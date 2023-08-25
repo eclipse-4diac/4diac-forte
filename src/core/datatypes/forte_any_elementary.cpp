@@ -228,39 +228,39 @@ int CIEC_ANY_ELEMENTARY::fromString(const char *paValue){
     EDataTypeID eID = getDataTypeID();
     switch (eID){
       case e_SINT:
-        nSUpperBound = CIEC_SINT::scm_nMaxVal;
-        nSLowerBound = CIEC_SINT::scm_nMinVal;
+        nSUpperBound = CIEC_SINT::scmMaxVal;
+        nSLowerBound = CIEC_SINT::scmMinVal;
         break;
       case e_INT:
-        nSUpperBound = CIEC_INT::scm_nMaxVal;
-        nSLowerBound = CIEC_INT::scm_nMinVal;
+        nSUpperBound = CIEC_INT::scmMaxVal;
+        nSLowerBound = CIEC_INT::scmMinVal;
         break;
       case e_DINT:
-        nSUpperBound = CIEC_DINT::scm_nMaxVal;
-        nSLowerBound = CIEC_DINT::scm_nMinVal;
+        nSUpperBound = CIEC_DINT::scmMaxVal;
+        nSLowerBound = CIEC_DINT::scmMinVal;
         break;
         case e_LINT:
-        nSUpperBound = CIEC_LINT::scm_nMaxVal;
-        nSLowerBound = CIEC_LINT::scm_nMinVal;
+        nSUpperBound = CIEC_LINT::scmMaxVal;
+        nSLowerBound = CIEC_LINT::scmMinVal;
         break;
       case e_USINT:
       case e_BYTE:
-        nUUpperBound = CIEC_USINT::scm_nMaxVal;
+        nUUpperBound = CIEC_USINT::scmMaxVal;
         bSigned = false;
         break;
       case e_UINT:
       case e_WORD:
-        nUUpperBound = CIEC_UINT::scm_nMaxVal;
+        nUUpperBound = CIEC_UINT::scmMaxVal;
         bSigned = false;
         break;
       case e_UDINT:
       case e_DWORD:
-        nUUpperBound = CIEC_UDINT::scm_nMaxVal;
+        nUUpperBound = CIEC_UDINT::scmMaxVal;
         bSigned = false;
         break;
       case e_ULINT:
       case e_LWORD:
-        nUUpperBound = CIEC_ULINT::scm_nMaxVal;
+        nUUpperBound = CIEC_ULINT::scmMaxVal;
         bSigned = false;
         break;
       default:
@@ -305,7 +305,7 @@ int CIEC_ANY_ELEMENTARY::fromString(const char *paValue){
 bool CIEC_ANY_ELEMENTARY::isTypeSpecifier(const char* paValue, const char* paHashPosition) const {
   CStringDictionary::TStringId nTypeNameId = parseTypeName(paValue, paHashPosition);
 
-  if ((CStringDictionary::scm_nInvalidStringId != nTypeNameId) && ((scm_StringToTypeId.find(nTypeNameId) != scm_StringToTypeId.end()) || (isCastable(nTypeNameId))))
+  if ((CStringDictionary::scmInvalidStringId != nTypeNameId) && ((scm_StringToTypeId.find(nTypeNameId) != scm_StringToTypeId.end()) || (isCastable(nTypeNameId))))
   {
     return true;
   }

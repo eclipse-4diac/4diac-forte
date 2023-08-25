@@ -46,32 +46,32 @@ class FORTE_WagoBusAdapter : public forte::core::io::IOConfigFBMultiAdapter {
     };
 
     TEventID INITO(){
-      return m_nParentAdapterListEventID + scm_nEventINITOID;
+      return mParentAdapterListEventID + scmEventINITOID;
     }
 
     TEventID INIT(){
-      return m_nParentAdapterListEventID + scm_nEventINITID;
+      return mParentAdapterListEventID + scmEventINITID;
     }
 
   private:
-    static const CStringDictionary::TStringId scm_anDataInputNames[];
-    static const CStringDictionary::TStringId scm_anDataInputTypeIds[];
-    static const CStringDictionary::TStringId scm_anDataOutputNames[];
-    static const CStringDictionary::TStringId scm_anDataOutputTypeIds[];
+    static const CStringDictionary::TStringId scmDataInputNames[];
+    static const CStringDictionary::TStringId scmDataInputTypeIds[];
+    static const CStringDictionary::TStringId scmDataOutputNames[];
+    static const CStringDictionary::TStringId scmDataOutputTypeIds[];
 
-    static const TForteInt16 scm_anEIWithIndexes[];
-    static const TDataIOID scm_anEIWith[];
-    static const CStringDictionary::TStringId scm_anEventInputNames[];
+    static const TForteInt16 scmEIWithIndexes[];
+    static const TDataIOID scmEIWith[];
+    static const CStringDictionary::TStringId scmEventInputNames[];
 
-    static const TForteInt16 scm_anEOWithIndexes[];
-    static const TDataIOID scm_anEOWith[];
-    static const CStringDictionary::TStringId scm_anEventOutputNames[];
+    static const TForteInt16 scmEOWithIndexes[];
+    static const TDataIOID scmEOWith[];
+    static const CStringDictionary::TStringId scmEventOutputNames[];
 
-    static const SFBInterfaceSpec scm_stFBInterfaceSpecSocket;
-    static const SFBInterfaceSpec scm_stFBInterfaceSpecPlug;
+    static const SFBInterfaceSpec scmFBInterfaceSpecSocket;
+    static const SFBInterfaceSpec scmFBInterfaceSpecPlug;
 
-    static const TEventID scm_nEventINITOID = 0;
-    static const TEventID scm_nEventINITID = 0;
+    static const TEventID scmEventINITOID = 0;
+    static const TEventID scmEventINITID = 0;
 
 
 };

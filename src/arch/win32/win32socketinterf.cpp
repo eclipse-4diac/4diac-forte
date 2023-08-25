@@ -18,21 +18,21 @@
 #include "devlog.h"
 #include <string.h>
 
-void CWin32SocketInterface::closeSocket(TSocketDescriptor pa_nSockD){
-  closesocket(pa_nSockD);
+void CWin32SocketInterface::closeSocket(TSocketDescriptor paSockD){
+  closesocket(paSockD);
 }
 
-CWin32SocketInterface::TSocketDescriptor CWin32SocketInterface::openTCPServerConnection(char *pa_acIPAddr, unsigned short pa_nPort){
+CWin32SocketInterface::TSocketDescriptor CWin32SocketInterface::openTCPServerConnection(char *paIPAddr, unsigned short paPort){
   TSocketDescriptor nRetVal = INVALID_SOCKET;
 
-  DEVLOG_INFO("CWin32SocketInterface: Opening TCP-Server connection at: %s:%d\n", pa_acIPAddr, pa_nPort);
+  DEVLOG_INFO("CWin32SocketInterface: Opening TCP-Server connection at: %s:%d\n", paIPAddr, paPort);
 
   TSocketDescriptor nSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 
   if(INVALID_SOCKET != nSocket){
     struct sockaddr_in stSockAddr = { };
     stSockAddr.sin_family = AF_INET;
-    stSockAddr.sin_port = htons(pa_nPort);
+    stSockAddr.sin_port = htons(paPort);
     stSockAddr.sin_addr.s_addr = htonl(INADDR_ANY);
 
     int nOptVal = 1;
@@ -69,20 +69,20 @@ CWin32SocketInterface::TSocketDescriptor CWin32SocketInterface::openTCPServerCon
   return nRetVal;
 }
 
-CWin32SocketInterface::TSocketDescriptor CWin32SocketInterface::openTCPClientConnection(char *pa_acIPAddr, unsigned short pa_nPort){
+CWin32SocketInterface::TSocketDescriptor CWin32SocketInterface::openTCPClientConnection(char *paIPAddr, unsigned short paPort){
   TSocketDescriptor nRetVal = INVALID_SOCKET;
   TSocketDescriptor nSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 
-  DEVLOG_INFO("CWin32SocketInterface: Opening TCP-Client connection at: %s:%d\n", pa_acIPAddr, pa_nPort);
+  DEVLOG_INFO("CWin32SocketInterface: Opening TCP-Client connection at: %s:%d\n", paIPAddr, paPort);
 
   if(INVALID_SOCKET != nSocket) {
     sockaddr_in stSockAddr = {};
     int stSockAddrSz = sizeof(stSockAddr);
-    if(WSAStringToAddressA(pa_acIPAddr, AF_INET, nullptr, (LPSOCKADDR)&stSockAddr, &stSockAddrSz)) {
-      DEVLOG_ERROR("CWin32SocketInterface: WSAStringToAddressA() failed: %d - %s\n", stSockAddr.sin_addr.s_addr, pa_acIPAddr);
+    if(WSAStringToAddressA(paIPAddr, AF_INET, nullptr, (LPSOCKADDR)&stSockAddr, &stSockAddrSz)) {
+      DEVLOG_ERROR("CWin32SocketInterface: WSAStringToAddressA() failed: %d - %s\n", stSockAddr.sin_addr.s_addr, paIPAddr);
     }
     stSockAddr.sin_family = AF_INET;
-    stSockAddr.sin_port = htons(pa_nPort);
+    stSockAddr.sin_port = htons(paPort);
 
     if(SOCKET_ERROR == connect(nSocket, (struct sockaddr*) &stSockAddr, sizeof(struct sockaddr))) {
       int nLastError = WSAGetLastError();
@@ -104,10 +104,10 @@ CWin32SocketInterface::TSocketDescriptor CWin32SocketInterface::openTCPClientCon
   return nRetVal;
 }
 
-CWin32SocketInterface::TSocketDescriptor CWin32SocketInterface::acceptTCPConnection(TSocketDescriptor pa_nListeningSockD){
+CWin32SocketInterface::TSocketDescriptor CWin32SocketInterface::acceptTCPConnection(TSocketDescriptor paListeningSockD){
   struct sockaddr client_addr;
   int sin_size = sizeof(struct sockaddr);
-  TSocketDescriptor nRetVal = accept(pa_nListeningSockD, &client_addr, &sin_size);
+  TSocketDescriptor nRetVal = accept(paListeningSockD, &client_addr, &sin_size);
 
   if(INVALID_SOCKET == nRetVal){
     int nLastError = WSAGetLastError();
@@ -118,14 +118,14 @@ CWin32SocketInterface::TSocketDescriptor CWin32SocketInterface::acceptTCPConnect
   return nRetVal;
 }
 
-int CWin32SocketInterface::sendDataOnTCP(TSocketDescriptor pa_nSockD, const char* pa_pcData, unsigned int pa_unSize){
+int CWin32SocketInterface::sendDataOnTCP(TSocketDescriptor paSockD, const char* paData, unsigned int paSize){
   // This function sends all data in the buffer before it returns!
-  int nToSend = pa_unSize;
+  int nToSend = paSize;
   int nRetVal = 0;
 
   while(0 < nToSend){
     //TODO: check if open connection (socket might be closed by peer)
-    nRetVal = static_cast<int>(send(pa_nSockD, pa_pcData, nToSend, 0));
+    nRetVal = static_cast<int>(send(paSockD, paData, nToSend, 0));
     if(nRetVal <= 0){
       LPSTR pacErrorMessage = getErrorMessage(WSAGetLastError());
       DEVLOG_ERROR("TCP-Socket Send failed: %s\n", pacErrorMessage);
@@ -133,15 +133,15 @@ int CWin32SocketInterface::sendDataOnTCP(TSocketDescriptor pa_nSockD, const char
       break;
     }
     nToSend -= nRetVal;
-    pa_pcData += nRetVal;
+    paData += nRetVal;
   }
   return nRetVal;
 }
 
-int CWin32SocketInterface::receiveDataFromTCP(TSocketDescriptor pa_nSockD, char* pa_pcData, unsigned int pa_unBufSize){
+int CWin32SocketInterface::receiveDataFromTCP(TSocketDescriptor paSockD, char* paData, unsigned int paBufSize){
   int nRetVal;
   do{
-    nRetVal = recv(pa_nSockD, pa_pcData, pa_unBufSize, 0);
+    nRetVal = recv(paSockD, paData, paBufSize, 0);
   } while((SOCKET_ERROR == nRetVal) && (WSAEINTR == h_errno)); // recv got interrupt / recieving again
   if(SOCKET_ERROR == nRetVal) {
     int nLastError = WSAGetLastError();
@@ -155,18 +155,18 @@ int CWin32SocketInterface::receiveDataFromTCP(TSocketDescriptor pa_nSockD, char*
   return nRetVal;
 }
 
-CWin32SocketInterface::TSocketDescriptor CWin32SocketInterface::openUDPSendPort(char *pa_acIPAddr, unsigned short pa_nPort, TUDPDestAddr *m_ptDestAddr){
-  DEVLOG_INFO("CWin32SocketInterface: Opening UDP sending connection at: %s:%d\n", pa_acIPAddr, pa_nPort);
+CWin32SocketInterface::TSocketDescriptor CWin32SocketInterface::openUDPSendPort(char *paIPAddr, unsigned short paPort, TUDPDestAddr *mDestAddr){
+  DEVLOG_INFO("CWin32SocketInterface: Opening UDP sending connection at: %s:%d\n", paIPAddr, paPort);
   TSocketDescriptor nRetVal = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
 
   if(INVALID_SOCKET != nRetVal) {
-    *m_ptDestAddr = TUDPDestAddr();
-    int m_ptDestAddrSz = sizeof(*m_ptDestAddr);
-    if(WSAStringToAddressA(pa_acIPAddr, AF_INET, nullptr, (LPSOCKADDR)m_ptDestAddr, &m_ptDestAddrSz)) {
-      DEVLOG_ERROR("CWin32SocketInterface: WSAStringToAddressA() failed: %d - %s\n", m_ptDestAddr->sin_addr.s_addr, pa_acIPAddr);
+    *mDestAddr = TUDPDestAddr();
+    int mDestAddrSz = sizeof(*mDestAddr);
+    if(WSAStringToAddressA(paIPAddr, AF_INET, nullptr, (LPSOCKADDR)mDestAddr, &mDestAddrSz)) {
+      DEVLOG_ERROR("CWin32SocketInterface: WSAStringToAddressA() failed: %d - %s\n", mDestAddr->sin_addr.s_addr, paIPAddr);
     }
-    m_ptDestAddr->sin_family = AF_INET;
-    m_ptDestAddr->sin_port = htons(pa_nPort);
+    mDestAddr->sin_family = AF_INET;
+    mDestAddr->sin_port = htons(paPort);
  }
   else{
     int nLastError = WSAGetLastError();
@@ -177,8 +177,8 @@ CWin32SocketInterface::TSocketDescriptor CWin32SocketInterface::openUDPSendPort(
   return nRetVal;
 }
 
-CWin32SocketInterface::TSocketDescriptor CWin32SocketInterface::openUDPReceivePort(char *pa_acIPAddr, unsigned short pa_nPort){
-  DEVLOG_INFO("CWin32SocketInterface: Opening UDP receiving connection at: %s:%d\n", pa_acIPAddr, pa_nPort);
+CWin32SocketInterface::TSocketDescriptor CWin32SocketInterface::openUDPReceivePort(char *paIPAddr, unsigned short paPort){
+  DEVLOG_INFO("CWin32SocketInterface: Opening UDP receiving connection at: %s:%d\n", paIPAddr, paPort);
   TSocketDescriptor nRetVal = INVALID_SOCKET;
   TSocketDescriptor nSocket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
 
@@ -187,14 +187,14 @@ CWin32SocketInterface::TSocketDescriptor CWin32SocketInterface::openUDPReceivePo
     if(0 <= setsockopt(nSocket, SOL_SOCKET, SO_REUSEADDR, (char *) &nReuseAddrVal, sizeof(nReuseAddrVal))){
       struct sockaddr_in stSockAddr = {};
       stSockAddr.sin_family = AF_INET;
-      stSockAddr.sin_port = htons(pa_nPort);
+      stSockAddr.sin_port = htons(paPort);
       stSockAddr.sin_addr.s_addr = htonl(INADDR_ANY);
       if(0 == bind(nSocket, (struct sockaddr *) &stSockAddr, sizeof(struct sockaddr))){
         // setting up multicast group
         sockaddr_in stMCastAddr = {};
         int stMCastAddrSz = sizeof(stMCastAddr);
-        if(WSAStringToAddressA(pa_acIPAddr, AF_INET, nullptr, (LPSOCKADDR)&stMCastAddr, &stMCastAddrSz)) {
-          DEVLOG_ERROR("CWin32SocketInterface: WSAStringToAddressA() failed: %d - %s\n", stMCastAddr.sin_addr.s_addr, pa_acIPAddr);
+        if(WSAStringToAddressA(paIPAddr, AF_INET, nullptr, (LPSOCKADDR)&stMCastAddr, &stMCastAddrSz)) {
+          DEVLOG_ERROR("CWin32SocketInterface: WSAStringToAddressA() failed: %d - %s\n", stMCastAddr.sin_addr.s_addr, paIPAddr);
         }
 
         struct ip_mreq stMReq = {};
@@ -228,14 +228,14 @@ CWin32SocketInterface::TSocketDescriptor CWin32SocketInterface::openUDPReceivePo
   return nRetVal;
 }
 
-int CWin32SocketInterface::sendDataOnUDP(TSocketDescriptor pa_nSockD, TUDPDestAddr *pa_ptDestAddr, char* pa_pcData, unsigned int pa_unSize){
+int CWin32SocketInterface::sendDataOnUDP(TSocketDescriptor paSockD, TUDPDestAddr *paDestAddr, char* paData, unsigned int paSize){
   // This function sends all data in the buffer before it returns!
-  int nToSend = pa_unSize;
+  int nToSend = paSize;
   int nRetVal = 0;
 
   while(0 < nToSend){
     //TODO: check if open connection (socket might be closed by peer)
-    nRetVal = static_cast<int>(sendto(pa_nSockD, pa_pcData, nToSend, 0, (struct sockaddr *) pa_ptDestAddr, sizeof(struct sockaddr)));
+    nRetVal = static_cast<int>(sendto(paSockD, paData, nToSend, 0, (struct sockaddr *) paDestAddr, sizeof(struct sockaddr)));
     if(nRetVal <= 0){
       int nLastError = WSAGetLastError();
       LPSTR pacErrorMessage = getErrorMessage(nLastError);
@@ -244,15 +244,15 @@ int CWin32SocketInterface::sendDataOnUDP(TSocketDescriptor pa_nSockD, TUDPDestAd
       break;
     }
     nToSend -= nRetVal;
-    pa_pcData += nRetVal;
+    paData += nRetVal;
   }
   return nRetVal;
 }
 
-int CWin32SocketInterface::receiveDataFromUDP(TSocketDescriptor pa_nSockD, char* pa_pcData, unsigned int pa_unBufSize){
+int CWin32SocketInterface::receiveDataFromUDP(TSocketDescriptor paSockD, char* paData, unsigned int paBufSize){
   int nRetVal;
   do{
-    nRetVal = recvfrom(pa_nSockD, pa_pcData, pa_unBufSize, 0, 0, 0);
+    nRetVal = recvfrom(paSockD, paData, paBufSize, 0, 0, 0);
   } while((SOCKET_ERROR == nRetVal) && (WSAEINTR == h_errno)); // recv got interrupt / recieving again
 
   if(SOCKET_ERROR == nRetVal) {
@@ -264,11 +264,11 @@ int CWin32SocketInterface::receiveDataFromUDP(TSocketDescriptor pa_nSockD, char*
   return nRetVal;
 }
 
-LPSTR CWin32SocketInterface::getErrorMessage(int pa_nErrorNumber){
+LPSTR CWin32SocketInterface::getErrorMessage(int paErrorNumber){
   LPSTR pacErrorMessage = nullptr;
   FormatMessage(
   FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
-  nullptr, pa_nErrorNumber, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), pacErrorMessage, 0,
+  nullptr, paErrorNumber, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), pacErrorMessage, 0,
   nullptr);
   return pacErrorMessage;
 }

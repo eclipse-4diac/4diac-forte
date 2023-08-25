@@ -17,26 +17,26 @@
 
 DEFINE_FIRMWARE_FB(FORTE_FieldsToPublishEvent, g_nStringIdFieldsToPublishEvent)
 
-const CStringDictionary::TStringId FORTE_FieldsToPublishEvent::scm_anDataInputNames[] = {g_nStringIdsource, g_nStringIdevent, g_nStringIddeliveryCompleteUri};
+const CStringDictionary::TStringId FORTE_FieldsToPublishEvent::scmDataInputNames[] = {g_nStringIdsource, g_nStringIdevent, g_nStringIddeliveryCompleteUri};
 
-const CStringDictionary::TStringId FORTE_FieldsToPublishEvent::scm_anDataInputTypeIds[] = {g_nStringIdArrowheadSystem, g_nStringIdArrowheadEvent, g_nStringIdWSTRING};
+const CStringDictionary::TStringId FORTE_FieldsToPublishEvent::scmDataInputTypeIds[] = {g_nStringIdArrowheadSystem, g_nStringIdArrowheadEvent, g_nStringIdWSTRING};
 
-const CStringDictionary::TStringId FORTE_FieldsToPublishEvent::scm_anDataOutputNames[] = {g_nStringIdpublishEvent};
+const CStringDictionary::TStringId FORTE_FieldsToPublishEvent::scmDataOutputNames[] = {g_nStringIdpublishEvent};
 
-const CStringDictionary::TStringId FORTE_FieldsToPublishEvent::scm_anDataOutputTypeIds[] = {g_nStringIdPublishEvent};
+const CStringDictionary::TStringId FORTE_FieldsToPublishEvent::scmDataOutputTypeIds[] = {g_nStringIdPublishEvent};
 
-const TForteInt16 FORTE_FieldsToPublishEvent::scm_anEIWithIndexes[] = {0};
-const TDataIOID FORTE_FieldsToPublishEvent::scm_anEIWith[] = {0, 1, 2, scmWithListDelimiter};
-const CStringDictionary::TStringId FORTE_FieldsToPublishEvent::scm_anEventInputNames[] = {g_nStringIdREQ};
+const TForteInt16 FORTE_FieldsToPublishEvent::scmEIWithIndexes[] = {0};
+const TDataIOID FORTE_FieldsToPublishEvent::scmEIWith[] = {0, 1, 2, scmWithListDelimiter};
+const CStringDictionary::TStringId FORTE_FieldsToPublishEvent::scmEventInputNames[] = {g_nStringIdREQ};
 
-const TDataIOID FORTE_FieldsToPublishEvent::scm_anEOWith[] = {0, scmWithListDelimiter};
-const TForteInt16 FORTE_FieldsToPublishEvent::scm_anEOWithIndexes[] = {0, -1};
-const CStringDictionary::TStringId FORTE_FieldsToPublishEvent::scm_anEventOutputNames[] = {g_nStringIdCNF};
+const TDataIOID FORTE_FieldsToPublishEvent::scmEOWith[] = {0, scmWithListDelimiter};
+const TForteInt16 FORTE_FieldsToPublishEvent::scmEOWithIndexes[] = {0, -1};
+const CStringDictionary::TStringId FORTE_FieldsToPublishEvent::scmEventOutputNames[] = {g_nStringIdCNF};
 
-const SFBInterfaceSpec FORTE_FieldsToPublishEvent::scm_stFBInterfaceSpec = {
-  1,  scm_anEventInputNames,  scm_anEIWith,  scm_anEIWithIndexes,
-  1,  scm_anEventOutputNames,  scm_anEOWith, scm_anEOWithIndexes,  3,  scm_anDataInputNames, scm_anDataInputTypeIds,
-  1,  scm_anDataOutputNames, scm_anDataOutputTypeIds,
+const SFBInterfaceSpec FORTE_FieldsToPublishEvent::scmFBInterfaceSpec = {
+  1,  scmEventInputNames,  scmEIWith,  scmEIWithIndexes,
+  1,  scmEventOutputNames,  scmEOWith, scmEOWithIndexes,  3,  scmDataInputNames, scmDataInputTypeIds,
+  1,  scmDataOutputNames, scmDataOutputTypeIds,
   0, 0
 };
 
@@ -50,38 +50,38 @@ publishEvent().deliveryCompleteUri() = deliveryCompleteUri();
 
 
 void FORTE_FieldsToPublishEvent::enterStateSTART(){
-  m_nECCState = scm_nStateSTART;
+  mECCState = scmStateSTART;
 }
 
 void FORTE_FieldsToPublishEvent::enterStateREQ(){
-  m_nECCState = scm_nStateREQ;
+  mECCState = scmStateREQ;
   alg_REQ();
-  sendOutputEvent( scm_nEventCNFID);
+  sendOutputEvent( scmEventCNFID);
 }
 
-void FORTE_FieldsToPublishEvent::executeEvent(TEventID pa_nEIID){
+void FORTE_FieldsToPublishEvent::executeEvent(TEventID paEIID){
   bool bTransitionCleared;
   do{
     bTransitionCleared = true;
-    switch(m_nECCState){
-      case scm_nStateSTART:
-        if(scm_nEventREQID == pa_nEIID)
+    switch(mECCState){
+      case scmStateSTART:
+        if(scmEventREQID == paEIID)
           enterStateREQ();
         else
           bTransitionCleared  = false; //no transition cleared
         break;
-      case scm_nStateREQ:
+      case scmStateREQ:
         if((1))
           enterStateSTART();
         else
           bTransitionCleared  = false; //no transition cleared
         break;
       default:
-      DEVLOG_ERROR("The state is not in the valid range! The state value is: %d. The max value can be: 1.", m_nECCState.operator TForteUInt16 ());
-        m_nECCState = 0; //0 is always the initial state
+      DEVLOG_ERROR("The state is not in the valid range! The state value is: %d. The max value can be: 1.", mECCState.operator TForteUInt16 ());
+        mECCState = 0; //0 is always the initial state
         break;
     }
-    pa_nEIID = cg_nInvalidEventID;  // we have to clear the event after the first check in order to ensure correct behavior
+    paEIID = cg_nInvalidEventID;  // we have to clear the event after the first check in order to ensure correct behavior
   }while(bTransitionCleared);
 }
 

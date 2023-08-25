@@ -59,45 +59,45 @@
 class CFBDKASN1ComLayerTestMock: public forte::com_infra::CFBDKASN1ComLayer{
   public:
     CFBDKASN1ComLayerTestMock() : forte::com_infra::CFBDKASN1ComLayer(nullptr, nullptr){
-      m_poBottomLayer = &m_oTestLayer;
+      mBottomLayer = &mTestLayer;
     }
 
     ~CFBDKASN1ComLayerTestMock(){
-      m_poBottomLayer = nullptr;
+      mBottomLayer = nullptr;
     }
 
     void *getSendDataPtr() {
-      return m_oTestLayer.m_poData;
+      return mTestLayer.mData;
     }
     unsigned int getSendDataSize(){
-      return m_oTestLayer.m_unSize;
+      return mTestLayer.mSize;
     }
 
   private:
    class TestMockBottomLayer : public forte::com_infra::CComLayer{
      public:
      TestMockBottomLayer() : forte::com_infra::CComLayer(nullptr,nullptr){
-       m_poData = nullptr;
-       m_poAllocData = nullptr;
-       m_unSize = 0;
+       mData = nullptr;
+       mAllocData = nullptr;
+       mSize = 0;
      }
 
      ~TestMockBottomLayer(){
-       if (nullptr != m_poAllocData) {
-         delete[] m_poAllocData;
+       if (nullptr != mAllocData) {
+         delete[] mAllocData;
        }
      }
 
-      forte::com_infra::EComResponse sendData(void *pa_pvData, unsigned int pa_unSize){
-        if (nullptr != m_poAllocData) {
-          delete[] m_poAllocData;
+      forte::com_infra::EComResponse sendData(void *paData, unsigned int paSize){
+        if (nullptr != mAllocData) {
+          delete[] mAllocData;
         }
-        m_poAllocData = new TForteByte[pa_unSize];
-        if (nullptr != m_poAllocData) {
-          m_poData = m_poAllocData;
-          memcpy(m_poData,pa_pvData,pa_unSize);
-          //m_poData = pa_pvData;
-          m_unSize = pa_unSize;
+        mAllocData = new TForteByte[paSize];
+        if (nullptr != mAllocData) {
+          mData = mAllocData;
+          memcpy(mData,paData,paSize);
+          //mData = paData;
+          mSize = paSize;
           return forte::com_infra::e_ProcessDataOk;
         } else {
           return forte::com_infra::e_ProcessDataSendFailed;
@@ -112,12 +112,12 @@ class CFBDKASN1ComLayerTestMock: public forte::com_infra::CFBDKASN1ComLayer{
         return forte::com_infra::e_ProcessDataOk;
       }
 
-      TForteByte *m_poData;
-      TForteByte *m_poAllocData;
-       unsigned int m_unSize;
+      TForteByte *mData;
+      TForteByte *mAllocData;
+       unsigned int mSize;
    };
 
-   TestMockBottomLayer m_oTestLayer;
+   TestMockBottomLayer mTestLayer;
 };
 
 

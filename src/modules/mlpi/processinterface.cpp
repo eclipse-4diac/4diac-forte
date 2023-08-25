@@ -162,25 +162,25 @@ bool CMLPIFaceProcessInterface::checkInputData(){
 
 DEFINE_HANDLER(CMLPIFaceProcessInterface::CIOHandler)
 
-CMLPIFaceProcessInterface::CIOHandler::CIOHandler(CDeviceExecution& pa_poDeviceExecution) : CExternalEventHandler(pa_poDeviceExecution){
+CMLPIFaceProcessInterface::CIOHandler::CIOHandler(CDeviceExecution& paDeviceExecution) : CExternalEventHandler(paDeviceExecution){
 }
 
 CMLPIFaceProcessInterface::CIOHandler::~CIOHandler(){
 }
 
-void CMLPIFaceProcessInterface::CIOHandler::registerIXFB(CMLPIFaceProcessInterface *pa_poFB){
+void CMLPIFaceProcessInterface::CIOHandler::registerIXFB(CMLPIFaceProcessInterface *paFB){
   mReadFBListSync.lock();
-  mReadFBList.pushBack(pa_poFB);
+  mReadFBList.pushBack(paFB);
   mReadFBListSync.unlock();
 }
 
-void CMLPIFaceProcessInterface::CIOHandler::unregisterIXFB(CMLPIFaceProcessInterface *pa_poFB){
+void CMLPIFaceProcessInterface::CIOHandler::unregisterIXFB(CMLPIFaceProcessInterface *paFB){
   mReadFBListSync.lock();
   TReadFBContainer::Iterator itRunner(mReadFBList.begin());
   TReadFBContainer::Iterator itRefNode(mReadFBList.end());
   TReadFBContainer::Iterator itEnd(mReadFBList.end());
   while(itRunner != itEnd){
-    if(*itRunner == pa_poFB){
+    if(*itRunner == paFB){
       if(itRefNode == itEnd){
         mReadFBList.popFront();
       }

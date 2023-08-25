@@ -20,26 +20,26 @@
 
 DEFINE_FIRMWARE_FB(FORTE_RT_E_CYCLE, g_nStringIdRT_E_CYCLE)
 
-const CStringDictionary::TStringId FORTE_RT_E_CYCLE::scm_anDataInputNames[] = {g_nStringIdDT, g_nStringIdDeadline, g_nStringIdWCET};
-const CStringDictionary::TStringId FORTE_RT_E_CYCLE::scm_anDataInputTypeIds[] = {g_nStringIdTIME, g_nStringIdTIME, g_nStringIdTIME};
-const CStringDictionary::TStringId FORTE_RT_E_CYCLE::scm_anDataOutputNames[] = {g_nStringIdQO};
-const CStringDictionary::TStringId FORTE_RT_E_CYCLE::scm_anDataOutputTypeIds[] = {g_nStringIdBOOL};
-const TDataIOID FORTE_RT_E_CYCLE::scm_anEIWith[] = {0, 1, 2, scmWithListDelimiter};
-const TForteInt16 FORTE_RT_E_CYCLE::scm_anEIWithIndexes[] = {0, -1};
-const CStringDictionary::TStringId FORTE_RT_E_CYCLE::scm_anEventInputNames[] = {g_nStringIdSTART, g_nStringIdSTOP};
-const TForteInt16 FORTE_RT_E_CYCLE::scm_anEOWithIndexes[] = {-1};
-const CStringDictionary::TStringId FORTE_RT_E_CYCLE::scm_anEventOutputNames[] = {g_nStringIdEO};
-const SFBInterfaceSpec FORTE_RT_E_CYCLE::scm_stFBInterfaceSpec = {
-  2, scm_anEventInputNames, scm_anEIWith, scm_anEIWithIndexes,
-  1, scm_anEventOutputNames, nullptr, scm_anEOWithIndexes,
-  3, scm_anDataInputNames, scm_anDataInputTypeIds,
-  1, scm_anDataOutputNames, scm_anDataOutputTypeIds,
+const CStringDictionary::TStringId FORTE_RT_E_CYCLE::scmDataInputNames[] = {g_nStringIdDT, g_nStringIdDeadline, g_nStringIdWCET};
+const CStringDictionary::TStringId FORTE_RT_E_CYCLE::scmDataInputTypeIds[] = {g_nStringIdTIME, g_nStringIdTIME, g_nStringIdTIME};
+const CStringDictionary::TStringId FORTE_RT_E_CYCLE::scmDataOutputNames[] = {g_nStringIdQO};
+const CStringDictionary::TStringId FORTE_RT_E_CYCLE::scmDataOutputTypeIds[] = {g_nStringIdBOOL};
+const TDataIOID FORTE_RT_E_CYCLE::scmEIWith[] = {0, 1, 2, scmWithListDelimiter};
+const TForteInt16 FORTE_RT_E_CYCLE::scmEIWithIndexes[] = {0, -1};
+const CStringDictionary::TStringId FORTE_RT_E_CYCLE::scmEventInputNames[] = {g_nStringIdSTART, g_nStringIdSTOP};
+const TForteInt16 FORTE_RT_E_CYCLE::scmEOWithIndexes[] = {-1};
+const CStringDictionary::TStringId FORTE_RT_E_CYCLE::scmEventOutputNames[] = {g_nStringIdEO};
+const SFBInterfaceSpec FORTE_RT_E_CYCLE::scmFBInterfaceSpec = {
+  2, scmEventInputNames, scmEIWith, scmEIWithIndexes,
+  1, scmEventOutputNames, nullptr, scmEOWithIndexes,
+  3, scmDataInputNames, scmDataInputTypeIds,
+  1, scmDataOutputNames, scmDataOutputTypeIds,
   0, nullptr,
   0, nullptr
 };
 
-FORTE_RT_E_CYCLE::FORTE_RT_E_CYCLE(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes) :
-        CEventSourceFB( pa_poSrcRes, &scm_stFBInterfaceSpec, pa_nInstanceNameId),
+FORTE_RT_E_CYCLE::FORTE_RT_E_CYCLE(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) :
+        CEventSourceFB( paSrcRes, &scmFBInterfaceSpec, paInstanceNameId),
     var_conn_QO(var_QO),
     conn_EO(this, 0),
     conn_DT(nullptr),
@@ -60,16 +60,16 @@ void FORTE_RT_E_CYCLE::setInitialValues() {
 void FORTE_RT_E_CYCLE::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   switch(paEIID) {
     case cg_nExternalEventID:
-      sendOutputEvent(scm_nEventEOID, paECET);
+      sendOutputEvent(scmEventEOID, paECET);
       break;
-    case scm_nEventSTOPID:
+    case scmEventSTOPID:
       if(mActive){
         mECEO.setDeadline(CIEC_TIME(static_cast<CIEC_TIME::TValueType>(0)));
         getTimer().unregisterTimedFB(this);
         mActive = false;
       }
       break;
-    case scm_nEventSTARTID:
+    case scmEventSTARTID:
       if(!mActive){
         mECEO.setDeadline(var_Deadline);
         getTimer().registerTimedFB(&mTimeListEntry, var_DT);
@@ -91,14 +91,14 @@ EMGMResponse FORTE_RT_E_CYCLE::changeFBExecutionState(EMGMCommandType paCommand)
 
 void FORTE_RT_E_CYCLE::readInputData(TEventID paEIID) {
   switch(paEIID) {
-    case scm_nEventSTARTID: {
+    case scmEventSTARTID: {
       RES_DATA_CON_CRITICAL_REGION();
       readData(0, var_DT, conn_DT);
       readData(1, var_Deadline, conn_Deadline);
       readData(2, var_WCET, conn_WCET);
       break;
     }
-    case scm_nEventSTOPID: {
+    case scmEventSTOPID: {
       RES_DATA_CON_CRITICAL_REGION();
       break;
     }

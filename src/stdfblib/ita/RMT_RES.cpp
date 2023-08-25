@@ -20,22 +20,22 @@
 
 DEFINE_FIRMWARE_FB(RMT_RES, g_nStringIdRMT_RES);
 
-const CStringDictionary::TStringId RMT_RES::scm_aunVarInputNameIds[] = {g_nStringIdMGR_ID};
-const CStringDictionary::TStringId RMT_RES::scm_aunDIDataTypeIds[] = {g_nStringIdWSTRING};
+const CStringDictionary::TStringId RMT_RES::scmVarInputNameIds[] = {g_nStringIdMGR_ID};
+const CStringDictionary::TStringId RMT_RES::scmDIDataTypeIds[] = {g_nStringIdWSTRING};
 
 
-const SFBInterfaceSpec RMT_RES::scm_stFBInterfaceSpec = {
+const SFBInterfaceSpec RMT_RES::scmFBInterfaceSpec = {
   0, nullptr, nullptr, nullptr,
   0, nullptr, nullptr, nullptr,
-  1, scm_aunVarInputNameIds, scm_aunDIDataTypeIds,
+  1, scmVarInputNameIds, scmDIDataTypeIds,
   0, nullptr, nullptr,
   0, nullptr,
   0, nullptr
 };
 
 
-RMT_RES::RMT_RES(CStringDictionary::TStringId pa_nInstanceNameId, CResource* pa_poDevice):
-       CResource(pa_poDevice, &scm_stFBInterfaceSpec, pa_nInstanceNameId){
+RMT_RES::RMT_RES(CStringDictionary::TStringId paInstanceNameId, CResource* paDevice):
+       CResource(paDevice, &scmFBInterfaceSpec, paInstanceNameId){
 }
 
 bool RMT_RES::initialize() {

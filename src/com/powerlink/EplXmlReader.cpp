@@ -20,26 +20,26 @@ using namespace std;
 
 #include <tinyxml.h>
 
-CEplXmlReader::CEplXmlReader(CProcessImageMatrix* pa_pIn, CProcessImageMatrix* pa_pOut){
-  m_pProcImageIn = pa_pIn;
-  m_pProcImageOut = pa_pOut;
+CEplXmlReader::CEplXmlReader(CProcessImageMatrix* paIn, CProcessImageMatrix* paOut){
+  mProcImageIn = paIn;
+  mProcImageOut = paOut;
 }
 
 CEplXmlReader::~CEplXmlReader(){
 
 }
 
-void CEplXmlReader::setProcessImageIn(CProcessImageMatrix* pa_pIn){
-  m_pProcImageIn = pa_pIn;
+void CEplXmlReader::setProcessImageIn(CProcessImageMatrix* paIn){
+  mProcImageIn = paIn;
 }
 
-void CEplXmlReader::setProcessImageOut(CProcessImageMatrix* pa_pOut){
-  m_pProcImageOut = pa_pOut;
+void CEplXmlReader::setProcessImageOut(CProcessImageMatrix* paOut){
+  mProcImageOut = paOut;
 }
 
-void CEplXmlReader::readXmlFile(const char* pa_pchFileName){
+void CEplXmlReader::readXmlFile(const char* paFileName){
 
-  TiXmlDocument xmlDoc(pa_pchFileName);
+  TiXmlDocument xmlDoc(paFileName);
 
   if(xmlDoc.LoadFile()){
     TiXmlNode *appProcess = xmlDoc.FirstChild("ApplicationProcess");
@@ -59,14 +59,14 @@ void CEplXmlReader::readXmlFile(const char* pa_pchFileName){
   }
 }
 
-void CEplXmlReader::createProcImageOut(TiXmlNode* pa_pProcessImage){
+void CEplXmlReader::createProcImageOut(TiXmlNode* paProcessImage){
   int currentCnId = -1;
   int currentModuleNr = -1;
   char currentModuleId[256];
   int currentIoNr = -1;
 
   TiXmlNode *channel;
-  for(channel = pa_pProcessImage->FirstChild("Channel"); channel != nullptr; channel = channel->NextSibling("Channel")){
+  for(channel = paProcessImage->FirstChild("Channel"); channel != nullptr; channel = channel->NextSibling("Channel")){
     // New IO
     currentIoNr++;
 
@@ -104,22 +104,22 @@ void CEplXmlReader::createProcImageOut(TiXmlNode* pa_pProcessImage){
       strcpy(currentModuleId, modId);
       currentIoNr = 0;
 
-      m_oModuleListOut.addEntry(ioName, piOffset, bitOffset, currentModuleNr);
-      m_pProcImageOut->addEntry(cnId, currentModuleNr, currentIoNr, dSize, piOffset, bitOffset);
+      mModuleListOut.addEntry(ioName, piOffset, bitOffset, currentModuleNr);
+      mProcImageOut->addEntry(cnId, currentModuleNr, currentIoNr, dSize, piOffset, bitOffset);
 
     }
-    else if(m_oModuleListOut.moduleNameExist(ioName)){ // IO name exist => this must be a new module with same brand as another
+    else if(mModuleListOut.moduleNameExist(ioName)){ // IO name exist => this must be a new module with same brand as another
       currentModuleNr++;
       strcpy(currentModuleId, modId);
       currentIoNr = 0;
 
-      m_oModuleListOut.addEntry(ioName, piOffset, bitOffset, currentModuleNr);
-      m_pProcImageOut->addEntry(cnId, currentModuleNr, currentIoNr, dSize, piOffset, bitOffset);
+      mModuleListOut.addEntry(ioName, piOffset, bitOffset, currentModuleNr);
+      mProcImageOut->addEntry(cnId, currentModuleNr, currentIoNr, dSize, piOffset, bitOffset);
 
     }
     else if(strcmp(modId, currentModuleId) == 0){ // same module ID as IO before => must be same module
 
-      m_pProcImageOut->addEntry(cnId, currentModuleNr, currentIoNr, dSize, piOffset, bitOffset);
+      mProcImageOut->addEntry(cnId, currentModuleNr, currentIoNr, dSize, piOffset, bitOffset);
 
     }
     else{ // new module ID => new module
@@ -127,8 +127,8 @@ void CEplXmlReader::createProcImageOut(TiXmlNode* pa_pProcessImage){
       strcpy(currentModuleId, modId);
       currentIoNr = 0;
 
-      m_oModuleListOut.addEntry(ioName, piOffset, bitOffset, currentModuleNr);
-      m_pProcImageOut->addEntry(cnId, currentModuleNr, currentIoNr, dSize, piOffset, bitOffset);
+      mModuleListOut.addEntry(ioName, piOffset, bitOffset, currentModuleNr);
+      mProcImageOut->addEntry(cnId, currentModuleNr, currentIoNr, dSize, piOffset, bitOffset);
 
     }
 
@@ -138,14 +138,14 @@ void CEplXmlReader::createProcImageOut(TiXmlNode* pa_pProcessImage){
   }
 }
 
-void CEplXmlReader::createProcImageIn(TiXmlNode *pa_pProcessImage){
+void CEplXmlReader::createProcImageIn(TiXmlNode *paProcessImage){
   int currentCnId = -1;
   int currentModuleNr = -1;
   char currentModuleId[256];
   int currentIoNr = -1;
 
   TiXmlNode *channel;
-  for(channel = pa_pProcessImage->FirstChild("Channel"); channel != nullptr; channel = channel->NextSibling("Channel")){
+  for(channel = paProcessImage->FirstChild("Channel"); channel != nullptr; channel = channel->NextSibling("Channel")){
     // New IO
     currentIoNr++;
 
@@ -185,24 +185,24 @@ void CEplXmlReader::createProcImageIn(TiXmlNode *pa_pProcessImage){
       strcpy(currentModuleId, modId);
       currentIoNr = 0;
 
-      m_oModuleListIn.addEntry(ioName, piOffset, bitOffset, currentModuleNr);
-      m_pProcImageIn->addEntry(cnId, currentModuleNr, currentIoNr, dSize, piOffset, bitOffset);
+      mModuleListIn.addEntry(ioName, piOffset, bitOffset, currentModuleNr);
+      mProcImageIn->addEntry(cnId, currentModuleNr, currentIoNr, dSize, piOffset, bitOffset);
 
     }
-    else if(m_oModuleListIn.moduleNameExist(ioName)){ // IO name exist => this must be a new module with same brand as another
+    else if(mModuleListIn.moduleNameExist(ioName)){ // IO name exist => this must be a new module with same brand as another
 
       currentModuleNr = getModuleNr(ioName);
 
       strcpy(currentModuleId, modId);
       currentIoNr = 0;
 
-      m_oModuleListIn.addEntry(ioName, piOffset, bitOffset, currentModuleNr);
-      m_pProcImageIn->addEntry(cnId, currentModuleNr, currentIoNr, dSize, piOffset, bitOffset);
+      mModuleListIn.addEntry(ioName, piOffset, bitOffset, currentModuleNr);
+      mProcImageIn->addEntry(cnId, currentModuleNr, currentIoNr, dSize, piOffset, bitOffset);
 
     }
     else if(strcmp(modId, currentModuleId) == 0){ // same module ID as IO before => must be same module
 
-      m_pProcImageIn->addEntry(cnId, currentModuleNr, currentIoNr, dSize, piOffset, bitOffset);
+      mProcImageIn->addEntry(cnId, currentModuleNr, currentIoNr, dSize, piOffset, bitOffset);
 
     }
     else{ // new module ID => new module
@@ -212,8 +212,8 @@ void CEplXmlReader::createProcImageIn(TiXmlNode *pa_pProcessImage){
       strcpy(currentModuleId, modId);
       currentIoNr = 0;
 
-      m_oModuleListIn.addEntry(ioName, piOffset, bitOffset, currentModuleNr);
-      m_pProcImageIn->addEntry(cnId, currentModuleNr, currentIoNr, dSize, piOffset, bitOffset);
+      mModuleListIn.addEntry(ioName, piOffset, bitOffset, currentModuleNr);
+      mProcImageIn->addEntry(cnId, currentModuleNr, currentIoNr, dSize, piOffset, bitOffset);
 
     }
 
@@ -223,9 +223,9 @@ void CEplXmlReader::createProcImageIn(TiXmlNode *pa_pProcessImage){
   }
 }
 
-int CEplXmlReader::getModuleNr(const char* pa_pchIoId){
+int CEplXmlReader::getModuleNr(const char* paIoId){
   char localCopy[256];
-  strcpy(localCopy, pa_pchIoId);
+  strcpy(localCopy, paIoId);
 
   char dest[256];
   char* pch = strtok(localCopy, ".");
@@ -234,8 +234,8 @@ int CEplXmlReader::getModuleNr(const char* pa_pchIoId){
   pch = strtok(nullptr, ".");
   strcat(dest, pch);
 
-  int occurences = m_oModuleListIn.getNrOfModules(dest);
-  int modNr = m_oModuleListOut.getModuleNr(dest, occurences + 1);
+  int occurences = mModuleListIn.getNrOfModules(dest);
+  int modNr = mModuleListOut.getModuleNr(dest, occurences + 1);
   if(modNr == -1) {
     cout << "ShouldNotHappenError" << endl;
   }

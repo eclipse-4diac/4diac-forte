@@ -22,27 +22,27 @@
 
 DEFINE_FIRMWARE_FB(FORTE_ST_REC_CONN, g_nStringIdST_REC_CONN)
 
-const CStringDictionary::TStringId FORTE_ST_REC_CONN::scm_anDataInputNames[] = {g_nStringIdQI, g_nStringIdOLD_SRC_FB, g_nStringIdOLD_SRC_FB_OUT, g_nStringIdOLD_DST_FB, g_nStringIdOLD_DST_FB_IN, g_nStringIdNEW_SRC_FB, g_nStringIdNEW_SRC_FB_OUT, g_nStringIdNEW_DST_FB, g_nStringIdNEW_DST_FB_IN, g_nStringIdDST};
-const CStringDictionary::TStringId FORTE_ST_REC_CONN::scm_anDataInputTypeIds[] = {g_nStringIdBOOL, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING};
-const CStringDictionary::TStringId FORTE_ST_REC_CONN::scm_anDataOutputNames[] = {g_nStringIdQO, g_nStringIdSTATUS};
-const CStringDictionary::TStringId FORTE_ST_REC_CONN::scm_anDataOutputTypeIds[] = {g_nStringIdBOOL, g_nStringIdWSTRING};
-const TDataIOID FORTE_ST_REC_CONN::scm_anEIWith[] = {1, 2, 3, 4, 9, 5, 6, 7, 8, 0, scmWithListDelimiter};
-const TForteInt16 FORTE_ST_REC_CONN::scm_anEIWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_ST_REC_CONN::scm_anEventInputNames[] = {g_nStringIdREQ};
-const TDataIOID FORTE_ST_REC_CONN::scm_anEOWith[] = {1, 0, scmWithListDelimiter};
-const TForteInt16 FORTE_ST_REC_CONN::scm_anEOWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_ST_REC_CONN::scm_anEventOutputNames[] = {g_nStringIdCNF};
-const SFBInterfaceSpec FORTE_ST_REC_CONN::scm_stFBInterfaceSpec = {
-  1, scm_anEventInputNames, scm_anEIWith, scm_anEIWithIndexes,
-  1, scm_anEventOutputNames, scm_anEOWith, scm_anEOWithIndexes,
-  10, scm_anDataInputNames, scm_anDataInputTypeIds,
-  2, scm_anDataOutputNames, scm_anDataOutputTypeIds,
+const CStringDictionary::TStringId FORTE_ST_REC_CONN::scmDataInputNames[] = {g_nStringIdQI, g_nStringIdOLD_SRC_FB, g_nStringIdOLD_SRC_FB_OUT, g_nStringIdOLD_DST_FB, g_nStringIdOLD_DST_FB_IN, g_nStringIdNEW_SRC_FB, g_nStringIdNEW_SRC_FB_OUT, g_nStringIdNEW_DST_FB, g_nStringIdNEW_DST_FB_IN, g_nStringIdDST};
+const CStringDictionary::TStringId FORTE_ST_REC_CONN::scmDataInputTypeIds[] = {g_nStringIdBOOL, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING};
+const CStringDictionary::TStringId FORTE_ST_REC_CONN::scmDataOutputNames[] = {g_nStringIdQO, g_nStringIdSTATUS};
+const CStringDictionary::TStringId FORTE_ST_REC_CONN::scmDataOutputTypeIds[] = {g_nStringIdBOOL, g_nStringIdWSTRING};
+const TDataIOID FORTE_ST_REC_CONN::scmEIWith[] = {1, 2, 3, 4, 9, 5, 6, 7, 8, 0, scmWithListDelimiter};
+const TForteInt16 FORTE_ST_REC_CONN::scmEIWithIndexes[] = {0};
+const CStringDictionary::TStringId FORTE_ST_REC_CONN::scmEventInputNames[] = {g_nStringIdREQ};
+const TDataIOID FORTE_ST_REC_CONN::scmEOWith[] = {1, 0, scmWithListDelimiter};
+const TForteInt16 FORTE_ST_REC_CONN::scmEOWithIndexes[] = {0};
+const CStringDictionary::TStringId FORTE_ST_REC_CONN::scmEventOutputNames[] = {g_nStringIdCNF};
+const SFBInterfaceSpec FORTE_ST_REC_CONN::scmFBInterfaceSpec = {
+  1, scmEventInputNames, scmEIWith, scmEIWithIndexes,
+  1, scmEventOutputNames, scmEOWith, scmEOWithIndexes,
+  10, scmDataInputNames, scmDataInputTypeIds,
+  2, scmDataOutputNames, scmDataOutputTypeIds,
   0, nullptr,
   0, nullptr
 };
 
-FORTE_ST_REC_CONN::FORTE_ST_REC_CONN(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes) :
-    CFunctionBlock( pa_poSrcRes, &scm_stFBInterfaceSpec, pa_nInstanceNameId),
+FORTE_ST_REC_CONN::FORTE_ST_REC_CONN(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) :
+    CFunctionBlock( paSrcRes, &scmFBInterfaceSpec, paInstanceNameId),
     var_conn_QO(var_QO),
     var_conn_STATUS(var_STATUS),
     conn_CNF(this, 0),
@@ -77,14 +77,14 @@ void FORTE_ST_REC_CONN::setInitialValues() {
 
 void FORTE_ST_REC_CONN::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   switch(paEIID) {
-    case scm_nEventREQID:
+    case scmEventREQID:
       var_QO = var_QI;
       if(var_QI) {
         executeRQST();
       } else {
         var_STATUS = u"Not Ready"_WSTRING;
       }
-      sendOutputEvent(scm_nEventCNFID, paECET);
+      sendOutputEvent(scmEventCNFID, paECET);
       break;
   }
 }
@@ -122,7 +122,7 @@ void FORTE_ST_REC_CONN::executeRQST(){
 
 void FORTE_ST_REC_CONN::readInputData(TEventID paEIID) {
   switch(paEIID) {
-    case scm_nEventREQID: {
+    case scmEventREQID: {
       RES_DATA_CON_CRITICAL_REGION();
       readData(1, var_OLD_SRC_FB, conn_OLD_SRC_FB);
       readData(2, var_OLD_SRC_FB_OUT, conn_OLD_SRC_FB_OUT);
@@ -143,7 +143,7 @@ void FORTE_ST_REC_CONN::readInputData(TEventID paEIID) {
 
 void FORTE_ST_REC_CONN::writeOutputData(TEventID paEIID) {
   switch(paEIID) {
-    case scm_nEventCNFID: {
+    case scmEventCNFID: {
       RES_DATA_CON_CRITICAL_REGION();
       writeData(1, var_STATUS, conn_STATUS);
       writeData(0, var_QO, conn_QO);

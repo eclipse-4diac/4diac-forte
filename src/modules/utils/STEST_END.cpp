@@ -19,19 +19,19 @@
 
 DEFINE_FIRMWARE_FB(FORTE_STEST_END, g_nStringIdSTEST_END)
 
-const TForteInt16 FORTE_STEST_END::scm_anEIWithIndexes[] = {-1};
-const CStringDictionary::TStringId FORTE_STEST_END::scm_anEventInputNames[] = {g_nStringIdREQ};
+const TForteInt16 FORTE_STEST_END::scmEIWithIndexes[] = {-1};
+const CStringDictionary::TStringId FORTE_STEST_END::scmEventInputNames[] = {g_nStringIdREQ};
 
-const SFBInterfaceSpec FORTE_STEST_END::scm_stFBInterfaceSpec = {
-  1,  scm_anEventInputNames,  nullptr,  scm_anEIWithIndexes,
+const SFBInterfaceSpec FORTE_STEST_END::scmFBInterfaceSpec = {
+  1,  scmEventInputNames,  nullptr,  scmEIWithIndexes,
   0,  nullptr,  nullptr, nullptr,  0,  nullptr, nullptr,
   0,  nullptr, nullptr,
   0, nullptr,
   0, nullptr
 };
 
-void FORTE_STEST_END::executeEvent(TEventID pa_nEIID){
-  if(scm_nEventREQID == pa_nEIID){
+void FORTE_STEST_END::executeEvent(TEventID paEIID){
+  if(scmEventREQID == paEIID){
     CThread::sleepThread(250); //avoid killing the device before it was properly started (DEV_MGR still was initializing the ipCommlayer when it was killed)
     getResource().getDevice().changeFBExecutionState(EMGMCommandType::Kill);
   }

@@ -24,31 +24,31 @@ class GEN_ARRAY2ARRAY: public CGenFunctionBlock<CFunctionBlock> {
   DECLARE_GENERIC_FIRMWARE_FB(GEN_ARRAY2ARRAY)
 
 private:
-  static const CStringDictionary::TStringId scm_anDataInputNames[];
-  CStringDictionary::TStringId *m_anDataInputTypeIds;
+  static const CStringDictionary::TStringId scmDataInputNames[];
+  CStringDictionary::TStringId *mDataInputTypeIds;
 
   CIEC_ARRAY &IN_Array() {
     return *static_cast<CIEC_ARRAY*>(getDI(0));
   };
 
-  static const CStringDictionary::TStringId scm_anDataOutputNames[];
-  CStringDictionary::TStringId *m_anDataOutputTypeIds;
+  static const CStringDictionary::TStringId scmDataOutputNames[];
+  CStringDictionary::TStringId *mDataOutputTypeIds;
 
   CIEC_ARRAY &OUT_Array() {
     return *static_cast<CIEC_ARRAY*>(getDO(0));
   };
 
-  static const TEventID scm_nEventREQID = 0;
-  static const CStringDictionary::TStringId scm_anEventInputNames[];
+  static const TEventID scmEventREQID = 0;
+  static const CStringDictionary::TStringId scmEventInputNames[];
 
-  static const TEventID scm_nEventCNFID = 0;
-  static const CStringDictionary::TStringId scm_anEventOutputNames[];
+  static const TEventID scmEventCNFID = 0;
+  static const CStringDictionary::TStringId scmEventOutputNames[];
 
-  static const SFBInterfaceSpec scm_stFBInterfaceSpec;
+  static const SFBInterfaceSpec scmFBInterfaceSpec;
 
   //self-defined members
   CStringDictionary::TStringId m_ValueTypeID;
-  unsigned int m_nArrayLength;
+  unsigned int mArrayLength;
 
   void executeEvent(TEventID paEIID) override;
 

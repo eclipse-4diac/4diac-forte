@@ -43,9 +43,9 @@ EComResponse CTSNLayer::openConnection(char *paLayerParameter){
     TForteUInt16 nPort = static_cast<TForteUInt16>(forte::core::util::strtoul(parser[1], nullptr, 10));
 
     CIPComSocketHandler::TSocketDescriptor nSockDes = CIPComSocketHandler::scmInvalidSocketDescriptor;
-    m_eConnectionState = e_Connected;
+    mConnectionState = e_Connected;
 
-    switch (m_poFb->getComServiceType()){
+    switch (mFb->getComServiceType()){
       case e_Server:
         DEVLOG_ERROR("[TSN LAYER] TSN layer does not support server FBs. Use the default "
             "ip layer without vlan parameters instead.\n");
@@ -68,14 +68,14 @@ EComResponse CTSNLayer::openConnection(char *paLayerParameter){
     }
 
     if(CIPComSocketHandler::scmInvalidSocketDescriptor != nSockDes && e_InitOk == eRetVal){
-      if(e_Publisher != m_poFb->getComServiceType()){
+      if(e_Publisher != mFb->getComServiceType()){
         //Publishers should not be registered for receiving data
         getExtEvHandler<CIPComSocketHandler>().addComCallback(nSockDes, this);
       }
       eRetVal = e_InitOk;
     }
     else{
-      m_eConnectionState = e_Disconnected;
+      mConnectionState = e_Disconnected;
     }
   }
   return eRetVal;

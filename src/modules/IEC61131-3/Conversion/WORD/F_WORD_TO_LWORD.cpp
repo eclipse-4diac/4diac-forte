@@ -29,35 +29,35 @@
 
 DEFINE_FIRMWARE_FB(FORTE_F_WORD_TO_LWORD, g_nStringIdF_WORD_TO_LWORD)
 
-const CStringDictionary::TStringId FORTE_F_WORD_TO_LWORD::scm_anDataInputNames[] = {g_nStringIdIN};
+const CStringDictionary::TStringId FORTE_F_WORD_TO_LWORD::scmDataInputNames[] = {g_nStringIdIN};
 
-const CStringDictionary::TStringId FORTE_F_WORD_TO_LWORD::scm_anDataInputTypeIds[] = {g_nStringIdWORD};
+const CStringDictionary::TStringId FORTE_F_WORD_TO_LWORD::scmDataInputTypeIds[] = {g_nStringIdWORD};
 
-const CStringDictionary::TStringId FORTE_F_WORD_TO_LWORD::scm_anDataOutputNames[] = {g_nStringIdOUT};
+const CStringDictionary::TStringId FORTE_F_WORD_TO_LWORD::scmDataOutputNames[] = {g_nStringIdOUT};
 
-const CStringDictionary::TStringId FORTE_F_WORD_TO_LWORD::scm_anDataOutputTypeIds[] = {g_nStringIdLWORD};
+const CStringDictionary::TStringId FORTE_F_WORD_TO_LWORD::scmDataOutputTypeIds[] = {g_nStringIdLWORD};
 
-const TDataIOID FORTE_F_WORD_TO_LWORD::scm_anEIWith[] = {0, scmWithListDelimiter};
-const TForteInt16 FORTE_F_WORD_TO_LWORD::scm_anEIWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_F_WORD_TO_LWORD::scm_anEventInputNames[] = {g_nStringIdREQ};
+const TDataIOID FORTE_F_WORD_TO_LWORD::scmEIWith[] = {0, scmWithListDelimiter};
+const TForteInt16 FORTE_F_WORD_TO_LWORD::scmEIWithIndexes[] = {0};
+const CStringDictionary::TStringId FORTE_F_WORD_TO_LWORD::scmEventInputNames[] = {g_nStringIdREQ};
 
-const TDataIOID FORTE_F_WORD_TO_LWORD::scm_anEOWith[] = {0, scmWithListDelimiter};
-const TForteInt16 FORTE_F_WORD_TO_LWORD::scm_anEOWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_F_WORD_TO_LWORD::scm_anEventOutputNames[] = {g_nStringIdCNF};
+const TDataIOID FORTE_F_WORD_TO_LWORD::scmEOWith[] = {0, scmWithListDelimiter};
+const TForteInt16 FORTE_F_WORD_TO_LWORD::scmEOWithIndexes[] = {0};
+const CStringDictionary::TStringId FORTE_F_WORD_TO_LWORD::scmEventOutputNames[] = {g_nStringIdCNF};
 
 
-const SFBInterfaceSpec FORTE_F_WORD_TO_LWORD::scm_stFBInterfaceSpec = {
-  1, scm_anEventInputNames, scm_anEIWith, scm_anEIWithIndexes,
-  1, scm_anEventOutputNames, scm_anEOWith, scm_anEOWithIndexes,
-  1, scm_anDataInputNames, scm_anDataInputTypeIds,
-  1, scm_anDataOutputNames, scm_anDataOutputTypeIds,
+const SFBInterfaceSpec FORTE_F_WORD_TO_LWORD::scmFBInterfaceSpec = {
+  1, scmEventInputNames, scmEIWith, scmEIWithIndexes,
+  1, scmEventOutputNames, scmEOWith, scmEOWithIndexes,
+  1, scmDataInputNames, scmDataInputTypeIds,
+  1, scmDataOutputNames, scmDataOutputTypeIds,
   0, nullptr,
   0, nullptr
 };
 
 
-FORTE_F_WORD_TO_LWORD::FORTE_F_WORD_TO_LWORD(CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes) :
-    CSimpleFB(pa_poSrcRes, &scm_stFBInterfaceSpec, pa_nInstanceNameId, nullptr),
+FORTE_F_WORD_TO_LWORD::FORTE_F_WORD_TO_LWORD(CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) :
+    CSimpleFB(paSrcRes, &scmFBInterfaceSpec, paInstanceNameId, nullptr),
     var_IN(CIEC_WORD(0)),
     var_OUT(CIEC_LWORD(0)),
     var_conn_OUT(var_OUT),
@@ -72,20 +72,20 @@ void FORTE_F_WORD_TO_LWORD::alg_REQ(void) {
 }
 
 
-void FORTE_F_WORD_TO_LWORD::executeEvent(TEventID pa_nEIID){
-  switch(pa_nEIID) {
-    case scm_nEventREQID:
+void FORTE_F_WORD_TO_LWORD::executeEvent(TEventID paEIID){
+  switch(paEIID) {
+    case scmEventREQID:
       alg_REQ();
       break;
     default:
       break;
   }
-  sendOutputEvent(scm_nEventCNFID);
+  sendOutputEvent(scmEventCNFID);
 }
 
-void FORTE_F_WORD_TO_LWORD::readInputData(TEventID pa_nEIID) {
-  switch(pa_nEIID) {
-    case scm_nEventREQID: {
+void FORTE_F_WORD_TO_LWORD::readInputData(TEventID paEIID) {
+  switch(paEIID) {
+    case scmEventREQID: {
       RES_DATA_CON_CRITICAL_REGION();
       readData(0, var_IN, conn_IN);
       break;
@@ -95,9 +95,9 @@ void FORTE_F_WORD_TO_LWORD::readInputData(TEventID pa_nEIID) {
   }
 }
 
-void FORTE_F_WORD_TO_LWORD::writeOutputData(TEventID pa_nEIID) {
-  switch(pa_nEIID) {
-    case scm_nEventCNFID: {
+void FORTE_F_WORD_TO_LWORD::writeOutputData(TEventID paEIID) {
+  switch(paEIID) {
+    case scmEventCNFID: {
       RES_DATA_CON_CRITICAL_REGION();
       writeData(0, var_OUT, conn_OUT);
       break;

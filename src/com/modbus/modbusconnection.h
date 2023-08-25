@@ -31,9 +31,9 @@ class CModbusConnection : public CThread{
     explicit CModbusConnection(CModbusHandler* pa_modbusHandler);
     ~CModbusConnection() override;
 
-    virtual int readData(CModbusIOBlock* pa_pIOBlock, void* pa_pData, unsigned int pa_nMaxDataSize) = 0;
-    int writeData(CModbusIOBlock* pa_pIOBlock, const void* pa_pData, unsigned int pa_nDataSize);
-    virtual void writeDataRange(EModbusFunction pa_eFunction, unsigned int pa_nStartAddress, unsigned int pa_nNrAddresses, const void *pa_pData) = 0;
+    virtual int readData(CModbusIOBlock* paIOBlock, void* paData, unsigned int paMaxDataSize) = 0;
+    int writeData(CModbusIOBlock* paIOBlock, const void* paData, unsigned int paDataSize);
+    virtual void writeDataRange(EModbusFunction paFunction, unsigned int paStartAddress, unsigned int paNrAddresses, const void *paData) = 0;
     void run() override = 0;
 
     /*! \brief Initializes Modbus connection
@@ -49,40 +49,40 @@ class CModbusConnection : public CThread{
      */
     virtual void disconnect();
 
-    void setIPAddress(const char* pa_poIPAddress);
-    void setPort(unsigned int pa_nPort);
+    void setIPAddress(const char* paIPAddress);
+    void setPort(unsigned int paPort);
 
-    void setDevice(const char* pa_chDevice);
-    void setBaud(int pa_nBaud);
-    void setParity(char pa_cParity);
-    void setDataBit(int pa_nDataBit);
-    void setStopBit(int pa_nStopBit);
-    void setFlowControl(EModbusFlowControl pa_enFlowControl);
-    void setResponseTimeout(unsigned int pa_nResponseTimeout);
-    void setByteTimeout(unsigned int pa_nByteTimeout);
+    void setDevice(const char* paDevice);
+    void setBaud(int paBaud);
+    void setParity(char paParity);
+    void setDataBit(int paDataBit);
+    void setStopBit(int paStopBit);
+    void setFlowControl(EModbusFlowControl paFlowControl);
+    void setResponseTimeout(unsigned int paResponseTimeout);
+    void setByteTimeout(unsigned int paByteTimeout);
 
   protected:
-    modbus_t* m_pModbusConn;
-    CModbusHandler* m_pModbusHandler;
+    modbus_t* mModbusConn;
+    CModbusHandler* mModbusHandler;
 
-    bool m_bConnected;
+    bool mConnected;
 
-    const char* getDevice() const { return m_chDevice; }
-    EModbusFlowControl getFlowControl() const { return m_enFlowControl; }
+    const char* getDevice() const { return mDevice; }
+    EModbusFlowControl getFlowControl() const { return mFlowControl; }
 
   private:
-    const char* m_paIPAddress;
-    unsigned int m_nPort;
+    const char* mIPAddress;
+    unsigned int mPort;
 
-    char m_chDevice[256];
-    int m_nBaud;
-    char m_cParity;
-    int m_nDataBit;
-    int m_nStopBit;
-    EModbusFlowControl m_enFlowControl;
+    char mDevice[256];
+    int mBaud;
+    char mParity;
+    int mDataBit;
+    int mStopBit;
+    EModbusFlowControl mFlowControl;
 
-    unsigned int m_nResponseTimeout;
-    unsigned int m_nByteTimeout;
+    unsigned int mResponseTimeout;
+    unsigned int mByteTimeout;
 };
 
 #endif  // _MODBUSCONNECTION_H_

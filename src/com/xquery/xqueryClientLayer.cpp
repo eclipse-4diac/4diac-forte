@@ -21,7 +21,7 @@ extern "C" {
 using namespace forte::com_infra;
 const char *CXqueryClientLayer::scmParameterSeperator = " ;:";
 
-CXqueryClientLayer::CXqueryClientLayer(CComLayer* pa_poUpperLayer, CBaseCommFB* pa_poComFB) : CComLayer(pa_poUpperLayer, pa_poComFB){
+CXqueryClientLayer::CXqueryClientLayer(CComLayer* paUpperLayer, CBaseCommFB* paComFB) : CComLayer(paUpperLayer, paComFB){
   sfd = -1;
   command = nullptr;
   host = nullptr;
@@ -33,9 +33,9 @@ CXqueryClientLayer::CXqueryClientLayer(CComLayer* pa_poUpperLayer, CBaseCommFB* 
 
 CXqueryClientLayer::~CXqueryClientLayer() = default;
 
-bool CXqueryClientLayer::parseParameters(char *pa_acLayerParameter){
+bool CXqueryClientLayer::parseParameters(char *paLayerParameter){
   bool retVal = true;
-  host = strtok(pa_acLayerParameter, scmParameterSeperator);
+  host = strtok(paLayerParameter, scmParameterSeperator);
   port = strtok(nullptr, scmParameterSeperator);
   dbName = strtok(nullptr, scmParameterSeperator);
   usr = strtok(nullptr, scmParameterSeperator);
@@ -46,9 +46,9 @@ bool CXqueryClientLayer::parseParameters(char *pa_acLayerParameter){
   return retVal;
 }
 
-forte::com_infra::EComResponse CXqueryClientLayer::openConnection(char *pa_acLayerParameter){
+forte::com_infra::EComResponse CXqueryClientLayer::openConnection(char *paLayerParameter){
   EComResponse retVal = e_InitTerminated;
-  if(e_Client == m_poFb->getComServiceType() && m_poFb->getNumRD() == 1 && m_poFb->getNumSD() == 1 && parseParameters(pa_acLayerParameter)){
+  if(e_Client == mFb->getComServiceType() && mFb->getNumRD() == 1 && mFb->getNumSD() == 1 && parseParameters(paLayerParameter)){
     sfd = basex_connect(host, port);
     if (sfd == -1) {
       DEVLOG_ERROR("Can not connect to BaseX server.\n");
@@ -57,7 +57,7 @@ forte::com_infra::EComResponse CXqueryClientLayer::openConnection(char *pa_acLay
       if (rc == -1) {
         DEVLOG_ERROR("Access to DB denied.\n");
       }else{
-        m_poFb->QO() = CIEC_BOOL(true);
+        mFb->QO() = CIEC_BOOL(true);
         DEVLOG_INFO("Connected to DB.\n");
         openDB();
         retVal = e_InitOk;
@@ -95,12 +95,12 @@ void CXqueryClientLayer::closeConnection(){
   }
 }
 
-forte::com_infra::EComResponse CXqueryClientLayer::sendData(void *pa_pvData, unsigned int pa_unSize){
+forte::com_infra::EComResponse CXqueryClientLayer::sendData(void *paData, unsigned int paSize){
   EComResponse retVal = e_ProcessDataOk;
-  if(0 == pa_unSize){
+  if(0 == paSize){
     retVal = e_ProcessDataInvalidObject;
   }else{
-    CIEC_ANY const *SDs(static_cast<TConstIEC_ANYPtr>(pa_pvData));
+    CIEC_ANY const *SDs(static_cast<TConstIEC_ANYPtr>(paData));
     if(SDs[0].getDataTypeID() == CIEC_ANY::e_STRING){
       command = ((CIEC_STRING &)SDs[0]).getValue();
       getExtEvHandler<CXqueryHandler>().registerLayer(this);
@@ -111,11 +111,11 @@ forte::com_infra::EComResponse CXqueryClientLayer::sendData(void *pa_pvData, uns
   return retVal;
 }
 
-forte::com_infra::EComResponse CXqueryClientLayer::recvData(const void *pa_pvData, unsigned int pa_unSize){
+forte::com_infra::EComResponse CXqueryClientLayer::recvData(const void *paData, unsigned int paSize){
   EComResponse retVal = e_Nothing;
-  if(pa_unSize > 0) {
-    m_poFb->getRDs()[0]->fromString(static_cast<const char *>(pa_pvData));
-    m_poFb->interruptCommFB(this);
+  if(paSize > 0) {
+    mFb->getRDs()[0]->fromString(static_cast<const char *>(paData));
+    mFb->interruptCommFB(this);
     retVal = e_ProcessDataOk;
   }
   return retVal;

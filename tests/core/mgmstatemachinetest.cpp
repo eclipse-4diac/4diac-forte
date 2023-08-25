@@ -29,7 +29,7 @@ class CFunctionBlockMock : public CFunctionBlock{
     }
 
     virtual CStringDictionary::TStringId getFBTypeId() const{
-      return CStringDictionary::scm_nInvalidStringId;
+      return CStringDictionary::scmInvalidStringId;
     }
 
   private:

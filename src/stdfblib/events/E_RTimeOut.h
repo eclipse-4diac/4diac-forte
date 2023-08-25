@@ -26,30 +26,30 @@ class FORTE_E_RTimeOut: public CCompositeFB {
   DECLARE_FIRMWARE_FB(FORTE_E_RTimeOut)
 
 private:
-  static const int scm_nTimeOutSocketAdpNum = 0;
+  static const int scmTimeOutSocketAdpNum = 0;
   
-  static const SAdapterInstanceDef scm_astAdapterInstances[];
+  static const SAdapterInstanceDef scmAdapterInstances[];
 
-  static const SFBInterfaceSpec scm_stFBInterfaceSpec;
+  static const SFBInterfaceSpec scmFBInterfaceSpec;
 
-  static const SCFB_FBInstanceData scm_astInternalFBs[];
-  static const SCFB_FBParameter scm_astParamters[];
-  static const SCFB_FBConnectionData scm_astEventConnections[];
-  static const SCFB_FBFannedOutConnectionData scm_astFannedOutEventConnections[];
-  static const SCFB_FBConnectionData scm_astDataConnections[];
-  static const SCFB_FBFannedOutConnectionData scm_astFannedOutDataConnections[];
-  static const SCFB_FBNData scm_stFBNData;
+  static const SCFB_FBInstanceData scmInternalFBs[];
+  static const SCFB_FBParameter scmParamters[];
+  static const SCFB_FBConnectionData scmEventConnections[];
+  static const SCFB_FBFannedOutConnectionData scmFannedOutEventConnections[];
+  static const SCFB_FBConnectionData scmDataConnections[];
+  static const SCFB_FBFannedOutConnectionData scmFannedOutDataConnections[];
+  static const SCFB_FBNData scmFBNData;
 
-  void readInputData(TEventID pa_nEIID) override;
-  void writeOutputData(TEventID pa_nEIID) override;
+  void readInputData(TEventID paEIID) override;
+  void writeOutputData(TEventID paEIID) override;
 
 public:
-  FORTE_E_RTimeOut(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes);
+  FORTE_E_RTimeOut(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
 
   CIEC_ANY *getDI(size_t) override;
   CIEC_ANY *getDO(size_t) override;
   FORTE_ARTimeOut &var_TimeOutSocket() {
-    return *static_cast<FORTE_ARTimeOut*>(m_apoAdapters[0]);
+    return *static_cast<FORTE_ARTimeOut*>(mAdapters[0]);
   };
   
   CEventConnection *getEOConUnchecked(TPortId) override;

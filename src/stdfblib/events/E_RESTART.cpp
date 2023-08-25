@@ -19,23 +19,23 @@
 
 DEFINE_FIRMWARE_FB(E_RESTART, g_nStringIdE_RESTART)
 
-const CStringDictionary::TStringId E_RESTART::scm_aunEONameIds[] = {g_nStringIdCOLD, g_nStringIdWARM, g_nStringIdSTOP};
+const CStringDictionary::TStringId E_RESTART::scmEONameIds[] = {g_nStringIdCOLD, g_nStringIdWARM, g_nStringIdSTOP};
 
 const TEventID E_RESTART::csmCOLDID;
 const TEventID E_RESTART::csmWARMID;
 const TEventID E_RESTART::csmSTOPID;
 
-const SFBInterfaceSpec E_RESTART::scm_stFBInterfaceSpec = {
+const SFBInterfaceSpec E_RESTART::scmFBInterfaceSpec = {
   0, nullptr, nullptr, nullptr,
-  3, scm_aunEONameIds, nullptr, nullptr,
+  3, scmEONameIds, nullptr, nullptr,
   0, nullptr, nullptr,
   0, nullptr, nullptr,
   0, nullptr,
   0, nullptr
 };
 
-void E_RESTART::executeEvent(TEventID pa_nEIID) {
-  if(cg_nExternalEventID == pa_nEIID && cg_nInvalidEventID != mEventToSend) {
+void E_RESTART::executeEvent(TEventID paEIID) {
+  if(cg_nExternalEventID == paEIID && cg_nInvalidEventID != mEventToSend) {
     sendOutputEvent(mEventToSend);
     if(csmSTOPID == mEventToSend) {
       //stop event is sent put the FB finally into the stopped state
@@ -46,10 +46,10 @@ void E_RESTART::executeEvent(TEventID pa_nEIID) {
   }
 }
 
-EMGMResponse E_RESTART::changeFBExecutionState(EMGMCommandType pa_unCommand){
-  EMGMResponse eRetVal = CFunctionBlock::changeFBExecutionState(pa_unCommand);
+EMGMResponse E_RESTART::changeFBExecutionState(EMGMCommandType paCommand){
+  EMGMResponse eRetVal = CFunctionBlock::changeFBExecutionState(paCommand);
   if(EMGMResponse::Ready == eRetVal){
-    switch(pa_unCommand){
+    switch(paCommand){
       case EMGMCommandType::Start:
         mEventToSend = (csmSTOPID == mEventToSend) ? csmWARMID : csmCOLDID;
         getResource().getDevice().getDeviceExecution().startNewEventChain(this);

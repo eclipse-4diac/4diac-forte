@@ -35,9 +35,9 @@ class CTXTimerHandler : public CTimerHandler{
     void disableHandler() override;
     /*!\brief Sets the priority of the event source
      *
-     * \param pa_nPriority new priority of the event source
+     * \param paPriority new priority of the event source
      */
-    void setPriority(int pa_nPriority) override;
+    void setPriority(int paPriority) override;
     /*!\brief Get the current priority of the event source
      *
      * \return current priority
@@ -53,9 +53,9 @@ class CTXTimerHandler : public CTimerHandler{
     }
     ;
 
-    explicit CTXTimerHandler(CDeviceExecution& pa_poDeviceExecution);
+    explicit CTXTimerHandler(CDeviceExecution& paDeviceExecution);
 
-    TX_TIMER m_stTimer;
+    TX_TIMER mTimer;
 
     friend class CTimerHandler;
 };

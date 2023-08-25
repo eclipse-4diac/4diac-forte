@@ -33,8 +33,8 @@ class GEN_CSV_WRITER : public CGenFunctionBlock<CFunctionBlock> {
       return *static_cast<CIEC_STRING*>(getDI(1));
     }
 
-    static const CStringDictionary::TStringId scm_anDataOutputNames[];
-    static const CStringDictionary::TStringId scm_anDataOutputTypeIds[];
+    static const CStringDictionary::TStringId scmDataOutputNames[];
+    static const CStringDictionary::TStringId scmDataOutputTypeIds[];
     CIEC_BOOL &QO(){
       return *static_cast<CIEC_BOOL*>(getDO(0));
     }
@@ -45,13 +45,13 @@ class GEN_CSV_WRITER : public CGenFunctionBlock<CFunctionBlock> {
     }
     ;
 
-    static const TEventID scm_nEventINITID = 0;
-    static const TEventID scm_nEventREQID = 1;
-    static const CStringDictionary::TStringId scm_anEventInputNames[];
+    static const TEventID scmEventINITID = 0;
+    static const TEventID scmEventREQID = 1;
+    static const CStringDictionary::TStringId scmEventInputNames[];
 
-    static const TEventID scm_nEventINITOID = 0;
-    static const TEventID scm_nEventCNFID = 1;
-    static const CStringDictionary::TStringId scm_anEventOutputNames[];
+    static const TEventID scmEventINITOID = 0;
+    static const TEventID scmEventCNFID = 1;
+    static const CStringDictionary::TStringId scmEventOutputNames[];
 
     void executeEvent(TEventID paEIID) override;
 
@@ -72,8 +72,8 @@ class GEN_CSV_WRITER : public CGenFunctionBlock<CFunctionBlock> {
 
     FILE *mCSVFile;
 
-    CStringDictionary::TStringId *m_anDataInputNames;
-    CStringDictionary::TStringId *m_anDataInputTypeIds;
+    CStringDictionary::TStringId *mDataInputNames;
+    CStringDictionary::TStringId *mDataInputTypeIds;
 
     static const CIEC_STRING scmOK;
     static const CIEC_STRING scmFileAlreadyOpened;

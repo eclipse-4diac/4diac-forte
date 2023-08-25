@@ -17,13 +17,13 @@ class COpcConnectionImpl;
 
 class CCmd_AddConnection : public ICmd{
   public:
-    explicit CCmd_AddConnection(COpcConnectionImpl *pa_pConnection);
+    explicit CCmd_AddConnection(COpcConnectionImpl *paConnection);
     ~CCmd_AddConnection() override;
 
     void runCommand() override;
     const char* getCommandName() const override;
   private:
-    COpcConnectionImpl* m_pConnection;
+    COpcConnectionImpl* mConnection;
 };
 
 #endif // CMDADDCONNECTION_H_

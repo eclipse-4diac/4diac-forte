@@ -22,8 +22,8 @@ class FORTE_SET_LOCAL_ADS_ADDRESS : public CFunctionBlock{
     DECLARE_FIRMWARE_FB (FORTE_SET_LOCAL_ADS_ADDRESS)
 
   private:
-    static const CStringDictionary::TStringId scm_anDataInputNames[];
-    static const CStringDictionary::TStringId scm_anDataInputTypeIds[];
+    static const CStringDictionary::TStringId scmDataInputNames[];
+    static const CStringDictionary::TStringId scmDataInputTypeIds[];
     CIEC_BOOL &QI(){
       return *static_cast<CIEC_BOOL*>(getDI(0));
     }
@@ -34,8 +34,8 @@ class FORTE_SET_LOCAL_ADS_ADDRESS : public CFunctionBlock{
     }
     ;
 
-    static const CStringDictionary::TStringId scm_anDataOutputNames[];
-    static const CStringDictionary::TStringId scm_anDataOutputTypeIds[];
+    static const CStringDictionary::TStringId scmDataOutputNames[];
+    static const CStringDictionary::TStringId scmDataOutputTypeIds[];
     CIEC_BOOL &QO(){
       return *static_cast<CIEC_BOOL*>(getDO(0));
     }
@@ -51,20 +51,20 @@ class FORTE_SET_LOCAL_ADS_ADDRESS : public CFunctionBlock{
     }
     ;
 
-    static const TEventID scm_nEventINITID = 0;
-    static const TForteInt16 scm_anEIWithIndexes[];
-    static const TDataIOID scm_anEIWith[];
-    static const CStringDictionary::TStringId scm_anEventInputNames[];
+    static const TEventID scmEventINITID = 0;
+    static const TForteInt16 scmEIWithIndexes[];
+    static const TDataIOID scmEIWith[];
+    static const CStringDictionary::TStringId scmEventInputNames[];
 
-    static const TEventID scm_nEventINITOID = 0;
-    static const TForteInt16 scm_anEOWithIndexes[];
-    static const TDataIOID scm_anEOWith[];
-    static const CStringDictionary::TStringId scm_anEventOutputNames[];
+    static const TEventID scmEventINITOID = 0;
+    static const TForteInt16 scmEOWithIndexes[];
+    static const TDataIOID scmEOWith[];
+    static const CStringDictionary::TStringId scmEventOutputNames[];
 
-    static const SFBInterfaceSpec scm_stFBInterfaceSpec;
+    static const SFBInterfaceSpec scmFBInterfaceSpec;
 
 
-    void executeEvent(TEventID pa_nEIID) override;
+    void executeEvent(TEventID paEIID) override;
 
   public:
     FUNCTION_BLOCK_CTOR (FORTE_SET_LOCAL_ADS_ADDRESS) { };

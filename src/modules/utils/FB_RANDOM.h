@@ -27,50 +27,50 @@ class FORTE_FB_RANDOM: public CBasicFB {
   DECLARE_FIRMWARE_FB(FORTE_FB_RANDOM)
 
 private:
-  static const CStringDictionary::TStringId scm_anDataInputNames[];
-  static const CStringDictionary::TStringId scm_anDataInputTypeIds[];
+  static const CStringDictionary::TStringId scmDataInputNames[];
+  static const CStringDictionary::TStringId scmDataInputTypeIds[];
   
-  static const CStringDictionary::TStringId scm_anDataOutputNames[];
-  static const CStringDictionary::TStringId scm_anDataOutputTypeIds[];
+  static const CStringDictionary::TStringId scmDataOutputNames[];
+  static const CStringDictionary::TStringId scmDataOutputTypeIds[];
   
-  static const TEventID scm_nEventINITID = 0;
-  static const TEventID scm_nEventREQID = 1;
+  static const TEventID scmEventINITID = 0;
+  static const TEventID scmEventREQID = 1;
   
-  static const TDataIOID scm_anEIWith[];
-  static const TForteInt16 scm_anEIWithIndexes[];
-  static const CStringDictionary::TStringId scm_anEventInputNames[];
+  static const TDataIOID scmEIWith[];
+  static const TForteInt16 scmEIWithIndexes[];
+  static const CStringDictionary::TStringId scmEventInputNames[];
   
-  static const TEventID scm_nEventINITOID = 0;
-  static const TEventID scm_nEventCNFID = 1;
+  static const TEventID scmEventINITOID = 0;
+  static const TEventID scmEventCNFID = 1;
   
-  static const TDataIOID scm_anEOWith[]; 
-  static const TForteInt16 scm_anEOWithIndexes[];
-  static const CStringDictionary::TStringId scm_anEventOutputNames[];
+  static const TDataIOID scmEOWith[]; 
+  static const TForteInt16 scmEOWithIndexes[];
+  static const CStringDictionary::TStringId scmEventOutputNames[];
   
 
-  static const SFBInterfaceSpec scm_stFBInterfaceSpec;
+  static const SFBInterfaceSpec scmFBInterfaceSpec;
   CIEC_ANY *getVarInternal(size_t) override;
   void alg_INIT(void);
   void alg_REQ(void);
-  static const TForteInt16 scm_nStateSTART = 0;
-  static const TForteInt16 scm_nStateREQ = 1;
-  static const TForteInt16 scm_nStateState = 2;
+  static const TForteInt16 scmStateSTART = 0;
+  static const TForteInt16 scmStateREQ = 1;
+  static const TForteInt16 scmStateState = 2;
   
   void enterStateSTART(void);
   void enterStateREQ(void);
   void enterStateState(void);
 
-  void executeEvent(TEventID pa_nEIID) override;
+  void executeEvent(TEventID paEIID) override;
 
-  void readInputData(TEventID pa_nEIID) override;
-  void writeOutputData(TEventID pa_nEIID) override;
+  void readInputData(TEventID paEIID) override;
+  void writeOutputData(TEventID paEIID) override;
 
   std::random_device mRandomDevice;  // Will be used to obtain a seed for the random number engine
   std::mt19937 mRandomGenerator; // Standard mersenne_twister_engine 
   std::uniform_real_distribution<float> mDistribution;
 
 public:
-  FORTE_FB_RANDOM(CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes);
+  FORTE_FB_RANDOM(CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
 
 
   CIEC_UINT var_SEED;
@@ -90,12 +90,12 @@ public:
   
   void evt_INIT(const CIEC_UINT &pa_SEED, CIEC_REAL &pa_VAL) {
     var_SEED = pa_SEED;
-    receiveInputEvent(scm_nEventINITID, nullptr);
+    receiveInputEvent(scmEventINITID, nullptr);
     pa_VAL = var_VAL;
   }
   void evt_REQ(const CIEC_UINT &pa_SEED, CIEC_REAL &pa_VAL) {
     var_SEED = pa_SEED;
-    receiveInputEvent(scm_nEventREQID, nullptr);
+    receiveInputEvent(scmEventREQID, nullptr);
     pa_VAL = var_VAL;
   }
   

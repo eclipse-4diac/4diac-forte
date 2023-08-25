@@ -31,7 +31,7 @@ namespace forte {
          *
          * The TSN layer configures the publisher's UDP socket to include VLAN id and priority
          *
-         * @param pa_acLayerParameter configuration data for this layer
+         * @param paLayerParameter configuration data for this layer
          * @return status of the opening process
          *      - e_InitOk if the opening process was successful
          *      - e_InitInvalidId if the opening process was not successful

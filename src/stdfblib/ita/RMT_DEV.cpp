@@ -16,20 +16,20 @@
 #endif
 #include <stringdict.h>
 
-const CStringDictionary::TStringId RMT_DEV::scm_aunDINameIds[] = { g_nStringIdMGR_ID };
-const CStringDictionary::TStringId RMT_DEV::scm_aunDIDataTypeIds[] = {g_nStringIdWSTRING};
+const CStringDictionary::TStringId RMT_DEV::scmDINameIds[] = { g_nStringIdMGR_ID };
+const CStringDictionary::TStringId RMT_DEV::scmDIDataTypeIds[] = {g_nStringIdWSTRING};
 
-const SFBInterfaceSpec RMT_DEV::scm_stFBInterfaceSpec = {
+const SFBInterfaceSpec RMT_DEV::scmFBInterfaceSpec = {
   0, nullptr, nullptr, nullptr,
   0, nullptr, nullptr, nullptr,
-  1, scm_aunDINameIds, scm_aunDIDataTypeIds,
+  1, scmDINameIds, scmDIDataTypeIds,
   0, nullptr, nullptr,
   0, nullptr,
   0, nullptr
 };
 
 RMT_DEV::RMT_DEV() :
-  CDevice(&scm_stFBInterfaceSpec, CStringDictionary::scm_nInvalidStringId),
+  CDevice(&scmFBInterfaceSpec, CStringDictionary::scmInvalidStringId),
       MGR(g_nStringIdMGR, this){
 }
 
@@ -41,8 +41,8 @@ bool RMT_DEV::initialize() {
   MGR_ID().fromString("localhost:61499");
 
   //we nee to manually crate this interface2internal connection as the MGR is not managed by device
-  m_oDConnMGR_ID.setSource(this, 0);
-  m_oDConnMGR_ID.connect(&MGR, g_nStringIdMGR_ID);
+  mDConnMGR_ID.setSource(this, 0);
+  mDConnMGR_ID.connect(&MGR, g_nStringIdMGR_ID);
   return true;
 }
 
@@ -54,14 +54,14 @@ int RMT_DEV::startDevice(){
   return 0;
 }
 
-EMGMResponse RMT_DEV::changeFBExecutionState(EMGMCommandType pa_unCommand){
-  EMGMResponse eRetVal = CDevice::changeFBExecutionState(pa_unCommand);
-  if((EMGMResponse::Ready == eRetVal) && (EMGMCommandType::Kill == pa_unCommand)){
+EMGMResponse RMT_DEV::changeFBExecutionState(EMGMCommandType paCommand){
+  EMGMResponse eRetVal = CDevice::changeFBExecutionState(paCommand);
+  if((EMGMResponse::Ready == eRetVal) && (EMGMCommandType::Kill == paCommand)){
     MGR.changeFBExecutionState(EMGMCommandType::Kill);
   }
   return eRetVal;
 }
 
-void RMT_DEV::setMGR_ID(const char * const pa_acConn){
-  MGR_ID().fromString(pa_acConn);
+void RMT_DEV::setMGR_ID(const char * const paConn){
+  MGR_ID().fromString(paConn);
 }

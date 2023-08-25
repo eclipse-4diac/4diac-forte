@@ -32,13 +32,13 @@ class CEventChainExecutionThread : public CThread{
     /*!\brief Start the a new event chain with the given event.
      *
      *
-     * \param pa_poEventToAdd event of the EC to start
+     * \param paEventToAdd event of the EC to start
      */
     void startEventChain(TEventEntry paEventToAdd);
 
     /*!\brief Add an new event entry to the event chain
      *
-     * \param pa_poEventToAdd new event entry
+     * \param paEventToAdd new event entry
      */
     void addEventEntry(TEventEntry paEventToAdd){
       if(!mEventList.push(paEventToAdd)){
@@ -48,7 +48,7 @@ class CEventChainExecutionThread : public CThread{
 
     /*!\brief allow to start, stop, and kill the execution of the event chain execution thread
      *
-     * @param pa_unCommand the management command to be executed
+     * @param paCommand the management command to be executed
      */
     void changeExecutionState(EMGMCommandType paCommand);
 
@@ -91,7 +91,7 @@ class CEventChainExecutionThread : public CThread{
 
     bool externalEventOccured() const {
       /* we should not need a protection here as we are just comparing the both
-       * the only value that could change during the compare is m_pstExternalEventListEnd. In the worst case
+       * the only value that could change during the compare is mExternalEventListEnd. In the worst case
        * this results in a to early or to late detection. However as the transfer is protected this should be no
        * big issue.
        * TODO perform test to verify this assumption

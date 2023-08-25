@@ -17,33 +17,33 @@
 
 DEFINE_ADAPTER_TYPE(FORTE_QueryServicesAdp, g_nStringIdQueryServicesAdp)
 
-const CStringDictionary::TStringId FORTE_QueryServicesAdp::scm_anDataInputNames[] = {g_nStringIdserviceEntries};
+const CStringDictionary::TStringId FORTE_QueryServicesAdp::scmDataInputNames[] = {g_nStringIdserviceEntries};
 
-const CStringDictionary::TStringId FORTE_QueryServicesAdp::scm_anDataInputTypeIds[] = {g_nStringIdARRAY, 10, g_nStringIdServiceRegistryEntry};
+const CStringDictionary::TStringId FORTE_QueryServicesAdp::scmDataInputTypeIds[] = {g_nStringIdARRAY, 10, g_nStringIdServiceRegistryEntry};
 
-const CStringDictionary::TStringId FORTE_QueryServicesAdp::scm_anDataOutputNames[] = {g_nStringIdserviceQueryForm, g_nStringIdendpoint};
+const CStringDictionary::TStringId FORTE_QueryServicesAdp::scmDataOutputNames[] = {g_nStringIdserviceQueryForm, g_nStringIdendpoint};
 
-const CStringDictionary::TStringId FORTE_QueryServicesAdp::scm_anDataOutputTypeIds[] = {g_nStringIdServiceQueryForm, g_nStringIdWSTRING};
+const CStringDictionary::TStringId FORTE_QueryServicesAdp::scmDataOutputTypeIds[] = {g_nStringIdServiceQueryForm, g_nStringIdWSTRING};
 
-const TDataIOID FORTE_QueryServicesAdp::scm_anEIWith[] = {0, scmWithListDelimiter};
-const TForteInt16 FORTE_QueryServicesAdp::scm_anEIWithIndexes[] = {0, -1};
-const CStringDictionary::TStringId FORTE_QueryServicesAdp::scm_anEventInputNames[] = {g_nStringIdqueried};
+const TDataIOID FORTE_QueryServicesAdp::scmEIWith[] = {0, scmWithListDelimiter};
+const TForteInt16 FORTE_QueryServicesAdp::scmEIWithIndexes[] = {0, -1};
+const CStringDictionary::TStringId FORTE_QueryServicesAdp::scmEventInputNames[] = {g_nStringIdqueried};
 
-const TDataIOID FORTE_QueryServicesAdp::scm_anEOWith[] = {0, 1, scmWithListDelimiter};
-const TForteInt16 FORTE_QueryServicesAdp::scm_anEOWithIndexes[] = {0, -1};
-const CStringDictionary::TStringId FORTE_QueryServicesAdp::scm_anEventOutputNames[] = {g_nStringIdquery};
+const TDataIOID FORTE_QueryServicesAdp::scmEOWith[] = {0, 1, scmWithListDelimiter};
+const TForteInt16 FORTE_QueryServicesAdp::scmEOWithIndexes[] = {0, -1};
+const CStringDictionary::TStringId FORTE_QueryServicesAdp::scmEventOutputNames[] = {g_nStringIdquery};
 
-const SFBInterfaceSpec FORTE_QueryServicesAdp::scm_stFBInterfaceSpecSocket = {
-  1,  scm_anEventInputNames,  scm_anEIWith,  scm_anEIWithIndexes,
-  1,  scm_anEventOutputNames,  scm_anEOWith, scm_anEOWithIndexes,  1,  scm_anDataInputNames, scm_anDataInputTypeIds,
-  2,  scm_anDataOutputNames, scm_anDataOutputTypeIds,
+const SFBInterfaceSpec FORTE_QueryServicesAdp::scmFBInterfaceSpecSocket = {
+  1,  scmEventInputNames,  scmEIWith,  scmEIWithIndexes,
+  1,  scmEventOutputNames,  scmEOWith, scmEOWithIndexes,  1,  scmDataInputNames, scmDataInputTypeIds,
+  2,  scmDataOutputNames, scmDataOutputTypeIds,
   0, 0
 };
 
-const SFBInterfaceSpec FORTE_QueryServicesAdp::scm_stFBInterfaceSpecPlug = {
-  1,  scm_anEventOutputNames,  scm_anEOWith,  scm_anEOWithIndexes,
-  1,  scm_anEventInputNames,  scm_anEIWith, scm_anEIWithIndexes,  2,  scm_anDataOutputNames, scm_anDataOutputTypeIds,
-  1,  scm_anDataInputNames, scm_anDataInputTypeIds,
+const SFBInterfaceSpec FORTE_QueryServicesAdp::scmFBInterfaceSpecPlug = {
+  1,  scmEventOutputNames,  scmEOWith,  scmEOWithIndexes,
+  1,  scmEventInputNames,  scmEIWith, scmEIWithIndexes,  2,  scmDataOutputNames, scmDataOutputTypeIds,
+  1,  scmDataInputNames, scmDataInputTypeIds,
   0, 0
 };
 

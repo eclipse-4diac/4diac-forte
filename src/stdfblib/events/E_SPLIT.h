@@ -25,29 +25,29 @@ class FORTE_E_SPLIT: public CBasicFB {
   DECLARE_FIRMWARE_FB(FORTE_E_SPLIT)
 
 private:
-  static const TEventID scm_nEventEIID = 0;
-  static const TForteInt16 scm_anEIWithIndexes[];
-  static const CStringDictionary::TStringId scm_anEventInputNames[];
-  static const TEventID scm_nEventEO1ID = 0;
-  static const TEventID scm_nEventEO2ID = 1;
-  static const TForteInt16 scm_anEOWithIndexes[];
-  static const CStringDictionary::TStringId scm_anEventOutputNames[];
+  static const TEventID scmEventEIID = 0;
+  static const TForteInt16 scmEIWithIndexes[];
+  static const CStringDictionary::TStringId scmEventInputNames[];
+  static const TEventID scmEventEO1ID = 0;
+  static const TEventID scmEventEO2ID = 1;
+  static const TForteInt16 scmEOWithIndexes[];
+  static const CStringDictionary::TStringId scmEventOutputNames[];
 
-  static const SFBInterfaceSpec scm_stFBInterfaceSpec;
+  static const SFBInterfaceSpec scmFBInterfaceSpec;
   CIEC_ANY *getVarInternal(size_t) override;
-  static const TForteInt16 scm_nStateSTART = 0;
-  static const TForteInt16 scm_nStateState = 1;
+  static const TForteInt16 scmStateSTART = 0;
+  static const TForteInt16 scmStateState = 1;
   
   void enterStateSTART(void);
   void enterStateState(void);
 
-  void executeEvent(TEventID pa_nEIID) override;
+  void executeEvent(TEventID paEIID) override;
 
-  void readInputData(TEventID pa_nEIID) override;
-  void writeOutputData(TEventID pa_nEIID) override;
+  void readInputData(TEventID paEIID) override;
+  void writeOutputData(TEventID paEIID) override;
 
 public:
-  FORTE_E_SPLIT(CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes);
+  FORTE_E_SPLIT(CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
 
   CEventConnection conn_EO1;
   CEventConnection conn_EO2;
@@ -57,7 +57,7 @@ public:
   CDataConnection **getDIConUnchecked(TPortId) override;
   CDataConnection *getDOConUnchecked(TPortId) override;
   void evt_EI() {
-    receiveInputEvent(scm_nEventEIID, nullptr);
+    receiveInputEvent(scmEventEIID, nullptr);
   }
   void operator()() {
     evt_EI();

@@ -47,28 +47,28 @@ namespace CONMELEON {
  *   8 bits per word is fine on most systems except for some low speed devices like LCD displays
  *   1000000 bits per second is a good choice
  */
-CSpiDevice::CSpiDevice(const char* sDevice) : m_nBitsPerWord(8), m_nSpeed(1000000), m_enMode(SPIMODE0) {
+CSpiDevice::CSpiDevice(const char* sDevice) : mBitsPerWord(8), mSpeed(1000000), mMode(SPIMODE0) {
 
-  m_bValid = openAndConfigureBus(sDevice);
+  mValid = openAndConfigureBus(sDevice);
 }
 
 CSpiDevice::CSpiDevice(const char* sDevice, unsigned int nSpeed, ESpiMode enMode)
-  : m_nBitsPerWord(8), m_nSpeed(nSpeed), m_enMode(enMode) {
+  : mBitsPerWord(8), mSpeed(nSpeed), mMode(enMode) {
 
-  m_bValid = openAndConfigureBus(sDevice);
+  mValid = openAndConfigureBus(sDevice);
 }
 
 CSpiDevice::~CSpiDevice() {
 
-  close(m_nFileDescriptor);
+  close(mFileDescriptor);
 }
 
 bool CSpiDevice::openAndConfigureBus(const char* sDevice) {
 
   // open the SPI device, e.g. /dev/spidev0.0
   // in normal linux system configuration, you need to have root privileges to do that
-  m_nFileDescriptor = open(sDevice, O_RDWR);
-  if (m_nFileDescriptor < 0) {
+  mFileDescriptor = open(sDevice, O_RDWR);
+  if (mFileDescriptor < 0) {
     // opening the device failed, so there is no need to continue
     // TODO: add logging and error handling
     return false;
@@ -77,7 +77,7 @@ bool CSpiDevice::openAndConfigureBus(const char* sDevice) {
 
     bool  bStateOk = false; //this value is not used until line 85 when is re-assigned, but not defined there because in 82 there's work to do.
     // setting the SPI mode and read back
-    int nRetVal = ioctl(m_nFileDescriptor, SPI_IOC_WR_MODE, &m_enMode);
+    int nRetVal = ioctl(mFileDescriptor, SPI_IOC_WR_MODE, &mMode);
 
     if (nRetVal < 0) {
       // TODO: add logging and error handling
@@ -85,7 +85,7 @@ bool CSpiDevice::openAndConfigureBus(const char* sDevice) {
 
     bStateOk = (nRetVal >= 0);
 
-    nRetVal = ioctl(m_nFileDescriptor, SPI_IOC_RD_MODE, &m_enMode);
+    nRetVal = ioctl(mFileDescriptor, SPI_IOC_RD_MODE, &mMode);
 
     if (nRetVal < 0) {
       // TODO: add logging and error handling
@@ -95,7 +95,7 @@ bool CSpiDevice::openAndConfigureBus(const char* sDevice) {
     bStateOk = bStateOk && (nRetVal >= 0);
 
     // setting the SPI bits per word
-    nRetVal = ioctl(m_nFileDescriptor, SPI_IOC_WR_BITS_PER_WORD, &m_nBitsPerWord);
+    nRetVal = ioctl(mFileDescriptor, SPI_IOC_WR_BITS_PER_WORD, &mBitsPerWord);
 
     if (nRetVal < 0) {
       // TODO: add logging and error handling
@@ -103,7 +103,7 @@ bool CSpiDevice::openAndConfigureBus(const char* sDevice) {
 
     bStateOk = bStateOk && (nRetVal >= 0);
 
-    nRetVal = ioctl(m_nFileDescriptor, SPI_IOC_RD_BITS_PER_WORD, &m_nBitsPerWord);
+    nRetVal = ioctl(mFileDescriptor, SPI_IOC_RD_BITS_PER_WORD, &mBitsPerWord);
 
     if (nRetVal < 0) {
       // TODO: add logging and error handling
@@ -112,7 +112,7 @@ bool CSpiDevice::openAndConfigureBus(const char* sDevice) {
     bStateOk = bStateOk && (nRetVal >= 0);
 
     // setting the SPI speed
-    nRetVal = ioctl(m_nFileDescriptor, SPI_IOC_WR_MAX_SPEED_HZ, &m_nSpeed);
+    nRetVal = ioctl(mFileDescriptor, SPI_IOC_WR_MAX_SPEED_HZ, &mSpeed);
 
     if (nRetVal < 0) {
       // TODO: add logging and error handling
@@ -120,7 +120,7 @@ bool CSpiDevice::openAndConfigureBus(const char* sDevice) {
 
     bStateOk = bStateOk && (nRetVal >= 0);
 
-    nRetVal = ioctl(m_nFileDescriptor, SPI_IOC_RD_MAX_SPEED_HZ, &m_nSpeed);
+    nRetVal = ioctl(mFileDescriptor, SPI_IOC_RD_MAX_SPEED_HZ, &mSpeed);
 
     if (nRetVal < 0) {
       // TODO: add logging and error handling
@@ -135,9 +135,9 @@ bool CSpiDevice::openAndConfigureBus(const char* sDevice) {
 bool CSpiDevice::write(const unsigned char* paData, int nLength) {
 
   // check input parameters before writing anything
-  if ((paData != nullptr) && m_bValid && ( nLength > 0 )) {
+  if ((paData != nullptr) && mValid && ( nLength > 0 )) {
     // call write() method of linux/spi/spidev.h
-     ssize_t nRetVal = ::write(m_nFileDescriptor, paData, nLength);
+     ssize_t nRetVal = ::write(mFileDescriptor, paData, nLength);
 
     // no logging here, because write() might be called often and will flood the error output stream
     return (nRetVal >= 0);
@@ -151,9 +151,9 @@ bool CSpiDevice::write(const unsigned char* paData, int nLength) {
 bool CSpiDevice::read(unsigned char* paData, int nLength) {
 
   // check input parameters before reading anything
-  if ((paData != nullptr) && m_bValid && ( nLength > 0 )) {
+  if ((paData != nullptr) && mValid && ( nLength > 0 )) {
     // call read() method of linux/spi/spidev.h
-     ssize_t nRetVal = ::read(m_nFileDescriptor, paData, nLength);
+     ssize_t nRetVal = ::read(mFileDescriptor, paData, nLength);
 
     // no logging here, because read() might be called often and will flood the error output stream
     return (nRetVal >= 0);
@@ -166,7 +166,7 @@ bool CSpiDevice::read(unsigned char* paData, int nLength) {
 
 bool CSpiDevice::transfer(const unsigned char* paTxData, unsigned char* paRxData, unsigned int nLength) {
 
-  if ( (nLength > 0) && m_bValid ){
+  if ( (nLength > 0) && mValid ){
     /* the struct spi_ios_transfer represents the data of a full SPI communication cycle
      * it is defined in linux/spi/spidev.h
      * paTxData is the buffer to hold the data sent and paRxData the data received
@@ -182,11 +182,11 @@ bool CSpiDevice::transfer(const unsigned char* paTxData, unsigned char* paRxData
     spiMsg.delay_usecs = 0;                  // if non zero, delay after the transmission of the last byte
                                 // before the device will be deselected, in case cs_change is true
     spiMsg.cs_change = 0;                  // set to true, if device should be deselected before new transfer starts
-    spiMsg.bits_per_word = m_nBitsPerWord;
-    spiMsg.speed_hz = m_nSpeed;
+    spiMsg.bits_per_word = mBitsPerWord;
+    spiMsg.speed_hz = mSpeed;
 
     // now hand the data over to the kernel SPI driver and read back at the same time
-    int nRetVal = ioctl (m_nFileDescriptor, SPI_IOC_MESSAGE(1), &spiMsg);
+    int nRetVal = ioctl (mFileDescriptor, SPI_IOC_MESSAGE(1), &spiMsg);
 
     // no logging here, because transfer() might be called often and will flood the error output stream
     return (nRetVal >= 0);

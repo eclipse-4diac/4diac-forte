@@ -33,9 +33,9 @@ class CECOSTimerHandler : public CTimerHandler, private CThread{
     void disableHandler() override;
     /*!\brief Sets the priority of the event source
      *
-     * \param pa_nPriority new priority of the event source
+     * \param paPriority new priority of the event source
      */
-    void setPriority(int pa_nPriority) override;
+    void setPriority(int paPriority) override;
     /*!\brief Get the current priority of the event source
      *
      * \return current priority
@@ -44,20 +44,20 @@ class CECOSTimerHandler : public CTimerHandler, private CThread{
 
   private:
 
-    static cyg_sem_t m_stSemaphore;
+    static cyg_sem_t mSemaphore;
 
     /*!\brief callback function for the system timer
      */
     static void timerHandlerFunc(cyg_handle_t , cyg_addrword_t ){
-      cyg_semaphore_post(&m_stSemaphore);
+      cyg_semaphore_post(&mSemaphore);
     }
 
-    explicit CECOSTimerHandler(CDeviceExecution& pa_poDeviceExecution);
+    explicit CECOSTimerHandler(CDeviceExecution& paDeviceExecution);
     virtual void run();
 
-    cyg_handle_t m_stAlarmHandle;
-    cyg_handle_t m_stCounterHandle, m_stSystemclockHandle;
-    cyg_alarm m_stAlarm;
+    cyg_handle_t mAlarmHandle;
+    cyg_handle_t mCounterHandle, mSystemclockHandle;
+    cyg_alarm mAlarm;
 
     friend class CTimerHandler;
 };

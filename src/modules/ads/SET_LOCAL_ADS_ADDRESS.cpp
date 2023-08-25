@@ -21,27 +21,27 @@
 
 DEFINE_FIRMWARE_FB(FORTE_SET_LOCAL_ADS_ADDRESS, g_nStringIdSET_LOCAL_ADS_ADDRESS)
 
-const CStringDictionary::TStringId FORTE_SET_LOCAL_ADS_ADDRESS::scm_anDataInputNames[] ={g_nStringIdQI, g_nStringIdPARAMS};
+const CStringDictionary::TStringId FORTE_SET_LOCAL_ADS_ADDRESS::scmDataInputNames[] ={g_nStringIdQI, g_nStringIdPARAMS};
 
-const CStringDictionary::TStringId FORTE_SET_LOCAL_ADS_ADDRESS::scm_anDataInputTypeIds[] = { g_nStringIdBOOL, g_nStringIdSTRING };
+const CStringDictionary::TStringId FORTE_SET_LOCAL_ADS_ADDRESS::scmDataInputTypeIds[] = { g_nStringIdBOOL, g_nStringIdSTRING };
 
-const CStringDictionary::TStringId FORTE_SET_LOCAL_ADS_ADDRESS::scm_anDataOutputNames[] = { g_nStringIdQO, g_nStringIdSTATUS, g_nStringIdLOCAL_ADS_ADDRESS };
+const CStringDictionary::TStringId FORTE_SET_LOCAL_ADS_ADDRESS::scmDataOutputNames[] = { g_nStringIdQO, g_nStringIdSTATUS, g_nStringIdLOCAL_ADS_ADDRESS };
 
-const CStringDictionary::TStringId FORTE_SET_LOCAL_ADS_ADDRESS::scm_anDataOutputTypeIds[] = { g_nStringIdBOOL, g_nStringIdWSTRING, g_nStringIdSTRING };
+const CStringDictionary::TStringId FORTE_SET_LOCAL_ADS_ADDRESS::scmDataOutputTypeIds[] = { g_nStringIdBOOL, g_nStringIdWSTRING, g_nStringIdSTRING };
 
-const TForteInt16 FORTE_SET_LOCAL_ADS_ADDRESS::scm_anEIWithIndexes[] = { 0 };
-const TDataIOID FORTE_SET_LOCAL_ADS_ADDRESS::scm_anEIWith[] = { 0, scmWithListDelimiter };
-const CStringDictionary::TStringId FORTE_SET_LOCAL_ADS_ADDRESS::scm_anEventInputNames[] = { g_nStringIdINIT };
+const TForteInt16 FORTE_SET_LOCAL_ADS_ADDRESS::scmEIWithIndexes[] = { 0 };
+const TDataIOID FORTE_SET_LOCAL_ADS_ADDRESS::scmEIWith[] = { 0, scmWithListDelimiter };
+const CStringDictionary::TStringId FORTE_SET_LOCAL_ADS_ADDRESS::scmEventInputNames[] = { g_nStringIdINIT };
 
-const TDataIOID FORTE_SET_LOCAL_ADS_ADDRESS::scm_anEOWith[] = { 0, 1, 2, scmWithListDelimiter };
-const TForteInt16 FORTE_SET_LOCAL_ADS_ADDRESS::scm_anEOWithIndexes[] = { 0, -1 };
-const CStringDictionary::TStringId FORTE_SET_LOCAL_ADS_ADDRESS::scm_anEventOutputNames[] = { g_nStringIdINITO };
+const TDataIOID FORTE_SET_LOCAL_ADS_ADDRESS::scmEOWith[] = { 0, 1, 2, scmWithListDelimiter };
+const TForteInt16 FORTE_SET_LOCAL_ADS_ADDRESS::scmEOWithIndexes[] = { 0, -1 };
+const CStringDictionary::TStringId FORTE_SET_LOCAL_ADS_ADDRESS::scmEventOutputNames[] = { g_nStringIdINITO };
 
-const SFBInterfaceSpec FORTE_SET_LOCAL_ADS_ADDRESS::scm_stFBInterfaceSpec = { 1, scm_anEventInputNames, scm_anEIWith, scm_anEIWithIndexes, 1, scm_anEventOutputNames, scm_anEOWith, scm_anEOWithIndexes, 2, scm_anDataInputNames, scm_anDataInputTypeIds, 3, scm_anDataOutputNames, scm_anDataOutputTypeIds, 0, 0 };
+const SFBInterfaceSpec FORTE_SET_LOCAL_ADS_ADDRESS::scmFBInterfaceSpec = { 1, scmEventInputNames, scmEIWith, scmEIWithIndexes, 1, scmEventOutputNames, scmEOWith, scmEOWithIndexes, 2, scmDataInputNames, scmDataInputTypeIds, 3, scmDataOutputNames, scmDataOutputTypeIds, 0, 0 };
 
-void FORTE_SET_LOCAL_ADS_ADDRESS::executeEvent(TEventID pa_nEIID){
-  switch (pa_nEIID){
-    case scm_nEventINITID:
+void FORTE_SET_LOCAL_ADS_ADDRESS::executeEvent(TEventID paEIID){
+  switch (paEIID){
+    case scmEventINITID:
       AmsNetId desiredAddress(std::string(PARAMS().getStorage().c_str()));
       if(QI()){
         AdsSetLocalAddress(desiredAddress);
@@ -64,7 +64,7 @@ void FORTE_SET_LOCAL_ADS_ADDRESS::executeEvent(TEventID pa_nEIID){
         QO() = CIEC_BOOL(false);
       }
 
-      sendOutputEvent(scm_nEventINITOID);
+      sendOutputEvent(scmEventINITOID);
       break;
   }
 }

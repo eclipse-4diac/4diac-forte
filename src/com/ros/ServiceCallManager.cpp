@@ -43,9 +43,9 @@ int CServiceCallManager::getPriority() const{
   return 0;
 }
 
-void CServiceCallManager::startChain(CEventSourceFB *pa_poECStartF){
-  if(0 != pa_poECStartF){
-    startNewEventChain(pa_poECStartF);
+void CServiceCallManager::startChain(CEventSourceFB *paECStartF){
+  if(0 != paECStartF){
+    startNewEventChain(paECStartF);
   }
 }
 

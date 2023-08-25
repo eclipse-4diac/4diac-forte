@@ -21,15 +21,15 @@ class CVXWorksSyncObject{
     virtual ~CVXWorksSyncObject();
 
     void lock(){
-      semTake(m_oSemBinary, WAIT_FOREVER);
+      semTake(mSemBinary, WAIT_FOREVER);
     }
 
     void unlock(){
-      semGive(m_oSemBinary);
+      semGive(mSemBinary);
     }
 
   private:
-    SEM_ID m_oSemBinary;
+    SEM_ID mSemBinary;
 
 };
 

@@ -13,11 +13,11 @@
 
 DEFINE_SINGLETON(TestSingleton);
 
-unsigned int TestSingleton::sm_unInstanceCount = 0;
+unsigned int TestSingleton::smInstanceCount = 0;
 
 TestSingleton::TestSingleton(){
-  sm_unInstanceCount++;
-  m_unSingletonID = sm_unInstanceCount;
+  smInstanceCount++;
+  mSingletonID = smInstanceCount;
 }
 
 TestSingleton::~TestSingleton() = default;

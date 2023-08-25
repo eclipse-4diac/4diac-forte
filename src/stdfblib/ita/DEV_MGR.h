@@ -35,7 +35,7 @@ class DEV_MGR: public forte::com_infra::CCommFB, public IBootFileCallback {
     bool executeCommand(const char *const paDest, char *paCommand) override;
 
     static const char *getResponseText(EMGMResponse paResp) {
-      return scm_sMGMResponseTexts[static_cast<std::underlying_type_t<EMGMResponse>>(paResp)];
+      return scmMGMResponseTexts[static_cast<std::underlying_type_t<EMGMResponse>>(paResp)];
     }
 
   private:
@@ -43,31 +43,31 @@ class DEV_MGR: public forte::com_infra::CCommFB, public IBootFileCallback {
      *
      * TODO fully define all responses as defined in IEC 61499 inc. numbers.
      */
-    static const char * const scm_sMGMResponseTexts[13];
+    static const char * const scmMGMResponseTexts[13];
 
     EMGMResponse parseAndExecuteMGMCommand(const char *const paDest, char *paCommand);
 
-    static const CStringDictionary::TStringId scm_anDataInputNames[];
-    static const CStringDictionary::TStringId scm_anDataInputTypeIds[];
-    static const CStringDictionary::TStringId scm_anDataOutputNames[];
-    static const CStringDictionary::TStringId scm_anDataOutputTypeIds[];
+    static const CStringDictionary::TStringId scmDataInputNames[];
+    static const CStringDictionary::TStringId scmDataInputTypeIds[];
+    static const CStringDictionary::TStringId scmDataOutputNames[];
+    static const CStringDictionary::TStringId scmDataOutputTypeIds[];
 
-    static const TEventID scm_nEventINITID = 0;
-    static const TEventID scm_nEventREQID = 1;
-    static const TForteInt16 scm_anEIWithIndexes[];
-    static const TDataIOID scm_anEIWith[];
-    static const CStringDictionary::TStringId scm_anEventInputNames[];
+    static const TEventID scmEventINITID = 0;
+    static const TEventID scmEventREQID = 1;
+    static const TForteInt16 scmEIWithIndexes[];
+    static const TDataIOID scmEIWith[];
+    static const CStringDictionary::TStringId scmEventInputNames[];
 
-    static const TEventID scm_nEventINITOID = 0;
-    static const TEventID scm_nEventCNFID = 1;
-    static const TForteInt16 scm_anEOWithIndexes[];
-    static const TDataIOID scm_anEOWith[];
-    static const CStringDictionary::TStringId scm_anEventOutputNames[];
+    static const TEventID scmEventINITOID = 0;
+    static const TEventID scmEventCNFID = 1;
+    static const TForteInt16 scmEOWithIndexes[];
+    static const TDataIOID scmEOWith[];
+    static const CStringDictionary::TStringId scmEventOutputNames[];
 
-    static const SFBInterfaceSpec scm_stFBInterfaceSpec;
+    static const SFBInterfaceSpec scmFBInterfaceSpec;
 
     //! The device the block is contained in
-    CDevice &m_poDevice;
+    CDevice &mDevice;
 
     void executeRQST();
     /*! \brief Parse the given request header to determine the ID and the requested command
@@ -125,7 +125,7 @@ class DEV_MGR: public forte::com_infra::CCommFB, public IBootFileCallback {
      */
     static int parseIdentifier(char *paIdentifierStart, forte::core::TNameIdentifier &paIdentifier);
 
-    void executeEvent(TEventID pa_nEIID) override;
+    void executeEvent(TEventID paEIID) override;
 
 #ifdef FORTE_SUPPORT_MONITORING
     static bool parseMonitoringData(char *paRequestPartLeft, forte::core::SManagementCMD &paCommand);
@@ -134,14 +134,14 @@ class DEV_MGR: public forte::com_infra::CCommFB, public IBootFileCallback {
 
     /*! \brief set the RESP output of the DEV_MGR according to the given response data
      *
-     * \param pa_acID id of the response
-     * \param pa_eResp qualifier of the response
+     * \param paID id of the response
+     * \param paResp qualifier of the response
      */
     void generateResponse(const char *paID, EMGMResponse paResp);
     /*! \brief set the RESP output of the DEV_MGR according to the given response data
      *
-     * \param pa_acID id of the response
-     * \param pa_eResp qualifier of the response
+     * \param paID id of the response
+     * \param paResp qualifier of the response
      * \param paCMD the command type
      */
     void generateLongResponse(EMGMResponse paResp, forte::core::SManagementCMD &paCMD);

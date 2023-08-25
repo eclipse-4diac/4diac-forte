@@ -23,7 +23,7 @@ class F_GT_TIME_tester  : public CFBTester{
     DECLARE_FB_TESTER(F_GT_TIME_tester);
 
   public:
-    F_GT_TIME_tester(CResource *m_poTestResource);
+    F_GT_TIME_tester(CResource *mTestResource);
 
   private:
     virtual void executeAllTests();
@@ -32,16 +32,16 @@ class F_GT_TIME_tester  : public CFBTester{
     bool testCase_Larger();
     bool testCase_Smaller();
 
-    FORTE_F_GT m_oTestee;
+    FORTE_F_GT mTestee;
 
-    CFBTestEOConn m_poOut_EO_Conn;
+    CFBTestEOConn mOut_EO_Conn;
 
-    CIEC_TIME m_oIN1;
-    CFBTestDIConn m_oIn_IN1_Conn;
-    CIEC_TIME m_oIN2;
-    CFBTestDIConn m_oIn_IN2_Conn;
-    CIEC_BOOL m_oOut_OUT; //DATA OUTPUT
-    CFBTestDOConn m_oOut_OUT_Conn; //DATA OUTPUT
+    CIEC_TIME mIN1;
+    CFBTestDIConn mIn_IN1_Conn;
+    CIEC_TIME mIN2;
+    CFBTestDIConn mIn_IN2_Conn;
+    CIEC_BOOL mOut_OUT; //DATA OUTPUT
+    CFBTestDOConn mOut_OUT_Conn; //DATA OUTPUT
 
 };
 

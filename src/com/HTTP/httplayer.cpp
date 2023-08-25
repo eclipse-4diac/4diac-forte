@@ -39,9 +39,9 @@ EComResponse CHttpComLayer::openConnection(char *paLayerParameter) {
   EComResponse eRetVal = e_InitInvalidId;
 
   if(checkSDsAndRDsType()) {
-    switch(m_poFb->getComServiceType()){
+    switch(mFb->getComServiceType()){
       case e_Server:
-        if(1 == m_poFb->getNumSD()) {
+        if(1 == mFb->getNumSD()) {
           mPath = std::string(paLayerParameter);
           if(getExtEvHandler<CHTTP_Handler>().addServerPath(this, mPath)) {
             eRetVal = e_InitOk;
@@ -67,9 +67,9 @@ EComResponse CHttpComLayer::openConnection(char *paLayerParameter) {
 
 EComResponse CHttpComLayer::openClientConnection(char* paLayerParameter) {
   EComResponse eRetVal = e_InitInvalidId;
-  TPortId numberOfSD = m_poFb->getNumSD();
+  TPortId numberOfSD = mFb->getNumSD();
 
-  if(2 == m_poFb->getNumRD()) {
+  if(2 == mFb->getNumRD()) {
     CParameterParser parser(paLayerParameter, ';', 3); //IP:PORT;POST|PUT|GET;[content-type]
 
     if(handleContentAndRequestType(parser, parser.parseParameters()) && handleAddress(parser[0], numberOfSD)) {
@@ -100,7 +100,7 @@ EComResponse CHttpComLayer::openClientConnection(char* paLayerParameter) {
       "[HTTP Layer] A client should ALWAYS have exactly 2 RD, the first one for the response code, and the second for the response body, even for PUT and POST\n");
   }
 
-  m_eConnectionState = e_Disconnected;
+  mConnectionState = e_Disconnected;
   return eRetVal;
 }
 
@@ -127,18 +127,18 @@ bool CHttpComLayer::checkSDInPOSTAndPUT(size_t paNoOfSD) {
 
 bool CHttpComLayer::checkSDsAndRDsType() const {
 
-  for(size_t i = 2; i < m_poFb->getNumSD(); i++) {
-    CIEC_ANY::EDataTypeID typeToCheck = m_poFb->getDI(static_cast<unsigned int>(i))->getDataTypeID();
+  for(size_t i = 2; i < mFb->getNumSD(); i++) {
+    CIEC_ANY::EDataTypeID typeToCheck = mFb->getDI(static_cast<unsigned int>(i))->getDataTypeID();
     if(CIEC_ANY::e_ANY != typeToCheck && CIEC_ANY::e_STRING != typeToCheck && CIEC_ANY::e_WSTRING != typeToCheck) {
-      DEVLOG_ERROR("[HTTP Layer] Client called %s has an invalid SD_%d\n", CStringDictionary::getInstance().get(m_poFb->getInstanceNameId()), i);
+      DEVLOG_ERROR("[HTTP Layer] Client called %s has an invalid SD_%d\n", CStringDictionary::getInstance().get(mFb->getInstanceNameId()), i);
       return false;
     }
   }
 
-  for(size_t i = 2; i < m_poFb->getNumRD(); i++) {
-    CIEC_ANY::EDataTypeID typeToCheck = m_poFb->getDO(static_cast<unsigned int>(i))->getDataTypeID();
+  for(size_t i = 2; i < mFb->getNumRD(); i++) {
+    CIEC_ANY::EDataTypeID typeToCheck = mFb->getDO(static_cast<unsigned int>(i))->getDataTypeID();
     if(CIEC_ANY::e_ANY != typeToCheck && CIEC_ANY::e_STRING != typeToCheck && CIEC_ANY::e_WSTRING != typeToCheck) {
-      DEVLOG_ERROR("[HTTP Layer] Client called %s has an invalid RD_%d\n", CStringDictionary::getInstance().get(m_poFb->getInstanceNameId()), i);
+      DEVLOG_ERROR("[HTTP Layer] Client called %s has an invalid RD_%d\n", CStringDictionary::getInstance().get(mFb->getInstanceNameId()), i);
       return false;
     }
   }
@@ -213,7 +213,7 @@ bool CHttpComLayer::handleAddress(const char* paAddress, size_t paNoOfSDs) {
 EComResponse CHttpComLayer::sendData(void *paData, unsigned int) {
   mInterruptResp = e_Nothing;
   if(mCorrectlyInitialized) {
-    switch(m_poFb->getComServiceType()){
+    switch(mFb->getComServiceType()){
       case e_Server:
         sendDataAsServer(paData);
         break;
@@ -279,7 +279,7 @@ EComResponse CHttpComLayer::recvData(const void *paData, unsigned int paSize) {
   mInterruptResp = e_Nothing;
   if(mCorrectlyInitialized) {
     memcpy(mRecvBuffer, paData, (paSize > cg_unIPLayerRecvBufferSize) ? cg_unIPLayerRecvBufferSize : paSize);
-    switch(m_poFb->getComServiceType()){
+    switch(mFb->getComServiceType()){
       case e_Server:
         DEVLOG_ERROR("[HTTP Layer] Receiving raw data as a Server? That's wrong, use the recvServerData function\n");
         break;
@@ -301,7 +301,7 @@ EComResponse CHttpComLayer::recvData(const void *paData, unsigned int paSize) {
     DEVLOG_ERROR("[HTTP Layer] The FB is not initialized\n");
   }
   if(e_ProcessDataOk == mInterruptResp) {
-    m_poFb->interruptCommFB(this);
+    mFb->interruptCommFB(this);
   }
   return mInterruptResp;
 }
@@ -311,20 +311,20 @@ EComResponse forte::com_infra::CHttpComLayer::recvServerData(CSinglyLinkedList<s
 
   mInterruptResp = e_Nothing;
   bool failed = false;
-  if(0 < m_poFb->getNumSD()) {
+  if(0 < mFb->getNumSD()) {
     unsigned int noOfParameters = 0;
     for(CSinglyLinkedList<std::string>::Iterator iter = paParameterValues.begin(); iter != paParameterValues.end(); ++iter) {
       noOfParameters++;
     }
 
-    if(noOfParameters == m_poFb->getNumRD()) {
+    if(noOfParameters == mFb->getNumRD()) {
       noOfParameters = 0;
       for(CSinglyLinkedList<std::string>::Iterator iter = paParameterValues.begin(); iter != paParameterValues.end(); ++iter) {
-        m_poFb->getRDs()[noOfParameters++]->setValue(CIEC_STRING(*iter));
+        mFb->getRDs()[noOfParameters++]->setValue(CIEC_STRING(*iter));
       }
     } else {
       DEVLOG_ERROR("[HTTP Layer] FB with path %s received a number of parameters of %u, while it has %u SDs\n", mPath.c_str(),
-        static_cast<TForteUInt16>(noOfParameters), m_poFb->getNumRD());
+        static_cast<TForteUInt16>(noOfParameters), mFb->getNumRD());
       failed = true;
     }
   }
@@ -340,7 +340,7 @@ EComResponse forte::com_infra::CHttpComLayer::recvServerData(CSinglyLinkedList<s
     mInterruptResp = e_ProcessDataOk;
   }
   if(e_ProcessDataOk == mInterruptResp) {
-    m_poFb->interruptCommFB(this);
+    mFb->interruptCommFB(this);
   }
   return mInterruptResp;
 }
@@ -348,8 +348,8 @@ EComResponse forte::com_infra::CHttpComLayer::recvServerData(CSinglyLinkedList<s
 EComResponse CHttpComLayer::handleHTTPResponse(char *paData) {
   DEVLOG_DEBUG("[HTTP Layer] Handling received HTTP response\n");
   EComResponse eRetVal = e_ProcessDataRecvFaild;
-  if(m_poFb != nullptr) {
-    CIEC_ANY** apoRDs = m_poFb->getRDs();
+  if(mFb != nullptr) {
+    CIEC_ANY** apoRDs = mFb->getRDs();
     // Interpret HTTP response and set output status according to success/failure.
     std::string responseCode;
     std::string output;
@@ -368,7 +368,7 @@ EComResponse CHttpComLayer::processInterrupt() {
 }
 
 void CHttpComLayer::closeConnection() {
-  if(e_Server == m_poFb->getComServiceType()) {
+  if(e_Server == mFb->getComServiceType()) {
     getExtEvHandler<CHTTP_Handler>().removeServerPath(mPath);
   }
   getExtEvHandler<CHTTP_Handler>().forceClose(this);

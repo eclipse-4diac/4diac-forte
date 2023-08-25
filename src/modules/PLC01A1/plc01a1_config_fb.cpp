@@ -21,28 +21,28 @@ DEFINE_FIRMWARE_FB(PLC01A1ConfigFB, g_nStringIdPLC01A1)
 
 
 
-const CStringDictionary::TStringId PLC01A1ConfigFB::scm_anDataInputNames[] = { g_nStringIdQI, g_nStringIdIN1, g_nStringIdIN2, g_nStringIdIN3, g_nStringIdIN4,
+const CStringDictionary::TStringId PLC01A1ConfigFB::scmDataInputNames[] = { g_nStringIdQI, g_nStringIdIN1, g_nStringIdIN2, g_nStringIdIN3, g_nStringIdIN4,
   g_nStringIdIN5, g_nStringIdIN6, g_nStringIdIN7, g_nStringIdIN8, g_nStringIdOUT1, g_nStringIdOUT2, g_nStringIdOUT3, g_nStringIdOUT4, g_nStringIdOUT5,
   g_nStringIdOUT6, g_nStringIdOUT7, g_nStringIdOUT8, g_nStringIdUpdateInterval };
 
-const CStringDictionary::TStringId PLC01A1ConfigFB::scm_anDataInputTypeIds[] = { g_nStringIdBOOL, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING,
+const CStringDictionary::TStringId PLC01A1ConfigFB::scmDataInputTypeIds[] = { g_nStringIdBOOL, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING,
   g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING,
   g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdUINT };
 
-const CStringDictionary::TStringId PLC01A1ConfigFB::scm_anDataOutputNames[] = { g_nStringIdQO, g_nStringIdSTATUS };
+const CStringDictionary::TStringId PLC01A1ConfigFB::scmDataOutputNames[] = { g_nStringIdQO, g_nStringIdSTATUS };
 
-const CStringDictionary::TStringId PLC01A1ConfigFB::scm_anDataOutputTypeIds[] = { g_nStringIdBOOL, g_nStringIdWSTRING };
+const CStringDictionary::TStringId PLC01A1ConfigFB::scmDataOutputTypeIds[] = { g_nStringIdBOOL, g_nStringIdWSTRING };
 
-const TForteInt16 PLC01A1ConfigFB::scm_anEIWithIndexes[] = { 0 };
-const TDataIOID PLC01A1ConfigFB::scm_anEIWith[] = { 0, 17, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, scmWithListDelimiter };
-const CStringDictionary::TStringId PLC01A1ConfigFB::scm_anEventInputNames[] = { g_nStringIdINIT };
-const TDataIOID PLC01A1ConfigFB::scm_anEOWith[] = { 0, 1, scmWithListDelimiter, 0, 1, scmWithListDelimiter };
-const TForteInt16 PLC01A1ConfigFB::scm_anEOWithIndexes[] = { 0, 3, -1 };
-const CStringDictionary::TStringId PLC01A1ConfigFB::scm_anEventOutputNames[] = { g_nStringIdINITO, g_nStringIdIND };
-const SFBInterfaceSpec PLC01A1ConfigFB::scm_stFBInterfaceSpec = {
-  1,  scm_anEventInputNames,  scm_anEIWith,  scm_anEIWithIndexes,
-  2,  scm_anEventOutputNames,  scm_anEOWith, scm_anEOWithIndexes,  18,  scm_anDataInputNames, scm_anDataInputTypeIds,
-  2,  scm_anDataOutputNames, scm_anDataOutputTypeIds,
+const TForteInt16 PLC01A1ConfigFB::scmEIWithIndexes[] = { 0 };
+const TDataIOID PLC01A1ConfigFB::scmEIWith[] = { 0, 17, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, scmWithListDelimiter };
+const CStringDictionary::TStringId PLC01A1ConfigFB::scmEventInputNames[] = { g_nStringIdINIT };
+const TDataIOID PLC01A1ConfigFB::scmEOWith[] = { 0, 1, scmWithListDelimiter, 0, 1, scmWithListDelimiter };
+const TForteInt16 PLC01A1ConfigFB::scmEOWithIndexes[] = { 0, 3, -1 };
+const CStringDictionary::TStringId PLC01A1ConfigFB::scmEventOutputNames[] = { g_nStringIdINITO, g_nStringIdIND };
+const SFBInterfaceSpec PLC01A1ConfigFB::scmFBInterfaceSpec = {
+  1,  scmEventInputNames,  scmEIWith,  scmEIWithIndexes,
+  2,  scmEventOutputNames,  scmEOWith, scmEOWithIndexes,  18,  scmDataInputNames, scmDataInputTypeIds,
+  2,  scmDataOutputNames, scmDataOutputTypeIds,
   0, 0
 };
 

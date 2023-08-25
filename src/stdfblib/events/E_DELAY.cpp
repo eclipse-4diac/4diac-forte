@@ -24,11 +24,11 @@ E_DELAY::E_DELAY(const CStringDictionary::TStringId paInstanceNameId, CResource 
 
 void E_DELAY::executeEvent(TEventID paEIID, CEventChainExecutionThread * const paECET){
   if(cg_nExternalEventID == paEIID ){
-    sendOutputEvent(csm_nEOID, getEventChainExecutor());
+    sendOutputEvent(csmEOID, getEventChainExecutor());
     mActive = false;
   }
   else{
-    if(csm_nEventSTARTID == paEIID && !mActive) {
+    if(csmEventSTARTID == paEIID && !mActive) {
       setEventChainExecutor(paECET); // E_DELAY will execute in the same thread on as from where it has been triggered.
     }
     CTimedFB::executeEvent(paEIID, paECET);

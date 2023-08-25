@@ -30,47 +30,47 @@ class FORTE_E_STOPWATCH: public CBasicFB {
 
 private:
   
-  static const CStringDictionary::TStringId scm_anDataOutputNames[];
-  static const CStringDictionary::TStringId scm_anDataOutputTypeIds[];
+  static const CStringDictionary::TStringId scmDataOutputNames[];
+  static const CStringDictionary::TStringId scmDataOutputTypeIds[];
   
-  static const TEventID scm_nEventSTARTID = 0;
-  static const TEventID scm_nEventSTOPID = 1;
+  static const TEventID scmEventSTARTID = 0;
+  static const TEventID scmEventSTOPID = 1;
   
-  static const TForteInt16 scm_anEIWithIndexes[];
-  static const CStringDictionary::TStringId scm_anEventInputNames[];
+  static const TForteInt16 scmEIWithIndexes[];
+  static const CStringDictionary::TStringId scmEventInputNames[];
   
-  static const TEventID scm_nEventEOID = 0;
+  static const TEventID scmEventEOID = 0;
   
-  static const TDataIOID scm_anEOWith[]; 
-  static const TForteInt16 scm_anEOWithIndexes[];
-  static const CStringDictionary::TStringId scm_anEventOutputNames[];
+  static const TDataIOID scmEOWith[]; 
+  static const TForteInt16 scmEOWithIndexes[];
+  static const CStringDictionary::TStringId scmEventOutputNames[];
   
 
-  static const SFBInterfaceSpec scm_stFBInterfaceSpec;
-  static const CStringDictionary::TStringId scm_anInternalsNames[];
-  static const CStringDictionary::TStringId scm_anInternalsTypeIds[];
-  static const SInternalVarsInformation scm_stInternalVars;
+  static const SFBInterfaceSpec scmFBInterfaceSpec;
+  static const CStringDictionary::TStringId scmInternalsNames[];
+  static const CStringDictionary::TStringId scmInternalsTypeIds[];
+  static const SInternalVarsInformation scmInternalVars;
   
   CIEC_TIME var_startTime;
   
   CIEC_ANY *getVarInternal(size_t) override;
   void alg_captureStartTime(void);
   void alg_calcDiff(void);
-  static const TForteInt16 scm_nStateSTART = 0;
-  static const TForteInt16 scm_nStateMeasure = 1;
-  static const TForteInt16 scm_nStateSTOP = 2;
+  static const TForteInt16 scmStateSTART = 0;
+  static const TForteInt16 scmStateMeasure = 1;
+  static const TForteInt16 scmStateSTOP = 2;
   
   void enterStateSTART(void);
   void enterStateMeasure(void);
   void enterStateSTOP(void);
 
-  void executeEvent(TEventID pa_nEIID) override;
+  void executeEvent(TEventID paEIID) override;
 
   void readInputData(TEventID) override;
-  void writeOutputData(TEventID pa_nEIID) override;
+  void writeOutputData(TEventID paEIID) override;
 
 public:
-  FORTE_E_STOPWATCH(CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes);
+  FORTE_E_STOPWATCH(CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
 
 
   CIEC_TIME var_TD;
@@ -86,11 +86,11 @@ public:
   CDataConnection *getDOConUnchecked(TPortId) override;
   
   void evt_START(CIEC_TIME &pa_TD) {
-    receiveInputEvent(scm_nEventSTARTID, nullptr);
+    receiveInputEvent(scmEventSTARTID, nullptr);
     pa_TD = var_TD;
   }
   void evt_STOP(CIEC_TIME &pa_TD) {
-    receiveInputEvent(scm_nEventSTOPID, nullptr);
+    receiveInputEvent(scmEventSTOPID, nullptr);
     pa_TD = var_TD;
   }
   

@@ -35,10 +35,10 @@ BOOST_AUTO_TEST_CASE(Literal_test)
   BOOST_TEST(static_cast<CIEC_INT::TValueType>(test1) == 0);
 
   CIEC_INT test2 = 32767_INT;
-  BOOST_TEST(static_cast<CIEC_INT::TValueType>(test2) == CIEC_INT::scm_nMaxVal);
+  BOOST_TEST(static_cast<CIEC_INT::TValueType>(test2) == CIEC_INT::scmMaxVal);
 
   CIEC_INT test3 = -32768_INT;
-  BOOST_TEST(static_cast<CIEC_INT::TValueType>(test3) == CIEC_INT::scm_nMinVal);
+  BOOST_TEST(static_cast<CIEC_INT::TValueType>(test3) == CIEC_INT::scmMinVal);
 }
 
 BOOST_AUTO_TEST_CASE(Assignment_test)

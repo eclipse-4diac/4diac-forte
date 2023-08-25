@@ -21,22 +21,22 @@ class FORTE_TEST_CONDITION: public CFunctionBlock{
   DECLARE_FIRMWARE_FB(FORTE_TEST_CONDITION)
 
 private:
-  static const CStringDictionary::TStringId scm_anDataInputNames[];
-  static const CStringDictionary::TStringId scm_anDataInputTypeIds[];
+  static const CStringDictionary::TStringId scmDataInputNames[];
+  static const CStringDictionary::TStringId scmDataInputTypeIds[];
   CIEC_BOOL &check() {
     return *static_cast<CIEC_BOOL*>(getDI(0));
   };
 
-  static const TEventID scm_nEventREQID = 0;
-  static const TForteInt16 scm_anEIWithIndexes[];
-  static const TDataIOID scm_anEIWith[];
-  static const CStringDictionary::TStringId scm_anEventInputNames[];
+  static const TEventID scmEventREQID = 0;
+  static const TForteInt16 scmEIWithIndexes[];
+  static const TDataIOID scmEIWith[];
+  static const CStringDictionary::TStringId scmEventInputNames[];
 
-  static const TEventID scm_nEventCNFID = 0;
-  static const TForteInt16 scm_anEOWithIndexes[];
-  static const CStringDictionary::TStringId scm_anEventOutputNames[];
+  static const TEventID scmEventCNFID = 0;
+  static const TForteInt16 scmEOWithIndexes[];
+  static const CStringDictionary::TStringId scmEventOutputNames[];
 
-  static const SFBInterfaceSpec scm_stFBInterfaceSpec;
+  static const SFBInterfaceSpec scmFBInterfaceSpec;
 
     static unsigned int smExecutedTests;
     static unsigned int smFailedTests;
@@ -45,7 +45,7 @@ private:
 
 
 
-  void executeEvent(TEventID pa_nEIID) override;
+  void executeEvent(TEventID paEIID) override;
 
   CSyncObject mFinalReportMutex;
 

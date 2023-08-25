@@ -22,15 +22,15 @@
 
 DEFINE_FIRMWARE_FB(FORTE_EliteBoard, g_nStringIdEliteBoard)
 
-const TForteInt16 FORTE_EliteBoard::scm_anEIWithIndexes[] = {-1};
-const CStringDictionary::TStringId FORTE_EliteBoard::scm_anEventInputNames[] = {
+const TForteInt16 FORTE_EliteBoard::scmEIWithIndexes[] = {-1};
+const CStringDictionary::TStringId FORTE_EliteBoard::scmEventInputNames[] = {
     g_nStringIdMAP};
 
-const TForteInt16 FORTE_EliteBoard::scm_anEOWithIndexes[] = {-1};
-const CStringDictionary::TStringId FORTE_EliteBoard::scm_anEventOutputNames[] =
+const TForteInt16 FORTE_EliteBoard::scmEOWithIndexes[] = {-1};
+const CStringDictionary::TStringId FORTE_EliteBoard::scmEventOutputNames[] =
     {g_nStringIdMAPO};
 
-const SAdapterInstanceDef FORTE_EliteBoard::scm_astAdapterInstances[] = {
+const SAdapterInstanceDef FORTE_EliteBoard::scmAdapterInstances[] = {
     {g_nStringIdPortAdapter, g_nStringIdPortA, true},
     {g_nStringIdPortAdapter, g_nStringIdPortB, true},
     {g_nStringIdPortAdapter, g_nStringIdPortC, true},
@@ -43,21 +43,21 @@ const SAdapterInstanceDef FORTE_EliteBoard::scm_astAdapterInstances[] = {
     {g_nStringIdPortAdapter, g_nStringIdPortJ, true},
     {g_nStringIdPortAdapter, g_nStringIdPortK, true}};
 
-const SFBInterfaceSpec FORTE_EliteBoard::scm_stFBInterfaceSpec = {
-    1,       scm_anEventInputNames,
-    nullptr, scm_anEIWithIndexes,
-    1,       scm_anEventOutputNames,
-    nullptr, scm_anEOWithIndexes,
+const SFBInterfaceSpec FORTE_EliteBoard::scmFBInterfaceSpec = {
+    1,       scmEventInputNames,
+    nullptr, scmEIWithIndexes,
+    1,       scmEventOutputNames,
+    nullptr, scmEOWithIndexes,
     0,       nullptr,
     nullptr, 0,
     nullptr, nullptr,
-    11,      scm_astAdapterInstances};
+    11,      scmAdapterInstances};
 
-FORTE_EliteBoard::FORTE_EliteBoard(const CStringDictionary::TStringId pa_nInstanceNameId,
-                 CResource *pa_poSrcRes)
-    : forte::core::io::IOConfigFBController(pa_poSrcRes, &scm_stFBInterfaceSpec,
-                                            pa_nInstanceNameId, m_anFBConnData,
-                                            m_anFBVarsData),
+FORTE_EliteBoard::FORTE_EliteBoard(const CStringDictionary::TStringId paInstanceNameId,
+                 CResource *paSrcRes)
+    : forte::core::io::IOConfigFBController(paSrcRes, &scmFBInterfaceSpec,
+                                            paInstanceNameId, mFBConnData,
+                                            mFBVarsData),
       mEventHandler{getExtEvHandler<EliteBoardDeviceController>(*this)} {};
 
 forte::core::io::IODeviceController *
@@ -72,7 +72,7 @@ constexpr uint32_t port_addresses[] = {
 };
 
 FORTE_PortAdapter &FORTE_EliteBoard::getPortAdapterByIndex(int index) {
-  return (*static_cast<FORTE_PortAdapter *>(m_apoAdapters[index]));
+  return (*static_cast<FORTE_PortAdapter *>(mAdapters[index]));
 }
 
 bool FORTE_EliteBoard::configurePortFB(int index) {
@@ -84,13 +84,13 @@ bool FORTE_EliteBoard::configurePortFB(int index) {
 
   adapter.GPIO_Port_Addr() = port_addresses[index];
 
-  sendAdapterEvent(index, FORTE_PortAdapter::scm_nEventMAPID);
+  sendAdapterEvent(index, FORTE_PortAdapter::scmEventMAPID);
   return true;
 }
 
-void FORTE_EliteBoard::executeEvent(TEventID pa_nEIID) {
+void FORTE_EliteBoard::executeEvent(TEventID paEIID) {
 
-  if (pa_nEIID == scm_nEventMAPID) {
+  if (paEIID == scmEventMAPID) {
     // start initialisation chain
     mCurrentAdapterIndex = 0;
 
@@ -100,7 +100,7 @@ void FORTE_EliteBoard::executeEvent(TEventID pa_nEIID) {
     }
 
     mCurrentAdapterIndex++;
-  } else if (pa_nEIID == getPortAdapterByIndex(mCurrentAdapterIndex).MAPO()) {
+  } else if (paEIID == getPortAdapterByIndex(mCurrentAdapterIndex).MAPO()) {
     // previous adapter finished initialisation
     if (mCurrentAdapterIndex < mAdapterCount) {
       // not completed yet
@@ -112,14 +112,14 @@ void FORTE_EliteBoard::executeEvent(TEventID pa_nEIID) {
 
       if (mCurrentAdapterIndex >= mAdapterCount) {
         // initialisation complete
-        sendOutputEvent(scm_nEventMAPOID);
+        sendOutputEvent(scmEventMAPOID);
       } else {
         // not completed yet
         mCurrentAdapterIndex++;
       }
     } else {
       // initialisation complete
-      sendOutputEvent(scm_nEventMAPOID);
+      sendOutputEvent(scmEventMAPOID);
     }
   }
 }

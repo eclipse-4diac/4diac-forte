@@ -36,7 +36,7 @@ class CIEC_GET_STRUCT_VALUE_Struct_test1 : public CIEC_STRUCT {
     }
 
     const CStringDictionary::TStringId* elementNames() const override {
-      return scm_unElementNames;
+      return scmElementNames;
     }
 
     CStringDictionary::TStringId getStructTypeNameID() const override {
@@ -62,10 +62,10 @@ class CIEC_GET_STRUCT_VALUE_Struct_test1 : public CIEC_STRUCT {
     static const unsigned int sizeOfFirstArray = 2;
 
   private:
-    static const CStringDictionary::TStringId scm_unElementNames[];
+    static const CStringDictionary::TStringId scmElementNames[];
 };
 
-const CStringDictionary::TStringId CIEC_GET_STRUCT_VALUE_Struct_test1::scm_unElementNames[] = { g_nStringIdVal1, g_nStringIdVal2 };
+const CStringDictionary::TStringId CIEC_GET_STRUCT_VALUE_Struct_test1::scmElementNames[] = { g_nStringIdVal1, g_nStringIdVal2 };
 
 DEFINE_FIRMWARE_DATATYPE(GET_STRUCT_VALUE_Struct_test1, g_nStringIdGET_STRUCT_VALUE_Struct_test1)
 
@@ -88,7 +88,7 @@ class CIEC_GET_STRUCT_VALUE_Struct_test2 : public CIEC_STRUCT {
     }
 
     const CStringDictionary::TStringId* elementNames() const override {
-      return scm_unElementNames;
+      return scmElementNames;
     }
 
     CStringDictionary::TStringId getStructTypeNameID() const override {
@@ -112,10 +112,10 @@ class CIEC_GET_STRUCT_VALUE_Struct_test2 : public CIEC_STRUCT {
     }
 
 private:
-    static const CStringDictionary::TStringId scm_unElementNames[];
+    static const CStringDictionary::TStringId scmElementNames[];
 };
 
-const CStringDictionary::TStringId CIEC_GET_STRUCT_VALUE_Struct_test2::scm_unElementNames[] = { g_nStringIdVal1, g_nStringIdVal2 };
+const CStringDictionary::TStringId CIEC_GET_STRUCT_VALUE_Struct_test2::scmElementNames[] = { g_nStringIdVal1, g_nStringIdVal2 };
 
 DEFINE_FIRMWARE_DATATYPE(GET_STRUCT_VALUE_Struct_test2, g_nStringIdGET_STRUCT_VALUE_Struct_test2)
 

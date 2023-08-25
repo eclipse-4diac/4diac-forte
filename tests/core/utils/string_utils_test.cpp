@@ -193,15 +193,15 @@ BOOST_AUTO_TEST_SUITE(CIEC_ARRAY_function_test)
     BOOST_CHECK_EQUAL(15, forte::core::util::charHexDigitToInt('F'));
   }
 
-  void strtolWrongInputCheck(const char* pa_acString, long int pa_nResult, unsigned int pa_unErrorPos){
+  void strtolWrongInputCheck(const char* paString, long int paResult, unsigned int paErrorPos){
     char *pacEndptr;
-    BOOST_CHECK_EQUAL(pa_nResult, forte::core::util::strtol(pa_acString, &pacEndptr, 10));
-    BOOST_CHECK_EQUAL(pa_acString[pa_unErrorPos], *pacEndptr);
+    BOOST_CHECK_EQUAL(paResult, forte::core::util::strtol(paString, &pacEndptr, 10));
+    BOOST_CHECK_EQUAL(paString[paErrorPos], *pacEndptr);
   }
 
   //*assumes that overflow will happen when the last digit is parsed
-  void strtolOverflowCheck(const char* pa_acString, long int pa_nResult){
-    strtolWrongInputCheck(pa_acString, pa_nResult, static_cast<unsigned int>(strlen(pa_acString) - 1));
+  void strtolOverflowCheck(const char* paString, long int paResult){
+    strtolWrongInputCheck(paString, paResult, static_cast<unsigned int>(strlen(paString) - 1));
     BOOST_CHECK_EQUAL(ERANGE, errno);
   }
 
@@ -256,15 +256,15 @@ BOOST_AUTO_TEST_SUITE(CIEC_ARRAY_function_test)
 
   }
 
-  void strtoulWrongInputCheck(const char* pa_acString, unsigned long int pa_unResult, unsigned int pa_unErrorPos, int base){
+  void strtoulWrongInputCheck(const char* paString, unsigned long int paResult, unsigned int paErrorPos, int base){
     char *pacEndptr;
-    BOOST_CHECK_EQUAL(pa_unResult, forte::core::util::strtoul(pa_acString, &pacEndptr, base));
-    BOOST_CHECK_EQUAL(pa_acString[pa_unErrorPos], *pacEndptr);
+    BOOST_CHECK_EQUAL(paResult, forte::core::util::strtoul(paString, &pacEndptr, base));
+    BOOST_CHECK_EQUAL(paString[paErrorPos], *pacEndptr);
   }
 
   //*assumes that overflow will happen when the last digit is parsed
-  void strtoulOverflowCheck(const char* pa_acString, unsigned long int pa_unResult, int base){
-    strtoulWrongInputCheck(pa_acString, pa_unResult, static_cast<unsigned int>(strlen(pa_acString) - 1), base);
+  void strtoulOverflowCheck(const char* paString, unsigned long int paResult, int base){
+    strtoulWrongInputCheck(paString, paResult, static_cast<unsigned int>(strlen(paString) - 1), base);
     BOOST_CHECK_EQUAL(ERANGE, errno);
   }
 
@@ -307,15 +307,15 @@ BOOST_AUTO_TEST_SUITE(CIEC_ARRAY_function_test)
     strtoulWrongInputCheck("0x0x74x219x52", 0, 3, 16);
   }
 
-  void strtollWrongInputCheck(const char* pa_acString, long long int pa_nResult, unsigned int pa_unErrorPos){
+  void strtollWrongInputCheck(const char* paString, long long int paResult, unsigned int paErrorPos){
     char *pacEndptr;
-    BOOST_CHECK_EQUAL(pa_nResult, forte::core::util::strtoll(pa_acString, &pacEndptr, 10));
-    BOOST_CHECK_EQUAL(pa_acString[pa_unErrorPos], *pacEndptr);
+    BOOST_CHECK_EQUAL(paResult, forte::core::util::strtoll(paString, &pacEndptr, 10));
+    BOOST_CHECK_EQUAL(paString[paErrorPos], *pacEndptr);
   }
 
   //*assumes that overflow will happen when the last digit is parsed
-  void strtollOverflowCheck(const char* pa_acString, long long int pa_nResult){
-    strtollWrongInputCheck(pa_acString, pa_nResult, static_cast<unsigned int>(strlen(pa_acString) - 1));
+  void strtollOverflowCheck(const char* paString, long long int paResult){
+    strtollWrongInputCheck(paString, paResult, static_cast<unsigned int>(strlen(paString) - 1));
     BOOST_CHECK_EQUAL(ERANGE, errno);
   }
 
@@ -362,15 +362,15 @@ BOOST_AUTO_TEST_SUITE(CIEC_ARRAY_function_test)
 
   }
 
-  void strtoullWrongInputCheck(const char* pa_acString, unsigned long long int pa_unResult, unsigned int pa_unErrorPos){
+  void strtoullWrongInputCheck(const char* paString, unsigned long long int paResult, unsigned int paErrorPos){
     char *pacEndptr;
-    BOOST_CHECK_EQUAL(pa_unResult, forte::core::util::strtoull(pa_acString, &pacEndptr, 10));
-    BOOST_CHECK_EQUAL(pa_acString[pa_unErrorPos], *pacEndptr);
+    BOOST_CHECK_EQUAL(paResult, forte::core::util::strtoull(paString, &pacEndptr, 10));
+    BOOST_CHECK_EQUAL(paString[paErrorPos], *pacEndptr);
   }
 
   //*assumes that overflow will happen when the last digit is parsed
-  void strtoullOverflowCheck(const char* pa_acString, unsigned long long int pa_unResult){
-    strtoullWrongInputCheck(pa_acString, pa_unResult, static_cast<unsigned int>(strlen(pa_acString) - 1));
+  void strtoullOverflowCheck(const char* paString, unsigned long long int paResult){
+    strtoullWrongInputCheck(paString, paResult, static_cast<unsigned int>(strlen(paString) - 1));
     BOOST_CHECK_EQUAL(ERANGE, errno);
   }
 

@@ -44,7 +44,7 @@ CGenBitBase::~CGenBitBase(){
 
 void CGenBitBase::readInputData(TEventID) {
   RES_DATA_CON_CRITICAL_REGION();
-  for(TPortId i = 0; i < mInterfaceSpec->m_nNumDIs; ++i) {
+  for(TPortId i = 0; i < mInterfaceSpec->mNumDIs; ++i) {
     readData(i, *mDIs[i], mDIConns[i]);
   }
 }
@@ -60,42 +60,42 @@ bool CGenBitBase::createInterfaceSpec(const char *paConfigString, SFBInterfaceSp
   if (nullptr != pcPos) {
     pcPos++;
     //we have an underscore and it is the first underscore after AND
-    paInterfaceSpec.m_nNumDIs = static_cast<TPortId>(forte::core::util::strtoul(pcPos, nullptr, 10));
-    DEVLOG_DEBUG("DIs: %d;\n", paInterfaceSpec.m_nNumDIs);
+    paInterfaceSpec.mNumDIs = static_cast<TPortId>(forte::core::util::strtoul(pcPos, nullptr, 10));
+    DEVLOG_DEBUG("DIs: %d;\n", paInterfaceSpec.mNumDIs);
   } else {
     return false;
   }
 
-  if (paInterfaceSpec.m_nNumDIs < 2) {
+  if (paInterfaceSpec.mNumDIs < 2) {
     return false;
   }
 
   //now the number of needed eventInputs and dataOutputs are available in the integer array
   //create the eventInputs
-  if (paInterfaceSpec.m_nNumDIs < CFunctionBlock::scm_nMaxInterfaceEvents) {
+  if (paInterfaceSpec.mNumDIs < CFunctionBlock::scmMaxInterfaceEvents) {
 
     //create the data inputs
-    mDataInputNames = new CStringDictionary::TStringId[paInterfaceSpec.m_nNumDIs];
-    mDataInputTypeIds = new CStringDictionary::TStringId[paInterfaceSpec.m_nNumDIs];
+    mDataInputNames = new CStringDictionary::TStringId[paInterfaceSpec.mNumDIs];
+    mDataInputTypeIds = new CStringDictionary::TStringId[paInterfaceSpec.mNumDIs];
 
     char diNames[cg_nIdentifierLength] = { "IN" };
 
-    for (size_t di = 0; di < paInterfaceSpec.m_nNumDIs; ++di) {
+    for (size_t di = 0; di < paInterfaceSpec.mNumDIs; ++di) {
       forte_snprintf(&(diNames[2]), 5 - 2, "%i", di + 1);
       mDataInputNames[di] = CStringDictionary::getInstance().insert(diNames);
       mDataInputTypeIds[di] = g_nStringIdANY_BIT;
     }
 
     //setup the interface Specification
-    paInterfaceSpec.m_nNumEIs = 1;
-    paInterfaceSpec.m_aunEINames = scmEventInputNames;
-    paInterfaceSpec.m_nNumEOs = 1;
-    paInterfaceSpec.m_aunEONames = scmEventOutputNames;
-    paInterfaceSpec.m_aunDINames = mDataInputNames;
-    paInterfaceSpec.m_aunDIDataTypeNames = mDataInputTypeIds;
-    paInterfaceSpec.m_nNumDOs = 1;
-    paInterfaceSpec.m_aunDONames = scmDataOutputNames;
-    paInterfaceSpec.m_aunDODataTypeNames = scmDataOutputTypeIds;
+    paInterfaceSpec.mNumEIs = 1;
+    paInterfaceSpec.mEINames = scmEventInputNames;
+    paInterfaceSpec.mNumEOs = 1;
+    paInterfaceSpec.mEONames = scmEventOutputNames;
+    paInterfaceSpec.mDINames = mDataInputNames;
+    paInterfaceSpec.mDIDataTypeNames = mDataInputTypeIds;
+    paInterfaceSpec.mNumDOs = 1;
+    paInterfaceSpec.mDONames = scmDataOutputNames;
+    paInterfaceSpec.mDODataTypeNames = scmDataOutputTypeIds;
     return true;
   }
   return false;

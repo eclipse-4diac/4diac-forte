@@ -26,21 +26,21 @@
 
 DEFINE_GENERIC_FIRMWARE_FB(GEN_E_DEMUX, g_nStringIdGEN_E_DEMUX)
 
-const CStringDictionary::TStringId GEN_E_DEMUX::scm_anDataInputNames[] = { g_nStringIdK };
-const CStringDictionary::TStringId GEN_E_DEMUX::scm_aunDIDataTypeIds[] = { g_nStringIdUINT };
+const CStringDictionary::TStringId GEN_E_DEMUX::scmDataInputNames[] = { g_nStringIdK };
+const CStringDictionary::TStringId GEN_E_DEMUX::scmDIDataTypeIds[] = { g_nStringIdUINT };
 
-const CStringDictionary::TStringId GEN_E_DEMUX::scm_anEventInputNames[] = { g_nStringIdEI };
+const CStringDictionary::TStringId GEN_E_DEMUX::scmEventInputNames[] = { g_nStringIdEI };
 
 GEN_E_DEMUX::GEN_E_DEMUX(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) :
-    CGenFunctionBlock<CFunctionBlock>(paSrcRes, paInstanceNameId), m_anEventOutputNames(nullptr){
+    CGenFunctionBlock<CFunctionBlock>(paSrcRes, paInstanceNameId), mEventOutputNames(nullptr){
 }
 
 GEN_E_DEMUX::~GEN_E_DEMUX(){
-  delete[] m_anEventOutputNames;
+  delete[] mEventOutputNames;
 }
 
 void GEN_E_DEMUX::executeEvent(TEventID paEIID){
-  if(scm_nEventEIID == paEIID && static_cast<CIEC_UINT::TValueType>(K()) < mInterfaceSpec->m_nNumEOs) {
+  if(scmEventEIID == paEIID && static_cast<CIEC_UINT::TValueType>(K()) < mInterfaceSpec->mNumEOs) {
     sendOutputEvent(static_cast<CIEC_UINT::TValueType>(K())); // the value of K corresponds to the output event ID;
   }
 }
@@ -60,22 +60,22 @@ bool GEN_E_DEMUX::createInterfaceSpec(const char *paConfigString, SFBInterfaceSp
     ++acPos;
     if('D' != *acPos){
       //we have an underscore and it is not the first underscore after E
-      paInterfaceSpec.m_nNumEOs = static_cast<TEventID>(forte::core::util::strtoul(acPos, nullptr, 10));
+      paInterfaceSpec.mNumEOs = static_cast<TEventID>(forte::core::util::strtoul(acPos, nullptr, 10));
 
-      if(paInterfaceSpec.m_nNumEOs < CFunctionBlock::scm_nMaxInterfaceEvents){
-        m_anEventOutputNames = new CStringDictionary::TStringId[paInterfaceSpec.m_nNumEOs];
+      if(paInterfaceSpec.mNumEOs < CFunctionBlock::scmMaxInterfaceEvents){
+        mEventOutputNames = new CStringDictionary::TStringId[paInterfaceSpec.mNumEOs];
 
-        generateGenericInterfacePointNameArray("EO", m_anEventOutputNames, paInterfaceSpec.m_nNumEOs);
+        generateGenericInterfacePointNameArray("EO", mEventOutputNames, paInterfaceSpec.mNumEOs);
 
-        paInterfaceSpec.m_nNumEIs = 1;
-        paInterfaceSpec.m_aunEINames = scm_anEventInputNames;
-        paInterfaceSpec.m_aunEONames = m_anEventOutputNames;
-        paInterfaceSpec.m_nNumDIs = 1;
-        paInterfaceSpec.m_aunDINames = scm_anDataInputNames;
-        paInterfaceSpec.m_aunDIDataTypeNames = scm_aunDIDataTypeIds;
-        paInterfaceSpec.m_nNumDOs = 0;
-        paInterfaceSpec.m_aunDONames = nullptr;
-        paInterfaceSpec.m_aunDODataTypeNames = nullptr;
+        paInterfaceSpec.mNumEIs = 1;
+        paInterfaceSpec.mEINames = scmEventInputNames;
+        paInterfaceSpec.mEONames = mEventOutputNames;
+        paInterfaceSpec.mNumDIs = 1;
+        paInterfaceSpec.mDINames = scmDataInputNames;
+        paInterfaceSpec.mDIDataTypeNames = scmDIDataTypeIds;
+        paInterfaceSpec.mNumDOs = 0;
+        paInterfaceSpec.mDONames = nullptr;
+        paInterfaceSpec.mDODataTypeNames = nullptr;
         return true;
       }
     }

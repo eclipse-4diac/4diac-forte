@@ -63,12 +63,12 @@ void IOConfigFBMultiSlave::executeEvent(TEventID paEIID) {
           }
         }
 
-        sendAdapterEvent(scm_nBusAdapterOutAdpNum, IOConfigFBMultiAdapter::scmEventINITID);
-        sendOutputEvent(scm_nEventINDID);
+        sendAdapterEvent(scmBusAdapterOutAdpNum, IOConfigFBMultiAdapter::scmEventINITID);
+        sendOutputEvent(scmEventINDID);
       } else {
         // Send confirmation of init
         BusAdapterIn().QO() = QO();
-        sendAdapterEvent(scm_nBusAdapterInAdpNum, IOConfigFBMultiAdapter::scmEventINITOID);
+        sendAdapterEvent(scmBusAdapterInAdpNum, IOConfigFBMultiAdapter::scmEventINITOID);
       }
     } else {
       deInit();
@@ -80,21 +80,21 @@ void IOConfigFBMultiSlave::executeEvent(TEventID paEIID) {
         // DeInit next slave
         BusAdapterOut().QI() = BusAdapterIn().QI();
 
-        sendAdapterEvent(scm_nBusAdapterOutAdpNum, IOConfigFBMultiAdapter::scmEventINITID);
-        sendOutputEvent(scm_nEventINDID);
+        sendAdapterEvent(scmBusAdapterOutAdpNum, IOConfigFBMultiAdapter::scmEventINITID);
+        sendOutputEvent(scmEventINDID);
       } else {
         // Send confirmation of deInit
         BusAdapterIn().QO() = QO();
-        sendAdapterEvent(scm_nBusAdapterInAdpNum, IOConfigFBMultiAdapter::scmEventINITOID);
+        sendAdapterEvent(scmBusAdapterInAdpNum, IOConfigFBMultiAdapter::scmEventINITOID);
       }
     }
   } else if(BusAdapterOut().INITO() == paEIID) {
     // Forward confirmation of initialization
     BusAdapterIn().QO() = func_AND(BusAdapterOut().QO(), QO());
-    sendAdapterEvent(scm_nBusAdapterInAdpNum, IOConfigFBMultiAdapter::scmEventINITOID);
+    sendAdapterEvent(scmBusAdapterInAdpNum, IOConfigFBMultiAdapter::scmEventINITOID);
   }
 
-  if(scm_nEventMAPID == paEIID) {
+  if(scmEventMAPID == paEIID) {
     if(mInitialized) {
       // Drop all existing handles
       getController().dropSlaveHandles(mIndex);
@@ -108,7 +108,7 @@ void IOConfigFBMultiSlave::executeEvent(TEventID paEIID) {
       QO() = CIEC_BOOL(false);
     }
 
-    sendOutputEvent(scm_nEventMAPOID);
+    sendOutputEvent(scmEventMAPOID);
   }
 }
 

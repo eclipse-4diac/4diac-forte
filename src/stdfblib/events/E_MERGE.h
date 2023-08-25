@@ -25,29 +25,29 @@ class FORTE_E_MERGE: public CBasicFB {
   DECLARE_FIRMWARE_FB(FORTE_E_MERGE)
 
 private:
-  static const TEventID scm_nEventEI1ID = 0;
-  static const TEventID scm_nEventEI2ID = 1;
-  static const TForteInt16 scm_anEIWithIndexes[];
-  static const CStringDictionary::TStringId scm_anEventInputNames[];
-  static const TEventID scm_nEventEOID = 0;
-  static const TForteInt16 scm_anEOWithIndexes[];
-  static const CStringDictionary::TStringId scm_anEventOutputNames[];
+  static const TEventID scmEventEI1ID = 0;
+  static const TEventID scmEventEI2ID = 1;
+  static const TForteInt16 scmEIWithIndexes[];
+  static const CStringDictionary::TStringId scmEventInputNames[];
+  static const TEventID scmEventEOID = 0;
+  static const TForteInt16 scmEOWithIndexes[];
+  static const CStringDictionary::TStringId scmEventOutputNames[];
 
-  static const SFBInterfaceSpec scm_stFBInterfaceSpec;
+  static const SFBInterfaceSpec scmFBInterfaceSpec;
   CIEC_ANY *getVarInternal(size_t) override;
-  static const TForteInt16 scm_nStateSTART = 0;
-  static const TForteInt16 scm_nStateEO = 1;
+  static const TForteInt16 scmStateSTART = 0;
+  static const TForteInt16 scmStateEO = 1;
   
   void enterStateSTART(void);
   void enterStateEO(void);
 
-  void executeEvent(TEventID pa_nEIID) override;
+  void executeEvent(TEventID paEIID) override;
 
-  void readInputData(TEventID pa_nEIID) override;
-  void writeOutputData(TEventID pa_nEIID) override;
+  void readInputData(TEventID paEIID) override;
+  void writeOutputData(TEventID paEIID) override;
 
 public:
-  FORTE_E_MERGE(CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes);
+  FORTE_E_MERGE(CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
 
   CEventConnection conn_EO;
   CIEC_ANY *getDI(size_t) override;
@@ -56,10 +56,10 @@ public:
   CDataConnection **getDIConUnchecked(TPortId) override;
   CDataConnection *getDOConUnchecked(TPortId) override;
   void evt_EI1() {
-    receiveInputEvent(scm_nEventEI1ID, nullptr);
+    receiveInputEvent(scmEventEI1ID, nullptr);
   }
   void evt_EI2() {
-    receiveInputEvent(scm_nEventEI2ID, nullptr);
+    receiveInputEvent(scmEventEI2ID, nullptr);
   }
   void operator()() {
     evt_EI1();

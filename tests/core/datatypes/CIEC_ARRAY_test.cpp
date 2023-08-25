@@ -53,7 +53,7 @@ class CIEC_ArrayOfStructTest : public CIEC_STRUCT {
     }
 
     const CStringDictionary::TStringId* elementNames() const override {
-      return scm_unElementNames;
+      return scmElementNames;
     }
 
     CStringDictionary::TStringId getStructTypeNameID() const override {
@@ -79,10 +79,10 @@ class CIEC_ArrayOfStructTest : public CIEC_STRUCT {
     }
 
   private:
-    static const CStringDictionary::TStringId scm_unElementNames[];
+    static const CStringDictionary::TStringId scmElementNames[];
 };
 
-const CStringDictionary::TStringId CIEC_ArrayOfStructTest::scm_unElementNames[] = { g_nStringIdVal1, g_nStringIdVal2, g_nStringIdVal3 };
+const CStringDictionary::TStringId CIEC_ArrayOfStructTest::scmElementNames[] = { g_nStringIdVal1, g_nStringIdVal2, g_nStringIdVal3 };
 
 DEFINE_FIRMWARE_DATATYPE(ArrayOfStructTest, g_nStringIdArrayOfStructTest);
 

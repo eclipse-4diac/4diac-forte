@@ -64,25 +64,25 @@ using namespace std::string_literals;
 
 class CDeserTestMockCommFB : public forte::com_infra::CCommFB{
   public:
-    CDeserTestMockCommFB(TForteUInt8 pa_nNumRD, const CStringDictionary::TStringId * const pa_aunDODataTypeNames) :
-        forte::com_infra::CCommFB(CStringDictionary::scm_nInvalidStringId, &m_oResource, forte::com_infra::e_Publisher),
-        m_oMockFBInterface(){
+    CDeserTestMockCommFB(TForteUInt8 paNumRD, const CStringDictionary::TStringId * const paDODataTypeNames) :
+        forte::com_infra::CCommFB(CStringDictionary::scmInvalidStringId, &mResource, forte::com_infra::e_Publisher),
+        mMockFBInterface(){
 
-      m_oMockFBInterface.m_aunEINames = nullptr;
-      m_oMockFBInterface.m_anEIWith = nullptr;
-      m_oMockFBInterface.m_anEIWithIndexes = nullptr;
-      m_oMockFBInterface.m_nNumEOs = 0;
-      m_oMockFBInterface.m_aunEONames = nullptr;
-      m_oMockFBInterface.m_anEOWith = nullptr;
-      m_oMockFBInterface.m_anEOWithIndexes = nullptr;
-      m_oMockFBInterface.m_nNumDIs = 2;
-      m_oMockFBInterface.m_aunDINames = nullptr;
-      m_oMockFBInterface.m_aunDIDataTypeNames = scm_anInputTypes;
-      m_oMockFBInterface.m_nNumDOs = pa_nNumRD + 2U;
-      m_oMockFBInterface.m_aunDONames = nullptr;
-      m_oMockFBInterface.m_aunDODataTypeNames = pa_aunDODataTypeNames;
+      mMockFBInterface.mEINames = nullptr;
+      mMockFBInterface.mEIWith = nullptr;
+      mMockFBInterface.mEIWithIndexes = nullptr;
+      mMockFBInterface.mNumEOs = 0;
+      mMockFBInterface.mEONames = nullptr;
+      mMockFBInterface.mEOWith = nullptr;
+      mMockFBInterface.mEOWithIndexes = nullptr;
+      mMockFBInterface.mNumDIs = 2;
+      mMockFBInterface.mDINames = nullptr;
+      mMockFBInterface.mDIDataTypeNames = scmInputTypes;
+      mMockFBInterface.mNumDOs = paNumRD + 2U;
+      mMockFBInterface.mDONames = nullptr;
+      mMockFBInterface.mDODataTypeNames = paDODataTypeNames;
 
-      setupFBInterface(&m_oMockFBInterface);
+      setupFBInterface(&mMockFBInterface);
     }
 
     virtual ~CDeserTestMockCommFB(){
@@ -91,14 +91,14 @@ class CDeserTestMockCommFB : public forte::com_infra::CCommFB{
     }
 
   private:
-    static const CStringDictionary::TStringId scm_anInputTypes[];
-    static EMB_RES m_oResource;
+    static const CStringDictionary::TStringId scmInputTypes[];
+    static EMB_RES mResource;
 
-    SFBInterfaceSpec m_oMockFBInterface;
+    SFBInterfaceSpec mMockFBInterface;
 };
 
-const CStringDictionary::TStringId CDeserTestMockCommFB::scm_anInputTypes[] = { g_nStringIdBOOL, g_nStringIdBOOL };
-EMB_RES CDeserTestMockCommFB::m_oResource(CStringDictionary::scm_nInvalidStringId, nullptr);
+const CStringDictionary::TStringId CDeserTestMockCommFB::scmInputTypes[] = { g_nStringIdBOOL, g_nStringIdBOOL };
+EMB_RES CDeserTestMockCommFB::mResource(CStringDictionary::scmInvalidStringId, nullptr);
 
 BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
 

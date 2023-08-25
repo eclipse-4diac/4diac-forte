@@ -559,10 +559,10 @@ template<typename T> const T func_MIN(const T &paIN1, const T &paIN2) {
 }
 
 template<typename T, typename U, typename V>
-const typename forte::core::mpl::get_castable_type<typename forte::core::mpl::get_castable_type<T, U>::type, V>::type func_LIMIT(const T &pa_roMN, const U &paIN,
-    const V &pa_roMX) {
+const typename forte::core::mpl::get_castable_type<typename forte::core::mpl::get_castable_type<T, U>::type, V>::type func_LIMIT(const T &paMN, const U &paIN,
+    const V &paMX) {
   using tImplicitType = typename forte::core::mpl::get_castable_type<typename forte::core::mpl::get_castable_type<T, U>::type, V>::type;
-  return func_MIN(func_MAX(static_cast<tImplicitType>(paIN), static_cast<tImplicitType>(pa_roMN)), static_cast<tImplicitType>(pa_roMX));
+  return func_MIN(func_MAX(static_cast<tImplicitType>(paIN), static_cast<tImplicitType>(paMN)), static_cast<tImplicitType>(paMX));
 }
 
 GENERATE_APPLY_FUNCTION(func_MOD)
@@ -1080,7 +1080,7 @@ template<typename T, typename ... Args> const T func_CONCAT(const T &paIn1, Args
 
 template<typename T> const T func_INSERT(const T &paIn1, const T &paIn2, const CIEC_ANY_INT &paP) {
   static_assert(std::is_base_of_v<CIEC_ANY_STRING, T>);
-  if(CIEC_UINT::scm_nMaxVal < (paIn1.length() + paIn2.length())) {
+  if(CIEC_UINT::scmMaxVal < (paIn1.length() + paIn2.length())) {
     DEVLOG_ERROR("result would be longer than maximum allowed length\n");
     return paIn1;
   }
@@ -1145,7 +1145,7 @@ template<typename T> const T func_REPLACE(const T &paIn1, const T &paIn2, const 
     return paIn1;
   }
 
-  if((P + L + paIn2.length()) > CIEC_UINT::scm_nMaxVal) {
+  if((P + L + paIn2.length()) > CIEC_UINT::scmMaxVal) {
     DEVLOG_ERROR("REPLACE exceeds length of string!\n");
   }
 

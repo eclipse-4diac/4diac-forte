@@ -24,8 +24,8 @@ class CIEC_STATE : public CIEC_ANY_INT {
   public:
     typedef TForteUInt16 TValueType;
 
-    static const TValueType scm_nMinVal = 0;
-    static const TValueType scm_nMaxVal;
+    static const TValueType scmMinVal = 0;
+    static const TValueType scmMaxVal;
 
     CIEC_STATE() = default;
 

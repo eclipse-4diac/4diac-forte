@@ -14,15 +14,15 @@
 #include "opcprocessvar.h"
 #include "opcconnectionimpl.h"
 
-CCmd_SetProcessVarValue::CCmd_SetProcessVarValue(COpcProcessVar * pa_pOpcVar) :
-    m_pOpcVar(pa_pOpcVar){
+CCmd_SetProcessVarValue::CCmd_SetProcessVarValue(COpcProcessVar * paOpcVar) :
+    mOpcVar(paOpcVar){
 }
 
 CCmd_SetProcessVarValue::~CCmd_SetProcessVarValue(){
 }
 
 void CCmd_SetProcessVarValue::runCommand(){
-  m_pOpcVar->sendItemData();
+  mOpcVar->sendItemData();
 }
 const char* CCmd_SetProcessVarValue::getCommandName() const{
   return "Cmd_SetProcessVarValue";

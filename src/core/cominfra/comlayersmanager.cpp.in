@@ -21,9 +21,9 @@ ${LAYERMANAGER_INCLUDE}
 
 using namespace forte::com_infra;
 
-CComLayer* CComLayersManager::createCommunicationLayer(char *pa_acLayerIdentifier, CComLayer* pa_poUpperLayer, CBaseCommFB * pa_poComFB){
-  CComLayer* m_poNewLayer = nullptr;
+CComLayer* CComLayersManager::createCommunicationLayer(char *paLayerIdentifier, CComLayer* paUpperLayer, CBaseCommFB * paComFB){
+  CComLayer* mNewLayer = nullptr;
   ${LAYERMANAGER_INSTANCE}
 
-  return m_poNewLayer;
+  return mNewLayer;
 }

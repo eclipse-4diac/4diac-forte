@@ -24,12 +24,12 @@ class GEN_E_DEMUX : public CGenFunctionBlock<CFunctionBlock>{
   DECLARE_GENERIC_FIRMWARE_FB(GEN_E_DEMUX)
 
   private:
-    static const CStringDictionary::TStringId scm_anDataInputNames[], scm_aunDIDataTypeIds[];
+    static const CStringDictionary::TStringId scmDataInputNames[], scmDIDataTypeIds[];
 
-    static const TEventID scm_nEventEIID = 0;
-    static const CStringDictionary::TStringId scm_anEventInputNames[];
+    static const TEventID scmEventEIID = 0;
+    static const CStringDictionary::TStringId scmEventInputNames[];
 
-    CStringDictionary::TStringId *m_anEventOutputNames;
+    CStringDictionary::TStringId *mEventOutputNames;
 
     void executeEvent(TEventID paEIID) override;
 

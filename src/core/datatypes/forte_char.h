@@ -24,8 +24,8 @@ class CIEC_CHAR : public CIEC_ANY_CHAR{
   public:
     using TValueType = TForteChar;
 
-    static const TValueType scm_nMinVal = 0;
-    static const TValueType scm_nMaxVal;
+    static const TValueType scmMinVal = 0;
+    static const TValueType scmMaxVal;
 
     CIEC_CHAR() = default;
 

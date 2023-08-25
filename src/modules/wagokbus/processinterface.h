@@ -46,7 +46,7 @@ class WagoPFCProcessInterface : public CProcessInterfaceBase {
       public:
         //!KBus interface handling is up and running correctly
         bool isKBusRunning();
-        //bool onKBusCylce(WagoPFCProcessInterface &pa_roKBusHandler); can be used for more complex kbus handling
+        //bool onKBusCylce(WagoPFCProcessInterface &paKBusHandler); can be used for more complex kbus handling
         bool isIdValid(TForteUInt8 paSlot);
         tldkc_KbusInfo_TerminalInfo *getTerminalInfo(TForteUInt8 paSlot);
         void registerKBusReadFB(WagoPFCProcessInterface *paFB);

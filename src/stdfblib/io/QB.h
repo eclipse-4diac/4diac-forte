@@ -28,22 +28,22 @@ class FORTE_QB final : public CProcessInterface {
   DECLARE_FIRMWARE_FB(FORTE_QB)
 
 private:
-  static const CStringDictionary::TStringId scm_anDataInputNames[];
-  static const CStringDictionary::TStringId scm_anDataInputTypeIds[];
-  static const CStringDictionary::TStringId scm_anDataOutputNames[];
-  static const CStringDictionary::TStringId scm_anDataOutputTypeIds[];
-  static const TEventID scm_nEventINITID = 0;
-  static const TEventID scm_nEventREQID = 1;
-  static const TDataIOID scm_anEIWith[];
-  static const TForteInt16 scm_anEIWithIndexes[];
-  static const CStringDictionary::TStringId scm_anEventInputNames[];
-  static const TEventID scm_nEventINITOID = 0;
-  static const TEventID scm_nEventCNFID = 1;
-  static const TDataIOID scm_anEOWith[]; 
-  static const TForteInt16 scm_anEOWithIndexes[];
-  static const CStringDictionary::TStringId scm_anEventOutputNames[];
+  static const CStringDictionary::TStringId scmDataInputNames[];
+  static const CStringDictionary::TStringId scmDataInputTypeIds[];
+  static const CStringDictionary::TStringId scmDataOutputNames[];
+  static const CStringDictionary::TStringId scmDataOutputTypeIds[];
+  static const TEventID scmEventINITID = 0;
+  static const TEventID scmEventREQID = 1;
+  static const TDataIOID scmEIWith[];
+  static const TForteInt16 scmEIWithIndexes[];
+  static const CStringDictionary::TStringId scmEventInputNames[];
+  static const TEventID scmEventINITOID = 0;
+  static const TEventID scmEventCNFID = 1;
+  static const TDataIOID scmEOWith[]; 
+  static const TForteInt16 scmEOWithIndexes[];
+  static const CStringDictionary::TStringId scmEventOutputNames[];
 
-  static const SFBInterfaceSpec scm_stFBInterfaceSpec;
+  static const SFBInterfaceSpec scmFBInterfaceSpec;
 
   void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
@@ -52,7 +52,7 @@ private:
   void setInitialValues() override;
 
 public:
-  FORTE_QB(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes);
+  FORTE_QB(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
 
   CIEC_BOOL var_QI;
   CIEC_STRING var_PARAMS;
@@ -80,7 +80,7 @@ public:
     var_QI = pa_QI;
     var_PARAMS = pa_PARAMS;
     var_OUT = pa_OUT;
-    receiveInputEvent(scm_nEventINITID, nullptr);
+    receiveInputEvent(scmEventINITID, nullptr);
     pa_QO = var_QO;
     pa_STATUS = var_STATUS;
   }
@@ -88,7 +88,7 @@ public:
     var_QI = pa_QI;
     var_PARAMS = pa_PARAMS;
     var_OUT = pa_OUT;
-    receiveInputEvent(scm_nEventREQID, nullptr);
+    receiveInputEvent(scmEventREQID, nullptr);
     pa_QO = var_QO;
     pa_STATUS = var_STATUS;
   }

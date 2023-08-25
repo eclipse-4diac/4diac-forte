@@ -26,9 +26,9 @@
 class CIEC_ANY_ELEMENTARY : public CIEC_ANY {
   public:
 
-    CIEC_ANY_ELEMENTARY(const CIEC_ANY_ELEMENTARY &pa_roVal) :
+    CIEC_ANY_ELEMENTARY(const CIEC_ANY_ELEMENTARY &paVal) :
         CIEC_ANY() {
-      setLargestUInt(pa_roVal.getLargestUInt());
+      setLargestUInt(paVal.getLargestUInt());
     }
 
     ~CIEC_ANY_ELEMENTARY() override = default;
@@ -38,7 +38,7 @@ class CIEC_ANY_ELEMENTARY : public CIEC_ANY {
     }
 
     int toString(char* paValue, size_t paBufferSize) const override;
-    int fromString(const char *pa_rsValue) override;
+    int fromString(const char *paValue) override;
 
     static EDataTypeID getElementaryDataTypeId(CStringDictionary::TStringId paTypeNameId);
 
@@ -52,7 +52,7 @@ class CIEC_ANY_ELEMENTARY : public CIEC_ANY {
 
     const static std::map<CStringDictionary::TStringId, CIEC_ANY::EDataTypeID> scm_StringToTypeId;
 
-    const static int scm_nMaxTypeNameLength = 13;
+    const static int scmMaxTypeNameLength = 13;
 
 };
 

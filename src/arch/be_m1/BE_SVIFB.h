@@ -17,16 +17,16 @@
 
 class BE_SVIFB : public CFunctionBlock{
   public:
-    BE_SVIFB(CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_pstInterfaceSpec, const CStringDictionary::TStringId pa_nInstanceNameId) :
-        CFunctionBlock(pa_poSrcRes, pa_pstInterfaceSpec, pa_nInstanceNameId){
+    BE_SVIFB(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId) :
+        CFunctionBlock(paSrcRes, paInterfaceSpec, paInstanceNameId){
     }
 
   protected:
-    bool registerSVIvar(const CIEC_STRING& pa_roID, CIEC_ANY& pa_roValue, const TForteUInt32 pa_nMode);
+    bool registerSVIvar(const CIEC_STRING& paID, CIEC_ANY& paValue, const TForteUInt32 paMode);
 
   private:
-    static const TForteUInt32 scm_anBE_SVI_Types[];
-    static const TForteUInt32 scm_anBE_SVI_VarSizes[];
+    static const TForteUInt32 scmBE_SVI_Types[];
+    static const TForteUInt32 scmBE_SVI_VarSizes[];
 
 };
 

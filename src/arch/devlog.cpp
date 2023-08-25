@@ -53,8 +53,8 @@ static const char* scLogLevel[] = { "INFO", "WARNING", "ERROR", "DEBUG", "TRACE"
 
 /*! \brief print the given log message with the error level and a time stamp
  *
- * @param pa_ecLevel the message's log level
- * @param pa_acMessage the message to log
+ * @param paLevel the message's log level
+ * @param paMessage the message to log
  */
 void printLogMessage(E_MsgLevel paLevel, const char *paMessage);
 

@@ -29,10 +29,10 @@ template <typename TThreadHandle, TThreadHandle nullHandle>
 forte::com_infra::EComResponse CSerialComLayerBase<TThreadHandle, nullHandle>::processInterrupt(){
   if(forte::com_infra::e_ProcessDataOk == mInterruptResp){
     CCriticalRegion lock(mRecvLock);
-    switch (m_eConnectionState){
+    switch (mConnectionState){
       case forte::com_infra::e_Connected:
-        if(nullptr != m_poTopLayer){
-          mInterruptResp = m_poTopLayer->recvData(mRecvBuffer, mBufFillSize);
+        if(nullptr != mTopLayer){
+          mInterruptResp = mTopLayer->recvData(mRecvBuffer, mBufFillSize);
           mBufFillSize = 0;
         }
         break;
@@ -141,7 +141,7 @@ forte::com_infra::EComResponse CSerialComLayerBase<TThreadHandle, nullHandle>::o
 
   forte::com_infra::EComResponse resp = openSerialConnection(parsedParameters, &mSerialHandle);
   if(forte::com_infra::e_InitOk == resp){
-    m_eConnectionState = forte::com_infra::e_Connected;
+    mConnectionState = forte::com_infra::e_Connected;
   }
   return resp;
 }

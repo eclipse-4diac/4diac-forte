@@ -35,7 +35,7 @@ class CFreeRTOSTimerHandler : public CTimerHandler {
     void disableHandler() override;
     /*!\brief Sets the priority of the event source
      *
-     * \param pa_nPriority new priority of the event source
+     * \param paPriority new priority of the event source
      */
     void setPriority(int paPriority) override;
     /*!\brief Get the current priority of the event source

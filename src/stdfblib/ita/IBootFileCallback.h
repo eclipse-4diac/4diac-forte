@@ -18,7 +18,7 @@
 
 class IBootFileCallback{
   public: 
-    virtual bool executeCommand(const char *const pa_acDest, char *pa_acCommand) = 0;
+    virtual bool executeCommand(const char *const paDest, char *paCommand) = 0;
 };
 
 #endif /* SRC_STDFBLIB_ITA_IBOOTFILECALLBACK_H_ */

@@ -24,38 +24,38 @@ namespace forte {
 class CModbusIOBlock {
   public:
     struct SModbusRange {
-      EModbusFunction m_eFunction;
-      unsigned int m_nStartAddress;
-      unsigned int m_nNrAddresses;
+      EModbusFunction mFunction;
+      unsigned int mStartAddress;
+      unsigned int mNrAddresses;
     };
     typedef std::vector<SModbusRange> TModbusRangeList;
 
-    CModbusIOBlock(forte::com_infra::CModbusComLayer* pa_pParent);
+    CModbusIOBlock(forte::com_infra::CModbusComLayer* paParent);
     ~CModbusIOBlock();
 
-    forte::com_infra::CModbusComLayer* getParent() const { return m_pParent; }
+    forte::com_infra::CModbusComLayer* getParent() const { return mParent; }
 
-    void addNewRead(EModbusFunction pa_eFunction, unsigned int pa_nStartAddress, unsigned int pa_nNrAddresses);
-    void addNewSend(EModbusFunction pa_eFunction, unsigned int pa_nStartAddress, unsigned int pa_nNrAddresses);
+    void addNewRead(EModbusFunction paFunction, unsigned int paStartAddress, unsigned int paNrAddresses);
+    void addNewSend(EModbusFunction paFunction, unsigned int paStartAddress, unsigned int paNrAddresses);
 
     void allocCache();
-    void* getCache() { return m_pCache; }
+    void* getCache() { return mCache; }
 
-    const TModbusRangeList& getReads() const { return m_lReads; }
-    const TModbusRangeList& getSends() const { return m_lSends; }
+    const TModbusRangeList& getReads() const { return mReads; }
+    const TModbusRangeList& getSends() const { return mSends; }
 
-    unsigned int getReadSize() const { return m_nReadSize; }
-    unsigned int getSendSize() const { return m_nSendSize; }
-    static unsigned int getRegisterSize(EModbusFunction pa_eFunction);
+    unsigned int getReadSize() const { return mReadSize; }
+    unsigned int getSendSize() const { return mSendSize; }
+    static unsigned int getRegisterSize(EModbusFunction paFunction);
 
   private:
-    forte::com_infra::CModbusComLayer *const m_pParent;
-    TModbusRangeList m_lReads;
-    TModbusRangeList m_lSends;
+    forte::com_infra::CModbusComLayer *const mParent;
+    TModbusRangeList mReads;
+    TModbusRangeList mSends;
 
-    void *m_pCache;
-    unsigned int m_nReadSize;
-    unsigned int m_nSendSize;
+    void *mCache;
+    unsigned int mReadSize;
+    unsigned int mSendSize;
 };
 
 #endif

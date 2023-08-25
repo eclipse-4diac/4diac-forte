@@ -18,29 +18,29 @@
 
 DEFINE_FIRMWARE_FB(FORTE_X20AT4222, g_nStringIdX20AT4222)
 
-const CStringDictionary::TStringId FORTE_X20AT4222::scm_anDataInputNames[] = { g_nStringIdQI, g_nStringIdCNID, g_nStringIdMODID };
+const CStringDictionary::TStringId FORTE_X20AT4222::scmDataInputNames[] = { g_nStringIdQI, g_nStringIdCNID, g_nStringIdMODID };
 
-const CStringDictionary::TStringId FORTE_X20AT4222::scm_anDataInputTypeIds[] = { g_nStringIdBOOL, g_nStringIdUSINT, g_nStringIdUINT };
+const CStringDictionary::TStringId FORTE_X20AT4222::scmDataInputTypeIds[] = { g_nStringIdBOOL, g_nStringIdUSINT, g_nStringIdUINT };
 
-const CStringDictionary::TStringId FORTE_X20AT4222::scm_anDataOutputNames[] = { g_nStringIdQO, g_nStringIdCNIDO, g_nStringIdSTATUS, g_nStringIdT01, g_nStringIdT02, g_nStringIdT03, g_nStringIdT04 };
+const CStringDictionary::TStringId FORTE_X20AT4222::scmDataOutputNames[] = { g_nStringIdQO, g_nStringIdCNIDO, g_nStringIdSTATUS, g_nStringIdT01, g_nStringIdT02, g_nStringIdT03, g_nStringIdT04 };
 
-const CStringDictionary::TStringId FORTE_X20AT4222::scm_anDataOutputTypeIds[] = { g_nStringIdBOOL, g_nStringIdUSINT, g_nStringIdSTRING, g_nStringIdREAL, g_nStringIdREAL, g_nStringIdREAL, g_nStringIdREAL };
+const CStringDictionary::TStringId FORTE_X20AT4222::scmDataOutputTypeIds[] = { g_nStringIdBOOL, g_nStringIdUSINT, g_nStringIdSTRING, g_nStringIdREAL, g_nStringIdREAL, g_nStringIdREAL, g_nStringIdREAL };
 
-const TForteInt16 FORTE_X20AT4222::scm_anEIWithIndexes[] = { 0, 4 };
-const TDataIOID FORTE_X20AT4222::scm_anEIWith[] = { 0, 1, 2, scmWithListDelimiter, 0, scmWithListDelimiter };
-const CStringDictionary::TStringId FORTE_X20AT4222::scm_anEventInputNames[] = { g_nStringIdINIT, g_nStringIdREQ };
+const TForteInt16 FORTE_X20AT4222::scmEIWithIndexes[] = { 0, 4 };
+const TDataIOID FORTE_X20AT4222::scmEIWith[] = { 0, 1, 2, scmWithListDelimiter, 0, scmWithListDelimiter };
+const CStringDictionary::TStringId FORTE_X20AT4222::scmEventInputNames[] = { g_nStringIdINIT, g_nStringIdREQ };
 
-const TDataIOID FORTE_X20AT4222::scm_anEOWith[] = { 0, 1, 2, scmWithListDelimiter, 2, 3, 4, 0, 5, 6, scmWithListDelimiter };
-const TForteInt16 FORTE_X20AT4222::scm_anEOWithIndexes[] = { 0, 4, -1 };
-const CStringDictionary::TStringId FORTE_X20AT4222::scm_anEventOutputNames[] = { g_nStringIdINITO, g_nStringIdCNF };
+const TDataIOID FORTE_X20AT4222::scmEOWith[] = { 0, 1, 2, scmWithListDelimiter, 2, 3, 4, 0, 5, 6, scmWithListDelimiter };
+const TForteInt16 FORTE_X20AT4222::scmEOWithIndexes[] = { 0, 4, -1 };
+const CStringDictionary::TStringId FORTE_X20AT4222::scmEventOutputNames[] = { g_nStringIdINITO, g_nStringIdCNF };
 
-const SFBInterfaceSpec FORTE_X20AT4222::scm_stFBInterfaceSpec = { 2, scm_anEventInputNames, scm_anEIWith, scm_anEIWithIndexes, 2, scm_anEventOutputNames, scm_anEOWith, scm_anEOWithIndexes, 3, scm_anDataInputNames, scm_anDataInputTypeIds, 7, scm_anDataOutputNames, scm_anDataOutputTypeIds, 0, 0 };
+const SFBInterfaceSpec FORTE_X20AT4222::scmFBInterfaceSpec = { 2, scmEventInputNames, scmEIWith, scmEIWithIndexes, 2, scmEventOutputNames, scmEOWith, scmEOWithIndexes, 3, scmDataInputNames, scmDataInputTypeIds, 7, scmDataOutputNames, scmDataOutputTypeIds, 0, 0 };
 
-void FORTE_X20AT4222::executeEvent(TEventID pa_nEIID){
-  switch (pa_nEIID){
-    case scm_nEventINITID:
+void FORTE_X20AT4222::executeEvent(TEventID paEIID){
+  switch (paEIID){
+    case scmEventINITID:
       if(QI() == true){
-        m_bInitOk = false;
+        mInitOk = false;
 
         CEplStackWrapper &eplStack = CEplStackWrapper::getInstance();
 
@@ -51,34 +51,34 @@ void FORTE_X20AT4222::executeEvent(TEventID pa_nEIID){
           // Inputs (process inputs) always start with i = 1
           // Check xap.xml if a BitUnused is present
           for(unsigned int i = 1; i < moduleIOs->getNrOfEntries() - 1; i++){
-            m_oEplMapping.m_lCurrentValues.pushBack(new SEplMapping::SEplMappingValues(moduleIOs->getEntry(i)[0], moduleIOs->getEntry(i)[1], moduleIOs->getEntry(i)[2]));
+            mEplMapping.mCurrentValues.pushBack(new SEplMapping::SEplMappingValues(moduleIOs->getEntry(i)[0], moduleIOs->getEntry(i)[1], moduleIOs->getEntry(i)[2]));
           }
 
           delete moduleIOs;
 
           eplStack.registerCallback(static_cast<IEplCNCallback*>(this));
 
-          m_bInitOk = true;
+          mInitOk = true;
         }
       }
       QO() = QI();
       CNIDO() = CNID();
-      sendOutputEvent(scm_nEventINITOID);
+      sendOutputEvent(scmEventINITOID);
       break;
-    case scm_nEventREQID:
-      if(QI() == true && m_bInitOk){
-        m_oSync.lock();
-        SEplMapping::TEplMappingList::Iterator itEnd = m_oEplMapping.m_lCurrentValues.end();
-        SEplMapping::TEplMappingList::Iterator it = m_oEplMapping.m_lCurrentValues.begin();
-        for(int i = 3; i < mInterfaceSpec->m_nNumDOs && it != itEnd; i++, ++it){
-          short ioVal = *((short*) (it->m_pchCurrentValue));
+    case scmEventREQID:
+      if(QI() == true && mInitOk){
+        mSync.lock();
+        SEplMapping::TEplMappingList::Iterator itEnd = mEplMapping.mCurrentValues.end();
+        SEplMapping::TEplMappingList::Iterator it = mEplMapping.mCurrentValues.begin();
+        for(int i = 3; i < mInterfaceSpec->mNumDOs && it != itEnd; i++, ++it){
+          short ioVal = *((short*) (it->mCurrentValue));
           TForteFloat ioValFloat = static_cast<TForteFloat>(ioVal);
           *static_cast<CIEC_REAL*>(getDO(i)) = ioValFloat / 10;
         }
-        m_oSync.unlock();
+        mSync.unlock();
       }
       QO() = QI();
-      sendOutputEvent(scm_nEventCNFID);
+      sendOutputEvent(scmEventCNFID);
       break;
   }
 }
@@ -86,21 +86,21 @@ void FORTE_X20AT4222::executeEvent(TEventID pa_nEIID){
 void FORTE_X20AT4222::cnSynchCallback(){
   CEplStackWrapper &eplStack = CEplStackWrapper::getInstance();
 
-  m_oSync.lock();
+  mSync.lock();
 
-  SEplMapping::TEplMappingList::Iterator itEnd = m_oEplMapping.m_lCurrentValues.end();
-  SEplMapping::TEplMappingList::Iterator it = m_oEplMapping.m_lCurrentValues.begin();
+  SEplMapping::TEplMappingList::Iterator itEnd = mEplMapping.mCurrentValues.end();
+  SEplMapping::TEplMappingList::Iterator it = mEplMapping.mCurrentValues.begin();
   for(it; it != itEnd; ++it){
     short ioVal = 0x0000;
     char lowByte;
     char highByte;
-    lowByte = (eplStack.getProcImageOut()[it->m_nPiOffset] & (0xFF << it->m_nBitOffset)) >> it->m_nBitOffset;
-    highByte = (eplStack.getProcImageOut()[it->m_nPiOffset + 1] & (0xFF << it->m_nBitOffset)) >> it->m_nBitOffset;
+    lowByte = (eplStack.getProcImageOut()[it->mPiOffset] & (0xFF << it->mBitOffset)) >> it->mBitOffset;
+    highByte = (eplStack.getProcImageOut()[it->mPiOffset + 1] & (0xFF << it->mBitOffset)) >> it->mBitOffset;
     ioVal = (short) ((0xFF00 & (highByte << 8))) | (short) (0xFF & lowByte);
 
-    *((short*) (it->m_pchCurrentValue)) = ioVal;
+    *((short*) (it->mCurrentValue)) = ioVal;
   }
 
-  m_oSync.unlock();
+  mSync.unlock();
 }
 

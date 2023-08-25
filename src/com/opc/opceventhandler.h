@@ -25,12 +25,12 @@ class COpcEventHandler : public CExternalEventHandler, private CThread{
   public:
     typedef int TCallbackDescriptor;
 
-    void sendCommand(ICmd *pa_pCmd);
+    void sendCommand(ICmd *paCmd);
 
-    TCallbackDescriptor addComCallback(forte::com_infra::CComLayer* pa_pComCallback);
-    void removeComCallback(TCallbackDescriptor pa_nCallbackDesc);
+    TCallbackDescriptor addComCallback(forte::com_infra::CComLayer* paComCallback);
+    void removeComCallback(TCallbackDescriptor paCallbackDesc);
 
-    void executeComCallback(TCallbackDescriptor pa_nCallbackDesc);
+    void executeComCallback(TCallbackDescriptor paCallbackDesc);
 
     /* functions needed for the external event handler interface */
     void enableHandler() override {
@@ -58,19 +58,19 @@ class COpcEventHandler : public CExternalEventHandler, private CThread{
     ICmd* getNextCommand();
 
     struct TComContainer{
-        TCallbackDescriptor m_nCallbackDesc;
-        forte::com_infra::CComLayer* m_pCallback;
+        TCallbackDescriptor mCallbackDesc;
+        forte::com_infra::CComLayer* mCallback;
     };
 
     typedef CSinglyLinkedList<TComContainer> TCallbackList;
-    TCallbackList m_lstComCallbacks;
+    TCallbackList mComCallbacks;
 
-    static TCallbackDescriptor m_nCallbackDescCount;
+    static TCallbackDescriptor mCallbackDescCount;
 
-    CSyncObject m_oSync;
+    CSyncObject mSync;
 
     typedef CSinglyLinkedList<ICmd*> TCommandQueue;
-    TCommandQueue m_lCommandQueue;
+    TCommandQueue mCommandQueue;
 };
 
 #endif // OPCEVENTHANDLER_H_

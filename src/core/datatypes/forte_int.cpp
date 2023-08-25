@@ -19,8 +19,8 @@
 
 DEFINE_FIRMWARE_DATATYPE(INT, g_nStringIdINT)
 
-const CIEC_INT::TValueType CIEC_INT::scm_nMinVal = std::numeric_limits<CIEC_INT::TValueType>::min();
-const CIEC_INT::TValueType CIEC_INT::scm_nMaxVal = std::numeric_limits<CIEC_INT::TValueType>::max();
+const CIEC_INT::TValueType CIEC_INT::scmMinVal = std::numeric_limits<CIEC_INT::TValueType>::min();
+const CIEC_INT::TValueType CIEC_INT::scmMaxVal = std::numeric_limits<CIEC_INT::TValueType>::max();
 
 template CIEC_INT &CIEC_INT::operator=<>(const CIEC_ANY_INT &paValue);
 

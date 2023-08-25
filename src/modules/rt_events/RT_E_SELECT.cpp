@@ -20,27 +20,27 @@
 
 DEFINE_FIRMWARE_FB(FORTE_RT_E_SELECT, g_nStringIdRT_E_SELECT)
 
-const CStringDictionary::TStringId FORTE_RT_E_SELECT::scm_anDataInputNames[] = {g_nStringIdQI, g_nStringIdG, g_nStringIdTmin, g_nStringIdDeadline, g_nStringIdWCET};
-const CStringDictionary::TStringId FORTE_RT_E_SELECT::scm_anDataInputTypeIds[] = {g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdTIME, g_nStringIdTIME, g_nStringIdTIME};
-const CStringDictionary::TStringId FORTE_RT_E_SELECT::scm_anDataOutputNames[] = {g_nStringIdQO};
-const CStringDictionary::TStringId FORTE_RT_E_SELECT::scm_anDataOutputTypeIds[] = {g_nStringIdBOOL};
-const TDataIOID FORTE_RT_E_SELECT::scm_anEIWith[] = {0, 2, 3, 4, scmWithListDelimiter, 1, scmWithListDelimiter, 1, scmWithListDelimiter};
-const TForteInt16 FORTE_RT_E_SELECT::scm_anEIWithIndexes[] = {0, 5, 7};
-const CStringDictionary::TStringId FORTE_RT_E_SELECT::scm_anEventInputNames[] = {g_nStringIdINIT, g_nStringIdEI0, g_nStringIdEI1};
-const TDataIOID FORTE_RT_E_SELECT::scm_anEOWith[] = {0, scmWithListDelimiter};
-const TForteInt16 FORTE_RT_E_SELECT::scm_anEOWithIndexes[] = {0, -1};
-const CStringDictionary::TStringId FORTE_RT_E_SELECT::scm_anEventOutputNames[] = {g_nStringIdINITO, g_nStringIdEO};
-const SFBInterfaceSpec FORTE_RT_E_SELECT::scm_stFBInterfaceSpec = {
-  3, scm_anEventInputNames, scm_anEIWith, scm_anEIWithIndexes,
-  2, scm_anEventOutputNames, scm_anEOWith, scm_anEOWithIndexes,
-  5, scm_anDataInputNames, scm_anDataInputTypeIds,
-  1, scm_anDataOutputNames, scm_anDataOutputTypeIds,
+const CStringDictionary::TStringId FORTE_RT_E_SELECT::scmDataInputNames[] = {g_nStringIdQI, g_nStringIdG, g_nStringIdTmin, g_nStringIdDeadline, g_nStringIdWCET};
+const CStringDictionary::TStringId FORTE_RT_E_SELECT::scmDataInputTypeIds[] = {g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdTIME, g_nStringIdTIME, g_nStringIdTIME};
+const CStringDictionary::TStringId FORTE_RT_E_SELECT::scmDataOutputNames[] = {g_nStringIdQO};
+const CStringDictionary::TStringId FORTE_RT_E_SELECT::scmDataOutputTypeIds[] = {g_nStringIdBOOL};
+const TDataIOID FORTE_RT_E_SELECT::scmEIWith[] = {0, 2, 3, 4, scmWithListDelimiter, 1, scmWithListDelimiter, 1, scmWithListDelimiter};
+const TForteInt16 FORTE_RT_E_SELECT::scmEIWithIndexes[] = {0, 5, 7};
+const CStringDictionary::TStringId FORTE_RT_E_SELECT::scmEventInputNames[] = {g_nStringIdINIT, g_nStringIdEI0, g_nStringIdEI1};
+const TDataIOID FORTE_RT_E_SELECT::scmEOWith[] = {0, scmWithListDelimiter};
+const TForteInt16 FORTE_RT_E_SELECT::scmEOWithIndexes[] = {0, -1};
+const CStringDictionary::TStringId FORTE_RT_E_SELECT::scmEventOutputNames[] = {g_nStringIdINITO, g_nStringIdEO};
+const SFBInterfaceSpec FORTE_RT_E_SELECT::scmFBInterfaceSpec = {
+  3, scmEventInputNames, scmEIWith, scmEIWithIndexes,
+  2, scmEventOutputNames, scmEOWith, scmEOWithIndexes,
+  5, scmDataInputNames, scmDataInputTypeIds,
+  1, scmDataOutputNames, scmDataOutputTypeIds,
   0, nullptr,
   0, nullptr
 };
 
-FORTE_RT_E_SELECT::FORTE_RT_E_SELECT(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes) :
-        CRTEventSingle( pa_poSrcRes, &scm_stFBInterfaceSpec, pa_nInstanceNameId),
+FORTE_RT_E_SELECT::FORTE_RT_E_SELECT(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) :
+        CRTEventSingle( paSrcRes, &scmFBInterfaceSpec, paInstanceNameId),
     var_conn_QO(var_QO),
     conn_INITO(this, 0),
     conn_EO(this, 1),
@@ -61,14 +61,14 @@ void FORTE_RT_E_SELECT::setInitialValues() {
   var_QO = 0_BOOL;
 }
 
-bool FORTE_RT_E_SELECT::checkActivation(TEventID pa_nEIID){
-  return (scm_nEventEI0ID == pa_nEIID && !var_G) ||
-         (scm_nEventEI1ID == pa_nEIID && var_G);
+bool FORTE_RT_E_SELECT::checkActivation(TEventID paEIID){
+  return (scmEventEI0ID == paEIID && !var_G) ||
+         (scmEventEI1ID == paEIID && var_G);
 }
 
 void FORTE_RT_E_SELECT::readInputData(TEventID paEIID) {
   switch(paEIID) {
-    case scm_nEventINITID: {
+    case scmEventINITID: {
       RES_DATA_CON_CRITICAL_REGION();
       readData(0, var_QI, conn_QI);
       readData(2, var_Tmin, conn_Tmin);
@@ -76,12 +76,12 @@ void FORTE_RT_E_SELECT::readInputData(TEventID paEIID) {
       readData(4, var_WCET, conn_WCET);
       break;
     }
-    case scm_nEventEI0ID: {
+    case scmEventEI0ID: {
       RES_DATA_CON_CRITICAL_REGION();
       readData(1, var_G, conn_G);
       break;
     }
-    case scm_nEventEI1ID: {
+    case scmEventEI1ID: {
       RES_DATA_CON_CRITICAL_REGION();
       readData(1, var_G, conn_G);
       break;
@@ -93,12 +93,12 @@ void FORTE_RT_E_SELECT::readInputData(TEventID paEIID) {
 
 void FORTE_RT_E_SELECT::writeOutputData(TEventID paEIID) {
   switch(paEIID) {
-    case scm_nEventINITOID: {
+    case scmEventINITOID: {
       RES_DATA_CON_CRITICAL_REGION();
       writeData(0, var_QO, conn_QO);
       break;
     }
-    case scm_nEventEOID: {
+    case scmEventEOID: {
       RES_DATA_CON_CRITICAL_REGION();
       break;
     }

@@ -31,17 +31,17 @@ extern "C" void __cxa_pure_virtual(void){
 
 RMT_DEV *poDev = 0;
 
-void endForte(int pa_nSig){
-  (void) pa_nSig;
+void endForte(int paSig){
+  (void) paSig;
   if(0 != poDev){
     poDev->changeFBExecutionState(EMGMCommandType::Kill);
   }
 }
 
 /*!\brief Creates the Device-Object
- * \param pa_acMGRID A string containing IP and Port like [IP]:[Port]
+ * \param paMGRID A string containing IP and Port like [IP]:[Port]
  */
-void createDev(const char *pa_acMGRID){
+void createDev(const char *paMGRID){
 
   signal(SIGINT, endForte);
   signal(SIGTERM, endForte);
@@ -53,7 +53,7 @@ void createDev(const char *pa_acMGRID){
   CFBTestsManager::getInstance().runAllTests();
 #endif
 
-  poDev->setMGR_ID(pa_acMGRID);
+  poDev->setMGR_ID(paMGRID);
   poDev->startDevice();
   DEVLOG_INFO("FORTE is up and running\n");
   poDev->MGR.joinResourceThread();

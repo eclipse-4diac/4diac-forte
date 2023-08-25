@@ -76,17 +76,17 @@ void CLuaBFB::executeEvent(TEventID paEIID) {
 
 CIEC_ANY* CLuaBFB::getVariable(TForteUInt32 paId) {
   if(CLuaBFB::LUA_FB_STATE == paId) {
-    return &m_nECCState;
+    return &mECCState;
   }
   if((paId & CLuaBFB::LUA_FB_IN_FLAG) != 0) {
     return getVarInternal(paId & CLuaBFB::LUA_FB_VAR_MAX);
   }
   if((paId & CLuaBFB::LUA_FB_AD_FLAG) != 0) {
     if((paId & CLuaBFB::LUA_FB_DO_FLAG) != 0) {
-      return m_apoAdapters[(paId >> 16) & CLuaBFB::LUA_AD_VAR_MAX]->getDO(paId & CLuaBFB::LUA_FB_VAR_MAX);
+      return mAdapters[(paId >> 16) & CLuaBFB::LUA_AD_VAR_MAX]->getDO(paId & CLuaBFB::LUA_FB_VAR_MAX);
     }
     if((paId & CLuaBFB::LUA_FB_DI_FLAG) != 0) {
-      return m_apoAdapters[(paId >> 16) & CLuaBFB::LUA_AD_VAR_MAX]->getDI(paId & CLuaBFB::LUA_FB_VAR_MAX);
+      return mAdapters[(paId >> 16) & CLuaBFB::LUA_AD_VAR_MAX]->getDI(paId & CLuaBFB::LUA_FB_VAR_MAX);
     }
     return nullptr;
   }

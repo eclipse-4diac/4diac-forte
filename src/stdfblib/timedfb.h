@@ -26,16 +26,16 @@
 class CTimedFB : public CEventSourceFB{
 private:
 protected:
-  static const SFBInterfaceSpec scm_stFBInterfaceSpec;
-  static const CStringDictionary::TStringId scm_aunEINameIds[];
-  static const CStringDictionary::TStringId scm_aunEONameIds[];
-  static const CStringDictionary::TStringId scm_aunDINameIds[];
-  static const CStringDictionary::TStringId scm_aunDIDataTypeNameIds[];
+  static const SFBInterfaceSpec scmFBInterfaceSpec;
+  static const CStringDictionary::TStringId scmEINameIds[];
+  static const CStringDictionary::TStringId scmEONameIds[];
+  static const CStringDictionary::TStringId scmDINameIds[];
+  static const CStringDictionary::TStringId scmDIDataTypeNameIds[];
 
-  static const TEventID csm_nEventSTARTID = 0;
-  static const TEventID csm_nEventSTOPID = 1;
+  static const TEventID csmEventSTARTID = 0;
+  static const TEventID csmEventSTOPID = 1;
 
-  static const TEventID csm_nEOID = 0;
+  static const TEventID csmEOID = 0;
 
 
   bool mActive; //!> flag to indicate that the timed fb is currently active
@@ -56,7 +56,7 @@ public:
   CTimedFB(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes, ETimerActivationType paType);
   ~CTimedFB() override = default;
 
-  EMGMResponse changeFBExecutionState(EMGMCommandType pa_unCommand) override;
+  EMGMResponse changeFBExecutionState(EMGMCommandType paCommand) override;
 
 };
 

@@ -25,57 +25,57 @@ class COpcConnection;
 
 class COpcConnectionImpl : public IAsynchDataCallback{
   public:
-    COpcConnectionImpl(const char *pa_acHost, const char *pa_acServerName, COpcConnection* pa_pOpcConn);
+    COpcConnectionImpl(const char *paHost, const char *paServerName, COpcConnection* paOpcConn);
     ~COpcConnectionImpl();
 
     void connect();
-    void addItem(COpcProcessVar* pa_pNewItem);
-    void addGroup(const char* pa_acGroupName, unsigned long pa_nReqUpdateRate, float pa_nDeadBand);
+    void addItem(COpcProcessVar* paNewItem);
+    void addGroup(const char* paGroupName, unsigned long paReqUpdateRate, float paDeadBand);
 
-    int sendItemData(COpcProcessVar* pa_pNewItem);
-    int receiveData(const char* pa_acRecvBuffer);
+    int sendItemData(COpcProcessVar* paNewItem);
+    int receiveData(const char* paRecvBuffer);
 
     const char* getHost(){
-      return m_acHost;
+      return mHost;
     }
     const char* getServerName(){
-      return m_acServerName;
+      return mServerName;
     }
 
     virtual void OnDataChange(COPCGroup & group, CAtlMap<COPCItem *, OPCItemData *> & changes);
 
   private:
-    COPCGroup* getOpcGroup(const char *pa_acGroupName, COpcProcessVar::EOpcProcessVarFunctions pa_eFunction);
+    COPCGroup* getOpcGroup(const char *paGroupName, COpcProcessVar::EOpcProcessVarFunctions paFunction);
 
     struct SOpcGroupSettings{
-        COPCGroup* m_pOpcGroupRead;
-        COPCGroup* m_pOpcGroupWrite;
-        const char* m_acGroupName;
-        unsigned long m_nReqUpdateRate;
-        unsigned long m_nRevisedUpdateRate;
-        float m_nDeadBand;
-        bool m_bReadGroupAdded;
-        bool m_bWriteGroupAdded;
+        COPCGroup* mOpcGroupRead;
+        COPCGroup* mOpcGroupWrite;
+        const char* mGroupName;
+        unsigned long mReqUpdateRate;
+        unsigned long mRevisedUpdateRate;
+        float mDeadBand;
+        bool mReadGroupAdded;
+        bool mWriteGroupAdded;
 
-        SOpcGroupSettings(const char* pa_acGroupName, unsigned long pa_nReqUpdateRate, float pa_nDeadBand) :
-          m_pOpcGroupRead(0), m_pOpcGroupWrite(0), m_acGroupName(pa_acGroupName), m_nReqUpdateRate(pa_nReqUpdateRate), m_nRevisedUpdateRate(0), m_nDeadBand(pa_nDeadBand), m_bReadGroupAdded(false), m_bWriteGroupAdded(false){
+        SOpcGroupSettings(const char* paGroupName, unsigned long paReqUpdateRate, float paDeadBand) :
+          mOpcGroupRead(0), mOpcGroupWrite(0), mGroupName(paGroupName), mReqUpdateRate(paReqUpdateRate), mRevisedUpdateRate(0), mDeadBand(paDeadBand), mReadGroupAdded(false), mWriteGroupAdded(false){
         }
     };
 
     typedef CSinglyLinkedList<SOpcGroupSettings*> TOpcGroupSettingsList;
-    TOpcGroupSettingsList m_lOpcGroupSettingsList;
+    TOpcGroupSettingsList mOpcGroupSettingsList;
 
-    COpcConnection* m_pOpcConn;
+    COpcConnection* mOpcConn;
 
-    COPCHost* m_pOpcHost;
-    COPCServer *m_pOpcServer;
+    COPCHost* mOpcHost;
+    COPCServer *mOpcServer;
 
-    const char* m_acHost;
-    const char* m_acServerName;
-    const char* m_acGroupName;
-    unsigned long m_nReqUpdateRate;
-    unsigned long m_nRealUpdateRate;
-    float m_nDeadBand;
+    const char* mHost;
+    const char* mServerName;
+    const char* mGroupName;
+    unsigned long mReqUpdateRate;
+    unsigned long mRealUpdateRate;
+    float mDeadBand;
 };
 
 #endif // OPCCONNECTIONIMPL_H_

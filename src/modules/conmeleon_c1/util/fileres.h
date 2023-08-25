@@ -51,7 +51,7 @@ public:
   /*! \fn bool isOpen()
    * \brief returns true if the file has been opened successfully
    */
-  bool isOpen() { return (m_pFileHandle != nullptr); }
+  bool isOpen() { return (mFileHandle != nullptr); }
 
   /*! \fn bool isReadOnly()
    * \brief returns true if the file has been opened in read only mode
@@ -82,7 +82,7 @@ public:
   void  readLine(char* pszData, std::size_t nLength) const;
 
 private:
-  FILE*  m_pFileHandle;
+  FILE*  mFileHandle;
   bool  m_ReadOnly;
 };
 

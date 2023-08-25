@@ -20,14 +20,14 @@ class EMB_RES : public CResource{
   DECLARE_FIRMWARE_FB(EMB_RES);
 
   public:
-    EMB_RES(CStringDictionary::TStringId pa_nInstanceNameId,
-        CResource* pa_poDevice);
+    EMB_RES(CStringDictionary::TStringId paInstanceNameId,
+        CResource* paDevice);
     ~EMB_RES() override;
 
     bool initialize() override;
 
   private:
-    static const SFBInterfaceSpec scm_stFBInterfaceSpec;
+    static const SFBInterfaceSpec scmFBInterfaceSpec;
 };
 
 #endif //close the ifdef sequence from the beginning of the file

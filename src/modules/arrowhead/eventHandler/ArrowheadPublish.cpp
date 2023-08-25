@@ -17,42 +17,42 @@
 
 DEFINE_FIRMWARE_FB(FORTE_ArrowheadPublish, g_nStringIdArrowheadPublish)
 
-const CStringDictionary::TStringId FORTE_ArrowheadPublish::scm_anDataInputNames[] = {g_nStringIdpublishEvent, g_nStringIdendpoint};
+const CStringDictionary::TStringId FORTE_ArrowheadPublish::scmDataInputNames[] = {g_nStringIdpublishEvent, g_nStringIdendpoint};
 
-const CStringDictionary::TStringId FORTE_ArrowheadPublish::scm_anDataInputTypeIds[] = {g_nStringIdPublishEvent, g_nStringIdWSTRING};
+const CStringDictionary::TStringId FORTE_ArrowheadPublish::scmDataInputTypeIds[] = {g_nStringIdPublishEvent, g_nStringIdWSTRING};
 
-const TForteInt16 FORTE_ArrowheadPublish::scm_anEIWithIndexes[] = {0};
-const TDataIOID FORTE_ArrowheadPublish::scm_anEIWith[] = {0, 1, scmWithListDelimiter};
-const CStringDictionary::TStringId FORTE_ArrowheadPublish::scm_anEventInputNames[] = {g_nStringIdpublish};
+const TForteInt16 FORTE_ArrowheadPublish::scmEIWithIndexes[] = {0};
+const TDataIOID FORTE_ArrowheadPublish::scmEIWith[] = {0, 1, scmWithListDelimiter};
+const CStringDictionary::TStringId FORTE_ArrowheadPublish::scmEventInputNames[] = {g_nStringIdpublish};
 
-const TForteInt16 FORTE_ArrowheadPublish::scm_anEOWithIndexes[] = {-1, -1};
-const CStringDictionary::TStringId FORTE_ArrowheadPublish::scm_anEventOutputNames[] = {g_nStringIdpublished};
+const TForteInt16 FORTE_ArrowheadPublish::scmEOWithIndexes[] = {-1, -1};
+const CStringDictionary::TStringId FORTE_ArrowheadPublish::scmEventOutputNames[] = {g_nStringIdpublished};
 
-const SAdapterInstanceDef FORTE_ArrowheadPublish::scm_astAdapterInstances[] = {
+const SAdapterInstanceDef FORTE_ArrowheadPublish::scmAdapterInstances[] = {
 {g_nStringIdArrowheadPublishAdp, g_nStringIdArrowheadPublishAdp, true }};
 
-const SFBInterfaceSpec FORTE_ArrowheadPublish::scm_stFBInterfaceSpec = {
-  1,  scm_anEventInputNames,  scm_anEIWith,  scm_anEIWithIndexes,
-  1,  scm_anEventOutputNames,  0, 0,  2,  scm_anDataInputNames, scm_anDataInputTypeIds,
+const SFBInterfaceSpec FORTE_ArrowheadPublish::scmFBInterfaceSpec = {
+  1,  scmEventInputNames,  scmEIWith,  scmEIWithIndexes,
+  1,  scmEventOutputNames,  0, 0,  2,  scmDataInputNames, scmDataInputTypeIds,
   0,  0, 0,
-  1,scm_astAdapterInstances};
+  1,scmAdapterInstances};
 
 
-const SCFB_FBConnectionData FORTE_ArrowheadPublish::scm_astEventConnections[] = {
-  {GENERATE_CONNECTION_PORT_ID_1_ARG(g_nStringIdpublish), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdArrowheadPublishAdp, g_nStringIdpublish), CCompositeFB::scm_nAdapterMarker |0},
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdArrowheadPublishAdp, g_nStringIdpublished), CCompositeFB::scm_nAdapterMarker |0, GENERATE_CONNECTION_PORT_ID_1_ARG(g_nStringIdpublished), -1},
+const SCFB_FBConnectionData FORTE_ArrowheadPublish::scmEventConnections[] = {
+  {GENERATE_CONNECTION_PORT_ID_1_ARG(g_nStringIdpublish), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdArrowheadPublishAdp, g_nStringIdpublish), CCompositeFB::scmAdapterMarker |0},
+  {GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdArrowheadPublishAdp, g_nStringIdpublished), CCompositeFB::scmAdapterMarker |0, GENERATE_CONNECTION_PORT_ID_1_ARG(g_nStringIdpublished), -1},
 };
 
-const SCFB_FBConnectionData FORTE_ArrowheadPublish::scm_astDataConnections[] = {
-  {GENERATE_CONNECTION_PORT_ID_1_ARG(g_nStringIdpublishEvent), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdArrowheadPublishAdp, g_nStringIdpublishEvent), CCompositeFB::scm_nAdapterMarker |0},
-  {GENERATE_CONNECTION_PORT_ID_1_ARG(g_nStringIdendpoint), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdArrowheadPublishAdp, g_nStringIdendpoint), CCompositeFB::scm_nAdapterMarker |0},
+const SCFB_FBConnectionData FORTE_ArrowheadPublish::scmDataConnections[] = {
+  {GENERATE_CONNECTION_PORT_ID_1_ARG(g_nStringIdpublishEvent), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdArrowheadPublishAdp, g_nStringIdpublishEvent), CCompositeFB::scmAdapterMarker |0},
+  {GENERATE_CONNECTION_PORT_ID_1_ARG(g_nStringIdendpoint), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdArrowheadPublishAdp, g_nStringIdendpoint), CCompositeFB::scmAdapterMarker |0},
 };
 
-const SCFB_FBNData FORTE_ArrowheadPublish::scm_stFBNData = {
+const SCFB_FBNData FORTE_ArrowheadPublish::scmFBNData = {
   0, 0,
-  2, scm_astEventConnections,
+  2, scmEventConnections,
   0, 0,
-  2, scm_astDataConnections,
+  2, scmDataConnections,
   0, 0,
   0, 0
 };

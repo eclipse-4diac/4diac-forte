@@ -34,8 +34,8 @@ class CGenBitBase : public CGenFunctionBlock<CFunctionBlock> {
       return *static_cast<CIEC_ANY_BIT_VARIANT *>(getDO(0));
     }
 
-    static const TEventID scm_nEventREQID = 0;
-    static const TEventID scm_nEventCNFID = 0;
+    static const TEventID scmEventREQID = 0;
+    static const TEventID scmEventCNFID = 0;
 
   private:
     CStringDictionary::TStringId *mDataInputNames;

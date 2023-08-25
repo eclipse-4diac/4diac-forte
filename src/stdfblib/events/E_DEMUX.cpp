@@ -28,24 +28,24 @@
 
 DEFINE_FIRMWARE_FB(FORTE_E_DEMUX, g_nStringIdE_DEMUX)
 
-const CStringDictionary::TStringId FORTE_E_DEMUX::scm_anDataInputNames[] = {g_nStringIdK};
-const CStringDictionary::TStringId FORTE_E_DEMUX::scm_anDataInputTypeIds[] = {g_nStringIdUINT};
-const TDataIOID FORTE_E_DEMUX::scm_anEIWith[] = {0, scmWithListDelimiter};
-const TForteInt16 FORTE_E_DEMUX::scm_anEIWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_E_DEMUX::scm_anEventInputNames[] = {g_nStringIdEI};
-const TForteInt16 FORTE_E_DEMUX::scm_anEOWithIndexes[] = {-1, -1, -1, -1};
-const CStringDictionary::TStringId FORTE_E_DEMUX::scm_anEventOutputNames[] = {g_nStringIdEO0, g_nStringIdEO1, g_nStringIdEO2, g_nStringIdEO3};
-const SFBInterfaceSpec FORTE_E_DEMUX::scm_stFBInterfaceSpec = {
-  1, scm_anEventInputNames, scm_anEIWith, scm_anEIWithIndexes,
-  4, scm_anEventOutputNames, nullptr, scm_anEOWithIndexes,
-  1, scm_anDataInputNames, scm_anDataInputTypeIds,
+const CStringDictionary::TStringId FORTE_E_DEMUX::scmDataInputNames[] = {g_nStringIdK};
+const CStringDictionary::TStringId FORTE_E_DEMUX::scmDataInputTypeIds[] = {g_nStringIdUINT};
+const TDataIOID FORTE_E_DEMUX::scmEIWith[] = {0, scmWithListDelimiter};
+const TForteInt16 FORTE_E_DEMUX::scmEIWithIndexes[] = {0};
+const CStringDictionary::TStringId FORTE_E_DEMUX::scmEventInputNames[] = {g_nStringIdEI};
+const TForteInt16 FORTE_E_DEMUX::scmEOWithIndexes[] = {-1, -1, -1, -1};
+const CStringDictionary::TStringId FORTE_E_DEMUX::scmEventOutputNames[] = {g_nStringIdEO0, g_nStringIdEO1, g_nStringIdEO2, g_nStringIdEO3};
+const SFBInterfaceSpec FORTE_E_DEMUX::scmFBInterfaceSpec = {
+  1, scmEventInputNames, scmEIWith, scmEIWithIndexes,
+  4, scmEventOutputNames, nullptr, scmEOWithIndexes,
+  1, scmDataInputNames, scmDataInputTypeIds,
   0, nullptr, nullptr,
   0, nullptr,
   0, nullptr
 };
 
-FORTE_E_DEMUX::FORTE_E_DEMUX(CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes) :
-    CBasicFB(pa_poSrcRes, &scm_stFBInterfaceSpec, pa_nInstanceNameId, nullptr),
+FORTE_E_DEMUX::FORTE_E_DEMUX(CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) :
+    CBasicFB(paSrcRes, &scmFBInterfaceSpec, paInstanceNameId, nullptr),
     var_K(CIEC_UINT(0)),
     conn_EO0(this, 0),
     conn_EO1(this, 1),
@@ -56,14 +56,14 @@ FORTE_E_DEMUX::FORTE_E_DEMUX(CStringDictionary::TStringId pa_nInstanceNameId, CR
 
 
 
-void FORTE_E_DEMUX::executeEvent(TEventID pa_nEIID){
+void FORTE_E_DEMUX::executeEvent(TEventID paEIID){
   do {
-    switch(m_nECCState) {
-      case scm_nStateSTART:
-        if(scm_nEventEIID == pa_nEIID) enterStateState();
+    switch(mECCState) {
+      case scmStateSTART:
+        if(scmEventEIID == paEIID) enterStateState();
         else return; //no transition cleared
         break;
-      case scm_nStateState:
+      case scmStateState:
         if(func_EQ(var_K, CIEC_UINT(0))) enterStateState_1();
         else
         if(func_EQ(var_K, CIEC_UINT(1))) enterStateState_2();
@@ -75,34 +75,34 @@ void FORTE_E_DEMUX::executeEvent(TEventID pa_nEIID){
         if(func_GT(var_K, CIEC_UINT(3))) enterStateSTART();
         else return; //no transition cleared
         break;
-      case scm_nStateState_1:
+      case scmStateState_1:
         if(1) enterStateSTART();
         else return; //no transition cleared
         break;
-      case scm_nStateState_2:
+      case scmStateState_2:
         if(1) enterStateSTART();
         else return; //no transition cleared
         break;
-      case scm_nStateState_3:
+      case scmStateState_3:
         if(1) enterStateSTART();
         else return; //no transition cleared
         break;
-      case scm_nStateState_4:
+      case scmStateState_4:
         if(1) enterStateSTART();
         else return; //no transition cleared
         break;
       default:
-        DEVLOG_ERROR("The state is not in the valid range! The state value is: %d. The max value can be: 6.", m_nECCState.operator TForteUInt16 ());
-        m_nECCState = 0; // 0 is always the initial state
+        DEVLOG_ERROR("The state is not in the valid range! The state value is: %d. The max value can be: 6.", mECCState.operator TForteUInt16 ());
+        mECCState = 0; // 0 is always the initial state
         return;
     }
-    pa_nEIID = cg_nInvalidEventID; // we have to clear the event after the first check in order to ensure correct behavior
+    paEIID = cg_nInvalidEventID; // we have to clear the event after the first check in order to ensure correct behavior
   } while(true);
 }
 
-void FORTE_E_DEMUX::readInputData(TEventID pa_nEIID) {
-  switch(pa_nEIID) {
-    case scm_nEventEIID: {
+void FORTE_E_DEMUX::readInputData(TEventID paEIID) {
+  switch(paEIID) {
+    case scmEventEIID: {
       RES_DATA_CON_CRITICAL_REGION();
       readData(0, var_K, conn_K);
       break;
@@ -153,31 +153,31 @@ CIEC_ANY *FORTE_E_DEMUX::getVarInternal(size_t) {
 
 
 void FORTE_E_DEMUX::enterStateSTART(void) {
-  m_nECCState = scm_nStateSTART;
+  mECCState = scmStateSTART;
 }
 
 void FORTE_E_DEMUX::enterStateState(void) {
-  m_nECCState = scm_nStateState;
+  mECCState = scmStateState;
 }
 
 void FORTE_E_DEMUX::enterStateState_1(void) {
-  m_nECCState = scm_nStateState_1;
-  sendOutputEvent(scm_nEventEO0ID);
+  mECCState = scmStateState_1;
+  sendOutputEvent(scmEventEO0ID);
 }
 
 void FORTE_E_DEMUX::enterStateState_2(void) {
-  m_nECCState = scm_nStateState_2;
-  sendOutputEvent(scm_nEventEO1ID);
+  mECCState = scmStateState_2;
+  sendOutputEvent(scmEventEO1ID);
 }
 
 void FORTE_E_DEMUX::enterStateState_3(void) {
-  m_nECCState = scm_nStateState_3;
-  sendOutputEvent(scm_nEventEO2ID);
+  mECCState = scmStateState_3;
+  sendOutputEvent(scmEventEO2ID);
 }
 
 void FORTE_E_DEMUX::enterStateState_4(void) {
-  m_nECCState = scm_nStateState_4;
-  sendOutputEvent(scm_nEventEO3ID);
+  mECCState = scmStateState_4;
+  sendOutputEvent(scmEventEO3ID);
 }
 
 

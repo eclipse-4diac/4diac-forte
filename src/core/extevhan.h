@@ -41,9 +41,9 @@ class CFunctionBlock;
 /*! \brief Baseclass for handling incoming interrupts and similar external events.
  * 
  * Implementations of such classes should provide the following functions for ES-FBs:
- *   - registerFB(CFunctionBlock *pa_poESFB, ...) allows the ES-FB to register to this ExternalEventHandler for recieving external 
+ *   - registerFB(CFunctionBlock *paESFB, ...) allows the ES-FB to register to this ExternalEventHandler for recieving external 
  *      events (e.g. INIT+). the specific parameters depend on the ExternalEventHandler.
- *   - unregisterFB(CFunctionBlock *pa_poESFB) the ES-FB doesn't want to receive any external events any more (e.g. INIT-).
+ *   - unregisterFB(CFunctionBlock *paESFB) the ES-FB doesn't want to receive any external events any more (e.g. INIT-).
  */
 
 class CExternalEventHandler{

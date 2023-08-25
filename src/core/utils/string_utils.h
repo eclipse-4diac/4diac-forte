@@ -19,24 +19,24 @@ namespace forte {
   namespace core {
     namespace util {
 
-      inline bool isDigit(char pa_cValue){
-        return ((pa_cValue >= '0') && (pa_cValue <= '9'));
+      inline bool isDigit(char paValue){
+        return ((paValue >= '0') && (paValue <= '9'));
       }
 
-      bool isAtoFChar(char pa_cValue);
+      bool isAtoFChar(char paValue);
 
-      inline bool isHexDigit(char pa_cValue){
-        return isDigit(pa_cValue) || isAtoFChar(pa_cValue);
+      inline bool isHexDigit(char paValue){
+        return isDigit(paValue) || isAtoFChar(paValue);
       }
 
-      inline TForteInt8 charDigitToInt(char pa_cValue){
-        return static_cast<TForteInt8>(pa_cValue - '0');
+      inline TForteInt8 charDigitToInt(char paValue){
+        return static_cast<TForteInt8>(paValue - '0');
       }
 
-      TForteInt8 charAtoFToInt(char pa_cValue);
+      TForteInt8 charAtoFToInt(char paValue);
 
-      inline TForteInt8 charHexDigitToInt(char pa_cValue){
-        return isDigit(pa_cValue) ? charDigitToInt(pa_cValue) : charAtoFToInt(pa_cValue);
+      inline TForteInt8 charHexDigitToInt(char paValue){
+        return isDigit(paValue) ? charDigitToInt(paValue) : charAtoFToInt(paValue);
       }
 
       long int strtol(const char *nptr, char **endptr, int base);

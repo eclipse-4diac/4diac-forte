@@ -52,10 +52,10 @@ CFBContainer::~CFBContainer() {
   mSubContainers.clear();
 }
 
-EMGMResponse CFBContainer::addFB(CFunctionBlock* pa_poFuncBlock){
+EMGMResponse CFBContainer::addFB(CFunctionBlock* paFuncBlock){
   EMGMResponse eRetVal = EMGMResponse::InvalidObject;
-  if(nullptr != pa_poFuncBlock){
-    mFunctionBlocks.insert(getFBIterator(pa_poFuncBlock->getInstanceNameId()), pa_poFuncBlock);
+  if(nullptr != paFuncBlock){
+    mFunctionBlocks.insert(getFBIterator(paFuncBlock->getInstanceNameId()), paFuncBlock);
     eRetVal = EMGMResponse::Ready;
   }
   return eRetVal;
@@ -107,7 +107,7 @@ EMGMResponse CFBContainer::deleteFB(forte::core::TNameIdentifier::CIterator &paN
   else{
     CStringDictionary::TStringId fBNameId = *paNameListIt;
 
-    if((CStringDictionary::scm_nInvalidStringId != fBNameId) && (!mFunctionBlocks.empty())) {
+    if((CStringDictionary::scmInvalidStringId != fBNameId) && (!mFunctionBlocks.empty())) {
       TFunctionBlockList::iterator it = getFBIterator(fBNameId);
       if(fBIteratorIsValid(it,fBNameId) && (*it)->isCurrentlyDeleteable()){
         mFunctionBlocks.erase(it);
@@ -122,7 +122,7 @@ EMGMResponse CFBContainer::deleteFB(forte::core::TNameIdentifier::CIterator &paN
 }
 
 CFunctionBlock *CFBContainer::getFB(CStringDictionary::TStringId paFBName) {
-  if(CStringDictionary::scm_nInvalidStringId != paFBName){
+  if(CStringDictionary::scmInvalidStringId != paFBName){
     TFunctionBlockList::iterator retIter = getFBIterator(paFBName);
     if(fBIteratorIsValid(retIter,paFBName))
       return *retIter;
@@ -131,7 +131,7 @@ CFunctionBlock *CFBContainer::getFB(CStringDictionary::TStringId paFBName) {
 }
 
 CFBContainer::TFunctionBlockList::iterator CFBContainer::getFBIterator(CStringDictionary::TStringId paFBName){
-  if(CStringDictionary::scm_nInvalidStringId != paFBName) {
+  if(CStringDictionary::scmInvalidStringId != paFBName) {
     return lower_bound(mFunctionBlocks.begin(), mFunctionBlocks.end(), paFBName,
                               [](CFunctionBlock *fb,
                                  CStringDictionary::TStringId fbName) {
@@ -164,7 +164,7 @@ CFBContainer* CFBContainer::getFBContainer(CStringDictionary::TStringId paContai
 }
 
 CFBContainer::TFBContainerList::iterator CFBContainer::getFBContainerIterator(CStringDictionary::TStringId paContainerName)  {
-  if(CStringDictionary::scm_nInvalidStringId != paContainerName && !mSubContainers.empty()){
+  if(CStringDictionary::scmInvalidStringId != paContainerName && !mSubContainers.empty()){
     return std::lower_bound(mSubContainers.begin(), mSubContainers.end(), paContainerName,
                                                      [](CFBContainer* container, CStringDictionary::TStringId containerName)
                                                      { return container->getName() < containerName; });

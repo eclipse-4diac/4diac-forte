@@ -45,7 +45,7 @@ namespace forte {
         void handledConnectedDataRecv();
         void handleConnectionAttemptInConnected() const;
 
-        CIPComSocketHandler::TSocketDescriptor mListeningID; //!> to be used by server type connections. there the m_nSocketID will be used for the accepted connection.
+        CIPComSocketHandler::TSocketDescriptor mListeningID; //!> to be used by server type connections. there the mSocketID will be used for the accepted connection.
         EComResponse mInterruptResp;
         char mRecvBuffer[cg_unIPLayerRecvBufferSize];
         unsigned int mBufFillSize;

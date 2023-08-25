@@ -17,36 +17,36 @@
 #include "basicfb.h"
 #include "resource.h"
 
-CBasicFB::CBasicFB(CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_pstInterfaceSpec,
-                   const CStringDictionary::TStringId pa_nInstanceNameId,
-                   const SInternalVarsInformation *pa_pstVarInternals) :
-        CFunctionBlock(pa_poSrcRes, pa_pstInterfaceSpec, pa_nInstanceNameId), m_nECCState(0),
-        cm_pstVarInternals(pa_pstVarInternals), mBasicFBVarsData(nullptr), m_aoInternals(nullptr) {
+CBasicFB::CBasicFB(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec,
+                   const CStringDictionary::TStringId paInstanceNameId,
+                   const SInternalVarsInformation *paVarInternals) :
+        CFunctionBlock(paSrcRes, paInterfaceSpec, paInstanceNameId), mECCState(0),
+        cmVarInternals(paVarInternals), mBasicFBVarsData(nullptr), mInternals(nullptr) {
 }
 
 bool CBasicFB::initialize() {
   if(!CFunctionBlock::initialize()) {
     return false;
   }
-  if((nullptr != cm_pstVarInternals) && (cm_pstVarInternals->m_nNumIntVars)) {
-    size_t basicVarsDataSize = calculateBasicFBVarsDataSize(*cm_pstVarInternals);
+  if((nullptr != cmVarInternals) && (cmVarInternals->mNumIntVars)) {
+    size_t basicVarsDataSize = calculateBasicFBVarsDataSize(*cmVarInternals);
     mBasicFBVarsData = basicVarsDataSize ? operator new(basicVarsDataSize) : nullptr;
 
     auto *basicVarsData = reinterpret_cast<TForteByte *>(mBasicFBVarsData);
-    m_aoInternals = reinterpret_cast<CIEC_ANY**>(basicVarsData);
-    basicVarsData += cm_pstVarInternals->m_nNumIntVars * sizeof(CIEC_ANY *);
-    const CStringDictionary::TStringId *pnDataIds = cm_pstVarInternals->m_aunIntVarsDataTypeNames;
-    for(TPortId i = 0; i < cm_pstVarInternals->m_nNumIntVars; ++i) {
-      m_aoInternals[i] = createDataPoint(pnDataIds, basicVarsData);
+    mInternals = reinterpret_cast<CIEC_ANY**>(basicVarsData);
+    basicVarsData += cmVarInternals->mNumIntVars * sizeof(CIEC_ANY *);
+    const CStringDictionary::TStringId *pnDataIds = cmVarInternals->mIntVarsDataTypeNames;
+    for(TPortId i = 0; i < cmVarInternals->mNumIntVars; ++i) {
+      mInternals[i] = createDataPoint(pnDataIds, basicVarsData);
     }
   }
   return true;
 }
 
 CBasicFB::~CBasicFB() {
-  if(nullptr != m_aoInternals) {
-    for(TPortId i = 0; i < cm_pstVarInternals->m_nNumIntVars; ++i) {
-      if(CIEC_ANY* value = m_aoInternals[i]; nullptr != value) {
+  if(nullptr != mInternals) {
+    for(TPortId i = 0; i < cmVarInternals->mNumIntVars; ++i) {
+      if(CIEC_ANY* value = mInternals[i]; nullptr != value) {
         std::destroy_at(value);
       }
     }
@@ -57,9 +57,9 @@ CBasicFB::~CBasicFB() {
 
 void CBasicFB::setInitialValues() {
   CFunctionBlock::setInitialValues();
-  if(cm_pstVarInternals) {
-    const CStringDictionary::TStringId *pnDataIds = cm_pstVarInternals->m_aunIntVarsDataTypeNames;
-    for (TPortId i = 0; i < cm_pstVarInternals->m_nNumIntVars; ++i) {
+  if(cmVarInternals) {
+    const CStringDictionary::TStringId *pnDataIds = cmVarInternals->mIntVarsDataTypeNames;
+    for (TPortId i = 0; i < cmVarInternals->mNumIntVars; ++i) {
       TForteByte *varsData = nullptr;
       CIEC_ANY *value = createDataPoint(pnDataIds, varsData);
       if (value) { getDI(i)->setValue(*value); }
@@ -72,9 +72,9 @@ size_t CBasicFB::calculateBasicFBVarsDataSize(const SInternalVarsInformation &pa
   size_t result = 0;
   const CStringDictionary::TStringId *pnDataIds;
 
-  result += paVarInternals.m_nNumIntVars * sizeof(CIEC_ANY *);
-  pnDataIds = paVarInternals.m_aunIntVarsDataTypeNames;
-  for (TPortId i = 0; i < paVarInternals.m_nNumIntVars; ++i) {
+  result += paVarInternals.mNumIntVars * sizeof(CIEC_ANY *);
+  pnDataIds = paVarInternals.mIntVarsDataTypeNames;
+  for (TPortId i = 0; i < paVarInternals.mNumIntVars; ++i) {
     result += getDataPointSize(pnDataIds);
   }
 
@@ -86,16 +86,16 @@ CIEC_ANY* CBasicFB::getVar(CStringDictionary::TStringId *paNameList, unsigned in
   if((nullptr == poRetVal) && (1 == paNameListSize)) {
     poRetVal = getInternalVar(*paNameList);
     if(nullptr == poRetVal && !strcmp("!ECC", CStringDictionary::getInstance().get(*paNameList))) { //TODO consider if this can also be an string ID in a different way
-      poRetVal = &m_nECCState;
+      poRetVal = &mECCState;
     }
   }
   return poRetVal;
 }
 
-CIEC_ANY* CBasicFB::getInternalVar(CStringDictionary::TStringId pa_nInternalName) {
+CIEC_ANY* CBasicFB::getInternalVar(CStringDictionary::TStringId paInternalName) {
   CIEC_ANY *retVal = nullptr;
-  if(nullptr != cm_pstVarInternals) {
-    TPortId unVarId = getPortId(pa_nInternalName, cm_pstVarInternals->m_nNumIntVars, cm_pstVarInternals->m_aunIntVarsNames);
+  if(nullptr != cmVarInternals) {
+    TPortId unVarId = getPortId(paInternalName, cmVarInternals->mNumIntVars, cmVarInternals->mIntVarsNames);
     if(cgInvalidPortId != unVarId) {
       retVal = getVarInternal(unVarId);
     }
@@ -108,7 +108,7 @@ TFunctionBlockPtr *CBasicFB::createInternalFBs(const size_t paAmountOfInternalFB
   if (paAmountOfInternalFBs) {
     internalFBs = new TFunctionBlockPtr[paAmountOfInternalFBs];
     for(size_t i = 0; i < paAmountOfInternalFBs; ++i) {
-      internalFBs[i] = CTypeLib::createFB(paInternalFBData[i].m_nFBInstanceNameId, paInternalFBData[i].m_nFBTypeNameId, paResource);
+      internalFBs[i] = CTypeLib::createFB(paInternalFBData[i].mFBInstanceNameId, paInternalFBData[i].mFBTypeNameId, paResource);
     }
   }
   return internalFBs;
@@ -123,9 +123,9 @@ void CBasicFB::deleteInternalFBs(const size_t paAmountOfInternalFBs, TFunctionBl
 
 #ifdef FORTE_TRACE_CTF
 void CBasicFB::traceInstanceData() {
-  std::vector<std::string> inputs(mInterfaceSpec->m_nNumDIs);
-  std::vector<std::string> outputs(mInterfaceSpec->m_nNumDOs);
-  std::vector<std::string> internals(cm_pstVarInternals ? cm_pstVarInternals->m_nNumIntVars : 0);
+  std::vector<std::string> inputs(mInterfaceSpec->mNumDIs);
+  std::vector<std::string> outputs(mInterfaceSpec->mNumDOs);
+  std::vector<std::string> internals(cmVarInternals ? cmVarInternals->mNumIntVars : 0);
   std::vector<const char *> inputs_c_str(inputs.size());
   std::vector<const char *> outputs_c_str(outputs.size());
   std::vector<const char *> internals_c_str(internals.size());

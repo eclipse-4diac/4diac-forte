@@ -25,41 +25,41 @@ COpcConnectionHandler::COpcConnectionHandler(){
 }
 
 COpcConnectionHandler::~COpcConnectionHandler(){
-  TOpcConnectionList::Iterator itEnd = m_lOpcConnectionList.end();
-  for(TOpcConnectionList::Iterator it = m_lOpcConnectionList.begin(); it != itEnd; ++it){
+  TOpcConnectionList::Iterator itEnd = mOpcConnectionList.end();
+  for(TOpcConnectionList::Iterator it = mOpcConnectionList.begin(); it != itEnd; ++it){
     delete (*it);
   }
 }
 
-COpcConnection* COpcConnectionHandler::getOpcConnection(const char *pa_acHost, const char *pa_acServerName, const char* pa_acGroupName, unsigned long pa_nReqUpdateRate, float pa_nDeadBand, CComLayer* pa_pComCallback){
+COpcConnection* COpcConnectionHandler::getOpcConnection(const char *paHost, const char *paServerName, const char* paGroupName, unsigned long paReqUpdateRate, float paDeadBand, CComLayer* paComCallback){
 
-  COpcConnection *newConnection = findOpcConnection(pa_acHost, pa_acServerName);
+  COpcConnection *newConnection = findOpcConnection(paHost, paServerName);
   if(newConnection == nullptr){
-    newConnection = new COpcConnection(pa_acHost, pa_acServerName, &(getExtEvHandler<COpcEventHandler>(*pa_pComCallback->getCommFB())));
+    newConnection = new COpcConnection(paHost, paServerName, &(getExtEvHandler<COpcEventHandler>(*paComCallback->getCommFB())));
 
-    m_lOpcConnectionList.pushBack(newConnection);
+    mOpcConnectionList.pushBack(newConnection);
   }
 
-  newConnection->addGroup(pa_acGroupName, pa_nReqUpdateRate, pa_nDeadBand, pa_pComCallback);
+  newConnection->addGroup(paGroupName, paReqUpdateRate, paDeadBand, paComCallback);
 
   return newConnection;
 }
 
-void COpcConnectionHandler::removeOpcConnection(const char *pa_acHost, const char *pa_acServerName, const char* pa_acGroupName){
-  COpcConnection *existingCon = findOpcConnection(pa_acHost, pa_acServerName);
+void COpcConnectionHandler::removeOpcConnection(const char *paHost, const char *paServerName, const char* paGroupName){
+  COpcConnection *existingCon = findOpcConnection(paHost, paServerName);
   if(existingCon != nullptr){
-    existingCon->removeGroup(pa_acGroupName);
+    existingCon->removeGroup(paGroupName);
 
     if(existingCon->getGroupCount() == 0) {
-      deleteOpcConnection(pa_acHost, pa_acServerName);
+      deleteOpcConnection(paHost, paServerName);
     }
   }
 }
 
-COpcConnection* COpcConnectionHandler::findOpcConnection(const char* pa_acHost, const char* pa_acServerName){
-  TOpcConnectionList::Iterator itEnd = m_lOpcConnectionList.end();
-  for(TOpcConnectionList::Iterator it = m_lOpcConnectionList.begin(); it != itEnd; ++it){
-    if(strcmp(it->getHost(), pa_acHost) == 0 && strcmp(it->getServerName(), pa_acServerName) == 0) {
+COpcConnection* COpcConnectionHandler::findOpcConnection(const char* paHost, const char* paServerName){
+  TOpcConnectionList::Iterator itEnd = mOpcConnectionList.end();
+  for(TOpcConnectionList::Iterator it = mOpcConnectionList.begin(); it != itEnd; ++it){
+    if(strcmp(it->getHost(), paHost) == 0 && strcmp(it->getServerName(), paServerName) == 0) {
       return (*it);
     }
   }
@@ -67,20 +67,20 @@ COpcConnection* COpcConnectionHandler::findOpcConnection(const char* pa_acHost, 
   return nullptr;
 }
 
-void COpcConnectionHandler::deleteOpcConnection(const char* pa_acHost, const char* pa_acServerName){
-  TOpcConnectionList::Iterator itDelete = m_lOpcConnectionList.begin();
-  TOpcConnectionList::Iterator it = m_lOpcConnectionList.begin();
-  TOpcConnectionList::Iterator itEnd = m_lOpcConnectionList.end();
+void COpcConnectionHandler::deleteOpcConnection(const char* paHost, const char* paServerName){
+  TOpcConnectionList::Iterator itDelete = mOpcConnectionList.begin();
+  TOpcConnectionList::Iterator it = mOpcConnectionList.begin();
+  TOpcConnectionList::Iterator itEnd = mOpcConnectionList.end();
 
   if(it != itEnd){
-    if(strcmp(it->getHost(), pa_acHost) == 0 && strcmp(it->getServerName(), pa_acServerName)){
-      m_lOpcConnectionList.popFront();
+    if(strcmp(it->getHost(), paHost) == 0 && strcmp(it->getServerName(), paServerName)){
+      mOpcConnectionList.popFront();
       return;
     }
     ++it;
     while(it != itEnd){
-      if(strcmp(it->getHost(), pa_acHost) == 0 && strcmp(it->getServerName(), pa_acServerName)){
-        m_lOpcConnectionList.eraseAfter(itDelete);
+      if(strcmp(it->getHost(), paHost) == 0 && strcmp(it->getServerName(), paServerName)){
+        mOpcConnectionList.eraseAfter(itDelete);
         return;
       }
 

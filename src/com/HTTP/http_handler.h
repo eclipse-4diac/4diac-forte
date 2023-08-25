@@ -37,7 +37,7 @@ class CHTTP_Handler : public CExternalEventHandler, public CThread, public forte
 
     void disableHandler() override;
 
-    void setPriority(int pa_nPriority) override;
+    void setPriority(int paPriority) override;
 
     int getPriority() const override;
 

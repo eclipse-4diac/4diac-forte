@@ -44,18 +44,18 @@ class CInterface2InternalDataConnection;
 class CResource : public CFunctionBlock, public forte::core::CFBContainer{
 
   public:
-    CSyncObject m_oResDataConSync;
+    CSyncObject mResDataConSync;
     /*! \brief The main constructor for a resource.
      *
      * The resource can only be generated with a given device the resource is contained. A resource can not exist outside of an device.
-     *  \param pa_poDevice           the device the resource is contained in
-     *  \param pa_pstInterfaceSpec   interface-specification of resource
-     *  \param pa_nInstanceNameId    StringId of instance-name
-     *  \param pa_roObjectHandler    reference to object handler
-     *  \param pa_acFBData           Byte-array for resource-specific data
+     *  \param paDevice           the device the resource is contained in
+     *  \param paInterfaceSpec   interface-specification of resource
+     *  \param paInstanceNameId    StringId of instance-name
+     *  \param paObjectHandler    reference to object handler
+     *  \param paFBData           Byte-array for resource-specific data
      */
-    CResource(CResource* pa_poDevice, const SFBInterfaceSpec *pa_pstInterfaceSpec,
-        CStringDictionary::TStringId pa_nInstanceNameId);
+    CResource(CResource* paDevice, const SFBInterfaceSpec *paInterfaceSpec,
+        CStringDictionary::TStringId paInstanceNameId);
 
     ~CResource() override;
 
@@ -63,7 +63,7 @@ class CResource : public CFunctionBlock, public forte::core::CFBContainer{
 
     /*!\brief Execute the given management command
      *
-     * Evaluates the m_sDestination parameter of the command if empty the resource tries
+     * Evaluates the mDestination parameter of the command if empty the resource tries
      * to execute the management command if not it tries to apply the mgm command to a
      * contained FB if possible.
      * \param paCommand internal representation of the management command
@@ -82,7 +82,7 @@ class CResource : public CFunctionBlock, public forte::core::CFBContainer{
       return mResourceEventExecution;
     };
 
-    EMGMResponse changeFBExecutionState(EMGMCommandType pa_unCommand) override;
+    EMGMResponse changeFBExecutionState(EMGMCommandType paCommand) override;
 
     /*!\brief Write a parameter value to a given FB-input
      *
@@ -111,7 +111,7 @@ class CResource : public CFunctionBlock, public forte::core::CFBContainer{
 #endif
 
   protected:
-    CResource(const SFBInterfaceSpec *pa_pstInterfaceSpec, CStringDictionary::TStringId pa_nInstanceNameId);
+    CResource(const SFBInterfaceSpec *paInterfaceSpec, CStringDictionary::TStringId paInstanceNameId);
 
     void executeEvent(TEventID) override {
     }
@@ -199,10 +199,10 @@ class CResource : public CFunctionBlock, public forte::core::CFBContainer{
     void createEventInterfaceResponseMessage(const SFBInterfaceSpec* paInterfaceSpec, CIEC_STRING& paReqResult);
     void createDataInterfaceResponseMessage(const SFBInterfaceSpec* paInterfaceSpec, CIEC_STRING& paReqResult);
     void createAdapterInterfaceResponseMessage(const SFBInterfaceSpec* paInterfaceSpec, CIEC_STRING& paReqResult);
-    void createInterfaceResponseMessages(CIEC_STRING& paReqResult, const char *paType, const CStringDictionary::TStringId* paNameList,
-        const CStringDictionary::TStringId* paTypeList, const TEventID pa_nNumberOfElements = 0, const TDataIOID* paEWith = nullptr, const TForteInt16* paEWithIndexes = nullptr,
+    void createInterfaceResponseMessages(CIEC_STRING& paReqResult, const char *paCommand, const CStringDictionary::TStringId* paNameList,
+        const CStringDictionary::TStringId* paTypeList, const TEventID paNumberOfElements = 0, const TDataIOID* paEWith = nullptr, const TForteInt16* paEWithIndexes = nullptr,
         const CStringDictionary::TStringId* paDNameList = nullptr);
-    void createInterfaceResponseMessage(CIEC_STRING& paReqResult, const char* pa_pcType, const CIEC_STRING& paName, const CIEC_STRING& paType,
+    void createInterfaceResponseMessage(CIEC_STRING& paReqResult, const char* paCommand, const CIEC_STRING& paName, const CIEC_STRING& paType,
         const TDataIOID* paEWith = nullptr, const TForteInt16* paEWithIndexes = nullptr, const TEventID paIndex = 0,
         const CStringDictionary::TStringId* paENameList = nullptr) const;
 

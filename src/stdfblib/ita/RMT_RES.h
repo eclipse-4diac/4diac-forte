@@ -19,7 +19,7 @@ class RMT_RES : public CResource{
   DECLARE_FIRMWARE_FB(RMT_RES)
 
   public:
-    RMT_RES(CStringDictionary::TStringId pa_nInstanceNameId, CResource* pa_roDevice);
+    RMT_RES(CStringDictionary::TStringId paInstanceNameId, CResource* paDevice);
     ~RMT_RES() override;
 
     bool initialize() override;
@@ -27,10 +27,10 @@ class RMT_RES : public CResource{
     void joinResourceThread() const;
 
   private:
-    static const SFBInterfaceSpec scm_stFBInterfaceSpec;
+    static const SFBInterfaceSpec scmFBInterfaceSpec;
 
-    static const CStringDictionary::TStringId scm_aunVarInputNameIds[];
-    static const CStringDictionary::TStringId scm_aunDIDataTypeIds[];
+    static const CStringDictionary::TStringId scmVarInputNameIds[];
+    static const CStringDictionary::TStringId scmDIDataTypeIds[];
 
 };
 

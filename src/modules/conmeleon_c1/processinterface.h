@@ -26,7 +26,7 @@ public:
     ~CConmeleonC1ProcessInterface() override;
 
 protected:
-  bool initialise(bool m_bInputOrOutput);
+  bool initialise(bool mInputOrOutput);
   bool deinitialise();
   bool writePin();
   bool readPin();

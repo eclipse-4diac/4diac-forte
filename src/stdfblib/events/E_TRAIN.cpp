@@ -22,27 +22,27 @@
 
 DEFINE_FIRMWARE_FB(FORTE_E_TRAIN, g_nStringIdE_TRAIN)
 
-const CStringDictionary::TStringId FORTE_E_TRAIN::scm_anDataInputNames[] = {g_nStringIdDT, g_nStringIdN};
-const CStringDictionary::TStringId FORTE_E_TRAIN::scm_anDataInputTypeIds[] = {g_nStringIdTIME, g_nStringIdUINT};
-const CStringDictionary::TStringId FORTE_E_TRAIN::scm_anDataOutputNames[] = {g_nStringIdCV};
-const CStringDictionary::TStringId FORTE_E_TRAIN::scm_anDataOutputTypeIds[] = {g_nStringIdUINT};
-const TDataIOID FORTE_E_TRAIN::scm_anEIWith[] = {0, scmWithListDelimiter, 0, scmWithListDelimiter};
-const TForteInt16 FORTE_E_TRAIN::scm_anEIWithIndexes[] = {0, 2};
-const CStringDictionary::TStringId FORTE_E_TRAIN::scm_anEventInputNames[] = {g_nStringIdSTART, g_nStringIdSTOP};
-const TDataIOID FORTE_E_TRAIN::scm_anEOWith[] = {0, scmWithListDelimiter};
-const TForteInt16 FORTE_E_TRAIN::scm_anEOWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_E_TRAIN::scm_anEventOutputNames[] = {g_nStringIdEO};
-const SFBInterfaceSpec FORTE_E_TRAIN::scm_stFBInterfaceSpec = {
-  2, scm_anEventInputNames, scm_anEIWith, scm_anEIWithIndexes,
-  1, scm_anEventOutputNames, scm_anEOWith, scm_anEOWithIndexes,
-  2, scm_anDataInputNames, scm_anDataInputTypeIds,
-  1, scm_anDataOutputNames, scm_anDataOutputTypeIds,
+const CStringDictionary::TStringId FORTE_E_TRAIN::scmDataInputNames[] = {g_nStringIdDT, g_nStringIdN};
+const CStringDictionary::TStringId FORTE_E_TRAIN::scmDataInputTypeIds[] = {g_nStringIdTIME, g_nStringIdUINT};
+const CStringDictionary::TStringId FORTE_E_TRAIN::scmDataOutputNames[] = {g_nStringIdCV};
+const CStringDictionary::TStringId FORTE_E_TRAIN::scmDataOutputTypeIds[] = {g_nStringIdUINT};
+const TDataIOID FORTE_E_TRAIN::scmEIWith[] = {0, scmWithListDelimiter, 0, scmWithListDelimiter};
+const TForteInt16 FORTE_E_TRAIN::scmEIWithIndexes[] = {0, 2};
+const CStringDictionary::TStringId FORTE_E_TRAIN::scmEventInputNames[] = {g_nStringIdSTART, g_nStringIdSTOP};
+const TDataIOID FORTE_E_TRAIN::scmEOWith[] = {0, scmWithListDelimiter};
+const TForteInt16 FORTE_E_TRAIN::scmEOWithIndexes[] = {0};
+const CStringDictionary::TStringId FORTE_E_TRAIN::scmEventOutputNames[] = {g_nStringIdEO};
+const SFBInterfaceSpec FORTE_E_TRAIN::scmFBInterfaceSpec = {
+  2, scmEventInputNames, scmEIWith, scmEIWithIndexes,
+  1, scmEventOutputNames, scmEOWith, scmEOWithIndexes,
+  2, scmDataInputNames, scmDataInputTypeIds,
+  1, scmDataOutputNames, scmDataOutputTypeIds,
   0, nullptr,
   0, nullptr
 };
 
-FORTE_E_TRAIN::FORTE_E_TRAIN(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes) :
-    CCompositeFB(pa_poSrcRes, &scm_stFBInterfaceSpec, pa_nInstanceNameId, &scm_stFBNData),
+FORTE_E_TRAIN::FORTE_E_TRAIN(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) :
+    CCompositeFB(paSrcRes, &scmFBInterfaceSpec, paInstanceNameId, &scmFBNData),
     var_DT(CIEC_TIME(0)),
     var_N(CIEC_UINT(0)),
     var_CV(CIEC_UINT(0)),
@@ -53,14 +53,14 @@ FORTE_E_TRAIN::FORTE_E_TRAIN(const CStringDictionary::TStringId pa_nInstanceName
     conn_CV(this, 0, &var_conn_CV) {
 };
 
-const SCFB_FBInstanceData FORTE_E_TRAIN::scm_astInternalFBs[] = {
+const SCFB_FBInstanceData FORTE_E_TRAIN::scmInternalFBs[] = {
   {g_nStringIdCTR, g_nStringIdE_CTU},
   {g_nStringIdGATE, g_nStringIdE_SWITCH},
   {g_nStringIdDLY, g_nStringIdE_DELAY}
 };
 
 
-const SCFB_FBConnectionData FORTE_E_TRAIN::scm_astEventConnections[] = {
+const SCFB_FBConnectionData FORTE_E_TRAIN::scmEventConnections[] = {
   {GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdCTR, g_nStringIdCUO), 0, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdGATE, g_nStringIdEI), 1},
   {GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdCTR, g_nStringIdRO), 0, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdGATE, g_nStringIdEI), 1},
   {GENERATE_CONNECTION_PORT_ID_1_ARG(g_nStringIdSTART), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdCTR, g_nStringIdR), 0},
@@ -69,35 +69,35 @@ const SCFB_FBConnectionData FORTE_E_TRAIN::scm_astEventConnections[] = {
   {GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdDLY, g_nStringIdEO), 2, GENERATE_CONNECTION_PORT_ID_1_ARG(g_nStringIdEO), -1},
 };
 
-const SCFB_FBFannedOutConnectionData FORTE_E_TRAIN::scm_astFannedOutEventConnections[] = {
+const SCFB_FBFannedOutConnectionData FORTE_E_TRAIN::scmFannedOutEventConnections[] = {
   {5, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdCTR, g_nStringIdCU), 0},
 };
 
-const SCFB_FBConnectionData FORTE_E_TRAIN::scm_astDataConnections[] = {
+const SCFB_FBConnectionData FORTE_E_TRAIN::scmDataConnections[] = {
   {GENERATE_CONNECTION_PORT_ID_1_ARG(g_nStringIdN), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdCTR, g_nStringIdPV), 0},
   {GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdCTR, g_nStringIdCV), 0, GENERATE_CONNECTION_PORT_ID_1_ARG(g_nStringIdCV), -1},
   {GENERATE_CONNECTION_PORT_ID_1_ARG(g_nStringIdDT), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdDLY, g_nStringIdDT), 2},
   {GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdCTR, g_nStringIdQ), 0, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdGATE, g_nStringIdG), 1},
 };
 
-const SCFB_FBNData FORTE_E_TRAIN::scm_stFBNData = {
-  3, scm_astInternalFBs,
-  6, scm_astEventConnections,
-  1, scm_astFannedOutEventConnections,
-  4, scm_astDataConnections,
+const SCFB_FBNData FORTE_E_TRAIN::scmFBNData = {
+  3, scmInternalFBs,
+  6, scmEventConnections,
+  1, scmFannedOutEventConnections,
+  4, scmDataConnections,
   0, nullptr,
   0, nullptr
 };
 
 
-void FORTE_E_TRAIN::readInputData(TEventID pa_nEIID) {
-  switch(pa_nEIID) {
-    case scm_nEventSTARTID: {
+void FORTE_E_TRAIN::readInputData(TEventID paEIID) {
+  switch(paEIID) {
+    case scmEventSTARTID: {
       RES_DATA_CON_CRITICAL_REGION();
       readData(0, var_DT, conn_DT);
       break;
     }
-    case scm_nEventSTOPID: {
+    case scmEventSTOPID: {
       RES_DATA_CON_CRITICAL_REGION();
       readData(0, var_DT, conn_DT);
       break;
@@ -107,9 +107,9 @@ void FORTE_E_TRAIN::readInputData(TEventID pa_nEIID) {
   }
 }
 
-void FORTE_E_TRAIN::writeOutputData(TEventID pa_nEIID) {
-  switch(pa_nEIID) {
-    case scm_nEventEOID: {
+void FORTE_E_TRAIN::writeOutputData(TEventID paEIID) {
+  switch(paEIID) {
+    case scmEventEOID: {
       RES_DATA_CON_CRITICAL_REGION();
       writeData(0, var_CV, conn_CV);
       break;

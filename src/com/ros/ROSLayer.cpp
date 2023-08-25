@@ -24,10 +24,10 @@
 using namespace forte::com_infra;
 using namespace std::string_literals;
 
-CROSLayer::CROSLayer(CComLayer* pa_poUpperLayer, CBaseCommFB* pa_poComFB) :
-    CComLayer(pa_poUpperLayer, pa_poComFB){
+CROSLayer::CROSLayer(CComLayer* paUpperLayer, CBaseCommFB* paComFB) :
+    CComLayer(paUpperLayer, paComFB){
 
-  m_eInterruptResp = e_ProcessDataOk;
+  mInterruptResp = e_ProcessDataOk;
   m_TopicName = ""s;
   m_TopicType = ""s;
   m_NumSDs = -1;
@@ -37,19 +37,19 @@ CROSLayer::CROSLayer(CComLayer* pa_poUpperLayer, CBaseCommFB* pa_poComFB) :
 CROSLayer::~CROSLayer() = default;
 
 // initializes current layer
-EComResponse CROSLayer::openConnection(char *pa_acLayerParameter){
+EComResponse CROSLayer::openConnection(char *paLayerParameter){
 
   EComResponse retVal = e_InitOk;
-  m_eCommServiceType = getCommFB()->getComServiceType();
+  mCommServiceType = getCommFB()->getComServiceType();
 
-  std::string layerParams = pa_acLayerParameter;
+  std::string layerParams = paLayerParameter;
 
   // extract layerparams from ID input between the square brackets
   // example: ID = ros[/signal:std_msgs/Float64], layerparams = /signal:std_msgs/Float64
   int doublePoint = static_cast<int>(layerParams.find_last_of(":"));
   m_TopicName = layerParams.substr(0, doublePoint);
 
-  if(e_Subscriber == m_eCommServiceType){
+  if(e_Subscriber == mCommServiceType){
 
     m_NumRDs = getCommFB()->getNumRD();
 
@@ -60,7 +60,7 @@ EComResponse CROSLayer::openConnection(char *pa_acLayerParameter){
       DEVLOG_ERROR("[ROSLAYER] Subscribers with more than 1 RD output are not supported at the moment");
     }
   }
-  else if(e_Publisher == m_eCommServiceType){
+  else if(e_Publisher == mCommServiceType){
     m_NumSDs = getCommFB()->getNumSD();
 
     if(0 == m_NumSDs){
@@ -89,10 +89,10 @@ EComResponse CROSLayer::openConnection(char *pa_acLayerParameter){
     }
   }
   // We are a Service
-  else if(e_Server == m_eCommServiceType){
+  else if(e_Server == mCommServiceType){
     //TODO implement this
   }
-  else if(e_Client == m_eCommServiceType){
+  else if(e_Client == mCommServiceType){
     //TODO implement this
   }
 
@@ -253,5 +253,5 @@ EComResponse CROSLayer::recvData(const void *, unsigned int){
 
 EComResponse CROSLayer::processInterrupt(){
   //we don't need to do anything here (only 1 layer)
-  return m_eInterruptResp;
+  return mInterruptResp;
 }

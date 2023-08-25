@@ -16,22 +16,22 @@
 
 #include <forte_architecture_time.h>
 
-TForteInt32 CIEC_ANY_DATE::sm_nTimeZoneOffset = -1;
+TForteInt32 CIEC_ANY_DATE::smTimeZoneOffset = -1;
 
 TForteInt32 CIEC_ANY_DATE::getTimeZoneOffset(){
-  if(sm_nTimeZoneOffset == -1){
+  if(smTimeZoneOffset == -1){
     time_t t = 24 * 60 * 60; // 2. 1. 1970 00:00:00 for UTC
 
     struct tm ptm;
     forte_localtime(&t, &ptm);
     if(ptm.tm_mday < 2) {
-      sm_nTimeZoneOffset = 60 * ptm.tm_hour + ptm.tm_min - 24 * 60;
+      smTimeZoneOffset = 60 * ptm.tm_hour + ptm.tm_min - 24 * 60;
     } else {
-      sm_nTimeZoneOffset = 60 * ptm.tm_hour + ptm.tm_min;
+      smTimeZoneOffset = 60 * ptm.tm_hour + ptm.tm_min;
     }
   }
 
-  return sm_nTimeZoneOffset;
+  return smTimeZoneOffset;
 }
 
 bool CIEC_ANY_DATE::setDateAndTime(struct tm &paTM, unsigned int paMilliSec) {

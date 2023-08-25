@@ -23,26 +23,26 @@ private:
 
 /* \brief the event chain executor used by this ES.
  */
-  CEventChainExecutionThread *m_poEventChainExecutor;
+  CEventChainExecutionThread *mEventChainExecutor;
   TEventEntry mEventSourceEventEntry; //! the event entry to start the event chain
 
 public:
-  CEventSourceFB(CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_pstInterfaceSpec,
-                 CStringDictionary::TStringId pa_nInstanceNameId) :
-          CFunctionBlock(pa_poSrcRes, pa_pstInterfaceSpec, pa_nInstanceNameId),
-          m_poEventChainExecutor(nullptr),
+  CEventSourceFB(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec,
+                 CStringDictionary::TStringId paInstanceNameId) :
+          CFunctionBlock(paSrcRes, paInterfaceSpec, paInstanceNameId),
+          mEventChainExecutor(nullptr),
           mEventSourceEventEntry(this, cg_nExternalEventID) {
   }
 
   ~CEventSourceFB() override = default;
-  void setEventChainExecutor(CEventChainExecutionThread *pa_poEventChainExecutor) { m_poEventChainExecutor = pa_poEventChainExecutor; };
-  CEventChainExecutionThread * getEventChainExecutor() { return m_poEventChainExecutor; };
+  void setEventChainExecutor(CEventChainExecutionThread *paEventChainExecutor) { mEventChainExecutor = paEventChainExecutor; };
+  CEventChainExecutionThread * getEventChainExecutor() { return mEventChainExecutor; };
 
   TEventEntry *getEventSourceEventEntry() { return &mEventSourceEventEntry; };
 };
 
 #define EVENT_SOURCE_FUNCTION_BLOCK_CTOR(fbclass) \
- fbclass(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes) : \
- CEventSourceFB( pa_poSrcRes, &scm_stFBInterfaceSpec, pa_nInstanceNameId)
+ fbclass(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) : \
+ CEventSourceFB( paSrcRes, &scmFBInterfaceSpec, paInstanceNameId)
 
 #endif /*_ESFB_H_*/

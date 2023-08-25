@@ -28,35 +28,35 @@
 
 DEFINE_FIRMWARE_FB(FORTE_FB_RANDOM, g_nStringIdFB_RANDOM)
 
-const CStringDictionary::TStringId FORTE_FB_RANDOM::scm_anDataInputNames[] = {g_nStringIdSEED};
+const CStringDictionary::TStringId FORTE_FB_RANDOM::scmDataInputNames[] = {g_nStringIdSEED};
 
-const CStringDictionary::TStringId FORTE_FB_RANDOM::scm_anDataInputTypeIds[] = {g_nStringIdUINT};
+const CStringDictionary::TStringId FORTE_FB_RANDOM::scmDataInputTypeIds[] = {g_nStringIdUINT};
 
-const CStringDictionary::TStringId FORTE_FB_RANDOM::scm_anDataOutputNames[] = {g_nStringIdVAL};
+const CStringDictionary::TStringId FORTE_FB_RANDOM::scmDataOutputNames[] = {g_nStringIdVAL};
 
-const CStringDictionary::TStringId FORTE_FB_RANDOM::scm_anDataOutputTypeIds[] = {g_nStringIdREAL};
+const CStringDictionary::TStringId FORTE_FB_RANDOM::scmDataOutputTypeIds[] = {g_nStringIdREAL};
 
-const TDataIOID FORTE_FB_RANDOM::scm_anEIWith[] = {0, scmWithListDelimiter};
-const TForteInt16 FORTE_FB_RANDOM::scm_anEIWithIndexes[] = {0, -1};
-const CStringDictionary::TStringId FORTE_FB_RANDOM::scm_anEventInputNames[] = {g_nStringIdINIT, g_nStringIdREQ};
+const TDataIOID FORTE_FB_RANDOM::scmEIWith[] = {0, scmWithListDelimiter};
+const TForteInt16 FORTE_FB_RANDOM::scmEIWithIndexes[] = {0, -1};
+const CStringDictionary::TStringId FORTE_FB_RANDOM::scmEventInputNames[] = {g_nStringIdINIT, g_nStringIdREQ};
 
-const TDataIOID FORTE_FB_RANDOM::scm_anEOWith[] = {0, scmWithListDelimiter};
-const TForteInt16 FORTE_FB_RANDOM::scm_anEOWithIndexes[] = {-1, 0};
-const CStringDictionary::TStringId FORTE_FB_RANDOM::scm_anEventOutputNames[] = {g_nStringIdINITO, g_nStringIdCNF};
+const TDataIOID FORTE_FB_RANDOM::scmEOWith[] = {0, scmWithListDelimiter};
+const TForteInt16 FORTE_FB_RANDOM::scmEOWithIndexes[] = {-1, 0};
+const CStringDictionary::TStringId FORTE_FB_RANDOM::scmEventOutputNames[] = {g_nStringIdINITO, g_nStringIdCNF};
 
 
-const SFBInterfaceSpec FORTE_FB_RANDOM::scm_stFBInterfaceSpec = {
-  2, scm_anEventInputNames, scm_anEIWith, scm_anEIWithIndexes,
-  2, scm_anEventOutputNames, scm_anEOWith, scm_anEOWithIndexes,
-  1, scm_anDataInputNames, scm_anDataInputTypeIds,
-  1, scm_anDataOutputNames, scm_anDataOutputTypeIds,
+const SFBInterfaceSpec FORTE_FB_RANDOM::scmFBInterfaceSpec = {
+  2, scmEventInputNames, scmEIWith, scmEIWithIndexes,
+  2, scmEventOutputNames, scmEOWith, scmEOWithIndexes,
+  1, scmDataInputNames, scmDataInputTypeIds,
+  1, scmDataOutputNames, scmDataOutputTypeIds,
   0, nullptr,
   0, nullptr
 };
 
 
-FORTE_FB_RANDOM::FORTE_FB_RANDOM(CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes) :
-    CBasicFB(pa_poSrcRes, &scm_stFBInterfaceSpec, pa_nInstanceNameId, nullptr),
+FORTE_FB_RANDOM::FORTE_FB_RANDOM(CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) :
+    CBasicFB(paSrcRes, &scmFBInterfaceSpec, paInstanceNameId, nullptr),
     mDistribution(0.0f, 1.0f),
     var_SEED(CIEC_UINT(0)),
     var_VAL(CIEC_REAL(0)),
@@ -82,40 +82,40 @@ void FORTE_FB_RANDOM::alg_REQ(){
 }
 
 
-void FORTE_FB_RANDOM::executeEvent(TEventID pa_nEIID){
+void FORTE_FB_RANDOM::executeEvent(TEventID paEIID){
   do {
-    switch(m_nECCState) {
-      case scm_nStateSTART:
-        if(scm_nEventREQID == pa_nEIID) enterStateREQ();
+    switch(mECCState) {
+      case scmStateSTART:
+        if(scmEventREQID == paEIID) enterStateREQ();
         else
-        if(scm_nEventINITID == pa_nEIID) enterStateState();
+        if(scmEventINITID == paEIID) enterStateState();
         else return; //no transition cleared
         break;
-      case scm_nStateREQ:
+      case scmStateREQ:
         if(1) enterStateSTART();
         else return; //no transition cleared
         break;
-      case scm_nStateState:
+      case scmStateState:
         if(1) enterStateSTART();
         else return; //no transition cleared
         break;
       default:
-        DEVLOG_ERROR("The state is not in the valid range! The state value is: %d. The max value can be: 3.", m_nECCState.operator TForteUInt16 ());
-        m_nECCState = 0; // 0 is always the initial state
+        DEVLOG_ERROR("The state is not in the valid range! The state value is: %d. The max value can be: 3.", mECCState.operator TForteUInt16 ());
+        mECCState = 0; // 0 is always the initial state
         return;
     }
-    pa_nEIID = cg_nInvalidEventID; // we have to clear the event after the first check in order to ensure correct behavior
+    paEIID = cg_nInvalidEventID; // we have to clear the event after the first check in order to ensure correct behavior
   } while(true);
 }
 
-void FORTE_FB_RANDOM::readInputData(TEventID pa_nEIID) {
-  switch(pa_nEIID) {
-    case scm_nEventINITID: {
+void FORTE_FB_RANDOM::readInputData(TEventID paEIID) {
+  switch(paEIID) {
+    case scmEventINITID: {
       RES_DATA_CON_CRITICAL_REGION();
       readData(0, var_SEED, conn_SEED);
       break;
     }
-    case scm_nEventREQID: {
+    case scmEventREQID: {
       RES_DATA_CON_CRITICAL_REGION();
       break;
     }
@@ -124,13 +124,13 @@ void FORTE_FB_RANDOM::readInputData(TEventID pa_nEIID) {
   }
 }
 
-void FORTE_FB_RANDOM::writeOutputData(TEventID pa_nEIID) {
-  switch(pa_nEIID) {
-    case scm_nEventINITOID: {
+void FORTE_FB_RANDOM::writeOutputData(TEventID paEIID) {
+  switch(paEIID) {
+    case scmEventINITOID: {
       RES_DATA_CON_CRITICAL_REGION();
       break;
     }
-    case scm_nEventCNFID: {
+    case scmEventCNFID: {
       RES_DATA_CON_CRITICAL_REGION();
       writeData(0, var_VAL, conn_VAL);
       break;
@@ -182,19 +182,19 @@ CIEC_ANY *FORTE_FB_RANDOM::getVarInternal(size_t) {
 
 
 void FORTE_FB_RANDOM::enterStateSTART(void) {
-  m_nECCState = scm_nStateSTART;
+  mECCState = scmStateSTART;
 }
 
 void FORTE_FB_RANDOM::enterStateREQ(void) {
-  m_nECCState = scm_nStateREQ;
+  mECCState = scmStateREQ;
   alg_REQ();
-  sendOutputEvent(scm_nEventCNFID);
+  sendOutputEvent(scmEventCNFID);
 }
 
 void FORTE_FB_RANDOM::enterStateState(void) {
-  m_nECCState = scm_nStateState;
+  mECCState = scmStateState;
   alg_INIT();
-  sendOutputEvent(scm_nEventINITOID);
+  sendOutputEvent(scmEventINITOID);
 }
 
 

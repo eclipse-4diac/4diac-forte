@@ -22,24 +22,24 @@ class GEN_VALUES2ARRAY : public CGenFunctionBlock<CFunctionBlock>{
   DECLARE_GENERIC_FIRMWARE_FB(GEN_VALUES2ARRAY)
 
   private:
-    CStringDictionary::TStringId *m_anDataInputNames;
-    CStringDictionary::TStringId *m_anDataInputTypeIds;
+    CStringDictionary::TStringId *mDataInputNames;
+    CStringDictionary::TStringId *mDataInputTypeIds;
 
-    static const CStringDictionary::TStringId scm_anDataOutputNames[];
-    CStringDictionary::TStringId *m_anDataOutputTypeIds;
+    static const CStringDictionary::TStringId scmDataOutputNames[];
+    CStringDictionary::TStringId *mDataOutputTypeIds;
 
     CIEC_ARRAY &OUT_Array(){
       return *static_cast<CIEC_ARRAY *>(getDO(0));
     }
 
-    static const TEventID scm_nEventREQID = 0;
-    static const CStringDictionary::TStringId scm_anEventInputNames[];
+    static const TEventID scmEventREQID = 0;
+    static const CStringDictionary::TStringId scmEventInputNames[];
 
-    static const TEventID scm_nEventCNFID = 0;
-    static const CStringDictionary::TStringId scm_anEventOutputNames[];
+    static const TEventID scmEventCNFID = 0;
+    static const CStringDictionary::TStringId scmEventOutputNames[];
 
     //self-defined members
-    unsigned int m_nDInputs;
+    unsigned int mDInputs;
     CStringDictionary::TStringId m_ValueTypeID;
 
     void executeEvent(TEventID paEIID) override;

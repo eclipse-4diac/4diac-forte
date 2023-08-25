@@ -17,34 +17,34 @@
 
 DEFINE_FIRMWARE_FB(FORTE_ServiceRegistryEntry2ServiceRegistryEntry, g_nStringIdServiceRegistryEntry2ServiceRegistryEntry)
 
-const CStringDictionary::TStringId FORTE_ServiceRegistryEntry2ServiceRegistryEntry::scm_anDataInputNames[] = {g_nStringIdIN};
+const CStringDictionary::TStringId FORTE_ServiceRegistryEntry2ServiceRegistryEntry::scmDataInputNames[] = {g_nStringIdIN};
 
-const CStringDictionary::TStringId FORTE_ServiceRegistryEntry2ServiceRegistryEntry::scm_anDataInputTypeIds[] = {g_nStringIdServiceRegistryEntry};
+const CStringDictionary::TStringId FORTE_ServiceRegistryEntry2ServiceRegistryEntry::scmDataInputTypeIds[] = {g_nStringIdServiceRegistryEntry};
 
-const CStringDictionary::TStringId FORTE_ServiceRegistryEntry2ServiceRegistryEntry::scm_anDataOutputNames[] = {g_nStringIdOUT};
+const CStringDictionary::TStringId FORTE_ServiceRegistryEntry2ServiceRegistryEntry::scmDataOutputNames[] = {g_nStringIdOUT};
 
-const CStringDictionary::TStringId FORTE_ServiceRegistryEntry2ServiceRegistryEntry::scm_anDataOutputTypeIds[] = {g_nStringIdServiceRegistryEntry};
+const CStringDictionary::TStringId FORTE_ServiceRegistryEntry2ServiceRegistryEntry::scmDataOutputTypeIds[] = {g_nStringIdServiceRegistryEntry};
 
-const TForteInt16 FORTE_ServiceRegistryEntry2ServiceRegistryEntry::scm_anEIWithIndexes[] = {0};
-const TDataIOID FORTE_ServiceRegistryEntry2ServiceRegistryEntry::scm_anEIWith[] = {0, scmWithListDelimiter};
-const CStringDictionary::TStringId FORTE_ServiceRegistryEntry2ServiceRegistryEntry::scm_anEventInputNames[] = {g_nStringIdREQ};
+const TForteInt16 FORTE_ServiceRegistryEntry2ServiceRegistryEntry::scmEIWithIndexes[] = {0};
+const TDataIOID FORTE_ServiceRegistryEntry2ServiceRegistryEntry::scmEIWith[] = {0, scmWithListDelimiter};
+const CStringDictionary::TStringId FORTE_ServiceRegistryEntry2ServiceRegistryEntry::scmEventInputNames[] = {g_nStringIdREQ};
 
-const TDataIOID FORTE_ServiceRegistryEntry2ServiceRegistryEntry::scm_anEOWith[] = {0, scmWithListDelimiter};
-const TForteInt16 FORTE_ServiceRegistryEntry2ServiceRegistryEntry::scm_anEOWithIndexes[] = {0, -1};
-const CStringDictionary::TStringId FORTE_ServiceRegistryEntry2ServiceRegistryEntry::scm_anEventOutputNames[] = {g_nStringIdCNF};
+const TDataIOID FORTE_ServiceRegistryEntry2ServiceRegistryEntry::scmEOWith[] = {0, scmWithListDelimiter};
+const TForteInt16 FORTE_ServiceRegistryEntry2ServiceRegistryEntry::scmEOWithIndexes[] = {0, -1};
+const CStringDictionary::TStringId FORTE_ServiceRegistryEntry2ServiceRegistryEntry::scmEventOutputNames[] = {g_nStringIdCNF};
 
-const SFBInterfaceSpec FORTE_ServiceRegistryEntry2ServiceRegistryEntry::scm_stFBInterfaceSpec = {
-  1,  scm_anEventInputNames,  scm_anEIWith,  scm_anEIWithIndexes,
-  1,  scm_anEventOutputNames,  scm_anEOWith, scm_anEOWithIndexes,  1,  scm_anDataInputNames, scm_anDataInputTypeIds,
-  1,  scm_anDataOutputNames, scm_anDataOutputTypeIds,
+const SFBInterfaceSpec FORTE_ServiceRegistryEntry2ServiceRegistryEntry::scmFBInterfaceSpec = {
+  1,  scmEventInputNames,  scmEIWith,  scmEIWithIndexes,
+  1,  scmEventOutputNames,  scmEOWith, scmEOWithIndexes,  1,  scmDataInputNames, scmDataInputTypeIds,
+  1,  scmDataOutputNames, scmDataOutputTypeIds,
   0, 0
 };
 
 
-void FORTE_ServiceRegistryEntry2ServiceRegistryEntry::executeEvent(TEventID pa_nEIID){
-  if(scm_nEventREQID == pa_nEIID) {
+void FORTE_ServiceRegistryEntry2ServiceRegistryEntry::executeEvent(TEventID paEIID){
+  if(scmEventREQID == paEIID) {
     st_OUT() = st_IN();
-    sendOutputEvent(scm_nEventCNFID);
+    sendOutputEvent(scmEventCNFID);
   }
 }
 

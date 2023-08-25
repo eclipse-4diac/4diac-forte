@@ -13,39 +13,39 @@
 #include "OPCGroup.h"
 #include "OPCItem.h"
 
-COpcProcessVar::COpcProcessVar(const char* pa_acItemGroupName, const char* pa_acItemName, EOpcProcessVarFunctions pa_eFunction) :
-  m_pOpcItem(0), m_acItemGroupName(pa_acItemGroupName), m_acItemName(pa_acItemName), m_bActive(false), m_eFunction(pa_eFunction){
-  m_oCurrentValue.set<SHORT>(0);
+COpcProcessVar::COpcProcessVar(const char* paItemGroupName, const char* paItemName, EOpcProcessVarFunctions paFunction) :
+  mOpcItem(0), mItemGroupName(paItemGroupName), mItemName(paItemName), mActive(false), mFunction(paFunction){
+  mCurrentValue.set<SHORT>(0);
 }
 
 void COpcProcessVar::sendItemData(){
   try{
     if(getIsActive()) {
-      m_pOpcItem->writeSync(updateValue());
+      mOpcItem->writeSync(updateValue());
     }
   } catch (OPCException &e){
     setIsActive(false);
   }
 }
 
-void COpcProcessVar::setNewValue(Variant pa_oNewValue){
-  m_oSync.lock();
-  m_lNewValueQueue.pushBack(pa_oNewValue);
-  m_oSync.unlock();
+void COpcProcessVar::setNewValue(Variant paNewValue){
+  mSync.lock();
+  mNewValueQueue.pushBack(paNewValue);
+  mSync.unlock();
 }
 
 Variant COpcProcessVar::peekNewValue(){
   Variant retVal;
 
-  m_oSync.lock();
-  TVariantList::Iterator itBegin = m_lNewValueQueue.begin();
-  if(itBegin != m_lNewValueQueue.end()){
+  mSync.lock();
+  TVariantList::Iterator itBegin = mNewValueQueue.begin();
+  if(itBegin != mNewValueQueue.end()){
     retVal = (*itBegin);
   } else {
-    retVal = m_oCurrentValue;
+    retVal = mCurrentValue;
   }
 
-  m_oSync.unlock();
+  mSync.unlock();
 
   return retVal;
 }
@@ -53,17 +53,17 @@ Variant COpcProcessVar::peekNewValue(){
 Variant COpcProcessVar::updateValue(){
   Variant retVal;
 
-  m_oSync.lock();
-  TVariantList::Iterator itBegin = m_lNewValueQueue.begin();
-  TVariantList::Iterator itEnd = m_lNewValueQueue.end();
-  if(itBegin != m_lNewValueQueue.end()){
-    m_oCurrentValue = retVal = (*itBegin);
-    m_lNewValueQueue.popFront();
+  mSync.lock();
+  TVariantList::Iterator itBegin = mNewValueQueue.begin();
+  TVariantList::Iterator itEnd = mNewValueQueue.end();
+  if(itBegin != mNewValueQueue.end()){
+    mCurrentValue = retVal = (*itBegin);
+    mNewValueQueue.popFront();
   } else {
-    retVal = m_oCurrentValue;
+    retVal = mCurrentValue;
   }
 
-  m_oSync.unlock();
+  mSync.unlock();
 
   return retVal;
 }

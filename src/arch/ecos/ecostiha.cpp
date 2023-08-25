@@ -13,32 +13,32 @@
 #include "ecostiha.h"
 #include "../../core/devexec.h"
 
-cyg_sem_t CECOSTimerHandler::m_stSemaphore;
+cyg_sem_t CECOSTimerHandler::mSemaphore;
 
-CTimerHandler* CTimerHandler::createTimerHandler(CDeviceExecution& pa_poDeviceExecution){
-  return new CECOSTimerHandler(pa_poDeviceExecution);
+CTimerHandler* CTimerHandler::createTimerHandler(CDeviceExecution& paDeviceExecution){
+  return new CECOSTimerHandler(paDeviceExecution);
 }
 
-CECOSTimerHandler::CECOSTimerHandler(CDeviceExecution& pa_poDeviceExecution) : CTimerHandler(pa_poDeviceExecution)  {
-  cyg_semaphore_init(&m_stSemaphore, 0);
+CECOSTimerHandler::CECOSTimerHandler(CDeviceExecution& paDeviceExecution) : CTimerHandler(paDeviceExecution)  {
+  cyg_semaphore_init(&mSemaphore, 0);
 
-  m_stSystemclockHandle = cyg_real_time_clock();
-  cyg_clock_to_counter(m_stSystemclockHandle, &m_stCounterHandle);
+  mSystemclockHandle = cyg_real_time_clock();
+  cyg_clock_to_counter(mSystemclockHandle, &mCounterHandle);
 
-  cyg_alarm_create(m_stCounterHandle, timerHandlerFunc, (cyg_addrword_t) 0, &m_stAlarmHandle, &m_stAlarm);
+  cyg_alarm_create(mCounterHandle, timerHandlerFunc, (cyg_addrword_t) 0, &mAlarmHandle, &mAlarm);
   start();
 }
 
 CECOSTimerHandler::~CECOSTimerHandler(){
-  cyg_semaphore_destroy(&m_stSemaphore);
+  cyg_semaphore_destroy(&mSemaphore);
 }
 
 void CECOSTimerHandler::enableHandler(){
-  cyg_alarm_initialize(m_stAlarmHandle, cyg_current_time() + 1, 1);
+  cyg_alarm_initialize(mAlarmHandle, cyg_current_time() + 1, 1);
 }
 
 void CECOSTimerHandler::disableHandler(){
-  cyg_alarm_disable(m_stAlarmHandle);
+  cyg_alarm_disable(mAlarmHandle);
 }
 
 void CECOSTimerHandler::setPriority(int ){
@@ -52,7 +52,7 @@ int CECOSTimerHandler::getPriority() const{
 void CECOSTimerHandler::run(){
   CECOSThread::setPriority(0); //we want to be a very important thread
   while(isAlive()){
-    cyg_semaphore_wait(&m_stSemaphore);
+    cyg_semaphore_wait(&mSemaphore);
     //FIXME add compensation code for timer activation jitter similar to the code in the posix architecture
     nextTick();
   }

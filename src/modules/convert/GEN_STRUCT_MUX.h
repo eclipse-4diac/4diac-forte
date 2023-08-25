@@ -22,13 +22,13 @@ class GEN_STRUCT_MUX : public CGenFunctionBlock<CFunctionBlock> {
     DECLARE_GENERIC_FIRMWARE_FB(GEN_STRUCT_MUX)
 
   private:
-    static const CStringDictionary::TStringId scm_anDataOutputNames[];
+    static const CStringDictionary::TStringId scmDataOutputNames[];
 
-    static const TEventID scm_nEventREQID = 0;
-    static const CStringDictionary::TStringId scm_anEventInputNames[];
+    static const TEventID scmEventREQID = 0;
+    static const CStringDictionary::TStringId scmEventInputNames[];
 
-    static const TEventID scm_nEventCNFID = 0;
-    static const CStringDictionary::TStringId scm_anEventOutputNames[];
+    static const TEventID scmEventCNFID = 0;
+    static const CStringDictionary::TStringId scmEventOutputNames[];
 
     void executeEvent(TEventID paEIID) override;
 

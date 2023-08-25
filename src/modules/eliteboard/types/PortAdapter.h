@@ -22,32 +22,32 @@ class FORTE_PortAdapter : public CAdapter {
   DECLARE_ADAPTER_TYPE(FORTE_PortAdapter)
 
 private:
-  static const CStringDictionary::TStringId scm_anDataOutputNames[];
-  static const CStringDictionary::TStringId scm_anDataOutputTypeIds[];
+  static const CStringDictionary::TStringId scmDataOutputNames[];
+  static const CStringDictionary::TStringId scmDataOutputTypeIds[];
 
 public:
-  static const TEventID scm_nEventMAPOID = 0;
+  static const TEventID scmEventMAPOID = 0;
 
 private:
-  static const TForteInt16 scm_anEIWithIndexes[];
-  static const CStringDictionary::TStringId scm_anEventInputNames[];
+  static const TForteInt16 scmEIWithIndexes[];
+  static const CStringDictionary::TStringId scmEventInputNames[];
 
 public:
-  static const TEventID scm_nEventMAPID = 0;
+  static const TEventID scmEventMAPID = 0;
 
 private:
-  static const TDataIOID scm_anEOWith[];
-  static const TForteInt16 scm_anEOWithIndexes[];
-  static const CStringDictionary::TStringId scm_anEventOutputNames[];
+  static const TDataIOID scmEOWith[];
+  static const TForteInt16 scmEOWithIndexes[];
+  static const CStringDictionary::TStringId scmEventOutputNames[];
 
-  static const SFBInterfaceSpec scm_stFBInterfaceSpecSocket;
+  static const SFBInterfaceSpec scmFBInterfaceSpecSocket;
 
-  static const SFBInterfaceSpec scm_stFBInterfaceSpecPlug;
+  static const SFBInterfaceSpec scmFBInterfaceSpecPlug;
 
 public:
-  TEventID MAPO() { return m_nParentAdapterListEventID + scm_nEventMAPOID; }
+  TEventID MAPO() { return mParentAdapterListEventID + scmEventMAPOID; }
 
-  TEventID MAP() { return m_nParentAdapterListEventID + scm_nEventMAPID; }
+  TEventID MAP() { return mParentAdapterListEventID + scmEventMAPID; }
 
   CIEC_DWORD &GPIO_Port_Addr() {
     return *static_cast<CIEC_DWORD *>((isSocket()) ? getDO(0) : getDI(0));
@@ -56,11 +56,11 @@ public:
 private:
 
 public:
-  FORTE_PortAdapter(CStringDictionary::TStringId pa_anAdapterInstanceName,
-                    CResource *pa_poSrcRes, bool pa_bIsPlug)
-      : CAdapter(pa_poSrcRes, &scm_stFBInterfaceSpecSocket,
-                 pa_anAdapterInstanceName, &scm_stFBInterfaceSpecPlug,
-                 pa_bIsPlug){};
+  FORTE_PortAdapter(CStringDictionary::TStringId paAdapterInstanceName,
+                    CResource *paSrcRes, bool paIsPlug)
+      : CAdapter(paSrcRes, &scmFBInterfaceSpecSocket,
+                 paAdapterInstanceName, &scmFBInterfaceSpecPlug,
+                 paIsPlug){};
 
   ~FORTE_PortAdapter() override = default;
 };

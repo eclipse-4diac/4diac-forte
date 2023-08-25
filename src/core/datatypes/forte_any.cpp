@@ -31,13 +31,13 @@ CStringDictionary::TStringId CIEC_ANY::getTypeNameID() const {
   return g_nStringIdANY;
 }
 
-CStringDictionary::TStringId CIEC_ANY::parseTypeName(const char *pa_pacValue, const char *pa_pacHashPos) {
-  return CStringDictionary::getInstance().getId(pa_pacValue, static_cast<size_t>(pa_pacHashPos - pa_pacValue));
+CStringDictionary::TStringId CIEC_ANY::parseTypeName(const char *paValue, const char *paHashPos) {
+  return CStringDictionary::getInstance().getId(paValue, static_cast<size_t>(paHashPos - paValue));
 }
 
-bool CIEC_ANY::isCastable(EDataTypeID pa_eSource, EDataTypeID pa_eDestination, bool &pa_rbUpCast, bool &pa_rbDownCast){
+bool CIEC_ANY::isCastable(EDataTypeID paSource, EDataTypeID paDestination, bool &paUpCast, bool &paDownCast){
 
-  pa_rbUpCast = pa_rbDownCast = false;
+  paUpCast = paDownCast = false;
 
   // EDataTypeID -> EDataType matrix, e_BOOL to e_WSTRING
   // Watch for ordering - it has to match EDataTypeID
@@ -116,26 +116,26 @@ bool CIEC_ANY::isCastable(EDataTypeID pa_eSource, EDataTypeID pa_eDestination, b
       {0b00000000, 0b00000000, 0b00000000, 0b00000000} // e_WSTRING
   };
 
-  if((pa_eSource < e_BOOL) || (pa_eSource > e_WSTRING) || (pa_eDestination < e_BOOL) || (pa_eDestination > e_WSTRING)){
+  if((paSource < e_BOOL) || (paSource > e_WSTRING) || (paDestination < e_BOOL) || (paDestination > e_WSTRING)){
     return false;
   }
 
-  pa_rbUpCast = (UpCast[pa_eSource - e_BOOL][(pa_eDestination - e_BOOL) >> 3] & (0x80 >> ((pa_eDestination - e_BOOL) & 0x07))) != 0;
-  pa_rbDownCast = (DownCast[pa_eSource - e_BOOL][(pa_eDestination - e_BOOL) >> 3] & (0x80 >> ((pa_eDestination - e_BOOL) & 0x07))) != 0;
+  paUpCast = (UpCast[paSource - e_BOOL][(paDestination - e_BOOL) >> 3] & (0x80 >> ((paDestination - e_BOOL) & 0x07))) != 0;
+  paDownCast = (DownCast[paSource - e_BOOL][(paDestination - e_BOOL) >> 3] & (0x80 >> ((paDestination - e_BOOL) & 0x07))) != 0;
 
-  return (pa_rbUpCast | pa_rbDownCast);
+  return (paUpCast | paDownCast);
 }
 
-void CIEC_ANY::specialCast(const CIEC_ANY &pa_roSrcValue, CIEC_ANY &pa_roDstValue){
-  switch (pa_roSrcValue.getDataTypeID()){
+void CIEC_ANY::specialCast(const CIEC_ANY &paSrcValue, CIEC_ANY &paDstValue){
+  switch (paSrcValue.getDataTypeID()){
     case CIEC_ANY::e_REAL:
-      CIEC_REAL::castRealData(static_cast<const CIEC_REAL &>(pa_roSrcValue), pa_roDstValue);
+      CIEC_REAL::castRealData(static_cast<const CIEC_REAL &>(paSrcValue), paDstValue);
       break;
     case CIEC_ANY::e_LREAL:
-      CIEC_LREAL::castLRealData(static_cast<const CIEC_LREAL &>(pa_roSrcValue), pa_roDstValue);
+      CIEC_LREAL::castLRealData(static_cast<const CIEC_LREAL &>(paSrcValue), paDstValue);
       break;
     default:
-      (void)pa_roDstValue; //to avoid warnings of unused parameter when real types aren't used
+      (void)paDstValue; //to avoid warnings of unused parameter when real types aren't used
       //we should not be here log error
       DEVLOG_ERROR("CIEC_ANY::specialCast: special cast for unsupported source data type requested!\n");
       break;

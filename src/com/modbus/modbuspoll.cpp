@@ -18,51 +18,51 @@
 
 #include <modbus.h>
 
-CModbusPoll::CModbusPoll(CModbusHandler* pa_pModbusHandler, long pa_nPollInterval) :
-  CModbusTimedEvent((TForteUInt32)pa_nPollInterval),m_pModbusHandler(pa_pModbusHandler){
+CModbusPoll::CModbusPoll(CModbusHandler* paModbusHandler, long paPollInterval) :
+  CModbusTimedEvent((TForteUInt32)paPollInterval),mModbusHandler(paModbusHandler){
 }
 
 CModbusPoll::~CModbusPoll(){
-  m_lPolls.clear();
+  mPolls.clear();
 }
 
-void CModbusPoll::addPollBlock(CModbusIOBlock *pa_pIOBlock){
-  m_lPolls.push_back(pa_pIOBlock);
-  pa_pIOBlock->allocCache();
+void CModbusPoll::addPollBlock(CModbusIOBlock *paIOBlock){
+  mPolls.push_back(paIOBlock);
+  paIOBlock->allocCache();
 }
 
-int CModbusPoll::executeEvent(modbus_t *pa_pModbusConn, void *){
+int CModbusPoll::executeEvent(modbus_t *paModbusConn, void *){
   restartTimer();
 
   int nrVals = 0;
-  for(auto it : m_lPolls){
-    nrVals += readOneBlock(pa_pModbusConn, it);
+  for(auto it : mPolls){
+    nrVals += readOneBlock(paModbusConn, it);
   }
   return nrVals;
 }
 
-int CModbusPoll::readOneBlock(modbus_t *pa_pModbusConn, CModbusIOBlock *pa_pIOBlock){
+int CModbusPoll::readOneBlock(modbus_t *paModbusConn, CModbusIOBlock *paIOBlock){
   int nrVals = 0;
   unsigned int dataIndex = 0;
-  const CModbusIOBlock::TModbusRangeList &lReads = pa_pIOBlock->getReads();
-  uint8_t *pData = (uint8_t*)pa_pIOBlock->getCache();
+  const CModbusIOBlock::TModbusRangeList &lReads = paIOBlock->getReads();
+  uint8_t *pData = (uint8_t*)paIOBlock->getCache();
   for (auto &it : lReads) {
-    const unsigned int nextDataIndex = dataIndex + it.m_nNrAddresses * CModbusIOBlock::getRegisterSize(it.m_eFunction);
-    if (nextDataIndex > pa_pIOBlock->getReadSize()) {
+    const unsigned int nextDataIndex = dataIndex + it.mNrAddresses * CModbusIOBlock::getRegisterSize(it.mFunction);
+    if (nextDataIndex > paIOBlock->getReadSize()) {
       break;
     }
-    switch (it.m_eFunction){
+    switch (it.mFunction){
       case eCoil:
-        nrVals += modbus_read_bits(pa_pModbusConn, it.m_nStartAddress, it.m_nNrAddresses, &pData[dataIndex]);
+        nrVals += modbus_read_bits(paModbusConn, it.mStartAddress, it.mNrAddresses, &pData[dataIndex]);
         break;
       case eDiscreteInput:
-        nrVals += modbus_read_input_bits(pa_pModbusConn, it.m_nStartAddress, it.m_nNrAddresses, &pData[dataIndex]);
+        nrVals += modbus_read_input_bits(paModbusConn, it.mStartAddress, it.mNrAddresses, &pData[dataIndex]);
         break;
       case eHoldingRegister:
-        nrVals += modbus_read_registers(pa_pModbusConn, it.m_nStartAddress, it.m_nNrAddresses, (uint16_t*)&pData[dataIndex]);
+        nrVals += modbus_read_registers(paModbusConn, it.mStartAddress, it.mNrAddresses, (uint16_t*)&pData[dataIndex]);
         break;
       case eInputRegister:
-        nrVals += modbus_read_input_registers(pa_pModbusConn, it.m_nStartAddress, it.m_nNrAddresses, (uint16_t*)&pData[dataIndex]);
+        nrVals += modbus_read_input_registers(paModbusConn, it.mStartAddress, it.mNrAddresses, (uint16_t*)&pData[dataIndex]);
         break;
       default:
         //TODO Error
@@ -72,7 +72,7 @@ int CModbusPoll::readOneBlock(modbus_t *pa_pModbusConn, CModbusIOBlock *pa_pIOBl
   }
 
   if (nrVals > 0) {
-    m_pModbusHandler->executeComCallback(pa_pIOBlock->getParent());
+    mModbusHandler->executeComCallback(paIOBlock->getParent());
   }
 
   return nrVals;

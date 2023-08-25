@@ -24,7 +24,7 @@ class CLuaEngine;
 class CLuaAdapterTypeEntry: public CTypeLib::CAdapterTypeEntry {
 private:
 
-  const CIEC_STRING cm_sLuaScriptAsString;
+  const CIEC_STRING cmLuaScriptAsString;
   SFBInterfaceSpec mSocketInterfaceSpec;
   SFBInterfaceSpec mPlugInterfaceSpec;
 
@@ -39,7 +39,7 @@ private:
 public:
   static CLuaAdapterTypeEntry* createLuaAdapterTypeEntry(CStringDictionary::TStringId typeNameId, CIEC_STRING& paLuaScriptAsString);
 
-  CAdapter* createAdapterInstance(CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes, bool pa_bIsPlug) override;
+  CAdapter* createAdapterInstance(CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes, bool paIsPlug) override;
 
   const SFBInterfaceSpec* getSocketInterfaceSpec() const {
     return &mSocketInterfaceSpec;

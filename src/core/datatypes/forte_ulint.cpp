@@ -18,7 +18,7 @@
 
 DEFINE_FIRMWARE_DATATYPE(ULINT, g_nStringIdULINT)
 
-const CIEC_ULINT::TValueType CIEC_ULINT::scm_nMaxVal = std::numeric_limits<CIEC_ULINT::TValueType>::max();
+const CIEC_ULINT::TValueType CIEC_ULINT::scmMaxVal = std::numeric_limits<CIEC_ULINT::TValueType>::max();
 
 template CIEC_ULINT &CIEC_ULINT::operator=<>(const CIEC_ANY_INT &paValue);
 

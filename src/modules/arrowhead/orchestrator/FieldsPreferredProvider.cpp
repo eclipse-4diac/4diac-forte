@@ -17,26 +17,26 @@
 
 DEFINE_FIRMWARE_FB(FORTE_FieldsPreferredProvider, g_nStringIdFieldsPreferredProvider)
 
-const CStringDictionary::TStringId FORTE_FieldsPreferredProvider::scm_anDataInputNames[] = {g_nStringIdproviderSystem, g_nStringIdproviderCloud};
+const CStringDictionary::TStringId FORTE_FieldsPreferredProvider::scmDataInputNames[] = {g_nStringIdproviderSystem, g_nStringIdproviderCloud};
 
-const CStringDictionary::TStringId FORTE_FieldsPreferredProvider::scm_anDataInputTypeIds[] = {g_nStringIdArrowheadSystem, g_nStringIdArrowheadCloud};
+const CStringDictionary::TStringId FORTE_FieldsPreferredProvider::scmDataInputTypeIds[] = {g_nStringIdArrowheadSystem, g_nStringIdArrowheadCloud};
 
-const CStringDictionary::TStringId FORTE_FieldsPreferredProvider::scm_anDataOutputNames[] = {g_nStringIdpreferredProvider};
+const CStringDictionary::TStringId FORTE_FieldsPreferredProvider::scmDataOutputNames[] = {g_nStringIdpreferredProvider};
 
-const CStringDictionary::TStringId FORTE_FieldsPreferredProvider::scm_anDataOutputTypeIds[] = {g_nStringIdPreferredProvider};
+const CStringDictionary::TStringId FORTE_FieldsPreferredProvider::scmDataOutputTypeIds[] = {g_nStringIdPreferredProvider};
 
-const TForteInt16 FORTE_FieldsPreferredProvider::scm_anEIWithIndexes[] = {0};
-const TDataIOID FORTE_FieldsPreferredProvider::scm_anEIWith[] = {0, 1, scmWithListDelimiter};
-const CStringDictionary::TStringId FORTE_FieldsPreferredProvider::scm_anEventInputNames[] = {g_nStringIdREQ};
+const TForteInt16 FORTE_FieldsPreferredProvider::scmEIWithIndexes[] = {0};
+const TDataIOID FORTE_FieldsPreferredProvider::scmEIWith[] = {0, 1, scmWithListDelimiter};
+const CStringDictionary::TStringId FORTE_FieldsPreferredProvider::scmEventInputNames[] = {g_nStringIdREQ};
 
-const TDataIOID FORTE_FieldsPreferredProvider::scm_anEOWith[] = {0, scmWithListDelimiter};
-const TForteInt16 FORTE_FieldsPreferredProvider::scm_anEOWithIndexes[] = {0, -1};
-const CStringDictionary::TStringId FORTE_FieldsPreferredProvider::scm_anEventOutputNames[] = {g_nStringIdCNF};
+const TDataIOID FORTE_FieldsPreferredProvider::scmEOWith[] = {0, scmWithListDelimiter};
+const TForteInt16 FORTE_FieldsPreferredProvider::scmEOWithIndexes[] = {0, -1};
+const CStringDictionary::TStringId FORTE_FieldsPreferredProvider::scmEventOutputNames[] = {g_nStringIdCNF};
 
-const SFBInterfaceSpec FORTE_FieldsPreferredProvider::scm_stFBInterfaceSpec = {
-  1,  scm_anEventInputNames,  scm_anEIWith,  scm_anEIWithIndexes,
-  1,  scm_anEventOutputNames,  scm_anEOWith, scm_anEOWithIndexes,  2,  scm_anDataInputNames, scm_anDataInputTypeIds,
-  1,  scm_anDataOutputNames, scm_anDataOutputTypeIds,
+const SFBInterfaceSpec FORTE_FieldsPreferredProvider::scmFBInterfaceSpec = {
+  1,  scmEventInputNames,  scmEIWith,  scmEIWithIndexes,
+  1,  scmEventOutputNames,  scmEOWith, scmEOWithIndexes,  2,  scmDataInputNames, scmDataInputTypeIds,
+  1,  scmDataOutputNames, scmDataOutputTypeIds,
   0, 0
 };
 
@@ -48,38 +48,38 @@ preferredProvider().providerCloud() = providerCloud();
 
 
 void FORTE_FieldsPreferredProvider::enterStateSTART(){
-  m_nECCState = scm_nStateSTART;
+  mECCState = scmStateSTART;
 }
 
 void FORTE_FieldsPreferredProvider::enterStateREQ(){
-  m_nECCState = scm_nStateREQ;
+  mECCState = scmStateREQ;
   alg_REQ();
-  sendOutputEvent( scm_nEventCNFID);
+  sendOutputEvent( scmEventCNFID);
 }
 
-void FORTE_FieldsPreferredProvider::executeEvent(TEventID pa_nEIID){
+void FORTE_FieldsPreferredProvider::executeEvent(TEventID paEIID){
   bool bTransitionCleared;
   do{
     bTransitionCleared = true;
-    switch(m_nECCState){
-      case scm_nStateSTART:
-        if(scm_nEventREQID == pa_nEIID)
+    switch(mECCState){
+      case scmStateSTART:
+        if(scmEventREQID == paEIID)
           enterStateREQ();
         else
           bTransitionCleared  = false; //no transition cleared
         break;
-      case scm_nStateREQ:
+      case scmStateREQ:
         if(1)
           enterStateSTART();
         else
           bTransitionCleared  = false; //no transition cleared
         break;
       default:
-      DEVLOG_ERROR("The state is not in the valid range! The state value is: %d. The max value can be: 1.", m_nECCState.operator TForteUInt16 ());
-        m_nECCState = 0; //0 is always the initial state
+      DEVLOG_ERROR("The state is not in the valid range! The state value is: %d. The max value can be: 1.", mECCState.operator TForteUInt16 ());
+        mECCState = 0; //0 is always the initial state
         break;
     }
-    pa_nEIID = cg_nInvalidEventID;  // we have to clear the event after the first check in order to ensure correct behavior
+    paEIID = cg_nInvalidEventID;  // we have to clear the event after the first check in order to ensure correct behavior
   }while(bTransitionCleared);
 }
 

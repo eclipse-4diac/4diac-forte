@@ -18,39 +18,39 @@
 
 DEFINE_FIRMWARE_FB(EmbrickMaster, g_nStringIdEBMaster)
 
-const CStringDictionary::TStringId EmbrickMaster::scm_anDataInputNames[] = {
+const CStringDictionary::TStringId EmbrickMaster::scmDataInputNames[] = {
     g_nStringIdQI, g_nStringIdBusInterface, g_nStringIdBusSelectPin,
     g_nStringIdBusInitSpeed, g_nStringIdBusLoopSpeed,
     g_nStringIdSlaveUpdateInterval };
 
-const CStringDictionary::TStringId EmbrickMaster::scm_anDataInputTypeIds[] = {
+const CStringDictionary::TStringId EmbrickMaster::scmDataInputTypeIds[] = {
     g_nStringIdBOOL, g_nStringIdUINT, g_nStringIdUINT, g_nStringIdUDINT,
     g_nStringIdUDINT, g_nStringIdUINT };
 
-const CStringDictionary::TStringId EmbrickMaster::scm_anDataOutputNames[] = {
+const CStringDictionary::TStringId EmbrickMaster::scmDataOutputNames[] = {
     g_nStringIdQO, g_nStringIdSTATUS };
 
-const CStringDictionary::TStringId EmbrickMaster::scm_anDataOutputTypeIds[] = {
+const CStringDictionary::TStringId EmbrickMaster::scmDataOutputTypeIds[] = {
     g_nStringIdBOOL, g_nStringIdWSTRING };
 
-const TForteInt16 EmbrickMaster::scm_anEIWithIndexes[] = { 0 };
-const TDataIOID EmbrickMaster::scm_anEIWith[] = { 0, 3, 5, 4, 1, 2, scmWithListDelimiter };
-const CStringDictionary::TStringId EmbrickMaster::scm_anEventInputNames[] = {
+const TForteInt16 EmbrickMaster::scmEIWithIndexes[] = { 0 };
+const TDataIOID EmbrickMaster::scmEIWith[] = { 0, 3, 5, 4, 1, 2, scmWithListDelimiter };
+const CStringDictionary::TStringId EmbrickMaster::scmEventInputNames[] = {
     g_nStringIdINIT };
 
-const TDataIOID EmbrickMaster::scm_anEOWith[] = { 0, 1, scmWithListDelimiter, 0, 1, scmWithListDelimiter };
-const TForteInt16 EmbrickMaster::scm_anEOWithIndexes[] = { 0, 3, -1 };
-const CStringDictionary::TStringId EmbrickMaster::scm_anEventOutputNames[] = {
+const TDataIOID EmbrickMaster::scmEOWith[] = { 0, 1, scmWithListDelimiter, 0, 1, scmWithListDelimiter };
+const TForteInt16 EmbrickMaster::scmEOWithIndexes[] = { 0, 3, -1 };
+const CStringDictionary::TStringId EmbrickMaster::scmEventOutputNames[] = {
     g_nStringIdINITO, g_nStringIdIND };
 
-const SAdapterInstanceDef EmbrickMaster::scm_astAdapterInstances[] = { {
+const SAdapterInstanceDef EmbrickMaster::scmAdapterInstances[] = { {
     g_nStringIdEBBusAdapter, g_nStringIdBusAdapterOut, true } };
 
-const SFBInterfaceSpec EmbrickMaster::scm_stFBInterfaceSpec = { 1,
-    scm_anEventInputNames, scm_anEIWith, scm_anEIWithIndexes, 2,
-    scm_anEventOutputNames, scm_anEOWith, scm_anEOWithIndexes, 6,
-    scm_anDataInputNames, scm_anDataInputTypeIds, 2, scm_anDataOutputNames,
-    scm_anDataOutputTypeIds, 1, scm_astAdapterInstances };
+const SFBInterfaceSpec EmbrickMaster::scmFBInterfaceSpec = { 1,
+    scmEventInputNames, scmEIWith, scmEIWithIndexes, 2,
+    scmEventOutputNames, scmEOWith, scmEOWithIndexes, 6,
+    scmDataInputNames, scmDataInputTypeIds, 2, scmDataOutputNames,
+    scmDataOutputTypeIds, 1, scmAdapterInstances };
 
 void EmbrickMaster::setInitialValues() {
   BusInterface() = 1;

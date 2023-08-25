@@ -25,56 +25,56 @@ class COpcProcessVar{
       e_FBInput, e_FBOutput
     };
 
-    COpcProcessVar(const char* pa_acItemGroupName, const char* pa_acItemName, EOpcProcessVarFunctions pa_eFunction);
+    COpcProcessVar(const char* paItemGroupName, const char* paItemName, EOpcProcessVarFunctions paFunction);
     ~COpcProcessVar(){
     }
 
     const char* getItemName() const {
-      return m_acItemName;
+      return mItemName;
     }
     const char* getItemGroupName() const {
-      return m_acItemGroupName;
+      return mItemGroupName;
     }
     EOpcProcessVarFunctions getItemFunction() const {
-      return m_eFunction;
+      return mFunction;
     }
 
-    void setOpcItem(COPCItem* pa_pOpcItem){
-      m_pOpcItem = pa_pOpcItem;
+    void setOpcItem(COPCItem* paOpcItem){
+      mOpcItem = paOpcItem;
     }
 
     void sendItemData();
 
-    void setNewValue(Variant pa_oNewValue);
+    void setNewValue(Variant paNewValue);
     Variant peekNewValue();
 
     Variant updateValue();
 
     bool getIsActive() const {
-      return m_bActive;
+      return mActive;
     }
 
-    void setIsActive(bool pa_bActive){
-      m_bActive = pa_bActive;
+    void setIsActive(bool paActive){
+      mActive = paActive;
     }
 
   private:
-    COPCItem* m_pOpcItem;
+    COPCItem* mOpcItem;
 
-    const char* m_acItemGroupName;
-    const char* m_acItemName;
-    bool m_bActive;
+    const char* mItemGroupName;
+    const char* mItemName;
+    bool mActive;
 
-    Variant m_oCurrentValue;
+    Variant mCurrentValue;
 
     typedef CSinglyLinkedList<Variant> TVariantList;
-    TVariantList m_lNewValueQueue;
+    TVariantList mNewValueQueue;
 
-    Variant m_oNewValue;
+    Variant mNewValue;
 
-    CSyncObject m_oSync;
+    CSyncObject mSync;
 
-    EOpcProcessVarFunctions m_eFunction;
+    EOpcProcessVarFunctions mFunction;
 
 };
 

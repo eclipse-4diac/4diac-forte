@@ -28,7 +28,7 @@ unsigned int forte_default_port = 61499;
  */
 bool checkEndianess();
 
-void createDev(const char *pa_acMGRID, TForteInstance* pa_resultDevice);
+void createDev(const char *paMGRID, TForteInstance* pa_resultDevice);
 
 void forteGlobalInitialize(){
   CForteArchitecture::initialize();
@@ -88,11 +88,11 @@ int forteStartInstanceGeneric(int argc, char *arg[], TForteInstance* pa_resultDe
   return FORTE_OK;
 }
 
-void forteStopInstance(int pa_nSig, TForteInstance pa_resultDevice){
+void forteStopInstance(int paSig, TForteInstance pa_resultDevice){
   if(!CForteArchitecture::isInitialized()){
     return;
   }
-  (void) pa_nSig;
+  (void) paSig;
   RMT_DEV *poDev = static_cast<RMT_DEV*>(pa_resultDevice);
   if(0 != poDev){
     poDev->changeFBExecutionState(EMGMCommandType::Kill);
@@ -103,14 +103,14 @@ void forteStopInstance(int pa_nSig, TForteInstance pa_resultDevice){
 }
 
 /*!\brief Creates the Device-Object
- * \param pa_acMGRID A string containing IP and Port like [IP]:[Port]
+ * \param paMGRID A string containing IP and Port like [IP]:[Port]
  * \param The result
  */
-void createDev(const char *pa_acMGRID, TForteInstance* pa_resultDevice){
+void createDev(const char *paMGRID, TForteInstance* pa_resultDevice){
   RMT_DEV *poDev = new RMT_DEV;
   poDev->initialize();
 
-  poDev->setMGR_ID(pa_acMGRID);
+  poDev->setMGR_ID(paMGRID);
   poDev->startDevice();
   *pa_resultDevice = poDev;
   DEVLOG_INFO("FORTE is up and running\n");

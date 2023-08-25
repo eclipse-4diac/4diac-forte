@@ -27,44 +27,44 @@
 
 DEFINE_FIRMWARE_FB(FORTE_E_SPLIT, g_nStringIdE_SPLIT)
 
-const TForteInt16 FORTE_E_SPLIT::scm_anEIWithIndexes[] = {-1};
-const CStringDictionary::TStringId FORTE_E_SPLIT::scm_anEventInputNames[] = {g_nStringIdEI};
-const TForteInt16 FORTE_E_SPLIT::scm_anEOWithIndexes[] = {-1, -1};
-const CStringDictionary::TStringId FORTE_E_SPLIT::scm_anEventOutputNames[] = {g_nStringIdEO1, g_nStringIdEO2};
-const SFBInterfaceSpec FORTE_E_SPLIT::scm_stFBInterfaceSpec = {
-  1, scm_anEventInputNames, nullptr, scm_anEIWithIndexes,
-  2, scm_anEventOutputNames, nullptr, scm_anEOWithIndexes,
+const TForteInt16 FORTE_E_SPLIT::scmEIWithIndexes[] = {-1};
+const CStringDictionary::TStringId FORTE_E_SPLIT::scmEventInputNames[] = {g_nStringIdEI};
+const TForteInt16 FORTE_E_SPLIT::scmEOWithIndexes[] = {-1, -1};
+const CStringDictionary::TStringId FORTE_E_SPLIT::scmEventOutputNames[] = {g_nStringIdEO1, g_nStringIdEO2};
+const SFBInterfaceSpec FORTE_E_SPLIT::scmFBInterfaceSpec = {
+  1, scmEventInputNames, nullptr, scmEIWithIndexes,
+  2, scmEventOutputNames, nullptr, scmEOWithIndexes,
   0, nullptr, nullptr,
   0, nullptr, nullptr,
   0, nullptr,
   0, nullptr
 };
 
-FORTE_E_SPLIT::FORTE_E_SPLIT(CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes) :
-    CBasicFB(pa_poSrcRes, &scm_stFBInterfaceSpec, pa_nInstanceNameId, nullptr),
+FORTE_E_SPLIT::FORTE_E_SPLIT(CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) :
+    CBasicFB(paSrcRes, &scmFBInterfaceSpec, paInstanceNameId, nullptr),
     conn_EO1(this, 0),
     conn_EO2(this, 1) {
 }
 
 
 
-void FORTE_E_SPLIT::executeEvent(TEventID pa_nEIID){
+void FORTE_E_SPLIT::executeEvent(TEventID paEIID){
   do {
-    switch(m_nECCState) {
-      case scm_nStateSTART:
-        if(scm_nEventEIID == pa_nEIID) enterStateState();
+    switch(mECCState) {
+      case scmStateSTART:
+        if(scmEventEIID == paEIID) enterStateState();
         else return; //no transition cleared
         break;
-      case scm_nStateState:
+      case scmStateState:
         if(1) enterStateSTART();
         else return; //no transition cleared
         break;
       default:
-        DEVLOG_ERROR("The state is not in the valid range! The state value is: %d. The max value can be: 2.", m_nECCState.operator TForteUInt16 ());
-        m_nECCState = 0; // 0 is always the initial state
+        DEVLOG_ERROR("The state is not in the valid range! The state value is: %d. The max value can be: 2.", mECCState.operator TForteUInt16 ());
+        mECCState = 0; // 0 is always the initial state
         return;
     }
-    pa_nEIID = cg_nInvalidEventID; // we have to clear the event after the first check in order to ensure correct behavior
+    paEIID = cg_nInvalidEventID; // we have to clear the event after the first check in order to ensure correct behavior
   } while(true);
 }
 
@@ -104,13 +104,13 @@ CIEC_ANY *FORTE_E_SPLIT::getVarInternal(size_t) {
 
 
 void FORTE_E_SPLIT::enterStateSTART(void) {
-  m_nECCState = scm_nStateSTART;
+  mECCState = scmStateSTART;
 }
 
 void FORTE_E_SPLIT::enterStateState(void) {
-  m_nECCState = scm_nStateState;
-  sendOutputEvent(scm_nEventEO1ID);
-  sendOutputEvent(scm_nEventEO2ID);
+  mECCState = scmStateState;
+  sendOutputEvent(scmEventEO1ID);
+  sendOutputEvent(scmEventEO2ID);
 }
 
 

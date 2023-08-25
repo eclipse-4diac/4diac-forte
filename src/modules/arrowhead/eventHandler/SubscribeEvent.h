@@ -23,8 +23,8 @@ class FORTE_SubscribeEvent: public CCompositeFB{
   DECLARE_FIRMWARE_FB(FORTE_SubscribeEvent)
 
 private:
-  static const CStringDictionary::TStringId scm_anDataInputNames[];
-  static const CStringDictionary::TStringId scm_anDataInputTypeIds[];
+  static const CStringDictionary::TStringId scmDataInputNames[];
+  static const CStringDictionary::TStringId scmDataInputTypeIds[];
   CIEC_EventFilter &eventFilter() {
     return *static_cast<CIEC_EventFilter*>(getDI(0));
   };
@@ -33,30 +33,30 @@ private:
     return *static_cast<CIEC_WSTRING*>(getDI(1));
   };
 
-  static const TEventID scm_nEventSubscribeID = 0;
-  static const TEventID scm_nEventUnsubscribeID = 1;
-  static const TForteInt16 scm_anEIWithIndexes[];
-  static const TDataIOID scm_anEIWith[];
-  static const CStringDictionary::TStringId scm_anEventInputNames[];
+  static const TEventID scmEventSubscribeID = 0;
+  static const TEventID scmEventUnsubscribeID = 1;
+  static const TForteInt16 scmEIWithIndexes[];
+  static const TDataIOID scmEIWith[];
+  static const CStringDictionary::TStringId scmEventInputNames[];
 
-  static const TEventID scm_nEventSubscribedID = 0;
-  static const TEventID scm_nEventUnsubscribedID = 1;
-  static const TForteInt16 scm_anEOWithIndexes[];
-  static const CStringDictionary::TStringId scm_anEventOutputNames[];
+  static const TEventID scmEventSubscribedID = 0;
+  static const TEventID scmEventUnsubscribedID = 1;
+  static const TForteInt16 scmEOWithIndexes[];
+  static const CStringDictionary::TStringId scmEventOutputNames[];
 
-  static const SAdapterInstanceDef scm_astAdapterInstances[];
+  static const SAdapterInstanceDef scmAdapterInstances[];
 
   FORTE_SubscribeEventAdp& SubscribeEventAdp() {
-    return (*static_cast<FORTE_SubscribeEventAdp*>(m_apoAdapters[0]));
+    return (*static_cast<FORTE_SubscribeEventAdp*>(mAdapters[0]));
   };
-  static const int scm_nSubscribeEventAdpAdpNum = 0;
-  static const SFBInterfaceSpec scm_stFBInterfaceSpec;
+  static const int scmSubscribeEventAdpAdpNum = 0;
+  static const SFBInterfaceSpec scmFBInterfaceSpec;
 
 
-  static const SCFB_FBConnectionData scm_astEventConnections[];
+  static const SCFB_FBConnectionData scmEventConnections[];
 
-  static const SCFB_FBConnectionData scm_astDataConnections[];
-  static const SCFB_FBNData scm_stFBNData;
+  static const SCFB_FBConnectionData scmDataConnections[];
+  static const SCFB_FBNData scmFBNData;
 
 public:
   COMPOSITE_FUNCTION_BLOCK_CTOR(FORTE_SubscribeEvent){

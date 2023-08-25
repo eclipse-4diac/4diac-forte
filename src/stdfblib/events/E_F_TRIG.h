@@ -27,31 +27,31 @@ class FORTE_E_F_TRIG: public CCompositeFB {
   DECLARE_FIRMWARE_FB(FORTE_E_F_TRIG)
 
 private:
-  static const CStringDictionary::TStringId scm_anDataInputNames[];
-  static const CStringDictionary::TStringId scm_anDataInputTypeIds[];
-  static const TEventID scm_nEventEIID = 0;
-  static const TDataIOID scm_anEIWith[];
-  static const TForteInt16 scm_anEIWithIndexes[];
-  static const CStringDictionary::TStringId scm_anEventInputNames[];
-  static const TEventID scm_nEventEOID = 0;
-  static const TForteInt16 scm_anEOWithIndexes[];
-  static const CStringDictionary::TStringId scm_anEventOutputNames[];
+  static const CStringDictionary::TStringId scmDataInputNames[];
+  static const CStringDictionary::TStringId scmDataInputTypeIds[];
+  static const TEventID scmEventEIID = 0;
+  static const TDataIOID scmEIWith[];
+  static const TForteInt16 scmEIWithIndexes[];
+  static const CStringDictionary::TStringId scmEventInputNames[];
+  static const TEventID scmEventEOID = 0;
+  static const TForteInt16 scmEOWithIndexes[];
+  static const CStringDictionary::TStringId scmEventOutputNames[];
 
-  static const SFBInterfaceSpec scm_stFBInterfaceSpec;
+  static const SFBInterfaceSpec scmFBInterfaceSpec;
 
-  static const SCFB_FBInstanceData scm_astInternalFBs[];
-  static const SCFB_FBParameter scm_astParamters[];
-  static const SCFB_FBConnectionData scm_astEventConnections[];
-  static const SCFB_FBFannedOutConnectionData scm_astFannedOutEventConnections[];
-  static const SCFB_FBConnectionData scm_astDataConnections[];
-  static const SCFB_FBFannedOutConnectionData scm_astFannedOutDataConnections[];
-  static const SCFB_FBNData scm_stFBNData;
+  static const SCFB_FBInstanceData scmInternalFBs[];
+  static const SCFB_FBParameter scmParamters[];
+  static const SCFB_FBConnectionData scmEventConnections[];
+  static const SCFB_FBFannedOutConnectionData scmFannedOutEventConnections[];
+  static const SCFB_FBConnectionData scmDataConnections[];
+  static const SCFB_FBFannedOutConnectionData scmFannedOutDataConnections[];
+  static const SCFB_FBNData scmFBNData;
 
-  void readInputData(TEventID pa_nEIID) override;
-  void writeOutputData(TEventID pa_nEIID) override;
+  void readInputData(TEventID paEIID) override;
+  void writeOutputData(TEventID paEIID) override;
 
 public:
-  FORTE_E_F_TRIG(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes);
+  FORTE_E_F_TRIG(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
 
   CIEC_BOOL var_QI;
   CEventConnection conn_EO;
@@ -63,7 +63,7 @@ public:
   CDataConnection *getDOConUnchecked(TPortId) override;
   void evt_EI(const CIEC_BOOL &pa_QI) {
     var_QI = pa_QI;
-    receiveInputEvent(scm_nEventEIID, nullptr);
+    receiveInputEvent(scmEventEIID, nullptr);
   }
   void operator()(const CIEC_BOOL &pa_QI) {
     evt_EI(pa_QI);

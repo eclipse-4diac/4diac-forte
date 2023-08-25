@@ -20,13 +20,13 @@
 #include <errno.h>
 #include <string.h>
 
-bool forte::core::util::isAtoFChar(char pa_cValue){
-  pa_cValue = static_cast<char>(toupper(pa_cValue));
-  return ((pa_cValue >= 'A') && (pa_cValue <= 'F'));
+bool forte::core::util::isAtoFChar(char paValue){
+  paValue = static_cast<char>(toupper(paValue));
+  return ((paValue >= 'A') && (paValue <= 'F'));
 }
 
-TForteInt8 forte::core::util::charAtoFToInt(char pa_cValue){
-  return static_cast<TForteInt8>((toupper(pa_cValue) - 'A') + 10);
+TForteInt8 forte::core::util::charAtoFToInt(char paValue){
+  return static_cast<TForteInt8>((toupper(paValue) - 'A') + 10);
 }
 
 long int forte::core::util::strtol(const char *nptr, char **endptr, int base) {
@@ -45,8 +45,8 @@ long int forte::core::util::strtol(const char *nptr, char **endptr, int base) {
     nptr += 2;
   }
 
-  long nLimit1 = (bNegativeNumber ? -(CIEC_DINT::scm_nMinVal / base) : (CIEC_DINT::scm_nMaxVal / base));
-  long nLimit2 = (bNegativeNumber ? -(CIEC_DINT::scm_nMinVal % base) : (CIEC_DINT::scm_nMaxVal % base));
+  long nLimit1 = (bNegativeNumber ? -(CIEC_DINT::scmMinVal / base) : (CIEC_DINT::scmMaxVal / base));
+  long nLimit2 = (bNegativeNumber ? -(CIEC_DINT::scmMinVal % base) : (CIEC_DINT::scmMaxVal % base));
   if (nLimit2 < 0) // Rounding direction for negative numbers is implementation defined
   {
     nLimit1--;
@@ -60,7 +60,7 @@ long int forte::core::util::strtol(const char *nptr, char **endptr, int base) {
     }
     TForteInt8 nCharVal = charHexDigitToInt(*nptr);
     if(nRetVal > nLimit1 || (nRetVal == nLimit1 && nCharVal > nLimit2)) {
-      nRetVal = (bNegativeNumber) ? CIEC_DINT::scm_nMinVal : CIEC_DINT::scm_nMaxVal;
+      nRetVal = (bNegativeNumber) ? CIEC_DINT::scmMinVal : CIEC_DINT::scmMaxVal;
       errno = ERANGE;
       break;
     }
@@ -79,8 +79,8 @@ long int forte::core::util::strtol(const char *nptr, char **endptr, int base) {
 
 unsigned long int forte::core::util::strtoul(const char *nptr, char **endptr, int base){
   unsigned long int unRetVal = 0;
-  unsigned long int unLimit1 = (CIEC_UDINT::scm_nMaxVal / base);
-  unsigned long int unLimit2 = (CIEC_UDINT::scm_nMaxVal % base);
+  unsigned long int unLimit1 = (CIEC_UDINT::scmMaxVal / base);
+  unsigned long int unLimit2 = (CIEC_UDINT::scmMaxVal % base);
   errno = 0;
 
   if((16 == base) && ('0' == (*nptr)) && ('x' == nptr[1])){
@@ -97,7 +97,7 @@ unsigned long int forte::core::util::strtoul(const char *nptr, char **endptr, in
 
     if(unRetVal > unLimit1 || (unRetVal == unLimit1 && (unsigned long int) nCharVal > unLimit2)){
       //in this round we would exceed the limit of the data type
-      unRetVal = CIEC_UDINT::scm_nMaxVal;
+      unRetVal = CIEC_UDINT::scmMaxVal;
       errno = ERANGE;
       break;
     }
@@ -129,8 +129,8 @@ long long int forte::core::util::strtoll(const char *nptr, char **endptr, int ba
   long long nLimit2;
 
   if (bNegativeNumber){
-    volatile long long nLimMinDiv = CIEC_LINT::scm_nMinVal / base;
-    volatile long long nLimMinMod = CIEC_LINT::scm_nMinVal % base;
+    volatile long long nLimMinDiv = CIEC_LINT::scmMinVal / base;
+    volatile long long nLimMinMod = CIEC_LINT::scmMinVal % base;
 
     nLimit1 = -nLimMinDiv;
     nLimit2 = -nLimMinMod;
@@ -142,8 +142,8 @@ long long int forte::core::util::strtoll(const char *nptr, char **endptr, int ba
     }
   }
   else{
-    nLimit1 = CIEC_LINT::scm_nMaxVal / base;
-    nLimit2 = CIEC_LINT::scm_nMaxVal % base;
+    nLimit1 = CIEC_LINT::scmMaxVal / base;
+    nLimit2 = CIEC_LINT::scmMaxVal % base;
   }
 
   for(; *nptr; ++nptr){ //Do until '/0'
@@ -153,7 +153,7 @@ long long int forte::core::util::strtoll(const char *nptr, char **endptr, int ba
     }
     TForteInt8 nCharVal = charHexDigitToInt(*nptr);
     if(nRetVal > nLimit1 || (nRetVal == nLimit1 && nCharVal > nLimit2)){
-      nRetVal = (bNegativeNumber) ? CIEC_LINT::scm_nMinVal : CIEC_LINT::scm_nMaxVal;
+      nRetVal = (bNegativeNumber) ? CIEC_LINT::scmMinVal : CIEC_LINT::scmMaxVal;
       errno = ERANGE;
       break;
     }
@@ -171,8 +171,8 @@ long long int forte::core::util::strtoll(const char *nptr, char **endptr, int ba
 
 unsigned long long int forte::core::util::strtoull(const char *nptr, char **endptr, int base){
   unsigned long long int unRetVal = 0;
-  unsigned long long int unLimit1 = (CIEC_ULINT::scm_nMaxVal / base);
-  unsigned long long int unLimit2 = (CIEC_ULINT::scm_nMaxVal % base);
+  unsigned long long int unLimit1 = (CIEC_ULINT::scmMaxVal / base);
+  unsigned long long int unLimit2 = (CIEC_ULINT::scmMaxVal % base);
   errno = 0;
 
   if((16 == base) && ('0' == (*nptr)) && ('x' == nptr[1])){
@@ -188,7 +188,7 @@ unsigned long long int forte::core::util::strtoull(const char *nptr, char **endp
     TForteInt8 nCharVal = charHexDigitToInt(*nptr);
     if(unRetVal > unLimit1 || (unRetVal == unLimit1 && (unsigned long long int) nCharVal > unLimit2)){
       //in this round we would exceed the limit of the data type
-      unRetVal = CIEC_ULINT::scm_nMaxVal;
+      unRetVal = CIEC_ULINT::scmMaxVal;
       errno = ERANGE;
       break;
     }

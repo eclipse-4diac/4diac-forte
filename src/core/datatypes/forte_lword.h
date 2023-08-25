@@ -43,8 +43,8 @@ class CIEC_LWORD : public CIEC_ANY_BIT{
   public:
     using TValueType = TForteLWord;
 
-    static constexpr TValueType scm_nMinVal = std::numeric_limits<CIEC_LWORD::TValueType>::min();
-    static constexpr TValueType scm_nMaxVal = std::numeric_limits<CIEC_LWORD::TValueType>::max();
+    static constexpr TValueType scmMinVal = std::numeric_limits<CIEC_LWORD::TValueType>::min();
+    static constexpr TValueType scmMaxVal = std::numeric_limits<CIEC_LWORD::TValueType>::max();
 
     CIEC_LWORD() = default;
 

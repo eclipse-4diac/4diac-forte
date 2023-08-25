@@ -40,7 +40,7 @@ namespace forte {
           static const TEventID scmEventMAPOID = 0;
 
           IOConfigFBSplitAdapter& IOConfigFBMultiAdapter() {
-            return (*static_cast<IOConfigFBSplitAdapter*>(m_apoAdapters[0]));
+            return (*static_cast<IOConfigFBSplitAdapter*>(mAdapters[0]));
           }
 
           static const int scmSplitAdapterAdpNum = 0;

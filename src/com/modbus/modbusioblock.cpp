@@ -13,34 +13,34 @@
 #include "modbusconnection.h"
 
 
-CModbusIOBlock::CModbusIOBlock(forte::com_infra::CModbusComLayer* pa_pParent)
-  : m_pParent(pa_pParent),m_pCache(0),m_nReadSize(0),m_nSendSize(0){
+CModbusIOBlock::CModbusIOBlock(forte::com_infra::CModbusComLayer* paParent)
+  : mParent(paParent),mCache(0),mReadSize(0),mSendSize(0){
 }
 
 CModbusIOBlock::~CModbusIOBlock(){
-  if (m_pCache) delete [] (uint8_t*)m_pCache;
+  if (mCache) delete [] (uint8_t*)mCache;
 }
 
 void CModbusIOBlock::allocCache() {
-  m_pCache = new uint8_t[m_nReadSize]();
+  mCache = new uint8_t[mReadSize]();
 }
 
-void CModbusIOBlock::addNewRead(EModbusFunction pa_eFunction, unsigned int pa_nStartAddress, unsigned int pa_nNrAddresses) {
-  m_lReads.push_back((SModbusRange){pa_eFunction, pa_nStartAddress, pa_nNrAddresses});
-  m_nReadSize += getRegisterSize(pa_eFunction) * pa_nNrAddresses;
-  if (m_pCache) {
-    delete [] (uint8_t*)m_pCache;
+void CModbusIOBlock::addNewRead(EModbusFunction paFunction, unsigned int paStartAddress, unsigned int paNrAddresses) {
+  mReads.push_back((SModbusRange){paFunction, paStartAddress, paNrAddresses});
+  mReadSize += getRegisterSize(paFunction) * paNrAddresses;
+  if (mCache) {
+    delete [] (uint8_t*)mCache;
     allocCache();
   }
 }
 
-void CModbusIOBlock::addNewSend(EModbusFunction pa_eFunction, unsigned int pa_nStartAddress, unsigned int pa_nNrAddresses) {
-  m_lSends.push_back((SModbusRange){pa_eFunction, pa_nStartAddress, pa_nNrAddresses});
-  m_nSendSize += getRegisterSize(pa_eFunction) * pa_nNrAddresses;
+void CModbusIOBlock::addNewSend(EModbusFunction paFunction, unsigned int paStartAddress, unsigned int paNrAddresses) {
+  mSends.push_back((SModbusRange){paFunction, paStartAddress, paNrAddresses});
+  mSendSize += getRegisterSize(paFunction) * paNrAddresses;
 }
 
-unsigned int CModbusIOBlock::getRegisterSize(EModbusFunction pa_eFunction) {
-  switch (pa_eFunction) {
+unsigned int CModbusIOBlock::getRegisterSize(EModbusFunction paFunction) {
+  switch (paFunction) {
     case eDiscreteInput:
     case eCoil:
         return sizeof(uint8_t);

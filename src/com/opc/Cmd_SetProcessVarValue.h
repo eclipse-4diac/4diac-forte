@@ -22,14 +22,14 @@ class COpcConnectionImpl;
 
 class CCmd_SetProcessVarValue : public ICmd{
   public:
-    explicit CCmd_SetProcessVarValue(COpcProcessVar * pa_pOpcVar);
+    explicit CCmd_SetProcessVarValue(COpcProcessVar * paOpcVar);
     ~CCmd_SetProcessVarValue() override;
 
     void runCommand() override;
     const char* getCommandName() const override;
 
   private:
-    COpcProcessVar* m_pOpcVar;
+    COpcProcessVar* mOpcVar;
 };
 
 #endif //CMDSETPROCESSVARVALUE_H_

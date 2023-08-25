@@ -17,36 +17,36 @@
 
 class CModbusTimedEvent{
   public:
-    explicit CModbusTimedEvent(TForteUInt32 pa_nUpdateInterval); // UpdateInterval = 0 => single shot event
+    explicit CModbusTimedEvent(TForteUInt32 paUpdateInterval); // UpdateInterval = 0 => single shot event
     virtual ~CModbusTimedEvent() = default;
 
-    void setUpdateInterval(TForteUInt32 pa_nUpdateInterval);
+    void setUpdateInterval(TForteUInt32 paUpdateInterval);
     TForteUInt32 getUpdateInterval() const{
-      return m_nUpdateInterval;
+      return mUpdateInterval;
     }
 
     void activate();
     void deactivate();
 
     bool isStarted() const {
-      return m_bIsStarted;
+      return mIsStarted;
     }
 
     bool readyToExecute() const;
 
     // Classes impementing this should call restartTimer in executeEvent
-    virtual int executeEvent(modbus_t* pa_pModbusConn, void* pa_pRetVal) = 0;
+    virtual int executeEvent(modbus_t* paModbusConn, void* paRetVal) = 0;
 
   protected:
     void restartTimer();
 
   private:
-    uint_fast64_t m_nStartTime;
+    uint_fast64_t mStartTime;
 
-    TForteUInt32 m_nUpdateInterval; // Polling interval in milliseconds (0 => single shot event)
+    TForteUInt32 mUpdateInterval; // Polling interval in milliseconds (0 => single shot event)
 
-    bool m_bSingleShotEvent;
-    bool m_bIsStarted;
+    bool mSingleShotEvent;
+    bool mIsStarted;
 };
 
 #endif // _MODBUSTIMEDEVENT_H_

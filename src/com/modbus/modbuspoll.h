@@ -21,18 +21,18 @@ class CModbusHandler;
 
 class CModbusPoll : public CModbusTimedEvent{
   public:
-    CModbusPoll(CModbusHandler* pa_pModbusHandler, long pa_nPollInterval);
+    CModbusPoll(CModbusHandler* paModbusHandler, long paPollInterval);
     ~CModbusPoll() override;
 
-    int executeEvent(modbus_t *pa_pModbusConn, void *pa_pRetVal) override;
+    int executeEvent(modbus_t *paModbusConn, void *paRetVal) override;
 
-    void addPollBlock(CModbusIOBlock *pa_pIOBlock);
+    void addPollBlock(CModbusIOBlock *paIOBlock);
 
   private:
-    CModbusHandler *const m_pModbusHandler;
-    std::vector<CModbusIOBlock*> m_lPolls;
+    CModbusHandler *const mModbusHandler;
+    std::vector<CModbusIOBlock*> mPolls;
 
-    int readOneBlock(modbus_t *pa_pModbusConn, CModbusIOBlock *pa_pIOBlock);
+    int readOneBlock(modbus_t *paModbusConn, CModbusIOBlock *paIOBlock);
 };
 
 #endif /* MODBUSPOLL_H_ */

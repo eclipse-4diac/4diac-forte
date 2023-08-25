@@ -16,27 +16,27 @@
 
 DEFINE_FIRMWARE_FB(FORTE_X20DI937X, g_nStringIdX20DI937X)
 
-const CStringDictionary::TStringId FORTE_X20DI937X::scm_anDataInputNames[] = { g_nStringIdQI, g_nStringIdCNID, g_nStringIdMODID };
+const CStringDictionary::TStringId FORTE_X20DI937X::scmDataInputNames[] = { g_nStringIdQI, g_nStringIdCNID, g_nStringIdMODID };
 
-const CStringDictionary::TStringId FORTE_X20DI937X::scm_anDataInputTypeIds[] = { g_nStringIdBOOL, g_nStringIdUSINT, g_nStringIdUINT };
+const CStringDictionary::TStringId FORTE_X20DI937X::scmDataInputTypeIds[] = { g_nStringIdBOOL, g_nStringIdUSINT, g_nStringIdUINT };
 
-const CStringDictionary::TStringId FORTE_X20DI937X::scm_anDataOutputNames[] = { g_nStringIdQO, g_nStringIdCNIDO, g_nStringIdSTATUS, g_nStringIdDI01, g_nStringIdDI02, g_nStringIdDI03, g_nStringIdDI04, g_nStringIdDI05, g_nStringIdDI06, g_nStringIdDI07, g_nStringIdDI08, g_nStringIdDI09, g_nStringIdDI10, g_nStringIdDI11, g_nStringIdDI12 };
+const CStringDictionary::TStringId FORTE_X20DI937X::scmDataOutputNames[] = { g_nStringIdQO, g_nStringIdCNIDO, g_nStringIdSTATUS, g_nStringIdDI01, g_nStringIdDI02, g_nStringIdDI03, g_nStringIdDI04, g_nStringIdDI05, g_nStringIdDI06, g_nStringIdDI07, g_nStringIdDI08, g_nStringIdDI09, g_nStringIdDI10, g_nStringIdDI11, g_nStringIdDI12 };
 
-const CStringDictionary::TStringId FORTE_X20DI937X::scm_anDataOutputTypeIds[] = { g_nStringIdBOOL, g_nStringIdUSINT, g_nStringIdSTRING, g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdBOOL };
+const CStringDictionary::TStringId FORTE_X20DI937X::scmDataOutputTypeIds[] = { g_nStringIdBOOL, g_nStringIdUSINT, g_nStringIdSTRING, g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdBOOL };
 
-const TForteInt16 FORTE_X20DI937X::scm_anEIWithIndexes[] = { 0, -1, -1 };
-const TDataIOID FORTE_X20DI937X::scm_anEIWith[] = { 0, 1, 2, scmWithListDelimiter };
-const CStringDictionary::TStringId FORTE_X20DI937X::scm_anEventInputNames[] = { g_nStringIdINIT, g_nStringIdREQ, g_nStringIdRSP };
+const TForteInt16 FORTE_X20DI937X::scmEIWithIndexes[] = { 0, -1, -1 };
+const TDataIOID FORTE_X20DI937X::scmEIWith[] = { 0, 1, 2, scmWithListDelimiter };
+const CStringDictionary::TStringId FORTE_X20DI937X::scmEventInputNames[] = { g_nStringIdINIT, g_nStringIdREQ, g_nStringIdRSP };
 
-const TDataIOID FORTE_X20DI937X::scm_anEOWith[] = { 0, 2, 1, scmWithListDelimiter, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, scmWithListDelimiter, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 2, scmWithListDelimiter };
-const TForteInt16 FORTE_X20DI937X::scm_anEOWithIndexes[] = { 0, 4, 18, -1 };
-const CStringDictionary::TStringId FORTE_X20DI937X::scm_anEventOutputNames[] = { g_nStringIdINITO, g_nStringIdCNF, g_nStringIdIND };
+const TDataIOID FORTE_X20DI937X::scmEOWith[] = { 0, 2, 1, scmWithListDelimiter, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, scmWithListDelimiter, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 2, scmWithListDelimiter };
+const TForteInt16 FORTE_X20DI937X::scmEOWithIndexes[] = { 0, 4, 18, -1 };
+const CStringDictionary::TStringId FORTE_X20DI937X::scmEventOutputNames[] = { g_nStringIdINITO, g_nStringIdCNF, g_nStringIdIND };
 
-const SFBInterfaceSpec FORTE_X20DI937X::scm_stFBInterfaceSpec = { 3, scm_anEventInputNames, scm_anEIWith, scm_anEIWithIndexes, 3, scm_anEventOutputNames, scm_anEOWith, scm_anEOWithIndexes, 3, scm_anDataInputNames, scm_anDataInputTypeIds, 15, scm_anDataOutputNames, scm_anDataOutputTypeIds, 0, 0 };
+const SFBInterfaceSpec FORTE_X20DI937X::scmFBInterfaceSpec = { 3, scmEventInputNames, scmEIWith, scmEIWithIndexes, 3, scmEventOutputNames, scmEOWith, scmEOWithIndexes, 3, scmDataInputNames, scmDataInputTypeIds, 15, scmDataOutputNames, scmDataOutputTypeIds, 0, 0 };
 
-void FORTE_X20DI937X::executeEvent(TEventID pa_nEIID){
-  switch (pa_nEIID){
-    case scm_nEventINITID: {
+void FORTE_X20DI937X::executeEvent(TEventID paEIID){
+  switch (paEIID){
+    case scmEventINITID: {
       //#error add code for INIT event!
 
       EplStackWrapper &eplStack = EplStackWrapper::getInstance();
@@ -47,12 +47,12 @@ void FORTE_X20DI937X::executeEvent(TEventID pa_nEIID){
       // Inputs (process inputs) always start with i = 1
       // Check xap.xml if a BitUnused is present
       for(unsigned int i = 1; i < moduleIOs->getNrOfEntries() - 1; i++){
-        m_oEplMapping.m_anDataSizes[i] = moduleIOs->getEntry(i)[0];
-        m_oEplMapping.m_anPiOffsets[i] = moduleIOs->getEntry(i)[1];
-        m_oEplMapping.m_anBitOffsets[i] = moduleIOs->getEntry(i)[2];
+        mEplMapping.mDataSizes[i] = moduleIOs->getEntry(i)[0];
+        mEplMapping.mPiOffsets[i] = moduleIOs->getEntry(i)[1];
+        mEplMapping.mBitOffsets[i] = moduleIOs->getEntry(i)[2];
 
-        char* newVal = new char[m_oEplMapping.m_anDataSizes[i]]();
-        m_oEplMapping.m_lCurrentValues.pushBack(newVal);
+        char* newVal = new char[mEplMapping.mDataSizes[i]]();
+        mEplMapping.mCurrentValues.pushBack(newVal);
       }
 
       delete moduleIOs;
@@ -61,23 +61,23 @@ void FORTE_X20DI937X::executeEvent(TEventID pa_nEIID){
 
       QO() = QI();
       CNIDO() = CNID();
-      sendOutputEvent(scm_nEventINITOID);
+      sendOutputEvent(scmEventINITOID);
       break;
     }
-    case scm_nEventREQID: {
-      m_oSync.lock();
-      CSinglyLinkedList<char*>::Iterator itEnd = m_oEplMapping.m_lCurrentValues.end();
-      CSinglyLinkedList<char*>::Iterator it = m_oEplMapping.m_lCurrentValues.begin();
-      for(int i = 3; i < mInterfaceSpec->m_nNumDOs && it != itEnd; i++, ++it){
+    case scmEventREQID: {
+      mSync.lock();
+      CSinglyLinkedList<char*>::Iterator itEnd = mEplMapping.mCurrentValues.end();
+      CSinglyLinkedList<char*>::Iterator it = mEplMapping.mCurrentValues.begin();
+      for(int i = 3; i < mInterfaceSpec->mNumDOs && it != itEnd; i++, ++it){
         bool ioVal = (bool) **it;
         *static_cast<CIEC_BOOL*>(getDO(i)) = ioVal;
       }
-      m_oSync.unlock();
+      mSync.unlock();
 
-      sendOutputEvent(scm_nEventCNFID);
+      sendOutputEvent(scmEventCNFID);
       break;
     }
-    case scm_nEventRSPID:
+    case scmEventRSPID:
       break;
   }
 }
@@ -85,14 +85,14 @@ void FORTE_X20DI937X::executeEvent(TEventID pa_nEIID){
 void FORTE_X20DI937X::cnSynchCallback(){
   EplStackWrapper &eplStack = EplStackWrapper::getInstance();
 
-  m_oSync.lock();
+  mSync.lock();
 
-  CSinglyLinkedList<char*>::Iterator itEnd = m_oEplMapping.m_lCurrentValues.end();
-  CSinglyLinkedList<char*>::Iterator it = m_oEplMapping.m_lCurrentValues.begin();
-  for(int i = 3, j = 1; i < mInterfaceSpec->m_nNumDOs && it != itEnd; i++, j++, ++it){
-    bool ioVal = (bool) (eplStack.getProcImageOut()[m_oEplMapping.m_anPiOffsets[j]] & (char) (0x01 << m_oEplMapping.m_anBitOffsets[j]));
+  CSinglyLinkedList<char*>::Iterator itEnd = mEplMapping.mCurrentValues.end();
+  CSinglyLinkedList<char*>::Iterator it = mEplMapping.mCurrentValues.begin();
+  for(int i = 3, j = 1; i < mInterfaceSpec->mNumDOs && it != itEnd; i++, j++, ++it){
+    bool ioVal = (bool) (eplStack.getProcImageOut()[mEplMapping.mPiOffsets[j]] & (char) (0x01 << mEplMapping.mBitOffsets[j]));
     **it = (char) ioVal;
   }
 
-  m_oSync.unlock();
+  mSync.unlock();
 }

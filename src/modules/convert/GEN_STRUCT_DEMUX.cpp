@@ -25,17 +25,17 @@
 
 DEFINE_GENERIC_FIRMWARE_FB(GEN_STRUCT_DEMUX, g_nStringIdGEN_STRUCT_DEMUX);
 
-const CStringDictionary::TStringId GEN_STRUCT_DEMUX::scm_anEventInputNames[] = { g_nStringIdREQ };
-const CStringDictionary::TStringId GEN_STRUCT_DEMUX::scm_anEventOutputNames[] = { g_nStringIdCNF };
+const CStringDictionary::TStringId GEN_STRUCT_DEMUX::scmEventInputNames[] = { g_nStringIdREQ };
+const CStringDictionary::TStringId GEN_STRUCT_DEMUX::scmEventOutputNames[] = { g_nStringIdCNF };
 
-const CStringDictionary::TStringId GEN_STRUCT_DEMUX::scm_anDataInputNames[] = { g_nStringIdIN };
+const CStringDictionary::TStringId GEN_STRUCT_DEMUX::scmDataInputNames[] = { g_nStringIdIN };
 
 void GEN_STRUCT_DEMUX::executeEvent(TEventID paEIID) {
-  if(scm_nEventREQID == paEIID) {
+  if(scmEventREQID == paEIID) {
     for (size_t i = 0; i < st_IN().getStructSize(); i++){
       getDO(static_cast<unsigned int>(i))->setValue(*st_IN().getMember(i));
     }
-    sendOutputEvent(scm_nEventCNFID);
+    sendOutputEvent(scmEventCNFID);
   }
 }
 
@@ -45,9 +45,9 @@ GEN_STRUCT_DEMUX::GEN_STRUCT_DEMUX(const CStringDictionary::TStringId paInstance
 
 GEN_STRUCT_DEMUX::~GEN_STRUCT_DEMUX(){
   if(nullptr != mInterfaceSpec){
-    delete[](mInterfaceSpec->m_aunDIDataTypeNames);
-    delete[](mInterfaceSpec->m_aunDONames);
-    delete[](mInterfaceSpec->m_aunDODataTypeNames);
+    delete[](mInterfaceSpec->mDIDataTypeNames);
+    delete[](mInterfaceSpec->mDONames);
+    delete[](mInterfaceSpec->mDODataTypeNames);
   }
 }
 
@@ -58,7 +58,7 @@ void GEN_STRUCT_DEMUX::readInputData(TEventID) {
 
 void GEN_STRUCT_DEMUX::writeOutputData(TEventID) {
   RES_DATA_CON_CRITICAL_REGION();
-  for(TPortId i = 0; i < mInterfaceSpec->m_nNumDOs; ++i) {
+  for(TPortId i = 0; i < mInterfaceSpec->mNumDOs; ++i) {
     writeData(i, *mDOs[i], mDOConns[i]);
   }
 }
@@ -80,16 +80,16 @@ bool GEN_STRUCT_DEMUX::createInterfaceSpec(const char *paConfigString, SFBInterf
         CStringDictionary::TStringId *doNames = new CStringDictionary::TStringId[structSize];
         CStringDictionary::TStringId *diDataTypeNames = new CStringDictionary::TStringId[1];
 
-        paInterfaceSpec.m_nNumEIs = 1;
-        paInterfaceSpec.m_aunEINames = scm_anEventInputNames;
-        paInterfaceSpec.m_nNumEOs = 1;
-        paInterfaceSpec.m_aunEONames = scm_anEventOutputNames;
-        paInterfaceSpec.m_nNumDIs = 1;
-        paInterfaceSpec.m_aunDINames = scm_anDataInputNames;
-        paInterfaceSpec.m_aunDIDataTypeNames = diDataTypeNames;
-        paInterfaceSpec.m_nNumDOs = structSize;
-        paInterfaceSpec.m_aunDONames = doNames;
-        paInterfaceSpec.m_aunDODataTypeNames = doDataTypeNames;
+        paInterfaceSpec.mNumEIs = 1;
+        paInterfaceSpec.mEINames = scmEventInputNames;
+        paInterfaceSpec.mNumEOs = 1;
+        paInterfaceSpec.mEONames = scmEventOutputNames;
+        paInterfaceSpec.mNumDIs = 1;
+        paInterfaceSpec.mDINames = scmDataInputNames;
+        paInterfaceSpec.mDIDataTypeNames = diDataTypeNames;
+        paInterfaceSpec.mNumDOs = structSize;
+        paInterfaceSpec.mDONames = doNames;
+        paInterfaceSpec.mDODataTypeNames = doDataTypeNames;
         diDataTypeNames[0] = structTypeNameId;
 
         for(size_t i = 0; i < structSize; ++i) {

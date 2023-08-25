@@ -27,7 +27,7 @@
 class CTXSyncObject{
   private:
   protected:
-    TX_MUTEX m_stMutex;
+    TX_MUTEX mMutex;
   public:
     CTXSyncObject();
     ~CTXSyncObject();
@@ -36,12 +36,12 @@ class CTXSyncObject{
    * This function blocks until it will get the lock for the coming critical section.
    */  
     void lock(){
-      tx_mutex_get(&m_stMutex, TX_WAIT_FOREVER);
+      tx_mutex_get(&mMutex, TX_WAIT_FOREVER);
       //TODO handle return value
     };
   //!Freee the resource coming after the lock command  
     void unlock(){
-      tx_mutex_put(&m_stMutex);
+      tx_mutex_put(&mMutex);
       //TODO handle return value
     };
 };

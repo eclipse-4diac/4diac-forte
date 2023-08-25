@@ -22,7 +22,7 @@ DEFINE_HANDLER(fmuHandler);
 CSinglyLinkedList<fmuComLayer*> fmuHandler::mlayers;
 
 
-fmuHandler::fmuHandler(CDeviceExecution& pa_poDeviceExecution) : CExternalEventHandler(pa_poDeviceExecution)  {
+fmuHandler::fmuHandler(CDeviceExecution& paDeviceExecution) : CExternalEventHandler(paDeviceExecution)  {
 }
 
 fmuHandler::~fmuHandler(){

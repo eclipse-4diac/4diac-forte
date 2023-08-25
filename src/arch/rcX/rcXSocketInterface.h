@@ -89,22 +89,22 @@ class CrcXSocketInterface : public CExternalEventHandler, private CThread{
 
     static const TSocketDescriptor scmInvalidSocketDescriptor;
 
-    static void closeSocket(TSocketDescriptor pa_nSockD);
-    static TSocketDescriptor openTCPServerConnection(char *pa_acIPAddr, unsigned short pa_nPort);
-    static TSocketDescriptor openTCPClientConnection(char *pa_acIPAddr, unsigned short pa_nPort);
-    static TSocketDescriptor acceptTCPConnection(TSocketDescriptor pa_nListeningSockD);
-    static int sendDataOnTCP(TSocketDescriptor pa_nSockD, const char* pa_pcData, unsigned int pa_unSize);
-    static int receiveDataFromTCP(TSocketDescriptor pa_nSockD, char* pa_pcData, unsigned int pa_unBufSize);
+    static void closeSocket(TSocketDescriptor paSockD);
+    static TSocketDescriptor openTCPServerConnection(char *paIPAddr, unsigned short paPort);
+    static TSocketDescriptor openTCPClientConnection(char *paIPAddr, unsigned short paPort);
+    static TSocketDescriptor acceptTCPConnection(TSocketDescriptor paListeningSockD);
+    static int sendDataOnTCP(TSocketDescriptor paSockD, const char* paData, unsigned int paSize);
+    static int receiveDataFromTCP(TSocketDescriptor paSockD, char* paData, unsigned int paBufSize);
 
-    static TSocketDescriptor openUDPSendPort(char *pa_acIPAddr, unsigned short pa_nPort, TUDPDestAddr *m_ptDestAddr);
-    static TSocketDescriptor openUDPReceivePort(char *pa_acIPAddr, unsigned short pa_nPort);
-    static int sendDataOnUDP(TSocketDescriptor pa_nSockD, TUDPDestAddr *pa_ptDestAddr, char* pa_pcData, unsigned int pa_unSize);
-    static int receiveDataFromUDP(TSocketDescriptor pa_nSockD, char* pa_pcData, unsigned int pa_unBufSize);
+    static TSocketDescriptor openUDPSendPort(char *paIPAddr, unsigned short paPort, TUDPDestAddr *mDestAddr);
+    static TSocketDescriptor openUDPReceivePort(char *paIPAddr, unsigned short paPort);
+    static int sendDataOnUDP(TSocketDescriptor paSockD, TUDPDestAddr *paDestAddr, char* paData, unsigned int paSize);
+    static int receiveDataFromUDP(TSocketDescriptor paSockD, char* paData, unsigned int paBufSize);
 
     /* Handler functions */
 
-    void addComCallback(TSocketDescriptor pa_nFD, forte::com_infra::CComLayer *pa_poComLayer);
-    void removeComCallback(TSocketDescriptor pa_nFD);
+    void addComCallback(TSocketDescriptor paFD, forte::com_infra::CComLayer *paComLayer);
+    void removeComCallback(TSocketDescriptor paFD);
 
     /* functions needed for the external event handler interface */
     void enableHandler() override {
@@ -131,14 +131,14 @@ class CrcXSocketInterface : public CExternalEventHandler, private CThread{
   private:
 
     struct TConnContType{
-        TSocketDescriptor m_nSockDes;
-        forte::com_infra::CComLayer * m_poCallee;
+        TSocketDescriptor mSockDes;
+        forte::com_infra::CComLayer * mCallee;
     };
 
     typedef CSinglyLinkedList<TConnContType> TConnectionContainer;
 
-    TConnectionContainer m_lstConnectionsList;
-    CSyncObject m_oSync;
+    TConnectionContainer mConnectionsList;
+    CSyncObject mSync;
 
     /* End of Handler */
 
@@ -156,13 +156,13 @@ class CrcXSocketInterface : public CExternalEventHandler, private CThread{
         UINT32 sndId;
     };
 
-    RX_RESULT openConnection(char *pa_acIPAddr, unsigned short pa_nPort, bool isTCP, bool isServer, TUDPDestAddr *m_ptDestAddr, TSocketDescriptor& pa_destSocket);
-    RX_RESULT sendData(TSocketDescriptor pa_nSockD, char* pa_pcData, unsigned int pa_unSize, bool pa_isTCP, TUDPDestAddr *pa_ptDestAddr, void* pa_PacketData, int* pa_result);
-    RX_RESULT close(TSocketDescriptor pa_nSockD);
+    RX_RESULT openConnection(char *paIPAddr, unsigned short paPort, bool isTCP, bool isServer, TUDPDestAddr *mDestAddr, TSocketDescriptor& pa_destSocket);
+    RX_RESULT sendData(TSocketDescriptor paSockD, char* paData, unsigned int paSize, bool paTCP, TUDPDestAddr *paDestAddr, void* pa_PacketData, int* pa_result);
+    RX_RESULT close(TSocketDescriptor paSockD);
     RX_RESULT accept(TSocketDescriptor pa_listeningSocketDesc, TSocketDescriptor& pa_destSocket);
-    RX_RESULT receiveData(TSocketDescriptor pa_nSockD, bool isTcp, char* pa_pcData, unsigned int pa_unBufSize, int* pa_receivedBytes);
-    TForteUInt32 stringIpToInt(char* pa_ipString);
-    RX_RESULT sendPacketToTCP(UINT32 pa_destId, UINT32 pa_ulLen, UINT32 pa_ulCmd, void* pa_tData, UINT32 pa_dataLength);
+    RX_RESULT receiveData(TSocketDescriptor paSockD, bool isTcp, char* paData, unsigned int paBufSize, int* pa_receivedBytes);
+    TForteUInt32 stringIpToInt(char* paString);
+    RX_RESULT sendPacketToTCP(UINT32 pa_destId, UINT32 paLen, UINT32 paCmd, void* paData, UINT32 pa_dataLength);
     /*!\brief Waits for packets until timeout.
      *
      *\param pa_command Determine specific command to store in pa_packetResult
@@ -179,10 +179,10 @@ class CrcXSocketInterface : public CExternalEventHandler, private CThread{
     void socketDescriptorDeAlloc(TSocketDescriptor pa_Socket);
 
     CSinglyLinkedList<FORTE_TCP_PACKET_T*> mWaitingList;
-    UINT32 m_unPacketsWaiting;
+    UINT32 mPacketsWaiting;
     TSocketDescriptor mListeningSocketDescriptor;
     tcpResources mForteResources;
-    bool m_bInitialized;
+    bool mInitialized;
 };
 
 

@@ -58,7 +58,7 @@ class CDataConnection : public CConnection {
       }
     }
 
-    /*! \brief Set class member variable m_poValue.
+    /*! \brief Set class member variable mValue.
      *
      *   Set class member variable mValue.
      *   \param paValue ... pointer to data variable
@@ -67,10 +67,10 @@ class CDataConnection : public CConnection {
       mValue = paValue;
     }
 
-    /*! \brief Get class member variable m_poValue.
+    /*! \brief Get class member variable mValue.
     *
     *   Get class member variable mValue.
-    *   \return pointer to class member variable m_poValue
+    *   \return pointer to class member variable mValue
     */
     CIEC_ANY* getValue() {
       return mValue;

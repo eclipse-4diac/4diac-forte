@@ -529,7 +529,7 @@ public:
 
     [[nodiscard]] CStringDictionary::TStringId getElementTypeNameID() const override {
       return mElementDataTypeEntry != nullptr ? mElementDataTypeEntry->getTypeNameId()
-                                              : CStringDictionary::scm_nInvalidStringId;
+                                              : CStringDictionary::scmInvalidStringId;
     }
 
     [[nodiscard]] int fromString(const char *paValue) override;

@@ -78,8 +78,8 @@ namespace forte {
   };
 
   struct SRetBuffers{
-    TForteUInt32 m_unTopGetDataSize;
-    TForteUInt32 m_unBottomGetDataSize;
+    TForteUInt32 mTopGetDataSize;
+    TForteUInt32 mBottomGetDataSize;
   };
 
 }

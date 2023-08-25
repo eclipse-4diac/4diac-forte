@@ -28,36 +28,36 @@ class FORTE_RT_E_TRAIN final : public CCompositeFB {
   DECLARE_FIRMWARE_FB(FORTE_RT_E_TRAIN)
 
 private:
-  static const CStringDictionary::TStringId scm_anDataInputNames[];
-  static const CStringDictionary::TStringId scm_anDataInputTypeIds[];
-  static const CStringDictionary::TStringId scm_anDataOutputNames[];
-  static const CStringDictionary::TStringId scm_anDataOutputTypeIds[];
-  static const TEventID scm_nEventSTARTID = 0;
-  static const TEventID scm_nEventSTOPID = 1;
-  static const TDataIOID scm_anEIWith[];
-  static const TForteInt16 scm_anEIWithIndexes[];
-  static const CStringDictionary::TStringId scm_anEventInputNames[];
-  static const TEventID scm_nEventEOID = 0;
-  static const TDataIOID scm_anEOWith[]; 
-  static const TForteInt16 scm_anEOWithIndexes[];
-  static const CStringDictionary::TStringId scm_anEventOutputNames[];
+  static const CStringDictionary::TStringId scmDataInputNames[];
+  static const CStringDictionary::TStringId scmDataInputTypeIds[];
+  static const CStringDictionary::TStringId scmDataOutputNames[];
+  static const CStringDictionary::TStringId scmDataOutputTypeIds[];
+  static const TEventID scmEventSTARTID = 0;
+  static const TEventID scmEventSTOPID = 1;
+  static const TDataIOID scmEIWith[];
+  static const TForteInt16 scmEIWithIndexes[];
+  static const CStringDictionary::TStringId scmEventInputNames[];
+  static const TEventID scmEventEOID = 0;
+  static const TDataIOID scmEOWith[]; 
+  static const TForteInt16 scmEOWithIndexes[];
+  static const CStringDictionary::TStringId scmEventOutputNames[];
 
-  static const SFBInterfaceSpec scm_stFBInterfaceSpec;
+  static const SFBInterfaceSpec scmFBInterfaceSpec;
 
-  static const SCFB_FBInstanceData scm_astInternalFBs[];
-  static const SCFB_FBParameter scm_astParamters[];
-  static const SCFB_FBConnectionData scm_astEventConnections[];
-  static const SCFB_FBFannedOutConnectionData scm_astFannedOutEventConnections[];
-  static const SCFB_FBConnectionData scm_astDataConnections[];
-  static const SCFB_FBFannedOutConnectionData scm_astFannedOutDataConnections[];
-  static const SCFB_FBNData scm_stFBNData;
+  static const SCFB_FBInstanceData scmInternalFBs[];
+  static const SCFB_FBParameter scmParamters[];
+  static const SCFB_FBConnectionData scmEventConnections[];
+  static const SCFB_FBFannedOutConnectionData scmFannedOutEventConnections[];
+  static const SCFB_FBConnectionData scmDataConnections[];
+  static const SCFB_FBFannedOutConnectionData scmFannedOutDataConnections[];
+  static const SCFB_FBNData scmFBNData;
 
   void readInputData(TEventID paEIID) override;
   void writeOutputData(TEventID paEIID) override;
   void setInitialValues() override;
 
 public:
-  FORTE_RT_E_TRAIN(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes);
+  FORTE_RT_E_TRAIN(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
 
   CIEC_TIME var_DT;
   CIEC_UINT var_N;
@@ -84,7 +84,7 @@ public:
     var_N = pa_N;
     var_Deadline = pa_Deadline;
     var_WCET = pa_WCET;
-    receiveInputEvent(scm_nEventSTARTID, nullptr);
+    receiveInputEvent(scmEventSTARTID, nullptr);
     pa_CV = var_CV;
   }
   void evt_STOP(const CIEC_TIME &pa_DT, const CIEC_UINT &pa_N, const CIEC_TIME &pa_Deadline, const CIEC_TIME &pa_WCET, CIEC_UINT &pa_CV) {
@@ -92,7 +92,7 @@ public:
     var_N = pa_N;
     var_Deadline = pa_Deadline;
     var_WCET = pa_WCET;
-    receiveInputEvent(scm_nEventSTOPID, nullptr);
+    receiveInputEvent(scmEventSTOPID, nullptr);
     pa_CV = var_CV;
   }
   void operator()(const CIEC_TIME &pa_DT, const CIEC_UINT &pa_N, const CIEC_TIME &pa_Deadline, const CIEC_TIME &pa_WCET, CIEC_UINT &pa_CV) {

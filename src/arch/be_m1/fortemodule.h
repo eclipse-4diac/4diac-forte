@@ -40,9 +40,9 @@ class CFORTEModule : public BEModule{
     virtual SINT32 AppRun(VOID);
     virtual VOID RpcNewCfg(SMI_MSG *pMsg);
 
-    BE_RMT_DEV *m_poDev;
+    BE_RMT_DEV *mDev;
 
-    UINT32 m_unFORTEstartOK;
+    UINT32 mFORTEstartOK;
 };
 
 

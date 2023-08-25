@@ -28,27 +28,27 @@
 
 DEFINE_FIRMWARE_FB(FORTE_E_CTU, g_nStringIdE_CTU)
 
-const CStringDictionary::TStringId FORTE_E_CTU::scm_anDataInputNames[] = {g_nStringIdPV};
-const CStringDictionary::TStringId FORTE_E_CTU::scm_anDataInputTypeIds[] = {g_nStringIdUINT};
-const CStringDictionary::TStringId FORTE_E_CTU::scm_anDataOutputNames[] = {g_nStringIdQ, g_nStringIdCV};
-const CStringDictionary::TStringId FORTE_E_CTU::scm_anDataOutputTypeIds[] = {g_nStringIdBOOL, g_nStringIdUINT};
-const TDataIOID FORTE_E_CTU::scm_anEIWith[] = {0, scmWithListDelimiter};
-const TForteInt16 FORTE_E_CTU::scm_anEIWithIndexes[] = {0, -1};
-const CStringDictionary::TStringId FORTE_E_CTU::scm_anEventInputNames[] = {g_nStringIdCU, g_nStringIdR};
-const TDataIOID FORTE_E_CTU::scm_anEOWith[] = {0, 1, scmWithListDelimiter, 0, 1, scmWithListDelimiter};
-const TForteInt16 FORTE_E_CTU::scm_anEOWithIndexes[] = {0, 3};
-const CStringDictionary::TStringId FORTE_E_CTU::scm_anEventOutputNames[] = {g_nStringIdCUO, g_nStringIdRO};
-const SFBInterfaceSpec FORTE_E_CTU::scm_stFBInterfaceSpec = {
-  2, scm_anEventInputNames, scm_anEIWith, scm_anEIWithIndexes,
-  2, scm_anEventOutputNames, scm_anEOWith, scm_anEOWithIndexes,
-  1, scm_anDataInputNames, scm_anDataInputTypeIds,
-  2, scm_anDataOutputNames, scm_anDataOutputTypeIds,
+const CStringDictionary::TStringId FORTE_E_CTU::scmDataInputNames[] = {g_nStringIdPV};
+const CStringDictionary::TStringId FORTE_E_CTU::scmDataInputTypeIds[] = {g_nStringIdUINT};
+const CStringDictionary::TStringId FORTE_E_CTU::scmDataOutputNames[] = {g_nStringIdQ, g_nStringIdCV};
+const CStringDictionary::TStringId FORTE_E_CTU::scmDataOutputTypeIds[] = {g_nStringIdBOOL, g_nStringIdUINT};
+const TDataIOID FORTE_E_CTU::scmEIWith[] = {0, scmWithListDelimiter};
+const TForteInt16 FORTE_E_CTU::scmEIWithIndexes[] = {0, -1};
+const CStringDictionary::TStringId FORTE_E_CTU::scmEventInputNames[] = {g_nStringIdCU, g_nStringIdR};
+const TDataIOID FORTE_E_CTU::scmEOWith[] = {0, 1, scmWithListDelimiter, 0, 1, scmWithListDelimiter};
+const TForteInt16 FORTE_E_CTU::scmEOWithIndexes[] = {0, 3};
+const CStringDictionary::TStringId FORTE_E_CTU::scmEventOutputNames[] = {g_nStringIdCUO, g_nStringIdRO};
+const SFBInterfaceSpec FORTE_E_CTU::scmFBInterfaceSpec = {
+  2, scmEventInputNames, scmEIWith, scmEIWithIndexes,
+  2, scmEventOutputNames, scmEOWith, scmEOWithIndexes,
+  1, scmDataInputNames, scmDataInputTypeIds,
+  2, scmDataOutputNames, scmDataOutputTypeIds,
   0, nullptr,
   0, nullptr
 };
 
-FORTE_E_CTU::FORTE_E_CTU(CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes) :
-    CBasicFB(pa_poSrcRes, &scm_stFBInterfaceSpec, pa_nInstanceNameId, nullptr),
+FORTE_E_CTU::FORTE_E_CTU(CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) :
+    CBasicFB(paSrcRes, &scmFBInterfaceSpec, paInstanceNameId, nullptr),
     var_PV(CIEC_UINT(0)),
     var_Q(CIEC_BOOL(0)),
     var_CV(CIEC_UINT(0)),
@@ -75,38 +75,38 @@ void FORTE_E_CTU::alg_CU(void) {
 
 void FORTE_E_CTU::executeEvent(TEventID paEIID, CEventChainExecutionThread * const paECET){
   do {
-    switch(m_nECCState) {
-      case scm_nStateSTART:
-        if((scm_nEventCUID == paEIID) && (func_LT(var_CV, CIEC_UINT(65535)))) enterStateCU(paECET);
+    switch(mECCState) {
+      case scmStateSTART:
+        if((scmEventCUID == paEIID) && (func_LT(var_CV, CIEC_UINT(65535)))) enterStateCU(paECET);
         else
-        if(scm_nEventRID == paEIID) enterStateR(paECET);
+        if(scmEventRID == paEIID) enterStateR(paECET);
         else return; //no transition cleared
         break;
-      case scm_nStateCU:
+      case scmStateCU:
         if(1) enterStateSTART(paECET);
         else return; //no transition cleared
         break;
-      case scm_nStateR:
+      case scmStateR:
         if(1) enterStateSTART(paECET);
         else return; //no transition cleared
         break;
       default:
-        DEVLOG_ERROR("The state is not in the valid range! The state value is: %d. The max value can be: 3.", m_nECCState.operator TForteUInt16 ());
-        m_nECCState = 0; // 0 is always the initial state
+        DEVLOG_ERROR("The state is not in the valid range! The state value is: %d. The max value can be: 3.", mECCState.operator TForteUInt16 ());
+        mECCState = 0; // 0 is always the initial state
         return;
     }
     paEIID = cg_nInvalidEventID; // we have to clear the event after the first check in order to ensure correct behavior
   } while(true);
 }
 
-void FORTE_E_CTU::readInputData(TEventID pa_nEIID) {
-  switch(pa_nEIID) {
-    case scm_nEventCUID: {
+void FORTE_E_CTU::readInputData(TEventID paEIID) {
+  switch(paEIID) {
+    case scmEventCUID: {
       RES_DATA_CON_CRITICAL_REGION();
       readData(0, var_PV, conn_PV);
       break;
     }
-    case scm_nEventRID: {
+    case scmEventRID: {
       RES_DATA_CON_CRITICAL_REGION();
       break;
     }
@@ -115,15 +115,15 @@ void FORTE_E_CTU::readInputData(TEventID pa_nEIID) {
   }
 }
 
-void FORTE_E_CTU::writeOutputData(TEventID pa_nEIID) {
-  switch(pa_nEIID) {
-    case scm_nEventCUOID: {
+void FORTE_E_CTU::writeOutputData(TEventID paEIID) {
+  switch(paEIID) {
+    case scmEventCUOID: {
       RES_DATA_CON_CRITICAL_REGION();
       writeData(0, var_Q, conn_Q);
       writeData(1, var_CV, conn_CV);
       break;
     }
-    case scm_nEventROID: {
+    case scmEventROID: {
       RES_DATA_CON_CRITICAL_REGION();
       writeData(0, var_Q, conn_Q);
       writeData(1, var_CV, conn_CV);
@@ -178,19 +178,19 @@ CIEC_ANY *FORTE_E_CTU::getVarInternal(size_t) {
 
 
 void FORTE_E_CTU::enterStateSTART(CEventChainExecutionThread* const paECET) {
-  m_nECCState = scm_nStateSTART;
+  mECCState = scmStateSTART;
 }
 
 void FORTE_E_CTU::enterStateCU(CEventChainExecutionThread* const paECET) {
-  m_nECCState = scm_nStateCU;
+  mECCState = scmStateCU;
   alg_CU();
-  sendOutputEvent(scm_nEventCUOID, paECET);
+  sendOutputEvent(scmEventCUOID, paECET);
 }
 
 void FORTE_E_CTU::enterStateR(CEventChainExecutionThread* const paECET) {
-  m_nECCState = scm_nStateR;
+  mECCState = scmStateR;
   alg_R();
-  sendOutputEvent(scm_nEventROID, paECET);
+  sendOutputEvent(scmEventROID, paECET);
 }
 
 

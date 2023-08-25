@@ -17,17 +17,17 @@
 
 using namespace forte::com_infra;
 
-CComLayer::CComLayer(CComLayer* pa_poUpperLayer, CBaseCommFB * pa_poComFB) :
-  m_eConnectionState(forte::com_infra::e_Disconnected), m_poTopLayer(pa_poUpperLayer), m_poBottomLayer(nullptr), m_poFb(pa_poComFB){
-  if(nullptr != m_poTopLayer){
-    m_poTopLayer->setBottomLayer(this);
+CComLayer::CComLayer(CComLayer* paUpperLayer, CBaseCommFB * paComFB) :
+  mConnectionState(forte::com_infra::e_Disconnected), mTopLayer(paUpperLayer), mBottomLayer(nullptr), mFb(paComFB){
+  if(nullptr != mTopLayer){
+    mTopLayer->setBottomLayer(this);
   }
 }
 
 CComLayer::~CComLayer(){
-  if(m_poBottomLayer != nullptr){
-    m_poBottomLayer->closeConnection();
-    delete m_poBottomLayer;
+  if(mBottomLayer != nullptr){
+    mBottomLayer->closeConnection();
+    delete mBottomLayer;
   }
 }
 

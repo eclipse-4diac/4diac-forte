@@ -23,7 +23,7 @@ namespace forte {
 
 #define FUNCTION_BLOCK_CTOR_FOR_IO_SPLIT_CONTROLLER(fbclass) \
  fbclass(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) : \
- IOConfigFBSplitController( (const TForteUInt8* const) &scmSplitAdapter, scmSplitAdapterNum, paSrcRes, &scm_stFBInterfaceSpec, paInstanceNameId)
+ IOConfigFBSplitController( (const TForteUInt8* const) &scmSplitAdapter, scmSplitAdapterNum, paSrcRes, &scmFBInterfaceSpec, paInstanceNameId)
 
       class IOConfigFBSplitController;
 

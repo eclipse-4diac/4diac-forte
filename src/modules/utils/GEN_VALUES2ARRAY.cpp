@@ -28,32 +28,32 @@
 
 DEFINE_GENERIC_FIRMWARE_FB(GEN_VALUES2ARRAY, g_nStringIdGEN_VALUES2ARRAY)
 
-const CStringDictionary::TStringId GEN_VALUES2ARRAY::scm_anDataOutputNames[] = { g_nStringIdOUT };
+const CStringDictionary::TStringId GEN_VALUES2ARRAY::scmDataOutputNames[] = { g_nStringIdOUT };
 
-const CStringDictionary::TStringId GEN_VALUES2ARRAY::scm_anEventInputNames[] = { g_nStringIdREQ };
+const CStringDictionary::TStringId GEN_VALUES2ARRAY::scmEventInputNames[] = { g_nStringIdREQ };
 
-const CStringDictionary::TStringId GEN_VALUES2ARRAY::scm_anEventOutputNames[] = { g_nStringIdCNF };
+const CStringDictionary::TStringId GEN_VALUES2ARRAY::scmEventOutputNames[] = { g_nStringIdCNF };
 
 GEN_VALUES2ARRAY::GEN_VALUES2ARRAY(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) :
-    CGenFunctionBlock<CFunctionBlock>(paSrcRes, paInstanceNameId), m_anDataInputNames(nullptr), m_anDataInputTypeIds(nullptr), m_anDataOutputTypeIds(nullptr), m_nDInputs(0), m_ValueTypeID(CStringDictionary::CStringDictionary::scm_nInvalidStringId){
+    CGenFunctionBlock<CFunctionBlock>(paSrcRes, paInstanceNameId), mDataInputNames(nullptr), mDataInputTypeIds(nullptr), mDataOutputTypeIds(nullptr), mDInputs(0), m_ValueTypeID(CStringDictionary::CStringDictionary::scmInvalidStringId){
 }
 
 GEN_VALUES2ARRAY::~GEN_VALUES2ARRAY(){
-  delete[] m_anDataInputNames;
-  delete[] m_anDataInputTypeIds;
-  delete[] m_anDataOutputTypeIds;
+  delete[] mDataInputNames;
+  delete[] mDataInputTypeIds;
+  delete[] mDataOutputTypeIds;
 }
 
 void GEN_VALUES2ARRAY::executeEvent(TEventID paEIID){
   switch (paEIID){
-    case scm_nEventREQID:
+    case scmEventREQID:
 
-      for(unsigned int input_index = 0; input_index < m_nDInputs; input_index++){
+      for(unsigned int input_index = 0; input_index < mDInputs; input_index++){
         //copy input values to array
         OUT_Array()[input_index].setValue(*getDI(input_index));
       }
 
-      sendOutputEvent(scm_nEventCNFID);
+      sendOutputEvent(scmEventCNFID);
 
       break;
   }
@@ -61,7 +61,7 @@ void GEN_VALUES2ARRAY::executeEvent(TEventID paEIID){
 
 void GEN_VALUES2ARRAY::readInputData(TEventID) {
   RES_DATA_CON_CRITICAL_REGION();
-  for(TPortId i = 0; i < mInterfaceSpec->m_nNumDIs; ++i) {
+  for(TPortId i = 0; i < mInterfaceSpec->mNumDIs; ++i) {
     readData(i, *mDIs[i], mDIConns[i]);
   }
 }
@@ -81,47 +81,47 @@ bool GEN_VALUES2ARRAY::createInterfaceSpec(const char *paConfigString, SFBInterf
 
     if(nullptr != dTypePos){
       //there is a number and a data type of inputs within the typename
-      m_nDInputs = static_cast<unsigned int>(forte::core::util::strtoul(dNumberPos, nullptr, 10));
+      mDInputs = static_cast<unsigned int>(forte::core::util::strtoul(dNumberPos, nullptr, 10));
       m_ValueTypeID = CStringDictionary::getInstance().getId(++dTypePos);
     }
     else{
-      m_ValueTypeID = CStringDictionary::scm_nInvalidStringId;
-      m_nDInputs = 0;
+      m_ValueTypeID = CStringDictionary::scmInvalidStringId;
+      mDInputs = 0;
     }
   }
   else{
     return false;
   }
 
-  if(m_ValueTypeID != CStringDictionary::scm_nInvalidStringId && m_nDInputs >= 2){
+  if(m_ValueTypeID != CStringDictionary::scmInvalidStringId && mDInputs >= 2){
     //create the data inputs
-    m_anDataInputNames = new CStringDictionary::TStringId[m_nDInputs];
-    m_anDataInputTypeIds = new CStringDictionary::TStringId[m_nDInputs];
+    mDataInputNames = new CStringDictionary::TStringId[mDInputs];
+    mDataInputTypeIds = new CStringDictionary::TStringId[mDInputs];
 
     char diNames[cg_nIdentifierLength] = { "IN_" };
-    for(unsigned int di = 0; di < m_nDInputs; di = di + 1){
+    for(unsigned int di = 0; di < mDInputs; di = di + 1){
       forte_snprintf(&(diNames[3]), 7 - 3, "%u", di + 1);
-      m_anDataInputNames[di] = CStringDictionary::getInstance().insert(diNames);
-      m_anDataInputTypeIds[di] = m_ValueTypeID;
+      mDataInputNames[di] = CStringDictionary::getInstance().insert(diNames);
+      mDataInputTypeIds[di] = m_ValueTypeID;
     }
 
     //create data output type
-    m_anDataOutputTypeIds = new CStringDictionary::TStringId[3];
-    m_anDataOutputTypeIds[0] = g_nStringIdARRAY;
-    m_anDataOutputTypeIds[1] = m_nDInputs;
-    m_anDataOutputTypeIds[2] = m_ValueTypeID;
+    mDataOutputTypeIds = new CStringDictionary::TStringId[3];
+    mDataOutputTypeIds[0] = g_nStringIdARRAY;
+    mDataOutputTypeIds[1] = mDInputs;
+    mDataOutputTypeIds[2] = m_ValueTypeID;
 
     //create the interface Specification
-    paInterfaceSpec.m_nNumEIs = 1;
-    paInterfaceSpec.m_aunEINames = scm_anEventInputNames;
-    paInterfaceSpec.m_nNumEOs = 1;
-    paInterfaceSpec.m_aunEONames = scm_anEventOutputNames;
-    paInterfaceSpec.m_nNumDIs = m_nDInputs;
-    paInterfaceSpec.m_aunDINames = m_anDataInputNames;
-    paInterfaceSpec.m_aunDIDataTypeNames = m_anDataInputTypeIds;
-    paInterfaceSpec.m_nNumDOs = 1;
-    paInterfaceSpec.m_aunDONames = scm_anDataOutputNames;
-    paInterfaceSpec.m_aunDODataTypeNames = m_anDataOutputTypeIds;
+    paInterfaceSpec.mNumEIs = 1;
+    paInterfaceSpec.mEINames = scmEventInputNames;
+    paInterfaceSpec.mNumEOs = 1;
+    paInterfaceSpec.mEONames = scmEventOutputNames;
+    paInterfaceSpec.mNumDIs = mDInputs;
+    paInterfaceSpec.mDINames = mDataInputNames;
+    paInterfaceSpec.mDIDataTypeNames = mDataInputTypeIds;
+    paInterfaceSpec.mNumDOs = 1;
+    paInterfaceSpec.mDONames = scmDataOutputNames;
+    paInterfaceSpec.mDODataTypeNames = mDataOutputTypeIds;
     return true;
   }
   return false;

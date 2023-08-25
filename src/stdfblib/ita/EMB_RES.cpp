@@ -19,7 +19,7 @@
 
 DEFINE_FIRMWARE_FB(EMB_RES, g_nStringIdEMB_RES);
 
-const SFBInterfaceSpec EMB_RES::scm_stFBInterfaceSpec = {
+const SFBInterfaceSpec EMB_RES::scmFBInterfaceSpec = {
   0, nullptr, nullptr, nullptr,
   0, nullptr, nullptr, nullptr,
   0, nullptr, nullptr,
@@ -28,9 +28,9 @@ const SFBInterfaceSpec EMB_RES::scm_stFBInterfaceSpec = {
   0, nullptr
 };
 
-EMB_RES::EMB_RES(CStringDictionary::TStringId pa_nInstanceNameId,
-    CResource* pa_poDevice) :
-  CResource(pa_poDevice, nullptr, pa_nInstanceNameId){
+EMB_RES::EMB_RES(CStringDictionary::TStringId paInstanceNameId,
+    CResource* paDevice) :
+  CResource(paDevice, nullptr, paInstanceNameId){
 }
 
 bool EMB_RES::initialize() {

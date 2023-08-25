@@ -20,27 +20,27 @@
 
 DEFINE_FIRMWARE_FB(FORTE_RT_E_DELAY, g_nStringIdRT_E_DELAY)
 
-const CStringDictionary::TStringId FORTE_RT_E_DELAY::scm_anDataInputNames[] = {g_nStringIdQI, g_nStringIdDT, g_nStringIdTmin, g_nStringIdDeadline, g_nStringIdWCET};
-const CStringDictionary::TStringId FORTE_RT_E_DELAY::scm_anDataInputTypeIds[] = {g_nStringIdBOOL, g_nStringIdTIME, g_nStringIdTIME, g_nStringIdTIME, g_nStringIdTIME};
-const CStringDictionary::TStringId FORTE_RT_E_DELAY::scm_anDataOutputNames[] = {g_nStringIdQO};
-const CStringDictionary::TStringId FORTE_RT_E_DELAY::scm_anDataOutputTypeIds[] = {g_nStringIdBOOL};
-const TDataIOID FORTE_RT_E_DELAY::scm_anEIWith[] = {0, 2, 3, 4, scmWithListDelimiter, 1, scmWithListDelimiter};
-const TForteInt16 FORTE_RT_E_DELAY::scm_anEIWithIndexes[] = {0, 5, -1};
-const CStringDictionary::TStringId FORTE_RT_E_DELAY::scm_anEventInputNames[] = {g_nStringIdINIT, g_nStringIdSTART, g_nStringIdSTOP};
-const TDataIOID FORTE_RT_E_DELAY::scm_anEOWith[] = {0, scmWithListDelimiter};
-const TForteInt16 FORTE_RT_E_DELAY::scm_anEOWithIndexes[] = {0, -1};
-const CStringDictionary::TStringId FORTE_RT_E_DELAY::scm_anEventOutputNames[] = {g_nStringIdINITO, g_nStringIdEO};
-const SFBInterfaceSpec FORTE_RT_E_DELAY::scm_stFBInterfaceSpec = {
-  3, scm_anEventInputNames, scm_anEIWith, scm_anEIWithIndexes,
-  2, scm_anEventOutputNames, scm_anEOWith, scm_anEOWithIndexes,
-  5, scm_anDataInputNames, scm_anDataInputTypeIds,
-  1, scm_anDataOutputNames, scm_anDataOutputTypeIds,
+const CStringDictionary::TStringId FORTE_RT_E_DELAY::scmDataInputNames[] = {g_nStringIdQI, g_nStringIdDT, g_nStringIdTmin, g_nStringIdDeadline, g_nStringIdWCET};
+const CStringDictionary::TStringId FORTE_RT_E_DELAY::scmDataInputTypeIds[] = {g_nStringIdBOOL, g_nStringIdTIME, g_nStringIdTIME, g_nStringIdTIME, g_nStringIdTIME};
+const CStringDictionary::TStringId FORTE_RT_E_DELAY::scmDataOutputNames[] = {g_nStringIdQO};
+const CStringDictionary::TStringId FORTE_RT_E_DELAY::scmDataOutputTypeIds[] = {g_nStringIdBOOL};
+const TDataIOID FORTE_RT_E_DELAY::scmEIWith[] = {0, 2, 3, 4, scmWithListDelimiter, 1, scmWithListDelimiter};
+const TForteInt16 FORTE_RT_E_DELAY::scmEIWithIndexes[] = {0, 5, -1};
+const CStringDictionary::TStringId FORTE_RT_E_DELAY::scmEventInputNames[] = {g_nStringIdINIT, g_nStringIdSTART, g_nStringIdSTOP};
+const TDataIOID FORTE_RT_E_DELAY::scmEOWith[] = {0, scmWithListDelimiter};
+const TForteInt16 FORTE_RT_E_DELAY::scmEOWithIndexes[] = {0, -1};
+const CStringDictionary::TStringId FORTE_RT_E_DELAY::scmEventOutputNames[] = {g_nStringIdINITO, g_nStringIdEO};
+const SFBInterfaceSpec FORTE_RT_E_DELAY::scmFBInterfaceSpec = {
+  3, scmEventInputNames, scmEIWith, scmEIWithIndexes,
+  2, scmEventOutputNames, scmEOWith, scmEOWithIndexes,
+  5, scmDataInputNames, scmDataInputTypeIds,
+  1, scmDataOutputNames, scmDataOutputTypeIds,
   0, nullptr,
   0, nullptr
 };
 
-FORTE_RT_E_DELAY::FORTE_RT_E_DELAY(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes) :
-        CEventSourceFB( pa_poSrcRes, &scm_stFBInterfaceSpec, pa_nInstanceNameId),
+FORTE_RT_E_DELAY::FORTE_RT_E_DELAY(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) :
+        CEventSourceFB( paSrcRes, &scmFBInterfaceSpec, paInstanceNameId),
     var_conn_QO(var_QO),
     conn_INITO(this, 0),
     conn_EO(this, 1),
@@ -66,25 +66,25 @@ void FORTE_RT_E_DELAY::setInitialValues() {
 void FORTE_RT_E_DELAY::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   switch(paEIID) {
     case cg_nExternalEventID:
-      sendOutputEvent(scm_nEventEOID, paECET);
+      sendOutputEvent(scmEventEOID, paECET);
       mActive = false;
       break;
-    case scm_nEventSTOPID:
+    case scmEventSTOPID:
       if(mActive){
         getTimer().unregisterTimedFB(this);
         mActive = false;
       }
       break;
-    case scm_nEventSTARTID:
+    case scmEventSTARTID:
       if((!mActive)&&(mInitialized)){
         getTimer().registerTimedFB(&mTimeListEntry, var_DT);
         mActive = true;
       }
       break;
-    case scm_nEventINITID:
+    case scmEventINITID:
       if(var_QI == true){
         if(!mInitialized){
-          //m_oECEO.start();
+          //mECEO.start();
           mInitialized = true;
         }
         mECEO.setDeadline(var_Deadline);
@@ -94,7 +94,7 @@ void FORTE_RT_E_DELAY::executeEvent(TEventID paEIID, CEventChainExecutionThread 
         mECEO.setDeadline(CIEC_TIME(static_cast<CIEC_TIME::TValueType>(0)));
       }
       var_QO = var_QI;
-      sendOutputEvent(scm_nEventINITOID, paECET);
+      sendOutputEvent(scmEventINITOID, paECET);
       break;
   }
 }
@@ -111,7 +111,7 @@ EMGMResponse FORTE_RT_E_DELAY::changeFBExecutionState(EMGMCommandType paCommand)
 
 void FORTE_RT_E_DELAY::readInputData(TEventID paEIID) {
   switch(paEIID) {
-    case scm_nEventINITID: {
+    case scmEventINITID: {
       RES_DATA_CON_CRITICAL_REGION();
       readData(0, var_QI, conn_QI);
       readData(2, var_Tmin, conn_Tmin);
@@ -119,12 +119,12 @@ void FORTE_RT_E_DELAY::readInputData(TEventID paEIID) {
       readData(4, var_WCET, conn_WCET);
       break;
     }
-    case scm_nEventSTARTID: {
+    case scmEventSTARTID: {
       RES_DATA_CON_CRITICAL_REGION();
       readData(1, var_DT, conn_DT);
       break;
     }
-    case scm_nEventSTOPID: {
+    case scmEventSTOPID: {
       RES_DATA_CON_CRITICAL_REGION();
       break;
     }
@@ -135,12 +135,12 @@ void FORTE_RT_E_DELAY::readInputData(TEventID paEIID) {
 
 void FORTE_RT_E_DELAY::writeOutputData(TEventID paEIID) {
   switch(paEIID) {
-    case scm_nEventINITOID: {
+    case scmEventINITOID: {
       RES_DATA_CON_CRITICAL_REGION();
       writeData(0, var_QO, conn_QO);
       break;
     }
-    case scm_nEventEOID: {
+    case scmEventEOID: {
       RES_DATA_CON_CRITICAL_REGION();
       break;
     }

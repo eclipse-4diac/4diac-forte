@@ -100,7 +100,7 @@ public:
    * \brief creates an ADS1018  device according to the  \a sDevice parameter
    * \param sDevice gives the device path e.g. /dev/spidev0.1 in case of the CONMELEON C1 board
    *
-   * The constructor sets the default parameters to m_nBitsPerWord = 8, m_enMode = SPIMODE1 and m_nSpeed to 1 MHz.
+   * The constructor sets the default parameters to mBitsPerWord = 8, mMode = SPIMODE1 and mSpeed to 1 MHz.
    */
   explicit CAds1018(const char* sDevice);
 
@@ -110,7 +110,7 @@ public:
    * \param nSpeed gives the bus clock frequency e.g. 1000000 for 1 MHz
    * \param enMode gives the SPI bus mode setting e.g. SPIMODE1
    *
-   * The constructor sets the default parameters to m_nBitsPerWord = 8
+   * The constructor sets the default parameters to mBitsPerWord = 8
    */
   CAds1018(const char* sDevice, unsigned int nSpeed, CONMELEON::ESpiMode enMode);
 

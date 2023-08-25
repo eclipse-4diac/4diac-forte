@@ -32,11 +32,11 @@ namespace forte {
      *
      * The data of this structure is the internal FORTE representation of an IEC 61499 management command.
      * e.g. create \<FB name="START" type="E_RESTART"\> will result in the following data values:
-     *    - m_nCMD = 0x30
-     *    - m_sDestination = ""
-     *    - m_sFistParam = "START"
-     *    - m_sSecondParam = "E_RESTART"
-     *    - m_sAdditionalParams = ""
+     *    - mCMD = 0x30
+     *    - mDestination = ""
+     *    - mFistParam = "START"
+     *    - mSecondParam = "E_RESTART"
+     *    - mAdditionalParams = ""
      */
     struct SManagementCMD{
         /*!\brief An identification number for the requested command based on the definitons in the standard.
@@ -47,7 +47,7 @@ namespace forte {
 
         /*!\brief The destination of the command.
          *
-         * if the destination is scm_nInvalidStringID device is the target.
+         * if the destination is scmInvalidStringID device is the target.
          * Otherwise a the TStringId of the resource's name the command
          * should be exectued in is the target.
          * FIXME if more than the resource should be supported (e.g. composite FBs) the type needs to be changed .

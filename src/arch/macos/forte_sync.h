@@ -27,7 +27,7 @@ class CMacOsSyncObject{
   private:
   protected:
   //! The posix thread mutex handle of the operating system.
-    pthread_mutex_t m_oMutexHandle;
+    pthread_mutex_t mMutexHandle;
   public:
     CMacOsSyncObject();
     ~CMacOsSyncObject();
@@ -36,12 +36,12 @@ class CMacOsSyncObject{
    * This function blocks until it will get the lock for the coming critical section.
    */  
     void lock(){
-      pthread_mutex_lock(&m_oMutexHandle);
+      pthread_mutex_lock(&mMutexHandle);
       //TODO handle return value
     };
   //!Freee the resource coming after the lock command  
     void unlock(){
-      pthread_mutex_unlock(&m_oMutexHandle);
+      pthread_mutex_unlock(&mMutexHandle);
       //TODO handle return value
     };
 };

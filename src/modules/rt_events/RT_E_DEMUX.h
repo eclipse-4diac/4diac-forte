@@ -29,31 +29,31 @@ class FORTE_RT_E_DEMUX final : public CFunctionBlock {
   DECLARE_FIRMWARE_FB(FORTE_RT_E_DEMUX)
 
 private:
-  static const CStringDictionary::TStringId scm_anDataInputNames[];
-  static const CStringDictionary::TStringId scm_anDataInputTypeIds[];
-  static const CStringDictionary::TStringId scm_anDataOutputNames[];
-  static const CStringDictionary::TStringId scm_anDataOutputTypeIds[];
-  static const TEventID scm_nEventINITID = 0;
-  static const TEventID scm_nEventEIID = 1;
-  static const TDataIOID scm_anEIWith[];
-  static const TForteInt16 scm_anEIWithIndexes[];
-  static const CStringDictionary::TStringId scm_anEventInputNames[];
-  static const TEventID scm_nEventINITOID = 0;
-  static const TEventID scm_nEventEO0ID = 1;
-  static const TEventID scm_nEventEO1ID = 2;
-  static const TEventID scm_nEventEO2ID = 3;
-  static const TEventID scm_nEventEO3ID = 4;
-  static const TDataIOID scm_anEOWith[];
-  static const TForteInt16 scm_anEOWithIndexes[];
-  static const CStringDictionary::TStringId scm_anEventOutputNames[];
+  static const CStringDictionary::TStringId scmDataInputNames[];
+  static const CStringDictionary::TStringId scmDataInputTypeIds[];
+  static const CStringDictionary::TStringId scmDataOutputNames[];
+  static const CStringDictionary::TStringId scmDataOutputTypeIds[];
+  static const TEventID scmEventINITID = 0;
+  static const TEventID scmEventEIID = 1;
+  static const TDataIOID scmEIWith[];
+  static const TForteInt16 scmEIWithIndexes[];
+  static const CStringDictionary::TStringId scmEventInputNames[];
+  static const TEventID scmEventINITOID = 0;
+  static const TEventID scmEventEO0ID = 1;
+  static const TEventID scmEventEO1ID = 2;
+  static const TEventID scmEventEO2ID = 3;
+  static const TEventID scmEventEO3ID = 4;
+  static const TDataIOID scmEOWith[];
+  static const TForteInt16 scmEOWithIndexes[];
+  static const CStringDictionary::TStringId scmEventOutputNames[];
 
-  static const SFBInterfaceSpec scm_stFBInterfaceSpec;
+  static const SFBInterfaceSpec scmFBInterfaceSpec;
 
-  CEventChainExecutionThread m_oECEO0;
-  CEventChainExecutionThread m_oECEO1;
-  CEventChainExecutionThread m_oECEO2;
-  CEventChainExecutionThread m_oECEO3;
-  bool m_bInitialized;
+  CEventChainExecutionThread mECEO0;
+  CEventChainExecutionThread mECEO1;
+  CEventChainExecutionThread mECEO2;
+  CEventChainExecutionThread mECEO3;
+  bool mInitialized;
 
   void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
@@ -62,7 +62,7 @@ private:
   void setInitialValues() override;
 
 public:
-  FORTE_RT_E_DEMUX(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes);
+  FORTE_RT_E_DEMUX(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
 
   CIEC_BOOL var_QI;
   CIEC_UINT var_K;
@@ -114,7 +114,7 @@ public:
     var_WCET2 = pa_WCET2;
     var_Deadline3 = pa_Deadline3;
     var_WCET3 = pa_WCET3;
-    receiveInputEvent(scm_nEventINITID, nullptr);
+    receiveInputEvent(scmEventINITID, nullptr);
     pa_QO = var_QO;
   }
   void evt_EI(const CIEC_BOOL &pa_QI, const CIEC_UINT &pa_K, const CIEC_TIME &pa_Tmin, const CIEC_TIME &pa_Deadline0, const CIEC_TIME &pa_WCET0, const CIEC_TIME &pa_Deadline1, const CIEC_TIME &pa_WCET1, const CIEC_TIME &pa_Deadline2, const CIEC_TIME &pa_WCET2, const CIEC_TIME &pa_Deadline3, const CIEC_TIME &pa_WCET3, CIEC_BOOL &pa_QO) {
@@ -129,7 +129,7 @@ public:
     var_WCET2 = pa_WCET2;
     var_Deadline3 = pa_Deadline3;
     var_WCET3 = pa_WCET3;
-    receiveInputEvent(scm_nEventEIID, nullptr);
+    receiveInputEvent(scmEventEIID, nullptr);
     pa_QO = var_QO;
   }
   void operator()(const CIEC_BOOL &pa_QI, const CIEC_UINT &pa_K, const CIEC_TIME &pa_Tmin, const CIEC_TIME &pa_Deadline0, const CIEC_TIME &pa_WCET0, const CIEC_TIME &pa_Deadline1, const CIEC_TIME &pa_WCET1, const CIEC_TIME &pa_Deadline2, const CIEC_TIME &pa_WCET2, const CIEC_TIME &pa_Deadline3, const CIEC_TIME &pa_WCET3, CIEC_BOOL &pa_QO) {

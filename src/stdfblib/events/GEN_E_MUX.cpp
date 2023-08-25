@@ -26,23 +26,23 @@
 
 DEFINE_GENERIC_FIRMWARE_FB(GEN_E_MUX, g_nStringIdGEN_E_MUX);
 
-const CStringDictionary::TStringId GEN_E_MUX::scm_anDataOutputNames[] = { g_nStringIdK };
-const CStringDictionary::TStringId GEN_E_MUX::scm_aunDODataTypeIds[] = { g_nStringIdUINT };
+const CStringDictionary::TStringId GEN_E_MUX::scmDataOutputNames[] = { g_nStringIdK };
+const CStringDictionary::TStringId GEN_E_MUX::scmDODataTypeIds[] = { g_nStringIdUINT };
 
-const CStringDictionary::TStringId GEN_E_MUX::scm_anEventOutputNames[] = { g_nStringIdEO };
+const CStringDictionary::TStringId GEN_E_MUX::scmEventOutputNames[] = { g_nStringIdEO };
 
 GEN_E_MUX::GEN_E_MUX(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) :
-    CGenFunctionBlock<CFunctionBlock>(paSrcRes, paInstanceNameId), m_anEventInputNames(nullptr){
+    CGenFunctionBlock<CFunctionBlock>(paSrcRes, paInstanceNameId), mEventInputNames(nullptr){
 }
 
 GEN_E_MUX::~GEN_E_MUX(){
-  delete[] m_anEventInputNames;
+  delete[] mEventInputNames;
 }
 
 void GEN_E_MUX::executeEvent(TEventID paEIID){
-  if(paEIID < mInterfaceSpec->m_nNumEIs){
+  if(paEIID < mInterfaceSpec->mNumEIs){
     K() = CIEC_UINT(static_cast<TForteUInt16>(paEIID));
-    sendOutputEvent(scm_nEventEOID);
+    sendOutputEvent(scmEventEOID);
   }
 }
 
@@ -61,30 +61,30 @@ bool GEN_E_MUX::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec
     ++acPos;
     if('M' != *acPos){
       //we have an underscore and it is not the first underscore after E
-      paInterfaceSpec.m_nNumEIs = static_cast<TEventID>(forte::core::util::strtoul(acPos, nullptr, 10));
+      paInterfaceSpec.mNumEIs = static_cast<TEventID>(forte::core::util::strtoul(acPos, nullptr, 10));
 
-      if(paInterfaceSpec.m_nNumEIs < CFunctionBlock::scm_nMaxInterfaceEvents && paInterfaceSpec.m_nNumEIs >= 2){
-        m_anEventInputNames = new CStringDictionary::TStringId[paInterfaceSpec.m_nNumEIs];
+      if(paInterfaceSpec.mNumEIs < CFunctionBlock::scmMaxInterfaceEvents && paInterfaceSpec.mNumEIs >= 2){
+        mEventInputNames = new CStringDictionary::TStringId[paInterfaceSpec.mNumEIs];
 
-        generateGenericInterfacePointNameArray("EI", m_anEventInputNames, paInterfaceSpec.m_nNumEIs);
+        generateGenericInterfacePointNameArray("EI", mEventInputNames, paInterfaceSpec.mNumEIs);
 
-        paInterfaceSpec.m_aunEINames = m_anEventInputNames;
-        paInterfaceSpec.m_nNumEOs = 1;
-        paInterfaceSpec.m_aunEONames = scm_anEventOutputNames;
-        paInterfaceSpec.m_nNumDIs = 0;
-        paInterfaceSpec.m_aunDINames = nullptr;
-        paInterfaceSpec.m_aunDIDataTypeNames = nullptr;
-        paInterfaceSpec.m_nNumDOs = 1;
-        paInterfaceSpec.m_aunDONames = scm_anDataOutputNames;
-        paInterfaceSpec.m_aunDODataTypeNames = scm_aunDODataTypeIds;
+        paInterfaceSpec.mEINames = mEventInputNames;
+        paInterfaceSpec.mNumEOs = 1;
+        paInterfaceSpec.mEONames = scmEventOutputNames;
+        paInterfaceSpec.mNumDIs = 0;
+        paInterfaceSpec.mDINames = nullptr;
+        paInterfaceSpec.mDIDataTypeNames = nullptr;
+        paInterfaceSpec.mNumDOs = 1;
+        paInterfaceSpec.mDONames = scmDataOutputNames;
+        paInterfaceSpec.mDODataTypeNames = scmDODataTypeIds;
         return true;
       }
       else{
-        if(paInterfaceSpec.m_nNumEIs >= CFunctionBlock::scm_nMaxInterfaceEvents){
-          DEVLOG_ERROR("Cannot configure FB-Instance E_MUX_%d. Number of event inputs exceeds maximum of %d.\n", paInterfaceSpec.m_nNumEIs, CFunctionBlock::scm_nMaxInterfaceEvents);
+        if(paInterfaceSpec.mNumEIs >= CFunctionBlock::scmMaxInterfaceEvents){
+          DEVLOG_ERROR("Cannot configure FB-Instance E_MUX_%d. Number of event inputs exceeds maximum of %d.\n", paInterfaceSpec.mNumEIs, CFunctionBlock::scmMaxInterfaceEvents);
         }
         else{
-          DEVLOG_ERROR("Cannot configure FB-Instance E_MUX_%d. Number of event inputs smaller than minimum of 2.\n", paInterfaceSpec.m_nNumEIs);
+          DEVLOG_ERROR("Cannot configure FB-Instance E_MUX_%d. Number of event inputs smaller than minimum of 2.\n", paInterfaceSpec.mNumEIs);
         }
       }
     }

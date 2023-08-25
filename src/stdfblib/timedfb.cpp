@@ -21,23 +21,23 @@
 #include "resource.h"
 #include "criticalregion.h"
 
-const CStringDictionary::TStringId CTimedFB::scm_aunEINameIds[] = {g_nStringIdSTART, g_nStringIdSTOP};
-const CStringDictionary::TStringId CTimedFB::scm_aunEONameIds[] = {g_nStringIdEO};
+const CStringDictionary::TStringId CTimedFB::scmEINameIds[] = {g_nStringIdSTART, g_nStringIdSTOP};
+const CStringDictionary::TStringId CTimedFB::scmEONameIds[] = {g_nStringIdEO};
 
-const CStringDictionary::TStringId CTimedFB::scm_aunDINameIds[] = {g_nStringIdDT};
-const CStringDictionary::TStringId CTimedFB::scm_aunDIDataTypeNameIds[] = {g_nStringIdTIME};
+const CStringDictionary::TStringId CTimedFB::scmDINameIds[] = {g_nStringIdDT};
+const CStringDictionary::TStringId CTimedFB::scmDIDataTypeNameIds[] = {g_nStringIdTIME};
 
-const SFBInterfaceSpec CTimedFB::scm_stFBInterfaceSpec = {
-  2, scm_aunEINameIds, nullptr, nullptr,
-  1, scm_aunEONameIds, nullptr, nullptr,
-  1, scm_aunDINameIds, scm_aunDIDataTypeNameIds,
+const SFBInterfaceSpec CTimedFB::scmFBInterfaceSpec = {
+  2, scmEINameIds, nullptr, nullptr,
+  1, scmEONameIds, nullptr, nullptr,
+  1, scmDINameIds, scmDIDataTypeNameIds,
   0, nullptr, nullptr,
   0, nullptr,
   0, nullptr
 };
 
 CTimedFB::CTimedFB(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes, ETimerActivationType paType) :
-      CEventSourceFB( paSrcRes, &scm_stFBInterfaceSpec, paInstanceNameId){
+      CEventSourceFB( paSrcRes, &scmFBInterfaceSpec, paInstanceNameId){
   setEventChainExecutor(paSrcRes->getResourceEventExecution());
   mActive = false;
   mTimeListEntry.mTimeOut = 0;
@@ -50,15 +50,15 @@ CTimedFB::CTimedFB(const CStringDictionary::TStringId paInstanceNameId, CResourc
 void CTimedFB::executeEvent(TEventID paEIID, CEventChainExecutionThread * const ){
   switch(paEIID){
     case cg_nExternalEventID:
-      sendOutputEvent(csm_nEOID, getEventChainExecutor());
+      sendOutputEvent(csmEOID, getEventChainExecutor());
       break;
-    case csm_nEventSTOPID:
+    case csmEventSTOPID:
       if(mActive){
         getTimer().unregisterTimedFB(this);
         mActive = false;
       }
       break;
-    case csm_nEventSTARTID:
+    case csmEventSTARTID:
       if(!mActive){
         getTimer().registerTimedFB( &mTimeListEntry, DT());
         mActive = true;
@@ -77,9 +77,9 @@ void CTimedFB::readInputData(TEventID) {
 void CTimedFB::writeOutputData(TEventID) {
 }
 
-EMGMResponse CTimedFB::changeFBExecutionState(EMGMCommandType pa_unCommand){
-  EMGMResponse eRetVal = CFunctionBlock::changeFBExecutionState(pa_unCommand);
-  if((EMGMResponse::Ready == eRetVal) && ((EMGMCommandType::Stop == pa_unCommand) || (EMGMCommandType::Kill == pa_unCommand)) && mActive) {
+EMGMResponse CTimedFB::changeFBExecutionState(EMGMCommandType paCommand){
+  EMGMResponse eRetVal = CFunctionBlock::changeFBExecutionState(paCommand);
+  if((EMGMResponse::Ready == eRetVal) && ((EMGMCommandType::Stop == paCommand) || (EMGMCommandType::Kill == paCommand)) && mActive) {
     getTimer().unregisterTimedFB(this);
     mActive = false;
   }

@@ -15,11 +15,11 @@
 #include "../../arch/utils/timespec_utils.h"
 #include <time.h>
 
-CTimerHandler* CTimerHandler::createTimerHandler(CDeviceExecution& pa_poDeviceExecution){
-  return new fmiTimerHandler(pa_poDeviceExecution);
+CTimerHandler* CTimerHandler::createTimerHandler(CDeviceExecution& paDeviceExecution){
+  return new fmiTimerHandler(paDeviceExecution);
 }
 
-fmiTimerHandler::fmiTimerHandler(CDeviceExecution& pa_poDeviceExecution) : CTimerHandler(pa_poDeviceExecution)  {
+fmiTimerHandler::fmiTimerHandler(CDeviceExecution& paDeviceExecution) : CTimerHandler(paDeviceExecution)  {
 }
 
 fmiTimerHandler::~fmiTimerHandler(){
@@ -31,8 +31,8 @@ void fmiTimerHandler::enableHandler(){
 void fmiTimerHandler::disableHandler(){
 }
 
-void fmiTimerHandler::setPriority(int pa_nPriority){
-  NOT_USED(pa_nPriority)
+void fmiTimerHandler::setPriority(int paPriority){
+  NOT_USED(paPriority)
 }
 
 int fmiTimerHandler::getPriority() const {

@@ -53,7 +53,7 @@ public:
     }
 
     const CStringDictionary::TStringId* elementNames() const override {
-      return scm_unElementNames;
+      return scmElementNames;
     }
 
     CStringDictionary::TStringId getStructTypeNameID() const override {
@@ -78,10 +78,10 @@ public:
       return nullptr;
     }
 private:
-  static const CStringDictionary::TStringId scm_unElementNames[];
+  static const CStringDictionary::TStringId scmElementNames[];
 };
 
-const CStringDictionary::TStringId CIEC_EndianessTestStruct::scm_unElementNames[] = {g_nStringIdVal1, g_nStringIdVal2, g_nStringIdVal3};
+const CStringDictionary::TStringId CIEC_EndianessTestStruct::scmElementNames[] = {g_nStringIdVal1, g_nStringIdVal2, g_nStringIdVal3};
 
 DEFINE_FIRMWARE_DATATYPE(EndianessTestStruct, g_nStringIdEndianessTestStruct)
 

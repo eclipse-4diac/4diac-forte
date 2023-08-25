@@ -19,7 +19,7 @@
 #include <string.h>
 
 const int CTXThread::scmThreadListSize = 27;
-TCTXThreadPtr CTXThread::sm_aoThreadList[27] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+TCTXThreadPtr CTXThread::smThreadList[27] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
 forte::arch::CThreadBase<TX_THREAD>::TThreadHandleType CTXThread::createThread(long paStackSize){
   memset((void *) &mThreadData, 0, sizeof(mThreadData));
@@ -74,7 +74,7 @@ void CTXThread::setDeadline(const CIEC_TIME &paVal) {
       else
         if (getDeadline() < smThreadList[i]->getDeadline()) {
           CTXThread *poRBuf, *poSBuf = smThreadList[i];
-          sm_aoThreadList[i] = this;
+          smThreadList[i] = this;
           setPriority(i + 2);
           for (ii = i + 1; ii < scmThreadListSize; ii++) {
             poSBuf->setPriority(ii + 2);

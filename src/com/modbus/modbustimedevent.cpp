@@ -12,39 +12,39 @@
 #include "modbustimedevent.h"
 #include "../../core/iec61131_functions.h"
 
-CModbusTimedEvent::CModbusTimedEvent(TForteUInt32 pa_nUpdateInterval) :
-    m_bIsStarted(false) {
-  m_nUpdateInterval = pa_nUpdateInterval;
+CModbusTimedEvent::CModbusTimedEvent(TForteUInt32 paUpdateInterval) :
+    mIsStarted(false) {
+  mUpdateInterval = paUpdateInterval;
 
-  if(pa_nUpdateInterval == 0) {
-    m_bSingleShotEvent = true;
+  if(paUpdateInterval == 0) {
+    mSingleShotEvent = true;
 
     activate();
   } else
-    m_bSingleShotEvent = false;
+    mSingleShotEvent = false;
 }
 
-void CModbusTimedEvent::setUpdateInterval(TForteUInt32 pa_nUpdateInterval) {
-  m_nUpdateInterval = pa_nUpdateInterval;
+void CModbusTimedEvent::setUpdateInterval(TForteUInt32 paUpdateInterval) {
+  mUpdateInterval = paUpdateInterval;
 }
 
 void CModbusTimedEvent::activate() {
-  m_nStartTime = func_NOW_MONOTONIC().getInMilliSeconds();
-  m_bIsStarted = true;
+  mStartTime = func_NOW_MONOTONIC().getInMilliSeconds();
+  mIsStarted = true;
 }
 
 void CModbusTimedEvent::deactivate() {
-  m_bIsStarted = false;
+  mIsStarted = false;
 }
 
 bool CModbusTimedEvent::readyToExecute() const {
   uint_fast64_t currentTime = func_NOW_MONOTONIC().getInMilliSeconds();
-  if(m_nUpdateInterval > currentTime) {
+  if(mUpdateInterval > currentTime) {
     return false;
   }
-  currentTime -= m_nUpdateInterval;
+  currentTime -= mUpdateInterval;
 
-  if(isStarted() && (currentTime > m_nStartTime || currentTime == m_nStartTime)) {
+  if(isStarted() && (currentTime > mStartTime || currentTime == mStartTime)) {
     return true;
   }
 

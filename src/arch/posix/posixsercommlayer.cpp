@@ -67,7 +67,7 @@ forte::com_infra::EComResponse CPosixSerCommLayer::recvData(const void *, unsign
       break;
   }
 
-  m_poFb->interruptCommFB(this);
+  mFb->interruptCommFB(this);
   return mInterruptResp;
 }
 

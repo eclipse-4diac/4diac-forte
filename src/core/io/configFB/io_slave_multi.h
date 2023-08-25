@@ -25,7 +25,7 @@ namespace forte {
 
 #define FUNCTION_BLOCK_CTOR_FOR_IO_MULTI_SLAVE(fbclass, fbBaseClass, type) \
  fbclass(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) : \
- fbBaseClass( (const TForteUInt8* const) &scmSlaveConfigurationIO, scmSlaveConfigurationIONum, type, paSrcRes, &scm_stFBInterfaceSpec, paInstanceNameId)
+ fbBaseClass( (const TForteUInt8* const) &scmSlaveConfigurationIO, scmSlaveConfigurationIONum, type, paSrcRes, &scmFBInterfaceSpec, paInstanceNameId)
 
       class IOConfigFBMultiSlave : public IOConfigFBBase {
         public:
@@ -46,21 +46,21 @@ namespace forte {
             return *static_cast<CIEC_WSTRING*>(getDO(1));
           }
 
-          static const TEventID scm_nEventMAPID = 0;
+          static const TEventID scmEventMAPID = 0;
 
-          static const TEventID scm_nEventMAPOID = 0;
-          static const TEventID scm_nEventINDID = 1;
+          static const TEventID scmEventMAPOID = 0;
+          static const TEventID scmEventINDID = 1;
 
           IOConfigFBMultiAdapter& BusAdapterOut() {
-            return (*static_cast<IOConfigFBMultiAdapter*>(m_apoAdapters[0]));
+            return (*static_cast<IOConfigFBMultiAdapter*>(mAdapters[0]));
           }
 
-          static const int scm_nBusAdapterOutAdpNum = 0;
+          static const int scmBusAdapterOutAdpNum = 0;
           IOConfigFBMultiAdapter& BusAdapterIn() {
-            return (*static_cast<IOConfigFBMultiAdapter*>(m_apoAdapters[1]));
+            return (*static_cast<IOConfigFBMultiAdapter*>(mAdapters[1]));
           }
 
-          static const int scm_nBusAdapterInAdpNum = 1;
+          static const int scmBusAdapterInAdpNum = 1;
 
           void executeEvent(TEventID paEIID) override;
 

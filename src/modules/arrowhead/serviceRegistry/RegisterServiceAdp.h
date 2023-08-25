@@ -23,8 +23,8 @@ class FORTE_RegisterServiceAdp: public CAdapter{
 
 private:
  private:
-  static const CStringDictionary::TStringId scm_anDataOutputNames[];
-  static const CStringDictionary::TStringId scm_anDataOutputTypeIds[];
+  static const CStringDictionary::TStringId scmDataOutputNames[];
+  static const CStringDictionary::TStringId scmDataOutputTypeIds[];
  public:
   CIEC_ServiceRegistryEntry &serviceRegistryEntry() {
     return *static_cast<CIEC_ServiceRegistryEntry*>((isSocket()) ? getDO(0) : getDI(0));
@@ -35,35 +35,35 @@ private:
   };
 
  public:
-  static const TEventID scm_nEventdoneRegisterID = 0;
+  static const TEventID scmEventdoneRegisterID = 0;
   TEventID doneRegister() {
-    return m_nParentAdapterListEventID + scm_nEventdoneRegisterID;
+    return mParentAdapterListEventID + scmEventdoneRegisterID;
   }
-  static const TEventID scm_nEventdoneUnregisterID = 1;
+  static const TEventID scmEventdoneUnregisterID = 1;
   TEventID doneUnregister() {
-    return m_nParentAdapterListEventID + scm_nEventdoneUnregisterID;
+    return mParentAdapterListEventID + scmEventdoneUnregisterID;
   }
  private:
-  static const TForteInt16 scm_anEIWithIndexes[];
-  static const CStringDictionary::TStringId scm_anEventInputNames[];
+  static const TForteInt16 scmEIWithIndexes[];
+  static const CStringDictionary::TStringId scmEventInputNames[];
 
  public:
-  static const TEventID scm_nEventregisterServiceID = 0;
+  static const TEventID scmEventregisterServiceID = 0;
   TEventID registerService() {
-    return m_nParentAdapterListEventID + scm_nEventregisterServiceID;
+    return mParentAdapterListEventID + scmEventregisterServiceID;
   }
-  static const TEventID scm_nEventunregisterServiceID = 1;
+  static const TEventID scmEventunregisterServiceID = 1;
   TEventID unregisterService() {
-    return m_nParentAdapterListEventID + scm_nEventunregisterServiceID;
+    return mParentAdapterListEventID + scmEventunregisterServiceID;
   }
  private:
-  static const TForteInt16 scm_anEOWithIndexes[];
-  static const TDataIOID scm_anEOWith[];
-  static const CStringDictionary::TStringId scm_anEventOutputNames[];
+  static const TForteInt16 scmEOWithIndexes[];
+  static const TDataIOID scmEOWith[];
+  static const CStringDictionary::TStringId scmEventOutputNames[];
 
-  static const SFBInterfaceSpec scm_stFBInterfaceSpecSocket;
+  static const SFBInterfaceSpec scmFBInterfaceSpecSocket;
 
-  static const SFBInterfaceSpec scm_stFBInterfaceSpecPlug;
+  static const SFBInterfaceSpec scmFBInterfaceSpecPlug;
 
 
 public:

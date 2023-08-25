@@ -20,45 +20,45 @@
 
 using namespace forte::com_infra;
 
-COpcConnection::COpcConnection(const char *pa_acHost, const char *pa_acServerName, COpcEventHandler* pa_eventHandler) :
-    m_nGroupCount(0), m_eConnectionEvent(e_Disconnected), m_acHost(pa_acHost), m_acServerName(pa_acServerName), m_acGroupName(0), m_nReqUpdateRate(0), m_nRealUpdateRate(0), m_nDeadBand(0), m_bIsConnected(false), m_bBlockingConnect(false),
+COpcConnection::COpcConnection(const char *paHost, const char *paServerName, COpcEventHandler* pa_eventHandler) :
+    mGroupCount(0), mConnectionEvent(e_Disconnected), mHost(paHost), mServerName(paServerName), mGroupName(0), mReqUpdateRate(0), mRealUpdateRate(0), mDeadBand(0), mIsConnected(false), mBlockingConnect(false),
    m_eventHandler(pa_eventHandler){
-  m_pOpcConnectionImpl = new COpcConnectionImpl(pa_acHost, pa_acServerName, this);
+  mOpcConnectionImpl = new COpcConnectionImpl(paHost, paServerName, this);
 }
 
 COpcConnection::~COpcConnection(){
-  delete m_pOpcConnectionImpl;
+  delete mOpcConnectionImpl;
 }
 
-void COpcConnection::addGroup(const char* pa_acGroupName, unsigned long pa_nReqUpdateRate, float pa_nDeadBand, CComLayer* pa_pComCallback){
-  m_oSync.lock();
-  m_lOpcGroupMapList.pushBack(new SOpcGroupMap(pa_acGroupName, m_eventHandler->addComCallback(pa_pComCallback)));
-  m_oSync.unlock();
+void COpcConnection::addGroup(const char* paGroupName, unsigned long paReqUpdateRate, float paDeadBand, CComLayer* paComCallback){
+  mSync.lock();
+  mOpcGroupMapList.pushBack(new SOpcGroupMap(paGroupName, m_eventHandler->addComCallback(paComCallback)));
+  mSync.unlock();
 
-  m_pOpcConnectionImpl->addGroup(pa_acGroupName, pa_nReqUpdateRate, pa_nDeadBand);
+  mOpcConnectionImpl->addGroup(paGroupName, paReqUpdateRate, paDeadBand);
 
-  m_nGroupCount++;
+  mGroupCount++;
 }
 
-void COpcConnection::removeGroup(const char* pa_acGroupName){
-  m_oSync.lock();
-  TOpcGroupMapList::Iterator itDelete = m_lOpcGroupMapList.begin();
-  TOpcGroupMapList::Iterator it_group = m_lOpcGroupMapList.begin();
-  TOpcGroupMapList::Iterator itEnd_group = m_lOpcGroupMapList.end();
+void COpcConnection::removeGroup(const char* paGroupName){
+  mSync.lock();
+  TOpcGroupMapList::Iterator itDelete = mOpcGroupMapList.begin();
+  TOpcGroupMapList::Iterator it_group = mOpcGroupMapList.begin();
+  TOpcGroupMapList::Iterator itEnd_group = mOpcGroupMapList.end();
 
   if(it_group != itEnd_group){
-    if(strcmp(it_group->m_acGroupName, pa_acGroupName) == 0){
-      m_lOpcGroupMapList.popFront();
-      m_nGroupCount--;
-      m_oSync.unlock();
+    if(strcmp(it_group->mGroupName, paGroupName) == 0){
+      mOpcGroupMapList.popFront();
+      mGroupCount--;
+      mSync.unlock();
       return;
     }
     ++it_group;
     while(it_group != itEnd_group){
-      if(strcmp(it_group->m_acGroupName, pa_acGroupName) == 0){
-        m_lOpcGroupMapList.eraseAfter(itDelete);
-        m_nGroupCount--;
-        m_oSync.unlock();
+      if(strcmp(it_group->mGroupName, paGroupName) == 0){
+        mOpcGroupMapList.eraseAfter(itDelete);
+        mGroupCount--;
+        mSync.unlock();
         return;
       }
 
@@ -67,14 +67,14 @@ void COpcConnection::removeGroup(const char* pa_acGroupName){
     }
   }
 
-  m_oSync.unlock();
+  mSync.unlock();
 }
 
 int COpcConnection::send_connect(){
-  switch (m_eConnectionEvent){
+  switch (mConnectionEvent){
     case e_Disconnected:
-      m_eConnectionEvent = e_Connecting;
-      m_eventHandler->sendCommand(new CCmd_AddConnection(m_pOpcConnectionImpl));
+      mConnectionEvent = e_Connecting;
+      m_eventHandler->sendCommand(new CCmd_AddConnection(mOpcConnectionImpl));
       return 0;
     case e_Connecting:
       return 0;
@@ -83,56 +83,56 @@ int COpcConnection::send_connect(){
   }
 }
 
-int COpcConnection::send_connect(bool pa_bBlocking){
-  m_bBlockingConnect = pa_bBlocking;
-  if(pa_bBlocking && !m_bIsConnected){
-    m_pOpcConnectionImpl->connect();
+int COpcConnection::send_connect(bool paBlocking){
+  mBlockingConnect = paBlocking;
+  if(paBlocking && !mIsConnected){
+    mOpcConnectionImpl->connect();
     return 1;
   }
 
   return send_connect();
 }
 
-int COpcConnection::send_addItem(COpcProcessVar* pa_pNewItem){
-  m_oSync.lock();
-  TOpcGroupMapList::Iterator itEnd_group = m_lOpcGroupMapList.end();
-  for(TOpcGroupMapList::Iterator it_group = m_lOpcGroupMapList.begin(); it_group != itEnd_group; ++it_group){
-    if(strcmp(it_group->m_acGroupName, pa_pNewItem->getItemGroupName()) == 0){
-      if(pa_pNewItem->getItemFunction() == COpcProcessVar::e_FBOutput){
+int COpcConnection::send_addItem(COpcProcessVar* paNewItem){
+  mSync.lock();
+  TOpcGroupMapList::Iterator itEnd_group = mOpcGroupMapList.end();
+  for(TOpcGroupMapList::Iterator it_group = mOpcGroupMapList.begin(); it_group != itEnd_group; ++it_group){
+    if(strcmp(it_group->mGroupName, paNewItem->getItemGroupName()) == 0){
+      if(paNewItem->getItemFunction() == COpcProcessVar::e_FBOutput){
 
         //check if item already added
-        TItemDataList::Iterator itEnd_item = (*it_group)->m_lReadItemsList.end();
-        for(TItemDataList::Iterator it_item = (*it_group)->m_lReadItemsList.begin(); it_item != itEnd_item; ++it_item){
-          if(strcmp(it_item->m_acItemName, pa_pNewItem->getItemName()) == 0){
-            m_oSync.unlock();
+        TItemDataList::Iterator itEnd_item = (*it_group)->mReadItemsList.end();
+        for(TItemDataList::Iterator it_item = (*it_group)->mReadItemsList.begin(); it_item != itEnd_item; ++it_item){
+          if(strcmp(it_item->mItemName, paNewItem->getItemName()) == 0){
+            mSync.unlock();
             return 1;
           }
         }
 
-        it_group->m_lReadItemsList.pushBack(new SOpcItemData(pa_pNewItem->getItemName()));
+        it_group->mReadItemsList.pushBack(new SOpcItemData(paNewItem->getItemName()));
         break;
 
       }
-      else if(pa_pNewItem->getItemFunction() == COpcProcessVar::e_FBInput){
+      else if(paNewItem->getItemFunction() == COpcProcessVar::e_FBInput){
         //check if item already added
-        TItemDataList::Iterator itEnd_item = (*it_group)->m_lWriteItemsList.end();
-        for(TItemDataList::Iterator it_item = (*it_group)->m_lWriteItemsList.begin(); it_item != itEnd_item; ++it_item){
-          if(strcmp(it_item->m_acItemName, pa_pNewItem->getItemName()) == 0){
-            m_oSync.unlock();
+        TItemDataList::Iterator itEnd_item = (*it_group)->mWriteItemsList.end();
+        for(TItemDataList::Iterator it_item = (*it_group)->mWriteItemsList.begin(); it_item != itEnd_item; ++it_item){
+          if(strcmp(it_item->mItemName, paNewItem->getItemName()) == 0){
+            mSync.unlock();
             return 1;
           }
         }
 
-        it_group->m_lWriteItemsList.pushBack(new SOpcItemData(pa_pNewItem->getItemName()));
+        it_group->mWriteItemsList.pushBack(new SOpcItemData(paNewItem->getItemName()));
         break;
 
       }
     }
   }
-  m_oSync.unlock();
+  mSync.unlock();
 
-  if(m_eConnectionEvent == e_Connected){
-    m_eventHandler->sendCommand(new CCmd_AddOPCProcessVar(m_pOpcConnectionImpl, pa_pNewItem));
+  if(mConnectionEvent == e_Connected){
+    m_eventHandler->sendCommand(new CCmd_AddOPCProcessVar(mOpcConnectionImpl, paNewItem));
 
     return 0;
   }
@@ -140,118 +140,118 @@ int COpcConnection::send_addItem(COpcProcessVar* pa_pNewItem){
   return -1;
 }
 
-int COpcConnection::send_sendItemData(COpcProcessVar* pa_pItem){
-  if(pa_pItem->getIsActive()) {
-    m_eventHandler->sendCommand(new CCmd_SetProcessVarValue(pa_pItem));
+int COpcConnection::send_sendItemData(COpcProcessVar* paItem){
+  if(paItem->getIsActive()) {
+    m_eventHandler->sendCommand(new CCmd_SetProcessVarValue(paItem));
   }
   return 0;
 }
 
-void COpcConnection::response_connect(bool pa_bConnectionState){
-  m_bIsConnected = pa_bConnectionState;
-  if(pa_bConnectionState) {
-    m_eConnectionEvent = e_Connected;
+void COpcConnection::response_connect(bool paConnectionState){
+  mIsConnected = paConnectionState;
+  if(paConnectionState) {
+    mConnectionEvent = e_Connected;
   } else {
-    m_eConnectionEvent = e_ConnectionFailed;
+    mConnectionEvent = e_ConnectionFailed;
   }
-    //m_eConnectionEvent = e_Disconnected;
+    //mConnectionEvent = e_Disconnected;
 
-  if(!m_bBlockingConnect){
+  if(!mBlockingConnect){
 
-    TOpcGroupMapList::Iterator itEnd = m_lOpcGroupMapList.end();
-    for(TOpcGroupMapList::Iterator it = m_lOpcGroupMapList.begin(); it != itEnd; ++it){
-      m_eventHandler->executeComCallback((*it)->m_nCallbackDesc);
+    TOpcGroupMapList::Iterator itEnd = mOpcGroupMapList.end();
+    for(TOpcGroupMapList::Iterator it = mOpcGroupMapList.begin(); it != itEnd; ++it){
+      m_eventHandler->executeComCallback((*it)->mCallbackDesc);
     }
 
   }
 }
 
-void COpcConnection::response_dataReceived(const char *pa_acGroupName, TItemDataList & pa_lItemDataList){
+void COpcConnection::response_dataReceived(const char *paGroupName, TItemDataList & paItemDataList){
   // Loop through OpcGroups
-  TOpcGroupMapList::Iterator itEnd_group = m_lOpcGroupMapList.end();
-  for(TOpcGroupMapList::Iterator it_group = m_lOpcGroupMapList.begin(); it_group != itEnd_group; ++it_group){
+  TOpcGroupMapList::Iterator itEnd_group = mOpcGroupMapList.end();
+  for(TOpcGroupMapList::Iterator it_group = mOpcGroupMapList.begin(); it_group != itEnd_group; ++it_group){
 
-    if(strcmp(it_group->m_acGroupName, pa_acGroupName) == 0){
+    if(strcmp(it_group->mGroupName, paGroupName) == 0){
 
       // Loop through OpcItems in OpcGroup
-      TItemDataList::Iterator itEnd_item = (*it_group)->m_lReadItemsList.end();
-      for(TItemDataList::Iterator it_item = (*it_group)->m_lReadItemsList.begin(); it_item != itEnd_item; ++it_item){
+      TItemDataList::Iterator itEnd_item = (*it_group)->mReadItemsList.end();
+      for(TItemDataList::Iterator it_item = (*it_group)->mReadItemsList.begin(); it_item != itEnd_item; ++it_item){
 
         // Loop through OpcItems in ItemDataList
-        TItemDataList::Iterator itEnd_newItem = pa_lItemDataList.end();
-        TItemDataList::Iterator itErase = pa_lItemDataList.begin();
-        for(TItemDataList::Iterator it_newItem = pa_lItemDataList.begin(); it_newItem != itEnd_newItem; ++it_newItem){
+        TItemDataList::Iterator itEnd_newItem = paItemDataList.end();
+        TItemDataList::Iterator itErase = paItemDataList.begin();
+        for(TItemDataList::Iterator it_newItem = paItemDataList.begin(); it_newItem != itEnd_newItem; ++it_newItem){
 
-          if(strcmp(it_newItem->m_acItemName, it_item->m_acItemName) == 0){
-            it_item->m_oItemData = it_newItem->m_oItemData;
+          if(strcmp(it_newItem->mItemName, it_item->mItemName) == 0){
+            it_item->mItemData = it_newItem->mItemData;
 
-            if(it_newItem == pa_lItemDataList.begin()) {
-              pa_lItemDataList.popFront();
+            if(it_newItem == paItemDataList.begin()) {
+              paItemDataList.popFront();
             } else {
-              pa_lItemDataList.eraseAfter(itErase);
+              paItemDataList.eraseAfter(itErase);
             }
 
             break;
           }
 
-          if(it_newItem != pa_lItemDataList.begin()) {
+          if(it_newItem != paItemDataList.begin()) {
             ++itErase;
           }
         }
-          if(pa_lItemDataList.isEmpty()) {
+          if(paItemDataList.isEmpty()) {
             break;
           }
       }
 
       // Change state
-      m_eConnectionEvent = e_DataReceived;
+      mConnectionEvent = e_DataReceived;
 
       // Notify Com Layer
-      m_eventHandler->executeComCallback(it_group->m_nCallbackDesc);
+      m_eventHandler->executeComCallback(it_group->mCallbackDesc);
       break;
     }
   }
 }
 
-void COpcConnection::response_itemAdded(COpcProcessVar* pa_pOpcItem){
+void COpcConnection::response_itemAdded(COpcProcessVar* paOpcItem){
   // Loop through OpcGroups
-  m_oSync.lock();
-  TOpcGroupMapList::Iterator itEnd_group = m_lOpcGroupMapList.end();
-  for(TOpcGroupMapList::Iterator it_group = m_lOpcGroupMapList.begin(); it_group != itEnd_group; ++it_group){
-    if(strcmp(it_group->m_acGroupName, pa_pOpcItem->getItemGroupName()) == 0){
+  mSync.lock();
+  TOpcGroupMapList::Iterator itEnd_group = mOpcGroupMapList.end();
+  for(TOpcGroupMapList::Iterator it_group = mOpcGroupMapList.begin(); it_group != itEnd_group; ++it_group){
+    if(strcmp(it_group->mGroupName, paOpcItem->getItemGroupName()) == 0){
       // Change state
-      if (pa_pOpcItem->getIsActive()) {
-        m_eConnectionEvent = e_ItemAddedOk;
+      if (paOpcItem->getIsActive()) {
+        mConnectionEvent = e_ItemAddedOk;
       } else {
-        m_eConnectionEvent = e_ItemAddedFailed;
+        mConnectionEvent = e_ItemAddedFailed;
       }
       // Notify Com Layer
-      m_eventHandler->executeComCallback(it_group->m_nCallbackDesc);
+      m_eventHandler->executeComCallback(it_group->mCallbackDesc);
       break;
     }
   }
-  m_oSync.unlock();
+  mSync.unlock();
 }
 
-int COpcConnection::receiveData(const char* pa_acGroupName, TOpcProcessVarList * pa_lOpcProcessVarList){
+int COpcConnection::receiveData(const char* paGroupName, TOpcProcessVarList * paOpcProcessVarList){
   int nrData = 0;
   // TODO Case when lists do not match in size
 
-  m_oSync.lock();
-  TOpcGroupMapList::Iterator itEnd_group = m_lOpcGroupMapList.end();
-  for(TOpcGroupMapList::Iterator it_group = m_lOpcGroupMapList.begin(); it_group != itEnd_group; ++it_group){
+  mSync.lock();
+  TOpcGroupMapList::Iterator itEnd_group = mOpcGroupMapList.end();
+  for(TOpcGroupMapList::Iterator it_group = mOpcGroupMapList.begin(); it_group != itEnd_group; ++it_group){
 
-    if(strcmp(it_group->m_acGroupName, pa_acGroupName) == 0){
+    if(strcmp(it_group->mGroupName, paGroupName) == 0){
 
-      TItemDataList::Iterator itEnd_item = it_group->m_lReadItemsList.end();
-      TItemDataList::Iterator it_item = it_group->m_lReadItemsList.begin();
+      TItemDataList::Iterator itEnd_item = it_group->mReadItemsList.end();
+      TItemDataList::Iterator it_item = it_group->mReadItemsList.begin();
 
-      TOpcProcessVarList::Iterator itEnd_procVar = pa_lOpcProcessVarList->end();
-      TOpcProcessVarList::Iterator it_procVar = pa_lOpcProcessVarList->begin();
+      TOpcProcessVarList::Iterator itEnd_procVar = paOpcProcessVarList->end();
+      TOpcProcessVarList::Iterator it_procVar = paOpcProcessVarList->begin();
 
       while(it_procVar != itEnd_procVar && it_item != itEnd_item){
 
-        it_procVar->setNewValue(it_item->m_oItemData);
+        it_procVar->setNewValue(it_item->mItemData);
 
         nrData++;
 
@@ -263,7 +263,7 @@ int COpcConnection::receiveData(const char* pa_acGroupName, TOpcProcessVarList *
     }
 
   }
-  m_oSync.unlock();
+  mSync.unlock();
   return nrData;
 }
 

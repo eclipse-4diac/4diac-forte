@@ -18,11 +18,11 @@
 #include <sys/time.h>
 #include "../utils/timespec_utils.h"
 
-CTimerHandler* CTimerHandler::createTimerHandler(CDeviceExecution& pa_poDeviceExecution){
-  return new CPCTimerHandler(pa_poDeviceExecution);
+CTimerHandler* CTimerHandler::createTimerHandler(CDeviceExecution& paDeviceExecution){
+  return new CPCTimerHandler(paDeviceExecution);
 }
 
-CPCTimerHandler::CPCTimerHandler(CDeviceExecution& pa_poDeviceExecution) : CTimerHandler(pa_poDeviceExecution)  {
+CPCTimerHandler::CPCTimerHandler(CDeviceExecution& paDeviceExecution) : CTimerHandler(paDeviceExecution)  {
 }
 
 CPCTimerHandler::~CPCTimerHandler(){

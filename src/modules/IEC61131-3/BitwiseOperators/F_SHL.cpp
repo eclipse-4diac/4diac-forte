@@ -24,34 +24,34 @@
 
 DEFINE_FIRMWARE_FB(FORTE_F_SHL, g_nStringIdF_SHL)
 
-const CStringDictionary::TStringId FORTE_F_SHL::scm_anDataInputNames[] = {g_nStringIdIN, g_nStringIdN};
+const CStringDictionary::TStringId FORTE_F_SHL::scmDataInputNames[] = {g_nStringIdIN, g_nStringIdN};
 
-const CStringDictionary::TStringId FORTE_F_SHL::scm_anDataInputTypeIds[] = {g_nStringIdANY_BIT, g_nStringIdANY_INT};
+const CStringDictionary::TStringId FORTE_F_SHL::scmDataInputTypeIds[] = {g_nStringIdANY_BIT, g_nStringIdANY_INT};
 
-const CStringDictionary::TStringId FORTE_F_SHL::scm_anDataOutputNames[] = {g_nStringIdOUT};
+const CStringDictionary::TStringId FORTE_F_SHL::scmDataOutputNames[] = {g_nStringIdOUT};
 
-const CStringDictionary::TStringId FORTE_F_SHL::scm_anDataOutputTypeIds[] = {g_nStringIdANY_BIT};
+const CStringDictionary::TStringId FORTE_F_SHL::scmDataOutputTypeIds[] = {g_nStringIdANY_BIT};
 
-const TDataIOID FORTE_F_SHL::scm_anEIWith[] = {0, 1, scmWithListDelimiter};
-const TForteInt16 FORTE_F_SHL::scm_anEIWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_F_SHL::scm_anEventInputNames[] = {g_nStringIdREQ};
+const TDataIOID FORTE_F_SHL::scmEIWith[] = {0, 1, scmWithListDelimiter};
+const TForteInt16 FORTE_F_SHL::scmEIWithIndexes[] = {0};
+const CStringDictionary::TStringId FORTE_F_SHL::scmEventInputNames[] = {g_nStringIdREQ};
 
-const TDataIOID FORTE_F_SHL::scm_anEOWith[] = {0, scmWithListDelimiter};
-const TForteInt16 FORTE_F_SHL::scm_anEOWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_F_SHL::scm_anEventOutputNames[] = {g_nStringIdCNF};
+const TDataIOID FORTE_F_SHL::scmEOWith[] = {0, scmWithListDelimiter};
+const TForteInt16 FORTE_F_SHL::scmEOWithIndexes[] = {0};
+const CStringDictionary::TStringId FORTE_F_SHL::scmEventOutputNames[] = {g_nStringIdCNF};
 
 
-const SFBInterfaceSpec FORTE_F_SHL::scm_stFBInterfaceSpec = {
-  1, scm_anEventInputNames, scm_anEIWith, scm_anEIWithIndexes,
-  1, scm_anEventOutputNames, scm_anEOWith, scm_anEOWithIndexes,
-  2, scm_anDataInputNames, scm_anDataInputTypeIds,
-  1, scm_anDataOutputNames, scm_anDataOutputTypeIds,
+const SFBInterfaceSpec FORTE_F_SHL::scmFBInterfaceSpec = {
+  1, scmEventInputNames, scmEIWith, scmEIWithIndexes,
+  1, scmEventOutputNames, scmEOWith, scmEOWithIndexes,
+  2, scmDataInputNames, scmDataInputTypeIds,
+  1, scmDataOutputNames, scmDataOutputTypeIds,
   0, nullptr,
   0, nullptr
 };
 
-FORTE_F_SHL::FORTE_F_SHL(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes) :
-    CFunctionBlock( pa_poSrcRes, &scm_stFBInterfaceSpec, pa_nInstanceNameId),
+FORTE_F_SHL::FORTE_F_SHL(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) :
+    CFunctionBlock( paSrcRes, &scmFBInterfaceSpec, paInstanceNameId),
     var_IN(CIEC_ANY_BIT_VARIANT()),
     var_N(CIEC_ANY_INT_VARIANT()),
     var_OUT(CIEC_ANY_BIT_VARIANT()),
@@ -62,9 +62,9 @@ FORTE_F_SHL::FORTE_F_SHL(const CStringDictionary::TStringId pa_nInstanceNameId, 
     conn_OUT(this, 0, &var_conn_OUT) {
 };
 
-void FORTE_F_SHL::executeEvent(TEventID pa_nEIID) {
-  switch(pa_nEIID) {
-    case scm_nEventREQID:
+void FORTE_F_SHL::executeEvent(TEventID paEIID) {
+  switch(paEIID) {
+    case scmEventREQID:
       var_OUT = std::visit([](auto &&paIN, auto&&paN) -> CIEC_ANY_BIT_VARIANT {
           using T = std::decay_t<decltype(paIN)>;
           if constexpr (!std::is_same<T, CIEC_BOOL>::value) {
@@ -75,14 +75,14 @@ void FORTE_F_SHL::executeEvent(TEventID pa_nEIID) {
                        CStringDictionary::getInstance().get(paN.getTypeNameID()));
           return CIEC_ANY_BIT_VARIANT();
       }, var_IN, var_N);
-      sendOutputEvent(scm_nEventCNFID);
+      sendOutputEvent(scmEventCNFID);
       break;
   }
 }
 
-void FORTE_F_SHL::readInputData(TEventID pa_nEIID) {
-  switch(pa_nEIID) {
-    case scm_nEventREQID: {
+void FORTE_F_SHL::readInputData(TEventID paEIID) {
+  switch(paEIID) {
+    case scmEventREQID: {
       RES_DATA_CON_CRITICAL_REGION();
       readData(0, var_IN, conn_IN);
       readData(1, var_N, conn_N);
@@ -93,9 +93,9 @@ void FORTE_F_SHL::readInputData(TEventID pa_nEIID) {
   }
 }
 
-void FORTE_F_SHL::writeOutputData(TEventID pa_nEIID) {
-  switch(pa_nEIID) {
-    case scm_nEventCNFID: {
+void FORTE_F_SHL::writeOutputData(TEventID paEIID) {
+  switch(paEIID) {
+    case scmEventCNFID: {
       RES_DATA_CON_CRITICAL_REGION();
       writeData(0, var_OUT, conn_OUT);
       break;

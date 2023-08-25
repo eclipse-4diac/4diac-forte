@@ -33,18 +33,18 @@ namespace forte {
     public:
       ~CBaseCommFB() override;
 
-      EMGMResponse changeFBExecutionState(EMGMCommandType pa_unCommand) override;
+      EMGMResponse changeFBExecutionState(EMGMCommandType paCommand) override;
 
       forte::com_infra::EComServiceType getComServiceType() const {
-        return m_eCommServiceType;
+        return mCommServiceType;
       }
 
       TPortId getNumSD() const {
-        return mInterfaceSpec->m_nNumDIs - 2;
+        return mInterfaceSpec->mNumDIs - 2;
       }
 
       TPortId getNumRD() const {
-        return mInterfaceSpec->m_nNumDOs - 2;
+        return mInterfaceSpec->mNumDOs - 2;
       }
 
       CIEC_ANY **getSDs() {
@@ -55,7 +55,7 @@ namespace forte {
         return mDOs + 2;
       }
 
-      void interruptCommFB(CComLayer *pa_poComLayer);
+      void interruptCommFB(CComLayer *paComLayer);
 
       CIEC_BOOL& QI() {
         return *static_cast<CIEC_BOOL*>(getDI(0));
@@ -85,7 +85,7 @@ namespace forte {
       }
 
     protected:
-      CBaseCommFB(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes, forte::com_infra::EComServiceType pa_eCommServiceType);
+      CBaseCommFB(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes, forte::com_infra::EComServiceType paCommServiceType);
 
       /*!\brief Extract the id and the parameter and the ID. The format is ID[PARAMS] where the opening and closing brackets are actually a opening and a closing brackets. They can be escaped using the $ sign.
        * The opening bracket should only be escaped if it's part of the ID (although not recommended).
@@ -117,7 +117,7 @@ namespace forte {
       */
       void closeConnection();
 
-      static const char * const scm_sResponseTexts[];
+      static const char * const scmResponseTexts[];
 
       /*!\brief Create the whole communication stack and open the connection
       *
@@ -143,10 +143,10 @@ namespace forte {
       */
       virtual char * getDefaultIDString(const char *paID) = 0;
 
-      EComServiceType m_eCommServiceType;
-      CComLayer *m_poTopOfComStack;
-      unsigned int m_unComInterruptQueueCount; //!< number of triggers pending from the network
-      CComLayer *m_apoInterruptQueue[cg_unCommunicationInterruptQueueSize];
+      EComServiceType mCommServiceType;
+      CComLayer *mTopOfComStack;
+      unsigned int mComInterruptQueueCount; //!< number of triggers pending from the network
+      CComLayer *mInterruptQueue[cg_unCommunicationInterruptQueueSize];
 
     public:
       CBaseCommFB(const CBaseCommFB&) = delete;

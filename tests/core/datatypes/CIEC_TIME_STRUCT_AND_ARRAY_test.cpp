@@ -46,7 +46,7 @@ class CIEC_TestStruct : public CIEC_STRUCT {
     }
 
     const CStringDictionary::TStringId* elementNames() const override {
-      return scm_unElementNames;
+      return scmElementNames;
     }
 
     CStringDictionary::TStringId getStructTypeNameID() const override {
@@ -72,12 +72,12 @@ class CIEC_TestStruct : public CIEC_STRUCT {
     }
 
   private:
-    static const CStringDictionary::TStringId scm_unElementTypes[];
-    static const CStringDictionary::TStringId scm_unElementNames[];
+    static const CStringDictionary::TStringId scmElementTypes[];
+    static const CStringDictionary::TStringId scmElementNames[];
 };
 
-const CStringDictionary::TStringId CIEC_TestStruct::scm_unElementTypes[] = { g_nStringIdBOOL, g_nStringIdINT, g_nStringIdTIME };
-const CStringDictionary::TStringId CIEC_TestStruct::scm_unElementNames[] = { g_nStringIdVal1, g_nStringIdVal2, g_nStringIdVal3 };
+const CStringDictionary::TStringId CIEC_TestStruct::scmElementTypes[] = { g_nStringIdBOOL, g_nStringIdINT, g_nStringIdTIME };
+const CStringDictionary::TStringId CIEC_TestStruct::scmElementNames[] = { g_nStringIdVal1, g_nStringIdVal2, g_nStringIdVal3 };
 
 DEFINE_FIRMWARE_DATATYPE(TestStruct, g_nStringIdTestStruct)
 
@@ -94,16 +94,16 @@ void setupTestStruct_TestDataSet1(CIEC_TestStruct &paStruct){
   setDataTestStruct(paStruct, true, 44, static_cast<CIEC_TIME::TValueType>(10));
 }
 
-void checkTestStruct_InitialValues(CIEC_TestStruct &pa_stStruct){
-  BOOST_CHECK_EQUAL(false, (*static_cast<CIEC_BOOL *>(pa_stStruct.getMemberNamed(g_nStringIdVal1))));
-  BOOST_CHECK_EQUAL(0, static_cast<CIEC_INT::TValueType>(*static_cast<CIEC_INT *>(pa_stStruct.getMemberNamed(g_nStringIdVal2))));
-  BOOST_CHECK_EQUAL(0, static_cast<CIEC_TIME::TValueType>(*static_cast<CIEC_TIME *>(pa_stStruct.getMemberNamed(g_nStringIdVal3))));
+void checkTestStruct_InitialValues(CIEC_TestStruct &paStruct){
+  BOOST_CHECK_EQUAL(false, (*static_cast<CIEC_BOOL *>(paStruct.getMemberNamed(g_nStringIdVal1))));
+  BOOST_CHECK_EQUAL(0, static_cast<CIEC_INT::TValueType>(*static_cast<CIEC_INT *>(paStruct.getMemberNamed(g_nStringIdVal2))));
+  BOOST_CHECK_EQUAL(0, static_cast<CIEC_TIME::TValueType>(*static_cast<CIEC_TIME *>(paStruct.getMemberNamed(g_nStringIdVal3))));
 }
 
-void checkTestStruct_TestDataSet1(CIEC_TestStruct &pa_stStruct){
-  BOOST_CHECK_EQUAL(true, (*static_cast<CIEC_BOOL *>(pa_stStruct.getMemberNamed(g_nStringIdVal1))));
-  BOOST_CHECK_EQUAL(44, static_cast<CIEC_INT::TValueType>(*static_cast<CIEC_INT *>(pa_stStruct.getMemberNamed(g_nStringIdVal2))));
-  BOOST_CHECK_EQUAL(10, static_cast<CIEC_TIME::TValueType>(*static_cast<CIEC_TIME *>(pa_stStruct.getMemberNamed(g_nStringIdVal3))));
+void checkTestStruct_TestDataSet1(CIEC_TestStruct &paStruct){
+  BOOST_CHECK_EQUAL(true, (*static_cast<CIEC_BOOL *>(paStruct.getMemberNamed(g_nStringIdVal1))));
+  BOOST_CHECK_EQUAL(44, static_cast<CIEC_INT::TValueType>(*static_cast<CIEC_INT *>(paStruct.getMemberNamed(g_nStringIdVal2))));
+  BOOST_CHECK_EQUAL(10, static_cast<CIEC_TIME::TValueType>(*static_cast<CIEC_TIME *>(paStruct.getMemberNamed(g_nStringIdVal3))));
 }
 
 BOOST_AUTO_TEST_CASE(TimeStruct_element_access_test){ 

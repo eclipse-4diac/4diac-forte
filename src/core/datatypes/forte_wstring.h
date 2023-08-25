@@ -91,21 +91,21 @@ class CIEC_WSTRING final : public CIEC_ANY_STRING {
      *   This command implements a conversion function from a UTF-8
      *   encoded string (found e.g. in XML to the internal
      *   ISO 10646 Row 00 encoding.
-     *   \param pa_pacBuffer  Reference to the given UTF-8 encoded byte array
-     *   \param pa_nLen  Length to read (-1 for null-terminated)
-     *   \param pa_bUnescape  Handle $-escapes and delimiter characters at the beginning and end
+     *   \param paBuffer  Reference to the given UTF-8 encoded byte array
+     *   \param paLen  Length to read (-1 for null-terminated)
+     *   \param paUnescape  Handle $-escapes and delimiter characters at the beginning and end
      *   \return number of bytes used from srcString
      *       -1 on error
      */
-    int fromUTF8(const char *pa_pacValue, int pa_nLen, bool pa_bUnescape);
+    int fromUTF8(const char *paValue, int paLen, bool paUnescape);
 
     /*! \brief Converts the WSTRING to a UTF-8 representation
      *
      *   This command implements a conversion function from a WSTRING
      *   to a UTF-8 encoding, usable e.g. for the serialization.
-     *   \param pa_pacBuffer  Reference to the output buffer. If 0, only the needed size will be computed.
-     *   \param pa_nBufferSize  Size of the provided buffer.
-     *   \param pa_bEscape  Produce $-escapes and delimiter characters at the beginning and end
+     *   \param paBuffer  Reference to the output buffer. If 0, only the needed size will be computed.
+     *   \param paBufferSize  Size of the provided buffer.
+     *   \param paEscape  Produce $-escapes and delimiter characters at the beginning and end
      *   \return number of bytes used in the buffer
      *           -1 on error
      */
@@ -116,13 +116,13 @@ class CIEC_WSTRING final : public CIEC_ANY_STRING {
      *   This command implements a conversion function from a UTF-16
      *   encoded string (found e.g. in serialized WSTRING type) to the internal
      *   UTF-8 encoding.
-     *   \param pa_pacBuffer  Reference to the given UTF-16 encoded byte array
-     *   \param pa_nBufferLen  Length of the provided byte array
+     *   \param paBuffer  Reference to the given UTF-16 encoded byte array
+     *   \param paBufferLen  Length of the provided byte array
      *   \return Can be the following response:
      *     - false....conversion was not successful - something went wrong!
      *     -  true....conversion was successful.
      */
-    bool fromUTF16(const TForteByte *pa_pacBuffer, unsigned int pa_nBufferLen);
+    bool fromUTF16(const TForteByte *paBuffer, unsigned int paBufferLen);
 
     /*! \brief Converts a UTF-16 encoded string to a WSTRING (UTF-8 internally)
      *
@@ -141,20 +141,20 @@ class CIEC_WSTRING final : public CIEC_ANY_STRING {
          *
          *   This command implements a conversion function from a WSTRING
          *   to a big-endian UTF-16 encoding, usable e.g. for the serialization.
-         *   \param pa_pacBuffer  Reference to the output buffer. If 0, only the needed size will be computed.
-         *   \param pa_nBufferSize  Size of the provided buffer.
+         *   \param paBuffer  Reference to the output buffer. If 0, only the needed size will be computed.
+         *   \param paBufferSize  Size of the provided buffer.
          *   \return number of bytes used in the buffer
          *           -1 on error
          */
-        int toUTF16(TForteByte *pa_pacBuffer, unsigned int pa_nBufferSize) const;
+        int toUTF16(TForteByte *paBuffer, unsigned int paBufferSize) const;
 
     EDataTypeID getDataTypeID() const override {
       return CIEC_ANY::e_WSTRING;
     }
 
-    void setValue(const CIEC_ANY& pa_roValue) override {
-      if(pa_roValue.getDataTypeID() == CIEC_ANY::e_WSTRING){
-        const CIEC_WSTRING &roSrc(static_cast<const CIEC_WSTRING &>(pa_roValue));
+    void setValue(const CIEC_ANY& paValue) override {
+      if(paValue.getDataTypeID() == CIEC_ANY::e_WSTRING){
+        const CIEC_WSTRING &roSrc(static_cast<const CIEC_WSTRING &>(paValue));
         this->assign(roSrc.getValue(), roSrc.length());
       }
     }
@@ -166,19 +166,19 @@ class CIEC_WSTRING final : public CIEC_ANY_STRING {
      *   This function is necessary for communication with a proper engineering system.
      *   It is expecting a UTF-8 string and will check whether its content is constrained
      *   to the basic multilingual plane.
-     *   \param pa_pacValue string buffer
+     *   \param paValue string buffer
      *   \return number of bytes taken used from the buffer
      *        -1 on on error
      */
-    int fromString(const char *pa_pacValue) override;
+    int fromString(const char *paValue) override;
 
     /*! \brief Converts data type value to string
      *
      *   This command implements a conversion function from C++ data type
      *   to IEC61131 conform data type (string format).
      *   This function is necessary for communication with a proper engineering system.
-     *   \param pa_acValue          Pointer to char-array for the result
-     *   \param pa_nBufferSize      Size of the buffer
+     *   \param paValue          Pointer to char-array for the result
+     *   \param paBufferSize      Size of the buffer
      *   \return number of bytes used in the buffer without trailing 0x00
      *           -1 on error
      */

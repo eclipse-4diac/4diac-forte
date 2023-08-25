@@ -23,15 +23,15 @@ class COpcProcessVar;
 class COpcEventHandler;
 
 struct SOpcItemData{
-    const char* m_acItemName;
-    Variant m_oItemData;
+    const char* mItemName;
+    Variant mItemData;
 
-    explicit SOpcItemData(const char* pa_acItemName) :
-        m_acItemName(pa_acItemName){
-      m_oItemData.set<SHORT>(0);
+    explicit SOpcItemData(const char* paItemName) :
+        mItemName(paItemName){
+      mItemData.set<SHORT>(0);
     }
-    SOpcItemData(const char* pa_acItemName, Variant pa_oItemData) :
-        m_acItemName(pa_acItemName), m_oItemData(pa_oItemData){
+    SOpcItemData(const char* paItemName, Variant paItemData) :
+        mItemName(paItemName), mItemData(paItemData){
     }
 };
 typedef CSinglyLinkedList<SOpcItemData*> TItemDataList;
@@ -39,32 +39,32 @@ typedef CSinglyLinkedList<SOpcItemData*> TItemDataList;
 class COpcConnection{
   public:
 
-    COpcConnection(const char *pa_acHost, const char *pa_acServerName, COpcEventHandler* pa_eventHandler);
+    COpcConnection(const char *paHost, const char *paServerName, COpcEventHandler* pa_eventHandler);
     ~COpcConnection();
 
     /*** Functions for OpcConnectionHandler ****************************************/
-    void addGroup(const char* pa_acGroupName, unsigned long pa_nReqUpdateRate, float pa_nDeadBand, forte::com_infra::CComLayer* pa_pComCallback);
-    void removeGroup(const char* pa_acGroupName);
+    void addGroup(const char* paGroupName, unsigned long paReqUpdateRate, float paDeadBand, forte::com_infra::CComLayer* paComCallback);
+    void removeGroup(const char* paGroupName);
     /*** END ***********************************************************************/
 
     /*** Functions for OpcComLayer *************************************************/
     int send_connect();
-    int send_connect(bool pa_bBlocking);
-    int send_addItem(COpcProcessVar* pa_pNewItem);
-    int send_sendItemData(COpcProcessVar* pa_pItem);
+    int send_connect(bool paBlocking);
+    int send_addItem(COpcProcessVar* paNewItem);
+    int send_sendItemData(COpcProcessVar* paItem);
 
     typedef CSinglyLinkedList<COpcProcessVar*> TOpcProcessVarList;
-    int receiveData(const char* pa_acGroupName, TOpcProcessVarList * pa_lOpcProcessVarList);
+    int receiveData(const char* paGroupName, TOpcProcessVarList * paOpcProcessVarList);
 
     bool isConnected() const {
-      return m_bIsConnected;
+      return mIsConnected;
     }
     /*** END ***********************************************************************/
 
     /*** Functions for OpcConnectionImpl *******************************************/
-    void response_connect(bool pa_bConnectionState);
-    void response_dataReceived(const char *pa_acGroupName, TItemDataList & pa_lItemDataList);
-    void response_itemAdded(COpcProcessVar* pa_pOpcItem);
+    void response_connect(bool paConnectionState);
+    void response_dataReceived(const char *paGroupName, TItemDataList & paItemDataList);
+    void response_itemAdded(COpcProcessVar* paOpcItem);
     /*** END ***********************************************************************/
 
     /*** Common Functions **********************************************************/
@@ -73,55 +73,55 @@ class COpcConnection{
     };
 
     const char* getHost() const {
-      return m_acHost;
+      return mHost;
     }
 
     const char* getServerName() const {
-      return m_acServerName;
+      return mServerName;
     }
 
     unsigned int getGroupCount() const {
-      return m_nGroupCount;
+      return mGroupCount;
     }
 
     EOpcConnectionEvents getConnectionState() const {
-      return m_eConnectionEvent;
+      return mConnectionEvent;
     }
 
     /*** END ***********************************************************************/
 
   private:
     struct SOpcGroupMap{
-        const char* m_acGroupName;
-        int m_nCallbackDesc;
-        TItemDataList m_lReadItemsList;
-        TItemDataList m_lWriteItemsList;
+        const char* mGroupName;
+        int mCallbackDesc;
+        TItemDataList mReadItemsList;
+        TItemDataList mWriteItemsList;
 
-        SOpcGroupMap(const char* pa_acGroupName, int pa_nCallbackDesc) :
-            m_acGroupName(pa_acGroupName), m_nCallbackDesc(pa_nCallbackDesc){
+        SOpcGroupMap(const char* paGroupName, int paCallbackDesc) :
+            mGroupName(paGroupName), mCallbackDesc(paCallbackDesc){
         }
     };
 
     typedef CSinglyLinkedList<SOpcGroupMap*> TOpcGroupMapList;
-    TOpcGroupMapList m_lOpcGroupMapList;
+    TOpcGroupMapList mOpcGroupMapList;
 
-    unsigned int m_nGroupCount;
+    unsigned int mGroupCount;
 
-    COpcConnectionImpl *m_pOpcConnectionImpl;
+    COpcConnectionImpl *mOpcConnectionImpl;
 
-    EOpcConnectionEvents m_eConnectionEvent;
+    EOpcConnectionEvents mConnectionEvent;
 
-    const char* m_acHost;
-    const char* m_acServerName;
-    const char* m_acGroupName;
-    unsigned long m_nReqUpdateRate;
-    unsigned long m_nRealUpdateRate;
-    float m_nDeadBand;
+    const char* mHost;
+    const char* mServerName;
+    const char* mGroupName;
+    unsigned long mReqUpdateRate;
+    unsigned long mRealUpdateRate;
+    float mDeadBand;
 
-    bool m_bIsConnected;
-    bool m_bBlockingConnect;
+    bool mIsConnected;
+    bool mBlockingConnect;
 
-    CSyncObject m_oSync;
+    CSyncObject mSync;
 
     COpcEventHandler* m_eventHandler;
 

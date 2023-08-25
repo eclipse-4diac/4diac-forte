@@ -47,14 +47,14 @@ EComResponse MQTTComLayer::recvData(const void* paData, unsigned int paSize) {
   memcpy(mDataBuffer, paData, paSize);
   mUsedBuffer = paSize;
   mInterruptResp = e_ProcessDataOk;
-  m_poFb->interruptCommFB(this);
+  mFb->interruptCommFB(this);
   return mInterruptResp;
 }
 
 EComResponse MQTTComLayer::processInterrupt() {
   if (e_ProcessDataOk == mInterruptResp) {
-    if ((0 < mUsedBuffer) && (nullptr != m_poTopLayer)) {
-      mInterruptResp = m_poTopLayer->recvData(mDataBuffer, mUsedBuffer);
+    if ((0 < mUsedBuffer) && (nullptr != mTopLayer)) {
+      mInterruptResp = mTopLayer->recvData(mDataBuffer, mUsedBuffer);
       mUsedBuffer = 0;
     }
   }
@@ -73,7 +73,7 @@ EComResponse MQTTComLayer::openConnection(char* paLayerParameter) {
       }
     }
 
-    switch (m_poFb->getComServiceType()) {
+    switch (mFb->getComServiceType()) {
     case e_Server:
       // TODO: Not implemented yet
       eRetVal = e_InitTerminated;

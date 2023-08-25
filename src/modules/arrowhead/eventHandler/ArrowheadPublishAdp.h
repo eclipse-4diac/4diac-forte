@@ -23,8 +23,8 @@ class FORTE_ArrowheadPublishAdp: public CAdapter{
 
 private:
  private:
-  static const CStringDictionary::TStringId scm_anDataOutputNames[];
-  static const CStringDictionary::TStringId scm_anDataOutputTypeIds[];
+  static const CStringDictionary::TStringId scmDataOutputNames[];
+  static const CStringDictionary::TStringId scmDataOutputTypeIds[];
  public:
   CIEC_PublishEvent &publishEvent() {
     return *static_cast<CIEC_PublishEvent*>((isSocket()) ? getDO(0) : getDI(0));
@@ -35,27 +35,27 @@ private:
   };
 
  public:
-  static const TEventID scm_nEventpublishedID = 0;
+  static const TEventID scmEventpublishedID = 0;
   int published() {
-    return m_nParentAdapterListEventID + scm_nEventpublishedID;
+    return mParentAdapterListEventID + scmEventpublishedID;
   }
  private:
-  static const TForteInt16 scm_anEIWithIndexes[];
-  static const CStringDictionary::TStringId scm_anEventInputNames[];
+  static const TForteInt16 scmEIWithIndexes[];
+  static const CStringDictionary::TStringId scmEventInputNames[];
 
  public:
-  static const TEventID scm_nEventpublishID = 0;
+  static const TEventID scmEventpublishID = 0;
   int publish() {
-    return m_nParentAdapterListEventID + scm_nEventpublishID;
+    return mParentAdapterListEventID + scmEventpublishID;
   }
  private:
-  static const TForteInt16 scm_anEOWithIndexes[];
-  static const TDataIOID scm_anEOWith[];
-  static const CStringDictionary::TStringId scm_anEventOutputNames[];
+  static const TForteInt16 scmEOWithIndexes[];
+  static const TDataIOID scmEOWith[];
+  static const CStringDictionary::TStringId scmEventOutputNames[];
 
-  static const SFBInterfaceSpec scm_stFBInterfaceSpecSocket;
+  static const SFBInterfaceSpec scmFBInterfaceSpecSocket;
 
-  static const SFBInterfaceSpec scm_stFBInterfaceSpecPlug;
+  static const SFBInterfaceSpec scmFBInterfaceSpecPlug;
 
 
 public:

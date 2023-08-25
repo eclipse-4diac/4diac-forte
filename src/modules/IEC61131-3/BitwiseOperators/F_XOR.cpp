@@ -24,34 +24,34 @@
 
 DEFINE_FIRMWARE_FB(FORTE_F_XOR, g_nStringIdF_XOR)
 
-const CStringDictionary::TStringId FORTE_F_XOR::scm_anDataInputNames[] = {g_nStringIdIN1, g_nStringIdIN2};
+const CStringDictionary::TStringId FORTE_F_XOR::scmDataInputNames[] = {g_nStringIdIN1, g_nStringIdIN2};
 
-const CStringDictionary::TStringId FORTE_F_XOR::scm_anDataInputTypeIds[] = {g_nStringIdANY_BIT, g_nStringIdANY_BIT};
+const CStringDictionary::TStringId FORTE_F_XOR::scmDataInputTypeIds[] = {g_nStringIdANY_BIT, g_nStringIdANY_BIT};
 
-const CStringDictionary::TStringId FORTE_F_XOR::scm_anDataOutputNames[] = {g_nStringIdOUT};
+const CStringDictionary::TStringId FORTE_F_XOR::scmDataOutputNames[] = {g_nStringIdOUT};
 
-const CStringDictionary::TStringId FORTE_F_XOR::scm_anDataOutputTypeIds[] = {g_nStringIdANY_BIT};
+const CStringDictionary::TStringId FORTE_F_XOR::scmDataOutputTypeIds[] = {g_nStringIdANY_BIT};
 
-const TDataIOID FORTE_F_XOR::scm_anEIWith[] = {0, 1, scmWithListDelimiter};
-const TForteInt16 FORTE_F_XOR::scm_anEIWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_F_XOR::scm_anEventInputNames[] = {g_nStringIdREQ};
+const TDataIOID FORTE_F_XOR::scmEIWith[] = {0, 1, scmWithListDelimiter};
+const TForteInt16 FORTE_F_XOR::scmEIWithIndexes[] = {0};
+const CStringDictionary::TStringId FORTE_F_XOR::scmEventInputNames[] = {g_nStringIdREQ};
 
-const TDataIOID FORTE_F_XOR::scm_anEOWith[] = {0, scmWithListDelimiter};
-const TForteInt16 FORTE_F_XOR::scm_anEOWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_F_XOR::scm_anEventOutputNames[] = {g_nStringIdCNF};
+const TDataIOID FORTE_F_XOR::scmEOWith[] = {0, scmWithListDelimiter};
+const TForteInt16 FORTE_F_XOR::scmEOWithIndexes[] = {0};
+const CStringDictionary::TStringId FORTE_F_XOR::scmEventOutputNames[] = {g_nStringIdCNF};
 
 
-const SFBInterfaceSpec FORTE_F_XOR::scm_stFBInterfaceSpec = {
-  1, scm_anEventInputNames, scm_anEIWith, scm_anEIWithIndexes,
-  1, scm_anEventOutputNames, scm_anEOWith, scm_anEOWithIndexes,
-  2, scm_anDataInputNames, scm_anDataInputTypeIds,
-  1, scm_anDataOutputNames, scm_anDataOutputTypeIds,
+const SFBInterfaceSpec FORTE_F_XOR::scmFBInterfaceSpec = {
+  1, scmEventInputNames, scmEIWith, scmEIWithIndexes,
+  1, scmEventOutputNames, scmEOWith, scmEOWithIndexes,
+  2, scmDataInputNames, scmDataInputTypeIds,
+  1, scmDataOutputNames, scmDataOutputTypeIds,
   0, nullptr,
   0, nullptr
 };
 
-FORTE_F_XOR::FORTE_F_XOR(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes) :
-    CFunctionBlock( pa_poSrcRes, &scm_stFBInterfaceSpec, pa_nInstanceNameId),
+FORTE_F_XOR::FORTE_F_XOR(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) :
+    CFunctionBlock( paSrcRes, &scmFBInterfaceSpec, paInstanceNameId),
     var_IN1(CIEC_ANY_BIT_VARIANT()),
     var_IN2(CIEC_ANY_BIT_VARIANT()),
     var_OUT(CIEC_ANY_BIT_VARIANT()),
@@ -62,20 +62,20 @@ FORTE_F_XOR::FORTE_F_XOR(const CStringDictionary::TStringId pa_nInstanceNameId, 
     conn_OUT(this, 0, &var_conn_OUT) {
 };
 
-void FORTE_F_XOR::executeEvent(TEventID pa_nEIID) {
-  switch(pa_nEIID) {
-    case scm_nEventREQID:
+void FORTE_F_XOR::executeEvent(TEventID paEIID) {
+  switch(paEIID) {
+    case scmEventREQID:
       var_OUT = std::visit([](auto &&paIN1, auto&&paIN2) -> CIEC_ANY_BIT_VARIANT {
           return func_XOR(paIN1, paIN2);
       }, var_IN1, var_IN2);
-      sendOutputEvent(scm_nEventCNFID);
+      sendOutputEvent(scmEventCNFID);
       break;
   }
 }
 
-void FORTE_F_XOR::readInputData(TEventID pa_nEIID) {
-  switch(pa_nEIID) {
-    case scm_nEventREQID: {
+void FORTE_F_XOR::readInputData(TEventID paEIID) {
+  switch(paEIID) {
+    case scmEventREQID: {
       RES_DATA_CON_CRITICAL_REGION();
       readData(0, var_IN1, conn_IN1);
       readData(1, var_IN2, conn_IN2);
@@ -86,9 +86,9 @@ void FORTE_F_XOR::readInputData(TEventID pa_nEIID) {
   }
 }
 
-void FORTE_F_XOR::writeOutputData(TEventID pa_nEIID) {
-  switch(pa_nEIID) {
-    case scm_nEventCNFID: {
+void FORTE_F_XOR::writeOutputData(TEventID paEIID) {
+  switch(paEIID) {
+    case scmEventCNFID: {
       RES_DATA_CON_CRITICAL_REGION();
       writeData(0, var_OUT, conn_OUT);
       break;

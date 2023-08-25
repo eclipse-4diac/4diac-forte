@@ -22,7 +22,7 @@
 #include <stdio.h>
 
 #ifndef _MSC_VER //somehow required here, because visual studio gives a linker error
-const CStringDictionary::TStringId CStringDictionary::scm_nInvalidStringId;
+const CStringDictionary::TStringId CStringDictionary::scmInvalidStringId;
 #endif
 
 BOOST_AUTO_TEST_SUITE(StringDictTests)
@@ -31,11 +31,11 @@ BOOST_AUTO_TEST_SUITE(StringDictTests)
     //TEst new string if it is not in string dict and after inserting is inside and the correct string
     const std::string sTestString("FORTE_4DIAC_TestString");
 
-    BOOST_CHECK_EQUAL(CStringDictionary::scm_nInvalidStringId, CStringDictionary::getInstance().getId(sTestString.c_str()));
-    BOOST_CHECK_EQUAL(CStringDictionary::scm_nInvalidStringId, CStringDictionary::getInstance().getId(sTestString.c_str(), sTestString.size()));
+    BOOST_CHECK_EQUAL(CStringDictionary::scmInvalidStringId, CStringDictionary::getInstance().getId(sTestString.c_str()));
+    BOOST_CHECK_EQUAL(CStringDictionary::scmInvalidStringId, CStringDictionary::getInstance().getId(sTestString.c_str(), sTestString.size()));
 
     CStringDictionary::TStringId unNewID = CStringDictionary::getInstance().insert(sTestString.c_str());
-    BOOST_CHECK(CStringDictionary::scm_nInvalidStringId != unNewID);
+    BOOST_CHECK(CStringDictionary::scmInvalidStringId != unNewID);
 
     BOOST_CHECK_EQUAL(unNewID, CStringDictionary::getInstance().getId(sTestString.c_str()));
     BOOST_CHECK_EQUAL(unNewID, CStringDictionary::getInstance().getId(sTestString.c_str(), sTestString.size()));
@@ -53,11 +53,11 @@ BOOST_AUTO_TEST_SUITE(StringDictTests)
 
   }
 
-  void stringIdTest(CStringDictionary::TStringId pa_unId, const std::string &pa_rsExpectedString){
-    std::string sTestString(CStringDictionary::getInstance().get(pa_unId));
-    BOOST_CHECK_EQUAL(sTestString, pa_rsExpectedString);
-    BOOST_CHECK_EQUAL(pa_unId, CStringDictionary::getInstance().getId(pa_rsExpectedString.c_str()));
-    BOOST_CHECK_EQUAL(pa_unId, CStringDictionary::getInstance().getId(pa_rsExpectedString.c_str(), pa_rsExpectedString.size()));
+  void stringIdTest(CStringDictionary::TStringId paId, const std::string &paExpectedString){
+    std::string sTestString(CStringDictionary::getInstance().get(paId));
+    BOOST_CHECK_EQUAL(sTestString, paExpectedString);
+    BOOST_CHECK_EQUAL(paId, CStringDictionary::getInstance().getId(paExpectedString.c_str()));
+    BOOST_CHECK_EQUAL(paId, CStringDictionary::getInstance().getId(paExpectedString.c_str(), paExpectedString.size()));
   }
 
   BOOST_AUTO_TEST_CASE(reinsertAvailableString){
@@ -99,7 +99,7 @@ BOOST_AUTO_TEST_SUITE(StringDictTests)
           newStringDictEntry, 40, "LargeStringTestStringNumber%ud", i);
 
       buffer.mString = newStringDictEntry;
-      BOOST_CHECK_EQUAL(CStringDictionary::scm_nInvalidStringId, CStringDictionary::getInstance().getId(newStringDictEntry));
+      BOOST_CHECK_EQUAL(CStringDictionary::scmInvalidStringId, CStringDictionary::getInstance().getId(newStringDictEntry));
       buffer.mID = CStringDictionary::getInstance().insert(newStringDictEntry);
 
       stringList.push_back(buffer);

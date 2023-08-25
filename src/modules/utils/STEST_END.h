@@ -20,15 +20,15 @@ class FORTE_STEST_END: public CFunctionBlock{
   DECLARE_FIRMWARE_FB(FORTE_STEST_END)
 
 private:
-  static const TEventID scm_nEventREQID = 0;
-  static const TForteInt16 scm_anEIWithIndexes[];
-  static const CStringDictionary::TStringId scm_anEventInputNames[];
+  static const TEventID scmEventREQID = 0;
+  static const TForteInt16 scmEIWithIndexes[];
+  static const CStringDictionary::TStringId scmEventInputNames[];
 
-  static const TForteInt16 scm_anEOWithIndexes[];
-  static const SFBInterfaceSpec scm_stFBInterfaceSpec;
+  static const TForteInt16 scmEOWithIndexes[];
+  static const SFBInterfaceSpec scmFBInterfaceSpec;
 
 
-  void executeEvent(TEventID pa_nEIID) override;
+  void executeEvent(TEventID paEIID) override;
 
 public:
   FUNCTION_BLOCK_CTOR(FORTE_STEST_END){

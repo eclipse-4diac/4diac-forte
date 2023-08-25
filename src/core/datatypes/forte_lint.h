@@ -38,8 +38,8 @@ class CIEC_LINT final : public CIEC_ANY_SIGNED {
   public:
     typedef TForteInt64 TValueType;
 
-    static const TValueType scm_nMinVal;
-    static const TValueType scm_nMaxVal;
+    static const TValueType scmMinVal;
+    static const TValueType scmMaxVal;
 
     CIEC_LINT() = default;
 

@@ -23,9 +23,9 @@
 class GEN_SUBL : public GEN_SUBSCRIBE{
     DECLARE_GENERIC_FIRMWARE_FB(GEN_SUBL)
   public:
-    GEN_SUBL(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes);
+    GEN_SUBL(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
 
-    bool configureFB(const char *pa_acConfigString) override;
+    bool configureFB(const char *paConfigString) override;
 
   protected:
     static const char * const scmLocalIDPrefix;

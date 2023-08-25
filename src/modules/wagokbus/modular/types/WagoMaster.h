@@ -41,30 +41,30 @@ class FORTE_WagoMaster : public forte::core::io::IOConfigFBMultiMaster {
     };
 
     FORTE_WagoBusAdapter& BusAdapterOut(){
-      return (*static_cast<FORTE_WagoBusAdapter*>(m_apoAdapters[0]));
+      return (*static_cast<FORTE_WagoBusAdapter*>(mAdapters[0]));
     };
 
   private:
-    static const CStringDictionary::TStringId scm_anDataInputNames[];
-    static const CStringDictionary::TStringId scm_anDataInputTypeIds[];
-    static const CStringDictionary::TStringId scm_anDataOutputNames[];
-    static const CStringDictionary::TStringId scm_anDataOutputTypeIds[];
+    static const CStringDictionary::TStringId scmDataInputNames[];
+    static const CStringDictionary::TStringId scmDataInputTypeIds[];
+    static const CStringDictionary::TStringId scmDataOutputNames[];
+    static const CStringDictionary::TStringId scmDataOutputTypeIds[];
 
-    static const TEventID scm_nEventINITID = 0;
-    static const TForteInt16 scm_anEIWithIndexes[];
-    static const TDataIOID scm_anEIWith[];
-    static const CStringDictionary::TStringId scm_anEventInputNames[];
+    static const TEventID scmEventINITID = 0;
+    static const TForteInt16 scmEIWithIndexes[];
+    static const TDataIOID scmEIWith[];
+    static const CStringDictionary::TStringId scmEventInputNames[];
 
-    static const TEventID scm_nEventINITOID = 0;
-    static const TEventID scm_nEventINDID = 1;
-    static const TForteInt16 scm_anEOWithIndexes[];
-    static const TDataIOID scm_anEOWith[];
-    static const CStringDictionary::TStringId scm_anEventOutputNames[];
+    static const TEventID scmEventINITOID = 0;
+    static const TEventID scmEventINDID = 1;
+    static const TForteInt16 scmEOWithIndexes[];
+    static const TDataIOID scmEOWith[];
+    static const CStringDictionary::TStringId scmEventOutputNames[];
 
-    static const SAdapterInstanceDef scm_astAdapterInstances[];
+    static const SAdapterInstanceDef scmAdapterInstances[];
 
-    static const int scm_nBusAdapterOutAdpNum = 0;
-    static const SFBInterfaceSpec scm_stFBInterfaceSpec;
+    static const int scmBusAdapterOutAdpNum = 0;
+    static const SFBInterfaceSpec scmFBInterfaceSpec;
 
 
   virtual void setInitialValues();

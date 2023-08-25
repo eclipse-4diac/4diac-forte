@@ -30,20 +30,20 @@ class FORTE_RT_E_CYCLE final : public CEventSourceFB {
   DECLARE_FIRMWARE_FB(FORTE_RT_E_CYCLE)
 
 private:
-  static const CStringDictionary::TStringId scm_anDataInputNames[];
-  static const CStringDictionary::TStringId scm_anDataInputTypeIds[];
-  static const CStringDictionary::TStringId scm_anDataOutputNames[];
-  static const CStringDictionary::TStringId scm_anDataOutputTypeIds[];
-  static const TEventID scm_nEventSTARTID = 0;
-  static const TEventID scm_nEventSTOPID = 1;
-  static const TDataIOID scm_anEIWith[];
-  static const TForteInt16 scm_anEIWithIndexes[];
-  static const CStringDictionary::TStringId scm_anEventInputNames[];
-  static const TEventID scm_nEventEOID = 0;
-  static const TForteInt16 scm_anEOWithIndexes[];
-  static const CStringDictionary::TStringId scm_anEventOutputNames[];
+  static const CStringDictionary::TStringId scmDataInputNames[];
+  static const CStringDictionary::TStringId scmDataInputTypeIds[];
+  static const CStringDictionary::TStringId scmDataOutputNames[];
+  static const CStringDictionary::TStringId scmDataOutputTypeIds[];
+  static const TEventID scmEventSTARTID = 0;
+  static const TEventID scmEventSTOPID = 1;
+  static const TDataIOID scmEIWith[];
+  static const TForteInt16 scmEIWithIndexes[];
+  static const CStringDictionary::TStringId scmEventInputNames[];
+  static const TEventID scmEventEOID = 0;
+  static const TForteInt16 scmEOWithIndexes[];
+  static const CStringDictionary::TStringId scmEventOutputNames[];
 
-  static const SFBInterfaceSpec scm_stFBInterfaceSpec;
+  static const SFBInterfaceSpec scmFBInterfaceSpec;
 
   bool mActive; //!> flag to indicate that the timed fb is currently active
   STimedFBListEntry mTimeListEntry;
@@ -56,7 +56,7 @@ private:
   void setInitialValues() override;
 
 public:
-  FORTE_RT_E_CYCLE(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes);
+  FORTE_RT_E_CYCLE(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
 
   EMGMResponse changeFBExecutionState(EMGMCommandType paCommand) override;
 
@@ -82,14 +82,14 @@ public:
     var_DT = pa_DT;
     var_Deadline = pa_Deadline;
     var_WCET = pa_WCET;
-    receiveInputEvent(scm_nEventSTARTID, nullptr);
+    receiveInputEvent(scmEventSTARTID, nullptr);
     pa_QO = var_QO;
   }
   void evt_STOP(const CIEC_TIME &pa_DT, const CIEC_TIME &pa_Deadline, const CIEC_TIME &pa_WCET, CIEC_BOOL &pa_QO) {
     var_DT = pa_DT;
     var_Deadline = pa_Deadline;
     var_WCET = pa_WCET;
-    receiveInputEvent(scm_nEventSTOPID, nullptr);
+    receiveInputEvent(scmEventSTOPID, nullptr);
     pa_QO = var_QO;
   }
   void operator()(const CIEC_TIME &pa_DT, const CIEC_TIME &pa_Deadline, const CIEC_TIME &pa_WCET, CIEC_BOOL &pa_QO) {

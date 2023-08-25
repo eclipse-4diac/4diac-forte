@@ -14,12 +14,12 @@
 #include "ecet.h"
 #include "device.h"
 
-CTimerHandler* CTimerHandler::createTimerHandler(CDeviceExecution &pa_poDeviceExecution) {
-  return new CFakeTimerHandler(pa_poDeviceExecution);
+CTimerHandler* CTimerHandler::createTimerHandler(CDeviceExecution &paDeviceExecution) {
+  return new CFakeTimerHandler(paDeviceExecution);
 }
 
-CFakeTimerHandler::CFakeTimerHandler(CDeviceExecution &pa_poDeviceExecution) :
-  CTimerHandler(pa_poDeviceExecution), sleepTime(0), fakeSleepFb(nullptr) {
+CFakeTimerHandler::CFakeTimerHandler(CDeviceExecution &paDeviceExecution) :
+  CTimerHandler(paDeviceExecution), sleepTime(0), fakeSleepFb(nullptr) {
 }
 
 CFakeTimerHandler::~CFakeTimerHandler() {

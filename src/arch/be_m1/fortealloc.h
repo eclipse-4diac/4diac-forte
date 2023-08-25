@@ -22,22 +22,22 @@
 extern UINT32 FORTE_MemPart;
 
 inline
-void forte_free(void *pa_pvData){
-  sys_MemXFree(pa_pvData);
+void forte_free(void *paData){
+  sys_MemXFree(paData);
 }
 
 inline
-void *forte_malloc(size_t pa_nSize){
+void *forte_malloc(size_t paSize){
   void * pTemp;
 
-    pTemp = sys_MemXPAlloc(FORTE_MemPart, pa_nSize);
+    pTemp = sys_MemXPAlloc(FORTE_MemPart, paSize);
 
     if (pTemp == nullptr)
     {
       /* no memory, suspend task to avoid a nullptr exception*/
       log_Err(
           "forte_malloc: unable to allocate 0x%x bytes in partition %d, Suspend task!",
-          pa_nSize, FORTE_MemPart);
+          paSize, FORTE_MemPart);
       taskSuspend(taskIdSelf());
     }
 

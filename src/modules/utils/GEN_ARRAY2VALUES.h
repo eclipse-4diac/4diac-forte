@@ -24,22 +24,22 @@ class GEN_ARRAY2VALUES : public CGenFunctionBlock<CFunctionBlock> {
   DECLARE_GENERIC_FIRMWARE_FB(GEN_ARRAY2VALUES)
 
   private:
-    CStringDictionary::TStringId *m_anDataOutputNames;
-    CStringDictionary::TStringId *m_anDataOutputTypeIds;
+    CStringDictionary::TStringId *mDataOutputNames;
+    CStringDictionary::TStringId *mDataOutputTypeIds;
 
-    static const CStringDictionary::TStringId scm_anDataInputNames[];
-    CStringDictionary::TStringId *m_anDataInputTypeIds;
+    static const CStringDictionary::TStringId scmDataInputNames[];
+    CStringDictionary::TStringId *mDataInputTypeIds;
 
     CIEC_ARRAY &IN_Array(){
       return *static_cast<CIEC_ARRAY *>(getDI(0));
     }
     ;
 
-    static const TEventID scm_nEventREQID = 0;
-    static const CStringDictionary::TStringId scm_anEventInputNames[];
+    static const TEventID scmEventREQID = 0;
+    static const CStringDictionary::TStringId scmEventInputNames[];
 
-    static const TEventID scm_nEventCNFID = 0;
-    static const CStringDictionary::TStringId scm_anEventOutputNames[];
+    static const TEventID scmEventCNFID = 0;
+    static const CStringDictionary::TStringId scmEventOutputNames[];
 
     //self-defined members
     size_t mDOutputs;

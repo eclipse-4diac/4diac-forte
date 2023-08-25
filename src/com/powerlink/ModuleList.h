@@ -19,39 +19,39 @@ class CModuleList{
     CModuleList();
     ~CModuleList();
 
-    void addEntry(const char* pa_pchName, unsigned int pa_nPiOffset, unsigned int pa_nBitOffset, unsigned int pa_nModuleNr);
+    void addEntry(const char* paName, unsigned int paPiOffset, unsigned int paBitOffset, unsigned int paModuleNr);
 
-    int getModuleNr(const char* pa_pchName, unsigned int pa_nPiOffset, unsigned int pa_nBitOffset);
+    int getModuleNr(const char* paName, unsigned int paPiOffset, unsigned int paBitOffset);
 
-    int getModuleNr(const char* pa_pchName, unsigned int pa_nOccurence);
+    int getModuleNr(const char* paName, unsigned int paOccurence);
 
-    int getNrOfModules(const char* pa_pchName);
+    int getNrOfModules(const char* paName);
 
-    bool moduleNameExist(const char* pa_pchName);
+    bool moduleNameExist(const char* paName);
 
   private:
     class IoModule{
       public:
-        IoModule(const char* pa_pchName, unsigned int pa_nPiOffset, unsigned int pa_nBitOffset, unsigned int pa_nModuleNr);
+        IoModule(const char* paName, unsigned int paPiOffset, unsigned int paBitOffset, unsigned int paModuleNr);
         ~IoModule();
 
-        char* m_pchName;
-        unsigned int m_nPiOffset;
-        unsigned int m_nBitOffset;
+        char* mName;
+        unsigned int mPiOffset;
+        unsigned int mBitOffset;
 
-        unsigned int m_nModuleNr;
+        unsigned int mModuleNr;
 
       private:
         IoModule(const IoModule& obj);
         IoModule& operator=(const IoModule& obj);
     };
 
-    //std::vector<IoModule*> m_lModules;
+    //std::vector<IoModule*> mModules;
 
     typedef CSinglyLinkedList<IoModule*> TModuleList;
-    TModuleList m_lModules;
+    TModuleList mModules;
 
-    unsigned int m_nNumberOfModules;
+    unsigned int mNumberOfModules;
 };
 
 #endif

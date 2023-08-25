@@ -22,8 +22,8 @@ class FORTE_FieldsToPreferredProvider: public CBasicFB{
   DECLARE_FIRMWARE_FB(FORTE_FieldsToPreferredProvider)
 
 private:
-  static const CStringDictionary::TStringId scm_anDataInputNames[];
-  static const CStringDictionary::TStringId scm_anDataInputTypeIds[];
+  static const CStringDictionary::TStringId scmDataInputNames[];
+  static const CStringDictionary::TStringId scmDataInputTypeIds[];
   CIEC_ArrowheadSystem &providerSystem() {
     return *static_cast<CIEC_ArrowheadSystem*>(getDI(0));
   };
@@ -32,37 +32,37 @@ private:
     return *static_cast<CIEC_ArrowheadCloud*>(getDI(1));
   };
 
-  static const CStringDictionary::TStringId scm_anDataOutputNames[];
-  static const CStringDictionary::TStringId scm_anDataOutputTypeIds[];
+  static const CStringDictionary::TStringId scmDataOutputNames[];
+  static const CStringDictionary::TStringId scmDataOutputTypeIds[];
   CIEC_PreferredProvider &preferredProvider() {
     return *static_cast<CIEC_PreferredProvider*>(getDO(0));
   };
 
-  static const TEventID scm_nEventREQID = 0;
-  static const TForteInt16 scm_anEIWithIndexes[];
-  static const TDataIOID scm_anEIWith[];
-  static const CStringDictionary::TStringId scm_anEventInputNames[];
+  static const TEventID scmEventREQID = 0;
+  static const TForteInt16 scmEIWithIndexes[];
+  static const TDataIOID scmEIWith[];
+  static const CStringDictionary::TStringId scmEventInputNames[];
 
-  static const TEventID scm_nEventCNFID = 0;
-  static const TForteInt16 scm_anEOWithIndexes[];
-  static const TDataIOID scm_anEOWith[];
-  static const CStringDictionary::TStringId scm_anEventOutputNames[];
+  static const TEventID scmEventCNFID = 0;
+  static const TForteInt16 scmEOWithIndexes[];
+  static const TDataIOID scmEOWith[];
+  static const CStringDictionary::TStringId scmEventOutputNames[];
 
-  static const SFBInterfaceSpec scm_stFBInterfaceSpec;
+  static const SFBInterfaceSpec scmFBInterfaceSpec;
 
 
   void alg_REQ();
-  static const TForteInt16 scm_nStateSTART = 0;
-  static const TForteInt16 scm_nStateREQ = 1;
+  static const TForteInt16 scmStateSTART = 0;
+  static const TForteInt16 scmStateREQ = 1;
 
   void enterStateSTART();
   void enterStateREQ();
 
-  virtual void executeEvent(TEventID pa_nEIID) override;
+  virtual void executeEvent(TEventID paEIID) override;
 
 public:
-  FORTE_FieldsToPreferredProvider(CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes) : 
-       CBasicFB(pa_poSrcRes, &scm_stFBInterfaceSpec, pa_nInstanceNameId,
+  FORTE_FieldsToPreferredProvider(CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) : 
+       CBasicFB(paSrcRes, &scmFBInterfaceSpec, paInstanceNameId,
               0){
   };
 

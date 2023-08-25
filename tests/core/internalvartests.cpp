@@ -33,7 +33,7 @@ const SFBInterfaceSpec gcEmptyInterface = {
 class CInternalVarTestFB : public CBasicFB{
   public:
     CInternalVarTestFB(const SInternalVarsInformation *paVarInternals) :
-      CBasicFB(nullptr, &gcEmptyInterface, CStringDictionary::scm_nInvalidStringId, paVarInternals) {
+      CBasicFB(nullptr, &gcEmptyInterface, CStringDictionary::scmInvalidStringId, paVarInternals) {
     }
 
     CIEC_ANY *getVarInternal(size_t paVarIntNum) override {
@@ -41,7 +41,7 @@ class CInternalVarTestFB : public CBasicFB{
     }
 
     virtual CStringDictionary::TStringId getFBTypeId() const {
-      return CStringDictionary::scm_nInvalidStringId;
+      return CStringDictionary::scmInvalidStringId;
     }
 
     virtual void executeEvent(TEventID){
@@ -86,7 +86,7 @@ BOOST_AUTO_TEST_CASE(sampleInteralVarList){
   CInternalVarTestFB testFB(&varData);
   BOOST_ASSERT(testFB.initialize());
 
-  for(size_t i = 0; i < varData.m_nNumIntVars; i++){
+  for(size_t i = 0; i < varData.mNumIntVars; i++){
     CIEC_ANY *var = testFB.getVar(&(varInternalNames[i]), 1);
     BOOST_CHECK(nullptr != var);
     BOOST_CHECK_EQUAL(var, testFB.getVarInternal(static_cast<unsigned int>(i)));

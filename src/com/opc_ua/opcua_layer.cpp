@@ -158,7 +158,7 @@ bool COPC_UA_Layer::checkTypesFromInterface() const {
 
 bool COPC_UA_Layer::checkPortConnectionInfo(unsigned int paPortIndex, bool paIsSD) const {
   const SFBInterfaceSpec *localInterfaceSpec = getCommFB()->getFBInterfaceSpec();
-  const CStringDictionary::TStringId localPortNameId = paIsSD ? localInterfaceSpec->m_aunDINames[paPortIndex] : localInterfaceSpec->m_aunDONames[paPortIndex];
+  const CStringDictionary::TStringId localPortNameId = paIsSD ? localInterfaceSpec->mDINames[paPortIndex] : localInterfaceSpec->mDONames[paPortIndex];
 
   const CDataConnection *localPortConnection = paIsSD ? getCommFB()->getDIConnection(localPortNameId) : getCommFB()->getDOConnection(localPortNameId);
   if(!localPortConnection) {

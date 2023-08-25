@@ -23,7 +23,7 @@
 
 DEFINE_FIRMWARE_DATATYPE(CHAR, g_nStringIdCHAR)
 
-const CIEC_CHAR::TValueType CIEC_CHAR::scm_nMaxVal = std::numeric_limits<CIEC_CHAR::TValueType>::max();
+const CIEC_CHAR::TValueType CIEC_CHAR::scmMaxVal = std::numeric_limits<CIEC_CHAR::TValueType>::max();
 
 int CIEC_CHAR::toString(char *paValue, size_t paBufferSize) const {
   const char longestStringSerialization[] = "CHAR#'$00'";

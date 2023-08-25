@@ -24,34 +24,34 @@
 
 DEFINE_FIRMWARE_FB(FORTE_GET_STRUCT_VALUE, g_nStringIdGET_STRUCT_VALUE)
 
-const CStringDictionary::TStringId FORTE_GET_STRUCT_VALUE::scm_anDataInputNames[] = {g_nStringIdin_struct, g_nStringIdmember};
+const CStringDictionary::TStringId FORTE_GET_STRUCT_VALUE::scmDataInputNames[] = {g_nStringIdin_struct, g_nStringIdmember};
 
-const CStringDictionary::TStringId FORTE_GET_STRUCT_VALUE::scm_anDataInputTypeIds[] = {g_nStringIdANY, g_nStringIdSTRING};
+const CStringDictionary::TStringId FORTE_GET_STRUCT_VALUE::scmDataInputTypeIds[] = {g_nStringIdANY, g_nStringIdSTRING};
 
-const CStringDictionary::TStringId FORTE_GET_STRUCT_VALUE::scm_anDataOutputNames[] = {g_nStringIdQO, g_nStringIdoutput};
+const CStringDictionary::TStringId FORTE_GET_STRUCT_VALUE::scmDataOutputNames[] = {g_nStringIdQO, g_nStringIdoutput};
 
-const CStringDictionary::TStringId FORTE_GET_STRUCT_VALUE::scm_anDataOutputTypeIds[] = {g_nStringIdBOOL, g_nStringIdANY};
+const CStringDictionary::TStringId FORTE_GET_STRUCT_VALUE::scmDataOutputTypeIds[] = {g_nStringIdBOOL, g_nStringIdANY};
 
-const TDataIOID FORTE_GET_STRUCT_VALUE::scm_anEIWith[] = {1, 0, scmWithListDelimiter};
-const TForteInt16 FORTE_GET_STRUCT_VALUE::scm_anEIWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_GET_STRUCT_VALUE::scm_anEventInputNames[] = {g_nStringIdREQ};
+const TDataIOID FORTE_GET_STRUCT_VALUE::scmEIWith[] = {1, 0, scmWithListDelimiter};
+const TForteInt16 FORTE_GET_STRUCT_VALUE::scmEIWithIndexes[] = {0};
+const CStringDictionary::TStringId FORTE_GET_STRUCT_VALUE::scmEventInputNames[] = {g_nStringIdREQ};
 
-const TDataIOID FORTE_GET_STRUCT_VALUE::scm_anEOWith[] = {0, 1, scmWithListDelimiter};
-const TForteInt16 FORTE_GET_STRUCT_VALUE::scm_anEOWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_GET_STRUCT_VALUE::scm_anEventOutputNames[] = {g_nStringIdCNF};
+const TDataIOID FORTE_GET_STRUCT_VALUE::scmEOWith[] = {0, 1, scmWithListDelimiter};
+const TForteInt16 FORTE_GET_STRUCT_VALUE::scmEOWithIndexes[] = {0};
+const CStringDictionary::TStringId FORTE_GET_STRUCT_VALUE::scmEventOutputNames[] = {g_nStringIdCNF};
 
 
-const SFBInterfaceSpec FORTE_GET_STRUCT_VALUE::scm_stFBInterfaceSpec = {
-  1, scm_anEventInputNames, scm_anEIWith, scm_anEIWithIndexes,
-  1, scm_anEventOutputNames, scm_anEOWith, scm_anEOWithIndexes,
-  2, scm_anDataInputNames, scm_anDataInputTypeIds,
-  2, scm_anDataOutputNames, scm_anDataOutputTypeIds,
+const SFBInterfaceSpec FORTE_GET_STRUCT_VALUE::scmFBInterfaceSpec = {
+  1, scmEventInputNames, scmEIWith, scmEIWithIndexes,
+  1, scmEventOutputNames, scmEOWith, scmEOWithIndexes,
+  2, scmDataInputNames, scmDataInputTypeIds,
+  2, scmDataOutputNames, scmDataOutputTypeIds,
   0, nullptr,
   0, nullptr
 };
 
-FORTE_GET_STRUCT_VALUE::FORTE_GET_STRUCT_VALUE(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes) :
-    CFunctionBlock( pa_poSrcRes, &scm_stFBInterfaceSpec, pa_nInstanceNameId),
+FORTE_GET_STRUCT_VALUE::FORTE_GET_STRUCT_VALUE(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) :
+    CFunctionBlock( paSrcRes, &scmFBInterfaceSpec, paInstanceNameId),
     var_in_struct(CIEC_ANY_VARIANT()),
     var_member(CIEC_STRING("", 0)),
     var_QO(CIEC_BOOL(0)),
@@ -81,9 +81,9 @@ CIEC_ANY *FORTE_GET_STRUCT_VALUE::lookForMember(CIEC_STRUCT &paWhereToLook, char
   return member;
 }
 
-void FORTE_GET_STRUCT_VALUE::executeEvent(TEventID pa_nEIID) {
-  switch (pa_nEIID) {
-    case scm_nEventREQID:
+void FORTE_GET_STRUCT_VALUE::executeEvent(TEventID paEIID) {
+  switch (paEIID) {
+    case scmEventREQID:
       if (std::holds_alternative<CIEC_ANY_UNIQUE_PTR<CIEC_STRUCT>>(var_in_struct)) {
         auto &inStruct = std::get<CIEC_ANY_UNIQUE_PTR<CIEC_STRUCT>>(var_in_struct);
         std::string memberName(var_member.getStorage()); // will be modified by lookForMember
@@ -103,14 +103,14 @@ void FORTE_GET_STRUCT_VALUE::executeEvent(TEventID pa_nEIID) {
                 var_in_struct.unwrap().getDataTypeID());
         var_QO = CIEC_BOOL(false);
       }
-      sendOutputEvent(scm_nEventCNFID);
+      sendOutputEvent(scmEventCNFID);
       break;
   }
 }
 
-void FORTE_GET_STRUCT_VALUE::readInputData(TEventID pa_nEIID) {
-  switch(pa_nEIID) {
-    case scm_nEventREQID: {
+void FORTE_GET_STRUCT_VALUE::readInputData(TEventID paEIID) {
+  switch(paEIID) {
+    case scmEventREQID: {
       RES_DATA_CON_CRITICAL_REGION();
       readData(1, var_member, conn_member);
       readData(0, var_in_struct, conn_in_struct);
@@ -121,9 +121,9 @@ void FORTE_GET_STRUCT_VALUE::readInputData(TEventID pa_nEIID) {
   }
 }
 
-void FORTE_GET_STRUCT_VALUE::writeOutputData(TEventID pa_nEIID) {
-  switch(pa_nEIID) {
-    case scm_nEventCNFID: {
+void FORTE_GET_STRUCT_VALUE::writeOutputData(TEventID paEIID) {
+  switch(paEIID) {
+    case scmEventCNFID: {
       RES_DATA_CON_CRITICAL_REGION();
       writeData(0, var_QO, conn_QO);
       writeData(1, var_output, conn_output);

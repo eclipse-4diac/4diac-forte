@@ -29,15 +29,15 @@
 
 DEFINE_GENERIC_FIRMWARE_FB(GEN_F_MUX, g_nStringIdGEN_F_MUX);
 
-const CStringDictionary::TStringId GEN_F_MUX::scm_anEventOutputNames[] = { g_nStringIdEO };
+const CStringDictionary::TStringId GEN_F_MUX::scmEventOutputNames[] = { g_nStringIdEO };
 
 GEN_F_MUX::GEN_F_MUX(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) :
     CGenFunctionBlock<CFunctionBlock>(paSrcRes, paInstanceNameId),
-  m_anEventInputNames(nullptr),
-  m_anDataOutputNames(nullptr),
-  m_anDataInputNames(nullptr),
-  m_anDataOutputTypeIds(nullptr),
-  m_anDataInputTypeIds(nullptr),
+  mEventInputNames(nullptr),
+  mDataOutputNames(nullptr),
+  mDataInputNames(nullptr),
+  mDataOutputTypeIds(nullptr),
+  mDataInputTypeIds(nullptr),
   mEInputs(0),
   mEOutputs(0),
   mDInputs(0),
@@ -45,11 +45,11 @@ GEN_F_MUX::GEN_F_MUX(const CStringDictionary::TStringId paInstanceNameId, CResou
 }
 
 GEN_F_MUX::~GEN_F_MUX(){
-  delete[] m_anEventInputNames;
-  delete[] m_anDataInputNames;
-  delete[] m_anDataInputTypeIds;
-  delete[] m_anDataOutputNames;
-  delete[] m_anDataOutputTypeIds;
+  delete[] mEventInputNames;
+  delete[] mDataInputNames;
+  delete[] mDataInputTypeIds;
+  delete[] mDataOutputNames;
+  delete[] mDataOutputTypeIds;
 }
 
 void GEN_F_MUX::executeEvent(TEventID paEIID){
@@ -98,7 +98,7 @@ void GEN_F_MUX::readInputData(TEventID paEI) {
 
 void GEN_F_MUX::writeOutputData(TEventID) {
   RES_DATA_CON_CRITICAL_REGION();
-  for(TPortId i = 0; i < mInterfaceSpec->m_nNumDOs; ++i) {
+  for(TPortId i = 0; i < mInterfaceSpec->mNumDOs; ++i) {
     writeData(i, *mDOs[i], mDOConns[i]);
   }
 }
@@ -173,15 +173,15 @@ bool GEN_F_MUX::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec
 
   //now the number of needed eventInputs and dataOutputs are available in the integer array
   //create the eventInputs
-  if(mEInputs < CFunctionBlock::scm_nMaxInterfaceEvents && mDInputs < CFunctionBlock::scm_nMaxInterfaceEvents){
+  if(mEInputs < CFunctionBlock::scmMaxInterfaceEvents && mDInputs < CFunctionBlock::scmMaxInterfaceEvents){
     //create the eventInputs
-    m_anEventInputNames = new CStringDictionary::TStringId[mEInputs];
+    mEventInputNames = new CStringDictionary::TStringId[mEInputs];
 
-    generateGenericInterfacePointNameArray("EI", m_anEventInputNames,  mEInputs);
+    generateGenericInterfacePointNameArray("EI", mEventInputNames,  mEInputs);
 
     //create the data inputs
-    m_anDataInputNames = new CStringDictionary::TStringId[mDInputs];
-    m_anDataInputTypeIds = new CStringDictionary::TStringId[mDInputs];
+    mDataInputNames = new CStringDictionary::TStringId[mDInputs];
+    mDataInputTypeIds = new CStringDictionary::TStringId[mDInputs];
     char diNames[cg_nIdentifierLength] = { "IN_" };
     size_t di_posIndex = 0;
     for(size_t ei = 0; ei < mEInputs; ei++) {
@@ -189,34 +189,34 @@ bool GEN_F_MUX::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec
       for(size_t di = 0; di < mDOutputs; di++) {
         forte_snprintf(&(diNames[3]), 11 - 3, "%u_%u", ei + 1, di + 1);
         di_posIndex = ei * mDOutputs + di;
-        m_anDataInputNames[di_posIndex] = CStringDictionary::getInstance().insert(diNames);
-        m_anDataInputTypeIds[di_posIndex] = g_nStringIdANY;
+        mDataInputNames[di_posIndex] = CStringDictionary::getInstance().insert(diNames);
+        mDataInputTypeIds[di_posIndex] = g_nStringIdANY;
       }
     }
 
     //create the data outputs
-    m_anDataOutputNames = new CStringDictionary::TStringId[mDOutputs + 2];
-    m_anDataOutputTypeIds = new CStringDictionary::TStringId[mDOutputs + 2];
+    mDataOutputNames = new CStringDictionary::TStringId[mDOutputs + 2];
+    mDataOutputTypeIds = new CStringDictionary::TStringId[mDOutputs + 2];
 
     //data outputs for status and QO
-    m_anDataOutputNames[0] = CStringDictionary::getInstance().insert("QO");
-    m_anDataOutputTypeIds[0] = g_nStringIdBOOL;
-    m_anDataOutputNames[1] = CStringDictionary::getInstance().insert("STATUS");
-    m_anDataOutputTypeIds[1] = g_nStringIdWSTRING;
+    mDataOutputNames[0] = CStringDictionary::getInstance().insert("QO");
+    mDataOutputTypeIds[0] = g_nStringIdBOOL;
+    mDataOutputNames[1] = CStringDictionary::getInstance().insert("STATUS");
+    mDataOutputTypeIds[1] = g_nStringIdWSTRING;
 
-    generateGenericDataPointArrays("OUT_", &(m_anDataOutputTypeIds[2]), &(m_anDataOutputNames[2]), mDOutputs);
+    generateGenericDataPointArrays("OUT_", &(mDataOutputTypeIds[2]), &(mDataOutputNames[2]), mDOutputs);
 
     //create the interface Specification
-    paInterfaceSpec.m_nNumEIs = mEInputs;
-    paInterfaceSpec.m_aunEINames = m_anEventInputNames;
-    paInterfaceSpec.m_nNumEOs = mEOutputs;
-    paInterfaceSpec.m_aunEONames = scm_anEventOutputNames;
-    paInterfaceSpec.m_nNumDIs = mDInputs;
-    paInterfaceSpec.m_aunDINames = m_anDataInputNames;
-    paInterfaceSpec.m_aunDIDataTypeNames = m_anDataInputTypeIds;
-    paInterfaceSpec.m_nNumDOs = mDOutputs + 2;
-    paInterfaceSpec.m_aunDONames = m_anDataOutputNames;
-    paInterfaceSpec.m_aunDODataTypeNames = m_anDataOutputTypeIds;
+    paInterfaceSpec.mNumEIs = mEInputs;
+    paInterfaceSpec.mEINames = mEventInputNames;
+    paInterfaceSpec.mNumEOs = mEOutputs;
+    paInterfaceSpec.mEONames = scmEventOutputNames;
+    paInterfaceSpec.mNumDIs = mDInputs;
+    paInterfaceSpec.mDINames = mDataInputNames;
+    paInterfaceSpec.mDIDataTypeNames = mDataInputTypeIds;
+    paInterfaceSpec.mNumDOs = mDOutputs + 2;
+    paInterfaceSpec.mDONames = mDataOutputNames;
+    paInterfaceSpec.mDODataTypeNames = mDataOutputTypeIds;
     return true;
   }
   return false;

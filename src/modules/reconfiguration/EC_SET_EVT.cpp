@@ -23,27 +23,27 @@
 
 DEFINE_FIRMWARE_FB(FORTE_EC_SET_EVT, g_nStringIdEC_SET_EVT)
 
-const CStringDictionary::TStringId FORTE_EC_SET_EVT::scm_anDataInputNames[] = {g_nStringIdQI, g_nStringIdFB_NAME, g_nStringIdFB_EVENT_IO, g_nStringIdDST};
-const CStringDictionary::TStringId FORTE_EC_SET_EVT::scm_anDataInputTypeIds[] = {g_nStringIdBOOL, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING};
-const CStringDictionary::TStringId FORTE_EC_SET_EVT::scm_anDataOutputNames[] = {g_nStringIdQO, g_nStringIdSTATUS};
-const CStringDictionary::TStringId FORTE_EC_SET_EVT::scm_anDataOutputTypeIds[] = {g_nStringIdBOOL, g_nStringIdWSTRING};
-const TDataIOID FORTE_EC_SET_EVT::scm_anEIWith[] = {0, 3, 1, 2, scmWithListDelimiter};
-const TForteInt16 FORTE_EC_SET_EVT::scm_anEIWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_EC_SET_EVT::scm_anEventInputNames[] = {g_nStringIdREQ};
-const TDataIOID FORTE_EC_SET_EVT::scm_anEOWith[] = {0, 1, scmWithListDelimiter};
-const TForteInt16 FORTE_EC_SET_EVT::scm_anEOWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_EC_SET_EVT::scm_anEventOutputNames[] = {g_nStringIdCNF};
-const SFBInterfaceSpec FORTE_EC_SET_EVT::scm_stFBInterfaceSpec = {
-  1, scm_anEventInputNames, scm_anEIWith, scm_anEIWithIndexes,
-  1, scm_anEventOutputNames, scm_anEOWith, scm_anEOWithIndexes,
-  4, scm_anDataInputNames, scm_anDataInputTypeIds,
-  2, scm_anDataOutputNames, scm_anDataOutputTypeIds,
+const CStringDictionary::TStringId FORTE_EC_SET_EVT::scmDataInputNames[] = {g_nStringIdQI, g_nStringIdFB_NAME, g_nStringIdFB_EVENT_IO, g_nStringIdDST};
+const CStringDictionary::TStringId FORTE_EC_SET_EVT::scmDataInputTypeIds[] = {g_nStringIdBOOL, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING};
+const CStringDictionary::TStringId FORTE_EC_SET_EVT::scmDataOutputNames[] = {g_nStringIdQO, g_nStringIdSTATUS};
+const CStringDictionary::TStringId FORTE_EC_SET_EVT::scmDataOutputTypeIds[] = {g_nStringIdBOOL, g_nStringIdWSTRING};
+const TDataIOID FORTE_EC_SET_EVT::scmEIWith[] = {0, 3, 1, 2, scmWithListDelimiter};
+const TForteInt16 FORTE_EC_SET_EVT::scmEIWithIndexes[] = {0};
+const CStringDictionary::TStringId FORTE_EC_SET_EVT::scmEventInputNames[] = {g_nStringIdREQ};
+const TDataIOID FORTE_EC_SET_EVT::scmEOWith[] = {0, 1, scmWithListDelimiter};
+const TForteInt16 FORTE_EC_SET_EVT::scmEOWithIndexes[] = {0};
+const CStringDictionary::TStringId FORTE_EC_SET_EVT::scmEventOutputNames[] = {g_nStringIdCNF};
+const SFBInterfaceSpec FORTE_EC_SET_EVT::scmFBInterfaceSpec = {
+  1, scmEventInputNames, scmEIWith, scmEIWithIndexes,
+  1, scmEventOutputNames, scmEOWith, scmEOWithIndexes,
+  4, scmDataInputNames, scmDataInputTypeIds,
+  2, scmDataOutputNames, scmDataOutputTypeIds,
   0, nullptr,
   0, nullptr
 };
 
-FORTE_EC_SET_EVT::FORTE_EC_SET_EVT(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes) :
-    CFunctionBlock( pa_poSrcRes, &scm_stFBInterfaceSpec, pa_nInstanceNameId),
+FORTE_EC_SET_EVT::FORTE_EC_SET_EVT(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) :
+    CFunctionBlock( paSrcRes, &scmFBInterfaceSpec, paInstanceNameId),
     var_conn_QO(var_QO),
     var_conn_STATUS(var_STATUS),
     conn_CNF(this, 0),
@@ -66,14 +66,14 @@ void FORTE_EC_SET_EVT::setInitialValues() {
 
 void FORTE_EC_SET_EVT::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   switch(paEIID) {
-    case scm_nEventREQID:
+    case scmEventREQID:
       var_QO = var_QI;
       if(var_QI) {
         executeRQST();
       } else {
         var_STATUS = u"Not Ready"_WSTRING;
       }
-      sendOutputEvent(scm_nEventCNFID, paECET);
+      sendOutputEvent(scmEventCNFID, paECET);
       break;
   }
 }
@@ -96,7 +96,7 @@ void FORTE_EC_SET_EVT::executeRQST(){
 
 void FORTE_EC_SET_EVT::readInputData(TEventID paEIID) {
   switch(paEIID) {
-    case scm_nEventREQID: {
+    case scmEventREQID: {
       RES_DATA_CON_CRITICAL_REGION();
       readData(0, var_QI, conn_QI);
       readData(3, var_DST, conn_DST);
@@ -111,7 +111,7 @@ void FORTE_EC_SET_EVT::readInputData(TEventID paEIID) {
 
 void FORTE_EC_SET_EVT::writeOutputData(TEventID paEIID) {
   switch(paEIID) {
-    case scm_nEventCNFID: {
+    case scmEventCNFID: {
       RES_DATA_CON_CRITICAL_REGION();
       writeData(0, var_QO, conn_QO);
       writeData(1, var_STATUS, conn_STATUS);

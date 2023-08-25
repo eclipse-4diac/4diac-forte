@@ -24,12 +24,12 @@ class GEN_E_MUX : public CGenFunctionBlock<CFunctionBlock>{
   DECLARE_GENERIC_FIRMWARE_FB(GEN_E_MUX)
 
   private:
-    static const CStringDictionary::TStringId scm_anDataOutputNames[], scm_aunDODataTypeIds[];
+    static const CStringDictionary::TStringId scmDataOutputNames[], scmDODataTypeIds[];
 
-    static const TEventID scm_nEventEOID = 0;
-    static const CStringDictionary::TStringId scm_anEventOutputNames[];
+    static const TEventID scmEventEOID = 0;
+    static const CStringDictionary::TStringId scmEventOutputNames[];
 
-    CStringDictionary::TStringId *m_anEventInputNames;
+    CStringDictionary::TStringId *mEventInputNames;
 
     void executeEvent(TEventID paEIID) override;
 

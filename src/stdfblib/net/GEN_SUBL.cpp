@@ -20,12 +20,12 @@ DEFINE_GENERIC_FIRMWARE_FB(GEN_SUBL, g_nStringIdGEN_SUBL)
 const char * const GEN_SUBL::scmLocalIDPrefix = "loc[";
 const char * const GEN_SUBL::scmLocalIDSuffix = "]";
 
-GEN_SUBL::GEN_SUBL(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes):
-          GEN_SUBSCRIBE( pa_nInstanceNameId, pa_poSrcRes){
+GEN_SUBL::GEN_SUBL(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes):
+          GEN_SUBSCRIBE( paInstanceNameId, paSrcRes){
 }
 
-bool GEN_SUBL::configureFB(const char *pa_acConfigString){
-  bool bRetVal = GEN_SUBSCRIBE::configureFB(pa_acConfigString);
+bool GEN_SUBL::configureFB(const char *paConfigString){
+  bool bRetVal = GEN_SUBSCRIBE::configureFB(paConfigString);
   //subls normally don't show the QI in the tool
   QI() = CIEC_BOOL(true);
   return bRetVal;

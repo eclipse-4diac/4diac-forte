@@ -15,7 +15,7 @@
 
 DEFINE_GENERIC_FIRMWARE_FB(GEN_PUBLISH, g_nStringIdGEN_PUBLISH)
 
-GEN_PUBLISH::GEN_PUBLISH(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes):
-forte::com_infra::CCommFB( pa_nInstanceNameId, pa_poSrcRes, forte::com_infra::e_Publisher){
-             //CNetCommFB( pa_nInstanceNameId, pa_poSrcRes, true, scm_nSendBufferSize, 0, CCommFB::e_Publisher){
+GEN_PUBLISH::GEN_PUBLISH(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes):
+forte::com_infra::CCommFB( paInstanceNameId, paSrcRes, forte::com_infra::e_Publisher){
+             //CNetCommFB( paInstanceNameId, paSrcRes, true, scmSendBufferSize, 0, CCommFB::e_Publisher){
 }

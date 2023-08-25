@@ -30,57 +30,57 @@ namespace forte::core::util {
 class CMixedStorage {
   public:
     /// Clear storage.
-    void clear() { m_vData.clear(); }
+    void clear() { mData.clear(); }
     /// Get storage size in bytes.
-    auto size() { return m_vData.size(); }
+    auto size() { return mData.size(); }
     /// Reserve storage memory
-    void reserve(std::size_t pa_unSize) { m_vData.reserve(pa_unSize); }
+    void reserve(std::size_t paSize) { mData.reserve(paSize); }
     /// Get pointer to memory
-    void* data() { return reinterpret_cast<void*>(m_vData.data()); }
+    void* data() { return reinterpret_cast<void*>(mData.data()); }
     /// Get pointer to memory
-    const void* data() const { return reinterpret_cast<const void*>(m_vData.data()); }
+    const void* data() const { return reinterpret_cast<const void*>(mData.data()); }
 
     /**
      * @brief Write a block of data between pointers.
      * @tparam T element type
-     * @param pa_pBegin pointer to first block
-     * @param pa_pEnd pointer after last block
+     * @param paBegin pointer to first block
+     * @param paEnd pointer after last block
      * @return pointer to the written block
      */
     template<typename T>
-    T* write(const T *pa_pBegin, const T *pa_pEnd) {
-      std::size_t bytesSize = (pa_pEnd - pa_pBegin) * sizeof(T);
-      return reinterpret_cast<T*>(write(pa_pBegin, bytesSize));
+    T* write(const T *paBegin, const T *paEnd) {
+      std::size_t bytesSize = (paEnd - paBegin) * sizeof(T);
+      return reinterpret_cast<T*>(write(paBegin, bytesSize));
     }
     /**
      * @brief Write a block of data bound by size.
      * @tparam T element type
-     * @param pa_pBegin pointer to first block
-     * @param pa_unSize number of elements to write
+     * @param paBegin pointer to first block
+     * @param paSize number of elements to write
      * @return pointer to the written block
      */
     template<typename T>
-    T* write(const T *pa_pBegin, std::size_t pa_unSize) {
-      return reinterpret_cast<T*>(write(reinterpret_cast<const void*>(pa_pBegin), pa_unSize * sizeof(T)));
+    T* write(const T *paBegin, std::size_t paSize) {
+      return reinterpret_cast<T*>(write(reinterpret_cast<const void*>(paBegin), paSize * sizeof(T)));
     }
     /**
      * @brief Write one data element.
      * @tparam T element type
-     * @param pa_xValue element to write
+     * @param paValue element to write
      * @return pointer to the written element
      */
     template<typename T>
-    T* write(T pa_xValue) {
-      return reinterpret_cast<T*>(write(reinterpret_cast<void*>(&pa_xValue), sizeof(pa_xValue)));
+    T* write(T paValue) {
+      return reinterpret_cast<T*>(write(reinterpret_cast<void*>(&paValue), sizeof(paValue)));
     }
 
     /**
      * @brief Write a void block of data bound by size.
-     * @param pa_pBegin pointer to block
-     * @param pa_unSize size of block in bytes
+     * @param paBegin pointer to block
+     * @param paSize size of block in bytes
      * @return pointer to the written block
      */
-    void* write(const void *pa_pBegin, std::size_t pa_unSize);
+    void* write(const void *paBegin, std::size_t paSize);
 
     /**
      * @brief Gets storage ending pointer.
@@ -89,7 +89,7 @@ class CMixedStorage {
      */
     template<typename T=void>
     T* end() {
-      return reinterpret_cast<T*>(&*m_vData.end());
+      return reinterpret_cast<T*>(&*mData.end());
     }
     /**
      * @brief Gets storage ending const pointer.
@@ -98,11 +98,11 @@ class CMixedStorage {
      */
     template<typename T=void>
     const T* end() const {
-      return reinterpret_cast<const T*>(&*m_vData.end());
+      return reinterpret_cast<const T*>(&*mData.end());
     }
 
   private:
-    std::vector<char> m_vData;
+    std::vector<char> mData;
 };
 
 }

@@ -22,27 +22,27 @@
 
 DEFINE_FIRMWARE_FB(FORTE_TRIGGER_SERVICE_CLIENT, g_nStringIdTRIGGER_SERVICE_CLIENT)
 
-const CStringDictionary::TStringId FORTE_TRIGGER_SERVICE_CLIENT::scm_anDataInputNames[] = { g_nStringIdQI, g_nStringIdNAMESPACE, g_nStringIdSRVNAME };
+const CStringDictionary::TStringId FORTE_TRIGGER_SERVICE_CLIENT::scmDataInputNames[] = { g_nStringIdQI, g_nStringIdNAMESPACE, g_nStringIdSRVNAME };
 
-const CStringDictionary::TStringId FORTE_TRIGGER_SERVICE_CLIENT::scm_anDataInputTypeIds[] = { g_nStringIdBOOL, g_nStringIdSTRING, g_nStringIdSTRING };
+const CStringDictionary::TStringId FORTE_TRIGGER_SERVICE_CLIENT::scmDataInputTypeIds[] = { g_nStringIdBOOL, g_nStringIdSTRING, g_nStringIdSTRING };
 
-const CStringDictionary::TStringId FORTE_TRIGGER_SERVICE_CLIENT::scm_anDataOutputNames[] = { g_nStringIdQO, g_nStringIdSTATUS, g_nStringIdSUCCESS, g_nStringIdMESSAGE };
+const CStringDictionary::TStringId FORTE_TRIGGER_SERVICE_CLIENT::scmDataOutputNames[] = { g_nStringIdQO, g_nStringIdSTATUS, g_nStringIdSUCCESS, g_nStringIdMESSAGE };
 
-const CStringDictionary::TStringId FORTE_TRIGGER_SERVICE_CLIENT::scm_anDataOutputTypeIds[] = { g_nStringIdBOOL, g_nStringIdSTRING, g_nStringIdBOOL, g_nStringIdSTRING };
+const CStringDictionary::TStringId FORTE_TRIGGER_SERVICE_CLIENT::scmDataOutputTypeIds[] = { g_nStringIdBOOL, g_nStringIdSTRING, g_nStringIdBOOL, g_nStringIdSTRING };
 
-const TForteInt16 FORTE_TRIGGER_SERVICE_CLIENT::scm_anEIWithIndexes[] = { 0, 4 };
-const TDataIOID FORTE_TRIGGER_SERVICE_CLIENT::scm_anEIWith[] = { 0, 1, 2, scmWithListDelimiter, 0, scmWithListDelimiter };
-const CStringDictionary::TStringId FORTE_TRIGGER_SERVICE_CLIENT::scm_anEventInputNames[] = { g_nStringIdINIT, g_nStringIdREQ };
+const TForteInt16 FORTE_TRIGGER_SERVICE_CLIENT::scmEIWithIndexes[] = { 0, 4 };
+const TDataIOID FORTE_TRIGGER_SERVICE_CLIENT::scmEIWith[] = { 0, 1, 2, scmWithListDelimiter, 0, scmWithListDelimiter };
+const CStringDictionary::TStringId FORTE_TRIGGER_SERVICE_CLIENT::scmEventInputNames[] = { g_nStringIdINIT, g_nStringIdREQ };
 
-const TDataIOID FORTE_TRIGGER_SERVICE_CLIENT::scm_anEOWith[] = { 0, 1, scmWithListDelimiter, 0, 1, 2, 3, scmWithListDelimiter };
-const TForteInt16 FORTE_TRIGGER_SERVICE_CLIENT::scm_anEOWithIndexes[] = { 0, 3, -1 };
-const CStringDictionary::TStringId FORTE_TRIGGER_SERVICE_CLIENT::scm_anEventOutputNames[] = { g_nStringIdINITO, g_nStringIdCNF };
+const TDataIOID FORTE_TRIGGER_SERVICE_CLIENT::scmEOWith[] = { 0, 1, scmWithListDelimiter, 0, 1, 2, 3, scmWithListDelimiter };
+const TForteInt16 FORTE_TRIGGER_SERVICE_CLIENT::scmEOWithIndexes[] = { 0, 3, -1 };
+const CStringDictionary::TStringId FORTE_TRIGGER_SERVICE_CLIENT::scmEventOutputNames[] = { g_nStringIdINITO, g_nStringIdCNF };
 
-const SFBInterfaceSpec FORTE_TRIGGER_SERVICE_CLIENT::scm_stFBInterfaceSpec = { 2, scm_anEventInputNames, scm_anEIWith, scm_anEIWithIndexes, 2, scm_anEventOutputNames, scm_anEOWith, scm_anEOWithIndexes, 3, scm_anDataInputNames, scm_anDataInputTypeIds, 4, scm_anDataOutputNames, scm_anDataOutputTypeIds, 0, 0 };
+const SFBInterfaceSpec FORTE_TRIGGER_SERVICE_CLIENT::scmFBInterfaceSpec = { 2, scmEventInputNames, scmEIWith, scmEIWithIndexes, 2, scmEventOutputNames, scmEOWith, scmEOWithIndexes, 3, scmDataInputNames, scmDataInputTypeIds, 4, scmDataOutputNames, scmDataOutputTypeIds, 0, 0 };
 
-void FORTE_TRIGGER_SERVICE_CLIENT::executeEvent(TEventID pa_nEIID){
-  switch (pa_nEIID){
-    case scm_nEventINITID:
+void FORTE_TRIGGER_SERVICE_CLIENT::executeEvent(TEventID paEIID){
+  switch (paEIID){
+    case scmEventINITID:
       //initiate
       if(!m_Initiated && QI()){
         setEventChainExecutor(mInvokingExecEnv);
@@ -60,15 +60,15 @@ void FORTE_TRIGGER_SERVICE_CLIENT::executeEvent(TEventID pa_nEIID){
         STATUS() = "Client terminated";
         QO() = false;
         m_Initiated = false;
-        sendOutputEvent(scm_nEventINITOID);
+        sendOutputEvent(scmEventINITOID);
       }
       //silently ignore other cases
       else{
         STATUS() = "Unknown init command sequence";
-        sendOutputEvent(scm_nEventINITOID);
+        sendOutputEvent(scmEventINITOID);
       }
       break;
-    case scm_nEventREQID:
+    case scmEventREQID:
       //call service
       if(m_Initiated && QI()){
         STATUS() = "Request sent";
@@ -79,7 +79,7 @@ void FORTE_TRIGGER_SERVICE_CLIENT::executeEvent(TEventID pa_nEIID){
       else{
         STATUS() = "Sending request not possible";
         QO() = false;
-        sendOutputEvent(scm_nEventCNFID);
+        sendOutputEvent(scmEventCNFID);
       }
       break;
     case cg_nExternalEventID:
@@ -88,11 +88,11 @@ void FORTE_TRIGGER_SERVICE_CLIENT::executeEvent(TEventID pa_nEIID){
         m_Initiated = true;
         STATUS() = "Client connected to server";
         QO() = true;
-        sendOutputEvent(scm_nEventINITOID);
+        sendOutputEvent(scmEventINITOID);
       }
       //call returned
       else{
-        sendOutputEvent(scm_nEventCNFID);
+        sendOutputEvent(scmEventCNFID);
       }
       break;
   }

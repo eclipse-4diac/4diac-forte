@@ -18,8 +18,8 @@
 
 DEFINE_GENERIC_FIRMWARE_FB(FORTE_PUBLISH_1, g_nStringIdPUBLISH_1)
 
-FORTE_PUBLISH_1::FORTE_PUBLISH_1(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes) :
-        GEN_PUBLISH(pa_nInstanceNameId, pa_poSrcRes) {
+FORTE_PUBLISH_1::FORTE_PUBLISH_1(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) :
+        GEN_PUBLISH(paInstanceNameId, paSrcRes) {
   configureFB("PUBLISH_1");
 }
 

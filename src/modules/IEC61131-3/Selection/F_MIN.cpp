@@ -24,34 +24,34 @@
 
 DEFINE_FIRMWARE_FB(FORTE_F_MIN, g_nStringIdF_MIN)
 
-const CStringDictionary::TStringId FORTE_F_MIN::scm_anDataInputNames[] = {g_nStringIdIN1, g_nStringIdIN2};
+const CStringDictionary::TStringId FORTE_F_MIN::scmDataInputNames[] = {g_nStringIdIN1, g_nStringIdIN2};
 
-const CStringDictionary::TStringId FORTE_F_MIN::scm_anDataInputTypeIds[] = {g_nStringIdANY_ELEMENTARY, g_nStringIdANY_ELEMENTARY};
+const CStringDictionary::TStringId FORTE_F_MIN::scmDataInputTypeIds[] = {g_nStringIdANY_ELEMENTARY, g_nStringIdANY_ELEMENTARY};
 
-const CStringDictionary::TStringId FORTE_F_MIN::scm_anDataOutputNames[] = {g_nStringIdOUT};
+const CStringDictionary::TStringId FORTE_F_MIN::scmDataOutputNames[] = {g_nStringIdOUT};
 
-const CStringDictionary::TStringId FORTE_F_MIN::scm_anDataOutputTypeIds[] = {g_nStringIdANY_ELEMENTARY};
+const CStringDictionary::TStringId FORTE_F_MIN::scmDataOutputTypeIds[] = {g_nStringIdANY_ELEMENTARY};
 
-const TDataIOID FORTE_F_MIN::scm_anEIWith[] = {0, 1, scmWithListDelimiter};
-const TForteInt16 FORTE_F_MIN::scm_anEIWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_F_MIN::scm_anEventInputNames[] = {g_nStringIdREQ};
+const TDataIOID FORTE_F_MIN::scmEIWith[] = {0, 1, scmWithListDelimiter};
+const TForteInt16 FORTE_F_MIN::scmEIWithIndexes[] = {0};
+const CStringDictionary::TStringId FORTE_F_MIN::scmEventInputNames[] = {g_nStringIdREQ};
 
-const TDataIOID FORTE_F_MIN::scm_anEOWith[] = {0, scmWithListDelimiter};
-const TForteInt16 FORTE_F_MIN::scm_anEOWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_F_MIN::scm_anEventOutputNames[] = {g_nStringIdCNF};
+const TDataIOID FORTE_F_MIN::scmEOWith[] = {0, scmWithListDelimiter};
+const TForteInt16 FORTE_F_MIN::scmEOWithIndexes[] = {0};
+const CStringDictionary::TStringId FORTE_F_MIN::scmEventOutputNames[] = {g_nStringIdCNF};
 
 
-const SFBInterfaceSpec FORTE_F_MIN::scm_stFBInterfaceSpec = {
-  1, scm_anEventInputNames, scm_anEIWith, scm_anEIWithIndexes,
-  1, scm_anEventOutputNames, scm_anEOWith, scm_anEOWithIndexes,
-  2, scm_anDataInputNames, scm_anDataInputTypeIds,
-  1, scm_anDataOutputNames, scm_anDataOutputTypeIds,
+const SFBInterfaceSpec FORTE_F_MIN::scmFBInterfaceSpec = {
+  1, scmEventInputNames, scmEIWith, scmEIWithIndexes,
+  1, scmEventOutputNames, scmEOWith, scmEOWithIndexes,
+  2, scmDataInputNames, scmDataInputTypeIds,
+  1, scmDataOutputNames, scmDataOutputTypeIds,
   0, nullptr,
   0, nullptr
 };
 
-FORTE_F_MIN::FORTE_F_MIN(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes) :
-    CFunctionBlock( pa_poSrcRes, &scm_stFBInterfaceSpec, pa_nInstanceNameId),
+FORTE_F_MIN::FORTE_F_MIN(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) :
+    CFunctionBlock( paSrcRes, &scmFBInterfaceSpec, paInstanceNameId),
     var_IN1(CIEC_ANY_ELEMENTARY_VARIANT()),
     var_IN2(CIEC_ANY_ELEMENTARY_VARIANT()),
     var_OUT(CIEC_ANY_ELEMENTARY_VARIANT()),
@@ -62,18 +62,18 @@ FORTE_F_MIN::FORTE_F_MIN(const CStringDictionary::TStringId pa_nInstanceNameId, 
     conn_OUT(this, 0, &var_conn_OUT) {
 };
 
-void FORTE_F_MIN::executeEvent(TEventID pa_nEIID) {
-  switch(pa_nEIID) {
-    case scm_nEventREQID:
+void FORTE_F_MIN::executeEvent(TEventID paEIID) {
+  switch(paEIID) {
+    case scmEventREQID:
       var_OUT = var_IN1 <= var_IN2 ? var_IN1 : var_IN2;
-      sendOutputEvent(scm_nEventCNFID);
+      sendOutputEvent(scmEventCNFID);
       break;
   }
 }
 
-void FORTE_F_MIN::readInputData(TEventID pa_nEIID) {
-  switch(pa_nEIID) {
-    case scm_nEventREQID: {
+void FORTE_F_MIN::readInputData(TEventID paEIID) {
+  switch(paEIID) {
+    case scmEventREQID: {
       RES_DATA_CON_CRITICAL_REGION();
       readData(0, var_IN1, conn_IN1);
       readData(1, var_IN2, conn_IN2);
@@ -84,9 +84,9 @@ void FORTE_F_MIN::readInputData(TEventID pa_nEIID) {
   }
 }
 
-void FORTE_F_MIN::writeOutputData(TEventID pa_nEIID) {
-  switch(pa_nEIID) {
-    case scm_nEventCNFID: {
+void FORTE_F_MIN::writeOutputData(TEventID paEIID) {
+  switch(paEIID) {
+    case scmEventCNFID: {
       RES_DATA_CON_CRITICAL_REGION();
       writeData(0, var_OUT, conn_OUT);
       break;

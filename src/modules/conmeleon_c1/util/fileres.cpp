@@ -16,7 +16,7 @@
 #include <cstdarg>
 
 
-CFileResource::CFileResource(const char* pszFileName, const char* pszOpenMode /*= "a+"*/) : m_pFileHandle(std::fopen(pszFileName, pszOpenMode)) {
+CFileResource::CFileResource(const char* pszFileName, const char* pszOpenMode /*= "a+"*/) : mFileHandle(std::fopen(pszFileName, pszOpenMode)) {
 
   m_ReadOnly = checkModeReadOnly(pszOpenMode);
 
@@ -24,8 +24,8 @@ CFileResource::CFileResource(const char* pszFileName, const char* pszOpenMode /*
 
 CFileResource::~CFileResource() {
 
-  if (m_pFileHandle != nullptr) {
-    std::fclose(m_pFileHandle);
+  if (mFileHandle != nullptr) {
+    std::fclose(mFileHandle);
   }
 }
 
@@ -34,15 +34,15 @@ void CFileResource::writeLine(const char* pszData) const {
   if (pszData == nullptr) {
     return; // bad parameter, just return and do nothing
   }
-  if (!m_ReadOnly && (m_pFileHandle != nullptr)) {
-    std::fputs(pszData, m_pFileHandle);
+  if (!m_ReadOnly && (mFileHandle != nullptr)) {
+    std::fputs(pszData, mFileHandle);
 
-    if (ferror(m_pFileHandle)) {
+    if (ferror(mFileHandle)) {
       // TODO: add logging or trace function like "Error during write to file operation! Check file permissions!";
     }
     // flushing or repositioning is required if the file is opened in update mode ("a"), so we do this always
     // following read operations on the same file will get the updated value for sure
-    std::fflush(m_pFileHandle);
+    std::fflush(mFileHandle);
   }
 }
 
@@ -51,7 +51,7 @@ void CFileResource::writeFormattedLine(const char* pszFormat, ...) const {
   if (pszFormat == nullptr) {
     return; // bad parameter, just return and do nothing
   }
-  if (!m_ReadOnly && (m_pFileHandle != nullptr)) {
+  if (!m_ReadOnly && (mFileHandle != nullptr)) {
     char     buffer[256]; // buffer to hold formatted string including the arguments
     va_list   args;
 
@@ -59,14 +59,14 @@ void CFileResource::writeFormattedLine(const char* pszFormat, ...) const {
     va_start (args, pszFormat);
     if (vsprintf (buffer,pszFormat, args) > 0) {
       // formatted string was assembled properly
-      std::fputs(buffer, m_pFileHandle);
+      std::fputs(buffer, mFileHandle);
 
-      if (ferror(m_pFileHandle)) {
+      if (ferror(mFileHandle)) {
         // TODO: add logging or trace function like "Error during write to file operation! Check file permissions!";
       }
       // flushing or repositioning is required if the file is opened in update mode ("a"), so we do this always
       // following read operations on the same file will get the updated value for sure
-      std::fflush(m_pFileHandle);
+      std::fflush(mFileHandle);
     }
     va_end(args);
   }
@@ -78,15 +78,15 @@ void CFileResource::readLine(char* pszData, std::size_t nLength) const {
     return; // bad parameters, just return and do nothing
   }
 
-  if (m_pFileHandle != nullptr) {
+  if (mFileHandle != nullptr) {
     char *pszLine = nullptr;
     std::size_t nLen = 0;
     ssize_t nNrCharsRead;
 
     // set file position to the beginning
-    std::rewind(m_pFileHandle);
+    std::rewind(mFileHandle);
 
-    nNrCharsRead = getline(&pszLine, &nLen, m_pFileHandle);
+    nNrCharsRead = getline(&pszLine, &nLen, mFileHandle);
     if (nNrCharsRead != -1) {
       strncpy(pszData, pszLine, nLength);
     }

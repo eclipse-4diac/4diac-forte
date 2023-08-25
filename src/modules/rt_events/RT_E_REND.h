@@ -28,35 +28,35 @@ class FORTE_RT_E_REND final : public CRTEventSingle {
   DECLARE_FIRMWARE_FB(FORTE_RT_E_REND)
 
 private:
-  static const CStringDictionary::TStringId scm_anDataInputNames[];
-  static const CStringDictionary::TStringId scm_anDataInputTypeIds[];
-  static const CStringDictionary::TStringId scm_anDataOutputNames[];
-  static const CStringDictionary::TStringId scm_anDataOutputTypeIds[];
-  static const TEventID scm_nEventINITID = 0;
-  static const TEventID scm_nEventEI1ID = 1;
-  static const TEventID scm_nEventEI2ID = 2;
-  static const TEventID scm_nEventRID = 3;
-  static const TDataIOID scm_anEIWith[];
-  static const TForteInt16 scm_anEIWithIndexes[];
-  static const CStringDictionary::TStringId scm_anEventInputNames[];
-  static const TEventID scm_nEventINITOID = 0;
-  static const TEventID scm_nEventEOID = 1;
-  static const TDataIOID scm_anEOWith[];
-  static const TForteInt16 scm_anEOWithIndexes[];
-  static const CStringDictionary::TStringId scm_anEventOutputNames[];
+  static const CStringDictionary::TStringId scmDataInputNames[];
+  static const CStringDictionary::TStringId scmDataInputTypeIds[];
+  static const CStringDictionary::TStringId scmDataOutputNames[];
+  static const CStringDictionary::TStringId scmDataOutputTypeIds[];
+  static const TEventID scmEventINITID = 0;
+  static const TEventID scmEventEI1ID = 1;
+  static const TEventID scmEventEI2ID = 2;
+  static const TEventID scmEventRID = 3;
+  static const TDataIOID scmEIWith[];
+  static const TForteInt16 scmEIWithIndexes[];
+  static const CStringDictionary::TStringId scmEventInputNames[];
+  static const TEventID scmEventINITOID = 0;
+  static const TEventID scmEventEOID = 1;
+  static const TDataIOID scmEOWith[];
+  static const TForteInt16 scmEOWithIndexes[];
+  static const CStringDictionary::TStringId scmEventOutputNames[];
 
-  static const SFBInterfaceSpec scm_stFBInterfaceSpec;
+  static const SFBInterfaceSpec scmFBInterfaceSpec;
 
-  int m_nState;
+  int mState;
 
-  bool checkActivation(TEventID pa_nEIID) override;
+  bool checkActivation(TEventID paEIID) override;
 
   void readInputData(TEventID paEIID) override;
   void writeOutputData(TEventID paEIID) override;
   void setInitialValues() override;
 
 public:
-  FORTE_RT_E_REND(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes);
+  FORTE_RT_E_REND(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
 
   CIEC_TIME var_Tmin;
   CIEC_TIME var_WCET;
@@ -81,7 +81,7 @@ public:
     var_Tmin = pa_Tmin;
     var_Deadline = pa_Deadline;
     var_WCET = pa_WCET;
-    receiveInputEvent(scm_nEventINITID, nullptr);
+    receiveInputEvent(scmEventINITID, nullptr);
     pa_QO = var_QO;
   }
   void evt_EI1(const CIEC_BOOL &pa_QI, const CIEC_TIME &pa_Tmin, const CIEC_TIME &pa_Deadline, const CIEC_TIME &pa_WCET, CIEC_BOOL &pa_QO) {
@@ -89,7 +89,7 @@ public:
     var_Tmin = pa_Tmin;
     var_Deadline = pa_Deadline;
     var_WCET = pa_WCET;
-    receiveInputEvent(scm_nEventEI1ID, nullptr);
+    receiveInputEvent(scmEventEI1ID, nullptr);
     pa_QO = var_QO;
   }
   void evt_EI2(const CIEC_BOOL &pa_QI, const CIEC_TIME &pa_Tmin, const CIEC_TIME &pa_Deadline, const CIEC_TIME &pa_WCET, CIEC_BOOL &pa_QO) {
@@ -97,7 +97,7 @@ public:
     var_Tmin = pa_Tmin;
     var_Deadline = pa_Deadline;
     var_WCET = pa_WCET;
-    receiveInputEvent(scm_nEventEI2ID, nullptr);
+    receiveInputEvent(scmEventEI2ID, nullptr);
     pa_QO = var_QO;
   }
   void evt_R(const CIEC_BOOL &pa_QI, const CIEC_TIME &pa_Tmin, const CIEC_TIME &pa_Deadline, const CIEC_TIME &pa_WCET, CIEC_BOOL &pa_QO) {
@@ -105,7 +105,7 @@ public:
     var_Tmin = pa_Tmin;
     var_Deadline = pa_Deadline;
     var_WCET = pa_WCET;
-    receiveInputEvent(scm_nEventRID, nullptr);
+    receiveInputEvent(scmEventRID, nullptr);
     pa_QO = var_QO;
   }
   void operator()(const CIEC_BOOL &pa_QI, const CIEC_TIME &pa_Tmin, const CIEC_TIME &pa_Deadline, const CIEC_TIME &pa_WCET, CIEC_BOOL &pa_QO) {

@@ -37,7 +37,7 @@ namespace forte {
 
         protected:
           IOConfigFBMultiAdapter& BusAdapterOut() {
-            return (*static_cast<IOConfigFBMultiAdapter*>(m_apoAdapters[0]));
+            return (*static_cast<IOConfigFBMultiAdapter*>(mAdapters[0]));
           }
           static const int scmBusAdapterAdpNum = 0;
 

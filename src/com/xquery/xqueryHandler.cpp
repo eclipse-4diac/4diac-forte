@@ -24,7 +24,7 @@ DEFINE_HANDLER(CXqueryHandler);
 CSyncObject CXqueryHandler::smXqueryMutex = CSyncObject();
 forte::arch::CSemaphore CXqueryHandler::mStateSemaphore = forte::arch::CSemaphore();
 
-CXqueryHandler::CXqueryHandler(CDeviceExecution& pa_poDeviceExecution) : CExternalEventHandler(pa_poDeviceExecution){
+CXqueryHandler::CXqueryHandler(CDeviceExecution& paDeviceExecution) : CExternalEventHandler(paDeviceExecution){
   result = nullptr;
   info = nullptr;
 }
@@ -65,7 +65,7 @@ int CXqueryHandler::getPriority() const{
 }
 
 int CXqueryHandler::registerLayer(CXqueryClientLayer* paLayer){
-  m_lstXqueryFBList.pushBack(paLayer);
+  mXqueryFBList.pushBack(paLayer);
   enableHandler();
   resumeSuspend();
   return 0;
@@ -73,10 +73,10 @@ int CXqueryHandler::registerLayer(CXqueryClientLayer* paLayer){
 
 void CXqueryHandler::run(){
   while(isAlive()){
-    if(m_lstXqueryFBList.isEmpty()){
+    if(mXqueryFBList.isEmpty()){
         selfSuspend();
     }else{
-      TXqueryFBContainer::Iterator it = m_lstXqueryFBList.begin();
+      TXqueryFBContainer::Iterator it = mXqueryFBList.begin();
       CXqueryClientLayer *xc = *it;
       if(xc->getSfd() > -1){
         int rc = basex_execute(xc->getSfd(), xc->getCommand(), &result, &info);  
@@ -95,7 +95,7 @@ void CXqueryHandler::run(){
       }else{
         DEVLOG_ERROR("Connection seems to be lost, query not sent.\n");
       }
-      m_lstXqueryFBList.popFront();
+      mXqueryFBList.popFront();
     }
   }
 }

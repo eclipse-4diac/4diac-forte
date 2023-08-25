@@ -20,27 +20,27 @@
 
 DEFINE_ADAPTER_TYPE(FORTE_ATimeOut, g_nStringIdATimeOut)
 
-const CStringDictionary::TStringId FORTE_ATimeOut::scm_anDataOutputNames[] = {g_nStringIdDT};
-const CStringDictionary::TStringId FORTE_ATimeOut::scm_anDataOutputTypeIds[] = {g_nStringIdTIME};
-const TForteInt16 FORTE_ATimeOut::scm_anEIWithIndexes[] = {-1};
-const CStringDictionary::TStringId FORTE_ATimeOut::scm_anEventInputNames[] = {g_nStringIdTimeOut};
-const TDataIOID FORTE_ATimeOut::scm_anEOWith[] = {0, scmWithListDelimiter};
-const TForteInt16 FORTE_ATimeOut::scm_anEOWithIndexes[] = {0, -1};
-const CStringDictionary::TStringId FORTE_ATimeOut::scm_anEventOutputNames[] = {g_nStringIdSTART, g_nStringIdSTOP};
+const CStringDictionary::TStringId FORTE_ATimeOut::scmDataOutputNames[] = {g_nStringIdDT};
+const CStringDictionary::TStringId FORTE_ATimeOut::scmDataOutputTypeIds[] = {g_nStringIdTIME};
+const TForteInt16 FORTE_ATimeOut::scmEIWithIndexes[] = {-1};
+const CStringDictionary::TStringId FORTE_ATimeOut::scmEventInputNames[] = {g_nStringIdTimeOut};
+const TDataIOID FORTE_ATimeOut::scmEOWith[] = {0, scmWithListDelimiter};
+const TForteInt16 FORTE_ATimeOut::scmEOWithIndexes[] = {0, -1};
+const CStringDictionary::TStringId FORTE_ATimeOut::scmEventOutputNames[] = {g_nStringIdSTART, g_nStringIdSTOP};
 
-const SFBInterfaceSpec FORTE_ATimeOut::scm_stFBInterfaceSpecSocket = {
-  1, scm_anEventInputNames, nullptr, scm_anEIWithIndexes,
-  2, scm_anEventOutputNames, scm_anEOWith, scm_anEOWithIndexes,
+const SFBInterfaceSpec FORTE_ATimeOut::scmFBInterfaceSpecSocket = {
+  1, scmEventInputNames, nullptr, scmEIWithIndexes,
+  2, scmEventOutputNames, scmEOWith, scmEOWithIndexes,
   0, nullptr, nullptr,
-  1, scm_anDataOutputNames, scm_anDataOutputTypeIds,
+  1, scmDataOutputNames, scmDataOutputTypeIds,
   0, nullptr,
   0, nullptr
 };
 
-const SFBInterfaceSpec FORTE_ATimeOut::scm_stFBInterfaceSpecPlug = {
-  2, scm_anEventOutputNames, scm_anEOWith, scm_anEOWithIndexes,
-  1, scm_anEventInputNames, nullptr, scm_anEIWithIndexes,
-  1, scm_anDataOutputNames, scm_anDataOutputTypeIds,
+const SFBInterfaceSpec FORTE_ATimeOut::scmFBInterfaceSpecPlug = {
+  2, scmEventOutputNames, scmEOWith, scmEOWithIndexes,
+  1, scmEventInputNames, nullptr, scmEIWithIndexes,
+  1, scmDataOutputNames, scmDataOutputTypeIds,
   0, nullptr, nullptr,
   0, nullptr,
   0, nullptr

@@ -18,11 +18,11 @@
 
 using namespace forte::com_infra;
 
-fmuComLayer::fmuComLayer(CComLayer* pa_poUpperLayer, CBaseCommFB * pa_poFB) : CComLayer(pa_poUpperLayer, pa_poFB),
-    m_someValueChanged(false), m_eInterruptResp(e_Nothing) {
+fmuComLayer::fmuComLayer(CComLayer* paUpperLayer, CBaseCommFB * paFB) : CComLayer(paUpperLayer, paFB),
+    m_someValueChanged(false), mInterruptResp(e_Nothing) {
 
-  m_outputs = getExtEvHandler<fmuHandler>().getOutputMap()->at(pa_poFB);
-  m_inputs =  getExtEvHandler<fmuHandler>().getInputMap()->at(pa_poFB);
+  m_outputs = getExtEvHandler<fmuHandler>().getOutputMap()->at(paFB);
+  m_inputs =  getExtEvHandler<fmuHandler>().getInputMap()->at(paFB);
 
   if(m_outputs){
     for(unsigned int i = 0; i < m_outputs->size(); i++){
@@ -36,18 +36,18 @@ fmuComLayer::fmuComLayer(CComLayer* pa_poUpperLayer, CBaseCommFB * pa_poFB) : CC
 fmuComLayer::~fmuComLayer() {
 }
 
-EComResponse fmuComLayer::sendData(void* pa_pvData, unsigned int pa_unSize) {
-  CIEC_ANY* SDs(static_cast<CIEC_ANY *>(pa_pvData));
-  for(unsigned int i = 0; i < pa_unSize; i++){
+EComResponse fmuComLayer::sendData(void* paData, unsigned int paSize) {
+  CIEC_ANY* SDs(static_cast<CIEC_ANY *>(paData));
+  for(unsigned int i = 0; i < paSize; i++){
     m_inputs->at(i)->setValue(SDs[i]);
   }
   return e_ProcessDataOk;
 }
 
-EComResponse fmuComLayer::recvData(const void* pa_pvData, unsigned int){
+EComResponse fmuComLayer::recvData(const void* paData, unsigned int){
 
-  m_eInterruptResp = e_Nothing;
-  const fmuValueContainer* l_value = static_cast<const fmuValueContainer*>(pa_pvData);
+  mInterruptResp = e_Nothing;
+  const fmuValueContainer* l_value = static_cast<const fmuValueContainer*>(paData);
   unsigned int counter = 0;
   for(std::vector<fmuValueContainer*>::iterator itRunner =  m_outputs->begin(); itRunner != m_outputs->end(); ++itRunner){
     if(*itRunner == l_value){
@@ -108,8 +108,8 @@ EComResponse fmuComLayer::recvData(const void* pa_pvData, unsigned int){
 
   if(!someFalse){
     if(m_someValueChanged){
-      m_eInterruptResp = e_ProcessDataOk;
-      m_poFb->interruptCommFB(this);
+      mInterruptResp = e_ProcessDataOk;
+      mFb->interruptCommFB(this);
     }else{
     }
     for(std::vector<bool>::iterator itRunner = m_inputsArrived.begin(); itRunner != m_inputsArrived.end(); ++itRunner){
@@ -117,11 +117,11 @@ EComResponse fmuComLayer::recvData(const void* pa_pvData, unsigned int){
     }
     m_someValueChanged = false;
   }
-  return m_eInterruptResp;
+  return mInterruptResp;
 }
 
 EComResponse fmuComLayer::processInterrupt() {
-  return m_eInterruptResp;
+  return mInterruptResp;
 }
 
 void fmuComLayer::closeConnection() {

@@ -30,14 +30,14 @@ class CIEC_ANY;
 class CAdapter;
 
 //!\ingroup CORE Type for a function pointer which allows to create a functionblock instance
-  typedef CFunctionBlock *(*TFunctionBlockCreateFunc)(CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes);
+  typedef CFunctionBlock *(*TFunctionBlockCreateFunc)(CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
 
 //!\ingroup CORE Type for a function pointer which allows to create an adapter instance
-  typedef CAdapter *(*TAdapterCreateFunc)(CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes, bool pa_bIsPlug);
+  typedef CAdapter *(*TAdapterCreateFunc)(CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes, bool paIsPlug);
 
 
 //!\ingroup CORE Type for a function pointer which allows to create a data type instance
-  typedef CIEC_ANY *(*TDataTypeCreateFunc)(TForteByte *pa_acDataBuf);
+  typedef CIEC_ANY *(*TDataTypeCreateFunc)(TForteByte *paDataBuf);
 
 #define FORTE_DUMMY_INIT_DEF(fbclass) int fbclass::dummyInit() {return 0; }
 #define FORTE_DUMMY_INIT_DEC  static int dummyInit();
@@ -46,10 +46,10 @@ class CAdapter;
 //!\ingroup CORE This define is used to create the definition necessary for generic FirmwareFunction blocks in order to get them automatically added to the FirmwareType list.
 #define DECLARE_GENERIC_FIRMWARE_FB(fbclass) \
   private: \
-    const static CTypeLib::CFBTypeEntry csm_oFirmwareFBEntry_##fbclass; \
+    const static CTypeLib::CFBTypeEntry csmFirmwareFBEntry_##fbclass; \
   public:  \
-    static CFunctionBlock *createFB(CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes){ \
-      return new fbclass( pa_nInstanceNameId, pa_poSrcRes);\
+    static CFunctionBlock *createFB(CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes){ \
+      return new fbclass( paInstanceNameId, paSrcRes);\
     }; \
     FORTE_DUMMY_INIT_DEC \
   private:
@@ -65,7 +65,7 @@ class CAdapter;
 
 #define DEFINE_GENERIC_FIRMWARE_FB(fbclass, fbTypeNameId)\
   extern const CStringDictionary::TStringId g_nStringId##fbclass; \
-  const CTypeLib::CFBTypeEntry fbclass::csm_oFirmwareFBEntry_##fbclass((fbTypeNameId), fbclass::createFB, 0); \
+  const CTypeLib::CFBTypeEntry fbclass::csmFirmwareFBEntry_##fbclass((fbTypeNameId), fbclass::createFB, 0); \
   FORTE_DUMMY_INIT_DEF(fbclass)
 
 /*!\ingroup CORE This define is used to create the implementation for the above definition. The second parameter is needed for the
@@ -73,29 +73,29 @@ class CAdapter;
  */
 #define DEFINE_FIRMWARE_FB(fbclass, fbTypeNameId) \
     extern const CStringDictionary::TStringId g_nStringId##fbclass; \
-    const CTypeLib::CFBTypeEntry fbclass::csm_oFirmwareFBEntry_##fbclass((fbTypeNameId), fbclass::createFB, &(fbclass::scm_stFBInterfaceSpec)); \
+    const CTypeLib::CFBTypeEntry fbclass::csmFirmwareFBEntry_##fbclass((fbTypeNameId), fbclass::createFB, &(fbclass::scmFBInterfaceSpec)); \
     FORTE_DUMMY_INIT_DEF(fbclass) \
     CStringDictionary::TStringId fbclass::getFBTypeId() const {return (fbTypeNameId); }
 
 //!\ingroup CORE This define is used to create the definition necessary for Adapter types.
 #define DECLARE_ADAPTER_TYPE(adapterclass) \
   private: \
-    const static CTypeLib::CAdapterTypeEntry csm_oAdapterTypeEntry_##adapterclass; \
+    const static CTypeLib::CAdapterTypeEntry csmAdapterTypeEntry_##adapterclass; \
   public:  \
-    static CAdapter *createAdapter(CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes, bool pa_bIsPlug){\
-      return new adapterclass(pa_nInstanceNameId, pa_poSrcRes, pa_bIsPlug);\
+    static CAdapter *createAdapter(CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes, bool paIsPlug){\
+      return new adapterclass(paInstanceNameId, paSrcRes, paIsPlug);\
     }; \
-    virtual CStringDictionary::TStringId getFBTypeId() const {return (csm_oAdapterTypeEntry_##adapterclass.getTypeNameId()); };\
+    virtual CStringDictionary::TStringId getFBTypeId() const {return (csmAdapterTypeEntry_##adapterclass.getTypeNameId()); };\
     FORTE_DUMMY_INIT_DEC \
   private:
 
 //!\ingroup CORE This define is used to create the implementation for the above definition.
 #define DEFINE_ADAPTER_TYPE(adapterclass, adapterTypeNameId)\
-  const CTypeLib::CAdapterTypeEntry adapterclass::csm_oAdapterTypeEntry_##adapterclass((adapterTypeNameId), adapterclass::createAdapter, &(adapterclass::scm_stFBInterfaceSpecSocket)); \
+  const CTypeLib::CAdapterTypeEntry adapterclass::csmAdapterTypeEntry_##adapterclass((adapterTypeNameId), adapterclass::createAdapter, &(adapterclass::scmFBInterfaceSpecSocket)); \
   FORTE_DUMMY_INIT_DEF(adapterclass)
 
 #define DEFINE_GENERIC_ADAPTER_TYPE(adapterclass, adapterTypeNameId)\
-  const CTypeLib::CAdapterTypeEntry adapterclass::csm_oAdapterTypeEntry_##adapterclass((adapterTypeNameId), adapterclass::createAdapter, 0); \
+  const CTypeLib::CAdapterTypeEntry adapterclass::csmAdapterTypeEntry_##adapterclass((adapterTypeNameId), adapterclass::createAdapter, 0); \
   FORTE_DUMMY_INIT_DEF(adapterclass)
 
 //!\ingroup CORE This define is used to create the definition necessary for Firmware datatype in order to get them automatically added to the FirmwareType list.
@@ -104,21 +104,21 @@ class CAdapter;
     static CIEC_ANY *createDataType(TForteByte *paDataBuf){ \
       return (0 != paDataBuf) ? new(paDataBuf)CIEC_##datatypename() : new CIEC_##datatypename; \
     }; \
-    const static CTypeLib::CDataTypeEntry csm_oFirmwareDataTypeEntry_##datatypename; \
+    const static CTypeLib::CDataTypeEntry csmFirmwareDataTypeEntry_##datatypename; \
     size_t getSizeof() const override { \
       return sizeof(CIEC_##datatypename); \
     } \
     CIEC_ANY* clone(TForteByte *paDataBuf) const override { \
       return (0 != paDataBuf) ? new(paDataBuf)CIEC_##datatypename(*this) : new CIEC_##datatypename(*this); } \
     CStringDictionary::TStringId getTypeNameID() const override { \
-        return CIEC_##datatypename::csm_oFirmwareDataTypeEntry_##datatypename.getTypeNameId(); \
+        return CIEC_##datatypename::csmFirmwareDataTypeEntry_##datatypename.getTypeNameId(); \
     } \
   FORTE_DUMMY_INIT_DEC \
   private:
 
 //!\ingroup CORE This define is used to create the implementation for the above definition.
 #define DEFINE_FIRMWARE_DATATYPE(datatypename, datatypenameid)\
-  const CTypeLib::CDataTypeEntry CIEC_##datatypename::csm_oFirmwareDataTypeEntry_##datatypename((datatypenameid), CIEC_##datatypename::createDataType, sizeof(CIEC_##datatypename));\
+  const CTypeLib::CDataTypeEntry CIEC_##datatypename::csmFirmwareDataTypeEntry_##datatypename((datatypenameid), CIEC_##datatypename::createDataType, sizeof(CIEC_##datatypename));\
   FORTE_DUMMY_INIT_DEF(CIEC_##datatypename)
 
 struct SFBInterfaceSpec;
@@ -131,22 +131,22 @@ class CTypeLib{
 //! The base class for all type entries in the type lib.
   class CTypeEntry{
     private:
-      CStringDictionary::TStringId m_nTypeNameId;
+      CStringDictionary::TStringId mTypeNameId;
 
     public:
-      CTypeEntry *m_poNext; //!< a pointer to the next element in the list. Will be used to build single linked list of type entries.
+      CTypeEntry *mNext; //!< a pointer to the next element in the list. Will be used to build single linked list of type entries.
 
-      explicit CTypeEntry(CStringDictionary::TStringId pa_nTypeNameId);
+      explicit CTypeEntry(CStringDictionary::TStringId paTypeNameId);
       virtual ~CTypeEntry();
 
-      CStringDictionary::TStringId getTypeNameId() const { return m_nTypeNameId; };
+      CStringDictionary::TStringId getTypeNameId() const { return mTypeNameId; };
   };
 
   class CSpecTypeEntry : public CTypeEntry {
     private:
       const SFBInterfaceSpec* mSocketInterfaceSpec;
     public:
-      CSpecTypeEntry(CStringDictionary::TStringId pa_nTypeNameId, const SFBInterfaceSpec* paSocketInterfaceSpec);
+      CSpecTypeEntry(CStringDictionary::TStringId paTypeNameId, const SFBInterfaceSpec* paSocketInterfaceSpec);
       ~CSpecTypeEntry() override;
       const SFBInterfaceSpec* getInterfaceSpec() const{ return mSocketInterfaceSpec; }
   };
@@ -154,10 +154,10 @@ class CTypeLib{
 //! The base class for all function block types entries in the type lib.
   class CFBTypeEntry : public CSpecTypeEntry{
     public:
-      CFBTypeEntry(CStringDictionary::TStringId pa_nTypeNameId, TFunctionBlockCreateFunc pa_pfuncCreateFB, const SFBInterfaceSpec* paSocketInterfaceSpec);
+      CFBTypeEntry(CStringDictionary::TStringId paTypeNameId, TFunctionBlockCreateFunc pa_pfuncCreateFB, const SFBInterfaceSpec* paSocketInterfaceSpec);
       ~CFBTypeEntry() override;
-      virtual CFunctionBlock *createFBInstance(CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes){
-              return m_pfuncFBCreationFunc( pa_nInstanceNameId, pa_poSrcRes);
+      virtual CFunctionBlock *createFBInstance(CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes){
+              return m_pfuncFBCreationFunc( paInstanceNameId, paSrcRes);
             }
     private:
        TFunctionBlockCreateFunc m_pfuncFBCreationFunc;
@@ -167,10 +167,10 @@ class CTypeLib{
  */
       class CAdapterTypeEntry : public CSpecTypeEntry{
         public:
-          CAdapterTypeEntry(CStringDictionary::TStringId pa_nTypeNameId, TAdapterCreateFunc pa_pfuncCreateAdapter, const SFBInterfaceSpec* paSocketInterfaceSpec);
+          CAdapterTypeEntry(CStringDictionary::TStringId paTypeNameId, TAdapterCreateFunc pa_pfuncCreateAdapter, const SFBInterfaceSpec* paSocketInterfaceSpec);
           ~CAdapterTypeEntry() override;
-          virtual CAdapter *createAdapterInstance(CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes, bool pa_bIsPlug){
-            return m_pfuncAdapterCreationFunc( pa_nInstanceNameId, pa_poSrcRes, pa_bIsPlug);
+          virtual CAdapter *createAdapterInstance(CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes, bool paIsPlug){
+            return m_pfuncAdapterCreationFunc( paInstanceNameId, paSrcRes, paIsPlug);
           }
         private:
           TAdapterCreateFunc m_pfuncAdapterCreationFunc;
@@ -181,8 +181,8 @@ class CTypeLib{
     public:
       CDataTypeEntry(CStringDictionary::TStringId paTypeNameId, TDataTypeCreateFunc paDTCreateFunc, size_t paSize);
       ~CDataTypeEntry() override;
-      virtual CIEC_ANY *createDataTypeInstance(TForteByte *pa_acDataBuf){
-        return mDTCreateFunc(pa_acDataBuf);
+      virtual CIEC_ANY *createDataTypeInstance(TForteByte *paDataBuf){
+        return mDTCreateFunc(paDataBuf);
       };
       [[nodiscard]] size_t getSize() const {
         return mSize;
@@ -195,29 +195,29 @@ class CTypeLib{
 public:
 /*!\brief Create a new FB instance of given type and given instance name.
  *
- * \param pa_nInstanceNameId  StringId of instance name as this information can be stored within the resource
- * \param pa_nFBTypeId Type of the FB to create.
- * \param pa_poRes   Resource the FB is contained in.
+ * \param paInstanceNameId  StringId of instance name as this information can be stored within the resource
+ * \param paFBTypeId Type of the FB to create.
+ * \param paRes   Resource the FB is contained in.
  * \return On success a pointer to the new FB is returned, else the return value is 0 use getLastError for getting more information on the problem.
  *   possible error codes are:
  *    - UnsupportedType   The requested FB type is not known to the typelib
  *    - InvalidOperation The requested FB can not be created (e.g. out of memory)
  */
-  static CFunctionBlock *createFB(CStringDictionary::TStringId pa_nInstanceNameId, CStringDictionary::TStringId pa_nFBTypeId, CResource *pa_poRes);
+  static CFunctionBlock *createFB(CStringDictionary::TStringId paInstanceNameId, CStringDictionary::TStringId paFBTypeId, CResource *paRes);
 
 /*\brief Delete the given FB
  */
-  static bool deleteFB(CFunctionBlock *pa_poFBToDelete);
+  static bool deleteFB(CFunctionBlock *paFBToDelete);
 
-  static CAdapter *createAdapter(CStringDictionary::TStringId pa_nInstanceNameId, CStringDictionary::TStringId pa_nFBTypeId, CResource *pa_poRes, bool pa_bIsPlug);
+  static CAdapter *createAdapter(CStringDictionary::TStringId paInstanceNameId, CStringDictionary::TStringId paFBTypeId, CResource *paRes, bool paIsPlug);
 
   /*!\brief Create an instance of an data type.
    *
-   * @param pa_nDTNameId string id of the datatype to create
-   * @param pa_acDataBuf buffer that the datatype should use. Has to be at least the size of CIEC_ANY
+   * @param paDTNameId string id of the datatype to create
+   * @param paDataBuf buffer that the datatype should use. Has to be at least the size of CIEC_ANY
    * @return pointer to the create data type.
    */
-  static CIEC_ANY *createDataTypeInstance(CStringDictionary::TStringId pa_nDTNameId, TForteByte *pa_acDataBuf);
+  static CIEC_ANY *createDataTypeInstance(CStringDictionary::TStringId paDTNameId, TForteByte *paDataBuf);
 
 
 /*!\brief Return a description of the last error that occured within the CTypeLib.
@@ -225,51 +225,51 @@ public:
  * e.g. Out of memory
  * \return Reference to the error string.
  */
-  static EMGMResponse getLastError() { return m_eLastErrorMSG; };
+  static EMGMResponse getLastError() { return mLastErrorMSG; };
 
 /*!\brief add a Firmware FB type to the type lib (is mainly used by the corresponding entry class).
  */
-  static void addFBType(CFBTypeEntry *pa_poFBTypeEntry);
+  static void addFBType(CFBTypeEntry *paFBTypeEntry);
 
   /*!\brief add a Firmware Adapter type to the type lib (is mainly used by the corresponding entry class).
    */
-  static void addAdapterType(CAdapterTypeEntry *pa_poAdapterTypeEntry);
+  static void addAdapterType(CAdapterTypeEntry *paAdapterTypeEntry);
 
 /*!\brief add a Firmware data type to the type lib (is mainly used by the corresponding entry class).
  */
-  static void addDataType(CDataTypeEntry *pa_poDTEntry);
+  static void addDataType(CDataTypeEntry *paDTEntry);
 /*!\brief Get a pointer to the begin of the FB library list
  */
-  static CTypeEntry *getFBLibStart() { return m_poFBLibStart; }
+  static CTypeEntry *getFBLibStart() { return mFBLibStart; }
 
   /*!\brief Get a pointer to the begin of the FB library list
    */
-    static CTypeEntry *getAdapterLibStart() { return m_poAdapterLibStart; }
+    static CTypeEntry *getAdapterLibStart() { return mAdapterLibStart; }
 
   /*!\brief Get a pointer to the begin of the datatype library list
  */
-  static CTypeEntry *getDTLibStart() { return m_poDTLibStart; }
+  static CTypeEntry *getDTLibStart() { return mDTLibStart; }
 
-  static CTypeEntry *findType(CStringDictionary::TStringId pa_nTypeId, CTypeEntry *pa_poListStart);
+  static CTypeEntry *findType(CStringDictionary::TStringId paTypeId, CTypeEntry *paListStart);
 
 protected:
 private:
 
 /*!\brief Buffer for the last error that occurred.
  */
-  static EMGMResponse m_eLastErrorMSG;
+  static EMGMResponse mLastErrorMSG;
 
-  static CFBTypeEntry *m_poFBLibStart, //!< pointer to the begin of the firmware fb library list
-               *m_poFBLibEnd; //!<pointer to the end of the firmware fb library list
+  static CFBTypeEntry *mFBLibStart, //!< pointer to the begin of the firmware fb library list
+               *mFBLibEnd; //!<pointer to the end of the firmware fb library list
 
-  static CAdapterTypeEntry *m_poAdapterLibStart, //!< pointer to the begin of the firmware adapter library list
-               *m_poAdapterLibEnd; //!<pointer to the end of the firmware adapter library list
+  static CAdapterTypeEntry *mAdapterLibStart, //!< pointer to the begin of the firmware adapter library list
+               *mAdapterLibEnd; //!<pointer to the end of the firmware adapter library list
 
-  static CDataTypeEntry *m_poDTLibStart, //!< pointer to the begin of the data type library
-                 *m_poDTLibEnd; //!< pointer to the end of the data type library
+  static CDataTypeEntry *mDTLibStart, //!< pointer to the begin of the data type library
+                 *mDTLibEnd; //!< pointer to the end of the data type library
 
   //! find the position of the first underscore that marks the end of the type name and the beginning of the generic part
-  static const char* getFirstNonTypeNameUnderscorePos(const char* pa_acTypeName);
+  static const char* getFirstNonTypeNameUnderscorePos(const char* paTypeName);
 };
 
 #endif /*TYPELIB_H_*/

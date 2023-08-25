@@ -17,33 +17,33 @@
 
 DEFINE_ADAPTER_TYPE(FORTE_OrchestratorRequestAdp, g_nStringIdOrchestratorRequestAdp)
 
-const CStringDictionary::TStringId FORTE_OrchestratorRequestAdp::scm_anDataInputNames[] = {g_nStringIdorchestrationResponse};
+const CStringDictionary::TStringId FORTE_OrchestratorRequestAdp::scmDataInputNames[] = {g_nStringIdorchestrationResponse};
 
-const CStringDictionary::TStringId FORTE_OrchestratorRequestAdp::scm_anDataInputTypeIds[] = {g_nStringIdARRAY, 10, g_nStringIdOrchestrationForm};
+const CStringDictionary::TStringId FORTE_OrchestratorRequestAdp::scmDataInputTypeIds[] = {g_nStringIdARRAY, 10, g_nStringIdOrchestrationForm};
 
-const CStringDictionary::TStringId FORTE_OrchestratorRequestAdp::scm_anDataOutputNames[] = {g_nStringIdserviceRequestForm, g_nStringIdendpoint};
+const CStringDictionary::TStringId FORTE_OrchestratorRequestAdp::scmDataOutputNames[] = {g_nStringIdserviceRequestForm, g_nStringIdendpoint};
 
-const CStringDictionary::TStringId FORTE_OrchestratorRequestAdp::scm_anDataOutputTypeIds[] = {g_nStringIdServiceRequestForm, g_nStringIdWSTRING};
+const CStringDictionary::TStringId FORTE_OrchestratorRequestAdp::scmDataOutputTypeIds[] = {g_nStringIdServiceRequestForm, g_nStringIdWSTRING};
 
-const TDataIOID FORTE_OrchestratorRequestAdp::scm_anEIWith[] = {0, scmWithListDelimiter};
-const TForteInt16 FORTE_OrchestratorRequestAdp::scm_anEIWithIndexes[] = {0, -1};
-const CStringDictionary::TStringId FORTE_OrchestratorRequestAdp::scm_anEventInputNames[] = {g_nStringIdresponseReceived};
+const TDataIOID FORTE_OrchestratorRequestAdp::scmEIWith[] = {0, scmWithListDelimiter};
+const TForteInt16 FORTE_OrchestratorRequestAdp::scmEIWithIndexes[] = {0, -1};
+const CStringDictionary::TStringId FORTE_OrchestratorRequestAdp::scmEventInputNames[] = {g_nStringIdresponseReceived};
 
-const TDataIOID FORTE_OrchestratorRequestAdp::scm_anEOWith[] = {0, 1, scmWithListDelimiter};
-const TForteInt16 FORTE_OrchestratorRequestAdp::scm_anEOWithIndexes[] = {0, -1};
-const CStringDictionary::TStringId FORTE_OrchestratorRequestAdp::scm_anEventOutputNames[] = {g_nStringIdrequestOrchestator};
+const TDataIOID FORTE_OrchestratorRequestAdp::scmEOWith[] = {0, 1, scmWithListDelimiter};
+const TForteInt16 FORTE_OrchestratorRequestAdp::scmEOWithIndexes[] = {0, -1};
+const CStringDictionary::TStringId FORTE_OrchestratorRequestAdp::scmEventOutputNames[] = {g_nStringIdrequestOrchestator};
 
-const SFBInterfaceSpec FORTE_OrchestratorRequestAdp::scm_stFBInterfaceSpecSocket = {
-  1,  scm_anEventInputNames,  scm_anEIWith,  scm_anEIWithIndexes,
-  1,  scm_anEventOutputNames,  scm_anEOWith, scm_anEOWithIndexes,  1,  scm_anDataInputNames, scm_anDataInputTypeIds,
-  2,  scm_anDataOutputNames, scm_anDataOutputTypeIds,
+const SFBInterfaceSpec FORTE_OrchestratorRequestAdp::scmFBInterfaceSpecSocket = {
+  1,  scmEventInputNames,  scmEIWith,  scmEIWithIndexes,
+  1,  scmEventOutputNames,  scmEOWith, scmEOWithIndexes,  1,  scmDataInputNames, scmDataInputTypeIds,
+  2,  scmDataOutputNames, scmDataOutputTypeIds,
   0, 0
 };
 
-const SFBInterfaceSpec FORTE_OrchestratorRequestAdp::scm_stFBInterfaceSpecPlug = {
-  1,  scm_anEventOutputNames,  scm_anEOWith,  scm_anEOWithIndexes,
-  1,  scm_anEventInputNames,  scm_anEIWith, scm_anEIWithIndexes,  2,  scm_anDataOutputNames, scm_anDataOutputTypeIds,
-  1,  scm_anDataInputNames, scm_anDataInputTypeIds,
+const SFBInterfaceSpec FORTE_OrchestratorRequestAdp::scmFBInterfaceSpecPlug = {
+  1,  scmEventOutputNames,  scmEOWith,  scmEOWithIndexes,
+  1,  scmEventInputNames,  scmEIWith, scmEIWithIndexes,  2,  scmDataOutputNames, scmDataOutputTypeIds,
+  1,  scmDataInputNames, scmDataInputTypeIds,
   0, 0
 };
 

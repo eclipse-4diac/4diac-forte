@@ -25,15 +25,15 @@ class GEN_F_MUX : public CGenFunctionBlock<CFunctionBlock> {
 
   private:
     //we know for sure that there is one output event
-    static const CStringDictionary::TStringId scm_anEventOutputNames[];
+    static const CStringDictionary::TStringId scmEventOutputNames[];
 
-    static const TEventID scm_nEventEOID = 0;
+    static const TEventID scmEventEOID = 0;
 
-    CStringDictionary::TStringId *m_anEventInputNames;
-    CStringDictionary::TStringId *m_anDataOutputNames;
-    CStringDictionary::TStringId *m_anDataInputNames;
-    CStringDictionary::TStringId *m_anDataOutputTypeIds;
-    CStringDictionary::TStringId *m_anDataInputTypeIds;
+    CStringDictionary::TStringId *mEventInputNames;
+    CStringDictionary::TStringId *mDataOutputNames;
+    CStringDictionary::TStringId *mDataInputNames;
+    CStringDictionary::TStringId *mDataOutputTypeIds;
+    CStringDictionary::TStringId *mDataInputTypeIds;
 
     //self-defined members
     size_t mEInputs;

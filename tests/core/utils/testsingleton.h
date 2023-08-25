@@ -20,13 +20,13 @@ class TestSingleton{
   public:
 
     int getSingletonID() {
-      return m_unSingletonID;
+      return mSingletonID;
     }
 
   private:
-    static unsigned int sm_unInstanceCount;
+    static unsigned int smInstanceCount;
 
-    unsigned int m_unSingletonID;
+    unsigned int mSingletonID;
 };
 
 #endif /* TESTSINGLETON_H_ */

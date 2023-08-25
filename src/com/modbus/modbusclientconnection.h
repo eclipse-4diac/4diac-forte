@@ -22,14 +22,14 @@ class CModbusPoll;
 namespace modbus_connection_event {
   class CModbusConnectionEvent : public CModbusTimedEvent{
     public:
-      explicit CModbusConnectionEvent(long pa_nReconnectInterval, EModbusFlowControl pa_enFlowControl, const char *pa_acDevice); //ReconnectInterval = 0 => only one connection try
+      explicit CModbusConnectionEvent(long paReconnectInterval, EModbusFlowControl paFlowControl, const char *paDevice); //ReconnectInterval = 0 => only one connection try
       ~CModbusConnectionEvent() override = default;
 
-      int executeEvent(modbus_t *pa_pModbusConn, void *pa_pRetVal) override;
+      int executeEvent(modbus_t *paModbusConn, void *paRetVal) override;
 
     private:
-      EModbusFlowControl m_enFlowControl;
-      char m_acDevice[256];
+      EModbusFlowControl mFlowControl;
+      char mDevice[256];
   };
 }
 
@@ -38,14 +38,14 @@ class CModbusClientConnection : public CModbusConnection{
     explicit CModbusClientConnection(CModbusHandler* pa_modbusHandler);
     ~CModbusClientConnection() override;
 
-    int readData(CModbusIOBlock* pa_pIOBlock, void* pa_pData, unsigned int pa_nMaxDataSize) override;
-    void writeDataRange(EModbusFunction pa_eFunction, unsigned int pa_nStartAddress, unsigned int pa_nNrAddresses, const void *pa_pData);
+    int readData(CModbusIOBlock* paIOBlock, void* paData, unsigned int paMaxDataSize) override;
+    void writeDataRange(EModbusFunction paFunction, unsigned int paStartAddress, unsigned int paNrAddresses, const void *paData);
     int connect() override;
     void disconnect() override;
 
-    void addNewPoll(long pa_nPollInterval, CModbusIOBlock* pa_pIOBlock);
+    void addNewPoll(long paPollInterval, CModbusIOBlock* paIOBlock);
 
-    void setSlaveId(unsigned int pa_nSlaveId);
+    void setSlaveId(unsigned int paSlaveId);
 
   protected:
     void run() override;
@@ -54,14 +54,14 @@ class CModbusClientConnection : public CModbusConnection{
     void tryConnect();
     void tryPolling();
 
-    modbus_connection_event::CModbusConnectionEvent *m_pModbusConnEvent;
+    modbus_connection_event::CModbusConnectionEvent *mModbusConnEvent;
 
     typedef std::vector<CModbusPoll*> TModbusPollList;
-    TModbusPollList m_lstPollList;
+    TModbusPollList mPollList;
 
-    unsigned int m_nSlaveId;
+    unsigned int mSlaveId;
 
-    CSyncObject m_oModbusLock;
+    CSyncObject mModbusLock;
 };
 
 #endif

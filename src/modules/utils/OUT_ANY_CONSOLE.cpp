@@ -24,34 +24,34 @@
 
 DEFINE_FIRMWARE_FB(FORTE_OUT_ANY_CONSOLE, g_nStringIdOUT_ANY_CONSOLE)
 
-const CStringDictionary::TStringId FORTE_OUT_ANY_CONSOLE::scm_anDataInputNames[] = {g_nStringIdQI, g_nStringIdLABEL, g_nStringIdIN};
+const CStringDictionary::TStringId FORTE_OUT_ANY_CONSOLE::scmDataInputNames[] = {g_nStringIdQI, g_nStringIdLABEL, g_nStringIdIN};
 
-const CStringDictionary::TStringId FORTE_OUT_ANY_CONSOLE::scm_anDataInputTypeIds[] = {g_nStringIdBOOL, g_nStringIdSTRING, g_nStringIdANY};
+const CStringDictionary::TStringId FORTE_OUT_ANY_CONSOLE::scmDataInputTypeIds[] = {g_nStringIdBOOL, g_nStringIdSTRING, g_nStringIdANY};
 
-const CStringDictionary::TStringId FORTE_OUT_ANY_CONSOLE::scm_anDataOutputNames[] = {g_nStringIdQO};
+const CStringDictionary::TStringId FORTE_OUT_ANY_CONSOLE::scmDataOutputNames[] = {g_nStringIdQO};
 
-const CStringDictionary::TStringId FORTE_OUT_ANY_CONSOLE::scm_anDataOutputTypeIds[] = {g_nStringIdBOOL};
+const CStringDictionary::TStringId FORTE_OUT_ANY_CONSOLE::scmDataOutputTypeIds[] = {g_nStringIdBOOL};
 
-const TDataIOID FORTE_OUT_ANY_CONSOLE::scm_anEIWith[] = {0, 2, 1, scmWithListDelimiter};
-const TForteInt16 FORTE_OUT_ANY_CONSOLE::scm_anEIWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_OUT_ANY_CONSOLE::scm_anEventInputNames[] = {g_nStringIdREQ};
+const TDataIOID FORTE_OUT_ANY_CONSOLE::scmEIWith[] = {0, 2, 1, scmWithListDelimiter};
+const TForteInt16 FORTE_OUT_ANY_CONSOLE::scmEIWithIndexes[] = {0};
+const CStringDictionary::TStringId FORTE_OUT_ANY_CONSOLE::scmEventInputNames[] = {g_nStringIdREQ};
 
-const TDataIOID FORTE_OUT_ANY_CONSOLE::scm_anEOWith[] = {0, scmWithListDelimiter};
-const TForteInt16 FORTE_OUT_ANY_CONSOLE::scm_anEOWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_OUT_ANY_CONSOLE::scm_anEventOutputNames[] = {g_nStringIdCNF};
+const TDataIOID FORTE_OUT_ANY_CONSOLE::scmEOWith[] = {0, scmWithListDelimiter};
+const TForteInt16 FORTE_OUT_ANY_CONSOLE::scmEOWithIndexes[] = {0};
+const CStringDictionary::TStringId FORTE_OUT_ANY_CONSOLE::scmEventOutputNames[] = {g_nStringIdCNF};
 
 
-const SFBInterfaceSpec FORTE_OUT_ANY_CONSOLE::scm_stFBInterfaceSpec = {
-  1, scm_anEventInputNames, scm_anEIWith, scm_anEIWithIndexes,
-  1, scm_anEventOutputNames, scm_anEOWith, scm_anEOWithIndexes,
-  3, scm_anDataInputNames, scm_anDataInputTypeIds,
-  1, scm_anDataOutputNames, scm_anDataOutputTypeIds,
+const SFBInterfaceSpec FORTE_OUT_ANY_CONSOLE::scmFBInterfaceSpec = {
+  1, scmEventInputNames, scmEIWith, scmEIWithIndexes,
+  1, scmEventOutputNames, scmEOWith, scmEOWithIndexes,
+  3, scmDataInputNames, scmDataInputTypeIds,
+  1, scmDataOutputNames, scmDataOutputTypeIds,
   0, nullptr,
   0, nullptr
 };
 
-FORTE_OUT_ANY_CONSOLE::FORTE_OUT_ANY_CONSOLE(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes) :
-    CFunctionBlock( pa_poSrcRes, &scm_stFBInterfaceSpec, pa_nInstanceNameId),
+FORTE_OUT_ANY_CONSOLE::FORTE_OUT_ANY_CONSOLE(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) :
+    CFunctionBlock( paSrcRes, &scmFBInterfaceSpec, paInstanceNameId),
     var_QI(CIEC_BOOL(0)),
     var_LABEL(CIEC_STRING("", 0)),
     var_IN(CIEC_ANY_VARIANT()),
@@ -64,9 +64,9 @@ FORTE_OUT_ANY_CONSOLE::FORTE_OUT_ANY_CONSOLE(const CStringDictionary::TStringId 
     conn_QO(this, 0, &var_conn_QO) {
 };
 
-void FORTE_OUT_ANY_CONSOLE::executeEvent(TEventID pa_nEIID) {
-  switch(pa_nEIID) {
-    case scm_nEventREQID:
+void FORTE_OUT_ANY_CONSOLE::executeEvent(TEventID paEIID) {
+  switch(paEIID) {
+    case scmEventREQID:
       var_QO = var_QI;
       if (var_QI) {
         DEVLOG_INFO(" %s = ", var_LABEL.getStorage().c_str());
@@ -75,14 +75,14 @@ void FORTE_OUT_ANY_CONSOLE::executeEvent(TEventID pa_nEIID) {
         var_IN.toString(buffer.data(), buffer.capacity());
         DEVLOG_INFO("%s\n", buffer.c_str());
       }
-      sendOutputEvent(scm_nEventCNFID);
+      sendOutputEvent(scmEventCNFID);
       break;
   }
 }
 
-void FORTE_OUT_ANY_CONSOLE::readInputData(TEventID pa_nEIID) {
-  switch(pa_nEIID) {
-    case scm_nEventREQID: {
+void FORTE_OUT_ANY_CONSOLE::readInputData(TEventID paEIID) {
+  switch(paEIID) {
+    case scmEventREQID: {
       RES_DATA_CON_CRITICAL_REGION();
       readData(0, var_QI, conn_QI);
       readData(2, var_IN, conn_IN);
@@ -94,9 +94,9 @@ void FORTE_OUT_ANY_CONSOLE::readInputData(TEventID pa_nEIID) {
   }
 }
 
-void FORTE_OUT_ANY_CONSOLE::writeOutputData(TEventID pa_nEIID) {
-  switch(pa_nEIID) {
-    case scm_nEventCNFID: {
+void FORTE_OUT_ANY_CONSOLE::writeOutputData(TEventID paEIID) {
+  switch(paEIID) {
+    case scmEventCNFID: {
       RES_DATA_CON_CRITICAL_REGION();
       writeData(0, var_QO, conn_QO);
       break;

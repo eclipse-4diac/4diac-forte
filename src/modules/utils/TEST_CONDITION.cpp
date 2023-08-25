@@ -26,20 +26,20 @@ bool FORTE_TEST_CONDITION::smfinalReportPrinted = false;
 
 DEFINE_FIRMWARE_FB(FORTE_TEST_CONDITION, g_nStringIdTEST_CONDITION)
 
-const CStringDictionary::TStringId FORTE_TEST_CONDITION::scm_anDataInputNames[] = {g_nStringIdcheck};
+const CStringDictionary::TStringId FORTE_TEST_CONDITION::scmDataInputNames[] = {g_nStringIdcheck};
 
-const CStringDictionary::TStringId FORTE_TEST_CONDITION::scm_anDataInputTypeIds[] = {g_nStringIdBOOL};
+const CStringDictionary::TStringId FORTE_TEST_CONDITION::scmDataInputTypeIds[] = {g_nStringIdBOOL};
 
-const TForteInt16 FORTE_TEST_CONDITION::scm_anEIWithIndexes[] = {0};
-const TDataIOID FORTE_TEST_CONDITION::scm_anEIWith[] = {0, scmWithListDelimiter};
-const CStringDictionary::TStringId FORTE_TEST_CONDITION::scm_anEventInputNames[] = {g_nStringIdREQ};
+const TForteInt16 FORTE_TEST_CONDITION::scmEIWithIndexes[] = {0};
+const TDataIOID FORTE_TEST_CONDITION::scmEIWith[] = {0, scmWithListDelimiter};
+const CStringDictionary::TStringId FORTE_TEST_CONDITION::scmEventInputNames[] = {g_nStringIdREQ};
 
-const TForteInt16 FORTE_TEST_CONDITION::scm_anEOWithIndexes[] = {-1, -1};
-const CStringDictionary::TStringId FORTE_TEST_CONDITION::scm_anEventOutputNames[] = {g_nStringIdCNF};
+const TForteInt16 FORTE_TEST_CONDITION::scmEOWithIndexes[] = {-1, -1};
+const CStringDictionary::TStringId FORTE_TEST_CONDITION::scmEventOutputNames[] = {g_nStringIdCNF};
 
-const SFBInterfaceSpec FORTE_TEST_CONDITION::scm_stFBInterfaceSpec = {
-  1,  scm_anEventInputNames,  scm_anEIWith,  scm_anEIWithIndexes,
-  1,  scm_anEventOutputNames,  nullptr, nullptr,  1,  scm_anDataInputNames, scm_anDataInputTypeIds,
+const SFBInterfaceSpec FORTE_TEST_CONDITION::scmFBInterfaceSpec = {
+  1,  scmEventInputNames,  scmEIWith,  scmEIWithIndexes,
+  1,  scmEventOutputNames,  nullptr, nullptr,  1,  scmDataInputNames, scmDataInputTypeIds,
   0,  nullptr, nullptr,
   0, nullptr,
   0, nullptr
@@ -62,7 +62,7 @@ FORTE_TEST_CONDITION::~FORTE_TEST_CONDITION() {
 
 
 void FORTE_TEST_CONDITION::executeEvent(TEventID paEIID) {
-  if(scm_nEventREQID == paEIID) {
+  if(scmEventREQID == paEIID) {
     smExecutedTests++;
     if(check()) {
       DEVLOG_INFO(" ------------------------------ [TEST_CONDITION_PASSED] %s.%s passed\n", getResource().getInstanceName(), getInstanceName());
@@ -71,7 +71,7 @@ void FORTE_TEST_CONDITION::executeEvent(TEventID paEIID) {
         getInstanceName());
       smFailedTests++;
     }
-    sendOutputEvent(scm_nEventCNFID);
+    sendOutputEvent(scmEventCNFID);
   }
 }
 

@@ -44,9 +44,9 @@ int CROSManager::getPriority() const{
   return 0;
 }
 
-void CROSManager::startChain(CEventSourceFB *pa_poECStartF){
-  if(0 != pa_poECStartF){
-    startNewEventChain(pa_poECStartF);
+void CROSManager::startChain(CEventSourceFB *paECStartF){
+  if(0 != paECStartF){
+    startNewEventChain(paECStartF);
   }
 }
 

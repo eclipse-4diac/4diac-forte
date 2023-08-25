@@ -20,22 +20,22 @@
 
 DEFINE_FIRMWARE_FB(FORTE_E_TimeOut, g_nStringIdE_TimeOut)
 
-const TForteInt16 FORTE_E_TimeOut::scm_anEOWithIndexes[] = { -1 };
-const SAdapterInstanceDef FORTE_E_TimeOut::scm_astAdapterInstances[] = { { g_nStringIdATimeOut, g_nStringIdTimeOutSocket, false } };
+const TForteInt16 FORTE_E_TimeOut::scmEOWithIndexes[] = { -1 };
+const SAdapterInstanceDef FORTE_E_TimeOut::scmAdapterInstances[] = { { g_nStringIdATimeOut, g_nStringIdTimeOutSocket, false } };
 
-const SFBInterfaceSpec FORTE_E_TimeOut::scm_stFBInterfaceSpec = {
+const SFBInterfaceSpec FORTE_E_TimeOut::scmFBInterfaceSpec = {
   0, nullptr, nullptr, nullptr,
   0, nullptr, nullptr, nullptr,
   0, nullptr, nullptr,
   0, nullptr, nullptr,
   0, nullptr,
-  1, scm_astAdapterInstances
+  1, scmAdapterInstances
 };
 
 void FORTE_E_TimeOut::executeEvent(TEventID paEIID, CEventChainExecutionThread * const paECET){
   if(cg_nExternalEventID == paEIID){
     mActive = false;
-    sendAdapterEvent(scm_nTimeOutSocketAdpNum, FORTE_ATimeOut::scm_nEventTimeOutID, getEventChainExecutor());
+    sendAdapterEvent(scmTimeOutSocketAdpNum, FORTE_ATimeOut::scmEventTimeOutID, getEventChainExecutor());
   }
   else if(var_TimeOutSocket().evt_START() == paEIID){
     if(!mActive){
@@ -52,9 +52,9 @@ void FORTE_E_TimeOut::executeEvent(TEventID paEIID, CEventChainExecutionThread *
   }
 }
 
-EMGMResponse FORTE_E_TimeOut::changeFBExecutionState(EMGMCommandType pa_unCommand){
-  EMGMResponse eRetVal = CFunctionBlock::changeFBExecutionState(pa_unCommand);
-  if((EMGMResponse::Ready == eRetVal) && ((EMGMCommandType::Stop == pa_unCommand) || (EMGMCommandType::Kill == pa_unCommand))){
+EMGMResponse FORTE_E_TimeOut::changeFBExecutionState(EMGMCommandType paCommand){
+  EMGMResponse eRetVal = CFunctionBlock::changeFBExecutionState(paCommand);
+  if((EMGMResponse::Ready == eRetVal) && ((EMGMCommandType::Stop == paCommand) || (EMGMCommandType::Kill == paCommand))){
     if(mActive){
       getTimer().unregisterTimedFB(this);
       mActive = false;

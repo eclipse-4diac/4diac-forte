@@ -124,7 +124,7 @@ MLOCAL VOID PanicHandler(UINT32 PanicMode){
  * Ret:
  *-------------------------------------------------------------------------*/
 CFORTEModule::CFORTEModule() :
-    m_poDev(nullptr){
+    mDev(nullptr){
   forteInit::initForte();
 }
 
@@ -166,15 +166,15 @@ SINT32 CFORTEModule::AppEarlyInit(VOID){
  *      <0   Error occurred
  *-------------------------------------------------------------------------*/
 SINT32 CFORTEModule::AppInit(VOID){
-  m_unFORTEstartOK = 1;
+  mFORTEstartOK = 1;
   //--- Add global variables for values that have to be exported via SVI.
-  if(GetSVIHandler().AddGlobVar("FORTEstart", SVI_F_INOUT | SVI_F_UINT32, 4, &(m_unFORTEstartOK), 0, 0) != OK){
+  if(GetSVIHandler().AddGlobVar("FORTEstart", SVI_F_INOUT | SVI_F_UINT32, 4, &(mFORTEstartOK), 0, 0) != OK){
     DEVLOG_ERROR("FORTE_mod::APPINIT: Can't add SVI variable 'FORTEstart'!");
   }
 
   DEVLOG_INFO("appInit of forte\n");
-  if(0 == m_poDev){
-    m_poDev = new BE_RMT_DEV(*this);
+  if(0 == mDev){
+    mDev = new BE_RMT_DEV(*this);
     DEVLOG_INFO("appInit after new BE_RMT_DEV");
   }
 
@@ -195,7 +195,7 @@ SINT32 CFORTEModule::AppInit(VOID){
  *-------------------------------------------------------------------------*/
 SINT32 CFORTEModule::AppDeInit(VOID){
   //--- Delete walking light class
-  SAFE_DELETE(m_poDev);
+  SAFE_DELETE(mDev);
   return (0);
 }
 
@@ -224,12 +224,12 @@ SINT32 CFORTEModule::AppLateDeInit(VOID){
  *      <0   Error occurred
  *-------------------------------------------------------------------------*/
 SINT32 CFORTEModule::AppEOI(VOID){
-  if(0 != m_poDev){
-    m_poDev->startDevice();
-    DEVLOG_INFO("m_poDev started\n");
+  if(0 != mDev){
+    mDev->startDevice();
+    DEVLOG_INFO("mDev started\n");
   }
   else{
-    DEVLOG_ERROR("no m_poDev preset\n");
+    DEVLOG_ERROR("no mDev preset\n");
   }
 
   return (0);
@@ -246,8 +246,8 @@ SINT32 CFORTEModule::AppEOI(VOID){
  *           ERROR   An error occurred
  *-------------------------------------------------------------------------*/
 SINT32 CFORTEModule::AppStop(VOID){
-  if(0 != m_poDev){
-    m_poDev->changeFBExecutionState(EMGMCommandType::Stop);
+  if(0 != mDev){
+    mDev->changeFBExecutionState(EMGMCommandType::Stop);
   }
 
   return OK;
@@ -316,6 +316,6 @@ VOID CFORTEModule::RpcNewCfg(SMI_MSG *pMsg){
  *--------------------------------------------------------------------------*/
 VOID CFORTEModule::CfgRead(VOID){
   //--- Get the delay time for my application.
-  pf_GetInt(GetAppName(), FORTE_C_PARMS, FORTE_C_DELAY, FORTE_DELAY, (SINT32 *) &m_unFORTEstartOK, GetCfgLine(), GetProfileName());
+  pf_GetInt(GetAppName(), FORTE_C_PARMS, FORTE_C_DELAY, FORTE_DELAY, (SINT32 *) &mFORTEstartOK, GetCfgLine(), GetProfileName());
 }
 

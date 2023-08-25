@@ -23,14 +23,14 @@ class FORTE_Port : public CFunctionBlock {
   DECLARE_FIRMWARE_FB(FORTE_Port)
 
 private:
-  static const CStringDictionary::TStringId scm_anDataInputNames[];
-  static const CStringDictionary::TStringId scm_anDataInputTypeIds[];
+  static const CStringDictionary::TStringId scmDataInputNames[];
+  static const CStringDictionary::TStringId scmDataInputTypeIds[];
 
-  static const int scm_nPortInAdapterAdpNum = 0;
+  static const int scmPortInAdapterAdpNum = 0;
 
-  static const SAdapterInstanceDef scm_astAdapterInstances[];
+  static const SAdapterInstanceDef scmAdapterInstances[];
 
-  static const SFBInterfaceSpec scm_stFBInterfaceSpec;
+  static const SFBInterfaceSpec scmFBInterfaceSpec;
 
   CIEC_WSTRING &st_Pin0() { return *static_cast<CIEC_WSTRING *>(getDI(0)); }
 
@@ -65,7 +65,7 @@ private:
   CIEC_WSTRING &st_Pin15() { return *static_cast<CIEC_WSTRING *>(getDI(15)); }
 
   FORTE_PortAdapter &st_PortInAdapter() {
-    return (*static_cast<FORTE_PortAdapter *>(m_apoAdapters[0]));
+    return (*static_cast<FORTE_PortAdapter *>(mAdapters[0]));
   };
 
 
@@ -73,15 +73,15 @@ private:
   static constexpr size_t pin_cnt = 16;
   std::array<CIEC_WSTRING *, pin_cnt> mRegistered;
 
-  void executeEvent(TEventID pa_nEIID) override;
+  void executeEvent(TEventID paEIID) override;
   void deregister_handles();
   void register_handles();
 
 
 public:
-  FORTE_Port(const CStringDictionary::TStringId pa_nInstanceNameId,
-             CResource *pa_poSrcRes)
-      : CFunctionBlock(pa_poSrcRes, &scm_stFBInterfaceSpec, pa_nInstanceNameId),
+  FORTE_Port(const CStringDictionary::TStringId paInstanceNameId,
+             CResource *paSrcRes)
+      : CFunctionBlock(paSrcRes, &scmFBInterfaceSpec, paInstanceNameId),
         mRegistered{} {};
 
   ~FORTE_Port() override = default;

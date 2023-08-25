@@ -20,43 +20,43 @@ class FORTE_CFB_TEST: public CCompositeFB{
   DECLARE_FIRMWARE_FB(FORTE_CFB_TEST)
 
 private:
-  static const CStringDictionary::TStringId scm_anDataInputNames[];
-  static const CStringDictionary::TStringId scm_anDataInputTypeIds[];
+  static const CStringDictionary::TStringId scmDataInputNames[];
+  static const CStringDictionary::TStringId scmDataInputTypeIds[];
   CIEC_BOOL &QI() {
     return *static_cast<CIEC_BOOL*>(getDI(0));
   };
 
-  static const CStringDictionary::TStringId scm_anDataOutputNames[];
-  static const CStringDictionary::TStringId scm_anDataOutputTypeIds[];
+  static const CStringDictionary::TStringId scmDataOutputNames[];
+  static const CStringDictionary::TStringId scmDataOutputTypeIds[];
   CIEC_BOOL &SR() {
     return *static_cast<CIEC_BOOL*>(getDO(0));
   };
 
-  static const TEventID scm_nEventSETID = 0;
-  static const TEventID scm_nEventRESETID = 1;
-  static const TForteInt16 scm_anEIWithIndexes[];
-  static const TDataIOID scm_anEIWith[];
-  static const CStringDictionary::TStringId scm_anEventInputNames[];
+  static const TEventID scmEventSETID = 0;
+  static const TEventID scmEventRESETID = 1;
+  static const TForteInt16 scmEIWithIndexes[];
+  static const TDataIOID scmEIWith[];
+  static const CStringDictionary::TStringId scmEventInputNames[];
 
-  static const TEventID scm_nEventCNFID = 0;
-  static const TEventID scm_nEventCHANGEDID = 1;
-  static const TForteInt16 scm_anEOWithIndexes[];
-  static const TDataIOID scm_anEOWith[];
-  static const CStringDictionary::TStringId scm_anEventOutputNames[];
+  static const TEventID scmEventCNFID = 0;
+  static const TEventID scmEventCHANGEDID = 1;
+  static const TForteInt16 scmEOWithIndexes[];
+  static const TDataIOID scmEOWith[];
+  static const CStringDictionary::TStringId scmEventOutputNames[];
 
-  static const SFBInterfaceSpec scm_stFBInterfaceSpec;
+  static const SFBInterfaceSpec scmFBInterfaceSpec;
 
 
-  static const SCFB_FBInstanceData scm_astInternalFBs[];
+  static const SCFB_FBInstanceData scmInternalFBs[];
 
-  static const SCFB_FBConnectionData scm_astEventConnections[];
+  static const SCFB_FBConnectionData scmEventConnections[];
 
-  static const SCFB_FBFannedOutConnectionData scm_astFannedOutEventConnections[];
+  static const SCFB_FBFannedOutConnectionData scmFannedOutEventConnections[];
 
-  static const SCFB_FBConnectionData scm_astDataConnections[];
+  static const SCFB_FBConnectionData scmDataConnections[];
 
-  static const SCFB_FBFannedOutConnectionData scm_astFannedOutDataConnections[];
-  static const SCFB_FBNData scm_stFBNData;
+  static const SCFB_FBFannedOutConnectionData scmFannedOutDataConnections[];
+  static const SCFB_FBNData scmFBNData;
 
 public:
   COMPOSITE_FUNCTION_BLOCK_CTOR(FORTE_CFB_TEST){

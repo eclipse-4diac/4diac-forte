@@ -455,10 +455,10 @@ BOOST_AUTO_TEST_CASE(String_fromString)
   BOOST_TEST(sTestee == cTestEscapedCharacterResult);
 }
 
-void stringTypedFromString(const std::string &pa_sSrc, const CIEC_STRING& pa_acResult){
+void stringTypedFromString(const std::string &paSrc, const CIEC_STRING& paResult){
   CIEC_STRING sTestee;
-  BOOST_TEST(pa_sSrc.length() == sTestee.fromString(pa_sSrc.c_str()));
-  BOOST_TEST(sTestee == pa_acResult);
+  BOOST_TEST(paSrc.length() == sTestee.fromString(paSrc.c_str()));
+  BOOST_TEST(sTestee == paResult);
 }
 
 BOOST_AUTO_TEST_CASE(String_fromString_typed) {

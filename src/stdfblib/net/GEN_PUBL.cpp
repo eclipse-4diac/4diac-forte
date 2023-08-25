@@ -20,12 +20,12 @@ DEFINE_GENERIC_FIRMWARE_FB(GEN_PUBL, g_nStringIdGEN_PUBL)
 const char * const GEN_PUBL::scmLocalIDPrefix = "loc[";
 const char * const GEN_PUBL::scmLocalIDSuffix = "]";
 
-GEN_PUBL::GEN_PUBL(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes):
-          GEN_PUBLISH( pa_nInstanceNameId, pa_poSrcRes) {
+GEN_PUBL::GEN_PUBL(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes):
+          GEN_PUBLISH( paInstanceNameId, paSrcRes) {
 }
 
-bool GEN_PUBL::configureFB(const char *pa_acConfigString){
-  bool bRetVal = GEN_PUBLISH::configureFB(pa_acConfigString);
+bool GEN_PUBL::configureFB(const char *paConfigString){
+  bool bRetVal = GEN_PUBLISH::configureFB(paConfigString);
   //publs normally don't show the QI in the tool
   QI() = CIEC_BOOL(true);
   return bRetVal;
