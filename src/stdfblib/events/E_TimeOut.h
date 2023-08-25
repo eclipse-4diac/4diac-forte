@@ -50,7 +50,6 @@ class FORTE_E_TimeOut : public CEventSourceFB{
       mActive = false;
       mTimeListEntry.mTimeOut = 0;
       mTimeListEntry.mInterval = 0;
-      mTimeListEntry.mNext = nullptr;
       mTimeListEntry.mType = e_SingleShot;
       mTimeListEntry.mTimedFB = this;
     };

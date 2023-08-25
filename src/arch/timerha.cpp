@@ -24,48 +24,30 @@
 DEFINE_HANDLER(CTimerHandler)
 
 CTimerHandler::CTimerHandler(CDeviceExecution& paDeviceExecution) : CExternalEventHandler(paDeviceExecution),
-    mForteTime(0), mTimedFBList(nullptr), mAddFBList(nullptr){
+    mForteTime(0) {
 }
 
 CTimerHandler::~CTimerHandler() = default;
 
-void CTimerHandler::registerTimedFB(STimedFBListEntry *paTimerListEntry, const CIEC_TIME &paTimeInterval) {
+void CTimerHandler::registerTimedFB(STimedFBListEntry paTimerListEntry, const CIEC_TIME &paTimeInterval) {
   //calculate the correct interval based on time-base and timer ticks per seconds
-  paTimerListEntry->mInterval = static_cast<TForteUInt32>((static_cast<CIEC_TIME::TValueType>(paTimeInterval) * getTicksPerSecond()) / CIEC_ANY_DURATION::csmForteTimeBaseUnitsPerSecond);
+  paTimerListEntry.mInterval = static_cast<TForteUInt32>((static_cast<CIEC_TIME::TValueType>(paTimeInterval) * getTicksPerSecond()) / CIEC_ANY_DURATION::csmForteTimeBaseUnitsPerSecond);
   // Correct null intervals that can lead to event queue overflow to at least 1 timer tick
-  if(0 == paTimerListEntry->mInterval) {
-    paTimerListEntry->mInterval = 1;
+  if(0 == paTimerListEntry.mInterval) {
+    paTimerListEntry.mInterval = 1;
   }
   // set the first next activation time right here to reduce jitter, see Bug #568902 for details
-  paTimerListEntry->mTimeOut = mForteTime + paTimerListEntry->mInterval;
+  paTimerListEntry.mTimeOut = mForteTime + paTimerListEntry.mInterval;
   {
     CCriticalRegion criticalRegion(mAddListSync);
-    paTimerListEntry->mNext = mAddFBList;
-    mAddFBList = paTimerListEntry;
+    mAddFBList.push_back(paTimerListEntry);
   }
 }
 
-void CTimerHandler::addTimedFBEntry(STimedFBListEntry *paTimerListEntry) {
-  paTimerListEntry->mNext = nullptr;
-  if (nullptr == mTimedFBList) {
-    mTimedFBList = paTimerListEntry;
-  } else {
-    if (mTimedFBList->mTimeOut > paTimerListEntry->mTimeOut) {
-      paTimerListEntry->mNext = mTimedFBList;
-      mTimedFBList = paTimerListEntry;
-    } else {
-      STimedFBListEntry *runner = mTimedFBList;
-      while (nullptr != runner->mNext) {
-        if (runner->mNext->mTimeOut > paTimerListEntry->mTimeOut) {
-          paTimerListEntry->mNext = runner->mNext;
-          runner->mNext = paTimerListEntry;
-          break;
-        }
-        runner = runner->mNext;
-      }
-      runner->mNext = paTimerListEntry;
-    }
-  }
+void CTimerHandler::addTimedFBEntry(STimedFBListEntry paTimerListEntry) {
+  auto it = std::lower_bound(mTimedFBList.begin(), mTimedFBList.end(), paTimerListEntry, 
+    [](STimedFBListEntry entry1, STimedFBListEntry entry2) { return entry1.mTimeOut < entry2.mTimeOut; });
+  mTimedFBList.insert(it, paTimerListEntry);
 }
 
 void CTimerHandler::unregisterTimedFB(CEventSourceFB *paTimedFB) {
@@ -74,27 +56,9 @@ void CTimerHandler::unregisterTimedFB(CEventSourceFB *paTimedFB) {
 }
 
 void CTimerHandler::removeTimedFB(CEventSourceFB *paTimedFB) {
-  if (nullptr != mTimedFBList) {
-    STimedFBListEntry *buffer = nullptr;
-    if (mTimedFBList->mTimedFB == paTimedFB) {
-      buffer = mTimedFBList;
-      mTimedFBList = mTimedFBList->mNext;
-      buffer->mNext = nullptr;
-      buffer->mTimeOut = 0;
-    } else {
-      STimedFBListEntry *runner = mTimedFBList;
-      while (nullptr != runner->mNext) {
-        if (runner->mNext->mTimedFB == paTimedFB) {
-          buffer = runner->mNext;
-          runner->mNext = runner->mNext->mNext;
-          buffer->mNext = nullptr;
-          buffer->mTimeOut = 0;
-          break;
-        }
-        runner = runner->mNext;
-      }
-    }
-  }
+  auto it = std::remove_if(mTimedFBList.begin(), mTimedFBList.end(), 
+  	[&paTimedFB](STimedFBListEntry entry) { return entry.mTimedFB == paTimedFB; });
+  mTimedFBList.erase(mTimedFBList.begin(), it);
 }
 
 void CTimerHandler::nextTick() {
@@ -107,58 +71,51 @@ void CTimerHandler::nextTick() {
 
   processTimedFBList();
 
-  if(nullptr != mAddFBList){
+  if(!mAddFBList.empty()){
     processAddList();
   }
 }
 
-void  CTimerHandler::processTimedFBList(){
-  while (nullptr != mTimedFBList) {
-    if (mTimedFBList->mTimeOut > mForteTime) {
-      break;
+void CTimerHandler::processTimedFBList() {
+  for (auto it = mTimedFBList.begin(); it != mTimedFBList.end();) {
+    if (it->mTimeOut > mForteTime) {
+      break;  
     }
-    STimedFBListEntry *buffer = mTimedFBList;
-    mTimedFBList = buffer->mNext;  //remove buffer from the list
-    triggerTimedFB(buffer);
+    STimedFBListEntry entry = *it; // buffer entry
+    it = mTimedFBList.erase(it);
+    triggerTimedFB(entry);
   }
 }
 
-void CTimerHandler::triggerTimedFB(STimedFBListEntry *paTimerListEntry){
-  mDeviceExecution.startNewEventChain(paTimerListEntry->mTimedFB);
-
-  switch (paTimerListEntry->mType) {
+void CTimerHandler::triggerTimedFB(STimedFBListEntry paTimerListEntry) {
+  mDeviceExecution.startNewEventChain(paTimerListEntry.mTimedFB);
+  
+  switch (paTimerListEntry.mType) {
     case e_Periodic:
-      paTimerListEntry->mTimeOut = mForteTime + paTimerListEntry->mInterval;  // the next activation time of this FB
+      paTimerListEntry.mTimeOut = mForteTime + paTimerListEntry.mInterval;  // the next activation time of this FB
       addTimedFBEntry(paTimerListEntry); //re-register the timed FB
       break;
     case e_SingleShot:
       // nothing special is to do up to now, therefore go to default
     default:
-      paTimerListEntry->mNext = nullptr;
-      paTimerListEntry->mTimeOut = 0;
       break;
   }
 }
 
-void CTimerHandler::processAddList(){
+void CTimerHandler::processAddList() {
   CCriticalRegion criticalRegion(mAddListSync);
-  while(nullptr != mAddFBList){
-    STimedFBListEntry *buffer = mAddFBList;
-    mAddFBList = buffer->mNext; //remove buffer from the list
-    if(buffer->mTimeOut < mForteTime){
-      // the time already passed trigger the fb
-      triggerTimedFB(buffer);
-    }
-    else{
-      addTimedFBEntry(buffer);
-    }
+  for (auto entry : mAddFBList) {
+	  if(entry.mTimeOut < mForteTime) {
+		  triggerTimedFB(entry);
+	  } else {
+	    addTimedFBEntry(entry);
+	  }
   }
+  mAddFBList.clear();
 }
 
-void CTimerHandler::processRemoveList(){
+void CTimerHandler::processRemoveList() {
   CCriticalRegion criticalRegion(mRemoveListSync);
-  std::for_each(mRemoveFBList.begin(), mRemoveFBList.end(), [this](CEventSourceFB* event) { removeTimedFB(event);} );
+  std::for_each(mRemoveFBList.begin(), mRemoveFBList.end(), [this](CEventSourceFB *event) { removeTimedFB(event);} );
   mRemoveFBList.clear();
 }
-
-

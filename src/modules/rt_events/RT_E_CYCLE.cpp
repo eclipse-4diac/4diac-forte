@@ -72,7 +72,7 @@ void FORTE_RT_E_CYCLE::executeEvent(TEventID paEIID, CEventChainExecutionThread 
     case scmEventSTARTID:
       if(!mActive){
         mECEO.setDeadline(var_Deadline);
-        getTimer().registerTimedFB(&mTimeListEntry, var_DT);
+        getTimer().registerTimedFB(mTimeListEntry, var_DT);
         mActive = true;
       }
       break;
@@ -148,5 +148,3 @@ CDataConnection *FORTE_RT_E_CYCLE::getDOConUnchecked(TPortId paIndex) {
   }
   return nullptr;
 }
-
-

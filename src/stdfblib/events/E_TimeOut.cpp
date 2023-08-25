@@ -39,7 +39,7 @@ void FORTE_E_TimeOut::executeEvent(TEventID paEIID, CEventChainExecutionThread *
   else if(var_TimeOutSocket().evt_START() == paEIID){
     if(!mActive){
       setEventChainExecutor(paECET);  // delay notification should be execute in the same thread on as from where it has been triggered.
-      getTimer().registerTimedFB(&mTimeListEntry, var_TimeOutSocket().var_DT());
+      getTimer().registerTimedFB(mTimeListEntry, var_TimeOutSocket().var_DT());
       mActive = true;
     }
   }

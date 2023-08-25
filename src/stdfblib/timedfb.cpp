@@ -42,7 +42,6 @@ CTimedFB::CTimedFB(const CStringDictionary::TStringId paInstanceNameId, CResourc
   mActive = false;
   mTimeListEntry.mTimeOut = 0;
   mTimeListEntry.mInterval = 0;
-  mTimeListEntry.mNext = nullptr;
   mTimeListEntry.mType = paType;
   mTimeListEntry.mTimedFB = this;
 }
@@ -60,7 +59,7 @@ void CTimedFB::executeEvent(TEventID paEIID, CEventChainExecutionThread * const 
       break;
     case csmEventSTARTID:
       if(!mActive){
-        getTimer().registerTimedFB( &mTimeListEntry, DT());
+        getTimer().registerTimedFB(mTimeListEntry, DT());
         mActive = true;
       }
       break;

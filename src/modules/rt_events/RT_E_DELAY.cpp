@@ -77,7 +77,7 @@ void FORTE_RT_E_DELAY::executeEvent(TEventID paEIID, CEventChainExecutionThread 
       break;
     case scmEventSTARTID:
       if((!mActive)&&(mInitialized)){
-        getTimer().registerTimedFB(&mTimeListEntry, var_DT);
+        getTimer().registerTimedFB(mTimeListEntry, var_DT);
         mActive = true;
       }
       break;
@@ -192,4 +192,3 @@ CDataConnection *FORTE_RT_E_DELAY::getDOConUnchecked(TPortId paIndex) {
   }
   return nullptr;
 }
-

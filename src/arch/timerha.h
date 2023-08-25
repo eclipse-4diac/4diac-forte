@@ -35,7 +35,6 @@ struct STimedFBListEntry{
     CEventSourceFB *mTimedFB; //!< Functionblock to be triggered
     TForteUInt32 mInterval; //!< relative time between FB trigger points (mainly needed for the different periodic timed FBs)
     ETimerActivationType mType; //!< type of activation. e.g. singleshot, periodic, ...
-    STimedFBListEntry *mNext; //!< pointer to the next entry in the list
 };
 
 /*! \brief External event handler for the Timer.
@@ -45,14 +44,12 @@ class CTimerHandler : public CExternalEventHandler{
   DECLARE_HANDLER(CTimerHandler)
     ;
   public:
-
     /*!\brief create the timer handler and set the parameter pointer with the the new timer handler.
      *
      * This function is not implemented in the standardtimerhandler and has to be implemented in the specific implementation.
      * implementations should check that not two timerhanlders can be created.
      */
     static CTimerHandler* createTimerHandler(CDeviceExecution &paDeviceExecution);
-
     /*!\brief Sets the priority of the event source
      *
      * \param paPriority new priority of the event source
@@ -63,7 +60,6 @@ class CTimerHandler : public CExternalEventHandler{
      * \return current priority
      */
     int getPriority() const override = 0;
-
     /*! \brief Get the time base of the runtime
      *
      * \return internal runtime ticks per second
@@ -77,7 +73,7 @@ class CTimerHandler : public CExternalEventHandler{
      * \param paTimerListEntry   TimerListEntry data
      * \param paTimeInterval      time interval to next event
      */
-    void registerTimedFB(STimedFBListEntry *paTimerListEntry, const CIEC_TIME &paTimeInterval);
+    void registerTimedFB(STimedFBListEntry paTimerListEntry, const CIEC_TIME &paTimeInterval);
 
     /*!\brief  Unregister an FB from an the timmer
      *
@@ -95,7 +91,7 @@ class CTimerHandler : public CExternalEventHandler{
 
   private:
     //!Add an entry to the timed list.
-    void addTimedFBEntry(STimedFBListEntry *paTimerListEntry);
+    void addTimedFBEntry(STimedFBListEntry paTimerListEntry);
 
     void processTimedFBList();
     void processAddList();
@@ -105,16 +101,16 @@ class CTimerHandler : public CExternalEventHandler{
     void removeTimedFB(CEventSourceFB *paTimedFB);
 
     //! process one timed FB entry, trigger the external event and if needed readd into the list.
-    void triggerTimedFB(STimedFBListEntry *paTimerListEntry);
+    void triggerTimedFB(STimedFBListEntry paTimerListEntry);
 
     //!The runtime time in ticks till the start of FORTE.
     uint_fast64_t mForteTime;
 
     //! List of function blocks currently registered to the timer handler
-    STimedFBListEntry *mTimedFBList;
+    std::vector<STimedFBListEntry> mTimedFBList;
 
     //! List of function blocks to be added to the timer handler
-    STimedFBListEntry *mAddFBList;
+    std::vector<STimedFBListEntry> mAddFBList;
     CSyncObject mAddListSync;
 
     //! List of function blocks to be removed from the timer handler
