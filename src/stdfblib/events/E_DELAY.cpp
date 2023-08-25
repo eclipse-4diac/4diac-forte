@@ -23,7 +23,7 @@ E_DELAY::E_DELAY(const CStringDictionary::TStringId paInstanceNameId, CResource 
 }
 
 void E_DELAY::executeEvent(TEventID paEIID, CEventChainExecutionThread * const paECET){
-  if(cg_nExternalEventID == paEIID ){
+  if(cgExternalEventID == paEIID ){
     sendOutputEvent(csmEOID, getEventChainExecutor());
     mActive = false;
   }

@@ -42,7 +42,7 @@ private:
 
 public:
   EVENT_SOURCE_FUNCTION_BLOCK_CTOR(E_RESTART),
-        mEventToSend(cg_nInvalidEventID) {
+        mEventToSend(cgInvalidEventID) {
     setEventChainExecutor(paSrcRes->getResourceEventExecution());
   }
   ~E_RESTART() override = default;

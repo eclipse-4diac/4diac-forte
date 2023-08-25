@@ -82,7 +82,7 @@ void FORTE_TRIGGER_SERVICE_CLIENT::executeEvent(TEventID paEIID){
         sendOutputEvent(scmEventCNFID);
       }
       break;
-    case cg_nExternalEventID:
+    case cgExternalEventID:
       //waitForExistence returned
       if(!m_Initiated){
         m_Initiated = true;

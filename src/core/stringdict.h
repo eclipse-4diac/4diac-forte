@@ -122,8 +122,8 @@ private:
   TStringId mNextString;
 
 #ifdef FORTE_STRING_DICT_FIXED_MEMORY
-  static TStringId scmIdList[cg_unStringDictInitialMaxNrOfStrings];
-  static char scmConstStringBuf[cg_unStringDictInitialStringBufSize];
+  static TStringId scmIdList[cgStringDictInitialMaxNrOfStrings];
+  static char scmConstStringBuf[cgStringDictInitialStringBufSize];
 #else
   static const TStringId scmIdList[];
   static const char scmConstStringBuf[];

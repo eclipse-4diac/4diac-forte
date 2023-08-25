@@ -180,7 +180,7 @@ void CIPComLayer::closeSocket(CIPComSocketHandler::TSocketDescriptor *paSocketID
 void CIPComLayer::handledConnectedDataRecv(){
   // in case of fragmented packets, it can occur that the buffer is full,
   // to avoid calling receiveDataFromTCP with a buffer size of 0 wait until buffer is larger 0
-  while((cg_unIPLayerRecvBufferSize - mBufFillSize) <= 0){
+  while((cgIPLayerRecvBufferSize - mBufFillSize) <= 0){
     CThread::sleepThread(0);
   }
   if(CIPComSocketHandler::scmInvalidSocketDescriptor != mSocketID){
@@ -190,7 +190,7 @@ void CIPComLayer::handledConnectedDataRecv(){
       case e_Server:
         case e_Client:
         nRetVal =
-            CIPComSocketHandler::receiveDataFromTCP(mSocketID, &mRecvBuffer[mBufFillSize], cg_unIPLayerRecvBufferSize
+            CIPComSocketHandler::receiveDataFromTCP(mSocketID, &mRecvBuffer[mBufFillSize], cgIPLayerRecvBufferSize
                 - mBufFillSize);
         break;
       case e_Publisher:
@@ -198,7 +198,7 @@ void CIPComLayer::handledConnectedDataRecv(){
         break;
       case e_Subscriber:
         nRetVal =
-            CIPComSocketHandler::receiveDataFromUDP(mSocketID, &mRecvBuffer[mBufFillSize], cg_unIPLayerRecvBufferSize
+            CIPComSocketHandler::receiveDataFromUDP(mSocketID, &mRecvBuffer[mBufFillSize], cgIPLayerRecvBufferSize
                 - mBufFillSize);
         break;
     }

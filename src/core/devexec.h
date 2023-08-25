@@ -89,7 +89,7 @@ class CDeviceExecution {
      *
      * The element 0 is always the timer event source.
      */
-    SEventHandlerElement mRegisteredEventHandlers[cg_unNumberOfHandlers];
+    SEventHandlerElement mRegisteredEventHandlers[cgNumberOfHandlers];
 
     CDevice& mDevice;
 };

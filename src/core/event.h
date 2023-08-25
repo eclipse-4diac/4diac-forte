@@ -27,9 +27,9 @@ typedef size_t TEventID;
 
 
 //!\ingroup CORE Constant for the invalid event input id
-const TEventID cg_nInvalidEventID = cgInvalidPortId;
+const TEventID cgInvalidEventID = cgInvalidPortId;
 //!\ingroup CORE Constant for the external event input id
-const TEventID cg_nExternalEventID = cg_nInvalidEventID - 1;
+const TEventID cgExternalEventID = cgInvalidEventID - 1;
 
 //!\brief With this marker events are anotated that are from the internals of a CFB to the interface of the CFB
 const TPortId cgInternal2InterfaceMarker = cgInvalidPortId + 1;

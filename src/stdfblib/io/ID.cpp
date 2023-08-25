@@ -65,7 +65,7 @@ void FORTE_ID::setInitialValues() {
 
 void FORTE_ID::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   switch(paEIID) {
-    case cg_nExternalEventID:
+    case cgExternalEventID:
       sendOutputEvent(scmEventINDID, paECET);
       break;
     case scmEventINITID:

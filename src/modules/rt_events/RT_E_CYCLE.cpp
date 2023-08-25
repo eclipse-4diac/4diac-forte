@@ -59,7 +59,7 @@ void FORTE_RT_E_CYCLE::setInitialValues() {
 
 void FORTE_RT_E_CYCLE::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   switch(paEIID) {
-    case cg_nExternalEventID:
+    case cgExternalEventID:
       sendOutputEvent(scmEventEOID, paECET);
       break;
     case scmEventSTOPID:

@@ -40,7 +40,7 @@ MLOCAL VOID PanicHandler(UINT32 PanicMode);
 class CFORTEModule;
 
 //--- globals
-CFORTEModule* g_poMainModule;
+CFORTEModule* gMainModule;
 
 //--- SW-Module memory partition, needed for new operator
 UINT32 FORTE_MemPart = 0;
@@ -65,18 +65,18 @@ extern "C" SINT32 forte_Init(MOD_CONF *pConf, MOD_LOAD *pLoad){
   FORTE_MemPart = pConf->MemPart;
 
   //--- Create new application class.
-  g_poMainModule = new CFORTEModule();
+  gMainModule = new CFORTEModule();
 
   //--- Close application if an error is occurred.
-  if(g_poMainModule == nullptr)
+  if(gMainModule == nullptr)
     return ERROR;
 
   //--- Initialize software module.
-  SINT32 TaskId = g_poMainModule->Init(pConf, pLoad, CFORTEModule::MINVERS, CFORTEModule::MAXVERS, 10000, FORTE_Version, "FORTE", (VOIDFUNCPTR) PanicHandler, (VOIDFUNCPTR) ExcHandler);
+  SINT32 TaskId = gMainModule->Init(pConf, pLoad, CFORTEModule::MINVERS, CFORTEModule::MAXVERS, 10000, FORTE_Version, "FORTE", (VOIDFUNCPTR) PanicHandler, (VOIDFUNCPTR) ExcHandler);
 
   //--- Close application if an error is occurred.
   if(TaskId == ERROR)
-    SAFE_DELETE(g_poMainModule);
+    SAFE_DELETE(gMainModule);
 
   return TaskId;
 }
@@ -90,10 +90,10 @@ extern "C" SINT32 forte_Init(MOD_CONF *pConf, MOD_LOAD *pLoad){
  * Ret:
  *-------------------------------------------------------------------------*/
 MLOCAL VOID ExcHandler(SINT32 Signal){
-  DEVLOG_INFO("%s: Signal %d received by task %x.", g_poMainModule->GetAppName(), Signal, taskIdSelf());
+  DEVLOG_INFO("%s: Signal %d received by task %x.", gMainModule->GetAppName(), Signal, taskIdSelf());
 
   //--- Deinit application task and resources.
-  g_poMainModule->AppExcHandler(Signal);
+  gMainModule->AppExcHandler(Signal);
 }
 
 /*--------------------------------------------------------------------------
@@ -112,7 +112,7 @@ MLOCAL VOID PanicHandler(UINT32 PanicMode){
   //              give all other modules also the chance to work off
   //              there panic handler!
 
-  g_poMainModule->AppPanicHandler(PanicMode);
+  gMainModule->AppPanicHandler(PanicMode);
 }
 
 /*--------------------------------------------------------------------------

@@ -109,7 +109,7 @@ void FORTE_EXECUTE_ACTION_CLIENT::executeEvent(TEventID paEIID){
       }
       break;
 
-    case cg_nExternalEventID:
+    case cgExternalEventID:
       //we received feedback (QO=false)
       if(false == QO()){
 

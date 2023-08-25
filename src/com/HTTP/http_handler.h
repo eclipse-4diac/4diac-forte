@@ -132,7 +132,7 @@ class CHTTP_Handler : public CExternalEventHandler, public CThread, public forte
 
     static CIPComSocketHandler::TSocketDescriptor smServerListeningSocket;
 
-    static char sRecvBuffer[cg_unIPLayerRecvBufferSize];
+    static char sRecvBuffer[cgIPLayerRecvBufferSize];
     static unsigned int sBufFillSize;
 
     static const unsigned int scmSendTimeout;

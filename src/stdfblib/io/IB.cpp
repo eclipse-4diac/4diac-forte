@@ -64,7 +64,7 @@ void FORTE_IB::setInitialValues() {
 
 void FORTE_IB::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   switch(paEIID) {
-    case cg_nExternalEventID:
+    case cgExternalEventID:
       sendOutputEvent(scmEventINDID, paECET);
       break;
     case scmEventINITID:

@@ -31,10 +31,10 @@ CStringDictionary::CStringDictionary(){
   mStringBufAddr = scmConstStringBuf;
   mStringIdBufAddr = scmIdList;
 
-  mStringBufSize = cg_unStringDictInitialStringBufSize;
-  mMaxNrOfStrings = cg_unStringDictInitialMaxNrOfStrings;
+  mStringBufSize = cgStringDictInitialStringBufSize;
+  mMaxNrOfStrings = cgStringDictInitialMaxNrOfStrings;
 
-  mNrOfStrings = cg_nNumOfConstStrings;
+  mNrOfStrings = cgNumOfConstStrings;
   mNextString = g_nStringIdNextFreeId;
 #else
   mStringIdBufAddr = nullptr;
@@ -42,14 +42,14 @@ CStringDictionary::CStringDictionary(){
   mMaxNrOfStrings = 0;
   mNrOfStrings = 0;
   mNextString = CStringDictionary::scmInvalidStringId;
-  size_t nStringBufSize = cg_unStringDictInitialStringBufSize;
+  size_t nStringBufSize = cgStringDictInitialStringBufSize;
   if(nStringBufSize < g_nStringIdNextFreeId){
     nStringBufSize = (g_nStringIdNextFreeId * 3) >> 1;
   }
 
-  unsigned int nMaxNrOfStrings = cg_unStringDictInitialMaxNrOfStrings;
-  if(nMaxNrOfStrings < cg_nNumOfConstStrings){
-    nMaxNrOfStrings = (cg_nNumOfConstStrings * 3) >> 1;
+  unsigned int nMaxNrOfStrings = cgStringDictInitialMaxNrOfStrings;
+  if(nMaxNrOfStrings < cgNumOfConstStrings){
+    nMaxNrOfStrings = (cgNumOfConstStrings * 3) >> 1;
   }
 
   mStringBufAddr = (char *) forte_malloc(nStringBufSize * sizeof(char));
@@ -57,12 +57,12 @@ CStringDictionary::CStringDictionary(){
     mStringIdBufAddr = (TStringId *) forte_malloc(nMaxNrOfStrings * sizeof(TStringId));
     if(nullptr != mStringIdBufAddr){
       memcpy(mStringBufAddr, scmConstStringBuf, g_nStringIdNextFreeId);
-      memcpy(mStringIdBufAddr, scmIdList, (cg_nNumOfConstStrings * sizeof(TStringId)));
+      memcpy(mStringIdBufAddr, scmIdList, (cgNumOfConstStrings * sizeof(TStringId)));
 
       mStringBufSize = nStringBufSize;
       mMaxNrOfStrings = nMaxNrOfStrings;
 
-      mNrOfStrings = cg_nNumOfConstStrings;
+      mNrOfStrings = cgNumOfConstStrings;
       mNextString = g_nStringIdNextFreeId;
     }
     else{

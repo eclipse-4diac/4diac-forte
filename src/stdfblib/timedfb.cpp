@@ -49,7 +49,7 @@ CTimedFB::CTimedFB(const CStringDictionary::TStringId paInstanceNameId, CResourc
 
 void CTimedFB::executeEvent(TEventID paEIID, CEventChainExecutionThread * const ){
   switch(paEIID){
-    case cg_nExternalEventID:
+    case cgExternalEventID:
       sendOutputEvent(csmEOID, getEventChainExecutor());
       break;
     case csmEventSTOPID:

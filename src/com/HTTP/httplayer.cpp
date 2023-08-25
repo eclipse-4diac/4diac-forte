@@ -278,7 +278,7 @@ void CHttpComLayer::sendDataAsClient(const void *paData) {
 EComResponse CHttpComLayer::recvData(const void *paData, unsigned int paSize) {
   mInterruptResp = e_Nothing;
   if(mCorrectlyInitialized) {
-    memcpy(mRecvBuffer, paData, (paSize > cg_unIPLayerRecvBufferSize) ? cg_unIPLayerRecvBufferSize : paSize);
+    memcpy(mRecvBuffer, paData, (paSize > cgIPLayerRecvBufferSize) ? cgIPLayerRecvBufferSize : paSize);
     switch(mFb->getComServiceType()){
       case e_Server:
         DEVLOG_ERROR("[HTTP Layer] Receiving raw data as a Server? That's wrong, use the recvServerData function\n");

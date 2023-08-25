@@ -97,7 +97,7 @@ void FORTE_EXECUTE_ACTION_SERVER::executeEvent(TEventID paEIID){
       break;
 
       //The server received a new goal
-    case cg_nExternalEventID:
+    case cgExternalEventID:
       if(m_ActionServer->isPreemptRequested() || !ros::ok()){
         m_ActionServer->setPreempted();
         ACTIONSTATUS() = "PREEMPTED";

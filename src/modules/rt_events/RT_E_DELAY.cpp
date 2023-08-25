@@ -65,7 +65,7 @@ void FORTE_RT_E_DELAY::setInitialValues() {
 
 void FORTE_RT_E_DELAY::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   switch(paEIID) {
-    case cg_nExternalEventID:
+    case cgExternalEventID:
       sendOutputEvent(scmEventEOID, paECET);
       mActive = false;
       break;

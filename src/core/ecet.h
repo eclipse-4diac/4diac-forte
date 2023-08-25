@@ -71,7 +71,7 @@ class CEventChainExecutionThread : public CThread{
      *
      * This list stores the necessary information for all events to deliver that occurred within this event chain.
      */
-    forte::core::util::CRingBuffer<TEventEntry, cg_nEventChainEventListSize> mEventList;
+    forte::core::util::CRingBuffer<TEventEntry, cgEventChainEventListSize> mEventList;
 
     void mainRun();
 
@@ -112,7 +112,7 @@ class CEventChainExecutionThread : public CThread{
      * Event-Chain execution was sleeping. with this second list we omit the need for a mutex protection of the event
      * list. This is a great performance gain.
      */
-    forte::core::util::CRingBuffer<TEventEntry, cg_nEventChainExternalEventListSize> mExternalEventList;
+    forte::core::util::CRingBuffer<TEventEntry, cgEventChainExternalEventListSize> mExternalEventList;
 
     //! SyncObject for protecting the list in regard to several accesses
     CSyncObject mExternalEventListSync;

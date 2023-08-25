@@ -23,7 +23,7 @@ E_RDELAY::E_RDELAY(const CStringDictionary::TStringId paInstanceNameId, CResourc
 
 void E_RDELAY::executeEvent(TEventID paEIID, CEventChainExecutionThread * const paECET){
   switch(paEIID){
-    case cg_nExternalEventID:
+    case cgExternalEventID:
       sendOutputEvent(csmEOID, getEventChainExecutor());
       mActive = false;
       break;

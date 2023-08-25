@@ -107,12 +107,12 @@ bool GEN_F_MUX::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec
   int index = 0;
   char *paramEI = nullptr;
   char *paramDO = nullptr;
-  char baseName[cg_nIdentifierLength];
+  char baseName[cgIdentifierLength];
 
   TIdentifier typeIdString;
 
-  memcpy(typeIdString, paConfigString, (strlen(paConfigString) > cg_nIdentifierLength) ? cg_nIdentifierLength : strlen(paConfigString) + 1); //plus 1 for the null character
-  typeIdString[cg_nIdentifierLength] = '\0';
+  memcpy(typeIdString, paConfigString, (strlen(paConfigString) > cgIdentifierLength) ? cgIdentifierLength : strlen(paConfigString) + 1); //plus 1 for the null character
+  typeIdString[cgIdentifierLength] = '\0';
 
   size_t inlength = strlen(typeIdString);
 
@@ -182,7 +182,7 @@ bool GEN_F_MUX::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec
     //create the data inputs
     mDataInputNames = new CStringDictionary::TStringId[mDInputs];
     mDataInputTypeIds = new CStringDictionary::TStringId[mDInputs];
-    char diNames[cg_nIdentifierLength] = { "IN_" };
+    char diNames[cgIdentifierLength] = { "IN_" };
     size_t di_posIndex = 0;
     for(size_t ei = 0; ei < mEInputs; ei++) {
 

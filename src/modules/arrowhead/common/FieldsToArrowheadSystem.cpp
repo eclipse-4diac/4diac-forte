@@ -81,7 +81,7 @@ void FORTE_FieldsToArrowheadSystem::executeEvent(TEventID paEIID){
         mECCState = 0; //0 is always the initial state
         break;
     }
-    paEIID = cg_nInvalidEventID;  // we have to clear the event after the first check in order to ensure correct behavior
+    paEIID = cgInvalidEventID;  // we have to clear the event after the first check in order to ensure correct behavior
   }while(bTransitionCleared);
 }
 

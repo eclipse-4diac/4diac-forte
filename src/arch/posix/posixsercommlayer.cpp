@@ -48,7 +48,7 @@ forte::com_infra::EComResponse CPosixSerCommLayer::sendData(void *paData, unsign
 
 forte::com_infra::EComResponse CPosixSerCommLayer::recvData(const void *, unsigned int){
   CCriticalRegion lock(mRecvLock);
-  ssize_t nReadCount = read(getSerialHandler(), &mRecvBuffer[mBufFillSize], cg_unIPLayerRecvBufferSize - mBufFillSize);
+  ssize_t nReadCount = read(getSerialHandler(), &mRecvBuffer[mBufFillSize], cgIPLayerRecvBufferSize - mBufFillSize);
 
   switch (nReadCount){
     case 0:

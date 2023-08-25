@@ -146,7 +146,7 @@ namespace forte {
       EComServiceType mCommServiceType;
       CComLayer *mTopOfComStack;
       unsigned int mComInterruptQueueCount; //!< number of triggers pending from the network
-      CComLayer *mInterruptQueue[cg_unCommunicationInterruptQueueSize];
+      CComLayer *mInterruptQueue[cgCommunicationInterruptQueueSize];
 
     public:
       CBaseCommFB(const CBaseCommFB&) = delete;

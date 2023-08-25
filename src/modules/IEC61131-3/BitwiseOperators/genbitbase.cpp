@@ -78,7 +78,7 @@ bool CGenBitBase::createInterfaceSpec(const char *paConfigString, SFBInterfaceSp
     mDataInputNames = new CStringDictionary::TStringId[paInterfaceSpec.mNumDIs];
     mDataInputTypeIds = new CStringDictionary::TStringId[paInterfaceSpec.mNumDIs];
 
-    char diNames[cg_nIdentifierLength] = { "IN" };
+    char diNames[cgIdentifierLength] = { "IN" };
 
     for (size_t di = 0; di < paInterfaceSpec.mNumDIs; ++di) {
       forte_snprintf(&(diNames[2]), 5 - 2, "%i", di + 1);

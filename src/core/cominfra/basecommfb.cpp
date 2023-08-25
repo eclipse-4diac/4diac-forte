@@ -133,7 +133,7 @@ void CBaseCommFB::closeConnection() {
 }
 
 void CBaseCommFB::interruptCommFB(CComLayer *paComLayer) {
-  if (cg_unCommunicationInterruptQueueSize > mComInterruptQueueCount) {
+  if (cgCommunicationInterruptQueueSize > mComInterruptQueueCount) {
     mInterruptQueue[mComInterruptQueueCount] = paComLayer;
     mComInterruptQueueCount++;
   }

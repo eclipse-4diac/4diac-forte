@@ -72,7 +72,7 @@ void FORTE_TRIGGER_SERVICE_SERVER::executeEvent(TEventID paEIID){
       m_ResponseAvailable = true;
       break;
 
-    case cg_nExternalEventID:
+    case cgExternalEventID:
       QO() = true;
       sendOutputEvent(scmEventINDID);
       break;

@@ -69,7 +69,7 @@ class CTimerHandler : public CExternalEventHandler{
      * \return internal runtime ticks per second
      */
     static TForteUInt32 getTicksPerSecond(){
-      return cg_nForteTicksPerSecond;
+      return cgForteTicksPerSecond;
     }
 
     /*!\brief Register an Event source Functionblock to this external event source.

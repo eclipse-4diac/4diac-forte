@@ -49,9 +49,9 @@ typedef char16_t TForteWChar; /**< 16 bit character */
 typedef float TForteFloat; /**< single precision IEEE float (32 Bit) */
 typedef double TForteDFloat; /**< double precision IEEE float (64 bit) */
 
-const unsigned int cg_nIdentifierLength = 32; //!<This value holds the length an identifier may have on order that it is unique. Identifiers may be FB-Type Names, FB-Names, var names,...
+const unsigned int cgIdentifierLength = 32; //!<This value holds the length an identifier may have on order that it is unique. Identifiers may be FB-Type Names, FB-Names, var names,...
 
-typedef char TIdentifier[cg_nIdentifierLength + 1]; //!<Type to hold an identifier during runtime. The +1 is for holding a trailing \\0
+typedef char TIdentifier[cgIdentifierLength + 1]; //!<Type to hold an identifier during runtime. The +1 is for holding a trailing \\0
 
 typedef size_t TPortId;   //!<Type for holding an optimized FORTE internal port number.
 

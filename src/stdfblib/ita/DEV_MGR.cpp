@@ -73,7 +73,7 @@ void DEV_MGR::executeEvent(TEventID paEIID){
 #endif
     CCommFB::executeEvent(paEIID);  //initialize the underlying server FB
   }else{
-    if(cg_nExternalEventID == paEIID && //we received a message on the network let the server correctly handle it
+    if(cgExternalEventID == paEIID && //we received a message on the network let the server correctly handle it
         forte::com_infra::e_ProcessDataOk == CCommFB::receiveData()){ //the message was correctly received
       executeRQST();
       //send response

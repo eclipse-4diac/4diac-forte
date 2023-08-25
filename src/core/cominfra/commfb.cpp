@@ -68,7 +68,7 @@ void CCommFB::executeEvent(TEventID paEIID) {
   case scmSendNotificationEventID:
     resp = sendData();
     break;
-  case cg_nExternalEventID:
+  case cgExternalEventID:
     resp = receiveData();
     break;
   default:
@@ -168,8 +168,8 @@ bool CCommFB::createInterfaceSpec(const char* paConfigString, SFBInterfaceSpec& 
   paInterfaceSpec.mNumEIs = 2;
   paInterfaceSpec.mNumEOs = 2;
 
-  memcpy(tempstring, paConfigString, (strlen(paConfigString) > cg_nIdentifierLength) ? cg_nIdentifierLength : strlen(paConfigString) + 1); //plus 1 for the null character
-  tempstring[cg_nIdentifierLength] = '\0';
+  memcpy(tempstring, paConfigString, (strlen(paConfigString) > cgIdentifierLength) ? cgIdentifierLength : strlen(paConfigString) + 1); //plus 1 for the null character
+  tempstring[cgIdentifierLength] = '\0';
 
   size_t inlength = strlen(tempstring);
 

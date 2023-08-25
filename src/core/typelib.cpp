@@ -129,11 +129,11 @@ CFunctionBlock *CTypeLib::createFB(CStringDictionary::TStringId paInstanceNameId
 
     if (nullptr != pcUnderScore) { // We found no underscore in the type name therefore it can not be a generic type
       ptrdiff_t nCopyLen = pcUnderScore - acTypeBuf;
-      if(nCopyLen > static_cast<ptrdiff_t>(cg_nIdentifierLength - 4)) {
-        nCopyLen = cg_nIdentifierLength - 4;
+      if(nCopyLen > static_cast<ptrdiff_t>(cgIdentifierLength - 4)) {
+        nCopyLen = cgIdentifierLength - 4;
       }
       memcpy(&(acGenFBName[4]), acTypeBuf, nCopyLen);
-      acGenFBName[cg_nIdentifierLength] = '\0';
+      acGenFBName[cgIdentifierLength] = '\0';
       poToCreate = findType(CStringDictionary::getInstance().getId(acGenFBName), mFBLibStart);
       if (nullptr != poToCreate) {
         poNewFB = (static_cast<CFBTypeEntry *>(poToCreate))->createFBInstance(paInstanceNameId, paRes);

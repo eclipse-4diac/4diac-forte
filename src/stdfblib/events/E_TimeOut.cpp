@@ -33,7 +33,7 @@ const SFBInterfaceSpec FORTE_E_TimeOut::scmFBInterfaceSpec = {
 };
 
 void FORTE_E_TimeOut::executeEvent(TEventID paEIID, CEventChainExecutionThread * const paECET){
-  if(cg_nExternalEventID == paEIID){
+  if(cgExternalEventID == paEIID){
     mActive = false;
     sendAdapterEvent(scmTimeOutSocketAdpNum, FORTE_ATimeOut::scmEventTimeOutID, getEventChainExecutor());
   }

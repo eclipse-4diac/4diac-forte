@@ -98,7 +98,7 @@ bool GEN_ARRAY2VALUES::createInterfaceSpec(const char *paConfigString, SFBInterf
     mDataOutputNames = new CStringDictionary::TStringId[mDOutputs];
     mDataOutputTypeIds = new CStringDictionary::TStringId[mDOutputs];
 
-    char doNames[cg_nIdentifierLength] = { "OUT_" };
+    char doNames[cgIdentifierLength] = { "OUT_" };
     for(size_t doIndex = 0; doIndex < mDOutputs; ++doIndex){
       forte_snprintf(&(doNames[4]), 8 - 4, "%i", doIndex + 1);
       mDataOutputNames[doIndex] = CStringDictionary::getInstance().insert(doNames);

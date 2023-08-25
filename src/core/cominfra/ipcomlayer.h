@@ -47,7 +47,7 @@ namespace forte {
 
         CIPComSocketHandler::TSocketDescriptor mListeningID; //!> to be used by server type connections. there the mSocketID will be used for the accepted connection.
         EComResponse mInterruptResp;
-        char mRecvBuffer[cg_unIPLayerRecvBufferSize];
+        char mRecvBuffer[cgIPLayerRecvBufferSize];
         unsigned int mBufFillSize;
     };
 

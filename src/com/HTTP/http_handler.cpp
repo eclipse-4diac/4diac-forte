@@ -42,7 +42,7 @@ DEFINE_HANDLER(CHTTP_Handler);
 
 CHTTP_Handler::CHTTP_Handler(CDeviceExecution &paDeviceExecution) :
     CExternalEventHandler(paDeviceExecution) {
-  memset(sRecvBuffer, 0, cg_unIPLayerRecvBufferSize);
+  memset(sRecvBuffer, 0, cgIPLayerRecvBufferSize);
 }
 
 CHTTP_Handler::~CHTTP_Handler() {
@@ -117,7 +117,7 @@ forte::com_infra::EComResponse CHTTP_Handler::recvData(const void *paData, unsig
       DEVLOG_ERROR("[HTTP Handler] Couldn't accept new HTTP connection\n");
     }
   } else {
-    int recvLen = CIPComSocketHandler::receiveDataFromTCP(socket, &sRecvBuffer[sBufFillSize], cg_unIPLayerRecvBufferSize - sBufFillSize);
+    int recvLen = CIPComSocketHandler::receiveDataFromTCP(socket, &sRecvBuffer[sBufFillSize], cgIPLayerRecvBufferSize - sBufFillSize);
     if(0 == recvLen) {
       removeAndCloseSocket(socket);
       removeHTTPLayerFromClientList(socket);

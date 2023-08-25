@@ -166,7 +166,7 @@ class CFunctionBlock {
     /*!\brief Get the ID of a specific event input of the FB.
      *
      * \param paEINameId   StringId to the event input name.
-     * \return The ID of the event input or cg_nInvalidEventID.
+     * \return The ID of the event input or cgInvalidEventID.
      */
     TEventID getEIID(CStringDictionary::TStringId paEINameId) const {
       return static_cast<TEventID>(getPortId(paEINameId, mInterfaceSpec->mNumEIs, mInterfaceSpec->mEINames));
@@ -175,7 +175,7 @@ class CFunctionBlock {
     /*!\brief Get the ID of a specific event output of the FB.
      *
      * \param paEONameId string id to the event output name.
-     * \return The ID of the event output or cg_nInvalidEventID.
+     * \return The ID of the event output or cgInvalidEventID.
      */
     TEventID getEOID(CStringDictionary::TStringId paEONameId) const {
       return static_cast<TEventID>(getPortId(paEONameId, mInterfaceSpec->mNumEOs, mInterfaceSpec->mEONames));

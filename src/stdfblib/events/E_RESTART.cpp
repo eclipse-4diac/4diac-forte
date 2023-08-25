@@ -35,7 +35,7 @@ const SFBInterfaceSpec E_RESTART::scmFBInterfaceSpec = {
 };
 
 void E_RESTART::executeEvent(TEventID paEIID) {
-  if(cg_nExternalEventID == paEIID && cg_nInvalidEventID != mEventToSend) {
+  if(cgExternalEventID == paEIID && cgInvalidEventID != mEventToSend) {
     sendOutputEvent(mEventToSend);
     if(csmSTOPID == mEventToSend) {
       //stop event is sent put the FB finally into the stopped state
@@ -62,7 +62,7 @@ EMGMResponse E_RESTART::changeFBExecutionState(EMGMCommandType paCommand){
         mSuspendSemaphore.waitIndefinitely();
         break;
       default:
-        mEventToSend = cg_nInvalidEventID;
+        mEventToSend = cgInvalidEventID;
         break;
     }
   }

@@ -92,7 +92,7 @@ namespace forte {
 
         CModbusConnection *mModbusConnection;
 
-        TForteByte mRecvBuffer[cg_unIPLayerRecvBufferSize];
+        TForteByte mRecvBuffer[cgIPLayerRecvBufferSize];
         unsigned int mBufFillSize;
 
         CModbusIOBlock m_IOBlock;

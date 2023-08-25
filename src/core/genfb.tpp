@@ -54,7 +54,7 @@ void CGenFunctionBlock<T>::generateGenericInterfacePointNameArray(const char * c
     }
   }
 
-  if(cg_nIdentifierLength >= (len + noOfDigits)){
+  if(cgIdentifierLength >= (len + noOfDigits)){
     TIdentifier acBuffer;
     memcpy(acBuffer, paPrefix, len);
     for(size_t i = 0; i <= noOfDigits; i++){

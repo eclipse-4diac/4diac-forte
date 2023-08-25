@@ -92,13 +92,13 @@ EMGMResponse CMonitoringHandler::addWatch(forte::core::TNameIdentifier &paNameLi
     }
     else{
       TEventID eventId = fB->getEIID(portName);
-      if(cg_nInvalidEventID != eventId){
+      if(cgInvalidEventID != eventId){
         addEventWatch(fbMonitoringEntry, portName, fB->getEIMonitorData(eventId));
         eRetVal = EMGMResponse::Ready;
       }
       else{
         eventId = fB->getEOID(portName);
-        if(cg_nInvalidEventID != eventId){
+        if(cgInvalidEventID != eventId){
           addEventWatch(fbMonitoringEntry, portName, fB->getEOMonitorData(eventId));
           eRetVal = EMGMResponse::Ready;
         }
@@ -187,7 +187,7 @@ EMGMResponse CMonitoringHandler::triggerEvent(forte::core::TNameIdentifier &paNa
   CFunctionBlock *fB = getFB(paNameList);
   if(nullptr != fB){
     TEventID eventId = fB->getEIID(portName);
-    if(cg_nInvalidEventID != eventId){
+    if(cgInvalidEventID != eventId){
       //only a single event can be triggered simultaneously (until it is executed by ecet!)
       //otherwise the triggerEvent structure needs to be moved to another place!
       mTriggerEvent.mFB = fB;
@@ -197,7 +197,7 @@ EMGMResponse CMonitoringHandler::triggerEvent(forte::core::TNameIdentifier &paNa
     }
     else{
       eventId = fB->getEOID(portName);
-      if(cg_nInvalidEventID != eventId){
+      if(cgInvalidEventID != eventId){
         fB->sendOutputEvent(eventId, mResource.getResourceEventExecution());
         mResource.getResourceEventExecution()->resumeSelfSuspend();
         eRetVal = EMGMResponse::Ready;
@@ -217,12 +217,12 @@ EMGMResponse CMonitoringHandler::resetEventCount(forte::core::TNameIdentifier &p
     TEventID eventId = fB->getEIID(portName);
     TForteUInt32 *eventMonitorData = nullptr;
 
-    if(cg_nInvalidEventID != eventId){
+    if(cgInvalidEventID != eventId){
       eventMonitorData = &fB->getEIMonitorData(eventId);
     }
     else{
       eventId = fB->getEOID(portName);
-      if(cg_nInvalidEventID != eventId){
+      if(cgInvalidEventID != eventId){
         eventMonitorData = &fB->getEOMonitorData(eventId);
       }
     }
