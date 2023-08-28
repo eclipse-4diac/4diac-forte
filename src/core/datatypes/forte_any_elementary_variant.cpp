@@ -309,8 +309,9 @@ int CIEC_ANY_ELEMENTARY_VARIANT::compare(const CIEC_ANY_ELEMENTARY_VARIANT &paVa
           return -1;
         }
       } else if constexpr (!std::is_same_v<commonType, forte::core::mpl::NullType>) {
-        return static_cast<int>(static_cast<typename commonType::TValueType>(static_cast<commonType >(value)) -
-                                static_cast<typename commonType::TValueType>(static_cast<commonType >(other)));
+        auto primitiveValue = static_cast<typename commonType::TValueType>(static_cast<commonType >(value));
+        auto primitiveOther = static_cast<typename commonType::TValueType>(static_cast<commonType >(other));
+        return (primitiveValue > primitiveOther) - (primitiveValue < primitiveOther);
       } else {
         DEVLOG_ERROR("Comparing incompatible types %s and %s\n",
                      CStringDictionary::getInstance().get(value.getTypeNameID()),
