@@ -29,6 +29,11 @@
 
 class CIEC_LTIME final : public CIEC_ANY_DURATION {
   DECLARE_FIRMWARE_DATATYPE(LTIME)
+ 
+  private:
+    static constexpr char csmMinLTimeValue[] = "LT#-106751d23h47m16s854ms775us808ns";
+    static constexpr char csmZeroNanoSecondLTimeValue[] = "LT#0ns";
+
   public:
     CIEC_LTIME() = default;
 
@@ -96,6 +101,9 @@ class CIEC_LTIME final : public CIEC_ANY_DURATION {
      */
     size_t getToStringBufferSize() const override;
 
+    TValueType getInDays() const;
+    TValueType getInHours() const;
+    TValueType getInMinutes() const;
     TValueType getInSeconds() const;
     TValueType getInMilliSeconds() const;
     TValueType getInMicroSeconds() const;

@@ -185,12 +185,12 @@ BOOST_AUTO_TEST_CASE(arrayOfStructs_access_test) {
   for(size_t i = 0; i < 3; i++) {
     CIEC_TestStruct &toTest = static_cast<CIEC_TestStruct&>(nTest[i]);
     setupArrayOfStructTest_TestDataSet1(toTest);
-    BOOST_CHECK_EQUAL(toTest.toString(acBuffer, 230), sizeof("(Val1:=TRUE,Val2:=33,Val3:=T#0ms)") - 1);
-    BOOST_CHECK_EQUAL(strcmp(acBuffer, "(Val1:=TRUE,Val2:=33,Val3:=T#0ms)"), 0);
+    BOOST_CHECK_EQUAL(toTest.toString(acBuffer, 230), sizeof("(Val1:=TRUE,Val2:=33,Val3:=T#22ns)") - 1);
+    BOOST_CHECK_EQUAL(strcmp(acBuffer, "(Val1:=TRUE,Val2:=33,Val3:=T#22ns)"), 0);
   }
 
-  BOOST_CHECK_EQUAL(nTest.toString(acBuffer, 230), sizeof("[(Val1:=TRUE,Val2:=33,Val3:=T#0ms),(Val1:=TRUE,Val2:=33,Val3:=T#0ms),(Val1:=TRUE,Val2:=33,Val3:=T#0ms)]") - 1);
-  BOOST_CHECK_EQUAL(strcmp(acBuffer, "[(Val1:=TRUE,Val2:=33,Val3:=T#0ms),(Val1:=TRUE,Val2:=33,Val3:=T#0ms),(Val1:=TRUE,Val2:=33,Val3:=T#0ms)]"), 0);
+  BOOST_CHECK_EQUAL(nTest.toString(acBuffer, 230), sizeof("[(Val1:=TRUE,Val2:=33,Val3:=T#22ns),(Val1:=TRUE,Val2:=33,Val3:=T#22ns),(Val1:=TRUE,Val2:=33,Val3:=T#22ns)]") - 1);
+  BOOST_CHECK_EQUAL(strcmp(acBuffer, "[(Val1:=TRUE,Val2:=33,Val3:=T#22ns),(Val1:=TRUE,Val2:=33,Val3:=T#22ns),(Val1:=TRUE,Val2:=33,Val3:=T#22ns)]"), 0);
 }
 
 BOOST_AUTO_TEST_CASE(arrayOfStructs_TIME_parser_test) {
