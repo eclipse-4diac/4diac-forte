@@ -18,11 +18,11 @@ using namespace forte::com_infra;
 
 class CXqueryClientLayer : public forte::com_infra::CComLayer{
   public:
-    CXqueryClientLayer(forte::com_infra::CComLayer* pa_poUpperLayer, forte::com_infra::CBaseCommFB* pa_poComFB);
+    CXqueryClientLayer(forte::com_infra::CComLayer* paUpperLayer, forte::com_infra::CBaseCommFB* paComFB);
     ~CXqueryClientLayer() override;
 
-    EComResponse sendData(void *pa_pvData, unsigned int pa_unSize) override;
-    EComResponse recvData(const void *pa_pvData, unsigned int pa_unSize) override;
+    EComResponse sendData(void *paData, unsigned int paSize) override;
+    EComResponse recvData(const void *paData, unsigned int paSize) override;
     EComResponse processInterrupt() override;
 
     const char * getCommand(){
@@ -34,8 +34,8 @@ class CXqueryClientLayer : public forte::com_infra::CComLayer{
 
   private:
     void closeConnection() override;
-    EComResponse openConnection(char *pa_acLayerParameter) override;
-    bool parseParameters(char *pa_acLayerParameter);
+    EComResponse openConnection(char *paLayerParameter) override;
+    bool parseParameters(char *paLayerParameter);
     void openDB();
 
     int sfd;

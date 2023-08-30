@@ -20,24 +20,30 @@
 
 DEFINE_FIRMWARE_FB(FORTE_E_TimeOut, g_nStringIdE_TimeOut)
 
-const TForteInt16 FORTE_E_TimeOut::scm_anEOWithIndexes[] = { -1 };
-const SAdapterInstanceDef FORTE_E_TimeOut::scm_astAdapterInstances[] = { { g_nStringIdATimeOut, g_nStringIdTimeOutSocket, false } };
+const SAdapterInstanceDef FORTE_E_TimeOut::scmAdapterInstances[] = { { g_nStringIdATimeOut, g_nStringIdTimeOutSocket, false } };
 
-const SFBInterfaceSpec FORTE_E_TimeOut::scm_stFBInterfaceSpec = { 0, nullptr, nullptr, nullptr, 0, nullptr, nullptr, nullptr, 0, nullptr, nullptr, 0, nullptr, nullptr, 1, scm_astAdapterInstances };
+const SFBInterfaceSpec FORTE_E_TimeOut::scmFBInterfaceSpec = {
+  0, nullptr, nullptr, nullptr,
+  0, nullptr, nullptr, nullptr,
+  0, nullptr, nullptr,
+  0, nullptr, nullptr,
+  0, nullptr,
+  1, scmAdapterInstances
+};
 
-void FORTE_E_TimeOut::executeEvent(TEventID pa_nEIID){
-  if(cg_nExternalEventID == pa_nEIID){
+void FORTE_E_TimeOut::executeEvent(TEventID paEIID, CEventChainExecutionThread * const paECET){
+  if(cgExternalEventID == paEIID){
     mActive = false;
-    sendAdapterEvent(scm_nTimeOutSocketAdpNum, FORTE_ATimeOut::scm_nEventTimeOutID);
+    sendAdapterEvent(scmTimeOutSocketAdpNum, FORTE_ATimeOut::scmEventTimeOutID, getEventChainExecutor());
   }
-  else if(var_TimeOutSocket().evt_START() == pa_nEIID){
+  else if(var_TimeOutSocket().evt_START() == paEIID){
     if(!mActive){
-      setEventChainExecutor(mInvokingExecEnv);  // delay notification should be execute in the same thread on as from where it has been triggered.
+      setEventChainExecutor(paECET);  // delay notification should be execute in the same thread on as from where it has been triggered.
       getTimer().registerTimedFB(&mTimeListEntry, var_TimeOutSocket().var_DT());
       mActive = true;
     }
   }
-  else if(var_TimeOutSocket().evt_STOP() == pa_nEIID){
+  else if(var_TimeOutSocket().evt_STOP() == paEIID){
     if(mActive){
       getTimer().unregisterTimedFB(this);
       mActive = false;
@@ -45,9 +51,15 @@ void FORTE_E_TimeOut::executeEvent(TEventID pa_nEIID){
   }
 }
 
-EMGMResponse FORTE_E_TimeOut::changeFBExecutionState(EMGMCommandType pa_unCommand){
-  EMGMResponse eRetVal = CFunctionBlock::changeFBExecutionState(pa_unCommand);
-  if((EMGMResponse::Ready == eRetVal) && ((EMGMCommandType::Stop == pa_unCommand) || (EMGMCommandType::Kill == pa_unCommand))){
+void FORTE_E_TimeOut::readInputData(TEventID) {
+}
+
+void FORTE_E_TimeOut::writeOutputData(TEventID) {
+}
+
+EMGMResponse FORTE_E_TimeOut::changeFBExecutionState(EMGMCommandType paCommand){
+  EMGMResponse eRetVal = CFunctionBlock::changeFBExecutionState(paCommand);
+  if((EMGMResponse::Ready == eRetVal) && ((EMGMCommandType::Stop == paCommand) || (EMGMCommandType::Kill == paCommand))){
     if(mActive){
       getTimer().unregisterTimedFB(this);
       mActive = false;

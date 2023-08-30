@@ -12,15 +12,15 @@
 #include "Cmd_AddOPCProcessVar.h"
 #include "opcconnectionimpl.h"
 
-CCmd_AddOPCProcessVar::CCmd_AddOPCProcessVar(COpcConnectionImpl *pa_pConnection, COpcProcessVar* pa_pNewItem) :
-    m_pOpcConn(pa_pConnection), m_pNewProcessVar(pa_pNewItem){
+CCmd_AddOPCProcessVar::CCmd_AddOPCProcessVar(COpcConnectionImpl *paConnection, COpcProcessVar* paNewItem) :
+    mOpcConn(paConnection), mNewProcessVar(paNewItem){
 }
 
 CCmd_AddOPCProcessVar::~CCmd_AddOPCProcessVar(){
 }
 
 void CCmd_AddOPCProcessVar::runCommand(){
-  m_pOpcConn->addItem(m_pNewProcessVar);
+  mOpcConn->addItem(mNewProcessVar);
 }
 
 const char* CCmd_AddOPCProcessVar::getCommandName() const{

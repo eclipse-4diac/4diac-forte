@@ -27,7 +27,7 @@ CIPComLayer::CIPComLayer(CComLayer* paUpperLayer, CBaseCommFB* paComFB) :
         mListeningID(CIPComSocketHandler::scmInvalidSocketDescriptor),
         mInterruptResp(e_Nothing),
         mBufFillSize(0){
-  memset(mRecvBuffer, 0, sizeof(mRecvBuffer)); //TODO change this to  m_acRecvBuffer{0} in the extended list when fully switching to C++11
+  memset(mRecvBuffer, 0, sizeof(mRecvBuffer)); //TODO change this to  mRecvBuffer{0} in the extended list when fully switching to C++11
   memset(&mDestAddr, 0, sizeof(mDestAddr));
 }
 
@@ -36,13 +36,13 @@ CIPComLayer::~CIPComLayer() = default;
 EComResponse CIPComLayer::sendData(void *paData, unsigned int paSize){
   EComResponse eRetVal = e_ProcessDataOk;
 
-  if((nullptr != m_poFb) && (CIPComSocketHandler::scmInvalidSocketDescriptor != mSocketID)){
-    switch (m_poFb->getComServiceType()){
+  if((nullptr != mFb) && (CIPComSocketHandler::scmInvalidSocketDescriptor != mSocketID)){
+    switch (mFb->getComServiceType()){
       case e_Server:
         if(0
             >= CIPComSocketHandler::sendDataOnTCP(mSocketID, static_cast<char*>(paData), paSize)){
           closeSocket(&mSocketID);
-          m_eConnectionState = e_Listening;
+          mConnectionState = e_Listening;
           eRetVal = e_InitTerminated;
         }
         break;
@@ -68,10 +68,10 @@ EComResponse CIPComLayer::sendData(void *paData, unsigned int paSize){
 
 EComResponse CIPComLayer::processInterrupt(){
   if(e_ProcessDataOk == mInterruptResp){
-    switch (m_eConnectionState){
+    switch (mConnectionState){
       case e_Connected:
-        if((0 < mBufFillSize) && (nullptr != m_poTopLayer)){
-          mInterruptResp = m_poTopLayer->recvData(mRecvBuffer, mBufFillSize);
+        if((0 < mBufFillSize) && (nullptr != mTopLayer)){
+          mInterruptResp = mTopLayer->recvData(mRecvBuffer, mBufFillSize);
           mBufFillSize = 0;
         }
         break;
@@ -87,14 +87,14 @@ EComResponse CIPComLayer::processInterrupt(){
 
 EComResponse CIPComLayer::recvData(const void *paData, unsigned int){
   mInterruptResp = e_Nothing;
-  switch (m_eConnectionState){
+  switch (mConnectionState){
     case e_Listening:
       //TODO move this to the processInterrupt()
       mSocketID = CIPComSocketHandler::acceptTCPConnection(mListeningID);
       if(CIPComSocketHandler::scmInvalidSocketDescriptor != mSocketID){
         DEVLOG_INFO("Connection established by client\n");
         getExtEvHandler<CIPComSocketHandler>().addComCallback(mSocketID, this);
-        m_eConnectionState = e_Connected;
+        mConnectionState = e_Connected;
       }
       break;
     case e_Connected:
@@ -125,13 +125,13 @@ EComResponse CIPComLayer::openConnection(char *paLayerParameter){
 
     CIPComSocketHandler::TSocketDescriptor nSockDes =
         CIPComSocketHandler::scmInvalidSocketDescriptor;
-    m_eConnectionState = e_Connected;
+    mConnectionState = e_Connected;
 
-    switch (m_poFb->getComServiceType()){
+    switch (mFb->getComServiceType()){
       case e_Server:
         nSockDes = mListeningID =
             CIPComSocketHandler::openTCPServerConnection(paLayerParameter, nPort);
-        m_eConnectionState = e_Listening;
+        mConnectionState = e_Listening;
         break;
       case e_Client:
         nSockDes = mSocketID =
@@ -148,14 +148,14 @@ EComResponse CIPComLayer::openConnection(char *paLayerParameter){
     }
 
     if(CIPComSocketHandler::scmInvalidSocketDescriptor != nSockDes){
-      if(e_Publisher != m_poFb->getComServiceType()){
+      if(e_Publisher != mFb->getComServiceType()){
         //Publishers should not be registered for receiving data
         getExtEvHandler<CIPComSocketHandler>().addComCallback(nSockDes, this);
       }
       eRetVal = e_InitOk;
     }
     else{
-      m_eConnectionState = e_Disconnected;
+      mConnectionState = e_Disconnected;
     }
   }
   return eRetVal;
@@ -166,7 +166,7 @@ void CIPComLayer::closeConnection(){
   closeSocket(&mSocketID);
   closeSocket(&mListeningID);
 
-  m_eConnectionState = e_Disconnected;
+  mConnectionState = e_Disconnected;
 }
 
 void CIPComLayer::closeSocket(CIPComSocketHandler::TSocketDescriptor *paSocketID){
@@ -180,17 +180,17 @@ void CIPComLayer::closeSocket(CIPComSocketHandler::TSocketDescriptor *paSocketID
 void CIPComLayer::handledConnectedDataRecv(){
   // in case of fragmented packets, it can occur that the buffer is full,
   // to avoid calling receiveDataFromTCP with a buffer size of 0 wait until buffer is larger 0
-  while((cg_unIPLayerRecvBufferSize - mBufFillSize) <= 0){
+  while((cgIPLayerRecvBufferSize - mBufFillSize) <= 0){
     CThread::sleepThread(0);
   }
   if(CIPComSocketHandler::scmInvalidSocketDescriptor != mSocketID){
     // TODO: sync buffer and bufFillSize
     int nRetVal = 0;
-    switch (m_poFb->getComServiceType()){
+    switch (mFb->getComServiceType()){
       case e_Server:
         case e_Client:
         nRetVal =
-            CIPComSocketHandler::receiveDataFromTCP(mSocketID, &mRecvBuffer[mBufFillSize], cg_unIPLayerRecvBufferSize
+            CIPComSocketHandler::receiveDataFromTCP(mSocketID, &mRecvBuffer[mBufFillSize], cgIPLayerRecvBufferSize
                 - mBufFillSize);
         break;
       case e_Publisher:
@@ -198,7 +198,7 @@ void CIPComLayer::handledConnectedDataRecv(){
         break;
       case e_Subscriber:
         nRetVal =
-            CIPComSocketHandler::receiveDataFromUDP(mSocketID, &mRecvBuffer[mBufFillSize], cg_unIPLayerRecvBufferSize
+            CIPComSocketHandler::receiveDataFromUDP(mSocketID, &mRecvBuffer[mBufFillSize], cgIPLayerRecvBufferSize
                 - mBufFillSize);
         break;
     }
@@ -207,9 +207,9 @@ void CIPComLayer::handledConnectedDataRecv(){
         DEVLOG_INFO("Connection closed by peer\n");
         mInterruptResp = e_InitTerminated;
         closeSocket (&mSocketID);
-        if(e_Server == m_poFb->getComServiceType()){
+        if(e_Server == mFb->getComServiceType()){
           //Move server into listening mode again
-          m_eConnectionState = e_Listening;
+          mConnectionState = e_Listening;
         }
         break;
       case -1:
@@ -221,7 +221,7 @@ void CIPComLayer::handledConnectedDataRecv(){
         mInterruptResp = e_ProcessDataOk;
         break;
     }
-    m_poFb->interruptCommFB(this);
+    mFb->interruptCommFB(this);
   }
 }
 

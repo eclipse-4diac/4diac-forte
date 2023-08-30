@@ -51,7 +51,7 @@ class CDeviceExecution {
      * With this function the device execution can disable or enable the notification on external events.
      * Necessary to hold timing constraints. The notifyTime()-function will be used to determine if different external event
      * handlers are to be enabled again.
-     * \param pa_nExtEvHandler ID of the external event handler given by the CDeviceExecution on registerExternalEvnetHandler()
+     * \param paExtEvHandler ID of the external event handler given by the CDeviceExecution on registerExternalEvnetHandler()
      * \return true if the external event handler is allowed to start new event chains.
      */
     bool extEvHandlerIsAllowed(size_t) const {
@@ -89,7 +89,7 @@ class CDeviceExecution {
      *
      * The element 0 is always the timer event source.
      */
-    SEventHandlerElement mRegisteredEventHandlers[cg_unNumberOfHandlers];
+    SEventHandlerElement mRegisteredEventHandlers[cgNumberOfHandlers];
 
     CDevice& mDevice;
 };

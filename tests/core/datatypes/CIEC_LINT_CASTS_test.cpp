@@ -352,9 +352,7 @@ BOOST_AUTO_TEST_CASE(LINT_Castable_test)
   BOOST_CHECK(!CIEC_ANY::isCastable(CIEC_ANY::e_LINT, CIEC_ANY::e_WSTRING, bUp, bDown)); BOOST_CHECK(! bUp); BOOST_CHECK(! bDown);
 }
 
-BOOST_AUTO_TEST_CASE(Explict_cast_operator_to_LINT)
-{
-
+BOOST_AUTO_TEST_CASE(Explict_cast_operator_to_LINT) {
   CIEC_USINT nUsint(2);
   CIEC_UINT nUint(3);
   CIEC_UDINT nUdint(4);

@@ -24,13 +24,13 @@ using namespace forte::core::util;
 
 static bool operator==(const SAdapterInstanceDef &a, const SAdapterInstanceDef &b) {
   return
-    a.m_nAdapterTypeNameID == b.m_nAdapterTypeNameID &&
-    a.m_nAdapterNameID     == b.m_nAdapterNameID     &&
-    a.m_bIsPlug            == b.m_bIsPlug;
+    a.mAdapterTypeNameID == b.mAdapterTypeNameID &&
+    a.mAdapterNameID     == b.mAdapterNameID     &&
+    a.mIsPlug            == b.mIsPlug;
 }
 
 static std::ostream& operator<<(std::ostream &os, const SAdapterInstanceDef &ai) {
-  return os << '{' << ai.m_nAdapterTypeNameID << ", " << ai.m_nAdapterNameID << ", " << ai.m_bIsPlug << "}";
+  return os << '{' << ai.mAdapterTypeNameID << ", " << ai.mAdapterNameID << ", " << ai.mIsPlug << "}";
 }
 
 BOOST_AUTO_TEST_SUITE(IfSpecBuilder_Test)
@@ -95,16 +95,16 @@ BOOST_AUTO_TEST_SUITE(IfSpecBuilder_Test)
   BOOST_AUTO_TEST_CASE(IfSpecBuilder_EmptyBuild) {
     CIfSpecBuilder uut;
     build(uut);
-    BOOST_CHECK_EQUAL(ifspec.m_nNumEIs, 0);
-    BOOST_CHECK_EQUAL(ifspec.m_nNumEOs, 0);
-    BOOST_CHECK_EQUAL(ifspec.m_nNumDIs, 0);
-    BOOST_CHECK_EQUAL(ifspec.m_nNumDOs, 0);
-    BOOST_CHECK_EQUAL(ifspec.m_nNumAdapters, 0);
+    BOOST_CHECK_EQUAL(ifspec.mNumEIs, 0);
+    BOOST_CHECK_EQUAL(ifspec.mNumEOs, 0);
+    BOOST_CHECK_EQUAL(ifspec.mNumDIs, 0);
+    BOOST_CHECK_EQUAL(ifspec.mNumDOs, 0);
+    BOOST_CHECK_EQUAL(ifspec.mNumAdapters, 0);
   }
 
   static auto strid(const char *s) {
     auto strId = CStringDictionary::getInstance().getId(s);
-    BOOST_REQUIRE(strId != CStringDictionary::scm_nInvalidStringId);
+    BOOST_REQUIRE(strId != CStringDictionary::scmInvalidStringId);
     return strId;
   }
 
@@ -139,36 +139,36 @@ BOOST_AUTO_TEST_SUITE(IfSpecBuilder_Test)
 
   BOOST_AUTO_TEST_CASE(IfSpecBuilder_SetStaticInputEvents) {
     CIfSpecBuilder uut;
-    uut.m_oEI.setStaticEvents(constStringIdList1, 3);
+    uut.mEI.setStaticEvents(constStringIdList1, 3);
     build(uut);
-    BOOST_CHECK_EQUAL(ifspec.m_nNumEIs, 3);
-    BOOST_CHECK_EQUAL(ifspec.m_aunEINames, constStringIdList1);
+    BOOST_CHECK_EQUAL(ifspec.mNumEIs, 3);
+    BOOST_CHECK_EQUAL(ifspec.mEINames, constStringIdList1);
   }
 
   BOOST_AUTO_TEST_CASE(IfSpecBuilder_SetStaticOutputEvents) {
     CIfSpecBuilder uut;
-    uut.m_oEO.setStaticEvents(constStringIdList2, 3);
+    uut.mEO.setStaticEvents(constStringIdList2, 3);
     build(uut);
-    BOOST_CHECK_EQUAL(ifspec.m_nNumEOs, 3);
-    BOOST_CHECK_EQUAL(ifspec.m_aunEONames, constStringIdList2);
+    BOOST_CHECK_EQUAL(ifspec.mNumEOs, 3);
+    BOOST_CHECK_EQUAL(ifspec.mEONames, constStringIdList2);
   }
 
   BOOST_AUTO_TEST_CASE(IfSpecBuilder_AddInputEvents) {
     CIfSpecBuilder uut;
-    add_events(uut.m_oEI, 2);
-    test_events(uut, ifspec.m_nNumEIs, ifspec.m_aunEINames);
+    add_events(uut.mEI, 2);
+    test_events(uut, ifspec.mNumEIs, ifspec.mEINames);
   }
 
   BOOST_AUTO_TEST_CASE(IfSpecBuilder_AddOutputEvents) {
     CIfSpecBuilder uut;
-    add_events(uut.m_oEO, 2);
-    test_events(uut, ifspec.m_nNumEOs, ifspec.m_aunEONames);
+    add_events(uut.mEO, 2);
+    test_events(uut, ifspec.mNumEOs, ifspec.mEONames);
   }
 
   BOOST_AUTO_TEST_CASE(IfSpecBuilder_AddEventsRange) {
     CIfSpecBuilder uut;
-    auto range = uut.m_oEI.addEventRange("E", 2);
-    test_events(uut, ifspec.m_nNumEIs, ifspec.m_aunEINames);
+    auto range = uut.mEI.addEventRange("E", 2);
+    test_events(uut, ifspec.mNumEIs, ifspec.mEINames);
     BOOST_CHECK(range.isValid());
     BOOST_CHECK_EQUAL(*range.mFirst, 0);
     BOOST_CHECK_EQUAL(*range.mLast, 1);
@@ -176,19 +176,19 @@ BOOST_AUTO_TEST_SUITE(IfSpecBuilder_Test)
 
   BOOST_AUTO_TEST_CASE(IfSpecBuilder_AddEventReturningReference) {
     CIfSpecBuilder uut;
-    BOOST_CHECK_EQUAL(*uut.m_oEI.addEvent("IE0"), 0);
-    BOOST_CHECK_EQUAL(*uut.m_oEI.addEvent("IE1"), 1);
-    BOOST_CHECK_EQUAL(*uut.m_oEO.addEvent("OE0"), 0);
+    BOOST_CHECK_EQUAL(*uut.mEI.addEvent("IE0"), 0);
+    BOOST_CHECK_EQUAL(*uut.mEI.addEvent("IE1"), 1);
+    BOOST_CHECK_EQUAL(*uut.mEO.addEvent("OE0"), 0);
   }
 
   BOOST_AUTO_TEST_CASE(IfSpecBuilder_DefaultWith) {
     CIfSpecBuilder uut;
-    add_events(uut.m_oEI, 2);
-    add_events(uut.m_oEO, 1);
+    add_events(uut.mEI, 2);
+    add_events(uut.mEO, 1);
     build(uut);
-    BOOST_CHECK_EQUAL(ifspec.m_anEIWithIndexes[0], -1);
-    BOOST_CHECK_EQUAL(ifspec.m_anEIWithIndexes[1], -1);
-    BOOST_CHECK_EQUAL(ifspec.m_anEOWithIndexes[0], -1);
+    BOOST_CHECK_EQUAL(ifspec.mEIWithIndexes[0], -1);
+    BOOST_CHECK_EQUAL(ifspec.mEIWithIndexes[1], -1);
+    BOOST_CHECK_EQUAL(ifspec.mEOWithIndexes[0], -1);
   }
 
   void test_data(CIfSpecBuilder &uut, TPortId &n, const CStringDictionary::TStringId *&f, const CStringDictionary::TStringId *&t, CStringDictionary::TStringId dataTypeId = -1u) {
@@ -209,20 +209,20 @@ BOOST_AUTO_TEST_SUITE(IfSpecBuilder_Test)
 
   BOOST_AUTO_TEST_CASE(IfSpecBuilder_AddInputData) {
     CIfSpecBuilder uut;
-    add_data(uut.m_oDI, 2);
-    test_data(uut, ifspec.m_nNumDIs, ifspec.m_aunDINames, ifspec.m_aunDIDataTypeNames);
+    add_data(uut.mDI, 2);
+    test_data(uut, ifspec.mNumDIs, ifspec.mDINames, ifspec.mDIDataTypeNames);
   }
 
   BOOST_AUTO_TEST_CASE(IfSpecBuilder_AddOutputData) {
     CIfSpecBuilder uut;
-    add_data(uut.m_oDO, 2);
-    test_data(uut, ifspec.m_nNumDOs, ifspec.m_aunDONames, ifspec.m_aunDODataTypeNames);
+    add_data(uut.mDO, 2);
+    test_data(uut, ifspec.mNumDOs, ifspec.mDONames, ifspec.mDODataTypeNames);
   }
 
   BOOST_AUTO_TEST_CASE(IfSpecBuilder_AddDataRange) {
     CIfSpecBuilder uut;
-    auto range = uut.m_oDI.addDataRange("D", 2);
-    test_data(uut, ifspec.m_nNumDIs, ifspec.m_aunDINames, ifspec.m_aunDIDataTypeNames, strid("ANY"));
+    auto range = uut.mDI.addDataRange("D", 2);
+    test_data(uut, ifspec.mNumDIs, ifspec.mDINames, ifspec.mDIDataTypeNames, strid("ANY"));
     BOOST_CHECK(range.isValid());
     BOOST_CHECK_EQUAL(*range.mFirst, 0);
     BOOST_CHECK_EQUAL(*range.mLast, 1);
@@ -230,27 +230,27 @@ BOOST_AUTO_TEST_SUITE(IfSpecBuilder_Test)
 
   BOOST_AUTO_TEST_CASE(IfSpecBuilder_AddDataReturningReference) {
     CIfSpecBuilder uut;
-    BOOST_CHECK_EQUAL(*uut.m_oDI.addData("ID0", 0), 0);
-    BOOST_CHECK_EQUAL(*uut.m_oDI.addData("ID1", 0), 1);
-    BOOST_CHECK_EQUAL(*uut.m_oDO.addData("OD0", 0), 0);
+    BOOST_CHECK_EQUAL(*uut.mDI.addData("ID0", 0), 0);
+    BOOST_CHECK_EQUAL(*uut.mDI.addData("ID1", 0), 1);
+    BOOST_CHECK_EQUAL(*uut.mDO.addData("OD0", 0), 0);
   }
 
   BOOST_AUTO_TEST_CASE(IfSpecBuilder_SetStaticInputData) {
     CIfSpecBuilder uut;
-    uut.m_oDI.setStaticData(constStringIdList1, constStringIdList2, 3);
+    uut.mDI.setStaticData(constStringIdList1, constStringIdList2, 3);
     build(uut);
-    BOOST_CHECK_EQUAL(ifspec.m_nNumDIs, 3);
-    BOOST_CHECK_EQUAL(ifspec.m_aunDINames, constStringIdList1);
-    BOOST_CHECK_EQUAL(ifspec.m_aunDIDataTypeNames, constStringIdList2);
+    BOOST_CHECK_EQUAL(ifspec.mNumDIs, 3);
+    BOOST_CHECK_EQUAL(ifspec.mDINames, constStringIdList1);
+    BOOST_CHECK_EQUAL(ifspec.mDIDataTypeNames, constStringIdList2);
   }
 
   BOOST_AUTO_TEST_CASE(IfSpecBuilder_SetStaticOuputData) {
     CIfSpecBuilder uut;
-    uut.m_oDO.setStaticData(constStringIdList1, constStringIdList2, 3);
+    uut.mDO.setStaticData(constStringIdList1, constStringIdList2, 3);
     build(uut);
-    BOOST_CHECK_EQUAL(ifspec.m_nNumDOs, 3);
-    BOOST_CHECK_EQUAL(ifspec.m_aunDONames, constStringIdList1);
-    BOOST_CHECK_EQUAL(ifspec.m_aunDODataTypeNames, constStringIdList2);
+    BOOST_CHECK_EQUAL(ifspec.mNumDOs, 3);
+    BOOST_CHECK_EQUAL(ifspec.mDONames, constStringIdList1);
+    BOOST_CHECK_EQUAL(ifspec.mDODataTypeNames, constStringIdList2);
   }
 
   BOOST_AUTO_TEST_CASE(IfSpecBuilder_FindValidEventPort) {
@@ -302,52 +302,52 @@ BOOST_AUTO_TEST_SUITE(IfSpecBuilder_Test)
 
   BOOST_AUTO_TEST_CASE(IfSpecBuilder_InputWith) {
     CIfSpecBuilder uut;
-    uut.m_oEI.addEventRange("E", 3);
-    uut.m_oDI.addDataRange("D", 3);
-    uut.bind(uut.m_oEI["E1"], {uut.m_oDI["D1"], uut.m_oDI["D3"]});
-    uut.bind(uut.m_oEI["E2"], uut.m_oDI["D2"]);
+    uut.mEI.addEventRange("E", 3);
+    uut.mDI.addDataRange("D", 3);
+    uut.bind(uut.mEI["E1"], {uut.mDI["D1"], uut.mDI["D3"]});
+    uut.bind(uut.mEI["E2"], uut.mDI["D2"]);
     build(uut);
-    test_bind(ifspec.m_anEIWith, ifspec.m_anEIWithIndexes);
+    test_bind(ifspec.mEIWith, ifspec.mEIWithIndexes);
   }
 
   BOOST_AUTO_TEST_CASE(IfSpecBuilder_OutputWith) {
     CIfSpecBuilder uut;
-    uut.m_oEO.addEventRange("E", 3);
-    uut.m_oDO.addDataRange("D", 3);
-    uut.bind(uut.m_oEO["E1"], {uut.m_oDO["D1"], uut.m_oDO["D3"]});
-    uut.bind(uut.m_oEO["E2"], uut.m_oDO["D2"]);
+    uut.mEO.addEventRange("E", 3);
+    uut.mDO.addDataRange("D", 3);
+    uut.bind(uut.mEO["E1"], {uut.mDO["D1"], uut.mDO["D3"]});
+    uut.bind(uut.mEO["E2"], uut.mDO["D2"]);
     build(uut);
-    test_bind(ifspec.m_anEOWith, ifspec.m_anEOWithIndexes);
+    test_bind(ifspec.mEOWith, ifspec.mEOWithIndexes);
   }
 
   BOOST_AUTO_TEST_CASE(IfSpecBuilder_RangeWithExplicit) {
     CIfSpecBuilder uut;
-    uut.m_oEO.addEvent("E");
-    uut.m_oDO.addDataRange("D", 3);
-    uut.bindRange(uut.m_oEO["E"], uut.m_oDO["D1"], uut.m_oDO["D3"]);
+    uut.mEO.addEvent("E");
+    uut.mDO.addDataRange("D", 3);
+    uut.bindRange(uut.mEO["E"], uut.mDO["D1"], uut.mDO["D3"]);
     build(uut);
     static constexpr std::array<TDataIOID, 4> tw = {0, 1, 2, CFunctionBlock::scmWithListDelimiter};
-    BOOST_CHECK_EQUAL_COLLECTIONS(ifspec.m_anEOWith, ifspec.m_anEOWith + tw.size(), tw.begin(), tw.end());
+    BOOST_CHECK_EQUAL_COLLECTIONS(ifspec.mEOWith, ifspec.mEOWith + tw.size(), tw.begin(), tw.end());
   }
 
   BOOST_AUTO_TEST_CASE(IfSpecBuilder_RangeWithDirect) {
     CIfSpecBuilder uut;
-    auto eRef = uut.m_oEO.addEvent("E");
-    auto dRange = uut.m_oDO.addDataRange("D", 3);
+    auto eRef = uut.mEO.addEvent("E");
+    auto dRange = uut.mDO.addDataRange("D", 3);
     uut.bindRange(eRef, dRange);
     build(uut);
-    BOOST_CHECK_EQUAL(ifspec.m_anEOWith[0], 0);
-    BOOST_CHECK_EQUAL(ifspec.m_anEOWith[2], 2);
-    BOOST_CHECK_EQUAL(ifspec.m_anEOWith[3], CFunctionBlock::scmWithListDelimiter);
+    BOOST_CHECK_EQUAL(ifspec.mEOWith[0], 0);
+    BOOST_CHECK_EQUAL(ifspec.mEOWith[2], 2);
+    BOOST_CHECK_EQUAL(ifspec.mEOWith[3], CFunctionBlock::scmWithListDelimiter);
   }
 
   BOOST_AUTO_TEST_CASE(IfSpecBuilder_StaticWith) {
     CIfSpecBuilder uut;
-    uut.m_oEO.addEvent("E");
-    uut.m_oOWith.setStaticBindings(staticBindings, staticIndexes);
+    uut.mEO.addEvent("E");
+    uut.mOWith.setStaticBindings(staticBindings, staticIndexes);
     build(uut);
-    BOOST_CHECK_EQUAL(ifspec.m_anEOWith, staticBindings.data());
-    BOOST_CHECK_EQUAL(ifspec.m_anEOWithIndexes, staticIndexes.data());
+    BOOST_CHECK_EQUAL(ifspec.mEOWith, staticBindings.data());
+    BOOST_CHECK_EQUAL(ifspec.mEOWithIndexes, staticIndexes.data());
   }
 
   BOOST_AUTO_TEST_CASE(IfSpecBuilder_CombinedStaticAndDynamicWith) {
@@ -378,28 +378,28 @@ BOOST_AUTO_TEST_SUITE(IfSpecBuilder_Test)
 
   BOOST_AUTO_TEST_CASE(IfSpecBuilder_DynamicWithsAndEventsCountDifferenceHandling) {
     CIfSpecBuilder uut;
-    uut.m_oOWith.setStaticBindings(staticBindings, staticIndexes);
+    uut.mOWith.setStaticBindings(staticBindings, staticIndexes);
     storage.clear();
     BOOST_CHECK(!uut.build(storage, ifspec));
   }
 
   BOOST_AUTO_TEST_CASE(IfSpecBuilder_StaticAdapters) {
     CIfSpecBuilder uut;
-    uut.m_oAdapter.setStaticAdapters(staticAdapters);
+    uut.mAdapter.setStaticAdapters(staticAdapters);
     build(uut);
-    BOOST_CHECK_EQUAL(ifspec.m_pstAdapterInstanceDefinition, staticAdapters.data());
-    BOOST_CHECK_EQUAL(ifspec.m_nNumAdapters, staticAdapters.size());
+    BOOST_CHECK_EQUAL(ifspec.mAdapterInstanceDefinition, staticAdapters.data());
+    BOOST_CHECK_EQUAL(ifspec.mNumAdapters, staticAdapters.size());
   }
 
   BOOST_AUTO_TEST_CASE(IfSpecBuilder_DynamicAdapters) {
     CIfSpecBuilder uut;
-    uut.m_oAdapter.addAdapter(1, 2, true);
-    uut.m_oAdapter.addAdapter(3, 4, false);
-    uut.m_oIAdapter.addAdapter(5, 6);
-    uut.m_oOAdapter.addAdapter(7, 8);
+    uut.mAdapter.addAdapter(1, 2, true);
+    uut.mAdapter.addAdapter(3, 4, false);
+    uut.mIAdapter.addAdapter(5, 6);
+    uut.mOAdapter.addAdapter(7, 8);
     build(uut);
-    BOOST_REQUIRE_EQUAL(ifspec.m_nNumAdapters, 4);
-    const auto adapter = ifspec.m_pstAdapterInstanceDefinition;
+    BOOST_REQUIRE_EQUAL(ifspec.mNumAdapters, 4);
+    const auto adapter = ifspec.mAdapterInstanceDefinition;
     BOOST_CHECK_EQUAL(adapter[0], (SAdapterInstanceDef{2, 1, true }));
     BOOST_CHECK_EQUAL(adapter[1], (SAdapterInstanceDef{4, 3, false}));
     BOOST_CHECK_EQUAL(adapter[2], (SAdapterInstanceDef{6, 5, false}));
@@ -408,19 +408,19 @@ BOOST_AUTO_TEST_SUITE(IfSpecBuilder_Test)
 
   BOOST_AUTO_TEST_CASE(IfSpecBuilder_AdaptersCString) {
     CIfSpecBuilder uut;
-    uut.m_oAdapter.addAdapter("adapter", "type", true);
+    uut.mAdapter.addAdapter("adapter", "type", true);
     build(uut);
-    BOOST_REQUIRE_EQUAL(ifspec.m_nNumAdapters, 1);
-    BOOST_CHECK_EQUAL(ifspec.m_pstAdapterInstanceDefinition[0], (SAdapterInstanceDef{strid("type"), strid("adapter"), true}));
+    BOOST_REQUIRE_EQUAL(ifspec.mNumAdapters, 1);
+    BOOST_CHECK_EQUAL(ifspec.mAdapterInstanceDefinition[0], (SAdapterInstanceDef{strid("type"), strid("adapter"), true}));
   }
 
   BOOST_AUTO_TEST_CASE(IfSpecBuilder_AddToStaticAdapters) {
     CIfSpecBuilder uut;
-    uut.m_oAdapter.setStaticAdapters(staticAdapters);
-    uut.m_oAdapter.addAdapter(5, 6, true);
+    uut.mAdapter.setStaticAdapters(staticAdapters);
+    uut.mAdapter.addAdapter(5, 6, true);
     build(uut);
-    BOOST_REQUIRE_EQUAL(ifspec.m_nNumAdapters, 3);
-    const auto adapter = ifspec.m_pstAdapterInstanceDefinition;
+    BOOST_REQUIRE_EQUAL(ifspec.mNumAdapters, 3);
+    const auto adapter = ifspec.mAdapterInstanceDefinition;
     BOOST_CHECK_EQUAL(adapter[0], (SAdapterInstanceDef{1, 2, true }));
     BOOST_CHECK_EQUAL(adapter[1], (SAdapterInstanceDef{3, 4, false}));
     BOOST_CHECK_EQUAL(adapter[2], (SAdapterInstanceDef{6, 5, true}));

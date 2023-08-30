@@ -45,12 +45,12 @@ class CIEC_ANY_INT : public CIEC_ANY_NUM{
       return getLargestInt();
     }
 
-     void setSignedValue(TLargestIntValueType m_nVal) {
-       setLargestInt(m_nVal);
+     void setSignedValue(TLargestIntValueType mVal) {
+       setLargestInt(mVal);
      }
 
-     void setUnsignedValue(TLargestIntValueType m_nVal) {
-       setLargestInt(m_nVal);
+     void setUnsignedValue(TLargestIntValueType mVal) {
+       setLargestInt(mVal);
      }
 
     CIEC_ANY_INT() = default;

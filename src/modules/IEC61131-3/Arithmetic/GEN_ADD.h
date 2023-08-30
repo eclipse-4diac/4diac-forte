@@ -14,6 +14,7 @@
  *    Alois Zoitl - introduced new CGenFB class for better handling generic FBs
  *   Martin Jobst
  *     - refactor for ANY variant
+ *     - add generic readInputData and writeOutputData
  *******************************************************************************/
 
 #ifndef _GEN_ADD_H_
@@ -27,7 +28,7 @@ class GEN_ADD : public CGenFunctionBlock<CFunctionBlock> {
   DECLARE_GENERIC_FIRMWARE_FB(GEN_ADD)
 
   private:
-    forte::core::util::CMixedStorage m_oIfSpecStorage;
+    forte::core::util::CMixedStorage mIfSpecStorage;
 
     CIEC_ANY_MAGNITUDE_VARIANT& var_IN(size_t paIndex) {
       return *static_cast<CIEC_ANY_MAGNITUDE_VARIANT*>(getDI(paIndex));
@@ -37,22 +38,23 @@ class GEN_ADD : public CGenFunctionBlock<CFunctionBlock> {
       return *static_cast<CIEC_ANY_MAGNITUDE_VARIANT*>(getDO(0));
     }
 
-    static const TEventID scm_nEventREQID = 0;
-    static const TForteInt16 scm_anEIWithIndexes[];
-    static const CStringDictionary::TStringId scm_anEventInputNames[];
+    static const TEventID scmEventREQID = 0;
+    static const CStringDictionary::TStringId scmEventInputNames[];
 
-    static const TEventID scm_nEventCNFID = 0;
-    static const TForteInt16 scm_anEOWithIndexes[];
-    static const TDataIOID scm_anEOWith[];
-    static const CStringDictionary::TStringId scm_anEventOutputNames[];
+    static const TEventID scmEventCNFID = 0;
+    static const CStringDictionary::TStringId scmEventOutputNames[];
 
     //self-defined members
-    unsigned int m_nDInputs;
+    unsigned int mDInputs;
 
     void executeEvent(TEventID paEIID) override;
+
+    void readInputData(TEventID paEI) override;
+    void writeOutputData(TEventID paEO) override;
+
     bool createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) override;
 
-    GEN_ADD(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes);
+    GEN_ADD(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
     ~GEN_ADD() override;
 };
 

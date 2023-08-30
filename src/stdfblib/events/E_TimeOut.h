@@ -28,20 +28,22 @@ class FORTE_E_TimeOut : public CEventSourceFB{
   DECLARE_FIRMWARE_FB(FORTE_E_TimeOut)
 
   private:
-    static const TForteInt16 scm_anEOWithIndexes[];
-    static const SAdapterInstanceDef scm_astAdapterInstances[];
+    static const SAdapterInstanceDef scmAdapterInstances[];
 
     FORTE_ATimeOut& var_TimeOutSocket(){
-      return *static_cast<FORTE_ATimeOut*>(m_apoAdapters[0]);
+      return *static_cast<FORTE_ATimeOut*>(mAdapters[0]);
     }
     ;
-    static const int scm_nTimeOutSocketAdpNum = 0;
-    static const SFBInterfaceSpec scm_stFBInterfaceSpec;
+    static const int scmTimeOutSocketAdpNum = 0;
+    static const SFBInterfaceSpec scmFBInterfaceSpec;
 
     bool mActive; //!> flag to indicate that the timed fb is currently active
     STimedFBListEntry mTimeListEntry; //!> The Timer list entry of this timed FB
 
-    void executeEvent(TEventID pa_nEIID) override;
+    void executeEvent(TEventID paEIID, CEventChainExecutionThread * const paECET) override;
+
+    void readInputData(TEventID paEI) override;
+    void writeOutputData(TEventID paEO) override;
 
   public:
     EVENT_SOURCE_FUNCTION_BLOCK_CTOR(FORTE_E_TimeOut){
@@ -55,7 +57,7 @@ class FORTE_E_TimeOut : public CEventSourceFB{
 
   ~FORTE_E_TimeOut() override = default;
 
-  EMGMResponse changeFBExecutionState(EMGMCommandType pa_unCommand) override;
+  EMGMResponse changeFBExecutionState(EMGMCommandType paCommand) override;
 
 };
 

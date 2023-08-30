@@ -460,11 +460,11 @@ BOOST_AUTO_TEST_CASE(WString_fromString)
   BOOST_CHECK_EQUAL(0, strcmp(sTestee.getValue(), cWStringTestEscapedWCharacterResult));
 }
 
-void wStringTypedFromString(const std::string &pa_sSrc, const char* pa_acResult){
+void wStringTypedFromString(const std::string &paSrc, const char* paResult){
   CIEC_WSTRING sTestee;
-  BOOST_CHECK_EQUAL(pa_sSrc.length(), sTestee.fromString(pa_sSrc.c_str()));
-  BOOST_CHECK_EQUAL(sTestee.length(), strlen(pa_acResult));
-  BOOST_CHECK_EQUAL(0, strcmp(sTestee.getValue(), pa_acResult));
+  BOOST_CHECK_EQUAL(paSrc.length(), sTestee.fromString(paSrc.c_str()));
+  BOOST_CHECK_EQUAL(sTestee.length(), strlen(paResult));
+  BOOST_CHECK_EQUAL(0, strcmp(sTestee.getValue(), paResult));
 }
 
 BOOST_AUTO_TEST_CASE(WString_fromString_typed)

@@ -17,27 +17,27 @@
 
 DEFINE_ADAPTER_TYPE(FORTE_ArrowheadPublishAdp, g_nStringIdArrowheadPublishAdp)
 
-const CStringDictionary::TStringId FORTE_ArrowheadPublishAdp::scm_anDataOutputNames[] = {g_nStringIdpublishEvent, g_nStringIdendpoint};
+const CStringDictionary::TStringId FORTE_ArrowheadPublishAdp::scmDataOutputNames[] = {g_nStringIdpublishEvent, g_nStringIdendpoint};
 
-const CStringDictionary::TStringId FORTE_ArrowheadPublishAdp::scm_anDataOutputTypeIds[] = {g_nStringIdPublishEvent, g_nStringIdWSTRING};
+const CStringDictionary::TStringId FORTE_ArrowheadPublishAdp::scmDataOutputTypeIds[] = {g_nStringIdPublishEvent, g_nStringIdWSTRING};
 
-const TForteInt16 FORTE_ArrowheadPublishAdp::scm_anEIWithIndexes[] = {-1, -1};
-const CStringDictionary::TStringId FORTE_ArrowheadPublishAdp::scm_anEventInputNames[] = {g_nStringIdpublished};
+const TForteInt16 FORTE_ArrowheadPublishAdp::scmEIWithIndexes[] = {-1, -1};
+const CStringDictionary::TStringId FORTE_ArrowheadPublishAdp::scmEventInputNames[] = {g_nStringIdpublished};
 
-const TDataIOID FORTE_ArrowheadPublishAdp::scm_anEOWith[] = {0, 1, scmWithListDelimiter};
-const TForteInt16 FORTE_ArrowheadPublishAdp::scm_anEOWithIndexes[] = {0, -1};
-const CStringDictionary::TStringId FORTE_ArrowheadPublishAdp::scm_anEventOutputNames[] = {g_nStringIdpublish};
+const TDataIOID FORTE_ArrowheadPublishAdp::scmEOWith[] = {0, 1, scmWithListDelimiter};
+const TForteInt16 FORTE_ArrowheadPublishAdp::scmEOWithIndexes[] = {0, -1};
+const CStringDictionary::TStringId FORTE_ArrowheadPublishAdp::scmEventOutputNames[] = {g_nStringIdpublish};
 
-const SFBInterfaceSpec FORTE_ArrowheadPublishAdp::scm_stFBInterfaceSpecSocket = {
-  1,  scm_anEventInputNames,  0,  scm_anEIWithIndexes,
-  1,  scm_anEventOutputNames,  scm_anEOWith, scm_anEOWithIndexes,  0,  0, 0, 
-  2,  scm_anDataOutputNames, scm_anDataOutputTypeIds,
+const SFBInterfaceSpec FORTE_ArrowheadPublishAdp::scmFBInterfaceSpecSocket = {
+  1,  scmEventInputNames,  0,  scmEIWithIndexes,
+  1,  scmEventOutputNames,  scmEOWith, scmEOWithIndexes,  0,  0, 0, 
+  2,  scmDataOutputNames, scmDataOutputTypeIds,
   0, 0
 };
 
-const SFBInterfaceSpec FORTE_ArrowheadPublishAdp::scm_stFBInterfaceSpecPlug = {
-  1,  scm_anEventOutputNames,  scm_anEOWith,  scm_anEOWithIndexes,
-  1,  scm_anEventInputNames,  0, 0,  2,  scm_anDataOutputNames, scm_anDataOutputTypeIds,
+const SFBInterfaceSpec FORTE_ArrowheadPublishAdp::scmFBInterfaceSpecPlug = {
+  1,  scmEventOutputNames,  scmEOWith,  scmEOWithIndexes,
+  1,  scmEventInputNames,  0, 0,  2,  scmDataOutputNames, scmDataOutputTypeIds,
   0,  0, 0,
   0, 0
 };

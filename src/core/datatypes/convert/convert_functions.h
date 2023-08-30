@@ -104,5 +104,6 @@ inline void stringConverter(CIEC_STRING &paString, const CIEC_ANY &paVal) {
 #include "SintToConvertFunctions.h"
 #include "BcdConvertFunctions.h"
 #include "TimeInResolutionConvertFunctions.h"
+#include "overloadedConvertFunctions.h"
 
 #endif /* SRC_CORE_DATATYPES_CONVERT_CONVERT_FUNCTIONS_H_ */

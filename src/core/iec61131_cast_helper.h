@@ -236,6 +236,18 @@ namespace forte {
           explicit_cast() = delete;
       };
 
+      /** @brief is T explicitly castable to U?
+       * 
+       * @tparam T type to be cast
+       * @tparam U goal type of the cast
+       * @return NullType if not castable, type U if castable
+      */
+      template <typename T, typename U>
+      using explicit_cast_t = typename explicit_cast<T, U>::type;
+
+      template<typename T, typename U>
+      constexpr auto is_explicitly_castable_v = std::is_same_v<explicit_cast_t<T,U>, U>;
+
 // BOOL explicit casts
       ALLOW_EXPLICIT_CAST(CIEC_BOOL, CIEC_USINT)
       ALLOW_EXPLICIT_CAST(CIEC_BOOL, CIEC_UINT)
@@ -465,6 +477,9 @@ namespace forte {
       */
       template<typename T, typename U>
       using implicit_or_explicit_cast_t = typename implicit_or_explicit_cast<T, U>::type;
+
+      template <typename T, typename U>
+      constexpr auto is_implicit_or_explicit_castable_v = (is_implicitly_castable_v<T, U> || is_explicitly_castable_v<T, U>);
 
       template <typename T, typename U>
       struct get_div_operator_result_type {

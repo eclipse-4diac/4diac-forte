@@ -22,7 +22,7 @@ class CLuaEngine;
 class CLuaBFBTypeEntry: public CTypeLib::CFBTypeEntry {
 private:
 
-  const CIEC_STRING cm_sLuaScriptAsString;
+  const CIEC_STRING cmLuaScriptAsString;
   SFBInterfaceSpec m_interfaceSpec;
   SInternalVarsInformation m_internalVarsInformation;
 
@@ -38,7 +38,7 @@ private:
 public:
   static CLuaBFBTypeEntry* createLuaFBTypeEntry(CStringDictionary::TStringId typeNameId, CIEC_STRING& paLuaScriptAsString);
 
-  CFunctionBlock* createFBInstance(CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes) override;
+  CFunctionBlock* createFBInstance(CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) override;
 
   const SFBInterfaceSpec* getInterfaceSpec() const {
     return &m_interfaceSpec;

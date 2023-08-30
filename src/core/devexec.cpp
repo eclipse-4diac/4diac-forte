@@ -20,7 +20,7 @@
 
 CDeviceExecution::CDeviceExecution(CDevice& paDevice) :
   mDevice(paDevice) {
-  memset(mRegisteredEventHandlers, 0, sizeof(SEventHandlerElement) * cg_unNumberOfHandlers);
+  memset(mRegisteredEventHandlers, 0, sizeof(SEventHandlerElement) * cgNumberOfHandlers);
 
   CDeviceExecution::createHandlers(*this);
 
@@ -28,7 +28,7 @@ CDeviceExecution::CDeviceExecution(CDevice& paDevice) :
 }
 
 CDeviceExecution::~CDeviceExecution() {
-  for(size_t i = 0; i < cg_unNumberOfHandlers; i++) {
+  for(size_t i = 0; i < cgNumberOfHandlers; i++) {
     if(nullptr != mRegisteredEventHandlers[i].mHandler) { //for the test cases, only the timer handler is created
       mRegisteredEventHandlers[i].mHandler->disableHandler();
       delete mRegisteredEventHandlers[i].mHandler;
@@ -60,7 +60,7 @@ CTimerHandler& CDeviceExecution::getTimer() const {
 }
 
 void CDeviceExecution::disableHandlers() {
-  for(size_t i = 0; i < cg_unNumberOfHandlers; i++) {
+  for(size_t i = 0; i < cgNumberOfHandlers; i++) {
     if(nullptr != mRegisteredEventHandlers[i].mHandler) {
       mRegisteredEventHandlers[i].mHandler->disableHandler();
     }

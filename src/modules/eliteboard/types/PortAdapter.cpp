@@ -18,30 +18,30 @@
 DEFINE_ADAPTER_TYPE(FORTE_PortAdapter, g_nStringIdPortAdapter)
 
 
-const CStringDictionary::TStringId FORTE_PortAdapter::scm_anDataOutputNames[] = {g_nStringIdGPIO_Port_Addr};
+const CStringDictionary::TStringId FORTE_PortAdapter::scmDataOutputNames[] = {g_nStringIdGPIO_Port_Addr};
 
-const CStringDictionary::TStringId FORTE_PortAdapter::scm_anDataOutputTypeIds[] = {g_nStringIdDWORD};
+const CStringDictionary::TStringId FORTE_PortAdapter::scmDataOutputTypeIds[] = {g_nStringIdDWORD};
 
-const TForteInt16 FORTE_PortAdapter::scm_anEIWithIndexes[] = {-1};
-const CStringDictionary::TStringId FORTE_PortAdapter::scm_anEventInputNames[] = {g_nStringIdMAPO};
+const TForteInt16 FORTE_PortAdapter::scmEIWithIndexes[] = {-1};
+const CStringDictionary::TStringId FORTE_PortAdapter::scmEventInputNames[] = {g_nStringIdMAPO};
 
-const TDataIOID FORTE_PortAdapter::scm_anEOWith[] = {0, scmWithListDelimiter};
-const TForteInt16 FORTE_PortAdapter::scm_anEOWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_PortAdapter::scm_anEventOutputNames[] = {g_nStringIdMAP};
+const TDataIOID FORTE_PortAdapter::scmEOWith[] = {0, scmWithListDelimiter};
+const TForteInt16 FORTE_PortAdapter::scmEOWithIndexes[] = {0};
+const CStringDictionary::TStringId FORTE_PortAdapter::scmEventOutputNames[] = {g_nStringIdMAP};
 
 
-const SFBInterfaceSpec FORTE_PortAdapter::scm_stFBInterfaceSpecSocket = {
-  1, scm_anEventInputNames, 0, scm_anEIWithIndexes,
-  1, scm_anEventOutputNames, scm_anEOWith, scm_anEOWithIndexes,
+const SFBInterfaceSpec FORTE_PortAdapter::scmFBInterfaceSpecSocket = {
+  1, scmEventInputNames, 0, scmEIWithIndexes,
+  1, scmEventOutputNames, scmEOWith, scmEOWithIndexes,
   0, nullptr, nullptr,
-  1, scm_anDataOutputNames, scm_anDataOutputTypeIds,
+  1, scmDataOutputNames, scmDataOutputTypeIds,
   0, nullptr
 };
 
-const SFBInterfaceSpec FORTE_PortAdapter::scm_stFBInterfaceSpecPlug = {
-  1, scm_anEventOutputNames, scm_anEOWith, scm_anEOWithIndexes,
-  1, scm_anEventInputNames, 0, scm_anEIWithIndexes,
-  1, scm_anDataOutputNames, scm_anDataOutputTypeIds,
+const SFBInterfaceSpec FORTE_PortAdapter::scmFBInterfaceSpecPlug = {
+  1, scmEventOutputNames, scmEOWith, scmEOWithIndexes,
+  1, scmEventInputNames, 0, scmEIWithIndexes,
+  1, scmDataOutputNames, scmDataOutputTypeIds,
   0, nullptr, nullptr,
   0, nullptr
 };

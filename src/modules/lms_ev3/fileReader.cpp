@@ -21,27 +21,27 @@
 
 DEFINE_FIRMWARE_FB(fileReader, g_nStringIdfileReader)
 
-const CStringDictionary::TStringId fileReader::scm_anDataInputNames[] = {g_nStringIdQI, g_nStringIdFILE_NAME};
+const CStringDictionary::TStringId fileReader::scmDataInputNames[] = {g_nStringIdQI, g_nStringIdFILE_NAME};
 
-const CStringDictionary::TStringId fileReader::scm_anDataInputTypeIds[] = {g_nStringIdBOOL, g_nStringIdSTRING};
+const CStringDictionary::TStringId fileReader::scmDataInputTypeIds[] = {g_nStringIdBOOL, g_nStringIdSTRING};
 
-const CStringDictionary::TStringId fileReader::scm_anDataOutputNames[] = {g_nStringIdQO, g_nStringIdSTATUS, g_nStringIdS1};
+const CStringDictionary::TStringId fileReader::scmDataOutputNames[] = {g_nStringIdQO, g_nStringIdSTATUS, g_nStringIdS1};
 
-const CStringDictionary::TStringId fileReader::scm_anDataOutputTypeIds[] = {g_nStringIdBOOL, g_nStringIdWSTRING, g_nStringIdSTRING};
+const CStringDictionary::TStringId fileReader::scmDataOutputTypeIds[] = {g_nStringIdBOOL, g_nStringIdWSTRING, g_nStringIdSTRING};
 
-const TForteInt16 fileReader::scm_anEIWithIndexes[] = {0, 3};
-const TDataIOID fileReader::scm_anEIWith[] = {0, 1, scmWithListDelimiter, 0, scmWithListDelimiter};
-const CStringDictionary::TStringId fileReader::scm_anEventInputNames[] = {g_nStringIdINIT, g_nStringIdREQ};
+const TForteInt16 fileReader::scmEIWithIndexes[] = {0, 3};
+const TDataIOID fileReader::scmEIWith[] = {0, 1, scmWithListDelimiter, 0, scmWithListDelimiter};
+const CStringDictionary::TStringId fileReader::scmEventInputNames[] = {g_nStringIdINIT, g_nStringIdREQ};
 
-const TDataIOID fileReader::scm_anEOWith[] = {0, 1, 2, scmWithListDelimiter, 0, 1, 2, scmWithListDelimiter};
-const TForteInt16 fileReader::scm_anEOWithIndexes[] = {0, 4, -1};
-const CStringDictionary::TStringId fileReader::scm_anEventOutputNames[] = {g_nStringIdINITO, g_nStringIdCNF};
+const TDataIOID fileReader::scmEOWith[] = {0, 1, 2, scmWithListDelimiter, 0, 1, 2, scmWithListDelimiter};
+const TForteInt16 fileReader::scmEOWithIndexes[] = {0, 4, -1};
+const CStringDictionary::TStringId fileReader::scmEventOutputNames[] = {g_nStringIdINITO, g_nStringIdCNF};
 
-const SFBInterfaceSpec fileReader::scm_stFBInterfaceSpec = {
-  2,  scm_anEventInputNames,  scm_anEIWith,  scm_anEIWithIndexes,
-  2,  scm_anEventOutputNames,  scm_anEOWith, scm_anEOWithIndexes,
-  2,  scm_anDataInputNames, scm_anDataInputTypeIds,
-  3,  scm_anDataOutputNames, scm_anDataOutputTypeIds,
+const SFBInterfaceSpec fileReader::scmFBInterfaceSpec = {
+  2,  scmEventInputNames,  scmEIWith,  scmEIWithIndexes,
+  2,  scmEventOutputNames,  scmEOWith, scmEOWithIndexes,
+  2,  scmDataInputNames, scmDataInputTypeIds,
+  3,  scmDataOutputNames, scmDataOutputTypeIds,
   0, 0
 };
 
@@ -49,23 +49,23 @@ const char * const fileReader::scmOK = "OK";
 const char * const fileReader::scmNotInitialised = "Not initialized";
 const char * const fileReader::scmCouldNotRead = "Could not read";
 
-void fileReader::executeEvent(TEventID pa_nEIID){ //TODO: manage output and status
-  switch (pa_nEIID){
-    case scm_nEventINITID:
+void fileReader::executeEvent(TEventID paEIID){ //TODO: manage output and status
+  switch (paEIID){
+    case scmEventINITID:
       if(true == QI()){
         QO() = openFile();
       }
       else{
         closeFile();
       }
-      sendOutputEvent(scm_nEventINITOID);
+      sendOutputEvent(scmEventINITOID);
       break;
-    case scm_nEventREQID:
+    case scmEventREQID:
       QO() = QI();
       if(true == QI()){
         QO() = readFile();
       }
-      sendOutputEvent(scm_nEventCNFID);
+      sendOutputEvent(scmEventCNFID);
       if (false == QO()){
         std::cout << "----------ERROR\n";
       }
@@ -73,8 +73,8 @@ void fileReader::executeEvent(TEventID pa_nEIID){ //TODO: manage output and stat
   }
 }
 
-fileReader::fileReader(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes) :
-    CFunctionBlock(pa_poSrcRes, &scm_stFBInterfaceSpec, pa_nInstanceNameId){
+fileReader::fileReader(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) :
+    CFunctionBlock(paSrcRes, &scmFBInterfaceSpec, paInstanceNameId){
   mFile.rdbuf()->pubsetbuf(nullptr, 0); //disable buffer to avoid latency
 }
 

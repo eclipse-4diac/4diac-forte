@@ -34,19 +34,19 @@ public:
   typedef size_t TStringId;
 
   //!\brief Invalid string id
-  static const TStringId scm_nInvalidStringId = std::numeric_limits<TStringId>::max();
+  static const TStringId scmInvalidStringId = std::numeric_limits<TStringId>::max();
 
 
   /*!\brief Get a string from the dictionary
    *
-   * \param pa_nId String id
+   * \param paId String id
    * \return the found string or 0 if not found
    */
-  const char *get(TStringId pa_nId);
+  const char *get(TStringId paId);
 
   /*!\brief Insert a string into the dictionary
    *
-   * \param pa_sStr String to be inserted
+   * \param paStr String to be inserted
    * \return id of the inserted string (or the existing one if the dictionary already has it)
    */
   TStringId insert(const char *paStr);
@@ -61,19 +61,19 @@ public:
 
   /*!\brief Retrieve the Id of a given string if it is already in the dictionary
    *
-   * \param pa_sStr String to be searched for
-   * \return id of the string (or scm_nInvalidStringId if it is not in the dictionary)
+   * \param paStr String to be searched for
+   * \return id of the string (or scmInvalidStringId if it is not in the dictionary)
    */
-  TStringId getId(const char *pa_sStr) const{
+  TStringId getId(const char *paStr) const{
     unsigned int nIdx;
-    return findEntry(pa_sStr, nIdx);
+    return findEntry(paStr, nIdx);
   }
 
   /*!\brief Retrieve the Id of a given string if it is already in the dictionary
    *
    * \param paStr String to be searched for (need not be '\0' terminated)
    * \param paStrSize Size of the string (excluding any terminating '\0' character)
-   * \return id of the string (or scm_nInvalidStringId if it is not in the dictionary)
+   * \return id of the string (or scmInvalidStringId if it is not in the dictionary)
    */
   TStringId getId(const char *paStr, size_t paStrSize) const{
     unsigned int nIdx;
@@ -88,45 +88,45 @@ private:
   TStringId findEntry(const char *paStr, size_t paStrSize, unsigned int &paIdx) const;
 
   // Reallocate the buffer
-  bool reallocateStringIdBuf(unsigned int pa_nNewMaxNrOfStrings);
-  bool reallocateStringBuf(size_t pa_nNewBufSize);
+  bool reallocateStringIdBuf(unsigned int paNewMaxNrOfStrings);
+  bool reallocateStringBuf(size_t paNewBufSize);
 
   // Insert the string at the specified position
-  TStringId insertAt(const char *pa_sStr, unsigned int pa_nIdx, size_t pa_nLen);
+  TStringId insertAt(const char *paStr, unsigned int paIdx, size_t paLen);
 
   // Get an address
-  const char *getStringAddress(TStringId pa_nId) const {
-    return m_paStringBufAddr + pa_nId;
+  const char *getStringAddress(TStringId paId) const {
+    return mStringBufAddr + paId;
   };
 
-  char *getStringAddress(TStringId pa_nId) {
-    return m_paStringBufAddr + pa_nId;
+  char *getStringAddress(TStringId paId) {
+    return mStringBufAddr + paId;
   };
 
   //!Buffer for the String Ids. The Ids are sorted according to their values they are pointing at
-  TStringId *m_pnStringIdBufAddr;
+  TStringId *mStringIdBufAddr;
 
   //! Buffer for the strings
-  char *m_paStringBufAddr;
+  char *mStringBufAddr;
 
   // Size of the allocated space
-  size_t m_nStringBufSize;
+  size_t mStringBufSize;
 
   // Maximum number of strings we can hold (size of the StringIdBufer)
-  unsigned int m_nMaxNrOfStrings;
+  unsigned int mMaxNrOfStrings;
 
   // Number of strings we are actually holding
-  unsigned int m_nNrOfStrings;
+  unsigned int mNrOfStrings;
 
   // Next string gets written here
-  TStringId m_nNextString;
+  TStringId mNextString;
 
 #ifdef FORTE_STRING_DICT_FIXED_MEMORY
-  static TStringId scm_aunIdList[cg_unStringDictInitialMaxNrOfStrings];
-  static char scm_acConstStringBuf[cg_unStringDictInitialStringBufSize];
+  static TStringId scmIdList[cgStringDictInitialMaxNrOfStrings];
+  static char scmConstStringBuf[cgStringDictInitialStringBufSize];
 #else
-  static const TStringId scm_aunIdList[];
-  static const char scm_acConstStringBuf[];
+  static const TStringId scmIdList[];
+  static const char scmConstStringBuf[];
 #endif
 };
 

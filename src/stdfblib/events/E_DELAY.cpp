@@ -22,16 +22,16 @@ E_DELAY::E_DELAY(const CStringDictionary::TStringId paInstanceNameId, CResource 
          CTimedFB( paInstanceNameId, paSrcRes, e_SingleShot){
 }
 
-void E_DELAY::executeEvent(TEventID pa_nEIID){
-  if(cg_nExternalEventID == pa_nEIID ){
-    sendOutputEvent(csm_nEOID);
+void E_DELAY::executeEvent(TEventID paEIID, CEventChainExecutionThread * const paECET){
+  if(cgExternalEventID == paEIID ){
+    sendOutputEvent(csmEOID, getEventChainExecutor());
     mActive = false;
   }
   else{
-    if(csm_nEventSTARTID == pa_nEIID && !mActive) {
-      setEventChainExecutor(mInvokingExecEnv); // E_DELAY will execute in the same thread on as from where it has been triggered.
+    if(csmEventSTARTID == paEIID && !mActive) {
+      setEventChainExecutor(paECET); // E_DELAY will execute in the same thread on as from where it has been triggered.
     }
-    CTimedFB::executeEvent(pa_nEIID);
+    CTimedFB::executeEvent(paEIID, paECET);
   }
 }
 

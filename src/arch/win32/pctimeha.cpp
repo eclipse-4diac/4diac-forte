@@ -14,13 +14,13 @@
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 
-const TForteInt32 CPCTimerHandler::csm_nTicksPerSecond = 1000;
+const TForteInt32 CPCTimerHandler::csmTicksPerSecond = 1000;
 
-CTimerHandler* CTimerHandler::createTimerHandler(CDeviceExecution& pa_poDeviceExecution){
-  return new CPCTimerHandler(pa_poDeviceExecution);
+CTimerHandler* CTimerHandler::createTimerHandler(CDeviceExecution& paDeviceExecution){
+  return new CPCTimerHandler(paDeviceExecution);
 }
 
-CPCTimerHandler::CPCTimerHandler(CDeviceExecution& pa_poDeviceExecution) : CTimerHandler(pa_poDeviceExecution)  {
+CPCTimerHandler::CPCTimerHandler(CDeviceExecution& paDeviceExecution) : CTimerHandler(paDeviceExecution)  {
 }
 
 CPCTimerHandler::~CPCTimerHandler(){
@@ -41,8 +41,8 @@ void CPCTimerHandler::run(){
   QueryPerformanceFrequency(&stFrequenzy);
   QueryPerformanceCounter(&stElapsed1);
 
-  stReqTimeVal.QuadPart = stFrequenzy.QuadPart / CPCTimerHandler::csm_nTicksPerSecond;
-  //stReqTimeVal = 1000000 / CPCTimerHandler::csm_nTicksPerSecond;
+  stReqTimeVal.QuadPart = stFrequenzy.QuadPart / CPCTimerHandler::csmTicksPerSecond;
+  //stReqTimeVal = 1000000 / CPCTimerHandler::csmTicksPerSecond;
 
   while(isAlive()){
     stWaittime.QuadPart *= 1000; // calculate in ms, not sec

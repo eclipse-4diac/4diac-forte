@@ -36,7 +36,7 @@ class CEventConnection : public CConnection{
     /*! \brief Triggers the event connection and all destinations are notified.
      *
      *
-     *  \param pa_poExecEnv Pointer to the execution environment the event is sent in.
+     *  \param paExecEnv Pointer to the execution environment the event is sent in.
      */
     void triggerEvent(CEventChainExecutionThread *paExecEnv) const;
 

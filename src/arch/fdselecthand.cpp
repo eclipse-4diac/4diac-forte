@@ -143,12 +143,12 @@ void CFDSelectHandler::removeComCallback(TFileDescriptor paFD){
   mConnectionListChanged = true;
 }
 
-CFDSelectHandler::TFileDescriptor CFDSelectHandler::createFDSet(fd_set *m_panFDSet){
+CFDSelectHandler::TFileDescriptor CFDSelectHandler::createFDSet(fd_set *mFDSet){
   TFileDescriptor nRetVal = scmInvalidFileDescriptor;
-  FD_ZERO(m_panFDSet);
+  FD_ZERO(mFDSet);
   TConnectionContainer::Iterator itEnd(mConnectionsList.end());
   for(TConnectionContainer::Iterator itRunner = mConnectionsList.begin(); itRunner != itEnd; ++itRunner){
-    FD_SET(itRunner->mSockDes, m_panFDSet);
+    FD_SET(itRunner->mSockDes, mFDSet);
     if(itRunner->mSockDes > nRetVal || scmInvalidFileDescriptor == nRetVal){
       nRetVal = itRunner->mSockDes;
     }

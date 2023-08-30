@@ -36,10 +36,10 @@ BOOST_AUTO_TEST_CASE(Literal_test)
   BOOST_TEST(static_cast<CIEC_DINT::TValueType>(test1) == 0);
 
   CIEC_DINT test2 = 2147483647_DINT;
-  BOOST_TEST(static_cast<CIEC_DINT::TValueType>(test2) == CIEC_DINT::scm_nMaxVal);
+  BOOST_TEST(static_cast<CIEC_DINT::TValueType>(test2) == CIEC_DINT::scmMaxVal);
 
   CIEC_DINT test3 = -2147483648_DINT;
-  BOOST_TEST(static_cast<CIEC_DINT::TValueType>(test3) == CIEC_DINT::scm_nMinVal);
+  BOOST_TEST(static_cast<CIEC_DINT::TValueType>(test3) == CIEC_DINT::scmMinVal);
 }
 
 BOOST_AUTO_TEST_CASE(Assignment_test)

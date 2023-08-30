@@ -1,5 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2020 Johannes Kepler University
+ * Copyright (c) 2020, 2023 Johannes Kepler University
+ *                          Martin Erich Jobst
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -9,6 +10,7 @@
  *
  * Contributors:
  *   Alois Zoitl - initial API and implementation and/or initial documentation
+ *   Martin Jobst - add generic readInputData and writeOutputData
  *******************************************************************************/
 #ifndef _GEN_STRUCT_DEMUX_H_
 #define _GEN_STRUCT_DEMUX_H_
@@ -20,18 +22,19 @@ class GEN_STRUCT_DEMUX : public CGenFunctionBlock<CFunctionBlock> {
     DECLARE_GENERIC_FIRMWARE_FB(GEN_STRUCT_DEMUX)
 
   private:
-    static const CStringDictionary::TStringId scm_anDataInputNames[];
+    static const CStringDictionary::TStringId scmDataInputNames[];
 
-    static const TEventID scm_nEventREQID = 0;
-    static const TForteInt16 scm_anEIWithIndexes[];
-    static const TDataIOID scm_anEIWith[];
-    static const CStringDictionary::TStringId scm_anEventInputNames[];
+    static const TEventID scmEventREQID = 0;
+    static const CStringDictionary::TStringId scmEventInputNames[];
 
-    static const TEventID scm_nEventCNFID = 0;
-    static const TForteInt16 scm_anEOWithIndexes[];
-    static const CStringDictionary::TStringId scm_anEventOutputNames[];
+    static const TEventID scmEventCNFID = 0;
+    static const CStringDictionary::TStringId scmEventOutputNames[];
 
     void executeEvent(TEventID paEIID) override;
+
+    void readInputData(TEventID paEI) override;
+    void writeOutputData(TEventID paEO) override;
+
     bool createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) override;
 
     CIEC_STRUCT& st_IN() {

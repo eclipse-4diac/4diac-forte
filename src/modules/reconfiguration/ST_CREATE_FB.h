@@ -9,70 +9,84 @@
  * Contributors:
  *   Matthias Plasch, Gerhard Ebenhofer - initial API and implementation and/or initial documentation
  *******************************************************************************/
-#ifndef _ST_CREATE_FB_H_
-#define _ST_CREATE_FB_H_
 
-#include <funcbloc.h>
-#include "core/resource.h"
+#pragma once
 
-// cppcheck-suppress noConstructor
-class FORTE_ST_CREATE_FB: public CFunctionBlock{
+#include "funcbloc.h"
+#include "forte_bool.h"
+#include "forte_wstring.h"
+#include "iec61131_functions.h"
+#include "forte_array_common.h"
+#include "forte_array.h"
+#include "forte_array_fixed.h"
+#include "forte_array_variable.h"
+
+
+class FORTE_ST_CREATE_FB final : public CFunctionBlock {
   DECLARE_FIRMWARE_FB(FORTE_ST_CREATE_FB)
 
 private:
-  static const CStringDictionary::TStringId scm_anDataInputNames[];
-  static const CStringDictionary::TStringId scm_anDataInputTypeIds[];
-  CIEC_BOOL &QI() {
-    return *static_cast<CIEC_BOOL*>(getDI(0));
-  };
+  static const CStringDictionary::TStringId scmDataInputNames[];
+  static const CStringDictionary::TStringId scmDataInputTypeIds[];
+  static const CStringDictionary::TStringId scmDataOutputNames[];
+  static const CStringDictionary::TStringId scmDataOutputTypeIds[];
+  static const TEventID scmEventREQID = 0;
+  static const TDataIOID scmEIWith[];
+  static const TForteInt16 scmEIWithIndexes[];
+  static const CStringDictionary::TStringId scmEventInputNames[];
+  static const TEventID scmEventCNFID = 0;
+  static const TDataIOID scmEOWith[]; 
+  static const TForteInt16 scmEOWithIndexes[];
+  static const CStringDictionary::TStringId scmEventOutputNames[];
 
-  CIEC_WSTRING &FB_NAME() {
-    return *static_cast<CIEC_WSTRING*>(getDI(1));
-  };
+  static const SFBInterfaceSpec scmFBInterfaceSpec;
 
-  CIEC_WSTRING &FB_TYPE() {
-    return *static_cast<CIEC_WSTRING*>(getDI(2));
-  };
-
-  CIEC_WSTRING &DST() {
-    return *static_cast<CIEC_WSTRING*>(getDI(3));
-  };
-
-  static const CStringDictionary::TStringId scm_anDataOutputNames[];
-  static const CStringDictionary::TStringId scm_anDataOutputTypeIds[];
-  CIEC_BOOL &QO() {
-    return *static_cast<CIEC_BOOL*>(getDO(0));
-  };
-
-  CIEC_WSTRING &STATUS() {
-    return *static_cast<CIEC_WSTRING*>(getDO(1));
-  };
-
-  static const TEventID scm_nEventREQID = 0;
-  static const TForteInt16 scm_anEIWithIndexes[];
-  static const TDataIOID scm_anEIWith[];
-  static const CStringDictionary::TStringId scm_anEventInputNames[];
-
-  static const TEventID scm_nEventCNFID = 0;
-  static const TForteInt16 scm_anEOWithIndexes[];
-  static const TDataIOID scm_anEOWith[];
-  static const CStringDictionary::TStringId scm_anEventOutputNames[];
-
-  static const SFBInterfaceSpec scm_stFBInterfaceSpec;
-
-  //! The device the block is contained in
-  CDevice &m_poDevice;
-
-
-  void executeEvent(TEventID pa_nEIID) override;
+  void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
   void executeRQST();
+
+  void readInputData(TEventID paEIID) override;
+  void writeOutputData(TEventID paEIID) override;
+  void setInitialValues() override;
+
 public:
-  FUNCTION_BLOCK_CTOR(FORTE_ST_CREATE_FB), m_poDevice(pa_poSrcRes->getDevice()){
-  };
+  FORTE_ST_CREATE_FB(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
 
-  ~FORTE_ST_CREATE_FB() override = default;
-
+  CIEC_BOOL var_QI;
+  CIEC_WSTRING var_FB_NAME;
+  CIEC_WSTRING var_FB_TYPE;
+  CIEC_WSTRING var_DST;
+  CIEC_BOOL var_QO;
+  CIEC_WSTRING var_STATUS;
+  CIEC_BOOL var_conn_QO;
+  CIEC_WSTRING var_conn_STATUS;
+  CEventConnection conn_CNF;
+  CDataConnection *conn_QI;
+  CDataConnection *conn_FB_NAME;
+  CDataConnection *conn_FB_TYPE;
+  CDataConnection *conn_DST;
+  CDataConnection conn_QO;
+  CDataConnection conn_STATUS;
+  CIEC_ANY *getDI(size_t) override;
+  CIEC_ANY *getDO(size_t) override;
+  CIEC_ANY *getDIO(size_t) override;
+  CEventConnection *getEOConUnchecked(TPortId) override;
+  CDataConnection **getDIConUnchecked(TPortId) override;
+  CDataConnection *getDOConUnchecked(TPortId) override;
+  CInOutDataConnection **getDIOInConUnchecked(TPortId) override;
+  CInOutDataConnection *getDIOOutConUnchecked(TPortId) override;
+  void evt_REQ(const CIEC_BOOL &pa_QI, const CIEC_WSTRING &pa_FB_NAME, const CIEC_WSTRING &pa_FB_TYPE, const CIEC_WSTRING &pa_DST, CIEC_BOOL &pa_QO, CIEC_WSTRING &pa_STATUS) {
+    var_QI = pa_QI;
+    var_FB_NAME = pa_FB_NAME;
+    var_FB_TYPE = pa_FB_TYPE;
+    var_DST = pa_DST;
+    receiveInputEvent(scmEventREQID, nullptr);
+    pa_QO = var_QO;
+    pa_STATUS = var_STATUS;
+  }
+  void operator()(const CIEC_BOOL &pa_QI, const CIEC_WSTRING &pa_FB_NAME, const CIEC_WSTRING &pa_FB_TYPE, const CIEC_WSTRING &pa_DST, CIEC_BOOL &pa_QO, CIEC_WSTRING &pa_STATUS) {
+    evt_REQ(pa_QI, pa_FB_NAME, pa_FB_TYPE, pa_DST, pa_QO, pa_STATUS);
+  }
 };
 
-#endif //close the ifdef sequence from the beginning of the file
+
 

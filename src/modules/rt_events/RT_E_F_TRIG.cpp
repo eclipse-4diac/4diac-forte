@@ -15,46 +15,148 @@
 #include "RT_E_F_TRIG_gen.cpp"
 #endif
 
+#include "criticalregion.h"
+#include "resource.h"
+
 DEFINE_FIRMWARE_FB(FORTE_RT_E_F_TRIG, g_nStringIdRT_E_F_TRIG)
 
-const CStringDictionary::TStringId FORTE_RT_E_F_TRIG::scm_anDataInputNames[] = {g_nStringIdQI, g_nStringIdTmin, g_nStringIdDeadline, g_nStringIdWCET};
-
-const CStringDictionary::TStringId FORTE_RT_E_F_TRIG::scm_anDataInputTypeIds[] = {g_nStringIdBOOL, g_nStringIdTIME, g_nStringIdTIME, g_nStringIdTIME};
-
-const CStringDictionary::TStringId FORTE_RT_E_F_TRIG::scm_anDataOutputNames[] = {g_nStringIdQO};
-
-const CStringDictionary::TStringId FORTE_RT_E_F_TRIG::scm_anDataOutputTypeIds[] = {g_nStringIdBOOL};
-
-const TForteInt16 FORTE_RT_E_F_TRIG::scm_anEIWithIndexes[] = {0, 5};
-const TDataIOID FORTE_RT_E_F_TRIG::scm_anEIWith[] = {0, 1, 2, 3, scmWithListDelimiter, 0, scmWithListDelimiter};
-const CStringDictionary::TStringId FORTE_RT_E_F_TRIG::scm_anEventInputNames[] = {g_nStringIdINIT, g_nStringIdEI};
-
-const TDataIOID FORTE_RT_E_F_TRIG::scm_anEOWith[] = {0, scmWithListDelimiter};
-const TForteInt16 FORTE_RT_E_F_TRIG::scm_anEOWithIndexes[] = {0, -1, -1};
-const CStringDictionary::TStringId FORTE_RT_E_F_TRIG::scm_anEventOutputNames[] = {g_nStringIdINITO, g_nStringIdEO};
-
-const SFBInterfaceSpec FORTE_RT_E_F_TRIG::scm_stFBInterfaceSpec = {
-  2,  scm_anEventInputNames,  scm_anEIWith,  scm_anEIWithIndexes,
-  2,  scm_anEventOutputNames,  scm_anEOWith, scm_anEOWithIndexes,  4,  scm_anDataInputNames, scm_anDataInputTypeIds,
-  1,  scm_anDataOutputNames, scm_anDataOutputTypeIds,
+const CStringDictionary::TStringId FORTE_RT_E_F_TRIG::scmDataInputNames[] = {g_nStringIdQI, g_nStringIdTmin, g_nStringIdDeadline, g_nStringIdWCET};
+const CStringDictionary::TStringId FORTE_RT_E_F_TRIG::scmDataInputTypeIds[] = {g_nStringIdBOOL, g_nStringIdTIME, g_nStringIdTIME, g_nStringIdTIME};
+const CStringDictionary::TStringId FORTE_RT_E_F_TRIG::scmDataOutputNames[] = {g_nStringIdQO};
+const CStringDictionary::TStringId FORTE_RT_E_F_TRIG::scmDataOutputTypeIds[] = {g_nStringIdBOOL};
+const TDataIOID FORTE_RT_E_F_TRIG::scmEIWith[] = {0, 1, 2, 3, scmWithListDelimiter, 0, scmWithListDelimiter};
+const TForteInt16 FORTE_RT_E_F_TRIG::scmEIWithIndexes[] = {0, 5};
+const CStringDictionary::TStringId FORTE_RT_E_F_TRIG::scmEventInputNames[] = {g_nStringIdINIT, g_nStringIdEI};
+const TDataIOID FORTE_RT_E_F_TRIG::scmEOWith[] = {0, scmWithListDelimiter};
+const TForteInt16 FORTE_RT_E_F_TRIG::scmEOWithIndexes[] = {0, -1};
+const CStringDictionary::TStringId FORTE_RT_E_F_TRIG::scmEventOutputNames[] = {g_nStringIdINITO, g_nStringIdEO};
+const SFBInterfaceSpec FORTE_RT_E_F_TRIG::scmFBInterfaceSpec = {
+  2, scmEventInputNames, scmEIWith, scmEIWithIndexes,
+  2, scmEventOutputNames, scmEOWith, scmEOWithIndexes,
+  4, scmDataInputNames, scmDataInputTypeIds,
+  1, scmDataOutputNames, scmDataOutputTypeIds,
+  0, nullptr,
   0, nullptr
 };
 
-FORTE_RT_E_F_TRIG::FORTE_RT_E_F_TRIG(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes) :
-       CRTEventSingle(
-           pa_poSrcRes,
-           &scm_stFBInterfaceSpec, pa_nInstanceNameId){
-    m_bWasHigh = false;
+FORTE_RT_E_F_TRIG::FORTE_RT_E_F_TRIG(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) :
+        CRTEventSingle(paSrcRes, &scmFBInterfaceSpec, paInstanceNameId),
+    var_conn_QO(var_QO),
+    conn_INITO(this, 0),
+    conn_EO(this, 1),
+    conn_QI(nullptr),
+    conn_Tmin(nullptr),
+    conn_Deadline(nullptr),
+    conn_WCET(nullptr),
+    conn_QO(this, 0, &var_conn_QO) {
+};
+
+void FORTE_RT_E_F_TRIG::setInitialValues() {
+  var_QI = 0_BOOL;
+  var_Tmin = 0_TIME;
+  var_Deadline = 0_TIME;
+  var_WCET = 0_TIME;
+  var_QO = 0_BOOL;
 }
 
-bool FORTE_RT_E_F_TRIG::checkActivation(TEventID ){
+bool FORTE_RT_E_F_TRIG::checkActivation(TEventID){
   bool bRetval = false;
 
-  if((QI() == false)&&(m_bWasHigh)){
+  if(!var_QI && mWasHigh) {
     bRetval = true;
   }
-  m_bWasHigh = QI();
+  mWasHigh = var_QI;
   return bRetval;
+}
+
+void FORTE_RT_E_F_TRIG::readInputData(TEventID paEIID) {
+  switch(paEIID) {
+    case scmEventINITID: {
+      RES_DATA_CON_CRITICAL_REGION();
+      readData(0, var_QI, conn_QI);
+      readData(1, var_Tmin, conn_Tmin);
+      readData(2, var_Deadline, conn_Deadline);
+      readData(3, var_WCET, conn_WCET);
+      break;
+    }
+    case scmEventEIID: {
+      RES_DATA_CON_CRITICAL_REGION();
+      readData(0, var_QI, conn_QI);
+      break;
+    }
+    default:
+      break;
+  }
+}
+
+void FORTE_RT_E_F_TRIG::writeOutputData(TEventID paEIID) {
+  switch(paEIID) {
+    case scmEventINITOID: {
+      RES_DATA_CON_CRITICAL_REGION();
+      writeData(0, var_QO, conn_QO);
+      break;
+    }
+    case scmEventEOID: {
+      RES_DATA_CON_CRITICAL_REGION();
+      break;
+    }
+    default:
+      break;
+  }
+}
+
+CIEC_ANY *FORTE_RT_E_F_TRIG::getDI(size_t paIndex) {
+  switch(paIndex) {
+    case 0: return &var_QI;
+    case 1: return &var_Tmin;
+    case 2: return &var_Deadline;
+    case 3: return &var_WCET;
+  }
+  return nullptr;
+}
+
+CIEC_ANY *FORTE_RT_E_F_TRIG::getDO(size_t paIndex) {
+  switch(paIndex) {
+    case 0: return &var_QO;
+  }
+  return nullptr;
+}
+
+CIEC_ANY *FORTE_RT_E_F_TRIG::getDIO(size_t) {
+  return nullptr;
+}
+
+CEventConnection *FORTE_RT_E_F_TRIG::getEOConUnchecked(TPortId paIndex) {
+  switch(paIndex) {
+    case 0: return &conn_INITO;
+    case 1: return &conn_EO;
+  }
+  return nullptr;
+}
+
+CDataConnection **FORTE_RT_E_F_TRIG::getDIConUnchecked(TPortId paIndex) {
+  switch(paIndex) {
+    case 0: return &conn_QI;
+    case 1: return &conn_Tmin;
+    case 2: return &conn_Deadline;
+    case 3: return &conn_WCET;
+  }
+  return nullptr;
+}
+
+CDataConnection *FORTE_RT_E_F_TRIG::getDOConUnchecked(TPortId paIndex) {
+  switch(paIndex) {
+    case 0: return &conn_QO;
+  }
+  return nullptr;
+}
+
+CInOutDataConnection **FORTE_RT_E_F_TRIG::getDIOInConUnchecked(TPortId) {
+  return nullptr;
+}
+
+CInOutDataConnection *FORTE_RT_E_F_TRIG::getDIOOutConUnchecked(TPortId) {
+  return nullptr;
 }
 
 

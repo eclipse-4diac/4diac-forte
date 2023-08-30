@@ -25,8 +25,8 @@ class FORTE_QueryServicesAdp: public CAdapter{
 
 private:
  private:
-  static const CStringDictionary::TStringId scm_anDataInputNames[];
-  static const CStringDictionary::TStringId scm_anDataInputTypeIds[];
+  static const CStringDictionary::TStringId scmDataInputNames[];
+  static const CStringDictionary::TStringId scmDataInputTypeIds[];
  public:
   CIEC_ServiceRegistryEntry *serviceEntries() {
     return (CIEC_ServiceRegistryEntry*)(*static_cast<CIEC_ARRAY<> *>((isSocket()) ? getDI(0) : getDO(0)))[0]; //the first element marks the start of the array
@@ -37,8 +37,8 @@ private:
   };
 
  private:
-  static const CStringDictionary::TStringId scm_anDataOutputNames[];
-  static const CStringDictionary::TStringId scm_anDataOutputTypeIds[];
+  static const CStringDictionary::TStringId scmDataOutputNames[];
+  static const CStringDictionary::TStringId scmDataOutputTypeIds[];
  public:
   CIEC_ServiceQueryForm &serviceQueryForm() {
     return *static_cast<CIEC_ServiceQueryForm*>((isSocket()) ? getDO(0) : getDI(0));
@@ -49,28 +49,28 @@ private:
   };
 
  public:
-  static const TEventID scm_nEventqueriedID = 0;
+  static const TEventID scmEventqueriedID = 0;
   TEventID queried() {
-    return m_nParentAdapterListEventID + scm_nEventqueriedID;
+    return mParentAdapterListEventID + scmEventqueriedID;
   }
  private:
-  static const TForteInt16 scm_anEIWithIndexes[];
-  static const TDataIOID scm_anEIWith[];
-  static const CStringDictionary::TStringId scm_anEventInputNames[];
+  static const TForteInt16 scmEIWithIndexes[];
+  static const TDataIOID scmEIWith[];
+  static const CStringDictionary::TStringId scmEventInputNames[];
 
  public:
-  static const TEventID scm_nEventqueryID = 0;
+  static const TEventID scmEventqueryID = 0;
   TEventID query() {
-    return m_nParentAdapterListEventID + scm_nEventqueryID;
+    return mParentAdapterListEventID + scmEventqueryID;
   }
  private:
-  static const TForteInt16 scm_anEOWithIndexes[];
-  static const TDataIOID scm_anEOWith[];
-  static const CStringDictionary::TStringId scm_anEventOutputNames[];
+  static const TForteInt16 scmEOWithIndexes[];
+  static const TDataIOID scmEOWith[];
+  static const CStringDictionary::TStringId scmEventOutputNames[];
 
-  static const SFBInterfaceSpec scm_stFBInterfaceSpecSocket;
+  static const SFBInterfaceSpec scmFBInterfaceSpecSocket;
 
-  static const SFBInterfaceSpec scm_stFBInterfaceSpecPlug;
+  static const SFBInterfaceSpec scmFBInterfaceSpecPlug;
 
 
 public:

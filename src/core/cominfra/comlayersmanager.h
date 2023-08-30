@@ -41,10 +41,10 @@ namespace forte {
 
     class CComLayersManager{
       public:
-        static CComLayer* createCommunicationLayer(char *pa_acLayerIdentifier, CComLayer* pa_poUpperLayer, CBaseCommFB * pa_poComFB);
+        static CComLayer* createCommunicationLayer(char *paLayerIdentifier, CComLayer* paUpperLayer, CBaseCommFB * paComFB);
 
         CComLayersManager() = delete;
-        CComLayersManager(const CComLayersManager& pa_roVal) = delete;
+        CComLayersManager(const CComLayersManager& paVal) = delete;
     };
   }
 }

@@ -20,40 +20,40 @@
 
 namespace luatype {
   bool getFBInstanceData(SCFB_FBInstanceData& paDef, CLuaEngine* paLuaEngine, int paIndex) {
-    paDef.m_nFBInstanceNameId = paLuaEngine->getField<CStringDictionary::TStringId, &CLuaEngine::getStringId>(paIndex, "fbNameID");
-    paDef.m_nFBTypeNameId = paLuaEngine->getField<CStringDictionary::TStringId, &CLuaEngine::getStringId>(paIndex, "fbTypeID");
-    if(paDef.m_nFBInstanceNameId == CStringDictionary::scm_nInvalidStringId || paDef.m_nFBTypeNameId == CStringDictionary::scm_nInvalidStringId) {
+    paDef.mFBInstanceNameId = paLuaEngine->getField<CStringDictionary::TStringId, &CLuaEngine::getStringId>(paIndex, "fbNameID");
+    paDef.mFBTypeNameId = paLuaEngine->getField<CStringDictionary::TStringId, &CLuaEngine::getStringId>(paIndex, "fbTypeID");
+    if(paDef.mFBInstanceNameId == CStringDictionary::scmInvalidStringId || paDef.mFBTypeNameId == CStringDictionary::scmInvalidStringId) {
       return false;
     }
     return true;
   }
 
   bool getFBConnectionData(SCFB_FBConnectionData& paDef, CLuaEngine* paLuaEngine, int paIndex) {
-    paDef.m_nDstFBNum = paLuaEngine->getField<int, &CLuaEngine::getInteger<int> >(paIndex, "dstFBNum");
-    paDef.m_nDstId = paLuaEngine->getField<CStringDictionary::TStringId, &CLuaEngine::getStringId>(paIndex, "dstID");
-    paDef.m_nSrcFBNum = paLuaEngine->getField<int, &CLuaEngine::getInteger<int> >(paIndex, "srcFBNum");
-    paDef.m_nSrcId = paLuaEngine->getField<CStringDictionary::TStringId, &CLuaEngine::getStringId>(paIndex, "srcID");
-    if(paDef.m_nDstId == CStringDictionary::scm_nInvalidStringId || paDef.m_nSrcId == CStringDictionary::scm_nInvalidStringId) {
+    paDef.mDstFBNum = paLuaEngine->getField<int, &CLuaEngine::getInteger<int> >(paIndex, "dstFBNum");
+    paDef.mDstId = paLuaEngine->getField<CStringDictionary::TStringId, &CLuaEngine::getStringId>(paIndex, "dstID");
+    paDef.mSrcFBNum = paLuaEngine->getField<int, &CLuaEngine::getInteger<int> >(paIndex, "srcFBNum");
+    paDef.mSrcId = paLuaEngine->getField<CStringDictionary::TStringId, &CLuaEngine::getStringId>(paIndex, "srcID");
+    if(paDef.mDstId == CStringDictionary::scmInvalidStringId || paDef.mSrcId == CStringDictionary::scmInvalidStringId) {
       return false;
     }
     return true;
   }
 
   bool getFBFannedOutConnectionData(SCFB_FBFannedOutConnectionData& paDef, CLuaEngine* paLuaEngine, int paIndex) {
-    paDef.m_nConnectionNum = paLuaEngine->getField<int, &CLuaEngine::getInteger<int> >(paIndex, "connectionNum");
-    paDef.m_nDstFBNum = paLuaEngine->getField<int, &CLuaEngine::getInteger<int> >(paIndex, "dstFBNum");
-    paDef.m_nDstId = paLuaEngine->getField<CStringDictionary::TStringId, &CLuaEngine::getStringId>(paIndex, "dstID");
-    if(paDef.m_nDstId == CStringDictionary::scm_nInvalidStringId) {
+    paDef.mConnectionNum = paLuaEngine->getField<int, &CLuaEngine::getInteger<int> >(paIndex, "connectionNum");
+    paDef.mDstFBNum = paLuaEngine->getField<int, &CLuaEngine::getInteger<int> >(paIndex, "dstFBNum");
+    paDef.mDstId = paLuaEngine->getField<CStringDictionary::TStringId, &CLuaEngine::getStringId>(paIndex, "dstID");
+    if(paDef.mDstId == CStringDictionary::scmInvalidStringId) {
       return false;
     }
     return true;
   }
 
   bool getFBParameter(SCFB_FBParameter& paDef, CLuaEngine* paLuaEngine, int paIndex) {
-    paDef.m_acParamValue = paLuaEngine->getField<const char *, &CLuaEngine::getString>(paIndex, "paramValue");
-    paDef.m_nDINameID = paLuaEngine->getField<CStringDictionary::TStringId, &CLuaEngine::getStringId>(paIndex, "diNameID");
-    paDef.m_nFBNum = paLuaEngine->getField<int, &CLuaEngine::getInteger<int> >(paIndex, "fbNum");
-    if(paDef.m_nDINameID == CStringDictionary::scm_nInvalidStringId) {
+    paDef.mParamValue = paLuaEngine->getField<const char *, &CLuaEngine::getString>(paIndex, "paramValue");
+    paDef.mDINameID = paLuaEngine->getField<CStringDictionary::TStringId, &CLuaEngine::getStringId>(paIndex, "diNameID");
+    paDef.mFBNum = paLuaEngine->getField<int, &CLuaEngine::getInteger<int> >(paIndex, "fbNum");
+    if(paDef.mDINameID == CStringDictionary::scmInvalidStringId) {
       return false;
     }
     return true;
@@ -62,12 +62,12 @@ namespace luatype {
 
 CLuaCFBTypeEntry::CLuaCFBTypeEntry(CStringDictionary::TStringId paTypeNameId, CIEC_STRING paLuaScriptAsString, SFBInterfaceSpec& paInterfaceSpec,
     SCFB_FBNData& paFbnSpec) :
-    CTypeLib::CFBTypeEntry(paTypeNameId, nullptr, &m_interfaceSpec), cm_sLuaScriptAsString(paLuaScriptAsString), m_interfaceSpec(paInterfaceSpec), m_fbnSpec(paFbnSpec) {
+    CTypeLib::CFBTypeEntry(paTypeNameId, nullptr, &m_interfaceSpec), cmLuaScriptAsString(paLuaScriptAsString), m_interfaceSpec(paInterfaceSpec), mSpec(paFbnSpec) {
 }
 
 CLuaCFBTypeEntry::~CLuaCFBTypeEntry() {
   deleteInterfaceSpec(m_interfaceSpec);
-  deleteFbnSpec(m_fbnSpec);
+  deleteFbnSpec(mSpec);
 }
 
 CLuaCFBTypeEntry* CLuaCFBTypeEntry::createLuaFBTypeEntry(CStringDictionary::TStringId paTypeNameId, CIEC_STRING& paLuaScriptAsString) {
@@ -103,62 +103,62 @@ CLuaCFBTypeEntry* CLuaCFBTypeEntry::createLuaFBTypeEntry(CStringDictionary::TStr
 
 CFunctionBlock* CLuaCFBTypeEntry::createFBInstance(CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) {
   CLuaEngine* luaEngine = paSrcRes->getLuaEngine();
-  if(!luaEngine->load(this) && (!luaEngine->loadString(std::string(cm_sLuaScriptAsString.getValue())))) {
+  if(!luaEngine->load(this) && (!luaEngine->loadString(std::string(cmLuaScriptAsString.getValue())))) {
     return nullptr;
   }
-  TForteByte* connData = new TForteByte[CFunctionBlock::genFBConnDataSize(m_interfaceSpec.m_nNumEOs, m_interfaceSpec.m_nNumDIs, m_interfaceSpec.m_nNumDOs)];
-  TForteByte* varsData = new TForteByte[CCompositeFB::genFBVarsDataSize(m_interfaceSpec.m_nNumDIs, m_interfaceSpec.m_nNumDOs, m_interfaceSpec.m_nNumAdapters)];
+  TForteByte* connData = new TForteByte[CFunctionBlock::genFBConnDataSize(m_interfaceSpec.mNumEOs, m_interfaceSpec.mNumDIs, m_interfaceSpec.mNumDOs)];
+  TForteByte* varsData = new TForteByte[CCompositeFB::genFBVarsDataSize(m_interfaceSpec.mNumDIs, m_interfaceSpec.mNumDOs, m_interfaceSpec.mNumAdapters)];
   return new CLuaCFB(paInstanceNameId, this, getFbnSpec(), connData, varsData, paSrcRes);
 }
 
 bool CLuaCFBTypeEntry::initInterfaceSpec(SFBInterfaceSpec& paInterfaceSpec, CLuaEngine* paLuaEngine, int paIndex) {
   //EI
-  paInterfaceSpec.m_nNumEIs = paLuaEngine->getField<TForteUInt8, &CLuaEngine::getInteger<TForteUInt8> >(paIndex, "numEIs");
-  size_t numEIs = paInterfaceSpec.m_nNumEIs;
-  paInterfaceSpec.m_aunEINames = paLuaEngine->getArrayField<CStringDictionary::TStringId, &CLuaEngine::getStringId>(paIndex, "EINames", numEIs);
+  paInterfaceSpec.mNumEIs = paLuaEngine->getField<TForteUInt8, &CLuaEngine::getInteger<TForteUInt8> >(paIndex, "numEIs");
+  size_t numEIs = paInterfaceSpec.mNumEIs;
+  paInterfaceSpec.mEINames = paLuaEngine->getArrayField<CStringDictionary::TStringId, &CLuaEngine::getStringId>(paIndex, "EINames", numEIs);
   size_t numEIWith = SIZE_MAX;
-  paInterfaceSpec.m_anEIWith = paLuaEngine->getArrayField<TDataIOID, &CLuaEngine::getInteger<TDataIOID> >(paIndex, "EIWith", numEIWith);
-  paInterfaceSpec.m_anEIWithIndexes = paLuaEngine->getArrayField<TForteInt16, &CLuaEngine::getInteger<TForteInt16> >(paIndex, "EIWithIndexes", numEIs);
+  paInterfaceSpec.mEIWith = paLuaEngine->getArrayField<TDataIOID, &CLuaEngine::getInteger<TDataIOID> >(paIndex, "EIWith", numEIWith);
+  paInterfaceSpec.mEIWithIndexes = paLuaEngine->getArrayField<TForteInt16, &CLuaEngine::getInteger<TForteInt16> >(paIndex, "EIWithIndexes", numEIs);
   //EO
-  paInterfaceSpec.m_nNumEOs = paLuaEngine->getField<TForteUInt8, &CLuaEngine::getInteger<TForteUInt8> >(paIndex, "numEOs");
-  size_t numEOs = paInterfaceSpec.m_nNumEOs;
-  paInterfaceSpec.m_aunEONames = paLuaEngine->getArrayField<CStringDictionary::TStringId, &CLuaEngine::getStringId>(paIndex, "EONames", numEOs);
+  paInterfaceSpec.mNumEOs = paLuaEngine->getField<TForteUInt8, &CLuaEngine::getInteger<TForteUInt8> >(paIndex, "numEOs");
+  size_t numEOs = paInterfaceSpec.mNumEOs;
+  paInterfaceSpec.mEONames = paLuaEngine->getArrayField<CStringDictionary::TStringId, &CLuaEngine::getStringId>(paIndex, "EONames", numEOs);
   size_t numEOWith = SIZE_MAX;
-  paInterfaceSpec.m_anEOWith = paLuaEngine->getArrayField<TDataIOID, &CLuaEngine::getInteger<TDataIOID> >(paIndex, "EOWith", numEOWith);
-  paInterfaceSpec.m_anEOWithIndexes = paLuaEngine->getArrayField<TForteInt16, &CLuaEngine::getInteger<TForteInt16> >(paIndex, "EOWithIndexes", numEOs);
+  paInterfaceSpec.mEOWith = paLuaEngine->getArrayField<TDataIOID, &CLuaEngine::getInteger<TDataIOID> >(paIndex, "EOWith", numEOWith);
+  paInterfaceSpec.mEOWithIndexes = paLuaEngine->getArrayField<TForteInt16, &CLuaEngine::getInteger<TForteInt16> >(paIndex, "EOWithIndexes", numEOs);
   //DI
-  paInterfaceSpec.m_nNumDIs = paLuaEngine->getField<TForteUInt8, &CLuaEngine::getInteger<TForteUInt8> >(paIndex, "numDIs");
-  size_t numDIs = paInterfaceSpec.m_nNumDIs;
-  paInterfaceSpec.m_aunDINames = paLuaEngine->getArrayField<CStringDictionary::TStringId, &CLuaEngine::getStringId>(paIndex, "DINames", numDIs);
+  paInterfaceSpec.mNumDIs = paLuaEngine->getField<TForteUInt8, &CLuaEngine::getInteger<TForteUInt8> >(paIndex, "numDIs");
+  size_t numDIs = paInterfaceSpec.mNumDIs;
+  paInterfaceSpec.mDINames = paLuaEngine->getArrayField<CStringDictionary::TStringId, &CLuaEngine::getStringId>(paIndex, "DINames", numDIs);
   size_t numDIDataTypeNames = SIZE_MAX;
-  paInterfaceSpec.m_aunDIDataTypeNames = paLuaEngine->getCustomArrayField<CStringDictionary::TStringId, luatype::getTypeNameId>(paIndex, "DIDataTypeNames",
+  paInterfaceSpec.mDIDataTypeNames = paLuaEngine->getCustomArrayField<CStringDictionary::TStringId, luatype::getTypeNameId>(paIndex, "DIDataTypeNames",
     numDIDataTypeNames);
   //DO
-  paInterfaceSpec.m_nNumDOs = paLuaEngine->getField<TForteUInt8, &CLuaEngine::getInteger<TForteUInt8> >(paIndex, "numDOs");
-  size_t numDOs = paInterfaceSpec.m_nNumDOs;
-  paInterfaceSpec.m_aunDONames = paLuaEngine->getArrayField<CStringDictionary::TStringId, &CLuaEngine::getStringId>(paIndex, "DONames", numDOs);
+  paInterfaceSpec.mNumDOs = paLuaEngine->getField<TForteUInt8, &CLuaEngine::getInteger<TForteUInt8> >(paIndex, "numDOs");
+  size_t numDOs = paInterfaceSpec.mNumDOs;
+  paInterfaceSpec.mDONames = paLuaEngine->getArrayField<CStringDictionary::TStringId, &CLuaEngine::getStringId>(paIndex, "DONames", numDOs);
   size_t numDODataTypeNames = SIZE_MAX;
-  paInterfaceSpec.m_aunDODataTypeNames = paLuaEngine->getCustomArrayField<CStringDictionary::TStringId, luatype::getTypeNameId>(paIndex, "DODataTypeNames",
+  paInterfaceSpec.mDODataTypeNames = paLuaEngine->getCustomArrayField<CStringDictionary::TStringId, luatype::getTypeNameId>(paIndex, "DODataTypeNames",
     numDODataTypeNames);
   //Adapters
-  paInterfaceSpec.m_nNumAdapters = paLuaEngine->getField<TForteUInt8, &CLuaEngine::getInteger<TForteUInt8> >(paIndex, "numAdapters");
-  size_t numAdapters = paInterfaceSpec.m_nNumAdapters;
-  paInterfaceSpec.m_pstAdapterInstanceDefinition = paLuaEngine->getCustomArrayField<SAdapterInstanceDef, luatype::getAdapterInstanceDefinition>(paIndex,
+  paInterfaceSpec.mNumAdapters = paLuaEngine->getField<TForteUInt8, &CLuaEngine::getInteger<TForteUInt8> >(paIndex, "numAdapters");
+  size_t numAdapters = paInterfaceSpec.mNumAdapters;
+  paInterfaceSpec.mAdapterInstanceDefinition = paLuaEngine->getCustomArrayField<SAdapterInstanceDef, luatype::getAdapterInstanceDefinition>(paIndex,
     "adapterInstanceDefinition", numAdapters);
   //checks
-  if(paInterfaceSpec.m_aunEINames == nullptr || paInterfaceSpec.m_anEIWith == nullptr || paInterfaceSpec.m_anEIWithIndexes == nullptr
-    || paInterfaceSpec.m_aunEONames == nullptr || paInterfaceSpec.m_anEOWith == nullptr || paInterfaceSpec.m_anEOWithIndexes == nullptr
-    || paInterfaceSpec.m_aunDINames == nullptr || paInterfaceSpec.m_aunDIDataTypeNames == nullptr || paInterfaceSpec.m_aunDONames == nullptr
-    || paInterfaceSpec.m_aunDODataTypeNames == nullptr || paInterfaceSpec.m_pstAdapterInstanceDefinition == nullptr) {
+  if(paInterfaceSpec.mEINames == nullptr || paInterfaceSpec.mEIWith == nullptr || paInterfaceSpec.mEIWithIndexes == nullptr
+    || paInterfaceSpec.mEONames == nullptr || paInterfaceSpec.mEOWith == nullptr || paInterfaceSpec.mEOWithIndexes == nullptr
+    || paInterfaceSpec.mDINames == nullptr || paInterfaceSpec.mDIDataTypeNames == nullptr || paInterfaceSpec.mDONames == nullptr
+    || paInterfaceSpec.mDODataTypeNames == nullptr || paInterfaceSpec.mAdapterInstanceDefinition == nullptr) {
     return false;
   }
   for(size_t i = 0; i < numEIs; i++) {
-    if(paInterfaceSpec.m_anEIWithIndexes[i] >= (TForteInt16) numEIWith) {
+    if(paInterfaceSpec.mEIWithIndexes[i] >= (TForteInt16) numEIWith) {
       return false;
     }
   }
   for(size_t i = 0; i < numEOs; i++) {
-    if(paInterfaceSpec.m_anEOWithIndexes[i] >= (TForteInt16) numEOWith) {
+    if(paInterfaceSpec.mEOWithIndexes[i] >= (TForteInt16) numEOWith) {
       return false;
     }
   }
@@ -166,59 +166,59 @@ bool CLuaCFBTypeEntry::initInterfaceSpec(SFBInterfaceSpec& paInterfaceSpec, CLua
 }
 
 void CLuaCFBTypeEntry::deleteInterfaceSpec(SFBInterfaceSpec& paInterfaceSpec) {
-  delete[] paInterfaceSpec.m_aunEINames;
-  delete[] paInterfaceSpec.m_anEIWith;
-  delete[] paInterfaceSpec.m_anEIWithIndexes;
-  delete[] paInterfaceSpec.m_aunEONames;
-  delete[] paInterfaceSpec.m_anEOWith;
-  delete[] paInterfaceSpec.m_anEOWithIndexes;
-  delete[] paInterfaceSpec.m_aunDINames;
-  delete[] paInterfaceSpec.m_aunDIDataTypeNames;
-  delete[] paInterfaceSpec.m_aunDONames;
-  delete[] paInterfaceSpec.m_aunDODataTypeNames;
-  delete[] paInterfaceSpec.m_pstAdapterInstanceDefinition;
+  delete[] paInterfaceSpec.mEINames;
+  delete[] paInterfaceSpec.mEIWith;
+  delete[] paInterfaceSpec.mEIWithIndexes;
+  delete[] paInterfaceSpec.mEONames;
+  delete[] paInterfaceSpec.mEOWith;
+  delete[] paInterfaceSpec.mEOWithIndexes;
+  delete[] paInterfaceSpec.mDINames;
+  delete[] paInterfaceSpec.mDIDataTypeNames;
+  delete[] paInterfaceSpec.mDONames;
+  delete[] paInterfaceSpec.mDODataTypeNames;
+  delete[] paInterfaceSpec.mAdapterInstanceDefinition;
 }
 
 bool CLuaCFBTypeEntry::initFbnSpec(SCFB_FBNData& paFbnSpec, CLuaEngine* paLuaEngine, int paIndex) {
   //internalFBs
-  paFbnSpec.m_nNumFBs = paLuaEngine->getField<TForteUInt8, &CLuaEngine::getInteger<TForteUInt8> >(paIndex, "numFBs");
-  size_t numFBs = paFbnSpec.m_nNumFBs;
-  paFbnSpec.m_pstFBInstances = paLuaEngine->getCustomArrayField<SCFB_FBInstanceData, luatype::getFBInstanceData>(paIndex, "internalFBs", numFBs);
+  paFbnSpec.mNumFBs = paLuaEngine->getField<TForteUInt8, &CLuaEngine::getInteger<TForteUInt8> >(paIndex, "numFBs");
+  size_t numFBs = paFbnSpec.mNumFBs;
+  paFbnSpec.mFBInstances = paLuaEngine->getCustomArrayField<SCFB_FBInstanceData, luatype::getFBInstanceData>(paIndex, "internalFBs", numFBs);
   //eventConnections
-  paFbnSpec.m_nNumEventConnections = paLuaEngine->getField<TForteUInt8, &CLuaEngine::getInteger<TForteUInt8> >(paIndex, "numECons");
-  size_t numECons = paFbnSpec.m_nNumEventConnections;
-  paFbnSpec.m_pstEventConnections = paLuaEngine->getCustomArrayField<SCFB_FBConnectionData, luatype::getFBConnectionData>(paIndex, "eventConnections",
+  paFbnSpec.mNumEventConnections = paLuaEngine->getField<TForteUInt8, &CLuaEngine::getInteger<TForteUInt8> >(paIndex, "numECons");
+  size_t numECons = paFbnSpec.mNumEventConnections;
+  paFbnSpec.mEventConnections = paLuaEngine->getCustomArrayField<SCFB_FBConnectionData, luatype::getFBConnectionData>(paIndex, "eventConnections",
     numECons);
   //fannedOutEventConnections
-  paFbnSpec.m_nNumFannedOutEventConnections = paLuaEngine->getField<TForteUInt8, &CLuaEngine::getInteger<TForteUInt8> >(paIndex, "numFECons");
-  size_t numFECons = paFbnSpec.m_nNumFannedOutEventConnections;
-  paFbnSpec.m_pstFannedOutEventConnections = paLuaEngine->getCustomArrayField<SCFB_FBFannedOutConnectionData, luatype::getFBFannedOutConnectionData>(paIndex,
+  paFbnSpec.mNumFannedOutEventConnections = paLuaEngine->getField<TForteUInt8, &CLuaEngine::getInteger<TForteUInt8> >(paIndex, "numFECons");
+  size_t numFECons = paFbnSpec.mNumFannedOutEventConnections;
+  paFbnSpec.mFannedOutEventConnections = paLuaEngine->getCustomArrayField<SCFB_FBFannedOutConnectionData, luatype::getFBFannedOutConnectionData>(paIndex,
     "fannedOutEventConnections", numFECons);
   //dataConnections
-  paFbnSpec.m_nNumDataConnections = paLuaEngine->getField<TForteUInt8, &CLuaEngine::getInteger<TForteUInt8> >(paIndex, "numDCons");
-  size_t numDCons = paFbnSpec.m_nNumDataConnections;
-  paFbnSpec.m_pstDataConnections = paLuaEngine->getCustomArrayField<SCFB_FBConnectionData, luatype::getFBConnectionData>(paIndex, "dataConnections", numDCons);
+  paFbnSpec.mNumDataConnections = paLuaEngine->getField<TForteUInt8, &CLuaEngine::getInteger<TForteUInt8> >(paIndex, "numDCons");
+  size_t numDCons = paFbnSpec.mNumDataConnections;
+  paFbnSpec.mDataConnections = paLuaEngine->getCustomArrayField<SCFB_FBConnectionData, luatype::getFBConnectionData>(paIndex, "dataConnections", numDCons);
   //fannedOutDataConnections
-  paFbnSpec.m_nNumFannedOutDataConnections = paLuaEngine->getField<TForteUInt8, &CLuaEngine::getInteger<TForteUInt8> >(paIndex, "numFDCons");
-  size_t numFDCons = paFbnSpec.m_nNumFannedOutDataConnections;
-  paFbnSpec.m_pstFannedOutDataConnections = paLuaEngine->getCustomArrayField<SCFB_FBFannedOutConnectionData, luatype::getFBFannedOutConnectionData>(paIndex,
+  paFbnSpec.mNumFannedOutDataConnections = paLuaEngine->getField<TForteUInt8, &CLuaEngine::getInteger<TForteUInt8> >(paIndex, "numFDCons");
+  size_t numFDCons = paFbnSpec.mNumFannedOutDataConnections;
+  paFbnSpec.mFannedOutDataConnections = paLuaEngine->getCustomArrayField<SCFB_FBFannedOutConnectionData, luatype::getFBFannedOutConnectionData>(paIndex,
     "fannedOutDataConnections", numFDCons);
   //parameters
-  paFbnSpec.m_nNumParams = paLuaEngine->getField<TForteUInt8, &CLuaEngine::getInteger<TForteUInt8> >(paIndex, "numParams");
-  size_t numParams = paFbnSpec.m_nNumParams;
-  paFbnSpec.m_pstParams = paLuaEngine->getCustomArrayField<SCFB_FBParameter, luatype::getFBParameter>(paIndex, "parameters", numParams);
+  paFbnSpec.mNumParams = paLuaEngine->getField<TForteUInt8, &CLuaEngine::getInteger<TForteUInt8> >(paIndex, "numParams");
+  size_t numParams = paFbnSpec.mNumParams;
+  paFbnSpec.mParams = paLuaEngine->getCustomArrayField<SCFB_FBParameter, luatype::getFBParameter>(paIndex, "parameters", numParams);
   //checks
-  if(paFbnSpec.m_pstFBInstances == nullptr) {
+  if(paFbnSpec.mFBInstances == nullptr) {
     return false;
   }
   return true;
 }
 
 void CLuaCFBTypeEntry::deleteFbnSpec(SCFB_FBNData& paFbnSpec) {
-  delete[] paFbnSpec.m_pstFBInstances;
-  delete[] paFbnSpec.m_pstEventConnections;
-  delete[] paFbnSpec.m_pstFannedOutEventConnections;
-  delete[] paFbnSpec.m_pstDataConnections;
-  delete[] paFbnSpec.m_pstFannedOutDataConnections;
-  delete[] paFbnSpec.m_pstParams;
+  delete[] paFbnSpec.mFBInstances;
+  delete[] paFbnSpec.mEventConnections;
+  delete[] paFbnSpec.mFannedOutEventConnections;
+  delete[] paFbnSpec.mDataConnections;
+  delete[] paFbnSpec.mFannedOutDataConnections;
+  delete[] paFbnSpec.mParams;
 }

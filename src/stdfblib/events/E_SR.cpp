@@ -27,23 +27,24 @@
 
 DEFINE_FIRMWARE_FB(FORTE_E_SR, g_nStringIdE_SR)
 
-const CStringDictionary::TStringId FORTE_E_SR::scm_anDataOutputNames[] = {g_nStringIdQ};
-const CStringDictionary::TStringId FORTE_E_SR::scm_anDataOutputTypeIds[] = {g_nStringIdBOOL};
-const TForteInt16 FORTE_E_SR::scm_anEIWithIndexes[] = {-1, -1};
-const CStringDictionary::TStringId FORTE_E_SR::scm_anEventInputNames[] = {g_nStringIdS, g_nStringIdR};
-const TDataIOID FORTE_E_SR::scm_anEOWith[] = {0, scmWithListDelimiter};
-const TForteInt16 FORTE_E_SR::scm_anEOWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_E_SR::scm_anEventOutputNames[] = {g_nStringIdEO};
-const SFBInterfaceSpec FORTE_E_SR::scm_stFBInterfaceSpec = {
-  2, scm_anEventInputNames, nullptr, scm_anEIWithIndexes,
-  1, scm_anEventOutputNames, scm_anEOWith, scm_anEOWithIndexes,
+const CStringDictionary::TStringId FORTE_E_SR::scmDataOutputNames[] = {g_nStringIdQ};
+const CStringDictionary::TStringId FORTE_E_SR::scmDataOutputTypeIds[] = {g_nStringIdBOOL};
+const TForteInt16 FORTE_E_SR::scmEIWithIndexes[] = {-1, -1};
+const CStringDictionary::TStringId FORTE_E_SR::scmEventInputNames[] = {g_nStringIdS, g_nStringIdR};
+const TDataIOID FORTE_E_SR::scmEOWith[] = {0, scmWithListDelimiter};
+const TForteInt16 FORTE_E_SR::scmEOWithIndexes[] = {0};
+const CStringDictionary::TStringId FORTE_E_SR::scmEventOutputNames[] = {g_nStringIdEO};
+const SFBInterfaceSpec FORTE_E_SR::scmFBInterfaceSpec = {
+  2, scmEventInputNames, nullptr, scmEIWithIndexes,
+  1, scmEventOutputNames, scmEOWith, scmEOWithIndexes,
   0, nullptr, nullptr,
-  1, scm_anDataOutputNames, scm_anDataOutputTypeIds,
+  1, scmDataOutputNames, scmDataOutputTypeIds,
+  0, nullptr,
   0, nullptr
 };
 
-FORTE_E_SR::FORTE_E_SR(CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes) :
-    CBasicFB(pa_poSrcRes, &scm_stFBInterfaceSpec, pa_nInstanceNameId, nullptr),
+FORTE_E_SR::FORTE_E_SR(CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) :
+    CBasicFB(paSrcRes, &scmFBInterfaceSpec, paInstanceNameId, nullptr),
     var_Q(CIEC_BOOL(0)),
     var_conn_Q(var_Q),
     conn_EO(this, 0),
@@ -60,36 +61,36 @@ void FORTE_E_SR::alg_RESET(void) {
 }
 
 
-void FORTE_E_SR::executeEvent(TEventID pa_nEIID){
+void FORTE_E_SR::executeEvent(TEventID paEIID){
   do {
-    switch(m_nECCState) {
-      case scm_nStateSTART:
-        if(scm_nEventSID == pa_nEIID) enterStateSET();
+    switch(mECCState) {
+      case scmStateSTART:
+        if(scmEventSID == paEIID) enterStateSET();
         else return; //no transition cleared
         break;
-      case scm_nStateSET:
-        if(scm_nEventRID == pa_nEIID) enterStateRESET();
+      case scmStateSET:
+        if(scmEventRID == paEIID) enterStateRESET();
         else return; //no transition cleared
         break;
-      case scm_nStateRESET:
-        if(scm_nEventSID == pa_nEIID) enterStateSET();
+      case scmStateRESET:
+        if(scmEventSID == paEIID) enterStateSET();
         else return; //no transition cleared
         break;
       default:
-        DEVLOG_ERROR("The state is not in the valid range! The state value is: %d. The max value can be: 3.", m_nECCState.operator TForteUInt16 ());
-        m_nECCState = 0; // 0 is always the initial state
+        DEVLOG_ERROR("The state is not in the valid range! The state value is: %d. The max value can be: 3.", mECCState.operator TForteUInt16 ());
+        mECCState = 0; // 0 is always the initial state
         return;
     }
-    pa_nEIID = cg_nInvalidEventID; // we have to clear the event after the first check in order to ensure correct behavior
+    paEIID = cgInvalidEventID; // we have to clear the event after the first check in order to ensure correct behavior
   } while(true);
 }
 
 void FORTE_E_SR::readInputData(TEventID) {
 }
 
-void FORTE_E_SR::writeOutputData(TEventID pa_nEIID) {
-  switch(pa_nEIID) {
-    case scm_nEventEOID: {
+void FORTE_E_SR::writeOutputData(TEventID paEIID) {
+  switch(paEIID) {
+    case scmEventEOID: {
       RES_DATA_CON_CRITICAL_REGION();
       writeData(0, var_Q, conn_Q);
       break;
@@ -134,19 +135,19 @@ CIEC_ANY *FORTE_E_SR::getVarInternal(size_t) {
 
 
 void FORTE_E_SR::enterStateSTART(void) {
-  m_nECCState = scm_nStateSTART;
+  mECCState = scmStateSTART;
 }
 
 void FORTE_E_SR::enterStateSET(void) {
-  m_nECCState = scm_nStateSET;
+  mECCState = scmStateSET;
   alg_SET();
-  sendOutputEvent(scm_nEventEOID);
+  sendOutputEvent(scmEventEOID);
 }
 
 void FORTE_E_SR::enterStateRESET(void) {
-  m_nECCState = scm_nStateRESET;
+  mECCState = scmStateRESET;
   alg_RESET();
-  sendOutputEvent(scm_nEventEOID);
+  sendOutputEvent(scmEventEOID);
 }
 
 

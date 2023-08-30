@@ -25,8 +25,8 @@ class FORTE_QueryService: public CCompositeFB{
   DECLARE_FIRMWARE_FB(FORTE_QueryService)
 
 private:
-  static const CStringDictionary::TStringId scm_anDataInputNames[];
-  static const CStringDictionary::TStringId scm_anDataInputTypeIds[];
+  static const CStringDictionary::TStringId scmDataInputNames[];
+  static const CStringDictionary::TStringId scmDataInputTypeIds[];
   CIEC_ServiceQueryForm &serviceQueryForm() {
     return *static_cast<CIEC_ServiceQueryForm*>(getDI(0));
   };
@@ -35,8 +35,8 @@ private:
     return *static_cast<CIEC_WSTRING*>(getDI(1));
   };
 
-  static const CStringDictionary::TStringId scm_anDataOutputNames[];
-  static const CStringDictionary::TStringId scm_anDataOutputTypeIds[];
+  static const CStringDictionary::TStringId scmDataOutputNames[];
+  static const CStringDictionary::TStringId scmDataOutputTypeIds[];
   CIEC_ServiceRegistryEntry *serviceEntries() {
     return (CIEC_ServiceRegistryEntry*)(*static_cast<CIEC_ARRAY<> *>(getDO(0)))[0]; //the first element marks the start of the array
   };
@@ -45,29 +45,29 @@ private:
     return *static_cast<CIEC_ARRAY<>*>(getDO(0));
   };
 
-  static const TEventID scm_nEventqueryID = 0;
-  static const TForteInt16 scm_anEIWithIndexes[];
-  static const TDataIOID scm_anEIWith[];
-  static const CStringDictionary::TStringId scm_anEventInputNames[];
+  static const TEventID scmEventqueryID = 0;
+  static const TForteInt16 scmEIWithIndexes[];
+  static const TDataIOID scmEIWith[];
+  static const CStringDictionary::TStringId scmEventInputNames[];
 
-  static const TEventID scm_nEventqueriedID = 0;
-  static const TForteInt16 scm_anEOWithIndexes[];
-  static const TDataIOID scm_anEOWith[];
-  static const CStringDictionary::TStringId scm_anEventOutputNames[];
+  static const TEventID scmEventqueriedID = 0;
+  static const TForteInt16 scmEOWithIndexes[];
+  static const TDataIOID scmEOWith[];
+  static const CStringDictionary::TStringId scmEventOutputNames[];
 
-  static const SAdapterInstanceDef scm_astAdapterInstances[];
+  static const SAdapterInstanceDef scmAdapterInstances[];
 
   FORTE_QueryServicesAdp& queryServices() {
-    return (*static_cast<FORTE_QueryServicesAdp*>(m_apoAdapters[0]));
+    return (*static_cast<FORTE_QueryServicesAdp*>(mAdapters[0]));
   };
   static const int scm_nqueryServicesAdpNum = 0;
-  static const SFBInterfaceSpec scm_stFBInterfaceSpec;
+  static const SFBInterfaceSpec scmFBInterfaceSpec;
 
 
-  static const SCFB_FBConnectionData scm_astEventConnections[];
+  static const SCFB_FBConnectionData scmEventConnections[];
 
-  static const SCFB_FBConnectionData scm_astDataConnections[];
-  static const SCFB_FBNData scm_stFBNData;
+  static const SCFB_FBConnectionData scmDataConnections[];
+  static const SCFB_FBNData scmFBNData;
 
 public:
   COMPOSITE_FUNCTION_BLOCK_CTOR(FORTE_QueryService){

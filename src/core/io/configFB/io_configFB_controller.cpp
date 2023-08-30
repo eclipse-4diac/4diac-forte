@@ -34,7 +34,7 @@ IOConfigFBController::~IOConfigFBController() {
 }
 
 void IOConfigFBController::executeEvent(TEventID paEIID) {
-  if(cg_nExternalEventID == paEIID) {
+  if(cgExternalEventID == paEIID) {
     if(!(mController->mNotificationHandled = handleNotification(mController->mNotificationType, mController->mNotificationAttachment))) {
       DEVLOG_ERROR("[IOConfigFBController] Notification of type %d has not been handled.\n", static_cast<int>(mController->mNotificationType));
     }

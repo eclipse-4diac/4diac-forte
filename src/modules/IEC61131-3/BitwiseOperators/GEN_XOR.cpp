@@ -31,16 +31,16 @@ GEN_XOR::~GEN_XOR() = default;
 
 void GEN_XOR::executeEvent(TEventID paEIID) {
   switch (paEIID) {
-    case scm_nEventREQID:
-      if(getFBInterfaceSpec()->m_nNumDIs) {
+    case scmEventREQID:
+      if(getFBInterfaceSpec()->mNumDIs) {
         var_OUT() = var_IN(0);
-        for (size_t i = 1; i < getFBInterfaceSpec()->m_nNumDIs; ++i) {
+        for (size_t i = 1; i < getFBInterfaceSpec()->mNumDIs; ++i) {
           var_OUT() = std::visit([](auto &&paOUT, auto &&paIN) -> CIEC_ANY_BIT_VARIANT {
               return func_XOR(paOUT, paIN);
           }, var_OUT(), var_IN(i));
         }
       }
-      sendOutputEvent(scm_nEventCNFID);
+      sendOutputEvent(scmEventCNFID);
       break;
   }
 }

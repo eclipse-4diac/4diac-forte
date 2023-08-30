@@ -17,27 +17,27 @@
 
 DEFINE_ADAPTER_TYPE(FORTE_RegisterServiceAdp, g_nStringIdRegisterServiceAdp)
 
-const CStringDictionary::TStringId FORTE_RegisterServiceAdp::scm_anDataOutputNames[] = {g_nStringIdserviceRegistryEntry, g_nStringIdendpoint};
+const CStringDictionary::TStringId FORTE_RegisterServiceAdp::scmDataOutputNames[] = {g_nStringIdserviceRegistryEntry, g_nStringIdendpoint};
 
-const CStringDictionary::TStringId FORTE_RegisterServiceAdp::scm_anDataOutputTypeIds[] = {g_nStringIdServiceRegistryEntry, g_nStringIdWSTRING};
+const CStringDictionary::TStringId FORTE_RegisterServiceAdp::scmDataOutputTypeIds[] = {g_nStringIdServiceRegistryEntry, g_nStringIdWSTRING};
 
-const TForteInt16 FORTE_RegisterServiceAdp::scm_anEIWithIndexes[] = {-1, -1, -1};
-const CStringDictionary::TStringId FORTE_RegisterServiceAdp::scm_anEventInputNames[] = {g_nStringIddoneRegister, g_nStringIddoneUnregister};
+const TForteInt16 FORTE_RegisterServiceAdp::scmEIWithIndexes[] = {-1, -1, -1};
+const CStringDictionary::TStringId FORTE_RegisterServiceAdp::scmEventInputNames[] = {g_nStringIddoneRegister, g_nStringIddoneUnregister};
 
-const TDataIOID FORTE_RegisterServiceAdp::scm_anEOWith[] = {0, 1, scmWithListDelimiter, 0, 1, scmWithListDelimiter};
-const TForteInt16 FORTE_RegisterServiceAdp::scm_anEOWithIndexes[] = {0, 3, -1};
-const CStringDictionary::TStringId FORTE_RegisterServiceAdp::scm_anEventOutputNames[] = {g_nStringIdregisterService, g_nStringIdunregisterService};
+const TDataIOID FORTE_RegisterServiceAdp::scmEOWith[] = {0, 1, scmWithListDelimiter, 0, 1, scmWithListDelimiter};
+const TForteInt16 FORTE_RegisterServiceAdp::scmEOWithIndexes[] = {0, 3, -1};
+const CStringDictionary::TStringId FORTE_RegisterServiceAdp::scmEventOutputNames[] = {g_nStringIdregisterService, g_nStringIdunregisterService};
 
-const SFBInterfaceSpec FORTE_RegisterServiceAdp::scm_stFBInterfaceSpecSocket = {
-  2,  scm_anEventInputNames,  0,  scm_anEIWithIndexes,
-  2,  scm_anEventOutputNames,  scm_anEOWith, scm_anEOWithIndexes,  0,  0, 0, 
-  2,  scm_anDataOutputNames, scm_anDataOutputTypeIds,
+const SFBInterfaceSpec FORTE_RegisterServiceAdp::scmFBInterfaceSpecSocket = {
+  2,  scmEventInputNames,  0,  scmEIWithIndexes,
+  2,  scmEventOutputNames,  scmEOWith, scmEOWithIndexes,  0,  0, 0, 
+  2,  scmDataOutputNames, scmDataOutputTypeIds,
   0, 0
 };
 
-const SFBInterfaceSpec FORTE_RegisterServiceAdp::scm_stFBInterfaceSpecPlug = {
-  2,  scm_anEventOutputNames,  scm_anEOWith,  scm_anEOWithIndexes,
-  2,  scm_anEventInputNames,  0, 0,  2,  scm_anDataOutputNames, scm_anDataOutputTypeIds,
+const SFBInterfaceSpec FORTE_RegisterServiceAdp::scmFBInterfaceSpecPlug = {
+  2,  scmEventOutputNames,  scmEOWith,  scmEOWithIndexes,
+  2,  scmEventInputNames,  0, 0,  2,  scmDataOutputNames, scmDataOutputTypeIds,
   0,  0, 0,
   0, 0
 };

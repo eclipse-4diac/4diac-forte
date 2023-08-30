@@ -203,15 +203,15 @@ BOOST_AUTO_TEST_CASE(ToString_Tests)
   BOOST_CHECK_EQUAL(strcmp(cBuffer, "10.0"), 0);
 }
 
-void lRealTypedFromString(const char *pa_acTestString, double pa_fResult){
+void lRealTypedFromString(const char *paTestString, double paResult){
   CIEC_LREAL nTest;
-  BOOST_CHECK_EQUAL(nTest.fromString(pa_acTestString), strlen(pa_acTestString));
-  BOOST_CHECK_EQUAL(pa_fResult, nTest);
+  BOOST_CHECK_EQUAL(nTest.fromString(paTestString), strlen(paTestString));
+  BOOST_CHECK_EQUAL(paResult, nTest);
 }
 
-void faultingLRealTypedFromString(const char *pa_acTestString){
+void faultingLRealTypedFromString(const char *paTestString){
   CIEC_LREAL nTest;
-  BOOST_CHECK_EQUAL(nTest.fromString(pa_acTestString), -1);
+  BOOST_CHECK_EQUAL(nTest.fromString(paTestString), -1);
 }
 
 

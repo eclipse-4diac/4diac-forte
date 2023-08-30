@@ -40,7 +40,7 @@ class CFBTestFixtureBase : public CFunctionBlock{
   protected:
     explicit CFBTestFixtureBase(CStringDictionary::TStringId paTypeId);
 
-    void setup(const char* pa_acConfigString = nullptr);
+    void setup(const char* paConfigString = nullptr);
 
     /*!\brief invoke the FB under Test with the given event id
      *
@@ -69,6 +69,12 @@ class CFBTestFixtureBase : public CFunctionBlock{
 
   private:
     void executeEvent(TEventID paEIID) override;
+
+    void readInputData(TEventID) override {
+    }
+
+    void writeOutputData(TEventID) override {
+    }
 
     void setupTestInterface();
     void performFBResetTests();

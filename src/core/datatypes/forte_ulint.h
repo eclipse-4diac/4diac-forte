@@ -35,8 +35,8 @@ class CIEC_ULINT final : public CIEC_ANY_UNSIGNED {
   public:
     typedef TForteUInt64 TValueType;
 
-    static const TValueType scm_nMinVal = 0;
-    static const TValueType scm_nMaxVal;
+    static const TValueType scmMinVal = 0;
+    static const TValueType scmMaxVal;
 
     CIEC_ULINT() = default;
 

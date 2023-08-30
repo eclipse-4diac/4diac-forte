@@ -23,8 +23,8 @@ class FORTE_SubscribeEventAdp: public CAdapter{
 
 private:
  private:
-  static const CStringDictionary::TStringId scm_anDataOutputNames[];
-  static const CStringDictionary::TStringId scm_anDataOutputTypeIds[];
+  static const CStringDictionary::TStringId scmDataOutputNames[];
+  static const CStringDictionary::TStringId scmDataOutputTypeIds[];
  public:
   CIEC_EventFilter &eventFilter() {
     return *static_cast<CIEC_EventFilter*>((isSocket()) ? getDO(0) : getDI(0));
@@ -35,35 +35,35 @@ private:
   };
 
  public:
-  static const TEventID scm_nEventSubscribedID = 0;
+  static const TEventID scmEventSubscribedID = 0;
   int Subscribed() {
-    return m_nParentAdapterListEventID + scm_nEventSubscribedID;
+    return mParentAdapterListEventID + scmEventSubscribedID;
   }
-  static const TEventID scm_nEventUnsubscribedID = 1;
+  static const TEventID scmEventUnsubscribedID = 1;
   int Unsubscribed() {
-    return m_nParentAdapterListEventID + scm_nEventUnsubscribedID;
+    return mParentAdapterListEventID + scmEventUnsubscribedID;
   }
  private:
-  static const TForteInt16 scm_anEIWithIndexes[];
-  static const CStringDictionary::TStringId scm_anEventInputNames[];
+  static const TForteInt16 scmEIWithIndexes[];
+  static const CStringDictionary::TStringId scmEventInputNames[];
 
  public:
-  static const TEventID scm_nEventSubscribeID = 0;
+  static const TEventID scmEventSubscribeID = 0;
   int Subscribe() {
-    return m_nParentAdapterListEventID + scm_nEventSubscribeID;
+    return mParentAdapterListEventID + scmEventSubscribeID;
   }
-  static const TEventID scm_nEventUnsubscribeID = 1;
+  static const TEventID scmEventUnsubscribeID = 1;
   int Unsubscribe() {
-    return m_nParentAdapterListEventID + scm_nEventUnsubscribeID;
+    return mParentAdapterListEventID + scmEventUnsubscribeID;
   }
  private:
-  static const TForteInt16 scm_anEOWithIndexes[];
-  static const TDataIOID scm_anEOWith[];
-  static const CStringDictionary::TStringId scm_anEventOutputNames[];
+  static const TForteInt16 scmEOWithIndexes[];
+  static const TDataIOID scmEOWith[];
+  static const CStringDictionary::TStringId scmEventOutputNames[];
 
-  static const SFBInterfaceSpec scm_stFBInterfaceSpecSocket;
+  static const SFBInterfaceSpec scmFBInterfaceSpecSocket;
 
-  static const SFBInterfaceSpec scm_stFBInterfaceSpecPlug;
+  static const SFBInterfaceSpec scmFBInterfaceSpecPlug;
 
 
 public:

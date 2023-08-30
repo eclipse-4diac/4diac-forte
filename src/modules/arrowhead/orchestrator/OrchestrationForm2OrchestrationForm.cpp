@@ -17,34 +17,34 @@
 
 DEFINE_FIRMWARE_FB(FORTE_OrchestrationForm2OrchestrationForm, g_nStringIdOrchestrationForm2OrchestrationForm)
 
-const CStringDictionary::TStringId FORTE_OrchestrationForm2OrchestrationForm::scm_anDataInputNames[] = {g_nStringIdIN};
+const CStringDictionary::TStringId FORTE_OrchestrationForm2OrchestrationForm::scmDataInputNames[] = {g_nStringIdIN};
 
-const CStringDictionary::TStringId FORTE_OrchestrationForm2OrchestrationForm::scm_anDataInputTypeIds[] = {g_nStringIdOrchestrationForm};
+const CStringDictionary::TStringId FORTE_OrchestrationForm2OrchestrationForm::scmDataInputTypeIds[] = {g_nStringIdOrchestrationForm};
 
-const CStringDictionary::TStringId FORTE_OrchestrationForm2OrchestrationForm::scm_anDataOutputNames[] = {g_nStringIdOUT};
+const CStringDictionary::TStringId FORTE_OrchestrationForm2OrchestrationForm::scmDataOutputNames[] = {g_nStringIdOUT};
 
-const CStringDictionary::TStringId FORTE_OrchestrationForm2OrchestrationForm::scm_anDataOutputTypeIds[] = {g_nStringIdOrchestrationForm};
+const CStringDictionary::TStringId FORTE_OrchestrationForm2OrchestrationForm::scmDataOutputTypeIds[] = {g_nStringIdOrchestrationForm};
 
-const TForteInt16 FORTE_OrchestrationForm2OrchestrationForm::scm_anEIWithIndexes[] = {0};
-const TDataIOID FORTE_OrchestrationForm2OrchestrationForm::scm_anEIWith[] = {0, scmWithListDelimiter};
-const CStringDictionary::TStringId FORTE_OrchestrationForm2OrchestrationForm::scm_anEventInputNames[] = {g_nStringIdREQ};
+const TForteInt16 FORTE_OrchestrationForm2OrchestrationForm::scmEIWithIndexes[] = {0};
+const TDataIOID FORTE_OrchestrationForm2OrchestrationForm::scmEIWith[] = {0, scmWithListDelimiter};
+const CStringDictionary::TStringId FORTE_OrchestrationForm2OrchestrationForm::scmEventInputNames[] = {g_nStringIdREQ};
 
-const TDataIOID FORTE_OrchestrationForm2OrchestrationForm::scm_anEOWith[] = {0, scmWithListDelimiter};
-const TForteInt16 FORTE_OrchestrationForm2OrchestrationForm::scm_anEOWithIndexes[] = {0, -1};
-const CStringDictionary::TStringId FORTE_OrchestrationForm2OrchestrationForm::scm_anEventOutputNames[] = {g_nStringIdCNF};
+const TDataIOID FORTE_OrchestrationForm2OrchestrationForm::scmEOWith[] = {0, scmWithListDelimiter};
+const TForteInt16 FORTE_OrchestrationForm2OrchestrationForm::scmEOWithIndexes[] = {0, -1};
+const CStringDictionary::TStringId FORTE_OrchestrationForm2OrchestrationForm::scmEventOutputNames[] = {g_nStringIdCNF};
 
-const SFBInterfaceSpec FORTE_OrchestrationForm2OrchestrationForm::scm_stFBInterfaceSpec = {
-  1,  scm_anEventInputNames,  scm_anEIWith,  scm_anEIWithIndexes,
-  1,  scm_anEventOutputNames,  scm_anEOWith, scm_anEOWithIndexes,  1,  scm_anDataInputNames, scm_anDataInputTypeIds,
-  1,  scm_anDataOutputNames, scm_anDataOutputTypeIds,
+const SFBInterfaceSpec FORTE_OrchestrationForm2OrchestrationForm::scmFBInterfaceSpec = {
+  1,  scmEventInputNames,  scmEIWith,  scmEIWithIndexes,
+  1,  scmEventOutputNames,  scmEOWith, scmEOWithIndexes,  1,  scmDataInputNames, scmDataInputTypeIds,
+  1,  scmDataOutputNames, scmDataOutputTypeIds,
   0, 0
 };
 
 
-void FORTE_OrchestrationForm2OrchestrationForm::executeEvent(TEventID pa_nEIID){
-  if(scm_nEventREQID == pa_nEIID) {
+void FORTE_OrchestrationForm2OrchestrationForm::executeEvent(TEventID paEIID){
+  if(scmEventREQID == paEIID) {
     st_OUT() = st_IN();
-    sendOutputEvent(scm_nEventCNFID);
+    sendOutputEvent(scmEventCNFID);
   }
 }
 

@@ -31,14 +31,14 @@ class CIEC_USINT final : public CIEC_ANY_UNSIGNED {
   public:
     typedef TForteUInt8 TValueType;
 
-    static const TValueType scm_nMinVal = 0;
-    static const TValueType scm_nMaxVal;
+    static const TValueType scmMinVal = 0;
+    static const TValueType scmMaxVal;
 
     CIEC_USINT() = default;
 
-    CIEC_USINT(const CIEC_USINT& pa_roValue) :
+    CIEC_USINT(const CIEC_USINT& paValue) :
             CIEC_ANY_UNSIGNED() {
-      setValueSimple(pa_roValue);
+      setValueSimple(paValue);
     }
 
     explicit CIEC_USINT(const CIEC_ANY_INT& paValue) :
@@ -52,8 +52,8 @@ class CIEC_USINT final : public CIEC_ANY_UNSIGNED {
 
     ~CIEC_USINT() override = default;
 
-    CIEC_USINT& operator =(const CIEC_USINT &pa_roValue){
-      setValueSimple(pa_roValue);
+    CIEC_USINT& operator =(const CIEC_USINT &paValue){
+      setValueSimple(paValue);
       return *this;
     }
 

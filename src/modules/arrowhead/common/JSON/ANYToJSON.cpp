@@ -18,35 +18,35 @@
 
 DEFINE_FIRMWARE_FB(FORTE_ANYToJSON, g_nStringIdANYToJSON)
 
-const CStringDictionary::TStringId FORTE_ANYToJSON::scm_anDataInputNames[] = {g_nStringIdinput};
+const CStringDictionary::TStringId FORTE_ANYToJSON::scmDataInputNames[] = {g_nStringIdinput};
 
-const CStringDictionary::TStringId FORTE_ANYToJSON::scm_anDataInputTypeIds[] = {g_nStringIdANY};
+const CStringDictionary::TStringId FORTE_ANYToJSON::scmDataInputTypeIds[] = {g_nStringIdANY};
 
-const CStringDictionary::TStringId FORTE_ANYToJSON::scm_anDataOutputNames[] = {g_nStringIdoutput};
+const CStringDictionary::TStringId FORTE_ANYToJSON::scmDataOutputNames[] = {g_nStringIdoutput};
 
-const CStringDictionary::TStringId FORTE_ANYToJSON::scm_anDataOutputTypeIds[] = {g_nStringIdSTRING};
+const CStringDictionary::TStringId FORTE_ANYToJSON::scmDataOutputTypeIds[] = {g_nStringIdSTRING};
 
-const TForteInt16 FORTE_ANYToJSON::scm_anEIWithIndexes[] = {0};
-const TDataIOID FORTE_ANYToJSON::scm_anEIWith[] = {0, scmWithListDelimiter};
-const CStringDictionary::TStringId FORTE_ANYToJSON::scm_anEventInputNames[] = {g_nStringIdREQ};
+const TForteInt16 FORTE_ANYToJSON::scmEIWithIndexes[] = {0};
+const TDataIOID FORTE_ANYToJSON::scmEIWith[] = {0, scmWithListDelimiter};
+const CStringDictionary::TStringId FORTE_ANYToJSON::scmEventInputNames[] = {g_nStringIdREQ};
 
-const TDataIOID FORTE_ANYToJSON::scm_anEOWith[] = {0, scmWithListDelimiter};
-const TForteInt16 FORTE_ANYToJSON::scm_anEOWithIndexes[] = {0, -1};
-const CStringDictionary::TStringId FORTE_ANYToJSON::scm_anEventOutputNames[] = {g_nStringIdCNF};
+const TDataIOID FORTE_ANYToJSON::scmEOWith[] = {0, scmWithListDelimiter};
+const TForteInt16 FORTE_ANYToJSON::scmEOWithIndexes[] = {0, -1};
+const CStringDictionary::TStringId FORTE_ANYToJSON::scmEventOutputNames[] = {g_nStringIdCNF};
 
-const SFBInterfaceSpec FORTE_ANYToJSON::scm_stFBInterfaceSpec = {
-  1,  scm_anEventInputNames,  scm_anEIWith,  scm_anEIWithIndexes,
-  1,  scm_anEventOutputNames,  scm_anEOWith, scm_anEOWithIndexes,  1,  scm_anDataInputNames, scm_anDataInputTypeIds,
-  1,  scm_anDataOutputNames, scm_anDataOutputTypeIds,
+const SFBInterfaceSpec FORTE_ANYToJSON::scmFBInterfaceSpec = {
+  1,  scmEventInputNames,  scmEIWith,  scmEIWithIndexes,
+  1,  scmEventOutputNames,  scmEOWith, scmEOWithIndexes,  1,  scmDataInputNames, scmDataInputTypeIds,
+  1,  scmDataOutputNames, scmDataOutputTypeIds,
   0, 0
 };
 
 
 void FORTE_ANYToJSON::executeEvent(TEventID paEIID) {
-  if(scm_nEventREQID == paEIID) {
+  if(scmEventREQID == paEIID) {
     output() = "";
     ArrowheadJSONHelper::transformANYToJSON(input(), output());
-    sendOutputEvent(scm_nEventCNFID);
+    sendOutputEvent(scmEventCNFID);
   }
 }
 

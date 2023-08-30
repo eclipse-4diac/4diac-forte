@@ -24,30 +24,33 @@
 class E_RESTART : public CEventSourceFB{
   DECLARE_FIRMWARE_FB(E_RESTART)
 private:
-  static const SFBInterfaceSpec scm_stFBInterfaceSpec;
+  static const SFBInterfaceSpec scmFBInterfaceSpec;
 
 
   static const TEventID csmCOLDID = 0;
   static const TEventID csmWARMID = 1;
   static const TEventID csmSTOPID = 2;
 
-  static const CStringDictionary::TStringId scm_aunEONameIds[];
+  static const CStringDictionary::TStringId scmEONameIds[];
 
   // semaphore to ensure proper handling of STOP execution state change
   forte::arch::CSemaphore mSuspendSemaphore;
 
   TEventID mEventToSend;
 
-  void executeEvent(TEventID pa_nEIID) override;
+  void executeEvent(TEventID paEIID) override;
+
+  void readInputData(TEventID paEI) override;
+  void writeOutputData(TEventID paEO) override;
 
 public:
   EVENT_SOURCE_FUNCTION_BLOCK_CTOR(E_RESTART),
-        mEventToSend(cg_nInvalidEventID) {
-    setEventChainExecutor(pa_poSrcRes->getResourceEventExecution());
+        mEventToSend(cgInvalidEventID) {
+    setEventChainExecutor(paSrcRes->getResourceEventExecution());
   }
   ~E_RESTART() override = default;
 
-  EMGMResponse changeFBExecutionState(EMGMCommandType pa_unCommand) override;
+  EMGMResponse changeFBExecutionState(EMGMCommandType paCommand) override;
 };
 
 #endif /*E_RESTART_H_*/

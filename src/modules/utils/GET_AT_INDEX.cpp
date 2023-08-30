@@ -24,33 +24,34 @@
 
 DEFINE_FIRMWARE_FB(FORTE_GET_AT_INDEX, g_nStringIdGET_AT_INDEX)
 
-const CStringDictionary::TStringId FORTE_GET_AT_INDEX::scm_anDataInputNames[] = {g_nStringIdIN_ARRAY, g_nStringIdINDEX};
+const CStringDictionary::TStringId FORTE_GET_AT_INDEX::scmDataInputNames[] = {g_nStringIdIN_ARRAY, g_nStringIdINDEX};
 
-const CStringDictionary::TStringId FORTE_GET_AT_INDEX::scm_anDataInputTypeIds[] = {g_nStringIdANY, g_nStringIdUINT};
+const CStringDictionary::TStringId FORTE_GET_AT_INDEX::scmDataInputTypeIds[] = {g_nStringIdANY, g_nStringIdUINT};
 
-const CStringDictionary::TStringId FORTE_GET_AT_INDEX::scm_anDataOutputNames[] = {g_nStringIdQO, g_nStringIdOUT};
+const CStringDictionary::TStringId FORTE_GET_AT_INDEX::scmDataOutputNames[] = {g_nStringIdQO, g_nStringIdOUT};
 
-const CStringDictionary::TStringId FORTE_GET_AT_INDEX::scm_anDataOutputTypeIds[] = {g_nStringIdBOOL, g_nStringIdANY};
+const CStringDictionary::TStringId FORTE_GET_AT_INDEX::scmDataOutputTypeIds[] = {g_nStringIdBOOL, g_nStringIdANY};
 
-const TDataIOID FORTE_GET_AT_INDEX::scm_anEIWith[] = {0, 1, scmWithListDelimiter};
-const TForteInt16 FORTE_GET_AT_INDEX::scm_anEIWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_GET_AT_INDEX::scm_anEventInputNames[] = {g_nStringIdREQ};
+const TDataIOID FORTE_GET_AT_INDEX::scmEIWith[] = {0, 1, scmWithListDelimiter};
+const TForteInt16 FORTE_GET_AT_INDEX::scmEIWithIndexes[] = {0};
+const CStringDictionary::TStringId FORTE_GET_AT_INDEX::scmEventInputNames[] = {g_nStringIdREQ};
 
-const TDataIOID FORTE_GET_AT_INDEX::scm_anEOWith[] = {0, 1, scmWithListDelimiter};
-const TForteInt16 FORTE_GET_AT_INDEX::scm_anEOWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_GET_AT_INDEX::scm_anEventOutputNames[] = {g_nStringIdCNF};
+const TDataIOID FORTE_GET_AT_INDEX::scmEOWith[] = {0, 1, scmWithListDelimiter};
+const TForteInt16 FORTE_GET_AT_INDEX::scmEOWithIndexes[] = {0};
+const CStringDictionary::TStringId FORTE_GET_AT_INDEX::scmEventOutputNames[] = {g_nStringIdCNF};
 
 
-const SFBInterfaceSpec FORTE_GET_AT_INDEX::scm_stFBInterfaceSpec = {
-  1, scm_anEventInputNames, scm_anEIWith, scm_anEIWithIndexes,
-  1, scm_anEventOutputNames, scm_anEOWith, scm_anEOWithIndexes,
-  2, scm_anDataInputNames, scm_anDataInputTypeIds,
-  2, scm_anDataOutputNames, scm_anDataOutputTypeIds,
+const SFBInterfaceSpec FORTE_GET_AT_INDEX::scmFBInterfaceSpec = {
+  1, scmEventInputNames, scmEIWith, scmEIWithIndexes,
+  1, scmEventOutputNames, scmEOWith, scmEOWithIndexes,
+  2, scmDataInputNames, scmDataInputTypeIds,
+  2, scmDataOutputNames, scmDataOutputTypeIds,
+  0, nullptr,
   0, nullptr
 };
 
-FORTE_GET_AT_INDEX::FORTE_GET_AT_INDEX(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes) :
-    CFunctionBlock( pa_poSrcRes, &scm_stFBInterfaceSpec, pa_nInstanceNameId),
+FORTE_GET_AT_INDEX::FORTE_GET_AT_INDEX(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) :
+    CFunctionBlock( paSrcRes, &scmFBInterfaceSpec, paInstanceNameId),
     var_IN_ARRAY(CIEC_ANY_VARIANT()),
     var_INDEX(CIEC_UINT(0)),
     var_QO(CIEC_BOOL(0)),
@@ -64,9 +65,9 @@ FORTE_GET_AT_INDEX::FORTE_GET_AT_INDEX(const CStringDictionary::TStringId pa_nIn
     conn_OUT(this, 1, &var_conn_OUT) {
 };
 
-void FORTE_GET_AT_INDEX::executeEvent(TEventID pa_nEIID) {
-  switch(pa_nEIID) {
-    case scm_nEventREQID:
+void FORTE_GET_AT_INDEX::executeEvent(TEventID paEIID) {
+  switch(paEIID) {
+    case scmEventREQID:
       if (std::holds_alternative<CIEC_ANY_UNIQUE_PTR<CIEC_ARRAY>>(var_IN_ARRAY)) {
         auto &inArray = std::get<CIEC_ANY_UNIQUE_PTR<CIEC_ARRAY>>(var_IN_ARRAY);
         // check if index is within bounds
@@ -80,14 +81,14 @@ void FORTE_GET_AT_INDEX::executeEvent(TEventID pa_nEIID) {
       } else {
         var_QO = CIEC_BOOL(false);
       }
-      sendOutputEvent(scm_nEventCNFID);
+      sendOutputEvent(scmEventCNFID);
       break;
   }
 }
 
-void FORTE_GET_AT_INDEX::readInputData(TEventID pa_nEIID) {
-  switch(pa_nEIID) {
-    case scm_nEventREQID: {
+void FORTE_GET_AT_INDEX::readInputData(TEventID paEIID) {
+  switch(paEIID) {
+    case scmEventREQID: {
       RES_DATA_CON_CRITICAL_REGION();
       readData(0, var_IN_ARRAY, conn_IN_ARRAY);
       readData(1, var_INDEX, conn_INDEX);
@@ -98,9 +99,9 @@ void FORTE_GET_AT_INDEX::readInputData(TEventID pa_nEIID) {
   }
 }
 
-void FORTE_GET_AT_INDEX::writeOutputData(TEventID pa_nEIID) {
-  switch(pa_nEIID) {
-    case scm_nEventCNFID: {
+void FORTE_GET_AT_INDEX::writeOutputData(TEventID paEIID) {
+  switch(paEIID) {
+    case scmEventCNFID: {
       RES_DATA_CON_CRITICAL_REGION();
       writeData(0, var_QO, conn_QO);
       writeData(1, var_OUT, conn_OUT);

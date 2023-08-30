@@ -29,10 +29,10 @@ namespace forte {
     class CLocalComLayer : public CComLayer{
 
       public:
-        CLocalComLayer(CComLayer* pa_poUpperLayer, CBaseCommFB * pa_poFB);
+        CLocalComLayer(CComLayer* paUpperLayer, CBaseCommFB * paFB);
         ~CLocalComLayer() override;
 
-        EComResponse sendData(void *pa_pvData, unsigned int pa_unSize) override;
+        EComResponse sendData(void *paData, unsigned int paSize) override;
         EComResponse recvData(const void *, unsigned int ) override {
           return e_ProcessDataOk;
         }
@@ -42,51 +42,51 @@ namespace forte {
         }
 
       private:
-        EComResponse openConnection(char *pa_acLayerParameter) override;
+        EComResponse openConnection(char *paLayerParameter) override;
         void closeConnection() override;
-        void setRDs(CLocalComLayer *pa_poSublLayer, CIEC_ANY **pa_aSDs, TPortId pa_unNumSDs);
+        void setRDs(CLocalComLayer *paSublLayer, CIEC_ANY **paSDs, TPortId paNumSDs);
 
         class CLocalCommGroup {
           public:
-            explicit CLocalCommGroup(CStringDictionary::TStringId pa_nGroupName) :
-                m_nGroupName(pa_nGroupName), m_lPublList(), m_lSublList(){
+            explicit CLocalCommGroup(CStringDictionary::TStringId paGroupName) :
+                mGroupName(paGroupName), mPublList(), mSublList(){
             }
 
-            CLocalCommGroup(const CLocalCommGroup& pa_roLocalCommGroup) :
-                m_nGroupName(pa_roLocalCommGroup.m_nGroupName), m_lPublList(), m_lSublList(){
+            CLocalCommGroup(const CLocalCommGroup& paLocalCommGroup) :
+                mGroupName(paLocalCommGroup.mGroupName), mPublList(), mSublList(){
             }
 
             ~CLocalCommGroup() = default;
 
-            CStringDictionary::TStringId m_nGroupName;
-            CSinglyLinkedList<CLocalComLayer*> m_lPublList;
-            CSinglyLinkedList<CLocalComLayer*> m_lSublList;
+            CStringDictionary::TStringId mGroupName;
+            CSinglyLinkedList<CLocalComLayer*> mPublList;
+            CSinglyLinkedList<CLocalComLayer*> mSublList;
         };
 
         class CLocalCommGroupsManager{
 
           public:
 
-            CLocalCommGroup* registerPubl(const CStringDictionary::TStringId pa_nID, CLocalComLayer *pa_poLayer);
-            void unregisterPubl(CLocalCommGroup *pa_poGroup, CLocalComLayer *pa_poLayer);
+            CLocalCommGroup* registerPubl(const CStringDictionary::TStringId paID, CLocalComLayer *paLayer);
+            void unregisterPubl(CLocalCommGroup *paGroup, CLocalComLayer *paLayer);
 
-            CLocalCommGroup* registerSubl(const CStringDictionary::TStringId pa_nID, CLocalComLayer *pa_poLayer);
-            void unregisterSubl(CLocalCommGroup *pa_poGroup, CLocalComLayer *pa_poLayer);
+            CLocalCommGroup* registerSubl(const CStringDictionary::TStringId paID, CLocalComLayer *paLayer);
+            void unregisterSubl(CLocalCommGroup *paGroup, CLocalComLayer *paLayer);
 
           private:
             CLocalCommGroupsManager() = default;
 
-            CLocalCommGroup* findLocalCommGroup(CStringDictionary::TStringId pa_nID);
-            CLocalCommGroup* createLocalCommGroup(CStringDictionary::TStringId pa_nID);
-            void removeCommGroup(CLocalCommGroup *pa_poGroup);
+            CLocalCommGroup* findLocalCommGroup(CStringDictionary::TStringId paID);
+            CLocalCommGroup* createLocalCommGroup(CStringDictionary::TStringId paID);
+            void removeCommGroup(CLocalCommGroup *paGroup);
 
-            static void removeListEntry(CSinglyLinkedList<CLocalComLayer*>  &pa_rlstList, CLocalComLayer *pa_poLayer);
+            static void removeListEntry(CSinglyLinkedList<CLocalComLayer*>  &pa_rlstList, CLocalComLayer *paLayer);
 
             /*!\brief The Sync object used locking the access to the internal used datastructures
              */
-            CSyncObject m_oSync;
+            CSyncObject mSync;
 
-            CSinglyLinkedList<CLocalCommGroup> m_lstLocalCommGroups;
+            CSinglyLinkedList<CLocalCommGroup> mLocalCommGroups;
 
             friend class CLocalComLayer;
 
@@ -95,10 +95,10 @@ namespace forte {
             CLocalCommGroupsManager &operator =(const CLocalCommGroupsManager&) = delete;
         };
 
-        static CLocalCommGroupsManager sm_oLocalCommGroupsManager;
+        static CLocalCommGroupsManager smLocalCommGroupsManager;
 
 
-        CLocalCommGroup *m_poLocalCommGroup;
+        CLocalCommGroup *mLocalCommGroup;
     };
   }
 

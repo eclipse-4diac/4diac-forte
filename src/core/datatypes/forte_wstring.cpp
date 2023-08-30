@@ -27,33 +27,33 @@ bool CIEC_WSTRING::fromUTF16(const TForteWChar *paBuffer, unsigned int paBufferL
   return fromUTF16(reinterpret_cast<const TForteByte*>(paBuffer), 2 * paBufferLen);
 }
 
-bool CIEC_WSTRING::fromUTF16(const TForteByte *pa_pacBuffer, unsigned int pa_nBufferLen) {
+bool CIEC_WSTRING::fromUTF16(const TForteByte *paBuffer, unsigned int paBufferLen) {
   bool bLittleEndian = false;
   TForteUInt32 nCodepoint;
   int nRes;
-  unsigned int nRemLen = pa_nBufferLen;
-  const TForteByte *pacBuffer = pa_pacBuffer;
+  unsigned int nRemLen = paBufferLen;
+  const TForteByte *pacBuffer = paBuffer;
 
-  if(pa_nBufferLen == 0){
+  if(paBufferLen == 0){
     assign("", 0);
     return true;
   }
-  else if((pa_nBufferLen & 1) == 1){
+  else if((paBufferLen & 1) == 1){
     return false;
   }
 
   // Check the BOM, default to big endian
-  nRes = CUnicodeUtilities::parseUTF16Codepoint(pa_pacBuffer, nCodepoint, false);
+  nRes = CUnicodeUtilities::parseUTF16Codepoint(paBuffer, nCodepoint, false);
   if(nRes < 0) {
     return false;
   }
   if(nRes == 2){
-    if(nCodepoint == CUnicodeUtilities::scm_unBOMMarkerSwapped){
+    if(nCodepoint == CUnicodeUtilities::scmBOMMarkerSwapped){
       bLittleEndian = true;
       nRemLen -= 2;
       pacBuffer += 2;
     }
-    else if(nCodepoint == CUnicodeUtilities::scm_unBOMMarker){
+    else if(nCodepoint == CUnicodeUtilities::scmBOMMarker){
       nRemLen -= 2;
       pacBuffer += 2;
     }
@@ -104,7 +104,7 @@ bool CIEC_WSTRING::fromUTF16(const TForteByte *pa_pacBuffer, unsigned int pa_nBu
   return true;
 }
 
-int CIEC_WSTRING::toUTF16(TForteByte* pa_pacBuffer, unsigned int pa_nBufferSize) const{
+int CIEC_WSTRING::toUTF16(TForteByte* paBuffer, unsigned int paBufferSize) const{
   // Count the needed space
   const TForteByte *pRunner = (const TForteByte *) getValue();
   unsigned int i = 0;
@@ -121,7 +121,7 @@ int CIEC_WSTRING::toUTF16(TForteByte* pa_pacBuffer, unsigned int pa_nBufferSize)
     i += nRes;
     pRunner += nRes;
     // Skip the BOM if present
-    if(nCodepoint != CUnicodeUtilities::scm_unBOMMarker){
+    if(nCodepoint != CUnicodeUtilities::scmBOMMarker){
       nRes = CUnicodeUtilities::encodeUTF16Codepoint(nullptr, 0, nCodepoint, false);
       if(nRes < 0) {
         return -1;
@@ -130,16 +130,16 @@ int CIEC_WSTRING::toUTF16(TForteByte* pa_pacBuffer, unsigned int pa_nBufferSize)
     }
   }
 
-  if(pa_pacBuffer == nullptr) {
+  if(paBuffer == nullptr) {
     return nNeededLength;
   }
 
-  if(nNeededLength > pa_nBufferSize) {
+  if(nNeededLength > paBufferSize) {
     return -1;
   }
 
-  TForteByte *pEncRunner = pa_pacBuffer;
-  TForteByte *pDataEnd = pa_pacBuffer + nNeededLength;
+  TForteByte *pEncRunner = paBuffer;
+  TForteByte *pDataEnd = paBuffer + nNeededLength;
 
   pRunner = (const TForteByte *) getValue();
   nRemLen = length();
@@ -151,7 +151,7 @@ int CIEC_WSTRING::toUTF16(TForteByte* pa_pacBuffer, unsigned int pa_nBufferSize)
     }
     i += nRes;
     pRunner += nRes;
-    if(nCodepoint != CUnicodeUtilities::scm_unBOMMarker){
+    if(nCodepoint != CUnicodeUtilities::scmBOMMarker){
       nRes = CUnicodeUtilities::encodeUTF16Codepoint(pEncRunner, static_cast<unsigned int>(pDataEnd - pEncRunner), nCodepoint, false);
       if(nRes < 0) {
         return -1;
@@ -160,17 +160,17 @@ int CIEC_WSTRING::toUTF16(TForteByte* pa_pacBuffer, unsigned int pa_nBufferSize)
     }
   }
 
-  return static_cast<unsigned int>(pEncRunner - pa_pacBuffer);
+  return static_cast<unsigned int>(pEncRunner - paBuffer);
 }
 
-int CIEC_WSTRING::fromString(const char *pa_pacValue){
+int CIEC_WSTRING::fromString(const char *paValue){
   int nRetVal = 0;
-  if(0 == strncmp(pa_pacValue, "WSTRING#", 8)){
-    pa_pacValue += 8;
+  if(0 == strncmp(paValue, "WSTRING#", 8)){
+    paValue += 8;
     nRetVal = 8;
   }
 
-  int nUTF8Result = fromUTF8(pa_pacValue, -1, (*pa_pacValue == '"'));
+  int nUTF8Result = fromUTF8(paValue, -1, (*paValue == '"'));
 
   return (-1 == nUTF8Result) ? -1 : (nRetVal + nUTF8Result);
 }
@@ -179,12 +179,12 @@ int CIEC_WSTRING::toString(char* paValue, size_t paBufferSize) const {
   return toUTF8(paValue, paBufferSize, true);
 }
 
-int CIEC_WSTRING::fromUTF8(const char *pa_pacValue, int pa_nLen, bool pa_bUnescape){
-  int nSrcLen = pa_nLen >= 0 ? pa_nLen : (pa_bUnescape ? determineEscapedStringLength(pa_pacValue, '"') : static_cast<int>(strlen(pa_pacValue)));
+int CIEC_WSTRING::fromUTF8(const char *paValue, int paLen, bool paUnescape){
+  int nSrcLen = paLen >= 0 ? paLen : (paUnescape ? determineEscapedStringLength(paValue, '"') : static_cast<int>(strlen(paValue)));
   int nSrcCappedLength = nSrcLen;
 
   if(0 <= nSrcLen){
-    if((nullptr == pa_pacValue) || (pa_pacValue[0] == '\0') || (nSrcLen == 0)){
+    if((nullptr == paValue) || (paValue[0] == '\0') || (nSrcLen == 0)){
       assign("", 0);
       return 0;
     }
@@ -204,7 +204,7 @@ int CIEC_WSTRING::fromUTF8(const char *pa_pacValue, int pa_nLen, bool pa_bUnesca
     }
 
     unsigned int nMaxWidth;
-    int nLength = CUnicodeUtilities::checkUTF8((const char *) pa_pacValue, nSrcCappedLength, nMaxWidth);
+    int nLength = CUnicodeUtilities::checkUTF8((const char *) paValue, nSrcCappedLength, nMaxWidth);
 
     // Only accept if this is valid UTF-8, otherwise we can get major
     // problems when serializing
@@ -219,19 +219,19 @@ int CIEC_WSTRING::fromUTF8(const char *pa_pacValue, int pa_nLen, bool pa_bUnesca
 
     // If BMP, all is well - simply assign
     if(nMaxWidth <= 16){
-      assign(pa_pacValue, static_cast<TForteUInt16>(nSrcCappedLength));
+      assign(paValue, static_cast<TForteUInt16>(nSrcCappedLength));
     }
     else{
       TForteUInt32 nCodepoint;
-      const TForteByte *pRunner = (const TForteByte *) pa_pacValue;
+      const TForteByte *pRunner = (const TForteByte *) paValue;
       TForteByte *pEncBuffer = (TForteByte *) getValue();
       TForteByte *pEncRunner = pEncBuffer;
 
-      while(*pRunner && (pRunner - (const TForteByte *) pa_pacValue) < nSrcCappedLength){
+      while(*pRunner && (pRunner - (const TForteByte *) paValue) < nSrcCappedLength){
         int nRes;
         nRes = CUnicodeUtilities::parseUTF8Codepoint(pRunner, nCodepoint);
         pRunner += nRes;
-        if(nCodepoint == CUnicodeUtilities::scm_unBOMMarker) {
+        if(nCodepoint == CUnicodeUtilities::scmBOMMarker) {
           continue;
         }
         if(nCodepoint >= 0x10000) {
@@ -248,7 +248,7 @@ int CIEC_WSTRING::fromUTF8(const char *pa_pacValue, int pa_nLen, bool pa_bUnesca
       setLength(static_cast<TForteUInt16>(pEncRunner - pEncBuffer));
     }
 
-    if(pa_bUnescape){
+    if(paUnescape){
       nLength = unescapeFromString(getValue(), '"');
       if(-1 == nLength){
         return -1;

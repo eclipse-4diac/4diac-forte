@@ -109,8 +109,8 @@ class CIEC_ANY {
      *  The data type value is set through the copy assignment
      *
      */
-    virtual void setValue(const CIEC_ANY &pa_roValue){
-      setValueSimple(pa_roValue);
+    virtual void setValue(const CIEC_ANY &paValue){
+      setValueSimple(paValue);
     }
 
     /**
@@ -139,7 +139,7 @@ class CIEC_ANY {
      *   This clone object is necessary for establishing data-connections.
      *   Pure virtual function implementation.
      */
-    virtual CIEC_ANY* clone(TForteByte *pa_acDataBuf) const = 0;
+    virtual CIEC_ANY* clone(TForteByte *paDataBuf) const = 0;
 
     /*! \brief Get data type id method
      *
@@ -177,11 +177,11 @@ class CIEC_ANY {
      *   data type (string format) to a C++ conform type.
      *   This function is necessary for communication with a proper engineering system.
      *   Pure virtual function implementation.
-     *   \param pa_pacValue string buffer
+     *   \param paValue string buffer
      *   \return number of bytes taken used from the buffer
      *        -1 on on error
      */
-    virtual int fromString(const char *pa_pacValue) = 0;
+    virtual int fromString(const char *paValue) = 0;
 
     /*! \brief Converts data type value to string
      *
@@ -212,15 +212,15 @@ class CIEC_ANY {
 
     /*! \brief determine whether we can cast the source to the destination and what kind of cast it is
      */
-    static bool isCastable(EDataTypeID pa_eSource, EDataTypeID pa_eDestination, bool &pa_rbUpCast, bool &pa_rbDownCast);
-    static bool isCastable(EDataTypeID pa_eSource, EDataTypeID pa_eDestination){
+    static bool isCastable(EDataTypeID paSource, EDataTypeID paDestination, bool &paUpCast, bool &paDownCast);
+    static bool isCastable(EDataTypeID paSource, EDataTypeID paDestination){
       bool bUpCast, bDownCast;
-      return isCastable(pa_eSource, pa_eDestination, bUpCast, bDownCast);
+      return isCastable(paSource, paDestination, bUpCast, bDownCast);
     }
 
     /*! \brief perform special cast operation that can not be directly handled by the data types
      */
-    static void specialCast(const CIEC_ANY &pa_roSrcValue, CIEC_ANY &pa_roDstValue);
+    static void specialCast(const CIEC_ANY &paSrcValue, CIEC_ANY &paDstValue);
 
     /*! \brief calculates buffer size needed for toString conversion
          */
@@ -259,8 +259,8 @@ class CIEC_ANY {
       return mForced;
     }
 
-    void setForced(bool pa_bForced){
-      mForced = pa_bForced;
+    void setForced(bool paForced){
+      mForced = paForced;
     }
 
   protected:
@@ -270,8 +270,8 @@ class CIEC_ANY {
      * known that this can be done safely.
      */
     inline
-    void setValueSimple(const CIEC_ANY &pa_roValue){
-      mAnyData = pa_roValue.mAnyData;
+    void setValueSimple(const CIEC_ANY &paValue){
+      mAnyData = paValue.mAnyData;
     }
 
     /*! \brief Get Method for complex datatypes
@@ -457,11 +457,11 @@ class CIEC_ANY {
       mAnyData.mGenData = paGenData;
     }
 
-    static CStringDictionary::TStringId parseTypeName(const char *pa_pacValue, const char *pa_pacHashPos);
+    static CStringDictionary::TStringId parseTypeName(const char *paValue, const char *paHashPos);
 
   public:
     CIEC_ANY(const CIEC_ANY&) = delete;
-    CIEC_ANY& operator =(const CIEC_ANY& pa_roValue) = delete;
+    CIEC_ANY& operator =(const CIEC_ANY& paValue) = delete;
 
   private:
     bool mForced;

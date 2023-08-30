@@ -34,7 +34,7 @@ class CWin32Thread : public forte::arch::CThreadBase <HANDLE>{
     /*! \brief Constructor of the Thread class
      *
      *  Does all the necessary steps in order to get the thread running with the start()-method
-     *  @param pa_nStackSize the Size of the stack the thread is allowed to use. 0 means use system default stack size.
+     *  @param paStackSize the Size of the stack the thread is allowed to use. 0 means use system default stack size.
      */
     explicit CWin32Thread(long paStackSize = 0);
 

@@ -31,8 +31,8 @@ class CIEC_BOOL : public CIEC_ANY_BIT{
 
     typedef bool TValueType;
 
-    static constexpr TValueType scm_nMinVal = std::numeric_limits<CIEC_BOOL::TValueType>::min();
-    static constexpr TValueType scm_nMaxVal = std::numeric_limits<CIEC_BOOL::TValueType>::max();
+    static constexpr TValueType scmMinVal = std::numeric_limits<CIEC_BOOL::TValueType>::min();
+    static constexpr TValueType scmMaxVal = std::numeric_limits<CIEC_BOOL::TValueType>::max();
 
     CIEC_BOOL() {
       setTBOOL8(false);

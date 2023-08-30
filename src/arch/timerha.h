@@ -55,7 +55,7 @@ class CTimerHandler : public CExternalEventHandler{
 
     /*!\brief Sets the priority of the event source
      *
-     * \param pa_nPriority new priority of the event source
+     * \param paPriority new priority of the event source
      */
     void setPriority(int paPriority) override = 0;
     /*!\brief Get the current priority of the event source
@@ -69,7 +69,7 @@ class CTimerHandler : public CExternalEventHandler{
      * \return internal runtime ticks per second
      */
     static TForteUInt32 getTicksPerSecond(){
-      return cg_nForteTicksPerSecond;
+      return cgForteTicksPerSecond;
     }
 
     /*!\brief Register an Event source Functionblock to this external event source.

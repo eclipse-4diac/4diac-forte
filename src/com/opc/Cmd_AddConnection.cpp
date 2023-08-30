@@ -12,15 +12,15 @@
 #include "Cmd_AddConnection.h"
 #include "opcconnectionimpl.h"
 
-CCmd_AddConnection::CCmd_AddConnection(COpcConnectionImpl *pa_pConnection) :
-    m_pConnection(pa_pConnection){
+CCmd_AddConnection::CCmd_AddConnection(COpcConnectionImpl *paConnection) :
+    mConnection(paConnection){
 }
 
 CCmd_AddConnection::~CCmd_AddConnection(){
 }
 
 void CCmd_AddConnection::runCommand(){
-  m_pConnection->connect();
+  mConnection->connect();
 }
 const char* CCmd_AddConnection::getCommandName() const{
   return "Cmd_AddConnection";

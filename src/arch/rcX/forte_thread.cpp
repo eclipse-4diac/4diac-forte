@@ -46,7 +46,7 @@ void CrcXThread::threadFunction(void *arguments){
 }
 
 CrcXThread::CrcXThread(long paStackSize) : CThreadBase(paStackSize),  mStack(0){
-  if(paStackSize < (300 * 4)){ // If m_nStackSize == 0, the minimum is also set.
+  if(paStackSize < (300 * 4)){ // If mStackSize == 0, the minimum is also set.
     paStackSize = 300 * 4;
   }
 

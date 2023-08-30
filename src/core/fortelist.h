@@ -238,7 +238,7 @@ public:
 
   /*!\brief Add's the given object at the end of the singly linked list
    *
-   * \param pa_poElement the reference to the object to be added
+   * \param paElement the reference to the object to be added
    */
   void pushBack(void* const paElement) {
     CSinglyLinkedListNode<void*>* poNewNode = new CSinglyLinkedListNode<void*>(paElement);

@@ -35,7 +35,7 @@ BOOST_AUTO_TEST_CASE(Literal_test)
   BOOST_TEST(static_cast<CIEC_DWORD::TValueType>(test1) == 0);
 
   CIEC_DWORD test2 = 0xFFFFFFFF_DWORD;
-  BOOST_TEST(static_cast<CIEC_DWORD::TValueType>(test2) == CIEC_DWORD::scm_nMaxVal);
+  BOOST_TEST(static_cast<CIEC_DWORD::TValueType>(test2) == CIEC_DWORD::scmMaxVal);
 }
 
 BOOST_AUTO_TEST_CASE(Assignment_test)

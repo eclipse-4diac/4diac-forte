@@ -23,9 +23,9 @@
 class GEN_PUBL : public GEN_PUBLISH{
   DECLARE_GENERIC_FIRMWARE_FB(GEN_PUBL)
   public:
-    GEN_PUBL(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes);
+    GEN_PUBL(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
 
-    bool configureFB(const char *pa_acConfigString) override;
+    bool configureFB(const char *paConfigString) override;
 
   protected:
     static const char * const scmLocalIDPrefix;

@@ -26,12 +26,12 @@ using namespace forte::com_infra;
 
 class fmuComLayer: public forte::com_infra::CComLayer{
 public:
-  fmuComLayer(CComLayer* pa_poUpperLayer, CBaseCommFB * pa_poFB);
+  fmuComLayer(CComLayer* paUpperLayer, CBaseCommFB * paFB);
   ~fmuComLayer() override;
 
-  EComResponse sendData(void* pa_pvData, unsigned int pa_unSize) override;
+  EComResponse sendData(void* paData, unsigned int paSize) override;
 
-  EComResponse recvData(const void *pa_pvData, unsigned int pa_unSize) override;
+  EComResponse recvData(const void *paData, unsigned int paSize) override;
 
   std::vector<fmuValueContainer*>* getOutputs() const {
     return m_outputs;
@@ -53,9 +53,9 @@ private:
 
   bool m_someValueChanged;
 
-  EComResponse m_eInterruptResp;
+  EComResponse mInterruptResp;
 
-  EComResponse openConnection(char* pa_acLayerParameter) override;
+  EComResponse openConnection(char* paLayerParameter) override;
 
 };
 

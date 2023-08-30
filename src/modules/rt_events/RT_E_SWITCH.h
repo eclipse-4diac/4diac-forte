@@ -10,82 +10,108 @@
  *   Alois Zoitl, Gerhard Ebenhofer, Ingo Hegny
  *    - initial API and implementation and/or initial documentation
  *******************************************************************************/
-#ifndef _RT_E_SWITCH_H_
-#define _RT_E_SWITCH_H_
 
-#include <funcbloc.h>
-#include <ecet.h>
+#pragma once
 
-// cppcheck-suppress noConstructor
-class FORTE_RT_E_SWITCH: public CFunctionBlock{
+#include "funcbloc.h"
+#include "forte_bool.h"
+#include "forte_time.h"
+#include "iec61131_functions.h"
+#include "forte_array_common.h"
+#include "forte_array.h"
+#include "forte_array_fixed.h"
+#include "forte_array_variable.h"
+
+#include "ecet.h"
+
+class FORTE_RT_E_SWITCH final : public CFunctionBlock {
   DECLARE_FIRMWARE_FB(FORTE_RT_E_SWITCH)
 
 private:
-  static const CStringDictionary::TStringId scm_anDataInputNames[];
-  static const CStringDictionary::TStringId scm_anDataInputTypeIds[];
-  CIEC_BOOL &QI() {
-    return *static_cast<CIEC_BOOL*>(getDI(0));
-  };
+  static const CStringDictionary::TStringId scmDataInputNames[];
+  static const CStringDictionary::TStringId scmDataInputTypeIds[];
+  static const CStringDictionary::TStringId scmDataOutputNames[];
+  static const CStringDictionary::TStringId scmDataOutputTypeIds[];
+  static const TEventID scmEventINITID = 0;
+  static const TEventID scmEventEIID = 1;
+  static const TDataIOID scmEIWith[];
+  static const TForteInt16 scmEIWithIndexes[];
+  static const CStringDictionary::TStringId scmEventInputNames[];
+  static const TEventID scmEventINITOID = 0;
+  static const TEventID scmEventEO1ID = 1;
+  static const TEventID scmEventEO2ID = 2;
+  static const TDataIOID scmEOWith[];
+  static const TForteInt16 scmEOWithIndexes[];
+  static const CStringDictionary::TStringId scmEventOutputNames[];
 
-  CIEC_BOOL &G() {
-    return *static_cast<CIEC_BOOL*>(getDI(1));
-  };
+  static const SFBInterfaceSpec scmFBInterfaceSpec;
 
-  CIEC_TIME &Tmin() {
-    return *static_cast<CIEC_TIME*>(getDI(2));
-  };
+  CEventChainExecutionThread mECEO1, mECEO2;
+  bool mInitialized;
 
-  CIEC_TIME &Deadline_EO1() {
-    return *static_cast<CIEC_TIME*>(getDI(3));
-  };
+  void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
-  CIEC_TIME &WCET_EO1() {
-    return *static_cast<CIEC_TIME*>(getDI(4));
-  };
-
-  CIEC_TIME &Deadline_EO2() {
-    return *static_cast<CIEC_TIME*>(getDI(5));
-  };
-
-  CIEC_TIME &WCET_EO2() {
-    return *static_cast<CIEC_TIME*>(getDI(6));
-  };
-
-  static const CStringDictionary::TStringId scm_anDataOutputNames[];
-  static const CStringDictionary::TStringId scm_anDataOutputTypeIds[];
-  CIEC_BOOL &QO() {
-    return *static_cast<CIEC_BOOL*>(getDO(0));
-  };
-
-  static const TEventID scm_nEventINITID = 0;
-  static const TEventID scm_nEventEIID = 1;
-  static const TForteInt16 scm_anEIWithIndexes[];
-  static const TDataIOID scm_anEIWith[];
-  static const CStringDictionary::TStringId scm_anEventInputNames[];
-
-  static const TEventID scm_nEventINITOID = 0;
-  static const TEventID scm_nEventEO1ID = 1;
-  static const TEventID scm_nEventEO2ID = 2;
-  static const TForteInt16 scm_anEOWithIndexes[];
-  static const TDataIOID scm_anEOWith[];
-  static const CStringDictionary::TStringId scm_anEventOutputNames[];
-
-  static const SFBInterfaceSpec scm_stFBInterfaceSpec;
-
-
-  CEventChainExecutionThread m_oECEO1, m_oECEO2;
-  bool m_bInitialized;
-
-  void executeEvent(TEventID pa_nEIID) override;
+  void readInputData(TEventID paEIID) override;
+  void writeOutputData(TEventID paEIID) override;
+  void setInitialValues() override;
 
 public:
-  FUNCTION_BLOCK_CTOR(FORTE_RT_E_SWITCH){
-  m_bInitialized = false;
-  };
+  FORTE_RT_E_SWITCH(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
 
-  ~FORTE_RT_E_SWITCH() override = default;
-
+  CIEC_BOOL var_QI;
+  CIEC_BOOL var_G;
+  CIEC_TIME var_Tmin;
+  CIEC_TIME var_Deadline_EO1;
+  CIEC_TIME var_WCET_EO1;
+  CIEC_TIME var_Deadline_EO2;
+  CIEC_TIME var_WCET_EO2;
+  CIEC_BOOL var_QO;
+  CIEC_BOOL var_conn_QO;
+  CEventConnection conn_INITO;
+  CEventConnection conn_EO1;
+  CEventConnection conn_EO2;
+  CDataConnection *conn_QI;
+  CDataConnection *conn_G;
+  CDataConnection *conn_Tmin;
+  CDataConnection *conn_Deadline_EO1;
+  CDataConnection *conn_WCET_EO1;
+  CDataConnection *conn_Deadline_EO2;
+  CDataConnection *conn_WCET_EO2;
+  CDataConnection conn_QO;
+  CIEC_ANY *getDI(size_t) override;
+  CIEC_ANY *getDO(size_t) override;
+  CIEC_ANY *getDIO(size_t) override;
+  CEventConnection *getEOConUnchecked(TPortId) override;
+  CDataConnection **getDIConUnchecked(TPortId) override;
+  CDataConnection *getDOConUnchecked(TPortId) override;
+  CInOutDataConnection **getDIOInConUnchecked(TPortId) override;
+  CInOutDataConnection *getDIOOutConUnchecked(TPortId) override;
+  void evt_INIT(const CIEC_BOOL &pa_QI, const CIEC_BOOL &pa_G, const CIEC_TIME &pa_Tmin, const CIEC_TIME &pa_Deadline_EO1, const CIEC_TIME &pa_WCET_EO1, const CIEC_TIME &pa_Deadline_EO2, const CIEC_TIME &pa_WCET_EO2, CIEC_BOOL &pa_QO) {
+    var_QI = pa_QI;
+    var_G = pa_G;
+    var_Tmin = pa_Tmin;
+    var_Deadline_EO1 = pa_Deadline_EO1;
+    var_WCET_EO1 = pa_WCET_EO1;
+    var_Deadline_EO2 = pa_Deadline_EO2;
+    var_WCET_EO2 = pa_WCET_EO2;
+    receiveInputEvent(scmEventINITID, nullptr);
+    pa_QO = var_QO;
+  }
+  void evt_EI(const CIEC_BOOL &pa_QI, const CIEC_BOOL &pa_G, const CIEC_TIME &pa_Tmin, const CIEC_TIME &pa_Deadline_EO1, const CIEC_TIME &pa_WCET_EO1, const CIEC_TIME &pa_Deadline_EO2, const CIEC_TIME &pa_WCET_EO2, CIEC_BOOL &pa_QO) {
+    var_QI = pa_QI;
+    var_G = pa_G;
+    var_Tmin = pa_Tmin;
+    var_Deadline_EO1 = pa_Deadline_EO1;
+    var_WCET_EO1 = pa_WCET_EO1;
+    var_Deadline_EO2 = pa_Deadline_EO2;
+    var_WCET_EO2 = pa_WCET_EO2;
+    receiveInputEvent(scmEventEIID, nullptr);
+    pa_QO = var_QO;
+  }
+  void operator()(const CIEC_BOOL &pa_QI, const CIEC_BOOL &pa_G, const CIEC_TIME &pa_Tmin, const CIEC_TIME &pa_Deadline_EO1, const CIEC_TIME &pa_WCET_EO1, const CIEC_TIME &pa_Deadline_EO2, const CIEC_TIME &pa_WCET_EO2, CIEC_BOOL &pa_QO) {
+    evt_INIT(pa_QI, pa_G, pa_Tmin, pa_Deadline_EO1, pa_WCET_EO1, pa_Deadline_EO2, pa_WCET_EO2, pa_QO);
+  }
 };
 
-#endif //close the ifdef sequence from the beginning of the file
+
 

@@ -22,27 +22,27 @@
 
 DEFINE_FIRMWARE_FB(FORTE_TRIGGER_SERVICE_SERVER, g_nStringIdTRIGGER_SERVICE_SERVER)
 
-const CStringDictionary::TStringId FORTE_TRIGGER_SERVICE_SERVER::scm_anDataInputNames[] = { g_nStringIdQI, g_nStringIdNAMESPACE, g_nStringIdSRVNAME, g_nStringIdSUCCESS, g_nStringIdMESSAGE };
+const CStringDictionary::TStringId FORTE_TRIGGER_SERVICE_SERVER::scmDataInputNames[] = { g_nStringIdQI, g_nStringIdNAMESPACE, g_nStringIdSRVNAME, g_nStringIdSUCCESS, g_nStringIdMESSAGE };
 
-const CStringDictionary::TStringId FORTE_TRIGGER_SERVICE_SERVER::scm_anDataInputTypeIds[] = { g_nStringIdBOOL, g_nStringIdSTRING, g_nStringIdSTRING, g_nStringIdBOOL, g_nStringIdSTRING };
+const CStringDictionary::TStringId FORTE_TRIGGER_SERVICE_SERVER::scmDataInputTypeIds[] = { g_nStringIdBOOL, g_nStringIdSTRING, g_nStringIdSTRING, g_nStringIdBOOL, g_nStringIdSTRING };
 
-const CStringDictionary::TStringId FORTE_TRIGGER_SERVICE_SERVER::scm_anDataOutputNames[] = { g_nStringIdQO, g_nStringIdSTATUS };
+const CStringDictionary::TStringId FORTE_TRIGGER_SERVICE_SERVER::scmDataOutputNames[] = { g_nStringIdQO, g_nStringIdSTATUS };
 
-const CStringDictionary::TStringId FORTE_TRIGGER_SERVICE_SERVER::scm_anDataOutputTypeIds[] = { g_nStringIdBOOL, g_nStringIdSTRING };
+const CStringDictionary::TStringId FORTE_TRIGGER_SERVICE_SERVER::scmDataOutputTypeIds[] = { g_nStringIdBOOL, g_nStringIdSTRING };
 
-const TForteInt16 FORTE_TRIGGER_SERVICE_SERVER::scm_anEIWithIndexes[] = { 0, 4 };
-const TDataIOID FORTE_TRIGGER_SERVICE_SERVER::scm_anEIWith[] = { 0, 1, 2, scmWithListDelimiter, 0, 3, 4, scmWithListDelimiter };
-const CStringDictionary::TStringId FORTE_TRIGGER_SERVICE_SERVER::scm_anEventInputNames[] = { g_nStringIdINIT, g_nStringIdRSP };
+const TForteInt16 FORTE_TRIGGER_SERVICE_SERVER::scmEIWithIndexes[] = { 0, 4 };
+const TDataIOID FORTE_TRIGGER_SERVICE_SERVER::scmEIWith[] = { 0, 1, 2, scmWithListDelimiter, 0, 3, 4, scmWithListDelimiter };
+const CStringDictionary::TStringId FORTE_TRIGGER_SERVICE_SERVER::scmEventInputNames[] = { g_nStringIdINIT, g_nStringIdRSP };
 
-const TDataIOID FORTE_TRIGGER_SERVICE_SERVER::scm_anEOWith[] = { 0, 1, scmWithListDelimiter, 0, 1, scmWithListDelimiter };
-const TForteInt16 FORTE_TRIGGER_SERVICE_SERVER::scm_anEOWithIndexes[] = { 0, 3, -1 };
-const CStringDictionary::TStringId FORTE_TRIGGER_SERVICE_SERVER::scm_anEventOutputNames[] = { g_nStringIdINITO, g_nStringIdIND };
+const TDataIOID FORTE_TRIGGER_SERVICE_SERVER::scmEOWith[] = { 0, 1, scmWithListDelimiter, 0, 1, scmWithListDelimiter };
+const TForteInt16 FORTE_TRIGGER_SERVICE_SERVER::scmEOWithIndexes[] = { 0, 3, -1 };
+const CStringDictionary::TStringId FORTE_TRIGGER_SERVICE_SERVER::scmEventOutputNames[] = { g_nStringIdINITO, g_nStringIdIND };
 
-const SFBInterfaceSpec FORTE_TRIGGER_SERVICE_SERVER::scm_stFBInterfaceSpec = { 2, scm_anEventInputNames, scm_anEIWith, scm_anEIWithIndexes, 2, scm_anEventOutputNames, scm_anEOWith, scm_anEOWithIndexes, 5, scm_anDataInputNames, scm_anDataInputTypeIds, 2, scm_anDataOutputNames, scm_anDataOutputTypeIds, 0, 0 };
+const SFBInterfaceSpec FORTE_TRIGGER_SERVICE_SERVER::scmFBInterfaceSpec = { 2, scmEventInputNames, scmEIWith, scmEIWithIndexes, 2, scmEventOutputNames, scmEOWith, scmEOWithIndexes, 5, scmDataInputNames, scmDataInputTypeIds, 2, scmDataOutputNames, scmDataOutputTypeIds, 0, 0 };
 
-void FORTE_TRIGGER_SERVICE_SERVER::executeEvent(TEventID pa_nEIID){
-  switch (pa_nEIID){
-    case scm_nEventINITID:
+void FORTE_TRIGGER_SERVICE_SERVER::executeEvent(TEventID paEIID){
+  switch (paEIID){
+    case scmEventINITID:
       //initiate
       if(!m_Initiated && QI()){
 
@@ -64,17 +64,17 @@ void FORTE_TRIGGER_SERVICE_SERVER::executeEvent(TEventID pa_nEIID){
         STATUS() = "initiation or termination failed";
         QO() = false;
       }
-      sendOutputEvent(scm_nEventINITOID);
+      sendOutputEvent(scmEventINITOID);
       break;
 
-    case scm_nEventRSPID:
+    case scmEventRSPID:
       STATUS() = "Processing service request finished";
       m_ResponseAvailable = true;
       break;
 
-    case cg_nExternalEventID:
+    case cgExternalEventID:
       QO() = true;
-      sendOutputEvent(scm_nEventINDID);
+      sendOutputEvent(scmEventINDID);
       break;
   }
 }

@@ -13,9 +13,9 @@
 #include "../../core/devexec.h"
 #include <windows.h>
 
-CExternTimerHandler *CExternTimerHandler::sm_poFORTEExtTimer = 0;
+CExternTimerHandler *CExternTimerHandler::smFORTEExtTimer = 0;
 
-const TForteInt32 CExternTimerHandler::csm_nTicksPerSecond = 1000;
+const TForteInt32 CExternTimerHandler::csmTicksPerSecond = 1000;
 
 extern "C" __declspec(dllexport) 
 void __stdcall nextTick(void){
@@ -27,24 +27,24 @@ unsigned int __stdcall getTicksPerSecond(){
   return CExternTimerHandler::getExternTicksPerSecond();
 }
 
-CTimerHandler* CTimerHandler::createTimerHandler(CDeviceExecution& pa_poDeviceExecution){
-  if(!CExternTimerHandler::sm_poFORTEExtTimer){ //creating two timers is not possible
-    CExternTimerHandler::sm_poFORTEExtTimer = new CExternTimerHandler(pa_poDeviceExecution);
+CTimerHandler* CTimerHandler::createTimerHandler(CDeviceExecution& paDeviceExecution){
+  if(!CExternTimerHandler::smFORTEExtTimer){ //creating two timers is not possible
+    CExternTimerHandler::smFORTEExtTimer = new CExternTimerHandler(paDeviceExecution);
   }
-  return CExternTimerHandler::sm_poFORTEExtTimer;
+  return CExternTimerHandler::smFORTEExtTimer;
 }
 
-CExternTimerHandler::CExternTimerHandler(CDeviceExecution& pa_poDeviceExecution) : CTimerHandler(pa_poDeviceExecution)  {
+CExternTimerHandler::CExternTimerHandler(CDeviceExecution& paDeviceExecution) : CTimerHandler(paDeviceExecution)  {
 }
 
 CExternTimerHandler::~CExternTimerHandler(){
   disableHandler();
-  CExternTimerHandler::sm_poFORTEExtTimer = 0;
+  CExternTimerHandler::smFORTEExtTimer = 0;
 }
 
 void CExternTimerHandler::externNextTick(){
-  if(CExternTimerHandler::sm_poFORTEExtTimer){
-    CExternTimerHandler::sm_poFORTEExtTimer->nextTick();
+  if(CExternTimerHandler::smFORTEExtTimer){
+    CExternTimerHandler::smFORTEExtTimer->nextTick();
   }
 }
 
@@ -56,7 +56,7 @@ void CExternTimerHandler::disableHandler(){
   //TODO think on hwo to handle this.
 }
 
-void CExternTimerHandler::setPriority(int pa_nPriority){
+void CExternTimerHandler::setPriority(int paPriority){
   //TODO think on hwo to handle this.
 }
 

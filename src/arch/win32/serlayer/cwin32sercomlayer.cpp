@@ -30,7 +30,7 @@ forte::com_infra::EComResponse CWin32SerComLayer::recvData(const void *, unsigne
     if(0 < dwBytesRead){
       mBufFillSize = dwBytesRead;
       mInterruptResp = forte::com_infra::e_ProcessDataOk;
-      m_poFb->interruptCommFB(this);
+      mFb->interruptCommFB(this);
     }
     else{
       mInterruptResp = forte::com_infra::e_ProcessDataRecvFaild;
@@ -161,11 +161,11 @@ forte::com_infra::EComResponse CWin32SerComLayer::openSerialConnection(const SSe
     return forte::com_infra::e_ProcessDataNoSocket;
   }
 
-  switch (m_poFb->getComServiceType()){
+  switch (mFb->getComServiceType()){
     case forte::com_infra::e_Server:
     case forte::com_infra::e_Client:
       getExtEvHandler<CWin32SerComHandler>().registerSerComLayer(this);
-      m_eConnectionState = forte::com_infra::e_Connected;
+      mConnectionState = forte::com_infra::e_Connected;
       break;
       case forte::com_infra::e_Publisher:
       break;

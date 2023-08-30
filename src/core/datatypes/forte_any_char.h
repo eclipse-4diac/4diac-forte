@@ -23,9 +23,9 @@
  */
 class CIEC_ANY_CHAR : public CIEC_ANY_CHARS {
   public:
-    CIEC_ANY_CHAR(const CIEC_ANY_CHAR &pa_roVal) :
+    CIEC_ANY_CHAR(const CIEC_ANY_CHAR &paVal) :
         CIEC_ANY_CHARS() {
-      setLargestUInt(pa_roVal.getLargestUInt());
+      setLargestUInt(paVal.getLargestUInt());
     }
 
     ~CIEC_ANY_CHAR() override = default;
@@ -35,7 +35,7 @@ class CIEC_ANY_CHAR : public CIEC_ANY_CHARS {
     }
 
     // int toString(char* paValue, size_t paBufferSize) const override;
-    // int fromString(const char *pa_rsValue) override;
+    // int fromString(const char *paValue) override;
 
   protected:
     CIEC_ANY_CHAR() = default;

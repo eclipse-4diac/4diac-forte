@@ -30,36 +30,36 @@ class FORTE_GET_STRUCT_VALUE: public CFunctionBlock {
   DECLARE_FIRMWARE_FB(FORTE_GET_STRUCT_VALUE)
 
 private:
-  static const CStringDictionary::TStringId scm_anDataInputNames[];
-  static const CStringDictionary::TStringId scm_anDataInputTypeIds[];
+  static const CStringDictionary::TStringId scmDataInputNames[];
+  static const CStringDictionary::TStringId scmDataInputTypeIds[];
   
-  static const CStringDictionary::TStringId scm_anDataOutputNames[];
-  static const CStringDictionary::TStringId scm_anDataOutputTypeIds[];
+  static const CStringDictionary::TStringId scmDataOutputNames[];
+  static const CStringDictionary::TStringId scmDataOutputTypeIds[];
   
-  static const TEventID scm_nEventREQID = 0;
+  static const TEventID scmEventREQID = 0;
   
-  static const TDataIOID scm_anEIWith[];
-  static const TForteInt16 scm_anEIWithIndexes[];
-  static const CStringDictionary::TStringId scm_anEventInputNames[];
+  static const TDataIOID scmEIWith[];
+  static const TForteInt16 scmEIWithIndexes[];
+  static const CStringDictionary::TStringId scmEventInputNames[];
   
-  static const TEventID scm_nEventCNFID = 0;
+  static const TEventID scmEventCNFID = 0;
   
-  static const TDataIOID scm_anEOWith[]; 
-  static const TForteInt16 scm_anEOWithIndexes[];
-  static const CStringDictionary::TStringId scm_anEventOutputNames[];
+  static const TDataIOID scmEOWith[]; 
+  static const TForteInt16 scmEOWithIndexes[];
+  static const CStringDictionary::TStringId scmEventOutputNames[];
   
 
-  static const SFBInterfaceSpec scm_stFBInterfaceSpec;
+  static const SFBInterfaceSpec scmFBInterfaceSpec;
 
   CIEC_ANY *lookForMember(CIEC_STRUCT &paWhereToLook, char *paMemberName);
 
-  void executeEvent(TEventID pa_nEIID);
+  void executeEvent(TEventID paEIID);
 
-  void readInputData(TEventID pa_nEIID) override;
-  void writeOutputData(TEventID pa_nEIID) override;
+  void readInputData(TEventID paEIID) override;
+  void writeOutputData(TEventID paEIID) override;
 
 public:
-  FORTE_GET_STRUCT_VALUE(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes);
+  FORTE_GET_STRUCT_VALUE(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
 
   CIEC_ANY_VARIANT var_in_struct;
   CIEC_STRING var_member;
@@ -83,7 +83,7 @@ public:
   void evt_REQ(const CIEC_ANY &pa_in_struct, const CIEC_STRING &pa_member, CIEC_BOOL &pa_QO, CIEC_ANY &pa_output) {
     var_in_struct = pa_in_struct;
     var_member = pa_member;
-    receiveInputEvent(scm_nEventREQID, nullptr);
+    receiveInputEvent(scmEventREQID, nullptr);
     pa_QO = var_QO;
     pa_output.setValue(var_output.unwrap());
   }

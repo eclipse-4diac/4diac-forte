@@ -19,31 +19,31 @@
 
 DEFINE_FIRMWARE_FB(FORTE_POWERLINK_MN, g_nStringIdPOWERLINK_MN)
 
-const CStringDictionary::TStringId FORTE_POWERLINK_MN::scm_anDataInputNames[] = { g_nStringIdQI, g_nStringIdCDC_CFG, g_nStringIdAPP_CFG, g_nStringIdDEV_NAME };
+const CStringDictionary::TStringId FORTE_POWERLINK_MN::scmDataInputNames[] = { g_nStringIdQI, g_nStringIdCDC_CFG, g_nStringIdAPP_CFG, g_nStringIdDEV_NAME };
 
-const CStringDictionary::TStringId FORTE_POWERLINK_MN::scm_anDataInputTypeIds[] = { g_nStringIdBOOL, g_nStringIdSTRING, g_nStringIdSTRING, g_nStringIdSTRING };
+const CStringDictionary::TStringId FORTE_POWERLINK_MN::scmDataInputTypeIds[] = { g_nStringIdBOOL, g_nStringIdSTRING, g_nStringIdSTRING, g_nStringIdSTRING };
 
-const CStringDictionary::TStringId FORTE_POWERLINK_MN::scm_anDataOutputNames[] = { g_nStringIdQO, g_nStringIdSTATUS };
+const CStringDictionary::TStringId FORTE_POWERLINK_MN::scmDataOutputNames[] = { g_nStringIdQO, g_nStringIdSTATUS };
 
-const CStringDictionary::TStringId FORTE_POWERLINK_MN::scm_anDataOutputTypeIds[] = { g_nStringIdBOOL, g_nStringIdSTRING };
+const CStringDictionary::TStringId FORTE_POWERLINK_MN::scmDataOutputTypeIds[] = { g_nStringIdBOOL, g_nStringIdSTRING };
 
-const TForteInt16 FORTE_POWERLINK_MN::scm_anEIWithIndexes[] = { 0 };
-const TDataIOID FORTE_POWERLINK_MN::scm_anEIWith[] = { 0, 1, 2, 3, scmWithListDelimiter };
-const CStringDictionary::TStringId FORTE_POWERLINK_MN::scm_anEventInputNames[] = { g_nStringIdINIT };
+const TForteInt16 FORTE_POWERLINK_MN::scmEIWithIndexes[] = { 0 };
+const TDataIOID FORTE_POWERLINK_MN::scmEIWith[] = { 0, 1, 2, 3, scmWithListDelimiter };
+const CStringDictionary::TStringId FORTE_POWERLINK_MN::scmEventInputNames[] = { g_nStringIdINIT };
 
-const TDataIOID FORTE_POWERLINK_MN::scm_anEOWith[] = { 0, 1, scmWithListDelimiter };
-const TForteInt16 FORTE_POWERLINK_MN::scm_anEOWithIndexes[] = { 0, -1 };
-const CStringDictionary::TStringId FORTE_POWERLINK_MN::scm_anEventOutputNames[] = { g_nStringIdINITO };
+const TDataIOID FORTE_POWERLINK_MN::scmEOWith[] = { 0, 1, scmWithListDelimiter };
+const TForteInt16 FORTE_POWERLINK_MN::scmEOWithIndexes[] = { 0, -1 };
+const CStringDictionary::TStringId FORTE_POWERLINK_MN::scmEventOutputNames[] = { g_nStringIdINITO };
 
-const SFBInterfaceSpec FORTE_POWERLINK_MN::scm_stFBInterfaceSpec = { 1, scm_anEventInputNames, scm_anEIWith, scm_anEIWithIndexes, 1, scm_anEventOutputNames, scm_anEOWith, scm_anEOWithIndexes, 4, scm_anDataInputNames, scm_anDataInputTypeIds, 2, scm_anDataOutputNames, scm_anDataOutputTypeIds, 0, 0 };
+const SFBInterfaceSpec FORTE_POWERLINK_MN::scmFBInterfaceSpec = { 1, scmEventInputNames, scmEIWith, scmEIWithIndexes, 1, scmEventOutputNames, scmEOWith, scmEOWithIndexes, 4, scmDataInputNames, scmDataInputTypeIds, 2, scmDataOutputNames, scmDataOutputTypeIds, 0, 0 };
 
 FORTE_POWERLINK_MN::~FORTE_POWERLINK_MN(){
   shutdownStack();
 }
 
-void FORTE_POWERLINK_MN::executeEvent(TEventID pa_nEIID){
-  switch (pa_nEIID){
-    case scm_nEventINITID:
+void FORTE_POWERLINK_MN::executeEvent(TEventID paEIID){
+  switch (paEIID){
+    case scmEventINITID:
 
       if(QI() == true){
         QO() = QI();
@@ -61,7 +61,7 @@ void FORTE_POWERLINK_MN::executeEvent(TEventID pa_nEIID){
         shutdownStack();
       }
 
-      sendOutputEvent(scm_nEventINITOID);
+      sendOutputEvent(scmEventINITOID);
       break;
   }
 }

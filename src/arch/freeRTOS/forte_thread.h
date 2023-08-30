@@ -48,7 +48,7 @@ class CFreeRTOSThread : public forte::arch::CThreadBase<TaskHandle_t> {
     /*! \brief Constructor of the Thread class
      *
      *  Does all the necessary steps in order to get the thread running with the start()-method
-     *  @param pa_nStackSize the Size of the stack the thread is allowed to use. this class will
+     *  @param paStackSize the Size of the stack the thread is allowed to use. this class will
      *         allocate the stack size in bytes from the heap
      */
     explicit CFreeRTOSThread(long paStackSize = configMINIMAL_STACK_SIZE_FORTE);

@@ -1,6 +1,8 @@
 /*******************************************************************************
- * Copyright (c) 2011 ACIN
- *                      2018 Johannes Kepler University
+ * Copyright (c) 2011, 2023 ACIN
+ *                          Johannes Kepler University
+ *                          Martin Erich Jobst
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -11,6 +13,7 @@
  *   Alois Zoitl
  *     - initial API and implementation and/or initial documentation
  *    Alois Zoitl - introduced new CGenFB class for better handling generic FBs
+ *    Martin Jobst - add generic readInputData and writeOutputData
  *******************************************************************************/
 #ifndef _GEN_E_MUX_H_
 #define _GEN_E_MUX_H_
@@ -21,16 +24,18 @@ class GEN_E_MUX : public CGenFunctionBlock<CFunctionBlock>{
   DECLARE_GENERIC_FIRMWARE_FB(GEN_E_MUX)
 
   private:
-    static const CStringDictionary::TStringId scm_anDataOutputNames[], scm_aunDODataTypeIds[];
+    static const CStringDictionary::TStringId scmDataOutputNames[], scmDODataTypeIds[];
 
-    static const TEventID scm_nEventEOID = 0;
-    static const TForteInt16 scm_anEOWithIndexes[];
-    static const TDataIOID scm_anEOWith[];
-    static const CStringDictionary::TStringId scm_anEventOutputNames[];
+    static const TEventID scmEventEOID = 0;
+    static const CStringDictionary::TStringId scmEventOutputNames[];
 
-    CStringDictionary::TStringId *m_anEventInputNames;
+    CStringDictionary::TStringId *mEventInputNames;
 
     void executeEvent(TEventID paEIID) override;
+
+    void readInputData(TEventID paEI) override;
+    void writeOutputData(TEventID paEO) override;
+
     bool createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) override;
 
     CIEC_UINT& K(){

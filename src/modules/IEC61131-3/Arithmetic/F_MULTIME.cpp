@@ -24,33 +24,34 @@
 
 DEFINE_FIRMWARE_FB(FORTE_F_MULTIME, g_nStringIdF_MULTIME)
 
-const CStringDictionary::TStringId FORTE_F_MULTIME::scm_anDataInputNames[] = {g_nStringIdIN1, g_nStringIdIN2};
+const CStringDictionary::TStringId FORTE_F_MULTIME::scmDataInputNames[] = {g_nStringIdIN1, g_nStringIdIN2};
 
-const CStringDictionary::TStringId FORTE_F_MULTIME::scm_anDataInputTypeIds[] = {g_nStringIdTIME, g_nStringIdANY_NUM};
+const CStringDictionary::TStringId FORTE_F_MULTIME::scmDataInputTypeIds[] = {g_nStringIdTIME, g_nStringIdANY_NUM};
 
-const CStringDictionary::TStringId FORTE_F_MULTIME::scm_anDataOutputNames[] = {g_nStringIdOUT};
+const CStringDictionary::TStringId FORTE_F_MULTIME::scmDataOutputNames[] = {g_nStringIdOUT};
 
-const CStringDictionary::TStringId FORTE_F_MULTIME::scm_anDataOutputTypeIds[] = {g_nStringIdTIME};
+const CStringDictionary::TStringId FORTE_F_MULTIME::scmDataOutputTypeIds[] = {g_nStringIdTIME};
 
-const TDataIOID FORTE_F_MULTIME::scm_anEIWith[] = {0, 1, scmWithListDelimiter};
-const TForteInt16 FORTE_F_MULTIME::scm_anEIWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_F_MULTIME::scm_anEventInputNames[] = {g_nStringIdREQ};
+const TDataIOID FORTE_F_MULTIME::scmEIWith[] = {0, 1, scmWithListDelimiter};
+const TForteInt16 FORTE_F_MULTIME::scmEIWithIndexes[] = {0};
+const CStringDictionary::TStringId FORTE_F_MULTIME::scmEventInputNames[] = {g_nStringIdREQ};
 
-const TDataIOID FORTE_F_MULTIME::scm_anEOWith[] = {0, scmWithListDelimiter};
-const TForteInt16 FORTE_F_MULTIME::scm_anEOWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_F_MULTIME::scm_anEventOutputNames[] = {g_nStringIdCNF};
+const TDataIOID FORTE_F_MULTIME::scmEOWith[] = {0, scmWithListDelimiter};
+const TForteInt16 FORTE_F_MULTIME::scmEOWithIndexes[] = {0};
+const CStringDictionary::TStringId FORTE_F_MULTIME::scmEventOutputNames[] = {g_nStringIdCNF};
 
 
-const SFBInterfaceSpec FORTE_F_MULTIME::scm_stFBInterfaceSpec = {
-  1, scm_anEventInputNames, scm_anEIWith, scm_anEIWithIndexes,
-  1, scm_anEventOutputNames, scm_anEOWith, scm_anEOWithIndexes,
-  2, scm_anDataInputNames, scm_anDataInputTypeIds,
-  1, scm_anDataOutputNames, scm_anDataOutputTypeIds,
+const SFBInterfaceSpec FORTE_F_MULTIME::scmFBInterfaceSpec = {
+  1, scmEventInputNames, scmEIWith, scmEIWithIndexes,
+  1, scmEventOutputNames, scmEOWith, scmEOWithIndexes,
+  2, scmDataInputNames, scmDataInputTypeIds,
+  1, scmDataOutputNames, scmDataOutputTypeIds,
+  0, nullptr,
   0, nullptr
 };
 
-FORTE_F_MULTIME::FORTE_F_MULTIME(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes) :
-    CFunctionBlock( pa_poSrcRes, &scm_stFBInterfaceSpec, pa_nInstanceNameId),
+FORTE_F_MULTIME::FORTE_F_MULTIME(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) :
+    CFunctionBlock( paSrcRes, &scmFBInterfaceSpec, paInstanceNameId),
     var_IN1(CIEC_TIME(0)),
     var_IN2(CIEC_ANY_NUM_VARIANT()),
     var_OUT(CIEC_TIME(0)),
@@ -61,20 +62,20 @@ FORTE_F_MULTIME::FORTE_F_MULTIME(const CStringDictionary::TStringId pa_nInstance
     conn_OUT(this, 0, &var_conn_OUT) {
 };
 
-void FORTE_F_MULTIME::executeEvent(TEventID pa_nEIID) {
-  switch(pa_nEIID) {
-    case scm_nEventREQID:
+void FORTE_F_MULTIME::executeEvent(TEventID paEIID) {
+  switch(paEIID) {
+    case scmEventREQID:
       var_OUT = std::visit([this](auto&&paIN2) -> CIEC_TIME {
         return func_MUL_TIME(var_IN1, paIN2);
       }, var_IN2);
-      sendOutputEvent(scm_nEventCNFID);
+      sendOutputEvent(scmEventCNFID);
       break;
   }
 }
 
-void FORTE_F_MULTIME::readInputData(TEventID pa_nEIID) {
-  switch(pa_nEIID) {
-    case scm_nEventREQID: {
+void FORTE_F_MULTIME::readInputData(TEventID paEIID) {
+  switch(paEIID) {
+    case scmEventREQID: {
       RES_DATA_CON_CRITICAL_REGION();
       readData(0, var_IN1, conn_IN1);
       readData(1, var_IN2, conn_IN2);
@@ -85,9 +86,9 @@ void FORTE_F_MULTIME::readInputData(TEventID pa_nEIID) {
   }
 }
 
-void FORTE_F_MULTIME::writeOutputData(TEventID pa_nEIID) {
-  switch(pa_nEIID) {
-    case scm_nEventCNFID: {
+void FORTE_F_MULTIME::writeOutputData(TEventID paEIID) {
+  switch(paEIID) {
+    case scmEventCNFID: {
       RES_DATA_CON_CRITICAL_REGION();
       writeData(0, var_OUT, conn_OUT);
       break;

@@ -28,34 +28,35 @@
 
 DEFINE_FIRMWARE_FB(FORTE_WSTRING2WSTRING, g_nStringIdWSTRING2WSTRING)
 
-const CStringDictionary::TStringId FORTE_WSTRING2WSTRING::scm_anDataInputNames[] = {g_nStringIdIN};
+const CStringDictionary::TStringId FORTE_WSTRING2WSTRING::scmDataInputNames[] = {g_nStringIdIN};
 
-const CStringDictionary::TStringId FORTE_WSTRING2WSTRING::scm_anDataInputTypeIds[] = {g_nStringIdWSTRING};
+const CStringDictionary::TStringId FORTE_WSTRING2WSTRING::scmDataInputTypeIds[] = {g_nStringIdWSTRING};
 
-const CStringDictionary::TStringId FORTE_WSTRING2WSTRING::scm_anDataOutputNames[] = {g_nStringIdOUT};
+const CStringDictionary::TStringId FORTE_WSTRING2WSTRING::scmDataOutputNames[] = {g_nStringIdOUT};
 
-const CStringDictionary::TStringId FORTE_WSTRING2WSTRING::scm_anDataOutputTypeIds[] = {g_nStringIdWSTRING};
+const CStringDictionary::TStringId FORTE_WSTRING2WSTRING::scmDataOutputTypeIds[] = {g_nStringIdWSTRING};
 
-const TDataIOID FORTE_WSTRING2WSTRING::scm_anEIWith[] = {0, scmWithListDelimiter};
-const TForteInt16 FORTE_WSTRING2WSTRING::scm_anEIWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_WSTRING2WSTRING::scm_anEventInputNames[] = {g_nStringIdREQ};
+const TDataIOID FORTE_WSTRING2WSTRING::scmEIWith[] = {0, scmWithListDelimiter};
+const TForteInt16 FORTE_WSTRING2WSTRING::scmEIWithIndexes[] = {0};
+const CStringDictionary::TStringId FORTE_WSTRING2WSTRING::scmEventInputNames[] = {g_nStringIdREQ};
 
-const TDataIOID FORTE_WSTRING2WSTRING::scm_anEOWith[] = {0, scmWithListDelimiter};
-const TForteInt16 FORTE_WSTRING2WSTRING::scm_anEOWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_WSTRING2WSTRING::scm_anEventOutputNames[] = {g_nStringIdCNF};
+const TDataIOID FORTE_WSTRING2WSTRING::scmEOWith[] = {0, scmWithListDelimiter};
+const TForteInt16 FORTE_WSTRING2WSTRING::scmEOWithIndexes[] = {0};
+const CStringDictionary::TStringId FORTE_WSTRING2WSTRING::scmEventOutputNames[] = {g_nStringIdCNF};
 
 
-const SFBInterfaceSpec FORTE_WSTRING2WSTRING::scm_stFBInterfaceSpec = {
-  1, scm_anEventInputNames, scm_anEIWith, scm_anEIWithIndexes,
-  1, scm_anEventOutputNames, scm_anEOWith, scm_anEOWithIndexes,
-  1, scm_anDataInputNames, scm_anDataInputTypeIds,
-  1, scm_anDataOutputNames, scm_anDataOutputTypeIds,
+const SFBInterfaceSpec FORTE_WSTRING2WSTRING::scmFBInterfaceSpec = {
+  1, scmEventInputNames, scmEIWith, scmEIWithIndexes,
+  1, scmEventOutputNames, scmEOWith, scmEOWithIndexes,
+  1, scmDataInputNames, scmDataInputTypeIds,
+  1, scmDataOutputNames, scmDataOutputTypeIds,
+  0, nullptr,
   0, nullptr
 };
 
 
-FORTE_WSTRING2WSTRING::FORTE_WSTRING2WSTRING(CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes) :
-    CSimpleFB(pa_poSrcRes, &scm_stFBInterfaceSpec, pa_nInstanceNameId, nullptr),
+FORTE_WSTRING2WSTRING::FORTE_WSTRING2WSTRING(CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) :
+    CSimpleFB(paSrcRes, &scmFBInterfaceSpec, paInstanceNameId, nullptr),
     var_IN(CIEC_WSTRING("")),
     var_OUT(CIEC_WSTRING("")),
     var_conn_OUT(var_OUT),
@@ -70,20 +71,20 @@ void FORTE_WSTRING2WSTRING::alg_REQ(void) {
 }
 
 
-void FORTE_WSTRING2WSTRING::executeEvent(TEventID pa_nEIID){
-  switch(pa_nEIID) {
-    case scm_nEventREQID:
+void FORTE_WSTRING2WSTRING::executeEvent(TEventID paEIID){
+  switch(paEIID) {
+    case scmEventREQID:
       alg_REQ();
       break;
     default:
       break;
   }
-  sendOutputEvent(scm_nEventCNFID);
+  sendOutputEvent(scmEventCNFID);
 }
 
-void FORTE_WSTRING2WSTRING::readInputData(TEventID pa_nEIID) {
-  switch(pa_nEIID) {
-    case scm_nEventREQID: {
+void FORTE_WSTRING2WSTRING::readInputData(TEventID paEIID) {
+  switch(paEIID) {
+    case scmEventREQID: {
       RES_DATA_CON_CRITICAL_REGION();
       readData(0, var_IN, conn_IN);
       break;
@@ -93,9 +94,9 @@ void FORTE_WSTRING2WSTRING::readInputData(TEventID pa_nEIID) {
   }
 }
 
-void FORTE_WSTRING2WSTRING::writeOutputData(TEventID pa_nEIID) {
-  switch(pa_nEIID) {
-    case scm_nEventCNFID: {
+void FORTE_WSTRING2WSTRING::writeOutputData(TEventID paEIID) {
+  switch(paEIID) {
+    case scmEventCNFID: {
       RES_DATA_CON_CRITICAL_REGION();
       writeData(0, var_OUT, conn_OUT);
       break;

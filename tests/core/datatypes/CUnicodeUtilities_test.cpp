@@ -33,7 +33,7 @@ BOOST_AUTO_TEST_CASE(CUnicodeUtilities_parseEncode8)
 
   nRet = CUnicodeUtilities::parseUTF8Codepoint(cBOM, nValue);
   BOOST_CHECK_EQUAL(nRet, 3);
-  BOOST_CHECK_EQUAL(nValue, CUnicodeUtilities::scm_unBOMMarker);
+  BOOST_CHECK_EQUAL(nValue, CUnicodeUtilities::scmBOMMarker);
 
   nRet = CUnicodeUtilities::parseUTF8Codepoint(cASCII1, nValue);
   BOOST_CHECK_EQUAL(nRet, 1);
@@ -60,7 +60,7 @@ BOOST_AUTO_TEST_CASE(CUnicodeUtilities_parseEncode8)
   nRet = CUnicodeUtilities::parseUTF8Codepoint(cInvalid2, nValue);
   BOOST_CHECK_EQUAL(nRet, -1);
 
-  nRet = CUnicodeUtilities::encodeUTF8Codepoint(cBuffer, 3, CUnicodeUtilities::scm_unBOMMarker);
+  nRet = CUnicodeUtilities::encodeUTF8Codepoint(cBuffer, 3, CUnicodeUtilities::scmBOMMarker);
   BOOST_CHECK_EQUAL(nRet, 3);
   BOOST_CHECK(! memcmp(cBOM, cBuffer, 3));
 
@@ -130,16 +130,16 @@ BOOST_AUTO_TEST_CASE(CUnicodeUtilities_parseEncode16)
 
   nRet = CUnicodeUtilities::parseUTF16Codepoint(cBOMBE, nValue, false);
   BOOST_CHECK_EQUAL(nRet, 2);
-  BOOST_CHECK_EQUAL(nValue, CUnicodeUtilities::scm_unBOMMarker);
+  BOOST_CHECK_EQUAL(nValue, CUnicodeUtilities::scmBOMMarker);
   nRet = CUnicodeUtilities::parseUTF16Codepoint(cBOMLE, nValue, false);
   BOOST_CHECK_EQUAL(nRet, 2);
-  BOOST_CHECK_EQUAL(nValue, CUnicodeUtilities::scm_unBOMMarkerSwapped);
+  BOOST_CHECK_EQUAL(nValue, CUnicodeUtilities::scmBOMMarkerSwapped);
   nRet = CUnicodeUtilities::parseUTF16Codepoint(cBOMBE, nValue, true);
   BOOST_CHECK_EQUAL(nRet, 2);
-  BOOST_CHECK_EQUAL(nValue, CUnicodeUtilities::scm_unBOMMarkerSwapped);
+  BOOST_CHECK_EQUAL(nValue, CUnicodeUtilities::scmBOMMarkerSwapped);
   nRet = CUnicodeUtilities::parseUTF16Codepoint(cBOMLE, nValue, true);
   BOOST_CHECK_EQUAL(nRet, 2);
-  BOOST_CHECK_EQUAL(nValue, CUnicodeUtilities::scm_unBOMMarker);
+  BOOST_CHECK_EQUAL(nValue, CUnicodeUtilities::scmBOMMarker);
 
   nRet = CUnicodeUtilities::parseUTF16Codepoint(cTest1BE, nValue, false);
   BOOST_CHECK_EQUAL(nRet, 2);

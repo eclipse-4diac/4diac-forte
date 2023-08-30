@@ -20,6 +20,7 @@
 #include "fortelist.h"
 #include "mgmcmd.h"
 #include "stringdict.h"
+#include "connectiondestinationtype.h"
 #include <vector>
 
 //forward declaration of a few classes to reduce include file dependencies
@@ -31,18 +32,29 @@ class CConnectionPoint {
     TPortId mPortId;
 
     CConnectionPoint(CFunctionBlock *paFB, TPortId paPortId) :
-        mFB(paFB), mPortId(paPortId){
+      mFB(paFB), mPortId(paPortId), mDestinationType(EConnectionDestinationType::e_IN) {
+    }
+
+    CConnectionPoint(CFunctionBlock *paFB, TPortId paPortId, EConnectionDestinationType paDestinationType) :
+      mFB(paFB), mPortId(paPortId), mDestinationType(paDestinationType) {
     }
 
     CConnectionPoint() = default;
 
-    bool operator==(const CConnectionPoint & paRight) const{
-      return ((mFB == paRight.mFB) && (mPortId == paRight.mPortId));
+    bool operator==(const CConnectionPoint & paRight) const {
+      return ((mFB == paRight.mFB) && (mPortId == paRight.mPortId) && (getConnectionDestinationType() == paRight.getConnectionDestinationType()));
     }
 
-    bool operator!=(const CConnectionPoint & paRight) const{
+    bool operator!=(const CConnectionPoint & paRight) const {
       return !(*this == paRight);
     }
+
+    EConnectionDestinationType getConnectionDestinationType() const {
+      return mDestinationType;
+    }
+
+  private:
+    EConnectionDestinationType mDestinationType;
 };
 static_assert(std::is_trivial_v<CConnectionPoint>);
 
@@ -108,7 +120,7 @@ class CConnection{
       return mDestinationIds.empty();
     }
 
-    bool isConnected() const{
+    virtual bool isConnected() const{
       return !isEmpty();
     }
 

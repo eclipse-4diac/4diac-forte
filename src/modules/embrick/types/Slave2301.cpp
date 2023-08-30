@@ -20,41 +20,41 @@
 
 DEFINE_FIRMWARE_FB(EmbrickSlave2301, g_nStringIdEBSlave2301)
 
-const CStringDictionary::TStringId EmbrickSlave2301::scm_anDataInputNames[] = {
+const CStringDictionary::TStringId EmbrickSlave2301::scmDataInputNames[] = {
     g_nStringIdQI, g_nStringIdRelay_1, g_nStringIdRelay_2, g_nStringIdRelay_3,
     g_nStringIdRelay_4, g_nStringIdRelay_5, g_nStringIdRelay_6,
     g_nStringIdUpdateInterval };
 
-const CStringDictionary::TStringId EmbrickSlave2301::scm_anDataInputTypeIds[] =
+const CStringDictionary::TStringId EmbrickSlave2301::scmDataInputTypeIds[] =
     { g_nStringIdBOOL, g_nStringIdWSTRING, g_nStringIdWSTRING,
         g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING,
         g_nStringIdWSTRING, g_nStringIdUINT };
 
-const CStringDictionary::TStringId EmbrickSlave2301::scm_anDataOutputNames[] = {
+const CStringDictionary::TStringId EmbrickSlave2301::scmDataOutputNames[] = {
     g_nStringIdQO, g_nStringIdSTATUS };
 
-const CStringDictionary::TStringId EmbrickSlave2301::scm_anDataOutputTypeIds[] = {
+const CStringDictionary::TStringId EmbrickSlave2301::scmDataOutputTypeIds[] = {
     g_nStringIdBOOL, g_nStringIdWSTRING };
 
-const TForteInt16 EmbrickSlave2301::scm_anEIWithIndexes[] = { 0 };
-const TDataIOID EmbrickSlave2301::scm_anEIWith[] = { 1, 2, 3, 4, 5, 6, 0, scmWithListDelimiter };
-const CStringDictionary::TStringId EmbrickSlave2301::scm_anEventInputNames[] = {
+const TForteInt16 EmbrickSlave2301::scmEIWithIndexes[] = { 0 };
+const TDataIOID EmbrickSlave2301::scmEIWith[] = { 1, 2, 3, 4, 5, 6, 0, scmWithListDelimiter };
+const CStringDictionary::TStringId EmbrickSlave2301::scmEventInputNames[] = {
     g_nStringIdMAP };
 
-const TDataIOID EmbrickSlave2301::scm_anEOWith[] = { 0, scmWithListDelimiter, 0, 1, scmWithListDelimiter };
-const TForteInt16 EmbrickSlave2301::scm_anEOWithIndexes[] = { 0, 2, -1 };
-const CStringDictionary::TStringId EmbrickSlave2301::scm_anEventOutputNames[] = {
+const TDataIOID EmbrickSlave2301::scmEOWith[] = { 0, scmWithListDelimiter, 0, 1, scmWithListDelimiter };
+const TForteInt16 EmbrickSlave2301::scmEOWithIndexes[] = { 0, 2, -1 };
+const CStringDictionary::TStringId EmbrickSlave2301::scmEventOutputNames[] = {
     g_nStringIdMAPO, g_nStringIdIND };
 
-const SAdapterInstanceDef EmbrickSlave2301::scm_astAdapterInstances[] = { {
+const SAdapterInstanceDef EmbrickSlave2301::scmAdapterInstances[] = { {
     g_nStringIdEBBusAdapter, g_nStringIdBusAdapterOut, true }, {
     g_nStringIdEBBusAdapter, g_nStringIdBusAdapterIn, false } };
 
-const SFBInterfaceSpec EmbrickSlave2301::scm_stFBInterfaceSpec = { 1,
-    scm_anEventInputNames, scm_anEIWith, scm_anEIWithIndexes, 2,
-    scm_anEventOutputNames, scm_anEOWith, scm_anEOWithIndexes, 8,
-    scm_anDataInputNames, scm_anDataInputTypeIds, 2, scm_anDataOutputNames,
-    scm_anDataOutputTypeIds, 2, scm_astAdapterInstances };
+const SFBInterfaceSpec EmbrickSlave2301::scmFBInterfaceSpec = { 1,
+    scmEventInputNames, scmEIWith, scmEIWithIndexes, 2,
+    scmEventOutputNames, scmEOWith, scmEOWithIndexes, 8,
+    scmDataInputNames, scmDataInputTypeIds, 2, scmDataOutputNames,
+    scmDataOutputTypeIds, 2, scmAdapterInstances };
 
 const TForteUInt8 EmbrickSlave2301::scmSlaveConfigurationIO[] = { 7 };
 const TForteUInt8 EmbrickSlave2301::scmSlaveConfigurationIONum = 1;

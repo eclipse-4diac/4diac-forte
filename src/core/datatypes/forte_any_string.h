@@ -47,11 +47,11 @@ class CIEC_ANY_STRING : public CIEC_ANY_CHARS {
      */
 
     virtual char* getValue() {
-      return ((char *) ((nullptr != getGenData()) ? reinterpret_cast<char*>(getGenData() + 4) : sm_acNullString));
+      return ((char *) ((nullptr != getGenData()) ? reinterpret_cast<char*>(getGenData() + 4) : smNullString));
     }
 
     virtual const char *getValue() const {
-      return (const char *) ((nullptr != getGenData()) ? reinterpret_cast<const char*>(getGenData() + 4) : sm_acNullString);
+      return (const char *) ((nullptr != getGenData()) ? reinterpret_cast<const char*>(getGenData() + 4) : smNullString);
     }
 
     virtual TForteUInt16 length() const {
@@ -68,20 +68,20 @@ class CIEC_ANY_STRING : public CIEC_ANY_CHARS {
 
     /*! Assign arbitrary data (can contain '0x00')
      */
-    virtual void assign(const char *pa_poData, TForteUInt16 pa_nLen);
+    virtual void assign(const char *paData, TForteUInt16 paLen);
 
     /*! Append arbitrary data (can contain '0x00')
      */
-    virtual void append(const char *pa_poData, TForteUInt16 pa_nLen);
+    virtual void append(const char *paData, TForteUInt16 paLen);
 
     /*! Append data, cannot contain '0x00' as this is used to identify the end of the cstring
      */
-    virtual void append(const char *pa_poData);
+    virtual void append(const char *paData);
 
     /*! Try to reserve enough space to hold a string with given length.
      *  After this function the string will be at least of the size given.
      */
-    virtual void reserve(const TForteUInt16 pa_nRequestedSize);
+    virtual void reserve(const TForteUInt16 paRequestedSize);
 
     /*! Retrieve the current allocated size
      *
@@ -96,9 +96,9 @@ class CIEC_ANY_STRING : public CIEC_ANY_CHARS {
      *
      *   This command implements a conversion function from a WSTRING
      *   to a UTF-8 encoding, usable e.g. for the serialization.
-     *   \param pa_pacBuffer  Reference to the output buffer. If 0, only the needed size will be computed.
-     *   \param pa_nBufferSize  Size of the provided buffer.
-     *   \param pa_bEscape  Produce $-escapes and delimiter characters at the beginning and end
+     *   \param paBuffer  Reference to the output buffer. If 0, only the needed size will be computed.
+     *   \param paBufferSize  Size of the provided buffer.
+     *   \param paEscape  Produce $-escapes and delimiter characters at the beginning and end
      *   \return number of bytes used in the buffer
      *           -1 on error
      */
@@ -108,7 +108,7 @@ class CIEC_ANY_STRING : public CIEC_ANY_CHARS {
 #endif
 
   protected:
-    static char sm_acNullString[];
+    static char smNullString[];
 
     /*! \brief Determines the source length of a potentially escaped string
      *
@@ -119,16 +119,16 @@ class CIEC_ANY_STRING : public CIEC_ANY_CHARS {
      *   Note: the returned length can be > scmMaxStringLen, so even larger strings
      *   can be truncated and their end still be found
      *
-     *   \param pa_pacValue  Source string
-     *   @param pa_cDelimiter string delimiting character (i.e., ' for STRING, " for WSTRING)
+     *   \param paValue  Source string
+     *   @param paDelimiter string delimiting character (i.e., ' for STRING, " for WSTRING)
      *   \return length of the string, -1 if it starts with a delimiter but does not end with one
      */
-    static int determineEscapedStringLength(const char *pa_pacValue, char pa_cDelimiter);
+    static int determineEscapedStringLength(const char *paValue, char paDelimiter);
 
-    static bool handleDollarEscapedChar(const char **pa_pacValue, bool pa_bWide, TForteUInt16 &pa_rnValue);
+    static bool handleDollarEscapedChar(const char **paSymbol, bool paWide, TForteUInt16 &paValue);
     // Use null as destination for just determining the need of escaping
     static int dollarEscapeChar(char *paValue, char paSymbol, unsigned int paBufferSize, const EDataTypeID paTypeID);
-    static bool parseEscapedHexNum(const char **pa_pacValue, bool pa_bWide, TForteUInt16 &pa_rnValue);
+    static bool parseEscapedHexNum(const char **paSymbol, bool paWide, TForteUInt16 &paValue);
 
     /*! \brief Unescape the input string.
      *
@@ -140,17 +140,17 @@ class CIEC_ANY_STRING : public CIEC_ANY_CHARS {
      */
     int unescapeFromString(const char *paValue, char paDelimiter);
 
-    void setLength(TForteUInt16 pa_unVal){
+    void setLength(TForteUInt16 paVal){
       TForteByte *pBuf = getGenData();
       if(nullptr != pBuf){
-        *((TForteUInt16 *) (pBuf)) = pa_unVal;
+        *((TForteUInt16 *) (pBuf)) = paVal;
       }
     }
 
-    void setAllocatedLength(TForteUInt16 pa_unVal){
+    void setAllocatedLength(TForteUInt16 paVal){
       TForteByte *pBuf = getGenData();
       if(nullptr != pBuf){
-        *((TForteUInt16 *) (pBuf + 2)) = pa_unVal;
+        *((TForteUInt16 *) (pBuf + 2)) = paVal;
       }
     }
 

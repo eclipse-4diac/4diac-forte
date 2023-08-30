@@ -44,15 +44,15 @@ class CDevice : public CResource {
     /*! \brief Sets up all the necessary data and classes necessary for execution.
      *
      */
-    CDevice(const SFBInterfaceSpec *pa_pstInterfaceSpec, const CStringDictionary::TStringId pa_nInstanceNameId) :
-        CResource(pa_pstInterfaceSpec, pa_nInstanceNameId), mDeviceExecution(*this) {
+    CDevice(const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId) :
+        CResource(paInterfaceSpec, paInstanceNameId), mDeviceExecution(*this) {
     }
 
     ~CDevice() override = default;
 
 
     CStringDictionary::TStringId getFBTypeId() const override {
-      return CStringDictionary::scm_nInvalidStringId;
+      return CStringDictionary::scmInvalidStringId;
     }
 
 
@@ -70,9 +70,9 @@ class CDevice : public CResource {
 
     /*!\brief Execute the given management command
      *
-     * Evaluates the m_sDestination parameter of the command if empty this class tries to execute the management command if not
+     * Evaluates the mDestination parameter of the command if empty this class tries to execute the management command if not
      * the referenced resource is called for handling the command.
-     * \param pa_oCommand FORTE internal representation of the management command
+     * \param paCommand FORTE internal representation of the management command
      * \return response of the MGMCommand execution as defined in IEC 61499
      */
     EMGMResponse executeMGMCommand(forte::core::SManagementCMD &paCommand) override;

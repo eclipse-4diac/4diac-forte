@@ -1,6 +1,8 @@
 /*******************************************************************************
- * Copyright (c) 2006-2014 ACIN, Profactor GmbH, fortiss GmbH
- *                      2018 Johannes Kepler University
+ * Copyright (c) 2006, 2023 ACIN, Profactor GmbH, fortiss GmbH
+ *                          Johannes Kepler University
+ *                          Martin Erich Jobst
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -12,6 +14,7 @@
  *    Patrick Smejkal
  *      - initial implementation and rework communication infrastructure
  *    Alois Zoitl - introduced new CGenFB class for better handling generic FBs
+ *    Martin Jobst - add generic readInputData and writeOutputData
  *******************************************************************************/
 #include <fortenew.h>
 #include <string.h>
@@ -24,27 +27,25 @@
 #include "../resource.h"
 #include "comlayer.h"
 #include "comlayersmanager.h"
+#include "criticalregion.h"
 
 using namespace forte::com_infra;
 
-const CStringDictionary::TStringId CCommFB::scm_aunRequesterEventInputNameIds[2] = { g_nStringIdINIT, g_nStringIdREQ };
-const CStringDictionary::TStringId CCommFB::scm_aunRequesterEventOutputNameIds[2] = { g_nStringIdINITO, g_nStringIdCNF };
+const CStringDictionary::TStringId CCommFB::scmRequesterEventInputNameIds[2] = { g_nStringIdINIT, g_nStringIdREQ };
+const CStringDictionary::TStringId CCommFB::scmRequesterEventOutputNameIds[2] = { g_nStringIdINITO, g_nStringIdCNF };
 
-const CStringDictionary::TStringId CCommFB::scm_aunResponderEventInputNameIds[2] = { g_nStringIdINIT, g_nStringIdRSP };
-const CStringDictionary::TStringId CCommFB::scm_aunResponderEventOutputNameIds[2] = { g_nStringIdINITO, g_nStringIdIND };
+const CStringDictionary::TStringId CCommFB::scmResponderEventInputNameIds[2] = { g_nStringIdINIT, g_nStringIdRSP };
+const CStringDictionary::TStringId CCommFB::scmResponderEventOutputNameIds[2] = { g_nStringIdINITO, g_nStringIdIND };
 
-const TForteInt16 CCommFB::scm_anEIWithIndexes[] = { 0, 3 };
-const TForteInt16 CCommFB::scm_anEOWithIndexes[] = { 0, 3, -1 };
-
-CCommFB::CCommFB(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes, forte::com_infra::EComServiceType pa_eCommServiceType) :
-  CBaseCommFB(pa_nInstanceNameId, pa_poSrcRes, pa_eCommServiceType) {
+CCommFB::CCommFB(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes, forte::com_infra::EComServiceType paCommServiceType) :
+  CBaseCommFB(paInstanceNameId, paSrcRes, paCommServiceType) {
 }
 
 CCommFB::~CCommFB() = default;
 
-EMGMResponse CCommFB::changeFBExecutionState(EMGMCommandType pa_unCommand) {
-  EMGMResponse retVal = CEventSourceFB::changeFBExecutionState(pa_unCommand);
-  if ((EMGMResponse::Ready == retVal) && (EMGMCommandType::Kill == pa_unCommand)) {
+EMGMResponse CCommFB::changeFBExecutionState(EMGMCommandType paCommand) {
+  EMGMResponse retVal = CEventSourceFB::changeFBExecutionState(paCommand);
+  if ((EMGMResponse::Ready == retVal) && (EMGMCommandType::Kill == paCommand)) {
     //when we are killed we'll close the connection so that it can safely be opened again after an reset
     closeConnection();
   }
@@ -55,7 +56,7 @@ void CCommFB::executeEvent(TEventID paEIID) {
   EComResponse resp = e_Nothing;
 
   switch (paEIID) {
-  case scm_nEventINITID:
+  case scmEventINITID:
     if (true == QI()) {
       resp = openConnection();
     }
@@ -64,10 +65,10 @@ void CCommFB::executeEvent(TEventID paEIID) {
       resp = e_InitTerminated;
     }
     break;
-  case scm_nSendNotificationEventID:
+  case scmSendNotificationEventID:
     resp = sendData();
     break;
-  case cg_nExternalEventID:
+  case cgExternalEventID:
     resp = receiveData();
     break;
   default:
@@ -75,7 +76,7 @@ void CCommFB::executeEvent(TEventID paEIID) {
   }
 
   if(resp & e_Terminated) {
-    if(m_eCommServiceType == e_Server && scm_nEventINITID != paEIID) { //if e_Terminated happened in INIT event, server shouldn't be silent
+    if(mCommServiceType == e_Server && scmEventINITID != paEIID) { //if e_Terminated happened in INIT event, server shouldn't be silent
       //servers will not send information on client termination and should silently start to listen again
       resp = e_Nothing;
     } else {
@@ -85,25 +86,65 @@ void CCommFB::executeEvent(TEventID paEIID) {
   }
 
   if (e_Nothing != resp) {
-    STATUS() = CIEC_WSTRING(scm_sResponseTexts[resp & 0xF]);
+    STATUS() = CIEC_WSTRING(scmResponseTexts[resp & 0xF]);
     QO() = CIEC_BOOL(!(resp & scg_unComNegative));
 
     if (scg_unINIT & resp) {
-      sendOutputEvent(scm_nEventINITOID);
+      sendOutputEvent(scmEventINITOID);
     }
     else {
-      sendOutputEvent(scm_nReceiveNotificationEventID);
+      sendOutputEvent(scmReceiveNotificationEventID);
     }
+  }
+}
+
+void CCommFB::readInputData(TEventID paEI) {
+  switch(paEI) {
+    case scmEventINITID: {
+      RES_DATA_CON_CRITICAL_REGION();
+      readData(0, *mDIs[0], mDIConns[0]);
+      readData(1, *mDIs[1], mDIConns[1]);
+      break;
+    }
+    case scmSendNotificationEventID: {
+      RES_DATA_CON_CRITICAL_REGION();
+      for(TPortId i = 0; i < mInterfaceSpec->mNumDIs; ++i) {
+        readData(i, *mDIs[i], mDIConns[i]);
+      }
+      break;
+    }
+    default:
+      break;
+  }
+}
+
+void CCommFB::writeOutputData(TEventID paEO) {
+  switch(paEO) {
+    case scmEventINITOID: {
+      RES_DATA_CON_CRITICAL_REGION();
+      writeData(0, *mDOs[0], mDOConns[0]);
+      writeData(1, *mDOs[1], mDOConns[1]);
+      break;
+    }
+    case scmReceiveNotificationEventID: {
+      RES_DATA_CON_CRITICAL_REGION();
+      for(TPortId i = 0; i < mInterfaceSpec->mNumDOs; ++i) {
+        writeData(i, *mDOs[i], mDOConns[i]);
+      }
+      break;
+    }
+    default:
+      break;
   }
 }
 
 EComResponse CCommFB::sendData() {
   EComResponse resp = e_Nothing;
   if (true == QI()) {
-    if (m_eCommServiceType != e_Subscriber) {
-      if (nullptr != m_poTopOfComStack) {
-        resp = m_poTopOfComStack->sendData(static_cast<void*>(getSDs()), static_cast<unsigned int>(mInterfaceSpec->m_nNumDIs - 2));
-        if ((resp == e_ProcessDataOk) && (m_eCommServiceType != e_Publisher)) {
+    if (mCommServiceType != e_Subscriber) {
+      if (nullptr != mTopOfComStack) {
+        resp = mTopOfComStack->sendData(static_cast<void*>(getSDs()), static_cast<unsigned int>(mInterfaceSpec->mNumDIs - 2));
+        if ((resp == e_ProcessDataOk) && (mCommServiceType != e_Publisher)) {
           // client and server will not directly send a cnf/ind event
           resp = e_Nothing;
         }
@@ -124,11 +165,11 @@ bool CCommFB::createInterfaceSpec(const char* paConfigString, SFBInterfaceSpec& 
   const char *sParamA = nullptr;
   const char *sParamB = nullptr;
 
-  paInterfaceSpec.m_nNumEIs = 2;
-  paInterfaceSpec.m_nNumEOs = 2;
+  paInterfaceSpec.mNumEIs = 2;
+  paInterfaceSpec.mNumEOs = 2;
 
-  memcpy(tempstring, paConfigString, (strlen(paConfigString) > cg_nIdentifierLength) ? cg_nIdentifierLength : strlen(paConfigString) + 1); //plus 1 for the null character
-  tempstring[cg_nIdentifierLength] = '\0';
+  memcpy(tempstring, paConfigString, (strlen(paConfigString) > cgIdentifierLength) ? cgIdentifierLength : strlen(paConfigString) + 1); //plus 1 for the null character
+  tempstring[cgIdentifierLength] = '\0';
 
   size_t inlength = strlen(tempstring);
 
@@ -155,18 +196,16 @@ bool CCommFB::createInterfaceSpec(const char* paConfigString, SFBInterfaceSpec& 
   configureDIs(sParamA, paInterfaceSpec);
   configureDOs(sParamB, paInterfaceSpec);
 
-  if (forte::com_infra::e_Requester == (forte::com_infra::e_Requester & m_eCommServiceType)) {
-    paInterfaceSpec.m_aunEINames = scm_aunRequesterEventInputNameIds;
-    paInterfaceSpec.m_aunEONames = scm_aunRequesterEventOutputNameIds;
+  if (forte::com_infra::e_Requester == (forte::com_infra::e_Requester & mCommServiceType)) {
+    paInterfaceSpec.mEINames = scmRequesterEventInputNameIds;
+    paInterfaceSpec.mEONames = scmRequesterEventOutputNameIds;
   }
   else {
-    if (forte::com_infra::e_Responder == (forte::com_infra::e_Responder & m_eCommServiceType)) {
-      paInterfaceSpec.m_aunEINames = scm_aunResponderEventInputNameIds;
-      paInterfaceSpec.m_aunEONames = scm_aunResponderEventOutputNameIds;
+    if (forte::com_infra::e_Responder == (forte::com_infra::e_Responder & mCommServiceType)) {
+      paInterfaceSpec.mEINames = scmResponderEventInputNameIds;
+      paInterfaceSpec.mEONames = scmResponderEventOutputNameIds;
     }
   }
-  paInterfaceSpec.m_anEIWithIndexes = scm_anEIWithIndexes;
-  paInterfaceSpec.m_anEOWithIndexes = scm_anEOWithIndexes;
 
   return true;
 }
@@ -174,40 +213,24 @@ bool CCommFB::createInterfaceSpec(const char* paConfigString, SFBInterfaceSpec& 
 void CCommFB::configureDIs(const char* paDIConfigString, SFBInterfaceSpec& paInterfaceSpec) const {
   CStringDictionary::TStringId* diDataTypeNames;
   CStringDictionary::TStringId* diNames;
-  TDataIOID* eiWith;
 
-  paInterfaceSpec.m_nNumDIs = 2;
+  paInterfaceSpec.mNumDIs = 2;
 
-  if (forte::com_infra::e_DataInputs == (forte::com_infra::e_DataInputs & m_eCommServiceType)) {
+  if (forte::com_infra::e_DataInputs == (forte::com_infra::e_DataInputs & mCommServiceType)) {
       //TODO: Check range of sParamA
-      paInterfaceSpec.m_nNumDIs = paInterfaceSpec.m_nNumDIs +
+      paInterfaceSpec.mNumDIs = paInterfaceSpec.mNumDIs +
                                   static_cast<TPortId>(forte::core::util::strtol(paDIConfigString, nullptr, 10));
-      diDataTypeNames = new CStringDictionary::TStringId[paInterfaceSpec.m_nNumDIs];
-      diNames = new CStringDictionary::TStringId[paInterfaceSpec.m_nNumDIs];
-      eiWith = new TDataIOID[paInterfaceSpec.m_nNumDIs - 2 + scmMinWithLength];
+      diDataTypeNames = new CStringDictionary::TStringId[paInterfaceSpec.mNumDIs];
+      diNames = new CStringDictionary::TStringId[paInterfaceSpec.mNumDIs];
 
-      generateGenericDataPointArrays("SD_", &(diDataTypeNames[2]), &(diNames[2]), paInterfaceSpec.m_nNumDIs - 2);
+      generateGenericDataPointArrays("SD_", &(diDataTypeNames[2]), &(diNames[2]), paInterfaceSpec.mNumDIs - 2);
     }
     else {
-      diDataTypeNames = new CStringDictionary::TStringId[paInterfaceSpec.m_nNumDIs];
-      diNames = new CStringDictionary::TStringId[paInterfaceSpec.m_nNumDIs];
-      eiWith = new TDataIOID[scmMinWithLength];
+      diDataTypeNames = new CStringDictionary::TStringId[paInterfaceSpec.mNumDIs];
+      diNames = new CStringDictionary::TStringId[paInterfaceSpec.mNumDIs];
     }
-    paInterfaceSpec.m_aunDIDataTypeNames = diDataTypeNames;
-    paInterfaceSpec.m_aunDINames = diNames;
-    paInterfaceSpec.m_anEIWith = eiWith;
-
-    eiWith[0] = 0;
-    eiWith[1] = 1;
-    eiWith[2] = scmWithListDelimiter;
-    eiWith[3] = 0;
-    eiWith[4] = 1;
-
-    TPortId i;
-    for (i = 0; i < paInterfaceSpec.m_nNumDIs - 2U; i++) {
-      eiWith[i + 5U] = i + 2U;
-    }
-    eiWith[i + 5U] = scmWithListDelimiter;
+    paInterfaceSpec.mDIDataTypeNames = diDataTypeNames;
+    paInterfaceSpec.mDINames = diNames;
 
     diDataTypeNames[0] = g_nStringIdBOOL;
     diNames[0] = g_nStringIdQI;
@@ -222,41 +245,25 @@ void CCommFB::configureDIs(const char* paDIConfigString, SFBInterfaceSpec& paInt
 void CCommFB::configureDOs(const char* paDOConfigString, SFBInterfaceSpec& paInterfaceSpec) const {
   CStringDictionary::TStringId* doDataTypeNames;
   CStringDictionary::TStringId* doNames;
-  TDataIOID* eoWith;
 
-  paInterfaceSpec.m_nNumDOs = 2;
+  paInterfaceSpec.mNumDOs = 2;
 
-  if(forte::com_infra::e_DataOutputs == (forte::com_infra::e_DataOutputs & m_eCommServiceType)){
+  if(forte::com_infra::e_DataOutputs == (forte::com_infra::e_DataOutputs & mCommServiceType)){
     //TODO: Check range of sParamA
-    paInterfaceSpec.m_nNumDOs = paInterfaceSpec.m_nNumDOs +
+    paInterfaceSpec.mNumDOs = paInterfaceSpec.mNumDOs +
                                 static_cast<TPortId>(forte::core::util::strtol(paDOConfigString, nullptr, 10));
-    doDataTypeNames  = new CStringDictionary::TStringId[paInterfaceSpec.m_nNumDOs];
-    doNames = new CStringDictionary::TStringId[paInterfaceSpec.m_nNumDOs];
-    eoWith = new TDataIOID[paInterfaceSpec.m_nNumDOs - 2 + scmMinWithLength];
+    doDataTypeNames  = new CStringDictionary::TStringId[paInterfaceSpec.mNumDOs];
+    doNames = new CStringDictionary::TStringId[paInterfaceSpec.mNumDOs];
 
-    generateGenericDataPointArrays("RD_", &(doDataTypeNames[2]), &(doNames[2]), paInterfaceSpec.m_nNumDOs - 2);
+    generateGenericDataPointArrays("RD_", &(doDataTypeNames[2]), &(doNames[2]), paInterfaceSpec.mNumDOs - 2);
   }
   else{
-    doDataTypeNames = new CStringDictionary::TStringId[paInterfaceSpec.m_nNumDOs];
-    doNames = new CStringDictionary::TStringId[paInterfaceSpec.m_nNumDOs];
-    eoWith = new TDataIOID[scmMinWithLength];
+    doDataTypeNames = new CStringDictionary::TStringId[paInterfaceSpec.mNumDOs];
+    doNames = new CStringDictionary::TStringId[paInterfaceSpec.mNumDOs];
   }
 
-  paInterfaceSpec.m_aunDONames = doNames;
-  paInterfaceSpec.m_aunDODataTypeNames = doDataTypeNames;
-  paInterfaceSpec.m_anEOWith = eoWith;
-
-  eoWith[0] = 0;
-  eoWith[1] = 1;
-  eoWith[2] = scmWithListDelimiter;
-  eoWith[3] = 0;
-  eoWith[4] = 1;
-
-  TPortId i;
-  for(i = 0; i < paInterfaceSpec.m_nNumDOs - 2U; i++){
-    eoWith[i + 5U] = i + 2U;
-  }
-  eoWith[i + 5U] = scmWithListDelimiter;
+  paInterfaceSpec.mDONames = doNames;
+  paInterfaceSpec.mDODataTypeNames = doDataTypeNames;
 
   doDataTypeNames[0] = g_nStringIdBOOL;
   doNames[0] = g_nStringIdQO;
@@ -273,21 +280,21 @@ EComResponse CCommFB::receiveData() {
   EComResponse eResp;
   EComResponse eRetVal = e_Nothing;
 
-  const unsigned int comInterruptQueueCountCopy = m_unComInterruptQueueCount;
+  const unsigned int comInterruptQueueCountCopy = mComInterruptQueueCount;
   for (size_t i = 0; i < comInterruptQueueCountCopy; ++i) {
-    if(m_apoInterruptQueue[i] == nullptr) {
+    if(mInterruptQueue[i] == nullptr) {
       DEVLOG_ERROR("Attempt to process nullptr in CommFB::receiveData");
       eResp = e_Nothing;
     } else {
-      eResp = m_apoInterruptQueue[i]->processInterrupt();
+      eResp = mInterruptQueue[i]->processInterrupt();
     }
     if (eResp > eRetVal) {
       eRetVal = eResp;
     }
   }
-  m_unComInterruptQueueCount -= comInterruptQueueCountCopy;
-  for (unsigned int i = 0; i < m_unComInterruptQueueCount; ++i) {
-    m_apoInterruptQueue[i] = m_apoInterruptQueue[i + comInterruptQueueCountCopy];
+  mComInterruptQueueCount -= comInterruptQueueCountCopy;
+  for (unsigned int i = 0; i < mComInterruptQueueCount; ++i) {
+    mInterruptQueue[i] = mInterruptQueue[i + comInterruptQueueCountCopy];
   }
 
   return eRetVal;

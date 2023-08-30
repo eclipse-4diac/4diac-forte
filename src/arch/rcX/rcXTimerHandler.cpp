@@ -15,12 +15,12 @@
 #include "../devlog.h"
 
 
-CTimerHandler* CTimerHandler::createTimerHandler(CDeviceExecution& pa_poDeviceExecution){
-  return new CrcXTimerHandler(pa_poDeviceExecution);
+CTimerHandler* CTimerHandler::createTimerHandler(CDeviceExecution& paDeviceExecution){
+  return new CrcXTimerHandler(paDeviceExecution);
 }
 
 
-CrcXTimerHandler::CrcXTimerHandler(CDeviceExecution& pa_poDeviceExecution) : CTimerHandler(pa_poDeviceExecution),
+CrcXTimerHandler::CrcXTimerHandler(CDeviceExecution& paDeviceExecution) : CTimerHandler(paDeviceExecution),
   mTimer(0), mFirstTime(true){
   mTimer = forte_malloc(RX_TIMER_SIZE);
   if(0 == mTimer){

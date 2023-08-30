@@ -35,10 +35,10 @@ BOOST_AUTO_TEST_CASE(Literal_test)
   BOOST_TEST(static_cast<CIEC_LINT::TValueType>(test1) == 0);
 
   CIEC_LINT test2 = 9223372036854775807_LINT;
-  BOOST_TEST(static_cast<CIEC_LINT::TValueType>(test2) == CIEC_LINT::scm_nMaxVal);
+  BOOST_TEST(static_cast<CIEC_LINT::TValueType>(test2) == CIEC_LINT::scmMaxVal);
 
   CIEC_LINT test3 = -9223372036854775808_LINT;
-  BOOST_TEST(static_cast<CIEC_LINT::TValueType>(test3) == CIEC_LINT::scm_nMinVal);
+  BOOST_TEST(static_cast<CIEC_LINT::TValueType>(test3) == CIEC_LINT::scmMinVal);
 }
 
 BOOST_AUTO_TEST_CASE(Assignment_test)
@@ -49,10 +49,10 @@ BOOST_AUTO_TEST_CASE(Assignment_test)
   //initial value must be 0
   BOOST_CHECK_EQUAL(static_cast<CIEC_LINT::TValueType>(nTest1), 0);
 
-  nTest1 = CIEC_LINT(CIEC_LINT::scm_nMinVal);
+  nTest1 = CIEC_LINT(CIEC_LINT::scmMinVal);
   nTest2 = nTest1;
-  BOOST_CHECK_EQUAL(static_cast<CIEC_LINT::TValueType>(nTest1), CIEC_LINT::scm_nMinVal);
-  BOOST_CHECK_EQUAL(static_cast<CIEC_LINT::TValueType>(nTest2), CIEC_LINT::scm_nMinVal);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_LINT::TValueType>(nTest1), CIEC_LINT::scmMinVal);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_LINT::TValueType>(nTest2), CIEC_LINT::scmMinVal);
 
   nTest1 = CIEC_LINT(-56921482365875466LL);
   nTest2 = nTest1;
@@ -97,8 +97,8 @@ BOOST_AUTO_TEST_CASE(Conversion_test)
   nTest = CIEC_LINT(-68734876324LL);
   BOOST_CHECK_EQUAL(nTest.operator TForteInt64(), -68734876324LL);
 
-  nTest = CIEC_LINT(CIEC_LINT::scm_nMinVal);
-  BOOST_CHECK_EQUAL(nTest.operator TForteInt64(), CIEC_LINT::scm_nMinVal);
+  nTest = CIEC_LINT(CIEC_LINT::scmMinVal);
+  BOOST_CHECK_EQUAL(nTest.operator TForteInt64(), CIEC_LINT::scmMinVal);
 
   nTest = CIEC_LINT(8462382567LL);
   BOOST_CHECK_EQUAL(nTest.operator TForteInt64(), 8462382567LL);
@@ -110,7 +110,7 @@ BOOST_AUTO_TEST_CASE(Conversion_test)
   strcpy(cBuffer, "");
 
   BOOST_CHECK_EQUAL(nTest.fromString("-9223372036854775808"), 20);
-  BOOST_CHECK_EQUAL(static_cast<CIEC_LINT::TValueType>(nTest), CIEC_LINT::scm_nMinVal);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_LINT::TValueType>(nTest), CIEC_LINT::scmMinVal);
   BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 21), 20);
   BOOST_CHECK_EQUAL(strcmp(cBuffer, "-9223372036854775808"), 0);
   BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
@@ -118,7 +118,7 @@ BOOST_AUTO_TEST_CASE(Conversion_test)
   nTest = CIEC_LINT(0);
 
   BOOST_CHECK_EQUAL(nTest.fromString("2#1000000000000000000000000000000000000000000000000000000000000000"), 66);
-  BOOST_CHECK_EQUAL(static_cast<CIEC_LINT::TValueType>(nTest), CIEC_LINT::scm_nMinVal);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_LINT::TValueType>(nTest), CIEC_LINT::scmMinVal);
   BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 21), 20);
   BOOST_CHECK_EQUAL(strcmp(cBuffer, "-9223372036854775808"), 0);
   BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
@@ -126,7 +126,7 @@ BOOST_AUTO_TEST_CASE(Conversion_test)
   nTest = CIEC_LINT(0);
 
   BOOST_CHECK_EQUAL(nTest.fromString("8#1000000000000000000000"), 24);
-  BOOST_CHECK_EQUAL(static_cast<CIEC_LINT::TValueType>(nTest), CIEC_LINT::scm_nMinVal);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_LINT::TValueType>(nTest), CIEC_LINT::scmMinVal);
   BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 21), 20);
   BOOST_CHECK_EQUAL(strcmp(cBuffer, "-9223372036854775808"), 0);
   BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
@@ -134,7 +134,7 @@ BOOST_AUTO_TEST_CASE(Conversion_test)
   nTest = CIEC_LINT(0);
 
   BOOST_CHECK_EQUAL(nTest.fromString("16#8000000000000000"), 19);
-  BOOST_CHECK_EQUAL(static_cast<CIEC_LINT::TValueType>(nTest), CIEC_LINT::scm_nMinVal);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_LINT::TValueType>(nTest), CIEC_LINT::scmMinVal);
   BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 21), 20);
   BOOST_CHECK_EQUAL(strcmp(cBuffer, "-9223372036854775808"), 0);
   BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);

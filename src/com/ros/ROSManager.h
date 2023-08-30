@@ -29,7 +29,7 @@ class CROSManager : public CExternalEventHandler, private CThread{
     void setPriority(int pa_prio) override;
     int getPriority() const override;
 
-    void startChain(CEventSourceFB *pa_poECStartF);
+    void startChain(CEventSourceFB *paECStartF);
     std::string ciecStringToStdString(const CIEC_STRING &pa_DataInput);
     CIEC_STRING stdStringToCiecString(const std::string &pa_inputString);
 

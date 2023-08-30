@@ -10,65 +10,97 @@
  *   Alois Zoitl, Gerhard Ebenhofer
  *    - initial API and implementation and/or initial documentation
  *******************************************************************************/
-#ifndef _RT_E_MERGE_H_
-#define _RT_E_MERGE_H_
+
+#pragma once
+
+#include "funcbloc.h"
+#include "forte_bool.h"
+#include "forte_time.h"
+#include "iec61131_functions.h"
+#include "forte_array_common.h"
+#include "forte_array.h"
+#include "forte_array_fixed.h"
+#include "forte_array_variable.h"
 
 #include "rtesingle.h"
 
-class FORTE_RT_E_MERGE: public CRTEventSingle{
+class FORTE_RT_E_MERGE final : public CRTEventSingle {
   DECLARE_FIRMWARE_FB(FORTE_RT_E_MERGE)
 
 private:
-  static const CStringDictionary::TStringId scm_anDataInputNames[];
-  static const CStringDictionary::TStringId scm_anDataInputTypeIds[];
-  CIEC_BOOL &QI() override {
-    return *static_cast<CIEC_BOOL*>(getDI(0));
-  };
+  static const CStringDictionary::TStringId scmDataInputNames[];
+  static const CStringDictionary::TStringId scmDataInputTypeIds[];
+  static const CStringDictionary::TStringId scmDataOutputNames[];
+  static const CStringDictionary::TStringId scmDataOutputTypeIds[];
+  static const TEventID scmEventINITID = 0;
+  static const TEventID scmEventEI1ID = 1;
+  static const TEventID scmEventEI2ID = 2;
+  static const TDataIOID scmEIWith[];
+  static const TForteInt16 scmEIWithIndexes[];
+  static const CStringDictionary::TStringId scmEventInputNames[];
+  static const TEventID scmEventINITOID = 0;
+  static const TEventID scmEventEOID = 1;
+  static const TDataIOID scmEOWith[];
+  static const TForteInt16 scmEOWithIndexes[];
+  static const CStringDictionary::TStringId scmEventOutputNames[];
 
-  CIEC_TIME &Tmin() {
-    return *static_cast<CIEC_TIME*>(getDI(1));
-  };
+  static const SFBInterfaceSpec scmFBInterfaceSpec;
 
-  CIEC_TIME &Deadline() override {
-    return *static_cast<CIEC_TIME*>(getDI(2));
-  };
+  bool checkActivation(TEventID) override { return true; } //we activate on every input event
 
-  CIEC_TIME &WCET() {
-    return *static_cast<CIEC_TIME*>(getDI(3));
-  };
-
-  static const CStringDictionary::TStringId scm_anDataOutputNames[];
-  static const CStringDictionary::TStringId scm_anDataOutputTypeIds[];
-  CIEC_BOOL &QO() override {
-    return *static_cast<CIEC_BOOL*>(getDO(0));
-  };
-
-  static const TEventID scm_nEventINITID = 0;
-  static const TEventID scm_nEventEI1ID = 1;
-  static const TEventID scm_nEventEI2ID = 2;
-  static const TForteInt16 scm_anEIWithIndexes[];
-  static const TDataIOID scm_anEIWith[];
-  static const CStringDictionary::TStringId scm_anEventInputNames[];
-
-  static const TEventID scm_nEventINITOID = 0;
-  static const TEventID scm_nEventEOID = 1;
-  static const TForteInt16 scm_anEOWithIndexes[];
-  static const TDataIOID scm_anEOWith[];
-  static const CStringDictionary::TStringId scm_anEventOutputNames[];
-
-  static const SFBInterfaceSpec scm_stFBInterfaceSpec;
-
-
-   bool checkActivation(TEventID) override { return true; } //we activate on every input event
-
+  void readInputData(TEventID paEIID) override;
+  void writeOutputData(TEventID paEIID) override;
+  void setInitialValues() override;
 
 public:
-  FORTE_RT_E_MERGE(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes);
+  FORTE_RT_E_MERGE(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
 
-
-  ~FORTE_RT_E_MERGE() override = default;
-
+  CIEC_TIME var_Tmin;
+  CIEC_TIME var_WCET;
+  CIEC_BOOL var_conn_QO;
+  CEventConnection conn_INITO;
+  CEventConnection conn_EO;
+  CDataConnection *conn_QI;
+  CDataConnection *conn_Tmin;
+  CDataConnection *conn_Deadline;
+  CDataConnection *conn_WCET;
+  CDataConnection conn_QO;
+  CIEC_ANY *getDI(size_t) override;
+  CIEC_ANY *getDO(size_t) override;
+  CIEC_ANY *getDIO(size_t) override;
+  CEventConnection *getEOConUnchecked(TPortId) override;
+  CDataConnection **getDIConUnchecked(TPortId) override;
+  CDataConnection *getDOConUnchecked(TPortId) override;
+  CInOutDataConnection **getDIOInConUnchecked(TPortId) override;
+  CInOutDataConnection *getDIOOutConUnchecked(TPortId) override;
+  void evt_INIT(const CIEC_BOOL &pa_QI, const CIEC_TIME &pa_Tmin, const CIEC_TIME &pa_Deadline, const CIEC_TIME &pa_WCET, CIEC_BOOL &pa_QO) {
+    var_QI = pa_QI;
+    var_Tmin = pa_Tmin;
+    var_Deadline = pa_Deadline;
+    var_WCET = pa_WCET;
+    receiveInputEvent(scmEventINITID, nullptr);
+    pa_QO = var_QO;
+  }
+  void evt_EI1(const CIEC_BOOL &pa_QI, const CIEC_TIME &pa_Tmin, const CIEC_TIME &pa_Deadline, const CIEC_TIME &pa_WCET, CIEC_BOOL &pa_QO) {
+    var_QI = pa_QI;
+    var_Tmin = pa_Tmin;
+    var_Deadline = pa_Deadline;
+    var_WCET = pa_WCET;
+    receiveInputEvent(scmEventEI1ID, nullptr);
+    pa_QO = var_QO;
+  }
+  void evt_EI2(const CIEC_BOOL &pa_QI, const CIEC_TIME &pa_Tmin, const CIEC_TIME &pa_Deadline, const CIEC_TIME &pa_WCET, CIEC_BOOL &pa_QO) {
+    var_QI = pa_QI;
+    var_Tmin = pa_Tmin;
+    var_Deadline = pa_Deadline;
+    var_WCET = pa_WCET;
+    receiveInputEvent(scmEventEI2ID, nullptr);
+    pa_QO = var_QO;
+  }
+  void operator()(const CIEC_BOOL &pa_QI, const CIEC_TIME &pa_Tmin, const CIEC_TIME &pa_Deadline, const CIEC_TIME &pa_WCET, CIEC_BOOL &pa_QO) {
+    evt_INIT(pa_QI, pa_Tmin, pa_Deadline, pa_WCET, pa_QO);
+  }
 };
 
-#endif //close the ifdef sequence from the beginning of the file
+
 

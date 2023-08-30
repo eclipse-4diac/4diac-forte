@@ -32,7 +32,7 @@ CIEC_ANY *CIEC_STRUCT::getMemberNamed(CStringDictionary::TStringId paMemberNameI
 
 CIEC_ANY *CIEC_STRUCT::getMemberNamed(const char *paMemberName) {
   CStringDictionary::TStringId elementNameId = CStringDictionary::getInstance().getId(paMemberName);
-  if (CStringDictionary::scm_nInvalidStringId != elementNameId) {
+  if (CStringDictionary::scmInvalidStringId != elementNameId) {
     return getMemberNamed(elementNameId);
   }
   return nullptr;
@@ -83,7 +83,7 @@ int CIEC_STRUCT::initializeFromString(const char *paValue) {
   const char *pcRunner = paValue;
   //first extract the element name
   CStringDictionary::TStringId elementNameId = parseNextElementId(pcRunner);
-  if (CStringDictionary::scm_nInvalidStringId != elementNameId) {
+  if (CStringDictionary::scmInvalidStringId != elementNameId) {
     findNextNonBlankSpace(&pcRunner);
     if (':' == *(pcRunner++) && '=' == *(pcRunner++)) { // parse ":="
       findNextNonBlankSpace(&pcRunner);
@@ -101,7 +101,7 @@ int CIEC_STRUCT::initializeFromString(const char *paValue) {
 }
 
 CStringDictionary::TStringId CIEC_STRUCT::parseNextElementId(const char *&paRunner) {
-  CStringDictionary::TStringId result = CStringDictionary::scm_nInvalidStringId;
+  CStringDictionary::TStringId result = CStringDictionary::scmInvalidStringId;
   const char *identifierStart = paRunner;
   const char *identifierEnd = std::strpbrk(paRunner, " :)");
   if (identifierEnd) {

@@ -12,12 +12,12 @@
 #include "forte_sync.h"
 
 CVXWorksSyncObject::CVXWorksSyncObject(){
-  m_oSemBinary = semBCreate(SEM_Q_FIFO, SEM_FULL); //semBCreate allows to be lock/unlock by different task, needed by CThread
-  if (SEM_ID_NULL == m_oSemBinary){
+  mSemBinary = semBCreate(SEM_Q_FIFO, SEM_FULL); //semBCreate allows to be lock/unlock by different task, needed by CThread
+  if (SEM_ID_NULL == mSemBinary){
     //TODO: check return value for out_of_memory error
   }
 }
 
 CVXWorksSyncObject::~CVXWorksSyncObject(){
-  semDelete(m_oSemBinary);
+  semDelete(mSemBinary);
 }

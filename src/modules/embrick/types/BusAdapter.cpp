@@ -18,40 +18,40 @@
 
 DEFINE_ADAPTER_TYPE(EmbrickBusAdapter, g_nStringIdEBBusAdapter)
 
-const CStringDictionary::TStringId EmbrickBusAdapter::scm_anDataInputNames[] =
+const CStringDictionary::TStringId EmbrickBusAdapter::scmDataInputNames[] =
     { g_nStringIdQO };
 
-const CStringDictionary::TStringId EmbrickBusAdapter::scm_anDataInputTypeIds[] =
+const CStringDictionary::TStringId EmbrickBusAdapter::scmDataInputTypeIds[] =
     { g_nStringIdBOOL };
 
-const CStringDictionary::TStringId EmbrickBusAdapter::scm_anDataOutputNames[] =
+const CStringDictionary::TStringId EmbrickBusAdapter::scmDataOutputNames[] =
     { g_nStringIdQI, g_nStringIdMasterId, g_nStringIdIndex,
         g_nStringIdUpdateInterval };
 
-const CStringDictionary::TStringId EmbrickBusAdapter::scm_anDataOutputTypeIds[] =
+const CStringDictionary::TStringId EmbrickBusAdapter::scmDataOutputTypeIds[] =
     { g_nStringIdBOOL, g_nStringIdUINT, g_nStringIdUINT, g_nStringIdUINT };
 
-const TDataIOID EmbrickBusAdapter::scm_anEIWith[] = { 0, scmWithListDelimiter };
-const TForteInt16 EmbrickBusAdapter::scm_anEIWithIndexes[] = { 0, -1 };
-const CStringDictionary::TStringId EmbrickBusAdapter::scm_anEventInputNames[] =
+const TDataIOID EmbrickBusAdapter::scmEIWith[] = { 0, scmWithListDelimiter };
+const TForteInt16 EmbrickBusAdapter::scmEIWithIndexes[] = { 0, -1 };
+const CStringDictionary::TStringId EmbrickBusAdapter::scmEventInputNames[] =
     { g_nStringIdINITO };
 
-const TDataIOID EmbrickBusAdapter::scm_anEOWith[] = { 2, 3, 1, 0, scmWithListDelimiter };
-const TForteInt16 EmbrickBusAdapter::scm_anEOWithIndexes[] = { 0, -1 };
-const CStringDictionary::TStringId EmbrickBusAdapter::scm_anEventOutputNames[] =
+const TDataIOID EmbrickBusAdapter::scmEOWith[] = { 2, 3, 1, 0, scmWithListDelimiter };
+const TForteInt16 EmbrickBusAdapter::scmEOWithIndexes[] = { 0, -1 };
+const CStringDictionary::TStringId EmbrickBusAdapter::scmEventOutputNames[] =
     { g_nStringIdINIT };
 
-const SFBInterfaceSpec EmbrickBusAdapter::scm_stFBInterfaceSpecSocket = { 1,
-    scm_anEventInputNames, scm_anEIWith, scm_anEIWithIndexes, 1,
-    scm_anEventOutputNames, scm_anEOWith, scm_anEOWithIndexes, 1,
-    scm_anDataInputNames, scm_anDataInputTypeIds, 4, scm_anDataOutputNames,
-    scm_anDataOutputTypeIds, 0, 0 };
+const SFBInterfaceSpec EmbrickBusAdapter::scmFBInterfaceSpecSocket = { 1,
+    scmEventInputNames, scmEIWith, scmEIWithIndexes, 1,
+    scmEventOutputNames, scmEOWith, scmEOWithIndexes, 1,
+    scmDataInputNames, scmDataInputTypeIds, 4, scmDataOutputNames,
+    scmDataOutputTypeIds, 0, 0 };
 
-const SFBInterfaceSpec EmbrickBusAdapter::scm_stFBInterfaceSpecPlug = { 1,
-    scm_anEventOutputNames, scm_anEOWith, scm_anEOWithIndexes, 1,
-    scm_anEventInputNames, scm_anEIWith, scm_anEIWithIndexes, 4,
-    scm_anDataOutputNames, scm_anDataOutputTypeIds, 1, scm_anDataInputNames,
-    scm_anDataInputTypeIds, 0, 0 };
+const SFBInterfaceSpec EmbrickBusAdapter::scmFBInterfaceSpecPlug = { 1,
+    scmEventOutputNames, scmEOWith, scmEOWithIndexes, 1,
+    scmEventInputNames, scmEIWith, scmEIWithIndexes, 4,
+    scmDataOutputNames, scmDataOutputTypeIds, 1, scmDataInputNames,
+    scmDataInputTypeIds, 0, 0 };
 
 const TForteUInt8 EmbrickBusAdapter::scmSlaveConfigurationIO[] = { 3 };
 const TForteUInt8 EmbrickBusAdapter::scmSlaveConfigurationIONum = 1;

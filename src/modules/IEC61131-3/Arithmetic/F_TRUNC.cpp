@@ -24,33 +24,34 @@
 
 DEFINE_FIRMWARE_FB(FORTE_F_TRUNC, g_nStringIdF_TRUNC)
 
-const CStringDictionary::TStringId FORTE_F_TRUNC::scm_anDataInputNames[] = {g_nStringIdIN};
+const CStringDictionary::TStringId FORTE_F_TRUNC::scmDataInputNames[] = {g_nStringIdIN};
 
-const CStringDictionary::TStringId FORTE_F_TRUNC::scm_anDataInputTypeIds[] = {g_nStringIdANY_REAL};
+const CStringDictionary::TStringId FORTE_F_TRUNC::scmDataInputTypeIds[] = {g_nStringIdANY_REAL};
 
-const CStringDictionary::TStringId FORTE_F_TRUNC::scm_anDataOutputNames[] = {g_nStringIdOUT};
+const CStringDictionary::TStringId FORTE_F_TRUNC::scmDataOutputNames[] = {g_nStringIdOUT};
 
-const CStringDictionary::TStringId FORTE_F_TRUNC::scm_anDataOutputTypeIds[] = {g_nStringIdANY_INT};
+const CStringDictionary::TStringId FORTE_F_TRUNC::scmDataOutputTypeIds[] = {g_nStringIdANY_INT};
 
-const TDataIOID FORTE_F_TRUNC::scm_anEIWith[] = {0, scmWithListDelimiter};
-const TForteInt16 FORTE_F_TRUNC::scm_anEIWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_F_TRUNC::scm_anEventInputNames[] = {g_nStringIdREQ};
+const TDataIOID FORTE_F_TRUNC::scmEIWith[] = {0, scmWithListDelimiter};
+const TForteInt16 FORTE_F_TRUNC::scmEIWithIndexes[] = {0};
+const CStringDictionary::TStringId FORTE_F_TRUNC::scmEventInputNames[] = {g_nStringIdREQ};
 
-const TDataIOID FORTE_F_TRUNC::scm_anEOWith[] = {0, scmWithListDelimiter};
-const TForteInt16 FORTE_F_TRUNC::scm_anEOWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_F_TRUNC::scm_anEventOutputNames[] = {g_nStringIdCNF};
+const TDataIOID FORTE_F_TRUNC::scmEOWith[] = {0, scmWithListDelimiter};
+const TForteInt16 FORTE_F_TRUNC::scmEOWithIndexes[] = {0};
+const CStringDictionary::TStringId FORTE_F_TRUNC::scmEventOutputNames[] = {g_nStringIdCNF};
 
 
-const SFBInterfaceSpec FORTE_F_TRUNC::scm_stFBInterfaceSpec = {
-  1, scm_anEventInputNames, scm_anEIWith, scm_anEIWithIndexes,
-  1, scm_anEventOutputNames, scm_anEOWith, scm_anEOWithIndexes,
-  1, scm_anDataInputNames, scm_anDataInputTypeIds,
-  1, scm_anDataOutputNames, scm_anDataOutputTypeIds,
+const SFBInterfaceSpec FORTE_F_TRUNC::scmFBInterfaceSpec = {
+  1, scmEventInputNames, scmEIWith, scmEIWithIndexes,
+  1, scmEventOutputNames, scmEOWith, scmEOWithIndexes,
+  1, scmDataInputNames, scmDataInputTypeIds,
+  1, scmDataOutputNames, scmDataOutputTypeIds,
+  0, nullptr,
   0, nullptr
 };
 
-FORTE_F_TRUNC::FORTE_F_TRUNC(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes) :
-    CFunctionBlock( pa_poSrcRes, &scm_stFBInterfaceSpec, pa_nInstanceNameId),
+FORTE_F_TRUNC::FORTE_F_TRUNC(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) :
+    CFunctionBlock( paSrcRes, &scmFBInterfaceSpec, paInstanceNameId),
     var_IN(CIEC_ANY_REAL_VARIANT()),
     var_OUT(CIEC_ANY_INT_VARIANT()),
     var_conn_OUT(var_OUT),
@@ -59,21 +60,21 @@ FORTE_F_TRUNC::FORTE_F_TRUNC(const CStringDictionary::TStringId pa_nInstanceName
     conn_OUT(this, 0, &var_conn_OUT) {
 };
 
-void FORTE_F_TRUNC::executeEvent(TEventID pa_nEIID) {
-  switch(pa_nEIID) {
-    case scm_nEventREQID:
+void FORTE_F_TRUNC::executeEvent(TEventID paEIID) {
+  switch(paEIID) {
+    case scmEventREQID:
       std::visit([](auto &&paIN, auto &&paOUT) -> void {
         using T = std::decay_t<decltype(paOUT)>;
         paOUT = func_TRUNC<T>(paIN);
       }, var_IN, var_OUT);
-      sendOutputEvent(scm_nEventCNFID);
+      sendOutputEvent(scmEventCNFID);
       break;
   }
 }
 
-void FORTE_F_TRUNC::readInputData(TEventID pa_nEIID) {
-  switch(pa_nEIID) {
-    case scm_nEventREQID: {
+void FORTE_F_TRUNC::readInputData(TEventID paEIID) {
+  switch(paEIID) {
+    case scmEventREQID: {
       RES_DATA_CON_CRITICAL_REGION();
       readData(0, var_IN, conn_IN);
       break;
@@ -83,9 +84,9 @@ void FORTE_F_TRUNC::readInputData(TEventID pa_nEIID) {
   }
 }
 
-void FORTE_F_TRUNC::writeOutputData(TEventID pa_nEIID) {
-  switch(pa_nEIID) {
-    case scm_nEventCNFID: {
+void FORTE_F_TRUNC::writeOutputData(TEventID paEIID) {
+  switch(paEIID) {
+    case scmEventCNFID: {
       RES_DATA_CON_CRITICAL_REGION();
       writeData(0, var_OUT, conn_OUT);
       break;

@@ -32,8 +32,8 @@ class FORTE_Wago1506: public WagoSlaveBase {
     INIT_HANLDLES(8, 8, 0, 0)
 
   private:
-    static const CStringDictionary::TStringId scm_anDataInputNames[];
-    static const CStringDictionary::TStringId scm_anDataInputTypeIds[];
+    static const CStringDictionary::TStringId scmDataInputNames[];
+    static const CStringDictionary::TStringId scmDataInputTypeIds[];
     CIEC_BOOL &QI() {
       return *static_cast<CIEC_BOOL*>(getDI(0));
     };
@@ -102,8 +102,8 @@ class FORTE_Wago1506: public WagoSlaveBase {
       return *static_cast<CIEC_WSTRING*>(getDI(16));
     };
 
-    static const CStringDictionary::TStringId scm_anDataOutputNames[];
-    static const CStringDictionary::TStringId scm_anDataOutputTypeIds[];
+    static const CStringDictionary::TStringId scmDataOutputNames[];
+    static const CStringDictionary::TStringId scmDataOutputTypeIds[];
     CIEC_BOOL &QO() {
       return *static_cast<CIEC_BOOL*>(getDO(0));
     };
@@ -112,25 +112,25 @@ class FORTE_Wago1506: public WagoSlaveBase {
       return *static_cast<CIEC_WSTRING*>(getDO(1));
     };
 
-    static const TForteInt16 scm_anEIWithIndexes[];
-    static const TDataIOID scm_anEIWith[];
-    static const CStringDictionary::TStringId scm_anEventInputNames[];
+    static const TForteInt16 scmEIWithIndexes[];
+    static const TDataIOID scmEIWith[];
+    static const CStringDictionary::TStringId scmEventInputNames[];
 
-    static const TForteInt16 scm_anEOWithIndexes[];
-    static const TDataIOID scm_anEOWith[];
-    static const CStringDictionary::TStringId scm_anEventOutputNames[];
+    static const TForteInt16 scmEOWithIndexes[];
+    static const TDataIOID scmEOWith[];
+    static const CStringDictionary::TStringId scmEventOutputNames[];
 
-    static const SAdapterInstanceDef scm_astAdapterInstances[];
+    static const SAdapterInstanceDef scmAdapterInstances[];
 
     FORTE_WagoBusAdapter& BusAdapterOut() {
-      return (*static_cast<FORTE_WagoBusAdapter*>(m_apoAdapters[0]));
+      return (*static_cast<FORTE_WagoBusAdapter*>(mAdapters[0]));
     };
-    static const int scm_nBusAdapterOutAdpNum = 0;
+    static const int scmBusAdapterOutAdpNum = 0;
     FORTE_WagoBusAdapter& BusAdapterIn() {
-      return (*static_cast<FORTE_WagoBusAdapter*>(m_apoAdapters[1]));
+      return (*static_cast<FORTE_WagoBusAdapter*>(mAdapters[1]));
     };
-    static const int scm_nBusAdapterInAdpNum = 1;
-    static const SFBInterfaceSpec scm_stFBInterfaceSpec;
+    static const int scmBusAdapterInAdpNum = 1;
+    static const SFBInterfaceSpec scmFBInterfaceSpec;
 
 
 };

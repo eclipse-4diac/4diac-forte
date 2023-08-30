@@ -29,34 +29,35 @@
 
 DEFINE_FIRMWARE_FB(FORTE_F_DT_TO_DATE, g_nStringIdF_DT_TO_DATE)
 
-const CStringDictionary::TStringId FORTE_F_DT_TO_DATE::scm_anDataInputNames[] = {g_nStringIdIN};
+const CStringDictionary::TStringId FORTE_F_DT_TO_DATE::scmDataInputNames[] = {g_nStringIdIN};
 
-const CStringDictionary::TStringId FORTE_F_DT_TO_DATE::scm_anDataInputTypeIds[] = {g_nStringIdDATE_AND_TIME};
+const CStringDictionary::TStringId FORTE_F_DT_TO_DATE::scmDataInputTypeIds[] = {g_nStringIdDATE_AND_TIME};
 
-const CStringDictionary::TStringId FORTE_F_DT_TO_DATE::scm_anDataOutputNames[] = {g_nStringIdOUT};
+const CStringDictionary::TStringId FORTE_F_DT_TO_DATE::scmDataOutputNames[] = {g_nStringIdOUT};
 
-const CStringDictionary::TStringId FORTE_F_DT_TO_DATE::scm_anDataOutputTypeIds[] = {g_nStringIdDATE};
+const CStringDictionary::TStringId FORTE_F_DT_TO_DATE::scmDataOutputTypeIds[] = {g_nStringIdDATE};
 
-const TDataIOID FORTE_F_DT_TO_DATE::scm_anEIWith[] = {0, scmWithListDelimiter};
-const TForteInt16 FORTE_F_DT_TO_DATE::scm_anEIWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_F_DT_TO_DATE::scm_anEventInputNames[] = {g_nStringIdREQ};
+const TDataIOID FORTE_F_DT_TO_DATE::scmEIWith[] = {0, scmWithListDelimiter};
+const TForteInt16 FORTE_F_DT_TO_DATE::scmEIWithIndexes[] = {0};
+const CStringDictionary::TStringId FORTE_F_DT_TO_DATE::scmEventInputNames[] = {g_nStringIdREQ};
 
-const TDataIOID FORTE_F_DT_TO_DATE::scm_anEOWith[] = {0, scmWithListDelimiter};
-const TForteInt16 FORTE_F_DT_TO_DATE::scm_anEOWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_F_DT_TO_DATE::scm_anEventOutputNames[] = {g_nStringIdCNF};
+const TDataIOID FORTE_F_DT_TO_DATE::scmEOWith[] = {0, scmWithListDelimiter};
+const TForteInt16 FORTE_F_DT_TO_DATE::scmEOWithIndexes[] = {0};
+const CStringDictionary::TStringId FORTE_F_DT_TO_DATE::scmEventOutputNames[] = {g_nStringIdCNF};
 
 
-const SFBInterfaceSpec FORTE_F_DT_TO_DATE::scm_stFBInterfaceSpec = {
-  1, scm_anEventInputNames, scm_anEIWith, scm_anEIWithIndexes,
-  1, scm_anEventOutputNames, scm_anEOWith, scm_anEOWithIndexes,
-  1, scm_anDataInputNames, scm_anDataInputTypeIds,
-  1, scm_anDataOutputNames, scm_anDataOutputTypeIds,
+const SFBInterfaceSpec FORTE_F_DT_TO_DATE::scmFBInterfaceSpec = {
+  1, scmEventInputNames, scmEIWith, scmEIWithIndexes,
+  1, scmEventOutputNames, scmEOWith, scmEOWithIndexes,
+  1, scmDataInputNames, scmDataInputTypeIds,
+  1, scmDataOutputNames, scmDataOutputTypeIds,
+  0, nullptr,
   0, nullptr
 };
 
 
-FORTE_F_DT_TO_DATE::FORTE_F_DT_TO_DATE(CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes) :
-    CSimpleFB(pa_poSrcRes, &scm_stFBInterfaceSpec, pa_nInstanceNameId, nullptr),
+FORTE_F_DT_TO_DATE::FORTE_F_DT_TO_DATE(CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) :
+    CSimpleFB(paSrcRes, &scmFBInterfaceSpec, paInstanceNameId, nullptr),
     var_IN(CIEC_DATE_AND_TIME(0)),
     var_OUT(CIEC_DATE(0)),
     var_conn_OUT(var_OUT),
@@ -71,20 +72,20 @@ void FORTE_F_DT_TO_DATE::alg_REQ(void) {
 }
 
 
-void FORTE_F_DT_TO_DATE::executeEvent(TEventID pa_nEIID){
-  switch(pa_nEIID) {
-    case scm_nEventREQID:
+void FORTE_F_DT_TO_DATE::executeEvent(TEventID paEIID){
+  switch(paEIID) {
+    case scmEventREQID:
       alg_REQ();
       break;
     default:
       break;
   }
-  sendOutputEvent(scm_nEventCNFID);
+  sendOutputEvent(scmEventCNFID);
 }
 
-void FORTE_F_DT_TO_DATE::readInputData(TEventID pa_nEIID) {
-  switch(pa_nEIID) {
-    case scm_nEventREQID: {
+void FORTE_F_DT_TO_DATE::readInputData(TEventID paEIID) {
+  switch(paEIID) {
+    case scmEventREQID: {
       RES_DATA_CON_CRITICAL_REGION();
       readData(0, var_IN, conn_IN);
       break;
@@ -94,9 +95,9 @@ void FORTE_F_DT_TO_DATE::readInputData(TEventID pa_nEIID) {
   }
 }
 
-void FORTE_F_DT_TO_DATE::writeOutputData(TEventID pa_nEIID) {
-  switch(pa_nEIID) {
-    case scm_nEventCNFID: {
+void FORTE_F_DT_TO_DATE::writeOutputData(TEventID paEIID) {
+  switch(paEIID) {
+    case scmEventCNFID: {
       RES_DATA_CON_CRITICAL_REGION();
       writeData(0, var_OUT, conn_OUT);
       break;

@@ -196,8 +196,8 @@ bool CSysFsProcessInterface::writePin() {
 
 DEFINE_HANDLER(CSysFsProcessInterface::CIOHandler);
 
-CSysFsProcessInterface::CIOHandler::CIOHandler(CDeviceExecution& pa_poDeviceExecution) :
-    CExternalEventHandler(pa_poDeviceExecution) {
+CSysFsProcessInterface::CIOHandler::CIOHandler(CDeviceExecution& paDeviceExecution) :
+    CExternalEventHandler(paDeviceExecution) {
 }
 
 CSysFsProcessInterface::CIOHandler::~CIOHandler() {
@@ -206,18 +206,18 @@ CSysFsProcessInterface::CIOHandler::~CIOHandler() {
   end();
 }
 
-void CSysFsProcessInterface::CIOHandler::registerIXFB(CSysFsProcessInterface *pa_poFB) {
+void CSysFsProcessInterface::CIOHandler::registerIXFB(CSysFsProcessInterface *paFB) {
   CCriticalRegion readList(mReadFBListSync);
-  mReadFBList.pushBack(pa_poFB);
+  mReadFBList.pushBack(paFB);
 }
 
-void CSysFsProcessInterface::CIOHandler::unregisterIXFB(CSysFsProcessInterface *pa_poFB) {
+void CSysFsProcessInterface::CIOHandler::unregisterIXFB(CSysFsProcessInterface *paFB) {
   CCriticalRegion readList(mReadFBListSync);
   TReadFBContainer::Iterator itRunner(mReadFBList.begin());
   TReadFBContainer::Iterator itRefNode(mReadFBList.end());
   TReadFBContainer::Iterator itEnd(mReadFBList.end());
   while(itRunner != itEnd) {
-    if(*itRunner == pa_poFB) {
+    if(*itRunner == paFB) {
       if(itRefNode == itEnd) {
         mReadFBList.popFront();
       } else {

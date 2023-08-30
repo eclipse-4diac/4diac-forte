@@ -22,8 +22,11 @@
 #include "utils/criticalregion.h"
 #include "utils/string_utils.h"
 
-
+using namespace std::string_literals;
 using namespace forte::core;
+
+const std::string cgClosingXMLTag = "\">"s;
+
 
 CMonitoringHandler::CMonitoringHandler(CResource &paResource) :
     mTriggerEvent(nullptr, 0),
@@ -89,13 +92,13 @@ EMGMResponse CMonitoringHandler::addWatch(forte::core::TNameIdentifier &paNameLi
     }
     else{
       TEventID eventId = fB->getEIID(portName);
-      if(cg_nInvalidEventID != eventId){
+      if(cgInvalidEventID != eventId){
         addEventWatch(fbMonitoringEntry, portName, fB->getEIMonitorData(eventId));
         eRetVal = EMGMResponse::Ready;
       }
       else{
         eventId = fB->getEOID(portName);
-        if(cg_nInvalidEventID != eventId){
+        if(cgInvalidEventID != eventId){
           addEventWatch(fbMonitoringEntry, portName, fB->getEOMonitorData(eventId));
           eRetVal = EMGMResponse::Ready;
         }
@@ -117,12 +120,12 @@ EMGMResponse CMonitoringHandler::removeWatch(forte::core::TNameIdentifier &paNam
     TFBMonitoringList::Iterator itRunner = mFBMonitoringList.begin();
 
     while(itRunner != mFBMonitoringList.end()){
-      if(itRunner->m_poFB == fB){
+      if(itRunner->mFB == fB){
         SFBMonitoringEntry &poFBMonitoringEntry(*itRunner);
 
         if(removeDataWatch(poFBMonitoringEntry, portName) || removeEventWatch(poFBMonitoringEntry, portName)){ //if element is not watched, end search and return error
 
-          if(poFBMonitoringEntry.m_lstWatchedDataPoints.isEmpty() && (poFBMonitoringEntry.m_lstWatchedEventPoints.isEmpty())){
+          if(poFBMonitoringEntry.mWatchedDataPoints.isEmpty() && (poFBMonitoringEntry.mWatchedEventPoints.isEmpty())){
             //no further values are monitored so remove the entry
             if(itRefNode == mFBMonitoringList.end()){
               //we have the first entry in the list
@@ -143,7 +146,7 @@ EMGMResponse CMonitoringHandler::removeWatch(forte::core::TNameIdentifier &paNam
   return eRetVal;
 }
 
-EMGMResponse CMonitoringHandler::readWatches(CIEC_STRING &paResponse){
+EMGMResponse CMonitoringHandler::readWatches(std::string &paResponse){
   paResponse.clear();
   if(nullptr == mResource.getResourcePtr()){
     //we are in the device
@@ -184,7 +187,7 @@ EMGMResponse CMonitoringHandler::triggerEvent(forte::core::TNameIdentifier &paNa
   CFunctionBlock *fB = getFB(paNameList);
   if(nullptr != fB){
     TEventID eventId = fB->getEIID(portName);
-    if(cg_nInvalidEventID != eventId){
+    if(cgInvalidEventID != eventId){
       //only a single event can be triggered simultaneously (until it is executed by ecet!)
       //otherwise the triggerEvent structure needs to be moved to another place!
       mTriggerEvent.mFB = fB;
@@ -194,9 +197,8 @@ EMGMResponse CMonitoringHandler::triggerEvent(forte::core::TNameIdentifier &paNa
     }
     else{
       eventId = fB->getEOID(portName);
-      if(cg_nInvalidEventID != eventId){
-        fB->mInvokingExecEnv = mResource.getResourceEventExecution();
-        fB->sendOutputEvent(eventId);
+      if(cgInvalidEventID != eventId){
+        fB->sendOutputEvent(eventId, mResource.getResourceEventExecution());
         mResource.getResourceEventExecution()->resumeSelfSuspend();
         eRetVal = EMGMResponse::Ready;
       }
@@ -215,17 +217,17 @@ EMGMResponse CMonitoringHandler::resetEventCount(forte::core::TNameIdentifier &p
     TEventID eventId = fB->getEIID(portName);
     TForteUInt32 *eventMonitorData = nullptr;
 
-    if(cg_nInvalidEventID != eventId){
+    if(cgInvalidEventID != eventId){
       eventMonitorData = &fB->getEIMonitorData(eventId);
     }
     else{
       eventId = fB->getEOID(portName);
-      if(cg_nInvalidEventID != eventId){
+      if(cgInvalidEventID != eventId){
         eventMonitorData = &fB->getEOMonitorData(eventId);
       }
     }
     if(nullptr != eventMonitorData){
-      CCriticalRegion criticalRegion(fB->getResource().m_oResDataConSync);
+      CCriticalRegion criticalRegion(fB->getResource().mResDataConSync);
       *eventMonitorData = 0;
       eRetVal = EMGMResponse::Ready;
     }
@@ -237,45 +239,45 @@ CMonitoringHandler::SFBMonitoringEntry &CMonitoringHandler::findOrCreateFBMonito
     CFunctionBlock *paFB, forte::core::TNameIdentifier &paNameList){
   for(TFBMonitoringList::Iterator itRunner = mFBMonitoringList.begin();
       itRunner != mFBMonitoringList.end(); ++itRunner){
-    if(itRunner->m_poFB == paFB){
+    if(itRunner->mFB == paFB){
       return *itRunner;
     }
   }
 
   mFBMonitoringList.pushBack(SFBMonitoringEntry());
   TFBMonitoringList::Iterator itLastEntry(mFBMonitoringList.back());
-  itLastEntry->m_poFB = paFB;
+  itLastEntry->mFB = paFB;
   createFullFBName(itLastEntry->mFullFBName, paNameList);
   return *itLastEntry;
 }
 
 void CMonitoringHandler::addDataWatch(SFBMonitoringEntry &paFBMonitoringEntry,
     CStringDictionary::TStringId paPortId, CIEC_ANY &paDataVal){
-  for(TDataWatchList::Iterator itRunner = paFBMonitoringEntry.m_lstWatchedDataPoints.begin();
-      itRunner != paFBMonitoringEntry.m_lstWatchedDataPoints.end(); ++itRunner){
+  for(TDataWatchList::Iterator itRunner = paFBMonitoringEntry.mWatchedDataPoints.begin();
+      itRunner != paFBMonitoringEntry.mWatchedDataPoints.end(); ++itRunner){
     if(itRunner->mPortId == paPortId){
       //the data point is already in the watch list
       return;
     }
   }
-  paFBMonitoringEntry.m_lstWatchedDataPoints.pushBack(SDataWatchEntry(paPortId, paDataVal));
+  paFBMonitoringEntry.mWatchedDataPoints.pushBack(SDataWatchEntry(paPortId, paDataVal));
 }
 
 bool CMonitoringHandler::removeDataWatch(SFBMonitoringEntry &paFBMonitoringEntry,
     CStringDictionary::TStringId paPortId){
   bool bRetVal = false;
 
-  TDataWatchList::Iterator itRunner = paFBMonitoringEntry.m_lstWatchedDataPoints.begin();
-  TDataWatchList::Iterator itRefNode = paFBMonitoringEntry.m_lstWatchedDataPoints.end();
+  TDataWatchList::Iterator itRunner = paFBMonitoringEntry.mWatchedDataPoints.begin();
+  TDataWatchList::Iterator itRefNode = paFBMonitoringEntry.mWatchedDataPoints.end();
 
-  while(itRunner != paFBMonitoringEntry.m_lstWatchedDataPoints.end()){
+  while(itRunner != paFBMonitoringEntry.mWatchedDataPoints.end()){
     if(itRunner->mPortId == paPortId){
-      if(itRefNode == paFBMonitoringEntry.m_lstWatchedDataPoints.end()){
+      if(itRefNode == paFBMonitoringEntry.mWatchedDataPoints.end()){
         //we have the first entry in the list
-        paFBMonitoringEntry.m_lstWatchedDataPoints.popFront();
+        paFBMonitoringEntry.mWatchedDataPoints.popFront();
       }
       else{
-        paFBMonitoringEntry.m_lstWatchedDataPoints.eraseAfter(itRefNode);
+        paFBMonitoringEntry.mWatchedDataPoints.eraseAfter(itRefNode);
       }
       bRetVal = true;
       break;
@@ -289,30 +291,30 @@ bool CMonitoringHandler::removeDataWatch(SFBMonitoringEntry &paFBMonitoringEntry
 }
 
 void CMonitoringHandler::addEventWatch(SFBMonitoringEntry &paFBMonitoringEntry, CStringDictionary::TStringId paPortId, TForteUInt32 &paEventData){
-  for(TEventWatchList::Iterator itRunner = paFBMonitoringEntry.m_lstWatchedEventPoints.begin();
-      itRunner != paFBMonitoringEntry.m_lstWatchedEventPoints.end(); ++itRunner){
+  for(TEventWatchList::Iterator itRunner = paFBMonitoringEntry.mWatchedEventPoints.begin();
+      itRunner != paFBMonitoringEntry.mWatchedEventPoints.end(); ++itRunner){
     if(itRunner->mPortId == paPortId){
       //the event point is already in the watch list
       return;
     }
   }
-  paFBMonitoringEntry.m_lstWatchedEventPoints.pushBack(SEventWatchEntry(paPortId, paEventData));
+  paFBMonitoringEntry.mWatchedEventPoints.pushBack(SEventWatchEntry(paPortId, paEventData));
 }
 
 bool CMonitoringHandler::removeEventWatch(SFBMonitoringEntry &paFBMonitoringEntry, CStringDictionary::TStringId paPortId){
   bool bRetVal = false;
 
-  TEventWatchList::Iterator itRunner = paFBMonitoringEntry.m_lstWatchedEventPoints.begin();
-  TEventWatchList::Iterator itRefNode = paFBMonitoringEntry.m_lstWatchedEventPoints.end();
+  TEventWatchList::Iterator itRunner = paFBMonitoringEntry.mWatchedEventPoints.begin();
+  TEventWatchList::Iterator itRefNode = paFBMonitoringEntry.mWatchedEventPoints.end();
 
-  while(itRunner != paFBMonitoringEntry.m_lstWatchedEventPoints.end()){
+  while(itRunner != paFBMonitoringEntry.mWatchedEventPoints.end()){
     if(itRunner->mPortId == paPortId){
-      if(itRefNode == paFBMonitoringEntry.m_lstWatchedEventPoints.end()){
+      if(itRefNode == paFBMonitoringEntry.mWatchedEventPoints.end()){
         //we have the first entry in the list
-        paFBMonitoringEntry.m_lstWatchedEventPoints.popFront();
+        paFBMonitoringEntry.mWatchedEventPoints.popFront();
       }
       else{
-        paFBMonitoringEntry.m_lstWatchedEventPoints.eraseAfter(itRefNode);
+        paFBMonitoringEntry.mWatchedEventPoints.eraseAfter(itRefNode);
       }
       bRetVal = true;
       break;
@@ -325,59 +327,58 @@ bool CMonitoringHandler::removeEventWatch(SFBMonitoringEntry &paFBMonitoringEntr
   return bRetVal;
 }
 
-void CMonitoringHandler::readResourceWatches(CIEC_STRING &paResponse){
+void CMonitoringHandler::readResourceWatches(std::string &paResponse){
   if(!mFBMonitoringList.isEmpty()){
-    paResponse.append("<Resource name=\"");
-    paResponse.append(mResource.getInstanceName());
-    paResponse.append("\">");
+    paResponse += "<Resource name=\""s;
+    paResponse += mResource.getInstanceName();
+    paResponse += cgClosingXMLTag;
 
     updateMonitringData();
 
     for(TFBMonitoringList::Iterator itRunner = mFBMonitoringList.begin(); itRunner != mFBMonitoringList.end(); ++itRunner){
-      paResponse.append("<FB name=\"");
-      paResponse.append(itRunner->mFullFBName);
-      paResponse.append("\">");
+      paResponse += "<FB name=\""s;
+      paResponse += itRunner->mFullFBName.c_str();
+      paResponse += cgClosingXMLTag;
 
       //add the data watches
-      for(TDataWatchList::Iterator itDataRunner = itRunner->m_lstWatchedDataPoints.begin(); itDataRunner != itRunner->m_lstWatchedDataPoints.end(); ++itDataRunner){
+      for(TDataWatchList::Iterator itDataRunner = itRunner->mWatchedDataPoints.begin(); itDataRunner != itRunner->mWatchedDataPoints.end(); ++itDataRunner){
         appendDataWatch(paResponse, *itDataRunner);
       }
 
       //add the event watches
-      for(TEventWatchList::Iterator itEventRunner = itRunner->m_lstWatchedEventPoints.begin(); itEventRunner != itRunner->m_lstWatchedEventPoints.end(); ++itEventRunner){
+      for(TEventWatchList::Iterator itEventRunner = itRunner->mWatchedEventPoints.begin(); itEventRunner != itRunner->mWatchedEventPoints.end(); ++itEventRunner){
         appendEventWatch(paResponse, *itEventRunner);
       }
 
-      paResponse.append("</FB>");
+      paResponse += "</FB>"s;
     }
-    paResponse.append("</Resource>");
+    paResponse += "</Resource>"s;
   }
 }
 
 
 void CMonitoringHandler::updateMonitringData(){
   //update the monitoring data buffer to keep the critical region as short as possible
-  CCriticalRegion criticalRegion(mResource.m_oResDataConSync);
+  CCriticalRegion criticalRegion(mResource.mResDataConSync);
   for(TFBMonitoringList::Iterator itRunner = mFBMonitoringList.begin(); itRunner != mFBMonitoringList.end(); ++itRunner){
 
-    for(TDataWatchList::Iterator itDataRunner = itRunner->m_lstWatchedDataPoints.begin(); itDataRunner != itRunner->m_lstWatchedDataPoints.end(); ++itDataRunner){
+    for(TDataWatchList::Iterator itDataRunner = itRunner->mWatchedDataPoints.begin(); itDataRunner != itRunner->mWatchedDataPoints.end(); ++itDataRunner){
       itDataRunner->mDataBuffer->setValue(itDataRunner->mDataValueRef);
       itDataRunner->mDataBuffer->setForced(itDataRunner->mDataValueRef.isForced());
     }
 
-    for(TEventWatchList::Iterator itEventRunner = itRunner->m_lstWatchedEventPoints.begin(); itEventRunner != itRunner->m_lstWatchedEventPoints.end(); ++itEventRunner){
+    for(TEventWatchList::Iterator itEventRunner = itRunner->mWatchedEventPoints.begin(); itEventRunner != itRunner->mWatchedEventPoints.end(); ++itEventRunner){
       itEventRunner->mEventDataBuf = itEventRunner->mEventDataRef;
     }
   }
 }
 
 
-void CMonitoringHandler::appendDataWatch(CIEC_STRING &paResponse,
-    SDataWatchEntry &paDataWatchEntry){
+void CMonitoringHandler::appendDataWatch(std::string &paResponse, SDataWatchEntry &paDataWatchEntry){
   appendPortTag(paResponse, paDataWatchEntry.mPortId);
-  paResponse.append("<Data value=\"");
+  paResponse += "<Data value=\""s;
   size_t bufferSize = paDataWatchEntry.mDataBuffer->getToStringBufferSize() + getExtraSizeForEscapedChars(*paDataWatchEntry.mDataBuffer);
-  char* acDataValue = new char [bufferSize]; //TODO try to directly use the response string instead
+  char* acDataValue = new char [bufferSize];
   int consumedBytes = paDataWatchEntry.mDataBuffer->toString(acDataValue, bufferSize);
   if(consumedBytes > 0 && static_cast<size_t>(consumedBytes) < bufferSize) {
     switch (paDataWatchEntry.mDataBuffer->getDataTypeID()) {
@@ -394,11 +395,11 @@ void CMonitoringHandler::appendDataWatch(CIEC_STRING &paResponse,
         break;
     }
     acDataValue[consumedBytes] = '\0';
-    paResponse.append(acDataValue);
+    paResponse += acDataValue;
   }
-  paResponse.append("\" forced=\"");
-  paResponse.append((paDataWatchEntry.mDataBuffer->isForced()) ? "true" : "false");
-  paResponse.append("\"/></Port>");
+  paResponse += "\" forced=\""s;
+  paResponse += (paDataWatchEntry.mDataBuffer->isForced()) ? "true"s : "false"s;
+  paResponse += "\"/></Port>"s;
   delete [] acDataValue;
 }
 
@@ -486,27 +487,27 @@ size_t CMonitoringHandler::getExtraSizeForEscapedCharsStruct(const CIEC_STRUCT& 
   return retVal;
 }
 
-void CMonitoringHandler::appendPortTag(CIEC_STRING &paResponse,
+void CMonitoringHandler::appendPortTag(std::string &paResponse,
     CStringDictionary::TStringId paPortId){
-  paResponse.append("<Port name=\"");
-  paResponse.append(CStringDictionary::getInstance().get(paPortId));
-  paResponse.append("\">");
+  paResponse += "<Port name=\""s;
+  paResponse += CStringDictionary::getInstance().get(paPortId);
+  paResponse += cgClosingXMLTag;
 }
 
-void CMonitoringHandler::appendEventWatch(CIEC_STRING &paResponse, SEventWatchEntry &paEventWatchEntry){
+void CMonitoringHandler::appendEventWatch(std::string &paResponse, SEventWatchEntry &paEventWatchEntry){
   appendPortTag(paResponse, paEventWatchEntry.mPortId);
 
   CIEC_UDINT udint(paEventWatchEntry.mEventDataBuf);
   CIEC_ULINT ulint(mResource.getDevice().getTimer().getForteTime());
 
-  paResponse.append("<Data value=\"");
-  char buf[21]; // the bigest number in an ulint is 18446744073709551616, TODO directly use pa_roResponse
+  paResponse += "<Data value=\""s;
+  char buf[21]; // the bigest number in an ulint is 18446744073709551616, TODO directly use paResponse
   udint.toString(buf, sizeof(buf));
-  paResponse.append(buf);
-  paResponse.append("\" time=\"");
+  paResponse += buf;
+  paResponse += "\" time=\""s;
   ulint.toString(buf, sizeof(buf));
-  paResponse.append(buf);
-  paResponse.append("\"/>\n</Port>");
+  paResponse += buf;
+  paResponse += "\"/>\n</Port>"s;
 }
 
 void CMonitoringHandler::createFullFBName(CIEC_STRING &paFullName, forte::core::TNameIdentifier &paNameList){

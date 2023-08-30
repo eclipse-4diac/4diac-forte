@@ -18,9 +18,9 @@
 
 DEFINE_HANDLER(COpcEventHandler);
 
-COpcEventHandler::TCallbackDescriptor COpcEventHandler::m_nCallbackDescCount = 0;
+COpcEventHandler::TCallbackDescriptor COpcEventHandler::mCallbackDescCount = 0;
 
-COpcEventHandler::COpcEventHandler(CDeviceExecution& pa_poDeviceExecution) : CExternalEventHandler(pa_poDeviceExecution)  {
+COpcEventHandler::COpcEventHandler(CDeviceExecution& paDeviceExecution) : CExternalEventHandler(paDeviceExecution)  {
   this->start();
   // Sleep to allow new thread to start
   CThread::sleepThread(100);
@@ -30,10 +30,10 @@ COpcEventHandler::~COpcEventHandler(){
   this->end();
 }
 
-void COpcEventHandler::sendCommand(ICmd *pa_pCmd){
-  m_oSync.lock();
-  m_lCommandQueue.pushBack(pa_pCmd);
-  m_oSync.unlock();
+void COpcEventHandler::sendCommand(ICmd *paCmd){
+  mSync.lock();
+  mCommandQueue.pushBack(paCmd);
+  mSync.unlock();
 }
 
 void COpcEventHandler::run(){
@@ -57,70 +57,70 @@ void COpcEventHandler::run(){
   CoUninitialize();
 }
 
-COpcEventHandler::TCallbackDescriptor COpcEventHandler::addComCallback(forte::com_infra::CComLayer* pa_pComCallback){
-  m_oSync.lock();
-  m_nCallbackDescCount++;
-  TComContainer stNewNode = { m_nCallbackDescCount, pa_pComCallback };
-  m_lstComCallbacks.pushBack(stNewNode);
-  m_oSync.unlock();
+COpcEventHandler::TCallbackDescriptor COpcEventHandler::addComCallback(forte::com_infra::CComLayer* paComCallback){
+  mSync.lock();
+  mCallbackDescCount++;
+  TComContainer stNewNode = { mCallbackDescCount, paComCallback };
+  mComCallbacks.pushBack(stNewNode);
+  mSync.unlock();
 
-  return m_nCallbackDescCount;
+  return mCallbackDescCount;
 }
 
-void COpcEventHandler::removeComCallback(COpcEventHandler::TCallbackDescriptor pa_nCallbackDesc){
-  m_oSync.lock();
+void COpcEventHandler::removeComCallback(COpcEventHandler::TCallbackDescriptor paCallbackDesc){
+  mSync.lock();
 
-  TCallbackList::Iterator itRunner(m_lstComCallbacks.begin());
+  TCallbackList::Iterator itRunner(mComCallbacks.begin());
 
-  if(itRunner->m_nCallbackDesc == pa_nCallbackDesc){
-    m_lstComCallbacks.popFront();
+  if(itRunner->mCallbackDesc == paCallbackDesc){
+    mComCallbacks.popFront();
   }
   else{
     TCallbackList::Iterator itLastPos(itRunner);
-    TCallbackList::Iterator itEnd(m_lstComCallbacks.end());
+    TCallbackList::Iterator itEnd(mComCallbacks.end());
     ++itRunner;
     while(itRunner != itEnd){
-      if(itRunner->m_nCallbackDesc == pa_nCallbackDesc){
-        m_lstComCallbacks.eraseAfter(itLastPos);
+      if(itRunner->mCallbackDesc == paCallbackDesc){
+        mComCallbacks.eraseAfter(itLastPos);
         break;
       }
       itLastPos = itRunner;
       ++itRunner;
     }
   }
-  m_oSync.unlock();
+  mSync.unlock();
 }
 
-void COpcEventHandler::executeComCallback(COpcEventHandler::TCallbackDescriptor pa_nCallbackDesc){
-  m_oSync.lock();
-  TCallbackList::Iterator itEnd(m_lstComCallbacks.end());
-  for(TCallbackList::Iterator itCallback = m_lstComCallbacks.begin(); itCallback != itEnd; ++itCallback){
-    if(itCallback->m_nCallbackDesc == pa_nCallbackDesc){
+void COpcEventHandler::executeComCallback(COpcEventHandler::TCallbackDescriptor paCallbackDesc){
+  mSync.lock();
+  TCallbackList::Iterator itEnd(mComCallbacks.end());
+  for(TCallbackList::Iterator itCallback = mComCallbacks.begin(); itCallback != itEnd; ++itCallback){
+    if(itCallback->mCallbackDesc == paCallbackDesc){
       //FIX
       TComContainer comCon = (*itCallback);
-      m_oSync.unlock();
-      if(forte::com_infra::e_Nothing != comCon.m_pCallback->recvData(0,0)){
-        startNewEventChain(comCon.m_pCallback->getCommFB());
+      mSync.unlock();
+      if(forte::com_infra::e_Nothing != comCon.mCallback->recvData(0,0)){
+        startNewEventChain(comCon.mCallback->getCommFB());
       }
-      m_oSync.lock();
+      mSync.lock();
       break;
     }
   }
-  m_oSync.unlock();
+  mSync.unlock();
 }
 
 ICmd* COpcEventHandler::getNextCommand(){
   ICmd* command;
 
-  m_oSync.lock();
-  TCommandQueue::Iterator itBegin = m_lCommandQueue.begin();
-  if(itBegin != m_lCommandQueue.end()){
+  mSync.lock();
+  TCommandQueue::Iterator itBegin = mCommandQueue.begin();
+  if(itBegin != mCommandQueue.end()){
     command = (*itBegin);
-    m_lCommandQueue.popFront();
+    mCommandQueue.popFront();
   } else {
     command = nullptr;
   }
-  m_oSync.unlock();
+  mSync.unlock();
 
   return command;
 }

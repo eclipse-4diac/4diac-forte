@@ -25,7 +25,7 @@ EMGMResponse CEventConnection::connect(CFunctionBlock *paDstFB, CStringDictionar
   EMGMResponse retval = EMGMResponse::NoSuchObject;
   TPortId nEIID = paDstFB->getEIID(paDstPortNameId);
 
-  if(cg_nInvalidEventID != nEIID){
+  if(cgInvalidEventID != nEIID){
     retval = CConnection::addDestination(CConnectionPoint(paDstFB, nEIID));
   }
   return retval;
@@ -35,7 +35,7 @@ EMGMResponse CEventConnection::connectToCFBInterface(CFunctionBlock *paDstFB, CS
   EMGMResponse retval = EMGMResponse::NoSuchObject;
   TPortId nEOID = paDstFB->getEOID(paDstPortNameId);
 
-  if(cg_nInvalidEventID != nEOID){
+  if(cgInvalidEventID != nEOID){
     nEOID |= cgInternal2InterfaceMarker;
     retval = CConnection::addDestination(CConnectionPoint(paDstFB, nEOID));
   }
@@ -46,7 +46,7 @@ EMGMResponse CEventConnection::disconnect(CFunctionBlock *paDstFB, CStringDictio
   EMGMResponse retval = EMGMResponse::NoSuchObject;
   TEventID nEIID = paDstFB->getEIID(paDstPortNameId);
 
-  if(cg_nInvalidEventID != nEIID){
+  if(cgInvalidEventID != nEIID){
     retval = CConnection::removeDestination(CConnectionPoint(paDstFB, nEIID));
   }
   return retval;

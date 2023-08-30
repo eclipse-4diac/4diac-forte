@@ -109,7 +109,7 @@ public:
    * \brief creates a SPI device according to the  \a sDevice parameter
    * \param sDevice gives the device path e.g. /dev/spidev0.0
    *
-   * The constructor sets the default parameters to m_nBitsPerWord = 8, m_enMode = SPIMODE0 and m_nSpeed to 1 MHz.
+   * The constructor sets the default parameters to mBitsPerWord = 8, mMode = SPIMODE0 and mSpeed to 1 MHz.
    * It configures the bus via file access to /dev/spidevx.y and using ioctl() calls to the kernel driver
    */
   explicit CSpiDevice(const char* sDevice);
@@ -120,7 +120,7 @@ public:
    * \param nSpeed gives the bus clock frequency e.g. 1000000 for 1 MHz
    * \param enMode gives the SPI bus mode setting e.g. SPIMODE0
    *
-   * The constructor sets the default parameters to m_nBitsPerWord = 8
+   * The constructor sets the default parameters to mBitsPerWord = 8
    */
   CSpiDevice(const char* sDevice, unsigned int nSpeed, ESpiMode enMode);
 
@@ -134,20 +134,20 @@ public:
    * \brief returns true if the device has been opened and configured successfully, false will be returned if something went wrong
    *
    */
-  bool isOpen() const { return m_bValid; };
+  bool isOpen() const { return mValid; };
 
   /*! \fn ESpiMode getMode()
    * \brief returns the currently configured SPI mode
    *
    */
-  ESpiMode getMode() const { return m_enMode; };
+  ESpiMode getMode() const { return mMode; };
 
   /*! \fn void setMode(ESpiMode newMode)
    * \brief sets the SPI mode to \a newMode
    * \param newMode gives the SPI mode to set (SPIMODE0 to SPIMODE3)
    *
    */
-  void setMode(ESpiMode newMode) { m_enMode = newMode; };
+  void setMode(ESpiMode newMode) { mMode = newMode; };
 
   /*! \fn bool write(const unsigned char* paData, int nLength)
    * \brief writes \a nLength bytes of the \a paData buffer to the device
@@ -194,24 +194,24 @@ private:
    *
    * The function opens the device, sets read and write mode, speed and so on.
    * If something is wrong during the setup and configuration it returns FALSE, TRUE is returned if everything is fine.
-   * All the member variables m_enMode, m_nBitsPerWord and m_nSpeed need to be initialized properly before this function is called.
+   * All the member variables mMode, mBitsPerWord and mSpeed need to be initialized properly before this function is called.
    * This is normally done by the constructors of CSpiDevice.
    */
   bool openAndConfigureBus(const char* sDevice);
 
   // TODO: make the data type of m_BitsPerWord bullet proof to allow only 8 (standard) or 9 (used by some LCD displays in LoSSI mode) bits
-  unsigned char  m_nBitsPerWord;
+  unsigned char  mBitsPerWord;
 
    // TODO: make the data type of m_Speed bullet proof, e.g. enum
-  unsigned int  m_nSpeed;
+  unsigned int  mSpeed;
 
-  ESpiMode    m_enMode;
+  ESpiMode    mMode;
 
   // file descriptor used for the SPI device
-  int        m_nFileDescriptor;
+  int        mFileDescriptor;
 
   // m_Valid is used by other member functions to check if the SPI device bus has been initialized properly
-  bool      m_bValid;
+  bool      mValid;
 
 };
 

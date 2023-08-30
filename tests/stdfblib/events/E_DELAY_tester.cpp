@@ -31,8 +31,8 @@ class E_DELAY_tester  : public CFBTester{
     DECLARE_FB_TESTER(E_DELAY_tester);
 
   public:
-    E_DELAY_tester(CResource* m_poTestResource) :
-        CFBTester(m_poTestResource){
+    E_DELAY_tester(CResource* mTestResource) :
+        CFBTester(mTestResource){
       setInputData({&mDT});
     }
 

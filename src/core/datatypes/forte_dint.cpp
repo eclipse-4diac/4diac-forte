@@ -18,8 +18,8 @@
 
 DEFINE_FIRMWARE_DATATYPE(DINT, g_nStringIdDINT)
 
-const CIEC_DINT::TValueType CIEC_DINT::scm_nMinVal = std::numeric_limits<CIEC_DINT::TValueType>::min();
-const CIEC_DINT::TValueType CIEC_DINT::scm_nMaxVal = std::numeric_limits<CIEC_DINT::TValueType>::max();
+const CIEC_DINT::TValueType CIEC_DINT::scmMinVal = std::numeric_limits<CIEC_DINT::TValueType>::min();
+const CIEC_DINT::TValueType CIEC_DINT::scmMaxVal = std::numeric_limits<CIEC_DINT::TValueType>::max();
 
 template CIEC_DINT &CIEC_DINT::operator=<>(const CIEC_ANY_INT &paValue);
 

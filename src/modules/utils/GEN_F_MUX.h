@@ -1,6 +1,8 @@
 /*******************************************************************************
- * Copyright (c) 2012 - 2015 Profactor GmbH, ACIN, fortiss Gmbh
- *                      2018 Johannes Kepler University
+ * Copyright (c) 2012, 2023 Profactor GmbH, ACIN, fortiss Gmbh
+ *                          Johannes Kepler University
+ *                          Martin Erich Jobst
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -11,6 +13,7 @@
  *   Matthias Plasch, Monika Wenger, Alois Zoitl
  *   - initial API and implementation and/or initial documentation
  *    Alois Zoitl - introduced new CGenFB class for better handling generic FBs
+ *    Martin Jobst - add generic readInputData and writeOutputData
  *******************************************************************************/
 #ifndef _GEN_F_MUX_H_
 #define _GEN_F_MUX_H_
@@ -22,21 +25,15 @@ class GEN_F_MUX : public CGenFunctionBlock<CFunctionBlock> {
 
   private:
     //we know for sure that there is one output event
-    static const CStringDictionary::TStringId scm_anEventOutputNames[];
+    static const CStringDictionary::TStringId scmEventOutputNames[];
 
-    static const TEventID scm_nEventEOID = 0;
+    static const TEventID scmEventEOID = 0;
 
-    CStringDictionary::TStringId *m_anEventInputNames;
-    CStringDictionary::TStringId *m_anDataOutputNames;
-    CStringDictionary::TStringId *m_anDataInputNames;
-    CStringDictionary::TStringId *m_anDataOutputTypeIds;
-    CStringDictionary::TStringId *m_anDataInputTypeIds;
-
-    TForteInt16 *m_anEIWithIndexes;
-    TDataIOID *m_anEIWith;
-
-    TForteInt16 *m_anEOWithIndexes;
-    TDataIOID *m_anEOWith;
+    CStringDictionary::TStringId *mEventInputNames;
+    CStringDictionary::TStringId *mDataOutputNames;
+    CStringDictionary::TStringId *mDataInputNames;
+    CStringDictionary::TStringId *mDataOutputTypeIds;
+    CStringDictionary::TStringId *mDataInputTypeIds;
 
     //self-defined members
     size_t mEInputs;
@@ -45,6 +42,10 @@ class GEN_F_MUX : public CGenFunctionBlock<CFunctionBlock> {
     size_t mDOutputs;
 
     void executeEvent(TEventID paEIID) override;
+
+    void readInputData(TEventID paEI) override;
+    void writeOutputData(TEventID paEO) override;
+
     bool createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) override;
 
     GEN_F_MUX(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);

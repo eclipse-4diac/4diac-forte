@@ -20,16 +20,16 @@ class CProcessImageMatrix{
     CProcessImageMatrix();
     ~CProcessImageMatrix();
 
-    void addEntry(unsigned int pa_nCN, unsigned int pa_nModule, unsigned int pa_nIoId, unsigned int pa_nDataSize, unsigned int pa_nPiOffset, unsigned int pa_nBitOffset);
+    void addEntry(unsigned int paCN, unsigned int paModule, unsigned int paIoId, unsigned int paDataSize, unsigned int paPiOffset, unsigned int paBitOffset);
 
     // getEntry: Returns an array with [dataSize, PIOffset, BitOffset]
-    unsigned int* getEntry(unsigned int pa_nCN, unsigned int pa_nModule, unsigned int pa_nIoId);
-    unsigned int* getEntry(unsigned int pa_nIndex);
+    unsigned int* getEntry(unsigned int paCN, unsigned int paModule, unsigned int paIoId);
+    unsigned int* getEntry(unsigned int paIndex);
 
     unsigned int getNrOfEntries() const;
 
     //ProcessImageMatrix* is owned by caller
-    CProcessImageMatrix* getModuleEntries(unsigned int pa_nCN, unsigned int pa_nModule);
+    CProcessImageMatrix* getModuleEntries(unsigned int paCN, unsigned int paModule);
 
     unsigned long getProcessImageSize() const ;
 
@@ -37,26 +37,26 @@ class CProcessImageMatrix{
 
   private:
     struct SChannelEntry{
-        unsigned int m_nCN;
-        unsigned int m_nModuleId;
-        unsigned int m_nIOid;
-        unsigned int m_nDataSize;
-        unsigned int m_nPIOffset;
-        unsigned int m_nBitOffset;
+        unsigned int mCN;
+        unsigned int mModuleId;
+        unsigned int mIOid;
+        unsigned int mDataSize;
+        unsigned int mPIOffset;
+        unsigned int mBitOffset;
 
-        SChannelEntry(unsigned int pa_nCN, unsigned int pa_nModuleId, unsigned int pa_nIOid, unsigned int pa_nDataSize, unsigned int pa_nPIOffset, unsigned int pa_nBitOffset) :
-            m_nCN(pa_nCN), m_nModuleId(pa_nModuleId), m_nIOid(pa_nIOid), m_nDataSize(pa_nDataSize), m_nPIOffset(pa_nPIOffset), m_nBitOffset(pa_nBitOffset){
+        SChannelEntry(unsigned int paCN, unsigned int paModuleId, unsigned int paIOid, unsigned int paDataSize, unsigned int paPIOffset, unsigned int paBitOffset) :
+            mCN(paCN), mModuleId(paModuleId), mIOid(paIOid), mDataSize(paDataSize), mPIOffset(paPIOffset), mBitOffset(paBitOffset){
         }
         ;
 
     };
 
     typedef CSinglyLinkedList<SChannelEntry*> TChannelList;
-    TChannelList m_lMatrix;
+    TChannelList mMatrix;
 
-    unsigned long m_nBitSize;
+    unsigned long mBitSize;
 
-    unsigned int m_nNumberOfEntries;
+    unsigned int mNumberOfEntries;
 };
 
 #endif

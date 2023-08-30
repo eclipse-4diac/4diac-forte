@@ -103,7 +103,7 @@ namespace forte {
         /** Request  to be sent to Host */
         std::string mRequest;
 
-        char mRecvBuffer[cg_unIPLayerRecvBufferSize];
+        char mRecvBuffer[cgIPLayerRecvBufferSize];
         unsigned int mBufFillSize;
 
         std::string mContentType;

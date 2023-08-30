@@ -35,7 +35,7 @@ class CIEC_Struct_Muxer_Test_Struct_1 : public CIEC_STRUCT {
     }
 
     const CStringDictionary::TStringId* elementNames() const override {
-      return scm_unElementNames;
+      return scmElementNames;
     }
 
     CStringDictionary::TStringId getStructTypeNameID() const override;
@@ -58,7 +58,7 @@ class CIEC_Struct_Muxer_Test_Struct_1 : public CIEC_STRUCT {
       return nullptr;
     }
 private:
-    static const CStringDictionary::TStringId scm_unElementNames[];
+    static const CStringDictionary::TStringId scmElementNames[];
 };
 
 class CIEC_Struct_Muxer_Test_Struct_2 : public CIEC_STRUCT {
@@ -76,7 +76,7 @@ class CIEC_Struct_Muxer_Test_Struct_2 : public CIEC_STRUCT {
     }
 
     const CStringDictionary::TStringId* elementNames() const override {
-      return scm_unElementNames;
+      return scmElementNames;
     }
 
     CStringDictionary::TStringId getStructTypeNameID() const override;
@@ -99,7 +99,7 @@ class CIEC_Struct_Muxer_Test_Struct_2 : public CIEC_STRUCT {
       return nullptr;
     }
   private:
-    static const CStringDictionary::TStringId scm_unElementNames[];
+    static const CStringDictionary::TStringId scmElementNames[];
 };
 
 class CIEC_Struct_Muxer_Test_Struct_3 : public CIEC_STRUCT {
@@ -113,7 +113,7 @@ class CIEC_Struct_Muxer_Test_Struct_3 : public CIEC_STRUCT {
     }
 
     const CStringDictionary::TStringId* elementNames() const override {
-      return scm_unElementNames;
+      return scmElementNames;
     }
 
     CStringDictionary::TStringId getStructTypeNameID() const override;
@@ -126,7 +126,7 @@ class CIEC_Struct_Muxer_Test_Struct_3 : public CIEC_STRUCT {
       return nullptr;
     }
   private:
-    static const CStringDictionary::TStringId scm_unElementNames[];
+    static const CStringDictionary::TStringId scmElementNames[];
 };
 
 class CIEC_Struct_Muxer_Test_Struct_4 : public CIEC_STRUCT {
@@ -142,7 +142,7 @@ class CIEC_Struct_Muxer_Test_Struct_4 : public CIEC_STRUCT {
     }
 
     const CStringDictionary::TStringId* elementNames() const override {
-      return scm_unElementNames;
+      return scmElementNames;
     }
 
     CStringDictionary::TStringId getStructTypeNameID() const override;
@@ -161,7 +161,7 @@ class CIEC_Struct_Muxer_Test_Struct_4 : public CIEC_STRUCT {
       return nullptr;
     }
   private:
-    static const CStringDictionary::TStringId scm_unElementNames[];
+    static const CStringDictionary::TStringId scmElementNames[];
 };
 
 class CIEC_Struct_Muxer_Test_Struct_5 : public CIEC_STRUCT {
@@ -179,7 +179,7 @@ public:
   }
 
   const CStringDictionary::TStringId* elementNames() const override {
-    return scm_unElementNames;
+    return scmElementNames;
   }
 
   CStringDictionary::TStringId getStructTypeNameID() const override;
@@ -202,7 +202,7 @@ public:
     return nullptr;
   }
 private:
-  static const CStringDictionary::TStringId scm_unElementNames[];
+  static const CStringDictionary::TStringId scmElementNames[];
 };
 
 

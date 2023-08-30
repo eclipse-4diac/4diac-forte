@@ -70,12 +70,12 @@ CConmeleonC1ProcessInterface::CConmeleonC1ProcessInterface(CResource *paSrcRes, 
 CConmeleonC1ProcessInterface::~CConmeleonC1ProcessInterface(){
 }
 
-bool CConmeleonC1ProcessInterface::initialise(bool m_bInputOrOutput){
+bool CConmeleonC1ProcessInterface::initialise(bool mInputOrOutput){
 
   CIEC_INT param;
   param.fromString(PARAMS().getStorage().c_str());
   mChannelNr = param;
-  setCallingFBType(m_bInputOrOutput);
+  setCallingFBType(mInputOrOutput);
 
   if (!checkChannelBoundaries()){
     STATUS() = scmUnknownChannel;

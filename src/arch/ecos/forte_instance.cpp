@@ -103,7 +103,7 @@ void forteStopInstance(int paSig, TForteInstance paResultDevice){
 }
 
 /*!\brief Creates the Device-Object
- * \param pa_acMGRID A string containing IP and Port like [IP]:[Port]
+ * \param paMGRID A string containing IP and Port like [IP]:[Port]
  * \param The result
  */
 void createDev(const char *paMGRID, TForteInstance* paResultDevice){

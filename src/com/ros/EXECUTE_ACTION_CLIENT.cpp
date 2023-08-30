@@ -22,27 +22,27 @@
 
 DEFINE_FIRMWARE_FB(FORTE_EXECUTE_ACTION_CLIENT, g_nStringIdEXECUTE_ACTION_CLIENT)
 
-const CStringDictionary::TStringId FORTE_EXECUTE_ACTION_CLIENT::scm_anDataInputNames[] = { g_nStringIdQI, g_nStringIdACTIONNAMESPACE, g_nStringIdACTIONMSGNAME, g_nStringIdCOMMAND, g_nStringIdID1, g_nStringIdID2 };
+const CStringDictionary::TStringId FORTE_EXECUTE_ACTION_CLIENT::scmDataInputNames[] = { g_nStringIdQI, g_nStringIdACTIONNAMESPACE, g_nStringIdACTIONMSGNAME, g_nStringIdCOMMAND, g_nStringIdID1, g_nStringIdID2 };
 
-const CStringDictionary::TStringId FORTE_EXECUTE_ACTION_CLIENT::scm_anDataInputTypeIds[] = { g_nStringIdBOOL, g_nStringIdSTRING, g_nStringIdSTRING, g_nStringIdSTRING, g_nStringIdDINT, g_nStringIdDINT };
+const CStringDictionary::TStringId FORTE_EXECUTE_ACTION_CLIENT::scmDataInputTypeIds[] = { g_nStringIdBOOL, g_nStringIdSTRING, g_nStringIdSTRING, g_nStringIdSTRING, g_nStringIdDINT, g_nStringIdDINT };
 
-const CStringDictionary::TStringId FORTE_EXECUTE_ACTION_CLIENT::scm_anDataOutputNames[] = { g_nStringIdQO, g_nStringIdFBSTATUS, g_nStringIdACTIONSTATUS, g_nStringIdRESULT, g_nStringIdID, g_nStringIdSTATE };
+const CStringDictionary::TStringId FORTE_EXECUTE_ACTION_CLIENT::scmDataOutputNames[] = { g_nStringIdQO, g_nStringIdFBSTATUS, g_nStringIdACTIONSTATUS, g_nStringIdRESULT, g_nStringIdID, g_nStringIdSTATE };
 
-const CStringDictionary::TStringId FORTE_EXECUTE_ACTION_CLIENT::scm_anDataOutputTypeIds[] = { g_nStringIdBOOL, g_nStringIdSTRING, g_nStringIdSTRING, g_nStringIdSTRING, g_nStringIdDINT, g_nStringIdSTRING };
+const CStringDictionary::TStringId FORTE_EXECUTE_ACTION_CLIENT::scmDataOutputTypeIds[] = { g_nStringIdBOOL, g_nStringIdSTRING, g_nStringIdSTRING, g_nStringIdSTRING, g_nStringIdDINT, g_nStringIdSTRING };
 
-const TForteInt16 FORTE_EXECUTE_ACTION_CLIENT::scm_anEIWithIndexes[] = { 0, 4 };
-const TDataIOID FORTE_EXECUTE_ACTION_CLIENT::scm_anEIWith[] = { 0, 1, 2, scmWithListDelimiter, 0, 3, 4, 5, scmWithListDelimiter };
-const CStringDictionary::TStringId FORTE_EXECUTE_ACTION_CLIENT::scm_anEventInputNames[] = { g_nStringIdINIT, g_nStringIdREQ };
+const TForteInt16 FORTE_EXECUTE_ACTION_CLIENT::scmEIWithIndexes[] = { 0, 4 };
+const TDataIOID FORTE_EXECUTE_ACTION_CLIENT::scmEIWith[] = { 0, 1, 2, scmWithListDelimiter, 0, 3, 4, 5, scmWithListDelimiter };
+const CStringDictionary::TStringId FORTE_EXECUTE_ACTION_CLIENT::scmEventInputNames[] = { g_nStringIdINIT, g_nStringIdREQ };
 
-const TDataIOID FORTE_EXECUTE_ACTION_CLIENT::scm_anEOWith[] = { 0, 1, scmWithListDelimiter, 0, 1, 2, 4, 3, scmWithListDelimiter, 5, scmWithListDelimiter };
-const TForteInt16 FORTE_EXECUTE_ACTION_CLIENT::scm_anEOWithIndexes[] = { 0, 3, 9 };
-const CStringDictionary::TStringId FORTE_EXECUTE_ACTION_CLIENT::scm_anEventOutputNames[] = { g_nStringIdINITO, g_nStringIdCNF };
+const TDataIOID FORTE_EXECUTE_ACTION_CLIENT::scmEOWith[] = { 0, 1, scmWithListDelimiter, 0, 1, 2, 4, 3, scmWithListDelimiter, 5, scmWithListDelimiter };
+const TForteInt16 FORTE_EXECUTE_ACTION_CLIENT::scmEOWithIndexes[] = { 0, 3, 9 };
+const CStringDictionary::TStringId FORTE_EXECUTE_ACTION_CLIENT::scmEventOutputNames[] = { g_nStringIdINITO, g_nStringIdCNF };
 
-const SFBInterfaceSpec FORTE_EXECUTE_ACTION_CLIENT::scm_stFBInterfaceSpec = { 2, scm_anEventInputNames, scm_anEIWith, scm_anEIWithIndexes, 2, scm_anEventOutputNames, scm_anEOWith, scm_anEOWithIndexes, 6, scm_anDataInputNames, scm_anDataInputTypeIds, 6, scm_anDataOutputNames, scm_anDataOutputTypeIds, 0, 0 };
+const SFBInterfaceSpec FORTE_EXECUTE_ACTION_CLIENT::scmFBInterfaceSpec = { 2, scmEventInputNames, scmEIWith, scmEIWithIndexes, 2, scmEventOutputNames, scmEOWith, scmEOWithIndexes, 6, scmDataInputNames, scmDataInputTypeIds, 6, scmDataOutputNames, scmDataOutputTypeIds, 0, 0 };
 
-void FORTE_EXECUTE_ACTION_CLIENT::executeEvent(TEventID pa_nEIID){
-  switch (pa_nEIID){
-    case scm_nEventINITID:
+void FORTE_EXECUTE_ACTION_CLIENT::executeEvent(TEventID paEIID){
+  switch (paEIID){
+    case scmEventINITID:
       //initialize FB
       if(!m_Initiated){
 
@@ -62,10 +62,10 @@ void FORTE_EXECUTE_ACTION_CLIENT::executeEvent(TEventID pa_nEIID){
         FBSTATUS() = "Terminated - All goals canceled";
         QO() = false;
       }
-      sendOutputEvent(scm_nEventINITOID);
+      sendOutputEvent(scmEventINITOID);
       break;
 
-    case scm_nEventREQID:
+    case scmEventREQID:
       //send new goal to the action server
       if(m_Initiated){
         //send new goal
@@ -98,7 +98,7 @@ void FORTE_EXECUTE_ACTION_CLIENT::executeEvent(TEventID pa_nEIID){
           m_ActionClient->cancelAllGoals();
           FBSTATUS() = "Goals canceled";
           QO() = false;
-          sendOutputEvent(scm_nEventCNFID);
+          sendOutputEvent(scmEventCNFID);
         }
       }
 
@@ -109,7 +109,7 @@ void FORTE_EXECUTE_ACTION_CLIENT::executeEvent(TEventID pa_nEIID){
       }
       break;
 
-    case cg_nExternalEventID:
+    case cgExternalEventID:
       //we received feedback (QO=false)
       if(false == QO()){
 
@@ -128,7 +128,7 @@ void FORTE_EXECUTE_ACTION_CLIENT::executeEvent(TEventID pa_nEIID){
         ACTIONSTATUS() = getCurrentActionState().c_str();
         FBSTATUS() = "Result received";
       }
-      sendOutputEvent(scm_nEventCNFID);
+      sendOutputEvent(scmEventCNFID);
       break;
   }
 }

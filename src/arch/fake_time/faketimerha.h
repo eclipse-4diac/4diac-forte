@@ -20,7 +20,7 @@
 class CFakeTimerHandler : public CTimerHandler, public CThread {
 
   public:
-    explicit CFakeTimerHandler(CDeviceExecution &pa_poDeviceExecution);
+    explicit CFakeTimerHandler(CDeviceExecution &paDeviceExecution);
 
     virtual ~CFakeTimerHandler();
 
@@ -35,9 +35,9 @@ class CFakeTimerHandler : public CTimerHandler, public CThread {
     virtual void disableHandler(void) override;
     /*!\brief Sets the priority of the event source
      *
-     * \param pa_nPriority new priority of the event source
+     * \param paPriority new priority of the event source
      */
-    virtual void setPriority(int pa_nPriority) override;
+    virtual void setPriority(int paPriority) override;
     /*!\brief Get the current priority of the event source
      *
      * \return current priority

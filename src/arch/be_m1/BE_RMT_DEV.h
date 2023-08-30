@@ -17,16 +17,16 @@
 
 class BE_RMT_DEV : public RMT_DEV{
   public:
-    explicit BE_RMT_DEV(CFORTEModule &pa_roModule);
+    explicit BE_RMT_DEV(CFORTEModule &paModule);
 
     ~BE_RMT_DEV() override;
 
     CFORTEModule & getModule() const{
-      return m_roModule;
+      return mModule;
     }
   protected:
   private:
-    CFORTEModule & m_roModule;
+    CFORTEModule & mModule;
 };
 
 #endif /* BE_RMT_DEV_H_ */

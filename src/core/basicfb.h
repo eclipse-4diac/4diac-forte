@@ -23,9 +23,9 @@
  *
  */
 struct SInternalVarsInformation {
-    TPortId m_nNumIntVars; //!< Number of internal vars
-    const CStringDictionary::TStringId *m_aunIntVarsNames; //!< List of the internalvarsnames
-    const CStringDictionary::TStringId *m_aunIntVarsDataTypeNames; //!< List of the data type names for the internal vars
+    TPortId mNumIntVars; //!< Number of internal vars
+    const CStringDictionary::TStringId *mIntVarsNames; //!< List of the internalvarsnames
+    const CStringDictionary::TStringId *mIntVarsDataTypeNames; //!< List of the data type names for the internal vars
 };
 
 /*!\ingroup CORE
@@ -36,9 +36,9 @@ class CBasicFB : public CFunctionBlock {
   public:
     /*!\brief The main constructur for a basic function block.
      */
-    CBasicFB(CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_pstInterfaceSpec,
-             CStringDictionary::TStringId pa_nInstanceNameId,
-             const SInternalVarsInformation *pa_pstVarInternals);
+    CBasicFB(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec,
+             CStringDictionary::TStringId paInstanceNameId,
+             const SInternalVarsInformation *paVarInternals);
 
     bool initialize() override;
 
@@ -53,16 +53,16 @@ class CBasicFB : public CFunctionBlock {
   protected:
     /*! \brief Get the internal variable with given number
      *
-     * Attention this function will not perform any range checks on the pa_nVarIntNum parameter!
-     * @param pa_nVarIntNum number of the internal variable starting with 0
+     * Attention this function will not perform any range checks on the paVarIntNum parameter!
+     * @param paVarIntNum number of the internal variable starting with 0
      * @return pointer to the internal variable
      */
-    virtual CIEC_ANY* getVarInternal(size_t pa_nVarIntNum) {
-      return m_aoInternals[pa_nVarIntNum];
+    virtual CIEC_ANY* getVarInternal(size_t paVarIntNum) {
+      return mInternals[paVarIntNum];
     }
 
-    CIEC_STATE m_nECCState; //! the current state of the ecc. start value is 0 = initial state id
-    const SInternalVarsInformation *const cm_pstVarInternals; //!< struct holding the information on the internal vars.
+    CIEC_STATE mECCState; //! the current state of the ecc. start value is 0 = initial state id
+    const SInternalVarsInformation *const cmVarInternals; //!< struct holding the information on the internal vars.
 
     static TFunctionBlockPtr *createInternalFBs(const size_t paAmountOfInternalFBs, const SCFB_FBInstanceData *const pa_InternalFBData, CResource *const paResource);
 
@@ -74,14 +74,14 @@ class CBasicFB : public CFunctionBlock {
   private:
     /*!\brief Get the pointer to a internal variable of the basic FB.
      *
-     * \param pa_nInternalName StringId of the internal variable name.
+     * \param paInternalName StringId of the internal variable name.
      * \return Pointer to the internal variable or 0.
      */
-    CIEC_ANY* getInternalVar(CStringDictionary::TStringId pa_nInternalName);
+    CIEC_ANY* getInternalVar(CStringDictionary::TStringId paInternalName);
 
     void setInitialValues() override;
 
-    CIEC_ANY **m_aoInternals; //!< A list of pointers to the internal variables.
+    CIEC_ANY **mInternals; //!< A list of pointers to the internal variables.
 
 #ifdef FORTE_FMU
         friend class fmuInstance;

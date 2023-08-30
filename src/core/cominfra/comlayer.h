@@ -34,11 +34,11 @@ namespace forte {
          * Depending on the layers functionality different things have to be performed here.
          * This can range from doing nothing to establishing a TCP session.
          *
-         * @param pa_acLayerParameter configuration data for this layer
+         * @param paLayerParameter configuration data for this layer
          * @return status of the opening process
          *      - e_InitOk of the opening process was successful
          */
-        virtual EComResponse openConnection(char *pa_acLayerParameter) = 0;
+        virtual EComResponse openConnection(char *paLayerParameter) = 0;
 
         /*!\brief Close this layer
          *
@@ -50,12 +50,12 @@ namespace forte {
          *
          * If necessary invoke bottom layer sendData functions.
          *
-         * @param pa_pvData pointer to the data to be sent
-         * @param pa_unSize size of the data to be sent
+         * @param paData pointer to the data to be sent
+         * @param paSize size of the data to be sent
          * @return status of the sending process:
          *    - e_ProcessDataOk ... if sending process was successful
          */
-        virtual EComResponse sendData(void *pa_pvData, unsigned int pa_unSize) = 0;
+        virtual EComResponse sendData(void *paData, unsigned int paSize) = 0;
 
         /*!\brief Finish to process the data received in a context outside the communication interrupt i.e. within the event chain of the ComFB.
          *
@@ -66,41 +66,41 @@ namespace forte {
         /*!\brief get the top layer
          */
         CComLayer *getTopLayer() const {
-          return m_poTopLayer;
+          return mTopLayer;
         }
 
         /*!\brief get the bottom layer
          */
         CComLayer *getBottomLayer() const {
-          return m_poBottomLayer;
+          return mBottomLayer;
         }
 
         /*!\brief set the bottom layer
          */
         void setBottomLayer(CComLayer *layer) {
-          m_poBottomLayer = layer;
+          mBottomLayer = layer;
         }
 
 
         /*!\brief get the FB of this layer
          */
         CBaseCommFB *getCommFB() const override {
-          return m_poFb;
+          return mFb;
         }
 
       protected:
-        CComLayer(CComLayer* pa_poUpperLayer, CBaseCommFB* pa_poComFB);
+        CComLayer(CComLayer* paUpperLayer, CBaseCommFB* paComFB);
 
         template<typename T>
         T& getExtEvHandler(){
-          return ::getExtEvHandler<T>(*m_poFb);
+          return ::getExtEvHandler<T>(*mFb);
         }
 
-        EComConnectionState m_eConnectionState;
+        EComConnectionState mConnectionState;
 
-        CComLayer *m_poTopLayer;
-        CComLayer *m_poBottomLayer;
-        CBaseCommFB *m_poFb;
+        CComLayer *mTopLayer;
+        CComLayer *mBottomLayer;
+        CBaseCommFB *mFb;
 
       private:
     };

@@ -13,62 +13,162 @@
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
 #include "ST_DEL_FB_gen.cpp"
 #endif
+
+#include "criticalregion.h"
+#include "resource.h"
+
+#include "device.h"
 #include "../../stdfblib/ita/DEV_MGR.h"
-#include <device.h>
 
 DEFINE_FIRMWARE_FB(FORTE_ST_DEL_FB, g_nStringIdST_DEL_FB)
 
-const CStringDictionary::TStringId FORTE_ST_DEL_FB::scm_anDataInputNames[] = {g_nStringIdQI, g_nStringIdFB_NAME, g_nStringIdDST};
-
-const CStringDictionary::TStringId FORTE_ST_DEL_FB::scm_anDataInputTypeIds[] = {g_nStringIdBOOL, g_nStringIdWSTRING, g_nStringIdWSTRING};
-
-const CStringDictionary::TStringId FORTE_ST_DEL_FB::scm_anDataOutputNames[] = {g_nStringIdQO, g_nStringIdSTATUS};
-
-const CStringDictionary::TStringId FORTE_ST_DEL_FB::scm_anDataOutputTypeIds[] = {g_nStringIdBOOL, g_nStringIdWSTRING};
-
-const TForteInt16 FORTE_ST_DEL_FB::scm_anEIWithIndexes[] = {0};
-const TDataIOID FORTE_ST_DEL_FB::scm_anEIWith[] = {1, 2, 0, scmWithListDelimiter};
-const CStringDictionary::TStringId FORTE_ST_DEL_FB::scm_anEventInputNames[] = {g_nStringIdREQ};
-
-const TDataIOID FORTE_ST_DEL_FB::scm_anEOWith[] = {1, 0, scmWithListDelimiter};
-const TForteInt16 FORTE_ST_DEL_FB::scm_anEOWithIndexes[] = {0, -1};
-const CStringDictionary::TStringId FORTE_ST_DEL_FB::scm_anEventOutputNames[] = {g_nStringIdCNF};
-
-const SFBInterfaceSpec FORTE_ST_DEL_FB::scm_stFBInterfaceSpec = {
-  1,  scm_anEventInputNames,  scm_anEIWith,  scm_anEIWithIndexes,
-  1,  scm_anEventOutputNames,  scm_anEOWith, scm_anEOWithIndexes,  3,  scm_anDataInputNames, scm_anDataInputTypeIds,
-  2,  scm_anDataOutputNames, scm_anDataOutputTypeIds,
+const CStringDictionary::TStringId FORTE_ST_DEL_FB::scmDataInputNames[] = {g_nStringIdQI, g_nStringIdFB_NAME, g_nStringIdDST};
+const CStringDictionary::TStringId FORTE_ST_DEL_FB::scmDataInputTypeIds[] = {g_nStringIdBOOL, g_nStringIdWSTRING, g_nStringIdWSTRING};
+const CStringDictionary::TStringId FORTE_ST_DEL_FB::scmDataOutputNames[] = {g_nStringIdQO, g_nStringIdSTATUS};
+const CStringDictionary::TStringId FORTE_ST_DEL_FB::scmDataOutputTypeIds[] = {g_nStringIdBOOL, g_nStringIdWSTRING};
+const TDataIOID FORTE_ST_DEL_FB::scmEIWith[] = {1, 2, 0, scmWithListDelimiter};
+const TForteInt16 FORTE_ST_DEL_FB::scmEIWithIndexes[] = {0};
+const CStringDictionary::TStringId FORTE_ST_DEL_FB::scmEventInputNames[] = {g_nStringIdREQ};
+const TDataIOID FORTE_ST_DEL_FB::scmEOWith[] = {1, 0, scmWithListDelimiter};
+const TForteInt16 FORTE_ST_DEL_FB::scmEOWithIndexes[] = {0};
+const CStringDictionary::TStringId FORTE_ST_DEL_FB::scmEventOutputNames[] = {g_nStringIdCNF};
+const SFBInterfaceSpec FORTE_ST_DEL_FB::scmFBInterfaceSpec = {
+  1, scmEventInputNames, scmEIWith, scmEIWithIndexes,
+  1, scmEventOutputNames, scmEOWith, scmEOWithIndexes,
+  3, scmDataInputNames, scmDataInputTypeIds,
+  2, scmDataOutputNames, scmDataOutputTypeIds,
+  0, nullptr,
   0, nullptr
 };
 
+FORTE_ST_DEL_FB::FORTE_ST_DEL_FB(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) :
+    CFunctionBlock( paSrcRes, &scmFBInterfaceSpec, paInstanceNameId),
+    var_conn_QO(var_QO),
+    var_conn_STATUS(var_STATUS),
+    conn_CNF(this, 0),
+    conn_QI(nullptr),
+    conn_FB_NAME(nullptr),
+    conn_DST(nullptr),
+    conn_QO(this, 0, &var_conn_QO),
+    conn_STATUS(this, 1, &var_conn_STATUS) {
+};
 
-void FORTE_ST_DEL_FB::executeEvent(TEventID pa_nEIID){
-  switch(pa_nEIID){
-    case scm_nEventREQID:
-      QO() = QI();
-      if(true == QI()) {
+void FORTE_ST_DEL_FB::setInitialValues() {
+  var_QI = 0_BOOL;
+  var_FB_NAME = u""_WSTRING;
+  var_DST = u""_WSTRING;
+  var_QO = 0_BOOL;
+  var_STATUS = u""_WSTRING;
+}
+
+void FORTE_ST_DEL_FB::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
+  switch(paEIID) {
+    case scmEventREQID:
+      var_QO = var_QI;
+      if(var_QI) {
         executeRQST();
       } else {
-      STATUS() = CIEC_WSTRING("Not Ready");
+        var_STATUS = u"Not Ready"_WSTRING;
       }
-      sendOutputEvent(scm_nEventCNFID);
+      sendOutputEvent(scmEventCNFID, paECET);
       break;
   }
 }
 
 void FORTE_ST_DEL_FB::executeRQST(){
   forte::core::SManagementCMD theCommand;
-  
-  theCommand.mDestination = CStringDictionary::getInstance().getId(DST().getValue());
-  theCommand.mFirstParam.pushBack(CStringDictionary::getInstance().getId(FB_NAME().getValue()));
+
+  theCommand.mDestination = CStringDictionary::getInstance().getId(var_DST.getValue());
+  theCommand.mFirstParam.pushBack(CStringDictionary::getInstance().getId(var_FB_NAME.getValue()));
   theCommand.mCMD = EMGMCommandType::DeleteFBInstance;
-  
-  EMGMResponse resp = m_poDevice.executeMGMCommand(theCommand);
-  
+
+  EMGMResponse resp = getResource().getDevice().executeMGMCommand(theCommand);
+
   //calculate return value
-  QO() = CIEC_BOOL(resp == EMGMResponse::Ready);
+  var_QO = CIEC_BOOL(resp == EMGMResponse::Ready);
   const std::string retVal(DEV_MGR::getResponseText(resp));
   DEVLOG_DEBUG("%s\n", retVal.c_str());
-  STATUS() = CIEC_WSTRING(retVal.c_str());
+  var_STATUS = CIEC_WSTRING(retVal.c_str());
 }
+
+void FORTE_ST_DEL_FB::readInputData(TEventID paEIID) {
+  switch(paEIID) {
+    case scmEventREQID: {
+      RES_DATA_CON_CRITICAL_REGION();
+      readData(1, var_FB_NAME, conn_FB_NAME);
+      readData(2, var_DST, conn_DST);
+      readData(0, var_QI, conn_QI);
+      break;
+    }
+    default:
+      break;
+  }
+}
+
+void FORTE_ST_DEL_FB::writeOutputData(TEventID paEIID) {
+  switch(paEIID) {
+    case scmEventCNFID: {
+      RES_DATA_CON_CRITICAL_REGION();
+      writeData(1, var_STATUS, conn_STATUS);
+      writeData(0, var_QO, conn_QO);
+      break;
+    }
+    default:
+      break;
+  }
+}
+
+CIEC_ANY *FORTE_ST_DEL_FB::getDI(size_t paIndex) {
+  switch(paIndex) {
+    case 0: return &var_QI;
+    case 1: return &var_FB_NAME;
+    case 2: return &var_DST;
+  }
+  return nullptr;
+}
+
+CIEC_ANY *FORTE_ST_DEL_FB::getDO(size_t paIndex) {
+  switch(paIndex) {
+    case 0: return &var_QO;
+    case 1: return &var_STATUS;
+  }
+  return nullptr;
+}
+
+CIEC_ANY *FORTE_ST_DEL_FB::getDIO(size_t) {
+  return nullptr;
+}
+
+CEventConnection *FORTE_ST_DEL_FB::getEOConUnchecked(TPortId paIndex) {
+  switch(paIndex) {
+    case 0: return &conn_CNF;
+  }
+  return nullptr;
+}
+
+CDataConnection **FORTE_ST_DEL_FB::getDIConUnchecked(TPortId paIndex) {
+  switch(paIndex) {
+    case 0: return &conn_QI;
+    case 1: return &conn_FB_NAME;
+    case 2: return &conn_DST;
+  }
+  return nullptr;
+}
+
+CDataConnection *FORTE_ST_DEL_FB::getDOConUnchecked(TPortId paIndex) {
+  switch(paIndex) {
+    case 0: return &conn_QO;
+    case 1: return &conn_STATUS;
+  }
+  return nullptr;
+}
+
+CInOutDataConnection **FORTE_ST_DEL_FB::getDIOInConUnchecked(TPortId) {
+  return nullptr;
+}
+
+CInOutDataConnection *FORTE_ST_DEL_FB::getDIOOutConUnchecked(TPortId) {
+  return nullptr;
+}
+
 

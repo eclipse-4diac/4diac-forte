@@ -15,8 +15,8 @@
 #include "../../../../core/io/configFB/io_slave_multi.h"
 
 #define FUNCTION_BLOCK_CTOR_FOR_WAGO_SLAVES(fbclass, type) \
-  fbclass(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes) : \
-  WagoSlaveBase(type, pa_poSrcRes, &scm_stFBInterfaceSpec, pa_nInstanceNameId)
+  fbclass(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) : \
+  WagoSlaveBase(type, paSrcRes, &scmFBInterfaceSpec, paInstanceNameId)
 
 #define INIT_HANLDLES(noOfBoolInputs, noOfBoolOutputs, noOfAnalogInputs, noOfAnalogOutputs) \
    void initHandles() override {initHandlesBase(noOfBoolInputs, noOfBoolOutputs, noOfAnalogInputs, noOfAnalogOutputs);};

@@ -26,45 +26,45 @@ namespace forte {
 
     class COpcComLayer : public CComLayer{
       public:
-        COpcComLayer(CComLayer* pa_poUpperLayer, CBaseCommFB* pa_poComFB);
+        COpcComLayer(CComLayer* paUpperLayer, CBaseCommFB* paComFB);
         ~COpcComLayer() override;
 
-        EComResponse sendData(void *pa_pvData, unsigned int pa_unSize) override; // top interface, called from top
-        EComResponse recvData(const void *pa_pvData, unsigned int pa_unSize) override;
+        EComResponse sendData(void *paData, unsigned int paSize) override; // top interface, called from top
+        EComResponse recvData(const void *paData, unsigned int paSize) override;
         EComResponse processInterrupt() override;
 
       private:
-        EComResponse openConnection(char *pa_acLayerParameter) override;
+        EComResponse openConnection(char *paLayerParameter) override;
         void closeConnection() override;
         int addOpcItems();
-        void setOutputValue(CIEC_ANY *pa_pDataOut, Variant * pa_pValue);
-        void processClientParams(char* pa_acLayerParams);
-        void convertInputData(void *pa_pData, unsigned int pa_nSize);
+        void setOutputValue(CIEC_ANY *paDataOut, Variant * paValue);
+        void processClientParams(char* paLayerParams);
+        void convertInputData(void *paData, unsigned int paSize);
 
-        unsigned int getInputValueSize(CIEC_ANY* pa_pData, Variant * pa_pNewValue);
+        unsigned int getInputValueSize(CIEC_ANY* paData, Variant * paNewValue);
 
         template<typename T>
-        void getInputValue(void * pa_pData, Variant * pa_pNewValue);
+        void getInputValue(void * paData, Variant * paNewValue);
 
-        const char* m_acHost;
-        const char* m_acServerName;
-        long m_nUpdateRate;
-        float m_nDeadBand;
-        const char* m_acOpcGroupName;
+        const char* mHost;
+        const char* mServerName;
+        long mUpdateRate;
+        float mDeadBand;
+        const char* mOpcGroupName;
 
-        bool m_bLayerParamsOK;
+        bool mLayerParamsOK;
 
-        COpcConnection *m_pOpcConnection;
+        COpcConnection *mOpcConnection;
 
         typedef CSinglyLinkedList<COpcProcessVar*> TOpcProcessVarList;
-        TOpcProcessVarList m_lFBOutputVars;
-        TOpcProcessVarList m_lFBInputVars;
+        TOpcProcessVarList mFBOutputVars;
+        TOpcProcessVarList mFBInputVars;
 
-        EComResponse m_eInterruptResp;
+        EComResponse mInterruptResp;
         typedef CSinglyLinkedList<EComResponse> TComResponseList;
-        TComResponseList m_lComResponses;
+        TComResponseList mComResponses;
 
-        CSyncObject m_oSync;
+        CSyncObject mSync;
     };
 
   }

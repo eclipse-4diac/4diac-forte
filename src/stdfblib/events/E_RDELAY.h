@@ -20,9 +20,9 @@ class E_RDELAY : public CTimedFB{
   DECLARE_FIRMWARE_FB(E_RDELAY)
 private:
 
-  void executeEvent(TEventID pa_nEIID) override;
+  void executeEvent(TEventID paEIID, CEventChainExecutionThread * const paECET) override;
 public:
-  E_RDELAY(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes);
+  E_RDELAY(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
   ~E_RDELAY() override = default;
 
 };

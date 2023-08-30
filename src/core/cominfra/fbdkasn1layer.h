@@ -37,75 +37,75 @@ namespace forte {
 
     class CFBDKASN1ComLayer : public CComLayer{
       public:
-        CFBDKASN1ComLayer(CComLayer* pa_poUpperLayer, CBaseCommFB * pa_poFB);
+        CFBDKASN1ComLayer(CComLayer* paUpperLayer, CBaseCommFB * paFB);
         ~CFBDKASN1ComLayer() override;
 
-        EComResponse sendData(void *pa_pvData, unsigned int pa_unSize) override; // top interface, called from top
-        EComResponse recvData(const void *pa_pvData, unsigned int pa_unSize) override; // bottom interface, called from bottom
+        EComResponse sendData(void *paData, unsigned int paSize) override; // top interface, called from top
+        EComResponse recvData(const void *paData, unsigned int paSize) override; // bottom interface, called from bottom
 
         /*!\brief Serialize an array of IEC data points into a byte array
          *
-         * @param pa_pcBytes destination array for the serialization
-         * @param pa_nStreamSize size of the destination array
-         * @param pa_apoData  array of IEC data points
-         * @param pa_nDataNum length of the data point array
+         * @param paBytes destination array for the serialization
+         * @param paStreamSize size of the destination array
+         * @param paData  array of IEC data points
+         * @param paDataNum length of the data point array
          * @return on success the number of bytes written into the destination array,
          *         -1 on error.
          */
-        static int serializeDataPointArray(TForteByte* pa_pcBytes, const size_t pa_nStreamSize, TConstIEC_ANYPtr *pa_apoData, size_t pa_nDataNum);
+        static int serializeDataPointArray(TForteByte* paBytes, const size_t paStreamSize, TConstIEC_ANYPtr *paData, size_t paDataNum);
         /*!\brief Serialize one IEC data point into a byte array
          *
-         * @param pa_pcBytes destination array for the serialization
-         * @param pa_nStreamSize size of the destination array
-         * @param pa_roCIECData IEC data point
+         * @param paBytes destination array for the serialization
+         * @param paStreamSize size of the destination array
+         * @param paCIECData IEC data point
          * @return on success the number of bytes written into the destination array,
          *         -1 on error.
          */
-        static int serializeDataPoint(TForteByte* pa_pcBytes, int pa_nStreamSize, const CIEC_ANY &pa_roCIECData);
+        static int serializeDataPoint(TForteByte* paBytes, int paStreamSize, const CIEC_ANY &paCIECData);
 
         /*! \brief Serialization of the data value according to IEC 61499 Compliance Profile for
          *   Feasibility Demonstrations based on ISO/IEC 8825 (ASN.1).
          *
          *  This function checks if enough bytes are available in the array.
          *
-         * @param pa_pcBytes destination array for the serialization
-         * @param pa_nStreamSize size of the destination array
-         * @param pa_roCIECData IEC data point
+         * @param paBytes destination array for the serialization
+         * @param paStreamSize size of the destination array
+         * @param paCIECData IEC data point
          * @return on success the number of bytes written into the destination array,
          *         -1 on error.
          */
-        static int serializeValue(TForteByte* pa_pcBytes, int pa_nStreamSize, const CIEC_ANY &pa_roCIECData);
+        static int serializeValue(TForteByte* paBytes, int paStreamSize, const CIEC_ANY &paCIECData);
 
         /*!\brief Deserialize an array of IEC data points from a byte array
          *
-         * @param pa_pcBytes target array for the deserialization
-         * @param pa_nStreamSize size of the target array
-         * @param pa_apoData  array of IEC data points
-         * @param pa_nDataNum length of the data point array
+         * @param paBytes target array for the deserialization
+         * @param paStreamSize size of the target array
+         * @param paData  array of IEC data points
+         * @param paDataNum length of the data point array
          * @return true on success
          */
-        static bool deserializeDataPointArray(const TForteByte* pa_pcBytes, unsigned int pa_nStreamSize, TIEC_ANYPtr *pa_apoData, size_t pa_nDataNum);
+        static bool deserializeDataPointArray(const TForteByte* paBytes, unsigned int paStreamSize, TIEC_ANYPtr *paData, size_t paDataNum);
 
         /*!\brief Deserialize an array of IEC data points from a byte array
          *
-         * @param pa_pcBytes target array for the deserialization
-         * @param pa_nStreamSize size of the target array
-         * @param pa_roCIECData  array of IEC data points
+         * @param paBytes target array for the deserialization
+         * @param paStreamSize size of the target array
+         * @param paCIECData  array of IEC data points
          * @return number of bytes used from the target array
          *         -1 on a general error, -2 if the tag does not fit
          */
-        static int deserializeDataPoint(const TForteByte* pa_pcBytes, int pa_nStreamSize, CIEC_ANY &pa_roCIECData);
+        static int deserializeDataPoint(const TForteByte* paBytes, int paStreamSize, CIEC_ANY &paCIECData);
 
         /*! \brief Deserialization of the data value according to IEC 61499 Compliance Profile for
          *   Feasibility Demonstrations based on ISO/IEC 8825 (ASN.1).
          *
-         * @param pa_pcBytes target array for the deserialization
-         * @param pa_nStreamSize size of the target array
-         * @param pa_roCIECData  array of IEC data points
+         * @param paBytes target array for the deserialization
+         * @param paStreamSize size of the target array
+         * @param paCIECData  array of IEC data points
          * @return number of bytes used from the target array
          *         -1 on a general error, -2 if the tag does not fit
          */
-        static int deserializeValue(const TForteByte* pa_pcBytes, int pa_nStreamSize, CIEC_ANY &pa_roCIECData);
+        static int deserializeValue(const TForteByte* paBytes, int paStreamSize, CIEC_ANY &paCIECData);
 
         enum EDataTypeTags {
           e_ANY_TAG = 0, e_BOOL_TAG = 1, e_SINT_TAG = 2, e_INT_TAG = 3, e_DINT_TAG = 4, e_LINT_TAG = 5, e_USINT_TAG = 6, e_UINT_TAG = 7, e_UDINT_TAG = 8, e_ULINT_TAG = 9, e_REAL_TAG = 10, e_LREAL_TAG = 11, e_TIME_TAG = 12, e_DATE_TAG = 13, e_TIME_OF_DAY_TAG = 14, e_DATE_AND_TIME_TAG = 15, e_STRING_TAG = 16, e_BYTE_TAG = 17, e_WORD_TAG = 18, e_DWORD_TAG = 19, e_LWORD_TAG = 20, e_WSTRING_TAG = 21, e_DerivedData_TAG = 26, e_DirectlyDerivedData_TAG = 27, e_EnumeratedData_TAG = 28, e_SubrangeData_TAG = 29, e_ARRAY_TAG = 22, //according to the compliance profile
@@ -127,73 +127,73 @@ namespace forte {
       protected:
       private:
 
-        static const TForteByte scm_nNull = 5;
-        static const TForteByte csm_aDataTags[][2];
+        static const TForteByte scmNull = 5;
+        static const TForteByte csmDataTags[][2];
 
         static const std::set<CIEC_ANY::EDataTypeID> scmSimpleEncodableDataTypes;
 
         /*!\brief Serialize the Null tag into a byte array
          *
          * This operation will always take one byte
-         * @param pa_pcBytes destination array for the serialization
+         * @param paBytes destination array for the serialization
          */
-        static void serializeNull(TForteByte* pa_pcBytes){
-          *pa_pcBytes = scm_nNull;
+        static void serializeNull(TForteByte* paBytes){
+          *paBytes = scmNull;
         }
 
-        static bool isNull(const TForteByte* pa_pcBytes){
-          return *pa_pcBytes == scm_nNull;
+        static bool isNull(const TForteByte* paBytes){
+          return *paBytes == scmNull;
         }
 
         /*! \brief Serialization of data tag  according to IEC 61499 Compliance Profile for
          *   Feasibility Demonstrations based on ISO/IEC 8825 (ASN.1).
          *
          * This operation will always take one byte.
-         * @param pa_pcBytes destination array for the serialization
-         * @param pa_roCIECData IEC data point
+         * @param paBytes destination array for the serialization
+         * @param paCIECData IEC data point
          */
-        static void serializeTag(TForteByte* pa_pcBytes, const CIEC_ANY &pa_roCIECData);
+        static void serializeTag(TForteByte* paBytes, const CIEC_ANY &paCIECData);
         /** Specialization of the serialization of the data value for different data types. The interface behaves as
-         *  described for static int serializeValue(TForteByte* pa_pcBytes, int pa_nStreamSize, TConstIEC_ANYPtr pa_pCIECData)
+         *  described for static int serializeValue(TForteByte* paBytes, int paStreamSize, TConstIEC_ANYPtr paCIECData)
          * @{*/
-        static int serializeValueSimpleDataType(TForteByte* pa_pcBytes, int pa_nStreamSize, const CIEC_ANY & pa_roDataPoint);
-        static int serializeValueTime(TForteByte* pa_pcBytes, int pa_nStreamSize, const CIEC_TIME & pa_roTime);
-        static int serializeValueString(TForteByte* pa_pcBytes, int pa_nStreamSize, const CIEC_STRING & pa_roString);
+        static int serializeValueSimpleDataType(TForteByte* paBytes, int paStreamSize, const CIEC_ANY & paDataPoint);
+        static int serializeValueTime(TForteByte* paBytes, int paStreamSize, const CIEC_TIME & paTime);
+        static int serializeValueString(TForteByte* paBytes, int paStreamSize, const CIEC_STRING & paString);
 #ifdef FORTE_USE_WSTRING_DATATYPE
-        static int serializeValueWString(TForteByte* pa_pcBytes, int pa_nStreamSize, const CIEC_WSTRING & pa_roWString);
+        static int serializeValueWString(TForteByte* paBytes, int paStreamSize, const CIEC_WSTRING & paWString);
 #endif //FORTE_USE_WSTRING_DATATYPE
-        static int serializeValueStruct(TForteByte* pa_pcBytes, int pa_nStreamSize, const CIEC_STRUCT & pa_roWString);
-        static int serializeArray(TForteByte *pa_pcBytes, int pa_nStreamSize, const CIEC_ARRAY &pa_roArray);
+        static int serializeValueStruct(TForteByte* paBytes, int paStreamSize, const CIEC_STRUCT & paWString);
+        static int serializeArray(TForteByte *paBytes, int paStreamSize, const CIEC_ARRAY &paArray);
         /**@}*/
 
 
 
         /*! \brief Deserialization of data tag  according to IEC 61499 Compliance Profile for
          *   Feasibility Demonstrations based on ISO/IEC 8825 (ASN.1).
-         *   \param pa_cByte byte that contains the received tag.
-         *   \param pa_roCIECData IEC data point
+         *   \param paByte byte that contains the received tag.
+         *   \param paCIECData IEC data point
          *   \return true if the tag matched the data point
          */
-        static bool deserializeTag(const TForteByte pa_cByte, CIEC_ANY &pa_roCIECData);
+        static bool deserializeTag(const TForteByte paByte, CIEC_ANY &paCIECData);
 
 
         /** Specialization of the deserialization of the data value for different data types. The interface behaves as
-         *  described for static int deserializeValue(const TForteByte* pa_pcBytes, int pa_nStreamSize, TIEC_ANYPtr pa_pCIECData)
+         *  described for static int deserializeValue(const TForteByte* paBytes, int paStreamSize, TIEC_ANYPtr paCIECData)
          * @{*/
-        static int deserializeValueSimpleDataType(const TForteByte* pa_pcBytes, int pa_nStreamSize, CIEC_ANY &pa_roIECData);
-        static int deserializeValueTime(const TForteByte* pa_pcBytes, int pa_nStreamSize, CIEC_TIME &pa_roIECData);
+        static int deserializeValueSimpleDataType(const TForteByte* paBytes, int paStreamSize, CIEC_ANY &paIECData);
+        static int deserializeValueTime(const TForteByte* paBytes, int paStreamSize, CIEC_TIME &paIECData);
 #ifdef FORTE_USE_WSTRING_DATATYPE
-        static int deserializeValueWString(const TForteByte* pa_pcBytes, int pa_nStreamSize, CIEC_WSTRING &pa_roIECData);
+        static int deserializeValueWString(const TForteByte* paBytes, int paStreamSize, CIEC_WSTRING &paIECData);
 #endif //FORTE_USE_WSTRING_DATATYPE
-        static int deserializeValueString(const TForteByte* pa_pcBytes, int pa_nStreamSize, CIEC_STRING &pa_roIECData);
-        static int deserializeArray(const TForteByte *pa_pcBytes, int pa_nStreamSize, CIEC_ARRAY &pa_roArray);
-        static int deserializeValueBoolArray(const TForteByte *pa_pcBytes, int pa_nStreamSize, CIEC_ARRAY &pa_roArray, TForteUInt16 pa_unDecodedArraySize);
-        static int deserializeValueStruct(const TForteByte* pa_pcBytes, int pa_nStreamSize, CIEC_STRUCT &pa_roIECData);
+        static int deserializeValueString(const TForteByte* paBytes, int paStreamSize, CIEC_STRING &paIECData);
+        static int deserializeArray(const TForteByte *paBytes, int paStreamSize, CIEC_ARRAY &paArray);
+        static int deserializeValueBoolArray(const TForteByte *paBytes, int paStreamSize, CIEC_ARRAY &paArray, TForteUInt16 paDecodedArraySize);
+        static int deserializeValueStruct(const TForteByte* paBytes, int paStreamSize, CIEC_STRUCT &paIECData);
         /**@}*/
 
-        static size_t getRequiredSerializationSize(const CIEC_ANY &pa_roCIECData);
+        static size_t getRequiredSerializationSize(const CIEC_ANY &paCIECData);
 
-        EComResponse openConnection(char *pa_acLayerParameter) override;
+        EComResponse openConnection(char *paLayerParameter) override;
         void closeConnection() override;
         void resizeDeserBuffer(unsigned int pa_size);
 

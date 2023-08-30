@@ -41,10 +41,10 @@ namespace forte {
 
         /*!\brief Adds a created function block to the FB-List
          *
-         * @param pa_poFuncBlock new function block to add to the FB-List
+         * @param paFuncBlock new function block to add to the FB-List
          * @return response of the command execution as defined in IEC 61499
          */
-        EMGMResponse addFB(CFunctionBlock *pa_poFuncBlock);
+        EMGMResponse addFB(CFunctionBlock *paFuncBlock);
 
         typedef std::vector<CFunctionBlock *> TFunctionBlockList;
 

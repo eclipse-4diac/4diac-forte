@@ -17,13 +17,13 @@
 
 
 inline
-void forte_free(void *pa_pvData){
-  free(pa_pvData);
+void forte_free(void *paData){
+  free(paData);
 }
 
 inline
-void *forte_malloc(size_t pa_nSize){
-  return malloc(pa_nSize);
+void *forte_malloc(size_t paSize){
+  return malloc(paSize);
 }
 
 #endif /* GENFORTEALLOC_H_ */

@@ -13,6 +13,7 @@
  *    Alois Zoitl - introduced new CGenFB class for better handling generic FBs
  *   Martin Jobst
  *     - refactor for ANY variant
+ *     - add generic readInputData and writeOutputData
  *******************************************************************************/
 
 #include "GEN_ADD.h"
@@ -20,15 +21,17 @@
 #include "GEN_ADD_gen.cpp"
 #endif
 
-#include <ifSpecBuilder.h>
 #include <ctype.h>
 #include <stdio.h>
-#include <forte_printer.h>
+#include "ifSpecBuilder.h"
+#include "forte_printer.h"
+#include "resource.h"
+#include "criticalregion.h"
 
 DEFINE_GENERIC_FIRMWARE_FB(GEN_ADD, g_nStringIdGEN_ADD)
 
-GEN_ADD::GEN_ADD(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes) :
-    CGenFunctionBlock<CFunctionBlock>(pa_poSrcRes, pa_nInstanceNameId), m_nDInputs(0){
+GEN_ADD::GEN_ADD(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) :
+    CGenFunctionBlock<CFunctionBlock>(paSrcRes, paInstanceNameId), mDInputs(0){
 }
 
 GEN_ADD::~GEN_ADD(){
@@ -36,10 +39,10 @@ GEN_ADD::~GEN_ADD(){
 
 void GEN_ADD::executeEvent(TEventID paEIID){
   switch (paEIID){
-    case scm_nEventREQID:
-      if(m_nDInputs) {
+    case scmEventREQID:
+      if(mDInputs) {
         var_OUT() = var_IN(0);
-        for (size_t i = 1; i < m_nDInputs; ++i) {
+        for (size_t i = 1; i < mDInputs; ++i) {
           var_OUT() = std::visit([](auto &&paOUT, auto &&paIN) -> CIEC_ANY_MAGNITUDE_VARIANT {
               using T = std::decay_t<decltype(paOUT)>;
               using U = std::decay_t<decltype(paIN)>;
@@ -54,9 +57,21 @@ void GEN_ADD::executeEvent(TEventID paEIID){
           }, var_OUT(), var_IN(i));
         }
       }
-      sendOutputEvent(scm_nEventCNFID);
+      sendOutputEvent(scmEventCNFID);
       break;
   }
+}
+
+void GEN_ADD::readInputData(TEventID) {
+  RES_DATA_CON_CRITICAL_REGION();
+  for(TPortId i = 0; i < mInterfaceSpec->mNumDIs; ++i) {
+    readData(i, *mDIs[i], mDIConns[i]);
+  }
+}
+
+void GEN_ADD::writeOutputData(TEventID) {
+  RES_DATA_CON_CRITICAL_REGION();
+  writeData(0, *mDOs[0], mDOConns[0]);
 }
 
 bool GEN_ADD::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec){
@@ -65,14 +80,14 @@ bool GEN_ADD::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &
   if(nullptr != pcPos){
     pcPos++;
     //we have an underscore and it is the first underscore after AND
-    m_nDInputs = static_cast<unsigned int>(forte::core::util::strtoul(pcPos, nullptr, 10));
-    DEVLOG_DEBUG("DIs: %d;\n", m_nDInputs);
+    mDInputs = static_cast<unsigned int>(forte::core::util::strtoul(pcPos, nullptr, 10));
+    DEVLOG_DEBUG("DIs: %d;\n", mDInputs);
   }
   else{
     return false;
   }
 
-  if(m_nDInputs < 2){
+  if(mDInputs < 2){
     return false;
   }
 
@@ -87,12 +102,10 @@ bool GEN_ADD::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &
   static constexpr std::array<TForteInt16, 1> anEOWithIndexes = { 0 };
 
   forte::core::util::CIfSpecBuilder isb;
-  isb.m_oEI.setStaticEvents(anEventInputNames);
-  isb.m_oEO.setStaticEvents(anEventOutputNames);
-  auto DIRange = isb.m_oDI.addDataRange("IN", m_nDInputs, g_nStringIdANY_MAGNITUDE);
-  isb.m_oDO.setStaticData(anDataOutputNames, anDataOutputTypeIds);
-  isb.m_oIWith.bindRange(isb.m_oEI[g_nStringIdREQ], DIRange);
-  isb.m_oOWith.setStaticBindings(anEOWith, anEOWithIndexes);
+  isb.mEI.setStaticEvents(anEventInputNames);
+  isb.mEO.setStaticEvents(anEventOutputNames);
+  auto DIRange = isb.mDI.addDataRange("IN", mDInputs, g_nStringIdANY_MAGNITUDE);
+  isb.mDO.setStaticData(anDataOutputNames, anDataOutputTypeIds);
 
-  return isb.build(m_oIfSpecStorage, paInterfaceSpec);
+  return isb.build(mIfSpecStorage, paInterfaceSpec);
 }

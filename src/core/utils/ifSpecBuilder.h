@@ -198,20 +198,20 @@ class CEventSpecBuilderBase {
   public:
     /**
      * @brief Set statically defined configuration.
-     * @param pa_aunStaticNames see SFBInterfaceSpec.m_aunEINames / SFBInterfaceSpec.m_aunEONames
-     * @param pa_nEventsCount see SFBInterfaceSpec.m_nNumEIs / SFBInterfaceSpec.m_nNumEOs
+     * @param paStaticNames see SFBInterfaceSpec.mEINames / SFBInterfaceSpec.mEONames
+     * @param paEventsCount see SFBInterfaceSpec.mNumEIs / SFBInterfaceSpec.mNumEOs
      */
-    void setStaticEvents(const CStringDictionary::TStringId *pa_aunStaticNames, std::size_t pa_nEventsCount) {
-      m_oNamesListBuilder.setStaticList(pa_aunStaticNames, pa_nEventsCount);
+    void setStaticEvents(const CStringDictionary::TStringId *paStaticNames, std::size_t paEventsCount) {
+      mNamesListBuilder.setStaticList(paStaticNames, paEventsCount);
     }
     /**
      * @brief Sets statically defined configuration through std::array.
-     * @tparam N see SFBInterfaceSpec.m_nNumEIs / SFBInterfaceSpec.m_nNumEOs; should be automatically deduced
-     * @param pa_aunStaticNames see SFBInterfaceSpec.m_aunEINames / SFBInterfaceSpec.m_aunEONames
+     * @tparam N see SFBInterfaceSpec.mNumEIs / SFBInterfaceSpec.mNumEOs; should be automatically deduced
+     * @param paStaticNames see SFBInterfaceSpec.mEINames / SFBInterfaceSpec.mEONames
      */
     template<std::size_t N>
-    void setStaticEvents(const std::array<CStringDictionary::TStringId, N> &pa_aStaticNames) {
-      setStaticEvents(pa_aStaticNames.data(), pa_aStaticNames.size());
+    void setStaticEvents(const std::array<CStringDictionary::TStringId, N> &paStaticNames) {
+      setStaticEvents(paStaticNames.data(), paStaticNames.size());
     }
 
     /**
@@ -219,17 +219,17 @@ class CEventSpecBuilderBase {
      * @return number of added events
      */
     auto getNumEvents() const {
-      return m_oNamesListBuilder.getNumStrings();
+      return mNamesListBuilder.getNumStrings();
     }
 
     /**
      * @brief Finds port index from event port name.
-     * @param pa_tName port name
+     * @param paName port name
      * @return port index or -1 if not found
      */
     template<typename T>
-    int findEvent(T pa_tName) const {
-      return m_oNamesListBuilder.findString(pa_tName);
+    int findEvent(T paName) const {
+      return mNamesListBuilder.findString(paName);
     }
 
     /**
@@ -237,10 +237,10 @@ class CEventSpecBuilderBase {
      * @return required dynamic data size
      */
     auto calcStorageSize() const {
-      return m_oNamesListBuilder.calcStorageSize();
+      return mNamesListBuilder.calcStorageSize();
     }
-    auto build(CMixedStorage &pa_oStorage) const {
-      return m_oNamesListBuilder.build(pa_oStorage);
+    auto build(CMixedStorage &paStorage) const {
+      return mNamesListBuilder.build(paStorage);
     }
 
     /**
@@ -248,21 +248,21 @@ class CEventSpecBuilderBase {
      * @return true if everything's ok
      */
     bool isGood() const {
-      return m_oNamesListBuilder.isGood() && m_bIsGood;
+      return mNamesListBuilder.isGood() && mIsGood;
     }
 
   private:
-    static constexpr auto scm_unMaxEvents = CFunctionBlock::scm_nMaxInterfaceEvents;
-    bool m_bIsGood = true;
-    CStringIdListSpecBuilder m_oNamesListBuilder{scm_unMaxEvents};
+    static constexpr auto scmMaxEvents = CFunctionBlock::scmMaxInterfaceEvents;
+    bool mIsGood = true;
+    CStringIdListSpecBuilder mNamesListBuilder{scmMaxEvents};
 
   protected:
     template<typename NameType>
-    int addEvent(NameType pa_xName) {
-      return m_oNamesListBuilder.addString(pa_xName);
+    int addEvent(NameType paName) {
+      return mNamesListBuilder.addString(paName);
     }
 
-    std::pair<int, int> addEventRange(const char *pa_sPrefix, int pa_nRangeSize);
+    std::pair<int, int> addEventRange(const char *paPrefix, int paRangeSize);
 };
 
 /**
@@ -280,22 +280,22 @@ class CEventSpecBuilder : public CEventSpecBuilderBase {
 
     /**
      * @brief Adds event port.
-     * @param pa_xName port name
+     * @param paName port name
      * @return reference to the added port
      */
     template<typename TNameType>
-    TCSpecReference addEvent(TNameType pa_xName) {
-      return CEventSpecBuilderBase::addEvent(pa_xName);
+    TCSpecReference addEvent(TNameType paName) {
+      return CEventSpecBuilderBase::addEvent(paName);
     }
 
     /**
      * @brief Adds a range of numerated event ports with the same name prefix.
-     * @param pa_sPrefix name prefix
-     * @param pa_nRangeSize number of event ports in range
+     * @param paPrefix name prefix
+     * @param paRangeSize number of event ports in range
      * @return reference to the whole range added
      */
-    TCSpecReferenceRange addEventRange(const char *pa_sPrefix, int pa_nRangeSize) {
-      return CEventSpecBuilderBase::addEventRange(pa_sPrefix, pa_nRangeSize);
+    TCSpecReferenceRange addEventRange(const char *paPrefix, int paRangeSize) {
+      return CEventSpecBuilderBase::addEventRange(paPrefix, paRangeSize);
     }
 
     /**
@@ -303,8 +303,8 @@ class CEventSpecBuilder : public CEventSpecBuilderBase {
      * @return reference
      */
     template<typename TNameType>
-    TCSpecReference operator[] (TNameType pa_tName) const {
-      return { findEvent(pa_tName) };
+    TCSpecReference operator[] (TNameType paName) const {
+      return { findEvent(paName) };
     }
 };
 
@@ -315,33 +315,33 @@ class CDataSpecBuilderBase {
   public:
     /**
      * @brief Sets statically defined configuration.
-     * @param pa_aunStaticDataNames see SFBInterfaceSpec.m_aunDINames / SFBInterfaceSpec.m_aunDONames
-     * @param pa_aunStaticTypeNames see SFBInterfaceSpec.m_aunDIDataTypeNames / SFBInterfaceSpec.m_aunDODataTypeNames
-     * @param pa_nDataCount see SFBInterfaceSpec.m_nNumDIs / SFBInterfaceSpec.m_nNumDOs
+     * @param paStaticDataNames see SFBInterfaceSpec.mDINames / SFBInterfaceSpec.mDONames
+     * @param paStaticTypeNames see SFBInterfaceSpec.mDIDataTypeNames / SFBInterfaceSpec.mDODataTypeNames
+     * @param paDataCount see SFBInterfaceSpec.mNumDIs / SFBInterfaceSpec.mNumDOs
      */
-    void setStaticData(const CStringDictionary::TStringId *pa_aunStaticDataNames, const CStringDictionary::TStringId *pa_aunStaticTypeNames, std::size_t pa_nDataCount) {
-      m_oNamesListBuilder.setStaticList(pa_aunStaticDataNames, pa_nDataCount);
-      m_oTypesListBuilder.setStaticList(pa_aunStaticTypeNames, pa_nDataCount);
+    void setStaticData(const CStringDictionary::TStringId *paStaticDataNames, const CStringDictionary::TStringId *paStaticTypeNames, std::size_t paDataCount) {
+      mNamesListBuilder.setStaticList(paStaticDataNames, paDataCount);
+      mTypesListBuilder.setStaticList(paStaticTypeNames, paDataCount);
     }
     /**
      * @brief Sets statically defined configuration through std::array.
-     * @tparam N see SFBInterfaceSpec.m_nNumDIs / SFBInterfaceSpec.m_nNumDOs; should be automatically deduced
-     * @param pa_aunStaticDataNames see SFBInterfaceSpec.m_aunDINames / SFBInterfaceSpec.m_aunDONames
-     * @param pa_aunStaticTypeNames see SFBInterfaceSpec.m_aunDIDataTypeNames / SFBInterfaceSpec.m_aunDODataTypeNames
+     * @tparam N see SFBInterfaceSpec.mNumDIs / SFBInterfaceSpec.mNumDOs; should be automatically deduced
+     * @param paStaticDataNames see SFBInterfaceSpec.mDINames / SFBInterfaceSpec.mDONames
+     * @param paStaticTypeNames see SFBInterfaceSpec.mDIDataTypeNames / SFBInterfaceSpec.mDODataTypeNames
      */
     template<std::size_t N>
-    void setStaticData(const std::array<CStringDictionary::TStringId, N> &pa_aunStaticDataNames, const std::array<CStringDictionary::TStringId, N> &pa_aunStaticTypeNames) {
-      setStaticData(pa_aunStaticDataNames.data(), pa_aunStaticTypeNames.data(), N);
+    void setStaticData(const std::array<CStringDictionary::TStringId, N> &paStaticDataNames, const std::array<CStringDictionary::TStringId, N> &paStaticTypeNames) {
+      setStaticData(paStaticDataNames.data(), paStaticTypeNames.data(), N);
     }
 
     /**
      * @brief Finds port index from data port name.
-     * @param pa_tName port name
+     * @param paName port name
      * @return port index or -1 if not found
      */
     template<typename T>
-    int findData(T pa_tName) const {
-      return m_oNamesListBuilder.findString(pa_tName);
+    int findData(T paName) const {
+      return mNamesListBuilder.findString(paName);
     }
 
     /**
@@ -349,33 +349,33 @@ class CDataSpecBuilderBase {
      * @return required dynamic data size
      */
     std::size_t calcStorageSize() const {
-      return m_oNamesListBuilder.calcStorageSize() + m_oTypesListBuilder.calcStorageSize();
+      return mNamesListBuilder.calcStorageSize() + mTypesListBuilder.calcStorageSize();
     }
-    std::tuple<const CStringDictionary::TStringId*, const CStringDictionary::TStringId*, TForteUInt8> build(CMixedStorage &pa_oStorage) const;
+    std::tuple<const CStringDictionary::TStringId*, const CStringDictionary::TStringId*, TForteUInt8> build(CMixedStorage &paStorage) const;
 
     /**
      * @brief Checks configuration status.
      * @return true if everything's ok
      */
     bool isGood() const {
-      return m_oNamesListBuilder.isGood() && m_oTypesListBuilder.isGood() && m_bIsGood;
+      return mNamesListBuilder.isGood() && mTypesListBuilder.isGood() && mIsGood;
     }
 
   private:
-    static constexpr auto scm_unMaxData = CFunctionBlock::scm_nMaxInterfaceEvents;
-    bool m_bIsGood = true;
-    CStringIdListSpecBuilder m_oNamesListBuilder{scm_unMaxData};
-    CStringIdListSpecBuilder m_oTypesListBuilder{scm_unMaxData};
+    static constexpr auto scmMaxData = CFunctionBlock::scmMaxInterfaceEvents;
+    bool mIsGood = true;
+    CStringIdListSpecBuilder mNamesListBuilder{scmMaxData};
+    CStringIdListSpecBuilder mTypesListBuilder{scmMaxData};
 
   protected:
     template<typename TNameType1, typename TNameType2>
-    int addData(TNameType1 pa_xName, TNameType2 pa_xTypeName) {
-      m_oNamesListBuilder.addString(pa_xName);
-      return m_oTypesListBuilder.addString(pa_xTypeName);
+    int addData(TNameType1 paName, TNameType2 paTypeName) {
+      mNamesListBuilder.addString(paName);
+      return mTypesListBuilder.addString(paTypeName);
     }
-    std::pair<int, int> addDataRange(const char *pa_sPrefix, int pa_nRangeSize);
-    std::pair<int, int> addDataRange(const char *pa_sPrefix, int pa_nRangeSize, CStringDictionary::TStringId pa_unTypeName);
-    std::pair<int, int> addDataRange(const char *pa_sPrefix, int pa_nRangeSize, const char *pa_sTypeName);
+    std::pair<int, int> addDataRange(const char *paPrefix, int paRangeSize);
+    std::pair<int, int> addDataRange(const char *paPrefix, int paRangeSize, CStringDictionary::TStringId paTypeName);
+    std::pair<int, int> addDataRange(const char *paPrefix, int paRangeSize, const char *paTypeName);
 };
 
 /**
@@ -393,34 +393,34 @@ class CDataSpecBuilder : public CDataSpecBuilderBase {
 
     /**
      * @brief Adds data port.
-     * @param pa_xName port name
-     * @param pa_xTypeName port data type name
+     * @param paName port name
+     * @param paTypeName port data type name
      * @return reference to the added port
      */
     template<typename TNameType1, typename TNameType2>
-    TCSpecReference addData(TNameType1 pa_xName, TNameType2 pa_xTypeName) {
-      return CDataSpecBuilderBase::addData(pa_xName, pa_xTypeName);
+    TCSpecReference addData(TNameType1 paName, TNameType2 paTypeName) {
+      return CDataSpecBuilderBase::addData(paName, paTypeName);
     }
 
     /**
      * @brief Adds a range of numerated data ports with the same name prefix and of ANY type.
-     * @param pa_sPrefix name prefix
-     * @param pa_nRangeSize number of data ports in range
+     * @param paPrefix name prefix
+     * @param paRangeSize number of data ports in range
      * @return reference to the whole range added
      */
-    TCSpecReferenceRange addDataRange(const char *pa_sPrefix, int pa_nRangeSize) {
-      return CDataSpecBuilderBase::addDataRange(pa_sPrefix, pa_nRangeSize);
+    TCSpecReferenceRange addDataRange(const char *paPrefix, int paRangeSize) {
+      return CDataSpecBuilderBase::addDataRange(paPrefix, paRangeSize);
     }
     /**
      * @brief Adds a range of numerated data ports with the same name prefix.
-     * @param pa_sPrefix name prefix
-     * @param pa_nRangeSize number of data ports in range
-     * @param pa_xTypeName data type name for every port
+     * @param paPrefix name prefix
+     * @param paRangeSize number of data ports in range
+     * @param paTypeName data type name for every port
      * @return reference to the whole range added
      */
     template<typename TNameType>
-    TCSpecReferenceRange addDataRange(const char *pa_sPrefix, int pa_nRangeSize, TNameType pa_xTypeName) {
-      return CDataSpecBuilderBase::addDataRange(pa_sPrefix, pa_nRangeSize, pa_xTypeName);
+    TCSpecReferenceRange addDataRange(const char *paPrefix, int paRangeSize, TNameType paTypeName) {
+      return CDataSpecBuilderBase::addDataRange(paPrefix, paRangeSize, paTypeName);
     }
 
     /**
@@ -428,8 +428,8 @@ class CDataSpecBuilder : public CDataSpecBuilderBase {
      * @return reference
      */
     template<typename TNameType>
-    TCSpecReference operator[] (TNameType pa_tName) const {
-      return { findData(pa_tName) };
+    TCSpecReference operator[] (TNameType paName) const {
+      return { findData(paName) };
     }
 };
 
@@ -443,73 +443,73 @@ class CWithSpecBuilderBase {
   public:
     /**
      * @brief Sets statically defined configuration.
-     * @param pa_aunStaticBindings see SFBInterfaceSpec.m_anEIWith / SFBInterfaceSpec.m_anEOWith
-     * @param pa_anStaticIndexes see SFBInterfaceSpec.m_anEIWithIndexes / SFBInterfaceSpec.m_anEOWithIndexes
-     * @param pa_unNumEvents see SFBInterfaceSpec.m_nNumEIs / SFBInterfaceSpec.m_nNumEOs
+     * @param paStaticBindings see SFBInterfaceSpec.mEIWith / SFBInterfaceSpec.mEOWith
+     * @param paStaticIndexes see SFBInterfaceSpec.mEIWithIndexes / SFBInterfaceSpec.mEOWithIndexes
+     * @param paNumEvents see SFBInterfaceSpec.mNumEIs / SFBInterfaceSpec.mNumEOs
      */
-    void setStaticBindings(const TDataIOID *pa_aunStaticBindings, const TForteInt16 *pa_anStaticIndexes, std::size_t pa_unNumEvents);
+    void setStaticBindings(const TDataIOID *paStaticBindings, const TForteInt16 *paStaticIndexes, std::size_t paNumEvents);
     /**
      * @brief Sets statically defined configuration through std::array.
      * @tparam NBindings number of bindings; should be automatically deduced
-     * @tparam NEvents see SFBInterfaceSpec.m_nNumEIs / SFBInterfaceSpec.m_nNumEOs; should be automatically deduced
-     * @param pa_aunStaticBindings see SFBInterfaceSpec.m_anEIWith / SFBInterfaceSpec.m_anEOWith
-     * @param pa_anStaticIndexes see SFBInterfaceSpec.m_anEIWithIndexes / SFBInterfaceSpec.m_anEOWithIndexes
+     * @tparam NEvents see SFBInterfaceSpec.mNumEIs / SFBInterfaceSpec.mNumEOs; should be automatically deduced
+     * @param paStaticBindings see SFBInterfaceSpec.mEIWith / SFBInterfaceSpec.mEOWith
+     * @param paStaticIndexes see SFBInterfaceSpec.mEIWithIndexes / SFBInterfaceSpec.mEOWithIndexes
      */
     template<std::size_t NBindings, std::size_t NEvents>
-    void setStaticBindings(const std::array<TDataIOID, NBindings> &pa_aunStaticBindings, const std::array<TForteInt16, NEvents> &pa_anStaticIndexes) {
-      setStaticBindings(pa_aunStaticBindings.data(), pa_anStaticIndexes.data(), NEvents);
+    void setStaticBindings(const std::array<TDataIOID, NBindings> &paStaticBindings, const std::array<TForteInt16, NEvents> &paStaticIndexes) {
+      setStaticBindings(paStaticBindings.data(), paStaticIndexes.data(), NEvents);
     }
 
     /**
      * @brief Binds data to event.
-     * @param pa_unEventId event port id
-     * @param pa_unDataId data port id
+     * @param paEventId event port id
+     * @param paDataId data port id
      */
-    void bind(TDataIOID pa_unEventId, TDataIOID pa_unDataId);
+    void bind(TDataIOID paEventId, TDataIOID paDataId);
     /**
      * @brief Binds multiple data to a single event.
-     * @param pa_unEventId event port id
-     * @param pa_unDataId a list of data port ids
+     * @param paEventId event port id
+     * @param paDataId a list of data port ids
      */
-    void bind(TDataIOID pa_unEventId, std::initializer_list<TDataIOID> pa_aunDataIds) {
-      for (auto dataId : pa_aunDataIds) {
-        bind(pa_unEventId, dataId);
+    void bind(TDataIOID paEventId, std::initializer_list<TDataIOID> paDataIds) {
+      for (auto dataId : paDataIds) {
+        bind(paEventId, dataId);
       }
     }
     /**
      * @brief Binds a range of data ports to an event.
-     * @param pa_unEventId event port id
-     * @param pa_unFirstDataId first data port id
-     * @param pa_unLastDataId last data port id
+     * @param paEventId event port id
+     * @param paFirstDataId first data port id
+     * @param paLastDataId last data port id
      */
-    void bindRange(TDataIOID pa_unEventId, TDataIOID pa_unFirstDataId, TDataIOID pa_unLastDataId);
+    void bindRange(TDataIOID paEventId, TDataIOID paFirstDataId, TDataIOID paLastDataId);
 
     /**
      * @brief Calculates required dynamic data size.
-     * @param pa_unNumEvents number of events in the FB
+     * @param paNumEvents number of events in the FB
      * @return required dynamic data size
      */
-    std::size_t calcStorageSize(std::size_t pa_unNumEvents) const;
-    std::tuple<const TDataIOID*, const TForteInt16*> build(CMixedStorage &pa_oStorage, std::size_t pa_unNumEvents);
+    std::size_t calcStorageSize(std::size_t paNumEvents) const;
+    std::tuple<const TDataIOID*, const TForteInt16*> build(CMixedStorage &paStorage, std::size_t paNumEvents);
 
     /**
      * @brief Checks configuration status.
      * @return true if everything's ok
      */
-    bool isGood() const { return m_bIsGood; }
+    bool isGood() const { return mIsGood; }
 
   private:
-    bool m_bIsGood = true;
-    const TDataIOID *m_aunStaticBindings = nullptr;
-    const TForteInt16 *m_anStaticIndexes = nullptr;
-    std::size_t m_unNumStaticEvents = 0;
-    std::vector<std::vector<TDataIOID>> m_vvDynamicList;
+    bool mIsGood = true;
+    const TDataIOID *mStaticBindings = nullptr;
+    const TForteInt16 *mStaticIndexes = nullptr;
+    std::size_t mNumStaticEvents = 0;
+    std::vector<std::vector<TDataIOID>> mDynamicList;
 
-    void grow(std::size_t pa_unNumEvents);
+    void grow(std::size_t paNumEvents);
 
   protected:
-    bool check(bool pa_bState) {
-      m_bIsGood = m_bIsGood && pa_bState;
+    bool check(bool paState) {
+      mIsGood = mIsGood && paState;
       return isGood();
     }
 };
@@ -533,47 +533,47 @@ class CWithSpecBuilder : public CWithSpecBuilderBase {
 
     /**
      * @brief Add a binding with a single data port.
-     * @param pa_oEventRef event to bind to
-     * @param pa_oDataRef data
+     * @param paEventRef event to bind to
+     * @param paDataRef data
      */
-    void bind(TCSpecEventReference pa_oEventRef, TCSpecDataReference pa_oDataRef) {
-      if (check(pa_oEventRef.isValid() && pa_oDataRef.isValid())) {
-        CWithSpecBuilderBase::bind(*pa_oEventRef, *pa_oDataRef);
+    void bind(TCSpecEventReference paEventRef, TCSpecDataReference paDataRef) {
+      if (check(paEventRef.isValid() && paDataRef.isValid())) {
+        CWithSpecBuilderBase::bind(*paEventRef, *paDataRef);
       }
     }
     /**
      * @brief Add a binding with multiple data ports.
-     * @param pa_oEventRef event to bind to
-     * @param pa_aoDataRefs list with data ports
+     * @param paEventRef event to bind to
+     * @param paDataRefs list with data ports
      */
-    void bind(TCSpecEventReference pa_oEventRef, std::initializer_list<TCSpecDataReference> pa_aoDataRefs) {
-      check(pa_oEventRef.isValid());
-      for (auto ref : pa_aoDataRefs) {
+    void bind(TCSpecEventReference paEventRef, std::initializer_list<TCSpecDataReference> paDataRefs) {
+      check(paEventRef.isValid());
+      for (auto ref : paDataRefs) {
         if (!check(ref.isValid()))
             break;
-        bind(pa_oEventRef, *ref);
+        bind(paEventRef, *ref);
       }
     }
 
     /**
      * @brief Add bindings to a range of data ports.
-     * @param pa_oEventRef event to bind to
-     * @param pa_oFirstDataRef first data port
-     * @param pa_oLastDataRef last data port
+     * @param paEventRef event to bind to
+     * @param paFirstDataRef first data port
+     * @param paLastDataRef last data port
      */
-    void bindRange(TCSpecEventReference pa_oEventRef, TCSpecDataReference pa_oFirstDataRef, TCSpecDataReference pa_oLastDataRef) {
-      if (check(pa_oEventRef.isValid() && pa_oFirstDataRef.isValid() && pa_oLastDataRef.isValid())) {
-        CWithSpecBuilderBase::bindRange(*pa_oEventRef, *pa_oFirstDataRef, *pa_oLastDataRef);
+    void bindRange(TCSpecEventReference paEventRef, TCSpecDataReference paFirstDataRef, TCSpecDataReference paLastDataRef) {
+      if (check(paEventRef.isValid() && paFirstDataRef.isValid() && paLastDataRef.isValid())) {
+        CWithSpecBuilderBase::bindRange(*paEventRef, *paFirstDataRef, *paLastDataRef);
       }
     }
     /**
      * @brief Add bindings to a range of data ports.
-     * @param pa_oEventRef event to bind to
-     * @param pa_oDataRefRange data port range
+     * @param paEventRef event to bind to
+     * @param paDataRefRange data port range
      */
-    void bindRange(TCSpecEventReference pa_oEventRef, TCSpecDataReferenceRange pa_oDataRefRange) {
-      if (check(pa_oEventRef.isValid() && pa_oDataRefRange.isValid())) {
-        CWithSpecBuilderBase::bindRange(*pa_oEventRef, *pa_oDataRefRange.mFirst, *pa_oDataRefRange.mLast);
+    void bindRange(TCSpecEventReference paEventRef, TCSpecDataReferenceRange paDataRefRange) {
+      if (check(paEventRef.isValid() && paDataRefRange.isValid())) {
+        CWithSpecBuilderBase::bindRange(*paEventRef, *paDataRefRange.mFirst, *paDataRefRange.mLast);
       }
     }
 };
@@ -585,51 +585,51 @@ class CAdapterSpecBuilder {
   public:
     /**
      * @brief Set statically defined configuration.
-     * @param pa_aoStaticAdapters see SFBInterfaceSpec.m_pstAdapterInstanceDefinition
-     * @param pa_nAdaptersCount see SFBInterfaceSpec.m_nNumAdapters
+     * @param paStaticAdapters see SFBInterfaceSpec.mAdapterInstanceDefinition
+     * @param paAdaptersCount see SFBInterfaceSpec.mNumAdapters
      */
-    void setStaticAdapters(const SAdapterInstanceDef *pa_aoStaticAdapters, std::size_t pa_nAdaptersCount);
+    void setStaticAdapters(const SAdapterInstanceDef *paStaticAdapters, std::size_t paAdaptersCount);
 
     /**
      * @brief Sets statically defined configuration through std::array.
-     * @tparam N see SFBInterfaceSpec.m_nNumAdapters
-     * @param pa_aoStaticAdapters see SFBInterfaceSpec.m_pstAdapterInstanceDefinition
+     * @tparam N see SFBInterfaceSpec.mNumAdapters
+     * @param paStaticAdapters see SFBInterfaceSpec.mAdapterInstanceDefinition
      */
     template<std::size_t N>
-    void setStaticAdapters(const std::array<SAdapterInstanceDef, N> &pa_aoStaticAdapters) {
-      setStaticAdapters(pa_aoStaticAdapters.data(), pa_aoStaticAdapters.size());
+    void setStaticAdapters(const std::array<SAdapterInstanceDef, N> &paStaticAdapters) {
+      setStaticAdapters(paStaticAdapters.data(), paStaticAdapters.size());
     }
 
     /**
      * @brief Adds adapter port (socket/plug).
-     * @param pa_unName port name
-     * @param pa_unTypeName port type (adapter name)
-     * @param pa_bIsPlug true when port is plug (output)
+     * @param paName port name
+     * @param paTypeName port type (adapter name)
+     * @param paIsPlug true when port is plug (output)
      */
-    void addAdapter(const CStringDictionary::TStringId pa_unName, const CStringDictionary::TStringId pa_unType, bool pa_bIsPlug);
+    void addAdapter(const CStringDictionary::TStringId paName, const CStringDictionary::TStringId paType, bool paIsPlug);
 
     /**
      * @brief Adds adapter port (socket/plug) using C strings.
      *
      * C strings are automatically converted to CStringDictionary.
      *
-     * @param pa_sName port name
-     * @param pa_sTypeName port type (adapter name)
-     * @param pa_bIsPlug true when port is plug (output)
+     * @param paName port name
+     * @param paTypeName port type (adapter name)
+     * @param paIsPlug true when port is plug (output)
      */
-    void addAdapter(const char *pa_sName, const char *pa_sType, bool pa_bIsPlug);
+    void addAdapter(const char *paName, const char *paType, bool paIsPlug);
 
     /**
      * @brief Calculates required dynamic data size.
      * @return required dynamic data size
      */
     std::size_t calcStorageSize() const;
-    std::tuple<const SAdapterInstanceDef*, TForteUInt8> build(CMixedStorage &pa_oStorage);
+    std::tuple<const SAdapterInstanceDef*, TForteUInt8> build(CMixedStorage &paStorage);
 
   private:
-    std::vector<SAdapterInstanceDef> m_vDynamicList;
-    std::size_t m_unStaticAdaptersCount = 0;
-    const SAdapterInstanceDef *m_aoStaticAdapters = nullptr;
+    std::vector<SAdapterInstanceDef> mDynamicList;
+    std::size_t mStaticAdaptersCount = 0;
+    const SAdapterInstanceDef *mStaticAdapters = nullptr;
 };
 
 /**
@@ -639,23 +639,23 @@ class CAdapterDirHelperBase {
   public:
     /**
      * @brief Adds adapter port (socket/plug).
-     * @param pa_xName port name
-     * @param pa_xTypeName port type (adapter name)
+     * @param paName port name
+     * @param paTypeName port type (adapter name)
      * @tparam TNameType string type
      */
     template<typename TNameType>
-    void addAdapter(TNameType pa_xName, TNameType pa_xTypeName) {
-      m_roBuilder.addAdapter(pa_xName, pa_xTypeName, m_bIsPlug);
+    void addAdapter(TNameType paName, TNameType paTypeName) {
+      mBuilder.addAdapter(paName, paTypeName, mIsPlug);
     }
 
   protected:
-    constexpr CAdapterDirHelperBase(CAdapterSpecBuilder &pa_roBuilder, bool pa_bIsPlug)
-      : m_roBuilder(pa_roBuilder), m_bIsPlug(pa_bIsPlug)
+    constexpr CAdapterDirHelperBase(CAdapterSpecBuilder &paBuilder, bool paIsPlug)
+      : mBuilder(paBuilder), mIsPlug(paIsPlug)
     {}
 
   private:
-    CAdapterSpecBuilder &m_roBuilder;
-    bool m_bIsPlug;
+    CAdapterSpecBuilder &mBuilder;
+    bool mIsPlug;
 };
 
 /**
@@ -669,16 +669,16 @@ class CAdapterDirHelper;
 template<>
 class CAdapterDirHelper<CInputSpecTag> : public CAdapterDirHelperBase {
   public:
-    constexpr CAdapterDirHelper(CAdapterSpecBuilder &pa_roBuilder)
-      : CAdapterDirHelperBase(pa_roBuilder, false)
+    constexpr CAdapterDirHelper(CAdapterSpecBuilder &paBuilder)
+      : CAdapterDirHelperBase(paBuilder, false)
     {}
 };
 
 template<>
 class CAdapterDirHelper<COutputSpecTag> : public CAdapterDirHelperBase {
   public:
-    constexpr CAdapterDirHelper(CAdapterSpecBuilder &pa_roBuilder)
-      : CAdapterDirHelperBase(pa_roBuilder, true)
+    constexpr CAdapterDirHelper(CAdapterSpecBuilder &paBuilder)
+      : CAdapterDirHelperBase(paBuilder, true)
     {}
 };
 
@@ -690,56 +690,56 @@ class CAdapterDirHelper<COutputSpecTag> : public CAdapterDirHelperBase {
  */
 class CIfSpecBuilder {
   public:
-    CEventSpecBuilder<CInputSpecTag>  m_oEI;       ///< event inputs
-    CEventSpecBuilder<COutputSpecTag> m_oEO;       ///< event outputs
-    CDataSpecBuilder<CInputSpecTag>   m_oDI;       ///< data inputs
-    CDataSpecBuilder<COutputSpecTag>  m_oDO;       ///< data outputs
-    CWithSpecBuilder<CInputSpecTag>   m_oIWith;    ///< input withs
-    CWithSpecBuilder<COutputSpecTag>  m_oOWith;    ///< output withs
-    CAdapterSpecBuilder               m_oAdapter;  ///< all adapters
-    CAdapterDirHelper<CInputSpecTag>  m_oIAdapter{m_oAdapter}; ///< input adapters
-    CAdapterDirHelper<COutputSpecTag> m_oOAdapter{m_oAdapter}; ///< output adapters
+    CEventSpecBuilder<CInputSpecTag>  mEI;       ///< event inputs
+    CEventSpecBuilder<COutputSpecTag> mEO;       ///< event outputs
+    CDataSpecBuilder<CInputSpecTag>   mDI;       ///< data inputs
+    CDataSpecBuilder<COutputSpecTag>  mDO;       ///< data outputs
+    CWithSpecBuilder<CInputSpecTag>   mIWith;    ///< input withs
+    CWithSpecBuilder<COutputSpecTag>  mOWith;    ///< output withs
+    CAdapterSpecBuilder               mAdapter;  ///< all adapters
+    CAdapterDirHelper<CInputSpecTag>  mIAdapter{mAdapter}; ///< input adapters
+    CAdapterDirHelper<COutputSpecTag> mOAdapter{mAdapter}; ///< output adapters
 
     /**
      * @brief Binds event to a single data port.
      * @tparam DirTag defines event/data direction; should be automatically deduced
-     * @param pa_oEventRef event from #m_oEI or #m_oEO
-     * @param pa_oDataRef data from #m_oDI or #m_oDO
+     * @param paEventRef event from #mEI or #mEO
+     * @param paDataRef data from #mDI or #mDO
      */
     template<class DirTag>
-    void bind(CSpecReference<CEventSpecTag, DirTag> pa_oEventRef, CSpecReference<CDataSpecTag, DirTag> pa_oDataRef) {
-      getWithFromDir(pa_oEventRef).bind(pa_oEventRef, pa_oDataRef);
+    void bind(CSpecReference<CEventSpecTag, DirTag> paEventRef, CSpecReference<CDataSpecTag, DirTag> paDataRef) {
+      getWithFromDir(paEventRef).bind(paEventRef, paDataRef);
     }
     /**
      * @brief Binds event to multiple data ports.
      * @tparam DirTag defines event/data direction; should be automatically deduced
-     * @param pa_oEventRef event from #m_oEI or #m_oEO
-     * @param pa_loDataRef multiple data from #m_oDI or #m_oDO
+     * @param paEventRef event from #mEI or #mEO
+     * @param paDataRef multiple data from #mDI or #mDO
      */
     template<class DirTag>
-    void bind(CSpecReference<CEventSpecTag, DirTag> pa_oEventRef, std::initializer_list<CSpecReference<CDataSpecTag, DirTag>> &&pa_loDataRef) {
-      getWithFromDir(pa_oEventRef).bind(pa_oEventRef, std::move(pa_loDataRef));
+    void bind(CSpecReference<CEventSpecTag, DirTag> paEventRef, std::initializer_list<CSpecReference<CDataSpecTag, DirTag>> &&paDataRef) {
+      getWithFromDir(paEventRef).bind(paEventRef, std::move(paDataRef));
     }
     /**
      * @brief Binds event to data port range.
      * @tparam DirTag defines event/data direction; should be automatically deduced
-     * @param pa_oEventRef event from #m_oEI or #m_oEO
-     * @param pa_oFirstDataRef first data from #m_oDI or #m_oDO
-     * @param pa_oFirstDataRef last data from #m_oDI or #m_oDO
+     * @param paEventRef event from #mEI or #mEO
+     * @param paFirstDataRef first data from #mDI or #mDO
+     * @param paFirstDataRef last data from #mDI or #mDO
      */
     template<class DirTag>
-    void bindRange(CSpecReference<CEventSpecTag, DirTag> pa_oEventRef, CSpecReference<CDataSpecTag, DirTag> pa_oFirstDataRef, CSpecReference<CDataSpecTag, DirTag> pa_oLastDataRef) {
-      getWithFromDir(pa_oEventRef).bindRange(pa_oEventRef, pa_oFirstDataRef, pa_oLastDataRef);
+    void bindRange(CSpecReference<CEventSpecTag, DirTag> paEventRef, CSpecReference<CDataSpecTag, DirTag> paFirstDataRef, CSpecReference<CDataSpecTag, DirTag> paLastDataRef) {
+      getWithFromDir(paEventRef).bindRange(paEventRef, paFirstDataRef, paLastDataRef);
     }
     /**
      * @brief Binds event to data port range.
      * @tparam DirTag defines event/data direction; should be automatically deduced
-     * @param pa_oEventRef event from #m_oEI or #m_oEO
-     * @param pa_oDataRefRange data range from #m_oDI or #m_oDO
+     * @param paEventRef event from #mEI or #mEO
+     * @param paDataRefRange data range from #mDI or #mDO
      */
     template<class DirTag>
-    void bindRange(CSpecReference<CEventSpecTag, DirTag> pa_oEventRef, CSpecReferenceRange<CDataSpecTag, DirTag> pa_oDataRefRange) {
-      getWithFromDir(pa_oEventRef).bindRange(pa_oEventRef, pa_oDataRefRange);
+    void bindRange(CSpecReference<CEventSpecTag, DirTag> paEventRef, CSpecReferenceRange<CDataSpecTag, DirTag> paDataRefRange) {
+      getWithFromDir(paEventRef).bindRange(paEventRef, paDataRefRange);
     }
 
     /**
@@ -747,11 +747,11 @@ class CIfSpecBuilder {
      *
      * Before calling this function events, data and withs need to be configured.
      *
-     * @param pa_oStorage storage containing dynamic data
-     * @param pa_oInterfaceSpec @ref SFBInterfaceSpec to fill out
+     * @param paStorage storage containing dynamic data
+     * @param paInterfaceSpec @ref SFBInterfaceSpec to fill out
      * @return isGood()
      */
-    bool build(CMixedStorage &pa_oStorage, SFBInterfaceSpec &pa_oInterfaceSpec);
+    bool build(CMixedStorage &paStorage, SFBInterfaceSpec &paInterfaceSpec);
 
     /**
      * @brief Checks builder status
@@ -760,13 +760,13 @@ class CIfSpecBuilder {
     bool isGood() const;
 
   private:
-    bool m_bIsGood = true;
+    bool mIsGood = true;
 
     constexpr CWithSpecBuilder<CInputSpecTag>& getWithFromDir(CSpecReference<CEventSpecTag, CInputSpecTag>) {
-      return m_oIWith;
+      return mIWith;
     }
     constexpr CWithSpecBuilder<COutputSpecTag>& getWithFromDir(CSpecReference<CEventSpecTag, COutputSpecTag>) {
-      return m_oOWith;
+      return mOWith;
     }
 };
 

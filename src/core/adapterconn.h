@@ -34,8 +34,8 @@ class CAdapterConnection : public CConnection{
       return mPlug;
     }
 
-    void setSocket(CAdapter *pa_poSocket){
-      mSocket = pa_poSocket;
+    void setSocket(CAdapter *paSocket){
+      mSocket = paSocket;
     }
 
     CAdapter *getSocket(){

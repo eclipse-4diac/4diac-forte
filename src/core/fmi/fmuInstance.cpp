@@ -38,13 +38,13 @@ void fmuInstance::printToFile(const char* message){
 #endif
 
 fmuInstance::fmuInstance(fmi2String instanceName, fmi2String GUID, fmi2String bootFileLocation, const fmi2CallbackFunctions *callbackFunctions) :
-    CDevice(0, CStringDictionary::scm_nInvalidStringId, 0, 0),
+    CDevice(0, CStringDictionary::scmInvalidStringId, 0, 0),
     mState(STATE_START_END), mStopTime(-1), mNumberOfEcets(0), mAllowEcetToRun(false) {
 
   CCriticalRegion criticalRegion(sFmuInstanceMutex);
   sFmuInstance = this;
 
-  mResource = new EMB_RES(CStringDictionary::scm_nInvalidStringId, this);
+  mResource = new EMB_RES(CStringDictionary::scmInvalidStringId, this);
 
   getDeviceExecution().getExtEvHandler<fmiTimerHandler>().removeExecutionThread(mResource->getResourceEventExecution());
   mNumberOfEcets--;
@@ -153,7 +153,7 @@ void fmuInstance::populateInputsAndOutputsCore(CFunctionBlock* paFB){
         std::vector<fmuValueContainer*>* outputs = new std::vector<fmuValueContainer*>;
         std::vector<fmuValueContainer*>* inputs = new std::vector<fmuValueContainer*>;
 
-        for(unsigned int i = 2; i < paFB->getFBInterfaceSpec()->m_nNumDIs; i++){
+        for(unsigned int i = 2; i < paFB->getFBInterfaceSpec()->mNumDIs; i++){
           type = getConnectedDataType(i, true, paFB);
           fmuValueContainer* newValue = new fmuValueContainer(fmuValueContainer::getValueFromType(type), false);
           inputs->push_back(newValue); //if an error occur, the fmuValueContainer will have the flag error to true. This must be checked by the FMI interface to kill the simulation
@@ -161,7 +161,7 @@ void fmuInstance::populateInputsAndOutputsCore(CFunctionBlock* paFB){
           FMU_DEBUG_LOG(this, "VARIABLES: COMM: " <<   paFB->getInstanceName() <<  " INPUT PORT " << i << " ADDED SUCCESSFULLY\n")
         }
 
-        for(unsigned int i = 2; i < paFB->getFBInterfaceSpec()->m_nNumDOs; i++){
+        for(unsigned int i = 2; i < paFB->getFBInterfaceSpec()->mNumDOs; i++){
           type = getConnectedDataType(i, false, paFB);
           fmuValueContainer* newValue = new fmuValueContainer(fmuValueContainer::getValueFromType(type), false);
           newValue->setCallbackArgument(newValue);
@@ -189,9 +189,9 @@ void fmuInstance::populateInputsAndOutputsCore(CFunctionBlock* paFB){
     CCompositeFB* testComposite = dynamic_cast<CCompositeFB*>(paFB);
     if(0 != testBasic){ //basic function Block
       //store internal variables
-      if(0 != testBasic->cm_pstVarInternals){
-        for(unsigned int i = 0; i < testBasic->cm_pstVarInternals->m_nNumIntVars; i++){
-          CStringDictionary::TStringId varId = testBasic->cm_pstVarInternals->m_aunIntVarsNames[i];
+      if(0 != testBasic->cmVarInternals){
+        for(unsigned int i = 0; i < testBasic->cmVarInternals->mNumIntVars; i++){
+          CStringDictionary::TStringId varId = testBasic->cmVarInternals->mIntVarsNames[i];
           CIEC_ANY* var = testBasic->getVar(&varId, 1);
           if(0 != var){
             fmuValueContainer* newValue = new fmuValueContainer(fmuValueContainer::getValueFromType(var->getDataTypeID()), true);
@@ -207,7 +207,7 @@ void fmuInstance::populateInputsAndOutputsCore(CFunctionBlock* paFB){
       //store state of ECC
       fmuValueContainer* newValue = new fmuValueContainer(fmuValueContainer::INTEGER, true);
       CStringDictionary::TStringId eccId = CStringDictionary::getInstance().getId("$ECC");
-      if(CStringDictionary::scm_nInvalidStringId == eccId){
+      if(CStringDictionary::scmInvalidStringId == eccId){
         CStringDictionary::getInstance().insert("$ECC");
         eccId = CStringDictionary::getInstance().getId("$ECC");
       }
@@ -217,58 +217,58 @@ void fmuInstance::populateInputsAndOutputsCore(CFunctionBlock* paFB){
     }
     else if(0 != testComposite){
       //populateInputsOutputs for internal FBs
-      for(unsigned int i = 0; i < testComposite->cm_cpoFBNData->m_nNumFBs; i++){
+      for(unsigned int i = 0; i < testComposite->cmFBNData->mNumFBs; i++){
         populateInputsAndOutputsCore(testComposite->mInternalFBs[i]);
       }
     }
   }
 }
 
-CIEC_ANY::EDataTypeID fmuInstance::getConnectedDataType(unsigned int portIndex, bool pa_isInput, CFunctionBlock* pa_poFB) {
+CIEC_ANY::EDataTypeID fmuInstance::getConnectedDataType(unsigned int portIndex, bool paInput, CFunctionBlock* paFB) {
 
   CIEC_ANY::EDataTypeID retVal = CIEC_ANY::e_Max;
   /* Retrieve Publisher, Connection and Signals Source Function Block Information */
-  const CStringDictionary::TStringId portNameId = pa_isInput ? pa_poFB->getFBInterfaceSpec()->m_aunDINames[portIndex] : pa_poFB->getFBInterfaceSpec()->m_aunDONames[portIndex];
-  const CDataConnection *portConnection = pa_isInput ? pa_poFB->getDIConnection(portNameId) : pa_poFB->getDOConnection(portNameId);
+  const CStringDictionary::TStringId portNameId = paInput ? paFB->getFBInterfaceSpec()->mDINames[portIndex] : paFB->getFBInterfaceSpec()->mDONames[portIndex];
+  const CDataConnection *portConnection = paInput ? paFB->getDIConnection(portNameId) : paFB->getDOConnection(portNameId);
   if(portConnection != nullptr){
     //TODO for now we assume that the subscriber connection only has one destination. Needs fix!
-    if(!pa_isInput && portConnection->getDestinationList().isEmpty()){
+    if(!paInput && portConnection->getDestinationList().isEmpty()){
       FMU_DEBUG_LOG(this, "--------ERROR: Subscriber does not have any connection.\n");
     }
     else{
       CSinglyLinkedList<CConnectionPoint>::Iterator it = portConnection->getDestinationList().begin();
-      const CConnectionPoint remoteConnectionPoint = pa_isInput ? portConnection->getSourceId() : *it;
+      const CConnectionPoint remoteConnectionPoint = paInput ? portConnection->getSourceId() : *it;
 
-      const CIEC_ANY *remotePort = pa_isInput ? remoteConnectionPoint.mFB->getDOFromPortId(remoteConnectionPoint.mPortId) : remoteConnectionPoint.mFB->getDIFromPortId(remoteConnectionPoint.mPortId);
+      const CIEC_ANY *remotePort = paInput ? remoteConnectionPoint.mFB->getDOFromPortId(remoteConnectionPoint.mPortId) : remoteConnectionPoint.mFB->getDIFromPortId(remoteConnectionPoint.mPortId);
 
       retVal = remotePort->getDataTypeID();
     }
   }
   else{
-    FMU_DEBUG_LOG(this, "--------ERROR: Got invalid port connection on FB " << pa_poFB->getInstanceName() << " at port " << CStringDictionary::getInstance().get(portNameId) << ". It must be connected to another FB.\n");
+    FMU_DEBUG_LOG(this, "--------ERROR: Got invalid port connection on FB " << paFB->getInstanceName() << " at port " << CStringDictionary::getInstance().get(portNameId) << ". It must be connected to another FB.\n");
   }
 
   return retVal;
 }
 
-void fmuInstance::fillInterfaceElementsArray(CFunctionBlock* pa_poFB, bool isInput, bool isEvent){
+void fmuInstance::fillInterfaceElementsArray(CFunctionBlock* paFB, bool isInput, bool isEvent){
 
   if(isEvent){
-    TEventID noOfElements = isInput ? pa_poFB->getFBInterfaceSpec()->m_nNumEIs : pa_poFB->getFBInterfaceSpec()->m_nNumEOs;
+    TEventID noOfElements = isInput ? paFB->getFBInterfaceSpec()->mNumEIs : paFB->getFBInterfaceSpec()->mNumEOs;
     for(TEventID i = 0; i < noOfElements; i++){
       fmuValueContainer* newValue = new fmuValueContainer(fmuValueContainer::valueType::INTEGER, true);
-      newValue->setEventCounterPointer(isInput ? &(pa_poFB->getEIMonitorData(i)) : &(pa_poFB->getEOMonitorData(i)));
+      newValue->setEventCounterPointer(isInput ? &(paFB->getEIMonitorData(i)) : &(paFB->getEOMonitorData(i)));
       mOutputsAndInputs.push_back(newValue);
-      FMU_DEBUG_LOG(this, "VARIABLES: INTERFACE: " << pa_poFB->getInstanceName() << "." << CStringDictionary::getInstance().get(isInput ? pa_poFB->getFBInterfaceSpec()->m_aunEINames[i] : pa_poFB->getFBInterfaceSpec()->m_aunEONames[i]) << " ADDED SUCCESSFULLY\n")
+      FMU_DEBUG_LOG(this, "VARIABLES: INTERFACE: " << paFB->getInstanceName() << "." << CStringDictionary::getInstance().get(isInput ? paFB->getFBInterfaceSpec()->mEINames[i] : paFB->getFBInterfaceSpec()->mEONames[i]) << " ADDED SUCCESSFULLY\n")
     }
   }
   else{
-    unsigned int noOfElements = isInput ? pa_poFB->getFBInterfaceSpec()->m_nNumDIs : pa_poFB->getFBInterfaceSpec()->m_nNumDOs;
+    unsigned int noOfElements = isInput ? paFB->getFBInterfaceSpec()->mNumDIs : paFB->getFBInterfaceSpec()->mNumDOs;
     for(unsigned int i = 0; i < noOfElements; i++){
-      FMU_DEBUG_LOG(this, "VARIABLES: INTERFACE: " << pa_poFB->getInstanceName() << "." << CStringDictionary::getInstance().get(isInput ? pa_poFB->getFBInterfaceSpec()->m_aunDINames[i] : pa_poFB->getFBInterfaceSpec()->m_aunDONames[i]) << ": ");
-      fmuValueContainer::valueType valueType = fmuValueContainer::getValueFromType(isInput ? pa_poFB->getDIFromPortId(static_cast<TPortId>(i))->getDataTypeID() : pa_poFB->getDOFromPortId(static_cast<TPortId>(i))->getDataTypeID());
+      FMU_DEBUG_LOG(this, "VARIABLES: INTERFACE: " << paFB->getInstanceName() << "." << CStringDictionary::getInstance().get(isInput ? paFB->getFBInterfaceSpec()->mDINames[i] : paFB->getFBInterfaceSpec()->mDONames[i]) << ": ");
+      fmuValueContainer::valueType valueType = fmuValueContainer::getValueFromType(isInput ? paFB->getDIFromPortId(static_cast<TPortId>(i))->getDataTypeID() : paFB->getDOFromPortId(static_cast<TPortId>(i))->getDataTypeID());
       if(fmuValueContainer::valueType::WRONG == valueType){
-        valueType = fmuValueContainer::getValueFromType(getConnectedDataType(i, isInput, pa_poFB));
+        valueType = fmuValueContainer::getValueFromType(getConnectedDataType(i, isInput, paFB));
       }
 
       if(fmuValueContainer::valueType::WRONG == valueType){
@@ -277,7 +277,7 @@ void fmuInstance::fillInterfaceElementsArray(CFunctionBlock* pa_poFB, bool isInp
       }
       FMU_DEBUG_LOG(this, " ADDED SUCCESSFULLY\n")
       fmuValueContainer* newValue = new fmuValueContainer(valueType, true);
-      newValue->setValuePointer(isInput ? pa_poFB->getDIFromPortId(static_cast<TPortId>(i)) : pa_poFB->getDOFromPortId(static_cast<TPortId>(i)));
+      newValue->setValuePointer(isInput ? paFB->getDIFromPortId(static_cast<TPortId>(i)) : paFB->getDOFromPortId(static_cast<TPortId>(i)));
       mOutputsAndInputs.push_back(newValue);
     }
   }

@@ -15,28 +15,28 @@
 #endif
 
 DEFINE_FIRMWARE_DATATYPE(Struct_Muxer_Test_Struct_1, g_nStringIdStruct_Muxer_Test_Struct_1)
-const CStringDictionary::TStringId CIEC_Struct_Muxer_Test_Struct_1::scm_unElementNames[] = { g_nStringIdVar1, g_nStringIdVar2, g_nStringIdVar3 };
+const CStringDictionary::TStringId CIEC_Struct_Muxer_Test_Struct_1::scmElementNames[] = { g_nStringIdVar1, g_nStringIdVar2, g_nStringIdVar3 };
 
 CStringDictionary::TStringId CIEC_Struct_Muxer_Test_Struct_1::getStructTypeNameID() const {
   return g_nStringIdStruct_Muxer_Test_Struct_1;
 };
 
 DEFINE_FIRMWARE_DATATYPE(Struct_Muxer_Test_Struct_2, g_nStringIdStruct_Muxer_Test_Struct_2)
-const CStringDictionary::TStringId CIEC_Struct_Muxer_Test_Struct_2::scm_unElementNames[] = { g_nStringIdVar1, g_nStringIdVar2, g_nStringIdVar3 };
+const CStringDictionary::TStringId CIEC_Struct_Muxer_Test_Struct_2::scmElementNames[] = { g_nStringIdVar1, g_nStringIdVar2, g_nStringIdVar3 };
 
 CStringDictionary::TStringId CIEC_Struct_Muxer_Test_Struct_2::getStructTypeNameID() const {
   return g_nStringIdStruct_Muxer_Test_Struct_2;
 };
 
 DEFINE_FIRMWARE_DATATYPE(Struct_Muxer_Test_Struct_3, g_nStringIdStruct_Muxer_Test_Struct_3)
-const CStringDictionary::TStringId CIEC_Struct_Muxer_Test_Struct_3::scm_unElementNames[] = { };
+const CStringDictionary::TStringId CIEC_Struct_Muxer_Test_Struct_3::scmElementNames[] = { };
 
 CStringDictionary::TStringId CIEC_Struct_Muxer_Test_Struct_3::getStructTypeNameID() const {
   return g_nStringIdStruct_Muxer_Test_Struct_3;
 };
 
 DEFINE_FIRMWARE_DATATYPE(Struct_Muxer_Test_Struct_4, g_nStringIdStruct_Muxer_Test_Struct_4)
-const CStringDictionary::TStringId CIEC_Struct_Muxer_Test_Struct_4::scm_unElementNames[] = {
+const CStringDictionary::TStringId CIEC_Struct_Muxer_Test_Struct_4::scmElementNames[] = {
   g_nStringIdVar0,
   g_nStringIdVar1,
   g_nStringIdVar2,
@@ -299,7 +299,7 @@ CStringDictionary::TStringId CIEC_Struct_Muxer_Test_Struct_4::getStructTypeNameI
 };
 
 DEFINE_FIRMWARE_DATATYPE(Struct_Muxer_Test_Struct_5, g_nStringIdStruct_Muxer_Test_Struct_5)
-const CStringDictionary::TStringId CIEC_Struct_Muxer_Test_Struct_5::scm_unElementNames[] = { g_nStringIdVar1, g_nStringIdVar2, g_nStringIdVar3 };
+const CStringDictionary::TStringId CIEC_Struct_Muxer_Test_Struct_5::scmElementNames[] = { g_nStringIdVar1, g_nStringIdVar2, g_nStringIdVar3 };
 
 CStringDictionary::TStringId CIEC_Struct_Muxer_Test_Struct_5::getStructTypeNameID() const {
   return g_nStringIdStruct_Muxer_Test_Struct_5;

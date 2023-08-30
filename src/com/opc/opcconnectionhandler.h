@@ -28,16 +28,16 @@ class COpcConnectionHandler{
      *  If a connection to the specified server already exist a pointer to this is returned. Otherwise a
      *  new connection is created. The returned connection includes the group with the specified settings.
      */
-    COpcConnection* getOpcConnection(const char *pa_acHost, const char *pa_acServerName, const char* pa_acGroupName, unsigned long pa_nReqUpdateRate, float pa_nDeadBand, forte::com_infra::CComLayer* pa_pComCallback);
+    COpcConnection* getOpcConnection(const char *paHost, const char *paServerName, const char* paGroupName, unsigned long paReqUpdateRate, float paDeadBand, forte::com_infra::CComLayer* paComCallback);
 
-    void removeOpcConnection(const char *pa_acHost, const char *pa_acServerName, const char* pa_acGroupName);
+    void removeOpcConnection(const char *paHost, const char *paServerName, const char* paGroupName);
 
   private:
-    COpcConnection* findOpcConnection(const char* pa_acHost, const char* pa_acServerName);
-    void deleteOpcConnection(const char* pa_acHost, const char* pa_acServerName);
+    COpcConnection* findOpcConnection(const char* paHost, const char* paServerName);
+    void deleteOpcConnection(const char* paHost, const char* paServerName);
 
     typedef CSinglyLinkedList<COpcConnection*> TOpcConnectionList;
-    TOpcConnectionList m_lOpcConnectionList;
+    TOpcConnectionList mOpcConnectionList;
 
 };
 

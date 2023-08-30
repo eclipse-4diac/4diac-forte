@@ -32,8 +32,8 @@ class CIEC_SINT final : public CIEC_ANY_SIGNED {
   public:
     typedef TForteInt8 TValueType;
 
-    static const TValueType scm_nMinVal;
-    static const TValueType scm_nMaxVal;
+    static const TValueType scmMinVal;
+    static const TValueType scmMaxVal;
 
     CIEC_SINT() = default;
 

@@ -149,7 +149,7 @@ FOREACH(POS RANGE ${LAYER_CLASS_LEN}-1)
   if("${POS}" GREATER  "0")
     SET(LAYERMANAGER_INSTANCE "${LAYERMANAGER_INSTANCE}  else ")
   endif()
-  SET(LAYERMANAGER_INSTANCE "${LAYERMANAGER_INSTANCE}if(0 == strcmp(\"${CONFIGNAME}\", pa_acLayerIdentifier)){\n    m_poNewLayer = new ${CLASS}(pa_poUpperLayer, pa_poComFB);\n  }\n")
+  SET(LAYERMANAGER_INSTANCE "${LAYERMANAGER_INSTANCE}if(0 == strcmp(\"${CONFIGNAME}\", paLayerIdentifier)){\n    mNewLayer = new ${CLASS}(paUpperLayer, paComFB);\n  }\n")
 ENDFOREACH(POS)
 
 CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/core/cominfra/comlayersmanager.cpp.in ${CMAKE_BINARY_DIR}/core/cominfra/comlayersmanager_new.cpp)

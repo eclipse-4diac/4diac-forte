@@ -17,48 +17,48 @@
 
 DEFINE_FIRMWARE_FB(FORTE_QueryService, g_nStringIdQueryService)
 
-const CStringDictionary::TStringId FORTE_QueryService::scm_anDataInputNames[] = {g_nStringIdserviceQueryForm, g_nStringIdaddress};
+const CStringDictionary::TStringId FORTE_QueryService::scmDataInputNames[] = {g_nStringIdserviceQueryForm, g_nStringIdaddress};
 
-const CStringDictionary::TStringId FORTE_QueryService::scm_anDataInputTypeIds[] = {g_nStringIdServiceQueryForm, g_nStringIdWSTRING};
+const CStringDictionary::TStringId FORTE_QueryService::scmDataInputTypeIds[] = {g_nStringIdServiceQueryForm, g_nStringIdWSTRING};
 
-const CStringDictionary::TStringId FORTE_QueryService::scm_anDataOutputNames[] = {g_nStringIdserviceEntries};
+const CStringDictionary::TStringId FORTE_QueryService::scmDataOutputNames[] = {g_nStringIdserviceEntries};
 
-const CStringDictionary::TStringId FORTE_QueryService::scm_anDataOutputTypeIds[] = {g_nStringIdARRAY, 10, g_nStringIdServiceRegistryEntry};
+const CStringDictionary::TStringId FORTE_QueryService::scmDataOutputTypeIds[] = {g_nStringIdARRAY, 10, g_nStringIdServiceRegistryEntry};
 
-const TForteInt16 FORTE_QueryService::scm_anEIWithIndexes[] = {0};
-const TDataIOID FORTE_QueryService::scm_anEIWith[] = {0, 1, scmWithListDelimiter};
-const CStringDictionary::TStringId FORTE_QueryService::scm_anEventInputNames[] = {g_nStringIdquery};
+const TForteInt16 FORTE_QueryService::scmEIWithIndexes[] = {0};
+const TDataIOID FORTE_QueryService::scmEIWith[] = {0, 1, scmWithListDelimiter};
+const CStringDictionary::TStringId FORTE_QueryService::scmEventInputNames[] = {g_nStringIdquery};
 
-const TDataIOID FORTE_QueryService::scm_anEOWith[] = {0, scmWithListDelimiter};
-const TForteInt16 FORTE_QueryService::scm_anEOWithIndexes[] = {0, -1};
-const CStringDictionary::TStringId FORTE_QueryService::scm_anEventOutputNames[] = {g_nStringIdqueried};
+const TDataIOID FORTE_QueryService::scmEOWith[] = {0, scmWithListDelimiter};
+const TForteInt16 FORTE_QueryService::scmEOWithIndexes[] = {0, -1};
+const CStringDictionary::TStringId FORTE_QueryService::scmEventOutputNames[] = {g_nStringIdqueried};
 
-const SAdapterInstanceDef FORTE_QueryService::scm_astAdapterInstances[] = {
+const SAdapterInstanceDef FORTE_QueryService::scmAdapterInstances[] = {
 {g_nStringIdQueryServicesAdp, g_nStringIdqueryServices, true }};
 
-const SFBInterfaceSpec FORTE_QueryService::scm_stFBInterfaceSpec = {
-  1,  scm_anEventInputNames,  scm_anEIWith,  scm_anEIWithIndexes,
-  1,  scm_anEventOutputNames,  scm_anEOWith, scm_anEOWithIndexes,  2,  scm_anDataInputNames, scm_anDataInputTypeIds,
-  1,  scm_anDataOutputNames, scm_anDataOutputTypeIds,
-  1,scm_astAdapterInstances};
+const SFBInterfaceSpec FORTE_QueryService::scmFBInterfaceSpec = {
+  1,  scmEventInputNames,  scmEIWith,  scmEIWithIndexes,
+  1,  scmEventOutputNames,  scmEOWith, scmEOWithIndexes,  2,  scmDataInputNames, scmDataInputTypeIds,
+  1,  scmDataOutputNames, scmDataOutputTypeIds,
+  1,scmAdapterInstances};
 
 
-const SCFB_FBConnectionData FORTE_QueryService::scm_astEventConnections[] = {
-  {GENERATE_CONNECTION_PORT_ID_1_ARG(g_nStringIdquery), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdqueryServices, g_nStringIdquery), CCompositeFB::scm_nAdapterMarker |0},
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdqueryServices, g_nStringIdqueried), CCompositeFB::scm_nAdapterMarker |0, GENERATE_CONNECTION_PORT_ID_1_ARG(g_nStringIdqueried), -1},
+const SCFB_FBConnectionData FORTE_QueryService::scmEventConnections[] = {
+  {GENERATE_CONNECTION_PORT_ID_1_ARG(g_nStringIdquery), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdqueryServices, g_nStringIdquery), CCompositeFB::scmAdapterMarker |0},
+  {GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdqueryServices, g_nStringIdqueried), CCompositeFB::scmAdapterMarker |0, GENERATE_CONNECTION_PORT_ID_1_ARG(g_nStringIdqueried), -1},
 };
 
-const SCFB_FBConnectionData FORTE_QueryService::scm_astDataConnections[] = {
-  {GENERATE_CONNECTION_PORT_ID_1_ARG(g_nStringIdserviceQueryForm), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdqueryServices, g_nStringIdserviceQueryForm), CCompositeFB::scm_nAdapterMarker |0},
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdqueryServices, g_nStringIdserviceEntries), CCompositeFB::scm_nAdapterMarker |0, GENERATE_CONNECTION_PORT_ID_1_ARG(g_nStringIdserviceEntries), -1},
-  {GENERATE_CONNECTION_PORT_ID_1_ARG(g_nStringIdaddress), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdqueryServices, g_nStringIdendpoint), CCompositeFB::scm_nAdapterMarker |0},
+const SCFB_FBConnectionData FORTE_QueryService::scmDataConnections[] = {
+  {GENERATE_CONNECTION_PORT_ID_1_ARG(g_nStringIdserviceQueryForm), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdqueryServices, g_nStringIdserviceQueryForm), CCompositeFB::scmAdapterMarker |0},
+  {GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdqueryServices, g_nStringIdserviceEntries), CCompositeFB::scmAdapterMarker |0, GENERATE_CONNECTION_PORT_ID_1_ARG(g_nStringIdserviceEntries), -1},
+  {GENERATE_CONNECTION_PORT_ID_1_ARG(g_nStringIdaddress), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdqueryServices, g_nStringIdendpoint), CCompositeFB::scmAdapterMarker |0},
 };
 
-const SCFB_FBNData FORTE_QueryService::scm_stFBNData = {
+const SCFB_FBNData FORTE_QueryService::scmFBNData = {
   0, 0,
-  2, scm_astEventConnections,
+  2, scmEventConnections,
   0, 0,
-  3, scm_astDataConnections,
+  3, scmDataConnections,
   0, 0,
   0, 0
 };

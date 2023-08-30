@@ -16,28 +16,28 @@
 
 DEFINE_FIRMWARE_FB(FORTE_Wago1405_6, g_nStringIdWago1405_6)
 
-const CStringDictionary::TStringId FORTE_Wago1405_6::scm_anDataInputNames[] = {g_nStringIdQI, g_nStringIdDigitalInput_1, g_nStringIdDigitalInput_2, g_nStringIdDigitalInput_3, g_nStringIdDigitalInput_4, g_nStringIdDigitalInput_5, g_nStringIdDigitalInput_6, g_nStringIdDigitalInput_7, g_nStringIdDigitalInput_8, g_nStringIdDigitalInput_9, g_nStringIdDigitalInput_10, g_nStringIdDigitalInput_11, g_nStringIdDigitalInput_12, g_nStringIdDigitalInput_13, g_nStringIdDigitalInput_14, g_nStringIdDigitalInput_15, g_nStringIdDigitalInput_16};
+const CStringDictionary::TStringId FORTE_Wago1405_6::scmDataInputNames[] = {g_nStringIdQI, g_nStringIdDigitalInput_1, g_nStringIdDigitalInput_2, g_nStringIdDigitalInput_3, g_nStringIdDigitalInput_4, g_nStringIdDigitalInput_5, g_nStringIdDigitalInput_6, g_nStringIdDigitalInput_7, g_nStringIdDigitalInput_8, g_nStringIdDigitalInput_9, g_nStringIdDigitalInput_10, g_nStringIdDigitalInput_11, g_nStringIdDigitalInput_12, g_nStringIdDigitalInput_13, g_nStringIdDigitalInput_14, g_nStringIdDigitalInput_15, g_nStringIdDigitalInput_16};
 
-const CStringDictionary::TStringId FORTE_Wago1405_6::scm_anDataInputTypeIds[] = {g_nStringIdBOOL, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING};
+const CStringDictionary::TStringId FORTE_Wago1405_6::scmDataInputTypeIds[] = {g_nStringIdBOOL, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING};
 
-const CStringDictionary::TStringId FORTE_Wago1405_6::scm_anDataOutputNames[] = {g_nStringIdQO, g_nStringIdSTATUS};
+const CStringDictionary::TStringId FORTE_Wago1405_6::scmDataOutputNames[] = {g_nStringIdQO, g_nStringIdSTATUS};
 
-const CStringDictionary::TStringId FORTE_Wago1405_6::scm_anDataOutputTypeIds[] = {g_nStringIdBOOL, g_nStringIdWSTRING};
+const CStringDictionary::TStringId FORTE_Wago1405_6::scmDataOutputTypeIds[] = {g_nStringIdBOOL, g_nStringIdWSTRING};
 
-const TForteInt16 FORTE_Wago1405_6::scm_anEIWithIndexes[] = {0};
-const TDataIOID FORTE_Wago1405_6::scm_anEIWith[] = {1, 2, 5, 3, 4, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 0, scmWithListDelimiter};
-const CStringDictionary::TStringId FORTE_Wago1405_6::scm_anEventInputNames[] = {g_nStringIdMAP};
+const TForteInt16 FORTE_Wago1405_6::scmEIWithIndexes[] = {0};
+const TDataIOID FORTE_Wago1405_6::scmEIWith[] = {1, 2, 5, 3, 4, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 0, scmWithListDelimiter};
+const CStringDictionary::TStringId FORTE_Wago1405_6::scmEventInputNames[] = {g_nStringIdMAP};
 
-const TDataIOID FORTE_Wago1405_6::scm_anEOWith[] = {0, scmWithListDelimiter, 0, 1, scmWithListDelimiter};
-const TForteInt16 FORTE_Wago1405_6::scm_anEOWithIndexes[] = {0, 2, -1};
-const CStringDictionary::TStringId FORTE_Wago1405_6::scm_anEventOutputNames[] = {g_nStringIdMAPO, g_nStringIdIND};
+const TDataIOID FORTE_Wago1405_6::scmEOWith[] = {0, scmWithListDelimiter, 0, 1, scmWithListDelimiter};
+const TForteInt16 FORTE_Wago1405_6::scmEOWithIndexes[] = {0, 2, -1};
+const CStringDictionary::TStringId FORTE_Wago1405_6::scmEventOutputNames[] = {g_nStringIdMAPO, g_nStringIdIND};
 
-const SAdapterInstanceDef FORTE_Wago1405_6::scm_astAdapterInstances[] = {
+const SAdapterInstanceDef FORTE_Wago1405_6::scmAdapterInstances[] = {
 {g_nStringIdWagoBusAdapter, g_nStringIdBusAdapterOut, true },
 {g_nStringIdWagoBusAdapter, g_nStringIdBusAdapterIn, false }};
 
-const SFBInterfaceSpec FORTE_Wago1405_6::scm_stFBInterfaceSpec = {
-  1,  scm_anEventInputNames,  scm_anEIWith,  scm_anEIWithIndexes,
-  2,  scm_anEventOutputNames,  scm_anEOWith, scm_anEOWithIndexes,  17,  scm_anDataInputNames, scm_anDataInputTypeIds,
-  2,  scm_anDataOutputNames, scm_anDataOutputTypeIds,
-  2,scm_astAdapterInstances};
+const SFBInterfaceSpec FORTE_Wago1405_6::scmFBInterfaceSpec = {
+  1,  scmEventInputNames,  scmEIWith,  scmEIWithIndexes,
+  2,  scmEventOutputNames,  scmEOWith, scmEOWithIndexes,  17,  scmDataInputNames, scmDataInputTypeIds,
+  2,  scmDataOutputNames, scmDataOutputTypeIds,
+  2,scmAdapterInstances};

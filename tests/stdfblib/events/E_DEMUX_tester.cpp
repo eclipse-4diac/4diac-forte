@@ -24,9 +24,9 @@ class E_DEMUX_tester : public CFBTester{
   public:
 
   private:
-    E_DEMUX_tester(CResource* m_poTestResource) :
-        CFBTester(m_poTestResource){
-      setInputData({&m_oIn_K});
+    E_DEMUX_tester(CResource* mTestResource) :
+        CFBTester(mTestResource){
+      setInputData({&mIn_K});
     }
     virtual ~E_DEMUX_tester() {
 
@@ -43,41 +43,41 @@ class E_DEMUX_tester : public CFBTester{
     /***********************************************************************************/
     bool testCase_K0(){
       /* prepare inputparameters */
-      m_oIn_K = 0;
+      mIn_K = 0;
       /* trigger the inputevent */
       triggerEvent(0);
       return checkForSingleOutputEventOccurence(0);
     }
     bool testCase_K1(){
       /* prepare inputparameters */
-      m_oIn_K = 1;
+      mIn_K = 1;
       /* trigger the inputevent */
       triggerEvent(0);
       return checkForSingleOutputEventOccurence(1);
     }
     bool testCase_K2(){
       /* prepare inputparameters */
-      m_oIn_K = 2;
+      mIn_K = 2;
       /* trigger the inputevent */
       triggerEvent(0);
       return checkForSingleOutputEventOccurence(2);
     }
     bool testCase_K3(){
       /* prepare inputparameters */
-      m_oIn_K = 3;
+      mIn_K = 3;
       /* trigger the inputevent */
       triggerEvent(0);
       return checkForSingleOutputEventOccurence(3);
     }
     bool testCase_K_GT_3(){
       /* prepare inputparameters */
-      m_oIn_K = 4;
+      mIn_K = 4;
       /* trigger the inputevent */
       triggerEvent(0);
       return eventChainEmpty();
     }
 
-    CIEC_UINT m_oIn_K; //DATA INPUT
+    CIEC_UINT mIn_K; //DATA INPUT
 };
 
 /***********************************************************************************/

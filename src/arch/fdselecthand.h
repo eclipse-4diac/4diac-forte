@@ -70,7 +70,7 @@ class CFDSelectHandler : public CExternalEventHandler, private CThread {
 
     typedef CSinglyLinkedList<TConnContType> TConnectionContainer;
 
-    TFileDescriptor createFDSet(fd_set *m_panFDSet);
+    TFileDescriptor createFDSet(fd_set *mFDSet);
 
     TConnectionContainer mConnectionsList;
     CSyncObject mSync;

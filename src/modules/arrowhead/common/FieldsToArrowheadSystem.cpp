@@ -17,26 +17,26 @@
 
 DEFINE_FIRMWARE_FB(FORTE_FieldsToArrowheadSystem, g_nStringIdFieldsToArrowheadSystem)
 
-const CStringDictionary::TStringId FORTE_FieldsToArrowheadSystem::scm_anDataInputNames[] = {g_nStringIdsystemName, g_nStringIdaddress, g_nStringIdport, g_nStringIdauthenticationInfo};
+const CStringDictionary::TStringId FORTE_FieldsToArrowheadSystem::scmDataInputNames[] = {g_nStringIdsystemName, g_nStringIdaddress, g_nStringIdport, g_nStringIdauthenticationInfo};
 
-const CStringDictionary::TStringId FORTE_FieldsToArrowheadSystem::scm_anDataInputTypeIds[] = {g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdDINT, g_nStringIdWSTRING};
+const CStringDictionary::TStringId FORTE_FieldsToArrowheadSystem::scmDataInputTypeIds[] = {g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdDINT, g_nStringIdWSTRING};
 
-const CStringDictionary::TStringId FORTE_FieldsToArrowheadSystem::scm_anDataOutputNames[] = {g_nStringIdarrowheadSystem};
+const CStringDictionary::TStringId FORTE_FieldsToArrowheadSystem::scmDataOutputNames[] = {g_nStringIdarrowheadSystem};
 
-const CStringDictionary::TStringId FORTE_FieldsToArrowheadSystem::scm_anDataOutputTypeIds[] = {g_nStringIdArrowheadSystem};
+const CStringDictionary::TStringId FORTE_FieldsToArrowheadSystem::scmDataOutputTypeIds[] = {g_nStringIdArrowheadSystem};
 
-const TForteInt16 FORTE_FieldsToArrowheadSystem::scm_anEIWithIndexes[] = {0};
-const TDataIOID FORTE_FieldsToArrowheadSystem::scm_anEIWith[] = {3, 2, 1, 0, scmWithListDelimiter};
-const CStringDictionary::TStringId FORTE_FieldsToArrowheadSystem::scm_anEventInputNames[] = {g_nStringIdREQ};
+const TForteInt16 FORTE_FieldsToArrowheadSystem::scmEIWithIndexes[] = {0};
+const TDataIOID FORTE_FieldsToArrowheadSystem::scmEIWith[] = {3, 2, 1, 0, scmWithListDelimiter};
+const CStringDictionary::TStringId FORTE_FieldsToArrowheadSystem::scmEventInputNames[] = {g_nStringIdREQ};
 
-const TDataIOID FORTE_FieldsToArrowheadSystem::scm_anEOWith[] = {0, scmWithListDelimiter};
-const TForteInt16 FORTE_FieldsToArrowheadSystem::scm_anEOWithIndexes[] = {0, -1};
-const CStringDictionary::TStringId FORTE_FieldsToArrowheadSystem::scm_anEventOutputNames[] = {g_nStringIdCNF};
+const TDataIOID FORTE_FieldsToArrowheadSystem::scmEOWith[] = {0, scmWithListDelimiter};
+const TForteInt16 FORTE_FieldsToArrowheadSystem::scmEOWithIndexes[] = {0, -1};
+const CStringDictionary::TStringId FORTE_FieldsToArrowheadSystem::scmEventOutputNames[] = {g_nStringIdCNF};
 
-const SFBInterfaceSpec FORTE_FieldsToArrowheadSystem::scm_stFBInterfaceSpec = {
-  1,  scm_anEventInputNames,  scm_anEIWith,  scm_anEIWithIndexes,
-  1,  scm_anEventOutputNames,  scm_anEOWith, scm_anEOWithIndexes,  4,  scm_anDataInputNames, scm_anDataInputTypeIds,
-  1,  scm_anDataOutputNames, scm_anDataOutputTypeIds,
+const SFBInterfaceSpec FORTE_FieldsToArrowheadSystem::scmFBInterfaceSpec = {
+  1,  scmEventInputNames,  scmEIWith,  scmEIWithIndexes,
+  1,  scmEventOutputNames,  scmEOWith, scmEOWithIndexes,  4,  scmDataInputNames, scmDataInputTypeIds,
+  1,  scmDataOutputNames, scmDataOutputTypeIds,
   0, 0
 };
 
@@ -50,38 +50,38 @@ arrowheadSystem().authenticationInfo() = authenticationInfo();
 
 
 void FORTE_FieldsToArrowheadSystem::enterStateSTART(){
-  m_nECCState = scm_nStateSTART;
+  mECCState = scmStateSTART;
 }
 
 void FORTE_FieldsToArrowheadSystem::enterStateREQ(){
-  m_nECCState = scm_nStateREQ;
+  mECCState = scmStateREQ;
   alg_REQ();
-  sendOutputEvent( scm_nEventCNFID);
+  sendOutputEvent( scmEventCNFID);
 }
 
-void FORTE_FieldsToArrowheadSystem::executeEvent(TEventID pa_nEIID){
+void FORTE_FieldsToArrowheadSystem::executeEvent(TEventID paEIID){
   bool bTransitionCleared;
   do{
     bTransitionCleared = true;
-    switch(m_nECCState){
-      case scm_nStateSTART:
-        if(scm_nEventREQID == pa_nEIID)
+    switch(mECCState){
+      case scmStateSTART:
+        if(scmEventREQID == paEIID)
           enterStateREQ();
         else
           bTransitionCleared  = false; //no transition cleared
         break;
-      case scm_nStateREQ:
+      case scmStateREQ:
         if(1)
           enterStateSTART();
         else
           bTransitionCleared  = false; //no transition cleared
         break;
       default:
-      DEVLOG_ERROR("The state is not in the valid range! The state value is: %d. The max value can be: 1.", m_nECCState.operator TForteUInt16 ());
-        m_nECCState = 0; //0 is always the initial state
+      DEVLOG_ERROR("The state is not in the valid range! The state value is: %d. The max value can be: 1.", mECCState.operator TForteUInt16 ());
+        mECCState = 0; //0 is always the initial state
         break;
     }
-    pa_nEIID = cg_nInvalidEventID;  // we have to clear the event after the first check in order to ensure correct behavior
+    paEIID = cgInvalidEventID;  // we have to clear the event after the first check in order to ensure correct behavior
   }while(bTransitionCleared);
 }
 

@@ -21,29 +21,29 @@
 
 using namespace forte::com_infra;
 
-COpcComLayer::COpcComLayer(CComLayer* pa_poUpperLayer, CBaseCommFB* pa_poComFB) :
-CComLayer(pa_poUpperLayer, pa_poComFB), m_acHost(0), m_acServerName(0), m_nUpdateRate(0), m_nDeadBand(0), m_bLayerParamsOK(false), m_pOpcConnection(0), m_eInterruptResp(e_Nothing){
-  m_acOpcGroupName = m_poFb->getInstanceName();
+COpcComLayer::COpcComLayer(CComLayer* paUpperLayer, CBaseCommFB* paComFB) :
+CComLayer(paUpperLayer, paComFB), mHost(0), mServerName(0), mUpdateRate(0), mDeadBand(0), mLayerParamsOK(false), mOpcConnection(0), mInterruptResp(e_Nothing){
+  mOpcGroupName = mFb->getInstanceName();
 }
 
 COpcComLayer::~COpcComLayer() = default;
 
-EComResponse COpcComLayer::sendData(void *pa_pvData, unsigned int pa_unSize){
+EComResponse COpcComLayer::sendData(void *paData, unsigned int paSize){
   EComResponse eRetVal = e_ProcessDataOk;
 
-  if((0 != m_poFb)){
-    if(m_pOpcConnection->isConnected()){
-      switch (m_poFb->getComServiceType()){
+  if((0 != mFb)){
+    if(mOpcConnection->isConnected()){
+      switch (mFb->getComServiceType()){
       case e_Server:
         //TODO
         break;
       case e_Client: {
-        convertInputData(pa_pvData, pa_unSize);
+        convertInputData(paData, paSize);
 
-        TOpcProcessVarList::Iterator itEnd = m_lFBInputVars.end();
-        for(TOpcProcessVarList::Iterator it = m_lFBInputVars.begin(); it != itEnd; ++it){
+        TOpcProcessVarList::Iterator itEnd = mFBInputVars.end();
+        for(TOpcProcessVarList::Iterator it = mFBInputVars.begin(); it != itEnd; ++it){
             if(it->getIsActive()) {
-              m_pOpcConnection->send_sendItemData((*it));
+              mOpcConnection->send_sendItemData((*it));
             }
         }
         break;
@@ -65,21 +65,21 @@ EComResponse COpcComLayer::processInterrupt(){
   EComResponse currentComResponse;
 
   {
-    CCriticalRegion criticalRegion(m_oSync);
-    TComResponseList::Iterator comIt(m_lComResponses.begin());
+    CCriticalRegion criticalRegion(mSync);
+    TComResponseList::Iterator comIt(mComResponses.begin());
     currentComResponse = *comIt;
-    m_lComResponses.popFront();
+    mComResponses.popFront();
   }
 
   switch (currentComResponse){
     case e_ProcessDataOk:
-      switch (m_eConnectionState){
+      switch (mConnectionState){
       case e_Connected: {
-        CIEC_ANY **apoRDs = m_poFb->getRDs();
-        unsigned int nrRDs = m_poFb->getNumRD();
+        CIEC_ANY **apoRDs = mFb->getRDs();
+        unsigned int nrRDs = mFb->getNumRD();
 
-        TOpcProcessVarList::Iterator itEnd = m_lFBOutputVars.end();
-        TOpcProcessVarList::Iterator it = m_lFBOutputVars.begin();
+        TOpcProcessVarList::Iterator itEnd = mFBOutputVars.end();
+        TOpcProcessVarList::Iterator it = mFBOutputVars.begin();
         for(unsigned int i = 0; i < nrRDs && it != itEnd; i++, ++it){
           setOutputValue(apoRDs[i], &it->updateValue());
         }
@@ -108,26 +108,26 @@ EComResponse COpcComLayer::processInterrupt(){
 EComResponse COpcComLayer::recvData(const void *, unsigned int){
   EComResponse eRet = e_Nothing;
 
-  switch (m_poFb->getComServiceType()){
+  switch (mFb->getComServiceType()){
     case e_Server:
       //TODO
       break;
     case e_Client: {
-      switch (m_pOpcConnection->getConnectionState()){
+      switch (mOpcConnection->getConnectionState()){
         case COpcConnection::e_Connected:
           // Successfully connected --> adding OPC items
           if(addOpcItems() < 0){
             //TODO
           } else {
-            m_eConnectionState = e_Connected;
+            mConnectionState = e_Connected;
           }
           break;
         case COpcConnection::e_ConnectionFailed:
           {
-            CCriticalRegion criticalRegion(m_oSync);
-            m_lComResponses.pushBack(e_InitTerminated);
+            CCriticalRegion criticalRegion(mSync);
+            mComResponses.pushBack(e_InitTerminated);
           }
-          m_poFb->interruptCommFB(this);
+          mFb->interruptCommFB(this);
           eRet = e_InitTerminated;
           break;
         case COpcConnection::e_ItemAddedOk:
@@ -135,20 +135,20 @@ EComResponse COpcComLayer::recvData(const void *, unsigned int){
           break;
         case COpcConnection::e_ItemAddedFailed:
           {
-            CCriticalRegion criticalRegion(m_oSync);
-            m_lComResponses.pushBack(e_InitTerminated);
+            CCriticalRegion criticalRegion(mSync);
+            mComResponses.pushBack(e_InitTerminated);
           }
-          m_poFb->interruptCommFB(this);
+          mFb->interruptCommFB(this);
           eRet = e_InitTerminated;
           break;
         case COpcConnection::e_DataReceived: {
-          int nRetVal = m_pOpcConnection->receiveData(m_acOpcGroupName, &m_lFBOutputVars);
+          int nRetVal = mOpcConnection->receiveData(mOpcGroupName, &mFBOutputVars);
           if (nRetVal > 0) {
             //we successfully received data
-            CCriticalRegion criticalRegion(m_oSync);
-            m_lComResponses.pushBack(e_ProcessDataOk);
+            CCriticalRegion criticalRegion(mSync);
+            mComResponses.pushBack(e_ProcessDataOk);
           }
-          m_poFb->interruptCommFB(this);
+          mFb->interruptCommFB(this);
           eRet = e_ProcessDataOk;
           break;
         }
@@ -170,25 +170,25 @@ EComResponse COpcComLayer::recvData(const void *, unsigned int){
   return eRet;
 }
 
-  EComResponse COpcComLayer::openConnection(char *pa_acLayerParameter){
+  EComResponse COpcComLayer::openConnection(char *paLayerParameter){
     EComResponse eRetVal = e_InitInvalidId;
-    m_eConnectionState = e_Disconnected;
+    mConnectionState = e_Disconnected;
 
-    switch (m_poFb->getComServiceType()){
+    switch (mFb->getComServiceType()){
     case e_Server:
       //TODO
       break;
     case e_Client:
-      processClientParams(pa_acLayerParameter);
-      if(m_bLayerParamsOK){
+      processClientParams(paLayerParameter);
+      if(mLayerParamsOK){
         eRetVal = e_InitOk;
-        m_pOpcConnection = COpcConnectionHandler::getInstance().getOpcConnection(m_acHost, m_acServerName, m_acOpcGroupName, m_nUpdateRate, m_nDeadBand, this);
+        mOpcConnection = COpcConnectionHandler::getInstance().getOpcConnection(mHost, mServerName, mOpcGroupName, mUpdateRate, mDeadBand, this);
 
-        m_pOpcConnection->send_connect();
+        mOpcConnection->send_connect();
 
-        COpcConnection::EOpcConnectionEvents connState = m_pOpcConnection->getConnectionState();
+        COpcConnection::EOpcConnectionEvents connState = mOpcConnection->getConnectionState();
         if (connState == COpcConnection::e_Connected) {
-          m_eConnectionState = e_Connected;
+          mConnectionState = e_Connected;
           addOpcItems();
         }
         else if(connState == COpcConnection::e_ConnectionFailed) {
@@ -209,75 +209,75 @@ EComResponse COpcComLayer::recvData(const void *, unsigned int){
 
   void COpcComLayer::closeConnection(){
     DEVLOG_DEBUG("COpcComLayer::closeConnection() \n");
-    COpcConnectionHandler::getInstance().removeOpcConnection(m_pOpcConnection->getHost(), m_pOpcConnection->getServerName(), m_acOpcGroupName);
+    COpcConnectionHandler::getInstance().removeOpcConnection(mOpcConnection->getHost(), mOpcConnection->getServerName(), mOpcGroupName);
 
-    m_eConnectionState = e_Disconnected;
+    mConnectionState = e_Disconnected;
   }
 
   int COpcComLayer::addOpcItems(){
     int result = 0;
 
     // Add input items
-    TOpcProcessVarList::Iterator itEnd = m_lFBInputVars.end();
-    for(TOpcProcessVarList::Iterator it = m_lFBInputVars.begin(); it != itEnd; ++it){
-      result = m_pOpcConnection->send_addItem(*it);
+    TOpcProcessVarList::Iterator itEnd = mFBInputVars.end();
+    for(TOpcProcessVarList::Iterator it = mFBInputVars.begin(); it != itEnd; ++it){
+      result = mOpcConnection->send_addItem(*it);
     }
 
     // Add output items
-    itEnd = m_lFBOutputVars.end();
-    for(TOpcProcessVarList::Iterator it = m_lFBOutputVars.begin(); it != itEnd; ++it){
-      result = m_pOpcConnection->send_addItem(*it);
+    itEnd = mFBOutputVars.end();
+    for(TOpcProcessVarList::Iterator it = mFBOutputVars.begin(); it != itEnd; ++it){
+      result = mOpcConnection->send_addItem(*it);
     }
 
     return result;
   }
 
-  void COpcComLayer::setOutputValue(CIEC_ANY *pa_pDataOut, Variant * pa_pValue){
-    switch (pa_pDataOut->getDataTypeID()){
+  void COpcComLayer::setOutputValue(CIEC_ANY *paDataOut, Variant * paValue){
+    switch (paDataOut->getDataTypeID()){
     case CIEC_ANY::e_BOOL:
-      pa_pDataOut->setValue(CIEC_BOOL(pa_pValue->get<bool>()));
+      paDataOut->setValue(CIEC_BOOL(paValue->get<bool>()));
       break;
     case CIEC_ANY::e_SINT:
-      pa_pDataOut->setValue(CIEC_SINT(pa_pValue->get<TForteInt8>()));
+      paDataOut->setValue(CIEC_SINT(paValue->get<TForteInt8>()));
       break;
     case CIEC_ANY::e_INT:
-      pa_pDataOut->setValue(CIEC_INT(pa_pValue->get<TForteInt16>()));
+      paDataOut->setValue(CIEC_INT(paValue->get<TForteInt16>()));
       break;
     case CIEC_ANY::e_DINT:
-      pa_pDataOut->setValue(CIEC_DINT(pa_pValue->get<TForteInt32>()));
+      paDataOut->setValue(CIEC_DINT(paValue->get<TForteInt32>()));
       break;
     case CIEC_ANY::e_LINT:
-      pa_pDataOut->setValue(CIEC_LINT(pa_pValue->get<TForteInt64>()));
+      paDataOut->setValue(CIEC_LINT(paValue->get<TForteInt64>()));
       break;
     case CIEC_ANY::e_USINT:
-      pa_pDataOut->setValue(CIEC_USINT(pa_pValue->get<TForteUInt8>()));
+      paDataOut->setValue(CIEC_USINT(paValue->get<TForteUInt8>()));
       break;
     case CIEC_ANY::e_UINT:
-      pa_pDataOut->setValue(CIEC_UINT(pa_pValue->get<TForteUInt16>()));
+      paDataOut->setValue(CIEC_UINT(paValue->get<TForteUInt16>()));
       break;
     case CIEC_ANY::e_UDINT:
-      pa_pDataOut->setValue(CIEC_UDINT(pa_pValue->get<TForteUInt32>()));
+      paDataOut->setValue(CIEC_UDINT(paValue->get<TForteUInt32>()));
       break;
     case CIEC_ANY::e_ULINT:
-      pa_pDataOut->setValue(CIEC_ULINT(pa_pValue->get<TForteUInt64>()));
+      paDataOut->setValue(CIEC_ULINT(paValue->get<TForteUInt64>()));
       break;
     case CIEC_ANY::e_BYTE:
-      pa_pDataOut->setValue(CIEC_BYTE(pa_pValue->get<TForteByte>()));
+      paDataOut->setValue(CIEC_BYTE(paValue->get<TForteByte>()));
       break;
     case CIEC_ANY::e_WORD:
-      pa_pDataOut->setValue(CIEC_WORD(pa_pValue->get<TForteWord>()));
+      paDataOut->setValue(CIEC_WORD(paValue->get<TForteWord>()));
       break;
     case CIEC_ANY::e_DWORD:
-      pa_pDataOut->setValue(CIEC_DWORD(pa_pValue->get<TForteDWord>()));
+      paDataOut->setValue(CIEC_DWORD(paValue->get<TForteDWord>()));
       break;
     case CIEC_ANY::e_LWORD:
-      pa_pDataOut->setValue(CIEC_LWORD(pa_pValue->get<TForteLWord>()));
+      paDataOut->setValue(CIEC_LWORD(paValue->get<TForteLWord>()));
       break;
     case CIEC_ANY::e_REAL:
-      pa_pDataOut->setValue(CIEC_REAL(pa_pValue->get<TForteFloat>()));
+      paDataOut->setValue(CIEC_REAL(paValue->get<TForteFloat>()));
       break;
     case CIEC_ANY::e_LREAL:
-      pa_pDataOut->setValue(CIEC_LREAL(pa_pValue->get<TForteDFloat>()));
+      paDataOut->setValue(CIEC_LREAL(paValue->get<TForteDFloat>()));
       break;
     default:
       //TODO
@@ -285,7 +285,7 @@ EComResponse COpcComLayer::recvData(const void *, unsigned int){
     }
   }
 
-  void COpcComLayer::processClientParams(char* pa_acLayerParams){
+  void COpcComLayer::processClientParams(char* paLayerParams){
 
     char *chrStorage;
     char *chrHost;
@@ -293,18 +293,18 @@ EComResponse COpcComLayer::recvData(const void *, unsigned int){
     char *temp;
 
     // Get Host
-    chrStorage = strchr(pa_acLayerParams, ':');
+    chrStorage = strchr(paLayerParams, ':');
   if(chrStorage == 0) {
       return;
   }
     *chrStorage = '\0';
     ++chrStorage;
-    chrHost = (char*) malloc(strlen(pa_acLayerParams) + 1);
-    strcpy(chrHost, pa_acLayerParams);
+    chrHost = (char*) malloc(strlen(paLayerParams) + 1);
+    strcpy(chrHost, paLayerParams);
   if(strcmp(chrHost, "127.0.0.1") == 0 || strcmp(chrHost, "localhost") == 0) {
-      m_acHost = "";
+      mHost = "";
   } else {
-    m_acHost = chrHost;
+    mHost = chrHost;
   }
 
     // Get server name
@@ -320,10 +320,10 @@ EComResponse COpcComLayer::recvData(const void *, unsigned int){
     ++chrStorage;
     chrServer = (char*) malloc(strlen(temp) + 1);
     strcpy(chrServer, temp);
-    m_acServerName = chrServer;
+    mServerName = chrServer;
 
     // Get update rate
-    m_nUpdateRate = atol(chrStorage);
+    mUpdateRate = atol(chrStorage);
     chrStorage = strchr(chrStorage, ':');
     if(chrStorage == 0){
       if (chrHost){
@@ -335,7 +335,7 @@ EComResponse COpcComLayer::recvData(const void *, unsigned int){
     ++chrStorage;
 
     // Get dead band
-    m_nDeadBand = (float) atof(chrStorage);
+    mDeadBand = (float) atof(chrStorage);
     chrStorage = strchr(chrStorage, ':');
     if(chrStorage == 0){
       if (chrHost){
@@ -364,7 +364,7 @@ EComResponse COpcComLayer::recvData(const void *, unsigned int){
     while(pch != nullptr){
       char *itemName = (char*) malloc(strlen(pch) + 1);
       strcpy(itemName, pch);
-      m_lFBInputVars.pushBack(new COpcProcessVar(m_acOpcGroupName, itemName, COpcProcessVar::e_FBInput));
+      mFBInputVars.pushBack(new COpcProcessVar(mOpcGroupName, itemName, COpcProcessVar::e_FBInput));
       nrItems++;
       pch = strtok(nullptr, ",");
     }
@@ -374,25 +374,25 @@ EComResponse COpcComLayer::recvData(const void *, unsigned int){
     while(pch != nullptr){
       char *itemName = (char*) malloc(strlen(pch) + 1);
       strcpy(itemName, pch);
-      m_lFBOutputVars.pushBack(new COpcProcessVar(m_acOpcGroupName, itemName, COpcProcessVar::e_FBOutput));
+      mFBOutputVars.pushBack(new COpcProcessVar(mOpcGroupName, itemName, COpcProcessVar::e_FBOutput));
       nrItems++;
 
       pch = strtok(nullptr, ",");
     }
 
   if(nrItems > 0) {
-    m_bLayerParamsOK = true;
+    mLayerParamsOK = true;
   }
 
   }
 
-  void COpcComLayer::convertInputData(void *pa_pData, unsigned int pa_nSize){
-    CIEC_ANY *apoSDs =  static_cast<CIEC_ANY*>(pa_pData);
-    unsigned int nrSDs = pa_nSize;
+  void COpcComLayer::convertInputData(void *paData, unsigned int paSize){
+    CIEC_ANY *apoSDs =  static_cast<CIEC_ANY*>(paData);
+    unsigned int nrSDs = paSize;
     unsigned int sdIndex = 0;
 
-    TOpcProcessVarList::Iterator it_var = m_lFBInputVars.begin();
-    TOpcProcessVarList::Iterator itEnd = m_lFBInputVars.end();
+    TOpcProcessVarList::Iterator it_var = mFBInputVars.begin();
+    TOpcProcessVarList::Iterator itEnd = mFBInputVars.end();
 
     while(sdIndex < nrSDs && it_var != itEnd){
       CIEC_ANY *dataIn = &apoSDs[sdIndex];
@@ -409,90 +409,90 @@ EComResponse COpcComLayer::recvData(const void *, unsigned int){
   }
 
   template<typename T>
-  void COpcComLayer::getInputValue(void * pa_pData, Variant * pa_pNewValue){
-    T* vData = (T*) pa_pData;
+  void COpcComLayer::getInputValue(void * paData, Variant * paNewValue){
+    T* vData = (T*) paData;
     T data = vData[0];
 
-    pa_pNewValue->set<T>(data);
+    paNewValue->set<T>(data);
   }
 
-  unsigned int COpcComLayer::getInputValueSize(CIEC_ANY* pa_pData, Variant * pa_pNewValue){
-    switch (pa_pData->getDataTypeID()){
+  unsigned int COpcComLayer::getInputValueSize(CIEC_ANY* paData, Variant * paNewValue){
+    switch (paData->getDataTypeID()){
     case CIEC_ANY::e_BOOL:
     {
-      pa_pNewValue->set<bool>((bool) *(dynamic_cast<CIEC_BOOL*>(pa_pData)));
+      paNewValue->set<bool>((bool) *(dynamic_cast<CIEC_BOOL*>(paData)));
       return sizeof(bool);
     }
     case CIEC_ANY::e_SINT:
     {
-      pa_pNewValue->set<CHAR>((CHAR) *(dynamic_cast<CIEC_SINT*>(pa_pData)));
+      paNewValue->set<CHAR>((CHAR) *(dynamic_cast<CIEC_SINT*>(paData)));
       return sizeof(TForteInt8);
     }
     case CIEC_ANY::e_INT:
     {
-      CIEC_INT* tempInt = dynamic_cast<CIEC_INT*>(pa_pData);
+      CIEC_INT* tempInt = dynamic_cast<CIEC_INT*>(paData);
       TForteInt16 forteInt = (TForteInt16) (*tempInt);
-      pa_pNewValue->set<TForteInt16>(forteInt);
+      paNewValue->set<TForteInt16>(forteInt);
       return sizeof(TForteInt16);
     }
     case CIEC_ANY::e_DINT:
     {
-      pa_pNewValue->set<TForteInt32>((TForteInt32) *(dynamic_cast<CIEC_DINT*>(pa_pData)));
+      paNewValue->set<TForteInt32>((TForteInt32) *(dynamic_cast<CIEC_DINT*>(paData)));
       return sizeof(TForteInt32);
     }
     case CIEC_ANY::e_LINT:
     {
-      pa_pNewValue->set<TForteInt64>((TForteInt64) *(dynamic_cast<CIEC_LINT*>(pa_pData)));
+      paNewValue->set<TForteInt64>((TForteInt64) *(dynamic_cast<CIEC_LINT*>(paData)));
       return sizeof(TForteInt64);
     }
     case CIEC_ANY::e_USINT:
     {
-      pa_pNewValue->set<TForteUInt8>((TForteUInt8) *(dynamic_cast<CIEC_USINT*>(pa_pData)));
+      paNewValue->set<TForteUInt8>((TForteUInt8) *(dynamic_cast<CIEC_USINT*>(paData)));
       return sizeof(TForteUInt8);
     }
     case CIEC_ANY::e_UINT:
     {
-      pa_pNewValue->set<TForteUInt16>((TForteUInt16) *(dynamic_cast<CIEC_UINT*>(pa_pData)));
+      paNewValue->set<TForteUInt16>((TForteUInt16) *(dynamic_cast<CIEC_UINT*>(paData)));
       return sizeof(TForteUInt16);
     }
     case CIEC_ANY::e_UDINT:
     {
-      pa_pNewValue->set<TForteUInt32>((TForteUInt32) *(dynamic_cast<CIEC_UDINT*>(pa_pData)));
+      paNewValue->set<TForteUInt32>((TForteUInt32) *(dynamic_cast<CIEC_UDINT*>(paData)));
       return sizeof(TForteUInt32);
     }
     case CIEC_ANY::e_ULINT:
     {
-      pa_pNewValue->set<TForteUInt64>((TForteUInt64) *(dynamic_cast<CIEC_ULINT*>(pa_pData)));
+      paNewValue->set<TForteUInt64>((TForteUInt64) *(dynamic_cast<CIEC_ULINT*>(paData)));
       return sizeof(TForteUInt64);
     }
     case CIEC_ANY::e_BYTE:
     {
-      pa_pNewValue->set<TForteByte>((TForteByte) *(dynamic_cast<CIEC_BYTE*>(pa_pData)));
+      paNewValue->set<TForteByte>((TForteByte) *(dynamic_cast<CIEC_BYTE*>(paData)));
       return sizeof(TForteByte);
     }
     case CIEC_ANY::e_WORD:
     {
-      pa_pNewValue->set<TForteWord>((TForteWord) *(dynamic_cast<CIEC_WORD*>(pa_pData)));
+      paNewValue->set<TForteWord>((TForteWord) *(dynamic_cast<CIEC_WORD*>(paData)));
       return sizeof(TForteWord);
     }
     case CIEC_ANY::e_DWORD:
     {
-      pa_pNewValue->set<TForteDWord>((TForteDWord) *(dynamic_cast<CIEC_DWORD*>(pa_pData)));
+      paNewValue->set<TForteDWord>((TForteDWord) *(dynamic_cast<CIEC_DWORD*>(paData)));
       return sizeof(TForteDWord);
     }
     case CIEC_ANY::e_LWORD:
     {
-      pa_pNewValue->set<TForteLWord>((TForteLWord) *(dynamic_cast<CIEC_LWORD*>(pa_pData)));
+      paNewValue->set<TForteLWord>((TForteLWord) *(dynamic_cast<CIEC_LWORD*>(paData)));
       return sizeof(TForteLWord);
     }
     case CIEC_ANY::e_REAL:
     {
-      pa_pNewValue->set<TForteFloat>((TForteFloat) *(dynamic_cast<CIEC_REAL*>(pa_pData)));
+      paNewValue->set<TForteFloat>((TForteFloat) *(dynamic_cast<CIEC_REAL*>(paData)));
       return sizeof(TForteFloat);
     }
     case CIEC_ANY::e_LREAL:
     {
-      pa_pNewValue->set<TForteDFloat>((TForteDFloat) *(dynamic_cast<CIEC_LREAL*>(pa_pData)));
+      paNewValue->set<TForteDFloat>((TForteDFloat) *(dynamic_cast<CIEC_LREAL*>(paData)));
       return sizeof(TForteDFloat);
     }
     default:

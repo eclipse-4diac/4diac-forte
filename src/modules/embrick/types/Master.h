@@ -26,8 +26,8 @@ class EmbrickMaster: public forte::core::io::IOConfigFBMultiMaster {
 DECLARE_FIRMWARE_FB(EmbrickMaster)
 
 private:
-  static const CStringDictionary::TStringId scm_anDataInputNames[];
-  static const CStringDictionary::TStringId scm_anDataInputTypeIds[];
+  static const CStringDictionary::TStringId scmDataInputNames[];
+  static const CStringDictionary::TStringId scmDataInputTypeIds[];
 
   CIEC_UINT &BusInterface() {
     return *static_cast<CIEC_UINT*>(getDI(1));
@@ -49,25 +49,25 @@ private:
     return *static_cast<CIEC_UINT*>(getDI(5));
   }
 
-  static const CStringDictionary::TStringId scm_anDataOutputNames[];
-  static const CStringDictionary::TStringId scm_anDataOutputTypeIds[];
+  static const CStringDictionary::TStringId scmDataOutputNames[];
+  static const CStringDictionary::TStringId scmDataOutputTypeIds[];
 
-  static const TForteInt16 scm_anEIWithIndexes[];
-  static const TDataIOID scm_anEIWith[];
-  static const CStringDictionary::TStringId scm_anEventInputNames[];
+  static const TForteInt16 scmEIWithIndexes[];
+  static const TDataIOID scmEIWith[];
+  static const CStringDictionary::TStringId scmEventInputNames[];
 
-  static const TForteInt16 scm_anEOWithIndexes[];
-  static const TDataIOID scm_anEOWith[];
-  static const CStringDictionary::TStringId scm_anEventOutputNames[];
+  static const TForteInt16 scmEOWithIndexes[];
+  static const TDataIOID scmEOWith[];
+  static const CStringDictionary::TStringId scmEventOutputNames[];
 
-  static const SAdapterInstanceDef scm_astAdapterInstances[];
+  static const SAdapterInstanceDef scmAdapterInstances[];
 
   EmbrickBusAdapter& BusAdapterOut() {
-    return (*static_cast<EmbrickBusAdapter*>(m_apoAdapters[0]));
+    return (*static_cast<EmbrickBusAdapter*>(mAdapters[0]));
   }
 
-  static const int scm_nBusAdapterAdpNum = 0;
-  static const SFBInterfaceSpec scm_stFBInterfaceSpec;
+  static const int scmBusAdapterAdpNum = 0;
+  static const SFBInterfaceSpec scmFBInterfaceSpec;
 
   virtual void setInitialValues();
 

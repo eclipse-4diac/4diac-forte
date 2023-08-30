@@ -22,27 +22,27 @@
 
 DEFINE_FIRMWARE_FB(FORTE_EXECUTE_ACTION_SERVER, g_nStringIdEXECUTE_ACTION_SERVER)
 
-const CStringDictionary::TStringId FORTE_EXECUTE_ACTION_SERVER::scm_anDataInputNames[] = { g_nStringIdQI, g_nStringIdACTIONNAMESPACE, g_nStringIdACTIONMSGNAME, g_nStringIdRESULT, g_nStringIdID, g_nStringIdSTATE };
+const CStringDictionary::TStringId FORTE_EXECUTE_ACTION_SERVER::scmDataInputNames[] = { g_nStringIdQI, g_nStringIdACTIONNAMESPACE, g_nStringIdACTIONMSGNAME, g_nStringIdRESULT, g_nStringIdID, g_nStringIdSTATE };
 
-const CStringDictionary::TStringId FORTE_EXECUTE_ACTION_SERVER::scm_anDataInputTypeIds[] = { g_nStringIdBOOL, g_nStringIdSTRING, g_nStringIdSTRING, g_nStringIdSTRING, g_nStringIdDINT, g_nStringIdSTRING };
+const CStringDictionary::TStringId FORTE_EXECUTE_ACTION_SERVER::scmDataInputTypeIds[] = { g_nStringIdBOOL, g_nStringIdSTRING, g_nStringIdSTRING, g_nStringIdSTRING, g_nStringIdDINT, g_nStringIdSTRING };
 
-const CStringDictionary::TStringId FORTE_EXECUTE_ACTION_SERVER::scm_anDataOutputNames[] = { g_nStringIdQO, g_nStringIdFBSTATUS, g_nStringIdACTIONSTATUS, g_nStringIdCOMMAND, g_nStringIdID1, g_nStringIdID2 };
+const CStringDictionary::TStringId FORTE_EXECUTE_ACTION_SERVER::scmDataOutputNames[] = { g_nStringIdQO, g_nStringIdFBSTATUS, g_nStringIdACTIONSTATUS, g_nStringIdCOMMAND, g_nStringIdID1, g_nStringIdID2 };
 
-const CStringDictionary::TStringId FORTE_EXECUTE_ACTION_SERVER::scm_anDataOutputTypeIds[] = { g_nStringIdBOOL, g_nStringIdSTRING, g_nStringIdSTRING, g_nStringIdSTRING, g_nStringIdDINT, g_nStringIdDINT };
+const CStringDictionary::TStringId FORTE_EXECUTE_ACTION_SERVER::scmDataOutputTypeIds[] = { g_nStringIdBOOL, g_nStringIdSTRING, g_nStringIdSTRING, g_nStringIdSTRING, g_nStringIdDINT, g_nStringIdDINT };
 
-const TForteInt16 FORTE_EXECUTE_ACTION_SERVER::scm_anEIWithIndexes[] = { 0, 4 };
-const TDataIOID FORTE_EXECUTE_ACTION_SERVER::scm_anEIWith[] = { 0, 1, 2, scmWithListDelimiter, 0, 5, 4, 3, scmWithListDelimiter };
-const CStringDictionary::TStringId FORTE_EXECUTE_ACTION_SERVER::scm_anEventInputNames[] = { g_nStringIdINIT, g_nStringIdRSP };
+const TForteInt16 FORTE_EXECUTE_ACTION_SERVER::scmEIWithIndexes[] = { 0, 4 };
+const TDataIOID FORTE_EXECUTE_ACTION_SERVER::scmEIWith[] = { 0, 1, 2, scmWithListDelimiter, 0, 5, 4, 3, scmWithListDelimiter };
+const CStringDictionary::TStringId FORTE_EXECUTE_ACTION_SERVER::scmEventInputNames[] = { g_nStringIdINIT, g_nStringIdRSP };
 
-const TDataIOID FORTE_EXECUTE_ACTION_SERVER::scm_anEOWith[] = { 0, 1, scmWithListDelimiter, 0, 1, 3, 2, 4, 5, scmWithListDelimiter };
-const TForteInt16 FORTE_EXECUTE_ACTION_SERVER::scm_anEOWithIndexes[] = { 0, 3, -1 };
-const CStringDictionary::TStringId FORTE_EXECUTE_ACTION_SERVER::scm_anEventOutputNames[] = { g_nStringIdINITO, g_nStringIdIND };
+const TDataIOID FORTE_EXECUTE_ACTION_SERVER::scmEOWith[] = { 0, 1, scmWithListDelimiter, 0, 1, 3, 2, 4, 5, scmWithListDelimiter };
+const TForteInt16 FORTE_EXECUTE_ACTION_SERVER::scmEOWithIndexes[] = { 0, 3, -1 };
+const CStringDictionary::TStringId FORTE_EXECUTE_ACTION_SERVER::scmEventOutputNames[] = { g_nStringIdINITO, g_nStringIdIND };
 
-const SFBInterfaceSpec FORTE_EXECUTE_ACTION_SERVER::scm_stFBInterfaceSpec = { 2, scm_anEventInputNames, scm_anEIWith, scm_anEIWithIndexes, 2, scm_anEventOutputNames, scm_anEOWith, scm_anEOWithIndexes, 6, scm_anDataInputNames, scm_anDataInputTypeIds, 6, scm_anDataOutputNames, scm_anDataOutputTypeIds, 0, 0 };
+const SFBInterfaceSpec FORTE_EXECUTE_ACTION_SERVER::scmFBInterfaceSpec = { 2, scmEventInputNames, scmEIWith, scmEIWithIndexes, 2, scmEventOutputNames, scmEOWith, scmEOWithIndexes, 6, scmDataInputNames, scmDataInputTypeIds, 6, scmDataOutputNames, scmDataOutputTypeIds, 0, 0 };
 
-void FORTE_EXECUTE_ACTION_SERVER::executeEvent(TEventID pa_nEIID){
-  switch (pa_nEIID){
-    case scm_nEventINITID:
+void FORTE_EXECUTE_ACTION_SERVER::executeEvent(TEventID paEIID){
+  switch (paEIID){
+    case scmEventINITID:
 
       if(QI() && !m_Initiated){
         
@@ -77,10 +77,10 @@ void FORTE_EXECUTE_ACTION_SERVER::executeEvent(TEventID pa_nEIID){
         FBSTATUS() = "Action Server Shutdown";
         //DEVLOG_DEBUG("[EXEC_SERVER] Action server shutdown\n");
       }
-      sendOutputEvent(scm_nEventINITOID);
+      sendOutputEvent(scmEventINITOID);
       break;
 
-    case scm_nEventRSPID:
+    case scmEventRSPID:
       //send a result (see executeCB)
       if(QI()){
         m_Result.result = getExtEvHandler<CROSManager>(*this).ciecStringToStdString(RESULT());
@@ -97,7 +97,7 @@ void FORTE_EXECUTE_ACTION_SERVER::executeEvent(TEventID pa_nEIID){
       break;
 
       //The server received a new goal
-    case cg_nExternalEventID:
+    case cgExternalEventID:
       if(m_ActionServer->isPreemptRequested() || !ros::ok()){
         m_ActionServer->setPreempted();
         ACTIONSTATUS() = "PREEMPTED";
@@ -116,7 +116,7 @@ void FORTE_EXECUTE_ACTION_SERVER::executeEvent(TEventID pa_nEIID){
         ACTIONSTATUS() = "ACTIVE";
         QO() = true;
       }
-      sendOutputEvent(scm_nEventINDID);
+      sendOutputEvent(scmEventINDID);
       break;
   }
 }

@@ -12,56 +12,56 @@
 #include "ModuleList.h"
 #include <cstring>
 
-CModuleList::IoModule::IoModule(const char* pa_pchName, unsigned int pa_nPiOffset, unsigned int pa_nBitOffset, unsigned int pa_nModuleNr) :
-    m_nPiOffset(pa_nPiOffset), m_nBitOffset(pa_nBitOffset), m_nModuleNr(pa_nModuleNr){
+CModuleList::IoModule::IoModule(const char* paName, unsigned int paPiOffset, unsigned int paBitOffset, unsigned int paModuleNr) :
+    mPiOffset(paPiOffset), mBitOffset(paBitOffset), mModuleNr(paModuleNr){
 
-  m_pchName = new char[strlen(pa_pchName) + 1];
-  strcpy(m_pchName, pa_pchName);
+  mName = new char[strlen(paName) + 1];
+  strcpy(mName, paName);
 }
 
 CModuleList::IoModule::~IoModule(){
-  delete[] m_pchName;
+  delete[] mName;
 }
 
 CModuleList::CModuleList() :
-    m_nNumberOfModules(0){
+    mNumberOfModules(0){
 
 }
 
 CModuleList::~CModuleList(){
   // Delete modules in list
-  m_lModules.clearAll();
+  mModules.clearAll();
 
 }
 
-void CModuleList::addEntry(const char* pa_pchName, unsigned int pa_nPiOffset, unsigned int pa_nBitOffset, unsigned int pa_nModuleNr){
-  m_lModules.pushBack(new IoModule(pa_pchName, pa_nPiOffset, pa_nBitOffset, pa_nModuleNr));
+void CModuleList::addEntry(const char* paName, unsigned int paPiOffset, unsigned int paBitOffset, unsigned int paModuleNr){
+  mModules.pushBack(new IoModule(paName, paPiOffset, paBitOffset, paModuleNr));
 
-  m_nNumberOfModules++;
+  mNumberOfModules++;
 }
 
-int CModuleList::getModuleNr(const char* pa_pchName, unsigned int pa_nPiOffset, unsigned int pa_nBitOffset){
+int CModuleList::getModuleNr(const char* paName, unsigned int paPiOffset, unsigned int paBitOffset){
 
-  TModuleList::Iterator itEnd(m_lModules.end());
-  for(TModuleList::Iterator it(m_lModules.begin()); it != itEnd; ++it){
-    if(strcmp(it->m_pchName, pa_pchName) == 0 && it->m_nPiOffset == pa_nPiOffset && it->m_nBitOffset == pa_nBitOffset){
-      return it->m_nModuleNr;
+  TModuleList::Iterator itEnd(mModules.end());
+  for(TModuleList::Iterator it(mModules.begin()); it != itEnd; ++it){
+    if(strcmp(it->mName, paName) == 0 && it->mPiOffset == paPiOffset && it->mBitOffset == paBitOffset){
+      return it->mModuleNr;
     }
   }
 
   return -1;
 }
 
-int CModuleList::getModuleNr(const char* pa_pchName, unsigned int pa_nOccurence){
+int CModuleList::getModuleNr(const char* paName, unsigned int paOccurence){
   unsigned int nrOcc = 0;
 
-  TModuleList::Iterator itEnd(m_lModules.end());
-  for(TModuleList::Iterator it(m_lModules.begin()); it != itEnd; ++it){
-    char* pch = strstr(it->m_pchName, pa_pchName);
+  TModuleList::Iterator itEnd(mModules.end());
+  for(TModuleList::Iterator it(mModules.begin()); it != itEnd; ++it){
+    char* pch = strstr(it->mName, paName);
     if(pch != nullptr){
       nrOcc++;
-      if(nrOcc == pa_nOccurence){
-        return it->m_nModuleNr;
+      if(nrOcc == paOccurence){
+        return it->mModuleNr;
       }
     }
   }
@@ -69,12 +69,12 @@ int CModuleList::getModuleNr(const char* pa_pchName, unsigned int pa_nOccurence)
   return -1;
 }
 
-int CModuleList::getNrOfModules(const char* pa_pchName){
+int CModuleList::getNrOfModules(const char* paName){
   int nrMods = 0;
 
-  TModuleList::Iterator itEnd(m_lModules.end());
-  for(TModuleList::Iterator it(m_lModules.begin()); it != itEnd; ++it){
-    char* pch = strstr(it->m_pchName, pa_pchName);
+  TModuleList::Iterator itEnd(mModules.end());
+  for(TModuleList::Iterator it(mModules.begin()); it != itEnd; ++it){
+    char* pch = strstr(it->mName, paName);
     if(pch != nullptr){
       nrMods++;
     }
@@ -83,11 +83,11 @@ int CModuleList::getNrOfModules(const char* pa_pchName){
   return nrMods;
 }
 
-bool CModuleList::moduleNameExist(const char* pa_pchName){
+bool CModuleList::moduleNameExist(const char* paName){
 
-  TModuleList::Iterator itEnd(m_lModules.end());
-  for(TModuleList::Iterator it(m_lModules.begin()); it != itEnd; ++it){
-    if(strcmp(it->m_pchName, pa_pchName) == 0){
+  TModuleList::Iterator itEnd(mModules.end());
+  for(TModuleList::Iterator it(mModules.begin()); it != itEnd; ++it){
+    if(strcmp(it->mName, paName) == 0){
       return true;
     }
   }

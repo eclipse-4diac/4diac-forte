@@ -17,18 +17,18 @@
 
 DEFINE_FIRMWARE_FB(FORTE_SubscribeEventOpcUa, g_nStringIdSubscribeEventOpcUa)
 
-const TForteInt16 FORTE_SubscribeEventOpcUa::scm_anEOWithIndexes[] = {-1};
-const SAdapterInstanceDef FORTE_SubscribeEventOpcUa::scm_astAdapterInstances[] = {
+const TForteInt16 FORTE_SubscribeEventOpcUa::scmEOWithIndexes[] = {-1};
+const SAdapterInstanceDef FORTE_SubscribeEventOpcUa::scmAdapterInstances[] = {
 {g_nStringIdSubscribeEventAdp, g_nStringIdSubscribeEventAdp, false }};
 
-const SFBInterfaceSpec FORTE_SubscribeEventOpcUa::scm_stFBInterfaceSpec = {
+const SFBInterfaceSpec FORTE_SubscribeEventOpcUa::scmFBInterfaceSpec = {
   0,  0,  0,  0,
   0,  0,   0, 0,  0,  0, 0, 
   0,  0, 0,
-  1,scm_astAdapterInstances};
+  1,scmAdapterInstances};
 
 
-const SCFB_FBInstanceData FORTE_SubscribeEventOpcUa::scm_astInternalFBs[] = {
+const SCFB_FBInstanceData FORTE_SubscribeEventOpcUa::scmInternalFBs[] = {
   {g_nStringIdInitFlagReg, g_nStringIdE_SR},
   {g_nStringIdE_PERMIT, g_nStringIdE_PERMIT},
   {g_nStringIdInitFlagUnReg, g_nStringIdE_SR},
@@ -50,7 +50,7 @@ const SCFB_FBInstanceData FORTE_SubscribeEventOpcUa::scm_astInternalFBs[] = {
   {g_nStringIdE_CTU_1_1, g_nStringIdE_CTU},
 };
 
-const SCFB_FBParameter FORTE_SubscribeEventOpcUa::scm_astParamters[] = {
+const SCFB_FBParameter FORTE_SubscribeEventOpcUa::scmParamters[] = {
   {4, g_nStringIdIN_1, "STRING#opc_ua[CALL_METHOD; "},
   {4, g_nStringIdIN_3, "STRING##; /Objects/2:EventHandler/2:subscribe]"},
   {7, g_nStringIdIN_1, "STRING#opc_ua[CALL_METHOD; "},
@@ -61,11 +61,11 @@ const SCFB_FBParameter FORTE_SubscribeEventOpcUa::scm_astParamters[] = {
   {18, g_nStringIdPV, "UINT#3"},
 };
 
-const SCFB_FBConnectionData FORTE_SubscribeEventOpcUa::scm_astEventConnections[] = {
+const SCFB_FBConnectionData FORTE_SubscribeEventOpcUa::scmEventConnections[] = {
   {GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdCreateRegisterID, g_nStringIdCNF), 4, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdF_STRING_TO_WSTRING, g_nStringIdREQ), 3},
   {GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdF_STRING_TO_WSTRING, g_nStringIdCNF), 3, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdANYToJSON, g_nStringIdREQ), 5},
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdSubscribeEventAdp, g_nStringIdSubscribe), CCompositeFB::scm_nAdapterMarker |0, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdCreateRegisterID, g_nStringIdREQ), 4},
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdSubscribeEventAdp, g_nStringIdUnsubscribe), CCompositeFB::scm_nAdapterMarker |0, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdCreateRegisterID_1, g_nStringIdREQ), 7},
+  {GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdSubscribeEventAdp, g_nStringIdSubscribe), CCompositeFB::scmAdapterMarker |0, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdCreateRegisterID, g_nStringIdREQ), 4},
+  {GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdSubscribeEventAdp, g_nStringIdUnsubscribe), CCompositeFB::scmAdapterMarker |0, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdCreateRegisterID_1, g_nStringIdREQ), 7},
   {GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdCreateRegisterID_1, g_nStringIdCNF), 7, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdF_STRING_TO_WSTRING_2, g_nStringIdREQ), 8},
   {GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdF_STRING_TO_WSTRING_2, g_nStringIdCNF), 8, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdANYToJSON, g_nStringIdREQ), 5},
   {GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdInitFlagReg, g_nStringIdEO), 0, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdRegister, g_nStringIdINIT), 9},
@@ -90,25 +90,25 @@ const SCFB_FBConnectionData FORTE_SubscribeEventOpcUa::scm_astEventConnections[]
   {GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdE_DELAY_1_1, g_nStringIdEO), 15, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdRegister, g_nStringIdREQ), 9},
 };
 
-const SCFB_FBFannedOutConnectionData FORTE_SubscribeEventOpcUa::scm_astFannedOutEventConnections[] = {
+const SCFB_FBFannedOutConnectionData FORTE_SubscribeEventOpcUa::scmFannedOutEventConnections[] = {
   {1, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdInitFlagReg, g_nStringIdS), 0},
   {5, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdInitFlagUnReg, g_nStringIdS), 2},
-  {12, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdSubscribeEventAdp, g_nStringIdUnsubscribed), CCompositeFB::scm_nAdapterMarker |0},
+  {12, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdSubscribeEventAdp, g_nStringIdUnsubscribed), CCompositeFB::scmAdapterMarker |0},
   {12, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdInitFlagUnReg, g_nStringIdR), 2},
   {13, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdInitFlagUnReg, g_nStringIdR), 2},
-  {13, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdSubscribeEventAdp, g_nStringIdUnsubscribed), CCompositeFB::scm_nAdapterMarker |0},
-  {17, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdSubscribeEventAdp, g_nStringIdSubscribed), CCompositeFB::scm_nAdapterMarker |0},
+  {13, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdSubscribeEventAdp, g_nStringIdUnsubscribed), CCompositeFB::scmAdapterMarker |0},
+  {17, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdSubscribeEventAdp, g_nStringIdSubscribed), CCompositeFB::scmAdapterMarker |0},
   {17, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdInitFlagReg, g_nStringIdR), 0},
   {18, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdInitFlagReg, g_nStringIdR), 0},
-  {18, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdSubscribeEventAdp, g_nStringIdSubscribed), CCompositeFB::scm_nAdapterMarker |0},
+  {18, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdSubscribeEventAdp, g_nStringIdSubscribed), CCompositeFB::scmAdapterMarker |0},
 };
 
-const SCFB_FBConnectionData FORTE_SubscribeEventOpcUa::scm_astDataConnections[] = {
+const SCFB_FBConnectionData FORTE_SubscribeEventOpcUa::scmDataConnections[] = {
   {GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdInitFlagUnReg, g_nStringIdQ), 2, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdE_PERMIT_1, g_nStringIdPERMIT), 6},
   {GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdCreateRegisterID, g_nStringIdOUT), 4, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdF_STRING_TO_WSTRING, g_nStringIdIN), 3},
   {GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdInitFlagReg, g_nStringIdQ), 0, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdE_PERMIT, g_nStringIdPERMIT), 1},
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdSubscribeEventAdp, g_nStringIdendpoint), CCompositeFB::scm_nAdapterMarker |0, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdCreateRegisterID, g_nStringIdIN_2), 4},
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdSubscribeEventAdp, g_nStringIdeventFilter), CCompositeFB::scm_nAdapterMarker |0, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdANYToJSON, g_nStringIdinput), 5},
+  {GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdSubscribeEventAdp, g_nStringIdendpoint), CCompositeFB::scmAdapterMarker |0, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdCreateRegisterID, g_nStringIdIN_2), 4},
+  {GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdSubscribeEventAdp, g_nStringIdeventFilter), CCompositeFB::scmAdapterMarker |0, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdANYToJSON, g_nStringIdinput), 5},
   {GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdCreateRegisterID_1, g_nStringIdOUT), 7, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdF_STRING_TO_WSTRING_2, g_nStringIdIN), 8},
   {GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdF_STRING_TO_WSTRING, g_nStringIdOUT), 3, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdRegister, g_nStringIdID), 9},
   {GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdANYToJSON, g_nStringIdoutput), 5, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdRegister, g_nStringIdSD_1), 9},
@@ -119,20 +119,20 @@ const SCFB_FBConnectionData FORTE_SubscribeEventOpcUa::scm_astDataConnections[] 
   {GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdRegister, g_nStringIdQO), 9, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdE_SWITCH_2_1, g_nStringIdG), 17},
 };
 
-const SCFB_FBFannedOutConnectionData FORTE_SubscribeEventOpcUa::scm_astFannedOutDataConnections[] = {
+const SCFB_FBFannedOutConnectionData FORTE_SubscribeEventOpcUa::scmFannedOutDataConnections[] = {
   {0, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdUnregister, g_nStringIdQI), 10},
   {2, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdRegister, g_nStringIdQI), 9},
   {3, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdCreateRegisterID_1, g_nStringIdIN_2), 7},
   {7, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdUnregister, g_nStringIdSD_1), 10},
 };
 
-const SCFB_FBNData FORTE_SubscribeEventOpcUa::scm_stFBNData = {
-  19, scm_astInternalFBs,
-  26, scm_astEventConnections,
-  10, scm_astFannedOutEventConnections,
-  13, scm_astDataConnections,
-  4, scm_astFannedOutDataConnections,
-  8, scm_astParamters
+const SCFB_FBNData FORTE_SubscribeEventOpcUa::scmFBNData = {
+  19, scmInternalFBs,
+  26, scmEventConnections,
+  10, scmFannedOutEventConnections,
+  13, scmDataConnections,
+  4, scmFannedOutDataConnections,
+  8, scmParamters
 };
 
 

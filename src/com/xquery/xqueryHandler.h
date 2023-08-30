@@ -24,7 +24,7 @@ class CXqueryHandler : public CExternalEventHandler, private CThread{
 
   private:
     typedef CSinglyLinkedList<CXqueryClientLayer *> TXqueryFBContainer;
-    TXqueryFBContainer m_lstXqueryFBList;
+    TXqueryFBContainer mXqueryFBList;
     static CSyncObject smXqueryMutex;
 
     static forte::arch::CSemaphore mStateSemaphore;

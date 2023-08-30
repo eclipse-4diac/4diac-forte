@@ -21,14 +21,14 @@
 class CExternTimerHandler : public CTimerHandler{
   public:
     static void externNextTick();
-    static TForteUInt32 getExternTicksPerSecond(){ return csm_nTicksPerSecond; };
-    explicit CExternTimerHandler(CDeviceExecution& pa_poDeviceExecution);
+    static TForteUInt32 getExternTicksPerSecond(){ return csmTicksPerSecond; };
+    explicit CExternTimerHandler(CDeviceExecution& paDeviceExecution);
       
     ~CExternTimerHandler() override;
 
     /*!\brief Pointer to a general timer used for code outside FBs, like devlog, TIME() and so on
      */
-    static CExternTimerHandler *sm_poFORTEExtTimer;
+    static CExternTimerHandler *smFORTEExtTimer;
     
   
   /*!\brief Enables this event source
@@ -40,9 +40,9 @@ class CExternTimerHandler : public CTimerHandler{
     void disableHandler() override;
   /*!\brief Sets the priority of the event source  
    * 
-   * \param pa_nPriority new priority of the event source
+   * \param paPriority new priority of the event source
    */
-    void setPriority(int pa_nPriority) override;
+    void setPriority(int paPriority) override;
   /*!\brief Get the current priority of the event source
    * 
    * \return current priority
@@ -53,12 +53,12 @@ class CExternTimerHandler : public CTimerHandler{
    * 
    * \return internal runtime ticks per millisecond
    */ 
-    virtual TForteUInt32 getTicksPerSecond(){ return csm_nTicksPerSecond; };
+    virtual TForteUInt32 getTicksPerSecond(){ return csmTicksPerSecond; };
 
   private:
   /*!\brief default time base of the used timer. in useconds.
    */
-    static const TForteInt32 csm_nTicksPerSecond;
+    static const TForteInt32 csmTicksPerSecond;
   /*!\brief callback function for the system timer
    */
     

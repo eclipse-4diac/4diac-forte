@@ -19,26 +19,26 @@
 
 DEFINE_FIRMWARE_FB(FORTE_GetArrayResponseFromJSON, g_nStringIdGetArrayResponseFromJSON)
 
-const CStringDictionary::TStringId FORTE_GetArrayResponseFromJSON::scm_anDataInputNames[] = {g_nStringIdresponse};
+const CStringDictionary::TStringId FORTE_GetArrayResponseFromJSON::scmDataInputNames[] = {g_nStringIdresponse};
 
-const CStringDictionary::TStringId FORTE_GetArrayResponseFromJSON::scm_anDataInputTypeIds[] = {g_nStringIdSTRING};
+const CStringDictionary::TStringId FORTE_GetArrayResponseFromJSON::scmDataInputTypeIds[] = {g_nStringIdSTRING};
 
-const CStringDictionary::TStringId FORTE_GetArrayResponseFromJSON::scm_anDataOutputNames[] = {g_nStringIdoutput};
+const CStringDictionary::TStringId FORTE_GetArrayResponseFromJSON::scmDataOutputNames[] = {g_nStringIdoutput};
 
-const CStringDictionary::TStringId FORTE_GetArrayResponseFromJSON::scm_anDataOutputTypeIds[] = {g_nStringIdANY};
+const CStringDictionary::TStringId FORTE_GetArrayResponseFromJSON::scmDataOutputTypeIds[] = {g_nStringIdANY};
 
-const TForteInt16 FORTE_GetArrayResponseFromJSON::scm_anEIWithIndexes[] = {0};
-const TDataIOID FORTE_GetArrayResponseFromJSON::scm_anEIWith[] = {0, scmWithListDelimiter};
-const CStringDictionary::TStringId FORTE_GetArrayResponseFromJSON::scm_anEventInputNames[] = {g_nStringIdREQ};
+const TForteInt16 FORTE_GetArrayResponseFromJSON::scmEIWithIndexes[] = {0};
+const TDataIOID FORTE_GetArrayResponseFromJSON::scmEIWith[] = {0, scmWithListDelimiter};
+const CStringDictionary::TStringId FORTE_GetArrayResponseFromJSON::scmEventInputNames[] = {g_nStringIdREQ};
 
-const TDataIOID FORTE_GetArrayResponseFromJSON::scm_anEOWith[] = {0, scmWithListDelimiter};
-const TForteInt16 FORTE_GetArrayResponseFromJSON::scm_anEOWithIndexes[] = {0, -1};
-const CStringDictionary::TStringId FORTE_GetArrayResponseFromJSON::scm_anEventOutputNames[] = {g_nStringIdCNF};
+const TDataIOID FORTE_GetArrayResponseFromJSON::scmEOWith[] = {0, scmWithListDelimiter};
+const TForteInt16 FORTE_GetArrayResponseFromJSON::scmEOWithIndexes[] = {0, -1};
+const CStringDictionary::TStringId FORTE_GetArrayResponseFromJSON::scmEventOutputNames[] = {g_nStringIdCNF};
 
-const SFBInterfaceSpec FORTE_GetArrayResponseFromJSON::scm_stFBInterfaceSpec = {
-  1,  scm_anEventInputNames,  scm_anEIWith,  scm_anEIWithIndexes,
-  1,  scm_anEventOutputNames,  scm_anEOWith, scm_anEOWithIndexes,  1,  scm_anDataInputNames, scm_anDataInputTypeIds,
-  1,  scm_anDataOutputNames, scm_anDataOutputTypeIds,
+const SFBInterfaceSpec FORTE_GetArrayResponseFromJSON::scmFBInterfaceSpec = {
+  1,  scmEventInputNames,  scmEIWith,  scmEIWithIndexes,
+  1,  scmEventOutputNames,  scmEOWith, scmEOWithIndexes,  1,  scmDataInputNames, scmDataInputTypeIds,
+  1,  scmDataOutputNames, scmDataOutputTypeIds,
   0, 0
 };
 
@@ -54,7 +54,7 @@ bool FORTE_GetArrayResponseFromJSON::isResponseEmpty(char* paText) {
 }
 
 void FORTE_GetArrayResponseFromJSON::executeEvent(TEventID paEIID) {
-  if(scm_nEventREQID == paEIID && CIEC_ANY::e_ARRAY == output().getDataTypeID() && CIEC_ANY::e_STRUCT == output_Array()[0]->getDataTypeID()) {
+  if(scmEventREQID == paEIID && CIEC_ANY::e_ARRAY == output().getDataTypeID() && CIEC_ANY::e_STRUCT == output_Array()[0]->getDataTypeID()) {
     //clean the output first
     output_Array().setup(output_Array().size(), static_cast<CIEC_STRUCT*>(output_Array()[0])->getStructTypeNameID());
 
@@ -76,7 +76,7 @@ void FORTE_GetArrayResponseFromJSON::executeEvent(TEventID paEIID) {
     } else {
       DEVLOG_ERROR("[Arrowhead GetArrayResponseFromJSON]: Invalid response, no ] was found: %s\n", response().getValue());
     }
-    sendOutputEvent(scm_nEventCNFID);
+    sendOutputEvent(scmEventCNFID);
   }
 }
 

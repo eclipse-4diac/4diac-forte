@@ -20,13 +20,13 @@
 #include "adapterconn.h"
 #include "ecet.h"
 
-CAdapter::CAdapter(CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_pstInterfaceSpecSocket, const CStringDictionary::TStringId pa_nInstanceNameId, const SFBInterfaceSpec *pa_pstInterfaceSpecPlug, bool pa_bIsPlug) :
-  CFunctionBlock(pa_poSrcRes, (pa_bIsPlug) ? pa_pstInterfaceSpecPlug : pa_pstInterfaceSpecSocket, pa_nInstanceNameId),
-  m_nParentAdapterListEventID(0),
-  m_bIsPlug(pa_bIsPlug),
-  m_poPeer(nullptr),
-  m_aoLocalDIs(mDIs),
-  m_poAdapterConn(nullptr){
+CAdapter::CAdapter(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpecSocket, const CStringDictionary::TStringId paInstanceNameId, const SFBInterfaceSpec *paInterfaceSpecPlug, bool paIsPlug) :
+  CFunctionBlock(paSrcRes, (paIsPlug) ? paInterfaceSpecPlug : paInterfaceSpecSocket, paInstanceNameId),
+  mParentAdapterListEventID(0),
+  mIsPlug(paIsPlug),
+  mPeer(nullptr),
+  mLocalDIs(mDIs),
+  mAdapterConn(nullptr){
 }
 
 bool CAdapter::initialize() {
@@ -38,43 +38,43 @@ bool CAdapter::initialize() {
 }
 
 CAdapter::~CAdapter(){
-  if (m_bIsPlug) {
-    if (m_poAdapterConn != nullptr) {
-      delete m_poAdapterConn;
+  if (mIsPlug) {
+    if (mAdapterConn != nullptr) {
+      delete mAdapterConn;
     }
   } else {
-    if (m_poAdapterConn != nullptr) {
-      m_poAdapterConn->setSocket(nullptr);
+    if (mAdapterConn != nullptr) {
+      mAdapterConn->setSocket(nullptr);
     }
   }
-  delete[] m_astEventEntry;
+  delete[] mEventEntry;
 }
 
 void CAdapter::fillEventEntryList(CFunctionBlock* paParentFB){
-  for (TEventID i = 0; i < mInterfaceSpec->m_nNumEOs; ++i) {
-    m_astEventEntry[i].mFB = paParentFB;
-    m_astEventEntry[i].mPortId = static_cast<TPortId>(m_nParentAdapterListEventID + i);
+  for (TEventID i = 0; i < mInterfaceSpec->mNumEOs; ++i) {
+    mEventEntry[i].mFB = paParentFB;
+    mEventEntry[i].mPortId = static_cast<TPortId>(mParentAdapterListEventID + i);
   }
 }
 
-void CAdapter::setParentFB(CFunctionBlock *pa_poParentFB, TForteUInt8 pa_nParentAdapterlistID){
-  m_nParentAdapterListEventID = static_cast<TForteUInt16>((pa_nParentAdapterlistID + 1) << 8);
+void CAdapter::setParentFB(CFunctionBlock *paParentFB, TForteUInt8 paParentAdapterlistID){
+  mParentAdapterListEventID = static_cast<TForteUInt16>((paParentAdapterlistID + 1) << 8);
 
-  fillEventEntryList(pa_poParentFB);
+  fillEventEntryList(paParentFB);
 
   if (isPlug()) {
     //the plug is in charge of managing the adapter connection
-    m_poAdapterConn = new CAdapterConnection(this, pa_nParentAdapterlistID, this);
+    mAdapterConn = new CAdapterConnection(this, paParentAdapterlistID, this);
   }
 }
 
-bool CAdapter::connect(CAdapter *pa_poPeer, CAdapterConnection *pa_poAdConn){
+bool CAdapter::connect(CAdapter *paPeer, CAdapterConnection *paAdConn){
   bool bRetVal = false;
-  if (m_poPeer == nullptr) {
-    m_poPeer = pa_poPeer;
-    mDIs = pa_poPeer->mDOs; //TODO: change is adapters of subtypes may be connected
+  if (mPeer == nullptr) {
+    mPeer = paPeer;
+    mDIs = paPeer->mDOs; //TODO: change is adapters of subtypes may be connected
     if (isSocket()) {
-      m_poAdapterConn = pa_poAdConn;
+      mAdapterConn = paAdConn;
     }
     bRetVal = true;
   }
@@ -82,34 +82,33 @@ bool CAdapter::connect(CAdapter *pa_poPeer, CAdapterConnection *pa_poAdConn){
   return bRetVal;
 }
 
-bool CAdapter::disconnect(CAdapterConnection *pa_poAdConn){
-  if ((pa_poAdConn != nullptr) && (pa_poAdConn != m_poAdapterConn)) {
+bool CAdapter::disconnect(CAdapterConnection *paAdConn){
+  if ((paAdConn != nullptr) && (paAdConn != mAdapterConn)) {
     return false; //connection requesting disconnect is not equal to established connection
   }
-  m_poPeer = nullptr;
-  mDIs = m_aoLocalDIs;
+  mPeer = nullptr;
+  mDIs = mLocalDIs;
   if (isSocket()) {
-    m_poAdapterConn = nullptr;
+    mAdapterConn = nullptr;
   }
   return true;
 }
 
-bool CAdapter::isCompatible(CAdapter *pa_poPeer) const {
+bool CAdapter::isCompatible(CAdapter *paPeer) const {
   //Need to check any adapter here as we don't know which adapter side is used for checking compatibility
-  return ((getFBTypeId() == pa_poPeer->getFBTypeId()) || ((getFBTypeId() == g_nStringIdANY_ADAPTER) && (g_nStringIdANY_ADAPTER != pa_poPeer->getFBTypeId())) || ((getFBTypeId() != g_nStringIdANY_ADAPTER) && (g_nStringIdANY_ADAPTER == pa_poPeer->getFBTypeId())));
+  return ((getFBTypeId() == paPeer->getFBTypeId()) || ((getFBTypeId() == g_nStringIdANY_ADAPTER) && (g_nStringIdANY_ADAPTER != paPeer->getFBTypeId())) || ((getFBTypeId() != g_nStringIdANY_ADAPTER) && (g_nStringIdANY_ADAPTER == paPeer->getFBTypeId())));
 }
 
-void CAdapter::executeEvent(TEventID pa_nEIID){
-  if (nullptr != m_poPeer) {
-    if (nullptr != m_poPeer->m_astEventEntry[pa_nEIID].mFB) {
-      mInvokingExecEnv->addEventEntry(m_poPeer->m_astEventEntry[pa_nEIID]);
+void CAdapter::executeEvent(TEventID paEIID, CEventChainExecutionThread * const paECET){
+  if (nullptr != mPeer) {
+    if (nullptr != mPeer->mEventEntry[paEIID].mFB) {
+      paECET->addEventEntry(mPeer->mEventEntry[paEIID]);
     } else {
-      m_poPeer->mInvokingExecEnv = mInvokingExecEnv;
-      m_poPeer->sendOutputEvent(pa_nEIID);
+      mPeer->sendOutputEvent(paEIID, paECET);
     }
   }
 }
 
 void CAdapter::setupEventEntryList(){
-  m_astEventEntry = new TEventEntry[mInterfaceSpec->m_nNumEOs];
+  mEventEntry = new TEventEntry[mInterfaceSpec->mNumEOs];
 }

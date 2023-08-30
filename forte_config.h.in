@@ -20,29 +20,29 @@
  *
  * FORTE will use this information to calculate time values.
  */
-const TForteUInt32 cg_nForteTicksPerSecond = ${FORTE_TicksPerSecond};
+const TForteUInt32 cgForteTicksPerSecond = ${FORTE_TicksPerSecond};
 
 /*! Define the initial size of the event chain list used in the event chain execution thread.
  *
  */
-const unsigned int cg_nEventChainEventListSize = ${FORTE_EventChainEventListSize};
+const unsigned int cgEventChainEventListSize = ${FORTE_EventChainEventListSize};
 
 
 /*! Define the initial size of the event chain's external event list.
  */
-const unsigned int cg_nEventChainExternalEventListSize = ${FORTE_EventChainExternalEventListSize};
+const unsigned int cgEventChainExternalEventListSize = ${FORTE_EventChainExternalEventListSize};
 
 
 /*! Defines the number of pending communication messages can be handled by a communication function block
  *
  */
-const unsigned int cg_unCommunicationInterruptQueueSize = ${FORTE_CommunicationInterruptQueueSize};
+const unsigned int cgCommunicationInterruptQueueSize = ${FORTE_CommunicationInterruptQueueSize};
 
 
 /*! Buffer size in bytes to be used by the ip layer as receive buffer.
  *
  */
-const unsigned int cg_unIPLayerRecvBufferSize = ${FORTE_IPLayerRecvBufferSize};
+const unsigned int cgIPLayerRecvBufferSize = ${FORTE_IPLayerRecvBufferSize};
 
 /*! \brief Define the management encapsulation protocol
  *
@@ -59,15 +59,15 @@ const unsigned int cg_unIPLayerRecvBufferSize = ${FORTE_IPLayerRecvBufferSize};
  * 
  * Depending on the FORTE_STRING_DICT_FIXED_MEMORY flag the string dict will reallocate if necessary.
  */
-const TForteUInt32 cg_unStringDictInitialStringBufSize = ${FORTE_STRINGDICTINITIALSTRINGBUFSIZE};
+const TForteUInt32 cgStringDictInitialStringBufSize = ${FORTE_STRINGDICTINITIALSTRINGBUFSIZE};
 
 /*! \brief FORTE string dict's initial max nr of strings
  *
  * Depending on the FORTE_STRING_DICT_FIXED_MEMORY flag the string dict will reallocate if necessary.
  */
-const TForteUInt32 cg_unStringDictInitialMaxNrOfStrings = ${FORTE_STRINGDICTINITIALMAXNROFSTRINGS};
+const TForteUInt32 cgStringDictInitialMaxNrOfStrings = ${FORTE_STRINGDICTINITIALMAXNROFSTRINGS};
 
-const TForteUInt32 cg_unNumberOfHandlers = ${FORTE_NUMBER_OF_HANDLERS};
+const TForteUInt32 cgNumberOfHandlers = ${FORTE_NUMBER_OF_HANDLERS};
 
 ${FORTE_CUSTOM_CONFIGURATIONS}
 

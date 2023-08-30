@@ -37,8 +37,8 @@ class CIEC_DINT final : public CIEC_ANY_SIGNED {
   public:
     typedef TForteInt32 TValueType;
 
-    static const TValueType scm_nMinVal;
-    static const TValueType scm_nMaxVal;
+    static const TValueType scmMinVal;
+    static const TValueType scmMaxVal;
 
     CIEC_DINT() = default;
 

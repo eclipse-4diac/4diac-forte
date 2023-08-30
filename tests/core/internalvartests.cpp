@@ -21,24 +21,37 @@
 # include "stringlist.h"
 #endif
 
-const SFBInterfaceSpec gcEmptyInterface = { 0, nullptr, nullptr, nullptr, 0, nullptr, nullptr, nullptr, 0, nullptr, nullptr, 0, nullptr, nullptr, 0, nullptr };
+const SFBInterfaceSpec gcEmptyInterface = {
+  0, nullptr, nullptr, nullptr, 
+  0, nullptr, nullptr, nullptr, 
+  0, nullptr, nullptr, 
+  0, nullptr, nullptr, 
+  0, nullptr, 
+  0, nullptr
+};
 
 class CInternalVarTestFB : public CBasicFB{
   public:
     CInternalVarTestFB(const SInternalVarsInformation *paVarInternals) :
-      CBasicFB(nullptr, &gcEmptyInterface, CStringDictionary::scm_nInvalidStringId, paVarInternals) {
+      CBasicFB(nullptr, &gcEmptyInterface, CStringDictionary::scmInvalidStringId, paVarInternals) {
     }
 
     CIEC_ANY *getVarInternal(size_t paVarIntNum) override {
       return CBasicFB::getVarInternal(paVarIntNum);
     }
 
-    virtual CStringDictionary::TStringId getFBTypeId() const {
-      return CStringDictionary::scm_nInvalidStringId;
+    CStringDictionary::TStringId getFBTypeId() const override {
+      return CStringDictionary::scmInvalidStringId;
     }
 
-    virtual void executeEvent(TEventID){
+    void executeEvent(TEventID) override {
       //nothiing to do here
+    }
+
+    void readInputData(TEventID) override{
+    }
+
+    void writeOutputData(TEventID) override{
     }
 };
 
@@ -79,7 +92,7 @@ BOOST_AUTO_TEST_CASE(sampleInteralVarList){
   CInternalVarTestFB testFB(&varData);
   BOOST_ASSERT(testFB.initialize());
 
-  for(size_t i = 0; i < varData.m_nNumIntVars; i++){
+  for(size_t i = 0; i < varData.mNumIntVars; i++){
     CIEC_ANY *var = testFB.getVar(&(varInternalNames[i]), 1);
     BOOST_CHECK(nullptr != var);
     BOOST_CHECK_EQUAL(var, testFB.getVarInternal(static_cast<unsigned int>(i)));

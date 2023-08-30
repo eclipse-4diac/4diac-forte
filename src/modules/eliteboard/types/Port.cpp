@@ -26,13 +26,13 @@ using namespace forte::core::io;
 
 DEFINE_FIRMWARE_FB(FORTE_Port, g_nStringIdPort)
 
-const CStringDictionary::TStringId FORTE_Port::scm_anDataInputNames[] = {
+const CStringDictionary::TStringId FORTE_Port::scmDataInputNames[] = {
     g_nStringIdPin0,  g_nStringIdPin1,  g_nStringIdPin2,  g_nStringIdPin3,
     g_nStringIdPin4,  g_nStringIdPin5,  g_nStringIdPin6,  g_nStringIdPin7,
     g_nStringIdPin8,  g_nStringIdPin9,  g_nStringIdPin10, g_nStringIdPin11,
     g_nStringIdPin12, g_nStringIdPin13, g_nStringIdPin14, g_nStringIdPin15};
 
-const CStringDictionary::TStringId FORTE_Port::scm_anDataInputTypeIds[] = {
+const CStringDictionary::TStringId FORTE_Port::scmDataInputTypeIds[] = {
     g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING,
     g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING,
     g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING,
@@ -40,10 +40,10 @@ const CStringDictionary::TStringId FORTE_Port::scm_anDataInputTypeIds[] = {
     g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING,
     g_nStringIdWSTRING};
 
-const SAdapterInstanceDef FORTE_Port::scm_astAdapterInstances[] = {
+const SAdapterInstanceDef FORTE_Port::scmAdapterInstances[] = {
     {g_nStringIdPortAdapter, g_nStringIdPortInAdapter, false}};
 
-const SFBInterfaceSpec FORTE_Port::scm_stFBInterfaceSpec = {
+const SFBInterfaceSpec FORTE_Port::scmFBInterfaceSpec = {
     0,
     nullptr,
     nullptr,
@@ -53,13 +53,13 @@ const SFBInterfaceSpec FORTE_Port::scm_stFBInterfaceSpec = {
     nullptr,
     nullptr,
     16,
-    scm_anDataInputNames,
-    scm_anDataInputTypeIds,
+    scmDataInputNames,
+    scmDataInputTypeIds,
     0,
     nullptr,
     nullptr,
     1,
-    scm_astAdapterInstances};
+    scmAdapterInstances};
 
 void FORTE_Port::deregister_handles() {
   for (int i = 0; i < pin_cnt; i++) {
@@ -91,11 +91,11 @@ void FORTE_Port::register_handles() {
   }
 }
 
-void FORTE_Port::executeEvent(TEventID pa_nEIID) {
-  if (pa_nEIID == st_PortInAdapter().MAP()) {
+void FORTE_Port::executeEvent(TEventID paEIID) {
+  if (paEIID == st_PortInAdapter().MAP()) {
     deregister_handles();
     register_handles();
 
-    sendAdapterEvent(0, FORTE_PortAdapter::scm_nEventMAPOID);
+    sendAdapterEvent(0, FORTE_PortAdapter::scmEventMAPOID);
   }
 }

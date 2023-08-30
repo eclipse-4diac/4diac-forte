@@ -29,75 +29,75 @@ namespace forte {
 
     class CModbusComLayer : public CComLayer{
       public:
-        CModbusComLayer(CComLayer* pa_poUpperLayer, CBaseCommFB* pa_poComFB);
+        CModbusComLayer(CComLayer* paUpperLayer, CBaseCommFB* paComFB);
         ~CModbusComLayer() override;
 
-        EComResponse sendData(void *pa_pvData, unsigned int pa_unSize) override; // top interface, called from top
-        EComResponse recvData(const void *pa_pvData, unsigned int pa_unSize) override;
+        EComResponse sendData(void *paData, unsigned int paSize) override; // top interface, called from top
+        EComResponse recvData(const void *paData, unsigned int paSize) override;
 
         EComResponse processInterrupt() override;
 
       private:
         struct STcpParams {
-          char m_acIp[15];
-          unsigned int m_nPort;
+          char mIp[15];
+          unsigned int mPort;
         };
         struct SRtuParams {
-          char m_acDevice[256];
-          int m_nBaud;
-          char m_cParity;
-          int m_nDataBit;
-          int m_nStopBit;
-          EModbusFlowControl m_enFlowControl;
+          char mDevice[256];
+          int mBaud;
+          char mParity;
+          int mDataBit;
+          int mStopBit;
+          EModbusFlowControl mFlowControl;
         };
         struct SAddrRange {
-          EModbusFunction m_eFunction;
-          unsigned int m_nStartAddress;
-          unsigned int m_nNrAddresses;
+          EModbusFunction mFunction;
+          unsigned int mStartAddress;
+          unsigned int mNrAddresses;
         };
         struct SCommonParams {
-          unsigned int m_nNrPolls;
-          unsigned int m_nNrSends;
-          long m_nPollFrequency;
-          unsigned int m_nSlaveId;
-          SAddrRange m_stRead[100];
-          SAddrRange m_stSend[100];
-          unsigned int m_nResponseTimeout;
-          unsigned int m_nByteTimeout;
+          unsigned int mNrPolls;
+          unsigned int mNrSends;
+          long mPollFrequency;
+          unsigned int mSlaveId;
+          SAddrRange mRead[100];
+          SAddrRange mSend[100];
+          unsigned int mResponseTimeout;
+          unsigned int mByteTimeout;
         };
         struct SConnection {
-          char m_acIdString[256];
-          unsigned int m_nUseCount;
-          CModbusConnection *m_pConnection;
+          char mIdString[256];
+          unsigned int mUseCount;
+          CModbusConnection *mConnection;
         };
 
         template<typename T>
-        T convertFBOutput(TForteByte *pa_acDataArray, unsigned int pa_nDataSize);
+        T convertFBOutput(TForteByte *paDataArray, unsigned int paDataSize);
 
-        unsigned int convertDataInput(void *pa_poInData, unsigned int pa_nDataSize, void *pa_poConvertedData);
+        unsigned int convertDataInput(void *paInData, unsigned int paDataSize, void *paConvertedData);
 
-        EComResponse openConnection(char *pa_acLayerParameter) override;
+        EComResponse openConnection(char *paLayerParameter) override;
         void closeConnection() override;
 
-        EModbusFunction decodeFunction(const char* pa_acParam, int *strIndex, EModbusFunction pa_eDefaultFunction=eHoldingRegister);
-        int processClientParams(const char* pa_acLayerParams, STcpParams* pa_pTcpParams, SRtuParams* pa_pRtuParams, SCommonParams* pa_pCommonParams, char* pa_acIdString);
-        int findNextStartAddress(const char* pa_acString, int pa_nStartIndex);
-        int findNextStopAddress(const char* pa_acString, int pa_nStartIndex);
-        bool isIp(const char* pa_acIp);
+        EModbusFunction decodeFunction(const char* paParam, int *strIndex, EModbusFunction paDefaultFunction=eHoldingRegister);
+        int processClientParams(const char* paLayerParams, STcpParams* paTcpParams, SRtuParams* paRtuParams, SCommonParams* paCommonParams, char* paIdString);
+        int findNextStartAddress(const char* paString, int paStartIndex);
+        int findNextStopAddress(const char* paString, int paStartIndex);
+        bool isIp(const char* paIp);
 
-        CModbusConnection* getClientConnection(const char* pa_acIdString);
-        void putConnection(CModbusConnection *pa_pModbusConn);
+        CModbusConnection* getClientConnection(const char* paIdString);
+        void putConnection(CModbusConnection *paModbusConn);
 
-        EComResponse m_eInterruptResp;
+        EComResponse mInterruptResp;
 
-        CModbusConnection *m_pModbusConnection;
+        CModbusConnection *mModbusConnection;
 
-        TForteByte m_acRecvBuffer[cg_unIPLayerRecvBufferSize];
-        unsigned int m_unBufFillSize;
+        TForteByte mRecvBuffer[cgIPLayerRecvBufferSize];
+        unsigned int mBufFillSize;
 
         CModbusIOBlock m_IOBlock;
 
-        static std::vector<SConnection> sm_lstConnections;
+        static std::vector<SConnection> smConnections;
     };
 
   }

@@ -26,40 +26,40 @@ class FORTE_E_CTD: public CBasicFB {
   DECLARE_FIRMWARE_FB(FORTE_E_CTD)
 
 private:
-  static const CStringDictionary::TStringId scm_anDataInputNames[];
-  static const CStringDictionary::TStringId scm_anDataInputTypeIds[];
-  static const CStringDictionary::TStringId scm_anDataOutputNames[];
-  static const CStringDictionary::TStringId scm_anDataOutputTypeIds[];
-  static const TEventID scm_nEventCDID = 0;
-  static const TEventID scm_nEventLDID = 1;
-  static const TDataIOID scm_anEIWith[];
-  static const TForteInt16 scm_anEIWithIndexes[];
-  static const CStringDictionary::TStringId scm_anEventInputNames[];
-  static const TEventID scm_nEventCDOID = 0;
-  static const TEventID scm_nEventLDOID = 1;
-  static const TDataIOID scm_anEOWith[]; 
-  static const TForteInt16 scm_anEOWithIndexes[];
-  static const CStringDictionary::TStringId scm_anEventOutputNames[];
+  static const CStringDictionary::TStringId scmDataInputNames[];
+  static const CStringDictionary::TStringId scmDataInputTypeIds[];
+  static const CStringDictionary::TStringId scmDataOutputNames[];
+  static const CStringDictionary::TStringId scmDataOutputTypeIds[];
+  static const TEventID scmEventCDID = 0;
+  static const TEventID scmEventLDID = 1;
+  static const TDataIOID scmEIWith[];
+  static const TForteInt16 scmEIWithIndexes[];
+  static const CStringDictionary::TStringId scmEventInputNames[];
+  static const TEventID scmEventCDOID = 0;
+  static const TEventID scmEventLDOID = 1;
+  static const TDataIOID scmEOWith[]; 
+  static const TForteInt16 scmEOWithIndexes[];
+  static const CStringDictionary::TStringId scmEventOutputNames[];
 
-  static const SFBInterfaceSpec scm_stFBInterfaceSpec;
+  static const SFBInterfaceSpec scmFBInterfaceSpec;
   CIEC_ANY *getVarInternal(size_t) override;
   void alg_CD(void);
   void alg_LOAD(void);
-  static const TForteInt16 scm_nStateSTART = 0;
-  static const TForteInt16 scm_nStateCD = 1;
-  static const TForteInt16 scm_nStateLD = 2;
+  static const TForteInt16 scmStateSTART = 0;
+  static const TForteInt16 scmStateCD = 1;
+  static const TForteInt16 scmStateLD = 2;
   
   void enterStateSTART(void);
   void enterStateCD(void);
   void enterStateLD(void);
 
-  void executeEvent(TEventID pa_nEIID) override;
+  void executeEvent(TEventID paEIID) override;
 
-  void readInputData(TEventID pa_nEIID) override;
-  void writeOutputData(TEventID pa_nEIID) override;
+  void readInputData(TEventID paEIID) override;
+  void writeOutputData(TEventID paEIID) override;
 
 public:
-  FORTE_E_CTD(CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes);
+  FORTE_E_CTD(CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
 
   CIEC_UINT var_PV;
   CIEC_BOOL var_Q;
@@ -78,13 +78,13 @@ public:
   CDataConnection *getDOConUnchecked(TPortId) override;
   void evt_CD(const CIEC_UINT &pa_PV, CIEC_BOOL &pa_Q, CIEC_UINT &pa_CV) {
     var_PV = pa_PV;
-    receiveInputEvent(scm_nEventCDID, nullptr);
+    receiveInputEvent(scmEventCDID, nullptr);
     pa_Q = var_Q;
     pa_CV = var_CV;
   }
   void evt_LD(const CIEC_UINT &pa_PV, CIEC_BOOL &pa_Q, CIEC_UINT &pa_CV) {
     var_PV = pa_PV;
-    receiveInputEvent(scm_nEventLDID, nullptr);
+    receiveInputEvent(scmEventLDID, nullptr);
     pa_Q = var_Q;
     pa_CV = var_CV;
   }

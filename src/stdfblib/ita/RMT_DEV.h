@@ -36,17 +36,17 @@ class RMT_DEV : public CDevice{
   */
     int startDevice() override;
 
-    EMGMResponse changeFBExecutionState(EMGMCommandType pa_unCommand) override;
+    EMGMResponse changeFBExecutionState(EMGMCommandType paCommand) override;
 
-    void setMGR_ID(const char * const pa_acConn);
+    void setMGR_ID(const char * const paConn);
 
   private:
-    CInterface2InternalDataConnection m_oDConnMGR_ID;
+    CInterface2InternalDataConnection mDConnMGR_ID;
 
-    static const SFBInterfaceSpec scm_stFBInterfaceSpec;
+    static const SFBInterfaceSpec scmFBInterfaceSpec;
 
-    static const CStringDictionary::TStringId scm_aunDINameIds[];
-    static const CStringDictionary::TStringId scm_aunDIDataTypeIds[];
+    static const CStringDictionary::TStringId scmDINameIds[];
+    static const CStringDictionary::TStringId scmDIDataTypeIds[];
 
     CIEC_WSTRING& MGR_ID() {
       return *static_cast<CIEC_WSTRING*>(getDI(0));

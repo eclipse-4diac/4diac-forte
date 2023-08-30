@@ -12,7 +12,7 @@
 #include "BE_SVIFB.h"
 #include "BE_RMT_DEV.h"
 
-const TForteUInt32 BE_SVIFB::scm_anBE_SVI_Types[] = { SVI_F_UNKNOWN, // e_ANY,
+const TForteUInt32 BE_SVIFB::scmBE_SVI_Types[] = { SVI_F_UNKNOWN, // e_ANY,
     SVI_F_BOOL8, // e_BOOL,
     SVI_F_SINT8, //  e_SINT,
     SVI_F_SINT16, //  e_INT,
@@ -44,7 +44,7 @@ const TForteUInt32 BE_SVIFB::scm_anBE_SVI_Types[] = { SVI_F_UNKNOWN, // e_ANY,
     //     e_Max = 65535     // Guarantees at least 16 bits - otherwise gcc will optimizes on some platforms
     };
 
-const TForteUInt32 BE_SVIFB::scm_anBE_SVI_VarSizes[] = { 0, // e_ANY,
+const TForteUInt32 BE_SVIFB::scmBE_SVI_VarSizes[] = { 0, // e_ANY,
     1, // e_BOOL,
     1, //  e_SINT,
     2, //  e_INT,
@@ -76,10 +76,10 @@ const TForteUInt32 BE_SVIFB::scm_anBE_SVI_VarSizes[] = { 0, // e_ANY,
     //     e_Max = 65535     // Guarantees at least 16 bits - otherwise gcc will optimizes on some platforms
     };
 
-bool BE_SVIFB::registerSVIvar(const CIEC_STRING& pa_roID, CIEC_ANY& pa_roValue, const TForteUInt32 pa_nMode){
+bool BE_SVIFB::registerSVIvar(const CIEC_STRING& paID, CIEC_ANY& paValue, const TForteUInt32 paMode){
   BE_RMT_DEV& roDev(static_cast<BE_RMT_DEV&>(getResource().getDevice()));
 
-  bool bRetVal = (OK == roDev.getModule().GetSVIHandler().AddGlobVar(((CHAR *) pa_roID.getValue()), pa_nMode | scm_anBE_SVI_Types[pa_roValue.getDataTypeID()], scm_anBE_SVI_VarSizes[pa_roValue.getDataTypeID()], (UINT32*) (pa_roValue.getDataPtr()), 0, 0));
+  bool bRetVal = (OK == roDev.getModule().GetSVIHandler().AddGlobVar(((CHAR *) paID.getValue()), paMode | scmBE_SVI_Types[paValue.getDataTypeID()], scmBE_SVI_VarSizes[paValue.getDataTypeID()], (UINT32*) (paValue.getDataPtr()), 0, 0));
   roDev.getModule().CfgRead();
   return bRetVal;
 }

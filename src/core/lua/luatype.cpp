@@ -16,10 +16,10 @@
 
 namespace luatype {
   bool getAdapterInstanceDefinition(SAdapterInstanceDef& def, CLuaEngine* luaEngine, int index) {
-    def.m_nAdapterNameID = luaEngine->getField<CStringDictionary::TStringId, &CLuaEngine::getStringId>(index, "adapterNameID");
-    def.m_nAdapterTypeNameID = luaEngine->getField<CStringDictionary::TStringId, &CLuaEngine::getStringId>(index, "adapterTypeNameID");
-    def.m_bIsPlug = luaEngine->getField<bool, &CLuaEngine::getBoolean>(index, "isPlug");
-    if (def.m_nAdapterNameID == CStringDictionary::scm_nInvalidStringId || def.m_nAdapterTypeNameID == CStringDictionary::scm_nInvalidStringId) {
+    def.mAdapterNameID = luaEngine->getField<CStringDictionary::TStringId, &CLuaEngine::getStringId>(index, "adapterNameID");
+    def.mAdapterTypeNameID = luaEngine->getField<CStringDictionary::TStringId, &CLuaEngine::getStringId>(index, "adapterTypeNameID");
+    def.mIsPlug = luaEngine->getField<bool, &CLuaEngine::getBoolean>(index, "isPlug");
+    if (def.mAdapterNameID == CStringDictionary::scmInvalidStringId || def.mAdapterTypeNameID == CStringDictionary::scmInvalidStringId) {
       return false;
     }
     return true;

@@ -44,7 +44,7 @@ class CModbusHandler : public CExternalEventHandler{
       return 0;
     }
 
-    void executeComCallback(forte::com_infra::CModbusComLayer* pa_pComCallback);
+    void executeComCallback(forte::com_infra::CModbusComLayer* paComCallback);
 };
 
 #endif // _MODBUSHANDLER_H_

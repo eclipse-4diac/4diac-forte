@@ -17,44 +17,44 @@
 
 DEFINE_FIRMWARE_FB(FORTE_SubscribeEvent, g_nStringIdSubscribeEvent)
 
-const CStringDictionary::TStringId FORTE_SubscribeEvent::scm_anDataInputNames[] = {g_nStringIdeventFilter, g_nStringIdendpoint};
+const CStringDictionary::TStringId FORTE_SubscribeEvent::scmDataInputNames[] = {g_nStringIdeventFilter, g_nStringIdendpoint};
 
-const CStringDictionary::TStringId FORTE_SubscribeEvent::scm_anDataInputTypeIds[] = {g_nStringIdEventFilter, g_nStringIdWSTRING};
+const CStringDictionary::TStringId FORTE_SubscribeEvent::scmDataInputTypeIds[] = {g_nStringIdEventFilter, g_nStringIdWSTRING};
 
-const TForteInt16 FORTE_SubscribeEvent::scm_anEIWithIndexes[] = {0, 3};
-const TDataIOID FORTE_SubscribeEvent::scm_anEIWith[] = {0, 1, scmWithListDelimiter, 0, 1, scmWithListDelimiter};
-const CStringDictionary::TStringId FORTE_SubscribeEvent::scm_anEventInputNames[] = {g_nStringIdSubscribe, g_nStringIdUnsubscribe};
+const TForteInt16 FORTE_SubscribeEvent::scmEIWithIndexes[] = {0, 3};
+const TDataIOID FORTE_SubscribeEvent::scmEIWith[] = {0, 1, scmWithListDelimiter, 0, 1, scmWithListDelimiter};
+const CStringDictionary::TStringId FORTE_SubscribeEvent::scmEventInputNames[] = {g_nStringIdSubscribe, g_nStringIdUnsubscribe};
 
-const TForteInt16 FORTE_SubscribeEvent::scm_anEOWithIndexes[] = {-1, -1, -1};
-const CStringDictionary::TStringId FORTE_SubscribeEvent::scm_anEventOutputNames[] = {g_nStringIdSubscribed, g_nStringIdUnsubscribed};
+const TForteInt16 FORTE_SubscribeEvent::scmEOWithIndexes[] = {-1, -1, -1};
+const CStringDictionary::TStringId FORTE_SubscribeEvent::scmEventOutputNames[] = {g_nStringIdSubscribed, g_nStringIdUnsubscribed};
 
-const SAdapterInstanceDef FORTE_SubscribeEvent::scm_astAdapterInstances[] = {
+const SAdapterInstanceDef FORTE_SubscribeEvent::scmAdapterInstances[] = {
 {g_nStringIdSubscribeEventAdp, g_nStringIdSubscribeEventAdp, true }};
 
-const SFBInterfaceSpec FORTE_SubscribeEvent::scm_stFBInterfaceSpec = {
-  2,  scm_anEventInputNames,  scm_anEIWith,  scm_anEIWithIndexes,
-  2,  scm_anEventOutputNames,  0, 0,  2,  scm_anDataInputNames, scm_anDataInputTypeIds,
+const SFBInterfaceSpec FORTE_SubscribeEvent::scmFBInterfaceSpec = {
+  2,  scmEventInputNames,  scmEIWith,  scmEIWithIndexes,
+  2,  scmEventOutputNames,  0, 0,  2,  scmDataInputNames, scmDataInputTypeIds,
   0,  0, 0,
-  1,scm_astAdapterInstances};
+  1,scmAdapterInstances};
 
 
-const SCFB_FBConnectionData FORTE_SubscribeEvent::scm_astEventConnections[] = {
-  {GENERATE_CONNECTION_PORT_ID_1_ARG(g_nStringIdUnsubscribe), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdSubscribeEventAdp, g_nStringIdUnsubscribe), CCompositeFB::scm_nAdapterMarker |0},
-  {GENERATE_CONNECTION_PORT_ID_1_ARG(g_nStringIdSubscribe), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdSubscribeEventAdp, g_nStringIdSubscribe), CCompositeFB::scm_nAdapterMarker |0},
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdSubscribeEventAdp, g_nStringIdSubscribed), CCompositeFB::scm_nAdapterMarker |0, GENERATE_CONNECTION_PORT_ID_1_ARG(g_nStringIdSubscribed), -1},
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdSubscribeEventAdp, g_nStringIdUnsubscribed), CCompositeFB::scm_nAdapterMarker |0, GENERATE_CONNECTION_PORT_ID_1_ARG(g_nStringIdUnsubscribed), -1},
+const SCFB_FBConnectionData FORTE_SubscribeEvent::scmEventConnections[] = {
+  {GENERATE_CONNECTION_PORT_ID_1_ARG(g_nStringIdUnsubscribe), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdSubscribeEventAdp, g_nStringIdUnsubscribe), CCompositeFB::scmAdapterMarker |0},
+  {GENERATE_CONNECTION_PORT_ID_1_ARG(g_nStringIdSubscribe), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdSubscribeEventAdp, g_nStringIdSubscribe), CCompositeFB::scmAdapterMarker |0},
+  {GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdSubscribeEventAdp, g_nStringIdSubscribed), CCompositeFB::scmAdapterMarker |0, GENERATE_CONNECTION_PORT_ID_1_ARG(g_nStringIdSubscribed), -1},
+  {GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdSubscribeEventAdp, g_nStringIdUnsubscribed), CCompositeFB::scmAdapterMarker |0, GENERATE_CONNECTION_PORT_ID_1_ARG(g_nStringIdUnsubscribed), -1},
 };
 
-const SCFB_FBConnectionData FORTE_SubscribeEvent::scm_astDataConnections[] = {
-  {GENERATE_CONNECTION_PORT_ID_1_ARG(g_nStringIdeventFilter), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdSubscribeEventAdp, g_nStringIdeventFilter), CCompositeFB::scm_nAdapterMarker |0},
-  {GENERATE_CONNECTION_PORT_ID_1_ARG(g_nStringIdendpoint), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdSubscribeEventAdp, g_nStringIdendpoint), CCompositeFB::scm_nAdapterMarker |0},
+const SCFB_FBConnectionData FORTE_SubscribeEvent::scmDataConnections[] = {
+  {GENERATE_CONNECTION_PORT_ID_1_ARG(g_nStringIdeventFilter), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdSubscribeEventAdp, g_nStringIdeventFilter), CCompositeFB::scmAdapterMarker |0},
+  {GENERATE_CONNECTION_PORT_ID_1_ARG(g_nStringIdendpoint), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdSubscribeEventAdp, g_nStringIdendpoint), CCompositeFB::scmAdapterMarker |0},
 };
 
-const SCFB_FBNData FORTE_SubscribeEvent::scm_stFBNData = {
+const SCFB_FBNData FORTE_SubscribeEvent::scmFBNData = {
   0, 0,
-  4, scm_astEventConnections,
+  4, scmEventConnections,
   0, 0,
-  2, scm_astDataConnections,
+  2, scmDataConnections,
   0, 0,
   0, 0
 };

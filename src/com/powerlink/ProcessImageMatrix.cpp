@@ -13,8 +13,8 @@
 
 CProcessImageMatrix::CProcessImageMatrix(){
 
-  m_nBitSize = 0;
-  m_nNumberOfEntries = 0;
+  mBitSize = 0;
+  mNumberOfEntries = 0;
 
 }
 
@@ -22,32 +22,32 @@ CProcessImageMatrix::~CProcessImageMatrix(){
   clearAll();
 }
 
-void CProcessImageMatrix::addEntry(unsigned int pa_nCN, unsigned int pa_nModule, unsigned int pa_nIoId, unsigned int pa_nDataSize, unsigned int pa_nPiOffset, unsigned int pa_nBitOffset){
+void CProcessImageMatrix::addEntry(unsigned int paCN, unsigned int paModule, unsigned int paIoId, unsigned int paDataSize, unsigned int paPiOffset, unsigned int paBitOffset){
 
-  m_lMatrix.pushBack(new SChannelEntry(pa_nCN, pa_nModule, pa_nIoId, pa_nDataSize, pa_nPiOffset, pa_nBitOffset));
+  mMatrix.pushBack(new SChannelEntry(paCN, paModule, paIoId, paDataSize, paPiOffset, paBitOffset));
 
   // Check if 8, 16, 32 bit aligned
-  if((pa_nDataSize % 32 == 0) || (pa_nDataSize % 16 == 0) || (pa_nDataSize % 8 == 0)){
-    if(m_nBitSize % pa_nDataSize != 0){
-      unsigned long fillBits = pa_nDataSize - (m_nBitSize % pa_nDataSize);
-      m_nBitSize += fillBits;
+  if((paDataSize % 32 == 0) || (paDataSize % 16 == 0) || (paDataSize % 8 == 0)){
+    if(mBitSize % paDataSize != 0){
+      unsigned long fillBits = paDataSize - (mBitSize % paDataSize);
+      mBitSize += fillBits;
     }
   }
-  m_nBitSize += pa_nDataSize;
+  mBitSize += paDataSize;
 
-  m_nNumberOfEntries++;
+  mNumberOfEntries++;
 }
 
 // getEntry: Returns an array with [dataSize, PIOffset, BitOffset]
-unsigned int* CProcessImageMatrix::getEntry(unsigned int pa_nCN, unsigned int pa_nModule, unsigned int pa_nIoId){
+unsigned int* CProcessImageMatrix::getEntry(unsigned int paCN, unsigned int paModule, unsigned int paIoId){
   static unsigned int data[3] = { 0, 0, 0 };
 
-  TChannelList::Iterator itEnd = m_lMatrix.end();
-  for(TChannelList::Iterator it = m_lMatrix.begin(); it != itEnd; ++it){
-    if(it->m_nCN == pa_nCN && it->m_nModuleId == pa_nModule && it->m_nIOid == pa_nIoId){
-      data[0] = it->m_nDataSize;
-      data[1] = it->m_nPIOffset;
-      data[2] = it->m_nBitOffset;
+  TChannelList::Iterator itEnd = mMatrix.end();
+  for(TChannelList::Iterator it = mMatrix.begin(); it != itEnd; ++it){
+    if(it->mCN == paCN && it->mModuleId == paModule && it->mIOid == paIoId){
+      data[0] = it->mDataSize;
+      data[1] = it->mPIOffset;
+      data[2] = it->mBitOffset;
       return data;
     }
   }
@@ -56,16 +56,16 @@ unsigned int* CProcessImageMatrix::getEntry(unsigned int pa_nCN, unsigned int pa
 }
 
 // getEntry: same as above but returns the values on row "index"
-unsigned int* CProcessImageMatrix::getEntry(unsigned int pa_nIndex){
-  if(pa_nIndex < m_nNumberOfEntries){
+unsigned int* CProcessImageMatrix::getEntry(unsigned int paIndex){
+  if(paIndex < mNumberOfEntries){
     static unsigned int data[3] = { 0, 0, 0 };
-    TChannelList::Iterator it = m_lMatrix.begin();
-    for(unsigned int i = 0; i < pa_nIndex; i++){
+    TChannelList::Iterator it = mMatrix.begin();
+    for(unsigned int i = 0; i < paIndex; i++){
       ++it;
     }
-    data[0] = it->m_nDataSize;
-    data[1] = it->m_nPIOffset;
-    data[2] = it->m_nBitOffset;
+    data[0] = it->mDataSize;
+    data[1] = it->mPIOffset;
+    data[2] = it->mBitOffset;
     return data;
   }
 
@@ -73,20 +73,20 @@ unsigned int* CProcessImageMatrix::getEntry(unsigned int pa_nIndex){
 }
 
 unsigned int CProcessImageMatrix::getNrOfEntries() const {
-  return m_nNumberOfEntries;
+  return mNumberOfEntries;
 }
 
-CProcessImageMatrix* CProcessImageMatrix::getModuleEntries(unsigned int pa_nCN, unsigned int pa_nModule){
+CProcessImageMatrix* CProcessImageMatrix::getModuleEntries(unsigned int paCN, unsigned int paModule){
   CProcessImageMatrix* newMatrix = nullptr;
 
-  TChannelList::Iterator itEnd = m_lMatrix.end();
-  for(TChannelList::Iterator it(m_lMatrix.begin()); it != itEnd; ++it){
-    if(it->m_nCN == pa_nCN && it->m_nModuleId == pa_nModule){
+  TChannelList::Iterator itEnd = mMatrix.end();
+  for(TChannelList::Iterator it(mMatrix.begin()); it != itEnd; ++it){
+    if(it->mCN == paCN && it->mModuleId == paModule){
       if(newMatrix == nullptr) {
         newMatrix = new CProcessImageMatrix();
       }
 
-      newMatrix->addEntry(it->m_nCN, it->m_nModuleId, it->m_nIOid, it->m_nDataSize, it->m_nPIOffset, it->m_nBitOffset);
+      newMatrix->addEntry(it->mCN, it->mModuleId, it->mIOid, it->mDataSize, it->mPIOffset, it->mBitOffset);
     }
   }
 
@@ -95,16 +95,16 @@ CProcessImageMatrix* CProcessImageMatrix::getModuleEntries(unsigned int pa_nCN, 
 
 unsigned long CProcessImageMatrix::getProcessImageSize() const {
   // Check if the whole matrix is 32 bit aligned
-  if(m_nBitSize % 32 != 0){
-    int fillBits = 32 - (m_nBitSize % 32);
-    return (unsigned long) (m_nBitSize + fillBits) / 8;
+  if(mBitSize % 32 != 0){
+    int fillBits = 32 - (mBitSize % 32);
+    return (unsigned long) (mBitSize + fillBits) / 8;
   }
-  return (unsigned long) m_nBitSize / 8;
+  return (unsigned long) mBitSize / 8;
 }
 
 void CProcessImageMatrix::clearAll(){
-  while(!m_lMatrix.isEmpty()){
-    delete *(TChannelList::Iterator) m_lMatrix.begin();
-    m_lMatrix.popFront();
+  while(!mMatrix.isEmpty()){
+    delete *(TChannelList::Iterator) mMatrix.begin();
+    mMatrix.popFront();
   }
 }

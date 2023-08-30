@@ -22,12 +22,12 @@
 class CAdapterConnection;
 
 #define ADAPTER_CTOR(fbclass) \
- fbclass(CStringDictionary::TStringId pa_anAdapterInstanceName, CResource *pa_poSrcRes, bool pa_bIsPlug) : \
- CAdapter( pa_poSrcRes, &scm_stFBInterfaceSpecSocket, pa_anAdapterInstanceName, &scm_stFBInterfaceSpecPlug, pa_bIsPlug)
+ fbclass(CStringDictionary::TStringId paAdapterInstanceName, CResource *paSrcRes, bool paIsPlug) : \
+ CAdapter( paSrcRes, &scmFBInterfaceSpecSocket, paAdapterInstanceName, &scmFBInterfaceSpecPlug, paIsPlug)
 
 #define ADAPTER_CTOR_WITH_BASE_CLASS(fbclass, fbBaseClass) \
- fbclass(CStringDictionary::TStringId pa_anAdapterInstanceName, CResource *pa_poSrcRes, bool pa_bIsPlug) : \
- fbBaseClass( pa_poSrcRes, &scm_stFBInterfaceSpecSocket, pa_anAdapterInstanceName, &scm_stFBInterfaceSpecPlug, pa_bIsPlug)
+ fbclass(CStringDictionary::TStringId paAdapterInstanceName, CResource *paSrcRes, bool paIsPlug) : \
+ fbBaseClass( paSrcRes, &scmFBInterfaceSpecSocket, paAdapterInstanceName, &scmFBInterfaceSpecPlug, paIsPlug)
 
 /*!\ingroup CORE\brief Class for handling adapters.
  *
@@ -37,7 +37,7 @@ class CAdapter : public CFunctionBlock{
     /*!\brief The main constructor for an adapter instance.
      */
     //TODO: think on interface
-    CAdapter(CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_pstInterfaceSpecSocket, const CStringDictionary::TStringId pa_nInstanceNameId, const SFBInterfaceSpec *pa_pstInterfaceSpecPlug, bool pa_bIsPlug);
+    CAdapter(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpecSocket, const CStringDictionary::TStringId paInstanceNameId, const SFBInterfaceSpec *paInterfaceSpecPlug, bool paIsPlug);
     ~CAdapter() override;
 
     bool initialize() override;
@@ -45,44 +45,44 @@ class CAdapter : public CFunctionBlock{
     /*!\brief Returns if Adapter instance is a Plug
      */
     bool isPlug() const{
-      return m_bIsPlug;
+      return mIsPlug;
     }
 
     /*!\brief Returns if Adapter instance is a Socket
      */
     bool isSocket() const{
-      return !m_bIsPlug;
+      return !mIsPlug;
     }
 
-    virtual void setParentFB(CFunctionBlock *pa_poParentFB, TForteUInt8 pa_nParentAdapterlistID);
+    virtual void setParentFB(CFunctionBlock *paParentFB, TForteUInt8 paParentAdapterlistID);
 
     /*! \brief Connects adapter to peer adapter
      *
      *   With this command the adapter is connected to a complementary adapter instance (peer).
      *   The data output pointers are "redirected" to the data inputs of the peer.
-     *   \param pa_poPeer  Pointer to the peer to connect to.
-     *   \param pa_poAdConn Pointer to the connecting adapter connection.
+     *   \param paPeer  Pointer to the peer to connect to.
+     *   \param paAdConn Pointer to the connecting adapter connection.
      *   \return success of establishment of connection
      */
-    bool connect(CAdapter *pa_poPeer, CAdapterConnection *pa_poAdConn);
+    bool connect(CAdapter *paPeer, CAdapterConnection *paAdConn);
 
     /*! \brief Disconnects adapter from peer adapter
      *
      *   With this command the adapter is disconnected from a complementary adapter instance (peer).
      *   The redirection of data output pointers is removed.
-     *   \param pa_poAdConn Pointer to the connecting adapter connection.
+     *   \param paAdConn Pointer to the connecting adapter connection.
      *   \return success of disconnection
      */
-    virtual bool disconnect(CAdapterConnection *pa_poAdConn = nullptr);
+    virtual bool disconnect(CAdapterConnection *paAdConn = nullptr);
 
     /*! \brief Returns the compatibility of the adapter to another adapter
      *
      *   This method will evaluate the compatibility of this adapter to another one.
      *   Only instances of compatible adapter types may be interconnected.
-     *   \param pa_poPeer Pointer to a potential peer, whose compatibility has to be checked.
+     *   \param paPeer Pointer to a potential peer, whose compatibility has to be checked.
      *   \return compatibility status
      */
-    bool isCompatible(CAdapter *pa_poPeer) const;
+    bool isCompatible(CAdapter *paPeer) const;
 
     /*! provides access to the interface spec used for the specific adatpter instnace (i.e., plug or socket)
      *  Is required mainly by the anyadapter
@@ -92,27 +92,27 @@ class CAdapter : public CFunctionBlock{
     }
 
     const TForteInt16 *getEventInputWithIndices() const{
-      return getAdapterInterfaceSpec()->m_anEIWithIndexes;
+      return getAdapterInterfaceSpec()->mEIWithIndexes;
     }
 
     const TForteInt16 *getEventOutputWithIndices() const{
-      return getAdapterInterfaceSpec()->m_anEOWithIndexes;
+      return getAdapterInterfaceSpec()->mEOWithIndexes;
     }
 
     const TDataIOID *getEventInputWith() const{
-      return getAdapterInterfaceSpec()->m_anEIWith;
+      return getAdapterInterfaceSpec()->mEIWith;
     }
 
     const TDataIOID *getEventOutputWith() const{
-      return getAdapterInterfaceSpec()->m_anEOWith;
+      return getAdapterInterfaceSpec()->mEOWith;
     }
 
     CAdapter *getPeer(){
-      return m_poPeer;
+      return mPeer;
     }
 
     CAdapterConnection *getAdapterConnection() const{
-      return m_poAdapterConn;
+      return mAdapterConn;
     }
 
   protected:
@@ -123,17 +123,17 @@ class CAdapter : public CFunctionBlock{
      */
     void fillEventEntryList(CFunctionBlock* paParentFB);
 
-    TForteUInt16 m_nParentAdapterListEventID;
+    TForteUInt16 mParentAdapterListEventID;
 
   private:
-    void executeEvent(TEventID pa_nEIID) override;
+    void executeEvent(TEventID paEIID, CEventChainExecutionThread * const paECET) override;
     void setupEventEntryList();
 
-    const bool m_bIsPlug;
-    CAdapter *m_poPeer;
-    CIEC_ANY **m_aoLocalDIs;
-    CAdapterConnection *m_poAdapterConn;
-    TEventEntry *m_astEventEntry; //! the event entry list to start the event chain
+    const bool mIsPlug;
+    CAdapter *mPeer;
+    CIEC_ANY **mLocalDIs;
+    CAdapterConnection *mAdapterConn;
+    TEventEntry *mEventEntry; //! the event entry list to start the event chain
 };
 
 #endif /*_ADAPTER_H_*/

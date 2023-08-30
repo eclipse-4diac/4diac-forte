@@ -17,17 +17,17 @@
 ${STRINGLIST_CPP}
 
 #ifdef FORTE_STRING_DICT_FIXED_MEMORY
-  CStringDictionary::TStringId CStringDictionary::scm_aunIdList[cg_unFORTE_StringDictInitialMaxNrOfStrings]
+  CStringDictionary::TStringId CStringDictionary::scmIdList[cgFORTE_StringDictInitialMaxNrOfStrings]
 #else
-  const CStringDictionary::TStringId CStringDictionary::scm_aunIdList[] 
+  const CStringDictionary::TStringId CStringDictionary::scmIdList[] 
 #endif
-  = {${scm_aunIdList_Str}};
+  = {${scmIdList_Str}};
 
 #ifdef FORTE_STRING_DICT_FIXED_MEMORY
-  char CStringDictionary::scm_acConstStringBuf[cg_unFORTE_StringDictInitialStringBufSize]
+  char CStringDictionary::scmConstStringBuf[cgFORTE_StringDictInitialStringBufSize]
 #else
-  const char CStringDictionary::scm_acConstStringBuf[] 
+  const char CStringDictionary::scmConstStringBuf[] 
 #endif
-  = {"${scm_acConstStringBuf_Str}"};
+  = {"${scmConstStringBuf_Str}"};
 
 ${ErrorStringBuf}

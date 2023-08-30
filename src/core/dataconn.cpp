@@ -28,7 +28,7 @@ EMGMResponse CDataConnection::connect(CFunctionBlock *paDstFB,
   TPortId dstPortId = paDstFB->getDIID(paDstPortNameId);
   if(cgInvalidPortId != dstPortId){
     CIEC_ANY *dstDataPoint = paDstFB->getDIFromPortId(dstPortId);
-    retVal = establishDataConnection(paDstFB, dstPortId, dstDataPoint);
+    retVal = CDataConnection::establishDataConnection(paDstFB, dstPortId, dstDataPoint);
   }
   return retVal;
 }
@@ -38,7 +38,7 @@ EMGMResponse CDataConnection::connectToCFBInterface(CFunctionBlock *paDstFB,
   EMGMResponse retVal = EMGMResponse::NoSuchObject;
   TPortId nDOID = paDstFB->getDOID(paDstPortNameId);
 
-  if(cg_nInvalidEventID != nDOID){
+  if(cgInvalidEventID != nDOID){
     CIEC_ANY *dstDataPoint = paDstFB->getDataOutput(paDstPortNameId);
     nDOID |= cgInternal2InterfaceMarker;
     retVal = establishDataConnection(paDstFB, nDOID, dstDataPoint);

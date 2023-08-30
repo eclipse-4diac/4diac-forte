@@ -17,7 +17,7 @@
 
 void CBSDSocketInterface::closeSocket(TSocketDescriptor paSockD){
 #if defined(NET_OS)
-  closesocket(pa_nSockD);
+  closesocket(paSockD);
 #else
   close(paSockD);
 #endif
@@ -38,7 +38,7 @@ CBSDSocketInterface::TSocketDescriptor CBSDSocketInterface::openTCPServerConnect
     memset(&(stSockAddr), '\0', sizeof(sockaddr_in));
     stSockAddr.sin_family = AF_INET;
 #if VXWORKS
-    stSockAddr.sin_port = static_cast<unsigned short>(htons(pa_nPort));
+    stSockAddr.sin_port = static_cast<unsigned short>(htons(paPort));
 #else
     stSockAddr.sin_port = htons(paPort);
 #endif
@@ -79,7 +79,7 @@ CBSDSocketInterface::TSocketDescriptor CBSDSocketInterface::openTCPClientConnect
     struct sockaddr_in stSockAddr;
     stSockAddr.sin_family = AF_INET;
 #if VXWORKS
-    stSockAddr.sin_port = static_cast<unsigned short>(htons(pa_nPort));
+    stSockAddr.sin_port = static_cast<unsigned short>(htons(paPort));
 #else
     stSockAddr.sin_port = htons(paPort);
 #endif
@@ -107,7 +107,7 @@ CBSDSocketInterface::TSocketDescriptor CBSDSocketInterface::acceptTCPConnection(
   TSocketDescriptor nRetVal;
 
 #if defined(NET_OS) || defined (VXWORKS)
-  nRetVal = accept(pa_nListeningSockD, &client_addr, &sin_size);
+  nRetVal = accept(paListeningSockD, &client_addr, &sin_size);
 #else
   nRetVal = accept(paListeningSockD, &client_addr, (socklen_t*) &sin_size);
 #endif
@@ -146,22 +146,22 @@ int CBSDSocketInterface::receiveDataFromTCP(TSocketDescriptor paSockD, char* paD
   return nRetVal;
 }
 
-CBSDSocketInterface::TSocketDescriptor CBSDSocketInterface::openUDPSendPort(char *pa_acIPAddr,
-    unsigned short pa_nPort, TUDPDestAddr *m_ptDestAddr){
-  DEVLOG_INFO("CBSDSocketInterface: Opening UDP sending connection at: %s:%d\n", pa_acIPAddr, pa_nPort);
+CBSDSocketInterface::TSocketDescriptor CBSDSocketInterface::openUDPSendPort(char *paIPAddr,
+    unsigned short paPort, TUDPDestAddr *mDestAddr){
+  DEVLOG_INFO("CBSDSocketInterface: Opening UDP sending connection at: %s:%d\n", paIPAddr, paPort);
   TSocketDescriptor nRetVal;
 
   nRetVal = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP);
 
   if(-1 != nRetVal){
-    m_ptDestAddr->sin_family = AF_INET;
+    mDestAddr->sin_family = AF_INET;
 #if VXWORKS
-    m_ptDestAddr->sin_port = static_cast<unsigned short>(htons(pa_nPort));
+    mDestAddr->sin_port = static_cast<unsigned short>(htons(paPort));
 #else
-    m_ptDestAddr->sin_port = htons(pa_nPort);
+    mDestAddr->sin_port = htons(paPort);
 #endif
-    m_ptDestAddr->sin_addr.s_addr = inet_addr(pa_acIPAddr);
-    memset(&(m_ptDestAddr->sin_zero), '\0', sizeof(m_ptDestAddr->sin_zero));
+    mDestAddr->sin_addr.s_addr = inet_addr(paIPAddr);
+    memset(&(mDestAddr->sin_zero), '\0', sizeof(mDestAddr->sin_zero));
 
 #ifdef NET_OS
     /* following is typedef void TM_fAR * in treck/include/trsocket.h */
@@ -186,9 +186,9 @@ CBSDSocketInterface::TSocketDescriptor CBSDSocketInterface::openUDPSendPort(char
   return nRetVal;
 }
 
-CBSDSocketInterface::TSocketDescriptor CBSDSocketInterface::openUDPReceivePort(char *pa_acIPAddr,
-    unsigned short pa_nPort){
-  DEVLOG_INFO("CBSDSocketInterface: Opening UDP receiving connection at: %s:%d\n", pa_acIPAddr, pa_nPort);
+CBSDSocketInterface::TSocketDescriptor CBSDSocketInterface::openUDPReceivePort(char *paIPAddr,
+    unsigned short paPort){
+  DEVLOG_INFO("CBSDSocketInterface: Opening UDP receiving connection at: %s:%d\n", paIPAddr, paPort);
   TSocketDescriptor nRetVal = -1;
   TSocketDescriptor nSocket = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP);
 
@@ -207,16 +207,16 @@ CBSDSocketInterface::TSocketDescriptor CBSDSocketInterface::openUDPReceivePort(c
       struct sockaddr_in stSockAddr;
       stSockAddr.sin_family = AF_INET;
 #if VXWORKS
-      stSockAddr.sin_port = static_cast<unsigned short>(htons(pa_nPort));
+      stSockAddr.sin_port = static_cast<unsigned short>(htons(paPort));
 #else
-      stSockAddr.sin_port = htons(pa_nPort);
+      stSockAddr.sin_port = htons(paPort);
 #endif
       stSockAddr.sin_addr.s_addr = htonl(INADDR_ANY);
       memset(&(stSockAddr.sin_zero), '\0', sizeof(stSockAddr.sin_zero));
       if(0 == bind(nSocket, (struct sockaddr *) &stSockAddr, sizeof(struct sockaddr))){
         // setting up multicast group
         struct ip_mreq stMReq;
-        stMReq.imr_multiaddr.s_addr = inet_addr(pa_acIPAddr);
+        stMReq.imr_multiaddr.s_addr = inet_addr(paIPAddr);
         stMReq.imr_interface.s_addr = htonl(INADDR_ANY);
         if(0 > setsockopt(nSocket, IPPROTO_IP, IP_ADD_MEMBERSHIP, (char*) &stMReq, sizeof(stMReq))){
           //if this fails we may have given a non multicasting addr. For now we accept this. May need to be changed in the future.
@@ -239,31 +239,31 @@ CBSDSocketInterface::TSocketDescriptor CBSDSocketInterface::openUDPReceivePort(c
   return nRetVal;
 }
 
-int CBSDSocketInterface::sendDataOnUDP(TSocketDescriptor pa_nSockD, TUDPDestAddr *pa_ptDestAddr,
-    char* pa_pcData, unsigned int pa_unSize){
+int CBSDSocketInterface::sendDataOnUDP(TSocketDescriptor paSockD, TUDPDestAddr *paDestAddr,
+    char* paData, unsigned int paSize){
   // This function sends all data in the buffer before it returns!
-  int nToSend = pa_unSize;
+  int nToSend = paSize;
   int nRetVal = 0;
 
   while(0 < nToSend){
     //TODO: check if open connection (socket might be closed by peer)
     nRetVal = static_cast<int>(
-        sendto(pa_nSockD, pa_pcData, nToSend, 0, (struct sockaddr *) pa_ptDestAddr, sizeof(struct sockaddr)));
+        sendto(paSockD, paData, nToSend, 0, (struct sockaddr *) paDestAddr, sizeof(struct sockaddr)));
     if(nRetVal <= 0){
       DEVLOG_ERROR("CBSDSocketInterface: UDP-Socket Send failed: %s\n", strerror(errno));
       break;
     }
     nToSend -= nRetVal;
-    pa_pcData += nRetVal;
+    paData += nRetVal;
   }
   return nRetVal;
 }
 
-int CBSDSocketInterface::receiveDataFromUDP(TSocketDescriptor pa_nSockD, char* pa_pcData,
-    unsigned int pa_unBufSize){
+int CBSDSocketInterface::receiveDataFromUDP(TSocketDescriptor paSockD, char* paData,
+    unsigned int paBufSize){
   int nRetVal;
   do{
-    nRetVal = static_cast<int>(recvfrom(pa_nSockD, pa_pcData, pa_unBufSize, 0, nullptr, nullptr));
+    nRetVal = static_cast<int>(recvfrom(paSockD, paData, paBufSize, 0, nullptr, nullptr));
   } while((-1 == nRetVal) && (EINTR == errno)); // recv got interrupt / recieving again
 
   if(nRetVal == -1){ //

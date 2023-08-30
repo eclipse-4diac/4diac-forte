@@ -130,14 +130,14 @@ BOOST_AUTO_TEST_CASE(append_from_CIEC_STRING_exceeding_max_length) {
   BOOST_TEST(fixed5 == "12345"_STRING);
 }
 
-BOOST_AUTO_TEST_CASE(append_from_stdString) {
+BOOST_AUTO_TEST_CASE(append_fromString) {
   CIEC_STRING_FIXED<5> fixed5;
   std::string appendString("12345"s);
   fixed5.append(appendString);
   BOOST_TEST(fixed5 == "12345"_STRING);
 }
 
-BOOST_AUTO_TEST_CASE(append_from_stdString_exceeding_max_length) {
+BOOST_AUTO_TEST_CASE(append_fromString_exceeding_max_length) {
   CIEC_STRING_FIXED<5> fixed5("123"_STRING);
   std::string appendString("456"s);
   fixed5.append(appendString);

@@ -26,38 +26,38 @@ class CAnyAdapter : public CAdapter{
   DECLARE_ADAPTER_TYPE(CAnyAdapter)
 
   public:
-    CAnyAdapter(CStringDictionary::TStringId pa_anAdapterInstanceName, CResource *pa_poSrcRes, bool pa_bIsPlug);
+    CAnyAdapter(CStringDictionary::TStringId paAdapterInstanceName, CResource *paSrcRes, bool paIsPlug);
     ~CAnyAdapter() override;
 
-    void typifyAnyAdapter(CAdapter *pa_poPeer);
+    void typifyAnyAdapter(CAdapter *paPeer);
 
-    void setParentFB(CFunctionBlock *pa_poParentFB, TForteUInt8 pa_nParentAdapterlistID) override;
+    void setParentFB(CFunctionBlock *paParentFB, TForteUInt8 paParentAdapterlistID) override;
 
-    bool disconnect(CAdapterConnection *pa_poAdConn) override;
+    bool disconnect(CAdapterConnection *paAdConn) override;
 
     //! Helper functions allowing to retrieve interface information from any_adpaters TODO look for Doxygen grouping syntax
     TEventID getNumEIs() const {
-      return mInterfaceSpec->m_nNumEIs;
+      return mInterfaceSpec->mNumEIs;
     }
 
     TEventID getNumEOs() const {
-      return mInterfaceSpec->m_nNumEOs;
+      return mInterfaceSpec->mNumEOs;
     }
 
     const TForteInt16* getEIWithIndexes() const {
-      return mInterfaceSpec->m_anEIWithIndexes;
+      return mInterfaceSpec->mEIWithIndexes;
     }
 
     const TDataIOID* getEIWiths() const {
-      return mInterfaceSpec->m_anEIWith;
+      return mInterfaceSpec->mEIWith;
     }
 
     TPortId getNumDIs() const {
-      return mInterfaceSpec->m_nNumDIs;
+      return mInterfaceSpec->mNumDIs;
     }
 
     const CStringDictionary::TStringId* getDataInputNames() const {
-      return mInterfaceSpec->m_aunDINames;
+      return mInterfaceSpec->mDINames;
     }
 
     TIEC_ANYPtr getDataInputs(){
@@ -65,11 +65,11 @@ class CAnyAdapter : public CAdapter{
     }
 
     TPortId getNumDOs() const {
-      return mInterfaceSpec->m_nNumDOs;
+      return mInterfaceSpec->mNumDOs;
     }
 
     const CStringDictionary::TStringId* getDataOutputNames() const {
-      return mInterfaceSpec->m_aunDONames;
+      return mInterfaceSpec->mDONames;
     }
 
     TIEC_ANYPtr getDataOutputs(){
@@ -77,15 +77,20 @@ class CAnyAdapter : public CAdapter{
     }
 
   protected:
+    void readInputData(TEventID) override {
+    }
+
+    void writeOutputData(TEventID) override {
+    }
 
   private:
-    static const SFBInterfaceSpec scm_stFBInterfaceSpec; //! interface spec for the empty interface of an any adapter will be used for plug and socket
+    static const SFBInterfaceSpec scmFBInterfaceSpec; //! interface spec for the empty interface of an any adapter will be used for plug and socket
 
     //!Interface specification to be used when configured
-    SFBInterfaceSpec m_stCurrentFBInterfaceSpec;
+    SFBInterfaceSpec mCurrentFBInterfaceSpec;
 
     CFunctionBlock *m_ParentFB; //!< Pointer to the parent FB
-    TForteUInt8 m_nParentAdapterlistID; //!< Adapter list ID in respect to the parent FB
+    TForteUInt8 mParentAdapterlistID; //!< Adapter list ID in respect to the parent FB
 };
 
 #endif /* ANYADAPTER_H_ */

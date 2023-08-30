@@ -17,26 +17,26 @@
 
 DEFINE_FIRMWARE_FB(FORTE_FieldsToServiceRequestForm, g_nStringIdFieldsToServiceRequestForm)
 
-const CStringDictionary::TStringId FORTE_FieldsToServiceRequestForm::scm_anDataInputNames[] = {g_nStringIdrequesterSystem, g_nStringIdrequesterCloud, g_nStringIdrequestedService, g_nStringIdorchestrationFlags, g_nStringIdpreferredProviders, g_nStringIdrequestedQoS};
+const CStringDictionary::TStringId FORTE_FieldsToServiceRequestForm::scmDataInputNames[] = {g_nStringIdrequesterSystem, g_nStringIdrequesterCloud, g_nStringIdrequestedService, g_nStringIdorchestrationFlags, g_nStringIdpreferredProviders, g_nStringIdrequestedQoS};
 
-const CStringDictionary::TStringId FORTE_FieldsToServiceRequestForm::scm_anDataInputTypeIds[] = {g_nStringIdArrowheadSystem, g_nStringIdArrowheadCloud, g_nStringIdArrowheadService, g_nStringIdARRAY, 10, g_nStringIdWSTRING, g_nStringIdARRAY, 10, g_nStringIdPreferredProvider, g_nStringIdARRAY, 10, g_nStringIdWSTRING};
+const CStringDictionary::TStringId FORTE_FieldsToServiceRequestForm::scmDataInputTypeIds[] = {g_nStringIdArrowheadSystem, g_nStringIdArrowheadCloud, g_nStringIdArrowheadService, g_nStringIdARRAY, 10, g_nStringIdWSTRING, g_nStringIdARRAY, 10, g_nStringIdPreferredProvider, g_nStringIdARRAY, 10, g_nStringIdWSTRING};
 
-const CStringDictionary::TStringId FORTE_FieldsToServiceRequestForm::scm_anDataOutputNames[] = {g_nStringIdserviceRequestForm};
+const CStringDictionary::TStringId FORTE_FieldsToServiceRequestForm::scmDataOutputNames[] = {g_nStringIdserviceRequestForm};
 
-const CStringDictionary::TStringId FORTE_FieldsToServiceRequestForm::scm_anDataOutputTypeIds[] = {g_nStringIdServiceRequestForm};
+const CStringDictionary::TStringId FORTE_FieldsToServiceRequestForm::scmDataOutputTypeIds[] = {g_nStringIdServiceRequestForm};
 
-const TForteInt16 FORTE_FieldsToServiceRequestForm::scm_anEIWithIndexes[] = {0};
-const TDataIOID FORTE_FieldsToServiceRequestForm::scm_anEIWith[] = {0, 1, 5, 4, 3, 2, scmWithListDelimiter};
-const CStringDictionary::TStringId FORTE_FieldsToServiceRequestForm::scm_anEventInputNames[] = {g_nStringIdREQ};
+const TForteInt16 FORTE_FieldsToServiceRequestForm::scmEIWithIndexes[] = {0};
+const TDataIOID FORTE_FieldsToServiceRequestForm::scmEIWith[] = {0, 1, 5, 4, 3, 2, scmWithListDelimiter};
+const CStringDictionary::TStringId FORTE_FieldsToServiceRequestForm::scmEventInputNames[] = {g_nStringIdREQ};
 
-const TDataIOID FORTE_FieldsToServiceRequestForm::scm_anEOWith[] = {0, scmWithListDelimiter};
-const TForteInt16 FORTE_FieldsToServiceRequestForm::scm_anEOWithIndexes[] = {0, -1};
-const CStringDictionary::TStringId FORTE_FieldsToServiceRequestForm::scm_anEventOutputNames[] = {g_nStringIdCNF};
+const TDataIOID FORTE_FieldsToServiceRequestForm::scmEOWith[] = {0, scmWithListDelimiter};
+const TForteInt16 FORTE_FieldsToServiceRequestForm::scmEOWithIndexes[] = {0, -1};
+const CStringDictionary::TStringId FORTE_FieldsToServiceRequestForm::scmEventOutputNames[] = {g_nStringIdCNF};
 
-const SFBInterfaceSpec FORTE_FieldsToServiceRequestForm::scm_stFBInterfaceSpec = {
-  1,  scm_anEventInputNames,  scm_anEIWith,  scm_anEIWithIndexes,
-  1,  scm_anEventOutputNames,  scm_anEOWith, scm_anEOWithIndexes,  6,  scm_anDataInputNames, scm_anDataInputTypeIds,
-  1,  scm_anDataOutputNames, scm_anDataOutputTypeIds,
+const SFBInterfaceSpec FORTE_FieldsToServiceRequestForm::scmFBInterfaceSpec = {
+  1,  scmEventInputNames,  scmEIWith,  scmEIWithIndexes,
+  1,  scmEventOutputNames,  scmEOWith, scmEOWithIndexes,  6,  scmDataInputNames, scmDataInputTypeIds,
+  1,  scmDataOutputNames, scmDataOutputTypeIds,
   0, 0
 };
 
@@ -68,38 +68,38 @@ i = i+1;
 
 
 void FORTE_FieldsToServiceRequestForm::enterStateSTART(){
-  m_nECCState = scm_nStateSTART;
+  mECCState = scmStateSTART;
 }
 
 void FORTE_FieldsToServiceRequestForm::enterStateREQ(){
-  m_nECCState = scm_nStateREQ;
+  mECCState = scmStateREQ;
   alg_REQ();
-  sendOutputEvent( scm_nEventCNFID);
+  sendOutputEvent( scmEventCNFID);
 }
 
-void FORTE_FieldsToServiceRequestForm::executeEvent(TEventID pa_nEIID){
+void FORTE_FieldsToServiceRequestForm::executeEvent(TEventID paEIID){
   bool bTransitionCleared;
   do{
     bTransitionCleared = true;
-    switch(m_nECCState){
-      case scm_nStateSTART:
-        if(scm_nEventREQID == pa_nEIID)
+    switch(mECCState){
+      case scmStateSTART:
+        if(scmEventREQID == paEIID)
           enterStateREQ();
         else
           bTransitionCleared  = false; //no transition cleared
         break;
-      case scm_nStateREQ:
+      case scmStateREQ:
         if(1)
           enterStateSTART();
         else
           bTransitionCleared  = false; //no transition cleared
         break;
       default:
-      DEVLOG_ERROR("The state is not in the valid range! The state value is: %d. The max value can be: 1.", m_nECCState.operator TForteUInt16 ());
-        m_nECCState = 0; //0 is always the initial state
+      DEVLOG_ERROR("The state is not in the valid range! The state value is: %d. The max value can be: 1.", mECCState.operator TForteUInt16 ());
+        mECCState = 0; //0 is always the initial state
         break;
     }
-    pa_nEIID = cg_nInvalidEventID;  // we have to clear the event after the first check in order to ensure correct behavior
+    paEIID = cgInvalidEventID;  // we have to clear the event after the first check in order to ensure correct behavior
   }while(bTransitionCleared);
 }
 

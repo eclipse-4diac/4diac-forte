@@ -36,7 +36,7 @@ BOOST_AUTO_TEST_CASE(Literal_test)
   BOOST_TEST(static_cast<CIEC_ULINT::TValueType>(test1) == 0);
 
   CIEC_ULINT test2 = 18446744073709551615_ULINT;
-  BOOST_TEST(static_cast<CIEC_ULINT::TValueType>(test2) == CIEC_ULINT::scm_nMaxVal);
+  BOOST_TEST(static_cast<CIEC_ULINT::TValueType>(test2) == CIEC_ULINT::scmMaxVal);
 }
 
 BOOST_AUTO_TEST_CASE(Assignment_test)

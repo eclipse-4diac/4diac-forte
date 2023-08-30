@@ -1,6 +1,8 @@
 /*******************************************************************************
- * Copyright (c) 2006-2015 ACIN, Profactor GmbH, fortiss GmbH
- *                      2018 Johannes Kepler University
+ * Copyright (c) 2006, 2023 ACIN, Profactor GmbH, fortiss GmbH
+ *                          Johannes Kepler University
+ *                          Martin Erich Jobst
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -12,6 +14,7 @@
  *    Martin Melik-Merkumians, Ingo Hegny, Patrick Smejkal
  *      - initial implementation and rework communication infrastructure
  *    Alois Zoitl - introduced new CGenFB class for better handling generic FBs
+ *    Martin Jobst - add generic readInputData and writeOutputData
  *******************************************************************************/
 #ifndef _COMMFB_H_
 #define _COMMFB_H_
@@ -27,17 +30,20 @@ namespace forte {
     public:
       ~CCommFB() override;
 
-      EMGMResponse changeFBExecutionState(EMGMCommandType pa_unCommand) override;
+      EMGMResponse changeFBExecutionState(EMGMCommandType paCommand) override;
 
     protected:
-      CCommFB(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes, forte::com_infra::EComServiceType pa_eCommServiceType);
+      CCommFB(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes, forte::com_infra::EComServiceType paCommServiceType);
 
-      void executeEvent(TEventID pa_nEIID) override;
+      void executeEvent(TEventID paEIID) override;
 
-      static const TEventID scm_nEventINITID = 0;
-      static const TEventID scm_nEventINITOID = 0;
-      static const TEventID scm_nSendNotificationEventID = 1;
-      static const TEventID scm_nReceiveNotificationEventID = 1;
+      void readInputData(TEventID paEI) override;
+      void writeOutputData(TEventID paEO) override;
+
+      static const TEventID scmEventINITID = 0;
+      static const TEventID scmEventINITOID = 0;
+      static const TEventID scmSendNotificationEventID = 1;
+      static const TEventID scmReceiveNotificationEventID = 1;
 
       static const char * const scmDefaultIDPrefix;
       static const char * const scmDefaultIDSuffix;
@@ -50,15 +56,11 @@ namespace forte {
       EComResponse sendData() override;
 
     private:
-      static const CStringDictionary::TStringId scm_aunRequesterEventInputNameIds[];
-      static const CStringDictionary::TStringId scm_aunRequesterEventOutputNameIds[];
+      static const CStringDictionary::TStringId scmRequesterEventInputNameIds[];
+      static const CStringDictionary::TStringId scmRequesterEventOutputNameIds[];
 
-      static const CStringDictionary::TStringId scm_aunResponderEventInputNameIds[];
-      static const CStringDictionary::TStringId scm_aunResponderEventOutputNameIds[];
-
-      static const TForteInt16 scm_anEIWithIndexes[];
-      static const TForteInt16 scm_anEOWithIndexes[];
-      static const size_t scmMinWithLength = 6;
+      static const CStringDictionary::TStringId scmResponderEventInputNameIds[];
+      static const CStringDictionary::TStringId scmResponderEventOutputNameIds[];
 
         bool createInterfaceSpec(const char* paConfigString, SFBInterfaceSpec& paInterfaceSpec) override;
 

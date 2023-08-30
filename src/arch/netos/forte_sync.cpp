@@ -13,11 +13,11 @@
 #include "forte_sync.h"
 
 CTXSyncObject::CTXSyncObject(){ 
-  tx_mutex_create(&m_stMutex, "Test Mutex", TX_INHERIT);
+  tx_mutex_create(&mMutex, "Test Mutex", TX_INHERIT);
   //TODO handle return value
 }
 
 CTXSyncObject::~CTXSyncObject(){
-  tx_mutex_delete(&m_stMutex);
+  tx_mutex_delete(&mMutex);
   //TODO handle return value
 }

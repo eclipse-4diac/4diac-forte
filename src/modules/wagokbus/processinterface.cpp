@@ -215,7 +215,7 @@ std::vector<std::string> WagoPFCProcessInterface::generateParameterList() {
 }
 
 void WagoPFCProcessInterface::CKBusHandler::updateReadData() {
-  //long pa_Value = strtol(m_acIndata, nullptr, 16);
+  //long pa_Value = strtol(mIndata, nullptr, 16);
   mReadFBListSync.lock();
   mAppDevInterface->ReadStart(mKBusDeviceId, mTaskId); /* lock PD-In data */
   TReadFBContainer::Iterator itEnd(mReadFBList.end());

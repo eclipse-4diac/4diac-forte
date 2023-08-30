@@ -15,8 +15,8 @@
 
 DEFINE_GENERIC_FIRMWARE_FB(GEN_SUBSCRIBE, g_nStringIdGEN_SUBSCRIBE)
 
-GEN_SUBSCRIBE::GEN_SUBSCRIBE(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes):
-forte::com_infra::CCommFB( pa_nInstanceNameId, pa_poSrcRes, forte::com_infra::e_Subscriber){
-//CNetCommFB( pa_nInstanceNameId, pa_poSrcRes, false, 0, scm_nRecvBufferSize, CCommFB::e_Subscriber){
+GEN_SUBSCRIBE::GEN_SUBSCRIBE(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes):
+forte::com_infra::CCommFB( paInstanceNameId, paSrcRes, forte::com_infra::e_Subscriber){
+//CNetCommFB( paInstanceNameId, paSrcRes, false, 0, scmRecvBufferSize, CCommFB::e_Subscriber){
 }
 

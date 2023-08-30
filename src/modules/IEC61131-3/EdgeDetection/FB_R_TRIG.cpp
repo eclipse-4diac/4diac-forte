@@ -28,38 +28,39 @@
 
 DEFINE_FIRMWARE_FB(FORTE_FB_R_TRIG, g_nStringIdFB_R_TRIG)
 
-const CStringDictionary::TStringId FORTE_FB_R_TRIG::scm_anDataInputNames[] = {g_nStringIdCLK};
+const CStringDictionary::TStringId FORTE_FB_R_TRIG::scmDataInputNames[] = {g_nStringIdCLK};
 
-const CStringDictionary::TStringId FORTE_FB_R_TRIG::scm_anDataInputTypeIds[] = {g_nStringIdBOOL};
+const CStringDictionary::TStringId FORTE_FB_R_TRIG::scmDataInputTypeIds[] = {g_nStringIdBOOL};
 
-const CStringDictionary::TStringId FORTE_FB_R_TRIG::scm_anDataOutputNames[] = {g_nStringIdQ};
+const CStringDictionary::TStringId FORTE_FB_R_TRIG::scmDataOutputNames[] = {g_nStringIdQ};
 
-const CStringDictionary::TStringId FORTE_FB_R_TRIG::scm_anDataOutputTypeIds[] = {g_nStringIdBOOL};
+const CStringDictionary::TStringId FORTE_FB_R_TRIG::scmDataOutputTypeIds[] = {g_nStringIdBOOL};
 
-const TDataIOID FORTE_FB_R_TRIG::scm_anEIWith[] = {0, scmWithListDelimiter};
-const TForteInt16 FORTE_FB_R_TRIG::scm_anEIWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_FB_R_TRIG::scm_anEventInputNames[] = {g_nStringIdREQ};
+const TDataIOID FORTE_FB_R_TRIG::scmEIWith[] = {0, scmWithListDelimiter};
+const TForteInt16 FORTE_FB_R_TRIG::scmEIWithIndexes[] = {0};
+const CStringDictionary::TStringId FORTE_FB_R_TRIG::scmEventInputNames[] = {g_nStringIdREQ};
 
-const TDataIOID FORTE_FB_R_TRIG::scm_anEOWith[] = {0, scmWithListDelimiter};
-const TForteInt16 FORTE_FB_R_TRIG::scm_anEOWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_FB_R_TRIG::scm_anEventOutputNames[] = {g_nStringIdCNF};
+const TDataIOID FORTE_FB_R_TRIG::scmEOWith[] = {0, scmWithListDelimiter};
+const TForteInt16 FORTE_FB_R_TRIG::scmEOWithIndexes[] = {0};
+const CStringDictionary::TStringId FORTE_FB_R_TRIG::scmEventOutputNames[] = {g_nStringIdCNF};
 
 
-const SFBInterfaceSpec FORTE_FB_R_TRIG::scm_stFBInterfaceSpec = {
-  1, scm_anEventInputNames, scm_anEIWith, scm_anEIWithIndexes,
-  1, scm_anEventOutputNames, scm_anEOWith, scm_anEOWithIndexes,
-  1, scm_anDataInputNames, scm_anDataInputTypeIds,
-  1, scm_anDataOutputNames, scm_anDataOutputTypeIds,
+const SFBInterfaceSpec FORTE_FB_R_TRIG::scmFBInterfaceSpec = {
+  1, scmEventInputNames, scmEIWith, scmEIWithIndexes,
+  1, scmEventOutputNames, scmEOWith, scmEOWithIndexes,
+  1, scmDataInputNames, scmDataInputTypeIds,
+  1, scmDataOutputNames, scmDataOutputTypeIds,
+  0, nullptr,
   0, nullptr
 };
 
-const CStringDictionary::TStringId FORTE_FB_R_TRIG::scm_anInternalsNames[] = {g_nStringIdMEM};
-const CStringDictionary::TStringId FORTE_FB_R_TRIG::scm_anInternalsTypeIds[] = {g_nStringIdBOOL};
-const SInternalVarsInformation FORTE_FB_R_TRIG::scm_stInternalVars = {1, scm_anInternalsNames, scm_anInternalsTypeIds};
+const CStringDictionary::TStringId FORTE_FB_R_TRIG::scmInternalsNames[] = {g_nStringIdMEM};
+const CStringDictionary::TStringId FORTE_FB_R_TRIG::scmInternalsTypeIds[] = {g_nStringIdBOOL};
+const SInternalVarsInformation FORTE_FB_R_TRIG::scmInternalVars = {1, scmInternalsNames, scmInternalsTypeIds};
 
 
-FORTE_FB_R_TRIG::FORTE_FB_R_TRIG(CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes) :
-    CSimpleFB(pa_poSrcRes, &scm_stFBInterfaceSpec, pa_nInstanceNameId, &scm_stInternalVars),
+FORTE_FB_R_TRIG::FORTE_FB_R_TRIG(CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) :
+    CSimpleFB(paSrcRes, &scmFBInterfaceSpec, paInstanceNameId, &scmInternalVars),
     var_MEM(CIEC_BOOL(0)),
     var_CLK(CIEC_BOOL(0)),
     var_Q(CIEC_BOOL(0)),
@@ -76,20 +77,20 @@ void FORTE_FB_R_TRIG::alg_REQ(void) {
 }
 
 
-void FORTE_FB_R_TRIG::executeEvent(TEventID pa_nEIID){
-  switch(pa_nEIID) {
-    case scm_nEventREQID:
+void FORTE_FB_R_TRIG::executeEvent(TEventID paEIID){
+  switch(paEIID) {
+    case scmEventREQID:
       alg_REQ();
       break;
     default:
       break;
   }
-  sendOutputEvent(scm_nEventCNFID);
+  sendOutputEvent(scmEventCNFID);
 }
 
-void FORTE_FB_R_TRIG::readInputData(TEventID pa_nEIID) {
-  switch(pa_nEIID) {
-    case scm_nEventREQID: {
+void FORTE_FB_R_TRIG::readInputData(TEventID paEIID) {
+  switch(paEIID) {
+    case scmEventREQID: {
       RES_DATA_CON_CRITICAL_REGION();
       readData(0, var_CLK, conn_CLK);
       break;
@@ -99,9 +100,9 @@ void FORTE_FB_R_TRIG::readInputData(TEventID pa_nEIID) {
   }
 }
 
-void FORTE_FB_R_TRIG::writeOutputData(TEventID pa_nEIID) {
-  switch(pa_nEIID) {
-    case scm_nEventCNFID: {
+void FORTE_FB_R_TRIG::writeOutputData(TEventID paEIID) {
+  switch(paEIID) {
+    case scmEventCNFID: {
       RES_DATA_CON_CRITICAL_REGION();
       writeData(0, var_Q, conn_Q);
       break;

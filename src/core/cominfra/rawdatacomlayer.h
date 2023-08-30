@@ -20,13 +20,13 @@ namespace forte {
   namespace com_infra {
     class CRawDataComLayer : public CComLayer{
       public:
-        CRawDataComLayer(CComLayer* pa_poUpperLayer, CBaseCommFB * pa_poFB);
+        CRawDataComLayer(CComLayer* paUpperLayer, CBaseCommFB * paFB);
         ~CRawDataComLayer() override;
         EComResponse sendData(void *paData, unsigned int paSize) override;
         EComResponse recvData(const void *paData, unsigned int paSize) override;
 
       private:
-        EComResponse openConnection(char *pa_acLayerParameter) override;
+        EComResponse openConnection(char *paLayerParameter) override;
         void closeConnection() override;
     };
   } /* namespace com_infra */

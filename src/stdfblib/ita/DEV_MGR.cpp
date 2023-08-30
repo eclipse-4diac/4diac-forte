@@ -30,33 +30,34 @@
 
 DEFINE_FIRMWARE_FB(DEV_MGR, g_nStringIdDEV_MGR)
 
-const CStringDictionary::TStringId DEV_MGR::scm_anDataInputNames[] = {g_nStringIdQI, g_nStringIdID, g_nStringIdRESP};
+const CStringDictionary::TStringId DEV_MGR::scmDataInputNames[] = {g_nStringIdQI, g_nStringIdID, g_nStringIdRESP};
 
-const CStringDictionary::TStringId DEV_MGR::scm_anDataInputTypeIds[] = {g_nStringIdBOOL, g_nStringIdWSTRING, g_nStringIdSTRING};
+const CStringDictionary::TStringId DEV_MGR::scmDataInputTypeIds[] = {g_nStringIdBOOL, g_nStringIdWSTRING, g_nStringIdSTRING};
 
-const CStringDictionary::TStringId DEV_MGR::scm_anDataOutputNames[] = {g_nStringIdQO, g_nStringIdSTATUS, g_nStringIdDST, g_nStringIdRQST};
+const CStringDictionary::TStringId DEV_MGR::scmDataOutputNames[] = {g_nStringIdQO, g_nStringIdSTATUS, g_nStringIdDST, g_nStringIdRQST};
 
-const CStringDictionary::TStringId DEV_MGR::scm_anDataOutputTypeIds[] = {g_nStringIdBOOL, g_nStringIdSTRING, g_nStringIdSTRING, g_nStringIdSTRING};
+const CStringDictionary::TStringId DEV_MGR::scmDataOutputTypeIds[] = {g_nStringIdBOOL, g_nStringIdSTRING, g_nStringIdSTRING, g_nStringIdSTRING};
 
-const TForteInt16 DEV_MGR::scm_anEIWithIndexes[] = {0, -1};
-const TDataIOID DEV_MGR::scm_anEIWith[] = {0, 1, scmWithListDelimiter};
-const CStringDictionary::TStringId DEV_MGR::scm_anEventInputNames[] = {g_nStringIdINIT, g_nStringIdREQ};
+const TForteInt16 DEV_MGR::scmEIWithIndexes[] = {0, -1};
+const TDataIOID DEV_MGR::scmEIWith[] = {0, 1, scmWithListDelimiter};
+const CStringDictionary::TStringId DEV_MGR::scmEventInputNames[] = {g_nStringIdINIT, g_nStringIdREQ};
 
-const TDataIOID DEV_MGR::scm_anEOWith[] = {0, 1, scmWithListDelimiter, 2, 3, scmWithListDelimiter};
-const TForteInt16 DEV_MGR::scm_anEOWithIndexes[] = {0, -1, 3};
-const CStringDictionary::TStringId DEV_MGR::scm_anEventOutputNames[] = {g_nStringIdINITO, g_nStringIdCNF};
+const TDataIOID DEV_MGR::scmEOWith[] = {0, 1, scmWithListDelimiter, 2, 3, scmWithListDelimiter};
+const TForteInt16 DEV_MGR::scmEOWithIndexes[] = {0, -1, 3};
+const CStringDictionary::TStringId DEV_MGR::scmEventOutputNames[] = {g_nStringIdINITO, g_nStringIdCNF};
 
-const SFBInterfaceSpec DEV_MGR::scm_stFBInterfaceSpec = {
-  2,  scm_anEventInputNames,  scm_anEIWith,  scm_anEIWithIndexes,
-  2,  scm_anEventOutputNames,  scm_anEOWith, scm_anEOWithIndexes,  3,  scm_anDataInputNames, scm_anDataInputTypeIds,
-  4,  scm_anDataOutputNames, scm_anDataOutputTypeIds,
+const SFBInterfaceSpec DEV_MGR::scmFBInterfaceSpec = {
+  2, scmEventInputNames, scmEIWith, scmEIWithIndexes,
+  2, scmEventOutputNames, scmEOWith, scmEOWithIndexes, 3, scmDataInputNames, scmDataInputTypeIds,
+  4, scmDataOutputNames, scmDataOutputTypeIds,
+  0, nullptr,
   0, nullptr
 };
 
-const char * const DEV_MGR::scm_sMGMResponseTexts[13] = { "RDY", "BAD_PARAMS", "LOCAL_TERMINATION", "SYSTEM_TERMINATION", "NOT_READY", "UNSUPPORTED_CMD", "UNSUPPORTED_TYPE", "NO_SUCH_OBJECT", "INVALID_OBJECT", "INVALID_OPERATION", "INVALID_STATE", "OVERFLOW", "INVALID_DST" };
+const char * const DEV_MGR::scmMGMResponseTexts[13] = { "RDY", "BAD_PARAMS", "LOCAL_TERMINATION", "SYSTEM_TERMINATION", "NOT_READY", "UNSUPPORTED_CMD", "UNSUPPORTED_TYPE", "NO_SUCH_OBJECT", "INVALID_OBJECT", "INVALID_OPERATION", "INVALID_STATE", "OVERFLOW", "INVALID_DST" };
 
 void DEV_MGR::executeEvent(TEventID paEIID){
-  if(scm_nEventINITID == paEIID){
+  if(scmEventINITID == paEIID){
 #ifdef FORTE_SUPPORT_BOOT_FILE
     if((true == QI()) && (false == QO())){
       //this is the first time init is called try to load a boot file
@@ -72,7 +73,7 @@ void DEV_MGR::executeEvent(TEventID paEIID){
 #endif
     CCommFB::executeEvent(paEIID);  //initialize the underlying server FB
   }else{
-    if(cg_nExternalEventID == paEIID && //we received a message on the network let the server correctly handle it
+    if(cgExternalEventID == paEIID && //we received a message on the network let the server correctly handle it
         forte::com_infra::e_ProcessDataOk == CCommFB::receiveData()){ //the message was correctly received
       executeRQST();
       //send response
@@ -582,14 +583,14 @@ void DEV_MGR::appendIdentifierName(CIEC_STRING& paDest, forte::core::TNameIdenti
 
 DEV_MGR::DEV_MGR(CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) :
     CCommFB(paInstanceNameId, paSrcRes, forte::com_infra::e_Server),
-    m_poDevice(paSrcRes->getDevice()) {
+    mDevice(paSrcRes->getDevice()) {
 }
 
 bool DEV_MGR::initialize() {
   if(!CCommFB::initialize()) {
     return false;
   }
-  setupFBInterface(&scm_stFBInterfaceSpec);
+  setupFBInterface(&scmFBInterfaceSpec);
   mCommand.mAdditionalParams.reserve(255);
   mCommand.mAdditionalParams.clear();
   return true;
@@ -603,7 +604,7 @@ DEV_MGR::~DEV_MGR(){
 EMGMResponse DEV_MGR::parseAndExecuteMGMCommand(const char *const paDest, char *paCommand){
   EMGMResponse eResp = EMGMResponse::InvalidObject;
   if(nullptr != strchr(paCommand, '>')){
-    mCommand.mDestination = (strlen(paDest) != 0) ? CStringDictionary::getInstance().insert(paDest) : CStringDictionary::scm_nInvalidStringId;
+    mCommand.mDestination = (strlen(paDest) != 0) ? CStringDictionary::getInstance().insert(paDest) : CStringDictionary::scmInvalidStringId;
     mCommand.mFirstParam.clear();
     mCommand.mSecondParam.clear();
     if ( 255 <= mCommand.mAdditionalParams.getCapacity()) {
@@ -650,7 +651,7 @@ EMGMResponse DEV_MGR::parseAndExecuteMGMCommand(const char *const paDest, char *
       }
 
       if(EMGMCommandType::INVALID != mCommand.mCMD) {
-          eResp = m_poDevice.executeMGMCommand(mCommand);
+          eResp = mDevice.executeMGMCommand(mCommand);
       }
     }
     else {

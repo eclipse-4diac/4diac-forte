@@ -24,84 +24,84 @@ class FORTE_EliteBoard : public forte::core::io::IOConfigFBController {
   DECLARE_FIRMWARE_FB(FORTE_EliteBoard)
 
 private:
-  static const TEventID scm_nEventMAPID = 0;
+  static const TEventID scmEventMAPID = 0;
 
-  static const TForteInt16 scm_anEIWithIndexes[];
-  static const CStringDictionary::TStringId scm_anEventInputNames[];
+  static const TForteInt16 scmEIWithIndexes[];
+  static const CStringDictionary::TStringId scmEventInputNames[];
 
-  static const TEventID scm_nEventMAPOID = 0;
+  static const TEventID scmEventMAPOID = 0;
 
-  static const TForteInt16 scm_anEOWithIndexes[];
-  static const CStringDictionary::TStringId scm_anEventOutputNames[];
+  static const TForteInt16 scmEOWithIndexes[];
+  static const CStringDictionary::TStringId scmEventOutputNames[];
 
-  static const int scm_nPortAAdpNum = 0;
-  static const int scm_nPortBAdpNum = 1;
-  static const int scm_nPortCAdpNum = 2;
-  static const int scm_nPortDAdpNum = 3;
-  static const int scm_nPortEAdpNum = 4;
-  static const int scm_nPortFAdpNum = 5;
-  static const int scm_nPortGAdpNum = 6;
-  static const int scm_nPortHAdpNum = 7;
-  static const int scm_nPortIAdpNum = 8;
-  static const int scm_nPortJAdpNum = 9;
-  static const int scm_nPortKAdpNum = 10;
+  static const int scmPortAAdpNum = 0;
+  static const int scmPortBAdpNum = 1;
+  static const int scmPortCAdpNum = 2;
+  static const int scmPortDAdpNum = 3;
+  static const int scmPortEAdpNum = 4;
+  static const int scmPortFAdpNum = 5;
+  static const int scmPortGAdpNum = 6;
+  static const int scmPortHAdpNum = 7;
+  static const int scmPortIAdpNum = 8;
+  static const int scmPortJAdpNum = 9;
+  static const int scmPortKAdpNum = 10;
 
-  static const SAdapterInstanceDef scm_astAdapterInstances[];
+  static const SAdapterInstanceDef scmAdapterInstances[];
 
-  static const SFBInterfaceSpec scm_stFBInterfaceSpec;
+  static const SFBInterfaceSpec scmFBInterfaceSpec;
 
   FORTE_PortAdapter &st_PortA() {
-    return (*static_cast<FORTE_PortAdapter *>(m_apoAdapters[0]));
+    return (*static_cast<FORTE_PortAdapter *>(mAdapters[0]));
   };
 
   FORTE_PortAdapter &st_PortB() {
-    return (*static_cast<FORTE_PortAdapter *>(m_apoAdapters[1]));
+    return (*static_cast<FORTE_PortAdapter *>(mAdapters[1]));
   };
 
   FORTE_PortAdapter &st_PortC() {
-    return (*static_cast<FORTE_PortAdapter *>(m_apoAdapters[2]));
+    return (*static_cast<FORTE_PortAdapter *>(mAdapters[2]));
   };
 
   FORTE_PortAdapter &st_PortD() {
-    return (*static_cast<FORTE_PortAdapter *>(m_apoAdapters[3]));
+    return (*static_cast<FORTE_PortAdapter *>(mAdapters[3]));
   };
 
   FORTE_PortAdapter &st_PortE() {
-    return (*static_cast<FORTE_PortAdapter *>(m_apoAdapters[4]));
+    return (*static_cast<FORTE_PortAdapter *>(mAdapters[4]));
   };
 
   FORTE_PortAdapter &st_PortF() {
-    return (*static_cast<FORTE_PortAdapter *>(m_apoAdapters[5]));
+    return (*static_cast<FORTE_PortAdapter *>(mAdapters[5]));
   };
 
   FORTE_PortAdapter &st_PortG() {
-    return (*static_cast<FORTE_PortAdapter *>(m_apoAdapters[6]));
+    return (*static_cast<FORTE_PortAdapter *>(mAdapters[6]));
   };
 
   FORTE_PortAdapter &st_PortH() {
-    return (*static_cast<FORTE_PortAdapter *>(m_apoAdapters[7]));
+    return (*static_cast<FORTE_PortAdapter *>(mAdapters[7]));
   };
 
   FORTE_PortAdapter &st_PortI() {
-    return (*static_cast<FORTE_PortAdapter *>(m_apoAdapters[8]));
+    return (*static_cast<FORTE_PortAdapter *>(mAdapters[8]));
   };
 
   FORTE_PortAdapter &st_PortJ() {
-    return (*static_cast<FORTE_PortAdapter *>(m_apoAdapters[9]));
+    return (*static_cast<FORTE_PortAdapter *>(mAdapters[9]));
   };
 
   FORTE_PortAdapter &st_PortK() {
-    return (*static_cast<FORTE_PortAdapter *>(m_apoAdapters[10]));
+    return (*static_cast<FORTE_PortAdapter *>(mAdapters[10]));
   };
 
 
-  void executeEvent(TEventID pa_nEIID) override;
+  void executeEvent(TEventID paEIID) override;
  
   void setConfig() {}
   
   EliteBoardDeviceController& mEventHandler;
   int mCurrentAdapterIndex = 0;
-  static const int mAdapterCount = scm_nPortKAdpNum + 1;
+  static const int mAdapterCount = scmPortKAdpNum + 1;
 
   forte::core::io::IODeviceController *
   createDeviceController(CDeviceExecution &paDeviceExecution);
@@ -110,8 +110,8 @@ private:
 
 public:
 
-  FORTE_EliteBoard(const CStringDictionary::TStringId pa_nInstanceNameId, 
-      CResource *pa_poSrcRes);
+  FORTE_EliteBoard(const CStringDictionary::TStringId paInstanceNameId, 
+      CResource *paSrcRes);
 
   ~FORTE_EliteBoard() override = default;
 };

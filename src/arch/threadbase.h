@@ -102,7 +102,7 @@ namespace forte {
          */
         static void runThread(CThreadBase *paThread);
 
-        /*! \brief Pointer to the memory to be used for this thread'm_stSuspendSemaphore stack
+        /*! \brief Pointer to the memory to be used for this thread'mSuspendSemaphore stack
          *
          *  This pointer is only not 0 if the stack is to be allocated by the architecture specific class.
          *  This depends on the operating system. If needed it should be allocated in the derived classes constructor.

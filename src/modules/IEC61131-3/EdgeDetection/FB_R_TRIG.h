@@ -27,42 +27,42 @@ class FORTE_FB_R_TRIG: public CSimpleFB {
   DECLARE_FIRMWARE_FB(FORTE_FB_R_TRIG)
 
 private:
-  static const CStringDictionary::TStringId scm_anDataInputNames[];
-  static const CStringDictionary::TStringId scm_anDataInputTypeIds[];
+  static const CStringDictionary::TStringId scmDataInputNames[];
+  static const CStringDictionary::TStringId scmDataInputTypeIds[];
   
-  static const CStringDictionary::TStringId scm_anDataOutputNames[];
-  static const CStringDictionary::TStringId scm_anDataOutputTypeIds[];
+  static const CStringDictionary::TStringId scmDataOutputNames[];
+  static const CStringDictionary::TStringId scmDataOutputTypeIds[];
   
-  static const TEventID scm_nEventREQID = 0;
+  static const TEventID scmEventREQID = 0;
   
-  static const TDataIOID scm_anEIWith[];
-  static const TForteInt16 scm_anEIWithIndexes[];
-  static const CStringDictionary::TStringId scm_anEventInputNames[];
+  static const TDataIOID scmEIWith[];
+  static const TForteInt16 scmEIWithIndexes[];
+  static const CStringDictionary::TStringId scmEventInputNames[];
   
-  static const TEventID scm_nEventCNFID = 0;
+  static const TEventID scmEventCNFID = 0;
   
-  static const TDataIOID scm_anEOWith[]; 
-  static const TForteInt16 scm_anEOWithIndexes[];
-  static const CStringDictionary::TStringId scm_anEventOutputNames[];
+  static const TDataIOID scmEOWith[]; 
+  static const TForteInt16 scmEOWithIndexes[];
+  static const CStringDictionary::TStringId scmEventOutputNames[];
   
 
-  static const SFBInterfaceSpec scm_stFBInterfaceSpec;
-  static const CStringDictionary::TStringId scm_anInternalsNames[];
-  static const CStringDictionary::TStringId scm_anInternalsTypeIds[];
-  static const SInternalVarsInformation scm_stInternalVars;
+  static const SFBInterfaceSpec scmFBInterfaceSpec;
+  static const CStringDictionary::TStringId scmInternalsNames[];
+  static const CStringDictionary::TStringId scmInternalsTypeIds[];
+  static const SInternalVarsInformation scmInternalVars;
   
   CIEC_BOOL var_MEM;
   
   CIEC_ANY *getVarInternal(size_t) override;
   void alg_REQ(void);
 
-  void executeEvent(TEventID pa_nEIID) override;
+  void executeEvent(TEventID paEIID) override;
 
-  void readInputData(TEventID pa_nEIID) override;
-  void writeOutputData(TEventID pa_nEIID) override;
+  void readInputData(TEventID paEIID) override;
+  void writeOutputData(TEventID paEIID) override;
 
 public:
-  FORTE_FB_R_TRIG(CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes);
+  FORTE_FB_R_TRIG(CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
 
 
   CIEC_BOOL var_CLK;
@@ -81,7 +81,7 @@ public:
   
   void evt_REQ(const CIEC_BOOL &pa_CLK, CIEC_BOOL &pa_Q) {
     var_CLK = pa_CLK;
-    receiveInputEvent(scm_nEventREQID, nullptr);
+    receiveInputEvent(scmEventREQID, nullptr);
     pa_Q = var_Q;
   }
   

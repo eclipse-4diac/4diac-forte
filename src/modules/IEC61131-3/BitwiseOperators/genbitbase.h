@@ -12,6 +12,7 @@
  *   Alois Zoitl - initial API and implementation and/or initial documentation
  *   Martin Jobst
  *     - refactor for ANY variant
+ *     - add generic readInputData and writeOutputData
  *******************************************************************************/
 #ifndef _GENBITBASE_H_
 #define _GENBITBASE_H_
@@ -33,8 +34,8 @@ class CGenBitBase : public CGenFunctionBlock<CFunctionBlock> {
       return *static_cast<CIEC_ANY_BIT_VARIANT *>(getDO(0));
     }
 
-    static const TEventID scm_nEventREQID = 0;
-    static const TEventID scm_nEventCNFID = 0;
+    static const TEventID scmEventREQID = 0;
+    static const TEventID scmEventCNFID = 0;
 
   private:
     CStringDictionary::TStringId *mDataInputNames;
@@ -43,13 +44,12 @@ class CGenBitBase : public CGenFunctionBlock<CFunctionBlock> {
     static const CStringDictionary::TStringId scmDataOutputNames[];
     static const CStringDictionary::TStringId scmDataOutputTypeIds[];
 
-    static const TForteInt16 scmEIWithIndexes[];
-    TDataIOID *mEIWith;
     static const CStringDictionary::TStringId scmEventInputNames[];
 
-    static const TForteInt16 scmEOWithIndexes[];
-    static const TDataIOID scmEOWith[];
     static const CStringDictionary::TStringId scmEventOutputNames[];
+
+    void readInputData(TEventID paEI) override;
+    void writeOutputData(TEventID paEO) override;
 
     bool createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) override;
 };

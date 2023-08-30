@@ -18,30 +18,30 @@
 
 DEFINE_FIRMWARE_FB(FORTE_WagoMaster, g_nStringIdWagoMaster)
 
-const CStringDictionary::TStringId FORTE_WagoMaster::scm_anDataInputNames[] = {g_nStringIdQI, g_nStringIdUpdateInterval};
+const CStringDictionary::TStringId FORTE_WagoMaster::scmDataInputNames[] = {g_nStringIdQI, g_nStringIdUpdateInterval};
 
-const CStringDictionary::TStringId FORTE_WagoMaster::scm_anDataInputTypeIds[] = { g_nStringIdBOOL, g_nStringIdUINT };
+const CStringDictionary::TStringId FORTE_WagoMaster::scmDataInputTypeIds[] = { g_nStringIdBOOL, g_nStringIdUINT };
 
-const CStringDictionary::TStringId FORTE_WagoMaster::scm_anDataOutputNames[] = {g_nStringIdQO, g_nStringIdSTATUS};
+const CStringDictionary::TStringId FORTE_WagoMaster::scmDataOutputNames[] = {g_nStringIdQO, g_nStringIdSTATUS};
 
-const CStringDictionary::TStringId FORTE_WagoMaster::scm_anDataOutputTypeIds[] = {g_nStringIdBOOL, g_nStringIdWSTRING};
+const CStringDictionary::TStringId FORTE_WagoMaster::scmDataOutputTypeIds[] = {g_nStringIdBOOL, g_nStringIdWSTRING};
 
-const TForteInt16 FORTE_WagoMaster::scm_anEIWithIndexes[] = {0};
-const TDataIOID FORTE_WagoMaster::scm_anEIWith[] = {0, 1, scmWithListDelimiter};
-const CStringDictionary::TStringId FORTE_WagoMaster::scm_anEventInputNames[] = {g_nStringIdINIT};
+const TForteInt16 FORTE_WagoMaster::scmEIWithIndexes[] = {0};
+const TDataIOID FORTE_WagoMaster::scmEIWith[] = {0, 1, scmWithListDelimiter};
+const CStringDictionary::TStringId FORTE_WagoMaster::scmEventInputNames[] = {g_nStringIdINIT};
 
-const TDataIOID FORTE_WagoMaster::scm_anEOWith[] = {0, 1, scmWithListDelimiter, 1, 0, scmWithListDelimiter};
-const TForteInt16 FORTE_WagoMaster::scm_anEOWithIndexes[] = {0, 3, -1};
-const CStringDictionary::TStringId FORTE_WagoMaster::scm_anEventOutputNames[] = {g_nStringIdINITO, g_nStringIdIND};
+const TDataIOID FORTE_WagoMaster::scmEOWith[] = {0, 1, scmWithListDelimiter, 1, 0, scmWithListDelimiter};
+const TForteInt16 FORTE_WagoMaster::scmEOWithIndexes[] = {0, 3, -1};
+const CStringDictionary::TStringId FORTE_WagoMaster::scmEventOutputNames[] = {g_nStringIdINITO, g_nStringIdIND};
 
-const SAdapterInstanceDef FORTE_WagoMaster::scm_astAdapterInstances[] = {
+const SAdapterInstanceDef FORTE_WagoMaster::scmAdapterInstances[] = {
 {g_nStringIdWagoBusAdapter, g_nStringIdBusAdapterOut, true }};
 
-const SFBInterfaceSpec FORTE_WagoMaster::scm_stFBInterfaceSpec = {
-  1,  scm_anEventInputNames,  scm_anEIWith,  scm_anEIWithIndexes,
-  2,  scm_anEventOutputNames,  scm_anEOWith, scm_anEOWithIndexes,  2,  scm_anDataInputNames, scm_anDataInputTypeIds,
-  2,  scm_anDataOutputNames, scm_anDataOutputTypeIds,
-  1,scm_astAdapterInstances};
+const SFBInterfaceSpec FORTE_WagoMaster::scmFBInterfaceSpec = {
+  1,  scmEventInputNames,  scmEIWith,  scmEIWithIndexes,
+  2,  scmEventOutputNames,  scmEOWith, scmEOWithIndexes,  2,  scmDataInputNames, scmDataInputTypeIds,
+  2,  scmDataOutputNames, scmDataOutputTypeIds,
+  1,scmAdapterInstances};
 
 void FORTE_WagoMaster::setInitialValues(){
   UpdateInterval() = 25;

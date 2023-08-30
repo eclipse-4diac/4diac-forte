@@ -36,7 +36,7 @@ class CIEC_ANY_DATE : public CIEC_ANY_ELEMENTARY{
     /*! set the value of the data according to the given values
      *
      */
-    bool setDateAndTime(struct tm &pa_rstTM, unsigned int pa_unMilliSec);
+    bool setDateAndTime(struct tm &paTM, unsigned int paMilliSec);
 
     /*! retrieve the time struct for the current value stored in this Data variable
      */
@@ -80,7 +80,7 @@ class CIEC_ANY_DATE : public CIEC_ANY_ELEMENTARY{
     CIEC_ANY_DATE() = default;
 
   private:
-    static TForteInt32 sm_nTimeZoneOffset;
+    static TForteInt32 smTimeZoneOffset;
 };
 
 #endif /*_MANY_DAT_H_*/

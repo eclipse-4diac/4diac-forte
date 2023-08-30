@@ -17,8 +17,8 @@
 using namespace forte::core::util;
 
 
-void* CMixedStorage::write(const void *pa_pBegin, std::size_t pa_unSize) {
-  auto pBegin = reinterpret_cast<const char*>(pa_pBegin);
-  m_vData.insert(m_vData.end(), pBegin, pBegin + pa_unSize);
-  return reinterpret_cast<void*>(&*m_vData.end() - pa_unSize);
+void* CMixedStorage::write(const void *paBegin, std::size_t paSize) {
+  auto pBegin = reinterpret_cast<const char*>(paBegin);
+  mData.insert(mData.end(), pBegin, pBegin + paSize);
+  return reinterpret_cast<void*>(&*mData.end() - paSize);
 }

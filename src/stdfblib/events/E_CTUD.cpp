@@ -29,26 +29,27 @@
 
 DEFINE_FIRMWARE_FB(FORTE_E_CTUD, g_nStringIdE_CTUD)
 
-const CStringDictionary::TStringId FORTE_E_CTUD::scm_anDataInputNames[] = {g_nStringIdPV};
-const CStringDictionary::TStringId FORTE_E_CTUD::scm_anDataInputTypeIds[] = {g_nStringIdUINT};
-const CStringDictionary::TStringId FORTE_E_CTUD::scm_anDataOutputNames[] = {g_nStringIdQU, g_nStringIdQD, g_nStringIdCV};
-const CStringDictionary::TStringId FORTE_E_CTUD::scm_anDataOutputTypeIds[] = {g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdUINT};
-const TDataIOID FORTE_E_CTUD::scm_anEIWith[] = {0, scmWithListDelimiter, 0, scmWithListDelimiter};
-const TForteInt16 FORTE_E_CTUD::scm_anEIWithIndexes[] = {0, -1, -1, 2};
-const CStringDictionary::TStringId FORTE_E_CTUD::scm_anEventInputNames[] = {g_nStringIdCU, g_nStringIdCD, g_nStringIdR, g_nStringIdLD};
-const TDataIOID FORTE_E_CTUD::scm_anEOWith[] = {0, 2, 1, scmWithListDelimiter, 0, 2, 1, scmWithListDelimiter, 0, 1, 2, scmWithListDelimiter};
-const TForteInt16 FORTE_E_CTUD::scm_anEOWithIndexes[] = {0, 4, 8};
-const CStringDictionary::TStringId FORTE_E_CTUD::scm_anEventOutputNames[] = {g_nStringIdCO, g_nStringIdRO, g_nStringIdLDO};
-const SFBInterfaceSpec FORTE_E_CTUD::scm_stFBInterfaceSpec = {
-  4, scm_anEventInputNames, scm_anEIWith, scm_anEIWithIndexes,
-  3, scm_anEventOutputNames, scm_anEOWith, scm_anEOWithIndexes,
-  1, scm_anDataInputNames, scm_anDataInputTypeIds,
-  3, scm_anDataOutputNames, scm_anDataOutputTypeIds,
+const CStringDictionary::TStringId FORTE_E_CTUD::scmDataInputNames[] = {g_nStringIdPV};
+const CStringDictionary::TStringId FORTE_E_CTUD::scmDataInputTypeIds[] = {g_nStringIdUINT};
+const CStringDictionary::TStringId FORTE_E_CTUD::scmDataOutputNames[] = {g_nStringIdQU, g_nStringIdQD, g_nStringIdCV};
+const CStringDictionary::TStringId FORTE_E_CTUD::scmDataOutputTypeIds[] = {g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdUINT};
+const TDataIOID FORTE_E_CTUD::scmEIWith[] = {0, scmWithListDelimiter, 0, scmWithListDelimiter};
+const TForteInt16 FORTE_E_CTUD::scmEIWithIndexes[] = {0, -1, -1, 2};
+const CStringDictionary::TStringId FORTE_E_CTUD::scmEventInputNames[] = {g_nStringIdCU, g_nStringIdCD, g_nStringIdR, g_nStringIdLD};
+const TDataIOID FORTE_E_CTUD::scmEOWith[] = {0, 2, 1, scmWithListDelimiter, 0, 2, 1, scmWithListDelimiter, 0, 1, 2, scmWithListDelimiter};
+const TForteInt16 FORTE_E_CTUD::scmEOWithIndexes[] = {0, 4, 8};
+const CStringDictionary::TStringId FORTE_E_CTUD::scmEventOutputNames[] = {g_nStringIdCO, g_nStringIdRO, g_nStringIdLDO};
+const SFBInterfaceSpec FORTE_E_CTUD::scmFBInterfaceSpec = {
+  4, scmEventInputNames, scmEIWith, scmEIWithIndexes,
+  3, scmEventOutputNames, scmEOWith, scmEOWithIndexes,
+  1, scmDataInputNames, scmDataInputTypeIds,
+  3, scmDataOutputNames, scmDataOutputTypeIds,
+  0, nullptr,
   0, nullptr
 };
 
-FORTE_E_CTUD::FORTE_E_CTUD(CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes) :
-    CBasicFB(pa_poSrcRes, &scm_stFBInterfaceSpec, pa_nInstanceNameId, nullptr),
+FORTE_E_CTUD::FORTE_E_CTUD(CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) :
+    CBasicFB(paSrcRes, &scmFBInterfaceSpec, paInstanceNameId, nullptr),
     var_PV(CIEC_UINT(0)),
     var_QU(CIEC_BOOL(0)),
     var_QD(CIEC_BOOL(0)),
@@ -88,60 +89,60 @@ void FORTE_E_CTUD::alg_CountDown(void) {
 }
 
 
-void FORTE_E_CTUD::executeEvent(TEventID pa_nEIID){
+void FORTE_E_CTUD::executeEvent(TEventID paEIID){
   do {
-    switch(m_nECCState) {
-      case scm_nStateSTART:
-        if((scm_nEventCUID == pa_nEIID) && (func_LT(var_CV, CIEC_UINT(65535)))) enterStateCU();
+    switch(mECCState) {
+      case scmStateSTART:
+        if((scmEventCUID == paEIID) && (func_LT(var_CV, CIEC_UINT(65535)))) enterStateCU();
         else
-        if(scm_nEventRID == pa_nEIID) enterStateR();
+        if(scmEventRID == paEIID) enterStateR();
         else
-        if((scm_nEventCDID == pa_nEIID) && (func_GT(var_CV, CIEC_UINT(0)))) enterStateCD();
+        if((scmEventCDID == paEIID) && (func_GT(var_CV, CIEC_UINT(0)))) enterStateCD();
         else
-        if(scm_nEventLDID == pa_nEIID) enterStateLD();
+        if(scmEventLDID == paEIID) enterStateLD();
         else return; //no transition cleared
         break;
-      case scm_nStateCU:
+      case scmStateCU:
         if(1) enterStateSTART();
         else return; //no transition cleared
         break;
-      case scm_nStateR:
+      case scmStateR:
         if(1) enterStateSTART();
         else return; //no transition cleared
         break;
-      case scm_nStateCD:
+      case scmStateCD:
         if(1) enterStateSTART();
         else return; //no transition cleared
         break;
-      case scm_nStateLD:
+      case scmStateLD:
         if(1) enterStateSTART();
         else return; //no transition cleared
         break;
       default:
-        DEVLOG_ERROR("The state is not in the valid range! The state value is: %d. The max value can be: 5.", m_nECCState.operator TForteUInt16 ());
-        m_nECCState = 0; // 0 is always the initial state
+        DEVLOG_ERROR("The state is not in the valid range! The state value is: %d. The max value can be: 5.", mECCState.operator TForteUInt16 ());
+        mECCState = 0; // 0 is always the initial state
         return;
     }
-    pa_nEIID = cg_nInvalidEventID; // we have to clear the event after the first check in order to ensure correct behavior
+    paEIID = cgInvalidEventID; // we have to clear the event after the first check in order to ensure correct behavior
   } while(true);
 }
 
-void FORTE_E_CTUD::readInputData(TEventID pa_nEIID) {
-  switch(pa_nEIID) {
-    case scm_nEventCUID: {
+void FORTE_E_CTUD::readInputData(TEventID paEIID) {
+  switch(paEIID) {
+    case scmEventCUID: {
       RES_DATA_CON_CRITICAL_REGION();
       readData(0, var_PV, conn_PV);
       break;
     }
-    case scm_nEventCDID: {
+    case scmEventCDID: {
       RES_DATA_CON_CRITICAL_REGION();
       break;
     }
-    case scm_nEventRID: {
+    case scmEventRID: {
       RES_DATA_CON_CRITICAL_REGION();
       break;
     }
-    case scm_nEventLDID: {
+    case scmEventLDID: {
       RES_DATA_CON_CRITICAL_REGION();
       readData(0, var_PV, conn_PV);
       break;
@@ -151,23 +152,23 @@ void FORTE_E_CTUD::readInputData(TEventID pa_nEIID) {
   }
 }
 
-void FORTE_E_CTUD::writeOutputData(TEventID pa_nEIID) {
-  switch(pa_nEIID) {
-    case scm_nEventCOID: {
+void FORTE_E_CTUD::writeOutputData(TEventID paEIID) {
+  switch(paEIID) {
+    case scmEventCOID: {
       RES_DATA_CON_CRITICAL_REGION();
       writeData(0, var_QU, conn_QU);
       writeData(2, var_CV, conn_CV);
       writeData(1, var_QD, conn_QD);
       break;
     }
-    case scm_nEventROID: {
+    case scmEventROID: {
       RES_DATA_CON_CRITICAL_REGION();
       writeData(0, var_QU, conn_QU);
       writeData(2, var_CV, conn_CV);
       writeData(1, var_QD, conn_QD);
       break;
     }
-    case scm_nEventLDOID: {
+    case scmEventLDOID: {
       RES_DATA_CON_CRITICAL_REGION();
       writeData(0, var_QU, conn_QU);
       writeData(1, var_QD, conn_QD);
@@ -226,35 +227,35 @@ CIEC_ANY *FORTE_E_CTUD::getVarInternal(size_t) {
 
 
 void FORTE_E_CTUD::enterStateSTART(void) {
-  m_nECCState = scm_nStateSTART;
+  mECCState = scmStateSTART;
 }
 
 void FORTE_E_CTUD::enterStateCU(void) {
-  m_nECCState = scm_nStateCU;
+  mECCState = scmStateCU;
   alg_CountUp();
   alg_UpdateQUQD();
-  sendOutputEvent(scm_nEventCOID);
+  sendOutputEvent(scmEventCOID);
 }
 
 void FORTE_E_CTUD::enterStateR(void) {
-  m_nECCState = scm_nStateR;
+  mECCState = scmStateR;
   alg_Reset();
   alg_UpdateQUQD();
-  sendOutputEvent(scm_nEventROID);
+  sendOutputEvent(scmEventROID);
 }
 
 void FORTE_E_CTUD::enterStateCD(void) {
-  m_nECCState = scm_nStateCD;
+  mECCState = scmStateCD;
   alg_CountDown();
   alg_UpdateQUQD();
-  sendOutputEvent(scm_nEventCOID);
+  sendOutputEvent(scmEventCOID);
 }
 
 void FORTE_E_CTUD::enterStateLD(void) {
-  m_nECCState = scm_nStateLD;
+  mECCState = scmStateLD;
   alg_Load();
   alg_UpdateQUQD();
-  sendOutputEvent(scm_nEventLDOID);
+  sendOutputEvent(scmEventLDOID);
 }
 
 

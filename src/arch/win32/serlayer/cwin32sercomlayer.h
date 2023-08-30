@@ -24,8 +24,8 @@ class CWin32SerComLayer : public CSerialComLayerBase<HANDLE>{
     ~CWin32SerComLayer() override;
 
     /*! \brief Perform send to serial interface
-    *   \param pa_pvData Sendable payload
-    *   \param pa_unSize Payload size in bytes
+    *   \param paData Sendable payload
+    *   \param paSize Payload size in bytes
     *
     *   \return ComLayer response
     */

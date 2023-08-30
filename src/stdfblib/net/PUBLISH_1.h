@@ -19,17 +19,17 @@ class FORTE_PUBLISH_1 : public GEN_PUBLISH {
   DECLARE_GENERIC_FIRMWARE_FB(FORTE_PUBLISH_1)
 
   protected:
-    static const TEventID scm_nEventREQID = scm_nSendNotificationEventID;
+    static const TEventID scmEventREQID = scmSendNotificationEventID;
 
   public:
-    FORTE_PUBLISH_1(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes);
+    FORTE_PUBLISH_1(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
     ~FORTE_PUBLISH_1() override = default;
 
     void evt_INIT(const CIEC_BOOL &pa_QI, const CIEC_WSTRING &pa_ID, const CIEC_ANY &pa_SD_1, CIEC_BOOL &pa_QO, CIEC_WSTRING &pa_STATUS) {
       QI() = pa_QI;
       ID() = pa_ID;
       getSDs()[0]->setValue(pa_SD_1.unwrap());
-      receiveInputEvent(scm_nEventINITID, nullptr);
+      receiveInputEvent(scmEventINITID, nullptr);
       pa_QO = QO();
       pa_STATUS = STATUS();
     }
@@ -37,7 +37,7 @@ class FORTE_PUBLISH_1 : public GEN_PUBLISH {
       QI() = pa_QI;
       ID() = pa_ID;
       getSDs()[0]->setValue(pa_SD_1.unwrap());
-      receiveInputEvent(scm_nEventREQID, nullptr);
+      receiveInputEvent(scmEventREQID, nullptr);
       pa_QO = QO();
       pa_STATUS = STATUS();
     }

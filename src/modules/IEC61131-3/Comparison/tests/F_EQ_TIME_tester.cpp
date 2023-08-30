@@ -17,14 +17,14 @@
 
 DEFINE_FB_TESTER(F_EQ_TIME_tester, g_nStringIdF_GT)
 
-F_EQ_TIME_tester::F_EQ_TIME_tester(CResource *m_poTestResource) :
-    CFBTester(m_oTestee, m_poTestResource),
-        m_oTestee(0, m_poTestResource),
-        m_poOut_EO_Conn(m_oTestee, g_nStringIdCNF),
-        m_oIn_IN1_Conn(m_oTestee, g_nStringIdIN1, &m_oIN1),
-        m_oIn_IN2_Conn(m_oTestee, g_nStringIdIN2, &m_oIN2),
-        m_oOut_OUT_Conn(m_oTestee, g_nStringIdOUT, &m_oOut_OUT){
-  m_oTestee.changeFBExecutionState(EMGMCommandType::Start);
+F_EQ_TIME_tester::F_EQ_TIME_tester(CResource *mTestResource) :
+    CFBTester(mTestee, mTestResource),
+        mTestee(0, mTestResource),
+        mOut_EO_Conn(mTestee, g_nStringIdCNF),
+        mIn_IN1_Conn(mTestee, g_nStringIdIN1, &mIN1),
+        mIn_IN2_Conn(mTestee, g_nStringIdIN2, &mIN2),
+        mOut_OUT_Conn(mTestee, g_nStringIdOUT, &mOut_OUT){
+  mTestee.changeFBExecutionState(EMGMCommandType::Start);
 }
 
 void F_EQ_TIME_tester::executeAllTests(){
@@ -48,15 +48,15 @@ bool F_EQ_TIME_tester::testCase_Equal(){
     bResult = false;
   }
   //verify data output as both are zero the value value should be true
-  if(m_oOut_OUT != true) {
+  if(mOut_OUT != true) {
     bResult = false;
   }
-  m_oIN1.fromString("T#500ms");
-  m_oIN2.fromString("T#500ms");
+  mIN1.fromString("T#500ms");
+  mIN2.fromString("T#500ms");
 
   triggerEvent(0);
 
-  if(m_oOut_OUT != true) {
+  if(mOut_OUT != true) {
     bResult = false;
   }
   return bResult;
@@ -65,12 +65,12 @@ bool F_EQ_TIME_tester::testCase_Equal(){
 bool F_EQ_TIME_tester::testCase_Larger(){
   bool bResult = true;
 
-  m_oIN1.fromString("T#800ms");
-  m_oIN2.fromString("T#300ms");
+  mIN1.fromString("T#800ms");
+  mIN2.fromString("T#300ms");
 
   triggerEvent(0);
 
-  if(m_oOut_OUT != false) {
+  if(mOut_OUT != false) {
     bResult = false;
   }
   return bResult;
@@ -79,12 +79,12 @@ bool F_EQ_TIME_tester::testCase_Larger(){
 bool F_EQ_TIME_tester::testCase_Smaller(){
   bool bResult = true;
 
-  m_oIN1.fromString("T#150ms");
-  m_oIN2.fromString("T#1s");
+  mIN1.fromString("T#150ms");
+  mIN2.fromString("T#1s");
 
   triggerEvent(0);
 
-  if(m_oOut_OUT != false) {
+  if(mOut_OUT != false) {
     bResult = false;
   }
   return bResult;
