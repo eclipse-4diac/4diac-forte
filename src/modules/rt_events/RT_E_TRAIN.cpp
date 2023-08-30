@@ -91,6 +91,7 @@ const SCFB_FBNData FORTE_RT_E_TRAIN::scmFBNData = {
   0, nullptr,
   6, scmDataConnections,
   0, nullptr,
+  0, nullptr,
   0, nullptr
 };
 

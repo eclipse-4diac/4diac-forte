@@ -1,5 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2005 - 2015 Profactor GmbH, ACIN, fortiss GmbH
+ * Copyright (c) 2005, 2023 Profactor GmbH, ACIN, fortiss GmbH,
+ *                          Johannes Kepler University Linz
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -11,6 +12,7 @@
  *    Thomas Strasser, Alois Zoitl, Gunnar Grabmaier, Gerhard Ebenhofer,
  *    Ingo Hegny
  *      - initial implementation and rework communication infrastructure
+ *    Alois Zoitl - added support for adapter connections in CFBs
  *******************************************************************************/
 #ifndef _CFB_H_
 #define _CFB_H_
@@ -56,6 +58,8 @@ struct SCFB_FBNData {
     const SCFB_FBConnectionData * mDataConnections;
     unsigned int mNumFannedOutDataConnections;
     const SCFB_FBFannedOutConnectionData * mFannedOutDataConnections;
+    unsigned int mNumAdapterConnections;
+    const SCFB_FBConnectionData * mAdapterConnections;
     unsigned int mNumParams;
     const SCFB_FBParameter * mParams;
 };
@@ -141,6 +145,7 @@ class CCompositeFB: public CFunctionBlock {
     void prepareIf2InEventCons();
     void establishConnection(CConnection *paCon, CFunctionBlock *paDstFb, CStringDictionary::TStringId paDstNameId);
     void createDataConnections();
+    void createAdapterConnections();
     void prepareIf2InDataCons();
     void setParams();
 

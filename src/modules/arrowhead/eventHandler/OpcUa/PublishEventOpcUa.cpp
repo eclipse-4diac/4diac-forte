@@ -93,6 +93,7 @@ const SCFB_FBNData FORTE_PublishEventOpcUa::scmFBNData = {
   4, scmFannedOutEventConnections,
   8, scmDataConnections,
   1, scmFannedOutDataConnections,
+  0, nullptr,
   4, scmParamters
 };
 

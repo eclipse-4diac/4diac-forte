@@ -57,6 +57,7 @@ const SCFB_FBNData FORTE_E_RTimeOut::scmFBNData = {
   0, nullptr,
   1, scmDataConnections,
   0, nullptr,
+  0, nullptr,
   0, nullptr
 };
 

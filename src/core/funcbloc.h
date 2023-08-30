@@ -282,7 +282,7 @@ class CFunctionBlock {
     /*!\brief Get the pointer to the adapter instance of the FB.
      *
      * \param paAdapterNameId  StringId of the adapter name.
-     * \return Pointer to the data output or 0.
+     * \return Pointer to the adapter or nullptr.
      */
     CAdapter* getAdapter(CStringDictionary::TStringId paAdapterNameId) const;
 

@@ -98,6 +98,7 @@ const SCFB_FBNData FORTE_SubscribeEventHTTP::scmFBNData = {
   4, scmFannedOutEventConnections,
   9, scmDataConnections,
   4, scmFannedOutDataConnections,
+  0, nullptr,
   4, scmParamters
 };
 

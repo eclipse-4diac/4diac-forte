@@ -1,5 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2005 - 2015 Profactor GmbH, ACIN, fortiss GmbH
+ * Copyright (c) 2005, 2023 Profactor GmbH, ACIN, fortiss GmbH,
+ *                          Johannes Kepler University Linz
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -9,8 +10,9 @@
  *
  * Contributors:
  *    Thomas Strasser, Alois Zoitl, Gunnar Grabmaier, Gerhard Ebenhofer,
- *    Martin Melik Merkumians, Ingo Hegny
+ *    Ingo Hegny
  *      - initial implementation and rework communication infrastructure
+ *    Alois Zoitl - added support for adapter connections in CFBs
  *******************************************************************************/
 #include <string.h>
 #include "cfb.h"
@@ -18,6 +20,7 @@
 #include "resource.h"
 #include "utils/criticalregion.h"
 #include "if2indco.h"
+#include "adapterconn.h"
 
 CCompositeFB::CCompositeFB(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec,
                            CStringDictionary::TStringId paInstanceNameId, const SCFB_FBNData * paFBNData) :
@@ -41,6 +44,7 @@ bool CCompositeFB::initialize() {
 
   createEventConnections();
   createDataConnections();
+  createAdapterConnections();
   setParams();
 
   //remove adapter-references for CFB
@@ -277,32 +281,51 @@ void CCompositeFB::createDataConnections(){
 
     CFunctionBlock *poSrcFB;
     CFunctionBlock *poDstFB;
-    for(unsigned int i = 0; i < cmFBNData->mNumDataConnections; ++i){
-      const SCFB_FBConnectionData *cpstCurrentConn = &(cmFBNData->mDataConnections[i]);
+    for(size_t i = 0; i < cmFBNData->mNumDataConnections; ++i){
+      const SCFB_FBConnectionData &currentConn(cmFBNData->mDataConnections[i]);
       //FIXME implement way to inform FB creator that creation failed
-      poSrcFB = getFunctionBlock(cpstCurrentConn->mSrcFBNum);
-      poDstFB = getFunctionBlock(cpstCurrentConn->mDstFBNum);
+      poSrcFB = getFunctionBlock(currentConn.mSrcFBNum);
+      poDstFB = getFunctionBlock(currentConn.mDstFBNum);
 
       if((nullptr != poSrcFB) && (nullptr != poDstFB)){
         if(this == poSrcFB){
-          mDataConnections[i] = &(mIf2InDConns[getDIID(cpstCurrentConn->mSrcId)]);
+          mDataConnections[i] = &(mIf2InDConns[getDIID(currentConn.mSrcId)]);
         }
         else{
-          mDataConnections[i] = poSrcFB->getDOConnection(cpstCurrentConn->mSrcId);
+          mDataConnections[i] = poSrcFB->getDOConnection(currentConn.mSrcId);
         }
-        establishConnection(mDataConnections[i], poDstFB, cpstCurrentConn->mDstId);
+        establishConnection(mDataConnections[i], poDstFB, currentConn.mDstId);
       }
       else{
-        DEVLOG_ERROR("Could not create event connection in CFB");
+        DEVLOG_ERROR("Could not create data connection in CFB");
       }
     }
     //now handle the fanned out connections
-    for(unsigned int i = 0; i < cmFBNData->mNumFannedOutDataConnections; ++i){
-      const SCFB_FBFannedOutConnectionData *cpstCurrentFannedConn = &(cmFBNData->mFannedOutDataConnections[i]);
-      poDstFB = getFunctionBlock(cpstCurrentFannedConn->mDstFBNum);
+    for(size_t i = 0; i < cmFBNData->mNumFannedOutDataConnections; ++i){
+      const SCFB_FBFannedOutConnectionData &currentFannedConn(cmFBNData->mFannedOutDataConnections[i]);
+      poDstFB = getFunctionBlock(currentFannedConn.mDstFBNum);
+      establishConnection(mDataConnections[currentFannedConn.mConnectionNum], poDstFB, currentFannedConn.mDstId);
+    }
+  }
+}
 
-      establishConnection(mDataConnections[cpstCurrentFannedConn->mConnectionNum],
-          poDstFB, cpstCurrentFannedConn->mDstId);
+void CCompositeFB::createAdapterConnections(){
+  for(size_t i = 0; i < cmFBNData->mNumAdapterConnections; ++i){
+    const SCFB_FBConnectionData &currentConn(cmFBNData->mAdapterConnections[i]);
+    //FIXME implement way to inform FB creator that creation failed
+    const CFunctionBlock *const srcFB = getFunctionBlock(currentConn.mSrcFBNum);
+    CFunctionBlock *const dstFB = getFunctionBlock(currentConn.mDstFBNum);
+
+    if((nullptr != srcFB) && (nullptr != dstFB)){
+      const CAdapter *const adp = srcFB->getAdapter(currentConn.mSrcId);
+      if((nullptr != adp) && (adp->isPlug())){
+        //only plugs hold the connection object
+        adp->getAdapterConnection()->connect(dstFB, currentConn.mDstId);
+      } else{
+        DEVLOG_ERROR("[CFB Creation] Adapter source is not a plug!");
+      }
+    } else{
+      DEVLOG_ERROR("[CFB Creation] Source or destination not found in adapter connection!");
     }
   }
 }
