@@ -2319,4 +2319,10 @@ BOOST_AUTO_TEST_CASE(overloaded_to_lint_function) {
   BOOST_TEST(static_cast<CIEC_LINT::TValueType>(result) == 8);
 }
 
+BOOST_AUTO_TEST_CASE(func_min_time) {
+  CIEC_TIME result;
+  result = func_MIN(30000000_TIME, 30000000000_TIME);
+  BOOST_TEST(static_cast<CIEC_TIME::TValueType>(result) == 30000000);
+}
+
 BOOST_AUTO_TEST_SUITE_END()

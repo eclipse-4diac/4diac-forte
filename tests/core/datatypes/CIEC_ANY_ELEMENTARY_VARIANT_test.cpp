@@ -231,6 +231,17 @@ BOOST_AUTO_TEST_SUITE(CIEC_ANY_ELEMENTARY_VARIANT_function_test)
       BOOST_CHECK(test1 < test2);
       BOOST_CHECK(!(test1 >= test2));
       BOOST_CHECK(!(test1 > test2));
-    }
+
+      // large difference
+      test1 = CIEC_ULINT(std::numeric_limits<CIEC_ULINT::TValueType>::min());
+      test2 = CIEC_ULINT(std::numeric_limits<CIEC_ULINT::TValueType>::max());
+
+      BOOST_CHECK(!(test1 == test2));
+      BOOST_CHECK(test1 != test2);
+      BOOST_CHECK(test1 <= test2);
+      BOOST_CHECK(test1 < test2);
+      BOOST_CHECK(!(test1 >= test2));
+      BOOST_CHECK(!(test1 > test2));
+  }
 
 BOOST_AUTO_TEST_SUITE_END()
