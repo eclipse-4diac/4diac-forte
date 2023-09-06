@@ -387,6 +387,10 @@ class CFunctionBlock {
       return mDIs[paDINum];
     }
 
+    const CIEC_ANY* getDI(TPortId paDINum) const {
+      return const_cast<CFunctionBlock*>(this)->getDI(paDINum);
+    }
+
     /*! \brief Get the data output with given number
      *
      * Attention this function will not perform any range checks on the paDONum parameter!
@@ -397,6 +401,10 @@ class CFunctionBlock {
       return mDOs[paDONum];
     }
 
+    const CIEC_ANY* getDO(TPortId paDONum) const {
+      return const_cast<CFunctionBlock *>(this)->getDO(paDONum);
+    }
+
     /*! \brief Get the data output with given number
      *
      * Attention this function will not perform any range checks on the paDONum parameter!
@@ -405,6 +413,10 @@ class CFunctionBlock {
      */
     virtual CIEC_ANY* getDIO(TPortId paDIONum) {
       return mDIOs[paDIONum];
+    }
+
+    const CIEC_ANY* getDIO(TPortId paDIONum) const {
+      return const_cast<CFunctionBlock *>(this)->getDIO(paDIONum);
     }
 
 #ifdef FORTE_SUPPORT_MONITORING
@@ -419,6 +431,8 @@ class CFunctionBlock {
     virtual CFunctionBlock *getFB(forte::core::TNameIdentifier::CIterator &paNameListIt);
 
 #endif //FORTE_SUPPORT_MONITORING
+    
+    int toString(char* paValue, size_t paBufferSize) const;
 
 #ifdef FORTE_TRACE_CTF
     virtual void traceInstanceData() {}
@@ -687,6 +701,10 @@ class CFunctionBlock {
   private:
     void configureGenericDI(TPortId paDIPortId, const CIEC_ANY *paRefValue);
     void configureGenericDIO(TPortId paDIOPortId, const CIEC_ANY *paRefValue);
+
+    constexpr static char csmToStringSeparator[] = ", ";
+
+    int writeToStringNameValuePair(char *paValue, size_t paBufferSize, const CStringDictionary::TStringId variableNameId, const CIEC_ANY *const variable) const;
 
     CResource *mResource; //!< A pointer to the resource containing the function block.
     forte::core::CFBContainer *mContainer; //!< A pointer to the container containing the function block.
