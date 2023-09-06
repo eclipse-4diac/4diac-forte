@@ -80,5 +80,5 @@ int CIEC_BOOL::toString(char* paValue, size_t paBufferSize) const {
 }
 
 size_t CIEC_BOOL::getToStringBufferSize() const {
-  return sizeof("FALSE");;
+  return sizeof("FALSE");
 }
