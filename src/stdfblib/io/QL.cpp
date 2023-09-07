@@ -40,7 +40,7 @@ const SFBInterfaceSpec FORTE_QL::scmFBInterfaceSpec = {
 };
 
 FORTE_QL::FORTE_QL(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) :
-    CFunctionBlock( paSrcRes, &scmFBInterfaceSpec, paInstanceNameId),
+        CProcessInterface(paSrcRes, &scmFBInterfaceSpec, paInstanceNameId),
     var_conn_QO(var_QO),
     var_conn_STATUS(var_STATUS),
     conn_INITO(this, 0),
