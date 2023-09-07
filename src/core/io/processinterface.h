@@ -43,6 +43,12 @@ namespace forte {
           bool writePin() {
             return write(OUT_X());
           }
+          bool readByte() {
+            return read(IN_B());
+          }
+          bool writeByte() {
+            return write(OUT_B());
+          }
           bool readWord() {
             return read(IN_W());
           }
@@ -54,6 +60,12 @@ namespace forte {
           }
           bool writeDWord() {
             return write(OUT_D());
+          }
+          bool readLWord() {
+            return read(IN_L());
+          }
+          bool writeLWord() {
+            return write(OUT_L());
           }
 
           bool read();

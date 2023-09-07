@@ -36,7 +36,15 @@ ProcessInterface::~ProcessInterface() {
 
 bool ProcessInterface::initialise(bool paIsInput) {
   mDirection = paIsInput ? IOMapper::In : IOMapper::Out;
+  if(paIsInput && (getFBInterfaceSpec()->mNumDOs < 3))
+  {
+    mType = CIEC_ANY::e_Max; //we assume that any FB which has no "IN" Output must be a EVENT-Only FB.
+  }
+  else
+  {
+    //as it has a index 2 here, we safely can do this
   mType = (paIsInput ? getDO(2) : getDI(2))->getDataTypeID();
+  }
 
   mIsReady = false;
   STATUS() = CIEC_STRING(scmWaitingForHandle);
@@ -92,10 +100,16 @@ bool ProcessInterface::read() {
 
   if(mHandle->is(CIEC_ANY::e_BOOL)) {
     mHandle->get(IN_X());
+  } else if(mHandle->is(CIEC_ANY::e_BYTE)) {
+      mHandle->get(IN_B());
   } else if(mHandle->is(CIEC_ANY::e_WORD)) {
     mHandle->get(IN_W());
   } else if(mHandle->is(CIEC_ANY::e_DWORD)) {
     mHandle->get(IN_D());
+  } else if(mHandle->is(CIEC_ANY::e_LWORD)) {
+    mHandle->get(IN_L());
+  } else if(mHandle->is(CIEC_ANY::e_Max)) {
+    return true; //it has no "IN" ...
   } else {
     return false;
   }
@@ -111,10 +125,16 @@ bool ProcessInterface::write() {
 
   if(mHandle->is(CIEC_ANY::e_BOOL)) {
     mHandle->set(OUT_X());
+  } else if(mHandle->is(CIEC_ANY::e_BYTE)) {
+    mHandle->set(OUT_B());
   } else if(mHandle->is(CIEC_ANY::e_WORD)) {
     mHandle->set(OUT_W());
   } else if(mHandle->is(CIEC_ANY::e_DWORD)) {
     mHandle->set(OUT_D());
+  } else if(mHandle->is(CIEC_ANY::e_LWORD)) {
+    mHandle->set(OUT_L());
+  } else if(mHandle->is(CIEC_ANY::e_Max)) { //not yet possible.
+    return true; //it has no "OUT" ...
   } else {
     return false;
   }
