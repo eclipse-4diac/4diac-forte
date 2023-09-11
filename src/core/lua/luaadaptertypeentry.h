@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2017 fortiss GmbH
+ * Copyright (c) 2017, 2023 fortiss GmbH, Johannes Kepler University Linz
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -7,8 +7,8 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *   Monika Wenger
- *   - initial API and implementation and/or initial documentation
+ *   Monika Wenger - initial API and implementation and/or initial documentation
+ *   Alois Zoitl   - upgraded to new FB memory layout
  *******************************************************************************/
 
 #ifndef SRC_CORE_LUAADAPTERTYPEENTRY_H_
@@ -16,6 +16,7 @@
 
 #include "typelib.h"
 #include "../funcbloc.h"
+#include <string>
 
 class CResource;
 class CAdapter;
@@ -24,11 +25,11 @@ class CLuaEngine;
 class CLuaAdapterTypeEntry: public CTypeLib::CAdapterTypeEntry {
 private:
 
-  const CIEC_STRING cmLuaScriptAsString;
+  const std::string cmLuaScriptAsString;
   SFBInterfaceSpec mSocketInterfaceSpec;
   SFBInterfaceSpec mPlugInterfaceSpec;
 
-  CLuaAdapterTypeEntry(CStringDictionary::TStringId typeNameId, CIEC_STRING paLuaScriptAsString,  SFBInterfaceSpec& interfaceSpec);
+  CLuaAdapterTypeEntry(CStringDictionary::TStringId typeNameId, const std::string& paLuaScriptAsString,  SFBInterfaceSpec& interfaceSpec);
 
   ~CLuaAdapterTypeEntry() override;
 
@@ -37,7 +38,7 @@ private:
   static void deleteInterfaceSpec(SFBInterfaceSpec& interfaceSpec);
 
 public:
-  static CLuaAdapterTypeEntry* createLuaAdapterTypeEntry(CStringDictionary::TStringId typeNameId, CIEC_STRING& paLuaScriptAsString);
+  static CLuaAdapterTypeEntry* createLuaAdapterTypeEntry(CStringDictionary::TStringId typeNameId, const std::string& paLuaScriptAsString);
 
   CAdapter* createAdapterInstance(CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes, bool paIsPlug) override;
 

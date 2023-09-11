@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2022 ACIN, Profactor GmbH, fortiss GmbH,
+ * Copyright (c) 2005, 2023 ACIN, Profactor GmbH, fortiss GmbH,
  *                          Johannes Kepler University,
  *                          Primetals Technologies Austria GmbH,
  *                          Martin Erich Jobst
@@ -93,14 +93,14 @@ EMGMResponse CResource::executeMGMCommand(forte::core::SManagementCMD &paCommand
         break;
       case EMGMCommandType::CreateFBType:
 #ifdef FORTE_DYNAMIC_TYPE_LOAD
-        retVal = createFBTypeFromLua(paCommand.mFirstParam.front(), paCommand.mAdditionalParams);
+        retVal = createFBTypeFromLua(paCommand.mFirstParam.front(), paCommand.mAdditionalParams.c_str());
 #else
         retVal = EMGMResponse::UnsupportedCmd;
 #endif
         break;
       case EMGMCommandType::CreateAdapterType:
 #ifdef FORTE_DYNAMIC_TYPE_LOAD
-        retVal = createAdapterTypeFromLua(paCommand.mFirstParam.front(), paCommand.mAdditionalParams);
+        retVal = createAdapterTypeFromLua(paCommand.mFirstParam.front(), paCommand.mAdditionalParams.c_str());
 #else
         retVal = EMGMResponse::UnsupportedCmd;
 #endif
@@ -643,9 +643,10 @@ void CResource::createInterfaceResponseMessage(CIEC_STRING& paReqResult, const c
 
 #ifdef FORTE_DYNAMIC_TYPE_LOAD
 EMGMResponse CResource::createFBTypeFromLua(CStringDictionary::TStringId typeNameId,
-    CIEC_STRING& paLuaScriptAsString){
+    const std::string& paLuaScriptAsString){
   EMGMResponse retVal = EMGMResponse::UnsupportedType;
-  if(nullptr != strstr(paLuaScriptAsString.getStorage().c_str(), "internalFBs")){ // CFBType
+
+  if(paLuaScriptAsString.find("internalFBs") !=std::string::npos){ // CFBType
     if(CLuaCFBTypeEntry::createLuaFBTypeEntry(typeNameId, paLuaScriptAsString) != nullptr){
       retVal = EMGMResponse::Ready;
     }
@@ -656,24 +657,21 @@ EMGMResponse CResource::createFBTypeFromLua(CStringDictionary::TStringId typeNam
   else{ // BFBType
     if(CLuaBFBTypeEntry::createLuaFBTypeEntry(typeNameId, paLuaScriptAsString) != nullptr){
       retVal = EMGMResponse::Ready;
-    }
-    else{
+    }else{
       retVal = EMGMResponse::InvalidOperation;
     }
   }
-  paLuaScriptAsString.clear();
   return retVal;
 }
 
 EMGMResponse CResource::createAdapterTypeFromLua(CStringDictionary::TStringId typeNameId,
-    CIEC_STRING& paLuaScriptAsString){
+    const std::string& paLuaScriptAsString){
   EMGMResponse retVal = EMGMResponse::UnsupportedType;
   if(CLuaAdapterTypeEntry::createLuaAdapterTypeEntry(typeNameId, paLuaScriptAsString) != nullptr){
      retVal = EMGMResponse::Ready;
-   }else{
-     retVal = EMGMResponse::InvalidOperation;
-   }
-   paLuaScriptAsString.clear();
+  }else{
+   retVal = EMGMResponse::InvalidOperation;
+  }
   return retVal;
 }
 

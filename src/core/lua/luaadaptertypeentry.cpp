@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2017 fortiss GmbH
+ * Copyright (c) 2017, 2023 fortiss GmbH, Johannes Kepler University Linz
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -7,8 +7,8 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *   Monika Wenger
- *   - initial API and implementation and/or initial documentation
+ *   Monika Wenger - initial API and implementation and/or initial documentation
+ *   Alois Zoitl   - upgraded to new FB memory layout
  *******************************************************************************/
 
 #include "luaadaptertypeentry.h"
@@ -18,7 +18,7 @@
 #include "resource.h"
 #include "adapter.h"
 
-CLuaAdapterTypeEntry::CLuaAdapterTypeEntry(CStringDictionary::TStringId paTypeNameId, CIEC_STRING paLuaScriptAsString, SFBInterfaceSpec& paInterfaceSpec) :
+CLuaAdapterTypeEntry::CLuaAdapterTypeEntry(CStringDictionary::TStringId paTypeNameId, const std::string &  paLuaScriptAsString, SFBInterfaceSpec& paInterfaceSpec) :
     CTypeLib::CAdapterTypeEntry(paTypeNameId, nullptr, &mSocketInterfaceSpec), cmLuaScriptAsString(paLuaScriptAsString), mSocketInterfaceSpec(paInterfaceSpec) {
   initPlugInterfaceSpec(mSocketInterfaceSpec);
 }
@@ -27,13 +27,13 @@ CLuaAdapterTypeEntry::~CLuaAdapterTypeEntry() {
   deleteInterfaceSpec(mSocketInterfaceSpec);
 }
 
-CLuaAdapterTypeEntry* CLuaAdapterTypeEntry::createLuaAdapterTypeEntry(CStringDictionary::TStringId paTypeNameId, CIEC_STRING& paLuaScriptAsString) {
+CLuaAdapterTypeEntry* CLuaAdapterTypeEntry::createLuaAdapterTypeEntry(CStringDictionary::TStringId paTypeNameId, const std::string & paLuaScriptAsString) {
   CLuaEngine luaEngine;
-  if(!luaEngine.loadString(std::string(paLuaScriptAsString.getValue()))) {
+  if(!luaEngine.loadString(paLuaScriptAsString)) {
     return nullptr;
   }
   //interfaceSpec
-  SFBInterfaceSpec interfaceSpec = { 0, nullptr, nullptr, nullptr, 0, nullptr, nullptr, nullptr, 0, nullptr, nullptr, 0, nullptr, nullptr, 0, nullptr };
+  SFBInterfaceSpec interfaceSpec = { 0, nullptr, nullptr, nullptr, 0, nullptr, nullptr, nullptr, 0, nullptr, nullptr, 0, nullptr, nullptr, 0, nullptr, 0, nullptr};
   if(!luaEngine.pushField(-1, "interfaceSpec", LUA_TTABLE)) {
     return nullptr;
   }
@@ -48,21 +48,10 @@ CLuaAdapterTypeEntry* CLuaAdapterTypeEntry::createLuaAdapterTypeEntry(CStringDic
 
 CAdapter* CLuaAdapterTypeEntry::createAdapterInstance(CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes, bool paIsPlug) {
   CLuaEngine* luaEngine = paSrcRes->getLuaEngine();
-  if(!luaEngine->load(this) && (!luaEngine->loadString(std::string(cmLuaScriptAsString.getValue())))) {
+  if(!luaEngine->load(this) && (!luaEngine->loadString(cmLuaScriptAsString))) {
     return nullptr;
   }
-  TForteByte* connData = nullptr;
-  TForteByte* varsData = nullptr;
-  if(paIsPlug) {
-    connData = new TForteByte[CAdapter::genAdapterFBConnDataSize(mPlugInterfaceSpec.mNumEIs, mPlugInterfaceSpec.mNumEOs, mPlugInterfaceSpec.mNumDIs,
-      mPlugInterfaceSpec.mNumDOs)];
-    varsData = new TForteByte[CAdapter::genFBVarsDataSize(mPlugInterfaceSpec.mNumDIs, mPlugInterfaceSpec.mNumDOs, mPlugInterfaceSpec.mNumAdapters)];
-  } else {
-    connData = new TForteByte[CAdapter::genAdapterFBConnDataSize(mSocketInterfaceSpec.mNumEIs, mSocketInterfaceSpec.mNumEOs, mSocketInterfaceSpec.mNumDIs,
-      mSocketInterfaceSpec.mNumDOs)];
-    varsData = new TForteByte[CAdapter::genFBVarsDataSize(mSocketInterfaceSpec.mNumDIs, mSocketInterfaceSpec.mNumDOs, mSocketInterfaceSpec.mNumAdapters)];
-  }
-  return new CLuaAdapter(paInstanceNameId, this, paIsPlug, connData, varsData, paSrcRes);
+  return new CLuaAdapter(paInstanceNameId, this, paIsPlug, paSrcRes);
 }
 
 bool CLuaAdapterTypeEntry::initInterfaceSpec(SFBInterfaceSpec& paInterfaceSpec, CLuaEngine* paLuaEngine, int paIndex) {
