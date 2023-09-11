@@ -695,6 +695,23 @@ TForteUInt32 &CFunctionBlock::getEOMonitorData(TEventID paEOID){
   return mEOMonitorCount[paEOID];
 }
 
+const std::string CFunctionBlock::getFullQualifiedInstanceName() const {
+  std::string fullName;
+  fullName.reserve(cgStringInitialSize);
+  fullName = getInstanceName();
+  forte::core::CFBContainer* parent = mContainer;
+  CResource* resourcePtr = getResourcePtr();
+  while(parent != nullptr &&
+		parent != resourcePtr &&
+		parent->getName() != nullptr) {
+    fullName.insert(0, ".");
+    fullName.insert(0, parent->getName());
+    parent = parent->getParent();
+  }
+  fullName.shrink_to_fit();
+  return fullName;
+}
+
 #endif //FORTE_SUPPORT_MONITORING
 
 int CFunctionBlock::writeToStringNameValuePair(char *paValue, size_t paBufferSize, const CStringDictionary::TStringId variableNameId, const CIEC_ANY *const variable) const {

@@ -382,7 +382,7 @@ EMGMResponse CResource::querySubapps(CIEC_STRING & paValue, CFBContainer& contai
     if(!prefix.empty()){
       subapp_prefix += ".";
     }
-    subapp_prefix += CStringDictionary::getInstance().get(subapp->getName());
+    subapp_prefix += subapp->getName();
 
     for(TFunctionBlockList::iterator itRunner2 = subapp->getFBList().begin(); itRunner2 != subapp->getFBList().end(); ++itRunner2){
 
@@ -481,16 +481,18 @@ void CResource::createConnectionResponseMessage(const CStringDictionary::TString
     const CFunctionBlock& paDstFb, const CFunctionBlock& paSrcFb, CIEC_STRING& paReqResult) const {
   paReqResult.append("<Connection Source=\"");
 
-  std::string fullName = paSrcFb.getInstanceName();
+  std::string fullName;
+  fullName.reserve(cgStringInitialSize);
+  fullName = paSrcFb.getInstanceName();
   fullName += ".";
   fullName += CStringDictionary::getInstance().get(srcId);
 
   CFBContainer* parent = &(paSrcFb.getContainer());
 
   if(paSrcFb.getInstanceNameId() != g_nStringIdSTART ){
-    while(CStringDictionary::getInstance().get(parent->getName()) != 0){
-      fullName = "." + fullName;
-      fullName = CStringDictionary::getInstance().get(parent->getName()) + fullName;
+    while(parent->getName() != 0){
+      fullName.insert(0, ".");
+      fullName.insert(0, parent->getName());
       parent = parent->getParent();
     }
   }
@@ -501,11 +503,12 @@ void CResource::createConnectionResponseMessage(const CStringDictionary::TString
   fullName += CStringDictionary::getInstance().get(dstId);
 
   parent = &(paDstFb.getContainer());
-  while(CStringDictionary::getInstance().get(parent->getName()) != 0){
-    fullName = "." + fullName;
-    fullName = CStringDictionary::getInstance().get(parent->getName()) + fullName;
+  while(parent->getName() != 0){
+    fullName.insert(0, ".");
+    fullName.insert(0, parent->getName());
     parent = parent->getParent();
   }
+  fullName.shrink_to_fit();
   paReqResult.append(fullName.c_str());
   paReqResult.append("\"/>");
 }

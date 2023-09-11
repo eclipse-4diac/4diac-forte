@@ -339,6 +339,9 @@ class CFunctionBlock {
     }
     ;
 
+
+    const std::string getFullQualifiedInstanceName() const;
+
     const char* getInstanceName() const {
       return CStringDictionary::getInstance().get(mFBInstanceName);
     }

@@ -61,6 +61,13 @@ const unsigned int cgIPLayerRecvBufferSize = ${FORTE_IPLayerRecvBufferSize};
  */
 const TForteUInt32 cgStringDictInitialStringBufSize = ${FORTE_STRINGDICTINITIALSTRINGBUFSIZE};
 
+
+/*! \brief FORTE string initial size
+ * 
+ * 
+ */
+const TForteUInt32 cgStringInitialSize = ${FORTE_STRINGINITIALSIZE};
+
 /*! \brief FORTE string dict's initial max nr of strings
  *
  * Depending on the FORTE_STRING_DICT_FIXED_MEMORY flag the string dict will reallocate if necessary.
