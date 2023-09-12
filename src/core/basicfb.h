@@ -46,6 +46,8 @@ class CBasicFB : public CFunctionBlock {
 
     CIEC_ANY* getVar(CStringDictionary::TStringId *paNameList, unsigned int paNameListSize) override;
 
+    int toString(char *paValue, size_t paBufferSize) const override;
+
 #ifdef FORTE_TRACE_CTF
     void traceInstanceData() override;
 #endif
@@ -59,6 +61,10 @@ class CBasicFB : public CFunctionBlock {
      */
     virtual CIEC_ANY* getVarInternal(size_t paVarIntNum) {
       return mInternals[paVarIntNum];
+    }
+
+    const CIEC_ANY* getVarInternal(size_t paVarIntNum) const {
+      return const_cast<CBasicFB *>(this)->getVarInternal(paVarIntNum);
     }
 
     CIEC_STATE mECCState; //! the current state of the ecc. start value is 0 = initial state id

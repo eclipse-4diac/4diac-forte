@@ -20,9 +20,10 @@ BOOST_AUTO_TEST_SUITE(FUNCBLOC)
 
 BOOST_AUTO_TEST_CASE(FB_TO_STRING_TEST){
     FORTE_E_CTUD testFb(0, nullptr); // Dummy FB, do not use for anything else than testing toString
+    constexpr char result[] = "(PV:=0, QU:=FALSE, QD:=FALSE, CV:=0)";
     char buffer[50];
-    testFb.toString(buffer, sizeof(buffer));
-    BOOST_TEST(buffer == "(PV:=0, QU:=FALSE, QD:=FALSE, CV:=0)");
+    BOOST_TEST(testFb.toString(buffer, sizeof(buffer)) == strlen(result));
+    BOOST_TEST(buffer == result);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

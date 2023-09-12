@@ -432,7 +432,7 @@ class CFunctionBlock {
 
 #endif //FORTE_SUPPORT_MONITORING
     
-    int toString(char* paValue, size_t paBufferSize) const;
+    virtual int toString(char* paValue, size_t paBufferSize) const;
 
 #ifdef FORTE_TRACE_CTF
     virtual void traceInstanceData() {}
@@ -698,13 +698,13 @@ class CFunctionBlock {
   public:
     CFunctionBlock(const CFunctionBlock&) = delete;
 
+  protected:
+    int writeToStringNameValuePair(char *paValue, size_t paBufferSize, const CStringDictionary::TStringId variableNameId, const CIEC_ANY *const variable) const;
+    constexpr static char csmToStringSeparator[] = ", ";
+
   private:
     void configureGenericDI(TPortId paDIPortId, const CIEC_ANY *paRefValue);
     void configureGenericDIO(TPortId paDIOPortId, const CIEC_ANY *paRefValue);
-
-    constexpr static char csmToStringSeparator[] = ", ";
-
-    int writeToStringNameValuePair(char *paValue, size_t paBufferSize, const CStringDictionary::TStringId variableNameId, const CIEC_ANY *const variable) const;
 
     CResource *mResource; //!< A pointer to the resource containing the function block.
     forte::core::CFBContainer *mContainer; //!< A pointer to the container containing the function block.

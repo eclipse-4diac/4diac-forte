@@ -770,8 +770,8 @@ int CFunctionBlock::toString(char *paValue, size_t paBufferSize) const {
       return -1;
     }
   }
-  strncpy(paValue + usedBuffer - 2, ")", paBufferSize - (usedBuffer - 2)); //overwrite the last two bytes with the closing )
-  return usedBuffer - 1;
+  strncpy(paValue + std::max(1, usedBuffer - 2), ")", paBufferSize - std::max(1, usedBuffer - 2)); // overwrite the last two bytes with the closing )
+  return std::max(2, usedBuffer - 1);
 }
 
 //********************************** below here are CTF Tracing specific functions **********************************************************

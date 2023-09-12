@@ -190,7 +190,7 @@ void fmuInstance::populateInputsAndOutputsCore(CFunctionBlock* paFB){
     if(0 != testBasic){ //basic function Block
       //store internal variables
       if(0 != testBasic->cmVarInternals){
-        for(unsigned int i = 0; i < testBasic->cmVarInternals->mNumIntVars; i++){
+        for(TPortId i = 0; i < testBasic->cmVarInternals->mNumIntVars; i++){
           CStringDictionary::TStringId varId = testBasic->cmVarInternals->mIntVarsNames[i];
           CIEC_ANY* var = testBasic->getVar(&varId, 1);
           if(0 != var){

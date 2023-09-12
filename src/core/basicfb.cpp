@@ -121,6 +121,38 @@ void CBasicFB::deleteInternalFBs(const size_t paAmountOfInternalFBs, TFunctionBl
   delete[] paInternalFBs;
 };
 
+int CBasicFB::toString(char *paValue, size_t paBufferSize) const {
+  int usedBuffer = CFunctionBlock::toString(paValue, paBufferSize);
+  if (usedBuffer < 1 || cmVarInternals == nullptr || (cmVarInternals != nullptr && cmVarInternals->mNumIntVars == 0)) {
+    return usedBuffer; // nothing to do
+  }
+
+  --usedBuffer;  // move the pointer to the position of the closing )
+  if(usedBuffer > 1) { // not only ()
+    strncpy(paValue + usedBuffer, csmToStringSeparator, paBufferSize - usedBuffer);
+    usedBuffer += sizeof(csmToStringSeparator) - 1;
+  }
+
+  for (size_t i = 0; i < cmVarInternals->mNumIntVars; ++i) {
+    const CIEC_ANY *const variable = getVarInternal(i);
+    const CStringDictionary::TStringId nameId = cmVarInternals->mIntVarsNames[i];
+    int result = writeToStringNameValuePair(paValue + usedBuffer, paBufferSize - usedBuffer, nameId, variable);
+    if(result >= 0) {
+      usedBuffer += result;
+    } else {
+      return -1;
+    }
+    if (paBufferSize - usedBuffer >= sizeof(csmToStringSeparator)) {
+      strncpy(paValue + usedBuffer, csmToStringSeparator, paBufferSize - usedBuffer);
+      usedBuffer += sizeof(csmToStringSeparator) - 1;
+    } else {
+      return -1;
+    }
+  }
+  strncpy(paValue + std::max(1, usedBuffer - 2), ")", paBufferSize - std::max(1, usedBuffer - 2)); // overwrite the last two bytes with the closing )
+  return std::max(2, usedBuffer - 1);
+};
+
 #ifdef FORTE_TRACE_CTF
 void CBasicFB::traceInstanceData() {
   std::vector<std::string> inputs(mInterfaceSpec->mNumDIs);
