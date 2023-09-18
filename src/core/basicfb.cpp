@@ -153,14 +153,30 @@ int CBasicFB::toString(char *paValue, size_t paBufferSize) const {
   return std::max(2, usedBuffer - 1);
 };
 
+size_t CBasicFB::getToStringBufferSize() const {
+  size_t bufferSize =  CFunctionBlock::getToStringBufferSize();
+  if(cmVarInternals) {
+    for (size_t i = 0; i < cmVarInternals->mNumIntVars; ++i) {
+        const CIEC_ANY *const variable = getVarInternal(i);
+        const CStringDictionary::TStringId nameId = cmVarInternals->mIntVarsNames[i];
+        const char *varName = CStringDictionary::getInstance().get(nameId); 
+        bufferSize += strlen(varName) + 4 + variable->getToStringBufferSize();
+    }   
+  }
+   return bufferSize;
+}
+
 #ifdef FORTE_TRACE_CTF
 void CBasicFB::traceInstanceData() {
+
   std::vector<std::string> inputs(mInterfaceSpec->mNumDIs);
   std::vector<std::string> outputs(mInterfaceSpec->mNumDOs);
   std::vector<std::string> internals(cmVarInternals ? cmVarInternals->mNumIntVars : 0);
+  std::vector<std::string> internalFbs(getInternalFBNum());
   std::vector<const char *> inputs_c_str(inputs.size());
   std::vector<const char *> outputs_c_str(outputs.size());
   std::vector<const char *> internals_c_str(internals.size());
+  std::vector<const char *> internalFbs_c_str(internalFbs.size());
 
   for(TPortId i = 0; i < inputs.size(); ++i) {
     CIEC_ANY *value = getDI(i);
@@ -186,12 +202,21 @@ void CBasicFB::traceInstanceData() {
     internals_c_str[i] = valueString.c_str();
   }
 
+  for(TPortId i = 0; i < internalFbs.size(); ++i) {
+    CFunctionBlock *value = getInternalFB(i);
+    std::string &valueString = internalFbs[i];
+    valueString.reserve(value->getToStringBufferSize());
+    value->toString(valueString.data(), valueString.capacity());
+    internalFbs_c_str[i] = valueString.c_str();
+  }
+
   barectf_default_trace_instanceData(getResource().getTracePlatformContext().getContext(),
                                      getFBTypeName() ?: "null",
                                      getInstanceName() ?: "null",
                                      static_cast<uint32_t >(inputs.size()), inputs_c_str.data(),
                                      static_cast<uint32_t >(outputs.size()), outputs_c_str.data(),
-                                     static_cast<uint32_t >(internals.size()), internals_c_str.data());
+                                     static_cast<uint32_t >(internals.size()), internals_c_str.data(),
+                                     static_cast<uint32_t >(internalFbs.size()), internalFbs_c_str.data());
 }
 #endif
 

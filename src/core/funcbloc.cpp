@@ -791,6 +791,30 @@ int CFunctionBlock::toString(char *paValue, size_t paBufferSize) const {
   return std::max(2, usedBuffer - 1);
 }
 
+size_t CFunctionBlock::getToStringBufferSize() const {
+  size_t bufferSize = 3; 
+  for (size_t i = 0; i < getFBInterfaceSpec()->mNumDIs; ++i) {
+      const CIEC_ANY *const variable = getDI(i);
+      const CStringDictionary::TStringId nameId = getFBInterfaceSpec()->mDINames[i];
+      const char *varName = CStringDictionary::getInstance().get(nameId);
+      bufferSize += strlen(varName) + 4 + variable->getToStringBufferSize(); // compensation for := and , for every variable
+  }
+  for (size_t i = 0; i < getFBInterfaceSpec()->mNumDOs; ++i) {
+      const CIEC_ANY *const variable = getDO(i);
+      const CStringDictionary::TStringId nameId = getFBInterfaceSpec()->mDONames[i];
+      const char *varName = CStringDictionary::getInstance().get(nameId);
+      bufferSize += strlen(varName) + 4 + variable->getToStringBufferSize(); // compensation for := and , for every variable
+  }
+   for (size_t i = 0; i < getFBInterfaceSpec()->mNumDIOs; ++i) {
+      const CIEC_ANY *const variable = getDIO(i);
+      const CStringDictionary::TStringId nameId = getFBInterfaceSpec()->mDIONames[i];
+      const char *varName = CStringDictionary::getInstance().get(nameId); 
+      bufferSize += strlen(varName) + 4 + variable->getToStringBufferSize(); // compensation for := and , for every variable
+   }
+   return bufferSize;
+
+}
+
 //********************************** below here are CTF Tracing specific functions **********************************************************
 #ifdef FORTE_TRACE_CTF
 void CFunctionBlock::traceInputEvent(TEventID paEIID){

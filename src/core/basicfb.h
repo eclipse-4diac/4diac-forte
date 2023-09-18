@@ -48,6 +48,8 @@ class CBasicFB : public CFunctionBlock {
 
     int toString(char *paValue, size_t paBufferSize) const override;
 
+    size_t getToStringBufferSize() const override;
+
 #ifdef FORTE_TRACE_CTF
     void traceInstanceData() override;
 #endif

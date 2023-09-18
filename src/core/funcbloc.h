@@ -437,6 +437,8 @@ class CFunctionBlock {
     
     virtual int toString(char* paValue, size_t paBufferSize) const;
 
+    virtual size_t getToStringBufferSize() const;
+
 #ifdef FORTE_TRACE_CTF
     virtual void traceInstanceData() {}
 #endif //FORTE_TRACE_CTF
