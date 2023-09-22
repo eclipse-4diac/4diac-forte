@@ -29,3 +29,4 @@ forte_add_network_layer(ETH ON "ip" CIPComLayer ipcomlayer "Enable Forte Com Eth
 forte_add_network_layer(FBDK ON "fbdk" CFBDKASN1ComLayer fbdkasn1layer "Enable Forte Com FBDK")
 forte_add_network_layer(LOCAL ON "loc" CLocalComLayer localcomlayer "Enable Forte local communication")
 forte_add_network_layer(RAW ON "raw" CRawDataComLayer rawdatacomlayer "Enable Forte raw communication")
+forte_add_network_layer(STRUCT_MEMBER OFF "structmemb" CStructMemberLocalComLayer structmembercomlayer "Local communication layer writing to a single element in a struct")

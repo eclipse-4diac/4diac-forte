@@ -99,9 +99,14 @@ void CLocalComLayer::closeConnection(){
 
 /********************** CLocalCommGroupsManager *************************************/
 CLocalComLayer::CLocalCommGroup* CLocalComLayer::CLocalCommGroupsManager::registerPubl(const CStringDictionary::TStringId paID, CLocalComLayer *paLayer){
-  CCriticalRegion criticalRegion(mSync);
   forte::com_infra::CBaseCommFB *commFb = paLayer->getCommFB();
-  CLocalCommGroup* group = findOrCreateLocalCommGroup(paID, commFb->getSDs(), commFb->getNumSD());
+  return registerPubl(paID, paLayer, commFb->getSDs(), commFb->getNumSD());
+}
+
+CLocalComLayer::CLocalCommGroup* CLocalComLayer::CLocalCommGroupsManager::registerPubl(const CStringDictionary::TStringId paID, CLocalComLayer *paLayer,
+    CIEC_ANY **paDataPins, TPortId paNumDataPins){
+  CCriticalRegion criticalRegion(mSync);
+  CLocalCommGroup *const group = findOrCreateLocalCommGroup(paID, paDataPins, paNumDataPins);
   if(group != nullptr){
       group->mPublList.push_back(paLayer);
   }
@@ -119,7 +124,7 @@ void CLocalComLayer::CLocalCommGroupsManager::unregisterPubl(CLocalCommGroup *pa
 CLocalComLayer::CLocalCommGroup* CLocalComLayer::CLocalCommGroupsManager::registerSubl(const CStringDictionary::TStringId paID, CLocalComLayer *paLayer){
   CCriticalRegion criticalRegion(mSync);
   forte::com_infra::CBaseCommFB *commFb = paLayer->getCommFB();
-  CLocalCommGroup *group = findOrCreateLocalCommGroup(paID, commFb->getRDs(), commFb->getNumRD());
+  CLocalCommGroup *const group = findOrCreateLocalCommGroup(paID, commFb->getRDs(), commFb->getNumRD());
   if(group != nullptr){
     group->mSublList.push_back(paLayer);
   }
@@ -165,7 +170,7 @@ void CLocalComLayer::CLocalCommGroupsManager::removeListEntry(CLocalCommGroup::T
 void CLocalComLayer::CLocalCommGroupsManager::removeCommGroup(CLocalCommGroup &paGroup){
   auto iter = getLocalCommGroupIterator(paGroup.mGroupName);
   if(isGroupIteratorForGroup(iter, paGroup.mGroupName)){
-    *mLocalCommGroups.erase(iter);
+    mLocalCommGroups.erase(iter);
   }
 }
 
@@ -190,7 +195,7 @@ bool CLocalComLayer::CLocalCommGroupsManager::checkDataTypes(const CLocalCommGro
 
   size_t i = 0;
   for(auto runner : group.mDataTypes){
-    if(runner != paDataPins[i]->getTypeNameID()){
+    if(runner != paDataPins[i]->unwrap().getTypeNameID()){
       return false;
     }
     i++;
