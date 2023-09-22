@@ -1,5 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2016 - 2018 Johannes Messmer (admin@jomess.com), fortiss GmbH
+ * Copyright (c) 2016, 2023 Johannes Messmer (admin@jomess.com), fortiss GmbH,
+ *                          Johannes Kepler University Linz
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -9,6 +11,7 @@
  * Contributors:
  *   Johannes Messmer - initial API and implementation and/or initial documentation
  *   Jose Cabral - Cleaning of namespaces
+ *   Alois Zoitl - further clean-ups and performance improvements on IOHandle
  *******************************************************************************/
 
 #include "processinterface.h"
@@ -17,12 +20,13 @@
 using namespace forte::core::io;
 using namespace std::string_literals;
 
-const std::string ProcessInterface::scmOK = "OK"s;
-const std::string ProcessInterface::scmWaitingForHandle = "Waiting for handle.."s;
-const std::string ProcessInterface::scmFailedToRegister = "Failed to register observer."s;
-const std::string ProcessInterface::scmMappedWrongDirectionOutput = "Mapped invalid direction. A Q block requires an output handle."s;
-const std::string ProcessInterface::scmMappedWrongDirectionInput = "Mapped invalid direction. An I block requires an input handle."s;
-const std::string ProcessInterface::scmMappedWrongDataType = "Mapped invalid data type."s;
+const CIEC_STRING ProcessInterface::scmOK("OK"_STRING);
+const CIEC_STRING ProcessInterface::scmWaitingForHandle("Waiting for handle.."_STRING);
+const CIEC_STRING ProcessInterface::scmFailedToRegister("Failed to register observer."_STRING);
+const CIEC_STRING ProcessInterface::scmMappedWrongDirectionOutput("Mapped invalid direction. A Q block requires an output handle."_STRING);
+const CIEC_STRING ProcessInterface::scmMappedWrongDirectionInput("Mapped invalid direction. An I block requires an input handle."_STRING);
+const CIEC_STRING ProcessInterface::scmMappedWrongDataType("Mapped invalid data type."_STRING);
+
 
 ProcessInterface::ProcessInterface(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId) :
     CProcessInterfaceBase(paSrcRes, paInterfaceSpec, paInstanceNameId), IOObserver() {
@@ -36,14 +40,12 @@ ProcessInterface::~ProcessInterface() {
 
 bool ProcessInterface::initialise(bool paIsInput) {
   mDirection = paIsInput ? IOMapper::In : IOMapper::Out;
-  if(paIsInput && (getFBInterfaceSpec()->mNumDOs < 3))
-  {
+  if(paIsInput && (getFBInterfaceSpec()->mNumDOs < 3)) {
     mType = CIEC_ANY::e_Max; //we assume that any FB which has no "IN" Output must be a EVENT-Only FB.
   }
-  else
-  {
+  else {
     //as it has a index 2 here, we safely can do this
-  mType = (paIsInput ? getDO(2) : getDI(2))->getDataTypeID();
+    mType = (paIsInput ? getDO(2) : getDI(2))->getDataTypeID();
   }
 
   mIsReady = false;
@@ -54,7 +56,7 @@ bool ProcessInterface::initialise(bool paIsInput) {
 
   // Register interface
   if(!(mIsListening = IOMapper::getInstance().registerObserver(CIEC_WSTRING(getFullQualifiedInstanceName().c_str()), this))) {
-    STATUS() = CIEC_STRING(scmFailedToRegister);
+    STATUS() = scmFailedToRegister;
     return false;
   }
 
@@ -98,20 +100,27 @@ bool ProcessInterface::read() {
     return false;
   }
 
-  if(mHandle->is(CIEC_ANY::e_BOOL)) {
-    mHandle->get(IN_X());
-  } else if(mHandle->is(CIEC_ANY::e_BYTE)) {
+  switch(mHandle->getIOHandleDataType()){
+    case CIEC_ANY::e_BOOL:
+      mHandle->get(IN_X());
+      break;
+    case CIEC_ANY::e_BYTE:
       mHandle->get(IN_B());
-  } else if(mHandle->is(CIEC_ANY::e_WORD)) {
-    mHandle->get(IN_W());
-  } else if(mHandle->is(CIEC_ANY::e_DWORD)) {
-    mHandle->get(IN_D());
-  } else if(mHandle->is(CIEC_ANY::e_LWORD)) {
-    mHandle->get(IN_L());
-  } else if(mHandle->is(CIEC_ANY::e_Max)) {
-    return true; //it has no "IN" ...
-  } else {
-    return false;
+      break;
+    case CIEC_ANY::e_WORD:
+      mHandle->get(IN_W());
+      break;
+    case CIEC_ANY::e_DWORD:
+      mHandle->get(IN_D());
+      break;
+    case CIEC_ANY::e_LWORD:
+      mHandle->get(IN_L());
+      break;
+    case CIEC_ANY::e_Max:
+      // we are an event only IO FB
+      return true; //it has no "IN" ...
+    default:
+      return false;
   }
 
   return true;
@@ -123,20 +132,27 @@ bool ProcessInterface::write() {
     return false;
   }
 
-  if(mHandle->is(CIEC_ANY::e_BOOL)) {
-    mHandle->set(OUT_X());
-  } else if(mHandle->is(CIEC_ANY::e_BYTE)) {
+  switch(mHandle->getIOHandleDataType()){
+    case CIEC_ANY::e_BOOL:
+      mHandle->set(OUT_X());
+      break;
+    case CIEC_ANY::e_BYTE:
     mHandle->set(OUT_B());
-  } else if(mHandle->is(CIEC_ANY::e_WORD)) {
+      break;
+    case CIEC_ANY::e_WORD:
     mHandle->set(OUT_W());
-  } else if(mHandle->is(CIEC_ANY::e_DWORD)) {
+      break;
+    case CIEC_ANY::e_DWORD:
     mHandle->set(OUT_D());
-  } else if(mHandle->is(CIEC_ANY::e_LWORD)) {
+      break;
+    case CIEC_ANY::e_LWORD:
     mHandle->set(OUT_L());
-  } else if(mHandle->is(CIEC_ANY::e_Max)) { //not yet possible.
-    return true; //it has no "OUT" ...
-  } else {
-    return false;
+      break;
+    case CIEC_ANY::e_Max:
+      // we are an event only IO FB
+      return true; //it has no "OUT" ...
+    default:
+      return false;
   }
 
   return true;
@@ -152,13 +168,13 @@ void ProcessInterface::onHandle(IOHandle* paHandle) {
 
     IOObserver::onHandle(paHandle);
 
-    if(!paHandle->is(mType)) {
-      STATUS() = CIEC_STRING(scmMappedWrongDataType);
+    if(paHandle->getIOHandleDataType() != mType) {
+      STATUS() = scmMappedWrongDataType;
       return;
     }
 
-    if(!paHandle->is(mDirection)) {
-      STATUS() = CIEC_STRING(mDirection == IOMapper::In ? scmMappedWrongDirectionInput : scmMappedWrongDirectionOutput);
+    if(paHandle->getDirection() != mDirection) {
+      STATUS() = mDirection == IOMapper::In ? scmMappedWrongDirectionInput : scmMappedWrongDirectionOutput;
       return;
     }
 
@@ -166,7 +182,7 @@ void ProcessInterface::onHandle(IOHandle* paHandle) {
       setEventChainExecutor(mInvokingExecEnv);
     }
 
-    STATUS() = CIEC_STRING(scmOK);
+    STATUS() = scmOK;
     mIsReady = true;
   }
 
@@ -184,7 +200,7 @@ void ProcessInterface::dropHandle() {
   IOObserver::dropHandle();
 
   QO() = CIEC_BOOL(false);
-  STATUS() = CIEC_STRING(scmWaitingForHandle);
+  STATUS() = scmWaitingForHandle;
   mIsReady = CIEC_BOOL(false);
 }
 

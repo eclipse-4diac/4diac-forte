@@ -136,7 +136,7 @@ void WagoDeviceController::runLoop() {
 
 void WagoDeviceController::addSlaveHandle(int, forte::core::io::IOHandle* paHandle) {
   CCriticalRegion criticalRegion(mHandleMutex);
-  paHandle->is(forte::core::io::IOMapper::In) ? mInputHandles.pushBack(paHandle) : mOutputHandles.pushBack(paHandle);
+  paHandle->isInput() ? mInputHandles.pushBack(paHandle) : mOutputHandles.pushBack(paHandle);
 }
 
 void WagoDeviceController::dropSlaveHandles(int) {

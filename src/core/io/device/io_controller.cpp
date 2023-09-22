@@ -60,10 +60,15 @@ void IODeviceController::addHandle(HandleDescriptor *paHandleDescriptor) {
     return;
   }
 
-  if(handle->is(IOMapper::In)) {
-    addHandle(&mInputHandles, paHandleDescriptor->mId, handle);
-  } else if(handle->is(IOMapper::Out)) {
-    addHandle(&mOutputHandles, paHandleDescriptor->mId, handle);
+  switch(handle->getDirection()){
+    case IOMapper::In:
+      addHandle(&mInputHandles, paHandleDescriptor->mId, handle);
+      break;
+    case IOMapper::Out:
+      addHandle(&mOutputHandles, paHandleDescriptor->mId, handle);
+      break;
+    default:
+      break;
   }
 }
 
