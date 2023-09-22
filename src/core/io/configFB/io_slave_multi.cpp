@@ -35,7 +35,7 @@ IOConfigFBMultiSlave::~IOConfigFBMultiSlave() {
   delete[] mSlaveConfigurationIOIsDefault;
 }
 
-void IOConfigFBMultiSlave::executeEvent(TEventID paEIID) {
+void IOConfigFBMultiSlave::executeEvent(TEventID paEIID, CEventChainExecutionThread * const paECET) {
   if(BusAdapterIn().INIT() == paEIID) {
     if(BusAdapterIn().QI() == true) {
       // Handle initialization event
@@ -63,12 +63,12 @@ void IOConfigFBMultiSlave::executeEvent(TEventID paEIID) {
           }
         }
 
-        sendAdapterEvent(scmBusAdapterOutAdpNum, IOConfigFBMultiAdapter::scmEventINITID);
-        sendOutputEvent(scmEventINDID);
+        sendAdapterEvent(scmBusAdapterOutAdpNum, IOConfigFBMultiAdapter::scmEventINITID, paECET);
+        sendOutputEvent(scmEventINDID, paECET);
       } else {
         // Send confirmation of init
         BusAdapterIn().QO() = QO();
-        sendAdapterEvent(scmBusAdapterInAdpNum, IOConfigFBMultiAdapter::scmEventINITOID);
+        sendAdapterEvent(scmBusAdapterInAdpNum, IOConfigFBMultiAdapter::scmEventINITOID, paECET);
       }
     } else {
       deInit();
@@ -80,18 +80,18 @@ void IOConfigFBMultiSlave::executeEvent(TEventID paEIID) {
         // DeInit next slave
         BusAdapterOut().QI() = BusAdapterIn().QI();
 
-        sendAdapterEvent(scmBusAdapterOutAdpNum, IOConfigFBMultiAdapter::scmEventINITID);
-        sendOutputEvent(scmEventINDID);
+        sendAdapterEvent(scmBusAdapterOutAdpNum, IOConfigFBMultiAdapter::scmEventINITID, paECET);
+        sendOutputEvent(scmEventINDID, paECET);
       } else {
         // Send confirmation of deInit
         BusAdapterIn().QO() = QO();
-        sendAdapterEvent(scmBusAdapterInAdpNum, IOConfigFBMultiAdapter::scmEventINITOID);
+        sendAdapterEvent(scmBusAdapterInAdpNum, IOConfigFBMultiAdapter::scmEventINITOID, paECET);
       }
     }
   } else if(BusAdapterOut().INITO() == paEIID) {
     // Forward confirmation of initialization
     BusAdapterIn().QO() = func_AND(BusAdapterOut().QO(), QO());
-    sendAdapterEvent(scmBusAdapterInAdpNum, IOConfigFBMultiAdapter::scmEventINITOID);
+    sendAdapterEvent(scmBusAdapterInAdpNum, IOConfigFBMultiAdapter::scmEventINITOID, paECET);
   }
 
   if(scmEventMAPID == paEIID) {
@@ -108,7 +108,7 @@ void IOConfigFBMultiSlave::executeEvent(TEventID paEIID) {
       QO() = CIEC_BOOL(false);
     }
 
-    sendOutputEvent(scmEventMAPOID);
+    sendOutputEvent(scmEventMAPOID, paECET);
   }
 }
 

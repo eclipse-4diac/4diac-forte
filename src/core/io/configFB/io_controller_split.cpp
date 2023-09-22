@@ -39,11 +39,11 @@ IOConfigFBSplitController* IOConfigFBSplitController::getControllerById(TForteUI
   return nullptr;
 }
 
-void IOConfigFBSplitController::onStartup() {
+void IOConfigFBSplitController::onStartup(CEventChainExecutionThread * const paECET) {
   mSplitIterator = 0;
 
   if(!scmSplitAdapterNum) {
-    return IOConfigFBController::onStartup();
+    return IOConfigFBController::onStartup(paECET);
   }
 
   IOConfigFBSplitAdapter *cur = static_cast<IOConfigFBSplitAdapter*>(mAdapters[scmSplitAdapter[mSplitIterator]]);
@@ -52,7 +52,7 @@ void IOConfigFBSplitController::onStartup() {
     mSplitIterator++;
 
     if(mSplitIterator == scmSplitAdapterNum) {
-      return IOConfigFBController::onStartup();
+      return IOConfigFBController::onStartup(paECET);
     }
 
     cur = static_cast<IOConfigFBSplitAdapter*>(mAdapters[scmSplitAdapter[mSplitIterator]]);
@@ -60,14 +60,14 @@ void IOConfigFBSplitController::onStartup() {
 
   cur->MasterId() = CIEC_UINT(mId);
   cur->QI() = CIEC_BOOL(true);
-  sendAdapterEvent(scmSplitAdapter[mSplitIterator], IOConfigFBSplitAdapter::scmEventINITID);
+  sendAdapterEvent(scmSplitAdapter[mSplitIterator], IOConfigFBSplitAdapter::scmEventINITID, paECET);
 }
 
-void IOConfigFBSplitController::onStop() {
+void IOConfigFBSplitController::onStop(CEventChainExecutionThread * const paECET) {
   mSplitIterator = 0;
 
   if(!scmSplitAdapterNum) {
-    return IOConfigFBController::onStop();
+    return IOConfigFBController::onStop(paECET);
   }
 
   IOConfigFBSplitAdapter *cur = static_cast<IOConfigFBSplitAdapter*>(mAdapters[scmSplitAdapter[mSplitIterator]]);
@@ -76,18 +76,18 @@ void IOConfigFBSplitController::onStop() {
     mSplitIterator++;
 
     if(mSplitIterator == scmSplitAdapterNum) {
-      return IOConfigFBController::onStop();
+      return IOConfigFBController::onStop(paECET);
     }
 
     cur = static_cast<IOConfigFBSplitAdapter*>(mAdapters[scmSplitAdapter[mSplitIterator]]);
   }
 
   cur->QI() = CIEC_BOOL(false);
-  sendAdapterEvent(scmSplitAdapter[mSplitIterator], IOConfigFBSplitAdapter::scmEventINITID);
+  sendAdapterEvent(scmSplitAdapter[mSplitIterator], IOConfigFBSplitAdapter::scmEventINITID, paECET);
 }
 
-void IOConfigFBSplitController::executeEvent(TEventID paEIID) {
-  IOConfigFBController::executeEvent(paEIID);
+void IOConfigFBSplitController::executeEvent(TEventID paEIID, CEventChainExecutionThread * const paECET) {
+  IOConfigFBController::executeEvent(paEIID, paECET);
 
   if(mSplitIterator < scmSplitAdapterNum) {
     IOConfigFBSplitAdapter *cur = static_cast<IOConfigFBSplitAdapter*>(mAdapters[scmSplitAdapter[mSplitIterator]]);
@@ -100,12 +100,12 @@ void IOConfigFBSplitController::executeEvent(TEventID paEIID) {
       if(mSplitIterator == scmSplitAdapterNum || (cur->QI() && !cur->QO())) {
         if(cur->QI() == true) {
           if(cur->QO() == true) {
-            IOConfigFBController::onStartup();
+            IOConfigFBController::onStartup(paECET);
           } else {
-            started(scmFailedToInitParts);
+            started(paECET, scmFailedToInitParts);
           }
         } else {
-          IOConfigFBController::onStop();
+          IOConfigFBController::onStop(paECET);
         }
       } else {
         IOConfigFBSplitAdapter *next = static_cast<IOConfigFBSplitAdapter*>(mAdapters[scmSplitAdapter[mSplitIterator]]);
@@ -115,9 +115,9 @@ void IOConfigFBSplitController::executeEvent(TEventID paEIID) {
 
           if(mSplitIterator == scmSplitAdapterNum) {
             if(cur->QO() == true) {
-              return IOConfigFBController::onStartup();
+              return IOConfigFBController::onStartup(paECET);
             } else {
-              return IOConfigFBController::onStop();
+              return IOConfigFBController::onStop(paECET);
             }
           }
 
@@ -127,7 +127,7 @@ void IOConfigFBSplitController::executeEvent(TEventID paEIID) {
         next->MasterId() = CIEC_UINT(mId);
         next->QI() = cur->QI();
 
-        sendAdapterEvent(scmSplitAdapter[mSplitIterator], IOConfigFBSplitAdapter::scmEventINITID);
+        sendAdapterEvent(scmSplitAdapter[mSplitIterator], IOConfigFBSplitAdapter::scmEventINITID, paECET);
       }
     }
   }
