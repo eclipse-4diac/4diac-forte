@@ -19,8 +19,8 @@
 #include <forte_bool.h>
 #include <forte_uint.h>
 
-class EBBusAdapter: public forte::core::io::IOConfigFBMultiAdapter {
-DECLARE_ADAPTER_TYPE(EBBusAdapter)
+class EmbrickBusAdapter: public forte::core::io::IOConfigFBMultiAdapter {
+DECLARE_ADAPTER_TYPE(EmbrickBusAdapter)
 
 private:
 private:
@@ -49,14 +49,14 @@ private:
   static const SFBInterfaceSpec scmFBInterfaceSpecPlug;
 
 public:
-  ADAPTER_CTOR_FOR_IO_MULTI(EBBusAdapter){
+  ADAPTER_CTOR_FOR_IO_MULTI(EmbrickBusAdapter){
 };
 
 private:
   static const TForteUInt8 scmSlaveConfigurationIO[];
   static const TForteUInt8 scmSlaveConfigurationIONum;
 
-  ~EBBusAdapter() override = default;
+  ~EmbrickBusAdapter() override = default;
 
 };
 

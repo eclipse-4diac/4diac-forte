@@ -11,9 +11,9 @@
  *   Jose Cabral - Cleaning of namespaces
  *******************************************************************************/
 
-#include "Slave2301.h"
+#include "EBSlave2301.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "Slave2301_gen.cpp"
+#include "EBSlave2301_gen.cpp"
 #endif
 
 #include "../handler/bus.h"

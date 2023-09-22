@@ -17,7 +17,7 @@
 #include <funcbloc.h>
 #include <forte_bool.h>
 #include <forte_wstring.h>
-#include "BusAdapter.h"
+#include "EBBusAdapter.h"
 #include "Slave.h"
 
 class EmbrickSlave2181: public EmbrickSlave {

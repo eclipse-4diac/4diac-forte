@@ -11,9 +11,9 @@
  *   Jose Cabral - Cleaning of namespaces
  *******************************************************************************/
 
-#include "BusAdapter.h"
+#include "EBBusAdapter.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "BusAdapter_gen.cpp"
+#include "EBBusAdapter_gen.cpp"
 #endif
 
 DEFINE_ADAPTER_TYPE(EmbrickBusAdapter, g_nStringIdEBBusAdapter)

@@ -27,9 +27,9 @@ forte_add_sourcefile_hcpp(handler/spi handler/pin handler/bus)
 forte_add_sourcefile_hcpp(slave/slave slave/handle)
 forte_add_sourcefile_hcpp(slave/handles/bit slave/handles/analog slave/handles/analog10)
 
-forte_add_sourcefile_hcpp(types/BusAdapter)
-forte_add_sourcefile_hcpp(types/Master)
-forte_add_sourcefile_hcpp(types/Slave types/Slave2181 types/Slave2301)
+forte_add_sourcefile_hcpp(types/EBBusAdapter)
+forte_add_sourcefile_hcpp(types/EBMaster)
+forte_add_sourcefile_hcpp(types/Slave types/EBSlave2181 types/EBSlave2301)
 
 endif(FORTE_IO_EMBRICK)
 endif("${FORTE_ARCHITECTURE}" STREQUAL "Posix")

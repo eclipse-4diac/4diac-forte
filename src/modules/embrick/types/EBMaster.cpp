@@ -11,9 +11,9 @@
  *   Jose Cabral - Cleaning of namespaces
  *******************************************************************************/
 
-#include "Master.h"
+#include "EBMaster.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "Master_gen.cpp"
+#include "EBMaster_gen.cpp"
 #endif
 
 DEFINE_FIRMWARE_FB(EmbrickMaster, g_nStringIdEBMaster)

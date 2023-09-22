@@ -11,48 +11,41 @@
  *   Jose Cabral - Cleaning of namespaces
  *******************************************************************************/
 
-#ifndef SRC_MODULES_EMBRICK_TYPES_SLAVE2301_H_
-#define SRC_MODULES_EMBRICK_TYPES_SLAVE2301_H_
+#ifndef SRC_MODULES_EMBRICK_TYPES_MASTER_H_
+#define SRC_MODULES_EMBRICK_TYPES_MASTER_H_
 
-#include <funcbloc.h>
 #include <forte_bool.h>
 #include <forte_wstring.h>
-#include "BusAdapter.h"
-#include "Slave.h"
+#include <devlog.h>
+#include <handler/bus.h>
+#include "../../../core/io/configFB/io_master_multi.h"
+#include "EBBusAdapter.h"
 
-class EmbrickSlave2301: public EmbrickSlave {
-DECLARE_FIRMWARE_FB(EmbrickSlave2301)
+class EmbrickMaster: public forte::core::io::IOConfigFBMultiMaster {
+DECLARE_FIRMWARE_FB(EmbrickMaster)
 
 private:
   static const CStringDictionary::TStringId scmDataInputNames[];
   static const CStringDictionary::TStringId scmDataInputTypeIds[];
 
-  CIEC_WSTRING &Relay_1() {
-    return *static_cast<CIEC_WSTRING*>(getDI(1));
+  CIEC_UINT &BusInterface() {
+    return *static_cast<CIEC_UINT*>(getDI(1));
   }
 
-  CIEC_WSTRING &Relay_2() {
-    return *static_cast<CIEC_WSTRING*>(getDI(2));
+  CIEC_UINT &BusSelectPin() {
+    return *static_cast<CIEC_UINT*>(getDI(2));
   }
 
-  CIEC_WSTRING &Relay_3() {
-    return *static_cast<CIEC_WSTRING*>(getDI(3));
+  CIEC_UDINT &BusInitSpeed() {
+    return *static_cast<CIEC_UDINT*>(getDI(3));
   }
 
-  CIEC_WSTRING &Relay_4() {
-    return *static_cast<CIEC_WSTRING*>(getDI(4));
+  CIEC_UDINT &BusLoopSpeed() {
+    return *static_cast<CIEC_UDINT*>(getDI(4));
   }
 
-  CIEC_WSTRING &Relay_5() {
-    return *static_cast<CIEC_WSTRING*>(getDI(5));
-  }
-
-  CIEC_WSTRING &Relay_6() {
-    return *static_cast<CIEC_WSTRING*>(getDI(6));
-  }
-
-  CIEC_UINT &UpdateInterval() {
-    return *static_cast<CIEC_UINT*>(getDI(7));
+  CIEC_UINT &SlaveUpdateInterval() {
+    return *static_cast<CIEC_UINT*>(getDI(5));
   }
 
   static const CStringDictionary::TStringId scmDataOutputNames[];
@@ -68,20 +61,27 @@ private:
 
   static const SAdapterInstanceDef scmAdapterInstances[];
 
+  EmbrickBusAdapter& BusAdapterOut() {
+    return (*static_cast<EmbrickBusAdapter*>(mAdapters[0]));
+  }
+
+  static const int scmBusAdapterAdpNum = 0;
   static const SFBInterfaceSpec scmFBInterfaceSpec;
 
-  static const TForteUInt8 scmSlaveConfigurationIO[];
-  static const TForteUInt8 scmSlaveConfigurationIONum;
+  virtual void setInitialValues();
 
-  virtual void initHandles();
+protected:
+  forte::core::io::IODeviceController* createDeviceController(CDeviceExecution& paDeviceExecution);
+
+  void setConfig();
+
+  virtual void onStartup();
 
 public:
-  FUNCTION_BLOCK_CTOR_FOR_IO_MULTI_SLAVE(EmbrickSlave2301, EmbrickSlave, EmbrickSlaveHandler::G_2RelNo4RelCo){
+  FUNCTION_BLOCK_CTOR_WITH_BASE_CLASS(EmbrickMaster, forte::core::io::IOConfigFBMultiMaster){
+  }
 };
 
-~EmbrickSlave2301() override = default;
-
-};
 
 #endif //close the ifdef sequence from the beginning of the file
 
