@@ -11,65 +11,49 @@
  *   Jose Cabral - Cleaning of namespaces
  *******************************************************************************/
 
-#ifndef SRC_MODULES_EMBRICK_TYPES_MASTER_H_
-#define SRC_MODULES_EMBRICK_TYPES_MASTER_H_
+#pragma once
 
-#include <forte_bool.h>
-#include <forte_wstring.h>
-#include <devlog.h>
+#include "funcbloc.h"
+#include "forte_bool.h"
+#include "forte_uint.h"
+#include "forte_udint.h"
+#include "forte_wstring.h"
+#include "iec61131_functions.h"
+#include "forte_array_common.h"
+#include "forte_array.h"
+#include "forte_array_fixed.h"
+#include "forte_array_variable.h"
+#include "EBBusAdapter.h"
 #include <handler/bus.h>
 #include "../../../core/io/configFB/io_master_multi.h"
-#include "EBBusAdapter.h"
 
-class FORTE_EBMaster: public forte::core::io::IOConfigFBMultiMaster {
-DECLARE_FIRMWARE_FB(FORTE_EBMaster)
+
+class FORTE_EBMaster final : public forte::core::io::IOConfigFBMultiMaster {
+  DECLARE_FIRMWARE_FB(FORTE_EBMaster)
 
 private:
   static const CStringDictionary::TStringId scmDataInputNames[];
   static const CStringDictionary::TStringId scmDataInputTypeIds[];
-
-  CIEC_UINT &BusInterface() {
-    return *static_cast<CIEC_UINT*>(getDI(1));
-  }
-
-  CIEC_UINT &BusSelectPin() {
-    return *static_cast<CIEC_UINT*>(getDI(2));
-  }
-
-  CIEC_UDINT &BusInitSpeed() {
-    return *static_cast<CIEC_UDINT*>(getDI(3));
-  }
-
-  CIEC_UDINT &BusLoopSpeed() {
-    return *static_cast<CIEC_UDINT*>(getDI(4));
-  }
-
-  CIEC_UINT &SlaveUpdateInterval() {
-    return *static_cast<CIEC_UINT*>(getDI(5));
-  }
-
   static const CStringDictionary::TStringId scmDataOutputNames[];
   static const CStringDictionary::TStringId scmDataOutputTypeIds[];
-
-  static const TForteInt16 scmEIWithIndexes[];
+  static const TEventID scmEventINITID = 0;
   static const TDataIOID scmEIWith[];
+  static const TForteInt16 scmEIWithIndexes[];
   static const CStringDictionary::TStringId scmEventInputNames[];
-
-  static const TForteInt16 scmEOWithIndexes[];
+  static const TEventID scmEventINITOID = 0;
+  static const TEventID scmEventINDID = 1;
   static const TDataIOID scmEOWith[];
+  static const TForteInt16 scmEOWithIndexes[];
   static const CStringDictionary::TStringId scmEventOutputNames[];
-
+  static const int scmBusAdapterOutAdpNum = 0;
   static const SAdapterInstanceDef scmAdapterInstances[];
 
-  FORTE_EBBusAdapter& BusAdapterOut() {
-    return (*static_cast<EBBusAdapter*>(mAdapters[0]));
-  }
-
-  static const int scmBusAdapterAdpNum = 0;
   static const SFBInterfaceSpec scmFBInterfaceSpec;
 
-  virtual void setInitialValues();
-
+  void readInputData(TEventID paEIID) override;
+  void writeOutputData(TEventID paEIID) override;
+  void setInitialValues() override;
+  
 protected:
   forte::core::io::IODeviceController* createDeviceController(CDeviceExecution& paDeviceExecution);
 
@@ -78,10 +62,62 @@ protected:
   virtual void onStartup();
 
 public:
-  FUNCTION_BLOCK_CTOR_WITH_BASE_CLASS(FORTE_EBMaster, forte::core::io::IOConfigFBMultiMaster){
+  FORTE_EBMaster(CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
+
+  CIEC_BOOL var_QI;
+  CIEC_UINT var_BusInterface;
+  CIEC_UINT var_BusSelectPin;
+  CIEC_UDINT var_BusInitSpeed;
+  CIEC_UDINT var_BusLoopSpeed;
+  CIEC_UINT var_SlaveUpdateInterval;
+
+  CIEC_BOOL var_QO;
+  CIEC_WSTRING var_STATUS;
+
+  CIEC_BOOL var_conn_QO;
+  CIEC_WSTRING var_conn_STATUS;
+
+  CEventConnection conn_INITO;
+  CEventConnection conn_IND;
+
+  CDataConnection *conn_QI;
+  CDataConnection *conn_BusInterface;
+  CDataConnection *conn_BusSelectPin;
+  CDataConnection *conn_BusInitSpeed;
+  CDataConnection *conn_BusLoopSpeed;
+  CDataConnection *conn_SlaveUpdateInterval;
+
+  CDataConnection conn_QO;
+  CDataConnection conn_STATUS;
+
+  CIEC_ANY *getDI(size_t) override;
+  CIEC_ANY *getDO(size_t) override;
+  CIEC_ANY *getDIO(size_t) override;
+  FORTE_EBBusAdapter &var_BusAdapterOut() {
+    return *static_cast<FORTE_EBBusAdapter*>(mAdapters[0]);
+  };
+
+  CEventConnection *getEOConUnchecked(TPortId) override;
+  CDataConnection **getDIConUnchecked(TPortId) override;
+  CDataConnection *getDOConUnchecked(TPortId) override;
+  CInOutDataConnection **getDIOInConUnchecked(TPortId) override;
+  CInOutDataConnection *getDIOOutConUnchecked(TPortId) override;
+
+  void evt_INIT(const CIEC_BOOL &paQI, const CIEC_UINT &paBusInterface, const CIEC_UINT &paBusSelectPin, const CIEC_UDINT &paBusInitSpeed, const CIEC_UDINT &paBusLoopSpeed, const CIEC_UINT &paSlaveUpdateInterval, CIEC_BOOL &paQO, CIEC_WSTRING &paSTATUS) {
+    var_QI = paQI;
+    var_BusInterface = paBusInterface;
+    var_BusSelectPin = paBusSelectPin;
+    var_BusInitSpeed = paBusInitSpeed;
+    var_BusLoopSpeed = paBusLoopSpeed;
+    var_SlaveUpdateInterval = paSlaveUpdateInterval;
+    receiveInputEvent(scmEventINITID, nullptr);
+    paQO = var_QO;
+    paSTATUS = var_STATUS;
+  }
+
+  void operator()(const CIEC_BOOL &paQI, const CIEC_UINT &paBusInterface, const CIEC_UINT &paBusSelectPin, const CIEC_UDINT &paBusInitSpeed, const CIEC_UDINT &paBusLoopSpeed, const CIEC_UINT &paSlaveUpdateInterval, CIEC_BOOL &paQO, CIEC_WSTRING &paSTATUS) {
+    evt_INIT(paQI, paBusInterface, paBusSelectPin, paBusInitSpeed, paBusLoopSpeed, paSlaveUpdateInterval, paQO, paSTATUS);
   }
 };
 
-
-#endif //close the ifdef sequence from the beginning of the file
 
