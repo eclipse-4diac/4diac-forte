@@ -21,8 +21,8 @@
 #include "../../../core/io/configFB/io_master_multi.h"
 #include "EBBusAdapter.h"
 
-class EmbrickMaster: public forte::core::io::IOConfigFBMultiMaster {
-DECLARE_FIRMWARE_FB(EmbrickMaster)
+class FORTE_EBMaster: public forte::core::io::IOConfigFBMultiMaster {
+DECLARE_FIRMWARE_FB(FORTE_EBMaster)
 
 private:
   static const CStringDictionary::TStringId scmDataInputNames[];
@@ -61,8 +61,8 @@ private:
 
   static const SAdapterInstanceDef scmAdapterInstances[];
 
-  EmbrickBusAdapter& BusAdapterOut() {
-    return (*static_cast<EmbrickBusAdapter*>(mAdapters[0]));
+  FORTE_EBBusAdapter& BusAdapterOut() {
+    return (*static_cast<EBBusAdapter*>(mAdapters[0]));
   }
 
   static const int scmBusAdapterAdpNum = 0;
@@ -78,7 +78,7 @@ protected:
   virtual void onStartup();
 
 public:
-  FUNCTION_BLOCK_CTOR_WITH_BASE_CLASS(EmbrickMaster, forte::core::io::IOConfigFBMultiMaster){
+  FUNCTION_BLOCK_CTOR_WITH_BASE_CLASS(FORTE_EBMaster, forte::core::io::IOConfigFBMultiMaster){
   }
 };
 

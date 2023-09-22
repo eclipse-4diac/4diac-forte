@@ -20,8 +20,8 @@
 #include "EBBusAdapter.h"
 #include "Slave.h"
 
-class EmbrickSlave2301: public EmbrickSlave {
-DECLARE_FIRMWARE_FB(EmbrickSlave2301)
+class FORTE_EBSlave2301: public EmbrickSlave {
+DECLARE_FIRMWARE_FB(FORTE_EBSlave2301)
 
 private:
   static const CStringDictionary::TStringId scmDataInputNames[];
@@ -76,10 +76,10 @@ private:
   virtual void initHandles();
 
 public:
-  FUNCTION_BLOCK_CTOR_FOR_IO_MULTI_SLAVE(EmbrickSlave2301, EmbrickSlave, EmbrickSlaveHandler::G_2RelNo4RelCo){
+  FUNCTION_BLOCK_CTOR_FOR_IO_MULTI_SLAVE(FORTE_EBSlave2301, EmbrickSlave, EmbrickSlaveHandler::G_2RelNo4RelCo){
 };
 
-~EmbrickSlave2301() override = default;
+~FORTE_EBSlave2301() override = default;
 
 };
 

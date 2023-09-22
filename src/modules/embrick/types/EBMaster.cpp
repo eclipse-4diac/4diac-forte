@@ -16,37 +16,37 @@
 #include "EBMaster_gen.cpp"
 #endif
 
-DEFINE_FIRMWARE_FB(EmbrickMaster, g_nStringIdEBMaster)
+DEFINE_FIRMWARE_FB(FORTE_EBMaster, g_nStringIdEBMaster)
 
-const CStringDictionary::TStringId EmbrickMaster::scmDataInputNames[] = {
+const CStringDictionary::TStringId FORTE_EBMaster::scmDataInputNames[] = {
     g_nStringIdQI, g_nStringIdBusInterface, g_nStringIdBusSelectPin,
     g_nStringIdBusInitSpeed, g_nStringIdBusLoopSpeed,
     g_nStringIdSlaveUpdateInterval };
 
-const CStringDictionary::TStringId EmbrickMaster::scmDataInputTypeIds[] = {
+const CStringDictionary::TStringId FORTE_EBMaster::scmDataInputTypeIds[] = {
     g_nStringIdBOOL, g_nStringIdUINT, g_nStringIdUINT, g_nStringIdUDINT,
     g_nStringIdUDINT, g_nStringIdUINT };
 
-const CStringDictionary::TStringId EmbrickMaster::scmDataOutputNames[] = {
+const CStringDictionary::TStringId FORTE_EBMaster::scmDataOutputNames[] = {
     g_nStringIdQO, g_nStringIdSTATUS };
 
-const CStringDictionary::TStringId EmbrickMaster::scmDataOutputTypeIds[] = {
+const CStringDictionary::TStringId FORTE_EBMaster::scmDataOutputTypeIds[] = {
     g_nStringIdBOOL, g_nStringIdWSTRING };
 
-const TForteInt16 EmbrickMaster::scmEIWithIndexes[] = { 0 };
-const TDataIOID EmbrickMaster::scmEIWith[] = { 0, 3, 5, 4, 1, 2, scmWithListDelimiter };
-const CStringDictionary::TStringId EmbrickMaster::scmEventInputNames[] = {
+const TForteInt16 FORTE_EBMaster::scmEIWithIndexes[] = { 0 };
+const TDataIOID FORTE_EBMaster::scmEIWith[] = { 0, 3, 5, 4, 1, 2, scmWithListDelimiter };
+const CStringDictionary::TStringId FORTE_EBMaster::scmEventInputNames[] = {
     g_nStringIdINIT };
 
-const TDataIOID EmbrickMaster::scmEOWith[] = { 0, 1, scmWithListDelimiter, 0, 1, scmWithListDelimiter };
-const TForteInt16 EmbrickMaster::scmEOWithIndexes[] = { 0, 3, -1 };
-const CStringDictionary::TStringId EmbrickMaster::scmEventOutputNames[] = {
+const TDataIOID FORTE_EBMaster::scmEOWith[] = { 0, 1, scmWithListDelimiter, 0, 1, scmWithListDelimiter };
+const TForteInt16 FORTE_EBMaster::scmEOWithIndexes[] = { 0, 3, -1 };
+const CStringDictionary::TStringId FORTE_EBMaster::scmEventOutputNames[] = {
     g_nStringIdINITO, g_nStringIdIND };
 
-const SAdapterInstanceDef EmbrickMaster::scmAdapterInstances[] = { {
+const SAdapterInstanceDef FORTE_EBMaster::scmAdapterInstances[] = { {
     g_nStringIdEBBusAdapter, g_nStringIdBusAdapterOut, true } };
 
-const SFBInterfaceSpec EmbrickMaster::scmFBInterfaceSpec = { 1,
+const SFBInterfaceSpec FORTE_EBMaster::scmFBInterfaceSpec = { 1,
     scmEventInputNames, scmEIWith, scmEIWithIndexes, 2,
     scmEventOutputNames, scmEOWith, scmEOWithIndexes, 6,
     scmDataInputNames, scmDataInputTypeIds,
@@ -54,7 +54,7 @@ const SFBInterfaceSpec EmbrickMaster::scmFBInterfaceSpec = { 1,
     0, nullptr,
     1, scmAdapterInstances };
 
-void EmbrickMaster::setInitialValues() {
+void FORTE_EBMaster::setInitialValues() {
   BusInterface() = 1_UINT;
   BusSelectPin() = 49_UINT;
   BusInitSpeed() = 300000_UDINT;
@@ -63,11 +63,11 @@ void EmbrickMaster::setInitialValues() {
 }
 
 
-forte::core::io::IODeviceController* EmbrickMaster::createDeviceController(CDeviceExecution& paDeviceExecution) {
+forte::core::io::IODeviceController* FORTE_EBMaster::createDeviceController(CDeviceExecution& paDeviceExecution) {
   return new EmbrickBusHandler(paDeviceExecution);
 }
 
-void EmbrickMaster::setConfig() {
+void FORTE_EBMaster::setConfig() {
   EmbrickBusHandler::Config config;
   config.mBusInterface = BusInterface().operator TForteUInt16();
   config.mBusSelectPin = BusSelectPin().operator TForteUInt16();
@@ -76,7 +76,7 @@ void EmbrickMaster::setConfig() {
   getDeviceController()->setConfig(&config);
 }
 
-void EmbrickMaster::onStartup() {
+void FORTE_EBMaster::onStartup() {
   BusAdapterOut().UpdateInterval() = SlaveUpdateInterval();
 
   forte::core::io::IOConfigFBMultiMaster::onStartup();
