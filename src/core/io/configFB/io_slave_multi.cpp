@@ -15,11 +15,11 @@
 
 using namespace forte::core::io;
 
-const char *const IOConfigFBMultiSlave::scmOK = "OK";
-const char *const IOConfigFBMultiSlave::scmStopped = "Stopped";
-const char *const IOConfigFBMultiSlave::scmMasterNotFound = "Master not found";
-const char *const IOConfigFBMultiSlave::scmNotFound = "Module not found";
-const char *const IOConfigFBMultiSlave::scmIncorrectType = "Module type is incorrect";
+const CIEC_WSTRING IOConfigFBMultiSlave::scmOK("OK");
+const CIEC_WSTRING IOConfigFBMultiSlave::scmStopped("Stopped");
+const char* const IOConfigFBMultiSlave::scmMasterNotFound("Master not found");
+const char* const IOConfigFBMultiSlave::scmNotFound("Module not found");
+const char* const IOConfigFBMultiSlave::scmIncorrectType("Module type is incorrect");
 
 IOConfigFBMultiSlave::IOConfigFBMultiSlave(const TForteUInt8 *const paSlaveConfigurationIO, const TForteUInt8 paSlaveConfigurationIONum, int paType,
     CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId) :
@@ -43,7 +43,7 @@ void IOConfigFBMultiSlave::executeEvent(TEventID paEIID) {
       QO() = CIEC_BOOL(mInitialized = error == nullptr);
 
       if(mInitialized) {
-        STATUS() = CIEC_WSTRING(scmOK);
+        STATUS() = scmOK;
       } else {
         STATUS() = CIEC_WSTRING(error);
       }
@@ -73,8 +73,8 @@ void IOConfigFBMultiSlave::executeEvent(TEventID paEIID) {
     } else {
       deInit();
 
-      QO() = CIEC_BOOL(false);
-      STATUS() = CIEC_WSTRING(scmStopped);
+      QO() = false_BOOL;
+      STATUS() = scmStopped;
 
       if(BusAdapterOut().getPeer() != nullptr) {
         // DeInit next slave

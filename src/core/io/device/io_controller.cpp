@@ -56,7 +56,7 @@ void IODeviceController::addHandle(HandleDescriptor *paHandleDescriptor) {
   IOHandle* handle = initHandle(paHandleDescriptor);
 
   if(nullptr == handle) {
-    DEVLOG_WARNING("[IODeviceController] Failed to initialize handle '%s'. Check initHandle method.\n", paHandleDescriptor->mId.getValue());
+    DEVLOG_WARNING("[IODeviceController] Failed to initialize handle '%s'. Check initHandle method.\n", paHandleDescriptor->mId.c_str());
     return;
   }
 
@@ -144,7 +144,7 @@ bool IODeviceController::isHandleValueEqual(IOHandle*) {
   return true;
 }
 
-void IODeviceController::addHandle(THandleList* paList, CIEC_WSTRING const &paId, IOHandle* paHandle) {
+void IODeviceController::addHandle(THandleList* paList, std::string const &paId, IOHandle* paHandle) {
   if(!paId.empty() && IOMapper::getInstance().registerHandle(paId, paHandle)) {
     CCriticalRegion criticalRegion(mHandleMutex);
     paList->pushBack(paHandle);

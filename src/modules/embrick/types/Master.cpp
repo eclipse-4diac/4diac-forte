@@ -49,15 +49,17 @@ const SAdapterInstanceDef EmbrickMaster::scmAdapterInstances[] = { {
 const SFBInterfaceSpec EmbrickMaster::scmFBInterfaceSpec = { 1,
     scmEventInputNames, scmEIWith, scmEIWithIndexes, 2,
     scmEventOutputNames, scmEOWith, scmEOWithIndexes, 6,
-    scmDataInputNames, scmDataInputTypeIds, 2, scmDataOutputNames,
-    scmDataOutputTypeIds, 1, scmAdapterInstances };
+    scmDataInputNames, scmDataInputTypeIds,
+    2, scmDataOutputNames, scmDataOutputTypeIds,
+    0, nullptr,
+    1, scmAdapterInstances };
 
 void EmbrickMaster::setInitialValues() {
-  BusInterface() = 1;
-  BusSelectPin() = 49;
-  BusInitSpeed() = 300000;
-  BusLoopSpeed() = 700000;
-  SlaveUpdateInterval() = 25;
+  BusInterface() = 1_UINT;
+  BusSelectPin() = 49_UINT;
+  BusInitSpeed() = 300000_UDINT;
+  BusLoopSpeed() = 700000_UDINT;
+  SlaveUpdateInterval() = 25_UINT;
 }
 
 
@@ -67,10 +69,10 @@ forte::core::io::IODeviceController* EmbrickMaster::createDeviceController(CDevi
 
 void EmbrickMaster::setConfig() {
   EmbrickBusHandler::Config config;
-  config.mBusInterface = BusInterface();
-  config.mBusSelectPin = BusSelectPin();
-  config.mBusInitSpeed = BusInitSpeed();
-  config.mBusLoopSpeed = BusLoopSpeed();
+  config.mBusInterface = BusInterface().operator TForteUInt16();
+  config.mBusSelectPin = BusSelectPin().operator TForteUInt16();
+  config.mBusInitSpeed = BusInitSpeed().operator TForteUInt32();
+  config.mBusLoopSpeed = BusLoopSpeed().operator TForteUInt32();
   getDeviceController()->setConfig(&config);
 }
 

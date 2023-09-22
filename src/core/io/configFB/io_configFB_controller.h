@@ -163,10 +163,10 @@ namespace forte {
 
           bool mPerformRestart;
 
-          static const char * const scmOK;
-          static const char * const scmInitializing;
-          static const char * const scmFailedToInit;
-          static const char * const scmStopped;
+          static const CIEC_WSTRING scmOK;
+          static const CIEC_WSTRING scmInitializing;
+          static const CIEC_WSTRING scmFailedToInit;
+          static const CIEC_WSTRING scmStopped;
       };
 
     } //namespace IO

@@ -14,10 +14,10 @@
 #include "Slave.h"
 #include <io/mapper/io_mapper.h>
 
-const char * const EmbrickSlave::scmSlow = "Slow";
-const char * const EmbrickSlave::scmInterrupted = "Interrupted";
-const char * const EmbrickSlave::scmError = "Error";
-const char * const EmbrickSlave::scmUnknown = "Invalid status code";
+const CIEC_WSTRING EmbrickSlave::scmSlow("Slow");
+const CIEC_WSTRING EmbrickSlave::scmInterrupted("Interrupted");
+const CIEC_WSTRING EmbrickSlave::scmError("Error");
+const CIEC_WSTRING EmbrickSlave::scmUnknown("Invalid status code");
 
 EmbrickSlave::EmbrickSlave(const TForteUInt8* const paSlaveConfigurationIO, const TForteUInt8 paSlaveConfigurationIO_num, int paType, CResource *paSrcRes,
     const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId) :
@@ -37,7 +37,7 @@ const char* EmbrickSlave::init() {
   mSlave->mDelegate = this;
 
   EmbrickSlaveHandler::Config config;
-  config.mUpdateInterval = UpdateInterval();
+  config.mUpdateInterval = UpdateInterval().operator TForteUInt16();
   mSlave->setConfig(config);
 
   return 0;
@@ -78,7 +78,7 @@ void EmbrickSlave::onSlaveStatus(EmbrickSlaveHandler::SlaveStatus paStatus, Embr
 void EmbrickSlave::onSlaveDestroy() {
   deInit();
 
-  QO() = false;
+  QO() = false_BOOL;
   STATUS() = scmError;
 
 }

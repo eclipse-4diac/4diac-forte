@@ -53,10 +53,10 @@ class EmbrickSlave : public forte::core::io::IOConfigFBMultiSlave, public Embric
     const char* init();
     void deInit();
 
-    static const char * const scmSlow;
-    static const char * const scmInterrupted;
-    static const char * const scmError;
-    static const char * const scmUnknown;
+    static const CIEC_WSTRING scmSlow;
+    static const CIEC_WSTRING scmInterrupted;
+    static const CIEC_WSTRING scmError;
+    static const CIEC_WSTRING scmUnknown;
 };
 
 #endif /* SRC_MODULES_EMBRICK_TYPES_SLAVE_H_ */

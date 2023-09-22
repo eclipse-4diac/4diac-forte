@@ -24,7 +24,7 @@ class EmbrickPinHandler {
 
   protected:
     explicit EmbrickPinHandler(unsigned int paPin);
-    ~EmbrickPinHandler() override;
+    virtual ~EmbrickPinHandler();
 
     bool set(bool paState);
     bool enable() {
@@ -38,13 +38,13 @@ class EmbrickPinHandler {
     void deInit();
 
     bool hasError() {
-      return paError != 0;
+      return mError != 0;
     }
-    const char* paError;
+    const char* mError;
 
   private:
     std::string mPinStr;
-    std::fstream paStream;
+    std::fstream mStream;
 
     void fail(const char* paReason);
 

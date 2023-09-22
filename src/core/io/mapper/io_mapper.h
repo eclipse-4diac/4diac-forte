@@ -40,11 +40,11 @@ namespace forte {
             InOut
           };
 
-          bool registerHandle(CIEC_WSTRING const &paId, IOHandle* paHandle);
+          bool registerHandle(std::string const &paId, IOHandle* paHandle);
           void deregisterHandle(IOHandle* paHandle);
-          void deregisterHandle(CIEC_WSTRING const &paId);
+          void deregisterHandle(std::string const &paId);
 
-          bool registerObserver(CIEC_WSTRING const &paId, IOObserver* paObserver);
+          bool registerObserver(std::string const &paId, IOObserver* paObserver);
           void deregisterObserver(IOObserver* paObserver);
 
         private:

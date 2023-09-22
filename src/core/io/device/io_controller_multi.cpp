@@ -24,7 +24,7 @@ void IODeviceMultiController::addHandle(IODeviceController::HandleDescriptor *pa
   IOHandle* handle = initHandle(desc);
 
   if(nullptr == handle) {
-    DEVLOG_WARNING("[IODeviceMultiController] Failed to initialize handle '%s'. Check initHandle method.\n", desc->mId.getValue());
+    DEVLOG_WARNING("[IODeviceMultiController] Failed to initialize handle '%s'. Check initHandle method.\n", desc->mId.c_str());
     return;
   }
 

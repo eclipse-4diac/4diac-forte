@@ -34,7 +34,7 @@ void EmbrickBitSlaveHandle::set(const CIEC_ANY &paState) {
 
 void EmbrickBitSlaveHandle::get(CIEC_ANY &paState) {
   CCriticalRegion criticalRegion(*mUpdateMutex);
-  static_cast<CIEC_BOOL&>(paState) = (*(mBuffer + mOffset) & mMask) != 0;
+  static_cast<CIEC_BOOL&>(paState) = CIEC_BOOL((*(mBuffer + mOffset) & mMask) != 0);
 }
 
 bool EmbrickBitSlaveHandle::equal(unsigned char* paOldBuffer) {

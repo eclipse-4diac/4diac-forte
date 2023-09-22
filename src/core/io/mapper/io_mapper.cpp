@@ -27,27 +27,26 @@ IOMapper::IOMapper() = default;
 
 IOMapper::~IOMapper() = default;
 
-bool IOMapper::registerHandle(CIEC_WSTRING const &paId, IOHandle* paHandle) {
+bool IOMapper::registerHandle(std::string const &paId, IOHandle* paHandle) {
   CCriticalRegion criticalRegion(mSyncMutex);
-  std::string idStr(paId.getValue());
 
   // Check for duplicates
-  if(mHandles.find(idStr) != mHandles.end()) {
-    DEVLOG_WARNING("[IOMapper] Duplicated handle entry '%s'\n", paId.getValue());
+  if(mHandles.find(paId) != mHandles.end()) {
+    DEVLOG_WARNING("[IOMapper] Duplicated handle entry '%s'\n", paId.c_str());
     return false;
   }
 
   // Insert into handles list
-  mHandles.insert(std::make_pair(idStr, paHandle));
+  mHandles.insert(std::make_pair(paId, paHandle));
 
-  DEVLOG_DEBUG("[IOMapper] Register handle %s\n", paId.getValue());
+  DEVLOG_DEBUG("[IOMapper] Register handle %s\n", paId.c_str());
 
   // Check for existing observer
-  if(mObservers.find(idStr) != mObservers.end()) {
-    paHandle->onObserver(mObservers[idStr]);
-    mObservers[idStr]->onHandle(paHandle);
+  if(mObservers.find(paId) != mObservers.end()) {
+    paHandle->onObserver(mObservers[paId]);
+    mObservers[paId]->onHandle(paHandle);
 
-    DEVLOG_INFO("[IOMapper] Connected %s\n", paId.getValue());
+    DEVLOG_INFO("[IOMapper] Connected %s\n", paId.c_str());
   }
 
   return true;
@@ -72,47 +71,42 @@ void IOMapper::deregisterHandle(IOHandle* paHandle) {
   }
 }
 
-void IOMapper::deregisterHandle(CIEC_WSTRING const &paId) {
+void IOMapper::deregisterHandle(std::string const &paId) {
   CCriticalRegion criticalRegion(mSyncMutex);
 
-  for (THandleMap::iterator it = mHandles.begin(); it != mHandles.end(); ++it) {
-    if (it->first == paId.getValue()) {
-      if (mObservers.find(it->first) != mObservers.end()) {
-        it->second->dropObserver();
-        mObservers[it->first]->dropHandle();
-        DEVLOG_INFO("[IOMapper] Disconnected %s (lost handle)\n",
-                    it->first.data());
-      }
-
-      DEVLOG_DEBUG("[IOMapper] Deregister handle %s\n", it->first.data());
-
-      mHandles.erase(it);
-      break;
+  auto handleIt = mHandles.find(paId);
+  if(handleIt != mHandles.end()){
+    auto observerIt = mObservers.find(paId);
+    if(observerIt != mObservers.end()){
+      handleIt->second->dropObserver();
+      observerIt->second->dropHandle();
+      DEVLOG_INFO("[IOMapper] Disconnected %s (lost handle)\n", paId.c_str());
     }
+    DEVLOG_DEBUG("[IOMapper] Deregister handle %s\n", paId.c_str());
+    mHandles.erase(handleIt);
   }
 }
 
-bool IOMapper::registerObserver(CIEC_WSTRING const &paId, IOObserver* paObserver) {
+bool IOMapper::registerObserver(std::string const &paId, IOObserver* paObserver) {
   CCriticalRegion criticalRegion(mSyncMutex);
-  std::string idStr(paId.getValue());
 
   // Check for duplicates
-  if(mObservers.find(idStr) != mObservers.end()) {
-    DEVLOG_WARNING("[IOMapper]  Duplicated observer entry '%s'\n", paId.getValue());
+  if(mObservers.find(paId) != mObservers.end()) {
+    DEVLOG_WARNING("[IOMapper]  Duplicated observer entry '%s'\n", paId.c_str());
     return false;
   }
 
   // Insert into observer list
-  mObservers.insert(std::make_pair(idStr, paObserver));
+  mObservers.insert(std::make_pair(paId, paObserver));
 
-  DEVLOG_DEBUG("[IOMapper] Register observer %s\n", paId.getValue());
+  DEVLOG_DEBUG("[IOMapper] Register observer %s\n", paId.c_str());
 
   // Check for existing handle
-  if(mHandles.find(idStr) != mHandles.end()) {
-    mHandles[idStr]->onObserver(paObserver);
-    paObserver->onHandle(mHandles[idStr]);
-
-    DEVLOG_INFO("[IOMapper]  Connected %s\n", paId.getValue());
+  if(auto handleIt = mHandles.find(paId); handleIt != mHandles.end()) {
+    auto handle = handleIt->second;
+    handle->onObserver(paObserver);
+    paObserver->onHandle(handle);
+    DEVLOG_INFO("[IOMapper]  Connected %s\n", paId.c_str());
   }
 
   return true;

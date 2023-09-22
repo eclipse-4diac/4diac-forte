@@ -80,7 +80,7 @@ namespace forte {
 
           void initHandle(IODeviceController::HandleDescriptor *paHandleDescriptor);
 
-          static const char* const scmOK;
+          static const CIEC_WSTRING scmOK;
           static const char* const scmMasterNotFound;
 
           int mIndex;
@@ -100,7 +100,7 @@ namespace forte {
 
           const char* handleInitEvent();
 
-          static const char* const scmStopped;
+          static const CIEC_WSTRING scmStopped;
           static const char* const scmNotFound;
           static const char* const scmIncorrectType;
 

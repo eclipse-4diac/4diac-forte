@@ -19,10 +19,10 @@ using namespace forte::core::io;
 
 int IOConfigFBController::smMaxErrors = 5;
 
-const char * const IOConfigFBController::scmOK = "OK";
-const char * const IOConfigFBController::scmInitializing = "Waiting for initialization..";
-const char * const IOConfigFBController::scmFailedToInit = "Failed to initialize controller.";
-const char * const IOConfigFBController::scmStopped = "Stopped";
+const CIEC_WSTRING IOConfigFBController::scmOK("OK");
+const CIEC_WSTRING  IOConfigFBController::scmInitializing("Waiting for initialization..");
+const CIEC_WSTRING  IOConfigFBController::scmFailedToInit("Failed to initialize controller.");
+const CIEC_WSTRING  IOConfigFBController::scmStopped("Stopped");
 
 IOConfigFBController::IOConfigFBController(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId) :
     IOConfigFBBase(paSrcRes, paInterfaceSpec, paInstanceNameId), mStarting(false), mErrorCounter(0), mController(nullptr),
@@ -57,10 +57,11 @@ bool IOConfigFBController::handleNotification(IODeviceController::NotificationTy
       onError();
       if(mStarting) {
         if(nullptr == paAttachment) {
-          paAttachment = scmFailedToInit;
+          STATUS() = scmFailedToInit;
+        } else {
+          STATUS() = CIEC_WSTRING((const char*) paAttachment);
         }
 
-        STATUS() = CIEC_WSTRING((const char*) paAttachment);
         DEVLOG_ERROR("[IOConfigFBController] Failed to initialize controller. Reason: %s\n", STATUS().getValue());
       } else {
         STATUS() = CIEC_WSTRING((const char*) paAttachment);
@@ -116,7 +117,7 @@ bool IOConfigFBController::init(int paDelay) {
   mController->setInitDelay(paDelay);
 
   mStarting = true;
-  STATUS() = CIEC_WSTRING(scmInitializing);
+  STATUS() = scmInitializing;
 
   setConfig();
 
@@ -184,7 +185,7 @@ void IOConfigFBController::stopped() {
   mController = nullptr;
   mStarting = false;
 
-  STATUS() = CIEC_WSTRING(scmStopped);
+  STATUS() = scmStopped;
 
   if(mPerformRestart) {
     mPerformRestart = false;

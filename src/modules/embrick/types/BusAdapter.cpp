@@ -45,13 +45,17 @@ const SFBInterfaceSpec EmbrickBusAdapter::scmFBInterfaceSpecSocket = { 1,
     scmEventInputNames, scmEIWith, scmEIWithIndexes, 1,
     scmEventOutputNames, scmEOWith, scmEOWithIndexes, 1,
     scmDataInputNames, scmDataInputTypeIds, 4, scmDataOutputNames,
-    scmDataOutputTypeIds, 0, 0 };
+    scmDataOutputTypeIds,
+    0, nullptr,
+    0, nullptr };
 
 const SFBInterfaceSpec EmbrickBusAdapter::scmFBInterfaceSpecPlug = { 1,
     scmEventOutputNames, scmEOWith, scmEOWithIndexes, 1,
     scmEventInputNames, scmEIWith, scmEIWithIndexes, 4,
     scmDataOutputNames, scmDataOutputTypeIds, 1, scmDataInputNames,
-    scmDataInputTypeIds, 0, 0 };
+    scmDataInputTypeIds,
+    0, nullptr,
+    0, nullptr};
 
 const TForteUInt8 EmbrickBusAdapter::scmSlaveConfigurationIO[] = { 3 };
 const TForteUInt8 EmbrickBusAdapter::scmSlaveConfigurationIONum = 1;

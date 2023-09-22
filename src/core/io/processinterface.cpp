@@ -55,7 +55,7 @@ bool ProcessInterface::initialise(bool paIsInput) {
   deinitialise();
 
   // Register interface
-  if(!(mIsListening = IOMapper::getInstance().registerObserver(CIEC_WSTRING(getFullQualifiedInstanceName().c_str()), this))) {
+  if(!(mIsListening = IOMapper::getInstance().registerObserver(getFullQualifiedInstanceName(), this))) {
     STATUS() = scmFailedToRegister;
     return false;
   }

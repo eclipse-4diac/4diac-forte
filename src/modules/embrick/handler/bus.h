@@ -86,7 +86,7 @@ class EmbrickBusHandler : public forte::core::io::IODeviceMultiController {
         uint8_t mOffset;
         uint8_t mPosition;
 
-        HandleDescriptor(CIEC_WSTRING const &paId, forte::core::io::IOMapper::Direction paDirection, int paSlaveIndex, HandleType paType, uint8_t paOffset,
+        HandleDescriptor(std::string const &paId, forte::core::io::IOMapper::Direction paDirection, int paSlaveIndex, HandleType paType, uint8_t paOffset,
             uint8_t paPosition) :
             forte::core::io::IODeviceMultiController::HandleDescriptor(paId, paDirection, paSlaveIndex), mType(paType), mOffset(paOffset), mPosition(paPosition) {
 
