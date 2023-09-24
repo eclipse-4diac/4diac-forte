@@ -136,10 +136,6 @@ CIEC_ANY *FORTE_E_IMPULSE::getDO(const size_t paIndex) {
   return nullptr;
 }
 
-CIEC_ANY *FORTE_E_IMPULSE::getDIO(size_t) {
-  return nullptr;
-}
-
 CEventConnection *FORTE_E_IMPULSE::getEOConUnchecked(const TPortId paIndex) {
   switch(paIndex) {
     case 0: return &conn_CNF;
@@ -158,14 +154,6 @@ CDataConnection *FORTE_E_IMPULSE::getDOConUnchecked(const TPortId paIndex) {
   switch(paIndex) {
     case 0: return &conn_QO;
   }
-  return nullptr;
-}
-
-CInOutDataConnection **FORTE_E_IMPULSE::getDIOInConUnchecked(TPortId) {
-  return nullptr;
-}
-
-CInOutDataConnection *FORTE_E_IMPULSE::getDIOOutConUnchecked(TPortId) {
   return nullptr;
 }
 

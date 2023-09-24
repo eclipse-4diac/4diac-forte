@@ -135,10 +135,6 @@ CIEC_ANY *FORTE_QX::getDO(size_t paIndex) {
   return nullptr;
 }
 
-CIEC_ANY *FORTE_QX::getDIO(size_t) {
-  return nullptr;
-}
-
 CEventConnection *FORTE_QX::getEOConUnchecked(TPortId paIndex) {
   switch(paIndex) {
     case 0: return &conn_INITO;
@@ -163,13 +159,4 @@ CDataConnection *FORTE_QX::getDOConUnchecked(TPortId paIndex) {
   }
   return nullptr;
 }
-
-CInOutDataConnection **FORTE_QX::getDIOInConUnchecked(TPortId) {
-  return nullptr;
-}
-
-CInOutDataConnection *FORTE_QX::getDIOOutConUnchecked(TPortId) {
-  return nullptr;
-}
-
 

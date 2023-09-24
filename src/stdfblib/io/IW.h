@@ -94,12 +94,9 @@ public:
   CDataConnection conn_IN;
   CIEC_ANY *getDI(size_t) override;
   CIEC_ANY *getDO(size_t) override;
-  CIEC_ANY *getDIO(size_t) override;
   CEventConnection *getEOConUnchecked(TPortId) override;
   CDataConnection **getDIConUnchecked(TPortId) override;
   CDataConnection *getDOConUnchecked(TPortId) override;
-  CInOutDataConnection **getDIOInConUnchecked(TPortId) override;
-  CInOutDataConnection *getDIOOutConUnchecked(TPortId) override;
   void evt_INIT(const CIEC_BOOL &pa_QI, const CIEC_STRING &pa_PARAMS, CIEC_BOOL &pa_QO, CIEC_STRING &pa_STATUS, CIEC_WORD &pa_IN) {
     var_QI = pa_QI;
     var_PARAMS = pa_PARAMS;

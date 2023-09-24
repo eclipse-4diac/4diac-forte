@@ -113,7 +113,6 @@ public:
 
   CIEC_ANY *getDI(size_t) override;
   CIEC_ANY *getDO(size_t) override;
-  CIEC_ANY *getDIO(size_t) override;
   FORTE_EBBusAdapter &var_BusAdapterIn() {
     return *static_cast<FORTE_EBBusAdapter*>(mAdapters[0]);
   };
@@ -125,8 +124,6 @@ public:
   CEventConnection *getEOConUnchecked(TPortId) override;
   CDataConnection **getDIConUnchecked(TPortId) override;
   CDataConnection *getDOConUnchecked(TPortId) override;
-  CInOutDataConnection **getDIOInConUnchecked(TPortId) override;
-  CInOutDataConnection *getDIOOutConUnchecked(TPortId) override;
 
   void evt_MAP(const CIEC_BOOL &paQI, const CIEC_WSTRING &paDigitalInput_1, const CIEC_WSTRING &paDigitalInput_2, const CIEC_WSTRING &paDigitalInput_3, const CIEC_WSTRING &paDigitalInput_4, const CIEC_WSTRING &paDigitalInput_5, const CIEC_WSTRING &paDigitalInput_6, const CIEC_WSTRING &paDigitalInput_7, const CIEC_WSTRING &paDigitalInput_8, const CIEC_WSTRING &paDigitalOutput_1, const CIEC_WSTRING &paDigitalOutput_2, const CIEC_WSTRING &paDigitalOutput_3, const CIEC_WSTRING &paDigitalOutput_4, const CIEC_WSTRING &paDigitalOutput_5, const CIEC_WSTRING &paDigitalOutput_6, const CIEC_WSTRING &paDigitalOutput_7, const CIEC_WSTRING &paDigitalOutput_8, const CIEC_UINT &paUpdateInterval, CIEC_BOOL &paQO, CIEC_WSTRING &paSTATUS) {
     var_QI = paQI;

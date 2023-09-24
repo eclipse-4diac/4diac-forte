@@ -135,10 +135,6 @@ CIEC_ANY *FORTE_EC_STOP_ELEM::getDO(size_t paIndex) {
   return nullptr;
 }
 
-CIEC_ANY *FORTE_EC_STOP_ELEM::getDIO(size_t) {
-  return nullptr;
-}
-
 CEventConnection *FORTE_EC_STOP_ELEM::getEOConUnchecked(TPortId paIndex) {
   switch(paIndex) {
     case 0: return &conn_CNF;
@@ -162,13 +158,4 @@ CDataConnection *FORTE_EC_STOP_ELEM::getDOConUnchecked(TPortId paIndex) {
   }
   return nullptr;
 }
-
-CInOutDataConnection **FORTE_EC_STOP_ELEM::getDIOInConUnchecked(TPortId) {
-  return nullptr;
-}
-
-CInOutDataConnection *FORTE_EC_STOP_ELEM::getDIOOutConUnchecked(TPortId) {
-  return nullptr;
-}
-
 

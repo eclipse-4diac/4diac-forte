@@ -220,10 +220,6 @@ CIEC_ANY *FORTE_RT_E_DEMUX::getDO(size_t paIndex) {
   return nullptr;
 }
 
-CIEC_ANY *FORTE_RT_E_DEMUX::getDIO(size_t) {
-  return nullptr;
-}
-
 CEventConnection *FORTE_RT_E_DEMUX::getEOConUnchecked(TPortId paIndex) {
   switch(paIndex) {
     case 0: return &conn_INITO;
@@ -256,14 +252,6 @@ CDataConnection *FORTE_RT_E_DEMUX::getDOConUnchecked(TPortId paIndex) {
   switch(paIndex) {
     case 0: return &conn_QO;
   }
-  return nullptr;
-}
-
-CInOutDataConnection **FORTE_RT_E_DEMUX::getDIOInConUnchecked(TPortId) {
-  return nullptr;
-}
-
-CInOutDataConnection *FORTE_RT_E_DEMUX::getDIOOutConUnchecked(TPortId) {
   return nullptr;
 }
 

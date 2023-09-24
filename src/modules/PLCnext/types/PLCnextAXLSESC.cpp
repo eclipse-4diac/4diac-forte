@@ -106,10 +106,6 @@ CIEC_ANY *FORTE_PLCnextAXLSESC::getDO(const size_t paIndex) {
   return nullptr;
 }
 
-CIEC_ANY *FORTE_PLCnextAXLSESC::getDIO(size_t) {
-  return nullptr;
-}
-
 CEventConnection *FORTE_PLCnextAXLSESC::getEOConUnchecked(const TPortId paIndex) {
   switch(paIndex) {
     case 0: return &conn_INITO;
@@ -130,14 +126,6 @@ CDataConnection *FORTE_PLCnextAXLSESC::getDOConUnchecked(const TPortId paIndex) 
     case 0: return &conn_QO;
     case 1: return &conn_STATUS;
   }
-  return nullptr;
-}
-
-CInOutDataConnection **FORTE_PLCnextAXLSESC::getDIOInConUnchecked(TPortId) {
-  return nullptr;
-}
-
-CInOutDataConnection *FORTE_PLCnextAXLSESC::getDIOOutConUnchecked(TPortId) {
   return nullptr;
 }
 

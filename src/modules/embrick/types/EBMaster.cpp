@@ -131,10 +131,6 @@ CIEC_ANY *FORTE_EBMaster::getDO(const size_t paIndex) {
   return nullptr;
 }
 
-CIEC_ANY *FORTE_EBMaster::getDIO(size_t) {
-  return nullptr;
-}
-
 CEventConnection *FORTE_EBMaster::getEOConUnchecked(const TPortId paIndex) {
   switch(paIndex) {
     case 0: return &conn_INITO;
@@ -160,14 +156,6 @@ CDataConnection *FORTE_EBMaster::getDOConUnchecked(const TPortId paIndex) {
     case 0: return &conn_QO;
     case 1: return &conn_STATUS;
   }
-  return nullptr;
-}
-
-CInOutDataConnection **FORTE_EBMaster::getDIOInConUnchecked(TPortId) {
-  return nullptr;
-}
-
-CInOutDataConnection *FORTE_EBMaster::getDIOOutConUnchecked(TPortId) {
   return nullptr;
 }
 

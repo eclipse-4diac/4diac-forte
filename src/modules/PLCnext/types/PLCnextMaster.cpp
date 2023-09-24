@@ -109,9 +109,6 @@ CIEC_ANY *FORTE_PLCnextMaster::getDO(const size_t paIndex) {
   return nullptr;
 }
 
-CIEC_ANY *FORTE_PLCnextMaster::getDIO(size_t) {
-  return nullptr;
-}
 
 CEventConnection *FORTE_PLCnextMaster::getEOConUnchecked(const TPortId paIndex) {
   switch(paIndex) {
@@ -134,14 +131,6 @@ CDataConnection *FORTE_PLCnextMaster::getDOConUnchecked(const TPortId paIndex) {
     case 0: return &conn_QO;
     case 1: return &conn_STATUS;
   }
-  return nullptr;
-}
-
-CInOutDataConnection **FORTE_PLCnextMaster::getDIOInConUnchecked(TPortId) {
-  return nullptr;
-}
-
-CInOutDataConnection *FORTE_PLCnextMaster::getDIOOutConUnchecked(TPortId) {
   return nullptr;
 }
 

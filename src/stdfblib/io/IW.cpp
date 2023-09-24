@@ -148,10 +148,6 @@ CIEC_ANY *FORTE_IW::getDO(size_t paIndex) {
   return nullptr;
 }
 
-CIEC_ANY *FORTE_IW::getDIO(size_t) {
-  return nullptr;
-}
-
 CEventConnection *FORTE_IW::getEOConUnchecked(TPortId paIndex) {
   switch(paIndex) {
     case 0: return &conn_INITO;
@@ -175,14 +171,6 @@ CDataConnection *FORTE_IW::getDOConUnchecked(TPortId paIndex) {
     case 1: return &conn_STATUS;
     case 2: return &conn_IN;
   }
-  return nullptr;
-}
-
-CInOutDataConnection **FORTE_IW::getDIOInConUnchecked(TPortId) {
-  return nullptr;
-}
-
-CInOutDataConnection *FORTE_IW::getDIOOutConUnchecked(TPortId) {
   return nullptr;
 }
 

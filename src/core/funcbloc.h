@@ -415,7 +415,7 @@ class CFunctionBlock {
      * @return pointer to the data output
      */
     virtual CIEC_ANY* getDIO(TPortId paDIONum) {
-      return mDIOs[paDIONum];
+      return nullptr;
     }
 
     const CIEC_ANY* getDIO(TPortId paDIONum) const {
@@ -603,7 +603,7 @@ class CFunctionBlock {
      * @return pointer to the data inout connection
      */
     virtual CInOutDataConnection **getDIOInConUnchecked(TPortId paDIONum) {
-      return mDIOConns + paDIONum;
+      return nullptr;
     }
 
     virtual CInOutDataConnection *getDIOOutConUnchecked(TPortId) {
@@ -656,10 +656,8 @@ class CFunctionBlock {
     CEventConnection *mEOConns; //!< A list of event connections pointers storing for each event output the event connection. If the output event is not connected the pointer is nullptr.
     CDataConnection **mDIConns; //!< A list of data connections pointers storing for each data input the data connection. If the data input is not connected the pointer is nullptr.
     CDataConnection *mDOConns; //!< A list of data connections pointers storing for each data output the data connection. If the data output is not connected the pointer is nullptr.
-    CInOutDataConnection **mDIOConns; //!< A list of inout data connections pointers storing for each data inout the data connection. If the data inout is not connected the pointer is nullptr.
     CIEC_ANY **mDIs; //!< A list of pointers to the data inputs. This allows to implement a general getDataInput()
     CIEC_ANY **mDOs; //!< A list of pointers to the data outputs. This allows to implement a general getDataOutput()
-    CIEC_ANY **mDIOs; //!< A list of pointers to the data outputs. This allows to implement a general getDataOutput()
     CEventChainExecutionThread *mInvokingExecEnv; //!< A pointer to the execution thread that invoked the FB. This value is stored here to reduce function parameters and reduce therefore stack usage.
     CAdapter **mAdapters; //!< A list of pointers to the adapters. This allows to implement a general getAdapter().
     void *mFBConnData; //!< Connection data buffer

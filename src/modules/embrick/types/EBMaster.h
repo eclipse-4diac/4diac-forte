@@ -92,7 +92,6 @@ public:
 
   CIEC_ANY *getDI(size_t) override;
   CIEC_ANY *getDO(size_t) override;
-  CIEC_ANY *getDIO(size_t) override;
   FORTE_EBBusAdapter &var_BusAdapterOut() {
     return *static_cast<FORTE_EBBusAdapter*>(mAdapters[0]);
   };
@@ -100,8 +99,6 @@ public:
   CEventConnection *getEOConUnchecked(TPortId) override;
   CDataConnection **getDIConUnchecked(TPortId) override;
   CDataConnection *getDOConUnchecked(TPortId) override;
-  CInOutDataConnection **getDIOInConUnchecked(TPortId) override;
-  CInOutDataConnection *getDIOOutConUnchecked(TPortId) override;
 
   void evt_INIT(const CIEC_BOOL &paQI, const CIEC_UINT &paBusInterface, const CIEC_UINT &paBusSelectPin, const CIEC_UDINT &paBusInitSpeed, const CIEC_UDINT &paBusLoopSpeed, const CIEC_UINT &paSlaveUpdateInterval, CIEC_BOOL &paQO, CIEC_WSTRING &paSTATUS) {
     var_QI = paQI;

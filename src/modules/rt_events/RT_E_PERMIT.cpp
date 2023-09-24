@@ -119,10 +119,6 @@ CIEC_ANY *FORTE_RT_E_PERMIT::getDO(size_t paIndex) {
   return nullptr;
 }
 
-CIEC_ANY *FORTE_RT_E_PERMIT::getDIO(size_t) {
-  return nullptr;
-}
-
 CEventConnection *FORTE_RT_E_PERMIT::getEOConUnchecked(TPortId paIndex) {
   switch(paIndex) {
     case 0: return &conn_INITO;
@@ -148,13 +144,4 @@ CDataConnection *FORTE_RT_E_PERMIT::getDOConUnchecked(TPortId paIndex) {
   }
   return nullptr;
 }
-
-CInOutDataConnection **FORTE_RT_E_PERMIT::getDIOInConUnchecked(TPortId) {
-  return nullptr;
-}
-
-CInOutDataConnection *FORTE_RT_E_PERMIT::getDIOOutConUnchecked(TPortId) {
-  return nullptr;
-}
-
 

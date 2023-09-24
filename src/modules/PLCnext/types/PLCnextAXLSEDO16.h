@@ -110,7 +110,6 @@ public:
 
   CIEC_ANY *getDI(size_t) override;
   CIEC_ANY *getDO(size_t) override;
-  CIEC_ANY *getDIO(size_t) override;
   FORTE_PLCnextBusAdapter &var_BusAdapterIn() {
     return *static_cast<FORTE_PLCnextBusAdapter*>(mAdapters[0]);
   };
@@ -122,8 +121,6 @@ public:
   CEventConnection *getEOConUnchecked(TPortId) override;
   CDataConnection **getDIConUnchecked(TPortId) override;
   CDataConnection *getDOConUnchecked(TPortId) override;
-  CInOutDataConnection **getDIOInConUnchecked(TPortId) override;
-  CInOutDataConnection *getDIOOutConUnchecked(TPortId) override;
 
   void evt_INIT(const CIEC_BOOL &paQI, const CIEC_STRING &paDO_1, const CIEC_STRING &paDO_2, const CIEC_STRING &paDO_3, const CIEC_STRING &paDO_4, const CIEC_STRING &paDO_5, const CIEC_STRING &paDO_6, const CIEC_STRING &paDO_7, const CIEC_STRING &paDO_8, const CIEC_STRING &paDO_9, const CIEC_STRING &paDO_10, const CIEC_STRING &paDO_11, const CIEC_STRING &paDO_12, const CIEC_STRING &paDO_13, const CIEC_STRING &paDO_14, const CIEC_STRING &paDO_15, const CIEC_STRING &paDO_16, CIEC_BOOL &paQO, CIEC_WSTRING &paSTATUS) {
     var_QI = paQI;

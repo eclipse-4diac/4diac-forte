@@ -72,12 +72,9 @@ public:
   CDataConnection conn_ET;
   CIEC_ANY *getDI(size_t) override;
   CIEC_ANY *getDO(size_t) override;
-  CIEC_ANY *getDIO(size_t) override;
   CEventConnection *getEOConUnchecked(TPortId) override;
   CDataConnection **getDIConUnchecked(TPortId) override;
   CDataConnection *getDOConUnchecked(TPortId) override;
-  CInOutDataConnection **getDIOInConUnchecked(TPortId) override;
-  CInOutDataConnection *getDIOOutConUnchecked(TPortId) override;
   void evt_REQ(const CIEC_BOOL &pa_IN, const CIEC_TIME &pa_PT, CIEC_BOOL &pa_Q, CIEC_TIME &pa_ET) {
     var_IN = pa_IN;
     var_PT = pa_PT;

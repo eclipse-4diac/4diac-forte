@@ -135,10 +135,6 @@ CIEC_ANY *FORTE_EBSlave2301::getDO(const size_t paIndex) {
   return nullptr;
 }
 
-CIEC_ANY *FORTE_EBSlave2301::getDIO(size_t) {
-  return nullptr;
-}
-
 CEventConnection *FORTE_EBSlave2301::getEOConUnchecked(const TPortId paIndex) {
   switch(paIndex) {
     case 0: return &conn_MAPO;
@@ -166,14 +162,6 @@ CDataConnection *FORTE_EBSlave2301::getDOConUnchecked(const TPortId paIndex) {
     case 0: return &conn_QO;
     case 1: return &conn_STATUS;
   }
-  return nullptr;
-}
-
-CInOutDataConnection **FORTE_EBSlave2301::getDIOInConUnchecked(TPortId) {
-  return nullptr;
-}
-
-CInOutDataConnection *FORTE_EBSlave2301::getDIOOutConUnchecked(TPortId) {
   return nullptr;
 }
 
