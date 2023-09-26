@@ -17,7 +17,6 @@
 
 #include "comlayer.h"
 #include "../stringdict.h"
-#include "../fortelist.h"
 #include <forte_sync.h>
 #include <vector>
 
@@ -45,19 +44,23 @@ namespace forte {
       protected:
         class CLocalCommGroup {
           public:
+            using TLocalComLayerList = std::vector<CLocalComLayer *>;
+
             explicit CLocalCommGroup(CStringDictionary::TStringId paGroupName) :
                 mGroupName(paGroupName), mPublList(), mSublList(){
             }
 
             CLocalCommGroup(const CLocalCommGroup& paLocalCommGroup) :
-                mGroupName(paLocalCommGroup.mGroupName), mPublList(), mSublList(){
+                mGroupName(paLocalCommGroup.mGroupName),
+                mPublList(paLocalCommGroup.mPublList),
+                mSublList(paLocalCommGroup.mSublList){
             }
 
             ~CLocalCommGroup() = default;
 
             CStringDictionary::TStringId mGroupName;
-            CSinglyLinkedList<CLocalComLayer*> mPublList;
-            CSinglyLinkedList<CLocalComLayer*> mSublList;
+            TLocalComLayerList mPublList;
+            TLocalComLayerList mSublList;
         };
 
         class CLocalCommGroupsManager{
@@ -84,7 +87,7 @@ namespace forte {
               return (iter != mLocalCommGroups.end() && iter->mGroupName == paID);
             }
 
-            static void removeListEntry(CSinglyLinkedList<CLocalComLayer*>  &pa_rlstList, CLocalComLayer *paLayer);
+            static void removeListEntry(CLocalCommGroup::TLocalComLayerList  &paComLayerList, CLocalComLayer *paLayer);
 
 
             /*!\brief The Sync object used locking the access to the internal used datastructures
