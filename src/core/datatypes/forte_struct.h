@@ -21,6 +21,9 @@
 
 class CIEC_STRUCT : public CIEC_ANY_DERIVED{
   public:
+    //! Indicator for invalid array member index positions
+    static constexpr size_t csmNIndex = -1;
+
     CIEC_STRUCT() = default;
 
     ~CIEC_STRUCT() override = default;
@@ -121,6 +124,8 @@ class CIEC_STRUCT : public CIEC_ANY_DERIVED{
      * \return on a valid member name id a pointer to the member var otherwise 0
      */
     CIEC_ANY* getMemberNamed(const char * paMemberName);
+
+    size_t getMemberIndex(CStringDictionary::TStringId paMemberNameId);
 
   protected:
     enum EASN1Tags {
