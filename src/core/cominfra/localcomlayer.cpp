@@ -100,15 +100,17 @@ void CLocalComLayer::closeConnection(){
 /********************** CLocalCommGroupsManager *************************************/
 CLocalComLayer::CLocalCommGroup* CLocalComLayer::CLocalCommGroupsManager::registerPubl(const CStringDictionary::TStringId paID, CLocalComLayer *paLayer){
   CCriticalRegion criticalRegion(mSync);
-  CLocalCommGroup *poGroup = findOrCreateLocalCommGroup(paID);
-  poGroup->mPublList.push_back(paLayer);
-  return poGroup;
+  forte::com_infra::CBaseCommFB *commFb = paLayer->getCommFB();
+  CLocalCommGroup* group = findOrCreateLocalCommGroup(paID, commFb->getSDs(), commFb->getNumSD());
+  if(group != nullptr){
+      group->mPublList.push_back(paLayer);
+  }
+  return group;
 }
 
 void CLocalComLayer::CLocalCommGroupsManager::unregisterPubl(CLocalCommGroup *paGroup, CLocalComLayer *paLayer){
   CCriticalRegion criticalRegion(mSync);
   removeListEntry(paGroup->mPublList, paLayer);
-
   if((paGroup->mPublList.empty()) && (paGroup->mSublList.empty())){
     removeCommGroup(*paGroup);
   }
@@ -116,21 +118,24 @@ void CLocalComLayer::CLocalCommGroupsManager::unregisterPubl(CLocalCommGroup *pa
 
 CLocalComLayer::CLocalCommGroup* CLocalComLayer::CLocalCommGroupsManager::registerSubl(const CStringDictionary::TStringId paID, CLocalComLayer *paLayer){
   CCriticalRegion criticalRegion(mSync);
-  CLocalCommGroup *poGroup = findOrCreateLocalCommGroup(paID);
-  poGroup->mSublList.push_back(paLayer);
-  return poGroup;
+  forte::com_infra::CBaseCommFB *commFb = paLayer->getCommFB();
+  CLocalCommGroup *group = findOrCreateLocalCommGroup(paID, commFb->getRDs(), commFb->getNumRD());
+  if(group != nullptr){
+    group->mSublList.push_back(paLayer);
+  }
+  return group;
 }
 
 void CLocalComLayer::CLocalCommGroupsManager::unregisterSubl(CLocalCommGroup *paGroup, CLocalComLayer *paLayer){
   CCriticalRegion criticalRegion(mSync);
   removeListEntry(paGroup->mSublList, paLayer);
-
   if((paGroup->mPublList.empty()) && (paGroup->mSublList.empty())){
     removeCommGroup(*paGroup);
   }
 }
 
-CLocalComLayer::CLocalCommGroupsManager::TLocalCommGroupList::iterator CLocalComLayer::CLocalCommGroupsManager::getLocalCommGroupIterator(CStringDictionary::TStringId paID){
+CLocalComLayer::CLocalCommGroupsManager::TLocalCommGroupList::iterator CLocalComLayer::CLocalCommGroupsManager::getLocalCommGroupIterator(
+    CStringDictionary::TStringId paID){
   return lower_bound(mLocalCommGroups.begin(), mLocalCommGroups.end(), paID,
                                   [](const CLocalCommGroup& locGroup,
                                      CStringDictionary::TStringId groupId) {
@@ -138,12 +143,16 @@ CLocalComLayer::CLocalCommGroupsManager::TLocalCommGroupList::iterator CLocalCom
                                   });
 }
 
-CLocalComLayer::CLocalCommGroup* CLocalComLayer::CLocalCommGroupsManager::findOrCreateLocalCommGroup(CStringDictionary::TStringId paID){
+CLocalComLayer::CLocalCommGroup* CLocalComLayer::CLocalCommGroupsManager::findOrCreateLocalCommGroup(CStringDictionary::TStringId paID,
+    CIEC_ANY **paDataPins, TPortId paNumDataPins){
   auto iter = getLocalCommGroupIterator(paID);
   if(isGroupIteratorForGroup(iter, paID)){
-     return &(*iter);
+    if(checkDataTypes(*iter, paDataPins, paNumDataPins)){
+      return &(*iter);
+    }
+    return nullptr;
   }
-  return &(*mLocalCommGroups.insert(iter, CLocalCommGroup(paID)));
+  return &(*mLocalCommGroups.insert(iter, CLocalCommGroup(paID, buildDataTypeList(paDataPins, paNumDataPins))));
 }
 
 void CLocalComLayer::CLocalCommGroupsManager::removeListEntry(CLocalCommGroup::TLocalComLayerList  &paComLayerList, CLocalComLayer *paLayer){
@@ -158,4 +167,34 @@ void CLocalComLayer::CLocalCommGroupsManager::removeCommGroup(CLocalCommGroup &p
   if(isGroupIteratorForGroup(iter, paGroup.mGroupName)){
     *mLocalCommGroups.erase(iter);
   }
+}
+
+CLocalComLayer::CLocalCommGroup::TLocalComDataTypeList CLocalComLayer::CLocalCommGroupsManager::buildDataTypeList(CIEC_ANY **paDataPins,
+    TPortId paNumDataPins){
+  CLocalComLayer::CLocalCommGroup::TLocalComDataTypeList dataTypes;
+
+  if(paDataPins != nullptr){
+    dataTypes.reserve(paNumDataPins);
+    for(size_t i = 0; i < paNumDataPins; i++){
+      dataTypes.push_back(paDataPins[i]->getTypeNameID());
+    }
+  }
+
+  return dataTypes;
+}
+
+bool CLocalComLayer::CLocalCommGroupsManager::checkDataTypes(const CLocalCommGroup& group, CIEC_ANY **paDataPins, TPortId paNumDataPins){
+  if(paNumDataPins != group.mDataTypes.size()){
+    return false;
+  }
+
+  size_t i = 0;
+  for(auto runner : group.mDataTypes){
+    if(runner != paDataPins[i]->getTypeNameID()){
+      return false;
+    }
+    i++;
+  }
+
+  return true;
 }

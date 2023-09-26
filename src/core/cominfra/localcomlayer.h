@@ -45,15 +45,17 @@ namespace forte {
         class CLocalCommGroup {
           public:
             using TLocalComLayerList = std::vector<CLocalComLayer *>;
+            using TLocalComDataTypeList = std::vector<CStringDictionary::TStringId>;
 
-            explicit CLocalCommGroup(CStringDictionary::TStringId paGroupName) :
-                mGroupName(paGroupName), mPublList(), mSublList(){
+            explicit CLocalCommGroup(CStringDictionary::TStringId paGroupName, TLocalComDataTypeList paDataTypes) :
+                mGroupName(paGroupName), mPublList(), mSublList(), mDataTypes(paDataTypes){
             }
 
             CLocalCommGroup(const CLocalCommGroup& paLocalCommGroup) :
                 mGroupName(paLocalCommGroup.mGroupName),
                 mPublList(paLocalCommGroup.mPublList),
-                mSublList(paLocalCommGroup.mSublList){
+                mSublList(paLocalCommGroup.mSublList),
+                mDataTypes(paLocalCommGroup.mDataTypes){
             }
 
             ~CLocalCommGroup() = default;
@@ -61,6 +63,7 @@ namespace forte {
             CStringDictionary::TStringId mGroupName;
             TLocalComLayerList mPublList;
             TLocalComLayerList mSublList;
+            TLocalComDataTypeList mDataTypes;
         };
 
         class CLocalCommGroupsManager{
@@ -80,7 +83,7 @@ namespace forte {
 
             TLocalCommGroupList::iterator getLocalCommGroupIterator(CStringDictionary::TStringId paID);
 
-            CLocalCommGroup* findOrCreateLocalCommGroup(CStringDictionary::TStringId paID);
+            CLocalCommGroup* findOrCreateLocalCommGroup(CStringDictionary::TStringId paID, CIEC_ANY **paDataPins, TPortId paNumDataPins);
             void removeCommGroup(CLocalCommGroup &paGroup);
 
             bool isGroupIteratorForGroup(TLocalCommGroupList::iterator iter, CStringDictionary::TStringId paID){
@@ -88,6 +91,8 @@ namespace forte {
             }
 
             static void removeListEntry(CLocalCommGroup::TLocalComLayerList  &paComLayerList, CLocalComLayer *paLayer);
+            static CLocalCommGroup::TLocalComDataTypeList buildDataTypeList(CIEC_ANY **paDataPins, TPortId paNumDataPins);
+            static bool checkDataTypes(const CLocalCommGroup& group, CIEC_ANY **paDataPins, TPortId paNumDataPins);
 
 
             /*!\brief The Sync object used locking the access to the internal used datastructures
