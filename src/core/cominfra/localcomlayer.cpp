@@ -39,32 +39,32 @@ EComResponse CLocalComLayer::sendData(void *, unsigned int){
 
   // go through GroupList and trigger all Subscribers
   for(auto runner : mLocalCommGroup->mSublList){
-    setRDs(runner, sds, numSDs);
+    forte::com_infra::CBaseCommFB& subFb(*runner->getCommFB());
+    CSyncObject*const poTargetResDataConSync = aquireResourceLock(*mFb, subFb);
+    setRDs(subFb, sds, numSDs);
+    subFb.interruptCommFB(runner);
+    subFb.getResource().getDevice().getDeviceExecution().startNewEventChain(&subFb);
+    if(poTargetResDataConSync != nullptr){
+        poTargetResDataConSync->unlock();
+    }
   }
 
   return e_ProcessDataOk;
 }
 
-void CLocalComLayer::setRDs(CLocalComLayer *paSublLayer, CIEC_ANY **paSDs, TPortId paNumSDs){
-  CSyncObject *poTargetResDataConSync = nullptr;
-  if(mFb->getResourcePtr() != paSublLayer->mFb->getResourcePtr()){
-    poTargetResDataConSync = &(paSublLayer->mFb->getResourcePtr()->mResDataConSync);
-    poTargetResDataConSync->lock();
+CSyncObject* CLocalComLayer::aquireResourceLock(const forte::com_infra::CBaseCommFB &paPubl, const forte::com_infra::CBaseCommFB &paSubl) {
+  if(paPubl.getResourcePtr() != paSubl.getResourcePtr()){
+    CSyncObject *const targetResDataConSync = &(paSubl.getResourcePtr()->mResDataConSync);
+    targetResDataConSync->lock();
+    return targetResDataConSync;
   }
+  return nullptr;
+}
 
-  CIEC_ANY **aRDs = paSublLayer->mFb->getRDs();
-
-  for(TPortId i = 0; (i < paNumSDs) && (i < paSublLayer->mFb->getNumRD()); ++i){
-    if(aRDs[i]->getDataTypeID() == paSDs[i]->getDataTypeID()){
+void CLocalComLayer::setRDs(forte::com_infra::CBaseCommFB& paSubl, CIEC_ANY **paSDs, TPortId paNumSDs){
+  CIEC_ANY **aRDs = paSubl.getRDs();
+  for(size_t i = 0; i < paNumSDs; ++i){
       aRDs[i]->setValue(*paSDs[i]);
-    }
-  }
-
-  paSublLayer->mFb->interruptCommFB(paSublLayer);
-  mFb->getResource().getDevice().getDeviceExecution().startNewEventChain(paSublLayer->mFb);
-
-  if(nullptr != poTargetResDataConSync){
-    poTargetResDataConSync->unlock();
   }
 }
 

@@ -42,6 +42,9 @@ namespace forte {
         }
 
       protected:
+        virtual void setRDs(forte::com_infra::CBaseCommFB& paSubl, CIEC_ANY **paSDs, TPortId paNumSDs);
+
+
         class CLocalCommGroup {
           public:
             using TLocalComLayerList = std::vector<CLocalComLayer *>;
@@ -121,7 +124,7 @@ namespace forte {
 
         EComResponse openConnection(char *const paLayerParameter) override;
         void closeConnection() override;
-        void setRDs(CLocalComLayer *paSublLayer, CIEC_ANY **paSDs, TPortId paNumSDs);
+        static CSyncObject* aquireResourceLock(const forte::com_infra::CBaseCommFB &paPubl, const forte::com_infra::CBaseCommFB &paSubl);
     };
   }
 
