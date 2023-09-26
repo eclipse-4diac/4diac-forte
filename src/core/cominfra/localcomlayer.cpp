@@ -67,7 +67,7 @@ void CLocalComLayer::setRDs(CLocalComLayer *paSublLayer, CIEC_ANY **paSDs, TPort
   }
 }
 
-EComResponse CLocalComLayer::openConnection(char *paLayerParameter){
+EComResponse CLocalComLayer::openConnection(char *const paLayerParameter){
   CStringDictionary::TStringId nId = CStringDictionary::getInstance().insert(paLayerParameter);
 
   switch (mFb->getComServiceType()){
@@ -75,10 +75,10 @@ EComResponse CLocalComLayer::openConnection(char *paLayerParameter){
     case e_Client:
       break;
     case e_Publisher:
-      mLocalCommGroup = smLocalCommGroupsManager.registerPubl(nId, this);
+      mLocalCommGroup = getLocalCommGroupsManager().registerPubl(nId, this);
       break;
     case e_Subscriber:
-      mLocalCommGroup = smLocalCommGroupsManager.registerSubl(nId, this);
+      mLocalCommGroup = getLocalCommGroupsManager().registerSubl(nId, this);
       break;
   }
   return (nullptr != mLocalCommGroup) ? e_InitOk : e_InitInvalidId;
@@ -87,10 +87,10 @@ EComResponse CLocalComLayer::openConnection(char *paLayerParameter){
 void CLocalComLayer::closeConnection(){
   if(nullptr != mLocalCommGroup){
     if(e_Publisher == mFb->getComServiceType()){
-      smLocalCommGroupsManager.unregisterPubl(mLocalCommGroup, this);
+      getLocalCommGroupsManager().unregisterPubl(mLocalCommGroup, this);
     }
     else{
-      smLocalCommGroupsManager.unregisterSubl(mLocalCommGroup, this);
+      getLocalCommGroupsManager().unregisterSubl(mLocalCommGroup, this);
     }
     mLocalCommGroup = nullptr;
   }

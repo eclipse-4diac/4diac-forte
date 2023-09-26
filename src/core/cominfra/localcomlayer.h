@@ -41,11 +41,7 @@ namespace forte {
           return e_ProcessDataOk;
         }
 
-      private:
-        EComResponse openConnection(char *paLayerParameter) override;
-        void closeConnection() override;
-        void setRDs(CLocalComLayer *paSublLayer, CIEC_ANY **paSDs, TPortId paNumSDs);
-
+      protected:
         class CLocalCommGroup {
           public:
             explicit CLocalCommGroup(CStringDictionary::TStringId paGroupName) :
@@ -95,10 +91,19 @@ namespace forte {
             CLocalCommGroupsManager &operator =(const CLocalCommGroupsManager&) = delete;
         };
 
-        static CLocalCommGroupsManager smLocalCommGroupsManager;
 
+        static CLocalCommGroupsManager& getLocalCommGroupsManager(){
+          return smLocalCommGroupsManager;
+        }
 
         CLocalCommGroup *mLocalCommGroup;
+
+      private:
+        static CLocalCommGroupsManager smLocalCommGroupsManager;
+
+        EComResponse openConnection(char *const paLayerParameter) override;
+        void closeConnection() override;
+        void setRDs(CLocalComLayer *paSublLayer, CIEC_ANY **paSDs, TPortId paNumSDs);
     };
   }
 
