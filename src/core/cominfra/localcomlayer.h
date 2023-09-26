@@ -19,6 +19,7 @@
 #include "../stringdict.h"
 #include "../fortelist.h"
 #include <forte_sync.h>
+#include <vector>
 
 class CIEC_ANY;
 
@@ -70,19 +71,28 @@ namespace forte {
             void unregisterSubl(CLocalCommGroup *paGroup, CLocalComLayer *paLayer);
 
           private:
+            using TLocalCommGroupList = std::vector<CLocalCommGroup>;
+
             CLocalCommGroupsManager() = default;
 
-            CLocalCommGroup* findLocalCommGroup(CStringDictionary::TStringId paID);
-            CLocalCommGroup* createLocalCommGroup(CStringDictionary::TStringId paID);
-            void removeCommGroup(CLocalCommGroup *paGroup);
+            TLocalCommGroupList::iterator getLocalCommGroupIterator(CStringDictionary::TStringId paID);
+
+            CLocalCommGroup* findOrCreateLocalCommGroup(CStringDictionary::TStringId paID);
+            void removeCommGroup(CLocalCommGroup &paGroup);
+
+            bool isGroupIteratorForGroup(TLocalCommGroupList::iterator iter, CStringDictionary::TStringId paID){
+              return (iter != mLocalCommGroups.end() && iter->mGroupName == paID);
+            }
 
             static void removeListEntry(CSinglyLinkedList<CLocalComLayer*>  &pa_rlstList, CLocalComLayer *paLayer);
+
 
             /*!\brief The Sync object used locking the access to the internal used datastructures
              */
             CSyncObject mSync;
 
-            CSinglyLinkedList<CLocalCommGroup> mLocalCommGroups;
+
+            TLocalCommGroupList mLocalCommGroups;
 
             friend class CLocalComLayer;
 

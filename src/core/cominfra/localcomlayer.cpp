@@ -99,12 +99,8 @@ void CLocalComLayer::closeConnection(){
 /********************** CLocalCommGroupsManager *************************************/
 CLocalComLayer::CLocalCommGroup* CLocalComLayer::CLocalCommGroupsManager::registerPubl(const CStringDictionary::TStringId paID, CLocalComLayer *paLayer){
   CCriticalRegion criticalRegion(mSync);
-  CLocalCommGroup *poGroup = findLocalCommGroup(paID);
-  if(nullptr == poGroup){
-    poGroup = createLocalCommGroup(paID);
-  }
+  CLocalCommGroup *poGroup = findOrCreateLocalCommGroup(paID);
   poGroup->mPublList.pushBack(paLayer);
-
   return poGroup;
 }
 
@@ -113,19 +109,15 @@ void CLocalComLayer::CLocalCommGroupsManager::unregisterPubl(CLocalCommGroup *pa
   removeListEntry(paGroup->mPublList, paLayer);
 
   if((paGroup->mPublList.isEmpty()) && (paGroup->mSublList.isEmpty())){
-    removeCommGroup(paGroup);
+    removeCommGroup(*paGroup);
   }
 
 }
 
 CLocalComLayer::CLocalCommGroup* CLocalComLayer::CLocalCommGroupsManager::registerSubl(const CStringDictionary::TStringId paID, CLocalComLayer *paLayer){
   CCriticalRegion criticalRegion(mSync);
-  CLocalCommGroup *poGroup = findLocalCommGroup(paID);
-  if(nullptr == poGroup){
-    poGroup = createLocalCommGroup(paID);
-  }
+  CLocalCommGroup *poGroup = findOrCreateLocalCommGroup(paID);
   poGroup->mSublList.pushBack(paLayer);
-
   return poGroup;
 }
 
@@ -134,31 +126,24 @@ void CLocalComLayer::CLocalCommGroupsManager::unregisterSubl(CLocalCommGroup *pa
   removeListEntry(paGroup->mSublList, paLayer);
 
   if((paGroup->mPublList.isEmpty()) && (paGroup->mSublList.isEmpty())){
-    removeCommGroup(paGroup);
+    removeCommGroup(*paGroup);
   }
 }
 
-CLocalComLayer::CLocalCommGroup* CLocalComLayer::CLocalCommGroupsManager::findLocalCommGroup(CStringDictionary::TStringId paID){
-  CLocalCommGroup *poGroup = nullptr;
-
-  if(!mLocalCommGroups.isEmpty()){
-    CSinglyLinkedList<CLocalCommGroup>::Iterator it = mLocalCommGroups.begin();
-    while(it != mLocalCommGroups.end()){
-      if((*it).mGroupName == paID){
-        poGroup = &(*it);
-        break;
-      }
-      ++it;
-    }
-  }
-
-  return poGroup;
+CLocalComLayer::CLocalCommGroupsManager::TLocalCommGroupList::iterator CLocalComLayer::CLocalCommGroupsManager::getLocalCommGroupIterator(CStringDictionary::TStringId paID){
+  return lower_bound(mLocalCommGroups.begin(), mLocalCommGroups.end(), paID,
+                                  [](const CLocalCommGroup& locGroup,
+                                     CStringDictionary::TStringId groupId) {
+                                    return locGroup.mGroupName < groupId;
+                                  });
 }
 
-CLocalComLayer::CLocalCommGroup* CLocalComLayer::CLocalCommGroupsManager::createLocalCommGroup(CStringDictionary::TStringId paID){
-  mLocalCommGroups.pushFront(CLocalCommGroup(paID));
-  CSinglyLinkedList<CLocalCommGroup>::Iterator it = mLocalCommGroups.begin();
-  return &(*it);
+CLocalComLayer::CLocalCommGroup* CLocalComLayer::CLocalCommGroupsManager::findOrCreateLocalCommGroup(CStringDictionary::TStringId paID){
+  auto iter = getLocalCommGroupIterator(paID);
+  if(isGroupIteratorForGroup(iter, paID)){
+     return &(*iter);
+  }
+  return &(*mLocalCommGroups.insert(iter, CLocalCommGroup(paID)));
 }
 
 void CLocalComLayer::CLocalCommGroupsManager::removeListEntry(CSinglyLinkedList<CLocalComLayer*> &pa_rlstList, CLocalComLayer *paLayer){
@@ -180,21 +165,9 @@ void CLocalComLayer::CLocalCommGroupsManager::removeListEntry(CSinglyLinkedList<
   }
 }
 
-void CLocalComLayer::CLocalCommGroupsManager::removeCommGroup(CLocalCommGroup *paGroup){
-  CSinglyLinkedList<CLocalCommGroup>::Iterator itRunner = mLocalCommGroups.begin();
-  CSinglyLinkedList<CLocalCommGroup>::Iterator itRevNode = mLocalCommGroups.end();
-
-  while(itRunner != mLocalCommGroups.end()){
-    if((*itRunner).mGroupName == paGroup->mGroupName){
-      if(itRevNode == mLocalCommGroups.end()){
-        mLocalCommGroups.popFront();
-      }
-      else{
-        mLocalCommGroups.eraseAfter(itRevNode);
-      }
-      break;
-    }
-    itRevNode = itRunner;
-    ++itRunner;
+void CLocalComLayer::CLocalCommGroupsManager::removeCommGroup(CLocalCommGroup &paGroup){
+  auto iter = getLocalCommGroupIterator(paGroup.mGroupName);
+  if(isGroupIteratorForGroup(iter, paGroup.mGroupName)){
+    *mLocalCommGroups.erase(iter);
   }
 }
