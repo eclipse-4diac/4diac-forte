@@ -28,6 +28,8 @@
 
 using namespace forte::com_infra;
 
+const std::string COPC_UA_Layer::structTypesBrowsePath = "/Types/0:ObjectTypes/0:BaseObjectType/2:";
+
 COPC_UA_Layer::COPC_UA_Layer(CComLayer *paUpperLayer, CBaseCommFB *paComFB) :
     CComLayer(paUpperLayer, paComFB), mInterruptResp(e_Nothing), mHandler(nullptr), mActionInfo(nullptr), mDataAlreadyPresent(false), mRDBuffer(nullptr) {
 }
@@ -36,14 +38,12 @@ COPC_UA_Layer::~COPC_UA_Layer() = default;
 
 EComResponse COPC_UA_Layer::openConnection(char *paLayerParameter) {
   EComResponse response = e_InitTerminated;
-
-  if(checkTypesFromInterface()) {
-    mActionInfo = CActionInfo::getActionInfoFromParams(paLayerParameter, *this);
-    if(mActionInfo) {
+  mActionInfo = CActionInfo::getActionInfoFromParams(paLayerParameter, *this);
+  if(mActionInfo) {
       mHandler =
           (mActionInfo->isRemote()) ? static_cast<COPC_UA_HandlerAbstract*>(&getExtEvHandler<COPC_UA_Remote_Handler>()) :
             static_cast<COPC_UA_HandlerAbstract*>(&getExtEvHandler<COPC_UA_Local_Handler>());
-
+    if(checkTypesFromInterface()) {
       if(UA_STATUSCODE_GOOD == mHandler->initializeAction(*mActionInfo)) {
         CCriticalRegion criticalRegion(mRDBufferMutex);
         response = e_InitOk;
@@ -52,7 +52,12 @@ EComResponse COPC_UA_Layer::openConnection(char *paLayerParameter) {
           mRDBuffer[i] = getCommFB()->getRDs()[i]->clone(nullptr);
         }
       }
-    }
+    } else {
+      if(isStructType() && checkWinCCTypeConnection()) {
+        // TODO
+        response = e_InitOk;
+      }
+    }   
   }
 
   return response;
@@ -119,6 +124,10 @@ EComResponse COPC_UA_Layer::recvData(const void *paData, unsigned int) {
 }
 
 EComResponse COPC_UA_Layer::sendData(void *, unsigned int) {
+  if(isStructType()) {
+    // TODO
+    return e_ProcessDataOk;
+  }
   return (UA_STATUSCODE_GOOD == mHandler->executeAction(*mActionInfo) ? e_ProcessDataOk : e_ProcessDataDataTypeError);
 }
 
@@ -157,10 +166,8 @@ bool COPC_UA_Layer::checkTypesFromInterface() const {
 }
 
 bool COPC_UA_Layer::checkPortConnectionInfo(unsigned int paPortIndex, bool paIsSD) const {
-  const SFBInterfaceSpec *localInterfaceSpec = getCommFB()->getFBInterfaceSpec();
-  const CStringDictionary::TStringId localPortNameId = paIsSD ? localInterfaceSpec->mDINames[paPortIndex] : localInterfaceSpec->mDONames[paPortIndex];
-
-  const CDataConnection *localPortConnection = paIsSD ? getCommFB()->getDIConnection(localPortNameId) : getCommFB()->getDOConnection(localPortNameId);
+  const CStringDictionary::TStringId localPortNameId = getLocalPortNameId(paPortIndex, paIsSD);
+  const CDataConnection *localPortConnection = getLocalPortConnection(paPortIndex, paIsSD);
   if(!localPortConnection) {
     DEVLOG_ERROR("[OPC UA LAYER]: Got invalid port connection on FB %s at port %s. It must be connected to another FB.\n", getCommFB()->getInstanceName(),
       CStringDictionary::getInstance().get(localPortNameId));
@@ -186,11 +193,12 @@ bool COPC_UA_Layer::checkPortConnectionInfo(unsigned int paPortIndex, bool paIsS
   }
 
   if(!COPC_UA_Helper::getOPCUATypeFromAny(*remoteType)) {
-    DEVLOG_ERROR("[OPC UA LAYER]: Invalid  type %d in FB %s at connection %s\n", remoteType, getCommFB()->getInstanceName(),
+    if(!isStructType()) {
+      DEVLOG_ERROR("[OPC UA LAYER]: Invalid  type %d in FB %s at connection %s\n", remoteType, getCommFB()->getInstanceName(),
       CStringDictionary::getInstance().get(localPortNameId));
+    }
     return false;
   }
-
   return true;
 }
 
@@ -239,4 +247,58 @@ bool COPC_UA_Layer::getDataAlreadyPresentRead() {
 void COPC_UA_Layer::setDataAlreadyPresentRead(bool paDataRead) {
   CCriticalRegion dataReadRegion(mDataAlreadyPresentMutex);
   mDataAlreadyPresent = paDataRead;
+}
+
+const CDataConnection* COPC_UA_Layer::getLocalPortConnection(int paPortIndex, bool paIsSD) const {
+  const CStringDictionary::TStringId localPortNameId = getLocalPortNameId(paPortIndex, paIsSD);
+  const CDataConnection *localPortConnection = paIsSD ? getCommFB()->getDIConnection(localPortNameId) : getCommFB()->getDOConnection(localPortNameId);
+  return localPortConnection;
+}
+
+const CStringDictionary::TStringId COPC_UA_Layer::getLocalPortNameId(int paPortIndex, bool paIsSD) const {
+  const SFBInterfaceSpec *localInterfaceSpec = getCommFB()->getFBInterfaceSpec();
+  return paIsSD ? localInterfaceSpec->mDINames[paPortIndex] : localInterfaceSpec->mDONames[paPortIndex];
+}
+
+bool COPC_UA_Layer::checkWinCCTypeConnection() {
+  int portIndex = 2;
+  bool isSD = true;
+  if(mActionInfo && mHandler) {
+    if(isWinCCOPCUAObjectPresent(getLocalPortConnection(portIndex, isSD), COPC_UA_Layer::structTypesBrowsePath)) {
+      return true;
+    }
+    DEVLOG_ERROR("[OPC UA LAYER]: Invalid Struct type in FB %s at connection %s\n", getCommFB()->getInstanceName(),
+    CStringDictionary::getInstance().get(getLocalPortNameId(portIndex, isSD)));
+  } else {
+    DEVLOG_ERROR("[OPC UA LAYER]: Failed to check WinCC Type Connection because Action or Handler is null!\n");
+  }
+  return false;
+}
+
+void COPC_UA_Layer::getWinCCStructBrowsePath(std::string &paBrowsePath, const CDataConnection *paLocalPortConnection, const std::string &paPathPrefix) {
+  paBrowsePath.append(paPathPrefix);
+  CConnectionPoint connectinPoint = paLocalPortConnection->getSourceId();
+  CIEC_ANY* type = connectinPoint.mFB->getDOFromPortId(connectinPoint.mPortId);
+  paBrowsePath.append(CStringDictionary::getInstance().get(type->getTypeNameID()));
+}
+
+bool COPC_UA_Layer::isStructType() const {
+  // TODO implement layer to handle more than 1 struct
+  // For the concept, only the first SD port needs to be a struct 
+  TPortId numSDs = mFb->getNumSD();
+  CIEC_ANY** apoSDs = mFb->getSDs();
+  return numSDs > 0 && CIEC_ANY::e_STRUCT == apoSDs[0]->unwrap().getDataTypeID();
+}
+
+bool COPC_UA_Layer::isWinCCOPCUAObjectPresent(const CDataConnection * paLocalPortConnection, const std::string & paPathPrefix) {
+  COPC_UA_Local_Handler* localHandler = dynamic_cast<COPC_UA_Local_Handler*>(mHandler);
+  if(localHandler) {
+    std::string browsePath;
+    getWinCCStructBrowsePath(browsePath, paLocalPortConnection, paPathPrefix);
+    CActionInfo::CNodePairInfo nodePair(nullptr, browsePath);
+    return localHandler->isOPCUAObjectPresent(nodePair);
+  } else {
+    DEVLOG_ERROR("[OPC UA LAYER]: Failed to get LocalHandler because LocalHandler is null!\n");
+  }
+  return false;
 }

@@ -439,6 +439,11 @@ UA_StatusCode COPC_UA_Local_Handler::uninitializeAction(CActionInfo &paActionInf
   return retVal;
 }
 
+bool COPC_UA_Local_Handler::isOPCUAObjectPresent(CActionInfo::CNodePairInfo &paNodePair) {
+  enableHandler();
+  return isNodePresent(paNodePair);
+}
+
 UA_StatusCode COPC_UA_Local_Handler::initializeVariable(CActionInfo &paActionInfo, bool paWrite) {
   UA_StatusCode retVal = UA_STATUSCODE_GOOD;
 

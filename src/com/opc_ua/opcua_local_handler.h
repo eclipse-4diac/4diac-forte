@@ -70,6 +70,8 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
       return mUaServer;
     }
 
+    bool isOPCUAObjectPresent(CActionInfo::CNodePairInfo &paNodePair);
+
   protected:
 
     /**
@@ -92,6 +94,7 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
      * @return UA_STATUSCODE_GOOD is no problem occurred, other value otherwise
      */
     UA_StatusCode uninitializeAction(CActionInfo &paActionInfo) override;
+
 
   private:
 
