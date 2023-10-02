@@ -70,6 +70,11 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
       return mUaServer;
     }
 
+    /**
+     * Check if Struct is present in OPC UA server
+     * @param paNodePair The NodePair of the Object Node to be looked for
+     * @return true, if the Object Node exists, false otherwise
+    */
     bool isOPCUAObjectPresent(CActionInfo::CNodePairInfo &paNodePair);
 
   protected:

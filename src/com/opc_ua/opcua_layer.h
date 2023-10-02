@@ -76,9 +76,14 @@ class COPC_UA_Layer : public forte::com_infra::CComLayer {
 
     /**
      * BrowsePath to folder that contains WinCC Struct Types
-    */
+     */
      static const std::string structTypesBrowsePath;
 
+    /**
+     * BrowsePath to folder that contains Struct Object Nodes
+     */
+     static const std::string structNodesBrowsePath;
+   
     /**
      * Response for the processInterrupt() method
      */
@@ -164,12 +169,19 @@ class COPC_UA_Layer : public forte::com_infra::CComLayer {
     */
     const CStringDictionary::TStringId getLocalPortNameId(int paPortIndex, bool paIsSD) const;
 
+
     /**
-     * Check that types of the SDs of the FBs are of WinCC Struct Type
-     * NOTE: Supports only one connected Struct Type and SDs currently
-     * @return True if WinCC Struct Type, false otherwise
-     */
-    bool checkWinCCTypeConnection();
+     * Create an OPC UA Object Node from Struct Type, if it is not present
+     * @return e_InitOk if Object Node was created successfully, e_InitTerminated otherwise
+    */
+    forte::com_infra::EComResponse createStructObjectNode();
+
+    /**
+     * Get the ActionInfo to create the OPC UA Object Node for Struct Type.
+     * Supports only one connected Struct Type currently
+     * @return The ActionInfo for creating OPC UA Object Node
+    */
+    CActionInfo* getCreateObjectActionForStruct();
 
     /**
      * Get the BrowsePath to the OPC UA WinCC Struct Object Type from the local Struct Type
@@ -180,10 +192,17 @@ class COPC_UA_Layer : public forte::com_infra::CComLayer {
     static void getWinCCStructBrowsePath(std::string &paBrowsePath, const CDataConnection *paLocalPortConnection, const std::string &paPathPrefix);
 
     /**
-     * Check if Data Connection is a Struct Type
-     * @return True if connected data type is Struct, false otherwise
+     * @param paStructTypeName Place to store the name of the Struct Type
     */
-    bool isStructType() const;
+    static void getStructTypeName(std::string& paStructTypeName, const CDataConnection *paLocalPortConnection);
+    
+
+    /**
+     * Check that types of the SDs of the FBs are of WinCC Struct Type
+     * NOTE: Supports only one connected Struct Type and SDs currently
+     * @return True if WinCC Struct Type, false otherwise
+     */
+    bool checkWinCCTypeConnection();
 
     /**
      * Check if WinCC Struct is present in OPC UA server
@@ -191,6 +210,12 @@ class COPC_UA_Layer : public forte::com_infra::CComLayer {
      * @param paPathPrefix The BrowsePath directory with namespace (e.g. /Objects/1:)
     */
     bool isWinCCOPCUAObjectPresent(const CDataConnection *paLocalPortConnection, const std::string &paPathPrefix);
+
+    /**
+     * Check if Data Connection is a Struct Type
+     * @return True if connected data type is Struct, false otherwise
+    */
+    bool isStructType() const;
 
     /**
      * Array of ANY pointers used as buffer to store the received data
