@@ -682,7 +682,7 @@ class CFunctionBlock {
      * \deprecated Use void executeEvent(TEventID paEIID, CEventChainExecutionThread * const paECET)
      * Will be removed when all FBs are migrated to new interface
      */
-    [[deprectated]] virtual void executeEvent(TEventID ) {
+    [[deprecated]] virtual void executeEvent(TEventID ) {
 
     }
 
