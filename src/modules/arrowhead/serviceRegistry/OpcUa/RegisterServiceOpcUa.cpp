@@ -132,6 +132,7 @@ const SCFB_FBNData FORTE_RegisterServiceOpcUa::scmFBNData = {
   10, scmFannedOutEventConnections,
   13, scmDataConnections,
   4, scmFannedOutDataConnections,
+  0, nullptr,
   8, scmParamters
 };
 

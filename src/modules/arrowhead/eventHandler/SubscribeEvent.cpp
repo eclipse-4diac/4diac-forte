@@ -56,6 +56,7 @@ const SCFB_FBNData FORTE_SubscribeEvent::scmFBNData = {
   0, 0,
   2, scmDataConnections,
   0, 0,
+  0, nullptr,
   0, 0
 };
 

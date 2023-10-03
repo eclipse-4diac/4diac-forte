@@ -27,6 +27,11 @@
 
 class CIEC_TIME final : public CIEC_ANY_DURATION {
   DECLARE_FIRMWARE_DATATYPE(TIME)
+
+  private:
+    static constexpr char csmMinTimeValue[] = "T#-106751d23h47m16s854ms775us808ns";
+    static constexpr char csmZeroNanoSecondTimeValue[] = "T#0ns";
+
   public:
     CIEC_TIME() = default;
 
@@ -83,7 +88,10 @@ class CIEC_TIME final : public CIEC_ANY_DURATION {
     /*! \brief calculates buffer size needed for toString conversion
      */
     size_t getToStringBufferSize() const override;
-
+    
+    TValueType getInDays() const;
+    TValueType getInHours() const;
+    TValueType getInMinutes() const;
     TValueType getInSeconds() const;
     TValueType getInMilliSeconds() const;
     TValueType getInMicroSeconds() const;
@@ -93,6 +101,7 @@ class CIEC_TIME final : public CIEC_ANY_DURATION {
     void setFromMilliSeconds(TValueType paValue);
     void setFromMicroSeconds(TValueType paValue);
     void setFromNanoSeconds(TValueType paValue);
+
 };
 
 inline CIEC_TIME operator ""_TIME(unsigned long long int paValue) {

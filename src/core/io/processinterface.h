@@ -43,6 +43,12 @@ namespace forte {
           bool writePin() {
             return write(OUT_X());
           }
+          bool readByte() {
+            return read(IN_B());
+          }
+          bool writeByte() {
+            return write(OUT_B());
+          }
           bool readWord() {
             return read(IN_W());
           }
@@ -54,6 +60,12 @@ namespace forte {
           }
           bool writeDWord() {
             return write(OUT_D());
+          }
+          bool readLWord() {
+            return read(IN_L());
+          }
+          bool writeLWord() {
+            return write(OUT_L());
           }
 
           bool read();
@@ -70,12 +82,12 @@ namespace forte {
           bool mIsReady;
           CSyncObject mSyncMutex;
 
-          static const std::string scmOK;
-          static const std::string scmWaitingForHandle;
-          static const std::string scmFailedToRegister;
-          static const std::string scmMappedWrongDirectionOutput;
-          static const std::string scmMappedWrongDirectionInput;
-          static const std::string scmMappedWrongDataType;
+          static const CIEC_STRING scmOK;
+          static const CIEC_STRING scmWaitingForHandle;
+          static const CIEC_STRING scmFailedToRegister;
+          static const CIEC_STRING scmMappedWrongDirectionOutput;
+          static const CIEC_STRING scmMappedWrongDirectionInput;
+          static const CIEC_STRING scmMappedWrongDataType;
       };
 
     } //namespace IO

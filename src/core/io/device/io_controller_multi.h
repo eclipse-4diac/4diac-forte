@@ -38,9 +38,8 @@ namespace forte {
             public:
               int mSlaveIndex;
 
-              HandleDescriptor(CIEC_WSTRING const &paId, IOMapper::Direction paDirection, int paSlaveIndex) :
+              HandleDescriptor(std::string const &paId, IOMapper::Direction paDirection, int paSlaveIndex) :
                   IODeviceController::HandleDescriptor(paId, paDirection), mSlaveIndex(paSlaveIndex) {
-
               }
           };
 

@@ -1087,18 +1087,18 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
     CDeserTestMockCommFB nTestFB(1, anType);
     forte::com_infra::CFBDKASN1ComLayer nTestee(nullptr, &nTestFB);
     CIEC_TIME &nVal(*static_cast<CIEC_TIME *>(nTestFB.getRDs()[0]));
-    char acStrBuf[20];
+    char acStrBuf[9];
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.recvData(cgTime0, cgTimeSerSize));
     BOOST_CHECK_EQUAL(0, static_cast<CIEC_TIME::TValueType>(nVal));
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.recvData(cgTime3000ms, cgTimeSerSize));
-    nVal.toString(acStrBuf, 20);
-    BOOST_CHECK_EQUAL(strcmp(acStrBuf, "T#3000ms"), 0);
+    nVal.toString(acStrBuf, 9);
+    BOOST_CHECK_EQUAL(strcmp(acStrBuf, "T#3s"), 0);
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.recvData(cgTime3s22ms, cgTimeSerSize));
-    nVal.toString(acStrBuf, 20);
-    BOOST_CHECK_EQUAL(strcmp(acStrBuf, "T#3022ms"), 0);
+    nVal.toString(acStrBuf, 9);
+    BOOST_CHECK_EQUAL(strcmp(acStrBuf, "T#3s22ms"), 0);
   }
 
   BOOST_AUTO_TEST_CASE(Single_Deserialize_Negative_Test_TIME){
@@ -1145,16 +1145,16 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
     TForteByte anGoodResult[] = { 0x4C, 0, 0, 0, 0, 0, 0x2D, 0xC6, 0xC0, 0x52, 0x9D, 0xCC, 0x50, 0, 0xA, 'H', 'a', 'l', 'l', 'o', 'W', 'o', 'r', 'l', 'd', 0x43, 0xD5, 0x4A, 0x41, 0x4C, 0, 0, 0, 0, 0, 0x2e, 0x1c, 0xb0 };
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.recvData(anGoodResult, nSerSize));
-    char acStrBuf[20];
-    oTimeVal1.toString(acStrBuf, 20);
+    char acStrBuf[9];
+    oTimeVal1.toString(acStrBuf, 9);
 
-    BOOST_CHECK_EQUAL(strcmp(acStrBuf, "T#3000ms"), 0);
+    BOOST_CHECK_EQUAL(strcmp(acStrBuf, "T#3s"), 0);
     BOOST_CHECK_EQUAL(oWordVal, 40396);
     BOOST_TEST(oStringVal.getStorage() == "HalloWorld"s);
     BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(oIntVal), -10934);
     BOOST_CHECK_EQUAL(oBoolVal, true);
-    oTimeVal2.toString(acStrBuf, 20);
-    BOOST_CHECK_EQUAL(strcmp(acStrBuf, "T#3022ms"), 0);
+    oTimeVal2.toString(acStrBuf, 9);
+    BOOST_CHECK_EQUAL(strcmp(acStrBuf, "T#3s22ms"), 0);
   }
 
   BOOST_AUTO_TEST_CASE(Single_Deserialize_Test_ARRAY){

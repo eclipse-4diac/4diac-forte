@@ -14,7 +14,7 @@
 #ifndef SRC_MODULES_EMBRICK_TYPES_SLAVE_H_
 #define SRC_MODULES_EMBRICK_TYPES_SLAVE_H_
 
-#include "BusAdapter.h"
+#include "EBBusAdapter.h"
 #include <forte_sync.h>
 
 #include <handler/bus.h>
@@ -34,12 +34,12 @@ class EmbrickSlave : public forte::core::io::IOConfigFBMultiSlave, public Embric
       return *static_cast<CIEC_UINT*>(getDI(0));
     }
 
-    EmbrickBusAdapter& BusAdapterOut() {
-      return (*static_cast<EmbrickBusAdapter*>(mAdapters[0]));
+    FORTE_EBBusAdapter& BusAdapterOut() {
+      return (*static_cast<FORTE_EBBusAdapter*>(mAdapters[0]));
     }
 
-    EmbrickBusAdapter& BusAdapterIn() {
-      return (*static_cast<EmbrickBusAdapter*>(mAdapters[1]));
+    FORTE_EBBusAdapter& BusAdapterIn() {
+      return (*static_cast<FORTE_EBBusAdapter*>(mAdapters[1]));
     }
 
     CSyncObject mSlaveMutex;
@@ -53,10 +53,10 @@ class EmbrickSlave : public forte::core::io::IOConfigFBMultiSlave, public Embric
     const char* init();
     void deInit();
 
-    static const char * const scmSlow;
-    static const char * const scmInterrupted;
-    static const char * const scmError;
-    static const char * const scmUnknown;
+    static const CIEC_WSTRING scmSlow;
+    static const CIEC_WSTRING scmInterrupted;
+    static const CIEC_WSTRING scmError;
+    static const CIEC_WSTRING scmUnknown;
 };
 
 #endif /* SRC_MODULES_EMBRICK_TYPES_SLAVE_H_ */

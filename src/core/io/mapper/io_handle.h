@@ -40,12 +40,20 @@ namespace forte {
             return mObserver;
           }
 
-          bool is(CIEC_ANY::EDataTypeID paType) const {
-            return this->mType == paType;
+          CIEC_ANY::EDataTypeID getIOHandleDataType() const {
+            return mType;
           }
 
-          bool is(IOMapper::Direction paDirection) const {
-            return this->mDirection == paDirection;
+          IOMapper::Direction getDirection() const {
+            return mDirection;
+          }
+
+          bool isInput() const {
+            return mDirection == IOMapper::In;
+          }
+
+          bool isOutput() const {
+            return mDirection == IOMapper::Out;
           }
 
           virtual void set(const CIEC_ANY &) = 0;

@@ -80,6 +80,7 @@ const SCFB_FBNData FORTE_RequestOrchestrationHTTP::scmFBNData = {
   1, scmFannedOutEventConnections,
   8, scmDataConnections,
   1, scmFannedOutDataConnections,
+  0, nullptr,
   2, scmParamters
 };
 

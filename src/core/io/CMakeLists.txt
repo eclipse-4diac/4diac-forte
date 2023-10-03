@@ -30,4 +30,4 @@ add_subdirectory(device)
 add_subdirectory(mapper)
 
 forte_add_sourcefile_hcpp(processinterface)
-forte_set_process_interface("Modular IO" IX QX IW QW ID QD)
+forte_set_process_interface("Modular IO" IE IX QX IB QB IW QW ID QD IL QL)

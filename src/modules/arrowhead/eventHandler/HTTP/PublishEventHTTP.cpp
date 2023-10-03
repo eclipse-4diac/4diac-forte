@@ -76,6 +76,7 @@ const SCFB_FBNData FORTE_PublishEventHTTP::scmFBNData = {
   1, scmFannedOutEventConnections,
   6, scmDataConnections,
   1, scmFannedOutDataConnections,
+  0, nullptr,
   2, scmParamters
 };
 

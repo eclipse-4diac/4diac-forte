@@ -21,11 +21,9 @@
 #include <cstring>
 
 CIEC_ANY *CIEC_STRUCT::getMemberNamed(CStringDictionary::TStringId paMemberNameId) {
-  const CStringDictionary::TStringId *punMemberNameIds = elementNames();
-  for (size_t i = 0; i < getStructSize(); ++i) {
-    if (punMemberNameIds[i] == paMemberNameId) {
-      return getMember(i);
-    }
+  size_t index = getMemberIndex(paMemberNameId);
+  if(index != csmNIndex){
+    return getMember(static_cast<size_t>(index));
   }
   return nullptr;
 }
@@ -36,6 +34,16 @@ CIEC_ANY *CIEC_STRUCT::getMemberNamed(const char *paMemberName) {
     return getMemberNamed(elementNameId);
   }
   return nullptr;
+}
+
+size_t CIEC_STRUCT::getMemberIndex(CStringDictionary::TStringId paMemberNameId){
+  const CStringDictionary::TStringId *punMemberNameIds = elementNames();
+  for(size_t i = 0; i < getStructSize(); ++i){
+    if(punMemberNameIds[i] == paMemberNameId){
+      return i;
+    }
+  }
+  return csmNIndex;
 }
 
 void CIEC_STRUCT::setValue(const CIEC_ANY &paValue) {

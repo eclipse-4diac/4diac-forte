@@ -96,12 +96,9 @@ public:
   CDataConnection conn_QO;
   CIEC_ANY *getDI(size_t) override;
   CIEC_ANY *getDO(size_t) override;
-  CIEC_ANY *getDIO(size_t) override;
   CEventConnection *getEOConUnchecked(TPortId) override;
   CDataConnection **getDIConUnchecked(TPortId) override;
   CDataConnection *getDOConUnchecked(TPortId) override;
-  CInOutDataConnection **getDIOInConUnchecked(TPortId) override;
-  CInOutDataConnection *getDIOOutConUnchecked(TPortId) override;
   void evt_INIT(const CIEC_BOOL &pa_QI, const CIEC_UINT &pa_K, const CIEC_TIME &pa_Tmin, const CIEC_TIME &pa_Deadline0, const CIEC_TIME &pa_WCET0, const CIEC_TIME &pa_Deadline1, const CIEC_TIME &pa_WCET1, const CIEC_TIME &pa_Deadline2, const CIEC_TIME &pa_WCET2, const CIEC_TIME &pa_Deadline3, const CIEC_TIME &pa_WCET3, CIEC_BOOL &pa_QO) {
     var_QI = pa_QI;
     var_K = pa_K;

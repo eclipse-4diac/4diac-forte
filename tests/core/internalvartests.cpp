@@ -103,6 +103,20 @@ BOOST_AUTO_TEST_CASE(sampleInteralVarList){
   BOOST_CHECK_EQUAL(CIEC_ANY::e_UINT, testFB.getVarInternal(2)->getDataTypeID());
 }
 
+BOOST_AUTO_TEST_CASE(testToStringWithInternalVariables){
+
+  CStringDictionary::TStringId varInternalNames[] = {g_nStringIdQU, g_nStringIdQD, g_nStringIdCV};
+  CStringDictionary::TStringId varInternalTypeIds[] = {g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdUINT};
+
+  SInternalVarsInformation varData{3, varInternalNames, varInternalTypeIds};
+
+  CInternalVarTestFB testFB(&varData);
+  BOOST_ASSERT(testFB.initialize());
+  constexpr char result[] = "(QU:=FALSE, QD:=FALSE, CV:=0)";
+  char buffer[50];
+  BOOST_TEST(testFB.toString(buffer, sizeof(buffer)) == strlen(result));
+  BOOST_TEST(buffer == result);
+}
 
 BOOST_AUTO_TEST_SUITE_END()
 

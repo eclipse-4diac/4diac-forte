@@ -178,12 +178,12 @@ BOOST_AUTO_TEST_CASE(TIME_to_STRING_test)
   //check TIME
   CIEC_TIME tTest;
   tTest.fromString("T#3000ms");
-  sResult = "T#3000ms"_STRING;
+  sResult = "T#3s"_STRING;
   sTest = func_TIME_AS_STRING(tTest);
   //check result value
   BOOST_TEST(sTest == sResult);
   //check length value
-  BOOST_TEST(sTest.length() == 8);
+  BOOST_TEST(sTest.length() == 4);
 }
 
 BOOST_AUTO_TEST_CASE(REAL_to_STRING_test) {

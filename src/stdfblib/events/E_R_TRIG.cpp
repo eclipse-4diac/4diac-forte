@@ -67,6 +67,7 @@ const SCFB_FBNData FORTE_E_R_TRIG::scmFBNData = {
   0, nullptr,
   2, scmDataConnections,
   0, nullptr,
+  0, nullptr,
   0, nullptr
 };
 

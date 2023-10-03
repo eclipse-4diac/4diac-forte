@@ -88,6 +88,7 @@ const SCFB_FBNData FORTE_CFB_TEST::scmFBNData = {
   1, scmFannedOutEventConnections,
   3, scmDataConnections,
   2, scmFannedOutDataConnections,
+  0, nullptr,
   0, nullptr
 };
 

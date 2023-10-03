@@ -695,7 +695,125 @@ TForteUInt32 &CFunctionBlock::getEOMonitorData(TEventID paEOID){
   return mEOMonitorCount[paEOID];
 }
 
+const std::string CFunctionBlock::getFullQualifiedInstanceName() const {
+  std::string fullName;
+  fullName.reserve(cgStringInitialSize);
+  fullName = getInstanceName();
+  forte::core::CFBContainer* parent = mContainer;
+  CResource* resourcePtr = getResourcePtr();
+  while(parent != nullptr &&
+		parent != resourcePtr &&
+		parent->getName() != nullptr) {
+    fullName.insert(0, ".");
+    fullName.insert(0, parent->getName());
+    parent = parent->getParent();
+  }
+  fullName.shrink_to_fit();
+  return fullName;
+}
+
 #endif //FORTE_SUPPORT_MONITORING
+
+int CFunctionBlock::writeToStringNameValuePair(char *paValue, size_t paBufferSize, const CStringDictionary::TStringId variableNameId, const CIEC_ANY *const variable) const {
+  size_t usedBuffer = 0;
+  const char *const variableName = CStringDictionary::getInstance().get(variableNameId);
+  size_t nameLength = strlen(variableName);
+  if ((paBufferSize - usedBuffer) < nameLength + 3) { // := and \0
+    return -1;
+  }
+  strcpy(paValue + usedBuffer, variableName);
+  strcpy(paValue + usedBuffer + nameLength, ":=");
+  usedBuffer += nameLength + 2;
+  int result = variable->toString(paValue + usedBuffer, paBufferSize - usedBuffer);
+  if (result < 0) {
+    return -1;
+  }
+  usedBuffer += static_cast<size_t>(result);
+  return usedBuffer;
+}
+
+int CFunctionBlock::toString(char *paValue, size_t paBufferSize) const {
+  int usedBuffer = 0;
+  if(paBufferSize < 1) {
+    return -1;
+  }
+  *paValue = '(';
+  ++usedBuffer;
+  for (size_t i = 0; i < getFBInterfaceSpec()->mNumDIs; ++i) {
+    const CIEC_ANY *const variable = getDI(i);
+    const CStringDictionary::TStringId nameId = getFBInterfaceSpec()->mDINames[i];
+    int result = writeToStringNameValuePair(paValue + usedBuffer, paBufferSize - usedBuffer, nameId, variable);
+    if(result >= 0) {
+      usedBuffer += result;
+    } else {
+      return -1;
+    }
+    if (paBufferSize - usedBuffer >= sizeof(csmToStringSeparator)) {
+      strncpy(paValue + usedBuffer, csmToStringSeparator, paBufferSize - usedBuffer);
+      usedBuffer += sizeof(csmToStringSeparator) - 1;
+    } else {
+      return -1;
+    }
+  }
+  for (size_t i = 0; i < getFBInterfaceSpec()->mNumDOs; ++i) {
+    const CIEC_ANY *const variable = getDO(i);
+    const CStringDictionary::TStringId nameId = getFBInterfaceSpec()->mDONames[i];
+    int result = writeToStringNameValuePair(paValue + usedBuffer, paBufferSize - usedBuffer, nameId, variable);
+    if(result >= 0) {
+      usedBuffer += result;
+    } else {
+      return -1;
+    }
+    if (paBufferSize - usedBuffer >= sizeof(csmToStringSeparator)) {
+      strncpy(paValue + usedBuffer, csmToStringSeparator, paBufferSize - usedBuffer);
+      usedBuffer += sizeof(csmToStringSeparator) - 1;
+    } else {
+      return -1;
+    }
+  }
+  for (size_t i = 0; i < getFBInterfaceSpec()->mNumDIOs; ++i) {
+    const CIEC_ANY *const variable = getDIO(i);
+    const CStringDictionary::TStringId nameId = getFBInterfaceSpec()->mDIONames[i];
+    int result = writeToStringNameValuePair(paValue + usedBuffer, paBufferSize - usedBuffer, nameId, variable);
+    if(result >= 0) {
+      usedBuffer += result;
+    } else {
+      return -1;
+    }
+    if (paBufferSize - usedBuffer >= sizeof(csmToStringSeparator)) {
+      strncpy(paValue + usedBuffer, csmToStringSeparator, paBufferSize - usedBuffer);
+      usedBuffer += sizeof(csmToStringSeparator) - 1;
+    } else {
+      return -1;
+    }
+  }
+  strncpy(paValue + std::max(1, usedBuffer - 2), ")", paBufferSize - std::max(1, usedBuffer - 2)); // overwrite the last two bytes with the closing )
+  return std::max(2, usedBuffer - 1);
+}
+
+size_t CFunctionBlock::getToStringBufferSize() const {
+  size_t bufferSize = 3; 
+  for (size_t i = 0; i < getFBInterfaceSpec()->mNumDIs; ++i) {
+      const CIEC_ANY *const variable = getDI(i);
+      const CStringDictionary::TStringId nameId = getFBInterfaceSpec()->mDINames[i];
+      const char *varName = CStringDictionary::getInstance().get(nameId);
+      bufferSize += strlen(varName) + 4 + variable->getToStringBufferSize(); // compensation for := and , for every variable
+  }
+  for (size_t i = 0; i < getFBInterfaceSpec()->mNumDOs; ++i) {
+      const CIEC_ANY *const variable = getDO(i);
+      const CStringDictionary::TStringId nameId = getFBInterfaceSpec()->mDONames[i];
+      const char *varName = CStringDictionary::getInstance().get(nameId);
+      bufferSize += strlen(varName) + 4 + variable->getToStringBufferSize(); // compensation for := and , for every variable
+  }
+   for (size_t i = 0; i < getFBInterfaceSpec()->mNumDIOs; ++i) {
+      const CIEC_ANY *const variable = getDIO(i);
+      const CStringDictionary::TStringId nameId = getFBInterfaceSpec()->mDIONames[i];
+      const char *varName = CStringDictionary::getInstance().get(nameId); 
+      bufferSize += strlen(varName) + 4 + variable->getToStringBufferSize(); // compensation for := and , for every variable
+   }
+   return bufferSize;
+
+}
 
 //********************************** below here are CTF Tracing specific functions **********************************************************
 #ifdef FORTE_TRACE_CTF

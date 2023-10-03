@@ -129,10 +129,6 @@ CIEC_ANY *FORTE_FB_TON::getDO(size_t paIndex) {
   return nullptr;
 }
 
-CIEC_ANY *FORTE_FB_TON::getDIO(size_t) {
-  return nullptr;
-}
-
 CEventConnection *FORTE_FB_TON::getEOConUnchecked(TPortId paIndex) {
   switch(paIndex) {
     case 0: return &conn_CNF;
@@ -155,13 +151,3 @@ CDataConnection *FORTE_FB_TON::getDOConUnchecked(TPortId paIndex) {
   }
   return nullptr;
 }
-
-CInOutDataConnection **FORTE_FB_TON::getDIOInConUnchecked(TPortId) {
-  return nullptr;
-}
-
-CInOutDataConnection *FORTE_FB_TON::getDIOOutConUnchecked(TPortId) {
-  return nullptr;
-}
-
-

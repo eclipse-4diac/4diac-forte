@@ -102,3 +102,9 @@ trace:
                       class: dynamic-array
                       element-field-type:
                         class: string
+                - internalFB: # Internal FB 
+                    field-type:
+                      class: dynamic-array
+                      element-field-type:
+                        class: string
+                      

@@ -86,7 +86,7 @@ CLuaCFBTypeEntry* CLuaCFBTypeEntry::createLuaFBTypeEntry(CStringDictionary::TStr
   }
   luaEngine.pop(); //pop interfaceSpec
   //fbnSpec
-  SCFB_FBNData fbnSpec = { 0, nullptr, 0, nullptr, 0, nullptr, 0, nullptr, 0, nullptr, 0, nullptr };
+  SCFB_FBNData fbnSpec = { 0, nullptr, 0, nullptr, 0, nullptr, 0, nullptr, 0, nullptr, 0, nullptr, 0, nullptr };
   if(!luaEngine.pushField(-1, "fbnSpec", LUA_TTABLE)) {
     deleteInterfaceSpec(interfaceSpec);
     return nullptr;

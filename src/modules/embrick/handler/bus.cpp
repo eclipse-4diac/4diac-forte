@@ -254,7 +254,7 @@ bool EmbrickBusHandler::checkHandlerError() {
   }
 
   if (mSlaveSelect->hasError()) {
-    mError = mSlaveSelect->paError;
+    mError = mSlaveSelect->mError;
     return true;
   }
 

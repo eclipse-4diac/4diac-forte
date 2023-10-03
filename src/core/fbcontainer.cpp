@@ -157,7 +157,7 @@ CFunctionBlock* CFBContainer::getContainedFB(forte::core::TNameIdentifier::CIter
 
 CFBContainer* CFBContainer::getFBContainer(CStringDictionary::TStringId paContainerName)  {
   TFBContainerList::iterator it = getFBContainerIterator(paContainerName);
-  if(it != mSubContainers.end() && (*it)->getName() == paContainerName){
+  if(it != mSubContainers.end() && (*it)->getNameId() == paContainerName){
     return *it;
   }
   return nullptr;
@@ -167,7 +167,7 @@ CFBContainer::TFBContainerList::iterator CFBContainer::getFBContainerIterator(CS
   if(CStringDictionary::scmInvalidStringId != paContainerName && !mSubContainers.empty()){
     return std::lower_bound(mSubContainers.begin(), mSubContainers.end(), paContainerName,
                                                      [](CFBContainer* container, CStringDictionary::TStringId containerName)
-                                                     { return container->getName() < containerName; });
+                                                     { return container->getNameId() < containerName; });
   }
   return mSubContainers.end();
 }
@@ -179,7 +179,7 @@ CFBContainer *CFBContainer::findOrCreateContainer(CStringDictionary::TStringId p
     mSubContainers.insert(mSubContainers.begin(), retVal);
   } else {
     TFBContainerList::iterator it = getFBContainerIterator(paContainerName);
-    if (nullptr == getFB(paContainerName) && (it == mSubContainers.end() || (*it)->getName() != paContainerName)) {
+    if (nullptr == getFB(paContainerName) && (it == mSubContainers.end() || (*it)->getNameId() != paContainerName)) {
       //the container with the given name does not exist but only create it if there is no FB with the same name.
       retVal = new CFBContainer(paContainerName, this);
       mSubContainers.insert(it, retVal);

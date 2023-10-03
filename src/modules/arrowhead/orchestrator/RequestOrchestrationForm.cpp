@@ -60,6 +60,7 @@ const SCFB_FBNData FORTE_RequestOrchestrationForm::scmFBNData = {
   0, 0,
   3, scmDataConnections,
   0, 0,
+  0, nullptr,
   0, 0
 };
 

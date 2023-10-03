@@ -30,7 +30,13 @@ public:
    *  For Smaller devices which do not use 64 bit datatypes a time base of 1000 (i.e., 1ms)
    *  or 1000000 (i.e., 1micro s) may be suitable.
    */
-  static const uint_fast64_t csmForteTimeBaseUnitsPerSecond = 1000000000; /* 1E9 */
+  static constexpr uint_fast64_t csmForteTimeBaseUnitsPerNanoSecond = 1;
+  static constexpr uint_fast64_t csmForteTimeBaseUnitsPerMicroSecond = csmForteTimeBaseUnitsPerNanoSecond * 1000;  
+  static constexpr uint_fast64_t csmForteTimeBaseUnitsPerMilliSecond = csmForteTimeBaseUnitsPerMicroSecond * 1000; 
+  static constexpr uint_fast64_t csmForteTimeBaseUnitsPerSecond = csmForteTimeBaseUnitsPerMilliSecond * 1000;     
+  static constexpr uint_fast64_t csmForteTimeBaseUnitsPerMinute = csmForteTimeBaseUnitsPerSecond * 60;
+  static constexpr uint_fast64_t csmForteTimeBaseUnitsPerHour = csmForteTimeBaseUnitsPerMinute * 60;
+  static constexpr uint_fast64_t csmForteTimeBaseUnitsPerDay = csmForteTimeBaseUnitsPerHour *24;
 
   template <typename T, typename U, std::enable_if_t<std::conjunction_v<std::is_base_of<CIEC_ANY_DURATION, T>, std::is_base_of<CIEC_ANY_DURATION, U> >, int> = 0>
   friend bool operator==(const T &paLeft, const U &paRight) {
@@ -81,6 +87,8 @@ public:
 
 protected:
   CIEC_ANY_DURATION() = default;
+  int timeElementsToString(int64_t paTimeElement, char *paValue, int paSize, size_t paBufferSize, const char *paUnit) const;
+
 };
 
 #endif /*_ANY_DURATION_H_*/

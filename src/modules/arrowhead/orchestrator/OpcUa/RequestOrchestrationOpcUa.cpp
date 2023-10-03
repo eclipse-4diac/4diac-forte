@@ -97,6 +97,7 @@ const SCFB_FBNData FORTE_RequestOrchestrationOpcUa::scmFBNData = {
   4, scmFannedOutEventConnections,
   10, scmDataConnections,
   1, scmFannedOutDataConnections,
+  0, nullptr,
   4, scmParamters
 };
 

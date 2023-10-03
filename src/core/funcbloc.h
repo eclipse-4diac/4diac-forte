@@ -282,7 +282,7 @@ class CFunctionBlock {
     /*!\brief Get the pointer to the adapter instance of the FB.
      *
      * \param paAdapterNameId  StringId of the adapter name.
-     * \return Pointer to the data output or 0.
+     * \return Pointer to the adapter or nullptr.
      */
     CAdapter* getAdapter(CStringDictionary::TStringId paAdapterNameId) const;
 
@@ -339,6 +339,9 @@ class CFunctionBlock {
     }
     ;
 
+
+    const std::string getFullQualifiedInstanceName() const;
+
     const char* getInstanceName() const {
       return CStringDictionary::getInstance().get(mFBInstanceName);
     }
@@ -387,6 +390,10 @@ class CFunctionBlock {
       return mDIs[paDINum];
     }
 
+    const CIEC_ANY* getDI(TPortId paDINum) const {
+      return const_cast<CFunctionBlock*>(this)->getDI(paDINum);
+    }
+
     /*! \brief Get the data output with given number
      *
      * Attention this function will not perform any range checks on the paDONum parameter!
@@ -397,6 +404,10 @@ class CFunctionBlock {
       return mDOs[paDONum];
     }
 
+    const CIEC_ANY* getDO(TPortId paDONum) const {
+      return const_cast<CFunctionBlock *>(this)->getDO(paDONum);
+    }
+
     /*! \brief Get the data output with given number
      *
      * Attention this function will not perform any range checks on the paDONum parameter!
@@ -404,7 +415,11 @@ class CFunctionBlock {
      * @return pointer to the data output
      */
     virtual CIEC_ANY* getDIO(TPortId paDIONum) {
-      return mDIOs[paDIONum];
+      return nullptr;
+    }
+
+    const CIEC_ANY* getDIO(TPortId paDIONum) const {
+      return const_cast<CFunctionBlock *>(this)->getDIO(paDIONum);
     }
 
 #ifdef FORTE_SUPPORT_MONITORING
@@ -419,6 +434,10 @@ class CFunctionBlock {
     virtual CFunctionBlock *getFB(forte::core::TNameIdentifier::CIterator &paNameListIt);
 
 #endif //FORTE_SUPPORT_MONITORING
+    
+    virtual int toString(char* paValue, size_t paBufferSize) const;
+
+    virtual size_t getToStringBufferSize() const;
 
 #ifdef FORTE_TRACE_CTF
     virtual void traceInstanceData() {}
@@ -584,7 +603,7 @@ class CFunctionBlock {
      * @return pointer to the data inout connection
      */
     virtual CInOutDataConnection **getDIOInConUnchecked(TPortId paDIONum) {
-      return mDIOConns + paDIONum;
+      return nullptr;
     }
 
     virtual CInOutDataConnection *getDIOOutConUnchecked(TPortId) {
@@ -637,10 +656,8 @@ class CFunctionBlock {
     CEventConnection *mEOConns; //!< A list of event connections pointers storing for each event output the event connection. If the output event is not connected the pointer is nullptr.
     CDataConnection **mDIConns; //!< A list of data connections pointers storing for each data input the data connection. If the data input is not connected the pointer is nullptr.
     CDataConnection *mDOConns; //!< A list of data connections pointers storing for each data output the data connection. If the data output is not connected the pointer is nullptr.
-    CInOutDataConnection **mDIOConns; //!< A list of inout data connections pointers storing for each data inout the data connection. If the data inout is not connected the pointer is nullptr.
     CIEC_ANY **mDIs; //!< A list of pointers to the data inputs. This allows to implement a general getDataInput()
     CIEC_ANY **mDOs; //!< A list of pointers to the data outputs. This allows to implement a general getDataOutput()
-    CIEC_ANY **mDIOs; //!< A list of pointers to the data outputs. This allows to implement a general getDataOutput()
     CEventChainExecutionThread *mInvokingExecEnv; //!< A pointer to the execution thread that invoked the FB. This value is stored here to reduce function parameters and reduce therefore stack usage.
     CAdapter **mAdapters; //!< A list of pointers to the adapters. This allows to implement a general getAdapter().
     void *mFBConnData; //!< Connection data buffer
@@ -683,6 +700,10 @@ class CFunctionBlock {
 
   public:
     CFunctionBlock(const CFunctionBlock&) = delete;
+
+  protected:
+    int writeToStringNameValuePair(char *paValue, size_t paBufferSize, const CStringDictionary::TStringId variableNameId, const CIEC_ANY *const variable) const;
+    constexpr static char csmToStringSeparator[] = ", ";
 
   private:
     void configureGenericDI(TPortId paDIPortId, const CIEC_ANY *paRefValue);

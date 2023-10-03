@@ -41,11 +41,11 @@ namespace forte {
           }
           static const int scmBusAdapterAdpNum = 0;
 
-          void onStartup() override;
+          void onStartup(CEventChainExecutionThread * const paECET) override;
 
-          void onStop() override;
+          void onStop(CEventChainExecutionThread * const paECET) override;
 
-          void executeEvent(TEventID paEIID) override;
+          void executeEvent(TEventID paEIID, CEventChainExecutionThread * const paECET) override;
 
         private:
           static TMasterList mInstances;

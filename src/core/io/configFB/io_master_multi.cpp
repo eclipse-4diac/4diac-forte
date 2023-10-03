@@ -37,40 +37,40 @@ IOConfigFBMultiMaster* IOConfigFBMultiMaster::getMasterById(TForteUInt16 paId) {
   return nullptr;
 }
 
-void IOConfigFBMultiMaster::onStartup() {
+void IOConfigFBMultiMaster::onStartup(CEventChainExecutionThread * const paECET) {
   if(nullptr == BusAdapterOut().getPeer()) {
-    return IOConfigFBController::onStartup();
+    return IOConfigFBController::onStartup(paECET);
   }
 
   BusAdapterOut().MasterId() = CIEC_UINT(mId);
-  BusAdapterOut().Index() = CIEC_UINT(0);
-  BusAdapterOut().QI() = CIEC_BOOL(true);
-  sendAdapterEvent(scmBusAdapterAdpNum, IOConfigFBMultiAdapter::scmEventINITID);
+  BusAdapterOut().Index() = 0_UINT;
+  BusAdapterOut().QI() = true_BOOL;
+  sendAdapterEvent(scmBusAdapterAdpNum, IOConfigFBMultiAdapter::scmEventINITID, paECET);
 }
 
-void IOConfigFBMultiMaster::onStop() {
+void IOConfigFBMultiMaster::onStop(CEventChainExecutionThread * const paECET) {
   if(nullptr == BusAdapterOut().getPeer()) {
-    return IOConfigFBController::onStop();
+    return IOConfigFBController::onStop(paECET);
   }
 
-  BusAdapterOut().QI() = CIEC_BOOL(false);
-  sendAdapterEvent(scmBusAdapterAdpNum, IOConfigFBMultiAdapter::scmEventINITID);
+  BusAdapterOut().QI() = false_BOOL;
+  sendAdapterEvent(scmBusAdapterAdpNum, IOConfigFBMultiAdapter::scmEventINITID, paECET);
 }
 
-void IOConfigFBMultiMaster::executeEvent(TEventID paEIID) {
-  IOConfigFBController::executeEvent(paEIID);
+void IOConfigFBMultiMaster::executeEvent(TEventID paEIID, CEventChainExecutionThread * const paECET) {
+  IOConfigFBController::executeEvent(paEIID, paECET);
 
   if(BusAdapterOut().INITO() == paEIID) {
     QO() = BusAdapterOut().QO();
 
     if(BusAdapterOut().QI() == true) {
       if(BusAdapterOut().QO() == true) {
-        IOConfigFBController::onStartup();
+        IOConfigFBController::onStartup(paECET);
       } else {
-        started(scmFailedToInitSlaves);
+        started(paECET, scmFailedToInitSlaves);
       }
     } else {
-      IOConfigFBController::onStop();
+      IOConfigFBController::onStop(paECET);
     }
   }
 }

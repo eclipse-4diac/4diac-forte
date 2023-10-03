@@ -177,12 +177,12 @@ BOOST_AUTO_TEST_CASE(TIME_to_WSTRING_test)
   //check TIME
   CIEC_TIME tTest;
   tTest.fromString("T#3000ms");
-  sResult = CIEC_WSTRING("T#3000ms");
+  sResult = CIEC_WSTRING("T#3s");
   sTest = func_TIME_AS_WSTRING(tTest);
   //check result value
   BOOST_CHECK(sTest == sResult);
   //check length value
-  BOOST_CHECK_EQUAL(sTest.length(), 8);
+  BOOST_CHECK_EQUAL(sTest.length(), 4);
 }
 
 BOOST_AUTO_TEST_CASE(REAL_to_WSTRING_test)

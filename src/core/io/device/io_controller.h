@@ -22,6 +22,8 @@
 
 #include <io/mapper/io_handle.h>
 
+#include <string>
+
 namespace forte {
   namespace core {
     namespace io {
@@ -60,10 +62,10 @@ namespace forte {
            */
           class HandleDescriptor {
             public:
-              CIEC_WSTRING const &mId;
+              std::string const &mId;
               IOMapper::Direction mDirection;
 
-              HandleDescriptor(CIEC_WSTRING const &paId, IOMapper::Direction paDirection) :
+              HandleDescriptor(std::string const &paId, IOMapper::Direction paDirection) :
                   mId(paId), mDirection(paDirection) {
 
               }
@@ -212,7 +214,7 @@ namespace forte {
 
           int mInitDelay;
 
-          void addHandle(THandleList* paList, CIEC_WSTRING const &paId, IOHandle* paHandle);
+          void addHandle(THandleList* paList, std::string const &paId, IOHandle* paHandle);
 
           // Functions needed for the external event handler interface
           void enableHandler() override {

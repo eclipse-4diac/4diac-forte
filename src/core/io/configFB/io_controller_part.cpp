@@ -20,7 +20,7 @@ IOConfigFBPartController::IOConfigFBPartController(CResource *paSrcRes, const SF
     IOConfigFBBase(paSrcRes, paInterfaceSpec, paInstanceNameId), mMaster(nullptr) {
 }
 
-void IOConfigFBPartController::executeEvent(TEventID paEIID) {
+void IOConfigFBPartController::executeEvent(TEventID paEIID, CEventChainExecutionThread * const paECET) {
   if(IOConfigFBMultiAdapter().INIT() == paEIID) {
     if(IOConfigFBMultiAdapter().QI() == true) {
       // Get master by id
@@ -36,13 +36,13 @@ void IOConfigFBPartController::executeEvent(TEventID paEIID) {
       }
       // Send confirmation of init
       IOConfigFBMultiAdapter().QO() = QO();
-      sendAdapterEvent(scmSplitAdapterAdpNum, IOConfigFBSplitAdapter::scmEventINITOID);
+      sendAdapterEvent(scmSplitAdapterAdpNum, IOConfigFBSplitAdapter::scmEventINITOID, paECET);
     } else {
       QO() = CIEC_BOOL(false);
 
       // Send confirmation of deInit
       IOConfigFBMultiAdapter().QO() = QO();
-      sendAdapterEvent(scmSplitAdapterAdpNum, IOConfigFBSplitAdapter::scmEventINITOID);
+      sendAdapterEvent(scmSplitAdapterAdpNum, IOConfigFBSplitAdapter::scmEventINITOID, paECET);
     }
   }
 }

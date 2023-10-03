@@ -178,9 +178,6 @@ CIEC_ANY *FORTE_ST_REC_CONN::getDO(size_t paIndex) {
   return nullptr;
 }
 
-CIEC_ANY *FORTE_ST_REC_CONN::getDIO(size_t) {
-  return nullptr;
-}
 
 CEventConnection *FORTE_ST_REC_CONN::getEOConUnchecked(TPortId paIndex) {
   switch(paIndex) {
@@ -212,13 +209,4 @@ CDataConnection *FORTE_ST_REC_CONN::getDOConUnchecked(TPortId paIndex) {
   }
   return nullptr;
 }
-
-CInOutDataConnection **FORTE_ST_REC_CONN::getDIOInConUnchecked(TPortId) {
-  return nullptr;
-}
-
-CInOutDataConnection *FORTE_ST_REC_CONN::getDIOOutConUnchecked(TPortId) {
-  return nullptr;
-}
-
 

@@ -40,7 +40,7 @@ const SFBInterfaceSpec FORTE_QL::scmFBInterfaceSpec = {
 };
 
 FORTE_QL::FORTE_QL(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) :
-    CFunctionBlock( paSrcRes, &scmFBInterfaceSpec, paInstanceNameId),
+        CProcessInterface(paSrcRes, &scmFBInterfaceSpec, paInstanceNameId),
     var_conn_QO(var_QO),
     var_conn_STATUS(var_STATUS),
     conn_INITO(this, 0),
@@ -136,10 +136,6 @@ CIEC_ANY *FORTE_QL::getDO(size_t paIndex) {
   return nullptr;
 }
 
-CIEC_ANY *FORTE_QL::getDIO(size_t) {
-  return nullptr;
-}
-
 CEventConnection *FORTE_QL::getEOConUnchecked(TPortId paIndex) {
   switch(paIndex) {
     case 0: return &conn_INITO;
@@ -162,14 +158,6 @@ CDataConnection *FORTE_QL::getDOConUnchecked(TPortId paIndex) {
     case 0: return &conn_QO;
     case 1: return &conn_STATUS;
   }
-  return nullptr;
-}
-
-CInOutDataConnection **FORTE_QL::getDIOInConUnchecked(TPortId) {
-  return nullptr;
-}
-
-CInOutDataConnection *FORTE_QL::getDIOOutConUnchecked(TPortId) {
   return nullptr;
 }
 

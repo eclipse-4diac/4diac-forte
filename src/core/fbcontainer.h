@@ -28,8 +28,12 @@ namespace forte {
         CFBContainer(CStringDictionary::TStringId paContainerName, CFBContainer *paParent);
         virtual ~CFBContainer();
 
-        CStringDictionary::TStringId getName() const{
+        CStringDictionary::TStringId getNameId() const{
           return mContainerName;
+        }
+
+        const char* getName() const {
+          return CStringDictionary::getInstance().get(mContainerName);
         }
 
         /*!\brief Gets a function block from the container or recursively from its subcontainers

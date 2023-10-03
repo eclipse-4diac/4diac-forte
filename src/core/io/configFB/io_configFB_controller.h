@@ -59,7 +59,7 @@ namespace forte {
             return *static_cast<CIEC_WSTRING*>(getDO(1));
           }
 
-          void executeEvent(TEventID paEIID) override;
+          void executeEvent(TEventID paEIID, CEventChainExecutionThread * const paECET) override;
 
           /*! @brief Creates an instance of the corresponding Device Controller
            *
@@ -85,19 +85,21 @@ namespace forte {
            *
            * @param paType Type of the notification
            * @param paAttachment Reference to the attachment (e.g. a string of an error message)
+           * @param paECET event chain execution thread to be used for handling the notification
            * @return True if the notification has been handled. In case it is not handled, a warning message is logged.
            */
-          virtual bool handleNotification(IODeviceController::NotificationType paType, const void* paAttachment);
+          virtual bool handleNotification(IODeviceController::NotificationType paType, const void* paAttachment, CEventChainExecutionThread * const paECET);
 
           /*! @brief Initializes the configuration fb
            *
            * It is usually called by the INIT+ event.
            * It may also be called after an error and a following recovery attempt.
            *
+           * @param paECET event chain execution thread for sending any events
            * @param paDelay Delay the initialization in seconds
            * @return True if the initialization was successful
            */
-          bool init(int paDelay = 0);
+          bool init(CEventChainExecutionThread * const paECET, int paDelay = 0);
 
           /*! @brief Initializes an IO handle
            *
@@ -113,10 +115,11 @@ namespace forte {
            *
            * It is usually called by the INIT- event and after an error.
            *
+           * @param paECET event chain execution thread for sending any events
            * @param paIsDestructing True if the deInit is called inside the destructor
            * @return True if the deinitialization was successful
            */
-          bool deInit(bool paIsDestructing = false);
+          bool deInit(CEventChainExecutionThread * const paECET, bool paIsDestructing = false);
 
           /*! @brief Used for asynchronous initialization operations
            *
@@ -124,14 +127,17 @@ namespace forte {
            * It is, for example, used for the initialization of attached configuration fbs.
            *
            * @attention The #started method should be called after the asynchronous initialization operations
+           *
+           * @param paECET event chain execution thread for sending any events
            */
-          virtual void onStartup();
+          virtual void onStartup(CEventChainExecutionThread * const paECET);
 
           /*! @brief Confirmation method of the #onStartup method
            *
+           * @param paECET event chain execution thread for sending any events
            * @param paError Forward error message in case the startup was not successful. Leads to a re-initialization.
            */
-          void started(const char* paError = nullptr);
+          void started(CEventChainExecutionThread * const paECET, const char* paError = nullptr);
 
           /*! @brief Used for asynchronous deinitialization operations
            *
@@ -139,11 +145,16 @@ namespace forte {
            * It is, for example, used for the deinitialization of attached configuration fbs.
            *
            * @attention The #stopped method should be called after the deinitialization operations.
+           *
+           * @param paECET event chain execution thread for sending any events
            */
-          virtual void onStop();
+          virtual void onStop(CEventChainExecutionThread * const paECET);
 
-          /*! @brief Confirmation method of the #onStop method */
-          void stopped();
+          /*! @brief Confirmation method of the #onStop method
+           *
+           * @param paECET event chain execution thread for sending any events
+           */
+          void stopped(CEventChainExecutionThread * const paECET);
 
         private:
 
@@ -159,14 +170,14 @@ namespace forte {
           //! Instance of the corresponding Device Controller
           IODeviceController *mController;
 
-          void onError(bool paIsFatal = true);
+          void onError(CEventChainExecutionThread * const paECET, bool paIsFatal = true);
 
           bool mPerformRestart;
 
-          static const char * const scmOK;
-          static const char * const scmInitializing;
-          static const char * const scmFailedToInit;
-          static const char * const scmStopped;
+          static const CIEC_WSTRING scmOK;
+          static const CIEC_WSTRING scmInitializing;
+          static const CIEC_WSTRING scmFailedToInit;
+          static const CIEC_WSTRING scmStopped;
       };
 
     } //namespace IO

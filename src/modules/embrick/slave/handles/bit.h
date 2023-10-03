@@ -29,8 +29,7 @@ class EmbrickBitSlaveHandle : public EmbrickSlaveHandle {
 
   protected:
     virtual void reset() {
-      CIEC_BOOL s = false;
-      set(s);
+      set(false_BOOL);
     }
 
     const uint8_t mMask;
