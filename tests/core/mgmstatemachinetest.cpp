@@ -33,7 +33,7 @@ class CFunctionBlockMock : public CFunctionBlock{
     }
 
   private:
-    void executeEvent(TEventID) override {
+    void executeEvent(TEventID, CEventChainExecutionThread * const) override {
     }
 
     void readInputData(TEventID) override{

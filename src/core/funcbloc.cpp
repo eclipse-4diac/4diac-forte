@@ -40,7 +40,7 @@ CFunctionBlock::CFunctionBlock(CResource *paSrcRes, const SFBInterfaceSpec *paIn
                                CStringDictionary::TStringId paInstanceNameId) :
         mInterfaceSpec(paInterfaceSpec),
         mEOConns(nullptr), mDIConns(nullptr), mDOConns(nullptr), mDIs(nullptr), mDOs(nullptr),
-        mInvokingExecEnv(nullptr), mAdapters(nullptr),
+        mAdapters(nullptr),
         mFBConnData(nullptr), mFBVarsData(nullptr),
         mResource(paSrcRes), mContainer(nullptr),
 #ifdef FORTE_SUPPORT_MONITORING

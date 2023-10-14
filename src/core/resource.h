@@ -113,7 +113,7 @@ class CResource : public CFunctionBlock, public forte::core::CFBContainer{
   protected:
     CResource(const SFBInterfaceSpec *paInterfaceSpec, CStringDictionary::TStringId paInstanceNameId);
 
-    void executeEvent(TEventID) override {
+    void executeEvent(TEventID paEIID, CEventChainExecutionThread * const paECET) override {
       // nothing to do here for a resource
     }
 

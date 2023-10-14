@@ -54,7 +54,7 @@ BOOST_AUTO_TEST_CASE(FB_TO_STRING_BUFFER_SIZE_TEST_WITH_INRENAL_VAR){
             return CStringDictionary::scmInvalidStringId;
         }
 
-        void executeEvent(TEventID) override {
+        void executeEvent(TEventID, CEventChainExecutionThread * const) override {
             // nothiing to do here
         }
 

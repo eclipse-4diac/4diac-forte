@@ -44,8 +44,8 @@ class CInternalVarTestFB : public CBasicFB{
       return CStringDictionary::scmInvalidStringId;
     }
 
-    void executeEvent(TEventID) override {
-      //nothiing to do here
+    void executeEvent(TEventID, CEventChainExecutionThread * const) override {
+      //nothing to do here
     }
 
     void readInputData(TEventID) override{
