@@ -71,7 +71,7 @@ void FORTE_UDINT2UDINT::alg_REQ(void) {
 }
 
 
-void FORTE_UDINT2UDINT::executeEvent(TEventID paEIID){
+void FORTE_UDINT2UDINT::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   switch(paEIID) {
     case scmEventREQID:
       alg_REQ();
@@ -79,7 +79,7 @@ void FORTE_UDINT2UDINT::executeEvent(TEventID paEIID){
     default:
       break;
   }
-  sendOutputEvent(scmEventCNFID);
+  sendOutputEvent(scmEventCNFID, paECET);
 }
 
 void FORTE_UDINT2UDINT::readInputData(TEventID paEIID) {

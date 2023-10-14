@@ -30,12 +30,12 @@ const CStringDictionary::TStringId GEN_STRUCT_DEMUX::scmEventOutputNames[] = { g
 
 const CStringDictionary::TStringId GEN_STRUCT_DEMUX::scmDataInputNames[] = { g_nStringIdIN };
 
-void GEN_STRUCT_DEMUX::executeEvent(TEventID paEIID) {
+void GEN_STRUCT_DEMUX::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   if(scmEventREQID == paEIID) {
     for (size_t i = 0; i < st_IN().getStructSize(); i++){
       getDO(static_cast<unsigned int>(i))->setValue(*st_IN().getMember(i));
     }
-    sendOutputEvent(scmEventCNFID);
+    sendOutputEvent(scmEventCNFID, paECET);
   }
 }
 

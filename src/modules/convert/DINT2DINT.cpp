@@ -71,7 +71,7 @@ void FORTE_DINT2DINT::alg_REQ(void) {
 }
 
 
-void FORTE_DINT2DINT::executeEvent(TEventID paEIID){
+void FORTE_DINT2DINT::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   switch(paEIID) {
     case scmEventREQID:
       alg_REQ();
@@ -79,7 +79,7 @@ void FORTE_DINT2DINT::executeEvent(TEventID paEIID){
     default:
       break;
   }
-  sendOutputEvent(scmEventCNFID);
+  sendOutputEvent(scmEventCNFID, paECET);
 }
 
 void FORTE_DINT2DINT::readInputData(TEventID paEIID) {
