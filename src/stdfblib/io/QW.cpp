@@ -64,7 +64,7 @@ void FORTE_QW::executeEvent(TEventID paEIID, CEventChainExecutionThread *const p
   switch(paEIID) {
     case scmEventINITID:
       if (var_QI) {
-        var_QO = CIEC_BOOL(CProcessInterface::initialise(false)); //initialise as output
+        var_QO = CIEC_BOOL(CProcessInterface::initialise(false, paECET)); //initialise as output
       } else {
         var_QO = CIEC_BOOL(CProcessInterface::deinitialise());
       }

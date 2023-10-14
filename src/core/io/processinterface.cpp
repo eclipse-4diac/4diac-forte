@@ -38,7 +38,7 @@ ProcessInterface::~ProcessInterface() {
   deinitialise();
 }
 
-bool ProcessInterface::initialise(bool paIsInput) {
+bool ProcessInterface::initialise(bool paIsInput, CEventChainExecutionThread *const paECET) {
   mDirection = paIsInput ? IOMapper::In : IOMapper::Out;
   if(paIsInput && (getFBInterfaceSpec()->mNumDOs < 3)) {
     mType = CIEC_ANY::e_Max; //we assume that any FB which has no "IN" Output must be a EVENT-Only FB.
@@ -58,6 +58,10 @@ bool ProcessInterface::initialise(bool paIsInput) {
   if(!(mIsListening = IOMapper::getInstance().registerObserver(getFullQualifiedInstanceName(), this))) {
     STATUS() = scmFailedToRegister;
     return false;
+  }
+
+  if(mDirection == IOMapper::In) {
+    setEventChainExecutor(paECET);
   }
 
   return mIsReady;
@@ -176,10 +180,6 @@ void ProcessInterface::onHandle(IOHandle* paHandle) {
     if(paHandle->getDirection() != mDirection) {
       STATUS() = mDirection == IOMapper::In ? scmMappedWrongDirectionInput : scmMappedWrongDirectionOutput;
       return;
-    }
-
-    if(mDirection == IOMapper::In) {
-      setEventChainExecutor(mInvokingExecEnv);
     }
 
     STATUS() = scmOK;

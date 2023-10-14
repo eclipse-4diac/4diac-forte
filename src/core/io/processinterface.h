@@ -35,7 +35,7 @@ namespace forte {
           bool onChange() override;
 
         protected:
-          bool initialise(bool paIsInput);
+          bool initialise(bool paIsInput, CEventChainExecutionThread *const paECET);
           bool deinitialise();
           bool readPin() {
             return read(IN_X());

@@ -66,7 +66,7 @@ void FORTE_IE::executeEvent(const TEventID paEIID, CEventChainExecutionThread *c
       break;
     case scmEventINITID:
       if (var_QI) {
-        var_QO = CIEC_BOOL(CProcessInterface::initialise(true)); //initialise as input
+        var_QO = CIEC_BOOL(CProcessInterface::initialise(true, paECET)); //initialise as input
       } else {
         var_QO = CIEC_BOOL(CProcessInterface::deinitialise());
       }

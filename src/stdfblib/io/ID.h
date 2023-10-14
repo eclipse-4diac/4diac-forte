@@ -30,7 +30,7 @@
  * In order that this FB can be used implementations need to provide a class CProcessInterface
  * this class needs to inherit from CProcessInterfaceBase and provide the following functions
  *
- *   - bool initialise(bool paInput)
+ *   - bool initialise(bool paInput, CEventChainExecutionThread *const paECET)
  *     Initialize the physical input identified with the value of the PARAMS input
  *       - @param paInput: if true it should be an input, if false it should be an output
  *       - @return true on success, false on error
