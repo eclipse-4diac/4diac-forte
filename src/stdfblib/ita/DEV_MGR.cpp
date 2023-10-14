@@ -56,7 +56,7 @@ const SFBInterfaceSpec DEV_MGR::scmFBInterfaceSpec = {
 
 const char * const DEV_MGR::scmMGMResponseTexts[13] = { "RDY", "BAD_PARAMS", "LOCAL_TERMINATION", "SYSTEM_TERMINATION", "NOT_READY", "UNSUPPORTED_CMD", "UNSUPPORTED_TYPE", "NO_SUCH_OBJECT", "INVALID_OBJECT", "INVALID_OPERATION", "INVALID_STATE", "OVERFLOW", "INVALID_DST" };
 
-void DEV_MGR::executeEvent(TEventID paEIID){
+void DEV_MGR::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   if(scmEventINITID == paEIID){
 #ifdef FORTE_SUPPORT_BOOT_FILE
     if((true == QI()) && (false == QO())){
@@ -71,7 +71,7 @@ void DEV_MGR::executeEvent(TEventID paEIID){
       }
     }
 #endif
-    CCommFB::executeEvent(paEIID);  //initialize the underlying server FB
+    CCommFB::executeEvent(paEIID, paECET);  //initialize the underlying server FB
   }else{
     if(cgExternalEventID == paEIID && //we received a message on the network let the server correctly handle it
         forte::com_infra::e_ProcessDataOk == CCommFB::receiveData()){ //the message was correctly received

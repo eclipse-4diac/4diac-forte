@@ -125,7 +125,7 @@ class DEV_MGR: public forte::com_infra::CCommFB, public IBootFileCallback {
      */
     static int parseIdentifier(char *paIdentifierStart, forte::core::TNameIdentifier &paIdentifier);
 
-    void executeEvent(TEventID paEIID) override;
+    void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
 #ifdef FORTE_SUPPORT_MONITORING
     static bool parseMonitoringData(char *paRequestPartLeft, forte::core::SManagementCMD &paCommand);
