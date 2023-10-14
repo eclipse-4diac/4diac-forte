@@ -22,7 +22,7 @@
 #include "forte_array_variable.h"
 
 
-class FORTE_E_DEMUX: public CBasicFB {
+class FORTE_E_DEMUX final : public CBasicFB {
   DECLARE_FIRMWARE_FB(FORTE_E_DEMUX)
 
 private:
@@ -40,48 +40,55 @@ private:
   static const CStringDictionary::TStringId scmEventOutputNames[];
 
   static const SFBInterfaceSpec scmFBInterfaceSpec;
+
   CIEC_ANY *getVarInternal(size_t) override;
+
   static const TForteInt16 scmStateSTART = 0;
   static const TForteInt16 scmStateState = 1;
   static const TForteInt16 scmStateState_1 = 2;
   static const TForteInt16 scmStateState_2 = 3;
   static const TForteInt16 scmStateState_3 = 4;
   static const TForteInt16 scmStateState_4 = 5;
-  
-  void enterStateSTART(void);
-  void enterStateState(void);
-  void enterStateState_1(void);
-  void enterStateState_2(void);
-  void enterStateState_3(void);
-  void enterStateState_4(void);
 
-  void executeEvent(TEventID paEIID) override;
+  void enterStateSTART(CEventChainExecutionThread *const paECET);
+  void enterStateState(CEventChainExecutionThread *const paECET);
+  void enterStateState_1(CEventChainExecutionThread *const paECET);
+  void enterStateState_2(CEventChainExecutionThread *const paECET);
+  void enterStateState_3(CEventChainExecutionThread *const paECET);
+  void enterStateState_4(CEventChainExecutionThread *const paECET);
+
+  void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
   void readInputData(TEventID paEIID) override;
   void writeOutputData(TEventID paEIID) override;
+  void setInitialValues() override;
 
 public:
   FORTE_E_DEMUX(CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
 
   CIEC_UINT var_K;
+
   CEventConnection conn_EO0;
   CEventConnection conn_EO1;
   CEventConnection conn_EO2;
   CEventConnection conn_EO3;
+
   CDataConnection *conn_K;
+
   CIEC_ANY *getDI(size_t) override;
   CIEC_ANY *getDO(size_t) override;
   CEventConnection *getEOConUnchecked(TPortId) override;
   CDataConnection **getDIConUnchecked(TPortId) override;
   CDataConnection *getDOConUnchecked(TPortId) override;
-  void evt_EI(const CIEC_UINT &pa_K) {
-    var_K = pa_K;
+
+  void evt_EI(const CIEC_UINT &paK) {
+    var_K = paK;
     receiveInputEvent(scmEventEIID, nullptr);
   }
-  void operator()(const CIEC_UINT &pa_K) {
-    evt_EI(pa_K);
+
+  void operator()(const CIEC_UINT &paK) {
+    evt_EI(paK);
   }
 };
-
 
 

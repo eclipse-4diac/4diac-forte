@@ -31,7 +31,7 @@ class GEN_E_MUX : public CGenFunctionBlock<CFunctionBlock>{
 
     CStringDictionary::TStringId *mEventInputNames;
 
-    void executeEvent(TEventID paEIID) override;
+    void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
     void readInputData(TEventID paEI) override;
     void writeOutputData(TEventID paEO) override;

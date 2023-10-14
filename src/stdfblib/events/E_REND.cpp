@@ -40,36 +40,34 @@ const SFBInterfaceSpec FORTE_E_REND::scmFBInterfaceSpec = {
   0, nullptr
 };
 
-FORTE_E_REND::FORTE_E_REND(CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) :
+FORTE_E_REND::FORTE_E_REND(const CStringDictionary::TStringId paInstanceNameId, CResource *const paSrcRes) :
     CBasicFB(paSrcRes, &scmFBInterfaceSpec, paInstanceNameId, nullptr),
     conn_EO(this, 0) {
 }
 
-
-
-void FORTE_E_REND::executeEvent(TEventID paEIID){
+void FORTE_E_REND::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   do {
     switch(mECCState) {
       case scmStateSTART:
-        if(scmEventEI2ID == paEIID) enterStateEI2();
+        if(scmEventEI2ID == paEIID) enterStateEI2(paECET);
         else
-        if(scmEventEI1ID == paEIID) enterStateEI1();
+        if(scmEventEI1ID == paEIID) enterStateEI1(paECET);
         else return; //no transition cleared
         break;
       case scmStateEI1:
-        if(scmEventRID == paEIID) enterStateSTART();
+        if(scmEventRID == paEIID) enterStateSTART(paECET);
         else
-        if(scmEventEI2ID == paEIID) enterStateEO();
+        if(scmEventEI2ID == paEIID) enterStateEO(paECET);
         else return; //no transition cleared
         break;
       case scmStateEO:
-        if(1) enterStateSTART();
+        if(1) enterStateSTART(paECET);
         else return; //no transition cleared
         break;
       case scmStateEI2:
-        if(scmEventRID == paEIID) enterStateSTART();
+        if(scmEventRID == paEIID) enterStateSTART(paECET);
         else
-        if(scmEventEI1ID == paEIID) enterStateEO();
+        if(scmEventEI1ID == paEIID) enterStateEO(paECET);
         else return; //no transition cleared
         break;
       default:
@@ -81,10 +79,29 @@ void FORTE_E_REND::executeEvent(TEventID paEIID){
   } while(true);
 }
 
+void FORTE_E_REND::enterStateSTART(CEventChainExecutionThread *const paECET) {
+  mECCState = scmStateSTART;
+}
+
+void FORTE_E_REND::enterStateEI1(CEventChainExecutionThread *const paECET) {
+  mECCState = scmStateEI1;
+}
+
+void FORTE_E_REND::enterStateEO(CEventChainExecutionThread *const paECET) {
+  mECCState = scmStateEO;
+  sendOutputEvent(scmEventEOID, paECET);
+}
+
+void FORTE_E_REND::enterStateEI2(CEventChainExecutionThread *const paECET) {
+  mECCState = scmStateEI2;
+}
+
 void FORTE_E_REND::readInputData(TEventID) {
+  // nothing to do
 }
 
 void FORTE_E_REND::writeOutputData(TEventID) {
+  // nothing to do
 }
 
 CIEC_ANY *FORTE_E_REND::getDI(size_t) {
@@ -95,7 +112,7 @@ CIEC_ANY *FORTE_E_REND::getDO(size_t) {
   return nullptr;
 }
 
-CEventConnection *FORTE_E_REND::getEOConUnchecked(TPortId paIndex) {
+CEventConnection *FORTE_E_REND::getEOConUnchecked(const TPortId paIndex) {
   switch(paIndex) {
     case 0: return &conn_EO;
   }
@@ -113,24 +130,4 @@ CDataConnection *FORTE_E_REND::getDOConUnchecked(TPortId) {
 CIEC_ANY *FORTE_E_REND::getVarInternal(size_t) {
   return nullptr;
 }
-
-
-void FORTE_E_REND::enterStateSTART(void) {
-  mECCState = scmStateSTART;
-}
-
-void FORTE_E_REND::enterStateEI1(void) {
-  mECCState = scmStateEI1;
-}
-
-void FORTE_E_REND::enterStateEO(void) {
-  mECCState = scmStateEO;
-  sendOutputEvent(scmEventEOID);
-}
-
-void FORTE_E_REND::enterStateEI2(void) {
-  mECCState = scmStateEI2;
-}
-
-
 

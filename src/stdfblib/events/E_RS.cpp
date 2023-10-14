@@ -43,37 +43,30 @@ const SFBInterfaceSpec FORTE_E_RS::scmFBInterfaceSpec = {
   0, nullptr
 };
 
-FORTE_E_RS::FORTE_E_RS(CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) :
+FORTE_E_RS::FORTE_E_RS(const CStringDictionary::TStringId paInstanceNameId, CResource *const paSrcRes) :
     CBasicFB(paSrcRes, &scmFBInterfaceSpec, paInstanceNameId, nullptr),
-    var_Q(CIEC_BOOL(0)),
     var_conn_Q(var_Q),
     conn_EO(this, 0),
     conn_Q(this, 0, &var_conn_Q) {
 }
 
-void FORTE_E_RS::alg_SET(void) {
-  
-  var_Q = CIEC_BOOL(true);
-}
-void FORTE_E_RS::alg_RESET(void) {
-  
-  var_Q = CIEC_BOOL(false);
+void FORTE_E_RS::setInitialValues() {
+  var_Q = 0_BOOL;
 }
 
-
-void FORTE_E_RS::executeEvent(TEventID paEIID){
+void FORTE_E_RS::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   do {
     switch(mECCState) {
       case scmStateSTART:
-        if(scmEventSID == paEIID) enterStateSET();
+        if(scmEventSID == paEIID) enterStateSET(paECET);
         else return; //no transition cleared
         break;
       case scmStateSET:
-        if(scmEventRID == paEIID) enterStateRESET();
+        if(scmEventRID == paEIID) enterStateRESET(paECET);
         else return; //no transition cleared
         break;
       case scmStateRESET:
-        if(scmEventSID == paEIID) enterStateSET();
+        if(scmEventSID == paEIID) enterStateSET(paECET);
         else return; //no transition cleared
         break;
       default:
@@ -85,10 +78,27 @@ void FORTE_E_RS::executeEvent(TEventID paEIID){
   } while(true);
 }
 
-void FORTE_E_RS::readInputData(TEventID) {
+void FORTE_E_RS::enterStateSTART(CEventChainExecutionThread *const paECET) {
+  mECCState = scmStateSTART;
 }
 
-void FORTE_E_RS::writeOutputData(TEventID paEIID) {
+void FORTE_E_RS::enterStateSET(CEventChainExecutionThread *const paECET) {
+  mECCState = scmStateSET;
+  alg_SET();
+  sendOutputEvent(scmEventEOID, paECET);
+}
+
+void FORTE_E_RS::enterStateRESET(CEventChainExecutionThread *const paECET) {
+  mECCState = scmStateRESET;
+  alg_RESET();
+  sendOutputEvent(scmEventEOID, paECET);
+}
+
+void FORTE_E_RS::readInputData(TEventID) {
+  // nothing to do
+}
+
+void FORTE_E_RS::writeOutputData(const TEventID paEIID) {
   switch(paEIID) {
     case scmEventEOID: {
       RES_DATA_CON_CRITICAL_REGION();
@@ -104,14 +114,14 @@ CIEC_ANY *FORTE_E_RS::getDI(size_t) {
   return nullptr;
 }
 
-CIEC_ANY *FORTE_E_RS::getDO(size_t paIndex) {
+CIEC_ANY *FORTE_E_RS::getDO(const size_t paIndex) {
   switch(paIndex) {
     case 0: return &var_Q;
   }
   return nullptr;
 }
 
-CEventConnection *FORTE_E_RS::getEOConUnchecked(TPortId paIndex) {
+CEventConnection *FORTE_E_RS::getEOConUnchecked(const TPortId paIndex) {
   switch(paIndex) {
     case 0: return &conn_EO;
   }
@@ -122,7 +132,7 @@ CDataConnection **FORTE_E_RS::getDIConUnchecked(TPortId) {
   return nullptr;
 }
 
-CDataConnection *FORTE_E_RS::getDOConUnchecked(TPortId paIndex) {
+CDataConnection *FORTE_E_RS::getDOConUnchecked(const TPortId paIndex) {
   switch(paIndex) {
     case 0: return &conn_Q;
   }
@@ -133,22 +143,15 @@ CIEC_ANY *FORTE_E_RS::getVarInternal(size_t) {
   return nullptr;
 }
 
+void FORTE_E_RS::alg_SET(void) {
 
-void FORTE_E_RS::enterStateSTART(void) {
-  mECCState = scmStateSTART;
+  #line 2 "E_RS.fbt"
+  var_Q = true_BOOL;
 }
 
-void FORTE_E_RS::enterStateSET(void) {
-  mECCState = scmStateSET;
-  alg_SET();
-  sendOutputEvent(scmEventEOID);
+void FORTE_E_RS::alg_RESET(void) {
+
+  #line 6 "E_RS.fbt"
+  var_Q = false_BOOL;
 }
-
-void FORTE_E_RS::enterStateRESET(void) {
-  mECCState = scmStateRESET;
-  alg_RESET();
-  sendOutputEvent(scmEventEOID);
-}
-
-
 

@@ -43,24 +43,25 @@ const SFBInterfaceSpec FORTE_E_PERMIT::scmFBInterfaceSpec = {
   0, nullptr
 };
 
-FORTE_E_PERMIT::FORTE_E_PERMIT(CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) :
+FORTE_E_PERMIT::FORTE_E_PERMIT(const CStringDictionary::TStringId paInstanceNameId, CResource *const paSrcRes) :
     CBasicFB(paSrcRes, &scmFBInterfaceSpec, paInstanceNameId, nullptr),
-    var_PERMIT(CIEC_BOOL(0)),
     conn_EO(this, 0),
     conn_PERMIT(nullptr) {
 }
 
+void FORTE_E_PERMIT::setInitialValues() {
+  var_PERMIT = 0_BOOL;
+}
 
-
-void FORTE_E_PERMIT::executeEvent(TEventID paEIID){
+void FORTE_E_PERMIT::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   do {
     switch(mECCState) {
       case scmStateSTART:
-        if((scmEventEIID == paEIID) && (var_PERMIT)) enterStateEO();
+        if((scmEventEIID == paEIID) && (var_PERMIT)) enterStateEO(paECET);
         else return; //no transition cleared
         break;
       case scmStateEO:
-        if(1) enterStateSTART();
+        if(1) enterStateSTART(paECET);
         else return; //no transition cleared
         break;
       default:
@@ -72,7 +73,16 @@ void FORTE_E_PERMIT::executeEvent(TEventID paEIID){
   } while(true);
 }
 
-void FORTE_E_PERMIT::readInputData(TEventID paEIID) {
+void FORTE_E_PERMIT::enterStateSTART(CEventChainExecutionThread *const paECET) {
+  mECCState = scmStateSTART;
+}
+
+void FORTE_E_PERMIT::enterStateEO(CEventChainExecutionThread *const paECET) {
+  mECCState = scmStateEO;
+  sendOutputEvent(scmEventEOID, paECET);
+}
+
+void FORTE_E_PERMIT::readInputData(const TEventID paEIID) {
   switch(paEIID) {
     case scmEventEIID: {
       RES_DATA_CON_CRITICAL_REGION();
@@ -85,9 +95,10 @@ void FORTE_E_PERMIT::readInputData(TEventID paEIID) {
 }
 
 void FORTE_E_PERMIT::writeOutputData(TEventID) {
+  // nothing to do
 }
 
-CIEC_ANY *FORTE_E_PERMIT::getDI(size_t paIndex) {
+CIEC_ANY *FORTE_E_PERMIT::getDI(const size_t paIndex) {
   switch(paIndex) {
     case 0: return &var_PERMIT;
   }
@@ -98,14 +109,14 @@ CIEC_ANY *FORTE_E_PERMIT::getDO(size_t) {
   return nullptr;
 }
 
-CEventConnection *FORTE_E_PERMIT::getEOConUnchecked(TPortId paIndex) {
+CEventConnection *FORTE_E_PERMIT::getEOConUnchecked(const TPortId paIndex) {
   switch(paIndex) {
     case 0: return &conn_EO;
   }
   return nullptr;
 }
 
-CDataConnection **FORTE_E_PERMIT::getDIConUnchecked(TPortId paIndex) {
+CDataConnection **FORTE_E_PERMIT::getDIConUnchecked(const TPortId paIndex) {
   switch(paIndex) {
     case 0: return &conn_PERMIT;
   }
@@ -119,16 +130,4 @@ CDataConnection *FORTE_E_PERMIT::getDOConUnchecked(TPortId) {
 CIEC_ANY *FORTE_E_PERMIT::getVarInternal(size_t) {
   return nullptr;
 }
-
-
-void FORTE_E_PERMIT::enterStateSTART(void) {
-  mECCState = scmStateSTART;
-}
-
-void FORTE_E_PERMIT::enterStateEO(void) {
-  mECCState = scmStateEO;
-  sendOutputEvent(scmEventEOID);
-}
-
-
 

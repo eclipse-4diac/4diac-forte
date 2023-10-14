@@ -42,29 +42,26 @@ const SFBInterfaceSpec FORTE_E_T_FF::scmFBInterfaceSpec = {
   0, nullptr
 };
 
-FORTE_E_T_FF::FORTE_E_T_FF(CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) :
+FORTE_E_T_FF::FORTE_E_T_FF(const CStringDictionary::TStringId paInstanceNameId, CResource *const paSrcRes) :
     CBasicFB(paSrcRes, &scmFBInterfaceSpec, paInstanceNameId, nullptr),
-    var_Q(CIEC_BOOL(0)),
     var_conn_Q(var_Q),
     conn_EO(this, 0),
     conn_Q(this, 0, &var_conn_Q) {
 }
 
-void FORTE_E_T_FF::alg_TOGGLE(void) {
-  
-  var_Q = func_NOT<CIEC_BOOL>(var_Q);
+void FORTE_E_T_FF::setInitialValues() {
+  var_Q = 0_BOOL;
 }
 
-
-void FORTE_E_T_FF::executeEvent(TEventID paEIID){
+void FORTE_E_T_FF::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   do {
     switch(mECCState) {
       case scmStateSTART:
-        if(scmEventCLKID == paEIID) enterStateSET();
+        if(scmEventCLKID == paEIID) enterStateSET(paECET);
         else return; //no transition cleared
         break;
       case scmStateSET:
-        if(1) enterStateSTART();
+        if(1) enterStateSTART(paECET);
         else return; //no transition cleared
         break;
       default:
@@ -76,10 +73,21 @@ void FORTE_E_T_FF::executeEvent(TEventID paEIID){
   } while(true);
 }
 
-void FORTE_E_T_FF::readInputData(TEventID) {
+void FORTE_E_T_FF::enterStateSTART(CEventChainExecutionThread *const paECET) {
+  mECCState = scmStateSTART;
 }
 
-void FORTE_E_T_FF::writeOutputData(TEventID paEIID) {
+void FORTE_E_T_FF::enterStateSET(CEventChainExecutionThread *const paECET) {
+  mECCState = scmStateSET;
+  alg_TOGGLE();
+  sendOutputEvent(scmEventEOID, paECET);
+}
+
+void FORTE_E_T_FF::readInputData(TEventID) {
+  // nothing to do
+}
+
+void FORTE_E_T_FF::writeOutputData(const TEventID paEIID) {
   switch(paEIID) {
     case scmEventEOID: {
       RES_DATA_CON_CRITICAL_REGION();
@@ -95,14 +103,14 @@ CIEC_ANY *FORTE_E_T_FF::getDI(size_t) {
   return nullptr;
 }
 
-CIEC_ANY *FORTE_E_T_FF::getDO(size_t paIndex) {
+CIEC_ANY *FORTE_E_T_FF::getDO(const size_t paIndex) {
   switch(paIndex) {
     case 0: return &var_Q;
   }
   return nullptr;
 }
 
-CEventConnection *FORTE_E_T_FF::getEOConUnchecked(TPortId paIndex) {
+CEventConnection *FORTE_E_T_FF::getEOConUnchecked(const TPortId paIndex) {
   switch(paIndex) {
     case 0: return &conn_EO;
   }
@@ -113,7 +121,7 @@ CDataConnection **FORTE_E_T_FF::getDIConUnchecked(TPortId) {
   return nullptr;
 }
 
-CDataConnection *FORTE_E_T_FF::getDOConUnchecked(TPortId paIndex) {
+CDataConnection *FORTE_E_T_FF::getDOConUnchecked(const TPortId paIndex) {
   switch(paIndex) {
     case 0: return &conn_Q;
   }
@@ -124,16 +132,9 @@ CIEC_ANY *FORTE_E_T_FF::getVarInternal(size_t) {
   return nullptr;
 }
 
+void FORTE_E_T_FF::alg_TOGGLE(void) {
 
-void FORTE_E_T_FF::enterStateSTART(void) {
-  mECCState = scmStateSTART;
+  #line 2 "E_T_FF.fbt"
+  var_Q = func_NOT<CIEC_BOOL>(var_Q);
 }
-
-void FORTE_E_T_FF::enterStateSET(void) {
-  mECCState = scmStateSET;
-  alg_TOGGLE();
-  sendOutputEvent(scmEventEOID);
-}
-
-
 

@@ -22,7 +22,7 @@
 #include "forte_array_variable.h"
 
 
-class FORTE_E_SELECT: public CBasicFB {
+class FORTE_E_SELECT final : public CBasicFB {
   DECLARE_FIRMWARE_FB(FORTE_E_SELECT)
 
 private:
@@ -38,41 +38,49 @@ private:
   static const CStringDictionary::TStringId scmEventOutputNames[];
 
   static const SFBInterfaceSpec scmFBInterfaceSpec;
+
   CIEC_ANY *getVarInternal(size_t) override;
+
   static const TForteInt16 scmStateSTART = 0;
   static const TForteInt16 scmStateEO = 1;
-  
-  void enterStateSTART(void);
-  void enterStateEO(void);
 
-  void executeEvent(TEventID paEIID) override;
+  void enterStateSTART(CEventChainExecutionThread *const paECET);
+  void enterStateEO(CEventChainExecutionThread *const paECET);
+
+  void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
   void readInputData(TEventID paEIID) override;
   void writeOutputData(TEventID paEIID) override;
+  void setInitialValues() override;
 
 public:
   FORTE_E_SELECT(CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
 
   CIEC_BOOL var_G;
+
   CEventConnection conn_EO;
+
   CDataConnection *conn_G;
+
   CIEC_ANY *getDI(size_t) override;
   CIEC_ANY *getDO(size_t) override;
   CEventConnection *getEOConUnchecked(TPortId) override;
   CDataConnection **getDIConUnchecked(TPortId) override;
   CDataConnection *getDOConUnchecked(TPortId) override;
-  void evt_EI0(const CIEC_BOOL &pa_G) {
-    var_G = pa_G;
+
+  void evt_EI0(const CIEC_BOOL &paG) {
+    var_G = paG;
     receiveInputEvent(scmEventEI0ID, nullptr);
   }
-  void evt_EI1(const CIEC_BOOL &pa_G) {
-    var_G = pa_G;
+
+  void evt_EI1(const CIEC_BOOL &paG) {
+    var_G = paG;
     receiveInputEvent(scmEventEI1ID, nullptr);
   }
-  void operator()(const CIEC_BOOL &pa_G) {
-    evt_EI0(pa_G);
+
+  void operator()(const CIEC_BOOL &paG) {
+    evt_EI0(paG);
   }
 };
-
 
 

@@ -34,9 +34,9 @@ const SFBInterfaceSpec E_RESTART::scmFBInterfaceSpec = {
   0, nullptr
 };
 
-void E_RESTART::executeEvent(TEventID paEIID) {
+void E_RESTART::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   if(cgExternalEventID == paEIID && cgInvalidEventID != mEventToSend) {
-    sendOutputEvent(mEventToSend);
+    sendOutputEvent(mEventToSend, paECET);
     if(csmSTOPID == mEventToSend) {
       //stop event is sent put the FB finally into the stopped state
       CFunctionBlock::changeFBExecutionState(EMGMCommandType::Stop);

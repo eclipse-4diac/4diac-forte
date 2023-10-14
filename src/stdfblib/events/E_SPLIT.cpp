@@ -40,23 +40,21 @@ const SFBInterfaceSpec FORTE_E_SPLIT::scmFBInterfaceSpec = {
   0, nullptr
 };
 
-FORTE_E_SPLIT::FORTE_E_SPLIT(CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) :
+FORTE_E_SPLIT::FORTE_E_SPLIT(const CStringDictionary::TStringId paInstanceNameId, CResource *const paSrcRes) :
     CBasicFB(paSrcRes, &scmFBInterfaceSpec, paInstanceNameId, nullptr),
     conn_EO1(this, 0),
     conn_EO2(this, 1) {
 }
 
-
-
-void FORTE_E_SPLIT::executeEvent(TEventID paEIID){
+void FORTE_E_SPLIT::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   do {
     switch(mECCState) {
       case scmStateSTART:
-        if(scmEventEIID == paEIID) enterStateState();
+        if(scmEventEIID == paEIID) enterStateState(paECET);
         else return; //no transition cleared
         break;
       case scmStateState:
-        if(1) enterStateSTART();
+        if(1) enterStateSTART(paECET);
         else return; //no transition cleared
         break;
       default:
@@ -68,10 +66,22 @@ void FORTE_E_SPLIT::executeEvent(TEventID paEIID){
   } while(true);
 }
 
+void FORTE_E_SPLIT::enterStateSTART(CEventChainExecutionThread *const paECET) {
+  mECCState = scmStateSTART;
+}
+
+void FORTE_E_SPLIT::enterStateState(CEventChainExecutionThread *const paECET) {
+  mECCState = scmStateState;
+  sendOutputEvent(scmEventEO1ID, paECET);
+  sendOutputEvent(scmEventEO2ID, paECET);
+}
+
 void FORTE_E_SPLIT::readInputData(TEventID) {
+  // nothing to do
 }
 
 void FORTE_E_SPLIT::writeOutputData(TEventID) {
+  // nothing to do
 }
 
 CIEC_ANY *FORTE_E_SPLIT::getDI(size_t) {
@@ -82,7 +92,7 @@ CIEC_ANY *FORTE_E_SPLIT::getDO(size_t) {
   return nullptr;
 }
 
-CEventConnection *FORTE_E_SPLIT::getEOConUnchecked(TPortId paIndex) {
+CEventConnection *FORTE_E_SPLIT::getEOConUnchecked(const TPortId paIndex) {
   switch(paIndex) {
     case 0: return &conn_EO1;
     case 1: return &conn_EO2;
@@ -101,17 +111,4 @@ CDataConnection *FORTE_E_SPLIT::getDOConUnchecked(TPortId) {
 CIEC_ANY *FORTE_E_SPLIT::getVarInternal(size_t) {
   return nullptr;
 }
-
-
-void FORTE_E_SPLIT::enterStateSTART(void) {
-  mECCState = scmStateSTART;
-}
-
-void FORTE_E_SPLIT::enterStateState(void) {
-  mECCState = scmStateState;
-  sendOutputEvent(scmEventEO1ID);
-  sendOutputEvent(scmEventEO2ID);
-}
-
-
 
