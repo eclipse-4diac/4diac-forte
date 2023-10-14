@@ -34,7 +34,7 @@ const CStringDictionary::TStringId FORTE_X20DI937X::scmEventOutputNames[] = { g_
 
 const SFBInterfaceSpec FORTE_X20DI937X::scmFBInterfaceSpec = { 3, scmEventInputNames, scmEIWith, scmEIWithIndexes, 3, scmEventOutputNames, scmEOWith, scmEOWithIndexes, 3, scmDataInputNames, scmDataInputTypeIds, 15, scmDataOutputNames, scmDataOutputTypeIds, 0, 0 };
 
-void FORTE_X20DI937X::executeEvent(TEventID paEIID){
+void FORTE_X20DI937X::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   switch (paEIID){
     case scmEventINITID: {
       //#error add code for INIT event!
@@ -61,7 +61,7 @@ void FORTE_X20DI937X::executeEvent(TEventID paEIID){
 
       QO() = QI();
       CNIDO() = CNID();
-      sendOutputEvent(scmEventINITOID);
+      sendOutputEvent(scmEventINITOID, paECET);
       break;
     }
     case scmEventREQID: {
@@ -74,7 +74,7 @@ void FORTE_X20DI937X::executeEvent(TEventID paEIID){
       }
       mSync.unlock();
 
-      sendOutputEvent(scmEventCNFID);
+      sendOutputEvent(scmEventCNFID, paECET);
       break;
     }
     case scmEventRSPID:

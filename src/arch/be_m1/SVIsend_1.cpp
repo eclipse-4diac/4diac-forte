@@ -37,13 +37,13 @@ const SFBInterfaceSpec FORTE_SVIsend_1::scmFBInterfaceSpec = {
 };
 
 
-void FORTE_SVIsend_1::executeEvent(TEventID paEIID){
+void FORTE_SVIsend_1::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   switch(paEIID){
     case scmEventINITID:
       if(true == QI()){
         QO() = registerSVIvar(ID(),SD_1(),SVI_F_OUT);
       }
-      sendOutputEvent(scmEventINITOID);
+      sendOutputEvent(scmEventINITOID, paECET);
       if (true == QO()) {
         printf("Alles OK send\n");
       } else {
@@ -52,7 +52,7 @@ void FORTE_SVIsend_1::executeEvent(TEventID paEIID){
       break;
 
     case scmEventREQID:
-      sendOutputEvent(scmEventCNFID);
+      sendOutputEvent(scmEventCNFID, paECET);
       break;
     default:
       break;

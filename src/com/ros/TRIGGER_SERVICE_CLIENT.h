@@ -87,7 +87,7 @@ class FORTE_TRIGGER_SERVICE_CLIENT : public CEventSourceFB{
     static const SFBInterfaceSpec scmFBInterfaceSpec;
 
 
-    void executeEvent(TEventID paEIID) override;
+    void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
   public:
     ros::ServiceClient m_triggerClient;

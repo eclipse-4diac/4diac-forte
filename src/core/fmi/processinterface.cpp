@@ -37,7 +37,7 @@ void CFMUProcessInterface::setValueContainer(fmuValueContainer* paValueContainer
   mValue = paValueContainer;
 }
 
-bool CFMUProcessInterface::initialise(bool paIsInput){
+bool CFMUProcessInterface::initialise(bool paIsInput, CEventChainExecutionThread *const paECET) {
   NOT_USED(paIsInput)
   if(0 != mValue){
     STATUS() = scmOK;

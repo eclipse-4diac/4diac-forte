@@ -40,7 +40,7 @@ const CStringDictionary::TStringId FORTE_EXECUTE_ACTION_SERVER::scmEventOutputNa
 
 const SFBInterfaceSpec FORTE_EXECUTE_ACTION_SERVER::scmFBInterfaceSpec = { 2, scmEventInputNames, scmEIWith, scmEIWithIndexes, 2, scmEventOutputNames, scmEOWith, scmEOWithIndexes, 6, scmDataInputNames, scmDataInputTypeIds, 6, scmDataOutputNames, scmDataOutputTypeIds, 0, 0 };
 
-void FORTE_EXECUTE_ACTION_SERVER::executeEvent(TEventID paEIID){
+void FORTE_EXECUTE_ACTION_SERVER::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   switch (paEIID){
     case scmEventINITID:
 
@@ -52,7 +52,7 @@ void FORTE_EXECUTE_ACTION_SERVER::executeEvent(TEventID paEIID){
 
         m_nh = new ros::NodeHandle(m_RosNamespace);
 
-        m_ActionServer = new actionServer(*m_nh, m_RosMsgName, boost::bind(&FORTE_EXECUTE_ACTION_SERVER::ActionExecuteCB, this, _1), false);
+        m_ActionServer = new actionServer(*m_nh, m_RosMsgName, boost::bind(&FORTE_EXECUTE_ACTION_SERVER::ActionExecuteCB, this, paECET, _1), false);
         m_ActionServer->start(); //not needed if auto_start=true (last param in ctor of server)
 
         QO() = true;
@@ -77,7 +77,7 @@ void FORTE_EXECUTE_ACTION_SERVER::executeEvent(TEventID paEIID){
         FBSTATUS() = "Action Server Shutdown";
         //DEVLOG_DEBUG("[EXEC_SERVER] Action server shutdown\n");
       }
-      sendOutputEvent(scmEventINITOID);
+      sendOutputEvent(scmEventINITOID, paECET);
       break;
 
     case scmEventRSPID:
@@ -121,12 +121,12 @@ void FORTE_EXECUTE_ACTION_SERVER::executeEvent(TEventID paEIID){
   }
 }
 
-void FORTE_EXECUTE_ACTION_SERVER::ActionExecuteCB(const ExecuteGoalConstPtr &pa_goal){
+void FORTE_EXECUTE_ACTION_SERVER::ActionExecuteCB(const ExecuteGoalConstPtr &pa_goal, CEventChainExecutionThread *const paECET) {
 
   m_GoalConstPtr = pa_goal;
   ros::Rate r(2); //2Hz
 
-  setEventChainExecutor(mInvokingExecEnv);
+  setEventChainExecutor(paECET);
   //DEVLOG_DEBUG("[EXEC_SERVER] Received goal is: %s \n", mGoalConstPtr->command.c_str());
   getExtEvHandler<CROSManager>(*this).startChain(this);
 

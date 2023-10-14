@@ -40,12 +40,12 @@ const CStringDictionary::TStringId FORTE_TRIGGER_SERVICE_CLIENT::scmEventOutputN
 
 const SFBInterfaceSpec FORTE_TRIGGER_SERVICE_CLIENT::scmFBInterfaceSpec = { 2, scmEventInputNames, scmEIWith, scmEIWithIndexes, 2, scmEventOutputNames, scmEOWith, scmEOWithIndexes, 3, scmDataInputNames, scmDataInputTypeIds, 4, scmDataOutputNames, scmDataOutputTypeIds, 0, 0 };
 
-void FORTE_TRIGGER_SERVICE_CLIENT::executeEvent(TEventID paEIID){
+void FORTE_TRIGGER_SERVICE_CLIENT::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   switch (paEIID){
     case scmEventINITID:
       //initiate
       if(!m_Initiated && QI()){
-        setEventChainExecutor(mInvokingExecEnv);
+        setEventChainExecutor(paECET);
         m_RosNamespace = getExtEvHandler<CROSManager>(*this).ciecStringToStdString(NAMESPACE());
         m_RosMsgName = getExtEvHandler<CROSManager>(*this).ciecStringToStdString(SRVNAME());
         m_nh = new ros::NodeHandle(m_RosNamespace);
@@ -60,12 +60,12 @@ void FORTE_TRIGGER_SERVICE_CLIENT::executeEvent(TEventID paEIID){
         STATUS() = "Client terminated";
         QO() = false;
         m_Initiated = false;
-        sendOutputEvent(scmEventINITOID);
+        sendOutputEvent(scmEventINITOID, paECET);
       }
       //silently ignore other cases
       else{
         STATUS() = "Unknown init command sequence";
-        sendOutputEvent(scmEventINITOID);
+        sendOutputEvent(scmEventINITOID, paECET);
       }
       break;
     case scmEventREQID:
@@ -79,7 +79,7 @@ void FORTE_TRIGGER_SERVICE_CLIENT::executeEvent(TEventID paEIID){
       else{
         STATUS() = "Sending request not possible";
         QO() = false;
-        sendOutputEvent(scmEventCNFID);
+        sendOutputEvent(scmEventCNFID, paECET);
       }
       break;
     case cgExternalEventID:
@@ -88,11 +88,11 @@ void FORTE_TRIGGER_SERVICE_CLIENT::executeEvent(TEventID paEIID){
         m_Initiated = true;
         STATUS() = "Client connected to server";
         QO() = true;
-        sendOutputEvent(scmEventINITOID);
+        sendOutputEvent(scmEventINITOID, paECET);
       }
       //call returned
       else{
-        sendOutputEvent(scmEventCNFID);
+        sendOutputEvent(scmEventCNFID, paECET);
       }
       break;
   }

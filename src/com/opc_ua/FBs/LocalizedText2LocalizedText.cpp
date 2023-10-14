@@ -45,10 +45,10 @@ const SFBInterfaceSpec FORTE_LocalizedText2LocalizedText::scmFBInterfaceSpec = {
 };
 
 
-void FORTE_LocalizedText2LocalizedText::executeEvent(TEventID paEIID){
+void FORTE_LocalizedText2LocalizedText::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   if(scmEventREQID == paEIID) {
     st_OUT() = st_IN();
-    sendOutputEvent(scmEventCNFID);
+    sendOutputEvent(scmEventCNFID, paECET);
   }
 }
 

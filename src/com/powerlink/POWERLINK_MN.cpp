@@ -41,7 +41,7 @@ FORTE_POWERLINK_MN::~FORTE_POWERLINK_MN(){
   shutdownStack();
 }
 
-void FORTE_POWERLINK_MN::executeEvent(TEventID paEIID){
+void FORTE_POWERLINK_MN::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   switch (paEIID){
     case scmEventINITID:
 
@@ -61,7 +61,7 @@ void FORTE_POWERLINK_MN::executeEvent(TEventID paEIID){
         shutdownStack();
       }
 
-      sendOutputEvent(scmEventINITOID);
+      sendOutputEvent(scmEventINITOID, paECET);
       break;
   }
 }

@@ -40,7 +40,7 @@ const CStringDictionary::TStringId FORTE_TRIGGER_SERVICE_SERVER::scmEventOutputN
 
 const SFBInterfaceSpec FORTE_TRIGGER_SERVICE_SERVER::scmFBInterfaceSpec = { 2, scmEventInputNames, scmEIWith, scmEIWithIndexes, 2, scmEventOutputNames, scmEOWith, scmEOWithIndexes, 5, scmDataInputNames, scmDataInputTypeIds, 2, scmDataOutputNames, scmDataOutputTypeIds, 0, 0 };
 
-void FORTE_TRIGGER_SERVICE_SERVER::executeEvent(TEventID paEIID){
+void FORTE_TRIGGER_SERVICE_SERVER::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   switch (paEIID){
     case scmEventINITID:
       //initiate
@@ -64,7 +64,7 @@ void FORTE_TRIGGER_SERVICE_SERVER::executeEvent(TEventID paEIID){
         STATUS() = "initiation or termination failed";
         QO() = false;
       }
-      sendOutputEvent(scmEventINITOID);
+      sendOutputEvent(scmEventINITOID, paECET);
       break;
 
     case scmEventRSPID:
@@ -80,8 +80,8 @@ void FORTE_TRIGGER_SERVICE_SERVER::executeEvent(TEventID paEIID){
 }
 
 //TODO use or delete first parameter
-bool FORTE_TRIGGER_SERVICE_SERVER::triggerCallback(std_srvs::Trigger::Request &, std_srvs::Trigger::Response &pa_resp){
-  setEventChainExecutor(mInvokingExecEnv);
+bool FORTE_TRIGGER_SERVICE_SERVER::triggerCallback(std_srvs::Trigger::Request &, std_srvs::Trigger::Response &pa_resp, CEventChainExecutionThread *const paECET) {
+  setEventChainExecutor(paECET);
   getExtEvHandler<CROSManager>(*this).startChain(this);
 
   // is a response available

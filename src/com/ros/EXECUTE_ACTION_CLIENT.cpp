@@ -40,7 +40,7 @@ const CStringDictionary::TStringId FORTE_EXECUTE_ACTION_CLIENT::scmEventOutputNa
 
 const SFBInterfaceSpec FORTE_EXECUTE_ACTION_CLIENT::scmFBInterfaceSpec = { 2, scmEventInputNames, scmEIWith, scmEIWithIndexes, 2, scmEventOutputNames, scmEOWith, scmEOWithIndexes, 6, scmDataInputNames, scmDataInputTypeIds, 6, scmDataOutputNames, scmDataOutputTypeIds, 0, 0 };
 
-void FORTE_EXECUTE_ACTION_CLIENT::executeEvent(TEventID paEIID){
+void FORTE_EXECUTE_ACTION_CLIENT::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   switch (paEIID){
     case scmEventINITID:
       //initialize FB
@@ -62,7 +62,7 @@ void FORTE_EXECUTE_ACTION_CLIENT::executeEvent(TEventID paEIID){
         FBSTATUS() = "Terminated - All goals canceled";
         QO() = false;
       }
-      sendOutputEvent(scmEventINITOID);
+      sendOutputEvent(scmEventINITOID, paECET);
       break;
 
     case scmEventREQID:
@@ -72,7 +72,7 @@ void FORTE_EXECUTE_ACTION_CLIENT::executeEvent(TEventID paEIID){
         if(QI() && !m_GoalActive){
           if(m_ActionClient->isServerConnected()){
             //register the external eventchain on the thread of the Request event
-            setEventChainExecutor(mInvokingExecEnv);
+            setEventChainExecutor(paECET);
             reapp_msgs::ExecuteGoal goal;
             goal.id1 = ID1();
             goal.id2 = ID2();
@@ -98,7 +98,7 @@ void FORTE_EXECUTE_ACTION_CLIENT::executeEvent(TEventID paEIID){
           m_ActionClient->cancelAllGoals();
           FBSTATUS() = "Goals canceled";
           QO() = false;
-          sendOutputEvent(scmEventCNFID);
+          sendOutputEvent(scmEventCNFID, paECET);
         }
       }
 
@@ -128,7 +128,7 @@ void FORTE_EXECUTE_ACTION_CLIENT::executeEvent(TEventID paEIID){
         ACTIONSTATUS() = getCurrentActionState().c_str();
         FBSTATUS() = "Result received";
       }
-      sendOutputEvent(scmEventCNFID);
+      sendOutputEvent(scmEventCNFID, paECET);
       break;
   }
 }

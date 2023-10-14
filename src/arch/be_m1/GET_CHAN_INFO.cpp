@@ -35,11 +35,11 @@ const CStringDictionary::TStringId FORTE_GET_CHAN_INFO::scmEventOutputNames[] = 
 
 const SFBInterfaceSpec FORTE_GET_CHAN_INFO::scmFBInterfaceSpec = { 1, scmEventInputNames, scmEIWith, scmEIWithIndexes, 1, scmEventOutputNames, scmEOWith, scmEOWithIndexes, 1, scmDataInputNames, scmDataInputTypeIds, 3, scmDataOutputNames, scmDataOutputTypeIds, 0, 0 };
 
-void FORTE_GET_CHAN_INFO::executeEvent(TEventID paEIID){
+void FORTE_GET_CHAN_INFO::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   switch (paEIID){
     case scmEventINITID:
       if(init()){
-        sendOutputEvent(scmEventINITOID);
+        sendOutputEvent(scmEventINITOID, paECET);
       }
       break;
   }

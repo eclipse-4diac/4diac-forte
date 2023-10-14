@@ -91,7 +91,7 @@ class FORTE_X20AT4222 : public CFunctionBlock, public IEplCNCallback{
     static const SFBInterfaceSpec scmFBInterfaceSpec;
 
 
-    void executeEvent(TEventID paEIID) override;
+    void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
     // Variables for mapping between inputs and POWERLINK stack
     SEplMapping mEplMapping;CSyncObject mSync;

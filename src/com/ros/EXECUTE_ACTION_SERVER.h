@@ -122,9 +122,9 @@ class FORTE_EXECUTE_ACTION_SERVER : public CEventSourceFB{
     static const SFBInterfaceSpec scmFBInterfaceSpec;
 
 
-    void executeEvent(TEventID paEIID) override;
+    void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
-    void ActionExecuteCB(const ExecuteGoalConstPtr &pa_goal);
+    void ActionExecuteCB(const ExecuteGoalConstPtr &pa_goal, CEventChainExecutionThread *const paECET);
 
   public:
     // cppcheck-suppress noConstructor

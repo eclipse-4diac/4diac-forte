@@ -37,7 +37,7 @@ const CStringDictionary::TStringId FORTE_X20DO9321::scmEventOutputNames[] = { g_
 
 const SFBInterfaceSpec FORTE_X20DO9321::scmFBInterfaceSpec = { 2, scmEventInputNames, scmEIWith, scmEIWithIndexes, 2, scmEventOutputNames, scmEOWith, scmEOWithIndexes, 15, scmDataInputNames, scmDataInputTypeIds, 3, scmDataOutputNames, scmDataOutputTypeIds, 0, 0 };
 
-void FORTE_X20DO9321::executeEvent(TEventID paEIID){
+void FORTE_X20DO9321::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   switch (paEIID){
     case scmEventINITID:
       if(QI() == true){
@@ -64,7 +64,7 @@ void FORTE_X20DO9321::executeEvent(TEventID paEIID){
       }
       QO() = QI();
       CNIDO() = CNID();
-      sendOutputEvent(scmEventINITOID);
+      sendOutputEvent(scmEventINITOID, paECET);
       break;
     case scmEventREQID:
       if(QI() == true && mInitOk){
@@ -78,7 +78,7 @@ void FORTE_X20DO9321::executeEvent(TEventID paEIID){
         mSync.unlock();
       }
       QO() = QI();
-      sendOutputEvent(scmEventCNFID);
+      sendOutputEvent(scmEventCNFID, paECET);
       break;
   }
 }
