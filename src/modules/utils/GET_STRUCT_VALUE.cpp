@@ -81,7 +81,7 @@ CIEC_ANY *FORTE_GET_STRUCT_VALUE::lookForMember(CIEC_STRUCT &paWhereToLook, char
   return member;
 }
 
-void FORTE_GET_STRUCT_VALUE::executeEvent(TEventID paEIID) {
+void FORTE_GET_STRUCT_VALUE::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   switch (paEIID) {
     case scmEventREQID:
       if (std::holds_alternative<CIEC_ANY_UNIQUE_PTR<CIEC_STRUCT>>(var_in_struct)) {
@@ -103,7 +103,7 @@ void FORTE_GET_STRUCT_VALUE::executeEvent(TEventID paEIID) {
                 var_in_struct.unwrap().getDataTypeID());
         var_QO = CIEC_BOOL(false);
       }
-      sendOutputEvent(scmEventCNFID);
+      sendOutputEvent(scmEventCNFID, paECET);
       break;
   }
 }

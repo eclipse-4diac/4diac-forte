@@ -80,7 +80,7 @@ CIEC_ANY *FORTE_SET_STRUCT_VALUE::lookForMember(CIEC_STRUCT &paWhereToLook, char
   return member;
 }
 
-void FORTE_SET_STRUCT_VALUE::executeEvent(TEventID paEIID) {
+void FORTE_SET_STRUCT_VALUE::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   switch (paEIID) {
     case scmEventREQID:
       var_out_struct = var_in_struct;
@@ -106,7 +106,7 @@ void FORTE_SET_STRUCT_VALUE::executeEvent(TEventID paEIID) {
                 getInstanceName(),
                 var_out_struct.unwrap().getDataTypeID());
       }
-      sendOutputEvent(scmEventCNFID);
+      sendOutputEvent(scmEventCNFID, paECET);
       break;
   }
 }

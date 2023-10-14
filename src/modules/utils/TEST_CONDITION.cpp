@@ -63,7 +63,7 @@ FORTE_TEST_CONDITION::~FORTE_TEST_CONDITION() {
 }
 
 
-void FORTE_TEST_CONDITION::executeEvent(TEventID paEIID) {
+void FORTE_TEST_CONDITION::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   if(scmEventREQID == paEIID) {
     smExecutedTests++;
     if(check()) {
@@ -73,7 +73,7 @@ void FORTE_TEST_CONDITION::executeEvent(TEventID paEIID) {
         getInstanceName());
       smFailedTests++;
     }
-    sendOutputEvent(scmEventCNFID);
+    sendOutputEvent(scmEventCNFID, paECET);
   }
 }
 

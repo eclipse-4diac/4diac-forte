@@ -53,7 +53,7 @@ class GEN_CSV_WRITER : public CGenFunctionBlock<CFunctionBlock> {
     static const TEventID scmEventCNFID = 1;
     static const CStringDictionary::TStringId scmEventOutputNames[];
 
-    void executeEvent(TEventID paEIID) override;
+    void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
     void readInputData(TEventID paEI) override;
     void writeOutputData(TEventID paEO) override;

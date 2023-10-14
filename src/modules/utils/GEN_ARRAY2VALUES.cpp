@@ -44,7 +44,7 @@ GEN_ARRAY2VALUES::~GEN_ARRAY2VALUES(){
   delete[] mDataOutputTypeIds;
 }
 
-void GEN_ARRAY2VALUES::executeEvent(TEventID paEIID){
+void GEN_ARRAY2VALUES::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   switch (paEIID){
     case scmEventREQID:
 
@@ -53,7 +53,7 @@ void GEN_ARRAY2VALUES::executeEvent(TEventID paEIID){
         getDO(static_cast<unsigned int>(output_index))->setValue((IN_Array()[output_index]));
       }
 
-      sendOutputEvent(scmEventCNFID);
+      sendOutputEvent(scmEventCNFID, paECET);
 
       break;
   }
