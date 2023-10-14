@@ -60,14 +60,14 @@ FORTE_F_TRUNC::FORTE_F_TRUNC(const CStringDictionary::TStringId paInstanceNameId
     conn_OUT(this, 0, &var_conn_OUT) {
 };
 
-void FORTE_F_TRUNC::executeEvent(TEventID paEIID) {
+void FORTE_F_TRUNC::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   switch(paEIID) {
     case scmEventREQID:
       std::visit([](auto &&paIN, auto &&paOUT) -> void {
         using T = std::decay_t<decltype(paOUT)>;
         paOUT = func_TRUNC<T>(paIN);
       }, var_IN, var_OUT);
-      sendOutputEvent(scmEventCNFID);
+      sendOutputEvent(scmEventCNFID, paECET);
       break;
   }
 }

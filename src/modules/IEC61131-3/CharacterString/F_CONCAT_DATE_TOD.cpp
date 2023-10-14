@@ -62,11 +62,11 @@ FORTE_F_CONCAT_DATE_TOD::FORTE_F_CONCAT_DATE_TOD(const CStringDictionary::TStrin
     conn_OUT(this, 0, &var_conn_OUT) {
 };
 
-void FORTE_F_CONCAT_DATE_TOD::executeEvent(TEventID paEIID) {
+void FORTE_F_CONCAT_DATE_TOD::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   switch(paEIID) {
     case scmEventREQID:
       var_OUT = func_CONCAT_DATE_TOD(var_IN1, var_IN2);
-      sendOutputEvent(scmEventCNFID);
+      sendOutputEvent(scmEventCNFID, paECET);
       break;
   }
 }

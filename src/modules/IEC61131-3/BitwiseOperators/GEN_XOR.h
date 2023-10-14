@@ -26,7 +26,7 @@ class GEN_XOR : public CGenBitBase {
 
   private:
 
-    void executeEvent(TEventID paEIID) override;
+    void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
     GEN_XOR(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
     ~GEN_XOR() override;

@@ -85,7 +85,7 @@ void FORTE_FB_CTU_LINT::alg_REQ(void) {
 }
 
 
-void FORTE_FB_CTU_LINT::executeEvent(TEventID paEIID){
+void FORTE_FB_CTU_LINT::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   switch(paEIID) {
     case scmEventREQID:
       alg_REQ();
@@ -93,7 +93,7 @@ void FORTE_FB_CTU_LINT::executeEvent(TEventID paEIID){
     default:
       break;
   }
-  sendOutputEvent(scmEventCNFID);
+  sendOutputEvent(scmEventCNFID, paECET);
 }
 
 void FORTE_FB_CTU_LINT::readInputData(TEventID paEIID) {

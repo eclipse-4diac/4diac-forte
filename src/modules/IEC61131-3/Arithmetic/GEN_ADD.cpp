@@ -37,7 +37,7 @@ GEN_ADD::GEN_ADD(const CStringDictionary::TStringId paInstanceNameId, CResource 
 GEN_ADD::~GEN_ADD(){
 }
 
-void GEN_ADD::executeEvent(TEventID paEIID){
+void GEN_ADD::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   switch (paEIID){
     case scmEventREQID:
       if(mDInputs) {
@@ -57,7 +57,7 @@ void GEN_ADD::executeEvent(TEventID paEIID){
           }, var_OUT(), var_IN(i));
         }
       }
-      sendOutputEvent(scmEventCNFID);
+      sendOutputEvent(scmEventCNFID, paECET);
       break;
   }
 }
