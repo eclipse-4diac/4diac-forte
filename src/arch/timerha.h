@@ -25,18 +25,6 @@
 class CEventSourceFB;
 class CIEC_TIME;
 
-enum ETimerActivationType{
-  e_SingleShot, e_Periodic
-};
-
-//! Data stored for each FB that is registered to the timer handler
-struct STimedFBListEntry{
-    uint_fast64_t mTimeOut; //!< absolut time when the next trigger of the FB should occure
-    CEventSourceFB *mTimedFB; //!< Functionblock to be triggered
-    TForteUInt32 mInterval; //!< relative time between FB trigger points (mainly needed for the different periodic timed FBs)
-    ETimerActivationType mType; //!< type of activation. e.g. singleshot, periodic, ...
-};
-
 /*! \brief External event handler for the Timer.
  *  \ingroup EXTEVHAND
  */
@@ -68,12 +56,19 @@ class CTimerHandler : public CExternalEventHandler{
       return cgForteTicksPerSecond;
     }
 
-    /*!\brief Register an Event source Functionblock to this external event source.
+    /*!\brief Register an Event source Function Block for receiving a single timed event.
      *
-     * \param paTimerListEntry   TimerListEntry data
-     * \param paTimeInterval      time interval to next event
+     * \param paTimedFB   		the event source FB to be registered
+     * \param paTimeInterval	delta time to next event
      */
-    void registerTimedFB(STimedFBListEntry paTimerListEntry, const CIEC_TIME &paTimeInterval);
+    void registerOneShotTimedFB(CEventSourceFB *const paTimedFB, const CIEC_TIME &paTimeInterval);
+
+    /*!\brief Register an Event source Function Block for receiving a periodic events.
+     *
+     * \param paTimedFB   		the event source FB to be registered
+     * \param paTimeInterval	delta time between two events
+     */
+    void registerPeriodicTimedFB(CEventSourceFB *const paTimedFB, const CIEC_TIME &paTimeInterval);
 
     /*!\brief  Unregister an FB from an the timmer
      *
@@ -90,8 +85,27 @@ class CTimerHandler : public CExternalEventHandler{
     }
 
   private:
+    //! Data stored for each FB that is registered to the timer handler
+    struct STimedFBListEntry{
+        CEventSourceFB *mTimedFB; //!< Function block to be triggered
+        uint_fast64_t mTimeOut; //!< Absolute time when the next trigger of the FB should occure
+        TForteUInt32 mInterval; //!< relative time between FB trigger points (mainly needed for the different periodic timed FBs), 0 means one shot activation
+
+        STimedFBListEntry(CEventSourceFB *paTimedFB, uint_fast64_t paTimeOut, TForteUInt32 paInterval) :
+            mTimedFB(paTimedFB), mTimeOut(paTimeOut), mInterval(paInterval){
+        }
+
+        STimedFBListEntry() = default;
+
+    };
+
+    static constexpr TForteUInt32 scmOneShotIndicator = 0;
+
+    void addToAddFBList(const STimedFBListEntry &paTimerListEntry);
+    TForteUInt32 convertIntervalToTimerHandlerUnits(const CIEC_TIME &paTimeInterval);
+
     //!Add an entry to the timed list.
-    void addTimedFBEntry(STimedFBListEntry paTimerListEntry);
+    void addTimedFBEntry(const STimedFBListEntry & paTimerListEntry);
 
     void processTimedFBList();
     void processAddList();

@@ -36,31 +36,21 @@ const SFBInterfaceSpec CTimedFB::scmFBInterfaceSpec = {
   0, nullptr
 };
 
-CTimedFB::CTimedFB(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes, ETimerActivationType paType) :
+CTimedFB::CTimedFB(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) :
       CEventSourceFB( paSrcRes, &scmFBInterfaceSpec, paInstanceNameId){
   setEventChainExecutor(paSrcRes->getResourceEventExecution());
   mActive = false;
-  mTimeListEntry.mTimeOut = 0;
-  mTimeListEntry.mInterval = 0;
-  mTimeListEntry.mType = paType;
-  mTimeListEntry.mTimedFB = this;
 }
 
-void CTimedFB::executeEvent(TEventID paEIID, CEventChainExecutionThread * const ){
+void CTimedFB::executeEvent(TEventID paEIID, CEventChainExecutionThread * const paECET){
   switch(paEIID){
     case cgExternalEventID:
-      sendOutputEvent(csmEOID, getEventChainExecutor());
+      sendOutputEvent(csmEOID, paECET);
       break;
     case csmEventSTOPID:
       if(mActive){
         getTimer().unregisterTimedFB(this);
         mActive = false;
-      }
-      break;
-    case csmEventSTARTID:
-      if(!mActive){
-        getTimer().registerTimedFB(mTimeListEntry, DT());
-        mActive = true;
       }
       break;
     default:

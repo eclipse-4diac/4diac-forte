@@ -29,24 +29,33 @@ CTimerHandler::CTimerHandler(CDeviceExecution& paDeviceExecution) : CExternalEve
 
 CTimerHandler::~CTimerHandler() = default;
 
-void CTimerHandler::registerTimedFB(STimedFBListEntry paTimerListEntry, const CIEC_TIME &paTimeInterval) {
-  //calculate the correct interval based on time-base and timer ticks per seconds
-  paTimerListEntry.mInterval = static_cast<TForteUInt32>((static_cast<CIEC_TIME::TValueType>(paTimeInterval) * getTicksPerSecond()) / CIEC_ANY_DURATION::csmForteTimeBaseUnitsPerSecond);
-  // Correct null intervals that can lead to event queue overflow to at least 1 timer tick
-  if(0 == paTimerListEntry.mInterval) {
-    paTimerListEntry.mInterval = 1;
-  }
-  // set the first next activation time right here to reduce jitter, see Bug #568902 for details
-  paTimerListEntry.mTimeOut = mForteTime + paTimerListEntry.mInterval;
-  {
-    CCriticalRegion criticalRegion(mAddListSync);
-    mAddFBList.push_back(paTimerListEntry);
-  }
+void CTimerHandler::registerOneShotTimedFB(CEventSourceFB *const paTimedFB, const CIEC_TIME &paTimeInterval) {
+	TForteUInt32 interval = convertIntervalToTimerHandlerUnits(paTimeInterval);
+	addToAddFBList(STimedFBListEntry(paTimedFB, mForteTime + interval, scmOneShotIndicator));
 }
 
-void CTimerHandler::addTimedFBEntry(STimedFBListEntry paTimerListEntry) {
+void CTimerHandler::registerPeriodicTimedFB(CEventSourceFB *const paTimedFB, const CIEC_TIME &paTimeInterval) {
+	TForteUInt32 interval = convertIntervalToTimerHandlerUnits(paTimeInterval);
+	addToAddFBList(STimedFBListEntry(paTimedFB, mForteTime + interval, interval));
+}
+
+TForteUInt32 CTimerHandler::convertIntervalToTimerHandlerUnits(const CIEC_TIME &paTimeInterval){
+  //calculate the correct interval based on time-base and timer ticks per seconds
+  TForteUInt32 interval = static_cast<TForteUInt32>((static_cast<CIEC_TIME::TValueType>(paTimeInterval) * getTicksPerSecond()) / CIEC_ANY_DURATION::csmForteTimeBaseUnitsPerSecond);
+  if(interval == 0) {
+    interval = 1;
+  }
+  return interval;
+}
+
+void CTimerHandler::addToAddFBList(const STimedFBListEntry& paTimerListEntry){
+  CCriticalRegion criticalRegion(mAddListSync);
+  mAddFBList.push_back(paTimerListEntry);
+}
+
+void CTimerHandler::addTimedFBEntry(const STimedFBListEntry& paTimerListEntry) {
   auto it = std::lower_bound(mTimedFBList.begin(), mTimedFBList.end(), paTimerListEntry, 
-    [](STimedFBListEntry entry1, STimedFBListEntry entry2) { return entry1.mTimeOut < entry2.mTimeOut; });
+    [](const STimedFBListEntry& entry1, const STimedFBListEntry& entry2) { return entry1.mTimeOut < entry2.mTimeOut; });
   mTimedFBList.insert(it, paTimerListEntry);
 }
 
@@ -57,8 +66,8 @@ void CTimerHandler::unregisterTimedFB(CEventSourceFB *paTimedFB) {
 
 void CTimerHandler::removeTimedFB(CEventSourceFB *paTimedFB) {
   auto it = std::remove_if(mTimedFBList.begin(), mTimedFBList.end(), 
-  	[&paTimedFB](STimedFBListEntry entry) { return entry.mTimedFB == paTimedFB; });
-  mTimedFBList.erase(mTimedFBList.begin(), it);
+  	[&paTimedFB](const STimedFBListEntry& entry) { return entry.mTimedFB == paTimedFB; });
+  mTimedFBList.erase(it, mTimedFBList.end());
 }
 
 void CTimerHandler::nextTick() {
@@ -89,16 +98,9 @@ void CTimerHandler::processTimedFBList() {
 
 void CTimerHandler::triggerTimedFB(STimedFBListEntry paTimerListEntry) {
   mDeviceExecution.startNewEventChain(paTimerListEntry.mTimedFB);
-  
-  switch (paTimerListEntry.mType) {
-    case e_Periodic:
+  if(paTimerListEntry.mInterval != scmOneShotIndicator){
       paTimerListEntry.mTimeOut = mForteTime + paTimerListEntry.mInterval;  // the next activation time of this FB
       addTimedFBEntry(paTimerListEntry); //re-register the timed FB
-      break;
-    case e_SingleShot:
-      // nothing special is to do up to now, therefore go to default
-    default:
-      break;
   }
 }
 

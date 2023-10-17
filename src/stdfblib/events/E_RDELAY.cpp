@@ -18,13 +18,13 @@
 DEFINE_FIRMWARE_FB(E_RDELAY, g_nStringIdE_RDELAY)
 
 E_RDELAY::E_RDELAY(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes):
-    CTimedFB( paInstanceNameId, paSrcRes, e_SingleShot){
+    CTimedFB(paInstanceNameId, paSrcRes){
 }
 
 void E_RDELAY::executeEvent(TEventID paEIID, CEventChainExecutionThread * const paECET){
   switch(paEIID){
     case cgExternalEventID:
-      sendOutputEvent(csmEOID, getEventChainExecutor());
+      sendOutputEvent(csmEOID, paECET);
       mActive = false;
       break;
     case csmEventSTARTID:
@@ -33,7 +33,7 @@ void E_RDELAY::executeEvent(TEventID paEIID, CEventChainExecutionThread * const 
         getTimer().unregisterTimedFB(this);
       }
       setEventChainExecutor(paECET);  // E_RDELAY will execute in the same thread on as from where it has been triggered.
-      getTimer().registerTimedFB( mTimeListEntry, DT());
+      getTimer().registerOneShotTimedFB(this, DT());
       mActive = true;
       break;
     default:

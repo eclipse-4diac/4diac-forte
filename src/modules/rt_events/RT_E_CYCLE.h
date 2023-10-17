@@ -46,7 +46,6 @@ private:
   static const SFBInterfaceSpec scmFBInterfaceSpec;
 
   bool mActive; //!> flag to indicate that the timed fb is currently active
-  STimedFBListEntry mTimeListEntry;
   CEventChainExecutionThread mECEO;
 
   void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;

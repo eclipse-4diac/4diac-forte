@@ -49,8 +49,7 @@ FORTE_RT_E_DELAY::FORTE_RT_E_DELAY(const CStringDictionary::TStringId paInstance
     conn_Tmin(nullptr),
     conn_Deadline(nullptr),
     conn_WCET(nullptr),
-    conn_QO(this, 0, &var_conn_QO),
-    mTimeListEntry{.mTimedFB = this, .mType = e_SingleShot} {
+    conn_QO(this, 0, &var_conn_QO) {
   setEventChainExecutor(&mECEO);
 };
 
@@ -77,7 +76,7 @@ void FORTE_RT_E_DELAY::executeEvent(TEventID paEIID, CEventChainExecutionThread 
       break;
     case scmEventSTARTID:
       if((!mActive)&&(mInitialized)){
-        getTimer().registerTimedFB(mTimeListEntry, var_DT);
+        getTimer().registerOneShotTimedFB(this, var_DT);
         mActive = true;
       }
       break;

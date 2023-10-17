@@ -39,11 +39,13 @@ protected:
 
 
   bool mActive; //!> flag to indicate that the timed fb is currently active
-  STimedFBListEntry mTimeListEntry; //!> The Timer list entry of this timed FB
-/*!\brief execute the input events of timed FBs as far it is possible
- *
- * Derived Timed FBs only normally need only the start event as this is different for each timed FB type (e.g. periodic vs. onetimeshot)
- */
+
+  CTimedFB(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
+
+  /*!\brief execute the input events of timed FBs as far it is possible
+   *
+   * Derived Timed FBs only normally need only the start event as this is different for each timed FB type (e.g. periodic vs. onetimeshot)
+   */
   void executeEvent(TEventID paEIID, CEventChainExecutionThread * const paECET) override;
 
   void readInputData(TEventID paEI) override;
@@ -52,8 +54,8 @@ protected:
   CIEC_TIME& DT() {
      return *static_cast<CIEC_TIME*>(getDI(0));
   }
+
 public:
-  CTimedFB(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes, ETimerActivationType paType);
   ~CTimedFB() override = default;
 
   EMGMResponse changeFBExecutionState(EMGMCommandType paCommand) override;

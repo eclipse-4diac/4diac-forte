@@ -34,12 +34,12 @@ const SFBInterfaceSpec FORTE_E_TimeOut::scmFBInterfaceSpec = {
 void FORTE_E_TimeOut::executeEvent(TEventID paEIID, CEventChainExecutionThread * const paECET){
   if(cgExternalEventID == paEIID){
     mActive = false;
-    sendAdapterEvent(scmTimeOutSocketAdpNum, FORTE_ATimeOut::scmEventTimeOutID, getEventChainExecutor());
+    sendAdapterEvent(scmTimeOutSocketAdpNum, FORTE_ATimeOut::scmEventTimeOutID, paECET);
   }
   else if(var_TimeOutSocket().evt_START() == paEIID){
     if(!mActive){
       setEventChainExecutor(paECET);  // delay notification should be execute in the same thread on as from where it has been triggered.
-      getTimer().registerTimedFB(mTimeListEntry, var_TimeOutSocket().var_DT());
+      getTimer().registerOneShotTimedFB(this, var_TimeOutSocket().var_DT());
       mActive = true;
     }
   }

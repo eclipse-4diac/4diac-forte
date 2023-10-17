@@ -38,7 +38,6 @@ class FORTE_E_TimeOut : public CEventSourceFB{
     static const SFBInterfaceSpec scmFBInterfaceSpec;
 
     bool mActive; //!> flag to indicate that the timed fb is currently active
-    STimedFBListEntry mTimeListEntry; //!> The Timer list entry of this timed FB
 
     void executeEvent(TEventID paEIID, CEventChainExecutionThread * const paECET) override;
 
@@ -46,12 +45,7 @@ class FORTE_E_TimeOut : public CEventSourceFB{
     void writeOutputData(TEventID paEO) override;
 
   public:
-    EVENT_SOURCE_FUNCTION_BLOCK_CTOR(FORTE_E_TimeOut){
-      mActive = false;
-      mTimeListEntry.mTimeOut = 0;
-      mTimeListEntry.mInterval = 0;
-      mTimeListEntry.mType = e_SingleShot;
-      mTimeListEntry.mTimedFB = this;
+    EVENT_SOURCE_FUNCTION_BLOCK_CTOR(FORTE_E_TimeOut), mActive(false) {
     };
 
   ~FORTE_E_TimeOut() override = default;

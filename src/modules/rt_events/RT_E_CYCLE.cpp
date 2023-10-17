@@ -45,8 +45,7 @@ FORTE_RT_E_CYCLE::FORTE_RT_E_CYCLE(const CStringDictionary::TStringId paInstance
     conn_DT(nullptr),
     conn_Deadline(nullptr),
     conn_WCET(nullptr),
-    conn_QO(this, 0, &var_conn_QO),
-    mTimeListEntry{.mTimedFB = this, .mType = e_Periodic} {
+    conn_QO(this, 0, &var_conn_QO) {
   setEventChainExecutor(&mECEO);
 };
 
@@ -72,7 +71,7 @@ void FORTE_RT_E_CYCLE::executeEvent(TEventID paEIID, CEventChainExecutionThread 
     case scmEventSTARTID:
       if(!mActive){
         mECEO.setDeadline(var_Deadline);
-        getTimer().registerTimedFB(mTimeListEntry, var_DT);
+        getTimer().registerPeriodicTimedFB(this, var_DT);
         mActive = true;
       }
       break;
