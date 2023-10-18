@@ -13,9 +13,9 @@
 #ifndef MGMCMDSTRUCT_H_
 #define MGMCMDSTRUCT_H_
 
-#include <mgmcmd.h>
-#include <forte_string.h>
-#include <fixedcapvector.h>
+#include "mgmcmd.h"
+#include "datatypes/forte_string.h"
+#include "utils/fixedcapvector.h"
 
 namespace forte {
   namespace core {

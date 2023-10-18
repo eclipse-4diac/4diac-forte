@@ -10,8 +10,8 @@
  *   Alois Zoitl, Monika Wenger - initial API and implementation and/or initial documentation
  *   Martin Melik-Merkumians - Adds methods for IB, QB, IL, and QL
  *******************************************************************************/
-#include <esfb.h>
-#include <resource.h>
+#include "../../core/esfb.h"
+#include "../../core/resource.h"
 
 #ifndef PROCESSINTERFACEBASE_H_
 #define PROCESSINTERFACEBASE_H_
