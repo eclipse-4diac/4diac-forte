@@ -289,6 +289,7 @@ endif()
 GET_PROPERTY(link_flags GLOBAL PROPERTY FORTE_LINK_FLAGS)
 
 add_library(FORTE_LITE OBJECT ${SOURCE_FILES}) #no executables.
+TARGET_LINK_LIBRARIES (FORTE_LITE ${LINK_LIBRARY})
 
 list(JOIN link_flags " " link_flags_string)
 
