@@ -29,7 +29,7 @@ class CPiFaceProcessInterface : public CProcessInterfaceBase{
   friend class CDeviceExecution;
 
   protected:
-    bool initialise(bool paInput);
+    bool initialise(bool paInput, CEventChainExecutionThread *const paECET);
     bool deinitialise();
     bool readPin();
     bool writePin();

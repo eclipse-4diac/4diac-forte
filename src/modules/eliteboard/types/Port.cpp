@@ -91,11 +91,11 @@ void FORTE_Port::register_handles() {
   }
 }
 
-void FORTE_Port::executeEvent(TEventID paEIID) {
+void FORTE_Port::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   if (paEIID == st_PortInAdapter().MAP()) {
     deregister_handles();
     register_handles();
 
-    sendAdapterEvent(0, FORTE_PortAdapter::scmEventMAPOID);
+    sendAdapterEvent(0, FORTE_PortAdapter::scmEventMAPOID, paECET);
   }
 }

@@ -60,7 +60,7 @@ bool CMLPIFaceProcessInterface::connectToMLPI(){
   return retVal;
 }
 
-bool CMLPIFaceProcessInterface::initialise(bool paInput){
+bool CMLPIFaceProcessInterface::initialise(bool paIsInput, CEventChainExecutionThread *const paECET) {
   bool retVal = false;
   /*
    * Starting forte at boot in the PLC has the effect of failing when connecting to the MLPI

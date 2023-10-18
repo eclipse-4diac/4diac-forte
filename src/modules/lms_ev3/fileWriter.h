@@ -70,7 +70,7 @@ class fileWriter: public CFunctionBlock{
     static const char * const scmNotInitialised;
     static const char * const scmCouldNotWrite;
 
-    void executeEvent(TEventID paEIID) override;
+    void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
   public:
     fileWriter(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);

@@ -53,7 +53,7 @@ bool FORTE_GetArrayResponseFromJSON::isResponseEmpty(char* paText) {
   return true;
 }
 
-void FORTE_GetArrayResponseFromJSON::executeEvent(TEventID paEIID) {
+void FORTE_GetArrayResponseFromJSON::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   if(scmEventREQID == paEIID && CIEC_ANY::e_ARRAY == output().getDataTypeID() && CIEC_ANY::e_STRUCT == output_Array()[0]->getDataTypeID()) {
     //clean the output first
     output_Array().setup(output_Array().size(), static_cast<CIEC_STRUCT*>(output_Array()[0])->getStructTypeNameID());
@@ -76,7 +76,7 @@ void FORTE_GetArrayResponseFromJSON::executeEvent(TEventID paEIID) {
     } else {
       DEVLOG_ERROR("[Arrowhead GetArrayResponseFromJSON]: Invalid response, no ] was found: %s\n", response().getValue());
     }
-    sendOutputEvent(scmEventCNFID);
+    sendOutputEvent(scmEventCNFID, paECET);
   }
 }
 

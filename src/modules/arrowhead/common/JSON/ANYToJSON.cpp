@@ -42,11 +42,11 @@ const SFBInterfaceSpec FORTE_ANYToJSON::scmFBInterfaceSpec = {
 };
 
 
-void FORTE_ANYToJSON::executeEvent(TEventID paEIID) {
+void FORTE_ANYToJSON::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   if(scmEventREQID == paEIID) {
     output() = "";
     ArrowheadJSONHelper::transformANYToJSON(input(), output());
-    sendOutputEvent(scmEventCNFID);
+    sendOutputEvent(scmEventCNFID, paECET);
   }
 }
 

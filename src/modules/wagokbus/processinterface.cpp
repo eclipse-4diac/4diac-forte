@@ -26,7 +26,7 @@ WagoPFCProcessInterface::~WagoPFCProcessInterface() {
   deinitialise();
 }
 
-bool WagoPFCProcessInterface::initialise(bool paInput) {
+bool WagoPFCProcessInterface::initialise(bool paInput, CEventChainExecutionThread *const paECET) {
   mInitialized = false;
   std::vector<std::string> paramsList(generateParameterList());
   char *pBuffer;
@@ -50,7 +50,7 @@ bool WagoPFCProcessInterface::initialise(bool paInput) {
       }
 
       mInitialized = true;
-      setEventChainExecutor(mInvokingExecEnv);
+      setEventChainExecutor(paECET);
     }
   }
   return mInitialized;

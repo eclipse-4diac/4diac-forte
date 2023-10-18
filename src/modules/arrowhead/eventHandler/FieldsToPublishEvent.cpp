@@ -49,30 +49,30 @@ publishEvent().deliveryCompleteUri() = deliveryCompleteUri();
 }
 
 
-void FORTE_FieldsToPublishEvent::enterStateSTART(){
+void FORTE_FieldsToPublishEvent::enterStateSTART(CEventChainExecutionThread *const paECET){
   mECCState = scmStateSTART;
 }
 
-void FORTE_FieldsToPublishEvent::enterStateREQ(){
+void FORTE_FieldsToPublishEvent::enterStateREQ(CEventChainExecutionThread *const paECET){
   mECCState = scmStateREQ;
   alg_REQ();
-  sendOutputEvent( scmEventCNFID);
+  sendOutputEvent(scmEventCNFID, paECET);
 }
 
-void FORTE_FieldsToPublishEvent::executeEvent(TEventID paEIID){
+void FORTE_FieldsToPublishEvent::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   bool bTransitionCleared;
   do{
     bTransitionCleared = true;
     switch(mECCState){
       case scmStateSTART:
         if(scmEventREQID == paEIID)
-          enterStateREQ();
+          enterStateREQ(paECET);
         else
           bTransitionCleared  = false; //no transition cleared
         break;
       case scmStateREQ:
         if((1))
-          enterStateSTART();
+          enterStateSTART(paECET);
         else
           bTransitionCleared  = false; //no transition cleared
         break;

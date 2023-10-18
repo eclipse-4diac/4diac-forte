@@ -51,30 +51,30 @@ preferredProvider().providerCloud() = providerCloud();
 }
 
 
-void FORTE_FieldsToPreferredProvider::enterStateSTART(){
+void FORTE_FieldsToPreferredProvider::enterStateSTART(CEventChainExecutionThread *const paECET){
   mECCState = scmStateSTART;
 }
 
-void FORTE_FieldsToPreferredProvider::enterStateREQ(){
+void FORTE_FieldsToPreferredProvider::enterStateREQ(CEventChainExecutionThread * const paECET){
   mECCState = scmStateREQ;
   alg_REQ();
-  sendOutputEvent( scmEventCNFID);
+  sendOutputEvent(scmEventCNFID, paECET);
 }
 
-void FORTE_FieldsToPreferredProvider::executeEvent(TEventID paEIID){
+void FORTE_FieldsToPreferredProvider::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   bool bTransitionCleared;
   do{
     bTransitionCleared = true;
     switch(mECCState){
       case scmStateSTART:
         if(scmEventREQID == paEIID)
-          enterStateREQ();
+          enterStateREQ(paECET);
         else
           bTransitionCleared  = false; //no transition cleared
         break;
       case scmStateREQ:
         if(1)
-          enterStateSTART();
+          enterStateSTART(paECET);
         else
           bTransitionCleared  = false; //no transition cleared
         break;

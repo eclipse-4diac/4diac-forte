@@ -70,7 +70,7 @@ CConmeleonC1ProcessInterface::CConmeleonC1ProcessInterface(CResource *paSrcRes, 
 CConmeleonC1ProcessInterface::~CConmeleonC1ProcessInterface(){
 }
 
-bool CConmeleonC1ProcessInterface::initialise(bool mInputOrOutput){
+bool CConmeleonC1ProcessInterface::initialise(bool paIsInput, CEventChainExecutionThread *const paECET) {
 
   CIEC_INT param;
   param.fromString(PARAMS().getStorage().c_str());

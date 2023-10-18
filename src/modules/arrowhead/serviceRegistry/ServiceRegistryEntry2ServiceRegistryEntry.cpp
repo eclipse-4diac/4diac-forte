@@ -41,10 +41,10 @@ const SFBInterfaceSpec FORTE_ServiceRegistryEntry2ServiceRegistryEntry::scmFBInt
 };
 
 
-void FORTE_ServiceRegistryEntry2ServiceRegistryEntry::executeEvent(TEventID paEIID){
+void FORTE_ServiceRegistryEntry2ServiceRegistryEntry::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   if(scmEventREQID == paEIID) {
     st_OUT() = st_IN();
-    sendOutputEvent(scmEventCNFID);
+    sendOutputEvent(scmEventCNFID, paECET);
   }
 }
 

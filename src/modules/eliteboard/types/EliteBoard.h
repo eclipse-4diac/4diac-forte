@@ -95,7 +95,7 @@ private:
   };
 
 
-  void executeEvent(TEventID paEIID) override;
+  void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
  
   void setConfig() {}
   

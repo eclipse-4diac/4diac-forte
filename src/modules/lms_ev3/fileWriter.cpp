@@ -49,7 +49,7 @@ const char * const fileWriter::scmOK = "OK";
 const char * const fileWriter::scmNotInitialised = "Not initialized";
 const char * const fileWriter::scmCouldNotWrite = "Could not write";
 
-void fileWriter::executeEvent(TEventID paEIID){ //TODO: manage output and status
+void fileWriter::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) { //TODO: manage output and status
   switch (paEIID){
     case scmEventINITID:
       if(true == QI()){
@@ -58,14 +58,14 @@ void fileWriter::executeEvent(TEventID paEIID){ //TODO: manage output and status
       else{
         closeFile();
       }
-      sendOutputEvent(scmEventINITOID);
+      sendOutputEvent(scmEventINITOID, paECET);
       break;
     case scmEventREQID:
       QO() = QI();
       if(true == QI()){
         QO() = writeFile();
       }
-      sendOutputEvent(scmEventCNFID);
+      sendOutputEvent(scmEventCNFID, paECET);
       if (false == QO()){
         std::cout << "----------ERROR\n";
       }

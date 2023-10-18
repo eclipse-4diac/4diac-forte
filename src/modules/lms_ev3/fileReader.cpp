@@ -49,7 +49,7 @@ const char * const fileReader::scmOK = "OK";
 const char * const fileReader::scmNotInitialised = "Not initialized";
 const char * const fileReader::scmCouldNotRead = "Could not read";
 
-void fileReader::executeEvent(TEventID paEIID){ //TODO: manage output and status
+void fileReader::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) { //TODO: manage output and status
   switch (paEIID){
     case scmEventINITID:
       if(true == QI()){
@@ -58,14 +58,14 @@ void fileReader::executeEvent(TEventID paEIID){ //TODO: manage output and status
       else{
         closeFile();
       }
-      sendOutputEvent(scmEventINITOID);
+      sendOutputEvent(scmEventINITOID, paECET);
       break;
     case scmEventREQID:
       QO() = QI();
       if(true == QI()){
         QO() = readFile();
       }
-      sendOutputEvent(scmEventCNFID);
+      sendOutputEvent(scmEventCNFID, paECET);
       if (false == QO()){
         std::cout << "----------ERROR\n";
       }

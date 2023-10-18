@@ -94,7 +94,7 @@ bool CSysFsProcessInterface::valueGPIO(bool paIsInput) {
   return retVal;
 }
 
-bool CSysFsProcessInterface::initialise(bool paIsInput) {
+bool CSysFsProcessInterface::initialise(bool paIsInput, CEventChainExecutionThread *const paECET) {
   bool retVal = false;
   if(CSysFsProcessInterface::exportGPIO()) {
     CThread::sleepThread(250);

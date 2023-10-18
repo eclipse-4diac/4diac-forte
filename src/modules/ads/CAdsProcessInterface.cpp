@@ -25,7 +25,7 @@ namespace forte {
         CProcessInterfaceBase(paSrcRes, paInterfaceSpec, paInstanceNameId), mAdsHandle(0) {
     }
 
-    bool CAdsProcessInterface::initialise(bool){
+    bool CAdsProcessInterface::initialise(bool paIsInput, CEventChainExecutionThread *const paECET) {
       CParameterParser adsParameters(PARAMS().getValue(), ':', 2);
       if(2 != adsParameters.parseParameters()) {
         STATUS() = CIEC_STRING("PARAMS could not be parsed");

@@ -98,7 +98,7 @@ class WagoPFCProcessInterface : public CProcessInterfaceBase {
     tldkc_KbusInfo_TerminalInfo *mTerminalInfo;
 
     // Wago PFCprocess interface protected methods
-    bool initialise(bool paInput);
+    bool initialise(bool paInput, CEventChainExecutionThread *const paECET);
     bool deinitialise();
     bool readPin();
     bool writePin();

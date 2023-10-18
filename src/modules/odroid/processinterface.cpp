@@ -22,7 +22,7 @@ COdroidProcessInterface::~COdroidProcessInterface(){
 
 }
 
-bool COdroidProcessInterface::initialise(bool paIsInput){
+bool COdroidProcessInterface::initialise(bool paIsInput, CEventChainExecutionThread *const paECET) {
   bool retVal = true;
   if((paIsInput) && (getDO(2)->getDataTypeID() == CIEC_ANY::e_WORD)){
     std::string fileName("/sys/class/saradc/ch");
@@ -39,7 +39,7 @@ bool COdroidProcessInterface::initialise(bool paIsInput){
     }
   }
   else{
-    retVal = CSysFsProcessInterface::initialise(paIsInput);
+    retVal = CSysFsProcessInterface::initialise(paIsInput, paECET);
   }
   return retVal;
 }
