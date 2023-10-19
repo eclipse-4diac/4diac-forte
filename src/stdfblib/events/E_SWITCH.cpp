@@ -80,7 +80,7 @@ void FORTE_E_SWITCH::executeEvent(TEventID paEIID, CEventChainExecutionThread *c
   } while(true);
 }
 
-void FORTE_E_SWITCH::enterStateSTART(CEventChainExecutionThread *const paECET) {
+void FORTE_E_SWITCH::enterStateSTART(CEventChainExecutionThread *const) {
   mECCState = scmStateSTART;
 }
 

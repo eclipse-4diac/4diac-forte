@@ -415,6 +415,7 @@ class CFunctionBlock {
      * @return pointer to the data output
      */
     virtual CIEC_ANY* getDIO(TPortId paDIONum) {
+      (void)paDIONum; // indicate to the compiler that the param is unused
       return nullptr;
     }
 
@@ -587,6 +588,7 @@ class CFunctionBlock {
      * @return pointer to the data inout connection
      */
     virtual CInOutDataConnection **getDIOInConUnchecked(TPortId paDIONum) {
+      (void)paDIONum; // indicate to the compiler that the param is unused
       return nullptr;
     }
 
@@ -656,14 +658,6 @@ class CFunctionBlock {
      *
      */
     virtual void executeEvent(TEventID paEIID, CEventChainExecutionThread * const paECET) = 0;
-
-    /**
-     * \deprecated Use void executeEvent(TEventID paEIID, CEventChainExecutionThread * const paECET)
-     * Will be removed when all FBs are migrated to new interface
-     */
-    [[deprecated]] virtual void executeEvent(TEventID ) {
-
-    }
 
     /*!\brief Function reading the values from input connections of the FB.
      *

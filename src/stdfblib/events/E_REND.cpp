@@ -79,11 +79,11 @@ void FORTE_E_REND::executeEvent(TEventID paEIID, CEventChainExecutionThread *con
   } while(true);
 }
 
-void FORTE_E_REND::enterStateSTART(CEventChainExecutionThread *const paECET) {
+void FORTE_E_REND::enterStateSTART(CEventChainExecutionThread *const) {
   mECCState = scmStateSTART;
 }
 
-void FORTE_E_REND::enterStateEI1(CEventChainExecutionThread *const paECET) {
+void FORTE_E_REND::enterStateEI1(CEventChainExecutionThread *const) {
   mECCState = scmStateEI1;
 }
 
@@ -92,7 +92,7 @@ void FORTE_E_REND::enterStateEO(CEventChainExecutionThread *const paECET) {
   sendOutputEvent(scmEventEOID, paECET);
 }
 
-void FORTE_E_REND::enterStateEI2(CEventChainExecutionThread *const paECET) {
+void FORTE_E_REND::enterStateEI2(CEventChainExecutionThread *const) {
   mECCState = scmStateEI2;
 }
 

@@ -73,7 +73,7 @@ void FORTE_E_PERMIT::executeEvent(TEventID paEIID, CEventChainExecutionThread *c
   } while(true);
 }
 
-void FORTE_E_PERMIT::enterStateSTART(CEventChainExecutionThread *const paECET) {
+void FORTE_E_PERMIT::enterStateSTART(CEventChainExecutionThread *const) {
   mECCState = scmStateSTART;
 }
 

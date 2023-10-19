@@ -101,11 +101,11 @@ void FORTE_E_DEMUX::executeEvent(TEventID paEIID, CEventChainExecutionThread *co
   } while(true);
 }
 
-void FORTE_E_DEMUX::enterStateSTART(CEventChainExecutionThread *const paECET) {
+void FORTE_E_DEMUX::enterStateSTART(CEventChainExecutionThread *const) {
   mECCState = scmStateSTART;
 }
 
-void FORTE_E_DEMUX::enterStateState(CEventChainExecutionThread *const paECET) {
+void FORTE_E_DEMUX::enterStateState(CEventChainExecutionThread *const) {
   mECCState = scmStateState;
 }
 

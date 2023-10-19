@@ -87,11 +87,11 @@ void FORTE_E_STOPWATCH::executeEvent(TEventID paEIID, CEventChainExecutionThread
   } while(true);
 }
 
-void FORTE_E_STOPWATCH::enterStateSTART(CEventChainExecutionThread *const paECET) {
+void FORTE_E_STOPWATCH::enterStateSTART(CEventChainExecutionThread *const) {
   mECCState = scmStateSTART;
 }
 
-void FORTE_E_STOPWATCH::enterStateMeasure(CEventChainExecutionThread *const paECET) {
+void FORTE_E_STOPWATCH::enterStateMeasure(CEventChainExecutionThread *const) {
   mECCState = scmStateMeasure;
   alg_captureStartTime();
 }

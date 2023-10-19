@@ -83,7 +83,7 @@ void FORTE_E_D_FF::executeEvent(TEventID paEIID, CEventChainExecutionThread *con
   } while(true);
 }
 
-void FORTE_E_D_FF::enterStateSTART(CEventChainExecutionThread *const paECET) {
+void FORTE_E_D_FF::enterStateSTART(CEventChainExecutionThread *const) {
   mECCState = scmStateSTART;
 }
 

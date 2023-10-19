@@ -89,7 +89,7 @@ void FORTE_FB_RANDOM::executeEvent(TEventID paEIID, CEventChainExecutionThread *
   } while(true);
 }
 
-void FORTE_FB_RANDOM::enterStateSTART(CEventChainExecutionThread *const paECET) {
+void FORTE_FB_RANDOM::enterStateSTART(CEventChainExecutionThread *const) {
   mECCState = scmStateSTART;
 }
 

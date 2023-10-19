@@ -67,7 +67,7 @@ void FORTE_E_MERGE::executeEvent(TEventID paEIID, CEventChainExecutionThread *co
   } while(true);
 }
 
-void FORTE_E_MERGE::enterStateSTART(CEventChainExecutionThread *const paECET) {
+void FORTE_E_MERGE::enterStateSTART(CEventChainExecutionThread *const) {
   mECCState = scmStateSTART;
 }
 

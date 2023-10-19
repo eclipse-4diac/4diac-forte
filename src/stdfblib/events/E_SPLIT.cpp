@@ -66,7 +66,7 @@ void FORTE_E_SPLIT::executeEvent(TEventID paEIID, CEventChainExecutionThread *co
   } while(true);
 }
 
-void FORTE_E_SPLIT::enterStateSTART(CEventChainExecutionThread *const paECET) {
+void FORTE_E_SPLIT::enterStateSTART(CEventChainExecutionThread *const) {
   mECCState = scmStateSTART;
 }
 

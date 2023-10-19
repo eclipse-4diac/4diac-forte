@@ -113,7 +113,7 @@ class CResource : public CFunctionBlock, public forte::core::CFBContainer{
   protected:
     CResource(const SFBInterfaceSpec *paInterfaceSpec, CStringDictionary::TStringId paInstanceNameId);
 
-    void executeEvent(TEventID paEIID, CEventChainExecutionThread * const paECET) override {
+    void executeEvent(TEventID, CEventChainExecutionThread * const) override {
       // nothing to do here for a resource
     }
 
@@ -125,7 +125,7 @@ class CResource : public CFunctionBlock, public forte::core::CFBContainer{
       // nothing to write to for a resource
     }
 
-    /*!Wrapper for simplifying connection creation in resources
+    /*! Wrapper for simplifying connection creation in resources
      *
      */
     EMGMResponse createConnection(forte::core::SManagementCMD &paCommand);
