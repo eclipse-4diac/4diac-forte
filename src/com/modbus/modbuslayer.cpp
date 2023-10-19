@@ -530,6 +530,10 @@ int CModbusComLayer::processClientParams(const char* paLayerParams, STcpParams* 
 
     if (!strcmp(flow, "arduino")) {
       paRtuParams->mFlowControl = eFlowArduino;
+#ifdef WIN32
+      paRtuParams->mFlowControl = eFlowDelay;
+      DEVLOG_WARNING("CModbusComLayer:: Flow control style \"arduino\" not supported on windows, using \"delay\"\n");
+#endif
     } else if (!strcmp(flow, "delay")) {
       paRtuParams->mFlowControl = eFlowDelay;
     } else if (!strcmp(flow, "longdelay") || !strcmp(flow, "delay5")) {
