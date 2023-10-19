@@ -22,7 +22,7 @@
 
 #include "../arch/devlog.h"
 #include "convert_functions.h"
-#include <math.h>
+#include <cmath>
 #include <string.h>
 #include "iec61131_cast_helper.h"
 #include "./utils/staticassert.h"
