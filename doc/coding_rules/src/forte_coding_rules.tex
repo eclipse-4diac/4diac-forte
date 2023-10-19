@@ -23,8 +23,8 @@
 
 
 \title{Coding Rules for \emph{FORTE}\footnote{Framework for Distributed Industrial Automation and Control---Run-Time Environment}}
-\author{Alois Zoitl, alil\@@users.sf.net \and Rene Smodic, smodic\@@acin.tuwien.ac.at}
-\date{May 18, 2010}
+\author{Alois Zoitl, alil\@@users.sf.net, Rene Smodic, smodic\@@acin.tuwien.ac.at \and Martin Melik Merkumians melik-merkumians\@@acin.tuwien.ac.at}
+\date{October 19, 2023}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -145,7 +145,14 @@ Mixed case letters (i.e. camel-case) have to be used and the appropriate prefixe
 
 
 \subsection{Variables}
-Variables have to be named self explanatory. The names have to be provided with the appropriate prefixes and they have to start with an uppercase letter. In case of combining prefixes, the use of ranges, arrays, pointer, enumerations, or structures is at first, followed by basic data types or object prefixes. The only exception are loop variables (thereby the use of i, j, k is allowed). Only one variable declaration per line is allowed. Pointer operators at the declaration have to be located in front of the variable (not after the type identifier). If possible initializations have to be done directly at the declaration.
+Variables have to be named self explanatory and written in lower camel case (camelCase).
+If a prefix has to be used, this is the first loweer-case letter, and the name of the variable will start with an upper-case letter (e.g., mMemberVariable).
+If no prefix has to be used (e.g., local variables), then the variable name will start with a lower-case letter (e.g., localVariable).
+For loop variables names like i, j, k, or similar are allowed, however if possible a meaningful name is preferred.
+Only one variable declaration per line is allowed.
+Pointer operators at the declaration have to be located in front of the variable (not after the type identifier).
+If applicable, variables shall be initialized at their declaration.
+Additionally, try to minimize the visibilty of a variable to its necessary minimum.
 
 \textbf{Global non constant variables are prohibited!}
 
@@ -177,57 +184,22 @@ cg & for a global constant\\
 
 \end{tabular}
 
-\noindent
-Optionally also more detailed type information can be given with the variable name:
-
-\begin{tabular}{ll}
-\textbf{Variable Types} & \textbf{Basic Data Types} \\
-\begin{tabular}{ll}
-a & for arrays\\
-p & for pointers\\ 	
-r & for references\\
-en & for enumerations\\
-st & for structures\\
-\end{tabular}	&
-
-\begin{tabular}{ll}
-c & for characters \\
-b & for booleans\\
-n & for integers\\	
-f & for all floating point numbers\\
-\end{tabular} \vspace{1mm}\\
-
-\textbf{Objects} & \\
-\begin{tabular}{ll}
-o & for meaningless objects\\	
-lst & for list objects\\
-v & for vector objects\\
-s & for string objects\\	
-\end{tabular} &\\
-&\\
-\end{tabular}
-
-\noindent If these optional type prefixes are used an \_ has to be inserted between scope prefix and the optional type prefix in order to increase readability. 
-
 \paragraph{Examples}
 \begin{quote}
 \verb|class CFunctionBlock;|\\
-\verb|int nNumber;|\\
-\verb|int *pnNumber = &nNumber;|\\
-\verb|char cKey;|\\
-\verb|bool g_bIsInitialized;|\\
-\verb|float m_fPi = 3.1415;|\\
-\verb|int anNumbers[10];|\\
+\verb|int number;|\\
+\verb|int *pointer = &number;|\\
+\verb|char key;|\\
+\verb|bool gIsInitialized;|\\
+\verb|float mPi = 3.1415;|\\
+\verb|int numbers[10];|\\
 \end{quote}
 
 
-\subsection{Constants}
+\subsection{Constants and Const-Expressions}
  With C++ it is prohibited to declare constants with the \#define statement (const has to be used instead). 
- A prefix cm, scm, or cg, depending on the cope of the constant should be used.
- Never ever use ``magic numbers'' 
-(e.g. \verb|if (x == 3){...}|). Instead use constants.
-
-
+ A prefix cm, scm, or cg, depending on the cope of the constant or constexpr shall be used.
+ Never ever use ``magic numbers'' (e.g. \verb|if (x == 3){...}|), always use constants.
 
 
 \section{Classes}
@@ -249,30 +221,38 @@ Parameters which are keeping their value within a method have to be declared as 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Code Formatting}
 \subsection{Indentation}
-The tabulator width has to be set to 2. Instead of tabulator characters spaces have to inserted (usually there is an option for this in the IDE called: ``replace tabs'').
+The tabulator width has to be set to 2 spaces.
+Instead of tabulator characters spaces have to inserted (usually there is an option for this in the IDE called: ``replace tabs'').
 A new block has to be started at the same line as its initial statement.
+For the purpose of indention, the access specifiers \verb|public|, \verb|protected|, and \verb|private| are considered to be blocks, so definitions need to be indented relative to the access specifier
 An example is given in the appendix \ref{subsec:IndentionAndBlocks} of this document.
 
 \subsection{Blocks}
 The left parenthesis of a block has to be in the same line as the construct. 
 The right parenthesis has to be in an own line. 
 
-Single-line if statemtens are not allowed. 
-Parenthesis have to be used for all if, else, else if, for, while statments even when they contain only a single statement.
+Single-line if statements are not allowed. 
+Curly brackets have to be used for all if, else, else if, for, while statments even when they contain only a single statement.
 
 An example how to format blocks is given in the appendix \ref{subsec:IndentionAndBlocks} of this document.
 
 \subsection{if-Statements}
 Within if-statements you should consider the following rules:
 \begin{itemize}
-\item Put constants in if-expression on the left side. If you are missing on \verb|=| or a \verb|!| in a 
-      comparison it will result in a compile error (e.g., \verb|if(if(cgMaxElements == mElements){|).
-\item Put spaces around your operators (e.g., \verb|if(0 < i){|)
+\item Put spaces around your operators (e.g., \verb|if(i > 0){|)
 \item If you have several expressions in an if put parenthesis around each of them in order to avoid 
-      ambiguous interpretation of the compiler (e.g., \verb|if((0 < i) && (5 > i)){|).
+      ambiguous interpretation of the compiler (e.g., \verb|if((i > 0) && (i < 5)){|).
+\item Always use curly brackets for the if body, so do \verb|if(i > 0){ return i; }| and not \verb|if(i > 0) return i;|
 
 \end{itemize}
 
+\subsection{Loops}
+Use the appropriate loop construct for your task.
+If you have an interator or you are using a plain counting variable with a predefined end, then use a \verb|for| loop.
+If there is a certain termination condition, use \verb|while(<condition>)| or \verb|do ... while(<condition>)| constructs.
+If an infinite loop is needed use \verb|while(true)|.
+
+Regardless of what type of loop you use, always use curly brackets for the loop body.
 
 \subsection{Eclipse}
 For users of the IDE Eclipse with the CDT plugin we provide a style file that correctly formats your code to this rules. The file can be found in FORTE's main directory and is called \verb=fortestyle.xml=. This file can be imported into your FORTE project under the Menu Project/Properties and there in the tree element C/C++ General/Code Style. With the FORTE style file you can simple correctly format your file by pressing \verb=<ctrl>+<shift>+f=.
@@ -292,6 +272,13 @@ in the IEC 61499 Standard. So they are execepted from the rules in sections 3 to
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Performance and Size Considerations}
 
+\subsection{Pointers vs. References}
+If applicable prefer references over pointers.
+References have no issues with possibly being \verb|nullptr| and its usage is usually simpler.
+
+\subsection{Parameter Passing}
+Again, prefer references over pointers when passing parameters.
+Additionally, if your data structures are rather small (< 16 bytes), then pass by-value, as this is usually more efficient compared to by-reference passing.
 
 
 \subsection{Function Inlining}
@@ -299,12 +286,9 @@ Our experience showed that functions shorter than 4 to 3 line should be inlined.
 
 
 \subsection{Local Static Variables}
-Local static variables can be rather helpful for implementing certain features. However be warned that they may have side effects. First of all modern C++ compilers will add code from \verb=libsupc++.a= which will protect them against multi threaded access. Depending on other features you use from the standard C++ library this can result in several kilobytes of binary image size increase. The compiler flag \verb=-fno-threadsafe-statics= can help here. But be warned that you may run in trouble with this flag. 
+Do not use local static variables... ever... period.
 
-Currently FORTE is using just one local static variable, namely in the singleton pattern. For these it is safe to use the \verb=-fno-threadsafe-statics= flag. And because of other optimizations done to remove the standard lib parts this will significantly reduce your image size. 
-
-Summarizing this short excursus better think twice before using a local static variable. FORTE will try to avoid them and future version will very likely not use them any more and so should you.
-
+They introduce all kinds of problems, such as reentrant issues, thread-safety, etc. so do not use them.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -339,7 +323,7 @@ class CFooSpace {
                      */
   private:
     //! short member var description
-    int m_nIsBar; /*!> long description
+    int mIsBar; /*!> long description
                    */  
 };
 
@@ -350,7 +334,7 @@ class CFooSpace {
 \subsection{Indention and Blocks} \label{subsec:IndentionAndBlocks}
 \begin{lstlisting}[frame=trbl]{}
 int CFooSpace::foo(void){
-  if(m_nIsBar){
+  if(mIsBar){
     bar();
     return 1;
   }
@@ -358,7 +342,7 @@ int CFooSpace::foo(void){
     megaBar();
   }
     
-  if(!m_nIsBar){
+  if(!mIsBar){
   	notBar();  
   }
   
