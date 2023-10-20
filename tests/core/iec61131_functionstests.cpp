@@ -400,6 +400,140 @@ BOOST_AUTO_TEST_CASE(eq_false)
   BOOST_TEST(func_EQ(nInt1, nInt2) == false);
 }
 
+BOOST_AUTO_TEST_CASE(eq_true_variadic_3)
+{
+  CIEC_SINT number1(10);
+  CIEC_INT number2(10);
+  CIEC_DINT number3(10);
+  BOOST_TEST(func_EQ(number1, number2, number3) == true);
+}
+
+BOOST_AUTO_TEST_CASE(eq_true_variadic_4)
+{
+  CIEC_SINT number1(10);
+  CIEC_INT number2(10);
+  CIEC_DINT number3(10);
+  CIEC_DINT number4(10);
+  BOOST_TEST(func_EQ(number1, number2, number3, number4) == true);
+}
+
+BOOST_AUTO_TEST_CASE(eq_false_variadic_3)
+{
+  CIEC_SINT number1(10);
+  CIEC_INT number2(10);
+  CIEC_DINT number3(-10);
+  BOOST_TEST(func_EQ(number1, number2, number3) == false);
+}
+
+BOOST_AUTO_TEST_CASE(eq_false_variadic_4)
+{
+  CIEC_SINT number1(10);
+  CIEC_INT number2(10);
+  CIEC_DINT number3(10);
+  CIEC_DINT number4(-10);
+  BOOST_TEST(func_EQ(number1, number2, number3, number4) == false);
+}
+
+BOOST_AUTO_TEST_CASE(gt_true) {
+  BOOST_TEST(func_GT(100_SINT, 90_INT) == true);
+}
+
+BOOST_AUTO_TEST_CASE(gt_false) {
+  BOOST_TEST(func_GT(90_SINT, 100_INT) == false);
+}
+
+BOOST_AUTO_TEST_CASE(gt_true_variadic_3) {
+  BOOST_TEST(func_GT(100_SINT, 90_INT, 80_DINT) == true);
+}
+
+BOOST_AUTO_TEST_CASE(gt_false_variadic_3) {
+  BOOST_TEST(func_GT(90_SINT, 100_INT, 80_DINT) == false);
+}
+
+BOOST_AUTO_TEST_CASE(gt_true_variadic_4) {
+  BOOST_TEST(func_GT(100_SINT, 90_INT, 80_DINT, 70_LINT) == true);
+}
+
+BOOST_AUTO_TEST_CASE(gt_false_variadic_4) {
+  BOOST_TEST(func_GT(90_SINT, 100_INT, 80_DINT, 70_LINT) == false);
+}
+
+BOOST_AUTO_TEST_CASE(ge_true) {
+  BOOST_TEST(func_GE(100_SINT, 90_INT) == true);
+  BOOST_TEST(func_GE(100_SINT, 100_INT) == true);
+}
+
+BOOST_AUTO_TEST_CASE(ge_false) {
+  BOOST_TEST(func_GE(90_SINT, 100_INT) == false);
+}
+
+BOOST_AUTO_TEST_CASE(ge_true_variadic_3) {
+  BOOST_TEST(func_GE(100_SINT, 90_INT, 80_DINT) == true);
+  BOOST_TEST(func_GE(100_SINT, 90_INT, 90_DINT) == true);
+}
+
+BOOST_AUTO_TEST_CASE(ge_false_variadic_3) {
+  BOOST_TEST(func_GE(90_SINT, 100_INT, 80_DINT) == false);
+}
+
+BOOST_AUTO_TEST_CASE(ge_true_variadic_4) {
+  BOOST_TEST(func_GE(100_SINT, 90_INT, 90_DINT, 70_LINT) == true);
+}
+
+BOOST_AUTO_TEST_CASE(ge_false_variadic_4) {
+  BOOST_TEST(func_GE(90_SINT, 100_INT, 80_DINT, 70_LINT) == false);
+}
+
+BOOST_AUTO_TEST_CASE(lt_true) {
+  BOOST_TEST(func_LT(90_SINT, 100_INT) == true);
+}
+
+BOOST_AUTO_TEST_CASE(lt_false) {
+  BOOST_TEST(func_LT(100_SINT, 90_INT) == false);
+}
+
+BOOST_AUTO_TEST_CASE(lt_true_variadic_3) {
+  BOOST_TEST(func_LT(80_SINT, 90_INT, 100_DINT) == true);
+}
+
+BOOST_AUTO_TEST_CASE(lt_false_variadic_3) {
+  BOOST_TEST(func_LT(80_SINT, 100_INT, 90_DINT) == false);
+}
+
+BOOST_AUTO_TEST_CASE(lt_true_variadic_4) {
+  BOOST_TEST(func_LT(70_SINT, 80_INT, 90_DINT, 100_LINT) == true);
+}
+
+BOOST_AUTO_TEST_CASE(lt_false_variadic_4) {
+  BOOST_TEST(func_LT(70_SINT, 90_INT, 80_DINT, 100_LINT) == false);
+}
+
+BOOST_AUTO_TEST_CASE(le_true) {
+  BOOST_TEST(func_LE(90_SINT, 100_INT) == true);
+  BOOST_TEST(func_LE(100_SINT, 100_INT) == true);
+}
+
+BOOST_AUTO_TEST_CASE(le_false) {
+  BOOST_TEST(func_LE(100_SINT, 90_INT) == false);
+}
+
+BOOST_AUTO_TEST_CASE(le_true_variadic_3) {
+  BOOST_TEST(func_LE(80_SINT, 90_INT, 100_DINT) == true);
+  BOOST_TEST(func_LE(90_SINT, 90_INT, 100_DINT) == true);
+}
+
+BOOST_AUTO_TEST_CASE(le_false_variadic_3) {
+  BOOST_TEST(func_LE(80_SINT, 100_INT, 90_DINT) == false);
+}
+
+BOOST_AUTO_TEST_CASE(le_true_variadic_4) {
+  BOOST_TEST(func_LE(70_SINT, 90_INT, 90_DINT, 100_LINT) == true);
+}
+
+BOOST_AUTO_TEST_CASE(le_false_variadic_4) {
+  BOOST_TEST(func_LE(70_SINT, 100_INT, 80_DINT, 90_LINT) == false);
+}
+
 BOOST_AUTO_TEST_CASE(ne_true)
 {
   CIEC_INT nInt1(10);
