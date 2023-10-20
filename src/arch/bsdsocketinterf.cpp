@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010 - 2015 ACIN, Profactor GmbH, AIT, fortiss GmbH
+ * Copyright (c) 2010, 2023 ACIN, Profactor GmbH, AIT, fortiss GmbH, OFFIS e.V.
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -9,6 +9,8 @@
  * Contributors:
  *   Alois Zoitl, Ingo Hegny, Gerhard Ebenhofer, Thomas Strasser
  *     - initial API and implementation and/or initial documentation
+ *   Jörg Walter
+ *     - improve multicast support
  *******************************************************************************/
 #include <sockhand.h>      //needs to be first pulls in the platform specific includes
 #include "bsdsocketinterf.h"
@@ -147,7 +149,7 @@ int CBSDSocketInterface::receiveDataFromTCP(TSocketDescriptor paSockD, char* paD
 }
 
 CBSDSocketInterface::TSocketDescriptor CBSDSocketInterface::openUDPSendPort(char *paIPAddr,
-    unsigned short paPort, TUDPDestAddr *mDestAddr){
+    unsigned short paPort, TUDPDestAddr *mDestAddr, const char *paMCInterface){
   DEVLOG_INFO("CBSDSocketInterface: Opening UDP sending connection at: %s:%d\n", paIPAddr, paPort);
   TSocketDescriptor nRetVal;
 
@@ -162,6 +164,15 @@ CBSDSocketInterface::TSocketDescriptor CBSDSocketInterface::openUDPSendPort(char
 #endif
     mDestAddr->sin_addr.s_addr = inet_addr(paIPAddr);
     memset(&(mDestAddr->sin_zero), '\0', sizeof(mDestAddr->sin_zero));
+
+    if (paMCInterface) {
+      struct in_addr ifaddr;
+      ifaddr.s_addr = inet_addr(paMCInterface);
+      if (setsockopt(nRetVal, IPPROTO_IP, IP_MULTICAST_IF, &ifaddr, sizeof(ifaddr)) != 0) {
+          DEVLOG_WARNING("CBSDSocketInterface: setsockopt(IP_MULTICAST_IF) failed: %s\n", strerror(errno));
+      }
+    }
+
 
 #ifdef NET_OS
     /* following is typedef void TM_fAR * in treck/include/trsocket.h */
@@ -187,7 +198,7 @@ CBSDSocketInterface::TSocketDescriptor CBSDSocketInterface::openUDPSendPort(char
 }
 
 CBSDSocketInterface::TSocketDescriptor CBSDSocketInterface::openUDPReceivePort(char *paIPAddr,
-    unsigned short paPort){
+    unsigned short paPort, const char *paMCInterface){
   DEVLOG_INFO("CBSDSocketInterface: Opening UDP receiving connection at: %s:%d\n", paIPAddr, paPort);
   TSocketDescriptor nRetVal = -1;
   TSocketDescriptor nSocket = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP);
@@ -217,7 +228,7 @@ CBSDSocketInterface::TSocketDescriptor CBSDSocketInterface::openUDPReceivePort(c
         // setting up multicast group
         struct ip_mreq stMReq;
         stMReq.imr_multiaddr.s_addr = inet_addr(paIPAddr);
-        stMReq.imr_interface.s_addr = htonl(INADDR_ANY);
+        stMReq.imr_interface.s_addr = inet_addr(paMCInterface);
         if(0 > setsockopt(nSocket, IPPROTO_IP, IP_ADD_MEMBERSHIP, (char*) &stMReq, sizeof(stMReq))){
           //if this fails we may have given a non multicasting addr. For now we accept this. May need to be changed in the future.
           DEVLOG_WARNING("CBSDSocketInterface: setsockopt(IP_ADD_MEMBERSHIP) failed: %s\n", strerror(errno));

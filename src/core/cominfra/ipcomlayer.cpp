@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010-2014 fortiss, TU Wien ACIN and others.
+ * Copyright (c) 2010, 2023 fortiss, TU Wien ACIN, OFFIS e.V. and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -13,6 +13,7 @@
  *    Martin Melik-Merkumians -  fix typo in forte::com_infra::EComConnectionState, serial communication support for WIN32
  *    Michael Hofmann - fix for fragmented packets
  *    Patrik Smejkal - rename interrupt in interruptCCommFB
+ *    Jörg Walter - improve UDP multicast support
  *******************************************************************************/
 #include "ipcomlayer.h"
 #include "../../arch/devlog.h"
@@ -116,6 +117,13 @@ EComResponse CIPComLayer::recvData(const void *paData, unsigned int){
 
 EComResponse CIPComLayer::openConnection(char *paLayerParameter){
   EComResponse eRetVal = e_InitInvalidId;
+  const char *acInterface = CIPComSocketHandler::scmAllInterfaces;
+  char *interfaceDest = strchr(paLayerParameter, '@');
+  if (interfaceDest) {
+    *interfaceDest = '\0';
+    acInterface = interfaceDest+1;
+  }
+
   char *acPort = strchr(paLayerParameter, ':');
   if(nullptr != acPort){
     *acPort = '\0';
@@ -139,11 +147,11 @@ EComResponse CIPComLayer::openConnection(char *paLayerParameter){
         break;
       case e_Publisher:
         nSockDes = mSocketID =
-            CIPComSocketHandler::openUDPSendPort(paLayerParameter, nPort, &mDestAddr);
+          CIPComSocketHandler::openUDPSendPort(paLayerParameter, nPort, &mDestAddr, acInterface);
         break;
       case e_Subscriber:
         nSockDes = mSocketID =
-            CIPComSocketHandler::openUDPReceivePort(paLayerParameter, nPort);
+          CIPComSocketHandler::openUDPReceivePort(paLayerParameter, nPort, acInterface);
         break;
     }
 
