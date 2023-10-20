@@ -41,7 +41,7 @@ const SFBInterfaceSpec FORTE_LocalizedText2LocalizedText::scmFBInterfaceSpec = {
   1,  scmEventInputNames,  scmEIWith,  scmEIWithIndexes,
   1,  scmEventOutputNames,  scmEOWith, scmEOWithIndexes,  1,  scmDataInputNames, scmDataInputTypeIds,
   1,  scmDataOutputNames, scmDataOutputTypeIds,
-  0, nullptr
+  0, nullptr, 0, nullptr
 };
 
 

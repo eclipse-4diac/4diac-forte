@@ -43,12 +43,7 @@ template<class TypeTag, class DirTag>
 class CSpecReference {
   public:
     constexpr CSpecReference() = default;
-    constexpr CSpecReference(int paRef) {
-      if (paRef < 0) {
-        mRef = scmMaxRefValue;
-      } else {
-        mRef = static_cast<TDataIOID>(paRef);
-      }
+    constexpr CSpecReference(int paRef) : mRef(paRef >= 0 ? static_cast<TDataIOID>(paRef) : scmMaxRefValue) {
     }
 
     /**
@@ -104,8 +99,8 @@ class CSpecReferenceRange {
      * @return reference to one port
      */
     constexpr TCSpecReference operator[](int paOffset) const {
-      int id = *mFirst + paOffset;
-      return { isValid() && id >= *mFirst && id <= *mLast ? id : -1 };
+      TDataIOID id = *mFirst + paOffset;
+      return { isValid() && id >= *mFirst && id <= *mLast ? static_cast<int>(id) : -1 };
     }
 
     /**
@@ -551,7 +546,7 @@ class CWithSpecBuilder : public CWithSpecBuilderBase {
       for (auto ref : paDataRefs) {
         if (!check(ref.isValid()))
             break;
-        bind(paEventRef, *ref);
+        bind(paEventRef, static_cast<int>(*ref));
       }
     }
 

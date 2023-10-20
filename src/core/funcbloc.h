@@ -106,7 +106,7 @@ struct SFBInterfaceSpec {
 class CFunctionBlock {
   public:
     constexpr static TDataIOID scmWithListDelimiter = cgInvalidPortId; //!< value identifying the end of a with list
-    constexpr static TForteInt16 scmNoDataAssociated = cgInvalidPortId; //!< value identifying the end of a with list
+    constexpr static TForteInt16 scmNoDataAssociated = static_cast<TForteInt16>(cgInvalidPortId); //!< value identifying the end of a with list
 
     /*!\brief Possible states of a runable object.
      *

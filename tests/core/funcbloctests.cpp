@@ -15,7 +15,7 @@
 
 #include "E_CTUD.h"
 #include "basicfb.h"
-#include "internalvartests_gen.cpp"
+#include "funcbloctests_gen.cpp"
 
 
 
