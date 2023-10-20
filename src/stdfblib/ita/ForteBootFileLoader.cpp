@@ -31,7 +31,7 @@ ForteBootFileLoader::ForteBootFileLoader(IBootFileCallback &paCallback) : mBootf
 ForteBootFileLoader::~ForteBootFileLoader() {
   if(nullptr != mBootfile){
     DEVLOG_INFO("Closing bootfile\n");
-    fclose(mBootfile);
+    forte_fclose(mBootfile);
   }
 }
 
@@ -43,7 +43,7 @@ bool ForteBootFileLoader::openBootFile() {
     bootFileName = std::string(gCommandLineBootFile);
   } else {
     // select provided or default boot file name
-    char * envBootFileName = getenv("FORTE_BOOT_FILE");
+    char * envBootFileName = forte_getenv("FORTE_BOOT_FILE");
     if(nullptr != envBootFileName) {
       DEVLOG_INFO("Using provided bootfile location from environment variable: %s\n", envBootFileName);
       bootFileName = std::string(envBootFileName);
@@ -57,13 +57,13 @@ bool ForteBootFileLoader::openBootFile() {
   if(bootFileName.empty()){
     DEVLOG_INFO("No bootfile specified and no default bootfile configured during build\n");
   } else {
-    mBootfile = fopen(bootFileName.c_str(), "r");
+    mBootfile = forte_fopen(bootFileName.c_str(), "r");
     if(nullptr != mBootfile){
       DEVLOG_INFO("Boot file %s opened\n", bootFileName.c_str());
       retVal = true;
     }
     else{
-      if(nullptr != getenv("FORTE_BOOT_FILE_FAIL_MISSING")){
+      if(nullptr != forte_getenv("FORTE_BOOT_FILE_FAIL_MISSING")){
         DEVLOG_ERROR("Boot file %s could not be opened and FORTE_BOOT_FILE_FAIL_MISSING is set. Failing...\n", bootFileName.c_str());
         mNeedsExit = true;
       }
@@ -113,7 +113,7 @@ bool ForteBootFileLoader::readLine(std::string &line){
   line.clear();
   char acLineBuf[size];
   do {
-    if(nullptr != fgets(acLineBuf, size, mBootfile)) {
+    if(nullptr != forte_fgets(acLineBuf, size, mBootfile)) {
       line.append(acLineBuf);
     } else {
       return 0 != line.length();

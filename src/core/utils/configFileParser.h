@@ -17,6 +17,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <utility> // needed for std::pair
+#include "../../arch/forte_fileio.h"
 
 /**
  * Helper class to parse configuration files. For now, all lines must be formed as key=value or empty lines
@@ -69,7 +70,7 @@ class CConfigFileParser {
     /**
      * File to be parsed
      */
-    FILE *mConfigFile;
+    decltype(forte_fopen(nullptr, nullptr)) mConfigFile;
 
     static const size_t scmLineBuffer = 256;
     static const char scmSeparator = '=';

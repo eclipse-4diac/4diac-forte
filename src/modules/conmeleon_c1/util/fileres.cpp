@@ -16,7 +16,7 @@
 #include <cstdarg>
 
 
-CFileResource::CFileResource(const char* pszFileName, const char* pszOpenMode /*= "a+"*/) : mFileHandle(std::fopen(pszFileName, pszOpenMode)) {
+CFileResource::CFileResource(const char* pszFileName, const char* pszOpenMode /*= "a+"*/) : mFileHandle(forte_fopen(pszFileName, pszOpenMode)) {
 
   m_ReadOnly = checkModeReadOnly(pszOpenMode);
 
@@ -25,7 +25,7 @@ CFileResource::CFileResource(const char* pszFileName, const char* pszOpenMode /*
 CFileResource::~CFileResource() {
 
   if (mFileHandle != nullptr) {
-    std::fclose(mFileHandle);
+    forte_fclose(mFileHandle);
   }
 }
 
@@ -86,7 +86,7 @@ void CFileResource::readLine(char* pszData, std::size_t nLength) const {
     // set file position to the beginning
     std::rewind(mFileHandle);
 
-    nNrCharsRead = getline(&pszLine, &nLen, mFileHandle);
+    nNrCharsRead = forte_getline(&pszLine, &nLen, mFileHandle);
     if (nNrCharsRead != -1) {
       strncpy(pszData, pszLine, nLength);
     }
@@ -94,7 +94,7 @@ void CFileResource::readLine(char* pszData, std::size_t nLength) const {
       // TODO: add logging or trace function like "Error during write to file operation! Check file permissions!";
     }
 
-    // getline allocates memory if needed, we need to release this memory again
+    // forte_getline allocates memory if needed, we need to release this memory again
     free(pszLine);
   }
 }

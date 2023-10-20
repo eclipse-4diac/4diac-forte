@@ -28,6 +28,7 @@
 #include "forte_any_string.h"
 #include "forte_any_int.h"
 #include "forte_char.h"
+#include "../../arch/forte_fileio.h"
 
 #include "devlog.h"
 

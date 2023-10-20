@@ -21,6 +21,7 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "PikeOS_Posix")
 
   forte_add_sourcefile_hcpp(../posix/forte_sync ../posix/forte_sem)
   forte_add_sourcefile_cpp(main.cpp ../genforte_printer.cpp ../posix/forte_thread.cpp)
+  forte_add_sourcefile_cpp(../genforte_fileio.cpp)
   if(FORTE_FAKE_TIME)
     forte_set_timer(../fake_time/faketimerha)
   else(FORTE_FAKE_TIME)

@@ -1,14 +1,13 @@
 /************************************************************************************
- * Copyright (c) 2017-2018 fortiss GmbH
- * This program and the accompanying materials are made available under the
- * terms of the Eclipse Public License 2.0 which is available at
- * http://www.eclipse.org/legal/epl-2.0.
- *
- * SPDX-License-Identifier: EPL-2.0
- *
- * Contributors:
- * Milan Vathoopan - initial API and implementation and/or initial documentation
- * Tarik Terzimehic - make OPC UA server port setable from the command line
+ Copyright (c) 2023 KT Elektronik GmbH
+ This program and the accompanying materials are made available under the
+ terms of the Eclipse Public License 2.0 which is available at
+ http://www.eclipse.org/legal/epl-2.0.
+
+ SPDX-License-Identifier: EPL-2.0
+ 
+ Contributors:
+  Dirk Kaar - initial API and implementation and/or initial documentation
  ************************************************************************************/
 
 #include "forte_Init.h"
@@ -22,7 +21,9 @@
 
 #include "../utils/mainparam_utils.h"
 
-unsigned int forte_default_port = 61499;
+#include <zephyr/kernel.h>
+
+constexpr unsigned int forte_default_port = 61499;
 
 /*!\brief Check if the correct endianess has been configured.
  *
@@ -56,7 +57,6 @@ int forteStartInstance(unsigned int paPort, TForteInstance* paResultInstance) {
   char port[6];
   forte_snprintf(port, 6, "%u", paPort);
   strcat(address, port);
-
   char* arguments[] = { progName, flag, address };
   return forteStartInstanceGeneric(3, arguments, paResultInstance);
 }
@@ -79,9 +79,9 @@ int forteStartInstanceGeneric(int paArgc, char *paArgv[], TForteInstance* paResu
     return FORTE_WRONG_ENDIANESS;
   }
 
-  const char *pIpPort = parseCommandLineArguments(paArgc, paArgv);
-  if((0 != strlen(pIpPort)) && (nullptr != strchr(pIpPort, ':'))) {
-    createDev(pIpPort, paResultInstance);
+  const char *ipPort = parseCommandLineArguments(paArgc, paArgv);
+  if((0 != strlen(ipPort)) && (NULL != strchr(ipPort, ':'))) {
+    createDev(ipPort, paResultInstance);
   } else { //! If needed call listHelp() to list the help for FORTE
     return FORTE_WRONG_PARAMETERS;
   }

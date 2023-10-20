@@ -86,7 +86,9 @@ CBSDSocketInterface::TSocketDescriptor CBSDSocketInterface::openTCPClientConnect
     stSockAddr.sin_port = htons(paPort);
 #endif
     stSockAddr.sin_addr.s_addr = inet_addr(paIPAddr);
+#ifndef __ZEPHYR__
     memset(&(stSockAddr.sin_zero), '\0', sizeof(stSockAddr.sin_zero));
+#endif
 
     if(-1 == connect(nSocket, (struct sockaddr *) &stSockAddr, sizeof(struct sockaddr))){
       close(nSocket);
@@ -163,6 +165,7 @@ CBSDSocketInterface::TSocketDescriptor CBSDSocketInterface::openUDPSendPort(char
     mDestAddr->sin_port = htons(paPort);
 #endif
     mDestAddr->sin_addr.s_addr = inet_addr(paIPAddr);
+#ifndef __ZEPHYR__
     memset(&(mDestAddr->sin_zero), '\0', sizeof(mDestAddr->sin_zero));
 
     if (paMCInterface) {
@@ -172,7 +175,7 @@ CBSDSocketInterface::TSocketDescriptor CBSDSocketInterface::openUDPSendPort(char
           DEVLOG_WARNING("CBSDSocketInterface: setsockopt(IP_MULTICAST_IF) failed: %s\n", strerror(errno));
       }
     }
-
+#endif
 
 #ifdef NET_OS
     /* following is typedef void TM_fAR * in treck/include/trsocket.h */
@@ -223,8 +226,11 @@ CBSDSocketInterface::TSocketDescriptor CBSDSocketInterface::openUDPReceivePort(c
       stSockAddr.sin_port = htons(paPort);
 #endif
       stSockAddr.sin_addr.s_addr = htonl(INADDR_ANY);
+#ifndef __ZEPHYR__
       memset(&(stSockAddr.sin_zero), '\0', sizeof(stSockAddr.sin_zero));
+#endif
       if(0 == bind(nSocket, (struct sockaddr *) &stSockAddr, sizeof(struct sockaddr))){
+#ifndef __ZEPHYR__
         // setting up multicast group
         struct ip_mreq stMReq;
         stMReq.imr_multiaddr.s_addr = inet_addr(paIPAddr);
@@ -233,6 +239,7 @@ CBSDSocketInterface::TSocketDescriptor CBSDSocketInterface::openUDPReceivePort(c
           //if this fails we may have given a non multicasting addr. For now we accept this. May need to be changed in the future.
           DEVLOG_WARNING("CBSDSocketInterface: setsockopt(IP_ADD_MEMBERSHIP) failed: %s\n", strerror(errno));
         }
+#endif
 
         nRetVal = nSocket;
       }

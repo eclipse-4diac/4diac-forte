@@ -14,6 +14,7 @@
 
 #include "fortenew.h"
 #include "forte_architecture.h"
+#include "forte_printer.h"
 #include <stdio.h>
 #include <string>
 #include "../../stdfblib/ita/RMT_DEV.h"
@@ -48,14 +49,15 @@ int forteStartInstance(unsigned int pa_port, TForteInstance* pa_resultDevice){
     pa_port = forte_default_port;
   }
 
+  char progName[] = "forte";
   char flag[] = "-c";
-  char address[16] = "localhost:";
+  char address[17] = "localhost:";
   char port[6];
-  sprintf(port, "%u", pa_port);
+  forte_snprintf(port, 6, "%u", paPort);
   strcat(address, port);
 
-  char* arguments[] = {flag, address};
-  return forteStartInstanceGeneric(2, arguments, pa_resultDevice);
+  char* arguments[] = { progName, flag, address };
+  return forteStartInstanceGeneric(3, arguments, pa_resultDevice);
 }
 
 

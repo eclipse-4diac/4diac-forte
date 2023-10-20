@@ -16,6 +16,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include "../../arch/forte_fileio.h"
 
 #include <string>
 
@@ -51,7 +52,7 @@ class ForteBootFileLoader {
     }
 
   private:
-    FILE *mBootfile;
+    decltype(forte_fopen(nullptr, nullptr)) mBootfile;
     IBootFileCallback &mCallback; //for now with one callback is enough for all cases
     bool mNeedsExit;
 
