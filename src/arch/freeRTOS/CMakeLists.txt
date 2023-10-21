@@ -22,6 +22,11 @@ forte_add_architecture(FreeRTOSLwIP)
 
 if("${FORTE_ARCHITECTURE}" STREQUAL "FreeRTOSLwIP")
 
+  option(FORTE_FREERTOS_PLUS_TCP "Use FreeRTOS-plus-TCP library instead of lwIP")
+  if (FORTE_FREERTOS_PLUS_TCP)
+    forte_add_definition("-DFORTE_FREERTOS_PLUS_TCP")
+  endif()
+
   forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})  
   
   if(NOT DEFINED FORTE_FREERTOS_ALLOC)
@@ -50,7 +55,6 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "FreeRTOSLwIP")
   mark_as_advanced(FORTE_FREERTOS_MINIMAL_STACK_SIZE)
   forte_add_custom_configuration("#define configMINIMAL_STACK_SIZE_FORTE ${FORTE_FREERTOS_MINIMAL_STACK_SIZE}")
   
-  set(FORTE_LOGLEVEL "NOLOG" CACHE STRING "Loglevel to use" FORCE)
   SET(FORTE_FreeRTOSLwIP_INCLUDES "" CACHE STRING "Folders to include from the FreeRTOS OS and the LwIP stack")
 
   SET(FORTE_FreeRTOSLwIP_LIB_DIR "" CACHE PATH "Only for executable: ABSOLUTE path to FreeRTOSLwIP folder with object library FORTE_FreeRTOSLwIP_LIB")
@@ -81,10 +85,14 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "FreeRTOSLwIP")
     forte_add_sourcefile_h(../gensockhand.h)
     forte_add_sourcefile_h(sockhand.h)
 
-    message("freeRTOS with LwIP arch needs the following flags to be defined (please do it in lwipopts.h):")
-    message("#define LWIP_COMPAT_SOCKETS 1")
-    message("#define LWIP_IGMP 1 //to use IP_ADD_MEMBERSHIP")
-    message("#define LWIP_TIMEVAL_PRIVATE 0 //This is optional. Set this flag if you get a compilation error about redefinition of struct timeval")
+    if (FORTE_FREERTOS_PLUS_TCP)
+      message(WARNING "The FreeRTOS-plus-TCP network stack does not (yet) support multicast communication")
+    else()
+      message("The lwIP network stack needs the following flags to be defined (please do it in lwipopts.h):")
+      message("#define LWIP_COMPAT_SOCKETS 1")
+      message("#define LWIP_IGMP 1 // multicast support")
+      message("#define LWIP_TIMEVAL_PRIVATE 0 // This is optional. Set this flag if you get a compilation error about redefinition of struct timeval")
+    endif()
   endif(FORTE_COM_ETH)
 
 endif()
