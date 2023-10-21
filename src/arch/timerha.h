@@ -20,6 +20,7 @@
 #include <forte_config.h>
 #include "../core/extevhan.h"
 #include <forte_sync.h>
+#include "forte_time.h"
 #include <vector>
 
 class CEventSourceFB;
@@ -100,6 +101,9 @@ class CTimerHandler : public CExternalEventHandler{
     };
 
     static constexpr TForteUInt32 scmOneShotIndicator = 0;
+
+    static_assert(CIEC_ANY_DURATION::csmForteTimeBaseUnitsPerSecond > cgForteTicksPerSecond);
+    static constexpr CIEC_TIME::TValueType scmTimeToTimerUnit = CIEC_ANY_DURATION::csmForteTimeBaseUnitsPerSecond / cgForteTicksPerSecond;
 
     void addToAddFBList(const STimedFBListEntry &paTimerListEntry);
     TForteUInt32 convertIntervalToTimerHandlerUnits(const CIEC_TIME &paTimeInterval);

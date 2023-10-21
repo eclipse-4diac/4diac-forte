@@ -40,12 +40,8 @@ void CTimerHandler::registerPeriodicTimedFB(CEventSourceFB *const paTimedFB, con
 }
 
 TForteUInt32 CTimerHandler::convertIntervalToTimerHandlerUnits(const CIEC_TIME &paTimeInterval){
-  //calculate the correct interval based on time-base and timer ticks per seconds
-  TForteUInt32 interval = static_cast<TForteUInt32>((static_cast<CIEC_TIME::TValueType>(paTimeInterval) * getTicksPerSecond()) / CIEC_ANY_DURATION::csmForteTimeBaseUnitsPerSecond);
-  if(interval == 0) {
-    interval = 1;
-  }
-  return interval;
+  CIEC_TIME::TValueType interval = static_cast<CIEC_TIME::TValueType>(paTimeInterval) / scmTimeToTimerUnit;
+  return interval > 0 ? static_cast<TForteUInt32>(interval) : 1U;
 }
 
 void CTimerHandler::addToAddFBList(const STimedFBListEntry& paTimerListEntry){
