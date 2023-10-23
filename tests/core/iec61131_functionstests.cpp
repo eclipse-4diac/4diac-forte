@@ -1,5 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2011 - 2013, 2018 TU Vienna/ACIN, nxtControl, Profactor GmbH, fortiss GmbH
+ * Copyright (c) 2011, 2023 TU Vienna/ACIN, nxtControl, Profactor GmbH, fortiss GmbH
+ *                          Primetals Technologies Austria GmbH
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -13,6 +14,9 @@
  *   Martin Melik-Merkumians - adds tests for LEN, LEFT, RIGHT, MID, REPLACE, DELETE,
  *     INSERT, EQ, NE, ADD, and AND
  *   Martin Melik-Merkumians - adds test for TRUNC
+ *   Martin Melik-Merkumians - adds test for variadic CONCAT, ADD, MUL, MIN, MAX,
+ *    LT, LE, GT, GE, EQ
+ *   Martin Melik-Merkumians - adds test for func_PLUS
  *******************************************************************************/
 
 #include <math.h>
@@ -1472,6 +1476,15 @@ BOOST_AUTO_TEST_CASE(func_minus)
   BOOST_REQUIRE(-5.0 == static_cast<CIEC_LREAL::TValueType>(func_MINUS(lreal)));
 
   BOOST_REQUIRE(CIEC_TIME(-5) == func_MINUS(time));
+}
+
+BOOST_AUTO_TEST_CASE(func_plus) {
+  BOOST_TEST(5 == static_cast<CIEC_INT::TValueType>(func_PLUS(5_INT)));
+}
+
+BOOST_AUTO_TEST_CASE(func_plus_assignment) {
+  CIEC_INT result = func_PLUS(5_INT);
+  BOOST_TEST(5 == static_cast<CIEC_INT::TValueType>(result));
 }
 
 BOOST_AUTO_TEST_CASE(func_concat_date_ulints) {

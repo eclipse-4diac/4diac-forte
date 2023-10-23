@@ -15,7 +15,8 @@
  *      - added different type templates for IEC 61131-3 functions and adds several type guards
  *      - Reworked binary operator templates to create correctly calculated and typed results
  *      - reworked and fixes ADD and SUB for time types
- *      - Added variadic comparison functions
+ *      - Added variadic comparison, MIN, MAX, ADD, MUL functions
+ *      - Added unary plus function
  *******************************************************************************/
 #ifndef IEC61131_FUNCTIONS_H_
 #define IEC61131_FUNCTIONS_H_
@@ -943,6 +944,18 @@ typename forte::core::mpl::get_div_operator_result_type<T, U>::type func_DIV(con
 template <typename T>
 T func_MINUS(const T& paIN) {
   return paIN.operator-();
+}
+
+/**
+ * @brief Unary plus function, needed for exported code
+ * 
+ * @tparam T CIEC data type
+ * @param paIN the value
+ * @return constexpr T&& return the same object, as it hasn't been modified 
+ */
+template<typename T>
+constexpr T&& func_PLUS(T&& paIN) {
+  return static_cast<T&&>(paIN);
 }
 
 template <typename T>
