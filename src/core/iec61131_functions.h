@@ -1094,7 +1094,7 @@ template<typename T, typename U> auto func_CONCAT(const T &paIn1, const U &paIn2
   }
 }
 
-template<typename T, typename ... Args> const T func_CONCAT(const T &paIn1, Args ... args) {
+template<typename T, typename ... Args> auto func_CONCAT(const T &paIn1, const Args& ... args) {
   return func_CONCAT(paIn1, func_CONCAT(args...));
 }
 
