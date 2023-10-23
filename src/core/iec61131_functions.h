@@ -700,7 +700,7 @@ auto func_ADD(const T &paIN1, const U &paIN2) -> typename forte::core::mpl::get_
 /*************** MUL ********************/
 template <class T, class U>
 class MulOperation {
-  using resultType = typename forte::core::mpl::get_mul_operator_result_type<T, U>::type;
+  using resultType = typename forte::core::mpl::get_mul_operator_result_type_t<T, U>;
 
 public:
   static resultType call(const T &paIN1, const U &paIN2) {
@@ -711,7 +711,7 @@ public:
 
 template <class U>
 class MulOperation<CIEC_TIME, U> {
-  using resultType = typename forte::core::mpl::get_mul_operator_result_type<CIEC_TIME, U>::type;
+  using resultType = typename forte::core::mpl::get_mul_operator_result_type_t<CIEC_TIME, U>;
 
 public:
   static resultType call(const CIEC_TIME &paIN1, const U &paIN2) {
@@ -722,7 +722,7 @@ public:
 
 template <class U>
 class MulOperation<CIEC_LTIME, U> {
-  using resultType = typename forte::core::mpl::get_mul_operator_result_type<CIEC_LTIME, U>::type;
+  using resultType = typename forte::core::mpl::get_mul_operator_result_type_t<CIEC_LTIME, U>;
 
 public:
   static resultType call(const CIEC_LTIME &paIN1, const U &paIN2) {
@@ -731,11 +731,18 @@ public:
   MulOperation() = delete;
 };
 
+template <typename T, typename U, typename ...Args>
+auto func_MUL(const T &paIN1, const U &paIN2, const Args& ...args) {
+  static_assert(std::is_base_of_v<CIEC_ANY_NUM, T>, "Variadic MUL only allowed with ANY_NUMs");
+  static_assert(std::is_base_of_v<CIEC_ANY_NUM, U>, "Variadic MUL only allowed with ANY_NUMs");
+  return func_MUL(func_MUL(paIN1, paIN2), args...);
+}
+
 template <typename R = forte::core::mpl::NullType, typename T, typename U>
-auto func_MUL(const T &paIN1, const U &paIN2) -> typename forte::core::mpl::get_mul_operator_result_type<T, U>::type {
-  using deductedType = typename forte::core::mpl::get_mul_operator_result_type<T, U>::type;
-  if constexpr (!std::is_same<R, forte::core::mpl::NullType>::value) {
-    static_assert(std::is_same<deductedType, R>::value, "Deducted type and requested type do not match!\n");
+auto func_MUL(const T &paIN1, const U &paIN2) -> typename forte::core::mpl::get_mul_operator_result_type_t<T, U> {
+  using deductedType = typename forte::core::mpl::get_mul_operator_result_type_t<T, U>;
+  if constexpr (!std::is_same_v<R, forte::core::mpl::NullType>) {
+    static_assert(std::is_same_v<deductedType, R>, "Deducted type and requested type do not match!\n");
   }
   return MulOperation<T, U>::call(paIN1, paIN2);
 }

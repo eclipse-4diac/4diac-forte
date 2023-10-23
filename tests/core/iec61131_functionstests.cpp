@@ -928,6 +928,10 @@ BOOST_AUTO_TEST_CASE(mul_number_and_ltime_MUL_LTIME) {
   BOOST_REQUIRE_EQUAL(CIEC_LTIME(30), result);
 }
 
+BOOST_AUTO_TEST_CASE(mul_variadic) {
+  BOOST_TEST(static_cast<CIEC_LINT::TValueType>(func_MUL(1_SINT, 2_INT, 3_DINT, 4_LINT)) == 24);
+}
+
 BOOST_AUTO_TEST_CASE(div_numbers) {
   CIEC_USINT sint(30);
   CIEC_UINT inte(6);
