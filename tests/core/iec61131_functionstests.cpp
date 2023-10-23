@@ -669,6 +669,10 @@ BOOST_AUTO_TEST_CASE(add_different_int_types_of_literals) {
   BOOST_REQUIRE_EQUAL(static_cast<CIEC_LINT::TValueType>(CIEC_LINT(0)), static_cast<CIEC_LINT::TValueType>(result));
 }
 
+BOOST_AUTO_TEST_CASE(add_variadic) {
+  BOOST_TEST(static_cast<CIEC_LINT::TValueType>(func_ADD(1_SINT, 2_INT, 3_DINT, 4_LINT)) == 10);
+}
+
 BOOST_AUTO_TEST_CASE(concat3)
 {
   CIEC_STRING sFristString("THIS_IS_THE_FIRST_STRING"_STRING);

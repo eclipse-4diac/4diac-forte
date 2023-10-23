@@ -560,6 +560,9 @@ namespace forte {
       };
 
       template <typename T, typename U>
+      using get_add_operator_result_type_t = typename get_add_operator_result_type<T, U>::type;
+
+      template <typename T, typename U>
       struct get_sub_operator_result_type {
         typedef typename get_castable_type<T, U>::type type;
         get_sub_operator_result_type() = delete;

@@ -628,7 +628,7 @@ const CIEC_LDATE_AND_TIME func_ADD_LDT_LTIME(const CIEC_LDATE_AND_TIME &paIN1, c
 
 template <class T, class U>
 class AddOperation {
-  using resultType = typename forte::core::mpl::get_add_operator_result_type<T, U>::type;
+  using resultType = typename forte::core::mpl::get_add_operator_result_type_t<T, U>;
 
 public:
   static resultType call(const T &paIN1, const U &paIN2) {
@@ -639,7 +639,7 @@ public:
 
 template <>
 class AddOperation<CIEC_TIME_OF_DAY, CIEC_TIME> {
-  using resultType = typename forte::core::mpl::get_add_operator_result_type<CIEC_TIME_OF_DAY, CIEC_TIME>::type;
+  using resultType = typename forte::core::mpl::get_add_operator_result_type_t<CIEC_TIME_OF_DAY, CIEC_TIME>;
 
 public:
   static resultType call(const CIEC_TIME_OF_DAY &paIN1, const CIEC_TIME &paIN2) {
@@ -650,7 +650,7 @@ public:
 
 template <>
 class AddOperation<CIEC_DATE_AND_TIME, CIEC_TIME> {
-  using resultType = typename forte::core::mpl::get_add_operator_result_type<CIEC_DATE_AND_TIME, CIEC_TIME>::type;
+  using resultType = typename forte::core::mpl::get_add_operator_result_type_t<CIEC_DATE_AND_TIME, CIEC_TIME>;
 
 public:
   static resultType call(const CIEC_DATE_AND_TIME &paIN1, const CIEC_TIME &paIN2) {
@@ -661,7 +661,7 @@ public:
 
 template <>
 class AddOperation<CIEC_LTIME_OF_DAY, CIEC_LTIME> {
-  using resultType = typename forte::core::mpl::get_add_operator_result_type<CIEC_LTIME_OF_DAY, CIEC_LTIME>::type;
+  using resultType = typename forte::core::mpl::get_add_operator_result_type_t<CIEC_LTIME_OF_DAY, CIEC_LTIME>;
 
 public:
   static resultType call(const CIEC_LTIME_OF_DAY &paIN1, const CIEC_LTIME &paIN2) {
@@ -672,7 +672,7 @@ public:
 
 template <>
 class AddOperation<CIEC_LDATE_AND_TIME, CIEC_LTIME> {
-  using resultType = typename forte::core::mpl::get_add_operator_result_type<CIEC_LDATE_AND_TIME, CIEC_LTIME>::type;
+  using resultType = typename forte::core::mpl::get_add_operator_result_type_t<CIEC_LDATE_AND_TIME, CIEC_LTIME>;
 
 public:
   static resultType call(const CIEC_LDATE_AND_TIME &paIN1, const CIEC_LTIME &paIN2) {
@@ -681,11 +681,18 @@ public:
   AddOperation() = delete;
 };
 
+template <typename T, typename U, typename ...Args>
+auto func_ADD(const T &paIN1, const U &paIN2, const Args& ...args) {
+  static_assert(std::is_base_of_v<CIEC_ANY_NUM, T>, "Variadic ADD only allowed with ANY_NUMs");
+  static_assert(std::is_base_of_v<CIEC_ANY_NUM, U>, "Variadic ADD only allowed with ANY_NUMs");
+  return func_ADD(func_ADD(paIN1, paIN2), args...);
+}
+
 template <typename R = forte::core::mpl::NullType, typename T, typename U>
-auto func_ADD(const T &paIN1, const U &paIN2) -> typename forte::core::mpl::get_add_operator_result_type<T, U>::type {
-  using deductedType = typename forte::core::mpl::get_add_operator_result_type<T, U>::type;
-  if constexpr (!std::is_same<R, forte::core::mpl::NullType>::value) {
-    static_assert(std::is_same<deductedType, R>::value, "Deducted type and requested type do not match!\n");
+auto func_ADD(const T &paIN1, const U &paIN2) -> typename forte::core::mpl::get_add_operator_result_type_t<T, U> {
+  using deductedType = typename forte::core::mpl::get_add_operator_result_type_t<T, U>;
+  if constexpr (!std::is_same_v<R, forte::core::mpl::NullType>) {
+    static_assert(std::is_same_v<deductedType, R>, "Deducted type and requested type do not match!\n");
   }
   return AddOperation<T, U>::call(paIN1, paIN2);
 }
