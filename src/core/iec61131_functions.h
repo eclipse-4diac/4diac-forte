@@ -215,7 +215,7 @@ template<> auto func_SHR(const CIEC_BOOL &paIn, const CIEC_ANY_INT &paN) -> CIEC
 template<typename T, typename U, template<typename A> class F, typename C> typename forte::core::mpl::get_castable_type<T, U>::type APPLY(const T &paIN1,
     const U &paIN2) {
   static_assert(forte::core::mpl::are_of_subtype_v<C, T, U>, "Template instantiation with incompatible types");
-  using tImplicitCastType = typename forte::core::mpl::get_castable_type<T, U>::type;
+  using tImplicitCastType = typename forte::core::mpl::get_castable_type_t<T, U>;
   static_assert(!(std::is_same<tImplicitCastType, forte::core::mpl::NullType>::value), "No implicit cast possible");
   const tImplicitCastType Result(F<tImplicitCastType>::call(static_cast<tImplicitCastType>(paIN1), static_cast<tImplicitCastType>(paIN2)));
   return Result;
@@ -552,6 +552,10 @@ template<typename T, typename U> const typename forte::core::mpl::get_castable_t
   return (G.operator bool()) ? IN1 : IN0;
 }
 
+template<typename T, typename U,typename... Args> auto func_MAX(const T &paIN1, const U &paIN2, const Args& ...args) {
+  return func_MAX(func_MAX(paIN1, paIN2), args...);
+}
+
 GENERATE_APPLY_FUNCTION(func_MAX)
 template<typename T, typename U> typename forte::core::mpl::get_castable_type<T, U>::type func_MAX(const T &paIN1, const U &paIN2) {
   return APPLY<T, U, func_MAX_Function, CIEC_ANY_ELEMENTARY>(paIN1, paIN2);
@@ -565,8 +569,12 @@ template<typename T> const T func_MAX(const T &paIN1, const T &paIN2) {
   }
 }
 
+template<typename T, typename U,typename... Args> auto func_MIN(const T &paIN1, const U &paIN2, const Args& ...args) {
+  return func_MIN(func_MIN(paIN1, paIN2), args...);
+}
+
 GENERATE_APPLY_FUNCTION(func_MIN)
-template<typename T, typename U> typename forte::core::mpl::get_castable_type<T, U>::type func_MIN(const T &paIN1, const U &paIN2) {
+template<typename T, typename U> typename forte::core::mpl::get_castable_type_t<T, U> func_MIN(const T &paIN1, const U &paIN2) {
   return APPLY<T, U, func_MIN_Function, CIEC_ANY_ELEMENTARY>(paIN1, paIN2);
 }
 

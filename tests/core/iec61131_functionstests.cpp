@@ -2469,4 +2469,40 @@ BOOST_AUTO_TEST_CASE(func_min_time) {
   BOOST_TEST(static_cast<CIEC_TIME::TValueType>(result) == 30000000);
 }
 
+BOOST_AUTO_TEST_CASE(func_min) {
+  // cast to int for better readability in test result output
+  BOOST_TEST(static_cast<int>(static_cast<CIEC_SINT::TValueType>(func_MIN(0_SINT, -10_SINT))) == -10);
+}
+
+BOOST_AUTO_TEST_CASE(func_min_variadic_3) {
+  // cast to int for better readability in test result output
+  BOOST_TEST(static_cast<int>(static_cast<CIEC_SINT::TValueType>(func_MIN(0_SINT, -10_SINT, -50_SINT))) == -50);
+}
+
+BOOST_AUTO_TEST_CASE(func_min_variadic_4) {
+  // cast to int for better readability in test result output
+  BOOST_TEST(static_cast<int>(static_cast<CIEC_SINT::TValueType>(func_MIN(0_SINT, -10_SINT, 50_SINT, 35_SINT))) == -10);
+}
+
+BOOST_AUTO_TEST_CASE(func_max_time) {
+  CIEC_TIME result;
+  result = func_MAX(30000000_TIME, 30000000000_TIME);
+  BOOST_TEST(static_cast<CIEC_TIME::TValueType>(result) == 30000000000);
+}
+
+BOOST_AUTO_TEST_CASE(func_max) {
+  // cast to int for better readability in test result output
+  BOOST_TEST(static_cast<int>(static_cast<CIEC_SINT::TValueType>(func_MAX(0_SINT, -10_SINT))) == 0);
+}
+
+BOOST_AUTO_TEST_CASE(func_max_variadic_3) {
+  // cast to int for better readability in test result output
+  BOOST_TEST(static_cast<int>(static_cast<CIEC_SINT::TValueType>(func_MAX(0_SINT, -10_SINT, -50_SINT))) == 0);
+}
+
+BOOST_AUTO_TEST_CASE(func_max_variadic_4) {
+  // cast to int for better readability in test result output
+  BOOST_TEST(static_cast<int>(static_cast<CIEC_SINT::TValueType>(func_MAX(0_SINT, -10_SINT, 50_SINT, 35_SINT))) == 50);
+}
+
 BOOST_AUTO_TEST_SUITE_END()
