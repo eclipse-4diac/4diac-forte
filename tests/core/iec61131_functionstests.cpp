@@ -1482,6 +1482,27 @@ BOOST_AUTO_TEST_CASE(func_plus) {
   BOOST_TEST(5 == static_cast<CIEC_INT::TValueType>(func_PLUS(5_INT)));
 }
 
+BOOST_AUTO_TEST_CASE(func_plus_in_max_call) {
+  BOOST_TEST(5 == static_cast<CIEC_INT::TValueType>(func_MAX(func_PLUS(5_INT), 5_INT)));
+}
+
+BOOST_AUTO_TEST_CASE(func_plus_in_max_call_with_object) {
+  CIEC_INT five(5);
+  BOOST_TEST(5 == static_cast<CIEC_INT::TValueType>(func_MAX(func_PLUS(five), 5_INT)));
+}
+
+BOOST_AUTO_TEST_CASE(func_plus_in_GE_call_with_object) {
+  CIEC_REAL PI = 3.14_REAL;
+  BOOST_TEST(true == static_cast<CIEC_BOOL::TValueType>(func_GT(func_PLUS(PI), 0.0_LREAL)));
+  BOOST_TEST(3.14f == static_cast<CIEC_REAL::TValueType>(func_PLUS(PI)));
+}
+
+BOOST_AUTO_TEST_CASE(func_plus_in_GE_call_with_object_and_explicit_template_argument) {
+  CIEC_REAL PI = 3.14_REAL;
+  BOOST_TEST(true == static_cast<CIEC_BOOL::TValueType>(func_GT(func_PLUS<CIEC_REAL>(PI), 0.0_LREAL)));
+  BOOST_TEST(3.14f == static_cast<CIEC_REAL::TValueType>(func_PLUS<CIEC_REAL>(PI)));
+}
+
 BOOST_AUTO_TEST_CASE(func_plus_assignment) {
   CIEC_INT result = func_PLUS(5_INT);
   BOOST_TEST(5 == static_cast<CIEC_INT::TValueType>(result));

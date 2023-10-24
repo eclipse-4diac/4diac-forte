@@ -958,8 +958,20 @@ constexpr T&& func_PLUS(T&& paIN) {
   return static_cast<T&&>(paIN);
 }
 
+/**
+ * @brief Unary plus function, needed for exported code
+ *
+ * @tparam T CIEC data type
+ * @param paIN the value
+ * @return constexpr T - a copy of paIN
+ */
+template<typename T>
+constexpr T func_PLUS(const T& paIN) {
+  return paIN;
+}
+
 template <typename T>
-const T func_TRUNC(const CIEC_REAL &paIN) {
+const T func_TRUNC(const T &paIN) {
   return T(static_cast<typename T::TValueType>(static_cast<TForteInt32>(paIN)));
 }
 
