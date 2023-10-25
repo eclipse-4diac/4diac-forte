@@ -42,16 +42,16 @@ const SFBInterfaceSpec FORTE_GET_VALUE::scmFBInterfaceSpec = {
 };
 
 
-void FORTE_GET_VALUE::executeEvent(TEventID paEIID){
+void FORTE_GET_VALUE::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   switch(paEIID){
     case scmEventINITID:
     if (init()) {
-      sendOutputEvent(scmEventINITOID);
+      sendOutputEvent(scmEventINITOID, paECET);
     }
     break;
   case scmEventREQID:
     RET_CODE() = read();
-    sendOutputEvent(scmEventCNFID);
+    sendOutputEvent(scmEventCNFID, paECET);
     break;
   }
 }

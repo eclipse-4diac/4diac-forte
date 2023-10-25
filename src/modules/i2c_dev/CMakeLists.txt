@@ -11,7 +11,7 @@
 # *******************************************************************************/ 
  
 if ("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
-forte_add_module(I2C-Dev OFF "Interacting with GPIOs of Linux-based devices via I2C using i2c-dev")
+forte_add_module(I2C_Dev OFF "Interacting with GPIOs of Linux-based devices via I2C using i2c-dev")
 
 forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 

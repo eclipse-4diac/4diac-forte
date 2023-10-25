@@ -106,7 +106,7 @@ struct SFBInterfaceSpec {
 class CFunctionBlock {
   public:
     constexpr static TDataIOID scmWithListDelimiter = cgInvalidPortId; //!< value identifying the end of a with list
-    constexpr static TForteInt16 scmNoDataAssociated = cgInvalidPortId; //!< value identifying the end of a with list
+    constexpr static TForteInt16 scmNoDataAssociated = static_cast<TForteInt16>(cgInvalidPortId); //!< value identifying the end of a with list
 
     /*!\brief Possible states of a runable object.
      *
@@ -415,6 +415,7 @@ class CFunctionBlock {
      * @return pointer to the data output
      */
     virtual CIEC_ANY* getDIO(TPortId paDIONum) {
+      (void)paDIONum; // indicate to the compiler that the param is unused
       return nullptr;
     }
 
@@ -465,14 +466,6 @@ class CFunctionBlock {
 
     static TPortId getPortId(CStringDictionary::TStringId paPortNameId, TPortId paMaxPortNames, const CStringDictionary::TStringId *paPortNames);
 
-
-    /**
-     * \deprecated Use void sendOutputEvent(CEventChainExecutionThread *paECET, TEventID paEO)
-     * Will be removed when all FBs are migrated to new interface
-     */
-    [[deprecated]] void sendOutputEvent(TEventID paEO){
-      sendOutputEvent(paEO, mInvokingExecEnv);
-    }
 
     /*!\brief Function to send an output event of the FB.
      *
@@ -562,14 +555,6 @@ class CFunctionBlock {
      */
     void sendAdapterEvent(TPortId paAdapterID, TEventID paEID, CEventChainExecutionThread * const paECET) const;
 
-    /**
-     * \deprecated Use void  void sendAdapterEvent(CEventChainExecutionThread *paECET, size_t paAdapterID, TEventID paEID)
-     * Will be removed when all FBs are migrated to new interface
-     */
-    [[deprecated]] void sendAdapterEvent(TPortId paAdapterID, TEventID paEID) const{
-      sendAdapterEvent(paAdapterID, paEID, mInvokingExecEnv);
-    }
-
     void setupAdapters(const SFBInterfaceSpec *paInterfaceSpec, TForteByte *paFBData);
 
     virtual CEventConnection *getEOConUnchecked(TPortId paEONum) {
@@ -603,6 +588,7 @@ class CFunctionBlock {
      * @return pointer to the data inout connection
      */
     virtual CInOutDataConnection **getDIOInConUnchecked(TPortId paDIONum) {
+      (void)paDIONum; // indicate to the compiler that the param is unused
       return nullptr;
     }
 
@@ -658,7 +644,6 @@ class CFunctionBlock {
     CDataConnection *mDOConns; //!< A list of data connections pointers storing for each data output the data connection. If the data output is not connected the pointer is nullptr.
     CIEC_ANY **mDIs; //!< A list of pointers to the data inputs. This allows to implement a general getDataInput()
     CIEC_ANY **mDOs; //!< A list of pointers to the data outputs. This allows to implement a general getDataOutput()
-    CEventChainExecutionThread *mInvokingExecEnv; //!< A pointer to the execution thread that invoked the FB. This value is stored here to reduce function parameters and reduce therefore stack usage.
     CAdapter **mAdapters; //!< A list of pointers to the adapters. This allows to implement a general getAdapter().
     void *mFBConnData; //!< Connection data buffer
     void *mFBVarsData; //!< Variable data buffer
@@ -670,21 +655,9 @@ class CFunctionBlock {
      * \param paEIID Event input ID where event occurred.
      * \param paExecEnv Event chain execution environment the FB will be executed in (used for adding output events).
      *
-     * TODO turn into pure virtual method when all
+     *
      */
-    virtual void executeEvent(TEventID paEIID, CEventChainExecutionThread * const paECET) {
-      //default implementation for legacy FB support
-      mInvokingExecEnv = paECET;
-      executeEvent(paEIID);
-    }
-
-    /**
-     * \deprecated Use void executeEvent(TEventID paEIID, CEventChainExecutionThread * const paECET)
-     * Will be removed when all FBs are migrated to new interface
-     */
-    [[deprecated]] virtual void executeEvent(TEventID ) {
-
-    }
+    virtual void executeEvent(TEventID paEIID, CEventChainExecutionThread * const paECET) = 0;
 
     /*!\brief Function reading the values from input connections of the FB.
      *

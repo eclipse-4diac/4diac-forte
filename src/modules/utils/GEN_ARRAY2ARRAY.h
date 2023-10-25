@@ -50,7 +50,7 @@ private:
   CStringDictionary::TStringId m_ValueTypeID;
   unsigned int mArrayLength;
 
-  void executeEvent(TEventID paEIID) override;
+  void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
   void readInputData(TEventID paEI) override;
   void writeOutputData(TEventID paEO) override;

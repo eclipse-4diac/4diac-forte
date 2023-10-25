@@ -31,17 +31,17 @@ const CStringDictionary::TStringId FORTE_SVIreceive_1::scmEventOutputNames[] = {
 
 const SFBInterfaceSpec FORTE_SVIreceive_1::scmFBInterfaceSpec = { 2, scmEventInputNames, scmEIWith, scmEIWithIndexes, 2, scmEventOutputNames, scmEOWith, scmEOWithIndexes, 2, scmDataInputNames, scmDataInputTypeIds, 2, scmDataOutputNames, scmDataOutputTypeIds, 0, 0 };
 
-void FORTE_SVIreceive_1::executeEvent(TEventID paEIID){
+void FORTE_SVIreceive_1::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   switch (paEIID){
     case scmEventINITID:
       if(true == QI()){
         QO() = registerSVIvar(ID(), RD_1(), SVI_F_IN);
       }
-      sendOutputEvent(scmEventINITOID);
+      sendOutputEvent(scmEventINITOID, paECET);
       break;
 
     case scmEventREQID:
-      sendOutputEvent(scmEventCNFID);
+      sendOutputEvent(scmEventCNFID, paECET);
       break;
     default:
       break;

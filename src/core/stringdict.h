@@ -18,7 +18,7 @@
 #define _CStringDictionary_H_
 
 #include "forte_config.h"
-#include "singlet.h"
+#include "utils/singlet.h"
 #include "datatype.h"
 
 #include <limits>
@@ -131,4 +131,3 @@ private:
 };
 
 #endif // _CStringDictionary_H_
-

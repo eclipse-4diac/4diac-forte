@@ -15,11 +15,13 @@
 #include "modbuspoll.h"
 #include <forte_thread.h>
 #include <unistd.h> // for sleep
-// for open and disabling DTR
-#include <termios.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+#ifndef WIN32
+// for open and disabling DTR
+#include <termios.h>
+#endif
 
 using namespace modbus_connection_event;
 
@@ -195,6 +197,7 @@ int CModbusConnectionEvent::executeEvent(modbus_t *paModbusConn, void *paRetVal)
   restartTimer();
 
   switch (mFlowControl) {
+#ifndef WIN32
     case eFlowArduino: {
       int fd = open(mDevice, O_RDWR);
       if (fd >= 0) {
@@ -218,6 +221,7 @@ int CModbusConnectionEvent::executeEvent(modbus_t *paModbusConn, void *paRetVal)
       }
       break;
     }
+#endif
     default:
       // ignore
       break;

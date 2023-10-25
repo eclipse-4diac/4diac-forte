@@ -64,7 +64,7 @@ FORTE_OUT_ANY_CONSOLE::FORTE_OUT_ANY_CONSOLE(const CStringDictionary::TStringId 
     conn_QO(this, 0, &var_conn_QO) {
 };
 
-void FORTE_OUT_ANY_CONSOLE::executeEvent(TEventID paEIID) {
+void FORTE_OUT_ANY_CONSOLE::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   switch(paEIID) {
     case scmEventREQID:
       var_QO = var_QI;
@@ -75,7 +75,7 @@ void FORTE_OUT_ANY_CONSOLE::executeEvent(TEventID paEIID) {
         var_IN.toString(buffer.data(), buffer.capacity());
         DEVLOG_INFO("%s\n", buffer.c_str());
       }
-      sendOutputEvent(scmEventCNFID);
+      sendOutputEvent(scmEventCNFID, paECET);
       break;
   }
 }

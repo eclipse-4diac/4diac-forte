@@ -41,10 +41,10 @@ const SFBInterfaceSpec FORTE_OrchestrationForm2OrchestrationForm::scmFBInterface
 };
 
 
-void FORTE_OrchestrationForm2OrchestrationForm::executeEvent(TEventID paEIID){
+void FORTE_OrchestrationForm2OrchestrationForm::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   if(scmEventREQID == paEIID) {
     st_OUT() = st_IN();
-    sendOutputEvent(scmEventCNFID);
+    sendOutputEvent(scmEventCNFID, paECET);
   }
 }
 

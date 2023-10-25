@@ -191,7 +191,7 @@ inline const CIEC_ULINT func_TIME_IN_NS_TO_ULINT(const CIEC_TIME &paValue) {
 }
 
 /********************************************************************
- *  TO_LREAL functions
+ *  TO_LREAL functions 
  ********************************************************************/
 
 /**
@@ -232,6 +232,95 @@ inline const CIEC_LREAL func_TIME_IN_US_TO_LREAL(const CIEC_TIME &paValue) {
  */
 inline const CIEC_LREAL func_TIME_IN_NS_TO_LREAL(const CIEC_TIME &paValue) {
   return func_TIME_IN_NS_TO<CIEC_LREAL>(paValue);
+}
+
+
+/********************************************************************
+ *  TO_UDINT functions
+ ********************************************************************/
+
+/**
+ * @brief conversion function from TIME to UDINT in seconds
+ *
+ * @param paValue TIME value to convert
+ * @return TIME value in seconds
+ */
+inline const CIEC_UDINT func_TIME_IN_S_TO_UDINT(const CIEC_TIME &paValue) {
+  return func_TIME_IN_S_TO<CIEC_UDINT>(paValue);
+}
+
+/**
+ * @brief conversion function from TIME to UDINT in milliseconds
+ *
+ * @param paValue TIME value to convert
+ * @return TIME value in milliseconds
+ */
+inline const CIEC_UDINT func_TIME_IN_MS_TO_UDINT(const CIEC_TIME &paValue) {
+  return func_TIME_IN_MS_TO<CIEC_UDINT>(paValue);
+}
+
+/**
+ * @brief conversion function from TIME to UDINT in microseconds
+ *
+ * @param paValue TIME value to convert
+ * @return TIME value in microseconds
+ */
+inline const CIEC_UDINT func_TIME_IN_US_TO_UDINT(const CIEC_TIME &paValue) {
+  return func_TIME_IN_US_TO<CIEC_UDINT>(paValue);
+}
+
+/**
+ * @brief conversion function from TIME to UDINT in nanoseconds
+ *
+ * @param paValue TIME value to convert
+ * @return TIME value in nanoseconds
+ */
+inline const CIEC_UDINT func_TIME_IN_NS_TO_UDINT(const CIEC_TIME &paValue) {
+  return func_TIME_IN_NS_TO<CIEC_UDINT>(paValue);
+}
+
+/********************************************************************
+ *  TO_DINT functions
+ ********************************************************************/
+
+/**
+ * @brief conversion function from TIME to DINT in seconds
+ *
+ * @param paValue TIME value to convert
+ * @return TIME value in seconds
+ */
+inline const CIEC_DINT func_TIME_IN_S_TO_DINT(const CIEC_TIME &paValue) {
+  return func_TIME_IN_S_TO<CIEC_DINT>(paValue);
+}
+
+/**
+ * @brief conversion function from TIME to DINT in milliseconds
+ *
+ * @param paValue TIME value to convert
+ * @return TIME value in milliseconds
+ */
+inline const CIEC_DINT func_TIME_IN_MS_TO_DINT(const CIEC_TIME &paValue) {
+  return func_TIME_IN_MS_TO<CIEC_DINT>(paValue);
+}
+
+/**
+ * @brief conversion function from TIME to DINT in microseconds
+ *
+ * @param paValue TIME value to convert
+ * @return TIME value in microseconds
+ */
+inline const CIEC_DINT func_TIME_IN_US_TO_DINT(const CIEC_TIME &paValue) {
+  return func_TIME_IN_US_TO<CIEC_DINT>(paValue);
+}
+
+/**
+ * @brief conversion function from TIME to DINT in nanoseconds
+ *
+ * @param paValue TIME value to convert
+ * @return TIME value in nanoseconds
+ */
+inline const CIEC_DINT func_TIME_IN_NS_TO_DINT(const CIEC_TIME &paValue) {
+  return func_TIME_IN_NS_TO<CIEC_DINT>(paValue);
 }
 
 #endif /* SRC_CORE_DATATYPES_CONVERT_TIMEINRESOLUTIONCONVERTFUNCTIONS_H_ */

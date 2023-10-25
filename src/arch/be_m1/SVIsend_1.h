@@ -56,7 +56,7 @@ private:
   static const SFBInterfaceSpec scmFBInterfaceSpec;
 
 
-  void executeEvent(TEventID paEIID) override;
+  void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
 public:
   FORTE_SVIsend_1(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) :

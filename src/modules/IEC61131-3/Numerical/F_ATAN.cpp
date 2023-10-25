@@ -60,13 +60,13 @@ FORTE_F_ATAN::FORTE_F_ATAN(const CStringDictionary::TStringId paInstanceNameId, 
     conn_OUT(this, 0, &var_conn_OUT) {
 };
 
-void FORTE_F_ATAN::executeEvent(TEventID paEIID) {
+void FORTE_F_ATAN::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   switch(paEIID) {
     case scmEventREQID:
       var_OUT = std::visit([](auto &&paIN) -> CIEC_ANY_REAL_VARIANT {
           return func_ATAN(paIN);
       }, var_IN);
-      sendOutputEvent(scmEventCNFID);
+      sendOutputEvent(scmEventCNFID, paECET);
       break;
   }
 }

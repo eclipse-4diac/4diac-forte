@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 fortiss GmbH
+ * Copyright (c) 2015, 2023 fortiss GmbH, Johannes Kepler University Linz
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -7,8 +7,8 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *   Martin Jobst
- *   - initial API and implementation and/or initial documentation
+ *   Martin Jobst - initial API and implementation and/or initial documentation
+ *   Alois Zoitl  - upgraded to new FB memory layout
  *******************************************************************************/
 
 #ifndef SRC_CORE_LUAENGINE_H_
@@ -52,10 +52,10 @@ public:
   bool loadFile(const std::string& path);
   bool call(int args, int results);
 
-  static bool luaPushAny(lua_State* luaState, CIEC_ANY& value);
+  static bool luaPushAny(lua_State* luaState, const CIEC_ANY& value);
   static bool luaGetAny(lua_State* luaState, CIEC_ANY& value, int index);
-  static bool luaPushArray(lua_State *luaState, CIEC_ARRAY<>& array);
-  static bool luaGetArray(lua_State *luaState, CIEC_ARRAY<>& array, int index);
+  static bool luaPushArray(lua_State *luaState, const  CIEC_ARRAY& array);
+  static bool luaGetArray(lua_State *luaState, CIEC_ARRAY& array, int index);
 
   void store(const void* ref) {
     lua_rawsetp(luaState, LUA_REGISTRYINDEX, ref);

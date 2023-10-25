@@ -40,7 +40,7 @@ CFunctionBlock::CFunctionBlock(CResource *paSrcRes, const SFBInterfaceSpec *paIn
                                CStringDictionary::TStringId paInstanceNameId) :
         mInterfaceSpec(paInterfaceSpec),
         mEOConns(nullptr), mDIConns(nullptr), mDOConns(nullptr), mDIs(nullptr), mDOs(nullptr),
-        mInvokingExecEnv(nullptr), mAdapters(nullptr),
+        mAdapters(nullptr),
         mFBConnData(nullptr), mFBVarsData(nullptr),
         mResource(paSrcRes), mContainer(nullptr),
 #ifdef FORTE_SUPPORT_MONITORING
@@ -729,11 +729,11 @@ int CFunctionBlock::writeToStringNameValuePair(char *paValue, size_t paBufferSiz
     return -1;
   }
   usedBuffer += static_cast<size_t>(result);
-  return usedBuffer;
+  return static_cast<int>(usedBuffer);
 }
 
 int CFunctionBlock::toString(char *paValue, size_t paBufferSize) const {
-  int usedBuffer = 0;
+  size_t usedBuffer = 0;
   if(paBufferSize < 1) {
     return -1;
   }
@@ -744,7 +744,7 @@ int CFunctionBlock::toString(char *paValue, size_t paBufferSize) const {
     const CStringDictionary::TStringId nameId = getFBInterfaceSpec()->mDINames[i];
     int result = writeToStringNameValuePair(paValue + usedBuffer, paBufferSize - usedBuffer, nameId, variable);
     if(result >= 0) {
-      usedBuffer += result;
+      usedBuffer += static_cast<size_t>(result);
     } else {
       return -1;
     }
@@ -760,7 +760,7 @@ int CFunctionBlock::toString(char *paValue, size_t paBufferSize) const {
     const CStringDictionary::TStringId nameId = getFBInterfaceSpec()->mDONames[i];
     int result = writeToStringNameValuePair(paValue + usedBuffer, paBufferSize - usedBuffer, nameId, variable);
     if(result >= 0) {
-      usedBuffer += result;
+      usedBuffer += static_cast<size_t>(result);
     } else {
       return -1;
     }
@@ -776,7 +776,7 @@ int CFunctionBlock::toString(char *paValue, size_t paBufferSize) const {
     const CStringDictionary::TStringId nameId = getFBInterfaceSpec()->mDIONames[i];
     int result = writeToStringNameValuePair(paValue + usedBuffer, paBufferSize - usedBuffer, nameId, variable);
     if(result >= 0) {
-      usedBuffer += result;
+      usedBuffer += static_cast<size_t>(result);
     } else {
       return -1;
     }
@@ -787,8 +787,9 @@ int CFunctionBlock::toString(char *paValue, size_t paBufferSize) const {
       return -1;
     }
   }
-  strncpy(paValue + std::max(1, usedBuffer - 2), ")", paBufferSize - std::max(1, usedBuffer - 2)); // overwrite the last two bytes with the closing )
-  return std::max(2, usedBuffer - 1);
+  usedBuffer = std::max(usedBuffer, std::size_t{3}); // ensure usedBuffer is at least 3 in case nothing was added beyond the opening '('
+  strncpy(paValue + (usedBuffer - 2), ")", paBufferSize - (usedBuffer - 2)); // overwrite the last two bytes with the closing ')'
+  return static_cast<int>(usedBuffer - 1);
 }
 
 size_t CFunctionBlock::getToStringBufferSize() const {

@@ -66,7 +66,7 @@ FORTE_F_REPLACE::FORTE_F_REPLACE(const CStringDictionary::TStringId paInstanceNa
     conn_OUT(this, 0, &var_conn_OUT) {
 };
 
-void FORTE_F_REPLACE::executeEvent(TEventID paEIID) {
+void FORTE_F_REPLACE::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   switch(paEIID) {
     case scmEventREQID:
       var_OUT = std::visit([](auto &&paIN1, auto&&paIN2, auto&&paP, auto&&paL) -> CIEC_ANY_STRING_VARIANT {
@@ -80,7 +80,7 @@ void FORTE_F_REPLACE::executeEvent(TEventID paEIID) {
                        CStringDictionary::getInstance().get(paIN2.getTypeNameID()));
           return CIEC_ANY_STRING_VARIANT();
       }, var_IN1, var_IN2, var_P, var_L);
-      sendOutputEvent(scmEventCNFID);
+      sendOutputEvent(scmEventCNFID, paECET);
       break;
   }
 }

@@ -113,7 +113,7 @@ class CResource : public CFunctionBlock, public forte::core::CFBContainer{
   protected:
     CResource(const SFBInterfaceSpec *paInterfaceSpec, CStringDictionary::TStringId paInstanceNameId);
 
-    void executeEvent(TEventID) override {
+    void executeEvent(TEventID, CEventChainExecutionThread * const) override {
       // nothing to do here for a resource
     }
 
@@ -125,7 +125,7 @@ class CResource : public CFunctionBlock, public forte::core::CFBContainer{
       // nothing to write to for a resource
     }
 
-    /*!Wrapper for simplifying connection creation in resources
+    /*! Wrapper for simplifying connection creation in resources
      *
      */
     EMGMResponse createConnection(forte::core::SManagementCMD &paCommand);
@@ -223,10 +223,10 @@ class CResource : public CFunctionBlock, public forte::core::CFBContainer{
      * @return response of the command execution as defined in IEC 61499
      */
     EMGMResponse createFBTypeFromLua(CStringDictionary::TStringId typeNameId,
-        CIEC_STRING & paLuaScriptAsString);
+        const std::string&  paLuaScriptAsString);
 
     EMGMResponse createAdapterTypeFromLua(CStringDictionary::TStringId typeNameId,
-            CIEC_STRING & paLuaScriptAsString);
+        const std::string&  paLuaScriptAsString);
 #endif
     /*!\brief get the variable with the given name identifier
      *

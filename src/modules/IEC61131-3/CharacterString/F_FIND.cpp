@@ -62,7 +62,7 @@ FORTE_F_FIND::FORTE_F_FIND(const CStringDictionary::TStringId paInstanceNameId, 
     conn_OUT(this, 0, &var_conn_OUT) {
 };
 
-void FORTE_F_FIND::executeEvent(TEventID paEIID) {
+void FORTE_F_FIND::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   switch(paEIID) {
     case scmEventREQID:
       std::visit([](auto &&paIN1, auto&&paIN2, auto&&paOUT) -> void {
@@ -76,7 +76,7 @@ void FORTE_F_FIND::executeEvent(TEventID paEIID) {
                      CStringDictionary::getInstance().get(paIN2.getTypeNameID()));
         }
       }, var_IN1, var_IN2, var_OUT);
-      sendOutputEvent(scmEventCNFID);
+      sendOutputEvent(scmEventCNFID, paECET);
       break;
   }
 }

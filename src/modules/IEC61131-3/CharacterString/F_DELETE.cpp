@@ -64,13 +64,13 @@ FORTE_F_DELETE::FORTE_F_DELETE(const CStringDictionary::TStringId paInstanceName
     conn_OUT(this, 0, &var_conn_OUT) {
 };
 
-void FORTE_F_DELETE::executeEvent(TEventID paEIID) {
+void FORTE_F_DELETE::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   switch(paEIID) {
     case scmEventREQID:
       var_OUT = std::visit([](auto &&paIN, auto&&paL, auto&&paP) -> CIEC_ANY_STRING_VARIANT {
           return func_DELETE(paIN, paL, paP);
       }, var_IN, var_L, var_P);
-      sendOutputEvent(scmEventCNFID);
+      sendOutputEvent(scmEventCNFID, paECET);
       break;
   }
 }

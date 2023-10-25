@@ -21,7 +21,7 @@
 #include "forte_array_variable.h"
 
 
-class FORTE_E_MERGE: public CBasicFB {
+class FORTE_E_MERGE final : public CBasicFB {
   DECLARE_FIRMWARE_FB(FORTE_E_MERGE)
 
 private:
@@ -34,14 +34,16 @@ private:
   static const CStringDictionary::TStringId scmEventOutputNames[];
 
   static const SFBInterfaceSpec scmFBInterfaceSpec;
+
   CIEC_ANY *getVarInternal(size_t) override;
+
   static const TForteInt16 scmStateSTART = 0;
   static const TForteInt16 scmStateEO = 1;
-  
-  void enterStateSTART(void);
-  void enterStateEO(void);
 
-  void executeEvent(TEventID paEIID) override;
+  void enterStateSTART(CEventChainExecutionThread *const paECET);
+  void enterStateEO(CEventChainExecutionThread *const paECET);
+
+  void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
   void readInputData(TEventID paEIID) override;
   void writeOutputData(TEventID paEIID) override;
@@ -50,21 +52,24 @@ public:
   FORTE_E_MERGE(CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
 
   CEventConnection conn_EO;
+
   CIEC_ANY *getDI(size_t) override;
   CIEC_ANY *getDO(size_t) override;
   CEventConnection *getEOConUnchecked(TPortId) override;
   CDataConnection **getDIConUnchecked(TPortId) override;
   CDataConnection *getDOConUnchecked(TPortId) override;
+
   void evt_EI1() {
     receiveInputEvent(scmEventEI1ID, nullptr);
   }
+
   void evt_EI2() {
     receiveInputEvent(scmEventEI2ID, nullptr);
   }
+
   void operator()() {
     evt_EI1();
   }
 };
-
 
 

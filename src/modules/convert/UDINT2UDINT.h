@@ -50,7 +50,7 @@ private:
   CIEC_ANY *getVarInternal(size_t) override;
   void alg_REQ(void);
 
-  void executeEvent(TEventID paEIID) override;
+  void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
   void readInputData(TEventID paEIID) override;
   void writeOutputData(TEventID paEIID) override;

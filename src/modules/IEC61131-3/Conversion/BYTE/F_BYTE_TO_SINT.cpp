@@ -72,7 +72,7 @@ void FORTE_F_BYTE_TO_SINT::alg_REQ(void) {
 }
 
 
-void FORTE_F_BYTE_TO_SINT::executeEvent(TEventID paEIID){
+void FORTE_F_BYTE_TO_SINT::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   switch(paEIID) {
     case scmEventREQID:
       alg_REQ();
@@ -80,7 +80,7 @@ void FORTE_F_BYTE_TO_SINT::executeEvent(TEventID paEIID){
     default:
       break;
   }
-  sendOutputEvent(scmEventCNFID);
+  sendOutputEvent(scmEventCNFID, paECET);
 }
 
 void FORTE_F_BYTE_TO_SINT::readInputData(TEventID paEIID) {

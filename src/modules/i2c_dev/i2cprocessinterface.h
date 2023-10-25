@@ -26,7 +26,7 @@ class CI2CProcessInterface : public CProcessInterfaceBase{
     ~CI2CProcessInterface() override;
 
   protected:
-    bool initialise(bool paInput);
+    bool initialise(bool paInput, CEventChainExecutionThread *const paECET);
     bool deinitialise();
     bool writePin();
     bool readPin();

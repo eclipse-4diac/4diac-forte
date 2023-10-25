@@ -27,12 +27,12 @@ const CStringDictionary::TStringId GEN_STRUCT_MUX::scmEventOutputNames[] = { g_n
 
 const CStringDictionary::TStringId GEN_STRUCT_MUX::scmDataOutputNames[] = { g_nStringIdOUT };
 
-void GEN_STRUCT_MUX::executeEvent(TEventID paEIID) {
+void GEN_STRUCT_MUX::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   if(scmEventREQID == paEIID) {
     for (size_t i = 0; i < st_OUT().getStructSize(); i++){
       st_OUT().getMember(i)->setValue(*getDI(static_cast<unsigned int>(i)));
     }
-    sendOutputEvent(scmEventCNFID);
+    sendOutputEvent(scmEventCNFID, paECET);
   }
 }
 

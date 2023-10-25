@@ -74,6 +74,7 @@ namespace forte {
           public:
 
             CLocalCommGroup* registerPubl(const CStringDictionary::TStringId paID, CLocalComLayer *paLayer);
+            CLocalCommGroup* registerPubl(const CStringDictionary::TStringId paID, CLocalComLayer *paLayer, CIEC_ANY **paDataPins, TPortId paNumDataPins);
             void unregisterPubl(CLocalCommGroup *paGroup, CLocalComLayer *paLayer);
 
             CLocalCommGroup* registerSubl(const CStringDictionary::TStringId paID, CLocalComLayer *paLayer);

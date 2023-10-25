@@ -62,30 +62,30 @@ i = i+1;
 }
 
 
-void FORTE_FieldsToEventFilter::enterStateSTART(){
+void FORTE_FieldsToEventFilter::enterStateSTART(CEventChainExecutionThread *const paECET){
   mECCState = scmStateSTART;
 }
 
-void FORTE_FieldsToEventFilter::enterStateREQ(){
+void FORTE_FieldsToEventFilter::enterStateREQ(CEventChainExecutionThread *const paECET){
   mECCState = scmStateREQ;
   alg_REQ();
-  sendOutputEvent( scmEventCNFID);
+  sendOutputEvent(scmEventCNFID, paECET);
 }
 
-void FORTE_FieldsToEventFilter::executeEvent(TEventID paEIID){
+void FORTE_FieldsToEventFilter::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   bool bTransitionCleared;
   do{
     bTransitionCleared = true;
     switch(mECCState){
       case scmStateSTART:
         if(scmEventREQID == paEIID)
-          enterStateREQ();
+          enterStateREQ(paECET);
         else
           bTransitionCleared  = false; //no transition cleared
         break;
       case scmStateREQ:
         if((1))
-          enterStateSTART();
+          enterStateSTART(paECET);
         else
           bTransitionCleared  = false; //no transition cleared
         break;

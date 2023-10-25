@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 fortiss GmbH
+ * Copyright (c) 2015, 2023 fortiss GmbH, Johannes Kepler University Linz
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -7,8 +7,8 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *   Martin Jobst
- *   - initial API and implementation and/or initial documentation
+ *   Martin Jobst - initial API and implementation and/or initial documentation
+ *   Alois Zoitl  - upgraded to new FB memory layout
  *******************************************************************************/
 
 #ifndef SRC_CORE_LUAFBTYPEENTRY_H_
@@ -22,11 +22,11 @@ class CLuaEngine;
 class CLuaBFBTypeEntry: public CTypeLib::CFBTypeEntry {
 private:
 
-  const CIEC_STRING cmLuaScriptAsString;
+  const std::string cmLuaScriptAsString;
   SFBInterfaceSpec m_interfaceSpec;
   SInternalVarsInformation m_internalVarsInformation;
 
-  CLuaBFBTypeEntry(CStringDictionary::TStringId typeNameId, CIEC_STRING paLuaScriptAsString, SFBInterfaceSpec& interfaceSpec,
+  CLuaBFBTypeEntry(CStringDictionary::TStringId typeNameId, const std::string& paLuaScriptAsString, SFBInterfaceSpec& interfaceSpec,
       SInternalVarsInformation& internalVarsInformation);
 
   ~CLuaBFBTypeEntry() override;
@@ -36,7 +36,7 @@ private:
   static bool initInternalVarsInformation(SInternalVarsInformation& internalVarsInformation, CLuaEngine* luaEngine, int index);
   static void deleteInternalVarsInformation(SInternalVarsInformation& internalVarsInformation);
 public:
-  static CLuaBFBTypeEntry* createLuaFBTypeEntry(CStringDictionary::TStringId typeNameId, CIEC_STRING& paLuaScriptAsString);
+  static CLuaBFBTypeEntry* createLuaFBTypeEntry(CStringDictionary::TStringId typeNameId, const std::string& paLuaScriptAsString);
 
   CFunctionBlock* createFBInstance(CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) override;
 

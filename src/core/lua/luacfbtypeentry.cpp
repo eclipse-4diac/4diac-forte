@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2017 fortiss GmbH
+ * Copyright (c) 2015, 2023 fortiss GmbH, Johannes Kepler University Linz
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -7,8 +7,8 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *   Monika Wenger
- *   - initial API and implementation and/or initial documentation
+ *   Martin Jobst - initial API and implementation and/or initial documentation
+ *   Alois Zoitl  - upgraded to new FB memory layout
  *******************************************************************************/
 
 #include "luacfbtypeentry.h"
@@ -60,7 +60,7 @@ namespace luatype {
   }
 }
 
-CLuaCFBTypeEntry::CLuaCFBTypeEntry(CStringDictionary::TStringId paTypeNameId, CIEC_STRING paLuaScriptAsString, SFBInterfaceSpec& paInterfaceSpec,
+CLuaCFBTypeEntry::CLuaCFBTypeEntry(CStringDictionary::TStringId paTypeNameId, const std::string & paLuaScriptAsString, SFBInterfaceSpec& paInterfaceSpec,
     SCFB_FBNData& paFbnSpec) :
     CTypeLib::CFBTypeEntry(paTypeNameId, nullptr, &m_interfaceSpec), cmLuaScriptAsString(paLuaScriptAsString), m_interfaceSpec(paInterfaceSpec), mSpec(paFbnSpec) {
 }
@@ -70,13 +70,13 @@ CLuaCFBTypeEntry::~CLuaCFBTypeEntry() {
   deleteFbnSpec(mSpec);
 }
 
-CLuaCFBTypeEntry* CLuaCFBTypeEntry::createLuaFBTypeEntry(CStringDictionary::TStringId paTypeNameId, CIEC_STRING& paLuaScriptAsString) {
+CLuaCFBTypeEntry* CLuaCFBTypeEntry::createLuaFBTypeEntry(CStringDictionary::TStringId paTypeNameId, const std::string & paLuaScriptAsString) {
   CLuaEngine luaEngine;
-  if(!luaEngine.loadString(std::string(paLuaScriptAsString.getValue()))) {
+  if(!luaEngine.loadString(paLuaScriptAsString)) {
     return nullptr;
   }
   //interfaceSpec
-  SFBInterfaceSpec interfaceSpec = { 0, nullptr, nullptr, nullptr, 0, nullptr, nullptr, nullptr, 0, nullptr, nullptr, 0, nullptr, nullptr, 0, nullptr };
+  SFBInterfaceSpec interfaceSpec = { 0, nullptr, nullptr, nullptr, 0, nullptr, nullptr, nullptr, 0, nullptr, nullptr, 0, nullptr, nullptr, 0, nullptr, 0, nullptr };
   if(!luaEngine.pushField(-1, "interfaceSpec", LUA_TTABLE)) {
     return nullptr;
   }
@@ -103,12 +103,10 @@ CLuaCFBTypeEntry* CLuaCFBTypeEntry::createLuaFBTypeEntry(CStringDictionary::TStr
 
 CFunctionBlock* CLuaCFBTypeEntry::createFBInstance(CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) {
   CLuaEngine* luaEngine = paSrcRes->getLuaEngine();
-  if(!luaEngine->load(this) && (!luaEngine->loadString(std::string(cmLuaScriptAsString.getValue())))) {
+  if(!luaEngine->load(this) && (!luaEngine->loadString(cmLuaScriptAsString))) {
     return nullptr;
   }
-  TForteByte* connData = new TForteByte[CFunctionBlock::genFBConnDataSize(m_interfaceSpec.mNumEOs, m_interfaceSpec.mNumDIs, m_interfaceSpec.mNumDOs)];
-  TForteByte* varsData = new TForteByte[CCompositeFB::genFBVarsDataSize(m_interfaceSpec.mNumDIs, m_interfaceSpec.mNumDOs, m_interfaceSpec.mNumAdapters)];
-  return new CLuaCFB(paInstanceNameId, this, getFbnSpec(), connData, varsData, paSrcRes);
+  return new CLuaCFB(paInstanceNameId, this, getFbnSpec(), paSrcRes);
 }
 
 bool CLuaCFBTypeEntry::initInterfaceSpec(SFBInterfaceSpec& paInterfaceSpec, CLuaEngine* paLuaEngine, int paIndex) {
@@ -203,6 +201,10 @@ bool CLuaCFBTypeEntry::initFbnSpec(SCFB_FBNData& paFbnSpec, CLuaEngine* paLuaEng
   size_t numFDCons = paFbnSpec.mNumFannedOutDataConnections;
   paFbnSpec.mFannedOutDataConnections = paLuaEngine->getCustomArrayField<SCFB_FBFannedOutConnectionData, luatype::getFBFannedOutConnectionData>(paIndex,
     "fannedOutDataConnections", numFDCons);
+  //dataConnections
+  paFbnSpec.mNumAdapterConnections = paLuaEngine->getField<TForteUInt8, &CLuaEngine::getInteger<TForteUInt8> >(paIndex, "numAdpCons");
+  size_t numAdpCons = paFbnSpec.mNumAdapterConnections;
+  paFbnSpec.mAdapterConnections = paLuaEngine->getCustomArrayField<SCFB_FBConnectionData, luatype::getFBConnectionData>(paIndex, "adapterConnections", numAdpCons);
   //parameters
   paFbnSpec.mNumParams = paLuaEngine->getField<TForteUInt8, &CLuaEngine::getInteger<TForteUInt8> >(paIndex, "numParams");
   size_t numParams = paFbnSpec.mNumParams;

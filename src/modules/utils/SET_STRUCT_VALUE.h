@@ -53,7 +53,7 @@ private:
 
   CIEC_ANY *lookForMember(CIEC_STRUCT &paWhereToLook, char *paMemberName);
 
-  void executeEvent(TEventID paEIID);
+  void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
   void readInputData(TEventID paEIID) override;
   void writeOutputData(TEventID paEIID) override;

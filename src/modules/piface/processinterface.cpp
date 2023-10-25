@@ -23,7 +23,7 @@ CPiFaceProcessInterface::~CPiFaceProcessInterface(){
   deinitialise();
 }
 
-bool CPiFaceProcessInterface::initialise(bool paInput){
+bool CPiFaceProcessInterface::initialise(bool paIsInput, CEventChainExecutionThread *const paECET) {
   bool retVal = false;
   if(paInput){
     getExtEvHandler<CPiFaceIOHandler>(*this).registerIXFB(this);

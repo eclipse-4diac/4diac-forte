@@ -35,16 +35,16 @@ const CStringDictionary::TStringId FORTE_SET_VALUE::scmEventOutputNames[] = { g_
 
 const SFBInterfaceSpec FORTE_SET_VALUE::scmFBInterfaceSpec = { 2, scmEventInputNames, scmEIWith, scmEIWithIndexes, 2, scmEventOutputNames, scmEOWith, scmEOWithIndexes, 3, scmDataInputNames, scmDataInputTypeIds, 1, scmDataOutputNames, scmDataOutputTypeIds, 0, 0 };
 
-void FORTE_SET_VALUE::executeEvent(TEventID paEIID){
+void FORTE_SET_VALUE::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   switch (paEIID){
     case scmEventINITID:
       if(init()){
-        sendOutputEvent(scmEventINITOID);
+        sendOutputEvent(scmEventINITOID, paECET);
       }
       break;
     case scmEventREQID:
       RET_CODE() = write();
-      sendOutputEvent(scmEventCNFID);
+      sendOutputEvent(scmEventCNFID, paECET);
       break;
   }
 }

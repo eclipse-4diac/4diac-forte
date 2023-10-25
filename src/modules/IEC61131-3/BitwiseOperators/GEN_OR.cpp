@@ -29,7 +29,7 @@ GEN_OR::GEN_OR(const CStringDictionary::TStringId paInstanceNameId, CResource *p
 
 GEN_OR::~GEN_OR() = default;
 
-void GEN_OR::executeEvent(TEventID paEIID) {
+void GEN_OR::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   switch (paEIID) {
     case scmEventREQID:
       if(getFBInterfaceSpec()->mNumDIs) {
@@ -40,7 +40,7 @@ void GEN_OR::executeEvent(TEventID paEIID) {
           }, var_OUT(), var_IN(i));
         }
       }
-      sendOutputEvent(scmEventCNFID);
+      sendOutputEvent(scmEventCNFID, paECET);
       break;
   }
 }

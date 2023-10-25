@@ -62,11 +62,11 @@ FORTE_F_SUB_DT_DT::FORTE_F_SUB_DT_DT(const CStringDictionary::TStringId paInstan
     conn_OUT(this, 0, &var_conn_OUT) {
 };
 
-void FORTE_F_SUB_DT_DT::executeEvent(TEventID paEIID) {
+void FORTE_F_SUB_DT_DT::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   switch(paEIID) {
     case scmEventREQID:
       var_OUT = func_SUB_DT_DT(var_IN1, var_IN2);
-      sendOutputEvent(scmEventCNFID);
+      sendOutputEvent(scmEventCNFID, paECET);
       break;
   }
 }

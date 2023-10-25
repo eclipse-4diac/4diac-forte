@@ -61,7 +61,7 @@ CLMSEV3ProcessInterface::~CLMSEV3ProcessInterface(){
   }
 }
 
-bool CLMSEV3ProcessInterface::initialise(bool paIsInput){
+bool CLMSEV3ProcessInterface::initialise(bool paIsInput, CEventChainExecutionThread *const paECET) {
   bool retVal = false;
   std::vector<std::string> paramsList(generateParameterList());
   STATUS() = scmNotInitialised;

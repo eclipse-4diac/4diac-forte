@@ -46,7 +46,7 @@ CUMICProcessInterface::~CUMICProcessInterface(){
     deinitialise();
 }
 
-bool CUMICProcessInterface::initialise(bool paIsInput){
+bool CUMICProcessInterface::initialise(bool paIsInput, CEventChainExecutionThread *const paECET) {
 
   bool retVal = false;
   std::stringstream streamBuf(std::string(PARAMS().getValue()));

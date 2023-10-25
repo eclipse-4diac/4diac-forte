@@ -64,7 +64,7 @@ FORTE_F_MUX_2::FORTE_F_MUX_2(const CStringDictionary::TStringId paInstanceNameId
     conn_OUT(this, 0, &var_conn_OUT) {
 };
 
-void FORTE_F_MUX_2::executeEvent(TEventID paEIID) {
+void FORTE_F_MUX_2::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   switch(paEIID) {
     case scmEventREQID:
       var_OUT = std::visit([this](auto &&paK) -> CIEC_ANY_VARIANT {
@@ -81,7 +81,7 @@ void FORTE_F_MUX_2::executeEvent(TEventID paEIID) {
         DEVLOG_ERROR("value of input K is not between 0 and 1\n");
         return CIEC_ANY_VARIANT();
       }, var_K);
-      sendOutputEvent(scmEventCNFID);
+      sendOutputEvent(scmEventCNFID, paECET);
       break;
   }
 }

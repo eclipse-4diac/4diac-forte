@@ -72,7 +72,7 @@ void FORTE_F_LWORD_TO_INT::alg_REQ(void) {
 }
 
 
-void FORTE_F_LWORD_TO_INT::executeEvent(TEventID paEIID){
+void FORTE_F_LWORD_TO_INT::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   switch(paEIID) {
     case scmEventREQID:
       alg_REQ();
@@ -80,7 +80,7 @@ void FORTE_F_LWORD_TO_INT::executeEvent(TEventID paEIID){
     default:
       break;
   }
-  sendOutputEvent(scmEventCNFID);
+  sendOutputEvent(scmEventCNFID, paECET);
 }
 
 void FORTE_F_LWORD_TO_INT::readInputData(TEventID paEIID) {

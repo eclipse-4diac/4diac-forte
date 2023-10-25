@@ -39,10 +39,10 @@ GEN_E_MUX::~GEN_E_MUX(){
   delete[] mEventInputNames;
 }
 
-void GEN_E_MUX::executeEvent(TEventID paEIID){
+void GEN_E_MUX::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   if(paEIID < mInterfaceSpec->mNumEIs){
     K() = CIEC_UINT(static_cast<TForteUInt16>(paEIID));
-    sendOutputEvent(scmEventEOID);
+    sendOutputEvent(scmEventEOID, paECET);
   }
 }
 

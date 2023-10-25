@@ -22,7 +22,7 @@
 #include "forte_array_variable.h"
 
 
-class FORTE_E_SWITCH: public CBasicFB {
+class FORTE_E_SWITCH final : public CBasicFB {
   DECLARE_FIRMWARE_FB(FORTE_E_SWITCH)
 
 private:
@@ -38,40 +38,47 @@ private:
   static const CStringDictionary::TStringId scmEventOutputNames[];
 
   static const SFBInterfaceSpec scmFBInterfaceSpec;
+
   CIEC_ANY *getVarInternal(size_t) override;
+
   static const TForteInt16 scmStateSTART = 0;
   static const TForteInt16 scmStateG0 = 1;
   static const TForteInt16 scmStateG1 = 2;
-  
-  void enterStateSTART(CEventChainExecutionThread * const paECET);
-  void enterStateG0(CEventChainExecutionThread * const paECET);
-  void enterStateG1(CEventChainExecutionThread * const paECET);
 
-  void executeEvent(TEventID paEIID, CEventChainExecutionThread * const paECET) override;
+  void enterStateSTART(CEventChainExecutionThread *const paECET);
+  void enterStateG0(CEventChainExecutionThread *const paECET);
+  void enterStateG1(CEventChainExecutionThread *const paECET);
+
+  void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
   void readInputData(TEventID paEIID) override;
   void writeOutputData(TEventID paEIID) override;
+  void setInitialValues() override;
 
 public:
   FORTE_E_SWITCH(CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
 
   CIEC_BOOL var_G;
+
   CEventConnection conn_EO0;
   CEventConnection conn_EO1;
+
   CDataConnection *conn_G;
+
   CIEC_ANY *getDI(size_t) override;
   CIEC_ANY *getDO(size_t) override;
   CEventConnection *getEOConUnchecked(TPortId) override;
   CDataConnection **getDIConUnchecked(TPortId) override;
   CDataConnection *getDOConUnchecked(TPortId) override;
-  void evt_EI(const CIEC_BOOL &pa_G) {
-    var_G = pa_G;
+
+  void evt_EI(const CIEC_BOOL &paG) {
+    var_G = paG;
     receiveInputEvent(scmEventEIID, nullptr);
   }
-  void operator()(const CIEC_BOOL &pa_G) {
-    evt_EI(pa_G);
+
+  void operator()(const CIEC_BOOL &paG) {
+    evt_EI(paG);
   }
 };
-
 
 

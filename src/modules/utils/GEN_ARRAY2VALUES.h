@@ -45,7 +45,7 @@ class GEN_ARRAY2VALUES : public CGenFunctionBlock<CFunctionBlock> {
     size_t mDOutputs;
     CStringDictionary::TStringId mValueTypeID;
 
-    void executeEvent(TEventID paEIID) override;
+    void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
     void readInputData(TEventID paEI) override;
     void writeOutputData(TEventID paEO) override;

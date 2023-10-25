@@ -62,11 +62,11 @@ FORTE_F_SUB_DATE_DATE::FORTE_F_SUB_DATE_DATE(const CStringDictionary::TStringId 
     conn_OUT(this, 0, &var_conn_OUT) {
 };
 
-void FORTE_F_SUB_DATE_DATE::executeEvent(TEventID paEIID) {
+void FORTE_F_SUB_DATE_DATE::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   switch(paEIID) {
     case scmEventREQID:
       var_OUT = func_SUB_DATE_DATE(var_IN1, var_IN2);
-      sendOutputEvent(scmEventCNFID);
+      sendOutputEvent(scmEventCNFID, paECET);
       break;
   }
 }

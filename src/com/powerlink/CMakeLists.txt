@@ -17,7 +17,7 @@ forte_add_module(POWERLINK OFF "openPOWERLINK Service Interface Function Blocks"
 #############################################################################
 
 if("${FORTE_ARCHITECTURE}" STREQUAL "Win32")
-    forte_add_sourcefile_cpp(EplWrapper.cpp)  
+  forte_add_sourcefile_cpp(EplWrapper.cpp)  
   forte_add_definition( -D_CONSOLE -DWPCAP )
   
   forte_add_include_directories(${FORTE_MODULE_POWERLINK_LIB_DIR}/Target/X86/Windows/WpdPack/Include)
@@ -61,6 +61,7 @@ if(FORTE_MODULE_POWERLINK)
     forte_add_sourcefile_h( EplWrapper.h )
     
     forte_add_link_directories(${FORTE_MODULE_POWERLINK_LIB_DIR})
+    forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
     
     forte_add_startup_hook(powerlinkStartupHook)
     forte_add_sourcefile_cpp(startup.cpp)

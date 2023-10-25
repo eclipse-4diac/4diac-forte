@@ -64,11 +64,11 @@ FORTE_F_SEL::FORTE_F_SEL(const CStringDictionary::TStringId paInstanceNameId, CR
     conn_OUT(this, 0, &var_conn_OUT) {
 };
 
-void FORTE_F_SEL::executeEvent(TEventID paEIID) {
+void FORTE_F_SEL::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   switch(paEIID) {
     case scmEventREQID:
       var_OUT = var_G ? var_IN1 : var_IN0;
-      sendOutputEvent(scmEventCNFID);
+      sendOutputEvent(scmEventCNFID, paECET);
       break;
   }
 }

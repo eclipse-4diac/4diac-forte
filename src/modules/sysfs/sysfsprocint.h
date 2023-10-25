@@ -45,7 +45,7 @@ class CSysFsProcessInterface : public CProcessInterfaceBase {
     };
 
   protected:
-    bool initialise(bool paIsInput);
+    bool initialise(bool paIsInput, CEventChainExecutionThread *const paECET);
     bool deinitialise();
     bool writePin();
     bool readPin();
@@ -60,12 +60,12 @@ class CSysFsProcessInterface : public CProcessInterfaceBase {
 
     bool unexportIO();
 
-    static const char * const scmOK;
-    static const char * const scmPinInUse;
-    static const char * const scmNotInitialised;
-    static const char * const scmError;
-    static const char * const scmCouldNotRead;
-    static const char * const scmCouldNotWrite;
+    static const CIEC_STRING scmOK;
+    static const CIEC_STRING scmPinInUse;
+    static const CIEC_STRING scmNotInitialised;
+    static const CIEC_STRING scmError;
+    static const CIEC_STRING scmCouldNotRead;
+    static const CIEC_STRING scmCouldNotWrite;
 };
 
 #endif /* PROCESSINTERFACE_H_ */

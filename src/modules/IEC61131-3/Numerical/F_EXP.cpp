@@ -60,13 +60,13 @@ FORTE_F_EXP::FORTE_F_EXP(const CStringDictionary::TStringId paInstanceNameId, CR
     conn_OUT(this, 0, &var_conn_OUT) {
 };
 
-void FORTE_F_EXP::executeEvent(TEventID paEIID) {
+void FORTE_F_EXP::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   switch(paEIID) {
     case scmEventREQID:
       var_OUT = std::visit([](auto &&paIN) -> CIEC_ANY_REAL_VARIANT {
           return func_EXP(paIN);
       }, var_IN);
-      sendOutputEvent(scmEventCNFID);
+      sendOutputEvent(scmEventCNFID, paECET);
       break;
   }
 }

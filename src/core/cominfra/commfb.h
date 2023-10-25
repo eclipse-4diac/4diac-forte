@@ -35,7 +35,7 @@ namespace forte {
     protected:
       CCommFB(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes, forte::com_infra::EComServiceType paCommServiceType);
 
-      void executeEvent(TEventID paEIID) override;
+      void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
       void readInputData(TEventID paEI) override;
       void writeOutputData(TEventID paEO) override;

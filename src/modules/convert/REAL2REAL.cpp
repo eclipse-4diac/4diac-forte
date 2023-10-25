@@ -71,7 +71,7 @@ void FORTE_REAL2REAL::alg_REQ(void) {
 }
 
 
-void FORTE_REAL2REAL::executeEvent(TEventID paEIID){
+void FORTE_REAL2REAL::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   switch(paEIID) {
     case scmEventREQID:
       alg_REQ();
@@ -79,7 +79,7 @@ void FORTE_REAL2REAL::executeEvent(TEventID paEIID){
     default:
       break;
   }
-  sendOutputEvent(scmEventCNFID);
+  sendOutputEvent(scmEventCNFID, paECET);
 }
 
 void FORTE_REAL2REAL::readInputData(TEventID paEIID) {

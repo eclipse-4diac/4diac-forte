@@ -36,7 +36,7 @@ const CStringDictionary::TStringId FORTE_X20AT4222::scmEventOutputNames[] = { g_
 
 const SFBInterfaceSpec FORTE_X20AT4222::scmFBInterfaceSpec = { 2, scmEventInputNames, scmEIWith, scmEIWithIndexes, 2, scmEventOutputNames, scmEOWith, scmEOWithIndexes, 3, scmDataInputNames, scmDataInputTypeIds, 7, scmDataOutputNames, scmDataOutputTypeIds, 0, 0 };
 
-void FORTE_X20AT4222::executeEvent(TEventID paEIID){
+void FORTE_X20AT4222::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   switch (paEIID){
     case scmEventINITID:
       if(QI() == true){
@@ -63,7 +63,7 @@ void FORTE_X20AT4222::executeEvent(TEventID paEIID){
       }
       QO() = QI();
       CNIDO() = CNID();
-      sendOutputEvent(scmEventINITOID);
+      sendOutputEvent(scmEventINITOID, paECET);
       break;
     case scmEventREQID:
       if(QI() == true && mInitOk){
@@ -78,7 +78,7 @@ void FORTE_X20AT4222::executeEvent(TEventID paEIID){
         mSync.unlock();
       }
       QO() = QI();
-      sendOutputEvent(scmEventCNFID);
+      sendOutputEvent(scmEventCNFID, paECET);
       break;
   }
 }
@@ -90,7 +90,7 @@ void FORTE_X20AT4222::cnSynchCallback(){
 
   SEplMapping::TEplMappingList::Iterator itEnd = mEplMapping.mCurrentValues.end();
   SEplMapping::TEplMappingList::Iterator it = mEplMapping.mCurrentValues.begin();
-  for(it; it != itEnd; ++it){
+  for(; it != itEnd; ++it){
     short ioVal = 0x0000;
     char lowByte;
     char highByte;

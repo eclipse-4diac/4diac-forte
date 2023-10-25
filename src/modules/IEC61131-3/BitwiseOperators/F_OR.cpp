@@ -62,13 +62,13 @@ FORTE_F_OR::FORTE_F_OR(const CStringDictionary::TStringId paInstanceNameId, CRes
     conn_OUT(this, 0, &var_conn_OUT) {
 };
 
-void FORTE_F_OR::executeEvent(TEventID paEIID) {
+void FORTE_F_OR::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   switch(paEIID) {
     case scmEventREQID:
       var_OUT = std::visit([](auto &&paIN1, auto&&paIN2) -> CIEC_ANY_BIT_VARIANT {
           return func_OR(paIN1, paIN2);
       }, var_IN1, var_IN2);
-      sendOutputEvent(scmEventCNFID);
+      sendOutputEvent(scmEventCNFID, paECET);
       break;
   }
 }

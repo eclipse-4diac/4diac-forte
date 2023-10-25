@@ -60,13 +60,13 @@ FORTE_F_LEN::FORTE_F_LEN(const CStringDictionary::TStringId paInstanceNameId, CR
     conn_OUT(this, 0, &var_conn_OUT) {
 };
 
-void FORTE_F_LEN::executeEvent(TEventID paEIID) {
+void FORTE_F_LEN::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   switch(paEIID) {
     case scmEventREQID:
       std::visit([](auto &&paIN, auto&&paOUT) -> void {
           paOUT = func_LEN(paIN);
       }, var_IN, var_OUT);
-      sendOutputEvent(scmEventCNFID);
+      sendOutputEvent(scmEventCNFID, paECET);
       break;
   }
 }

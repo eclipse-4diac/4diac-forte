@@ -39,9 +39,9 @@ GEN_E_DEMUX::~GEN_E_DEMUX(){
   delete[] mEventOutputNames;
 }
 
-void GEN_E_DEMUX::executeEvent(TEventID paEIID){
+void GEN_E_DEMUX::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   if(scmEventEIID == paEIID && static_cast<CIEC_UINT::TValueType>(K()) < mInterfaceSpec->mNumEOs) {
-    sendOutputEvent(static_cast<CIEC_UINT::TValueType>(K())); // the value of K corresponds to the output event ID;
+    sendOutputEvent(static_cast<CIEC_UINT::TValueType>(K()), paECET); // the value of K corresponds to the output event ID;
   }
 }
 

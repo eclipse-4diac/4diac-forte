@@ -29,7 +29,7 @@ CI2CProcessInterface::CI2CProcessInterface(CResource *paSrcRes, const SFBInterfa
 
 CI2CProcessInterface::~CI2CProcessInterface() = default;
 
-bool CI2CProcessInterface::initialise(bool ){
+bool CI2CProcessInterface::initialise(bool paIsInput, CEventChainExecutionThread *const paECET) {
   bool retVal = false;
   STATUS() = scmNotInitialised;
   std::vector<std::string> paramsList(generateParameterList());

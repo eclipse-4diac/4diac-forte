@@ -43,26 +43,27 @@ const SFBInterfaceSpec FORTE_E_SELECT::scmFBInterfaceSpec = {
   0, nullptr
 };
 
-FORTE_E_SELECT::FORTE_E_SELECT(CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) :
+FORTE_E_SELECT::FORTE_E_SELECT(const CStringDictionary::TStringId paInstanceNameId, CResource *const paSrcRes) :
     CBasicFB(paSrcRes, &scmFBInterfaceSpec, paInstanceNameId, nullptr),
-    var_G(CIEC_BOOL(0)),
     conn_EO(this, 0),
     conn_G(nullptr) {
 }
 
+void FORTE_E_SELECT::setInitialValues() {
+  var_G = 0_BOOL;
+}
 
-
-void FORTE_E_SELECT::executeEvent(TEventID paEIID){
+void FORTE_E_SELECT::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   do {
     switch(mECCState) {
       case scmStateSTART:
-        if((scmEventEI0ID == paEIID) && (func_NOT<CIEC_BOOL>(var_G))) enterStateEO();
+        if((scmEventEI0ID == paEIID) && (func_NOT<CIEC_BOOL>(var_G))) enterStateEO(paECET);
         else
-        if((scmEventEI1ID == paEIID) && (var_G)) enterStateEO();
+        if((scmEventEI1ID == paEIID) && (var_G)) enterStateEO(paECET);
         else return; //no transition cleared
         break;
       case scmStateEO:
-        if(1) enterStateSTART();
+        if(1) enterStateSTART(paECET);
         else return; //no transition cleared
         break;
       default:
@@ -74,7 +75,16 @@ void FORTE_E_SELECT::executeEvent(TEventID paEIID){
   } while(true);
 }
 
-void FORTE_E_SELECT::readInputData(TEventID paEIID) {
+void FORTE_E_SELECT::enterStateSTART(CEventChainExecutionThread *const) {
+  mECCState = scmStateSTART;
+}
+
+void FORTE_E_SELECT::enterStateEO(CEventChainExecutionThread *const paECET) {
+  mECCState = scmStateEO;
+  sendOutputEvent(scmEventEOID, paECET);
+}
+
+void FORTE_E_SELECT::readInputData(const TEventID paEIID) {
   switch(paEIID) {
     case scmEventEI0ID: {
       RES_DATA_CON_CRITICAL_REGION();
@@ -92,9 +102,10 @@ void FORTE_E_SELECT::readInputData(TEventID paEIID) {
 }
 
 void FORTE_E_SELECT::writeOutputData(TEventID) {
+  // nothing to do
 }
 
-CIEC_ANY *FORTE_E_SELECT::getDI(size_t paIndex) {
+CIEC_ANY *FORTE_E_SELECT::getDI(const size_t paIndex) {
   switch(paIndex) {
     case 0: return &var_G;
   }
@@ -105,14 +116,14 @@ CIEC_ANY *FORTE_E_SELECT::getDO(size_t) {
   return nullptr;
 }
 
-CEventConnection *FORTE_E_SELECT::getEOConUnchecked(TPortId paIndex) {
+CEventConnection *FORTE_E_SELECT::getEOConUnchecked(const TPortId paIndex) {
   switch(paIndex) {
     case 0: return &conn_EO;
   }
   return nullptr;
 }
 
-CDataConnection **FORTE_E_SELECT::getDIConUnchecked(TPortId paIndex) {
+CDataConnection **FORTE_E_SELECT::getDIConUnchecked(const TPortId paIndex) {
   switch(paIndex) {
     case 0: return &conn_G;
   }
@@ -126,16 +137,4 @@ CDataConnection *FORTE_E_SELECT::getDOConUnchecked(TPortId) {
 CIEC_ANY *FORTE_E_SELECT::getVarInternal(size_t) {
   return nullptr;
 }
-
-
-void FORTE_E_SELECT::enterStateSTART(void) {
-  mECCState = scmStateSTART;
-}
-
-void FORTE_E_SELECT::enterStateEO(void) {
-  mECCState = scmStateEO;
-  sendOutputEvent(scmEventEOID);
-}
-
-
 

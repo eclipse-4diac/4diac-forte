@@ -52,7 +52,7 @@ GEN_F_MUX::~GEN_F_MUX(){
   delete[] mDataOutputTypeIds;
 }
 
-void GEN_F_MUX::executeEvent(TEventID paEIID){
+void GEN_F_MUX::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
 
   if(static_cast<size_t>(paEIID) < mEInputs) {
 
@@ -84,7 +84,7 @@ void GEN_F_MUX::executeEvent(TEventID paEIID){
       *static_cast<CIEC_WSTRING *>(getDO(1)) = CIEC_WSTRING("Datatype ERROR");
     }
 
-    sendOutputEvent(0);
+    sendOutputEvent(scmEventEOID, paECET);
   }
 }
 

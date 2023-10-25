@@ -26,7 +26,7 @@ namespace forte {
         ~CAdsProcessInterface() override;
 
       protected:
-        bool initialise(bool paIsInput);
+        bool initialise(bool paIsInput, CEventChainExecutionThread *const paECET);
         bool deinitialise();
         bool writePin();
         bool readPin();

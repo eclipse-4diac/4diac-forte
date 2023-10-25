@@ -50,7 +50,7 @@ ENDFUNCTION(forte_add_sourcefile_h)
 FUNCTION(forte_add_sourcefile_with_path_hc)
   FOREACH(ARG ${ARGV})
     forte_add_sourcefile_with_path_h(${ARG}.h)
-    forte_add_sourcefile_with_path_cpp(${ARG}.c)
+    forte_add_sourcefile_with_path_c(${ARG}.c)
   ENDFOREACH(ARG)
 ENDFUNCTION(forte_add_sourcefile_with_path_hc)
 

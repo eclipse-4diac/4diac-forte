@@ -47,11 +47,8 @@ const SFBInterfaceSpec FORTE_E_CTU::scmFBInterfaceSpec = {
   0, nullptr
 };
 
-FORTE_E_CTU::FORTE_E_CTU(CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) :
+FORTE_E_CTU::FORTE_E_CTU(const CStringDictionary::TStringId paInstanceNameId, CResource *const paSrcRes) :
     CBasicFB(paSrcRes, &scmFBInterfaceSpec, paInstanceNameId, nullptr),
-    var_PV(CIEC_UINT(0)),
-    var_Q(CIEC_BOOL(0)),
-    var_CV(CIEC_UINT(0)),
     var_conn_Q(var_Q),
     var_conn_CV(var_CV),
     conn_CUO(this, 0),
@@ -61,23 +58,17 @@ FORTE_E_CTU::FORTE_E_CTU(CStringDictionary::TStringId paInstanceNameId, CResourc
     conn_CV(this, 1, &var_conn_CV) {
 }
 
-void FORTE_E_CTU::alg_R(void) {
-  
-  var_CV = CIEC_UINT(0);
-  var_Q = CIEC_BOOL(false);
-}
-void FORTE_E_CTU::alg_CU(void) {
-  
-  var_CV = func_ADD<CIEC_UINT>(var_CV, CIEC_UINT(1));
-  var_Q = func_GE(var_CV, var_PV);
+void FORTE_E_CTU::setInitialValues() {
+  var_PV = 0_UINT;
+  var_Q = 0_BOOL;
+  var_CV = 0_UINT;
 }
 
-
-void FORTE_E_CTU::executeEvent(TEventID paEIID, CEventChainExecutionThread * const paECET){
+void FORTE_E_CTU::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   do {
     switch(mECCState) {
       case scmStateSTART:
-        if((scmEventCUID == paEIID) && (func_LT(var_CV, CIEC_UINT(65535)))) enterStateCU(paECET);
+        if((scmEventCUID == paEIID) && (func_LT(var_CV, 65535_UINT))) enterStateCU(paECET);
         else
         if(scmEventRID == paEIID) enterStateR(paECET);
         else return; //no transition cleared
@@ -99,15 +90,27 @@ void FORTE_E_CTU::executeEvent(TEventID paEIID, CEventChainExecutionThread * con
   } while(true);
 }
 
-void FORTE_E_CTU::readInputData(TEventID paEIID) {
+void FORTE_E_CTU::enterStateSTART(CEventChainExecutionThread *const) {
+  mECCState = scmStateSTART;
+}
+
+void FORTE_E_CTU::enterStateCU(CEventChainExecutionThread *const paECET) {
+  mECCState = scmStateCU;
+  alg_CU();
+  sendOutputEvent(scmEventCUOID, paECET);
+}
+
+void FORTE_E_CTU::enterStateR(CEventChainExecutionThread *const paECET) {
+  mECCState = scmStateR;
+  alg_R();
+  sendOutputEvent(scmEventROID, paECET);
+}
+
+void FORTE_E_CTU::readInputData(const TEventID paEIID) {
   switch(paEIID) {
     case scmEventCUID: {
       RES_DATA_CON_CRITICAL_REGION();
       readData(0, var_PV, conn_PV);
-      break;
-    }
-    case scmEventRID: {
-      RES_DATA_CON_CRITICAL_REGION();
       break;
     }
     default:
@@ -115,7 +118,7 @@ void FORTE_E_CTU::readInputData(TEventID paEIID) {
   }
 }
 
-void FORTE_E_CTU::writeOutputData(TEventID paEIID) {
+void FORTE_E_CTU::writeOutputData(const TEventID paEIID) {
   switch(paEIID) {
     case scmEventCUOID: {
       RES_DATA_CON_CRITICAL_REGION();
@@ -134,14 +137,14 @@ void FORTE_E_CTU::writeOutputData(TEventID paEIID) {
   }
 }
 
-CIEC_ANY *FORTE_E_CTU::getDI(size_t paIndex) {
+CIEC_ANY *FORTE_E_CTU::getDI(const size_t paIndex) {
   switch(paIndex) {
     case 0: return &var_PV;
   }
   return nullptr;
 }
 
-CIEC_ANY *FORTE_E_CTU::getDO(size_t paIndex) {
+CIEC_ANY *FORTE_E_CTU::getDO(const size_t paIndex) {
   switch(paIndex) {
     case 0: return &var_Q;
     case 1: return &var_CV;
@@ -149,7 +152,7 @@ CIEC_ANY *FORTE_E_CTU::getDO(size_t paIndex) {
   return nullptr;
 }
 
-CEventConnection *FORTE_E_CTU::getEOConUnchecked(TPortId paIndex) {
+CEventConnection *FORTE_E_CTU::getEOConUnchecked(const TPortId paIndex) {
   switch(paIndex) {
     case 0: return &conn_CUO;
     case 1: return &conn_RO;
@@ -157,14 +160,14 @@ CEventConnection *FORTE_E_CTU::getEOConUnchecked(TPortId paIndex) {
   return nullptr;
 }
 
-CDataConnection **FORTE_E_CTU::getDIConUnchecked(TPortId paIndex) {
+CDataConnection **FORTE_E_CTU::getDIConUnchecked(const TPortId paIndex) {
   switch(paIndex) {
     case 0: return &conn_PV;
   }
   return nullptr;
 }
 
-CDataConnection *FORTE_E_CTU::getDOConUnchecked(TPortId paIndex) {
+CDataConnection *FORTE_E_CTU::getDOConUnchecked(const TPortId paIndex) {
   switch(paIndex) {
     case 0: return &conn_Q;
     case 1: return &conn_CV;
@@ -176,22 +179,19 @@ CIEC_ANY *FORTE_E_CTU::getVarInternal(size_t) {
   return nullptr;
 }
 
+void FORTE_E_CTU::alg_R(void) {
 
-void FORTE_E_CTU::enterStateSTART(CEventChainExecutionThread* const paECET) {
-  mECCState = scmStateSTART;
+  #line 2 "E_CTU.fbt"
+  var_CV = 0_UINT;
+  #line 3 "E_CTU.fbt"
+  var_Q = false_BOOL;
 }
 
-void FORTE_E_CTU::enterStateCU(CEventChainExecutionThread* const paECET) {
-  mECCState = scmStateCU;
-  alg_CU();
-  sendOutputEvent(scmEventCUOID, paECET);
+void FORTE_E_CTU::alg_CU(void) {
+
+  #line 7 "E_CTU.fbt"
+  var_CV = func_ADD<CIEC_UINT>(var_CV, 1_UINT);
+  #line 8 "E_CTU.fbt"
+  var_Q = func_GE(var_CV, var_PV);
 }
-
-void FORTE_E_CTU::enterStateR(CEventChainExecutionThread* const paECET) {
-  mECCState = scmStateR;
-  alg_R();
-  sendOutputEvent(scmEventROID, paECET);
-}
-
-
 

@@ -1,5 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2011 - 2013, 2018 TU Vienna/ACIN, nxtControl, Profactor GmbH, fortiss GmbH
+ * Copyright (c) 2011, 2023 TU Vienna/ACIN, nxtControl, Profactor GmbH, fortiss GmbH
+ *                          Primetals Technologies Austria GmbH
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -13,6 +14,9 @@
  *   Martin Melik-Merkumians - adds tests for LEN, LEFT, RIGHT, MID, REPLACE, DELETE,
  *     INSERT, EQ, NE, ADD, and AND
  *   Martin Melik-Merkumians - adds test for TRUNC
+ *   Martin Melik-Merkumians - adds test for variadic CONCAT, ADD, MUL, MIN, MAX,
+ *    LT, LE, GT, GE, EQ
+ *   Martin Melik-Merkumians - adds test for func_PLUS
  *******************************************************************************/
 
 #include <math.h>
@@ -400,6 +404,140 @@ BOOST_AUTO_TEST_CASE(eq_false)
   BOOST_TEST(func_EQ(nInt1, nInt2) == false);
 }
 
+BOOST_AUTO_TEST_CASE(eq_true_variadic_3)
+{
+  CIEC_SINT number1(10);
+  CIEC_INT number2(10);
+  CIEC_DINT number3(10);
+  BOOST_TEST(func_EQ(number1, number2, number3) == true);
+}
+
+BOOST_AUTO_TEST_CASE(eq_true_variadic_4)
+{
+  CIEC_SINT number1(10);
+  CIEC_INT number2(10);
+  CIEC_DINT number3(10);
+  CIEC_DINT number4(10);
+  BOOST_TEST(func_EQ(number1, number2, number3, number4) == true);
+}
+
+BOOST_AUTO_TEST_CASE(eq_false_variadic_3)
+{
+  CIEC_SINT number1(10);
+  CIEC_INT number2(10);
+  CIEC_DINT number3(-10);
+  BOOST_TEST(func_EQ(number1, number2, number3) == false);
+}
+
+BOOST_AUTO_TEST_CASE(eq_false_variadic_4)
+{
+  CIEC_SINT number1(10);
+  CIEC_INT number2(10);
+  CIEC_DINT number3(10);
+  CIEC_DINT number4(-10);
+  BOOST_TEST(func_EQ(number1, number2, number3, number4) == false);
+}
+
+BOOST_AUTO_TEST_CASE(gt_true) {
+  BOOST_TEST(func_GT(100_SINT, 90_INT) == true);
+}
+
+BOOST_AUTO_TEST_CASE(gt_false) {
+  BOOST_TEST(func_GT(90_SINT, 100_INT) == false);
+}
+
+BOOST_AUTO_TEST_CASE(gt_true_variadic_3) {
+  BOOST_TEST(func_GT(100_SINT, 90_INT, 80_DINT) == true);
+}
+
+BOOST_AUTO_TEST_CASE(gt_false_variadic_3) {
+  BOOST_TEST(func_GT(90_SINT, 100_INT, 80_DINT) == false);
+}
+
+BOOST_AUTO_TEST_CASE(gt_true_variadic_4) {
+  BOOST_TEST(func_GT(100_SINT, 90_INT, 80_DINT, 70_LINT) == true);
+}
+
+BOOST_AUTO_TEST_CASE(gt_false_variadic_4) {
+  BOOST_TEST(func_GT(90_SINT, 100_INT, 80_DINT, 70_LINT) == false);
+}
+
+BOOST_AUTO_TEST_CASE(ge_true) {
+  BOOST_TEST(func_GE(100_SINT, 90_INT) == true);
+  BOOST_TEST(func_GE(100_SINT, 100_INT) == true);
+}
+
+BOOST_AUTO_TEST_CASE(ge_false) {
+  BOOST_TEST(func_GE(90_SINT, 100_INT) == false);
+}
+
+BOOST_AUTO_TEST_CASE(ge_true_variadic_3) {
+  BOOST_TEST(func_GE(100_SINT, 90_INT, 80_DINT) == true);
+  BOOST_TEST(func_GE(100_SINT, 90_INT, 90_DINT) == true);
+}
+
+BOOST_AUTO_TEST_CASE(ge_false_variadic_3) {
+  BOOST_TEST(func_GE(90_SINT, 100_INT, 80_DINT) == false);
+}
+
+BOOST_AUTO_TEST_CASE(ge_true_variadic_4) {
+  BOOST_TEST(func_GE(100_SINT, 90_INT, 90_DINT, 70_LINT) == true);
+}
+
+BOOST_AUTO_TEST_CASE(ge_false_variadic_4) {
+  BOOST_TEST(func_GE(90_SINT, 100_INT, 80_DINT, 70_LINT) == false);
+}
+
+BOOST_AUTO_TEST_CASE(lt_true) {
+  BOOST_TEST(func_LT(90_SINT, 100_INT) == true);
+}
+
+BOOST_AUTO_TEST_CASE(lt_false) {
+  BOOST_TEST(func_LT(100_SINT, 90_INT) == false);
+}
+
+BOOST_AUTO_TEST_CASE(lt_true_variadic_3) {
+  BOOST_TEST(func_LT(80_SINT, 90_INT, 100_DINT) == true);
+}
+
+BOOST_AUTO_TEST_CASE(lt_false_variadic_3) {
+  BOOST_TEST(func_LT(80_SINT, 100_INT, 90_DINT) == false);
+}
+
+BOOST_AUTO_TEST_CASE(lt_true_variadic_4) {
+  BOOST_TEST(func_LT(70_SINT, 80_INT, 90_DINT, 100_LINT) == true);
+}
+
+BOOST_AUTO_TEST_CASE(lt_false_variadic_4) {
+  BOOST_TEST(func_LT(70_SINT, 90_INT, 80_DINT, 100_LINT) == false);
+}
+
+BOOST_AUTO_TEST_CASE(le_true) {
+  BOOST_TEST(func_LE(90_SINT, 100_INT) == true);
+  BOOST_TEST(func_LE(100_SINT, 100_INT) == true);
+}
+
+BOOST_AUTO_TEST_CASE(le_false) {
+  BOOST_TEST(func_LE(100_SINT, 90_INT) == false);
+}
+
+BOOST_AUTO_TEST_CASE(le_true_variadic_3) {
+  BOOST_TEST(func_LE(80_SINT, 90_INT, 100_DINT) == true);
+  BOOST_TEST(func_LE(90_SINT, 90_INT, 100_DINT) == true);
+}
+
+BOOST_AUTO_TEST_CASE(le_false_variadic_3) {
+  BOOST_TEST(func_LE(80_SINT, 100_INT, 90_DINT) == false);
+}
+
+BOOST_AUTO_TEST_CASE(le_true_variadic_4) {
+  BOOST_TEST(func_LE(70_SINT, 90_INT, 90_DINT, 100_LINT) == true);
+}
+
+BOOST_AUTO_TEST_CASE(le_false_variadic_4) {
+  BOOST_TEST(func_LE(70_SINT, 100_INT, 80_DINT, 90_LINT) == false);
+}
+
 BOOST_AUTO_TEST_CASE(ne_true)
 {
   CIEC_INT nInt1(10);
@@ -535,6 +673,10 @@ BOOST_AUTO_TEST_CASE(add_different_int_types_of_literals) {
   BOOST_REQUIRE_EQUAL(static_cast<CIEC_LINT::TValueType>(CIEC_LINT(0)), static_cast<CIEC_LINT::TValueType>(result));
 }
 
+BOOST_AUTO_TEST_CASE(add_variadic) {
+  BOOST_TEST(static_cast<CIEC_LINT::TValueType>(func_ADD(1_SINT, 2_INT, 3_DINT, 4_LINT)) == 10);
+}
+
 BOOST_AUTO_TEST_CASE(concat3)
 {
   CIEC_STRING sFristString("THIS_IS_THE_FIRST_STRING"_STRING);
@@ -552,6 +694,16 @@ BOOST_AUTO_TEST_CASE(concat4)
   CIEC_STRING sForthString("_THIS_IS_THE_FORTH_STRING"_STRING);
   CIEC_STRING sConcatString(func_CONCAT(sFristString, sSecondString, sThirdString, sForthString));
   BOOST_TEST(sConcatString == "THIS_IS_THE_FIRST_STRING_THIS_IS_THE_SECOND_STRING_THIS_IS_THE_THIRD_STRING_THIS_IS_THE_FORTH_STRING"_STRING);
+}
+
+BOOST_AUTO_TEST_CASE(concat4_mixed_types)
+{
+  CIEC_STRING sFristString("THIS_IS_THE_FIRST_STRING"_STRING);
+  CIEC_STRING sSecondString("THIS_IS_THE_SECOND_STRING"_STRING);
+  CIEC_STRING sThirdString("THIS_IS_THE_THIRD_STRING"_STRING);
+  CIEC_STRING sForthString("THIS_IS_THE_FORTH_STRING"_STRING);
+  CIEC_STRING sConcatString(func_CONCAT('_'_CHAR, sFristString, '_'_CHAR, sSecondString, '_'_CHAR, sThirdString, '_'_CHAR, sForthString));
+  BOOST_TEST(sConcatString == "_THIS_IS_THE_FIRST_STRING_THIS_IS_THE_SECOND_STRING_THIS_IS_THE_THIRD_STRING_THIS_IS_THE_FORTH_STRING"_STRING);
 }
 
 BOOST_AUTO_TEST_CASE(standard_example_insert)
@@ -778,6 +930,10 @@ BOOST_AUTO_TEST_CASE(mul_number_and_ltime_MUL_LTIME) {
 
   result = func_MUL_LTIME(time, sint);
   BOOST_REQUIRE_EQUAL(CIEC_LTIME(30), result);
+}
+
+BOOST_AUTO_TEST_CASE(mul_variadic) {
+  BOOST_TEST(static_cast<CIEC_LINT::TValueType>(func_MUL(1_SINT, 2_INT, 3_DINT, 4_LINT)) == 24);
 }
 
 BOOST_AUTO_TEST_CASE(div_numbers) {
@@ -1320,6 +1476,36 @@ BOOST_AUTO_TEST_CASE(func_minus)
   BOOST_REQUIRE(-5.0 == static_cast<CIEC_LREAL::TValueType>(func_MINUS(lreal)));
 
   BOOST_REQUIRE(CIEC_TIME(-5) == func_MINUS(time));
+}
+
+BOOST_AUTO_TEST_CASE(func_plus) {
+  BOOST_TEST(5 == static_cast<CIEC_INT::TValueType>(func_PLUS(5_INT)));
+}
+
+BOOST_AUTO_TEST_CASE(func_plus_in_max_call) {
+  BOOST_TEST(5 == static_cast<CIEC_INT::TValueType>(func_MAX(func_PLUS(5_INT), 5_INT)));
+}
+
+BOOST_AUTO_TEST_CASE(func_plus_in_max_call_with_object) {
+  CIEC_INT five(5);
+  BOOST_TEST(5 == static_cast<CIEC_INT::TValueType>(func_MAX(func_PLUS(five), 5_INT)));
+}
+
+BOOST_AUTO_TEST_CASE(func_plus_in_GE_call_with_object) {
+  CIEC_REAL PI = 3.14_REAL;
+  BOOST_TEST(true == static_cast<CIEC_BOOL::TValueType>(func_GT(func_PLUS(PI), 0.0_LREAL)));
+  BOOST_TEST(3.14f == static_cast<CIEC_REAL::TValueType>(func_PLUS(PI)));
+}
+
+BOOST_AUTO_TEST_CASE(func_plus_in_GE_call_with_object_and_explicit_template_argument) {
+  CIEC_REAL PI = 3.14_REAL;
+  BOOST_TEST(true == static_cast<CIEC_BOOL::TValueType>(func_GT(func_PLUS<CIEC_REAL>(PI), 0.0_LREAL)));
+  BOOST_TEST(3.14f == static_cast<CIEC_REAL::TValueType>(func_PLUS<CIEC_REAL>(PI)));
+}
+
+BOOST_AUTO_TEST_CASE(func_plus_assignment) {
+  CIEC_INT result = func_PLUS(5_INT);
+  BOOST_TEST(5 == static_cast<CIEC_INT::TValueType>(result));
 }
 
 BOOST_AUTO_TEST_CASE(func_concat_date_ulints) {
@@ -2323,6 +2509,42 @@ BOOST_AUTO_TEST_CASE(func_min_time) {
   CIEC_TIME result;
   result = func_MIN(30000000_TIME, 30000000000_TIME);
   BOOST_TEST(static_cast<CIEC_TIME::TValueType>(result) == 30000000);
+}
+
+BOOST_AUTO_TEST_CASE(func_min) {
+  // cast to int for better readability in test result output
+  BOOST_TEST(static_cast<int>(static_cast<CIEC_SINT::TValueType>(func_MIN(0_SINT, -10_SINT))) == -10);
+}
+
+BOOST_AUTO_TEST_CASE(func_min_variadic_3) {
+  // cast to int for better readability in test result output
+  BOOST_TEST(static_cast<int>(static_cast<CIEC_SINT::TValueType>(func_MIN(0_SINT, -10_SINT, -50_SINT))) == -50);
+}
+
+BOOST_AUTO_TEST_CASE(func_min_variadic_4) {
+  // cast to int for better readability in test result output
+  BOOST_TEST(static_cast<int>(static_cast<CIEC_SINT::TValueType>(func_MIN(0_SINT, -10_SINT, 50_SINT, 35_SINT))) == -10);
+}
+
+BOOST_AUTO_TEST_CASE(func_max_time) {
+  CIEC_TIME result;
+  result = func_MAX(30000000_TIME, 30000000000_TIME);
+  BOOST_TEST(static_cast<CIEC_TIME::TValueType>(result) == 30000000000);
+}
+
+BOOST_AUTO_TEST_CASE(func_max) {
+  // cast to int for better readability in test result output
+  BOOST_TEST(static_cast<int>(static_cast<CIEC_SINT::TValueType>(func_MAX(0_SINT, -10_SINT))) == 0);
+}
+
+BOOST_AUTO_TEST_CASE(func_max_variadic_3) {
+  // cast to int for better readability in test result output
+  BOOST_TEST(static_cast<int>(static_cast<CIEC_SINT::TValueType>(func_MAX(0_SINT, -10_SINT, -50_SINT))) == 0);
+}
+
+BOOST_AUTO_TEST_CASE(func_max_variadic_4) {
+  // cast to int for better readability in test result output
+  BOOST_TEST(static_cast<int>(static_cast<CIEC_SINT::TValueType>(func_MAX(0_SINT, -10_SINT, 50_SINT, 35_SINT))) == 50);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

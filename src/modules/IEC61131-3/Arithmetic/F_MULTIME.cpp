@@ -62,13 +62,13 @@ FORTE_F_MULTIME::FORTE_F_MULTIME(const CStringDictionary::TStringId paInstanceNa
     conn_OUT(this, 0, &var_conn_OUT) {
 };
 
-void FORTE_F_MULTIME::executeEvent(TEventID paEIID) {
+void FORTE_F_MULTIME::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   switch(paEIID) {
     case scmEventREQID:
       var_OUT = std::visit([this](auto&&paIN2) -> CIEC_TIME {
         return func_MUL_TIME(var_IN1, paIN2);
       }, var_IN2);
-      sendOutputEvent(scmEventCNFID);
+      sendOutputEvent(scmEventCNFID, paECET);
       break;
   }
 }

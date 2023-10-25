@@ -23,7 +23,7 @@
 #include "forte_array_variable.h"
 
 
-class FORTE_E_SR: public CBasicFB {
+class FORTE_E_SR final : public CBasicFB {
   DECLARE_FIRMWARE_FB(FORTE_E_SR)
 
 private:
@@ -34,51 +34,61 @@ private:
   static const TForteInt16 scmEIWithIndexes[];
   static const CStringDictionary::TStringId scmEventInputNames[];
   static const TEventID scmEventEOID = 0;
-  static const TDataIOID scmEOWith[]; 
+  static const TDataIOID scmEOWith[];
   static const TForteInt16 scmEOWithIndexes[];
   static const CStringDictionary::TStringId scmEventOutputNames[];
 
   static const SFBInterfaceSpec scmFBInterfaceSpec;
+
   CIEC_ANY *getVarInternal(size_t) override;
+
   void alg_SET(void);
   void alg_RESET(void);
+
   static const TForteInt16 scmStateSTART = 0;
   static const TForteInt16 scmStateSET = 1;
   static const TForteInt16 scmStateRESET = 2;
-  
-  void enterStateSTART(void);
-  void enterStateSET(void);
-  void enterStateRESET(void);
 
-  void executeEvent(TEventID paEIID) override;
+  void enterStateSTART(CEventChainExecutionThread *const paECET);
+  void enterStateSET(CEventChainExecutionThread *const paECET);
+  void enterStateRESET(CEventChainExecutionThread *const paECET);
+
+  void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
   void readInputData(TEventID paEIID) override;
   void writeOutputData(TEventID paEIID) override;
+  void setInitialValues() override;
 
 public:
   FORTE_E_SR(CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
 
   CIEC_BOOL var_Q;
+
   CIEC_BOOL var_conn_Q;
+
   CEventConnection conn_EO;
+
   CDataConnection conn_Q;
+
   CIEC_ANY *getDI(size_t) override;
   CIEC_ANY *getDO(size_t) override;
   CEventConnection *getEOConUnchecked(TPortId) override;
   CDataConnection **getDIConUnchecked(TPortId) override;
   CDataConnection *getDOConUnchecked(TPortId) override;
-  void evt_S(CIEC_BOOL &pa_Q) {
+
+  void evt_S(CIEC_BOOL &paQ) {
     receiveInputEvent(scmEventSID, nullptr);
-    pa_Q = var_Q;
+    paQ = var_Q;
   }
-  void evt_R(CIEC_BOOL &pa_Q) {
+
+  void evt_R(CIEC_BOOL &paQ) {
     receiveInputEvent(scmEventRID, nullptr);
-    pa_Q = var_Q;
+    paQ = var_Q;
   }
-  void operator()(CIEC_BOOL &pa_Q) {
-    evt_S(pa_Q);
+
+  void operator()(CIEC_BOOL &paQ) {
+    evt_S(paQ);
   }
 };
-
 
 

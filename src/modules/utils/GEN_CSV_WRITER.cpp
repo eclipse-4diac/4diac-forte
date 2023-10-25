@@ -39,20 +39,20 @@ const CIEC_STRING GEN_CSV_WRITER::scmOK = "OK"_STRING;
 const CIEC_STRING GEN_CSV_WRITER::scmFileAlreadyOpened = "File already opened"_STRING;
 const CIEC_STRING GEN_CSV_WRITER::scmFileNotOpened = "File not opened"_STRING;
 
-void GEN_CSV_WRITER::executeEvent(TEventID paEIID) {
+void GEN_CSV_WRITER::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   if(scmEventINITID == paEIID) {
     if(QI()) {
       openCSVFile();
     } else {
       closeCSVFile();
     }
-    sendOutputEvent(scmEventINITOID);
+    sendOutputEvent(scmEventINITOID, paECET);
   } else if(scmEventREQID == paEIID) {
     QO() = QI();
     if(QI()) {
       writeCSVFileLine();
     }
-    sendOutputEvent(scmEventCNFID);
+    sendOutputEvent(scmEventCNFID, paECET);
   }
 }
 

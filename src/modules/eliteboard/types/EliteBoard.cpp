@@ -88,7 +88,7 @@ bool FORTE_EliteBoard::configurePortFB(int index) {
   return true;
 }
 
-void FORTE_EliteBoard::executeEvent(TEventID paEIID) {
+void FORTE_EliteBoard::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
 
   if (paEIID == scmEventMAPID) {
     // start initialisation chain
@@ -112,14 +112,14 @@ void FORTE_EliteBoard::executeEvent(TEventID paEIID) {
 
       if (mCurrentAdapterIndex >= mAdapterCount) {
         // initialisation complete
-        sendOutputEvent(scmEventMAPOID);
+        sendOutputEvent(scmEventMAPOID, paECET);
       } else {
         // not completed yet
         mCurrentAdapterIndex++;
       }
     } else {
       // initialisation complete
-      sendOutputEvent(scmEventMAPOID);
+      sendOutputEvent(scmEventMAPOID, paECET);
     }
   }
 }

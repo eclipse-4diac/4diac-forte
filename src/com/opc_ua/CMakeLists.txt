@@ -43,7 +43,7 @@ if (FORTE_COM_OPC_UA)
     # OPEN62541 library to be linked to forte
     IF ("${FORTE_ARCHITECTURE}" STREQUAL "Win32")
         SET(FORTE_COM_OPC_UA_LIB "open62541.lib" CACHE STRING "OPC_UA Library file in FORTE_COM_OPC_UA_DIR to be linked to forte (normally with name libopen62541 and a extension according to the type and OS)")
-        forte_add_link_library("Iphlpapi") #pubsub uses functions in this library
+        forte_add_link_library("iphlpapi") #pubsub uses functions in this library
         forte_add_definition("-DUA_ARCHITECTURE_WIN32")
     ELSE ()
         SET(FORTE_COM_OPC_UA_LIB "libopen62541.a" CACHE STRING "OPC_UA Library file in FORTE_COM_OPC_UA_DIR to be linked to forte (normally with name libopen62541 and a extension according to the type and OS)")
@@ -97,8 +97,15 @@ if (FORTE_COM_OPC_UA)
       forte_add_include_system_directories(${FORTE_COM_OPC_UA_ENCRYPTION_INCLUDE_DIR})
       forte_add_link_directories(${FORTE_COM_OPC_UA_ENCRYPTION_LIB_DIR})
 
-      forte_add_link_library("libmbedcrypto.a")
-      forte_add_link_library("libmbedtls.a")
-      forte_add_link_library("libmbedx509.a")
+      set(FORTE_COM_OPC_UA_ENCRYPTION_MBEDTLS TRUE CACHE BOOL "Was open62541 built against mbedtls instead of openssl/libressl?")
+
+      if (FORTE_COM_OPC_UA_ENCRYPTION_MBEDTLS)
+        forte_add_link_library("libmbedcrypto.a")
+        forte_add_link_library("libmbedtls.a")
+        forte_add_link_library("libmbedx509.a")
+      else()
+        forte_add_link_library(ssl)
+        forte_add_link_library(crypto)
+      endif()
     endif()  
 endif (FORTE_COM_OPC_UA)

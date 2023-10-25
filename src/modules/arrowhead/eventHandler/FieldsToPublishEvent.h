@@ -60,10 +60,10 @@ private:
   static const TForteInt16 scmStateSTART = 0;
   static const TForteInt16 scmStateREQ = 1;
 
-  void enterStateSTART();
-  void enterStateREQ();
+  void enterStateSTART(CEventChainExecutionThread *const paECET);
+  void enterStateREQ(CEventChainExecutionThread *const paECET);
 
-  virtual void executeEvent(TEventID paEIID) override;
+  virtual void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
 public:
   FORTE_FieldsToPublishEvent(CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) : 

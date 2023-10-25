@@ -72,7 +72,7 @@ void FORTE_F_STRING_AS_TIME::alg_REQ(void) {
 }
 
 
-void FORTE_F_STRING_AS_TIME::executeEvent(TEventID paEIID){
+void FORTE_F_STRING_AS_TIME::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   switch(paEIID) {
     case scmEventREQID:
       alg_REQ();
@@ -80,7 +80,7 @@ void FORTE_F_STRING_AS_TIME::executeEvent(TEventID paEIID){
     default:
       break;
   }
-  sendOutputEvent(scmEventCNFID);
+  sendOutputEvent(scmEventCNFID, paECET);
 }
 
 void FORTE_F_STRING_AS_TIME::readInputData(TEventID paEIID) {

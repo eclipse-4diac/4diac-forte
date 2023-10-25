@@ -163,12 +163,20 @@ bool CActionInfo::checkReadAction(forte::com_infra::EComServiceType paFbType, TP
         mLayer.getCommFB()->getInstanceName(), CActionInfo::mActionNames[eRead]);
     }
   } else {
-    if(forte::com_infra::e_Client == paFbType && paNoOfRDs == getNoOfNodePairs() && 0 == paNoOfSDs) {
-      retVal = true;
-    } else {
+    if(paFbType != forte::com_infra::e_Client) {
       DEVLOG_ERROR(
-        "[OPC UA ACTION]: Remote %s action is only allowed using a Client FB, the amount of BrowseName,NodeId pairs should match the number of RDs, and must have no SDs\n",
+        "[OPC UA ACTION]: In FB %s: Remote %s action is only allowed using a Client FB\n",
         mLayer.getCommFB()->getInstanceName(), CActionInfo::mActionNames[eRead]);
+    } else if(getNoOfNodePairs() != paNoOfRDs)  {
+      DEVLOG_ERROR(
+        "[OPC UA ACTION]: In FB %s: Remote %s action needs as many BrowseName,NodeId pairs as there are RDs. (have: %i, need: %i)\n",
+        mLayer.getCommFB()->getInstanceName(), CActionInfo::mActionNames[eRead], getNoOfNodePairs(), paNoOfRDs);
+    } else if(paNoOfSDs != 0) {
+      DEVLOG_ERROR(
+        "[OPC UA ACTION]: In FB %s: Remote %s action must have no SDs. (have: %i)\n",
+        mLayer.getCommFB()->getInstanceName(), CActionInfo::mActionNames[eRead], paNoOfSDs);
+    } else {
+      retVal = true;
     }
   }
   return retVal;
@@ -209,12 +217,20 @@ bool CActionInfo::checkCreateMethodAction(forte::com_infra::EComServiceType paFb
 
 bool CActionInfo::checkCallMethodAction(forte::com_infra::EComServiceType paFbType, TPortId, TPortId) const {
   bool retVal = false;
-  if(forte::com_infra::e_Client == paFbType && 1 == getNoOfNodePairs() && !(*(mNodePair.begin()))->mBrowsePath.empty()) {
-    retVal = true;
-  } else {
+  if (paFbType != forte::com_infra::e_Client) {
     DEVLOG_ERROR(
-      "[OPC UA ACTION]: In FB %s: %s action is only allowed using a Client FB, the amount of BrowseName,NodeId pairs should be 1, and the browsepath shouldn't be empty\n",
+      "[OPC UA ACTION]: In FB %s: %s action is only allowed using a Client FB\n",
       mLayer.getCommFB()->getInstanceName(), CActionInfo::mActionNames[eCallMethod]);
+  } else if(getNoOfNodePairs() != 1) {
+    DEVLOG_ERROR(
+      "[OPC UA ACTION]: In FB %s: %s action is only allowed with a single BrowseName,NodeId pair. (have: %i)\n",
+      mLayer.getCommFB()->getInstanceName(), CActionInfo::mActionNames[eCallMethod], getNoOfNodePairs());
+  } else if((*(mNodePair.begin()))->mBrowsePath.empty()) {
+    DEVLOG_ERROR(
+      "[OPC UA ACTION]: In FB %s: %s action is only allowed with a non-empty browsepath\n",
+      mLayer.getCommFB()->getInstanceName(), CActionInfo::mActionNames[eCallMethod]);
+  } else {
+    retVal = true;
   }
   return retVal;
 }

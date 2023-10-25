@@ -89,9 +89,9 @@ class FORTE_TRIGGER_SERVICE_SERVER : public CEventSourceFB{
     static const SFBInterfaceSpec scmFBInterfaceSpec;
 
 
-    void executeEvent(TEventID paEIID) override;
+    void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
-    bool triggerCallback(std_srvs::Trigger::Request &pa_req, std_srvs::Trigger::Response &pa_resp);
+    bool triggerCallback(std_srvs::Trigger::Request &pa_req, std_srvs::Trigger::Response &pa_resp, CEventChainExecutionThread *const paECET);
 
   public:
     // cppcheck-suppress noConstructor

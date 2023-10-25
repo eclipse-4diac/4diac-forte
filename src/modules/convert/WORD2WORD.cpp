@@ -71,7 +71,7 @@ void FORTE_WORD2WORD::alg_REQ(void) {
 }
 
 
-void FORTE_WORD2WORD::executeEvent(TEventID paEIID){
+void FORTE_WORD2WORD::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   switch(paEIID) {
     case scmEventREQID:
       alg_REQ();
@@ -79,7 +79,7 @@ void FORTE_WORD2WORD::executeEvent(TEventID paEIID){
     default:
       break;
   }
-  sendOutputEvent(scmEventCNFID);
+  sendOutputEvent(scmEventCNFID, paECET);
 }
 
 void FORTE_WORD2WORD::readInputData(TEventID paEIID) {

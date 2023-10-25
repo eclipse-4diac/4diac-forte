@@ -43,17 +43,18 @@ const SFBInterfaceSpec FORTE_E_SWITCH::scmFBInterfaceSpec = {
   0, nullptr
 };
 
-FORTE_E_SWITCH::FORTE_E_SWITCH(CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) :
+FORTE_E_SWITCH::FORTE_E_SWITCH(const CStringDictionary::TStringId paInstanceNameId, CResource *const paSrcRes) :
     CBasicFB(paSrcRes, &scmFBInterfaceSpec, paInstanceNameId, nullptr),
-    var_G(CIEC_BOOL(0)),
     conn_EO0(this, 0),
     conn_EO1(this, 1),
     conn_G(nullptr) {
 }
 
+void FORTE_E_SWITCH::setInitialValues() {
+  var_G = 0_BOOL;
+}
 
-
-void FORTE_E_SWITCH::executeEvent(TEventID paEIID, CEventChainExecutionThread * const paECET){
+void FORTE_E_SWITCH::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   do {
     switch(mECCState) {
       case scmStateSTART:
@@ -79,7 +80,21 @@ void FORTE_E_SWITCH::executeEvent(TEventID paEIID, CEventChainExecutionThread * 
   } while(true);
 }
 
-void FORTE_E_SWITCH::readInputData(TEventID paEIID) {
+void FORTE_E_SWITCH::enterStateSTART(CEventChainExecutionThread *const) {
+  mECCState = scmStateSTART;
+}
+
+void FORTE_E_SWITCH::enterStateG0(CEventChainExecutionThread *const paECET) {
+  mECCState = scmStateG0;
+  sendOutputEvent(scmEventEO0ID, paECET);
+}
+
+void FORTE_E_SWITCH::enterStateG1(CEventChainExecutionThread *const paECET) {
+  mECCState = scmStateG1;
+  sendOutputEvent(scmEventEO1ID, paECET);
+}
+
+void FORTE_E_SWITCH::readInputData(const TEventID paEIID) {
   switch(paEIID) {
     case scmEventEIID: {
       RES_DATA_CON_CRITICAL_REGION();
@@ -92,9 +107,10 @@ void FORTE_E_SWITCH::readInputData(TEventID paEIID) {
 }
 
 void FORTE_E_SWITCH::writeOutputData(TEventID) {
+  // nothing to do
 }
 
-CIEC_ANY *FORTE_E_SWITCH::getDI(size_t paIndex) {
+CIEC_ANY *FORTE_E_SWITCH::getDI(const size_t paIndex) {
   switch(paIndex) {
     case 0: return &var_G;
   }
@@ -105,7 +121,7 @@ CIEC_ANY *FORTE_E_SWITCH::getDO(size_t) {
   return nullptr;
 }
 
-CEventConnection *FORTE_E_SWITCH::getEOConUnchecked(TPortId paIndex) {
+CEventConnection *FORTE_E_SWITCH::getEOConUnchecked(const TPortId paIndex) {
   switch(paIndex) {
     case 0: return &conn_EO0;
     case 1: return &conn_EO1;
@@ -113,7 +129,7 @@ CEventConnection *FORTE_E_SWITCH::getEOConUnchecked(TPortId paIndex) {
   return nullptr;
 }
 
-CDataConnection **FORTE_E_SWITCH::getDIConUnchecked(TPortId paIndex) {
+CDataConnection **FORTE_E_SWITCH::getDIConUnchecked(const TPortId paIndex) {
   switch(paIndex) {
     case 0: return &conn_G;
   }
@@ -127,21 +143,4 @@ CDataConnection *FORTE_E_SWITCH::getDOConUnchecked(TPortId) {
 CIEC_ANY *FORTE_E_SWITCH::getVarInternal(size_t) {
   return nullptr;
 }
-
-
-void FORTE_E_SWITCH::enterStateSTART(CEventChainExecutionThread * const paECET) {
-  mECCState = scmStateSTART;
-}
-
-void FORTE_E_SWITCH::enterStateG0(CEventChainExecutionThread * const paECET) {
-  mECCState = scmStateG0;
-  sendOutputEvent(scmEventEO0ID, paECET);
-}
-
-void FORTE_E_SWITCH::enterStateG1(CEventChainExecutionThread * const paECET) {
-  mECCState = scmStateG1;
-  sendOutputEvent(scmEventEO1ID, paECET);
-}
-
-
 

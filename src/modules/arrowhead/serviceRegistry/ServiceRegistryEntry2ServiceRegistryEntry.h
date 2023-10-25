@@ -45,7 +45,7 @@ private:
   static const SFBInterfaceSpec scmFBInterfaceSpec;
 
 
-  void executeEvent(TEventID paEIID) override;
+  void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
 public:
   FUNCTION_BLOCK_CTOR(FORTE_ServiceRegistryEntry2ServiceRegistryEntry){

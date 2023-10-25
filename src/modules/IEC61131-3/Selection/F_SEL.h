@@ -53,7 +53,7 @@ private:
 
   static const SFBInterfaceSpec scmFBInterfaceSpec;
 
-  void executeEvent(TEventID paEIID);
+  void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
   void readInputData(TEventID paEIID) override;
   void writeOutputData(TEventID paEIID) override;

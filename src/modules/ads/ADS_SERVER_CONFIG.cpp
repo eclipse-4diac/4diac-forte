@@ -38,7 +38,7 @@ const CStringDictionary::TStringId FORTE_ADS_SERVER_CONFIG::scmEventOutputNames[
 
 const SFBInterfaceSpec FORTE_ADS_SERVER_CONFIG::scmFBInterfaceSpec = { 1, scmEventInputNames, scmEIWith, scmEIWithIndexes, 1, scmEventOutputNames, scmEOWith, scmEOWithIndexes, 5, scmDataInputNames, scmDataInputTypeIds, 2, scmDataOutputNames, scmDataOutputTypeIds, 0, 0 };
 
-void FORTE_ADS_SERVER_CONFIG::executeEvent(TEventID paEIID){
+void FORTE_ADS_SERVER_CONFIG::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   switch (paEIID){
     case scmEventINITID:
       if(QI()) {
@@ -47,7 +47,7 @@ void FORTE_ADS_SERVER_CONFIG::executeEvent(TEventID paEIID){
         forte::ads::CAdsConnectionManager::getInstance().removeConnection(FRIENDLY_NAME().getStorage().c_str());
         QO() = CIEC_BOOL(false);
       }
-      sendOutputEvent(scmEventINITOID);
+      sendOutputEvent(scmEventINITOID, paECET);
       break;
   }
 }

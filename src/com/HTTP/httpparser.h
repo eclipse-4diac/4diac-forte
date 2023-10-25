@@ -136,8 +136,6 @@ namespace forte {
          */
         static unsigned int parseGETParameters(char* paParameters, CSinglyLinkedList<std::string>& paParameterNames,
             CSinglyLinkedList<std::string>& paParameterValues);
-
-        static const size_t scmMaxLengthOfContent = 6; //The limit of the amount to send in a PUT/POST request is set to 99999 bytes for now. Change this to try to send more
     };
   }
 }

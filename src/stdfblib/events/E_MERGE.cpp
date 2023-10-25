@@ -40,24 +40,22 @@ const SFBInterfaceSpec FORTE_E_MERGE::scmFBInterfaceSpec = {
   0, nullptr
 };
 
-FORTE_E_MERGE::FORTE_E_MERGE(CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) :
+FORTE_E_MERGE::FORTE_E_MERGE(const CStringDictionary::TStringId paInstanceNameId, CResource *const paSrcRes) :
     CBasicFB(paSrcRes, &scmFBInterfaceSpec, paInstanceNameId, nullptr),
     conn_EO(this, 0) {
 }
 
-
-
-void FORTE_E_MERGE::executeEvent(TEventID paEIID){
+void FORTE_E_MERGE::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   do {
     switch(mECCState) {
       case scmStateSTART:
-        if(scmEventEI1ID == paEIID) enterStateEO();
+        if(scmEventEI1ID == paEIID) enterStateEO(paECET);
         else
-        if(scmEventEI2ID == paEIID) enterStateEO();
+        if(scmEventEI2ID == paEIID) enterStateEO(paECET);
         else return; //no transition cleared
         break;
       case scmStateEO:
-        if(1) enterStateSTART();
+        if(1) enterStateSTART(paECET);
         else return; //no transition cleared
         break;
       default:
@@ -69,10 +67,21 @@ void FORTE_E_MERGE::executeEvent(TEventID paEIID){
   } while(true);
 }
 
+void FORTE_E_MERGE::enterStateSTART(CEventChainExecutionThread *const) {
+  mECCState = scmStateSTART;
+}
+
+void FORTE_E_MERGE::enterStateEO(CEventChainExecutionThread *const paECET) {
+  mECCState = scmStateEO;
+  sendOutputEvent(scmEventEOID, paECET);
+}
+
 void FORTE_E_MERGE::readInputData(TEventID) {
+  // nothing to do
 }
 
 void FORTE_E_MERGE::writeOutputData(TEventID) {
+  // nothing to do
 }
 
 CIEC_ANY *FORTE_E_MERGE::getDI(size_t) {
@@ -83,7 +92,7 @@ CIEC_ANY *FORTE_E_MERGE::getDO(size_t) {
   return nullptr;
 }
 
-CEventConnection *FORTE_E_MERGE::getEOConUnchecked(TPortId paIndex) {
+CEventConnection *FORTE_E_MERGE::getEOConUnchecked(const TPortId paIndex) {
   switch(paIndex) {
     case 0: return &conn_EO;
   }
@@ -101,16 +110,4 @@ CDataConnection *FORTE_E_MERGE::getDOConUnchecked(TPortId) {
 CIEC_ANY *FORTE_E_MERGE::getVarInternal(size_t) {
   return nullptr;
 }
-
-
-void FORTE_E_MERGE::enterStateSTART(void) {
-  mECCState = scmStateSTART;
-}
-
-void FORTE_E_MERGE::enterStateEO(void) {
-  mECCState = scmStateEO;
-  sendOutputEvent(scmEventEOID);
-}
-
-
 

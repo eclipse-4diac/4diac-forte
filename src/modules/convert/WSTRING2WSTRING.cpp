@@ -71,7 +71,7 @@ void FORTE_WSTRING2WSTRING::alg_REQ(void) {
 }
 
 
-void FORTE_WSTRING2WSTRING::executeEvent(TEventID paEIID){
+void FORTE_WSTRING2WSTRING::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   switch(paEIID) {
     case scmEventREQID:
       alg_REQ();
@@ -79,7 +79,7 @@ void FORTE_WSTRING2WSTRING::executeEvent(TEventID paEIID){
     default:
       break;
   }
-  sendOutputEvent(scmEventCNFID);
+  sendOutputEvent(scmEventCNFID, paECET);
 }
 
 void FORTE_WSTRING2WSTRING::readInputData(TEventID paEIID) {

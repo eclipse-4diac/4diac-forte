@@ -124,7 +124,7 @@ class FORTE_EXECUTE_ACTION_CLIENT : public CEventSourceFB{
     static const SFBInterfaceSpec scmFBInterfaceSpec;
 
 
-    void executeEvent(TEventID paEIID) override;
+    void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
     void doneCallback(const actionlib::SimpleClientGoalState& state, const ExecuteResultConstPtr& result);
     void activeCallback();

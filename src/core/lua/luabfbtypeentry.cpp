@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2017 fortiss GmbH
+ * Copyright (c) 2015, 2023 fortiss GmbH, Johannes Kepler University Linz
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -7,8 +7,8 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *   Monika Wenger
- *   - initial API and implementation and/or initial documentation
+ *   Martin Jobst - initial API and implementation and/or initial documentation
+ *   Alois Zoitl  - upgraded to new FB memory layout
  *******************************************************************************/
 
 #include "luabfbtypeentry.h"
@@ -18,7 +18,7 @@
 #include "luatype.h"
 #include "resource.h"
 
-CLuaBFBTypeEntry::CLuaBFBTypeEntry(CStringDictionary::TStringId paTypeNameId, CIEC_STRING paLuaScriptAsString, SFBInterfaceSpec& paInterfaceSpec,
+CLuaBFBTypeEntry::CLuaBFBTypeEntry(CStringDictionary::TStringId paTypeNameId, const std::string& paLuaScriptAsString, SFBInterfaceSpec& paInterfaceSpec,
     SInternalVarsInformation& paInternalVarsInformation) :
     CFBTypeEntry(paTypeNameId, nullptr, &m_interfaceSpec), cmLuaScriptAsString(paLuaScriptAsString), m_interfaceSpec(paInterfaceSpec),
         m_internalVarsInformation(paInternalVarsInformation) {
@@ -29,13 +29,13 @@ CLuaBFBTypeEntry::~CLuaBFBTypeEntry() {
   deleteInternalVarsInformation(m_internalVarsInformation);
 }
 
-CLuaBFBTypeEntry* CLuaBFBTypeEntry::createLuaFBTypeEntry(CStringDictionary::TStringId paTypeNameId, CIEC_STRING& paLuaScriptAsString) {
+CLuaBFBTypeEntry* CLuaBFBTypeEntry::createLuaFBTypeEntry(CStringDictionary::TStringId paTypeNameId, const std::string& paLuaScriptAsString) {
   CLuaEngine luaEngine;
-  if(!luaEngine.loadString(std::string(paLuaScriptAsString.getValue()))) {
+  if(!luaEngine.loadString(paLuaScriptAsString)) {
     return nullptr;
   }
   //interfaceSpec
-  SFBInterfaceSpec interfaceSpec = { 0, nullptr, nullptr, nullptr, 0, nullptr, nullptr, nullptr, 0, nullptr, nullptr, 0, nullptr, nullptr, 0, nullptr };
+  SFBInterfaceSpec interfaceSpec = { 0, nullptr, nullptr, nullptr, 0, nullptr, nullptr, nullptr, 0, nullptr, nullptr, 0, nullptr, nullptr, 0, nullptr, 0, nullptr };
   if(!luaEngine.pushField(-1, "interfaceSpec", LUA_TTABLE)) {
     return nullptr;
   }
@@ -63,17 +63,14 @@ CLuaBFBTypeEntry* CLuaBFBTypeEntry::createLuaFBTypeEntry(CStringDictionary::TStr
 CFunctionBlock* CLuaBFBTypeEntry::createFBInstance(CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) {
   CLuaEngine* luaEngine = paSrcRes->getLuaEngine();
   if(!luaEngine->load(this)) {
-    if(!luaEngine->loadString(std::string(cmLuaScriptAsString.getValue()))) {
+    if(!luaEngine->loadString(cmLuaScriptAsString)) {
       return nullptr;
     }
     luaEngine->pushField(-1, "ECC", LUA_TFUNCTION);
     luaEngine->store(this); //store ECC
   }
   luaEngine->pop(); //pop ECC / loaded defs
-  TForteByte* connData = new TForteByte[CFunctionBlock::genFBConnDataSize(m_interfaceSpec.mNumEOs, m_interfaceSpec.mNumDIs, m_interfaceSpec.mNumDOs)];
-  TForteByte* varsData = new TForteByte[CBasicFB::genBasicFBVarsDataSize(m_interfaceSpec.mNumDIs, m_interfaceSpec.mNumDOs,
-    m_internalVarsInformation.mNumIntVars, m_interfaceSpec.mNumAdapters)];
-  return new CLuaBFB(paInstanceNameId, this, connData, varsData, paSrcRes);
+  return new CLuaBFB(paInstanceNameId, this, paSrcRes);
 }
 
 bool CLuaBFBTypeEntry::initInterfaceSpec(SFBInterfaceSpec& paInterfaceSpec, CLuaEngine* paLuaEngine, int paIndex) {

@@ -68,7 +68,7 @@ class CFBTestFixtureBase : public CFunctionBlock{
     void setOutputData(std::initializer_list<TIEC_ANYPtr> paOutputData);
 
   private:
-    void executeEvent(TEventID paEIID) override;
+    void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
     void readInputData(TEventID) override {
     }

@@ -41,13 +41,13 @@ GEN_ARRAY2ARRAY::~GEN_ARRAY2ARRAY(){
   delete[] mDataOutputTypeIds;
 }
 
-void GEN_ARRAY2ARRAY::executeEvent(TEventID paEIID){
+void GEN_ARRAY2ARRAY::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   switch (paEIID){
     case scmEventREQID:
 
       OUT_Array().setValue(IN_Array());
 
-      sendOutputEvent(scmEventCNFID);
+      sendOutputEvent(scmEventCNFID, paECET);
 
       break;
   }

@@ -62,7 +62,7 @@ class fileReader: public CFunctionBlock{
     static const char * const scmNotInitialised;
     static const char * const scmCouldNotRead;
 
-    void executeEvent(TEventID paEIID) override;
+    void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
   public:
     fileReader(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);

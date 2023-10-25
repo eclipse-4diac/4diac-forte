@@ -64,7 +64,7 @@ class FORTE_SET_LOCAL_ADS_ADDRESS : public CFunctionBlock{
     static const SFBInterfaceSpec scmFBInterfaceSpec;
 
 
-    void executeEvent(TEventID paEIID) override;
+    void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
   public:
     FUNCTION_BLOCK_CTOR (FORTE_SET_LOCAL_ADS_ADDRESS) { };

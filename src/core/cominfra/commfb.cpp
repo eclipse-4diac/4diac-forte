@@ -52,7 +52,7 @@ EMGMResponse CCommFB::changeFBExecutionState(EMGMCommandType paCommand) {
   return retVal;
 }
 
-void CCommFB::executeEvent(TEventID paEIID) {
+void CCommFB::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   EComResponse resp = e_Nothing;
 
   switch (paEIID) {
@@ -90,10 +90,10 @@ void CCommFB::executeEvent(TEventID paEIID) {
     QO() = CIEC_BOOL(!(resp & scg_unComNegative));
 
     if (scg_unINIT & resp) {
-      sendOutputEvent(scmEventINITOID);
+      sendOutputEvent(scmEventINITOID, paECET);
     }
     else {
-      sendOutputEvent(scmReceiveNotificationEventID);
+      sendOutputEvent(scmReceiveNotificationEventID, paECET);
     }
   }
 }

@@ -30,7 +30,7 @@ class CFMUProcessInterface : public CProcessInterfaceBase{
     virtual void executeEvent(TEventID ){};
 
   protected:
-    bool initialise(bool paIsInput);
+    bool initialise(bool paIsInput, CEventChainExecutionThread *const paECET);
     bool deinitialise();
     bool writePin();
     bool readPin();

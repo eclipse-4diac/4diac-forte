@@ -29,12 +29,17 @@
 #include "devlog.h"
 
 #undef connect //gets confused with connect function of conn.h and childs
+#undef bind    //conflicts with a C++17 symbol used in FORTE
 
 #if !defined(CONFIG_IDF_CMAKE)
 inline int connect(int s, const struct sockaddr *name, socklen_t namelen) {
   return lwip_connect(s, name, namelen);
 }
 #endif
+
+static inline int bind(int sockfd, struct sockaddr *addr, socklen_t addrlen) {
+  return lwip_bind(sockfd, addr, addrlen);
+}
 
 //these include needs to be last
 #include "../gensockhand.h"

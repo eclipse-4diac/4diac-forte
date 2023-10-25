@@ -64,11 +64,11 @@ FORTE_F_LIMIT::FORTE_F_LIMIT(const CStringDictionary::TStringId paInstanceNameId
     conn_OUT(this, 0, &var_conn_OUT) {
 };
 
-void FORTE_F_LIMIT::executeEvent(TEventID paEIID) {
+void FORTE_F_LIMIT::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   switch(paEIID) {
     case scmEventREQID:
       var_OUT = var_IN <= var_MX ? (var_IN >= var_MN ? var_IN : var_MN) : var_MX;
-      sendOutputEvent(scmEventCNFID);
+      sendOutputEvent(scmEventCNFID, paECET);
       break;
   }
 }

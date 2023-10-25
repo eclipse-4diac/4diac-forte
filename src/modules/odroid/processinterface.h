@@ -20,7 +20,7 @@ class COdroidProcessInterface : public CSysFsProcessInterface{
     ~COdroidProcessInterface() override;
 
   protected:
-    bool initialise(bool paIsInput);
+    bool initialise(bool paIsInput, CEventChainExecutionThread *const paECET);
     bool deinitialise();
     bool readWord();
 

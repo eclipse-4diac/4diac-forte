@@ -15,12 +15,15 @@
 #include <extevhandlerhelper.h>
 #include <criticalregion.h>
 #include <string>
-const char * const CSysFsProcessInterface::scmOK = "OK";
-const char * const CSysFsProcessInterface::scmPinInUse = "Pin already in use by other FB";
-const char * const CSysFsProcessInterface::scmNotInitialised = "FB not initialized";
-const char * const CSysFsProcessInterface::scmError = "Error";
-const char * const CSysFsProcessInterface::scmCouldNotRead = "Could not read";
-const char * const CSysFsProcessInterface::scmCouldNotWrite = "Could not write";
+
+using namespace std::literals::string_literals;
+
+const CIEC_STRING CSysFsProcessInterface::scmOK("OK"_STRING);
+const CIEC_STRING CSysFsProcessInterface::scmPinInUse("Pin already in use by other FB"_STRING);
+const CIEC_STRING CSysFsProcessInterface::scmNotInitialised("FB not initialized"_STRING);
+const CIEC_STRING CSysFsProcessInterface::scmError("Error"_STRING);
+const CIEC_STRING CSysFsProcessInterface::scmCouldNotRead("Could not read"_STRING);
+const CIEC_STRING CSysFsProcessInterface::scmCouldNotWrite("Could not write"_STRING);
 
 CSysFsProcessInterface::CSysFsProcessInterface(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec,
     const CStringDictionary::TStringId paInstanceNameId) :
@@ -35,7 +38,7 @@ CSysFsProcessInterface::~CSysFsProcessInterface() {
 
 bool CSysFsProcessInterface::setDirection(bool paIsInput) {
   bool retVal = false;
-  std::string fileName = "/sys/class/gpio/gpio" + std::string(PARAMS().getValue()) + "/direction";
+  std::string fileName = "/sys/class/gpio/gpio"s + static_cast<std::string>(PARAMS()) + "/direction"s;
   std::ofstream mDirectionFile;
   mDirectionFile.open(fileName.c_str());
   if(mDirectionFile.is_open()) {
@@ -62,7 +65,7 @@ bool CSysFsProcessInterface::exportGPIO() {
   std::ofstream mExportFile;
   mExportFile.open(fileName.c_str());
   if(mExportFile.is_open()) {
-    mExportFile << PARAMS().getValue();
+    mExportFile << PARAMS().c_str();
     if(!mExportFile.fail()) {
       retVal = true;
     } else {
@@ -79,7 +82,7 @@ bool CSysFsProcessInterface::exportGPIO() {
 
 bool CSysFsProcessInterface::valueGPIO(bool paIsInput) {
   bool retVal = false;
-  std::string fileName = "/sys/class/gpio/gpio" + std::string(PARAMS().getValue()) + "/value";
+  std::string fileName = "/sys/class/gpio/gpio"s + static_cast<std::string>(PARAMS()) + "/value"s;
   if(paIsInput) {
     mFile.open(fileName.c_str(), std::fstream::in);
   } else {
@@ -94,7 +97,7 @@ bool CSysFsProcessInterface::valueGPIO(bool paIsInput) {
   return retVal;
 }
 
-bool CSysFsProcessInterface::initialise(bool paIsInput) {
+bool CSysFsProcessInterface::initialise(bool paIsInput, CEventChainExecutionThread *const) {
   bool retVal = false;
   if(CSysFsProcessInterface::exportGPIO()) {
     CThread::sleepThread(250);
@@ -108,7 +111,7 @@ bool CSysFsProcessInterface::initialise(bool paIsInput) {
           }
         }
         DEVLOG_DEBUG("[CSysFsProcessInterface::initialise] Pin with PARAM() %s was properly initialized.\n", PARAMS().getValue());
-        STATUS().fromString(scmOK);
+        STATUS() = scmOK;
         retVal = true;
       }
     }
@@ -119,22 +122,22 @@ bool CSysFsProcessInterface::initialise(bool paIsInput) {
 
 bool CSysFsProcessInterface::unexportIO() {
   bool retVal = false;
-  std::string fileName = "/sys/class/gpio/unexport";
+  std::string fileName = "/sys/class/gpio/unexport"s;
   std::ofstream mUnExport;
 
   mFile.close();
   mUnExport.open(fileName.c_str(), std::fstream::out);
   if(mUnExport.is_open()) {
-    mUnExport << PARAMS().getValue();
+    mUnExport << PARAMS().c_str();
     if(!mUnExport.fail()) {
       retVal = true;
-      STATUS().fromString(scmOK);
+      STATUS() = scmOK;
     } else {
-      STATUS().fromString(scmError);
+      STATUS() = scmError;
       DEVLOG_ERROR("[CSysFsProcessInterface::deinitialise] Error writing PARAMS() to file %s.\n", fileName.c_str());
     }
   } else {
-    STATUS().fromString(scmError);
+    STATUS() = scmError;
     DEVLOG_ERROR("[CSysFsProcessInterface::deinitialise] Opening file %s failed.\n", fileName.c_str());
   }
   return retVal;
@@ -157,7 +160,7 @@ bool CSysFsProcessInterface::checkInputData() {
     mFile.seekg(0, std::ios::beg);
     mFile.read(&binData, 1);
     if(mFile.fail()) {
-      STATUS().fromString(scmCouldNotRead);
+      STATUS() = scmCouldNotRead;
     } else {
       bool newData = '0' != binData;
       if(newData != IN_X()) {
@@ -166,7 +169,7 @@ bool CSysFsProcessInterface::checkInputData() {
       }
     }
   } else {
-    STATUS().fromString(scmNotInitialised);
+    STATUS() = scmNotInitialised;
   }
 
   return retVal;
@@ -180,15 +183,15 @@ bool CSysFsProcessInterface::writePin() {
     unsigned int val = (false != OUT_X()) ? 1 : 0; //if true set the led to full glowing
     mFile << val;
     if(!mFile.fail()) {
-      STATUS().fromString(scmOK);
+      STATUS() = scmOK;
       retVal = true;
     } else {
       DEVLOG_ERROR("[CSysFsProcessInterface::writePin] Could not write %u to output file\n", val);
-      STATUS().fromString(scmCouldNotWrite);
+      STATUS() = scmCouldNotWrite;
     }
   } else {
     DEVLOG_ERROR("[CSysFsProcessInterface::writePin] Cannot write to output since the FB was not properly initialized\n");
-    STATUS().fromString(scmNotInitialised);
+    STATUS() = scmNotInitialised;
   }
 
   return retVal;

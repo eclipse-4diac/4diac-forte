@@ -36,10 +36,6 @@ class CDevice : public CResource {
      */
     CDeviceExecution mDeviceExecution;
 
-  protected:
-    void executeEvent(TEventID) override {
-    }
-
   public:
     /*! \brief Sets up all the necessary data and classes necessary for execution.
      *

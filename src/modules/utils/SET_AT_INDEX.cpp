@@ -67,7 +67,7 @@ FORTE_SET_AT_INDEX::FORTE_SET_AT_INDEX(const CStringDictionary::TStringId paInst
     conn_OUT_ARRAY(this, 1, &var_conn_OUT_ARRAY) {
 };
 
-void FORTE_SET_AT_INDEX::executeEvent(TEventID paEIID) {
+void FORTE_SET_AT_INDEX::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   switch(paEIID) {
     case scmEventREQID:
       if (std::holds_alternative<CIEC_ANY_UNIQUE_PTR<CIEC_ARRAY>>(var_IN_ARRAY)) {
@@ -86,7 +86,7 @@ void FORTE_SET_AT_INDEX::executeEvent(TEventID paEIID) {
       } else {
         var_QO = CIEC_BOOL(false);
       }
-      sendOutputEvent(scmEventCNFID);
+      sendOutputEvent(scmEventCNFID, paECET);
       break;
   }
 }

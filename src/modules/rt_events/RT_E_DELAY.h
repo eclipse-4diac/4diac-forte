@@ -50,7 +50,6 @@ private:
 
   bool mActive; //!> flag to indicate that the timed fb is currently active
   bool mInitialized;
-  STimedFBListEntry mTimeListEntry;
   CEventChainExecutionThread mECEO;
 
   void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;

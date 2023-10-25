@@ -41,7 +41,7 @@ class GEN_F_MUX : public CGenFunctionBlock<CFunctionBlock> {
     size_t mDInputs;
     size_t mDOutputs;
 
-    void executeEvent(TEventID paEIID) override;
+    void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
     void readInputData(TEventID paEI) override;
     void writeOutputData(TEventID paEO) override;

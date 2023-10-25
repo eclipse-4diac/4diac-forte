@@ -62,13 +62,13 @@ FORTE_F_EXPT::FORTE_F_EXPT(const CStringDictionary::TStringId paInstanceNameId, 
     conn_OUT(this, 0, &var_conn_OUT) {
 };
 
-void FORTE_F_EXPT::executeEvent(TEventID paEIID) {
+void FORTE_F_EXPT::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   switch(paEIID) {
     case scmEventREQID:
       var_OUT = std::visit([](auto &&paIN1, auto&&paIN2) -> CIEC_ANY_REAL_VARIANT {
         return func_EXPT(paIN1, paIN2);
       }, var_IN1, var_IN2);
-      sendOutputEvent(scmEventCNFID);
+      sendOutputEvent(scmEventCNFID, paECET);
       break;
   }
 }
