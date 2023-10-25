@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2016 - 2018 Johannes Messmer (admin@jomess.com), fortiss GmbH
+ * Copyright (c) 2016, 2023 Johannes Messmer (admin@jomess.com), fortiss GmbH, OFFIS e.V.
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -9,21 +9,22 @@
  * Contributors:
  *   Johannes Messmer - initial API and implementation and/or initial documentation
  *   Jose Cabral - Cleaning of namespaces
+ *   Jörg Walter - more efficient pin handling
  *******************************************************************************/
 
 #include "pin.h"
 #include <devlog.h>
+#include <unistd.h>
+#include <fcntl.h>
 
+const char * const EmbrickPinHandler::scmFailedToExportPin = "Failed to export GPIO pin.";
+const char * const EmbrickPinHandler::scmFailedToSetDirection = "Failed to set GPIO direction.";
 const char * const EmbrickPinHandler::scmFailedToOpenFile = "Failed to open sysfs file.";
 const char * const EmbrickPinHandler::scmFailedToWriteFile = "Failed to write sysfs file.";
 const char * const EmbrickPinHandler::scmNotInitialised = "Failed to write to not initialised sysfs stream.";
 
 EmbrickPinHandler::EmbrickPinHandler(unsigned int paPin) :
-    mError(0),
-    mPinStr((std::ostringstream() << std::dec << paPin).str()) { // Convert pin int to string
-
-  // Disable buffer to avoid latency
-  mStream.rdbuf()->pubsetbuf(0, 0);
+  mError(0), mPinNumber(paPin) {
 
   // Init pin
   init();
@@ -33,81 +34,69 @@ EmbrickPinHandler::~EmbrickPinHandler() {
   deInit();
 }
 
-void EmbrickPinHandler::init() {
-  std::string fileName;
-  mStream.clear();
+static bool writeFile(const std::string &fn, const std::string &val) {
+  int fd = open(fn.c_str(), O_WRONLY);
+  if (fd < 0 || write(fd, val.data(), val.size()) != (ssize_t)val.size()) {
+    DEVLOG_DEBUG("emBrick[PinHandler]: writing %s to %s failed: %s\n",
+                 fn.c_str(), val.c_str(), strerror(errno));
+    close(fd);
+    return false;
+  }
+  close(fd);
+  return true;
+}
 
-  // Enable pin
-  fileName = "/sys/class/gpio/export";
-  mStream.open(fileName.c_str(), std::fstream::out);
-  if(!mStream.is_open()) {
-    return fail(scmFailedToOpenFile);
-  }
-  mStream << mPinStr;
-  if(mStream.fail()) {
-    return fail(scmFailedToWriteFile);
-  }
-  mStream.close();
+void EmbrickPinHandler::init() {
+  std::string pinStr = std::to_string(mPinNumber);
 
   // Use pin as output
-  fileName = "/sys/class/gpio/gpio" + mPinStr + "/direction";
-  mStream.open(fileName.c_str(), std::fstream::out);
-  if(!mStream.is_open()) {
-    return fail(scmFailedToOpenFile);
+  if (!writeFile("/sys/class/gpio/gpio" + pinStr + "/direction", "out")) {
+    if (!writeFile("/sys/class/gpio/export", std::to_string(mPinNumber))) {
+      return fail(scmFailedToExportPin);
   }
-  mStream.clear();
 
-  mStream << "out";
-  if(mStream.fail()) {
-    return fail(scmFailedToWriteFile);
+    didExport = true;
+
+    if (!writeFile("/sys/class/gpio/gpio" + pinStr + "/direction", "out"))
+      return fail(scmFailedToSetDirection);
   }
-  mStream.close();
 
   // Prepare pin stream for usage
-  fileName = "/sys/class/gpio/gpio" + mPinStr + "/value";
-  mStream.open(fileName.c_str(), std::fstream::out);
-  if(!mStream.is_open()) {
+  std::string fn = "/sys/class/gpio/gpio" + pinStr + "/value";
+  mPinFd = open(fn.c_str(), O_WRONLY);
+  if (mPinFd < 0) {
     return fail(scmFailedToOpenFile);
   }
-  DEVLOG_INFO("emBrick[PinHandler]: GPIO %s ready.\n", mPinStr.data());
+
+  DEVLOG_INFO("emBrick[PinHandler]: GPIO %i ready.\n", mPinNumber);
 }
 
 void EmbrickPinHandler::deInit() {
   std::string fileName;
 
   // Close pin stream
-  if(mStream.is_open()) {
-    mStream.clear();
-    mStream.close();
+  if (mPinFd >= 0) {
+    close(mPinFd);
+    mPinFd = -1;
   }
 
-  // Disable pin
-  fileName = "/sys/class/gpio/unexport";
-  mStream.open(fileName.c_str(), std::fstream::out);
-  if(!mStream.is_open()) {
-    return fail(scmFailedToOpenFile);
+  if (didExport) {
+    if (!writeFile("/sys/class/gpio/unexport", std::to_string(mPinNumber))) {
+      return fail(scmFailedToExportPin);
+    }
   }
-  mStream << mPinStr;
-  if(mStream.fail()) {
-    return fail(scmFailedToWriteFile);
-  }
-  mStream.close();
 
-  DEVLOG_INFO("emBrick[PinHandler]: GPIO %s stopped.\n", mPinStr.data());
+  DEVLOG_INFO("emBrick[PinHandler]: GPIO %i stopped.\n", mPinNumber);
 }
 
 bool EmbrickPinHandler::set(bool paState) {
-  if(!mStream.is_open()) {
+  if (mPinFd < 0) {
     fail(scmNotInitialised);
     return false;
   }
 
-  mStream.clear();
-  mStream.seekp(0, std::ios::beg);
-
-  unsigned int val = paState ? 1 : 0;
-  mStream << val;
-  if(mStream.fail()) {
+  lseek(mPinFd, 0, SEEK_SET);
+  if (write(mPinFd, paState?"1":"0", 1) != 1) {
     fail(scmFailedToWriteFile);
     return false;
   }
@@ -119,4 +108,3 @@ void EmbrickPinHandler::fail(const char* paReason) {
   mError = paReason;
   DEVLOG_ERROR("emBrick[PinHandler]: %s\n", paReason);
 }
-
