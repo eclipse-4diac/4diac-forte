@@ -49,12 +49,14 @@ struct EmbrickSlaveInitPackage {
 struct EmbrickMasterInitPackage {
     uint8_t mSlaveAddress;
     uint16_t mSyncGapMultiplicator;
+    uint8_t padding[6];
 
     void toBuffer(unsigned char* paBuffer) {
       paBuffer[0] = mSlaveAddress;
 
       uint16_t syncGapFactor = htons(this->mSyncGapMultiplicator);
       memcpy(paBuffer + 1, &syncGapFactor, 2);
+      memset(paBuffer+3, 0, sizeof(padding));
     }
 };
 

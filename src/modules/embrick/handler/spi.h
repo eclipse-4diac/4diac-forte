@@ -20,7 +20,10 @@
 #include <devlog.h>
 #include <forte_wstring.h>
 #include <sys/ioctl.h>
+
+extern "C" { // missing in some versions of spidev.h
 #include <linux/spi/spidev.h>
+}
 
 class EmbrickSPIHandler {
     friend class EmbrickBusHandler;

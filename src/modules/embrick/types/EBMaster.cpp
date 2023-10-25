@@ -172,8 +172,8 @@ void FORTE_EBMaster::setConfig() {
   getDeviceController()->setConfig(&config);
 }
 
-void FORTE_EBMaster::onStartup() {
+void FORTE_EBMaster::onStartup(CEventChainExecutionThread * const paECET) {
   var_BusAdapterOut().var_UpdateInterval() = var_SlaveUpdateInterval;
 
-  forte::core::io::IOConfigFBMultiMaster::onStartup();
+  forte::core::io::IOConfigFBMultiMaster::onStartup(paECET);
 }

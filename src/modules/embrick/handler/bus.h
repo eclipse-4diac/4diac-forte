@@ -34,7 +34,7 @@
 
 const unsigned int TransferBufferLength = 150;
 const unsigned int SyncGapMultiplicator = 15;
-const unsigned int SyncGapDuration = (SyncGapMultiplicator - 1) * 32 + 10;
+const unsigned int SyncGapDuration = (SyncGapMultiplicator - 1) * 36 + 10;
 
 class EmbrickBusHandler : public forte::core::io::IODeviceMultiController {
     friend class EmbrickSlaveHandler;

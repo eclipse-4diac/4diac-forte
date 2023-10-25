@@ -16,7 +16,7 @@
 
 EmbrickBitSlaveHandle::EmbrickBitSlaveHandle(forte::core::io::IODeviceController *paController, forte::core::io::IOMapper::Direction paDirection,
     uint8_t paOffset, uint8_t paPosition, EmbrickSlaveHandler *paSlave) :
-    EmbrickSlaveHandle(paController, paDirection, mType = CIEC_ANY::e_BOOL, paOffset, paSlave), mMask((uint8_t) (1 << paPosition)) {
+    EmbrickSlaveHandle(paController, paDirection, CIEC_ANY::e_BOOL, paOffset, paSlave), mMask((uint8_t) (1 << paPosition)) {
 
 }
 

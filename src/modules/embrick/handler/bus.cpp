@@ -186,7 +186,7 @@ void EmbrickBusHandler::runLoop() {
     if(timespecLessThan(&now, &mSNext->mNextDeadline)){ //only wait if the deadline is in the future
       struct timespec timeToSleep;
       timespecSub(&mSNext->mNextDeadline, &now, &timeToSleep);
-      mForceLoop.timedWait(timeToSleep.tv_sec * 1E9 + timeToSleep.tv_nsec);
+      mForceLoop.timedWait(timeToSleep.tv_sec * 1000000000ULL + timeToSleep.tv_nsec);
     }
 
     // Set current slave
@@ -227,7 +227,7 @@ void EmbrickBusHandler::runLoop() {
       addTime(sCur->mNextDeadline, sCur->mLastDuration);
     }
 
-    for (unsigned int i = 0; i < mSlaveCount; i++) {
+    for (int i = 0; i < mSlaveCount; i++) {
       if (timespecLessThan(&mSList[i]->mNextDeadline, &mSNext->mNextDeadline)) {
         mSNext = mSList[i];
       }
@@ -390,6 +390,7 @@ bool EmbrickBusHandler::transfer(unsigned int paTarget, Command paCmd,
 
     // Critical error of bus -> break immediately
     if(!ok) {
+      DEVLOG_DEBUG("emBrick[BusHandler]: Transfer error\n");
       break;
     }
 
@@ -397,7 +398,13 @@ bool EmbrickBusHandler::transfer(unsigned int paTarget, Command paCmd,
     ok = calcChecksum(mRecvBuffer + sizeof(EmbrickHeaderPackage),
         bufferLength - sizeof(EmbrickHeaderPackage)) == 0;
     if (!ok) {
+      // Don't print message when the slave just didn't answer
+      for (auto i = 0u; i < bufferLength; i++) {
+        if (mRecvBuffer[i] != 0) {
       DEVLOG_DEBUG("emBrick[BusHandler]: Transfer - Invalid checksum\n");
+          break;
+        }
+      }
     }
   } while (!ok && ++fails < attempts);
 
@@ -421,7 +428,7 @@ bool EmbrickBusHandler::transfer(unsigned int paTarget, Command paCmd,
   }
 
   memcpy(paDataReceive, mRecvBuffer + sizeof(EmbrickHeaderPackage) + 1,
-         paDataReceiveLength);
+         (size_t)paDataReceiveLength);
   if(paSyncMutex) {
     paSyncMutex->unlock();
   }
@@ -442,7 +449,7 @@ uint64_t EmbrickBusHandler::micros() {
   struct timespec ts;
   clock_gettime(CLOCK_MONOTONIC, &ts);
 
-  return round(ts.tv_nsec / 1.0e3) + (ts.tv_sec - mInitTime) * 1E6;
+  return (unsigned long)(ts.tv_nsec / 1'000LL) + (unsigned long)(ts.tv_sec - mInitTime) * 1'000'000ULL;
 }
 
 unsigned long EmbrickBusHandler::millis() {
@@ -450,23 +457,22 @@ unsigned long EmbrickBusHandler::millis() {
   struct timespec ts;
   clock_gettime(CLOCK_MONOTONIC, &ts);
 
-  return static_cast<unsigned long>(round(ts.tv_nsec / 1.0e6)) + (ts.tv_sec - mInitTime) * 1000;
+  return (unsigned long)(ts.tv_nsec / 1'000'000LL) + (unsigned long)(ts.tv_sec - mInitTime) * 1'000UL;
 }
 
 void EmbrickBusHandler::microsleep(uint64_t paMicroseconds) {
   struct timespec ts;
-  ts.tv_sec = (long) (paMicroseconds / (uint64_t) 1E6);
-  ts.tv_nsec = (long) paMicroseconds * (long) 1E3 - ts.tv_sec * (long) 1E9;
+  ts.tv_sec = (time_t)(paMicroseconds / 1'000'000UL);
+  ts.tv_nsec = (long)(paMicroseconds - (unsigned long)ts.tv_sec * 1'000'000UL) * 1'000;
   nanosleep(&ts, 0);
 }
 
 void EmbrickBusHandler::addTime(struct timespec& paTs, unsigned long paMicroseconds) {
-  paTs.tv_sec += paMicroseconds / (unsigned long) 1E6;
-  unsigned long t = paTs.tv_nsec + paMicroseconds * (unsigned long) 1E3
-      - (paMicroseconds / (unsigned long) 1E6) * (unsigned long) 1E9;
-  if (t >= (unsigned long) 1E9) {
-    t -= (unsigned long) 1E9;
+  unsigned long sec = paMicroseconds / 1'000'000UL;
+  paTs.tv_sec += sec;
+  paTs.tv_nsec += (long)(paMicroseconds - (unsigned long)sec * 1'000'000UL) * 1'000;
+  if (paTs.tv_nsec >= 1'000'000'000) {
+    paTs.tv_nsec -= 1'000'000'000;
     paTs.tv_sec++;
   }
-  paTs.tv_nsec = t;
 }
