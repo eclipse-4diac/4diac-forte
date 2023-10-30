@@ -87,9 +87,9 @@ class CIEC_ANY {
           } else {
             oToCast.setValueSimple(U(static_cast<typename U::TValueType>(static_cast<typename T::TValueType>(paFromCast))));
           }
-      } else if constexpr (std::is_base_of_v<CIEC_ANY_REAL, T>){
+      } else if constexpr (std::is_base_of_v<CIEC_ANY_REAL, T>) {
         specialCast(paFromCast, oToCast);
-      } else if constexpr (std::is_base_of_v<CIEC_ANY_REAL, U>){
+      } else if constexpr (std::is_base_of_v<CIEC_ANY_REAL, U>) {
         oToCast.setValue(paFromCast);
       } else {
         oToCast.setValueSimple(paFromCast);
@@ -109,7 +109,7 @@ class CIEC_ANY {
      *  The data type value is set through the copy assignment
      *
      */
-    virtual void setValue(const CIEC_ANY &paValue){
+    virtual void setValue(const CIEC_ANY &paValue) {
       setValueSimple(paValue);
     }
 
@@ -158,7 +158,7 @@ class CIEC_ANY {
      *  \return Returns TForteByte*
      */
 
-    TForteByte* getDataPtr(){
+    TForteByte* getDataPtr() {
       return mAnyData.mData;
     }
 
@@ -167,7 +167,7 @@ class CIEC_ANY {
      *  \return Returns const TForteByte*
      */
 
-    const TForteByte* getConstDataPtr() const{
+    const TForteByte* getConstDataPtr() const {
       return mAnyData.mData;
     }
 
@@ -213,7 +213,7 @@ class CIEC_ANY {
     /*! \brief determine whether we can cast the source to the destination and what kind of cast it is
      */
     static bool isCastable(EDataTypeID paSource, EDataTypeID paDestination, bool &paUpCast, bool &paDownCast);
-    static bool isCastable(EDataTypeID paSource, EDataTypeID paDestination){
+    static bool isCastable(EDataTypeID paSource, EDataTypeID paDestination) {
       bool bUpCast, bDownCast;
       return isCastable(paSource, paDestination, bUpCast, bDownCast);
     }
@@ -229,37 +229,37 @@ class CIEC_ANY {
 #ifdef FORTE_SUPPORT_CUSTOM_SERIALIZABLE_DATATYPES
     /*! \brief the following methods have to be implemented if a custom datatype is added to the forte which is not supported by the default seralize mechanism. */
     /*! \brief returns the required size for serialization */
-    virtual unsigned int getRequiredSerializationSize() const{
+    virtual unsigned int getRequiredSerializationSize() const {
       return 0;
     }
-    ;
+    
     /*! \brief returns the tag of the datatype for serialization */
     virtual TForteByte getTag() const{
       return 0xFF;
     }
-    ;
+    
     /*! \brief serialize the custom type */
-    virtual int serializeCustomType(TForteByte*, int) const{
+    virtual int serializeCustomType(TForteByte*, int) const {
       return -1;
     }
-    ;
+    
     /*! \brief deserialize the tag */
-    virtual bool deserializeTag(const TForteByte){
+    virtual bool deserializeTag(const TForteByte) {
       return false;
     }
-    ;
+    
     /*! \brief deserialize the custom type*/
-    virtual int deserializeCustomType(const TForteByte*, int){
+    virtual int deserializeCustomType(const TForteByte*, int) {
       return -1;
     }
-    ;
+    
 #endif
 
-    bool isForced() const{
+    bool isForced() const {
       return mForced;
     }
 
-    void setForced(bool paForced){
+    void setForced(bool paForced) {
       mForced = paForced;
     }
 
@@ -270,7 +270,7 @@ class CIEC_ANY {
      * known that this can be done safely.
      */
     inline
-    void setValueSimple(const CIEC_ANY &paValue){
+    void setValueSimple(const CIEC_ANY &paValue) {
       mAnyData = paValue.mAnyData;
     }
 
@@ -278,31 +278,31 @@ class CIEC_ANY {
      *  A virtual function for datatypes who can't be copied by the union assignment
      */
 
-    void setTBOOL8(bool src){
+    void setTBOOL8(bool src) {
       mAnyData.mLargestUInt = TLargestUIntValueType(src);
     }
 
-    void setTUINT32(TForteUInt32 src){ //also used for TForteDWord
+    void setTUINT32(TForteUInt32 src) { //also used for TForteDWord
       mAnyData.mLargestUInt = TLargestUIntValueType(src);
     }
 
-    void setTUINT16(TForteUInt16 src){ //also used for TForteWord
+    void setTUINT16(TForteUInt16 src) { //also used for TForteWord
       mAnyData.mLargestUInt = TLargestUIntValueType(src);
     }
 
-    void setTUINT8(TForteUInt8 src){ //also used for TForteByte
+    void setTUINT8(TForteUInt8 src) { //also used for TForteByte
       mAnyData.mLargestUInt = TLargestUIntValueType(src);
     }
 
-    void setTINT32(TForteInt32 src){
+    void setTINT32(TForteInt32 src) {
       mAnyData.mLargestInt = TLargestIntValueType(src);
     }
 
-    void setTINT16(TForteInt16 src){
+    void setTINT16(TForteInt16 src) {
       mAnyData.mLargestInt = TLargestIntValueType(src);
     }
 
-    void setTINT8(TForteInt8 src){
+    void setTINT8(TForteInt8 src) {
       mAnyData.mLargestInt = TLargestIntValueType(src);
     }
 
@@ -314,46 +314,46 @@ class CIEC_ANY {
       mAnyData.mLargestUInt = TLargestUIntValueType(src);
     }
 
-    void setTFLOAT(TForteFloat src){
+    void setTFLOAT(TForteFloat src) {
       mAnyData.mFloat = TForteFloat(src);
     }
 
-    void setTDFLOAT(TForteDFloat src){
+    void setTDFLOAT(TForteDFloat src) {
       mAnyData.mDFloat = TForteDFloat(src);
     }
 
-  void setTUINT64(TForteUInt64 src){ //also used for LWORD
-    mAnyData.mLargestUInt = TLargestUIntValueType(src);
-  }
+    void setTUINT64(TForteUInt64 src) { //also used for LWORD
+      mAnyData.mLargestUInt = TLargestUIntValueType(src);
+    }
 
-  void setTINT64(TForteInt64 src){
-    mAnyData.mLargestInt = TLargestIntValueType(src);
-  }
+    void setTINT64(TForteInt64 src) {
+      mAnyData.mLargestInt = TLargestIntValueType(src);
+    }
 #ifdef FORTE_BIG_ENDIAN
     bool getTBOOL8() const{
       return (mAnyData.mLargestUInt != 0);
     }
-    TForteUInt32 getTUINT32() const{ //also used for TForteDWord
+    TForteUInt32 getTUINT32() const { //also used for TForteDWord
       return static_cast<TForteUInt32>(mAnyData.mLargestUInt);
     }
 
-    TForteUInt16 getTUINT16() const{ //also used for TForteWord
+    TForteUInt16 getTUINT16() cons t{ //also used for TForteWord
       return static_cast<TForteUInt16>(mAnyData.mLargestUInt);
     }
 
-    TForteUInt8 getTUINT8() const{ //also used for TForteByte
+    TForteUInt8 getTUINT8() const { //also used for TForteByte
       return static_cast<TForteUInt8>(mAnyData.mLargestUInt);
     }
 
-    TForteInt32 getTINT32() const{
+    TForteInt32 getTINT32() const {
       return static_cast<TForteInt32>(mAnyData.mLargestInt);
     }
 
-    TForteInt16 getTINT16() const{
+    TForteInt16 getTINT16() const {
       return static_cast<TForteInt16>(mAnyData.mLargestInt);
     }
 
-    TForteInt8 getTINT8() const{
+    TForteInt8 getTINT8() const {
       return static_cast<TForteInt8>(mAnyData.mLargestInt);
     }
 
@@ -365,11 +365,11 @@ class CIEC_ANY {
       return static_cast<TForteWChar>(mAnyData.mLargestInt);
     }
 
-    TForteUInt64 getTUINT64() const{ //also used for LWORD
+    TForteUInt64 getTUINT64() const { //also used for LWORD
       return static_cast<TForteUInt64>(mAnyData.mLargestUInt);
     }
 
-    TForteInt64 getTINT64() const{
+    TForteInt64 getTINT64() const {
       return static_cast<TForteInt64>(mAnyData.mLargestInt);
     }
 #else
@@ -378,27 +378,27 @@ class CIEC_ANY {
       return mAnyData.mBool;
     }
 
-    TForteUInt32 getTUINT32() const{ //also used for TForteDWord
+    TForteUInt32 getTUINT32() const { //also used for TForteDWord
       return mAnyData.mUInt32;
     }
 
-    TForteUInt16 getTUINT16() const{ //also used for TForteWord
+    TForteUInt16 getTUINT16() const { //also used for TForteWord
       return mAnyData.mUInt16;
     }
 
-    TForteUInt8 getTUINT8() const{ //also used for TForteByte
+    TForteUInt8 getTUINT8() const { //also used for TForteByte
       return mAnyData.mUInt8;
     }
 
-    TForteInt32 getTINT32() const{
+    TForteInt32 getTINT32() const {
       return mAnyData.mInt32;
     }
 
-    TForteInt16 getTINT16() const{
+    TForteInt16 getTINT16() const {
       return mAnyData.mInt16;
     }
 
-    TForteInt8 getTINT8() const{
+    TForteInt8 getTINT8() const {
       return mAnyData.mInt8;
     }
 
@@ -410,10 +410,11 @@ class CIEC_ANY {
       return mAnyData.mWChar16;
     }
 
-    TForteUInt64 getTUINT64() const{ //also used for LWORD
+    TForteUInt64 getTUINT64() const { //also used for LWORD
       return mAnyData.mUInt64;
     }
-    TForteInt64 getTINT64() const{
+    
+    TForteInt64 getTINT64() const {
       return mAnyData.mInt64;
     }
 #else
@@ -421,39 +422,39 @@ class CIEC_ANY {
 #endif //#ifdef FORTE_BIG_ENDIAN
 #endif //#ifdef FORTE_LITTLE_ENDIAN
 //!< get-Methods are Big/Little Endian independent
-    TForteFloat getTFLOAT() const{
+    TForteFloat getTFLOAT() const {
       return (TForteFloat) mAnyData.mFloat;
     }
 
-    TForteDFloat getTDFLOAT() const{
+    TForteDFloat getTDFLOAT() const {
       return TForteDFloat(mAnyData.mDFloat);
     }
 
-    TLargestUIntValueType getLargestUInt() const{
+    TLargestUIntValueType getLargestUInt() const {
       return mAnyData.mLargestUInt;
     }
 
-    void setLargestUInt(TLargestUIntValueType paVal){
+    void setLargestUInt(TLargestUIntValueType paVal) {
       mAnyData.mLargestUInt = paVal;
     }
 
-    TLargestIntValueType getLargestInt() const{
+    TLargestIntValueType getLargestInt() const {
       return mAnyData.mLargestInt;
     }
 
-    void setLargestInt(TLargestIntValueType paVal){
+    void setLargestInt(TLargestIntValueType paVal) {
       mAnyData.mLargestInt = paVal;
     }
 
-    TForteByte *getGenData(){
+    TForteByte *getGenData() {
       return mAnyData.mGenData;
     }
 
-    const TForteByte *getGenData() const{
+    const TForteByte *getGenData() const {
       return mAnyData.mGenData;
     }
 
-    void setGenData(TForteByte *paGenData){
+    void setGenData(TForteByte *paGenData) {
       mAnyData.mGenData = paGenData;
     }
 
@@ -468,37 +469,37 @@ class CIEC_ANY {
 
     //Anonymous union holding the data value of our IEC data type
     union UAnyData{
-        bool mBool;
+      bool mBool;
 
-        TForteByte mByte;
-        TForteWord mWord;
-        TForteDWord mDWord;
+      TForteByte mByte;
+      TForteWord mWord;
+      TForteDWord mDWord;
 
-        TForteInt8 mInt8;
-        TForteInt16 mInt16;
-        TForteInt32 mInt32;
+      TForteInt8 mInt8;
+      TForteInt16 mInt16;
+      TForteInt32 mInt32;
 
-        TForteUInt8 mUInt8;
-        TForteUInt16 mUInt16;
-        TForteUInt32 mUInt32;
+      TForteUInt8 mUInt8;
+      TForteUInt16 mUInt16;
+      TForteUInt32 mUInt32;
 
-        TForteChar mChar8;
-        TForteWChar mWChar16;
+      TForteChar mChar8;
+      TForteWChar mWChar16;
 
-        TForteFloat mFloat;
-        TForteDFloat mDFloat;
+      TForteFloat mFloat;
+      TForteDFloat mDFloat;
 
-        TForteInt64 mInt64;
-        TForteUInt64 mUInt64;
-        TForteByte mData[sizeof(TForteUInt64)]; //!< For data extraction in big endian machines
-        TLargestUIntValueType mLargestUInt;
-        TLargestIntValueType mLargestInt;
-        /*! \brief A pointer to general data that can be used for data types needing other data than that contained in the union
-         *
-         * This is needed as the current design does not allow that the size of data types when created is different from
-         * the size of the CIEC_ANY class. This data value will be used for example by string or array.
-         */
-        TForteByte *mGenData;
+      TForteInt64 mInt64;
+      TForteUInt64 mUInt64;
+      TForteByte mData[sizeof(TForteUInt64)]; //!< For data extraction in big endian machines
+      TLargestUIntValueType mLargestUInt;
+      TLargestIntValueType mLargestInt;
+      /*! \brief A pointer to general data that can be used for data types needing other data than that contained in the union
+        *
+        * This is needed as the current design does not allow that the size of data types when created is different from
+        * the size of the CIEC_ANY class. This data value will be used for example by string or array.
+        */
+      TForteByte *mGenData;
     };
 
     UAnyData mAnyData;
