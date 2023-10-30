@@ -127,7 +127,7 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_serialize_test)
 BOOST_AUTO_TEST_CASE(Single_Serialize_Test_BOOL){
   CFBDKASN1ComLayerTestMock nTestee;
   CIEC_BOOL nBool;
-  TIEC_ANYPtr poArray[1];
+  CIEC_ANY* poArray[1];
   poArray[0] = &nBool;
 
   nBool = CIEC_BOOL(false);
@@ -140,18 +140,18 @@ BOOST_AUTO_TEST_CASE(Single_Serialize_Test_BOOL){
   BOOST_CHECK_EQUAL(nTestee.getSendDataSize(), cgBoolSerSize);
   BOOST_CHECK_EQUAL(cgBoolTrue, *((TForteByte *)nTestee.getSendDataPtr()));
 
-  BOOST_CHECK_EQUAL(nTestee.serializeDataPointArray(static_cast<TForteByte *>(nullptr), 0, const_cast<TConstIEC_ANYPtr *>(poArray), 1), -1);
+  BOOST_CHECK_EQUAL(nTestee.serializeDataPointArray(static_cast<TForteByte *>(nullptr), 0, const_cast<const CIEC_ANY**>(poArray), 1), -1);
   BOOST_CHECK_EQUAL(nTestee.serializeDataPoint(static_cast<TForteByte *>(nullptr), 0, nBool), -1);
 }
 
 BOOST_AUTO_TEST_CASE(Single_Serialize_Test_BYTE){
   CFBDKASN1ComLayerTestMock nTestee;
   CIEC_BYTE nVal;
-  TIEC_ANYPtr poArray[1];
+  CIEC_ANY* poArray[1];
   poArray[0] = &nVal;
 
   TForteByte acSmallBuf[1];
-  BOOST_CHECK_EQUAL(nTestee.serializeDataPointArray(acSmallBuf, 1, const_cast<TConstIEC_ANYPtr *>(poArray), 1), -1);
+  BOOST_CHECK_EQUAL(nTestee.serializeDataPointArray(acSmallBuf, 1, const_cast<const CIEC_ANY* *>(poArray), 1), -1);
   BOOST_CHECK_EQUAL(nTestee.serializeDataPoint(acSmallBuf, 1, nVal), -1);
 
   nVal= CIEC_BYTE(0);
@@ -178,11 +178,11 @@ BOOST_AUTO_TEST_CASE(Single_Serialize_Test_BYTE){
 BOOST_AUTO_TEST_CASE(Single_Serialize_Test_WORD){
   CFBDKASN1ComLayerTestMock nTestee;
   CIEC_WORD nVal;
-  TIEC_ANYPtr poArray[1];
+  CIEC_ANY* poArray[1];
     poArray[0] = &nVal;
 
   TForteByte acSmallBuf[2];
-  BOOST_CHECK_EQUAL(nTestee.serializeDataPointArray(acSmallBuf, 2, const_cast<TConstIEC_ANYPtr *>(poArray), 1), -1);
+  BOOST_CHECK_EQUAL(nTestee.serializeDataPointArray(acSmallBuf, 2, const_cast<const CIEC_ANY**>(poArray), 1), -1);
   BOOST_CHECK_EQUAL(nTestee.serializeDataPoint(acSmallBuf, 2, nVal), -1);
 
   nVal= CIEC_WORD(0);
@@ -215,11 +215,11 @@ BOOST_AUTO_TEST_CASE(Single_Serialize_Test_WORD){
 BOOST_AUTO_TEST_CASE(Single_Serialize_Test_DWORD){
   CFBDKASN1ComLayerTestMock nTestee;
   CIEC_DWORD nVal;
-  TIEC_ANYPtr poArray[1];
+  CIEC_ANY* poArray[1];
   poArray[0] = &nVal;
 
   TForteByte acSmallBuf[4];
-  BOOST_CHECK_EQUAL(nTestee.serializeDataPointArray(acSmallBuf, 4, const_cast<TConstIEC_ANYPtr *>(poArray), 1), -1);
+  BOOST_CHECK_EQUAL(nTestee.serializeDataPointArray(acSmallBuf, 4, const_cast<const CIEC_ANY**>(poArray), 1), -1);
   BOOST_CHECK_EQUAL(nTestee.serializeDataPoint(acSmallBuf, 4, nVal), -1);
 
   nVal= CIEC_DWORD(0);
@@ -262,11 +262,11 @@ BOOST_AUTO_TEST_CASE(Single_Serialize_Test_DWORD){
 BOOST_AUTO_TEST_CASE(Single_Serialize_Test_LWORD){
   CFBDKASN1ComLayerTestMock nTestee;
   CIEC_LWORD nVal;
-  TIEC_ANYPtr poArray[1];
+  CIEC_ANY* poArray[1];
     poArray[0] = &nVal;
 
   TForteByte acSmallBuf[8];
-  BOOST_CHECK_EQUAL(nTestee.serializeDataPointArray(acSmallBuf, 8, const_cast<TConstIEC_ANYPtr *>(poArray), 1), -1);
+  BOOST_CHECK_EQUAL(nTestee.serializeDataPointArray(acSmallBuf, 8, const_cast<const CIEC_ANY**>(poArray), 1), -1);
   BOOST_CHECK_EQUAL(nTestee.serializeDataPoint(acSmallBuf, 8, nVal), -1);
 
   nVal= CIEC_LWORD(0);
@@ -318,11 +318,11 @@ BOOST_AUTO_TEST_CASE(Single_Serialize_Test_LWORD){
 BOOST_AUTO_TEST_CASE(Single_Serialize_Test_USINT){
   CFBDKASN1ComLayerTestMock nTestee;
   CIEC_USINT nVal;
-  TIEC_ANYPtr poArray[1];
+  CIEC_ANY* poArray[1];
     poArray[0] = &nVal;
 
   TForteByte acSmallBuf[1];
-  BOOST_CHECK_EQUAL(nTestee.serializeDataPointArray(acSmallBuf, 1, const_cast<TConstIEC_ANYPtr *>(poArray), 1), -1);
+  BOOST_CHECK_EQUAL(nTestee.serializeDataPointArray(acSmallBuf, 1, const_cast<const CIEC_ANY**>(poArray), 1), -1);
   BOOST_CHECK_EQUAL(nTestee.serializeDataPoint(acSmallBuf, 1, nVal), -1);
 
   nVal= CIEC_USINT(0);
@@ -349,11 +349,11 @@ BOOST_AUTO_TEST_CASE(Single_Serialize_Test_USINT){
 BOOST_AUTO_TEST_CASE(Single_Serialize_Test_UINT){
   CFBDKASN1ComLayerTestMock nTestee;
   CIEC_UINT nVal;
-  TIEC_ANYPtr poArray[1];
+  CIEC_ANY* poArray[1];
     poArray[0] = &nVal;
 
   TForteByte acSmallBuf[2];
-  BOOST_CHECK_EQUAL(nTestee.serializeDataPointArray(acSmallBuf, 2, const_cast<TConstIEC_ANYPtr *>(poArray), 1), -1);
+  BOOST_CHECK_EQUAL(nTestee.serializeDataPointArray(acSmallBuf, 2, const_cast<const CIEC_ANY**>(poArray), 1), -1);
   BOOST_CHECK_EQUAL(nTestee.serializeDataPoint(acSmallBuf, 2, nVal), -1);
 
   nVal= CIEC_UINT(0);
@@ -387,11 +387,11 @@ BOOST_AUTO_TEST_CASE(Single_Serialize_Test_UINT){
 BOOST_AUTO_TEST_CASE(Single_Serialize_Test_UDINT){
   CFBDKASN1ComLayerTestMock nTestee;
   CIEC_UDINT nVal;
-  TIEC_ANYPtr poArray[1];
+  CIEC_ANY* poArray[1];
     poArray[0] = &nVal;
 
   TForteByte acSmallBuf[4];
-  BOOST_CHECK_EQUAL(nTestee.serializeDataPointArray(acSmallBuf, 4, const_cast<TConstIEC_ANYPtr *>(poArray), 1), -1);
+  BOOST_CHECK_EQUAL(nTestee.serializeDataPointArray(acSmallBuf, 4, const_cast<const CIEC_ANY**>(poArray), 1), -1);
   BOOST_CHECK_EQUAL(nTestee.serializeDataPoint(acSmallBuf, 4, nVal), -1);
 
   nVal= CIEC_UDINT(0);
@@ -434,11 +434,11 @@ BOOST_AUTO_TEST_CASE(Single_Serialize_Test_UDINT){
 BOOST_AUTO_TEST_CASE(Single_Serialize_Test_ULINT){
   CFBDKASN1ComLayerTestMock nTestee;
   CIEC_ULINT nVal;
-  TIEC_ANYPtr poArray[1];
+  CIEC_ANY* poArray[1];
     poArray[0] = &nVal;
 
   TForteByte acSmallBuf[8];
-  BOOST_CHECK_EQUAL(nTestee.serializeDataPointArray(acSmallBuf, 8, const_cast<TConstIEC_ANYPtr *>(poArray), 1), -1);
+  BOOST_CHECK_EQUAL(nTestee.serializeDataPointArray(acSmallBuf, 8, const_cast<const CIEC_ANY**>(poArray), 1), -1);
   BOOST_CHECK_EQUAL(nTestee.serializeDataPoint(acSmallBuf, 8, nVal), -1);
 
   nVal= CIEC_ULINT(0);
@@ -493,11 +493,11 @@ BOOST_AUTO_TEST_CASE(Single_Serialize_Test_ULINT){
 BOOST_AUTO_TEST_CASE(Single_Serialize_Test_SINT){
   CFBDKASN1ComLayerTestMock nTestee;
   CIEC_SINT nVal;
-  TIEC_ANYPtr poArray[1];
+  CIEC_ANY* poArray[1];
     poArray[0] = &nVal;
 
   TForteByte acSmallBuf[1];
-  BOOST_CHECK_EQUAL(nTestee.serializeDataPointArray(acSmallBuf, 1, const_cast<TConstIEC_ANYPtr *>(poArray), 1), -1);
+  BOOST_CHECK_EQUAL(nTestee.serializeDataPointArray(acSmallBuf, 1, const_cast<const CIEC_ANY**>(poArray), 1), -1);
   BOOST_CHECK_EQUAL(nTestee.serializeDataPoint(acSmallBuf, 1, nVal), -1);
 
   nVal= CIEC_SINT(0);
@@ -529,11 +529,11 @@ BOOST_AUTO_TEST_CASE(Single_Serialize_Test_SINT){
 BOOST_AUTO_TEST_CASE(Single_Serialize_Test_INT){
   CFBDKASN1ComLayerTestMock nTestee;
   CIEC_INT nVal;
-  TIEC_ANYPtr poArray[1];
+  CIEC_ANY* poArray[1];
     poArray[0] = &nVal;
 
   TForteByte acSmallBuf[2];
-  BOOST_CHECK_EQUAL(nTestee.serializeDataPointArray(acSmallBuf, 2, const_cast<TConstIEC_ANYPtr *>(poArray), 1), -1);
+  BOOST_CHECK_EQUAL(nTestee.serializeDataPointArray(acSmallBuf, 2, const_cast<const CIEC_ANY**>(poArray), 1), -1);
   BOOST_CHECK_EQUAL(nTestee.serializeDataPoint(acSmallBuf, 2, nVal), -1);
 
   nVal= CIEC_INT(0);
@@ -585,11 +585,11 @@ BOOST_AUTO_TEST_CASE(Single_Serialize_Test_INT){
 BOOST_AUTO_TEST_CASE(Single_Serialize_Test_DINT){
   CFBDKASN1ComLayerTestMock nTestee;
   CIEC_DINT nVal;
-  TIEC_ANYPtr poArray[1];
+  CIEC_ANY* poArray[1];
     poArray[0] = &nVal;
 
   TForteByte acSmallBuf[4];
-  BOOST_CHECK_EQUAL(nTestee.serializeDataPointArray(acSmallBuf, 4, const_cast<TConstIEC_ANYPtr *>(poArray), 1), -1);
+  BOOST_CHECK_EQUAL(nTestee.serializeDataPointArray(acSmallBuf, 4, const_cast<const CIEC_ANY**>(poArray), 1), -1);
   BOOST_CHECK_EQUAL(nTestee.serializeDataPoint(acSmallBuf, 4, nVal), -1);
 
   nVal= CIEC_DINT(0);
@@ -661,11 +661,11 @@ BOOST_AUTO_TEST_CASE(Single_Serialize_Test_DINT){
 BOOST_AUTO_TEST_CASE(Single_Serialize_Test_LINT){
   CFBDKASN1ComLayerTestMock nTestee;
   CIEC_LINT nVal;
-  TIEC_ANYPtr poArray[1];
+  CIEC_ANY* poArray[1];
     poArray[0] = &nVal;
 
   TForteByte acSmallBuf[8];
-  BOOST_CHECK_EQUAL(nTestee.serializeDataPointArray(acSmallBuf, 8, const_cast<TConstIEC_ANYPtr *>(poArray), 1), -1);
+  BOOST_CHECK_EQUAL(nTestee.serializeDataPointArray(acSmallBuf, 8, const_cast<const CIEC_ANY**>(poArray), 1), -1);
   BOOST_CHECK_EQUAL(nTestee.serializeDataPoint(acSmallBuf, 8, nVal), -1);
 
   nVal= CIEC_LINT(0);
@@ -757,11 +757,11 @@ BOOST_AUTO_TEST_CASE(Single_Serialize_Test_LINT){
 BOOST_AUTO_TEST_CASE(Single_Serialize_Test_REAL){
   CFBDKASN1ComLayerTestMock nTestee;
   CIEC_REAL nVal;
-  TIEC_ANYPtr poArray[1];
+  CIEC_ANY* poArray[1];
     poArray[0] = &nVal;
 
   TForteByte acSmallBuf[4];
-  BOOST_CHECK_EQUAL(nTestee.serializeDataPointArray(acSmallBuf, 4, const_cast<TConstIEC_ANYPtr *>(poArray), 1), -1);
+  BOOST_CHECK_EQUAL(nTestee.serializeDataPointArray(acSmallBuf, 4, const_cast<const CIEC_ANY**>(poArray), 1), -1);
   BOOST_CHECK_EQUAL(nTestee.serializeDataPoint(acSmallBuf, 4, nVal), -1);
 
   BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.sendData(poArray, 1));
@@ -792,11 +792,11 @@ BOOST_AUTO_TEST_CASE(Single_Serialize_Test_REAL){
 BOOST_AUTO_TEST_CASE(Single_Serialize_Test_LREAL){
   CFBDKASN1ComLayerTestMock nTestee;
   CIEC_LREAL nVal;
-  TIEC_ANYPtr poArray[1];
+  CIEC_ANY* poArray[1];
     poArray[0] = &nVal;
 
   TForteByte acSmallBuf[8];
-  BOOST_CHECK_EQUAL(nTestee.serializeDataPointArray(acSmallBuf, 8, const_cast<TConstIEC_ANYPtr *>(poArray), 1), -1);
+  BOOST_CHECK_EQUAL(nTestee.serializeDataPointArray(acSmallBuf, 8, const_cast<const CIEC_ANY**>(poArray), 1), -1);
   BOOST_CHECK_EQUAL(nTestee.serializeDataPoint(acSmallBuf, 8, nVal), -1);
 
   BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.sendData(poArray, 1));
@@ -827,11 +827,11 @@ BOOST_AUTO_TEST_CASE(Single_Serialize_Test_LREAL){
 BOOST_AUTO_TEST_CASE(Single_Serialize_Test_STRING){
   CFBDKASN1ComLayerTestMock nTestee;
   CIEC_STRING nVal;
-  TIEC_ANYPtr poArray[1];
+  CIEC_ANY* poArray[1];
     poArray[0] = &nVal;
 
   TForteByte acSmallBuf[2];
-  BOOST_CHECK_EQUAL(nTestee.serializeDataPointArray(acSmallBuf, 2, const_cast<TConstIEC_ANYPtr *>(poArray), 1), -1);
+  BOOST_CHECK_EQUAL(nTestee.serializeDataPointArray(acSmallBuf, 2, const_cast<const CIEC_ANY**>(poArray), 1), -1);
   BOOST_CHECK_EQUAL(nTestee.serializeDataPoint(acSmallBuf, 2, nVal), -1);
 
   BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.sendData(poArray, 1));
@@ -844,18 +844,18 @@ BOOST_AUTO_TEST_CASE(Single_Serialize_Test_STRING){
   BOOST_CHECK(std::equal(cgStringHalloWorld, cgStringHalloWorld + cgStringHalloWorldSerSize, ((TForteByte *)nTestee.getSendDataPtr())));
 
   TForteByte acSecondSmallBuf[12];
-  BOOST_CHECK_EQUAL(nTestee.serializeDataPointArray(acSecondSmallBuf, 12, const_cast<TConstIEC_ANYPtr *>(poArray), 1), -1);
+  BOOST_CHECK_EQUAL(nTestee.serializeDataPointArray(acSecondSmallBuf, 12, const_cast<const CIEC_ANY**>(poArray), 1), -1);
   BOOST_CHECK_EQUAL(nTestee.serializeDataPoint(acSecondSmallBuf, 12, nVal), -1);
 }
 
 BOOST_AUTO_TEST_CASE(Single_Serialize_Test_WSTRING){
   CFBDKASN1ComLayerTestMock nTestee;
   CIEC_WSTRING nVal;
-  TIEC_ANYPtr poArray[1];
+  CIEC_ANY* poArray[1];
     poArray[0] = &nVal;
 
   TForteByte acSmallBuf[2];
-  BOOST_CHECK_EQUAL(nTestee.serializeDataPointArray(acSmallBuf, 2, const_cast<TConstIEC_ANYPtr *>(poArray), 1), -1);
+  BOOST_CHECK_EQUAL(nTestee.serializeDataPointArray(acSmallBuf, 2, const_cast<const CIEC_ANY**>(poArray), 1), -1);
   BOOST_CHECK_EQUAL(nTestee.serializeDataPoint(acSmallBuf, 2, nVal), -1);
 
   BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.sendData(poArray, 1));
@@ -868,7 +868,7 @@ BOOST_AUTO_TEST_CASE(Single_Serialize_Test_WSTRING){
   BOOST_CHECK(std::equal(cgWStringHalloWorld, cgWStringHalloWorld + cgWStringHalloWorldSerSize, ((TForteByte *)nTestee.getSendDataPtr())));
 
   TForteByte acSecondSmallBuf[3];
-  BOOST_CHECK_EQUAL(nTestee.serializeDataPointArray(acSecondSmallBuf, cgWStringHalloWorldSerSize-1, const_cast<TConstIEC_ANYPtr *>(poArray), 1), -1);
+  BOOST_CHECK_EQUAL(nTestee.serializeDataPointArray(acSecondSmallBuf, cgWStringHalloWorldSerSize-1, const_cast<const CIEC_ANY**>(poArray), 1), -1);
   BOOST_CHECK_EQUAL(nTestee.serializeDataPoint(acSecondSmallBuf, cgWStringHalloWorldSerSize-1, nVal), -1);
 
   nVal = CIEC_WSTRING((const char *) cgWStringNihongoUTF8);
@@ -880,11 +880,11 @@ BOOST_AUTO_TEST_CASE(Single_Serialize_Test_WSTRING){
 BOOST_AUTO_TEST_CASE(Single_Serialize_Test_TIME){
   CFBDKASN1ComLayerTestMock nTestee;
   CIEC_TIME nVal;
-  TIEC_ANYPtr poArray[1];
+  CIEC_ANY* poArray[1];
   poArray[0] = &nVal;
 
   TForteByte acSmallBuf[8];
-  BOOST_CHECK_EQUAL(nTestee.serializeDataPointArray(acSmallBuf, 8, const_cast<TConstIEC_ANYPtr *>(poArray), 1), -1);
+  BOOST_CHECK_EQUAL(nTestee.serializeDataPointArray(acSmallBuf, 8, const_cast<const CIEC_ANY**>(poArray), 1), -1);
   BOOST_CHECK_EQUAL(nTestee.serializeDataPoint(acSmallBuf, 8, nVal), -1);
 
   BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.sendData(poArray, 1));
@@ -912,7 +912,7 @@ BOOST_AUTO_TEST_CASE(Single_Serialize_Test_MultiDatas){
   CIEC_BOOL *poBoolVal;
   CIEC_TIME *poTimeVal2;
 
-  TIEC_ANYPtr poArray[6];
+  CIEC_ANY* poArray[6];
 
   poArray[0] = poTimeVal1 = new CIEC_TIME();
   poArray[1] = poWordVal = new CIEC_WORD();
@@ -936,7 +936,7 @@ BOOST_AUTO_TEST_CASE(Single_Serialize_Test_MultiDatas){
   BOOST_CHECK(std::equal(anGoodResult, anGoodResult + nSerSize, ((TForteByte *)nTestee.getSendDataPtr())));
 
   TForteByte acSmallBuf[nSerSize - 1];
-  BOOST_CHECK_EQUAL(nTestee.serializeDataPointArray(acSmallBuf, nSerSize - 2, const_cast<TConstIEC_ANYPtr *>(poArray), 6), -1);
+  BOOST_CHECK_EQUAL(nTestee.serializeDataPointArray(acSmallBuf, nSerSize - 2, const_cast<const CIEC_ANY**>(poArray), 6), -1);
   delete poTimeVal1;
   delete poWordVal;
   delete poStringVal;
@@ -948,7 +948,7 @@ BOOST_AUTO_TEST_CASE(Single_Serialize_Test_MultiDatas){
 BOOST_AUTO_TEST_CASE(Single_Serialize_Test_ARRAY){
   CFBDKASN1ComLayerTestMock nTestee;
   CIEC_ARRAY_DYNAMIC nVal(5, g_nStringIdBOOL);
-  TIEC_ANYPtr poArray[1];
+  CIEC_ANY* poArray[1];
   poArray[0] = &nVal;
 
 
@@ -959,9 +959,9 @@ BOOST_AUTO_TEST_CASE(Single_Serialize_Test_ARRAY){
   static_cast<CIEC_BOOL &>(nVal[4]) = CIEC_BOOL(true);
 
   TForteByte acSmallBuf[7];
-  BOOST_CHECK_EQUAL(nTestee.serializeDataPointArray(acSmallBuf, 1, const_cast<TConstIEC_ANYPtr *>(poArray), 1), -1);
-  BOOST_CHECK_EQUAL(nTestee.serializeDataPointArray(acSmallBuf, 3, const_cast<TConstIEC_ANYPtr *>(poArray), 1), -1);
-  BOOST_CHECK_EQUAL(nTestee.serializeDataPointArray(acSmallBuf, 7, const_cast<TConstIEC_ANYPtr *>(poArray), 1), -1);
+  BOOST_CHECK_EQUAL(nTestee.serializeDataPointArray(acSmallBuf, 1, const_cast<const CIEC_ANY**>(poArray), 1), -1);
+  BOOST_CHECK_EQUAL(nTestee.serializeDataPointArray(acSmallBuf, 3, const_cast<const CIEC_ANY**>(poArray), 1), -1);
+  BOOST_CHECK_EQUAL(nTestee.serializeDataPointArray(acSmallBuf, 7, const_cast<const CIEC_ANY**>(poArray), 1), -1);
   BOOST_CHECK_EQUAL(nTestee.serializeDataPoint(acSmallBuf, 1, nVal), -1);
   BOOST_CHECK_EQUAL(nTestee.serializeDataPoint(acSmallBuf, 3, nVal), -1);
   BOOST_CHECK_EQUAL(nTestee.serializeDataPoint(acSmallBuf, 7, nVal), -1);

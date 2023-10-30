@@ -60,7 +60,7 @@ class CAnyAdapter : public CAdapter{
       return mInterfaceSpec->mDINames;
     }
 
-    TIEC_ANYPtr getDataInputs(){
+    CIEC_ANY* getDataInputs(){
       return getDI(0);
     }
 
@@ -72,7 +72,7 @@ class CAnyAdapter : public CAdapter{
       return mInterfaceSpec->mDONames;
     }
 
-    TIEC_ANYPtr getDataOutputs(){
+    CIEC_ANY* getDataOutputs(){
       return getDO(0);
     }
 

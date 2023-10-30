@@ -506,11 +506,4 @@ class CIEC_ANY {
 
 };
 
-/*!\brief Type for handling CIEC_ANY pointers
- */
-typedef CIEC_ANY* TIEC_ANYPtr;
-typedef const CIEC_ANY* TConstIEC_ANYPtr;
-
-typedef CIEC_ANY IIEC_ANY; //TODO: for legacy support, will be deleted with next major release
-
 #endif /*_MANY_H_*/

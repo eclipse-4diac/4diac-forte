@@ -52,7 +52,7 @@ namespace forte {
          * @return on success the number of bytes written into the destination array,
          *         -1 on error.
          */
-        static int serializeDataPointArray(TForteByte* paBytes, const size_t paStreamSize, TConstIEC_ANYPtr *paData, size_t paDataNum);
+        static int serializeDataPointArray(TForteByte *paBytes, const size_t paStreamSize, const CIEC_ANY **paData, size_t paDataNum);
         /*!\brief Serialize one IEC data point into a byte array
          *
          * @param paBytes destination array for the serialization
@@ -84,7 +84,7 @@ namespace forte {
          * @param paDataNum length of the data point array
          * @return true on success
          */
-        static bool deserializeDataPointArray(const TForteByte* paBytes, unsigned int paStreamSize, TIEC_ANYPtr *paData, size_t paDataNum);
+        static bool deserializeDataPointArray(const TForteByte *paBytes, unsigned int paStreamSize, CIEC_ANY **paData, size_t paDataNum);
 
         /*!\brief Deserialize an array of IEC data points from a byte array
          *
@@ -154,7 +154,7 @@ namespace forte {
          */
         static void serializeTag(TForteByte* paBytes, const CIEC_ANY &paCIECData);
         /** Specialization of the serialization of the data value for different data types. The interface behaves as
-         *  described for static int serializeValue(TForteByte* paBytes, int paStreamSize, TConstIEC_ANYPtr paCIECData)
+         *  described for static int serializeValue(TForteByte* paBytes, int paStreamSize, const CIEC_ANY* paCIECData)
          * @{*/
         static int serializeValueSimpleDataType(TForteByte* paBytes, int paStreamSize, const CIEC_ANY & paDataPoint);
         static int serializeValueTime(TForteByte* paBytes, int paStreamSize, const CIEC_TIME & paTime);
@@ -178,7 +178,7 @@ namespace forte {
 
 
         /** Specialization of the deserialization of the data value for different data types. The interface behaves as
-         *  described for static int deserializeValue(const TForteByte* paBytes, int paStreamSize, TIEC_ANYPtr paCIECData)
+         *  described for static int deserializeValue(const TForteByte* paBytes, int paStreamSize, CIEC_ANY* paCIECData)
          * @{*/
         static int deserializeValueSimpleDataType(const TForteByte* paBytes, int paStreamSize, CIEC_ANY &paIECData);
         static int deserializeValueTime(const TForteByte* paBytes, int paStreamSize, CIEC_TIME &paIECData);

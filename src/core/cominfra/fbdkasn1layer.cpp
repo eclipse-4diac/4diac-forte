@@ -106,7 +106,7 @@ EComResponse CFBDKASN1ComLayer::sendData(void *paData, unsigned int paSize){
   EComResponse eRetVal = e_ProcessDataNoSocket;
 
   if(mBottomLayer != nullptr){
-    TConstIEC_ANYPtr *apoSDs = static_cast<TConstIEC_ANYPtr *> (paData);
+    const CIEC_ANY **apoSDs = static_cast<const CIEC_ANY **>(paData);
     size_t unNeededBufferSize = 0;
 
     if(nullptr == apoSDs){
@@ -267,7 +267,7 @@ const TForteByte CFBDKASN1ComLayer::csmDataTags[][2] = {
     {e_APPLICATION + e_CONSTRUCTED + e_ARRAY_TAG, 255},
     {e_APPLICATION + e_CONSTRUCTED + e_STRUCT_TAG, 255}};
 
-int CFBDKASN1ComLayer::serializeDataPointArray(TForteByte *paBytes, const size_t paStreamSize, TConstIEC_ANYPtr *paData, size_t paDataNum){
+int CFBDKASN1ComLayer::serializeDataPointArray(TForteByte *paBytes, const size_t paStreamSize, const CIEC_ANY**paData, size_t paDataNum){
   int nRetVal = -1;
   if(0 == paDataNum){
     serializeNull(paBytes);
@@ -557,7 +557,7 @@ int CFBDKASN1ComLayer::serializeValueStruct(TForteByte* paBytes, int paStreamSiz
   return nTotalStreamUsed;
 }
 
-bool CFBDKASN1ComLayer::deserializeDataPointArray(const TForteByte* paBytes, unsigned int paStreamSize, TIEC_ANYPtr *paData, size_t paDataNum){
+bool CFBDKASN1ComLayer::deserializeDataPointArray(const TForteByte* paBytes, unsigned int paStreamSize, CIEC_ANY **paData, size_t paDataNum){
   bool bRetval = true;
   if(0 == paDataNum){
     bRetval = ((paStreamSize == 1) && (isNull(paBytes)));
