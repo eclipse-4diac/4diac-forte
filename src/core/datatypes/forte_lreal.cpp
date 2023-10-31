@@ -138,7 +138,3 @@ void CIEC_LREAL::castLRealData(const CIEC_LREAL &paSrcValue, CIEC_ANY &paDestVal
       break;
   }
 }
-
-size_t CIEC_LREAL::getToStringBufferSize() const {
-  return sizeof("-2.2250738585072014E-308"); //Minimal double number, negative for additional sign
-}

@@ -26,12 +26,7 @@
 #include "forte_constants.h"
 #include "forte_lint.h"
 
-
-
-
-
 DEFINE_FIRMWARE_DATATYPE(LTIME, g_nStringIdLTIME)
-
 
 int CIEC_LTIME::fromString(const char *paValue) {
   int nRetVal = -1;
@@ -283,8 +278,4 @@ void CIEC_LTIME::setFromNanoSeconds(TValueType paValue) {
         (forte::core::constants::cNanosecondsPerSecond < csmForteTimeBaseUnitsPerSecond) ?
           paValue * (csmForteTimeBaseUnitsPerSecond / forte::core::constants::cNanosecondsPerSecond) :
           paValue / (forte::core::constants::cNanosecondsPerSecond / csmForteTimeBaseUnitsPerSecond));
-}
-
-size_t CIEC_LTIME::getToStringBufferSize() const {
-  return sizeof("LT#-18446744073709551615ns");
 }

@@ -143,9 +143,11 @@ class CIEC_LREAL final : public CIEC_ANY_REAL{
 
     /*! \brief calculates buffer size needed for toString conversion
      */
-    size_t getToStringBufferSize() const override;
+    constexpr size_t getToStringBufferSize() const override {
+      return sizeof("-2.2250738585072014E-308"); // Minimal double number, negative for additional sign
+    }
 
-    EDataTypeID getDataTypeID() const override {
+    constexpr EDataTypeID getDataTypeID() const override {
       return CIEC_ANY::e_LREAL;
     }
 

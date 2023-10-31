@@ -54,7 +54,7 @@ class CIEC_DATE final : public CIEC_ANY_DATE {
       return getTUINT64();
     }
 
-    EDataTypeID getDataTypeID() const override {
+    constexpr EDataTypeID getDataTypeID() const override {
       return CIEC_ANY::e_DATE;
     }
 
@@ -83,7 +83,9 @@ class CIEC_DATE final : public CIEC_ANY_DATE {
 
     /*! \brief calculates buffer size needed for toString conversion
      */
-    size_t getToStringBufferSize() const override;
+    constexpr size_t getToStringBufferSize() const override {
+      return sizeof("D#1970-01-01");
+    }
 };
 
 inline bool operator==(const CIEC_DATE left, const CIEC_DATE &right) {

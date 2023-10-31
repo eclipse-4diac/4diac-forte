@@ -59,7 +59,7 @@ class CIEC_TIME final : public CIEC_ANY_DURATION {
       return getLargestInt();
     }
 
-    EDataTypeID getDataTypeID() const override {
+    constexpr EDataTypeID getDataTypeID() const override {
       return CIEC_ANY::e_TIME;
     }
 
@@ -87,8 +87,10 @@ class CIEC_TIME final : public CIEC_ANY_DURATION {
 
     /*! \brief calculates buffer size needed for toString conversion
      */
-    size_t getToStringBufferSize() const override;
-    
+    constexpr size_t getToStringBufferSize() const override {
+      return sizeof(csmMinTimeValue);
+    }
+
     TValueType getInDays() const;
     TValueType getInHours() const;
     TValueType getInMinutes() const;

@@ -127,7 +127,3 @@ int CIEC_LDATE_AND_TIME::toString(char* paValue, size_t paBufferSize) const {
 int CIEC_LDATE_AND_TIME::toGMTString(char* paValue, unsigned int paBufferSize) const{
   return toString(paValue, paBufferSize);
 }
-
-size_t CIEC_LDATE_AND_TIME::getToStringBufferSize() const {
-  return sizeof("LDT#1970-01-01-00:00:00.000");
-}

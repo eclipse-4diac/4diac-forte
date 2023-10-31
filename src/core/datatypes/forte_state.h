@@ -18,7 +18,7 @@
 
 /*!\ingroup COREDTS CIEC_EVENT represents the STATE data type according to IEC 61131.
  */
-class CIEC_STATE : public CIEC_ANY_INT {
+class CIEC_STATE final : public CIEC_ANY_INT {
   DECLARE_FIRMWARE_DATATYPE(STATE)
 
   public:
@@ -62,9 +62,11 @@ class CIEC_STATE : public CIEC_ANY_INT {
 
     /*! \brief calculates buffer size needed for toString conversion
      */
-    size_t getToStringBufferSize() const override;
+    constexpr size_t getToStringBufferSize() const override {
+      return sizeof("65535");
+    }
 
-    EDataTypeID getDataTypeID() const override {
+    constexpr EDataTypeID getDataTypeID() const override {
       return CIEC_ANY::e_UINT;
     }
 };

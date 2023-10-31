@@ -137,18 +137,18 @@ class CIEC_WSTRING final : public CIEC_ANY_STRING {
      */
     bool fromUTF16(const TForteWChar *paBuffer, unsigned int paBufferLen);
 
-        /*! \brief Converts the WSTRING to a UTF-16 representation
-         *
-         *   This command implements a conversion function from a WSTRING
-         *   to a big-endian UTF-16 encoding, usable e.g. for the serialization.
-         *   \param paBuffer  Reference to the output buffer. If 0, only the needed size will be computed.
-         *   \param paBufferSize  Size of the provided buffer.
-         *   \return number of bytes used in the buffer
-         *           -1 on error
-         */
-        int toUTF16(TForteByte *paBuffer, unsigned int paBufferSize) const;
+    /*! \brief Converts the WSTRING to a UTF-16 representation
+      *
+      *   This command implements a conversion function from a WSTRING
+      *   to a big-endian UTF-16 encoding, usable e.g. for the serialization.
+      *   \param paBuffer  Reference to the output buffer. If 0, only the needed size will be computed.
+      *   \param paBufferSize  Size of the provided buffer.
+      *   \return number of bytes used in the buffer
+      *           -1 on error
+      */
+    int toUTF16(TForteByte *paBuffer, unsigned int paBufferSize) const;
 
-    EDataTypeID getDataTypeID() const override {
+    constexpr EDataTypeID getDataTypeID() const override {
       return CIEC_ANY::e_WSTRING;
     }
 

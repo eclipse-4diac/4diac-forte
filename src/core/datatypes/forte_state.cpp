@@ -18,7 +18,3 @@
 DEFINE_FIRMWARE_DATATYPE(STATE, g_nStringIdSTATE)
 
 const CIEC_STATE::TValueType CIEC_STATE::scmMaxVal = std::numeric_limits<CIEC_STATE::TValueType>::max();
-
-size_t CIEC_STATE::getToStringBufferSize() const {
-    return sizeof("65535");
-}
