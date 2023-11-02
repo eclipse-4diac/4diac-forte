@@ -32,7 +32,7 @@ const std::string COPC_UA_Layer::structTypesBrowsePath = "/Types/0:ObjectTypes/0
 const std::string COPC_UA_Layer::structNodesBrowsePath = "/Objects/1:";
 
 COPC_UA_Layer::COPC_UA_Layer(CComLayer *paUpperLayer, CBaseCommFB *paComFB) :
-    CComLayer(paUpperLayer, paComFB), mInterruptResp(e_Nothing), mHandler(nullptr), mActionInfo(nullptr), mDataAlreadyPresent(false), mRDBuffer(nullptr) {
+    CComLayer(paUpperLayer, paComFB), mInterruptResp(e_Nothing), mHandler(nullptr), mActionInfo(nullptr), mDataAlreadyPresent(false), mRDBuffer(nullptr), mIsObjectNodeStruct(false) {
 }
 
 COPC_UA_Layer::~COPC_UA_Layer() = default;
@@ -54,7 +54,8 @@ EComResponse COPC_UA_Layer::openConnection(char *paLayerParameter) {
         }
       }
     } else {
-      if(isStructType() && checkWinCCTypeConnection() && CActionInfo::eWrite == mActionInfo->getAction()) {
+      if(isStructType() && checkObjectNodeStructTypeConnection() && CActionInfo::eWrite == mActionInfo->getAction()) {
+        mIsObjectNodeStruct = true;
         response = createStructObjectNode();
       }
     }   
@@ -123,9 +124,8 @@ EComResponse COPC_UA_Layer::recvData(const void *paData, unsigned int) {
 }
 
 EComResponse COPC_UA_Layer::sendData(void *, unsigned int) {
-  if(isStructType()) {
-    // TODO
-    return e_ProcessDataOk;
+  if(mIsObjectNodeStruct) {
+    return executeActionForObjectNodeStruct();
   }
   return (UA_STATUSCODE_GOOD == mHandler->executeAction(*mActionInfo) ? e_ProcessDataOk : e_ProcessDataDataTypeError);
 }
@@ -248,37 +248,73 @@ void COPC_UA_Layer::setDataAlreadyPresentRead(bool paDataRead) {
   mDataAlreadyPresent = paDataRead;
 }
 
+forte::com_infra::EComResponse COPC_UA_Layer::executeActionForObjectNodeStruct() {
+  // TODO implement layer to handle more than 1 struct
+  COPC_UA_Local_Handler* localHandler = dynamic_cast<COPC_UA_Local_Handler*>(mHandler);
+  if(!localHandler) {
+    DEVLOG_ERROR("[OPC UA LAYER]: Failed to get LocalHandler because LocalHandler is null!\n");
+    return e_ProcessDataDataTypeError;
+  }
+  std::string structTypeName;
+  getStructTypeName(structTypeName, getLocalPortConnection(2, true));
+  
+  CIEC_ANY** apoSDs = mFb->getSDs();
+  CIEC_STRUCT& structType = static_cast<CIEC_STRUCT&>(apoSDs[0]->unwrap());
+  const CStringDictionary::TStringId* structMemberNames = structType.elementNames();
+  for(size_t i = 0; i < structType.getStructSize(); i++) {
+    std::string memberBrowsePath;
+    getObjectNodeStructMemberBrowsePath(memberBrowsePath, structTypeName, structMemberNames[i], COPC_UA_Layer::structNodesBrowsePath);
+
+    CActionInfo* actionInfo = new CActionInfo(*this, mActionInfo->getAction(), mActionInfo->getEndpoint());
+    actionInfo->getNodePairInfo().pushBack(new CActionInfo::CNodePairInfo(nullptr, memberBrowsePath));
+    CIEC_ANY* memberVariable = structType.getMember(i);
+    if(UA_STATUSCODE_GOOD != localHandler->executeActionForObjectStruct(*actionInfo, *memberVariable)) {
+      DEVLOG_ERROR("[OPC UA LAYER]: Error occured in FB %s while sending Struct member %s\n", getCommFB()->getInstanceName(),
+      CStringDictionary::getInstance().get(structMemberNames[i]));
+      return e_ProcessDataDataTypeError;
+    }
+  }
+  return e_ProcessDataOk;
+}
+
 const CDataConnection* COPC_UA_Layer::getLocalPortConnection(int paPortIndex, bool paIsSD) const {
   const CStringDictionary::TStringId localPortNameId = getLocalPortNameId(paPortIndex, paIsSD);
   const CDataConnection *localPortConnection = paIsSD ? getCommFB()->getDIConnection(localPortNameId) : getCommFB()->getDOConnection(localPortNameId);
   return localPortConnection;
 }
 
-const CStringDictionary::TStringId COPC_UA_Layer::getLocalPortNameId(int paPortIndex, bool paIsSD) const {
+CStringDictionary::TStringId COPC_UA_Layer::getLocalPortNameId(int paPortIndex, bool paIsSD) const {
   const SFBInterfaceSpec *localInterfaceSpec = getCommFB()->getFBInterfaceSpec();
   return paIsSD ? localInterfaceSpec->mDINames[paPortIndex] : localInterfaceSpec->mDONames[paPortIndex];
 }
 
-bool COPC_UA_Layer::checkWinCCTypeConnection() {
+bool COPC_UA_Layer::checkObjectNodeStructTypeConnection() {
   int portIndex = 2;
   bool isSD = true;
   if(mActionInfo && mHandler) {
-    if(isWinCCOPCUAObjectPresent(getLocalPortConnection(portIndex, isSD), COPC_UA_Layer::structTypesBrowsePath)) {
+    if(isOPCUAStructObjectPresent(getLocalPortConnection(portIndex, isSD), COPC_UA_Layer::structTypesBrowsePath)) {
       return true;
     }
     DEVLOG_ERROR("[OPC UA LAYER]: Invalid Struct type in FB %s at connection %s\n", getCommFB()->getInstanceName(),
     CStringDictionary::getInstance().get(getLocalPortNameId(portIndex, isSD)));
   } else {
-    DEVLOG_ERROR("[OPC UA LAYER]: Failed to check WinCC Type Connection because Action or Handler is null!\n");
+    DEVLOG_ERROR("[OPC UA LAYER]: Failed to check Object Struct Type Connection because Action or Handler is null!\n");
   }
   return false;
 }
 
-void COPC_UA_Layer::getWinCCStructBrowsePath(std::string &paBrowsePath, const CDataConnection *paLocalPortConnection, const std::string &paPathPrefix) {
+void COPC_UA_Layer::getObjectNodeStructBrowsePath(std::string &paBrowsePath, const CDataConnection *paLocalPortConnection, const std::string &paPathPrefix) {
   paBrowsePath.append(paPathPrefix);
   std::string structTypeName;
   getStructTypeName(structTypeName, paLocalPortConnection);
   paBrowsePath.append(structTypeName);
+}
+
+void COPC_UA_Layer::getObjectNodeStructMemberBrowsePath(std::string &paBrowsePath, std::string &structTypeName, const CStringDictionary::TStringId structMemberNameId, const std::string &paPathPrefix) {
+  paBrowsePath.append(paPathPrefix);
+  paBrowsePath.append(structTypeName);
+  paBrowsePath.append("/2:");
+  paBrowsePath.append(CStringDictionary::getInstance().get(structMemberNameId));
 }
 
 void COPC_UA_Layer::getStructTypeName(std::string &paStructTypeName, const CDataConnection *paLocalPortConnection) {
@@ -295,11 +331,11 @@ bool COPC_UA_Layer::isStructType() const {
   return numSDs > 0 && CIEC_ANY::e_STRUCT == apoSDs[0]->unwrap().getDataTypeID();
 }
 
-bool COPC_UA_Layer::isWinCCOPCUAObjectPresent(const CDataConnection * paLocalPortConnection, const std::string & paPathPrefix) {
+bool COPC_UA_Layer::isOPCUAStructObjectPresent(const CDataConnection *paLocalPortConnection, const std::string &paPathPrefix) {
   COPC_UA_Local_Handler* localHandler = dynamic_cast<COPC_UA_Local_Handler*>(mHandler);
   if(localHandler) {
     std::string browsePath;
-    getWinCCStructBrowsePath(browsePath, paLocalPortConnection, paPathPrefix);
+    getObjectNodeStructBrowsePath(browsePath, paLocalPortConnection, paPathPrefix);
     CActionInfo::CNodePairInfo nodePair(nullptr, browsePath);
     return localHandler->isOPCUAObjectPresent(nodePair);
   } else {
@@ -311,10 +347,10 @@ bool COPC_UA_Layer::isWinCCOPCUAObjectPresent(const CDataConnection * paLocalPor
 EComResponse COPC_UA_Layer::createStructObjectNode() {
   EComResponse response = e_InitTerminated;
   const CDataConnection* localPortConnection = getLocalPortConnection(2, true);
-  if(isWinCCOPCUAObjectPresent(localPortConnection, COPC_UA_Layer::structNodesBrowsePath)) {
+  if(isOPCUAStructObjectPresent(localPortConnection, COPC_UA_Layer::structNodesBrowsePath)) {
     return e_InitOk;
   }
-  CActionInfo* actionInfo = getCreateObjectActionForStruct();
+  CActionInfo* actionInfo = getCreateObjectActionForObjectNodeStruct();
   if( (UA_STATUSCODE_GOOD == mHandler->initializeAction(*actionInfo)) && (UA_STATUSCODE_GOOD == mHandler->executeAction(*actionInfo)) ) {
     response = e_InitOk;
   }
@@ -322,14 +358,14 @@ EComResponse COPC_UA_Layer::createStructObjectNode() {
   return response;
 }
 
-CActionInfo* COPC_UA_Layer::getCreateObjectActionForStruct() {
+CActionInfo* COPC_UA_Layer::getCreateObjectActionForObjectNodeStruct() {
   // TODO implement layer to handle more than 1 struct
   CActionInfo* actionInfo = new CActionInfo(*this, CActionInfo::UA_ActionType::eCreateObject, mActionInfo->getEndpoint());
 
   std::string typeBrowsePath;
-  getWinCCStructBrowsePath(typeBrowsePath, getLocalPortConnection(2, true), COPC_UA_Layer::structTypesBrowsePath);
+  getObjectNodeStructBrowsePath(typeBrowsePath, getLocalPortConnection(2, true), COPC_UA_Layer::structTypesBrowsePath);
   std::string nodeBrowsePath;
-  getWinCCStructBrowsePath(nodeBrowsePath, getLocalPortConnection(2, true), COPC_UA_Layer::structNodesBrowsePath);
+  getObjectNodeStructBrowsePath(nodeBrowsePath, getLocalPortConnection(2, true), COPC_UA_Layer::structNodesBrowsePath);
 
   CSinglyLinkedList<CActionInfo::CNodePairInfo*>& nodePairs = actionInfo->getNodePairInfo();
   nodePairs.pushBack(new CActionInfo::CNodePairInfo(nullptr, typeBrowsePath));

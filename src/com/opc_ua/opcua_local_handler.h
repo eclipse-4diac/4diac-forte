@@ -77,6 +77,15 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
     */
     bool isOPCUAObjectPresent(CActionInfo::CNodePairInfo &paNodePair);
 
+    /**
+     * Execute the action for Object Node Structs
+     * NOTE: Currently supports Write Action only
+     * @param paActionInfo Action to be executed
+     * @param paMember Struct Object member
+     * @return UA_STATUSCODE_GOOD is no problem occurred, other value otherwise
+     */
+    UA_StatusCode executeActionForObjectStruct(CActionInfo &paActionInfo, CIEC_ANY& paMember);
+
   protected:
 
     /**
@@ -489,6 +498,14 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
      * @return UA_STATUSCODE_GOOD is no problem occurred, other value otherwise
      */
     UA_StatusCode executeWrite(CActionInfo &paActionInfo);
+
+    /**
+     * Execute the write action for a Object Struct member
+     * @param paActionInfo Action to be executed
+     * @param paMember The Struct Object member
+     * @return UA_STATUSCODE_GOOD is no problem occurred, other value otherwise
+     */
+    UA_StatusCode executeObjectStructWrite(CActionInfo &paActionInfo, CIEC_ANY& paMember);
 
     /**
      * When the FB of the local method is triggered to signalize the end of the method, this function is called

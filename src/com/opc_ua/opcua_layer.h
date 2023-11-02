@@ -75,7 +75,7 @@ class COPC_UA_Layer : public forte::com_infra::CComLayer {
   private:
 
     /**
-     * BrowsePath to folder that contains WinCC Struct Types
+     * BrowsePath to folder that contains Object Node Struct Types
      */
      static const std::string structTypesBrowsePath;
 
@@ -153,6 +153,14 @@ class COPC_UA_Layer : public forte::com_infra::CComLayer {
     CSyncObject mDataAlreadyPresentMutex;
     bool mDataAlreadyPresent;
 
+    bool mIsObjectNodeStruct;
+
+    /**
+     * Execute the action for a Object Node Struct
+     * @return e_ProcessDataOK if no problem occurred, other value otherwise
+     */
+    forte::com_infra::EComResponse executeActionForObjectNodeStruct();
+
     /**
      * Get the port connection pointer for a connected data port
      * @param paPortIndex The Index of the data port
@@ -167,7 +175,7 @@ class COPC_UA_Layer : public forte::com_infra::CComLayer {
      * @param paIsSD True if the port to get is an SD, false othewise
      * @return The pointer to the local port connection
     */
-    const CStringDictionary::TStringId getLocalPortNameId(int paPortIndex, bool paIsSD) const;
+    CStringDictionary::TStringId getLocalPortNameId(int paPortIndex, bool paIsSD) const;
 
 
     /**
@@ -181,35 +189,45 @@ class COPC_UA_Layer : public forte::com_infra::CComLayer {
      * Supports only one connected Struct Type currently
      * @return The ActionInfo for creating OPC UA Object Node
     */
-    CActionInfo* getCreateObjectActionForStruct();
+    CActionInfo* getCreateObjectActionForObjectNodeStruct();
 
     /**
-     * Get the BrowsePath to the OPC UA WinCC Struct Object Type from the local Struct Type
+     * Get the BrowsePath to the OPC UA Struct Object Type from the local Struct Type
      * @param paBrowsePath Place to store the BrowsePath to the OPC UA Struct Object Type
      * @param paLocalPortConnection Local port connection pointer
      * @param paPathPrefix The BrowsePath directory with namespace (e.g. /Objects/1:)
      */
-    static void getWinCCStructBrowsePath(std::string &paBrowsePath, const CDataConnection *paLocalPortConnection, const std::string &paPathPrefix);
+    static void getObjectNodeStructBrowsePath(std::string &paBrowsePath, const CDataConnection *paLocalPortConnection, const std::string &paPathPrefix);
+
+    /**
+     * Get the BrowsePath to the OPC UA Object Struct members from the local Struct Type
+     * @param paBrowsePath Place to store the BrowsePath to the OPC UA Struct Object Type
+     * @param structTypeName Name of Object Node Struct Type
+     * @param structMemberNameId Name Id of Object Node Struct member
+     * @param paPathPrefix The BrowsePath directory with namespace (e.g. /Objects/1:)
+     */
+    static void getObjectNodeStructMemberBrowsePath(std::string &paBrowsePath, std::string &structTypeName, const CStringDictionary::TStringId structMemberNameId, const std::string &paPathPrefix);
 
     /**
      * @param paStructTypeName Place to store the name of the Struct Type
+     * @param paLocalPortConnection Local port connection pointer
     */
     static void getStructTypeName(std::string& paStructTypeName, const CDataConnection *paLocalPortConnection);
     
 
     /**
-     * Check that types of the SDs of the FBs are of WinCC Struct Type
+     * Check that the Struct Object type of the SDs is valid
      * NOTE: Supports only one connected Struct Type and SDs currently
-     * @return True if WinCC Struct Type, false otherwise
+     * @return True if Struct Object Type is valid, false otherwise
      */
-    bool checkWinCCTypeConnection();
+    bool checkObjectNodeStructTypeConnection();
 
     /**
-     * Check if WinCC Struct is present in OPC UA server
+     * Check if Object Node Struct is present in OPC UA server
      * @param paLocalPortConnection Local port connection pointer
      * @param paPathPrefix The BrowsePath directory with namespace (e.g. /Objects/1:)
     */
-    bool isWinCCOPCUAObjectPresent(const CDataConnection *paLocalPortConnection, const std::string &paPathPrefix);
+    bool isOPCUAStructObjectPresent(const CDataConnection *paLocalPortConnection, const std::string &paPathPrefix);
 
     /**
      * Check if Data Connection is a Struct Type
