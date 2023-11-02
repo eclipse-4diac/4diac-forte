@@ -136,9 +136,9 @@ class CCompositeFB: public CFunctionBlock {
     }
 
     virtual void readInternal2InterfaceOutputData(TEventID paEOID) = 0;
+    void executeEvent(TEventID paEIID, CEventChainExecutionThread * const paECET) override final;
 
   private:
-    void executeEvent(TEventID paEIID, CEventChainExecutionThread * const paECET) override;
 
     bool createInternalFBs();
     void createEventConnections();
