@@ -128,6 +128,7 @@ void CCommFB::writeOutputData(TEventID paEO) {
     }
     case scmReceiveNotificationEventID: {
       RES_DATA_CON_CRITICAL_REGION();
+      CCriticalRegion lock(getFBLock());
       for(TPortId i = 0; i < mInterfaceSpec->mNumDOs; ++i) {
         writeData(i, *mDOs[i], mDOConns[i]);
       }

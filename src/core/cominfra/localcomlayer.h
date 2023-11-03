@@ -125,7 +125,6 @@ namespace forte {
 
         EComResponse openConnection(char *const paLayerParameter) override;
         void closeConnection() override;
-        static CSyncObject* aquireResourceLock(const forte::com_infra::CBaseCommFB &paPubl, const forte::com_infra::CBaseCommFB &paSubl);
     };
   }
 

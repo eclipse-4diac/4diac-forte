@@ -33,33 +33,21 @@ CLocalComLayer::~CLocalComLayer(){
 }
 
 EComResponse CLocalComLayer::sendData(void *, unsigned int){
-  CCriticalRegion criticalRegion(mFb->getResource().mResDataConSync);
   CIEC_ANY **sds = mFb->getSDs();
   TPortId numSDs = mFb->getNumSD();
 
   // go through GroupList and trigger all Subscribers
   for(auto runner : mLocalCommGroup->mSublList){
     forte::com_infra::CBaseCommFB& subFb(*runner->getCommFB());
-    CSyncObject*const poTargetResDataConSync = aquireResourceLock(*mFb, subFb);
+    CCriticalRegion criticalRegion(subFb.getFBLock());
     setRDs(subFb, sds, numSDs);
     subFb.interruptCommFB(runner);
     subFb.getResource().getDevice().getDeviceExecution().startNewEventChain(&subFb);
-    if(poTargetResDataConSync != nullptr){
-        poTargetResDataConSync->unlock();
-    }
   }
 
   return e_ProcessDataOk;
 }
 
-CSyncObject* CLocalComLayer::aquireResourceLock(const forte::com_infra::CBaseCommFB &paPubl, const forte::com_infra::CBaseCommFB &paSubl) {
-  if(paPubl.getResourcePtr() != paSubl.getResourcePtr()){
-    CSyncObject *const targetResDataConSync = &(paSubl.getResourcePtr()->mResDataConSync);
-    targetResDataConSync->lock();
-    return targetResDataConSync;
-  }
-  return nullptr;
-}
 
 void CLocalComLayer::setRDs(forte::com_infra::CBaseCommFB& paSubl, CIEC_ANY **paSDs, TPortId paNumSDs){
   CIEC_ANY **aRDs = paSubl.getRDs();
