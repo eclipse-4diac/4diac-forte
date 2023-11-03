@@ -85,7 +85,6 @@ void FORTE_UINT2UINT::executeEvent(TEventID paEIID, CEventChainExecutionThread *
 void FORTE_UINT2UINT::readInputData(TEventID paEIID) {
   switch(paEIID) {
     case scmEventREQID: {
-      RES_DATA_CON_CRITICAL_REGION();
       readData(0, var_IN, conn_IN);
       break;
     }
@@ -97,8 +96,7 @@ void FORTE_UINT2UINT::readInputData(TEventID paEIID) {
 void FORTE_UINT2UINT::writeOutputData(TEventID paEIID) {
   switch(paEIID) {
     case scmEventCNFID: {
-      RES_DATA_CON_CRITICAL_REGION();
-      writeData(0, var_OUT, conn_OUT);
+       writeData(0, var_OUT, conn_OUT);
       break;
     }
     default:

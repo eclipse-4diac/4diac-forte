@@ -62,7 +62,6 @@ void FORTE_RT_E_MERGE::setInitialValues() {
 void FORTE_RT_E_MERGE::readInputData(TEventID paEIID) {
   switch(paEIID) {
     case scmEventINITID: {
-      RES_DATA_CON_CRITICAL_REGION();
       readData(0, var_QI, conn_QI);
       readData(1, var_Tmin, conn_Tmin);
       readData(2, var_Deadline, conn_Deadline);
@@ -70,11 +69,9 @@ void FORTE_RT_E_MERGE::readInputData(TEventID paEIID) {
       break;
     }
     case scmEventEI1ID: {
-      RES_DATA_CON_CRITICAL_REGION();
       break;
     }
     case scmEventEI2ID: {
-      RES_DATA_CON_CRITICAL_REGION();
       break;
     }
     default:
@@ -85,12 +82,10 @@ void FORTE_RT_E_MERGE::readInputData(TEventID paEIID) {
 void FORTE_RT_E_MERGE::writeOutputData(TEventID paEIID) {
   switch(paEIID) {
     case scmEventINITOID: {
-      RES_DATA_CON_CRITICAL_REGION();
       writeData(0, var_QO, conn_QO);
       break;
     }
     case scmEventEOID: {
-      RES_DATA_CON_CRITICAL_REGION();
       break;
     }
     default:

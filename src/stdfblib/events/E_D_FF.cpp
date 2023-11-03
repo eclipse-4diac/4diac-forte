@@ -102,7 +102,6 @@ void FORTE_E_D_FF::enterStateRESET(CEventChainExecutionThread *const paECET) {
 void FORTE_E_D_FF::readInputData(const TEventID paEIID) {
   switch(paEIID) {
     case scmEventCLKID: {
-      RES_DATA_CON_CRITICAL_REGION();
       readData(0, var_D, conn_D);
       break;
     }
@@ -114,7 +113,6 @@ void FORTE_E_D_FF::readInputData(const TEventID paEIID) {
 void FORTE_E_D_FF::writeOutputData(const TEventID paEIID) {
   switch(paEIID) {
     case scmEventEOID: {
-      RES_DATA_CON_CRITICAL_REGION();
       writeData(0, var_Q, conn_Q);
       break;
     }

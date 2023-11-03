@@ -64,7 +64,6 @@ void FORTE_PLCnextMaster::setInitialValues() {
 void FORTE_PLCnextMaster::readInputData(const TEventID paEIID) {
   switch(paEIID) {
     case scmEventINITID: {
-      RES_DATA_CON_CRITICAL_REGION();
       readData(0, var_QI, conn_QI);
       readData(1, var_SlaveUpdateInterval, conn_SlaveUpdateInterval);
       break;
@@ -77,13 +76,11 @@ void FORTE_PLCnextMaster::readInputData(const TEventID paEIID) {
 void FORTE_PLCnextMaster::writeOutputData(const TEventID paEIID) {
   switch(paEIID) {
     case scmEventINITOID: {
-      RES_DATA_CON_CRITICAL_REGION();
       writeData(0, var_QO, conn_QO);
       writeData(1, var_STATUS, conn_STATUS);
       break;
     }
     case scmEventINDID: {
-      RES_DATA_CON_CRITICAL_REGION();
       writeData(0, var_QO, conn_QO);
       writeData(1, var_STATUS, conn_STATUS);
       break;

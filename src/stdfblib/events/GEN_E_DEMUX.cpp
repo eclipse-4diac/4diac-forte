@@ -46,7 +46,6 @@ void GEN_E_DEMUX::executeEvent(TEventID paEIID, CEventChainExecutionThread *cons
 }
 
 void GEN_E_DEMUX::readInputData(TEventID) {
-  RES_DATA_CON_CRITICAL_REGION();
   readData(0, *mDIs[0], mDIConns[0]);
 }
 

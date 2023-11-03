@@ -75,7 +75,6 @@ const SCFB_FBNData FORTE_E_F_TRIG::scmFBNData = {
 void FORTE_E_F_TRIG::readInputData(TEventID paEIID) {
   switch(paEIID) {
     case scmEventEIID: {
-      RES_DATA_CON_CRITICAL_REGION();
       readData(0, var_QI, conn_QI);
       break;
     }

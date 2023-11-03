@@ -85,8 +85,7 @@ void FORTE_STRING2STRING::executeEvent(TEventID paEIID, CEventChainExecutionThre
 void FORTE_STRING2STRING::readInputData(TEventID paEIID) {
   switch(paEIID) {
     case scmEventREQID: {
-      RES_DATA_CON_CRITICAL_REGION();
-      readData(0, var_IN, conn_IN);
+       readData(0, var_IN, conn_IN);
       break;
     }
     default:
@@ -97,7 +96,6 @@ void FORTE_STRING2STRING::readInputData(TEventID paEIID) {
 void FORTE_STRING2STRING::writeOutputData(TEventID paEIID) {
   switch(paEIID) {
     case scmEventCNFID: {
-      RES_DATA_CON_CRITICAL_REGION();
       writeData(0, var_OUT, conn_OUT);
       break;
     }

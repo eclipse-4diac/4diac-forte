@@ -227,7 +227,6 @@ EMGMResponse CMonitoringHandler::resetEventCount(forte::core::TNameIdentifier &p
       }
     }
     if(nullptr != eventMonitorData){
-      CCriticalRegion criticalRegion(fB->getResource().mResDataConSync);
       *eventMonitorData = 0;
       eRetVal = EMGMResponse::Ready;
     }
@@ -358,15 +357,11 @@ void CMonitoringHandler::readResourceWatches(std::string &paResponse){
 
 
 void CMonitoringHandler::updateMonitringData(){
-  //update the monitoring data buffer to keep the critical region as short as possible
-  CCriticalRegion criticalRegion(mResource.mResDataConSync);
   for(TFBMonitoringList::Iterator itRunner = mFBMonitoringList.begin(); itRunner != mFBMonitoringList.end(); ++itRunner){
-
     for(TDataWatchList::Iterator itDataRunner = itRunner->mWatchedDataPoints.begin(); itDataRunner != itRunner->mWatchedDataPoints.end(); ++itDataRunner){
       itDataRunner->mDataBuffer->setValue(itDataRunner->mDataValueRef);
       itDataRunner->mDataBuffer->setForced(itDataRunner->mDataValueRef.isForced());
     }
-
     for(TEventWatchList::Iterator itEventRunner = itRunner->mWatchedEventPoints.begin(); itEventRunner != itRunner->mWatchedEventPoints.end(); ++itEventRunner){
       itEventRunner->mEventDataBuf = itEventRunner->mEventDataRef;
     }

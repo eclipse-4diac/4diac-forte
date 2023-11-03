@@ -80,7 +80,6 @@ void FORTE_F_TIME_IN_MS_TO_DINT::executeEvent(const TEventID paEIID, CEventChain
 void FORTE_F_TIME_IN_MS_TO_DINT::readInputData(const TEventID paEIID) {
   switch(paEIID) {
     case scmEventREQID: {
-      RES_DATA_CON_CRITICAL_REGION();
       readData(0, var_IN, conn_IN);
       break;
     }
@@ -92,7 +91,6 @@ void FORTE_F_TIME_IN_MS_TO_DINT::readInputData(const TEventID paEIID) {
 void FORTE_F_TIME_IN_MS_TO_DINT::writeOutputData(const TEventID paEIID) {
   switch(paEIID) {
     case scmEventCNFID: {
-      RES_DATA_CON_CRITICAL_REGION();
       writeData(0, var_OUT, conn_OUT);
       break;
     }

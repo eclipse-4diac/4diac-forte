@@ -59,7 +59,6 @@ void CTimedFB::executeEvent(TEventID paEIID, CEventChainExecutionThread * const 
 }
 
 void CTimedFB::readInputData(TEventID) {
-  RES_DATA_CON_CRITICAL_REGION();
   readData(0, *mDIs[0], mDIConns[0]);
 }
 

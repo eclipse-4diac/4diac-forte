@@ -44,7 +44,6 @@ class CInterface2InternalDataConnection;
 class CResource : public CFunctionBlock, public forte::core::CFBContainer{
 
   public:
-    CSyncObject mResDataConSync;
     /*! \brief The main constructor for a resource.
      *
      * The resource can only be generated with a given device the resource is contained. A resource can not exist outside of an device.

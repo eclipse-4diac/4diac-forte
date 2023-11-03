@@ -109,9 +109,6 @@ CIEC_ANY* CLuaBFB::getVariable(TForteUInt32 paId) {
 void CLuaBFB::readInputData(TEventID paEIID) {
   if(nullptr != mInterfaceSpec->mEIWithIndexes && scmNoDataAssociated != mInterfaceSpec->mEIWithIndexes[paEIID]) {
     const TDataIOID *eiWithStart = &(mInterfaceSpec->mEIWith[mInterfaceSpec->mEIWithIndexes[paEIID]]);
-
-    // TODO think on this lock
-    RES_DATA_CON_CRITICAL_REGION();
     for(size_t i = 0; eiWithStart[i] != scmWithListDelimiter; ++i) {
       TDataIOID diNum = eiWithStart[i];
       readData(diNum, *getDI(diNum), *getDIConUnchecked(diNum));
@@ -122,8 +119,6 @@ void CLuaBFB::readInputData(TEventID paEIID) {
 void CLuaBFB::writeOutputData(TEventID paEO) {
   if (nullptr != mInterfaceSpec->mEOWithIndexes && -1 != mInterfaceSpec->mEOWithIndexes[paEO]) {
     const TDataIOID *eiWithStart = &(mInterfaceSpec->mEOWith[mInterfaceSpec->mEOWithIndexes[paEO]]);
-    //TODO think on this lock
-    RES_DATA_CON_CRITICAL_REGION();
     for (size_t i = 0; eiWithStart[i] != scmWithListDelimiter; ++i) {
       TDataIOID doNum = eiWithStart[i];
       writeData(doNum, *getDO(doNum), *getDOConUnchecked(doNum));

@@ -56,8 +56,6 @@ namespace forte {
 #endif //FORTE_SUPPORT_MONITORING
 
 
-#define RES_DATA_CON_CRITICAL_REGION()  CCriticalRegion criticalRegion(getResource().mResDataConSync)
-
 typedef CAdapter *TAdapterPtr;
 
 typedef TPortId TDataIOID; //!< \ingroup CORE Type for holding an data In- or output ID

@@ -89,7 +89,6 @@ void FORTE_GET_AT_INDEX::executeEvent(TEventID paEIID, CEventChainExecutionThrea
 void FORTE_GET_AT_INDEX::readInputData(TEventID paEIID) {
   switch(paEIID) {
     case scmEventREQID: {
-      RES_DATA_CON_CRITICAL_REGION();
       readData(0, var_IN_ARRAY, conn_IN_ARRAY);
       readData(1, var_INDEX, conn_INDEX);
       break;
@@ -102,7 +101,6 @@ void FORTE_GET_AT_INDEX::readInputData(TEventID paEIID) {
 void FORTE_GET_AT_INDEX::writeOutputData(TEventID paEIID) {
   switch(paEIID) {
     case scmEventCNFID: {
-      RES_DATA_CON_CRITICAL_REGION();
       writeData(0, var_QO, conn_QO);
       writeData(1, var_OUT, conn_OUT);
       break;

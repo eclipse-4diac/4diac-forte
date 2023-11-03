@@ -87,7 +87,6 @@ void FORTE_F_TIME_IN_S_TO_ULINT::executeEvent(TEventID paEIID, CEventChainExecut
 void FORTE_F_TIME_IN_S_TO_ULINT::readInputData(TEventID paEIID) {
   switch(paEIID) {
     case scmEventREQID: {
-      RES_DATA_CON_CRITICAL_REGION();
       readData(0, var_IN, conn_IN);
       break;
     }
@@ -99,7 +98,6 @@ void FORTE_F_TIME_IN_S_TO_ULINT::readInputData(TEventID paEIID) {
 void FORTE_F_TIME_IN_S_TO_ULINT::writeOutputData(TEventID paEIID) {
   switch(paEIID) {
     case scmEventCNFID: {
-      RES_DATA_CON_CRITICAL_REGION();
       writeData(0, var_OUT, conn_OUT);
       break;
     }

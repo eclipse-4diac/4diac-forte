@@ -60,12 +60,10 @@ void GEN_ARRAY2VALUES::executeEvent(TEventID paEIID, CEventChainExecutionThread 
 }
 
 void GEN_ARRAY2VALUES::readInputData(TEventID) {
-  RES_DATA_CON_CRITICAL_REGION();
   readData(0, *mDIs[0], mDIConns[0]);
 }
 
 void GEN_ARRAY2VALUES::writeOutputData(TEventID) {
-  RES_DATA_CON_CRITICAL_REGION();
   for(TPortId i = 0; i < mInterfaceSpec->mNumDOs; ++i) {
     writeData(i, *mDOs[i], mDOConns[i]);
   }

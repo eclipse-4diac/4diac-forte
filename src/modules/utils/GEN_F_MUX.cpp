@@ -89,7 +89,6 @@ void GEN_F_MUX::executeEvent(TEventID paEIID, CEventChainExecutionThread *const 
 }
 
 void GEN_F_MUX::readInputData(TEventID paEI) {
-  RES_DATA_CON_CRITICAL_REGION();
   for(TPortId i = 0; i < mDOutputs; ++i) {
     TPortId index = paEI * mDOutputs + i;
     readData(index, *mDIs[index], mDIConns[index]);
@@ -97,7 +96,6 @@ void GEN_F_MUX::readInputData(TEventID paEI) {
 }
 
 void GEN_F_MUX::writeOutputData(TEventID) {
-  RES_DATA_CON_CRITICAL_REGION();
   for(TPortId i = 0; i < mInterfaceSpec->mNumDOs; ++i) {
     writeData(i, *mDOs[i], mDOConns[i]);
   }

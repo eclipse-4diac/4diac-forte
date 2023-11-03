@@ -91,7 +91,6 @@ void FORTE_FB_F_TRIG::executeEvent(TEventID paEIID, CEventChainExecutionThread *
 void FORTE_FB_F_TRIG::readInputData(TEventID paEIID) {
   switch(paEIID) {
     case scmEventREQID: {
-      RES_DATA_CON_CRITICAL_REGION();
       readData(0, var_CLK, conn_CLK);
       break;
     }
@@ -103,7 +102,6 @@ void FORTE_FB_F_TRIG::readInputData(TEventID paEIID) {
 void FORTE_FB_F_TRIG::writeOutputData(TEventID paEIID) {
   switch(paEIID) {
     case scmEventCNFID: {
-      RES_DATA_CON_CRITICAL_REGION();
       writeData(0, var_Q, conn_Q);
       break;
     }

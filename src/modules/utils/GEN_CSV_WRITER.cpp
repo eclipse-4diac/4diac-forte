@@ -69,13 +69,11 @@ GEN_CSV_WRITER::~GEN_CSV_WRITER(){
 void GEN_CSV_WRITER::readInputData(TEventID paEI) {
   switch(paEI) {
     case scmEventINITID: {
-      RES_DATA_CON_CRITICAL_REGION();
       readData(0, *mDIs[0], mDIConns[0]);
       readData(1, *mDIs[1], mDIConns[1]);
       break;
     }
     case scmEventREQID: {
-      RES_DATA_CON_CRITICAL_REGION();
       readData(0, *mDIs[0], mDIConns[0]);
       for(TPortId i = 2; i < mInterfaceSpec->mNumDIs; i++){
         readData(i, *mDIs[i], mDIConns[i]);
@@ -88,7 +86,6 @@ void GEN_CSV_WRITER::readInputData(TEventID paEI) {
 }
 
 void GEN_CSV_WRITER::writeOutputData(TEventID) {
-  RES_DATA_CON_CRITICAL_REGION();
   writeData(0, *mDOs[0], mDOConns[0]);
   writeData(1, *mDOs[1], mDOConns[1]);
 }

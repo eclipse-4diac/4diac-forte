@@ -259,7 +259,6 @@ EMGMResponse CResource::writeValue(forte::core::TNameIdentifier &paNameList, con
           CDataConnection *con = fb->getDOConnection(portName);
           if(nullptr != con){
             //if we have got a connection it was a DO mirror the forced value there
-            CCriticalRegion criticalRegion(mResDataConSync);
             con->writeData(*var);
           }
         }

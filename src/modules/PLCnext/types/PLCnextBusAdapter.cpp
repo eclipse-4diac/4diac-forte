@@ -51,8 +51,7 @@ void FORTE_PLCnextBusAdapter::readInputData(const TEventID paEIID) {
   if(isSocket()) {
     switch(paEIID) {
       case scmEventINITOID: {
-        RES_DATA_CON_CRITICAL_REGION();
-        readData(0, *mDIs[0], mDIConns[0]);
+          readData(0, *mDIs[0], mDIConns[0]);
         break;
       }
       default:
@@ -61,8 +60,7 @@ void FORTE_PLCnextBusAdapter::readInputData(const TEventID paEIID) {
   } else {
     switch(paEIID) {
       case scmEventINITID: {
-        RES_DATA_CON_CRITICAL_REGION();
-        readData(2, *mDIs[2], mDIConns[2]);
+          readData(2, *mDIs[2], mDIConns[2]);
         readData(3, *mDIs[3], mDIConns[3]);
         readData(1, *mDIs[1], mDIConns[1]);
         readData(0, *mDIs[0], mDIConns[0]);
@@ -78,8 +76,7 @@ void FORTE_PLCnextBusAdapter::writeOutputData(const TEventID paEIID) {
   if(isSocket()) {
     switch(paEIID) {
       case scmEventINITID: {
-        RES_DATA_CON_CRITICAL_REGION();
-        writeData(2, *mDOs[2], mDOConns[2]);
+          writeData(2, *mDOs[2], mDOConns[2]);
         writeData(3, *mDOs[3], mDOConns[3]);
         writeData(1, *mDOs[1], mDOConns[1]);
         writeData(0, *mDOs[0], mDOConns[0]);
@@ -91,8 +88,7 @@ void FORTE_PLCnextBusAdapter::writeOutputData(const TEventID paEIID) {
   } else {
     switch(paEIID) {
       case scmEventINITOID: {
-        RES_DATA_CON_CRITICAL_REGION();
-        writeData(0, *mDOs[0], mDOConns[0]);
+          writeData(0, *mDOs[0], mDOConns[0]);
         break;
       }
       default:

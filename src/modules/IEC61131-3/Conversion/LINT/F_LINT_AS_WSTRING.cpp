@@ -86,7 +86,6 @@ void FORTE_F_LINT_AS_WSTRING::executeEvent(TEventID paEIID, CEventChainExecution
 void FORTE_F_LINT_AS_WSTRING::readInputData(TEventID paEIID) {
   switch(paEIID) {
     case scmEventREQID: {
-      RES_DATA_CON_CRITICAL_REGION();
       readData(0, var_IN, conn_IN);
       break;
     }
@@ -98,7 +97,6 @@ void FORTE_F_LINT_AS_WSTRING::readInputData(TEventID paEIID) {
 void FORTE_F_LINT_AS_WSTRING::writeOutputData(TEventID paEIID) {
   switch(paEIID) {
     case scmEventCNFID: {
-      RES_DATA_CON_CRITICAL_REGION();
       writeData(0, var_OUT, conn_OUT);
       break;
     }

@@ -97,7 +97,6 @@ void FORTE_EC_SET_EVT::executeRQST(){
 void FORTE_EC_SET_EVT::readInputData(TEventID paEIID) {
   switch(paEIID) {
     case scmEventREQID: {
-      RES_DATA_CON_CRITICAL_REGION();
       readData(0, var_QI, conn_QI);
       readData(3, var_DST, conn_DST);
       readData(1, var_FB_NAME, conn_FB_NAME);
@@ -112,7 +111,6 @@ void FORTE_EC_SET_EVT::readInputData(TEventID paEIID) {
 void FORTE_EC_SET_EVT::writeOutputData(TEventID paEIID) {
   switch(paEIID) {
     case scmEventCNFID: {
-      RES_DATA_CON_CRITICAL_REGION();
       writeData(0, var_QO, conn_QO);
       writeData(1, var_STATUS, conn_STATUS);
       break;

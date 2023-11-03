@@ -132,7 +132,6 @@ void FORTE_E_DEMUX::enterStateState_4(CEventChainExecutionThread *const paECET) 
 void FORTE_E_DEMUX::readInputData(const TEventID paEIID) {
   switch(paEIID) {
     case scmEventEIID: {
-      RES_DATA_CON_CRITICAL_REGION();
       readData(0, var_K, conn_K);
       break;
     }

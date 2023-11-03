@@ -101,13 +101,11 @@ void CCommFB::executeEvent(TEventID paEIID, CEventChainExecutionThread *const pa
 void CCommFB::readInputData(TEventID paEI) {
   switch(paEI) {
     case scmEventINITID: {
-      RES_DATA_CON_CRITICAL_REGION();
       readData(0, *mDIs[0], mDIConns[0]);
       readData(1, *mDIs[1], mDIConns[1]);
       break;
     }
     case scmSendNotificationEventID: {
-      RES_DATA_CON_CRITICAL_REGION();
       for(TPortId i = 0; i < mInterfaceSpec->mNumDIs; ++i) {
         readData(i, *mDIs[i], mDIConns[i]);
       }
@@ -121,13 +119,11 @@ void CCommFB::readInputData(TEventID paEI) {
 void CCommFB::writeOutputData(TEventID paEO) {
   switch(paEO) {
     case scmEventINITOID: {
-      RES_DATA_CON_CRITICAL_REGION();
       writeData(0, *mDOs[0], mDOConns[0]);
       writeData(1, *mDOs[1], mDOConns[1]);
       break;
     }
     case scmReceiveNotificationEventID: {
-      RES_DATA_CON_CRITICAL_REGION();
       CCriticalRegion lock(getFBLock());
       for(TPortId i = 0; i < mInterfaceSpec->mNumDOs; ++i) {
         writeData(i, *mDOs[i], mDOConns[i]);

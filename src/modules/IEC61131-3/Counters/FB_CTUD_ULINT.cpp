@@ -119,7 +119,6 @@ void FORTE_FB_CTUD_ULINT::executeEvent(TEventID paEIID, CEventChainExecutionThre
 void FORTE_FB_CTUD_ULINT::readInputData(TEventID paEIID) {
   switch(paEIID) {
     case scmEventREQID: {
-      RES_DATA_CON_CRITICAL_REGION();
       readData(0, var_CU, conn_CU);
       readData(1, var_CD, conn_CD);
       readData(2, var_R, conn_R);
@@ -135,7 +134,6 @@ void FORTE_FB_CTUD_ULINT::readInputData(TEventID paEIID) {
 void FORTE_FB_CTUD_ULINT::writeOutputData(TEventID paEIID) {
   switch(paEIID) {
     case scmEventCNFID: {
-      RES_DATA_CON_CRITICAL_REGION();
       writeData(0, var_QU, conn_QU);
       writeData(1, var_QD, conn_QD);
       writeData(2, var_CV, conn_CV);

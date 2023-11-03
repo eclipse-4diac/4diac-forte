@@ -114,7 +114,6 @@ void FORTE_SET_STRUCT_VALUE::executeEvent(TEventID paEIID, CEventChainExecutionT
 void FORTE_SET_STRUCT_VALUE::readInputData(TEventID paEIID) {
   switch(paEIID) {
     case scmEventREQID: {
-      RES_DATA_CON_CRITICAL_REGION();
       readData(1, var_member, conn_member);
       readData(0, var_in_struct, conn_in_struct);
       readData(2, var_element_value, conn_element_value);
@@ -128,7 +127,6 @@ void FORTE_SET_STRUCT_VALUE::readInputData(TEventID paEIID) {
 void FORTE_SET_STRUCT_VALUE::writeOutputData(TEventID paEIID) {
   switch(paEIID) {
     case scmEventCNFID: {
-      RES_DATA_CON_CRITICAL_REGION();
       writeData(0, var_out_struct, conn_out_struct);
       break;
     }
