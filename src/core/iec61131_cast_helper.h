@@ -99,19 +99,16 @@ namespace forte {
       template<typename CommonSubtype, typename T, typename U>
       constexpr auto are_of_subtype_v = std::conjunction_v<std::is_base_of<CommonSubtype, T>, std::is_base_of<CommonSubtype, U>>;;
 
-      /* For PARTIAL classes, which derive from their base CIEC class, which can be used to identify the CIEC class*/
-      template<typename T> struct get_equivalent_CIEC_class {
-        typedef typename std::conditional<std::is_base_of<CIEC_BOOL, T>::value, CIEC_BOOL, typename std::conditional<std::is_base_of<CIEC_BYTE, T>::value, CIEC_BYTE, typename std::conditional<std::is_base_of<CIEC_WORD, T>::value, CIEC_WORD, typename std::conditional<std::is_base_of<CIEC_DWORD, T>::value, CIEC_DWORD, typename std::conditional<std::is_base_of<CIEC_LWORD, T>::value, CIEC_LWORD, NullType>::type>::type>::type>::type>::type type;
-        get_equivalent_CIEC_class() = delete;
-      };
-
       /** @brief What is the CIEC class of a CIEC class or specialist subtype?
+       * 
+       * For PARTIAL classes, which derive from their base CIEC class, which can be used to identify the CIEC class
        *
        * @param T type to be checked
        * @return NullType if not known, default CIEC class otherwise
        */
-      template <typename T>
-      using get_equivalent_CIEC_class_t = typename get_equivalent_CIEC_class<T>::type;
+      template<typename T>
+      using get_equivalent_CIEC_class_t =
+        std::conditional_t<std::is_base_of_v<CIEC_BOOL, T>, CIEC_BOOL, typename std::conditional_t<std::is_base_of_v<CIEC_BYTE, T>, CIEC_BYTE, typename std::conditional_t<std::is_base_of_v<CIEC_WORD, T>, CIEC_WORD, typename std::conditional_t<std::is_base_of_v<CIEC_DWORD, T>, CIEC_DWORD, typename std::conditional_t<std::is_base_of_v<CIEC_LWORD, T>, CIEC_LWORD, NullType>>>>>;
 
       /* invalid implicit casts */
       template<typename T, typename U> struct implicit_cast {
