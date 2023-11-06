@@ -89,14 +89,6 @@ namespace forte {
           NullType() = delete;
       };
 
-      template<typename CommonSubtype, typename T, typename U>
-      struct are_of_subtype {
-        enum {
-          value = (std::is_base_of<CommonSubtype, T>::value && std::is_base_of<CommonSubtype, U>::value)
-        };
-        are_of_subtype() = delete;
-      };
-
       /** @brief Are T and U subtyped of CommonSubType?
        *
        * @tparam CommonSubType the supertype to be checked against
@@ -105,7 +97,7 @@ namespace forte {
        * @return NullType if not known, default CIEC class otherwise
        */
       template<typename CommonSubtype, typename T, typename U>
-      constexpr auto are_of_subtype_v = are_of_subtype<CommonSubtype, T, U>::value;
+      constexpr auto are_of_subtype_v = std::conjunction_v<std::is_base_of<CommonSubtype, T>, std::is_base_of<CommonSubtype, U>>;;
 
       /* For PARTIAL classes, which derive from their base CIEC class, which can be used to identify the CIEC class*/
       template<typename T> struct get_equivalent_CIEC_class {
