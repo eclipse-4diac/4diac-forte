@@ -19,7 +19,7 @@ CGenFunctionBlock<T>::CGenFunctionBlock(CResource *paSrcRes, const CStringDictio
     T(paSrcRes, nullptr, paInstanceNameId),
     mConfiguredFBTypeNameId(CStringDictionary::scmInvalidStringId), mGenInterfaceSpec() {
 
-  static_assert((std::is_base_of<CFunctionBlock, T>::value), "TFunctionBlock");
+  static_assert((std::is_base_of_v<CFunctionBlock, T>), "TFunctionBlock");
 }
 
 template<class T>

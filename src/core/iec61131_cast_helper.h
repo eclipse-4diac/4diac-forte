@@ -500,6 +500,9 @@ namespace forte {
       };
 
       template <typename T, typename U>
+      using get_div_operator_result_type_t = typename get_div_operator_result_type<T, U>::type;
+
+      template <typename T, typename U>
       struct get_mul_operator_result_type {
         typedef typename get_castable_type<T, U>::type type;
         get_mul_operator_result_type() = delete;
@@ -642,6 +645,9 @@ namespace forte {
         typedef CIEC_LTIME type;
         get_sub_operator_result_type() = delete;
       };
+
+      template <typename T, typename U>
+      using get_sub_operator_result_type_t = typename get_sub_operator_result_type<T, U>::type;
 
       template<typename T>
       struct get_any_chars_base_type {

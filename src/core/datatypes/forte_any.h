@@ -68,14 +68,12 @@ class CIEC_ANY {
     static int dummyInit();
 
     template<typename U, typename T>
-    static typename forte::core::mpl::implicit_or_explicit_cast_t<T, U> cast(const T paFromCast){
+    static auto cast(const T paFromCast) -> typename forte::core::mpl::implicit_or_explicit_cast_t<T, U> {
       U oToCast;
       // If interacting with integers, add or remove sign extension
-      if constexpr (std::is_base_of_v<CIEC_ANY_BIT, T> &&
-          std::is_base_of_v<CIEC_ANY_INT, U>) {
+      if constexpr (std::is_base_of_v<CIEC_ANY_BIT, T> && std::is_base_of_v<CIEC_ANY_INT, U>) {
         oToCast.setValueSimple(U(static_cast<typename U::TValueType>(static_cast<typename T::TValueType>(paFromCast))));
-      } else if constexpr (std::is_base_of_v<CIEC_ANY_INT, T> &&
-          std::is_base_of_v<CIEC_ANY_BIT, U>) {
+      } else if constexpr (std::is_base_of_v<CIEC_ANY_INT, T> && std::is_base_of_v<CIEC_ANY_BIT, U>) {
         typename T::TValueType fromValue = static_cast<typename T::TValueType>(paFromCast);
         typename std::make_unsigned_t<typename T::TValueType> fromValueUnsigned = static_cast<std::make_unsigned_t<typename T::TValueType>>(fromValue);
         typename U::TValueType toValue = static_cast<typename U::TValueType>(fromValueUnsigned);

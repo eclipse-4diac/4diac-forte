@@ -103,8 +103,8 @@ class ST_FOR_ITER {
     /* Type checking section, not for actual use */
     /*********************************************/
     void testMethod() {
-      static_assert((std::is_base_of<CIEC_ANY_INT, E>::value), "E is not of type ANY_INT");
-      static_assert((std::is_base_of<CIEC_ANY_INT, B>::value), "B is not of type ANY_INT");
+      static_assert((std::is_base_of_v<CIEC_ANY_INT, E>), "E is not of type ANY_INT");
+      static_assert((std::is_base_of_v<CIEC_ANY_INT, B>), "B is not of type ANY_INT");
     }
 };
 
