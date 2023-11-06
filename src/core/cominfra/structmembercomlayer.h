@@ -14,6 +14,8 @@
 #pragma once
 
 #include "localcomlayer.h"
+#include <vector>
+
 
 namespace forte {
 
@@ -29,6 +31,9 @@ namespace forte {
      *
      * To use it a ID param with the following structure needs to be provided:
      *    structmemb[localgroupname;structtype;structmembername]
+     *
+     * It is also possible to wirte to children of the structs using:
+     * 		structmemb[localgroupname;structtype;structmembername.structchildmembername]
      *
      *  - localgroupname:  is the local group this local com layer should attach to. If this is the
      *                     first block for this group an according group is created.
@@ -48,11 +53,19 @@ namespace forte {
         void setRDs(forte::com_infra::CBaseCommFB &paSubl, CIEC_ANY **paSDs, TPortId paNumSDs);
 
       private:
+        using TTargetStructIndexList = std::vector<size_t>;
         static constexpr size_t scmNumLayerParameters = 3;
+        TTargetStructIndexList mIndexList;
 
         EComResponse openConnection(char *paLayerParameter) override;
+        CIEC_ANY* getTargetByIndex(CIEC_STRUCT* paRoot, TTargetStructIndexList &paIndexList);
+        TTargetStructIndexList buildIndexList(CIEC_ANY* paRoot, const char *paNestedStructString);
 
-        size_t mMemberIndex;
+        enum EComStringIndex {
+        	e_LOCALGROUPNAME,
+					e_STRUCTTYPE,
+					e_STRUCTMEMBERNAME
+        };
     };
   }
 }
