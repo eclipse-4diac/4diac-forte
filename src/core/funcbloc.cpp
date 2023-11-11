@@ -42,7 +42,7 @@ CFunctionBlock::CFunctionBlock(CResource *paSrcRes, const SFBInterfaceSpec *paIn
         mEOConns(nullptr), mDIConns(nullptr), mDOConns(nullptr), mDIs(nullptr), mDOs(nullptr),
         mAdapters(nullptr),
         mFBConnData(nullptr), mFBVarsData(nullptr),
-        mResource(paSrcRes), mContainer(nullptr),
+        mResource(paSrcRes), mContainer(paSrcRes),
 #ifdef FORTE_SUPPORT_MONITORING
         mEOMonitorCount(nullptr), mEIMonitorCount(nullptr),
 #endif
@@ -117,7 +117,7 @@ void CFunctionBlock::setupAdapters(const SFBInterfaceSpec *paInterfaceSpec, TFor
     for(TPortId i = 0; i < paInterfaceSpec->mNumAdapters; ++i) {
       //set pointer to right place in paFBData
       mAdapters[i] = CTypeLib::createAdapter(paInterfaceSpec->mAdapterInstanceDefinition[i].mAdapterNameID,
-        paInterfaceSpec->mAdapterInstanceDefinition[i].mAdapterTypeNameID, getResourcePtr(),
+        paInterfaceSpec->mAdapterInstanceDefinition[i].mAdapterTypeNameID, getResource(),
         paInterfaceSpec->mAdapterInstanceDefinition[i].mIsPlug);
       if(nullptr != mAdapters[i]) {
         mAdapters[i]->setParentFB(this, static_cast<TForteUInt8>(i));
@@ -126,8 +126,24 @@ void CFunctionBlock::setupAdapters(const SFBInterfaceSpec *paInterfaceSpec, TFor
   }
 }
 
-CTimerHandler& CFunctionBlock::getTimer(){
-  return mResource->getDevice().getTimer();
+CResource* CFunctionBlock::getResource() {
+  if(mContainer != nullptr){
+    return mContainer->getResource();
+  }
+  DEVLOG_ERROR("FB is not contained in an FB Container!");
+  return nullptr;
+}
+
+CDevice* CFunctionBlock::getDevice() {
+  if(mContainer != nullptr){
+    return mContainer->getDevice();
+  }
+  DEVLOG_ERROR("FB is not contained in an FB Container!");
+  return nullptr;
+}
+
+CTimerHandler& CFunctionBlock::getTimer() {
+  return getDevice()->getTimer();
 }
 
 CEventConnection *CFunctionBlock::getEOConnection(CStringDictionary::TStringId paEONameId) {
@@ -700,9 +716,9 @@ const std::string CFunctionBlock::getFullQualifiedInstanceName() const {
   fullName.reserve(cgStringInitialSize);
   fullName = getInstanceName();
   forte::core::CFBContainer* parent = mContainer;
-  CResource* resourcePtr = getResourcePtr();
+  const CResource* resource = getResource();
   while(parent != nullptr &&
-		parent != resourcePtr &&
+		parent != resource &&
 		parent->getName() != nullptr) {
     fullName.insert(0, ".");
     fullName.insert(0, parent->getName());

@@ -67,9 +67,9 @@ void FORTE_TEST_CONDITION::executeEvent(TEventID paEIID, CEventChainExecutionThr
   if(scmEventREQID == paEIID) {
     smExecutedTests++;
     if(check()) {
-      DEVLOG_INFO(" ------------------------------ [TEST_CONDITION_PASSED] %s.%s passed\n", getResource().getInstanceName(), getInstanceName());
+      DEVLOG_INFO(" ------------------------------ [TEST_CONDITION_PASSED] %s.%s passed\n", getResource()->getInstanceName(), getInstanceName());
     } else {
-      DEVLOG_ERROR("------------------------------ [TEST_CONDITION_FAILED] %s.%s failed ------------------------------\n", getResource().getInstanceName(),
+      DEVLOG_ERROR("------------------------------ [TEST_CONDITION_FAILED] %s.%s failed ------------------------------\n", getResource()->getInstanceName(),
         getInstanceName());
       smFailedTests++;
     }

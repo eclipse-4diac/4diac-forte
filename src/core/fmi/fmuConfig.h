@@ -185,6 +185,6 @@ const unsigned int allowedStatesInFunction[] = {
     GET_FMU_INSTANCE_FROM_FB(this->getCommFB())
 
 #define GET_FMU_INSTANCE_FROM_FB(fb) \
-  ((fmuInstance*)&((fb)->getResource().getDevice()))
+  ((fmuInstance*)(fb)->getDevice())
 
 #endif /* _FMU_CONFIG_H_ */

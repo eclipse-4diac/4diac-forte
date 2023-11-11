@@ -82,7 +82,7 @@ void FORTE_EC_KILL_ELEM::executeRQST(){
   theCommand.mFirstParam.pushBack(CStringDictionary::getInstance().getId(var_ELEM_NAME.getValue()));
   theCommand.mCMD = EMGMCommandType::Kill;
 
-  EMGMResponse resp = getResource().getDevice().executeMGMCommand(theCommand);
+  EMGMResponse resp = getDevice()->executeMGMCommand(theCommand);
 
   //calculate return value
   var_QO = CIEC_BOOL(resp == EMGMResponse::Ready);

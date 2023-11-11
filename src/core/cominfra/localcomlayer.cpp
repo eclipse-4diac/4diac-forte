@@ -42,7 +42,7 @@ EComResponse CLocalComLayer::sendData(void *, unsigned int){
     CCriticalRegion criticalRegion(subFb.getFBLock());
     setRDs(subFb, sds, numSDs);
     subFb.interruptCommFB(runner);
-    subFb.getResource().getDevice().getDeviceExecution().startNewEventChain(&subFb);
+    subFb.getDevice()->getDeviceExecution().startNewEventChain(&subFb);
   }
 
   return e_ProcessDataOk;

@@ -49,10 +49,9 @@ class CFBTestConn : public CDataConnection {
     virtual ~CFBTestConn();
 };
 
-
 CFBTestFixtureBase::CFBTestFixtureBase(CStringDictionary::TStringId paTypeId) :
     CFunctionBlock(CFBTestDataGlobalFixture::getResource(), nullptr, 0), mTypeId(paTypeId),
-        mFBUnderTest(CTypeLib::createFB(paTypeId, paTypeId, getResourcePtr())) {
+        mFBUnderTest(CTypeLib::createFB(paTypeId, paTypeId, CFBTestDataGlobalFixture::getResource())) {
 }
 
 bool CFBTestFixtureBase::initialize() {
@@ -106,7 +105,7 @@ void CFBTestFixtureBase::performFBResetTests() {
   BOOST_CHECK_EQUAL(EMGMResponse::Ready, mFBUnderTest->changeFBExecutionState(EMGMCommandType::Stop));
   BOOST_CHECK_EQUAL(EMGMResponse::Ready, mFBUnderTest->changeFBExecutionState(EMGMCommandType::Reset));
 
-  CFunctionBlock *freshInstance = CTypeLib::createFB(mTypeId, mTypeId, getResourcePtr());
+  CFunctionBlock *freshInstance = CTypeLib::createFB(mTypeId, mTypeId, getResource());
   BOOST_REQUIRE(freshInstance != nullptr);
 
   if(!mConfigString.empty()) {
@@ -159,7 +158,7 @@ void CFBTestFixtureBase::executeEvent(TEventID paEIID, CEventChainExecutionThrea
 }
 
 void CFBTestFixtureBase::triggerEvent(TPortId paEIId) {
-  CEventChainExecutionThread *execThread = getResource().getResourceEventExecution();
+  CEventChainExecutionThread *execThread = getResource()->getResourceEventExecution();
   TEventEntry entry(mFBUnderTest, paEIId);
 
   execThread->startEventChain(entry);

@@ -107,7 +107,7 @@ bool IOConfigFBController::init(CEventChainExecutionThread * const paECET, int p
     return false;
   }
 
-  mController = createDeviceController(getResource().getDevice().getDeviceExecution());
+  mController = createDeviceController(getDevice()->getDeviceExecution());
   if(mController == nullptr) {
     DEVLOG_ERROR("[IOConfigFBController] Failed to create controller.\n");
     return false;

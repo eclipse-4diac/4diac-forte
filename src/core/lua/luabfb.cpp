@@ -56,7 +56,7 @@ const luaL_Reg CLuaBFB::LUA_FUNCS[] = { { "__index", CLuaFB_index }, { "__newind
 CLuaBFB::CLuaBFB(CStringDictionary::TStringId paInstanceNameId, const CLuaBFBTypeEntry* paTypeEntry, CResource *paResource) :
     CBasicFB(paResource, paTypeEntry->getInterfaceSpec(), paInstanceNameId, paTypeEntry->getInternalVarsInformation()),
         mTypeEntry(paTypeEntry) {
-  CLuaEngine *luaEngine = getResource().getLuaEngine();
+  CLuaEngine *luaEngine = getResource()->getLuaEngine();
   luaEngine->registerType<CLuaBFB>();
   luaEngine->pushObject<CLuaBFB>(this);
   luaEngine->store(this);
@@ -72,7 +72,7 @@ bool CLuaBFB::initialize() {
 
 void CLuaBFB::executeEvent(TEventID paEIID, CEventChainExecutionThread *paECET) {
   mInvokingExecEnv = paECET;
-  CLuaEngine *luaEngine = getResource().getLuaEngine();
+  CLuaEngine *luaEngine = getResource()->getLuaEngine();
   luaEngine->load(mTypeEntry);
   luaEngine->load(this);
   luaEngine->pushInteger(paEIID > 255 ? recalculateID(paEIID) : paEIID);

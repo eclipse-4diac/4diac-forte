@@ -148,7 +148,7 @@ EMGMResponse CMonitoringHandler::removeWatch(forte::core::TNameIdentifier &paNam
 
 EMGMResponse CMonitoringHandler::readWatches(std::string &paResponse){
   paResponse.clear();
-  if(nullptr == mResource.getResourcePtr()){
+  if(nullptr == mResource.getParent()){
     //we are in the device
     for(CFBContainer::TFunctionBlockList::iterator itRunner = mResource.getFBList().begin();
         itRunner != mResource.getFBList().end();
@@ -493,7 +493,7 @@ void CMonitoringHandler::appendEventWatch(std::string &paResponse, SEventWatchEn
   appendPortTag(paResponse, paEventWatchEntry.mPortId);
 
   CIEC_UDINT udint(paEventWatchEntry.mEventDataBuf);
-  CIEC_ULINT ulint(mResource.getDevice().getTimer().getForteTime());
+  CIEC_ULINT ulint(mResource.getDevice()->getTimer().getForteTime());
 
   paResponse += "<Data value=\""s;
   char buf[21]; // the bigest number in an ulint is 18446744073709551616, TODO directly use paResponse

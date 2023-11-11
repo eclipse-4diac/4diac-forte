@@ -58,12 +58,12 @@ EMGMResponse E_RESTART::changeFBExecutionState(EMGMCommandType paCommand){
     switch(paCommand){
       case EMGMCommandType::Start:
         mEventToSend = (csmSTOPID == mEventToSend) ? csmWARMID : csmCOLDID;
-        getResource().getDevice().getDeviceExecution().startNewEventChain(this);
+        getDevice()->getDeviceExecution().startNewEventChain(this);
         break;
       case EMGMCommandType::Stop:
         mEventToSend = csmSTOPID;
         CFunctionBlock::changeFBExecutionState(EMGMCommandType::Start);   //keep FB in running state until stop event is delivered.
-        getResource().getDevice().getDeviceExecution().startNewEventChain(this);
+        getDevice()->getDeviceExecution().startNewEventChain(this);
         // wait until semaphore is released, after STOP eventExecution was completed
         mSuspendSemaphore.waitIndefinitely();
         break;

@@ -87,7 +87,7 @@ void FORTE_ST_SET_PARM::executeRQST() {
   theCommand.mAdditionalParams = func_WSTRING_TO_STRING(var_PARM_VAL);
   theCommand.mCMD = EMGMCommandType::Write;
 
-  EMGMResponse resp = getResource().getDevice().executeMGMCommand(theCommand);
+  EMGMResponse resp = getDevice()->executeMGMCommand(theCommand);
 
   //calculate return value
   var_QO = CIEC_BOOL(resp == EMGMResponse::Ready);

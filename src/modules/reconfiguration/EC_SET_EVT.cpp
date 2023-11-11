@@ -85,7 +85,7 @@ void FORTE_EC_SET_EVT::executeRQST(){
   theCommand.mFirstParam.pushBack(CStringDictionary::getInstance().getId(var_FB_EVENT_IO.getValue()));
   theCommand.mCMD = EMGMCommandType::MonitoringTriggerEvent;
 
-  EMGMResponse resp = getResource().getDevice().executeMGMCommand(theCommand);
+  EMGMResponse resp = getDevice()->executeMGMCommand(theCommand);
 
   //calculate return value
   var_QO = CIEC_BOOL(resp == EMGMResponse::Ready);

@@ -61,6 +61,22 @@ EMGMResponse CFBContainer::addFB(CFunctionBlock* paFuncBlock){
   return eRetVal;
 }
 
+CResource* CFBContainer::getResource() {
+  if(mParent != nullptr){
+    return mParent->getResource();
+  }
+  DEVLOG_ERROR("FB is not contained in an FB Container!");
+  return nullptr;
+}
+
+CDevice* CFBContainer::getDevice() {
+  if(mParent != nullptr){
+    return mParent->getDevice();
+  }
+  DEVLOG_ERROR("FB is not contained in an FB Container!");
+  return nullptr;
+}
+
 
 EMGMResponse CFBContainer::createFB(forte::core::TNameIdentifier::CIterator &paNameListIt, CStringDictionary::TStringId paTypeName, CResource *paRes){
   EMGMResponse retval = EMGMResponse::InvalidState;

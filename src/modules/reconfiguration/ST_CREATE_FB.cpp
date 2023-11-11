@@ -86,7 +86,7 @@ void FORTE_ST_CREATE_FB::executeRQST(){
   theCommand.mSecondParam.pushBack(CStringDictionary::getInstance().getId(var_FB_TYPE.getValue()));
   theCommand.mCMD = EMGMCommandType::CreateFBInstance;
 
-  EMGMResponse resp = getResource().getDevice().executeMGMCommand(theCommand);
+  EMGMResponse resp = getDevice()->executeMGMCommand(theCommand);
 
   //calculate return value
   var_QO = CIEC_BOOL(resp == EMGMResponse::Ready);

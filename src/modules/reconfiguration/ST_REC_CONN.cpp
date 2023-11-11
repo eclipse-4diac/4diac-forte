@@ -99,7 +99,7 @@ void FORTE_ST_REC_CONN::executeRQST(){
   theCommand.mSecondParam.pushBack(CStringDictionary::getInstance().getId(var_OLD_DST_FB_IN.getValue()));
   theCommand.mCMD = EMGMCommandType::DeleteConnection;
 
-  EMGMResponse resp = getResource().getDevice().executeMGMCommand(theCommand);
+  EMGMResponse resp = getDevice()->executeMGMCommand(theCommand);
 
   if (resp == EMGMResponse::Ready) {
     // create new connection
@@ -110,7 +110,7 @@ void FORTE_ST_REC_CONN::executeRQST(){
     theCommand.mSecondParam.pushBack(CStringDictionary::getInstance().getId(var_NEW_DST_FB.getValue()));
     theCommand.mSecondParam.pushBack(CStringDictionary::getInstance().getId(var_NEW_DST_FB_IN.getValue()));
     theCommand.mCMD = EMGMCommandType::CreateConnection;
-    resp = getResource().getDevice().executeMGMCommand(theCommand);
+    resp = getDevice()->executeMGMCommand(theCommand);
   }
 
   //calculate return value

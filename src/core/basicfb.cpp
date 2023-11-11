@@ -210,7 +210,7 @@ void CBasicFB::traceInstanceData() {
     internalFbs_c_str[i] = valueString.c_str();
   }
 
-  barectf_default_trace_instanceData(getResource().getTracePlatformContext().getContext(),
+  barectf_default_trace_instanceData(getResource()->getTracePlatformContext().getContext(),
                                      getFBTypeName() ?: "null",
                                      getInstanceName() ?: "null",
                                      static_cast<uint32_t >(inputs.size()), inputs_c_str.data(),
