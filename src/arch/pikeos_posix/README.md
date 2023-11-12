@@ -19,7 +19,7 @@ Assuming you have a CODEO workspace with 4 projects:
         After importing the project was renamed to "forte-incubation".  
         The import source may be a cloned git repository
         (`git://git.eclipse.org/gitroot/4diac/org.eclipse.4diac.forte.git`) or the
-        ZIP-File "4diac FORTE Source" downloaded from [eclipse.org/4diac](https://www.eclipse.org/4diac/en_dow.php).
+        ZIP-File "4diac FORTE Source" downloaded from [eclipse.org/4diac](https://eclipse.dev/4diac/en_dow.php).
     * **🗁 lwip.app**  
     PikeOS 5.x Application Project of type *Posix Project / lwip-build*.
     * **🗁 forteserver.int**  
@@ -145,7 +145,7 @@ Assign "POSIX Process (2)" to this channel.
 
 Go to `qemu-... / ... Ethernet User Level Driver` and set "Enable Multicast Communication" to true for `...-net-device`,  `...-net-vchan0` and `...-net-vchan1`.
 
-Now you are able to test the partitions by starting QEMU and perform the [4DIAC-step-by-step tutorial](https://www.eclipse.org/4diac/en_help.php?helppage=html/4diacIDE/overview.html).
+Now you are able to test the partitions by starting QEMU and perform the [4DIAC-step-by-step tutorial](https://eclipse.dev/4diac/en_help.php?helppage=html/4diacIDE/overview.html).
 
 On using user mode network you have to start QEMU by selecting "Start QEMU with custom commandline" and defining portforwarding:
 

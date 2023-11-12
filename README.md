@@ -37,13 +37,13 @@ For building local RPMs you can use [tito](https://github.com/dgoodwin/tito):
     
 ### Building 4diac FORTE for Other systems
 
-Detailed information on how to build 4diac FORTE for the different supported operating systems and hardware platforms can be found in our [Installation Documentation](https://www.eclipse.org/4diac/en_help.php?helppage=html/installation/install.html)
+Detailed information on how to build 4diac FORTE for the different supported operating systems and hardware platforms can be found in our [Installation Documentation](https://eclipse.dev/4diac/en_help.php?helppage=html/installation/install.html)
 
 
 ## Links
 
-* [Home page](https://www.eclipse.org/4diac)
-* [Documentation](https://www.eclipse.org/4diac/en_help.php) 
+* [Home page](https://eclipse.dev/4diac/4diac)
+* [Documentation](https://eclipse.dev/4diac/en_help.php) 
 * [Mailing list](https://dev.eclipse.org/mailman/listinfo/4diac-dev)
 * [Wiki](https://wiki.eclipse.org/Eclipse_4diac_Wiki)
 * [Examples](http://git.eclipse.org/c/4diac/org.eclipse.4diac.examples.git)
