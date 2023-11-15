@@ -194,6 +194,8 @@ class COPC_UA_Layer : public forte::com_infra::CComLayer {
     */
     CActionInfo* getCreateObjectActionForObjectNodeStruct(bool paIsPublisher);
 
+    forte::com_infra::EComResponse initializeActionForStructMembers(const CDataConnection *paLocalPortConnection, bool paIsPublisher);
+
     /**
      * Get the BrowsePath to the OPC UA Struct Object Type from the local Struct Type
      * @param paBrowsePath Place to store the BrowsePath to the OPC UA Struct Object Type

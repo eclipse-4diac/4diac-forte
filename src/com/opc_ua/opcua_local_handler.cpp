@@ -384,6 +384,19 @@ UA_StatusCode COPC_UA_Local_Handler::initializeAction(CActionInfo &paActionInfo)
   return retVal;
 }
 
+UA_StatusCode COPC_UA_Local_Handler::initializeActionForObjectStruct(CActionInfo& paActionInfo, CIEC_ANY &paMember) {
+  UA_StatusCode retVal = UA_STATUSCODE_BADINTERNALERROR;
+  if(mUaServer) {
+    CCriticalRegion criticalRegion(mServerAccessMutex);
+    if(paActionInfo.getAction() == CActionInfo::eWrite) {
+      retVal = initializeObjectStructMemberVariable(paActionInfo, &paMember, true);
+    } else if(paActionInfo.getAction() == CActionInfo::eRead) {
+      retVal = initializeObjectStructMemberVariable(paActionInfo, &paMember, false);
+    }
+  }
+  return retVal;
+}
+
 UA_StatusCode COPC_UA_Local_Handler::executeAction(CActionInfo &paActionInfo) {
   UA_StatusCode retVal = UA_STATUSCODE_BADINTERNALERROR;
 
@@ -489,6 +502,39 @@ UA_StatusCode COPC_UA_Local_Handler::initializeVariable(CActionInfo &paActionInf
     referencedNodesDecrement(paActionInfo);
   }
 
+  for(CSinglyLinkedList<UA_NodeId*>::Iterator itRerencedNodes = referencedNodes.begin(); itRerencedNodes != referencedNodes.end(); ++itRerencedNodes) {
+    UA_NodeId_delete(*itRerencedNodes);
+  }
+  return retVal;
+}
+
+UA_StatusCode COPC_UA_Local_Handler::initializeObjectStructMemberVariable(CActionInfo &paActionInfo, CIEC_ANY *paMember, bool paWrite) {
+  UA_StatusCode retVal = UA_STATUSCODE_GOOD;
+
+  size_t indexOfNodePair = 0;
+  CSinglyLinkedList<UA_NodeId*> referencedNodes;
+  for(CSinglyLinkedList<CActionInfo::CNodePairInfo*>::Iterator itMain = paActionInfo.getNodePairInfo().begin();
+      itMain != paActionInfo.getNodePairInfo().end() && UA_STATUSCODE_GOOD == retVal; ++itMain, indexOfNodePair++) {
+
+    CSinglyLinkedList<UA_NodeId*> presentNodes;
+    bool nodeExists = false;
+    retVal = getNode(**itMain, presentNodes, &nodeExists);
+
+    if(UA_STATUSCODE_GOOD == retVal) {
+      if(nodeExists) {
+        retVal = handleExistingVariable(paActionInfo, **itMain, paMember[indexOfNodePair], indexOfNodePair, paWrite);
+
+        handlePresentNodes(presentNodes, referencedNodes, UA_STATUSCODE_GOOD != retVal);
+      } else { //node does not exist
+        //presentNodes shouldn't have any allocated NodeId at this point
+        retVal = handleNonExistingVariable(paActionInfo, **itMain, paMember[indexOfNodePair], indexOfNodePair, referencedNodes, paWrite);
+      }
+    }
+  }
+  referencedNodesIncrement(referencedNodes, paActionInfo);
+  if(UA_STATUSCODE_GOOD != retVal) {
+    referencedNodesDecrement(paActionInfo);
+  }
   for(CSinglyLinkedList<UA_NodeId*>::Iterator itRerencedNodes = referencedNodes.begin(); itRerencedNodes != referencedNodes.end(); ++itRerencedNodes) {
     UA_NodeId_delete(*itRerencedNodes);
   }

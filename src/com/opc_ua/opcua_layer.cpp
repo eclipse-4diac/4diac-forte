@@ -68,6 +68,14 @@ EComResponse COPC_UA_Layer::openConnection(char *paLayerParameter) {
         mIsObjectNodeStruct = true;
         response = createStructObjectNode(isPublisher);
         // TODO Initialise RDBuffer
+        CCriticalRegion criticalRegion(mRDBufferMutex);
+        response = e_InitOk;
+        if(!isPublisher) {
+          mRDBuffer = new CIEC_ANY*[getCommFB()->getNumRD()];
+          for(size_t i = 0; i < getCommFB()->getNumRD(); ++i) {
+            mRDBuffer[i] = getCommFB()->getRDs()[i]->clone(nullptr);
+          }
+        }
       }
     }   
   }
@@ -103,6 +111,9 @@ EComResponse COPC_UA_Layer::recvData(const void *paData, unsigned int) {
           if(UA_Variant_isScalar(handleRecv->mData[i]) && handleRecv->mData[i]->data
             && handleRecv->mData[i]->type == COPC_UA_Helper::getOPCUATypeFromAny(*mRDBuffer[handleRecv->mOffset + i])) {
             COPC_UA_Helper::convertFromOPCUAType(handleRecv->mData[i]->data, *mRDBuffer[handleRecv->mOffset + i]);
+          } else if(mIsObjectNodeStruct) {
+            mInterruptResp = e_Nothing;
+            // TODO 
           } else {
             DEVLOG_ERROR("[OPC UA LAYER]: RD_%d of FB %s has no data, is not a scalar or there is a type mismatch\n", handleRecv->mOffset + i,
               getCommFB()->getInstanceName());
@@ -285,7 +296,7 @@ forte::com_infra::EComResponse COPC_UA_Layer::executeActionForObjectNodeStruct(b
       CStringDictionary::getInstance().get(structMemberNames[i]));
       return e_ProcessDataDataTypeError;
     }
-  }
+      }
   return e_ProcessDataOk;
 }
 
@@ -363,11 +374,18 @@ EComResponse COPC_UA_Layer::createStructObjectNode(bool paIsPublisher) {
   EComResponse response = e_InitTerminated;
   const CDataConnection* localPortConnection = getLocalPortConnection(2, paIsPublisher);
   if(isOPCUAStructObjectPresent(localPortConnection, COPC_UA_Layer::structNodesBrowsePath, paIsPublisher)) {
+    if(!paIsPublisher) {
+      return initializeActionForStructMembers(localPortConnection, paIsPublisher);
+    }
     return e_InitOk;
   }
   CActionInfo* actionInfo = getCreateObjectActionForObjectNodeStruct(paIsPublisher);
   if( (UA_STATUSCODE_GOOD == mHandler->initializeAction(*actionInfo)) && (UA_STATUSCODE_GOOD == mHandler->executeAction(*actionInfo)) ) {
-    response = e_InitOk;
+    if(!paIsPublisher) {
+      response = initializeActionForStructMembers(localPortConnection, paIsPublisher);
+    } else {
+      response = e_InitOk;
+    }
   }
   delete actionInfo;
   return response;
@@ -387,4 +405,33 @@ CActionInfo* COPC_UA_Layer::getCreateObjectActionForObjectNodeStruct(bool paIsPu
   nodePairs.pushBack(new CActionInfo::CNodePairInfo(nullptr, typeBrowsePath));
   nodePairs.pushBack(new CActionInfo::CNodePairInfo(nullptr, nodeBrowsePath));
   return actionInfo;
+}
+
+forte::com_infra::EComResponse COPC_UA_Layer::initializeActionForStructMembers(const CDataConnection *paLocalPortConnection, bool paIsPublisher) {
+  // TODO implement layer to handle more than 1 struct
+  COPC_UA_Local_Handler* localHandler = static_cast<COPC_UA_Local_Handler*>(mHandler);
+  if(!localHandler) {
+    DEVLOG_ERROR("[OPC UA LAYER]: Failed to get LocalHandler because LocalHandler is null!\n");
+    return e_InitTerminated;
+  }
+  std::string structTypeName;
+  getStructTypeName(structTypeName, paLocalPortConnection, paIsPublisher);
+
+  CIEC_ANY** apoDataPorts = paIsPublisher ? mFb->getSDs() : mFb->getRDs();
+  CIEC_STRUCT& structType = static_cast<CIEC_STRUCT&>(apoDataPorts[0]->unwrap());
+  const CStringDictionary::TStringId* structMemberNames = structType.elementNames();
+  
+  for(size_t i = 0; i < structType.getStructSize(); i++) {
+    std::string memberBrowsePath;
+    getObjectNodeStructMemberBrowsePath(memberBrowsePath, structTypeName, structMemberNames[i], COPC_UA_Layer::structNodesBrowsePath);
+    CActionInfo* actionInfo = new CActionInfo(*this, mActionInfo->getAction(), mActionInfo->getEndpoint());
+    actionInfo->getNodePairInfo().pushBack(new CActionInfo::CNodePairInfo(nullptr, memberBrowsePath));
+    CIEC_ANY* memberVariable = structType.getMember(i);
+    if(UA_STATUSCODE_GOOD != localHandler->initializeActionForObjectStruct(*actionInfo, *memberVariable)) {
+      DEVLOG_ERROR("[OPC UA LAYER]: Error occured in FB %s while initializing Struct member %s\n", getCommFB()->getInstanceName(),
+      CStringDictionary::getInstance().get(structMemberNames[i]));
+      return e_InitTerminated;
+    }
+  }
+  return e_InitOk;
 }

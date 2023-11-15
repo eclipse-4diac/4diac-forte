@@ -77,6 +77,8 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
     */
     bool isOPCUAObjectPresent(CActionInfo::CNodePairInfo &paNodePair);
 
+    UA_StatusCode initializeActionForObjectStruct(CActionInfo &paActionInfo, CIEC_ANY &paMember);
+
     /**
      * Execute the action for Object Node Structs
      * NOTE: Currently supports Write Action only
@@ -84,7 +86,7 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
      * @param paMember Struct Object member
      * @return UA_STATUSCODE_GOOD is no problem occurred, other value otherwise
      */
-    UA_StatusCode executeActionForObjectStruct(CActionInfo &paActionInfo, CIEC_ANY& paMember);
+    UA_StatusCode executeActionForObjectStruct(CActionInfo &paActionInfo, CIEC_ANY &paMember);
 
   protected:
 
@@ -388,6 +390,8 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
      */
     UA_StatusCode initializeVariable(CActionInfo &paActionInfo, bool isWrite);
 
+    UA_StatusCode initializeObjectStructMemberVariable(CActionInfo &paActionInfo, CIEC_ANY *paMember, bool paWrite);
+
     /**
      * When an action refers to variable that already exist in the OPC UA server, another variable shouldn't be created. If you are trying to read a variable
      * that has already another FB reading from it, it will fail. If the variable was created as a write, by reading it, it will set the writing permission
@@ -505,7 +509,7 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
      * @param paMember The Struct Object member
      * @return UA_STATUSCODE_GOOD is no problem occurred, other value otherwise
      */
-    UA_StatusCode executeObjectStructWrite(CActionInfo &paActionInfo, CIEC_ANY& paMember);
+    UA_StatusCode executeObjectStructWrite(CActionInfo &paActionInfo, CIEC_ANY &paMember);
 
     /**
      * When the FB of the local method is triggered to signalize the end of the method, this function is called
