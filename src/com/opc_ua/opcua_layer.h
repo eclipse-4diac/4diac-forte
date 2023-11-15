@@ -157,9 +157,10 @@ class COPC_UA_Layer : public forte::com_infra::CComLayer {
 
     /**
      * Execute the action for a Object Node Struct
+     * @param paIsPublisher True if the FB is a Publisher, false othewise
      * @return e_ProcessDataOK if no problem occurred, other value otherwise
      */
-    forte::com_infra::EComResponse executeActionForObjectNodeStruct();
+    forte::com_infra::EComResponse executeActionForObjectNodeStruct(bool paIsPublisher);
 
     /**
      * Get the port connection pointer for a connected data port
@@ -180,24 +181,27 @@ class COPC_UA_Layer : public forte::com_infra::CComLayer {
 
     /**
      * Create an OPC UA Object Node from Struct Type, if it is not present
+     * @param paIsPublisher True if the FB is a Publisher, false othewise
      * @return e_InitOk if Object Node was created successfully, e_InitTerminated otherwise
     */
-    forte::com_infra::EComResponse createStructObjectNode();
+    forte::com_infra::EComResponse createStructObjectNode(bool paIsPublisher);
 
     /**
      * Get the ActionInfo to create the OPC UA Object Node for Struct Type.
      * Supports only one connected Struct Type currently
+     * @param paIsPublisher True if the FB is a Publisher, false othewise
      * @return The ActionInfo for creating OPC UA Object Node
     */
-    CActionInfo* getCreateObjectActionForObjectNodeStruct();
+    CActionInfo* getCreateObjectActionForObjectNodeStruct(bool paIsPublisher);
 
     /**
      * Get the BrowsePath to the OPC UA Struct Object Type from the local Struct Type
      * @param paBrowsePath Place to store the BrowsePath to the OPC UA Struct Object Type
      * @param paLocalPortConnection Local port connection pointer
      * @param paPathPrefix The BrowsePath directory with namespace (e.g. /Objects/1:)
+     * @param paIsPublisher True if the FB is a Publisher, false othewise
      */
-    static void getObjectNodeStructBrowsePath(std::string &paBrowsePath, const CDataConnection *paLocalPortConnection, const std::string &paPathPrefix);
+    void getObjectNodeStructBrowsePath(std::string &paBrowsePath, const CDataConnection *paLocalPortConnection, const std::string &paPathPrefix, bool paIsPublisher);
 
     /**
      * Get the BrowsePath to the OPC UA Object Struct members from the local Struct Type
@@ -211,29 +215,33 @@ class COPC_UA_Layer : public forte::com_infra::CComLayer {
     /**
      * @param paStructTypeName Place to store the name of the Struct Type
      * @param paLocalPortConnection Local port connection pointer
+     * @param paIsPublisher True if the FB is a Publisher, false othewise
     */
-    static void getStructTypeName(std::string& paStructTypeName, const CDataConnection *paLocalPortConnection);
+    void getStructTypeName(std::string& paStructTypeName, const CDataConnection *paLocalPortConnection, bool paIsPublisher);
     
 
     /**
      * Check that the Struct Object type of the SDs is valid
      * NOTE: Supports only one connected Struct Type and SDs currently
+     * @param paIsPublisher True if the FB is a Publisher, false othewise
      * @return True if Struct Object Type is valid, false otherwise
      */
-    bool checkObjectNodeStructTypeConnection();
+    bool checkObjectNodeStructTypeConnection(bool paIsPublisher);
 
     /**
      * Check if Object Node Struct is present in OPC UA server
      * @param paLocalPortConnection Local port connection pointer
      * @param paPathPrefix The BrowsePath directory with namespace (e.g. /Objects/1:)
+     * @param paIsPublisher True if the FB is a Publisher, false othewise
     */
-    bool isOPCUAStructObjectPresent(const CDataConnection *paLocalPortConnection, const std::string &paPathPrefix);
+    bool isOPCUAStructObjectPresent(const CDataConnection *paLocalPortConnection, const std::string &paPathPrefix, bool paIsPublisher);
 
     /**
      * Check if Data Connection is a Struct Type
+     * @param paIsPublisher True if the FB is a Publisher, false othewise
      * @return True if connected data type is Struct, false otherwise
     */
-    bool isStructType() const;
+    bool isStructType(bool paIsPublisher) const;
 
     /**
      * Array of ANY pointers used as buffer to store the received data
