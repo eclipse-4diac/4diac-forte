@@ -156,6 +156,8 @@ class COPC_UA_Layer : public forte::com_infra::CComLayer {
 
     bool mIsObjectNodeStruct;
 
+    std::shared_ptr<CActionInfo> mCreateObjectStructNode;
+
     std::vector<std::shared_ptr<CActionInfo>> mObjectNodeStructActionInfos;
 
     /**
@@ -195,7 +197,7 @@ class COPC_UA_Layer : public forte::com_infra::CComLayer {
      * @param paIsPublisher True if the FB is a Publisher, false othewise
      * @return The ActionInfo for creating OPC UA Object Node
     */
-    CActionInfo* getCreateObjectActionForObjectNodeStruct(bool paIsPublisher);
+    std::shared_ptr<CActionInfo> getCreateObjectActionForObjectNodeStruct(bool paIsPublisher);
 
     forte::com_infra::EComResponse initializeActionForStructMembers(const CDataConnection *paLocalPortConnection, bool paIsPublisher);
 

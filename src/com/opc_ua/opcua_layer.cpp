@@ -88,6 +88,9 @@ void COPC_UA_Layer::closeConnection() {
     for(std::shared_ptr<CActionInfo> actionInfo : mObjectNodeStructActionInfos) {
       mHandler->uninitializeAction(*actionInfo);
     }
+    if(mCreateObjectStructNode) {
+      mHandler->uninitializeAction(*mCreateObjectStructNode);
+    }
     mHandler = nullptr;
 
     if(mRDBuffer) {
@@ -432,22 +435,21 @@ EComResponse COPC_UA_Layer::createStructObjectNode(bool paIsPublisher) {
     }
     return e_InitOk;
   }
-  CActionInfo* actionInfo = getCreateObjectActionForObjectNodeStruct(paIsPublisher);
-  if( (UA_STATUSCODE_GOOD == mHandler->initializeAction(*actionInfo)) && (UA_STATUSCODE_GOOD == mHandler->executeAction(*actionInfo)) ) {
+  mCreateObjectStructNode = getCreateObjectActionForObjectNodeStruct(paIsPublisher);
+  if( (UA_STATUSCODE_GOOD == mHandler->initializeAction(*mCreateObjectStructNode)) && (UA_STATUSCODE_GOOD == mHandler->executeAction(*mCreateObjectStructNode)) ) {
     if(!paIsPublisher) {
       response = initializeActionForStructMembers(localPortConnection, paIsPublisher);
     } else {
       response = e_InitOk;
     }
   }
-  delete actionInfo;
   return response;
 }
 
-CActionInfo* COPC_UA_Layer::getCreateObjectActionForObjectNodeStruct(bool paIsPublisher) {
+std::shared_ptr<CActionInfo> COPC_UA_Layer::getCreateObjectActionForObjectNodeStruct(bool paIsPublisher) {
   // TODO implement layer to handle more than 1 struct
   int portIndex = 2;
-  CActionInfo* actionInfo = new CActionInfo(*this, CActionInfo::UA_ActionType::eCreateObject, mActionInfo->getEndpoint());
+  std::shared_ptr<CActionInfo> actionInfo = std::make_shared<CActionInfo>(*this, CActionInfo::UA_ActionType::eCreateObject, mActionInfo->getEndpoint());
   const CDataConnection* localPortConnection = getLocalPortConnection(portIndex, paIsPublisher);
   std::string typeBrowsePath;
   getObjectNodeStructBrowsePath(typeBrowsePath, localPortConnection, COPC_UA_Layer::structTypesBrowsePath, paIsPublisher);
