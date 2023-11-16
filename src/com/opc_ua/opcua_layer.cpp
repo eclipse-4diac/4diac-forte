@@ -55,9 +55,9 @@ EComResponse COPC_UA_Layer::openConnection(char *paLayerParameter) {
       }
     } else {
       bool isPublisher;
-      if(mFb->getComServiceType() == EComServiceType::e_Publisher) {
+      if(getCommFB()->getComServiceType() == EComServiceType::e_Publisher) {
         isPublisher = true;
-      } else if(mFb->getComServiceType() == EComServiceType::e_Subscriber) {
+      } else if(getCommFB()->getComServiceType() == EComServiceType::e_Subscriber) {
         isPublisher = false;
       } else {
         return response;
@@ -67,14 +67,11 @@ EComResponse COPC_UA_Layer::openConnection(char *paLayerParameter) {
       if(isStructType(isPublisher) && checkObjectNodeStructTypeConnection(isPublisher) && (CActionInfo::eWrite == action || CActionInfo::eRead == action) ) {
         mIsObjectNodeStruct = true;
         response = createStructObjectNode(isPublisher);
-        // TODO Initialise RDBuffer
+        
         CCriticalRegion criticalRegion(mRDBufferMutex);
         response = e_InitOk;
         if(!isPublisher) {
-          mRDBuffer = new CIEC_ANY*[getCommFB()->getNumRD()];
-          for(size_t i = 0; i < getCommFB()->getNumRD(); ++i) {
-            mRDBuffer[i] = getCommFB()->getRDs()[i]->clone(nullptr);
-          }
+          initialiseStructObjectRDBuffer();
         }
       }
     }   
@@ -86,11 +83,20 @@ void COPC_UA_Layer::closeConnection() {
   if(mHandler) {
     CCriticalRegion criticalRegion(mRDBufferMutex);
     mHandler->uninitializeAction(*mActionInfo);
-    mHandler = nullptr;
     delete mActionInfo;
+
+    for(std::shared_ptr<CActionInfo> actionInfo : mObjectNodeStructActionInfos) {
+      mHandler->uninitializeAction(*actionInfo);
+    }
+    mHandler = nullptr;
+
     if(mRDBuffer) {
-      for (size_t i = 0; i < getCommFB()->getNumRD(); ++i) {
-        delete mRDBuffer[i];
+      if(mIsObjectNodeStruct) {
+        deleteStructObjectRDBuffer();
+      } else {
+        for (size_t i = 0; i < getCommFB()->getNumRD(); ++i) {
+          delete mRDBuffer[i];
+        }
       }
       delete[] mRDBuffer;
       mRDBuffer = nullptr;
@@ -100,7 +106,6 @@ void COPC_UA_Layer::closeConnection() {
 
 EComResponse COPC_UA_Layer::recvData(const void *paData, unsigned int) {
   mInterruptResp = e_ProcessDataOk;
-
   const COPC_UA_Helper::UA_RecvVariable_handle *handleRecv = static_cast<const COPC_UA_Helper::UA_RecvVariable_handle *>(paData);
 
   if(!handleRecv->mFailed) {
@@ -108,14 +113,17 @@ EComResponse COPC_UA_Layer::recvData(const void *paData, unsigned int) {
       if(handleRecv->mSize + handleRecv->mOffset <= getCommFB()->getNumRD()) {
         CCriticalRegion criticalRegion(mRDBufferMutex);
         for(size_t i = 0; i < handleRecv->mSize; i++) {
+          size_t bufferIndex = mIsObjectNodeStruct ? getRDBufferIndexFromNodeId(handleRecv->mNodeId) : handleRecv->mOffset + i;
+          if(bufferIndex == -1) {
+            DEVLOG_ERROR("[OPC UA LAYER]: Received Node ID %d does not match with any registered Node ID for FB %s\n", handleRecv->mNodeId, getCommFB()->getInstanceName());
+            mInterruptResp = e_ProcessDataRecvFaild;
+            break;
+          }
           if(UA_Variant_isScalar(handleRecv->mData[i]) && handleRecv->mData[i]->data
-            && handleRecv->mData[i]->type == COPC_UA_Helper::getOPCUATypeFromAny(*mRDBuffer[handleRecv->mOffset + i])) {
-            COPC_UA_Helper::convertFromOPCUAType(handleRecv->mData[i]->data, *mRDBuffer[handleRecv->mOffset + i]);
-          } else if(mIsObjectNodeStruct) {
-            mInterruptResp = e_Nothing;
-            // TODO 
+            && handleRecv->mData[i]->type == COPC_UA_Helper::getOPCUATypeFromAny(*mRDBuffer[bufferIndex])) {
+            COPC_UA_Helper::convertFromOPCUAType(handleRecv->mData[i]->data, *mRDBuffer[bufferIndex]);
           } else {
-            DEVLOG_ERROR("[OPC UA LAYER]: RD_%d of FB %s has no data, is not a scalar or there is a type mismatch\n", handleRecv->mOffset + i,
+            DEVLOG_ERROR("[OPC UA LAYER]: RD_%d of FB %s has no data, is not a scalar or there is a type mismatch\n", bufferIndex,
               getCommFB()->getInstanceName());
             mInterruptResp = e_ProcessDataRecvFaild;
             break;
@@ -155,8 +163,12 @@ EComResponse COPC_UA_Layer::sendData(void *, unsigned int) {
 
 EComResponse COPC_UA_Layer::processInterrupt() {
   CCriticalRegion criticalRegion(mRDBufferMutex);
-  for(size_t i = 0; i < getCommFB()->getNumRD(); ++i) {
-    getCommFB()->getRDs()[i]->setValue(*mRDBuffer[i]);
+  if(mIsObjectNodeStruct) { 
+    setObjectStructData();
+  } else {
+    for(size_t i = 0; i < getCommFB()->getNumRD(); ++i) {
+      getCommFB()->getRDs()[i]->setValue(*mRDBuffer[i]);
+    }
   }
   setDataAlreadyPresentRead(false);
   return mInterruptResp;
@@ -281,7 +293,7 @@ forte::com_infra::EComResponse COPC_UA_Layer::executeActionForObjectNodeStruct(b
   std::string structTypeName;
   getStructTypeName(structTypeName, getLocalPortConnection(portIndex, paIsPublisher), paIsPublisher);
   
-  CIEC_ANY** apoSDs = mFb->getSDs();
+  CIEC_ANY** apoSDs = getCommFB()->getSDs();
   CIEC_STRUCT& structType = static_cast<CIEC_STRUCT&>(apoSDs[0]->unwrap());
   const CStringDictionary::TStringId* structMemberNames = structType.elementNames();
   for(size_t i = 0; i < structType.getStructSize(); i++) {
@@ -296,7 +308,7 @@ forte::com_infra::EComResponse COPC_UA_Layer::executeActionForObjectNodeStruct(b
       CStringDictionary::getInstance().get(structMemberNames[i]));
       return e_ProcessDataDataTypeError;
     }
-      }
+          }
   return e_ProcessDataOk;
 }
 
@@ -323,6 +335,47 @@ bool COPC_UA_Layer::checkObjectNodeStructTypeConnection(bool paIsPublisher) {
     DEVLOG_ERROR("[OPC UA LAYER]: Failed to check Object Struct Type Connection because Action or Handler is null!\n");
   }
   return false;
+}
+
+void COPC_UA_Layer::initialiseStructObjectRDBuffer() {
+  // TODO implement layer to handle more than 1 struct
+  CIEC_ANY** apoRDs = getCommFB()->getRDs();
+  CIEC_STRUCT& structType = static_cast<CIEC_STRUCT&>(apoRDs[0]->unwrap());
+  const size_t structSize = structType.getStructSize();
+  mRDBuffer = new CIEC_ANY*[structSize];
+  for(size_t i = 0; i < structSize; i++) {
+    mRDBuffer[i] = structType.getMember(i)->clone(nullptr);
+  }
+}
+
+void COPC_UA_Layer::deleteStructObjectRDBuffer() {
+  if(getCommFB()->getComServiceType() == e_Subscriber) {
+    CIEC_ANY** apoRDs = getCommFB()->getRDs();
+    CIEC_STRUCT& structType = static_cast<CIEC_STRUCT&>(apoRDs[0]->unwrap());
+    for(size_t i = 0; i < structType.getStructSize(); i++) {
+      delete mRDBuffer[i];
+    }
+  }
+}
+
+void COPC_UA_Layer::setObjectStructData() {
+  // TODO implement layer to handle more than 1 struct
+  CIEC_ANY** apoRDs = getCommFB()->getRDs();
+  CIEC_STRUCT& structType = static_cast<CIEC_STRUCT&>(apoRDs[0]->unwrap());
+  for(size_t i = 0; i < structType.getStructSize(); i++) {
+    structType.getMember(i)->setValue(*mRDBuffer[i]);
+  }
+}
+
+size_t COPC_UA_Layer::getRDBufferIndexFromNodeId(const UA_NodeId *paNodeId) {
+  for(size_t i = 0; i < mObjectNodeStructActionInfos.size(); i++) {
+    std::shared_ptr<CActionInfo> actionInfo = mObjectNodeStructActionInfos[i];
+    UA_NodeId *nodeId = (*actionInfo->getNodePairInfo().begin())->mNodeId;
+    if(UA_NodeId_equal(nodeId, paNodeId)) {
+      return i;
+    }
+  }
+  return -1;
 }
 
 void COPC_UA_Layer::getObjectNodeStructBrowsePath(std::string &paBrowsePath, const CDataConnection *paLocalPortConnection, const std::string &paPathPrefix, bool paIsPublisher) {
@@ -352,8 +405,8 @@ void COPC_UA_Layer::getStructTypeName(std::string &paStructTypeName, const CData
 bool COPC_UA_Layer::isStructType(bool paIsPublisher) const {
   // TODO implement layer to handle more than 1 struct
   // For the concept, only the first SD/RD port needs to be a struct 
-  TPortId nrOfPorts = paIsPublisher ? mFb->getNumSD() : mFb->getNumRD();
-  CIEC_ANY** apoDataPorts = paIsPublisher ? mFb->getSDs() : mFb->getRDs();
+  TPortId nrOfPorts = paIsPublisher ? getCommFB()->getNumSD() : getCommFB()->getNumRD();
+  CIEC_ANY** apoDataPorts = paIsPublisher ? getCommFB()->getSDs() : getCommFB()->getRDs();
   return nrOfPorts > 0 && CIEC_ANY::e_STRUCT == apoDataPorts[0]->unwrap().getDataTypeID();
 }
 
@@ -417,21 +470,23 @@ forte::com_infra::EComResponse COPC_UA_Layer::initializeActionForStructMembers(c
   std::string structTypeName;
   getStructTypeName(structTypeName, paLocalPortConnection, paIsPublisher);
 
-  CIEC_ANY** apoDataPorts = paIsPublisher ? mFb->getSDs() : mFb->getRDs();
+  CIEC_ANY** apoDataPorts = paIsPublisher ? getCommFB()->getSDs() : getCommFB()->getRDs();
   CIEC_STRUCT& structType = static_cast<CIEC_STRUCT&>(apoDataPorts[0]->unwrap());
   const CStringDictionary::TStringId* structMemberNames = structType.elementNames();
   
   for(size_t i = 0; i < structType.getStructSize(); i++) {
     std::string memberBrowsePath;
     getObjectNodeStructMemberBrowsePath(memberBrowsePath, structTypeName, structMemberNames[i], COPC_UA_Layer::structNodesBrowsePath);
-    CActionInfo* actionInfo = new CActionInfo(*this, mActionInfo->getAction(), mActionInfo->getEndpoint());
+
+    std::shared_ptr<CActionInfo> actionInfo = std::make_shared<CActionInfo>(*this, mActionInfo->getAction(), mActionInfo->getEndpoint());
     actionInfo->getNodePairInfo().pushBack(new CActionInfo::CNodePairInfo(nullptr, memberBrowsePath));
     CIEC_ANY* memberVariable = structType.getMember(i);
-    if(UA_STATUSCODE_GOOD != localHandler->initializeActionForObjectStruct(*actionInfo, *memberVariable)) {
+    if(UA_STATUSCODE_GOOD != localHandler->initializeActionForObjectStruct(actionInfo, *memberVariable)) {
       DEVLOG_ERROR("[OPC UA LAYER]: Error occured in FB %s while initializing Struct member %s\n", getCommFB()->getInstanceName(),
       CStringDictionary::getInstance().get(structMemberNames[i]));
       return e_InitTerminated;
     }
+    mObjectNodeStructActionInfos.push_back(std::move(actionInfo));
   }
   return e_InitOk;
 }

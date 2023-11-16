@@ -21,6 +21,7 @@
 
 #include "../../core/cominfra/comlayer.h"
 #include "opcua_helper.h"
+#include <memory>
 
 class COPC_UA_HandlerAbstract;
 class CActionInfo;
@@ -155,6 +156,8 @@ class COPC_UA_Layer : public forte::com_infra::CComLayer {
 
     bool mIsObjectNodeStruct;
 
+    std::vector<std::shared_ptr<CActionInfo>> mObjectNodeStructActionInfos;
+
     /**
      * Execute the action for a Object Node Struct
      * @param paIsPublisher True if the FB is a Publisher, false othewise
@@ -195,6 +198,14 @@ class COPC_UA_Layer : public forte::com_infra::CComLayer {
     CActionInfo* getCreateObjectActionForObjectNodeStruct(bool paIsPublisher);
 
     forte::com_infra::EComResponse initializeActionForStructMembers(const CDataConnection *paLocalPortConnection, bool paIsPublisher);
+
+    void initialiseStructObjectRDBuffer();
+
+    void deleteStructObjectRDBuffer();
+
+    size_t getRDBufferIndexFromNodeId(const UA_NodeId *paNodeId);
+
+    void setObjectStructData();
 
     /**
      * Get the BrowsePath to the OPC UA Struct Object Type from the local Struct Type

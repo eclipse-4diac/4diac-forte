@@ -77,7 +77,7 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
     */
     bool isOPCUAObjectPresent(CActionInfo::CNodePairInfo &paNodePair);
 
-    UA_StatusCode initializeActionForObjectStruct(CActionInfo &paActionInfo, CIEC_ANY &paMember);
+    UA_StatusCode initializeActionForObjectStruct(std::shared_ptr<CActionInfo> &paActionInfo, CIEC_ANY &paMember);
 
     /**
      * Execute the action for Object Node Structs
@@ -390,7 +390,7 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
      */
     UA_StatusCode initializeVariable(CActionInfo &paActionInfo, bool isWrite);
 
-    UA_StatusCode initializeObjectStructMemberVariable(CActionInfo &paActionInfo, CIEC_ANY *paMember, bool paWrite);
+    UA_StatusCode initializeObjectStructMemberVariable(std::shared_ptr<CActionInfo> &paActionInfo, CIEC_ANY *paMember, bool paWrite);
 
     /**
      * When an action refers to variable that already exist in the OPC UA server, another variable shouldn't be created. If you are trying to read a variable

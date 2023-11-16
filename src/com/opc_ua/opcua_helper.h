@@ -85,7 +85,7 @@ class COPC_UA_Helper {
     class UA_RecvVariable_handle : public UA_Variables_handle {
       public:
         explicit UA_RecvVariable_handle(size_t paSize) :
-            UA_Variables_handle(paSize) {
+            UA_Variables_handle(paSize), mNodeId(nullptr) {
           mData = new const UA_Variant*[mSize];
         }
 
@@ -94,6 +94,7 @@ class COPC_UA_Helper {
         }
 
         const UA_Variant **mData;
+        const UA_NodeId *mNodeId;
 
         UA_RecvVariable_handle(const UA_RecvVariable_handle &paObj) = delete;
         UA_RecvVariable_handle& operator=(const UA_RecvVariable_handle& other) = delete;
