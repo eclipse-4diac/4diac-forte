@@ -30,7 +30,6 @@
 using namespace forte::com_infra;
 
 const std::string COPC_UA_Layer::structTypesBrowsePath = "/Types/0:ObjectTypes/0:BaseObjectType/2:";
-const std::string COPC_UA_Layer::structNodesBrowsePath = "/Objects/1:";
 
 COPC_UA_Layer::COPC_UA_Layer(CComLayer *paUpperLayer, CBaseCommFB *paComFB) :
     CComLayer(paUpperLayer, paComFB), mInterruptResp(e_Nothing), mHandler(nullptr), mActionInfo(nullptr), mDataAlreadyPresent(false), mRDBuffer(nullptr), mIsObjectNodeStruct(false) {
@@ -309,7 +308,10 @@ CStringDictionary::TStringId COPC_UA_Layer::getLocalPortNameId(int paPortIndex, 
 bool COPC_UA_Layer::checkObjectNodeStructTypeConnection(bool paIsPublisher) {
   int portIndex = 2;
   if(mActionInfo && mHandler) {
-    if(isOPCUAStructObjectPresent(getLocalPortConnection(portIndex, paIsPublisher), COPC_UA_Layer::structTypesBrowsePath, paIsPublisher)) {
+    const CDataConnection* localPortConnection = getLocalPortConnection(portIndex, paIsPublisher);
+    std::string browsePath;
+    getObjectNodeStructBrowsePath(browsePath, localPortConnection, COPC_UA_Layer::structTypesBrowsePath, paIsPublisher);
+    if(isOPCUAStructObjectPresent(browsePath)) {
       return true;
     }
     DEVLOG_ERROR("[OPC UA LAYER]: Invalid Struct type in FB %s at connection %s\n", getCommFB()->getInstanceName(),
@@ -370,11 +372,10 @@ void COPC_UA_Layer::getObjectNodeStructBrowsePath(std::string &paBrowsePath, con
   }
 }
 
-void COPC_UA_Layer::getObjectNodeStructMemberBrowsePath(std::string &paBrowsePath, std::string &structTypeName, const CStringDictionary::TStringId structMemberNameId, const std::string &paPathPrefix) {
-  paBrowsePath.append(paPathPrefix);
-  paBrowsePath.append(structTypeName);
-  paBrowsePath.append("/2:");
-  paBrowsePath.append(CStringDictionary::getInstance().get(structMemberNameId));
+void COPC_UA_Layer::getObjectNodeStructMemberBrowsePath(std::string &paMemberBrowsePath, std::string &paBrowsePathPrefix, const CStringDictionary::TStringId structMemberNameId) {
+  paMemberBrowsePath.append(paBrowsePathPrefix);
+  paMemberBrowsePath.append("/2:");
+  paMemberBrowsePath.append(CStringDictionary::getInstance().get(structMemberNameId));
 }
 
 void COPC_UA_Layer::getStructTypeName(std::string &paStructTypeName, const CDataConnection *paLocalPortConnection, bool paIsPublisher) {
@@ -393,12 +394,10 @@ bool COPC_UA_Layer::isStructType(bool paIsPublisher) const {
   return nrOfPorts > 0 && CIEC_ANY::e_STRUCT == apoDataPorts[0]->unwrap().getDataTypeID();
 }
 
-bool COPC_UA_Layer::isOPCUAStructObjectPresent(const CDataConnection *paLocalPortConnection, const std::string &paPathPrefix, bool paIsPublisher) {
+bool COPC_UA_Layer::isOPCUAStructObjectPresent(std::string &paBrowsePath) {
   COPC_UA_Local_Handler* localHandler = static_cast<COPC_UA_Local_Handler*>(mHandler);
   if(localHandler) {
-    std::string browsePath;
-    getObjectNodeStructBrowsePath(browsePath, paLocalPortConnection, paPathPrefix, paIsPublisher);
-    CActionInfo::CNodePairInfo nodePair(nullptr, browsePath);
+    CActionInfo::CNodePairInfo nodePair(nullptr, paBrowsePath);
     return localHandler->isOPCUAObjectPresent(nodePair);
   } else {
     DEVLOG_ERROR("[OPC UA LAYER]: Failed to get LocalHandler because LocalHandler is null!\n");
@@ -423,50 +422,45 @@ CIEC_ANY const *COPC_UA_Layer::getObjectStructMember(CActionInfo &paActionInfo, 
 
 EComResponse COPC_UA_Layer::createStructObjectNode(bool paIsPublisher) {
   EComResponse response = e_InitTerminated;
+  std::string browsePath = (*mActionInfo->getNodePairInfo().begin())->mBrowsePath;
   const CDataConnection* localPortConnection = getLocalPortConnection(2, paIsPublisher);
-  if(isOPCUAStructObjectPresent(localPortConnection, COPC_UA_Layer::structNodesBrowsePath, paIsPublisher)) {
-    return initializeActionForStructMembers(localPortConnection, paIsPublisher);
+  if(isOPCUAStructObjectPresent(browsePath)) {
+    return initializeActionForStructMembers(browsePath, paIsPublisher);
   }
-  mCreateObjectStructNode = getCreateObjectActionForObjectNodeStruct(paIsPublisher);
+  mCreateObjectStructNode = getCreateObjectActionForObjectNodeStruct(browsePath, paIsPublisher);
   if( (UA_STATUSCODE_GOOD == mHandler->initializeAction(*mCreateObjectStructNode)) && (UA_STATUSCODE_GOOD == mHandler->executeAction(*mCreateObjectStructNode)) ) {
-    response = initializeActionForStructMembers(localPortConnection, paIsPublisher);
+    response = initializeActionForStructMembers(browsePath, paIsPublisher);
   }
   return response;
 }
 
-std::shared_ptr<CActionInfo> COPC_UA_Layer::getCreateObjectActionForObjectNodeStruct(bool paIsPublisher) {
+std::shared_ptr<CActionInfo> COPC_UA_Layer::getCreateObjectActionForObjectNodeStruct(std::string &paBrowsePath, bool paIsPublisher) {
   // TODO implement layer to handle more than 1 struct
   int portIndex = 2;
   std::shared_ptr<CActionInfo> actionInfo = std::make_shared<CActionInfo>(*this, CActionInfo::UA_ActionType::eCreateObject, mActionInfo->getEndpoint());
-  const CDataConnection* localPortConnection = getLocalPortConnection(portIndex, paIsPublisher);
   std::string typeBrowsePath;
-  getObjectNodeStructBrowsePath(typeBrowsePath, localPortConnection, COPC_UA_Layer::structTypesBrowsePath, paIsPublisher);
-  std::string nodeBrowsePath;
-  getObjectNodeStructBrowsePath(nodeBrowsePath, localPortConnection, COPC_UA_Layer::structNodesBrowsePath, paIsPublisher);
+  getObjectNodeStructBrowsePath(typeBrowsePath, getLocalPortConnection(portIndex, paIsPublisher), COPC_UA_Layer::structTypesBrowsePath, paIsPublisher);
 
   CSinglyLinkedList<CActionInfo::CNodePairInfo*>& nodePairs = actionInfo->getNodePairInfo();
   nodePairs.pushBack(new CActionInfo::CNodePairInfo(nullptr, typeBrowsePath));
-  nodePairs.pushBack(new CActionInfo::CNodePairInfo(nullptr, nodeBrowsePath));
+  nodePairs.pushBack(new CActionInfo::CNodePairInfo(nullptr, paBrowsePath));
   return actionInfo;
 }
 
-forte::com_infra::EComResponse COPC_UA_Layer::initializeActionForStructMembers(const CDataConnection *paLocalPortConnection, bool paIsPublisher) {
+forte::com_infra::EComResponse COPC_UA_Layer::initializeActionForStructMembers(std::string &paBrowsePath, bool paIsPublisher) {
   // TODO implement layer to handle more than 1 struct
   COPC_UA_Local_Handler* localHandler = static_cast<COPC_UA_Local_Handler*>(mHandler);
   if(!localHandler) {
     DEVLOG_ERROR("[OPC UA LAYER]: Failed to get LocalHandler because LocalHandler is null!\n");
     return e_InitTerminated;
   }
-  std::string structTypeName;
-  getStructTypeName(structTypeName, paLocalPortConnection, paIsPublisher);
-
   CIEC_ANY** apoDataPorts = paIsPublisher ? getCommFB()->getSDs() : getCommFB()->getRDs();
   CIEC_STRUCT& structType = static_cast<CIEC_STRUCT&>(apoDataPorts[0]->unwrap());
   const CStringDictionary::TStringId* structMemberNames = structType.elementNames();
   
   for(size_t i = 0; i < structType.getStructSize(); i++) {
     std::string memberBrowsePath;
-    getObjectNodeStructMemberBrowsePath(memberBrowsePath, structTypeName, structMemberNames[i], COPC_UA_Layer::structNodesBrowsePath);
+    getObjectNodeStructMemberBrowsePath(memberBrowsePath, paBrowsePath, structMemberNames[i]);
 
     std::shared_ptr<CActionInfo> actionInfo = std::make_shared<CStructMemberActionInfo>(*this, mActionInfo->getAction(), mActionInfo->getEndpoint());
     CIEC_ANY* memberVariable = structType.getMember(i);

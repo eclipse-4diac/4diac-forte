@@ -83,11 +83,6 @@ class COPC_UA_Layer : public forte::com_infra::CComLayer {
      static const std::string structTypesBrowsePath;
 
     /**
-     * BrowsePath to folder that contains Struct Object Nodes
-     */
-     static const std::string structNodesBrowsePath;
-   
-    /**
      * Response for the processInterrupt() method
      */
     forte::com_infra::EComResponse mInterruptResp;
@@ -196,12 +191,13 @@ class COPC_UA_Layer : public forte::com_infra::CComLayer {
     /**
      * Get the ActionInfo to create the OPC UA Object Node for Struct Type.
      * Supports only one connected Struct Type currently
+     * @param paBrowsePath BrowsePath to the Struct Object Node
      * @param paIsPublisher True if the FB is a Publisher, false othewise
      * @return The ActionInfo for creating OPC UA Object Node
     */
-    std::shared_ptr<CActionInfo> getCreateObjectActionForObjectNodeStruct(bool paIsPublisher);
+    std::shared_ptr<CActionInfo> getCreateObjectActionForObjectNodeStruct(std::string &paBrowsePath, bool paIsPublisher);
 
-    forte::com_infra::EComResponse initializeActionForStructMembers(const CDataConnection *paLocalPortConnection, bool paIsPublisher);
+    forte::com_infra::EComResponse initializeActionForStructMembers(std::string &paBrowsePath, bool paIsPublisher);
 
     void initialiseStructObjectRDBuffer();
 
@@ -222,12 +218,11 @@ class COPC_UA_Layer : public forte::com_infra::CComLayer {
 
     /**
      * Get the BrowsePath to the OPC UA Object Struct members from the local Struct Type
-     * @param paBrowsePath Place to store the BrowsePath to the OPC UA Struct Object Type
-     * @param structTypeName Name of Object Node Struct Type
+     * @param paMemberBrowsePath Place to store the BrowsePath to the OPC UA Struct Object Type
+     * @param paBrowsePathPrefix BrowsePath to the Struct Object Node
      * @param structMemberNameId Name Id of Object Node Struct member
-     * @param paPathPrefix The BrowsePath directory with namespace (e.g. /Objects/1:)
      */
-    static void getObjectNodeStructMemberBrowsePath(std::string &paBrowsePath, std::string &structTypeName, const CStringDictionary::TStringId structMemberNameId, const std::string &paPathPrefix);
+    static void getObjectNodeStructMemberBrowsePath(std::string &paMemberBrowsePath, std::string &paBrowsePathPrefix, const CStringDictionary::TStringId structMemberNameId);
 
     /**
      * @param paStructTypeName Place to store the name of the Struct Type
@@ -247,11 +242,10 @@ class COPC_UA_Layer : public forte::com_infra::CComLayer {
 
     /**
      * Check if Object Node Struct is present in OPC UA server
-     * @param paLocalPortConnection Local port connection pointer
-     * @param paPathPrefix The BrowsePath directory with namespace (e.g. /Objects/1:)
-     * @param paIsPublisher True if the FB is a Publisher, false othewise
+     * @param paBrowsePath The BrowsePath to the Object Node
+     * @return true, if Object Node already exists, false otherwise
     */
-    bool isOPCUAStructObjectPresent(const CDataConnection *paLocalPortConnection, const std::string &paPathPrefix, bool paIsPublisher);
+    bool isOPCUAStructObjectPresent(std::string &paBrowsePath);
 
     /**
      * Check if Data Connection is a Struct Type
