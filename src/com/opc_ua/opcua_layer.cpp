@@ -25,6 +25,7 @@
 #include <criticalregion.h>
 #include "opcua_action_info.h"
 #include "opcua_remote_handler.h"
+#include "struct_action_info.h"
 
 using namespace forte::com_infra;
 
@@ -286,32 +287,11 @@ void COPC_UA_Layer::setDataAlreadyPresentRead(bool paDataRead) {
 }
 
 forte::com_infra::EComResponse COPC_UA_Layer::executeActionForObjectNodeStruct(bool paIsPublisher) {
-  // TODO implement layer to handle more than 1 struct
-  int portIndex = 2;
-  COPC_UA_Local_Handler* localHandler = static_cast<COPC_UA_Local_Handler*>(mHandler);
-  if(!localHandler) {
-    DEVLOG_ERROR("[OPC UA LAYER]: Failed to get LocalHandler because LocalHandler is null!\n");
-    return e_ProcessDataDataTypeError;
-  }
-  std::string structTypeName;
-  getStructTypeName(structTypeName, getLocalPortConnection(portIndex, paIsPublisher), paIsPublisher);
-  
-  CIEC_ANY** apoSDs = getCommFB()->getSDs();
-  CIEC_STRUCT& structType = static_cast<CIEC_STRUCT&>(apoSDs[0]->unwrap());
-  const CStringDictionary::TStringId* structMemberNames = structType.elementNames();
-  for(size_t i = 0; i < structType.getStructSize(); i++) {
-    std::string memberBrowsePath;
-    getObjectNodeStructMemberBrowsePath(memberBrowsePath, structTypeName, structMemberNames[i], COPC_UA_Layer::structNodesBrowsePath);
-
-    CActionInfo* actionInfo = new CActionInfo(*this, mActionInfo->getAction(), mActionInfo->getEndpoint());
-    actionInfo->getNodePairInfo().pushBack(new CActionInfo::CNodePairInfo(nullptr, memberBrowsePath));
-    CIEC_ANY* memberVariable = structType.getMember(i);
-    if(UA_STATUSCODE_GOOD != localHandler->executeActionForObjectStruct(*actionInfo, *memberVariable)) {
-      DEVLOG_ERROR("[OPC UA LAYER]: Error occured in FB %s while sending Struct member %s\n", getCommFB()->getInstanceName(),
-      CStringDictionary::getInstance().get(structMemberNames[i]));
+  for(std::shared_ptr<CActionInfo> actionInfo : mObjectNodeStructActionInfos) {
+    if(UA_STATUSCODE_GOOD != mHandler->executeAction(*actionInfo)) {
       return e_ProcessDataDataTypeError;
     }
-          }
+  }
   return e_ProcessDataOk;
 }
 
@@ -426,22 +406,30 @@ bool COPC_UA_Layer::isOPCUAStructObjectPresent(const CDataConnection *paLocalPor
   return false;
 }
 
+CIEC_ANY const *COPC_UA_Layer::getObjectStructMember(CActionInfo &paActionInfo, bool paIsSD) {
+  CIEC_ANY** apoDataPorts = paIsSD ? getCommFB()->getSDs() : getCommFB()->getRDs();
+  CIEC_STRUCT& structType = static_cast<CIEC_STRUCT&>(apoDataPorts[0]->unwrap());
+  const std::string actionBrowsePath = (*paActionInfo.getNodePairInfo().begin())->mBrowsePath;
+
+  for(size_t i = 0; i < mObjectNodeStructActionInfos.size(); i++) {
+    std::shared_ptr<CActionInfo> actionInfo = mObjectNodeStructActionInfos[i];
+    std::string browsePath = (*actionInfo->getNodePairInfo().begin())->mBrowsePath;
+    if(browsePath == actionBrowsePath) {
+      return structType.getMember(i);
+    }
+  }
+  return nullptr;
+}
+
 EComResponse COPC_UA_Layer::createStructObjectNode(bool paIsPublisher) {
   EComResponse response = e_InitTerminated;
   const CDataConnection* localPortConnection = getLocalPortConnection(2, paIsPublisher);
   if(isOPCUAStructObjectPresent(localPortConnection, COPC_UA_Layer::structNodesBrowsePath, paIsPublisher)) {
-    if(!paIsPublisher) {
-      return initializeActionForStructMembers(localPortConnection, paIsPublisher);
-    }
-    return e_InitOk;
+    return initializeActionForStructMembers(localPortConnection, paIsPublisher);
   }
   mCreateObjectStructNode = getCreateObjectActionForObjectNodeStruct(paIsPublisher);
   if( (UA_STATUSCODE_GOOD == mHandler->initializeAction(*mCreateObjectStructNode)) && (UA_STATUSCODE_GOOD == mHandler->executeAction(*mCreateObjectStructNode)) ) {
-    if(!paIsPublisher) {
-      response = initializeActionForStructMembers(localPortConnection, paIsPublisher);
-    } else {
-      response = e_InitOk;
-    }
+    response = initializeActionForStructMembers(localPortConnection, paIsPublisher);
   }
   return response;
 }
@@ -480,9 +468,9 @@ forte::com_infra::EComResponse COPC_UA_Layer::initializeActionForStructMembers(c
     std::string memberBrowsePath;
     getObjectNodeStructMemberBrowsePath(memberBrowsePath, structTypeName, structMemberNames[i], COPC_UA_Layer::structNodesBrowsePath);
 
-    std::shared_ptr<CActionInfo> actionInfo = std::make_shared<CActionInfo>(*this, mActionInfo->getAction(), mActionInfo->getEndpoint());
-    actionInfo->getNodePairInfo().pushBack(new CActionInfo::CNodePairInfo(nullptr, memberBrowsePath));
+    std::shared_ptr<CActionInfo> actionInfo = std::make_shared<CStructMemberActionInfo>(*this, mActionInfo->getAction(), mActionInfo->getEndpoint());
     CIEC_ANY* memberVariable = structType.getMember(i);
+    actionInfo->getNodePairInfo().pushBack(new CActionInfo::CNodePairInfo(nullptr, memberBrowsePath));
     if(UA_STATUSCODE_GOOD != localHandler->initializeActionForObjectStruct(actionInfo, *memberVariable)) {
       DEVLOG_ERROR("[OPC UA LAYER]: Error occured in FB %s while initializing Struct member %s\n", getCommFB()->getInstanceName(),
       CStringDictionary::getInstance().get(structMemberNames[i]));

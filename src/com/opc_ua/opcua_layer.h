@@ -73,6 +73,8 @@ class COPC_UA_Layer : public forte::com_infra::CComLayer {
      */
     void triggerNewEvent();
 
+    CIEC_ANY const *getObjectStructMember(CActionInfo &paActionInfo, bool paIsSD);
+
   private:
 
     /**

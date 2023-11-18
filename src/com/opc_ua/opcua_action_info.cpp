@@ -82,7 +82,7 @@ CActionInfo* CActionInfo::getActionInfoFromParams(const char *paParams, COPC_UA_
   return retVal;
 }
 
-const CIEC_ANY *const *CActionInfo::getDataToSend() const {
+const CIEC_ANY *const *CActionInfo::getDataToSend() {
   return mLayer.getCommFB()->getSDs();
 }
 

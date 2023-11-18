@@ -428,17 +428,6 @@ UA_StatusCode COPC_UA_Local_Handler::executeAction(CActionInfo &paActionInfo) {
   return retVal;
 }
 
-UA_StatusCode COPC_UA_Local_Handler::executeActionForObjectStruct(CActionInfo& paActionInfo, CIEC_ANY& paMember) {
-  UA_StatusCode retVal = UA_STATUSCODE_BADINTERNALERROR;
-  if(mUaServer) {
-    CCriticalRegion criticalRegion(mServerAccessMutex);
-    if(paActionInfo.getAction() == CActionInfo::eWrite) {
-      retVal = executeObjectStructWrite(paActionInfo, paMember);
-    }
-  }
-  return retVal;
-}
-
 UA_StatusCode COPC_UA_Local_Handler::uninitializeAction(CActionInfo &paActionInfo) {
   UA_StatusCode retVal = UA_STATUSCODE_BADINTERNALERROR;
   CCriticalRegion criticalRegion(mServerAccessMutex);
@@ -943,20 +932,6 @@ UA_StatusCode COPC_UA_Local_Handler::executeWrite(CActionInfo &paActionInfo) {
       break;
     }
 
-  }
-  return retVal;
-}
-
-UA_StatusCode COPC_UA_Local_Handler::executeObjectStructWrite(CActionInfo & paActionInfo, CIEC_ANY& paMember) {
-  UA_StatusCode retVal = UA_STATUSCODE_GOOD;
-  CSinglyLinkedList<CActionInfo::CNodePairInfo*>::Iterator it = paActionInfo.getNodePairInfo().begin();
-  CSinglyLinkedList<UA_NodeId*> presentNodes;
-  bool nodeExists = false;
-  retVal = getNode(**it, presentNodes, &nodeExists);
-  retVal = updateNodeValue(*(*it)->mNodeId, &paMember);
-  if(UA_STATUSCODE_GOOD != retVal) {
-    DEVLOG_ERROR("[OPC UA LOCAL]: Could not write WinCC Struct Member at FB %s. Error: %s\n",
-      paActionInfo.getLayer().getCommFB()->getInstanceName(), UA_StatusCode_name(retVal));
   }
   return retVal;
 }
