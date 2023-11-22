@@ -15,7 +15,10 @@
  *      - refactoring and adaption to new concept
  *    Jose Cabral:
  *      - refactoring to cleaner architecture
- *    Martin Melik Merkumians - Change CIEC_STRING to std::string
+ *    Martin Melik Merkumians:
+ *      - Change CIEC_STRING to std::string
+ *    Markus Meingast:
+ *      - Add Support for Object Structs
  *******************************************************************************/
 
 #include "../../core/devexec.h"

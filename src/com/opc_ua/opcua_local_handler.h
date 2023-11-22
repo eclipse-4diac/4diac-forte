@@ -15,7 +15,10 @@
  *      - refactoring and adaption to new concept
  *    Jose Cabral:
  *      - refactoring to cleaner architecture
- *    Martin Melik Merkumians - Change CIEC_STRING to std::string
+ *    Martin Melik Merkumians:
+ *      - Change CIEC_STRING to std::string
+ *    Markus Meingast:
+ *      - Add Support for Object Structs
  *******************************************************************************/
 
 #ifndef SRC_MODULES_OPC_UA_OPCUALOCALHANDLER_H_
@@ -77,6 +80,11 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
     */
     bool isOPCUAObjectPresent(CActionInfo::CNodePairInfo &paNodePair);
 
+    /**
+     * Perform initialization of the action for an Object Struct
+     * @param paActionInfo Action to be initialized
+     * @return UA_STATUSCODE_GOOD if no problem occurred, other value otherwise
+     */
     UA_StatusCode initializeActionForObjectStruct(std::shared_ptr<CActionInfo> &paActionInfo, CIEC_ANY &paMember);
 
   protected:
@@ -84,21 +92,21 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
     /**
      * Perform all the needed initialization of the action
      * @param paActionInfo Action to be initialized
-     * @return UA_STATUSCODE_GOOD is no problem occurred, other value otherwise
+     * @return UA_STATUSCODE_GOOD if no problem occurred, other value otherwise
      */
     UA_StatusCode initializeAction(CActionInfo &paActionInfo) override;
 
     /**
      * Execute the action
      * @param paActionInfo Action to be executed
-     * @return UA_STATUSCODE_GOOD is no problem occurred, other value otherwise
+     * @return UA_STATUSCODE_GOOD if no problem occurred, other value otherwise
      */
     UA_StatusCode executeAction(CActionInfo &paActionInfo) override;
 
     /**
      * Uninitialize the action
      * @param paActionInfo Action to be Uninitialized
-     * @return UA_STATUSCODE_GOOD is no problem occurred, other value otherwise
+     * @return UA_STATUSCODE_GOOD if no problem occurred, other value otherwise
      */
     UA_StatusCode uninitializeAction(CActionInfo &paActionInfo) override;
 
@@ -381,6 +389,13 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
      */
     UA_StatusCode initializeVariable(CActionInfo &paActionInfo, bool isWrite);
 
+    /**
+     * Initialization of read and write of Object Struct member variables. It handles both existing and non-existing cases
+     * @param paActionInfo Action to be initialized
+     * @param paMember The member to be initialized
+     * @param paWrite True if the action is to write a variable, false if it's for reading
+     * @return UA_STATUSCODE_GOOD on success, other value otherwise
+     */
     UA_StatusCode initializeObjectStructMemberVariable(std::shared_ptr<CActionInfo> &paActionInfo, CIEC_ANY *paMember, bool paWrite);
 
     /**

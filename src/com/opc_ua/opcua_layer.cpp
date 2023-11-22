@@ -1,6 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2015-2019 Florian Froschermeier <florian.froschermeier@tum.de>,
- *               fortiss GmbH
+ * Copyright (c) 2015-2023 Florian Froschermeier <florian.froschermeier@tum.de>,
+ *               fortiss GmbH, Primetals Technologies Austria GmbH
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -14,6 +14,8 @@
  *      - refactoring and adaption to new concept
  *    Jose Cabral:
  *      - refactoring to cleaner architecture
+ *    Markus Meingast:
+ *      - add Support for Object Structs
  *******************************************************************************/
 
 #include "opcua_layer.h"
@@ -116,7 +118,7 @@ EComResponse COPC_UA_Layer::recvData(const void *paData, unsigned int) {
       if(handleRecv->mSize + handleRecv->mOffset <= getCommFB()->getNumRD()) {
         CCriticalRegion criticalRegion(mRDBufferMutex);
         for(size_t i = 0; i < handleRecv->mSize; i++) {
-          long long bufferIndex = mIsObjectNodeStruct ? getRDBufferIndexFromNodeId(handleRecv->mNodeId) : handleRecv->mOffset + i;
+          long long bufferIndex = mIsObjectNodeStruct ? getObjectStructRDBufferIndexFromNodeId(handleRecv->mNodeId) : handleRecv->mOffset + i;
           if(bufferIndex == -1) {
             DEVLOG_ERROR("[OPC UA LAYER]: Received Node ID %d does not match with any registered Node ID for FB %s\n", handleRecv->mNodeId, getCommFB()->getInstanceName());
             mInterruptResp = e_ProcessDataRecvFaild;
@@ -352,7 +354,7 @@ void COPC_UA_Layer::setObjectStructData() {
   }
 }
 
-int COPC_UA_Layer::getRDBufferIndexFromNodeId(const UA_NodeId *paNodeId) {
+int COPC_UA_Layer::getObjectStructRDBufferIndexFromNodeId(const UA_NodeId *paNodeId) {
   for(size_t i = 0; i < mObjectNodeStructActionInfos.size(); i++) {
     std::shared_ptr<CActionInfo> actionInfo = mObjectNodeStructActionInfos[i];
     UA_NodeId *nodeId = (*actionInfo->getNodePairInfo().begin())->mNodeId;
@@ -424,11 +426,11 @@ EComResponse COPC_UA_Layer::createStructObjectNode(bool paIsPublisher) {
   EComResponse response = e_InitTerminated;
   std::string browsePath = (*mActionInfo->getNodePairInfo().begin())->mBrowsePath;
   if(isOPCUAStructObjectPresent(browsePath)) {
-    return initializeActionForStructMembers(browsePath, paIsPublisher);
+    return initializeActionForObjectStructMembers(browsePath, paIsPublisher);
   }
   mCreateObjectStructNode = getCreateObjectActionForObjectNodeStruct(browsePath, paIsPublisher);
   if( (UA_STATUSCODE_GOOD == mHandler->initializeAction(*mCreateObjectStructNode)) && (UA_STATUSCODE_GOOD == mHandler->executeAction(*mCreateObjectStructNode)) ) {
-    response = initializeActionForStructMembers(browsePath, paIsPublisher);
+    response = initializeActionForObjectStructMembers(browsePath, paIsPublisher);
   }
   return response;
 }
@@ -446,7 +448,7 @@ std::shared_ptr<CActionInfo> COPC_UA_Layer::getCreateObjectActionForObjectNodeSt
   return actionInfo;
 }
 
-forte::com_infra::EComResponse COPC_UA_Layer::initializeActionForStructMembers(std::string &paBrowsePath, bool paIsPublisher) {
+forte::com_infra::EComResponse COPC_UA_Layer::initializeActionForObjectStructMembers(std::string &paBrowsePath, bool paIsPublisher) {
   // TODO implement layer to handle more than 1 struct
   COPC_UA_Local_Handler* localHandler = static_cast<COPC_UA_Local_Handler*>(mHandler);
   if(!localHandler) {

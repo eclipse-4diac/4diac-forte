@@ -1,6 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2015-2019 Florian Froschermeier <florian.froschermeier@tum.de>,
- *               fortiss GmbH
+ * Copyright (c) 2015-2023 Florian Froschermeier <florian.froschermeier@tum.de>,
+ *               fortiss GmbH, Primetals Technologies Austria GmbH
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -14,6 +14,8 @@
  *      - refactoring and adaption to new concept
  *    Jose Cabral:
  *      - refactoring to cleaner architecture
+ *    Markus Meingast:
+ *      - add Support for Object Structs
  *******************************************************************************/
 
 #ifndef SRC_MODULES_OPC_UA_OPCUA_LAYER_H_
@@ -73,6 +75,12 @@ class COPC_UA_Layer : public forte::com_infra::CComLayer {
      */
     void triggerNewEvent();
 
+    /**
+     * Get Object Struct member from ActionInfo browsepath
+     * @param paActionInfo ActionInfo to get the browsepath from
+     * @param paIsSD True if the local port is an SD, false otherwise
+     * @return The pointer to the member variable
+    */
     CIEC_ANY const *getObjectStructMember(CActionInfo &paActionInfo, bool paIsSD);
 
   private:
@@ -127,7 +135,7 @@ class COPC_UA_Layer : public forte::com_infra::CComLayer {
      * Get the remote data input/output
      * @param paResult Place to store the pointer to the result
      * @param paRemoteConnectionPoint Connection point of the other end
-     * @param paIsSD true if the local port is an SD, false otherwise
+     * @param paIsSD True if the local port is an SD, false otherwise
      * @return True if no problem occurred, false otherwise
      */
     bool getRemoteAny(CIEC_ANY **paResult, const CConnectionPoint &paRemoteConnectionPoint, bool paIsSD) const;
@@ -196,14 +204,36 @@ class COPC_UA_Layer : public forte::com_infra::CComLayer {
     */
     std::shared_ptr<CActionInfo> getCreateObjectActionForObjectNodeStruct(std::string &paBrowsePath, bool paIsPublisher);
 
-    forte::com_infra::EComResponse initializeActionForStructMembers(std::string &paBrowsePath, bool paIsPublisher);
 
+    /**
+     * Perform initialization for Object Struct Members
+     * @param paBrowsePath The browsepath to the Object Struct
+     * @param paIsPublisher True if the FB is a Publisher, false othewise
+     * @return e_InitOk if initialization was successful, e_InitTerminated otherwise
+     */
+    forte::com_infra::EComResponse initializeActionForObjectStructMembers(std::string &paBrowsePath, bool paIsPublisher);
+
+
+    /**
+     * Initialize RDBuffer for Object Structs
+    */
     void initialiseStructObjectRDBuffer();
 
+    /**
+     * Delete all entries of the RDBuffer
+    */
     void deleteStructObjectRDBuffer();
 
-    int getRDBufferIndexFromNodeId(const UA_NodeId *paNodeId);
+    /**
+     * Get index to the corresponding Object Struct RDBuffer entry from the Node ID
+     * @param paNodeId The Node ID
+     * @return The index to the corresponding RDBuffer entry
+    */
+    int getObjectStructRDBufferIndexFromNodeId(const UA_NodeId *paNodeId);
 
+    /**
+     * Set values of Object Struct members from the RDBuffer
+    */
     void setObjectStructData();
 
     /**
