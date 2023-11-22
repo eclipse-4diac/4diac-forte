@@ -159,10 +159,9 @@ class COPC_UA_Layer : public forte::com_infra::CComLayer {
 
     /**
      * Execute the action for a Object Node Struct
-     * @param paIsPublisher True if the FB is a Publisher, false othewise
      * @return e_ProcessDataOK if no problem occurred, other value otherwise
      */
-    forte::com_infra::EComResponse executeActionForObjectNodeStruct(bool paIsPublisher);
+    forte::com_infra::EComResponse executeActionForObjectNodeStruct();
 
     /**
      * Get the port connection pointer for a connected data port
@@ -203,7 +202,7 @@ class COPC_UA_Layer : public forte::com_infra::CComLayer {
 
     void deleteStructObjectRDBuffer();
 
-    size_t getRDBufferIndexFromNodeId(const UA_NodeId *paNodeId);
+    int getRDBufferIndexFromNodeId(const UA_NodeId *paNodeId);
 
     void setObjectStructData();
 

@@ -32,7 +32,7 @@ using namespace forte::com_infra;
 const std::string COPC_UA_Layer::structTypesBrowsePath = "/Types/0:ObjectTypes/0:BaseObjectType/2:";
 
 COPC_UA_Layer::COPC_UA_Layer(CComLayer *paUpperLayer, CBaseCommFB *paComFB) :
-    CComLayer(paUpperLayer, paComFB), mInterruptResp(e_Nothing), mHandler(nullptr), mActionInfo(nullptr), mDataAlreadyPresent(false), mRDBuffer(nullptr), mIsObjectNodeStruct(false) {
+    CComLayer(paUpperLayer, paComFB), mInterruptResp(e_Nothing), mHandler(nullptr), mActionInfo(nullptr), mDataAlreadyPresent(false), mIsObjectNodeStruct(false), mRDBuffer(nullptr) {
 }
 
 COPC_UA_Layer::~COPC_UA_Layer() = default;
@@ -116,7 +116,7 @@ EComResponse COPC_UA_Layer::recvData(const void *paData, unsigned int) {
       if(handleRecv->mSize + handleRecv->mOffset <= getCommFB()->getNumRD()) {
         CCriticalRegion criticalRegion(mRDBufferMutex);
         for(size_t i = 0; i < handleRecv->mSize; i++) {
-          size_t bufferIndex = mIsObjectNodeStruct ? getRDBufferIndexFromNodeId(handleRecv->mNodeId) : handleRecv->mOffset + i;
+          long long bufferIndex = mIsObjectNodeStruct ? getRDBufferIndexFromNodeId(handleRecv->mNodeId) : handleRecv->mOffset + i;
           if(bufferIndex == -1) {
             DEVLOG_ERROR("[OPC UA LAYER]: Received Node ID %d does not match with any registered Node ID for FB %s\n", handleRecv->mNodeId, getCommFB()->getInstanceName());
             mInterruptResp = e_ProcessDataRecvFaild;
@@ -158,7 +158,7 @@ EComResponse COPC_UA_Layer::recvData(const void *paData, unsigned int) {
 
 EComResponse COPC_UA_Layer::sendData(void *, unsigned int) {
   if(mIsObjectNodeStruct) {
-    return executeActionForObjectNodeStruct(true);
+    return executeActionForObjectNodeStruct();
   }
   return (UA_STATUSCODE_GOOD == mHandler->executeAction(*mActionInfo) ? e_ProcessDataOk : e_ProcessDataDataTypeError);
 }
@@ -285,7 +285,7 @@ void COPC_UA_Layer::setDataAlreadyPresentRead(bool paDataRead) {
   mDataAlreadyPresent = paDataRead;
 }
 
-forte::com_infra::EComResponse COPC_UA_Layer::executeActionForObjectNodeStruct(bool paIsPublisher) {
+forte::com_infra::EComResponse COPC_UA_Layer::executeActionForObjectNodeStruct() {
   for(std::shared_ptr<CActionInfo> actionInfo : mObjectNodeStructActionInfos) {
     if(UA_STATUSCODE_GOOD != mHandler->executeAction(*actionInfo)) {
       return e_ProcessDataDataTypeError;
@@ -352,12 +352,12 @@ void COPC_UA_Layer::setObjectStructData() {
   }
 }
 
-size_t COPC_UA_Layer::getRDBufferIndexFromNodeId(const UA_NodeId *paNodeId) {
+int COPC_UA_Layer::getRDBufferIndexFromNodeId(const UA_NodeId *paNodeId) {
   for(size_t i = 0; i < mObjectNodeStructActionInfos.size(); i++) {
     std::shared_ptr<CActionInfo> actionInfo = mObjectNodeStructActionInfos[i];
     UA_NodeId *nodeId = (*actionInfo->getNodePairInfo().begin())->mNodeId;
     if(UA_NodeId_equal(nodeId, paNodeId)) {
-      return i;
+      return (int)i;
     }
   }
   return -1;
@@ -423,7 +423,6 @@ CIEC_ANY const *COPC_UA_Layer::getObjectStructMember(CActionInfo &paActionInfo, 
 EComResponse COPC_UA_Layer::createStructObjectNode(bool paIsPublisher) {
   EComResponse response = e_InitTerminated;
   std::string browsePath = (*mActionInfo->getNodePairInfo().begin())->mBrowsePath;
-  const CDataConnection* localPortConnection = getLocalPortConnection(2, paIsPublisher);
   if(isOPCUAStructObjectPresent(browsePath)) {
     return initializeActionForStructMembers(browsePath, paIsPublisher);
   }
