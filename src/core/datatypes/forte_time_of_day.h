@@ -27,7 +27,7 @@
 /*!\ingroup COREDTS CIEC_TIME_OF_DAY represents the time data types according to IEC 61131.
  */
 
-class CIEC_TIME_OF_DAY : public CIEC_ANY_DATE{
+class CIEC_TIME_OF_DAY final : public CIEC_ANY_DATE{
   DECLARE_FIRMWARE_DATATYPE(TIME_OF_DAY)
   public:
     CIEC_TIME_OF_DAY() = default;
@@ -59,9 +59,11 @@ class CIEC_TIME_OF_DAY : public CIEC_ANY_DATE{
 
     /*! \brief calculates buffer size needed for toString conversion
      */
-    size_t getToStringBufferSize() const override;
+    constexpr size_t getToStringBufferSize() const override {
+      return sizeof("TOD#00:00:00.000");
+    }
 
-    EDataTypeID getDataTypeID() const override {
+    constexpr EDataTypeID getDataTypeID() const override {
       return CIEC_ANY::e_TIME_OF_DAY;
     }
 

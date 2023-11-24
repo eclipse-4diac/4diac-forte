@@ -35,7 +35,7 @@ void CFreeRTOSTimerHandler::disableHandler() {
   xTimerStop(mTimer, 0);
 }
 
-void CFreeRTOSTimerHandler::setPriority(int paPriority) {
+void CFreeRTOSTimerHandler::setPriority(int) {
 
 }
 

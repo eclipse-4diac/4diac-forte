@@ -100,7 +100,7 @@ forte::com_infra::EComResponse CXqueryClientLayer::sendData(void *paData, unsign
   if(0 == paSize){
     retVal = e_ProcessDataInvalidObject;
   }else{
-    CIEC_ANY const *SDs(static_cast<TConstIEC_ANYPtr>(paData));
+    CIEC_ANY const *SDs(static_cast<const CIEC_ANY*>(paData));
     if(SDs[0].getDataTypeID() == CIEC_ANY::e_STRING){
       command = ((CIEC_STRING &)SDs[0]).getValue();
       getExtEvHandler<CXqueryHandler>().registerLayer(this);

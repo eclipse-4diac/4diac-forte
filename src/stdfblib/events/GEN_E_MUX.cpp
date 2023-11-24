@@ -50,7 +50,6 @@ void GEN_E_MUX::readInputData(TEventID) {
 }
 
 void GEN_E_MUX::writeOutputData(TEventID) {
-  RES_DATA_CON_CRITICAL_REGION();
   writeData(0, *mDOs[0], mDOConns[0]);
 }
 

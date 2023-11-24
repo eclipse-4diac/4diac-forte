@@ -27,6 +27,7 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "PLCnext")
 
   forte_add_sourcefile_hcpp(../posix/forte_thread ../posix/forte_sync ../posix/forte_sem)
   forte_add_sourcefile_cpp(../genforte_printer.cpp)
+  forte_add_sourcefile_cpp(../genforte_fileio.cpp)
   forte_add_sourcefile_h(../forte_architecture_time.h)
   forte_add_sourcefile_hcpp(../utils/timespec_utils)
   forte_add_sourcefile_cpp(../genforte_realFunctions.cpp)

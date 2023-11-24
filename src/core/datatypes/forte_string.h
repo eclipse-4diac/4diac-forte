@@ -28,6 +28,7 @@
 #include "forte_any_string.h"
 #include "forte_any_int.h"
 #include "forte_char.h"
+#include "../../arch/forte_fileio.h"
 
 #include "devlog.h"
 
@@ -213,7 +214,7 @@ class CIEC_STRING : public CIEC_ANY_STRING {
       return nullptr;
     }
 
-    EDataTypeID getDataTypeID() const override {
+    constexpr EDataTypeID getDataTypeID() const override final {
       return CIEC_ANY::e_STRING;
     }
 

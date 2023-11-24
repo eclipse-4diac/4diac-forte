@@ -86,7 +86,7 @@ void FORTE_ST_CREATE_FB::executeRQST(){
   theCommand.mSecondParam.pushBack(CStringDictionary::getInstance().getId(var_FB_TYPE.getValue()));
   theCommand.mCMD = EMGMCommandType::CreateFBInstance;
 
-  EMGMResponse resp = getResource().getDevice().executeMGMCommand(theCommand);
+  EMGMResponse resp = getDevice()->executeMGMCommand(theCommand);
 
   //calculate return value
   var_QO = CIEC_BOOL(resp == EMGMResponse::Ready);
@@ -98,7 +98,6 @@ void FORTE_ST_CREATE_FB::executeRQST(){
 void FORTE_ST_CREATE_FB::readInputData(TEventID paEIID) {
   switch(paEIID) {
     case scmEventREQID: {
-      RES_DATA_CON_CRITICAL_REGION();
       readData(1, var_FB_NAME, conn_FB_NAME);
       readData(2, var_FB_TYPE, conn_FB_TYPE);
       readData(3, var_DST, conn_DST);
@@ -113,7 +112,6 @@ void FORTE_ST_CREATE_FB::readInputData(TEventID paEIID) {
 void FORTE_ST_CREATE_FB::writeOutputData(TEventID paEIID) {
   switch(paEIID) {
     case scmEventCNFID: {
-      RES_DATA_CON_CRITICAL_REGION();
       writeData(1, var_STATUS, conn_STATUS);
       writeData(0, var_QO, conn_QO);
       break;

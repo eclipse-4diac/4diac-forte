@@ -83,13 +83,11 @@ void FORTE_QX::executeEvent(TEventID paEIID, CEventChainExecutionThread *const p
 void FORTE_QX::readInputData(TEventID paEIID) {
   switch(paEIID) {
     case scmEventINITID: {
-      RES_DATA_CON_CRITICAL_REGION();
       readData(0, var_QI, conn_QI);
       readData(1, var_PARAMS, conn_PARAMS);
       break;
     }
     case scmEventREQID: {
-      RES_DATA_CON_CRITICAL_REGION();
       readData(0, var_QI, conn_QI);
       readData(2, var_OUT, conn_OUT);
       break;
@@ -102,13 +100,11 @@ void FORTE_QX::readInputData(TEventID paEIID) {
 void FORTE_QX::writeOutputData(TEventID paEIID) {
   switch(paEIID) {
     case scmEventINITOID: {
-      RES_DATA_CON_CRITICAL_REGION();
       writeData(0, var_QO, conn_QO);
       writeData(1, var_STATUS, conn_STATUS);
       break;
     }
     case scmEventCNFID: {
-      RES_DATA_CON_CRITICAL_REGION();
       writeData(0, var_QO, conn_QO);
       writeData(1, var_STATUS, conn_STATUS);
       break;

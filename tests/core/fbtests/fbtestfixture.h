@@ -64,8 +64,8 @@ class CFBTestFixtureBase : public CFunctionBlock{
      */
     bool checkForSingleOutputEventOccurence(TEventID paExpectedEOId);
 
-    void setInputData(std::initializer_list<TIEC_ANYPtr> paInputData);
-    void setOutputData(std::initializer_list<TIEC_ANYPtr> paOutputData);
+    void setInputData(std::initializer_list<CIEC_ANY*> paInputData);
+    void setOutputData(std::initializer_list<CIEC_ANY*> paOutputData);
 
   private:
     void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;

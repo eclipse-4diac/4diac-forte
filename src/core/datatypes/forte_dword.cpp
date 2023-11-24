@@ -18,7 +18,3 @@
 #endif
 
 DEFINE_FIRMWARE_DATATYPE(DWORD, g_nStringIdDWORD)
-
-size_t CIEC_DWORD::getToStringBufferSize() const {
-  return sizeof("4294967295");
-}

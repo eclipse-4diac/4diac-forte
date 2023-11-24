@@ -90,7 +90,6 @@ const SCFB_FBNData FORTE_E_IMPULSE::scmFBNData = {
 void FORTE_E_IMPULSE::readInternal2InterfaceOutputData(const TEventID paEOID) {
   switch(paEOID) {
     case scmEventCNFID: {
-      RES_DATA_CON_CRITICAL_REGION();
       if(CDataConnection *conn = getIn2IfConUnchecked(0); conn) { conn->readData(var_QO); }
       break;
     }
@@ -101,7 +100,6 @@ void FORTE_E_IMPULSE::readInternal2InterfaceOutputData(const TEventID paEOID) {
 void FORTE_E_IMPULSE::readInputData(const TEventID paEIID) {
   switch(paEIID) {
     case scmEventREQID: {
-      RES_DATA_CON_CRITICAL_REGION();
       readData(0, var_TM, conn_TM);
       break;
     }
@@ -113,7 +111,6 @@ void FORTE_E_IMPULSE::readInputData(const TEventID paEIID) {
 void FORTE_E_IMPULSE::writeOutputData(const TEventID paEIID) {
   switch(paEIID) {
     case scmEventCNFID: {
-      RES_DATA_CON_CRITICAL_REGION();
       writeData(0, var_QO, conn_QO);
       break;
     }

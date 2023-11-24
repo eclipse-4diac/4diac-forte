@@ -95,7 +95,3 @@ int CIEC_CHAR::fromString(const char *paValue) {
 
   return -1; //no match so something must be wrong
 }
-
-size_t CIEC_CHAR::getToStringBufferSize() const {
-  return sizeof("'$00'");
-}

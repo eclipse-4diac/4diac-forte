@@ -24,7 +24,3 @@ const CIEC_SINT::TValueType CIEC_SINT::scmMaxVal = std::numeric_limits<CIEC_SINT
 
 template CIEC_SINT &CIEC_SINT::operator=<>(const CIEC_ANY_INT &paValue);
 
-size_t CIEC_SINT::getToStringBufferSize() const {
-  return sizeof("-128");
-}
-

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 -2015 AIT, fortiss GmbH
+ * Copyright (c) 2012, 2022 AIT, ACIN, fortiss GmbH, Hit robot group
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -8,13 +8,16 @@
  *
  * Contributors:
  *   Filip Andren, Alois Zoitl - initial API and implementation and/or initial documentation
+ *   Tibalt Zhao - replace forte list with stl vector
  *******************************************************************************/
 #ifndef OPCCOMLAYER_H_
 #define OPCCOMLAYER_H_
 
-#include <forte_config.h>
+#include "forte_config.h"
 #include "comlayer.h"
 #include "opcprocessvar.h"
+#include <vector>
+#include <deque>
 
 class CIEC_ANY;
 class COpcConnection;
@@ -36,8 +39,7 @@ namespace forte {
       private:
         EComResponse openConnection(char *paLayerParameter) override;
         void closeConnection() override;
-        int addOpcItems();
-        void setOutputValue(CIEC_ANY *paDataOut, Variant * paValue);
+        void setOutputValue(CIEC_ANY *paDataOut, Variant *paValue);
         void processClientParams(char* paLayerParams);
         void convertInputData(void *paData, unsigned int paSize);
 
@@ -56,12 +58,12 @@ namespace forte {
 
         COpcConnection *mOpcConnection;
 
-        typedef CSinglyLinkedList<COpcProcessVar*> TOpcProcessVarList;
+        typedef std::vector<COpcProcessVar*> TOpcProcessVarList;
         TOpcProcessVarList mFBOutputVars;
         TOpcProcessVarList mFBInputVars;
 
         EComResponse mInterruptResp;
-        typedef CSinglyLinkedList<EComResponse> TComResponseList;
+        typedef std::deque<EComResponse> TComResponseList;
         TComResponseList mComResponses;
 
         CSyncObject mSync;

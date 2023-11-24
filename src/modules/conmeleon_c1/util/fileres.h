@@ -82,7 +82,7 @@ public:
   void  readLine(char* pszData, std::size_t nLength) const;
 
 private:
-  FILE*  mFileHandle;
+  decltype(forte_fopen(nullptr, nullptr))  mFileHandle;
   bool  m_ReadOnly;
 };
 

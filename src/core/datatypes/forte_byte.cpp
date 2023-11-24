@@ -18,7 +18,3 @@
 #endif
 
 DEFINE_FIRMWARE_DATATYPE(BYTE, g_nStringIdBYTE)
-
-size_t CIEC_BYTE::getToStringBufferSize() const {
-  return sizeof("255");
-}

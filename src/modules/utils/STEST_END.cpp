@@ -33,7 +33,7 @@ const SFBInterfaceSpec FORTE_STEST_END::scmFBInterfaceSpec = {
 void FORTE_STEST_END::executeEvent(TEventID paEIID, CEventChainExecutionThread *const) {
   if(scmEventREQID == paEIID){
     CThread::sleepThread(250); //avoid killing the device before it was properly started (DEV_MGR still was initializing the ipCommlayer when it was killed)
-    getResource().getDevice().changeFBExecutionState(EMGMCommandType::Kill);
+    getDevice()->changeFBExecutionState(EMGMCommandType::Kill);
   }
 }
 

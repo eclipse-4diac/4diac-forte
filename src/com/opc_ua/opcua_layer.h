@@ -1,6 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2015-2019 Florian Froschermeier <florian.froschermeier@tum.de>,
- *               fortiss GmbH
+ * Copyright (c) 2015-2023 Florian Froschermeier <florian.froschermeier@tum.de>,
+ *               fortiss GmbH, Primetals Technologies Austria GmbH
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -14,6 +14,8 @@
  *      - refactoring and adaption to new concept
  *    Jose Cabral:
  *      - refactoring to cleaner architecture
+ *    Markus Meingast:
+ *      - add Support for Object Structs
  *******************************************************************************/
 
 #ifndef SRC_MODULES_OPC_UA_OPCUA_LAYER_H_
@@ -21,6 +23,7 @@
 
 #include "../../core/cominfra/comlayer.h"
 #include "opcua_helper.h"
+#include <memory>
 
 class COPC_UA_HandlerAbstract;
 class CActionInfo;
@@ -72,7 +75,20 @@ class COPC_UA_Layer : public forte::com_infra::CComLayer {
      */
     void triggerNewEvent();
 
+    /**
+     * Get Object Struct member from ActionInfo browsepath
+     * @param paActionInfo ActionInfo to get the browsepath from
+     * @param paIsSD True if the local port is an SD, false otherwise
+     * @return The pointer to the member variable
+    */
+    CIEC_ANY const *getObjectStructMember(CActionInfo &paActionInfo, bool paIsSD);
+
   private:
+
+    /**
+     * BrowsePath to folder that contains Object Node Struct Types
+     */
+     static const std::string structTypesBrowsePath;
 
     /**
      * Response for the processInterrupt() method
@@ -119,7 +135,7 @@ class COPC_UA_Layer : public forte::com_infra::CComLayer {
      * Get the remote data input/output
      * @param paResult Place to store the pointer to the result
      * @param paRemoteConnectionPoint Connection point of the other end
-     * @param paIsSD true if the local port is an SD, false otherwise
+     * @param paIsSD True if the local port is an SD, false otherwise
      * @return True if no problem occurred, false otherwise
      */
     bool getRemoteAny(CIEC_ANY **paResult, const CConnectionPoint &paRemoteConnectionPoint, bool paIsSD) const;
@@ -142,6 +158,130 @@ class COPC_UA_Layer : public forte::com_infra::CComLayer {
     bool getDataAlreadyPresentRead();
     CSyncObject mDataAlreadyPresentMutex;
     bool mDataAlreadyPresent;
+
+    bool mIsObjectNodeStruct;
+
+    std::shared_ptr<CActionInfo> mCreateObjectStructNode;
+
+    std::vector<std::shared_ptr<CActionInfo>> mObjectNodeStructActionInfos;
+
+    /**
+     * Execute the action for a Object Node Struct
+     * @return e_ProcessDataOK if no problem occurred, other value otherwise
+     */
+    forte::com_infra::EComResponse executeActionForObjectNodeStruct();
+
+    /**
+     * Get the port connection pointer for a connected data port
+     * @param paPortIndex The Index of the data port
+     * @param paIsSD True if the port to get is an SD, false othewise
+     * @return The pointer to the local port connection
+    */
+    const CDataConnection* getLocalPortConnection(int paPortIndex, bool paIsSD) const;
+
+    /**
+     * Get the id of the specified local data port name
+     * @param paPortIndex The Index of the data port
+     * @param paIsSD True if the port to get is an SD, false othewise
+     * @return The pointer to the local port connection
+    */
+    CStringDictionary::TStringId getLocalPortNameId(int paPortIndex, bool paIsSD) const;
+
+
+    /**
+     * Create an OPC UA Object Node from Struct Type, if it is not present
+     * @param paIsPublisher True if the FB is a Publisher, false othewise
+     * @return e_InitOk if Object Node was created successfully, e_InitTerminated otherwise
+    */
+    forte::com_infra::EComResponse createStructObjectNode(bool paIsPublisher);
+
+    /**
+     * Get the ActionInfo to create the OPC UA Object Node for Struct Type.
+     * Supports only one connected Struct Type currently
+     * @param paBrowsePath BrowsePath to the Struct Object Node
+     * @param paIsPublisher True if the FB is a Publisher, false othewise
+     * @return The ActionInfo for creating OPC UA Object Node
+    */
+    std::shared_ptr<CActionInfo> getCreateObjectActionForObjectNodeStruct(std::string &paBrowsePath, bool paIsPublisher);
+
+
+    /**
+     * Perform initialization for Object Struct Members
+     * @param paBrowsePath The browsepath to the Object Struct
+     * @param paIsPublisher True if the FB is a Publisher, false othewise
+     * @return e_InitOk if initialization was successful, e_InitTerminated otherwise
+     */
+    forte::com_infra::EComResponse initializeActionForObjectStructMembers(std::string &paBrowsePath, bool paIsPublisher);
+
+
+    /**
+     * Initialize RDBuffer for Object Structs
+    */
+    void initialiseStructObjectRDBuffer();
+
+    /**
+     * Delete all entries of the RDBuffer
+    */
+    void deleteStructObjectRDBuffer();
+
+    /**
+     * Get index to the corresponding Object Struct RDBuffer entry from the Node ID
+     * @param paNodeId The Node ID
+     * @return The index to the corresponding RDBuffer entry
+    */
+    int getObjectStructRDBufferIndexFromNodeId(const UA_NodeId *paNodeId);
+
+    /**
+     * Set values of Object Struct members from the RDBuffer
+    */
+    void setObjectStructData();
+
+    /**
+     * Get the BrowsePath to the OPC UA Struct Object Type from the local Struct Type
+     * @param paBrowsePath Place to store the BrowsePath to the OPC UA Struct Object Type
+     * @param paLocalPortConnection Local port connection pointer
+     * @param paPathPrefix The BrowsePath directory with namespace (e.g. /Objects/1:)
+     * @param paIsPublisher True if the FB is a Publisher, false othewise
+     */
+    void getObjectNodeStructBrowsePath(std::string &paBrowsePath, const CDataConnection *paLocalPortConnection, const std::string &paPathPrefix, bool paIsPublisher);
+
+    /**
+     * Get the BrowsePath to the OPC UA Object Struct members from the local Struct Type
+     * @param paMemberBrowsePath Place to store the BrowsePath to the OPC UA Struct Object Type
+     * @param paBrowsePathPrefix BrowsePath to the Struct Object Node
+     * @param structMemberNameId Name Id of Object Node Struct member
+     */
+    static void getObjectNodeStructMemberBrowsePath(std::string &paMemberBrowsePath, std::string &paBrowsePathPrefix, const CStringDictionary::TStringId structMemberNameId);
+
+    /**
+     * @param paStructTypeName Place to store the name of the Struct Type
+     * @param paLocalPortConnection Local port connection pointer
+     * @param paIsPublisher True if the FB is a Publisher, false othewise
+    */
+    void getStructTypeName(std::string& paStructTypeName, const CDataConnection *paLocalPortConnection, bool paIsPublisher);
+    
+
+    /**
+     * Check that the Struct Object type of the SDs is valid
+     * NOTE: Supports only one connected Struct Type and SDs currently
+     * @param paIsPublisher True if the FB is a Publisher, false othewise
+     * @return True if Struct Object Type is valid, false otherwise
+     */
+    bool checkObjectNodeStructTypeConnection(bool paIsPublisher);
+
+    /**
+     * Check if Object Node Struct is present in OPC UA server
+     * @param paBrowsePath The BrowsePath to the Object Node
+     * @return true, if Object Node already exists, false otherwise
+    */
+    bool isOPCUAStructObjectPresent(std::string &paBrowsePath);
+
+    /**
+     * Check if Data Connection is a Struct Type
+     * @param paIsPublisher True if the FB is a Publisher, false othewise
+     * @return True if connected data type is Struct, false otherwise
+    */
+    bool isStructType(bool paIsPublisher) const;
 
     /**
      * Array of ANY pointers used as buffer to store the received data

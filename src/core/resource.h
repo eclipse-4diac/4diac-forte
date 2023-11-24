@@ -31,7 +31,6 @@ class CLuaEngine;
 #include "trace/barectf_platform_forte.h"
 #endif
 
-class CDevice;
 class CInterface2InternalDataConnection;
 
 /*! \ingroup CORE\brief Base class for all resources handling the reconfiguration management within this
@@ -44,7 +43,6 @@ class CInterface2InternalDataConnection;
 class CResource : public CFunctionBlock, public forte::core::CFBContainer{
 
   public:
-    CSyncObject mResDataConSync;
     /*! \brief The main constructor for a resource.
      *
      * The resource can only be generated with a given device the resource is contained. A resource can not exist outside of an device.
@@ -71,12 +69,21 @@ class CResource : public CFunctionBlock, public forte::core::CFBContainer{
      */
     virtual EMGMResponse executeMGMCommand(forte::core::SManagementCMD &paCommand);
 
-    /*! \brief Get the device the resource is contained in
-     */
-    CDevice &getDevice(){
-      return (CDevice &) getResource();
+    CResource* getResource() override {
+      return this;
     }
-    ;
+
+    const CResource* getResource() const override {
+       return this;
+    }
+
+    CDevice* getDevice() override {
+      return CFBContainer::getDevice();
+    }
+
+    const CDevice* getDevice() const override {
+      return CFBContainer::getDevice();
+    }
 
     CEventChainExecutionThread *getResourceEventExecution() const{
       return mResourceEventExecution;

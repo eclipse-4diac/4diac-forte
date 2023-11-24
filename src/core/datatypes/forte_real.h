@@ -111,7 +111,7 @@ class CIEC_REAL final : public CIEC_ANY_REAL{
 
     void setValue(const CIEC_ANY& paValue) override;
 
-    EDataTypeID getDataTypeID() const override {
+    constexpr EDataTypeID getDataTypeID() const override {
       return CIEC_ANY::e_REAL;
     }
 
@@ -139,7 +139,9 @@ class CIEC_REAL final : public CIEC_ANY_REAL{
 
     /*! \brief calculates buffer size needed for toString conversion
      */
-    size_t getToStringBufferSize() const override;
+    constexpr size_t getToStringBufferSize() const override {
+      return sizeof("-1.175494351E-38"); // minimal float value (negative for additional sign)
+    }
 
     [[nodiscard]] bool equals(const CIEC_ANY &paOther) const override {
       if(paOther.getDataTypeID() == CIEC_ANY::e_REAL) {

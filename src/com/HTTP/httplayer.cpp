@@ -233,7 +233,7 @@ EComResponse CHttpComLayer::sendData(void *paData, unsigned int) {
 
 void CHttpComLayer::sendDataAsServer(const void *paData) {
   bool error = false;
-  TConstIEC_ANYPtr apoSDs = static_cast<TConstIEC_ANYPtr>(paData);
+  const CIEC_ANY* apoSDs = static_cast<const CIEC_ANY*>(paData);
   if(!serializeData(apoSDs[0])) {
     error = true;
   } else {
@@ -251,7 +251,7 @@ void CHttpComLayer::sendDataAsServer(const void *paData) {
 void CHttpComLayer::sendDataAsClient(const void *paData) {
   bool error = false;
   if(mHasParameterInSD) {
-    TConstIEC_ANYPtr apoSDs = static_cast<TConstIEC_ANYPtr>(paData);
+    const CIEC_ANY* apoSDs = static_cast<const CIEC_ANY*>(paData);
     if(!serializeData(apoSDs[0])) {
       error = true;
       DEVLOG_ERROR("[HTTP Layer] Error in data serialization\n");

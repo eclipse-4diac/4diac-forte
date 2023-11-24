@@ -63,7 +63,7 @@ void DEV_MGR::executeEvent(TEventID paEIID, CEventChainExecutionThread *const pa
       //this is the first time init is called try to load a boot file
       ForteBootFileLoader loader(*this);
       if(loader.needsExit()){
-        getResource().getDevice().changeFBExecutionState(EMGMCommandType::Kill);
+        getDevice()->changeFBExecutionState(EMGMCommandType::Kill);
         return;
       }
       if(loader.isOpen() && LOAD_RESULT_OK == loader.loadBootFile()){
@@ -583,7 +583,7 @@ void DEV_MGR::appendIdentifierName(CIEC_STRING& paDest, forte::core::TNameIdenti
 
 DEV_MGR::DEV_MGR(CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) :
     CCommFB(paInstanceNameId, paSrcRes, forte::com_infra::e_Server),
-    mDevice(paSrcRes->getDevice()) {
+    mDevice(*paSrcRes->getDevice()) {
 }
 
 bool DEV_MGR::initialize() {

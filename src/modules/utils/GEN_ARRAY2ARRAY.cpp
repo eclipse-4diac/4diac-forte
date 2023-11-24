@@ -54,12 +54,10 @@ void GEN_ARRAY2ARRAY::executeEvent(TEventID paEIID, CEventChainExecutionThread *
 }
 
 void GEN_ARRAY2ARRAY::readInputData(TEventID) {
-  RES_DATA_CON_CRITICAL_REGION();
   readData(0, *mDIs[0], mDIConns[0]);
 }
 
 void GEN_ARRAY2ARRAY::writeOutputData(TEventID) {
-  RES_DATA_CON_CRITICAL_REGION();
   writeData(0, *mDOs[0], mDOConns[0]);
 }
 

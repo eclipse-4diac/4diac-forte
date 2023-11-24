@@ -111,7 +111,6 @@ EMGMResponse FORTE_RT_E_DELAY::changeFBExecutionState(EMGMCommandType paCommand)
 void FORTE_RT_E_DELAY::readInputData(TEventID paEIID) {
   switch(paEIID) {
     case scmEventINITID: {
-      RES_DATA_CON_CRITICAL_REGION();
       readData(0, var_QI, conn_QI);
       readData(2, var_Tmin, conn_Tmin);
       readData(3, var_Deadline, conn_Deadline);
@@ -119,12 +118,10 @@ void FORTE_RT_E_DELAY::readInputData(TEventID paEIID) {
       break;
     }
     case scmEventSTARTID: {
-      RES_DATA_CON_CRITICAL_REGION();
       readData(1, var_DT, conn_DT);
       break;
     }
     case scmEventSTOPID: {
-      RES_DATA_CON_CRITICAL_REGION();
       break;
     }
     default:
@@ -135,12 +132,10 @@ void FORTE_RT_E_DELAY::readInputData(TEventID paEIID) {
 void FORTE_RT_E_DELAY::writeOutputData(TEventID paEIID) {
   switch(paEIID) {
     case scmEventINITOID: {
-      RES_DATA_CON_CRITICAL_REGION();
       writeData(0, var_QO, conn_QO);
       break;
     }
     case scmEventEOID: {
-      RES_DATA_CON_CRITICAL_REGION();
       break;
     }
     default:

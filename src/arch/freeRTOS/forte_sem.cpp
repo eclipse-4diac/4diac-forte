@@ -20,6 +20,9 @@ namespace forte {
 
     CFreeRTOSSemaphore::CFreeRTOSSemaphore(unsigned int paInitialValue) {
       mSemaphore = xSemaphoreCreateBinary();
+      while (paInitialValue--) {
+        xSemaphoreGive(mSemaphore);
+      }
     }
 
     CFreeRTOSSemaphore::~CFreeRTOSSemaphore() {

@@ -26,7 +26,3 @@ template CIEC_UDINT &CIEC_UDINT::operator=<>(const CIEC_ANY_INT &paValue);
 template CIEC_UDINT &CIEC_UDINT::operator=<>(const CIEC_USINT &paValue);
 
 template CIEC_UDINT &CIEC_UDINT::operator=<>(const CIEC_UINT &paValue);
-
-size_t CIEC_UDINT::getToStringBufferSize() const {
-  return sizeof("4294967295");
-}

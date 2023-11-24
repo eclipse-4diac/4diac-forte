@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 -2014 AIT, ACIN, fortiss GmbH
+ * Copyright (c) 2012, 2022 AIT, ACIN,fortiss GmbH, Hit robot group
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -8,15 +8,16 @@
  *
  * Contributors:
  *   Filip Andren, Alois Zoitl - initial API and implementation and/or initial documentation
+ *   Tibalt Zhao - Guard the opc connection from requests from FBs,filter non-sense requests 
  *******************************************************************************/
 #ifndef OPCCONNECTION_H_
 #define OPCCONNECTION_H_
 
 #include "comlayer.h"
-#include "fortelist.h"
-#include <forte_sync.h>
+#include "forte_sync.h"
 #include "windows.h"
 #include "Variant.h"
+#include <vector>
 
 class COpcConnectionImpl;
 class COpcProcessVar;
@@ -34,12 +35,13 @@ struct SOpcItemData{
         mItemName(paItemName), mItemData(paItemData){
     }
 };
-typedef CSinglyLinkedList<SOpcItemData*> TItemDataList;
+typedef std::vector<SOpcItemData*> TItemDataList;
+
 
 class COpcConnection{
   public:
 
-    COpcConnection(const char *paHost, const char *paServerName, COpcEventHandler* pa_eventHandler);
+    COpcConnection(const char *paHost, const char *paServerName, COpcEventHandler* paEventHandler);
     ~COpcConnection();
 
     /*** Functions for OpcConnectionHandler ****************************************/
@@ -47,29 +49,39 @@ class COpcConnection{
     void removeGroup(const char* paGroupName);
     /*** END ***********************************************************************/
 
+
     /*** Functions for OpcComLayer *************************************************/
-    int send_connect();
-    int send_connect(bool paBlocking);
-    int send_addItem(COpcProcessVar* paNewItem);
-    int send_sendItemData(COpcProcessVar* paItem);
+    typedef std::vector<COpcProcessVar*> TOpcProcessVarList;
+    int send_connect(const char *acGroupName, unsigned long nReqUpdateRate, float nDeadBand, forte::com_infra::CComLayer *paComCallback,
+                     TOpcProcessVarList paNewItems);
+    int send_sendItemData(COpcProcessVar *paItem);
+    int send_disconnect(const char *paGroupName);
 
-    typedef CSinglyLinkedList<COpcProcessVar*> TOpcProcessVarList;
-    int receiveData(const char* paGroupName, TOpcProcessVarList * paOpcProcessVarList);
+    int receiveData(const char *paGroupName, TOpcProcessVarList * paOpcProcessVarList);
 
-    bool isConnected() const {
-      return mIsConnected;
+    bool isConnected() {
+      return mConnected;
     }
     /*** END ***********************************************************************/
 
     /*** Functions for OpcConnectionImpl *******************************************/
-    void response_connect(bool paConnectionState);
+    void response_connect(bool paConnectionState, const char* paGroupName);
     void response_dataReceived(const char *paGroupName, TItemDataList & paItemDataList);
-    void response_itemAdded(COpcProcessVar* paOpcItem);
+    void response_dataSent(const char* paGroupName,const char* paItemName, bool paSuccess);
     /*** END ***********************************************************************/
 
     /*** Common Functions **********************************************************/
     enum EOpcConnectionEvents{
-      e_Disconnected, e_Connecting, e_ConnectionFailed, e_Connected, e_ItemAddedOk, e_ItemAddedFailed, e_DataReceived
+      e_Idle, e_Disconnect, e_Connect, e_DataReceive, e_ItemSend
+    };
+
+    enum EOpcConnectionState{
+      e_Connected, e_Disconnected, e_Connecting, e_Disconnecting
+    };
+
+    struct SLastHappenedEvent{
+      EOpcConnectionEvents mLastHappenedEvent;
+      bool mSuccess;
     };
 
     const char* getHost() const {
@@ -84,13 +96,19 @@ class COpcConnection{
       return mGroupCount;
     }
 
-    EOpcConnectionEvents getConnectionState() const {
-      return mConnectionEvent;
+    EOpcConnectionState getConnectionState() const {
+      return mConnectionState;
+    }
+
+    SLastHappenedEvent getLastEvent() const {
+      return mLastEvent;
     }
 
     /*** END ***********************************************************************/
 
   private:
+    int maintainGroupMapInfo(COpcProcessVar* paNewItem);
+
     struct SOpcGroupMap{
         const char* mGroupName;
         int mCallbackDesc;
@@ -102,14 +120,67 @@ class COpcConnection{
         }
     };
 
-    typedef CSinglyLinkedList<SOpcGroupMap*> TOpcGroupMapList;
+    int getGroupCallbackDesc(const char * paGroupName){
+      for(unsigned int i = 0; i < mOpcGroupMapList.size(); i++){
+        if(mOpcGroupMapList[i]->mGroupName == paGroupName){
+          return mOpcGroupMapList[i]->mCallbackDesc;
+        }
+      }
+      return -1;
+    }
+
+    int removeGroupCallbackDesc(const char * paGroupName);
+    //to see if could send command to opc event handler
+    void maintainStateinEventResponse(EOpcConnectionEvents paEvent, bool paSuccess){
+      //let's transfer ongoing state to steady state(such as connecting => connected)
+      if(e_Connect == paEvent){
+        mLastEvent.mLastHappenedEvent = e_Connect;
+        mLastEvent.mSuccess = paSuccess;
+
+        if(paSuccess){
+          mConnectionState = e_Connected;
+        }
+        else{
+          mConnectionState = e_Disconnected;
+        }
+
+      }
+      else if(e_Disconnect == paEvent){
+        mLastEvent.mLastHappenedEvent = e_Disconnect;
+        mLastEvent.mSuccess = paSuccess;
+        if(paSuccess){
+          mConnectionState = e_Disconnected;
+        }
+        else{
+          mConnectionState = e_Connected;
+        }
+      }
+      else if(e_DataReceive == paEvent){
+        mLastEvent.mLastHappenedEvent = e_DataReceive;
+        mLastEvent.mSuccess = paSuccess;
+        mConnectionState = e_Connected;
+      }
+      else if(e_ItemSend == paEvent){
+        mLastEvent.mLastHappenedEvent = e_ItemSend;
+        mLastEvent.mSuccess = paSuccess;
+        mConnectionState = e_Connected;
+      }
+    }
+
+    bool ifInGroupList(const char* paGroupName);
+
+    bool ifLetEventPass(EOpcConnectionEvents paEvent, const char* paGroupName);
+
+    typedef std::vector<SOpcGroupMap*> TOpcGroupMapList;
     TOpcGroupMapList mOpcGroupMapList;
 
     unsigned int mGroupCount;
 
     COpcConnectionImpl *mOpcConnectionImpl;
 
-    EOpcConnectionEvents mConnectionEvent;
+    EOpcConnectionState mConnectionState;
+
+    SLastHappenedEvent mLastEvent;
 
     const char* mHost;
     const char* mServerName;
@@ -118,12 +189,12 @@ class COpcConnection{
     unsigned long mRealUpdateRate;
     float mDeadBand;
 
-    bool mIsConnected;
+    bool mConnected;
     bool mBlockingConnect;
 
     CSyncObject mSync;
 
-    COpcEventHandler* m_eventHandler;
+    COpcEventHandler* mEventHandler;
 
     //we don't want COpcConnection to be copy and assignable
     COpcConnection(const COpcConnection&);

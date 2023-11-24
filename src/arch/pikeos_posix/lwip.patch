@@ -1,0 +1,94 @@
+diff -Naur a/4diac-forte/README.md b/4diac-forte/README.md
+--- a/4diac-forte/README.md	1970-01-01 01:00:00.000000000 +0100
++++ b/4diac-forte/README.md	2021-03-16 15:39:52.732669040 +0100
+@@ -0,0 +1,6 @@
++Folder "4diac-forte"
++====================
++
++This is the CMake Build folder,
++where 4diac-forte CMake will store the generated Makefiles
++and source files into.
+diff -Naur a/lwipopts.h b/lwipopts.h
+--- a/lwipopts.h	2021-03-16 15:31:56.164649301 +0100
++++ b/lwipopts.h	2021-03-16 15:28:06.740639799 +0100
+@@ -1430,7 +1430,7 @@
+ /**
+  * SO_REUSE==1: Enable SO_REUSEADDR option.
+  */
+-#define SO_REUSE				0
++#define SO_REUSE				1
+ 
+ /**
+  * SO_REUSE_RXTOALL==1: Pass a copy of incoming broadcast/multicast packets
+diff -Naur a/Makefile b/Makefile
+--- a/Makefile	2021-03-16 15:32:00.212649469 +0100
++++ b/Makefile	2021-03-16 14:42:04.596525399 +0100
+@@ -68,12 +68,12 @@
+ #
+ # Build the list of apps (do nothing if APPLIST is empty)
+ #
+-all: $(APPLIST)
++all: $(APPLIST) 4diac-all
+ 
+ #
+ # Clean generated apps and objects
+ #
+-clean:
++clean: 4diac-clean
+ ifneq ($(APPLIST),)
+ 	rm -f $(APPLIST) $(APPLIST:.elf=.unstripped) $(APPLIST:.elf=.unstripped.pikeos.ld-info.txt)
+ endif
+@@ -84,7 +84,7 @@
+ #
+ # Remove completely object and depend directories
+ #
+-distclean: clean
++distclean: clean 4diac-distclean
+ 	rm -rf $(ODIR) $(DEPDIR)
+ 
+ #
+@@ -93,7 +93,7 @@
+ #
+ # Do nothing if either PIKEOS_INSTALL_DIRECTORY or APPLIST is empty
+ #
+-install: all
++install: all 4diac-install
+ ifneq ($(PIKEOS_INSTALL_DIRECTORY),)
+ ifneq ($(APPLIST),)
+ 	mkdir -p $(PIKEOS_INSTALL_DIRECTORY)
+@@ -118,3 +118,35 @@
+ endif
+ 
+ endif
++
++.PHONY: 4diac-all 4diac-clean 4diac-distclean 4diac-install
++4DIAC_DIR = 4diac-forte
++4DIAC_MAKEFILE = $(4DIAC_DIR)/Makefile
++
++4diac-all:
++ifneq (,$(wildcard $(4DIAC_MAKEFILE)))
++	@cd "$(4DIAC_DIR)" && $(MAKE)
++endif
++	@true
++
++4diac-install:
++ifneq (,$(wildcard $(4DIAC_MAKEFILE)))
++	@ mkdir -p $(CUSTOM_POOL_DIR)/$(PIKEOS_PROJECT_TYPE)
++	@ cp $(4DIAC_DIR)/src/forte $(CUSTOM_POOL_DIR)/$(PIKEOS_PROJECT_TYPE) || true
++endif
++
++4diac-clean:
++ifneq (,$(wildcard $(4DIAC_MAKEFILE)))
++	@cd "$(4DIAC_DIR)" ; $(MAKE) clean || true 
++endif
++	@true
++
++4diac-distclean:
++ifneq (,$(wildcard $(4DIAC_MAKEFILE)))
++	@echo "Deleting and recreating $(4DIAC_DIR) dir"
++	@mv "$(4DIAC_DIR)/README.md" "$(4DIAC_DIR)_README.md"
++	@rm -rf "$(4DIAC_DIR)"
++	@mkdir -p "$(4DIAC_DIR)"
++	@mv "$(4DIAC_DIR)_README.md" "$(4DIAC_DIR)/README.md" 
++endif
++	@true

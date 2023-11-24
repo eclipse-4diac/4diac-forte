@@ -15,7 +15,10 @@
  *      - refactoring and adaption to new concept
  *    Jose Cabral:
  *      - refactoring to cleaner architecture
- *    Martin Melik Merkumians - Change CIEC_STRING to std::string
+ *    Martin Melik Merkumians:
+ *      - Change CIEC_STRING to std::string
+ *    Markus Meingast:
+ *      - Add Support for Object Structs
  *******************************************************************************/
 
 #include "../../core/devexec.h"
@@ -384,6 +387,19 @@ UA_StatusCode COPC_UA_Local_Handler::initializeAction(CActionInfo &paActionInfo)
   return retVal;
 }
 
+UA_StatusCode COPC_UA_Local_Handler::initializeActionForObjectStruct(std::shared_ptr<CActionInfo> &paActionInfo, CIEC_ANY &paMember) {
+  UA_StatusCode retVal = UA_STATUSCODE_BADINTERNALERROR;
+  if(mUaServer) {
+    CCriticalRegion criticalRegion(mServerAccessMutex);
+    if(paActionInfo->getAction() == CActionInfo::eWrite) {
+      retVal = initializeObjectStructMemberVariable(paActionInfo, &paMember, true);
+    } else if(paActionInfo->getAction() == CActionInfo::eRead) {
+      retVal = initializeObjectStructMemberVariable(paActionInfo, &paMember, false);
+    }
+  }
+  return retVal;
+}
+
 UA_StatusCode COPC_UA_Local_Handler::executeAction(CActionInfo &paActionInfo) {
   UA_StatusCode retVal = UA_STATUSCODE_BADINTERNALERROR;
 
@@ -439,6 +455,11 @@ UA_StatusCode COPC_UA_Local_Handler::uninitializeAction(CActionInfo &paActionInf
   return retVal;
 }
 
+bool COPC_UA_Local_Handler::isOPCUAObjectPresent(CActionInfo::CNodePairInfo &paNodePair) {
+  enableHandler();
+  return isNodePresent(paNodePair);
+}
+
 UA_StatusCode COPC_UA_Local_Handler::initializeVariable(CActionInfo &paActionInfo, bool paWrite) {
   UA_StatusCode retVal = UA_STATUSCODE_GOOD;
 
@@ -473,6 +494,39 @@ UA_StatusCode COPC_UA_Local_Handler::initializeVariable(CActionInfo &paActionInf
     referencedNodesDecrement(paActionInfo);
   }
 
+  for(CSinglyLinkedList<UA_NodeId*>::Iterator itRerencedNodes = referencedNodes.begin(); itRerencedNodes != referencedNodes.end(); ++itRerencedNodes) {
+    UA_NodeId_delete(*itRerencedNodes);
+  }
+  return retVal;
+}
+
+UA_StatusCode COPC_UA_Local_Handler::initializeObjectStructMemberVariable(std::shared_ptr<CActionInfo> &paActionInfo, CIEC_ANY *paMember, bool paWrite) {
+  UA_StatusCode retVal = UA_STATUSCODE_GOOD;
+
+  size_t indexOfNodePair = 0;
+  CSinglyLinkedList<UA_NodeId*> referencedNodes;
+  for(CSinglyLinkedList<CActionInfo::CNodePairInfo*>::Iterator itMain = paActionInfo->getNodePairInfo().begin();
+      itMain != paActionInfo->getNodePairInfo().end() && UA_STATUSCODE_GOOD == retVal; ++itMain, indexOfNodePair++) {
+
+    CSinglyLinkedList<UA_NodeId*> presentNodes;
+    bool nodeExists = false;
+    retVal = getNode(**itMain, presentNodes, &nodeExists);
+
+    if(UA_STATUSCODE_GOOD == retVal) {
+      if(nodeExists) {
+        retVal = handleExistingVariable(*paActionInfo, **itMain, paMember[indexOfNodePair], indexOfNodePair, paWrite);
+
+        handlePresentNodes(presentNodes, referencedNodes, UA_STATUSCODE_GOOD != retVal);
+      } else { //node does not exist
+        //presentNodes shouldn't have any allocated NodeId at this point
+        retVal = handleNonExistingVariable(*paActionInfo, **itMain, paMember[indexOfNodePair], indexOfNodePair, referencedNodes, paWrite);
+      }
+    }
+  }
+  referencedNodesIncrement(referencedNodes, *paActionInfo);
+  if(UA_STATUSCODE_GOOD != retVal) {
+    referencedNodesDecrement(*paActionInfo);
+  }
   for(CSinglyLinkedList<UA_NodeId*>::Iterator itRerencedNodes = referencedNodes.begin(); itRerencedNodes != referencedNodes.end(); ++itRerencedNodes) {
     UA_NodeId_delete(*itRerencedNodes);
   }
@@ -1447,7 +1501,7 @@ UA_StatusCode COPC_UA_Local_Handler::CUA_LocalCallbackFunctions::onServerMethodC
   return retVal;
 }
 
-void COPC_UA_Local_Handler::CUA_LocalCallbackFunctions::onWrite(UA_Server*, const UA_NodeId*, void*, const UA_NodeId*, void *nodeContext, //NOSONAR
+void COPC_UA_Local_Handler::CUA_LocalCallbackFunctions::onWrite(UA_Server*, const UA_NodeId*, void*, const UA_NodeId *nodeId, void *nodeContext, //NOSONAR
     const UA_NumericRange*, const UA_DataValue *data) {
 
   UA_VariableContext_Handle *variableCallbackHandle = static_cast<UA_VariableContext_Handle*>(nodeContext);
@@ -1456,6 +1510,7 @@ void COPC_UA_Local_Handler::CUA_LocalCallbackFunctions::onWrite(UA_Server*, cons
 
   handleRecv.mData[0] = data->hasValue ? &data->value : nullptr; //TODO: check this empty data
   handleRecv.mOffset = variableCallbackHandle->mPortIndex;
+  handleRecv.mNodeId = nodeId;
 
   EComResponse retVal = variableCallbackHandle->mActionInfo.getLayer().recvData(static_cast<const void*>(&handleRecv), 0); //TODO: add multidimensional mData handling with 'range'.
 

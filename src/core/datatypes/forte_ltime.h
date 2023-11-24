@@ -71,7 +71,7 @@ class CIEC_LTIME final : public CIEC_ANY_DURATION {
       return getLargestInt();
     }
 
-    EDataTypeID getDataTypeID() const override {
+    constexpr EDataTypeID getDataTypeID() const override {
       return CIEC_ANY::e_LTIME;
     }
 
@@ -85,6 +85,7 @@ class CIEC_LTIME final : public CIEC_ANY_DURATION {
      *        -1 on on error
      */
     int fromString(const char *paValue) override;
+    
     /*! \brief Converts data type value to string
      *
      *   This command implements a conversion function from C++ data type
@@ -99,7 +100,9 @@ class CIEC_LTIME final : public CIEC_ANY_DURATION {
 
     /*! \brief calculates buffer size needed for toString conversion
      */
-    size_t getToStringBufferSize() const override;
+    constexpr size_t getToStringBufferSize() const override {
+      return sizeof("LT#-18446744073709551615ns");
+    }
 
     TValueType getInDays() const;
     TValueType getInHours() const;

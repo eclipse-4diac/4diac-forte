@@ -67,9 +67,11 @@ class CIEC_LDATE final : public CIEC_ANY_DATE {
 
     /*! \brief calculates buffer size needed for toString conversion
      */
-    size_t getToStringBufferSize() const override;
+    constexpr size_t getToStringBufferSize() const override {
+      return sizeof("LD#1970-01-01");
+    }
 
-    EDataTypeID getDataTypeID() const override {
+    constexpr EDataTypeID getDataTypeID() const override {
       return CIEC_ANY::e_LDATE;
     }
 

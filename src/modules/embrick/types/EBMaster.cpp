@@ -78,8 +78,7 @@ void FORTE_EBMaster::setInitialValues() {
 void FORTE_EBMaster::readInputData(const TEventID paEIID) {
   switch(paEIID) {
     case scmEventINITID: {
-      RES_DATA_CON_CRITICAL_REGION();
-      readData(0, var_QI, conn_QI);
+       readData(0, var_QI, conn_QI);
       readData(3, var_BusInitSpeed, conn_BusInitSpeed);
       readData(5, var_SlaveUpdateInterval, conn_SlaveUpdateInterval);
       readData(4, var_BusLoopSpeed, conn_BusLoopSpeed);
@@ -95,13 +94,11 @@ void FORTE_EBMaster::readInputData(const TEventID paEIID) {
 void FORTE_EBMaster::writeOutputData(const TEventID paEIID) {
   switch(paEIID) {
     case scmEventINITOID: {
-      RES_DATA_CON_CRITICAL_REGION();
       writeData(0, var_QO, conn_QO);
       writeData(1, var_STATUS, conn_STATUS);
       break;
     }
     case scmEventINDID: {
-      RES_DATA_CON_CRITICAL_REGION();
       writeData(0, var_QO, conn_QO);
       writeData(1, var_STATUS, conn_STATUS);
       break;
@@ -172,8 +169,8 @@ void FORTE_EBMaster::setConfig() {
   getDeviceController()->setConfig(&config);
 }
 
-void FORTE_EBMaster::onStartup() {
+void FORTE_EBMaster::onStartup(CEventChainExecutionThread * const paECET) {
   var_BusAdapterOut().var_UpdateInterval() = var_SlaveUpdateInterval;
 
-  forte::core::io::IOConfigFBMultiMaster::onStartup();
+  forte::core::io::IOConfigFBMultiMaster::onStartup(paECET);
 }

@@ -129,21 +129,21 @@ bool CUA_ClientConfigFileParser::loadConfig(const std::string &paFileLocation, c
 bool CUA_ClientConfigFileParser::loadFileIntoBytestring(const std::string &paFileLocation, UA_ByteString &paResult) {
   bool retVal = false;
 
-  FILE *file = fopen(paFileLocation.c_str(), "rb"); //read binary
-  if(0 != file) {
+  auto file = forte_fopen(paFileLocation.c_str(), "rb"); //read binary
+  if(nullptr != file) {
     //look for size of file
-    fseek(file, 0, SEEK_END);
-    paResult.length = (size_t) ftell(file);
+    forte_fseek(file, 0, SEEK_END);
+    paResult.length = (size_t) forte_ftell(file);
     paResult.data = (UA_Byte *) UA_malloc(paResult.length * sizeof(UA_Byte));
 
-    fseek(file, 0, SEEK_SET);
-    if(paResult.length == fread(paResult.data, sizeof(UA_Byte), paResult.length, file)) {
+    forte_fseek(file, 0, SEEK_SET);
+    if(paResult.length == forte_fread(paResult.data, sizeof(UA_Byte), paResult.length, file)) {
       retVal = true;
     } else {
       DEVLOG_ERROR("[OPC UA CLIENT]: Error reading file %s\n", paFileLocation.c_str());
       UA_ByteString_clear(&paResult);
     }
-    fclose(file);
+    forte_fclose(file);
   } else {
     DEVLOG_ERROR("[OPC UA CLIENT]: Error opening file %s\n", paFileLocation.c_str());
   }

@@ -85,7 +85,6 @@ void FORTE_TIME2TIME::executeEvent(TEventID paEIID, CEventChainExecutionThread *
 void FORTE_TIME2TIME::readInputData(TEventID paEIID) {
   switch(paEIID) {
     case scmEventREQID: {
-      RES_DATA_CON_CRITICAL_REGION();
       readData(0, var_IN, conn_IN);
       break;
     }
@@ -97,8 +96,7 @@ void FORTE_TIME2TIME::readInputData(TEventID paEIID) {
 void FORTE_TIME2TIME::writeOutputData(TEventID paEIID) {
   switch(paEIID) {
     case scmEventCNFID: {
-      RES_DATA_CON_CRITICAL_REGION();
-      writeData(0, var_OUT, conn_OUT);
+       writeData(0, var_OUT, conn_OUT);
       break;
     }
     default:

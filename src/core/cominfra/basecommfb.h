@@ -23,6 +23,7 @@
 #include "comtypes.h"
 #include "../genfb.h"
 #include "../esfb.h"
+#include "forte_sync.h"
 
 namespace forte {
   namespace com_infra {
@@ -82,6 +83,10 @@ namespace forte {
 
       CIEC_BOOL& QO() {
         return *static_cast<CIEC_BOOL*>(getDO(0));
+      }
+
+      CSyncObject &getFBLock(){
+        return mFBLock;
       }
 
     protected:
@@ -147,6 +152,9 @@ namespace forte {
       CComLayer *mTopOfComStack;
       unsigned int mComInterruptQueueCount; //!< number of triggers pending from the network
       CComLayer *mInterruptQueue[cgCommunicationInterruptQueueSize];
+
+    private:
+      CSyncObject mFBLock;
 
     public:
       CBaseCommFB(const CBaseCommFB&) = delete;

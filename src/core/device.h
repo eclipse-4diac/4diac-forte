@@ -83,6 +83,14 @@ class CDevice : public CResource {
     CTimerHandler& getTimer() const {
       return mDeviceExecution.getTimer();
     }
+
+    CDevice* getDevice() override {
+      return this;
+    }
+
+    const CDevice* getDevice() const override {
+      return this;
+    }
 };
 
 #endif

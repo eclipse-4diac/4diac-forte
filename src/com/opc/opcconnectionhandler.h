@@ -28,7 +28,7 @@ class COpcConnectionHandler{
      *  If a connection to the specified server already exist a pointer to this is returned. Otherwise a
      *  new connection is created. The returned connection includes the group with the specified settings.
      */
-    COpcConnection* getOpcConnection(const char *paHost, const char *paServerName, const char* paGroupName, unsigned long paReqUpdateRate, float paDeadBand, forte::com_infra::CComLayer* paComCallback);
+    COpcConnection* getOpcConnection(const char *paHost, const char *paServerName, forte::com_infra::CComLayer* paComCallback);
 
     void removeOpcConnection(const char *paHost, const char *paServerName, const char* paGroupName);
 

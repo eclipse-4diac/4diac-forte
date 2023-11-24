@@ -59,7 +59,7 @@ protected:
 
   void setConfig();
 
-  virtual void onStartup();
+  virtual void onStartup(CEventChainExecutionThread * const paECET);
 
 public:
   FORTE_EBMaster(CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);

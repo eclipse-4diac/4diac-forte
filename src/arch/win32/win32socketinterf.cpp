@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010, 2021 ACIN, Profactor GmbH, AIT, fortiss GmbH, OFFIS e.V., HIT robot group
+ * Copyright (c) 2010, 2023 ACIN, Profactor GmbH, AIT, fortiss GmbH, OFFIS e.V., HIT robot group
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -9,7 +9,7 @@
  * Contributors:
  *   Alois Zoitl, Ingo Hegny, Gerhard Ebenhofer, Thomas Strasser
  *     - initial API and implementation and/or initial documentation
- *  Jörg Walter - Windows XP compatibility
+ *  Jörg Walter - Windows XP compatibility, improve UDP multicast support
  *  Zhao Xin - fix socket resource leakage
  *******************************************************************************/
 
@@ -155,7 +155,7 @@ int CWin32SocketInterface::receiveDataFromTCP(TSocketDescriptor paSockD, char* p
   return nRetVal;
 }
 
-CWin32SocketInterface::TSocketDescriptor CWin32SocketInterface::openUDPSendPort(char *paIPAddr, unsigned short paPort, TUDPDestAddr *mDestAddr){
+CWin32SocketInterface::TSocketDescriptor CWin32SocketInterface::openUDPSendPort(char *paIPAddr, unsigned short paPort, TUDPDestAddr *mDestAddr, const char *paMCInterface){
   DEVLOG_INFO("CWin32SocketInterface: Opening UDP sending connection at: %s:%d\n", paIPAddr, paPort);
   TSocketDescriptor nRetVal = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
 
@@ -174,10 +174,25 @@ CWin32SocketInterface::TSocketDescriptor CWin32SocketInterface::openUDPSendPort(
     DEVLOG_ERROR("CWin32SocketInterface: UDP-Socket socket() failed: %d - %s\n", nLastError, pacErrorMessage);
     LocalFree(pacErrorMessage);
   }
+
+  if (paMCInterface) {
+    sockaddr_in stMCastIF = {};
+    int stMCastIFSz = sizeof(stMCastIF);
+    if(WSAStringToAddressA(const_cast<char *>(paMCInterface), AF_INET, NULL, (LPSOCKADDR)&stMCastIF, &stMCastIFSz)) {
+      DEVLOG_ERROR("CWin32SocketInterface: WSAStringToAddressA() failed: %d - %s\n", stMCastIF.sin_addr.s_addr, paMCInterface);
+    }
+
+    struct in_addr ifaddr;
+    ifaddr.s_addr = stMCastIF.sin_addr.s_addr;
+    if (setsockopt(nRetVal, IPPROTO_IP, IP_MULTICAST_IF, (char*) &ifaddr, sizeof(ifaddr)) != 0) {
+      DEVLOG_WARNING("CBSDSocketInterface: setsockopt(IP_MULTICAST_IF) failed: %s\n", strerror(errno));
+    }
+  }
+
   return nRetVal;
 }
 
-CWin32SocketInterface::TSocketDescriptor CWin32SocketInterface::openUDPReceivePort(char *paIPAddr, unsigned short paPort){
+CWin32SocketInterface::TSocketDescriptor CWin32SocketInterface::openUDPReceivePort(char *paIPAddr, unsigned short paPort, const char *paMCInterface){
   DEVLOG_INFO("CWin32SocketInterface: Opening UDP receiving connection at: %s:%d\n", paIPAddr, paPort);
   TSocketDescriptor nRetVal = INVALID_SOCKET;
   TSocketDescriptor nSocket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
@@ -197,9 +212,15 @@ CWin32SocketInterface::TSocketDescriptor CWin32SocketInterface::openUDPReceivePo
           DEVLOG_ERROR("CWin32SocketInterface: WSAStringToAddressA() failed: %d - %s\n", stMCastAddr.sin_addr.s_addr, paIPAddr);
         }
 
+        sockaddr_in stMCastIF = {};
+        int stMCastIFSz = sizeof(stMCastIF);
+        if(WSAStringToAddressA(const_cast<char *>(paMCInterface), AF_INET, NULL, (LPSOCKADDR)&stMCastIF, &stMCastIFSz)) {
+          DEVLOG_ERROR("CWin32SocketInterface: WSAStringToAddressA() failed: %d - %s\n", stMCastIF.sin_addr.s_addr, paMCInterface);
+        }
+
         struct ip_mreq stMReq = {};
         stMReq.imr_multiaddr = stMCastAddr.sin_addr;
-        stMReq.imr_interface.s_addr = htonl(INADDR_ANY);
+        stMReq.imr_interface.s_addr = stMCastIF.sin_addr.s_addr;
         setsockopt(nSocket, IPPROTO_IP, IP_ADD_MEMBERSHIP, (char*) &stMReq, sizeof(stMReq));
         //if this fails we may have given a non multicasting addr. For now we accept this. May need to be changed in the future.
 

@@ -81,9 +81,11 @@ class CIEC_BYTE : public CIEC_ANY_BIT{
 
     /*! \brief calculates buffer size needed for toString conversion
      */
-    size_t getToStringBufferSize() const override;
+    constexpr size_t getToStringBufferSize() const override final {
+      return sizeof("255");
+    }
 
-    EDataTypeID getDataTypeID() const override {
+    constexpr EDataTypeID getDataTypeID() const override final {
       return CIEC_ANY::e_BYTE;
     }
 

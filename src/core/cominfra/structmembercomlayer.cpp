@@ -23,16 +23,53 @@ CStructMemberLocalComLayer::CStructMemberLocalComLayer(CComLayer* paUpperLayer, 
 }
 
 void CStructMemberLocalComLayer::setRDs(forte::com_infra::CBaseCommFB &paSubl, CIEC_ANY **paSDs, TPortId ){
-  CIEC_STRUCT& target = static_cast<CIEC_STRUCT &>(paSubl.getRDs()[0]->unwrap());
-  target.getMember(mMemberIndex)->setValue(paSDs[0]->unwrap());
+  CIEC_ANY* target = getTargetByIndex(static_cast<CIEC_STRUCT*>(&(paSubl.getRDs()[0]->unwrap())), mIndexList);
+  if (nullptr != target)
+	  target->setValue(paSDs[0]->unwrap());
+}
+
+CIEC_ANY* CStructMemberLocalComLayer::getTargetByIndex(CIEC_STRUCT* paRoot, TTargetStructIndexList &paIndexList){
+	if (paIndexList.empty()) {
+		return nullptr;
+	}
+
+	CIEC_STRUCT* target = paRoot;
+	for (auto index : paIndexList) {
+		target = static_cast<CIEC_STRUCT*>(target->getMember(index));
+	}
+	return target;
+}
+
+CStructMemberLocalComLayer::TTargetStructIndexList CStructMemberLocalComLayer::buildIndexList(CIEC_ANY* paRoot, const char *paNestedStructString) {
+  CParameterParser parser(paNestedStructString, '.');
+  const size_t numNestedStructs = parser.parseParameters();
+  TTargetStructIndexList resultList;
+
+  for (size_t i = 0; i < numNestedStructs; i++) {
+  	CStringDictionary::TStringId id = CStringDictionary::getInstance().insert(parser[i]);
+  	size_t memberIndex = static_cast<CIEC_STRUCT*>(paRoot)->getMemberIndex(id);
+
+  	if (memberIndex == CIEC_STRUCT::csmNIndex) {
+  		resultList.clear(); //on error return empty resultList
+  		return resultList;
+  	}
+
+  	resultList.push_back(memberIndex);
+  	CIEC_ANY* member = static_cast<CIEC_STRUCT*>(paRoot)->getMember(memberIndex);
+
+  	if (member->unwrap().getDataTypeID() == CIEC_ANY::e_STRUCT) {
+  		paRoot = member;
+	  }
+  }
+  return resultList;
 }
 
 EComResponse CStructMemberLocalComLayer::openConnection(char *paLayerParameter){
-  //structmemb[localgroupname;structtype;structmembername]
+  //structmemb[localgroupname;structtype;structmembername.structchildmembername]
   CParameterParser parser(paLayerParameter, ';', scmNumLayerParameters);
 
   if (parser.parseParameters() != scmNumLayerParameters) {
-    DEVLOG_ERROR("[StructMemberLayer] The initialization string might be wrong! Usage: structmemb[<localGroupName>;<StructDataTypeName>;<StructMemberName>]");
+    DEVLOG_ERROR("[StructMemberLayer] The initialization string might be wrong! Usage: structmemb[<localGroupName>;<StructDataTypeName>;<StructMemberName>.<StructChildMembername>]");
     return e_InitInvalidId;
   }
 
@@ -41,21 +78,20 @@ EComResponse CStructMemberLocalComLayer::openConnection(char *paLayerParameter){
     return e_InitInvalidId;
   }
 
-  CStringDictionary::TStringId groupNameID = CStringDictionary::getInstance().insert(parser[0]);
-  CStringDictionary::TStringId dataTypeNameID = CStringDictionary::getInstance().insert(parser[1]);
-  CStringDictionary::TStringId memberNameID = CStringDictionary::getInstance().insert(parser[2]);
+  CStringDictionary::TStringId groupNameID = CStringDictionary::getInstance().insert(parser[EComStringIndex::e_LOCALGROUPNAME]);
+  CStringDictionary::TStringId dataTypeNameID = CStringDictionary::getInstance().insert(parser[EComStringIndex::e_STRUCTTYPE]);
 
-  CIEC_STRUCT *const dummy = static_cast<CIEC_STRUCT*>(CTypeLib::createDataTypeInstance(dataTypeNameID, nullptr));
+  CIEC_STRUCT *const dummy = static_cast<CIEC_STRUCT* >(CTypeLib::createDataTypeInstance(dataTypeNameID, nullptr));
 
-  if(dummy == nullptr){
-    DEVLOG_ERROR("[StructMemberLayer] The struct is not available in the data type lib: %s!\r\n", parser[1]);
+  if(nullptr == dummy){
+    DEVLOG_ERROR("[StructMemberLayer] The struct is not available in the data type lib: %s!\r\n", parser[EComStringIndex::e_STRUCTTYPE]);
     return e_InitInvalidId;
   }
 
-  //check if member name is present in struct
-  mMemberIndex = dummy->getMemberIndex(memberNameID);
-  if (mMemberIndex == CIEC_STRUCT::csmNIndex) {
-    DEVLOG_ERROR("[StructMemberLayer] The specified struct has no member \"%s\"!\r\n", parser[2]);
+  mIndexList = buildIndexList(dummy, parser[EComStringIndex::e_STRUCTMEMBERNAME]);
+
+  if (mIndexList.empty()) {
+    DEVLOG_ERROR("[StructMemberLayer] The specified struct has no member \"%s\"!\r\n", parser[EComStringIndex::e_STRUCTMEMBERNAME]);
     return e_InitInvalidId;
   }
 
@@ -71,5 +107,6 @@ EComResponse CStructMemberLocalComLayer::openConnection(char *paLayerParameter){
     case e_Subscriber:
       break;
   }
+
   return (nullptr != mLocalCommGroup) ? e_InitOk : e_InitInvalidId;
 }

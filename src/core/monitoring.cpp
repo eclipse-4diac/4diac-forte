@@ -148,7 +148,7 @@ EMGMResponse CMonitoringHandler::removeWatch(forte::core::TNameIdentifier &paNam
 
 EMGMResponse CMonitoringHandler::readWatches(std::string &paResponse){
   paResponse.clear();
-  if(nullptr == mResource.getResourcePtr()){
+  if(nullptr == mResource.getParent()){
     //we are in the device
     for(CFBContainer::TFunctionBlockList::iterator itRunner = mResource.getFBList().begin();
         itRunner != mResource.getFBList().end();
@@ -227,7 +227,6 @@ EMGMResponse CMonitoringHandler::resetEventCount(forte::core::TNameIdentifier &p
       }
     }
     if(nullptr != eventMonitorData){
-      CCriticalRegion criticalRegion(fB->getResource().mResDataConSync);
       *eventMonitorData = 0;
       eRetVal = EMGMResponse::Ready;
     }
@@ -358,15 +357,11 @@ void CMonitoringHandler::readResourceWatches(std::string &paResponse){
 
 
 void CMonitoringHandler::updateMonitringData(){
-  //update the monitoring data buffer to keep the critical region as short as possible
-  CCriticalRegion criticalRegion(mResource.mResDataConSync);
   for(TFBMonitoringList::Iterator itRunner = mFBMonitoringList.begin(); itRunner != mFBMonitoringList.end(); ++itRunner){
-
     for(TDataWatchList::Iterator itDataRunner = itRunner->mWatchedDataPoints.begin(); itDataRunner != itRunner->mWatchedDataPoints.end(); ++itDataRunner){
       itDataRunner->mDataBuffer->setValue(itDataRunner->mDataValueRef);
       itDataRunner->mDataBuffer->setForced(itDataRunner->mDataValueRef.isForced());
     }
-
     for(TEventWatchList::Iterator itEventRunner = itRunner->mWatchedEventPoints.begin(); itEventRunner != itRunner->mWatchedEventPoints.end(); ++itEventRunner){
       itEventRunner->mEventDataBuf = itEventRunner->mEventDataRef;
     }
@@ -498,7 +493,7 @@ void CMonitoringHandler::appendEventWatch(std::string &paResponse, SEventWatchEn
   appendPortTag(paResponse, paEventWatchEntry.mPortId);
 
   CIEC_UDINT udint(paEventWatchEntry.mEventDataBuf);
-  CIEC_ULINT ulint(mResource.getDevice().getTimer().getForteTime());
+  CIEC_ULINT ulint(mResource.getDevice()->getTimer().getForteTime());
 
   paResponse += "<Data value=\""s;
   char buf[21]; // the bigest number in an ulint is 18446744073709551616, TODO directly use paResponse

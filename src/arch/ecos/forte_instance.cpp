@@ -50,13 +50,15 @@ int forteStartInstance(unsigned int paPort, TForteInstance* paResultDevice){
     paPort = cgForteDefaultPort;
   }
 
-  char address[16] = "localhost:";
+  char progName[] = "forte";
+  char flag[] = "-c";
+  char address[17] = "localhost:";
   char port[6];
-  forte_snprintf(port, 5, "%u", paPort);
+  forte_snprintf(port, 6, "%u", paPort);
   strcat(address, port);
 
-  char* arguments[] = { address };
-  return forteStartInstanceGeneric(1, arguments, paResultDevice);
+  char* arguments[] = { progName, flag, address };
+  return forteStartInstanceGeneric(3, arguments, paResultDevice);
 }
 
 int forteStartInstanceGeneric(int argc, char *arg[], TForteInstance* paResultDevice){

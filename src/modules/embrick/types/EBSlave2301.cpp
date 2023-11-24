@@ -80,7 +80,6 @@ void FORTE_EBSlave2301::setInitialValues() {
 void FORTE_EBSlave2301::readInputData(const TEventID paEIID) {
   switch(paEIID) {
     case scmEventMAPID: {
-      RES_DATA_CON_CRITICAL_REGION();
       readData(1, var_Relay_1, conn_Relay_1);
       readData(2, var_Relay_2, conn_Relay_2);
       readData(3, var_Relay_3, conn_Relay_3);
@@ -98,12 +97,10 @@ void FORTE_EBSlave2301::readInputData(const TEventID paEIID) {
 void FORTE_EBSlave2301::writeOutputData(const TEventID paEIID) {
   switch(paEIID) {
     case scmEventMAPOID: {
-      RES_DATA_CON_CRITICAL_REGION();
       writeData(0, var_QO, conn_QO);
       break;
     }
     case scmEventINDID: {
-      RES_DATA_CON_CRITICAL_REGION();
       writeData(0, var_QO, conn_QO);
       writeData(1, var_STATUS, conn_STATUS);
       break;

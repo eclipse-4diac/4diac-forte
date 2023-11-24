@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 -2014 AIT, fortiss GmbH, Hit robot group
+ * Copyright (c) 2012, 2022 AIT, fortiss GmbH, Hit robot group
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -31,27 +31,24 @@ COpcConnectionHandler::~COpcConnectionHandler(){
   }
 }
 
-COpcConnection* COpcConnectionHandler::getOpcConnection(const char *paHost, const char *paServerName, const char* paGroupName, unsigned long paReqUpdateRate, float paDeadBand, CComLayer* paComCallback){
-
+COpcConnection* COpcConnectionHandler::getOpcConnection(const char *paHost, const char *paServerName, CComLayer* paComCallback){
   COpcConnection *newConnection = findOpcConnection(paHost, paServerName);
   if(newConnection == nullptr){
     newConnection = new COpcConnection(paHost, paServerName, &(getExtEvHandler<COpcEventHandler>(*paComCallback->getCommFB())));
 
     mOpcConnectionList.pushBack(newConnection);
   }
-
-  newConnection->addGroup(paGroupName, paReqUpdateRate, paDeadBand, paComCallback);
-
   return newConnection;
 }
 
 void COpcConnectionHandler::removeOpcConnection(const char *paHost, const char *paServerName, const char* paGroupName){
   COpcConnection *existingCon = findOpcConnection(paHost, paServerName);
   if(existingCon != nullptr){
-    existingCon->removeGroup(paGroupName);
-
-    if(existingCon->getGroupCount() == 0) {
-      deleteOpcConnection(paHost, paServerName);
+    if(0 == existingCon->send_disconnect(paGroupName)){
+      DEVLOG_INFO("The connection is closed and the group is removed![%s].\n",paGroupName);
+    }
+    else{
+      DEVLOG_INFO("The connection is kept untouched![%s].\n",paGroupName);
     }
   }
 }
@@ -63,7 +60,6 @@ COpcConnection* COpcConnectionHandler::findOpcConnection(const char* paHost, con
       return (*it);
     }
   }
-
   return nullptr;
 }
 
@@ -73,7 +69,7 @@ void COpcConnectionHandler::deleteOpcConnection(const char* paHost, const char* 
   TOpcConnectionList::Iterator itEnd = mOpcConnectionList.end();
 
   if(it != itEnd){
-    if(strcmp(it->getHost(), paHost) == 0 && strcmp(it->getServerName(), paServerName)){
+    if(strcmp(it->getHost(), paHost) == 0 && strcmp(it->getServerName(), paServerName) == 0){
       mOpcConnectionList.popFront();
       return;
     }
@@ -83,7 +79,6 @@ void COpcConnectionHandler::deleteOpcConnection(const char* paHost, const char* 
         mOpcConnectionList.eraseAfter(itDelete);
         return;
       }
-
       ++itDelete;
       ++it;
     }

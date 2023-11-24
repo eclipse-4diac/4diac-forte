@@ -108,7 +108,6 @@ void FORTE_FB_RANDOM::enterStateState(CEventChainExecutionThread *const paECET) 
 void FORTE_FB_RANDOM::readInputData(const TEventID paEIID) {
   switch(paEIID) {
     case scmEventINITID: {
-      RES_DATA_CON_CRITICAL_REGION();
       readData(0, var_SEED, conn_SEED);
       break;
     }
@@ -120,7 +119,6 @@ void FORTE_FB_RANDOM::readInputData(const TEventID paEIID) {
 void FORTE_FB_RANDOM::writeOutputData(const TEventID paEIID) {
   switch(paEIID) {
     case scmEventCNFID: {
-      RES_DATA_CON_CRITICAL_REGION();
       writeData(0, var_VAL, conn_VAL);
       break;
     }

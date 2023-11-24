@@ -55,7 +55,7 @@ void IOConfigFBMultiSlave::executeEvent(TEventID paEIID, CEventChainExecutionThr
         BusAdapterOut().MasterId() = BusAdapterIn().MasterId();
 
         for(int i = 0; i < BusAdapterIn().mSlaveConfigurationIONum; i++) {
-          TIEC_ANYPtr ptr = BusAdapterIn().getSlaveConfig(i);
+          CIEC_ANY* ptr = BusAdapterIn().getSlaveConfig(i);
           if(CIEC_ANY::e_UINT == ptr->getDataTypeID()) {
             *static_cast<CIEC_UINT*>(BusAdapterOut().getSlaveConfig(i)) = *static_cast<CIEC_UINT*>(ptr);
           } else {
@@ -128,7 +128,7 @@ const char* IOConfigFBMultiSlave::handleInitEvent() {
   for(int i = 0; i < mSlaveConfigurationIONum; i++) {
     bool isSet = true;
 
-    TIEC_ANYPtr ptr = getDI(mSlaveConfigurationIO[i]);
+    CIEC_ANY* ptr = getDI(mSlaveConfigurationIO[i]);
     if(CIEC_ANY::e_UINT == ptr->getDataTypeID()) {
       isSet = static_cast<CIEC_UINT::TValueType>(*static_cast<CIEC_UINT*>(ptr)) > 0 ? true : false;
     } else {

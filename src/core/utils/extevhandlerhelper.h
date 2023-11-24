@@ -25,7 +25,7 @@
  */
 template<typename T>
 T& getExtEvHandler(CFunctionBlock& paFB){
-  return paFB.getResource().getDevice().getDeviceExecution().getExtEvHandler<T>();
+  return paFB.getDevice()->getDeviceExecution().getExtEvHandler<T>();
 }
 
 

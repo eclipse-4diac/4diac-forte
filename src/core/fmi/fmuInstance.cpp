@@ -285,11 +285,11 @@ void fmuInstance::fillInterfaceElementsArray(CFunctionBlock* paFB, bool isInput,
 
 void fmuInstance::startInstance(){
   resetInstance();
-  (static_cast<CDevice*>(mResource->getResourcePtr()))->changeFBExecutionState(EMGMCommandType::Start);
+  changeFBExecutionState(EMGMCommandType::Start);
 }
 
 void fmuInstance::resetInstance(){
-  (static_cast<CDevice*>(mResource->getResourcePtr()))->changeFBExecutionState(EMGMCommandType::Reset);
+  changeFBExecutionState(EMGMCommandType::Reset);
 }
 
 
@@ -299,5 +299,5 @@ void fmuInstance::stopInstance(){
   for(unsigned int i = 0; i < mNumberOfEcets; i++){
     mEcetSemaphore.inc();
   }
-  (static_cast<CDevice*>(mResource->getResourcePtr()))->changeFBExecutionState(EMGMCommandType::Stop);
+  changeFBExecutionState(EMGMCommandType::Stop);
 }

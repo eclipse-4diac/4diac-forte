@@ -85,7 +85,6 @@ void FORTE_E_PERMIT::enterStateEO(CEventChainExecutionThread *const paECET) {
 void FORTE_E_PERMIT::readInputData(const TEventID paEIID) {
   switch(paEIID) {
     case scmEventEIID: {
-      RES_DATA_CON_CRITICAL_REGION();
       readData(0, var_PERMIT, conn_PERMIT);
       break;
     }

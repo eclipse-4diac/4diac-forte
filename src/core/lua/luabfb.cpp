@@ -56,7 +56,7 @@ const luaL_Reg CLuaBFB::LUA_FUNCS[] = { { "__index", CLuaFB_index }, { "__newind
 CLuaBFB::CLuaBFB(CStringDictionary::TStringId paInstanceNameId, const CLuaBFBTypeEntry* paTypeEntry, CResource *paResource) :
     CBasicFB(paResource, paTypeEntry->getInterfaceSpec(), paInstanceNameId, paTypeEntry->getInternalVarsInformation()),
         mTypeEntry(paTypeEntry) {
-  CLuaEngine *luaEngine = getResource().getLuaEngine();
+  CLuaEngine *luaEngine = getResource()->getLuaEngine();
   luaEngine->registerType<CLuaBFB>();
   luaEngine->pushObject<CLuaBFB>(this);
   luaEngine->store(this);
@@ -72,7 +72,7 @@ bool CLuaBFB::initialize() {
 
 void CLuaBFB::executeEvent(TEventID paEIID, CEventChainExecutionThread *paECET) {
   mInvokingExecEnv = paECET;
-  CLuaEngine *luaEngine = getResource().getLuaEngine();
+  CLuaEngine *luaEngine = getResource()->getLuaEngine();
   luaEngine->load(mTypeEntry);
   luaEngine->load(this);
   luaEngine->pushInteger(paEIID > 255 ? recalculateID(paEIID) : paEIID);
@@ -109,9 +109,6 @@ CIEC_ANY* CLuaBFB::getVariable(TForteUInt32 paId) {
 void CLuaBFB::readInputData(TEventID paEIID) {
   if(nullptr != mInterfaceSpec->mEIWithIndexes && scmNoDataAssociated != mInterfaceSpec->mEIWithIndexes[paEIID]) {
     const TDataIOID *eiWithStart = &(mInterfaceSpec->mEIWith[mInterfaceSpec->mEIWithIndexes[paEIID]]);
-
-    // TODO think on this lock
-    RES_DATA_CON_CRITICAL_REGION();
     for(size_t i = 0; eiWithStart[i] != scmWithListDelimiter; ++i) {
       TDataIOID diNum = eiWithStart[i];
       readData(diNum, *getDI(diNum), *getDIConUnchecked(diNum));
@@ -122,8 +119,6 @@ void CLuaBFB::readInputData(TEventID paEIID) {
 void CLuaBFB::writeOutputData(TEventID paEO) {
   if (nullptr != mInterfaceSpec->mEOWithIndexes && -1 != mInterfaceSpec->mEOWithIndexes[paEO]) {
     const TDataIOID *eiWithStart = &(mInterfaceSpec->mEOWith[mInterfaceSpec->mEOWithIndexes[paEO]]);
-    //TODO think on this lock
-    RES_DATA_CON_CRITICAL_REGION();
     for (size_t i = 0; eiWithStart[i] != scmWithListDelimiter; ++i) {
       TDataIOID doNum = eiWithStart[i];
       writeData(doNum, *getDO(doNum), *getDOConUnchecked(doNum));

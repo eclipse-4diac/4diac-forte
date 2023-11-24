@@ -52,8 +52,7 @@ void FORTE_ARTimeOut::readInputData(const TEventID paEIID) {
   } else {
     switch(paEIID) {
       case scmEventSTARTID: {
-        RES_DATA_CON_CRITICAL_REGION();
-        readData(0, *mDIs[0], mDIConns[0]);
+          readData(0, *mDIs[0], mDIConns[0]);
         break;
       }
       default:
@@ -66,8 +65,7 @@ void FORTE_ARTimeOut::writeOutputData(const TEventID paEIID) {
   if(isSocket()) {
     switch(paEIID) {
       case scmEventSTARTID: {
-        RES_DATA_CON_CRITICAL_REGION();
-        writeData(0, *mDOs[0], mDOConns[0]);
+          writeData(0, *mDOs[0], mDOConns[0]);
         break;
       }
       default:

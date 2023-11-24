@@ -103,7 +103,7 @@ void EmbrickSPIHandler::fail(const char* paReason) {
 
 bool EmbrickSPIHandler::transfer(unsigned char* paSendBuffer, unsigned char* paReceiveBuffer, int paLength) {
 
-  struct spi_ioc_transfer msg;
+  struct spi_ioc_transfer msg{};
 
   msg.tx_buf = (unsigned long) paSendBuffer;
   msg.rx_buf = (unsigned long) paReceiveBuffer;

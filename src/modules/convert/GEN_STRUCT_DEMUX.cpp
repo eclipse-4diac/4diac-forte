@@ -52,12 +52,10 @@ GEN_STRUCT_DEMUX::~GEN_STRUCT_DEMUX(){
 }
 
 void GEN_STRUCT_DEMUX::readInputData(TEventID) {
-  RES_DATA_CON_CRITICAL_REGION();
   readData(0, *mDIs[0], mDIConns[0]);
 }
 
 void GEN_STRUCT_DEMUX::writeOutputData(TEventID) {
-  RES_DATA_CON_CRITICAL_REGION();
   for(TPortId i = 0; i < mInterfaceSpec->mNumDOs; ++i) {
     writeData(i, *mDOs[i], mDOConns[i]);
   }

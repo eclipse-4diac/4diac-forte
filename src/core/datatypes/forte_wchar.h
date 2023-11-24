@@ -20,7 +20,7 @@
 
 /*!\ingroup COREDTS CIEC_BYTE represents the byte data type according to IEC 61131.
  */
-class CIEC_WCHAR : public CIEC_ANY_CHAR{
+class CIEC_WCHAR : public CIEC_ANY_CHAR {
   DECLARE_FIRMWARE_DATATYPE(WCHAR)
 
   public:
@@ -62,9 +62,11 @@ class CIEC_WCHAR : public CIEC_ANY_CHAR{
 
     /*! \brief calculates buffer size needed for toString conversion
      */
-    size_t getToStringBufferSize() const override;
+    constexpr size_t getToStringBufferSize() const override {
+      return sizeof("\"$0000\"");
+    }
 
-    EDataTypeID getDataTypeID() const override {
+    constexpr EDataTypeID getDataTypeID() const override {
       return CIEC_ANY::e_WCHAR;
     }
 };

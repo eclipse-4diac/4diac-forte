@@ -99,7 +99,7 @@ void FORTE_ST_REC_CONN::executeRQST(){
   theCommand.mSecondParam.pushBack(CStringDictionary::getInstance().getId(var_OLD_DST_FB_IN.getValue()));
   theCommand.mCMD = EMGMCommandType::DeleteConnection;
 
-  EMGMResponse resp = getResource().getDevice().executeMGMCommand(theCommand);
+  EMGMResponse resp = getDevice()->executeMGMCommand(theCommand);
 
   if (resp == EMGMResponse::Ready) {
     // create new connection
@@ -110,7 +110,7 @@ void FORTE_ST_REC_CONN::executeRQST(){
     theCommand.mSecondParam.pushBack(CStringDictionary::getInstance().getId(var_NEW_DST_FB.getValue()));
     theCommand.mSecondParam.pushBack(CStringDictionary::getInstance().getId(var_NEW_DST_FB_IN.getValue()));
     theCommand.mCMD = EMGMCommandType::CreateConnection;
-    resp = getResource().getDevice().executeMGMCommand(theCommand);
+    resp = getDevice()->executeMGMCommand(theCommand);
   }
 
   //calculate return value
@@ -123,7 +123,6 @@ void FORTE_ST_REC_CONN::executeRQST(){
 void FORTE_ST_REC_CONN::readInputData(TEventID paEIID) {
   switch(paEIID) {
     case scmEventREQID: {
-      RES_DATA_CON_CRITICAL_REGION();
       readData(1, var_OLD_SRC_FB, conn_OLD_SRC_FB);
       readData(2, var_OLD_SRC_FB_OUT, conn_OLD_SRC_FB_OUT);
       readData(3, var_OLD_DST_FB, conn_OLD_DST_FB);
@@ -144,7 +143,6 @@ void FORTE_ST_REC_CONN::readInputData(TEventID paEIID) {
 void FORTE_ST_REC_CONN::writeOutputData(TEventID paEIID) {
   switch(paEIID) {
     case scmEventCNFID: {
-      RES_DATA_CON_CRITICAL_REGION();
       writeData(1, var_STATUS, conn_STATUS);
       writeData(0, var_QO, conn_QO);
       break;

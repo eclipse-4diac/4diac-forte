@@ -77,7 +77,7 @@ const TForteUInt32 BE_SVIFB::scmBE_SVI_VarSizes[] = { 0, // e_ANY,
     };
 
 bool BE_SVIFB::registerSVIvar(const CIEC_STRING& paID, CIEC_ANY& paValue, const TForteUInt32 paMode){
-  BE_RMT_DEV& roDev(static_cast<BE_RMT_DEV&>(getResource().getDevice()));
+  BE_RMT_DEV& roDev(static_cast<BE_RMT_DEV&>(*getDevice()));
 
   bool bRetVal = (OK == roDev.getModule().GetSVIHandler().AddGlobVar(((CHAR *) paID.getValue()), paMode | scmBE_SVI_Types[paValue.getDataTypeID()], scmBE_SVI_VarSizes[paValue.getDataTypeID()], (UINT32*) (paValue.getDataPtr()), 0, 0));
   roDev.getModule().CfgRead();

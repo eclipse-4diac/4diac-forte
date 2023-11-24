@@ -91,14 +91,12 @@ EMGMResponse FORTE_RT_E_CYCLE::changeFBExecutionState(EMGMCommandType paCommand)
 void FORTE_RT_E_CYCLE::readInputData(TEventID paEIID) {
   switch(paEIID) {
     case scmEventSTARTID: {
-      RES_DATA_CON_CRITICAL_REGION();
       readData(0, var_DT, conn_DT);
       readData(1, var_Deadline, conn_Deadline);
       readData(2, var_WCET, conn_WCET);
       break;
     }
     case scmEventSTOPID: {
-      RES_DATA_CON_CRITICAL_REGION();
       break;
     }
     default:

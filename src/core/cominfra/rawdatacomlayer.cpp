@@ -31,7 +31,7 @@ namespace forte {
     }
 
     EComResponse CRawDataComLayer::sendData( void *paData, unsigned int){
-      TConstIEC_ANYPtr *apoSDs = static_cast<TConstIEC_ANYPtr *>(paData);
+      const CIEC_ANY* *apoSDs = static_cast<const CIEC_ANY* *>(paData);
       const CIEC_STRING &val(static_cast<const CIEC_STRING&>(*apoSDs[0]));
       mBottomLayer->sendData((void*)val.getStorage().c_str(), val.length());
       return e_ProcessDataOk;
@@ -39,7 +39,7 @@ namespace forte {
 
     EComResponse CRawDataComLayer::recvData( const void *paData, unsigned int paSize){
       if (nullptr == mTopLayer && mFb->getNumRD() == 1){
-        TIEC_ANYPtr *apoRDs = static_cast<TIEC_ANYPtr *>(mFb->getRDs());
+        CIEC_ANY* *apoRDs = static_cast<CIEC_ANY* *>(mFb->getRDs());
         CIEC_STRING &val(static_cast<CIEC_STRING&>(*apoRDs[0]));
         val.assign(static_cast<const char *>(paData), static_cast<TForteUInt16>(paSize));
       }

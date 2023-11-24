@@ -62,7 +62,6 @@ void FORTE_RT_E_EC_COUPLER::setInitialValues() {
 void FORTE_RT_E_EC_COUPLER::readInputData(TEventID paEIID) {
   switch(paEIID) {
     case scmEventINITID: {
-      RES_DATA_CON_CRITICAL_REGION();
       readData(0, var_QI, conn_QI);
       readData(1, var_Tmin, conn_Tmin);
       readData(2, var_Deadline, conn_Deadline);
@@ -70,7 +69,6 @@ void FORTE_RT_E_EC_COUPLER::readInputData(TEventID paEIID) {
       break;
     }
     case scmEventEIID: {
-      RES_DATA_CON_CRITICAL_REGION();
       break;
     }
     default:
@@ -81,12 +79,10 @@ void FORTE_RT_E_EC_COUPLER::readInputData(TEventID paEIID) {
 void FORTE_RT_E_EC_COUPLER::writeOutputData(TEventID paEIID) {
   switch(paEIID) {
     case scmEventINITOID: {
-      RES_DATA_CON_CRITICAL_REGION();
       writeData(0, var_QO, conn_QO);
       break;
     }
     case scmEventEOID: {
-      RES_DATA_CON_CRITICAL_REGION();
       break;
     }
     default:

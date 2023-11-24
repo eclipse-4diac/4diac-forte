@@ -79,7 +79,7 @@ class CActionInfo {
      * Getter of the layer
      * @return Layer
      */
-    COPC_UA_Layer& getLayer() {
+    COPC_UA_Layer& getLayer() const {
       return mLayer;
     }
 
@@ -128,7 +128,7 @@ class CActionInfo {
      * Retrieves the array of CIEC_ANY to be sent
      * @return the array of CIEC_ANY to be sent
      */
-    const CIEC_ANY *const *getDataToSend() const;
+    virtual const CIEC_ANY *const *getDataToSend();
 
     /**
      * Retrieves the array of CIEC_ANY where to receive the data

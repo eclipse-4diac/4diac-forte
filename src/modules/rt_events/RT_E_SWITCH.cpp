@@ -111,7 +111,6 @@ void FORTE_RT_E_SWITCH::executeEvent(TEventID paEIID, CEventChainExecutionThread
 void FORTE_RT_E_SWITCH::readInputData(TEventID paEIID) {
   switch(paEIID) {
     case scmEventINITID: {
-      RES_DATA_CON_CRITICAL_REGION();
       readData(0, var_QI, conn_QI);
       readData(2, var_Tmin, conn_Tmin);
       readData(3, var_Deadline_EO1, conn_Deadline_EO1);
@@ -121,7 +120,6 @@ void FORTE_RT_E_SWITCH::readInputData(TEventID paEIID) {
       break;
     }
     case scmEventEIID: {
-      RES_DATA_CON_CRITICAL_REGION();
       readData(1, var_G, conn_G);
       break;
     }
@@ -133,16 +131,13 @@ void FORTE_RT_E_SWITCH::readInputData(TEventID paEIID) {
 void FORTE_RT_E_SWITCH::writeOutputData(TEventID paEIID) {
   switch(paEIID) {
     case scmEventINITOID: {
-      RES_DATA_CON_CRITICAL_REGION();
       writeData(0, var_QO, conn_QO);
       break;
     }
     case scmEventEO1ID: {
-      RES_DATA_CON_CRITICAL_REGION();
       break;
     }
     case scmEventEO2ID: {
-      RES_DATA_CON_CRITICAL_REGION();
       break;
     }
     default:

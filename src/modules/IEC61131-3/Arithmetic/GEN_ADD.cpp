@@ -63,14 +63,12 @@ void GEN_ADD::executeEvent(TEventID paEIID, CEventChainExecutionThread *const pa
 }
 
 void GEN_ADD::readInputData(TEventID) {
-  RES_DATA_CON_CRITICAL_REGION();
   for(TPortId i = 0; i < mInterfaceSpec->mNumDIs; ++i) {
     readData(i, *mDIs[i], mDIConns[i]);
   }
 }
 
 void GEN_ADD::writeOutputData(TEventID) {
-  RES_DATA_CON_CRITICAL_REGION();
   writeData(0, *mDOs[0], mDOConns[0]);
 }
 

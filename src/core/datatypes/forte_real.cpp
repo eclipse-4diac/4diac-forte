@@ -138,7 +138,3 @@ void CIEC_REAL::castRealData(const CIEC_REAL &paSrcValue, CIEC_ANY &paDestValue)
       break;
   }
 }
-
-size_t CIEC_REAL::getToStringBufferSize() const {
-  return sizeof("-1.175494351E-38"); //minimal float value (negative for additional sign)
-}

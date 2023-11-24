@@ -72,7 +72,7 @@ void EmbrickSlave::onSlaveStatus(EmbrickSlaveHandler::SlaveStatus paStatus, Embr
       break;
   }
 
-  sendOutputEvent(scmEventINDID);
+  sendOutputEvent(scmEventINDID, getEventChainExecutor());
 }
 
 void EmbrickSlave::onSlaveDestroy() {

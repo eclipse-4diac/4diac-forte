@@ -41,7 +41,7 @@
 #include <string>
 
 CResource::CResource(CResource* paDevice, const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId) :
-    CFunctionBlock(paDevice, paInterfaceSpec, paInstanceNameId), forte::core::CFBContainer(CStringDictionary::scmInvalidStringId, nullptr), // the fbcontainer of resources does not have a seperate name as it is stored in the resource
+    CFunctionBlock(paDevice, paInterfaceSpec, paInstanceNameId), forte::core::CFBContainer(CStringDictionary::scmInvalidStringId, paDevice), // the fbcontainer of resources does not have a seperate name as it is stored in the resource
     mResourceEventExecution(CEventChainExecutionThread::createEcet()), mResIf2InConnections(nullptr)
 #ifdef FORTE_SUPPORT_MONITORING
 , mMonitoringHandler(*this)
@@ -259,7 +259,6 @@ EMGMResponse CResource::writeValue(forte::core::TNameIdentifier &paNameList, con
           CDataConnection *con = fb->getDOConnection(portName);
           if(nullptr != con){
             //if we have got a connection it was a DO mirror the forced value there
-            CCriticalRegion criticalRegion(mResDataConSync);
             con->writeData(*var);
           }
         }

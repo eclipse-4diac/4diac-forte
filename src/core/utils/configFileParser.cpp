@@ -16,7 +16,7 @@
 #include <string.h>
 
 CConfigFileParser::CConfigFileParser(const std::string &paFileLocation) {
-  mConfigFile = fopen(paFileLocation.c_str(), "r");
+  mConfigFile = forte_fopen(paFileLocation.c_str(), "r");
   if(nullptr != mConfigFile) {
     DEVLOG_INFO("[CConfigFileParser]: Configuration file %s opened\n", paFileLocation.c_str());
   } else {
@@ -27,7 +27,7 @@ CConfigFileParser::CConfigFileParser(const std::string &paFileLocation) {
 CConfigFileParser::~CConfigFileParser() {
   if(nullptr != mConfigFile) {
     DEVLOG_INFO("[CConfigFileParser]: Closing configuration file\n");
-    fclose(mConfigFile);
+    forte_fclose(mConfigFile);
   }
 }
 
@@ -35,7 +35,7 @@ CConfigFileParser::ParseResult CConfigFileParser::parseNextLine(std::pair<std::s
   ParseResult retVal = eFileNotOpened;
   if(mConfigFile) {
     char lineBuf[scmLineBuffer];
-    if(nullptr != fgets(lineBuf, scmLineBuffer, mConfigFile)) {
+    if(nullptr != forte_fgets(lineBuf, scmLineBuffer, mConfigFile)) {
       if(0 == strcmp(lineBuf, "\n")) {
         retVal = eEmptyLine;
       } else {
@@ -50,7 +50,7 @@ CConfigFileParser::ParseResult CConfigFileParser::parseNextLine(std::pair<std::s
         }
       }
     } else {
-      if(feof(mConfigFile)) {
+      if(forte_feof(mConfigFile)) {
         retVal = eEndOfFile;
       } else {
         retVal = eInternalError;

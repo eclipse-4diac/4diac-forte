@@ -34,7 +34,7 @@ const char * const CBaseCommFB::scmResponseTexts[] = { "OK", "INVALID_ID", "TERM
 CBaseCommFB::CBaseCommFB(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes, forte::com_infra::EComServiceType paCommServiceType) :
     CGenFunctionBlock<CEventSourceFB>(paSrcRes, paInstanceNameId), mCommServiceType(paCommServiceType), mTopOfComStack(nullptr) {
   memset(mInterruptQueue, 0, sizeof(mInterruptQueue)); //TODO change this to  mInterruptQueue{0} in the extended list when fully switching to C++11
-  setEventChainExecutor(getResource().getResourceEventExecution());
+  setEventChainExecutor(paSrcRes->getResourceEventExecution());
   mComInterruptQueueCount = 0;
 }
 

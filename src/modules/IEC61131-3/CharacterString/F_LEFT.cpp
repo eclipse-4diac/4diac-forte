@@ -76,7 +76,6 @@ void FORTE_F_LEFT::executeEvent(TEventID paEIID, CEventChainExecutionThread *con
 void FORTE_F_LEFT::readInputData(TEventID paEIID) {
   switch(paEIID) {
     case scmEventREQID: {
-      RES_DATA_CON_CRITICAL_REGION();
       readData(0, var_IN, conn_IN);
       readData(1, var_L, conn_L);
       break;
@@ -89,7 +88,6 @@ void FORTE_F_LEFT::readInputData(TEventID paEIID) {
 void FORTE_F_LEFT::writeOutputData(TEventID paEIID) {
   switch(paEIID) {
     case scmEventCNFID: {
-      RES_DATA_CON_CRITICAL_REGION();
       writeData(0, var_OUT, conn_OUT);
       break;
     }

@@ -101,7 +101,6 @@ void FORTE_E_SR::readInputData(TEventID) {
 void FORTE_E_SR::writeOutputData(const TEventID paEIID) {
   switch(paEIID) {
     case scmEventEOID: {
-      RES_DATA_CON_CRITICAL_REGION();
       writeData(0, var_Q, conn_Q);
       break;
     }

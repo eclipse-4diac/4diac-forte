@@ -87,12 +87,10 @@ void FORTE_E_SELECT::enterStateEO(CEventChainExecutionThread *const paECET) {
 void FORTE_E_SELECT::readInputData(const TEventID paEIID) {
   switch(paEIID) {
     case scmEventEI0ID: {
-      RES_DATA_CON_CRITICAL_REGION();
       readData(0, var_G, conn_G);
       break;
     }
     case scmEventEI1ID: {
-      RES_DATA_CON_CRITICAL_REGION();
       readData(0, var_G, conn_G);
       break;
     }

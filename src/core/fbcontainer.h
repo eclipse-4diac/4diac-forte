@@ -19,6 +19,7 @@
 #include "mgmcmdstruct.h"
 
 class CFunctionBlock;
+class CDevice;
 
 namespace forte {
   namespace core {
@@ -63,6 +64,16 @@ namespace forte {
         }
 
         CFBContainer* getParent() const { return mParent;}
+
+        virtual CResource* getResource();
+        virtual const CResource* getResource() const {
+          return const_cast<CFBContainer*>(this)->getResource();
+        }
+
+        virtual CDevice* getDevice();
+        virtual const CDevice* getDevice() const {
+          return const_cast<CFBContainer*>(this)->getDevice();
+        }
 
       protected:
 

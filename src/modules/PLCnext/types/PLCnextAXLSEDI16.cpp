@@ -95,7 +95,6 @@ void FORTE_PLCnextAXLSEDI16::setInitialValues() {
 void FORTE_PLCnextAXLSEDI16::readInputData(const TEventID paEIID) {
   switch(paEIID) {
     case scmEventINITID: {
-      RES_DATA_CON_CRITICAL_REGION();
       readData(0, var_QI, conn_QI);
       readData(1, var_DI_1, conn_DI_1);
       readData(2, var_DI_2, conn_DI_2);
@@ -123,13 +122,11 @@ void FORTE_PLCnextAXLSEDI16::readInputData(const TEventID paEIID) {
 void FORTE_PLCnextAXLSEDI16::writeOutputData(const TEventID paEIID) {
   switch(paEIID) {
     case scmEventINITOID: {
-      RES_DATA_CON_CRITICAL_REGION();
       writeData(0, var_QO, conn_QO);
       writeData(1, var_STATUS, conn_STATUS);
       break;
     }
     case scmEventINDID: {
-      RES_DATA_CON_CRITICAL_REGION();
       writeData(0, var_QO, conn_QO);
       writeData(1, var_STATUS, conn_STATUS);
       break;

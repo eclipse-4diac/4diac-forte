@@ -49,14 +49,12 @@ GEN_STRUCT_MUX::~GEN_STRUCT_MUX(){
 }
 
 void GEN_STRUCT_MUX::readInputData(TEventID) {
-  RES_DATA_CON_CRITICAL_REGION();
   for(TPortId i = 0; i < mInterfaceSpec->mNumDIs; ++i) {
     readData(i, *mDIs[i], mDIConns[i]);
   }
 }
 
 void GEN_STRUCT_MUX::writeOutputData(TEventID) {
-  RES_DATA_CON_CRITICAL_REGION();
   writeData(0, *mDOs[0], mDOConns[0]);
 }
 

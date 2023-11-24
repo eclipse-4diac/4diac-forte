@@ -142,12 +142,10 @@ void FORTE_E_CTUD::enterStateLD(CEventChainExecutionThread *const paECET) {
 void FORTE_E_CTUD::readInputData(const TEventID paEIID) {
   switch(paEIID) {
     case scmEventCUID: {
-      RES_DATA_CON_CRITICAL_REGION();
       readData(0, var_PV, conn_PV);
       break;
     }
     case scmEventLDID: {
-      RES_DATA_CON_CRITICAL_REGION();
       readData(0, var_PV, conn_PV);
       break;
     }
@@ -159,21 +157,18 @@ void FORTE_E_CTUD::readInputData(const TEventID paEIID) {
 void FORTE_E_CTUD::writeOutputData(const TEventID paEIID) {
   switch(paEIID) {
     case scmEventCOID: {
-      RES_DATA_CON_CRITICAL_REGION();
       writeData(0, var_QU, conn_QU);
       writeData(2, var_CV, conn_CV);
       writeData(1, var_QD, conn_QD);
       break;
     }
     case scmEventROID: {
-      RES_DATA_CON_CRITICAL_REGION();
       writeData(0, var_QU, conn_QU);
       writeData(2, var_CV, conn_CV);
       writeData(1, var_QD, conn_QD);
       break;
     }
     case scmEventLDOID: {
-      RES_DATA_CON_CRITICAL_REGION();
       writeData(0, var_QU, conn_QU);
       writeData(1, var_QD, conn_QD);
       writeData(2, var_CV, conn_CV);

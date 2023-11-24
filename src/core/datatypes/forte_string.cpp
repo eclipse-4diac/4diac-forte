@@ -30,7 +30,7 @@ using namespace std::string_literals;
 
 DEFINE_FIRMWARE_DATATYPE(STRING, g_nStringIdSTRING);
 
-CIEC_STRING::CIEC_STRING(const char* paValue) : mValue(paValue, strnlen(paValue, scmMaxStringLen)) {
+CIEC_STRING::CIEC_STRING(const char* paValue) : mValue(paValue, forte_strnlen_s(paValue, scmMaxStringLen)) {
 }
 
 CIEC_STRING::CIEC_STRING(const char* paValue, const size_t paLength) : mValue(paValue, std::min(paLength, scmMaxStringLen)) {

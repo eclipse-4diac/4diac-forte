@@ -20,6 +20,7 @@
 
 #include <genfb.h>
 #include <stdio.h>
+#include "../../arch/forte_fileio.h"
 
 class GEN_CSV_WRITER : public CGenFunctionBlock<CFunctionBlock> {
     DECLARE_GENERIC_FIRMWARE_FB(GEN_CSV_WRITER)
@@ -70,7 +71,7 @@ class GEN_CSV_WRITER : public CGenFunctionBlock<CFunctionBlock> {
     void closeCSVFile();
     void writeCSVFileLine();
 
-    FILE *mCSVFile;
+    decltype(forte_fopen(nullptr, nullptr)) mCSVFile;
 
     CStringDictionary::TStringId *mDataInputNames;
     CStringDictionary::TStringId *mDataInputTypeIds;

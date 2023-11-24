@@ -89,7 +89,6 @@ void FORTE_F_MUX_2::executeEvent(TEventID paEIID, CEventChainExecutionThread *co
 void FORTE_F_MUX_2::readInputData(TEventID paEIID) {
   switch(paEIID) {
     case scmEventREQID: {
-      RES_DATA_CON_CRITICAL_REGION();
       readData(1, var_IN1, conn_IN1);
       readData(2, var_IN2, conn_IN2);
       readData(0, var_K, conn_K);
@@ -103,7 +102,6 @@ void FORTE_F_MUX_2::readInputData(TEventID paEIID) {
 void FORTE_F_MUX_2::writeOutputData(TEventID paEIID) {
   switch(paEIID) {
     case scmEventCNFID: {
-      RES_DATA_CON_CRITICAL_REGION();
       writeData(0, var_OUT, conn_OUT);
       break;
     }

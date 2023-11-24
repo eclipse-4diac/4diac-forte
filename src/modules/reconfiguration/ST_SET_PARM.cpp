@@ -87,7 +87,7 @@ void FORTE_ST_SET_PARM::executeRQST() {
   theCommand.mAdditionalParams = func_WSTRING_TO_STRING(var_PARM_VAL);
   theCommand.mCMD = EMGMCommandType::Write;
 
-  EMGMResponse resp = getResource().getDevice().executeMGMCommand(theCommand);
+  EMGMResponse resp = getDevice()->executeMGMCommand(theCommand);
 
   //calculate return value
   var_QO = CIEC_BOOL(resp == EMGMResponse::Ready);
@@ -99,7 +99,6 @@ void FORTE_ST_SET_PARM::executeRQST() {
 void FORTE_ST_SET_PARM::readInputData(TEventID paEIID) {
   switch(paEIID) {
     case scmEventREQID: {
-      RES_DATA_CON_CRITICAL_REGION();
       readData(1, var_ELEM_NAME, conn_ELEM_NAME);
       readData(2, var_ELEM_DATA_IN, conn_ELEM_DATA_IN);
       readData(3, var_PARM_VAL, conn_PARM_VAL);
@@ -115,7 +114,6 @@ void FORTE_ST_SET_PARM::readInputData(TEventID paEIID) {
 void FORTE_ST_SET_PARM::writeOutputData(TEventID paEIID) {
   switch(paEIID) {
     case scmEventCNFID: {
-      RES_DATA_CON_CRITICAL_REGION();
       writeData(1, var_STATUS, conn_STATUS);
       writeData(0, var_QO, conn_QO);
       break;

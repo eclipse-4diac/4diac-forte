@@ -32,9 +32,6 @@ bool CLuaCFB::initialize() {
 void CLuaCFB::readInputData(TEventID paEIID) {
   if(mInterfaceSpec->mEIWithIndexes != nullptr && mInterfaceSpec->mEIWithIndexes[paEIID] != scmNoDataAssociated) {
     const TDataIOID *eiWithStart = &(mInterfaceSpec->mEIWith[mInterfaceSpec->mEIWithIndexes[paEIID]]);
-
-    // TODO think on this lock
-    RES_DATA_CON_CRITICAL_REGION();
     for(size_t i = 0; eiWithStart[i] != scmWithListDelimiter; ++i) {
       TDataIOID diNum = eiWithStart[i];
       readData(diNum, *getDI(diNum), *getDIConUnchecked(diNum));
@@ -45,8 +42,6 @@ void CLuaCFB::readInputData(TEventID paEIID) {
 void CLuaCFB::writeOutputData(TEventID paEO) {
   if (mInterfaceSpec->mEOWithIndexes != nullptr && mInterfaceSpec->mEOWithIndexes[paEO] != -1) {
     const TDataIOID *eiWithStart = &(mInterfaceSpec->mEOWith[mInterfaceSpec->mEOWithIndexes[paEO]]);
-    //TODO think on this lock
-    RES_DATA_CON_CRITICAL_REGION();
     for (size_t i = 0; eiWithStart[i] != scmWithListDelimiter; ++i) {
       TDataIOID doNum = eiWithStart[i];
       writeData(doNum, *getDO(doNum), *getDOConUnchecked(doNum));
@@ -59,14 +54,9 @@ void CLuaCFB::readInternal2InterfaceOutputData(TEventID paEOID){
   if((paEOID < mInterfaceSpec->mNumEOs) && (mInterfaceSpec->mEOWithIndexes != nullptr) &&
       (mInterfaceSpec->mEOWithIndexes[paEOID]) != -1){
     const TDataIOID *poEOWithStart = &(mInterfaceSpec->mEOWith[mInterfaceSpec->mEOWithIndexes[paEOID]]);
-
-    // TODO think on this lock
-    {
-      RES_DATA_CON_CRITICAL_REGION();
-      for(size_t i = 0; poEOWithStart[i] != scmWithListDelimiter; ++i){
-        if(getIn2IfConUnchecked(poEOWithStart[i]) != nullptr){
-          getIn2IfConUnchecked(poEOWithStart[i])->readData(*getDO(poEOWithStart[i]));
-        }
+    for(size_t i = 0; poEOWithStart[i] != scmWithListDelimiter; ++i){
+      if(getIn2IfConUnchecked(poEOWithStart[i]) != nullptr){
+        getIn2IfConUnchecked(poEOWithStart[i])->readData(*getDO(poEOWithStart[i]));
       }
     }
   }

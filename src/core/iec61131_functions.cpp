@@ -18,171 +18,171 @@
 #include "forte_architecture_time.h"
 
 /*** TRUNC ***/
-const CIEC_SINT func_TRUNC_SINT(const CIEC_REAL &paIN) {
+CIEC_SINT func_TRUNC_SINT(const CIEC_REAL &paIN) {
   return func_TRUNC<CIEC_SINT>(paIN);
 }
 
-const CIEC_INT func_TRUNC_INT(const CIEC_REAL &paIN) {
+CIEC_INT func_TRUNC_INT(const CIEC_REAL &paIN) {
   return func_TRUNC<CIEC_INT>(paIN);
 }
 
-const CIEC_DINT func_TRUNC_DINT(const CIEC_REAL &paIN) {
+CIEC_DINT func_TRUNC_DINT(const CIEC_REAL &paIN) {
   return func_TRUNC<CIEC_DINT>(paIN);
 }
 
-const CIEC_LINT func_TRUNC_LINT(const CIEC_REAL &paIN) {
+CIEC_LINT func_TRUNC_LINT(const CIEC_REAL &paIN) {
   return func_TRUNC<CIEC_LINT>(paIN);
 }
 
-const CIEC_USINT func_TRUNC_USINT(const CIEC_REAL &paIN) {
+CIEC_USINT func_TRUNC_USINT(const CIEC_REAL &paIN) {
   return func_TRUNC<CIEC_USINT>(paIN);
 }
 
-const CIEC_UINT func_TRUNC_UINT(const CIEC_REAL &paIN) {
+CIEC_UINT func_TRUNC_UINT(const CIEC_REAL &paIN) {
   return func_TRUNC<CIEC_UINT>(paIN);
 }
 
-const CIEC_UDINT func_TRUNC_UDINT(const CIEC_REAL &paIN) {
+CIEC_UDINT func_TRUNC_UDINT(const CIEC_REAL &paIN) {
   return func_TRUNC<CIEC_UDINT>(paIN);
 }
 
-const CIEC_ULINT func_TRUNC_ULINT(const CIEC_REAL &paIN) {
+CIEC_ULINT func_TRUNC_ULINT(const CIEC_REAL &paIN) {
   return func_TRUNC<CIEC_ULINT>(paIN);
 }
 
-const CIEC_SINT func_REAL_TRUNC_SINT(const CIEC_REAL &paIN) {
+CIEC_SINT func_REAL_TRUNC_SINT(const CIEC_REAL &paIN) {
   return func_TRUNC<CIEC_SINT>(paIN);
 }
 
-const CIEC_INT func_REAL_TRUNC_INT(const CIEC_REAL &paIN) {
+CIEC_INT func_REAL_TRUNC_INT(const CIEC_REAL &paIN) {
   return func_TRUNC<CIEC_INT>(paIN);
 }
 
-const CIEC_DINT func_REAL_TRUNC_DINT(const CIEC_REAL &paIN) {
+CIEC_DINT func_REAL_TRUNC_DINT(const CIEC_REAL &paIN) {
   return func_TRUNC<CIEC_DINT>(paIN);
 }
 
-const CIEC_LINT func_REAL_TRUNC_LINT(const CIEC_REAL &paIN) {
+CIEC_LINT func_REAL_TRUNC_LINT(const CIEC_REAL &paIN) {
   return func_TRUNC<CIEC_LINT>(paIN);
 }
 
-const CIEC_USINT func_REAL_TRUNC_USINT(const CIEC_REAL &paIN) {
+CIEC_USINT func_REAL_TRUNC_USINT(const CIEC_REAL &paIN) {
   return func_TRUNC<CIEC_USINT>(paIN);
 }
 
-const CIEC_UINT func_REAL_TRUNC_UINT(const CIEC_REAL &paIN) {
+CIEC_UINT func_REAL_TRUNC_UINT(const CIEC_REAL &paIN) {
   return func_TRUNC<CIEC_UINT>(paIN);
 }
 
-const CIEC_UDINT func_REAL_TRUNC_UDINT(const CIEC_REAL &paIN) {
+CIEC_UDINT func_REAL_TRUNC_UDINT(const CIEC_REAL &paIN) {
   return func_TRUNC<CIEC_UDINT>(paIN);
 }
 
-const CIEC_ULINT func_REAL_TRUNC_ULINT(const CIEC_REAL &paIN) {
+CIEC_ULINT func_REAL_TRUNC_ULINT(const CIEC_REAL &paIN) {
   return func_TRUNC<CIEC_ULINT>(paIN);
 }
 
-const CIEC_SINT func_TRUNC_SINT(const CIEC_LREAL &paIN) {
+CIEC_SINT func_TRUNC_SINT(const CIEC_LREAL &paIN) {
   return func_TRUNC<CIEC_SINT>(paIN);
 }
 
-const CIEC_INT func_TRUNC_INT(const CIEC_LREAL &paIN) {
+CIEC_INT func_TRUNC_INT(const CIEC_LREAL &paIN) {
   return func_TRUNC<CIEC_INT>(paIN);
 }
 
-const CIEC_DINT func_TRUNC_DINT(const CIEC_LREAL &paIN) {
+CIEC_DINT func_TRUNC_DINT(const CIEC_LREAL &paIN) {
   return func_TRUNC<CIEC_DINT>(paIN);
 }
 
-const CIEC_LINT func_TRUNC_LINT(const CIEC_LREAL &paIN) {
+CIEC_LINT func_TRUNC_LINT(const CIEC_LREAL &paIN) {
   return func_TRUNC<CIEC_LINT>(paIN);
 }
 
-const CIEC_USINT func_TRUNC_USINT(const CIEC_LREAL &paIN) {
+CIEC_USINT func_TRUNC_USINT(const CIEC_LREAL &paIN) {
   return func_TRUNC<CIEC_USINT>(paIN);
 }
 
-const CIEC_UINT func_TRUNC_UINT(const CIEC_LREAL &paIN) {
+CIEC_UINT func_TRUNC_UINT(const CIEC_LREAL &paIN) {
   return func_TRUNC<CIEC_UINT>(paIN);
 }
 
-const CIEC_UDINT func_TRUNC_UDINT(const CIEC_LREAL &paIN) {
+CIEC_UDINT func_TRUNC_UDINT(const CIEC_LREAL &paIN) {
   return func_TRUNC<CIEC_UDINT>(paIN);
 }
 
-const CIEC_ULINT func_TRUNC_ULINT(const CIEC_LREAL &paIN) {
+CIEC_ULINT func_TRUNC_ULINT(const CIEC_LREAL &paIN) {
   return func_TRUNC<CIEC_ULINT>(paIN);
 }
 
-const CIEC_SINT func_LREAL_TRUNC_SINT(const CIEC_LREAL &paIN) {
+CIEC_SINT func_LREAL_TRUNC_SINT(const CIEC_LREAL &paIN) {
   return func_TRUNC<CIEC_SINT>(paIN);
 }
 
-const CIEC_INT func_LREAL_TRUNC_INT(const CIEC_LREAL &paIN) {
+CIEC_INT func_LREAL_TRUNC_INT(const CIEC_LREAL &paIN) {
   return func_TRUNC<CIEC_INT>(paIN);
 }
 
-const CIEC_DINT func_LREAL_TRUNC_DINT(const CIEC_LREAL &paIN) {
+CIEC_DINT func_LREAL_TRUNC_DINT(const CIEC_LREAL &paIN) {
   return func_TRUNC<CIEC_DINT>(paIN);
 }
 
-const CIEC_LINT func_LREAL_TRUNC_LINT(const CIEC_LREAL &paIN) {
+CIEC_LINT func_LREAL_TRUNC_LINT(const CIEC_LREAL &paIN) {
   return func_TRUNC<CIEC_LINT>(paIN);
 }
 
-const CIEC_USINT func_LREAL_TRUNC_USINT(const CIEC_LREAL &paIN) {
+CIEC_USINT func_LREAL_TRUNC_USINT(const CIEC_LREAL &paIN) {
   return func_TRUNC<CIEC_USINT>(paIN);
 }
 
-const CIEC_UINT func_LREAL_TRUNC_UINT(const CIEC_LREAL &paIN) {
+CIEC_UINT func_LREAL_TRUNC_UINT(const CIEC_LREAL &paIN) {
   return func_TRUNC<CIEC_UINT>(paIN);
 }
 
-const CIEC_UDINT func_LREAL_TRUNC_UDINT(const CIEC_LREAL &paIN) {
+CIEC_UDINT func_LREAL_TRUNC_UDINT(const CIEC_LREAL &paIN) {
   return func_TRUNC<CIEC_UDINT>(paIN);
 }
 
-const CIEC_ULINT func_LREAL_TRUNC_ULINT(const CIEC_LREAL &paIN) {
+CIEC_ULINT func_LREAL_TRUNC_ULINT(const CIEC_LREAL &paIN) {
   return func_TRUNC<CIEC_ULINT>(paIN);
 }
 
-const CIEC_TIME func_ADD_TIME(const CIEC_TIME &paIN1, const CIEC_TIME &paIN2) {
+CIEC_TIME func_ADD_TIME(const CIEC_TIME &paIN1, const CIEC_TIME &paIN2) {
   return func_ADD(paIN1, paIN2);
 }
 
-const CIEC_TIME_OF_DAY func_ADD_TOD_TIME(const CIEC_TIME_OF_DAY& paIN1, const CIEC_TIME& paIN2){
+CIEC_TIME_OF_DAY func_ADD_TOD_TIME(const CIEC_TIME_OF_DAY& paIN1, const CIEC_TIME& paIN2){
   return CIEC_TIME_OF_DAY(static_cast<CIEC_TIME_OF_DAY::TValueType>(paIN1) + static_cast<CIEC_TIME::TValueType>(paIN2));
 }
 
-const CIEC_DATE_AND_TIME func_ADD_DT_TIME(const CIEC_DATE_AND_TIME& paIN1, const CIEC_TIME& paIN2){
+CIEC_DATE_AND_TIME func_ADD_DT_TIME(const CIEC_DATE_AND_TIME& paIN1, const CIEC_TIME& paIN2){
   return CIEC_DATE_AND_TIME(static_cast<CIEC_DATE_AND_TIME::TValueType>(paIN1) + static_cast<CIEC_TIME::TValueType>(paIN2));
 }
 
-const CIEC_TIME func_SUB_TIME(const CIEC_TIME &paIN1, const CIEC_TIME &paIN2) {
+CIEC_TIME func_SUB_TIME(const CIEC_TIME &paIN1, const CIEC_TIME &paIN2) {
   return func_SUB(paIN1, paIN2);
 }
 
-const CIEC_TIME_OF_DAY func_SUB_TOD_TIME(const CIEC_TIME_OF_DAY& paIN1, const CIEC_TIME& paIN2){
+CIEC_TIME_OF_DAY func_SUB_TOD_TIME(const CIEC_TIME_OF_DAY& paIN1, const CIEC_TIME& paIN2){
   return CIEC_TIME_OF_DAY(static_cast<CIEC_TIME_OF_DAY::TValueType>(paIN1) - static_cast<CIEC_TIME::TValueType>(paIN2));
 }
 
-const CIEC_DATE_AND_TIME func_SUB_DT_TIME(const CIEC_DATE_AND_TIME& paIN1, const CIEC_TIME& paIN2){
+CIEC_DATE_AND_TIME func_SUB_DT_TIME(const CIEC_DATE_AND_TIME& paIN1, const CIEC_TIME& paIN2){
   return CIEC_DATE_AND_TIME(static_cast<CIEC_DATE_AND_TIME::TValueType>(paIN1) - static_cast<CIEC_TIME::TValueType>(paIN2));
 }
 
-const CIEC_TIME func_SUB_DT_DT(const CIEC_DATE_AND_TIME& paIN1, const CIEC_DATE_AND_TIME& paIN2){
+CIEC_TIME func_SUB_DT_DT(const CIEC_DATE_AND_TIME& paIN1, const CIEC_DATE_AND_TIME& paIN2){
   return CIEC_TIME(static_cast<CIEC_DATE_AND_TIME::TValueType>(paIN1) - static_cast<TForteUInt64>(paIN2));
 }
 
-const CIEC_TIME func_SUB_TOD_TOD(const CIEC_TIME_OF_DAY &paIN1, const CIEC_TIME_OF_DAY &paIN2){
+CIEC_TIME func_SUB_TOD_TOD(const CIEC_TIME_OF_DAY &paIN1, const CIEC_TIME_OF_DAY &paIN2){
   return CIEC_TIME(static_cast<CIEC_TIME_OF_DAY::TValueType>(paIN1) - static_cast<CIEC_TIME_OF_DAY::TValueType>(paIN2));
 }
 
-const CIEC_TIME func_SUB_DATE_DATE(const CIEC_DATE &paIN1, const CIEC_DATE &paIN2){
+CIEC_TIME func_SUB_DATE_DATE(const CIEC_DATE &paIN1, const CIEC_DATE &paIN2){
   return CIEC_TIME(static_cast<CIEC_DATE::TValueType>(paIN1) - static_cast<CIEC_DATE::TValueType>(paIN2));
 }
 
-const CIEC_DATE_AND_TIME func_CONCAT_DATE_TOD(const CIEC_DATE& paIN1, const CIEC_TIME_OF_DAY& paIN2){
+CIEC_DATE_AND_TIME func_CONCAT_DATE_TOD(const CIEC_DATE& paIN1, const CIEC_TIME_OF_DAY& paIN2){
   CIEC_DATE_AND_TIME retVal;
 
   struct tm pstTime; 
@@ -197,7 +197,7 @@ const CIEC_DATE_AND_TIME func_CONCAT_DATE_TOD(const CIEC_DATE& paIN1, const CIEC
   return retVal;
 }
 
-const CIEC_DATE_AND_TIME func_CONCAT_DT(const CIEC_ANY_INT &YEAR, const CIEC_ANY_INT &MONTH, const CIEC_ANY_INT &DAY, const CIEC_ANY_INT &HOUR, const CIEC_ANY_INT &MINUTE, const CIEC_ANY_INT &SECOND, const CIEC_ANY_INT &MILLISECOND) {
+CIEC_DATE_AND_TIME func_CONCAT_DT(const CIEC_ANY_INT &YEAR, const CIEC_ANY_INT &MONTH, const CIEC_ANY_INT &DAY, const CIEC_ANY_INT &HOUR, const CIEC_ANY_INT &MINUTE, const CIEC_ANY_INT &SECOND, const CIEC_ANY_INT &MILLISECOND) {
   struct tm concatTime {};
   if(YEAR.isSigned()) {
     concatTime.tm_year = static_cast<int>(YEAR.getSignedValue() - 1900);
@@ -246,7 +246,7 @@ const CIEC_DATE_AND_TIME func_CONCAT_DT(const CIEC_ANY_INT &YEAR, const CIEC_ANY
   return retVal;
 }
 
-const CIEC_TIME_OF_DAY func_CONCAT_TOD(const CIEC_ANY_INT &HOUR, const CIEC_ANY_INT &MINUTE, const CIEC_ANY_INT &SECOND, const CIEC_ANY_INT &MILLISECOND) {
+CIEC_TIME_OF_DAY func_CONCAT_TOD(const CIEC_ANY_INT &HOUR, const CIEC_ANY_INT &MINUTE, const CIEC_ANY_INT &SECOND, const CIEC_ANY_INT &MILLISECOND) {
   // Only unsigned representations need to be checked, as negative signed number will be large positive unsigned numbers, outside the allowed range
   if (HOUR.getUnsignedValue() > 23) {
     DEVLOG_ERROR("CONCAT_TOD HOUR outside of valid range");
@@ -271,47 +271,47 @@ const CIEC_TIME_OF_DAY func_CONCAT_TOD(const CIEC_ANY_INT &HOUR, const CIEC_ANY_
   return CIEC_TIME_OF_DAY(hour + minute + second + millisecond);
 }
 
-const CIEC_DATE func_CONCAT_DATE(const CIEC_ANY_INT &YEAR, const CIEC_ANY_INT &MONTH, const CIEC_ANY_INT &DAY) {
+CIEC_DATE func_CONCAT_DATE(const CIEC_ANY_INT &YEAR, const CIEC_ANY_INT &MONTH, const CIEC_ANY_INT &DAY) {
   return func_DT_TO_DATE(func_CONCAT_DT(YEAR, MONTH, DAY, CIEC_LINT(0), CIEC_LINT(0), CIEC_LINT(0), CIEC_LINT(0)));
 }
 
-const CIEC_LTIME func_ADD_LTIME(const CIEC_LTIME &paIN1, const CIEC_LTIME &paIN2) {
+CIEC_LTIME func_ADD_LTIME(const CIEC_LTIME &paIN1, const CIEC_LTIME &paIN2) {
   return func_ADD(paIN1, paIN2);
 }
 
-const CIEC_LTIME_OF_DAY func_ADD_LTOD_LTIME(const CIEC_LTIME_OF_DAY& paIN1, const CIEC_LTIME& paIN2){
+CIEC_LTIME_OF_DAY func_ADD_LTOD_LTIME(const CIEC_LTIME_OF_DAY& paIN1, const CIEC_LTIME& paIN2){
   return CIEC_LTIME_OF_DAY(static_cast<TForteUInt64>(paIN1) + static_cast<TForteUInt64>(paIN2));
 }
 
-const CIEC_LDATE_AND_TIME func_ADD_LDT_LTIME(const CIEC_LDATE_AND_TIME& paIN1, const CIEC_LTIME& paIN2){
+CIEC_LDATE_AND_TIME func_ADD_LDT_LTIME(const CIEC_LDATE_AND_TIME& paIN1, const CIEC_LTIME& paIN2){
   return CIEC_LDATE_AND_TIME(static_cast<TForteUInt64>(paIN1) + static_cast<TForteUInt64>(paIN2));
 }
 
-const CIEC_LTIME func_SUB_LTIME(const CIEC_LTIME &paIN1, const CIEC_LTIME &paIN2) {
+CIEC_LTIME func_SUB_LTIME(const CIEC_LTIME &paIN1, const CIEC_LTIME &paIN2) {
   return func_SUB(paIN1, paIN2);
 }
 
-const CIEC_LTIME_OF_DAY func_SUB_LTOD_LTIME(const CIEC_LTIME_OF_DAY& paIN1, const CIEC_LTIME& paIN2){
+CIEC_LTIME_OF_DAY func_SUB_LTOD_LTIME(const CIEC_LTIME_OF_DAY& paIN1, const CIEC_LTIME& paIN2){
   return CIEC_LTIME_OF_DAY(static_cast<TForteUInt64>(paIN1) - static_cast<TForteUInt64>(paIN2));
 }
 
-const CIEC_LDATE_AND_TIME func_SUB_LDT_LTIME(const CIEC_LDATE_AND_TIME& paIN1, const CIEC_LTIME& paIN2){
+CIEC_LDATE_AND_TIME func_SUB_LDT_LTIME(const CIEC_LDATE_AND_TIME& paIN1, const CIEC_LTIME& paIN2){
   return CIEC_LDATE_AND_TIME(static_cast<TForteUInt64>(paIN1) - static_cast<TForteUInt64>(paIN2));
 }
 
-const CIEC_LTIME func_SUB_LDT_LDT(const CIEC_LDATE_AND_TIME& paIN1, const CIEC_LDATE_AND_TIME& paIN2){
+CIEC_LTIME func_SUB_LDT_LDT(const CIEC_LDATE_AND_TIME& paIN1, const CIEC_LDATE_AND_TIME& paIN2){
   return CIEC_LTIME(static_cast<TForteUInt64>(paIN1) - static_cast<TForteUInt64>(paIN2));
 }
 
-const CIEC_LTIME func_SUB_LTOD_LTOD(const CIEC_LTIME_OF_DAY &paIN1, const CIEC_LTIME_OF_DAY &paIN2){
+CIEC_LTIME func_SUB_LTOD_LTOD(const CIEC_LTIME_OF_DAY &paIN1, const CIEC_LTIME_OF_DAY &paIN2){
   return CIEC_LTIME(static_cast<TForteUInt64>(paIN1) - static_cast<TForteUInt64>(paIN2));
 }
 
-const CIEC_LTIME func_SUB_LDATE_LDATE(const CIEC_LDATE &paIN1, const CIEC_LDATE &paIN2){
+CIEC_LTIME func_SUB_LDATE_LDATE(const CIEC_LDATE &paIN1, const CIEC_LDATE &paIN2){
   return CIEC_LTIME(static_cast<TForteUInt64>(paIN1) - static_cast<TForteUInt64>(paIN2));
 }
 
-const CIEC_LDATE_AND_TIME func_CONCAT_LDATE_LTOD(const CIEC_LDATE& paIN1, const CIEC_LTIME_OF_DAY& paIN2){
+CIEC_LDATE_AND_TIME func_CONCAT_LDATE_LTOD(const CIEC_LDATE& paIN1, const CIEC_LTIME_OF_DAY& paIN2){
   CIEC_LDATE_AND_TIME retVal;
 
   struct tm pstTime;
@@ -326,7 +326,7 @@ const CIEC_LDATE_AND_TIME func_CONCAT_LDATE_LTOD(const CIEC_LDATE& paIN1, const 
   return retVal;
 }
 
-const CIEC_LDATE_AND_TIME func_CONCAT_LDT(const CIEC_ANY_INT &YEAR, const CIEC_ANY_INT &MONTH, const CIEC_ANY_INT &DAY, const CIEC_ANY_INT &HOUR, const CIEC_ANY_INT &MINUTE, const CIEC_ANY_INT &SECOND, const CIEC_ANY_INT &MILLISECOND) {
+CIEC_LDATE_AND_TIME func_CONCAT_LDT(const CIEC_ANY_INT &YEAR, const CIEC_ANY_INT &MONTH, const CIEC_ANY_INT &DAY, const CIEC_ANY_INT &HOUR, const CIEC_ANY_INT &MINUTE, const CIEC_ANY_INT &SECOND, const CIEC_ANY_INT &MILLISECOND) {
   struct tm concatTime{};
 
   if(YEAR.isSigned()) {
@@ -376,11 +376,11 @@ const CIEC_LDATE_AND_TIME func_CONCAT_LDT(const CIEC_ANY_INT &YEAR, const CIEC_A
   return retVal;
 }
 
-const CIEC_LDATE func_CONCAT_LDATE(const CIEC_ANY_INT &YEAR, const CIEC_ANY_INT &MONTH, const CIEC_ANY_INT &DAY) {
+CIEC_LDATE func_CONCAT_LDATE(const CIEC_ANY_INT &YEAR, const CIEC_ANY_INT &MONTH, const CIEC_ANY_INT &DAY) {
   return func_LDT_TO_LDATE(func_CONCAT_DT(YEAR, MONTH, DAY, CIEC_LINT(0), CIEC_LINT(0), CIEC_LINT(0), CIEC_LINT(0)));
 }
 
-const CIEC_LTIME_OF_DAY func_CONCAT_LTOD(const CIEC_ANY_INT &HOUR, const CIEC_ANY_INT &MINUTE, const CIEC_ANY_INT &SECOND, const CIEC_ANY_INT &MILLISECOND) {
+CIEC_LTIME_OF_DAY func_CONCAT_LTOD(const CIEC_ANY_INT &HOUR, const CIEC_ANY_INT &MINUTE, const CIEC_ANY_INT &SECOND, const CIEC_ANY_INT &MILLISECOND) {
   // Only unsigned representations need to be checked, as negative signed number will be large positive unsigned numbers, outside the allowed range
   if (HOUR.getUnsignedValue() > 23) {
     DEVLOG_ERROR("CONCAT_TOD HOUR outside of valid range");
@@ -405,11 +405,11 @@ const CIEC_LTIME_OF_DAY func_CONCAT_LTOD(const CIEC_ANY_INT &HOUR, const CIEC_AN
   return CIEC_LTIME_OF_DAY(hour + minute + second + millisecond);
 }
 
-const CIEC_TIME func_NOW_MONOTONIC() {
+CIEC_TIME func_NOW_MONOTONIC() {
   return CIEC_TIME(getNanoSecondsMonotonic());
 }
 
-const CIEC_DATE_AND_TIME func_NOW() {
+CIEC_DATE_AND_TIME func_NOW() {
   return CIEC_DATE_AND_TIME(getNanoSecondsRealtime());
 }
 

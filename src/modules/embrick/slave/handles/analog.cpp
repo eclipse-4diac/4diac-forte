@@ -39,6 +39,6 @@ bool EmbrickAnalogSlaveHandle::equal(unsigned char* paOldBuffer) {
 }
 
 const CIEC_DWORD EmbrickAnalogSlaveHandle::getValue(const unsigned char* paBuffer) {
-  return *(paBuffer + mOffset) * 256 + *(paBuffer + mOffset + 1);
+  return CIEC_DWORD(*(paBuffer + mOffset) * 256 + *(paBuffer + mOffset + 1));
 }
 

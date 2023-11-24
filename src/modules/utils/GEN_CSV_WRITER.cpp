@@ -69,13 +69,11 @@ GEN_CSV_WRITER::~GEN_CSV_WRITER(){
 void GEN_CSV_WRITER::readInputData(TEventID paEI) {
   switch(paEI) {
     case scmEventINITID: {
-      RES_DATA_CON_CRITICAL_REGION();
       readData(0, *mDIs[0], mDIConns[0]);
       readData(1, *mDIs[1], mDIConns[1]);
       break;
     }
     case scmEventREQID: {
-      RES_DATA_CON_CRITICAL_REGION();
       readData(0, *mDIs[0], mDIConns[0]);
       for(TPortId i = 2; i < mInterfaceSpec->mNumDIs; i++){
         readData(i, *mDIs[i], mDIConns[i]);
@@ -88,7 +86,6 @@ void GEN_CSV_WRITER::readInputData(TEventID paEI) {
 }
 
 void GEN_CSV_WRITER::writeOutputData(TEventID) {
-  RES_DATA_CON_CRITICAL_REGION();
   writeData(0, *mDOs[0], mDOConns[0]);
   writeData(1, *mDOs[1], mDOConns[1]);
 }
@@ -127,7 +124,7 @@ bool GEN_CSV_WRITER::createInterfaceSpec(const char *paConfigString, SFBInterfac
 void GEN_CSV_WRITER::openCSVFile() {
   QO() = CIEC_BOOL(false);
   if(nullptr == mCSVFile) {
-    mCSVFile = fopen(FILE_NAME().getStorage().c_str(), "w+");
+    mCSVFile = forte_fopen(FILE_NAME().getStorage().c_str(), "w+");
     if(nullptr != mCSVFile) {
       QO() = CIEC_BOOL(true);
       STATUS() = scmOK;
@@ -146,7 +143,7 @@ void GEN_CSV_WRITER::openCSVFile() {
 void GEN_CSV_WRITER::closeCSVFile() {
   QO() = CIEC_BOOL(false);
   if(nullptr != mCSVFile) {
-    if(0 == fclose(mCSVFile)) {
+    if(0 == forte_fclose(mCSVFile)) {
       STATUS() = scmOK;
       DEVLOG_INFO("[GEN_CSV_WRITER]: File %s successfully closed\n", FILE_NAME().getStorage().c_str());
     } else {
@@ -164,13 +161,13 @@ void GEN_CSV_WRITER::writeCSVFileLine() {
     for(TPortId i = 2; i < mInterfaceSpec->mNumDIs; i++) {
       int nLen = getDI(i)->unwrap().toString(acBuffer, scmWriteBufferSize);
       if(nLen >= 0) {
-        fwrite(acBuffer, 1, static_cast<size_t>(nLen), mCSVFile);
+        forte_fwrite(acBuffer, 1, static_cast<size_t>(nLen), mCSVFile);
       } else {
         DEVLOG_ERROR("[GEN_CSV_WRITER]: Can't get string value for input %d\n", i);
       }
-      fwrite("; ", 1, 2, mCSVFile);
+      forte_fwrite("; ", 1, 2, mCSVFile);
     }
-    fwrite("\n", 1, 1, mCSVFile);
+    forte_fwrite("\n", 1, 1, mCSVFile);
   } else {
     QO() = CIEC_BOOL(false);
     STATUS() = scmFileNotOpened;

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2016 - 2018 Johannes Messmer (admin@jomess.com), fortiss GmbH
+ * Copyright (c) 2016,2023 Johannes Messmer (admin@jomess.com), fortiss GmbH, OFFIS e.V.
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -9,13 +9,12 @@
  * Contributors:
  *   Johannes Messmer - initial API and implementation and/or initial documentation
  *   Jose Cabral - Cleaning of namespaces
+ *   Jörg Walter - more efficient pin handling
  *******************************************************************************/
 
 #ifndef SRC_MODULES_EMBRICK_HANDLER_PIN_H_
 #define SRC_MODULES_EMBRICK_HANDLER_PIN_H_
 
-#include <fstream>
-#include <sstream>
 #include <string>
 #include <forte_wstring.h>
 
@@ -43,11 +42,14 @@ class EmbrickPinHandler {
     const char* mError;
 
   private:
-    std::string mPinStr;
-    std::fstream mStream;
+    unsigned int mPinNumber = 0;
+    int mPinFd = -1;
+    bool didExport = false;
 
     void fail(const char* paReason);
 
+    static const char * const scmFailedToExportPin;
+    static const char * const scmFailedToSetDirection;
     static const char * const scmFailedToOpenFile;
     static const char * const scmFailedToWriteFile;
     static const char * const scmNotInitialised;

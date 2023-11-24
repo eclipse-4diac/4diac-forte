@@ -23,7 +23,3 @@ const CIEC_UINT::TValueType CIEC_UINT::scmMaxVal = std::numeric_limits<CIEC_UINT
 template CIEC_UINT &CIEC_UINT::operator=<>(const CIEC_ANY_INT &paValue);
 
 template CIEC_UINT &CIEC_UINT::operator=<>(const CIEC_USINT &paValue);
-
-size_t CIEC_UINT::getToStringBufferSize() const {
-  return sizeof("65535");
-}

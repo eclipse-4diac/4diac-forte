@@ -60,7 +60,7 @@ namespace forte {
           const TForteUInt8* cmSlaveConfigurationIO;
           TForteUInt8 mSlaveConfigurationIONum;
 
-          TIEC_ANYPtr getSlaveConfig(int paIndex) {
+          CIEC_ANY* getSlaveConfig(int paIndex) {
             return (isSocket()) ? getDO(cmSlaveConfigurationIO[paIndex]) : getDI(cmSlaveConfigurationIO[paIndex]);
           }
 

@@ -85,7 +85,6 @@ void FORTE_BOOL2BOOL::executeEvent(TEventID paEIID, CEventChainExecutionThread *
 void FORTE_BOOL2BOOL::readInputData(TEventID paEIID) {
   switch(paEIID) {
     case scmEventREQID: {
-      RES_DATA_CON_CRITICAL_REGION();
       readData(0, var_IN, conn_IN);
       break;
     }
@@ -97,7 +96,6 @@ void FORTE_BOOL2BOOL::readInputData(TEventID paEIID) {
 void FORTE_BOOL2BOOL::writeOutputData(TEventID paEIID) {
   switch(paEIID) {
     case scmEventCNFID: {
-      RES_DATA_CON_CRITICAL_REGION();
       writeData(0, var_OUT, conn_OUT);
       break;
     }

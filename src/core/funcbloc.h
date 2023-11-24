@@ -34,9 +34,11 @@
 #include "forte_st_iterator.h"
 #include "forte_st_util.h"
 
+
 class CEventChainExecutionThread;
 class CAdapter;
 class CTimerHandler;
+class CDevice;
 
 typedef CFunctionBlock *TFunctionBlockPtr;
 
@@ -55,8 +57,6 @@ namespace forte {
 }
 #endif //FORTE_SUPPORT_MONITORING
 
-
-#define RES_DATA_CON_CRITICAL_REGION()  CCriticalRegion criticalRegion(getResource().mResDataConSync)
 
 typedef CAdapter *TAdapterPtr;
 
@@ -132,12 +132,14 @@ class CFunctionBlock {
 
     /*!\brief Get the resource the function block is contained in.
      */
-    CResource& getResource() const {
-      return *mResource;
+    virtual CResource* getResource();
+    virtual const CResource* getResource() const {
+      return const_cast<CFunctionBlock *>(this)->getResource();
     }
 
-    CResource* getResourcePtr() const {
-      return mResource;
+    virtual CDevice* getDevice();
+    virtual const CDevice* getDevice() const {
+      return const_cast<CFunctionBlock *>(this)->getDevice();
     }
 
     forte::core::CFBContainer& getContainer() const {
