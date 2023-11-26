@@ -22,9 +22,9 @@
 #include "if2indco.h"
 #include "adapterconn.h"
 
-CCompositeFB::CCompositeFB(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec,
+CCompositeFB::CCompositeFB(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec *paInterfaceSpec,
                            CStringDictionary::TStringId paInstanceNameId, const SCFB_FBNData * paFBNData) :
-        CFunctionBlock(paSrcRes, paInterfaceSpec, paInstanceNameId),
+        CFunctionBlock(paContainer, paInterfaceSpec, paInstanceNameId),
         mIf2InDConns(nullptr),
         mIn2IfDConns(nullptr),
         cmFBNData(paFBNData),
@@ -195,7 +195,7 @@ bool CCompositeFB::createInternalFBs(){
     mInternalFBs = new TFunctionBlockPtr[cmFBNData->mNumFBs];
     for(unsigned int i = 0; i < cmFBNData->mNumFBs; ++i){
       const SCFB_FBInstanceData &cfbInstanceData(cmFBNData->mFBInstances[i]);
-      mInternalFBs[i] = CTypeLib::createFB(cfbInstanceData.mFBInstanceNameId, cfbInstanceData.mFBTypeNameId, getResource());
+      mInternalFBs[i] = CTypeLib::createFB(cfbInstanceData.mFBInstanceNameId, cfbInstanceData.mFBTypeNameId, getContainer());
       if(mInternalFBs[i] == nullptr){
         DEVLOG_ERROR("Cannot create internal FB (name: %s, type: %s) in CFB (type: %s)!\n",
             CStringDictionary::getInstance().get(cfbInstanceData.mFBInstanceNameId),

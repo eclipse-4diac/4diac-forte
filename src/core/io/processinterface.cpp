@@ -28,8 +28,8 @@ const CIEC_STRING ProcessInterface::scmMappedWrongDirectionInput("Mapped invalid
 const CIEC_STRING ProcessInterface::scmMappedWrongDataType("Mapped invalid data type."_STRING);
 
 
-ProcessInterface::ProcessInterface(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId) :
-    CProcessInterfaceBase(paSrcRes, paInterfaceSpec, paInstanceNameId), IOObserver() {
+ProcessInterface::ProcessInterface(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId) :
+    CProcessInterfaceBase(paContainer, paInterfaceSpec, paInstanceNameId), IOObserver() {
   mIsListening = false;
   mIsReady = false;
 }

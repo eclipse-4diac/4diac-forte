@@ -15,8 +15,8 @@
 
 using namespace forte::core::io;
 
-IOConfigFBBase::IOConfigFBBase(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId) :
-    CEventSourceFB(paSrcRes, paInterfaceSpec, paInstanceNameId) {
+IOConfigFBBase::IOConfigFBBase(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId) :
+    CEventSourceFB(paContainer, paInterfaceSpec, paInstanceNameId) {
 }
 
 IOConfigFBBase::~IOConfigFBBase() = default;

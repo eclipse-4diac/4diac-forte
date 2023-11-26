@@ -28,7 +28,7 @@ const SFBInterfaceSpec EMB_RES::scmFBInterfaceSpec = {
   0, nullptr
 };
 
-EMB_RES::EMB_RES(CStringDictionary::TStringId paInstanceNameId, CResource* paDevice) :
+EMB_RES::EMB_RES(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paDevice) :
     CResource(paDevice, nullptr, paInstanceNameId){
 }
 
@@ -36,7 +36,7 @@ bool EMB_RES::initialize() {
   if(!CResource::initialize()) {
     return false;
   }
-  addFB(CTypeLib::createFB(g_nStringIdSTART, g_nStringIdE_RESTART, this));
+  addFB(CTypeLib::createFB(g_nStringIdSTART, g_nStringIdE_RESTART, *this));
   return true;
 }
 

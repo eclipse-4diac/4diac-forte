@@ -43,8 +43,8 @@ const SFBInterfaceSpec FORTE_EBMaster::scmFBInterfaceSpec = {
   1, scmAdapterInstances
 };
 
-FORTE_EBMaster::FORTE_EBMaster(const CStringDictionary::TStringId paInstanceNameId, CResource *const paSrcRes) :
-    forte::core::io::IOConfigFBMultiMaster(paSrcRes, &scmFBInterfaceSpec, paInstanceNameId),
+FORTE_EBMaster::FORTE_EBMaster(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+    forte::core::io::IOConfigFBMultiMaster(paContainer, &scmFBInterfaceSpec, paInstanceNameId),
     var_BusInterface(1_UINT),
     var_BusSelectPin(49_UINT),
     var_BusInitSpeed(300000_UDINT),

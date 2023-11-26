@@ -54,7 +54,7 @@ class GEN_ADD : public CGenFunctionBlock<CFunctionBlock> {
 
     bool createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) override;
 
-    GEN_ADD(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
+    GEN_ADD(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
     ~GEN_ADD() override;
 };
 

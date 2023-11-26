@@ -16,8 +16,8 @@
 #include "resource.h"
 #include "criticalregion.h"
 
-CLuaCFB::CLuaCFB(CStringDictionary::TStringId paInstanceNameId, const CLuaCFBTypeEntry* paTypeEntry, SCFB_FBNData *paFbnData, CResource *paResource) :
-    CCompositeFB(paResource, paTypeEntry->getInterfaceSpec(), paInstanceNameId, paFbnData), mTypeEntry(paTypeEntry) {
+CLuaCFB::CLuaCFB(CStringDictionary::TStringId paInstanceNameId, const CLuaCFBTypeEntry* paTypeEntry, SCFB_FBNData *paFbnData, forte::core::CFBContainer &paContainer) :
+    CCompositeFB(paContainer, paTypeEntry->getInterfaceSpec(), paInstanceNameId, paFbnData), mTypeEntry(paTypeEntry) {
 }
 
 CLuaCFB::~CLuaCFB() = default;

@@ -46,12 +46,12 @@ CLuaAdapterTypeEntry* CLuaAdapterTypeEntry::createLuaAdapterTypeEntry(CStringDic
   return new CLuaAdapterTypeEntry(paTypeNameId, paLuaScriptAsString, interfaceSpec);
 }
 
-CAdapter* CLuaAdapterTypeEntry::createAdapterInstance(CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes, bool paIsPlug) {
-  CLuaEngine* luaEngine = paSrcRes->getLuaEngine();
+CAdapter* CLuaAdapterTypeEntry::createAdapterInstance(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer, bool paIsPlug) {
+  CLuaEngine* luaEngine = paContainer.getResource()->getLuaEngine();
   if(!luaEngine->load(this) && (!luaEngine->loadString(cmLuaScriptAsString))) {
     return nullptr;
   }
-  return new CLuaAdapter(paInstanceNameId, this, paIsPlug, paSrcRes);
+  return new CLuaAdapter(paInstanceNameId, this, paIsPlug, paContainer);
 }
 
 bool CLuaAdapterTypeEntry::initInterfaceSpec(SFBInterfaceSpec& paInterfaceSpec, CLuaEngine* paLuaEngine, int paIndex) {

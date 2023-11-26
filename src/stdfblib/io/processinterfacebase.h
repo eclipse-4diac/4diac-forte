@@ -19,10 +19,10 @@
 
 class CProcessInterfaceBase : public CEventSourceFB{
   public:
-    CProcessInterfaceBase(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec,
+    CProcessInterfaceBase(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec *paInterfaceSpec,
         const CStringDictionary::TStringId paInstanceNameId) :
-          CEventSourceFB(paSrcRes, paInterfaceSpec, paInstanceNameId){
-  setEventChainExecutor(paSrcRes->getResourceEventExecution());
+          CEventSourceFB(paContainer, paInterfaceSpec, paInstanceNameId){
+      setEventChainExecutor(getResource()->getResourceEventExecution());
     }
 
     ~CProcessInterfaceBase() override = default;

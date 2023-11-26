@@ -44,8 +44,8 @@ const SFBInterfaceSpec FORTE_E_DEMUX::scmFBInterfaceSpec = {
   0, nullptr
 };
 
-FORTE_E_DEMUX::FORTE_E_DEMUX(const CStringDictionary::TStringId paInstanceNameId, CResource *const paSrcRes) :
-    CBasicFB(paSrcRes, &scmFBInterfaceSpec, paInstanceNameId, nullptr),
+FORTE_E_DEMUX::FORTE_E_DEMUX(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+    CBasicFB(paContainer, &scmFBInterfaceSpec, paInstanceNameId, nullptr),
     conn_EO0(this, 0),
     conn_EO1(this, 1),
     conn_EO2(this, 2),

@@ -50,8 +50,8 @@ const SFBInterfaceSpec FORTE_F_SUB_DATE_DATE::scmFBInterfaceSpec = {
   0, nullptr
 };
 
-FORTE_F_SUB_DATE_DATE::FORTE_F_SUB_DATE_DATE(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) :
-    CFunctionBlock( paSrcRes, &scmFBInterfaceSpec, paInstanceNameId),
+FORTE_F_SUB_DATE_DATE::FORTE_F_SUB_DATE_DATE(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+    CFunctionBlock(paContainer, &scmFBInterfaceSpec, paInstanceNameId),
     var_IN1(CIEC_DATE(0)),
     var_IN2(CIEC_DATE(0)),
     var_OUT(CIEC_TIME(0)),

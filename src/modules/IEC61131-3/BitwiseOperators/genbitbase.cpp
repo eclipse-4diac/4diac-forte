@@ -33,8 +33,8 @@ const CStringDictionary::TStringId CGenBitBase::scmEventInputNames[] = {g_nStrin
 
 const CStringDictionary::TStringId CGenBitBase::scmEventOutputNames[] = { g_nStringIdCNF };
 
-CGenBitBase::CGenBitBase(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) :
-    CGenFunctionBlock<CFunctionBlock>(paSrcRes, paInstanceNameId), mDataInputNames(nullptr), mDataInputTypeIds(nullptr) {
+CGenBitBase::CGenBitBase(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+    CGenFunctionBlock<CFunctionBlock>(paContainer, paInstanceNameId), mDataInputNames(nullptr), mDataInputTypeIds(nullptr) {
 }
 
 CGenBitBase::~CGenBitBase(){

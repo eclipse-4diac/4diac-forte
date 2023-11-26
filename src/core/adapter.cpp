@@ -20,8 +20,8 @@
 #include "adapterconn.h"
 #include "ecet.h"
 
-CAdapter::CAdapter(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpecSocket, const CStringDictionary::TStringId paInstanceNameId, const SFBInterfaceSpec *paInterfaceSpecPlug, bool paIsPlug) :
-  CFunctionBlock(paSrcRes, (paIsPlug) ? paInterfaceSpecPlug : paInterfaceSpecSocket, paInstanceNameId),
+CAdapter::CAdapter(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec *paInterfaceSpecSocket, const CStringDictionary::TStringId paInstanceNameId, const SFBInterfaceSpec *paInterfaceSpecPlug, bool paIsPlug) :
+  CFunctionBlock(paContainer, (paIsPlug) ? paInterfaceSpecPlug : paInterfaceSpecSocket, paInstanceNameId),
   mParentAdapterListEventID(0),
   mIsPlug(paIsPlug),
   mPeer(nullptr),

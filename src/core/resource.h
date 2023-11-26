@@ -52,8 +52,7 @@ class CResource : public CFunctionBlock, public forte::core::CFBContainer{
      *  \param paObjectHandler    reference to object handler
      *  \param paFBData           Byte-array for resource-specific data
      */
-    CResource(CResource* paDevice, const SFBInterfaceSpec *paInterfaceSpec,
-        CStringDictionary::TStringId paInstanceNameId);
+    CResource(forte::core::CFBContainer &paDevice, const SFBInterfaceSpec *paInterfaceSpec, CStringDictionary::TStringId paInstanceNameId);
 
     ~CResource() override;
 

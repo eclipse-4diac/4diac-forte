@@ -59,8 +59,8 @@ const CStringDictionary::TStringId FORTE_FB_F_TRIG::scmInternalsTypeIds[] = {g_n
 const SInternalVarsInformation FORTE_FB_F_TRIG::scmInternalVars = {1, scmInternalsNames, scmInternalsTypeIds};
 
 
-FORTE_FB_F_TRIG::FORTE_FB_F_TRIG(CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) :
-    CSimpleFB(paSrcRes, &scmFBInterfaceSpec, paInstanceNameId, &scmInternalVars),
+FORTE_FB_F_TRIG::FORTE_FB_F_TRIG(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+    CSimpleFB(paContainer, &scmFBInterfaceSpec, paInstanceNameId, &scmInternalVars),
     var_MEM(CIEC_BOOL(true)),
     var_CLK(CIEC_BOOL(0)),
     var_Q(CIEC_BOOL(0)),

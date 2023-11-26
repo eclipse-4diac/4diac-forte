@@ -81,11 +81,9 @@ namespace forte {
          *
          * @param paNameListIt    iterator to the current position in the name list for the FB to be created (e.g., SubApp1.SubApp2.FBName, FBName2)
          * @param paTypeName      the type name of the FB to be created
-         * @param paRes           the resource this container is contained in and in which the fb should reside
          * @return response of the command execution as defined in IEC 61499
          */
-        EMGMResponse createFB(forte::core::TNameIdentifier::CIterator &paNameListIt,
-            CStringDictionary::TStringId paTypeName, CResource *paRes);
+        EMGMResponse createFB(forte::core::TNameIdentifier::CIterator &paNameListIt, CStringDictionary::TStringId paTypeName);
 
         /*!\brief Delete a FB instance with given name
          *

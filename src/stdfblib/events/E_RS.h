@@ -59,7 +59,7 @@ private:
   void setInitialValues() override;
 
 public:
-  FORTE_E_RS(CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
+  FORTE_E_RS(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
   CIEC_BOOL var_Q;
 

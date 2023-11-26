@@ -57,7 +57,7 @@ private:
   void writeOutputData(TEventID paEIID) override;
 
 public:
-  FORTE_F_SUB_TOD_TIME(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
+  FORTE_F_SUB_TOD_TIME(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
   CIEC_TIME_OF_DAY var_IN1;
   CIEC_TIME var_IN2;

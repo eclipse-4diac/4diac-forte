@@ -53,7 +53,7 @@ private:
   void setInitialValues() override;
 
 public:
-  FORTE_E_PERMIT(CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
+  FORTE_E_PERMIT(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
   CIEC_BOOL var_PERMIT;
 

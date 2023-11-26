@@ -21,12 +21,12 @@ namespace forte {
     namespace io {
 
 #define ADAPTER_CTOR_FOR_IO_MULTI(fbclass) \
- fbclass(CStringDictionary::TStringId paAdapterInstanceName, CResource *paSrcRes, bool paIsPlug) : \
- IOConfigFBMultiAdapter( scmSlaveConfigurationIO, scmSlaveConfigurationIONum, paSrcRes, &scmFBInterfaceSpecSocket, paAdapterInstanceName, &scmFBInterfaceSpecPlug, paIsPlug)
+ fbclass(CStringDictionary::TStringId paAdapterInstanceName, forte::core::CFBContainer &paContainer, bool paIsPlug) : \
+ IOConfigFBMultiAdapter( scmSlaveConfigurationIO, scmSlaveConfigurationIONum, paContainer, &scmFBInterfaceSpecSocket, paAdapterInstanceName, &scmFBInterfaceSpecPlug, paIsPlug)
 
       class IOConfigFBMultiAdapter : public CAdapter {
         public:
-          IOConfigFBMultiAdapter(const TForteUInt8* const paSlaveConfigurationIO, const TForteUInt8 paSlaveConfigurationIONum, CResource *paSrcRes,
+          IOConfigFBMultiAdapter(const TForteUInt8* const paSlaveConfigurationIO, const TForteUInt8 paSlaveConfigurationIONum, forte::core::CFBContainer &paContainer,
               const SFBInterfaceSpec *patInterfaceSpecSocket, const CStringDictionary::TStringId paInstanceNameId, const SFBInterfaceSpec *paInterfaceSpecPlug,
               bool paIsPlug);
           ~IOConfigFBMultiAdapter() override;

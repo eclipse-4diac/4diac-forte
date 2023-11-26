@@ -56,7 +56,7 @@ private:
   void setInitialValues() override;
 
 public:
-  FORTE_FB_TON(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
+  FORTE_FB_TON(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
   CIEC_BOOL var_IN;
   CIEC_TIME var_PT;

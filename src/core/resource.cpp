@@ -40,8 +40,8 @@
 
 #include <string>
 
-CResource::CResource(CResource* paDevice, const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId) :
-    CFunctionBlock(paDevice, paInterfaceSpec, paInstanceNameId), forte::core::CFBContainer(CStringDictionary::scmInvalidStringId, paDevice), // the fbcontainer of resources does not have a seperate name as it is stored in the resource
+CResource::CResource(forte::core::CFBContainer &paDevice, const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId) :
+    CFunctionBlock(paDevice, paInterfaceSpec, paInstanceNameId), forte::core::CFBContainer(CStringDictionary::scmInvalidStringId, &paDevice), // the fbcontainer of resources does not have a seperate name as it is stored in the resource
     mResourceEventExecution(CEventChainExecutionThread::createEcet()), mResIf2InConnections(nullptr)
 #ifdef FORTE_SUPPORT_MONITORING
 , mMonitoringHandler(*this)
@@ -52,7 +52,7 @@ CResource::CResource(CResource* paDevice, const SFBInterfaceSpec *paInterfaceSpe
 {}
 
 CResource::CResource(const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId) :
-    CFunctionBlock(nullptr, paInterfaceSpec, paInstanceNameId), forte::core::CFBContainer(CStringDictionary::scmInvalidStringId, nullptr), // the fbcontainer of resources does not have a seperate name as it is stored in the resource
+    CFunctionBlock(*this, paInterfaceSpec, paInstanceNameId), forte::core::CFBContainer(CStringDictionary::scmInvalidStringId, nullptr), // the fbcontainer of resources does not have a seperate name as it is stored in the resource
     mResourceEventExecution(nullptr), mResIf2InConnections(nullptr)
 #ifdef FORTE_SUPPORT_MONITORING
 , mMonitoringHandler(*this)
@@ -88,7 +88,7 @@ EMGMResponse CResource::executeMGMCommand(forte::core::SManagementCMD &paCommand
     switch (paCommand.mCMD){
       case EMGMCommandType::CreateFBInstance: {
         forte::core::TNameIdentifier::CIterator itRunner(paCommand.mFirstParam.begin());
-        retVal = createFB(itRunner, paCommand.mSecondParam.front(), this);
+        retVal = createFB(itRunner, paCommand.mSecondParam.front());
       }
         break;
       case EMGMCommandType::CreateFBType:

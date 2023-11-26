@@ -31,8 +31,8 @@ const CStringDictionary::TStringId GEN_E_MUX::scmDODataTypeIds[] = { g_nStringId
 
 const CStringDictionary::TStringId GEN_E_MUX::scmEventOutputNames[] = { g_nStringIdEO };
 
-GEN_E_MUX::GEN_E_MUX(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) :
-    CGenFunctionBlock<CFunctionBlock>(paSrcRes, paInstanceNameId), mEventInputNames(nullptr){
+GEN_E_MUX::GEN_E_MUX(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+    CGenFunctionBlock<CFunctionBlock>(paContainer, paInstanceNameId), mEventInputNames(nullptr){
 }
 
 GEN_E_MUX::~GEN_E_MUX(){

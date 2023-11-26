@@ -73,7 +73,7 @@ private:
   void setInitialValues() override;
 
 public:
-  FORTE_E_CTUD(CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
+  FORTE_E_CTUD(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
   CIEC_UINT var_PV;
 

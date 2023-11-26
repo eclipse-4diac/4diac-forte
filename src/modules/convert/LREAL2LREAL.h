@@ -56,7 +56,7 @@ private:
   void writeOutputData(TEventID paEIID) override;
 
 public:
-  FORTE_LREAL2LREAL(CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
+  FORTE_LREAL2LREAL(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
 
   CIEC_LREAL var_IN;

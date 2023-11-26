@@ -20,8 +20,8 @@ const char * const IOConfigFBMultiMaster::scmFailedToInitSlaves = "Failed to ini
 TMasterList IOConfigFBMultiMaster::mInstances;
 TForteUInt16 IOConfigFBMultiMaster::mInstancesIncrement = 0;
 
-IOConfigFBMultiMaster::IOConfigFBMultiMaster(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId) :
-    IOConfigFBController(paSrcRes, paInterfaceSpec, paInstanceNameId) {
+IOConfigFBMultiMaster::IOConfigFBMultiMaster(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId) :
+    IOConfigFBController(paContainer, paInterfaceSpec, paInstanceNameId) {
   mId = mInstancesIncrement++;
   mInstances.pushBack(this);
 }

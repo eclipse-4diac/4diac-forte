@@ -23,7 +23,7 @@ class GEN_SUBSCRIBE : public forte::com_infra::CCommFB {
     DECLARE_GENERIC_FIRMWARE_FB(GEN_SUBSCRIBE)
 
   public:
-    GEN_SUBSCRIBE(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
+    GEN_SUBSCRIBE(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
     ~GEN_SUBSCRIBE() override = default;
 
 };

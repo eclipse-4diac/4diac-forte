@@ -28,7 +28,7 @@ private:
 
   void executeEvent(TEventID paEIID, CEventChainExecutionThread * const paECET) override;
 public:
-  E_DELAY(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
+  E_DELAY(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
   ~E_DELAY() override = default;
 
 };

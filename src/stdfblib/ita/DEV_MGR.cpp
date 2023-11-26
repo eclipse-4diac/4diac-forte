@@ -581,9 +581,9 @@ void DEV_MGR::appendIdentifierName(CIEC_STRING& paDest, forte::core::TNameIdenti
   }
 }
 
-DEV_MGR::DEV_MGR(CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) :
-    CCommFB(paInstanceNameId, paSrcRes, forte::com_infra::e_Server),
-    mDevice(*paSrcRes->getDevice()) {
+DEV_MGR::DEV_MGR(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+    CCommFB(paInstanceNameId, paContainer, forte::com_infra::e_Server),
+    mDevice(*paContainer.getDevice()) {
 }
 
 bool DEV_MGR::initialize() {

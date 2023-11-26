@@ -30,8 +30,8 @@
 
 DEFINE_GENERIC_FIRMWARE_FB(GEN_ADD, g_nStringIdGEN_ADD)
 
-GEN_ADD::GEN_ADD(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) :
-    CGenFunctionBlock<CFunctionBlock>(paSrcRes, paInstanceNameId), mDInputs(0){
+GEN_ADD::GEN_ADD(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+    CGenFunctionBlock<CFunctionBlock>(paContainer, paInstanceNameId), mDInputs(0){
 }
 
 GEN_ADD::~GEN_ADD(){

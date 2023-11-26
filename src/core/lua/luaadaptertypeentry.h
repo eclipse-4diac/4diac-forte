@@ -40,7 +40,7 @@ private:
 public:
   static CLuaAdapterTypeEntry* createLuaAdapterTypeEntry(CStringDictionary::TStringId typeNameId, const std::string& paLuaScriptAsString);
 
-  CAdapter* createAdapterInstance(CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes, bool paIsPlug) override;
+  CAdapter* createAdapterInstance(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer, bool paIsPlug) override;
 
   const SFBInterfaceSpec* getSocketInterfaceSpec() const {
     return &mSocketInterfaceSpec;

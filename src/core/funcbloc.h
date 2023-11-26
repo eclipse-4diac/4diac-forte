@@ -44,8 +44,8 @@ typedef CFunctionBlock *TFunctionBlockPtr;
 
 namespace forte {
   namespace core {
-          class CFBContainer;
-     }
+    class CFBContainer;
+  }
 }
 
 #ifdef FORTE_SUPPORT_MONITORING
@@ -143,11 +143,7 @@ class CFunctionBlock {
     }
 
     forte::core::CFBContainer& getContainer() const {
-      return *mContainer;
-    }
-
-    void setContainer(forte::core::CFBContainer* container) {
-      mContainer = container;
+      return mContainer;
     }
 
     /*!\brief Get the timer of the device where the FB is contained.
@@ -450,21 +446,21 @@ class CFunctionBlock {
 
     /*!\brief The main constructor for a function block.
      *
-     * \param paSrcRes          pointer to the resource this function block is contained in (mainly necessary for management functions and service interfaces)
+     * \param paContainer      FB container this function block is contained in (mainly necessary for management functions and service interfaces)
      * \param paInterfaceSpec  const pointer to the interface spec
-     * \param paInstanceNameId   string id
-     * \param paFBConnData      Byte-array for fb-specific connection data. It will need space for the event output connections,
+     * \param paInstanceNameId string id
+     * \param paFBConnData     Byte-array for fb-specific connection data. It will need space for the event output connections,
      *                             data input connections, and data output connections, in that order. The space requirements are:
      *                               sizeof(TEventConnectionPtr) * Number of Event outputs +
      *                               sizeof(TDataConnectionPtr)  * Number of Data inputs +
      *                               sizeof(TDataConnectionPtr)  * Number of Data outputs
-     * \param paFBVarsData      Byte-array for fb-specific variable data. It will need space for the data inputs, data outputs, and adapters in that order.
+     * \param paFBVarsData    Byte-array for fb-specific variable data. It will need space for the data inputs, data outputs, and adapters in that order.
      *                             The space requirements are:
      *                               sizeof(CIEC_ANY)) * Number of Data inputs +
      *                               sizeof(CIEC_ANY)) * Number of Data outputs +
      *                               sizeof(TAdapterPtr) * ta_nNumAdapters
      */
-    CFunctionBlock(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec, CStringDictionary::TStringId paInstanceNameId);
+    CFunctionBlock(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec *paInterfaceSpec, CStringDictionary::TStringId paInstanceNameId);
 
     static TPortId getPortId(CStringDictionary::TStringId paPortNameId, TPortId paMaxPortNames, const CStringDictionary::TStringId *paPortNames);
 
@@ -684,8 +680,7 @@ class CFunctionBlock {
     void configureGenericDI(TPortId paDIPortId, const CIEC_ANY *paRefValue);
     void configureGenericDIO(TPortId paDIOPortId, const CIEC_ANY *paRefValue);
 
-    CResource *mResource; //!< A pointer to the resource containing the function block.
-    forte::core::CFBContainer *mContainer; //!< A pointer to the container containing the function block.
+    forte::core::CFBContainer &mContainer; //!< The container of this function block.
 
 #ifdef FORTE_SUPPORT_MONITORING
     void setupEventMonitoringData();
@@ -724,12 +719,12 @@ class CFunctionBlock {
 };
 
 #define FUNCTION_BLOCK_CTOR(fbclass) \
- fbclass(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) : \
- CFunctionBlock( paSrcRes, &scmFBInterfaceSpec, paInstanceNameId)
+ fbclass(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) : \
+ CFunctionBlock(paContainer, &scmFBInterfaceSpec, paInstanceNameId)
 
 #define FUNCTION_BLOCK_CTOR_WITH_BASE_CLASS(fbclass, fbBaseClass) \
- fbclass(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) : \
- fbBaseClass( paSrcRes, &scmFBInterfaceSpec, paInstanceNameId)
+ fbclass(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) : \
+ fbBaseClass(paContainer, &scmFBInterfaceSpec, paInstanceNameId)
 
 
 #ifdef OPTIONAL

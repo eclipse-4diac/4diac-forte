@@ -58,7 +58,7 @@ private:
   void writeOutputData(TEventID paEIID) override;
 
 public:
-  FORTE_F_CONCAT_DATE_TOD(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
+  FORTE_F_CONCAT_DATE_TOD(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
   CIEC_DATE var_IN1;
   CIEC_TIME_OF_DAY var_IN2;

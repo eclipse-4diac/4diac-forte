@@ -57,7 +57,7 @@ private:
   void writeOutputData(TEventID paEIID) override;
 
 public:
-  FORTE_F_LWORD_BCD_TO_ULINT(CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
+  FORTE_F_LWORD_BCD_TO_ULINT(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
 
   CIEC_LWORD var_IN;

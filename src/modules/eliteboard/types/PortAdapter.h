@@ -57,8 +57,8 @@ private:
 
 public:
   FORTE_PortAdapter(CStringDictionary::TStringId paAdapterInstanceName,
-                    CResource *paSrcRes, bool paIsPlug)
-      : CAdapter(paSrcRes, &scmFBInterfaceSpecSocket,
+                    forte::core::CFBContainer &paContainer, bool paIsPlug)
+      : CAdapter(paContainer, &scmFBInterfaceSpecSocket,
                  paAdapterInstanceName, &scmFBInterfaceSpecPlug,
                  paIsPlug){};
 

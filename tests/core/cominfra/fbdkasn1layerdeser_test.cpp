@@ -63,9 +63,10 @@
 using namespace std::string_literals;
 
 class CDeserTestMockCommFB : public forte::com_infra::CCommFB{
+
   public:
     CDeserTestMockCommFB(TForteUInt8 paNumRD, const CStringDictionary::TStringId * const paDODataTypeNames) :
-        forte::com_infra::CCommFB(CStringDictionary::scmInvalidStringId, &mResource, forte::com_infra::e_Publisher),
+        forte::com_infra::CCommFB(CStringDictionary::scmInvalidStringId, mResource, forte::com_infra::e_Publisher),
         mMockFBInterface(){
 
       mMockFBInterface.mEINames = nullptr;
@@ -98,7 +99,7 @@ class CDeserTestMockCommFB : public forte::com_infra::CCommFB{
 };
 
 const CStringDictionary::TStringId CDeserTestMockCommFB::scmInputTypes[] = { g_nStringIdBOOL, g_nStringIdBOOL };
-EMB_RES CDeserTestMockCommFB::mResource(CStringDictionary::scmInvalidStringId, nullptr);
+EMB_RES CDeserTestMockCommFB::mResource(CStringDictionary::scmInvalidStringId, mResource);
 
 BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
 

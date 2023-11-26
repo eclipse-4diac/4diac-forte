@@ -53,7 +53,7 @@ private:
   void setInitialValues() override;
 
 public:
-  FORTE_IE(CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
+  FORTE_IE(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
   CIEC_BOOL var_QI;
   CIEC_STRING var_PARAMS;

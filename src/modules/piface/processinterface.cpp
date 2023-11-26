@@ -12,10 +12,10 @@
 #include "processinterface.h"
 #include <extevhandlerhelper.h>
 
-CPiFaceProcessInterface::CPiFaceProcessInterface(CResource *paSrcRes,
+CPiFaceProcessInterface::CPiFaceProcessInterface(forte::core::CFBContainer &paContainer,
     const SFBInterfaceSpec *paInterfaceSpec,
     const CStringDictionary::TStringId paInstanceNameId) :
-    CProcessInterfaceBase(paSrcRes, paInterfaceSpec, paInstanceNameId),
+    CProcessInterfaceBase(paContainer, paInterfaceSpec, paInstanceNameId),
         mPin(0){
 }
 

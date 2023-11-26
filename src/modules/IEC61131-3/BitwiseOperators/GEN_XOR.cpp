@@ -23,8 +23,8 @@
 
 DEFINE_GENERIC_FIRMWARE_FB(GEN_XOR, g_nStringIdGEN_XOR)
 
-GEN_XOR::GEN_XOR(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) :
-    CGenBitBase(paInstanceNameId, paSrcRes){
+GEN_XOR::GEN_XOR(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+    CGenBitBase(paInstanceNameId, paContainer){
 }
 
 GEN_XOR::~GEN_XOR() = default;

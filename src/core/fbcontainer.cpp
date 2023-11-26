@@ -78,17 +78,16 @@ CDevice* CFBContainer::getDevice() {
 }
 
 
-EMGMResponse CFBContainer::createFB(forte::core::TNameIdentifier::CIterator &paNameListIt, CStringDictionary::TStringId paTypeName, CResource *paRes){
+EMGMResponse CFBContainer::createFB(forte::core::TNameIdentifier::CIterator &paNameListIt, CStringDictionary::TStringId paTypeName){
   EMGMResponse retval = EMGMResponse::InvalidState;
 
   if(paNameListIt.isLastEntry()){
     // test if the container does not contain any FB or a container with the same name
     if((nullptr == getFB(*paNameListIt)) && (nullptr == getFBContainer(*paNameListIt))){
-      CFunctionBlock *newFB = CTypeLib::createFB(*paNameListIt, paTypeName, paRes);
+      CFunctionBlock *newFB = CTypeLib::createFB(*paNameListIt, paTypeName, *this);
       if(nullptr != newFB){
         //we could create a FB now add it to the list of contained FBs
         addFB(newFB);
-        newFB->setContainer(this);
         retval = EMGMResponse::Ready;
       }
       else{
@@ -102,7 +101,7 @@ EMGMResponse CFBContainer::createFB(forte::core::TNameIdentifier::CIterator &paN
     if(nullptr != childCont){
       //remove the container from the name list
       ++paNameListIt;
-      retval = childCont->createFB(paNameListIt, paTypeName, paRes);
+      retval = childCont->createFB(paNameListIt, paTypeName);
     }
   }
   return retval;

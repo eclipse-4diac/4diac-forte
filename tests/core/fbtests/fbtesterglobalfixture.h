@@ -14,7 +14,7 @@
 
 #include <device.h>
 
-/**Global fixture for provding the resource and device needed for fb testing
+/**Global fixture for providing the resource and device needed for fb testing
  *
  */
 class CFBTestDataGlobalFixture{
@@ -23,8 +23,8 @@ class CFBTestDataGlobalFixture{
     CFBTestDataGlobalFixture();
     ~CFBTestDataGlobalFixture();
 
-    static CResource *getResource(){
-      return smTestRes;
+    static CResource &getResource(){
+      return *smTestRes;
     }
 
   private:

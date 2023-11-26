@@ -47,8 +47,8 @@ const SFBInterfaceSpec FORTE_FB_RANDOM::scmFBInterfaceSpec = {
   0, nullptr
 };
 
-FORTE_FB_RANDOM::FORTE_FB_RANDOM(const CStringDictionary::TStringId paInstanceNameId, CResource *const paSrcRes) :
-    CBasicFB(paSrcRes, &scmFBInterfaceSpec, paInstanceNameId, nullptr),
+FORTE_FB_RANDOM::FORTE_FB_RANDOM(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+    CBasicFB(paContainer, &scmFBInterfaceSpec, paInstanceNameId, nullptr),
     var_SEED(0_UINT),
     var_conn_VAL(var_VAL),
     conn_INITO(this, 0),

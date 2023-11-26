@@ -105,7 +105,7 @@ void CFBTestFixtureBase::performFBResetTests() {
   BOOST_CHECK_EQUAL(EMGMResponse::Ready, mFBUnderTest->changeFBExecutionState(EMGMCommandType::Stop));
   BOOST_CHECK_EQUAL(EMGMResponse::Ready, mFBUnderTest->changeFBExecutionState(EMGMCommandType::Reset));
 
-  CFunctionBlock *freshInstance = CTypeLib::createFB(mTypeId, mTypeId, getResource());
+  CFunctionBlock *freshInstance = CTypeLib::createFB(mTypeId, mTypeId, *getResource());
   BOOST_REQUIRE(freshInstance != nullptr);
 
   if(!mConfigString.empty()) {

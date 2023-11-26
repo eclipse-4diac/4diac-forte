@@ -50,8 +50,8 @@ const SFBInterfaceSpec FORTE_F_CONCAT_DATE_TOD::scmFBInterfaceSpec = {
   0, nullptr
 };
 
-FORTE_F_CONCAT_DATE_TOD::FORTE_F_CONCAT_DATE_TOD(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) :
-    CFunctionBlock( paSrcRes, &scmFBInterfaceSpec, paInstanceNameId),
+FORTE_F_CONCAT_DATE_TOD::FORTE_F_CONCAT_DATE_TOD(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+    CFunctionBlock(paContainer, &scmFBInterfaceSpec, paInstanceNameId),
     var_IN1(CIEC_DATE(0)),
     var_IN2(CIEC_TIME_OF_DAY(0)),
     var_OUT(CIEC_DATE_AND_TIME(0)),

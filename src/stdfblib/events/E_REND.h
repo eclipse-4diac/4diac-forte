@@ -54,7 +54,7 @@ private:
   void writeOutputData(TEventID paEIID) override;
 
 public:
-  FORTE_E_REND(CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
+  FORTE_E_REND(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
   CEventConnection conn_EO;
 

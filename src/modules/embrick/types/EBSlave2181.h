@@ -59,7 +59,7 @@ private:
   virtual void initHandles();
 
 public:
-  FORTE_EBSlave2181(CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
+  FORTE_EBSlave2181(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
   CIEC_BOOL var_QI;
   CIEC_WSTRING var_DigitalInput_1;

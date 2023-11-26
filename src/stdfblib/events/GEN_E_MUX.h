@@ -42,7 +42,7 @@ class GEN_E_MUX : public CGenFunctionBlock<CFunctionBlock>{
       return *static_cast<CIEC_UINT*>(getDO(0));
     }
 
-    GEN_E_MUX(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
+    GEN_E_MUX(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
     ~GEN_E_MUX() override;
 
 };

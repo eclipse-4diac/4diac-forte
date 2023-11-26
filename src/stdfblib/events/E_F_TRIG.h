@@ -52,7 +52,7 @@ private:
   void readInternal2InterfaceOutputData(TEventID paEOID) override;
 
 public:
-  FORTE_E_F_TRIG(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
+  FORTE_E_F_TRIG(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
   CIEC_BOOL var_QI;
   CEventConnection conn_EO;

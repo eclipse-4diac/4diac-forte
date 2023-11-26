@@ -37,8 +37,8 @@ const SFBInterfaceSpec FORTE_E_R_TRIG::scmFBInterfaceSpec = {
   0, nullptr
 };
 
-FORTE_E_R_TRIG::FORTE_E_R_TRIG(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) :
-    CCompositeFB(paSrcRes, &scmFBInterfaceSpec, paInstanceNameId, &scmFBNData),
+FORTE_E_R_TRIG::FORTE_E_R_TRIG(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+    CCompositeFB(paContainer, &scmFBInterfaceSpec, paInstanceNameId, &scmFBNData),
     var_QI(CIEC_BOOL(0)),
     conn_EO(this, 0),
     conn_QI(nullptr) {

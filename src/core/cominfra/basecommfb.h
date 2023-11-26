@@ -90,7 +90,7 @@ namespace forte {
       }
 
     protected:
-      CBaseCommFB(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes, forte::com_infra::EComServiceType paCommServiceType);
+      CBaseCommFB(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer, forte::com_infra::EComServiceType paCommServiceType);
 
       /*!\brief Extract the id and the parameter and the ID. The format is ID[PARAMS] where the opening and closing brackets are actually a opening and a closing brackets. They can be escaped using the $ sign.
        * The opening bracket should only be escaped if it's part of the ID (although not recommended).

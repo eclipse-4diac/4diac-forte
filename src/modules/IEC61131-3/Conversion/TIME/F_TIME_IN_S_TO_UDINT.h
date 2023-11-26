@@ -52,7 +52,7 @@ private:
   void setInitialValues() override;
 
 public:
-  FORTE_F_TIME_IN_S_TO_UDINT(CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
+  FORTE_F_TIME_IN_S_TO_UDINT(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
   CIEC_TIME var_IN;
 

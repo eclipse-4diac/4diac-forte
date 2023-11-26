@@ -43,7 +43,7 @@ const SFBInterfaceSpec FORTE_PLCnextAXLSEDO16::scmFBInterfaceSpec = {
   2, scmAdapterInstances
 };
 
-FORTE_PLCnextAXLSEDO16::FORTE_PLCnextAXLSEDO16(const CStringDictionary::TStringId paInstanceNameId, CResource *const paSrcRes) :
+FORTE_PLCnextAXLSEDO16::FORTE_PLCnextAXLSEDO16(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
    PLCnextSlaveHandler (PLCnextSlaveHandler::Output, pa_poSrcRes, &scm_stFBInterfaceSpec, pa_nInstanceNameId, m_anFBConnData, m_anFBVarsData),
     var_DO_1(""_STRING),
     var_conn_QO(var_QO),

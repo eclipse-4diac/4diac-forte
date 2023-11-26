@@ -22,7 +22,7 @@ namespace forte {
 
       class IOConfigFBBase : public CEventSourceFB {
         public:
-          IOConfigFBBase(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId);
+          IOConfigFBBase(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId);
           ~IOConfigFBBase() override;
       };
 

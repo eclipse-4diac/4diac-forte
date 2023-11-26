@@ -65,8 +65,8 @@ public:
   }
 
 public:
-  FORTE_ATimeOut(CStringDictionary::TStringId paAdapterInstanceName, CResource *paSrcRes, bool paIsPlug) :
-      CAdapter(paSrcRes, &scmFBInterfaceSpecSocket, paAdapterInstanceName, &scmFBInterfaceSpecPlug, paIsPlug) {
+  FORTE_ATimeOut(CStringDictionary::TStringId paAdapterInstanceName, forte::core::CFBContainer &paContainer, bool paIsPlug) :
+      CAdapter(paContainer, &scmFBInterfaceSpecSocket, paAdapterInstanceName, &scmFBInterfaceSpecPlug, paIsPlug) {
    };
 
   virtual ~FORTE_ATimeOut() = default;

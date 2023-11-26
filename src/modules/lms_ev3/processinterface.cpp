@@ -47,8 +47,8 @@ const char * const CLMSEV3ProcessInterface::scmCouldNotWrite = "Could not write"
 
 //TODO: QO is not changed in this file, should be changed according to the execution?
 
-CLMSEV3ProcessInterface::CLMSEV3ProcessInterface(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId) :
-                                                        CProcessInterfaceBase(paSrcRes, paInterfaceSpec, paInstanceNameId){
+CLMSEV3ProcessInterface::CLMSEV3ProcessInterface(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId) :
+                                                        CProcessInterfaceBase(paContainer, paInterfaceSpec, paInstanceNameId){
   mFile.rdbuf()->pubsetbuf(0, 0); //disable buffer to avoid latency
   mnTypeOfIO = UNDEFINED;
   mstButtonVariables = 0;

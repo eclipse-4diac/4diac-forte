@@ -55,8 +55,8 @@ const SFBInterfaceSpec FORTE_TIME2TIME::scmFBInterfaceSpec = {
 };
 
 
-FORTE_TIME2TIME::FORTE_TIME2TIME(CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) :
-    CSimpleFB(paSrcRes, &scmFBInterfaceSpec, paInstanceNameId, nullptr),
+FORTE_TIME2TIME::FORTE_TIME2TIME(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+    CSimpleFB(paContainer, &scmFBInterfaceSpec, paInstanceNameId, nullptr),
     var_IN(CIEC_TIME(0)),
     var_OUT(CIEC_TIME(0)),
     var_conn_OUT(var_OUT),

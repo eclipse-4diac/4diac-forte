@@ -56,7 +56,7 @@ private:
   void setInitialValues() override;
 
 public:
-  FORTE_RT_E_SPLIT(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
+  FORTE_RT_E_SPLIT(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
   CIEC_BOOL var_QI;
   CIEC_TIME var_Tmin;

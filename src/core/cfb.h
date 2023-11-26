@@ -97,13 +97,12 @@ class CCompositeFB: public CFunctionBlock {
     /*!\brief The main constructor for a composite function block.
      *
      * The interface of the constructor has been extended from the basic FB's interface with the following values:
-     * \param paSrcRes         pointer to including resource
-     * \param paInterfaceSpec pointer to interface specification
-     * \param paInstanceNameId  StringId of instance name
-     * \param paFBNData       const pointer to description of internal structure of FB (FBs, Connections, ...)
-     * \param paFBData         ByteArray for FB-specific data (DI, DO, int. Vars, ...)
+     * \param paContainer      reference to the container of this CFB
+     * \param paInterfaceSpec  pointer to interface specification
+     * \param paInstanceNameId StringId of instance name
+     * \param paFBNData        const pointer to description of internal structure of FB (FBs, Connections, ...)
      */
-    CCompositeFB(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec,
+    CCompositeFB(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec *paInterfaceSpec,
                  CStringDictionary::TStringId paInstanceNameId,
                  const SCFB_FBNData * paFBNData);
 
@@ -171,7 +170,7 @@ class CCompositeFB: public CFunctionBlock {
 };
 
 #define COMPOSITE_FUNCTION_BLOCK_CTOR(fbclass) \
- fbclass(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) : \
- CCompositeFB(paSrcRes, &scmFBInterfaceSpec, paInstanceNameId, &scmFBNData)
+ fbclass(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) : \
+ CCompositeFB(paContainer, &scmFBInterfaceSpec, paInstanceNameId, &scmFBNData)
 
 #endif /*_CFB_H_*/

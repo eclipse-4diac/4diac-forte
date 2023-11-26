@@ -50,8 +50,8 @@ const SFBInterfaceSpec FORTE_F_MID::scmFBInterfaceSpec = {
   0, nullptr
 };
 
-FORTE_F_MID::FORTE_F_MID(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) :
-    CFunctionBlock( paSrcRes, &scmFBInterfaceSpec, paInstanceNameId),
+FORTE_F_MID::FORTE_F_MID(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+    CFunctionBlock(paContainer, &scmFBInterfaceSpec, paInstanceNameId),
     var_IN(CIEC_ANY_STRING_VARIANT()),
     var_L(CIEC_ANY_INT_VARIANT()),
     var_P(CIEC_ANY_INT_VARIANT()),

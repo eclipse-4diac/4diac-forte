@@ -37,8 +37,8 @@ const CStringDictionary::TStringId CCommFB::scmRequesterEventOutputNameIds[2] = 
 const CStringDictionary::TStringId CCommFB::scmResponderEventInputNameIds[2] = { g_nStringIdINIT, g_nStringIdRSP };
 const CStringDictionary::TStringId CCommFB::scmResponderEventOutputNameIds[2] = { g_nStringIdINITO, g_nStringIdIND };
 
-CCommFB::CCommFB(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes, forte::com_infra::EComServiceType paCommServiceType) :
-  CBaseCommFB(paInstanceNameId, paSrcRes, paCommServiceType) {
+CCommFB::CCommFB(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer, forte::com_infra::EComServiceType paCommServiceType) :
+  CBaseCommFB(paInstanceNameId, paContainer, paCommServiceType) {
 }
 
 CCommFB::~CCommFB() = default;

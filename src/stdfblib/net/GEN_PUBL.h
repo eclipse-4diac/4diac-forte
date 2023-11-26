@@ -23,7 +23,7 @@
 class GEN_PUBL : public GEN_PUBLISH{
   DECLARE_GENERIC_FIRMWARE_FB(GEN_PUBL)
   public:
-    GEN_PUBL(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
+    GEN_PUBL(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     bool configureFB(const char *paConfigString) override;
 

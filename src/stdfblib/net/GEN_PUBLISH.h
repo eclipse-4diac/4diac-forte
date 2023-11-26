@@ -22,7 +22,7 @@ class GEN_PUBLISH : public forte::com_infra::CCommFB {
 DECLARE_GENERIC_FIRMWARE_FB(GEN_PUBLISH)
 
 public:
-  GEN_PUBLISH(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
+  GEN_PUBLISH(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
   ~GEN_PUBLISH() override = default;
 };
 

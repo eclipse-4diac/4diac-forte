@@ -58,7 +58,7 @@ private:
   void writeOutputData(TEventID paEIID) override;
 
 public:
-  FORTE_OUT_ANY_CONSOLE(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
+  FORTE_OUT_ANY_CONSOLE(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
   CIEC_BOOL var_QI;
   CIEC_STRING var_LABEL;

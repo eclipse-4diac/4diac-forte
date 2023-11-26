@@ -48,8 +48,8 @@ const SFBInterfaceSpec FORTE_E_CTUD::scmFBInterfaceSpec = {
   0, nullptr
 };
 
-FORTE_E_CTUD::FORTE_E_CTUD(const CStringDictionary::TStringId paInstanceNameId, CResource *const paSrcRes) :
-    CBasicFB(paSrcRes, &scmFBInterfaceSpec, paInstanceNameId, nullptr),
+FORTE_E_CTUD::FORTE_E_CTUD(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+    CBasicFB(paContainer, &scmFBInterfaceSpec, paInstanceNameId, nullptr),
     var_conn_QU(var_QU),
     var_conn_QD(var_QD),
     var_conn_CV(var_CV),

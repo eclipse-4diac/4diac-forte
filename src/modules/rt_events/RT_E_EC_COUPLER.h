@@ -52,7 +52,7 @@ private:
   void setInitialValues() override;
 
 public:
-  FORTE_RT_E_EC_COUPLER(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
+  FORTE_RT_E_EC_COUPLER(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
   CIEC_TIME var_Tmin;
   CIEC_TIME var_WCET;

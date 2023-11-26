@@ -58,7 +58,7 @@ private:
   void setInitialValues() override;
 
 public:
-  FORTE_RT_E_TRAIN(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
+  FORTE_RT_E_TRAIN(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
   CIEC_TIME var_DT;
   CIEC_UINT var_N;

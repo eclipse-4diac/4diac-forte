@@ -55,7 +55,7 @@ private:
   void setInitialValues() override;
 
 public:
-  FORTE_RT_E_CYCLE(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
+  FORTE_RT_E_CYCLE(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
   EMGMResponse changeFBExecutionState(EMGMCommandType paCommand) override;
 

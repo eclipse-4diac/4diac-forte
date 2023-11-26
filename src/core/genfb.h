@@ -29,7 +29,7 @@ class CGenFunctionBlock : public T {
     bool configureFB(const char *paConfigString) override;
 
   protected:
-    CGenFunctionBlock(CResource *paSrcRes, const CStringDictionary::TStringId paInstanceNameId);
+    CGenFunctionBlock(forte::core::CFBContainer &paContainer, const CStringDictionary::TStringId paInstanceNameId);
     ~CGenFunctionBlock() override;
 
 

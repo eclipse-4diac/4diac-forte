@@ -50,8 +50,8 @@ const SFBInterfaceSpec FORTE_F_MUX_2::scmFBInterfaceSpec = {
   0, nullptr
 };
 
-FORTE_F_MUX_2::FORTE_F_MUX_2(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) :
-    CFunctionBlock( paSrcRes, &scmFBInterfaceSpec, paInstanceNameId),
+FORTE_F_MUX_2::FORTE_F_MUX_2(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+    CFunctionBlock(paContainer, &scmFBInterfaceSpec, paInstanceNameId),
     var_K(CIEC_ANY_INT_VARIANT()),
     var_IN1(CIEC_ANY_VARIANT()),
     var_IN2(CIEC_ANY_VARIANT()),

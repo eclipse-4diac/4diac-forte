@@ -26,7 +26,7 @@ class CAnyAdapter : public CAdapter{
   DECLARE_ADAPTER_TYPE(CAnyAdapter)
 
   public:
-    CAnyAdapter(CStringDictionary::TStringId paAdapterInstanceName, CResource *paSrcRes, bool paIsPlug);
+    CAnyAdapter(CStringDictionary::TStringId paAdapterInstanceName, forte::core::CFBContainer &paContainer, bool paIsPlug);
     ~CAnyAdapter() override;
 
     void typifyAnyAdapter(CAdapter *paPeer);

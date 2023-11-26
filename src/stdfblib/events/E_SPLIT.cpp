@@ -40,8 +40,8 @@ const SFBInterfaceSpec FORTE_E_SPLIT::scmFBInterfaceSpec = {
   0, nullptr
 };
 
-FORTE_E_SPLIT::FORTE_E_SPLIT(const CStringDictionary::TStringId paInstanceNameId, CResource *const paSrcRes) :
-    CBasicFB(paSrcRes, &scmFBInterfaceSpec, paInstanceNameId, nullptr),
+FORTE_E_SPLIT::FORTE_E_SPLIT(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+    CBasicFB(paContainer, &scmFBInterfaceSpec, paInstanceNameId, nullptr),
     conn_EO1(this, 0),
     conn_EO2(this, 1) {
 }

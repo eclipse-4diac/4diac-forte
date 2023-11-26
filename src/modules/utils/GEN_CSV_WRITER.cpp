@@ -56,8 +56,8 @@ void GEN_CSV_WRITER::executeEvent(TEventID paEIID, CEventChainExecutionThread *c
   }
 }
 
-GEN_CSV_WRITER::GEN_CSV_WRITER(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) :
-    CGenFunctionBlock<CFunctionBlock>(paSrcRes, paInstanceNameId), mCSVFile(nullptr), mDataInputNames(nullptr), mDataInputTypeIds(nullptr) {
+GEN_CSV_WRITER::GEN_CSV_WRITER(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+    CGenFunctionBlock<CFunctionBlock>(paContainer, paInstanceNameId), mCSVFile(nullptr), mDataInputNames(nullptr), mDataInputTypeIds(nullptr) {
 }
 
 GEN_CSV_WRITER::~GEN_CSV_WRITER(){

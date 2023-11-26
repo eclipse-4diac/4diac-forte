@@ -58,7 +58,7 @@ private:
   void writeOutputData(TEventID paEIID) override;
 
 public:
-  FORTE_SET_AT_INDEX(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
+  FORTE_SET_AT_INDEX(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
   CIEC_ANY_VARIANT var_IN_ARRAY;
   CIEC_UINT var_INDEX;

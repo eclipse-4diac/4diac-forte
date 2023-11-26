@@ -62,7 +62,7 @@ private:
   void writeOutputData(TEventID paEIID) override;
 
 public:
-  FORTE_FB_R_TRIG(CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
+  FORTE_FB_R_TRIG(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
 
   CIEC_BOOL var_CLK;

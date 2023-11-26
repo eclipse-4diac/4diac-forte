@@ -60,8 +60,8 @@ CLuaBFBTypeEntry* CLuaBFBTypeEntry::createLuaFBTypeEntry(CStringDictionary::TStr
   return new CLuaBFBTypeEntry(paTypeNameId, paLuaScriptAsString, interfaceSpec, internalVarsInformation);
 }
 
-CFunctionBlock* CLuaBFBTypeEntry::createFBInstance(CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) {
-  CLuaEngine* luaEngine = paSrcRes->getLuaEngine();
+CFunctionBlock* CLuaBFBTypeEntry::createFBInstance(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) {
+  CLuaEngine* luaEngine = paContainer.getResource().getLuaEngine();
   if(!luaEngine->load(this)) {
     if(!luaEngine->loadString(cmLuaScriptAsString)) {
       return nullptr;
@@ -70,7 +70,7 @@ CFunctionBlock* CLuaBFBTypeEntry::createFBInstance(CStringDictionary::TStringId 
     luaEngine->store(this); //store ECC
   }
   luaEngine->pop(); //pop ECC / loaded defs
-  return new CLuaBFB(paInstanceNameId, this, paSrcRes);
+  return new CLuaBFB(paInstanceNameId, this, paContainer);
 }
 
 bool CLuaBFBTypeEntry::initInterfaceSpec(SFBInterfaceSpec& paInterfaceSpec, CLuaEngine* paLuaEngine, int paIndex) {

@@ -17,8 +17,8 @@
 
 DEFINE_FIRMWARE_FB(E_RDELAY, g_nStringIdE_RDELAY)
 
-E_RDELAY::E_RDELAY(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes):
-    CTimedFB(paInstanceNameId, paSrcRes){
+E_RDELAY::E_RDELAY(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer):
+    CTimedFB(paInstanceNameId, paContainer){
 }
 
 void E_RDELAY::executeEvent(TEventID paEIID, CEventChainExecutionThread * const paECET){

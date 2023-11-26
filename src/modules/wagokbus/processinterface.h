@@ -36,7 +36,7 @@ extern "C" {
 class WagoPFCProcessInterface : public CProcessInterfaceBase {
   public:
     // wago PFC process interface declaration
-    WagoPFCProcessInterface(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId);
+    WagoPFCProcessInterface(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId);
     ~WagoPFCProcessInterface() override;
 
     // cppcheck-suppress noConstructor

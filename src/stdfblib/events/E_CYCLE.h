@@ -22,8 +22,8 @@
 class E_CYCLE : public CTimedFB{
     DECLARE_FIRMWARE_FB(E_CYCLE)
   public:
-    E_CYCLE(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) :
-        CTimedFB( paInstanceNameId, paSrcRes){
+    E_CYCLE(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+        CTimedFB( paInstanceNameId, paContainer){
     }
 
     ~E_CYCLE() override = default;

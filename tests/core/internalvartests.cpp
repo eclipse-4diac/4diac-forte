@@ -13,6 +13,7 @@
 
 #include <boost/test/unit_test.hpp>
 #include <basicfb.h>
+#include "fbcontainer.h"
 
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
 //don't add a space between # and include so the cmake script finds the line
@@ -31,9 +32,12 @@ const SFBInterfaceSpec gcEmptyInterface = {
 };
 
 class CInternalVarTestFB : public CBasicFB{
+
+    static forte::core::CFBContainer smContainer;
+
   public:
     CInternalVarTestFB(const SInternalVarsInformation *paVarInternals) :
-      CBasicFB(nullptr, &gcEmptyInterface, CStringDictionary::scmInvalidStringId, paVarInternals) {
+      CBasicFB(smContainer, &gcEmptyInterface, CStringDictionary::scmInvalidStringId, paVarInternals) {
     }
 
     CIEC_ANY *getVarInternal(size_t paVarIntNum) override {
@@ -55,6 +59,7 @@ class CInternalVarTestFB : public CBasicFB{
     }
 };
 
+forte::core::CFBContainer CInternalVarTestFB::smContainer(CStringDictionary::scmInvalidStringId, nullptr);
 
 BOOST_AUTO_TEST_SUITE(internal_vars)
 

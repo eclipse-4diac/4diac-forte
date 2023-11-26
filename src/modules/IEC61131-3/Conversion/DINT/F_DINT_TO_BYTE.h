@@ -57,7 +57,7 @@ private:
   void writeOutputData(TEventID paEIID) override;
 
 public:
-  FORTE_F_DINT_TO_BYTE(CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
+  FORTE_F_DINT_TO_BYTE(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
 
   CIEC_DINT var_IN;

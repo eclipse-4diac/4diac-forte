@@ -72,7 +72,7 @@ private:
   void setInitialValues() override;
 
 public:
-  FORTE_QX(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
+  FORTE_QX(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
   CIEC_BOOL var_QI;
   CIEC_STRING var_PARAMS;

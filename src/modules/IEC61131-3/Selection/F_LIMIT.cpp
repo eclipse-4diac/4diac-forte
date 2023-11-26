@@ -50,8 +50,8 @@ const SFBInterfaceSpec FORTE_F_LIMIT::scmFBInterfaceSpec = {
   0, nullptr
 };
 
-FORTE_F_LIMIT::FORTE_F_LIMIT(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) :
-    CFunctionBlock( paSrcRes, &scmFBInterfaceSpec, paInstanceNameId),
+FORTE_F_LIMIT::FORTE_F_LIMIT(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+    CFunctionBlock(paContainer, &scmFBInterfaceSpec, paInstanceNameId),
     var_MN(CIEC_ANY_ELEMENTARY_VARIANT()),
     var_IN(CIEC_ANY_ELEMENTARY_VARIANT()),
     var_MX(CIEC_ANY_ELEMENTARY_VARIANT()),

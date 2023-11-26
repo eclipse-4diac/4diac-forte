@@ -25,8 +25,8 @@ const CStringDictionary::TStringId FORTE_GEN_RT_Bridge::scmEventInputNames[] = {
 const CStringDictionary::TStringId FORTE_GEN_RT_Bridge::scmEventOutputNames[] = {g_nStringIdRDO};
 
 
-FORTE_GEN_RT_Bridge::FORTE_GEN_RT_Bridge(const CStringDictionary::TStringId paInstanceNameId, CResource *const paSrcRes) :
-    CGenFunctionBlock<CFunctionBlock>(paSrcRes, paInstanceNameId) {
+FORTE_GEN_RT_Bridge::FORTE_GEN_RT_Bridge(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+    CGenFunctionBlock<CFunctionBlock>(paContainer, paInstanceNameId) {
 };
 
 void FORTE_GEN_RT_Bridge::setInitialValues() {

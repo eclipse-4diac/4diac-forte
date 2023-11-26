@@ -16,6 +16,7 @@
 #endif
 
 #include "struct_mux_demux_data.h"
+#include "fbcontainer.h"
 
 
 struct STRUCT_MUX_TestFixture_1 : public CFBTestFixtureBase{
@@ -129,28 +130,30 @@ BOOST_FIXTURE_TEST_SUITE( STRUCT_MUX_SecondStructTest, STRUCT_MUX_TestFixture_2)
 
 BOOST_AUTO_TEST_SUITE_END()
 
+extern forte::core::CFBContainer container;
+
 BOOST_AUTO_TEST_SUITE(STRUCT_MUX_FailedCreationTest)
 
   BOOST_AUTO_TEST_CASE(missingDataType){
-    CFunctionBlock *fb = CTypeLib::createFB(g_nStringIdInstanceName, g_nStringIdSTRUCT_MUX_1UnknownType, nullptr);
+    CFunctionBlock *fb = CTypeLib::createFB(g_nStringIdInstanceName, g_nStringIdSTRUCT_MUX_1UnknownType, container);
     BOOST_CHECK(nullptr == fb);
   }
 
   BOOST_AUTO_TEST_CASE(wrongDataType){
-    CFunctionBlock *fb = CTypeLib::createFB(g_nStringIdInstanceName, g_nStringIdSTRUCT_MUX_1STRING, nullptr);
+    CFunctionBlock *fb = CTypeLib::createFB(g_nStringIdInstanceName, g_nStringIdSTRUCT_MUX_1STRING, container);
     BOOST_CHECK(nullptr == fb);
 
-    fb = CTypeLib::createFB(g_nStringIdInstanceName, g_nStringIdSTRUCT_MUX_1REAL, nullptr);
+    fb = CTypeLib::createFB(g_nStringIdInstanceName, g_nStringIdSTRUCT_MUX_1REAL, container);
     BOOST_CHECK(nullptr == fb);
   }
 
 BOOST_AUTO_TEST_CASE(emptyStruct) {
-CFunctionBlock *fb = CTypeLib::createFB(g_nStringIdInstanceName, g_nStringIdSTRUCT_MUX_1Struct_Muxer_Test_Struct_3, nullptr);
+CFunctionBlock *fb = CTypeLib::createFB(g_nStringIdInstanceName, g_nStringIdSTRUCT_MUX_1Struct_Muxer_Test_Struct_3, container);
 BOOST_CHECK(nullptr == fb);
 }
 
 BOOST_AUTO_TEST_CASE(bigStruct) {
-CFunctionBlock *fb = CTypeLib::createFB(g_nStringIdInstanceName, g_nStringIdSTRUCT_MUX_1Struct_Muxer_Test_Struct_4, nullptr);
+CFunctionBlock *fb = CTypeLib::createFB(g_nStringIdInstanceName, g_nStringIdSTRUCT_MUX_1Struct_Muxer_Test_Struct_4, container);
 BOOST_CHECK(nullptr != fb);
 delete fb;
 }

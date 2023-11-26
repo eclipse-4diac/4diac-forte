@@ -58,7 +58,7 @@ private:
   void readInternal2InterfaceOutputData(TEventID paEOID) override;
 
 public:
-  FORTE_E_TRAIN(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
+  FORTE_E_TRAIN(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
   CIEC_TIME var_DT;
   CIEC_UINT var_N;

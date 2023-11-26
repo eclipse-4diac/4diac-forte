@@ -15,9 +15,9 @@
 
 using namespace forte::core::io;
 
-IOConfigFBSplitAdapter::IOConfigFBSplitAdapter(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpecSocket,
+IOConfigFBSplitAdapter::IOConfigFBSplitAdapter(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec *paInterfaceSpecSocket,
     const CStringDictionary::TStringId paInstanceNameId, const SFBInterfaceSpec *paInterfaceSpecPlug, bool paIsPlug) :
-    CAdapter(paSrcRes, paInterfaceSpecSocket, paInstanceNameId, paInterfaceSpecPlug, paIsPlug) {
+    CAdapter(paContainer, paInterfaceSpecSocket, paInstanceNameId, paInterfaceSpecPlug, paIsPlug) {
 }
 
 IOConfigFBSplitAdapter::~IOConfigFBSplitAdapter() = default;

@@ -20,8 +20,8 @@ DEFINE_GENERIC_FIRMWARE_FB(GEN_SUBL, g_nStringIdGEN_SUBL)
 const char * const GEN_SUBL::scmLocalIDPrefix = "loc[";
 const char * const GEN_SUBL::scmLocalIDSuffix = "]";
 
-GEN_SUBL::GEN_SUBL(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes):
-          GEN_SUBSCRIBE( paInstanceNameId, paSrcRes){
+GEN_SUBL::GEN_SUBL(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer):
+          GEN_SUBSCRIBE( paInstanceNameId, paContainer){
 }
 
 bool GEN_SUBL::configureFB(const char *paConfigString){
