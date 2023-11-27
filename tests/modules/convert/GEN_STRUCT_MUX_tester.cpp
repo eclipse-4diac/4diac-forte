@@ -16,7 +16,7 @@
 #endif
 
 #include "struct_mux_demux_data.h"
-#include "fbcontainer.h"
+#include "fbcontainermock.h"
 
 
 struct STRUCT_MUX_TestFixture_1 : public CFBTestFixtureBase{
@@ -130,30 +130,28 @@ BOOST_FIXTURE_TEST_SUITE( STRUCT_MUX_SecondStructTest, STRUCT_MUX_TestFixture_2)
 
 BOOST_AUTO_TEST_SUITE_END()
 
-extern forte::core::CFBContainer container;
-
 BOOST_AUTO_TEST_SUITE(STRUCT_MUX_FailedCreationTest)
 
   BOOST_AUTO_TEST_CASE(missingDataType){
-    CFunctionBlock *fb = CTypeLib::createFB(g_nStringIdInstanceName, g_nStringIdSTRUCT_MUX_1UnknownType, container);
+    CFunctionBlock *fb = CTypeLib::createFB(g_nStringIdInstanceName, g_nStringIdSTRUCT_MUX_1UnknownType, CFBContainerMock::smDefaultFBContMock);
     BOOST_CHECK(nullptr == fb);
   }
 
   BOOST_AUTO_TEST_CASE(wrongDataType){
-    CFunctionBlock *fb = CTypeLib::createFB(g_nStringIdInstanceName, g_nStringIdSTRUCT_MUX_1STRING, container);
+    CFunctionBlock *fb = CTypeLib::createFB(g_nStringIdInstanceName, g_nStringIdSTRUCT_MUX_1STRING, CFBContainerMock::smDefaultFBContMock);
     BOOST_CHECK(nullptr == fb);
 
-    fb = CTypeLib::createFB(g_nStringIdInstanceName, g_nStringIdSTRUCT_MUX_1REAL, container);
+    fb = CTypeLib::createFB(g_nStringIdInstanceName, g_nStringIdSTRUCT_MUX_1REAL, CFBContainerMock::smDefaultFBContMock);
     BOOST_CHECK(nullptr == fb);
   }
 
 BOOST_AUTO_TEST_CASE(emptyStruct) {
-CFunctionBlock *fb = CTypeLib::createFB(g_nStringIdInstanceName, g_nStringIdSTRUCT_MUX_1Struct_Muxer_Test_Struct_3, container);
+CFunctionBlock *fb = CTypeLib::createFB(g_nStringIdInstanceName, g_nStringIdSTRUCT_MUX_1Struct_Muxer_Test_Struct_3, CFBContainerMock::smDefaultFBContMock);
 BOOST_CHECK(nullptr == fb);
 }
 
 BOOST_AUTO_TEST_CASE(bigStruct) {
-CFunctionBlock *fb = CTypeLib::createFB(g_nStringIdInstanceName, g_nStringIdSTRUCT_MUX_1Struct_Muxer_Test_Struct_4, container);
+CFunctionBlock *fb = CTypeLib::createFB(g_nStringIdInstanceName, g_nStringIdSTRUCT_MUX_1Struct_Muxer_Test_Struct_4, CFBContainerMock::smDefaultFBContMock);
 BOOST_CHECK(nullptr != fb);
 delete fb;
 }

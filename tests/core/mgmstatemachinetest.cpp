@@ -12,15 +12,14 @@
 #include <boost/test/unit_test.hpp>
 #include "forte_boost_output_support.h"
 #include "../../src/core/funcbloc.h"
-#include "fbcontainer.h"
+#include "fbcontainermock.h"
+
 
 class CFunctionBlockMock : public CFunctionBlock{
 
-  static forte::core::CFBContainer smContainer;
-
   public:
     CFunctionBlockMock() :
-        CFunctionBlock(smContainer, nullptr, 0){
+        CFunctionBlock(CFBContainerMock::smDefaultFBContMock, nullptr, 0){
     }
 
     bool initialize() override {
@@ -47,8 +46,6 @@ class CFunctionBlockMock : public CFunctionBlock{
     }
 };
 
-
-forte::core::CFBContainer CFunctionBlockMock::smContainer(CStringDictionary::scmInvalidStringId, nullptr);
 
 BOOST_AUTO_TEST_SUITE(ManagedObjectStateMachine)
 

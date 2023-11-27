@@ -709,12 +709,10 @@ const std::string CFunctionBlock::getFullQualifiedInstanceName() const {
   fullName = getInstanceName();
   forte::core::CFBContainer* parent = &mContainer;
   const CResource* resource = getResource();
-  while(parent != nullptr &&
-		parent != resource &&
-		parent->getName() != nullptr) {
+  while(parent != resource && parent->getName() != nullptr) {
     fullName.insert(0, ".");
     fullName.insert(0, parent->getName());
-    parent = parent->getParent();
+    parent = &parent->getParent();
   }
   fullName.shrink_to_fit();
   return fullName;

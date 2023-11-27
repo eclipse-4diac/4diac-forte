@@ -148,12 +148,12 @@ EMGMResponse CMonitoringHandler::removeWatch(forte::core::TNameIdentifier &paNam
 
 EMGMResponse CMonitoringHandler::readWatches(std::string &paResponse){
   paResponse.clear();
-  if(nullptr == mResource.getParent()){
+  if(&mResource == &mResource.getParent()){
     //we are in the device
     for(CFBContainer::TFunctionBlockList::iterator itRunner = mResource.getFBList().begin();
         itRunner != mResource.getFBList().end();
         ++itRunner){
-      ((CResource*) (*itRunner))->getMonitoringHandler().readResourceWatches(paResponse);
+      static_cast<CResource*>(*itRunner)->getMonitoringHandler().readResourceWatches(paResponse);
     }
   }
   else{

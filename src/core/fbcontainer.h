@@ -26,7 +26,7 @@ namespace forte {
 
     class CFBContainer{
       public:
-        CFBContainer(CStringDictionary::TStringId paContainerName, CFBContainer *paParent);
+        CFBContainer(CStringDictionary::TStringId paContainerName, CFBContainer &paParent);
         virtual ~CFBContainer();
 
         CStringDictionary::TStringId getNameId() const{
@@ -63,14 +63,18 @@ namespace forte {
           return mSubContainers;
         }
 
-        CFBContainer* getParent() const { return mParent;}
+        CFBContainer& getParent() const { return mParent;}
 
-        virtual CResource* getResource();
+        virtual CResource* getResource(){
+          return mParent.getResource();
+        }
         virtual const CResource* getResource() const {
           return const_cast<CFBContainer*>(this)->getResource();
         }
 
-        virtual CDevice* getDevice();
+        virtual CDevice* getDevice(){
+          return mParent.getDevice();
+        }
         virtual const CDevice* getDevice() const {
           return const_cast<CFBContainer*>(this)->getDevice();
         }
@@ -114,7 +118,7 @@ namespace forte {
         CFBContainer *findOrCreateContainer(CStringDictionary::TStringId paContainerName);
 
         CStringDictionary::TStringId mContainerName; //!< name of the container
-        CFBContainer *mParent; //!< the parent FBContainer this FBContainer is contained in. The parent of a resource is 0
+        CFBContainer &mParent; //!< the parent FBContainer this FBContainer is contained in. The parent of a device is the device itself!
 
         TFunctionBlockList mFunctionBlocks; //!< The functionblocks hold in this container
         TFBContainerList mSubContainers; //!< List of subcontainers (i.e, subapplications in this container)

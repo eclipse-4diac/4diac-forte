@@ -40,8 +40,10 @@
 
 #include <string>
 
+using namespace std::string_literals;
+
 CResource::CResource(forte::core::CFBContainer &paDevice, const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId) :
-    CFunctionBlock(paDevice, paInterfaceSpec, paInstanceNameId), forte::core::CFBContainer(CStringDictionary::scmInvalidStringId, &paDevice), // the fbcontainer of resources does not have a seperate name as it is stored in the resource
+    CFunctionBlock(paDevice, paInterfaceSpec, paInstanceNameId), forte::core::CFBContainer(CStringDictionary::scmInvalidStringId, paDevice), // the fbcontainer of resources does not have a seperate name as it is stored in the resource
     mResourceEventExecution(CEventChainExecutionThread::createEcet()), mResIf2InConnections(nullptr)
 #ifdef FORTE_SUPPORT_MONITORING
 , mMonitoringHandler(*this)
@@ -52,7 +54,7 @@ CResource::CResource(forte::core::CFBContainer &paDevice, const SFBInterfaceSpec
 {}
 
 CResource::CResource(const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId) :
-    CFunctionBlock(*this, paInterfaceSpec, paInstanceNameId), forte::core::CFBContainer(CStringDictionary::scmInvalidStringId, nullptr), // the fbcontainer of resources does not have a seperate name as it is stored in the resource
+    CFunctionBlock(*this, paInterfaceSpec, paInstanceNameId), forte::core::CFBContainer(CStringDictionary::scmInvalidStringId, *this), // the fbcontainer of resources does not have a seperate name as it is stored in the resource
     mResourceEventExecution(nullptr), mResIf2InConnections(nullptr)
 #ifdef FORTE_SUPPORT_MONITORING
 , mMonitoringHandler(*this)
@@ -478,38 +480,39 @@ void CResource::createFBResponseMessage(const CFunctionBlock& paFb, const char* 
 
 void CResource::createConnectionResponseMessage(const CStringDictionary::TStringId srcId, const CStringDictionary::TStringId dstId,
     const CFunctionBlock& paDstFb, const CFunctionBlock& paSrcFb, CIEC_STRING& paReqResult) const {
-  paReqResult.append("<Connection Source=\"");
+  paReqResult.append("<Connection Source=\""s);
 
   std::string fullName;
   fullName.reserve(cgStringInitialSize);
   fullName = paSrcFb.getInstanceName();
-  fullName += ".";
+  fullName += "."s;
   fullName += CStringDictionary::getInstance().get(srcId);
 
   CFBContainer* parent = &(paSrcFb.getContainer());
+  const CDevice *dev = getDevice();
 
   if(paSrcFb.getInstanceNameId() != g_nStringIdSTART ){
-    while(parent->getName() != 0){
-      fullName.insert(0, ".");
+    while(parent != dev && parent->getName() != 0){
+      fullName.insert(0, "."s);
       fullName.insert(0, parent->getName());
-      parent = parent->getParent();
+      parent = &parent->getParent();
     }
   }
-  paReqResult.append(fullName.c_str());
-  paReqResult.append("\" Destination=\"");
+  paReqResult.append(fullName);
+  paReqResult.append("\" Destination=\""s);
   fullName = paDstFb.getInstanceName();
-  fullName += ".";
+  fullName += "."s;
   fullName += CStringDictionary::getInstance().get(dstId);
 
   parent = &(paDstFb.getContainer());
-  while(parent->getName() != 0){
-    fullName.insert(0, ".");
+  while(parent != dev && parent->getName() != 0){
+    fullName.insert(0, "."s);
     fullName.insert(0, parent->getName());
-    parent = parent->getParent();
+    parent = &parent->getParent();
   }
   fullName.shrink_to_fit();
-  paReqResult.append(fullName.c_str());
-  paReqResult.append("\"/>");
+  paReqResult.append(fullName);
+  paReqResult.append("\"/>"s);
 }
 
 EMGMResponse CResource::createFBTypeResponseMessage(const CStringDictionary::TStringId paValue, CIEC_STRING & paReqResult){
