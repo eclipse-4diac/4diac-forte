@@ -183,7 +183,7 @@ CLocalComLayer::CLocalCommGroup::TLocalComDataTypeList CLocalComLayer::CLocalCom
   if(paDataPins != nullptr){
     dataTypes.reserve(paNumDataPins);
     for(size_t i = 0; i < paNumDataPins; i++){
-      dataTypes.push_back(paDataPins[i]->getTypeNameID());
+      dataTypes.push_back(paDataPins[i]->unwrap().getTypeNameID());
     }
   }
 
