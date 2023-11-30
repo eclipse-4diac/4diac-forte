@@ -45,8 +45,8 @@ public:
     return &m_interfaceSpec;
   }
 
-  SCFB_FBNData* getFbnSpec(){
-    return &mSpec;
+  SCFB_FBNData& getFbnSpec(){
+    return mSpec;
   }
 };
 

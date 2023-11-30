@@ -23,8 +23,9 @@
 #include "adapterconn.h"
 
 CCompositeFB::CCompositeFB(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec *paInterfaceSpec,
-                           CStringDictionary::TStringId paInstanceNameId, const SCFB_FBNData * paFBNData) :
+                           CStringDictionary::TStringId paInstanceNameId, const SCFB_FBNData & paFBNData) :
         CFunctionBlock(paContainer, paInterfaceSpec, paInstanceNameId),
+        forte::core::CFBContainer(paInstanceNameId, paContainer, paFBNData.mNumFBs),
         mIf2InDConns(nullptr),
         mIn2IfDConns(nullptr),
         cmFBNData(paFBNData),
@@ -57,13 +58,6 @@ bool CCompositeFB::initialize() {
 }
 
 CCompositeFB::~CCompositeFB(){
-  if(cmFBNData->mNumFBs){
-    for(unsigned int i = 0; i < cmFBNData->mNumFBs; ++i){
-      delete mInternalFBs[i];
-    }
-    delete[] mInternalFBs;
-  }
-
   //only delete the interface to internal event connections all other connections are managed by their source's FBs
   //this has to be done even if we don't have any event connection to ensure correct behavior
   for(unsigned int i = 0; i < mInterfaceSpec->mNumEIs; ++i){
@@ -71,11 +65,11 @@ CCompositeFB::~CCompositeFB(){
   }
   delete[] mInterface2InternalEventCons;
 
-  if(cmFBNData->mNumEventConnections){
+  if(cmFBNData.mNumEventConnections){
     delete[] mEventConnections;
   }
 
-  if(cmFBNData->mNumDataConnections){
+  if(cmFBNData.mNumDataConnections){
     if(nullptr != mDataConnections){
       delete[] mDataConnections;
     }
@@ -123,7 +117,7 @@ bool CCompositeFB::configureGenericDO(TPortId paDOPortId, const CIEC_ANY &paRefV
 EMGMResponse CCompositeFB::changeFBExecutionState(EMGMCommandType paCommand){
   EMGMResponse nRetVal = CFunctionBlock::changeFBExecutionState(paCommand);
   if (EMGMResponse::Ready == nRetVal) {
-    nRetVal = changeInternalFBExecutionState(paCommand, cmFBNData->mNumFBs, mInternalFBs);
+    nRetVal = CFBContainer::changeContainedFBsExecutionState(paCommand);
   }
   //Update FB parameters that maybe got overwritten by default values of the FB
   if((EMGMCommandType::Reset == paCommand) && (E_FBStates::Idle == getState())){
@@ -135,19 +129,15 @@ EMGMResponse CCompositeFB::changeFBExecutionState(EMGMCommandType paCommand){
 #ifdef FORTE_SUPPORT_MONITORING
 
 CFunctionBlock *CCompositeFB::getFB(forte::core::TNameIdentifier::CIterator &paNameListIt){
-  CFunctionBlock *retVal = nullptr;
-  for(unsigned int i = 0; i < cmFBNData->mNumFBs; ++i){
-    if(mInternalFBs[i]->getInstanceNameId() == *paNameListIt){
-      if(paNameListIt.isLastEntry()){
-        retVal = mInternalFBs[i];
-      } else {
+  CFunctionBlock *retVal = forte::core::CFBContainer::getFB(*paNameListIt);
+
+  if(retVal != nullptr){
+      if(!paNameListIt.isLastEntry()){
          //we are looking for a child of this fB
         ++paNameListIt;
-        retVal = mInternalFBs[i]->getFB(paNameListIt);
+        retVal = retVal->getFB(paNameListIt);
       }
-    }
-  }
-  if(nullptr == retVal){
+  } else {
     //check if it is an adapter of the function block
     retVal = CFunctionBlock::getFB(paNameListIt);
   }
@@ -156,21 +146,17 @@ CFunctionBlock *CCompositeFB::getFB(forte::core::TNameIdentifier::CIterator &paN
 
 #endif
 
-CIEC_ANY *CCompositeFB::getVar(CStringDictionary::TStringId *paNameList,
-    unsigned int paNameListSize){
+CIEC_ANY *CCompositeFB::getVar(CStringDictionary::TStringId *paNameList, unsigned int paNameListSize){
   CIEC_ANY *retVal = nullptr;
 
   if(1 > paNameListSize){
-    for(unsigned int i = 0; i < cmFBNData->mNumFBs; ++i){
-      if(*paNameList == mInternalFBs[i]->getInstanceNameId()){
-        paNameList++;
-        paNameListSize--;
-        retVal = mInternalFBs[i]->getVar(paNameList, paNameListSize);
-        break;
-      }
+    CFunctionBlock *child = forte::core::CFBContainer::getFB(*paNameList);
+    if(child != nullptr){
+      paNameList++;
+      paNameListSize--;
+      retVal = child->getVar(paNameList, paNameListSize);
     }
-  }
-  else{
+  } else {
     retVal = CFunctionBlock::getVar(paNameList, paNameListSize);
   }
 
@@ -191,12 +177,10 @@ void CCompositeFB::executeEvent(TEventID paEIID, CEventChainExecutionThread * co
 }
 
 bool CCompositeFB::createInternalFBs(){
-  if(cmFBNData->mNumFBs){
-    mInternalFBs = new TFunctionBlockPtr[cmFBNData->mNumFBs];
-    for(unsigned int i = 0; i < cmFBNData->mNumFBs; ++i){
-      const SCFB_FBInstanceData &cfbInstanceData(cmFBNData->mFBInstances[i]);
-      mInternalFBs[i] = CTypeLib::createFB(cfbInstanceData.mFBInstanceNameId, cfbInstanceData.mFBTypeNameId, getContainer());
-      if(mInternalFBs[i] == nullptr){
+  if(cmFBNData.mNumFBs){
+    for(size_t i = 0; i < cmFBNData.mNumFBs; ++i){
+      const SCFB_FBInstanceData &cfbInstanceData(cmFBNData.mFBInstances[i]);
+      if(createFB(cfbInstanceData.mFBInstanceNameId, cfbInstanceData.mFBTypeNameId) != EMGMResponse::Ready){
         DEVLOG_ERROR("Cannot create internal FB (name: %s, type: %s) in CFB (type: %s)!\n",
             CStringDictionary::getInstance().get(cfbInstanceData.mFBInstanceNameId),
             CStringDictionary::getInstance().get(cfbInstanceData.mFBTypeNameId),
@@ -210,37 +194,34 @@ bool CCompositeFB::createInternalFBs(){
 
 void CCompositeFB::createEventConnections(){
   prepareIf2InEventCons();  //the interface to internal event connections are needed even if they are not connected therefore we have to create them correctly in any case
-  if(0 != cmFBNData->mNumEventConnections){
-    mEventConnections = new CEventConnection *[cmFBNData->mNumEventConnections]; //TODO for a major revison this list could be ommited but requires a change in the faned out connections
+  if(0 != cmFBNData.mNumEventConnections){
+    mEventConnections = new CEventConnection *[cmFBNData.mNumEventConnections]; //TODO for a major revison this list could be ommited but requires a change in the faned out connections
 
-    CFunctionBlock *poSrcFB;
-    CFunctionBlock *poDstFB;
-    for(unsigned int i = 0; i < cmFBNData->mNumEventConnections; ++i){
-      const SCFB_FBConnectionData *cpstCurrentConn = &(cmFBNData->mEventConnections[i]);
+    for(size_t i = 0; i < cmFBNData.mNumEventConnections; ++i){
+      const SCFB_FBConnectionData *currentConn = &(cmFBNData.mEventConnections[i]);
       //FIXME implement way to inform FB creator that creation failed
-      poSrcFB = getFunctionBlock(cpstCurrentConn->mSrcFBNum);
-      poDstFB = getFunctionBlock(cpstCurrentConn->mDstFBNum);
+      CFunctionBlock *srcFB = getFunctionBlock(currentConn->mSrcFBNum);
+      CFunctionBlock *dstFB = getFunctionBlock(currentConn->mDstFBNum);
 
-      if((nullptr != poSrcFB) && (nullptr != poDstFB)){
-        if(this == poSrcFB){
+      if((nullptr != srcFB) && (nullptr != dstFB)){
+        if(this == srcFB){
           mEventConnections[i] =
-              mInterface2InternalEventCons[getEIID(cpstCurrentConn->mSrcId)];
+              mInterface2InternalEventCons[getEIID(currentConn->mSrcId)];
         }
         else{
-          mEventConnections[i] = poSrcFB->getEOConnection(cpstCurrentConn->mSrcId);
+          mEventConnections[i] = srcFB->getEOConnection(currentConn->mSrcId);
         }
-        establishConnection(mEventConnections[i], poDstFB, cpstCurrentConn->mDstId);
+        establishConnection(mEventConnections[i], dstFB, currentConn->mDstId);
       }
       else{
         DEVLOG_ERROR("Could not create event connection in CFB");
       }
     }
     //now handle the fanned out connections
-    for(unsigned int i = 0; i < cmFBNData->mNumFannedOutEventConnections; ++i){
-      const SCFB_FBFannedOutConnectionData *cpstCurrentFannedConn = &(cmFBNData->mFannedOutEventConnections[i]);
-      poDstFB = getFunctionBlock(cpstCurrentFannedConn->mDstFBNum);
-      establishConnection(mEventConnections[cpstCurrentFannedConn->mConnectionNum],
-          poDstFB, cpstCurrentFannedConn->mDstId);
+    for(size_t i = 0; i < cmFBNData.mNumFannedOutEventConnections; ++i){
+      const SCFB_FBFannedOutConnectionData *currentFannedConn = &(cmFBNData.mFannedOutEventConnections[i]);
+      CFunctionBlock *dstFB = getFunctionBlock(currentFannedConn->mDstFBNum);
+      establishConnection(mEventConnections[currentFannedConn->mConnectionNum], dstFB, currentFannedConn->mDstId);
     }
   }
 }
@@ -266,7 +247,7 @@ void CCompositeFB::establishConnection(CConnection *paCon, CFunctionBlock *paDst
 }
 
 void CCompositeFB::createDataConnections(){
-  if(cmFBNData->mNumDataConnections){
+  if(cmFBNData.mNumDataConnections){
     if(mInterfaceSpec->mNumDIs){
       prepareIf2InDataCons();
     }
@@ -277,41 +258,39 @@ void CCompositeFB::createDataConnections(){
       }
     }
 
-    mDataConnections = new CDataConnection *[cmFBNData->mNumDataConnections];
+    mDataConnections = new CDataConnection *[cmFBNData.mNumDataConnections];
 
-    CFunctionBlock *poSrcFB;
-    CFunctionBlock *poDstFB;
-    for(size_t i = 0; i < cmFBNData->mNumDataConnections; ++i){
-      const SCFB_FBConnectionData &currentConn(cmFBNData->mDataConnections[i]);
+    for(size_t i = 0; i < cmFBNData.mNumDataConnections; ++i){
+      const SCFB_FBConnectionData &currentConn(cmFBNData.mDataConnections[i]);
       //FIXME implement way to inform FB creator that creation failed
-      poSrcFB = getFunctionBlock(currentConn.mSrcFBNum);
-      poDstFB = getFunctionBlock(currentConn.mDstFBNum);
+      CFunctionBlock *srcFB = getFunctionBlock(currentConn.mSrcFBNum);
+      CFunctionBlock *dstFB = getFunctionBlock(currentConn.mDstFBNum);
 
-      if((nullptr != poSrcFB) && (nullptr != poDstFB)){
-        if(this == poSrcFB){
+      if((nullptr != srcFB) && (nullptr != dstFB)){
+        if(this == srcFB){
           mDataConnections[i] = &(mIf2InDConns[getDIID(currentConn.mSrcId)]);
         }
         else{
-          mDataConnections[i] = poSrcFB->getDOConnection(currentConn.mSrcId);
+          mDataConnections[i] = srcFB->getDOConnection(currentConn.mSrcId);
         }
-        establishConnection(mDataConnections[i], poDstFB, currentConn.mDstId);
+        establishConnection(mDataConnections[i], dstFB, currentConn.mDstId);
       }
       else{
         DEVLOG_ERROR("Could not create data connection in CFB");
       }
     }
     //now handle the fanned out connections
-    for(size_t i = 0; i < cmFBNData->mNumFannedOutDataConnections; ++i){
-      const SCFB_FBFannedOutConnectionData &currentFannedConn(cmFBNData->mFannedOutDataConnections[i]);
-      poDstFB = getFunctionBlock(currentFannedConn.mDstFBNum);
-      establishConnection(mDataConnections[currentFannedConn.mConnectionNum], poDstFB, currentFannedConn.mDstId);
+    for(size_t i = 0; i < cmFBNData.mNumFannedOutDataConnections; ++i){
+      const SCFB_FBFannedOutConnectionData &currentFannedConn(cmFBNData.mFannedOutDataConnections[i]);
+      CFunctionBlock *dstFB = getFunctionBlock(currentFannedConn.mDstFBNum);
+      establishConnection(mDataConnections[currentFannedConn.mConnectionNum], dstFB, currentFannedConn.mDstId);
     }
   }
 }
 
 void CCompositeFB::createAdapterConnections(){
-  for(size_t i = 0; i < cmFBNData->mNumAdapterConnections; ++i){
-    const SCFB_FBConnectionData &currentConn(cmFBNData->mAdapterConnections[i]);
+  for(size_t i = 0; i < cmFBNData.mNumAdapterConnections; ++i){
+    const SCFB_FBConnectionData &currentConn(cmFBNData.mAdapterConnections[i]);
     //FIXME implement way to inform FB creator that creation failed
     const CFunctionBlock *const srcFB = getFunctionBlock(currentConn.mSrcFBNum);
     CFunctionBlock *const dstFB = getFunctionBlock(currentConn.mDstFBNum);
@@ -338,37 +317,39 @@ void CCompositeFB::prepareIf2InDataCons(){
 }
 
 void CCompositeFB::setParams() {
-  for(unsigned int i = 0; i < cmFBNData->mNumParams; ++i){
-    const SCFB_FBParameter *pstCurrentParam = &(cmFBNData->mParams[i]);
-    CIEC_ANY *poDI =
-        mInternalFBs[pstCurrentParam->mFBNum]->getDataInput(pstCurrentParam->mDINameID);
-    if(nullptr != poDI){
-      poDI->fromString(pstCurrentParam->mParamValue);
-    }
-    else{
-      DEVLOG_ERROR("Could not get date input for setting a parameter");
+  for(size_t i = 0; i < cmFBNData.mNumParams; ++i){
+    const SCFB_FBParameter &currentParam(cmFBNData.mParams[i]);
+    CFunctionBlock *child = getFunctionBlock(currentParam.mFBNum);
+    if(child != nullptr){
+      CIEC_ANY *di = child->getDataInput(currentParam.mDINameID);
+      if(di != nullptr){
+        di->fromString(currentParam.mParamValue);
+      }
+      else{
+        DEVLOG_ERROR("Could not get data input for setting a parameter");
+      }
+    } else {
+      DEVLOG_ERROR("Could not get child FB for setting a parameter");
     }
   }
 }
 
 CFunctionBlock *CCompositeFB::getFunctionBlock(int paFBNum){
-  CFunctionBlock *poRetVal = nullptr;
   if(-1 == paFBNum){
-    poRetVal = this;
+    return this;
   }
-  else if(0 <= paFBNum)  {
+  if(0 <= paFBNum)  {
     TForteUInt32 fbNum = static_cast<TForteUInt32>(paFBNum);
     if(scmAdapterMarker == (scmAdapterMarker & fbNum)){
       fbNum &= scmAdapterFBRange;
       if(fbNum < mInterfaceSpec->mNumAdapters){
-        poRetVal = mAdapters[fbNum];
+        return mAdapters[fbNum];
       }
-    }
-    else{
-      if(fbNum < cmFBNData->mNumFBs){
-        poRetVal = mInternalFBs[fbNum];
+    } else{
+      if(fbNum < cmFBNData.mNumFBs){
+        return forte::core::CFBContainer::getFB(cmFBNData.mFBInstances[fbNum].mFBInstanceNameId);
       }
     }
   }
-  return poRetVal;
+  return nullptr;
 }

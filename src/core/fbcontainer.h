@@ -80,6 +80,7 @@ namespace forte {
         }
 
       protected:
+        CFBContainer(CStringDictionary::TStringId paContainerName, CFBContainer &paParent, size_t paNumFBs);
 
         /*!\brief Create a new FB instance of given type and name
          *
@@ -88,6 +89,14 @@ namespace forte {
          * @return response of the command execution as defined in IEC 61499
          */
         EMGMResponse createFB(forte::core::TNameIdentifier::CIterator &paNameListIt, CStringDictionary::TStringId paTypeName);
+
+        /*!\brief Create a new FB instance of given type and name
+         *
+         * @param paInstanceNameId    instance name for the FB to be created
+         * @param paTypeName      the type name of the FB to be created
+         * @return response of the command execution as defined in IEC 61499
+         */
+        EMGMResponse createFB(CStringDictionary::TStringId paInstanceNameId, CStringDictionary::TStringId paTypeName);
 
         /*!\brief Delete a FB instance with given name
          *

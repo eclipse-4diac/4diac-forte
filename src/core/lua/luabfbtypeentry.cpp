@@ -61,7 +61,7 @@ CLuaBFBTypeEntry* CLuaBFBTypeEntry::createLuaFBTypeEntry(CStringDictionary::TStr
 }
 
 CFunctionBlock* CLuaBFBTypeEntry::createFBInstance(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) {
-  CLuaEngine* luaEngine = paContainer.getResource().getLuaEngine();
+  CLuaEngine* luaEngine = paContainer.getResource()->getLuaEngine();
   if(!luaEngine->load(this)) {
     if(!luaEngine->loadString(cmLuaScriptAsString)) {
       return nullptr;

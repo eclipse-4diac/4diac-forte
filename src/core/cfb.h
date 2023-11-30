@@ -18,6 +18,7 @@
 #define _CFB_H_
 
 #include "funcbloc.h"
+#include "fbcontainer.h"
 
 class CInterface2InternalDataConnection;
 
@@ -79,7 +80,7 @@ GENERATE_CONNECTION_PORT_ID_2_ARG(CStringDictionary::scmInvalidStringId, PortNam
 /*!\ingroup CORE
  * \brief Class for handling firmware composite function blocks.
  */
-class CCompositeFB: public CFunctionBlock {
+class CCompositeFB: public CFunctionBlock, public forte::core::CFBContainer {
 
   public:
     /*! \brief Indicator that the given FB id is an adapter.
@@ -104,7 +105,7 @@ class CCompositeFB: public CFunctionBlock {
      */
     CCompositeFB(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec *paInterfaceSpec,
                  CStringDictionary::TStringId paInstanceNameId,
-                 const SCFB_FBNData * paFBNData);
+                 const SCFB_FBNData & paFBNData);
 
     ~CCompositeFB() override;
 
@@ -154,15 +155,13 @@ class CCompositeFB: public CFunctionBlock {
     CInterface2InternalDataConnection *mIf2InDConns;
     CDataConnection **mIn2IfDConns;
 
-    const SCFB_FBNData * const cmFBNData;
+    const SCFB_FBNData & cmFBNData;
 
     CEventConnection **mEventConnections;
     CDataConnection **mDataConnections;
 
     //!Array storing the holding the connections to be used in the execute event for triggering the internal FBs
     CEventConnection **mInterface2InternalEventCons;
-
-    TFunctionBlockPtr *mInternalFBs;
 
 #ifdef FORTE_FMU
     friend class fmuInstance;
@@ -171,6 +170,6 @@ class CCompositeFB: public CFunctionBlock {
 
 #define COMPOSITE_FUNCTION_BLOCK_CTOR(fbclass) \
  fbclass(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) : \
- CCompositeFB(paContainer, &scmFBInterfaceSpec, paInstanceNameId, &scmFBNData)
+ CCompositeFB(paContainer, &scmFBInterfaceSpec, paInstanceNameId, scmFBNData)
 
 #endif /*_CFB_H_*/

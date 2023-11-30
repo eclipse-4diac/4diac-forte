@@ -44,7 +44,7 @@ const SFBInterfaceSpec FORTE_E_IMPULSE::scmFBInterfaceSpec = {
 };
 
 FORTE_E_IMPULSE::FORTE_E_IMPULSE(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
-    CCompositeFB(paContainer, &scmFBInterfaceSpec, paInstanceNameId, &scmFBNData),
+    CCompositeFB(paContainer, &scmFBInterfaceSpec, paInstanceNameId, scmFBNData),
     var_conn_QO(var_QO),
     conn_CNF(this, 0),
     conn_TM(nullptr),

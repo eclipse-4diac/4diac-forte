@@ -40,6 +40,11 @@ CFBContainer::CFBContainer(CStringDictionary::TStringId paContainerName, CFBCont
     mContainerName(paContainerName), mParent(paParent) {
 }
 
+CFBContainer::CFBContainer(CStringDictionary::TStringId paContainerName, CFBContainer &paParent, size_t paNumFBs) :
+    mContainerName(paContainerName), mParent(paParent) {
+  mFunctionBlocks.reserve(paNumFBs);
+}
+
 CFBContainer::~CFBContainer() {
   for (TFunctionBlockList::iterator itRunner(mFunctionBlocks.begin()); itRunner != mFunctionBlocks.end(); ++itRunner) {
     CTypeLib::deleteFB(*itRunner);
@@ -62,32 +67,32 @@ EMGMResponse CFBContainer::addFB(CFunctionBlock* paFuncBlock){
 }
 
 EMGMResponse CFBContainer::createFB(forte::core::TNameIdentifier::CIterator &paNameListIt, CStringDictionary::TStringId paTypeName){
-  EMGMResponse retval = EMGMResponse::InvalidState;
-
   if(paNameListIt.isLastEntry()){
-    // test if the container does not contain any FB or a container with the same name
-    if((nullptr == getFB(*paNameListIt)) && (nullptr == getFBContainer(*paNameListIt))){
-      CFunctionBlock *newFB = CTypeLib::createFB(*paNameListIt, paTypeName, *this);
-      if(nullptr != newFB){
-        //we could create a FB now add it to the list of contained FBs
-        addFB(newFB);
-        retval = EMGMResponse::Ready;
-      }
-      else{
-        retval = CTypeLib::getLastError();
-      }
-    }
-  }
-  else{
+    return createFB(*paNameListIt, paTypeName);
+  } else{
     //we have more than one name in the fb name list. Find or create the container and hand the create command to this container.
     CFBContainer *childCont = findOrCreateContainer(*paNameListIt);
     if(nullptr != childCont){
       //remove the container from the name list
       ++paNameListIt;
-      retval = childCont->createFB(paNameListIt, paTypeName);
+      return childCont->createFB(paNameListIt, paTypeName);
     }
   }
-  return retval;
+  return EMGMResponse::InvalidState;
+}
+
+EMGMResponse CFBContainer::createFB(CStringDictionary::TStringId paInstanceNameId, CStringDictionary::TStringId paTypeName) {
+  // test if the container does not contain any FB or a container with the same name
+  if((nullptr == getFB(paInstanceNameId)) && (nullptr == getFBContainer(paInstanceNameId))) {
+    CFunctionBlock *newFB = CTypeLib::createFB(paInstanceNameId, paTypeName, *this);
+    if(nullptr != newFB) {
+      //we could create a FB now add it to the list of contained FBs
+      addFB(newFB);
+      return EMGMResponse::Ready;
+    }
+    return CTypeLib::getLastError();
+  }
+  return EMGMResponse::InvalidState;
 }
 
 EMGMResponse CFBContainer::deleteFB(forte::core::TNameIdentifier::CIterator &paNameListIt){
