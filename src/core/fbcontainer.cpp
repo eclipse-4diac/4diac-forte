@@ -66,6 +66,15 @@ EMGMResponse CFBContainer::addFB(CFunctionBlock* paFuncBlock){
   return eRetVal;
 }
 
+std::string CFBContainer::getFullQualifiedApplicationInstanceName() const {
+  std::string result(mParent.getFullQualifiedApplicationInstanceName());
+  if(!result.empty()){
+    result += '.';
+  }
+  result += getName();
+  return result;
+}
+
 EMGMResponse CFBContainer::createFB(forte::core::TNameIdentifier::CIterator &paNameListIt, CStringDictionary::TStringId paTypeName){
   if(paNameListIt.isLastEntry()){
     return createFB(*paNameListIt, paTypeName);

@@ -337,8 +337,13 @@ class CFunctionBlock {
     }
     ;
 
-
-    const std::string getFullQualifiedInstanceName() const;
+    /*! \brief Get the full hierarchical name of this FB in its application
+     *
+     * Generates a dot separated name list of this FB excluding device and resource
+     *
+     * \return full hierarchical name
+     */
+    const std::string getFullQualifiedApplicationInstanceName() const;
 
     const char* getInstanceName() const {
       return CStringDictionary::getInstance().get(mFBInstanceName);
