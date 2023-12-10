@@ -79,7 +79,7 @@ namespace forte {
           return const_cast<CFBContainer*>(this)->getDevice();
         }
 
-        virtual std::string getFullQualifiedApplicationInstanceName() const;
+        virtual std::string getFullQualifiedApplicationInstanceName(const char sepChar) const;
 
       protected:
         CFBContainer(CStringDictionary::TStringId paContainerName, CFBContainer &paParent, size_t paNumFBs);

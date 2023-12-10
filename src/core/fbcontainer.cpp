@@ -66,10 +66,10 @@ EMGMResponse CFBContainer::addFB(CFunctionBlock* paFuncBlock){
   return eRetVal;
 }
 
-std::string CFBContainer::getFullQualifiedApplicationInstanceName() const {
-  std::string result(mParent.getFullQualifiedApplicationInstanceName());
+std::string CFBContainer::getFullQualifiedApplicationInstanceName(const char sepChar) const {
+  std::string result(mParent.getFullQualifiedApplicationInstanceName(sepChar));
   if(!result.empty()){
-    result += '.';
+    result += sepChar;
   }
   result += getName();
   return result;

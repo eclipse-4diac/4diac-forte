@@ -703,22 +703,13 @@ TForteUInt32 &CFunctionBlock::getEOMonitorData(TEventID paEOID){
   return mEOMonitorCount[paEOID];
 }
 
-const std::string CFunctionBlock::getFullQualifiedApplicationInstanceName() const {
-  std::string fullName(mContainer.getFullQualifiedApplicationInstanceName());
+std::string CFunctionBlock::getFullQualifiedApplicationInstanceName(const char sepChar) const {
+  std::string fullName(mContainer.getFullQualifiedApplicationInstanceName(sepChar));
 
   if(!fullName.empty()){
-    fullName += '.';
+    fullName += sepChar;
   }
   fullName += getInstanceName();
-
-  forte::core::CFBContainer* parent = &mContainer;
-  const CResource* resource = getResource();
-  while(parent != resource && parent->getName() != nullptr) {
-    fullName.insert(0, ".");
-    fullName.insert(0, parent->getName());
-    parent = &parent->getParent();
-  }
-  fullName.shrink_to_fit();
   return fullName;
 }
 

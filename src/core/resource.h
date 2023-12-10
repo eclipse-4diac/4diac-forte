@@ -84,7 +84,7 @@ class CResource : public CFunctionBlock, public forte::core::CFBContainer{
       return CFBContainer::getDevice();
     }
 
-    std::string getFullQualifiedApplicationInstanceName() const override{
+    std::string getFullQualifiedApplicationInstanceName(const char ) const override{
       // we don't want to add anything here as the resource name should be excluded
       return std::string();
     }

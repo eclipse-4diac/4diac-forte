@@ -343,7 +343,7 @@ class CFunctionBlock {
      *
      * \return full hierarchical name
      */
-    const std::string getFullQualifiedApplicationInstanceName() const;
+    std::string getFullQualifiedApplicationInstanceName(const char sepChar) const;
 
     const char* getInstanceName() const {
       return CStringDictionary::getInstance().get(mFBInstanceName);
