@@ -18,10 +18,9 @@
 #ifndef _TYPELIB_H_
 #define _TYPELIB_H_
 
-#include <fortenew.h>
+#include "fortenew.h"
 #include "mgmcmd.h"
-#include <stringlist.h>
-#include "./utils/staticassert.h"
+#include "stringlist.h"
 
 //forward declaration of a few classes to reduce include file dependencies
 class CFunctionBlock;

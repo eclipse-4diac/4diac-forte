@@ -20,7 +20,6 @@
 #define _ANY_BIT_H_
 
 #include "forte_any_elementary.h"
-#include "../utils/staticassert.h"
 #include <limits>
 
 /*!\ingroup COREDTS IIEC_ANY_BIT represents any bit data types according to IEC 61131.

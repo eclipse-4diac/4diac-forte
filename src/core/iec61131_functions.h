@@ -23,10 +23,7 @@
 
 #include "../arch/devlog.h"
 #include "convert_functions.h"
-#include <cmath>
-#include <string.h>
 #include "iec61131_cast_helper.h"
-#include "./utils/staticassert.h"
 #include "./datatypes/forte_struct.h"
 #include "./datatypes/forte_array_common.h"
 #include "./datatypes/forte_array_fixed.h"
@@ -34,10 +31,8 @@
 #include "./datatypes/forte_array_dynamic.h"
 
 #include <algorithm>
-
-#ifdef CONCAT
-# undef CONCAT
-#endif
+#include <cmath>
+#include <cstring>
 
 #ifdef VXWORKS
 #define tanf(x) static_cast<TForteFloat>(tan(x))
@@ -1485,7 +1480,7 @@ auto swapEndianess(const T &paValue) -> typename std::enable_if_t<std::is_base_o
   } else if constexpr (std::is_same_v<CIEC_WSTRING, T>) {
     T reversed(paValue);
     const TForteUInt16 length = reversed.length();
-    for(TForteUInt16 i = 0; i < length; i += sizeof(typename T::TValueType)) {
+    for(TForteUInt16 i = 0; i < length; i += sizeof(typename T::TSymbolType)) {
       *(reversed.getValue() + i) = *(paValue.getValue() + (i + 1));
       *(reversed.getValue() + (i + 1)) = *(paValue.getValue() + i);
     }
