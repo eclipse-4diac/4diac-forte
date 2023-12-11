@@ -52,6 +52,14 @@ public:
 
     [[nodiscard]] virtual const_reference operator[](intmax_t index) const = 0;
 
+    bool isIndexInRange(const intmax_t index) const {
+      return getLowerBound() <= index && index <= getUpperBound();
+    }
+
+    bool isIndexInRange(const CIEC_ANY_INT &index) const {
+      return isIndexInRange(index.getSignedValue());
+    }
+
     CIEC_ARRAY &operator=(const CIEC_ARRAY &paSource) {
       assignDynamic(paSource, paSource.getLowerBound(), paSource.getUpperBound());
       return *this;
