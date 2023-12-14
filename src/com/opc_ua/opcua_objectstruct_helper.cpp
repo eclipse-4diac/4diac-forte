@@ -53,14 +53,14 @@ bool COPC_UA_ObjectStruct_Helper::checkStructTypeConnection(bool paIsPublisher) 
   if(createOPCUAStructType(structTypeName, structType)) {
     return true;
   }
-  DEVLOG_ERROR("[OPC UA LAYER]: Invalid Struct type connected to FB %s\n", mLayer.getCommFB()->getInstanceName());
+  DEVLOG_ERROR("[OPC UA OBJECT STRUCT HELPER]: Invalid Struct type connected to FB %s\n", mLayer.getCommFB()->getInstanceName());
   return false;
 }
 
 bool COPC_UA_ObjectStruct_Helper::createOPCUAStructType(std::string &paStructTypeName, CIEC_STRUCT &paStructType) {
   COPC_UA_Local_Handler* localHandler = static_cast<COPC_UA_Local_Handler*>(mHandler);
   if(!localHandler) {
-    DEVLOG_ERROR("[OPC UA LAYER]: Failed to get LocalHandler because LocalHandler is null!\n");
+    DEVLOG_ERROR("[OPC UA OBJECT STRUCT HELPER]: Failed to get LocalHandler because LocalHandler is null!\n");
     return false;
   }
   UA_Server *server = localHandler->getUAServer();
@@ -91,7 +91,7 @@ bool COPC_UA_ObjectStruct_Helper::defineOPCUAStructTypeNode(UA_Server *paServer,
     nullptr, &paNodeId);
 
   if (status != UA_STATUSCODE_GOOD) {
-    DEVLOG_ERROR("[OPC UA LAYER]: Failed to create OPC UA Type Node for Type %s\n", paStructTypeName);
+    DEVLOG_ERROR("[OPC UA OBJECT STRUCT HELPER]: Failed to create OPC UA Type Node for Type %s\n", paStructTypeName);
     return false;
   }
   return true;
@@ -222,7 +222,7 @@ forte::com_infra::EComResponse COPC_UA_ObjectStruct_Helper::initializeMemberActi
   // TODO implement layer to handle more than 1 struct
   COPC_UA_Local_Handler* localHandler = static_cast<COPC_UA_Local_Handler*>(mHandler);
   if(!localHandler) {
-    DEVLOG_ERROR("[OPC UA LAYER]: Failed to get LocalHandler because LocalHandler is null!\n");
+    DEVLOG_ERROR("[OPC UA OBJECT STRUCT HELPER]: Failed to get LocalHandler because LocalHandler is null!\n");
     return e_InitTerminated;
   }
   CIEC_ANY** apoDataPorts = paIsPublisher ? mLayer.getCommFB()->getSDs() : mLayer.getCommFB()->getRDs();
@@ -237,7 +237,7 @@ forte::com_infra::EComResponse COPC_UA_ObjectStruct_Helper::initializeMemberActi
     CIEC_ANY* memberVariable = structType.getMember(i);
     actionInfo->getNodePairInfo().pushBack(new CActionInfo::CNodePairInfo(nullptr, memberBrowsePath));
     if(UA_STATUSCODE_GOOD != localHandler->initializeActionForObjectStruct(actionInfo, *memberVariable)) {
-      DEVLOG_ERROR("[OPC UA LAYER]: Error occured in FB %s while initializing Struct member %s\n", mLayer.getCommFB()->getInstanceName(),
+      DEVLOG_ERROR("[OPC UA OBJECT STRUCT HELPER]: Error occured in FB %s while initializing Struct member %s\n", mLayer.getCommFB()->getInstanceName(),
       CStringDictionary::getInstance().get(structMemberNames[i]));
       return e_InitTerminated;
     }
@@ -252,7 +252,7 @@ bool COPC_UA_ObjectStruct_Helper::isOPCUAObjectPresent(std::string &paBrowsePath
     CActionInfo::CNodePairInfo nodePair(nullptr, paBrowsePath);
     return localHandler->isOPCUAObjectPresent(nodePair);
   } else {
-    DEVLOG_ERROR("[OPC UA LAYER]: Failed to get LocalHandler because LocalHandler is null!\n");
+    DEVLOG_ERROR("[OPC UA OBJECT STRUCT HELPER]: Failed to get LocalHandler because LocalHandler is null!\n");
   }
   return false;
 }
