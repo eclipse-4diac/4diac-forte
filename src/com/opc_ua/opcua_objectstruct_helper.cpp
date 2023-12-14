@@ -46,8 +46,79 @@ bool COPC_UA_ObjectStruct_Helper::checkStructTypeConnection(bool paIsPublisher) 
   if(COPC_UA_ObjectStruct_Helper::isOPCUAObjectPresent(browsePath)) {
     return true;
   }
+  std::string structTypeName;
+  getStructTypeName(structTypeName, paIsPublisher);
+  CIEC_ANY** apoRDs = paIsPublisher ? mLayer.getCommFB()->getSDs() : mLayer.getCommFB()->getRDs();
+  CIEC_STRUCT& structType = static_cast<CIEC_STRUCT&>(apoRDs[0]->unwrap());
+  if(createOPCUAStructType(structTypeName, structType)) {
+    return true;
+  }
   DEVLOG_ERROR("[OPC UA LAYER]: Invalid Struct type connected to FB %s\n", mLayer.getCommFB()->getInstanceName());
   return false;
+}
+
+bool COPC_UA_ObjectStruct_Helper::createOPCUAStructType(std::string &paStructTypeName, CIEC_STRUCT &paStructType) {
+  COPC_UA_Local_Handler* localHandler = static_cast<COPC_UA_Local_Handler*>(mHandler);
+  if(!localHandler) {
+    DEVLOG_ERROR("[OPC UA LAYER]: Failed to get LocalHandler because LocalHandler is null!\n");
+    return false;
+  }
+  UA_Server *server = localHandler->getUAServer();
+  UA_NodeId typeNodeId;
+  if(!defineOPCUAStructTypeNode(server, typeNodeId, paStructTypeName)) return false;
+  const CStringDictionary::TStringId* structMemberNames = paStructType.elementNames();
+  for(size_t i = 0; i < paStructType.getStructSize(); i++) {
+    CIEC_ANY* structMember = paStructType.getMember(i);
+    if(!addOPCUAStructTypeComponent(server, typeNodeId, structMember, CStringDictionary::getInstance().get(structMemberNames[i]))) {
+      return false;
+    } 
+  }
+  return true;
+}
+
+bool COPC_UA_ObjectStruct_Helper::defineOPCUAStructTypeNode(UA_Server *paServer, UA_NodeId &paNodeId, std::string &paStructTypeName) {
+  // TODO Define namespaceindex globally
+  UA_UInt16 namespaceIndex = 2;
+  char* structTypeName = const_cast<char*>(paStructTypeName.c_str());
+
+  paNodeId = UA_NODEID_NUMERIC(namespaceIndex, 0);
+  UA_ObjectTypeAttributes oAttr = UA_ObjectTypeAttributes_default;
+  oAttr.displayName = UA_LOCALIZEDTEXT(const_cast<char*>(""), structTypeName);
+  UA_StatusCode status = UA_Server_addObjectTypeNode(paServer, paNodeId,
+    UA_NODEID_NUMERIC(0, UA_NS0ID_BASEOBJECTTYPE),
+    UA_NODEID_NUMERIC(0, UA_NS0ID_HASSUBTYPE),
+    UA_QUALIFIEDNAME(namespaceIndex, structTypeName), oAttr,
+    nullptr, &paNodeId);
+
+  if (status != UA_STATUSCODE_GOOD) {
+    DEVLOG_ERROR("[OPC UA LAYER]: Failed to create OPC UA Type Node for Type %s\n", paStructTypeName);
+    return false;
+  }
+  return true;
+}
+
+bool COPC_UA_ObjectStruct_Helper::addOPCUAStructTypeComponent(UA_Server *paServer, UA_NodeId &paParentNodeId, CIEC_ANY *paStructMember, std::string paStructMemberName) {
+  UA_UInt16 namespaceIndex = 2;
+  char* memberName = const_cast<char*>(paStructMemberName.c_str());
+  UA_VariableAttributes vAttr = UA_VariableAttributes_default;
+    vAttr.displayName = UA_LOCALIZEDTEXT(static_cast<char*>(""), memberName);
+    vAttr.valueRank = UA_VALUERANK_SCALAR;
+    vAttr.minimumSamplingInterval = 0.000000;
+    vAttr.userAccessLevel = 1;
+    vAttr.accessLevel = 3;
+    vAttr.dataType = COPC_UA_Helper::getOPCUATypeFromAny(*paStructMember)->typeId;//UA_NODEID_NUMERIC(0, 1); // 1 is Boolean
+
+    UA_NodeId memberNodeId = UA_NODEID_NUMERIC(namespaceIndex, 0);
+    UA_StatusCode status = UA_Server_addVariableNode(paServer, UA_NODEID_NULL, paParentNodeId,
+      UA_NODEID_NUMERIC(0, UA_NS0ID_HASCOMPONENT),
+      UA_QUALIFIEDNAME(namespaceIndex, memberName),
+      UA_NODEID_NUMERIC(0, UA_NS0ID_BASEDATAVARIABLETYPE), vAttr, NULL, &memberNodeId);
+  if(status != UA_STATUSCODE_GOOD) {
+    return false;
+  }
+  return UA_STATUSCODE_GOOD == UA_Server_addReference(paServer, memberNodeId,
+      UA_NODEID_NUMERIC(0, UA_NS0ID_HASMODELLINGRULE),
+      UA_EXPANDEDNODEID_NUMERIC(0, UA_NS0ID_MODELLINGRULE_MANDATORY), true);               
 }
 
 forte::com_infra::EComResponse COPC_UA_ObjectStruct_Helper::createObjectNode(CActionInfo& paActionInfo, bool paIsPublisher) {

@@ -134,6 +134,8 @@ class COPC_UA_ObjectStruct_Helper {
     */
     std::shared_ptr<CActionInfo> getCreateObjectActionInfo(CActionInfo& paActionInfo, std::string &paBrowsePath, bool paIsPublisher);
 
+    bool createOPCUAStructType(std::string &paStructTypeName, CIEC_STRUCT &paStructType);
+
     /**
      * Perform initialization for Object Struct Members
      * @param paActionInfo The ActionInfo to create the Object Node from
@@ -152,6 +154,12 @@ class COPC_UA_ObjectStruct_Helper {
     void getStructBrowsePath(std::string &paBrowsePath, const std::string &paPathPrefix, bool paIsPublisher);
 
     /**
+     * @param paStructTypeName Place to store the name of the Struct Type
+     * @param paIsPublisher True if the FB is a Publisher, false othewise
+    */
+    void getStructTypeName(std::string &paStructTypeName, bool paIsPublisher);
+
+    /**
      * Get the BrowsePath to the OPC UA Object Struct members from the local Struct Type
      * @param paMemberBrowsePath Place to store the BrowsePath to the OPC UA Struct Object Type
      * @param paBrowsePathPrefix BrowsePath to the Struct Object Node
@@ -159,11 +167,8 @@ class COPC_UA_ObjectStruct_Helper {
      */
     static void getStructMemberBrowsePath(std::string &paMemberBrowsePath, std::string &paBrowsePathPrefix, const CStringDictionary::TStringId structMemberNameId);
 
+    static bool defineOPCUAStructTypeNode(UA_Server *paServer, UA_NodeId &paNodeId, std::string &paStructTypeName);
 
-    /**
-     * @param paStructTypeName Place to store the name of the Struct Type
-     * @param paIsPublisher True if the FB is a Publisher, false othewise
-    */
-    void getStructTypeName(std::string &paStructTypeName, bool paIsPublisher);
+    static bool addOPCUAStructTypeComponent(UA_Server *paServer, UA_NodeId &paParentNodeId, CIEC_ANY *paStructMember, std::string paStructMemberName);
 
 };
