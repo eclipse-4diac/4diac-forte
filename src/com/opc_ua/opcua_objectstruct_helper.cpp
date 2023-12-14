@@ -35,8 +35,8 @@ void COPC_UA_ObjectStruct_Helper::uninitializeStruct() {
   for(std::shared_ptr<CActionInfo> actionInfo : mStructMemberActionInfos) {
       mHandler->uninitializeAction(*actionInfo);
     }
-    if(mCreatetNodeActionInfo) {
-      mHandler->uninitializeAction(*mCreatetNodeActionInfo);
+    if(mCreateNodeActionInfo) {
+      mHandler->uninitializeAction(*mCreateNodeActionInfo);
   }
 }
 
@@ -53,23 +53,13 @@ bool COPC_UA_ObjectStruct_Helper::checkStructTypeConnection(bool paIsPublisher) 
 forte::com_infra::EComResponse COPC_UA_ObjectStruct_Helper::createObjectNode(CActionInfo& paActionInfo, bool paIsPublisher) {
   EComResponse response = e_InitTerminated;
   std::string browsePath = (*paActionInfo.getNodePairInfo().begin())->mBrowsePath;
-  if(isOPCUAObjectPresent(browsePath)) {
-    return initializeMemberAction(paActionInfo, browsePath, paIsPublisher);
+  if(!isOPCUAObjectPresent(browsePath)) {
+    mCreateNodeActionInfo = getCreateObjectActionInfo(paActionInfo, browsePath, paIsPublisher);
+    if( (UA_STATUSCODE_GOOD != mHandler->initializeAction(*mCreateNodeActionInfo)) || (UA_STATUSCODE_GOOD != mHandler->executeAction(*mCreateNodeActionInfo)) ) {
+      return response;
+    }
   }
-  mCreatetNodeActionInfo = getCreateObjectActionInfo(paActionInfo, browsePath, paIsPublisher);
-  if( (UA_STATUSCODE_GOOD == mHandler->initializeAction(*mCreatetNodeActionInfo)) && (UA_STATUSCODE_GOOD == mHandler->executeAction(*mCreatetNodeActionInfo)) ) {
-    response = initializeMemberAction(paActionInfo, browsePath, paIsPublisher);
-  }
-  return response;
-
-
-  // if(!isOPCUAStructObjectPresent(browsePath)) {
-  //   mCreateNodeActionInfo = getCreateObjectActionForObjectNodeStruct(browsePath, paIsPublisher);
-  //   if( (UA_STATUSCODE_GOOD != mHandler->initializeAction(*mCreateNodeActionInfo)) && (UA_STATUSCODE_GOOD == mHandler->executeAction(*mCreateNodeActionInfo)) ) {
-  //     return response;
-  //   }
-  // }
-  // return initializeActionForObjectStructMembers(browsePath, paIsPublisher);
+  return initializeMemberAction(paActionInfo, browsePath, paIsPublisher);
 }
 
 CIEC_ANY const *COPC_UA_ObjectStruct_Helper::getStructMember(CActionInfo &paActionInfo, bool paIsSD) {

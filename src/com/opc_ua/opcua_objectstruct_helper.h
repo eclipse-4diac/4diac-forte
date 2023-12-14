@@ -110,7 +110,7 @@ class COPC_UA_ObjectStruct_Helper {
     /**
      * Pointer to ActionInfo for created OPC UA Struct Object Node
      */
-    std::shared_ptr<CActionInfo> mCreatetNodeActionInfo;
+    std::shared_ptr<CActionInfo> mCreateNodeActionInfo;
 
     /**
      * ActionInfos of Struct members 
