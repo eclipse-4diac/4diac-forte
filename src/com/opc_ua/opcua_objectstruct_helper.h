@@ -38,7 +38,7 @@ class COPC_UA_ObjectStruct_Helper {
      * @param paIsPublisher True if the FB is a Publisher, false othewise
      * @return True if Struct Object Type is valid, false otherwise
      */
-    bool checkObjectNodeStructTypeConnection(bool paIsPublisher);
+    bool checkStructTypeConnection(bool paIsPublisher);
 
     /**
      * Create an OPC UA Object Node from Struct Type, if it is not present
@@ -46,7 +46,7 @@ class COPC_UA_ObjectStruct_Helper {
      * @param paIsPublisher True if the FB is a Publisher, false othewise
      * @return e_InitOk if Object Node was created successfully, e_InitTerminated otherwise
     */
-    forte::com_infra::EComResponse createStructObjectNode(CActionInfo& paActionInfo, bool paIsPublisher);
+    forte::com_infra::EComResponse createObjectNode(CActionInfo& paActionInfo, bool paIsPublisher);
 
     /**
      * Get Object Struct member from ActionInfo browsepath
@@ -54,38 +54,38 @@ class COPC_UA_ObjectStruct_Helper {
      * @param paIsSD True if the local port is an SD, false otherwise
      * @return The pointer to the member variable
     */
-    CIEC_ANY const *getObjectStructMember(CActionInfo &paActionInfo, bool paIsSD);
+    CIEC_ANY const *getStructMember(CActionInfo &paActionInfo, bool paIsSD);
 
     /**
      * Execute the action for a Object Node Struct
      * @return e_ProcessDataOK if no problem occurred, other value otherwise
      */
-    forte::com_infra::EComResponse executeActionForObjectNodeStruct();
+    forte::com_infra::EComResponse executeStructAction();
 
     /**
      * Get index to the corresponding Object Struct RDBuffer entry from the Node ID
      * @param paNodeId The Node ID
      * @return The index to the corresponding RDBuffer entry
     */
-    int getObjectStructRDBufferIndexFromNodeId(const UA_NodeId *paNodeId);
+    int getRDBufferIndexFromNodeId(const UA_NodeId *paNodeId);
 
     /**
      * Set values of Object Struct members from the RDBuffer
      * @param paRDBuffer The buffer for the data
     */
-    void setObjectStructData(CIEC_ANY ***paRDBuffer);
+    void setMemberValues(CIEC_ANY ***paRDBuffer);
 
     /**
      * Initialize RDBuffer for Object Structs
      * @param paRDBuffer The buffer to be initialized
     */
-    void initializeStructObjectRDBuffer(CIEC_ANY ***paRDBuffer);
+    void initializeRDBuffer(CIEC_ANY ***paRDBuffer);
 
     /**
      * Delete all entries of the RDBuffer
      * @param paRDBuffer The buffer to be uninitialized
     */
-    void deleteStructObjectRDBuffer(CIEC_ANY ***paRDBuffer);
+    void deleteRDBufferEntries(CIEC_ANY ***paRDBuffer);
 
     /**
      * Check if Data Connection is a Struct Type
@@ -110,19 +110,19 @@ class COPC_UA_ObjectStruct_Helper {
     /**
      * Pointer to ActionInfo for created OPC UA Struct Object Node
      */
-    std::shared_ptr<CActionInfo> mCreateObjectStructNode;
+    std::shared_ptr<CActionInfo> mCreatetNodeActionInfo;
 
     /**
      * ActionInfos of Struct members 
     */
-    std::vector<std::shared_ptr<CActionInfo>> mObjectNodeStructActionInfos;
+    std::vector<std::shared_ptr<CActionInfo>> mStructMemberActionInfos;
 
     /**
      * Check if Object Node Struct is present in OPC UA server
      * @param paBrowsePath The BrowsePath to the Object Node
      * @return true, if Object Node already exists, false otherwise
     */
-    bool isOPCUAStructObjectPresent(std::string &paBrowsePath);
+    bool isOPCUAObjectPresent(std::string &paBrowsePath);
 
     /**
      * Get the ActionInfo to create the OPC UA Object Node for Struct Type.
@@ -132,7 +132,7 @@ class COPC_UA_ObjectStruct_Helper {
      * @param paIsPublisher True if the FB is a Publisher, false othewise
      * @return The ActionInfo for creating OPC UA Object Node
     */
-    std::shared_ptr<CActionInfo> getCreateObjectActionForObjectNodeStruct(CActionInfo& paActionInfo, std::string &paBrowsePath, bool paIsPublisher);
+    std::shared_ptr<CActionInfo> getCreateObjectActionInfo(CActionInfo& paActionInfo, std::string &paBrowsePath, bool paIsPublisher);
 
     /**
      * Perform initialization for Object Struct Members
@@ -141,7 +141,7 @@ class COPC_UA_ObjectStruct_Helper {
      * @param paIsPublisher True if the FB is a Publisher, false othewise
      * @return e_InitOk if initialization was successful, e_InitTerminated otherwise
      */
-    forte::com_infra::EComResponse initializeActionForObjectStructMembers(CActionInfo& paActionInfo, std::string &paBrowsePath, bool paIsPublisher);
+    forte::com_infra::EComResponse initializeMemberAction(CActionInfo& paActionInfo, std::string &paBrowsePath, bool paIsPublisher);
     
     /**
      * Get the BrowsePath to the OPC UA Struct Object Type from the local Struct Type
@@ -149,7 +149,7 @@ class COPC_UA_ObjectStruct_Helper {
      * @param paPathPrefix The BrowsePath directory with namespace (e.g. /Objects/1:)
      * @param paIsPublisher True if the FB is a Publisher, false othewise
      */
-    void getObjectNodeStructBrowsePath(std::string &paBrowsePath, const std::string &paPathPrefix, bool paIsPublisher);
+    void getStructBrowsePath(std::string &paBrowsePath, const std::string &paPathPrefix, bool paIsPublisher);
 
     /**
      * Get the BrowsePath to the OPC UA Object Struct members from the local Struct Type
@@ -157,7 +157,7 @@ class COPC_UA_ObjectStruct_Helper {
      * @param paBrowsePathPrefix BrowsePath to the Struct Object Node
      * @param structMemberNameId Name Id of Object Node Struct member
      */
-    static void getObjectNodeStructMemberBrowsePath(std::string &paMemberBrowsePath, std::string &paBrowsePathPrefix, const CStringDictionary::TStringId structMemberNameId);
+    static void getStructMemberBrowsePath(std::string &paMemberBrowsePath, std::string &paBrowsePathPrefix, const CStringDictionary::TStringId structMemberNameId);
 
 
     /**

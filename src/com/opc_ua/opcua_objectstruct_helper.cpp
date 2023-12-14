@@ -32,33 +32,33 @@ COPC_UA_ObjectStruct_Helper::~COPC_UA_ObjectStruct_Helper() {
 }
 
 void COPC_UA_ObjectStruct_Helper::uninitializeStruct() {
-  for(std::shared_ptr<CActionInfo> actionInfo : mObjectNodeStructActionInfos) {
+  for(std::shared_ptr<CActionInfo> actionInfo : mStructMemberActionInfos) {
       mHandler->uninitializeAction(*actionInfo);
     }
-    if(mCreateObjectStructNode) {
-      mHandler->uninitializeAction(*mCreateObjectStructNode);
+    if(mCreatetNodeActionInfo) {
+      mHandler->uninitializeAction(*mCreatetNodeActionInfo);
   }
 }
 
-bool COPC_UA_ObjectStruct_Helper::checkObjectNodeStructTypeConnection(bool paIsPublisher) {
+bool COPC_UA_ObjectStruct_Helper::checkStructTypeConnection(bool paIsPublisher) {
   std::string browsePath;
-  COPC_UA_ObjectStruct_Helper::getObjectNodeStructBrowsePath(browsePath, COPC_UA_ObjectStruct_Helper::structTypesBrowsePath, paIsPublisher);
-  if(COPC_UA_ObjectStruct_Helper::isOPCUAStructObjectPresent(browsePath)) {
+  COPC_UA_ObjectStruct_Helper::getStructBrowsePath(browsePath, COPC_UA_ObjectStruct_Helper::structTypesBrowsePath, paIsPublisher);
+  if(COPC_UA_ObjectStruct_Helper::isOPCUAObjectPresent(browsePath)) {
     return true;
   }
   DEVLOG_ERROR("[OPC UA LAYER]: Invalid Struct type connected to FB %s\n", mLayer.getCommFB()->getInstanceName());
   return false;
 }
 
-forte::com_infra::EComResponse COPC_UA_ObjectStruct_Helper::createStructObjectNode(CActionInfo& paActionInfo, bool paIsPublisher) {
+forte::com_infra::EComResponse COPC_UA_ObjectStruct_Helper::createObjectNode(CActionInfo& paActionInfo, bool paIsPublisher) {
   EComResponse response = e_InitTerminated;
   std::string browsePath = (*paActionInfo.getNodePairInfo().begin())->mBrowsePath;
-  if(isOPCUAStructObjectPresent(browsePath)) {
-    return initializeActionForObjectStructMembers(paActionInfo, browsePath, paIsPublisher);
+  if(isOPCUAObjectPresent(browsePath)) {
+    return initializeMemberAction(paActionInfo, browsePath, paIsPublisher);
   }
-  mCreateObjectStructNode = getCreateObjectActionForObjectNodeStruct(paActionInfo, browsePath, paIsPublisher);
-  if( (UA_STATUSCODE_GOOD == mHandler->initializeAction(*mCreateObjectStructNode)) && (UA_STATUSCODE_GOOD == mHandler->executeAction(*mCreateObjectStructNode)) ) {
-    response = initializeActionForObjectStructMembers(paActionInfo, browsePath, paIsPublisher);
+  mCreatetNodeActionInfo = getCreateObjectActionInfo(paActionInfo, browsePath, paIsPublisher);
+  if( (UA_STATUSCODE_GOOD == mHandler->initializeAction(*mCreatetNodeActionInfo)) && (UA_STATUSCODE_GOOD == mHandler->executeAction(*mCreatetNodeActionInfo)) ) {
+    response = initializeMemberAction(paActionInfo, browsePath, paIsPublisher);
   }
   return response;
 
@@ -72,13 +72,13 @@ forte::com_infra::EComResponse COPC_UA_ObjectStruct_Helper::createStructObjectNo
   // return initializeActionForObjectStructMembers(browsePath, paIsPublisher);
 }
 
-CIEC_ANY const *COPC_UA_ObjectStruct_Helper::getObjectStructMember(CActionInfo &paActionInfo, bool paIsSD) {
+CIEC_ANY const *COPC_UA_ObjectStruct_Helper::getStructMember(CActionInfo &paActionInfo, bool paIsSD) {
   CIEC_ANY** apoDataPorts = paIsSD ? mLayer.getCommFB()->getSDs() : mLayer.getCommFB()->getRDs();
   CIEC_STRUCT& structType = static_cast<CIEC_STRUCT&>(apoDataPorts[0]->unwrap());
   const std::string actionBrowsePath = (*paActionInfo.getNodePairInfo().begin())->mBrowsePath;
 
-  for(size_t i = 0; i < mObjectNodeStructActionInfos.size(); i++) {
-    std::shared_ptr<CActionInfo> actionInfo = mObjectNodeStructActionInfos[i];
+  for(size_t i = 0; i < mStructMemberActionInfos.size(); i++) {
+    std::shared_ptr<CActionInfo> actionInfo = mStructMemberActionInfos[i];
     std::string browsePath = (*actionInfo->getNodePairInfo().begin())->mBrowsePath;
     if(browsePath == actionBrowsePath) {
       return structType.getMember(i);
@@ -87,8 +87,8 @@ CIEC_ANY const *COPC_UA_ObjectStruct_Helper::getObjectStructMember(CActionInfo &
   return nullptr;
 }
 
-forte::com_infra::EComResponse COPC_UA_ObjectStruct_Helper::executeActionForObjectNodeStruct() {
-  for(std::shared_ptr<CActionInfo> actionInfo : mObjectNodeStructActionInfos) {
+forte::com_infra::EComResponse COPC_UA_ObjectStruct_Helper::executeStructAction() {
+  for(std::shared_ptr<CActionInfo> actionInfo : mStructMemberActionInfos) {
     if(UA_STATUSCODE_GOOD != mHandler->executeAction(*actionInfo)) {
       return e_ProcessDataDataTypeError;
     }
@@ -96,9 +96,9 @@ forte::com_infra::EComResponse COPC_UA_ObjectStruct_Helper::executeActionForObje
   return e_ProcessDataOk;
 }
 
-int COPC_UA_ObjectStruct_Helper::getObjectStructRDBufferIndexFromNodeId(const UA_NodeId *paNodeId) {
-  for(size_t i = 0; i < mObjectNodeStructActionInfos.size(); i++) {
-    std::shared_ptr<CActionInfo> actionInfo = mObjectNodeStructActionInfos[i];
+int COPC_UA_ObjectStruct_Helper::getRDBufferIndexFromNodeId(const UA_NodeId *paNodeId) {
+  for(size_t i = 0; i < mStructMemberActionInfos.size(); i++) {
+    std::shared_ptr<CActionInfo> actionInfo = mStructMemberActionInfos[i];
     UA_NodeId *nodeId = (*actionInfo->getNodePairInfo().begin())->mNodeId;
     if(UA_NodeId_equal(nodeId, paNodeId)) {
       return (int)i;
@@ -107,7 +107,7 @@ int COPC_UA_ObjectStruct_Helper::getObjectStructRDBufferIndexFromNodeId(const UA
   return -1;
 }
 
-void COPC_UA_ObjectStruct_Helper::setObjectStructData(CIEC_ANY ***paRDBuffer) {
+void COPC_UA_ObjectStruct_Helper::setMemberValues(CIEC_ANY ***paRDBuffer) {
   // TODO implement layer to handle more than 1 struct
   CIEC_ANY** apoRDs = mLayer.getCommFB()->getRDs();
   CIEC_STRUCT& structType = static_cast<CIEC_STRUCT&>(apoRDs[0]->unwrap());
@@ -116,7 +116,7 @@ void COPC_UA_ObjectStruct_Helper::setObjectStructData(CIEC_ANY ***paRDBuffer) {
   }
 }
 
-void COPC_UA_ObjectStruct_Helper::initializeStructObjectRDBuffer(CIEC_ANY ***paRDBuffer) {
+void COPC_UA_ObjectStruct_Helper::initializeRDBuffer(CIEC_ANY ***paRDBuffer) {
   // TODO implement layer to handle more than 1 struct
   CIEC_ANY** apoRDs = mLayer.getCommFB()->getRDs();
   CIEC_STRUCT& structType = static_cast<CIEC_STRUCT&>(apoRDs[0]->unwrap());
@@ -127,7 +127,7 @@ void COPC_UA_ObjectStruct_Helper::initializeStructObjectRDBuffer(CIEC_ANY ***paR
   }
 }
 
-void COPC_UA_ObjectStruct_Helper::deleteStructObjectRDBuffer(CIEC_ANY ***paRDBuffer) {
+void COPC_UA_ObjectStruct_Helper::deleteRDBufferEntries(CIEC_ANY ***paRDBuffer) {
   if(mLayer.getCommFB()->getComServiceType() == e_Subscriber) {
     CIEC_ANY** apoRDs = mLayer.getCommFB()->getRDs();
     CIEC_STRUCT& structType = static_cast<CIEC_STRUCT&>(apoRDs[0]->unwrap());
@@ -145,11 +145,11 @@ bool COPC_UA_ObjectStruct_Helper::isStructType(const COPC_UA_Layer &paLayer, boo
   return nrOfPorts > 0 && CIEC_ANY::e_STRUCT == apoDataPorts[0]->unwrap().getDataTypeID();
 }
 
-std::shared_ptr<CActionInfo> COPC_UA_ObjectStruct_Helper::getCreateObjectActionForObjectNodeStruct(CActionInfo& paActionInfo, std::string &paBrowsePath, bool paIsPublisher) {
+std::shared_ptr<CActionInfo> COPC_UA_ObjectStruct_Helper::getCreateObjectActionInfo(CActionInfo& paActionInfo, std::string &paBrowsePath, bool paIsPublisher) {
   // TODO implement layer to handle more than 1 struct
   std::shared_ptr<CActionInfo> actionInfo = std::make_shared<CActionInfo>(mLayer, CActionInfo::UA_ActionType::eCreateObject, paActionInfo.getEndpoint());
   std::string typeBrowsePath;
-  getObjectNodeStructBrowsePath(typeBrowsePath, COPC_UA_ObjectStruct_Helper::structTypesBrowsePath, paIsPublisher);
+  getStructBrowsePath(typeBrowsePath, COPC_UA_ObjectStruct_Helper::structTypesBrowsePath, paIsPublisher);
 
   CSinglyLinkedList<CActionInfo::CNodePairInfo*>& nodePairs = actionInfo->getNodePairInfo();
   nodePairs.pushBack(new CActionInfo::CNodePairInfo(nullptr, typeBrowsePath));
@@ -157,7 +157,7 @@ std::shared_ptr<CActionInfo> COPC_UA_ObjectStruct_Helper::getCreateObjectActionF
   return actionInfo;
 }
 
-forte::com_infra::EComResponse COPC_UA_ObjectStruct_Helper::initializeActionForObjectStructMembers(CActionInfo& paActionInfo, std::string &paBrowsePath, bool paIsPublisher) {
+forte::com_infra::EComResponse COPC_UA_ObjectStruct_Helper::initializeMemberAction(CActionInfo& paActionInfo, std::string &paBrowsePath, bool paIsPublisher) {
   // TODO implement layer to handle more than 1 struct
   COPC_UA_Local_Handler* localHandler = static_cast<COPC_UA_Local_Handler*>(mHandler);
   if(!localHandler) {
@@ -170,7 +170,7 @@ forte::com_infra::EComResponse COPC_UA_ObjectStruct_Helper::initializeActionForO
   
   for(size_t i = 0; i < structType.getStructSize(); i++) {
     std::string memberBrowsePath;
-    getObjectNodeStructMemberBrowsePath(memberBrowsePath, paBrowsePath, structMemberNames[i]);
+    getStructMemberBrowsePath(memberBrowsePath, paBrowsePath, structMemberNames[i]);
 
     std::shared_ptr<CActionInfo> actionInfo = std::make_shared<CStructMemberActionInfo>(*this, mLayer, paActionInfo.getAction(), paActionInfo.getEndpoint());
     CIEC_ANY* memberVariable = structType.getMember(i);
@@ -180,12 +180,12 @@ forte::com_infra::EComResponse COPC_UA_ObjectStruct_Helper::initializeActionForO
       CStringDictionary::getInstance().get(structMemberNames[i]));
       return e_InitTerminated;
     }
-    mObjectNodeStructActionInfos.push_back(std::move(actionInfo));
+    mStructMemberActionInfos.push_back(std::move(actionInfo));
   }
   return e_InitOk;
 }
 
-bool COPC_UA_ObjectStruct_Helper::isOPCUAStructObjectPresent(std::string &paBrowsePath) {
+bool COPC_UA_ObjectStruct_Helper::isOPCUAObjectPresent(std::string &paBrowsePath) {
   COPC_UA_Local_Handler* localHandler = static_cast<COPC_UA_Local_Handler*>(mHandler);
   if(localHandler) {
     CActionInfo::CNodePairInfo nodePair(nullptr, paBrowsePath);
@@ -196,7 +196,7 @@ bool COPC_UA_ObjectStruct_Helper::isOPCUAStructObjectPresent(std::string &paBrow
   return false;
 }
 
-void COPC_UA_ObjectStruct_Helper::getObjectNodeStructBrowsePath(std::string &paBrowsePath, const std::string &paPathPrefix, bool paIsPublisher) {
+void COPC_UA_ObjectStruct_Helper::getStructBrowsePath(std::string &paBrowsePath, const std::string &paPathPrefix, bool paIsPublisher) {
   std::string structTypeName;
   getStructTypeName(structTypeName, paIsPublisher);
   if(!structTypeName.empty()) {
@@ -205,7 +205,7 @@ void COPC_UA_ObjectStruct_Helper::getObjectNodeStructBrowsePath(std::string &paB
   }
 }
 
-void COPC_UA_ObjectStruct_Helper::getObjectNodeStructMemberBrowsePath(std::string &paMemberBrowsePath, std::string &paBrowsePathPrefix, const CStringDictionary::TStringId structMemberNameId) {
+void COPC_UA_ObjectStruct_Helper::getStructMemberBrowsePath(std::string &paMemberBrowsePath, std::string &paBrowsePathPrefix, const CStringDictionary::TStringId structMemberNameId) {
   paMemberBrowsePath.append(paBrowsePathPrefix);
   paMemberBrowsePath.append(memberNamespaceIndex);
   paMemberBrowsePath.append(CStringDictionary::getInstance().get(structMemberNameId));

@@ -66,14 +66,14 @@ EComResponse COPC_UA_Layer::openConnection(char *paLayerParameter) {
       
       CActionInfo::UA_ActionType action = mActionInfo->getAction();
       mStructObjectHelper = std::make_unique<COPC_UA_ObjectStruct_Helper>(*this, mHandler);
-      if(COPC_UA_ObjectStruct_Helper::isStructType(*this, isPublisher) && mStructObjectHelper->checkObjectNodeStructTypeConnection(isPublisher) && (CActionInfo::eWrite == action || CActionInfo::eRead == action) ) {
+      if(COPC_UA_ObjectStruct_Helper::isStructType(*this, isPublisher) && mStructObjectHelper->checkStructTypeConnection(isPublisher) && (CActionInfo::eWrite == action || CActionInfo::eRead == action) ) {
         mIsObjectNodeStruct = true;
-        response = mStructObjectHelper->createStructObjectNode(*mActionInfo, isPublisher);
+        response = mStructObjectHelper->createObjectNode(*mActionInfo, isPublisher);
         
         CCriticalRegion criticalRegion(mRDBufferMutex);
         response = e_InitOk;
         if(!isPublisher) {
-          mStructObjectHelper->initializeStructObjectRDBuffer(&mRDBuffer);
+          mStructObjectHelper->initializeRDBuffer(&mRDBuffer);
         }
       }
     }   
@@ -93,7 +93,7 @@ void COPC_UA_Layer::closeConnection() {
     mHandler = nullptr;
     if(mRDBuffer) {
       if(mIsObjectNodeStruct) {
-        mStructObjectHelper->deleteStructObjectRDBuffer(&mRDBuffer);
+        mStructObjectHelper->deleteRDBufferEntries(&mRDBuffer);
       } else {
         for (size_t i = 0; i < getCommFB()->getNumRD(); ++i) {
           delete mRDBuffer[i];
@@ -114,7 +114,7 @@ EComResponse COPC_UA_Layer::recvData(const void *paData, unsigned int) {
       if(handleRecv->mSize + handleRecv->mOffset <= getCommFB()->getNumRD()) {
         CCriticalRegion criticalRegion(mRDBufferMutex);
         for(size_t i = 0; i < handleRecv->mSize; i++) {
-          long long bufferIndex = mIsObjectNodeStruct ? mStructObjectHelper->getObjectStructRDBufferIndexFromNodeId(handleRecv->mNodeId) : handleRecv->mOffset + i;
+          long long bufferIndex = mIsObjectNodeStruct ? mStructObjectHelper->getRDBufferIndexFromNodeId(handleRecv->mNodeId) : handleRecv->mOffset + i;
           if(bufferIndex == -1) {
             DEVLOG_ERROR("[OPC UA LAYER]: Received Node ID %d does not match with any registered Node ID for FB %s\n", handleRecv->mNodeId, getCommFB()->getInstanceName());
             mInterruptResp = e_ProcessDataRecvFaild;
@@ -156,7 +156,7 @@ EComResponse COPC_UA_Layer::recvData(const void *paData, unsigned int) {
 
 EComResponse COPC_UA_Layer::sendData(void *, unsigned int) {
   if(mIsObjectNodeStruct) {
-    return mStructObjectHelper->executeActionForObjectNodeStruct();
+    return mStructObjectHelper->executeStructAction();
   }
   return (UA_STATUSCODE_GOOD == mHandler->executeAction(*mActionInfo) ? e_ProcessDataOk : e_ProcessDataDataTypeError);
 }
@@ -165,7 +165,7 @@ EComResponse COPC_UA_Layer::sendData(void *, unsigned int) {
 EComResponse COPC_UA_Layer::processInterrupt() {
   CCriticalRegion criticalRegion(mRDBufferMutex);
   if(mIsObjectNodeStruct) { 
-    mStructObjectHelper->setObjectStructData(&mRDBuffer);
+    mStructObjectHelper->setMemberValues(&mRDBuffer);
   } else {
     for(size_t i = 0; i < getCommFB()->getNumRD(); ++i) {
       getCommFB()->getRDs()[i]->setValue(*mRDBuffer[i]);

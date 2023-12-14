@@ -25,7 +25,7 @@ class CStructMemberActionInfo : public CActionInfo {
     }
 
     const CIEC_ANY *const *getDataToSend() override {
-      mMemberArr[0] = mStructHelper.getObjectStructMember(*this, true);
+      mMemberArr[0] = mStructHelper.getStructMember(*this, true);
       return mMemberArr;
     }
 
