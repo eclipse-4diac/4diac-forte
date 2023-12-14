@@ -15,7 +15,7 @@
  *    Jose Cabral:
  *      - refactoring to cleaner architecture
  *    Markus Meingast:
- *      - add Support for Object Structs
+ *      - add support for Object Structs
  *******************************************************************************/
 
 #ifndef SRC_MODULES_OPC_UA_OPCUA_LAYER_H_
@@ -239,11 +239,10 @@ class COPC_UA_Layer : public forte::com_infra::CComLayer {
     /**
      * Get the BrowsePath to the OPC UA Struct Object Type from the local Struct Type
      * @param paBrowsePath Place to store the BrowsePath to the OPC UA Struct Object Type
-     * @param paLocalPortConnection Local port connection pointer
      * @param paPathPrefix The BrowsePath directory with namespace (e.g. /Objects/1:)
      * @param paIsPublisher True if the FB is a Publisher, false othewise
      */
-    void getObjectNodeStructBrowsePath(std::string &paBrowsePath, const CDataConnection *paLocalPortConnection, const std::string &paPathPrefix, bool paIsPublisher);
+    void getObjectNodeStructBrowsePath(std::string &paBrowsePath, const std::string &paPathPrefix, bool paIsPublisher);
 
     /**
      * Get the BrowsePath to the OPC UA Object Struct members from the local Struct Type
@@ -255,10 +254,9 @@ class COPC_UA_Layer : public forte::com_infra::CComLayer {
 
     /**
      * @param paStructTypeName Place to store the name of the Struct Type
-     * @param paLocalPortConnection Local port connection pointer
      * @param paIsPublisher True if the FB is a Publisher, false othewise
     */
-    void getStructTypeName(std::string& paStructTypeName, const CDataConnection *paLocalPortConnection, bool paIsPublisher);
+    void getStructTypeName(std::string &paStructTypeName, bool paIsPublisher);
     
 
     /**
