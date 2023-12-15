@@ -57,26 +57,28 @@ bool CCompositeFB::initialize() {
   return true;
 }
 
-CCompositeFB::~CCompositeFB(){
+CCompositeFB::~CCompositeFB() {
   //only delete the interface to internal event connections all other connections are managed by their source's FBs
   //this has to be done even if we don't have any event connection to ensure correct behavior
-  for(unsigned int i = 0; i < mInterfaceSpec->mNumEIs; ++i){
-    delete mInterface2InternalEventCons[i];
+  if (mInterface2InternalEventCons) {
+    for (unsigned int i = 0; i < mInterfaceSpec->mNumEIs; ++i) {
+      delete mInterface2InternalEventCons[i];
+    }
+    delete[] mInterface2InternalEventCons;
   }
-  delete[] mInterface2InternalEventCons;
 
-  if(cmFBNData.mNumEventConnections){
+  if (cmFBNData.mNumEventConnections) {
     delete[] mEventConnections;
   }
 
-  if(cmFBNData.mNumDataConnections){
-    if(nullptr != mDataConnections){
+  if (cmFBNData.mNumDataConnections) {
+    if (nullptr != mDataConnections) {
       delete[] mDataConnections;
     }
-    if(nullptr != mIf2InDConns){
+    if (nullptr != mIf2InDConns) {
       delete[] mIf2InDConns;
     }
-    if(nullptr != mIn2IfDConns){
+    if (nullptr != mIn2IfDConns) {
       delete[] mIn2IfDConns;
     }
   }
