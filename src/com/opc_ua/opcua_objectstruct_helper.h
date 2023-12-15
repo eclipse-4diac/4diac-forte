@@ -73,19 +73,19 @@ class COPC_UA_ObjectStruct_Helper {
      * Set values of Object Struct members from the RDBuffer
      * @param paRDBuffer The buffer for the data
     */
-    void setMemberValues(CIEC_ANY ***paRDBuffer);
+    void setMemberValues(CIEC_ANY **paRDBuffer);
 
     /**
      * Initialize RDBuffer for Object Structs
-     * @param paRDBuffer The buffer to be initialized
+     * @return The initialized buffer
     */
-    void initializeRDBuffer(CIEC_ANY ***paRDBuffer);
+    CIEC_ANY **initializeRDBuffer();
 
     /**
      * Delete all entries of the RDBuffer
      * @param paRDBuffer The buffer to be uninitialized
     */
-    void deleteRDBufferEntries(CIEC_ANY ***paRDBuffer);
+    void deleteRDBufferEntries(CIEC_ANY **paRDBuffer);
 
     /**
      * Check if Data Connection is a Struct Type

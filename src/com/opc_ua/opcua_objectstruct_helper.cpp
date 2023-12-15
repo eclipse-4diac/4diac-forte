@@ -168,32 +168,33 @@ int COPC_UA_ObjectStruct_Helper::getRDBufferIndexFromNodeId(const UA_NodeId *paN
   return -1;
 }
 
-void COPC_UA_ObjectStruct_Helper::setMemberValues(CIEC_ANY ***paRDBuffer) {
+void COPC_UA_ObjectStruct_Helper::setMemberValues(CIEC_ANY **paRDBuffer) {
   // TODO implement layer to handle more than 1 struct
   CIEC_ANY** apoRDs = mLayer.getCommFB()->getRDs();
   CIEC_STRUCT& structType = static_cast<CIEC_STRUCT&>(apoRDs[0]->unwrap());
   for(size_t i = 0; i < structType.getStructSize(); i++) {
-    structType.getMember(i)->setValue(*(*paRDBuffer)[i]);
+    structType.getMember(i)->setValue(*paRDBuffer[i]);
   }
 }
 
-void COPC_UA_ObjectStruct_Helper::initializeRDBuffer(CIEC_ANY ***paRDBuffer) {
+CIEC_ANY **COPC_UA_ObjectStruct_Helper::initializeRDBuffer() {
   // TODO implement layer to handle more than 1 struct
   CIEC_ANY** apoRDs = mLayer.getCommFB()->getRDs();
   CIEC_STRUCT& structType = static_cast<CIEC_STRUCT&>(apoRDs[0]->unwrap());
   const size_t structSize = structType.getStructSize();
-  *paRDBuffer = new CIEC_ANY*[structSize];
+  CIEC_ANY **RDBuffer = new CIEC_ANY*[structSize];
   for(size_t i = 0; i < structSize; i++) {
-    (*paRDBuffer)[i] = structType.getMember(i)->clone(nullptr);
+    RDBuffer[i] = structType.getMember(i)->clone(nullptr);
   }
+  return RDBuffer;
 }
 
-void COPC_UA_ObjectStruct_Helper::deleteRDBufferEntries(CIEC_ANY ***paRDBuffer) {
+void COPC_UA_ObjectStruct_Helper::deleteRDBufferEntries(CIEC_ANY **paRDBuffer) {
   if(mLayer.getCommFB()->getComServiceType() == e_Subscriber) {
     CIEC_ANY** apoRDs = mLayer.getCommFB()->getRDs();
     CIEC_STRUCT& structType = static_cast<CIEC_STRUCT&>(apoRDs[0]->unwrap());
     for(size_t i = 0; i < structType.getStructSize(); i++) {
-      delete (*paRDBuffer)[i];
+      delete paRDBuffer[i];
     }
   }
 }

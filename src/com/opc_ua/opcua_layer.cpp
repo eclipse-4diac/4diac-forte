@@ -73,7 +73,7 @@ EComResponse COPC_UA_Layer::openConnection(char *paLayerParameter) {
         CCriticalRegion criticalRegion(mRDBufferMutex);
         response = e_InitOk;
         if(!isPublisher) {
-          mStructObjectHelper->initializeRDBuffer(&mRDBuffer);
+          mRDBuffer = mStructObjectHelper->initializeRDBuffer();
         }
       }
     }   
@@ -93,7 +93,7 @@ void COPC_UA_Layer::closeConnection() {
     mHandler = nullptr;
     if(mRDBuffer) {
       if(mIsObjectNodeStruct) {
-        mStructObjectHelper->deleteRDBufferEntries(&mRDBuffer);
+        mStructObjectHelper->deleteRDBufferEntries(mRDBuffer);
       } else {
         for (size_t i = 0; i < getCommFB()->getNumRD(); ++i) {
           delete mRDBuffer[i];
@@ -165,7 +165,7 @@ EComResponse COPC_UA_Layer::sendData(void *, unsigned int) {
 EComResponse COPC_UA_Layer::processInterrupt() {
   CCriticalRegion criticalRegion(mRDBufferMutex);
   if(mIsObjectNodeStruct) { 
-    mStructObjectHelper->setMemberValues(&mRDBuffer);
+    mStructObjectHelper->setMemberValues(mRDBuffer);
   } else {
     for(size_t i = 0; i < getCommFB()->getNumRD(); ++i) {
       getCommFB()->getRDs()[i]->setValue(*mRDBuffer[i]);
