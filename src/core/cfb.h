@@ -152,6 +152,10 @@ class CCompositeFB: public CFunctionBlock, public forte::core::CFBContainer {
     //!Acquire the functionblock for a given function block number this may be a contained fb, an adapter, or the composite itself.
     CFunctionBlock *getFunctionBlock(int paFBNum);
 
+    virtual CInOutDataConnection *getDIOOutConInternalUnchecked(TPortId) {
+      return nullptr;
+    }
+
     CInterface2InternalDataConnection *mIf2InDConns;
     CDataConnection **mIn2IfDConns;
 

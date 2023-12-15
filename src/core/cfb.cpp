@@ -270,7 +270,13 @@ void CCompositeFB::createDataConnections(){
 
       if((nullptr != srcFB) && (nullptr != dstFB)){
         if(this == srcFB){
-          mDataConnections[i] = &(mIf2InDConns[getDIID(currentConn.mSrcId)]);
+          TPortId diId = getDIID(currentConn.mSrcId);
+          if(diId != cgInvalidPortId) {
+            mDataConnections[i] = &(mIf2InDConns[diId]);
+          } else {
+            TPortId dioId = getDIOID(currentConn.mSrcId);
+            mDataConnections[i] = getDIOOutConInternalUnchecked(dioId);
+          }
         }
         else{
           mDataConnections[i] = srcFB->getDOConnection(currentConn.mSrcId);

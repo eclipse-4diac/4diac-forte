@@ -23,7 +23,7 @@
 
 class CFunctionBlock;
 
-class CInterface2InternalDataConnection : public CDataConnection{
+class CInterface2InternalDataConnection : public CDataConnection {
   public:
     CInterface2InternalDataConnection();
 
