@@ -20,6 +20,12 @@
 class COPC_UA_HandlerAbstract;
 class CActionInfo;
 
+namespace forte {
+  namespace com_infra {
+    class CBaseCommFB;
+  }
+}
+
 class COPC_UA_ObjectStruct_Helper {
   public:
 
@@ -71,9 +77,11 @@ class COPC_UA_ObjectStruct_Helper {
 
     /**
      * Set values of Object Struct members from the RDBuffer
+     *
+     * @param paRDs      the array of data pointers to be sent
      * @param paRDBuffer The buffer for the data
     */
-    void setMemberValues(CIEC_ANY **paRDBuffer);
+    static void setMemberValues(CIEC_ANY** paRDs, CIEC_ANY **paRDBuffer);
 
     /**
      * Initialize RDBuffer for Object Structs
@@ -83,9 +91,11 @@ class COPC_UA_ObjectStruct_Helper {
 
     /**
      * Delete all entries of the RDBuffer
+     *
+     * @param paCommFB   The comm fb for which the rdbuffer was created
      * @param paRDBuffer The buffer to be uninitialized
     */
-    void deleteRDBufferEntries(CIEC_ANY **paRDBuffer);
+    static void deleteRDBufferEntries(forte::com_infra::CBaseCommFB &paCommFB, CIEC_ANY **paRDBuffer);
 
     /**
      * Check if Data Connection is a Struct Type

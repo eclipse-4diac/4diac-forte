@@ -168,10 +168,9 @@ int COPC_UA_ObjectStruct_Helper::getRDBufferIndexFromNodeId(const UA_NodeId *paN
   return -1;
 }
 
-void COPC_UA_ObjectStruct_Helper::setMemberValues(CIEC_ANY **paRDBuffer) {
+void COPC_UA_ObjectStruct_Helper::setMemberValues(CIEC_ANY** paRDs, CIEC_ANY **paRDBuffer) {
   // TODO implement layer to handle more than 1 struct
-  CIEC_ANY** apoRDs = mLayer.getCommFB()->getRDs();
-  CIEC_STRUCT& structType = static_cast<CIEC_STRUCT&>(apoRDs[0]->unwrap());
+  CIEC_STRUCT& structType = static_cast<CIEC_STRUCT&>(paRDs[0]->unwrap());
   for(size_t i = 0; i < structType.getStructSize(); i++) {
     structType.getMember(i)->setValue(*paRDBuffer[i]);
   }
@@ -179,8 +178,8 @@ void COPC_UA_ObjectStruct_Helper::setMemberValues(CIEC_ANY **paRDBuffer) {
 
 CIEC_ANY **COPC_UA_ObjectStruct_Helper::initializeRDBuffer() {
   // TODO implement layer to handle more than 1 struct
-  CIEC_ANY** apoRDs = mLayer.getCommFB()->getRDs();
-  CIEC_STRUCT& structType = static_cast<CIEC_STRUCT&>(apoRDs[0]->unwrap());
+  CIEC_ANY** rds = mLayer.getCommFB()->getRDs();
+  CIEC_STRUCT& structType = static_cast<CIEC_STRUCT&>(rds[0]->unwrap());
   const size_t structSize = structType.getStructSize();
   CIEC_ANY **RDBuffer = new CIEC_ANY*[structSize];
   for(size_t i = 0; i < structSize; i++) {
@@ -189,10 +188,10 @@ CIEC_ANY **COPC_UA_ObjectStruct_Helper::initializeRDBuffer() {
   return RDBuffer;
 }
 
-void COPC_UA_ObjectStruct_Helper::deleteRDBufferEntries(CIEC_ANY **paRDBuffer) {
-  if(mLayer.getCommFB()->getComServiceType() == e_Subscriber) {
-    CIEC_ANY** apoRDs = mLayer.getCommFB()->getRDs();
-    CIEC_STRUCT& structType = static_cast<CIEC_STRUCT&>(apoRDs[0]->unwrap());
+void COPC_UA_ObjectStruct_Helper::deleteRDBufferEntries(forte::com_infra::CBaseCommFB &paCommFB, CIEC_ANY **paRDBuffer) {
+  if(paCommFB.getComServiceType() == e_Subscriber) {
+    CIEC_ANY** rds = paCommFB.getRDs();
+    CIEC_STRUCT& structType = static_cast<CIEC_STRUCT&>(rds[0]->unwrap());
     for(size_t i = 0; i < structType.getStructSize(); i++) {
       delete paRDBuffer[i];
     }
