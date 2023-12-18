@@ -54,7 +54,7 @@ private:
   void setInitialValues() override;
 
 public:
-  FORTE_E_SELECT(CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
+  FORTE_E_SELECT(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
   CIEC_BOOL var_G;
 

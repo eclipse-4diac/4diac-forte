@@ -62,7 +62,7 @@ class GEN_CSV_WRITER : public CGenFunctionBlock<CFunctionBlock> {
     bool createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) override;
 
   public:
-    GEN_CSV_WRITER(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
+    GEN_CSV_WRITER(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
     ~GEN_CSV_WRITER() override;
 
   private:

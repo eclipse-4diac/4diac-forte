@@ -22,7 +22,7 @@ class FORTE_PUBLISH_1 : public GEN_PUBLISH {
     static const TEventID scmEventREQID = scmSendNotificationEventID;
 
   public:
-    FORTE_PUBLISH_1(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
+    FORTE_PUBLISH_1(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
     ~FORTE_PUBLISH_1() override = default;
 
     void evt_INIT(const CIEC_BOOL &pa_QI, const CIEC_WSTRING &pa_ID, const CIEC_ANY &pa_SD_1, CIEC_BOOL &pa_QO, CIEC_WSTRING &pa_STATUS) {

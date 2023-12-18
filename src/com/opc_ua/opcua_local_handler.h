@@ -18,7 +18,7 @@
  *    Martin Melik Merkumians:
  *      - Change CIEC_STRING to std::string
  *    Markus Meingast:
- *      - Add Support for Object Structs
+ *      - Add support for Object Structs
  *******************************************************************************/
 
 #ifndef SRC_MODULES_OPC_UA_OPCUALOCALHANDLER_H_

@@ -36,7 +36,7 @@ class CBasicFB : public CFunctionBlock {
   public:
     /*!\brief The main constructur for a basic function block.
      */
-    CBasicFB(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec,
+    CBasicFB(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec *paInterfaceSpec,
              CStringDictionary::TStringId paInstanceNameId,
              const SInternalVarsInformation *paVarInternals);
 
@@ -88,7 +88,7 @@ class CBasicFB : public CFunctionBlock {
     CIEC_STATE mECCState; //! the current state of the ecc. start value is 0 = initial state id
     const SInternalVarsInformation *const cmVarInternals; //!< struct holding the information on the internal vars.
 
-    static TFunctionBlockPtr *createInternalFBs(const size_t paAmountOfInternalFBs, const SCFB_FBInstanceData *const pa_InternalFBData, CResource *const paResource);
+    static TFunctionBlockPtr *createInternalFBs(const size_t paAmountOfInternalFBs, const SCFB_FBInstanceData *const pa_InternalFBData, forte::core::CFBContainer &paContainer);
 
     static void deleteInternalFBs(const size_t paAmountOfInternalFBs, TFunctionBlockPtr *paInternalFBs);
 

@@ -56,7 +56,7 @@ private:
   void writeOutputData(TEventID paEIID) override;
 
 public:
-  FORTE_FB_RS(CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
+  FORTE_FB_RS(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
 
   CIEC_BOOL var_S;

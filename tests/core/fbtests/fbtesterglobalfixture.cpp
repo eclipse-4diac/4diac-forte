@@ -34,7 +34,7 @@ CFBTestDataGlobalFixture::CFBTestDataGlobalFixture(){
   //mimick the behavior provided by typelib
   smTestDev->changeFBExecutionState(EMGMCommandType::Reset);
 
-  smTestRes = (CResource *)CTypeLib::createFB(g_nStringIdEMB_RES, g_nStringIdEMB_RES, smTestDev);
+  smTestRes = (CResource *)CTypeLib::createFB(g_nStringIdEMB_RES, g_nStringIdEMB_RES, *smTestDev);
 
   if(smTestRes != nullptr){
     smTestDev->addFB(smTestRes);

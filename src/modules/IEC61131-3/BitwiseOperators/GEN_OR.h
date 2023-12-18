@@ -28,7 +28,7 @@ class GEN_OR : public CGenBitBase {
 
     void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
-    GEN_OR(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
+    GEN_OR(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
     ~GEN_OR() override;
 };
 

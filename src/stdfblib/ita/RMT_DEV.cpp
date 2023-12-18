@@ -30,7 +30,7 @@ const SFBInterfaceSpec RMT_DEV::scmFBInterfaceSpec = {
 
 RMT_DEV::RMT_DEV() :
   CDevice(&scmFBInterfaceSpec, CStringDictionary::scmInvalidStringId),
-      MGR(g_nStringIdMGR, this){
+      MGR(g_nStringIdMGR, *this){
 }
 
 bool RMT_DEV::initialize() {

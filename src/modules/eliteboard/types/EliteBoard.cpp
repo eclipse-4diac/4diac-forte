@@ -53,9 +53,8 @@ const SFBInterfaceSpec FORTE_EliteBoard::scmFBInterfaceSpec = {
     nullptr, nullptr,
     11,      scmAdapterInstances};
 
-FORTE_EliteBoard::FORTE_EliteBoard(const CStringDictionary::TStringId paInstanceNameId,
-                 CResource *paSrcRes)
-    : forte::core::io::IOConfigFBController(paSrcRes, &scmFBInterfaceSpec,
+FORTE_EliteBoard::FORTE_EliteBoard(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer)
+    : forte::core::io::IOConfigFBController(paContainer, &scmFBInterfaceSpec,
                                             paInstanceNameId, mFBConnData,
                                             mFBVarsData),
       mEventHandler{getExtEvHandler<EliteBoardDeviceController>(*this)} {};

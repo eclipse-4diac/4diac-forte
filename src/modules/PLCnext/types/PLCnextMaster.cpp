@@ -42,8 +42,8 @@ const SFBInterfaceSpec FORTE_PLCnextMaster::scmFBInterfaceSpec = {
   1, scmAdapterInstances
 };
 
-FORTE_PLCnextMaster::FORTE_PLCnextMaster(const CStringDictionary::TStringId paInstanceNameId, CResource *const paSrcRes) :
-    forte::core::io::IOConfigFBMultiMaster(paSrcRes, &scmFBInterfaceSpec, paInstanceNameId),
+FORTE_PLCnextMaster::FORTE_PLCnextMaster(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+    forte::core::io::IOConfigFBMultiMaster(paContainer, &scmFBInterfaceSpec, paInstanceNameId),
     var_conn_QO(var_QO),
     var_conn_STATUS(var_STATUS),
     conn_INITO(this, 0),

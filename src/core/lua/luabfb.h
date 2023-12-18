@@ -52,7 +52,7 @@ class CLuaBFB : public CBasicFB {
     static const char LUA_NAME[];
     static const luaL_Reg LUA_FUNCS[];
 
-    CLuaBFB(CStringDictionary::TStringId paInstanceNameId, const CLuaBFBTypeEntry* paTypeEntry, CResource *paResource);
+    CLuaBFB(CStringDictionary::TStringId paInstanceNameId, const CLuaBFBTypeEntry* paTypeEntry, forte::core::CFBContainer &paContainer);
     ~CLuaBFB() override;
 
     bool initialize() override;

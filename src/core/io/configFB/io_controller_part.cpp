@@ -15,9 +15,9 @@
 
 using namespace forte::core::io;
 
-IOConfigFBPartController::IOConfigFBPartController(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec,
+IOConfigFBPartController::IOConfigFBPartController(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec *paInterfaceSpec,
     const CStringDictionary::TStringId paInstanceNameId) :
-    IOConfigFBBase(paSrcRes, paInterfaceSpec, paInstanceNameId), mMaster(nullptr) {
+    IOConfigFBBase(paContainer, paInterfaceSpec, paInstanceNameId), mMaster(nullptr) {
 }
 
 void IOConfigFBPartController::executeEvent(TEventID paEIID, CEventChainExecutionThread * const paECET) {

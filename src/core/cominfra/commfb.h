@@ -33,7 +33,7 @@ namespace forte {
       EMGMResponse changeFBExecutionState(EMGMCommandType paCommand) override;
 
     protected:
-      CCommFB(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes, forte::com_infra::EComServiceType paCommServiceType);
+      CCommFB(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer, forte::com_infra::EComServiceType paCommServiceType);
 
       void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 

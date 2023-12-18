@@ -36,8 +36,13 @@ EMGMResponse checkForActionEquivalentState(const CFunctionBlock &paFB, const EMG
   return EMGMResponse::InvalidState;
 }
 
-CFBContainer::CFBContainer(CStringDictionary::TStringId paContainerName, CFBContainer *paParent) :
+CFBContainer::CFBContainer(CStringDictionary::TStringId paContainerName, CFBContainer &paParent) :
     mContainerName(paContainerName), mParent(paParent) {
+}
+
+CFBContainer::CFBContainer(CStringDictionary::TStringId paContainerName, CFBContainer &paParent, size_t paNumFBs) :
+    mContainerName(paContainerName), mParent(paParent) {
+  mFunctionBlocks.reserve(paNumFBs);
 }
 
 CFBContainer::~CFBContainer() {
@@ -61,51 +66,42 @@ EMGMResponse CFBContainer::addFB(CFunctionBlock* paFuncBlock){
   return eRetVal;
 }
 
-CResource* CFBContainer::getResource() {
-  if(mParent != nullptr){
-    return mParent->getResource();
+std::string CFBContainer::getFullQualifiedApplicationInstanceName(const char sepChar) const {
+  std::string result(mParent.getFullQualifiedApplicationInstanceName(sepChar));
+  if(!result.empty()){
+    result += sepChar;
   }
-  DEVLOG_ERROR("FB is not contained in an FB Container!");
-  return nullptr;
+  result += getName();
+  return result;
 }
 
-CDevice* CFBContainer::getDevice() {
-  if(mParent != nullptr){
-    return mParent->getDevice();
-  }
-  DEVLOG_ERROR("FB is not contained in an FB Container!");
-  return nullptr;
-}
-
-
-EMGMResponse CFBContainer::createFB(forte::core::TNameIdentifier::CIterator &paNameListIt, CStringDictionary::TStringId paTypeName, CResource *paRes){
-  EMGMResponse retval = EMGMResponse::InvalidState;
-
+EMGMResponse CFBContainer::createFB(forte::core::TNameIdentifier::CIterator &paNameListIt, CStringDictionary::TStringId paTypeName){
   if(paNameListIt.isLastEntry()){
-    // test if the container does not contain any FB or a container with the same name
-    if((nullptr == getFB(*paNameListIt)) && (nullptr == getFBContainer(*paNameListIt))){
-      CFunctionBlock *newFB = CTypeLib::createFB(*paNameListIt, paTypeName, paRes);
-      if(nullptr != newFB){
-        //we could create a FB now add it to the list of contained FBs
-        addFB(newFB);
-        newFB->setContainer(this);
-        retval = EMGMResponse::Ready;
-      }
-      else{
-        retval = CTypeLib::getLastError();
-      }
-    }
-  }
-  else{
+    return createFB(*paNameListIt, paTypeName);
+  } else{
     //we have more than one name in the fb name list. Find or create the container and hand the create command to this container.
     CFBContainer *childCont = findOrCreateContainer(*paNameListIt);
     if(nullptr != childCont){
       //remove the container from the name list
       ++paNameListIt;
-      retval = childCont->createFB(paNameListIt, paTypeName, paRes);
+      return childCont->createFB(paNameListIt, paTypeName);
     }
   }
-  return retval;
+  return EMGMResponse::InvalidState;
+}
+
+EMGMResponse CFBContainer::createFB(CStringDictionary::TStringId paInstanceNameId, CStringDictionary::TStringId paTypeName) {
+  // test if the container does not contain any FB or a container with the same name
+  if((nullptr == getFB(paInstanceNameId)) && (nullptr == getFBContainer(paInstanceNameId))) {
+    CFunctionBlock *newFB = CTypeLib::createFB(paInstanceNameId, paTypeName, *this);
+    if(nullptr != newFB) {
+      //we could create a FB now add it to the list of contained FBs
+      addFB(newFB);
+      return EMGMResponse::Ready;
+    }
+    return CTypeLib::getLastError();
+  }
+  return EMGMResponse::InvalidState;
 }
 
 EMGMResponse CFBContainer::deleteFB(forte::core::TNameIdentifier::CIterator &paNameListIt){
@@ -191,13 +187,13 @@ CFBContainer::TFBContainerList::iterator CFBContainer::getFBContainerIterator(CS
 CFBContainer *CFBContainer::findOrCreateContainer(CStringDictionary::TStringId paContainerName) {
   CFBContainer *retVal;
   if (mSubContainers.empty()) {
-    retVal = new CFBContainer(paContainerName, this);
+    retVal = new CFBContainer(paContainerName, *this);
     mSubContainers.insert(mSubContainers.begin(), retVal);
   } else {
     TFBContainerList::iterator it = getFBContainerIterator(paContainerName);
     if (nullptr == getFB(paContainerName) && (it == mSubContainers.end() || (*it)->getNameId() != paContainerName)) {
       //the container with the given name does not exist but only create it if there is no FB with the same name.
-      retVal = new CFBContainer(paContainerName, this);
+      retVal = new CFBContainer(paContainerName, *this);
       mSubContainers.insert(it, retVal);
     } else {
       retVal = (*it);

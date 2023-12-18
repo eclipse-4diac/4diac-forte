@@ -17,10 +17,9 @@
 
 #include "forte_any.h"
 #include "iec61131_cast_helper.h"
-#include "./utils/staticassert.h"
 #include "iec61131_functions.h"
 
-#include <math.h>
+#include <cmath>
 
 /** @brief This iterator class is a generator/input iterator, producing a new value on each iteration, until the preset goal value is met
  *

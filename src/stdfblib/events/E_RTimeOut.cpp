@@ -32,8 +32,8 @@ const SFBInterfaceSpec FORTE_E_RTimeOut::scmFBInterfaceSpec = {
   1, scmAdapterInstances
 };
 
-FORTE_E_RTimeOut::FORTE_E_RTimeOut(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) :
-    CCompositeFB(paSrcRes, &scmFBInterfaceSpec, paInstanceNameId, &scmFBNData) {
+FORTE_E_RTimeOut::FORTE_E_RTimeOut(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+    CCompositeFB(paContainer, &scmFBInterfaceSpec, paInstanceNameId, scmFBNData) {
 };
 
 const SCFB_FBInstanceData FORTE_E_RTimeOut::scmInternalFBs[] = {

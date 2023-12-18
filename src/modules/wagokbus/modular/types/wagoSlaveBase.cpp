@@ -15,8 +15,8 @@
 const TForteUInt8 WagoSlaveBase::scmSlaveConfigurationIO[] = { };
 const TForteUInt8 WagoSlaveBase::scmSlaveConfigurationIONum = 0;
 
-WagoSlaveBase::WagoSlaveBase(int paType, CResource* paResource, const SFBInterfaceSpec* paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId) :
-        forte::core::io::IOConfigFBMultiSlave(scmSlaveConfigurationIO, scmSlaveConfigurationIONum, paType, paResource, paInterfaceSpec, paInstanceNameId) {
+WagoSlaveBase::WagoSlaveBase(int paType, forte::core::CFBContainer &paContainer, const SFBInterfaceSpec* paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId) :
+        forte::core::io::IOConfigFBMultiSlave(scmSlaveConfigurationIO, scmSlaveConfigurationIONum, paType, paContainer, paInterfaceSpec, paInstanceNameId) {
 }
 
 void WagoSlaveBase::initHandlesBase(size_t paNumberOfBoolInputs, size_t paNumberOfBoolOutputs, size_t paNumberOfAnalogInputs, size_t paNumberOfAnalogOutputs) {

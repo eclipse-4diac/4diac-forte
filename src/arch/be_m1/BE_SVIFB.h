@@ -17,8 +17,8 @@
 
 class BE_SVIFB : public CFunctionBlock{
   public:
-    BE_SVIFB(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId) :
-        CFunctionBlock(paSrcRes, paInterfaceSpec, paInstanceNameId){
+    BE_SVIFB(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId) :
+        CFunctionBlock(paContainer, paInterfaceSpec, paInstanceNameId){
     }
 
   protected:

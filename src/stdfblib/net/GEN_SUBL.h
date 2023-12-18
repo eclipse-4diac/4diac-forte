@@ -23,7 +23,7 @@
 class GEN_SUBL : public GEN_SUBSCRIBE{
     DECLARE_GENERIC_FIRMWARE_FB(GEN_SUBL)
   public:
-    GEN_SUBL(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
+    GEN_SUBL(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     bool configureFB(const char *paConfigString) override;
 

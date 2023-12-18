@@ -38,7 +38,7 @@ private:
 public:
   static CLuaBFBTypeEntry* createLuaFBTypeEntry(CStringDictionary::TStringId typeNameId, const std::string& paLuaScriptAsString);
 
-  CFunctionBlock* createFBInstance(CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) override;
+  CFunctionBlock* createFBInstance(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) override;
 
   const SFBInterfaceSpec* getInterfaceSpec() const {
     return &m_interfaceSpec;

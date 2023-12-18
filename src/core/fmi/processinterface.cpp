@@ -21,12 +21,12 @@ const char * const CFMUProcessInterface::scmOK = "OK";
 const char * const CFMUProcessInterface::scmNOTINITIALIZED = "Not initialized";
 const char * const CFMUProcessInterface::scmINTERNALERROR = "Internal Error";
 
-CFMUProcessInterface::CFMUProcessInterface(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId) :
-    CProcessInterfaceBase(paSrcRes, paInterfaceSpec, paInstanceNameId), mInitialized(false), mValue(0){
+CFMUProcessInterface::CFMUProcessInterface(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId) :
+    CProcessInterfaceBase(paContainer, paInterfaceSpec, paInstanceNameId), mInitialized(false), mValue(0){
 }
 
-CFMUProcessInterface::CFMUProcessInterface(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) :
-    CProcessInterfaceBase(paSrcRes, 0, paInstanceNameId, 0, 0), mInitialized(false), mValue(0) {
+CFMUProcessInterface::CFMUProcessInterface(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+    CProcessInterfaceBase(paContainer, 0, paInstanceNameId, 0, 0), mInitialized(false), mValue(0) {
   FMU_DEBUG_LOG(GET_FMU_INSTANCE_FROM_FB(this), "Someone called the wrong constructor.\n") //Why do I need this constructor?
 }
 

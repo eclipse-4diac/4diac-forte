@@ -89,12 +89,12 @@ CTypeLib::CTypeEntry *CTypeLib::findType(CStringDictionary::TStringId paTypeId, 
   return retval;
 }
 
-CAdapter *CTypeLib::createAdapter(CStringDictionary::TStringId paInstanceNameId, CStringDictionary::TStringId paAdapterTypeId, CResource *paRes, bool paIsPlug) {
+CAdapter *CTypeLib::createAdapter(CStringDictionary::TStringId paInstanceNameId, CStringDictionary::TStringId paAdapterTypeId, forte::core::CFBContainer &paContainer, bool paIsPlug) {
   CAdapter *poNewAdapter = nullptr;
   CTypeEntry *poToCreate = findType(paAdapterTypeId, mAdapterLibStart);
   if (nullptr != poToCreate) {
     poNewAdapter =
-      (static_cast<CAdapterTypeEntry *>(poToCreate))->createAdapterInstance(paInstanceNameId,paRes, paIsPlug);
+      (static_cast<CAdapterTypeEntry *>(poToCreate))->createAdapterInstance(paInstanceNameId, paContainer, paIsPlug);
     if(nullptr == poNewAdapter) {
       mLastErrorMSG = EMGMResponse::Overflow;
     }
@@ -112,13 +112,12 @@ CAdapter *CTypeLib::createAdapter(CStringDictionary::TStringId paInstanceNameId,
   return poNewAdapter;
 }
 
-CFunctionBlock *CTypeLib::createFB(CStringDictionary::TStringId paInstanceNameId, CStringDictionary::TStringId paFBTypeId, CResource *paRes) {
+CFunctionBlock *CTypeLib::createFB(CStringDictionary::TStringId paInstanceNameId, CStringDictionary::TStringId paFBTypeId, forte::core::CFBContainer &paContainer) {
   CFunctionBlock *poNewFB = nullptr;
   CTypeEntry *poToCreate = findType(paFBTypeId, mFBLibStart);
   //TODO: Avoid that the user can create generic blocks.
   if (nullptr != poToCreate) {
-    poNewFB
-        = (static_cast<CFBTypeEntry *>(poToCreate))->createFBInstance(paInstanceNameId, paRes);
+    poNewFB = (static_cast<CFBTypeEntry *>(poToCreate))->createFBInstance(paInstanceNameId, paContainer);
     if(nullptr == poNewFB) { // we could not create the requested object
       mLastErrorMSG = EMGMResponse::Overflow;
     }
@@ -136,7 +135,7 @@ CFunctionBlock *CTypeLib::createFB(CStringDictionary::TStringId paInstanceNameId
       acGenFBName[cgIdentifierLength] = '\0';
       poToCreate = findType(CStringDictionary::getInstance().getId(acGenFBName), mFBLibStart);
       if (nullptr != poToCreate) {
-        poNewFB = (static_cast<CFBTypeEntry *>(poToCreate))->createFBInstance(paInstanceNameId, paRes);
+        poNewFB = (static_cast<CFBTypeEntry *>(poToCreate))->createFBInstance(paInstanceNameId, paContainer);
         if (nullptr == poNewFB){ // we could not create the requested object
           mLastErrorMSG = EMGMResponse::Overflow;
         }

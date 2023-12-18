@@ -27,7 +27,7 @@ class DEV_MGR: public forte::com_infra::CCommFB, public IBootFileCallback {
   DECLARE_FIRMWARE_FB(DEV_MGR)
 
   public:
-    DEV_MGR(CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
+    DEV_MGR(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
     ~DEV_MGR() override;
 
     bool initialize() override;

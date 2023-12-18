@@ -15,20 +15,22 @@
 
 #include "opcua_action_info.h"
 #include "opcua_layer.h"
+#include "opcua_objectstruct_helper.h"
 
 class CStructMemberActionInfo : public CActionInfo {
   public:
 
-    explicit CStructMemberActionInfo(COPC_UA_Layer &paLayer, UA_ActionType paAction, const std::string &paEndpoint):
-        CActionInfo(paLayer, paAction, paEndpoint){
+    explicit CStructMemberActionInfo(COPC_UA_ObjectStruct_Helper &paStructHelper, COPC_UA_Layer &paLayer, UA_ActionType paAction, const std::string &paEndpoint):
+        CActionInfo(paLayer, paAction, paEndpoint), mStructHelper(paStructHelper){
     }
 
     const CIEC_ANY *const *getDataToSend() override {
-      mMemberArr[0] = getLayer().getObjectStructMember(*this, true);
+      mMemberArr[0] = mStructHelper.getStructMember(*this, true);
       return mMemberArr;
     }
 
   private:
     CIEC_ANY const* mMemberArr[1];
 
+    COPC_UA_ObjectStruct_Helper &mStructHelper;
 };

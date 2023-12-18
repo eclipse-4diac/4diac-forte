@@ -59,7 +59,7 @@ private:
   void writeOutputData(TEventID paEIID) override;
 
 public:
-  FORTE_F_SEL(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
+  FORTE_F_SEL(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
   CIEC_BOOL var_G;
   CIEC_ANY_VARIANT var_IN0;

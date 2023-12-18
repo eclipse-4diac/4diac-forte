@@ -57,7 +57,7 @@ private:
   void writeOutputData(TEventID paEIID) override;
 
 public:
-  FORTE_F_SINT_AS_STRING(CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
+  FORTE_F_SINT_AS_STRING(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
 
   CIEC_SINT var_IN;

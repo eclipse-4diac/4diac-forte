@@ -39,8 +39,8 @@ const SFBInterfaceSpec FORTE_RT_E_F_TRIG::scmFBInterfaceSpec = {
   0, nullptr
 };
 
-FORTE_RT_E_F_TRIG::FORTE_RT_E_F_TRIG(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) :
-        CRTEventSingle(paSrcRes, &scmFBInterfaceSpec, paInstanceNameId),
+FORTE_RT_E_F_TRIG::FORTE_RT_E_F_TRIG(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+        CRTEventSingle(paContainer, &scmFBInterfaceSpec, paInstanceNameId),
     var_conn_QO(var_QO),
     conn_INITO(this, 0),
     conn_EO(this, 1),

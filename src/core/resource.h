@@ -52,8 +52,7 @@ class CResource : public CFunctionBlock, public forte::core::CFBContainer{
      *  \param paObjectHandler    reference to object handler
      *  \param paFBData           Byte-array for resource-specific data
      */
-    CResource(CResource* paDevice, const SFBInterfaceSpec *paInterfaceSpec,
-        CStringDictionary::TStringId paInstanceNameId);
+    CResource(forte::core::CFBContainer &paDevice, const SFBInterfaceSpec *paInterfaceSpec, CStringDictionary::TStringId paInstanceNameId);
 
     ~CResource() override;
 
@@ -83,6 +82,11 @@ class CResource : public CFunctionBlock, public forte::core::CFBContainer{
 
     const CDevice* getDevice() const override {
       return CFBContainer::getDevice();
+    }
+
+    std::string getFullQualifiedApplicationInstanceName(const char ) const override{
+      // we don't want to add anything here as the resource name should be excluded
+      return std::string();
     }
 
     CEventChainExecutionThread *getResourceEventExecution() const{

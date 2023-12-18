@@ -42,7 +42,8 @@ class CIEC_WSTRING final : public CIEC_ANY_STRING {
   DECLARE_FIRMWARE_DATATYPE(WSTRING)
 
   public:
-    using TValueType = TForteWChar;
+    using TValueType = std::wstring;
+    using TSymbolType = TForteWChar;
     CIEC_WSTRING() = default;
 
     CIEC_WSTRING(const CIEC_WSTRING& paValue) = default;

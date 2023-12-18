@@ -49,7 +49,7 @@ private:
   void writeOutputData(TEventID paEIID) override;
 
 public:
-  FORTE_E_SPLIT(CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
+  FORTE_E_SPLIT(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
   CEventConnection conn_EO1;
   CEventConnection conn_EO2;

@@ -49,7 +49,7 @@ private:
   void setInitialValues() override;
 
 public:
-  FORTE_ST_SET_PARM(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
+  FORTE_ST_SET_PARM(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
   CIEC_BOOL var_QI;
   CIEC_WSTRING var_ELEM_NAME;

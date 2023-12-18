@@ -20,9 +20,9 @@ const char * const IOConfigFBSplitController::scmFailedToInitParts = "Failed to 
 TControllerList IOConfigFBSplitController::mInstances;
 TForteUInt16 IOConfigFBSplitController::mInstancesIncrement = 0;
 
-IOConfigFBSplitController::IOConfigFBSplitController(const TForteUInt8* const paSplitAdapter, const TForteUInt8 paSplitAdapterNum, CResource *paSrcRes,
+IOConfigFBSplitController::IOConfigFBSplitController(const TForteUInt8* const paSplitAdapter, const TForteUInt8 paSplitAdapterNum, forte::core::CFBContainer &paContainer,
     const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId) :
-    IOConfigFBController(paSrcRes, paInterfaceSpec, paInstanceNameId), scmSplitAdapter(paSplitAdapter),
+    IOConfigFBController(paContainer, paInterfaceSpec, paInstanceNameId), scmSplitAdapter(paSplitAdapter),
         scmSplitAdapterNum(paSplitAdapterNum), mSplitIterator(0) {
   mId = mInstancesIncrement++;
   mInstances.pushBack(this);

@@ -21,8 +21,8 @@
 
 namespace forte {
   namespace ads {
-    CAdsProcessInterface::CAdsProcessInterface(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId) :
-        CProcessInterfaceBase(paSrcRes, paInterfaceSpec, paInstanceNameId), mAdsHandle(0) {
+    CAdsProcessInterface::CAdsProcessInterface(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId) :
+        CProcessInterfaceBase(paContainer, paInterfaceSpec, paInstanceNameId), mAdsHandle(0) {
     }
 
     bool CAdsProcessInterface::initialise(bool paIsInput, CEventChainExecutionThread *const paECET) {

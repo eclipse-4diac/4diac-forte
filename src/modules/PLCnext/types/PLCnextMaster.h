@@ -55,7 +55,7 @@ private:
   void setConfig();
 
 public:
-  FORTE_PLCnextMaster(CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
+  FORTE_PLCnextMaster(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
   CIEC_BOOL var_QI;
   CIEC_UINT var_SlaveUpdateInterval;

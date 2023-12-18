@@ -34,8 +34,8 @@ const CStringDictionary::TStringId GEN_ARRAY2VALUES::scmEventInputNames[] = { g_
 
 const CStringDictionary::TStringId GEN_ARRAY2VALUES::scmEventOutputNames[] = { g_nStringIdCNF };
 
-GEN_ARRAY2VALUES::GEN_ARRAY2VALUES(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) :
-    CGenFunctionBlock<CFunctionBlock>(paSrcRes, paInstanceNameId), mDataOutputNames(nullptr), mDataOutputTypeIds(nullptr), mDataInputTypeIds(nullptr), mDOutputs(0), mValueTypeID(CStringDictionary::scmInvalidStringId){
+GEN_ARRAY2VALUES::GEN_ARRAY2VALUES(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+    CGenFunctionBlock<CFunctionBlock>(paContainer, paInstanceNameId), mDataOutputNames(nullptr), mDataOutputTypeIds(nullptr), mDataInputTypeIds(nullptr), mDOutputs(0), mValueTypeID(CStringDictionary::scmInvalidStringId){
 }
 
 GEN_ARRAY2VALUES::~GEN_ARRAY2VALUES(){

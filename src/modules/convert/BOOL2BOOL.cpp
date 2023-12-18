@@ -55,8 +55,8 @@ const SFBInterfaceSpec FORTE_BOOL2BOOL::scmFBInterfaceSpec = {
 };
 
 
-FORTE_BOOL2BOOL::FORTE_BOOL2BOOL(CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) :
-    CSimpleFB(paSrcRes, &scmFBInterfaceSpec, paInstanceNameId, nullptr),
+FORTE_BOOL2BOOL::FORTE_BOOL2BOOL(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+    CSimpleFB(paContainer, &scmFBInterfaceSpec, paInstanceNameId, nullptr),
     var_IN(CIEC_BOOL(0)),
     var_OUT(CIEC_BOOL(0)),
     var_conn_OUT(var_OUT),

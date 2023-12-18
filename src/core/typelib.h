@@ -18,10 +18,9 @@
 #ifndef _TYPELIB_H_
 #define _TYPELIB_H_
 
-#include <fortenew.h>
+#include "fortenew.h"
 #include "mgmcmd.h"
-#include <stringlist.h>
-#include "./utils/staticassert.h"
+#include "stringlist.h"
 
 //forward declaration of a few classes to reduce include file dependencies
 class CFunctionBlock;
@@ -29,11 +28,17 @@ class CResource;
 class CIEC_ANY;
 class CAdapter;
 
+namespace forte {
+  namespace core {
+    class CFBContainer;
+  }
+}
+
 //!\ingroup CORE Type for a function pointer which allows to create a functionblock instance
-  typedef CFunctionBlock *(*TFunctionBlockCreateFunc)(CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
+  typedef CFunctionBlock *(*TFunctionBlockCreateFunc)(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
 //!\ingroup CORE Type for a function pointer which allows to create an adapter instance
-  typedef CAdapter *(*TAdapterCreateFunc)(CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes, bool paIsPlug);
+  typedef CAdapter *(*TAdapterCreateFunc)(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer, bool paIsPlug);
 
 
 //!\ingroup CORE Type for a function pointer which allows to create a data type instance
@@ -48,8 +53,8 @@ class CAdapter;
   private: \
     const static CTypeLib::CFBTypeEntry csmFirmwareFBEntry_##fbclass; \
   public:  \
-    static CFunctionBlock *createFB(CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes){ \
-      return new fbclass( paInstanceNameId, paSrcRes);\
+    static CFunctionBlock *createFB(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer){ \
+      return new fbclass( paInstanceNameId, paContainer);\
     }; \
     FORTE_DUMMY_INIT_DEC \
   private:
@@ -82,8 +87,8 @@ class CAdapter;
   private: \
     const static CTypeLib::CAdapterTypeEntry csmAdapterTypeEntry_##adapterclass; \
   public:  \
-    static CAdapter *createAdapter(CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes, bool paIsPlug){\
-      return new adapterclass(paInstanceNameId, paSrcRes, paIsPlug);\
+    static CAdapter *createAdapter(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer, bool paIsPlug){\
+      return new adapterclass(paInstanceNameId, paContainer, paIsPlug);\
     }; \
     virtual CStringDictionary::TStringId getFBTypeId() const {return (csmAdapterTypeEntry_##adapterclass.getTypeNameId()); };\
     FORTE_DUMMY_INIT_DEC \
@@ -156,8 +161,8 @@ class CTypeLib{
     public:
       CFBTypeEntry(CStringDictionary::TStringId paTypeNameId, TFunctionBlockCreateFunc pa_pfuncCreateFB, const SFBInterfaceSpec* paSocketInterfaceSpec);
       ~CFBTypeEntry() override;
-      virtual CFunctionBlock *createFBInstance(CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes){
-              return m_pfuncFBCreationFunc( paInstanceNameId, paSrcRes);
+      virtual CFunctionBlock *createFBInstance(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer){
+              return m_pfuncFBCreationFunc( paInstanceNameId, paContainer);
             }
     private:
        TFunctionBlockCreateFunc m_pfuncFBCreationFunc;
@@ -169,8 +174,8 @@ class CTypeLib{
         public:
           CAdapterTypeEntry(CStringDictionary::TStringId paTypeNameId, TAdapterCreateFunc pa_pfuncCreateAdapter, const SFBInterfaceSpec* paSocketInterfaceSpec);
           ~CAdapterTypeEntry() override;
-          virtual CAdapter *createAdapterInstance(CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes, bool paIsPlug){
-            return m_pfuncAdapterCreationFunc( paInstanceNameId, paSrcRes, paIsPlug);
+          virtual CAdapter *createAdapterInstance(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer, bool paIsPlug){
+            return m_pfuncAdapterCreationFunc( paInstanceNameId, paContainer, paIsPlug);
           }
         private:
           TAdapterCreateFunc m_pfuncAdapterCreationFunc;
@@ -197,19 +202,19 @@ public:
  *
  * \param paInstanceNameId  StringId of instance name as this information can be stored within the resource
  * \param paFBTypeId Type of the FB to create.
- * \param paRes   Resource the FB is contained in.
+ * \param paContainer   FB container the FB is contained in.
  * \return On success a pointer to the new FB is returned, else the return value is 0 use getLastError for getting more information on the problem.
  *   possible error codes are:
  *    - UnsupportedType   The requested FB type is not known to the typelib
  *    - InvalidOperation The requested FB can not be created (e.g. out of memory)
  */
-  static CFunctionBlock *createFB(CStringDictionary::TStringId paInstanceNameId, CStringDictionary::TStringId paFBTypeId, CResource *paRes);
+  static CFunctionBlock *createFB(CStringDictionary::TStringId paInstanceNameId, CStringDictionary::TStringId paFBTypeId, forte::core::CFBContainer &paContainer);
 
 /*\brief Delete the given FB
  */
   static bool deleteFB(CFunctionBlock *paFBToDelete);
 
-  static CAdapter *createAdapter(CStringDictionary::TStringId paInstanceNameId, CStringDictionary::TStringId paFBTypeId, CResource *paRes, bool paIsPlug);
+  static CAdapter *createAdapter(CStringDictionary::TStringId paInstanceNameId, CStringDictionary::TStringId paFBTypeId, forte::core::CFBContainer &paContainer, bool paIsPlug);
 
   /*!\brief Create an instance of an data type.
    *

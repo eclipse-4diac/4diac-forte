@@ -20,7 +20,7 @@
 
 class CLuaCFB : public CCompositeFB {
   public:
-    CLuaCFB(CStringDictionary::TStringId paInstanceNameId, const CLuaCFBTypeEntry* paTypeEntry, SCFB_FBNData *paFbnData, CResource *paResource);
+    CLuaCFB(CStringDictionary::TStringId paInstanceNameId, const CLuaCFBTypeEntry* paTypeEntry, SCFB_FBNData &paFbnData, forte::core::CFBContainer &paContainer);
     ~CLuaCFB() override;
 
     CStringDictionary::TStringId getFBTypeId() const override {

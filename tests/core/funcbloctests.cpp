@@ -16,13 +16,13 @@
 #include "E_CTUD.h"
 #include "basicfb.h"
 #include "funcbloctests_gen.cpp"
-
+#include "fbcontainermock.h"
 
 
 BOOST_AUTO_TEST_SUITE(FUNCBLOC)
 
 BOOST_AUTO_TEST_CASE(FB_TO_STRING_TEST){
-    FORTE_E_CTUD testFb(0, nullptr); // Dummy FB, do not use for anything else than testing toString
+    FORTE_E_CTUD testFb(0, CFBContainerMock::smDefaultFBContMock); // Dummy FB, do not use for anything else than testing toString
     constexpr char result[] = "(PV:=0, QU:=FALSE, QD:=FALSE, CV:=0)";
     char buffer[50];
     BOOST_TEST(testFb.toString(buffer, sizeof(buffer)) == strlen(result));
@@ -43,7 +43,7 @@ BOOST_AUTO_TEST_CASE(FB_TO_STRING_BUFFER_SIZE_TEST_WITH_INRENAL_VAR){
             0, nullptr};
 
     public:
-        CInternalVarTestFB(const SInternalVarsInformation *paVarInternals) : CBasicFB(nullptr, &gcEmptyInterface, CStringDictionary::scmInvalidStringId, paVarInternals) {
+        CInternalVarTestFB(const SInternalVarsInformation *paVarInternals) : CBasicFB(CFBContainerMock::smDefaultFBContMock, &gcEmptyInterface, CStringDictionary::scmInvalidStringId, paVarInternals) {
         }
 
         CIEC_ANY *getVarInternal(size_t paVarIntNum) override {
@@ -77,9 +77,11 @@ BOOST_AUTO_TEST_CASE(FB_TO_STRING_BUFFER_SIZE_TEST_WITH_INRENAL_VAR){
 BOOST_AUTO_TEST_CASE(FB_TO_STRING_BUFFER_SIZE_TEST_WITHOUT_INRENAL_VAR){
 
     // Test for FB with inputs and outputs
-    FORTE_E_CTUD testFb(0, nullptr); // Dummy FB, do not use for anything else than testing getToStringBufferSize
+    FORTE_E_CTUD testFb(0, CFBContainerMock::smDefaultFBContMock); // Dummy FB, do not use for anything else than testing getToStringBufferSize
     size_t size = testFb.getToStringBufferSize();
     BOOST_CHECK_EQUAL(size , 51);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
+
+

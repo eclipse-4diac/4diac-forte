@@ -17,10 +17,10 @@
 #include "basicfb.h"
 #include "resource.h"
 
-CBasicFB::CBasicFB(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec,
+CBasicFB::CBasicFB(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec *paInterfaceSpec,
                    const CStringDictionary::TStringId paInstanceNameId,
                    const SInternalVarsInformation *paVarInternals) :
-        CFunctionBlock(paSrcRes, paInterfaceSpec, paInstanceNameId), mECCState(0),
+        CFunctionBlock(paContainer, paInterfaceSpec, paInstanceNameId), mECCState(0),
         cmVarInternals(paVarInternals), mBasicFBVarsData(nullptr), mInternals(nullptr) {
 }
 
@@ -103,12 +103,12 @@ CIEC_ANY* CBasicFB::getInternalVar(CStringDictionary::TStringId paInternalName) 
   return retVal;
 }
 
-TFunctionBlockPtr *CBasicFB::createInternalFBs(const size_t paAmountOfInternalFBs, const SCFB_FBInstanceData *const paInternalFBData, CResource* const paResource) {
+TFunctionBlockPtr *CBasicFB::createInternalFBs(const size_t paAmountOfInternalFBs, const SCFB_FBInstanceData *const paInternalFBData, forte::core::CFBContainer &paContainer) {
   TFunctionBlockPtr *internalFBs = nullptr;
   if (paAmountOfInternalFBs) {
     internalFBs = new TFunctionBlockPtr[paAmountOfInternalFBs];
     for(size_t i = 0; i < paAmountOfInternalFBs; ++i) {
-      internalFBs[i] = CTypeLib::createFB(paInternalFBData[i].mFBInstanceNameId, paInternalFBData[i].mFBTypeNameId, paResource);
+      internalFBs[i] = CTypeLib::createFB(paInternalFBData[i].mFBInstanceNameId, paInternalFBData[i].mFBTypeNameId, paContainer);
     }
   }
   return internalFBs;

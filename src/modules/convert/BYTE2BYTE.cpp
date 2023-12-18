@@ -55,8 +55,8 @@ const SFBInterfaceSpec FORTE_BYTE2BYTE::scmFBInterfaceSpec = {
 };
 
 
-FORTE_BYTE2BYTE::FORTE_BYTE2BYTE(CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) :
-    CSimpleFB(paSrcRes, &scmFBInterfaceSpec, paInstanceNameId, nullptr),
+FORTE_BYTE2BYTE::FORTE_BYTE2BYTE(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+    CSimpleFB(paContainer, &scmFBInterfaceSpec, paInstanceNameId, nullptr),
     var_IN(CIEC_BYTE(0)),
     var_OUT(CIEC_BYTE(0)),
     var_conn_OUT(var_OUT),

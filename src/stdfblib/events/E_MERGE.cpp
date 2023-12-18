@@ -40,8 +40,8 @@ const SFBInterfaceSpec FORTE_E_MERGE::scmFBInterfaceSpec = {
   0, nullptr
 };
 
-FORTE_E_MERGE::FORTE_E_MERGE(const CStringDictionary::TStringId paInstanceNameId, CResource *const paSrcRes) :
-    CBasicFB(paSrcRes, &scmFBInterfaceSpec, paInstanceNameId, nullptr),
+FORTE_E_MERGE::FORTE_E_MERGE(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+    CBasicFB(paContainer, &scmFBInterfaceSpec, paInstanceNameId, nullptr),
     conn_EO(this, 0) {
 }
 

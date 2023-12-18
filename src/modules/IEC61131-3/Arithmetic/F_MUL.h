@@ -56,7 +56,7 @@ private:
   void writeOutputData(TEventID paEIID) override;
 
 public:
-  FORTE_F_MUL(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
+  FORTE_F_MUL(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
   CIEC_ANY_NUM_VARIANT var_IN1;
   CIEC_ANY_NUM_VARIANT var_IN2;

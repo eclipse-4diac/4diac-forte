@@ -27,9 +27,9 @@ private:
   TEventEntry mEventSourceEventEntry; //! the event entry to start the event chain
 
 public:
-  CEventSourceFB(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec,
+  CEventSourceFB(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec *paInterfaceSpec,
                  CStringDictionary::TStringId paInstanceNameId) :
-          CFunctionBlock(paSrcRes, paInterfaceSpec, paInstanceNameId),
+          CFunctionBlock(paContainer, paInterfaceSpec, paInstanceNameId),
           mEventChainExecutor(nullptr),
           mEventSourceEventEntry(this, cgExternalEventID) {
   }
@@ -42,7 +42,7 @@ public:
 };
 
 #define EVENT_SOURCE_FUNCTION_BLOCK_CTOR(fbclass) \
- fbclass(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) : \
- CEventSourceFB( paSrcRes, &scmFBInterfaceSpec, paInstanceNameId)
+ fbclass(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) : \
+ CEventSourceFB(paContainer, &scmFBInterfaceSpec, paInstanceNameId)
 
 #endif /*_ESFB_H_*/

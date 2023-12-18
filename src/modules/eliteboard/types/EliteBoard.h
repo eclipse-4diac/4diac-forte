@@ -111,7 +111,7 @@ private:
 public:
 
   FORTE_EliteBoard(const CStringDictionary::TStringId paInstanceNameId, 
-      CResource *paSrcRes);
+      forte::core::CFBContainer &paContainer);
 
   ~FORTE_EliteBoard() override = default;
 };

@@ -52,7 +52,7 @@ class PLCnextSlaveHandler : public forte::core::io::IOConfigFBMultiSlave {
 
     CSyncObject handleMutex;
 
-    PLCnextSlaveHandler(int paType, CResource* paSrcRes, const SFBInterfaceSpec* paInterfaceSpec,
+    PLCnextSlaveHandler(int paType, forte::core::CFBContainer &paContainer, const SFBInterfaceSpec* paInterfaceSpec,
         const CStringDictionary::TStringId paInstanceNameId);
 
     ~PLCnextSlaveHandler();

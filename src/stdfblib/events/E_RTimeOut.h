@@ -45,7 +45,7 @@ private:
   void readInternal2InterfaceOutputData(TEventID paEOID) override;
 
 public:
-  FORTE_E_RTimeOut(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
+  FORTE_E_RTimeOut(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
   CIEC_ANY *getDI(size_t) override;
   CIEC_ANY *getDO(size_t) override;

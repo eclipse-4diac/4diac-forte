@@ -61,9 +61,9 @@ private:
   }
 
 public:
-  CRTEventSingle(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec,
+  CRTEventSingle(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec *paInterfaceSpec,
                  const CStringDictionary::TStringId paInstanceNameId) :
-          CFunctionBlock(paSrcRes, paInterfaceSpec, paInstanceNameId) {
+          CFunctionBlock(paContainer, paInterfaceSpec, paInstanceNameId) {
   };
 
   CIEC_BOOL var_QI;

@@ -15,8 +15,6 @@
 
 DEFINE_GENERIC_FIRMWARE_FB(GEN_CLIENT, g_nStringIdGEN_CLIENT)
 
-GEN_CLIENT::GEN_CLIENT(const CStringDictionary::TStringId paInstanceNameId,
-    CResource *paSrcRes):
-    forte::com_infra::CCommFB(paInstanceNameId, paSrcRes, forte::com_infra::e_Client){
-    //CCommFB(paInstanceNameId, paSrcRes, true, scmSendBufferSize, scmRecvBufferSize, CCommFB::e_Client){
+GEN_CLIENT::GEN_CLIENT(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer):
+            forte::com_infra::CCommFB(paInstanceNameId, paContainer, forte::com_infra::e_Client){
 }

@@ -18,8 +18,8 @@
 
 DEFINE_GENERIC_FIRMWARE_FB(FORTE_SUBSCRIBE_1, g_nStringIdSUBSCRIBE_1)
 
-FORTE_SUBSCRIBE_1::FORTE_SUBSCRIBE_1(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) :
-        GEN_SUBSCRIBE(paInstanceNameId, paSrcRes) {
+FORTE_SUBSCRIBE_1::FORTE_SUBSCRIBE_1(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+                   GEN_SUBSCRIBE(paInstanceNameId, paContainer) {
   configureFB("SUBSCRIBE_1");
 }
 

@@ -57,7 +57,7 @@ private:
   void writeOutputData(TEventID paEIID) override;
 
 public:
-  FORTE_F_DT_TO_DATE(CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
+  FORTE_F_DT_TO_DATE(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
 
   CIEC_DATE_AND_TIME var_IN;

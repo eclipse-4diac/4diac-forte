@@ -56,8 +56,8 @@ const SFBInterfaceSpec FORTE_F_WSTRING_AS_ULINT::scmFBInterfaceSpec = {
 };
 
 
-FORTE_F_WSTRING_AS_ULINT::FORTE_F_WSTRING_AS_ULINT(CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) :
-    CSimpleFB(paSrcRes, &scmFBInterfaceSpec, paInstanceNameId, nullptr),
+FORTE_F_WSTRING_AS_ULINT::FORTE_F_WSTRING_AS_ULINT(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+    CSimpleFB(paContainer, &scmFBInterfaceSpec, paInstanceNameId, nullptr),
     var_IN(CIEC_WSTRING("")),
     var_OUT(CIEC_ULINT(0)),
     var_conn_OUT(var_OUT),

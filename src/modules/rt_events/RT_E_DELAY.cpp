@@ -39,8 +39,8 @@ const SFBInterfaceSpec FORTE_RT_E_DELAY::scmFBInterfaceSpec = {
   0, nullptr
 };
 
-FORTE_RT_E_DELAY::FORTE_RT_E_DELAY(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) :
-        CEventSourceFB( paSrcRes, &scmFBInterfaceSpec, paInstanceNameId),
+FORTE_RT_E_DELAY::FORTE_RT_E_DELAY(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+        CEventSourceFB(paContainer, &scmFBInterfaceSpec, paInstanceNameId),
     var_conn_QO(var_QO),
     conn_INITO(this, 0),
     conn_EO(this, 1),

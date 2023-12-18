@@ -23,7 +23,7 @@
 class CGenBitBase : public CGenFunctionBlock<CFunctionBlock> {
 
   protected:
-    CGenBitBase(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
+    CGenBitBase(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
     ~CGenBitBase() override;
 
     CIEC_ANY_BIT_VARIANT& var_IN(size_t paIndex) {

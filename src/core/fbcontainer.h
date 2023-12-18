@@ -26,7 +26,7 @@ namespace forte {
 
     class CFBContainer{
       public:
-        CFBContainer(CStringDictionary::TStringId paContainerName, CFBContainer *paParent);
+        CFBContainer(CStringDictionary::TStringId paContainerName, CFBContainer &paParent);
         virtual ~CFBContainer();
 
         CStringDictionary::TStringId getNameId() const{
@@ -63,29 +63,42 @@ namespace forte {
           return mSubContainers;
         }
 
-        CFBContainer* getParent() const { return mParent;}
+        CFBContainer& getParent() const { return mParent;}
 
-        virtual CResource* getResource();
+        virtual CResource* getResource(){
+          return mParent.getResource();
+        }
         virtual const CResource* getResource() const {
           return const_cast<CFBContainer*>(this)->getResource();
         }
 
-        virtual CDevice* getDevice();
+        virtual CDevice* getDevice(){
+          return mParent.getDevice();
+        }
         virtual const CDevice* getDevice() const {
           return const_cast<CFBContainer*>(this)->getDevice();
         }
 
+        virtual std::string getFullQualifiedApplicationInstanceName(const char sepChar) const;
+
       protected:
+        CFBContainer(CStringDictionary::TStringId paContainerName, CFBContainer &paParent, size_t paNumFBs);
 
         /*!\brief Create a new FB instance of given type and name
          *
          * @param paNameListIt    iterator to the current position in the name list for the FB to be created (e.g., SubApp1.SubApp2.FBName, FBName2)
          * @param paTypeName      the type name of the FB to be created
-         * @param paRes           the resource this container is contained in and in which the fb should reside
          * @return response of the command execution as defined in IEC 61499
          */
-        EMGMResponse createFB(forte::core::TNameIdentifier::CIterator &paNameListIt,
-            CStringDictionary::TStringId paTypeName, CResource *paRes);
+        EMGMResponse createFB(forte::core::TNameIdentifier::CIterator &paNameListIt, CStringDictionary::TStringId paTypeName);
+
+        /*!\brief Create a new FB instance of given type and name
+         *
+         * @param paInstanceNameId    instance name for the FB to be created
+         * @param paTypeName      the type name of the FB to be created
+         * @return response of the command execution as defined in IEC 61499
+         */
+        EMGMResponse createFB(CStringDictionary::TStringId paInstanceNameId, CStringDictionary::TStringId paTypeName);
 
         /*!\brief Delete a FB instance with given name
          *
@@ -116,7 +129,7 @@ namespace forte {
         CFBContainer *findOrCreateContainer(CStringDictionary::TStringId paContainerName);
 
         CStringDictionary::TStringId mContainerName; //!< name of the container
-        CFBContainer *mParent; //!< the parent FBContainer this FBContainer is contained in. The parent of a resource is 0
+        CFBContainer &mParent; //!< the parent FBContainer this FBContainer is contained in. The parent of a device is the device itself!
 
         TFunctionBlockList mFunctionBlocks; //!< The functionblocks hold in this container
         TFBContainerList mSubContainers; //!< List of subcontainers (i.e, subapplications in this container)

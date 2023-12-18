@@ -68,7 +68,7 @@ private:
   std::uniform_real_distribution<float> mDistribution;
 
 public:
-  FORTE_FB_RANDOM(CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
+  FORTE_FB_RANDOM(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
   CIEC_UINT var_SEED;
 

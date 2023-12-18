@@ -53,8 +53,8 @@ int CLuaFB_call(lua_State *paLuaState) {
 const char CLuaBFB::LUA_NAME[] = "FORTE_CLuaFB";
 const luaL_Reg CLuaBFB::LUA_FUNCS[] = { { "__index", CLuaFB_index }, { "__newindex", CLuaFB_newindex }, { "__call", CLuaFB_call }, { nullptr, nullptr } };
 
-CLuaBFB::CLuaBFB(CStringDictionary::TStringId paInstanceNameId, const CLuaBFBTypeEntry* paTypeEntry, CResource *paResource) :
-    CBasicFB(paResource, paTypeEntry->getInterfaceSpec(), paInstanceNameId, paTypeEntry->getInternalVarsInformation()),
+CLuaBFB::CLuaBFB(CStringDictionary::TStringId paInstanceNameId, const CLuaBFBTypeEntry* paTypeEntry, forte::core::CFBContainer &paContainer) :
+    CBasicFB(paContainer, paTypeEntry->getInterfaceSpec(), paInstanceNameId, paTypeEntry->getInternalVarsInformation()),
         mTypeEntry(paTypeEntry) {
   CLuaEngine *luaEngine = getResource()->getLuaEngine();
   luaEngine->registerType<CLuaBFB>();

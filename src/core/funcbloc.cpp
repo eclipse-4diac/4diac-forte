@@ -36,13 +36,13 @@
 #include "trace/barectf_platform_forte.h"
 #endif
 
-CFunctionBlock::CFunctionBlock(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec,
+CFunctionBlock::CFunctionBlock(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec *paInterfaceSpec,
                                CStringDictionary::TStringId paInstanceNameId) :
         mInterfaceSpec(paInterfaceSpec),
         mEOConns(nullptr), mDIConns(nullptr), mDOConns(nullptr), mDIs(nullptr), mDOs(nullptr),
         mAdapters(nullptr),
         mFBConnData(nullptr), mFBVarsData(nullptr),
-        mResource(paSrcRes), mContainer(paSrcRes),
+        mContainer(paContainer),
 #ifdef FORTE_SUPPORT_MONITORING
         mEOMonitorCount(nullptr), mEIMonitorCount(nullptr),
 #endif
@@ -117,7 +117,7 @@ void CFunctionBlock::setupAdapters(const SFBInterfaceSpec *paInterfaceSpec, TFor
     for(TPortId i = 0; i < paInterfaceSpec->mNumAdapters; ++i) {
       //set pointer to right place in paFBData
       mAdapters[i] = CTypeLib::createAdapter(paInterfaceSpec->mAdapterInstanceDefinition[i].mAdapterNameID,
-        paInterfaceSpec->mAdapterInstanceDefinition[i].mAdapterTypeNameID, getResource(),
+        paInterfaceSpec->mAdapterInstanceDefinition[i].mAdapterTypeNameID, getContainer(),
         paInterfaceSpec->mAdapterInstanceDefinition[i].mIsPlug);
       if(nullptr != mAdapters[i]) {
         mAdapters[i]->setParentFB(this, static_cast<TForteUInt8>(i));
@@ -127,19 +127,11 @@ void CFunctionBlock::setupAdapters(const SFBInterfaceSpec *paInterfaceSpec, TFor
 }
 
 CResource* CFunctionBlock::getResource() {
-  if(mContainer != nullptr){
-    return mContainer->getResource();
-  }
-  DEVLOG_ERROR("FB is not contained in an FB Container!");
-  return nullptr;
+  return mContainer.getResource();
 }
 
 CDevice* CFunctionBlock::getDevice() {
-  if(mContainer != nullptr){
-    return mContainer->getDevice();
-  }
-  DEVLOG_ERROR("FB is not contained in an FB Container!");
-  return nullptr;
+  return mContainer.getDevice();
 }
 
 CTimerHandler& CFunctionBlock::getTimer() {
@@ -711,20 +703,13 @@ TForteUInt32 &CFunctionBlock::getEOMonitorData(TEventID paEOID){
   return mEOMonitorCount[paEOID];
 }
 
-const std::string CFunctionBlock::getFullQualifiedInstanceName() const {
-  std::string fullName;
-  fullName.reserve(cgStringInitialSize);
-  fullName = getInstanceName();
-  forte::core::CFBContainer* parent = mContainer;
-  const CResource* resource = getResource();
-  while(parent != nullptr &&
-		parent != resource &&
-		parent->getName() != nullptr) {
-    fullName.insert(0, ".");
-    fullName.insert(0, parent->getName());
-    parent = parent->getParent();
+std::string CFunctionBlock::getFullQualifiedApplicationInstanceName(const char sepChar) const {
+  std::string fullName(mContainer.getFullQualifiedApplicationInstanceName(sepChar));
+
+  if(!fullName.empty()){
+    fullName += sepChar;
   }
-  fullName.shrink_to_fit();
+  fullName += getInstanceName();
   return fullName;
 }
 

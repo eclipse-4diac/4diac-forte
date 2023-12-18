@@ -64,7 +64,7 @@ private:
   void setInitialValues() override;
 
 public:
-  FORTE_E_DEMUX(CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
+  FORTE_E_DEMUX(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
   CIEC_UINT var_K;
 

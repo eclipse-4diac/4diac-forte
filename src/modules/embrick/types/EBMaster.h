@@ -62,7 +62,7 @@ protected:
   virtual void onStartup(CEventChainExecutionThread * const paECET);
 
 public:
-  FORTE_EBMaster(CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
+  FORTE_EBMaster(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
   CIEC_BOOL var_QI;
   CIEC_UINT var_BusInterface;

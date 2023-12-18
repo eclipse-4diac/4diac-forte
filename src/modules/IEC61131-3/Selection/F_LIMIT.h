@@ -56,7 +56,7 @@ private:
   void writeOutputData(TEventID paEIID) override;
 
 public:
-  FORTE_F_LIMIT(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
+  FORTE_F_LIMIT(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
   CIEC_ANY_ELEMENTARY_VARIANT var_MN;
   CIEC_ANY_ELEMENTARY_VARIANT var_IN;

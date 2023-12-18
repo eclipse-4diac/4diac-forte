@@ -124,6 +124,9 @@ class CIEC_STRING : public CIEC_ANY_STRING {
     using value_type = CIEC_CHAR;
     using reference = value_type &;
     using const_reference = const value_type &;
+    
+    using TValueType = storage_type;
+    using TSymbolType = TForteChar;
 
     CIEC_STRING() {
     };

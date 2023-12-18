@@ -56,7 +56,7 @@ private:
   void writeOutputData(TEventID paEIID) override;
 
 public:
-  FORTE_UINT2UINT(CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
+  FORTE_UINT2UINT(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
 
   CIEC_UINT var_IN;

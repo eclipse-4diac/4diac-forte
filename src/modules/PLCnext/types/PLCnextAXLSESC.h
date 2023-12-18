@@ -54,7 +54,7 @@ private:
   void initHandles() override;
 
 public:
-  FORTE_PLCnextAXLSESC(CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
+  FORTE_PLCnextAXLSESC(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
   CIEC_BOOL var_QI;
 

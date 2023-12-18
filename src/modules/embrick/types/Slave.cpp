@@ -19,9 +19,9 @@ const CIEC_WSTRING EmbrickSlave::scmInterrupted("Interrupted");
 const CIEC_WSTRING EmbrickSlave::scmError("Error");
 const CIEC_WSTRING EmbrickSlave::scmUnknown("Invalid status code");
 
-EmbrickSlave::EmbrickSlave(const TForteUInt8* const paSlaveConfigurationIO, const TForteUInt8 paSlaveConfigurationIO_num, int paType, CResource *paSrcRes,
+EmbrickSlave::EmbrickSlave(const TForteUInt8* const paSlaveConfigurationIO, const TForteUInt8 paSlaveConfigurationIO_num, int paType, forte::core::CFBContainer &paContainer,
     const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId) :
-        forte::core::io::IOConfigFBMultiSlave(paSlaveConfigurationIO, paSlaveConfigurationIO_num, paType, paSrcRes, paInterfaceSpec, paInstanceNameId), mSlave(0) {
+        forte::core::io::IOConfigFBMultiSlave(paSlaveConfigurationIO, paSlaveConfigurationIO_num, paType, paContainer, paInterfaceSpec, paInstanceNameId), mSlave(0) {
 }
 
 EmbrickSlave::~EmbrickSlave() {

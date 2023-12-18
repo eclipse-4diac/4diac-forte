@@ -39,8 +39,8 @@ void GEN_STRUCT_DEMUX::executeEvent(TEventID paEIID, CEventChainExecutionThread 
   }
 }
 
-GEN_STRUCT_DEMUX::GEN_STRUCT_DEMUX(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) :
-    CGenFunctionBlock<CFunctionBlock>(paSrcRes, paInstanceNameId){
+GEN_STRUCT_DEMUX::GEN_STRUCT_DEMUX(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+    CGenFunctionBlock<CFunctionBlock>(paContainer, paInstanceNameId){
 }
 
 GEN_STRUCT_DEMUX::~GEN_STRUCT_DEMUX(){

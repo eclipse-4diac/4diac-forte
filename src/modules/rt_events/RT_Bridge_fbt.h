@@ -23,7 +23,7 @@ class FORTE_GEN_RT_Bridge final : public CGenFunctionBlock<CFunctionBlock>  {
     DECLARE_GENERIC_FIRMWARE_FB(FORTE_GEN_RT_Bridge)
 
   public:
-    FORTE_GEN_RT_Bridge(CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
+    FORTE_GEN_RT_Bridge(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
   private:
     static const TEventID scmEventRDID = 0;

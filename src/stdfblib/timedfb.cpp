@@ -36,9 +36,9 @@ const SFBInterfaceSpec CTimedFB::scmFBInterfaceSpec = {
   0, nullptr
 };
 
-CTimedFB::CTimedFB(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) :
-      CEventSourceFB( paSrcRes, &scmFBInterfaceSpec, paInstanceNameId){
-  setEventChainExecutor(paSrcRes->getResourceEventExecution());
+CTimedFB::CTimedFB(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+      CEventSourceFB(paContainer, &scmFBInterfaceSpec, paInstanceNameId){
+  setEventChainExecutor(getResource()->getResourceEventExecution());
   mActive = false;
 }
 

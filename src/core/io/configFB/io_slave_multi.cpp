@@ -22,8 +22,8 @@ const char* const IOConfigFBMultiSlave::scmNotFound("Module not found");
 const char* const IOConfigFBMultiSlave::scmIncorrectType("Module type is incorrect");
 
 IOConfigFBMultiSlave::IOConfigFBMultiSlave(const TForteUInt8 *const paSlaveConfigurationIO, const TForteUInt8 paSlaveConfigurationIONum, int paType,
-    CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId) :
-    IOConfigFBBase(paSrcRes, paInterfaceSpec, paInstanceNameId), mIndex(-1), mSlaveConfigurationIO(paSlaveConfigurationIO),
+    forte::core::CFBContainer &paContainer, const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId) :
+    IOConfigFBBase(paContainer, paInterfaceSpec, paInstanceNameId), mIndex(-1), mSlaveConfigurationIO(paSlaveConfigurationIO),
         mMaster(nullptr), mType(paType), mInitialized(false), mSlaveConfigurationIONum(paSlaveConfigurationIONum),
         mSlaveConfigurationIOIsDefault(new bool[paSlaveConfigurationIONum]()) {
   for(int i = 0; i < mSlaveConfigurationIONum; i++) {

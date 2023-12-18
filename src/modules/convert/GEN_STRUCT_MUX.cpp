@@ -36,8 +36,8 @@ void GEN_STRUCT_MUX::executeEvent(TEventID paEIID, CEventChainExecutionThread *c
   }
 }
 
-GEN_STRUCT_MUX::GEN_STRUCT_MUX(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) :
-    CGenFunctionBlock<CFunctionBlock>(paSrcRes, paInstanceNameId){
+GEN_STRUCT_MUX::GEN_STRUCT_MUX(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+    CGenFunctionBlock<CFunctionBlock>(paContainer, paInstanceNameId){
 }
 
 GEN_STRUCT_MUX::~GEN_STRUCT_MUX(){

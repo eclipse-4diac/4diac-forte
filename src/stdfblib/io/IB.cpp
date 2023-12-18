@@ -39,8 +39,8 @@ const SFBInterfaceSpec FORTE_IB::scmFBInterfaceSpec = {
   0, nullptr
 };
 
-FORTE_IB::FORTE_IB(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) :
-        CProcessInterface(paSrcRes, &scmFBInterfaceSpec, paInstanceNameId),
+FORTE_IB::FORTE_IB(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+        CProcessInterface(paContainer, &scmFBInterfaceSpec, paInstanceNameId),
     var_conn_QO(var_QO),
     var_conn_STATUS(var_STATUS),
     var_conn_IN(var_IN),

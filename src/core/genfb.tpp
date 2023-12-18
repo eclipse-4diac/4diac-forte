@@ -15,8 +15,8 @@
 #endif
 
 template<class T>
-CGenFunctionBlock<T>::CGenFunctionBlock(CResource *paSrcRes, const CStringDictionary::TStringId paInstanceNameId) :
-    T(paSrcRes, nullptr, paInstanceNameId),
+CGenFunctionBlock<T>::CGenFunctionBlock(forte::core::CFBContainer &paContainer, const CStringDictionary::TStringId paInstanceNameId) :
+    T(paContainer, nullptr, paInstanceNameId),
     mConfiguredFBTypeNameId(CStringDictionary::scmInvalidStringId), mGenInterfaceSpec() {
 
   static_assert((std::is_base_of_v<CFunctionBlock, T>), "TFunctionBlock");

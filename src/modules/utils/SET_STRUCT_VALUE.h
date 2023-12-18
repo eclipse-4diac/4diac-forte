@@ -59,7 +59,7 @@ private:
   void writeOutputData(TEventID paEIID) override;
 
 public:
-  FORTE_SET_STRUCT_VALUE(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
+  FORTE_SET_STRUCT_VALUE(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
   CIEC_ANY_VARIANT var_in_struct;
   CIEC_STRING var_member;

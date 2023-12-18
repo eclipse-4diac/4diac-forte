@@ -31,8 +31,8 @@ const CStringDictionary::TStringId GEN_E_DEMUX::scmDIDataTypeIds[] = { g_nString
 
 const CStringDictionary::TStringId GEN_E_DEMUX::scmEventInputNames[] = { g_nStringIdEI };
 
-GEN_E_DEMUX::GEN_E_DEMUX(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) :
-    CGenFunctionBlock<CFunctionBlock>(paSrcRes, paInstanceNameId), mEventOutputNames(nullptr){
+GEN_E_DEMUX::GEN_E_DEMUX(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+    CGenFunctionBlock<CFunctionBlock>(paContainer, paInstanceNameId), mEventOutputNames(nullptr){
 }
 
 GEN_E_DEMUX::~GEN_E_DEMUX(){

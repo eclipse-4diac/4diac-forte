@@ -56,8 +56,8 @@ const SFBInterfaceSpec FORTE_F_STRING_AS_DINT::scmFBInterfaceSpec = {
 };
 
 
-FORTE_F_STRING_AS_DINT::FORTE_F_STRING_AS_DINT(CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) :
-    CSimpleFB(paSrcRes, &scmFBInterfaceSpec, paInstanceNameId, nullptr),
+FORTE_F_STRING_AS_DINT::FORTE_F_STRING_AS_DINT(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+    CSimpleFB(paContainer, &scmFBInterfaceSpec, paInstanceNameId, nullptr),
     var_IN(CIEC_STRING("", 0)),
     var_OUT(CIEC_DINT(0)),
     var_conn_OUT(var_OUT),

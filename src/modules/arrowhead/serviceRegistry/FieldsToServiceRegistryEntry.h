@@ -84,8 +84,8 @@ private:
   virtual void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
 public:
-  FORTE_FieldsToServiceRegistryEntry(CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) : 
-       CBasicFB(paSrcRes, &scmFBInterfaceSpec, paInstanceNameId,
+  FORTE_FieldsToServiceRegistryEntry(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) : 
+       CBasicFB(paContainer, &scmFBInterfaceSpec, paInstanceNameId,
               0){
   };
 
