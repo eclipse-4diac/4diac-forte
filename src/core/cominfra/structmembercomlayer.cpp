@@ -51,13 +51,8 @@ CIEC_ANY* CStructMemberLocalComLayer::getTargetByIndex(CIEC_STRUCT* paRoot, TTar
 bool CStructMemberLocalComLayer::parseArrayIndexFromString(const char* paNestedStructString, CIEC_INT& targetIndex) {
   std::string str(paNestedStructString);
 
-  if (str.find('[') != std::string::npos) {
-    DEVLOG_ERROR("Please use array(0) to access an array element instead of array[0]!!\r\n");
-    return false;
-  }
-
-  const size_t startIndex = (str.find('(') != std::string::npos) ? str.find('(') + 1 : std::string::npos;
-  const size_t stopIndex = str.find(')');
+  const size_t startIndex = (str.find('[') != std::string::npos) ? str.find('[') + 1 : std::string::npos;
+  const size_t stopIndex = str.find(']');
 
   if (startIndex == std::string::npos || stopIndex == std::string::npos) {
     return false;
@@ -88,7 +83,7 @@ CStructMemberLocalComLayer::TTargetStructIndexList CStructMemberLocalComLayer::b
       id = CStringDictionary::getInstance().insert(parser[i]);
     } else {
       std::string sub = parser[i];
-      sub.erase(sub.find('('), std::string::npos);
+      sub.erase(sub.find('['), std::string::npos);
       id = CStringDictionary::getInstance().insert(sub.data());
     }
 
