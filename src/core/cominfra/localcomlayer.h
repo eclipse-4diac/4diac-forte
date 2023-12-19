@@ -80,6 +80,8 @@ namespace forte {
             CLocalCommGroup* registerSubl(const CStringDictionary::TStringId paID, CLocalComLayer *paLayer);
             void unregisterSubl(CLocalCommGroup *paGroup, CLocalComLayer *paLayer);
 
+            CLocalCommGroup* getComGroup(const CStringDictionary::TStringId paGroupID);
+
           private:
             using TLocalCommGroupList = std::vector<CLocalCommGroup>;
 
@@ -119,6 +121,7 @@ namespace forte {
         }
 
         CLocalCommGroup *mLocalCommGroup;
+        CStringDictionary::TStringId mGroupID;
 
       private:
         static CLocalCommGroupsManager smLocalCommGroupsManager;
