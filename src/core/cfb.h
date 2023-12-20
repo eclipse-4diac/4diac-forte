@@ -145,6 +145,7 @@ class CCompositeFB: public CFunctionBlock, public forte::core::CFBContainer {
     void prepareIf2InEventCons();
     void establishConnection(CConnection *paCon, CFunctionBlock *paDstFb, CStringDictionary::TStringId paDstNameId);
     void createDataConnections();
+    CDataConnection * getDataConn(CFunctionBlock *paSrcFB, CStringDictionary::TStringId paSrcNameId);
     void createAdapterConnections();
     void prepareIf2InDataCons();
     void setParams();

@@ -269,18 +269,7 @@ void CCompositeFB::createDataConnections(){
       CFunctionBlock *dstFB = getFunctionBlock(currentConn.mDstFBNum);
 
       if((nullptr != srcFB) && (nullptr != dstFB)){
-        if(this == srcFB){
-          TPortId diId = getDIID(currentConn.mSrcId);
-          if(diId != cgInvalidPortId) {
-            mDataConnections[i] = &(mIf2InDConns[diId]);
-          } else {
-            TPortId dioId = getDIOID(currentConn.mSrcId);
-            mDataConnections[i] = getDIOOutConInternalUnchecked(dioId);
-          }
-        }
-        else{
-          mDataConnections[i] = srcFB->getDOConnection(currentConn.mSrcId);
-        }
+        mDataConnections[i] = getDataConn(srcFB, currentConn.mSrcId);
         establishConnection(mDataConnections[i], dstFB, currentConn.mDstId);
       }
       else{
@@ -294,6 +283,24 @@ void CCompositeFB::createDataConnections(){
       establishConnection(mDataConnections[currentFannedConn.mConnectionNum], dstFB, currentFannedConn.mDstId);
     }
   }
+}
+
+CDataConnection * CCompositeFB::getDataConn(CFunctionBlock *paSrcFB, CStringDictionary::TStringId paSrcNameId){
+  if(this == paSrcFB){
+    TPortId diId = getDIID(paSrcNameId);
+    if(diId != cgInvalidPortId) {
+      return &(mIf2InDConns[diId]);
+    } else {
+      TPortId dioId = getDIOID(paSrcNameId);
+      return getDIOOutConInternalUnchecked(dioId);
+    }
+  }
+
+  CDataConnection *con = paSrcFB->getDOConnection(paSrcNameId);
+  if(con == nullptr) {
+    con = paSrcFB->getDIOOutConnection(paSrcNameId);
+  }
+  return con;
 }
 
 void CCompositeFB::createAdapterConnections(){
