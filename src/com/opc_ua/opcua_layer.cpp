@@ -93,7 +93,7 @@ void COPC_UA_Layer::closeConnection() {
     mHandler = nullptr;
     if(mRDBuffer) {
       if(mIsObjectNodeStruct) {
-        mStructObjectHelper->deleteRDBufferEntries(mRDBuffer);
+    	  COPC_UA_ObjectStruct_Helper::deleteRDBufferEntries(*getCommFB(), mRDBuffer);
       } else {
         for (size_t i = 0; i < getCommFB()->getNumRD(); ++i) {
           delete mRDBuffer[i];
@@ -165,7 +165,7 @@ EComResponse COPC_UA_Layer::sendData(void *, unsigned int) {
 EComResponse COPC_UA_Layer::processInterrupt() {
   CCriticalRegion criticalRegion(mRDBufferMutex);
   if(mIsObjectNodeStruct) { 
-    mStructObjectHelper->setMemberValues(mRDBuffer);
+	  COPC_UA_ObjectStruct_Helper::setMemberValues(getCommFB()->getRDs(), mRDBuffer);
   } else {
     for(size_t i = 0; i < getCommFB()->getNumRD(); ++i) {
       getCommFB()->getRDs()[i]->setValue(*mRDBuffer[i]);

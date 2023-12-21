@@ -143,33 +143,42 @@ void CBaseCommFB::interruptCommFB(CComLayer *paComLayer) {
 }
 
 char *CBaseCommFB::extractLayerIdAndParams(char **paRemainingID, char **paLayerParams) {
-  char *layerID = nullptr;
-  if('\0' != **paRemainingID) {
-    char *possibleLayerId = *paRemainingID;
-    *paRemainingID = forte::core::util::lookForNonEscapedChar(paRemainingID, '[', '\\');
-    if(nullptr != *paRemainingID) {
-      ++*paRemainingID;
-      char *possibleLayerParams = *paRemainingID;
-      *paRemainingID = forte::core::util::lookForNonEscapedChar(paRemainingID, ']', '\\');
-      if(nullptr != *paRemainingID) { //both [ and ] were found so the ID is correct
-        ++*paRemainingID;
-        if('\0' != **paRemainingID) {
-          ++*paRemainingID;
+  if ('\0' != **paRemainingID) {
+    char *const layerID = *paRemainingID;
+    *paRemainingID = strchr(*paRemainingID, '[');
+    if (nullptr != *paRemainingID) {
+      int bracketCount = 0;
+      char * const paramsStart = *paRemainingID;
+      char *currentChar = *paRemainingID;
+      while ('\0' != *currentChar) {
+        if (*currentChar == '[') {
+          bracketCount++;
         }
+        if (*currentChar == ']') {
+          bracketCount--;
 
-        layerID = possibleLayerId;
-        *paLayerParams = possibleLayerParams;
-        forte::core::util::removeEscapedSigns(paLayerParams, '\\');
-      } else {
-        DEVLOG_ERROR("[CBaseCommFB]: No valid closing bracket was found\n");
+          if (bracketCount == 0){
+            *paramsStart = '\0';
+            *currentChar = '\0';
+            *paRemainingID = currentChar + 1;  //let the paRemainingID point to the char after the closing bracket
+            *paLayerParams = paramsStart + 1;  //let the paLayerParams point to the char after the opening bracket
+
+            if('\0' != **paRemainingID) {
+              ++(*paRemainingID);
+             }
+            return layerID;
+          }
+        }
+        currentChar++;
       }
+      DEVLOG_ERROR("[CBaseCommFB] ID is not valid!\n");
     } else {
       DEVLOG_ERROR("[CBaseCommFB]: No valid opening bracket was found\n");
     }
   } else {
     DEVLOG_ERROR("[CBaseCommFB]: The id of the layer is empty\n");
   }
-  return layerID;
+  return nullptr;
 }
 
 char *CBaseCommFB::buildIDString(const char *paPrefix, const char *paIDRoot, const char *paSuffix) {

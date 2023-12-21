@@ -12,6 +12,7 @@
  *    Alois Zoitl - initial implementation and bug fixes
  *    Patrik Smejkal - rename interrupt in interruptCCommFB
  *    Martin Jobst - account for new FB layout and varying data type size
+ *    Mario Kastner - bug fixes
  *******************************************************************************/
 #include "localcomlayer.h"
 #include "commfb.h"
@@ -36,15 +37,20 @@ EComResponse CLocalComLayer::sendData(void *, unsigned int){
   CIEC_ANY **sds = mFb->getSDs();
   TPortId numSDs = mFb->getNumSD();
 
-  // go through GroupList and trigger all Subscribers
-  for(auto runner : mLocalCommGroup->mSublList){
+  CLocalCommGroup* comGroup = getLocalCommGroupsManager().getComGroup(mGroupID);
+
+  if (comGroup == nullptr) {
+    return e_ProcessDataSendFailed;
+  }
+
+  for(auto runner : comGroup->mSublList){
     forte::com_infra::CBaseCommFB& subFb(*runner->getCommFB());
     CCriticalRegion criticalRegion(subFb.getFBLock());
     setRDs(subFb, sds, numSDs);
     subFb.interruptCommFB(runner);
     subFb.getDevice()->getDeviceExecution().startNewEventChain(&subFb);
   }
-
+  
   return e_ProcessDataOk;
 }
 
@@ -57,17 +63,17 @@ void CLocalComLayer::setRDs(forte::com_infra::CBaseCommFB& paSubl, CIEC_ANY **pa
 }
 
 EComResponse CLocalComLayer::openConnection(char *const paLayerParameter){
-  CStringDictionary::TStringId nId = CStringDictionary::getInstance().insert(paLayerParameter);
+  mGroupID = CStringDictionary::getInstance().insert(paLayerParameter);
 
   switch (mFb->getComServiceType()){
     case e_Server:
     case e_Client:
       break;
     case e_Publisher:
-      mLocalCommGroup = getLocalCommGroupsManager().registerPubl(nId, this);
+      mLocalCommGroup = getLocalCommGroupsManager().registerPubl(mGroupID, this);
       break;
     case e_Subscriber:
-      mLocalCommGroup = getLocalCommGroupsManager().registerSubl(nId, this);
+      mLocalCommGroup = getLocalCommGroupsManager().registerSubl(mGroupID, this);
       break;
   }
   return (nullptr != mLocalCommGroup) ? e_InitOk : e_InitInvalidId;
@@ -91,12 +97,20 @@ CLocalComLayer::CLocalCommGroup* CLocalComLayer::CLocalCommGroupsManager::regist
   return registerPubl(paID, paLayer, commFb->getSDs(), commFb->getNumSD());
 }
 
+CLocalComLayer::CLocalCommGroup* CLocalComLayer::CLocalCommGroupsManager::getComGroup(const CStringDictionary::TStringId paGroupID) {
+  auto iterator = getLocalCommGroupIterator(paGroupID);
+  if (isGroupIteratorForGroup(iterator, paGroupID)) {
+    return &(*iterator);
+  }
+  return nullptr;
+}
+
 CLocalComLayer::CLocalCommGroup* CLocalComLayer::CLocalCommGroupsManager::registerPubl(const CStringDictionary::TStringId paID, CLocalComLayer *paLayer,
     CIEC_ANY **paDataPins, TPortId paNumDataPins){
   CCriticalRegion criticalRegion(mSync);
   CLocalCommGroup *const group = findOrCreateLocalCommGroup(paID, paDataPins, paNumDataPins);
   if(group != nullptr){
-      group->mPublList.push_back(paLayer);
+    group->mPublList.push_back(paLayer);
   }
   return group;
 }
@@ -169,7 +183,7 @@ CLocalComLayer::CLocalCommGroup::TLocalComDataTypeList CLocalComLayer::CLocalCom
   if(paDataPins != nullptr){
     dataTypes.reserve(paNumDataPins);
     for(size_t i = 0; i < paNumDataPins; i++){
-      dataTypes.push_back(paDataPins[i]->getTypeNameID());
+      dataTypes.push_back(paDataPins[i]->unwrap().getTypeNameID());
     }
   }
 

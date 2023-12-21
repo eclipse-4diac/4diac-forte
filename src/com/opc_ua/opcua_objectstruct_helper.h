@@ -20,6 +20,12 @@
 class COPC_UA_HandlerAbstract;
 class CActionInfo;
 
+namespace forte {
+  namespace com_infra {
+    class CBaseCommFB;
+  }
+}
+
 class COPC_UA_ObjectStruct_Helper {
   public:
 
@@ -71,9 +77,11 @@ class COPC_UA_ObjectStruct_Helper {
 
     /**
      * Set values of Object Struct members from the RDBuffer
+     *
+     * @param paRDs      the array of data pointers to be sent
      * @param paRDBuffer The buffer for the data
     */
-    void setMemberValues(CIEC_ANY **paRDBuffer);
+    static void setMemberValues(CIEC_ANY** paRDs, CIEC_ANY **paRDBuffer);
 
     /**
      * Initialize RDBuffer for Object Structs
@@ -83,9 +91,11 @@ class COPC_UA_ObjectStruct_Helper {
 
     /**
      * Delete all entries of the RDBuffer
+     *
+     * @param paCommFB   The comm fb for which the rdbuffer was created
      * @param paRDBuffer The buffer to be uninitialized
     */
-    void deleteRDBufferEntries(CIEC_ANY **paRDBuffer);
+    static void deleteRDBufferEntries(forte::com_infra::CBaseCommFB &paCommFB, CIEC_ANY **paRDBuffer);
 
     /**
      * Check if Data Connection is a Struct Type
@@ -106,6 +116,8 @@ class COPC_UA_ObjectStruct_Helper {
      static const std::string structTypesBrowsePath;
 
      static const std::string memberNamespaceIndex;
+
+     static char smEmptyLocale[];
 
     /**
      * Pointer to ActionInfo for created OPC UA Struct Object Node
@@ -134,7 +146,7 @@ class COPC_UA_ObjectStruct_Helper {
     */
     std::shared_ptr<CActionInfo> getCreateObjectActionInfo(CActionInfo& paActionInfo, std::string &paBrowsePath, bool paIsPublisher);
 
-    bool createOPCUAStructType(std::string &paStructTypeName, CIEC_STRUCT &paStructType);
+    bool createOPCUAStructType(const std::string &paStructTypeName, CIEC_STRUCT &paStructType);
 
     /**
      * Perform initialization for Object Struct Members
@@ -147,28 +159,25 @@ class COPC_UA_ObjectStruct_Helper {
     
     /**
      * Get the BrowsePath to the OPC UA Struct Object Type from the local Struct Type
-     * @param paBrowsePath Place to store the BrowsePath to the OPC UA Struct Object Type
      * @param paPathPrefix The BrowsePath directory with namespace (e.g. /Objects/1:)
      * @param paIsPublisher True if the FB is a Publisher, false othewise
      */
-    void getStructBrowsePath(std::string &paBrowsePath, const std::string &paPathPrefix, bool paIsPublisher);
+    std::string getStructBrowsePath(const std::string &paPathPrefix, bool paIsPublisher);
 
     /**
-     * @param paStructTypeName Place to store the name of the Struct Type
      * @param paIsPublisher True if the FB is a Publisher, false othewise
     */
-    void getStructTypeName(std::string &paStructTypeName, bool paIsPublisher);
+    std::string getStructTypeName(bool paIsPublisher);
 
     /**
      * Get the BrowsePath to the OPC UA Object Struct members from the local Struct Type
-     * @param paMemberBrowsePath Place to store the BrowsePath to the OPC UA Struct Object Type
      * @param paBrowsePathPrefix BrowsePath to the Struct Object Node
      * @param structMemberNameId Name Id of Object Node Struct member
      */
-    static void getStructMemberBrowsePath(std::string &paMemberBrowsePath, std::string &paBrowsePathPrefix, const CStringDictionary::TStringId structMemberNameId);
+    static std::string getStructMemberBrowsePath(std::string &paBrowsePathPrefix, const CStringDictionary::TStringId structMemberNameId);
 
-    static bool defineOPCUAStructTypeNode(UA_Server *paServer, UA_NodeId &paNodeId, std::string &paStructTypeName);
+    static bool defineOPCUAStructTypeNode(UA_Server *paServer, UA_NodeId &paNodeId, const std::string &paStructTypeName);
 
-    static bool addOPCUAStructTypeComponent(UA_Server *paServer, UA_NodeId &paParentNodeId, CIEC_ANY *paStructMember, std::string paStructMemberName);
+    static bool addOPCUAStructTypeComponent(UA_Server *paServer, UA_NodeId &paParentNodeId, CIEC_ANY *paStructMember, const std::string &paStructMemberName);
 
 };
