@@ -33,10 +33,11 @@ class CIEC_ULINT final : public CIEC_ANY_UNSIGNED {
   DECLARE_FIRMWARE_DATATYPE(ULINT)
 
   public:
-    typedef TForteUInt64 TValueType;
+    using TValueType = TForteUInt64;
+    constexpr static size_t scmBitLength = 64U;
 
-    static const TValueType scmMinVal = 0;
-    static const TValueType scmMaxVal;
+    static constexpr TValueType scmMinVal = std::numeric_limits<TValueType>::min();
+    static constexpr TValueType scmMaxVal = std::numeric_limits<TValueType>::max();
 
     CIEC_ULINT() = default;
 

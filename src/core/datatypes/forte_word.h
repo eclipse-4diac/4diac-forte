@@ -39,10 +39,11 @@ class CIEC_WORD : public CIEC_ANY_BIT{
   DECLARE_FIRMWARE_DATATYPE(WORD)
 
   public:
-    typedef TForteWord TValueType;
+    using TValueType = TForteWord;
+    constexpr static size_t scmBitLength = 16U;
 
-    static constexpr TValueType scmMinVal = std::numeric_limits<CIEC_WORD::TValueType>::min();
-    static constexpr TValueType scmMaxVal = std::numeric_limits<CIEC_WORD::TValueType>::max();
+    static constexpr TValueType scmMinVal = std::numeric_limits<TValueType>::min();
+    static constexpr TValueType scmMaxVal = std::numeric_limits<TValueType>::max();
 
     CIEC_WORD() = default;
 

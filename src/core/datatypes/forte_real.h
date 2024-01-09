@@ -36,7 +36,8 @@ class CIEC_REAL final : public CIEC_ANY_REAL{
   DECLARE_FIRMWARE_DATATYPE(REAL)
 
   public:
-    typedef TForteFloat TValueType;
+    using TValueType = TForteFloat;
+    constexpr static size_t scmBitLength = 32U;
 
     CIEC_REAL() = default;
 

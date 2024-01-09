@@ -37,10 +37,11 @@ class CIEC_BYTE : public CIEC_ANY_BIT{
   DECLARE_FIRMWARE_DATATYPE(BYTE)
 
   public:
-    typedef TForteByte TValueType;
+    using TValueType = TForteByte;
+    constexpr static size_t scmBitLength = 8U;
 
-    static constexpr TValueType scmMinVal = std::numeric_limits<CIEC_BYTE::TValueType>::min();
-    static constexpr TValueType scmMaxVal = std::numeric_limits<CIEC_BYTE::TValueType>::max();
+    static constexpr TValueType scmMinVal = std::numeric_limits<TValueType>::min();
+    static constexpr TValueType scmMaxVal = std::numeric_limits<TValueType>::max();
 
     CIEC_BYTE() = default;
 

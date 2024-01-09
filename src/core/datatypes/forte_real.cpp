@@ -14,10 +14,10 @@
  *    Jose Cabral
  *      - Move arch dependant code (strtod) to the arch folder
  *******************************************************************************/
-#include <math.h>
-#include <string.h>
-#include <stdlib.h>
-#include <stdio.h>
+#include <cmath>
+#include <cstring>
+#include <cstdlib>
+#include <cstdio>
 #include "forte_real.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
 #include "forte_real_gen.cpp"
@@ -43,7 +43,7 @@ int CIEC_REAL::fromString(const char *paValue){
   errno = 0;
   realval = forte_stringToFloat(pacRunner, &pcEnd);
 
-  if(pacRunner == pcEnd || !isfinite(realval) || errno != 0) {
+  if(pacRunner == pcEnd || !std::isfinite(realval) || errno != 0) {
     return -1;
   }
 

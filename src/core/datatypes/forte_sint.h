@@ -30,10 +30,11 @@ class CIEC_SINT final : public CIEC_ANY_SIGNED {
   DECLARE_FIRMWARE_DATATYPE(SINT)
 
   public:
-    typedef TForteInt8 TValueType;
+    using TValueType = TForteInt8;
+    constexpr static size_t scmBitLength = 8U;
 
-    static const TValueType scmMinVal;
-    static const TValueType scmMaxVal;
+    static constexpr TValueType scmMinVal = std::numeric_limits<TValueType>::min();
+    static constexpr TValueType scmMaxVal = std::numeric_limits<TValueType>::max();
 
     CIEC_SINT() = default;
 

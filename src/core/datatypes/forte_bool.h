@@ -28,11 +28,11 @@ class CIEC_BOOL : public CIEC_ANY_BIT{
   DECLARE_FIRMWARE_DATATYPE(BOOL)
 
   public:
+    using TValueType = bool;
+    constexpr static size_t scmBitLength = 1U;
 
-    typedef bool TValueType;
-
-    static constexpr TValueType scmMinVal = std::numeric_limits<CIEC_BOOL::TValueType>::min();
-    static constexpr TValueType scmMaxVal = std::numeric_limits<CIEC_BOOL::TValueType>::max();
+    static constexpr TValueType scmMinVal = std::numeric_limits<TValueType>::min();
+    static constexpr TValueType scmMaxVal = std::numeric_limits<TValueType>::max();
 
     CIEC_BOOL() {
       setTBOOL8(false);

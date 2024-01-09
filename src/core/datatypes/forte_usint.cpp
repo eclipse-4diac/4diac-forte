@@ -18,5 +18,3 @@
 
 DEFINE_FIRMWARE_DATATYPE(USINT, g_nStringIdUSINT)
 
-const CIEC_USINT::TValueType CIEC_USINT::scmMaxVal = std::numeric_limits<CIEC_USINT::TValueType>::max();
-

@@ -37,9 +37,10 @@ class CIEC_LINT final : public CIEC_ANY_SIGNED {
 
   public:
     typedef TForteInt64 TValueType;
+    constexpr static size_t scmBitLength = 64U;
 
-    static const TValueType scmMinVal;
-    static const TValueType scmMaxVal;
+    static constexpr TValueType scmMinVal = std::numeric_limits<TValueType>::min();
+    static constexpr TValueType scmMaxVal = std::numeric_limits<TValueType>::max();
 
     CIEC_LINT() = default;
 

@@ -34,10 +34,11 @@ class CIEC_INT final : public CIEC_ANY_SIGNED {
   DECLARE_FIRMWARE_DATATYPE(INT)
 
   public:
-    typedef TForteInt16 TValueType;
+    using TValueType = TForteInt16;
+    constexpr static size_t scmBitLength = 16U;
 
-    static const TValueType scmMinVal;
-    static const TValueType scmMaxVal;
+    static constexpr TValueType scmMinVal = std::numeric_limits<TValueType>::min();
+    static constexpr TValueType scmMaxVal = std::numeric_limits<TValueType>::max();
 
     CIEC_INT() = default;
 
