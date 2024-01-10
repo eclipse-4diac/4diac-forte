@@ -24,10 +24,10 @@ class CIEC_WCHAR : public CIEC_ANY_CHAR {
   DECLARE_FIRMWARE_DATATYPE(WCHAR)
 
   public:
-    typedef TForteWChar TValueType;
+    using TValueType = TForteWChar;
 
-    static const TValueType scmMinVal = 0;
-    static const TValueType scmMaxVal;
+    static constexpr TValueType scmMinVal = std::numeric_limits<TValueType>::min();
+    static constexpr TValueType scmMaxVal = std::numeric_limits<TValueType>::max();
 
     CIEC_WCHAR() = default;
 

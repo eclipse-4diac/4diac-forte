@@ -261,7 +261,7 @@ BOOST_AUTO_TEST_CASE(test_upperbound_lowerbound_test){
   BOOST_CHECK_EQUAL(static_cast<CIEC_LTIME::TValueType>(nTest), std::numeric_limits<CIEC_LTIME::TValueType>::min());
   BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 40), 35);
   BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
-  BOOST_CHECK_EQUAL(std::string(cBuffer), "LT#-106751d23h47m16s854ms775us808ns");
+  BOOST_TEST(cBuffer == "LT#-106751d23h47m16s854ms775us808ns");
 
   strcpy(cBuffer, "");
   nTest = CIEC_LTIME(static_cast<CIEC_LTIME::TValueType>(0));

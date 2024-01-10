@@ -38,6 +38,8 @@ class CIEC_REAL final : public CIEC_ANY_REAL{
   public:
     using TValueType = TForteFloat;
     constexpr static size_t scmBitLength = 32U;
+    static constexpr TValueType scmMinVal = std::numeric_limits<TValueType>::min();
+    static constexpr TValueType scmMaxVal = std::numeric_limits<TValueType>::max();
 
     CIEC_REAL() = default;
 

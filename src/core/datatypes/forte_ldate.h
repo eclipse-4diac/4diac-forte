@@ -28,6 +28,8 @@
 class CIEC_LDATE final : public CIEC_ANY_DATE {
   DECLARE_FIRMWARE_DATATYPE(LDATE)
   public:
+    constexpr static size_t scmBitLength = 64U;
+
     CIEC_LDATE() = default;
 
     CIEC_LDATE(const CIEC_LDATE& paValue) :

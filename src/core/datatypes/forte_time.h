@@ -33,6 +33,10 @@ class CIEC_TIME final : public CIEC_ANY_DURATION {
     static constexpr char csmZeroNanoSecondTimeValue[] = "T#0ns";
 
   public:
+    constexpr static size_t scmBitLength = 64U;
+    static constexpr TValueType scmMinVal = std::numeric_limits<TValueType>::min();
+    static constexpr TValueType scmMaxVal = std::numeric_limits<TValueType>::max();
+    
     CIEC_TIME() = default;
 
     CIEC_TIME(const CIEC_TIME &paValue) : CIEC_ANY_DURATION() {

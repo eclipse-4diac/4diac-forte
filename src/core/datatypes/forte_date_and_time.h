@@ -28,6 +28,8 @@
 class CIEC_DATE_AND_TIME final : public CIEC_ANY_DATE {
     DECLARE_FIRMWARE_DATATYPE(DATE_AND_TIME)
   public:
+    constexpr static size_t scmBitLength = 64U;
+
     CIEC_DATE_AND_TIME() = default;
 
     CIEC_DATE_AND_TIME(const CIEC_DATE_AND_TIME& paValue) : CIEC_ANY_DATE() {

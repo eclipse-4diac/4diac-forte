@@ -30,6 +30,10 @@
 class CIEC_TIME_OF_DAY final : public CIEC_ANY_DATE{
   DECLARE_FIRMWARE_DATATYPE(TIME_OF_DAY)
   public:
+    constexpr static size_t scmBitLength = 64U;
+    static constexpr TValueType scmMinVal = std::numeric_limits<TValueType>::min();
+    static constexpr TValueType scmMaxVal = std::numeric_limits<TValueType>::max();
+    
     CIEC_TIME_OF_DAY() = default;
 
     CIEC_TIME_OF_DAY(const CIEC_TIME_OF_DAY& paValue) :

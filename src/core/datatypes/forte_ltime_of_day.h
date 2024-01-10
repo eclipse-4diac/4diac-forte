@@ -31,6 +31,8 @@
 class CIEC_LTIME_OF_DAY final : public CIEC_ANY_DATE {
   DECLARE_FIRMWARE_DATATYPE(LTIME_OF_DAY)
   public:
+    constexpr static size_t scmBitLength = 64U;
+
     CIEC_LTIME_OF_DAY() = default;
 
     CIEC_LTIME_OF_DAY(const CIEC_LTIME_OF_DAY& paValue) :
