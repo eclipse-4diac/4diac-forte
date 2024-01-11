@@ -1084,10 +1084,11 @@ CIEC_LTIME func_DIV_LTIME(const CIEC_LTIME &paIN1, const T &paIN2) {
   }
 }
 
-template<typename T>
-CIEC_ANY_INT func_LEN(const T& paVal){
-  static_assert(std::is_base_of_v<CIEC_ANY_STRING, T>, "T not of ANY_STRING");
-  return CIEC_ANY_INT(paVal.length());
+template<typename T, typename U>
+T func_LEN(const U& paVal){
+  static_assert(std::is_base_of_v<CIEC_ANY_INT, T>, "T not of ANY_INT");
+  static_assert(std::is_base_of_v<CIEC_ANY_STRING, U>, "T not of ANY_STRING");
+  return T(static_cast<typename T::TValueType>(paVal.length()));
 }
 
 template<typename T>
@@ -1256,39 +1257,40 @@ T func_REPLACE(const T &paIn1, const T &paIn2, const CIEC_ANY_INT &paL, const CI
   return func_CONCAT(func_CONCAT(func_LEFT(paIn1, positionLeft), paIn2), func_RIGHT(paIn1, positionRight));
 }
 
-template <typename T, typename U>
-CIEC_ANY_INT func_FIND(const T &paIn1, const U &paIn2) {
-  static_assert(std::is_base_of_v<CIEC_ANY_STRING, T>, "paIn1 must be of type CIEC_ANY_STRING");
-  static_assert(std::is_base_of_v<CIEC_ANY_CHARS, U>, "paIn2 must be of type CIEC_ANY_CHARS");
-  if constexpr(std::is_base_of_v<T, CIEC_STRING>) {
-    static_assert(std::is_base_of_v<U, CIEC_STRING> || std::is_same_v<U, CIEC_CHAR>, "FIND in STRING only with STRING or CHAR");
-    if constexpr(std::is_base_of_v<U, CIEC_STRING>) {
+template <typename T, typename U, typename V>
+T func_FIND(const U &paIn1, const V &paIn2) {
+  static_assert(std::is_base_of_v<CIEC_ANY_INT, T>, "result must be of type CIEC_ANY_INT");
+  static_assert(std::is_base_of_v<CIEC_ANY_STRING, U>, "paIn1 must be of type CIEC_ANY_STRING");
+  static_assert(std::is_base_of_v<CIEC_ANY_CHARS, V>, "paIn2 must be of type CIEC_ANY_CHARS");
+  if constexpr(std::is_base_of_v<U, CIEC_STRING>) {
+    static_assert(std::is_base_of_v<V, CIEC_STRING> || std::is_same_v<V, CIEC_CHAR>, "FIND in STRING only with STRING or CHAR");
+    if constexpr(std::is_base_of_v<V, CIEC_STRING>) {
       const auto findIndex = paIn1.getStorage().find(paIn2.getStorage());
       if (findIndex != std::string::npos) {
-        return CIEC_ANY_INT(findIndex + 1);
+        return T(static_cast<typename T::TValueType>(findIndex + 1));
       }
     }
-    else if constexpr (std::is_same_v<U, CIEC_CHAR>) {
+    else if constexpr (std::is_same_v<V, CIEC_CHAR>) {
       const auto findIndex = paIn1.getStorage().find(static_cast<CIEC_CHAR::TValueType>(paIn2));
       if (findIndex != std::string::npos) {
-        return CIEC_ANY_INT(findIndex + 1);
+        return T(static_cast<typename T::TValueType>(findIndex + 1));
       }   
     }
-    return CIEC_ANY_INT(0);
-  } else if constexpr(std::is_same_v<T, CIEC_WSTRING>) {
-    static_assert(std::is_same_v<U, CIEC_WSTRING> || std::is_same_v<U, CIEC_WCHAR>, "FIND in WSTRING only with WSTRING or WCHAR");
-    if constexpr(std::is_same_v<U, CIEC_WSTRING>) {
+    return T(0);
+  } else if constexpr(std::is_same_v<U, CIEC_WSTRING>) {
+    static_assert(std::is_same_v<V, CIEC_WSTRING> || std::is_same_v<V, CIEC_WCHAR>, "FIND in WSTRING only with WSTRING or WCHAR");
+    if constexpr(std::is_same_v<V, CIEC_WSTRING>) {
       const char* pc_Find = strstr(paIn1.getValue(), paIn2.getValue());
       if (nullptr != pc_Find){
-        return CIEC_ANY_INT(pc_Find - paIn1.getValue() + 1);
+        return T(static_cast<typename T::TValueType>(pc_Find - paIn1.getValue() + 1));
       }
-    } else if constexpr(std::is_same_v<U, CIEC_WCHAR>) {
+    } else if constexpr(std::is_same_v<V, CIEC_WCHAR>) {
       const char* pc_Find = strstr(paIn1.getValue(), static_cast<CIEC_WCHAR::TValueType>(paIn2));
       if (nullptr != pc_Find){
-        return CIEC_ANY_INT(pc_Find - paIn1.getValue() + 1);
+        return T(static_cast<typename T::TValueType>(pc_Find - paIn1.getValue() + 1));
       }
     }
-    return CIEC_ANY_INT(0);
+    return T(0);
   }
 }
 
@@ -1358,7 +1360,13 @@ void func_SPLIT_LDT(const CIEC_LDATE_AND_TIME &paValue, CIEC_ANY_INT &YEAR, CIEC
  * 
  * This function differs from the standard in taking an LDATE, which can be implicitly cast from a DATE
  */
-CIEC_ANY_INT func_DAY_OF_WEEK(const CIEC_LDATE &paValue);
+template<typename T>
+T func_DAY_OF_WEEK(const CIEC_LDATE &paValue) {
+  static_assert(std::is_base_of_v<CIEC_ANY_INT, T>, "T not of ANY_INT");
+  struct tm timeStruct;
+  paValue.getTimeStruct(&timeStruct);
+  return T(static_cast<typename T::TValueType>(timeStruct.tm_wday));
+}
 
 /**
  * @brief returns current monotonic clock value as time span in nanoseconds

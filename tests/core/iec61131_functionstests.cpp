@@ -140,7 +140,7 @@ BOOST_AUTO_TEST_CASE(to_lower)
 BOOST_AUTO_TEST_CASE(standard_example_len)
 {
   CIEC_STRING sTestString("ASTRING"_STRING);
-  CIEC_UINT nLength(func_LEN(sTestString));
+  CIEC_UINT nLength(func_LEN<CIEC_UINT>(sTestString));
   BOOST_TEST(static_cast<CIEC_UINT::TValueType>(nLength) == 7);
 }
 
@@ -148,7 +148,7 @@ BOOST_AUTO_TEST_CASE(len)
 {
   CIEC_STRING sTestString("Lorem ipsum dolor sit amet"_STRING);
   CIEC_UINT nLength;
-  nLength = func_LEN(sTestString);
+  nLength = func_LEN<CIEC_UINT>(sTestString);
   BOOST_TEST(static_cast<CIEC_UINT::TValueType>(nLength) == 26);
 }
 
@@ -248,7 +248,7 @@ BOOST_AUTO_TEST_CASE(find_at_begin)
   CIEC_STRING sBigString("Lorem ipsum dolor sit amet"_STRING);
   CIEC_STRING sSearchString("Lorem"_STRING);
   CIEC_UINT nIndex;
-  nIndex = func_FIND(sBigString, sSearchString);
+  nIndex = func_FIND<CIEC_UINT>(sBigString, sSearchString);
   BOOST_TEST(1 == static_cast<CIEC_UINT::TValueType>(nIndex));
 }
 
@@ -257,7 +257,7 @@ BOOST_AUTO_TEST_CASE(find_in_between)
   CIEC_STRING sBigString("Lorem ipsum dolor sit amet"_STRING);
   CIEC_STRING sSearchString("dolor"_STRING);
   CIEC_UINT nIndex;
-  nIndex = func_FIND(sBigString, sSearchString);
+  nIndex = func_FIND<CIEC_UINT>(sBigString, sSearchString);
   BOOST_TEST(13 == static_cast<CIEC_UINT::TValueType>(nIndex));
 }
 
@@ -266,7 +266,7 @@ BOOST_AUTO_TEST_CASE(find_at_the_end)
   CIEC_STRING sBigString("Lorem ipsum dolor sit"_STRING);
   CIEC_STRING sSearchString("t"_STRING);
   CIEC_UINT nIndex;
-  nIndex = func_FIND(sBigString, sSearchString);
+  nIndex = func_FIND<CIEC_UINT>(sBigString, sSearchString);
   BOOST_TEST(21 == static_cast<CIEC_UINT::TValueType>(nIndex));
 }
 
@@ -275,7 +275,7 @@ BOOST_AUTO_TEST_CASE(find_not_found)
   CIEC_STRING sBigString("Lorem ipsum dolor sit"_STRING);
   CIEC_STRING sSearchString("Latin"_STRING);
   CIEC_UINT nIndex;
-  nIndex = func_FIND(sBigString, sSearchString);
+  nIndex = func_FIND<CIEC_UINT>(sBigString, sSearchString);
   BOOST_TEST(0 == static_cast<CIEC_UINT::TValueType>(nIndex));
 }
 
@@ -1897,7 +1897,7 @@ BOOST_AUTO_TEST_CASE(func_day_of_week) {
   date.fromString("DATE#2017-03-20");
 
   CIEC_ULINT weekday;
-  weekday = func_DAY_OF_WEEK(date);
+  weekday = func_DAY_OF_WEEK<CIEC_ULINT>(date);
   BOOST_TEST(static_cast<CIEC_ULINT::TValueType>(weekday) == 1);
 }
 

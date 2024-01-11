@@ -69,7 +69,7 @@ void FORTE_F_FIND::executeEvent(TEventID paEIID, CEventChainExecutionThread *con
         using T = std::decay_t<decltype(paIN1)>;
         using U = std::decay_t<decltype(paIN2)>;
         if constexpr ((std::is_same_v<T, CIEC_STRING> && (std::is_same_v<U, CIEC_STRING> || std::is_same_v<U, CIEC_CHAR>)) || (std::is_same_v<T, CIEC_WSTRING> && (std::is_same_v<U, CIEC_WSTRING> || std::is_same_v<U, CIEC_WCHAR>))) {
-          paOUT = func_FIND(paIN1, paIN2);
+          paOUT = func_FIND<typeof(paOUT)>(paIN1, paIN2);
         } else {
           DEVLOG_ERROR("Incompatible types IN1:%s and IN2:%s for FIND\n",
                      CStringDictionary::getInstance().get(paIN1.getTypeNameID()),
