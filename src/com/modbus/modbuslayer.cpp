@@ -62,99 +62,99 @@ unsigned int CModbusComLayer::convertDataInput(void *paInData, unsigned int paDa
   unsigned int nrSDs = paDataSize;
 
   for(unsigned int i = 0; i < nrSDs; i++){
-    CIEC_ANY *anyVal = apoSDs[i];
-    switch (anyVal->getDataTypeID()) {
+    CIEC_ANY &anyVal(apoSDs[i]->unwrap());
+    switch (anyVal.getDataTypeID()) {
       case CIEC_ANY::e_BOOL: // 1bit data type
       {
-        TForteUInt8 out = (bool) *(CIEC_BOOL*) anyVal;
+        TForteUInt8 out = (bool) static_cast<CIEC_BOOL&>(anyVal);
         *(TForteUInt8*) (&convertedData[outLength]) = out;
         outLength += sizeof(TForteUInt8);
         break;
       }
       case CIEC_ANY::e_SINT: // 8bit data types
       {
-        TForteInt16 out = (TForteInt8) *(CIEC_SINT*) anyVal;
+        TForteInt16 out = (TForteInt8) static_cast<CIEC_SINT&>(anyVal);
         *(TForteInt16*) (&convertedData[outLength]) = out;
         outLength += sizeof(TForteInt16);
         break;
       }
       case CIEC_ANY::e_USINT: {
-        TForteUInt16 out = (TForteUInt8) *(CIEC_USINT*) anyVal;
+        TForteUInt16 out = (TForteUInt8) static_cast<CIEC_USINT&>(anyVal);
         *(TForteUInt16*) (&convertedData[outLength]) = out;
         outLength += sizeof(TForteUInt16);
         break;
       }
       case CIEC_ANY::e_BYTE: {
-        TForteUInt16 out = (TForteByte) *(CIEC_BYTE*) anyVal;
+        TForteUInt16 out = (TForteByte) static_cast<CIEC_BYTE&>(anyVal);
         *(TForteUInt16*) (&convertedData[outLength]) = out;
         outLength += sizeof(TForteUInt16);
         break;
       }
       case CIEC_ANY::e_INT: // 16bit data types
       {
-        TForteInt16 out = (TForteInt16) *(CIEC_INT*) anyVal;
+        TForteInt16 out = (TForteInt16) static_cast<CIEC_INT&>(anyVal);
         *(TForteInt16*) (&convertedData[outLength]) = out;
         outLength += sizeof(TForteInt16);
         break;
       }
       case CIEC_ANY::e_UINT: {
-        TForteUInt16 out = (TForteUInt16) *(CIEC_UINT*) anyVal;
+        TForteUInt16 out = (TForteUInt16) static_cast<CIEC_UINT&>(anyVal);
         *(TForteUInt16*) (&convertedData[outLength]) = out;
         outLength += sizeof(TForteUInt16);
         break;
       }
       case CIEC_ANY::e_WORD: {
-        TForteWord out = (TForteWord) *(CIEC_WORD*) anyVal;
+        TForteWord out = (TForteWord) static_cast<CIEC_WORD&>(anyVal);
         *(TForteWord*) (&convertedData[outLength]) = out;
         outLength += sizeof(TForteWord);
         break;
       }
       case CIEC_ANY::e_DINT: // 32bit data types
       {
-        TForteInt32 out = (TForteInt32) *static_cast<CIEC_DINT*>(anyVal);
+        TForteInt32 out = (TForteInt32) static_cast<CIEC_DINT&>(anyVal);
         *(TForteInt32*) (&convertedData[outLength]) = convertFBOutput<TForteInt32>((TForteByte*) &out, sizeof(TForteInt32));
         outLength += sizeof(TForteInt32);
         break;
       }
       case CIEC_ANY::e_UDINT: {
-        TForteUInt32 out = (TForteUInt32) *(CIEC_UDINT*) anyVal;
+        TForteUInt32 out = (TForteUInt32) static_cast<CIEC_UDINT&>(anyVal);
         *(TForteUInt32*) (&convertedData[outLength]) = convertFBOutput<TForteUInt32>((TForteByte*) &out, sizeof(TForteUInt32));
         outLength += sizeof(TForteUInt32);
         break;
       }
       case CIEC_ANY::e_DWORD: {
-        TForteDWord out = (TForteDWord) *(CIEC_DWORD*) anyVal;
+        TForteDWord out = (TForteDWord) static_cast<CIEC_DWORD&>(anyVal);
         *(TForteDWord*) (&convertedData[outLength]) = convertFBOutput<TForteDWord>((TForteByte*) &out, sizeof(TForteDWord));
         outLength += sizeof(TForteDWord);
         break;
       }
       case CIEC_ANY::e_REAL: {
-        TForteFloat out = (TForteFloat) *(CIEC_REAL*) anyVal;
+        TForteFloat out = (TForteFloat) static_cast<CIEC_REAL&>(anyVal);
         *(TForteFloat*) (&convertedData[outLength]) = convertFBOutput<TForteFloat>((TForteByte*) &out, sizeof(TForteFloat));
         outLength += sizeof(TForteFloat);
         break;
       }
       case CIEC_ANY::e_LINT: // 64bit data types
       {
-        TForteInt64 out = (TForteInt64) *(CIEC_LINT*) anyVal;
+        TForteInt64 out = (TForteInt64) static_cast<CIEC_LINT&>(anyVal);
         *(TForteInt64*) (&convertedData[outLength]) = convertFBOutput<TForteInt64>((TForteByte*) &out, sizeof(TForteInt64));
         outLength += sizeof(TForteInt64);
         break;
       }
       case CIEC_ANY::e_ULINT: {
-        TForteUInt64 out = (TForteUInt64) *(CIEC_ULINT*) anyVal;
+        TForteUInt64 out = (TForteUInt64) static_cast<CIEC_ULINT&>(anyVal);
         *(TForteUInt64*) (&convertedData[outLength]) = convertFBOutput<TForteUInt64>((TForteByte*) &out, sizeof(TForteUInt64));
         outLength += sizeof(TForteUInt64);
         break;
       }
       case CIEC_ANY::e_LWORD: {
-        TForteLWord out = (TForteLWord) *(CIEC_LWORD*) anyVal;
+        TForteLWord out = (TForteLWord) static_cast<CIEC_LWORD&>(anyVal);
         *(TForteLWord*) (&convertedData[outLength]) = convertFBOutput<TForteLWord>((TForteByte*) &out, sizeof(TForteLWord));
         outLength += sizeof(TForteLWord);
         break;
       }
       case CIEC_ANY::e_LREAL: {
-        TForteDFloat out = (TForteDFloat) *(CIEC_LREAL*) anyVal;
+        TForteDFloat out = (TForteDFloat) static_cast<CIEC_LREAL&>(anyVal);
         *(TForteDFloat*) (&convertedData[outLength]) = convertFBOutput<TForteDFloat>((TForteByte*) &out, sizeof(TForteDFloat));
         outLength += sizeof(TForteDFloat);
         break;
@@ -176,65 +176,66 @@ EComResponse CModbusComLayer::processInterrupt(){
         unsigned int dataIndex = 0;
 
         for(unsigned int i = 0; i < nrRDs; i++){
-          switch (apoRDs[i]->getDataTypeID()){
+          CIEC_ANY &anyVal(apoRDs[i]->unwrap());
+          switch (anyVal.getDataTypeID()){
             case CIEC_ANY::e_BOOL:
-              apoRDs[i]->setValue(CIEC_BOOL(convertFBOutput<bool>(&mRecvBuffer[dataIndex], mBufFillSize - dataIndex)));
+              static_cast<CIEC_BOOL &>(anyVal) =CIEC_BOOL(convertFBOutput<bool>(&mRecvBuffer[dataIndex], mBufFillSize - dataIndex));
               dataIndex += sizeof(bool);
               break;
             case CIEC_ANY::e_SINT:
-              apoRDs[i]->setValue(CIEC_SINT(convertFBOutput<TForteInt8>(&mRecvBuffer[dataIndex], mBufFillSize - dataIndex)));
+              static_cast<CIEC_SINT &>(anyVal) =CIEC_SINT(convertFBOutput<TForteInt8>(&mRecvBuffer[dataIndex], mBufFillSize - dataIndex));
               dataIndex += sizeof(TForteInt8);
               break;
             case CIEC_ANY::e_INT:
-              apoRDs[i]->setValue(CIEC_INT(convertFBOutput<TForteInt16>(&mRecvBuffer[dataIndex], mBufFillSize - dataIndex)));
+              static_cast<CIEC_INT &>(anyVal) =CIEC_INT(convertFBOutput<TForteInt16>(&mRecvBuffer[dataIndex], mBufFillSize - dataIndex));
               dataIndex += sizeof(TForteInt16);
               break;
             case CIEC_ANY::e_DINT:
-              apoRDs[i]->setValue(CIEC_DINT(convertFBOutput<TForteInt32>(&mRecvBuffer[dataIndex], mBufFillSize - dataIndex)));
+              static_cast<CIEC_DINT &>(anyVal) =CIEC_DINT(convertFBOutput<TForteInt32>(&mRecvBuffer[dataIndex], mBufFillSize - dataIndex));
               dataIndex += sizeof(TForteInt32);
               break;
             case CIEC_ANY::e_LINT:
-              apoRDs[i]->setValue(CIEC_LINT(convertFBOutput<TForteInt64>(&mRecvBuffer[dataIndex], mBufFillSize - dataIndex)));
+              static_cast<CIEC_LINT &>(anyVal) =CIEC_LINT(convertFBOutput<TForteInt64>(&mRecvBuffer[dataIndex], mBufFillSize - dataIndex));
               dataIndex += sizeof(TForteInt64);
               break;
             case CIEC_ANY::e_USINT:
-              apoRDs[i]->setValue(CIEC_USINT(convertFBOutput<TForteUInt8>(&mRecvBuffer[dataIndex], mBufFillSize - dataIndex)));
+              static_cast<CIEC_USINT &>(anyVal) =CIEC_USINT(convertFBOutput<TForteUInt8>(&mRecvBuffer[dataIndex], mBufFillSize - dataIndex));
               dataIndex += sizeof(TForteUInt8);
               break;
             case CIEC_ANY::e_UINT:
-              apoRDs[i]->setValue(CIEC_UINT(convertFBOutput<TForteUInt16>(&mRecvBuffer[dataIndex], mBufFillSize - dataIndex)));
+              static_cast<CIEC_UINT &>(anyVal) =CIEC_UINT(convertFBOutput<TForteUInt16>(&mRecvBuffer[dataIndex], mBufFillSize - dataIndex));
               dataIndex += sizeof(TForteUInt16);
               break;
             case CIEC_ANY::e_UDINT:
-              apoRDs[i]->setValue(CIEC_UDINT(convertFBOutput<TForteUInt32>(&mRecvBuffer[dataIndex], mBufFillSize - dataIndex)));
+              static_cast<CIEC_UDINT &>(anyVal) =CIEC_UDINT(convertFBOutput<TForteUInt32>(&mRecvBuffer[dataIndex], mBufFillSize - dataIndex));
               dataIndex += sizeof(TForteUInt32);
               break;
             case CIEC_ANY::e_ULINT:
-              apoRDs[i]->setValue(CIEC_ULINT(convertFBOutput<TForteUInt64>(&mRecvBuffer[dataIndex], mBufFillSize - dataIndex)));
+              static_cast<CIEC_ULINT &>(anyVal) =CIEC_ULINT(convertFBOutput<TForteUInt64>(&mRecvBuffer[dataIndex], mBufFillSize - dataIndex));
               dataIndex += sizeof(TForteUInt64);
               break;
             case CIEC_ANY::e_BYTE:
-              apoRDs[i]->setValue(CIEC_BYTE(convertFBOutput<TForteByte>(&mRecvBuffer[dataIndex], mBufFillSize - dataIndex)));
+              static_cast<CIEC_BYTE &>(anyVal) =CIEC_BYTE(convertFBOutput<TForteByte>(&mRecvBuffer[dataIndex], mBufFillSize - dataIndex));
               dataIndex += sizeof(TForteByte);
               break;
             case CIEC_ANY::e_WORD:
-              apoRDs[i]->setValue(CIEC_WORD(convertFBOutput<TForteWord>(&mRecvBuffer[dataIndex], mBufFillSize - dataIndex)));
+              static_cast<CIEC_WORD &>(anyVal) =CIEC_WORD(convertFBOutput<TForteWord>(&mRecvBuffer[dataIndex], mBufFillSize - dataIndex));
               dataIndex += sizeof(TForteWord);
               break;
             case CIEC_ANY::e_DWORD:
-              apoRDs[i]->setValue(CIEC_DWORD(convertFBOutput<TForteDWord>(&mRecvBuffer[dataIndex], mBufFillSize - dataIndex)));
+              static_cast<CIEC_DWORD &>(anyVal) =CIEC_DWORD(convertFBOutput<TForteDWord>(&mRecvBuffer[dataIndex], mBufFillSize - dataIndex));
               dataIndex += sizeof(TForteDWord);
               break;
             case CIEC_ANY::e_LWORD:
-              apoRDs[i]->setValue(CIEC_LWORD(convertFBOutput<TForteLWord>(&mRecvBuffer[dataIndex], mBufFillSize - dataIndex)));
+              static_cast<CIEC_LWORD &>(anyVal) =CIEC_LWORD(convertFBOutput<TForteLWord>(&mRecvBuffer[dataIndex], mBufFillSize - dataIndex));
               dataIndex += sizeof(TForteLWord);
               break;
             case CIEC_ANY::e_REAL:
-              apoRDs[i]->setValue(CIEC_REAL(convertFBOutput<TForteFloat>(&mRecvBuffer[dataIndex], mBufFillSize - dataIndex)));
+              static_cast<CIEC_REAL &>(anyVal) =CIEC_REAL(convertFBOutput<TForteFloat>(&mRecvBuffer[dataIndex], mBufFillSize - dataIndex));
               dataIndex += sizeof(TForteFloat);
               break;
             case CIEC_ANY::e_LREAL:
-              apoRDs[i]->setValue(CIEC_LREAL(convertFBOutput<TForteDFloat>(&mRecvBuffer[dataIndex], mBufFillSize - dataIndex)));
+              static_cast<CIEC_LREAL &>(anyVal) =CIEC_LREAL(convertFBOutput<TForteDFloat>(&mRecvBuffer[dataIndex], mBufFillSize - dataIndex));
               dataIndex += sizeof(TForteDFloat);
               break;
             default:
