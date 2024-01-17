@@ -53,7 +53,7 @@ bool COPC_UA_ObjectStruct_Helper::checkStructTypeConnection(bool paIsPublisher) 
   if(createOPCUAStructType(getStructTypeName(paIsPublisher), structType)) {
     return true;
   }
-  DEVLOG_ERROR("[OPC UA OBJECT STRUCT HELPER]: Invalid Struct type connected to FB %s\n", mLayer.getCommFB()->getInstanceName());
+  DEVLOG_ERROR("[OPC UA OBJECT STRUCT HELPER]: Could not create OPC UA Struct Type at FB %s\n", mLayer.getCommFB()->getInstanceName());
   return false;
 }
 
@@ -89,9 +89,9 @@ bool COPC_UA_ObjectStruct_Helper::defineOPCUAStructTypeNode(UA_Server *paServer,
     UA_NODEID_NUMERIC(0, UA_NS0ID_HASSUBTYPE),
     UA_QUALIFIEDNAME(namespaceIndex, structTypeName), oAttr,
     nullptr, &paNodeId);
-
+  
   if (status != UA_STATUSCODE_GOOD) {
-    DEVLOG_ERROR("[OPC UA OBJECT STRUCT HELPER]: Failed to create OPC UA Type Node for Type %s\n", paStructTypeName);
+    DEVLOG_ERROR("[OPC UA OBJECT STRUCT HELPER]: Failed to create OPC UA Struct Type Node for Type %s, Status Code: %s\n", paStructTypeName.c_str(), UA_StatusCode_name(status));
     return false;
   }
   return true;
@@ -116,11 +116,17 @@ bool COPC_UA_ObjectStruct_Helper::addOPCUAStructTypeComponent(UA_Server *paServe
       UA_QUALIFIEDNAME(namespaceIndex, memberName),
       UA_NODEID_NUMERIC(0, UA_NS0ID_BASEDATAVARIABLETYPE), vAttr, NULL, &memberNodeId);
   if(status != UA_STATUSCODE_GOOD) {
+    DEVLOG_ERROR("[OPC UA OBJECT STRUCT HELPER]: Failed to add Member to OPC UA Struct Type Node for Member %s, Status Code: %s\n", paStructMemberName.c_str(), UA_StatusCode_name(status));
     return false;
   }
-  return UA_STATUSCODE_GOOD == UA_Server_addReference(paServer, memberNodeId,
+  status = UA_Server_addReference(paServer, memberNodeId,
       UA_NODEID_NUMERIC(0, UA_NS0ID_HASMODELLINGRULE),
-      UA_EXPANDEDNODEID_NUMERIC(0, UA_NS0ID_MODELLINGRULE_MANDATORY), true);               
+      UA_EXPANDEDNODEID_NUMERIC(0, UA_NS0ID_MODELLINGRULE_MANDATORY), true);
+  if(status != UA_STATUSCODE_GOOD) {
+    DEVLOG_ERROR("[OPC UA OBJECT STRUCT HELPER]: Failed to add OPC UA reference to Struct Member %s, Status Code: %s\n", paStructMemberName.c_str(), UA_StatusCode_name(status));
+    return false;
+  }
+  return true;
 }
 
 forte::com_infra::EComResponse COPC_UA_ObjectStruct_Helper::createObjectNode(CActionInfo& paActionInfo, bool paIsPublisher) {
