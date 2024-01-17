@@ -111,11 +111,19 @@ class COPC_UA_ObjectStruct_Helper {
     COPC_UA_HandlerAbstract *mHandler;
 
     /**
+     * OPC UA Object Struct Namespace Index
+    */
+    static const UA_UInt16 smOpcuaNamespaceIndex;
+
+    /**
      * BrowsePath to folder that contains Object Node Struct Types
      */
-     static const std::string structTypesBrowsePath;
+     static const std::string smStructTypesBrowsePath;
 
-     static const std::string memberNamespaceIndex;
+    /**
+     * String representation to the Namespace Index for Object Struct Members
+    */
+     static const std::string smMemberNamespaceIndex;
 
      static char smEmptyLocale[];
 
