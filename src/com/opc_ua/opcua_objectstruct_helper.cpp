@@ -79,11 +79,12 @@ bool COPC_UA_ObjectStruct_Helper::createOPCUAStructType(const std::string &paStr
 }
 
 bool COPC_UA_ObjectStruct_Helper::defineOPCUAStructTypeNode(UA_Server *paServer, UA_NodeId &paNodeId, const std::string &paStructTypeName) {
-  char* structTypeName = const_cast<char*>(paStructTypeName.c_str());
-
+  char* structTypeName = new char[paStructTypeName.length() +1];
+  strncpy(structTypeName, paStructTypeName.c_str(), paStructTypeName.length());
+  structTypeName[paStructTypeName.length()] = '\0';
   paNodeId = UA_NODEID_NUMERIC(smOpcuaNamespaceIndex, 0);
   UA_ObjectTypeAttributes oAttr = UA_ObjectTypeAttributes_default;
-  oAttr.displayName = UA_LOCALIZEDTEXT(const_cast<char*>(""), structTypeName);
+  oAttr.displayName = UA_LOCALIZEDTEXT(smEmptyLocale, structTypeName);
   UA_StatusCode status = UA_Server_addObjectTypeNode(paServer, paNodeId,
     UA_NODEID_NUMERIC(0, UA_NS0ID_BASEOBJECTTYPE),
     UA_NODEID_NUMERIC(0, UA_NS0ID_HASSUBTYPE),
