@@ -17,13 +17,59 @@
 #include "OPCUA_DEV.h"
 #include "stringdict.h"
 
+/* Management and Resource Type */
 char OPCUA_MGR::smEmptyLocale[] = "";
 char OPCUA_MGR::smMgmtType[] = "IEC61499MgmtType";
 char OPCUA_MGR::smMgmtName[] = "IEC61499Mgmt";
 char OPCUA_MGR::smResType[] = "ResourceType";
 
+/* Create Resource */
+char OPCUA_MGR::smCreateResMethodName[] = "createResource";
+char OPCUA_MGR::smCreateResArg1Name[] = "Resource_Name";
+char OPCUA_MGR::smCreateResArg1Description[] = "Name of Resource";
+char OPCUA_MGR::smCreateResArg2Name[] = "Type_Name";
+char OPCUA_MGR::smCreateResArg2Description[] = "Type of Resource";
+char OPCUA_MGR::smCreateResOutArgName[] = "Resource NodeId";
+char OPCUA_MGR::smCreateResOutArgDescription[] = "Resource NodeId";
+char OPCUA_MGR::smCreateResAttrDisplayName[] = "Create Resource";
+char OPCUA_MGR::smCreateResAttrDescription[] = "Create a Resource";
+
+/* Create FB */
+char OPCUA_MGR::smCreateFBMethodName[] = "createFB";
+char OPCUA_MGR::smCreateFBArg1Name[] = "FB_Name";
+char OPCUA_MGR::smCreateFBArg1Description[] = "Fully qualified name of FB";
+char OPCUA_MGR::smCreateFBArg2Name[] = "FB_Type";
+char OPCUA_MGR::smCreateFBArg2Description[] = "Type of FB";
+char OPCUA_MGR::smCreateFBAttrDisplayName[] = "Create FB";
+char OPCUA_MGR::smCreateFBAttrDescription[] = "Create FB";
+
+/* Create Connection */
+char OPCUA_MGR::smCreateConnMethodName[] = "createConnection";
+char OPCUA_MGR::smCreateConnArg1Name[] = "Connection_Source";
+char OPCUA_MGR::smCreateConnArg1Description[] = "{SubApp.FbName.PortName}";
+char OPCUA_MGR::smCreateConnArg2Name[] = "Connection_Dst";
+char OPCUA_MGR::smCreateConnArg2Description[] = "{SubApp.FbName.PortName}";
+char OPCUA_MGR::smCreateConnAttrDisplayName[] = "Create Connection";
+char OPCUA_MGR::smCreateConnAttrDescription[] = "Create Connection";
+
+/* Write FB */
+char OPCUA_MGR::smWriteFBMethodName[] = "writeFB";
+char OPCUA_MGR::smWriteFBArg1Name[] = "FB_Name";
+char OPCUA_MGR::smWriteFBArg1Description[] = "Fully qualified name of FB";
+char OPCUA_MGR::smWriteFBArg2Name[] = "Value";
+char OPCUA_MGR::smWriteFBArg2Description[] = "Value to be written";
+char OPCUA_MGR::smWriteFBAttrDisplayName[] = "Write FB Parameter";
+char OPCUA_MGR::smWriteFBAttrDescription[] = "Write FB Parameter";
+
+/* Start Resource */
+char OPCUA_MGR::smStartResMethodName[] = "startResource";
+char OPCUA_MGR::smStartResArgName[] = "Resource Name";
+char OPCUA_MGR::smStartResArgDescription[] = "Resource Name";
+char OPCUA_MGR::smStartResAttrDisplayName[] = "Start Resource";
+char OPCUA_MGR::smStartResAttrDescription[] = "Start Resource";
+
 /* Initialize UA Status Codes */
-const std::map<EMGMResponse, UA_StatusCode> scResponseMap = {
+const std::map<EMGMResponse, UA_StatusCode> OPCUA_MGR::scResponseMap = {
   {EMGMResponse::Ready, UA_STATUSCODE_GOOD},
   {EMGMResponse::BadParams, UA_STATUSCODE_BADINVALIDARGUMENT},
   {EMGMResponse::LocalTermination, UA_STATUSCODE_BADSHUTDOWN}, 
@@ -68,18 +114,20 @@ bool OPCUA_MGR::isInitialized(){
 EMGMResponse OPCUA_MGR::createIEC61499MgmtObject(UA_Server* paServer) {
   EMGMResponse eRetVal = EMGMResponse::InvalidState;
   if (defineIEC61499MgmtObjectType(paServer) != EMGMResponse::Ready) return eRetVal;
+  if (addCreateResourceMethod(paServer) != EMGMResponse::Ready) return eRetVal;
+  if (addStartResourceMethod(paServer) != EMGMResponse::Ready) return eRetVal;
   return addMgmtObjectInstance();
 }
 
 EMGMResponse OPCUA_MGR::defineIEC61499MgmtObjectType(UA_Server* paServer) {
   EMGMResponse eRetVal = EMGMResponse::Ready;
-  mMgmtTypeId = UA_NODEID_STRING(1, smMgmtType);
+  mMgmtTypeId = UA_NODEID_STRING(smNamespaces[1], smMgmtType);
   UA_ObjectTypeAttributes rtAttr = UA_ObjectTypeAttributes_default;
   rtAttr.displayName = UA_LOCALIZEDTEXT(smEmptyLocale, smMgmtType);
   UA_StatusCode status = UA_Server_addObjectTypeNode(paServer, mMgmtTypeId,
-    UA_NODEID_NUMERIC(0, UA_NS0ID_BASEOBJECTTYPE),
-    UA_NODEID_NUMERIC(0, UA_NS0ID_HASSUBTYPE),
-    UA_QUALIFIEDNAME(1, smMgmtType), rtAttr,
+    UA_NODEID_NUMERIC(smNamespaces[0], UA_NS0ID_BASEOBJECTTYPE),
+    UA_NODEID_NUMERIC(smNamespaces[0], UA_NS0ID_HASSUBTYPE),
+    UA_QUALIFIEDNAME(smNamespaces[1], smMgmtType), rtAttr,
     nullptr, &mMgmtTypeId);
 
   if (status != UA_STATUSCODE_GOOD) {
@@ -92,10 +140,10 @@ EMGMResponse OPCUA_MGR::addMgmtObjectInstance() {
   EMGMResponse eRetVal = EMGMResponse::Ready;
   UA_ObjectAttributes oAttr = UA_ObjectAttributes_default;
   oAttr.displayName = UA_LOCALIZEDTEXT(smEmptyLocale, smMgmtName);
-  UA_StatusCode status = UA_Server_addObjectNode(mUaHandler.getUAServer(), UA_NODEID_STRING(1, smMgmtName),
-    UA_NODEID_NUMERIC(0, UA_NS0ID_OBJECTSFOLDER),
-    UA_NODEID_NUMERIC(0, UA_NS0ID_ORGANIZES),
-    UA_QUALIFIEDNAME(1, smMgmtName),
+  UA_StatusCode status = UA_Server_addObjectNode(mUaHandler.getUAServer(), UA_NODEID_STRING(smNamespaces[1], smMgmtName),
+    UA_NODEID_NUMERIC(smNamespaces[0], UA_NS0ID_OBJECTSFOLDER),
+    UA_NODEID_NUMERIC(smNamespaces[0], UA_NS0ID_ORGANIZES),
+    UA_QUALIFIEDNAME(smNamespaces[1], smMgmtName),
     mMgmtTypeId,
     oAttr, nullptr, &mMgmtNodeId);
 
@@ -108,18 +156,21 @@ EMGMResponse OPCUA_MGR::addMgmtObjectInstance() {
 EMGMResponse OPCUA_MGR::createIEC61499ResourceObjectType(UA_Server* paServer) {
   EMGMResponse eRetVal = EMGMResponse::InvalidState;
   if (defineIEC61499ResourceObjectType(paServer) != EMGMResponse::Ready) return eRetVal;
+  if (addCreateFBMethod(paServer) != EMGMResponse::Ready) return eRetVal;
+  if (addCreateConnectionMethod(paServer) != EMGMResponse::Ready) return eRetVal;
+  if (addWriteFBMethod(paServer) != EMGMResponse::Ready) return eRetVal;
   return EMGMResponse::Ready;
 }
 
 EMGMResponse OPCUA_MGR::defineIEC61499ResourceObjectType(UA_Server* paServer) {
   EMGMResponse eRetVal = EMGMResponse::Ready;
-  mResourceTypeId = UA_NODEID_STRING(1, smResType);
+  mResourceTypeId = UA_NODEID_STRING(smNamespaces[1], smResType);
   UA_ObjectTypeAttributes rtAttr = UA_ObjectTypeAttributes_default;
   rtAttr.displayName = UA_LOCALIZEDTEXT(smEmptyLocale, smResType);
   UA_StatusCode status = UA_Server_addObjectTypeNode(paServer, mResourceTypeId,
-    UA_NODEID_NUMERIC(0, UA_NS0ID_BASEOBJECTTYPE),
-    UA_NODEID_NUMERIC(0, UA_NS0ID_HASSUBTYPE),
-    UA_QUALIFIEDNAME(1, smResType), rtAttr,
+    UA_NODEID_NUMERIC(smNamespaces[0], UA_NS0ID_BASEOBJECTTYPE),
+    UA_NODEID_NUMERIC(smNamespaces[0], UA_NS0ID_HASSUBTYPE),
+    UA_QUALIFIEDNAME(smNamespaces[1], smResType), rtAttr,
     nullptr, &mResourceTypeId);
   if (status != UA_STATUSCODE_GOOD) {
     return EMGMResponse::InvalidState;
@@ -135,12 +186,299 @@ EMGMResponse OPCUA_MGR::addResourceObjectInstance(char* paResourceName, UA_NodeI
 
   UA_StatusCode status = UA_Server_addObjectNode(mUaHandler.getUAServer(), UA_NODEID_NULL,
     paParentNodeId,
-    UA_NODEID_NUMERIC(0, UA_NS0ID_ORGANIZES),
-    UA_QUALIFIEDNAME(1, paResourceName),
+    UA_NODEID_NUMERIC(smNamespaces[0], UA_NS0ID_ORGANIZES),
+    UA_QUALIFIEDNAME(smNamespaces[1], paResourceName),
     mResourceTypeId, oAttr, paResourceName, 
     &paNodeId);
   if (status != UA_STATUSCODE_GOOD) {
     return EMGMResponse::InvalidState;
   }
   return eRetVal;
+}
+
+EMGMResponse OPCUA_MGR::addCreateResourceMethod(UA_Server* paServer) {
+  UA_Argument inputArguments[2];
+  initArgument(inputArguments[0], UA_TYPES_STRING, smCreateResArg1Name, smCreateResArg1Description);
+  initArgument(inputArguments[1], UA_TYPES_STRING, smCreateResArg2Name, smCreateResArg2Description);
+
+  UA_Argument outputArgument;
+  initArgument(outputArgument, UA_TYPES_NODEID, smCreateResOutArgName, smCreateResOutArgDescription);
+
+  UA_MethodAttributes createResAttr = createAttribute(smCreateResAttrDisplayName, smCreateResAttrDescription);
+  return addMethodNode(paServer, smCreateResMethodName, mMgmtTypeId, createResAttr, inputArguments, 2, &outputArgument, 1, &onCreateResource);
+}
+
+UA_StatusCode OPCUA_MGR::onCreateResource(UA_Server*,
+    const UA_NodeId*, void*,
+    const UA_NodeId*, void* methodContext,
+    const UA_NodeId*, void*,
+    size_t, const UA_Variant* input,
+    size_t, UA_Variant* output) {
+  if (!methodContext) {
+    return UA_STATUSCODE_BADUNKNOWNRESPONSE;
+  }
+  std::string resourceName = getInputValue(*static_cast<UA_String*>(input[0].data));
+  std::string resType = getInputValue(*static_cast<UA_String*>(input[1].data));
+
+  OPCUA_MGR* uaMGR = static_cast<OPCUA_MGR*>(methodContext);
+  uaMGR->setMGMCommand(EMGMCommandType::CreateFBInstance, CStringDictionary::scmInvalidStringId, nullptr, resourceName.c_str(), resType.c_str());
+  EMGMResponse eMGMRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
+
+  int status = scResponseMap.find(eMGMRetVal)->second;
+  if (status != UA_STATUSCODE_GOOD) {
+    return status;
+  }
+
+  UA_NodeId nodeId;
+  char* resNameChar = new char[resourceName.length() + 1];
+  strcpy(resNameChar, resourceName.c_str());
+  eMGMRetVal = uaMGR->addResourceObjectInstance(resNameChar, nodeId, uaMGR->mMgmtNodeId);
+  status = scResponseMap.find(eMGMRetVal)->second;
+  if (status != UA_STATUSCODE_GOOD){
+    return status;
+  }
+  uaMGR->resourceNodeMap.emplace(resourceName, nodeId);
+  /* Return Output */
+  status = UA_Variant_setScalarCopy(output, &nodeId, &UA_TYPES[UA_TYPES_NODEID]);
+  UA_NodeId_clear(&nodeId);
+  return status;
+}
+
+EMGMResponse OPCUA_MGR::addCreateFBMethod(UA_Server* paServer) {
+  UA_Argument inputArguments[2];
+  initArgument(inputArguments[0], UA_TYPES_STRING, smCreateFBArg1Name, smCreateFBArg1Description);
+  initArgument(inputArguments[1], UA_TYPES_STRING, smCreateFBArg2Name, smCreateFBArg2Description);
+
+  UA_MethodAttributes createFBAttr = createAttribute(smCreateFBAttrDisplayName, smCreateFBAttrDescription);
+  return addMethodNode(paServer, smCreateFBMethodName, mResourceTypeId, createFBAttr, inputArguments, 2, nullptr, 0, &onCreateFB);
+}
+
+UA_StatusCode OPCUA_MGR::onCreateFB(UA_Server*,
+  const UA_NodeId*, void*,
+  const UA_NodeId*, void* methodContext,
+  const UA_NodeId*, void* objectContext,
+  size_t, const UA_Variant* input,
+  size_t, UA_Variant*) {
+  if (!methodContext) {
+    return UA_STATUSCODE_BADUNKNOWNRESPONSE;
+  }
+  EMGMResponse eRetVal = EMGMResponse::UnsupportedType;
+  std::string destination;
+  destination = getInputValue(*static_cast<UA_String*>(input[0].data));
+  std::string fbTypeStr;
+  fbTypeStr = getInputValue(*static_cast<UA_String*>(input[1].data));
+
+  std::vector<std::string> fullFbName;
+  parseDestinationName(destination, fullFbName);
+  std::vector<std::string> fbType{ fbTypeStr };
+
+  const char* resourceName = static_cast<const char*>(objectContext);
+  OPCUA_MGR* uaMGR = static_cast<OPCUA_MGR*>(methodContext);
+  uaMGR->setMGMCommand(EMGMCommandType::CreateFBInstance, CStringDictionary::getInstance().insert(resourceName), nullptr, fullFbName, fbType);
+  eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
+  return scResponseMap.find(eRetVal)->second;
+}
+
+EMGMResponse OPCUA_MGR::addCreateConnectionMethod(UA_Server* paServer) {
+  UA_Argument inputArguments[2];
+  initArgument(inputArguments[0], UA_TYPES_STRING, smCreateConnArg1Name, smCreateConnArg1Description);
+  initArgument(inputArguments[1], UA_TYPES_STRING, smCreateConnArg2Name, smCreateConnArg2Description);
+
+  UA_MethodAttributes createConnAttr = createAttribute(smCreateConnAttrDisplayName, smCreateConnAttrDescription);
+  return addMethodNode(paServer, smCreateConnMethodName, mResourceTypeId, createConnAttr, inputArguments, 2, nullptr, 0, &onCreateConnection);
+}
+
+UA_StatusCode OPCUA_MGR::onCreateConnection(UA_Server*,
+  const UA_NodeId*, void*,
+  const UA_NodeId*, void* methodContext,
+  const UA_NodeId*, void* objectContext,
+  size_t, const UA_Variant* input,
+  size_t, UA_Variant*) {
+  if (!methodContext) {
+    return UA_STATUSCODE_BADUNKNOWNRESPONSE;
+  }
+  EMGMResponse eRetVal = EMGMResponse::UnsupportedType;
+  std::string source;
+  source = getInputValue(*static_cast<UA_String*>(input[0].data));
+  std::string destination;
+  destination = getInputValue(*static_cast<UA_String*>(input[1].data));
+
+  std::vector<std::string> sourceFullName;
+  std::vector<std::string> destinationFullName;
+  parseDestinationName(source, sourceFullName);
+  parseDestinationName(destination, destinationFullName);
+
+  const char* resourceName = static_cast<const char*>(objectContext);
+  OPCUA_MGR* uaMGR = static_cast<OPCUA_MGR*>(methodContext);
+  uaMGR->setMGMCommand(EMGMCommandType::CreateConnection, CStringDictionary::getInstance().insert(resourceName), nullptr, sourceFullName, destinationFullName);
+  eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
+  return scResponseMap.find(eRetVal)->second;
+}
+
+EMGMResponse OPCUA_MGR::addWriteFBMethod(UA_Server* paServer) {
+  UA_Argument inputArguments[2];
+  initArgument(inputArguments[0], UA_TYPES_STRING, smWriteFBArg1Name, smWriteFBArg1Description);
+  initArgument(inputArguments[1], UA_TYPES_STRING, smWriteFBArg2Name, smWriteFBArg2Description);
+
+  UA_MethodAttributes writeFBAttr = createAttribute(smWriteFBAttrDisplayName, smWriteFBAttrDescription);
+  return addMethodNode(paServer, smWriteFBMethodName, mResourceTypeId, writeFBAttr, inputArguments, 2, nullptr, 0, &onWriteFB);
+}
+
+UA_StatusCode OPCUA_MGR::onWriteFB(UA_Server*,
+  const UA_NodeId*, void*,
+  const UA_NodeId*, void* methodContext,
+  const UA_NodeId*, void* objectContext,
+  size_t, const UA_Variant* input,
+  size_t, UA_Variant*) {
+  if (!methodContext) {
+    return UA_STATUSCODE_BADUNKNOWNRESPONSE;
+  }
+  EMGMResponse eRetVal = EMGMResponse::UnsupportedType;
+  std::string destination;
+  destination = getInputValue(*static_cast<UA_String*>(input[0].data));
+  std::string writeValue = getInputValue(*static_cast<UA_String*>(input[1].data));
+  std::vector<std::string> writeDestination;
+  parseDestinationName(destination, writeDestination);
+
+  const char* resourceName = static_cast<const char*>(objectContext);
+  OPCUA_MGR* uaMGR = static_cast<OPCUA_MGR*>(methodContext);
+  uaMGR->setMGMCommand(EMGMCommandType::Write, CStringDictionary::getInstance().insert(resourceName), writeValue.c_str(), writeDestination);
+  eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
+  return scResponseMap.find(eRetVal)->second;
+}
+
+EMGMResponse OPCUA_MGR::addStartResourceMethod(UA_Server* paServer) {
+  UA_Argument inputArgument;
+  initArgument(inputArgument, UA_TYPES_STRING, smStartResArgName, smStartResArgDescription);
+
+  UA_MethodAttributes startResAttr = createAttribute(smStartResAttrDisplayName, smStartResAttrDescription);
+  return addMethodNode(paServer, smStartResMethodName, mMgmtTypeId, startResAttr, &inputArgument, 1, nullptr, 0, &onStartResource);
+}
+
+UA_StatusCode OPCUA_MGR::onStartResource(UA_Server*,
+  const UA_NodeId*, void*,
+  const UA_NodeId*, void* methodContext,
+  const UA_NodeId*, void*,
+  size_t, const UA_Variant* input,
+  size_t, UA_Variant*) {
+  if (!methodContext) {
+    return UA_STATUSCODE_BADUNKNOWNRESPONSE;
+  }
+  EMGMResponse eRetVal = EMGMResponse::UnsupportedType;
+  /* Resource Name */
+  std::string resourceName = getInputValue(*static_cast<UA_String*>(input[0].data));
+  OPCUA_MGR* uaMGR = static_cast<OPCUA_MGR*>(methodContext);
+  uaMGR->setMGMCommand(EMGMCommandType::Start, CStringDictionary::getInstance().insert(resourceName.c_str()), nullptr, nullptr, nullptr);
+  eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
+  return scResponseMap.find(eRetVal)->second;
+}
+
+/* Helpers */
+
+EMGMResponse OPCUA_MGR::addMethodNode(UA_Server* paServer, char* paMethodNodeName, UA_NodeId paParentNodeId, UA_MethodAttributes paAttr, 
+    const UA_Argument *paInArgs, size_t paInArgSize, const UA_Argument *paOutArgs, 
+    size_t paOutArgSize, UA_MethodCallback paCallback) {
+  EMGMResponse eRetVal = EMGMResponse::Ready;
+  UA_NodeId methodId;
+  UA_StatusCode status = UA_Server_addMethodNode(paServer, UA_NODEID_STRING(smNamespaces[1], paMethodNodeName),
+    paParentNodeId,
+    UA_NODEID_NUMERIC(smNamespaces[0], UA_NS0ID_HASCOMPONENT),
+    UA_QUALIFIEDNAME(smNamespaces[1], paMethodNodeName),
+    paAttr, paCallback,
+    paInArgSize, paInArgs, paOutArgSize, paOutArgs,
+    this, &methodId);
+
+  if (status != UA_STATUSCODE_GOOD) {
+    return EMGMResponse::InvalidState;
+  }
+  status = addReference(paServer, methodId);
+  if (status != UA_STATUSCODE_GOOD) {
+    return EMGMResponse::InvalidState;
+  }
+  return eRetVal;
+}
+
+void OPCUA_MGR::initArgument(UA_Argument& paArgument, int paTypeId, char* paName, char* paDescription) {
+  UA_Argument_init(&paArgument);
+  paArgument.description = UA_LOCALIZEDTEXT(smEmptyLocale, paDescription);
+  paArgument.name = UA_STRING(paName);
+  paArgument.dataType = UA_TYPES[paTypeId].typeId;
+  paArgument.valueRank = UA_VALUERANK_SCALAR;
+}
+
+UA_MethodAttributes OPCUA_MGR::createAttribute(char* paDisplayName, char* paDescription) {
+  UA_MethodAttributes methodAttr = UA_MethodAttributes_default;
+  methodAttr.description = UA_LOCALIZEDTEXT(smEmptyLocale, paDescription);
+  methodAttr.displayName = UA_LOCALIZEDTEXT(smEmptyLocale, paDisplayName);
+  methodAttr.executable = true;
+  methodAttr.userExecutable = true;
+  return methodAttr;
+}
+
+UA_StatusCode OPCUA_MGR::addReference(UA_Server* paServer, UA_NodeId& paMethodId) {
+  return UA_Server_addReference(paServer, paMethodId,
+    UA_NODEID_NUMERIC(0, UA_NS0ID_HASMODELLINGRULE),
+    UA_EXPANDEDNODEID_NUMERIC(0, UA_NS0ID_MODELLINGRULE_MANDATORY), true);
+}
+
+void OPCUA_MGR::clearMGMCommand() {
+  mCommand.mFirstParam.clear();
+  mCommand.mSecondParam.clear();
+  mCommand.mAdditionalParams.clear();
+  mCommand.mMonitorResponse.clear();
+}
+
+void OPCUA_MGR::setMGMCommand(EMGMCommandType paCMD, CStringDictionary::TStringId paDestination,
+  const char* paAdditionalParams, const char* paFirstParam, const char* paSecondParam) {
+  clearMGMCommand();
+  mCommand.mCMD = paCMD;
+  mCommand.mDestination = paDestination;
+  if (paFirstParam != nullptr) {
+    mCommand.mFirstParam.pushBack(CStringDictionary::getInstance().insert(paFirstParam));
+  }
+  if (paSecondParam != nullptr) {
+    mCommand.mSecondParam.pushBack(CStringDictionary::getInstance().insert(paSecondParam));
+  }
+  if (paAdditionalParams != nullptr) {
+    mCommand.mAdditionalParams.fromString(paAdditionalParams);
+  }
+}
+
+void OPCUA_MGR::setMGMCommand(EMGMCommandType paCMD, CStringDictionary::TStringId paDestination,
+    const char* paAdditionalParams, std::vector<std::string>& paFirstParam, 
+    std::vector<std::string> paSecondParam) {
+  clearMGMCommand();
+  mCommand.mCMD = paCMD;
+  mCommand.mDestination = paDestination;
+  if (!paFirstParam.empty()) {
+    for (std::string param : paFirstParam) {
+      mCommand.mFirstParam.pushBack(CStringDictionary::getInstance().insert(param.c_str()));
+    }
+  }
+  if (!paSecondParam.empty()) {
+    for (std::string param : paSecondParam) {
+      mCommand.mSecondParam.pushBack(CStringDictionary::getInstance().insert(param.c_str()));
+    }
+  }
+  if (paAdditionalParams != nullptr) {
+    mCommand.mAdditionalParams.fromString(paAdditionalParams);
+  }
+}
+
+std::string OPCUA_MGR::getInputValue(UA_String paInput) {
+  if (paInput.length == 0) {
+    return std::string(" ");
+  }
+  std::string inputNameStr((const char*)paInput.data, paInput.length);
+  return inputNameStr.substr(0, paInput.length);
+}
+
+void OPCUA_MGR::parseDestinationName(std::string& paDestination, std::vector<std::string>& paFbName) {
+  size_t index = paDestination.find_first_of(".");
+  while (index != std::string::npos) {
+    paFbName.push_back(paDestination.substr(0, index));
+    paDestination = paDestination.substr(paFbName.back().length() + 1);
+    index = paDestination.find_first_of(".");
+  }
+  paFbName.push_back(paDestination.substr(0, index));
 }
