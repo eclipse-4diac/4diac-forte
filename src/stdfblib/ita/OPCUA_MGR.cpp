@@ -114,15 +114,6 @@ char OPCUA_MGR::smCreateFBArg2Description[] = "Type of FB";
 char OPCUA_MGR::smCreateFBAttrDisplayName[] = "Create FB";
 char OPCUA_MGR::smCreateFBAttrDescription[] = "Create FB";
 
-/* Create Connection */
-char OPCUA_MGR::smCreateConnMethodName[] = "createConnection";
-char OPCUA_MGR::smCreateConnArg1Name[] = "Connection_Source";
-char OPCUA_MGR::smCreateConnArg1Description[] = "{SubApp.FbName.PortName}";
-char OPCUA_MGR::smCreateConnArg2Name[] = "Connection_Dst";
-char OPCUA_MGR::smCreateConnArg2Description[] = "{SubApp.FbName.PortName}";
-char OPCUA_MGR::smCreateConnAttrDisplayName[] = "Create Connection";
-char OPCUA_MGR::smCreateConnAttrDescription[] = "Create Connection";
-
 /* Write FB */
 char OPCUA_MGR::smWriteFBMethodName[] = "writeFB";
 char OPCUA_MGR::smWriteFBArg1Name[] = "FB_Name";
@@ -131,6 +122,51 @@ char OPCUA_MGR::smWriteFBArg2Name[] = "Value";
 char OPCUA_MGR::smWriteFBArg2Description[] = "Value to be written";
 char OPCUA_MGR::smWriteFBAttrDisplayName[] = "Write FB Parameter";
 char OPCUA_MGR::smWriteFBAttrDescription[] = "Write FB Parameter";
+
+/* Start FB */
+char OPCUA_MGR::smStartFBMethodName[] = "startFB";
+char OPCUA_MGR::smStartFBArg1Name[] = "FB_Name";
+char OPCUA_MGR::smStartFBArg1Description[] = "Fully qualified name of FB";
+char OPCUA_MGR::smStartFBAttrDisplayName[] = "Start FB";
+char OPCUA_MGR::smStartFBAttrDescription[] = "Start FB";
+
+/* Stop FB */
+char OPCUA_MGR::smStopFBMethodName[] = "stopFB";
+char OPCUA_MGR::smStopFBArg1Name[] = "FB_Name";
+char OPCUA_MGR::smStopFBArg1Description[] = "Fully qualified name of FB";
+char OPCUA_MGR::smStopFBAttrDisplayName[] = "Stop FB";
+char OPCUA_MGR::smStopFBAttrDescription[] = "Stop FB";
+
+/* Reset FB */
+char OPCUA_MGR::smResetFBMethodName[] = "resetFB";
+char OPCUA_MGR::smResetFBArg1Name[] = "FB_Name";
+char OPCUA_MGR::smResetFBArg1Description[] = "Fully qualified name of FB";
+char OPCUA_MGR::smResetFBAttrDisplayName[] = "Reset FB";
+char OPCUA_MGR::smResetFBAttrDescription[] = "Reset FB";
+
+/* Kill FB */
+char OPCUA_MGR::smKillFBMethodName[] = "killFB";
+char OPCUA_MGR::smKillFBArg1Name[] = "FB_Name";
+char OPCUA_MGR::smKillFBArg1Description[] = "Fully qualified name of FB";
+char OPCUA_MGR::smKillFBAttrDisplayName[] = "Kill FB";
+char OPCUA_MGR::smKillFBAttrDescription[] = "Kill FB";
+
+/* Delete FB */
+char OPCUA_MGR::smDeleteFBMethodName[] = "deleteFB";
+char OPCUA_MGR::smDeleteFBArg1Name[] = "FB_Name";
+char OPCUA_MGR::smDeleteFBArg1Description[] = "Fully qualified name of FB";
+char OPCUA_MGR::smDeleteFBAttrDisplayName[] = "Delete FB";
+char OPCUA_MGR::smDeleteFBAttrDescription[] = "Delete FB";
+
+
+/* Create Connection */
+char OPCUA_MGR::smCreateConnMethodName[] = "createConnection";
+char OPCUA_MGR::smCreateConnArg1Name[] = "Connection_Source";
+char OPCUA_MGR::smCreateConnArg1Description[] = "{SubApp.FbName.PortName}";
+char OPCUA_MGR::smCreateConnArg2Name[] = "Connection_Dst";
+char OPCUA_MGR::smCreateConnArg2Description[] = "{SubApp.FbName.PortName}";
+char OPCUA_MGR::smCreateConnAttrDisplayName[] = "Create Connection";
+char OPCUA_MGR::smCreateConnAttrDescription[] = "Create Connection";
 
 /* Initialize UA Status Codes */
 const std::map<EMGMResponse, UA_StatusCode> OPCUA_MGR::scResponseMap = {
@@ -233,6 +269,11 @@ EMGMResponse OPCUA_MGR::createIEC61499ResourceObjectType(UA_Server* paServer) {
   if (addCreateFBMethod(paServer) != EMGMResponse::Ready) return eRetVal;
   if (addCreateConnectionMethod(paServer) != EMGMResponse::Ready) return eRetVal;
   if (addWriteFBMethod(paServer) != EMGMResponse::Ready) return eRetVal;
+  if (addStartFBMethod(paServer) != EMGMResponse::Ready) return eRetVal;
+  if (addStopFBMethod(paServer) != EMGMResponse::Ready) return eRetVal;
+  if (addResetFBMethod(paServer) != EMGMResponse::Ready) return eRetVal;
+  if (addKillFBMethod(paServer) != EMGMResponse::Ready) return eRetVal;
+  if (addDeleteFBMethod(paServer) != EMGMResponse::Ready) return eRetVal;
   return EMGMResponse::Ready;
 }
 
@@ -534,6 +575,37 @@ UA_StatusCode OPCUA_MGR::onStartResource(UA_Server*,
   return scResponseMap.find(eRetVal)->second;
 }
 
+EMGMResponse OPCUA_MGR::addStartFBMethod(UA_Server* paServer) {
+  UA_Argument inputArgument;
+  initArgument(inputArgument, UA_TYPES_STRING, smStartFBArg1Name, smStartFBArg1Description);
+
+  UA_MethodAttributes startFBAttr = createAttribute(smStartFBAttrDisplayName, smStartFBAttrDescription);
+  return addMethodNode(paServer, smStartFBMethodName, mResourceTypeId, startFBAttr, &inputArgument, 1, nullptr, 0, &onStartFB);
+}
+
+UA_StatusCode OPCUA_MGR::onStartFB(UA_Server*,
+  const UA_NodeId*, void*,
+  const UA_NodeId*, void* methodContext,
+  const UA_NodeId*, void* objectContext,
+  size_t, const UA_Variant* input,
+  size_t, UA_Variant*) {
+  if (methodContext != nullptr) {
+    EMGMResponse eRetVal = EMGMResponse::UnsupportedType;
+    std::string destination;
+    destination = getInputValue(*static_cast<UA_String*>(input[0].data));
+    /* e.g. SubApp1.FB1*/
+    std::vector<std::string> fullFbName;
+    parseDestinationName(destination, fullFbName);
+
+    const char* resourceName = static_cast<const char*>(objectContext);
+    OPCUA_MGR* uaMGR = static_cast<OPCUA_MGR*>(methodContext);
+    uaMGR->setMGMCommand(EMGMCommandType::Start, CStringDictionary::getInstance().insert(resourceName), nullptr, fullFbName);
+    eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
+    return scResponseMap.find(eRetVal)->second;
+  }
+  return UA_STATUSCODE_BADUNKNOWNRESPONSE;
+}
+
 EMGMResponse OPCUA_MGR::addStopDeviceMethod(UA_Server* paServer) {
   UA_MethodAttributes stopDevAttr = createAttribute(smStopDevAttrDisplayName, smStopDevAttrDescription);
   return addMethodNode(paServer, smStopDevMethodName, mMgmtTypeId, stopDevAttr, nullptr, 0, nullptr, 0, &onStopDevice);
@@ -574,6 +646,37 @@ UA_StatusCode OPCUA_MGR::onStopResource(UA_Server*,
     std::string resourceName = getInputValue(*static_cast<UA_String*>(input[0].data));
     OPCUA_MGR* uaMGR = static_cast<OPCUA_MGR*>(methodContext);
     uaMGR->setMGMCommand(EMGMCommandType::Stop, CStringDictionary::scmInvalidStringId, nullptr, resourceName.c_str(), nullptr);
+    eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
+    return scResponseMap.find(eRetVal)->second;
+  }
+  return UA_STATUSCODE_BADUNKNOWNRESPONSE;
+}
+
+EMGMResponse OPCUA_MGR::addStopFBMethod(UA_Server* paServer) {
+  UA_Argument inputArgument;
+  initArgument(inputArgument, UA_TYPES_STRING, smStopFBArg1Name, smStopFBArg1Description);
+
+  UA_MethodAttributes stopFBAttr = createAttribute(smStopFBAttrDisplayName, smStopFBAttrDescription);
+  return addMethodNode(paServer, smStopFBMethodName, mResourceTypeId, stopFBAttr, &inputArgument, 1, nullptr, 0, &onStopFB);
+}
+
+UA_StatusCode OPCUA_MGR::onStopFB(UA_Server*,
+  const UA_NodeId*, void*,
+  const UA_NodeId*, void* methodContext,
+  const UA_NodeId*, void* objectContext,
+  size_t, const UA_Variant* input,
+  size_t, UA_Variant*) {
+  if (methodContext != nullptr) {
+    EMGMResponse eRetVal = EMGMResponse::UnsupportedType;
+    std::string destination;
+    destination = getInputValue(*static_cast<UA_String*>(input[0].data));
+    /* e.g. SubApp1.FB1*/
+    std::vector<std::string> fullFbName;
+    parseDestinationName(destination, fullFbName);
+
+    const char* resourceName = static_cast<const char*>(objectContext);
+    OPCUA_MGR* uaMGR = static_cast<OPCUA_MGR*>(methodContext);
+    uaMGR->setMGMCommand(EMGMCommandType::Stop, CStringDictionary::getInstance().insert(resourceName), nullptr, fullFbName);
     eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
     return scResponseMap.find(eRetVal)->second;
   }
@@ -626,6 +729,37 @@ UA_StatusCode OPCUA_MGR::onResetResource(UA_Server*,
   return UA_STATUSCODE_BADUNKNOWNRESPONSE;
 }
 
+EMGMResponse OPCUA_MGR::addResetFBMethod(UA_Server* paServer) {
+  UA_Argument inputArgument;
+  initArgument(inputArgument, UA_TYPES_STRING, smResetFBArg1Name, smResetFBArg1Description);
+
+  UA_MethodAttributes resetFBAttr = createAttribute(smResetFBAttrDisplayName, smResetFBAttrDescription);
+  return addMethodNode(paServer, smResetFBMethodName, mResourceTypeId, resetFBAttr, &inputArgument, 1, nullptr, 0, &onResetFB);
+}
+
+UA_StatusCode OPCUA_MGR::onResetFB(UA_Server*,
+  const UA_NodeId*, void*,
+  const UA_NodeId*, void* methodContext,
+  const UA_NodeId*, void* objectContext,
+  size_t, const UA_Variant* input,
+  size_t, UA_Variant*) {
+  if (methodContext != nullptr) {
+    EMGMResponse eRetVal = EMGMResponse::UnsupportedType;
+    std::string destination;
+    destination = getInputValue(*static_cast<UA_String*>(input[0].data));
+    /* e.g. SubApp1.FB1*/
+    std::vector<std::string> fullFbName;
+    parseDestinationName(destination, fullFbName);
+
+    const char* resourceName = static_cast<const char*>(objectContext);
+    OPCUA_MGR* uaMGR = static_cast<OPCUA_MGR*>(methodContext);
+    uaMGR->setMGMCommand(EMGMCommandType::Reset, CStringDictionary::getInstance().insert(resourceName), nullptr, fullFbName);
+    eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
+    return scResponseMap.find(eRetVal)->second;
+  }
+  return UA_STATUSCODE_BADUNKNOWNRESPONSE;
+}
+
 EMGMResponse OPCUA_MGR::addKillDeviceMethod(UA_Server* paServer) {
   UA_MethodAttributes killDevAttr = createAttribute(smKillDevAttrDisplayName, smKillDevAttrDescription);
   return addMethodNode(paServer, smKillDevMethodName, mMgmtTypeId, killDevAttr, nullptr, 0, nullptr, 0, &onKillDevice);
@@ -672,6 +806,37 @@ UA_StatusCode OPCUA_MGR::onKillResource(UA_Server*,
   return UA_STATUSCODE_BADUNKNOWNRESPONSE;
 }
 
+EMGMResponse OPCUA_MGR::addKillFBMethod(UA_Server* paServer) {
+  UA_Argument inputArgument;
+  initArgument(inputArgument, UA_TYPES_STRING, smKillFBArg1Name, smKillFBArg1Description);
+
+  UA_MethodAttributes killFBAttr = createAttribute(smKillFBAttrDisplayName, smKillFBAttrDescription);
+  return addMethodNode(paServer, smKillFBMethodName, mResourceTypeId, killFBAttr, &inputArgument, 1, nullptr, 0, &onKillFB);
+}
+
+UA_StatusCode OPCUA_MGR::onKillFB(UA_Server*,
+  const UA_NodeId*, void*,
+  const UA_NodeId*, void* methodContext,
+  const UA_NodeId*, void* objectContext,
+  size_t, const UA_Variant* input,
+  size_t, UA_Variant*) {
+  if (methodContext != nullptr) {
+    EMGMResponse eRetVal = EMGMResponse::UnsupportedType;
+    std::string destination;
+    destination = getInputValue(*static_cast<UA_String*>(input[0].data));
+    /* e.g. SubApp1.FB1*/
+    std::vector<std::string> fullFbName;
+    parseDestinationName(destination, fullFbName);
+
+    const char* resourceName = static_cast<const char*>(objectContext);
+    OPCUA_MGR* uaMGR = static_cast<OPCUA_MGR*>(methodContext);
+    uaMGR->setMGMCommand(EMGMCommandType::Kill, CStringDictionary::getInstance().insert(resourceName), nullptr, fullFbName);
+    eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
+    return scResponseMap.find(eRetVal)->second;
+  }
+  return UA_STATUSCODE_BADUNKNOWNRESPONSE;
+}
+
 EMGMResponse OPCUA_MGR::addDeleteResourceMethod(UA_Server* paServer) {
   UA_Argument inputArgument;
   initArgument(inputArgument, UA_TYPES_STRING, smDeleteResArgName, smDeleteResArgDescription);
@@ -705,6 +870,38 @@ UA_StatusCode OPCUA_MGR::onDeleteResource(UA_Server*,
     return UA_STATUSCODE_BADINVALIDSTATE;
   }
   return status;
+}
+
+EMGMResponse OPCUA_MGR::addDeleteFBMethod(UA_Server* paServer) {
+  UA_Argument inputArgument;
+  initArgument(inputArgument, UA_TYPES_STRING, smDeleteFBArg1Name, smDeleteFBArg1Description);
+
+  UA_MethodAttributes deleteFBAttr = createAttribute(smDeleteFBAttrDisplayName, smDeleteFBAttrDescription);
+  return addMethodNode(paServer, smDeleteFBMethodName, mResourceTypeId, deleteFBAttr, &inputArgument, 1, nullptr, 0, &onDeleteFB);
+}
+
+UA_StatusCode OPCUA_MGR::onDeleteFB(UA_Server*,
+  const UA_NodeId*, void*,
+  const UA_NodeId*, void* methodContext,
+  const UA_NodeId*, void* objectContext,
+  size_t, const UA_Variant* input,
+  size_t, UA_Variant*) {
+  if (methodContext != nullptr) {
+    EMGMResponse eRetVal = EMGMResponse::UnsupportedType;
+    std::string destination;
+    destination = getInputValue(*static_cast<UA_String*>(input[0].data));
+    /* e.g. SubApp1.FB1*/
+    std::vector<std::string> fullFbName;
+    parseDestinationName(destination, fullFbName);
+
+    const char* resourceName = static_cast<const char*>(objectContext);
+    OPCUA_MGR* uaMGR = static_cast<OPCUA_MGR*>(methodContext);
+
+    uaMGR->setMGMCommand(EMGMCommandType::DeleteFBInstance, CStringDictionary::getInstance().insert(resourceName), nullptr, fullFbName);
+    eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
+    return scResponseMap.find(eRetVal)->second;
+  }
+  return UA_STATUSCODE_BADUNKNOWNRESPONSE;
 }
 
 /* Helpers */

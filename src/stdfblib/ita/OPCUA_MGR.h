@@ -129,15 +129,6 @@ private:
   static char smCreateFBAttrDisplayName[];
   static char smCreateFBAttrDescription[];
 
-  /* Create Connection */
-  static char smCreateConnMethodName[];
-  static char smCreateConnArg1Name[];
-  static char smCreateConnArg1Description[];
-  static char smCreateConnArg2Name[];
-  static char smCreateConnArg2Description[];
-  static char smCreateConnAttrDisplayName[];
-  static char smCreateConnAttrDescription[];
-
   /* Write FB */
   static char smWriteFBMethodName[];
   static char smWriteFBArg1Name[];
@@ -146,6 +137,50 @@ private:
   static char smWriteFBArg2Description[];
   static char smWriteFBAttrDisplayName[];
   static char smWriteFBAttrDescription[];
+
+  /* Start FB */
+  static char smStartFBMethodName[];
+  static char smStartFBArg1Name[];
+  static char smStartFBArg1Description[];
+  static char smStartFBAttrDisplayName[];
+  static char smStartFBAttrDescription[];
+
+  /* Stop FB */
+  static char smStopFBMethodName[];
+  static char smStopFBArg1Name[];
+  static char smStopFBArg1Description[];
+  static char smStopFBAttrDisplayName[];
+  static char smStopFBAttrDescription[];
+
+  /* Reset FB */
+  static char smResetFBMethodName[];
+  static char smResetFBArg1Name[];
+  static char smResetFBArg1Description[];
+  static char smResetFBAttrDisplayName[];
+  static char smResetFBAttrDescription[];
+
+  /* Kill FB */
+  static char smKillFBMethodName[];
+  static char smKillFBArg1Name[];
+  static char smKillFBArg1Description[];
+  static char smKillFBAttrDisplayName[];
+  static char smKillFBAttrDescription[];
+
+  /* Delete FB */
+  static char smDeleteFBMethodName[];
+  static char smDeleteFBArg1Name[];
+  static char smDeleteFBArg1Description[];
+  static char smDeleteFBAttrDisplayName[];
+  static char smDeleteFBAttrDescription[];
+
+  /* Create Connection */
+  static char smCreateConnMethodName[];
+  static char smCreateConnArg1Name[];
+  static char smCreateConnArg1Description[];
+  static char smCreateConnArg2Name[];
+  static char smCreateConnArg2Description[];
+  static char smCreateConnAttrDisplayName[];
+  static char smCreateConnAttrDescription[];
 
   static const std::map<EMGMResponse, UA_StatusCode> scResponseMap;
 
@@ -245,6 +280,14 @@ private:
     size_t inputSize, const UA_Variant* input,
     size_t outputSize, UA_Variant* output);
 
+  EMGMResponse addStartFBMethod(UA_Server* paServer);
+  static UA_StatusCode onStartFB(UA_Server* server,
+    const UA_NodeId* sessionId, void* sessionHandle,
+    const UA_NodeId* methodId, void* methodContext,
+    const UA_NodeId* objectId, void* objectContext,
+    size_t inputSize, const UA_Variant* input,
+    size_t outputSize, UA_Variant* output);
+
   EMGMResponse addStopDeviceMethod(UA_Server* paServer);
   static UA_StatusCode onStopDevice(UA_Server* server,
     const UA_NodeId* sessionId, void* sessionHandle,
@@ -255,6 +298,14 @@ private:
 
   EMGMResponse addStopResourceMethod(UA_Server* paServer);
   static UA_StatusCode onStopResource(UA_Server* server,
+    const UA_NodeId* sessionId, void* sessionHandle,
+    const UA_NodeId* methodId, void* methodContext,
+    const UA_NodeId* objectId, void* objectContext,
+    size_t inputSize, const UA_Variant* input,
+    size_t outputSize, UA_Variant* output);
+
+  EMGMResponse addStopFBMethod(UA_Server* paServer);
+  static UA_StatusCode onStopFB(UA_Server* server,
     const UA_NodeId* sessionId, void* sessionHandle,
     const UA_NodeId* methodId, void* methodContext,
     const UA_NodeId* objectId, void* objectContext,
@@ -277,6 +328,14 @@ private:
     size_t inputSize, const UA_Variant* input,
     size_t outputSize, UA_Variant* output);
 
+  EMGMResponse addResetFBMethod(UA_Server* paServer);
+  static UA_StatusCode onResetFB(UA_Server* server,
+    const UA_NodeId* sessionId, void* sessionHandle,
+    const UA_NodeId* methodId, void* methodContext,
+    const UA_NodeId* objectId, void* objectContext,
+    size_t inputSize, const UA_Variant* input,
+    size_t outputSize, UA_Variant* output);
+
   EMGMResponse addKillDeviceMethod(UA_Server* paServer);
   static UA_StatusCode onKillDevice(UA_Server* server,
     const UA_NodeId* sessionId, void* sessionHandle,
@@ -293,8 +352,24 @@ private:
     size_t inputSize, const UA_Variant* input,
     size_t outputSize, UA_Variant* output);
 
+  EMGMResponse addKillFBMethod(UA_Server* paServer);
+  static UA_StatusCode onKillFB(UA_Server* server,
+    const UA_NodeId* sessionId, void* sessionHandle,
+    const UA_NodeId* methodId, void* methodContext,
+    const UA_NodeId* objectId, void* objectContext,
+    size_t inputSize, const UA_Variant* input,
+    size_t outputSize, UA_Variant* output);
+
   EMGMResponse addDeleteResourceMethod(UA_Server* paServer);
   static UA_StatusCode onDeleteResource(UA_Server* server,
+    const UA_NodeId* sessionId, void* sessionHandle,
+    const UA_NodeId* methodId, void* methodContext,
+    const UA_NodeId* objectId, void* objectContext,
+    size_t inputSize, const UA_Variant* input,
+    size_t outputSize, UA_Variant* output);
+
+  EMGMResponse addDeleteFBMethod(UA_Server* paServer);
+  static UA_StatusCode onDeleteFB(UA_Server* server,
     const UA_NodeId* sessionId, void* sessionHandle,
     const UA_NodeId* methodId, void* methodContext,
     const UA_NodeId* objectId, void* objectContext,
