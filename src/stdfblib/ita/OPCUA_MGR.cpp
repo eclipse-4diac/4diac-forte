@@ -168,6 +168,15 @@ char OPCUA_MGR::smCreateConnArg2Description[] = "{SubApp.FbName.PortName}";
 char OPCUA_MGR::smCreateConnAttrDisplayName[] = "Create Connection";
 char OPCUA_MGR::smCreateConnAttrDescription[] = "Create Connection";
 
+/* Delete Connection */
+char OPCUA_MGR::smDeleteConnMethodName[] = "deleteConnection";
+char OPCUA_MGR::smDeleteConnArg1Name[] = "Connection_Source";
+char OPCUA_MGR::smDeleteConnArg1Description[] = "{SubApp.FbName.PortName}";
+char OPCUA_MGR::smDeleteConnArg2Name[] = "Connection_Dst";
+char OPCUA_MGR::smDeleteConnArg2Description[] = "{SubApp.FbName.PortName}";
+char OPCUA_MGR::smDeleteConnAttrDisplayName[] = "Delete Connection";
+char OPCUA_MGR::smDeleteConnAttrDescription[] = "Delete Connection";
+
 /* Initialize UA Status Codes */
 const std::map<EMGMResponse, UA_StatusCode> OPCUA_MGR::scResponseMap = {
   {EMGMResponse::Ready, UA_STATUSCODE_GOOD},
@@ -274,6 +283,7 @@ EMGMResponse OPCUA_MGR::createIEC61499ResourceObjectType(UA_Server* paServer) {
   if (addResetFBMethod(paServer) != EMGMResponse::Ready) return eRetVal;
   if (addKillFBMethod(paServer) != EMGMResponse::Ready) return eRetVal;
   if (addDeleteFBMethod(paServer) != EMGMResponse::Ready) return eRetVal;
+  if (addDeleteConnectionMethod(paServer) != EMGMResponse::Ready) return eRetVal;
   return EMGMResponse::Ready;
 }
 
@@ -898,6 +908,41 @@ UA_StatusCode OPCUA_MGR::onDeleteFB(UA_Server*,
     OPCUA_MGR* uaMGR = static_cast<OPCUA_MGR*>(methodContext);
 
     uaMGR->setMGMCommand(EMGMCommandType::DeleteFBInstance, CStringDictionary::getInstance().insert(resourceName), nullptr, fullFbName);
+    eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
+    return scResponseMap.find(eRetVal)->second;
+  }
+  return UA_STATUSCODE_BADUNKNOWNRESPONSE;
+}
+
+EMGMResponse OPCUA_MGR::addDeleteConnectionMethod(UA_Server* paServer) {
+  UA_Argument inputArguments[2];
+  initArgument(inputArguments[0], UA_TYPES_STRING, smDeleteConnArg1Name, smDeleteConnArg1Description);
+  initArgument(inputArguments[1], UA_TYPES_STRING, smDeleteConnArg2Name, smDeleteConnArg2Description);
+
+  UA_MethodAttributes deleteConnAttr = createAttribute(smDeleteConnAttrDisplayName, smDeleteConnAttrDescription);
+  return addMethodNode(paServer, smDeleteConnMethodName, mResourceTypeId, deleteConnAttr, inputArguments, 2, nullptr, 0, &onDeleteConnection);
+}
+
+UA_StatusCode OPCUA_MGR::onDeleteConnection(UA_Server*,
+  const UA_NodeId*, void*,
+  const UA_NodeId*, void* methodContext,
+  const UA_NodeId*, void* objectContext,
+  size_t, const UA_Variant* input,
+  size_t, UA_Variant*) {
+  if (methodContext != nullptr) {
+    EMGMResponse eRetVal = EMGMResponse::UnsupportedType;
+    std::string source;
+    source = getInputValue(*static_cast<UA_String*>(input[0].data));
+    std::string destination;
+    destination = getInputValue(*static_cast<UA_String*>(input[1].data));
+    std::vector<std::string> sourceFullName;
+    std::vector<std::string> destinationFullName;
+    parseDestinationName(source, sourceFullName);
+    parseDestinationName(destination, destinationFullName);
+
+    const char* resourceName = static_cast<const char*>(objectContext);
+    OPCUA_MGR* uaMGR = static_cast<OPCUA_MGR*>(methodContext);
+    uaMGR->setMGMCommand(EMGMCommandType::DeleteConnection, CStringDictionary::getInstance().insert(resourceName), nullptr, sourceFullName, destinationFullName);
     eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
     return scResponseMap.find(eRetVal)->second;
   }

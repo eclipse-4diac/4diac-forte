@@ -182,6 +182,15 @@ private:
   static char smCreateConnAttrDisplayName[];
   static char smCreateConnAttrDescription[];
 
+  /* Delete Connection */
+  static char smDeleteConnMethodName[];
+  static char smDeleteConnArg1Name[];
+  static char smDeleteConnArg1Description[];
+  static char smDeleteConnArg2Name[];
+  static char smDeleteConnArg2Description[];
+  static char smDeleteConnAttrDisplayName[];
+  static char smDeleteConnAttrDescription[];
+
   static const std::map<EMGMResponse, UA_StatusCode> scResponseMap;
 
   static const UA_UInt16 smNamespaces[];
@@ -370,6 +379,14 @@ private:
 
   EMGMResponse addDeleteFBMethod(UA_Server* paServer);
   static UA_StatusCode onDeleteFB(UA_Server* server,
+    const UA_NodeId* sessionId, void* sessionHandle,
+    const UA_NodeId* methodId, void* methodContext,
+    const UA_NodeId* objectId, void* objectContext,
+    size_t inputSize, const UA_Variant* input,
+    size_t outputSize, UA_Variant* output);
+
+  EMGMResponse addDeleteConnectionMethod(UA_Server* paServer);
+  static UA_StatusCode onDeleteConnection(UA_Server* server,
     const UA_NodeId* sessionId, void* sessionHandle,
     const UA_NodeId* methodId, void* methodContext,
     const UA_NodeId* objectId, void* objectContext,
