@@ -38,6 +38,13 @@ private:
   static char smMgmtName[];
   static char smResType[];
 
+  /* Write Device */
+  static char smWriteDevMethodName[];
+  static char smWriteDevArgName[];
+  static char smWriteDevArgDescription[];
+  static char smWriteDevAttrDisplayName[];
+  static char smWriteDevAttrDescription[];
+
   /* Start Device */
   static char smStartDevMethodName[];
   static char smStartDevAttrDisplayName[];
@@ -58,13 +65,6 @@ private:
   static char smKillDevAttrDisplayName[];
   static char smKillDevAttrDescription[];
 
-  /* Write Device */
-  static char smWriteDevMethodName[];
-  static char smWriteDevArgName[];
-  static char smWriteDevArgDescription[];
-  static char smWriteDevAttrDisplayName[];
-  static char smWriteDevAttrDescription[];
-
   /* Create Resource */
   static char smCreateResMethodName[];
   static char smCreateResArg1Name[];
@@ -75,6 +75,50 @@ private:
   static char smCreateResOutArgDescription[];
   static char smCreateResAttrDisplayName[];
   static char smCreateResAttrDescription[];
+
+  /* Write Resource */
+  static char smWriteResMethodName[];
+  static char smWriteResArg1Name[];
+  static char smWriteResArg1Description[];
+  static char smWriteResArg2Name[];
+  static char smWriteResArg2Description[];
+  static char smWriteResAttrDisplayName[];
+  static char smWriteResAttrDescription[];
+
+  /* Start Resource */
+  static char smStartResMethodName[];
+  static char smStartResArgName[];
+  static char smStartResArgDescription[];
+  static char smStartResAttrDisplayName[];
+  static char smStartResAttrDescription[];
+
+  /* Stop Resource */
+  static char smStopResMethodName[];
+  static char smStopResArgName[];
+  static char smStopResArgDescription[];
+  static char smStopResAttrDisplayName[];
+  static char smStopResAttrDescription[];
+
+  /* Reset Resource */
+  static char smResetResMethodName[];
+  static char smResetResArgName[];
+  static char smResetResArgDescription[];
+  static char smResetResAttrDisplayName[];
+  static char smResetResAttrDescription[];
+
+  /* Kill Resource */
+  static char smKillResMethodName[];
+  static char smKillResArgName[];
+  static char smKillResArgDescription[];
+  static char smKillResAttrDisplayName[];
+  static char smKillResAttrDescription[];
+
+  /* Delete Resource */
+  static char smDeleteResMethodName[];
+  static char smDeleteResArgName[];
+  static char smDeleteResArgDescription[];
+  static char smDeleteResAttrDisplayName[];
+  static char smDeleteResAttrDescription[];
 
   /* Create FB */
   static char smCreateFBMethodName[];
@@ -102,13 +146,6 @@ private:
   static char smWriteFBArg2Description[];
   static char smWriteFBAttrDisplayName[];
   static char smWriteFBAttrDescription[];
-
-  /* Start Resource */
-  static char smStartResMethodName[];
-  static char smStartResArgName[];
-  static char smStartResArgDescription[];
-  static char smStartResAttrDisplayName[];
-  static char smStartResAttrDescription[];
 
   static const std::map<EMGMResponse, UA_StatusCode> scResponseMap;
 
@@ -142,6 +179,8 @@ private:
   
   EMGMResponse addResourceObjectInstance(char* name, UA_NodeId& paNodeId, UA_NodeId paParentNodeId);
 
+  EMGMResponse removeResourceObjectInstance(std::string resourceName);
+
   EMGMResponse addCreateResourceMethod(UA_Server* paServer);
   static UA_StatusCode onCreateResource(UA_Server* server,
     const UA_NodeId* sessionId, void* sessionHandle,
@@ -168,6 +207,14 @@ private:
 
   EMGMResponse addWriteDeviceMethod(UA_Server* paServer);
   static UA_StatusCode onWriteDevice(UA_Server* server,
+    const UA_NodeId* sessionId, void* sessionHandle,
+    const UA_NodeId* methodId, void* methodContext,
+    const UA_NodeId* objectId, void* objectContext,
+    size_t inputSize, const UA_Variant* input,
+    size_t outputSize, UA_Variant* output);
+
+  EMGMResponse addWriteResourceMethod(UA_Server* paServer);
+  static UA_StatusCode onWriteResource(UA_Server* server,
     const UA_NodeId* sessionId, void* sessionHandle,
     const UA_NodeId* methodId, void* methodContext,
     const UA_NodeId* objectId, void* objectContext,
@@ -206,6 +253,14 @@ private:
     size_t inputSize, const UA_Variant* input,
     size_t outputSize, UA_Variant* output);
 
+  EMGMResponse addStopResourceMethod(UA_Server* paServer);
+  static UA_StatusCode onStopResource(UA_Server* server,
+    const UA_NodeId* sessionId, void* sessionHandle,
+    const UA_NodeId* methodId, void* methodContext,
+    const UA_NodeId* objectId, void* objectContext,
+    size_t inputSize, const UA_Variant* input,
+    size_t outputSize, UA_Variant* output);
+
   EMGMResponse addResetDeviceMethod(UA_Server* paServer);
   static UA_StatusCode onResetDevice(UA_Server* server,
     const UA_NodeId* sessionId, void* sessionHandle,
@@ -214,8 +269,32 @@ private:
     size_t inputSize, const UA_Variant* input,
     size_t outputSize, UA_Variant* output);
 
+  EMGMResponse addResetResourceMethod(UA_Server* paServer);
+  static UA_StatusCode onResetResource(UA_Server* server,
+    const UA_NodeId* sessionId, void* sessionHandle,
+    const UA_NodeId* methodId, void* methodContext,
+    const UA_NodeId* objectId, void* objectContext,
+    size_t inputSize, const UA_Variant* input,
+    size_t outputSize, UA_Variant* output);
+
   EMGMResponse addKillDeviceMethod(UA_Server* paServer);
   static UA_StatusCode onKillDevice(UA_Server* server,
+    const UA_NodeId* sessionId, void* sessionHandle,
+    const UA_NodeId* methodId, void* methodContext,
+    const UA_NodeId* objectId, void* objectContext,
+    size_t inputSize, const UA_Variant* input,
+    size_t outputSize, UA_Variant* output);
+
+  EMGMResponse addKillResourceMethod(UA_Server* paServer);
+  static UA_StatusCode onKillResource(UA_Server* server,
+    const UA_NodeId* sessionId, void* sessionHandle,
+    const UA_NodeId* methodId, void* methodContext,
+    const UA_NodeId* objectId, void* objectContext,
+    size_t inputSize, const UA_Variant* input,
+    size_t outputSize, UA_Variant* output);
+
+  EMGMResponse addDeleteResourceMethod(UA_Server* paServer);
+  static UA_StatusCode onDeleteResource(UA_Server* server,
     const UA_NodeId* sessionId, void* sessionHandle,
     const UA_NodeId* methodId, void* methodContext,
     const UA_NodeId* objectId, void* objectContext,

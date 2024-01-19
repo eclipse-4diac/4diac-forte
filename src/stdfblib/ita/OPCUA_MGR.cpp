@@ -23,6 +23,13 @@ char OPCUA_MGR::smMgmtType[] = "IEC61499MgmtType";
 char OPCUA_MGR::smMgmtName[] = "IEC61499Mgmt";
 char OPCUA_MGR::smResType[] = "ResourceType";
 
+/* Write Device */
+char OPCUA_MGR::smWriteDevMethodName[] = "writeDevice";
+char OPCUA_MGR::smWriteDevArgName[] = "Value";
+char OPCUA_MGR::smWriteDevArgDescription[] = "Value to be written";
+char OPCUA_MGR::smWriteDevAttrDisplayName[] = "Write Device Parameter";
+char OPCUA_MGR::smWriteDevAttrDescription[] = "Write Device Parameter";
+
 /* Start Device */
 char OPCUA_MGR::smStartDevMethodName[] = "startDevice";
 char OPCUA_MGR::smStartDevAttrDisplayName[] = "Start Device";
@@ -43,13 +50,6 @@ char OPCUA_MGR::smKillDevMethodName[] = "killDevice";
 char OPCUA_MGR::smKillDevAttrDisplayName[] = "Kill Device";
 char OPCUA_MGR::smKillDevAttrDescription[] = "Kill Device";
 
-/* Write Device */
-char OPCUA_MGR::smWriteDevMethodName[] = "writeDevice";
-char OPCUA_MGR::smWriteDevArgName[] = "Value";
-char OPCUA_MGR::smWriteDevArgDescription[] = "Value to be written";
-char OPCUA_MGR::smWriteDevAttrDisplayName[] = "Write Device Parameter";
-char OPCUA_MGR::smWriteDevAttrDescription[] = "Write Device Parameter";
-
 /* Create Resource */
 char OPCUA_MGR::smCreateResMethodName[] = "createResource";
 char OPCUA_MGR::smCreateResArg1Name[] = "Resource_Name";
@@ -60,6 +60,50 @@ char OPCUA_MGR::smCreateResOutArgName[] = "Resource NodeId";
 char OPCUA_MGR::smCreateResOutArgDescription[] = "Resource NodeId";
 char OPCUA_MGR::smCreateResAttrDisplayName[] = "Create Resource";
 char OPCUA_MGR::smCreateResAttrDescription[] = "Create a Resource";
+
+/* Write Resource */
+char OPCUA_MGR::smWriteResMethodName[] = "writeResource";
+char OPCUA_MGR::smWriteResArg1Name[] = "Resource Name";
+char OPCUA_MGR::smWriteResArg1Description[] = "Destination Resource Name";
+char OPCUA_MGR::smWriteResArg2Name[] = "Value";
+char OPCUA_MGR::smWriteResArg2Description[] = "Value to be written";
+char OPCUA_MGR::smWriteResAttrDisplayName[] = "Write Resource Parameter";
+char OPCUA_MGR::smWriteResAttrDescription[] = "Write Resource Parameter";
+
+/* Start Resource */
+char OPCUA_MGR::smStartResMethodName[] = "startResource";
+char OPCUA_MGR::smStartResArgName[] = "Resource Name";
+char OPCUA_MGR::smStartResArgDescription[] = "Resource Name";
+char OPCUA_MGR::smStartResAttrDisplayName[] = "Start Resource";
+char OPCUA_MGR::smStartResAttrDescription[] = "Start Resource";
+
+/* Stop Resource */
+char OPCUA_MGR::smStopResMethodName[] = "stopResource";
+char OPCUA_MGR::smStopResArgName[] = "Resource Name";
+char OPCUA_MGR::smStopResArgDescription[] = "Resource Name";
+char OPCUA_MGR::smStopResAttrDisplayName[] = "Stop Resource";
+char OPCUA_MGR::smStopResAttrDescription[] = "Stop Resource";
+
+/* Reset Resource */
+char OPCUA_MGR::smResetResMethodName[] = "resetResource";
+char OPCUA_MGR::smResetResArgName[] = "Resource Name";
+char OPCUA_MGR::smResetResArgDescription[] = "Resource Name";
+char OPCUA_MGR::smResetResAttrDisplayName[] = "Reset Resource";
+char OPCUA_MGR::smResetResAttrDescription[] = "Reset Resource";
+
+/* Kill Resource */
+char OPCUA_MGR::smKillResMethodName[] = "killResource";
+char OPCUA_MGR::smKillResArgName[] = "Resource Name";
+char OPCUA_MGR::smKillResArgDescription[] = "Resource Name";
+char OPCUA_MGR::smKillResAttrDisplayName[] = "Kill Resource";
+char OPCUA_MGR::smKillResAttrDescription[] = "Kill Resource";
+
+/* Delete Resource */
+char OPCUA_MGR::smDeleteResMethodName[] = "deleteResource";
+char OPCUA_MGR::smDeleteResArgName[] = "Resource Name";
+char OPCUA_MGR::smDeleteResArgDescription[] = "Resource Name";
+char OPCUA_MGR::smDeleteResAttrDisplayName[] = "Delete Resource";
+char OPCUA_MGR::smDeleteResAttrDescription[] = "Delete Resource";
 
 /* Create FB */
 char OPCUA_MGR::smCreateFBMethodName[] = "createFB";
@@ -87,13 +131,6 @@ char OPCUA_MGR::smWriteFBArg2Name[] = "Value";
 char OPCUA_MGR::smWriteFBArg2Description[] = "Value to be written";
 char OPCUA_MGR::smWriteFBAttrDisplayName[] = "Write FB Parameter";
 char OPCUA_MGR::smWriteFBAttrDescription[] = "Write FB Parameter";
-
-/* Start Resource */
-char OPCUA_MGR::smStartResMethodName[] = "startResource";
-char OPCUA_MGR::smStartResArgName[] = "Resource Name";
-char OPCUA_MGR::smStartResArgDescription[] = "Resource Name";
-char OPCUA_MGR::smStartResAttrDisplayName[] = "Start Resource";
-char OPCUA_MGR::smStartResAttrDescription[] = "Start Resource";
 
 /* Initialize UA Status Codes */
 const std::map<EMGMResponse, UA_StatusCode> OPCUA_MGR::scResponseMap = {
@@ -143,11 +180,16 @@ EMGMResponse OPCUA_MGR::createIEC61499MgmtObject(UA_Server* paServer) {
   if (defineIEC61499MgmtObjectType(paServer) != EMGMResponse::Ready) return eRetVal;
   if (addCreateResourceMethod(paServer) != EMGMResponse::Ready) return eRetVal;
   if (addWriteDeviceMethod(paServer) != EMGMResponse::Ready) return eRetVal;
+  if (addWriteResourceMethod(paServer) != EMGMResponse::Ready) return eRetVal;
   if (addStartDeviceMethod(paServer) != EMGMResponse::Ready) return eRetVal;
   if (addStartResourceMethod(paServer) != EMGMResponse::Ready) return eRetVal;
   if (addStopDeviceMethod(paServer) != EMGMResponse::Ready) return eRetVal;
+  if (addStopResourceMethod(paServer) != EMGMResponse::Ready) return eRetVal;
   if (addResetDeviceMethod(paServer) != EMGMResponse::Ready) return eRetVal;
+  if (addResetResourceMethod(paServer) != EMGMResponse::Ready) return eRetVal;
   if (addKillDeviceMethod(paServer) != EMGMResponse::Ready) return eRetVal;
+  if (addKillResourceMethod(paServer) != EMGMResponse::Ready) return eRetVal;
+  if (addDeleteResourceMethod(paServer) != EMGMResponse::Ready) return eRetVal;
   return addMgmtObjectInstance();
 }
 
@@ -226,6 +268,18 @@ EMGMResponse OPCUA_MGR::addResourceObjectInstance(char* paResourceName, UA_NodeI
     return EMGMResponse::InvalidState;
   }
   return eRetVal;
+}
+
+EMGMResponse OPCUA_MGR::removeResourceObjectInstance(std::string resourceName) {
+  std::map<std::string, UA_NodeId>::iterator it = resourceNodeMap.find(resourceName);
+  if (it == resourceNodeMap.end()) {
+    return EMGMResponse::InvalidState;
+  }
+  if (UA_Server_deleteNode(mUaHandler.getUAServer(), it->second, true) != UA_STATUSCODE_GOOD) {
+    return EMGMResponse::InvalidState;
+  }
+  resourceNodeMap.erase(it);
+  return EMGMResponse::Ready;
 }
 
 EMGMResponse OPCUA_MGR::addCreateResourceMethod(UA_Server* paServer) {
@@ -373,6 +427,34 @@ UA_StatusCode OPCUA_MGR::onWriteDevice(UA_Server*,
   return UA_STATUSCODE_BADUNKNOWNRESPONSE;
 }
 
+EMGMResponse OPCUA_MGR::addWriteResourceMethod(UA_Server* paServer) {
+  UA_Argument inputArguments[2];
+  initArgument(inputArguments[0], UA_TYPES_STRING, smWriteResArg1Name, smWriteResArg1Description);
+  initArgument(inputArguments[1], UA_TYPES_STRING, smWriteResArg2Name, smWriteResArg2Description);
+
+  UA_MethodAttributes writeResAttr = createAttribute(smWriteResAttrDisplayName, smWriteResAttrDescription);
+  return addMethodNode(paServer, smWriteResMethodName, mMgmtTypeId, writeResAttr, inputArguments, 2, nullptr, 0, &onWriteResource);
+}
+
+UA_StatusCode OPCUA_MGR::onWriteResource(UA_Server*,
+  const UA_NodeId*, void*,
+  const UA_NodeId*, void* methodContext,
+  const UA_NodeId*, void*,
+  size_t, const UA_Variant* input,
+  size_t, UA_Variant*) {
+  if (methodContext != nullptr) {
+    EMGMResponse eRetVal = EMGMResponse::UnsupportedType;
+    std::string resourceName = getInputValue(*static_cast<UA_String*>(input[0].data));
+    std::string writeValue = getInputValue(*static_cast<UA_String*>(input[1].data));
+
+    OPCUA_MGR* uaMGR = static_cast<OPCUA_MGR*>(methodContext);
+    uaMGR->setMGMCommand(EMGMCommandType::Write, CStringDictionary::getInstance().insert(resourceName.c_str()), writeValue.c_str(), nullptr, nullptr);
+    eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
+    return scResponseMap.find(eRetVal)->second;
+  }
+  return UA_STATUSCODE_BADUNKNOWNRESPONSE;
+}
+
 EMGMResponse OPCUA_MGR::addWriteFBMethod(UA_Server* paServer) {
   UA_Argument inputArguments[2];
   initArgument(inputArguments[0], UA_TYPES_STRING, smWriteFBArg1Name, smWriteFBArg1Description);
@@ -473,6 +555,31 @@ UA_StatusCode OPCUA_MGR::onStopDevice(UA_Server*,
   return UA_STATUSCODE_BADUNKNOWNRESPONSE;
 }
 
+EMGMResponse OPCUA_MGR::addStopResourceMethod(UA_Server* paServer) {
+  UA_Argument inputArgument;
+  initArgument(inputArgument, UA_TYPES_STRING, smStopResArgName, smStopResArgDescription);
+
+  UA_MethodAttributes stopResAttr = createAttribute(smStopResAttrDisplayName, smStopResAttrDescription);
+  return addMethodNode(paServer, smStopResMethodName, mMgmtTypeId, stopResAttr, &inputArgument, 1, nullptr, 0, &onStopResource);
+}
+
+UA_StatusCode OPCUA_MGR::onStopResource(UA_Server*,
+  const UA_NodeId*, void*,
+  const UA_NodeId*, void* methodContext,
+  const UA_NodeId*, void*,
+  size_t, const UA_Variant* input,
+  size_t, UA_Variant*) {
+  if (methodContext != nullptr) {
+    EMGMResponse eRetVal = EMGMResponse::UnsupportedType;
+    std::string resourceName = getInputValue(*static_cast<UA_String*>(input[0].data));
+    OPCUA_MGR* uaMGR = static_cast<OPCUA_MGR*>(methodContext);
+    uaMGR->setMGMCommand(EMGMCommandType::Stop, CStringDictionary::scmInvalidStringId, nullptr, resourceName.c_str(), nullptr);
+    eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
+    return scResponseMap.find(eRetVal)->second;
+  }
+  return UA_STATUSCODE_BADUNKNOWNRESPONSE;
+}
+
 EMGMResponse OPCUA_MGR::addResetDeviceMethod(UA_Server* paServer) {
   UA_MethodAttributes resetDevAttr = createAttribute(smResetDevAttrDisplayName, smResetDevAttrDescription);
   return addMethodNode(paServer, smResetDevMethodName, mMgmtTypeId, resetDevAttr, nullptr, 0, nullptr, 0, &onResetDevice);
@@ -488,6 +595,31 @@ UA_StatusCode OPCUA_MGR::onResetDevice(UA_Server*,
     EMGMResponse eRetVal = EMGMResponse::UnsupportedType;
     OPCUA_MGR* uaMGR = static_cast<OPCUA_MGR*>(methodContext);
     uaMGR->setMGMCommand(EMGMCommandType::Reset, CStringDictionary::scmInvalidStringId, nullptr, nullptr, nullptr);
+    eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
+    return scResponseMap.find(eRetVal)->second;
+  }
+  return UA_STATUSCODE_BADUNKNOWNRESPONSE;
+}
+
+EMGMResponse OPCUA_MGR::addResetResourceMethod(UA_Server* paServer) {
+  UA_Argument inputArgument;
+  initArgument(inputArgument, UA_TYPES_STRING, smResetResArgName, smResetResArgDescription);
+
+  UA_MethodAttributes resetResAttr = createAttribute(smResetResAttrDisplayName, smResetResAttrDescription);
+  return addMethodNode(paServer, smResetResMethodName, mMgmtTypeId, resetResAttr, &inputArgument, 1, nullptr, 0, &onResetResource);
+}
+
+UA_StatusCode OPCUA_MGR::onResetResource(UA_Server*,
+  const UA_NodeId*, void*,
+  const UA_NodeId*, void* methodContext,
+  const UA_NodeId*, void*,
+  size_t, const UA_Variant* input,
+  size_t, UA_Variant*) {
+  if (methodContext != nullptr) {
+    EMGMResponse eRetVal = EMGMResponse::UnsupportedType;
+    std::string resourceName = getInputValue(*static_cast<UA_String*>(input[0].data));
+    OPCUA_MGR* uaMGR = static_cast<OPCUA_MGR*>(methodContext);
+    uaMGR->setMGMCommand(EMGMCommandType::Reset, CStringDictionary::scmInvalidStringId, nullptr, resourceName.c_str(), nullptr);
     eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
     return scResponseMap.find(eRetVal)->second;
   }
@@ -513,6 +645,66 @@ UA_StatusCode OPCUA_MGR::onKillDevice(UA_Server*,
     return scResponseMap.find(eRetVal)->second;
   }
   return UA_STATUSCODE_BADUNKNOWNRESPONSE;
+}
+
+EMGMResponse OPCUA_MGR::addKillResourceMethod(UA_Server* paServer) {
+  UA_Argument inputArgument;
+  initArgument(inputArgument, UA_TYPES_STRING, smKillResArgName, smKillResArgDescription);
+
+  UA_MethodAttributes killResAttr = createAttribute(smKillResAttrDisplayName, smKillResAttrDescription);
+  return addMethodNode(paServer, smKillResMethodName, mMgmtTypeId, killResAttr, &inputArgument, 1, nullptr, 0, &onKillResource);
+}
+
+UA_StatusCode OPCUA_MGR::onKillResource(UA_Server*,
+  const UA_NodeId*, void*,
+  const UA_NodeId*, void* methodContext,
+  const UA_NodeId*, void*,
+  size_t, const UA_Variant* input,
+  size_t, UA_Variant*) {
+  if (methodContext != nullptr) {
+    EMGMResponse eRetVal = EMGMResponse::UnsupportedType;
+    std::string resourceName = getInputValue(*static_cast<UA_String*>(input[0].data));
+    OPCUA_MGR* uaMGR = static_cast<OPCUA_MGR*>(methodContext);
+    uaMGR->setMGMCommand(EMGMCommandType::Kill, CStringDictionary::scmInvalidStringId, nullptr, resourceName.c_str(), nullptr);
+    eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
+    return scResponseMap.find(eRetVal)->second;
+  }
+  return UA_STATUSCODE_BADUNKNOWNRESPONSE;
+}
+
+EMGMResponse OPCUA_MGR::addDeleteResourceMethod(UA_Server* paServer) {
+  UA_Argument inputArgument;
+  initArgument(inputArgument, UA_TYPES_STRING, smDeleteResArgName, smDeleteResArgDescription);
+
+  UA_MethodAttributes deleteResAttr = createAttribute(smDeleteResAttrDisplayName, smDeleteResAttrDescription);
+  return addMethodNode(paServer, smDeleteResMethodName, mMgmtTypeId, deleteResAttr, &inputArgument, 1, nullptr, 0, &onDeleteResource);
+}
+
+UA_StatusCode OPCUA_MGR::onDeleteResource(UA_Server*,
+  const UA_NodeId*, void*,
+  const UA_NodeId*, void* methodContext,
+  const UA_NodeId*, void*,
+  size_t, const UA_Variant* input,
+  size_t, UA_Variant*) {
+  if (methodContext == nullptr) {
+    return UA_STATUSCODE_BADUNKNOWNRESPONSE;
+  }
+  EMGMResponse eRetVal = EMGMResponse::UnsupportedType;
+  /* Resource Name */
+  std::string resourceName = getInputValue(*static_cast<UA_String*>(input[0].data));
+
+  OPCUA_MGR* uaMGR = static_cast<OPCUA_MGR*>(methodContext);
+  uaMGR->setMGMCommand(EMGMCommandType::DeleteFBInstance, CStringDictionary::scmInvalidStringId, nullptr, resourceName.c_str(), nullptr);
+  eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
+  UA_StatusCode status = scResponseMap.find(eRetVal)->second;
+
+  if (status != UA_STATUSCODE_GOOD) {
+    return status;
+  }
+  if (uaMGR->removeResourceObjectInstance(resourceName) != EMGMResponse::Ready) {
+    return UA_STATUSCODE_BADINVALIDSTATE;
+  }
+  return status;
 }
 
 /* Helpers */
