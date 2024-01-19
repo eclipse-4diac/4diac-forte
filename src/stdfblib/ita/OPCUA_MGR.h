@@ -38,6 +38,33 @@ private:
   static char smMgmtName[];
   static char smResType[];
 
+  /* Start Device */
+  static char smStartDevMethodName[];
+  static char smStartDevAttrDisplayName[];
+  static char smStartDevAttrDescription[];
+
+  /* Stop Device */
+  static char smStopDevMethodName[];
+  static char smStopDevAttrDisplayName[];
+  static char smStopDevAttrDescription[];
+
+  /* Reset Device */
+  static char smResetDevMethodName[];
+  static char smResetDevAttrDisplayName[];
+  static char smResetDevAttrDescription[];
+
+  /* Kill Device */
+  static char smKillDevMethodName[];
+  static char smKillDevAttrDisplayName[];
+  static char smKillDevAttrDescription[];
+
+  /* Write Device */
+  static char smWriteDevMethodName[];
+  static char smWriteDevArgName[];
+  static char smWriteDevArgDescription[];
+  static char smWriteDevAttrDisplayName[];
+  static char smWriteDevAttrDescription[];
+
   /* Create Resource */
   static char smCreateResMethodName[];
   static char smCreateResArg1Name[];
@@ -139,6 +166,14 @@ private:
     size_t inputSize, const UA_Variant* input,
     size_t outputSize, UA_Variant* output);
 
+  EMGMResponse addWriteDeviceMethod(UA_Server* paServer);
+  static UA_StatusCode onWriteDevice(UA_Server* server,
+    const UA_NodeId* sessionId, void* sessionHandle,
+    const UA_NodeId* methodId, void* methodContext,
+    const UA_NodeId* objectId, void* objectContext,
+    size_t inputSize, const UA_Variant* input,
+    size_t outputSize, UA_Variant* output);
+
   EMGMResponse addWriteFBMethod(UA_Server* paServer);
   static UA_StatusCode onWriteFB(UA_Server* server,
     const UA_NodeId* sessionId, void* sessionHandle,
@@ -147,8 +182,40 @@ private:
     size_t inputSize, const UA_Variant* input,
     size_t outputSize, UA_Variant* output);
 
+  EMGMResponse addStartDeviceMethod(UA_Server* paServer);
+  static UA_StatusCode onStartDevice(UA_Server* server,
+    const UA_NodeId* sessionId, void* sessionHandle,
+    const UA_NodeId* methodId, void* methodContext,
+    const UA_NodeId* objectId, void* objectContext,
+    size_t inputSize, const UA_Variant* input,
+    size_t outputSize, UA_Variant* output);
+
   EMGMResponse addStartResourceMethod(UA_Server* paServer);
   static UA_StatusCode onStartResource(UA_Server* server,
+    const UA_NodeId* sessionId, void* sessionHandle,
+    const UA_NodeId* methodId, void* methodContext,
+    const UA_NodeId* objectId, void* objectContext,
+    size_t inputSize, const UA_Variant* input,
+    size_t outputSize, UA_Variant* output);
+
+  EMGMResponse addStopDeviceMethod(UA_Server* paServer);
+  static UA_StatusCode onStopDevice(UA_Server* server,
+    const UA_NodeId* sessionId, void* sessionHandle,
+    const UA_NodeId* methodId, void* methodContext,
+    const UA_NodeId* objectId, void* objectContext,
+    size_t inputSize, const UA_Variant* input,
+    size_t outputSize, UA_Variant* output);
+
+  EMGMResponse addResetDeviceMethod(UA_Server* paServer);
+  static UA_StatusCode onResetDevice(UA_Server* server,
+    const UA_NodeId* sessionId, void* sessionHandle,
+    const UA_NodeId* methodId, void* methodContext,
+    const UA_NodeId* objectId, void* objectContext,
+    size_t inputSize, const UA_Variant* input,
+    size_t outputSize, UA_Variant* output);
+
+  EMGMResponse addKillDeviceMethod(UA_Server* paServer);
+  static UA_StatusCode onKillDevice(UA_Server* server,
     const UA_NodeId* sessionId, void* sessionHandle,
     const UA_NodeId* methodId, void* methodContext,
     const UA_NodeId* objectId, void* objectContext,
