@@ -38,10 +38,6 @@ public:
     using iterator = typename std::array<T, 0>::iterator;
     using const_iterator = typename std::array<T, 0>::const_iterator;
 
-    using CIEC_ARRAY::at;
-    using CIEC_ARRAY::operator[];
-    using CIEC_ARRAY::operator=;
-
     using CIEC_ARRAY_COMMON<T>::at;
     using CIEC_ARRAY_COMMON<T>::operator[];
     using CIEC_ARRAY_COMMON<T>::operator=;
