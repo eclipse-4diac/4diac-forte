@@ -85,7 +85,7 @@ public:
       return operator[](indexValue);
     }
 
-    [[nodiscard]] constexpr EDataTypeID getDataTypeID() const final {
+    [[nodiscard]] EDataTypeID getDataTypeID() const final {
       return CIEC_ANY::e_ARRAY;
     }
 

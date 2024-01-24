@@ -71,7 +71,7 @@ class CIEC_LTIME final : public CIEC_ANY_DURATION {
       return getLargestInt();
     }
 
-    constexpr EDataTypeID getDataTypeID() const override {
+    EDataTypeID getDataTypeID() const override {
       return CIEC_ANY::e_LTIME;
     }
 
@@ -100,7 +100,7 @@ class CIEC_LTIME final : public CIEC_ANY_DURATION {
 
     /*! \brief calculates buffer size needed for toString conversion
      */
-    constexpr size_t getToStringBufferSize() const override {
+    size_t getToStringBufferSize() const override {
       return sizeof("LT#-18446744073709551615ns");
     }
 

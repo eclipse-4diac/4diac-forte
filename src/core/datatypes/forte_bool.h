@@ -63,7 +63,7 @@ class CIEC_BOOL : public CIEC_ANY_BIT{
       return (0 != getLargestUInt());
     }
 
-    constexpr EDataTypeID getDataTypeID() const override final {
+    EDataTypeID getDataTypeID() const override final {
       return CIEC_ANY::e_BOOL;
     }
 
@@ -91,7 +91,7 @@ class CIEC_BOOL : public CIEC_ANY_BIT{
 
     /*! \brief calculates buffer size needed for toString conversion
      */
-    constexpr size_t getToStringBufferSize() const override final {
+    size_t getToStringBufferSize() const override final {
       return sizeof("FALSE");
     }
 

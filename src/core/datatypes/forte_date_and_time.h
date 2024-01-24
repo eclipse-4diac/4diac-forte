@@ -54,7 +54,7 @@ class CIEC_DATE_AND_TIME final : public CIEC_ANY_DATE {
       return getTUINT64();
     }
 
-    constexpr EDataTypeID getDataTypeID() const override {
+    EDataTypeID getDataTypeID() const override {
       return CIEC_ANY::e_DATE_AND_TIME;
     }
 
@@ -91,7 +91,7 @@ class CIEC_DATE_AND_TIME final : public CIEC_ANY_DATE {
 
     /*! \brief calculates buffer size needed for toString conversion
      */
-    constexpr size_t getToStringBufferSize() const override {
+    size_t getToStringBufferSize() const override {
       return sizeof("DT#1970-01-01-00:00:00.000");
     }
 };

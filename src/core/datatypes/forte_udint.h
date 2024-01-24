@@ -86,11 +86,11 @@ class CIEC_UDINT final : public CIEC_ANY_UNSIGNED {
 
     /*! \brief calculates buffer size needed for toString conversion
      */
-    constexpr size_t getToStringBufferSize() const override {
+    size_t getToStringBufferSize() const override {
       return sizeof("4294967295");
     }
 
-    constexpr EDataTypeID getDataTypeID() const override {
+    EDataTypeID getDataTypeID() const override {
       return CIEC_ANY::e_UDINT;
     }
 };

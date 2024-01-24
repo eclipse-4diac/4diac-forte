@@ -106,7 +106,7 @@ class CIEC_DWORD : public CIEC_ANY_BIT {
 
     /*! \brief calculates buffer size needed for toString conversion
      */
-    constexpr size_t getToStringBufferSize() const override final {
+    size_t getToStringBufferSize() const override final {
       return sizeof("4294967295");
     }
 

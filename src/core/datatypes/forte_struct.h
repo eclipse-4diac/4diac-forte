@@ -72,7 +72,7 @@ class CIEC_STRUCT : public CIEC_ANY_DERIVED{
      */
     size_t getToStringBufferSize() const override;
 
-    constexpr EDataTypeID getDataTypeID() const override final {
+    EDataTypeID getDataTypeID() const override final {
       return CIEC_ANY::e_STRUCT;
     }
 
