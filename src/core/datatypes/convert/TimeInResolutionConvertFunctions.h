@@ -1,5 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2019 TU Vienna/ACIN
+ * Copyright (c) 2019, 2024 TU Vienna/ACIN
+ *                          Martin Erich Jobst
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -8,6 +9,7 @@
  *
  * Contributors:
  *    Martin Melik-Merkumians - adds non standard time to number conversions
+ *    Martin Erich Jobst - add templated versions for ANY_DURATION
  *******************************************************************************/
 
 #ifndef SRC_CORE_DATATYPES_CONVERT_TIMEINRESOLUTIONCONVERTFUNCTIONS_H_
@@ -29,9 +31,10 @@
  * @param paValue TIME value to convert
  * @return TIME value in seconds
  */
-template<typename T>
-inline const T func_TIME_IN_S_TO(const CIEC_TIME &paValue) {
+template<typename T, typename U>
+inline const T func_TIME_IN_S_TO(const U &paValue) {
   static_assert((std::is_base_of_v<CIEC_ANY_NUM, T>), "T not of ANY_NUM");
+  static_assert((std::is_base_of_v<CIEC_ANY_DURATION, U>), "U not of ANY_DURATION");
   if(std::is_base_of_v<CIEC_ANY_REAL, T>) {
     return T(
       static_cast<typename T::TValueType>(paValue.getInNanoSeconds()) / static_cast<typename T::TValueType>(forte::core::constants::cNanosecondsPerSecond));
@@ -50,9 +53,10 @@ inline const T func_TIME_IN_S_TO(const CIEC_TIME &paValue) {
  * @param paValue TIME value to convert
  * @return TIME value in milliseconds
  */
-template<typename T>
-inline const T func_TIME_IN_MS_TO(const CIEC_TIME &paValue) {
+template<typename T, typename U>
+inline const T func_TIME_IN_MS_TO(const U &paValue) {
   static_assert((std::is_base_of_v<CIEC_ANY_NUM, T>), "T not of ANY_NUM");
+  static_assert((std::is_base_of_v<CIEC_ANY_DURATION, U>), "U not of ANY_DURATION");
   if(std::is_base_of_v<CIEC_ANY_REAL, T>) {
     return T(
       static_cast<typename T::TValueType>(paValue.getInNanoSeconds())
@@ -73,9 +77,10 @@ inline const T func_TIME_IN_MS_TO(const CIEC_TIME &paValue) {
  * @param paValue TIME value to convert
  * @return TIME value in microseconds
  */
-template<typename T>
-inline const T func_TIME_IN_US_TO(const CIEC_TIME &paValue) {
+template<typename T, typename U>
+inline const T func_TIME_IN_US_TO(const U &paValue) {
   static_assert((std::is_base_of_v<CIEC_ANY_NUM, T>), "T not of ANY_NUM");
+  static_assert((std::is_base_of_v<CIEC_ANY_DURATION, U>), "U not of ANY_DURATION");
   if(std::is_base_of_v<CIEC_ANY_REAL, T>) {
     return T(
       static_cast<typename T::TValueType>(paValue.getInNanoSeconds())
@@ -96,9 +101,10 @@ inline const T func_TIME_IN_US_TO(const CIEC_TIME &paValue) {
  * @param paValue TIME value to convert
  * @return TIME value in nanoseconds
  */
-template<typename T>
-inline const T func_TIME_IN_NS_TO(const CIEC_TIME &paValue) {
+template<typename T, typename U>
+inline const T func_TIME_IN_NS_TO(const U &paValue) {
   static_assert((std::is_base_of_v<CIEC_ANY_NUM, T>), "T not of ANY_NUM");
+  static_assert((std::is_base_of_v<CIEC_ANY_DURATION, U>), "U not of ANY_DURATION");
   return T(static_cast<typename T::TValueType>(paValue.getInNanoSeconds()));
 }
 
@@ -112,7 +118,8 @@ inline const T func_TIME_IN_NS_TO(const CIEC_TIME &paValue) {
  * @param paValue TIME value to convert
  * @return TIME value in seconds
  */
-inline const CIEC_LINT func_TIME_IN_S_TO_LINT(const CIEC_TIME &paValue) {
+template<typename T>
+inline const CIEC_LINT func_TIME_IN_S_TO_LINT(const T &paValue) {
   return func_TIME_IN_S_TO<CIEC_LINT>(paValue);
 }
 
@@ -122,7 +129,8 @@ inline const CIEC_LINT func_TIME_IN_S_TO_LINT(const CIEC_TIME &paValue) {
  * @param paValue TIME value to convert
  * @return TIME value in milliseconds
  */
-inline const CIEC_LINT func_TIME_IN_MS_TO_LINT(const CIEC_TIME &paValue) {
+template<typename T>
+inline const CIEC_LINT func_TIME_IN_MS_TO_LINT(const T &paValue) {
   return func_TIME_IN_MS_TO<CIEC_LINT>(paValue);
 }
 
@@ -132,7 +140,8 @@ inline const CIEC_LINT func_TIME_IN_MS_TO_LINT(const CIEC_TIME &paValue) {
  * @param paValue TIME value to convert
  * @return TIME value in microseconds
  */
-inline const CIEC_LINT func_TIME_IN_US_TO_LINT(const CIEC_TIME &paValue) {
+template<typename T>
+inline const CIEC_LINT func_TIME_IN_US_TO_LINT(const T &paValue) {
   return func_TIME_IN_US_TO<CIEC_LINT>(paValue);
 }
 
@@ -142,7 +151,8 @@ inline const CIEC_LINT func_TIME_IN_US_TO_LINT(const CIEC_TIME &paValue) {
  * @param paValue TIME value to convert
  * @return TIME value in nanoseconds
  */
-inline const CIEC_LINT func_TIME_IN_NS_TO_LINT(const CIEC_TIME &paValue) {
+template<typename T>
+inline const CIEC_LINT func_TIME_IN_NS_TO_LINT(const T &paValue) {
   return func_TIME_IN_NS_TO<CIEC_LINT>(paValue);
 }
 
@@ -156,7 +166,8 @@ inline const CIEC_LINT func_TIME_IN_NS_TO_LINT(const CIEC_TIME &paValue) {
  * @param paValue TIME value to convert
  * @return TIME value in seconds
  */
-inline const CIEC_ULINT func_TIME_IN_S_TO_ULINT(const CIEC_TIME &paValue) {
+template<typename T>
+inline const CIEC_ULINT func_TIME_IN_S_TO_ULINT(const T &paValue) {
   return func_TIME_IN_S_TO<CIEC_ULINT>(paValue);
 }
 
@@ -166,7 +177,8 @@ inline const CIEC_ULINT func_TIME_IN_S_TO_ULINT(const CIEC_TIME &paValue) {
  * @param paValue TIME value to convert
  * @return TIME value in milliseconds
  */
-inline const CIEC_ULINT func_TIME_IN_MS_TO_ULINT(const CIEC_TIME &paValue) {
+template<typename T>
+inline const CIEC_ULINT func_TIME_IN_MS_TO_ULINT(const T &paValue) {
   return func_TIME_IN_MS_TO<CIEC_ULINT>(paValue);
 }
 
@@ -176,7 +188,8 @@ inline const CIEC_ULINT func_TIME_IN_MS_TO_ULINT(const CIEC_TIME &paValue) {
  * @param paValue TIME value to convert
  * @return TIME value in microseconds
  */
-inline const CIEC_ULINT func_TIME_IN_US_TO_ULINT(const CIEC_TIME &paValue) {
+template<typename T>
+inline const CIEC_ULINT func_TIME_IN_US_TO_ULINT(const T &paValue) {
   return func_TIME_IN_US_TO<CIEC_ULINT>(paValue);
 }
 
@@ -186,7 +199,8 @@ inline const CIEC_ULINT func_TIME_IN_US_TO_ULINT(const CIEC_TIME &paValue) {
  * @param paValue TIME value to convert
  * @return TIME value in nanoseconds
  */
-inline const CIEC_ULINT func_TIME_IN_NS_TO_ULINT(const CIEC_TIME &paValue) {
+template<typename T>
+inline const CIEC_ULINT func_TIME_IN_NS_TO_ULINT(const T &paValue) {
   return func_TIME_IN_NS_TO<CIEC_ULINT>(paValue);
 }
 
@@ -200,7 +214,8 @@ inline const CIEC_ULINT func_TIME_IN_NS_TO_ULINT(const CIEC_TIME &paValue) {
  * @param paValue TIME value to convert
  * @return TIME value in seconds
  */
-inline const CIEC_LREAL func_TIME_IN_S_TO_LREAL(const CIEC_TIME &paValue) {
+template<typename T>
+inline const CIEC_LREAL func_TIME_IN_S_TO_LREAL(const T &paValue) {
   return func_TIME_IN_S_TO<CIEC_LREAL>(paValue);
 }
 
@@ -210,7 +225,8 @@ inline const CIEC_LREAL func_TIME_IN_S_TO_LREAL(const CIEC_TIME &paValue) {
  * @param paValue TIME value to convert
  * @return TIME value in milliseconds
  */
-inline const CIEC_LREAL func_TIME_IN_MS_TO_LREAL(const CIEC_TIME &paValue) {
+template<typename T>
+inline const CIEC_LREAL func_TIME_IN_MS_TO_LREAL(const T &paValue) {
   return func_TIME_IN_MS_TO<CIEC_LREAL>(paValue);
 }
 
@@ -220,7 +236,8 @@ inline const CIEC_LREAL func_TIME_IN_MS_TO_LREAL(const CIEC_TIME &paValue) {
  * @param paValue TIME value to convert
  * @return TIME value in microseconds
  */
-inline const CIEC_LREAL func_TIME_IN_US_TO_LREAL(const CIEC_TIME &paValue) {
+template<typename T>
+inline const CIEC_LREAL func_TIME_IN_US_TO_LREAL(const T &paValue) {
   return func_TIME_IN_US_TO<CIEC_LREAL>(paValue);
 }
 
@@ -230,7 +247,8 @@ inline const CIEC_LREAL func_TIME_IN_US_TO_LREAL(const CIEC_TIME &paValue) {
  * @param paValue TIME value to convert
  * @return TIME value in nanoseconds
  */
-inline const CIEC_LREAL func_TIME_IN_NS_TO_LREAL(const CIEC_TIME &paValue) {
+template<typename T>
+inline const CIEC_LREAL func_TIME_IN_NS_TO_LREAL(const T &paValue) {
   return func_TIME_IN_NS_TO<CIEC_LREAL>(paValue);
 }
 
@@ -245,7 +263,8 @@ inline const CIEC_LREAL func_TIME_IN_NS_TO_LREAL(const CIEC_TIME &paValue) {
  * @param paValue TIME value to convert
  * @return TIME value in seconds
  */
-inline const CIEC_UDINT func_TIME_IN_S_TO_UDINT(const CIEC_TIME &paValue) {
+template<typename T>
+inline const CIEC_UDINT func_TIME_IN_S_TO_UDINT(const T &paValue) {
   return func_TIME_IN_S_TO<CIEC_UDINT>(paValue);
 }
 
@@ -255,7 +274,8 @@ inline const CIEC_UDINT func_TIME_IN_S_TO_UDINT(const CIEC_TIME &paValue) {
  * @param paValue TIME value to convert
  * @return TIME value in milliseconds
  */
-inline const CIEC_UDINT func_TIME_IN_MS_TO_UDINT(const CIEC_TIME &paValue) {
+template<typename T>
+inline const CIEC_UDINT func_TIME_IN_MS_TO_UDINT(const T &paValue) {
   return func_TIME_IN_MS_TO<CIEC_UDINT>(paValue);
 }
 
@@ -265,7 +285,8 @@ inline const CIEC_UDINT func_TIME_IN_MS_TO_UDINT(const CIEC_TIME &paValue) {
  * @param paValue TIME value to convert
  * @return TIME value in microseconds
  */
-inline const CIEC_UDINT func_TIME_IN_US_TO_UDINT(const CIEC_TIME &paValue) {
+template<typename T>
+inline const CIEC_UDINT func_TIME_IN_US_TO_UDINT(const T &paValue) {
   return func_TIME_IN_US_TO<CIEC_UDINT>(paValue);
 }
 
@@ -275,7 +296,8 @@ inline const CIEC_UDINT func_TIME_IN_US_TO_UDINT(const CIEC_TIME &paValue) {
  * @param paValue TIME value to convert
  * @return TIME value in nanoseconds
  */
-inline const CIEC_UDINT func_TIME_IN_NS_TO_UDINT(const CIEC_TIME &paValue) {
+template<typename T>
+inline const CIEC_UDINT func_TIME_IN_NS_TO_UDINT(const T &paValue) {
   return func_TIME_IN_NS_TO<CIEC_UDINT>(paValue);
 }
 
@@ -289,7 +311,8 @@ inline const CIEC_UDINT func_TIME_IN_NS_TO_UDINT(const CIEC_TIME &paValue) {
  * @param paValue TIME value to convert
  * @return TIME value in seconds
  */
-inline const CIEC_DINT func_TIME_IN_S_TO_DINT(const CIEC_TIME &paValue) {
+template<typename T>
+inline const CIEC_DINT func_TIME_IN_S_TO_DINT(const T &paValue) {
   return func_TIME_IN_S_TO<CIEC_DINT>(paValue);
 }
 
@@ -299,7 +322,8 @@ inline const CIEC_DINT func_TIME_IN_S_TO_DINT(const CIEC_TIME &paValue) {
  * @param paValue TIME value to convert
  * @return TIME value in milliseconds
  */
-inline const CIEC_DINT func_TIME_IN_MS_TO_DINT(const CIEC_TIME &paValue) {
+template<typename T>
+inline const CIEC_DINT func_TIME_IN_MS_TO_DINT(const T &paValue) {
   return func_TIME_IN_MS_TO<CIEC_DINT>(paValue);
 }
 
@@ -309,7 +333,8 @@ inline const CIEC_DINT func_TIME_IN_MS_TO_DINT(const CIEC_TIME &paValue) {
  * @param paValue TIME value to convert
  * @return TIME value in microseconds
  */
-inline const CIEC_DINT func_TIME_IN_US_TO_DINT(const CIEC_TIME &paValue) {
+template<typename T>
+inline const CIEC_DINT func_TIME_IN_US_TO_DINT(const T &paValue) {
   return func_TIME_IN_US_TO<CIEC_DINT>(paValue);
 }
 
@@ -319,7 +344,8 @@ inline const CIEC_DINT func_TIME_IN_US_TO_DINT(const CIEC_TIME &paValue) {
  * @param paValue TIME value to convert
  * @return TIME value in nanoseconds
  */
-inline const CIEC_DINT func_TIME_IN_NS_TO_DINT(const CIEC_TIME &paValue) {
+template<typename T>
+inline const CIEC_DINT func_TIME_IN_NS_TO_DINT(const T &paValue) {
   return func_TIME_IN_NS_TO<CIEC_DINT>(paValue);
 }
 
