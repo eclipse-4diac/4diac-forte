@@ -218,6 +218,18 @@ namespace forte {
 // REAL implicit casts
       ALLOW_IMPLICIT_CAST(CIEC_REAL, CIEC_LREAL)
 
+      /* TIME casts */
+      ALLOW_IMPLICIT_CAST(CIEC_TIME, CIEC_LTIME)
+
+      /* DATE_AND_TIME casts */
+      ALLOW_IMPLICIT_CAST(CIEC_DATE_AND_TIME, CIEC_LDATE_AND_TIME)
+
+      /* DATE casts */
+      ALLOW_IMPLICIT_CAST(CIEC_DATE, CIEC_LDATE)
+
+      /* TIME_OF_DAY casts */
+      ALLOW_IMPLICIT_CAST(CIEC_TIME_OF_DAY, CIEC_LTIME_OF_DAY)
+
 // Explicit casts
       /* invalid explicit casts */
       template<typename T, typename U> struct explicit_cast{
@@ -549,7 +561,31 @@ namespace forte {
       };
 
       template <>
+      struct get_add_operator_result_type<CIEC_TIME_OF_DAY, CIEC_LTIME> {
+        typedef CIEC_LTIME_OF_DAY type;
+        get_add_operator_result_type() = delete;
+      };
+
+      template <>
+      struct get_add_operator_result_type<CIEC_LTIME_OF_DAY, CIEC_TIME> {
+        typedef CIEC_LTIME_OF_DAY type;
+        get_add_operator_result_type() = delete;
+      };
+
+      template <>
       struct get_add_operator_result_type<CIEC_LDATE_AND_TIME, CIEC_LTIME> {
+        typedef CIEC_LDATE_AND_TIME type;
+        get_add_operator_result_type() = delete;
+      };
+
+      template <>
+      struct get_add_operator_result_type<CIEC_DATE_AND_TIME, CIEC_LTIME> {
+        typedef CIEC_LDATE_AND_TIME type;
+        get_add_operator_result_type() = delete;
+      };
+
+      template <>
+      struct get_add_operator_result_type<CIEC_LDATE_AND_TIME, CIEC_TIME> {
         typedef CIEC_LDATE_AND_TIME type;
         get_add_operator_result_type() = delete;
       };
@@ -612,7 +648,31 @@ namespace forte {
       };
 
       template <>
+      struct get_sub_operator_result_type<CIEC_DATE, CIEC_LDATE> {
+        typedef CIEC_LTIME type;
+        get_sub_operator_result_type() = delete;
+      };
+
+      template <>
+      struct get_sub_operator_result_type<CIEC_LDATE, CIEC_DATE> {
+        typedef CIEC_LTIME type;
+        get_sub_operator_result_type() = delete;
+      };
+
+      template <>
       struct get_sub_operator_result_type<CIEC_LTIME_OF_DAY, CIEC_LTIME> {
+        typedef CIEC_LTIME_OF_DAY type;
+        get_sub_operator_result_type() = delete;
+      };
+
+      template <>
+      struct get_sub_operator_result_type<CIEC_TIME_OF_DAY, CIEC_LTIME> {
+        typedef CIEC_LTIME_OF_DAY type;
+        get_sub_operator_result_type() = delete;
+      };
+
+      template <>
+      struct get_sub_operator_result_type<CIEC_LTIME_OF_DAY, CIEC_TIME> {
         typedef CIEC_LTIME_OF_DAY type;
         get_sub_operator_result_type() = delete;
       };
@@ -624,13 +684,49 @@ namespace forte {
       };
 
       template <>
+      struct get_sub_operator_result_type<CIEC_TIME_OF_DAY, CIEC_LTIME_OF_DAY> {
+        typedef CIEC_LTIME type;
+        get_sub_operator_result_type() = delete;
+      };
+
+      template <>
+      struct get_sub_operator_result_type<CIEC_LTIME_OF_DAY, CIEC_TIME_OF_DAY> {
+        typedef CIEC_LTIME type;
+        get_sub_operator_result_type() = delete;
+      };
+
+      template <>
       struct get_sub_operator_result_type<CIEC_LDATE_AND_TIME, CIEC_LTIME> {
         typedef CIEC_LDATE_AND_TIME type;
         get_sub_operator_result_type() = delete;
       };
 
       template <>
+      struct get_sub_operator_result_type<CIEC_DATE_AND_TIME, CIEC_LTIME> {
+        typedef CIEC_LDATE_AND_TIME type;
+        get_sub_operator_result_type() = delete;
+      };
+
+      template <>
+      struct get_sub_operator_result_type<CIEC_LDATE_AND_TIME, CIEC_TIME> {
+        typedef CIEC_LDATE_AND_TIME type;
+        get_sub_operator_result_type() = delete;
+      };
+
+      template <>
       struct get_sub_operator_result_type<CIEC_LDATE_AND_TIME, CIEC_LDATE_AND_TIME> {
+        typedef CIEC_LTIME type;
+        get_sub_operator_result_type() = delete;
+      };
+
+      template <>
+      struct get_sub_operator_result_type<CIEC_DATE_AND_TIME, CIEC_LDATE_AND_TIME> {
+        typedef CIEC_LTIME type;
+        get_sub_operator_result_type() = delete;
+      };
+
+      template <>
+      struct get_sub_operator_result_type<CIEC_LDATE_AND_TIME, CIEC_DATE_AND_TIME> {
         typedef CIEC_LTIME type;
         get_sub_operator_result_type() = delete;
       };
