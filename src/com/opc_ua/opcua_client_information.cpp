@@ -166,6 +166,8 @@ UA_StatusCode CUA_ClientInformation::executeRead(CActionInfo& paActionInfo) {
   if(UA_STATUSCODE_GOOD != retVal) {
     DEVLOG_ERROR("[OPC UA CLIENT]: Couldn't dispatch read action for FB %s. Error: %s\n", paActionInfo.getLayer().getCommFB()->getInstanceName(), UA_StatusCode_name(retVal));
     delete remoteCallHandle;
+    mNeedsReconnection = false;
+    retVal = handleClientState(); //force a reconnection
   } else {
     addAsyncCall();
   }
@@ -205,6 +207,8 @@ UA_StatusCode CUA_ClientInformation::executeWrite(CActionInfo& paActionInfo) {
   if(UA_STATUSCODE_GOOD != retVal) {
     DEVLOG_ERROR("[OPC UA CLIENT]: Couldn't dispatch write action for FB %s. Error: %s\n", paActionInfo.getLayer().getCommFB()->getInstanceName(), UA_StatusCode_name(retVal));
     delete remoteCallHandle;
+    mNeedsReconnection = false;
+    retVal = handleClientState(); //force a reconnection
   } else {
     addAsyncCall();
   }
