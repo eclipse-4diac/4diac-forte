@@ -141,3 +141,4 @@ void CIEC_ANY::specialCast(const CIEC_ANY &paSrcValue, CIEC_ANY &paDstValue){
       break;
   }
 }
+
