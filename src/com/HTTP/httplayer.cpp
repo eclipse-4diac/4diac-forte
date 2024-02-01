@@ -1,7 +1,8 @@
 /*******************************************************************************
- * Copyright (c) 2017, 2023 Marc Jakobi, github.com/MrcJkb
+ * Copyright (c) 2017, 2023, 2024 Marc Jakobi, github.com/MrcJkb
  *                          fortiss GmbH
  *                          Primetals Technologies Austria GmbH
+ *                          OFFIS e.V.
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -12,6 +13,7 @@
  *    Marc Jakobi - initial implementation for HTTP clients
  *    Jose Cabral - Merge old HTTPIpLayer to this one and use CIEC_STRING
  *    Martin Melik Merkumians - change CIEC_STRING to std::string
+ *    Malte Grave - fixed the handleHTTPResponse output
  ********************************************************************************/
 
 #include "httplayer.h"
@@ -354,8 +356,8 @@ EComResponse CHttpComLayer::handleHTTPResponse(char *paData) {
     std::string responseCode;
     std::string output;
     CHttpParser::parseResponse(output, responseCode, paData) ? eRetVal = e_ProcessDataOk : eRetVal = e_ProcessDataRecvFaild;
-    apoRDs[0]->fromString(responseCode.c_str());
-    apoRDs[1]->fromString(output.c_str());
+    apoRDs[0]->setValue(CIEC_STRING(responseCode));
+    apoRDs[1]->setValue(CIEC_STRING(output));
   } else {
     DEVLOG_ERROR("[HTTP Layer] No FB defined\n");
   }
