@@ -76,6 +76,8 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "Win32")
   elseif(MSVC)
     forte_add_definition("-wd4595")  #warning 4595: 'operator delete/delete[]': non-member operator new or delete functions may not be declared inline
     forte_add_definition("-wd4290")  #warning 4290: C++ exception specification ignored except to indicate a function is not __declspec(nothrow). A function is declared using exception specification, which Visual C++ accepts but does not implement. (from new/delete warning)
+    forte_add_definition("-DWIN32_LEAN_AND_MEAN")
+    forte_add_definition("-DNOMINMAX")
   endif()
   
   forte_add_definition("-D_CRT_SECURE_NO_DEPRECATE")
@@ -83,6 +85,7 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "Win32")
   forte_add_definition("-D_SCL_SECURE_NO_WARNINGS")
   forte_add_definition("-D_CRT_SECURE_NO_WARNINGS")
   forte_add_definition("-D_NO_W32_PSEUDO_MODIFIERS")   #takes care of IN, OUT and OPTIONAL in mingw
+  
 
   
   if(FORTE_TESTS AND FORTE_USE_TEST_CONFIG_IN_FORTE)

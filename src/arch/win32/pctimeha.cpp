@@ -11,7 +11,6 @@
  *******************************************************************************/
 #include "pctimeha.h"
 #include "../../core/devexec.h"
-#define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 
 const TForteInt32 CPCTimerHandler::csmTicksPerSecond = 1000;
