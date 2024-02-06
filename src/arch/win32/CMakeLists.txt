@@ -76,10 +76,10 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "Win32")
   elseif(MSVC)
     forte_add_definition("-wd4595")  #warning 4595: 'operator delete/delete[]': non-member operator new or delete functions may not be declared inline
     forte_add_definition("-wd4290")  #warning 4290: C++ exception specification ignored except to indicate a function is not __declspec(nothrow). A function is declared using exception specification, which Visual C++ accepts but does not implement. (from new/delete warning)
-    forte_add_definition("-DWIN32_LEAN_AND_MEAN")
-    forte_add_definition("-DNOMINMAX")
+    forte_add_definition("-DNOMINMAX")  #needed that windows.h is not adding macros for MIN and MAX
   endif()
   
+  forte_add_definition("-DWIN32_LEAN_AND_MEAN")  # needed for windows.h
   forte_add_definition("-D_CRT_SECURE_NO_DEPRECATE")
   forte_add_definition("-D_CRT_NONSTDC_NO_DEPRECATE")
   forte_add_definition("-D_SCL_SECURE_NO_WARNINGS")
