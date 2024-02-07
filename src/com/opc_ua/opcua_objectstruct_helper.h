@@ -127,6 +127,8 @@ class COPC_UA_ObjectStruct_Helper {
 
      static char smEmptyLocale[];
 
+     std::vector<char*> mStructTypeNames;
+
     /**
      * Pointer to ActionInfo for created OPC UA Struct Object Node
      */
@@ -184,8 +186,8 @@ class COPC_UA_ObjectStruct_Helper {
      */
     static std::string getStructMemberBrowsePath(std::string &paBrowsePathPrefix, const CStringDictionary::TStringId structMemberNameId);
 
-    static bool defineOPCUAStructTypeNode(UA_Server *paServer, UA_NodeId &paNodeId, const std::string &paStructTypeName);
+    bool defineOPCUAStructTypeNode(UA_Server *paServer, UA_NodeId &paNodeId, const std::string &paStructTypeName);
 
-    static bool addOPCUAStructTypeComponent(UA_Server *paServer, UA_NodeId &paParentNodeId, CIEC_ANY *paStructMember, const std::string &paStructMemberName);
+    bool addOPCUAStructTypeComponent(UA_Server *paServer, UA_NodeId &paParentNodeId, CIEC_ANY *paStructMember, const std::string &paStructMemberName);
 
 };
