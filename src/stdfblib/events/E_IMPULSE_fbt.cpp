@@ -1,10 +1,10 @@
-/*************************************************************************
- *** Copyright (c) 2023 HR Agrartechnik GmbH
- *** This program and the accompanying materials are made available under the
- *** terms of the Eclipse Public License 2.0 which is available at
- *** http://www.eclipse.org/legal/epl-2.0.
- ***
- *** SPDX-License-Identifier: EPL-2.0
+/*************************************************************************  
+ *** Copyright (c) 2012, 2023 TU Wien ACIN, HR Agrartechnik GmbH  
+ *** This program and the accompanying materials are made available under the  
+ *** terms of the Eclipse Public License 2.0 which is available at  
+ *** http://www.eclipse.org/legal/epl-2.0.  
+ ***  
+ *** SPDX-License-Identifier: EPL-2.0  
  ***
  *** This file was generated using the 4DIAC FORTE Export Filter V1.0.x NG!
  ***
@@ -14,9 +14,9 @@
  ***     1.0: 2023-08-21/Franz Höpfinger - HR Agrartechnik GmbH -
  *************************************************************************/
 
-#include "E_IMPULSE.h"
+#include "E_IMPULSE_fbt.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "E_IMPULSE_gen.cpp"
+#include "E_IMPULSE_fbt_gen.cpp"
 #endif
 
 #include "criticalregion.h"
@@ -29,13 +29,13 @@ const CStringDictionary::TStringId FORTE_E_IMPULSE::scmDataInputTypeIds[] = {g_n
 const CStringDictionary::TStringId FORTE_E_IMPULSE::scmDataOutputNames[] = {g_nStringIdQO};
 const CStringDictionary::TStringId FORTE_E_IMPULSE::scmDataOutputTypeIds[] = {g_nStringIdBOOL};
 const TDataIOID FORTE_E_IMPULSE::scmEIWith[] = {0, scmWithListDelimiter};
-const TForteInt16 FORTE_E_IMPULSE::scmEIWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_E_IMPULSE::scmEventInputNames[] = {g_nStringIdREQ};
+const TForteInt16 FORTE_E_IMPULSE::scmEIWithIndexes[] = {0, -1};
+const CStringDictionary::TStringId FORTE_E_IMPULSE::scmEventInputNames[] = {g_nStringIdREQ, g_nStringIdR};
 const TDataIOID FORTE_E_IMPULSE::scmEOWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_E_IMPULSE::scmEOWithIndexes[] = {0};
 const CStringDictionary::TStringId FORTE_E_IMPULSE::scmEventOutputNames[] = {g_nStringIdCNF};
 const SFBInterfaceSpec FORTE_E_IMPULSE::scmFBInterfaceSpec = {
-  1, scmEventInputNames, scmEIWith, scmEIWithIndexes,
+  2, scmEventInputNames, scmEIWith, scmEIWithIndexes,
   1, scmEventOutputNames, scmEOWith, scmEOWithIndexes,
   1, scmDataInputNames, scmDataInputTypeIds,
   1, scmDataOutputNames, scmDataOutputTypeIds,
@@ -66,10 +66,12 @@ const SCFB_FBConnectionData FORTE_E_IMPULSE::scmEventConnections[] = {
   {GENERATE_CONNECTION_PORT_ID_1_ARG(g_nStringIdREQ), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdE_DELAY, g_nStringIdSTART), 0},
   {GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdE_DELAY, g_nStringIdEO), 0, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdE_SR, g_nStringIdR), 1},
   {GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdE_SR, g_nStringIdEO), 1, GENERATE_CONNECTION_PORT_ID_1_ARG(g_nStringIdCNF), -1},
+  {GENERATE_CONNECTION_PORT_ID_1_ARG(g_nStringIdR), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdE_DELAY, g_nStringIdSTOP), 0},
 };
 
 const SCFB_FBFannedOutConnectionData FORTE_E_IMPULSE::scmFannedOutEventConnections[] = {
   {0, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdE_SR, g_nStringIdS), 1},
+  {3, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdE_SR, g_nStringIdR), 1},
 };
 
 const SCFB_FBConnectionData FORTE_E_IMPULSE::scmDataConnections[] = {
@@ -79,8 +81,8 @@ const SCFB_FBConnectionData FORTE_E_IMPULSE::scmDataConnections[] = {
 
 const SCFB_FBNData FORTE_E_IMPULSE::scmFBNData = {
   2, scmInternalFBs,
-  3, scmEventConnections,
-  1, scmFannedOutEventConnections,
+  4, scmEventConnections,
+  2, scmFannedOutEventConnections,
   2, scmDataConnections,
   0, nullptr,
   0, nullptr,
@@ -153,6 +155,4 @@ CDataConnection *FORTE_E_IMPULSE::getDOConUnchecked(const TPortId paIndex) {
   }
   return nullptr;
 }
-
-
 
