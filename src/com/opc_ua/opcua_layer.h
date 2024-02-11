@@ -120,23 +120,6 @@ class COPC_UA_Layer : public forte::com_infra::CComLayer {
     bool checkPortConnectionInfo(unsigned int paPortIndex, bool paIsSD) const;
 
     /**
-     * Get the remote data input/output
-     * @param paResult Place to store the pointer to the result
-     * @param paRemoteConnectionPoint Connection point of the other end
-     * @param paIsSD True if the local port is an SD, false otherwise
-     * @return True if no problem occurred, false otherwise
-     */
-    bool getRemoteAny(CIEC_ANY **paResult, const CConnectionPoint &paRemoteConnectionPoint, bool paIsSD) const;
-
-    /**
-     * RDs can have many output connections to different data input. This function checks if all output connections have the same type
-     * @param paPortConnection Local port connection to be checked
-     * @param paRemoteType Type of the remote end if all output connections are the same
-     * @return True if all output connections are the same and valid, fall otherwise
-     */
-    bool checkFanOutTypes(const CDataConnection &paPortConnection, CIEC_ANY **paRemoteType) const;
-
-    /**
      * The following functions and variables are used because if many subscription are present in one FB, and all of them are updated,
      * we'll get one external event for each, when only one is needed.
      * TODO: this is a quick fix. This is a problem for any FB which has many RDs, meaning that if any of the RDs changes, an IND is triggered. It's not wrong,

@@ -80,16 +80,10 @@ FailingServer;<Request ID="79" Action="CREATE"><FB Name="WrongPath" Type="TEST_C
 FailingServer;<Request ID="80" Action="CREATE"><FB Name="BOOL2BOOL_3_1_1" Type="DINT2DINT" /></Request>
 FailingServer;<Request ID="81" Action="CREATE"><FB Name="BOOL2BOOL_3_2_1_1" Type="DINT2DINT" /></Request>
 FailingServer;<Request ID="82" Action="CREATE"><FB Name="F_NOT_1_2_1_1_1_1" Type="F_NOT" /></Request>
-FailingServer;<Request ID="83" Action="CREATE"><FB Name="SUBSCRIBE_150" Type="SUBSCRIBE_1" /></Request>
-FailingServer;<Request ID="84" Action="WRITE"><Connection Source="1" Destination="SUBSCRIBE_150.QI" /></Request>
-FailingServer;<Request ID="85" Action="WRITE"><Connection Source="opc_ua[READ;/Objects/firstRead/ByteStringNodeId/folderTests/WithId,1:b=byteStringNodeId]" Destination="SUBSCRIBE_150.ID" /></Request>
 FailingServer;<Request ID="86" Action="CREATE"><FB Name="UnconnectedRD" Type="TEST_CONDITION" /></Request>
 FailingServer;<Request ID="87" Action="CREATE"><FB Name="UnconnectedSD" Type="TEST_CONDITION" /></Request>
-FailingServer;<Request ID="88" Action="CREATE"><FB Name="BOOL2BOOL_3_2_1" Type="DINT2DINT" /></Request>
 FailingServer;<Request ID="89" Action="CREATE"><FB Name="STRING2STRING_1" Type="STRING2STRING" /></Request>
 FailingServer;<Request ID="90" Action="CREATE"><FB Name="F_NOT_1" Type="F_NOT" /></Request>
-FailingServer;<Request ID="91" Action="CREATE"><FB Name="F_NOT_1_2_1_1_1" Type="F_NOT" /></Request>
-FailingServer;<Request ID="92" Action="CREATE"><FB Name="DifferentTypesOutput" Type="TEST_CONDITION" /></Request>
 FailingServer;<Request ID="93" Action="CREATE"><FB Name="SUBSCRIBE_140" Type="SUBSCRIBE_2" /></Request>
 FailingServer;<Request ID="94" Action="WRITE"><Connection Source="1" Destination="SUBSCRIBE_140.QI" /></Request>
 FailingServer;<Request ID="95" Action="WRITE"><Connection Source="opc_ua[READ;/Objects/firstRead/StringNodeId/folderTests/WithId,1:s=hello;/Objects/firstRead/ByteStringNodeId/folderTests/sameFolder/WithId,1:b=byteStringNodeId1;/Objects/firstRead/ByteStringNodeId/folderTests/sameFolder/WithId1,1:b=byteStringNodeId2]" Destination="SUBSCRIBE_140.ID" /></Request>
@@ -109,7 +103,6 @@ FailingServer;<Request ID="108" Action="CREATE"><FB Name="Writable1_2" Type="SUB
 FailingServer;<Request ID="109" Action="WRITE"><Connection Source="1" Destination="Writable1_2.QI" /></Request>
 FailingServer;<Request ID="110" Action="WRITE"><Connection Source="opc_ua[READ;/Objects/firstRead/StringNodeId/folderTests/WithId,1:s=helloRead]" Destination="Writable1_2.ID" /></Request>
 FailingServer;<Request ID="111" Action="CREATE"><FB Name="BOOL2BOOL_3_3" Type="DINT2DINT" /></Request>
-FailingServer;<Request ID="112" Action="CREATE"><FB Name="STRING2STRING" Type="INT2INT" /></Request>
 FailingServer;<Request ID="113" Action="CREATE"><FB Name="BOOL2BOOL_3_2_1_2" Type="DINT2DINT" /></Request>
 FailingServer;<Request ID="114" Action="CREATE"><FB Name="SameTypesOutput" Type="TEST_CONDITION" /></Request>
 FailingServer;<Request ID="115" Action="CREATE"><FB Name="SUBSCRIBE_150_1" Type="SUBSCRIBE_1" /></Request>
@@ -368,10 +361,8 @@ FailingServer;<Request ID="367" Action="CREATE"><Connection Source="F_NOT_1_2_1_
 FailingServer;<Request ID="368" Action="CREATE"><Connection Source="SUBSCRIBE_wrongPath.INITO" Destination="F_NOT_1_2_1.REQ" /></Request>
 FailingServer;<Request ID="369" Action="CREATE"><Connection Source="F_NOT_1_2_1.CNF" Destination="WrongPath.REQ" /></Request>
 FailingServer;<Request ID="370" Action="CREATE"><Connection Source="Writable1_1_1.INITO" Destination="SameNameDifferentNodeIdW.REQ" /></Request>
-FailingServer;<Request ID="371" Action="CREATE"><Connection Source="DoubleMethod.CNF" Destination="SUBSCRIBE_150.INIT" /></Request>
+FailingServer;<Request ID="371" Action="CREATE"><Connection Source="DoubleMethod.CNF" Destination="SUBSCRIBE_150_1.INIT" /></Request>
 FailingServer;<Request ID="372" Action="CREATE"><Connection Source="F_NOT_1.CNF" Destination="UnconnectedSD.REQ" /></Request>
-FailingServer;<Request ID="373" Action="CREATE"><Connection Source="SUBSCRIBE_150.INITO" Destination="F_NOT_1_2_1_1_1.REQ" /></Request>
-FailingServer;<Request ID="374" Action="CREATE"><Connection Source="F_NOT_1_2_1_1_1.CNF" Destination="DifferentTypesOutput.REQ" /></Request>
 FailingServer;<Request ID="375" Action="CREATE"><Connection Source="F_NOT_1_2_1_1_1_1.CNF" Destination="UnconnectedRD.REQ" /></Request>
 FailingServer;<Request ID="376" Action="CREATE"><Connection Source="SUBSCRIBE_140.INITO" Destination="F_NOT_1_2_1_1_1_1.REQ" /></Request>
 FailingServer;<Request ID="377" Action="CREATE"><Connection Source="UnconnectedRD.CNF" Destination="Writable1_1_2.INIT" /></Request>
@@ -391,7 +382,6 @@ FailingServer;<Request ID="390" Action="CREATE"><Connection Source="Writable1_2.
 FailingServer;<Request ID="391" Action="CREATE"><Connection Source="SameNameDifferentNodeIdR.CNF" Destination="Writable1_1_1.INIT" /></Request>
 FailingServer;<Request ID="392" Action="CREATE"><Connection Source="SameNameDifferentNodeIdW.CNF" Destination="SUBSCRIBE_1_1.INIT" /></Request>
 FailingServer;<Request ID="393" Action="CREATE"><Connection Source="SameTypesOutput.CNF" Destination="SUBSCRIBE_140.INIT" /></Request>
-FailingServer;<Request ID="394" Action="CREATE"><Connection Source="DifferentTypesOutput.CNF" Destination="SUBSCRIBE_150_1.INIT" /></Request>
 FailingServer;<Request ID="395" Action="CREATE"><Connection Source="SUBSCRIBE_150_1.INITO" Destination="SameTypesOutput.REQ" /></Request>
 FailingServer;<Request ID="396" Action="CREATE"><Connection Source="F_NOT_1_2_1_2_1.CNF" Destination="wrongNamespace1.REQ" /></Request>
 FailingServer;<Request ID="397" Action="CREATE"><Connection Source="SUBSCRIBE_NoObject_1.INITO" Destination="F_NOT_1_2_1_2_1.REQ" /></Request>
@@ -470,10 +460,7 @@ FailingServer;<Request ID="469" Action="CREATE"><Connection Source="SUBSCRIBE_wr
 FailingServer;<Request ID="470" Action="CREATE"><Connection Source="F_NOT_1_2_1.OUT" Destination="WrongPath.check" /></Request>
 FailingServer;<Request ID="471" Action="CREATE"><Connection Source="SUBSCRIBE_1_1_1_1.RD_1" Destination="BOOL2BOOL_3_1_1.IN" /></Request>
 FailingServer;<Request ID="472" Action="CREATE"><Connection Source="Writable1_1_1.QO" Destination="SameNameDifferentNodeIdW.check" /></Request>
-FailingServer;<Request ID="473" Action="CREATE"><Connection Source="SUBSCRIBE_150.RD_1" Destination="BOOL2BOOL_3_2_1.IN" /></Request>
 FailingServer;<Request ID="474" Action="CREATE"><Connection Source="F_NOT_1.OUT" Destination="UnconnectedSD.check" /></Request>
-FailingServer;<Request ID="475" Action="CREATE"><Connection Source="SUBSCRIBE_150.QO" Destination="F_NOT_1_2_1_1_1.IN" /></Request>
-FailingServer;<Request ID="476" Action="CREATE"><Connection Source="F_NOT_1_2_1_1_1.OUT" Destination="DifferentTypesOutput.check" /></Request>
 FailingServer;<Request ID="477" Action="CREATE"><Connection Source="F_NOT_1_2_1_1_1_1.OUT" Destination="UnconnectedRD.check" /></Request>
 FailingServer;<Request ID="478" Action="CREATE"><Connection Source="SUBSCRIBE_140.QO" Destination="F_NOT_1_2_1_1_1_1.IN" /></Request>
 FailingServer;<Request ID="479" Action="CREATE"><Connection Source="SUBSCRIBE_140.RD_1" Destination="BOOL2BOOL_3_2_1_1.IN" /></Request>
@@ -486,7 +473,6 @@ FailingServer;<Request ID="485" Action="CREATE"><Connection Source="F_EQ.OUT" De
 FailingServer;<Request ID="486" Action="CREATE"><Connection Source="BOOL2BOOL_3_1_1.OUT" Destination="F_EQ.IN1" /></Request>
 FailingServer;<Request ID="487" Action="CREATE"><Connection Source="Writable1_2.QO" Destination="SameNameDifferentNodeIdR.check" /></Request>
 FailingServer;<Request ID="488" Action="CREATE"><Connection Source="Writable1_2.RD_1" Destination="BOOL2BOOL_3_3.IN" /></Request>
-FailingServer;<Request ID="489" Action="CREATE"><Connection Source="SUBSCRIBE_150.RD_1" Destination="STRING2STRING.IN" /></Request>
 FailingServer;<Request ID="490" Action="CREATE"><Connection Source="E_SR.Q" Destination="HandleInitLocal.F_BOOL_TO_UINT.IN" /></Request>
 FailingServer;<Request ID="491" Action="CREATE"><Connection Source="E_SR.Q" Destination="HandleInitLocal.InitFinished.QI" /></Request>
 FailingServer;<Request ID="492" Action="CREATE"><Connection Source="E_SR.Q" Destination="HandleInitLocal.SUBSCRIBE_0.QI" /></Request>
