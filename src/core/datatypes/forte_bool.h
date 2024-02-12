@@ -29,9 +29,12 @@ class CIEC_BOOL : public CIEC_ANY_BIT{
 
   public:
     using TValueType = bool;
+    [[deprecated("Please use the corresponding numeric_limits template")]]
     constexpr static size_t scmBitLength = 1U;
 
+    [[deprecated("Please use the corresponding numeric_limits template")]] 
     static constexpr TValueType scmMinVal = std::numeric_limits<TValueType>::min();
+    [[deprecated("Please use the corresponding numeric_limits template")]]
     static constexpr TValueType scmMaxVal = std::numeric_limits<TValueType>::max();
 
     CIEC_BOOL() {
@@ -103,6 +106,13 @@ const CIEC_BOOL false_BOOL = CIEC_BOOL(false);
 
 inline CIEC_BOOL operator ""_BOOL(unsigned long long int paValue) {
   return CIEC_BOOL(paValue);
+}
+
+namespace std {
+  template <>
+  struct numeric_limits<CIEC_BOOL> : public forte::templates::numeric_limits<CIEC_BOOL> {
+    static constexpr size_t bitLength = 1U;
+  };
 }
 
 #endif /*_FORTE_BOOL_H_*/

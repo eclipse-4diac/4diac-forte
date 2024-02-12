@@ -30,8 +30,11 @@
 class CIEC_TIME_OF_DAY final : public CIEC_ANY_DATE{
   DECLARE_FIRMWARE_DATATYPE(TIME_OF_DAY)
   public:
+    [[deprecated("Please use the corresponding numeric_limits template")]]
     constexpr static size_t scmBitLength = 64U;
+    [[deprecated("Please use the corresponding numeric_limits template")]]
     static constexpr TValueType scmMinVal = std::numeric_limits<TValueType>::min();
+    [[deprecated("Please use the corresponding numeric_limits template")]]
     static constexpr TValueType scmMaxVal = std::numeric_limits<TValueType>::max();
     
     CIEC_TIME_OF_DAY() = default;
@@ -97,6 +100,13 @@ class CIEC_TIME_OF_DAY final : public CIEC_ANY_DATE{
 
 inline CIEC_TIME_OF_DAY operator ""_TIME_OF_DAY(unsigned long long int paValue) {
   return CIEC_TIME_OF_DAY(static_cast<CIEC_TIME_OF_DAY::TValueType>(paValue));
+}
+
+namespace std {
+  template <>
+  struct numeric_limits<CIEC_TIME_OF_DAY> : public forte::templates::numeric_limits<CIEC_TIME_OF_DAY> {
+    static constexpr size_t bitLength = 64U;
+  };
 }
 
 #endif /*_FORTE_TOD_H_*/

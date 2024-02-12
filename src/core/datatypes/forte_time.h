@@ -33,8 +33,11 @@ class CIEC_TIME final : public CIEC_ANY_DURATION {
     static constexpr char csmZeroNanoSecondTimeValue[] = "T#0ns";
 
   public:
+    [[deprecated("Please use the corresponding numeric_limits template")]]
     constexpr static size_t scmBitLength = 64U;
+    [[deprecated("Please use the corresponding numeric_limits template")]]
     static constexpr TValueType scmMinVal = std::numeric_limits<TValueType>::min();
+    [[deprecated("Please use the corresponding numeric_limits template")]]
     static constexpr TValueType scmMaxVal = std::numeric_limits<TValueType>::max();
     
     CIEC_TIME() = default;
@@ -112,6 +115,13 @@ class CIEC_TIME final : public CIEC_ANY_DURATION {
 
 inline CIEC_TIME operator ""_TIME(unsigned long long int paValue) {
   return CIEC_TIME(static_cast<CIEC_TIME::TValueType>(paValue));
+}
+
+namespace std {
+  template <>
+  struct numeric_limits<CIEC_TIME> : public forte::templates::numeric_limits<CIEC_TIME> {
+    static constexpr size_t bitLength = 64U;
+  };
 }
 
 #endif /*_FORTE_TIME_H_*/

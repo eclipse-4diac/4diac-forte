@@ -32,9 +32,11 @@ class CIEC_UDINT final : public CIEC_ANY_UNSIGNED {
 
   public:
     using TValueType = TForteUInt32;
+    [[deprecated("Please use the corresponding numeric_limits template")]]
     constexpr static size_t scmBitLength = 32U;
-
+    [[deprecated("Please use the corresponding numeric_limits template")]]
     static constexpr TValueType scmMinVal = std::numeric_limits<TValueType>::min();
+    [[deprecated("Please use the corresponding numeric_limits template")]]
     static constexpr TValueType scmMaxVal = std::numeric_limits<TValueType>::max();
 
     CIEC_UDINT() = default;
@@ -98,6 +100,13 @@ class CIEC_UDINT final : public CIEC_ANY_UNSIGNED {
 
 inline CIEC_UDINT operator ""_UDINT(unsigned long long int paValue) {
   return CIEC_UDINT(static_cast<CIEC_UDINT::TValueType>(paValue));
+}
+
+namespace std {
+  template <>
+  struct numeric_limits<CIEC_UDINT> : public forte::templates::numeric_limits<CIEC_UDINT> {
+    static constexpr size_t bitLength = 32U;
+  };
 }
 
 #endif /*_FORTE_UDINT_H_*/
