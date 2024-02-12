@@ -25,6 +25,7 @@ class CIEC_WCHAR : public CIEC_ANY_CHAR {
 
   public:
     using TValueType = TForteWChar;
+    constexpr static size_t scmBitLength = 16U;
 
     static constexpr TValueType scmMinVal = std::numeric_limits<TValueType>::min();
     static constexpr TValueType scmMaxVal = std::numeric_limits<TValueType>::max();
