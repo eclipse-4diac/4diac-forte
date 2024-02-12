@@ -36,10 +36,13 @@ class CIEC_LINT final : public CIEC_ANY_SIGNED {
   DECLARE_FIRMWARE_DATATYPE(LINT)
 
   public:
-    typedef TForteInt64 TValueType;
+    using TValueType = TForteInt64;
+    [[deprecated("Please use the corresponding numeric_limits template")]]
     constexpr static size_t scmBitLength = 64U;
 
+    [[deprecated("Please use the corresponding numeric_limits template")]]
     static constexpr TValueType scmMinVal = std::numeric_limits<TValueType>::min();
+    [[deprecated("Please use the corresponding numeric_limits template")]]
     static constexpr TValueType scmMaxVal = std::numeric_limits<TValueType>::max();
 
     CIEC_LINT() = default;
@@ -127,6 +130,13 @@ class CIEC_LINT final : public CIEC_ANY_SIGNED {
 
 inline CIEC_LINT operator ""_LINT(unsigned long long int paValue) {
   return CIEC_LINT(static_cast<CIEC_LINT::TValueType>(paValue));
+}
+
+namespace std {
+  template <>
+  struct numeric_limits<CIEC_LINT> : public forte::templates::numeric_limits<CIEC_LINT> {
+    static constexpr size_t bitLength = 64U;
+  };
 }
 
 #endif /*_FORTE_LINT_H_*/

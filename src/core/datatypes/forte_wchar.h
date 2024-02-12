@@ -25,9 +25,11 @@ class CIEC_WCHAR : public CIEC_ANY_CHAR {
 
   public:
     using TValueType = TForteWChar;
+    [[deprecated("Please use the corresponding numeric_limits template")]]
     constexpr static size_t scmBitLength = 16U;
-
+    [[deprecated("Please use the corresponding numeric_limits template")]]
     static constexpr TValueType scmMinVal = std::numeric_limits<TValueType>::min();
+    [[deprecated("Please use the corresponding numeric_limits template")]]
     static constexpr TValueType scmMaxVal = std::numeric_limits<TValueType>::max();
 
     CIEC_WCHAR() = default;
@@ -78,6 +80,13 @@ inline CIEC_WCHAR operator ""_WCHAR(char16_t paValue) {
 
 inline CIEC_WCHAR operator ""_WCHAR(unsigned long long int paValue) {
   return CIEC_WCHAR(static_cast<CIEC_WCHAR::TValueType>(paValue));
+}
+
+namespace std {
+  template <>
+  struct numeric_limits<CIEC_WCHAR> : public forte::templates::numeric_limits<CIEC_WCHAR> {
+    static constexpr size_t bitLength = 16U;
+  };
 }
 
 #endif /*_FORTE_WCHAR_H_*/

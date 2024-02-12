@@ -28,6 +28,7 @@
 class CIEC_DATE_AND_TIME final : public CIEC_ANY_DATE {
     DECLARE_FIRMWARE_DATATYPE(DATE_AND_TIME)
   public:
+    [[deprecated("Please use the corresponding numeric_limits template")]]
     constexpr static size_t scmBitLength = 64U;
 
     CIEC_DATE_AND_TIME() = default;
@@ -108,6 +109,13 @@ inline bool operator!=(const CIEC_DATE_AND_TIME left, const CIEC_DATE_AND_TIME &
 
 inline CIEC_DATE_AND_TIME operator ""_DATE_AND_TIME(unsigned long long int paValue) {
   return CIEC_DATE_AND_TIME(static_cast<CIEC_DATE_AND_TIME::TValueType>(paValue));
+}
+
+namespace std {
+  template <>
+  struct numeric_limits<CIEC_DATE_AND_TIME> : public forte::templates::numeric_limits<CIEC_DATE_AND_TIME> {
+    static constexpr size_t bitLength = 64U;
+  };
 }
 
 #endif /*_FORTE_DATE_AND_TIME_H_*/
