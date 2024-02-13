@@ -20,11 +20,10 @@
 #endif
 
 #include "../../arch/timerha.h"
-#include <string.h>
-#include <stdio.h>
-#include <ctype.h>
+#include <cstring>
+#include <cstdio>
+#include <cctype>
 #include "forte_constants.h"
-#include "forte_lint.h"
 
 DEFINE_FIRMWARE_DATATYPE(LTIME, g_nStringIdLTIME)
 
@@ -122,23 +121,21 @@ int CIEC_LTIME::fromString(const char *paValue) {
 
   setLargestInt(nIntVal);
   return nRetVal;
-
 }
 
-int CIEC_LTIME::toString(char *paValue, size_t paBufferSize) const
-{
+int CIEC_LTIME::toString(char *paValue, size_t paBufferSize) const {
   int nSize = 0;
   int nRetVal = -1;
   if(paBufferSize > 4) {
     TValueType timeValNano = static_cast<TValueType>(*this);
 
     //  generate the correct string for the min value
-    if(timeValNano == std::numeric_limits<CIEC_LTIME::TValueType>::min()) {
-      if(paBufferSize < sizeof(csmMinLTimeValue)) {
+    if(timeValNano == scmMinVal) {
+      if (paBufferSize < getToStringBufferSize()) {
         return -1;
       }
       strncpy(paValue, csmMinLTimeValue, paBufferSize);
-      return sizeof(csmMinLTimeValue) - 1;
+      return static_cast<int>(getToStringBufferSize() - 1U);
     }
 
     //  generate the correct string for 0ns
@@ -212,11 +209,10 @@ int CIEC_LTIME::toString(char *paValue, size_t paBufferSize) const
     } else {
       nRetVal +=nSize;
     }
- 
   }
+
   return nRetVal;
 }
-
 
 CIEC_LTIME::TValueType CIEC_LTIME::getInDays() const {
   return static_cast<TValueType>(*this) / static_cast<TValueType>(csmForteTimeBaseUnitsPerDay);

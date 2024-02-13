@@ -44,7 +44,7 @@ int CIEC_LREAL::fromString(const char *paValue){
   errno = 0;
   realval = strtod(pacRunner, &pcEnd);
 
-  if(pacRunner == pcEnd || !isfinite(realval) || errno != 0){
+  if(pacRunner == pcEnd || !std::isfinite(realval) || errno != 0){
     return -1;
   }
   setTDFLOAT((TForteDFloat) realval);

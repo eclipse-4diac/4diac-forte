@@ -39,7 +39,6 @@ size_t forte_fwrite(const void *ptr, size_t itemsize, size_t nitems, void* file)
 
 char* forte_fgets(char* str, int count, void* file);
 
-ssize_t forte_getline(char** lineptr, size_t* n, void* file);
 
 #ifdef __cplusplus
 }

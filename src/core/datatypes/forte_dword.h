@@ -40,10 +40,11 @@ class CIEC_DWORD : public CIEC_ANY_BIT {
   DECLARE_FIRMWARE_DATATYPE(DWORD)
 
   public:
-    typedef TForteDWord TValueType;
+    using TValueType = TForteDWord;
+    constexpr static size_t scmBitLength = 32U;
 
-    static constexpr TValueType scmMinVal = std::numeric_limits<CIEC_DWORD::TValueType>::min();
-    static constexpr TValueType scmMaxVal = std::numeric_limits<CIEC_DWORD::TValueType>::max();
+    static constexpr TValueType scmMinVal = std::numeric_limits<TValueType>::min();
+    static constexpr TValueType scmMaxVal = std::numeric_limits<TValueType>::max();
 
     CIEC_DWORD() = default;
 
@@ -106,7 +107,7 @@ class CIEC_DWORD : public CIEC_ANY_BIT {
 
     /*! \brief calculates buffer size needed for toString conversion
      */
-    constexpr size_t getToStringBufferSize() const override final {
+    size_t getToStringBufferSize() const override final {
       return sizeof("4294967295");
     }
 

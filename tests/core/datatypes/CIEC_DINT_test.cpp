@@ -90,14 +90,6 @@ BOOST_AUTO_TEST_CASE(Equality_test)
   BOOST_CHECK(nTest1.equals(nTest2));
 }
 
-BOOST_AUTO_TEST_CASE(ANY_INT_ASSIGNMENT_TEST) {
-  CIEC_ANY_INT anyInt(50);
-  CIEC_DINT test;
-
-  test = anyInt;
-  BOOST_TEST(50 == static_cast<CIEC_DINT::TValueType>(test));
-}
-
 BOOST_AUTO_TEST_CASE(Conversion_test)
 {
   CIEC_DINT nTest;

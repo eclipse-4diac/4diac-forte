@@ -29,18 +29,16 @@ class CIEC_ARRAY_VARIABLE;
 template<typename T, intmax_t lowerBound, intmax_t upperBound>
 class CIEC_ARRAY_FIXED : public CIEC_ARRAY_COMMON<T> {
 public:
+    constexpr static const size_t cmSize = upperBound - lowerBound + 1;
+
     using difference_type = std::ptrdiff_t;
     using value_type = typename CIEC_ARRAY_COMMON<T>::value_type;
     using pointer = typename CIEC_ARRAY_COMMON<T>::pointer;
     using const_pointer = typename CIEC_ARRAY_COMMON<T>::const_pointer;
     using reference = typename CIEC_ARRAY_COMMON<T>::reference;
     using const_reference = typename CIEC_ARRAY_COMMON<T>::const_reference;
-    using iterator = typename std::array<T, 0>::iterator;
-    using const_iterator = typename std::array<T, 0>::const_iterator;
-
-    using CIEC_ARRAY::at;
-    using CIEC_ARRAY::operator[];
-    using CIEC_ARRAY::operator=;
+    using iterator = typename std::array<T, cmSize>::iterator;
+    using const_iterator = typename std::array<T, cmSize>::const_iterator;
 
     using CIEC_ARRAY_COMMON<T>::at;
     using CIEC_ARRAY_COMMON<T>::operator[];
@@ -198,8 +196,6 @@ public:
     [[nodiscard]] constexpr const_reference operator[](intmax_t index) const override {
       return data[getDataArrayIndex(index)];
     }
-
-    constexpr static const size_t cmSize = upperBound - lowerBound + 1;
 
     [[nodiscard]] constexpr iterator begin() {
       return data.begin();

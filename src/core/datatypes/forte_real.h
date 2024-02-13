@@ -36,7 +36,10 @@ class CIEC_REAL final : public CIEC_ANY_REAL{
   DECLARE_FIRMWARE_DATATYPE(REAL)
 
   public:
-    typedef TForteFloat TValueType;
+    using TValueType = TForteFloat;
+    constexpr static size_t scmBitLength = 32U;
+    static constexpr TValueType scmMinVal = std::numeric_limits<TValueType>::min();
+    static constexpr TValueType scmMaxVal = std::numeric_limits<TValueType>::max();
 
     CIEC_REAL() = default;
 
@@ -111,7 +114,7 @@ class CIEC_REAL final : public CIEC_ANY_REAL{
 
     void setValue(const CIEC_ANY& paValue) override;
 
-    constexpr EDataTypeID getDataTypeID() const override {
+    EDataTypeID getDataTypeID() const override {
       return CIEC_ANY::e_REAL;
     }
 
@@ -139,7 +142,7 @@ class CIEC_REAL final : public CIEC_ANY_REAL{
 
     /*! \brief calculates buffer size needed for toString conversion
      */
-    constexpr size_t getToStringBufferSize() const override {
+    size_t getToStringBufferSize() const override {
       return sizeof("-1.175494351E-38"); // minimal float value (negative for additional sign)
     }
 

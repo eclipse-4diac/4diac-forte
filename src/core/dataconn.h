@@ -33,6 +33,8 @@ class CDataConnection : public CConnection {
 
     EMGMResponse disconnect(CFunctionBlock *paDstFB, CStringDictionary::TStringId paDstPortNameId) override;
 
+    void handleAnySrcPortConnection(const CIEC_ANY &paDstDataPoint);
+
     /*! \brief Write connection data value.
     *
     *   Write data value from FB data output to connection data variable.
@@ -86,8 +88,6 @@ class CDataConnection : public CConnection {
     static bool canBeConnected(const CIEC_ANY *paSrcDataPoint, const CIEC_ANY *paDstDataPoint);
 
     virtual EMGMResponse establishDataConnection(CFunctionBlock *paDstFB, TPortId paDstPortId, CIEC_ANY *paDstDataPoint);
-
-    void handleAnySrcPortConnection(const CIEC_ANY &paDstDataPoint);
 
     /*! \brief Value for storing the current data of the connection
      */

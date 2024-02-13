@@ -32,6 +32,9 @@ COPC_UA_ObjectStruct_Helper::COPC_UA_ObjectStruct_Helper(COPC_UA_Layer &paLayer,
 }
 
 COPC_UA_ObjectStruct_Helper::~COPC_UA_ObjectStruct_Helper() {
+  for(char* name: mStructTypeNames) {
+    delete[] name;
+  }
   mHandler = nullptr;
 }
 
@@ -82,6 +85,7 @@ bool COPC_UA_ObjectStruct_Helper::defineOPCUAStructTypeNode(UA_Server *paServer,
   char* structTypeName = new char[paStructTypeName.length() +1];
   strncpy(structTypeName, paStructTypeName.c_str(), paStructTypeName.length());
   structTypeName[paStructTypeName.length()] = '\0';
+  mStructTypeNames.push_back(structTypeName);
   paNodeId = UA_NODEID_NUMERIC(smOpcuaNamespaceIndex, 0);
   UA_ObjectTypeAttributes oAttr = UA_ObjectTypeAttributes_default;
   oAttr.displayName = UA_LOCALIZEDTEXT(smEmptyLocale, structTypeName);
@@ -102,6 +106,7 @@ bool COPC_UA_ObjectStruct_Helper::addOPCUAStructTypeComponent(UA_Server *paServe
   char* memberName = new char[paStructMemberName.length() +1];
   strncpy(memberName, paStructMemberName.c_str(), paStructMemberName.length());
   memberName[paStructMemberName.length()] = '\0';
+  mStructTypeNames.push_back(memberName);
   UA_VariableAttributes vAttr = UA_VariableAttributes_default;
     vAttr.displayName = UA_LOCALIZEDTEXT(smEmptyLocale, memberName);
     vAttr.valueRank = UA_VALUERANK_SCALAR;
@@ -254,8 +259,11 @@ forte::com_infra::EComResponse COPC_UA_ObjectStruct_Helper::initializeMemberActi
 bool COPC_UA_ObjectStruct_Helper::isOPCUAObjectPresent(std::string &paBrowsePath) {
   COPC_UA_Local_Handler* localHandler = static_cast<COPC_UA_Local_Handler*>(mHandler);
   if(localHandler) {
+    // CActionInfo::CNodePairInfo* nodePair = new CActionInfo::CNodePairInfo(nullptr, paBrowsePath);
     CActionInfo::CNodePairInfo nodePair(nullptr, paBrowsePath);
-    return localHandler->isOPCUAObjectPresent(nodePair);
+    bool retVal = localHandler->isOPCUAObjectPresent(nodePair);
+    if(nodePair.mNodeId) delete nodePair.mNodeId;
+    return retVal;
   } else {
     DEVLOG_ERROR("[OPC UA OBJECT STRUCT HELPER]: Failed to get LocalHandler because LocalHandler is null!\n");
   }

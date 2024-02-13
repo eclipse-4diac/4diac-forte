@@ -224,6 +224,11 @@ class CIEC_ANY {
          */
     virtual size_t getToStringBufferSize() const = 0;
 
+    virtual size_t getIECMemorySize() const {
+      const EDataTypeID typeId = getDataTypeID();
+      return typeId > (sizeof(csmDataLengthLookup) / sizeof(size_t)) ? 0 : csmDataLengthLookup[typeId];
+    }
+
 #ifdef FORTE_SUPPORT_CUSTOM_SERIALIZABLE_DATATYPES
     /*! \brief the following methods have to be implemented if a custom datatype is added to the forte which is not supported by the default seralize mechanism. */
     /*! \brief returns the required size for serialization */
@@ -502,6 +507,7 @@ class CIEC_ANY {
 
     UAnyData mAnyData;
 
+    constexpr static size_t csmDataLengthLookup[] = {0, 1, 1, 2, 4, 8, 1, 2, 4, 8, 1, 2, 4, 8, 8, 8, 8, 8, 8, 8, 8, 8, 1, 2, 4, 8, 0, 0, 0};
 };
 
 #endif /*_MANY_H_*/

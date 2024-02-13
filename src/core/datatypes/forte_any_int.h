@@ -28,11 +28,6 @@ class CIEC_ANY_INT : public CIEC_ANY_NUM{
 
     ~CIEC_ANY_INT() override = default;
 
-    CIEC_ANY *clone(TForteByte *) const override {
-      DEVLOG_ERROR("Attempt to call clone on CIEC_ANY_INT\n");
-      return nullptr;
-    }
-
     bool isSigned() const {
       return e_LINT >= getDataTypeID();
     }
@@ -54,11 +49,6 @@ class CIEC_ANY_INT : public CIEC_ANY_NUM{
      }
 
     CIEC_ANY_INT() = default;
-
-    size_t getToStringBufferSize() const {
-      DEVLOG_ERROR("Calling CIEC_ANY_INT getToStringBufferSize is invalid!\n");
-      return 0;
-    }
 };
 
 #endif /*_MANY_INT_H_*/

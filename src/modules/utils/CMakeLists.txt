@@ -23,3 +23,4 @@ forte_add_sourcefile_hcpp(FB_RANDOM GET_STRUCT_VALUE SET_STRUCT_VALUE)
 
 forte_add_sourcefile_hcpp(STEST_END)
 forte_add_sourcefile_hcpp(TEST_CONDITION)
+forte_add_subdirectory(Selection)

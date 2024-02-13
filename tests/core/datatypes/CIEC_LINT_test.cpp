@@ -74,14 +74,6 @@ BOOST_AUTO_TEST_CASE(Assignment_test)
   BOOST_CHECK_EQUAL(static_cast<CIEC_LINT::TValueType>(nTest2), -6548432101LL);
 }
 
-BOOST_AUTO_TEST_CASE(ANY_INT_ASSIGNMENT_TEST) {
-  CIEC_ANY_INT anyInt(50);
-  CIEC_LINT test;
-
-  test = anyInt;
-  BOOST_TEST(50 == static_cast<CIEC_LINT::TValueType>(test));
-}
-
 BOOST_AUTO_TEST_CASE(Conversion_test)
 {
   CIEC_LINT nTest;

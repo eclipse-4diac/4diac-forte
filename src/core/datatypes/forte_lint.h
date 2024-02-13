@@ -37,9 +37,10 @@ class CIEC_LINT final : public CIEC_ANY_SIGNED {
 
   public:
     typedef TForteInt64 TValueType;
+    constexpr static size_t scmBitLength = 64U;
 
-    static const TValueType scmMinVal;
-    static const TValueType scmMaxVal;
+    static constexpr TValueType scmMinVal = std::numeric_limits<TValueType>::min();
+    static constexpr TValueType scmMaxVal = std::numeric_limits<TValueType>::max();
 
     CIEC_LINT() = default;
 
@@ -115,11 +116,11 @@ class CIEC_LINT final : public CIEC_ANY_SIGNED {
 
     /*! \brief calculates buffer size needed for toString conversion
      */
-    constexpr size_t getToStringBufferSize() const override {
+    size_t getToStringBufferSize() const override {
       return sizeof("-9223372036854775808");
     }
 
-    constexpr EDataTypeID getDataTypeID() const override {
+    EDataTypeID getDataTypeID() const override {
       return CIEC_ANY::e_LINT;
     }
 };

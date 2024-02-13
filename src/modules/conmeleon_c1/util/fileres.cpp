@@ -86,7 +86,7 @@ void CFileResource::readLine(char* pszData, std::size_t nLength) const {
     // set file position to the beginning
     std::rewind(mFileHandle);
 
-    nNrCharsRead = forte_getline(&pszLine, &nLen, mFileHandle);
+    nNrCharsRead = getline(&pszLine, &nLen, mFileHandle);
     if (nNrCharsRead != -1) {
       strncpy(pszData, pszLine, nLength);
     }

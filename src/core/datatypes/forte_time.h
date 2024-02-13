@@ -33,6 +33,10 @@ class CIEC_TIME final : public CIEC_ANY_DURATION {
     static constexpr char csmZeroNanoSecondTimeValue[] = "T#0ns";
 
   public:
+    constexpr static size_t scmBitLength = 64U;
+    static constexpr TValueType scmMinVal = std::numeric_limits<TValueType>::min();
+    static constexpr TValueType scmMaxVal = std::numeric_limits<TValueType>::max();
+    
     CIEC_TIME() = default;
 
     CIEC_TIME(const CIEC_TIME &paValue) : CIEC_ANY_DURATION() {
@@ -59,7 +63,7 @@ class CIEC_TIME final : public CIEC_ANY_DURATION {
       return getLargestInt();
     }
 
-    constexpr EDataTypeID getDataTypeID() const override {
+    EDataTypeID getDataTypeID() const override {
       return CIEC_ANY::e_TIME;
     }
 
@@ -87,7 +91,7 @@ class CIEC_TIME final : public CIEC_ANY_DURATION {
 
     /*! \brief calculates buffer size needed for toString conversion
      */
-    constexpr size_t getToStringBufferSize() const override {
+    size_t getToStringBufferSize() const override {
       return sizeof(csmMinTimeValue);
     }
 

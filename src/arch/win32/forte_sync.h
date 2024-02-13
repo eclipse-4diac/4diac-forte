@@ -13,8 +13,6 @@
 #ifndef _FORTE_SYNC_H_
 #define _FORTE_SYNC_H_
 
-#define WIN32_LEAN_AND_MEAN
-
 #include <windows.h>
 
 #define CSyncObject CPCSyncObject //allows that doxygen can generate better documenation

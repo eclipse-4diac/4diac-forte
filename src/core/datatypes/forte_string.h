@@ -217,7 +217,7 @@ class CIEC_STRING : public CIEC_ANY_STRING {
       return nullptr;
     }
 
-    constexpr EDataTypeID getDataTypeID() const override final {
+    EDataTypeID getDataTypeID() const override final {
       return CIEC_ANY::e_STRING;
     }
 

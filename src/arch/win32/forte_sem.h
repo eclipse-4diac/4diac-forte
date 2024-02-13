@@ -15,7 +15,6 @@
 #ifndef SRC_ARCH_WIN32_SEMAPHORE_H_
 #define SRC_ARCH_WIN32_SEMAPHORE_H_
 
-#define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 
 #include "datatype.h"

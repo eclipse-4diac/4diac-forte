@@ -31,15 +31,5 @@ class CIEC_ANY_UNSIGNED : public CIEC_ANY_INT {
     }
 
     ~CIEC_ANY_UNSIGNED() override = default;
-
-    CIEC_ANY *clone(TForteByte *) const override {
-      DEVLOG_ERROR("Attempt to call clone on CIEC_ANY_UNSIGNED\n");
-      return nullptr;
-    }
-
-    size_t getToStringBufferSize() const override {
-      DEVLOG_ERROR("Calling CIEC_ANY_UNSIGNED getToStringBufferSize is invalid!\n");
-      return 0;
-    }
 };
 

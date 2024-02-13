@@ -149,7 +149,7 @@ class CIEC_WSTRING final : public CIEC_ANY_STRING {
       */
     int toUTF16(TForteByte *paBuffer, unsigned int paBufferSize) const;
 
-    constexpr EDataTypeID getDataTypeID() const override {
+    EDataTypeID getDataTypeID() const override {
       return CIEC_ANY::e_WSTRING;
     }
 

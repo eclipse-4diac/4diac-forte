@@ -31,13 +31,19 @@
 #include "forte_uint.h"
 #include "forte_usint.h"
 
+#include <limits>
+
 /*!\ingroup COREDTS CIEC_LREAL represents the lreal data type according to IEC 61131.
  */
 class CIEC_LREAL final : public CIEC_ANY_REAL{
   DECLARE_FIRMWARE_DATATYPE(LREAL)
 
   public:
-    typedef TForteDFloat TValueType;
+    using TValueType = TForteDFloat;
+    constexpr static size_t scmBitLength = 64U;
+
+    static constexpr TValueType scmMinVal = std::numeric_limits<TValueType>::min();
+    static constexpr TValueType scmMaxVal = std::numeric_limits<TValueType>::max();
 
     CIEC_LREAL() = default;
 
@@ -143,11 +149,11 @@ class CIEC_LREAL final : public CIEC_ANY_REAL{
 
     /*! \brief calculates buffer size needed for toString conversion
      */
-    constexpr size_t getToStringBufferSize() const override {
+    size_t getToStringBufferSize() const override {
       return sizeof("-2.2250738585072014E-308"); // Minimal double number, negative for additional sign
     }
 
-    constexpr EDataTypeID getDataTypeID() const override {
+    EDataTypeID getDataTypeID() const override {
       return CIEC_ANY::e_LREAL;
     }
 

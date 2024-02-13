@@ -23,8 +23,6 @@
 
 DEFINE_FIRMWARE_DATATYPE(WCHAR, g_nStringIdWCHAR)
 
-const CIEC_WCHAR::TValueType CIEC_WCHAR::scmMaxVal = std::numeric_limits<CIEC_WCHAR::TValueType>::max();
-
 int CIEC_WCHAR::toString(char *paValue, size_t paBufferSize) const {
   const char longestStringSerialization[] = "WCHAR#\"$0000\"";
   const size_t longestStringSize = sizeof(longestStringSerialization);

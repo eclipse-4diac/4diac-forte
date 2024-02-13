@@ -23,9 +23,10 @@ class CIEC_CHAR : public CIEC_ANY_CHAR{
 
   public:
     using TValueType = TForteChar;
+    constexpr static size_t scmBitLength = 8U;
 
-    static const TValueType scmMinVal = 0;
-    static const TValueType scmMaxVal;
+    static constexpr TValueType scmMinVal = std::numeric_limits<TValueType>::min();
+    static constexpr TValueType scmMaxVal = std::numeric_limits<TValueType>::max();
 
     CIEC_CHAR() = default;
 
@@ -60,11 +61,11 @@ class CIEC_CHAR : public CIEC_ANY_CHAR{
 
     /*! \brief calculates buffer size needed for toString conversion
      */
-    constexpr size_t getToStringBufferSize() const override final {
+    size_t getToStringBufferSize() const override final {
       return sizeof("'$00'");
     }
 
-    constexpr EDataTypeID getDataTypeID() const override final {
+    EDataTypeID getDataTypeID() const override final {
       return CIEC_ANY::e_CHAR;
     }
 };

@@ -24,10 +24,11 @@ class CIEC_WCHAR : public CIEC_ANY_CHAR {
   DECLARE_FIRMWARE_DATATYPE(WCHAR)
 
   public:
-    typedef TForteWChar TValueType;
+    using TValueType = TForteWChar;
+    constexpr static size_t scmBitLength = 16U;
 
-    static const TValueType scmMinVal = 0;
-    static const TValueType scmMaxVal;
+    static constexpr TValueType scmMinVal = std::numeric_limits<TValueType>::min();
+    static constexpr TValueType scmMaxVal = std::numeric_limits<TValueType>::max();
 
     CIEC_WCHAR() = default;
 
@@ -62,11 +63,11 @@ class CIEC_WCHAR : public CIEC_ANY_CHAR {
 
     /*! \brief calculates buffer size needed for toString conversion
      */
-    constexpr size_t getToStringBufferSize() const override {
+    size_t getToStringBufferSize() const override {
       return sizeof("\"$0000\"");
     }
 
-    constexpr EDataTypeID getDataTypeID() const override {
+    EDataTypeID getDataTypeID() const override {
       return CIEC_ANY::e_WCHAR;
     }
 };

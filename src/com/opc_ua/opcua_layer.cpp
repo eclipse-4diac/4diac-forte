@@ -214,62 +214,14 @@ bool COPC_UA_Layer::checkPortConnectionInfo(unsigned int paPortIndex, bool paIsS
     return false;
   }
 
-  CIEC_ANY *remoteType = nullptr;
-  if(paIsSD) {
-    const CConnectionPoint &remoteConnectionPoint = localPortConnection->getSourceId();
-    if(!getRemoteAny(&remoteType, remoteConnectionPoint, paIsSD)) {
-      return false;
-    }
-  } else {
-    if(!checkFanOutTypes(*localPortConnection, &remoteType)) {
-      return false;
-    }
-  }
+  CIEC_ANY &remoteType = (paIsSD) ? getCommFB()->getDI(paPortIndex)->unwrap() : getCommFB()->getDO(paPortIndex)->unwrap();
 
-  if(!COPC_UA_Helper::getOPCUATypeFromAny(*remoteType)) {
+  if(!COPC_UA_Helper::getOPCUATypeFromAny(remoteType)) {
     if(!COPC_UA_ObjectStruct_Helper::isStructType(*this, paIsSD)) {
-      DEVLOG_ERROR("[OPC UA LAYER]: Invalid  type %d in FB %s at connection %s\n", remoteType, getCommFB()->getInstanceName(),
+      DEVLOG_ERROR("[OPC UA LAYER]: Invalid  type %d in FB %s at connection %s\n", remoteType.getDataTypeID(), getCommFB()->getInstanceName(),
       CStringDictionary::getInstance().get(localPortNameId));
     }
     return false;
-  }
-  return true;
-}
-
-bool COPC_UA_Layer::getRemoteAny(CIEC_ANY **paResult, const CConnectionPoint &paRemoteConnectionPoint, bool paIsSD) const {
-  if(!paRemoteConnectionPoint.mFB) {
-    DEVLOG_ERROR(
-      "[OPC UA LAYER]: FB %s has a problem. The connected FB in the current data input is a null pointer. Check last debug logging for more information\n",
-      getCommFB()->getInstanceName());
-    return false;
-  }
-
-  *paResult =
-      paIsSD ? paRemoteConnectionPoint.mFB->getDOFromPortId(paRemoteConnectionPoint.mPortId) :
-        paRemoteConnectionPoint.mFB->getDIFromPortId(paRemoteConnectionPoint.mPortId);
-
-  return true;
-}
-
-bool COPC_UA_Layer::checkFanOutTypes(const CDataConnection &paPortConnection, CIEC_ANY **paResult) const {
-
-  for(const auto& it : paPortConnection.getDestinationList()){
-    if(paPortConnection.getDestinationList().front() == it) { //first one
-      if(!getRemoteAny(paResult, it, false)) {
-        return false;
-      }
-    } else {
-      CIEC_ANY* newRemoteType;
-      if(!getRemoteAny(&newRemoteType, it, false)) {
-        return false;
-      } else {
-        if(newRemoteType->unwrap().getDataTypeID() != (*paResult)->unwrap().getDataTypeID()) {
-          DEVLOG_ERROR("[OPC UA LAYER]: FB %s has one RD which is connected to many data inputs and the types are not the same.\n",
-            getCommFB()->getInstanceName());
-          return false;
-        }
-      }
-    }
   }
   return true;
 }

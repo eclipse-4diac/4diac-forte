@@ -70,6 +70,7 @@ class GEN_CSV_WRITER : public CGenFunctionBlock<CFunctionBlock> {
     void openCSVFile();
     void closeCSVFile();
     void writeCSVFileLine();
+    bool areDIsSameArrayLength(size_t& commonArraySize);
 
     decltype(forte_fopen(nullptr, nullptr)) mCSVFile;
 

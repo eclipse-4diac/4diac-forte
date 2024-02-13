@@ -109,9 +109,10 @@ bool CCompositeFB::connectDI(TPortId paDIPortId, CDataConnection *paDataCon){
 
 bool CCompositeFB::configureGenericDO(TPortId paDOPortId, const CIEC_ANY &paRefValue){
   bool bRetVal = CFunctionBlock::configureGenericDO(paDOPortId, paRefValue);
-  if(bRetVal && nullptr != mIn2IfDConns[paDOPortId]){
+  CDataConnection *dataCon = mIn2IfDConns[paDOPortId];
+  if(bRetVal && dataCon != nullptr){
     //issue a reconfiguration attempt so that all connection end points in this connection are also correctly configured
-    mIn2IfDConns[paDOPortId]->connectToCFBInterface(this, paDOPortId);
+    dataCon->handleAnySrcPortConnection(paRefValue);
   }
   return bRetVal;
 }

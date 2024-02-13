@@ -64,7 +64,7 @@ void FORTE_F_LEN::executeEvent(TEventID paEIID, CEventChainExecutionThread *cons
   switch(paEIID) {
     case scmEventREQID:
       std::visit([](auto &&paIN, auto&&paOUT) -> void {
-          paOUT = func_LEN(paIN);
+          paOUT = func_LEN<std::remove_reference_t<decltype(paOUT)>>(paIN);
       }, var_IN, var_OUT);
       sendOutputEvent(scmEventCNFID, paECET);
       break;

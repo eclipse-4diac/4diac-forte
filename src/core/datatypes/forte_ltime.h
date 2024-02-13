@@ -35,6 +35,10 @@ class CIEC_LTIME final : public CIEC_ANY_DURATION {
     static constexpr char csmZeroNanoSecondLTimeValue[] = "LT#0ns";
 
   public:
+    constexpr static size_t scmBitLength = 64U;
+    static constexpr TValueType scmMinVal = std::numeric_limits<TValueType>::min();
+    static constexpr TValueType scmMaxVal = std::numeric_limits<TValueType>::max();
+
     CIEC_LTIME() = default;
 
     CIEC_LTIME(const CIEC_LTIME &paValue) : CIEC_ANY_DURATION() {
@@ -71,7 +75,7 @@ class CIEC_LTIME final : public CIEC_ANY_DURATION {
       return getLargestInt();
     }
 
-    constexpr EDataTypeID getDataTypeID() const override {
+    EDataTypeID getDataTypeID() const override {
       return CIEC_ANY::e_LTIME;
     }
 
@@ -100,8 +104,8 @@ class CIEC_LTIME final : public CIEC_ANY_DURATION {
 
     /*! \brief calculates buffer size needed for toString conversion
      */
-    constexpr size_t getToStringBufferSize() const override {
-      return sizeof("LT#-18446744073709551615ns");
+    size_t getToStringBufferSize() const override {
+      return sizeof(csmMinLTimeValue);
     }
 
     TValueType getInDays() const;
