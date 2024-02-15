@@ -60,83 +60,83 @@ T func_ABS(const T &paIN) {
 }
 
 inline CIEC_REAL func_SQRT(const CIEC_REAL &paIN){
-  return CIEC_REAL(sqrtf(paIN));
+  return CIEC_REAL(sqrtf(static_cast<CIEC_REAL::TValueType>(paIN)));
 }
 
 inline CIEC_LREAL func_SQRT(const CIEC_LREAL &paIN){
-  return CIEC_LREAL(sqrt(paIN));
+  return CIEC_LREAL(sqrt(static_cast<CIEC_LREAL::TValueType>(paIN)));
 }
 
 inline CIEC_REAL func_LN(const CIEC_REAL &paIN){
-  return CIEC_REAL(logf(paIN));
+  return CIEC_REAL(logf(static_cast<CIEC_REAL::TValueType>(paIN)));
 }
 
 inline CIEC_LREAL func_LN(const CIEC_LREAL &paIN){
-  return CIEC_LREAL(log(paIN));
+  return CIEC_LREAL(log(static_cast<CIEC_LREAL::TValueType>(paIN)));
 }
 
 inline CIEC_REAL func_LOG(const CIEC_REAL &paIN){
-  return CIEC_REAL(log10f(paIN));
+  return CIEC_REAL(log10f(static_cast<CIEC_REAL::TValueType>(paIN)));
 }
 
 inline CIEC_LREAL func_LOG(const CIEC_LREAL &paIN){
-  return CIEC_LREAL(log10(paIN));
+  return CIEC_LREAL(log10(static_cast<CIEC_LREAL::TValueType>(paIN)));
 }
 
 inline CIEC_REAL func_SIN(const CIEC_REAL &paIN){
-  return CIEC_REAL(sinf(paIN));
+  return CIEC_REAL(sinf(static_cast<CIEC_REAL::TValueType>(paIN)));
 }
 
 inline CIEC_LREAL func_SIN(const CIEC_LREAL &paIN){
-  return CIEC_LREAL(sin(paIN));
+  return CIEC_LREAL(sin(static_cast<CIEC_LREAL::TValueType>(paIN)));
 }
 
 inline CIEC_REAL func_COS(const CIEC_REAL &paIN){
-  return CIEC_REAL(cosf(paIN));
+  return CIEC_REAL(cosf(static_cast<CIEC_REAL::TValueType>(paIN)));
 }
 
 inline CIEC_LREAL func_COS(const CIEC_LREAL &paIN){
-  return CIEC_LREAL(cos(paIN));
+  return CIEC_LREAL(cos(static_cast<CIEC_LREAL::TValueType>(paIN)));
 }
 
 inline CIEC_REAL func_TAN(const CIEC_REAL &paIN){
-    return CIEC_REAL(tanf(paIN));
+    return CIEC_REAL(tanf(static_cast<CIEC_REAL::TValueType>(paIN)));
 }
 
 inline CIEC_LREAL func_TAN(const CIEC_LREAL &paIN){
-  return CIEC_LREAL(tan(paIN));
+  return CIEC_LREAL(tan(static_cast<CIEC_LREAL::TValueType>(paIN)));
 }
 
 inline CIEC_REAL func_ASIN(const CIEC_REAL &paIN){
-  return CIEC_REAL(asinf(paIN));
+  return CIEC_REAL(asinf(static_cast<CIEC_REAL::TValueType>(paIN)));
 }
 
 inline CIEC_LREAL func_ASIN(const CIEC_LREAL &paIN){
-  return CIEC_LREAL(asin(paIN));
+  return CIEC_LREAL(asin(static_cast<CIEC_LREAL::TValueType>(paIN)));
 }
 
 inline CIEC_REAL func_ACOS(const CIEC_REAL &paIN){
-  return CIEC_REAL(acosf(paIN));
+  return CIEC_REAL(acosf(static_cast<CIEC_REAL::TValueType>(paIN)));
 }
 
 inline CIEC_LREAL func_ACOS(const CIEC_LREAL &paIN){
-  return CIEC_LREAL(acos(paIN));
+  return CIEC_LREAL(acos(static_cast<CIEC_LREAL::TValueType>(paIN)));
 }
 
 inline CIEC_REAL func_ATAN(const CIEC_REAL &paIN){
-    return CIEC_REAL(atanf(paIN));
+    return CIEC_REAL(atanf(static_cast<CIEC_REAL::TValueType>(paIN)));
 }
 
 inline CIEC_LREAL func_ATAN(const CIEC_LREAL &paIN){
-  return CIEC_LREAL(atan(paIN));
+  return CIEC_LREAL(atan(static_cast<CIEC_LREAL::TValueType>(paIN)));
 }
 
 inline CIEC_REAL func_EXP(const CIEC_REAL &paIN){
-  return CIEC_REAL(expf(paIN));
+  return CIEC_REAL(expf(static_cast<CIEC_REAL::TValueType>(paIN)));
 }
 
 inline CIEC_LREAL func_EXP(const CIEC_LREAL &paIN){
-  return CIEC_LREAL(exp(paIN));
+  return CIEC_LREAL(exp(static_cast<CIEC_LREAL::TValueType>(paIN)));
 }
 
 template <typename T, typename U>
@@ -992,11 +992,6 @@ constexpr T func_PLUS(const T& paIN) {
   return paIN;
 }
 
-template <typename T>
-T func_TRUNC(const T &paIN) {
-  return T(static_cast<typename T::TValueType>(static_cast<TForteInt32>(paIN)));
-}
-
 CIEC_SINT func_TRUNC_SINT(const CIEC_REAL &paIN);
 CIEC_INT func_TRUNC_INT(const CIEC_REAL &paIN);
 CIEC_DINT func_TRUNC_DINT(const CIEC_REAL &paIN);
@@ -1015,9 +1010,10 @@ CIEC_UINT func_REAL_TRUNC_UINT(const CIEC_REAL &paIN);
 CIEC_UDINT func_REAL_TRUNC_UDINT(const CIEC_REAL &paIN);
 CIEC_ULINT func_REAL_TRUNC_ULINT(const CIEC_REAL &paIN);
 
-template <typename T>
-T func_TRUNC(const CIEC_LREAL &paIN) {
-  return T(static_cast<typename T::TValueType>(static_cast<TForteInt64>(paIN)));
+//[[deprecated ("Not desired anymore and possible target of removal in the future")]] - attribute cannot be added, so its a comment for now
+template <typename T, typename U>
+auto func_TRUNC(const U &paIN) -> typename std::enable_if_t<std::is_base_of_v<CIEC_ANY_INT, T> && std::is_base_of_v<CIEC_ANY_REAL, U>, T> {
+  return T(static_cast<typename T::TValueType>(static_cast<typename U::TValueType>(paIN)));
 }
 
 CIEC_SINT func_TRUNC_SINT(const CIEC_LREAL &paIN);

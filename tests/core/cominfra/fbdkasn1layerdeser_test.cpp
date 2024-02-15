@@ -955,19 +955,19 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
     CIEC_LREAL &nVal(*static_cast<CIEC_LREAL *>(nTestFB.getRDs()[0]));
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.recvData(cgLReal0, cgLRealSerSize));
-    BOOST_CHECK_EQUAL(0.0, nVal);
+    BOOST_TEST(0.0 == static_cast<CIEC_LREAL::TValueType>(nVal));
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.recvData(cgLReal2_28743e6, cgLRealSerSize));
-    BOOST_CHECK_EQUAL(2.28743e6, nVal);
+    BOOST_TEST(2.28743e6 == static_cast<CIEC_LREAL::TValueType>(nVal));
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.recvData(cgLRealm6_2587em4, cgLRealSerSize));
-    BOOST_CHECK_EQUAL(-6.2587e-4, nVal);
+    BOOST_TEST(-6.2587e-4 == static_cast<CIEC_LREAL::TValueType>(nVal));
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.recvData(cgLReal1_0Em37, cgLRealSerSize));
-    BOOST_CHECK_EQUAL(1.0E-37, nVal);
+    BOOST_TEST(1.0E-37 == static_cast<CIEC_LREAL::TValueType>(nVal));
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.recvData(cgLReal36_0, cgLRealSerSize));
-    BOOST_CHECK_EQUAL(36.0, nVal);
+    BOOST_TEST(36.0 == static_cast<CIEC_LREAL::TValueType>(nVal));
   }
 
   BOOST_AUTO_TEST_CASE(Single_Deserialize_Negative_Test_LREAL){

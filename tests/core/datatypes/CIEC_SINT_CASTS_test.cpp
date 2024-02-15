@@ -300,13 +300,13 @@ BOOST_AUTO_TEST_CASE(CASTS_SINT_to_REAL)
 
 //toLREAL
   nTestLReal.setValue(nTestSInt0);
-  BOOST_CHECK_EQUAL(nTestLReal, 0.0f);
+  BOOST_TEST(0.0 == static_cast<CIEC_LREAL::TValueType>(nTestLReal));
   nTestLReal.setValue(nTestSInt1);
-  BOOST_CHECK_EQUAL(nTestLReal, 1.0f);
+  BOOST_TEST(1.0 == static_cast<CIEC_LREAL::TValueType>(nTestLReal));
   nTestLReal.setValue(nTestSInt45);
-  BOOST_CHECK_EQUAL(nTestLReal, 45.0f);
+  BOOST_TEST(45.0 == static_cast<CIEC_LREAL::TValueType>(nTestLReal));
   nTestLReal.setValue(nTestSInt127);
-  BOOST_CHECK_EQUAL(nTestLReal, 127.0f);
+  BOOST_TEST(127.0 == static_cast<CIEC_LREAL::TValueType>(nTestLReal));
 }
 
 BOOST_AUTO_TEST_CASE(SINT_Castable_test)

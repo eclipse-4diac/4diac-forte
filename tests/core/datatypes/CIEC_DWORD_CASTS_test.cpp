@@ -311,11 +311,11 @@ BOOST_AUTO_TEST_CASE(CASTS_DWORD_to_REAL)
 
 //toLREAL
   nTestLReal.setValue(nTestDWord0);
-  BOOST_CHECK_EQUAL(0.0, nTestLReal);
+  BOOST_TEST(0.0 == static_cast<CIEC_LREAL::TValueType>(nTestLReal));
   nTestLReal.setValue(nTestDWord1);
-  BOOST_CHECK_EQUAL(4.94066e-324, nTestLReal);
+  BOOST_TEST(4.94066e-324 == static_cast<CIEC_LREAL::TValueType>(nTestLReal));
   nTestLReal.setValue(nTestDWord65536);
-  BOOST_CHECK_EQUAL(3.23791e-319, nTestLReal);
+  BOOST_TEST(3.23791e-319 == static_cast<CIEC_LREAL::TValueType>(nTestLReal));
   nTestLReal.setValue(nTestDWord4294967295);
   BOOST_TEST(2.1219957904712067e-314 == static_cast<CIEC_LREAL::TValueType>(nTestLReal));
 }

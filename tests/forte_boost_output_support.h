@@ -18,6 +18,7 @@
 #define _FORTE_BOOST_OUTPUT_SUPPORT_H_
 
 #include <iostream>
+#include "forte_lreal.h"
 #include "forte_char.h"
 #include "forte_wchar.h"
 #include "forte_string.h"
@@ -32,6 +33,14 @@
 #include "forte_ldate_and_time.h"
 #include "funcbloc.h"
 #include "mgmcmd.h"
+
+inline
+std::ostream& boost_test_print_type(std::ostream &out, const CIEC_LREAL &variable) {
+  char outputString[variable.getToStringBufferSize()];
+  variable.toString(outputString, sizeof(outputString));
+  out << outputString;
+  return out;
+}
 
 inline
 std::ostream& boost_test_print_type(std::ostream &out, const CIEC_TIME &variable) {

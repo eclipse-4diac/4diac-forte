@@ -135,7 +135,7 @@ class CIEC_LREAL final : public CIEC_ANY_REAL{
     }
 
     CIEC_LREAL operator-() const {
-      return CIEC_LREAL(-1.0 * *this);
+      return CIEC_LREAL(-1.0 * static_cast<TValueType>(*this));
     }
 
     /*! \brief Converts CIEC_LREAL to elementary 64 bit float
@@ -143,7 +143,7 @@ class CIEC_LREAL final : public CIEC_ANY_REAL{
      *   Conversion operator for converting CIEC_LREAL to elementary 64 bit float
      */
 
-    operator TForteDFloat() const{
+    explicit operator TForteDFloat() const {
       return getTDFLOAT();
     }
 

@@ -184,9 +184,9 @@ BOOST_AUTO_TEST_CASE(CASTS_BOOL_to_REAL)
 
 //toLREAL
   nTestLReal.setValue(bTestBool_false);
-  BOOST_CHECK_EQUAL(0.0, nTestLReal);
+  BOOST_TEST(0.0 == static_cast<CIEC_LREAL::TValueType>(nTestLReal));
   nTestLReal.setValue(bTestBool_true);
-  BOOST_CHECK_EQUAL(1.0, nTestLReal);
+  BOOST_TEST(1.0 == static_cast<CIEC_LREAL::TValueType>(nTestLReal));
 }
 
 BOOST_AUTO_TEST_CASE(BOOL_Castable_test)
