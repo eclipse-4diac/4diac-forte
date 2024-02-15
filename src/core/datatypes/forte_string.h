@@ -65,11 +65,6 @@ class CIEC_STRING : public CIEC_ANY_STRING {
     return paLeft.getStorage() <= paRight.getStorage();
   }
 
-  friend std::ostream &operator<<(std::ostream &out, const CIEC_STRING &variable) {
-    out << variable.getStorage();
-    return out;
-  }
-
   // CIEC_STRING to std::string and vice versa comparison operators
   friend bool operator==(const std::string &paLeft, const CIEC_STRING &paRight) {
     return paLeft == paRight.getStorage();
