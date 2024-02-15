@@ -295,13 +295,13 @@ BOOST_AUTO_TEST_CASE(CASTS_BYTE_to_REAL)
 
 //toLREAL
   nTestLReal.setValue(nTestByte0);
-  BOOST_CHECK_EQUAL(0.0, nTestLReal);
+  BOOST_TEST(0.0 == static_cast<CIEC_LREAL::TValueType>(nTestLReal));
   nTestLReal.setValue(nTestByte1);
-  BOOST_CHECK_EQUAL(4.94066e-324, nTestLReal);
+  BOOST_TEST(4.94066e-324 == static_cast<CIEC_LREAL::TValueType>(nTestLReal));
   nTestLReal.setValue(nTestByte45);
-  BOOST_CHECK_EQUAL(2.2233e-322, nTestLReal);
+  BOOST_TEST(2.2233e-322 == static_cast<CIEC_LREAL::TValueType>(nTestLReal));
   nTestLReal.setValue(nTestByte255);
-  BOOST_CHECK_EQUAL(1.25987e-321, nTestLReal);
+  BOOST_TEST(1.25987e-321 == static_cast<CIEC_LREAL::TValueType>(nTestLReal));
 }
 
 BOOST_AUTO_TEST_CASE(BYTE_Castable_test)

@@ -655,7 +655,7 @@ BOOST_AUTO_TEST_CASE(add_function_LREAL_USINT)
   CIEC_USINT nUsint(10);
   CIEC_LREAL nLreal(30010);
   CIEC_LREAL nResult(func_ADD(nLreal, nUsint));
-  BOOST_TEST(static_cast<TForteDWord>(nResult) == 30020);
+  BOOST_TEST(static_cast<CIEC_LREAL::TValueType>(nResult) == 30020);
 }
 
 //BOOST_AUTO_TEST_CASE(add_function_LREAL_ULINT) //should fail, currently no way to automatically test this
