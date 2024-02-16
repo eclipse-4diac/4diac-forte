@@ -570,9 +570,6 @@ namespace forte {
       static constexpr bool is_bounded = std::numeric_limits<typename T::TValueType>::is_bounded;
       static constexpr bool is_modulo = std::numeric_limits<typename T::TValueType>::is_modulo;
 
-      // It is not clear what it means for a boolean type to trap.
-      // This is a DR on the LWG issue list.  Here, I use integer
-      // promotion semantics.
       static constexpr bool traps = std::numeric_limits<typename T::TValueType>::traps;
       static constexpr bool tinyness_before = std::numeric_limits<typename T::TValueType>::tinyness_before;
       static constexpr std::float_round_style round_style = std::numeric_limits<typename T::TValueType>::round_style;
