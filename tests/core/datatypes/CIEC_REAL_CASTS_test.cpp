@@ -312,19 +312,19 @@ BOOST_AUTO_TEST_CASE(CASTS_REAL_to_LREAL)
   BOOST_CHECK_EQUAL(36.0f, nTestReal36);
 
   CIEC_ANY::specialCast(nTestReal0, nTestLReal);
-  BOOST_CHECK_EQUAL((double)0.0f, nTestLReal);
+  BOOST_TEST(static_cast<double>(0.0f) == static_cast<CIEC_LREAL::TValueType>(nTestLReal));
   CIEC_ANY::specialCast(nTestReal1, nTestLReal);
-  BOOST_CHECK_EQUAL((double)1.0f, nTestLReal);
+  BOOST_TEST(static_cast<double>(1.0f) == static_cast<CIEC_LREAL::TValueType>(nTestLReal));
   nTestLReal.setValue(nTestReal2_2874e6);
   CIEC_ANY::specialCast(nTestReal2_2874e6, nTestLReal);
-  BOOST_CHECK_EQUAL(((double)2.2874e6f), nTestLReal);
+  BOOST_TEST(static_cast<double>(2.2874e6f) == static_cast<CIEC_LREAL::TValueType>(nTestLReal));
   CIEC_ANY::specialCast(nTestRealm6_2587em4, nTestLReal);
-  BOOST_CHECK_EQUAL(((double)-6.2587e-4f), nTestLReal);
+  BOOST_TEST(static_cast<double>(-6.2587e-4f) == static_cast<CIEC_LREAL::TValueType>(nTestLReal));
   nTestLReal.setValue(nTestReal1_0em37);
   CIEC_ANY::specialCast(nTestReal1_0em37, nTestLReal);
-  BOOST_CHECK_EQUAL(((double)1.0e-37f), nTestLReal);
+  BOOST_TEST(static_cast<double>(1.0e-37f) == static_cast<CIEC_LREAL::TValueType>(nTestLReal));
   CIEC_ANY::specialCast(nTestReal36, nTestLReal);
-  BOOST_CHECK_EQUAL(((double)36.0f), nTestLReal);
+  BOOST_TEST(static_cast<double>(36.0f) == static_cast<CIEC_LREAL::TValueType>(nTestLReal));
 }
 
 BOOST_AUTO_TEST_CASE(REAL_Castable_test)

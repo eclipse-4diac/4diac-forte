@@ -284,12 +284,12 @@ private:
     std::vector<T> data;
 };
 
-static_assert(std::is_copy_constructible_v<CIEC_ARRAY_VARIABLE<CIEC_ANY>>);
-static_assert(std::is_move_constructible_v<CIEC_ARRAY_VARIABLE<CIEC_ANY>>);
-static_assert(std::is_copy_assignable_v<CIEC_ARRAY_VARIABLE<CIEC_ANY>>);
-static_assert(std::is_move_assignable_v<CIEC_ARRAY_VARIABLE<CIEC_ANY>>);
-static_assert(std::is_destructible_v<CIEC_ARRAY_VARIABLE<CIEC_ANY>>);
-static_assert(std::is_swappable_v<CIEC_ARRAY_VARIABLE<CIEC_ANY>>);
+static_assert(std::is_copy_constructible_v<CIEC_ARRAY_VARIABLE<CIEC_INT>>);
+static_assert(std::is_move_constructible_v<CIEC_ARRAY_VARIABLE<CIEC_INT>>);
+static_assert(std::is_copy_assignable_v<CIEC_ARRAY_VARIABLE<CIEC_INT>>);
+static_assert(std::is_move_assignable_v<CIEC_ARRAY_VARIABLE<CIEC_INT>>);
+static_assert(std::is_destructible_v<CIEC_ARRAY_VARIABLE<CIEC_INT>>);
+static_assert(std::is_swappable_v<CIEC_ARRAY_VARIABLE<CIEC_INT>>);
 
 static_assert(std::is_constructible_v<CIEC_ARRAY_VARIABLE<CIEC_ULINT>, const CIEC_ARRAY_VARIABLE<CIEC_UINT> &>);
 static_assert(std::is_constructible_v<CIEC_ARRAY_VARIABLE<CIEC_ULINT>, CIEC_ARRAY_VARIABLE<CIEC_UINT> &&>);

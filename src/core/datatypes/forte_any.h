@@ -1,6 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2005 - 2013 Profactor GmbH, ACIN, nxtcontrol GmbH, fortiss GmbH, 2018 TU Vienna/ACIN
- *               2023 Martin Erich Jobst
+ * Copyright (c) 2005, 2024 Profactor GmbH, ACIN, nxtcontrol GmbH, fortiss GmbH
+ *                          TU Vienna/ACIN, Martin Erich Jobst,
+ *                          Martin Melik Merkumians
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -15,11 +16,13 @@
  *    Martin Melik Merkumians - templated cast factory function
  *    Martin Jobst - add equals function
  *                 - add support for data types with different size
+ *    Martin Melik Merkumians - Add specialized numeric_limits for IEC types
  *******************************************************************************/
 #ifndef _ANY_H_
 #define _ANY_H_
 
-#include <string.h>
+#include <cstring>
+#include <limits>
 #include "../typelib.h"
 #include "iec61131_cast_helper.h"
 
@@ -509,5 +512,69 @@ class CIEC_ANY {
 
     constexpr static size_t csmDataLengthLookup[] = {0, 1, 1, 2, 4, 8, 1, 2, 4, 8, 1, 2, 4, 8, 8, 8, 8, 8, 8, 8, 8, 8, 1, 2, 4, 8, 0, 0, 0};
 };
+
+namespace forte {
+  namespace templates {
+    template <typename T, typename = typename std::enable_if_t<std::is_base_of_v<CIEC_ANY, T>>>
+    struct numeric_limits {
+      static constexpr bool is_specialized = true;
+
+      static T
+      min() noexcept { return T(std::numeric_limits<typename T::TValueType>::min()); }
+
+      static T
+      max() noexcept { return T(std::numeric_limits<typename T::TValueType>::max()); }
+
+      static T
+      lowest() noexcept { return min(); }
+
+      static constexpr int digits = std::numeric_limits<typename T::TValueType>::digits;
+      static constexpr int digits10 = std::numeric_limits<typename T::TValueType>::digits10;
+      static constexpr int max_digits10 = std::numeric_limits<typename T::TValueType>::max_digits10;
+
+      static constexpr bool is_signed = std::numeric_limits<typename T::TValueType>::is_signed;
+      static constexpr bool is_integer = std::numeric_limits<typename T::TValueType>::is_integer;
+      static constexpr bool is_exact = std::numeric_limits<typename T::TValueType>::is_exact;
+      static constexpr int radix = std::numeric_limits<typename T::TValueType>::radix;
+
+      static T
+      epsilon() noexcept { return T(std::numeric_limits<typename T::TValueType>::epsilon()); }
+
+      static T
+      round_error() noexcept { return T(std::numeric_limits<typename T::TValueType>::round_error()); }
+
+      static constexpr int min_exponent = std::numeric_limits<typename T::TValueType>::min_exponent;
+      static constexpr int min_exponent10 = std::numeric_limits<typename T::TValueType>::min_exponent;
+      static constexpr int max_exponent = std::numeric_limits<typename T::TValueType>::max_exponent;
+      static constexpr int max_exponent10 = std::numeric_limits<typename T::TValueType>::max_exponent10;
+
+      static constexpr bool has_infinity = std::numeric_limits<typename T::TValueType>::has_infinity;
+      static constexpr bool has_quiet_NaN = std::numeric_limits<typename T::TValueType>::has_quiet_NaN;
+      static constexpr bool has_signaling_NaN = std::numeric_limits<typename T::TValueType>::has_signaling_NaN;
+      static constexpr std::float_denorm_style has_denorm = std::numeric_limits<typename T::TValueType>::has_denorm;
+      static constexpr bool has_denorm_loss = std::numeric_limits<typename T::TValueType>::has_denorm_loss;
+
+      static T
+      infinity() noexcept { return T(std::numeric_limits<typename T::TValueType>::infinity()); }
+
+      static T
+      quiet_NaN() noexcept { return T(std::numeric_limits<typename T::TValueType>::quiet_NaN()); }
+
+      static T
+      signaling_NaN() noexcept { return T(std::numeric_limits<typename T::TValueType>::signaling_NaN()); }
+
+      static T
+      denorm_min() noexcept { return T(std::numeric_limits<typename T::TValueType>::denorm_min()); }
+
+      static constexpr bool is_iec559 = std::numeric_limits<typename T::TValueType>::is_iec559;
+      static constexpr bool is_bounded = std::numeric_limits<typename T::TValueType>::is_bounded;
+      static constexpr bool is_modulo = std::numeric_limits<typename T::TValueType>::is_modulo;
+
+      static constexpr bool traps = std::numeric_limits<typename T::TValueType>::traps;
+      static constexpr bool tinyness_before = std::numeric_limits<typename T::TValueType>::tinyness_before;
+      static constexpr std::float_round_style round_style = std::numeric_limits<typename T::TValueType>::round_style;
+    };
+  }
+}
 
 #endif /*_MANY_H_*/

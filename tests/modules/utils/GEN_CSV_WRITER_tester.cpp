@@ -31,11 +31,11 @@ class GEN_CSV_WRITER_TestFixture : public CFBTestFixtureBase {
       setOutputData({&mQO, &mSTATUS});
       CFBTestFixtureBase::setup("CSV_WRITER_2");
 
-      char tempName[L_tmpnam];
-      BOOST_CHECK(std::tmpnam(tempName));
+      char filename[] = "/tmp/fileXXXXXX";
+      BOOST_CHECK(mkstemp(filename));
 
       mQI = CIEC_BOOL(true);
-      mFILE_NAME = CIEC_STRING(tempName, strlen(tempName));
+      mFILE_NAME = CIEC_STRING(filename, strlen(filename));
 
       triggerEvent(InputEventINIT);
 

@@ -31,6 +31,7 @@
 class CIEC_LTIME_OF_DAY final : public CIEC_ANY_DATE {
   DECLARE_FIRMWARE_DATATYPE(LTIME_OF_DAY)
   public:
+    [[deprecated("Please use the corresponding numeric_limits template")]]
     constexpr static size_t scmBitLength = 64U;
 
     CIEC_LTIME_OF_DAY() = default;
@@ -107,6 +108,13 @@ class CIEC_LTIME_OF_DAY final : public CIEC_ANY_DATE {
 
 inline CIEC_LTIME_OF_DAY operator ""_LTIME_OF_DAY(unsigned long long int paValue) {
   return CIEC_LTIME_OF_DAY(static_cast<CIEC_LTIME_OF_DAY::TValueType>(paValue));
+}
+
+namespace std {
+  template <>
+  struct numeric_limits<CIEC_LTIME_OF_DAY> : public forte::templates::numeric_limits<CIEC_LTIME_OF_DAY> {
+    static constexpr size_t bitLength = 64U;
+  };
 }
 
 #endif /*_FORTE_LTOD_H_*/

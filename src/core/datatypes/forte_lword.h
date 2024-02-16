@@ -42,9 +42,11 @@ class CIEC_LWORD : public CIEC_ANY_BIT{
 
   public:
     using TValueType = TForteLWord;
+    [[deprecated("Please use the corresponding numeric_limits template")]]
     constexpr static size_t scmBitLength = 64U;
-
+    [[deprecated("Please use the corresponding numeric_limits template")]]
     static constexpr TValueType scmMinVal = std::numeric_limits<TValueType>::min();
+    [[deprecated("Please use the corresponding numeric_limits template")]]
     static constexpr TValueType scmMaxVal = std::numeric_limits<TValueType>::max();
 
     CIEC_LWORD() = default;
@@ -142,6 +144,13 @@ class CIEC_LWORD : public CIEC_ANY_BIT{
 
 inline CIEC_LWORD operator ""_LWORD(unsigned long long int paValue) {
   return CIEC_LWORD(static_cast<CIEC_LWORD::TValueType>(paValue));
+}
+
+namespace std {
+  template <>
+  struct numeric_limits<CIEC_LWORD> : public forte::templates::numeric_limits<CIEC_LWORD> {
+    static constexpr size_t bitLength = 64U;
+  };
 }
 
 #endif /*_FORTE_LWORD_H_*/

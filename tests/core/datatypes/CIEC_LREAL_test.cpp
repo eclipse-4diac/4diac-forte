@@ -61,38 +61,37 @@ BOOST_AUTO_TEST_CASE(Assignment_test)
   CIEC_LREAL nTest2;
 
   //initial value must be 0
-  BOOST_CHECK_EQUAL(nTest1, 0.0f);
+  BOOST_TEST(static_cast<CIEC_LREAL::TValueType>(nTest1) == 0.0);
 
   nTest1 = CIEC_LREAL(std::numeric_limits<TForteDFloat>::min());
   nTest2 = nTest1;
-  BOOST_CHECK_EQUAL(nTest1, std::numeric_limits<TForteDFloat>::min());
-  BOOST_CHECK_EQUAL(nTest2, std::numeric_limits<TForteDFloat>::min());
+  BOOST_TEST(static_cast<CIEC_LREAL::TValueType>(nTest1) == std::numeric_limits<TForteDFloat>::min());
+  BOOST_TEST(static_cast<CIEC_LREAL::TValueType>(nTest2) == std::numeric_limits<TForteDFloat>::min());
 
   nTest1 = CIEC_LREAL(2.28743e6);
   nTest2 = nTest1;
-  BOOST_CHECK_EQUAL(nTest1, 2.28743e6);
-  BOOST_CHECK_EQUAL(nTest2, 2.28743e6);
+  BOOST_TEST(static_cast<CIEC_LREAL::TValueType>(nTest1) == 2.28743e6);
+  BOOST_TEST(static_cast<CIEC_LREAL::TValueType>(nTest2) == 2.28743e6);
 
-  nTest1 = CIEC_LREAL(-6.2587e-4f);
+  nTest1 = CIEC_LREAL(-6.2587e-4);
   nTest2 = nTest1;
-  BOOST_CHECK_EQUAL(nTest1, -6.2587e-4f);
-  BOOST_CHECK_EQUAL(nTest2, -6.2587e-4f);
+  BOOST_TEST(static_cast<CIEC_LREAL::TValueType>(nTest1) == -6.2587e-4);
+  BOOST_TEST(static_cast<CIEC_LREAL::TValueType>(nTest2) == -6.2587e-4);
 
-  nTest1 = CIEC_LREAL(1.0E-37f);
+  nTest1 = CIEC_LREAL(1.0E-37);
   nTest2 = nTest1;
-  BOOST_CHECK_EQUAL(nTest1, 1.0E-37f);
-  BOOST_CHECK_EQUAL(nTest2, 1.0E-37f);
+  BOOST_TEST(static_cast<CIEC_LREAL::TValueType>(nTest1) == 1.0E-37);
+  BOOST_TEST(static_cast<CIEC_LREAL::TValueType>(nTest2) == 1.0E-37);
 
   nTest1 = CIEC_LREAL(std::numeric_limits<TForteDFloat>::max());
   nTest2 = nTest1;
-  BOOST_CHECK_EQUAL(nTest1, std::numeric_limits<TForteDFloat>::max());
-  BOOST_CHECK_EQUAL(nTest2, std::numeric_limits<TForteDFloat>::max());
+  BOOST_TEST(static_cast<CIEC_LREAL::TValueType>(nTest1) == std::numeric_limits<TForteDFloat>::max());
+  BOOST_TEST(static_cast<CIEC_LREAL::TValueType>(nTest2) == std::numeric_limits<TForteDFloat>::max());
 
   //check that assignment operator does not intertwine objects
   nTest2 = CIEC_LREAL(-36.0);
-  BOOST_CHECK_EQUAL(nTest1, std::numeric_limits<TForteDFloat>::max());
-  BOOST_CHECK_EQUAL(nTest2, -36.0);
-
+  BOOST_TEST(static_cast<CIEC_LREAL::TValueType>(nTest1) == std::numeric_limits<TForteDFloat>::max());
+  BOOST_TEST(static_cast<CIEC_LREAL::TValueType>(nTest2) == -36.0);
 }
 
 BOOST_AUTO_TEST_CASE(Equality_test)
@@ -206,7 +205,7 @@ BOOST_AUTO_TEST_CASE(ToString_Tests)
 void lRealTypedFromString(const char *paTestString, double paResult){
   CIEC_LREAL nTest;
   BOOST_CHECK_EQUAL(nTest.fromString(paTestString), strlen(paTestString));
-  BOOST_CHECK_EQUAL(paResult, nTest);
+  BOOST_CHECK_EQUAL(paResult, static_cast<CIEC_LREAL::TValueType>(nTest));
 }
 
 void faultingLRealTypedFromString(const char *paTestString){

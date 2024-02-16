@@ -37,8 +37,11 @@ class CIEC_REAL final : public CIEC_ANY_REAL{
 
   public:
     using TValueType = TForteFloat;
+    [[deprecated("Please use the corresponding numeric_limits template")]]
     constexpr static size_t scmBitLength = 32U;
+    [[deprecated("Please use the corresponding numeric_limits template")]]
     static constexpr TValueType scmMinVal = std::numeric_limits<TValueType>::min();
+    [[deprecated("Please use the corresponding numeric_limits template")]]    
     static constexpr TValueType scmMaxVal = std::numeric_limits<TValueType>::max();
 
     CIEC_REAL() = default;
@@ -166,6 +169,13 @@ inline CIEC_REAL operator ""_REAL(unsigned long long int paValue) {
 
 inline CIEC_REAL operator ""_REAL(long double paValue) {
   return CIEC_REAL(static_cast<CIEC_REAL::TValueType>(paValue));
+}
+
+namespace std {
+  template <>
+  struct numeric_limits<CIEC_REAL> : public forte::templates::numeric_limits<CIEC_REAL> {
+    static constexpr size_t bitLength = 32U;
+  };
 }
 
 #endif /*_FORTE_REAL_H_*/

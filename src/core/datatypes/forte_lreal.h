@@ -40,9 +40,11 @@ class CIEC_LREAL final : public CIEC_ANY_REAL{
 
   public:
     using TValueType = TForteDFloat;
+    [[deprecated("Please use the corresponding numeric_limits template")]]
     constexpr static size_t scmBitLength = 64U;
-
+    [[deprecated("Please use the corresponding numeric_limits template")]]
     static constexpr TValueType scmMinVal = std::numeric_limits<TValueType>::min();
+    [[deprecated("Please use the corresponding numeric_limits template")]]
     static constexpr TValueType scmMaxVal = std::numeric_limits<TValueType>::max();
 
     CIEC_LREAL() = default;
@@ -135,7 +137,7 @@ class CIEC_LREAL final : public CIEC_ANY_REAL{
     }
 
     CIEC_LREAL operator-() const {
-      return CIEC_LREAL(-1.0 * *this);
+      return CIEC_LREAL(-1.0 * static_cast<TValueType>(*this));
     }
 
     /*! \brief Converts CIEC_LREAL to elementary 64 bit float
@@ -143,7 +145,7 @@ class CIEC_LREAL final : public CIEC_ANY_REAL{
      *   Conversion operator for converting CIEC_LREAL to elementary 64 bit float
      */
 
-    operator TForteDFloat() const{
+    explicit operator TForteDFloat() const {
       return getTDFLOAT();
     }
 
@@ -202,6 +204,13 @@ inline CIEC_LREAL operator ""_LREAL(unsigned long long int paValue) {
 
 inline CIEC_LREAL operator ""_LREAL(long double paValue) {
   return CIEC_LREAL(static_cast<CIEC_LREAL::TValueType>(paValue));
+}
+
+namespace std {
+  template <>
+  struct numeric_limits<CIEC_LREAL> : public forte::templates::numeric_limits<CIEC_LREAL> {
+    static constexpr size_t bitLength = 64U;
+  };
 }
 
 #endif /*_FORTE_LREAL_H_*/

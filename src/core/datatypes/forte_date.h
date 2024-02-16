@@ -27,6 +27,7 @@
 class CIEC_DATE final : public CIEC_ANY_DATE {
   DECLARE_FIRMWARE_DATATYPE(DATE)
   public:
+    [[deprecated("Please use the corresponding numeric_limits template")]]
     constexpr static size_t scmBitLength = 64U;
 
     CIEC_DATE() = default;
@@ -100,6 +101,13 @@ inline bool operator!=(const CIEC_DATE left, const CIEC_DATE &right) {
 
 inline CIEC_DATE operator ""_DATE(unsigned long long int paValue) {
   return CIEC_DATE(static_cast<CIEC_DATE::TValueType>(paValue));
+}
+
+namespace std {
+  template <>
+  struct numeric_limits<CIEC_DATE> : public forte::templates::numeric_limits<CIEC_DATE> {
+    static constexpr size_t bitLength = 64U;
+  };
 }
 
 #endif /*_FORTE_DATE_H_*/

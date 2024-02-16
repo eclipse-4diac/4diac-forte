@@ -276,12 +276,12 @@ BOOST_AUTO_TEST_SUITE(TypeLibDataTypeTests)
   BOOST_AUTO_TEST_CASE(createLREAL){
     TForteByte acDataBuf[sizeof(CIEC_LREAL)];
     CIEC_ANY *poVal = CTypeLib::createDataTypeInstance(g_nStringIdLREAL, acDataBuf);
-    BOOST_CHECK_EQUAL(CIEC_ANY::e_LREAL, poVal->getDataTypeID());
-    BOOST_CHECK_EQUAL(0.0f, *static_cast<CIEC_LREAL *>(poVal));
+    BOOST_TEST(CIEC_ANY::e_LREAL == poVal->getDataTypeID());
+    BOOST_TEST(0.0 == static_cast<CIEC_LREAL::TValueType>(*static_cast<CIEC_LREAL *>(poVal)));
 
     poVal = CTypeLib::createDataTypeInstance(g_nStringIdLREAL, nullptr);
-    BOOST_CHECK_EQUAL(CIEC_ANY::e_LREAL, poVal->getDataTypeID());
-    BOOST_CHECK_EQUAL(0.0f, *static_cast<CIEC_LREAL *>(poVal));
+    BOOST_TEST(CIEC_ANY::e_LREAL == poVal->getDataTypeID());
+    BOOST_TEST(0.0 == static_cast<CIEC_LREAL::TValueType>(*static_cast<CIEC_LREAL *>(poVal)));
     delete poVal;
   }
 
