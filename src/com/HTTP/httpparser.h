@@ -31,29 +31,33 @@ namespace forte {
          * Generates a HTTP GET request. The request is written to paDest
          * @param paDest place to store the request
          * @param paHost host of the server to connect
+         * @param paPort port of the server to connect
          * @param paPath path to look for
+         * @param paParams parameters to consider for the request
          */
-        static void createGetRequest(std::string& paDest, const std::string& paHost, const std::string& paPath);
+        static void createGetRequest(std::string& paDest, const std::string& paHost, const TForteUInt16 paPort, const std::string& paPath, const std::string &paAuth, const std::string& paParams);
 
         /**
          * Generates a HTTP PUT request. The request is written to paDest.
          * @param paDest place to store the request
          * @param paHost host of the server to connect
+         * @param paPort port of the server to connect
          * @param paPath path to access in the server
+         * @param paParams parameters to consider for the request
          * @param paData data in the body to send to the server
          * @param paContentType content type of the request
          * @param paType PUT or POST
          */
-        static void createPutPostRequest(std::string& paDest, const std::string& paHost, const std::string& paPath, const std::string& paData,
+        static void createPutPostRequest(std::string& paDest, const std::string& paHost, const TForteUInt16 paPort, const std::string& paPath, const std::string &paAuth, const std::string& paParams, const std::string& paBody,
             const std::string& paContentType, CHttpComLayer::ERequestType paType);
 
         /**
-         * Takes a previous PUT request in paDest, and updates the content of it
+         * Adds a body to the request.
          * @param paDest old request
-         * @param paData new data
-         * @return true if no error happened, false otherwise
+         * @param paContentType type of the body
+         * @param paBody body of the request
          */
-        static bool changePutPostData(std::string& paDest, const std::string& paData);
+        static void addBodyToRequest (const std::string &paBody, const std::string &paContentType, std::string &paDest);
 
         /**
          * Extracts data from a response to a HTTP request
@@ -108,10 +112,12 @@ namespace forte {
          *  Creates the common parts of the headers of the supported types
          * @param paDest place to store the header
          * @param paHost server host to be written in the header
+         * @param paPort server port to be written in the header
          * @param paPath the path to be written in the header
+         * @param paParams parameters to consider for the request
          * @param paType the type of request to be written in the header
          */
-        static void addCommonHeader(std::string& paDest, const std::string& paHost, const std::string& paPath, CHttpComLayer::ERequestType paType);
+        static void addCommonHeader (std::string &paDest, const std::string &paHost, const TForteUInt16 paPort, const std::string &paPath, const std::string &paAuth, const std::string &paParams, CHttpComLayer::ERequestType paType);
 
         /**
          * Appends the ending "\r\n\r\n" to the HTTP request
