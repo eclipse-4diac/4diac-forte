@@ -24,6 +24,37 @@
 #include "../../modules/PLCnext/plcNextDeviceStatus.h"
 #endif
 
+#ifdef __UCLIBC__
+extern "C" {
+  void * __stack_chk_guard = 0;
+
+  void __stack_chk_guard_setup(void) {
+    unsigned char *p;
+    p = (unsigned char *) &__stack_chk_guard;
+
+    p[0] = 0;
+    p[1] = 0;
+    p[2] = '\n';
+    p[3] = 255;	// XXX: Random this
+  }
+
+  /*
+   * This is called if the SSP checks fail, which means that the stack has been
+   * corrupted.
+   */
+  void __stack_chk_fail(void)
+  {
+    abort();
+  }
+
+  #include <link.h>
+  #include <sys/auxv.h>
+
+  #define AUX_MAX_AT_ID 40
+  ElfW(auxv_t) _dl_auxvt[AUX_MAX_AT_ID];
+}
+#endif
+
 /*!\brief Check if the correct endianess has been configured.
  *
  * If the right endianess is not set this function will end FORTE.
