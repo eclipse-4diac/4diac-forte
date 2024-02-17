@@ -72,9 +72,11 @@ namespace forte {
         /** Serializes the data to a char* */
         bool serializeData(const CIEC_ANY& paCIECData);
 
-        void sendDataAsServer(const void *paData);
+        void sendDataAsServer(const CIEC_ANY &paSD0);
 
-        void sendDataAsClient(const void *paData);
+        void sendDataAsClient(const CIEC_ANY &paSD0);
+
+        const CIEC_ANY& getSD0(void *paData);
 
         EComResponse openClientConnection(char* paLayerParameter);
 

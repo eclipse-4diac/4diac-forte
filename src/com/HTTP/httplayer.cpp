@@ -212,15 +212,20 @@ bool CHttpComLayer::handleAddress(const char* paAddress, size_t paNoOfSDs) {
   return everythingOK;
 }
 
+const CIEC_ANY& CHttpComLayer::getSD0(void *paData){
+  const CIEC_ANY **sds = static_cast<const CIEC_ANY **>(paData);
+  return sds[0]->unwrap();
+}
+
 EComResponse CHttpComLayer::sendData(void *paData, unsigned int) {
   mInterruptResp = e_Nothing;
   if(mCorrectlyInitialized) {
     switch(mFb->getComServiceType()){
       case e_Server:
-        sendDataAsServer(paData);
+        sendDataAsServer(getSD0(paData));
         break;
       case e_Client:
-        sendDataAsClient(paData);
+        sendDataAsClient(getSD0(paData));
         break;
       default:
         // e_Publisher and e_Subscriber
@@ -233,10 +238,9 @@ EComResponse CHttpComLayer::sendData(void *paData, unsigned int) {
   return mInterruptResp;
 }
 
-void CHttpComLayer::sendDataAsServer(const void *paData) {
+void CHttpComLayer::sendDataAsServer(const CIEC_ANY &paSD0) {
   bool error = false;
-  const CIEC_ANY* apoSDs = static_cast<const CIEC_ANY*>(paData);
-  if(!serializeData(apoSDs[0])) {
+  if(!serializeData(paSD0)) {
     error = true;
   } else {
     CHttpParser::createResponse(mRequest, "HTTP/1.1 200 OK"s, "text/plain"s, mReqData);
@@ -250,11 +254,10 @@ void CHttpComLayer::sendDataAsServer(const void *paData) {
   }
 }
 
-void CHttpComLayer::sendDataAsClient(const void *paData) {
+void CHttpComLayer::sendDataAsClient(const CIEC_ANY &paSD0) {
   bool error = false;
   if(mHasParameterInSD) {
-    const CIEC_ANY* apoSDs = static_cast<const CIEC_ANY*>(paData);
-    if(!serializeData(apoSDs[0])) {
+    if(!serializeData(paSD0)) {
       error = true;
       DEVLOG_ERROR("[HTTP Layer] Error in data serialization\n");
     } else {
