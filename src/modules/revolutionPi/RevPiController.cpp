@@ -19,19 +19,19 @@ const char * const RevPiController::scmFailedToResetControllerFile =
 const char * const RevPiController::scmFailedToGetDeviceList =
     "Failed to get device list";
 
-RevPiController::RevPiController(CDeviceExecution& paDeviceExecution) : forte::core::IO::IODeviceMultiController(paDeviceExecution),
+RevPiController::RevPiController(CDeviceExecution& paDeviceExecution) : forte::core::io::IODeviceMultiController(paDeviceExecution),
     deviceCount(0) {
-  config.UpdateInterval = 25;
+  config.updateInterval = 25;
 }
 
-void RevPiController::setConfig(struct forte::core::IO::IODeviceController::Config* config) {
-  Config newConfig = *static_cast<Config*>(config);
+void RevPiController::setConfig(struct forte::core::io::IODeviceController::Config* paConfig) {
+  Config newConfig = *static_cast<Config*>(paConfig);
 
-  if (newConfig.UpdateInterval <= 0) {
+  if (newConfig.updateInterval <= 0) {
     DEVLOG_WARNING(
         "[RevPiController] Configured UpdateInterval is set to an invalid value '%d'. Set to 25.\n",
-        newConfig.UpdateInterval);
-    newConfig.UpdateInterval = 25;
+        newConfig.updateInterval);
+    newConfig.updateInterval = 25;
   }
 
   this->config = newConfig;
@@ -68,15 +68,15 @@ const char* RevPiController::init() {
   return 0;
 }
 
-forte::core::IO::IOHandle* RevPiController::initHandle(
-    forte::core::IO::IODeviceMultiController::HandleDescriptor *handleDescriptor) {
-  HandleDescriptor desc = *static_cast<HandleDescriptor*>(handleDescriptor);
+forte::core::io::IOHandle* RevPiController::initHandle(
+    forte::core::io::IODeviceMultiController::HandleDescriptor *paHandleDescriptor) {
+  HandleDescriptor desc = *static_cast<HandleDescriptor*>(paHandleDescriptor);
 
-  return new RevPiHandle(this, desc.type, desc.direction,
-      static_cast<uint16_t>(deviceList[desc.slaveIndex + 1].i16uBaseOffset + desc.offset
-          + (desc.direction == forte::core::IO::IOMapper::In ?
-              deviceList[desc.slaveIndex + 1].i16uInputOffset :
-              deviceList[desc.slaveIndex + 1].i16uOutputOffset)), desc.position);
+  return new RevPiHandle(this, desc.type, desc.mDirection,
+      static_cast<uint16_t>(deviceList[desc.mSlaveIndex + 1].i16uBaseOffset + desc.offset
+          + (desc.mDirection == forte::core::io::IOMapper::In ?
+              deviceList[desc.mSlaveIndex + 1].i16uInputOffset :
+              deviceList[desc.mSlaveIndex + 1].i16uOutputOffset)), desc.position);
 }
 
 void RevPiController::deInit() {
@@ -86,7 +86,7 @@ void RevPiController::deInit() {
 
 void RevPiController::runLoop() {
   while (isAlive()) {
-    mTimeoutSemaphore.timedWait(1000000000 / config.UpdateInterval);
+    mTimeoutSemaphore.timedWait(1000000000 / config.updateInterval);
 
     // Perform poll operation
     this->checkForInputChanges();
@@ -94,24 +94,23 @@ void RevPiController::runLoop() {
   }
 }
 
-void RevPiController::addSlaveHandle(int, forte::core::IO::IOHandle* handle) {
-  handleMutex.lock();
-  handle->is(forte::core::IO::IOMapper::In) ? inputHandles.pushBack(handle) : outputHandles.pushBack(handle);
-  handleMutex.unlock();
+void RevPiController::addSlaveHandle(int, forte::core::io::IOHandle* paHandle) {
+  CCriticalRegion criticalRegion(mHandleMutex);
+  paHandle->isInput() ? mInputHandles.pushBack(paHandle) : mOutputHandles.pushBack(paHandle);
 }
 
 void RevPiController::dropSlaveHandles(int) {
   // Is handled by #dropHandles method
 }
 
-bool RevPiController::isSlaveAvailable(int index) {
-  return index + 1 < deviceCount;
+bool RevPiController::isSlaveAvailable(int paIndex) {
+  return paIndex + 1 < deviceCount;
 }
 
-bool RevPiController::checkSlaveType(int index, int type) {
-  return deviceList[index + 1].i16uModuleType == type;
+bool RevPiController::checkSlaveType(int paIndex, int paType) {
+  return deviceList[paIndex + 1].i16uModuleType == paType;
 }
 
-bool RevPiController::isHandleValueEqual(forte::core::IO::IOHandle* handle) {
-  return !((RevPiHandle*) handle)->check();
+bool RevPiController::isHandleValueEqual(forte::core::io::IOHandle* paHandle) {
+  return !static_cast<RevPiHandle*>(paHandle)->check();
 }

@@ -9,77 +9,70 @@
  *   Johannes Messmer - initial API and implementation and/or initial documentation
  *******************************************************************************/
 
-#ifndef _IOREVPIBUSADAPTER_H_
-#define _IOREVPIBUSADAPTER_H_
+#pragma once
 
 #include <io/configFB/io_adapter_multi.h>
-#include <typelib.h>
-#include <forte_bool.h>
-#include <forte_uint.h>
+#include "adapter.h"
+#include "typelib.h"
+#include "forte_bool.h"
+#include "forte_uint.h"
 
-class FORTE_IORevPiBusAdapter: public forte::core::IO::IOConfigFBMultiAdapter {
+class FORTE_IORevPiBusAdapter: public forte::core::io::IOConfigFBMultiAdapter {
   DECLARE_ADAPTER_TYPE(FORTE_IORevPiBusAdapter)
 
-private:
- private:
-  static const CStringDictionary::TStringId scm_anDataInputNames[];
-  static const CStringDictionary::TStringId scm_anDataInputTypeIds[];
- public:
-  CIEC_BOOL &QO() {
-    return *static_cast<CIEC_BOOL*>((isSocket()) ? getDI(0) : getDO(0));
-  };
+  private:
+    static const CStringDictionary::TStringId scmDataInputNames[];
+    static const CStringDictionary::TStringId scmDataInputTypeIds[];
+    static const CStringDictionary::TStringId scmDataOutputNames[];
+    static const CStringDictionary::TStringId scmDataOutputTypeIds[];
 
- private:
-  static const CStringDictionary::TStringId scm_anDataOutputNames[];
-  static const CStringDictionary::TStringId scm_anDataOutputTypeIds[];
- public:
-  CIEC_BOOL &QI() {
-    return *static_cast<CIEC_BOOL*>((isSocket()) ? getDO(0) : getDI(0));
-  };
+    static const TDataIOID scmEIWith[];
+    static const TForteInt16 scmEIWithIndexes[];
+    static const CStringDictionary::TStringId scmEventInputNames[];
 
-  CIEC_UINT &MasterId() {
-    return *static_cast<CIEC_UINT*>((isSocket()) ? getDO(1) : getDI(1));
-  };
+    static const TDataIOID scmEOWith[];
+    static const TForteInt16 scmEOWithIndexes[];
+    static const CStringDictionary::TStringId scmEventOutputNames[];
 
-  CIEC_UINT &Index() {
-    return *static_cast<CIEC_UINT*>((isSocket()) ? getDO(2) : getDI(2));
-  };
+    static const SFBInterfaceSpec scmFBInterfaceSpecSocket;
 
- public:
-  static const TEventID scm_nEventINITOID = 0;
-  int INITO() {
-    return m_nParentAdapterListEventID + scm_nEventINITOID;
-  }
- private:
-  static const TForteInt16 scm_anEIWithIndexes[];
-  static const TDataIOID scm_anEIWith[];
-  static const CStringDictionary::TStringId scm_anEventInputNames[];
+    static const SFBInterfaceSpec scmFBInterfaceSpecPlug;
 
- public:
-  static const TEventID scm_nEventINITID = 0;
-  int INIT() {
-    return m_nParentAdapterListEventID + scm_nEventINITID;
-  }
- private:
-  static const TForteInt16 scm_anEOWithIndexes[];
-  static const TDataIOID scm_anEOWith[];
-  static const CStringDictionary::TStringId scm_anEventOutputNames[];
+    void readInputData(TEventID paEIID) override;
+    void writeOutputData(TEventID paEIID) override;
 
-  static const SFBInterfaceSpec scm_stFBInterfaceSpecSocket;
+  public:
+    ADAPTER_CTOR_FOR_IO_MULTI (FORTE_IORevPiBusAdapter) {
+    };
+    virtual ~FORTE_IORevPiBusAdapter(){};
 
-  static const SFBInterfaceSpec scm_stFBInterfaceSpecPlug;
+    static const TEventID scmEventINITOID = 0;
+    static const TEventID scmEventINITID = 0;
 
-   FORTE_ADAPTER_DATA_ARRAY(1, 1, 1, 3, 0);
+    static const TForteUInt8 scm_slaveConfigurationIO[];
+    static const TForteUInt8 scm_slaveConfigurationIO_num;
 
-public:
-  ADAPTER_CTOR_FOR_IO_MULTI (FORTE_IORevPiBusAdapter) {
-  };
-  static const TForteUInt8 scm_slaveConfigurationIO[];
-  static const TForteUInt8 scm_slaveConfigurationIO_num;
+    CIEC_BOOL &var_QO() {
+      return *static_cast<CIEC_BOOL*>((isSocket()) ? getDI(0) : getDO(0));
+    }
 
-  virtual ~FORTE_IORevPiBusAdapter(){};
+    CIEC_BOOL &var_QI() {
+      return *static_cast<CIEC_BOOL*>((isSocket()) ? getDO(0) : getDI(0));
+    }
 
+    CIEC_UINT &var_MasterId() {
+      return *static_cast<CIEC_UINT*>((isSocket()) ? getDO(1) : getDI(1));
+    }
+
+    CIEC_UINT &var_Index() {
+      return *static_cast<CIEC_UINT*>((isSocket()) ? getDO(2) : getDI(2));
+    }
+
+    TEventID evt_INITO() {
+      return mParentAdapterListEventID + scmEventINITOID;
+    }
+
+    TEventID evt_INIT() {
+      return mParentAdapterListEventID + scmEventINITID;
+    }
 };
-
-#endif //close the ifdef sequence from the beginning of the file
-

@@ -12,13 +12,13 @@
 #include "RevPiHandle.h"
 #include <forte_word.h>
 
-RevPiHandle::RevPiHandle(RevPiController *controller, CIEC_ANY::EDataTypeID type,
-    forte::core::IO::IOMapper::Direction direction, uint16_t offset, uint8_t position) :
-    forte::core::IO::IOHandle(controller, direction, type), valueLastCheck(0) {
-  control.i16uAddress = offset;
-  control.i8uBit = position;
+RevPiHandle::RevPiHandle(RevPiController *paController, CIEC_ANY::EDataTypeID paType,
+    forte::core::io::IOMapper::Direction paDirection, uint16_t paOffset, uint8_t paPosition) :
+    forte::core::io::IOHandle(paController, paDirection, paType), valueLastCheck(0) {
+  control.i16uAddress = paOffset;
+  control.i8uBit = paPosition;
   control.i8uValue = 0;
-  switch(type){
+  switch(mType){
     case CIEC_ANY::e_BOOL:
       valueLastCheck = new CIEC_BOOL;
       break;
@@ -36,14 +36,14 @@ RevPiHandle::~RevPiHandle(){
   }
 }
 
-void RevPiHandle::set(const CIEC_ANY &state) {
-  switch(type){
+void RevPiHandle::set(const CIEC_ANY &paState) {
+  switch(mType){
       case CIEC_ANY::e_BOOL:
-        control.i8uValue = static_cast<const CIEC_BOOL&>(state) ? 1 : 0;
+        control.i8uValue = static_cast<const CIEC_BOOL&>(paState) ? 1 : 0;
         piControlSetBitValue(&control);
         break;
       case CIEC_ANY::e_WORD:{
-        TForteWord value = static_cast<TForteWord>(static_cast<const CIEC_WORD&>(state));
+        TForteWord value = static_cast<TForteWord>(static_cast<const CIEC_WORD&>(paState));
         piControlWrite(control.i16uAddress, 2,  reinterpret_cast<uint8_t*>(&value));
         break;
       }
@@ -52,16 +52,16 @@ void RevPiHandle::set(const CIEC_ANY &state) {
     }
 }
 
-void RevPiHandle::get(CIEC_ANY &state) {
-  switch (type){
+void RevPiHandle::get(CIEC_ANY &paState) {
+  switch (mType){
     case CIEC_ANY::e_BOOL:
       piControlGetBitValue(&control);
-      static_cast<CIEC_BOOL&>(state) = control.i8uValue;
+      static_cast<CIEC_BOOL&>(paState) = CIEC_BOOL(0 != control.i8uValue);
       break;
     case CIEC_ANY::e_WORD:{
       TForteWord value;
       piControlRead(control.i16uAddress, 2, reinterpret_cast<uint8_t*>(&value));
-      static_cast<CIEC_WORD&>(state) = value;
+      static_cast<CIEC_WORD&>(paState) = CIEC_WORD(value);
       break;
     }
     default:
@@ -71,7 +71,7 @@ void RevPiHandle::get(CIEC_ANY &state) {
 
 bool RevPiHandle::check() {
   bool changed;
-  switch (type){
+  switch (mType){
     case CIEC_ANY::e_BOOL:{
       CIEC_BOOL value;
       get(value);
@@ -93,8 +93,6 @@ bool RevPiHandle::check() {
 }
 
 void RevPiHandle::dropObserver() {
-  CIEC_WORD state = 0; //should work for boolean too
-  set(state);
-
-  forte::core::IO::IOHandle::dropObserver();
+  set(CIEC_WORD(0));
+  forte::core::io::IOHandle::dropObserver();
 }

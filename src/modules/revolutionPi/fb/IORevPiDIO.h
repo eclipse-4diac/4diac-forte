@@ -9,188 +9,175 @@
  *   Johannes Messmer - initial API and implementation and/or initial documentation
  *******************************************************************************/
 
-#ifndef _IOREVPIDIO_H_
-#define _IOREVPIDIO_H_
+#pragma once
 
-#include <funcbloc.h>
-#include <forte_bool.h>
-#include <forte_wstring.h>
+#include "funcbloc.h"
+#include "forte_bool.h"
+#include "forte_wstring.h"
 #include "IORevPiBusAdapter.h"
 #include <io/configFB/io_slave_multi.h>
 
-class FORTE_IORevPiDIO: public forte::core::IO::IOConfigFBMultiSlave {
+class FORTE_IORevPiDIO: public forte::core::io::IOConfigFBMultiSlave {
 DECLARE_FIRMWARE_FB(FORTE_IORevPiDIO)
 
 private:
-  static const CStringDictionary::TStringId scm_anDataInputNames[];
-  static const CStringDictionary::TStringId scm_anDataInputTypeIds[];
-  CIEC_BOOL &QI() {
-    return *static_cast<CIEC_BOOL*>(getDI(0));
-  }
+  static const CStringDictionary::TStringId scmDataInputNames[];
+  static const CStringDictionary::TStringId scmDataInputTypeIds[];
+  static const CStringDictionary::TStringId scmDataOutputNames[];
+  static const CStringDictionary::TStringId scmDataOutputTypeIds[];
+  static const TEventID scmEventMAPID = 0;
+  static const TDataIOID scmEIWith[];
+  static const TForteInt16 scmEIWithIndexes[];
+  static const CStringDictionary::TStringId scmEventInputNames[];
+  static const TEventID scmEventMAPOID = 0;
+  static const TEventID scmEventINDID = 1;
+  static const TDataIOID scmEOWith[];
+  static const TForteInt16 scmEOWithIndexes[];
+  static const CStringDictionary::TStringId scmEventOutputNames[];
+  static const int scmBusAdapterInAdpNum = 0;
+  static const int scmBusAdapterOutAdpNum = 1;
+  static const SAdapterInstanceDef scmAdapterInstances[];
 
-  CIEC_WSTRING &DigitalInput_1() {
-    return *static_cast<CIEC_WSTRING*>(getDI(1));
-  }
+  static const SFBInterfaceSpec scmFBInterfaceSpec;
 
-  CIEC_WSTRING &DigitalInput_2() {
-    return *static_cast<CIEC_WSTRING*>(getDI(2));
-  }
-
-  CIEC_WSTRING &DigitalInput_3() {
-    return *static_cast<CIEC_WSTRING*>(getDI(3));
-  }
-
-  CIEC_WSTRING &DigitalInput_4() {
-    return *static_cast<CIEC_WSTRING*>(getDI(4));
-  }
-
-  CIEC_WSTRING &DigitalInput_5() {
-    return *static_cast<CIEC_WSTRING*>(getDI(5));
-  }
-
-  CIEC_WSTRING &DigitalInput_6() {
-    return *static_cast<CIEC_WSTRING*>(getDI(6));
-  }
-
-  CIEC_WSTRING &DigitalInput_7() {
-    return *static_cast<CIEC_WSTRING*>(getDI(7));
-  }
-
-  CIEC_WSTRING &DigitalInput_8() {
-    return *static_cast<CIEC_WSTRING*>(getDI(8));
-  }
-
-  CIEC_WSTRING &DigitalInput_9() {
-    return *static_cast<CIEC_WSTRING*>(getDI(9));
-  }
-
-  CIEC_WSTRING &DigitalInput_10() {
-    return *static_cast<CIEC_WSTRING*>(getDI(10));
-  }
-
-  CIEC_WSTRING &DigitalInput_11() {
-    return *static_cast<CIEC_WSTRING*>(getDI(11));
-  }
-
-  CIEC_WSTRING &DigitalInput_12() {
-    return *static_cast<CIEC_WSTRING*>(getDI(12));
-  }
-
-  CIEC_WSTRING &DigitalInput_13() {
-    return *static_cast<CIEC_WSTRING*>(getDI(13));
-  }
-
-  CIEC_WSTRING &DigitalInput_14() {
-    return *static_cast<CIEC_WSTRING*>(getDI(14));
-  }
-
-  CIEC_WSTRING &DigitalOutput_1() {
-    return *static_cast<CIEC_WSTRING*>(getDI(15));
-  }
-
-  CIEC_WSTRING &DigitalOutput_2() {
-    return *static_cast<CIEC_WSTRING*>(getDI(16));
-  }
-
-  CIEC_WSTRING &DigitalOutput_3() {
-    return *static_cast<CIEC_WSTRING*>(getDI(17));
-  }
-
-  CIEC_WSTRING &DigitalOutput_4() {
-    return *static_cast<CIEC_WSTRING*>(getDI(18));
-  }
-
-  CIEC_WSTRING &DigitalOutput_5() {
-    return *static_cast<CIEC_WSTRING*>(getDI(19));
-  }
-
-  CIEC_WSTRING &DigitalOutput_6() {
-    return *static_cast<CIEC_WSTRING*>(getDI(20));
-  }
-
-  CIEC_WSTRING &DigitalOutput_7() {
-    return *static_cast<CIEC_WSTRING*>(getDI(21));
-  }
-
-  CIEC_WSTRING &DigitalOutput_8() {
-    return *static_cast<CIEC_WSTRING*>(getDI(22));
-  }
-
-  CIEC_WSTRING &DigitalOutput_9() {
-    return *static_cast<CIEC_WSTRING*>(getDI(23));
-  }
-
-  CIEC_WSTRING &DigitalOutput_10() {
-    return *static_cast<CIEC_WSTRING*>(getDI(24));
-  }
-
-  CIEC_WSTRING &DigitalOutput_11() {
-    return *static_cast<CIEC_WSTRING*>(getDI(25));
-  }
-
-  CIEC_WSTRING &DigitalOutput_12() {
-    return *static_cast<CIEC_WSTRING*>(getDI(26));
-  }
-
-  CIEC_WSTRING &DigitalOutput_13() {
-    return *static_cast<CIEC_WSTRING*>(getDI(27));
-  }
-
-  CIEC_WSTRING &DigitalOutput_14() {
-    return *static_cast<CIEC_WSTRING*>(getDI(28));
-  }
-
-  static const CStringDictionary::TStringId scm_anDataOutputNames[];
-  static const CStringDictionary::TStringId scm_anDataOutputTypeIds[];
-  CIEC_BOOL &QO() {
-    return *static_cast<CIEC_BOOL*>(getDO(0));
-  }
-
-  CIEC_WSTRING &STATUS() {
-    return *static_cast<CIEC_WSTRING*>(getDO(1));
-  }
-
-  static const TEventID scm_nEventMAPID = 0;
-  static const TForteInt16 scm_anEIWithIndexes[];
-  static const TDataIOID scm_anEIWith[];
-  static const CStringDictionary::TStringId scm_anEventInputNames[];
-
-  static const TEventID scm_nEventMAPOID = 0;
-  static const TEventID scm_nEventINDID = 1;
-  static const TForteInt16 scm_anEOWithIndexes[];
-  static const TDataIOID scm_anEOWith[];
-  static const CStringDictionary::TStringId scm_anEventOutputNames[];
-
-  static const SAdapterInstanceDef scm_astAdapterInstances[];
-
-  FORTE_IORevPiBusAdapter& BusAdapterOut() {
-    return (*static_cast<FORTE_IORevPiBusAdapter*>(m_apoAdapters[0]));
-  }
-
-  static const int scm_nBusAdapterOutAdpNum = 0;
-  FORTE_IORevPiBusAdapter& BusAdapterIn() {
-    return (*static_cast<FORTE_IORevPiBusAdapter*>(m_apoAdapters[1]));
-  }
-
-  static const int scm_nBusAdapterInAdpNum = 1;
-  static const SFBInterfaceSpec scm_stFBInterfaceSpec;
-
-  FORTE_FB_DATA_ARRAY(2, 29, 2, 2)
+  void readInputData(TEventID paEIID) override;
+  void writeOutputData(TEventID paEIID) override;
+  void setInitialValues() override;
 
   static const TForteUInt8 scm_slaveConfigurationIO[];
   static const TForteUInt8 scm_slaveConfigurationIO_num;
 
 public:
-  FUNCTION_BLOCK_CTOR_FOR_IO_MULTI_SLAVE(FORTE_IORevPiDIO, forte::core::IO::IOConfigFBMultiSlave, 96){
+  FUNCTION_BLOCK_CTOR_FOR_IO_MULTI_SLAVE(FORTE_IORevPiDIO, forte::core::io::IOConfigFBMultiSlave, 96){
+  };
+
+  virtual ~FORTE_IORevPiDIO() {};
+
+  CIEC_BOOL var_QI;
+  CIEC_WSTRING var_DigitalInput_1;
+  CIEC_WSTRING var_DigitalInput_2;
+  CIEC_WSTRING var_DigitalInput_3;
+  CIEC_WSTRING var_DigitalInput_4;
+  CIEC_WSTRING var_DigitalInput_5;
+  CIEC_WSTRING var_DigitalInput_6;
+  CIEC_WSTRING var_DigitalInput_7;
+  CIEC_WSTRING var_DigitalInput_8;
+  CIEC_WSTRING var_DigitalInput_9;
+  CIEC_WSTRING var_DigitalInput_10;
+  CIEC_WSTRING var_DigitalInput_11;
+  CIEC_WSTRING var_DigitalInput_12;
+  CIEC_WSTRING var_DigitalInput_13;
+  CIEC_WSTRING var_DigitalInput_14;
+  CIEC_WSTRING var_DigitalOutput_1;
+  CIEC_WSTRING var_DigitalOutput_2;
+  CIEC_WSTRING var_DigitalOutput_3;
+  CIEC_WSTRING var_DigitalOutput_4;
+  CIEC_WSTRING var_DigitalOutput_5;
+  CIEC_WSTRING var_DigitalOutput_6;
+  CIEC_WSTRING var_DigitalOutput_7;
+  CIEC_WSTRING var_DigitalOutput_8;
+  CIEC_WSTRING var_DigitalOutput_9;
+  CIEC_WSTRING var_DigitalOutput_10;
+  CIEC_WSTRING var_DigitalOutput_11;
+  CIEC_WSTRING var_DigitalOutput_12;
+  CIEC_WSTRING var_DigitalOutput_13;
+  CIEC_WSTRING var_DigitalOutput_14;
+
+  CIEC_BOOL var_QO;
+  CIEC_WSTRING var_STATUS;
+
+  CIEC_BOOL var_conn_QO;
+  CIEC_WSTRING var_conn_STATUS;
+
+  CEventConnection conn_MAPO;
+  CEventConnection conn_IND;
+
+  CDataConnection *conn_QI;
+  CDataConnection *conn_DigitalInput_1;
+  CDataConnection *conn_DigitalInput_2;
+  CDataConnection *conn_DigitalInput_3;
+  CDataConnection *conn_DigitalInput_4;
+  CDataConnection *conn_DigitalInput_5;
+  CDataConnection *conn_DigitalInput_6;
+  CDataConnection *conn_DigitalInput_7;
+  CDataConnection *conn_DigitalInput_8;
+  CDataConnection *conn_DigitalInput_9;
+  CDataConnection *conn_DigitalInput_10;
+  CDataConnection *conn_DigitalInput_11;
+  CDataConnection *conn_DigitalInput_12;
+  CDataConnection *conn_DigitalInput_13;
+  CDataConnection *conn_DigitalInput_14;
+  CDataConnection *conn_DigitalOutput_1;
+  CDataConnection *conn_DigitalOutput_2;
+  CDataConnection *conn_DigitalOutput_3;
+  CDataConnection *conn_DigitalOutput_4;
+  CDataConnection *conn_DigitalOutput_5;
+  CDataConnection *conn_DigitalOutput_6;
+  CDataConnection *conn_DigitalOutput_7;
+  CDataConnection *conn_DigitalOutput_8;
+  CDataConnection *conn_DigitalOutput_9;
+  CDataConnection *conn_DigitalOutput_10;
+  CDataConnection *conn_DigitalOutput_11;
+  CDataConnection *conn_DigitalOutput_12;
+  CDataConnection *conn_DigitalOutput_13;
+  CDataConnection *conn_DigitalOutput_14;
+
+  CDataConnection conn_QO;
+  CDataConnection conn_STATUS;
+
+  CIEC_ANY *getDI(size_t) override;
+  CIEC_ANY *getDO(size_t) override;
+  FORTE_IORevPiBusAdapter &var_BusAdapterIn() {
+    return *static_cast<FORTE_IORevPiBusAdapter*>(mAdapters[0]);
+  };
+
+  FORTE_IORevPiBusAdapter &var_BusAdapterOut() {
+    return *static_cast<FORTE_IORevPiBusAdapter*>(mAdapters[1]);
+  };
+
+  CEventConnection *getEOConUnchecked(TPortId) override;
+  CDataConnection **getDIConUnchecked(TPortId) override;
+  CDataConnection *getDOConUnchecked(TPortId) override;
+
+  void evt_MAP(const CIEC_BOOL &paQI, const CIEC_WSTRING &paDigitalInput_1, const CIEC_WSTRING &paDigitalInput_2, const CIEC_WSTRING &paDigitalInput_3, const CIEC_WSTRING &paDigitalInput_4, const CIEC_WSTRING &paDigitalInput_5, const CIEC_WSTRING &paDigitalInput_6, const CIEC_WSTRING &paDigitalInput_7, const CIEC_WSTRING &paDigitalInput_8, const CIEC_WSTRING &paDigitalInput_9, const CIEC_WSTRING &paDigitalInput_10, const CIEC_WSTRING &paDigitalInput_11, const CIEC_WSTRING &paDigitalInput_12, const CIEC_WSTRING &paDigitalInput_13, const CIEC_WSTRING &paDigitalInput_14, const CIEC_WSTRING &paDigitalOutput_1, const CIEC_WSTRING &paDigitalOutput_2, const CIEC_WSTRING &paDigitalOutput_3, const CIEC_WSTRING &paDigitalOutput_4, const CIEC_WSTRING &paDigitalOutput_5, const CIEC_WSTRING &paDigitalOutput_6, const CIEC_WSTRING &paDigitalOutput_7, const CIEC_WSTRING &paDigitalOutput_8, const CIEC_WSTRING &paDigitalOutput_9, const CIEC_WSTRING &paDigitalOutput_10, const CIEC_WSTRING &paDigitalOutput_11, const CIEC_WSTRING &paDigitalOutput_12, const CIEC_WSTRING &paDigitalOutput_13, const CIEC_WSTRING &paDigitalOutput_14, CIEC_BOOL &paQO, CIEC_WSTRING &paSTATUS) {
+    var_QI = paQI;
+    var_DigitalInput_1 = paDigitalInput_1;
+    var_DigitalInput_2 = paDigitalInput_2;
+    var_DigitalInput_3 = paDigitalInput_3;
+    var_DigitalInput_4 = paDigitalInput_4;
+    var_DigitalInput_5 = paDigitalInput_5;
+    var_DigitalInput_6 = paDigitalInput_6;
+    var_DigitalInput_7 = paDigitalInput_7;
+    var_DigitalInput_8 = paDigitalInput_8;
+    var_DigitalInput_9 = paDigitalInput_9;
+    var_DigitalInput_10 = paDigitalInput_10;
+    var_DigitalInput_11 = paDigitalInput_11;
+    var_DigitalInput_12 = paDigitalInput_12;
+    var_DigitalInput_13 = paDigitalInput_13;
+    var_DigitalInput_14 = paDigitalInput_14;
+    var_DigitalOutput_1 = paDigitalOutput_1;
+    var_DigitalOutput_2 = paDigitalOutput_2;
+    var_DigitalOutput_3 = paDigitalOutput_3;
+    var_DigitalOutput_4 = paDigitalOutput_4;
+    var_DigitalOutput_5 = paDigitalOutput_5;
+    var_DigitalOutput_6 = paDigitalOutput_6;
+    var_DigitalOutput_7 = paDigitalOutput_7;
+    var_DigitalOutput_8 = paDigitalOutput_8;
+    var_DigitalOutput_9 = paDigitalOutput_9;
+    var_DigitalOutput_10 = paDigitalOutput_10;
+    var_DigitalOutput_11 = paDigitalOutput_11;
+    var_DigitalOutput_12 = paDigitalOutput_12;
+    var_DigitalOutput_13 = paDigitalOutput_13;
+    var_DigitalOutput_14 = paDigitalOutput_14;
+    executeEvent(scmEventMAPID, nullptr);
+    paQO = var_QO;
+    paSTATUS = var_STATUS;
+  }
+
+  void operator()(const CIEC_BOOL &paQI, const CIEC_WSTRING &paDigitalInput_1, const CIEC_WSTRING &paDigitalInput_2, const CIEC_WSTRING &paDigitalInput_3, const CIEC_WSTRING &paDigitalInput_4, const CIEC_WSTRING &paDigitalInput_5, const CIEC_WSTRING &paDigitalInput_6, const CIEC_WSTRING &paDigitalInput_7, const CIEC_WSTRING &paDigitalInput_8, const CIEC_WSTRING &paDigitalInput_9, const CIEC_WSTRING &paDigitalInput_10, const CIEC_WSTRING &paDigitalInput_11, const CIEC_WSTRING &paDigitalInput_12, const CIEC_WSTRING &paDigitalInput_13, const CIEC_WSTRING &paDigitalInput_14, const CIEC_WSTRING &paDigitalOutput_1, const CIEC_WSTRING &paDigitalOutput_2, const CIEC_WSTRING &paDigitalOutput_3, const CIEC_WSTRING &paDigitalOutput_4, const CIEC_WSTRING &paDigitalOutput_5, const CIEC_WSTRING &paDigitalOutput_6, const CIEC_WSTRING &paDigitalOutput_7, const CIEC_WSTRING &paDigitalOutput_8, const CIEC_WSTRING &paDigitalOutput_9, const CIEC_WSTRING &paDigitalOutput_10, const CIEC_WSTRING &paDigitalOutput_11, const CIEC_WSTRING &paDigitalOutput_12, const CIEC_WSTRING &paDigitalOutput_13, const CIEC_WSTRING &paDigitalOutput_14, CIEC_BOOL &paQO, CIEC_WSTRING &paSTATUS) {
+    evt_MAP(paQI, paDigitalInput_1, paDigitalInput_2, paDigitalInput_3, paDigitalInput_4, paDigitalInput_5, paDigitalInput_6, paDigitalInput_7, paDigitalInput_8, paDigitalInput_9, paDigitalInput_10, paDigitalInput_11, paDigitalInput_12, paDigitalInput_13, paDigitalInput_14, paDigitalOutput_1, paDigitalOutput_2, paDigitalOutput_3, paDigitalOutput_4, paDigitalOutput_5, paDigitalOutput_6, paDigitalOutput_7, paDigitalOutput_8, paDigitalOutput_9, paDigitalOutput_10, paDigitalOutput_11, paDigitalOutput_12, paDigitalOutput_13, paDigitalOutput_14, paQO, paSTATUS);
+  }
+
+  protected:
+    void initHandles();
 };
-
-virtual ~FORTE_IORevPiDIO() {};
-
-protected:
-
-void initHandles();
-
-};
-
-#endif //close the ifdef sequence from the beginning of the file
-

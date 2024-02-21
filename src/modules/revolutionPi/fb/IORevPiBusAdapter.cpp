@@ -16,37 +16,80 @@
 
 DEFINE_ADAPTER_TYPE(FORTE_IORevPiBusAdapter, g_nStringIdIORevPiBusAdapter)
 
-const CStringDictionary::TStringId FORTE_IORevPiBusAdapter::scm_anDataInputNames[] = {g_nStringIdQO};
+const CStringDictionary::TStringId FORTE_IORevPiBusAdapter::scmDataInputNames[] = {g_nStringIdQO};
+const CStringDictionary::TStringId FORTE_IORevPiBusAdapter::scmDataInputTypeIds[] = {g_nStringIdBOOL};
+const CStringDictionary::TStringId FORTE_IORevPiBusAdapter::scmDataOutputNames[] = {g_nStringIdQI, g_nStringIdMasterId, g_nStringIdIndex};
+const CStringDictionary::TStringId FORTE_IORevPiBusAdapter::scmDataOutputTypeIds[] = {g_nStringIdBOOL, g_nStringIdUINT, g_nStringIdUINT};
+const TDataIOID FORTE_IORevPiBusAdapter::scmEIWith[] = {0, scmWithListDelimiter};
+const TForteInt16 FORTE_IORevPiBusAdapter::scmEIWithIndexes[] = {0};
+const CStringDictionary::TStringId FORTE_IORevPiBusAdapter::scmEventInputNames[] = {g_nStringIdINITO};
+const TDataIOID FORTE_IORevPiBusAdapter::scmEOWith[] = {2, 1, 0, scmWithListDelimiter};
+const TForteInt16 FORTE_IORevPiBusAdapter::scmEOWithIndexes[] = {0};
+const CStringDictionary::TStringId FORTE_IORevPiBusAdapter::scmEventOutputNames[] = {g_nStringIdINIT};
 
-const CStringDictionary::TStringId FORTE_IORevPiBusAdapter::scm_anDataInputTypeIds[] = {g_nStringIdBOOL};
-
-const CStringDictionary::TStringId FORTE_IORevPiBusAdapter::scm_anDataOutputNames[] = {g_nStringIdQI, g_nStringIdMasterId, g_nStringIdIndex};
-
-const CStringDictionary::TStringId FORTE_IORevPiBusAdapter::scm_anDataOutputTypeIds[] = {g_nStringIdBOOL, g_nStringIdUINT, g_nStringIdUINT};
-
-const TDataIOID FORTE_IORevPiBusAdapter::scm_anEIWith[] = {0, 255};
-const TForteInt16 FORTE_IORevPiBusAdapter::scm_anEIWithIndexes[] = {0, -1};
-const CStringDictionary::TStringId FORTE_IORevPiBusAdapter::scm_anEventInputNames[] = {g_nStringIdINITO};
-
-const TDataIOID FORTE_IORevPiBusAdapter::scm_anEOWith[] = {2, 1, 0, 255};
-const TForteInt16 FORTE_IORevPiBusAdapter::scm_anEOWithIndexes[] = {0, -1};
-const CStringDictionary::TStringId FORTE_IORevPiBusAdapter::scm_anEventOutputNames[] = {g_nStringIdINIT};
-
-const SFBInterfaceSpec FORTE_IORevPiBusAdapter::scm_stFBInterfaceSpecSocket = {
-  1,  scm_anEventInputNames,  scm_anEIWith,  scm_anEIWithIndexes,
-  1,  scm_anEventOutputNames,  scm_anEOWith, scm_anEOWithIndexes,  1,  scm_anDataInputNames, scm_anDataInputTypeIds,
-  3,  scm_anDataOutputNames, scm_anDataOutputTypeIds,
-  0, 0
+const SFBInterfaceSpec FORTE_IORevPiBusAdapter::scmFBInterfaceSpecSocket = {
+  1, scmEventInputNames, scmEIWith, scmEIWithIndexes,
+  1, scmEventOutputNames, scmEOWith, scmEOWithIndexes,
+  1, scmDataInputNames, scmDataInputTypeIds,
+  3, scmDataOutputNames, scmDataOutputTypeIds,
+  0, nullptr
 };
 
-const SFBInterfaceSpec FORTE_IORevPiBusAdapter::scm_stFBInterfaceSpecPlug = {
-  1,  scm_anEventOutputNames,  scm_anEOWith,  scm_anEOWithIndexes,
-  1,  scm_anEventInputNames,  scm_anEIWith, scm_anEIWithIndexes,  3,  scm_anDataOutputNames, scm_anDataOutputTypeIds,
-  1,  scm_anDataInputNames, scm_anDataInputTypeIds,
-  0, 0
+const SFBInterfaceSpec FORTE_IORevPiBusAdapter::scmFBInterfaceSpecPlug = {
+  1, scmEventOutputNames, scmEOWith, scmEOWithIndexes,
+  1, scmEventInputNames, scmEIWith, scmEIWithIndexes,
+  3, scmDataOutputNames, scmDataOutputTypeIds,
+  1, scmDataInputNames, scmDataInputTypeIds,
+  0, nullptr
 };
+
+void FORTE_IORevPiBusAdapter::readInputData(const TEventID paEIID) {
+  if(isSocket()) {
+    switch(paEIID) {
+      case scmEventINITOID: {
+        readData(0, *mDIs[0], mDIConns[0]);
+        break;
+      }
+      default:
+        break;
+    }
+  } else {
+    switch(paEIID) {
+      case scmEventINITID: {
+        readData(2, *mDIs[2], mDIConns[2]);
+        readData(1, *mDIs[1], mDIConns[1]);
+        readData(0, *mDIs[0], mDIConns[0]);
+        break;
+      }
+      default:
+        break;
+    }
+  }
+}
+
+void FORTE_IORevPiBusAdapter::writeOutputData(const TEventID paEIID) {
+  if(isSocket()) {
+    switch(paEIID) {
+      case scmEventINITID: {
+        writeData(2, *mDOs[2], mDOConns[2]);
+        writeData(1, *mDOs[1], mDOConns[1]);
+        writeData(0, *mDOs[0], mDOConns[0]);
+        break;
+      }
+      default:
+        break;
+    }
+  } else {
+    switch(paEIID) {
+      case scmEventINITOID: {
+        writeData(0, *mDOs[0], mDOConns[0]);
+        break;
+      }
+      default:
+        break;
+    }
+  }
+}
 
 const TForteUInt8 FORTE_IORevPiBusAdapter::scm_slaveConfigurationIO[] = { };
 const TForteUInt8 FORTE_IORevPiBusAdapter::scm_slaveConfigurationIO_num = 0;
-
-

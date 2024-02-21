@@ -48,10 +48,10 @@ void RevPiConfig::setInitialValues(){
 
 void RevPiConfig::setConfig(){
   RevPiController::Config config;
-  config.UpdateInterval = UpdateInterval();
+  config.updateInterval = UpdateInterval();
   controller->setConfig(&config);
 }
 
-forte::core::IO::IODeviceController* RevPiConfig::createDeviceController(CDeviceExecution& paDeviceExecution){
+forte::core::io::IODeviceController* RevPiConfig::createDeviceController(CDeviceExecution& paDeviceExecution){
     return new RevPiController(paDeviceExecution);
 }

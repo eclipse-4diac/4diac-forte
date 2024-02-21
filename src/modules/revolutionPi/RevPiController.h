@@ -9,45 +9,37 @@
  *   Johannes Messmer - initial API and implementation and/or initial documentation
  *******************************************************************************/
 
-#ifndef SRC_MODULES_FESTO_CECC_FESTO_CONTROLLER_H_
-#define SRC_MODULES_FESTO_CECC_FESTO_CONTROLLER_H_
+#pragma once
 
 #include <io/device/io_controller_multi.h>
-#include <stdio.h>
-#include <string>
 #include "lib/piControlIf.h"
 #include <forte_sem.h>
 
 class RevPiHandle;
 
-class RevPiController: public forte::core::IO::IODeviceMultiController {
+class RevPiController: public forte::core::io::IODeviceMultiController {
 public:
   RevPiController(CDeviceExecution& paDeviceExecution);
 
-  struct Config: forte::core::IO::IODeviceController::Config {
-    unsigned int UpdateInterval; //!< Sets the frequency for the data update cycle. The default value is 25 Hz.
+  struct Config: forte::core::io::IODeviceController::Config {
+    unsigned int updateInterval; //!< Sets the frequency for the data update cycle. The default value is 25 Hz.
   };
 
-  struct HandleDescriptor: forte::core::IO::IODeviceMultiController::HandleDescriptor {
+  struct HandleDescriptor: forte::core::io::IODeviceMultiController::HandleDescriptor {
     CIEC_ANY::EDataTypeID type;
     uint8_t offset;
     uint8_t position;
 
-    HandleDescriptor(CIEC_WSTRING const &id, forte::core::IO::IOMapper::Direction direction,
+    HandleDescriptor(CIEC_WSTRING const &id, forte::core::io::IOMapper::Direction direction,
         int slaveIndex, CIEC_ANY::EDataTypeID type, uint8_t offset,
         uint8_t position) :
-          forte::core::IO::IODeviceMultiController::HandleDescriptor(id, direction,
+          forte::core::io::IODeviceMultiController::HandleDescriptor(id, direction,
             slaveIndex), type(type), offset(offset), position(position) {
 
     }
   };
 
-  void setConfig(struct forte::core::IO::IODeviceController::Config* config);
-
-  //virtual bool isHandleValueEqual(forte::core::IO::IOHandle* handle);
-
-  //void createHandle(CIEC_WSTRING const &id, forte::core::IO::IOMapper::Direction direction,
-  //    uint8_t offset, uint8_t position);
+  void setConfig(struct forte::core::io::IODeviceController::Config* config);
 
   /*! @brief Adds a handle for a slave
    *
@@ -57,7 +49,7 @@ public:
    * @param index Index/Position of the modular slave
    * @param handle Handle object which should be updated by the controller.
    */
-  void addSlaveHandle(int index, forte::core::IO::IOHandle* handle);
+  void addSlaveHandle(int index, forte::core::io::IOHandle* handle);
 
   /*! @brief Drop all handles of a specific slave
    *
@@ -71,8 +63,8 @@ public:
 protected:
   const char* init();
 
-  forte::core::IO::IOHandle* initHandle(
-      forte::core::IO::IODeviceMultiController::HandleDescriptor *handleDescriptor);
+  forte::core::io::IOHandle* initHandle(
+      forte::core::io::IODeviceMultiController::HandleDescriptor *handleDescriptor);
 
   void deInit();
 
@@ -99,7 +91,7 @@ protected:
    * @param handle Handle which should be compared to the previous IO state
    * @return True if the current state is equal to the previous IO state. In case it has changed, return false.
    */
-  virtual bool isHandleValueEqual(forte::core::IO::IOHandle* handle);
+  virtual bool isHandleValueEqual(forte::core::io::IOHandle* handle);
 
 private:
   /*! @brief Checks if a slave exists at the given index
@@ -121,5 +113,3 @@ private:
   static const char * const scmFailedToResetControllerFile;
   static const char * const scmFailedToGetDeviceList;
 };
-
-#endif /* SRC_MODULES_FESTO_CECC_FESTO_CONTROLLER_H_ */

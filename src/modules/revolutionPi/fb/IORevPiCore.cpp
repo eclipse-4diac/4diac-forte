@@ -18,45 +18,110 @@
 
 DEFINE_FIRMWARE_FB(FORTE_IORevPiCore, g_nStringIdIORevPiCore)
 
-const CStringDictionary::TStringId FORTE_IORevPiCore::scm_anDataInputNames[] = {g_nStringIdQI, g_nStringIdUpdateInterval};
+const CStringDictionary::TStringId FORTE_IORevPiCore::scmDataInputNames[] = {g_nStringIdQI, g_nStringIdUpdateInterval};
+const CStringDictionary::TStringId FORTE_IORevPiCore::scmDataInputTypeIds[] = {g_nStringIdBOOL, g_nStringIdUINT};
+const CStringDictionary::TStringId FORTE_IORevPiCore::scmDataOutputNames[] = {g_nStringIdQO, g_nStringIdSTATUS};
+const CStringDictionary::TStringId FORTE_IORevPiCore::scmDataOutputTypeIds[] = {g_nStringIdBOOL, g_nStringIdWSTRING};
+const TDataIOID FORTE_IORevPiCore::scmEIWith[] = {0, 1, scmWithListDelimiter};
+const TForteInt16 FORTE_IORevPiCore::scmEIWithIndexes[] = {0};
+const CStringDictionary::TStringId FORTE_IORevPiCore::scmEventInputNames[] = {g_nStringIdINIT};
+const TDataIOID FORTE_IORevPiCore::scmEOWith[] = {0, 1, scmWithListDelimiter, 0, 1, scmWithListDelimiter};
+const TForteInt16 FORTE_IORevPiCore::scmEOWithIndexes[] = {0, 3};
+const CStringDictionary::TStringId FORTE_IORevPiCore::scmEventOutputNames[] = {g_nStringIdINITO, g_nStringIdIND};
+const SAdapterInstanceDef FORTE_IORevPiCore::scmAdapterInstances[] = {
+  {g_nStringIdIORevPiBusAdapter, g_nStringIdBusAdapterOut, true}
+};
+const SFBInterfaceSpec FORTE_IORevPiCore::scmFBInterfaceSpec = {
+  1, scmEventInputNames, scmEIWith, scmEIWithIndexes,
+  2, scmEventOutputNames, scmEOWith, scmEOWithIndexes,
+  2, scmDataInputNames, scmDataInputTypeIds,
+  2, scmDataOutputNames, scmDataOutputTypeIds,
+  0, nullptr,
+  1, scmAdapterInstances
+};
 
-const CStringDictionary::TStringId FORTE_IORevPiCore::scm_anDataInputTypeIds[] = {g_nStringIdBOOL, g_nStringIdUINT};
-
-const CStringDictionary::TStringId FORTE_IORevPiCore::scm_anDataOutputNames[] = {g_nStringIdQO, g_nStringIdSTATUS};
-
-const CStringDictionary::TStringId FORTE_IORevPiCore::scm_anDataOutputTypeIds[] = {g_nStringIdBOOL, g_nStringIdWSTRING};
-
-const TForteInt16 FORTE_IORevPiCore::scm_anEIWithIndexes[] = {0};
-const TDataIOID FORTE_IORevPiCore::scm_anEIWith[] = {0, 1, 255};
-const CStringDictionary::TStringId FORTE_IORevPiCore::scm_anEventInputNames[] = {g_nStringIdINIT};
-
-const TDataIOID FORTE_IORevPiCore::scm_anEOWith[] = {0, 1, 255, 0, 1, 255};
-const TForteInt16 FORTE_IORevPiCore::scm_anEOWithIndexes[] = {0, 3, -1};
-const CStringDictionary::TStringId FORTE_IORevPiCore::scm_anEventOutputNames[] = {g_nStringIdINITO, g_nStringIdIND};
-
-const SAdapterInstanceDef FORTE_IORevPiCore::scm_astAdapterInstances[] = {
-{g_nStringIdIORevPiBusAdapter, g_nStringIdBusAdapterOut, true }};
-
-const SFBInterfaceSpec FORTE_IORevPiCore::scm_stFBInterfaceSpec = {
-  1,  scm_anEventInputNames,  scm_anEIWith,  scm_anEIWithIndexes,
-  2,  scm_anEventOutputNames,  scm_anEOWith, scm_anEOWithIndexes,  2,  scm_anDataInputNames, scm_anDataInputTypeIds,
-  2,  scm_anDataOutputNames, scm_anDataOutputTypeIds,
-  1,scm_astAdapterInstances};
-
-
-void FORTE_IORevPiCore::setInitialValues(){
-  UpdateInterval() = 25;
+void FORTE_IORevPiCore::setInitialValues() {
+  var_QI = 0_BOOL;
+  var_UpdateInterval = 25_UINT;
+  var_QO = 0_BOOL;
+  var_STATUS = u""_WSTRING;
 }
 
 void FORTE_IORevPiCore::setConfig() {
   RevPiController::Config config;
-  config.UpdateInterval = UpdateInterval();
-  controller->setConfig(&config);
+  config.updateInterval = var_UpdateInterval.getUnsignedValue();
+  getDeviceController()->setConfig(&config);
 }
 
-forte::core::IO::IODeviceController* FORTE_IORevPiCore::createDeviceController(CDeviceExecution& paDeviceExecution) {
+forte::core::io::IODeviceController* FORTE_IORevPiCore::createDeviceController(CDeviceExecution& paDeviceExecution) {
   return new RevPiController(paDeviceExecution);
 }
 
+void FORTE_IORevPiCore::readInputData(const TEventID paEIID) {
+  switch(paEIID) {
+    case scmEventINITID: {
+      readData(0, var_QI, conn_QI);
+      readData(1, var_UpdateInterval, conn_UpdateInterval);
+      break;
+    }
+    default:
+      break;
+  }
+}
 
+void FORTE_IORevPiCore::writeOutputData(const TEventID paEIID) {
+  switch(paEIID) {
+    case scmEventINITOID: {
+      writeData(0, var_QO, conn_QO);
+      writeData(1, var_STATUS, conn_STATUS);
+      break;
+    }
+    case scmEventINDID: {
+      writeData(0, var_QO, conn_QO);
+      writeData(1, var_STATUS, conn_STATUS);
+      break;
+    }
+    default:
+      break;
+  }
+}
 
+CIEC_ANY *FORTE_IORevPiCore::getDI(const size_t paIndex) {
+  switch(paIndex) {
+    case 0: return &var_QI;
+    case 1: return &var_UpdateInterval;
+  }
+  return nullptr;
+}
+
+CIEC_ANY *FORTE_IORevPiCore::getDO(const size_t paIndex) {
+  switch(paIndex) {
+    case 0: return &var_QO;
+    case 1: return &var_STATUS;
+  }
+  return nullptr;
+}
+
+CEventConnection *FORTE_IORevPiCore::getEOConUnchecked(const TPortId paIndex) {
+  switch(paIndex) {
+    case 0: return &conn_INITO;
+    case 1: return &conn_IND;
+  }
+  return nullptr;
+}
+
+CDataConnection **FORTE_IORevPiCore::getDIConUnchecked(const TPortId paIndex) {
+  switch(paIndex) {
+    case 0: return &conn_QI;
+    case 1: return &conn_UpdateInterval;
+  }
+  return nullptr;
+}
+
+CDataConnection *FORTE_IORevPiCore::getDOConUnchecked(const TPortId paIndex) {
+  switch(paIndex) {
+    case 0: return &conn_QO;
+    case 1: return &conn_STATUS;
+  }
+  return nullptr;
+}

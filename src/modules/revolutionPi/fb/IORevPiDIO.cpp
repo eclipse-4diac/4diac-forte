@@ -18,64 +18,214 @@
 
 DEFINE_FIRMWARE_FB(FORTE_IORevPiDIO, g_nStringIdIORevPiDIO)
 
-const CStringDictionary::TStringId FORTE_IORevPiDIO::scm_anDataInputNames[] = {
-    g_nStringIdQI, g_nStringIdDigitalInput_1, g_nStringIdDigitalInput_2,
-    g_nStringIdDigitalInput_3, g_nStringIdDigitalInput_4,
-    g_nStringIdDigitalInput_5, g_nStringIdDigitalInput_6,
-    g_nStringIdDigitalInput_7, g_nStringIdDigitalInput_8,
-    g_nStringIdDigitalInput_9, g_nStringIdDigitalInput_10,
-    g_nStringIdDigitalInput_11, g_nStringIdDigitalInput_12,
-    g_nStringIdDigitalInput_13, g_nStringIdDigitalInput_14,
-    g_nStringIdDigitalOutput_1, g_nStringIdDigitalOutput_2,
-    g_nStringIdDigitalOutput_3, g_nStringIdDigitalOutput_4,
-    g_nStringIdDigitalOutput_5, g_nStringIdDigitalOutput_6,
-    g_nStringIdDigitalOutput_7, g_nStringIdDigitalOutput_8,
-    g_nStringIdDigitalOutput_9, g_nStringIdDigitalOutput_10,
-    g_nStringIdDigitalOutput_11, g_nStringIdDigitalOutput_12,
-    g_nStringIdDigitalOutput_13, g_nStringIdDigitalOutput_14 };
-
-const CStringDictionary::TStringId FORTE_IORevPiDIO::scm_anDataInputTypeIds[] =
-    { g_nStringIdBOOL, g_nStringIdWSTRING, g_nStringIdWSTRING,
-        g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING,
-        g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING,
-        g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING,
-        g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING,
-        g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING,
-        g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING,
-        g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING,
-        g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING,
-        g_nStringIdWSTRING, g_nStringIdWSTRING };
-
-const CStringDictionary::TStringId FORTE_IORevPiDIO::scm_anDataOutputNames[] = {
-    g_nStringIdQO, g_nStringIdSTATUS };
-
-const CStringDictionary::TStringId FORTE_IORevPiDIO::scm_anDataOutputTypeIds[] =
-    { g_nStringIdBOOL, g_nStringIdWSTRING };
-
-const TForteInt16 FORTE_IORevPiDIO::scm_anEIWithIndexes[] = { 0 };
-const TDataIOID FORTE_IORevPiDIO::scm_anEIWith[] = { 1, 2, 5, 3, 4, 6, 7, 8, 15,
-    16, 17, 18, 19, 20, 21, 22, 0, 14, 13, 12, 11, 10, 9, 23, 24, 25, 26, 27,
-    28, 255 };
-const CStringDictionary::TStringId FORTE_IORevPiDIO::scm_anEventInputNames[] = {
-    g_nStringIdMAP };
-
-const TDataIOID FORTE_IORevPiDIO::scm_anEOWith[] = { 0, 255, 0, 1, 255 };
-const TForteInt16 FORTE_IORevPiDIO::scm_anEOWithIndexes[] = { 0, 2, -1 };
-const CStringDictionary::TStringId FORTE_IORevPiDIO::scm_anEventOutputNames[] =
-    { g_nStringIdMAPO, g_nStringIdIND };
-
-const SAdapterInstanceDef FORTE_IORevPiDIO::scm_astAdapterInstances[] = { {
-    g_nStringIdIORevPiBusAdapter, g_nStringIdBusAdapterOut, true }, {
-    g_nStringIdIORevPiBusAdapter, g_nStringIdBusAdapterIn, false } };
-
-const SFBInterfaceSpec FORTE_IORevPiDIO::scm_stFBInterfaceSpec = { 1,
-    scm_anEventInputNames, scm_anEIWith, scm_anEIWithIndexes, 2,
-    scm_anEventOutputNames, scm_anEOWith, scm_anEOWithIndexes, 29,
-    scm_anDataInputNames, scm_anDataInputTypeIds, 2, scm_anDataOutputNames,
-    scm_anDataOutputTypeIds, 2, scm_astAdapterInstances };
+const CStringDictionary::TStringId FORTE_IORevPiDIO::scmDataInputNames[] = {g_nStringIdQI, g_nStringIdDigitalInput_1, g_nStringIdDigitalInput_2, g_nStringIdDigitalInput_3, g_nStringIdDigitalInput_4, g_nStringIdDigitalInput_5, g_nStringIdDigitalInput_6, g_nStringIdDigitalInput_7, g_nStringIdDigitalInput_8, g_nStringIdDigitalInput_9, g_nStringIdDigitalInput_10, g_nStringIdDigitalInput_11, g_nStringIdDigitalInput_12, g_nStringIdDigitalInput_13, g_nStringIdDigitalInput_14, g_nStringIdDigitalOutput_1, g_nStringIdDigitalOutput_2, g_nStringIdDigitalOutput_3, g_nStringIdDigitalOutput_4, g_nStringIdDigitalOutput_5, g_nStringIdDigitalOutput_6, g_nStringIdDigitalOutput_7, g_nStringIdDigitalOutput_8, g_nStringIdDigitalOutput_9, g_nStringIdDigitalOutput_10, g_nStringIdDigitalOutput_11, g_nStringIdDigitalOutput_12, g_nStringIdDigitalOutput_13, g_nStringIdDigitalOutput_14};
+const CStringDictionary::TStringId FORTE_IORevPiDIO::scmDataInputTypeIds[] = {g_nStringIdBOOL, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING};
+const CStringDictionary::TStringId FORTE_IORevPiDIO::scmDataOutputNames[] = {g_nStringIdQO, g_nStringIdSTATUS};
+const CStringDictionary::TStringId FORTE_IORevPiDIO::scmDataOutputTypeIds[] = {g_nStringIdBOOL, g_nStringIdWSTRING};
+const TDataIOID FORTE_IORevPiDIO::scmEIWith[] = {1, 2, 5, 3, 4, 6, 7, 8, 15, 16, 17, 18, 19, 20, 21, 22, 0, 14, 13, 12, 11, 10, 9, 23, 24, 25, 26, 27, 28, scmWithListDelimiter};
+const TForteInt16 FORTE_IORevPiDIO::scmEIWithIndexes[] = {0};
+const CStringDictionary::TStringId FORTE_IORevPiDIO::scmEventInputNames[] = {g_nStringIdMAP};
+const TDataIOID FORTE_IORevPiDIO::scmEOWith[] = {0, scmWithListDelimiter, 0, 1, scmWithListDelimiter};
+const TForteInt16 FORTE_IORevPiDIO::scmEOWithIndexes[] = {0, 2};
+const CStringDictionary::TStringId FORTE_IORevPiDIO::scmEventOutputNames[] = {g_nStringIdMAPO, g_nStringIdIND};
+const SAdapterInstanceDef FORTE_IORevPiDIO::scmAdapterInstances[] = {
+  {g_nStringIdIORevPiBusAdapter, g_nStringIdBusAdapterIn, false},
+  {g_nStringIdIORevPiBusAdapter, g_nStringIdBusAdapterOut, true}
+};
+const SFBInterfaceSpec FORTE_IORevPiDIO::scmFBInterfaceSpec = {
+  1, scmEventInputNames, scmEIWith, scmEIWithIndexes,
+  2, scmEventOutputNames, scmEOWith, scmEOWithIndexes,
+  29, scmDataInputNames, scmDataInputTypeIds,
+  2, scmDataOutputNames, scmDataOutputTypeIds,
+  0, nullptr,
+  2, scmAdapterInstances
+};
 
 const TForteUInt8 FORTE_IORevPiDIO::scm_slaveConfigurationIO[] = { };
 const TForteUInt8 FORTE_IORevPiDIO::scm_slaveConfigurationIO_num = 0;
+
+void FORTE_IORevPiDIO::setInitialValues() {
+  var_QI = 0_BOOL;
+  var_DigitalInput_1 = u""_WSTRING;
+  var_DigitalInput_2 = u""_WSTRING;
+  var_DigitalInput_3 = u""_WSTRING;
+  var_DigitalInput_4 = u""_WSTRING;
+  var_DigitalInput_5 = u""_WSTRING;
+  var_DigitalInput_6 = u""_WSTRING;
+  var_DigitalInput_7 = u""_WSTRING;
+  var_DigitalInput_8 = u""_WSTRING;
+  var_DigitalInput_9 = u""_WSTRING;
+  var_DigitalInput_10 = u""_WSTRING;
+  var_DigitalInput_11 = u""_WSTRING;
+  var_DigitalInput_12 = u""_WSTRING;
+  var_DigitalInput_13 = u""_WSTRING;
+  var_DigitalInput_14 = u""_WSTRING;
+  var_DigitalOutput_1 = u""_WSTRING;
+  var_DigitalOutput_2 = u""_WSTRING;
+  var_DigitalOutput_3 = u""_WSTRING;
+  var_DigitalOutput_4 = u""_WSTRING;
+  var_DigitalOutput_5 = u""_WSTRING;
+  var_DigitalOutput_6 = u""_WSTRING;
+  var_DigitalOutput_7 = u""_WSTRING;
+  var_DigitalOutput_8 = u""_WSTRING;
+  var_DigitalOutput_9 = u""_WSTRING;
+  var_DigitalOutput_10 = u""_WSTRING;
+  var_DigitalOutput_11 = u""_WSTRING;
+  var_DigitalOutput_12 = u""_WSTRING;
+  var_DigitalOutput_13 = u""_WSTRING;
+  var_DigitalOutput_14 = u""_WSTRING;
+  var_QO = 0_BOOL;
+  var_STATUS = u""_WSTRING;
+}
+
+void FORTE_IORevPiDIO::readInputData(const TEventID paEIID) {
+  switch(paEIID) {
+    case scmEventMAPID: {
+      readData(1, var_DigitalInput_1, conn_DigitalInput_1);
+      readData(2, var_DigitalInput_2, conn_DigitalInput_2);
+      readData(5, var_DigitalInput_5, conn_DigitalInput_5);
+      readData(3, var_DigitalInput_3, conn_DigitalInput_3);
+      readData(4, var_DigitalInput_4, conn_DigitalInput_4);
+      readData(6, var_DigitalInput_6, conn_DigitalInput_6);
+      readData(7, var_DigitalInput_7, conn_DigitalInput_7);
+      readData(8, var_DigitalInput_8, conn_DigitalInput_8);
+      readData(15, var_DigitalOutput_1, conn_DigitalOutput_1);
+      readData(16, var_DigitalOutput_2, conn_DigitalOutput_2);
+      readData(17, var_DigitalOutput_3, conn_DigitalOutput_3);
+      readData(18, var_DigitalOutput_4, conn_DigitalOutput_4);
+      readData(19, var_DigitalOutput_5, conn_DigitalOutput_5);
+      readData(20, var_DigitalOutput_6, conn_DigitalOutput_6);
+      readData(21, var_DigitalOutput_7, conn_DigitalOutput_7);
+      readData(22, var_DigitalOutput_8, conn_DigitalOutput_8);
+      readData(0, var_QI, conn_QI);
+      readData(14, var_DigitalInput_14, conn_DigitalInput_14);
+      readData(13, var_DigitalInput_13, conn_DigitalInput_13);
+      readData(12, var_DigitalInput_12, conn_DigitalInput_12);
+      readData(11, var_DigitalInput_11, conn_DigitalInput_11);
+      readData(10, var_DigitalInput_10, conn_DigitalInput_10);
+      readData(9, var_DigitalInput_9, conn_DigitalInput_9);
+      readData(23, var_DigitalOutput_9, conn_DigitalOutput_9);
+      readData(24, var_DigitalOutput_10, conn_DigitalOutput_10);
+      readData(25, var_DigitalOutput_11, conn_DigitalOutput_11);
+      readData(26, var_DigitalOutput_12, conn_DigitalOutput_12);
+      readData(27, var_DigitalOutput_13, conn_DigitalOutput_13);
+      readData(28, var_DigitalOutput_14, conn_DigitalOutput_14);
+      break;
+    }
+    default:
+      break;
+  }
+}
+
+void FORTE_IORevPiDIO::writeOutputData(const TEventID paEIID) {
+  switch(paEIID) {
+    case scmEventMAPOID: {
+      writeData(0, var_QO, conn_QO);
+      break;
+    }
+    case scmEventINDID: {
+      writeData(0, var_QO, conn_QO);
+      writeData(1, var_STATUS, conn_STATUS);
+      break;
+    }
+    default:
+      break;
+  }
+}
+
+CIEC_ANY *FORTE_IORevPiDIO::getDI(const size_t paIndex) {
+  switch(paIndex) {
+    case 0: return &var_QI;
+    case 1: return &var_DigitalInput_1;
+    case 2: return &var_DigitalInput_2;
+    case 3: return &var_DigitalInput_3;
+    case 4: return &var_DigitalInput_4;
+    case 5: return &var_DigitalInput_5;
+    case 6: return &var_DigitalInput_6;
+    case 7: return &var_DigitalInput_7;
+    case 8: return &var_DigitalInput_8;
+    case 9: return &var_DigitalInput_9;
+    case 10: return &var_DigitalInput_10;
+    case 11: return &var_DigitalInput_11;
+    case 12: return &var_DigitalInput_12;
+    case 13: return &var_DigitalInput_13;
+    case 14: return &var_DigitalInput_14;
+    case 15: return &var_DigitalOutput_1;
+    case 16: return &var_DigitalOutput_2;
+    case 17: return &var_DigitalOutput_3;
+    case 18: return &var_DigitalOutput_4;
+    case 19: return &var_DigitalOutput_5;
+    case 20: return &var_DigitalOutput_6;
+    case 21: return &var_DigitalOutput_7;
+    case 22: return &var_DigitalOutput_8;
+    case 23: return &var_DigitalOutput_9;
+    case 24: return &var_DigitalOutput_10;
+    case 25: return &var_DigitalOutput_11;
+    case 26: return &var_DigitalOutput_12;
+    case 27: return &var_DigitalOutput_13;
+    case 28: return &var_DigitalOutput_14;
+  }
+  return nullptr;
+}
+
+CIEC_ANY *FORTE_IORevPiDIO::getDO(const size_t paIndex) {
+  switch(paIndex) {
+    case 0: return &var_QO;
+    case 1: return &var_STATUS;
+  }
+  return nullptr;
+}
+
+CEventConnection *FORTE_IORevPiDIO::getEOConUnchecked(const TPortId paIndex) {
+  switch(paIndex) {
+    case 0: return &conn_MAPO;
+    case 1: return &conn_IND;
+  }
+  return nullptr;
+}
+
+CDataConnection **FORTE_IORevPiDIO::getDIConUnchecked(const TPortId paIndex) {
+  switch(paIndex) {
+    case 0: return &conn_QI;
+    case 1: return &conn_DigitalInput_1;
+    case 2: return &conn_DigitalInput_2;
+    case 3: return &conn_DigitalInput_3;
+    case 4: return &conn_DigitalInput_4;
+    case 5: return &conn_DigitalInput_5;
+    case 6: return &conn_DigitalInput_6;
+    case 7: return &conn_DigitalInput_7;
+    case 8: return &conn_DigitalInput_8;
+    case 9: return &conn_DigitalInput_9;
+    case 10: return &conn_DigitalInput_10;
+    case 11: return &conn_DigitalInput_11;
+    case 12: return &conn_DigitalInput_12;
+    case 13: return &conn_DigitalInput_13;
+    case 14: return &conn_DigitalInput_14;
+    case 15: return &conn_DigitalOutput_1;
+    case 16: return &conn_DigitalOutput_2;
+    case 17: return &conn_DigitalOutput_3;
+    case 18: return &conn_DigitalOutput_4;
+    case 19: return &conn_DigitalOutput_5;
+    case 20: return &conn_DigitalOutput_6;
+    case 21: return &conn_DigitalOutput_7;
+    case 22: return &conn_DigitalOutput_8;
+    case 23: return &conn_DigitalOutput_9;
+    case 24: return &conn_DigitalOutput_10;
+    case 25: return &conn_DigitalOutput_11;
+    case 26: return &conn_DigitalOutput_12;
+    case 27: return &conn_DigitalOutput_13;
+    case 28: return &conn_DigitalOutput_14;
+  }
+  return nullptr;
+}
+
+CDataConnection *FORTE_IORevPiDIO::getDOConUnchecked(const TPortId paIndex) {
+  switch(paIndex) {
+    case 0: return &conn_QO;
+    case 1: return &conn_STATUS;
+  }
+  return nullptr;
+}
 
 void FORTE_IORevPiDIO::initHandles() {
   // Initialize handles
@@ -86,14 +236,14 @@ void FORTE_IORevPiDIO::initHandles() {
 
   for (int i = 0; i < iCount; i++) {
     RevPiController::HandleDescriptor desc = RevPiController::HandleDescriptor(
-        *static_cast<CIEC_WSTRING*>(getDI(iOffset + i)), forte::core::IO::IOMapper::In, index,
+        *static_cast<CIEC_WSTRING*>(getDI(iOffset + i)), forte::core::io::IOMapper::In, index,
         CIEC_ANY::e_BOOL, (uint8_t) (i / 8), (uint8_t) (i % 8));
     initHandle(&desc);
   }
 
   for (int i = 0; i < oCount; i++) {
     RevPiController::HandleDescriptor desc = RevPiController::HandleDescriptor(
-        *static_cast<CIEC_WSTRING*>(getDI(oOffset + i)), forte::core::IO::IOMapper::Out, index,
+        *static_cast<CIEC_WSTRING*>(getDI(oOffset + i)), forte::core::io::IOMapper::Out, index,
         CIEC_ANY::e_BOOL, (uint8_t) (i / 8), (uint8_t) (i % 8));
     initHandle(&desc);
   }

@@ -9,15 +9,14 @@
  *   Johannes Messmer - initial API and implementation and/or initial documentation
  *******************************************************************************/
 
-#ifndef SRC_MODULES_REVPI_REVPIHANDLE_H_
-#define SRC_MODULES_REVPI_REVPIHANDLE_H_
+#pragma once
 
 #include <io/mapper/io_handle.h>
 #include "RevPiController.h"
 
-class RevPiHandle: public forte::core::IO::IOHandle {
+class RevPiHandle: public forte::core::io::IOHandle {
 public:
-  RevPiHandle(RevPiController *controller, CIEC_ANY::EDataTypeID type, forte::core::IO::IOMapper::Direction direction,
+  RevPiHandle(RevPiController *controller, CIEC_ANY::EDataTypeID type, forte::core::io::IOMapper::Direction direction,
       uint16_t offset, uint8_t position);
 
   ~RevPiHandle();
@@ -33,5 +32,3 @@ protected:
 
   virtual void dropObserver();
 };
-
-#endif /* SRC_MODULES_REVPI_REVPIHANDLE_H_ */

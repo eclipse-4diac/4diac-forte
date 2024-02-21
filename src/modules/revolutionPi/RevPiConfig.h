@@ -9,8 +9,7 @@
  *   Johannes Messmer - initial API and implementation and/or initial documentation
  *******************************************************************************/
 
-#ifndef _IOREVPI_H_
-#define _IOREVPI_H_
+#pragma once
 
 #include <funcbloc.h>
 #include <forte_bool.h>
@@ -19,7 +18,7 @@
 
 #include <io/configFB/io_configFB_controller.h>
 
-class RevPiConfig: public forte::core::IO::IOConfigFBController{
+class RevPiConfig: public forte::core::io::IOConfigFBController{
   DECLARE_FIRMWARE_FB(RevPiConfig)
 
 private:
@@ -173,15 +172,13 @@ private:
 virtual void setInitialValues();
 
 public:
-  FUNCTION_BLOCK_CTOR_WITH_BASE_CLASS(RevPiConfig, forte::core::IO::IOConfigFBController){
+  FUNCTION_BLOCK_CTOR_WITH_BASE_CLASS(RevPiConfig, forte::core::io::IOConfigFBController){
   };
 
   virtual ~RevPiConfig(){};
 
 protected:
-  forte::core::IO::IODeviceController* createDeviceController(CDeviceExecution& paDeviceExecution);
+  forte::core::io::IODeviceController* createDeviceController(CDeviceExecution& paDeviceExecution);
   void setConfig ();
 
 };
-
-#endif //close the ifdef sequence from the beginning of the file

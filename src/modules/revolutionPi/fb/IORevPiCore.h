@@ -9,71 +9,84 @@
  *   Johannes Messmer - initial API and implementation and/or initial documentation
  *******************************************************************************/
 
-#ifndef _IOREVPICORE_H_
-#define _IOREVPICORE_H_
+#pragma once
 
 #include <io/configFB/io_master_multi.h>
 
 #include "IORevPiBusAdapter.h"
 
-class FORTE_IORevPiCore: public forte::core::IO::IOConfigFBMultiMaster {
+class FORTE_IORevPiCore: public forte::core::io::IOConfigFBMultiMaster {
   DECLARE_FIRMWARE_FB(FORTE_IORevPiCore)
 
-private:
-  static const CStringDictionary::TStringId scm_anDataInputNames[];
-  static const CStringDictionary::TStringId scm_anDataInputTypeIds[];
-  CIEC_BOOL &QI() {
-    return *static_cast<CIEC_BOOL*>(getDI(0));
-  };
+  private:
+    static const CStringDictionary::TStringId scmDataInputNames[];
+    static const CStringDictionary::TStringId scmDataInputTypeIds[];
+    static const CStringDictionary::TStringId scmDataOutputNames[];
+    static const CStringDictionary::TStringId scmDataOutputTypeIds[];
+    static const TEventID scmEventINITID = 0;
+    static const TDataIOID scmEIWith[];
+    static const TForteInt16 scmEIWithIndexes[];
+    static const CStringDictionary::TStringId scmEventInputNames[];
+    static const TEventID scmEventINITOID = 0;
+    static const TEventID scmEventINDID = 1;
+    static const TDataIOID scmEOWith[];
+    static const TForteInt16 scmEOWithIndexes[];
+    static const CStringDictionary::TStringId scmEventOutputNames[];
+    static const int scmBusAdapterOutAdpNum = 0;
+    static const SAdapterInstanceDef scmAdapterInstances[];
 
-  CIEC_UINT &UpdateInterval() {
-    return *static_cast<CIEC_UINT*>(getDI(1));
-  };
+    static const SFBInterfaceSpec scmFBInterfaceSpec;
 
-  static const CStringDictionary::TStringId scm_anDataOutputNames[];
-  static const CStringDictionary::TStringId scm_anDataOutputTypeIds[];
-  CIEC_BOOL &QO() {
-    return *static_cast<CIEC_BOOL*>(getDO(0));
-  };
+    void readInputData(TEventID paEIID) override;
+    void writeOutputData(TEventID paEIID) override;
+    void setInitialValues() override;
 
-  CIEC_WSTRING &STATUS() {
-    return *static_cast<CIEC_WSTRING*>(getDO(1));
-  };
+    forte::core::io::IODeviceController* createDeviceController(CDeviceExecution& paDeviceExecution);
+    void setConfig();
 
-  static const TEventID scm_nEventINITID = 0;
-  static const TForteInt16 scm_anEIWithIndexes[];
-  static const TDataIOID scm_anEIWith[];
-  static const CStringDictionary::TStringId scm_anEventInputNames[];
+  public:
+    FUNCTION_BLOCK_CTOR_WITH_BASE_CLASS(FORTE_IORevPiCore, forte::core::io::IOConfigFBMultiMaster){
+    };
 
-  static const TEventID scm_nEventINITOID = 0;
-  static const TEventID scm_nEventINDID = 1;
-  static const TForteInt16 scm_anEOWithIndexes[];
-  static const TDataIOID scm_anEOWith[];
-  static const CStringDictionary::TStringId scm_anEventOutputNames[];
+    virtual ~FORTE_IORevPiCore(){};
 
-  static const SAdapterInstanceDef scm_astAdapterInstances[];
+    CIEC_BOOL var_QI;
+    CIEC_UINT var_UpdateInterval;
 
-  FORTE_IORevPiBusAdapter& BusAdapterOut() {
-    return (*static_cast<FORTE_IORevPiBusAdapter*>(m_apoAdapters[0]));
-  };
-  static const int scm_nBusAdapterOutAdpNum = 0;
-  static const SFBInterfaceSpec scm_stFBInterfaceSpec;
+    CIEC_BOOL var_QO;
+    CIEC_WSTRING var_STATUS;
 
-   FORTE_FB_DATA_ARRAY(2, 2, 2, 1);
+    CIEC_BOOL var_conn_QO;
+    CIEC_WSTRING var_conn_STATUS;
 
-virtual void setInitialValues();
+    CEventConnection conn_INITO;
+    CEventConnection conn_IND;
 
-forte::core::IO::IODeviceController* createDeviceController(CDeviceExecution& paDeviceExecution);
+    CDataConnection *conn_QI;
+    CDataConnection *conn_UpdateInterval;
 
-  void setConfig();
+    CDataConnection conn_QO;
+    CDataConnection conn_STATUS;
 
-public:
-  FUNCTION_BLOCK_CTOR_WITH_BASE_CLASS(FORTE_IORevPiCore, forte::core::IO::IOConfigFBMultiMaster){
-  };
+    CIEC_ANY *getDI(size_t) override;
+    CIEC_ANY *getDO(size_t) override;
+    FORTE_IORevPiBusAdapter &var_BusAdapterOut() {
+      return *static_cast<FORTE_IORevPiBusAdapter*>(mAdapters[0]);
+    };
 
-  virtual ~FORTE_IORevPiCore(){};
+    CEventConnection *getEOConUnchecked(TPortId) override;
+    CDataConnection **getDIConUnchecked(TPortId) override;
+    CDataConnection *getDOConUnchecked(TPortId) override;
 
+    void evt_INIT(const CIEC_BOOL &paQI, const CIEC_UINT &paUpdateInterval, CIEC_BOOL &paQO, CIEC_WSTRING &paSTATUS) {
+      var_QI = paQI;
+      var_UpdateInterval = paUpdateInterval;
+      executeEvent(scmEventINITID, nullptr);
+      paQO = var_QO;
+      paSTATUS = var_STATUS;
+    }
+
+    void operator()(const CIEC_BOOL &paQI, const CIEC_UINT &paUpdateInterval, CIEC_BOOL &paQO, CIEC_WSTRING &paSTATUS) {
+      evt_INIT(paQI, paUpdateInterval, paQO, paSTATUS);
+    }
 };
-
-#endif //close the ifdef sequence from the beginning of the file
-
