@@ -10,10 +10,10 @@
 # *   - initial API and implementation and/or initial documentation
 # *******************************************************************************/
 
-forte_add_io(RevPiModularIO "Support for Revolution Pi")
+forte_add_io(REVOLUTIONPI "Support for Revolution Pi")
 
+if(FORTE_IO_REVOLUTIONPI)
 forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
-forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR}/lib)
 
 forte_add_sourcefile_hcpp( lib/piControlIf )
 
@@ -24,3 +24,5 @@ forte_add_sourcefile_hcpp( fb/IORevPiCore )
 forte_add_sourcefile_hcpp( fb/IORevPiBusAdapter )
 forte_add_sourcefile_hcpp( fb/IORevPiDIO )
 forte_add_sourcefile_hcpp( fb/IORevPiAIO )
+
+endif(FORTE_IO_REVOLUTIONPI)
