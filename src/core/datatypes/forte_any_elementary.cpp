@@ -228,39 +228,39 @@ int CIEC_ANY_ELEMENTARY::fromString(const char *paValue){
     EDataTypeID eID = getDataTypeID();
     switch (eID){
       case e_SINT:
-        nSUpperBound = CIEC_SINT::scmMaxVal;
-        nSLowerBound = CIEC_SINT::scmMinVal;
+        nSUpperBound = std::numeric_limits<CIEC_SINT::TValueType>::max();
+        nSLowerBound = std::numeric_limits<CIEC_SINT::TValueType>::min();
         break;
       case e_INT:
-        nSUpperBound = CIEC_INT::scmMaxVal;
-        nSLowerBound = CIEC_INT::scmMinVal;
+        nSUpperBound = std::numeric_limits<CIEC_INT::TValueType>::max();
+        nSLowerBound = std::numeric_limits<CIEC_INT::TValueType>::min();
         break;
       case e_DINT:
-        nSUpperBound = CIEC_DINT::scmMaxVal;
-        nSLowerBound = CIEC_DINT::scmMinVal;
+        nSUpperBound = std::numeric_limits<CIEC_DINT::TValueType>::max();
+        nSLowerBound = std::numeric_limits<CIEC_DINT::TValueType>::min();
         break;
         case e_LINT:
-        nSUpperBound = CIEC_LINT::scmMaxVal;
-        nSLowerBound = CIEC_LINT::scmMinVal;
+        nSUpperBound = std::numeric_limits<CIEC_LINT::TValueType>::max();
+        nSLowerBound = std::numeric_limits<CIEC_LINT::TValueType>::min();
         break;
       case e_USINT:
       case e_BYTE:
-        nUUpperBound = CIEC_USINT::scmMaxVal;
+        nUUpperBound = std::numeric_limits<CIEC_USINT::TValueType>::max();
         bSigned = false;
         break;
       case e_UINT:
       case e_WORD:
-        nUUpperBound = CIEC_UINT::scmMaxVal;
+        nUUpperBound = std::numeric_limits<CIEC_UINT::TValueType>::max();
         bSigned = false;
         break;
       case e_UDINT:
       case e_DWORD:
-        nUUpperBound = CIEC_UDINT::scmMaxVal;
+        nUUpperBound = std::numeric_limits<CIEC_UDINT::TValueType>::max();
         bSigned = false;
         break;
       case e_ULINT:
       case e_LWORD:
-        nUUpperBound = CIEC_ULINT::scmMaxVal;
+        nUUpperBound = std::numeric_limits<CIEC_ULINT::TValueType>::max();
         bSigned = false;
         break;
       default:

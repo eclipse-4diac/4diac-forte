@@ -34,7 +34,7 @@ BOOST_AUTO_TEST_CASE(Literal_test)
   BOOST_TEST(static_cast<CIEC_LWORD::TValueType>(test1) == 0);
 
   CIEC_LWORD test2 = 0xFFFFFFFFFFFFFFFF_LWORD;
-  BOOST_TEST(static_cast<CIEC_LWORD::TValueType>(test2) == CIEC_LWORD::scmMaxVal);
+  BOOST_TEST(static_cast<CIEC_LWORD::TValueType>(test2) == std::numeric_limits<CIEC_LWORD::TValueType>::max());
 }
 
 BOOST_AUTO_TEST_CASE(Assignment_test)

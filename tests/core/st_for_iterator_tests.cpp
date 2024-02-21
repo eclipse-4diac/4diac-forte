@@ -65,61 +65,61 @@ BOOST_AUTO_TEST_CASE(ST_ITER_CIEC_UINT_EXPLICIT_BY)
 BOOST_AUTO_TEST_CASE(ST_ITER_CIEC_INT_IMPLICIT_BY_OVERFLOW)
 {
     CIEC_INT runner;
-    CIEC_INT start(CIEC_INT::scmMaxVal - 2);
-    CIEC_INT to(CIEC_INT::scmMaxVal);
+    CIEC_INT start(std::numeric_limits<CIEC_INT::TValueType>::max() - 2);
+    CIEC_INT to(std::numeric_limits<CIEC_INT>::max());
     for (auto st_lv_synthetic_1 : ST_FOR_ITER<CIEC_INT>(runner, start, to)) {
     }
-    BOOST_TEST(static_cast<CIEC_INT::TValueType>(runner) == CIEC_INT::scmMaxVal);
+    BOOST_TEST(static_cast<CIEC_INT::TValueType>(runner) == std::numeric_limits<CIEC_INT::TValueType>::max());
 }
 
 BOOST_AUTO_TEST_CASE(ST_ITER_CIEC_INT_EXPLICIT_BY_OVERFLOW)
 {
     CIEC_INT runner;
-    CIEC_INT start(CIEC_INT::scmMaxVal - 2);
-    CIEC_INT to(CIEC_INT::scmMaxVal);
+    CIEC_INT start(std::numeric_limits<CIEC_INT::TValueType>::max() - 2);
+    CIEC_INT to(std::numeric_limits<CIEC_INT>::max());
     CIEC_INT by(1);
     for (auto st_lv_synthetic_1 : ST_FOR_ITER<CIEC_INT>(runner, start, to, by)) {
     }
-    BOOST_TEST(static_cast<CIEC_INT::TValueType>(runner) == CIEC_INT::scmMaxVal);
+    BOOST_TEST(static_cast<CIEC_INT::TValueType>(runner) == std::numeric_limits<CIEC_INT::TValueType>::max());
 }
 
 BOOST_AUTO_TEST_CASE(ST_ITER_CIEC_UINT_IMPLICIT_BY_OVERFLOW)
 {
     CIEC_UINT runner;
-    CIEC_UINT start(CIEC_UINT::scmMaxVal - 2);
-    CIEC_UINT to(CIEC_UINT::scmMaxVal);
+    CIEC_UINT start(std::numeric_limits<CIEC_UINT::TValueType>::max() - 2);
+    CIEC_UINT to(std::numeric_limits<CIEC_UINT>::max());
     for (auto st_lv_synthetic_1 : ST_FOR_ITER<CIEC_UINT>(runner, start, to)) {
     }
-    BOOST_TEST(static_cast<CIEC_UINT::TValueType>(runner) == CIEC_UINT::scmMaxVal);
+    BOOST_TEST(static_cast<CIEC_UINT::TValueType>(runner) == std::numeric_limits<CIEC_UINT::TValueType>::max());
 }
 
 BOOST_AUTO_TEST_CASE(ST_ITER_CIEC_UINT_EXPLICIT_BY_OVERFLOW)
 {
     CIEC_UINT runner;
-    CIEC_UINT start(CIEC_UINT::scmMaxVal - 2);
-    CIEC_UINT to(CIEC_UINT::scmMaxVal);
+    CIEC_UINT start(std::numeric_limits<CIEC_UINT::TValueType>::max() - 2);
+    CIEC_UINT to(std::numeric_limits<CIEC_UINT>::max());
     CIEC_UINT by(1);
     for (auto st_lv_synthetic_1 : ST_FOR_ITER<CIEC_UINT>(runner, start, to, by)) {
     }
-    BOOST_TEST(static_cast<CIEC_UINT::TValueType>(runner) == CIEC_UINT::scmMaxVal);
+    BOOST_TEST(static_cast<CIEC_UINT::TValueType>(runner) == std::numeric_limits<CIEC_UINT::TValueType>::max());
 }
 
 BOOST_AUTO_TEST_CASE(ST_ITER_CIEC_INT_EXPLICIT_BY_UNDERFLOW)
 {
     CIEC_INT runner;
-    CIEC_INT start(CIEC_INT::scmMinVal + 2);
-    CIEC_INT to(CIEC_INT::scmMinVal);
+    CIEC_INT start(std::numeric_limits<CIEC_INT::TValueType>::min() + 2);
+    CIEC_INT to(std::numeric_limits<CIEC_INT>::min());
     CIEC_INT by(-1);
     for (auto st_lv_synthetic_1 : ST_FOR_ITER<CIEC_INT>(runner, start, to, by)) {
     }
-    BOOST_TEST(static_cast<CIEC_INT::TValueType>(runner) == CIEC_INT::scmMinVal);
+    BOOST_TEST(static_cast<CIEC_INT::TValueType>(runner) == std::numeric_limits<CIEC_INT::TValueType>::min());
 }
 
 BOOST_AUTO_TEST_CASE(ST_ITER_CIEC_UINT_EXPLICIT_BY_UNDERFLOW)
 {
     CIEC_UINT runner;
-    CIEC_UINT start(CIEC_UINT::scmMinVal + 2);
-    CIEC_UINT to(CIEC_UINT::scmMinVal);
+    CIEC_UINT start(std::numeric_limits<CIEC_UINT::TValueType>::min() + 2);
+    CIEC_UINT to(std::numeric_limits<CIEC_UINT>::min());
     CIEC_INT by(-1);
     for (auto st_lv_synthetic_1 : ST_FOR_ITER<CIEC_UINT, CIEC_INT>(runner, start, to, by)) {
     }
