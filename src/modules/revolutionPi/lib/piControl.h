@@ -1,8 +1,42 @@
-/*!
+/*=======================================================================================
  *
- * Project: piControl
- * (C)    : KUNBUS GmbH, Heerweg 15C, 73370 Denkendorf, Germany
+ *         KK    KK   UU    UU   NN    NN   BBBBBB    UU    UU    SSSSSS
+ *         KK   KK    UU    UU   NNN   NN   BB   BB   UU    UU   SS
+ *         KK  KK     UU    UU   NNNN  NN   BB   BB   UU    UU   SS
+ *  +----- KKKKK      UU    UU   NN NN NN   BBBBB     UU    UU    SSSSS
+ *  |      KK  KK     UU    UU   NN  NNNN   BB   BB   UU    UU        SS
+ *  |      KK   KK    UU    UU   NN   NNN   BB   BB   UU    UU        SS
+ *  |      KK    KKK   UUUUUU    NN    NN   BBBBBB     UUUUUU    SSSSSS     GmbH
+ *  |
+ *  |            [#]  I N D U S T R I A L   C O M M U N I C A T I O N
+ *  |             |
+ *  +-------------+
  *
+ *---------------------------------------------------------------------------------------
+ *
+ * MIT License
+ *
+ * Copyright (C) 2018 : KUNBUS GmbH, Heerweg 15C, 73370 Denkendorf, Germany
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *
+ *=======================================================================================
  */
 
 #ifndef PICONTROL_H_
@@ -13,6 +47,7 @@
 /******************************************************************************/
 #ifndef WIN32
 #include <linux/ioctl.h>
+#include <linux/types.h>
 #endif //WIN32
 
 //#include <stdint.h>
@@ -22,15 +57,16 @@
 /******************************************************************************/
 #ifndef WIN32
 
-#define PICONTROL_DEVICE	"/dev/piControl0"
+#define PICONTROL_DEVICE        "/dev/piControl0"
 
 // The config file moved to /etc/revpi.
 // If it cannot be found there, the old location should be used.
-#define PICONFIG_FILE		"/etc/revpi/config.rsc"
+#define PICONFIG_FILE           "/etc/revpi/config.rsc"
 #define PICONFIG_FILE_WHEEZY    "/opt/KUNBUS/config.rsc"
 
-#define REV_PI_DEV_FIRST_RIGHT      32		// address of first module on the right side of the RevPi Core
-#define REV_PI_DEV_CNT_MAX          64		// max. number of
+#define REV_PI_DEV_FIRST_RIGHT      32      // address of first module on the right side of the RevPi Core
+#define REV_PI_DEV_CNT_MAX          64      // max. number of
+#define REV_PI_ERROR_MSG_LEN        256     // max. length of error message
 
 // Module Id
 // 0x0001 - 0x3000      KUNBUS Modules (e.g. DIO, Gateways, ...)
@@ -47,6 +83,10 @@
 #define PICONTROL_SW_MODBUS_RTU_MASTER      0x6004      // 24580
 #define PICONTROL_SW_PROFINET_CONTROLLER    0x6005      // 24581
 #define PICONTROL_SW_PROFINET_DEVICE        0x6006      // 24582
+#define PICONTROL_SW_REVPI_SEVEN            0x6007      // 24583
+#define PICONTROL_SW_REVPI_CLOUD            0x6008      // 24584
+#define PICONTROL_SW_OPCUA_REVPI_SERVER     0x6009      // 24585
+#define PICONTROL_SW_MQTT_REVPI_CLIENT      0x6010      // 24586
 
 #define PICONTROL_NOT_CONNECTED             0x8000
 #define PICONTROL_NOT_CONNECTED_MASK        0x7fff
@@ -55,26 +95,34 @@
 #define PICONTROL_USER_MODULE_MASK          0x7fff  // old definition, will be removed soon
 
 #define KB_IOC_MAGIC  'K'
-#define  KB_CMD1			_IO(KB_IOC_MAGIC, 10 )  // for test only
-#define  KB_CMD2			_IO(KB_IOC_MAGIC, 11 )  // for test only
-#define  KB_RESET			_IO(KB_IOC_MAGIC, 12 )  // reset the piControl driver including the config file
-#define  KB_GET_DEVICE_INFO_LIST	_IO(KB_IOC_MAGIC, 13 )  // get the device info of all detected devices
-#define  KB_GET_DEVICE_INFO		_IO(KB_IOC_MAGIC, 14 )  // get the device info of one device
-#define  KB_GET_VALUE			_IO(KB_IOC_MAGIC, 15 )  // get the value of one bit in the process image
-#define  KB_SET_VALUE			_IO(KB_IOC_MAGIC, 16 )  // set the value of one bit in the process image
-#define  KB_FIND_VARIABLE		_IO(KB_IOC_MAGIC, 17 )  // find a varible defined in piCtory
-#define  KB_SET_EXPORTED_OUTPUTS	_IO(KB_IOC_MAGIC, 18 )  // copy the exported outputs from a application process image to the real process image
-#define  KB_UPDATE_DEVICE_FIRMWARE	_IO(KB_IOC_MAGIC, 19 )  // try to update the firmware of connected devices
-#define  KB_DIO_RESET_COUNTER		_IO(KB_IOC_MAGIC, 20 )  // set a counter or endocder to 0
-#define  KB_GET_LAST_MESSAGE		_IO(KB_IOC_MAGIC, 21 )  // copy the last error message
+#define  KB_CMD1                            _IO(KB_IOC_MAGIC, 10 )  // for test only
+#define  KB_CMD2                            _IO(KB_IOC_MAGIC, 11 )  // for test only
+#define  KB_RESET                           _IO(KB_IOC_MAGIC, 12 )  // reset the piControl driver including the config file
+#define  KB_GET_DEVICE_INFO_LIST            _IO(KB_IOC_MAGIC, 13 )  // get the device info of all detected devices
+#define  KB_GET_DEVICE_INFO                 _IO(KB_IOC_MAGIC, 14 )  // get the device info of one device
+#define  KB_GET_VALUE                       _IO(KB_IOC_MAGIC, 15 )  // get the value of one bit in the process image
+#define  KB_SET_VALUE                       _IO(KB_IOC_MAGIC, 16 )  // set the value of one bit in the process image
+#define  KB_FIND_VARIABLE                   _IO(KB_IOC_MAGIC, 17 )  // find a varible defined in piCtory
+#define  KB_SET_EXPORTED_OUTPUTS            _IO(KB_IOC_MAGIC, 18 )  // copy the exported outputs from a application process image to the real process image
+#define  KB_UPDATE_DEVICE_FIRMWARE          _IO(KB_IOC_MAGIC, 19 )  // try to update the firmware of connected devices
+#define  KB_DIO_RESET_COUNTER               _IO(KB_IOC_MAGIC, 20 )  // set a counter or endocder to 0
+#define  KB_GET_LAST_MESSAGE                _IO(KB_IOC_MAGIC, 21 )  // copy the last error message
+#define  KB_STOP_IO                         _IO(KB_IOC_MAGIC, 22 )  // stop/start IO communication, can be used for I/O simulation
+#define  KB_CONFIG_STOP                     _IO(KB_IOC_MAGIC, 23 )  // for download of configuration to Master Gateway: stop IO communication completely
+#define  KB_CONFIG_SEND                     _IO(KB_IOC_MAGIC, 24 )  // for download of configuration to Master Gateway: download config data
+#define  KB_CONFIG_START                    _IO(KB_IOC_MAGIC, 25 )  // for download of configuration to Master Gateway: restart IO communication
+#define  KB_SET_OUTPUT_WATCHDOG             _IO(KB_IOC_MAGIC, 26 )  // activate a watchdog for this handle. If write is not called for a given period all outputs are set to 0
+#define  KB_SET_POS                         _IO(KB_IOC_MAGIC, 27 )  // set the f_pos, the unsigned int * is used to interpret the pos value
+#define  KB_AIO_CALIBRATE                   _IO(KB_IOC_MAGIC, 28 )
+#define  KB_RO_GET_COUNTER                  _IO(KB_IOC_MAGIC, 29 )  // get counter values of a RO module
 
-#define  KB_WAIT_FOR_EVENT		_IO(KB_IOC_MAGIC, 50 )  // wait for an event. This call is normally blocking
-#define  KB_EVENT_RESET			1		// piControl was reset, reload configuration
+#define  KB_WAIT_FOR_EVENT                  _IO(KB_IOC_MAGIC, 50 )  // wait for an event. This call is normally blocking
+#define  KB_EVENT_RESET                     1       // piControl was reset, reload configuration
 
-// the following call are for KUNBUS internal use only. uncomment the following define to activate them.
-// #define KUNBUS_TEST
-#define  KB_INTERN_SET_SERIAL_NUM	_IO(KB_IOC_MAGIC, 100 )  // set serial num in piDIO, piDI or piDO (can be made only once)
-#define  KB_INTERN_IO_MSG		_IO(KB_IOC_MAGIC, 101 )  // send an I/O-Protocol message and return response
+// the following call are for KUNBUS internal use only.
+#define  KB_INTERN_SET_SERIAL_NUM           _IO(KB_IOC_MAGIC, 100 )  // set serial num in piDIO, piDI or piDO (can be made only once)
+#define  KB_INTERN_IO_MSG                   _IO(KB_IOC_MAGIC, 101 )  // send an I/O-Protocol message and return response
+#define MAX_TELEGRAM_DATA_SIZE 255
 
 #endif //WIN32
 
@@ -104,6 +152,10 @@ typedef struct SDeviceInfoStr
 typedef struct SEntryInfoStr
 {
     uint8_t     i8uAddress;             // Address of module in current configuration
+#define ENTRY_INFO_TYPE_INPUT           1
+#define ENTRY_INFO_TYPE_OUTPUT          2
+#define ENTRY_INFO_TYPE_MEMORY          3
+#define ENTRY_INFO_TYPE_MASK            0x7F
     uint8_t     i8uType;                // 1=input, 2=output, 3=memory, 4=config, 0=undefined, + 0x80 if exported
     uint16_t    i16uIndex;              // index of I/O value for this module
     uint16_t    i16uBitLength;          // length of value in bits
@@ -125,14 +177,54 @@ typedef struct SPIVariableStr
     char        strVarName[32];         // Variable name
     uint16_t    i16uAddress;            // Address of the byte in the process image
     uint8_t     i8uBit;                 // 0-7 bit position, >= 8 whole byte
-    uint16_t    i16uLength;              // length of the variable in bits. Possible values are 1, 8, 16 and 32
+    uint16_t    i16uLength;             // length of the variable in bits. Possible values are 1, 8, 16 and 32
 } SPIVariable;
 
 typedef struct SDIOResetCounterStr
 {
-	uint8_t     i8uAddress;             // Address of module in current configuration
-	uint16_t    i16uBitfield;           // bitfield, if bit n is 1, reset counter/encoder on input n
+    uint8_t     i8uAddress;             // Address of module in current configuration
+    uint16_t    i16uBitfield;           // bitfield, if bit n is 1, reset counter/encoder on input n
 } SDIOResetCounter;
+
+struct pictl_calibrate {
+        /* Address of module in current configuration */
+        unsigned char   address;
+        /* bitfield: mode */
+        unsigned char   mode;
+        /* channels to calibrate */
+        unsigned char   channels;
+        /* point in lookupTable */
+        unsigned char   x_val;
+        signed short    y_val;
+};
+
+typedef struct SConfigDataStr
+{
+    uint8_t     bLeft;
+    uint16_t    i16uLen;
+    char        acData[MAX_TELEGRAM_DATA_SIZE];
+} SConfigData;
+
+enum revpi_ro_num {
+        RELAY_1 = 0,
+        RELAY_2,
+        RELAY_3,
+        RELAY_4,
+        REVPI_RO_NUM_RELAYS,
+};
+
+/* Data for KB_RO_GET_COUNTER ioctl */
+struct revpi_ro_ioctl_counters {
+        /* Address of module in current configuration, set by userspace. */
+        __u8 addr;
+        /* Data returned from kernel */
+        __u32 counter[REVPI_RO_NUM_RELAYS];
+} __attribute__((__packed__));
+
+#define REVPI_RO_RELAY_1_BIT    BIT(0)
+#define REVPI_RO_RELAY_2_BIT    BIT(1)
+#define REVPI_RO_RELAY_3_BIT    BIT(2)
+#define REVPI_RO_RELAY_4_BIT    BIT(3)
 
 #define PICONTROL_CONFIG_ERROR_WRONG_MODULE_TYPE         -10
 #define PICONTROL_CONFIG_ERROR_WRONG_INPUT_LENGTH        -11
@@ -148,11 +240,41 @@ typedef struct SDIOResetCounterStr
 #define PICONTROL_STATUS_SIZE_MISMATCH                  0x08
 #define PICONTROL_STATUS_LEFT_GATEWAY                   0x10
 #define PICONTROL_STATUS_RIGHT_GATEWAY                  0x20
+#define PICONTROL_STATUS_X2_DIN                         0x40    // RevPi Connect only
 
-#define PICONTROL_LED_A1_GREEN                          0x01
-#define PICONTROL_LED_A1_RED                            0x02
-#define PICONTROL_LED_A2_GREEN                          0x04
-#define PICONTROL_LED_A2_RED                            0x08
+#define PICONTROL_LED_A1_GREEN                          0x0001
+#define PICONTROL_LED_A1_RED                            0x0002
+#define PICONTROL_LED_A2_GREEN                          0x0004
+#define PICONTROL_LED_A2_RED                            0x0008
+/* Revpi Connect and Flat */
+#define PICONTROL_LED_A3_GREEN                          0x0010
+#define PICONTROL_LED_A3_RED                            0x0020
+/* RevPi Connect only */
+#define PICONTROL_X2_DOUT                               0x0040
+#define PICONTROL_X2_DOUT_CONNECT4                      0x0001
+#define PICONTROL_WD_TRIGGER                            0x0080
+/* Revpi Flat only */
+#define PICONTROL_LED_A4_GREEN                          0x0040
+#define PICONTROL_LED_A4_RED                            0x0080
+#define PICONTROL_LED_A5_GREEN                          0x0100
+#define PICONTROL_LED_A5_RED                            0x0200
+/* RevPi Connect 4 only */
+#define PICONTROL_LED_RGB_A1_RED                        0x0001
+#define PICONTROL_LED_RGB_A1_GREEN                      0x0002
+#define PICONTROL_LED_RGB_A1_BLUE                       0x0004
+#define PICONTROL_LED_RGB_A2_RED                        0x0008
+#define PICONTROL_LED_RGB_A2_GREEN                      0x0010
+#define PICONTROL_LED_RGB_A2_BLUE                       0x0020
+#define PICONTROL_LED_RGB_A3_RED                        0x0040
+#define PICONTROL_LED_RGB_A3_GREEN                      0x0080
+#define PICONTROL_LED_RGB_A3_BLUE                       0x0100
+#define PICONTROL_LED_RGB_A4_RED                        0x0200
+#define PICONTROL_LED_RGB_A4_GREEN                      0x0400
+#define PICONTROL_LED_RGB_A4_BLUE                       0x0800
+#define PICONTROL_LED_RGB_A5_RED                        0x1000
+#define PICONTROL_LED_RGB_A5_GREEN                      0x2000
+#define PICONTROL_LED_RGB_A5_BLUE                       0x4000
+
 
 
 /******************************************************************************/
