@@ -35,10 +35,10 @@ BOOST_AUTO_TEST_CASE(Literal_test)
   BOOST_TEST(static_cast<CIEC_SINT::TValueType>(test1) == 0);
 
   CIEC_SINT test2 = 127_SINT;
-  BOOST_TEST(static_cast<CIEC_SINT::TValueType>(test2) == CIEC_SINT::scmMaxVal);
+  BOOST_TEST(static_cast<CIEC_SINT::TValueType>(test2) == std::numeric_limits<CIEC_SINT::TValueType>::max());
 
   CIEC_SINT test3 = -128_SINT;
-  BOOST_TEST(static_cast<CIEC_SINT::TValueType>(test3) == CIEC_SINT::scmMinVal);
+  BOOST_TEST(static_cast<CIEC_SINT::TValueType>(test3) == std::numeric_limits<CIEC_SINT::TValueType>::min());
 }
 
 BOOST_AUTO_TEST_CASE(Assignment_test)

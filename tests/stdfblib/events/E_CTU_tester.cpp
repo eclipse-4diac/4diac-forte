@@ -33,14 +33,14 @@ struct E_CTU_TestFixture : public CFBTestFixtureBase {
     CIEC_UINT mOutCV; //count value
 
     bool checkCU(TForteUInt16 paPrevCV) {
-      if(paPrevCV < CIEC_UINT::scmMaxVal) {
+      if(paPrevCV < std::numeric_limits<CIEC_UINT::TValueType>::max()) {
         if(func_NE(CIEC_UINT(paPrevCV + 1), mOutCV)) {
           return false;
         } else if(!checkForSingleOutputEventOccurence(0)) {
           return false;
         }
       } else {
-        if(func_AND(func_NE(CIEC_UINT(CIEC_UINT::scmMaxVal), mOutCV), func_NOT(CIEC_BOOL(eventChainEmpty())))) {
+        if(func_AND(func_NE(std::numeric_limits<CIEC_UINT>::max(), mOutCV), func_NOT(CIEC_BOOL(eventChainEmpty())))) {
           return false;
         }
       }
@@ -120,20 +120,20 @@ triggerEvent(1);
 BOOST_CHECK (checkR());
 
 mInPV = CIEC_UINT(65533);
-for(TForteUInt16 i = 0; i < CIEC_UINT::scmMaxVal; i++) {
+for(TForteUInt16 i = 0; i < std::numeric_limits<CIEC_UINT::TValueType>::max(); i++) {
   //Send event
   triggerEvent(0);
   BOOST_CHECK(checkCU(i));
 }
 
 triggerEvent(0);
-BOOST_CHECK (checkCU(CIEC_UINT::scmMaxVal));
+BOOST_CHECK (checkCU(std::numeric_limits<CIEC_UINT::TValueType>::max()));
 
 triggerEvent(0);
-BOOST_CHECK (checkCU(CIEC_UINT::scmMaxVal));
+BOOST_CHECK (checkCU(std::numeric_limits<CIEC_UINT::TValueType>::max()));
 
 triggerEvent(0);
-BOOST_CHECK (checkCU(CIEC_UINT::scmMaxVal));
+BOOST_CHECK (checkCU(std::numeric_limits<CIEC_UINT::TValueType>::max()));
 
 triggerEvent(1);
 BOOST_CHECK (checkR());}

@@ -35,7 +35,7 @@ BOOST_AUTO_TEST_CASE(Literal_test)
   BOOST_TEST(static_cast<CIEC_BYTE::TValueType>(test1) == 0);
 
   CIEC_BYTE test2 = 0xFF_BYTE;
-  BOOST_TEST(static_cast<CIEC_BYTE::TValueType>(test2) == CIEC_BYTE::scmMaxVal);
+  BOOST_TEST(static_cast<CIEC_BYTE::TValueType>(test2) == std::numeric_limits<CIEC_BYTE::TValueType>::max());
 }
 
 BOOST_AUTO_TEST_CASE(Assignment_test)

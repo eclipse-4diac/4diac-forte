@@ -401,7 +401,7 @@ bool CLMSEV3ProcessInterface::writeDWord(){
     switch (mnTypeOfIO){
       case MOTOR_POSITION:{
         TForteInt32 finalVal = static_cast<TForteInt32>(val);
-        if (CIEC_INT::scmMinVal <= finalVal && CIEC_INT::scmMaxVal >= finalVal){
+        if (std::numeric_limits<CIEC_INT::TValueType>::min() <= finalVal && std::numeric_limits<CIEC_INT::TValueType>::max() >= finalVal){
           mFile << finalVal;
           writeAttempted = true;
         }else{
@@ -411,7 +411,7 @@ bool CLMSEV3ProcessInterface::writeDWord(){
       }
       case MOTOR_POSITIONSETPOINT:{
         TForteInt32 finalVal = static_cast<TForteInt32>(val);
-        if (CIEC_INT::scmMinVal <= finalVal && CIEC_INT::scmMaxVal >= finalVal){
+        if (std::numeric_limits<CIEC_INT::TValueType>::min() <= finalVal && std::numeric_limits<CIEC_INT::TValueType>::max() >= finalVal){
           mFile << finalVal;
           writeAttempted = true;
         }else{

@@ -130,7 +130,7 @@ int CIEC_LTIME::toString(char *paValue, size_t paBufferSize) const {
     TValueType timeValNano = static_cast<TValueType>(*this);
 
     //  generate the correct string for the min value
-    if(timeValNano == scmMinVal) {
+    if(timeValNano == std::numeric_limits<CIEC_LTIME::TValueType>::min()) {
       if (paBufferSize < getToStringBufferSize()) {
         return -1;
       }
