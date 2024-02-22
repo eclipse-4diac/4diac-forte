@@ -46,7 +46,7 @@ public:
   };
 
 
-  IOHandle* initHandle(HandleDescriptor& paHandleDescriptor);
+  IOHandle* createIOHandle(HandleDescriptor& paHandleDescriptor);
 
   void setConfig(Config *paConfig) {}
   const char *init() {

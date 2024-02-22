@@ -126,7 +126,7 @@ void EmbrickBusHandler::deInit() {
   delete mSlaveSelect;
 }
 
-forte::core::io::IOHandle* EmbrickBusHandler::initHandle(
+forte::core::io::IOHandle* EmbrickBusHandler::createIOHandle(
     forte::core::io::IODeviceController::HandleDescriptor &paHandleDescriptor) {
   HandleDescriptor &desc = static_cast<HandleDescriptor&>(paHandleDescriptor);
 
