@@ -84,8 +84,8 @@ const char* WagoDeviceController::init() {
   return 0;
 }
 
-forte::core::io::IOHandle* WagoDeviceController::initHandle(forte::core::io::IODeviceController::HandleDescriptor *paHandleDescriptor) {
-  WagoHandleDescriptor desc = *static_cast<WagoHandleDescriptor*>(paHandleDescriptor);
+forte::core::io::IOHandle* WagoDeviceController::initHandle(forte::core::io::IODeviceController::HandleDescriptor &paHandleDescriptor) {
+  WagoHandleDescriptor &desc = *static_cast<WagoHandleDescriptor&>(paHandleDescriptor);
 
   TForteUInt32 outputOffset;
   TForteUInt32 inputOffset;

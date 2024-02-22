@@ -112,7 +112,7 @@ void IOConfigFBMultiSlave::executeEvent(TEventID paEIID, CEventChainExecutionThr
   }
 }
 
-void IOConfigFBMultiSlave::initHandle(IODeviceController::HandleDescriptor *paHandleDescriptor) {
+void IOConfigFBMultiSlave::initHandle(IODeviceController::HandleDescriptor &paHandleDescriptor) {
   mMaster->initHandle(paHandleDescriptor);
 }
 

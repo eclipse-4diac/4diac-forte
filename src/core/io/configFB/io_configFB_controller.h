@@ -109,7 +109,7 @@ namespace forte {
            *
            * @param paHandleDescriptor Descriptor of the handle
            */
-          void initHandle(IODeviceController::HandleDescriptor *paHandleDescriptor);
+          void initHandle(IODeviceController::HandleDescriptor &paHandleDescriptor);
 
           /*! @brief Deinitializes the configuration fb
            *

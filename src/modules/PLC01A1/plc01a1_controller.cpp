@@ -160,8 +160,8 @@ bool PLC01A1Controller::isHandleValueEqual(forte::core::io::IOHandle *paHandle) 
   return ((forte::core::io::IOHandleBit*) paHandle)->equal(mInputArrayOld);
 }
 
-forte::core::io::IOHandle* PLC01A1Controller::initHandle(forte::core::io::IODeviceController::HandleDescriptor *paHandleDescriptor) {
-  HandleDescriptor desc = *static_cast<HandleDescriptor*>(paHandleDescriptor);
+forte::core::io::IOHandle* PLC01A1Controller::initHandle(forte::core::io::IODeviceController::HandleDescriptor &paHandleDescriptor) {
+  HandleDescriptor& desc = static_cast<HandleDescriptor&>(paHandleDescriptor);
 
   return new forte::core::io::IOHandleBit(this, desc.mDirection, desc.mOffset, desc.mPosition,
     desc.mDirection == forte::core::io::IOMapper::In ? mInputArray : mOutputArray);

@@ -154,7 +154,7 @@ namespace forte {
            *
            * @param paHandleDescriptor Descriptor of the handle
            */
-          virtual void addHandle(HandleDescriptor *paHandleDescriptor);
+          virtual void addHandle(HandleDescriptor &paHandleDescriptor);
 
           /*! @brief Initializer for all IO handles.
            *
@@ -163,7 +163,7 @@ namespace forte {
            *
            * @param paHandleDescriptor Descriptor of the handle
            */
-          virtual IOHandle* initHandle(HandleDescriptor *paHandleDescriptor) = 0;
+          virtual IOHandle* initHandle(HandleDescriptor &paHandleDescriptor) = 0;
 
           /*! @brief Iterates over all input handles and fires an indication event in case of a change.
            *
