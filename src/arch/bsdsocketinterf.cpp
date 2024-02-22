@@ -147,6 +147,27 @@ int CBSDSocketInterface::receiveDataFromTCP(TSocketDescriptor paSockD, char* paD
   if(nRetVal == -1){
     DEVLOG_ERROR("CBSDSocketInterface: TCP-Socket recv() failed: %s\n", strerror(errno));
   }
+
+  // recv only sets errno if res is <= 0
+  if(nRetVal <= 0) {
+    switch(errno){
+      case EWOULDBLOCK:
+      case ENOENT: //caused by vfs
+        //TODO: this is a "connected = true" case, for the moment we leave it open.
+        break;
+      case ENOTCONN:
+      case EPIPE:
+      case ECONNRESET:
+      case ECONNREFUSED:
+      case ECONNABORTED:
+        DEVLOG_ERROR("CBSDSocketInterface::receiveDataFromTCP recv() Disconnected: nRetVal: %d, ERR: %d %s\n", nRetVal, errno, strerror(errno));
+        return 0; //Connection closed by peer
+      default:
+        DEVLOG_ERROR("CBSDSocketInterface::receiveDataFromTCP recv() Unexpected: nRetVal: %d, ERR: %d %s\n", nRetVal, errno, strerror(errno));
+        //TODO: this is a "connected = true" case, for the moment we leave it open.
+        break;
+    }
+  }
   return nRetVal;
 }
 
@@ -286,6 +307,27 @@ int CBSDSocketInterface::receiveDataFromUDP(TSocketDescriptor paSockD, char* paD
 
   if(nRetVal == -1){ //
     DEVLOG_ERROR("CBSDSocketInterface: UDP-Socket recvfrom() failed: %s\n", strerror(errno));
+  }
+
+  // recv only sets errno if res is <= 0
+  if(nRetVal <= 0) {
+    switch(errno){
+      case EWOULDBLOCK:
+      case ENOENT: //caused by vfs
+        //TODO: this is a "connected = true" case, for the moment we leave it open.
+        break;
+      case ENOTCONN:
+      case EPIPE:
+      case ECONNRESET:
+      case ECONNREFUSED:
+      case ECONNABORTED:
+        DEVLOG_ERROR("CBSDSocketInterface::receiveDataFromUDP recvfrom() Disconnected: nRetVal: %d, ERR: %d %s\n", nRetVal, errno, strerror(errno));
+        return 0; //Connection closed by peer
+      default:
+        DEVLOG_ERROR("CBSDSocketInterface::receiveDataFromUDP recvfrom() Unexpected: nRetVal: %d, ERR: %d %s\n", nRetVal, errno, strerror(errno));
+        //TODO: this is a "connected = true" case, for the moment we leave it open.
+        break;
+    }
   }
   return nRetVal;
 }
