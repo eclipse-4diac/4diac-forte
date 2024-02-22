@@ -21,7 +21,7 @@ IODeviceMultiController::IODeviceMultiController(CDeviceExecution& paDeviceExecu
 
 void IODeviceMultiController::addHandle(IODeviceController::HandleDescriptor &paHandleDescriptor) {
   HandleDescriptor& desc = static_cast<HandleDescriptor&>(paHandleDescriptor);
-  IOHandle* handle = initHandle(desc);
+  IOHandle* handle = createIOHandle(desc);
 
   if(nullptr == handle) {
     DEVLOG_WARNING("[IODeviceMultiController] Failed to initialize handle '%s'. Check initHandle method.\n", desc.mId.c_str());

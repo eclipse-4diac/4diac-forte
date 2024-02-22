@@ -104,7 +104,7 @@ class EmbrickBusHandler : public forte::core::io::IODeviceMultiController {
     const char* init();
     void deInit();
 
-    forte::core::io::IOHandle* initHandle(forte::core::io::IODeviceController::HandleDescriptor &paHandleDescriptor);
+    forte::core::io::IOHandle* createIOHandle(forte::core::io::IODeviceController::HandleDescriptor &paHandleDescriptor);
 
     void prepareLoop();
     virtual void runLoop();

@@ -67,7 +67,7 @@ namespace forte {
 
           void addHandle(IODeviceController::HandleDescriptor &paHandleDescriptor) override;
 
-          IOHandle* initHandle(IODeviceController::HandleDescriptor &paHandleDescriptor) override = 0;
+          IOHandle* createIOHandle(IODeviceController::HandleDescriptor &paHandleDescriptor) override = 0;
 
         private:
 

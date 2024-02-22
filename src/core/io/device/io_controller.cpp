@@ -53,7 +53,7 @@ void IODeviceController::run() {
 }
 
 void IODeviceController::addHandle(HandleDescriptor &paHandleDescriptor) {
-  IOHandle* handle = initHandle(paHandleDescriptor);
+  IOHandle* handle = createIOHandle(paHandleDescriptor);
 
   if(nullptr == handle) {
     DEVLOG_WARNING("[IODeviceController] Failed to initialize handle '%s'. Check initHandle method.\n", paHandleDescriptor.mId.c_str());

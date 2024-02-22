@@ -42,7 +42,7 @@ void PLCnextDeviceController::registerSlaveHandler(PLCnextSlaveHandler *slave) {
     mSlaves->pushBack(slave);
 }
 
-forte::core::io::IOHandle* PLCnextDeviceController::initHandle(forte::core::io::IODeviceController::HandleDescriptor &paHandleDescriptor) {
+forte::core::io::IOHandle* PLCnextDeviceController::createIOHandle(forte::core::io::IODeviceController::HandleDescriptor &paHandleDescriptor) {
     HandleDescriptor& desc = static_cast<HandleDescriptor&>(paHandleDescriptor);
     PLCnextSlaveHandler* slave = getSlave(desc.mSlaveIndex);
 
