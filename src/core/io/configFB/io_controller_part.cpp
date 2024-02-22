@@ -47,6 +47,6 @@ void IOConfigFBPartController::executeEvent(TEventID paEIID, CEventChainExecutio
   }
 }
 
-void IOConfigFBPartController::initHandle(IODeviceController::HandleDescriptor *paHandleDescriptor) {
+void IOConfigFBPartController::initHandle(IODeviceController::HandleDescriptor &paHandleDescriptor) {
   mMaster->initHandle(paHandleDescriptor);
 }

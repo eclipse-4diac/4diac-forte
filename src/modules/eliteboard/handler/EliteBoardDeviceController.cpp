@@ -22,9 +22,8 @@ EliteBoardDeviceController::EliteBoardDeviceController(CDeviceExecution& paDevic
 
 EliteBoardDeviceController::~EliteBoardDeviceController() {}
 
-EliteBoardDeviceController::IOHandle *
-EliteBoardDeviceController::initHandle(HandleDescriptor *paHandleDescriptor) {
-  auto desc = static_cast<EliteBoardHandleDescriptor *>(paHandleDescriptor);
-  IOHandle *handle = new IOHandleGPIO(this, desc->mGPIO_Port, desc->mPin);
+EliteBoardDeviceController::IOHandle *EliteBoardDeviceController::initHandle(HandleDescriptor &paHandleDescriptor) {
+  auto desc = static_cast<EliteBoardHandleDescriptor &>(paHandleDescriptor);
+  IOHandle *handle = new IOHandleGPIO(this, desc.mGPIO_Port, desc.mPin);
   return static_cast<IOHandle *>(handle);
 }

@@ -52,20 +52,20 @@ void IODeviceController::run() {
   }
 }
 
-void IODeviceController::addHandle(HandleDescriptor *paHandleDescriptor) {
+void IODeviceController::addHandle(HandleDescriptor &paHandleDescriptor) {
   IOHandle* handle = initHandle(paHandleDescriptor);
 
   if(nullptr == handle) {
-    DEVLOG_WARNING("[IODeviceController] Failed to initialize handle '%s'. Check initHandle method.\n", paHandleDescriptor->mId.c_str());
+    DEVLOG_WARNING("[IODeviceController] Failed to initialize handle '%s'. Check initHandle method.\n", paHandleDescriptor.mId.c_str());
     return;
   }
 
   switch(handle->getDirection()){
     case IOMapper::In:
-      addHandle(&mInputHandles, paHandleDescriptor->mId, handle);
+      addHandle(&mInputHandles, paHandleDescriptor.mId, handle);
       break;
     case IOMapper::Out:
-      addHandle(&mOutputHandles, paHandleDescriptor->mId, handle);
+      addHandle(&mOutputHandles, paHandleDescriptor.mId, handle);
       break;
     default:
       break;

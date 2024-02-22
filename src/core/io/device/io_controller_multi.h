@@ -65,9 +65,9 @@ namespace forte {
         protected:
           explicit IODeviceMultiController(CDeviceExecution& paDeviceExecution);
 
-          void addHandle(IODeviceController::HandleDescriptor *paHandleDescriptor) override;
+          void addHandle(IODeviceController::HandleDescriptor &paHandleDescriptor) override;
 
-          IOHandle* initHandle(IODeviceController::HandleDescriptor *paHandleDescriptor) override = 0;
+          IOHandle* initHandle(IODeviceController::HandleDescriptor &paHandleDescriptor) override = 0;
 
         private:
 

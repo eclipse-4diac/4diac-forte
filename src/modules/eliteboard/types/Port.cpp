@@ -87,7 +87,7 @@ void FORTE_Port::register_handles() {
     EliteBoardDeviceController::EliteBoardHandleDescriptor descr(id->getValue(), port, 1 << i);
     auto ctrl = getExtEvHandler<EliteBoardDeviceController>(*this);
 
-    IOMapper::getInstance().registerHandle(id->getValue(), ctrl.initHandle(&descr));
+    IOMapper::getInstance().registerHandle(id->getValue(), ctrl.initHandle(descr));
   }
 }
 
