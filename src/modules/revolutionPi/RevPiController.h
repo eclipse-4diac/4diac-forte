@@ -26,15 +26,16 @@ public:
   };
 
   struct HandleDescriptor: forte::core::io::IODeviceMultiController::HandleDescriptor {
-    CIEC_ANY::EDataTypeID type;
-    uint8_t offset;
-    uint8_t position;
+    CIEC_ANY::EDataTypeID mType;
+    uint8_t mOffset;
+    uint8_t mPosition;
 
-    HandleDescriptor(CIEC_WSTRING const &id, forte::core::io::IOMapper::Direction direction,
-        int slaveIndex, CIEC_ANY::EDataTypeID type, uint8_t offset,
-        uint8_t position) :
-          forte::core::io::IODeviceMultiController::HandleDescriptor(id, direction,
-            slaveIndex), type(type), offset(offset), position(position) {
+    HandleDescriptor(std::string const &paID, forte::core::io::IOMapper::Direction paDirection,
+        int paSlaveIndex, CIEC_ANY::EDataTypeID paType, uint8_t paOffset, uint8_t paPosition) :
+          forte::core::io::IODeviceMultiController::HandleDescriptor(paID, paDirection, paSlaveIndex),
+          mType(paType),
+          mOffset(paOffset),
+          mPosition(paPosition) {
 
     }
   };
@@ -63,8 +64,7 @@ public:
 protected:
   const char* init();
 
-  forte::core::io::IOHandle* initHandle(
-      forte::core::io::IODeviceMultiController::HandleDescriptor *handleDescriptor);
+  forte::core::io::IOHandle* initHandle(forte::core::io::IODeviceController::HandleDescriptor *handleDescriptor) override;
 
   void deInit();
 

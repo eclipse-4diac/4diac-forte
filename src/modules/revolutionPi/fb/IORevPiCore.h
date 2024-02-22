@@ -45,8 +45,7 @@ class FORTE_IORevPiCore: public forte::core::io::IOConfigFBMultiMaster {
     void setConfig();
 
   public:
-    FUNCTION_BLOCK_CTOR_WITH_BASE_CLASS(FORTE_IORevPiCore, forte::core::io::IOConfigFBMultiMaster){
-    };
+    FORTE_IORevPiCore(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     virtual ~FORTE_IORevPiCore(){};
 

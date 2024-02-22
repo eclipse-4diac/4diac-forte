@@ -49,8 +49,8 @@ class FORTE_IORevPiBusAdapter: public forte::core::io::IOConfigFBMultiAdapter {
     static const TEventID scmEventINITOID = 0;
     static const TEventID scmEventINITID = 0;
 
-    static const TForteUInt8 scm_slaveConfigurationIO[];
-    static const TForteUInt8 scm_slaveConfigurationIO_num;
+    static const TForteUInt8 scmSlaveConfigurationIO[];
+    static const TForteUInt8 scmSlaveConfigurationIONum;
 
     CIEC_BOOL &var_QO() {
       return *static_cast<CIEC_BOOL*>((isSocket()) ? getDI(0) : getDO(0));

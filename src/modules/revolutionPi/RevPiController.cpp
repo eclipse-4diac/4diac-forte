@@ -68,15 +68,14 @@ const char* RevPiController::init() {
   return 0;
 }
 
-forte::core::io::IOHandle* RevPiController::initHandle(
-    forte::core::io::IODeviceMultiController::HandleDescriptor *paHandleDescriptor) {
+forte::core::io::IOHandle* RevPiController::initHandle(IODeviceController::HandleDescriptor *paHandleDescriptor) {
   HandleDescriptor desc = *static_cast<HandleDescriptor*>(paHandleDescriptor);
 
-  return new RevPiHandle(this, desc.type, desc.mDirection,
-      static_cast<uint16_t>(deviceList[desc.mSlaveIndex + 1].i16uBaseOffset + desc.offset
+  return new RevPiHandle(this, desc.mType, desc.mDirection,
+      static_cast<uint16_t>(deviceList[desc.mSlaveIndex + 1].i16uBaseOffset + desc.mOffset
           + (desc.mDirection == forte::core::io::IOMapper::In ?
               deviceList[desc.mSlaveIndex + 1].i16uInputOffset :
-              deviceList[desc.mSlaveIndex + 1].i16uOutputOffset)), desc.position);
+              deviceList[desc.mSlaveIndex + 1].i16uOutputOffset)), desc.mPosition);
 }
 
 void RevPiController::deInit() {

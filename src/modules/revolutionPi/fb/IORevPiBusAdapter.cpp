@@ -32,6 +32,7 @@ const SFBInterfaceSpec FORTE_IORevPiBusAdapter::scmFBInterfaceSpecSocket = {
   1, scmEventOutputNames, scmEOWith, scmEOWithIndexes,
   1, scmDataInputNames, scmDataInputTypeIds,
   3, scmDataOutputNames, scmDataOutputTypeIds,
+  0, nullptr,
   0, nullptr
 };
 
@@ -40,6 +41,7 @@ const SFBInterfaceSpec FORTE_IORevPiBusAdapter::scmFBInterfaceSpecPlug = {
   1, scmEventInputNames, scmEIWith, scmEIWithIndexes,
   3, scmDataOutputNames, scmDataOutputTypeIds,
   1, scmDataInputNames, scmDataInputTypeIds,
+  0, nullptr,
   0, nullptr
 };
 
@@ -91,5 +93,5 @@ void FORTE_IORevPiBusAdapter::writeOutputData(const TEventID paEIID) {
   }
 }
 
-const TForteUInt8 FORTE_IORevPiBusAdapter::scm_slaveConfigurationIO[] = { };
-const TForteUInt8 FORTE_IORevPiBusAdapter::scm_slaveConfigurationIO_num = 0;
+const TForteUInt8 FORTE_IORevPiBusAdapter::scmSlaveConfigurationIO[] = { };
+const TForteUInt8 FORTE_IORevPiBusAdapter::scmSlaveConfigurationIONum = 0;

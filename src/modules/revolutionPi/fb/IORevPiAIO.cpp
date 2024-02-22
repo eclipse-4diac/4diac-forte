@@ -19,7 +19,7 @@
 DEFINE_FIRMWARE_FB(FORTE_IORevPiAIO, g_nStringIdIORevPiAIO)
 
 const CStringDictionary::TStringId FORTE_IORevPiAIO::scmDataInputNames[] = {g_nStringIdQI, g_nStringIdAnalogInput_1, g_nStringIdAnalogInput_2, g_nStringIdAnalogInput_3, g_nStringIdAnalogInput_4, g_nStringIdRTD_1, g_nStringIdRTD_2, g_nStringIdAnalogOutput_1, g_nStringIdAnalogOutput_2};
-const CStringDictionary::TStringId FORTE_IORevPiAIO::scmDataInputTypeIds[] = {g_nStringIdBOOL, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING};
+const CStringDictionary::TStringId FORTE_IORevPiAIO::scmDataInputTypeIds[] = {g_nStringIdBOOL, g_nStringIdSTRING, g_nStringIdSTRING, g_nStringIdSTRING, g_nStringIdSTRING, g_nStringIdSTRING, g_nStringIdSTRING, g_nStringIdSTRING, g_nStringIdSTRING};
 const CStringDictionary::TStringId FORTE_IORevPiAIO::scmDataOutputNames[] = {g_nStringIdQO, g_nStringIdSTATUS};
 const CStringDictionary::TStringId FORTE_IORevPiAIO::scmDataOutputTypeIds[] = {g_nStringIdBOOL, g_nStringIdWSTRING};
 const TDataIOID FORTE_IORevPiAIO::scmEIWith[] = {1, 2, 5, 3, 4, 6, 7, 8, 0, scmWithListDelimiter};
@@ -41,8 +41,28 @@ const SFBInterfaceSpec FORTE_IORevPiAIO::scmFBInterfaceSpec = {
   2, scmAdapterInstances
 };
 
-const TForteUInt8 FORTE_IORevPiAIO::scm_slaveConfigurationIO[] = { };
-const TForteUInt8 FORTE_IORevPiAIO::scm_slaveConfigurationIO_num = 0;
+const TForteUInt8 FORTE_IORevPiAIO::scmSlaveConfigurationIO[] = { };
+const TForteUInt8 FORTE_IORevPiAIO::scmSlaveConfigurationIONum = 0;
+
+FORTE_IORevPiAIO::FORTE_IORevPiAIO(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+    forte::core::io::IOConfigFBMultiSlave(scmSlaveConfigurationIO, scmSlaveConfigurationIONum, 103, paContainer, &scmFBInterfaceSpec, paInstanceNameId),
+    var_conn_QO(var_QO),
+    var_conn_STATUS(var_STATUS),
+    conn_MAPO(this, 0),
+    conn_IND(this, 1),
+    conn_QI(nullptr),
+    conn_AnalogInput_1(nullptr),
+    conn_AnalogInput_2(nullptr),
+    conn_AnalogInput_3(nullptr),
+    conn_AnalogInput_4(nullptr),
+    conn_RTD_1(nullptr),
+    conn_RTD_2(nullptr),
+    conn_AnalogOutput_1(nullptr),
+    conn_AnalogOutput_2(nullptr),
+    conn_QO(this, 0, &var_conn_QO),
+    conn_STATUS(this, 1, &var_conn_STATUS){
+
+};
 
 
 void FORTE_IORevPiAIO::initHandles() {
@@ -52,7 +72,7 @@ void FORTE_IORevPiAIO::initHandles() {
   for (int i = 1; i < 9; i++) {
     uint8_t* currentOffset = (i < 7) ? &inputOffset : &outputOffset;
       RevPiController::HandleDescriptor desc = RevPiController::HandleDescriptor(
-          *static_cast<CIEC_WSTRING*>(getDI(i)), (i < 7) ? forte::core::io::IOMapper::In : forte::core::io::IOMapper::Out, mIndex,
+          static_cast<CIEC_STRING*>(getDI(i))->getStorage(), (i < 7) ? forte::core::io::IOMapper::In : forte::core::io::IOMapper::Out, mIndex,
           CIEC_ANY::e_WORD, *currentOffset, 0);
       initHandle(&desc);
     *currentOffset = static_cast<uint8_t>(*currentOffset + 2);
@@ -61,14 +81,14 @@ void FORTE_IORevPiAIO::initHandles() {
 
 void FORTE_IORevPiAIO::setInitialValues() {
   var_QI = 0_BOOL;
-  var_AnalogInput_1 = u""_WSTRING;
-  var_AnalogInput_2 = u""_WSTRING;
-  var_AnalogInput_3 = u""_WSTRING;
-  var_AnalogInput_4 = u""_WSTRING;
-  var_RTD_1 = u""_WSTRING;
-  var_RTD_2 = u""_WSTRING;
-  var_AnalogOutput_1 = u""_WSTRING;
-  var_AnalogOutput_2 = u""_WSTRING;
+  var_AnalogInput_1 = ""_STRING;
+  var_AnalogInput_2 = ""_STRING;
+  var_AnalogInput_3 = ""_STRING;
+  var_AnalogInput_4 = ""_STRING;
+  var_RTD_1 = ""_STRING;
+  var_RTD_2 = ""_STRING;
+  var_AnalogOutput_1 = ""_STRING;
+  var_AnalogOutput_2 = ""_STRING;
   var_QO = 0_BOOL;
   var_STATUS = u""_WSTRING;
 }
@@ -127,6 +147,37 @@ CIEC_ANY *FORTE_IORevPiAIO::getDO(const size_t paIndex) {
   switch(paIndex) {
     case 0: return &var_QO;
     case 1: return &var_STATUS;
+  }
+  return nullptr;
+}
+
+CEventConnection *FORTE_IORevPiAIO::getEOConUnchecked(const TPortId paIndex) {
+  switch(paIndex) {
+    case 0: return &conn_MAPO;
+    case 1: return &conn_IND;
+  }
+  return nullptr;
+}
+
+CDataConnection **FORTE_IORevPiAIO::getDIConUnchecked(const TPortId paIndex) {
+  switch(paIndex) {
+    case 0: return &conn_QI;
+    case 1: return &conn_AnalogInput_1;
+    case 2: return &conn_AnalogInput_2;
+    case 3: return &conn_AnalogInput_3;
+    case 4: return &conn_AnalogInput_4;
+    case 5: return &conn_RTD_1;
+    case 6: return &conn_RTD_2;
+    case 7: return &conn_AnalogOutput_1;
+    case 8: return &conn_AnalogOutput_2;
+  }
+  return nullptr;
+}
+
+CDataConnection *FORTE_IORevPiAIO::getDOConUnchecked(const TPortId paIndex) {
+  switch(paIndex) {
+    case 0: return &conn_QO;
+    case 1: return &conn_STATUS;
   }
   return nullptr;
 }

@@ -40,28 +40,27 @@ private:
 
   static const SFBInterfaceSpec scmFBInterfaceSpec;
 
-  static const TForteUInt8 scm_slaveConfigurationIO[];
-  static const TForteUInt8 scm_slaveConfigurationIO_num;
+  static const TForteUInt8 scmSlaveConfigurationIO[];
+  static const TForteUInt8 scmSlaveConfigurationIONum;
 
   void readInputData(TEventID paEIID) override;
   void writeOutputData(TEventID paEIID) override;
   void setInitialValues() override;
 
 public:
-  FUNCTION_BLOCK_CTOR_FOR_IO_MULTI_SLAVE(FORTE_IORevPiAIO, forte::core::io::IOConfigFBMultiSlave, 103){
-};
+  FORTE_IORevPiAIO(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
   virtual ~FORTE_IORevPiAIO(){};
 
   CIEC_BOOL var_QI;
-  CIEC_WSTRING var_AnalogInput_1;
-  CIEC_WSTRING var_AnalogInput_2;
-  CIEC_WSTRING var_AnalogInput_3;
-  CIEC_WSTRING var_AnalogInput_4;
-  CIEC_WSTRING var_RTD_1;
-  CIEC_WSTRING var_RTD_2;
-  CIEC_WSTRING var_AnalogOutput_1;
-  CIEC_WSTRING var_AnalogOutput_2;
+  CIEC_STRING var_AnalogInput_1;
+  CIEC_STRING var_AnalogInput_2;
+  CIEC_STRING var_AnalogInput_3;
+  CIEC_STRING var_AnalogInput_4;
+  CIEC_STRING var_RTD_1;
+  CIEC_STRING var_RTD_2;
+  CIEC_STRING var_AnalogOutput_1;
+  CIEC_STRING var_AnalogOutput_2;
 
   CIEC_BOOL var_QO;
   CIEC_WSTRING var_STATUS;
@@ -99,7 +98,7 @@ public:
   CDataConnection **getDIConUnchecked(TPortId) override;
   CDataConnection *getDOConUnchecked(TPortId) override;
 
-  void evt_MAP(const CIEC_BOOL &paQI, const CIEC_WSTRING &paAnalogInput_1, const CIEC_WSTRING &paAnalogInput_2, const CIEC_WSTRING &paAnalogInput_3, const CIEC_WSTRING &paAnalogInput_4, const CIEC_WSTRING &paRTD_1, const CIEC_WSTRING &paRTD_2, const CIEC_WSTRING &paAnalogOutput_1, const CIEC_WSTRING &paAnalogOutput_2, CIEC_BOOL &paQO, CIEC_WSTRING &paSTATUS) {
+  void evt_MAP(const CIEC_BOOL &paQI, const CIEC_STRING &paAnalogInput_1, const CIEC_STRING &paAnalogInput_2, const CIEC_STRING &paAnalogInput_3, const CIEC_STRING &paAnalogInput_4, const CIEC_STRING &paRTD_1, const CIEC_STRING &paRTD_2, const CIEC_STRING &paAnalogOutput_1, const CIEC_STRING &paAnalogOutput_2, CIEC_BOOL &paQO, CIEC_WSTRING &paSTATUS) {
     var_QI = paQI;
     var_AnalogInput_1 = paAnalogInput_1;
     var_AnalogInput_2 = paAnalogInput_2;
@@ -114,7 +113,7 @@ public:
     paSTATUS = var_STATUS;
   }
 
-  void operator()(const CIEC_BOOL &paQI, const CIEC_WSTRING &paAnalogInput_1, const CIEC_WSTRING &paAnalogInput_2, const CIEC_WSTRING &paAnalogInput_3, const CIEC_WSTRING &paAnalogInput_4, const CIEC_WSTRING &paRTD_1, const CIEC_WSTRING &paRTD_2, const CIEC_WSTRING &paAnalogOutput_1, const CIEC_WSTRING &paAnalogOutput_2, CIEC_BOOL &paQO, CIEC_WSTRING &paSTATUS) {
+  void operator()(const CIEC_BOOL &paQI, const CIEC_STRING &paAnalogInput_1, const CIEC_STRING &paAnalogInput_2, const CIEC_STRING &paAnalogInput_3, const CIEC_STRING &paAnalogInput_4, const CIEC_STRING &paRTD_1, const CIEC_STRING &paRTD_2, const CIEC_STRING &paAnalogOutput_1, const CIEC_STRING &paAnalogOutput_2, CIEC_BOOL &paQO, CIEC_WSTRING &paSTATUS) {
     evt_MAP(paQI, paAnalogInput_1, paAnalogInput_2, paAnalogInput_3, paAnalogInput_4, paRTD_1, paRTD_2, paAnalogOutput_1, paAnalogOutput_2, paQO, paSTATUS);
   }
 

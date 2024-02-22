@@ -40,6 +40,20 @@ const SFBInterfaceSpec FORTE_IORevPiCore::scmFBInterfaceSpec = {
   1, scmAdapterInstances
 };
 
+FORTE_IORevPiCore::FORTE_IORevPiCore(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+  forte::core::io::IOConfigFBMultiMaster(paContainer, &scmFBInterfaceSpec, paInstanceNameId),
+     var_UpdateInterval(25_UINT),
+     var_conn_QO(var_QO),
+     var_conn_STATUS(var_STATUS),
+     conn_INITO(this, 0),
+     conn_IND(this, 1),
+     conn_QI(nullptr),
+     conn_UpdateInterval(nullptr),
+     conn_QO(this, 0, &var_conn_QO),
+     conn_STATUS(this, 1, &var_conn_STATUS) {
+
+}
+
 void FORTE_IORevPiCore::setInitialValues() {
   var_QI = 0_BOOL;
   var_UpdateInterval = 25_UINT;
@@ -49,7 +63,7 @@ void FORTE_IORevPiCore::setInitialValues() {
 
 void FORTE_IORevPiCore::setConfig() {
   RevPiController::Config config;
-  config.updateInterval = var_UpdateInterval.getUnsignedValue();
+  config.updateInterval = static_cast<CIEC_UINT::TValueType>(var_UpdateInterval);
   getDeviceController()->setConfig(&config);
 }
 
