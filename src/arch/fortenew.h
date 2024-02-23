@@ -32,7 +32,7 @@
  * TODO try std new with nothrow.
  */
 
-#if __cplusplus >= 201103L //stdc11
+#if __cplusplus >= 201103L || _MSVC_LANG >= 201103L //stdc11
 inline
 void* operator new(size_t paSize) {
   return forte_malloc(paSize);
@@ -57,7 +57,7 @@ void operator delete[](void* paData) noexcept{
   }
 }
 
-# if __cplusplus >= 201402L //stdc14
+# if __cplusplus >= 201402L || _MSVC_LANG >= 201402L //stdc14
 inline
 void operator delete(void* paData, std::size_t) noexcept{
   if (paData){
