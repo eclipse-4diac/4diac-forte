@@ -547,12 +547,12 @@ BOOST_AUTO_TEST_CASE(String_toString_faultcase_buffer_pointer_nullptr) {
 BOOST_AUTO_TEST_CASE(String_toString_faultcase_buffer_not_enough_buffer_size) {
   CIEC_STRING testString("4diac 4 ever!"_STRING);
   const size_t bufferSize = "4diac 4 ever!"_STRING.length() + 1 + 2; // +1 for \0 and +2 for enclosing single quotes
-  char cStringBuffer[bufferSize];
+  std::vector<char> cStringBuffer(bufferSize);
 
-  for(size_t i = 0; i < bufferSize; ++i) {
-    BOOST_CHECK_EQUAL(-1, testString.toString(cStringBuffer, i));
+  for(size_t i = 0; i < cStringBuffer.size(); ++i) {
+    BOOST_CHECK_EQUAL(-1, testString.toString(cStringBuffer.data(), i));
   }
-  BOOST_CHECK_EQUAL(bufferSize - 1, testString.toString(cStringBuffer, bufferSize)); // \0 is not counted
+  BOOST_CHECK_EQUAL(cStringBuffer.size() - 1, testString.toString(cStringBuffer.data(), cStringBuffer.size())); // \0 is not counted
 }
 
 BOOST_AUTO_TEST_CASE(String_getToStringBufferSize_NoSpecialSymbols) {
