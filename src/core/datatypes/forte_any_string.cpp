@@ -192,7 +192,7 @@ int CIEC_ANY_STRING::dollarEscapeChar(char *paValue, char paSymbol, unsigned int
       }
       break;
     default:
-      if(!isprint(paSymbol) && paTypeID == CIEC_ANY::e_STRING) {
+      if(!isprint(static_cast<unsigned char>(paSymbol)) && paTypeID == CIEC_ANY::e_STRING) {
         nUsedBytes += 2; // '$xx'
       }
       break;
