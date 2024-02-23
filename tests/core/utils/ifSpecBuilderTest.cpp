@@ -430,7 +430,7 @@ BOOST_AUTO_TEST_SUITE(IfSpecBuilder_Test)
     CStringIdListSpecBuilder uut{16};
     uut.setStaticList(constStringIdList1, 3);
     uut.addString(4);
-    auto out = uut.build(storage);
+    auto out = uut.build<size_t>(storage);
     BOOST_CHECK_NE(std::get<0>(out), constStringIdList1);
     BOOST_CHECK_EQUAL(std::get<1>(out), 4);
     static constexpr std::array<CStringDictionary::TStringId, 4> expected = {1, 2, 3, 4};
