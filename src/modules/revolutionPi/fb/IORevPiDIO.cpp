@@ -16,6 +16,8 @@
 
 #include "../RevPiController.h"
 
+using namespace forte::core::io;
+
 DEFINE_FIRMWARE_FB(FORTE_IORevPiDIO, g_nStringIdIORevPiDIO)
 
 const CStringDictionary::TStringId FORTE_IORevPiDIO::scmDataInputNames[] = {g_nStringIdQI, g_nStringIdDigitalInput_1, g_nStringIdDigitalInput_2, g_nStringIdDigitalInput_3, g_nStringIdDigitalInput_4, g_nStringIdDigitalInput_5, g_nStringIdDigitalInput_6, g_nStringIdDigitalInput_7, g_nStringIdDigitalInput_8, g_nStringIdDigitalInput_9, g_nStringIdDigitalInput_10, g_nStringIdDigitalInput_11, g_nStringIdDigitalInput_12, g_nStringIdDigitalInput_13, g_nStringIdDigitalInput_14, g_nStringIdDigitalOutput_1, g_nStringIdDigitalOutput_2, g_nStringIdDigitalOutput_3, g_nStringIdDigitalOutput_4, g_nStringIdDigitalOutput_5, g_nStringIdDigitalOutput_6, g_nStringIdDigitalOutput_7, g_nStringIdDigitalOutput_8, g_nStringIdDigitalOutput_9, g_nStringIdDigitalOutput_10, g_nStringIdDigitalOutput_11, g_nStringIdDigitalOutput_12, g_nStringIdDigitalOutput_13, g_nStringIdDigitalOutput_14};
@@ -45,7 +47,7 @@ const TForteUInt8 FORTE_IORevPiDIO::scmSlaveConfigurationIO[] = { };
 const TForteUInt8 FORTE_IORevPiDIO::scmSlaveConfigurationIONum = 0;
 
 FORTE_IORevPiDIO::FORTE_IORevPiDIO(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
-    forte::core::io::IOConfigFBMultiSlave(scmSlaveConfigurationIO, scmSlaveConfigurationIONum, 96, paContainer, &scmFBInterfaceSpec, paInstanceNameId),
+    IOConfigFBMultiSlave(scmSlaveConfigurationIO, scmSlaveConfigurationIONum, 96, paContainer, &scmFBInterfaceSpec, paInstanceNameId),
     var_conn_QO(var_QO),
     var_conn_STATUS(var_STATUS),
     conn_MAPO(this, 0),
@@ -274,17 +276,15 @@ void FORTE_IORevPiDIO::initHandles() {
   int oOffset = iOffset + iCount;
 
   for (int i = 0; i < iCount; i++) {
-    RevPiController::HandleDescriptor desc = RevPiController::HandleDescriptor(
-        static_cast<CIEC_STRING*>(getDI(iOffset + i))->getStorage(), forte::core::io::IOMapper::In, mIndex,
-        CIEC_ANY::e_BOOL, (uint8_t) (i / 8), (uint8_t) (i % 8));
-    initHandle(&desc);
+    RevPiController::HandleDescriptor desc(static_cast<CIEC_STRING*>(getDI(iOffset + i))->getStorage(),
+        IOMapper::In, mIndex, CIEC_ANY::e_BOOL, (uint8_t) (i / 8), (uint8_t) (i % 8));
+    initHandle(desc);
   }
 
   for (int i = 0; i < oCount; i++) {
-    RevPiController::HandleDescriptor desc = RevPiController::HandleDescriptor(
-        static_cast<CIEC_STRING*>(getDI(oOffset + i))->getStorage(), forte::core::io::IOMapper::Out, mIndex,
-        CIEC_ANY::e_BOOL, (uint8_t) (i / 8), (uint8_t) (i % 8));
-    initHandle(&desc);
+    RevPiController::HandleDescriptor desc(static_cast<CIEC_STRING*>(getDI(oOffset + i))->getStorage(),
+        IOMapper::Out, mIndex, CIEC_ANY::e_BOOL, (uint8_t) (i / 8), (uint8_t) (i % 8));
+    initHandle(desc);
   }
 }
 

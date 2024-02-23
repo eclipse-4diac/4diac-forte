@@ -64,7 +64,7 @@ public:
 protected:
   const char* init();
 
-  forte::core::io::IOHandle* initHandle(forte::core::io::IODeviceController::HandleDescriptor *handleDescriptor) override;
+  forte::core::io::IOHandle* createIOHandle(forte::core::io::IODeviceController::HandleDescriptor &handleDescriptor) override;
 
   void deInit();
 

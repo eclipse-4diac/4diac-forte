@@ -67,11 +67,8 @@ namespace forte {
 
           void addHandle(IODeviceController::HandleDescriptor &paHandleDescriptor) override;
 
-<<<<<<< Upstream, based on eclipse/develop
           IOHandle* createIOHandle(IODeviceController::HandleDescriptor &paHandleDescriptor) override = 0;
 
-=======
->>>>>>> 78ecaa2 Upgraded RevPi elements to latest IO and FB interface
         private:
 
           /*! @brief Checks if a slave exists at the given index

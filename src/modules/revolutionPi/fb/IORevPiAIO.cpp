@@ -16,6 +16,8 @@
 
 #include "../RevPiController.h"
 
+using namespace forte::core::io;
+
 DEFINE_FIRMWARE_FB(FORTE_IORevPiAIO, g_nStringIdIORevPiAIO)
 
 const CStringDictionary::TStringId FORTE_IORevPiAIO::scmDataInputNames[] = {g_nStringIdQI, g_nStringIdAnalogInput_1, g_nStringIdAnalogInput_2, g_nStringIdAnalogInput_3, g_nStringIdAnalogInput_4, g_nStringIdRTD_1, g_nStringIdRTD_2, g_nStringIdAnalogOutput_1, g_nStringIdAnalogOutput_2};
@@ -45,7 +47,7 @@ const TForteUInt8 FORTE_IORevPiAIO::scmSlaveConfigurationIO[] = { };
 const TForteUInt8 FORTE_IORevPiAIO::scmSlaveConfigurationIONum = 0;
 
 FORTE_IORevPiAIO::FORTE_IORevPiAIO(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
-    forte::core::io::IOConfigFBMultiSlave(scmSlaveConfigurationIO, scmSlaveConfigurationIONum, 103, paContainer, &scmFBInterfaceSpec, paInstanceNameId),
+    IOConfigFBMultiSlave(scmSlaveConfigurationIO, scmSlaveConfigurationIONum, 103, paContainer, &scmFBInterfaceSpec, paInstanceNameId),
     var_conn_QO(var_QO),
     var_conn_STATUS(var_STATUS),
     conn_MAPO(this, 0),
@@ -71,10 +73,9 @@ void FORTE_IORevPiAIO::initHandles() {
 
   for (int i = 1; i < 9; i++) {
     uint8_t* currentOffset = (i < 7) ? &inputOffset : &outputOffset;
-      RevPiController::HandleDescriptor desc = RevPiController::HandleDescriptor(
-          static_cast<CIEC_STRING*>(getDI(i))->getStorage(), (i < 7) ? forte::core::io::IOMapper::In : forte::core::io::IOMapper::Out, mIndex,
-          CIEC_ANY::e_WORD, *currentOffset, 0);
-      initHandle(&desc);
+    RevPiController::HandleDescriptor desc(static_cast<CIEC_STRING*>(getDI(i))->getStorage(),
+        (i < 7) ? IOMapper::In : IOMapper::Out, mIndex, CIEC_ANY::e_WORD, *currentOffset, 0);
+    initHandle(desc);
     *currentOffset = static_cast<uint8_t>(*currentOffset + 2);
   }
 }

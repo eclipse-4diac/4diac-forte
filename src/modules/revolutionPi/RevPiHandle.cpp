@@ -12,9 +12,11 @@
 #include "RevPiHandle.h"
 #include <forte_word.h>
 
+using namespace forte::core::io;
+
 RevPiHandle::RevPiHandle(RevPiController *paController, CIEC_ANY::EDataTypeID paType,
-    forte::core::io::IOMapper::Direction paDirection, uint16_t paOffset, uint8_t paPosition) :
-    forte::core::io::IOHandle(paController, paDirection, paType), valueLastCheck(0) {
+    IOMapper::Direction paDirection, uint16_t paOffset, uint8_t paPosition) :
+    IOHandle(paController, paDirection, paType), valueLastCheck(0) {
   control.i16uAddress = paOffset;
   control.i8uBit = paPosition;
   control.i8uValue = 0;
@@ -94,5 +96,5 @@ bool RevPiHandle::check() {
 
 void RevPiHandle::dropObserver() {
   set(CIEC_WORD(0));
-  forte::core::io::IOHandle::dropObserver();
+  IOHandle::dropObserver();
 }

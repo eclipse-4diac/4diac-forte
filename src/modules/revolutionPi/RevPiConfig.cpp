@@ -16,6 +16,8 @@
 
 #include "RevPiController.h"
 
+using namespace forte::core::io;
+
 DEFINE_FIRMWARE_FB(RevPiConfig, g_nStringIdIORevPi)
 
 const CStringDictionary::TStringId RevPiConfig::scm_anDataInputNames[] = {g_nStringIdQI, g_nStringIdDigitalInput_1, g_nStringIdDigitalInput_2, g_nStringIdDigitalInput_3, g_nStringIdDigitalInput_4, g_nStringIdDigitalInput_5, g_nStringIdDigitalInput_6, g_nStringIdDigitalInput_7, g_nStringIdDigitalInput_8, g_nStringIdDigitalInput_9, g_nStringIdDigitalInput_10, g_nStringIdDigitalInput_11, g_nStringIdDigitalInput_12, g_nStringIdDigitalInput_13, g_nStringIdDigitalInput_14, g_nStringIdDigitalOutput_1, g_nStringIdDigitalOutput_2, g_nStringIdDigitalOutput_3, g_nStringIdDigitalOutput_4, g_nStringIdDigitalOutput_5, g_nStringIdDigitalOutput_6, g_nStringIdDigitalOutput_7, g_nStringIdDigitalOutput_8, g_nStringIdDigitalOutput_9, g_nStringIdDigitalOutput_10, g_nStringIdDigitalOutput_11, g_nStringIdDigitalOutput_12, g_nStringIdDigitalOutput_13, g_nStringIdDigitalOutput_14, g_nStringIdUpdateInterval};
@@ -52,6 +54,6 @@ void RevPiConfig::setConfig(){
   controller->setConfig(&config);
 }
 
-forte::core::io::IODeviceController* RevPiConfig::createDeviceController(CDeviceExecution& paDeviceExecution){
+IODeviceController* RevPiConfig::createDeviceController(CDeviceExecution& paDeviceExecution){
     return new RevPiController(paDeviceExecution);
 }

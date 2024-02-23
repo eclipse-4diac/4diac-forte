@@ -12,6 +12,8 @@
 #include "RevPiController.h"
 #include "RevPiHandle.h"
 
+using namespace forte::core::io;
+
 const char * const RevPiController::scmFailedToOpenControlFile =
     "Failed to open control file.";
 const char * const RevPiController::scmFailedToResetControllerFile =
@@ -19,12 +21,12 @@ const char * const RevPiController::scmFailedToResetControllerFile =
 const char * const RevPiController::scmFailedToGetDeviceList =
     "Failed to get device list";
 
-RevPiController::RevPiController(CDeviceExecution& paDeviceExecution) : forte::core::io::IODeviceMultiController(paDeviceExecution),
+RevPiController::RevPiController(CDeviceExecution& paDeviceExecution) : IODeviceMultiController(paDeviceExecution),
     deviceCount(0) {
   config.updateInterval = 25;
 }
 
-void RevPiController::setConfig(struct forte::core::io::IODeviceController::Config* paConfig) {
+void RevPiController::setConfig(struct IODeviceController::Config* paConfig) {
   Config newConfig = *static_cast<Config*>(paConfig);
 
   if (newConfig.updateInterval <= 0) {
@@ -68,12 +70,12 @@ const char* RevPiController::init() {
   return 0;
 }
 
-forte::core::io::IOHandle* RevPiController::initHandle(IODeviceController::HandleDescriptor *paHandleDescriptor) {
-  HandleDescriptor desc = *static_cast<HandleDescriptor*>(paHandleDescriptor);
+IOHandle* RevPiController::createIOHandle(IODeviceController::HandleDescriptor &paHandleDescriptor) {
+  HandleDescriptor &desc(static_cast<HandleDescriptor&>(paHandleDescriptor));
 
   return new RevPiHandle(this, desc.mType, desc.mDirection,
       static_cast<uint16_t>(deviceList[desc.mSlaveIndex + 1].i16uBaseOffset + desc.mOffset
-          + (desc.mDirection == forte::core::io::IOMapper::In ?
+          + (desc.mDirection == IOMapper::In ?
               deviceList[desc.mSlaveIndex + 1].i16uInputOffset :
               deviceList[desc.mSlaveIndex + 1].i16uOutputOffset)), desc.mPosition);
 }
@@ -93,7 +95,7 @@ void RevPiController::runLoop() {
   }
 }
 
-void RevPiController::addSlaveHandle(int, forte::core::io::IOHandle* paHandle) {
+void RevPiController::addSlaveHandle(int, IOHandle* paHandle) {
   CCriticalRegion criticalRegion(mHandleMutex);
   paHandle->isInput() ? mInputHandles.pushBack(paHandle) : mOutputHandles.pushBack(paHandle);
 }
@@ -110,6 +112,6 @@ bool RevPiController::checkSlaveType(int paIndex, int paType) {
   return deviceList[paIndex + 1].i16uModuleType == paType;
 }
 
-bool RevPiController::isHandleValueEqual(forte::core::io::IOHandle* paHandle) {
+bool RevPiController::isHandleValueEqual(IOHandle* paHandle) {
   return !static_cast<RevPiHandle*>(paHandle)->check();
 }
