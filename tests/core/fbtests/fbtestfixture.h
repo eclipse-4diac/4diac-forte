@@ -33,7 +33,7 @@ class CFBTestFixtureBase : public CFunctionBlock{
 
     bool initialize() override;
 
-    CStringDictionary::TStringId getFBTypeId() const {
+    CStringDictionary::TStringId getFBTypeId() const override {
       return mTypeId;
     }
 
