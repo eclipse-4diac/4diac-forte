@@ -64,7 +64,7 @@ namespace forte {
 #define DECLARE_FIRMWARE_FB(fbclass) \
     DECLARE_GENERIC_FIRMWARE_FB(fbclass) \
   public: \
-    virtual CStringDictionary::TStringId getFBTypeId() const;\
+    CStringDictionary::TStringId getFBTypeId() const override;\
   private:
 
 
@@ -90,7 +90,7 @@ namespace forte {
     static CAdapter *createAdapter(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer, bool paIsPlug){\
       return new adapterclass(paInstanceNameId, paContainer, paIsPlug);\
     }; \
-    virtual CStringDictionary::TStringId getFBTypeId() const {return (csmAdapterTypeEntry_##adapterclass.getTypeNameId()); };\
+    CStringDictionary::TStringId getFBTypeId() const override {return (csmAdapterTypeEntry_##adapterclass.getTypeNameId()); };\
     FORTE_DUMMY_INIT_DEC \
   private:
 

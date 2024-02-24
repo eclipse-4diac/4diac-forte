@@ -29,7 +29,7 @@ class E_CYCLE : public CTimedFB{
     ~E_CYCLE() override = default;
 
   private:
-    void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET);
+    void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 };
 
 #endif /*E_CYCLE_H_*/
