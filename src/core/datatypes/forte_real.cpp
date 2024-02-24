@@ -53,7 +53,7 @@ int CIEC_REAL::fromString(const char *paValue){
 
 int CIEC_REAL::toString(char* paValue, size_t paBufferSize) const {
   int nRetVal = forte_snprintf(paValue, paBufferSize, "%.*g", std::numeric_limits<CIEC_REAL::TValueType>::max_digits10, getTFLOAT());
-  if((nRetVal < -1) || (nRetVal >= static_cast<int>(paBufferSize))) {
+  if((nRetVal < 0) || (nRetVal >= static_cast<int>(paBufferSize))) {
     return -1;
   }
   // Check if there is a trailing decimal fraction or exponent
