@@ -137,6 +137,34 @@ int CBSDSocketInterface::sendDataOnTCP(TSocketDescriptor paSockD, const char* pa
   return nRetVal;
 }
 
+int CBSDSocketInterface::handleError(int nRetVal, int err, const char* msg) {
+  // recv only sets errno if res is <= 0
+  if(nRetVal <= 0) {
+    switch(errno){
+      case EWOULDBLOCK:
+      case ENOENT: //caused by vfs
+        //connected = true;
+        break;
+      case ENOTCONN:
+      case EPIPE:
+      case ECONNRESET:
+      case ECONNREFUSED:
+      case ECONNABORTED:
+        //connected = false;
+        DEVLOG_ERROR("CBSDSocketInterface::receiveDataFrom%s  recv() Disconnected: nRetVal: %d, ERR: %d %s\n", msg, nRetVal, errno, strerror(errno));
+        return 0; //Connection closed by peer
+      default:
+        DEVLOG_ERROR("CBSDSocketInterface::receiveDataFrom%s recv() Unexpected: nRetVal: %d, ERR: %d %s\n", msg, nRetVal, errno, strerror(errno));
+        //connected = true;
+        break;
+    }
+  }
+  return nRetVal;
+}
+
+
+
+
 int CBSDSocketInterface::receiveDataFromTCP(TSocketDescriptor paSockD, char* paData,
     unsigned int paBufSize){
   int nRetVal;
@@ -147,28 +175,7 @@ int CBSDSocketInterface::receiveDataFromTCP(TSocketDescriptor paSockD, char* paD
   if(nRetVal == -1){
     DEVLOG_ERROR("CBSDSocketInterface: TCP-Socket recv() failed: %s\n", strerror(errno));
   }
-
-  // recv only sets errno if res is <= 0
-  if(nRetVal <= 0) {
-    switch(errno){
-      case EWOULDBLOCK:
-      case ENOENT: //caused by vfs
-        //TODO: this is a "connected = true" case, for the moment we leave it open.
-        break;
-      case ENOTCONN:
-      case EPIPE:
-      case ECONNRESET:
-      case ECONNREFUSED:
-      case ECONNABORTED:
-        DEVLOG_ERROR("CBSDSocketInterface::receiveDataFromTCP recv() Disconnected: nRetVal: %d, ERR: %d %s\n", nRetVal, errno, strerror(errno));
-        return 0; //Connection closed by peer
-      default:
-        DEVLOG_ERROR("CBSDSocketInterface::receiveDataFromTCP recv() Unexpected: nRetVal: %d, ERR: %d %s\n", nRetVal, errno, strerror(errno));
-        //TODO: this is a "connected = true" case, for the moment we leave it open.
-        break;
-    }
-  }
-  return nRetVal;
+  return handleError(nRetVal, errno, "TCP");
 }
 
 CBSDSocketInterface::TSocketDescriptor CBSDSocketInterface::openUDPSendPort(char *paIPAddr,
@@ -309,25 +316,5 @@ int CBSDSocketInterface::receiveDataFromUDP(TSocketDescriptor paSockD, char* paD
     DEVLOG_ERROR("CBSDSocketInterface: UDP-Socket recvfrom() failed: %s\n", strerror(errno));
   }
 
-  // recv only sets errno if res is <= 0
-  if(nRetVal <= 0) {
-    switch(errno){
-      case EWOULDBLOCK:
-      case ENOENT: //caused by vfs
-        //TODO: this is a "connected = true" case, for the moment we leave it open.
-        break;
-      case ENOTCONN:
-      case EPIPE:
-      case ECONNRESET:
-      case ECONNREFUSED:
-      case ECONNABORTED:
-        DEVLOG_ERROR("CBSDSocketInterface::receiveDataFromUDP recvfrom() Disconnected: nRetVal: %d, ERR: %d %s\n", nRetVal, errno, strerror(errno));
-        return 0; //Connection closed by peer
-      default:
-        DEVLOG_ERROR("CBSDSocketInterface::receiveDataFromUDP recvfrom() Unexpected: nRetVal: %d, ERR: %d %s\n", nRetVal, errno, strerror(errno));
-        //TODO: this is a "connected = true" case, for the moment we leave it open.
-        break;
-    }
-  }
-  return nRetVal;
+  return handleError(nRetVal, errno, "UDP");
 }

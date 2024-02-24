@@ -33,6 +33,10 @@ class CBSDSocketInterface{
     static int sendDataOnUDP(TSocketDescriptor paSockD, TUDPDestAddr *paDestAddr, char* paData, unsigned int paSize);
     static int receiveDataFromUDP(TSocketDescriptor paSockD, char* paData, unsigned int paBufSize);
 
+
+    static int handleError(int nRetVal, int err, const char* msg);
+
+
     CBSDSocketInterface() = delete;
 };
 
