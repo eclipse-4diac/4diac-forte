@@ -19,10 +19,6 @@
 
 /*! \ingroup ZEPHYR-HAL
  * \brief The sync object implementation for Zephyr.
- *
- * In the Zephyr version we use a binary semaphore for the sync object
- * 
- * Note: For Mutex implementation,  uncomment the xSemaphoreCreateMutex() function in sync.cpp
  */
 
 class CZephyrSyncObject {

@@ -169,7 +169,7 @@ namespace forte {
            *
            * The method iterates over the #inputHandles list.
            * It checks if the input handle has a bound observer and then calls the #isHandleValueEqual method.
-           * If the #isHandleValueEqual returns true, the indication event is fired for the bound observer.
+           * If the #isHandleValueEqual returns false, the indication event is fired for the bound observer.
            * @attention The method does only work if the #isHandleValueEqual is overridden.
            */
           void checkForInputChanges();

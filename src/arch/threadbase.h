@@ -89,7 +89,7 @@ namespace forte {
 
         /*! \brief set the alive flag for this flag
          */
-        void setAlive(bool paVal) {
+        virtual void setAlive(bool paVal) {
           mAlive = paVal;
         }
 

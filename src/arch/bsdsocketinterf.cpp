@@ -17,6 +17,14 @@
 #include "devlog.h"
 #include <string.h>
 
+#ifdef __ZEPHYR__
+#ifdef CONFIG_POSIX_API
+#include <netinet/in.h>
+#else
+#include <zephyr/posix/netinet/in.h>
+#endif
+#endif // __ZEPHYR__
+
 void CBSDSocketInterface::closeSocket(TSocketDescriptor paSockD){
 #if defined(NET_OS)
   closesocket(paSockD);
@@ -142,7 +150,7 @@ int CBSDSocketInterface::receiveDataFromTCP(TSocketDescriptor paSockD, char* paD
   int nRetVal;
   do{
     nRetVal = static_cast<int>(recv(paSockD, paData, paBufSize, 0));
-  } while((-1 == nRetVal) && (EINTR == errno)); // recv got interrupt / recieving again
+  } while((-1 == nRetVal) && (EINTR == errno)); // recv got interrupt / receiving again
 
   if(nRetVal == -1){
     DEVLOG_ERROR("CBSDSocketInterface: TCP-Socket recv() failed: %s\n", strerror(errno));
@@ -175,7 +183,33 @@ CBSDSocketInterface::TSocketDescriptor CBSDSocketInterface::openUDPSendPort(char
           DEVLOG_WARNING("CBSDSocketInterface: setsockopt(IP_MULTICAST_IF) failed: %s\n", strerror(errno));
       }
     }
-#endif
+#else
+    if (paMCInterface) {
+      // setting up multicast group
+      struct in_addr ifaddr;
+      ifaddr.s_addr = inet_addr(paMCInterface);
+      struct net_if* iface = nullptr;
+
+      if (nullptr == net_if_ipv4_addr_lookup(&ifaddr, &iface)) {
+        DEVLOG_WARNING("CBSDSocketInterface: net_if_ipv4_addr_lookup failed: %s - fall back to default if\n", paMCInterface);
+        iface = net_if_get_default();
+      }
+      if (nullptr != iface) {
+        DEVLOG_INFO("CBSDSocketInterface: multicast using if: %s\n", iface->config.name);
+        struct in_addr addr;
+        addr.s_addr = inet_addr(paIPAddr);
+        struct net_if_mcast_addr* maddr = net_if_ipv4_maddr_lookup(&addr, &iface);
+        if (!maddr) {
+          maddr = net_if_ipv4_maddr_add(iface, &addr);
+          if (!maddr) {
+            DEVLOG_WARNING("CBSDSocketInterface: net_if_ipv4_maddr_add failed\n");
+          }
+        }
+      } else {
+        DEVLOG_WARNING("CBSDSocketInterface: net_if_get_default() failed\n");
+      }
+    }
+#endif // __ZEPHYR__
 
 #ifdef NET_OS
     /* following is typedef void TM_fAR * in treck/include/trsocket.h */
@@ -239,7 +273,34 @@ CBSDSocketInterface::TSocketDescriptor CBSDSocketInterface::openUDPReceivePort(c
           //if this fails we may have given a non multicasting addr. For now we accept this. May need to be changed in the future.
           DEVLOG_WARNING("CBSDSocketInterface: setsockopt(IP_ADD_MEMBERSHIP) failed: %s\n", strerror(errno));
         }
-#endif
+#else
+        // setting up multicast group
+        struct in_addr ifaddr;
+        ifaddr.s_addr = inet_addr(paMCInterface);
+        struct net_if* iface = nullptr;
+  
+        if (nullptr == net_if_ipv4_addr_lookup(&ifaddr, &iface)) {
+          DEVLOG_WARNING("CBSDSocketInterface: net_if_ipv4_addr_lookup failed: %s - fall back to default if\n", paMCInterface);
+          iface = net_if_get_default();
+        }
+        if (nullptr != iface) {
+          DEVLOG_INFO("CBSDSocketInterface: multicast using if: %s\n", iface->config.name);
+          struct in_addr addr;
+          addr.s_addr = inet_addr(paIPAddr);
+          struct net_if_mcast_addr* maddr = net_if_ipv4_maddr_lookup(&addr, &iface);
+          if (!maddr) {
+            maddr = net_if_ipv4_maddr_add(iface, &addr);
+            if (!maddr) {
+              DEVLOG_WARNING("CBSDSocketInterface: net_if_ipv4_maddr_add failed\n");
+            }
+          }
+          if (maddr && !net_if_ipv4_maddr_is_joined(maddr)) {
+            net_if_ipv4_maddr_join(iface, maddr);
+          }
+        } else {
+          DEVLOG_WARNING("CBSDSocketInterface: net_if_get_default() failed\n");
+        }
+#endif // __ZEPHYR__
 
         nRetVal = nSocket;
       }
@@ -282,7 +343,7 @@ int CBSDSocketInterface::receiveDataFromUDP(TSocketDescriptor paSockD, char* paD
   int nRetVal;
   do{
     nRetVal = static_cast<int>(recvfrom(paSockD, paData, paBufSize, 0, nullptr, nullptr));
-  } while((-1 == nRetVal) && (EINTR == errno)); // recv got interrupt / recieving again
+  } while((-1 == nRetVal) && (EINTR == errno)); // recv got interrupt / receiving again
 
   if(nRetVal == -1){ //
     DEVLOG_ERROR("CBSDSocketInterface: UDP-Socket recvfrom() failed: %s\n", strerror(errno));

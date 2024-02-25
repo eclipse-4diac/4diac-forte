@@ -15,9 +15,9 @@
 
 #include "forte_thread.h"
 
-#ifndef CONFIG_FPU_SHARING
+#ifndef K_FP_REGS
 #define K_FP_REGS 0
-#endif // CONFIG_FPU_SHARING
+#endif // K_FP_REGS
 
 CZephyrThread::CZephyrThread(long paStackSize) : CThreadBase(paStackSize) {
   stack = k_thread_stack_alloc(paStackSize, 0);
