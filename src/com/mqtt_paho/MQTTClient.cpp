@@ -14,6 +14,7 @@
 #include "MQTTClient.h"
 #include "basecommfb.h"
 #include <algorithm>
+#include "MQTTClientConfigParser.h"
 
 std::string gMqttClientConfigFile;
 
@@ -186,6 +187,18 @@ int CMQTTClient::initClient() {
   mClientConnectionOptions.onSuccess = onMqttConnectionSucceed;
   mClientConnectionOptions.onFailure = onMqttConnectionFailed;
   mClientConnectionOptions.context = this;
+
+  if ("" != gMqttClientConfigFile) { //file was provided
+    CMQTTClientConfigFileParser::MQTTConfigFromFile result = CMQTTClientConfigFileParser::MQTTConfigFromFile(mUsername, mPassword);
+    std::string endpoint = mAddress;
+    if(CMQTTClientConfigFileParser::loadConfig(gMqttClientConfigFile, endpoint, result)) {
+      mClientConnectionOptions.username = mUsername.c_str();
+      mClientConnectionOptions.password = mPassword.c_str();
+    } else {
+      return MQTTHandler::eWrongClientID;
+    }
+  }
+
   if (MQTTASYNC_SUCCESS != MQTTAsync_setCallbacks(mAsClient, this, onMqttConnectionLost, onMqttMessageArrived, NULL)) {
     return MQTTHandler::eConnectionFailed;
   }
