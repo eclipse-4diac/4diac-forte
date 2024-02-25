@@ -137,34 +137,6 @@ int CBSDSocketInterface::sendDataOnTCP(TSocketDescriptor paSockD, const char* pa
   return nRetVal;
 }
 
-int CBSDSocketInterface::handleError(int nRetVal, int err, const char* msg) {
-  // recv only sets errno if res is <= 0
-  if(nRetVal <= 0) {
-    switch(errno){
-      case EWOULDBLOCK:
-      case ENOENT: //caused by vfs
-        //connected = true;
-        break;
-      case ENOTCONN:
-      case EPIPE:
-      case ECONNRESET:
-      case ECONNREFUSED:
-      case ECONNABORTED:
-        //connected = false;
-        DEVLOG_ERROR("CBSDSocketInterface::receiveDataFrom%s  recv() Disconnected: nRetVal: %d, ERR: %d %s\n", msg, nRetVal, errno, strerror(errno));
-        return 0; //Connection closed by peer
-      default:
-        DEVLOG_ERROR("CBSDSocketInterface::receiveDataFrom%s recv() Unexpected: nRetVal: %d, ERR: %d %s\n", msg, nRetVal, errno, strerror(errno));
-        //connected = true;
-        break;
-    }
-  }
-  return nRetVal;
-}
-
-
-
-
 int CBSDSocketInterface::receiveDataFromTCP(TSocketDescriptor paSockD, char* paData,
     unsigned int paBufSize){
   int nRetVal;
@@ -318,3 +290,30 @@ int CBSDSocketInterface::receiveDataFromUDP(TSocketDescriptor paSockD, char* paD
 
   return handleError(nRetVal, errno, "UDP");
 }
+
+int CBSDSocketInterface::handleError(int nRetVal, int err, const char* msg) {
+  // recv only sets errno if res is <= 0
+  if(nRetVal <= 0) {
+    switch(errno){
+      case EWOULDBLOCK:
+      case ENOENT: //caused by vfs
+        //connected = true;
+        break;
+      case ENOTCONN:
+      case EPIPE:
+      case ECONNRESET:
+      case ECONNREFUSED:
+      case ECONNABORTED:
+        //connected = false;
+        DEVLOG_ERROR("CBSDSocketInterface::receiveDataFrom%s  recv() Disconnected: nRetVal: %d, ERR: %d %s\n", msg, nRetVal, errno, strerror(errno));
+        return 0; //Connection closed by peer
+      default:
+        DEVLOG_ERROR("CBSDSocketInterface::receiveDataFrom%s recv() Unexpected: nRetVal: %d, ERR: %d %s\n", msg, nRetVal, errno, strerror(errno));
+        //connected = true;
+        break;
+    }
+  }
+  return nRetVal;
+}
+
+
