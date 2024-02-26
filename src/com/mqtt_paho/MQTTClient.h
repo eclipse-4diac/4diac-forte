@@ -91,8 +91,6 @@ private:
 
   std::string mAddress;
   std::string mClientId;
-  std::string mUsername;
-  std::string mPassword;
 
   MQTTAsync mAsClient;
   MQTTAsync_connectOptions mClientConnectionOptions;
