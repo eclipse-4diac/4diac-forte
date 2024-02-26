@@ -70,23 +70,25 @@ namespace forte {
         EComResponse handleHTTPResponse(char *paData);
 
         /** Serializes the data to a char* */
-        bool serializeData(const CIEC_ANY& paCIECData);
+        void serializeData(const CIEC_ANY& paSD0, const CIEC_ANY& paSD1, const CIEC_ANY& paSD2);
 
-        void sendDataAsServer(const void *paData);
+        void sendDataAsServer(const CIEC_ANY &paSD0, const CIEC_ANY &paSD1, const CIEC_ANY &paSD2);
 
-        void sendDataAsClient(const void *paData);
+        void sendDataAsClient(const CIEC_ANY &paSD0, const CIEC_ANY &paSD1, const CIEC_ANY &paSD2);
+
+        const CIEC_ANY& getSDx(void *paData, int paSdNum);
 
         EComResponse openClientConnection(char* paLayerParameter);
 
-        bool checkSDInPOSTAndPUT(size_t paNoOfSD);
-
         bool checkSDsAndRDsType() const;
 
-        bool handleAddress(const char* paAddress, size_t paNoOfSDs);
+        bool handleAddress(const char* paAddress);
 
         bool handleContentAndRequestType(CParameterParser &paParser, size_t paNoOfParameters);
 
         bool storeRequestType(const char* paType);
+
+        void createRequest();
 
         EComResponse mInterruptResp;
 
@@ -96,10 +98,14 @@ namespace forte {
         std::string mHost;
         /** Path in host */
         std::string mPath;
+        /** Parameters */
+        std::string mParams;
         /** Data to be sent */
-        std::string mReqData;
+        std::string mBody;
         /** Port of the host */
         TForteUInt16 mPort;
+        /** Authentication */
+        std::string mAuth;
         /** Request  to be sent to Host */
         std::string mRequest;
 

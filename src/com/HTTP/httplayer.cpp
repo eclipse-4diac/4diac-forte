@@ -28,8 +28,7 @@ using namespace forte::com_infra;
 using namespace std::string_literals;
 
 CHttpComLayer::CHttpComLayer(CComLayer* paUpperLayer, CBaseCommFB* paComFB) :
-    CComLayer(paUpperLayer, paComFB), mInterruptResp(e_Nothing), mRequestType(e_NOTSET), mPort(80), mBufFillSize(0), mCorrectlyInitialized(false),
-        mHasParameterInSD(false) {
+    CComLayer(paUpperLayer, paComFB), mInterruptResp(e_Nothing), mRequestType(e_NOTSET), mPort(80), mBufFillSize(0), mCorrectlyInitialized(false) {
   memset(mRecvBuffer, 0, sizeof(mRecvBuffer));
 }
 
@@ -39,7 +38,6 @@ CHttpComLayer::~CHttpComLayer() {
 
 EComResponse CHttpComLayer::openConnection(char *paLayerParameter) {
   EComResponse eRetVal = e_InitInvalidId;
-
   if(checkSDsAndRDsType()) {
     switch(mFb->getComServiceType()){
       case e_Server:
@@ -62,73 +60,26 @@ EComResponse CHttpComLayer::openConnection(char *paLayerParameter) {
         break;
     }
   }
-
   mCorrectlyInitialized = (eRetVal == e_InitOk);
   return eRetVal;
 }
 
 EComResponse CHttpComLayer::openClientConnection(char* paLayerParameter) {
   EComResponse eRetVal = e_InitInvalidId;
-  TPortId numberOfSD = mFb->getNumSD();
-
-  if(2 == mFb->getNumRD()) {
+  if(2 == mFb->getNumRD() && 3 == mFb->getNumSD()) {
     CParameterParser parser(paLayerParameter, ';', 3); //IP:PORT;POST|PUT|GET;[content-type]
-
-    if(handleContentAndRequestType(parser, parser.parseParameters()) && handleAddress(parser[0], numberOfSD)) {
-
-      switch(mRequestType){
-        case e_PUT:
-        case e_POST:
-          if(checkSDInPOSTAndPUT(numberOfSD)) {
-            CHttpParser::createPutPostRequest(mRequest, mHost, mPath, mReqData, mContentType, mRequestType);
-            eRetVal = e_InitOk;
-            DEVLOG_INFO("[HTTP Layer] FB with PUT/POST request initialized. Host: %s, Path: %s\n", mHost.c_str(), mPath.c_str());
-          }
-          break;
-        case e_GET:
-          if(0 != numberOfSD) {
-            DEVLOG_WARNING("[HTTP Layer] FB with GET request has SD which are ignore. If you want to have parameters, put them in the path in the PARAMS\n");
-          }
-          CHttpParser::createGetRequest(mRequest, mHost, mPath);
-          eRetVal = e_InitOk;
-          DEVLOG_INFO("[HTTP Layer] FB with GET request initialized. Host: %s, Path: %s\n", mHost.c_str(), mPath.c_str());
-          break;
-        default:
-          break;
-      }
-    }
+    handleContentAndRequestType(parser, parser.parseParameters());
+    handleAddress(parser[0]);
+    eRetVal = e_InitOk;
   } else {
     DEVLOG_ERROR(
-      "[HTTP Layer] A client should ALWAYS have exactly 2 RD, the first one for the response code, and the second for the response body, even for PUT and POST\n");
+        "[HTTP Layer] A client should ALWAYS have exactly 2 RD, the first one for the response code, and the second for the response body, and ALWAYS exactly 3 SD one for authentication, one for parameters, and one for the body.\n");
   }
-
   mConnectionState = e_Disconnected;
   return eRetVal;
 }
 
-bool CHttpComLayer::checkSDInPOSTAndPUT(size_t paNoOfSD) {
-  bool evetythingOK = true;
-
-  if(0 == paNoOfSD) {
-    if(mReqData.empty()) {
-      DEVLOG_ERROR("[HTTP Layer] You are using a POST/PUT FB but no data is defined as SD nor as parameters in PARAMS\n");
-      evetythingOK = false;
-    }
-  } else if(1 == paNoOfSD) {
-    if(!mReqData.empty()) {
-      DEVLOG_WARNING("[HTTP Layer] Parameters in PARAMS are ignored for PUT/POST request data and SDs are sent instead\n");
-    }
-    mHasParameterInSD = true;
-  } else {
-    DEVLOG_ERROR("[HTTP Layer] You can use maximum 1 SD\n");
-    evetythingOK = false;
-  }
-
-  return evetythingOK;
-}
-
 bool CHttpComLayer::checkSDsAndRDsType() const {
-
   for(size_t i = 2; i < mFb->getNumSD(); i++) {
     CIEC_ANY::EDataTypeID typeToCheck = mFb->getDI(static_cast<unsigned int>(i))->getDataTypeID();
     if(CIEC_ANY::e_ANY != typeToCheck && CIEC_ANY::e_STRING != typeToCheck && CIEC_ANY::e_WSTRING != typeToCheck) {
@@ -136,7 +87,6 @@ bool CHttpComLayer::checkSDsAndRDsType() const {
       return false;
     }
   }
-
   for(size_t i = 2; i < mFb->getNumRD(); i++) {
     CIEC_ANY::EDataTypeID typeToCheck = mFb->getDO(static_cast<unsigned int>(i))->getDataTypeID();
     if(CIEC_ANY::e_ANY != typeToCheck && CIEC_ANY::e_STRING != typeToCheck && CIEC_ANY::e_WSTRING != typeToCheck) {
@@ -178,22 +128,11 @@ bool CHttpComLayer::handleContentAndRequestType(CParameterParser &paParser, size
   return everythingOK;
 }
 
-bool CHttpComLayer::handleAddress(const char* paAddress, size_t paNoOfSDs) {
+bool CHttpComLayer::handleAddress(const char* paAddress) {
   bool everythingOK = true;
-
   //look for parameters
-  CParameterParser parser(paAddress, '?', 2); //IP:PORT/PATH?PARAMETERS
   std::string addressToParse(paAddress);
-  if(2 == parser.parseParameters() && (e_PUT == mRequestType || e_POST == mRequestType)) {
-    if(0 == paNoOfSDs) { //if SDs are present, the parameters in PARAMS are ignored
-      mReqData = std::string(parser[1]);
-      mContentType = "application/x-www-form-urlencoded"s;
-    }
-    addressToParse = std::string(parser[0]);
-  }
-
   char *firstSlash = strchr(addressToParse.data(), '/');
-
   if(firstSlash) {
     mPath = std::string(firstSlash);
     *firstSlash = '\0';
@@ -212,15 +151,20 @@ bool CHttpComLayer::handleAddress(const char* paAddress, size_t paNoOfSDs) {
   return everythingOK;
 }
 
+const CIEC_ANY& CHttpComLayer::getSDx(void *paData, int paSdNum){
+  const CIEC_ANY **sds = static_cast<const CIEC_ANY **>(paData);
+  return sds[paSdNum]->unwrap();
+}
+
 EComResponse CHttpComLayer::sendData(void *paData, unsigned int) {
   mInterruptResp = e_Nothing;
   if(mCorrectlyInitialized) {
     switch(mFb->getComServiceType()){
       case e_Server:
-        sendDataAsServer(paData);
+        sendDataAsServer(getSDx(paData, 0), getSDx(paData, 1), getSDx(paData, 2));
         break;
       case e_Client:
-        sendDataAsClient(paData);
+        sendDataAsClient(getSDx(paData, 0), getSDx(paData, 1), getSDx(paData, 2));
         break;
       default:
         // e_Publisher and e_Subscriber
@@ -233,47 +177,41 @@ EComResponse CHttpComLayer::sendData(void *paData, unsigned int) {
   return mInterruptResp;
 }
 
-void CHttpComLayer::sendDataAsServer(const void *paData) {
-  bool error = false;
-  const CIEC_ANY* apoSDs = static_cast<const CIEC_ANY*>(paData);
-  if(!serializeData(apoSDs[0])) {
-    error = true;
-  } else {
-    CHttpParser::createResponse(mRequest, "HTTP/1.1 200 OK"s, "text/plain"s, mReqData);
-  }
-  if(error) {
-    getExtEvHandler<CHTTP_Handler>().forceClose(this);
-    mInterruptResp = e_ProcessDataDataTypeError;
-  } else {
-    getExtEvHandler<CHTTP_Handler>().sendServerAnswer(this, mRequest);
-    mInterruptResp = e_ProcessDataOk;
+void CHttpComLayer::createRequest() {
+  switch (mRequestType) {
+    case e_PUT:
+    case e_POST:
+      CHttpParser::createPutPostRequest(mRequest, mHost, mPort, mPath, mAuth, mParams, mBody, mContentType, mRequestType);
+      DEVLOG_INFO(
+          "[HTTP Layer] FB with PUT/POST request initialized. Host: %s, Path: %s:%d, Parameters: '%s'\n",
+          mHost.c_str(), mPath.c_str(), mPort, mParams.c_str());
+      break;
+    case e_GET:
+      CHttpParser::createGetRequest(mRequest, mHost, mPort, mPath, mAuth, mParams);
+      DEVLOG_INFO("[HTTP Layer] FB with GET request initialized. Host: %s, Path: %s, Parameters: '%s'\n", mHost.c_str(), mPath.c_str(), mParams.c_str());
+      break;
+    default:
+      break;
   }
 }
 
-void CHttpComLayer::sendDataAsClient(const void *paData) {
-  bool error = false;
-  if(mHasParameterInSD) {
-    const CIEC_ANY* apoSDs = static_cast<const CIEC_ANY*>(paData);
-    if(!serializeData(apoSDs[0])) {
-      error = true;
-      DEVLOG_ERROR("[HTTP Layer] Error in data serialization\n");
-    } else {
-      if(!CHttpParser::changePutPostData(mRequest, mReqData)) {
-        DEVLOG_ERROR("[HTTP Layer] Wrong PUT/POST request when changing the data\n");
-        error = true;
-      }
-    }
-  }
+void CHttpComLayer::sendDataAsServer(const CIEC_ANY &paSD0, const CIEC_ANY &paSD1, const CIEC_ANY &paSD2) {
+  serializeData(paSD0, paSD1, paSD2);
+  createRequest();
+  CHttpParser::createResponse(mRequest, "HTTP/1.1 200 OK"s, "text/plain"s, mBody);
+  getExtEvHandler<CHTTP_Handler>().sendServerAnswer(this, mRequest);
+  mInterruptResp = e_ProcessDataOk;
+}
 
-  if(!error) {
-    if(getExtEvHandler<CHTTP_Handler>().sendClientData(this, mRequest)) {
-      mInterruptResp = e_ProcessDataOk;
-    } else {
-      mInterruptResp = e_ProcessDataSendFailed;
-      DEVLOG_ERROR("[HTTP Layer] Sending request on TCP failed\n");
-    }
+void CHttpComLayer::sendDataAsClient(const CIEC_ANY &paSD0, const CIEC_ANY &paSD1, const CIEC_ANY &paSD2) {
+  serializeData(paSD0, paSD1, paSD2);
+  createRequest();
+  if(getExtEvHandler<CHTTP_Handler>().sendClientData(this, mRequest)) {
+    mInterruptResp = e_ProcessDataOk;
   } else {
     mInterruptResp = e_ProcessDataDataTypeError;
+    mInterruptResp = e_ProcessDataSendFailed;
+    DEVLOG_ERROR("[HTTP Layer] Sending request on TCP failed\n");
   }
 }
 
@@ -334,8 +272,8 @@ EComResponse forte::com_infra::CHttpComLayer::recvServerData(CSinglyLinkedList<s
   if(failed) {
     std::string toSend;
     std::string result("HTTP/1.1 400 Bad Request"s);
-    mReqData.clear();
-    CHttpParser::createResponse(toSend, result, mContentType, mReqData);
+    mBody.clear();
+    CHttpParser::createResponse(toSend, result, mContentType, mBody);
     getExtEvHandler<CHTTP_Handler>().sendServerAnswerFromRecv(this, toSend);
     mInterruptResp = e_ProcessDataDataTypeError;
   } else {
@@ -376,25 +314,22 @@ void CHttpComLayer::closeConnection() {
   getExtEvHandler<CHTTP_Handler>().forceClose(this);
 }
 
-bool CHttpComLayer::serializeData(const CIEC_ANY& paCIECData) {
-  size_t bufferSize = paCIECData.getToStringBufferSize();
-  mReqData.reserve(static_cast<TForteUInt16>(bufferSize));
-  char *buffer = mReqData.data();
-  int nWrittenBytes;
-  switch(paCIECData.getDataTypeID()){
-    case CIEC_ANY::e_WSTRING:
-      nWrittenBytes = static_cast<const CIEC_WSTRING&>(paCIECData).toUTF8(buffer, bufferSize, false);
-      break;
-    case CIEC_ANY::e_STRING:
-      nWrittenBytes = static_cast<const CIEC_STRING&>(paCIECData).toUTF8(buffer, bufferSize, false);
-      break;
-    default:
-      nWrittenBytes = paCIECData.toString(buffer, bufferSize);
+void CHttpComLayer::serializeData(const CIEC_ANY& paSD0, const CIEC_ANY& paSD1, const CIEC_ANY& paSD2) {
+  if(CIEC_ANY::e_WSTRING == paSD0.getDataTypeID()){
+      mAuth = static_cast<const CIEC_WSTRING&>(paSD0).getValue();
+  }else if(CIEC_ANY::e_STRING == paSD0.getDataTypeID()){
+      mAuth = static_cast<const CIEC_STRING&>(paSD0).getStorage();
   }
-
-  nWrittenBytes = nWrittenBytes > -1 ? nWrittenBytes : 0;
-  mReqData.assign(buffer, static_cast<TForteUInt16>(nWrittenBytes));
-  return true;
+  if(CIEC_ANY::e_WSTRING == paSD1.getDataTypeID()){
+      mParams = static_cast<const CIEC_WSTRING&>(paSD1).getValue();
+  }else if(CIEC_ANY::e_STRING == paSD1.getDataTypeID()){
+      mParams = static_cast<const CIEC_STRING&>(paSD1).getStorage();
+  }
+  if(CIEC_ANY::e_WSTRING == paSD2.getDataTypeID()){
+      mBody = static_cast<const CIEC_WSTRING&>(paSD2).getValue();
+  }else if(CIEC_ANY::e_STRING == paSD2.getDataTypeID()){
+      mBody = static_cast<const CIEC_STRING&>(paSD2).getStorage();
+  }
 }
 
 std::string& forte::com_infra::CHttpComLayer::getHost() {

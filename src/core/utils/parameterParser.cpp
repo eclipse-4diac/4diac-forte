@@ -19,7 +19,7 @@ CParameterParser::CParameterParser(const char* paParameters, const char paSepara
     mSeparator(paSeparator) {
   mParameterLocations.reserve(paExpectedNumParams);
   if (paParameters != nullptr)
-  { // make a copy of the parameter string for porcessing
+  { // make a copy of the parameter string for processing
     mParameters = new char[strlen(paParameters) + 1]();
     strcpy(mParameters, paParameters);
       } else { // if nullptr provide valid empty size-1 char array
