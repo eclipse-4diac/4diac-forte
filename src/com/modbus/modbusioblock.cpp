@@ -26,7 +26,12 @@ void CModbusIOBlock::allocCache() {
 }
 
 void CModbusIOBlock::addNewRead(EModbusFunction paFunction, unsigned int paStartAddress, unsigned int paNrAddresses) {
-  mReads.push_back((SModbusRange){paFunction, paStartAddress, paNrAddresses});
+  SModbusRange mbr;
+  mbr.mFunction = paFunction;
+  mbr.mStartAddress = paStartAddress;
+  mbr.mNrAddresses = paNrAddresses;
+  mReads.push_back(mbr);
+
   mReadSize += getRegisterSize(paFunction) * paNrAddresses;
   if (mCache) {
     delete [] (uint8_t*)mCache;
@@ -35,7 +40,12 @@ void CModbusIOBlock::addNewRead(EModbusFunction paFunction, unsigned int paStart
 }
 
 void CModbusIOBlock::addNewSend(EModbusFunction paFunction, unsigned int paStartAddress, unsigned int paNrAddresses) {
-  mSends.push_back((SModbusRange){paFunction, paStartAddress, paNrAddresses});
+  SModbusRange mbr;
+  mbr.mFunction = paFunction;
+  mbr.mStartAddress = paStartAddress;
+  mbr.mNrAddresses = paNrAddresses;
+  mSends.push_back(mbr);
+
   mSendSize += getRegisterSize(paFunction) * paNrAddresses;
 }
 
