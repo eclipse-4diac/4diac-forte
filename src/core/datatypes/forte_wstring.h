@@ -52,13 +52,16 @@ class CIEC_WSTRING final : public CIEC_ANY_STRING {
       TForteWChar value = static_cast<TForteWChar>(paValue);
       auto &converter = std::use_facet<std::codecvt<char16_t, char, std::mbstate_t>>(std::locale());
       std::mbstate_t mb{};
-      char buf[converter.max_length()];
-      const char16_t *from_next;
-      char *to_next;
-      converter.out(mb, &value, &value + 1, from_next, buf, buf + converter.max_length(), to_next);
-      // error checking skipped for brevity
-      std::size_t size = static_cast<size_t>(to_next - buf);
-      assign(buf, static_cast<TForteUInt16>(size));
+      char* buf = new char[converter.max_length()];
+      if (buf) {
+        const char16_t *from_next;
+        char *to_next;
+        converter.out(mb, &value, &value + 1, from_next, buf, buf + converter.max_length(), to_next);
+        // error checking skipped for brevity
+        std::size_t size = static_cast<size_t>(to_next - buf);
+        assign(buf, static_cast<TForteUInt16>(size));
+        delete[] buf;
+      }
     }
 
     explicit CIEC_WSTRING(const char* paValue) {
@@ -68,14 +71,17 @@ class CIEC_WSTRING final : public CIEC_ANY_STRING {
     CIEC_WSTRING(const char16_t *paValue, size_t paLength) {
       auto &converter = std::use_facet<std::codecvt<char16_t, char, std::mbstate_t>>(std::locale());
       std::mbstate_t mb{};
-      char buf[paLength * converter.max_length()];
-      const char16_t *from_next;
-      char *to_next;
-      converter.out(mb, paValue, paValue + paLength, from_next,
-                    buf, buf + paLength * static_cast<size_t>(converter.max_length()), to_next);
-      // error checking skipped for brevity
-      std::size_t size = static_cast<size_t>(to_next - buf);
-      assign(buf, static_cast<TForteUInt16>(size));
+      char *buf = new char[paLength * converter.max_length()];  //arrays with not constant size not supported
+      if (buf) {
+        const char16_t *from_next;
+        char *to_next;
+        converter.out(mb, paValue, paValue + paLength, from_next,
+                      buf, buf + paLength * static_cast<size_t>(converter.max_length()), to_next);
+        // error checking skipped for brevity
+        std::size_t size = static_cast<size_t>(to_next - buf);
+        assign(buf, static_cast<TForteUInt16>(size));
+        delete[] buf;
+      }
     }
 
     ~CIEC_WSTRING() override = default;
