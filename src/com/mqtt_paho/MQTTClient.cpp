@@ -188,9 +188,9 @@ int CMQTTClient::initClient() {
   mClientConnectionOptions.onFailure = onMqttConnectionFailed;
   mClientConnectionOptions.context = this;
 
+  std::string username;
+  std::string password;
   if ("" != gMqttClientConfigFile) { //file was provided
-    std::string username;
-    std::string password;
     CMQTTClientConfigFileParser::MQTTConfigFromFile result = CMQTTClientConfigFileParser::MQTTConfigFromFile(username, password);
     if (CMQTTClientConfigFileParser::loadConfig(gMqttClientConfigFile, mAddress, result)) {
       mClientConnectionOptions.username = username.c_str();
