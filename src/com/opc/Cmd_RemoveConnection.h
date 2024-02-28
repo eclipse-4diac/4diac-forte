@@ -10,8 +10,8 @@
  * Contributors:
  *   Alois Zoitl - initial API and implementation and/or initial documentation
  *******************************************************************************/
-#ifndef CMDADDCONNECTION_H_
-#define CMDADDCONNECTION_H_
+#ifndef CMDREMOVECONNECTION_H_
+#define CMDREMOVECONNECTION_H_
 #include "ICmd.h"
 #include "comlayer.h"
 #include <vector>
@@ -33,4 +33,4 @@ class CCmd_RemoveConnection : public ICmd{
     COpcConnectionImpl &mConnection;
 };
 
-#endif // CMDADDCONNECTION_H_
+#endif // CMDREMOVECONNECTION_H_

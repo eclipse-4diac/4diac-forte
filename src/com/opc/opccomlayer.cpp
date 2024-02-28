@@ -98,13 +98,13 @@ EComResponse COpcComLayer::processInterrupt(){
     case e_ProcessDataOk:
       switch (mConnectionState){
       case e_Connected: {
-        CIEC_ANY *apoRDs = mFb->getRDs();
+        CIEC_ANY **apoRDs = mFb->getRDs();
         unsigned int nrRDs = mFb->getNumRD();
 
         TOpcProcessVarList::iterator itEnd = mFBOutputVars.end();
         TOpcProcessVarList::iterator it = mFBOutputVars.begin();
         for(unsigned int i = 0; i < nrRDs && it != itEnd; i++, ++it){
-          setOutputValue(&apoRDs[i], &(*it)->updateValue());
+          setOutputValue(&apoRDs[i]->unwrap(), &(*it)->updateValue());
         }
 
         break;
@@ -390,17 +390,17 @@ void COpcComLayer::processClientParams(char* paLayerParams){
 }
 
 void COpcComLayer::convertInputData(void *paData, unsigned int paSize){
-  CIEC_ANY *sDs =  static_cast<CIEC_ANY*>(paData);
+  CIEC_ANY **sDs = static_cast<CIEC_ANY**>(paData);
   unsigned int nrSDs = paSize;
   unsigned int sdIndex = 0;
 
   TOpcProcessVarList::iterator itVar = mFBInputVars.begin();
 
   while(sdIndex < nrSDs && itVar != mFBInputVars.end()){
-    CIEC_ANY *dataIn = &sDs[sdIndex];
+    CIEC_ANY &dataIn(sDs[sdIndex]->unwrap());
     Variant newVariant;
 
-    getInputValueSize(dataIn, &newVariant);
+    getInputValueSize(&dataIn, &newVariant);
 
     (*itVar)->setNewValue(newVariant);
 
@@ -426,7 +426,7 @@ unsigned int COpcComLayer::getInputValueSize(CIEC_ANY* paData, Variant * paNewVa
   }
   case CIEC_ANY::e_SINT:
   {
-    paNewValue->set<CHAR>((CHAR) *(dynamic_cast<CIEC_SINT*>(paData)));
+    paNewValue->set<TForteInt8>((TForteInt8) *(dynamic_cast<CIEC_SINT*>(paData)));
     return sizeof(TForteInt8);
   }
   case CIEC_ANY::e_INT:
