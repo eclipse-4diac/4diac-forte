@@ -14,6 +14,7 @@ forte_add_io(REVOLUTIONPI "Support for Revolution Pi")
 
 if(FORTE_IO_REVOLUTIONPI)
 set(FORTE_IO ON CACHE BOOL "Enable IO Modules" FORCE)
+message("Set FORTE_IO")
 forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 forte_add_sourcefile_hc( lib/piControlIf )
