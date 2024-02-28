@@ -29,6 +29,7 @@
 #include <stdexcept>
 #include <devlog.h>
 #include <utility>
+#include <memory>
 
 template<typename T>
 class CIEC_ARRAY_COMMON;
