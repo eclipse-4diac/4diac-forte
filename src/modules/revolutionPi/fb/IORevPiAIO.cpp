@@ -1,13 +1,15 @@
-/*************************************************************************
- *** FORTE Library Element
- ***
- *** This file was generated using the 4DIAC FORTE Export Filter V1.0.x!
- ***
- *** Name: IORevPiAIO
- *** Description: Service Interface Function Block Type
- *** Version: 
- ***     0.0: 2017-10-26/4DIAC-IDE - 4DIAC-Consortium - 
- *************************************************************************/
+/*******************************************************************************
+ * Copyright (c) 2018, 2024 fortiss GmbH, Monika Wenger, Johannes Kepler University Linz
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v2.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v20.html
+ *
+ * Contributors:
+ *   Jose Cabral - initial implementation
+ *   Monika Wenger, Alois Zoitl - migration to current runtime
+ *******************************************************************************/
 
 #include "IORevPiAIO.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
