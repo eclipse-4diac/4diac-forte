@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2022 AIT, fortiss GmbH, HIT robot group
+ * Copyright (c) 2012, 2024 AIT, fortiss GmbH, HIT robot group, Samator Indo Gas
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -9,6 +9,7 @@
  * Contributors:
  *   Filip Andren, Alois Zoitl - initial API and implementation and/or initial documentation
  *   Tibalt Zhao - add the list of items instead of add item one by one
+ *   Ketut Kumajaya - switch to OPCClientToolKit with 64bit support
  *******************************************************************************/
 #ifndef OPCCONNECTIONIMPL_H_
 #define OPCCONNECTIONIMPL_H_
@@ -23,7 +24,7 @@
 
 class COpcConnection;
 
-class COpcConnectionImpl : public IAsynchDataCallback{
+class COpcConnectionImpl : public IAsyncDataCallback{
   public:
     COpcConnectionImpl(const char *paHost, const char *paServerName, COpcConnection* paOpcConn);
     ~COpcConnectionImpl();
@@ -47,7 +48,7 @@ class COpcConnectionImpl : public IAsynchDataCallback{
 
     bool isConnected();
 
-    virtual void COpcConnectionImpl::OnDataChange(COPCGroup &paGroup, CAtlMap<COPCItem *, OPCItemData *> &paChanges);
+    virtual void COpcConnectionImpl::OnDataChange(COPCGroup &paGroup, COPCItemDataMap &paChanges);
 
   private:
 

@@ -1,5 +1,5 @@
 #*******************************************************************************
-# Copyright (c) 2012, 2021 AIT, ACIN, fortiss GmbH, Hit robot group
+# Copyright (c) 2012, 2024 AIT, ACIN, fortiss GmbH, Hit robot group, Samator Indo Gas
 # This program and the accompanying materials are made available under the
 # terms of the Eclipse Public License 2.0 which is available at
 # http://www.eclipse.org/legal/epl-2.0.
@@ -9,6 +9,7 @@
 # Contributors:
 #    Filip Andren, Alois Zoitl - initial API and implementation and/or initial documentation
 #    Tibalt Zhao - Ease the workload to compile OPC DA
+#    Ketut Kumajaya - set OPCClientToolKit as an external sub project
 # *******************************************************************************/
 #############################################################################
 # OPC Com Layer
@@ -31,9 +32,11 @@ if(FORTE_COM_OPC)
 
   forte_add_include_directories( ${FORTE_COM_OPC_BOOST_ROOT} )
 
-  forte_add_include_directories( ${FORTE_COM_OPC_LIB_ROOT}/include )
-  forte_add_link_directories( ${FORTE_COM_OPC_LIB_ROOT}/lib )
-
-  forte_add_link_library( OPCClientToolKit.lib )
+  forte_add_include_directories( ${FORTE_COM_OPC_LIB_ROOT} )
+  if(EXISTS ${FORTE_COM_OPC_LIB_ROOT}/CMakeLists.txt)
+    add_subdirectory( ${FORTE_COM_OPC_LIB_ROOT} lib/OPCClientToolKit )
+  else()
+    message(SEND_ERROR "FORTE_COM_OPC_LIB_ROOT not set or a compatible OPCClientToolKit does not exist")
+  endif()
 endif(FORTE_COM_OPC)
 endif("${FORTE_ARCHITECTURE}" STREQUAL "Win32")
