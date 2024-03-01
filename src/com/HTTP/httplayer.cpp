@@ -41,15 +41,7 @@ EComResponse CHttpComLayer::openConnection(char *paLayerParameter) {
   if(checkSDsAndRDsType()) {
     switch(mFb->getComServiceType()){
       case e_Server:
-        if(1 == mFb->getNumSD()) {
-          mPath = std::string(paLayerParameter);
-          if(getExtEvHandler<CHTTP_Handler>().addServerPath(this, mPath)) {
-            eRetVal = e_InitOk;
-          }
-        } else {
-          DEVLOG_ERROR("[HTTP Layer] The FB with PARAM %s coudln't be initialized since only one SD is possible in HTTP Server which is for the response\n",
-            paLayerParameter);
-        }
+        eRetVal = startServer(paLayerParameter);
         break;
       case e_Client:
         eRetVal = openClientConnection(paLayerParameter);
@@ -61,6 +53,21 @@ EComResponse CHttpComLayer::openConnection(char *paLayerParameter) {
     }
   }
   mCorrectlyInitialized = (eRetVal == e_InitOk);
+  return eRetVal;
+}
+
+EComResponse CHttpComLayer::startServer (char *paLayerParameter) {
+  EComResponse eRetVal = e_InitInvalidId;
+  if (1 == mFb->getNumSD()) {
+    mPath = std::string(paLayerParameter);
+    if (getExtEvHandler<CHTTP_Handler>().addServerPath(this, mPath)) {
+      eRetVal = e_InitOk;
+    }
+  } else {
+    DEVLOG_ERROR(
+        "[HTTP Layer] The FB with PARAM %s coudln't be initialized since only one SD is possible in HTTP Server which is for the response\n",
+        paLayerParameter);
+  }
   return eRetVal;
 }
 
@@ -161,10 +168,10 @@ EComResponse CHttpComLayer::sendData(void *paData, unsigned int) {
   if(mCorrectlyInitialized) {
     switch(mFb->getComServiceType()){
       case e_Server:
-        sendDataAsServer(getSDx(paData, 0), getSDx(paData, 1), getSDx(paData, 2));
+        sendDataAsServer(paData);
         break;
       case e_Client:
-        sendDataAsClient(getSDx(paData, 0), getSDx(paData, 1), getSDx(paData, 2));
+        sendDataAsClient(paData);
         break;
       default:
         // e_Publisher and e_Subscriber
@@ -195,16 +202,18 @@ void CHttpComLayer::createRequest() {
   }
 }
 
-void CHttpComLayer::sendDataAsServer(const CIEC_ANY &paSD0, const CIEC_ANY &paSD1, const CIEC_ANY &paSD2) {
-  serializeData(paSD0, paSD1, paSD2);
+void CHttpComLayer::sendDataAsServer(void *paData) {
+  serializeData(getSDx(paData, 0), mBody);
   createRequest();
   CHttpParser::createResponse(mRequest, "HTTP/1.1 200 OK"s, "text/plain"s, mBody);
   getExtEvHandler<CHTTP_Handler>().sendServerAnswer(this, mRequest);
   mInterruptResp = e_ProcessDataOk;
 }
 
-void CHttpComLayer::sendDataAsClient(const CIEC_ANY &paSD0, const CIEC_ANY &paSD1, const CIEC_ANY &paSD2) {
-  serializeData(paSD0, paSD1, paSD2);
+void CHttpComLayer::sendDataAsClient(void *paData) {
+  serializeData(getSDx(paData, 0), mAuth);
+  serializeData(getSDx(paData, 1), mParams);
+  serializeData(getSDx(paData, 2), mBody);
   createRequest();
   if(getExtEvHandler<CHTTP_Handler>().sendClientData(this, mRequest)) {
     mInterruptResp = e_ProcessDataOk;
@@ -314,21 +323,11 @@ void CHttpComLayer::closeConnection() {
   getExtEvHandler<CHTTP_Handler>().forceClose(this);
 }
 
-void CHttpComLayer::serializeData(const CIEC_ANY& paSD0, const CIEC_ANY& paSD1, const CIEC_ANY& paSD2) {
-  if(CIEC_ANY::e_WSTRING == paSD0.getDataTypeID()){
-      mAuth = static_cast<const CIEC_WSTRING&>(paSD0).getValue();
-  }else if(CIEC_ANY::e_STRING == paSD0.getDataTypeID()){
-      mAuth = static_cast<const CIEC_STRING&>(paSD0).getStorage();
-  }
-  if(CIEC_ANY::e_WSTRING == paSD1.getDataTypeID()){
-      mParams = static_cast<const CIEC_WSTRING&>(paSD1).getValue();
-  }else if(CIEC_ANY::e_STRING == paSD1.getDataTypeID()){
-      mParams = static_cast<const CIEC_STRING&>(paSD1).getStorage();
-  }
-  if(CIEC_ANY::e_WSTRING == paSD2.getDataTypeID()){
-      mBody = static_cast<const CIEC_WSTRING&>(paSD2).getValue();
-  }else if(CIEC_ANY::e_STRING == paSD2.getDataTypeID()){
-      mBody = static_cast<const CIEC_STRING&>(paSD2).getStorage();
+void CHttpComLayer::serializeData(const CIEC_ANY& paSDx, std::string& paMember) {
+  if(CIEC_ANY::e_WSTRING == paSDx.getDataTypeID()){
+      paMember = static_cast<const CIEC_WSTRING&>(paSDx).getValue();
+  }else if(CIEC_ANY::e_STRING == paSDx.getDataTypeID()){
+      paMember = static_cast<const CIEC_STRING&>(paSDx).getStorage();
   }
 }
 

@@ -25,8 +25,8 @@ using namespace forte::com_infra;
 using namespace std::string_literals;
 
 void CHttpParser::createGetRequest (std::string &paDest, const std::string &paHost, const TForteUInt16 paPort, const std::string &paPath, const std::string &paAuth, const std::string &paParams) {
-  CHttpParser::addCommonHeader(paDest, paHost, paPort, paPath, paAuth, paParams, CHttpComLayer::e_GET);
-  CHttpParser::addHeaderEnding(paDest);
+  addCommonHeader(paDest, paHost, paPort, paPath, paAuth, paParams, CHttpComLayer::e_GET);
+  addHeaderEnding(paDest);
 }
 
 void CHttpParser::addBodyToRequest (const std::string &paBody, const std::string &paContentType, std::string &paDest) {
@@ -35,7 +35,7 @@ void CHttpParser::addBodyToRequest (const std::string &paBody, const std::string
     paDest += paContentType;
     paDest += "\r\nContent-Length: "s;
     paDest += std::to_string(paBody.length());
-    CHttpParser::addHeaderEnding(paDest);
+    addHeaderEnding(paDest);
   }
   if (!paBody.empty()) {
     paDest += paBody;
@@ -44,12 +44,12 @@ void CHttpParser::addBodyToRequest (const std::string &paBody, const std::string
 
 void CHttpParser::createPutPostRequest (std::string &paDest, const std::string &paHost, const TForteUInt16 paPort, const std::string &paPath, const std::string &paAuth, const std::string &paParams, const std::string &paBody,
     const std::string& paContentType, CHttpComLayer::ERequestType paType) {
-  CHttpParser::addCommonHeader(paDest, paHost, paPort, paPath, paAuth, paParams, paType);
+  addCommonHeader(paDest, paHost, paPort, paPath, paAuth, paParams, paType);
   addBodyToRequest(paBody, paContentType, paDest);
 }
 
 bool CHttpParser::parseResponse(std::string& paBody, std::string& paResponseCode, char* paSrc) {
-  if(CHttpParser::getHttpResponseCode(paResponseCode, paSrc)) {
+  if(getHttpResponseCode(paResponseCode, paSrc)) {
     char* helperChar = strstr(paSrc, "\r\n\r\n"); // Extract data from HTTP response char
     if(nullptr != helperChar) {
       helperChar += sizeof("\r\n\r\n") - 1;
