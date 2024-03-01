@@ -40,6 +40,8 @@ namespace forte {
 
         EComResponse openConnection(char* paLayerParameter) override;
 
+        EComResponse startServer(char* paLayerParameter);
+
         void closeConnection() override;
 
         EComResponse processInterrupt() override;
@@ -70,11 +72,11 @@ namespace forte {
         EComResponse handleHTTPResponse(char *paData);
 
         /** Serializes the data to a char* */
-        void serializeData(const CIEC_ANY& paSD0, const CIEC_ANY& paSD1, const CIEC_ANY& paSD2);
+        void serializeData(const CIEC_ANY& paSDx, std::string& paMember);
 
-        void sendDataAsServer(const CIEC_ANY &paSD0, const CIEC_ANY &paSD1, const CIEC_ANY &paSD2);
+        void sendDataAsServer(void *paData);
 
-        void sendDataAsClient(const CIEC_ANY &paSD0, const CIEC_ANY &paSD1, const CIEC_ANY &paSD2);
+        void sendDataAsClient(void *paData);
 
         const CIEC_ANY& getSDx(void *paData, int paSdNum);
 
@@ -89,6 +91,7 @@ namespace forte {
         bool storeRequestType(const char* paType);
 
         void createRequest();
+      EComResponse startServer (EComResponse eRetVal, char *paLayerParameter);
 
         EComResponse mInterruptResp;
 
@@ -115,8 +118,6 @@ namespace forte {
         std::string mContentType;
 
         bool mCorrectlyInitialized;
-
-        bool mHasParameterInSD;
     };
 
   }
