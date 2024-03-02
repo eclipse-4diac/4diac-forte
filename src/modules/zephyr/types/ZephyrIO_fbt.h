@@ -11,9 +11,13 @@
 
 #pragma once
 
+#pragma region includes
 #include <types/ZephyrIOBase.h>
+#pragma endregion includes
 
+#pragma region base class spec
 class FORTE_ZephyrIO final : public FORTE_ZephyrIOBase {
+#pragma endregion base class spec
   DECLARE_FIRMWARE_FB(FORTE_ZephyrIO)
 
   private:
@@ -32,18 +36,22 @@ class FORTE_ZephyrIO final : public FORTE_ZephyrIOBase {
 
     static const SFBInterfaceSpec scmFBInterfaceSpec;
 
+#pragma region remove executeEvent()
     // using FORTE_ZephyrIOBase::executeEvent
+#pragma endregion remove executeEvent()
 
     void readInputData(TEventID paEIID) override;
     void writeOutputData(TEventID paEIID) override;
     void setInitialValues() override;
 
+#pragma region define IOs
     static constexpr size_t numberOfIOs = 0;
 
     void setConfig() override;
 
   protected:
     void onStartup(CEventChainExecutionThread * const paECET) override;
+#pragma endregion define IOs
 
   public:
     FORTE_ZephyrIO(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);

@@ -144,3 +144,26 @@ CONFIG_ADC_ASYNC=y
 CONFIG_PWM=y
 ```
 
+## Implementing and extending a Modular IO Controller Configuration FB
+
+Use the included ZephyrIO template for modular IO to start a controller configuration FB. The FBT that is used by 4diac IDE is located in `src/modules/zephyr/TypeLibrary/io/zephyr/ZephyrIO.fbt`. The exported FB for compiling and linking with FORTE is provided in `src/modules/zephyr/types/ZephyrIO_fbt.*`. We recommend that you perform a 4diac IDE Type Export once to familiarize yourself with the non-generated implementation portions in the provided `ZephyrIO_fbt.*` sources. In order to sucessfully do this, run the 4diac IDE Type Export Wizard, and leave the "Overwrite with warning" checkbox unselected, plus when asked whether to perform an overwrite or merge, always choose Merge.
+
+In detail, the header file for Zephyr modular IO controller configuration FBs has to be merged with the following non-automatic sections:
+
+- The includes
+- The base class specification
+- Removing the executeEvent() override
+- The section containing number of IOs, setConfig(), and onStartup()
+
+
+The compilation unit file in turn to be merged with the following non-automatic sections:
+
+- The includes
+- The base class specification
+- Removing the executeEvent() override
+- The section containing setConfig(), and onStartup()
+
+Next, copy the `.FBT` and `_fbt.*` to match your own board, and seek and replace all uses of `ZephyrIO` in the files to match your new name. Verify that export and merge still gives the expected result.
+
+In order to add the actual IOs of your board configuration, you can look at the differences between ZephyrIO and Esp32EthernetKitIO. The latter has a sample set of GPIO input/output, ADC, and PWM, and it should all be sufficiently self explaining if you know your way around developing applications with the Zephyr OS.
+

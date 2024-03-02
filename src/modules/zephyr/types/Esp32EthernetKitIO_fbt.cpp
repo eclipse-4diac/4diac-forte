@@ -14,10 +14,12 @@
 #include "Esp32EthernetKitIO_fbt_gen.cpp"
 #endif
 
+#pragma region includes
 #include <handler/IOHandleGPIODescriptor.h>
 #include <handler/IOHandleADCDescriptor.h>
 #include <handler/IOHandlePWMDescriptor.h>
 #include "handler/IODeviceController.h"
+#pragma endregion includes
 
 DEFINE_FIRMWARE_FB(FORTE_Esp32EthernetKitIO, g_nStringIdEsp32EthernetKitIO)
 
@@ -41,7 +43,9 @@ const SFBInterfaceSpec FORTE_Esp32EthernetKitIO::scmFBInterfaceSpec = {
 };
 
 FORTE_Esp32EthernetKitIO::FORTE_Esp32EthernetKitIO(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+#pragma region base class spec
     FORTE_ZephyrIOBase(paContainer, &scmFBInterfaceSpec, paInstanceNameId),
+#pragma endregion base class spec
     var_UpdateInterval(40000000_TIME),
     var_conn_QO(var_QO),
     var_conn_STATUS(var_STATUS),
@@ -67,7 +71,9 @@ void FORTE_Esp32EthernetKitIO::setInitialValues() {
   var_STATUS = ""_STRING;
 }
 
+#pragma region remove executeEvent()
 // using FORTE_ZephyrIOBase::executeEvent
+#pragma endregion remove executeEvent()
 
 void FORTE_Esp32EthernetKitIO::readInputData(const TEventID paEIID) {
   switch(paEIID) {
@@ -144,6 +150,7 @@ CDataConnection *FORTE_Esp32EthernetKitIO::getDOConUnchecked(const TPortId paInd
   return nullptr;
 }
 
+#pragma region define IOs
 namespace {
   struct gpio_dt_spec led0 = GPIO_DT_SPEC_GET(DT_ALIAS(led0), gpios);
   struct gpio_dt_spec sw0 = GPIO_DT_SPEC_GET(DT_ALIAS(sw0), gpios);
@@ -236,4 +243,4 @@ void FORTE_Esp32EthernetKitIO::onStartup(CEventChainExecutionThread * const paEC
 
   FORTE_ZephyrIOBase::onStartup(paECET);
 }
-
+#pragma endregion define IOs

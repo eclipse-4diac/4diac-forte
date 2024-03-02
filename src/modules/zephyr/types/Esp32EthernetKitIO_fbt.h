@@ -11,9 +11,13 @@
 
 #pragma once
 
+#pragma region includes
 #include <types/ZephyrIOBase.h>
+#pragma endregion includes
 
+#pragma region base class spec
 class FORTE_Esp32EthernetKitIO final : public FORTE_ZephyrIOBase {
+#pragma endregion base class spec
   DECLARE_FIRMWARE_FB(FORTE_Esp32EthernetKitIO)
 
   private:
@@ -32,12 +36,15 @@ class FORTE_Esp32EthernetKitIO final : public FORTE_ZephyrIOBase {
 
     static const SFBInterfaceSpec scmFBInterfaceSpec;
 
+#pragma region remove executeEvent()
     // using FORTE_ZephyrIOBase::executeEvent
+#pragma endregion remove executeEvent()
 
     void readInputData(TEventID paEIID) override;
     void writeOutputData(TEventID paEIID) override;
     void setInitialValues() override;
 
+#pragma region define IOs
     static constexpr size_t numberOfGPIOs = 2;
     static constexpr size_t numberOfADCChannels = 1;
     static constexpr size_t numberOfPWMs = 1;
@@ -46,6 +53,7 @@ class FORTE_Esp32EthernetKitIO final : public FORTE_ZephyrIOBase {
 
   protected:
     void onStartup(CEventChainExecutionThread * const paECET) override;
+#pragma endregion define IOs
 
   public:
     FORTE_Esp32EthernetKitIO(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);

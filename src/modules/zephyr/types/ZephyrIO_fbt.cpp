@@ -14,9 +14,11 @@
 #include "ZephyrIO_fbt_gen.cpp"
 #endif
 
+#pragma region includes
 #include <handler/IOHandleGPIODescriptor.h>
 #include <handler/IOHandleADCDescriptor.h>
 #include "handler/IODeviceController.h"
+#pragma endregion includes
 
 DEFINE_FIRMWARE_FB(FORTE_ZephyrIO, g_nStringIdZephyrIO)
 
@@ -40,7 +42,9 @@ const SFBInterfaceSpec FORTE_ZephyrIO::scmFBInterfaceSpec = {
 };
 
 FORTE_ZephyrIO::FORTE_ZephyrIO(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+#pragma region base class spec
     FORTE_ZephyrIOBase(paContainer, &scmFBInterfaceSpec, paInstanceNameId),
+#pragma endregion base class spec
     var_UpdateInterval(40000000_TIME),
     var_conn_QO(var_QO),
     var_conn_STATUS(var_STATUS),
@@ -58,7 +62,9 @@ void FORTE_ZephyrIO::setInitialValues() {
   var_STATUS = ""_STRING;
 }
 
+#pragma region remove executeEvent()
 // using FORTE_ZephyrIOBase::executeEvent
+#pragma endregion remove executeEvent()
 
 void FORTE_ZephyrIO::readInputData(const TEventID paEIID) {
   switch(paEIID) {
@@ -123,6 +129,7 @@ CDataConnection *FORTE_ZephyrIO::getDOConUnchecked(const TPortId paIndex) {
   return nullptr;
 }
 
+#pragma region define IOs
 void FORTE_ZephyrIO::setConfig() {
   IODeviceController::Config config;
   config.updateInterval = static_cast<CIEC_TIME*>(getDI(
@@ -149,4 +156,4 @@ void FORTE_ZephyrIO::onStartup(CEventChainExecutionThread * const paECET) {
 
   FORTE_ZephyrIOBase::onStartup(paECET);
 }
-
+#pragma endregion define IOs
