@@ -1,45 +1,11 @@
 Installation Instructions
 The OPC com layer requires the following packages
-  - OPC Client library release 0.4 (http://sourceforge.net/projects/opcclient/)
+  - OPC Client library (https://github.com/kumajaya/OPC-Client-X64.git)
   - Boost Lexical Cast (http://www.boost.org)
 
-Before OPC Client is compiled the function init() in OPCClient.cpp must be changed from:
-void COPCClient::init()
-{  
-  HRESULT  result = CoInitialize(NULL);
-  if (FAILED(result))
-  {
-    throw OPCException("CoInitialize failed");
-  }
-
-  CoInitializeSecurity(NULL, -1, NULL, NULL, RPC_C_AUTHN_LEVEL_NONE, RPC_C_IMP_LEVEL_IMPERSONATE, NULL, EOAC_NONE, NULL);
-
-  result = CoGetMalloc(MEMCTX_TASK, &iMalloc);
-  if (FAILED(result))
-  {
-    throw OPCException("CoGetMalloc failed");
-  }
-}
-
-to:
-void COPCClient::init()
-{  
-  CoInitializeSecurity(NULL, -1, NULL, NULL, RPC_C_AUTHN_LEVEL_NONE, RPC_C_IMP_LEVEL_IMPERSONATE, NULL, EOAC_NONE, NULL);
-
-  HRESULT  result = CoGetMalloc(MEMCTX_TASK, &iMalloc);
-  if (FAILED(result))
-  {
-    throw OPCException("CoGetMalloc failed");
-  }
-}
-  
-  
-Once the OPC Client library is compiled performe the steps below:
-1. Place OPC Client library in the following folder structure:
-  <opcclientroot>/include - all headers should be placed here
-  <opcclientroot>/lib - OPCClientToolkit.lib
-2. Choose <opcclientroot> for FORTE_COM_OPC_LIB_ROOT in CMake
-3. Choose Boost root folder <boostroot> for FORTE_COM_OPC_BOOST_ROOT
+Once the two libraries above are available, performe the steps below:
+1. Choose <opcclientroot>/OPCClientToolKit for FORTE_COM_OPC_LIB_ROOT in CMake
+2. Choose Boost root folder <boostroot> for FORTE_COM_OPC_BOOST_ROOT
    (the lexical_cast.hpp header must be available in <boostroot>/boost)
 
 Parameter Documentation (all values are required)
