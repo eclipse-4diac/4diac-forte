@@ -52,6 +52,24 @@ class COpcConnectionImpl : public IAsyncDataCallback{
 
   private:
 
+    static const char* WS2LPCTSTR(const std::wstring &wstr) {
+      const wchar_t *input = wstr.c_str();
+      // Count required buffer size (plus one for null-terminator).
+      size_t size = (wcslen(input) + 1) * sizeof(wchar_t);
+      char *buffer = new char[size];
+      #ifdef __STDC_LIB_EXT1__
+        // wcstombs_s is only guaranteed to be available if __STDC_LIB_EXT1__ is defined
+        size_t convertedSize;
+        std::wcstombs_s(&convertedSize, buffer, size, input, size);
+      #else
+        std::wcstombs(buffer, input, size);
+      #endif
+      const char *ret = (const char*) buffer;
+      // Free allocated memory:
+      delete buffer;
+      return ret;
+    }
+
     COPCGroup* getOpcGroup(const char* paGroupName, bool paIfRead);
     void clearGroup();
 

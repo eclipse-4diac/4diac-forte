@@ -66,7 +66,7 @@ bool COpcConnectionImpl::connect(const char* paGroupName){
 
     mOpcServer = mOpcHost->connectDAServer(COPCHost::LPCSTR2WS(mServerName));
   } catch (OPCException &e){
-    DEVLOG_ERROR("connect OPC server failed:%s[%s]\n",COPCHost::WS2LPCTSTR(e.reasonString()),paGroupName);
+    DEVLOG_ERROR("connect OPC server failed:%s[%s]\n",WS2LPCTSTR(e.reasonString()),paGroupName);
     return false;
   }
   DEVLOG_INFO("successfully connect OPC server in COpcConnectionImpl[%s]\n",paGroupName);
@@ -109,9 +109,9 @@ void COpcConnectionImpl::addItemList(const char* paGroupName, std::vector<std::s
     }
     catch (OPCException &e)
     {
-      DEVLOG_ERROR("addItem failed with exception:%s[%s:%s]\n", COPCHost::WS2LPCTSTR(e.reasonString()),
+      DEVLOG_ERROR("addItem failed with exception:%s[%s:%s]\n", WS2LPCTSTR(e.reasonString()),
                     groupName,paReadItems[i].c_str());
-      if(strcmp(COPCHost::WS2LPCTSTR(e.reasonString()),"Failed to add item") != 0){
+      if(strcmp(WS2LPCTSTR(e.reasonString()),"Failed to add item") != 0){
         //pa_pNewItem->setIsActive(false);
         this->disconnect();
         mConnected = false;
@@ -201,12 +201,12 @@ int COpcConnectionImpl::sendItemData(const char *paGroupName, const char *paItem
   if(it != mOpcItems.end()){
     lItems = it->second;
     for(size_t i = 0; i < lItems.size(); i++){
-      if(0 == strcmp(COPCHost::WS2LPCTSTR(lItems[i]->getName()), paItemName)){
+      if(0 == strcmp(WS2LPCTSTR(lItems[i]->getName()), paItemName)){
         try{
           lItems[i]->writeSync(paVar);
         }
         catch (OPCException &e){
-          DEVLOG_ERROR("opcitem writesync failed with exception:%s[%s:%s]\n", COPCHost::WS2LPCTSTR(e.reasonString()), writeGrpName, paItemName);
+          DEVLOG_ERROR("opcitem writesync failed with exception:%s[%s:%s]\n", WS2LPCTSTR(e.reasonString()), writeGrpName, paItemName);
           rtn = -1;
           break;
         }
@@ -226,31 +226,16 @@ int COpcConnectionImpl::sendItemData(const char *paGroupName, const char *paItem
 
 void COpcConnectionImpl::OnDataChange(COPCGroup & paGroup, COPCItemDataMap & paChanges){
   TItemDataList itemList;
-  for(POSITION pos = paChanges.GetStartPosition(); pos != nullptr;){
-    OPCHANDLE handle = paChanges.GetKeyAt(pos);
+  POSITION pos = paChanges.GetStartPosition();
+  while(pos){
     OPCItemData *data = paChanges.GetNextValue(pos);
     if (data) {
       const COPCItem *item = data->item();
-      if (item) {
-        itemList.push_back(new SOpcItemData(COPCHost::WS2LPCTSTR(item->getName()), (Variant) data->vDataValue));
-      }
+      itemList.push_back(new SOpcItemData(WS2LPCTSTR(item->getName()), (Variant) data->vDataValue));
     }
   }
 
-  const wchar_t *input = paGroup.getName().c_str();
-  // Count required buffer size (plus one for null-terminator).
-  size_t size = (wcslen(input) + 1) * sizeof(wchar_t);
-  char *buffer = new char[size];
-  #ifdef __STDC_LIB_EXT1__
-    // wcstombs_s is only guaranteed to be available if __STDC_LIB_EXT1__ is defined
-    size_t convertedSize;
-    std::wcstombs_s(&convertedSize, buffer, size, input, size);
-  #else
-    std::wcstombs(buffer, input, size);
-  #endif
-  const char *c_groupName = (const char*) buffer;
-  // Free allocated memory:
-  delete buffer;
+  const char *c_groupName = WS2LPCTSTR(paGroup.getName());
 
   int position = 0;
   const char * subStrRead = strstr(c_groupName, "_read");
@@ -287,7 +272,7 @@ COPCGroup* COpcConnectionImpl::getOpcGroup(const char* paGroupName, bool paIfRea
             (*it)->mReadGroupAdded = true;
           } catch (OPCException &e){
             // TODO
-            DEVLOG_ERROR("exception in make opc group[%s]:%s\n",groupName,COPCHost::WS2LPCTSTR(e.reasonString()));
+            DEVLOG_ERROR("exception in make opc group[%s]:%s\n",groupName,WS2LPCTSTR(e.reasonString()));
             (*it)->mOpcGroupRead = nullptr;
             retGroup = nullptr;
           }
@@ -305,7 +290,7 @@ COPCGroup* COpcConnectionImpl::getOpcGroup(const char* paGroupName, bool paIfRea
             (*it)->mWriteGroupAdded = true;
           } catch (OPCException &e){
             // TODO
-            DEVLOG_ERROR("exception in make opc group[%s]:%s\n",groupName,COPCHost::WS2LPCTSTR(e.reasonString()));
+            DEVLOG_ERROR("exception in make opc group[%s]:%s\n",groupName,WS2LPCTSTR(e.reasonString()));
             (*it)->mOpcGroupWrite = nullptr;
             (*it)->mOpcGroupWrite = nullptr;
             retGroup = nullptr;
