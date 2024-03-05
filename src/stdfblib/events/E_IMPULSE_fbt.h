@@ -9,10 +9,10 @@
  *** This file was generated using the 4DIAC FORTE Export Filter V1.0.x NG!
  ***
  *** Name: E_IMPULSE
- *** Description: Generate a Impulse
+ *** Description: standard timer function block (pulse)
  *** Version:
- ***     1.0: 2023-08-21/Franz Höpfinger - HR Agrartechnik GmbH -
- *************************************************************************/ 
+ ***     1.0: 2023-08-21/Franz Hoepfinger - HR Agrartechnik GmbH -
+ *************************************************************************/
 
 #pragma once
 
@@ -63,17 +63,17 @@ class FORTE_E_IMPULSE final : public CCompositeFB {
   public:
     FORTE_E_IMPULSE(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
-    CIEC_TIME var_TM;
+    CIEC_TIME var_PT;
 
-    CIEC_BOOL var_QO;
+    CIEC_BOOL var_Q;
 
-    CIEC_BOOL var_conn_QO;
+    CIEC_BOOL var_conn_Q;
 
     CEventConnection conn_CNF;
 
-    CDataConnection *conn_TM;
+    CDataConnection *conn_PT;
 
-    CDataConnection conn_QO;
+    CDataConnection conn_Q;
 
     CIEC_ANY *getDI(size_t) override;
     CIEC_ANY *getDO(size_t) override;
@@ -81,20 +81,20 @@ class FORTE_E_IMPULSE final : public CCompositeFB {
     CDataConnection **getDIConUnchecked(TPortId) override;
     CDataConnection *getDOConUnchecked(TPortId) override;
 
-    void evt_REQ(const CIEC_TIME &paTM, CIEC_BOOL &paQO) {
-      var_TM = paTM;
+    void evt_REQ(const CIEC_TIME &paPT, CIEC_BOOL &paQ) {
+      var_PT = paPT;
       executeEvent(scmEventREQID, nullptr);
-      paQO = var_QO;
+      paQ = var_Q;
     }
 
-    void evt_R(const CIEC_TIME &paTM, CIEC_BOOL &paQO) {
-      var_TM = paTM;
+    void evt_R(const CIEC_TIME &paPT, CIEC_BOOL &paQ) {
+      var_PT = paPT;
       executeEvent(scmEventRID, nullptr);
-      paQO = var_QO;
+      paQ = var_Q;
     }
 
-    void operator()(const CIEC_TIME &paTM, CIEC_BOOL &paQO) {
-      evt_REQ(paTM, paQO);
+    void operator()(const CIEC_TIME &paPT, CIEC_BOOL &paQ) {
+      evt_REQ(paPT, paQ);
     }
 };
 
