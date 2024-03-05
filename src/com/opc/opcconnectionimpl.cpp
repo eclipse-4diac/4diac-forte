@@ -43,6 +43,16 @@ void COpcConnectionImpl::disconnect(){//const char* paGroupName){
       COPCClient::stop();
       mConnected = false;
       this->clearGroup(); 
+
+      if (mOpcHost) {
+        delete mOpcHost;
+        mOpcHost = nullptr;
+      }
+
+      if (mOpcServer) {
+        delete mOpcServer;
+        mOpcServer = nullptr;
+      }
   }
 }
 
