@@ -8,7 +8,7 @@
  ***
  *** This file was generated using the 4DIAC FORTE Export Filter V1.0.x NG!
  ***
- *** Name: E_IMPULSE
+ *** Name: E_PULSE
  *** Description: standard timer function block (pulse)
  *** Version:
  ***     1.0: 2023-08-21/Franz Hoepfinger - HR Agrartechnik GmbH -
@@ -27,8 +27,8 @@
 #include "forte_array_variable.h"
 
 
-class FORTE_E_IMPULSE final : public CCompositeFB {
-  DECLARE_FIRMWARE_FB(FORTE_E_IMPULSE)
+class FORTE_E_PULSE final : public CCompositeFB {
+  DECLARE_FIRMWARE_FB(FORTE_E_PULSE)
 
   private:
     static const CStringDictionary::TStringId scmDataInputNames[];
@@ -61,7 +61,7 @@ class FORTE_E_IMPULSE final : public CCompositeFB {
     void setInitialValues() override;
 
   public:
-    FORTE_E_IMPULSE(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_E_PULSE(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     CIEC_TIME var_PT;
 
