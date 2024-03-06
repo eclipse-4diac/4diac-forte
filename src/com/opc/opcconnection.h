@@ -24,14 +24,14 @@ class COpcProcessVar;
 class COpcEventHandler;
 
 struct SOpcItemData{
-    const char* mItemName;
+    const std::string mItemName;
     Variant mItemData;
 
-    explicit SOpcItemData(const char* paItemName) :
+    explicit SOpcItemData(const std::string paItemName) :
         mItemName(paItemName){
       mItemData.set<SHORT>(0);
     }
-    SOpcItemData(const char* paItemName, Variant paItemData) :
+    SOpcItemData(const std::string paItemName, Variant paItemData) :
         mItemName(paItemName), mItemData(paItemData){
     }
 };

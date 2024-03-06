@@ -69,6 +69,8 @@ void COpcConnection::removeGroup(const char* paGroupName){
   } else{
     removeGroupCallbackDesc(paGroupName);
   }
+  //remove fb group and all group items
+  this->mOpcConnectionImpl->removeGroup(paGroupName);
 }
 
 bool COpcConnection::ifLetEventPass(EOpcConnectionEvents paEvent, const char* paGroupName){
@@ -152,7 +154,7 @@ int COpcConnection::maintainGroupMapInfo(COpcProcessVar* paNewItem){
       if(paNewItem->getItemFunction() == COpcProcessVar::e_FBOutput){
         //check if item already added
         for(auto item = (*group)->mReadItemsList.begin(); item != (*group)->mReadItemsList.end(); ++item){
-          if(strcmp((*item)->mItemName, paNewItem->getItemName()) == 0){
+          if((*item)->mItemName.compare(paNewItem->getItemName()) == 0){
             return 1;
           }
         }
@@ -162,7 +164,7 @@ int COpcConnection::maintainGroupMapInfo(COpcProcessVar* paNewItem){
       else if(paNewItem->getItemFunction() == COpcProcessVar::e_FBInput){
         //check if item already added
         for(auto item = (*group)->mWriteItemsList.begin(); item != (*group)->mWriteItemsList.end(); ++item){
-          if(strcmp((*item)->mItemName, paNewItem->getItemName()) == 0){
+          if((*item)->mItemName.compare(paNewItem->getItemName()) == 0){
             return 1;
           }
         }
@@ -214,7 +216,7 @@ void COpcConnection::response_dataReceived(const char *paGroupName, TItemDataLis
       for(auto item = (*group)->mReadItemsList.begin(); item != (*group)->mReadItemsList.end(); ++item){
         // Loop through OpcItems in ItemDataList
         for(auto newItem = paItemDataList.begin(); newItem != paItemDataList.end(); ++newItem){
-          if(strcmp((*newItem)->mItemName, (*item)->mItemName) == 0){
+          if((*newItem)->mItemName.compare((*item)->mItemName) == 0){
             (*item)->mItemData = (*newItem)->mItemData;
             paItemDataList.erase(newItem);
             break;
@@ -225,6 +227,17 @@ void COpcConnection::response_dataReceived(const char *paGroupName, TItemDataLis
       mEventHandler->executeComCallback((*group)->mCallbackDesc);
       break;
     }
+  }
+  // Should not happen unless something is manipulating the contents of the string
+  if(!paItemDataList.empty()){
+    int count = 0;
+    for(size_t i = 0; i < paItemDataList.size(); i++){
+      DEVLOG_INFO("deleting item from onchange itemlist[%s:%s]\n",paGroupName,paItemDataList[i]->mItemName);
+      delete paItemDataList[i];
+      count++;
+    }
+    paItemDataList.clear();
+    DEVLOG_ERROR("there are %d items cleared from onchange itemlist[%s]\n",count,paGroupName);
   }
 }
 
