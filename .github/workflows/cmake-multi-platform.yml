@@ -23,15 +23,14 @@ jobs:
       #
       # To add more build types (Release, Debug, RelWithDebInfo, etc.) customize the build_type list.
       matrix:
-        #os: [ubuntu-latest, windows-latest]
-        os: [ubuntu-latest]
+        os: [ubuntu-latest, windows-latest]
         build_type: [Debug]
         c_compiler: [gcc, clang, cl]
         include:
-        #  - os: windows-latest
-        #    c_compiler: cl
-        #    cpp_compiler: cl
-        #    architecture: "Win32"
+          - os: windows-latest
+            c_compiler: cl
+            cpp_compiler: cl
+            architecture: "Win32"
           - os: ubuntu-latest
             c_compiler: gcc
             cpp_compiler: g++
@@ -41,10 +40,10 @@ jobs:
             cpp_compiler: clang++
             architecture: "Posix"
         exclude:
-        #  - os: windows-latest
-        #    c_compiler: gcc
-        #  - os: windows-latest
-        #    c_compiler: clang
+          - os: windows-latest
+            c_compiler: gcc
+          - os: windows-latest
+            c_compiler: clang
           - os: ubuntu-latest
             c_compiler: cl
 
@@ -58,8 +57,13 @@ jobs:
       run: |
         echo "build-output-dir=${{ github.workspace }}/build" >> "$GITHUB_OUTPUT"
     
-    - name: Install libboost
+    - name: Install libboost (Linux)
+      if: ${{ matrix.os != 'windows-latest' }}
       run: sudo apt-get install -y libboost-all-dev
+
+    - name: Install boost (Windows)
+      if: ${{ matrix.os == 'windows-latest' }}
+      run: nuget install boost -Version 1.84.0
 
     - name: Configure CMake
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
@@ -73,6 +77,7 @@ jobs:
         -DFORTE_ARCHITECTURE=${{ matrix.architecture }}
         -DFORTE_COM_ETH=ON
         -DFORTE_TESTS=ON
+        ${{ matrix.os == 'windows-latest' && format('-DFORTE_TESTS_INC_DIRS={0}/boost.1.84.0/lib/native/include', github.workspace) || '' }}
 
     - name: Build
       # Build your program with the given configuration. Note that --config is needed because the default Windows generator is a multi-config generator (Visual Studio generator).
@@ -82,4 +87,4 @@ jobs:
       working-directory: ${{ steps.strings.outputs.build-output-dir }}
       # Execute tests defined by the CMake configuration. Note that --build-config is needed because the default Windows generator is a multi-config generator (Visual Studio generator).
       # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
-      run: ctest --build-config ${{ matrix.build_type }}
+      run: ctest --build-config ${{ matrix.build_type }} --output-on-failure
