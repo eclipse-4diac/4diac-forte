@@ -7,6 +7,13 @@
  *** Description: Template for Modular IO with boards running Zephyr OS
  *** Version:
  ***     1.0: 2024-01-12/Dirk Kaar -  -
+ ***
+ *** Copyright (c) 2024 KT Elektronik GmbH
+ *** This program and the accompanying materials are made available under the
+ *** terms of the Eclipse Public License 2.0 which is available at
+ *** http://www.eclipse.org/legal/epl-2.0.
+ ***
+ *** SPDX-License-Identifier: EPL-2.0
  *************************************************************************/
 
 #pragma once

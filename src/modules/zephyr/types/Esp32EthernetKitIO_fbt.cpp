@@ -7,6 +7,13 @@
  *** Description: Template for Modular IO with Esp32EthernetKit board
  *** Version:
  ***     1.0: 2024-01-13/Dirk O. Kaar -  -
+ ***
+ *** Copyright (c) 2024 KT Elektronik GmbH
+ *** This program and the accompanying materials are made available under the
+ *** terms of the Eclipse Public License 2.0 which is available at
+ *** http://www.eclipse.org/legal/epl-2.0.
+ ***
+ *** SPDX-License-Identifier: EPL-2.0
  *************************************************************************/
 
 #include "Esp32EthernetKitIO_fbt.h"
