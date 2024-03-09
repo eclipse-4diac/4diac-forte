@@ -17,14 +17,6 @@
 #include "devlog.h"
 #include <string.h>
 
-#ifdef __ZEPHYR__
-#ifdef CONFIG_POSIX_API
-#include <netinet/in.h>
-#else
-#include <zephyr/posix/netinet/in.h>
-#endif
-#endif // __ZEPHYR__
-
 void CBSDSocketInterface::closeSocket(TSocketDescriptor paSockD){
 #if defined(NET_OS)
   closesocket(paSockD);
@@ -158,6 +150,39 @@ int CBSDSocketInterface::receiveDataFromTCP(TSocketDescriptor paSockD, char* paD
   return handleError(nRetVal, errno, "TCP");
 }
 
+#ifdef __ZEPHYR__
+namespace {
+  void setupMulticastGroup(char* paIPAddr, const char* paMCInterface) {
+    // setting up multicast group
+    struct in_addr ifaddr;
+    ifaddr.s_addr = inet_addr(paMCInterface);
+    struct net_if* iface = nullptr;
+  
+    if (nullptr == net_if_ipv4_addr_lookup(&ifaddr, &iface)) {
+      DEVLOG_WARNING("CBSDSocketInterface: net_if_ipv4_addr_lookup failed: %s - fall back to default if\n", paMCInterface);
+      iface = net_if_get_default();
+    }
+    if (nullptr != iface) {
+      DEVLOG_INFO("CBSDSocketInterface: multicast using if: %s\n", iface->config.name);
+      struct in_addr addr;
+      addr.s_addr = inet_addr(paIPAddr);
+      struct net_if_mcast_addr* maddr = net_if_ipv4_maddr_lookup(&addr, &iface);
+      if (!maddr) {
+        maddr = net_if_ipv4_maddr_add(iface, &addr);
+        if (!maddr) {
+          DEVLOG_WARNING("CBSDSocketInterface: net_if_ipv4_maddr_add failed\n");
+        }
+      }
+      if (maddr && !net_if_ipv4_maddr_is_joined(maddr)) {
+        net_if_ipv4_maddr_join(iface, maddr);
+      }
+    } else {
+      DEVLOG_WARNING("CBSDSocketInterface: net_if_get_default() failed\n");
+    }
+  }
+};
+#endif // __ZEPHYR__
+
 CBSDSocketInterface::TSocketDescriptor CBSDSocketInterface::openUDPSendPort(char *paIPAddr,
     unsigned short paPort, TUDPDestAddr *mDestAddr, const char *paMCInterface){
   DEVLOG_INFO("CBSDSocketInterface: Opening UDP sending connection at: %s:%d\n", paIPAddr, paPort);
@@ -183,31 +208,9 @@ CBSDSocketInterface::TSocketDescriptor CBSDSocketInterface::openUDPSendPort(char
           DEVLOG_WARNING("CBSDSocketInterface: setsockopt(IP_MULTICAST_IF) failed: %s\n", strerror(errno));
       }
     }
-#else
+#else // __ZEPHYR__
     if (paMCInterface) {
-      // setting up multicast group
-      struct in_addr ifaddr;
-      ifaddr.s_addr = inet_addr(paMCInterface);
-      struct net_if* iface = nullptr;
-
-      if (nullptr == net_if_ipv4_addr_lookup(&ifaddr, &iface)) {
-        DEVLOG_WARNING("CBSDSocketInterface: net_if_ipv4_addr_lookup failed: %s - fall back to default if\n", paMCInterface);
-        iface = net_if_get_default();
-      }
-      if (nullptr != iface) {
-        DEVLOG_INFO("CBSDSocketInterface: multicast using if: %s\n", iface->config.name);
-        struct in_addr addr;
-        addr.s_addr = inet_addr(paIPAddr);
-        struct net_if_mcast_addr* maddr = net_if_ipv4_maddr_lookup(&addr, &iface);
-        if (!maddr) {
-          maddr = net_if_ipv4_maddr_add(iface, &addr);
-          if (!maddr) {
-            DEVLOG_WARNING("CBSDSocketInterface: net_if_ipv4_maddr_add failed\n");
-          }
-        }
-      } else {
-        DEVLOG_WARNING("CBSDSocketInterface: net_if_get_default() failed\n");
-      }
+      setupMulticastGroup(paIPAddr, paMCInterface);
     }
 #endif // __ZEPHYR__
 
@@ -273,33 +276,8 @@ CBSDSocketInterface::TSocketDescriptor CBSDSocketInterface::openUDPReceivePort(c
           //if this fails we may have given a non multicasting addr. For now we accept this. May need to be changed in the future.
           DEVLOG_WARNING("CBSDSocketInterface: setsockopt(IP_ADD_MEMBERSHIP) failed: %s\n", strerror(errno));
         }
-#else
-        // setting up multicast group
-        struct in_addr ifaddr;
-        ifaddr.s_addr = inet_addr(paMCInterface);
-        struct net_if* iface = nullptr;
-  
-        if (nullptr == net_if_ipv4_addr_lookup(&ifaddr, &iface)) {
-          DEVLOG_WARNING("CBSDSocketInterface: net_if_ipv4_addr_lookup failed: %s - fall back to default if\n", paMCInterface);
-          iface = net_if_get_default();
-        }
-        if (nullptr != iface) {
-          DEVLOG_INFO("CBSDSocketInterface: multicast using if: %s\n", iface->config.name);
-          struct in_addr addr;
-          addr.s_addr = inet_addr(paIPAddr);
-          struct net_if_mcast_addr* maddr = net_if_ipv4_maddr_lookup(&addr, &iface);
-          if (!maddr) {
-            maddr = net_if_ipv4_maddr_add(iface, &addr);
-            if (!maddr) {
-              DEVLOG_WARNING("CBSDSocketInterface: net_if_ipv4_maddr_add failed\n");
-            }
-          }
-          if (maddr && !net_if_ipv4_maddr_is_joined(maddr)) {
-            net_if_ipv4_maddr_join(iface, maddr);
-          }
-        } else {
-          DEVLOG_WARNING("CBSDSocketInterface: net_if_get_default() failed\n");
-        }
+#else // __ZEPHYR__
+        setupMulticastGroup(paIPAddr, paMCInterface);
 #endif // __ZEPHYR__
 
         nRetVal = nSocket;

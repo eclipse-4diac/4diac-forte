@@ -1,5 +1,5 @@
 /************************************************************************************
- Copyright (c) 2023 KT Elektronik GmbH
+ Copyright (c) 2023-2024 KT Elektronik GmbH
  This program and the accompanying materials are made available under the
  terms of the Eclipse Public License 2.0 which is available at
  http://www.eclipse.org/legal/epl-2.0.
@@ -21,6 +21,12 @@
 #include <zephyr/posix/arpa/inet.h>
 #include <zephyr/net/socket.h>
 #include <zephyr/kernel.h>
+
+#ifdef CONFIG_POSIX_API
+#include <netinet/in.h>
+#else
+#include <zephyr/posix/netinet/in.h>
+#endif
 
 inline in_addr_t inet_addr(const char *cp) {
 	in_addr_t in_addr;
