@@ -67,7 +67,7 @@ void FORTE_F_DIVTIME::executeEvent(TEventID paEIID, CEventChainExecutionThread *
     case scmEventREQID:
       var_OUT = std::visit([this](auto&&paIN2) -> CIEC_TIME {
         return func_DIV_TIME(var_IN1, paIN2);
-      }, var_IN2);
+      }, static_cast<CIEC_ANY_NUM_VARIANT::variant&>(var_IN2));
       sendOutputEvent(scmEventCNFID, paECET);
       break;
   }

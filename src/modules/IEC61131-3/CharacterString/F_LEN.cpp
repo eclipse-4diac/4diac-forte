@@ -65,7 +65,7 @@ void FORTE_F_LEN::executeEvent(TEventID paEIID, CEventChainExecutionThread *cons
     case scmEventREQID:
       std::visit([](auto &&paIN, auto&&paOUT) -> void {
           paOUT = func_LEN<std::remove_reference_t<decltype(paOUT)>>(paIN);
-      }, var_IN, var_OUT);
+      }, static_cast<CIEC_ANY_STRING_VARIANT::variant&>(var_IN) ,static_cast<CIEC_ANY_INT_VARIANT::variant&>(var_OUT) );
       sendOutputEvent(scmEventCNFID, paECET);
       break;
   }
