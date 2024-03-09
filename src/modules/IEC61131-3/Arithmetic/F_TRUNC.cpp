@@ -66,7 +66,7 @@ void FORTE_F_TRUNC::executeEvent(TEventID paEIID, CEventChainExecutionThread *co
       std::visit([](auto &&paIN, auto &&paOUT) -> void {
         using T = std::decay_t<decltype(paOUT)>;
         paOUT = func_TRUNC<T>(paIN);
-      }, var_IN, var_OUT);
+      }, static_cast<CIEC_ANY_REAL_VARIANT::variant&>(var_IN), static_cast<CIEC_ANY_INT_VARIANT::variant&>(var_OUT));
       sendOutputEvent(scmEventCNFID, paECET);
       break;
   }

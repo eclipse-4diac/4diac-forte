@@ -79,7 +79,7 @@ void FORTE_F_REPLACE::executeEvent(TEventID paEIID, CEventChainExecutionThread *
                        CStringDictionary::getInstance().get(paIN1.getTypeNameID()),
                        CStringDictionary::getInstance().get(paIN2.getTypeNameID()));
           return CIEC_ANY_STRING_VARIANT();
-      }, var_IN1, var_IN2, var_P, var_L);
+      }, static_cast<CIEC_ANY_STRING_VARIANT::variant&>(var_IN1), static_cast<CIEC_ANY_STRING_VARIANT::variant&>(var_IN2), static_cast<CIEC_ANY_INT_VARIANT::variant&>(var_P), static_cast<CIEC_ANY_INT_VARIANT::variant&>(var_L));
       sendOutputEvent(scmEventCNFID, paECET);
       break;
   }

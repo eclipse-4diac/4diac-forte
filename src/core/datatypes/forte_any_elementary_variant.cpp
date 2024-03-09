@@ -208,7 +208,7 @@ CIEC_ANY_ELEMENTARY &CIEC_ANY_ELEMENTARY_VARIANT::unwrap() {
       } else {
         static_assert(always_false_v < T > , "non-exhaustive visitor");
       }
-  }, *this);;
+  }, static_cast<CIEC_ANY_ELEMENTARY_VARIANT::variant&>(*this));
 }
 
 const CIEC_ANY_ELEMENTARY &CIEC_ANY_ELEMENTARY_VARIANT::unwrap() const {
@@ -219,7 +219,7 @@ const CIEC_ANY_ELEMENTARY &CIEC_ANY_ELEMENTARY_VARIANT::unwrap() const {
       } else {
         static_assert(always_false_v < T > , "non-exhaustive visitor");
       }
-  }, *this);;
+  }, static_cast<const CIEC_ANY_ELEMENTARY_VARIANT::variant&>(*this));
 }
 
 int CIEC_ANY_ELEMENTARY_VARIANT::fromString(const char *paValue) {
@@ -318,6 +318,7 @@ int CIEC_ANY_ELEMENTARY_VARIANT::compare(const CIEC_ANY_ELEMENTARY_VARIANT &paVa
                      CStringDictionary::getInstance().get(other.getTypeNameID()));
         return -1;
       }
-  }, paValue, paOther);;
+  }, static_cast<const CIEC_ANY_ELEMENTARY_VARIANT::variant&>(paValue), 
+      static_cast<const CIEC_ANY_ELEMENTARY_VARIANT::variant&>(paOther));
 }
 

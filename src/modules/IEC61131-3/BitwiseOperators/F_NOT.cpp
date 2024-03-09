@@ -65,7 +65,7 @@ void FORTE_F_NOT::executeEvent(TEventID paEIID, CEventChainExecutionThread *cons
     case scmEventREQID:
       var_OUT = std::visit([](auto &&paIN) -> CIEC_ANY_BIT_VARIANT {
           return func_NOT(paIN);
-      }, var_IN);
+      }, static_cast<CIEC_ANY_BIT_VARIANT::variant&>(var_IN));
       sendOutputEvent(scmEventCNFID, paECET);
       break;
   }
