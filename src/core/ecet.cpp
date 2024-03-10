@@ -34,6 +34,12 @@ void CEventChainExecutionThread::run(){
   }
 }
 
+void CEventChainExecutionThread::onAliveChanged(bool paNewValue) {
+  if(!paNewValue){
+    resumeSelfSuspend();
+  }
+}
+
 void CEventChainExecutionThread::mainRun(){
   if(externalEventOccured()){
     transferExternalEvents();
@@ -93,7 +99,6 @@ void CEventChainExecutionThread::changeExecutionState(EMGMCommandType paCommand)
       [[fallthrough]];
     case EMGMCommandType::Stop:
       setAlive(false); //end thread in both cases
-      resumeSelfSuspend();
       break;
     default:
       break;
