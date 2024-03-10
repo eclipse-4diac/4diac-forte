@@ -146,7 +146,7 @@ CONFIG_PWM=y
 
 ## Implementing and extending a Modular IO Controller Configuration FB
 
-Use the included ZephyrIO template for modular IO to start a controller configuration FB. The FBT that is used by 4diac IDE is located in `src/modules/zephyr/TypeLibrary/io/zephyr/ZephyrIO.fbt`. The exported FB for compiling and linking with FORTE is provided in `src/modules/zephyr/types/ZephyrIO_fbt.*`. We recommend that you perform a 4diac IDE Type Export once to familiarize yourself with the non-generated implementation portions in the provided `ZephyrIO_fbt.*` sources. In order to sucessfully do this, run the 4diac IDE Type Export Wizard, and leave the "Overwrite with warning" checkbox unselected, plus when asked whether to perform an overwrite or merge, always choose Merge.
+Use the ZephyrIO function block template for modular IO included with the 4diac IDE TypeLibrary to start a controller configuration FB. The FBT is located in `.../TypeLibrary/io/zephyr/ZephyrIO.fbt` of 4diac projects. The exported FB for compiling and linking with FORTE is provided in `src/modules/zephyr/types/ZephyrIO_fbt.*` of the FORTE sources. We recommend that you perform a 4diac IDE Type Export once to familiarize yourself with the non-generated implementation portions in the provided `ZephyrIO_fbt.*` sources. In order to sucessfully do this, run the 4diac IDE Type Export Wizard, and leave the "Overwrite with warning" checkbox unselected, plus when asked whether to perform an overwrite or merge, always choose Merge.
 
 In detail, the header file for Zephyr modular IO controller configuration FBs has to be merged with the following non-automatic sections:
 
