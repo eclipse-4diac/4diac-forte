@@ -147,7 +147,7 @@ int CBSDSocketInterface::receiveDataFromTCP(TSocketDescriptor paSockD, char* paD
   if(nRetVal == -1){
     DEVLOG_ERROR("CBSDSocketInterface: TCP-Socket recv() failed: %s\n", strerror(errno));
   }
-  return handleError(nRetVal, errno, "TCP");
+  return handleError(nRetVal, "TCP");
 }
 
 CBSDSocketInterface::TSocketDescriptor CBSDSocketInterface::openUDPSendPort(char *paIPAddr,
@@ -288,10 +288,10 @@ int CBSDSocketInterface::receiveDataFromUDP(TSocketDescriptor paSockD, char* paD
     DEVLOG_ERROR("CBSDSocketInterface: UDP-Socket recvfrom() failed: %s\n", strerror(errno));
   }
 
-  return handleError(nRetVal, errno, "UDP");
+  return handleError(nRetVal, "UDP");
 }
 
-int CBSDSocketInterface::handleError(int nRetVal, int err, const char* msg) {
+int CBSDSocketInterface::handleError(int nRetVal, const char* msg) {
   // recv only sets errno if res is <= 0
   if(nRetVal <= 0) {
     switch(errno){
