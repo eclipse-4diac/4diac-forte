@@ -85,6 +85,8 @@ class CEventChainExecutionThread : public CThread{
      */
     void run() override;
 
+    void onAliveChanged(bool paNewValue) override;
+
     /*! \brief Clear the event chain.
      */
     void clear();
