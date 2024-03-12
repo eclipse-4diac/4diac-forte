@@ -53,7 +53,7 @@ std::shared_ptr<CMQTTClient> MQTTHandler::getClient(const std::string& paAddress
       }
       else {
         // Wrong ClientId
-        DEVLOG_ERROR("Wrong ClientID for Address %s, ClientID: %s\n", paAddress, paClientId);
+        DEVLOG_ERROR("Wrong ClientID for Address %s, ClientID: %s\n", paAddress.c_str(), paClientId.c_str());
         return nullptr;
       }
     }
