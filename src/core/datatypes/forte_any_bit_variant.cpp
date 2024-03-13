@@ -76,7 +76,7 @@ CIEC_ANY_BIT &CIEC_ANY_BIT_VARIANT::unwrap() {
       } else {
         static_assert(always_false_v < T > , "non-exhaustive visitor");
       }
-  }, static_cast<CIEC_ANY_BIT_VARIANT::variant&>(*this));;
+  }, static_cast<CIEC_ANY_BIT_VARIANT::variant&>(*this));
 }
 
 const CIEC_ANY_BIT &CIEC_ANY_BIT_VARIANT::unwrap() const {

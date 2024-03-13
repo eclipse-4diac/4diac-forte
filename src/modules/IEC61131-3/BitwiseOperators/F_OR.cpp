@@ -67,7 +67,8 @@ void FORTE_F_OR::executeEvent(TEventID paEIID, CEventChainExecutionThread *const
     case scmEventREQID:
       var_OUT = std::visit([](auto &&paIN1, auto&&paIN2) -> CIEC_ANY_BIT_VARIANT {
           return func_OR(paIN1, paIN2);
-      }, static_cast<CIEC_ANY_BIT_VARIANT::variant&>(var_IN1), static_cast<CIEC_ANY_BIT_VARIANT::variant&>(var_IN2));
+      }, static_cast<CIEC_ANY_BIT_VARIANT::variant&>(var_IN1),
+         static_cast<CIEC_ANY_BIT_VARIANT::variant&>(var_IN2));
       sendOutputEvent(scmEventCNFID, paECET);
       break;
   }
