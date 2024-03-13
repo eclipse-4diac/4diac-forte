@@ -69,7 +69,9 @@ void FORTE_F_MID::executeEvent(TEventID paEIID, CEventChainExecutionThread *cons
     case scmEventREQID:
       var_OUT = std::visit([](auto &&paIN, auto&&paL, auto&&paP) -> CIEC_ANY_STRING_VARIANT {
           return func_MID(paIN, paL, paP);
-      }, static_cast<CIEC_ANY_STRING_VARIANT::variant&>(var_IN), static_cast<CIEC_ANY_INT_VARIANT::variant&>(var_L), static_cast<CIEC_ANY_INT_VARIANT::variant&>(var_P));
+      }, static_cast<CIEC_ANY_STRING_VARIANT::variant&>(var_IN),
+         static_cast<CIEC_ANY_INT_VARIANT::variant&>(var_L),
+         static_cast<CIEC_ANY_INT_VARIANT::variant&>(var_P));
       sendOutputEvent(scmEventCNFID, paECET);
       break;
   }

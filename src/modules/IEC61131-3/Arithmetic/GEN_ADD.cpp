@@ -54,7 +54,8 @@ void GEN_ADD::executeEvent(TEventID paEIID, CEventChainExecutionThread *const pa
                            CStringDictionary::getInstance().get(paOUT.getTypeNameID()),
                            CStringDictionary::getInstance().get(paIN.getTypeNameID()));
               return paOUT;
-          }, static_cast<CIEC_ANY_MAGNITUDE_VARIANT::variant&>(var_OUT()), static_cast<CIEC_ANY_MAGNITUDE_VARIANT::variant&>(var_IN(i)));
+          }, static_cast<CIEC_ANY_MAGNITUDE_VARIANT::variant&>(var_OUT()), 
+             static_cast<CIEC_ANY_MAGNITUDE_VARIANT::variant&>(var_IN(i)));
         }
       }
       sendOutputEvent(scmEventCNFID, paECET);

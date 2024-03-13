@@ -319,6 +319,6 @@ int CIEC_ANY_ELEMENTARY_VARIANT::compare(const CIEC_ANY_ELEMENTARY_VARIANT &paVa
         return -1;
       }
   }, static_cast<const CIEC_ANY_ELEMENTARY_VARIANT::variant&>(paValue), 
-      static_cast<const CIEC_ANY_ELEMENTARY_VARIANT::variant&>(paOther));
+     static_cast<const CIEC_ANY_ELEMENTARY_VARIANT::variant&>(paOther));
 }
 

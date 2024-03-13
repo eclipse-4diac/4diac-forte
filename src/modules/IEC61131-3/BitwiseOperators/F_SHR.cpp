@@ -74,7 +74,8 @@ void FORTE_F_SHR::executeEvent(TEventID paEIID, CEventChainExecutionThread *cons
                        CStringDictionary::getInstance().get(paIN.getTypeNameID()),
                        CStringDictionary::getInstance().get(paN.getTypeNameID()));
           return CIEC_ANY_BIT_VARIANT();
-      }, static_cast<CIEC_ANY_BIT_VARIANT::variant&>(var_IN), static_cast<CIEC_ANY_INT_VARIANT::variant&>(var_N));
+      }, static_cast<CIEC_ANY_BIT_VARIANT::variant&>(var_IN),
+         static_cast<CIEC_ANY_INT_VARIANT::variant&>(var_N));
       sendOutputEvent(scmEventCNFID, paECET);
       break;
   }

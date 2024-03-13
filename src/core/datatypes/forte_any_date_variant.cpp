@@ -93,7 +93,7 @@ const CIEC_ANY_DATE &CIEC_ANY_DATE_VARIANT::unwrap() const {
       } else {
         static_assert(always_false_v < T > , "non-exhaustive visitor");
       }
-  }, static_cast<const CIEC_ANY_DATE_VARIANT::variant&>(*this));;
+  }, static_cast<const CIEC_ANY_DATE_VARIANT::variant&>(*this));
 }
 
 int CIEC_ANY_DATE_VARIANT::fromString(const char *paValue) {
