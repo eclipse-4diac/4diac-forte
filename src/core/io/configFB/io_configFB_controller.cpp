@@ -127,9 +127,9 @@ bool IOConfigFBController::init(CEventChainExecutionThread * const paECET, int p
   return true;
 }
 
-void IOConfigFBController::initHandle(IODeviceController::HandleDescriptor *paHandleDescriptor) {
+void IOConfigFBController::initHandle(IODeviceController::HandleDescriptor &paHandleDescriptor) {
 
-  if(paHandleDescriptor->mId.empty()) {
+  if(paHandleDescriptor.mId.empty()) {
     return;
   }
 

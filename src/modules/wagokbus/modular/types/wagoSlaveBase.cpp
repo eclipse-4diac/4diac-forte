@@ -25,7 +25,7 @@ void WagoSlaveBase::initHandlesBase(size_t paNumberOfBoolInputs, size_t paNumber
   for(size_t i = 0; i < paNumberOfBoolInputs; i++) {
     WagoDeviceController::WagoHandleDescriptor desc = WagoDeviceController::WagoHandleDescriptor(*static_cast<CIEC_WSTRING*>(getDI(offset + i)),
       forte::core::io::IOMapper::In, mIndex, CIEC_ANY::e_BOOL, static_cast<TForteUInt32>(i));
-    initHandle(&desc);
+    initHandle(desc);
   }
 
   offset += paNumberOfBoolInputs;
@@ -33,7 +33,7 @@ void WagoSlaveBase::initHandlesBase(size_t paNumberOfBoolInputs, size_t paNumber
   for(size_t i = 0; i < paNumberOfBoolOutputs; i++) {
     WagoDeviceController::WagoHandleDescriptor desc = WagoDeviceController::WagoHandleDescriptor(*static_cast<CIEC_WSTRING*>(getDI(offset + i)),
       forte::core::io::IOMapper::Out, mIndex, CIEC_ANY::e_BOOL, static_cast<TForteUInt32>(i));
-    initHandle(&desc);
+    initHandle(desc);
   }
 
   offset += paNumberOfBoolOutputs;
@@ -41,7 +41,7 @@ void WagoSlaveBase::initHandlesBase(size_t paNumberOfBoolInputs, size_t paNumber
   for(size_t i = 0; i < paNumberOfAnalogInputs; i++) {
     WagoDeviceController::WagoHandleDescriptor desc = WagoDeviceController::WagoHandleDescriptor(*static_cast<CIEC_WSTRING*>(getDI(offset + i)),
       forte::core::io::IOMapper::In, mIndex, CIEC_ANY::e_WORD, static_cast<TForteUInt32>(i));
-    initHandle(&desc);
+    initHandle(desc);
   }
 
   offset += paNumberOfAnalogInputs;
@@ -49,6 +49,6 @@ void WagoSlaveBase::initHandlesBase(size_t paNumberOfBoolInputs, size_t paNumber
   for(size_t i = 0; i < paNumberOfAnalogOutputs; i++) {
     WagoDeviceController::WagoHandleDescriptor desc = WagoDeviceController::WagoHandleDescriptor(*static_cast<CIEC_WSTRING*>(getDI(offset + i)),
       forte::core::io::IOMapper::Out, mIndex, CIEC_ANY::e_WORD, static_cast<TForteUInt32>(i));
-    initHandle(&desc);
+    initHandle(desc);
   }
 }

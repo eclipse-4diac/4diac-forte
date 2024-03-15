@@ -52,7 +52,7 @@ class WagoDeviceController : public forte::core::io::IODeviceMultiController {
   protected:
     const char* init();
 
-    forte::core::io::IOHandle* initHandle(forte::core::io::IODeviceController::HandleDescriptor *paHandleDescriptor) override;
+    forte::core::io::IOHandle* createIOHandle(forte::core::io::IODeviceController::HandleDescriptor &paHandleDescriptor) override;
 
     void deInit() override;
 

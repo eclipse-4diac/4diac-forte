@@ -22,6 +22,7 @@
 #include "forte_char.h"
 #include "forte_wchar.h"
 #include "forte_string.h"
+#include "forte_string_fixed.h"
 #include "forte_wstring.h"
 #include "forte_time.h"
 #include "forte_time_of_day.h"
@@ -124,6 +125,13 @@ std::ostream& boost_test_print_type(std::ostream &out, const CIEC_WCHAR &variabl
 
 inline
 std::ostream& boost_test_print_type(std::ostream &out, const CIEC_STRING &variable) {
+  out << variable.getStorage();
+  return out;
+}
+
+template<size_t maxLength>
+inline
+std::ostream& boost_test_print_type(std::ostream &out, const CIEC_STRING_FIXED<maxLength> &variable) {
   out << variable.getStorage();
   return out;
 }

@@ -1177,7 +1177,7 @@ auto func_CONCAT(const T &paIn1, const Args& ... args) {
 template<typename T>
 T func_INSERT(const T &paIn1, const T &paIn2, const CIEC_ANY_INT &paP) {
   static_assert(std::is_base_of_v<CIEC_ANY_STRING, T>);
-  if(CIEC_UINT::scmMaxVal < (paIn1.length() + paIn2.length())) {
+  if(std::numeric_limits<CIEC_UINT::TValueType>::max() < (paIn1.length() + paIn2.length())) {
     DEVLOG_ERROR("result would be longer than maximum allowed length\n");
     return paIn1;
   }
@@ -1244,7 +1244,7 @@ T func_REPLACE(const T &paIn1, const T &paIn2, const CIEC_ANY_INT &paL, const CI
     return paIn1;
   }
 
-  if((P + L + paIn2.length()) > CIEC_UINT::scmMaxVal) {
+  if((P + L + paIn2.length()) > std::numeric_limits<CIEC_UINT::TValueType>::max()) {
     DEVLOG_ERROR("REPLACE exceeds length of string!\n");
   }
 

@@ -14,6 +14,7 @@
 #include "MQTTClient.h"
 #include "basecommfb.h"
 #include <algorithm>
+#include "MQTTClientConfigParser.h"
 
 std::string gMqttClientConfigFile;
 
@@ -124,7 +125,7 @@ void CMQTTClient::onSubscribeSucceed(void* paContext, MQTTAsync_successData*) {
   if (nullptr != paContext) {
     MQTTComLayer* layer = static_cast<MQTTComLayer*>(paContext);
     std::shared_ptr<CMQTTClient> client = layer->getClient();
-    DEVLOG_INFO("MQTT: @%s: Subscription succeed.\n Topic: -%s-\n", client->mAddress.c_str(), layer->getTopicName());
+    DEVLOG_INFO("MQTT: @%s: Subscription succeed.\n Topic: -%s-\n", client->mAddress.c_str(), layer->getTopicName().c_str());
     CCriticalRegion sectionState(client->mMQTTMutex);
     client->removeToResubscribe(layer);
     if (client->mMQTT_STATE != ALL_SUBSCRIBED) {
@@ -138,7 +139,7 @@ void CMQTTClient::onSubscribeFailed(void* paContext, MQTTAsync_failureData*) {
     MQTTComLayer* layer = static_cast<MQTTComLayer*>(paContext);
     std::shared_ptr<CMQTTClient> client = layer->getClient();
     CCriticalRegion sectionState(client->mMQTTMutex);
-    DEVLOG_ERROR("MQTT: @%s: Subscription failed.\n Topic: -%s-\n", client->mAddress.c_str(), layer->getTopicName());
+    DEVLOG_ERROR("MQTT: @%s: Subscription failed.\n Topic: -%s-\n", client->mAddress.c_str(), layer->getTopicName().c_str());
     client->mHandler.resumeSelfSuspend();
   }
 }
@@ -186,6 +187,19 @@ int CMQTTClient::initClient() {
   mClientConnectionOptions.onSuccess = onMqttConnectionSucceed;
   mClientConnectionOptions.onFailure = onMqttConnectionFailed;
   mClientConnectionOptions.context = this;
+
+  std::string username;
+  std::string password;
+  if ("" != gMqttClientConfigFile) { //file was provided
+    CMQTTClientConfigFileParser::MQTTConfigFromFile result = CMQTTClientConfigFileParser::MQTTConfigFromFile(username, password);
+    if (CMQTTClientConfigFileParser::loadConfig(gMqttClientConfigFile, mAddress, result)) {
+      mClientConnectionOptions.username = username.c_str();
+      mClientConnectionOptions.password = password.c_str();
+    } else {
+      return MQTTHandler::eWrongClientID;
+    }
+  }
+
   if (MQTTASYNC_SUCCESS != MQTTAsync_setCallbacks(mAsClient, this, onMqttConnectionLost, onMqttMessageArrived, NULL)) {
     return MQTTHandler::eConnectionFailed;
   }

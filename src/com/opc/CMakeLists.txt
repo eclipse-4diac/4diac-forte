@@ -27,7 +27,7 @@ if(FORTE_COM_OPC)
 
   forte_add_sourcefile_hcpp( opcconnection opcconnectionhandler opceventhandler
                  opcconnectionimpl opcprocessvar Cmd_AddConnection
-                 Cmd_AddOPCProcessVar Cmd_SetProcessVarValue )
+                 Cmd_RemoveConnection Cmd_SetProcessVarValue )
 
   forte_add_include_directories( ${FORTE_COM_OPC_BOOST_ROOT} )
 

@@ -203,7 +203,7 @@ void CIPComLayer::handledConnectedDataRecv(){
                 - mBufFillSize);
         break;
       case e_Publisher:
-        //do nothing as subscribers cannot receive data
+        //do nothing as publishers cannot receive data
         break;
       case e_Subscriber:
         nRetVal =

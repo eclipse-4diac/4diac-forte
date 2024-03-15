@@ -147,7 +147,7 @@ int CBSDSocketInterface::receiveDataFromTCP(TSocketDescriptor paSockD, char* paD
   if(nRetVal == -1){
     DEVLOG_ERROR("CBSDSocketInterface: TCP-Socket recv() failed: %s\n", strerror(errno));
   }
-  return nRetVal;
+  return handleError(nRetVal, "TCP");
 }
 
 CBSDSocketInterface::TSocketDescriptor CBSDSocketInterface::openUDPSendPort(char *paIPAddr,
@@ -287,5 +287,33 @@ int CBSDSocketInterface::receiveDataFromUDP(TSocketDescriptor paSockD, char* paD
   if(nRetVal == -1){ //
     DEVLOG_ERROR("CBSDSocketInterface: UDP-Socket recvfrom() failed: %s\n", strerror(errno));
   }
+
+  return handleError(nRetVal, "UDP");
+}
+
+int CBSDSocketInterface::handleError(int nRetVal, const char* msg) {
+  // recv only sets errno if res is <= 0
+  if(nRetVal <= 0) {
+    switch(errno){
+      case EWOULDBLOCK:
+      case ENOENT: //caused by vfs
+        //connected = true;
+        break;
+      case ENOTCONN:
+      case EPIPE:
+      case ECONNRESET:
+      case ECONNREFUSED:
+      case ECONNABORTED:
+        //connected = false;
+        DEVLOG_ERROR("CBSDSocketInterface::receiveDataFrom%s  recv() Disconnected: nRetVal: %d, ERR: %d %s\n", msg, nRetVal, errno, strerror(errno));
+        return 0; //Connection closed by peer
+      default:
+        DEVLOG_ERROR("CBSDSocketInterface::receiveDataFrom%s recv() Unexpected: nRetVal: %d, ERR: %d %s\n", msg, nRetVal, errno, strerror(errno));
+        //connected = true;
+        break;
+    }
+  }
   return nRetVal;
 }
+
+

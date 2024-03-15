@@ -216,7 +216,7 @@ void FORTE_PLCnextAXLSEDI16::initHandles() {
             (uint16_t) i,
             PLCnextDeviceController::Bit);
 
-        initHandle(&desc);
+        initHandle(desc);
     }
 }
 

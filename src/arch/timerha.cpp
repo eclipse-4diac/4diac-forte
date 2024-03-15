@@ -1,6 +1,8 @@
 /*******************************************************************************
- * Copyright (c) 2005 - 2015 ACIN, Profactor GmbH, fortiss GmbH
- *               2020 Johannes Kepler University Linz
+ * Copyright (c) 2005, 2024 ACIN, Profactor GmbH, fortiss GmbH,
+ *                          Johannes Kepler University Linz,
+ *                          OFFIS e.V.
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -22,6 +24,7 @@
 #include <functional>
 
 DEFINE_HANDLER(CTimerHandler)
+
 
 CTimerHandler::CTimerHandler(CDeviceExecution& paDeviceExecution) : CExternalEventHandler(paDeviceExecution),
     mForteTime(0) {
@@ -50,8 +53,7 @@ void CTimerHandler::addToAddFBList(const STimedFBListEntry& paTimerListEntry){
 }
 
 void CTimerHandler::addTimedFBEntry(const STimedFBListEntry& paTimerListEntry) {
-  auto it = std::lower_bound(mTimedFBList.begin(), mTimedFBList.end(), paTimerListEntry, 
-    [](const STimedFBListEntry& entry1, const STimedFBListEntry& entry2) { return entry1.mTimeOut < entry2.mTimeOut; });
+  auto it = std::upper_bound(mTimedFBList.begin(), mTimedFBList.end(), paTimerListEntry);
   mTimedFBList.insert(it, paTimerListEntry);
 }
 
@@ -82,13 +84,11 @@ void CTimerHandler::nextTick() {
 }
 
 void CTimerHandler::processTimedFBList() {
-  for (auto it = mTimedFBList.begin(); it != mTimedFBList.end();) {
-    if (it->mTimeOut > mForteTime) {
-      break;  
-    }
-    STimedFBListEntry entry = *it; // buffer entry
-    it = mTimedFBList.erase(it);
-    triggerTimedFB(entry);
+  auto last = std::upper_bound(mTimedFBList.begin(), mTimedFBList.end(), mForteTime);
+  std::vector<STimedFBListEntry> triggered(mTimedFBList.begin(), last);
+  mTimedFBList.erase(mTimedFBList.begin(), last);
+  for (auto &fb : triggered) {
+     triggerTimedFB(fb);
   }
 }
 

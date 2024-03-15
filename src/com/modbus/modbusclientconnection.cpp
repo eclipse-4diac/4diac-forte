@@ -14,11 +14,11 @@
 #include "devlog.h"
 #include "modbuspoll.h"
 #include <forte_thread.h>
-#include <unistd.h> // for sleep
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
 #ifndef WIN32
+#include <unistd.h>
 // for open and disabling DTR
 #include <termios.h>
 #endif
@@ -209,7 +209,7 @@ int CModbusConnectionEvent::executeEvent(modbus_t *paModbusConn, void *paRetVal)
             DEVLOG_INFO("Hardware flow control for Modbus RTU disabled\n");
             // Disabling DTR is not perfect and it will be toggled by this open for disabling it.
             // Therefore, wait for Arduino to boot only if flags weren't previously set.
-            sleep(2);
+            CThread::sleepThread(2);
           } else {
             DEVLOG_ERROR("Failed disabling flow control for Modbus RTU\n");
             return -1;
@@ -232,10 +232,10 @@ int CModbusConnectionEvent::executeEvent(modbus_t *paModbusConn, void *paRetVal)
   if (retVal >= 0) {
     switch (mFlowControl) {
       case eFlowLongDelay:
-        sleep(3);
+        CThread::sleepThread(3);
         // fall through
       case eFlowDelay:
-        sleep(2);
+        CThread::sleepThread(2);
         break;
       default:
         // ignore

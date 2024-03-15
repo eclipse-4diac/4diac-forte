@@ -19,17 +19,17 @@ IODeviceMultiController::IODeviceMultiController(CDeviceExecution& paDeviceExecu
     IODeviceController(paDeviceExecution) {
 }
 
-void IODeviceMultiController::addHandle(IODeviceController::HandleDescriptor *paHandleDescriptor) {
-  HandleDescriptor* desc = static_cast<HandleDescriptor*>(paHandleDescriptor);
-  IOHandle* handle = initHandle(desc);
+void IODeviceMultiController::addHandle(IODeviceController::HandleDescriptor &paHandleDescriptor) {
+  HandleDescriptor& desc = static_cast<HandleDescriptor&>(paHandleDescriptor);
+  IOHandle* handle = createIOHandle(desc);
 
   if(nullptr == handle) {
-    DEVLOG_WARNING("[IODeviceMultiController] Failed to initialize handle '%s'. Check initHandle method.\n", desc->mId.c_str());
+    DEVLOG_WARNING("[IODeviceMultiController] Failed to initialize handle '%s'. Check initHandle method.\n", desc.mId.c_str());
     return;
   }
 
-  if(IOMapper::getInstance().registerHandle(desc->mId, handle)) {
-    addSlaveHandle(desc->mSlaveIndex, handle);
+  if(IOMapper::getInstance().registerHandle(desc.mId, handle)) {
+    addSlaveHandle(desc.mSlaveIndex, handle);
   } else {
     delete handle;
   }

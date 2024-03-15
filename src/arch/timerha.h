@@ -1,7 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2005 - 2015 ACIN, Profactor GmbH, fortiss GmbH
- *               2020 Johannes Kepler University Linz
- *
+ * Copyright (c) 2005, 2024 ACIN, Profactor GmbH, fortiss GmbH,
+ *                          Johannes Kepler University Linz,
+ *                          OFFIS e.V.
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -97,6 +97,18 @@ class CTimerHandler : public CExternalEventHandler{
         }
 
         STimedFBListEntry() = default;
+
+        bool operator<(const STimedFBListEntry& paRHS) const {
+          return mTimeOut < paRHS.mTimeOut;
+        }
+
+        bool operator<(uint_fast64_t paRHS)  const {
+          return mTimeOut < paRHS;
+        }
+
+        friend bool operator<(uint_fast64_t paLHS, const STimedFBListEntry& paRHS) {
+          return paLHS < paRHS.mTimeOut;
+        }
 
     };
 

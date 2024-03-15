@@ -71,14 +71,14 @@ void PLC01A1ConfigFB::onStartup() {
       forte::core::io::IOMapper::In,
       0 /*offset is always 0 */,
       static_cast<uint8_t>(i));
-    initHandle(&desc);
+    initHandle(desc);
   }
 
   for(size_t i = 0; i < numberOfOutputs; i++) {
     PLC01A1Controller::HandleDescriptor
     desc = PLC01A1Controller::HandleDescriptor(*static_cast<CIEC_WSTRING*>(getDI(initialDIOffset + numberOfInputs + i)),
       forte::core::io::IOMapper::Out, 0 /*offset is always 0 */, static_cast<uint8_t>(numberOfOutputs - i - 1));
-    initHandle(&desc);
+    initHandle(desc);
   }
 
   started();

@@ -13,47 +13,43 @@
  ********************************************************************************/
 
 #include "httpparser.h"
+
 #include <stdio.h>
 #include <string.h>
-#include "devlog.h"
+
+#include "../../arch/datatype.h"
+#include "../../arch/devlog.h"
+#include "../../core/utils/parameterParser.h"
 
 using namespace forte::com_infra;
 using namespace std::string_literals;
 
-void CHttpParser::createGetRequest(std::string& paDest, const std::string& paHost, const std::string& paPath) {
-  CHttpParser::addCommonHeader(paDest, paHost, paPath, CHttpComLayer::e_GET);
-  CHttpParser::addHeaderEnding(paDest);
+void CHttpParser::createGetRequest (std::string &paDest, const std::string &paHost, const TForteUInt16 paPort, const std::string &paPath, const std::string &paAuth, const std::string &paParams) {
+  addCommonHeader(paDest, paHost, paPort, paPath, paAuth, paParams, CHttpComLayer::e_GET);
+  addHeaderEnding(paDest);
 }
 
-void CHttpParser::createPutPostRequest(std::string& paDest, const std::string& paHost, const std::string& paPath, const std::string& paData,
-    const std::string& paContentType, CHttpComLayer::ERequestType paType) {
-  CHttpParser::addCommonHeader(paDest, paHost, paPath, paType);
-  paDest.append("\r\nContent-type: "s);
-  paDest.append(paContentType);
-  paDest.append("\r\nContent-length: "s);
-  changePutPostData(paDest, paData);
-}
-
-bool CHttpParser::changePutPostData(std::string& paDest, const std::string& paData) {
-  char* helperChar = strstr(paDest.data(), "length: ");
-  if(nullptr != helperChar) {
-    helperChar += sizeof("length: ") - 1;
-    *helperChar = '\0';
-    paDest = std::string(paDest.c_str()); // will shrink the length of the string to the new ending
-    char contentLength[std::numeric_limits<size_t>::digits10 + 1];
-    snprintf(contentLength, sizeof(contentLength), "%zu", strlen(paData.c_str()));
-    paDest.append(contentLength);
-    CHttpParser::addHeaderEnding(paDest);
-    paDest.append(paData);
-    return true;
-  } else { // wrong request?
-    DEVLOG_ERROR("[HTTP Parser] PUT/POST request was wrongly created\n");
-    return false;
+void CHttpParser::addBodyToRequest (const std::string &paBody, const std::string &paContentType, std::string &paDest) {
+  if(!paContentType.empty()){
+    paDest += "\r\nContent-Type: "s;
+    paDest += paContentType;
+    paDest += "\r\nContent-Length: "s;
+    paDest += std::to_string(paBody.length());
+    addHeaderEnding(paDest);
+  }
+  if (!paBody.empty()) {
+    paDest += paBody;
   }
 }
 
+void CHttpParser::createPutPostRequest (std::string &paDest, const std::string &paHost, const TForteUInt16 paPort, const std::string &paPath, const std::string &paAuth, const std::string &paParams, const std::string &paBody,
+    const std::string& paContentType, CHttpComLayer::ERequestType paType) {
+  addCommonHeader(paDest, paHost, paPort, paPath, paAuth, paParams, paType);
+  addBodyToRequest(paBody, paContentType, paDest);
+}
+
 bool CHttpParser::parseResponse(std::string& paBody, std::string& paResponseCode, char* paSrc) {
-  if(CHttpParser::getHttpResponseCode(paResponseCode, paSrc)) {
+  if(getHttpResponseCode(paResponseCode, paSrc)) {
     char* helperChar = strstr(paSrc, "\r\n\r\n"); // Extract data from HTTP response char
     if(nullptr != helperChar) {
       helperChar += sizeof("\r\n\r\n") - 1;
@@ -139,19 +135,12 @@ CHttpComLayer::ERequestType forte::com_infra::CHttpParser::getTypeOfRequest(cons
 }
 
 void forte::com_infra::CHttpParser::createResponse(std::string& paDest, const std::string& paResult, const std::string& paContentType,
-    const std::string& paData) {
+    const std::string& paBody) {
   paDest = paResult;
-  if(paData.empty()) {
-    paDest.append("\r\n"s);
-  } else {
-    paDest.append("\r\nContent-type: "s);
-    paDest.append(paContentType);
-    paDest.append("\r\nContent-length: "s);
-    changePutPostData(paDest, paData);
-  }
+  addBodyToRequest(paBody, paContentType, paDest);
 }
 
-void CHttpParser::addCommonHeader(std::string& paDest, const std::string& paHost, const std::string& paPath, CHttpComLayer::ERequestType paType) {
+void CHttpParser::addCommonHeader (std::string &paDest, const std::string &paHost, const TForteUInt16 paPort, const std::string &paPath, const std::string &paAuth, const std::string &paParams, CHttpComLayer::ERequestType paType) {
   switch(paType){
     case CHttpComLayer::e_GET:
       paDest = "GET "s;
@@ -166,15 +155,24 @@ void CHttpParser::addCommonHeader(std::string& paDest, const std::string& paHost
       DEVLOG_ERROR("[HTTP Parser] Unexpected HTTP Type when adding header\n");
       break;
   }
-
-  paDest.append(paPath);
-  paDest.append(" HTTP/1.1\r\n"s);
-  paDest.append("Host: "s);
-  paDest.append(paHost);
+  paDest += paPath;
+  if(!paParams.empty()){
+    paDest += "?"s;
+    paDest += paParams;
+  }
+  paDest += " HTTP/1.1\r\n"s;
+  paDest += "Host: "s;
+  paDest += paHost;
+  paDest += ":"s;
+  paDest += std::to_string(paPort);
+  if(!paAuth.empty()){
+    paDest += "\r\nAuthorization: "s;
+    paDest += paAuth;
+  }
 }
 
 void CHttpParser::addHeaderEnding(std::string& paDest) {
-  paDest.append("\r\n\r\n"s);
+  paDest += "\r\n\r\n"s;
 }
 
 bool CHttpParser::getHttpResponseCode(std::string& paDest, char* paSrc) {

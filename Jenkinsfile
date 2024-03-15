@@ -20,7 +20,7 @@ kind: Pod
 spec:
   containers:
   - name: build
-    image: quay.io/eclipse-4diac/4diac-fortebuildcontainer:latest
+    image: quay.io/eclipse4diac/4diac-fortebuildcontainer:latest
     resources:
       limits:
         cpu: "2000m"

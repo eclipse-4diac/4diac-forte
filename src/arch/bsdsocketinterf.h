@@ -34,6 +34,9 @@ class CBSDSocketInterface{
     static int receiveDataFromUDP(TSocketDescriptor paSockD, char* paData, unsigned int paBufSize);
 
     CBSDSocketInterface() = delete;
+
+  private:
+    static int handleError(int nRetVal, const char* msg);
 };
 
 #endif /* BSDSOCKETINTERF_H_ */

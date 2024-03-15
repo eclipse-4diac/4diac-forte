@@ -96,7 +96,7 @@ void CIEC_LREAL::setValue(const CIEC_ANY& paValue){
 void CIEC_LREAL::castLRealData(const CIEC_LREAL &paSrcValue, CIEC_ANY &paDestValue){
   switch (paDestValue.getDataTypeID()){
     case CIEC_ANY::e_REAL:
-      static_cast<CIEC_REAL &>(paDestValue) = CIEC_REAL(static_cast<CIEC_LREAL::TValueType>(paSrcValue));
+      static_cast<CIEC_REAL &>(paDestValue) = CIEC_REAL(static_cast<CIEC_REAL::TValueType>(static_cast<CIEC_LREAL::TValueType>(paSrcValue)));
       break;
     case CIEC_ANY::e_LREAL:
       static_cast<CIEC_LREAL &>(paDestValue) = paSrcValue;

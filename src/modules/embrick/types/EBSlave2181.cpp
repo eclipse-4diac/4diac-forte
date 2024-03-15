@@ -227,13 +227,13 @@ void FORTE_EBSlave2181::initHandles() {
     EmbrickBusHandler::HandleDescriptor desc = EmbrickBusHandler::HandleDescriptor(
         static_cast<CIEC_WSTRING*>(getDI(iOffset + i))->getValue(), forte::core::io::IOMapper::In, mIndex,
         EmbrickBusHandler::Bit, (uint8_t) (i / 8), (uint8_t) (i % 8));
-    initHandle(&desc);
+    initHandle(desc);
   }
 
   for (int i = 0; i < oCount; i++) {
     EmbrickBusHandler::HandleDescriptor desc = EmbrickBusHandler::HandleDescriptor(
         static_cast<CIEC_WSTRING*>(getDI(oOffset + i))->getValue(), forte::core::io::IOMapper::Out, mIndex,
         EmbrickBusHandler::Bit, (uint8_t) (i / 8), (uint8_t) (i % 8));
-    initHandle(&desc);
+    initHandle(desc);
   }
 }
