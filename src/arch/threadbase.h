@@ -89,8 +89,12 @@ namespace forte {
 
         /*! \brief set the alive flag for this flag
          */
-        virtual void setAlive(bool paVal) {
+        void setAlive(bool paVal) {
+          bool oldAlive = mAlive;
           mAlive = paVal;
+          if(oldAlive != mAlive){
+            onAliveChanged(mAlive);
+          }
         }
 
         /*! \brief Helper method to run the thread.
@@ -128,6 +132,15 @@ namespace forte {
          * @return handle to the newly created thread
          */
         virtual TThreadHandleType createThread(long paStackSize) = 0;
+
+
+        /*! \brief Call back allowing children to perform child specific actions on alive state changes
+         *
+         * @param paNewValue the new value of the alive flag
+         */
+        virtual void onAliveChanged(bool paNewValue) {
+          (void)paNewValue;  // inhibit compiler warning
+        }
 
         //! Semaphore for implementing a generic join functionality. For a stable functionality this mutex must be locked during thread creation.
         CSemaphore mJoinSem;

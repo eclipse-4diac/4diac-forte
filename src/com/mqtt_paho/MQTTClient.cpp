@@ -125,7 +125,7 @@ void CMQTTClient::onSubscribeSucceed(void* paContext, MQTTAsync_successData*) {
   if (nullptr != paContext) {
     MQTTComLayer* layer = static_cast<MQTTComLayer*>(paContext);
     std::shared_ptr<CMQTTClient> client = layer->getClient();
-    DEVLOG_INFO("MQTT: @%s: Subscription succeed.\n Topic: -%s-\n", client->mAddress.c_str(), layer->getTopicName());
+    DEVLOG_INFO("MQTT: @%s: Subscription succeed.\n Topic: -%s-\n", client->mAddress.c_str(), layer->getTopicName().c_str());
     CCriticalRegion sectionState(client->mMQTTMutex);
     client->removeToResubscribe(layer);
     if (client->mMQTT_STATE != ALL_SUBSCRIBED) {
@@ -139,7 +139,7 @@ void CMQTTClient::onSubscribeFailed(void* paContext, MQTTAsync_failureData*) {
     MQTTComLayer* layer = static_cast<MQTTComLayer*>(paContext);
     std::shared_ptr<CMQTTClient> client = layer->getClient();
     CCriticalRegion sectionState(client->mMQTTMutex);
-    DEVLOG_ERROR("MQTT: @%s: Subscription failed.\n Topic: -%s-\n", client->mAddress.c_str(), layer->getTopicName());
+    DEVLOG_ERROR("MQTT: @%s: Subscription failed.\n Topic: -%s-\n", client->mAddress.c_str(), layer->getTopicName().c_str());
     client->mHandler.resumeSelfSuspend();
   }
 }
