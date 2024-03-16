@@ -15,12 +15,16 @@ forte_add_module(CONVERT OFF "Convert Function Blocks")
 #############################################################################
 # Convert FB
 #############################################################################
-forte_add_sourcefile_hcpp( BOOL2BOOL     BYTE2BYTE   DINT2DINT         DWORD2DWORD )
-forte_add_sourcefile_hcpp( INT2INT       SINT2SINT )
-forte_add_sourcefile_hcpp( STRING2STRING  TIME2TIME   UINT2UINT         UDINT2UDINT )
-forte_add_sourcefile_hcpp( USINT2USINT     WORD2WORD     WSTRING2WSTRING )
+forte_add_sourcefile_hcpp( BOOL2BOOL BYTE2BYTE )
+forte_add_sourcefile_hcpp( WORD2WORD LWORD2LWORD_fbt DWORD2DWORD )
+forte_add_sourcefile_hcpp( CHAR2CHAR_fbt WCHAR2WCHAR_fbt )
+forte_add_sourcefile_hcpp( INT2INT SINT2SINT DINT2DINT LINT2LINT_fbt )
+forte_add_sourcefile_hcpp( USINT2USINT UINT2UINT UDINT2UDINT ULINT2ULINT_fbt )
+forte_add_sourcefile_hcpp( STRING2STRING  WSTRING2WSTRING )
+forte_add_sourcefile_hcpp( TIME2TIME LTIME2LTIME_fbt )
+forte_add_sourcefile_hcpp( DATE2DATE_fbt LDATE2LDATE_fbt )
+forte_add_sourcefile_hcpp( DT2DT_fbt LDT2LDT_fbt )
+forte_add_sourcefile_hcpp( TOD2TOD_fbt LTOD2LTOD_fbt )
+forte_add_sourcefile_hcpp( REAL2REAL LREAL2LREAL )
 forte_add_sourcefile_hcpp( GEN_STRUCT_MUX GEN_STRUCT_DEMUX )
-forte_add_sourcefile_hcpp(REAL2REAL)
-forte_add_sourcefile_hcpp(LREAL2LREAL)
-
 
