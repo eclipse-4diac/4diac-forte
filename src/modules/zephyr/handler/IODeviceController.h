@@ -38,8 +38,7 @@ public:
   void handleChangeEvent(IOHandle *paHandle) override;
 
 protected:
-  void setAlive(bool paVal) override {
-    forte::core::io::IODeviceController::setAlive(paVal);
+  void onAliveChanged(bool paNewValue) override {
     mUpdateSema.inc();
   }
   const char *init() override {

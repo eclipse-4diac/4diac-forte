@@ -30,6 +30,7 @@ public:
   ~IOHandleADC() override;
   void get(CIEC_ANY &) override;
   void set(const CIEC_ANY &) override;
+  bool equal();
 
 protected:
   void onObserver(IOObserver *paObserver) override;
@@ -69,9 +70,9 @@ private:
   };
   adc_work_context_t mADCWorkCtx;
   k_poll_signal mSamplingSignal;
-  enum State { IDLE, SAMPLING, DESTROY };
-  State mState{ IDLE };
 #endif // CONFIG_ADC_ASYNC
+  enum State { IDLE, SAMPLING, NEWDATA, DESTROY };
+  State mState{ IDLE };
   uint32_t mValue = 0;
 };
 

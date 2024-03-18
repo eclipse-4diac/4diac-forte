@@ -54,7 +54,9 @@ private:
   };
   gpio_work_context_t mGPIOWorkCtx;
   gpio_callback_context_t mGPIOCallbackCtx;
-  bool mLastValue;
+  enum State { IDLE, NEWDATA, DESTROY };
+  State mState{ IDLE };
+  bool mValue;
 };
 
 #endif // IOHANDLEGPIO_H

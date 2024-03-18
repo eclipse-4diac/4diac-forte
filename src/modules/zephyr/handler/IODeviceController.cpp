@@ -91,6 +91,9 @@ bool IODeviceController::isHandleValueEqual(IOHandle* paHandle) {
   case CIEC_ANY::e_BOOL:
     return static_cast<IOHandleGPIO*>(paHandle)->equal();
     break;
+  case CIEC_ANY::e_DWORD:
+    return paHandle->isInput() && static_cast<IOHandleADC*>(paHandle)->equal();
+    break;
   default:
     return false;
     break;

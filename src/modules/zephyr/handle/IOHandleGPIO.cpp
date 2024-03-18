@@ -54,6 +54,7 @@ IOHandleGPIO::~IOHandleGPIO() {
   gpio_remove_callback(getGPIOSpec()->port, &mGPIOCallbackCtx.gpio_cb_data);
   k_work_sync sync;
   k_work_cancel_sync(&mGPIOWorkCtx.work, &sync);
+  mState = DESTROY;
 }
 
 void IOHandleGPIO::onObserver(IOObserver *paObserver) {
@@ -70,15 +71,19 @@ void IOHandleGPIO::dropObserver() {
 
 void IOHandleGPIO::get(CIEC_ANY &paState) {
   DEVLOG_DEBUG("IOHandleGPIO::get\n");
-  auto value = gpio_pin_get_dt(getGPIOSpec());
-  static_cast<CIEC_BOOL &>(paState) = CIEC_BOOL(value);
-  mLastValue = value;
+  const auto prevState = mState;
+  const bool eq = equal();
+  static_cast<CIEC_BOOL &>(paState) = CIEC_BOOL(mValue);
+  if (prevState == IDLE && !eq && hasObserver()) {
+    mController->fireIndicationEvent(getObserver());
+  }
+  mState = IDLE;
 }
 
 void IOHandleGPIO::set(const CIEC_ANY &paState) {
   DEVLOG_DEBUG("IOHandleGPIO::set\n");
   const CIEC_BOOL value = static_cast<const CIEC_BOOL &>(paState);
-  mLastValue = value;
+  mValue = value;
   gpio_pin_set_dt(getGPIOSpec(), value);
   mController->handleChangeEvent(this);
 }
@@ -86,7 +91,11 @@ void IOHandleGPIO::set(const CIEC_ANY &paState) {
 bool IOHandleGPIO::equal() {
   DEVLOG_DEBUG("IOHandleGPIO::equal\n");
   bool value = gpio_pin_get_dt(getGPIOSpec());
-  bool eq = (value == mLastValue);
+  bool eq = (value == mValue);
+  if (!eq) {
+    mState = NEWDATA;
+    mValue = value;
+  }
   return eq;
 }
 
@@ -100,6 +109,7 @@ void IOHandleGPIO::work_callback(struct k_work* item) {
   DEVLOG_DEBUG("IOHandleGPIO::work_callback\n");
   gpio_work_context_t* ctx = CONTAINER_OF(item, gpio_work_context_t, work);
   // Use this to notify IOHandle of asynchronous value changes, i.e. IRQs
+  ctx->self->mState = NEWDATA;
   ctx->self->onChange();
 }
 
