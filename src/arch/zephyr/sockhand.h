@@ -34,6 +34,8 @@ inline in_addr_t inet_addr(const char *cp) {
 	return -1;
 }
 
+void setupMulticastGroup(char* paIPAddr, const char* paMCInterface);
+
 //these include needs to be last
 #include "../gensockhand.h"
 #include "../fdselecthand.h"
