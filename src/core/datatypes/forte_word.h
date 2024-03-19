@@ -108,13 +108,34 @@ class CIEC_WORD : public CIEC_ANY_BIT{
     /*! \brief Partial access within a CIEC_WORD (e.g. [WORD].partial<CIEC_BOOL>(1))
      *
      */
-    template <class T> CIEC_ANY_BIT_PARTIAL<T, CIEC_WORD> partial(size_t paIndex) {
+    template<class T>
+    CIEC_ANY_BIT_PARTIAL<T, CIEC_WORD> partial(size_t paIndex) {
       return CIEC_ANY_BIT_PARTIAL<T, CIEC_WORD>(*this, paIndex);
     }
 
-    template <class T> CIEC_ANY_BIT_PARTIAL<T, CIEC_WORD> partial(const CIEC_ANY_INT& paIndex){
-      size_t index = paIndex.getUnsignedValue();
-      return CIEC_ANY_BIT_PARTIAL<T, CIEC_WORD>(*this, index);
+    template<class T>
+    T partial(size_t paIndex) const {
+      return CIEC_ANY_BIT_PARTIAL<T, CIEC_WORD>::partialValue(*this, paIndex);
+    }
+
+    template<class T>
+    T cpartial(size_t paIndex) const {
+      return partial<T>(paIndex);
+    }
+
+    template<class T>
+    CIEC_ANY_BIT_PARTIAL<T, CIEC_WORD> partial(const CIEC_ANY_INT &paIndex) {
+      return partial<T>(paIndex.getUnsignedValue());
+    }
+
+    template<class T>
+    T partial(const CIEC_ANY_INT &paIndex) const {
+      return partial<T>(paIndex.getUnsignedValue());
+    }
+
+    template<class T>
+    T cpartial(const CIEC_ANY_INT &paIndex) const {
+      return partial<T>(paIndex);
     }
 };
 
