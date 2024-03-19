@@ -71,8 +71,18 @@ jobs:
         -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
         -S ${{ github.workspace }}
         -DFORTE_ARCHITECTURE=${{ matrix.architecture }}
-        -DFORTE_COM_ETH=ON
         -DFORTE_TESTS=ON
+        -DFORTE_MODULE_CONVERT=ON
+        -DFORTE_MODULE_IEC61131=ON
+        -DFORTE_MODULE_UTILS=ON
+        -DFORTE_MODULE_RT_Events=ON
+        -DFORTE_MODULE_RECONFIGURATION=ON
+        -DFORTE_IO=ON
+        -DFORTE_COM_ETH=ON
+        -DFORTE_COM_FBDK=ON
+        -DFORTE_COM_LOCAL=ON
+        -DFORTE_COM_RAW=ON
+        -DFORTE_COM_HTTP=ON
 
     - name: Build
       # Build your program with the given configuration. Note that --config is needed because the default Windows generator is a multi-config generator (Visual Studio generator).
