@@ -31,9 +31,13 @@ class CIEC_ANY_BIT_PARTIAL final : public PartialType {
     using PartialType::operator=;
 
     CIEC_ANY_BIT_PARTIAL(SourceType &paValue, const size_t paIndex) : mOriginalValue(paValue), mIndex(paIndex)  {
+      *this = partialValue(paValue, paIndex);
+    }
+
+    static PartialType partialValue(const SourceType &paValue, const size_t paIndex) {
       PartialValueType partialValue = 0;
       if(paIndex <= scmMaxIndex) {
-        const auto shiftIndex = mIndex * scmPartialDigits;
+        const auto shiftIndex = paIndex * scmPartialDigits;
         const SourceValueType sourceValue = static_cast<SourceValueType>(paValue);
         if constexpr(std::is_same_v<CIEC_BOOL, PartialType>) {
           partialValue = static_cast<PartialValueType>((sourceValue >> shiftIndex) & 0x1);
@@ -43,7 +47,7 @@ class CIEC_ANY_BIT_PARTIAL final : public PartialType {
       } else {
         DEVLOG_ERROR("Attempted partial index %d outside the range of allowed indices %d\n", paIndex, scmMaxIndex);
       }
-      *this = PartialType(partialValue);
+      return PartialType(partialValue);
     }
 
     CIEC_ANY_BIT_PARTIAL& operator=(const CIEC_ANY_BIT_PARTIAL &paValue) {
@@ -55,8 +59,9 @@ class CIEC_ANY_BIT_PARTIAL final : public PartialType {
       if(mIndex <= scmMaxIndex) {
         constexpr SourceValueType maskTemplate = std::numeric_limits<PartialValueType>::max();
         const auto shiftIndex = mIndex * scmPartialDigits;
-        const SourceValueType mask = (maskTemplate << shiftIndex);
-        const SourceValueType partialPartValue = static_cast<SourceValueType>(static_cast<PartialValueType>(*this)) << shiftIndex;
+        const SourceValueType mask = static_cast<SourceValueType>(maskTemplate << shiftIndex);
+        const SourceValueType partialPartValue = static_cast<SourceValueType>(
+                static_cast<SourceValueType>(static_cast<PartialValueType>(*this)) << shiftIndex);
         const SourceValueType sourceValue = static_cast<SourceValueType>(mOriginalValue);
         SourceValueType mergedValue = sourceValue ^ ((sourceValue ^ partialPartValue) & mask);
         mOriginalValue = SourceType(mergedValue);
