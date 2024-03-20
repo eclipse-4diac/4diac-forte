@@ -186,6 +186,13 @@ char OPCUA_MGR::smAddWatchArgDescription[] = "Fully qualified name of FB Port";
 char OPCUA_MGR::smAddWatchAttrDisplayName[] = "Add Watch";
 char OPCUA_MGR::smAddWatchAttrDescription[] = "Add Watch";
 
+/* Read Watches */
+char OPCUA_MGR::smReadWatchesMethodName[] = "readWatches";
+char OPCUA_MGR::smReadWatchesOutArgName[] = "Response";
+char OPCUA_MGR::smReadWatchesOutArgDescription[] = "Read Response";
+char OPCUA_MGR::smReadWatchesDisplayName[] = "Read Watches";
+char OPCUA_MGR::smReadWatchesDescription[] = "Read Watches";
+
 #endif // FORTE_SUPPORT_MONITORING
 
 /* Initialize UA Status Codes */
@@ -246,6 +253,9 @@ EMGMResponse OPCUA_MGR::createIEC61499MgmtObject(UA_Server* paServer) {
   if (addKillDeviceMethod(paServer) != EMGMResponse::Ready) return eRetVal;
   if (addKillResourceMethod(paServer) != EMGMResponse::Ready) return eRetVal;
   if (addDeleteResourceMethod(paServer) != EMGMResponse::Ready) return eRetVal;
+#ifdef FORTE_SUPPORT_MONITORING
+  if (addReadWatchesMethod(paServer) != EMGMResponse::Ready) return eRetVal;
+#endif // FORTE_SUPPORT_MONITORING
   return addMgmtObjectInstance();
 }
 
@@ -996,6 +1006,36 @@ UA_StatusCode OPCUA_MGR::onAddWatch(UA_Server*,
   return UA_STATUSCODE_BADUNKNOWNRESPONSE;
 }
 
+EMGMResponse OPCUA_MGR::addReadWatchesMethod(UA_Server* paServer) {
+  UA_Argument outputArgument;
+  initArgument(outputArgument, UA_TYPES_STRING, smReadWatchesOutArgName, smReadWatchesOutArgDescription);
+  UA_MethodAttributes readWatchesAttr = createAttribute(smReadWatchesDisplayName, smReadWatchesDescription);
+  return addMethodNode(paServer, smReadWatchesMethodName, mMgmtTypeId, readWatchesAttr, nullptr, 0, &outputArgument, 1, &onReadWatches);
+}
+
+UA_StatusCode OPCUA_MGR::onReadWatches(UA_Server*,
+  const UA_NodeId*, void*,
+  const UA_NodeId*, void* methodContext,
+  const UA_NodeId*, void*,
+  size_t, const UA_Variant*,
+  size_t, UA_Variant* output) {
+  if (methodContext != nullptr) {
+    EMGMResponse eRetVal = EMGMResponse::UnsupportedType;
+    OPCUA_MGR* uaMGR = static_cast<OPCUA_MGR*>(methodContext);
+    uaMGR->setMGMCommand(EMGMCommandType::MonitoringReadWatches, CStringDictionary::scmInvalidStringId, nullptr, nullptr, nullptr);
+    eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
+    int status = scResponseMap.find(eRetVal)->second;
+    if (status != UA_STATUSCODE_GOOD) {
+      return status;
+    }
+    UA_String uaResp = UA_String_fromChars(uaMGR->mCommand.mMonitorResponse.c_str());
+    status = UA_Variant_setScalarCopy(output, &uaResp, &UA_TYPES[UA_TYPES_STRING]);
+    UA_String_clear(&uaResp);
+    return status;
+    }
+  return UA_STATUSCODE_BADUNKNOWNRESPONSE;
+}
+
 #endif // FORTE_SUPPORT_MONITORING
 
 /* Helpers */
@@ -1050,7 +1090,9 @@ void OPCUA_MGR::clearMGMCommand() {
   mCommand.mFirstParam.clear();
   mCommand.mSecondParam.clear();
   mCommand.mAdditionalParams.clear();
+#ifdef FORTE_SUPPORT_MONITORING
   mCommand.mMonitorResponse.clear();
+#endif // FORTE_SUPPORT_MONITORING
 }
 
 void OPCUA_MGR::setMGMCommand(EMGMCommandType paCMD, CStringDictionary::TStringId paDestination,
