@@ -193,6 +193,13 @@ char OPCUA_MGR::smReadWatchesOutArgDescription[] = "Read Response";
 char OPCUA_MGR::smReadWatchesDisplayName[] = "Read Watches";
 char OPCUA_MGR::smReadWatchesDescription[] = "Read Watches";
 
+/* Remove Watch */
+char OPCUA_MGR::smRemoveWatchMethodName[] = "removeWatch";
+char OPCUA_MGR::smRemoveWatchArgName[] = "FB Port";
+char OPCUA_MGR::smRemoveWatchArgDescription[] = "Fully qualified name of FB Port";
+char OPCUA_MGR::smRemoveWatchAttrDisplayName[] = "Remove Watch";
+char OPCUA_MGR::smRemoveWatchAttrDescription[] = "Remove Watch";
+
 #endif // FORTE_SUPPORT_MONITORING
 
 /* Initialize UA Status Codes */
@@ -307,6 +314,7 @@ EMGMResponse OPCUA_MGR::createIEC61499ResourceObjectType(UA_Server* paServer) {
   if (addDeleteConnectionMethod(paServer) != EMGMResponse::Ready) return eRetVal;
 #ifdef FORTE_SUPPORT_MONITORING
   if (addAddWatchMethod(paServer) != EMGMResponse::Ready) return eRetVal;
+  if (addRemoveWatchMethod(paServer) != EMGMResponse::Ready) return eRetVal;
 #endif // FORTE_SUPPORT_MONITORING
   return EMGMResponse::Ready;
 }
@@ -1033,6 +1041,36 @@ UA_StatusCode OPCUA_MGR::onReadWatches(UA_Server*,
     UA_String_clear(&uaResp);
     return status;
     }
+  return UA_STATUSCODE_BADUNKNOWNRESPONSE;
+}
+
+EMGMResponse OPCUA_MGR::addRemoveWatchMethod(UA_Server* paServer) {
+  UA_Argument inputArgument;
+  initArgument(inputArgument, UA_TYPES_STRING, smRemoveWatchArgName, smRemoveWatchArgDescription);
+
+  UA_MethodAttributes removeWatchAttr = createAttribute(smRemoveWatchAttrDisplayName, smRemoveWatchAttrDescription);
+  return addMethodNode(paServer, smRemoveWatchMethodName, mResourceTypeId, removeWatchAttr, &inputArgument, 1, nullptr, 0, &onRemoveWatch);
+}
+
+UA_StatusCode OPCUA_MGR::onRemoveWatch(UA_Server*,
+  const UA_NodeId*, void*,
+  const UA_NodeId*, void* methodContext,
+  const UA_NodeId*, void* objectContext,
+  size_t, const UA_Variant* input,
+  size_t, UA_Variant*) {
+  if (methodContext != nullptr) {
+    EMGMResponse eRetVal = EMGMResponse::UnsupportedType;
+    std::string destination;
+    destination = getInputValue(*static_cast<UA_String*>(input[0].data));
+    std::vector<std::string> fullFbName;
+    parseDestinationName(destination, fullFbName);
+
+    const char* resourceName = static_cast<const char*>(objectContext);
+    OPCUA_MGR* uaMGR = static_cast<OPCUA_MGR*>(methodContext);
+    uaMGR->setMGMCommand(EMGMCommandType::MonitoringRemoveWatch, CStringDictionary::getInstance().insert(resourceName), nullptr, fullFbName);
+    eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
+    return scResponseMap.find(eRetVal)->second;
+  }
   return UA_STATUSCODE_BADUNKNOWNRESPONSE;
 }
 
