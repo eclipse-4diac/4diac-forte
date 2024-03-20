@@ -208,6 +208,13 @@ private:
   static char smReadWatchesOutArgName[];
   static char smReadWatchesOutArgDescription[];
 
+  /* Remove Watch */
+  static char smRemoveWatchMethodName[];
+  static char smRemoveWatchArgName[];
+  static char smRemoveWatchArgDescription[];
+  static char smRemoveWatchAttrDisplayName[];
+  static char smRemoveWatchAttrDescription[];
+
 #endif // FORTE_SUPPORT_MONITORING
 
   static const std::map<EMGMResponse, UA_StatusCode> scResponseMap;
@@ -431,6 +438,14 @@ private:
     const UA_NodeId* objectId, void* objectContext,
     size_t inputSize, const UA_Variant* input,
     size_t outputSize, UA_Variant* output);    
+
+  EMGMResponse addRemoveWatchMethod(UA_Server* paServer);
+  static UA_StatusCode onRemoveWatch(UA_Server* server,
+    const UA_NodeId* sessionId, void* sessionHandle,
+    const UA_NodeId* methodId, void* methodContext,
+    const UA_NodeId* objectId, void* objectContext,
+    size_t inputSize, const UA_Variant* input,
+    size_t outputSize, UA_Variant* output);
 
 #endif // FORTE_SUPPORT_MONITORING
 
