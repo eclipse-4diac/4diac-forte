@@ -15,9 +15,10 @@
 #include "zephyrtiha.h"
 #include "forte_constants.h"
 
-#ifndef CONFIG_FPU_SHARING
+#ifndef K_FP_REGS
 #define K_FP_REGS 0
-#endif // CONFIG_FPU_SHARING
+#endif // K_FP_REGS
+
 
 CTimerHandler* CTimerHandler::createTimerHandler(CDeviceExecution& paDeviceExecution) {
   return new CZephyrTimerHandler(paDeviceExecution);

@@ -142,7 +142,7 @@ int CBSDSocketInterface::receiveDataFromTCP(TSocketDescriptor paSockD, char* paD
   int nRetVal;
   do{
     nRetVal = static_cast<int>(recv(paSockD, paData, paBufSize, 0));
-  } while((-1 == nRetVal) && (EINTR == errno)); // recv got interrupt / recieving again
+  } while((-1 == nRetVal) && (EINTR == errno)); // recv got interrupt / receiving again
 
   if(nRetVal == -1){
     DEVLOG_ERROR("CBSDSocketInterface: TCP-Socket recv() failed: %s\n", strerror(errno));
@@ -175,7 +175,11 @@ CBSDSocketInterface::TSocketDescriptor CBSDSocketInterface::openUDPSendPort(char
           DEVLOG_WARNING("CBSDSocketInterface: setsockopt(IP_MULTICAST_IF) failed: %s\n", strerror(errno));
       }
     }
-#endif
+#else // __ZEPHYR__
+    if (paMCInterface) {
+      setupMulticastGroup(paIPAddr, paMCInterface);
+    }
+#endif // __ZEPHYR__
 
 #ifdef NET_OS
     /* following is typedef void TM_fAR * in treck/include/trsocket.h */
@@ -239,7 +243,9 @@ CBSDSocketInterface::TSocketDescriptor CBSDSocketInterface::openUDPReceivePort(c
           //if this fails we may have given a non multicasting addr. For now we accept this. May need to be changed in the future.
           DEVLOG_WARNING("CBSDSocketInterface: setsockopt(IP_ADD_MEMBERSHIP) failed: %s\n", strerror(errno));
         }
-#endif
+#else // __ZEPHYR__
+        setupMulticastGroup(paIPAddr, paMCInterface);
+#endif // __ZEPHYR__
 
         nRetVal = nSocket;
       }
@@ -282,7 +288,7 @@ int CBSDSocketInterface::receiveDataFromUDP(TSocketDescriptor paSockD, char* paD
   int nRetVal;
   do{
     nRetVal = static_cast<int>(recvfrom(paSockD, paData, paBufSize, 0, nullptr, nullptr));
-  } while((-1 == nRetVal) && (EINTR == errno)); // recv got interrupt / recieving again
+  } while((-1 == nRetVal) && (EINTR == errno)); // recv got interrupt / receiving again
 
   if(nRetVal == -1){ //
     DEVLOG_ERROR("CBSDSocketInterface: UDP-Socket recvfrom() failed: %s\n", strerror(errno));

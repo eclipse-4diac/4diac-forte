@@ -42,7 +42,7 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "Zephyr")
     forte_add_handler(CFDSelectHandler sockhand)
     forte_add_sourcefile_hcpp( ../fdselecthand ../bsdsocketinterf)
     forte_add_sourcefile_h(../gensockhand.h)
-    forte_add_sourcefile_h(sockhand.h)
+    forte_add_sourcefile_hcpp(sockhand)
   endif(FORTE_COM_ETH)
 
 endif()
