@@ -191,6 +191,18 @@ private:
   static char smDeleteConnAttrDisplayName[];
   static char smDeleteConnAttrDescription[];
 
+/* FORTE Monitoring */
+#ifdef FORTE_SUPPORT_MONITORING
+
+  /* Add Watch */
+  static char smAddWatchMethodName[];
+  static char smAddWatchArgName[];
+  static char smAddWatchArgDescription[];
+  static char smAddWatchAttrDisplayName[];
+  static char smAddWatchAttrDescription[];
+
+#endif // FORTE_SUPPORT_MONITORING
+
   static const std::map<EMGMResponse, UA_StatusCode> scResponseMap;
 
   static const UA_UInt16 smNamespaces[];
@@ -393,6 +405,17 @@ private:
     size_t inputSize, const UA_Variant* input,
     size_t outputSize, UA_Variant* output);
 
+/* FORTE Monitoring */
+
+#ifdef FORTE_SUPPORT_MONITORING
+  EMGMResponse addAddWatchMethod(UA_Server* paServer);
+  static UA_StatusCode onAddWatch(UA_Server* server,
+    const UA_NodeId* sessionId, void* sessionHandle,
+    const UA_NodeId* methodId, void* methodContext,
+    const UA_NodeId* objectId, void* objectContext,
+    size_t inputSize, const UA_Variant* input,
+    size_t outputSize, UA_Variant* output);  
+#endif // FORTE_SUPPORT_MONITORING
 /* Helpers */
 
   EMGMResponse addMethodNode(UA_Server* paServer, char* paMethodName, UA_NodeId paParentNodeId, 
