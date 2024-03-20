@@ -177,6 +177,17 @@ char OPCUA_MGR::smDeleteConnArg2Description[] = "{SubApp.FbName.PortName}";
 char OPCUA_MGR::smDeleteConnAttrDisplayName[] = "Delete Connection";
 char OPCUA_MGR::smDeleteConnAttrDescription[] = "Delete Connection";
 
+#ifdef FORTE_SUPPORT_MONITORING
+
+/* Add Watch */
+char OPCUA_MGR::smAddWatchMethodName[] = "addWatch";
+char OPCUA_MGR::smAddWatchArgName[] = "FB Port";
+char OPCUA_MGR::smAddWatchArgDescription[] = "Fully qualified name of FB Port";
+char OPCUA_MGR::smAddWatchAttrDisplayName[] = "Add Watch";
+char OPCUA_MGR::smAddWatchAttrDescription[] = "Add Watch";
+
+#endif // FORTE_SUPPORT_MONITORING
+
 /* Initialize UA Status Codes */
 const std::map<EMGMResponse, UA_StatusCode> OPCUA_MGR::scResponseMap = {
   {EMGMResponse::Ready, UA_STATUSCODE_GOOD},
@@ -284,6 +295,9 @@ EMGMResponse OPCUA_MGR::createIEC61499ResourceObjectType(UA_Server* paServer) {
   if (addKillFBMethod(paServer) != EMGMResponse::Ready) return eRetVal;
   if (addDeleteFBMethod(paServer) != EMGMResponse::Ready) return eRetVal;
   if (addDeleteConnectionMethod(paServer) != EMGMResponse::Ready) return eRetVal;
+#ifdef FORTE_SUPPORT_MONITORING
+  if (addAddWatchMethod(paServer) != EMGMResponse::Ready) return eRetVal;
+#endif // FORTE_SUPPORT_MONITORING
   return EMGMResponse::Ready;
 }
 
@@ -949,6 +963,41 @@ UA_StatusCode OPCUA_MGR::onDeleteConnection(UA_Server*,
   return UA_STATUSCODE_BADUNKNOWNRESPONSE;
 }
 
+/* FORTE Monitoring */
+#ifdef FORTE_SUPPORT_MONITORING
+
+EMGMResponse OPCUA_MGR::addAddWatchMethod(UA_Server* paServer) {
+  UA_Argument inputArgument;
+  initArgument(inputArgument, UA_TYPES_STRING, smAddWatchArgName, smAddWatchArgDescription);
+
+  UA_MethodAttributes addWatchAttr = createAttribute(smAddWatchAttrDisplayName, smAddWatchAttrDescription);
+  return addMethodNode(paServer, smAddWatchMethodName, mResourceTypeId, addWatchAttr, &inputArgument, 1, nullptr, 0, &onAddWatch);
+}
+
+UA_StatusCode OPCUA_MGR::onAddWatch(UA_Server*,
+  const UA_NodeId*, void*,
+  const UA_NodeId*, void* methodContext,
+  const UA_NodeId*, void* objectContext,
+  size_t, const UA_Variant* input,
+  size_t, UA_Variant*) {
+  if (methodContext != nullptr) {
+    EMGMResponse eRetVal = EMGMResponse::UnsupportedType;
+    std::string destination;
+    destination = getInputValue(*static_cast<UA_String*>(input[0].data));
+    std::vector<std::string> fullFbName;
+    parseDestinationName(destination, fullFbName);
+
+    const char* resourceName = static_cast<const char*>(objectContext);
+    OPCUA_MGR* uaMGR = static_cast<OPCUA_MGR*>(methodContext);
+    uaMGR->setMGMCommand(EMGMCommandType::MonitoringAddWatch, CStringDictionary::getInstance().insert(resourceName), nullptr, fullFbName);
+    eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
+    return scResponseMap.find(eRetVal)->second;
+  }
+  return UA_STATUSCODE_BADUNKNOWNRESPONSE;
+}
+
+#endif // FORTE_SUPPORT_MONITORING
+
 /* Helpers */
 
 EMGMResponse OPCUA_MGR::addMethodNode(UA_Server* paServer, char* paMethodNodeName, UA_NodeId paParentNodeId, UA_MethodAttributes paAttr, 
@@ -1016,7 +1065,7 @@ void OPCUA_MGR::setMGMCommand(EMGMCommandType paCMD, CStringDictionary::TStringI
     mCommand.mSecondParam.pushBack(CStringDictionary::getInstance().insert(paSecondParam));
   }
   if (paAdditionalParams != nullptr) {
-    mCommand.mAdditionalParams.fromString(paAdditionalParams);
+    mCommand.mAdditionalParams = CIEC_STRING(paAdditionalParams);
   }
 }
 
@@ -1037,7 +1086,7 @@ void OPCUA_MGR::setMGMCommand(EMGMCommandType paCMD, CStringDictionary::TStringI
     }
   }
   if (paAdditionalParams != nullptr) {
-    mCommand.mAdditionalParams.fromString(paAdditionalParams);
+    mCommand.mAdditionalParams = CIEC_STRING(paAdditionalParams);
   }
 }
 
