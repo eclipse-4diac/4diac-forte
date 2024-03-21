@@ -29,7 +29,24 @@
  */
 template<typename T>
 class CIEC_ARRAY_COMMON : public CIEC_ARRAY {
-public:
+    friend bool operator==(const CIEC_ARRAY_COMMON &paLeft, const CIEC_ARRAY_COMMON &paRight) {
+      if (paLeft.getLowerBound() != paRight.getLowerBound() || paLeft.getUpperBound() != paRight.getUpperBound()) {
+        return false;
+      }
+
+      for (intmax_t i = paLeft.getLowerBound(), end = paLeft.getUpperBound(); i <= end; ++i) {
+        if (!func_EQ(paLeft[i], paRight[i])) {
+          return false;
+        }
+      }
+      return true;
+    }
+
+    friend bool operator!=(const CIEC_ARRAY_COMMON &paLeft, const CIEC_ARRAY_COMMON &paRight) {
+      return !(paLeft == paRight);
+    }
+
+  public:
     using value_type = T;
     using pointer = value_type *;
     using const_pointer = const value_type *;
