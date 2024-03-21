@@ -1,7 +1,8 @@
 /*******************************************************************************
  * Copyright (c) 2010 - 2015 TU Vienna/ACIN, Profactor GmbH, fortiss GmbH,
- *    2018-2019 TU Vienna/ACIN
- *   2021 HIT robot group
+ *               2018-2019 TU Vienna/ACIN
+ *               2021 HIT robot group
+ *               2024 Monika Wenger
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -16,6 +17,7 @@
  *    Martin Melik-Merkumians - removes invalid casts, update implementation
  *     to use new cast function
  *    Zhao Xin -fixes string conversion 
+ *    Monika Wenger - func_ANY_AS_STRING
  *******************************************************************************/
 #ifndef SRC_CORE_DATATYPES_CONVERT_CONVERT_FUNCTIONS_H_
 #define SRC_CORE_DATATYPES_CONVERT_CONVERT_FUNCTIONS_H_
@@ -77,6 +79,12 @@ inline void stringConverter(CIEC_STRING &paString, const CIEC_ANY &paVal) {
     paVal.toString(buffer, bufferSize);
     paString.assign(buffer, static_cast<TForteUInt16>(strlen(buffer))); // max length 65534, cast to silence to compiler
     delete[](buffer);
+}
+
+inline const CIEC_STRING func_ANY_AS_STRING(const CIEC_ANY &paVal) {
+  CIEC_STRING string;
+  stringConverter(string, paVal.unwrap());
+  return string;
 }
 
 #include "TimeOfDayToConvertFunctions.h"
