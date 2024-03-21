@@ -52,6 +52,9 @@ public:
 
     CIEC_EndianessTestStruct() = default;
 
+    CIEC_EndianessTestStruct(CIEC_BOOL paVar1, CIEC_DINT paVar2, CIEC_LWORD paVar3)
+      : Var1(paVar1), Var2(paVar2), Var3(paVar3) {}
+
     size_t getStructSize() const override {
       return 3;
     }
@@ -438,6 +441,28 @@ BOOST_AUTO_TEST_CASE(eq_false_variadic_4)
   BOOST_TEST(func_EQ(number1, number2, number3, number4) == false);
 }
 
+BOOST_AUTO_TEST_CASE(eq_array_fixed)
+{
+  CIEC_ARRAY_FIXED<CIEC_INT, 0, 1> array1 = {17_INT, 4_INT};
+  CIEC_ARRAY_FIXED<CIEC_INT, 0, 1> array2 = {17_INT, 4_INT};
+  CIEC_ARRAY_FIXED<CIEC_INT, 0, 1> array3 = {21_INT, 42_INT};
+  CIEC_ARRAY_FIXED<CIEC_INT, 0, 2> array4 = {17_INT, 4_INT, 21_INT};
+  CIEC_ARRAY_FIXED<CIEC_DINT, 0, 1> array5 = {17_DINT, 4_DINT};
+  BOOST_TEST(func_EQ(array1, array2) == true);
+  BOOST_TEST(func_EQ(array1, array3) == false);
+  BOOST_TEST(func_EQ(array1, array4) == false);
+  BOOST_TEST(func_EQ(array1, array5) == false);
+}
+
+BOOST_AUTO_TEST_CASE(eq_struct)
+{
+  CIEC_EndianessTestStruct struct1(true_BOOL, 17_DINT, 4_LWORD);
+  CIEC_EndianessTestStruct struct2(true_BOOL, 17_DINT, 4_LWORD);
+  CIEC_EndianessTestStruct struct3(true_BOOL, 21_DINT, 42_LWORD);
+  BOOST_TEST(func_EQ(struct1, struct2) == true);
+  BOOST_TEST(func_EQ(struct1, struct3) == false);
+}
+
 BOOST_AUTO_TEST_CASE(gt_true) {
   BOOST_TEST(func_GT(100_SINT, 90_INT) == true);
 }
@@ -578,6 +603,28 @@ BOOST_AUTO_TEST_CASE(ne_false_mixed_types)
   CIEC_LINT nLint1(10);
   CIEC_INT nInt2(-10);
   BOOST_TEST(func_NE(nLint1, nInt2) == true);
+}
+
+BOOST_AUTO_TEST_CASE(ne_array_fixed)
+{
+  CIEC_ARRAY_FIXED<CIEC_INT, 0, 1> array1 = {17_INT, 4_INT};
+  CIEC_ARRAY_FIXED<CIEC_INT, 0, 1> array2 = {17_INT, 4_INT};
+  CIEC_ARRAY_FIXED<CIEC_INT, 0, 1> array3 = {21_INT, 42_INT};
+  CIEC_ARRAY_FIXED<CIEC_INT, 0, 2> array4 = {17_INT, 4_INT, 21_INT};
+  CIEC_ARRAY_FIXED<CIEC_DINT, 0, 1> array5 = {17_DINT, 4_DINT};
+  BOOST_TEST(func_NE(array1, array2) == false);
+  BOOST_TEST(func_NE(array1, array3) == true);
+  BOOST_TEST(func_NE(array1, array4) == true);
+  BOOST_TEST(func_NE(array1, array5) == true);
+}
+
+BOOST_AUTO_TEST_CASE(ne_struct)
+{
+  CIEC_EndianessTestStruct struct1(true_BOOL, 17_DINT, 4_LWORD);
+  CIEC_EndianessTestStruct struct2(true_BOOL, 17_DINT, 4_LWORD);
+  CIEC_EndianessTestStruct struct3(true_BOOL, 21_DINT, 42_LWORD);
+  BOOST_TEST(func_NE(struct1, struct2) == false);
+  BOOST_TEST(func_NE(struct1, struct3) == true);
 }
 
 BOOST_AUTO_TEST_CASE(implicit_bool_casts)

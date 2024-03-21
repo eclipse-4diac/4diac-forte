@@ -40,23 +40,6 @@ void CIEC_ARRAY::setValue(const CIEC_ANY &paValue) {
   }
 }
 
-bool CIEC_ARRAY::equals(const CIEC_ANY &paOther) const {
-  if (paOther.getDataTypeID() == CIEC_ANY::e_ARRAY) {
-    auto &otherArray = static_cast<const CIEC_ARRAY &>(paOther);
-    if (getLowerBound() != otherArray.getLowerBound() || getUpperBound() != otherArray.getUpperBound()) {
-      return false;
-    }
-
-    for (intmax_t i = getLowerBound(), end = getUpperBound(); i <= end; ++i) {
-      if (!operator[](i).equals(otherArray[i])) {
-        return false;
-      }
-    }
-    return true;
-  }
-  return false;
-}
-
 int CIEC_ARRAY::toString(char *paValue, size_t paBufferSize) const {
   int nBytesUsed = -1;
 
