@@ -75,7 +75,8 @@ void FORTE_F_CONCAT::executeEvent(TEventID paEIID, CEventChainExecutionThread *c
                        CStringDictionary::getInstance().get(paIN1.getTypeNameID()),
                        CStringDictionary::getInstance().get(paIN2.getTypeNameID()));
           return CIEC_ANY_STRING_VARIANT();
-      }, var_IN1, var_IN2);
+      }, static_cast<CIEC_ANY_STRING_VARIANT::variant&>(var_IN1),
+         static_cast<CIEC_ANY_STRING_VARIANT::variant&>(var_IN2));
       sendOutputEvent(scmEventCNFID, paECET);
       break;
   }

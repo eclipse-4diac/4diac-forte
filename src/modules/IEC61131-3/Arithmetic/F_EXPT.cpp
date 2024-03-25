@@ -67,7 +67,8 @@ void FORTE_F_EXPT::executeEvent(TEventID paEIID, CEventChainExecutionThread *con
     case scmEventREQID:
       var_OUT = std::visit([](auto &&paIN1, auto&&paIN2) -> CIEC_ANY_REAL_VARIANT {
         return func_EXPT(paIN1, paIN2);
-      }, var_IN1, var_IN2);
+      }, static_cast<CIEC_ANY_REAL_VARIANT::variant&>(var_IN1), 
+         static_cast<CIEC_ANY_REAL_VARIANT::variant&>(var_IN2));
       sendOutputEvent(scmEventCNFID, paECET);
       break;
   }

@@ -80,7 +80,7 @@ void FORTE_F_MUX_2::executeEvent(TEventID paEIID, CEventChainExecutionThread *co
         }
         DEVLOG_ERROR("value of input K is not between 0 and 1\n");
         return CIEC_ANY_VARIANT();
-      }, var_K);
+      }, static_cast<CIEC_ANY_INT_VARIANT::variant&>(var_K));
       sendOutputEvent(scmEventCNFID, paECET);
       break;
   }

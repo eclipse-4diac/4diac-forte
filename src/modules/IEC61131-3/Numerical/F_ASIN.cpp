@@ -65,7 +65,7 @@ void FORTE_F_ASIN::executeEvent(TEventID paEIID, CEventChainExecutionThread *con
     case scmEventREQID:
       var_OUT = std::visit([](auto &&paIN) -> CIEC_ANY_REAL_VARIANT {
           return func_ASIN(paIN);
-      }, var_IN);
+      }, static_cast<CIEC_ANY_REAL_VARIANT::variant&>(var_IN));
       sendOutputEvent(scmEventCNFID, paECET);
       break;
   }

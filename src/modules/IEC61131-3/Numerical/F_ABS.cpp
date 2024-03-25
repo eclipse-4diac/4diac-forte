@@ -65,7 +65,7 @@ void FORTE_F_ABS::executeEvent(TEventID paEIID, CEventChainExecutionThread *cons
     case scmEventREQID:
       var_OUT = std::visit([](auto &&paIN) -> CIEC_ANY_NUM_VARIANT {
         return func_ABS(paIN);
-      }, var_IN);
+      }, static_cast<CIEC_ANY_NUM_VARIANT::variant&>(var_IN));
       sendOutputEvent(scmEventCNFID, paECET);
       break;
   }

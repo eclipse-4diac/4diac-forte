@@ -76,7 +76,8 @@ void FORTE_F_ADD::executeEvent(TEventID paEIID, CEventChainExecutionThread *cons
                      CStringDictionary::getInstance().get(paIN1.getTypeNameID()),
                      CStringDictionary::getInstance().get(paIN2.getTypeNameID()));
         return CIEC_ANY_MAGNITUDE_VARIANT();
-      }, var_IN1, var_IN2);
+      }, static_cast<CIEC_ANY_MAGNITUDE_VARIANT::variant&>(var_IN1),
+         static_cast<CIEC_ANY_MAGNITUDE_VARIANT::variant&>(var_IN2));
       sendOutputEvent(scmEventCNFID, paECET);
       break;
   }

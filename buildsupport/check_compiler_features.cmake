@@ -24,13 +24,6 @@ function(TEST_NEEDED_FORTE_COMPILER_FEATURES)
     message(WARNING "`nullptr` not supported, replacing it with 0 via precprocessor")
     forte_add_definition("-Dnullptr=0")
   endif()
-
-  if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" AND
-          CMAKE_CXX_COMPILER_VERSION VERSION_LESS 11.3)
-    # gcc < 11.3 has a bug in the handling of std::variant and std::visit,
-    # incompatible with the current implementation of forte
-    message(FATAL_ERROR "At least GCC version 11.3 required!")
-  endif()
 endfunction()
 
 cmake_policy(POP)

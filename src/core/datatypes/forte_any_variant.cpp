@@ -219,7 +219,7 @@ CIEC_ANY &CIEC_ANY_VARIANT::unwrap() {
       } else {
         static_assert(always_false_v < T > , "non-exhaustive visitor");
       }
-  }, *this);;
+  }, static_cast<CIEC_ANY_VARIANT::variant&>(*this));
 }
 
 const CIEC_ANY &CIEC_ANY_VARIANT::unwrap() const {
@@ -234,7 +234,7 @@ const CIEC_ANY &CIEC_ANY_VARIANT::unwrap() const {
       } else {
         static_assert(always_false_v < T > , "non-exhaustive visitor");
       }
-  }, *this);;
+  }, static_cast<const CIEC_ANY_VARIANT::variant&>(*this));
 }
 
 int CIEC_ANY_VARIANT::fromString(const char *paValue) {
