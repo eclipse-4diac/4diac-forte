@@ -12,6 +12,7 @@
  *  Martin Melik Merkumians - Adds getNanoSecondsMonotonic
  *                          - Optimize order of operations for time result
  *  Martin Jobst - add high-resolution realtime clock
+ *  Ketut Kumajaya - Fix compatibility to Windows 7
  *******************************************************************************/
 
 #include <windows.h>
@@ -20,6 +21,24 @@
 #include "forte_constants.h"
 
 #ifndef FORTE_FAKE_TIME
+namespace {
+
+typedef void(WINAPI* GetSystemTimeAsFileTimePtr)(LPFILETIME);
+
+class GetSystemTimeInit {
+public:
+  GetSystemTimeInit() {
+    fp =
+        (GetSystemTimeAsFileTimePtr)GetProcAddress(GetModuleHandleW(L"kernel32.dll"), "GetSystemTimePreciseAsFileTime");
+    if (fp == nullptr)
+      fp = GetSystemTimeAsFileTime;
+  }
+  GetSystemTimeAsFileTimePtr fp;
+};
+
+GetSystemTimeInit GetSystemTimeAsFileTimeFunc;
+} // namespace
+
 uint_fast64_t getNanoSecondsMonotonic() {
   LARGE_INTEGER performance_counter;
   LARGE_INTEGER performance_frequency;
@@ -38,7 +57,7 @@ uint_fast64_t getNanoSecondsMonotonic() {
 uint_fast64_t getNanoSecondsRealtime() {
   FILETIME filetime;
 
-  GetSystemTimePreciseAsFileTime(&filetime);
+  GetSystemTimeAsFileTimeFunc.fp(&filetime);
 
   // The FILETIME struct stores the number of 100-nanosecond intervals since January 1, 1601 (UTC).
   uint_fast64_t time = static_cast<uint_fast64_t>(filetime.dwHighDateTime) << 32 | static_cast<uint_fast64_t>(filetime.dwLowDateTime);
