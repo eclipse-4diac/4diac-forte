@@ -37,89 +37,89 @@
 
 inline
 std::ostream& boost_test_print_type(std::ostream &out, const CIEC_LREAL &variable) {
-  char outputString[variable.getToStringBufferSize()];
-  variable.toString(outputString, sizeof(outputString));
-  out << outputString;
+  std::vector<char> outputString(variable.getToStringBufferSize());
+  variable.toString(outputString.data(), outputString.size());
+  out << outputString.data();
   return out;
 }
 
 inline
 std::ostream& boost_test_print_type(std::ostream &out, const CIEC_TIME &variable) {
-  char outputString[variable.getToStringBufferSize()];
-  variable.toString(outputString, sizeof(outputString));
-  out << outputString;
+  std::vector<char> outputString(variable.getToStringBufferSize());
+  variable.toString(outputString.data(), outputString.size());
+  out << outputString.data();
   return out;
 }
 
 inline
 std::ostream& boost_test_print_type(std::ostream &out, const CIEC_TIME_OF_DAY &variable) {
-  char outputString[variable.getToStringBufferSize()];
-  variable.toString(outputString, sizeof(outputString));
-  out << outputString;
+  std::vector<char> outputString(variable.getToStringBufferSize());
+  variable.toString(outputString.data(), outputString.size());
+  out << outputString.data();
   return out;
 }
 
 inline
 std::ostream& boost_test_print_type(std::ostream &out, const CIEC_DATE &variable) {
-  char outputString[variable.getToStringBufferSize()];
-  variable.toString(outputString, sizeof(outputString));
-  out << outputString;
+  std::vector<char> outputString(variable.getToStringBufferSize());
+  variable.toString(outputString.data(), outputString.size());
+  out << outputString.data();
   return out;
 }
 
 inline
 std::ostream& boost_test_print_type(std::ostream &out, const CIEC_DATE_AND_TIME &variable) {
-  char outputString[variable.getToStringBufferSize()];
-  variable.toString(outputString, sizeof(outputString));
-  out << outputString;
+  std::vector<char> outputString(variable.getToStringBufferSize());
+  variable.toString(outputString.data(), outputString.size());
+  out << outputString.data();
   return out;
 }
 
 inline
 std::ostream& boost_test_print_type(std::ostream &out, const CIEC_LTIME &variable) {
-  char outputString[variable.getToStringBufferSize()];
-  variable.toString(outputString, sizeof(outputString));
-  out << outputString;
+  std::vector<char> outputString(variable.getToStringBufferSize());
+  variable.toString(outputString.data(), outputString.size());
+  out << outputString.data();
   return out;
 }
 
 inline
 std::ostream& boost_test_print_type(std::ostream &out, const CIEC_LTIME_OF_DAY &variable) {
-  char outputString[variable.getToStringBufferSize()];
-  variable.toString(outputString, sizeof(outputString));
-  out << outputString;
+  std::vector<char> outputString(variable.getToStringBufferSize());
+  variable.toString(outputString.data(), outputString.size());
+  out << outputString.data();
   return out;
 }
 
 inline
 std::ostream& boost_test_print_type(std::ostream &out, const CIEC_LDATE &variable) {
-  char outputString[variable.getToStringBufferSize()];
-  variable.toString(outputString, sizeof(outputString));
-  out << outputString;
+  std::vector<char> outputString(variable.getToStringBufferSize());
+  variable.toString(outputString.data(), outputString.size());
+  out << outputString.data();
   return out;
 }
 
 inline
 std::ostream& boost_test_print_type(std::ostream &out, const CIEC_LDATE_AND_TIME &variable) {
-  char outputString[variable.getToStringBufferSize()];
-  variable.toString(outputString, sizeof(outputString));
-  out << outputString;
+  std::vector<char> outputString(variable.getToStringBufferSize());
+  variable.toString(outputString.data(), outputString.size());
+  out << outputString.data();
   return out;
 }
 
 inline
 std::ostream& boost_test_print_type(std::ostream &out, const CIEC_CHAR &variable) {
-  char outputString[variable.getToStringBufferSize()];
-  variable.toString(outputString, sizeof(outputString));
-  out << outputString;
+  std::vector<char> outputString(variable.getToStringBufferSize());
+  variable.toString(outputString.data(), outputString.size());
+  out << outputString.data();
   return out;
 }
 
 inline
 std::ostream& boost_test_print_type(std::ostream &out, const CIEC_WCHAR &variable) {
-  char outputString[variable.getToStringBufferSize()];
-  variable.toString(outputString, sizeof(outputString));
-  out << outputString;
+  std::vector<char> outputString(variable.getToStringBufferSize());
+  variable.toString(outputString.data(), outputString.size());
+  out << outputString.data();
   return out;
 }
 
@@ -138,9 +138,9 @@ std::ostream& boost_test_print_type(std::ostream &out, const CIEC_STRING_FIXED<m
 
 inline
 std::ostream& boost_test_print_type(std::ostream &out, const CIEC_WSTRING &variable) {
-  char outputString[variable.getToStringBufferSize()];
-  variable.toString(outputString, sizeof(outputString));
-  out << outputString;
+  std::vector<char> outputString(variable.getToStringBufferSize());
+  variable.toString(outputString.data(), outputString.size());
+  out << outputString.data();
   return out;
 }
 
