@@ -20,6 +20,16 @@
 #include "forte_any_derived.h"
 
 class CIEC_STRUCT : public CIEC_ANY_DERIVED{
+    template <typename T, std::enable_if_t<std::is_base_of_v<CIEC_STRUCT, T>, int> = 0>
+    friend bool operator==(const T &paLeft, const T &paRight) {
+      return paLeft.equals(paRight);
+    }
+
+    template <typename T, std::enable_if_t<std::is_base_of_v<CIEC_STRUCT, T>, int> = 0>
+    friend bool operator!=(const T &paLeft, const T &paRight) {
+      return !(paLeft == paRight);
+    }
+
   public:
     //! Indicator for invalid array member index positions
     static constexpr size_t csmNIndex = -1;

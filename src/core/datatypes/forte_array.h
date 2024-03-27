@@ -27,7 +27,24 @@
 /** \brief A common supertype for all CIEC_ARRAY variants, providing the minimal interface an array must provide
  */
 class CIEC_ARRAY : public CIEC_ANY_DERIVED {
-public:
+    friend bool operator==(const CIEC_ARRAY &paLeft, const CIEC_ARRAY &paRight) {
+      if (paLeft.getLowerBound() != paRight.getLowerBound() || paLeft.getUpperBound() != paRight.getUpperBound()) {
+        return false;
+      }
+
+      for (intmax_t i = paLeft.getLowerBound(), end = paLeft.getUpperBound(); i <= end; ++i) {
+        if (!paLeft[i].equals(paRight[i])) {
+          return false;
+        }
+      }
+      return true;
+    }
+
+    friend bool operator!=(const CIEC_ARRAY &paLeft, const CIEC_ARRAY &paRight) {
+      return !(paLeft == paRight);
+    }
+
+  public:
     using value_type = CIEC_ANY;
     using pointer = value_type *;
     using const_pointer = const value_type *;
@@ -93,7 +110,12 @@ public:
 
     void setValue(const CIEC_ANY &paValue) override;
 
-    [[nodiscard]] bool equals(const CIEC_ANY &paOther) const override;
+    [[nodiscard]] bool equals(const CIEC_ANY &paOther) const override {
+      if (paOther.getDataTypeID() == CIEC_ANY::e_ARRAY) {
+        return *this == static_cast<const CIEC_ARRAY &>(paOther);
+      }
+      return false;
+    }
 
     [[nodiscard]] int toString(char *paValue, size_t paBufferSize) const override;
 

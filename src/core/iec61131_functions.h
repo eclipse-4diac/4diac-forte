@@ -425,7 +425,9 @@ CIEC_BOOL func_EQ(const T &paIn1, const U &paIn2, const Args& ... args) {
 
 template<typename T, typename U>
 CIEC_BOOL func_EQ(const T &paIN1, const U &paIN2) {
-  if constexpr (forte::core::mpl::are_of_subtype_v<CIEC_ANY_BIT, T, U>) { //ANY_BITs can be also partial accesses
+  if constexpr (forte::core::mpl::has_equality_v<T, U>) {
+    return CIEC_BOOL(paIN1 == paIN2);
+  } else if constexpr (forte::core::mpl::are_of_subtype_v<CIEC_ANY_BIT, T, U>) { //ANY_BITs can be also partial accesses
     using tTClass = typename forte::core::mpl::get_equivalent_CIEC_class_t<T>;
     using tUClass = typename forte::core::mpl::get_equivalent_CIEC_class_t<U>;
     using tImplicitCastType = typename forte::core::mpl::get_castable_type_t<tTClass, tUClass>;
@@ -539,7 +541,9 @@ CIEC_BOOL func_LT(const T &paIN1, const T &paIN2) {
 
 template<typename T, typename U>
 CIEC_BOOL func_NE(const T &paIN1, const U &paIN2) {
-  if constexpr (forte::core::mpl::are_of_subtype_v<CIEC_ANY_BIT, T, U>) { //ANY_BITs can be also partial accesses
+  if constexpr (forte::core::mpl::has_equality_v<T, U>) {
+    return CIEC_BOOL(paIN1 != paIN2);
+  } else if constexpr (forte::core::mpl::are_of_subtype_v<CIEC_ANY_BIT, T, U>) { //ANY_BITs can be also partial accesses
     using tTClass = typename forte::core::mpl::get_equivalent_CIEC_class_t<T>;
     using tUClass = typename forte::core::mpl::get_equivalent_CIEC_class_t<U>;
     using tImplicitCastType = typename forte::core::mpl::get_castable_type_t<tTClass, tUClass>;

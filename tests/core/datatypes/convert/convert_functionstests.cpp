@@ -427,7 +427,13 @@ BOOST_AUTO_TEST_SUITE(convert_functions)
     BOOST_TEST(
       static_cast<CIEC_LREAL::TValueType>(timeInNs) == static_cast<CIEC_LREAL::TValueType>(INT64_C(172800000000000) + INT64_C(18000000000000) + INT64_C(2580000000000) + INT64_C(12000000000) + INT64_C(44000000) + INT64_C(27000) + INT64_C(31)));
   }
-  
+
+  BOOST_AUTO_TEST_CASE(CONVERT_STRING_TO_CHAR) {
+    BOOST_TEST(static_cast<CIEC_CHAR::TValueType>(func_STRING_TO_CHAR(""_STRING)) == '\0');
+    BOOST_TEST(static_cast<CIEC_CHAR::TValueType>(func_STRING_TO_CHAR("a"_STRING)) == 'a');
+    BOOST_TEST(static_cast<CIEC_CHAR::TValueType>(func_STRING_TO_CHAR("abc"_STRING)) == 'a');
+  }
+
   /**** BYTE_BCD_TO_* ****/
   BOOST_AUTO_TEST_CASE(BYTE_BCD_TO_USINT) {
     using SourceType = CIEC_BYTE;
