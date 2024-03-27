@@ -473,5 +473,5 @@ private:
 
   static std::string getInputValue(UA_String paInput);
 
-  static void parseDestinationName(std::string& paDestination, std::vector<std::string>& paTarget);
+  static void parseDestinationName(const std::string& paDestination, std::vector<std::string>& paTarget);
 };
