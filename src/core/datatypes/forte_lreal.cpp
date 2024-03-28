@@ -12,7 +12,7 @@
  *    Ingo Hegny, Martin Melik Merkumians, Monika Wenger
  *      - initial implementation and rework communication infrastructure
  *******************************************************************************/
-#include <math.h>
+#include <cmath>
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
