@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2022 AIT, ACIN,fortiss GmbH, Hit robot group
+ * Copyright (c) 2012, 2024 AIT, ACIN,fortiss GmbH, Hit robot group, Samator Indo Gas
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -9,6 +9,7 @@
  * Contributors:
  *   Filip Andren, Alois Zoitl - initial API and implementation and/or initial documentation
  *   Tibalt Zhao - Guard the opc connection from requests from FBs,filter non-sense requests 
+ *   Ketut Kumajaya - switch to OPCClientToolKit with 64bit support
  *******************************************************************************/
 #ifndef OPCCONNECTION_H_
 #define OPCCONNECTION_H_

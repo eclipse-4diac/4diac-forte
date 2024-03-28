@@ -236,8 +236,7 @@ int COpcConnectionImpl::sendItemData(const char *paGroupName, const char *paItem
   if(it != mOpcItems.end()){
     items = it->second;
     for(size_t i = 0; i < items.size(); i++){
-      std::string itemName = WS2S(items[i]->getName());
-      if(0 == strcmp(itemName.c_str(), paItemName)){
+      if(WS2S(items[i]->getName()) == paItemName){
         try{
           items[i]->writeSync(paVar);
         }
@@ -266,14 +265,12 @@ void COpcConnectionImpl::OnDataChange(COPCGroup & paGroup, COPCItemDataMap & paC
   while(pos){
     OPCItemData *data = paChanges.GetNextValue(pos);
     if (data) {
-      // Possible unpredictable string behavior in a multi-threaded program
-      std::string itemName = WS2S(data->item()->getName());
-      itemList.push_back(new SOpcItemData(itemName.c_str(), (Variant) data->vDataValue));
+      itemList.push_back(new SOpcItemData(WS2S(data->item()->getName()).c_str(), (Variant) data->vDataValue));
     }
   }
 
   // Possible unpredictable string behavior in a multi-threaded program
-  std::string s_groupName = WS2S(paGroup.getName());
+  const std::string s_groupName(WS2S(paGroup.getName()));
   const char *c_groupName = s_groupName.c_str();
 
   long long position = 0;
