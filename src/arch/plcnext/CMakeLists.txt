@@ -23,7 +23,7 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "PLCnext")
   else(FORTE_FAKE_TIME)
     forte_set_timer(../posix/pctimeha)
   endif(FORTE_FAKE_TIME)
-  forte_add_sourcefile_cpp(../posix/forte_architecture_time.cpp)
+  forte_add_sourcefile_cpp(../posix/forte_architecture_time.cpp ../forte_standard_time.cpp)
 
   forte_add_sourcefile_hcpp(../posix/forte_thread ../posix/forte_sync ../posix/forte_sem)
   forte_add_sourcefile_cpp(../genforte_printer.cpp)

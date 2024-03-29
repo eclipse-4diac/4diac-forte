@@ -24,7 +24,7 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
   else(FORTE_FAKE_TIME)
     forte_set_timer(pctimeha)
   endif(FORTE_FAKE_TIME)
-  forte_add_sourcefile_cpp(forte_architecture_time.cpp)
+  forte_add_sourcefile_cpp(forte_architecture_time.cpp ../forte_standard_time.cpp)
 
   forte_add_sourcefile_hcpp(forte_thread forte_sync forte_sem)
   forte_add_sourcefile_cpp(../genforte_printer.cpp)

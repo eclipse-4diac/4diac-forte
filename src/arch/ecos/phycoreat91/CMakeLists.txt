@@ -25,7 +25,7 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "Phycore AT91")
   else(FORTE_FAKE_TIME)
     forte_add_sourcefile_hcpp(../ecostiha)
   endif(FORTE_FAKE_TIME)
-  forte_add_sourcefile_cpp(../../posix/forte_architecture_time.cpp)
+  forte_add_sourcefile_cpp(../../posix/forte_architecture_time.cpp ../../forte_standard_time.cpp)
 
   forte_add_sourcefile_cpp(../../genforte_printer.cpp)
   forte_add_sourcefile_h(../../forte_architecture_time.h)
