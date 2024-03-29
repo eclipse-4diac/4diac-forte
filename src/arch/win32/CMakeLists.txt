@@ -28,7 +28,7 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "Win32")
   else()
     forte_add_sourcefile_cpp(forte_sync.cpp)
   endif()
-  forte_add_sourcefile_cpp(forte_architecture.cpp winforte_printer.cpp forte_architecture_time.cpp)
+  forte_add_sourcefile_cpp(forte_architecture.cpp winforte_printer.cpp forte_architecture_time.cpp ../forte_standard_time.cpp)
   forte_add_sourcefile_cpp(../genforte_fileio.cpp)
   forte_add_sourcefile_cpp(../genforte_realFunctions.cpp)
   
