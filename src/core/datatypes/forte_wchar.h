@@ -66,7 +66,7 @@ class CIEC_WCHAR : public CIEC_ANY_CHAR {
     /*! \brief calculates buffer size needed for toString conversion
      */
     size_t getToStringBufferSize() const override {
-      return sizeof("\"$0000\"");
+      return sizeof("WCHAR#\"$0000\"");
     }
 
     EDataTypeID getDataTypeID() const override {

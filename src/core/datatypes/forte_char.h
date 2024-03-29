@@ -65,7 +65,7 @@ class CIEC_CHAR : public CIEC_ANY_CHAR{
     /*! \brief calculates buffer size needed for toString conversion
      */
     size_t getToStringBufferSize() const override final {
-      return sizeof("'$00'");
+      return sizeof("CHAR#'$00'");
     }
 
     EDataTypeID getDataTypeID() const override final {
