@@ -194,10 +194,15 @@ void COpcConnectionImpl::removeGroup(const char* paGroupName){
   }
   for(auto group = mOpcGroupSettingsList.begin(); group != mOpcGroupSettingsList.end();){
     if(nullptr == paGroupName || 0 == strcmp((*group)->mGroupName, paGroupName)){
-      removeItems(WS2S((*group)->mOpcGroupRead->getName()).c_str());
-      removeItems(WS2S((*group)->mOpcGroupWrite->getName()).c_str());
-      delete (*group)->mOpcGroupRead;
-      delete (*group)->mOpcGroupWrite;
+      if (nullptr != (*group)->mOpcGroupRead) {
+        (*group)->mOpcGroupRead->disableAsync();
+        removeItems(WS2S((*group)->mOpcGroupRead->getName()).c_str());
+        delete (*group)->mOpcGroupRead;
+      }
+      if (nullptr != (*group)->mOpcGroupWrite) {
+        removeItems(WS2S((*group)->mOpcGroupWrite->getName()).c_str());
+        delete (*group)->mOpcGroupWrite;
+      }
       group =  mOpcGroupSettingsList.erase(group);
       if(nullptr == paGroupName){
         continue;
