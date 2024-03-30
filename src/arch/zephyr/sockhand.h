@@ -24,6 +24,8 @@
 
 #ifdef CONFIG_POSIX_API
 #include <netinet/in.h>
+#include <sys/select.h>
+#include <unistd.h>
 #else
 #include <zephyr/posix/netinet/in.h>
 #endif
