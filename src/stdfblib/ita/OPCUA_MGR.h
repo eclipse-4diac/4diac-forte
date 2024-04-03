@@ -191,6 +191,13 @@ private:
   static char smDeleteConnAttrDisplayName[];
   static char smDeleteConnAttrDescription[];
 
+  /* Query Resources */
+  static char smQueryResourcesMethodName[];
+  static char smQueryResourcesDisplayName[];
+  static char smQueryResourcesDescription[];
+  static char smQueryResourcesOutArgName[];
+  static char smQueryResourcesOutArgDescription[];
+
 /* FORTE Monitoring */
 #ifdef FORTE_SUPPORT_MONITORING
 
@@ -437,6 +444,14 @@ private:
 
   EMGMResponse addDeleteConnectionMethod(UA_Server* paServer);
   static UA_StatusCode onDeleteConnection(UA_Server* server,
+    const UA_NodeId* sessionId, void* sessionHandle,
+    const UA_NodeId* methodId, void* methodContext,
+    const UA_NodeId* objectId, void* objectContext,
+    size_t inputSize, const UA_Variant* input,
+    size_t outputSize, UA_Variant* output);
+
+  EMGMResponse addQueryResourcesMethod(UA_Server* paServer);
+  static UA_StatusCode onQueryResources(UA_Server* server,
     const UA_NodeId* sessionId, void* sessionHandle,
     const UA_NodeId* methodId, void* methodContext,
     const UA_NodeId* objectId, void* objectContext,

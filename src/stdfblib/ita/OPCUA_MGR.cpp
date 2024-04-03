@@ -177,6 +177,13 @@ char OPCUA_MGR::smDeleteConnArg2Description[] = "{SubApp.FbName.PortName}";
 char OPCUA_MGR::smDeleteConnAttrDisplayName[] = "Delete Connection";
 char OPCUA_MGR::smDeleteConnAttrDescription[] = "Delete Connection";
 
+/* Query Resources */
+char OPCUA_MGR::smQueryResourcesMethodName[] = "queryResources";
+char OPCUA_MGR::smQueryResourcesOutArgName[] = "Response";
+char OPCUA_MGR::smQueryResourcesOutArgDescription[] = "Read Response";
+char OPCUA_MGR::smQueryResourcesDisplayName[] = "Query Resources";
+char OPCUA_MGR::smQueryResourcesDescription[] = "Query Resources";
+
 #ifdef FORTE_SUPPORT_MONITORING
 
 /* Add Watch */
@@ -284,6 +291,7 @@ EMGMResponse OPCUA_MGR::createIEC61499MgmtObject(UA_Server* paServer) {
   if (addKillDeviceMethod(paServer) != EMGMResponse::Ready) return eRetVal;
   if (addKillResourceMethod(paServer) != EMGMResponse::Ready) return eRetVal;
   if (addDeleteResourceMethod(paServer) != EMGMResponse::Ready) return eRetVal;
+  if (addQueryResourcesMethod(paServer) != EMGMResponse::Ready) return eRetVal;
 #ifdef FORTE_SUPPORT_MONITORING
   if (addReadWatchesMethod(paServer) != EMGMResponse::Ready) return eRetVal;
 #endif // FORTE_SUPPORT_MONITORING
@@ -989,6 +997,36 @@ UA_StatusCode OPCUA_MGR::onDeleteConnection(UA_Server*,
   uaMGR->setMGMCommand(EMGMCommandType::DeleteConnection, CStringDictionary::getInstance().insert(resourceName), nullptr, sourceFullName, destinationFullName);
   eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
   return scResponseMap.find(eRetVal)->second;
+}
+
+EMGMResponse OPCUA_MGR::addQueryResourcesMethod(UA_Server* paServer) {
+  UA_Argument outputArgument;
+  initArgument(outputArgument, UA_TYPES_STRING, smQueryResourcesOutArgName, smQueryResourcesOutArgDescription);
+  UA_MethodAttributes queryResourcesAttr = createAttribute(smQueryResourcesDisplayName, smQueryResourcesDescription);
+  return addMethodNode(paServer, smQueryResourcesMethodName, mMgmtTypeId, queryResourcesAttr, nullptr, 0, &outputArgument, 1, &onQueryResources);
+}
+
+UA_StatusCode OPCUA_MGR::onQueryResources(UA_Server*,
+  const UA_NodeId*, void*,
+  const UA_NodeId*, void* methodContext,
+  const UA_NodeId*, void*,
+  size_t, const UA_Variant*,
+  size_t, UA_Variant* output) {
+  if (!methodContext) {
+    return UA_STATUSCODE_BADUNKNOWNRESPONSE;
+  }
+  EMGMResponse eRetVal = EMGMResponse::UnsupportedType;
+  OPCUA_MGR* uaMGR = static_cast<OPCUA_MGR*>(methodContext);
+  uaMGR->setMGMCommand(EMGMCommandType::QueryFB, CStringDictionary::scmInvalidStringId, nullptr, nullptr, nullptr);
+  eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
+  int status = scResponseMap.find(eRetVal)->second;
+  if (status != UA_STATUSCODE_GOOD) {
+    return status;
+  }
+  UA_String uaResp = UA_String_fromChars(uaMGR->mCommand.mAdditionalParams.c_str());
+  status = UA_Variant_setScalarCopy(output, &uaResp, &UA_TYPES[UA_TYPES_STRING]);
+  UA_String_clear(&uaResp);
+  return status;
 }
 
 /* FORTE Monitoring */
