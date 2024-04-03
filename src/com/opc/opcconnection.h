@@ -43,7 +43,7 @@ typedef std::vector<SOpcItemData*> TItemDataList;
 class COpcConnection{
   public:
 
-    COpcConnection(const char *paHost, const char *paServerName, COpcEventHandler* paEventHandler);
+    COpcConnection(const std::string& paHost, const std::string& paServerName, COpcEventHandler* paEventHandler);
     ~COpcConnection();
 
     /*** Functions for OpcConnectionHandler ****************************************/
@@ -86,11 +86,11 @@ class COpcConnection{
       bool mSuccess;
     };
 
-    const char* getHost() const {
+    const std::string getHost() const {
       return mHost;
     }
 
-    const char* getServerName() const {
+    const std::string getServerName() const {
       return mServerName;
     }
 
@@ -184,12 +184,8 @@ class COpcConnection{
 
     SLastHappenedEvent mLastEvent;
 
-    const char* mHost;
-    const char* mServerName;
-    const char* mGroupName;
-    unsigned long mReqUpdateRate;
-    unsigned long mRealUpdateRate;
-    float mDeadBand;
+    const std::string mHost;
+    const std::string mServerName;
 
     bool mConnected;
     bool mBlockingConnect;

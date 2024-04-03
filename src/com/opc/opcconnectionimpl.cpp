@@ -29,7 +29,7 @@
 
 using namespace std::string_literals;
 
-COpcConnectionImpl::COpcConnectionImpl(const char *paHost, const char *paServerName, COpcConnection* paOpcConn) :
+COpcConnectionImpl::COpcConnectionImpl(const std::string& paHost, const std::string& paServerName, COpcConnection* paOpcConn) :
     mOpcConn(paOpcConn), mOpcHost(0), mOpcServer(0),mConnected(0), mHost(paHost), mServerName(paServerName) {
 }
 
@@ -73,9 +73,9 @@ bool COpcConnectionImpl::connect(const std::string& paGroupName){
       return false;
     }
 
-    mOpcHost = COPCClient::makeHost(S2WS(std::string(mHost)));
+    mOpcHost = COPCClient::makeHost(S2WS(mHost));
 
-    mOpcServer = mOpcHost->connectDAServer(S2WS(std::string(mServerName)));
+    mOpcServer = mOpcHost->connectDAServer(S2WS(mServerName));
   } catch (OPCException &e){
     DEVLOG_ERROR("connect OPC server failed:%s[%s]\n",WS2S(e.reasonString()).c_str(),paGroupName.c_str());
     return false;
@@ -85,8 +85,8 @@ bool COpcConnectionImpl::connect(const std::string& paGroupName){
   return true;
 }
 
-void COpcConnectionImpl::addItemList(const std::string& paGroupName, std::vector<std::string> paReadItems,
-    std::vector<std::string> paWriteItems){
+void COpcConnectionImpl::addItemList(const std::string& paGroupName, std::vector<std::string>& paReadItems,
+    std::vector<std::string>& paWriteItems){
   //we assume all the items in pa_lNewItems are of same group
   std::string groupName;
   TItemDataList itemList;

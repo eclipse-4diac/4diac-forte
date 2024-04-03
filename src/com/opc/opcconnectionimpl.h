@@ -27,26 +27,18 @@ class COpcConnection;
 
 class COpcConnectionImpl : public IAsyncDataCallback{
   public:
-    COpcConnectionImpl(const char *paHost, const char *paServerName, COpcConnection* paOpcConn);
+    COpcConnectionImpl(const std::string& paHost, const std::string& paServerName, COpcConnection* paOpcConn);
     ~COpcConnectionImpl();
 
     bool connect(const std::string& paGroupName);
     void disconnect();
-    void addItemList(const std::string& paGroupName,  std::vector<std::string> paReadItems,std::vector<std::string> paWriteItems);
+    void addItemList(const std::string& paGroupName, std::vector<std::string>& paReadItems, std::vector<std::string>& paWriteItems);
     bool addGroup(const std::string& paGroupName, unsigned long paReqUpdateRate, float paDeadBand);
     void removeGroup(const std::string& paGroupName);
     void removeItems(const std::string& paGroupName);
 
 
     int sendItemData(const std::string& paGroupName, const std::string& paItemName, Variant paVar);
-    int receiveData(const char* paRecvBuffer);
-
-    const char* getHost(){
-      return mHost;
-    }
-    const char* getServerName(){
-      return mServerName;
-    }
 
     bool isConnected();
 
@@ -84,8 +76,8 @@ class COpcConnectionImpl : public IAsyncDataCallback{
     COPCHost* mOpcHost;
     COPCServer *mOpcServer;
 
-    const char* mHost;
-    const char* mServerName;
+    const std::string mHost;
+    const std::string mServerName;
     bool mConnected;
 };
 

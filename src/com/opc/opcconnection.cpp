@@ -23,9 +23,9 @@
 
 using namespace forte::com_infra;
 
-COpcConnection::COpcConnection(const char *paHost, const char *paServerName, COpcEventHandler* paEventHandler) :
-    mGroupCount(0), mConnectionState(e_Disconnected), mHost(paHost), mServerName(paServerName), mGroupName(0), mReqUpdateRate(0),
-    mRealUpdateRate(0), mDeadBand(0), mConnected(false), mBlockingConnect(false), mEventHandler(paEventHandler){
+COpcConnection::COpcConnection(const std::string& paHost, const std::string& paServerName, COpcEventHandler* paEventHandler) :
+    mGroupCount(0), mConnectionState(e_Disconnected), mHost(paHost), mServerName(paServerName),
+    mConnected(false), mBlockingConnect(false), mEventHandler(paEventHandler){
   mOpcConnectionImpl = new COpcConnectionImpl(paHost, paServerName, this);
   mLastEvent.mLastHappenedEvent = e_Idle;
   mLastEvent.mSuccess = true;

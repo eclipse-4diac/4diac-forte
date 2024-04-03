@@ -1,5 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2012, 2022 AIT, ACIN, fortiss GmbH, Hit robot group
+ *               2024 Samator Indo Gas
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -10,6 +11,7 @@
  *   Filip Andren, Patrick Smejkal, Alois Zoitl, Martin Melik-Merkumians - initial API and implementation and/or initial documentation
  *   ys guo - Fix opc module compilation errors and deadlock bug
  *   Tibalt Zhao -Merge additem into Connect and take advantage of detailed event info from opcconnection
+ *   Ketut Kumajaya - Code refactoring from char* to std::string
  *******************************************************************************/
 #include "opccomlayer.h"
 #include "../../arch/devlog.h"
@@ -23,14 +25,13 @@
 using namespace forte::com_infra;
 
 COpcComLayer::COpcComLayer(CComLayer* paUpperLayer, CBaseCommFB* paComFB) :
-    CComLayer(paUpperLayer, paComFB), mHost(0), mServerName(0), mUpdateRate(0), mDeadBand(0),
-    mLayerParamsOK(false), mOpcConnection(0), mInterruptResp(e_Nothing){
-  mOpcGroupName = mFb->getInstanceName();
-  DEVLOG_DEBUG("new OpcComLayer: [0x%lX][%s]\n", this, mOpcGroupName);
+    CComLayer(paUpperLayer, paComFB), mHost(), mServerName(), mUpdateRate(0), mDeadBand(0),
+    mLayerParamsOK(false), mOpcConnection(0), mInterruptResp(e_Nothing), mOpcGroupName(mFb->getInstanceName()){
+  DEVLOG_DEBUG("new OpcComLayer: [0x%lX][%s]\n", this, mOpcGroupName.c_str());
 }
 
 COpcComLayer::~COpcComLayer(){
-  DEVLOG_DEBUG("delete OpcComLayer: [0x%lX][%s]\n", this, mOpcGroupName);
+  DEVLOG_DEBUG("delete OpcComLayer: [0x%lX][%s]\n", this, mOpcGroupName.c_str());
   for(auto &it :mFBInputVars){
     delete it;
   }
