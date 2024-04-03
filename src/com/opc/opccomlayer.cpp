@@ -12,6 +12,7 @@
  *   ys guo - Fix opc module compilation errors and deadlock bug
  *   Tibalt Zhao -Merge additem into Connect and take advantage of detailed event info from opcconnection
  *   Ketut Kumajaya - Code refactoring from char* to std::string
+ *                  - Proper memory usage and deallocation
  *******************************************************************************/
 #include "opccomlayer.h"
 #include "../../arch/devlog.h"
@@ -304,35 +305,37 @@ void COpcComLayer::processClientParams(char* paLayerParams){
   *chrStorage = '\0';
   ++chrStorage;
   chrHost = (char*) malloc(strlen(paLayerParams) + 1);
-  strcpy(chrHost, paLayerParams);
-  if(strcmp(chrHost, "127.0.0.1") == 0 || strcmp(chrHost, "localhost") == 0) {
+  if (nullptr != chrHost) {
+    strcpy(chrHost, paLayerParams);
+    if(strcmp(chrHost, "127.0.0.1") == 0 || strcmp(chrHost, "localhost") == 0) {
       mHost = "";
-  } else {
-    mHost = chrHost;
+    } else {
+      mHost = chrHost;
+    }
+    free(chrHost);
+    chrHost = nullptr;
   }
 
   // Get server name
   temp = chrStorage;
   chrStorage = strchr(chrStorage, ':');
   if(chrStorage == 0){
-    if (chrHost){
-      free(chrHost);
-    }
     return;
   }
   *chrStorage = '\0';
   ++chrStorage;
   chrServer = (char*) malloc(strlen(temp) + 1);
-  strcpy(chrServer, temp);
-  mServerName = chrServer;
+  if (nullptr != chrServer) {
+    strcpy(chrServer, temp);
+    mServerName = chrServer;
+    free(chrServer);
+    chrServer = nullptr;
+  }
 
   // Get update rate
   mUpdateRate = atol(chrStorage);
   chrStorage = strchr(chrStorage, ':');
   if(chrStorage == 0){
-    if (chrHost){
-      free(chrHost);
-    }
     return;
   }
   *chrStorage = '\0';
@@ -342,9 +345,6 @@ void COpcComLayer::processClientParams(char* paLayerParams){
   mDeadBand = (float) atof(chrStorage);
   chrStorage = strchr(chrStorage, ':');
   if(chrStorage == 0){
-    if (chrHost){
-      free(chrHost);
-    }
     return;
   }
 
@@ -355,9 +355,6 @@ void COpcComLayer::processClientParams(char* paLayerParams){
   char * inputItems = chrStorage;
   chrStorage = strchr(chrStorage, ':');
   if(chrStorage == 0){
-    if (chrHost){
-      free(chrHost);
-    }
     return;
   }
   *chrStorage = '\0';
@@ -367,21 +364,28 @@ void COpcComLayer::processClientParams(char* paLayerParams){
   pch = strtok(inputItems, ",");
   while(pch != nullptr){
     char *itemName = (char*) malloc(strlen(pch) + 1);
-    strcpy(itemName, pch);
-    mFBInputVars.push_back(new COpcProcessVar(mOpcGroupName, itemName, COpcProcessVar::e_FBInput));
-    nrItems++;
-    pch = strtok(nullptr, ",");
+    if (nullptr != itemName) {
+      strcpy(itemName, pch);
+      mFBInputVars.push_back(new COpcProcessVar(mOpcGroupName, itemName, COpcProcessVar::e_FBInput));
+      nrItems++;
+      pch = strtok(nullptr, ",");
+      free(itemName);
+      itemName = nullptr;
+    }
   }
 
   // Get FB output items
   pch = strtok(chrStorage, ",");
   while(pch != nullptr){
     char *itemName = (char*) malloc(strlen(pch) + 1);
-    strcpy(itemName, pch);
-    mFBOutputVars.push_back(new COpcProcessVar(mOpcGroupName, itemName, COpcProcessVar::e_FBOutput));
-    nrItems++;
-
-    pch = strtok(nullptr, ",");
+    if (nullptr != itemName) {
+      strcpy(itemName, pch);
+      mFBOutputVars.push_back(new COpcProcessVar(mOpcGroupName, itemName, COpcProcessVar::e_FBOutput));
+      nrItems++;
+      pch = strtok(nullptr, ",");
+      free(itemName);
+      itemName = nullptr;
+    }
   }
 
   if(nrItems > 0) {
