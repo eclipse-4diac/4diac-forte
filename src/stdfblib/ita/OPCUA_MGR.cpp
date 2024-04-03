@@ -209,13 +209,20 @@ char OPCUA_MGR::smTriggerEventAttrDescription[] = "Trigger Event";
 const char* OPCUA_MGR::scmTriggerEventParam = "$e";
 
 /* Force Value */
-  char OPCUA_MGR::smForceValueMethodName[] = "forceValue";
-  char OPCUA_MGR::smForceValueArg1Name[] = "FB Port";
-  char OPCUA_MGR::smForceValueArg1Description[] = "Fully qualified name of FB Port";
-  char OPCUA_MGR::smForceValueArg2Name[] = "Value";
-  char OPCUA_MGR::smForceValueArg2Description[] = "Value to be written";
-  char OPCUA_MGR::smForceValueAttrDisplayName[] = "Force Value";
-  char OPCUA_MGR::smForceValueAttrDescription[] = "Force Value";
+char OPCUA_MGR::smForceValueMethodName[] = "forceValue";
+char OPCUA_MGR::smForceValueArg1Name[] = "FB Port";
+char OPCUA_MGR::smForceValueArg1Description[] = "Fully qualified name of FB Port";
+char OPCUA_MGR::smForceValueArg2Name[] = "Value";
+char OPCUA_MGR::smForceValueArg2Description[] = "Value to be written";
+char OPCUA_MGR::smForceValueAttrDisplayName[] = "Force Value";
+char OPCUA_MGR::smForceValueAttrDescription[] = "Force Value";
+
+/* Clear Force */
+char OPCUA_MGR::smClearForceMethodName[] = "clearForce";
+char OPCUA_MGR::smClearForceArgName[] = "FB Port";
+char OPCUA_MGR::smClearForceArgDescription[] = "Fully qualified name of FB Port";
+char OPCUA_MGR::smClearForceAttrDisplayName[] = "Clear Force";
+char OPCUA_MGR::smClearForceAttrDescription[] = "Clear Force";
 
 #endif // FORTE_SUPPORT_MONITORING
 
@@ -334,6 +341,7 @@ EMGMResponse OPCUA_MGR::createIEC61499ResourceObjectType(UA_Server* paServer) {
   if (addRemoveWatchMethod(paServer) != EMGMResponse::Ready) return eRetVal;
   if (addTriggerEventMethod(paServer) != EMGMResponse::Ready) return eRetVal;
   if (addForceValueMethod(paServer) != EMGMResponse::Ready) return eRetVal;
+  if (addClearForceMethod(paServer) != EMGMResponse::Ready) return eRetVal;
 #endif // FORTE_SUPPORT_MONITORING
   return EMGMResponse::Ready;
 }
@@ -1129,6 +1137,35 @@ UA_StatusCode OPCUA_MGR::onForceValue(UA_Server*,
   const char* resourceName = static_cast<const char*>(objectContext);
   OPCUA_MGR* uaMGR = static_cast<OPCUA_MGR*>(methodContext);
   uaMGR->setMGMCommand(EMGMCommandType::MonitoringForce, CStringDictionary::getInstance().insert(resourceName), writeValue.c_str(), writeDestination);
+  eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
+  return scResponseMap.find(eRetVal)->second;
+}
+
+EMGMResponse OPCUA_MGR::addClearForceMethod(UA_Server* paServer) {
+  UA_Argument inputArgument;
+  initArgument(inputArgument, UA_TYPES_STRING, smClearForceArgName, smClearForceArgDescription);
+
+  UA_MethodAttributes clearForceAttr = createAttribute(smClearForceAttrDisplayName, smClearForceAttrDescription);
+  return addMethodNode(paServer, smClearForceMethodName, mResourceTypeId, clearForceAttr, &inputArgument, 1, nullptr, 0, &onClearForce);
+}
+
+UA_StatusCode OPCUA_MGR::onClearForce(UA_Server*,
+  const UA_NodeId*, void*,
+  const UA_NodeId*, void* methodContext,
+  const UA_NodeId*, void* objectContext,
+  size_t, const UA_Variant* input,
+  size_t, UA_Variant*) {
+  if (!methodContext) {
+    return UA_STATUSCODE_BADUNKNOWNRESPONSE;
+  }
+  EMGMResponse eRetVal = EMGMResponse::UnsupportedType;
+  std::string destination = getInputValue(*static_cast<UA_String*>(input[0].data));
+  std::vector<std::string> fullFbName;
+  parseDestinationName(destination, fullFbName);
+
+  const char* resourceName = static_cast<const char*>(objectContext);
+  OPCUA_MGR* uaMGR = static_cast<OPCUA_MGR*>(methodContext);
+  uaMGR->setMGMCommand(EMGMCommandType::MonitoringClearForce, CStringDictionary::getInstance().insert(resourceName), nullptr, fullFbName);
   eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
   return scResponseMap.find(eRetVal)->second;
 }
