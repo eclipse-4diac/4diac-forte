@@ -223,6 +223,15 @@ private:
   static char smTriggerEventAttrDescription[];
   static const char* scmTriggerEventParam;
 
+  /* Force Value */
+  static char smForceValueMethodName[];
+  static char smForceValueArg1Name[];
+  static char smForceValueArg1Description[];
+  static char smForceValueArg2Name[];
+  static char smForceValueArg2Description[];
+  static char smForceValueAttrDisplayName[];
+  static char smForceValueAttrDescription[];
+
 #endif // FORTE_SUPPORT_MONITORING
 
   static const std::map<EMGMResponse, UA_StatusCode> scResponseMap;
@@ -457,6 +466,14 @@ private:
 
   EMGMResponse addTriggerEventMethod(UA_Server* paServer);
   static UA_StatusCode onTriggerEvent(UA_Server* server,
+    const UA_NodeId* sessionId, void* sessionHandle,
+    const UA_NodeId* methodId, void* methodContext,
+    const UA_NodeId* objectId, void* objectContext,
+    size_t inputSize, const UA_Variant* input,
+    size_t outputSize, UA_Variant* output);
+
+  EMGMResponse addForceValueMethod(UA_Server* paServer);
+  static UA_StatusCode onForceValue(UA_Server* server,
     const UA_NodeId* sessionId, void* sessionHandle,
     const UA_NodeId* methodId, void* methodContext,
     const UA_NodeId* objectId, void* objectContext,

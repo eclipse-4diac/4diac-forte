@@ -208,6 +208,15 @@ char OPCUA_MGR::smTriggerEventAttrDisplayName[] = "Trigger Event";
 char OPCUA_MGR::smTriggerEventAttrDescription[] = "Trigger Event";
 const char* OPCUA_MGR::scmTriggerEventParam = "$e";
 
+/* Force Value */
+  char OPCUA_MGR::smForceValueMethodName[] = "forceValue";
+  char OPCUA_MGR::smForceValueArg1Name[] = "FB Port";
+  char OPCUA_MGR::smForceValueArg1Description[] = "Fully qualified name of FB Port";
+  char OPCUA_MGR::smForceValueArg2Name[] = "Value";
+  char OPCUA_MGR::smForceValueArg2Description[] = "Value to be written";
+  char OPCUA_MGR::smForceValueAttrDisplayName[] = "Force Value";
+  char OPCUA_MGR::smForceValueAttrDescription[] = "Force Value";
+
 #endif // FORTE_SUPPORT_MONITORING
 
 /* Initialize UA Status Codes */
@@ -324,6 +333,7 @@ EMGMResponse OPCUA_MGR::createIEC61499ResourceObjectType(UA_Server* paServer) {
   if (addAddWatchMethod(paServer) != EMGMResponse::Ready) return eRetVal;
   if (addRemoveWatchMethod(paServer) != EMGMResponse::Ready) return eRetVal;
   if (addTriggerEventMethod(paServer) != EMGMResponse::Ready) return eRetVal;
+  if (addForceValueMethod(paServer) != EMGMResponse::Ready) return eRetVal;
 #endif // FORTE_SUPPORT_MONITORING
   return EMGMResponse::Ready;
 }
@@ -1090,6 +1100,37 @@ UA_StatusCode OPCUA_MGR::onTriggerEvent(UA_Server*,
     return scResponseMap.find(eRetVal)->second;
   }
   return UA_STATUSCODE_BADUNKNOWNRESPONSE;
+}
+
+EMGMResponse OPCUA_MGR::addForceValueMethod(UA_Server* paServer) {
+  UA_Argument inputArguments[2];
+  initArgument(inputArguments[0], UA_TYPES_STRING, smForceValueArg1Name, smForceValueArg1Description);
+  initArgument(inputArguments[1], UA_TYPES_STRING, smForceValueArg2Name, smForceValueArg2Description);
+
+  UA_MethodAttributes forceValueAttr = createAttribute(smForceValueAttrDisplayName, smForceValueAttrDescription);
+  return addMethodNode(paServer, smForceValueMethodName, mResourceTypeId, forceValueAttr, inputArguments, 2, nullptr, 0, &onForceValue);
+}
+
+UA_StatusCode OPCUA_MGR::onForceValue(UA_Server*,
+  const UA_NodeId*, void*,
+  const UA_NodeId*, void* methodContext,
+  const UA_NodeId*, void* objectContext,
+  size_t, const UA_Variant* input,
+  size_t, UA_Variant*) {
+  if (!methodContext) {
+    return UA_STATUSCODE_BADUNKNOWNRESPONSE;
+  }
+  EMGMResponse eRetVal = EMGMResponse::UnsupportedType;
+  std::string destination = getInputValue(*static_cast<UA_String*>(input[0].data));
+  std::string writeValue = getInputValue(*static_cast<UA_String*>(input[1].data));
+  std::vector<std::string> writeDestination;
+  parseDestinationName(destination, writeDestination);
+
+  const char* resourceName = static_cast<const char*>(objectContext);
+  OPCUA_MGR* uaMGR = static_cast<OPCUA_MGR*>(methodContext);
+  uaMGR->setMGMCommand(EMGMCommandType::MonitoringForce, CStringDictionary::getInstance().insert(resourceName), writeValue.c_str(), writeDestination);
+  eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
+  return scResponseMap.find(eRetVal)->second;
 }
 
 #endif // FORTE_SUPPORT_MONITORING
