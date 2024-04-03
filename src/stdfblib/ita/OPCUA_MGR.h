@@ -232,6 +232,13 @@ private:
   static char smForceValueAttrDisplayName[];
   static char smForceValueAttrDescription[];
 
+  /* Clear Force */
+  static char smClearForceMethodName[];
+  static char smClearForceArgName[];
+  static char smClearForceArgDescription[];
+  static char smClearForceAttrDisplayName[];
+  static char smClearForceAttrDescription[];
+
 #endif // FORTE_SUPPORT_MONITORING
 
   static const std::map<EMGMResponse, UA_StatusCode> scResponseMap;
@@ -474,6 +481,14 @@ private:
 
   EMGMResponse addForceValueMethod(UA_Server* paServer);
   static UA_StatusCode onForceValue(UA_Server* server,
+    const UA_NodeId* sessionId, void* sessionHandle,
+    const UA_NodeId* methodId, void* methodContext,
+    const UA_NodeId* objectId, void* objectContext,
+    size_t inputSize, const UA_Variant* input,
+    size_t outputSize, UA_Variant* output);
+
+  EMGMResponse addClearForceMethod(UA_Server* paServer);
+  static UA_StatusCode onClearForce(UA_Server* server,
     const UA_NodeId* sessionId, void* sessionHandle,
     const UA_NodeId* methodId, void* methodContext,
     const UA_NodeId* objectId, void* objectContext,
