@@ -19,7 +19,7 @@ SET(SOURCE_GROUP ${SOURCE_GROUP}\\ita)
 forte_add_sourcefile_hcpp(DEV_MGR  EMB_RES  RMT_DEV  RMT_RES)
 
 if (FORTE_COM_OPC_UA)
-  forte_add_sourcefile_hcpp(OPCUA_DEV OPCUA_MGR)
+  forte_add_sourcefile_hcpp(OPCUA_DEV OPCUA_MGR Config_EMB_RES)
 endif (FORTE_COM_OPC_UA)
 
 forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
