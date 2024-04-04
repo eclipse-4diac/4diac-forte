@@ -16,7 +16,6 @@
 #include "opcua_layer.h"
 #include <memory>
 
-// class COPC_UA_Layer;
 class COPC_UA_HandlerAbstract;
 class CActionInfo;
 

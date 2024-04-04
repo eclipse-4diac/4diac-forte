@@ -69,10 +69,8 @@ EComResponse COPC_UA_Layer::openConnection(char *paLayerParameter) {
       if(COPC_UA_ObjectStruct_Helper::isStructType(*this, isPublisher) && mStructObjectHelper->checkStructTypeConnection(isPublisher) && (CActionInfo::eWrite == action || CActionInfo::eRead == action) ) {
         mIsObjectNodeStruct = true;
         response = mStructObjectHelper->createObjectNode(*mActionInfo, isPublisher);
-        
-        CCriticalRegion criticalRegion(mRDBufferMutex);
-        response = e_InitOk;
-        if(!isPublisher) {
+        if(!isPublisher && (response == e_InitOk)) {
+          CCriticalRegion criticalRegion(mRDBufferMutex);
           mRDBuffer = mStructObjectHelper->initializeRDBuffer();
         }
       }
