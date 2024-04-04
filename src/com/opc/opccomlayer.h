@@ -1,5 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2012, 2022 AIT, ACIN, fortiss GmbH, Hit robot group
+ *               2024 Samator Indo Gas
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -9,6 +10,7 @@
  * Contributors:
  *   Filip Andren, Alois Zoitl - initial API and implementation and/or initial documentation
  *   Tibalt Zhao - replace forte list with stl vector
+ *   Ketut Kumajaya - Code refactoring from char* to std::string
  *******************************************************************************/
 #ifndef OPCCOMLAYER_H_
 #define OPCCOMLAYER_H_
@@ -48,11 +50,11 @@ namespace forte {
         template<typename T>
         void getInputValue(void * paData, Variant * paNewValue);
 
-        const char* mHost;
-        const char* mServerName;
+        std::string mHost;
+        std::string mServerName;
         long mUpdateRate;
         float mDeadBand;
-        const char* mOpcGroupName;
+        const std::string mOpcGroupName;
 
         bool mLayerParamsOK;
 
