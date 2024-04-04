@@ -110,9 +110,10 @@ class COPC_UA_ObjectStruct_Helper {
     COPC_UA_HandlerAbstract *mHandler;
 
     /**
-     * OPC UA Object Struct Namespace Index
+     * OPC UA Object Struct Namespace Index.
+     * The default NamespaceIndex is 1.
     */
-    static const UA_UInt16 smOpcuaNamespaceIndex;
+    UA_UInt16 mOpcuaNamespaceIndex;
 
     /**
      * BrowsePath to folder that contains Object Node Struct Types
@@ -124,7 +125,7 @@ class COPC_UA_ObjectStruct_Helper {
     */
      static const std::string smMemberNamespaceIndex;
 
-     static char smEmptyLocale[];
+     static char smEmptyString[];
 
      std::vector<char*> mStructTypeNames;
 
@@ -167,6 +168,13 @@ class COPC_UA_ObjectStruct_Helper {
     forte::com_infra::EComResponse initializeMemberAction(CActionInfo& paActionInfo, std::string &paBrowsePath, bool paIsPublisher);
     
     /**
+     * Check if OPC UA namespace is given by the Resource configuration. 
+     * If the configuration is set, change the namespace index. 
+     * Otherwise, leave it in default state.
+    */
+    void checkOPCUANamespace();
+
+    /**
      * Get the BrowsePath to the OPC UA Struct Object Type from the local Struct Type
      * @param paPathPrefix The BrowsePath directory with namespace (e.g. /Objects/1:)
      * @param paIsPublisher True if the FB is a Publisher, false othewise
@@ -183,10 +191,17 @@ class COPC_UA_ObjectStruct_Helper {
      * @param paBrowsePathPrefix BrowsePath to the Struct Object Node
      * @param structMemberNameId Name Id of Object Node Struct member
      */
-    static std::string getStructMemberBrowsePath(std::string &paBrowsePathPrefix, const CStringDictionary::TStringId structMemberNameId);
+    std::string getStructMemberBrowsePath(std::string &paBrowsePathPrefix, const CStringDictionary::TStringId structMemberNameId);
+
+    /**
+     * Creates an OPC UA namespace with the given name and assigns the 
+     * namespace index to the mOpcuaNamespaceIndex member variable.
+     * @param nsName The name of the OPC UA Namespace
+     * @return true if namespace was successfully created or if it already exists, false otherwise
+    */
+    bool createOPCUANamespace(char* nsName);
 
     bool defineOPCUAStructTypeNode(UA_Server *paServer, UA_NodeId &paNodeId, const std::string &paStructTypeName);
 
     bool addOPCUAStructTypeComponent(UA_Server *paServer, UA_NodeId &paParentNodeId, CIEC_ANY *paStructMember, const std::string &paStructMemberName);
-
 };
