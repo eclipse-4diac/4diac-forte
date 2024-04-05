@@ -17,11 +17,13 @@
 #include "opccomlayer.h"
 #include "../../arch/devlog.h"
 #include "commfb.h"
+#include "../../core/utils/parameterParser.h"
 
 #include "opcconnection.h"
 #include "opcconnectionhandler.h"
 #include "Variant.h"
 #include <criticalregion.h>
+#include <boost/lexical_cast.hpp>
 
 using namespace forte::com_infra;
 
@@ -292,106 +294,70 @@ void COpcComLayer::setOutputValue(CIEC_ANY *paDataOut, Variant * paValue){
 }
 
 void COpcComLayer::processClientParams(char* paLayerParams){
-  char *chrStorage;
-  char *chrHost;
-  char *chrServer;
-  char *temp;
-
-  // Get Host
-  chrStorage = strchr(paLayerParams, ':');
-  if(chrStorage == 0) {
+  CParameterParser parser(paLayerParams, ':', ParameterAmount);
+  if (ParameterAmount == parser.parseParameters()) {
+    mHost = parser[Host];
+    if (mHost.empty()) {
       return;
-  }
-  *chrStorage = '\0';
-  ++chrStorage;
-  chrHost = (char*) malloc(strlen(paLayerParams) + 1);
-  if (nullptr != chrHost) {
-    strcpy(chrHost, paLayerParams);
-    if(strcmp(chrHost, "127.0.0.1") == 0 || strcmp(chrHost, "localhost") == 0) {
+    }
+    if (mHost.compare("127.0.0.1") == 0 || mHost.compare("localhost") == 0) {
       mHost = "";
-    } else {
-      mHost = chrHost;
     }
-    free(chrHost);
-    chrHost = nullptr;
-  }
 
-  // Get server name
-  temp = chrStorage;
-  chrStorage = strchr(chrStorage, ':');
-  if(chrStorage == 0){
-    return;
-  }
-  *chrStorage = '\0';
-  ++chrStorage;
-  chrServer = (char*) malloc(strlen(temp) + 1);
-  if (nullptr != chrServer) {
-    strcpy(chrServer, temp);
-    mServerName = chrServer;
-    free(chrServer);
-    chrServer = nullptr;
-  }
+    mServerName = parser[ServerName];
+    if (mServerName.empty()) {
+      return;
+    }
 
-  // Get update rate
-  mUpdateRate = atol(chrStorage);
-  chrStorage = strchr(chrStorage, ':');
-  if(chrStorage == 0){
-    return;
-  }
-  *chrStorage = '\0';
-  ++chrStorage;
+    std::string val = parser[UpdateRate];
+    if (val.empty()) {
+      return;
+    }
+    else {
+      mUpdateRate = boost::lexical_cast<long>(val);
+    }
 
-  // Get dead band
-  mDeadBand = (float) atof(chrStorage);
-  chrStorage = strchr(chrStorage, ':');
-  if(chrStorage == 0){
-    return;
-  }
+    val = parser[DeadBand];
+    if (val.empty()) {
+      return;
+    }
+    else {
+      mDeadBand = boost::lexical_cast<float>(val);
+    }
 
-  *chrStorage = '\0';
-  ++chrStorage;
+    unsigned int nrItems = 0;
+    unsigned int nrItemAmount = 0;
+    const char* inputItems = parser[FbInputItems];
+    if (inputItems != nullptr && inputItems[0] != '\0') {
+      CParameterParser inputParser(inputItems, ',');
+      nrItems = static_cast<unsigned int>(inputParser.parseParameters());
+      if (nrItems > 0) {
+        for(unsigned int i = 0; i < nrItems; i++){
+          mFBInputVars.push_back(new COpcProcessVar(mOpcGroupName, inputParser[i], COpcProcessVar::e_FBInput));
+          nrItemAmount++;
+        }
+      }
+    }
 
-  // Get FB input items
-  char * inputItems = chrStorage;
-  chrStorage = strchr(chrStorage, ':');
-  if(chrStorage == 0){
-    return;
-  }
-  *chrStorage = '\0';
-  ++chrStorage;
-  int nrItems = 0;
-  char *pch;
-  pch = strtok(inputItems, ",");
-  while(pch != nullptr){
-    char *itemName = (char*) malloc(strlen(pch) + 1);
-    if (nullptr != itemName) {
-      strcpy(itemName, pch);
-      mFBInputVars.push_back(new COpcProcessVar(mOpcGroupName, itemName, COpcProcessVar::e_FBInput));
-      nrItems++;
-      pch = strtok(nullptr, ",");
-      free(itemName);
-      itemName = nullptr;
+    const char* outputItems = parser[FbOutputItems];
+    if (outputItems != nullptr && outputItems[0] != '\0') {
+      CParameterParser outputParser(outputItems, ',');
+      nrItems = static_cast<unsigned int>(outputParser.parseParameters());
+      if (nrItems > 0) {
+        for(unsigned int i = 0; i < nrItems; i++){
+          mFBOutputVars.push_back(new COpcProcessVar(mOpcGroupName, outputParser[i], COpcProcessVar::e_FBOutput));
+          nrItemAmount++;
+        }
+      }
+    }
+
+    if(nrItemAmount > 0) {
+      mLayerParamsOK = true;
     }
   }
-
-  // Get FB output items
-  pch = strtok(chrStorage, ",");
-  while(pch != nullptr){
-    char *itemName = (char*) malloc(strlen(pch) + 1);
-    if (nullptr != itemName) {
-      strcpy(itemName, pch);
-      mFBOutputVars.push_back(new COpcProcessVar(mOpcGroupName, itemName, COpcProcessVar::e_FBOutput));
-      nrItems++;
-      pch = strtok(nullptr, ",");
-      free(itemName);
-      itemName = nullptr;
-    }
+  else {
+    return;
   }
-
-  if(nrItems > 0) {
-    mLayerParamsOK = true;
-  }
-
 }
 
 void COpcComLayer::convertInputData(void *paData, unsigned int paSize){
