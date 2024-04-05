@@ -1,5 +1,5 @@
 /*************************************************************************  
- *** Copyright (c) 2012, 2023 TU Wien ACIN, HR Agrartechnik GmbH  
+ *** Copyright (c) 2023, 2024 HR Agrartechnik GmbH  
  *** This program and the accompanying materials are made available under the  
  *** terms of the Eclipse Public License 2.0 which is available at  
  *** http://www.eclipse.org/legal/epl-2.0.  
@@ -11,7 +11,8 @@
  *** Name: E_PULSE
  *** Description: standard timer function block (pulse)
  *** Version:
- ***     1.0: 2023-08-21/Franz Hoepfinger - HR Agrartechnik GmbH -
+ ***     1.0: 2023-08-21/Franz Hoepfinger - HR Agrartechnik GmbH - initial implementation as E_IMPULSE
+ ***          2024-05-03/Franz Hoepfinger - HR Agrartechnik GmbH - renamed to E_PULSE
  *************************************************************************/
 
 #pragma once
