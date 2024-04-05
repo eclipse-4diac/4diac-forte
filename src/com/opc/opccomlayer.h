@@ -69,6 +69,16 @@ namespace forte {
         TComResponseList mComResponses;
 
         CSyncObject mSync;
+
+        enum Parameters {
+          Host,
+          ServerName,
+          UpdateRate,
+          DeadBand,
+          FbInputItems,
+          FbOutputItems,
+          ParameterAmount
+        };
     };
 
   }
