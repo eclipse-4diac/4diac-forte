@@ -1,5 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2012, 2015, 2022 AIT, fortiss GmbH, HIT robot group
+ *               2024 Samator Indo Gas
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -9,6 +10,7 @@
  * Contributors:
  *   Filip Andren, Alois Zoitl - initial API and implementation and/or initial documentation
  *   Tibalt Zhao, use stl vector
+ *   Ketut Kumajaya - Clear command in queue on exit
  *******************************************************************************/
 #ifndef OPCEVENTHANDLER_H_
 #define OPCEVENTHANDLER_H_
@@ -57,6 +59,8 @@ class COpcEventHandler : public CExternalEventHandler, private CThread{
 
   private:
     ICmd* getNextCommand();
+    void clearCommandQueue();
+
     struct TComContainer{
         TCallbackDescriptor mCallbackDesc;
         forte::com_infra::CComLayer* mCallback;
