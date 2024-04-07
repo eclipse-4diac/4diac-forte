@@ -11,6 +11,7 @@
  *   Filip Andren, Alois Zoitl - initial API and implementation and/or initial documentation
  *   Tibalt Zhao, use stl vector
  *   Ketut Kumajaya - Clear command in queue on exit
+ *                  - Fix disconnection issue on exit
  *******************************************************************************/
 #ifndef OPCEVENTHANDLER_H_
 #define OPCEVENTHANDLER_H_
@@ -37,11 +38,11 @@ class COpcEventHandler : public CExternalEventHandler, private CThread{
 
     /* functions needed for the external event handler interface */
     void enableHandler() override {
-      start();
+      //do nothing, start thread in the constructor
     }
 
     void disableHandler() override {
-      end();
+      //do nothing, end thread in the destructor
     }
 
     void setPriority(int) override {
@@ -53,6 +54,10 @@ class COpcEventHandler : public CExternalEventHandler, private CThread{
       //the same as for setPriority
       return 0;
     }
+
+    void resumeSelfSuspend();
+
+    void selfSuspend();
 
   protected:
     void run() override;
@@ -71,7 +76,9 @@ class COpcEventHandler : public CExternalEventHandler, private CThread{
 
     static TCallbackDescriptor mCallbackDescCount;
 
-    CSyncObject mSync;
+    static CSyncObject mSync;
+    static forte::arch::CSemaphore mStateSemaphore;
+    static bool mIsSemaphoreEmpty;
 
     typedef CSinglyLinkedList<ICmd*> TCommandQueue;
     TCommandQueue mCommandQueue;
