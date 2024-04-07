@@ -12,6 +12,7 @@
  *   ys guo - Fix opc module compilation errors and deadlock bug
  *   Tibalt Zhao - use stl vector
  *   Ketut Kumajaya - Clear command in queue on exit
+ *                  - Fix disconnection issue on exit
  *******************************************************************************/
 #include "opceventhandler.h"
 #include "../core/devexec.h"
@@ -21,22 +22,37 @@
 
 DEFINE_HANDLER(COpcEventHandler);
 
+CSyncObject COpcEventHandler::mSync;
+forte::arch::CSemaphore COpcEventHandler::mStateSemaphore;
+bool COpcEventHandler::mIsSemaphoreEmpty = true;
+
 COpcEventHandler::TCallbackDescriptor COpcEventHandler::mCallbackDescCount = 0;
 
 COpcEventHandler::COpcEventHandler(CDeviceExecution& paDeviceExecution) : CExternalEventHandler(paDeviceExecution)  {
-  this->start();
-  // Sleep to allow new thread to start
-  CThread::sleepThread(100);
+  if (!isAlive()) {
+    this->start();
+    // Sleep to allow new thread to start
+    CThread::sleepThread(100);
+  }
 }
 
 COpcEventHandler::~COpcEventHandler(){
-  this->end();
+  if (!mCommandQueue.isEmpty()) {
+    resumeSelfSuspend(); //wake-up and execute all commands in queue if exist
+  }
 
-  clearCommandQueue(); // delete command in queue if exist
+  if (isAlive()) {
+    setAlive(false);
+    resumeSelfSuspend();
+    end();
+  }
+
+  clearCommandQueue(); //re-check and delete all commands in queue if still exist
 }
 
 void COpcEventHandler::clearCommandQueue(){
   while(!mCommandQueue.isEmpty()) {
+    // should never have come in here
     ICmd* nextCommand = getNextCommand();
     if(nextCommand != nullptr) {
       DEVLOG_ERROR("erase from command queue[%s]\n", nextCommand->getCommandName());
@@ -46,8 +62,10 @@ void COpcEventHandler::clearCommandQueue(){
 }
 
 void COpcEventHandler::sendCommand(ICmd *paCmd){
-  CCriticalRegion critcalRegion(mSync);
+  mSync.lock();
   mCommandQueue.pushBack(paCmd);
+  mSync.unlock();
+  resumeSelfSuspend();
 }
 
 void COpcEventHandler::run(){
@@ -55,18 +73,18 @@ void COpcEventHandler::run(){
 
   if(result == S_OK){
     while(isAlive()){
-      ICmd* nextCommand = getNextCommand();
-      if(nextCommand != nullptr) {
-        nextCommand->runCommand();
-        delete nextCommand;
+      if (!isAlive()) {
+        break;
       }
-
-      MSG msg;
-      while(PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE)){
-        TranslateMessage(&msg);
-        DispatchMessage(&msg);
+      while(!mCommandQueue.isEmpty()) {
+        ICmd* nextCommand = getNextCommand();
+        if(nextCommand != nullptr) {
+          nextCommand->runCommand();
+          delete nextCommand;
+          nextCommand = nullptr;
+        }
       }
-      CThread::sleepThread(100);
+      selfSuspend();
     }
   }
 
@@ -122,4 +140,22 @@ ICmd* COpcEventHandler::getNextCommand(){
     mCommandQueue.popFront();
   }
   return command;
+}
+
+void COpcEventHandler::resumeSelfSuspend() {
+  if (mIsSemaphoreEmpty) { //avoid incrementing many times
+    {
+      CCriticalRegion critcalRegion(mSync);
+      mStateSemaphore.inc();
+      mIsSemaphoreEmpty = false;
+    }
+  }
+}
+
+void COpcEventHandler::selfSuspend() {
+  mStateSemaphore.waitIndefinitely();
+  {
+    CCriticalRegion critcalRegion(mSync);
+    mIsSemaphoreEmpty = true;
+  }
 }
