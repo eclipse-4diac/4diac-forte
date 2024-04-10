@@ -29,25 +29,10 @@ bool COpcEventHandler::mIsSemaphoreEmpty = true;
 COpcEventHandler::TCallbackDescriptor COpcEventHandler::mCallbackDescCount = 0;
 
 COpcEventHandler::COpcEventHandler(CDeviceExecution& paDeviceExecution) : CExternalEventHandler(paDeviceExecution)  {
-  if (!isAlive()) {
-    this->start();
-    // Sleep to allow new thread to start
-    CThread::sleepThread(100);
-  }
 }
 
 COpcEventHandler::~COpcEventHandler(){
-  if (!mCommandQueue.isEmpty()) {
-    resumeSelfSuspend(); //wake-up and execute all commands in queue if exist
-  }
-
-  if (isAlive()) {
-    setAlive(false);
-    resumeSelfSuspend();
-    end();
-  }
-
-  clearCommandQueue(); //re-check and delete all commands in queue if still exist
+  clearCommandQueue(); //check and delete all commands in queue if not empty
 }
 
 void COpcEventHandler::clearCommandQueue(){
@@ -57,6 +42,22 @@ void COpcEventHandler::clearCommandQueue(){
     if(nextCommand != nullptr) {
       DEVLOG_ERROR("erase from command queue[%s]\n", nextCommand->getCommandName());
       delete nextCommand;
+    }
+  }
+
+  for(TCallbackList::iterator itRunner = mComCallbacks.begin(); itRunner != mComCallbacks.end(); ++itRunner){
+    DEVLOG_ERROR("erase from command callback\n");
+    mComCallbacks.erase(itRunner);
+  }
+}
+
+void COpcEventHandler::executeCommandQueue(){
+  while(!mCommandQueue.isEmpty()) {
+    ICmd* nextCommand = getNextCommand();
+    if(nextCommand != nullptr) {
+      nextCommand->runCommand();
+      delete nextCommand;
+      nextCommand = nullptr;
     }
   }
 }
@@ -69,26 +70,14 @@ void COpcEventHandler::sendCommand(ICmd *paCmd){
 }
 
 void COpcEventHandler::run(){
-  HRESULT result = CoInitializeEx(nullptr, COINIT_MULTITHREADED);
-
-  if(result == S_OK){
-    while(isAlive()){
-      if (!isAlive()) {
-        break;
-      }
-      while(!mCommandQueue.isEmpty()) {
-        ICmd* nextCommand = getNextCommand();
-        if(nextCommand != nullptr) {
-          nextCommand->runCommand();
-          delete nextCommand;
-          nextCommand = nullptr;
-        }
-      }
-      selfSuspend();
+  while(isAlive()){
+    executeCommandQueue();
+    if (!isAlive()) {
+      break;
     }
+    selfSuspend();
   }
-
-  CoUninitialize();
+  executeCommandQueue(); // immediately try to clear the command queue after a stop
 }
 
 COpcEventHandler::TCallbackDescriptor COpcEventHandler::addComCallback(forte::com_infra::CComLayer* paComCallback){

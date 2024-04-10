@@ -38,11 +38,31 @@ class COpcEventHandler : public CExternalEventHandler, private CThread{
 
     /* functions needed for the external event handler interface */
     void enableHandler() override {
-      //do nothing, start thread in the constructor
+      if (!isAlive()) {
+        start();
+        DEVLOG_INFO("COpcEventHandler: handler enabled\n");
+      }
     }
 
     void disableHandler() override {
-      //do nothing, end thread in the destructor
+      if (!mComCallbacks.empty()) {
+        DEVLOG_INFO("COpcEventHandler: command callback not empty\n");
+        resumeSelfSuspend();
+        return; // refuse, wait the second trigger
+      }
+
+      if (!mCommandQueue.isEmpty()) {
+        DEVLOG_INFO("COpcEventHandler: command queue not empty\n");
+        resumeSelfSuspend(); //wake-up, execute all commands in queue and continue
+      }
+
+      mStateSemaphore.timedWait(100000000); // wait 100ms to back wake-up
+      if (isAlive()) {
+        resumeSelfSuspend();
+        setAlive(false);
+        end();
+        DEVLOG_INFO("COpcEventHandler: handler disabled\n");
+      }
     }
 
     void setPriority(int) override {
@@ -65,6 +85,7 @@ class COpcEventHandler : public CExternalEventHandler, private CThread{
   private:
     ICmd* getNextCommand();
     void clearCommandQueue();
+    void executeCommandQueue();
 
     struct TComContainer{
         TCallbackDescriptor mCallbackDesc;
