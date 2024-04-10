@@ -166,11 +166,6 @@ bool COpcConnectionImpl::addGroup(const std::string& paGroupName, unsigned long 
 }
 
 void COpcConnectionImpl::removeItems(const std::string& paGroupName){
-  if(!mConnected){
-    DEVLOG_INFO("COpcConnectionImpl::removeItems: disconnected\n");
-    return;
-  }
-
   if(paGroupName.empty()){
     DEVLOG_INFO("COpcConnectionImpl::removeItems: group name is empty\n");
     return;
@@ -233,12 +228,6 @@ void COpcConnectionImpl::removeGroup(const std::string& paGroupName){
 
 void COpcConnectionImpl::clearGroup(){
   DEVLOG_INFO("clearGroup in COpcConnectionImpl\n");
-  // BUG: delete items from server on kill not always working, clear the container here
-  std::vector<COPCItem *> items;
-  for(auto it = mOpcItems.begin(); it != mOpcItems.end(); ++it){
-    items = it->second;
-    items.clear();
-  }
   mOpcItems.clear();
   removeGroup(std::string());
 }
