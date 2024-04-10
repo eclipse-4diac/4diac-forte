@@ -1,5 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2012, 2022 AIT, HIT robot group
+ *               2024 Samator Indo Gas
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -9,6 +10,7 @@
  * Contributors:
  *   Filip Andren - initial API and implementation and/or initial documentation
  *   Tibalt Zhao - use stl deque and polish the logs
+ *   Ketut Kumajaya - Code refactoring from char* to std::string
  *******************************************************************************/
 #include "opcprocessvar.h"
 #include "OPCGroup.h"
@@ -16,7 +18,7 @@
 #include "../../arch/devlog.h"
 #include <criticalregion.h>
 
-COpcProcessVar::COpcProcessVar(const char* paItemGroupName, const char* paItemName, EOpcProcessVarFunctions paFunction) :
+COpcProcessVar::COpcProcessVar(const std::string& paItemGroupName, const std::string& paItemName, EOpcProcessVarFunctions paFunction) :
   mItemGroupName(paItemGroupName), mItemName(paItemName), mActive(false), mFunction(paFunction){
   mCurrentValue.set<SHORT>(0);
 }

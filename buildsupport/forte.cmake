@@ -259,12 +259,8 @@ MACRO(forte_add_directory_module)
   forte_add_module(${MODULENAME} OFF ${DESCRIPTION})
 ENDMACRO(forte_add_directory_module)
 
-#MACRO(forte_add_io NAME DIRECTORY DESCRIPTION)
 MACRO(forte_add_io NAME DESCRIPTION)
   set(FORTE_IO_${NAME} OFF CACHE BOOL "${DESCRIPTION}")
-  if(NOT FORTE_IO_${NAME})
-    return()
-  endif(NOT FORTE_IO_${NAME})
 ENDMACRO(forte_add_io)
 
 set(FORTE_SRC_DIR ${CMAKE_CURRENT_LIST_DIR}/../src CACHE INTERNAL "")

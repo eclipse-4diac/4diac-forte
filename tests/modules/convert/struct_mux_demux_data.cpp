@@ -29,7 +29,7 @@ CStringDictionary::TStringId CIEC_Struct_Muxer_Test_Struct_2::getStructTypeNameI
 };
 
 DEFINE_FIRMWARE_DATATYPE(Struct_Muxer_Test_Struct_3, g_nStringIdStruct_Muxer_Test_Struct_3)
-const CStringDictionary::TStringId CIEC_Struct_Muxer_Test_Struct_3::scmElementNames[] = { };
+const CStringDictionary::TStringId CIEC_Struct_Muxer_Test_Struct_3::scmElementNames[] = { 0 };
 
 CStringDictionary::TStringId CIEC_Struct_Muxer_Test_Struct_3::getStructTypeNameID() const {
   return g_nStringIdStruct_Muxer_Test_Struct_3;

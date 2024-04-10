@@ -42,6 +42,222 @@
 
 BOOST_AUTO_TEST_SUITE(Datatypes_to_STRING_conversion_test)
 
+BOOST_AUTO_TEST_CASE(ANY_to_STRING_test)
+{
+  CIEC_STRING sTest;
+  CIEC_STRING sResult;
+  //check BOOL
+  CIEC_BOOL bTest(true);
+  sResult = "TRUE"_STRING;
+  sTest = func_ANY_AS_STRING(bTest);
+  //check result value
+  BOOST_TEST(sTest == sResult);
+  //check length value
+  BOOST_TEST(sTest.length() == 4);
+
+  //check WORD
+  CIEC_WORD nWTest(0xffff);
+  sResult = "65535"_STRING;
+  sTest = func_ANY_AS_STRING(nWTest);
+  //check result value
+  BOOST_TEST(sTest == sResult);
+  //check length value
+  BOOST_TEST(sTest.length() == 5);
+
+  //check DWORD 4294967295
+  CIEC_DWORD nDWTest(0xffffffff);
+  sResult = "4294967295"_STRING;
+  sTest = func_ANY_AS_STRING(nDWTest);
+  //check result value
+  BOOST_TEST(sTest == sResult);
+  //check length value
+  BOOST_TEST(sTest.length() == 10);
+
+  //check BYTE 255U
+  CIEC_BYTE nBTest(255U);
+  sResult = "255"_STRING;
+  sTest = func_ANY_AS_STRING(nBTest);
+  //check result value
+  BOOST_TEST(sTest == sResult);
+  //check length value
+  BOOST_TEST(sTest.length() == 3);
+
+  //check LWORD 255U
+  CIEC_LWORD nLWTest(18446744073709551615ULL);
+  sResult = "18446744073709551615"_STRING;
+  sTest = func_ANY_AS_STRING(nLWTest);
+  //check result value
+  BOOST_TEST(sTest == sResult);
+  //check length value
+  BOOST_TEST(sTest.length() == 20);
+
+  //check SINT
+  CIEC_SINT nSTest(127);
+  sResult = "127"_STRING;
+  sTest = func_ANY_AS_STRING(nSTest);
+  //check result value
+  BOOST_TEST(sTest == sResult);
+  //check length value
+  BOOST_TEST(sTest.length() == 3);
+
+  //check USINT
+  CIEC_USINT nUSTest(255);
+  sResult = "255"_STRING;
+  sTest = func_ANY_AS_STRING(nUSTest);
+  //check result value
+  BOOST_TEST(sTest == sResult);
+  //check length value
+  BOOST_TEST(sTest.length() == 3);
+
+  //check INT
+  CIEC_INT nITest(32767);
+  sResult = "32767"_STRING;
+  sTest = func_ANY_AS_STRING(nITest);
+  //check result value
+  BOOST_TEST(sTest == sResult);
+  //check length value
+  BOOST_TEST(sTest.length() == 5);
+
+  //check UINT
+  CIEC_UINT nUITest(65535);
+  sResult = "65535"_STRING;
+  sTest = func_ANY_AS_STRING(nUITest);
+  //check result value
+  BOOST_TEST(sTest == sResult);
+  //check length value
+  BOOST_TEST(sTest.length() == 5);
+
+  //check DINT
+  CIEC_DINT nDITest(2147483647);
+  sResult = "2147483647"_STRING;
+  sTest = func_ANY_AS_STRING(nDITest);
+  //check result value
+  BOOST_TEST(sTest == sResult);
+  //check length value
+  BOOST_TEST(sTest.length() == 10);
+
+  //check UDINT
+  CIEC_UDINT nUDITest(4294967295ULL);
+  sResult = "4294967295"_STRING;
+  sTest = func_ANY_AS_STRING(nUDITest);
+  //check result value
+  BOOST_TEST(sTest == sResult);
+  //check length value
+  BOOST_TEST(sTest.length() == 10);
+
+  //check LINT
+  CIEC_LINT nLITest(9223372036854775807LL);
+  sResult = "9223372036854775807"_STRING;
+  sTest = func_ANY_AS_STRING(nLITest);
+  //check result value
+  BOOST_TEST(sTest == sResult);
+  //check length value
+  BOOST_TEST(sTest.length() == 19);
+
+  //check ULINT
+  CIEC_ULINT nULITest(18446744073709551615ULL);
+  sResult = "18446744073709551615"_STRING;
+  sTest = func_ANY_AS_STRING(nULITest);
+  //check result value
+  BOOST_TEST(sTest == sResult);
+  //check length value
+  BOOST_TEST(sTest.length() == 20);
+
+  //check TIME
+  CIEC_TIME tTest;
+  tTest.fromString("T#3000ms");
+  sResult = "T#3s"_STRING;
+  sTest = func_ANY_AS_STRING(tTest);
+  //check result value
+  BOOST_TEST(sTest == sResult);
+  //check length value
+  BOOST_TEST(sTest.length() == 4);
+
+  //check LTIME
+  CIEC_LTIME ltTest;
+  ltTest.fromString("LTIME#4h36m");
+  sResult = "LT#4h36m"_STRING;
+  sTest = func_ANY_AS_STRING(ltTest);
+  //check result value
+  BOOST_TEST(sTest == sResult);
+  //check length value
+  BOOST_TEST(sTest.length() == 8);
+
+  //check REAL
+  CIEC_REAL nRTest(1.46e-3f);
+  sResult = "0.00146000006"_STRING;
+  sTest = func_ANY_AS_STRING(nRTest);
+  //check result value
+  BOOST_TEST(sTest == sResult);
+  //check length value
+  BOOST_TEST(sTest.length() == 13);
+
+  //check LREAL
+  CIEC_LREAL nLRTest(-2.2874e6);
+  sResult = "-2287400.0"_STRING;
+  sTest = func_ANY_AS_STRING(nLRTest);
+  //check result value
+  BOOST_TEST(sTest == sResult);
+  //check length value
+  BOOST_TEST(sTest.length() == 10);
+
+  //check STRING
+  CIEC_STRING stringTest = "the_test_STRING"_STRING;
+  sResult = "'the_test_STRING'"_STRING;
+  sTest = func_ANY_AS_STRING(stringTest);
+  //check result value
+  BOOST_TEST(sTest == sResult);
+  //check length value
+  BOOST_TEST(sTest.length() == 17);
+
+  //check WSTRING
+  CIEC_WSTRING wTest = u"the_test_STRING"_WSTRING;
+  sResult = "\"the_test_STRING\""_STRING;
+  sTest = func_ANY_AS_STRING(wTest);
+  //check result value
+  BOOST_TEST(sTest == sResult);
+  //check length value
+  BOOST_TEST(sTest.length() == 17);
+
+  //check DATE
+  CIEC_DATE dTest;
+  dTest.fromString("1994-06-22");
+  sResult = "D#1994-06-22"_STRING;
+  sTest = func_ANY_AS_STRING(dTest);
+  //check result value
+  BOOST_TEST(sTest == sResult);
+  //check length value
+  BOOST_TEST(sTest.length() == 12);
+
+  //check DATE_AND_TIME
+  CIEC_DATE_AND_TIME dtTest;
+  dtTest.fromString("DT#2017-03-20-01:02:03");
+  sResult = "DT#2017-03-20-01:02:03.000"_STRING;
+  sTest = func_ANY_AS_STRING(dtTest);
+  //check result value
+  BOOST_TEST(sTest == sResult);
+  //check length value
+  BOOST_TEST(sTest.length() == 26);
+
+  //check CHAR
+  CIEC_CHAR cTest('c');
+  sResult = "CHAR#'c'"_STRING;
+  sTest = func_ANY_AS_STRING(cTest);
+  //check result value
+  BOOST_TEST(sTest == sResult);
+  //check length value
+  BOOST_TEST(sTest.length() == 8);
+
+  //check WCHAR
+  CIEC_WCHAR wcTest('C');
+  sResult = "WCHAR#\"C\""_STRING;
+  sTest = func_ANY_AS_STRING(wcTest);
+  //check result value
+  BOOST_TEST(sTest == sResult);
+  //check length value
+  BOOST_TEST(sTest.length() == 9);
+}
+
 BOOST_AUTO_TEST_CASE(BOOLS_AND_BITS_to_STRING_test)
 {
   CIEC_STRING sTest;

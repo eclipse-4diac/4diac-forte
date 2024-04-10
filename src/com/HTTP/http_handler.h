@@ -111,12 +111,12 @@ class CHTTP_Handler : public CExternalEventHandler, public CThread, public forte
     struct HTTPClientWaiting {
         forte::com_infra::CHttpComLayer* mLayer;
         CIPComSocketHandler::TSocketDescriptor mSocket;
-        CIEC_DATE_AND_TIME mStartTime;
+        CIEC_TIME mStartTime;
     };
 
     struct HTTPAcceptedSockets {
         CIPComSocketHandler::TSocketDescriptor mSocket;
-        CIEC_DATE_AND_TIME mStartTime;
+        CIEC_TIME mStartTime;
     };
 
     CSinglyLinkedList<HTTPServerWaiting*> mServerLayers;

@@ -38,3 +38,5 @@ forte_add_subdirectory(ULINT)
 forte_add_subdirectory(LWORD)
 forte_add_subdirectory(LINT)
 forte_add_subdirectory(DT)
+
+forte_add_sourcefile_hcpp(F_ANY_AS_STRING_fbt)

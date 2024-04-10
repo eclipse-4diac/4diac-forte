@@ -13,7 +13,7 @@
  *** Version:
  ***     1.0: 2017-09-22/Alois Zoitl - fortiss GmbH - initial API and implementation and/or initial documentation (E_CTUD)
  ***     1.1: 2019-07-09/Alois Zoitl - JKU - fixed bug in down counting (E_CTUD)
- ***     1.2: 2024-02-10/Franz Höpfinger - HR Agrartechnik GmbH - Copy over E_CTUD to E_CTUD_UDINT
+ ***     1.2: 2024-02-10/Franz Hoepfinger - HR Agrartechnik GmbH - Copy over E_CTUD to E_CTUD_UDINT
  *************************************************************************/
 
 #include "E_CTUD_UDINT_fbt.h"

@@ -76,12 +76,14 @@ std::size_t CStringIdListSpecBuilder::calcStorageSize() const {
   return cmStaticList ? 0 : mDynamicList.size() * sizeof(CStringDictionary::TStringId);
 }
 
-std::tuple<const CStringDictionary::TStringId*, TForteUInt8> CStringIdListSpecBuilder::build(CMixedStorage &paStorage) const {
+template<typename IndexType>
+std::tuple<const CStringDictionary::TStringId*, IndexType>
+CStringIdListSpecBuilder::CStringIdListSpecBuilder::build(CMixedStorage &paStorage) const {
   if (cmStaticList) {
     return {cmStaticList, mStaticListSize};
   }
   const CStringDictionary::TStringId* listPtr = paStorage.write(mDynamicList.data(), mDynamicList.size());
-  return {listPtr, (TForteUInt8)mDynamicList.size()};
+  return {listPtr, mDynamicList.size()};
 }
 
 
@@ -126,10 +128,10 @@ std::pair<int, int> CDataSpecBuilderBase::addDataRange(const char *paPrefix, int
   return {firstId, lastId};
 }
 
-std::tuple<const CStringDictionary::TStringId*, const CStringDictionary::TStringId*, TForteUInt8>
+std::tuple<const CStringDictionary::TStringId*, const CStringDictionary::TStringId*, TPortId>
 CDataSpecBuilderBase::build(CMixedStorage &paStorage) const {
-  auto nameData = mNamesListBuilder.build(paStorage);
-  auto typeData = mTypesListBuilder.build(paStorage);
+  auto nameData = mNamesListBuilder.build<TPortId>(paStorage);
+  auto typeData = mTypesListBuilder.build<TPortId>(paStorage);
   return {std::get<0>(nameData), std::get<0>(typeData), std::get<1>(nameData) };
 }
 
@@ -243,12 +245,12 @@ std::size_t CAdapterSpecBuilder::calcStorageSize() const {
   return mStaticAdapters ? 0 : mDynamicList.size() * sizeof(SAdapterInstanceDef);
 }
 
-std::tuple<const SAdapterInstanceDef*, TForteUInt8> CAdapterSpecBuilder::build(CMixedStorage &paStorage) {
+std::tuple<const SAdapterInstanceDef*, TPortId> CAdapterSpecBuilder::build(CMixedStorage &paStorage) {
   if (mStaticAdapters) {
     return {mStaticAdapters, mStaticAdaptersCount};
   }
   const SAdapterInstanceDef *aidefPtr = paStorage.write(mDynamicList.data(), mDynamicList.size());
-  return {aidefPtr, (TForteUInt8)mDynamicList.size()};
+  return {aidefPtr, mDynamicList.size()};
 }
 
 

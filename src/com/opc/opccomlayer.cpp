@@ -1,5 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2012, 2022 AIT, ACIN, fortiss GmbH, Hit robot group
+ *               2024 Samator Indo Gas
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -10,27 +11,30 @@
  *   Filip Andren, Patrick Smejkal, Alois Zoitl, Martin Melik-Merkumians - initial API and implementation and/or initial documentation
  *   ys guo - Fix opc module compilation errors and deadlock bug
  *   Tibalt Zhao -Merge additem into Connect and take advantage of detailed event info from opcconnection
+ *   Ketut Kumajaya - Code refactoring from char* to std::string
+ *                  - Proper memory usage and deallocation
  *******************************************************************************/
 #include "opccomlayer.h"
 #include "../../arch/devlog.h"
 #include "commfb.h"
+#include "../../core/utils/parameterParser.h"
 
 #include "opcconnection.h"
 #include "opcconnectionhandler.h"
 #include "Variant.h"
 #include <criticalregion.h>
+#include <boost/lexical_cast.hpp>
 
 using namespace forte::com_infra;
 
 COpcComLayer::COpcComLayer(CComLayer* paUpperLayer, CBaseCommFB* paComFB) :
-    CComLayer(paUpperLayer, paComFB), mHost(0), mServerName(0), mUpdateRate(0), mDeadBand(0),
-    mLayerParamsOK(false), mOpcConnection(0), mInterruptResp(e_Nothing){
-  mOpcGroupName = mFb->getInstanceName();
-  DEVLOG_DEBUG("new OpcComLayer: [0x%lX][%s]\n", this, mOpcGroupName);
+    CComLayer(paUpperLayer, paComFB), mHost(), mServerName(), mUpdateRate(0), mDeadBand(0),
+    mLayerParamsOK(false), mOpcConnection(0), mInterruptResp(e_Nothing), mOpcGroupName(mFb->getInstanceName()){
+  DEVLOG_DEBUG("new OpcComLayer: [0x%lX][%s]\n", this, mOpcGroupName.c_str());
 }
 
 COpcComLayer::~COpcComLayer(){
-  DEVLOG_DEBUG("delete OpcComLayer: [0x%lX][%s]\n", this, mOpcGroupName);
+  DEVLOG_DEBUG("delete OpcComLayer: [0x%lX][%s]\n", this, mOpcGroupName.c_str());
   for(auto &it :mFBInputVars){
     delete it;
   }
@@ -99,11 +103,11 @@ EComResponse COpcComLayer::processInterrupt(){
       switch (mConnectionState){
       case e_Connected: {
         CIEC_ANY **apoRDs = mFb->getRDs();
-        unsigned int nrRDs = mFb->getNumRD();
+        size_t nrRDs = mFb->getNumRD();
 
         TOpcProcessVarList::iterator itEnd = mFBOutputVars.end();
         TOpcProcessVarList::iterator it = mFBOutputVars.begin();
-        for(unsigned int i = 0; i < nrRDs && it != itEnd; i++, ++it){
+        for(size_t i = 0; i < nrRDs && it != itEnd; i++, ++it){
           setOutputValue(&apoRDs[i]->unwrap(), &(*it)->updateValue());
         }
 
@@ -290,103 +294,70 @@ void COpcComLayer::setOutputValue(CIEC_ANY *paDataOut, Variant * paValue){
 }
 
 void COpcComLayer::processClientParams(char* paLayerParams){
-  char *chrStorage;
-  char *chrHost;
-  char *chrServer;
-  char *temp;
-
-  // Get Host
-  chrStorage = strchr(paLayerParams, ':');
-  if(chrStorage == 0) {
+  CParameterParser parser(paLayerParams, ':', ParameterAmount);
+  if (ParameterAmount == parser.parseParameters()) {
+    mHost = parser[Host];
+    if (mHost.empty()) {
       return;
-  }
-  *chrStorage = '\0';
-  ++chrStorage;
-  chrHost = (char*) malloc(strlen(paLayerParams) + 1);
-  strcpy(chrHost, paLayerParams);
-  if(strcmp(chrHost, "127.0.0.1") == 0 || strcmp(chrHost, "localhost") == 0) {
+    }
+    if (mHost.compare("127.0.0.1") == 0 || mHost.compare("localhost") == 0) {
       mHost = "";
-  } else {
-    mHost = chrHost;
-  }
-
-  // Get server name
-  temp = chrStorage;
-  chrStorage = strchr(chrStorage, ':');
-  if(chrStorage == 0){
-    if (chrHost){
-      free(chrHost);
     }
+
+    mServerName = parser[ServerName];
+    if (mServerName.empty()) {
+      return;
+    }
+
+    std::string val = parser[UpdateRate];
+    if (val.empty()) {
+      return;
+    }
+    else {
+      mUpdateRate = boost::lexical_cast<long>(val);
+    }
+
+    val = parser[DeadBand];
+    if (val.empty()) {
+      return;
+    }
+    else {
+      mDeadBand = boost::lexical_cast<float>(val);
+    }
+
+    unsigned int nrItems = 0;
+    unsigned int nrItemAmount = 0;
+    const char* inputItems = parser[FbInputItems];
+    if (inputItems != nullptr && inputItems[0] != '\0') {
+      CParameterParser inputParser(inputItems, ',');
+      nrItems = static_cast<unsigned int>(inputParser.parseParameters());
+      if (nrItems > 0) {
+        for(unsigned int i = 0; i < nrItems; i++){
+          mFBInputVars.push_back(new COpcProcessVar(mOpcGroupName, inputParser[i], COpcProcessVar::e_FBInput));
+          nrItemAmount++;
+        }
+      }
+    }
+
+    const char* outputItems = parser[FbOutputItems];
+    if (outputItems != nullptr && outputItems[0] != '\0') {
+      CParameterParser outputParser(outputItems, ',');
+      nrItems = static_cast<unsigned int>(outputParser.parseParameters());
+      if (nrItems > 0) {
+        for(unsigned int i = 0; i < nrItems; i++){
+          mFBOutputVars.push_back(new COpcProcessVar(mOpcGroupName, outputParser[i], COpcProcessVar::e_FBOutput));
+          nrItemAmount++;
+        }
+      }
+    }
+
+    if(nrItemAmount > 0) {
+      mLayerParamsOK = true;
+    }
+  }
+  else {
     return;
   }
-  *chrStorage = '\0';
-  ++chrStorage;
-  chrServer = (char*) malloc(strlen(temp) + 1);
-  strcpy(chrServer, temp);
-  mServerName = chrServer;
-
-  // Get update rate
-  mUpdateRate = atol(chrStorage);
-  chrStorage = strchr(chrStorage, ':');
-  if(chrStorage == 0){
-    if (chrHost){
-      free(chrHost);
-    }
-    return;
-  }
-  *chrStorage = '\0';
-  ++chrStorage;
-
-  // Get dead band
-  mDeadBand = (float) atof(chrStorage);
-  chrStorage = strchr(chrStorage, ':');
-  if(chrStorage == 0){
-    if (chrHost){
-      free(chrHost);
-    }
-    return;
-  }
-
-  *chrStorage = '\0';
-  ++chrStorage;
-
-  // Get FB input items
-  char * inputItems = chrStorage;
-  chrStorage = strchr(chrStorage, ':');
-  if(chrStorage == 0){
-    if (chrHost){
-      free(chrHost);
-    }
-    return;
-  }
-  *chrStorage = '\0';
-  ++chrStorage;
-  int nrItems = 0;
-  char *pch;
-  pch = strtok(inputItems, ",");
-  while(pch != nullptr){
-    char *itemName = (char*) malloc(strlen(pch) + 1);
-    strcpy(itemName, pch);
-    mFBInputVars.push_back(new COpcProcessVar(mOpcGroupName, itemName, COpcProcessVar::e_FBInput));
-    nrItems++;
-    pch = strtok(nullptr, ",");
-  }
-
-  // Get FB output items
-  pch = strtok(chrStorage, ",");
-  while(pch != nullptr){
-    char *itemName = (char*) malloc(strlen(pch) + 1);
-    strcpy(itemName, pch);
-    mFBOutputVars.push_back(new COpcProcessVar(mOpcGroupName, itemName, COpcProcessVar::e_FBOutput));
-    nrItems++;
-
-    pch = strtok(nullptr, ",");
-  }
-
-  if(nrItems > 0) {
-    mLayerParamsOK = true;
-  }
-
 }
 
 void COpcComLayer::convertInputData(void *paData, unsigned int paSize){

@@ -55,6 +55,8 @@ class CIEC_STRING_FIXED final : public CIEC_STRING {
 
     ~CIEC_STRING_FIXED() = default;
 
+    using CIEC_STRING::operator=;
+
     // Also handles the case of two different fix sized strings, as only the own maxLength is relevant
     CIEC_STRING_FIXED &operator=(const CIEC_STRING &paValue) {
       const std::string_view stringView(paValue.getStorage());
@@ -78,8 +80,6 @@ class CIEC_STRING_FIXED final : public CIEC_STRING {
       getStorageMutable() = std::move(paValue.getStorageMutable());
       return *this;
     }
-
-    using CIEC_STRING::operator=;
 
     size_t getMaximumLength() const override {
       return maxLength;

@@ -191,14 +191,14 @@ BOOST_AUTO_TEST_SUITE(IfSpecBuilder_Test)
     BOOST_CHECK_EQUAL(ifspec.mEOWithIndexes[0], -1);
   }
 
-  void test_data(CIfSpecBuilder &uut, TPortId &n, const CStringDictionary::TStringId *&f, const CStringDictionary::TStringId *&t, CStringDictionary::TStringId dataTypeId = -1u) {
+  void test_data(CIfSpecBuilder &uut, TPortId &n, const CStringDictionary::TStringId *&f, const CStringDictionary::TStringId *&t, CStringDictionary::TStringId dataTypeId = CStringDictionary::scmInvalidStringId) {
     build(uut);
     BOOST_REQUIRE_EQUAL(n, 2);
     BOOST_REQUIRE_NE(f, nullptr);
     BOOST_REQUIRE_NE(t, nullptr);
     BOOST_CHECK_EQUAL(f[0], strid("D1"));
     BOOST_CHECK_EQUAL(f[1], strid("D2"));
-    if (dataTypeId == -1u) {
+    if (dataTypeId == CStringDictionary::scmInvalidStringId) {
       BOOST_CHECK_EQUAL(t[0], strid("T0"));
       BOOST_CHECK_EQUAL(t[1], strid("T1"));
     } else {
@@ -430,7 +430,7 @@ BOOST_AUTO_TEST_SUITE(IfSpecBuilder_Test)
     CStringIdListSpecBuilder uut{16};
     uut.setStaticList(constStringIdList1, 3);
     uut.addString(4);
-    auto out = uut.build(storage);
+    auto out = uut.build<size_t>(storage);
     BOOST_CHECK_NE(std::get<0>(out), constStringIdList1);
     BOOST_CHECK_EQUAL(std::get<1>(out), 4);
     static constexpr std::array<CStringDictionary::TStringId, 4> expected = {1, 2, 3, 4};

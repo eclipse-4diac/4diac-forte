@@ -171,7 +171,9 @@ class CStringIdListSpecBuilder {
      * @return required dynamic data size
      */
     std::size_t calcStorageSize() const;
-    std::tuple<const CStringDictionary::TStringId*, TForteUInt8> build(CMixedStorage &paStorage) const;
+
+    template<typename IndexType>
+    std::tuple<const CStringDictionary::TStringId*, IndexType> build(CMixedStorage &paStorage) const;
 
     /**
      * @brief Checks configuration status.
@@ -235,7 +237,7 @@ class CEventSpecBuilderBase {
       return mNamesListBuilder.calcStorageSize();
     }
     auto build(CMixedStorage &paStorage) const {
-      return mNamesListBuilder.build(paStorage);
+      return mNamesListBuilder.build<TEventID>(paStorage);
     }
 
     /**
@@ -346,7 +348,7 @@ class CDataSpecBuilderBase {
     std::size_t calcStorageSize() const {
       return mNamesListBuilder.calcStorageSize() + mTypesListBuilder.calcStorageSize();
     }
-    std::tuple<const CStringDictionary::TStringId*, const CStringDictionary::TStringId*, TForteUInt8> build(CMixedStorage &paStorage) const;
+    std::tuple<const CStringDictionary::TStringId*, const CStringDictionary::TStringId*, TPortId> build(CMixedStorage &paStorage) const;
 
     /**
      * @brief Checks configuration status.
@@ -619,7 +621,7 @@ class CAdapterSpecBuilder {
      * @return required dynamic data size
      */
     std::size_t calcStorageSize() const;
-    std::tuple<const SAdapterInstanceDef*, TForteUInt8> build(CMixedStorage &paStorage);
+    std::tuple<const SAdapterInstanceDef*, TPortId> build(CMixedStorage &paStorage);
 
   private:
     std::vector<SAdapterInstanceDef> mDynamicList;

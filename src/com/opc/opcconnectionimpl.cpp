@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2022 AIT, ACIN, HIT robot group
+ * Copyright (c) 2012, 2024 AIT, ACIN, HIT robot group, Samator Indo Gas
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -9,6 +9,8 @@
  * Contributors:
  *   Filip Andren, Alois Zoitl - initial API and implementation and/or initial documentation
  *   Tibalt Zhao - add the list of items instead of add item one by one
+ *   Ketut Kumajaya - switch to OPCClientToolKit with 64bit support
+ *                  - Code refactoring from char* to std::string
  *******************************************************************************/
 #include "opcconnectionimpl.h"
 #include "../../arch/devlog.h"
@@ -22,9 +24,13 @@
 #include "OPCGroup.h"
 #include "OPCItem.h"
 
-COpcConnectionImpl::COpcConnectionImpl(const char *paHost, const char *paServerName, COpcConnection* paOpcConn) :
-    mOpcConn(paOpcConn), mOpcHost(0), mOpcServer(0),mConnected(0), mHost(paHost), mServerName(paServerName),
-    mGroupName(0), mReqUpdateRate(0), mRealUpdateRate(0), mDeadBand(0) {
+#define S2WS(x) COPCHost::S2WS(x)
+#define WS2S(x) COPCHost::WS2S(x)
+
+using namespace std::string_literals;
+
+COpcConnectionImpl::COpcConnectionImpl(const std::string& paHost, const std::string& paServerName, COpcConnection* paOpcConn) :
+    mOpcConn(paOpcConn), mOpcHost(0), mOpcServer(0),mConnected(0), mHost(paHost), mServerName(paServerName) {
 }
 
 COpcConnectionImpl::~COpcConnectionImpl(){
@@ -39,60 +45,66 @@ void COpcConnectionImpl::disconnect(){//const char* paGroupName){
   DEVLOG_INFO("COpcConnectionImpl disconnect\n");
   if (isConnected())
   {
-      COPCClient::stop();
-      mConnected = false;
-      this->clearGroup(); 
+    if (mOpcHost != nullptr) {
+      delete mOpcHost;
+      mOpcHost = nullptr;
+    }
+
+    if (mOpcServer != nullptr) {
+      delete mOpcServer;
+      mOpcServer = nullptr;
+    }
+
+    COPCClient::stop();
+    mConnected = false;
   }
 }
 
-bool COpcConnectionImpl::connect(const char* paGroupName){
+bool COpcConnectionImpl::connect(const std::string& paGroupName){
   if(isConnected()){
-      DEVLOG_DEBUG("COpcConnectionImpl::connect: already connected[%s]\n",paGroupName);
-      return true;
+    DEVLOG_DEBUG("COpcConnectionImpl::connect: already connected[%s]\n",paGroupName.c_str());
+    return true;
   }
 
   try{
-    DEVLOG_INFO("try to connect OPC server in COpcConnectionImpl[%s]\n",paGroupName);
-    HRESULT result = CoInitializeEx(nullptr, COINIT_MULTITHREADED);
-    if(result != S_FALSE && result != S_OK){
+    DEVLOG_INFO("try to connect OPC server in COpcConnectionImpl[%s]\n",paGroupName.c_str());
+    if (true != COPCClient::init(OPCOLEInitMode::MULTITHREADED)) {
       DEVLOG_ERROR("CoInitializeEx init failed\n");
       return false;
     }
 
-    COPCClient::init();
+    mOpcHost = COPCClient::makeHost(S2WS(mHost));
 
-    mOpcHost = COPCClient::makeHost(mHost);
-
-    mOpcServer = mOpcHost->connectDAServer(mServerName);
+    mOpcServer = mOpcHost->connectDAServer(S2WS(mServerName));
   } catch (OPCException &e){
-    DEVLOG_ERROR("connect OPC server failed:%s[%s]\n",(LPCTSTR)(e.reasonString()),paGroupName);
+    DEVLOG_ERROR("connect OPC server failed:%s[%s]\n",WS2S(e.reasonString()).c_str(),paGroupName.c_str());
     return false;
   }
-  DEVLOG_INFO("successfully connect OPC server in COpcConnectionImpl[%s]\n",paGroupName);
+  DEVLOG_INFO("successfully connect OPC server in COpcConnectionImpl[%s]\n",paGroupName.c_str());
   mConnected = true;
   return true;
 }
 
-void COpcConnectionImpl::addItemList(const char* paGroupName, std::vector<std::string> paReadItems,
-    std::vector<std::string> paWriteItems){
+void COpcConnectionImpl::addItemList(const std::string& paGroupName, std::vector<std::string>& paReadItems,
+    std::vector<std::string>& paWriteItems){
   //we assume all the items in pa_lNewItems are of same group
-  const char * groupName = nullptr;
+  std::string groupName;
   TItemDataList itemList;
-  unsigned int nreadSize = paReadItems.size(); 
+  DEVLOG_INFO("adding items in COpcConnectionImpl[%s]\n", paGroupName.c_str());
+  size_t readSize = paReadItems.size();
   //now paReadItems contains read and write items
   paReadItems.insert(paReadItems.end(), paWriteItems.begin(), paWriteItems.end());
   for(size_t i = 0; i < paReadItems.size(); i++){
     groupName = paGroupName;
-    DEVLOG_INFO("adding item %s in COpcConnectionImpl[%s]\n", paReadItems[i].c_str(),groupName);
     COPCGroup *itemGroup = nullptr;
-    if(i + 1 > nreadSize){
+    if(i + 1 > readSize){
       itemGroup = getOpcGroup(groupName, false);
     }
     else{
       itemGroup = getOpcGroup(groupName, true);
     }
     if (itemGroup == nullptr){
-      DEVLOG_INFO("there is no group for this item:%s [%s]\n", paReadItems[i].c_str(), groupName);
+      DEVLOG_INFO("there is no group for this item:%s [%s]\n", paReadItems[i].c_str(), groupName.c_str());
       //pa_pNewItem->setIsActive(false);
       this->disconnect();
       mConnected = false;
@@ -100,18 +112,19 @@ void COpcConnectionImpl::addItemList(const char* paGroupName, std::vector<std::s
       return;
     }
 
-    ATL::CString itemName(paReadItems[i].c_str());
+    DEVLOG_DEBUG("adding item %s in COpcConnectionImpl[%s]\n", paReadItems[i].c_str(), WS2S(itemGroup->getName()).c_str());
+    std::wstring itemName(S2WS(paReadItems[i]));
     try
     {
       COPCItem *newItem = itemGroup->addItem(itemName, true);
       //pa_pNewItem->setIsActive(true);
-      mOpcItems[itemGroup->getName()].push_back(newItem);
+      mOpcItems[WS2S(itemGroup->getName())].push_back(newItem);
     }
     catch (OPCException &e)
     {
-      DEVLOG_ERROR("addItem failed with exception:%s[%s:%s]\n", (LPCTSTR)(e.reasonString()),
-                    groupName,paReadItems[i].c_str());
-      if(strcmp((LPCTSTR)(e.reasonString()),"Failed to add item") != 0){
+      DEVLOG_ERROR("addItem failed with exception:%s[%s:%s]\n", WS2S(e.reasonString()).c_str(),
+                    groupName.c_str(),paReadItems[i].c_str());
+      if(e.reasonString().compare(L"COPCGroup::addItem: FAILED to add item") != 0){
         //pa_pNewItem->setIsActive(false);
         this->disconnect();
         mConnected = false;
@@ -120,8 +133,8 @@ void COpcConnectionImpl::addItemList(const char* paGroupName, std::vector<std::s
       }
       else{
         DEVLOG_ERROR("Check the opc item name: %s, probably it is wrong![%s]\n",
-                   paReadItems[i].c_str(),groupName);
-        itemList.push_back(new SOpcItemData(paReadItems[i].c_str(), (Variant)NAN ));
+                   paReadItems[i].c_str(),groupName.c_str());
+        itemList.push_back(new SOpcItemData(paReadItems[i], (Variant)NAN ));
       }
     }
   }
@@ -132,19 +145,18 @@ void COpcConnectionImpl::addItemList(const char* paGroupName, std::vector<std::s
   if(!itemList.empty()){
     mOpcConn->response_dataReceived(groupName,itemList);
   }
-    
 }
 
-bool COpcConnectionImpl::addGroup(const char* paGroupName, unsigned long paReqUpdateRate, float paDeadBand){
-  if(nullptr == paGroupName){
-   DEVLOG_INFO("COpcConnectionImpl::addGroup: group name is nullptr\n");
+bool COpcConnectionImpl::addGroup(const std::string& paGroupName, unsigned long paReqUpdateRate, float paDeadBand){
+  if(paGroupName.empty()){
+   DEVLOG_INFO("COpcConnectionImpl::addGroup: group name is empty\n");
    return false;
   }
-  DEVLOG_INFO("addGroup in COpcConnectionImpl[%s]\n", paGroupName);
+  DEVLOG_INFO("addGroup in COpcConnectionImpl[%s]\n", paGroupName.c_str());
 
   for(auto var : mOpcGroupSettingsList){
-    if(strcmp(var->mGroupName,paGroupName) == 0){
-      DEVLOG_INFO("COpcConnectionImpl::addGroup: %s is already added\n", paGroupName);
+    if(var->mGroupName == paGroupName){
+      DEVLOG_INFO("COpcConnectionImpl::addGroup: %s is already added\n", paGroupName.c_str());
       return false;
     }
   }
@@ -152,19 +164,49 @@ bool COpcConnectionImpl::addGroup(const char* paGroupName, unsigned long paReqUp
   return true;
 }
 
-void COpcConnectionImpl::removeGroup(const char* paGroupName){
-  if(paGroupName == nullptr){
+void COpcConnectionImpl::removeItems(const std::string& paGroupName){
+  if(paGroupName.empty()){
+   DEVLOG_INFO("COpcConnectionImpl::removeItems: group name is nullptr\n");
+   return;
+  }
+  DEVLOG_INFO("removing items in COpcConnectionImpl[%s]\n", paGroupName.c_str());
+  std::vector<COPCItem *> items;
+
+  TOpcItemsIt it = mOpcItems.find(paGroupName);
+  if(it != mOpcItems.end()){
+    items = it->second;
+    for(size_t i = 0; i < items.size(); i++){
+      DEVLOG_DEBUG("removing item %s in COpcConnectionImpl[%s]\n", WS2S(items[i]->getName()).c_str(), paGroupName.c_str());
+      delete items[i];
+    }
+    items.clear();
+    mOpcItems.erase(it);
+  }
+  else{
+    DEVLOG_ERROR("there is no item in group:%s\n", paGroupName.c_str());
+  }
+}
+
+void COpcConnectionImpl::removeGroup(const std::string& paGroupName){
+  if(paGroupName.empty()){
     DEVLOG_INFO("nullptr is passed to removeGroup,clear the group\n");
   }
   else{
-    DEVLOG_INFO("removeGroup in COpcConnectionImpl[%s]\n",paGroupName);
+    DEVLOG_INFO("removeGroup in COpcConnectionImpl[%s]\n",paGroupName.c_str());
   }
   for(auto group = mOpcGroupSettingsList.begin(); group != mOpcGroupSettingsList.end();){
-    if(nullptr == paGroupName || 0 == strcmp((*group)->mGroupName, paGroupName)){
-      delete (*group)->mOpcGroupRead;
-      delete (*group)->mOpcGroupWrite;
+    if(paGroupName.empty() || (*group)->mGroupName == paGroupName){
+      if (nullptr != (*group)->mOpcGroupRead) {
+        (*group)->mOpcGroupRead->disableAsync();
+        removeItems(WS2S((*group)->mOpcGroupRead->getName()));
+        delete (*group)->mOpcGroupRead;
+      }
+      if (nullptr != (*group)->mOpcGroupWrite) {
+        removeItems(WS2S((*group)->mOpcGroupWrite->getName()));
+        delete (*group)->mOpcGroupWrite;
+      }
       group =  mOpcGroupSettingsList.erase(group);
-      if(nullptr == paGroupName){
+      if(paGroupName.empty()){
         continue;
       }
       else{
@@ -181,32 +223,28 @@ void COpcConnectionImpl::removeGroup(const char* paGroupName){
 void COpcConnectionImpl::clearGroup(){
   DEVLOG_INFO("clearGroup in COpcConnectionImpl\n");
   mOpcItems.clear();
-  removeGroup(0);
+  removeGroup(std::string());
 }
 
-int COpcConnectionImpl::sendItemData(const char *paGroupName, const char *paItemName, Variant paVar){
-  if(paGroupName == nullptr || paItemName == nullptr) {
+int COpcConnectionImpl::sendItemData(const std::string& paGroupName, const std::string& paItemName, Variant paVar){
+  if(paGroupName.empty() || paItemName.empty()) {
     DEVLOG_ERROR("nullptr is passed to COpcConnectionImpl::sendItemData\n");
     return -1;
   }
   int rtn = -1;
-  DEVLOG_INFO("sendItemData in COpcConnectionImpl[%s:%s]\n",paGroupName,paItemName);
-  std::vector<COPCItem *> lItems;
-
-  char *writeGrpName= (char*) malloc(strlen(paGroupName) + 6 + 1);
-  strcpy(writeGrpName, paGroupName);
-  strcat(writeGrpName, "_write");
-
+  DEVLOG_INFO("sendItemData in COpcConnectionImpl[%s:%s]\n",paGroupName.c_str(),paItemName.c_str());
+  std::vector<COPCItem *> items;
+  const std::string writeGrpName(paGroupName + "_write"s);
   TOpcItemsIt it = mOpcItems.find(writeGrpName);
   if(it != mOpcItems.end()){
-    lItems = it->second;
-    for(size_t i = 0; i < lItems.size(); i++){
-      if(0 == strcmp((LPCTSTR)(lItems[i]->getName()), paItemName)){
+    items = it->second;
+    for(size_t i = 0; i < items.size(); i++){
+      if(WS2S(items[i]->getName()) == paItemName){
         try{
-          lItems[i]->writeSync(paVar);
+          items[i]->writeSync(paVar);
         }
         catch (OPCException &e){
-          DEVLOG_ERROR("opcitem writesync failed with exception:%s[%s:%s]\n", (LPCTSTR)(e.reasonString()), writeGrpName, paItemName);
+          DEVLOG_ERROR("opcitem writesync failed with exception:%s[%s:%s]\n", WS2S(e.reasonString()).c_str(), writeGrpName.c_str(), paItemName.c_str());
           rtn = -1;
           break;
         }
@@ -216,83 +254,65 @@ int COpcConnectionImpl::sendItemData(const char *paGroupName, const char *paItem
     }
   }
   else{
-    DEVLOG_ERROR("there is no item in group:%s\n", writeGrpName);
+    DEVLOG_ERROR("there is no item in group:%s\n", writeGrpName.c_str());
     rtn = -1;
   }
   mOpcConn->response_dataSent(paGroupName, paItemName, rtn == 0 ? true : false);
-  free(writeGrpName);
   return 0;
 }
 
-void COpcConnectionImpl::OnDataChange(COPCGroup & paGroup, CAtlMap<COPCItem *, OPCItemData *> & paChanges){
+void COpcConnectionImpl::OnDataChange(COPCGroup & paGroup, COPCItemDataMap & paChanges){
   TItemDataList itemList;
-  for(POSITION pos = paChanges.GetStartPosition(); pos != nullptr;){
-    OPCItemData *itemData = paChanges.GetValueAt(pos);
-    COPCItem *item = paChanges.GetNextKey(pos);
-    itemList.push_back(new SOpcItemData((LPCTSTR) (item->getName()), (Variant) itemData->vDataValue));
+  POSITION pos = paChanges.GetStartPosition();
+  while(pos){
+    OPCItemData *data = paChanges.GetNextValue(pos);
+    if (data) {
+      itemList.push_back(new SOpcItemData(WS2S(data->item()->getName()), (Variant) data->vDataValue));
+    }
   }
 
-  const char *c_groupName = (const char*) paGroup.getName();
-
-  int position = 0;
-  const char * subStrRead = strstr(c_groupName, "_read");
-  if(subStrRead != nullptr) {
-    position = subStrRead - c_groupName;
+  std::string groupName(WS2S(paGroup.getName()));
+  size_t position = groupName.rfind("_read");
+  if (position != std::string::npos) {
+    groupName.resize(position);
+    mOpcConn->response_dataReceived(groupName, itemList);
   }
-  else{
-    //TODO Should not happen error
-  }
-
-  char * groupName = (char*) malloc(position + 1);
-  strncpy(groupName, c_groupName, position);
-  groupName[position] = '\0';
-
-  mOpcConn->response_dataReceived(groupName, itemList);
-
-  free(groupName);
 }
 
-COPCGroup* COpcConnectionImpl::getOpcGroup(const char* paGroupName, bool paIfRead){
+COPCGroup* COpcConnectionImpl::getOpcGroup(const std::string& paGroupName, bool paIfRead){
   COPCGroup *retGroup = nullptr;
 
   TOpcGroupSettingsList::iterator itEnd = mOpcGroupSettingsList.end();
   for(TOpcGroupSettingsList::iterator it = mOpcGroupSettingsList.begin(); it != itEnd; ++it){
-    if(strcmp((*it)->mGroupName, paGroupName) == 0){
+    if((*it)->mGroupName == paGroupName){
       if(paIfRead){
         if(!((*it)->mReadGroupAdded)){
-          char *groupName = (char*) malloc(strlen(paGroupName) + 5 + 1);
-          strcpy(groupName, paGroupName);
-          strcat(groupName, "_read");
+          const std::string groupName(paGroupName + "_read"s);
           try{
-            (*it)->mOpcGroupRead = retGroup = mOpcServer->makeGroup(groupName, true, (*it)->mReqUpdateRate, (*it)->mRevisedUpdateRate, (*it)->mDeadBand);
-            (*it)->mOpcGroupRead->enableAsynch(*this);
+            (*it)->mOpcGroupRead = retGroup = mOpcServer->makeGroup(S2WS(groupName), true, (*it)->mReqUpdateRate, (*it)->mRevisedUpdateRate, (*it)->mDeadBand);
+            (*it)->mOpcGroupRead->enableAsync(this);
             (*it)->mReadGroupAdded = true;
           } catch (OPCException &e){
             // TODO
-            DEVLOG_ERROR("exception in make opc group[%s]:%s\n",groupName,(LPCTSTR)(e.reasonString()));
+            DEVLOG_ERROR("exception in make opc group[%s]:%s\n",groupName.c_str(),WS2S(e.reasonString()).c_str());
             (*it)->mOpcGroupRead = nullptr;
             retGroup = nullptr;
           }
-          free(groupName);
         } else {
           retGroup = (*it)->mOpcGroupRead;
         }
       } else{
         if(!((*it)->mWriteGroupAdded)){
-          char *groupName = (char*) malloc(strlen(paGroupName) + 6 + 1);
-          strcpy(groupName, paGroupName);
-          strcat(groupName, "_write");
+          const std::string groupName(paGroupName + "_write"s);
           try{
-            (*it)->mOpcGroupWrite = retGroup = mOpcServer->makeGroup(groupName, true, (*it)->mReqUpdateRate, (*it)->mRevisedUpdateRate, (*it)->mDeadBand);
+            (*it)->mOpcGroupWrite = retGroup = mOpcServer->makeGroup(S2WS(groupName), true, (*it)->mReqUpdateRate, (*it)->mRevisedUpdateRate, (*it)->mDeadBand);
             (*it)->mWriteGroupAdded = true;
           } catch (OPCException &e){
             // TODO
-            DEVLOG_ERROR("exception in make opc group[%s]:%s\n",groupName,(LPCTSTR)(e.reasonString()));
-            (*it)->mOpcGroupWrite = nullptr;
+            DEVLOG_ERROR("exception in make opc group[%s]:%s\n",groupName.c_str(),WS2S(e.reasonString()).c_str());
             (*it)->mOpcGroupWrite = nullptr;
             retGroup = nullptr;
           }
-          free(groupName);
         } else {
           retGroup = (*it)->mOpcGroupWrite;
         }

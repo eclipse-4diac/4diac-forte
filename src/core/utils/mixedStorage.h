@@ -89,7 +89,7 @@ class CMixedStorage {
      */
     template<typename T=void>
     T* end() {
-      return reinterpret_cast<T*>(&*mData.end());
+      return reinterpret_cast<T*>(mData.data() + mData.size());
     }
     /**
      * @brief Gets storage ending const pointer.
@@ -98,7 +98,7 @@ class CMixedStorage {
      */
     template<typename T=void>
     const T* end() const {
-      return reinterpret_cast<const T*>(&*mData.end());
+      return reinterpret_cast<const T*>(mData.data() + mData.size());
     }
 
   private:

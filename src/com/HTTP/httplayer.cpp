@@ -190,8 +190,8 @@ void CHttpComLayer::createRequest() {
     case e_POST:
       CHttpParser::createPutPostRequest(mRequest, mHost, mPort, mPath, mAuth, mParams, mBody, mContentType, mRequestType);
       DEVLOG_INFO(
-          "[HTTP Layer] FB with PUT/POST request initialized. Host: %s, Path: %s:%d, Parameters: '%s'\n",
-          mHost.c_str(), mPath.c_str(), mPort, mParams.c_str());
+          "[HTTP Layer] FB with PUT/POST request initialized. Host: %s:%d, Path: %s, Parameters: '%s'\n",
+          mHost.c_str(), mPort, mPath.c_str(), mParams.c_str());
       break;
     case e_GET:
       CHttpParser::createGetRequest(mRequest, mHost, mPort, mPath, mAuth, mParams);

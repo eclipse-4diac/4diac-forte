@@ -177,6 +177,62 @@ char OPCUA_MGR::smDeleteConnArg2Description[] = "{SubApp.FbName.PortName}";
 char OPCUA_MGR::smDeleteConnAttrDisplayName[] = "Delete Connection";
 char OPCUA_MGR::smDeleteConnAttrDescription[] = "Delete Connection";
 
+/* Query Resources */
+char OPCUA_MGR::smQueryResourcesMethodName[] = "queryResources";
+char OPCUA_MGR::smQueryResourcesOutArgName[] = "Response";
+char OPCUA_MGR::smQueryResourcesOutArgDescription[] = "Read Response";
+char OPCUA_MGR::smQueryResourcesDisplayName[] = "Query Resources";
+char OPCUA_MGR::smQueryResourcesDescription[] = "Query Resources";
+
+#ifdef FORTE_SUPPORT_MONITORING
+
+/* Add Watch */
+char OPCUA_MGR::smAddWatchMethodName[] = "addWatch";
+char OPCUA_MGR::smAddWatchArgName[] = "FB Port";
+char OPCUA_MGR::smAddWatchArgDescription[] = "Fully qualified name of FB Port";
+char OPCUA_MGR::smAddWatchAttrDisplayName[] = "Add Watch";
+char OPCUA_MGR::smAddWatchAttrDescription[] = "Add Watch";
+
+/* Read Watches */
+char OPCUA_MGR::smReadWatchesMethodName[] = "readWatches";
+char OPCUA_MGR::smReadWatchesOutArgName[] = "Response";
+char OPCUA_MGR::smReadWatchesOutArgDescription[] = "Read Response";
+char OPCUA_MGR::smReadWatchesDisplayName[] = "Read Watches";
+char OPCUA_MGR::smReadWatchesDescription[] = "Read Watches";
+
+/* Remove Watch */
+char OPCUA_MGR::smRemoveWatchMethodName[] = "removeWatch";
+char OPCUA_MGR::smRemoveWatchArgName[] = "FB Port";
+char OPCUA_MGR::smRemoveWatchArgDescription[] = "Fully qualified name of FB Port";
+char OPCUA_MGR::smRemoveWatchAttrDisplayName[] = "Remove Watch";
+char OPCUA_MGR::smRemoveWatchAttrDescription[] = "Remove Watch";
+
+/* Trigger Event */
+char OPCUA_MGR::smTriggerEventMethodName[] = "triggerEvent";
+char OPCUA_MGR::smTriggerEventArgName[] = "FB Port";
+char OPCUA_MGR::smTriggerEventArgDescription[] = "Fully qualified name of FB Port";
+char OPCUA_MGR::smTriggerEventAttrDisplayName[] = "Trigger Event";
+char OPCUA_MGR::smTriggerEventAttrDescription[] = "Trigger Event";
+const char* OPCUA_MGR::scmTriggerEventParam = "$e";
+
+/* Force Value */
+char OPCUA_MGR::smForceValueMethodName[] = "forceValue";
+char OPCUA_MGR::smForceValueArg1Name[] = "FB Port";
+char OPCUA_MGR::smForceValueArg1Description[] = "Fully qualified name of FB Port";
+char OPCUA_MGR::smForceValueArg2Name[] = "Value";
+char OPCUA_MGR::smForceValueArg2Description[] = "Value to be written";
+char OPCUA_MGR::smForceValueAttrDisplayName[] = "Force Value";
+char OPCUA_MGR::smForceValueAttrDescription[] = "Force Value";
+
+/* Clear Force */
+char OPCUA_MGR::smClearForceMethodName[] = "clearForce";
+char OPCUA_MGR::smClearForceArgName[] = "FB Port";
+char OPCUA_MGR::smClearForceArgDescription[] = "Fully qualified name of FB Port";
+char OPCUA_MGR::smClearForceAttrDisplayName[] = "Clear Force";
+char OPCUA_MGR::smClearForceAttrDescription[] = "Clear Force";
+
+#endif // FORTE_SUPPORT_MONITORING
+
 /* Initialize UA Status Codes */
 const std::map<EMGMResponse, UA_StatusCode> OPCUA_MGR::scResponseMap = {
   {EMGMResponse::Ready, UA_STATUSCODE_GOOD},
@@ -235,6 +291,10 @@ EMGMResponse OPCUA_MGR::createIEC61499MgmtObject(UA_Server* paServer) {
   if (addKillDeviceMethod(paServer) != EMGMResponse::Ready) return eRetVal;
   if (addKillResourceMethod(paServer) != EMGMResponse::Ready) return eRetVal;
   if (addDeleteResourceMethod(paServer) != EMGMResponse::Ready) return eRetVal;
+  if (addQueryResourcesMethod(paServer) != EMGMResponse::Ready) return eRetVal;
+#ifdef FORTE_SUPPORT_MONITORING
+  if (addReadWatchesMethod(paServer) != EMGMResponse::Ready) return eRetVal;
+#endif // FORTE_SUPPORT_MONITORING
   return addMgmtObjectInstance();
 }
 
@@ -284,6 +344,13 @@ EMGMResponse OPCUA_MGR::createIEC61499ResourceObjectType(UA_Server* paServer) {
   if (addKillFBMethod(paServer) != EMGMResponse::Ready) return eRetVal;
   if (addDeleteFBMethod(paServer) != EMGMResponse::Ready) return eRetVal;
   if (addDeleteConnectionMethod(paServer) != EMGMResponse::Ready) return eRetVal;
+#ifdef FORTE_SUPPORT_MONITORING
+  if (addAddWatchMethod(paServer) != EMGMResponse::Ready) return eRetVal;
+  if (addRemoveWatchMethod(paServer) != EMGMResponse::Ready) return eRetVal;
+  if (addTriggerEventMethod(paServer) != EMGMResponse::Ready) return eRetVal;
+  if (addForceValueMethod(paServer) != EMGMResponse::Ready) return eRetVal;
+  if (addClearForceMethod(paServer) != EMGMResponse::Ready) return eRetVal;
+#endif // FORTE_SUPPORT_MONITORING
   return EMGMResponse::Ready;
 }
 
@@ -354,8 +421,8 @@ UA_StatusCode OPCUA_MGR::onCreateResource(UA_Server*,
   if (!methodContext) {
     return UA_STATUSCODE_BADUNKNOWNRESPONSE;
   }
-  std::string resourceName = getInputValue(*static_cast<UA_String*>(input[0].data));
-  std::string resType = getInputValue(*static_cast<UA_String*>(input[1].data));
+  const std::string resourceName(getInputValue(*static_cast<UA_String*>(input[0].data)));
+  const std::string resType(getInputValue(*static_cast<UA_String*>(input[1].data)));
 
   OPCUA_MGR* uaMGR = static_cast<OPCUA_MGR*>(methodContext);
   uaMGR->setMGMCommand(EMGMCommandType::CreateFBInstance, CStringDictionary::scmInvalidStringId, nullptr, resourceName.c_str(), resType.c_str());
@@ -400,10 +467,8 @@ UA_StatusCode OPCUA_MGR::onCreateFB(UA_Server*,
     return UA_STATUSCODE_BADUNKNOWNRESPONSE;
   }
   EMGMResponse eRetVal = EMGMResponse::UnsupportedType;
-  std::string destination;
-  destination = getInputValue(*static_cast<UA_String*>(input[0].data));
-  std::string fbTypeStr;
-  fbTypeStr = getInputValue(*static_cast<UA_String*>(input[1].data));
+  const std::string destination(getInputValue(*static_cast<UA_String*>(input[0].data)));
+  const std::string fbTypeStr(getInputValue(*static_cast<UA_String*>(input[1].data)));
 
   std::vector<std::string> fullFbName;
   parseDestinationName(destination, fullFbName);
@@ -435,10 +500,8 @@ UA_StatusCode OPCUA_MGR::onCreateConnection(UA_Server*,
     return UA_STATUSCODE_BADUNKNOWNRESPONSE;
   }
   EMGMResponse eRetVal = EMGMResponse::UnsupportedType;
-  std::string source;
-  source = getInputValue(*static_cast<UA_String*>(input[0].data));
-  std::string destination;
-  destination = getInputValue(*static_cast<UA_String*>(input[1].data));
+  const std::string source(getInputValue(*static_cast<UA_String*>(input[0].data)));
+  const std::string destination(getInputValue(*static_cast<UA_String*>(input[1].data)));
 
   std::vector<std::string> sourceFullName;
   std::vector<std::string> destinationFullName;
@@ -466,16 +529,16 @@ UA_StatusCode OPCUA_MGR::onWriteDevice(UA_Server*,
   const UA_NodeId*, void*,
   size_t, const UA_Variant* input,
   size_t, UA_Variant*) {
-  if (methodContext != nullptr) {
-    EMGMResponse eRetVal = EMGMResponse::UnsupportedType;
-    std::string writeValue = getInputValue(*static_cast<UA_String*>(input[0].data));
-
-    OPCUA_MGR* uaMGR = static_cast<OPCUA_MGR*>(methodContext);
-    uaMGR->setMGMCommand(EMGMCommandType::Write, CStringDictionary::scmInvalidStringId, writeValue.c_str(), nullptr, nullptr);
-    eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
-    return scResponseMap.find(eRetVal)->second;
+  if (!methodContext) {
+    return UA_STATUSCODE_BADUNKNOWNRESPONSE;
   }
-  return UA_STATUSCODE_BADUNKNOWNRESPONSE;
+  EMGMResponse eRetVal = EMGMResponse::UnsupportedType;
+  const std::string writeValue(getInputValue(*static_cast<UA_String*>(input[0].data)));
+
+  OPCUA_MGR* uaMGR = static_cast<OPCUA_MGR*>(methodContext);
+  uaMGR->setMGMCommand(EMGMCommandType::Write, CStringDictionary::scmInvalidStringId, writeValue.c_str(), nullptr, nullptr);
+  eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
+  return scResponseMap.find(eRetVal)->second;
 }
 
 EMGMResponse OPCUA_MGR::addWriteResourceMethod(UA_Server* paServer) {
@@ -493,17 +556,17 @@ UA_StatusCode OPCUA_MGR::onWriteResource(UA_Server*,
   const UA_NodeId*, void*,
   size_t, const UA_Variant* input,
   size_t, UA_Variant*) {
-  if (methodContext != nullptr) {
-    EMGMResponse eRetVal = EMGMResponse::UnsupportedType;
-    std::string resourceName = getInputValue(*static_cast<UA_String*>(input[0].data));
-    std::string writeValue = getInputValue(*static_cast<UA_String*>(input[1].data));
-
-    OPCUA_MGR* uaMGR = static_cast<OPCUA_MGR*>(methodContext);
-    uaMGR->setMGMCommand(EMGMCommandType::Write, CStringDictionary::getInstance().insert(resourceName.c_str()), writeValue.c_str(), nullptr, nullptr);
-    eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
-    return scResponseMap.find(eRetVal)->second;
+  if (!methodContext) {
+    return UA_STATUSCODE_BADUNKNOWNRESPONSE;
   }
-  return UA_STATUSCODE_BADUNKNOWNRESPONSE;
+  EMGMResponse eRetVal = EMGMResponse::UnsupportedType;
+  const std::string resourceName(getInputValue(*static_cast<UA_String*>(input[0].data)));
+  const std::string writeValue(getInputValue(*static_cast<UA_String*>(input[1].data)));
+
+  OPCUA_MGR* uaMGR = static_cast<OPCUA_MGR*>(methodContext);
+  uaMGR->setMGMCommand(EMGMCommandType::Write, CStringDictionary::getInstance().insert(resourceName.c_str()), writeValue.c_str(), nullptr, nullptr);
+  eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
+  return scResponseMap.find(eRetVal)->second;
 }
 
 EMGMResponse OPCUA_MGR::addWriteFBMethod(UA_Server* paServer) {
@@ -525,9 +588,8 @@ UA_StatusCode OPCUA_MGR::onWriteFB(UA_Server*,
     return UA_STATUSCODE_BADUNKNOWNRESPONSE;
   }
   EMGMResponse eRetVal = EMGMResponse::UnsupportedType;
-  std::string destination;
-  destination = getInputValue(*static_cast<UA_String*>(input[0].data));
-  std::string writeValue = getInputValue(*static_cast<UA_String*>(input[1].data));
+  const std::string destination(getInputValue(*static_cast<UA_String*>(input[0].data)));
+  const std::string writeValue(getInputValue(*static_cast<UA_String*>(input[1].data)));
   std::vector<std::string> writeDestination;
   parseDestinationName(destination, writeDestination);
 
@@ -549,14 +611,14 @@ UA_StatusCode OPCUA_MGR::onStartDevice(UA_Server*,
   const UA_NodeId*, void*,
   size_t, const UA_Variant*,
   size_t, UA_Variant*) {
-  if (methodContext != nullptr) {
-    EMGMResponse eRetVal = EMGMResponse::UnsupportedType;
-    OPCUA_MGR* uaMGR = static_cast<OPCUA_MGR*>(methodContext);
-    uaMGR->setMGMCommand(EMGMCommandType::Start, CStringDictionary::scmInvalidStringId, nullptr, nullptr, nullptr);
-    eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
-    return scResponseMap.find(eRetVal)->second;
+  if (!methodContext) {
+    return UA_STATUSCODE_BADUNKNOWNRESPONSE;
   }
-  return UA_STATUSCODE_BADUNKNOWNRESPONSE;
+  EMGMResponse eRetVal = EMGMResponse::UnsupportedType;
+  OPCUA_MGR* uaMGR = static_cast<OPCUA_MGR*>(methodContext);
+  uaMGR->setMGMCommand(EMGMCommandType::Start, CStringDictionary::scmInvalidStringId, nullptr, nullptr, nullptr);
+  eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
+  return scResponseMap.find(eRetVal)->second;
 }
 
 EMGMResponse OPCUA_MGR::addStartResourceMethod(UA_Server* paServer) {
@@ -577,8 +639,7 @@ UA_StatusCode OPCUA_MGR::onStartResource(UA_Server*,
     return UA_STATUSCODE_BADUNKNOWNRESPONSE;
   }
   EMGMResponse eRetVal = EMGMResponse::UnsupportedType;
-  /* Resource Name */
-  std::string resourceName = getInputValue(*static_cast<UA_String*>(input[0].data));
+  const std::string resourceName(getInputValue(*static_cast<UA_String*>(input[0].data)));
   OPCUA_MGR* uaMGR = static_cast<OPCUA_MGR*>(methodContext);
   uaMGR->setMGMCommand(EMGMCommandType::Start, CStringDictionary::getInstance().insert(resourceName.c_str()), nullptr, nullptr, nullptr);
   eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
@@ -599,21 +660,19 @@ UA_StatusCode OPCUA_MGR::onStartFB(UA_Server*,
   const UA_NodeId*, void* objectContext,
   size_t, const UA_Variant* input,
   size_t, UA_Variant*) {
-  if (methodContext != nullptr) {
-    EMGMResponse eRetVal = EMGMResponse::UnsupportedType;
-    std::string destination;
-    destination = getInputValue(*static_cast<UA_String*>(input[0].data));
-    /* e.g. SubApp1.FB1*/
-    std::vector<std::string> fullFbName;
-    parseDestinationName(destination, fullFbName);
-
-    const char* resourceName = static_cast<const char*>(objectContext);
-    OPCUA_MGR* uaMGR = static_cast<OPCUA_MGR*>(methodContext);
-    uaMGR->setMGMCommand(EMGMCommandType::Start, CStringDictionary::getInstance().insert(resourceName), nullptr, fullFbName);
-    eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
-    return scResponseMap.find(eRetVal)->second;
+  if (!methodContext) {
+    return UA_STATUSCODE_BADUNKNOWNRESPONSE;
   }
-  return UA_STATUSCODE_BADUNKNOWNRESPONSE;
+  EMGMResponse eRetVal = EMGMResponse::UnsupportedType;
+  const std::string destination(getInputValue(*static_cast<UA_String*>(input[0].data)));
+  std::vector<std::string> fullFbName;
+  parseDestinationName(destination, fullFbName);
+
+  const char* resourceName = static_cast<const char*>(objectContext);
+  OPCUA_MGR* uaMGR = static_cast<OPCUA_MGR*>(methodContext);
+  uaMGR->setMGMCommand(EMGMCommandType::Start, CStringDictionary::getInstance().insert(resourceName), nullptr, fullFbName);
+  eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
+  return scResponseMap.find(eRetVal)->second;
 }
 
 EMGMResponse OPCUA_MGR::addStopDeviceMethod(UA_Server* paServer) {
@@ -627,14 +686,14 @@ UA_StatusCode OPCUA_MGR::onStopDevice(UA_Server*,
   const UA_NodeId*, void*,
   size_t, const UA_Variant*,
   size_t, UA_Variant*) {
-  if (methodContext != nullptr) {
-    EMGMResponse eRetVal = EMGMResponse::UnsupportedType;
-    OPCUA_MGR* uaMGR = static_cast<OPCUA_MGR*>(methodContext);
-    uaMGR->setMGMCommand(EMGMCommandType::Stop, CStringDictionary::scmInvalidStringId, nullptr, nullptr, nullptr);
-    eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
-    return scResponseMap.find(eRetVal)->second;
+  if (!methodContext) {
+    return UA_STATUSCODE_BADUNKNOWNRESPONSE;
   }
-  return UA_STATUSCODE_BADUNKNOWNRESPONSE;
+  EMGMResponse eRetVal = EMGMResponse::UnsupportedType;
+  OPCUA_MGR* uaMGR = static_cast<OPCUA_MGR*>(methodContext);
+  uaMGR->setMGMCommand(EMGMCommandType::Stop, CStringDictionary::scmInvalidStringId, nullptr, nullptr, nullptr);
+  eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
+  return scResponseMap.find(eRetVal)->second;
 }
 
 EMGMResponse OPCUA_MGR::addStopResourceMethod(UA_Server* paServer) {
@@ -651,15 +710,15 @@ UA_StatusCode OPCUA_MGR::onStopResource(UA_Server*,
   const UA_NodeId*, void*,
   size_t, const UA_Variant* input,
   size_t, UA_Variant*) {
-  if (methodContext != nullptr) {
-    EMGMResponse eRetVal = EMGMResponse::UnsupportedType;
-    std::string resourceName = getInputValue(*static_cast<UA_String*>(input[0].data));
-    OPCUA_MGR* uaMGR = static_cast<OPCUA_MGR*>(methodContext);
-    uaMGR->setMGMCommand(EMGMCommandType::Stop, CStringDictionary::scmInvalidStringId, nullptr, resourceName.c_str(), nullptr);
-    eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
-    return scResponseMap.find(eRetVal)->second;
+  if (!methodContext) {
+    return UA_STATUSCODE_BADUNKNOWNRESPONSE;
   }
-  return UA_STATUSCODE_BADUNKNOWNRESPONSE;
+  EMGMResponse eRetVal = EMGMResponse::UnsupportedType;
+  const std::string resourceName(getInputValue(*static_cast<UA_String*>(input[0].data)));
+  OPCUA_MGR* uaMGR = static_cast<OPCUA_MGR*>(methodContext);
+  uaMGR->setMGMCommand(EMGMCommandType::Stop, CStringDictionary::scmInvalidStringId, nullptr, resourceName.c_str(), nullptr);
+  eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
+  return scResponseMap.find(eRetVal)->second;
 }
 
 EMGMResponse OPCUA_MGR::addStopFBMethod(UA_Server* paServer) {
@@ -676,21 +735,20 @@ UA_StatusCode OPCUA_MGR::onStopFB(UA_Server*,
   const UA_NodeId*, void* objectContext,
   size_t, const UA_Variant* input,
   size_t, UA_Variant*) {
-  if (methodContext != nullptr) {
-    EMGMResponse eRetVal = EMGMResponse::UnsupportedType;
-    std::string destination;
-    destination = getInputValue(*static_cast<UA_String*>(input[0].data));
-    /* e.g. SubApp1.FB1*/
-    std::vector<std::string> fullFbName;
-    parseDestinationName(destination, fullFbName);
-
-    const char* resourceName = static_cast<const char*>(objectContext);
-    OPCUA_MGR* uaMGR = static_cast<OPCUA_MGR*>(methodContext);
-    uaMGR->setMGMCommand(EMGMCommandType::Stop, CStringDictionary::getInstance().insert(resourceName), nullptr, fullFbName);
-    eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
-    return scResponseMap.find(eRetVal)->second;
+  if (!methodContext) {
+    return UA_STATUSCODE_BADUNKNOWNRESPONSE;
   }
-  return UA_STATUSCODE_BADUNKNOWNRESPONSE;
+  EMGMResponse eRetVal = EMGMResponse::UnsupportedType;
+  const std::string destination(getInputValue(*static_cast<UA_String*>(input[0].data)));
+  std::vector<std::string> fullFbName;
+  parseDestinationName(destination, fullFbName);
+
+  const char* resourceName = static_cast<const char*>(objectContext);
+  OPCUA_MGR* uaMGR = static_cast<OPCUA_MGR*>(methodContext);
+  uaMGR->setMGMCommand(EMGMCommandType::Stop, CStringDictionary::getInstance().insert(resourceName), nullptr, fullFbName);
+  eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
+  return scResponseMap.find(eRetVal)->second;
+
 }
 
 EMGMResponse OPCUA_MGR::addResetDeviceMethod(UA_Server* paServer) {
@@ -704,14 +762,15 @@ UA_StatusCode OPCUA_MGR::onResetDevice(UA_Server*,
   const UA_NodeId*, void*,
   size_t, const UA_Variant*,
   size_t, UA_Variant*) {
-  if (methodContext != nullptr) {
-    EMGMResponse eRetVal = EMGMResponse::UnsupportedType;
-    OPCUA_MGR* uaMGR = static_cast<OPCUA_MGR*>(methodContext);
-    uaMGR->setMGMCommand(EMGMCommandType::Reset, CStringDictionary::scmInvalidStringId, nullptr, nullptr, nullptr);
-    eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
-    return scResponseMap.find(eRetVal)->second;
+  if (!methodContext) {
+    return UA_STATUSCODE_BADUNKNOWNRESPONSE;
   }
-  return UA_STATUSCODE_BADUNKNOWNRESPONSE;
+  EMGMResponse eRetVal = EMGMResponse::UnsupportedType;
+  OPCUA_MGR* uaMGR = static_cast<OPCUA_MGR*>(methodContext);
+  uaMGR->setMGMCommand(EMGMCommandType::Reset, CStringDictionary::scmInvalidStringId, nullptr, nullptr, nullptr);
+  eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
+  return scResponseMap.find(eRetVal)->second;
+
 }
 
 EMGMResponse OPCUA_MGR::addResetResourceMethod(UA_Server* paServer) {
@@ -728,15 +787,15 @@ UA_StatusCode OPCUA_MGR::onResetResource(UA_Server*,
   const UA_NodeId*, void*,
   size_t, const UA_Variant* input,
   size_t, UA_Variant*) {
-  if (methodContext != nullptr) {
-    EMGMResponse eRetVal = EMGMResponse::UnsupportedType;
-    std::string resourceName = getInputValue(*static_cast<UA_String*>(input[0].data));
-    OPCUA_MGR* uaMGR = static_cast<OPCUA_MGR*>(methodContext);
-    uaMGR->setMGMCommand(EMGMCommandType::Reset, CStringDictionary::scmInvalidStringId, nullptr, resourceName.c_str(), nullptr);
-    eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
-    return scResponseMap.find(eRetVal)->second;
+  if (!methodContext) {
+    return UA_STATUSCODE_BADUNKNOWNRESPONSE;
   }
-  return UA_STATUSCODE_BADUNKNOWNRESPONSE;
+  EMGMResponse eRetVal = EMGMResponse::UnsupportedType;
+  const std::string resourceName(getInputValue(*static_cast<UA_String*>(input[0].data)));
+  OPCUA_MGR* uaMGR = static_cast<OPCUA_MGR*>(methodContext);
+  uaMGR->setMGMCommand(EMGMCommandType::Reset, CStringDictionary::scmInvalidStringId, nullptr, resourceName.c_str(), nullptr);
+  eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
+  return scResponseMap.find(eRetVal)->second;
 }
 
 EMGMResponse OPCUA_MGR::addResetFBMethod(UA_Server* paServer) {
@@ -753,21 +812,19 @@ UA_StatusCode OPCUA_MGR::onResetFB(UA_Server*,
   const UA_NodeId*, void* objectContext,
   size_t, const UA_Variant* input,
   size_t, UA_Variant*) {
-  if (methodContext != nullptr) {
-    EMGMResponse eRetVal = EMGMResponse::UnsupportedType;
-    std::string destination;
-    destination = getInputValue(*static_cast<UA_String*>(input[0].data));
-    /* e.g. SubApp1.FB1*/
-    std::vector<std::string> fullFbName;
-    parseDestinationName(destination, fullFbName);
-
-    const char* resourceName = static_cast<const char*>(objectContext);
-    OPCUA_MGR* uaMGR = static_cast<OPCUA_MGR*>(methodContext);
-    uaMGR->setMGMCommand(EMGMCommandType::Reset, CStringDictionary::getInstance().insert(resourceName), nullptr, fullFbName);
-    eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
-    return scResponseMap.find(eRetVal)->second;
+  if (!methodContext) {
+    return UA_STATUSCODE_BADUNKNOWNRESPONSE;
   }
-  return UA_STATUSCODE_BADUNKNOWNRESPONSE;
+  EMGMResponse eRetVal = EMGMResponse::UnsupportedType;
+  const std::string destination(getInputValue(*static_cast<UA_String*>(input[0].data)));
+  std::vector<std::string> fullFbName;
+  parseDestinationName(destination, fullFbName);
+
+  const char* resourceName = static_cast<const char*>(objectContext);
+  OPCUA_MGR* uaMGR = static_cast<OPCUA_MGR*>(methodContext);
+  uaMGR->setMGMCommand(EMGMCommandType::Reset, CStringDictionary::getInstance().insert(resourceName), nullptr, fullFbName);
+  eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
+  return scResponseMap.find(eRetVal)->second;
 }
 
 EMGMResponse OPCUA_MGR::addKillDeviceMethod(UA_Server* paServer) {
@@ -781,14 +838,14 @@ UA_StatusCode OPCUA_MGR::onKillDevice(UA_Server*,
   const UA_NodeId*, void*,
   size_t, const UA_Variant*,
   size_t, UA_Variant*) {
-  if (methodContext != nullptr) {
-    EMGMResponse eRetVal = EMGMResponse::UnsupportedType;
-    OPCUA_MGR* uaMGR = static_cast<OPCUA_MGR*>(methodContext);
-    uaMGR->setMGMCommand(EMGMCommandType::Kill, CStringDictionary::scmInvalidStringId, nullptr, nullptr, nullptr);
-    eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
-    return scResponseMap.find(eRetVal)->second;
+  if (!methodContext) {
+    return UA_STATUSCODE_BADUNKNOWNRESPONSE;
   }
-  return UA_STATUSCODE_BADUNKNOWNRESPONSE;
+  EMGMResponse eRetVal = EMGMResponse::UnsupportedType;
+  OPCUA_MGR* uaMGR = static_cast<OPCUA_MGR*>(methodContext);
+  uaMGR->setMGMCommand(EMGMCommandType::Kill, CStringDictionary::scmInvalidStringId, nullptr, nullptr, nullptr);
+  eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
+  return scResponseMap.find(eRetVal)->second;
 }
 
 EMGMResponse OPCUA_MGR::addKillResourceMethod(UA_Server* paServer) {
@@ -805,15 +862,15 @@ UA_StatusCode OPCUA_MGR::onKillResource(UA_Server*,
   const UA_NodeId*, void*,
   size_t, const UA_Variant* input,
   size_t, UA_Variant*) {
-  if (methodContext != nullptr) {
-    EMGMResponse eRetVal = EMGMResponse::UnsupportedType;
-    std::string resourceName = getInputValue(*static_cast<UA_String*>(input[0].data));
-    OPCUA_MGR* uaMGR = static_cast<OPCUA_MGR*>(methodContext);
-    uaMGR->setMGMCommand(EMGMCommandType::Kill, CStringDictionary::scmInvalidStringId, nullptr, resourceName.c_str(), nullptr);
-    eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
-    return scResponseMap.find(eRetVal)->second;
+  if (!methodContext) {
+    return UA_STATUSCODE_BADUNKNOWNRESPONSE;
   }
-  return UA_STATUSCODE_BADUNKNOWNRESPONSE;
+  EMGMResponse eRetVal = EMGMResponse::UnsupportedType;
+  const std::string resourceName(getInputValue(*static_cast<UA_String*>(input[0].data)));
+  OPCUA_MGR* uaMGR = static_cast<OPCUA_MGR*>(methodContext);
+  uaMGR->setMGMCommand(EMGMCommandType::Kill, CStringDictionary::scmInvalidStringId, nullptr, resourceName.c_str(), nullptr);
+  eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
+  return scResponseMap.find(eRetVal)->second;
 }
 
 EMGMResponse OPCUA_MGR::addKillFBMethod(UA_Server* paServer) {
@@ -830,21 +887,19 @@ UA_StatusCode OPCUA_MGR::onKillFB(UA_Server*,
   const UA_NodeId*, void* objectContext,
   size_t, const UA_Variant* input,
   size_t, UA_Variant*) {
-  if (methodContext != nullptr) {
-    EMGMResponse eRetVal = EMGMResponse::UnsupportedType;
-    std::string destination;
-    destination = getInputValue(*static_cast<UA_String*>(input[0].data));
-    /* e.g. SubApp1.FB1*/
-    std::vector<std::string> fullFbName;
-    parseDestinationName(destination, fullFbName);
-
-    const char* resourceName = static_cast<const char*>(objectContext);
-    OPCUA_MGR* uaMGR = static_cast<OPCUA_MGR*>(methodContext);
-    uaMGR->setMGMCommand(EMGMCommandType::Kill, CStringDictionary::getInstance().insert(resourceName), nullptr, fullFbName);
-    eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
-    return scResponseMap.find(eRetVal)->second;
+  if (!methodContext) {
+    return UA_STATUSCODE_BADUNKNOWNRESPONSE;
   }
-  return UA_STATUSCODE_BADUNKNOWNRESPONSE;
+  EMGMResponse eRetVal = EMGMResponse::UnsupportedType;
+  const std::string destination(getInputValue(*static_cast<UA_String*>(input[0].data)));
+  std::vector<std::string> fullFbName;
+  parseDestinationName(destination, fullFbName);
+
+  const char* resourceName = static_cast<const char*>(objectContext);
+  OPCUA_MGR* uaMGR = static_cast<OPCUA_MGR*>(methodContext);
+  uaMGR->setMGMCommand(EMGMCommandType::Kill, CStringDictionary::getInstance().insert(resourceName), nullptr, fullFbName);
+  eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
+  return scResponseMap.find(eRetVal)->second;
 }
 
 EMGMResponse OPCUA_MGR::addDeleteResourceMethod(UA_Server* paServer) {
@@ -861,12 +916,11 @@ UA_StatusCode OPCUA_MGR::onDeleteResource(UA_Server*,
   const UA_NodeId*, void*,
   size_t, const UA_Variant* input,
   size_t, UA_Variant*) {
-  if (methodContext == nullptr) {
+  if (!methodContext) {
     return UA_STATUSCODE_BADUNKNOWNRESPONSE;
   }
   EMGMResponse eRetVal = EMGMResponse::UnsupportedType;
-  /* Resource Name */
-  std::string resourceName = getInputValue(*static_cast<UA_String*>(input[0].data));
+  const std::string resourceName(getInputValue(*static_cast<UA_String*>(input[0].data)));
 
   OPCUA_MGR* uaMGR = static_cast<OPCUA_MGR*>(methodContext);
   uaMGR->setMGMCommand(EMGMCommandType::DeleteFBInstance, CStringDictionary::scmInvalidStringId, nullptr, resourceName.c_str(), nullptr);
@@ -896,22 +950,20 @@ UA_StatusCode OPCUA_MGR::onDeleteFB(UA_Server*,
   const UA_NodeId*, void* objectContext,
   size_t, const UA_Variant* input,
   size_t, UA_Variant*) {
-  if (methodContext != nullptr) {
-    EMGMResponse eRetVal = EMGMResponse::UnsupportedType;
-    std::string destination;
-    destination = getInputValue(*static_cast<UA_String*>(input[0].data));
-    /* e.g. SubApp1.FB1*/
-    std::vector<std::string> fullFbName;
-    parseDestinationName(destination, fullFbName);
-
-    const char* resourceName = static_cast<const char*>(objectContext);
-    OPCUA_MGR* uaMGR = static_cast<OPCUA_MGR*>(methodContext);
-
-    uaMGR->setMGMCommand(EMGMCommandType::DeleteFBInstance, CStringDictionary::getInstance().insert(resourceName), nullptr, fullFbName);
-    eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
-    return scResponseMap.find(eRetVal)->second;
+  if (!methodContext) {
+    return UA_STATUSCODE_BADUNKNOWNRESPONSE;
   }
-  return UA_STATUSCODE_BADUNKNOWNRESPONSE;
+  EMGMResponse eRetVal = EMGMResponse::UnsupportedType;
+  const std::string destination(getInputValue(*static_cast<UA_String*>(input[0].data)));
+  std::vector<std::string> fullFbName;
+  parseDestinationName(destination, fullFbName);
+
+  const char* resourceName = static_cast<const char*>(objectContext);
+  OPCUA_MGR* uaMGR = static_cast<OPCUA_MGR*>(methodContext);
+
+  uaMGR->setMGMCommand(EMGMCommandType::DeleteFBInstance, CStringDictionary::getInstance().insert(resourceName), nullptr, fullFbName);
+  eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
+  return scResponseMap.find(eRetVal)->second;
 }
 
 EMGMResponse OPCUA_MGR::addDeleteConnectionMethod(UA_Server* paServer) {
@@ -929,25 +981,235 @@ UA_StatusCode OPCUA_MGR::onDeleteConnection(UA_Server*,
   const UA_NodeId*, void* objectContext,
   size_t, const UA_Variant* input,
   size_t, UA_Variant*) {
-  if (methodContext != nullptr) {
-    EMGMResponse eRetVal = EMGMResponse::UnsupportedType;
-    std::string source;
-    source = getInputValue(*static_cast<UA_String*>(input[0].data));
-    std::string destination;
-    destination = getInputValue(*static_cast<UA_String*>(input[1].data));
-    std::vector<std::string> sourceFullName;
-    std::vector<std::string> destinationFullName;
-    parseDestinationName(source, sourceFullName);
-    parseDestinationName(destination, destinationFullName);
-
-    const char* resourceName = static_cast<const char*>(objectContext);
-    OPCUA_MGR* uaMGR = static_cast<OPCUA_MGR*>(methodContext);
-    uaMGR->setMGMCommand(EMGMCommandType::DeleteConnection, CStringDictionary::getInstance().insert(resourceName), nullptr, sourceFullName, destinationFullName);
-    eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
-    return scResponseMap.find(eRetVal)->second;
+  if (!methodContext) {
+    return UA_STATUSCODE_BADUNKNOWNRESPONSE;
   }
-  return UA_STATUSCODE_BADUNKNOWNRESPONSE;
+  EMGMResponse eRetVal = EMGMResponse::UnsupportedType;
+  const std::string source(getInputValue(*static_cast<UA_String*>(input[0].data)));
+  const std::string destination(getInputValue(*static_cast<UA_String*>(input[1].data)));
+  std::vector<std::string> sourceFullName;
+  std::vector<std::string> destinationFullName;
+  parseDestinationName(source, sourceFullName);
+  parseDestinationName(destination, destinationFullName);
+
+  const char* resourceName = static_cast<const char*>(objectContext);
+  OPCUA_MGR* uaMGR = static_cast<OPCUA_MGR*>(methodContext);
+  uaMGR->setMGMCommand(EMGMCommandType::DeleteConnection, CStringDictionary::getInstance().insert(resourceName), nullptr, sourceFullName, destinationFullName);
+  eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
+  return scResponseMap.find(eRetVal)->second;
 }
+
+EMGMResponse OPCUA_MGR::addQueryResourcesMethod(UA_Server* paServer) {
+  UA_Argument outputArgument;
+  initArgument(outputArgument, UA_TYPES_STRING, smQueryResourcesOutArgName, smQueryResourcesOutArgDescription);
+  UA_MethodAttributes queryResourcesAttr = createAttribute(smQueryResourcesDisplayName, smQueryResourcesDescription);
+  return addMethodNode(paServer, smQueryResourcesMethodName, mMgmtTypeId, queryResourcesAttr, nullptr, 0, &outputArgument, 1, &onQueryResources);
+}
+
+UA_StatusCode OPCUA_MGR::onQueryResources(UA_Server*,
+  const UA_NodeId*, void*,
+  const UA_NodeId*, void* methodContext,
+  const UA_NodeId*, void*,
+  size_t, const UA_Variant*,
+  size_t, UA_Variant* output) {
+  if (!methodContext) {
+    return UA_STATUSCODE_BADUNKNOWNRESPONSE;
+  }
+  EMGMResponse eRetVal = EMGMResponse::UnsupportedType;
+  OPCUA_MGR* uaMGR = static_cast<OPCUA_MGR*>(methodContext);
+  uaMGR->setMGMCommand(EMGMCommandType::QueryFB, CStringDictionary::scmInvalidStringId, nullptr, nullptr, nullptr);
+  eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
+  int status = scResponseMap.find(eRetVal)->second;
+  if (status != UA_STATUSCODE_GOOD) {
+    return status;
+  }
+  UA_String uaResp = UA_String_fromChars(uaMGR->mCommand.mAdditionalParams.c_str());
+  status = UA_Variant_setScalarCopy(output, &uaResp, &UA_TYPES[UA_TYPES_STRING]);
+  UA_String_clear(&uaResp);
+  return status;
+}
+
+/* FORTE Monitoring */
+#ifdef FORTE_SUPPORT_MONITORING
+
+EMGMResponse OPCUA_MGR::addAddWatchMethod(UA_Server* paServer) {
+  UA_Argument inputArgument;
+  initArgument(inputArgument, UA_TYPES_STRING, smAddWatchArgName, smAddWatchArgDescription);
+
+  UA_MethodAttributes addWatchAttr = createAttribute(smAddWatchAttrDisplayName, smAddWatchAttrDescription);
+  return addMethodNode(paServer, smAddWatchMethodName, mResourceTypeId, addWatchAttr, &inputArgument, 1, nullptr, 0, &onAddWatch);
+}
+
+UA_StatusCode OPCUA_MGR::onAddWatch(UA_Server*,
+  const UA_NodeId*, void*,
+  const UA_NodeId*, void* methodContext,
+  const UA_NodeId*, void* objectContext,
+  size_t, const UA_Variant* input,
+  size_t, UA_Variant*) {
+  if (!methodContext) {
+    return UA_STATUSCODE_BADUNKNOWNRESPONSE;
+  }
+  EMGMResponse eRetVal = EMGMResponse::UnsupportedType;
+  const std::string destination(getInputValue(*static_cast<UA_String*>(input[0].data)));
+  std::vector<std::string> fullFbName;
+  parseDestinationName(destination, fullFbName);
+
+  const char* resourceName = static_cast<const char*>(objectContext);
+  OPCUA_MGR* uaMGR = static_cast<OPCUA_MGR*>(methodContext);
+  uaMGR->setMGMCommand(EMGMCommandType::MonitoringAddWatch, CStringDictionary::getInstance().insert(resourceName), nullptr, fullFbName);
+  eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
+  return scResponseMap.find(eRetVal)->second;
+}
+
+EMGMResponse OPCUA_MGR::addReadWatchesMethod(UA_Server* paServer) {
+  UA_Argument outputArgument;
+  initArgument(outputArgument, UA_TYPES_STRING, smReadWatchesOutArgName, smReadWatchesOutArgDescription);
+  UA_MethodAttributes readWatchesAttr = createAttribute(smReadWatchesDisplayName, smReadWatchesDescription);
+  return addMethodNode(paServer, smReadWatchesMethodName, mMgmtTypeId, readWatchesAttr, nullptr, 0, &outputArgument, 1, &onReadWatches);
+}
+
+UA_StatusCode OPCUA_MGR::onReadWatches(UA_Server*,
+  const UA_NodeId*, void*,
+  const UA_NodeId*, void* methodContext,
+  const UA_NodeId*, void*,
+  size_t, const UA_Variant*,
+  size_t, UA_Variant* output) {
+  if (!methodContext) {
+    return UA_STATUSCODE_BADUNKNOWNRESPONSE;
+  }
+  EMGMResponse eRetVal = EMGMResponse::UnsupportedType;
+  OPCUA_MGR* uaMGR = static_cast<OPCUA_MGR*>(methodContext);
+  uaMGR->setMGMCommand(EMGMCommandType::MonitoringReadWatches, CStringDictionary::scmInvalidStringId, nullptr, nullptr, nullptr);
+  eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
+  int status = scResponseMap.find(eRetVal)->second;
+  if (status != UA_STATUSCODE_GOOD) {
+    return status;
+  }
+  UA_String uaResp = UA_String_fromChars(uaMGR->mCommand.mMonitorResponse.c_str());
+  status = UA_Variant_setScalarCopy(output, &uaResp, &UA_TYPES[UA_TYPES_STRING]);
+  UA_String_clear(&uaResp);
+  return status;
+}
+
+EMGMResponse OPCUA_MGR::addRemoveWatchMethod(UA_Server* paServer) {
+  UA_Argument inputArgument;
+  initArgument(inputArgument, UA_TYPES_STRING, smRemoveWatchArgName, smRemoveWatchArgDescription);
+
+  UA_MethodAttributes removeWatchAttr = createAttribute(smRemoveWatchAttrDisplayName, smRemoveWatchAttrDescription);
+  return addMethodNode(paServer, smRemoveWatchMethodName, mResourceTypeId, removeWatchAttr, &inputArgument, 1, nullptr, 0, &onRemoveWatch);
+}
+
+UA_StatusCode OPCUA_MGR::onRemoveWatch(UA_Server*,
+  const UA_NodeId*, void*,
+  const UA_NodeId*, void* methodContext,
+  const UA_NodeId*, void* objectContext,
+  size_t, const UA_Variant* input,
+  size_t, UA_Variant*) {
+  if (!methodContext) {
+    return UA_STATUSCODE_BADUNKNOWNRESPONSE;
+  }
+  EMGMResponse eRetVal = EMGMResponse::UnsupportedType;
+  const std::string destination(getInputValue(*static_cast<UA_String*>(input[0].data)));
+  std::vector<std::string> fullFbName;
+  parseDestinationName(destination, fullFbName);
+
+  const char* resourceName = static_cast<const char*>(objectContext);
+  OPCUA_MGR* uaMGR = static_cast<OPCUA_MGR*>(methodContext);
+  uaMGR->setMGMCommand(EMGMCommandType::MonitoringRemoveWatch, CStringDictionary::getInstance().insert(resourceName), nullptr, fullFbName);
+  eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
+  return scResponseMap.find(eRetVal)->second;
+}
+
+EMGMResponse OPCUA_MGR::addTriggerEventMethod(UA_Server* paServer) {
+  UA_Argument inputArgument;
+  initArgument(inputArgument, UA_TYPES_STRING, smTriggerEventArgName, smTriggerEventArgDescription);
+
+  UA_MethodAttributes triggerEventAttr = createAttribute(smTriggerEventAttrDisplayName, smTriggerEventAttrDescription);
+  return addMethodNode(paServer, smTriggerEventMethodName, mResourceTypeId, triggerEventAttr, &inputArgument, 1, nullptr, 0, &onTriggerEvent);
+}
+
+UA_StatusCode OPCUA_MGR::onTriggerEvent(UA_Server*,
+  const UA_NodeId*, void*,
+  const UA_NodeId*, void* methodContext,
+  const UA_NodeId*, void* objectContext,
+  size_t, const UA_Variant* input,
+  size_t, UA_Variant*) {
+  if (!methodContext) {
+    return UA_STATUSCODE_BADUNKNOWNRESPONSE;
+  }
+  EMGMResponse eRetVal = EMGMResponse::UnsupportedType;
+  const std::string destination(getInputValue(*static_cast<UA_String*>(input[0].data)));
+  std::vector<std::string> fullFbName;
+  parseDestinationName(destination, fullFbName);
+
+  const char* resourceName = static_cast<const char*>(objectContext);
+  OPCUA_MGR* uaMGR = static_cast<OPCUA_MGR*>(methodContext);
+  uaMGR->setMGMCommand(EMGMCommandType::MonitoringTriggerEvent, CStringDictionary::getInstance().insert(resourceName), OPCUA_MGR::scmTriggerEventParam, fullFbName);
+  eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
+  return scResponseMap.find(eRetVal)->second;
+}
+
+EMGMResponse OPCUA_MGR::addForceValueMethod(UA_Server* paServer) {
+  UA_Argument inputArguments[2];
+  initArgument(inputArguments[0], UA_TYPES_STRING, smForceValueArg1Name, smForceValueArg1Description);
+  initArgument(inputArguments[1], UA_TYPES_STRING, smForceValueArg2Name, smForceValueArg2Description);
+
+  UA_MethodAttributes forceValueAttr = createAttribute(smForceValueAttrDisplayName, smForceValueAttrDescription);
+  return addMethodNode(paServer, smForceValueMethodName, mResourceTypeId, forceValueAttr, inputArguments, 2, nullptr, 0, &onForceValue);
+}
+
+UA_StatusCode OPCUA_MGR::onForceValue(UA_Server*,
+  const UA_NodeId*, void*,
+  const UA_NodeId*, void* methodContext,
+  const UA_NodeId*, void* objectContext,
+  size_t, const UA_Variant* input,
+  size_t, UA_Variant*) {
+  if (!methodContext) {
+    return UA_STATUSCODE_BADUNKNOWNRESPONSE;
+  }
+  EMGMResponse eRetVal = EMGMResponse::UnsupportedType;
+  const std::string destination(getInputValue(*static_cast<UA_String*>(input[0].data)));
+  const std::string writeValue(getInputValue(*static_cast<UA_String*>(input[1].data)));
+  std::vector<std::string> writeDestination;
+  parseDestinationName(destination, writeDestination);
+
+  const char* resourceName = static_cast<const char*>(objectContext);
+  OPCUA_MGR* uaMGR = static_cast<OPCUA_MGR*>(methodContext);
+  uaMGR->setMGMCommand(EMGMCommandType::MonitoringForce, CStringDictionary::getInstance().insert(resourceName), writeValue.c_str(), writeDestination);
+  eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
+  return scResponseMap.find(eRetVal)->second;
+}
+
+EMGMResponse OPCUA_MGR::addClearForceMethod(UA_Server* paServer) {
+  UA_Argument inputArgument;
+  initArgument(inputArgument, UA_TYPES_STRING, smClearForceArgName, smClearForceArgDescription);
+
+  UA_MethodAttributes clearForceAttr = createAttribute(smClearForceAttrDisplayName, smClearForceAttrDescription);
+  return addMethodNode(paServer, smClearForceMethodName, mResourceTypeId, clearForceAttr, &inputArgument, 1, nullptr, 0, &onClearForce);
+}
+
+UA_StatusCode OPCUA_MGR::onClearForce(UA_Server*,
+  const UA_NodeId*, void*,
+  const UA_NodeId*, void* methodContext,
+  const UA_NodeId*, void* objectContext,
+  size_t, const UA_Variant* input,
+  size_t, UA_Variant*) {
+  if (!methodContext) {
+    return UA_STATUSCODE_BADUNKNOWNRESPONSE;
+  }
+  EMGMResponse eRetVal = EMGMResponse::UnsupportedType;
+  const std::string destination(getInputValue(*static_cast<UA_String*>(input[0].data)));
+  std::vector<std::string> fullFbName;
+  parseDestinationName(destination, fullFbName);
+
+  const char* resourceName = static_cast<const char*>(objectContext);
+  OPCUA_MGR* uaMGR = static_cast<OPCUA_MGR*>(methodContext);
+  uaMGR->setMGMCommand(EMGMCommandType::MonitoringClearForce, CStringDictionary::getInstance().insert(resourceName), nullptr, fullFbName);
+  eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
+  return scResponseMap.find(eRetVal)->second;
+}
+
+#endif // FORTE_SUPPORT_MONITORING
 
 /* Helpers */
 
@@ -1001,7 +1263,9 @@ void OPCUA_MGR::clearMGMCommand() {
   mCommand.mFirstParam.clear();
   mCommand.mSecondParam.clear();
   mCommand.mAdditionalParams.clear();
+#ifdef FORTE_SUPPORT_MONITORING
   mCommand.mMonitorResponse.clear();
+#endif // FORTE_SUPPORT_MONITORING
 }
 
 void OPCUA_MGR::setMGMCommand(EMGMCommandType paCMD, CStringDictionary::TStringId paDestination,
@@ -1016,7 +1280,7 @@ void OPCUA_MGR::setMGMCommand(EMGMCommandType paCMD, CStringDictionary::TStringI
     mCommand.mSecondParam.pushBack(CStringDictionary::getInstance().insert(paSecondParam));
   }
   if (paAdditionalParams != nullptr) {
-    mCommand.mAdditionalParams.fromString(paAdditionalParams);
+    mCommand.mAdditionalParams = CIEC_STRING(paAdditionalParams);
   }
 }
 
@@ -1037,7 +1301,7 @@ void OPCUA_MGR::setMGMCommand(EMGMCommandType paCMD, CStringDictionary::TStringI
     }
   }
   if (paAdditionalParams != nullptr) {
-    mCommand.mAdditionalParams.fromString(paAdditionalParams);
+    mCommand.mAdditionalParams = CIEC_STRING(paAdditionalParams);
   }
 }
 
@@ -1049,12 +1313,13 @@ std::string OPCUA_MGR::getInputValue(UA_String paInput) {
   return inputNameStr.substr(0, paInput.length);
 }
 
-void OPCUA_MGR::parseDestinationName(std::string& paDestination, std::vector<std::string>& paFbName) {
-  size_t index = paDestination.find_first_of(".");
+void OPCUA_MGR::parseDestinationName(const std::string& paDestination, std::vector<std::string>& paFbName) {
+  std::string dst(paDestination);
+  size_t index = dst.find_first_of(".");
   while (index != std::string::npos) {
-    paFbName.push_back(paDestination.substr(0, index));
-    paDestination = paDestination.substr(paFbName.back().length() + 1);
-    index = paDestination.find_first_of(".");
+    paFbName.push_back(dst.substr(0, index));
+    dst = dst.substr(paFbName.back().length() + 1);
+    index = dst.find_first_of(".");
   }
-  paFbName.push_back(paDestination.substr(0, index));
+  paFbName.push_back(dst.substr(0, index));
 }

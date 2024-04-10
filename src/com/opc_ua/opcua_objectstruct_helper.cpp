@@ -12,23 +12,25 @@
  *******************************************************************************/
 
 #include "opcua_objectstruct_helper.h"
+#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
+#include "opcua_objectstruct_helper_gen.cpp"
+#endif
 #include "opcua_layer.h"
 #include "struct_action_info.h"
 #include "../../core/cominfra/basecommfb.h"
 #include "opcua_local_handler.h"
+#include <sstream>
 
 using namespace forte::com_infra;
 
-const UA_UInt16 COPC_UA_ObjectStruct_Helper::smOpcuaNamespaceIndex = 2;
+const std::string COPC_UA_ObjectStruct_Helper::smStructTypesBrowsePath = "/Types/0:ObjectTypes/0:BaseObjectType/%d:";
 
-const std::string COPC_UA_ObjectStruct_Helper::smStructTypesBrowsePath = "/Types/0:ObjectTypes/0:BaseObjectType/2:";
+const std::string COPC_UA_ObjectStruct_Helper::smMemberNamespaceIndex = "/%d:";
 
-const std::string COPC_UA_ObjectStruct_Helper::smMemberNamespaceIndex = "/2:";
-
-char COPC_UA_ObjectStruct_Helper::smEmptyLocale[] = "";
+char COPC_UA_ObjectStruct_Helper::smEmptyString[] = "";
 
 COPC_UA_ObjectStruct_Helper::COPC_UA_ObjectStruct_Helper(COPC_UA_Layer &paLayer, COPC_UA_HandlerAbstract *paHandler):
-  mLayer(paLayer), mHandler(paHandler) {
+  mLayer(paLayer), mHandler(paHandler), mOpcuaNamespaceIndex(1) {
 }
 
 COPC_UA_ObjectStruct_Helper::~COPC_UA_ObjectStruct_Helper() {
@@ -40,14 +42,15 @@ COPC_UA_ObjectStruct_Helper::~COPC_UA_ObjectStruct_Helper() {
 
 void COPC_UA_ObjectStruct_Helper::uninitializeStruct() {
   for(std::shared_ptr<CActionInfo> actionInfo : mStructMemberActionInfos) {
-      mHandler->uninitializeAction(*actionInfo);
-    }
-    if(mCreateNodeActionInfo) {
-      mHandler->uninitializeAction(*mCreateNodeActionInfo);
+    mHandler->uninitializeAction(*actionInfo);
+  }
+  if(mCreateNodeActionInfo) {
+    mHandler->uninitializeAction(*mCreateNodeActionInfo);
   }
 }
 
 bool COPC_UA_ObjectStruct_Helper::checkStructTypeConnection(bool paIsPublisher) {
+  checkOPCUANamespace();
   std::string browsePath(getStructBrowsePath(smStructTypesBrowsePath, paIsPublisher));
   if(isOPCUAObjectPresent(browsePath)) {
     return true;
@@ -81,18 +84,34 @@ bool COPC_UA_ObjectStruct_Helper::createOPCUAStructType(const std::string &paStr
   return true;
 }
 
+bool COPC_UA_ObjectStruct_Helper::createOPCUANamespace(char* nsName) {
+  mHandler->enableHandler();
+  COPC_UA_Local_Handler* localHandler = static_cast<COPC_UA_Local_Handler*>(mHandler);
+  if(!localHandler) {
+    DEVLOG_ERROR("[OPC UA OBJECT STRUCT HELPER]: Failed to get LocalHandler because LocalHandler is null!\n");
+    return false;
+  }
+  UA_Server *server = localHandler->getUAServer();
+  UA_UInt16 nsIndex = UA_Server_addNamespace(server, nsName);
+  if(nsIndex <= 0) {
+    return false;
+  }
+  mOpcuaNamespaceIndex = nsIndex;
+  return true;
+}
+
 bool COPC_UA_ObjectStruct_Helper::defineOPCUAStructTypeNode(UA_Server *paServer, UA_NodeId &paNodeId, const std::string &paStructTypeName) {
   char* structTypeName = new char[paStructTypeName.length() +1];
   strncpy(structTypeName, paStructTypeName.c_str(), paStructTypeName.length());
   structTypeName[paStructTypeName.length()] = '\0';
   mStructTypeNames.push_back(structTypeName);
-  paNodeId = UA_NODEID_NUMERIC(smOpcuaNamespaceIndex, 0);
+  paNodeId = UA_NODEID_NUMERIC(mOpcuaNamespaceIndex, 0);
   UA_ObjectTypeAttributes oAttr = UA_ObjectTypeAttributes_default;
-  oAttr.displayName = UA_LOCALIZEDTEXT(smEmptyLocale, structTypeName);
+  oAttr.displayName = UA_LOCALIZEDTEXT(smEmptyString, structTypeName);
   UA_StatusCode status = UA_Server_addObjectTypeNode(paServer, paNodeId,
     UA_NODEID_NUMERIC(0, UA_NS0ID_BASEOBJECTTYPE),
     UA_NODEID_NUMERIC(0, UA_NS0ID_HASSUBTYPE),
-    UA_QUALIFIEDNAME(smOpcuaNamespaceIndex, structTypeName), oAttr,
+    UA_QUALIFIEDNAME(mOpcuaNamespaceIndex, structTypeName), oAttr,
     nullptr, &paNodeId);
   
   if (status != UA_STATUSCODE_GOOD) {
@@ -108,18 +127,18 @@ bool COPC_UA_ObjectStruct_Helper::addOPCUAStructTypeComponent(UA_Server *paServe
   memberName[paStructMemberName.length()] = '\0';
   mStructTypeNames.push_back(memberName);
   UA_VariableAttributes vAttr = UA_VariableAttributes_default;
-    vAttr.displayName = UA_LOCALIZEDTEXT(smEmptyLocale, memberName);
+    vAttr.displayName = UA_LOCALIZEDTEXT(smEmptyString, memberName);
     vAttr.valueRank = UA_VALUERANK_SCALAR;
     vAttr.minimumSamplingInterval = 0.000000;
-    vAttr.userAccessLevel = 1;
-    vAttr.accessLevel = 3;
-    vAttr.dataType = COPC_UA_Helper::getOPCUATypeFromAny(*paStructMember)->typeId;//UA_NODEID_NUMERIC(0, 1); // 1 is Boolean
+    vAttr.userAccessLevel = UA_ACCESSLEVELMASK_READ | UA_ACCESSLEVELMASK_WRITE;
+    vAttr.accessLevel = UA_ACCESSLEVELMASK_READ | UA_ACCESSLEVELMASK_WRITE;
+    vAttr.dataType = COPC_UA_Helper::getOPCUATypeFromAny(*paStructMember)->typeId;
 
-    UA_NodeId memberNodeId = UA_NODEID_NUMERIC(smOpcuaNamespaceIndex, 0);
-    UA_StatusCode status = UA_Server_addVariableNode(paServer, UA_NODEID_NULL, paParentNodeId,
+    UA_NodeId memberNodeId = UA_NODEID_NUMERIC(mOpcuaNamespaceIndex, 0);
+    UA_StatusCode status = UA_Server_addVariableNode(paServer, memberNodeId, paParentNodeId,
       UA_NODEID_NUMERIC(0, UA_NS0ID_HASCOMPONENT),
-      UA_QUALIFIEDNAME(smOpcuaNamespaceIndex, memberName),
-      UA_NODEID_NUMERIC(0, UA_NS0ID_BASEDATAVARIABLETYPE), vAttr, NULL, &memberNodeId);
+      UA_QUALIFIEDNAME(mOpcuaNamespaceIndex, memberName),
+      UA_NODEID_NUMERIC(0, UA_NS0ID_BASEDATAVARIABLETYPE), vAttr, nullptr, &memberNodeId);
   if(status != UA_STATUSCODE_GOOD) {
     DEVLOG_ERROR("[OPC UA OBJECT STRUCT HELPER]: Failed to add Member to OPC UA Struct Type Node for Member %s, Status Code: %s\n", paStructMemberName.c_str(), UA_StatusCode_name(status));
     return false;
@@ -259,7 +278,6 @@ forte::com_infra::EComResponse COPC_UA_ObjectStruct_Helper::initializeMemberActi
 bool COPC_UA_ObjectStruct_Helper::isOPCUAObjectPresent(std::string &paBrowsePath) {
   COPC_UA_Local_Handler* localHandler = static_cast<COPC_UA_Local_Handler*>(mHandler);
   if(localHandler) {
-    // CActionInfo::CNodePairInfo* nodePair = new CActionInfo::CNodePairInfo(nullptr, paBrowsePath);
     CActionInfo::CNodePairInfo nodePair(nullptr, paBrowsePath);
     bool retVal = localHandler->isOPCUAObjectPresent(nodePair);
     if(nodePair.mNodeId) delete nodePair.mNodeId;
@@ -270,16 +288,37 @@ bool COPC_UA_ObjectStruct_Helper::isOPCUAObjectPresent(std::string &paBrowsePath
   return false;
 }
 
-std::string COPC_UA_ObjectStruct_Helper::getStructBrowsePath(const std::string &paPathPrefix, bool paIsPublisher) {
-  std::string structTypeName(getStructTypeName(paIsPublisher));
-  if(!structTypeName.empty()) {
-	  return paPathPrefix + structTypeName;
+void COPC_UA_ObjectStruct_Helper::checkOPCUANamespace() {
+  if(!mLayer.getCommFB()->getResource()->getFBInterfaceSpec()) {
+    return;
   }
-  return std::string();
+  CIEC_WSTRING* configPort = static_cast<CIEC_WSTRING*>(mLayer.getCommFB()->getResource()->getDataInput(g_nStringIdOPCUA_Namespace));
+  if(configPort && configPort->length() > 0) {
+    if(!createOPCUANamespace(configPort->getValue())) {
+      DEVLOG_ERROR("[OPC UA OBJECT STRUCT HELPER]: Failed to create OPC UA Namespace with value: %s", configPort->getValue());
+    }
+  }
 }
 
+std::string COPC_UA_ObjectStruct_Helper::getStructBrowsePath(const std::string &paPathPrefix, bool paIsPublisher) {
+  std::string structTypeName(getStructTypeName(paIsPublisher));
+  if(structTypeName.empty()) {
+    return std::string();
+  }
+  std::stringstream ss;
+  char buf[100];
+  snprintf(buf, sizeof(buf), paPathPrefix.c_str(), mOpcuaNamespaceIndex);
+  ss << buf << structTypeName;
+  return ss.str();
+}
+
+
 std::string COPC_UA_ObjectStruct_Helper::getStructMemberBrowsePath(std::string &paBrowsePathPrefix, const CStringDictionary::TStringId structMemberNameId) {
-  return paBrowsePathPrefix + smMemberNamespaceIndex + CStringDictionary::getInstance().get(structMemberNameId);
+  std::stringstream ss;
+  char buf[100];
+  snprintf(buf, sizeof(buf), smMemberNamespaceIndex.c_str(), mOpcuaNamespaceIndex);
+  ss << paBrowsePathPrefix << buf << CStringDictionary::getInstance().get(structMemberNameId);
+  return ss.str();
 }
 
 std::string COPC_UA_ObjectStruct_Helper::getStructTypeName(bool paIsPublisher) {

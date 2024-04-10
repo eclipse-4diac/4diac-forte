@@ -33,8 +33,8 @@ const TDataIOID FORTE_IORevPiAIO::scmEOWith[] = {0, scmWithListDelimiter, 0, 1, 
 const TForteInt16 FORTE_IORevPiAIO::scmEOWithIndexes[] = {0, 2};
 const CStringDictionary::TStringId FORTE_IORevPiAIO::scmEventOutputNames[] = {g_nStringIdMAPO, g_nStringIdIND};
 const SAdapterInstanceDef FORTE_IORevPiAIO::scmAdapterInstances[] = {
-  {g_nStringIdIORevPiBusAdapter, g_nStringIdBusAdapterIn, false},
-  {g_nStringIdIORevPiBusAdapter, g_nStringIdBusAdapterOut, true}
+  {g_nStringIdIORevPiBusAdapter, g_nStringIdBusAdapterOut, true},
+  {g_nStringIdIORevPiBusAdapter, g_nStringIdBusAdapterIn, false}
 };
 const SFBInterfaceSpec FORTE_IORevPiAIO::scmFBInterfaceSpec = {
   1, scmEventInputNames, scmEIWith, scmEIWithIndexes,

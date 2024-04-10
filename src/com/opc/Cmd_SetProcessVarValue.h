@@ -24,7 +24,7 @@ class COpcConnectionImpl;
 
 class CCmd_SetProcessVarValue : public ICmd{
   public:
-    explicit CCmd_SetProcessVarValue(COpcConnectionImpl *paConnection, std::string& paGroupName, std::string& paItemName, Variant paVar);
+    explicit CCmd_SetProcessVarValue(COpcConnectionImpl *paConnection, const std::string& paGroupName, const std::string& paItemName, Variant paVar);
     ~CCmd_SetProcessVarValue() = default;
 
     void runCommand() override;
@@ -33,8 +33,8 @@ class CCmd_SetProcessVarValue : public ICmd{
   private:
     COpcConnectionImpl* mConnection;
     COpcProcessVar* mOpcVar;
-    std::string mGroupName;
-    std::string mItemName;
+    const std::string mGroupName;
+    const std::string mItemName;
     Variant mVar;
 };
 

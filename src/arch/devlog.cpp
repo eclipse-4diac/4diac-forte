@@ -46,6 +46,10 @@
 #endif // FORTE_STACKTRACE_CXX23
 #endif // FORTE_STACKTRACE
 
+#ifdef __ZEPHYR__
+#include <zephyr/logging/log.h>
+#endif // __ZEPHYR__
+
 static const char* scLogLevel[] = { "INFO", "WARNING", "ERROR", "DEBUG", "TRACE" };
 
 //this define allows to provide an own log handler (see LMS for an example of this)
@@ -96,7 +100,7 @@ void printLogMessage(E_MsgLevel paLevel, const char *paMessage) {
 #ifndef __ZEPHYR__
   fprintf(stderr, "%s: T#%" PRIuFAST64 ": %s", scLogLevel[static_cast<int>(paLevel)], getNanoSecondsMonotonic(), paMessage);
 #else
-  printk("%s: T#%" PRIuFAST64 ": %s", scLogLevel[static_cast<int>(paLevel)], getNanoSecondsMonotonic(), paMessage);
+  LOG_PRINTK("%s: T#%" PRIuFAST64 ": %s", scLogLevel[static_cast<int>(paLevel)], getNanoSecondsMonotonic(), paMessage);
 #endif // __ZEPHYR__
 }
 
