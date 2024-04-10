@@ -280,8 +280,7 @@ bool COPC_UA_ObjectStruct_Helper::isOPCUAObjectPresent(std::string &paBrowsePath
   if(localHandler) {
     CActionInfo::CNodePairInfo nodePair(nullptr, paBrowsePath);
     bool retVal = localHandler->isOPCUAObjectPresent(nodePair);
-    if(nodePair.mNodeId) 
-    { 
+    if(nodePair.mNodeId) { 
       UA_NodeId_delete(nodePair.mNodeId);
     }
     return retVal;
