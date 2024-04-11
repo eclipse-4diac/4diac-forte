@@ -55,7 +55,7 @@ forte::com_infra::EComResponse CWin32SerComLayer::sendData(void *paData, unsigne
   }
 
   //Send termination symbol(s)
-  if (!WriteFile(static_cast<HANDLE>(mSerialHandle), mTerminationSymbol, strlen(mTerminationSymbol), &dwBytesWritten, nullptr))
+  if (!WriteFile(static_cast<HANDLE>(mSerialHandle), mTerminationSymbol, static_cast<DWORD>(strlen(mTerminationSymbol)), &dwBytesWritten, nullptr))
   {
     return forte::com_infra::e_ProcessDataSendFailed;
   }
@@ -70,7 +70,7 @@ forte::com_infra::EComResponse CWin32SerComLayer::sendData(void *paData, unsigne
 forte::com_infra::EComResponse CWin32SerComLayer::openSerialConnection(const SSerialParameters& paSerialParameters, CSerialComLayerBase<HANDLE>::TSerialHandleType* paHandleResult){
 
   HANDLE serialHandle = CreateFile(
-      paSerialParameters.interfaceName.getValue(),
+      paSerialParameters.interfaceName.c_str(),
       GENERIC_READ | GENERIC_WRITE, 0, 0,
       OPEN_EXISTING,
       FILE_ATTRIBUTE_NORMAL, 0);

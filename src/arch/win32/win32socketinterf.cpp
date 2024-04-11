@@ -1,5 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2010, 2023 ACIN, Profactor GmbH, AIT, fortiss GmbH, OFFIS e.V., HIT robot group
+ *               2024 Samator Indo Gas
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -11,12 +12,15 @@
  *     - initial API and implementation and/or initial documentation
  *  Jörg Walter - Windows XP compatibility, improve UDP multicast support
  *  Zhao Xin - fix socket resource leakage
+ *  Ketut Kumajaya - switch to the Unicode version of WSAStringToAddress
  *******************************************************************************/
 
 #include <sockhand.h>      //needs to be first pulls in the platform specific includes
 #include "win32socketinterf.h"
 #include "devlog.h"
-#include <string.h>
+#include "../forte_stringFunctions.h"
+
+#define S2WS(x) forte_stringToWstring(x)
 
 void CWin32SocketInterface::closeSocket(TSocketDescriptor paSockD){
   closesocket(paSockD);
@@ -78,8 +82,8 @@ CWin32SocketInterface::TSocketDescriptor CWin32SocketInterface::openTCPClientCon
   if(INVALID_SOCKET != nSocket) {
     sockaddr_in stSockAddr = {};
     int stSockAddrSz = sizeof(stSockAddr);
-    if(WSAStringToAddressA(paIPAddr, AF_INET, nullptr, (LPSOCKADDR)&stSockAddr, &stSockAddrSz)) {
-      DEVLOG_ERROR("CWin32SocketInterface: WSAStringToAddressA() failed: %d - %s\n", stSockAddr.sin_addr.s_addr, paIPAddr);
+    if(WSAStringToAddressW((LPWSTR)S2WS(paIPAddr).c_str(), AF_INET, nullptr, (LPSOCKADDR)&stSockAddr, &stSockAddrSz)) {
+      DEVLOG_ERROR("CWin32SocketInterface: WSAStringToAddressW() failed: %d - %s\n", stSockAddr.sin_addr.s_addr, paIPAddr);
     }
     stSockAddr.sin_family = AF_INET;
     stSockAddr.sin_port = htons(paPort);
@@ -162,8 +166,8 @@ CWin32SocketInterface::TSocketDescriptor CWin32SocketInterface::openUDPSendPort(
   if(INVALID_SOCKET != nRetVal) {
     *mDestAddr = TUDPDestAddr();
     int mDestAddrSz = sizeof(*mDestAddr);
-    if(WSAStringToAddressA(paIPAddr, AF_INET, nullptr, (LPSOCKADDR)mDestAddr, &mDestAddrSz)) {
-      DEVLOG_ERROR("CWin32SocketInterface: WSAStringToAddressA() failed: %d - %s\n", mDestAddr->sin_addr.s_addr, paIPAddr);
+    if(WSAStringToAddressW((LPWSTR)S2WS(paIPAddr).c_str(), AF_INET, nullptr, (LPSOCKADDR)mDestAddr, &mDestAddrSz)) {
+      DEVLOG_ERROR("CWin32SocketInterface: WSAStringToAddressW() failed: %d - %s\n", mDestAddr->sin_addr.s_addr, paIPAddr);
     }
     mDestAddr->sin_family = AF_INET;
     mDestAddr->sin_port = htons(paPort);
@@ -178,8 +182,8 @@ CWin32SocketInterface::TSocketDescriptor CWin32SocketInterface::openUDPSendPort(
   if (paMCInterface) {
     sockaddr_in stMCastIF = {};
     int stMCastIFSz = sizeof(stMCastIF);
-    if(WSAStringToAddressA(const_cast<char *>(paMCInterface), AF_INET, NULL, (LPSOCKADDR)&stMCastIF, &stMCastIFSz)) {
-      DEVLOG_ERROR("CWin32SocketInterface: WSAStringToAddressA() failed: %d - %s\n", stMCastIF.sin_addr.s_addr, paMCInterface);
+    if(WSAStringToAddressW((LPWSTR)S2WS(const_cast<char *>(paMCInterface)).c_str(), AF_INET, NULL, (LPSOCKADDR)&stMCastIF, &stMCastIFSz)) {
+      DEVLOG_ERROR("CWin32SocketInterface: WSAStringToAddressW() failed: %d - %s\n", stMCastIF.sin_addr.s_addr, paMCInterface);
     }
 
     struct in_addr ifaddr;
@@ -208,14 +212,14 @@ CWin32SocketInterface::TSocketDescriptor CWin32SocketInterface::openUDPReceivePo
         // setting up multicast group
         sockaddr_in stMCastAddr = {};
         int stMCastAddrSz = sizeof(stMCastAddr);
-        if(WSAStringToAddressA(paIPAddr, AF_INET, nullptr, (LPSOCKADDR)&stMCastAddr, &stMCastAddrSz)) {
-          DEVLOG_ERROR("CWin32SocketInterface: WSAStringToAddressA() failed: %d - %s\n", stMCastAddr.sin_addr.s_addr, paIPAddr);
+        if(WSAStringToAddressW((LPWSTR)S2WS(paIPAddr).c_str(), AF_INET, nullptr, (LPSOCKADDR)&stMCastAddr, &stMCastAddrSz)) {
+          DEVLOG_ERROR("CWin32SocketInterface: WSAStringToAddressW() failed: %d - %s\n", stMCastAddr.sin_addr.s_addr, paIPAddr);
         }
 
         sockaddr_in stMCastIF = {};
         int stMCastIFSz = sizeof(stMCastIF);
-        if(WSAStringToAddressA(const_cast<char *>(paMCInterface), AF_INET, NULL, (LPSOCKADDR)&stMCastIF, &stMCastIFSz)) {
-          DEVLOG_ERROR("CWin32SocketInterface: WSAStringToAddressA() failed: %d - %s\n", stMCastIF.sin_addr.s_addr, paMCInterface);
+        if(WSAStringToAddressW((LPWSTR)S2WS(const_cast<char *>(paMCInterface)).c_str(), AF_INET, NULL, (LPSOCKADDR)&stMCastIF, &stMCastIFSz)) {
+          DEVLOG_ERROR("CWin32SocketInterface: WSAStringToAddressW() failed: %d - %s\n", stMCastIF.sin_addr.s_addr, paMCInterface);
         }
 
         struct ip_mreq stMReq = {};
