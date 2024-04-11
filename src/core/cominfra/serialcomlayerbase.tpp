@@ -55,7 +55,7 @@ forte::com_infra::EComResponse CSerialComLayerBase<TThreadHandle, nullHandle>::o
   }
 
   SSerialParameters parsedParameters;
-  parsedParameters.interfaceName = CIEC_STRING(parser[CSerialComLayerBase::eInterface]);
+  parsedParameters.interfaceName = CIEC_STRING(parser[CSerialComLayerBase::eInterface], strlen(parser[CSerialComLayerBase::eInterface]));
 
   //Check baud rate setting
   parsedParameters.baudRate = static_cast<EForteSerialBaudRate>(atoi(parser[CSerialComLayerBase::eBaudrate]));

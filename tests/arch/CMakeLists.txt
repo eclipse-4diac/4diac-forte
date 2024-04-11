@@ -10,4 +10,8 @@
 # *   Martin Melik-Merkumians  - initial API and implementation and/or initial documentation
 # *******************************************************************************/
 
+forte_test_add_inc_directories(${CMAKE_CURRENT_SOURCE_DIR})
+
+forte_test_add_sourcefile_cpp(forte_stringFunctions_test.cpp)
+
 forte_test_add_subdirectory(utils)
