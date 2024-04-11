@@ -442,17 +442,17 @@ class CUA_ClientInformation {
     /**
      * Time in nanoseconds that the client should wait before another reconnection try
      */
-    static const uint_fast64_t scmConnectionRetryTimeoutNano = 8E9; //8s
+    static const uint_fast64_t scmConnectionRetryTimeoutNano = static_cast<uint_fast64_t>(8E9); //8s
 
     /**
      * Time in nanoseconds that the client should wait before try to initialize the actions
      */
-    static const uint_fast64_t scmInitializeActionRetryNano = 3E9; //3s
+    static const uint_fast64_t scmInitializeActionRetryNano = static_cast<uint_fast64_t>(3E9); //3s
 
     /**
      * Time in milliseconds for connection timeout configured in the OPC UA stack client
      */
-    static const UA_UInt32 scmClientTimeoutInMilli = 5E3; //5s
+    static const UA_UInt32 scmClientTimeoutInMilli = static_cast<UA_UInt32>(5E3); //5s
 
 };
 
