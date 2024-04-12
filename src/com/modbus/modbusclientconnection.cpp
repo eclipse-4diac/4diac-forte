@@ -196,8 +196,8 @@ int CModbusConnectionEvent::executeEvent(modbus_t *paModbusConn, void *paRetVal)
 
   restartTimer();
 
-  switch (mFlowControl) {
 #ifndef WIN32
+  switch (mFlowControl) {
     case eFlowArduino: {
       int fd = open(mDevice, O_RDWR);
       if (fd >= 0) {
@@ -221,11 +221,11 @@ int CModbusConnectionEvent::executeEvent(modbus_t *paModbusConn, void *paRetVal)
       }
       break;
     }
-#endif
     default:
       // ignore
       break;
   };
+#endif
 
   int retVal = modbus_connect(paModbusConn);
 
