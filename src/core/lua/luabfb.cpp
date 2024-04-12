@@ -75,7 +75,7 @@ void CLuaBFB::executeEvent(TEventID paEIID, CEventChainExecutionThread *paECET) 
   CLuaEngine *luaEngine = getResource()->getLuaEngine();
   luaEngine->load(mTypeEntry);
   luaEngine->load(this);
-  luaEngine->pushInteger(paEIID > 255 ? recalculateID(paEIID) : paEIID);
+  luaEngine->pushInteger(paEIID > 255 ? recalculateID(static_cast<int>(paEIID)) : paEIID);
   if(!luaEngine->call(2, 0)) {
     DEVLOG_ERROR("Error calling function executeEvent for instance %s\n", getInstanceName());
   }

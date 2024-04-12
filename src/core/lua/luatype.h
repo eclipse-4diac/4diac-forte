@@ -15,8 +15,8 @@
 #define SRC_CORE_LUA_LUATYPE_H_
 
 #include "../stringdict.h"
+#include "../funcbloc.h"
 
-class SAdapterInstanceDef;
 class CLuaEngine;
 
 namespace luatype {

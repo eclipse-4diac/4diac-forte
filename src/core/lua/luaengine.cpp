@@ -249,7 +249,7 @@ bool CLuaEngine::luaGetAny(lua_State *paLuaState, CIEC_ANY &paValue, int paIndex
       static_cast<CIEC_LREAL&>(paValue) = CIEC_LREAL(static_cast<TForteDFloat>(lua_tonumber(paLuaState, paIndex)));
       break;
     case CIEC_ANY::e_STRING:
-      static_cast<CIEC_STRING&>(paValue) = CIEC_STRING(lua_tostring(paLuaState, paIndex));
+      static_cast<CIEC_STRING&>(paValue) = CIEC_STRING(std::string(lua_tostring(paLuaState, paIndex)));
       break;
     case CIEC_ANY::e_WSTRING:
       static_cast<CIEC_WSTRING&>(paValue) = CIEC_WSTRING(lua_tostring(paLuaState, paIndex));
@@ -265,8 +265,8 @@ bool CLuaEngine::luaGetAny(lua_State *paLuaState, CIEC_ANY &paValue, int paIndex
 }
 
 bool CLuaEngine::luaPushArray(lua_State *paLuaState, const CIEC_ARRAY& paArray) {
-  lua_createtable(paLuaState, paArray.size(), 2);
-  for(size_t i = paArray.size(); i > 0; i--) {
+  lua_createtable(paLuaState, static_cast<int>(paArray.size()), 2);
+  for(int i = static_cast<int>(paArray.size()); i > 0; i--) {
     if(!luaPushAny(paLuaState, paArray[(TForteUInt16) (i - 1)])) { // index starts at 0
       lua_pop(paLuaState, 1); // pop table
       return false;
@@ -294,10 +294,10 @@ bool CLuaEngine::luaGetArray(lua_State *paLuaState, CIEC_ARRAY& paArray, int paI
   }
   lua_pushstring(paLuaState, "lo");
   lua_rawget(paLuaState, adjIndex);
-  int lo = lua_tointeger(paLuaState, -1);
+  int lo = static_cast<int>(lua_tointeger(paLuaState, -1));
   lua_pop(paLuaState, 1); // pop lo
 
-  for (size_t i = 0; i < paArray.size(); i++) {
+  for (int i = 0; i < static_cast<int>(paArray.size()); i++) {
     lua_rawgeti(paLuaState, paIndex, i + lo); // use the lower bound as offset
     bool res = luaGetAny(paLuaState, paArray[(TForteUInt16) i], -1);
     lua_pop(paLuaState, 1); // pop element
