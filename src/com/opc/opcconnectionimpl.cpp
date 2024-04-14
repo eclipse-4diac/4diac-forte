@@ -14,6 +14,7 @@
  *******************************************************************************/
 #include "opcconnectionimpl.h"
 #include "../../arch/devlog.h"
+#include "../../arch/forte_stringFunctions.h"
 
 #include "opceventhandler.h"
 #include "opcconnection.h"
@@ -24,8 +25,8 @@
 #include "OPCGroup.h"
 #include "OPCItem.h"
 
-#define S2WS(x) COPCHost::S2WS(x)
-#define WS2S(x) COPCHost::WS2S(x)
+#define S2WS(x) forte_stringToWstring(x)
+#define WS2S(x) forte_wstringToString(x)
 
 using namespace std::string_literals;
 
