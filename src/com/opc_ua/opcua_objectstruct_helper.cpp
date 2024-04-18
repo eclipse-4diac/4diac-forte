@@ -19,6 +19,7 @@
 #include "struct_action_info.h"
 #include "../../core/cominfra/basecommfb.h"
 #include "opcua_local_handler.h"
+#include "../../core/utils/parameterParser.h"
 #include <sstream>
 
 using namespace forte::com_infra;
@@ -249,7 +250,9 @@ std::shared_ptr<CActionInfo> COPC_UA_ObjectStruct_Helper::getCreateObjectActionI
   std::string typeBrowsePath(getStructBrowsePath(smStructTypesBrowsePath, paIsPublisher));
   CSinglyLinkedList<CActionInfo::CNodePairInfo*>& nodePairs = actionInfo->getNodePairInfo();
   nodePairs.pushBack(new CActionInfo::CNodePairInfo(nullptr, typeBrowsePath));
-  nodePairs.pushBack(new CActionInfo::CNodePairInfo(nullptr, paBrowsePath));
+  UA_NodeId *nodeId = createStringNodeIdFromBrowsepath(paBrowsePath);
+  mOpcuaObjectNamespaceIndex = nodeId->namespaceIndex;
+  nodePairs.pushBack(new CActionInfo::CNodePairInfo(nodeId, paBrowsePath));
   return actionInfo;
 }
 
@@ -269,7 +272,8 @@ forte::com_infra::EComResponse COPC_UA_ObjectStruct_Helper::initializeMemberActi
 
     std::shared_ptr<CActionInfo> actionInfo = std::make_shared<CStructMemberActionInfo>(*this, mLayer, paActionInfo.getAction(), paActionInfo.getEndpoint());
     CIEC_ANY* memberVariable = structType.getMember(i);
-    actionInfo->getNodePairInfo().pushBack(new CActionInfo::CNodePairInfo(nullptr, memberBrowsePath));
+    UA_NodeId *nodeId = createStringNodeIdFromBrowsepath(memberBrowsePath);
+    actionInfo->getNodePairInfo().pushBack(new CActionInfo::CNodePairInfo(nodeId, memberBrowsePath));
     if(UA_STATUSCODE_GOOD != localHandler->initializeActionForObjectStruct(actionInfo, *memberVariable)) {
       DEVLOG_ERROR("[OPC UA OBJECT STRUCT HELPER]: Error occured in FB %s while initializing Struct member %s\n", mLayer.getCommFB()->getInstanceName(),
       CStringDictionary::getInstance().get(structMemberNames[i]));
@@ -305,6 +309,48 @@ void COPC_UA_ObjectStruct_Helper::checkOPCUANamespace() {
       DEVLOG_ERROR("[OPC UA OBJECT STRUCT HELPER]: Failed to create OPC UA Namespace with value: %s", configPort->getValue());
     }
   }
+}
+
+UA_NodeId *COPC_UA_ObjectStruct_Helper::createStringNodeIdFromBrowsepath(const std::string &paBrowsePath) {
+  UA_NodeId *resultNodeId = UA_NodeId_new();
+  UA_NodeId_init(resultNodeId);
+  resultNodeId->namespaceIndex = getNamespaceIndexFromBrowsepath(paBrowsePath);
+  resultNodeId->identifierType = UA_NODEIDTYPE_STRING;
+  resultNodeId->identifier.string = UA_String_fromChars(removeNamespaceIndicesFromBrowsePath(paBrowsePath).c_str());
+  return resultNodeId;
+}
+
+UA_UInt16 COPC_UA_ObjectStruct_Helper::getNamespaceIndexFromBrowsepath(const std::string &paBrowsePath) {
+  CParameterParser mainParser(paBrowsePath.c_str(), '/');
+  size_t parsingResult = mainParser.parseParameters();
+  if(parsingResult > 0) {
+    size_t elementNameIndex = strcmp("", mainParser[parsingResult-1]) != 0 ? parsingResult-1 : parsingResult-2;
+    std::string objectName(mainParser[elementNameIndex]);
+    CParameterParser nsIndexParser(objectName.c_str(), ':');
+    parsingResult = nsIndexParser.parseParameters();
+    if(parsingResult > 1) {
+      return static_cast<UA_UInt16>(forte::core::util::strtoul(nsIndexParser[0], nullptr, 10));
+    }
+  } else {
+    DEVLOG_ERROR("[OPC UA HELPER]: Error while parsing FB browse path %s\n", paBrowsePath);
+  }
+  return COPC_UA_Local_Handler::scmDefaultBrowsenameNameSpace;
+}
+
+std::string COPC_UA_ObjectStruct_Helper::removeNamespaceIndicesFromBrowsePath(const std::string &paBrowsePath) {
+  std::stringstream ss;
+  CParameterParser mainParser(paBrowsePath.c_str(), '/');
+  size_t mainParserLength = mainParser.parseParameters();
+  for(size_t i = 0; i < mainParserLength; i++) {
+    std::string nodePair(mainParser[i]);
+    if(!nodePair.empty()) {
+      CParameterParser nsIndexParser(nodePair.c_str(), ':');
+      size_t parserLength = nsIndexParser.parseParameters();
+      size_t browsePathIndex = parserLength > 1 ? 1 : 0;
+      ss << '/' << nsIndexParser[browsePathIndex];
+    }
+  }
+  return ss.str();
 }
 
 std::string COPC_UA_ObjectStruct_Helper::getStructBrowsePath(const std::string &paPathPrefix, bool paIsPublisher) {
