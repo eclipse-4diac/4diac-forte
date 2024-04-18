@@ -116,6 +116,12 @@ class COPC_UA_ObjectStruct_Helper {
     UA_UInt16 mOpcuaTypeNamespaceIndex;
 
     /**
+     * OPC UA Object Struct Instance Namespace Index.
+     * The default NamespaceIndex is 1.
+    */
+    UA_UInt16 mOpcuaObjectNamespaceIndex;
+
+    /**
      * BrowsePath to folder that contains Object Node Struct Types
      */
      static const std::string smStructTypesBrowsePath;
@@ -205,7 +211,7 @@ class COPC_UA_ObjectStruct_Helper {
 
     /**
      * Creates an OPC UA namespace with the given name and assigns the 
-     * namespace index to the mOpcuaNamespaceIndex member variable.
+     * namespace index to the mOpcuaTypeNamespaceIndex member variable.
      * @param nsName The name of the OPC UA Namespace
      * @return true if namespace was successfully created or if it already exists, false otherwise
     */
