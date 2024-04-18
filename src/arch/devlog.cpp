@@ -19,7 +19,6 @@
 # include "forte_printer.h"
 # include "../core/utils/criticalregion.h"
 # include "forte_architecture_time.h"
-# include <cstdio>
 # include <cstdlib>
 # include <cstdarg>
 
@@ -34,9 +33,14 @@
 #  include <cinttypes>
 # endif //< stdc11
 
+#ifndef __ZEPHYR__
+#include <iostream>
+#else
+#include <zephyr/logging/log.h>
+#endif // __ZEPHYR__
+
 #ifdef FORTE_STACKTRACE
 #include <iostream>
-
 #ifdef FORTE_STACKTRACE_BOOST
 #include <boost/stacktrace.hpp>
 #endif // FORTE_STACKTRACE_BOOST
@@ -45,10 +49,6 @@
 #include <stacktrace>
 #endif // FORTE_STACKTRACE_CXX23
 #endif // FORTE_STACKTRACE
-
-#ifdef __ZEPHYR__
-#include <zephyr/logging/log.h>
-#endif // __ZEPHYR__
 
 static const char* scLogLevel[] = { "INFO", "WARNING", "ERROR", "DEBUG", "TRACE" };
 
@@ -98,7 +98,10 @@ void logMessage(E_MsgLevel paLevel, const char *paMessage, ...) {
 
 void printLogMessage(E_MsgLevel paLevel, const char *paMessage) {
 #ifndef __ZEPHYR__
-  fprintf(stderr, "%s: T#%" PRIuFAST64 ": %s", scLogLevel[static_cast<int>(paLevel)], getNanoSecondsMonotonic(), paMessage);
+  (paLevel == E_MsgLevel::Error ? std::cerr : std::cout) << scLogLevel[static_cast<int>(paLevel)] << ": " << getNanoSecondsMonotonic() << ": " << paMessage;
+  #ifdef WIN32
+  (paLevel == E_MsgLevel::Error ? std::cerr : std::cout) << std::flush;
+  #endif
 #else
   LOG_PRINTK("%s: T#%" PRIuFAST64 ": %s", scLogLevel[static_cast<int>(paLevel)], getNanoSecondsMonotonic(), paMessage);
 #endif // __ZEPHYR__
