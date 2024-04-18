@@ -220,4 +220,25 @@ class COPC_UA_ObjectStruct_Helper {
     bool defineOPCUAStructTypeNode(UA_Server *paServer, UA_NodeId &paNodeId, const std::string &paStructTypeName);
 
     bool addOPCUAStructTypeComponent(UA_Server *paServer, UA_NodeId &paParentNodeId, CIEC_ANY *paStructMember, const std::string &paStructMemberName);
+
+    /**
+     * Creates NodeId of type string from the given browsepath
+     * @param paBrowsePath The browsepath of the Object Struct
+     * @return The NodeId of type string 
+    */
+    static UA_NodeId *createStringNodeIdFromBrowsepath(const std::string& paBrowsePath);
+
+    /**
+     * Returns the namespace index of the Object Struct Instance from the given browsepath
+     * @param paBrowsePath The browsepath of the Object Struct
+     * @return The namespace index of the Object Struct
+    */
+    static UA_UInt16 getNamespaceIndexFromBrowsepath(const std::string& paBrowsePath);
+
+    /**
+     * Removes any present namespace indices from the browsepath.
+     * @param paBrowsePath The browsepath of the Object Struct
+     * @return The browsepath without any namespace indices
+    */
+    static std::string removeNamespaceIndicesFromBrowsePath(const std::string& paBrowsePath);
 };
