@@ -110,10 +110,10 @@ class COPC_UA_ObjectStruct_Helper {
     COPC_UA_HandlerAbstract *mHandler;
 
     /**
-     * OPC UA Object Struct Namespace Index.
+     * OPC UA Object Struct Type Namespace Index.
      * The default NamespaceIndex is 1.
     */
-    UA_UInt16 mOpcuaNamespaceIndex;
+    UA_UInt16 mOpcuaTypeNamespaceIndex;
 
     /**
      * BrowsePath to folder that contains Object Node Struct Types
@@ -133,6 +133,16 @@ class COPC_UA_ObjectStruct_Helper {
      * Pointer to ActionInfo for created OPC UA Struct Object Node
      */
     std::shared_ptr<CActionInfo> mCreateNodeActionInfo;
+
+    /**
+     * String NodeIds of OPCUA Struct Type Nodes 
+    */
+    std::vector<UA_NodeId> mStructTypeNodes;
+
+    /**
+     * String NodeIds of OPCUA Struct Type Member Nodes 
+    */
+    std::vector<UA_NodeId> mStructTypeMemberNodes;
 
     /**
      * ActionInfos of Struct members 
