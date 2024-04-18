@@ -30,7 +30,8 @@ const std::string COPC_UA_ObjectStruct_Helper::smMemberNamespaceIndex = "/%d:";
 char COPC_UA_ObjectStruct_Helper::smEmptyString[] = "";
 
 COPC_UA_ObjectStruct_Helper::COPC_UA_ObjectStruct_Helper(COPC_UA_Layer &paLayer, COPC_UA_HandlerAbstract *paHandler):
-  mLayer(paLayer), mHandler(paHandler), mOpcuaTypeNamespaceIndex(COPC_UA_Local_Handler::scmDefaultBrowsenameNameSpace) {
+  mLayer(paLayer), mHandler(paHandler), mOpcuaTypeNamespaceIndex(COPC_UA_Local_Handler::scmDefaultBrowsenameNameSpace),
+  mOpcuaObjectNamespaceIndex(COPC_UA_Local_Handler::scmDefaultBrowsenameNameSpace) {
 }
 
 COPC_UA_ObjectStruct_Helper::~COPC_UA_ObjectStruct_Helper() {
@@ -152,13 +153,6 @@ bool COPC_UA_ObjectStruct_Helper::addOPCUAStructTypeComponent(UA_Server *paServe
   mStructTypeMemberNodes.push_back(memberNodeId);
   if(status != UA_STATUSCODE_GOOD) {
     DEVLOG_ERROR("[OPC UA OBJECT STRUCT HELPER]: Failed to add Member to OPC UA Struct Type Node for Member %s, Status Code: %s\n", paStructMemberName.c_str(), UA_StatusCode_name(status));
-    return false;
-  }
-  status = UA_Server_addReference(paServer, memberNodeId,
-      UA_NODEID_NUMERIC(0, UA_NS0ID_HASMODELLINGRULE),
-      UA_EXPANDEDNODEID_NUMERIC(0, UA_NS0ID_MODELLINGRULE_MANDATORY), true);
-  if(status != UA_STATUSCODE_GOOD) {
-    DEVLOG_ERROR("[OPC UA OBJECT STRUCT HELPER]: Failed to add OPC UA reference to Struct Member %s, Status Code: %s\n", paStructMemberName.c_str(), UA_StatusCode_name(status));
     return false;
   }
   return true;
@@ -329,7 +323,7 @@ std::string COPC_UA_ObjectStruct_Helper::getStructBrowsePath(const std::string &
 std::string COPC_UA_ObjectStruct_Helper::getStructMemberBrowsePath(std::string &paBrowsePathPrefix, const CStringDictionary::TStringId structMemberNameId) {
   std::stringstream ss;
   char buf[100];
-  snprintf(buf, sizeof(buf), smMemberNamespaceIndex.c_str(), mOpcuaTypeNamespaceIndex);
+  snprintf(buf, sizeof(buf), smMemberNamespaceIndex.c_str(), mOpcuaObjectNamespaceIndex);
   ss << paBrowsePathPrefix << buf << CStringDictionary::getInstance().get(structMemberNameId);
   return ss.str();
 }
