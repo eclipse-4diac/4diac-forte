@@ -30,7 +30,7 @@ const std::string COPC_UA_ObjectStruct_Helper::smMemberNamespaceIndex = "/%d:";
 char COPC_UA_ObjectStruct_Helper::smEmptyString[] = "";
 
 COPC_UA_ObjectStruct_Helper::COPC_UA_ObjectStruct_Helper(COPC_UA_Layer &paLayer, COPC_UA_HandlerAbstract *paHandler):
-  mLayer(paLayer), mHandler(paHandler), mOpcuaTypeNamespaceIndex(1) {
+  mLayer(paLayer), mHandler(paHandler), mOpcuaTypeNamespaceIndex(COPC_UA_Local_Handler::scmDefaultBrowsenameNameSpace) {
 }
 
 COPC_UA_ObjectStruct_Helper::~COPC_UA_ObjectStruct_Helper() {
