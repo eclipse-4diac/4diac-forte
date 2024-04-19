@@ -171,7 +171,7 @@ EComResponse CModbusComLayer::processInterrupt(){
     switch (mConnectionState){
       case e_Connected: {
         CIEC_ANY **apoRDs = mFb->getRDs();
-        unsigned int nrRDs = mFb->getNumRD();
+        size_t nrRDs = mFb->getNumRD();
 
         unsigned int dataIndex = 0;
 

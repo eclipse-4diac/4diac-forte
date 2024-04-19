@@ -57,6 +57,7 @@ void COpcConnectionImpl::disconnect(){//const char* paGroupName){
 
     COPCClient::stop();
     mConnected = false;
+    DEVLOG_INFO("COpcConnectionImpl disconnected\n");
   }
 }
 
@@ -166,8 +167,8 @@ bool COpcConnectionImpl::addGroup(const std::string& paGroupName, unsigned long 
 
 void COpcConnectionImpl::removeItems(const std::string& paGroupName){
   if(paGroupName.empty()){
-   DEVLOG_INFO("COpcConnectionImpl::removeItems: group name is nullptr\n");
-   return;
+    DEVLOG_INFO("COpcConnectionImpl::removeItems: group name is empty\n");
+    return;
   }
   DEVLOG_INFO("removing items in COpcConnectionImpl[%s]\n", paGroupName.c_str());
   std::vector<COPCItem *> items;
@@ -177,7 +178,10 @@ void COpcConnectionImpl::removeItems(const std::string& paGroupName){
     items = it->second;
     for(size_t i = 0; i < items.size(); i++){
       DEVLOG_DEBUG("removing item %s in COpcConnectionImpl[%s]\n", WS2S(items[i]->getName()).c_str(), paGroupName.c_str());
-      delete items[i];
+      if (nullptr != items[i]) {
+        delete items[i];
+        items[i] = nullptr;
+      }
     }
     items.clear();
     mOpcItems.erase(it);
@@ -189,21 +193,23 @@ void COpcConnectionImpl::removeItems(const std::string& paGroupName){
 
 void COpcConnectionImpl::removeGroup(const std::string& paGroupName){
   if(paGroupName.empty()){
-    DEVLOG_INFO("nullptr is passed to removeGroup,clear the group\n");
+    DEVLOG_INFO("empty name is passed to removeGroup,clear the group\n");
   }
   else{
     DEVLOG_INFO("removeGroup in COpcConnectionImpl[%s]\n",paGroupName.c_str());
   }
   for(auto group = mOpcGroupSettingsList.begin(); group != mOpcGroupSettingsList.end();){
     if(paGroupName.empty() || (*group)->mGroupName == paGroupName){
-      if (nullptr != (*group)->mOpcGroupRead) {
+      if (nullptr != (*group)->mOpcGroupRead && (*group)->mReadGroupAdded) {
         (*group)->mOpcGroupRead->disableAsync();
         removeItems(WS2S((*group)->mOpcGroupRead->getName()));
         delete (*group)->mOpcGroupRead;
+        (*group)->mOpcGroupRead = nullptr;
       }
-      if (nullptr != (*group)->mOpcGroupWrite) {
+      if (nullptr != (*group)->mOpcGroupWrite && (*group)->mWriteGroupAdded) {
         removeItems(WS2S((*group)->mOpcGroupWrite->getName()));
         delete (*group)->mOpcGroupWrite;
+        (*group)->mOpcGroupWrite = nullptr;
       }
       group =  mOpcGroupSettingsList.erase(group);
       if(paGroupName.empty()){

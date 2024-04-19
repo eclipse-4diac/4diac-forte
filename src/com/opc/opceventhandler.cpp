@@ -1,5 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2012, 2022 AIT, fortiss GmbH, Hit robot group
+ *               2024 Samator Indo Gas
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -10,6 +11,8 @@
  *   Filip Andren, Alois Zoitl - initial API and implementation and/or initial documentation
  *   ys guo - Fix opc module compilation errors and deadlock bug
  *   Tibalt Zhao - use stl vector
+ *   Ketut Kumajaya - Clear command in queue on exit
+ *                  - Fix disconnection issue on exit
  *******************************************************************************/
 #include "opceventhandler.h"
 #include "../core/devexec.h"
@@ -19,44 +22,62 @@
 
 DEFINE_HANDLER(COpcEventHandler);
 
+CSyncObject COpcEventHandler::mSync;
+forte::arch::CSemaphore COpcEventHandler::mStateSemaphore;
+bool COpcEventHandler::mIsSemaphoreEmpty = true;
+
 COpcEventHandler::TCallbackDescriptor COpcEventHandler::mCallbackDescCount = 0;
 
 COpcEventHandler::COpcEventHandler(CDeviceExecution& paDeviceExecution) : CExternalEventHandler(paDeviceExecution)  {
-  this->start();
-  // Sleep to allow new thread to start
-  CThread::sleepThread(100);
 }
 
 COpcEventHandler::~COpcEventHandler(){
-  this->end();
+  clearCommandQueue(); //check and delete all commands in queue if not empty
 }
 
-void COpcEventHandler::sendCommand(ICmd *paCmd){
-  CCriticalRegion critcalRegion(mSync);
-  mCommandQueue.pushBack(paCmd);
-}
-
-void COpcEventHandler::run(){
-  HRESULT result = CoInitializeEx(nullptr, COINIT_MULTITHREADED);
-
-  if(result == S_OK){
-    while(isAlive()){
-      ICmd* nextCommand = getNextCommand();
-      if(nextCommand != nullptr) {
-        nextCommand->runCommand();
-        delete nextCommand;
-      }
-
-      MSG msg;
-      while(PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE)){
-        TranslateMessage(&msg);
-        DispatchMessage(&msg);
-      }
-      CThread::sleepThread(100);
+void COpcEventHandler::clearCommandQueue(){
+  while(!mCommandQueue.isEmpty()) {
+    // should never have come in here
+    ICmd* nextCommand = getNextCommand();
+    if(nextCommand != nullptr) {
+      DEVLOG_ERROR("erase from command queue[%s]\n", nextCommand->getCommandName());
+      delete nextCommand;
     }
   }
 
-  CoUninitialize();
+  for(TCallbackList::iterator itRunner = mComCallbacks.begin(); itRunner != mComCallbacks.end(); ++itRunner){
+    DEVLOG_ERROR("erase from command callback\n");
+    mComCallbacks.erase(itRunner);
+  }
+}
+
+void COpcEventHandler::executeCommandQueue(){
+  while(!mCommandQueue.isEmpty()) {
+    ICmd* nextCommand = getNextCommand();
+    if(nextCommand != nullptr) {
+      nextCommand->runCommand();
+      delete nextCommand;
+      nextCommand = nullptr;
+    }
+  }
+}
+
+void COpcEventHandler::sendCommand(ICmd *paCmd){
+  mSync.lock();
+  mCommandQueue.pushBack(paCmd);
+  mSync.unlock();
+  resumeSelfSuspend();
+}
+
+void COpcEventHandler::run(){
+  while(isAlive()){
+    executeCommandQueue();
+    if (!isAlive()) {
+      break;
+    }
+    selfSuspend();
+  }
+  executeCommandQueue(); // immediately try to clear the command queue after a stop
 }
 
 COpcEventHandler::TCallbackDescriptor COpcEventHandler::addComCallback(forte::com_infra::CComLayer* paComCallback){
@@ -108,4 +129,22 @@ ICmd* COpcEventHandler::getNextCommand(){
     mCommandQueue.popFront();
   }
   return command;
+}
+
+void COpcEventHandler::resumeSelfSuspend() {
+  if (mIsSemaphoreEmpty) { //avoid incrementing many times
+    {
+      CCriticalRegion critcalRegion(mSync);
+      mStateSemaphore.inc();
+      mIsSemaphoreEmpty = false;
+    }
+  }
+}
+
+void COpcEventHandler::selfSuspend() {
+  mStateSemaphore.waitIndefinitely();
+  {
+    CCriticalRegion critcalRegion(mSync);
+    mIsSemaphoreEmpty = true;
+  }
 }

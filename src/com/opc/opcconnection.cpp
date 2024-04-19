@@ -71,8 +71,6 @@ void COpcConnection::removeGroup(const std::string& paGroupName){
   } else{
     removeGroupCallbackDesc(paGroupName);
   }
-  //remove fb group and all group items
-  this->mOpcConnectionImpl->removeGroup(paGroupName);
 }
 
 bool COpcConnection::ifLetEventPass(EOpcConnectionEvents paEvent, const std::string& paGroupName){
@@ -118,6 +116,10 @@ bool COpcConnection::ifInGroupList(const std::string& paGroupName){
 
 int COpcConnection::send_connect(const std::string& paGroupName, unsigned long paReqUpdateRate, float paDeadBand,
     forte::com_infra::CComLayer* paComCallback, std::vector<COpcProcessVar*> paNewItems){
+  if(mConnectionState == e_Disconnected){
+    mEventHandler->enableHandler();
+  }
+
   if(ifLetEventPass(e_Connect,paGroupName)){
     mConnectionState = e_Connecting;
     addGroup(paGroupName, paReqUpdateRate, paDeadBand, paComCallback);
@@ -138,7 +140,7 @@ int COpcConnection::send_disconnect(const std::string& paGroupName){
     mConnected = false;
     removeGroup(paGroupName);
     mConnectionState = e_Disconnected;
-    mEventHandler->sendCommand(new CCmd_RemoveConnection(*mOpcConnectionImpl));
+    mEventHandler->sendCommand(new CCmd_RemoveConnection(*mOpcConnectionImpl, paGroupName, true));
     return 0;
   }
   //remove  this group but not affect the connection as there are other fb still using it
@@ -146,6 +148,7 @@ int COpcConnection::send_disconnect(const std::string& paGroupName){
                 mOpcGroupMapList.size(),mConnectionState, paGroupName.c_str());
   DEVLOG_INFO("remove group %s\n", paGroupName.c_str());
   removeGroup(paGroupName);
+  mEventHandler->sendCommand(new CCmd_RemoveConnection(*mOpcConnectionImpl, paGroupName, false));
   return -1 ;
 }
 
@@ -184,8 +187,8 @@ int COpcConnection::send_sendItemData(COpcProcessVar* paItem){
     return -1;
   }
 
-  mEventHandler->sendCommand(new CCmd_SetProcessVarValue(mOpcConnectionImpl, std::string(paItem->getItemGroupName()),
-    std::string(paItem->getItemName()),paItem->updateValue()));
+  mEventHandler->sendCommand(new CCmd_SetProcessVarValue(mOpcConnectionImpl, paItem->getItemGroupName(),
+    paItem->getItemName(),paItem->updateValue()));
   return 0;
 }
 

@@ -87,6 +87,11 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
      */
     UA_StatusCode initializeActionForObjectStruct(std::shared_ptr<CActionInfo> &paActionInfo, CIEC_ANY &paMember);
 
+    /**
+     * Default value for the namespace of the browsename for all created nodes
+     */
+    static const UA_UInt16 scmDefaultBrowsenameNameSpace = 1;
+
   protected:
 
     /**
@@ -678,11 +683,6 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
      * @return The method call. 0 if an external call for the action was not triggered
      */
     CLocalMethodCall* getLocalMethodCall(const CLocalMethodInfo &paActionInfo);
-
-    /**
-     * Default value for the namespace of the browsename for all created nodes
-     */
-    static const UA_UInt16 scmDefaultBrowsenameNameSpace = 1;
 
     /**
      * English locale used as default for all nodes
