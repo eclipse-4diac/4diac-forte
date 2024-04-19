@@ -40,10 +40,11 @@ class COPC_UA_ObjectStruct_Helper {
     /**
      * Check that the Struct Object type of the SDs is valid
      * NOTE: Supports only one connected Struct Type and SDs currently
+     * @param paActionInfo The ActionInfo of the request
      * @param paIsPublisher True if the FB is a Publisher, false othewise
      * @return True if Struct Object Type is valid, false otherwise
      */
-    bool checkStructTypeConnection(bool paIsPublisher);
+    bool checkStructTypeConnection(CActionInfo &paActionInfo, bool paIsPublisher);
 
     /**
      * Create an OPC UA Object Node from Struct Type, if it is not present
@@ -170,9 +171,17 @@ class COPC_UA_ObjectStruct_Helper {
      * @param paIsPublisher True if the FB is a Publisher, false othewise
      * @return The ActionInfo for creating OPC UA Object Node
     */
-    std::shared_ptr<CActionInfo> getCreateObjectActionInfo(CActionInfo& paActionInfo, std::string &paBrowsePath, bool paIsPublisher);
+    std::shared_ptr<CActionInfo> getCreateObjectActionInfo(CActionInfo &paActionInfo, std::string &paBrowsePath, bool paIsPublisher);
 
-    bool createOPCUAStructType(const std::string &paStructTypeName, CIEC_STRUCT &paStructType);
+
+    /**
+     * Create a OPC UA Basic Object Type from the Struct Type and Name
+     * @param paActionInfo The ActionInfo to create the Object Node from
+     * @param paStructTypeName The name of the Struct Type
+     * @param paStructType The Struct Type
+     * 
+    */
+    bool createOPCUAStructType(CActionInfo &paActionInfo, const std::string &paStructTypeName, CIEC_STRUCT &paStructType);
 
     /**
      * Perform initialization for Object Struct Members
@@ -217,8 +226,22 @@ class COPC_UA_ObjectStruct_Helper {
     */
     bool createOPCUANamespace(char* nsName);
 
-    bool defineOPCUAStructTypeNode(UA_Server *paServer, UA_NodeId &paNodeId, const std::string &paStructTypeName);
+    /**
+     * Creates OPC UA Struct Type Object Node in Base Object Types folder with the given Struct Type Name
+     * @param paServer The OPC UA server
+     * @param paNodeId The NodeId to be written
+     * @param paStructTypeName The name of the Struct Type
+     * @param defaultCase The initialisation case for the NodeId type (true -> String NodeId, false -> Numeric NodeId)
+    */
+    bool defineOPCUAStructTypeNode(UA_Server *paServer, UA_NodeId &paNodeId, const std::string &paStructTypeName, bool defaultCase);
 
+    /**
+     * Creates the member variable for the OPC UA Struct Type Object Node with the given Struct Member Name
+     * @param paServer The OPC UA server
+     * @param paParentNodeId The NodeId of the Struct Type Object Node
+     * @param paStructMember The Struct Member
+     * @param paStructMemberName The name of the Struct Member
+    */
     bool addOPCUAStructTypeComponent(UA_Server *paServer, UA_NodeId &paParentNodeId, CIEC_ANY *paStructMember, const std::string &paStructMemberName);
 
     /**
