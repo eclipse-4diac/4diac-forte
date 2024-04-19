@@ -54,7 +54,9 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
   ENDIF(FORTE_POSIX_GENERATE_MAP_FILE)  
 
   forte_add_link_library("-lpthread") 
-  forte_add_link_library("-lrt") 
+  if (NOT APPLE)
+    forte_add_link_library("-lrt") 
+  endif()
 
   forte_add_network_layer(SER OFF "ser" CPosixSerCommLayer posixsercommlayer "Enable Forte serial line communication")
 
