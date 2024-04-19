@@ -236,6 +236,10 @@ set(FORTE_TESTS OFF CACHE BOOL "Build Tests")
 IF(FORTE_TESTS)
     set(FORTE_TESTS_LINK_DIRS "" CACHE PATH "Test specific library directories")
     set(FORTE_TESTS_INC_DIRS "" CACHE PATH "Test specific include directories")
+    if("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
+        set(FORTE_TEST_CODE_COVERAGE_ANALYSIS OFF CACHE BOOL "Perform code coverage analyis with GCOV and presentation with LCOV")
+        mark_as_advanced(FORTE_TEST_CODE_COVERAGE_ANALYSIS)
+    endif()
 ENDIF(FORTE_TESTS)
 
 set(FORTE_USE_TEST_CONFIG_IN_FORTE ON CACHE BOOL "Add the test definitions and compiler options to the base forte") #this is needed for posix and win32 options

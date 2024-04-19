@@ -139,8 +139,6 @@ GET_PROPERTY(link_flags_test GLOBAL PROPERTY FORTE_TEST_LINK_FLAGS)
 add_test(forte_test ${EXECUTABLE_OUTPUT_PATH}/forte_test)
 
 if("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
-  set(FORTE_TEST_CODE_COVERAGE_ANALYSIS OFF CACHE BOOL "Perform code coverage analyis with GCOV and presentation with LCOV")
-  mark_as_advanced(FORTE_TEST_CODE_COVERAGE_ANALYSIS)
   if(FORTE_TEST_CODE_COVERAGE_ANALYSIS)
       INCLUDE(${FORTE_BUILDSUPPORT_DIRECTORY}/GCov.cmake)    
       SETUP_GCOV(TestCoverage ctest coverage)
