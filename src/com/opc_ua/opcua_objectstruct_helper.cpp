@@ -260,7 +260,14 @@ std::shared_ptr<CActionInfo> COPC_UA_ObjectStruct_Helper::getCreateObjectActionI
   std::string typeBrowsePath(getStructBrowsePath(smStructTypesBrowsePath, paIsPublisher));
   CSinglyLinkedList<CActionInfo::CNodePairInfo*>& nodePairs = actionInfo->getNodePairInfo();
   nodePairs.pushBack(new CActionInfo::CNodePairInfo(nullptr, typeBrowsePath));
-  UA_NodeId *nodeId = createStringNodeIdFromBrowsepath(paBrowsePath);
+  bool isNodeIdPresent = (*paActionInfo.getNodePairInfo().begin())->mNodeId;
+  UA_NodeId *nodeId = nullptr; 
+  if(!isNodeIdPresent) {
+    nodeId = createStringNodeIdFromBrowsepath(paBrowsePath);
+  } else {
+    nodeId = UA_NodeId_new();
+    UA_NodeId_copy((*paActionInfo.getNodePairInfo().begin())->mNodeId, nodeId);
+  }
   mOpcuaObjectNamespaceIndex = nodeId->namespaceIndex;
   nodePairs.pushBack(new CActionInfo::CNodePairInfo(nodeId, paBrowsePath));
   return actionInfo;
@@ -276,13 +283,17 @@ forte::com_infra::EComResponse COPC_UA_ObjectStruct_Helper::initializeMemberActi
   CIEC_ANY** apoDataPorts = paIsPublisher ? mLayer.getCommFB()->getSDs() : mLayer.getCommFB()->getRDs();
   CIEC_STRUCT& structType = static_cast<CIEC_STRUCT&>(apoDataPorts[0]->unwrap());
   const CStringDictionary::TStringId* structMemberNames = structType.elementNames();
-  
+  bool isNodeIdPresent = (*paActionInfo.getNodePairInfo().begin())->mNodeId;
+
   for(size_t i = 0; i < structType.getStructSize(); i++) {
     std::string memberBrowsePath(getStructMemberBrowsePath(paBrowsePath, structMemberNames[i]));
 
     std::shared_ptr<CActionInfo> actionInfo = std::make_shared<CStructMemberActionInfo>(*this, mLayer, paActionInfo.getAction(), paActionInfo.getEndpoint());
     CIEC_ANY* memberVariable = structType.getMember(i);
-    UA_NodeId *nodeId = createStringNodeIdFromBrowsepath(memberBrowsePath);
+    UA_NodeId* nodeId = nullptr;
+    if(!isNodeIdPresent) {    
+      nodeId = createStringNodeIdFromBrowsepath(memberBrowsePath);
+    }
     actionInfo->getNodePairInfo().pushBack(new CActionInfo::CNodePairInfo(nodeId, memberBrowsePath));
     if(UA_STATUSCODE_GOOD != localHandler->initializeActionForObjectStruct(actionInfo, *memberVariable)) {
       DEVLOG_ERROR("[OPC UA OBJECT STRUCT HELPER]: Error occured in FB %s while initializing Struct member %s\n", mLayer.getCommFB()->getInstanceName(),
