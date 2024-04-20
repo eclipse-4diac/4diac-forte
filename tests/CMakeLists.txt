@@ -126,6 +126,10 @@ endif("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
 
 if("${FORTE_ARCHITECTURE}" STREQUAL "Win32")
  ADD_DEFINITIONS (-DBOOST_TEST_NO_LIB)
+ if(MINGW)
+  #force MINGW to statically link libc and lib stdc++ so that no mingw dlls are needed for forte_test.exe
+  TARGET_LINK_OPTIONS(forte_test PRIVATE -static-libgcc -static-libstdc++)
+ endif()
 endif("${FORTE_ARCHITECTURE}" STREQUAL "Win32")
 
 add_dependencies(forte_test FORTE_LITE)
