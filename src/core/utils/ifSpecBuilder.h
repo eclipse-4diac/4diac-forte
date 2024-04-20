@@ -20,10 +20,9 @@
 #include <tuple>
 #include <funcbloc.h>
 
+#include "mixedStorage.h"
 
 namespace forte::core::util {
-
-class CMixedStorage;
 
 class CInputSpecTag;    ///< helper class for distinguishing inputs from outputs (not an actual class)
 class COutputSpecTag;   ///< helper class for distinguishing outputs from intputs (not an actual class)
@@ -173,7 +172,13 @@ class CStringIdListSpecBuilder {
     std::size_t calcStorageSize() const;
 
     template<typename IndexType>
-    std::tuple<const CStringDictionary::TStringId*, IndexType> build(CMixedStorage &paStorage) const;
+    std::tuple<const CStringDictionary::TStringId*, IndexType> build(CMixedStorage &paStorage) const {
+      if (cmStaticList) {
+        return {cmStaticList, mStaticListSize};
+      }
+      const CStringDictionary::TStringId* listPtr = paStorage.write(mDynamicList.data(), mDynamicList.size());
+      return {listPtr, mDynamicList.size()};
+    }
 
     /**
      * @brief Checks configuration status.

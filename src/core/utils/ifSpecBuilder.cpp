@@ -19,7 +19,6 @@
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
 #include "ifSpecBuilder_gen.cpp"
 #endif
-#include "mixedStorage.h"
 
 using namespace forte::core::util;
 
@@ -74,16 +73,6 @@ int CStringIdListSpecBuilder::findString(CStringDictionary::TStringId paStringId
 
 std::size_t CStringIdListSpecBuilder::calcStorageSize() const {
   return cmStaticList ? 0 : mDynamicList.size() * sizeof(CStringDictionary::TStringId);
-}
-
-template<typename IndexType>
-std::tuple<const CStringDictionary::TStringId*, IndexType>
-CStringIdListSpecBuilder::CStringIdListSpecBuilder::build(CMixedStorage &paStorage) const {
-  if (cmStaticList) {
-    return {cmStaticList, mStaticListSize};
-  }
-  const CStringDictionary::TStringId* listPtr = paStorage.write(mDynamicList.data(), mDynamicList.size());
-  return {listPtr, mDynamicList.size()};
 }
 
 
