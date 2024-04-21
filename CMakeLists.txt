@@ -142,8 +142,14 @@ if (WIN32)
   option(FORTE_WINDOWS_XP_COMPAT OFF "Enable some workarounds for Windows XP compatibility")
   if (FORTE_WINDOWS_XP_COMPAT)
     add_definitions(-DWINDOWS_XP_COMPAT=1)
+    add_definitions(-D_WIN32_WINNT=0x0501)
+    add_definitions(-DUA_ARCHITECTURE_WEC7)
   endif()
 endif(WIN32)
+
+if (APPLE)
+  add_compile_options("-Dpthread_condattr_setclock(a,b)=(0)")
+endif ()
 
 #######################################################################################
 # dynamic type loading
