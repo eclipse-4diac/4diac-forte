@@ -1,4 +1,4 @@
-/*************************************************************************  
+/*************************************************************************
  *** Copyright (c) 2024 HR Agrartechnik GmbH  
  *** This program and the accompanying materials are made available under the  
  *** terms of the Eclipse Public License 2.0 which is available at  
@@ -12,6 +12,7 @@
  *** Description: standard timer function block (off-delay timing)
  *** Version:
  ***     1.0: 2024-03-04/Franz Hoepfinger - HR Agrartechnik GmbH -
+ ***     1.1: 2024-04-23/Franz Hoepfinger - HR Agrartechnik GmbH - Add a Reset to Timer FBs
  *************************************************************************/
 
 #include "E_TOF_fbt.h"
@@ -29,13 +30,13 @@ const CStringDictionary::TStringId FORTE_E_TOF::scmDataInputTypeIds[] = {g_nStri
 const CStringDictionary::TStringId FORTE_E_TOF::scmDataOutputNames[] = {g_nStringIdQ};
 const CStringDictionary::TStringId FORTE_E_TOF::scmDataOutputTypeIds[] = {g_nStringIdBOOL};
 const TDataIOID FORTE_E_TOF::scmEIWith[] = {0, 1, scmWithListDelimiter};
-const TForteInt16 FORTE_E_TOF::scmEIWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_E_TOF::scmEventInputNames[] = {g_nStringIdREQ};
+const TForteInt16 FORTE_E_TOF::scmEIWithIndexes[] = {0, -1};
+const CStringDictionary::TStringId FORTE_E_TOF::scmEventInputNames[] = {g_nStringIdREQ, g_nStringIdR};
 const TDataIOID FORTE_E_TOF::scmEOWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_E_TOF::scmEOWithIndexes[] = {0};
 const CStringDictionary::TStringId FORTE_E_TOF::scmEventOutputNames[] = {g_nStringIdCNF};
 const SFBInterfaceSpec FORTE_E_TOF::scmFBInterfaceSpec = {
-  1, scmEventInputNames, scmEIWith, scmEIWithIndexes,
+  2, scmEventInputNames, scmEIWith, scmEIWithIndexes,
   1, scmEventOutputNames, scmEOWith, scmEOWithIndexes,
   2, scmDataInputNames, scmDataInputTypeIds,
   1, scmDataOutputNames, scmDataOutputTypeIds,
@@ -71,10 +72,12 @@ const SCFB_FBConnectionData FORTE_E_TOF::scmEventConnections[] = {
   {GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdE_DELAY, g_nStringIdEO), 1, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdE_RS, g_nStringIdR), 2},
   {GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdE_SWITCH, g_nStringIdEO1), 0, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdE_RS, g_nStringIdS), 2},
   {GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdE_SWITCH, g_nStringIdEO0), 0, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdE_DELAY, g_nStringIdSTART), 1},
+  {GENERATE_CONNECTION_PORT_ID_1_ARG(g_nStringIdR), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdE_RS, g_nStringIdR), 2},
 };
 
 const SCFB_FBFannedOutConnectionData FORTE_E_TOF::scmFannedOutEventConnections[] = {
   {3, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdE_DELAY, g_nStringIdSTOP), 1},
+  {5, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdE_DELAY, g_nStringIdSTOP), 1},
 };
 
 const SCFB_FBConnectionData FORTE_E_TOF::scmDataConnections[] = {
@@ -85,8 +88,8 @@ const SCFB_FBConnectionData FORTE_E_TOF::scmDataConnections[] = {
 
 const SCFB_FBNData FORTE_E_TOF::scmFBNData = {
   3, scmInternalFBs,
-  5, scmEventConnections,
-  1, scmFannedOutEventConnections,
+  6, scmEventConnections,
+  2, scmFannedOutEventConnections,
   3, scmDataConnections,
   0, nullptr,
   0, nullptr,
