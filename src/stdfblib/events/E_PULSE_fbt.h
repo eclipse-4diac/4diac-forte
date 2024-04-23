@@ -1,4 +1,4 @@
-/*************************************************************************  
+/*************************************************************************
  *** Copyright (c) 2023, 2024 HR Agrartechnik GmbH  
  *** This program and the accompanying materials are made available under the  
  *** terms of the Eclipse Public License 2.0 which is available at  
@@ -12,7 +12,8 @@
  *** Description: standard timer function block (pulse)
  *** Version:
  ***     1.0: 2023-08-21/Franz Hoepfinger - HR Agrartechnik GmbH - initial implementation as E_IMPULSE
- ***          2024-05-03/Franz Hoepfinger - HR Agrartechnik GmbH - renamed to E_PULSE
+ ***     1.0: 2024-03-05/Franz Hoepfinger - HR Agrartechnik GmbH - renamed to E_PULSE
+ ***     1.1: 2024-04-23/Franz Hoepfinger - HR Agrartechnik GmbH - Add a Reset to Timer FBs
  *************************************************************************/
 
 #pragma once
