@@ -293,10 +293,12 @@ TARGET_LINK_LIBRARIES (FORTE_LITE ${LINK_LIBRARY})
 
 list(JOIN link_flags " " link_flags_string)
 
+set(FORTE_LINK_STATIC OFF CACHE BOOL "Force static linking of forte binary")
+
 if(FORTE_BUILD_EXECUTABLE)
   ADD_EXECUTABLE (forte $<TARGET_OBJECTS:FORTE_LITE> ${SOURCE_EXECUTABLE_CPP} ${FORTE_EXECUTABLE_H})
   set_target_properties(forte PROPERTIES LINK_FLAGS "${link_flags_string}")
-  if (MUSL OR UCLIBC)
+  if (FORTE_LINK_STATIC)
     set_target_properties(forte PROPERTIES LINK_SEARCH_START_STATIC ON)
     set_target_properties(forte PROPERTIES LINK_SEARCH_END_STATIC ON)
     target_link_options(forte PRIVATE -static-libgcc -static-libstdc++ -static)
