@@ -117,6 +117,11 @@ add_definitions(${DEFINITION}) #using target_compile_definitions put the definit
 
 if("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
  ADD_DEFINITIONS (-DBOOST_TEST_DYN_LINK)
+ if(FORTE_LINK_STATIC)
+  set_target_properties(forte_test PROPERTIES LINK_SEARCH_START_STATIC ON)
+  set_target_properties(forte_test PROPERTIES LINK_SEARCH_END_STATIC ON)
+  target_link_options(forte_test PRIVATE -static-libgcc -static-libstdc++ -static)
+ endif()
 endif("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
 
 if("${FORTE_ARCHITECTURE}" STREQUAL "Win32")
