@@ -50,6 +50,8 @@
 #endif // FORTE_STACKTRACE_CXX23
 #endif // FORTE_STACKTRACE
 
+std::string getRealtimeString();
+
 static const char* scLogLevel[] = { "INFO", "WARNING", "ERROR", "DEBUG", "TRACE" };
 
 //this define allows to provide an own log handler (see LMS for an example of this)
@@ -98,7 +100,7 @@ void logMessage(E_MsgLevel paLevel, const char *paMessage, ...) {
 
 void printLogMessage(E_MsgLevel paLevel, const char *paMessage) {
 #ifndef __ZEPHYR__
-  (paLevel == E_MsgLevel::Error ? std::cerr : std::cout) << scLogLevel[static_cast<int>(paLevel)] << ": " << getNanoSecondsMonotonic() << ": " << paMessage;
+  (paLevel == E_MsgLevel::Error ? std::cerr : std::cout) << scLogLevel[static_cast<int>(paLevel)] << ": " << getRealtimeString() << ": " << paMessage;
   #ifdef WIN32
   (paLevel == E_MsgLevel::Error ? std::cerr : std::cout) << std::flush;
   #endif
