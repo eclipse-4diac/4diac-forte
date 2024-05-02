@@ -93,4 +93,10 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "Win32")
   endif(FORTE_TESTS AND FORTE_USE_TEST_CONFIG_IN_FORTE)
   
  
+  set(FORTE_WINDOWS_SERVICE OFF CACHE BOOL "Set as a Windows service")
+  if(FORTE_WINDOWS_SERVICE)
+    forte_add_definition("-DFORTE_WINDOWS_SERVICE")
+    add_subdirectory(service)
+  endif()
+
 endif()

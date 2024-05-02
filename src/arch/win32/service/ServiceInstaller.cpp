@@ -53,7 +53,7 @@ void InstallService(PWSTR pszServiceName,
     SC_HANDLE schSCManager = NULL;
     SC_HANDLE schService = NULL;
 
-    if (GetModuleFileName(NULL, szPath, ARRAYSIZE(szPath)) == 0)
+    if (GetModuleFileNameW(NULL, szPath, ARRAYSIZE(szPath)) == 0)
     {
         wprintf(L"GetModuleFileName failed w/err 0x%08lx\n", GetLastError());
         goto Cleanup;
@@ -69,7 +69,7 @@ void InstallService(PWSTR pszServiceName,
     }
 
     // Install the service into SCM by calling CreateService
-    schService = CreateService(
+    schService = CreateServiceW(
         schSCManager,                   // SCManager database
         pszServiceName,                 // Name of service
         pszDisplayName,                 // Name to display
@@ -134,7 +134,7 @@ void UninstallService(PWSTR pszServiceName)
     }
 
     // Open the service with delete, stop, and query status permissions
-    schService = OpenService(schSCManager, pszServiceName, SERVICE_STOP |
+    schService = OpenServiceW(schSCManager, pszServiceName, SERVICE_STOP |
         SERVICE_QUERY_STATUS | DELETE);
     if (schService == NULL)
     {
