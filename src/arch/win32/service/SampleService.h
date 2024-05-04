@@ -3,6 +3,8 @@
 * Project:      CppWindowsService
 * Copyright (c) Microsoft Corporation.
 *
+* 2024, Ketut Kumajaya - modified for FORTE to run as a Windows service
+*
 * Provides a sample service class that derives from the service base class -
 * CServiceBase. The sample service logs the service start and stop
 * information to the Application event log, and shows how to run the main
@@ -27,6 +29,8 @@ class CSampleService : public CServiceBase
 public:
 
     CSampleService(PWSTR pszServiceName,
+        int argc,
+        char *argv[],
         BOOL fCanStop = TRUE,
         BOOL fCanShutdown = TRUE,
         BOOL fCanPauseContinue = FALSE);
@@ -43,4 +47,7 @@ private:
 
     BOOL m_fStopping;
     HANDLE m_hStoppedEvent;
+
+    int m_argc;
+    char **m_argv;
 };

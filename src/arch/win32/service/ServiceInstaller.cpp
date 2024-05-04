@@ -3,6 +3,8 @@
 * Project:      CppWindowsService
 * Copyright (c) Microsoft Corporation.
 *
+* 2024, Ketut Kumajaya - modified for FORTE to run as a Windows service
+*
 * The file implements functions that install and uninstall the service.
 *
 * This source is subject to the Microsoft Public License.
@@ -15,7 +17,7 @@
 \***************************************************************************/
 
 #pragma region "Includes"
-#include <stdio.h>
+#include <cstdio>
 #include <windows.h>
 #include "ServiceInstaller.h"
 #pragma endregion
@@ -58,6 +60,9 @@ void InstallService(PWSTR pszServiceName,
         wprintf(L"GetModuleFileName failed w/err 0x%08lx\n", GetLastError());
         goto Cleanup;
     }
+
+    // Append argument to support binary as service, log redirection enabled
+    wcscat(szPath, L" -service log");
 
     // Open the local default service control manager database
     schSCManager = OpenSCManager(NULL, NULL, SC_MANAGER_CONNECT |

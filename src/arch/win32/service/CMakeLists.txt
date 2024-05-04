@@ -10,7 +10,6 @@
 #    Ketut Kumajaya - initial API and implementation and/or initial documentation
 # *******************************************************************************/
 if(FORTE_WINDOWS_SERVICE)
-  forte_add_sourcefile_cpp(CppWindowsService.cpp)
-  forte_add_sourcefile_hcpp(SampleService ServiceBase ServiceInstaller)
-  forte_add_sourcefile_h(ThreadPool.h)
+  forte_add_to_executable_h(SampleService ServiceBase ServiceInstaller ThreadPool)
+  forte_add_to_executable_cpp(CppWindowsService SampleService ServiceBase ServiceInstaller)
 endif()

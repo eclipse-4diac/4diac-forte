@@ -1,5 +1,6 @@
 #*******************************************************************************
 # Copyright (c) 2010 - 2015 ACIN, Profactor GmbH, fortiss GmbH
+#               2024 Samator Indo Gas
 # This program and the accompanying materials are made available under the
 # terms of the Eclipse Public License 2.0 which is available at
 # http://www.eclipse.org/legal/epl-2.0.
@@ -9,6 +10,7 @@
 # Contributors:
 #   Alois Zoitl, Gerhard Ebenhofer, Martin Melik-Merkumians - initial API and implementation and/or initial documentation
 #   Christoph Binder - add possibility to configure simulated time
+#   Ketut Kumajaya - option to run as a Windows service
 # *******************************************************************************/
 
 SET(SOURCE_GROUP ${SOURCE_GROUP}\\win32)

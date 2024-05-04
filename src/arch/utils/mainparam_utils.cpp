@@ -1,5 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2018 fortiss GmbH
+ *               2024 Samator Indo Gas
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -9,6 +10,7 @@
  * Contributors:
  *   Tarik Terzimehic
  *    - initial API and implementation and/or initial documentation
+ *   Ketut Kumajaya - option to run as a Windows service
  *******************************************************************************/
 
 #include <forte_config.h>
@@ -40,6 +42,10 @@ void listHelp(){
 #ifdef FORTE_TRACE_CTF
   printf("%-20s Set the output directory for TRACE_CTF\n", "  -t <directory>");
 #endif //FORTE_TRACE_CTF
+#ifdef FORTE_WINDOWS_SERVICE
+  printf("%-20s To install as a Windows service\n", "  -install");
+  printf("%-20s To remove the service\n", "  -remove");
+#endif //FORTE_WINDOWS_SERVICE
 }
 
 /*!\brief Parses the command line arguments passed to the main function
@@ -90,6 +96,10 @@ const char *parseCommandLineArguments(int argc, char *arg[]){
             barectfSetup(arg[i + 1] ?: "");
             break;
 #endif //FORTE_TRACE_CTF
+#ifdef FORTE_WINDOWS_SERVICE
+          case 's':
+            break;
+#endif //FORTE_WINDOWS_SERVICE
           default: //! Unknown parameter or -h -> Lists the help for FORTE
             return "";
         }

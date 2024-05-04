@@ -3,6 +3,8 @@
 * Project:      CppWindowsService
 * Copyright (c) Microsoft Corporation.
 *
+* 2024, Ketut Kumajaya - modified for FORTE to run as a Windows service
+*
 * Provides a sample service class that derives from the service base class -
 * CServiceBase. The sample service logs the service start and stop
 * information to the Application event log, and shows how to run the main
@@ -23,13 +25,25 @@
 #pragma endregion
 
 
+#include <sstream>
+#include "../../devlog.h"
+#include "../../forte_stringFunctions.h"
+
+void endForte(int paSig);
+int _main(int argc, char *arg[]);
+
+
 CSampleService::CSampleService(PWSTR pszServiceName,
+                               int argc,
+                               char *argv[],
                                BOOL fCanStop,
                                BOOL fCanShutdown,
                                BOOL fCanPauseContinue)
 : CServiceBase(pszServiceName, fCanStop, fCanShutdown, fCanPauseContinue)
 {
     m_fStopping = FALSE;
+    m_argc = argc;
+    m_argv = argv;
 
     // Create a manual-reset event that is not signaled at first to indicate
     // the stopped signal of the service.
@@ -78,8 +92,15 @@ CSampleService::~CSampleService(void)
 //
 void CSampleService::OnStart(DWORD, LPWSTR*)
 {
+    // Log command line arguments
+    std::ostringstream stream;
+    for (int i = 0; i < m_argc; ++i)
+    {
+        stream << " " << m_argv[i];
+    }
+
     // Log a service start message to the Application log.
-    WriteEventLogEntry((PWSTR)L"CppWindowsService in OnStart",
+    WriteEventLogEntry((PWSTR)(forte_stringToWstring(("FORTE service started:" + stream.str())).c_str()),
         EVENTLOG_INFORMATION_TYPE);
 
     // Queue the main service function for execution in a worker thread.
@@ -98,7 +119,14 @@ void CSampleService::ServiceWorkerThread(void)
     // Periodically check if the service is stopping.
     while (!m_fStopping)
     {
+        // Log a prosess start message
+        DEVLOG_INFO("FORTE process start\n");
+
         // Perform main service function here...
+        _main(m_argc, m_argv);
+
+        // Log a prosess stop message
+        DEVLOG_INFO("FORTE process end\n");
 
         ::Sleep(2000);  // Simulate some lengthy operations.
     }
@@ -123,12 +151,16 @@ void CSampleService::ServiceWorkerThread(void)
 void CSampleService::OnStop()
 {
     // Log a service stop message to the Application log.
-    WriteEventLogEntry((PWSTR)L"CppWindowsService in OnStop",
+    WriteEventLogEntry((PWSTR)L"FORTE service stopped",
         EVENTLOG_INFORMATION_TYPE);
 
     // Indicate that the service is stopping and wait for the finish of the
     // main service function (ServiceWorkerThread).
     m_fStopping = TRUE;
+
+    // Kill FORTE process
+    endForte(0);
+
     if (WaitForSingleObject(m_hStoppedEvent, INFINITE) != WAIT_OBJECT_0)
     {
         throw GetLastError();

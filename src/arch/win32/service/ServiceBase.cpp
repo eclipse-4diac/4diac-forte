@@ -18,7 +18,7 @@
 
 #pragma region Includes
 #include "ServiceBase.h"
-#include <assert.h>
+#include <cassert>
 #include <strsafe.h>
 #pragma endregion
 
