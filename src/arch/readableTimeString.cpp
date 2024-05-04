@@ -14,7 +14,7 @@
 
 std::string getRealtimeString() {
   CIEC_DATE_AND_TIME dt = func_NOW();
-  std::string str(dt.getToStringBufferSize(), '\0');
+  std::string str(dt.getToStringBufferSize() - 1, '\0'); // -1 for exclude the last \0
   dt.toString(str.data(), str.size());
   return str;
 }
