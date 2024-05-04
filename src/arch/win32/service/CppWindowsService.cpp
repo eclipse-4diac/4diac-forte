@@ -30,19 +30,19 @@
 //
 
 // Internal name of the service
-#define SERVICE_NAME             L"CppWindowsService"
+#define SERVICE_NAME             (PWSTR)L"CppWindowsService"
 
 // Displayed name of the service
-#define SERVICE_DISPLAY_NAME     L"CppWindowsService Sample Service"
+#define SERVICE_DISPLAY_NAME     (PWSTR)L"CppWindowsService Sample Service"
 
 // Service start options.
 #define SERVICE_START_TYPE       SERVICE_DEMAND_START
 
 // List of service dependencies - "dep1\0dep2\0\0"
-#define SERVICE_DEPENDENCIES     L""
+#define SERVICE_DEPENDENCIES     (PWSTR)L""
 
 // The name of the account under which the service should run
-#define SERVICE_ACCOUNT          L"NT AUTHORITY\\LocalService"
+#define SERVICE_ACCOUNT          (PWSTR)L"NT AUTHORITY\\LocalService"
 
 // The password to the service account name
 #define SERVICE_PASSWORD         NULL

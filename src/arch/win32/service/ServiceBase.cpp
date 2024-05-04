@@ -152,7 +152,7 @@ CServiceBase::CServiceBase(PWSTR pszServiceName,
                            BOOL fCanPauseContinue)
 {
     // Service name must be a valid string and cannot be NULL.
-    m_name = (pszServiceName == NULL) ? L"" : pszServiceName;
+    m_name = (pszServiceName == NULL) ? (PWSTR)L"" : pszServiceName;
 
     m_statusHandle = NULL;
 
@@ -221,7 +221,7 @@ void CServiceBase::Start(DWORD dwArgc, PWSTR *pszArgv)
     catch (DWORD dwError)
     {
         // Log the error.
-        WriteErrorLogEntry(L"Service Start", dwError);
+        WriteErrorLogEntry((PWSTR)L"Service Start", dwError);
 
         // Set the service status to be stopped.
         SetServiceStatus(SERVICE_STOPPED, dwError);
@@ -229,7 +229,7 @@ void CServiceBase::Start(DWORD dwArgc, PWSTR *pszArgv)
     catch (...)
     {
         // Log the error.
-        WriteEventLogEntry(L"Service failed to start.", EVENTLOG_ERROR_TYPE);
+        WriteEventLogEntry((PWSTR)L"Service failed to start.", EVENTLOG_ERROR_TYPE);
 
         // Set the service status to be stopped.
         SetServiceStatus(SERVICE_STOPPED);
@@ -252,7 +252,7 @@ void CServiceBase::Start(DWORD dwArgc, PWSTR *pszArgv)
 //   * dwArgc   - number of command line arguments
 //   * lpszArgv - array of command line arguments
 //
-void CServiceBase::OnStart(DWORD dwArgc, PWSTR *pszArgv)
+void CServiceBase::OnStart(DWORD, PWSTR*)
 {
 }
 
@@ -282,7 +282,7 @@ void CServiceBase::Stop()
     catch (DWORD dwError)
     {
         // Log the error.
-        WriteErrorLogEntry(L"Service Stop", dwError);
+        WriteErrorLogEntry((PWSTR)L"Service Stop", dwError);
 
         // Set the orginal service status.
         SetServiceStatus(dwOriginalState);
@@ -290,7 +290,7 @@ void CServiceBase::Stop()
     catch (...)
     {
         // Log the error.
-        WriteEventLogEntry(L"Service failed to stop.", EVENTLOG_ERROR_TYPE);
+        WriteEventLogEntry((PWSTR)L"Service failed to stop.", EVENTLOG_ERROR_TYPE);
 
         // Set the orginal service status.
         SetServiceStatus(dwOriginalState);
@@ -337,7 +337,7 @@ void CServiceBase::Pause()
     catch (DWORD dwError)
     {
         // Log the error.
-        WriteErrorLogEntry(L"Service Pause", dwError);
+        WriteErrorLogEntry((PWSTR)L"Service Pause", dwError);
 
         // Tell SCM that the service is still running.
         SetServiceStatus(SERVICE_RUNNING);
@@ -345,7 +345,7 @@ void CServiceBase::Pause()
     catch (...)
     {
         // Log the error.
-        WriteEventLogEntry(L"Service failed to pause.", EVENTLOG_ERROR_TYPE);
+        WriteEventLogEntry((PWSTR)L"Service failed to pause.", EVENTLOG_ERROR_TYPE);
 
         // Tell SCM that the service is still running.
         SetServiceStatus(SERVICE_RUNNING);
@@ -390,7 +390,7 @@ void CServiceBase::Continue()
     catch (DWORD dwError)
     {
         // Log the error.
-        WriteErrorLogEntry(L"Service Continue", dwError);
+        WriteErrorLogEntry((PWSTR)L"Service Continue", dwError);
 
         // Tell SCM that the service is still paused.
         SetServiceStatus(SERVICE_PAUSED);
@@ -398,7 +398,7 @@ void CServiceBase::Continue()
     catch (...)
     {
         // Log the error.
-        WriteEventLogEntry(L"Service failed to resume.", EVENTLOG_ERROR_TYPE);
+        WriteEventLogEntry((PWSTR)L"Service failed to resume.", EVENTLOG_ERROR_TYPE);
 
         // Tell SCM that the service is still paused.
         SetServiceStatus(SERVICE_PAUSED);
@@ -439,12 +439,12 @@ void CServiceBase::Shutdown()
     catch (DWORD dwError)
     {
         // Log the error.
-        WriteErrorLogEntry(L"Service Shutdown", dwError);
+        WriteErrorLogEntry((PWSTR)L"Service Shutdown", dwError);
     }
     catch (...)
     {
         // Log the error.
-        WriteEventLogEntry(L"Service failed to shut down.", EVENTLOG_ERROR_TYPE);
+        WriteEventLogEntry((PWSTR)L"Service failed to shut down.", EVENTLOG_ERROR_TYPE);
     }
 }
 

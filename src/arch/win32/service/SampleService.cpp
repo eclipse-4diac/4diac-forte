@@ -76,10 +76,10 @@ CSampleService::~CSampleService(void)
 //   other solution is to spawn a new thread to perform the main service
 //   functions, which is demonstrated in this code sample.
 //
-void CSampleService::OnStart(DWORD dwArgc, LPWSTR *lpszArgv)
+void CSampleService::OnStart(DWORD, LPWSTR*)
 {
     // Log a service start message to the Application log.
-    WriteEventLogEntry(L"CppWindowsService in OnStart",
+    WriteEventLogEntry((PWSTR)L"CppWindowsService in OnStart",
         EVENTLOG_INFORMATION_TYPE);
 
     // Queue the main service function for execution in a worker thread.
@@ -123,7 +123,7 @@ void CSampleService::ServiceWorkerThread(void)
 void CSampleService::OnStop()
 {
     // Log a service stop message to the Application log.
-    WriteEventLogEntry(L"CppWindowsService in OnStop",
+    WriteEventLogEntry((PWSTR)L"CppWindowsService in OnStop",
         EVENTLOG_INFORMATION_TYPE);
 
     // Indicate that the service is stopping and wait for the finish of the
