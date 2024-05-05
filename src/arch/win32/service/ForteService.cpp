@@ -20,7 +20,7 @@
 \***************************************************************************/
 
 #pragma region Includes
-#include "SampleService.h"
+#include "ForteService.h"
 #include "ThreadPool.h"
 #pragma endregion
 
@@ -33,7 +33,7 @@ void endForte(int paSig);
 int _main(int argc, char *arg[]);
 
 
-CSampleService::CSampleService(PWSTR pszServiceName,
+CForteService::CForteService(PWSTR pszServiceName,
                                int argc,
                                char *argv[],
                                BOOL fCanStop,
@@ -55,7 +55,7 @@ CSampleService::CSampleService(PWSTR pszServiceName,
 }
 
 
-CSampleService::~CSampleService(void)
+CForteService::~CForteService(void)
 {
     if (m_hStoppedEvent)
     {
@@ -66,7 +66,7 @@ CSampleService::~CSampleService(void)
 
 
 //
-//   FUNCTION: CSampleService::OnStart(DWORD, LPWSTR *)
+//   FUNCTION: CForteService::OnStart(DWORD, LPWSTR *)
 //
 //   PURPOSE: The function is executed when a Start command is sent to the
 //   service by the SCM or when the operating system starts (for a service
@@ -90,7 +90,7 @@ CSampleService::~CSampleService(void)
 //   other solution is to spawn a new thread to perform the main service
 //   functions, which is demonstrated in this code sample.
 //
-void CSampleService::OnStart(DWORD, LPWSTR*)
+void CForteService::OnStart(DWORD, LPWSTR*)
 {
     // Log command line arguments
     std::ostringstream stream;
@@ -104,17 +104,17 @@ void CSampleService::OnStart(DWORD, LPWSTR*)
         EVENTLOG_INFORMATION_TYPE);
 
     // Queue the main service function for execution in a worker thread.
-    CThreadPool::QueueUserWorkItem(&CSampleService::ServiceWorkerThread, this);
+    CThreadPool::QueueUserWorkItem(&CForteService::ServiceWorkerThread, this);
 }
 
 
 //
-//   FUNCTION: CSampleService::ServiceWorkerThread(void)
+//   FUNCTION: CForteService::ServiceWorkerThread(void)
 //
 //   PURPOSE: The method performs the main function of the service. It runs
 //   on a thread pool worker thread.
 //
-void CSampleService::ServiceWorkerThread(void)
+void CForteService::ServiceWorkerThread(void)
 {
     // Periodically check if the service is stopping.
     while (!m_fStopping)
@@ -137,7 +137,7 @@ void CSampleService::ServiceWorkerThread(void)
 
 
 //
-//   FUNCTION: CSampleService::OnStop(void)
+//   FUNCTION: CForteService::OnStop(void)
 //
 //   PURPOSE: The function is executed when a Stop command is sent to the
 //   service by SCM. It specifies actions to take when a service stops
@@ -148,7 +148,7 @@ void CSampleService::ServiceWorkerThread(void)
 //   Be sure to periodically call ReportServiceStatus() with
 //   SERVICE_STOP_PENDING if the procedure is going to take long time.
 //
-void CSampleService::OnStop()
+void CForteService::OnStop()
 {
     // Log a service stop message to the Application log.
     WriteEventLogEntry((PWSTR)L"FORTE service stopped",

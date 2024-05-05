@@ -24,17 +24,17 @@
 #include "ServiceBase.h"
 
 
-class CSampleService : public CServiceBase
+class CForteService : public CServiceBase
 {
 public:
 
-    CSampleService(PWSTR pszServiceName,
+    CForteService(PWSTR pszServiceName,
         int argc,
         char *argv[],
         BOOL fCanStop = TRUE,
         BOOL fCanShutdown = TRUE,
         BOOL fCanPauseContinue = FALSE);
-    virtual ~CSampleService(void);
+    virtual ~CForteService(void);
 
 protected:
 

@@ -23,7 +23,7 @@
 #include <windows.h>
 #include "ServiceInstaller.h"
 #include "ServiceBase.h"
-#include "SampleService.h"
+#include "ForteService.h"
 #pragma endregion
 
 
@@ -138,7 +138,7 @@ int wmain(int argc, wchar_t *argv[])
                 std::cerr.rdbuf(nullptr);
             }
 
-            SampleService service(SERVICE_DISPLAY_NAME, static_cast<int>(l_argv.size() - 1), l_argv.data());
+            CForteService service(SERVICE_DISPLAY_NAME, static_cast<int>(l_argv.size() - 1), l_argv.data());
             if (!CServiceBase::Run(service))
             {
                 DEVLOG_ERROR("Service failed to run w/err 0x%08lx\n", GetLastError());
