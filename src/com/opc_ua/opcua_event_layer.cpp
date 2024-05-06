@@ -18,6 +18,8 @@
 
 using namespace forte::com_infra;
 
+char COPC_UA_Event_Layer::smEmptyString[] = "";
+
 COPC_UA_Event_Layer::COPC_UA_Event_Layer(CComLayer *paUpperLayer, CBaseCommFB *paComFB) :
   CComLayer(paUpperLayer, paComFB), mHandler(nullptr) {
 
@@ -34,7 +36,19 @@ EComResponse COPC_UA_Event_Layer::openConnection(char *paLayerParameter) {
     DEVLOG_ERROR("[OPC UA EVENT LAYER]: Too many layer arguments! Number of arguments: %d", nrOfParams);
     return eRetVal;
   }
-  // TODO
+  char* eventTypeName = new char[strlen(parser[0]) + 1];
+  strncpy(eventTypeName, parser[0], strlen(parser[0]));
+  eventTypeName[strlen(parser[0])] = '\0';
+
+  mHandler = static_cast<COPC_UA_HandlerAbstract*>(&getExtEvHandler<COPC_UA_Local_Handler>());
+  COPC_UA_Local_Handler* localHandler = static_cast<COPC_UA_Local_Handler*>(mHandler);
+  localHandler->enableHandler();
+  UA_NodeId eventType;
+  UA_StatusCode status = addNewEventType(localHandler->getUAServer(), eventType, eventTypeName);
+  if(status != UA_STATUSCODE_GOOD) {
+    DEVLOG_ERROR("[OPC UA EVENT LAYER]: Failed to add EventType. Status: %s", UA_StatusCode_name(status));
+    return eRetVal;
+  }
   return e_InitOk;
 }
 
@@ -54,4 +68,14 @@ EComResponse COPC_UA_Event_Layer::sendData(void *paData, unsigned int paSize) {
 EComResponse COPC_UA_Event_Layer::processInterrupt() {
   // TODO
   return e_ProcessDataOk;
+}
+
+UA_StatusCode COPC_UA_Event_Layer::addNewEventType(UA_Server *server, UA_NodeId &paEventType, char* eventTypeName) {
+    UA_ObjectTypeAttributes attr = UA_ObjectTypeAttributes_default;
+    attr.displayName = UA_LOCALIZEDTEXT(smEmptyString, eventTypeName);
+    return UA_Server_addObjectTypeNode(server, UA_NODEID_NULL,
+                                       UA_NODEID_NUMERIC(0, UA_NS0ID_BASEEVENTTYPE),
+                                       UA_NODEID_NUMERIC(0, UA_NS0ID_HASSUBTYPE),
+                                       UA_QUALIFIEDNAME(0, eventTypeName),
+                                       attr, NULL, &paEventType);
 }
