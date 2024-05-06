@@ -52,6 +52,8 @@ class COPC_UA_Event_Layer : public forte::com_infra::CComLayer {
 
     static const size_t scmNumberOfParameters = 1;
 
+    static char smEmptyString[];
+
     COPC_UA_HandlerAbstract *mHandler;
 
     /**
@@ -65,4 +67,6 @@ class COPC_UA_Event_Layer : public forte::com_infra::CComLayer {
      * Called when INIT is triggered in the FB and QI is set to false
      */
     void closeConnection() override;
+
+    static UA_StatusCode addNewEventType(UA_Server *server, UA_NodeId &paEventType, char* eventTypeName);
 };
