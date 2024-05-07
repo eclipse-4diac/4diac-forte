@@ -112,19 +112,28 @@ UA_StatusCode COPC_UA_Event_Layer::addNewEventInstance(UA_Server *paServer, UA_N
   status = UA_Server_writeObjectProperty_scalar(paServer, paNodeId, UA_QUALIFIEDNAME(scmServerNSIndex, smEventTimeProperty),
                                               &eventTime, &UA_TYPES[UA_TYPES_DATETIME]);
   if(status != UA_STATUSCODE_GOOD) {
-    DEVLOG_ERROR("[OPC UA EVENT LAYER]: Failed to write ObjectProperty for OPC UA Event Instance. Status: %s\n", UA_StatusCode_name(status));
+    DEVLOG_ERROR("[OPC UA EVENT LAYER]: Failed to write TimeProperty for OPC UA Event Instance. Status: %s\n", UA_StatusCode_name(status));
+    return status;
   }
-
   UA_UInt16 eventSeverity = 100;
-    UA_Server_writeObjectProperty_scalar(paServer, paNodeId, UA_QUALIFIEDNAME(scmServerNSIndex, smEventSeverityProperty),
+  status = UA_Server_writeObjectProperty_scalar(paServer, paNodeId, UA_QUALIFIEDNAME(scmServerNSIndex, smEventSeverityProperty),
                                          &eventSeverity, &UA_TYPES[UA_TYPES_UINT16]);
-
-    UA_LocalizedText eventMessage = UA_LOCALIZEDTEXT(smEmptyString, "An event has been generated.");
-    UA_Server_writeObjectProperty_scalar(paServer, paNodeId, UA_QUALIFIEDNAME(scmServerNSIndex, smEventMessageProperty),
-                                         &eventMessage, &UA_TYPES[UA_TYPES_LOCALIZEDTEXT]);
-
-    UA_String eventSourceName = UA_STRING("Server");
-    UA_Server_writeObjectProperty_scalar(paServer, paNodeId, UA_QUALIFIEDNAME(scmServerNSIndex, smEventSourceProperty),
-                                         &eventSourceName, &UA_TYPES[UA_TYPES_STRING]);
+  if(status != UA_STATUSCODE_GOOD) {
+    DEVLOG_ERROR("[OPC UA EVENT LAYER]: Failed to write SeverityProperty for OPC UA Event Instance. Status: %s\n", UA_StatusCode_name(status));
+    return status;
+  }
+  UA_LocalizedText eventMessage = UA_LOCALIZEDTEXT(smEmptyString, "An event has been generated.");
+  status = UA_Server_writeObjectProperty_scalar(paServer, paNodeId, UA_QUALIFIEDNAME(scmServerNSIndex, smEventMessageProperty),
+                                        &eventMessage, &UA_TYPES[UA_TYPES_LOCALIZEDTEXT]);
+  if(status != UA_STATUSCODE_GOOD) {
+    DEVLOG_ERROR("[OPC UA EVENT LAYER]: Failed to write MessageProperty for OPC UA Event Instance. Status: %s\n", UA_StatusCode_name(status));
+    return status;
+  }
+  UA_String eventSourceName = UA_STRING("Server");
+  status = UA_Server_writeObjectProperty_scalar(paServer, paNodeId, UA_QUALIFIEDNAME(scmServerNSIndex, smEventSourceProperty),
+                                        &eventSourceName, &UA_TYPES[UA_TYPES_STRING]);
+  if(status != UA_STATUSCODE_GOOD) {
+    DEVLOG_ERROR("[OPC UA EVENT LAYER]: Failed to write SourceProperty for OPC UA Event Instance. Status: %s\n", UA_StatusCode_name(status));
+  }
   return status;
 }
