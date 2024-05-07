@@ -41,6 +41,11 @@ EComResponse COPC_UA_Event_Layer::openConnection(char *paLayerParameter) {
     return eRetVal;
   }
   mEventTypeName = parser[0];
+
+  size_t numSDs = getCommFB()->getNumSD();
+  if(numSDs != 0 && numSDs != 2) {
+    DEVLOG_ERROR("[OPC UA EVENT LAYER]: Number of SDs must be 0 or 2 for FB %s", getCommFB()->getInstanceName());
+  }
   mHandler = static_cast<COPC_UA_HandlerAbstract*>(&getExtEvHandler<COPC_UA_Local_Handler>());
   COPC_UA_Local_Handler* localHandler = static_cast<COPC_UA_Local_Handler*>(mHandler);
   localHandler->enableHandler();
@@ -60,11 +65,12 @@ EComResponse COPC_UA_Event_Layer::sendData(void*, unsigned int) {
   EComResponse eRetVal = e_ProcessDataInhibited;
   COPC_UA_Local_Handler* localHandler = static_cast<COPC_UA_Local_Handler*>(mHandler);
   UA_Server *server = localHandler->getUAServer();
-  if(addNewEventInstance(server, mEventTypeNode, mEventInstanceNode) != UA_STATUSCODE_GOOD) {
+  UA_NodeId eventNode;
+  if(addNewEventInstance(server, mEventTypeNode, eventNode, getCommFB()) != UA_STATUSCODE_GOOD) {
     DEVLOG_ERROR("[OPC UA EVENT LAYER]: Failed to create OPC UA Event %s.\n", mEventTypeName.c_str());
     return eRetVal;
   }
-  UA_StatusCode status = UA_Server_triggerEvent(server, mEventInstanceNode, 
+  UA_StatusCode status = UA_Server_triggerEvent(server, eventNode, 
                                                 UA_NODEID_NUMERIC(0, UA_NS0ID_SERVER),
                                                 nullptr, UA_TRUE);
   if(status != UA_STATUSCODE_GOOD) {
@@ -102,38 +108,70 @@ UA_StatusCode COPC_UA_Event_Layer::addNewEventType(UA_Server *paServer, UA_NodeI
   return status;
 }
 
-UA_StatusCode COPC_UA_Event_Layer::addNewEventInstance(UA_Server *paServer, UA_NodeId &paEventType, UA_NodeId &paNodeId) {
+UA_StatusCode COPC_UA_Event_Layer::addNewEventInstance(UA_Server *paServer, UA_NodeId &paEventType, UA_NodeId &paNodeId, CBaseCommFB *paFb) {
   UA_StatusCode status = UA_Server_createEvent(paServer, paEventType, &paNodeId);
   if(status != UA_STATUSCODE_GOOD) {
     DEVLOG_ERROR("[OPC UA EVENT LAYER]: Failed to create Event Instance. Status: %s\n", UA_StatusCode_name(status));
     return status;
   }
+  if(writeTimeAndSourceProperty(paServer, paNodeId)) {
+    return status;
+  }
+  const size_t numSDs = paFb->getNumSD();
+  if(numSDs == 2) {
+    CIEC_ANY **sds = paFb->getSDs();
+    for(size_t i = 0; i < numSDs; i++) {
+      char *eventProperty = i == 0 ? smEventSeverityProperty: smEventMessageProperty;
+      const UA_DataType *dataType = COPC_UA_Helper::getOPCUATypeFromAny(*sds[i]);
+      void *varValue = UA_new(dataType);
+      COPC_UA_Helper::convertToOPCUAType(*sds[i], varValue);
+      status = UA_Server_writeObjectProperty_scalar(paServer, paNodeId, UA_QUALIFIEDNAME(scmServerNSIndex, eventProperty),
+                                        varValue, dataType);
+      UA_delete(varValue, dataType);
+      if(status != UA_STATUSCODE_GOOD) {
+        DEVLOG_ERROR("[OPC UA EVENT LAYER]: Failed to write property %s for OPC UA Event Instance. Status: %s\n", eventProperty, UA_StatusCode_name(status));
+        return status;
+      }
+    }
+  } else {
+    return writeDefaultProperties(paServer, paNodeId);
+  }
+  return status;
+}
+
+UA_StatusCode COPC_UA_Event_Layer::writeTimeAndSourceProperty(UA_Server *paServer, UA_NodeId &paNodeId) {
   UA_DateTime eventTime = UA_DateTime_now();
-  status = UA_Server_writeObjectProperty_scalar(paServer, paNodeId, UA_QUALIFIEDNAME(scmServerNSIndex, smEventTimeProperty),
+  UA_StatusCode status = UA_Server_writeObjectProperty_scalar(paServer, paNodeId, UA_QUALIFIEDNAME(scmServerNSIndex, smEventTimeProperty),
                                               &eventTime, &UA_TYPES[UA_TYPES_DATETIME]);
   if(status != UA_STATUSCODE_GOOD) {
     DEVLOG_ERROR("[OPC UA EVENT LAYER]: Failed to write TimeProperty for OPC UA Event Instance. Status: %s\n", UA_StatusCode_name(status));
     return status;
   }
+  std::string sourceName("Server");
+  UA_String uaEventSourceName = UA_STRING(sourceName.data());
+  status = UA_Server_writeObjectProperty_scalar(paServer, paNodeId, UA_QUALIFIEDNAME(scmServerNSIndex, smEventSourceProperty),
+                                        &uaEventSourceName, &UA_TYPES[UA_TYPES_STRING]);
+  if(status != UA_STATUSCODE_GOOD) {
+    DEVLOG_ERROR("[OPC UA EVENT LAYER]: Failed to write SourceProperty for OPC UA Event Instance. Status: %s\n", UA_StatusCode_name(status));
+  }
+  return status;
+}
+
+UA_StatusCode COPC_UA_Event_Layer::writeDefaultProperties(UA_Server *paServer, UA_NodeId &paNodeId) {
   UA_UInt16 eventSeverity = 100;
-  status = UA_Server_writeObjectProperty_scalar(paServer, paNodeId, UA_QUALIFIEDNAME(scmServerNSIndex, smEventSeverityProperty),
+  UA_StatusCode status = UA_Server_writeObjectProperty_scalar(paServer, paNodeId, UA_QUALIFIEDNAME(scmServerNSIndex, smEventSeverityProperty),
                                          &eventSeverity, &UA_TYPES[UA_TYPES_UINT16]);
   if(status != UA_STATUSCODE_GOOD) {
     DEVLOG_ERROR("[OPC UA EVENT LAYER]: Failed to write SeverityProperty for OPC UA Event Instance. Status: %s\n", UA_StatusCode_name(status));
     return status;
   }
-  UA_LocalizedText eventMessage = UA_LOCALIZEDTEXT(smEmptyString, "An event has been generated.");
+
+  std::string message("An event has been generated.");
+  UA_LocalizedText eventMessage = UA_LOCALIZEDTEXT(smEmptyString, message.data());
   status = UA_Server_writeObjectProperty_scalar(paServer, paNodeId, UA_QUALIFIEDNAME(scmServerNSIndex, smEventMessageProperty),
                                         &eventMessage, &UA_TYPES[UA_TYPES_LOCALIZEDTEXT]);
   if(status != UA_STATUSCODE_GOOD) {
     DEVLOG_ERROR("[OPC UA EVENT LAYER]: Failed to write MessageProperty for OPC UA Event Instance. Status: %s\n", UA_StatusCode_name(status));
-    return status;
-  }
-  UA_String eventSourceName = UA_STRING("Server");
-  status = UA_Server_writeObjectProperty_scalar(paServer, paNodeId, UA_QUALIFIEDNAME(scmServerNSIndex, smEventSourceProperty),
-                                        &eventSourceName, &UA_TYPES[UA_TYPES_STRING]);
-  if(status != UA_STATUSCODE_GOOD) {
-    DEVLOG_ERROR("[OPC UA EVENT LAYER]: Failed to write SourceProperty for OPC UA Event Instance. Status: %s\n", UA_StatusCode_name(status));
   }
   return status;
 }

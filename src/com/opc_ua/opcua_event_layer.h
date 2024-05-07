@@ -68,11 +68,7 @@ class COPC_UA_Event_Layer : public forte::com_infra::CComLayer {
 
     std::string mEventTypeName;
 
-    std::string mEventInstanceName;
-
     UA_NodeId mEventTypeNode;
-
-    UA_NodeId mEventInstanceNode;
 
     /**
      * Called when INIT is triggered in the FB and QI is set to true
@@ -90,5 +86,9 @@ class COPC_UA_Event_Layer : public forte::com_infra::CComLayer {
 
     static UA_StatusCode addNewEventType(UA_Server *paServer, UA_NodeId &paEventType, std::string paEventTypeName);
 
-    static UA_StatusCode addNewEventInstance(UA_Server *paServer, UA_NodeId &paEventType, UA_NodeId &paNodeId);
+    static UA_StatusCode addNewEventInstance(UA_Server *paServer, UA_NodeId &paEventType, UA_NodeId &paNodeId, forte::com_infra::CBaseCommFB *paFb);
+
+    static UA_StatusCode writeTimeAndSourceProperty(UA_Server *paServer, UA_NodeId &paNodeId);
+
+    static UA_StatusCode writeDefaultProperties(UA_Server *paServer, UA_NodeId &paNodeId);
 };
