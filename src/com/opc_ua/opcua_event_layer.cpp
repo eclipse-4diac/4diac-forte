@@ -80,25 +80,21 @@ EComResponse COPC_UA_Event_Layer::processInterrupt() {
 }
 
 forte::com_infra::EComResponse COPC_UA_Event_Layer::createOPCUAEvent(UA_Server *paServer) {
-  EComResponse eRetVal = e_InitTerminated;
-  char* eventTypeName = new char[mEventTypeName.size() + 1];
-  strncpy(eventTypeName, mEventTypeName.c_str(), mEventTypeName.size());
-  eventTypeName[mEventTypeName.size()] = '\0';
-
-  if(addNewEventType(paServer, mEventTypeNode, eventTypeName) != UA_STATUSCODE_GOOD) {
+  if(addNewEventType(paServer, mEventTypeNode, mEventTypeName) != UA_STATUSCODE_GOOD) {
     DEVLOG_ERROR("[OPC UA EVENT LAYER]: Failed to create OPC UA Event %s.\n", mEventTypeName.c_str());
-    return eRetVal;
+    return e_InitTerminated;
   }
   return e_InitOk;
 }
 
-UA_StatusCode COPC_UA_Event_Layer::addNewEventType(UA_Server *paServer, UA_NodeId &paEventType, char* eventTypeName) {
+UA_StatusCode COPC_UA_Event_Layer::addNewEventType(UA_Server *paServer, UA_NodeId &paEventType, std::string paEventTypeName) {
     UA_ObjectTypeAttributes attr = UA_ObjectTypeAttributes_default;
-    attr.displayName = UA_LOCALIZEDTEXT(smEmptyString, eventTypeName);
+    std::string eventTypeName(paEventTypeName);
+    attr.displayName = UA_LOCALIZEDTEXT(smEmptyString, eventTypeName.data());
     UA_StatusCode status = UA_Server_addObjectTypeNode(paServer, UA_NODEID_NULL,
                                        UA_NODEID_NUMERIC(0, UA_NS0ID_BASEEVENTTYPE),
                                        UA_NODEID_NUMERIC(0, UA_NS0ID_HASSUBTYPE),
-                                       UA_QUALIFIEDNAME(0, eventTypeName),
+                                       UA_QUALIFIEDNAME(0, eventTypeName.data()),
                                        attr, NULL, &paEventType);
     if(status != UA_STATUSCODE_GOOD) {
     DEVLOG_ERROR("[OPC UA EVENT LAYER]: Failed to add EventType. Status: %s\n", UA_StatusCode_name(status));

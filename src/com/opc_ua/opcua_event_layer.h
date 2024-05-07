@@ -88,7 +88,7 @@ class COPC_UA_Event_Layer : public forte::com_infra::CComLayer {
 
     forte::com_infra::EComResponse createOPCUAEvent(UA_Server *paServer);
 
-    static UA_StatusCode addNewEventType(UA_Server *paServer, UA_NodeId &paEventType, char* eventTypeName);
+    static UA_StatusCode addNewEventType(UA_Server *paServer, UA_NodeId &paEventType, std::string paEventTypeName);
 
     static UA_StatusCode addNewEventInstance(UA_Server *paServer, UA_NodeId &paEventType, UA_NodeId &paNodeId);
 };
