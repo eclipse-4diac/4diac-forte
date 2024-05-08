@@ -52,8 +52,25 @@ int COpcConnection::removeGroupCallbackDesc(const std::string& paGroupName){
     if(mOpcGroupMapList[i]->mGroupName == paGroupName){
       mEventHandler->removeComCallback(mOpcGroupMapList[i]->mCallbackDesc);
       DEVLOG_INFO("erase from m_lOpcGroupMapList %d[%s]\n", i,paGroupName.c_str());
+      //remove group's read item list first
+      for(auto &readItem : mOpcGroupMapList[i]->mReadItemsList){
+        delete readItem;
+      }
+      //clear vector and remove it from memory
+      TItemDataList().swap(mOpcGroupMapList[i]->mReadItemsList);
+      //and then group's write item list
+      for(auto &writeItem : mOpcGroupMapList[i]->mWriteItemsList){
+        delete writeItem;
+      }
+      //clear vector and remove it from memory
+      TItemDataList().swap(mOpcGroupMapList[i]->mWriteItemsList);
+      //and finally the group itself
       delete mOpcGroupMapList[i];
       mOpcGroupMapList.erase(mOpcGroupMapList.begin()+i);
+      if(mOpcGroupMapList.empty()){
+        //no content, remove vector from memory
+        TOpcGroupMapList().swap(mOpcGroupMapList);
+      }
       return 0;
     }
   }
@@ -223,6 +240,7 @@ void COpcConnection::response_dataReceived(const std::string& paGroupName, TItem
         for(auto newItem = paItemDataList.begin(); newItem != paItemDataList.end(); ++newItem){
           if((*newItem)->mItemName.compare((*item)->mItemName) == 0){
             (*item)->mItemData = (*newItem)->mItemData;
+            delete (*newItem);
             paItemDataList.erase(newItem);
             break;
           }
@@ -233,16 +251,20 @@ void COpcConnection::response_dataReceived(const std::string& paGroupName, TItem
       break;
     }
   }
-  // Should not happen unless something is manipulating the contents of the string
   if(!paItemDataList.empty()){
+    // Should not happen unless there is data received that is not consumed
     int count = 0;
     for(size_t i = 0; i < paItemDataList.size(); i++){
       DEVLOG_INFO("deleting item from onchange itemlist[%s:%s]\n",paGroupName.c_str(),paItemDataList[i]->mItemName.c_str());
       delete paItemDataList[i];
       count++;
     }
-    paItemDataList.clear();
+    //clear vector and remove it from memory
+    TItemDataList().swap(paItemDataList);
     DEVLOG_ERROR("there are %d items cleared from onchange itemlist[%s]\n",count,paGroupName.c_str());
+  } else {
+    //no content, remove vector from memory
+    TItemDataList().swap(paItemDataList);
   }
 }
 
