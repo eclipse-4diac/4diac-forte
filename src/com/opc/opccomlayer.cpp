@@ -38,9 +38,13 @@ COpcComLayer::~COpcComLayer(){
   for(auto &it :mFBInputVars){
     delete it;
   }
+  //clear vector and remove it from memory
+  TOpcProcessVarList().swap(mFBInputVars);
   for(auto &it :mFBOutputVars){
     delete it;
   }
+  //clear vector and remove it from memory
+  TOpcProcessVarList().swap(mFBOutputVars);
 }
 
 EComResponse COpcComLayer::sendData(void *paData, unsigned int paSize){

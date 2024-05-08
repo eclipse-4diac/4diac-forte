@@ -44,11 +44,14 @@ void COpcEventHandler::clearCommandQueue(){
       delete nextCommand;
     }
   }
+  mCommandQueue.clearAll();
 
   for(TCallbackList::iterator itRunner = mComCallbacks.begin(); itRunner != mComCallbacks.end(); ++itRunner){
     DEVLOG_ERROR("erase from command callback\n");
     mComCallbacks.erase(itRunner);
   }
+  //clear vector and remove it from memory
+  TCallbackList().swap(mComCallbacks);
 }
 
 void COpcEventHandler::executeCommandQueue(){
@@ -60,6 +63,7 @@ void COpcEventHandler::executeCommandQueue(){
       nextCommand = nullptr;
     }
   }
+  mCommandQueue.clearAll();
 }
 
 void COpcEventHandler::sendCommand(ICmd *paCmd){
@@ -97,6 +101,10 @@ void COpcEventHandler::removeComCallback(COpcEventHandler::TCallbackDescriptor p
       mComCallbacks.erase(itRunner);
       break; 
     }
+  }
+  if(mComCallbacks.empty()){
+    //no content, remove vector from memory
+    TCallbackList().swap(mComCallbacks);
   }
 }
 
