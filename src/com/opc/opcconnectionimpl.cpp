@@ -179,13 +179,15 @@ void COpcConnectionImpl::removeItems(const std::string& paGroupName){
     items = it->second;
     for(size_t i = 0; i < items.size(); i++){
       DEVLOG_DEBUG("removing item %s in COpcConnectionImpl[%s]\n", WS2S(items[i]->getName()).c_str(), paGroupName.c_str());
-      if (nullptr != items[i]) {
-        delete items[i];
-        items[i] = nullptr;
-      }
+      delete items[i];
     }
-    items.clear();
+    //clear vector and remove it from memory
+    std::vector<COPCItem *>().swap(items);
     mOpcItems.erase(it);
+    if(mOpcItems.empty()){
+      //no content, remove vector from memory
+      std::map<std::string, std::vector<COPCItem*>>().swap(mOpcItems);
+    }
   }
   else{
     DEVLOG_ERROR("there is no item in group:%s\n", paGroupName.c_str());
@@ -201,18 +203,20 @@ void COpcConnectionImpl::removeGroup(const std::string& paGroupName){
   }
   for(auto group = mOpcGroupSettingsList.begin(); group != mOpcGroupSettingsList.end();){
     if(paGroupName.empty() || (*group)->mGroupName == paGroupName){
-      if (nullptr != (*group)->mOpcGroupRead && (*group)->mReadGroupAdded) {
+      if ((*group)->mReadGroupAdded) {
         (*group)->mOpcGroupRead->disableAsync();
         removeItems(WS2S((*group)->mOpcGroupRead->getName()));
         delete (*group)->mOpcGroupRead;
-        (*group)->mOpcGroupRead = nullptr;
       }
-      if (nullptr != (*group)->mOpcGroupWrite && (*group)->mWriteGroupAdded) {
+      if ((*group)->mWriteGroupAdded) {
         removeItems(WS2S((*group)->mOpcGroupWrite->getName()));
         delete (*group)->mOpcGroupWrite;
-        (*group)->mOpcGroupWrite = nullptr;
       }
       group =  mOpcGroupSettingsList.erase(group);
+      if(mOpcGroupSettingsList.empty()){
+        //no content, remove vector from memory
+        TOpcGroupSettingsList().swap(mOpcGroupSettingsList);
+      }
       if(paGroupName.empty()){
         continue;
       }
@@ -229,7 +233,7 @@ void COpcConnectionImpl::removeGroup(const std::string& paGroupName){
 
 void COpcConnectionImpl::clearGroup(){
   DEVLOG_INFO("clearGroup in COpcConnectionImpl\n");
-  mOpcItems.clear();
+  //clear all group and all group's items
   removeGroup(std::string());
 }
 

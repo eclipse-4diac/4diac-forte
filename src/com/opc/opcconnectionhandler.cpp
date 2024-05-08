@@ -31,6 +31,7 @@ COpcConnectionHandler::~COpcConnectionHandler(){
   for(TOpcConnectionList::Iterator it = mOpcConnectionList.begin(); it != itEnd; ++it){
     delete (*it);
   }
+  mOpcConnectionList.clearAll();
 }
 
 COpcConnection* COpcConnectionHandler::getOpcConnection(const std::string& paHost, const std::string& paServerName, CComLayer* paComCallback){
