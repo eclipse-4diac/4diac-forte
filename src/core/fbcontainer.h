@@ -17,6 +17,7 @@
 #include "fortelist.h"
 #include "stringdict.h"
 #include "mgmcmdstruct.h"
+#include <vector>
 
 class CFunctionBlock;
 class CDevice;

@@ -36,6 +36,13 @@ SET(FORTE_LOGGER_BUFFER_SIZE "300" CACHE STRING "Buffer's length of the logger")
 mark_as_advanced(FORTE_LOGGER_BUFFER_SIZE)
 forte_add_custom_configuration("#define FORTE_LOGGER_BUFFER_SIZE ${FORTE_LOGGER_BUFFER_SIZE}")
 
+SET(FORTE_LOGGER_READABLE_TIME OFF CACHE BOOL "Logger time in IEC 61131-3 date time literal")
+if(FORTE_LOGGER_READABLE_TIME)
+    forte_add_sourcefile_cpp(readableTimeString.cpp)
+else()
+    forte_add_sourcefile_cpp(plainTimeString.cpp)
+endif()
+
 if (FORTE_STACKTRACE)
     if (FORTE_STACKTRACE_IMPL MATCHES "boost")
         find_package(Boost REQUIRED)

@@ -141,6 +141,6 @@ CIEC_ANY *FORTE_GetInstancePathAndName::getVarInternal(size_t) {
 
 void FORTE_GetInstancePathAndName::alg_REQ(void) {
   var_Path = CIEC_STRING(getContainer().getFullQualifiedApplicationInstanceName(var_Sep.operator TForteChar()));
-  var_Name = CIEC_STRING(getInstanceName());
+  var_Name = CIEC_STRING(getInstanceName(), strlen(getInstanceName()));
 }
 

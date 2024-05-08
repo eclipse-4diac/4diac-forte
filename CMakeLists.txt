@@ -142,8 +142,14 @@ if (WIN32)
   option(FORTE_WINDOWS_XP_COMPAT OFF "Enable some workarounds for Windows XP compatibility")
   if (FORTE_WINDOWS_XP_COMPAT)
     add_definitions(-DWINDOWS_XP_COMPAT=1)
+    add_definitions(-D_WIN32_WINNT=0x0501)
+    add_definitions(-DUA_ARCHITECTURE_WEC7)
   endif()
 endif(WIN32)
+
+if (APPLE)
+  add_compile_options("-Dpthread_condattr_setclock(a,b)=(0)")
+endif ()
 
 #######################################################################################
 # dynamic type loading
@@ -230,6 +236,10 @@ set(FORTE_TESTS OFF CACHE BOOL "Build Tests")
 IF(FORTE_TESTS)
     set(FORTE_TESTS_LINK_DIRS "" CACHE PATH "Test specific library directories")
     set(FORTE_TESTS_INC_DIRS "" CACHE PATH "Test specific include directories")
+    if("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
+        set(FORTE_TEST_CODE_COVERAGE_ANALYSIS OFF CACHE BOOL "Perform code coverage analyis with GCOV and presentation with LCOV")
+        mark_as_advanced(FORTE_TEST_CODE_COVERAGE_ANALYSIS)
+    endif()
 ENDIF(FORTE_TESTS)
 
 set(FORTE_USE_TEST_CONFIG_IN_FORTE ON CACHE BOOL "Add the test definitions and compiler options to the base forte") #this is needed for posix and win32 options

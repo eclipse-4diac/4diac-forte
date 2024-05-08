@@ -117,6 +117,11 @@ add_definitions(${DEFINITION}) #using target_compile_definitions put the definit
 
 if("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
  ADD_DEFINITIONS (-DBOOST_TEST_DYN_LINK)
+ if(FORTE_LINK_STATIC)
+  set_target_properties(forte_test PROPERTIES LINK_SEARCH_START_STATIC ON)
+  set_target_properties(forte_test PROPERTIES LINK_SEARCH_END_STATIC ON)
+  target_link_options(forte_test PRIVATE -static-libgcc -static-libstdc++ -static)
+ endif()
 endif("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
 
 if("${FORTE_ARCHITECTURE}" STREQUAL "Win32")
@@ -139,8 +144,6 @@ GET_PROPERTY(link_flags_test GLOBAL PROPERTY FORTE_TEST_LINK_FLAGS)
 add_test(forte_test ${EXECUTABLE_OUTPUT_PATH}/forte_test)
 
 if("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
-  set(FORTE_TEST_CODE_COVERAGE_ANALYSIS OFF CACHE BOOL "Perform code coverage analyis with GCOV and presentation with LCOV")
-  mark_as_advanced(FORTE_TEST_CODE_COVERAGE_ANALYSIS)
   if(FORTE_TEST_CODE_COVERAGE_ANALYSIS)
       INCLUDE(${FORTE_BUILDSUPPORT_DIRECTORY}/GCov.cmake)    
       SETUP_GCOV(TestCoverage ctest coverage)
