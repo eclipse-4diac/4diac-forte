@@ -27,13 +27,10 @@
 #pragma endregion
 
 
-#include <cstring>
 #include <filesystem>
 #include <fstream>
 #include <iostream>
-#include <vector>
 #include "../../devlog.h"
-#include "../../forte_stringFunctions.h"
 
 int _main(int argc, char *arg[]);
 
@@ -76,27 +73,16 @@ int _main(int argc, char *arg[]);
 //  COMMENTS:
 //    wmain() either performs the command line task, or run the service.
 //
-int wmain(int argc, wchar_t *argv[])
+int main(int argc, char *argv[])
 {
     int ret = -1;
 
     // User can edit forte command line arguments in
     // HKLM\SYSTEM\CurrentControlSet\Services\4diac-forte\ImagePath
 
-    // Reconstruct command line arguments from wide to narrow string
-    std::vector<char*> l_argv;
-    for (int i = 0; i < argc; ++i)
-    {
-        std::string str = forte_wstringToString(argv[i]);
-        char* buf = new char[str.length() + 1];
-        std::strcpy(buf, str.c_str());
-        l_argv.push_back(buf);
-    }
-    l_argv.push_back(nullptr); // argv[argc] is this null pointer
-
     if ((argc > 1) && ((*argv[1] == L'-' || (*argv[1] == L'/'))))
     {
-        if (_wcsicmp(L"install", argv[1] + 1) == 0)
+        if (_stricmp("install", argv[1] + 1) == 0)
         {
             // Install the service when the command is
             // "-install" or "/install".
@@ -109,24 +95,24 @@ int wmain(int argc, wchar_t *argv[])
                 SERVICE_PASSWORD            // Password of the account
                 );
         }
-        else if (_wcsicmp(L"remove", argv[1] + 1) == 0)
+        else if (_stricmp("remove", argv[1] + 1) == 0)
         {
             // Uninstall the service when the command is
             // "-remove" or "/remove".
             UninstallService(SERVICE_NAME);
         }
-        else if (_wcsicmp(L"service", argv[1] + 1) == 0 || _wcsicmp(L"s", argv[1] + 1) == 0)
+        else if (_stricmp("service", argv[1] + 1) == 0 || _stricmp("s", argv[1] + 1) == 0)
         {
             // Start setup stdout/stderr redirection
-            wchar_t szPath[MAX_PATH];
-            if (GetModuleFileNameW(NULL, szPath, ARRAYSIZE(szPath)) == 0) {
-                DEVLOG_ERROR("GetModuleFileNameW failed w/err 0x%08lx\n", GetLastError());
+            char szPath[MAX_PATH];
+            if (GetModuleFileNameA(NULL, szPath, ARRAYSIZE(szPath)) == 0) {
+                DEVLOG_ERROR("GetModuleFileNameA failed w/err 0x%08lx\n", GetLastError());
             }
 
             std::ofstream coutfile;
-            std::filesystem::path fullpath(forte_wstringToString(szPath));
+            std::filesystem::path fullpath(szPath);
             // Disable logging with "-service nolog" argument
-            if (std::filesystem::exists(fullpath) && _wcsicmp(L"nolog", argv[2]) != 0) {
+            if (std::filesystem::exists(fullpath) && _stricmp("nolog", argv[2]) != 0) {
                 coutfile.open(fullpath.replace_extension("log").string());
                 std::cout.rdbuf(coutfile.rdbuf());
                 std::cerr.rdbuf(coutfile.rdbuf());
@@ -138,7 +124,7 @@ int wmain(int argc, wchar_t *argv[])
                 std::cerr.rdbuf(nullptr);
             }
 
-            CForteService service(SERVICE_DISPLAY_NAME, static_cast<int>(l_argv.size() - 1), l_argv.data());
+            CForteService service(SERVICE_DISPLAY_NAME, argc, argv);
             if (!CServiceBase::Run(service))
             {
                 DEVLOG_ERROR("Service failed to run w/err 0x%08lx\n", GetLastError());
@@ -146,23 +132,13 @@ int wmain(int argc, wchar_t *argv[])
         }
         else
         {
-            ret = _main(static_cast<int>(l_argv.size() - 1), l_argv.data());
+            ret = _main(argc, argv);
         }
     }
     else
     {
-        ret = _main(static_cast<int>(l_argv.size() - 1), l_argv.data());
+        ret = _main(argc, argv);
     }
-
-    // Clear the command line arguments
-    for(auto &buf : l_argv)
-    {
-        if (buf != nullptr)
-        {
-            delete[] buf;
-        }
-    }
-    l_argv.clear();
 
     return ret;
 }
