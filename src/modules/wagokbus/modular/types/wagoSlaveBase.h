@@ -9,8 +9,7 @@
  ***     0.0: 2016-11-30/4DIAC-IDE - 4DIAC-Consortium -
  *************************************************************************/
 
-#ifndef SRC_MODULES_WAGOKBUS_MODULAR_TYPES_WAGOSLAVEBASE_H_
-#define SRC_MODULES_WAGOKBUS_MODULAR_TYPES_WAGOSLAVEBASE_H_
+#pragma once
 
 #include "../../../../core/io/configFB/io_slave_multi.h"
 
@@ -39,5 +38,3 @@ class WagoSlaveBase : public forte::core::io::IOConfigFBMultiSlave {
     static const TForteUInt8 scmSlaveConfigurationIO[];
     static const TForteUInt8 scmSlaveConfigurationIONum;
 };
-
-#endif /* SRC_MODULES_WAGOKBUS_MODULAR_TYPES_WAGOSLAVEBASE_H_ */

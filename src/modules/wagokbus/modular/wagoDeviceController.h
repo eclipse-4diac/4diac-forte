@@ -38,7 +38,7 @@ class WagoDeviceController : public forte::core::io::IODeviceMultiController {
         CIEC_ANY::EDataTypeID mType;
         TForteUInt32 mChannel;
 
-        WagoHandleDescriptor(CIEC_WSTRING const &paId, forte::core::io::IOMapper::Direction paDirection, int paSlaveIndex, CIEC_ANY::EDataTypeID paType,
+        WagoHandleDescriptor(std::string const &paId, forte::core::io::IOMapper::Direction paDirection, int paSlaveIndex, CIEC_ANY::EDataTypeID paType,
             TForteUInt32 paChannel) :
             forte::core::io::IODeviceMultiController::HandleDescriptor(paId, paDirection, paSlaveIndex), mType(paType), mChannel(paChannel) {
         }

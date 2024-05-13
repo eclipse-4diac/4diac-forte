@@ -84,21 +84,20 @@ bool WagoHandle::check() {
 }
 
 void WagoHandle::dropObserver() {
-  CIEC_WORD state = 0; //should work for boolean too
-  set(state);
+  set(CIEC_WORD(0));
   forte::core::io::IOHandle::dropObserver();
 }
 
 void WagoHandle::getBoolean(CIEC_BOOL &paState) {
   bool inDataBool = false;
   mAppDevInterface->ReadBool(mKBusDeviceId, mTaskId, mInputOffset, &inDataBool);
-  paState = inDataBool;
+  paState = CIEC_BOOL(inDataBool);
 }
 
 void WagoHandle::getWord(CIEC_WORD &paState) {
   TForteByte inDataWord[2];
   mAppDevInterface->ReadBytes(mKBusDeviceId, mTaskId, mInputOffset, 2, inDataWord);
-  paState = static_cast<TForteWord>((static_cast<TForteWord>(inDataWord[1]) << 8) + (static_cast<TForteWord>(inDataWord[0])));
+  paState = CIEC_WORD((inDataWord[1] << 8) + inDataWord[0]);
 }
 
 void WagoHandle::setBoolean(const CIEC_BOOL &paState) {
