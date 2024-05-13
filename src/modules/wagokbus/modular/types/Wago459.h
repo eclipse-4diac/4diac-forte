@@ -9,8 +9,7 @@
  ***     0.0: 2016-11-30/4DIAC-IDE - 4DIAC-Consortium -
  *************************************************************************/
 
-#ifndef _WAGO459_H_
-#define _WAGO459_H_
+#pragma once
 
 #include <funcbloc.h>
 #include <forte_bool.h>
@@ -22,10 +21,61 @@ class FORTE_Wago459: public WagoSlaveBase{
   DECLARE_FIRMWARE_FB(FORTE_Wago459)
 
   public:
-    FUNCTION_BLOCK_CTOR_FOR_WAGO_SLAVES(FORTE_Wago459, 459){
+    FORTE_Wago459(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    ~FORTE_Wago459() override = default;
+
+    CIEC_BOOL var_QI;
+    CIEC_WSTRING var_AnalogInput_1;
+    CIEC_WSTRING var_AnalogInput_2;
+    CIEC_WSTRING var_AnalogInput_3;
+    CIEC_WSTRING var_AnalogInput_4;
+
+    CIEC_BOOL var_QO;
+    CIEC_WSTRING var_STATUS;
+
+    CIEC_BOOL var_conn_QO;
+    CIEC_WSTRING var_conn_STATUS;
+
+    CEventConnection conn_MAPO;
+    CEventConnection conn_IND;
+
+    CDataConnection *conn_QI;
+    CDataConnection *conn_AnalogInput_1;
+    CDataConnection *conn_AnalogInput_2;
+    CDataConnection *conn_AnalogInput_3;
+    CDataConnection *conn_AnalogInput_4;
+
+    CDataConnection conn_QO;
+    CDataConnection conn_STATUS;
+
+    CIEC_ANY *getDI(size_t) override;
+    CIEC_ANY *getDO(size_t) override;
+    FORTE_WagoBusAdapter &var_BusAdapterIn() {
+      return *static_cast<FORTE_WagoBusAdapter*>(mAdapters[0]);
     };
 
-    ~FORTE_Wago459() override = default;
+    FORTE_WagoBusAdapter &var_BusAdapterOut() {
+      return *static_cast<FORTE_WagoBusAdapter*>(mAdapters[1]);
+    };
+
+    CEventConnection *getEOConUnchecked(TPortId) override;
+    CDataConnection **getDIConUnchecked(TPortId) override;
+    CDataConnection *getDOConUnchecked(TPortId) override;
+
+    void evt_MAP(const CIEC_BOOL &paQI, const CIEC_WSTRING &paAnalogInput_1, const CIEC_WSTRING &paAnalogInput_2, const CIEC_WSTRING &paAnalogInput_3, const CIEC_WSTRING &paAnalogInput_4, CIEC_BOOL &paQO, CIEC_WSTRING &paSTATUS) {
+      var_QI = paQI;
+      var_AnalogInput_1 = paAnalogInput_1;
+      var_AnalogInput_2 = paAnalogInput_2;
+      var_AnalogInput_3 = paAnalogInput_3;
+      var_AnalogInput_4 = paAnalogInput_4;
+      executeEvent(scmEventMAPID, nullptr);
+      paQO = var_QO;
+      paSTATUS = var_STATUS;
+    }
+
+    void operator()(const CIEC_BOOL &paQI, const CIEC_WSTRING &paAnalogInput_1, const CIEC_WSTRING &paAnalogInput_2, const CIEC_WSTRING &paAnalogInput_3, const CIEC_WSTRING &paAnalogInput_4, CIEC_BOOL &paQO, CIEC_WSTRING &paSTATUS) {
+      evt_MAP(paQI, paAnalogInput_1, paAnalogInput_2, paAnalogInput_3, paAnalogInput_4, paQO, paSTATUS);
+    }
 
   protected:
 
@@ -34,58 +84,24 @@ class FORTE_Wago459: public WagoSlaveBase{
   private:
     static const CStringDictionary::TStringId scmDataInputNames[];
     static const CStringDictionary::TStringId scmDataInputTypeIds[];
-    CIEC_BOOL &QI(){
-      return *static_cast<CIEC_BOOL*>(getDI(0));
-    };
-
-    CIEC_WSTRING &AnalogInput_1(){
-      return *static_cast<CIEC_WSTRING*>(getDI(1));
-    };
-
-    CIEC_WSTRING &AnalogInput_2(){
-      return *static_cast<CIEC_WSTRING*>(getDI(2));
-    };
-
-    CIEC_WSTRING &AnalogInput_3(){
-      return *static_cast<CIEC_WSTRING*>(getDI(3));
-    };
-
-    CIEC_WSTRING &AnalogInput_4(){
-      return *static_cast<CIEC_WSTRING*>(getDI(4));
-    };
-
     static const CStringDictionary::TStringId scmDataOutputNames[];
     static const CStringDictionary::TStringId scmDataOutputTypeIds[];
-    CIEC_BOOL &QO(){
-      return *static_cast<CIEC_BOOL*>(getDO(0));
-    };
-
-    CIEC_WSTRING &STATUS(){
-      return *static_cast<CIEC_WSTRING*>(getDO(1));
-    };
-
-    static const TForteInt16 scmEIWithIndexes[];
+    static const TEventID scmEventMAPID = 0;
     static const TDataIOID scmEIWith[];
+    static const TForteInt16 scmEIWithIndexes[];
     static const CStringDictionary::TStringId scmEventInputNames[];
-
-    static const TForteInt16 scmEOWithIndexes[];
+    static const TEventID scmEventMAPOID = 0;
+    static const TEventID scmEventINDID = 1;
     static const TDataIOID scmEOWith[];
+    static const TForteInt16 scmEOWithIndexes[];
     static const CStringDictionary::TStringId scmEventOutputNames[];
-
+    static const int scmBusAdapterInAdpNum = 0;
+    static const int scmBusAdapterOutAdpNum = 1;
     static const SAdapterInstanceDef scmAdapterInstances[];
 
-    FORTE_WagoBusAdapter& BusAdapterOut(){
-      return (*static_cast<FORTE_WagoBusAdapter*>(mAdapters[0]));
-    };
-    static const int scmBusAdapterOutAdpNum = 0;
-    FORTE_WagoBusAdapter& BusAdapterIn(){
-      return (*static_cast<FORTE_WagoBusAdapter*>(mAdapters[1]));
-    };
-    static const int scmBusAdapterInAdpNum = 1;
     static const SFBInterfaceSpec scmFBInterfaceSpec;
 
-
+    void readInputData(TEventID paEIID) override;
+    void writeOutputData(TEventID paEIID) override;
+    void setInitialValues() override;
 };
-
-#endif //close the ifdef sequence from the beginning of the file
-
