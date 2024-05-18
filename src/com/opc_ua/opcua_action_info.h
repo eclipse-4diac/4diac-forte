@@ -46,11 +46,26 @@ class CActionInfo {
     /**
      * 2-Tuple to reference a specific node in an OPC UA server composed of the node ID and browsepath of the node
      */
-    struct CNodePairInfo {
+    class CNodePairInfo {
+      public:
         CNodePairInfo(UA_NodeId *paNodeId, const std::string &paBrowsePath) :
-            mNodeId(paNodeId), mBrowsePath(paBrowsePath) {
+            mNodeId(paNodeId, UA_NodeId_delete), mBrowsePath(paBrowsePath) {
         }
-        UA_NodeId *mNodeId;
+
+        UA_NodeId *getNodeId() const {
+          return mNodeId.get();
+        }
+
+        void setNodeId(UA_NodeId * paNodeId){
+          mNodeId.reset(paNodeId);
+        }
+
+        const std::string& getBrowsePath() const {
+          return mBrowsePath;
+        }
+
+      private:
+        std::unique_ptr<UA_NodeId, decltype(&UA_NodeId_delete)> mNodeId{nullptr, UA_NodeId_delete};
         std::string mBrowsePath;
     };
 
@@ -65,7 +80,7 @@ class CActionInfo {
     /**
      * Destructor of the class
      */
-    virtual ~CActionInfo();
+    virtual ~CActionInfo() = default;
 
     /**
      * Getter of the action type
@@ -95,7 +110,7 @@ class CActionInfo {
      * Getter of the list of node pair information
      * @return List of node pair information
      */
-    CSinglyLinkedList<CNodePairInfo*>& getNodePairInfo() {
+    std::vector<CNodePairInfo>& getNodePairInfo() {
       return mNodePair;
     }
 
@@ -104,9 +119,7 @@ class CActionInfo {
      * @return Amount of node pair in the action
      */
     size_t getNoOfNodePairs() const {
-      size_t noOfPairs = 0;
-      for(CSinglyLinkedList<CNodePairInfo*>::Iterator it = mNodePair.begin(); it != mNodePair.end(); ++it, noOfPairs++);
-      return noOfPairs;
+      return mNodePair.size();
     }
 
     /**
@@ -260,7 +273,7 @@ class CActionInfo {
     /**
      * List of the node pair information about the nodes the action is accessing
      */
-    CSinglyLinkedList<CNodePairInfo*> mNodePair;
+    std::vector<CNodePairInfo> mNodePair;
 
     static const size_t scmMinimumAmounOfParameters = 2; //at least two are needed
 
@@ -297,7 +310,7 @@ class CActionInfo {
          * @param paResult Place to store a new allocated node pair info if the source was valid
          * @return True if paPair contained a valid node pair information, false otherwise
          */
-        static bool handlePair(const char *paPair, CSinglyLinkedList<CNodePairInfo*> &paResult);
+        static bool handlePair(const char *paPair, std::vector<CNodePairInfo> &paResult);
 
       private:
 

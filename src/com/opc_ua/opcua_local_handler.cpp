@@ -466,21 +466,21 @@ UA_StatusCode COPC_UA_Local_Handler::initializeVariable(CActionInfo &paActionInf
   size_t indexOfNodePair = 0;
   CSinglyLinkedList<UA_NodeId*> referencedNodes;
   const CIEC_ANY *const *variables = paWrite ? paActionInfo.getDataToSend() : paActionInfo.getDataToReceive();
-  for(CSinglyLinkedList<CActionInfo::CNodePairInfo*>::Iterator itMain = paActionInfo.getNodePairInfo().begin();
+  for(auto itMain = paActionInfo.getNodePairInfo().begin();
       itMain != paActionInfo.getNodePairInfo().end() && UA_STATUSCODE_GOOD == retVal; ++itMain, indexOfNodePair++) {
 
     CSinglyLinkedList<UA_NodeId*> presentNodes;
     bool nodeExists = false;
-    retVal = getNode(**itMain, presentNodes, &nodeExists);
+    retVal = getNode(*itMain, presentNodes, &nodeExists);
 
     if(UA_STATUSCODE_GOOD == retVal) {
       if(nodeExists) {
-        retVal = handleExistingVariable(paActionInfo, **itMain, *variables[indexOfNodePair], indexOfNodePair, paWrite);
+        retVal = handleExistingVariable(paActionInfo, *itMain, *variables[indexOfNodePair], indexOfNodePair, paWrite);
 
         handlePresentNodes(presentNodes, referencedNodes, UA_STATUSCODE_GOOD != retVal);
       } else { //node does not exist
         //presentNodes shouldn't have any allocated NodeId at this point
-        retVal = handleNonExistingVariable(paActionInfo, **itMain, *variables[indexOfNodePair], indexOfNodePair, referencedNodes, paWrite);
+        retVal = handleNonExistingVariable(paActionInfo, *itMain, *variables[indexOfNodePair], indexOfNodePair, referencedNodes, paWrite);
       }
     }
   }
@@ -505,21 +505,21 @@ UA_StatusCode COPC_UA_Local_Handler::initializeObjectStructMemberVariable(std::s
 
   size_t indexOfNodePair = 0;
   CSinglyLinkedList<UA_NodeId*> referencedNodes;
-  for(CSinglyLinkedList<CActionInfo::CNodePairInfo*>::Iterator itMain = paActionInfo->getNodePairInfo().begin();
+  for(auto itMain = paActionInfo->getNodePairInfo().begin();
       itMain != paActionInfo->getNodePairInfo().end() && UA_STATUSCODE_GOOD == retVal; ++itMain, indexOfNodePair++) {
 
     CSinglyLinkedList<UA_NodeId*> presentNodes;
     bool nodeExists = false;
-    retVal = getNode(**itMain, presentNodes, &nodeExists);
+    retVal = getNode(*itMain, presentNodes, &nodeExists);
 
     if(UA_STATUSCODE_GOOD == retVal) {
       if(nodeExists) {
-        retVal = handleExistingVariable(*paActionInfo, **itMain, paMember[indexOfNodePair], indexOfNodePair, paWrite);
+        retVal = handleExistingVariable(*paActionInfo, *itMain, paMember[indexOfNodePair], indexOfNodePair, paWrite);
 
         handlePresentNodes(presentNodes, referencedNodes, UA_STATUSCODE_GOOD != retVal);
       } else { //node does not exist
         //presentNodes shouldn't have any allocated NodeId at this point
-        retVal = handleNonExistingVariable(*paActionInfo, **itMain, paMember[indexOfNodePair], indexOfNodePair, referencedNodes, paWrite);
+        retVal = handleNonExistingVariable(*paActionInfo, *itMain, paMember[indexOfNodePair], indexOfNodePair, referencedNodes, paWrite);
       }
     }
   }
@@ -537,26 +537,26 @@ UA_StatusCode COPC_UA_Local_Handler::handleExistingVariable(CActionInfo &paActio
     size_t paIndexOfNodePair, bool paWrite) {
 
   UA_NodeId outDataType;
-  UA_StatusCode retVal = UA_Server_readDataType(mUaServer, *paNodePairInfo.mNodeId, &outDataType);
+  UA_StatusCode retVal = UA_Server_readDataType(mUaServer, *paNodePairInfo.getNodeId(), &outDataType);
 
   if(UA_STATUSCODE_GOOD == retVal) {
     if(UA_NodeId_equal(&outDataType, &COPC_UA_Helper::getOPCUATypeFromAny(paVariable)->typeId)) {
       if(!paWrite) { //If we are reading a variable, it should be writable from the outside
-        retVal = addWritePermission(*paNodePairInfo.mNodeId);
+        retVal = addWritePermission(*paNodePairInfo.getNodeId());
         if(UA_STATUSCODE_GOOD == retVal) {
           void *handle = nullptr;
-          retVal = UA_Server_getNodeContext(mUaServer, *paNodePairInfo.mNodeId, &handle);
+          retVal = UA_Server_getNodeContext(mUaServer, *paNodePairInfo.getNodeId(), &handle);
           if(UA_STATUSCODE_GOOD == retVal) {
             if(!handle) {
-              retVal = registerVariableCallBack(*paNodePairInfo.mNodeId, paActionInfo, paIndexOfNodePair);
+              retVal = registerVariableCallBack(*paNodePairInfo.getNodeId(), paActionInfo, paIndexOfNodePair);
             } else {
               DEVLOG_ERROR("[OPC UA LOCAL]: At FB %s RD_%d the node %s has already a FB who is reading from it. Cannot add another one\n",
-                paActionInfo.getLayer().getCommFB()->getInstanceName(), paIndexOfNodePair, paNodePairInfo.mBrowsePath.c_str());
+                paActionInfo.getLayer().getCommFB()->getInstanceName(), paIndexOfNodePair, paNodePairInfo.getBrowsePath().c_str());
               retVal = UA_STATUSCODE_BADUNEXPECTEDERROR;
             }
           } else {
             DEVLOG_ERROR("[OPC UA LOCAL]: At FB %s RD_%d the node %s could not retrieve context. Error: %s\n",
-                         paActionInfo.getLayer().getCommFB()->getInstanceName(), paIndexOfNodePair, paNodePairInfo.mBrowsePath.c_str(), UA_StatusCode_name(retVal));
+                         paActionInfo.getLayer().getCommFB()->getInstanceName(), paIndexOfNodePair, paNodePairInfo.getBrowsePath().c_str(), UA_StatusCode_name(retVal));
           }
         } else {
           DEVLOG_ERROR("[OPC UA LOCAL]: Cannot set write permission of node for port %d. Error: %s\n", paIndexOfNodePair, UA_StatusCode_name(retVal));
@@ -579,7 +579,7 @@ UA_StatusCode COPC_UA_Local_Handler::handleNonExistingVariable(CActionInfo &paAc
     const CIEC_ANY &paVariable, size_t paIndexOfNodePair, CSinglyLinkedList<UA_NodeId*> &paReferencedNodes, bool paWrite) {
 
   std::string nodeName;
-  UA_StatusCode retVal = splitAndCreateFolders(paNodePairInfo.mBrowsePath, nodeName, paReferencedNodes);
+  UA_StatusCode retVal = splitAndCreateFolders(paNodePairInfo.getBrowsePath(), nodeName, paReferencedNodes);
   if(UA_STATUSCODE_GOOD == retVal) {
     CCreateVariableInfo variableInformation;
     initializeCreateInfo(nodeName, paNodePairInfo, paReferencedNodes.isEmpty() ? nullptr : *(paReferencedNodes.back()), variableInformation);
@@ -598,9 +598,9 @@ UA_StatusCode COPC_UA_Local_Handler::handleNonExistingVariable(CActionInfo &paAc
       if(!paWrite) {
         retVal = registerVariableCallBack(*variableInformation.mReturnedNodeId, paActionInfo, paIndexOfNodePair);
       }
-      if(UA_STATUSCODE_GOOD == retVal && !paNodePairInfo.mNodeId) {
-        paNodePairInfo.mNodeId = UA_NodeId_new();
-        UA_NodeId_copy(variableInformation.mReturnedNodeId, paNodePairInfo.mNodeId);
+      if(UA_STATUSCODE_GOOD == retVal && !paNodePairInfo.getNodeId()) {
+        paNodePairInfo.setNodeId(UA_NodeId_new());
+        UA_NodeId_copy(variableInformation.mReturnedNodeId, paNodePairInfo.getNodeId());
       }
     }
   }
@@ -722,10 +722,10 @@ UA_StatusCode COPC_UA_Local_Handler::initializeCreateMethod(CActionInfo &paActio
   CSinglyLinkedList<UA_NodeId*> referencedNodes;
   CSinglyLinkedList<UA_NodeId*> presentNodes;
 
-  CSinglyLinkedList<CActionInfo::CNodePairInfo*>::Iterator itMethodNodePairInfo = paActionInfo.getNodePairInfo().begin();
+  auto itMethodNodePairInfo = paActionInfo.getNodePairInfo().begin();
 
   bool nodeExists = false;
-  UA_StatusCode retVal = getNode(**itMethodNodePairInfo, presentNodes, &nodeExists);
+  UA_StatusCode retVal = getNode(*itMethodNodePairInfo, presentNodes, &nodeExists);
 
   if(UA_STATUSCODE_GOOD == retVal) {
     if(nodeExists) {
@@ -749,18 +749,20 @@ UA_StatusCode COPC_UA_Local_Handler::initializeCreateMethod(CActionInfo &paActio
       //presentNodes shouldn't have any allocated NodeId at this point
 
       std::string nodeName;
-      retVal = splitAndCreateFolders((*itMethodNodePairInfo)->mBrowsePath, nodeName, referencedNodes);
+      retVal = splitAndCreateFolders(itMethodNodePairInfo->getBrowsePath(), nodeName, referencedNodes);
       if(UA_STATUSCODE_GOOD == retVal) {
         CCreateMethodInfo methodInformation(static_cast<CLocalMethodInfo&>(paActionInfo));
-        initializeCreateInfo(nodeName, (**itMethodNodePairInfo), referencedNodes.isEmpty() ? nullptr : *(referencedNodes.back()), methodInformation);
+        initializeCreateInfo(nodeName, *itMethodNodePairInfo, referencedNodes.isEmpty() ? nullptr : *(referencedNodes.back()), methodInformation);
 
         methodInformation.mOutputSize = paActionInfo.getSendSize();
         methodInformation.mInputSize = paActionInfo.getReceiveSize();
 
         createMethodArguments(paActionInfo, methodInformation);
 
-        retVal = createMethodNode(methodInformation, &(*itMethodNodePairInfo)->mNodeId);
+        UA_NodeId* result;
+        retVal = createMethodNode(methodInformation, &result);
         if(UA_STATUSCODE_GOOD == retVal) {
+          itMethodNodePairInfo->setNodeId(result);
           UA_NodeId *tmp = UA_NodeId_new();
           UA_NodeId_copy(methodInformation.mReturnedNodeId, tmp);
           referencedNodes.pushBack(tmp);
@@ -785,17 +787,17 @@ UA_StatusCode COPC_UA_Local_Handler::initializeCreateMethod(CActionInfo &paActio
 }
 
 UA_StatusCode COPC_UA_Local_Handler::handleExistingMethod(CActionInfo &paActionInfo, const UA_NodeId &paParentNode) {
-  CSinglyLinkedList<CActionInfo::CNodePairInfo*>::Iterator it = paActionInfo.getNodePairInfo().begin();
+  auto it = paActionInfo.getNodePairInfo().begin();
   UA_StatusCode retVal = UA_STATUSCODE_GOOD;
 
-  DEVLOG_INFO("[OPC UA LOCAL]: Adding a callback for an existing method at %s\n", (*it)->mBrowsePath.c_str());
+  DEVLOG_INFO("[OPC UA LOCAL]: Adding a callback for an existing method at %s\n", it->getBrowsePath().c_str());
 
   //check if the method was already referenced by another FB
   for(CSinglyLinkedList<UA_ParentNodeHandler>::Iterator iter = mMethodsContexts.begin(); iter != mMethodsContexts.end(); ++iter) {
-    if(UA_NodeId_equal(&paParentNode, (*iter).mParentNodeId) && UA_NodeId_equal((*it)->mNodeId, (*iter).mMethodNodeId)) {
+    if(UA_NodeId_equal(&paParentNode, (*iter).mParentNodeId) && UA_NodeId_equal(it->getNodeId(), (*iter).mMethodNodeId)) {
       DEVLOG_ERROR(
           "[OPC UA LOCAL]: The FB %s is trying to reference a local method at %s which has already a FB who is referencing it. Cannot add another one\n",
-          paActionInfo.getLayer().getCommFB()->getInstanceName(), (*it)->mBrowsePath.c_str());
+          paActionInfo.getLayer().getCommFB()->getInstanceName(), it->getBrowsePath().c_str());
       retVal = UA_STATUSCODE_BADINTERNALERROR;
       break;
     }
@@ -804,11 +806,11 @@ UA_StatusCode COPC_UA_Local_Handler::handleExistingMethod(CActionInfo &paActionI
   //TODO: check types of existing method to this layer
 
   if(UA_STATUSCODE_GOOD == retVal) {
-    retVal = UA_Server_setMethodNode_callback(mUaServer, *(*it)->mNodeId, COPC_UA_Local_Handler::CUA_LocalCallbackFunctions::onServerMethodCall);
+    retVal = UA_Server_setMethodNode_callback(mUaServer, *it->getNodeId(), COPC_UA_Local_Handler::CUA_LocalCallbackFunctions::onServerMethodCall);
     if(UA_STATUSCODE_GOOD == retVal) {
-      retVal = UA_Server_setNodeContext(mUaServer, *(*it)->mNodeId, this);
+      retVal = UA_Server_setNodeContext(mUaServer, *it->getNodeId(), this);
       if(UA_STATUSCODE_GOOD == retVal) {
-        UA_ParentNodeHandler parentNodeContext(paParentNode, (*it)->mNodeId, static_cast<CLocalMethodInfo&>(paActionInfo));
+        UA_ParentNodeHandler parentNodeContext(paParentNode, it->getNodeId(), static_cast<CLocalMethodInfo&>(paActionInfo));
         mMethodsContexts.pushBack(parentNodeContext);
       } else {
         DEVLOG_ERROR("[OPC UA LOCAL]: Could not set context function for method at %s. Error: %s\n", paActionInfo.getLayer().getCommFB()->getInstanceName(),
@@ -906,9 +908,9 @@ UA_StatusCode COPC_UA_Local_Handler::initializeCreateNode(CActionInfo &paActionI
   //The main process is done in the execution
   UA_StatusCode retVal = UA_STATUSCODE_GOOD;
 
-  CSinglyLinkedList<CActionInfo::CNodePairInfo*>::Iterator it = paActionInfo.getNodePairInfo().back();
+  auto& instance = paActionInfo.getNodePairInfo().back();
 
-  if((*it)->mBrowsePath.empty()) { //the browsename of the instance is mandatory
+  if(instance.getBrowsePath().empty()) { //the browsename of the instance is mandatory
     retVal = UA_STATUSCODE_BADINTERNALERROR;
     DEVLOG_ERROR("[OPC UA LOCAL]: The BrowsePath of the instance is mandatory for creating a node at FB %s. Error: %s\n",
       paActionInfo.getLayer().getCommFB()->getInstanceName(), UA_StatusCode_name(retVal));
@@ -925,10 +927,10 @@ UA_StatusCode COPC_UA_Local_Handler::executeWrite(CActionInfo &paActionInfo) {
   UA_StatusCode retVal = UA_STATUSCODE_GOOD;
   const CIEC_ANY *const *dataToSend = paActionInfo.getDataToSend();
   size_t indexOfNodePair = 0;
-  for(CSinglyLinkedList<CActionInfo::CNodePairInfo*>::Iterator it = paActionInfo.getNodePairInfo().begin(); it != paActionInfo.getNodePairInfo().end();
+  for(auto it = paActionInfo.getNodePairInfo().begin(); it != paActionInfo.getNodePairInfo().end();
       ++it, indexOfNodePair++) {
 
-    retVal = updateNodeValue(*(*it)->mNodeId, dataToSend[indexOfNodePair]);
+    retVal = updateNodeValue(*it->getNodeId(), dataToSend[indexOfNodePair]);
     if(UA_STATUSCODE_GOOD != retVal) {
       DEVLOG_ERROR("[OPC UA LOCAL]: Could not convert value to write for port %d at FB %s. Error: %s\n", indexOfNodePair,
         paActionInfo.getLayer().getCommFB()->getInstanceName(), UA_StatusCode_name(retVal));
@@ -963,29 +965,29 @@ UA_StatusCode COPC_UA_Local_Handler::executeCreateMethod(CActionInfo &paActionIn
 UA_StatusCode COPC_UA_Local_Handler::executeCreateObject(CActionInfo &paActionInfo) {
   UA_StatusCode retVal = UA_STATUSCODE_BADINTERNALERROR;
 
-  CSinglyLinkedList<CActionInfo::CNodePairInfo*>::Iterator itTypeNodePairInfo = paActionInfo.getNodePairInfo().begin();
+  auto itTypeNodePairInfo = paActionInfo.getNodePairInfo().begin();
 
   //look for type first
-  if(isNodePresent(**itTypeNodePairInfo)) {
+  if(isNodePresent(*itTypeNodePairInfo)) {
 
-    CSinglyLinkedList<CActionInfo::CNodePairInfo*>::Iterator itInstance = paActionInfo.getNodePairInfo().begin();
+    auto itInstance = paActionInfo.getNodePairInfo().begin();
     ++itInstance;
 
     CSinglyLinkedList<UA_NodeId*> referencedNodes;
     bool nodeExists = false;
     //check if an instance is already present
-    retVal = getNode(**itInstance, referencedNodes, &nodeExists);
+    retVal = getNode(*itInstance, referencedNodes, &nodeExists);
 
     if(UA_STATUSCODE_GOOD == retVal) {
       if(!nodeExists) {
 
         std::string nodeName;
-        retVal = splitAndCreateFolders((*itInstance)->mBrowsePath, nodeName, referencedNodes);
+        retVal = splitAndCreateFolders(itInstance->getBrowsePath(), nodeName, referencedNodes);
         if(UA_STATUSCODE_GOOD == retVal) {
           CCreateObjectInfo createInformation;
 
-          initializeCreateInfo(nodeName, (**itInstance), referencedNodes.isEmpty() ? nullptr : *(referencedNodes.back()), createInformation);
-          createInformation.mTypeNodeId = (*itTypeNodePairInfo)->mNodeId;
+          initializeCreateInfo(nodeName, *itInstance, referencedNodes.isEmpty() ? nullptr : *(referencedNodes.back()), createInformation);
+          createInformation.mTypeNodeId = itTypeNodePairInfo->getNodeId();
 
           retVal = createObjectNode(createInformation);
 
@@ -1064,34 +1066,34 @@ UA_StatusCode COPC_UA_Local_Handler::createObjectNode(const CCreateObjectInfo &p
 UA_StatusCode COPC_UA_Local_Handler::executeCreateVariable(CActionInfo &paActionInfo) {
   UA_StatusCode retVal = UA_STATUSCODE_BADINTERNALERROR;
 
-  CSinglyLinkedList<CActionInfo::CNodePairInfo*>::Iterator itVariableTypeNodePairInfo = paActionInfo.getNodePairInfo().begin();
+  auto itVariableTypeNodePairInfo = paActionInfo.getNodePairInfo().begin();
 
   //look for variable type first
-  if(isNodePresent(**itVariableTypeNodePairInfo)) {
-    CSinglyLinkedList<CActionInfo::CNodePairInfo*>::Iterator itDataValueTypeNodePairInfo = paActionInfo.getNodePairInfo().begin();
+  if(isNodePresent(*itVariableTypeNodePairInfo)) {
+    auto itDataValueTypeNodePairInfo = paActionInfo.getNodePairInfo().begin();
     ++itDataValueTypeNodePairInfo;
 
     //look for data value type
-    if(isNodePresent(**itDataValueTypeNodePairInfo)) {
+    if(isNodePresent(*itDataValueTypeNodePairInfo)) {
 
-      CSinglyLinkedList<CActionInfo::CNodePairInfo*>::Iterator itInstance = paActionInfo.getNodePairInfo().back();
+      auto& instance = paActionInfo.getNodePairInfo().back();
 
       CSinglyLinkedList<UA_NodeId*> referencedNodes;
       bool nodeExists = false;
       //check if an instance is already present
-      retVal = getNode(**itInstance, referencedNodes, &nodeExists);
+      retVal = getNode(instance, referencedNodes, &nodeExists);
 
       if(UA_STATUSCODE_GOOD == retVal) {
         if(!nodeExists) {
 
           std::string nodeName;
-          retVal = splitAndCreateFolders((*itInstance)->mBrowsePath, nodeName, referencedNodes);
+          retVal = splitAndCreateFolders(instance.getBrowsePath(), nodeName, referencedNodes);
           if(UA_STATUSCODE_GOOD == retVal) {
             CCreateVariableInfo createInformation;
 
-            initializeCreateInfo(nodeName, (**itInstance), referencedNodes.isEmpty() ? nullptr : *(referencedNodes.back()), createInformation);
-            createInformation.mVariableTypeNodeId = (*itVariableTypeNodePairInfo)->mNodeId;
-            const UA_NodeId *dataValueTypeNodeId = (*itDataValueTypeNodePairInfo)->mNodeId;
+            initializeCreateInfo(nodeName, instance, referencedNodes.isEmpty() ? nullptr : *(referencedNodes.back()), createInformation);
+            createInformation.mVariableTypeNodeId = itVariableTypeNodePairInfo->getNodeId();
+            const UA_NodeId *dataValueTypeNodeId = itDataValueTypeNodePairInfo->getNodeId();
 
             createInformation.mTypeConvert = UA_findDataType(dataValueTypeNodeId);
             createInformation.mAllowWrite = true;
@@ -1152,15 +1154,15 @@ bool COPC_UA_Local_Handler::isNodePresent(CActionInfo::CNodePairInfo &paNodePair
 UA_StatusCode COPC_UA_Local_Handler::executeDeleteObject(CActionInfo &paActionInfo) {
 
   bool nodeExists = false;
-  CSinglyLinkedList<CActionInfo::CNodePairInfo*>::Iterator itInstance = paActionInfo.getNodePairInfo().begin();
+  auto itInstance = paActionInfo.getNodePairInfo().begin();
   CSinglyLinkedList<UA_NodeId*> referencedNodes;
 
   //look for instance
-  UA_StatusCode retVal = getNode(**itInstance, referencedNodes, &nodeExists);
+  UA_StatusCode retVal = getNode(*itInstance, referencedNodes, &nodeExists);
 
   if(UA_STATUSCODE_GOOD == retVal) {
     if(nodeExists) {
-      retVal = UA_Server_deleteNode(mUaServer, *(*itInstance)->mNodeId, true);
+      retVal = UA_Server_deleteNode(mUaServer, *itInstance->getNodeId(), true);
     } else {
       DEVLOG_ERROR("[OPC UA LOCAL]: The instance of the object to delete could not be found for FB %s\n",
         paActionInfo.getLayer().getCommFB()->getInstanceName());
@@ -1179,7 +1181,7 @@ UA_StatusCode COPC_UA_Local_Handler::executeDeleteObject(CActionInfo &paActionIn
 void COPC_UA_Local_Handler::initializeCreateInfo(std::string &paNodeName, const CActionInfo::CNodePairInfo &paNodePairInfo, const UA_NodeId *paParentNodeId,
     CCreateInfo &paResult) const {
   COPC_UA_Helper::getBrowsenameFromNodeName(paNodeName.c_str(), scmDefaultBrowsenameNameSpace, *paResult.mBrowseName); //this cannot fail here anymore, since it was checked already with getNode
-  paResult.mRequestedNodeId = paNodePairInfo.mNodeId;
+  paResult.mRequestedNodeId = paNodePairInfo.getNodeId();
   paResult.mParentNodeId = paParentNodeId;
 }
 
@@ -1187,23 +1189,23 @@ UA_StatusCode COPC_UA_Local_Handler::getNode(CActionInfo::CNodePairInfo &paNodeP
   UA_StatusCode retVal = UA_STATUSCODE_GOOD;
   *paIsPresent = false;
 
-  if(!paNodePairInfo.mBrowsePath.empty()) {
+  if(!paNodePairInfo.getBrowsePath().empty()) {
     UA_BrowsePath *browsePaths = nullptr;
     size_t pathCount = 0;
     size_t firstNonExistingNode = 0;
 
     CSinglyLinkedList<UA_NodeId*> existingNodeIds;
-    retVal = translateBrowseNameAndStore(paNodePairInfo.mBrowsePath.c_str(), &browsePaths, &pathCount, &firstNonExistingNode, existingNodeIds);
+    retVal = translateBrowseNameAndStore(paNodePairInfo.getBrowsePath().c_str(), &browsePaths, &pathCount, &firstNonExistingNode, existingNodeIds);
     if(UA_STATUSCODE_GOOD == retVal) {
       if(firstNonExistingNode == pathCount) { //all nodes exist
         *paIsPresent = true;
-        if(paNodePairInfo.mNodeId) { //nodeID was provided
-          if(!UA_NodeId_equal(paNodePairInfo.mNodeId, *existingNodeIds.back())) {
+        if(paNodePairInfo.getNodeId()) { //nodeID was provided
+          if(!UA_NodeId_equal(paNodePairInfo.getNodeId(), *existingNodeIds.back())) {
             *paIsPresent = false; // the found Node has not the same NodeId.
           }
         } else { //if no nodeID was provided, the found Node is stored in the nodePairInfo
-          paNodePairInfo.mNodeId = UA_NodeId_new();
-          UA_NodeId_copy(*existingNodeIds.back(), paNodePairInfo.mNodeId);
+          paNodePairInfo.setNodeId(UA_NodeId_new());
+          UA_NodeId_copy(*existingNodeIds.back(), paNodePairInfo.getNodeId());
         }
       }
 
@@ -1219,7 +1221,7 @@ UA_StatusCode COPC_UA_Local_Handler::getNode(CActionInfo::CNodePairInfo &paNodeP
   } else {
     void *handle = nullptr;
     //we use UA_Server_getNodeContext just to check if the node exist in the addressspace
-    if(UA_STATUSCODE_BADNODEIDUNKNOWN != UA_Server_getNodeContext(mUaServer, *paNodePairInfo.mNodeId, &handle)) {
+    if(UA_STATUSCODE_BADNODEIDUNKNOWN != UA_Server_getNodeContext(mUaServer, *paNodePairInfo.getNodeId(), &handle)) {
       *paIsPresent = true;
     }
   }

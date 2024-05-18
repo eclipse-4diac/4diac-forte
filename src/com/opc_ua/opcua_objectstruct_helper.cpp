@@ -82,7 +82,7 @@ bool COPC_UA_ObjectStruct_Helper::createOPCUAStructType(CActionInfo &paActionInf
     return false;
   }
   UA_Server *server = localHandler->getUAServer();
-  bool isNodeIdPresent = (*paActionInfo.getNodePairInfo().begin())->mNodeId;
+  bool isNodeIdPresent = paActionInfo.getNodePairInfo().begin()->getNodeId() != nullptr;
   UA_NodeId typeNodeId;
   if(!defineOPCUAStructTypeNode(server, typeNodeId, paStructTypeName, !isNodeIdPresent)) return false;
   const CStringDictionary::TStringId* structMemberNames = paStructType.elementNames();
@@ -171,7 +171,7 @@ bool COPC_UA_ObjectStruct_Helper::addOPCUAStructTypeComponent(UA_Server *paServe
 
 forte::com_infra::EComResponse COPC_UA_ObjectStruct_Helper::createObjectNode(CActionInfo& paActionInfo, bool paIsPublisher) {
   EComResponse response = e_InitTerminated;
-  std::string browsePath = (*paActionInfo.getNodePairInfo().begin())->mBrowsePath;
+  std::string browsePath = paActionInfo.getNodePairInfo().begin()->getBrowsePath();
   if(!isOPCUAObjectPresent(browsePath)) {
     mCreateNodeActionInfo = getCreateObjectActionInfo(paActionInfo, browsePath, paIsPublisher);
     if( (UA_STATUSCODE_GOOD != mHandler->initializeAction(*mCreateNodeActionInfo)) || (UA_STATUSCODE_GOOD != mHandler->executeAction(*mCreateNodeActionInfo)) ) {
@@ -184,11 +184,11 @@ forte::com_infra::EComResponse COPC_UA_ObjectStruct_Helper::createObjectNode(CAc
 CIEC_ANY const *COPC_UA_ObjectStruct_Helper::getStructMember(CActionInfo &paActionInfo, bool paIsSD) {
   CIEC_ANY** apoDataPorts = paIsSD ? mLayer.getCommFB()->getSDs() : mLayer.getCommFB()->getRDs();
   CIEC_STRUCT& structType = static_cast<CIEC_STRUCT&>(apoDataPorts[0]->unwrap());
-  const std::string actionBrowsePath = (*paActionInfo.getNodePairInfo().begin())->mBrowsePath;
+  const std::string actionBrowsePath = paActionInfo.getNodePairInfo().begin()->getBrowsePath();
 
   for(size_t i = 0; i < mStructMemberActionInfos.size(); i++) {
     std::shared_ptr<CActionInfo> actionInfo = mStructMemberActionInfos[i];
-    std::string browsePath = (*actionInfo->getNodePairInfo().begin())->mBrowsePath;
+    std::string browsePath = actionInfo->getNodePairInfo().begin()->getBrowsePath();
     if(browsePath == actionBrowsePath) {
       return structType.getMember(i);
     }
@@ -208,7 +208,7 @@ forte::com_infra::EComResponse COPC_UA_ObjectStruct_Helper::executeStructAction(
 int COPC_UA_ObjectStruct_Helper::getRDBufferIndexFromNodeId(const UA_NodeId *paNodeId) {
   for(size_t i = 0; i < mStructMemberActionInfos.size(); i++) {
     std::shared_ptr<CActionInfo> actionInfo = mStructMemberActionInfos[i];
-    UA_NodeId *nodeId = (*actionInfo->getNodePairInfo().begin())->mNodeId;
+    auto *nodeId = actionInfo->getNodePairInfo().begin()->getNodeId();
     if(UA_NodeId_equal(nodeId, paNodeId)) {
       return (int)i;
     }
@@ -258,18 +258,18 @@ std::shared_ptr<CActionInfo> COPC_UA_ObjectStruct_Helper::getCreateObjectActionI
   // TODO implement layer to handle more than 1 struct
   std::shared_ptr<CActionInfo> actionInfo = std::make_shared<CActionInfo>(mLayer, CActionInfo::UA_ActionType::eCreateObject, paActionInfo.getEndpoint());
   std::string typeBrowsePath(getStructBrowsePath(smStructTypesBrowsePath, paIsPublisher));
-  CSinglyLinkedList<CActionInfo::CNodePairInfo*>& nodePairs = actionInfo->getNodePairInfo();
-  nodePairs.pushBack(new CActionInfo::CNodePairInfo(nullptr, typeBrowsePath));
-  bool isNodeIdPresent = (*paActionInfo.getNodePairInfo().begin())->mNodeId;
+  auto& nodePairs = actionInfo->getNodePairInfo();
+  nodePairs.emplace_back(nullptr, typeBrowsePath);
+  bool isNodeIdPresent = paActionInfo.getNodePairInfo().begin()->getNodeId() != nullptr;
   UA_NodeId *nodeId = nullptr; 
   if(!isNodeIdPresent) {
     nodeId = createStringNodeIdFromBrowsepath(paBrowsePath);
   } else {
     nodeId = UA_NodeId_new();
-    UA_NodeId_copy((*paActionInfo.getNodePairInfo().begin())->mNodeId, nodeId);
+    UA_NodeId_copy(paActionInfo.getNodePairInfo().begin()->getNodeId(), nodeId);
   }
   mOpcuaObjectNamespaceIndex = nodeId->namespaceIndex;
-  nodePairs.pushBack(new CActionInfo::CNodePairInfo(nodeId, paBrowsePath));
+  nodePairs.emplace_back(nodeId, paBrowsePath);
   return actionInfo;
 }
 
@@ -283,7 +283,7 @@ forte::com_infra::EComResponse COPC_UA_ObjectStruct_Helper::initializeMemberActi
   CIEC_ANY** apoDataPorts = paIsPublisher ? mLayer.getCommFB()->getSDs() : mLayer.getCommFB()->getRDs();
   CIEC_STRUCT& structType = static_cast<CIEC_STRUCT&>(apoDataPorts[0]->unwrap());
   const CStringDictionary::TStringId* structMemberNames = structType.elementNames();
-  bool isNodeIdPresent = (*paActionInfo.getNodePairInfo().begin())->mNodeId;
+  bool isNodeIdPresent = paActionInfo.getNodePairInfo().begin()->getNodeId() != nullptr;
 
   for(size_t i = 0; i < structType.getStructSize(); i++) {
     std::string memberBrowsePath(getStructMemberBrowsePath(paBrowsePath, structMemberNames[i]));
@@ -294,7 +294,7 @@ forte::com_infra::EComResponse COPC_UA_ObjectStruct_Helper::initializeMemberActi
     if(!isNodeIdPresent) {    
       nodeId = createStringNodeIdFromBrowsepath(memberBrowsePath);
     }
-    actionInfo->getNodePairInfo().pushBack(new CActionInfo::CNodePairInfo(nodeId, memberBrowsePath));
+    actionInfo->getNodePairInfo().emplace_back(nodeId, memberBrowsePath);
     if(UA_STATUSCODE_GOOD != localHandler->initializeActionForObjectStruct(actionInfo, *memberVariable)) {
       DEVLOG_ERROR("[OPC UA OBJECT STRUCT HELPER]: Error occured in FB %s while initializing Struct member %s\n", mLayer.getCommFB()->getInstanceName(),
       CStringDictionary::getInstance().get(structMemberNames[i]));
@@ -309,11 +309,7 @@ bool COPC_UA_ObjectStruct_Helper::isOPCUAObjectPresent(std::string &paBrowsePath
   COPC_UA_Local_Handler* localHandler = static_cast<COPC_UA_Local_Handler*>(mHandler);
   if(localHandler) {
     CActionInfo::CNodePairInfo nodePair(nullptr, paBrowsePath);
-    bool retVal = localHandler->isOPCUAObjectPresent(nodePair);
-    if(nodePair.mNodeId) { 
-      UA_NodeId_delete(nodePair.mNodeId);
-    }
-    return retVal;
+    return localHandler->isOPCUAObjectPresent(nodePair);
   } else {
     DEVLOG_ERROR("[OPC UA OBJECT STRUCT HELPER]: Failed to get LocalHandler because LocalHandler is null!\n");
   }
