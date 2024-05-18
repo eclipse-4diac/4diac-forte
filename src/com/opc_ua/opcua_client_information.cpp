@@ -152,11 +152,11 @@ UA_StatusCode CUA_ClientInformation::executeRead(CActionInfo& paActionInfo) {
   request.nodesToRead = ids;
 
   size_t indexOfNodePair = 0;
-  for(CSinglyLinkedList<CActionInfo::CNodePairInfo*>::Iterator itNodePair = paActionInfo.getNodePairInfo().begin();
+  for(auto itNodePair = paActionInfo.getNodePairInfo().begin();
       itNodePair != paActionInfo.getNodePairInfo().end(); ++itNodePair, indexOfNodePair++) {
     UA_ReadValueId_init(&ids[indexOfNodePair]);
     ids[indexOfNodePair].attributeId = UA_ATTRIBUTEID_VALUE;
-    UA_NodeId_copy((*itNodePair)->mNodeId, &ids[indexOfNodePair].nodeId);
+    UA_NodeId_copy(itNodePair->getNodeId(), &ids[indexOfNodePair].nodeId);
   }
 
   UA_RemoteCallHandle *remoteCallHandle = new UA_RemoteCallHandle(paActionInfo, *this);
@@ -190,12 +190,12 @@ UA_StatusCode CUA_ClientInformation::executeWrite(CActionInfo& paActionInfo) {
 
   size_t indexOfNodePair = 0;
   const CIEC_ANY *const *dataToSend = paActionInfo.getDataToSend();
-  for(CSinglyLinkedList<CActionInfo::CNodePairInfo*>::Iterator itNodePair = paActionInfo.getNodePairInfo().begin();
+  for(auto itNodePair = paActionInfo.getNodePairInfo().begin();
       itNodePair != paActionInfo.getNodePairInfo().end(); ++itNodePair, indexOfNodePair++) {
 
     UA_WriteValue_init(&ids[indexOfNodePair]);
     ids[indexOfNodePair].attributeId = UA_ATTRIBUTEID_VALUE;
-    UA_NodeId_copy((*itNodePair)->mNodeId, &ids[indexOfNodePair].nodeId);
+    UA_NodeId_copy(itNodePair->getNodeId(), &ids[indexOfNodePair].nodeId);
     ids[indexOfNodePair].value.hasValue = true;
 
     COPC_UA_Helper::fillVariant(ids[indexOfNodePair].value.value, *dataToSend[indexOfNodePair]);
@@ -234,10 +234,10 @@ UA_StatusCode CUA_ClientInformation::executeCallMethod(CActionInfo& paActionInfo
 
   const CIEC_ANY *const *dataToSend = paActionInfo.getDataToSend();
 
-  CSinglyLinkedList<CActionInfo::CNodePairInfo*>::Iterator itNodePair = paActionInfo.getNodePairInfo().begin();
-  UA_NodeId_copy((*itNodePair)->mNodeId, &methodRequest->methodId);
+  auto itNodePair = paActionInfo.getNodePairInfo().begin();
+  UA_NodeId_copy(itNodePair->getNodeId(), &methodRequest->methodId);
   ++itNodePair;
-  UA_NodeId_copy((*itNodePair)->mNodeId, &methodRequest->objectId);
+  UA_NodeId_copy(itNodePair->getNodeId(), &methodRequest->objectId);
 
   for(size_t i = 0; i < methodRequest->inputArgumentsSize; i++) {
     COPC_UA_Helper::fillVariant(methodRequest->inputArguments[i], *dataToSend[i]);
@@ -324,28 +324,28 @@ bool CUA_ClientInformation::initializeAction(CActionInfo& paActionInfo) {
     }
   } else {
     size_t runnerHelper = 0;
-    for(CSinglyLinkedList<CActionInfo::CNodePairInfo*>::Iterator itNodePair = paActionInfo.getNodePairInfo().begin();
+    for(auto itNodePair = paActionInfo.getNodePairInfo().begin();
         itNodePair != paActionInfo.getNodePairInfo().end();
         ++itNodePair, runnerHelper++) {
 
-      if(!somethingFailed && !(*itNodePair)->mBrowsePath.empty()) { //if browsepath was given, look for NodeId, even if NodeID was also provided
+      if(!somethingFailed && !itNodePair->getBrowsePath().empty()) { //if browsepath was given, look for NodeId, even if NodeID was also provided
         UA_NodeId *nodeId;
-        UA_StatusCode retVal = COPC_UA_Helper::getRemoteNodeForPath(*mClient, (*itNodePair)->mBrowsePath.c_str(), nullptr, &nodeId); //we don't care about the parent
+        UA_StatusCode retVal = COPC_UA_Helper::getRemoteNodeForPath(*mClient, itNodePair->getBrowsePath().c_str(), nullptr, &nodeId); //we don't care about the parent
 
         if(UA_STATUSCODE_GOOD != retVal) {
           DEVLOG_ERROR("[OPC UA CLIENT]: The index %u of the FB %s could not be initialized because the requested nodeId was not found. Error: %s\n",
             runnerHelper, paActionInfo.getLayer().getCommFB()->getInstanceName(), UA_StatusCode_name(retVal));
           somethingFailed = true;
         } else {
-          if((*itNodePair)->mNodeId) {
-            if(!UA_NodeId_equal((*itNodePair)->mNodeId, nodeId)) { //if NodeId was provided, check if found is the same
+          if(itNodePair->getNodeId()) {
+            if(!UA_NodeId_equal(itNodePair->getNodeId(), nodeId)) { //if NodeId was provided, check if found is the same
               DEVLOG_ERROR("[OPC UA CLIENT]: The call from FB %s failed the found nodeId of the method doesn't match the provided one\n",
                 paActionInfo.getLayer().getCommFB()->getInstanceName());
               somethingFailed = true;
             }
             UA_NodeId_delete(nodeId);
           } else {
-            (*itNodePair)->mNodeId = nodeId;
+            itNodePair->setNodeId(nodeId);
           }
         }
       }
@@ -362,31 +362,31 @@ bool CUA_ClientInformation::initializeAction(CActionInfo& paActionInfo) {
 bool CUA_ClientInformation::initializeCallMethod(CActionInfo& paActionInfo) {
   bool somethingFailed = false;
 
-  CSinglyLinkedList<CActionInfo::CNodePairInfo*>::Iterator itNodePair = paActionInfo.getNodePairInfo().begin();
+  auto itNodePair = paActionInfo.getNodePairInfo().begin();
   //get parentNodeId and also the method NodeId
   UA_NodeId *methodNode;
   UA_NodeId *parentNode;
 
-  UA_StatusCode retVal = COPC_UA_Helper::getRemoteNodeForPath(*mClient, (*itNodePair)->mBrowsePath.c_str(), &parentNode, &methodNode);
+  UA_StatusCode retVal = COPC_UA_Helper::getRemoteNodeForPath(*mClient, itNodePair->getBrowsePath().c_str(), &parentNode, &methodNode);
 
   if(UA_STATUSCODE_GOOD != retVal) {
     DEVLOG_ERROR("[OPC UA CLIENT]: The method call from FB %s failed because the requested node was not found. Error: %s\n",
       paActionInfo.getLayer().getCommFB()->getInstanceName(), UA_StatusCode_name(retVal));
     somethingFailed = true;
   } else {
-    if((*itNodePair)->mNodeId) {
-      if(!UA_NodeId_equal((*itNodePair)->mNodeId, methodNode)) { //if NodeId of method was provided, check if found is the same
+    if(itNodePair->getNodeId()) {
+      if(!UA_NodeId_equal(itNodePair->getNodeId(), methodNode)) { //if NodeId of method was provided, check if found is the same
         DEVLOG_ERROR("[OPC UA CLIENT]: The method call from FB %s failed the found nodeId of the method doesn't match the provided one\n",
           paActionInfo.getLayer().getCommFB()->getInstanceName());
         somethingFailed = true;
       }
       UA_NodeId_delete(methodNode);
     } else {
-      (*itNodePair)->mNodeId = methodNode;
+      itNodePair->setNodeId(methodNode);
     }
     if(!somethingFailed) {
       //store the parentNodeId in the second position. BrowseName is not needed
-      paActionInfo.getNodePairInfo().pushBack(new CActionInfo::CNodePairInfo(parentNode, ""));
+      paActionInfo.getNodePairInfo().emplace_back(parentNode, "");
     } else {
       UA_NodeId_delete(parentNode);
     }
@@ -412,13 +412,13 @@ bool CUA_ClientInformation::initializeSubscription(CActionInfo& paActionInfo) {
       itemsAddedToList++;
     }
 
-    CSinglyLinkedList<CActionInfo::CNodePairInfo*>::Iterator itNodePairInfo = paActionInfo.getNodePairInfo().begin();
+    auto itNodePairInfo = paActionInfo.getNodePairInfo().begin();
     size_t itemsAddedToLibrary = 0;
 
     CSinglyLinkedList<UA_MonitoringItemInfo>::Iterator itAddedMonitoringItemInfo = itFirstNewMonitoringItemInfo;
 
     for(itemsAddedToLibrary = 0; itemsAddedToLibrary < itemsAddedToList; ++itAddedMonitoringItemInfo, ++itNodePairInfo) {
-      if(!addMonitoringItem(*itAddedMonitoringItemInfo, *(*itNodePairInfo)->mNodeId)) {
+      if(!addMonitoringItem(*itAddedMonitoringItemInfo, *itNodePairInfo->getNodeId())) {
         somethingFailed = true;
         break;
       }
@@ -578,7 +578,7 @@ void CUA_ClientInformation::CUA_RemoteCallbackFunctions::readAsyncCallback(UA_Cl
 
       if(!varHandle.mFailed) {
         size_t indexOfPair = 0;
-        for(CSinglyLinkedList<CActionInfo::CNodePairInfo*>::Iterator itNodePairs = remoteCallHandle->mActionInfo.getNodePairInfo().begin();
+        for(auto itNodePairs = remoteCallHandle->mActionInfo.getNodePairInfo().begin();
             itNodePairs != remoteCallHandle->mActionInfo.getNodePairInfo().end(); ++itNodePairs, indexOfPair++) {
           varHandle.mData[indexOfPair] = &paResponse->results[indexOfPair].value;
         }

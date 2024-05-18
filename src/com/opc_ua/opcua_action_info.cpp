@@ -23,15 +23,6 @@ CActionInfo::CActionInfo(COPC_UA_Layer &paLayer, UA_ActionType paAction, const s
     mAction(paAction), mLayer(paLayer), mEndpoint(paEndpoint) {
 }
 
-CActionInfo::~CActionInfo() {
-  for(CSinglyLinkedList<CNodePairInfo*>::Iterator it = mNodePair.begin(); it != mNodePair.end(); ++it) {
-    if((*it)->mNodeId) {
-      UA_NodeId_delete((*it)->mNodeId);
-    }
-    delete (*it);
-  }
-}
-
 bool CActionInfo::isRemote() const {
   return (!mEndpoint.empty());
 }
@@ -142,8 +133,8 @@ bool CActionInfo::checkAction() const {
 
 bool CActionInfo::checkNodePairInfo() const {
   bool retVal = true;
-  for(CSinglyLinkedList<CNodePairInfo*>::Iterator it = mNodePair.begin(); it != mNodePair.end(); ++it) {
-    if((*it)->mBrowsePath.empty() && nullptr == (*it)->mNodeId) { //browsePath AND/OR NodeId must be given. If both are empty there's a problem
+  for(auto it = mNodePair.begin(); it != mNodePair.end(); ++it) {
+    if(it->getBrowsePath().empty() && nullptr == it->getNodeId()) { //browsePath AND/OR NodeId must be given. If both are empty there's a problem
       DEVLOG_ERROR("[OPC UA ACTION]: BrowsePath and NodeId are empty in FB %s\n", mLayer.getCommFB()->getInstanceName());
       retVal = false;
       break;
@@ -225,7 +216,7 @@ bool CActionInfo::checkCallMethodAction(forte::com_infra::EComServiceType paFbTy
     DEVLOG_ERROR(
       "[OPC UA ACTION]: In FB %s: %s action is only allowed with a single BrowseName,NodeId pair. (have: %i)\n",
       mLayer.getCommFB()->getInstanceName(), CActionInfo::mActionNames[eCallMethod], getNoOfNodePairs());
-  } else if((*(mNodePair.begin()))->mBrowsePath.empty()) {
+  } else if(mNodePair.begin()->getBrowsePath().empty()) {
     DEVLOG_ERROR(
       "[OPC UA ACTION]: In FB %s: %s action is only allowed with a non-empty browsepath\n",
       mLayer.getCommFB()->getInstanceName(), CActionInfo::mActionNames[eCallMethod]);
@@ -310,7 +301,7 @@ bool CActionInfo::CActionParser::getEndpoint(const char *paEndpoint, std::string
   return false;
 }
 
-bool CActionInfo::CActionParser::handlePair(const char *paPair, CSinglyLinkedList<CNodePairInfo*> &paResult) {
+bool CActionInfo::CActionParser::handlePair(const char *paPair, std::vector<CNodePairInfo> &paResult) {
   bool retVal = false;
   CParameterParser pairParser(paPair, ',');
   std::string browsePathResult;
@@ -328,7 +319,7 @@ bool CActionInfo::CActionParser::handlePair(const char *paPair, CSinglyLinkedLis
   }
 
   if(retVal) {
-    paResult.pushBack(new CNodePairInfo(nodeIdResult, browsePathResult));
+    paResult.emplace_back(nodeIdResult, browsePathResult);
   }
 
   return retVal;
