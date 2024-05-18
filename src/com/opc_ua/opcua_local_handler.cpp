@@ -598,7 +598,7 @@ UA_StatusCode COPC_UA_Local_Handler::handleNonExistingVariable(CActionInfo &paAc
       if(!paWrite) {
         retVal = registerVariableCallBack(*variableInformation.mReturnedNodeId, paActionInfo, paIndexOfNodePair);
       }
-      if(UA_STATUSCODE_GOOD == retVal && !paNodePairInfo.getNodeId()) {
+      if(UA_STATUSCODE_GOOD == retVal && paNodePairInfo.getNodeId() == nullptr) {
         paNodePairInfo.setNodeId(UA_NodeId_new());
         UA_NodeId_copy(variableInformation.mReturnedNodeId, paNodePairInfo.getNodeId());
       }
@@ -759,7 +759,7 @@ UA_StatusCode COPC_UA_Local_Handler::initializeCreateMethod(CActionInfo &paActio
 
         createMethodArguments(paActionInfo, methodInformation);
 
-        UA_NodeId* result;
+        UA_NodeId* result = nullptr;
         retVal = createMethodNode(methodInformation, &result);
         if(UA_STATUSCODE_GOOD == retVal) {
           itMethodNodePairInfo->setNodeId(result);
@@ -1199,7 +1199,7 @@ UA_StatusCode COPC_UA_Local_Handler::getNode(CActionInfo::CNodePairInfo &paNodeP
     if(UA_STATUSCODE_GOOD == retVal) {
       if(firstNonExistingNode == pathCount) { //all nodes exist
         *paIsPresent = true;
-        if(paNodePairInfo.getNodeId()) { //nodeID was provided
+        if(paNodePairInfo.getNodeId() != nullptr) { //nodeID was provided
           if(!UA_NodeId_equal(paNodePairInfo.getNodeId(), *existingNodeIds.back())) {
             *paIsPresent = false; // the found Node has not the same NodeId.
           }

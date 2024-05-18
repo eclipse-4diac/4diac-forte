@@ -337,7 +337,7 @@ bool CUA_ClientInformation::initializeAction(CActionInfo& paActionInfo) {
             runnerHelper, paActionInfo.getLayer().getCommFB()->getInstanceName(), UA_StatusCode_name(retVal));
           somethingFailed = true;
         } else {
-          if(itNodePair->getNodeId()) {
+          if(itNodePair->getNodeId() != nullptr) {
             if(!UA_NodeId_equal(itNodePair->getNodeId(), nodeId)) { //if NodeId was provided, check if found is the same
               DEVLOG_ERROR("[OPC UA CLIENT]: The call from FB %s failed the found nodeId of the method doesn't match the provided one\n",
                 paActionInfo.getLayer().getCommFB()->getInstanceName());
@@ -374,7 +374,7 @@ bool CUA_ClientInformation::initializeCallMethod(CActionInfo& paActionInfo) {
       paActionInfo.getLayer().getCommFB()->getInstanceName(), UA_StatusCode_name(retVal));
     somethingFailed = true;
   } else {
-    if(itNodePair->getNodeId()) {
+    if(itNodePair->getNodeId() != nullptr) {
       if(!UA_NodeId_equal(itNodePair->getNodeId(), methodNode)) { //if NodeId of method was provided, check if found is the same
         DEVLOG_ERROR("[OPC UA CLIENT]: The method call from FB %s failed the found nodeId of the method doesn't match the provided one\n",
           paActionInfo.getLayer().getCommFB()->getInstanceName());
