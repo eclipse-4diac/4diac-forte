@@ -28,3 +28,7 @@ forte_test_add_subdirectory(datatypes)
 forte_test_add_subdirectory(cominfra)
 forte_test_add_subdirectory(fbtests)
 forte_test_add_subdirectory(utils)
+
+if(FORTE_TRACE_CTF)
+  forte_test_add_subdirectory(trace)
+endif(FORTE_TRACE_CTF)
