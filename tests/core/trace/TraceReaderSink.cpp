@@ -70,30 +70,18 @@ bt_component_class_sink_consume_method_status EventsReader::consume()
     // Current message 
     const bt_message *message = messages[i];
 
-    /* Print line for current message if it's an event message */
-    print_message(message);
+    // Discard if it's not an event message
+    if (bt_message_get_type(message) != BT_MESSAGE_TYPE_EVENT) {
+        continue;
+    }
+
+    mOutput.emplace_back(message);  
 
     // Put this message's reference
     bt_message_put_ref(message);
   }
 
   return BT_COMPONENT_CLASS_SINK_CONSUME_METHOD_STATUS_OK;
-}
-
-void EventsReader::print_message(const bt_message *message)
-{
-  // Discard if it's not an event message
-  if (bt_message_get_type(message) != BT_MESSAGE_TYPE_EVENT) {
-      return;
-  }
-
-  if(auto forteEventRecord = EventMessage(message); forteEventRecord.isValidRecord()){
-    mOutput.push_back(forteEventRecord.getString());  
-  } else {
-    std::abort();
-  }
-
-  return;
 }
 
 }

@@ -14,6 +14,10 @@
 
 #include <babeltrace2/babeltrace.h>
 
+#include "EventMessage.h"
+
+#include <optional>
+#include <iomanip>
 
 BOOST_AUTO_TEST_SUITE (ctfTracer_test)
 
@@ -29,10 +33,6 @@ BOOST_AUTO_TEST_CASE(library_test) {
   BOOST_TEST(BT_PLUGIN_FIND_STATUS_OK == bt_plugin_find("utils", BT_FALSE, BT_FALSE, BT_TRUE, BT_FALSE, BT_TRUE, &utilsPlugin));
 
   auto muxerFilterClass = bt_plugin_borrow_filter_component_class_by_name_const(utilsPlugin, "muxer"); 
-
-  const bt_plugin* textPlugin;
-  BOOST_TEST(BT_PLUGIN_FIND_STATUS_OK == bt_plugin_find("text", BT_FALSE, BT_FALSE, BT_TRUE, BT_FALSE, BT_TRUE, &textPlugin));
-  auto prettySinkClass = bt_plugin_borrow_sink_component_class_by_name_const(textPlugin, "pretty"); 
 
   // look on static plugins only
   const bt_plugin* fortePlugin;
@@ -63,11 +63,10 @@ BOOST_AUTO_TEST_CASE(library_test) {
     bt_graph_add_filter_component(graph, muxerFilterClass, "muxer", nullptr, BT_LOGGING_LEVEL_TRACE, &muxerComponent));
 
   // create pretty component
-  std::vector<std::string> messages;
-  const bt_component_sink*  prettyComponent;
+  std::vector<EventMessage> messages;
+  const bt_component_sink*  forteReaderComponent;
   BOOST_TEST(BT_GRAPH_ADD_COMPONENT_STATUS_OK == 
- //  bt_graph_add_sink_component(graph, prettySinkClass, "pretty", nullptr, BT_LOGGING_LEVEL_TRACE, &prettyComponent));
-   bt_graph_add_sink_component_with_initialize_method_data(graph, forteReaderClass, "pretty", nullptr, &messages, BT_LOGGING_LEVEL_TRACE, &prettyComponent));
+   bt_graph_add_sink_component_with_initialize_method_data(graph, forteReaderClass, "forteReader", nullptr, &messages, BT_LOGGING_LEVEL_TRACE, &forteReaderComponent));
 
   // Connections
   for(uint64_t i = 0; i < bt_component_source_get_output_port_count(tracesComponent); i++){
@@ -79,13 +78,37 @@ BOOST_AUTO_TEST_CASE(library_test) {
 
   BOOST_TEST(BT_GRAPH_CONNECT_PORTS_STATUS_OK ==  bt_graph_connect_ports(graph, 
     bt_component_filter_borrow_output_port_by_index_const(muxerComponent, 0), 
-    bt_component_sink_borrow_input_port_by_index_const(prettyComponent, 0), 
+    bt_component_sink_borrow_input_port_by_index_const(forteReaderComponent, 0), 
     nullptr));
 
   BOOST_TEST(BT_GRAPH_RUN_STATUS_OK == bt_graph_run(graph));	
 
-  for(auto message : messages) {
-    std::cout << message << std::endl;
+  auto getTimestampDifference = [](int64_t current, std::optional<int64_t> prev) -> std::string {
+    if(prev == std::nullopt){
+      return "(+?.\?\?\?\?\?\?\?\?\?)";
+    }
+
+    auto diff = current - prev.value();
+
+    auto seconds = diff / 1000000000;
+    diff %= 1000000000;
+
+
+    std::stringstream ss;
+    ss << "(" << (diff < 0 ? "-" : "+") << 
+      std::setw(1) << std::setfill('0') << seconds << 
+      "." << 
+      std::setw(9) << std::setfill('0') << diff  << ")"; 
+    
+    return ss.str();
+  };
+
+  std::optional<int64_t> lastTimestamp = std::nullopt;
+  for(const auto& message : messages) {
+    std::cout << message.getTimestampString() 
+      << " " << getTimestampDifference(message.getTimestamp(), lastTimestamp) << " "
+      << message.getPayloadString() << std::endl;
+    lastTimestamp = message.getTimestamp();
   }
 }
 

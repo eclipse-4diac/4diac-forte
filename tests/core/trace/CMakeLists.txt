@@ -13,5 +13,7 @@ SET(SOURCE_GROUP ${SOURCE_GROUP}\\trace)
 
 forte_test_add_sourcefile_cpp(ctfTracerTest.cpp)
 forte_test_add_sourcefile_cpp(TraceReaderSink.cpp)
+forte_test_add_sourcefile_cpp(EventMessage.cpp)
+
 
 forte_add_link_library(babeltrace2)

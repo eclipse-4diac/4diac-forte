@@ -1,14 +1,19 @@
+#ifndef _FORTE_TESTS_CORE_TRACE_TRACE_READER_SINK_H_
+#define _FORTE_TESTS_CORE_TRACE_TRACE_READER_SINK_H_
 
-#include <babeltrace2/babeltrace.h>
 
 #include <vector>
 #include <string>
+
+#include <babeltrace2/babeltrace.h>
+
+#include "EventMessage.h"
 
 namespace forte {
   class EventsReader {
     public:
 
-    typedef std::vector<std::string> MessageStorage;
+    typedef std::vector<EventMessage> MessageStorage;
 
     EventsReader(bt_self_component_sink *self_component_sink,
         const bt_value *params, 
@@ -19,12 +24,12 @@ namespace forte {
     bt_component_class_sink_consume_method_status consume();
 
     private:
-    void print_message(const bt_message *message);
-
     bt_self_component_sink *mSelfComponentSink;
 
-    std::vector<std::string>& mOutput;
+    MessageStorage& mOutput;
 
     bt_message_iterator *mMessageIterator{nullptr};
   };  
 }
+
+#endif // _FORTE_TESTS_CORE_TRACE_TRACE_READER_SINK_H_
