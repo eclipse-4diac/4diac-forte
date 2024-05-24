@@ -908,9 +908,9 @@ UA_StatusCode COPC_UA_Local_Handler::initializeCreateNode(CActionInfo &paActionI
   //The main process is done in the execution
   UA_StatusCode retVal = UA_STATUSCODE_GOOD;
 
-  auto& instance = paActionInfo.getNodePairInfo().back();
+  auto& nodePair = paActionInfo.getNodePairInfo().back();
 
-  if(instance.getBrowsePath().empty()) { //the browsename of the instance is mandatory
+  if(nodePair.getBrowsePath().empty()) { //the browsename of the instance is mandatory
     retVal = UA_STATUSCODE_BADINTERNALERROR;
     DEVLOG_ERROR("[OPC UA LOCAL]: The BrowsePath of the instance is mandatory for creating a node at FB %s. Error: %s\n",
       paActionInfo.getLayer().getCommFB()->getInstanceName(), UA_StatusCode_name(retVal));
@@ -1076,22 +1076,22 @@ UA_StatusCode COPC_UA_Local_Handler::executeCreateVariable(CActionInfo &paAction
     //look for data value type
     if(isNodePresent(*itDataValueTypeNodePairInfo)) {
 
-      auto& instance = paActionInfo.getNodePairInfo().back();
+      auto& nodePair = paActionInfo.getNodePairInfo().back();
 
       CSinglyLinkedList<UA_NodeId*> referencedNodes;
       bool nodeExists = false;
-      //check if an instance is already present
-      retVal = getNode(instance, referencedNodes, &nodeExists);
+      //check if a nodePair is already present
+      retVal = getNode(nodePair, referencedNodes, &nodeExists);
 
       if(UA_STATUSCODE_GOOD == retVal) {
         if(!nodeExists) {
 
           std::string nodeName;
-          retVal = splitAndCreateFolders(instance.getBrowsePath(), nodeName, referencedNodes);
+          retVal = splitAndCreateFolders(nodePair.getBrowsePath(), nodeName, referencedNodes);
           if(UA_STATUSCODE_GOOD == retVal) {
             CCreateVariableInfo createInformation;
 
-            initializeCreateInfo(nodeName, instance, referencedNodes.isEmpty() ? nullptr : *(referencedNodes.back()), createInformation);
+            initializeCreateInfo(nodeName, nodePair, referencedNodes.isEmpty() ? nullptr : *(referencedNodes.back()), createInformation);
             createInformation.mVariableTypeNodeId = itVariableTypeNodePairInfo->getNodeId();
             const UA_NodeId *dataValueTypeNodeId = itDataValueTypeNodePairInfo->getNodeId();
 

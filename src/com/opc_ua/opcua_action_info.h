@@ -56,7 +56,7 @@ class CActionInfo {
           return mNodeId.get();
         }
 
-        void setNodeId(UA_NodeId * paNodeId){
+        void setNodeId(UA_NodeId *paNodeId){
           mNodeId.reset(paNodeId);
         }
 
