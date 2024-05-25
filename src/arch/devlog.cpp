@@ -33,11 +33,7 @@
 #  include <cinttypes>
 # endif //< stdc11
 
-#ifndef __ZEPHYR__
 #include <iostream>
-#else
-#include <zephyr/logging/log.h>
-#endif // __ZEPHYR__
 
 #ifdef FORTE_STACKTRACE
 #include <iostream>
@@ -99,14 +95,10 @@ void logMessage(E_MsgLevel paLevel, const char *paMessage, ...) {
 }
 
 void printLogMessage(E_MsgLevel paLevel, const char *paMessage) {
-#ifndef __ZEPHYR__
   (paLevel == E_MsgLevel::Error ? std::cerr : std::cout) << scLogLevel[static_cast<int>(paLevel)] << ": " << getRealtimeString() << ": " << paMessage;
   #ifdef WIN32
   (paLevel == E_MsgLevel::Error ? std::cerr : std::cout) << std::flush;
   #endif
-#else
-  LOG_PRINTK("%s: T#%" PRIuFAST64 ": %s", scLogLevel[static_cast<int>(paLevel)], getNanoSecondsMonotonic(), paMessage);
-#endif // __ZEPHYR__
 }
 
 # endif  /* FORTE_EXTERNAL_LOG_HANDLER */
