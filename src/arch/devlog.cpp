@@ -36,7 +36,6 @@
 #include <iostream>
 
 #ifdef FORTE_STACKTRACE
-#include <iostream>
 #ifdef FORTE_STACKTRACE_BOOST
 #include <boost/stacktrace.hpp>
 #endif // FORTE_STACKTRACE_BOOST
