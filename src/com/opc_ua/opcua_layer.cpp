@@ -33,7 +33,7 @@
 using namespace forte::com_infra;
 
 COPC_UA_Layer::COPC_UA_Layer(CComLayer *paUpperLayer, CBaseCommFB *paComFB) :
-    CComLayer(paUpperLayer, paComFB), mInterruptResp(e_Nothing), mHandler(nullptr), mActionInfo(nullptr), mDataAlreadyPresent(false), mIsObjectNodeStruct(false), mRDBuffer(nullptr) {
+    CComLayer(paUpperLayer, paComFB), mInterruptResp(e_Nothing), mHandler(nullptr), mDataAlreadyPresent(false), mIsObjectNodeStruct(false) {
 }
 
 COPC_UA_Layer::~COPC_UA_Layer() = default;
@@ -49,9 +49,8 @@ EComResponse COPC_UA_Layer::openConnection(char *paLayerParameter) {
       if(UA_STATUSCODE_GOOD == mHandler->initializeAction(*mActionInfo)) {
         CCriticalRegion criticalRegion(mRDBufferMutex);
         response = e_InitOk;
-        mRDBuffer = new CIEC_ANY*[getCommFB()->getNumRD()];
         for(size_t i = 0; i < getCommFB()->getNumRD(); ++i) {
-          mRDBuffer[i] = getCommFB()->getRDs()[i]->clone(nullptr);
+          mRDBuffer.emplace_back(getCommFB()->getRDs()[i]->clone(nullptr));
         }
       }
     } else {
@@ -83,22 +82,16 @@ void COPC_UA_Layer::closeConnection() {
   if(mHandler) {
     CCriticalRegion criticalRegion(mRDBufferMutex);
     mHandler->uninitializeAction(*mActionInfo);
-    delete mActionInfo;
+    mActionInfo.reset();
 
     if(mIsObjectNodeStruct) {
       mStructObjectHelper->uninitializeStruct();
     }
     mHandler = nullptr;
-    if(mRDBuffer) {
-      if(mIsObjectNodeStruct) {
-    	  COPC_UA_ObjectStruct_Helper::deleteRDBufferEntries(*getCommFB(), mRDBuffer);
-      } else {
-        for (size_t i = 0; i < getCommFB()->getNumRD(); ++i) {
-          delete mRDBuffer[i];
-        }
-      }
-      delete[] mRDBuffer;
-      mRDBuffer = nullptr;
+    if(mIsObjectNodeStruct) {
+      COPC_UA_ObjectStruct_Helper::deleteRDBufferEntries(*getCommFB(), mRDBuffer);
+    } else {
+      mRDBuffer.clear();
     }
   }
 }

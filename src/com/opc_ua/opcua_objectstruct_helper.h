@@ -81,13 +81,13 @@ class COPC_UA_ObjectStruct_Helper {
      * @param paRDs      the array of data pointers to be sent
      * @param paRDBuffer The buffer for the data
     */
-    static void setMemberValues(CIEC_ANY** paRDs, CIEC_ANY **paRDBuffer);
+    static void setMemberValues(CIEC_ANY** paRDs, const std::vector<std::unique_ptr<CIEC_ANY>>& paRDBuffer);
 
     /**
      * Initialize RDBuffer for Object Structs
      * @return The initialized buffer
     */
-    CIEC_ANY **initializeRDBuffer();
+    std::vector<std::unique_ptr<CIEC_ANY>> initializeRDBuffer();
 
     /**
      * Delete all entries of the RDBuffer
@@ -95,7 +95,7 @@ class COPC_UA_ObjectStruct_Helper {
      * @param paCommFB   The comm fb for which the rdbuffer was created
      * @param paRDBuffer The buffer to be uninitialized
     */
-    static void deleteRDBufferEntries(forte::com_infra::CBaseCommFB &paCommFB, CIEC_ANY **paRDBuffer);
+    static void deleteRDBufferEntries(forte::com_infra::CBaseCommFB &paCommFB, std::vector<std::unique_ptr<CIEC_ANY>>& paRDBuffer);
 
     /**
      * Check if Data Connection is a Struct Type
