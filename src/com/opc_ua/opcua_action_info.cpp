@@ -27,8 +27,8 @@ bool CActionInfo::isRemote() const {
   return (!mEndpoint.empty());
 }
 
-CActionInfo* CActionInfo::getActionInfoFromParams(const char *paParams, COPC_UA_Layer &paLayer) {
-  CActionInfo *retVal = nullptr;
+std::unique_ptr<CActionInfo> CActionInfo::getActionInfoFromParams(const char *paParams, COPC_UA_Layer &paLayer) {
+  std::unique_ptr<CActionInfo> retVal = nullptr;
   CParameterParser mainParser(paParams, ';');
   size_t amountOfParameters = mainParser.parseParameters();
 
@@ -44,9 +44,9 @@ CActionInfo* CActionInfo::getActionInfoFromParams(const char *paParams, COPC_UA_
       }
 
       if(CActionInfo::eCreateMethod == action) {
-        retVal = new CLocalMethodInfo(paLayer, endpoint);
+        retVal.reset(new CLocalMethodInfo(paLayer, endpoint));
       } else {
-        retVal = new CActionInfo(paLayer, action, endpoint);
+        retVal.reset(new CActionInfo(paLayer, action, endpoint));
       }
 
       bool somethingFailed = false;
@@ -62,7 +62,6 @@ CActionInfo* CActionInfo::getActionInfoFromParams(const char *paParams, COPC_UA_
       }
 
       if(somethingFailed) {
-        delete retVal;
         retVal = nullptr;
       }
     }
