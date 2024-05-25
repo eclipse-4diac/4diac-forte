@@ -1,17 +1,20 @@
 #ifndef _FORTE_TESTS_CORE_TRACE_TRACE_READER_SINK_H_
 #define _FORTE_TESTS_CORE_TRACE_TRACE_READER_SINK_H_
 
-
-#include <vector>
 #include <string>
+#include <vector>
 
 #include <babeltrace2/babeltrace.h>
 
 #include "EventMessage.h"
 
 namespace forte {
+  /**
+   * Used with the babeltrace2 library to read event messages from it and transform them 
+   * into EventMessage objects
+  */
   class EventsReader {
-    public:
+  public:
 
     typedef std::vector<EventMessage> MessageStorage;
 
@@ -23,7 +26,7 @@ namespace forte {
 
     bt_component_class_sink_consume_method_status consume();
 
-    private:
+  private:
     bt_self_component_sink *mSelfComponentSink;
 
     MessageStorage& mOutput;

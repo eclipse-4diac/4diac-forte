@@ -11,6 +11,8 @@ class AbstractPayload;
 
 class EventMessage {
 public:
+  EventMessage(const std::string& paEventType, std::unique_ptr<AbstractPayload> paPayload, int64_t paTimestamp);
+
   EventMessage(const bt_message* message);
   
   std::string getPayloadString() const;
@@ -29,6 +31,8 @@ private:
 
 class AbstractPayload {
 public:
+  AbstractPayload(const std::string& paTypeName, const std::string& paInstanceName);
+
   AbstractPayload(const bt_field* field);
   
   virtual std::string getString() const;
@@ -41,13 +45,13 @@ protected:
   virtual std::string specificPayloadString() const = 0;
 
   std::string mTypeName;
-  std::string instanceName;
+  std::string mInstanceName;
 };
-
-
 
 class FBEventPayload : public AbstractPayload {
 public:
+  FBEventPayload(const std::string& paTypeName, const std::string& paInstanceName, const uint64_t eventId);
+
   FBEventPayload(const bt_field* field);
 
 private:
@@ -55,11 +59,13 @@ private:
 
   bool specificPayloadEqual(const AbstractPayload& other) const;
  
-  uint64_t eventId;
+  uint64_t mEventId;
 };
 
 class FBDataPayload : public AbstractPayload {
 public:
+  FBDataPayload(const std::string& paTypeName, const std::string& paInstanceName, uint64_t paDataId, const std::string& paValue);
+
   FBDataPayload(const bt_field* field);
 
 private:
@@ -67,12 +73,18 @@ private:
 
   bool specificPayloadEqual(const AbstractPayload& other) const;
 
-  uint64_t dataId;
-  std::string value;
+  uint64_t mDataId;
+  std::string mValue;
 };
 
 class FBInstanceDataPayload : public AbstractPayload {
 public:
+  FBInstanceDataPayload(const std::string& paTypeName, const std::string& paInstanceName, 
+        const std::vector<std::string>& paInputs,
+        const std::vector<std::string>& paOutputs,
+        const std::vector<std::string>& paInternal,
+        const std::vector<std::string>& paInternalFB);
+
   FBInstanceDataPayload(const bt_field* field);
   
 private:
@@ -80,17 +92,15 @@ private:
 
   bool specificPayloadEqual(const AbstractPayload& other) const;
 
-  std::vector<std::string> inputs;
-  std::vector<std::string> outputs;
-  std::vector<std::string> internal;
-  std::vector<std::string> internalFB;
+  std::vector<std::string> mInputs;
+  std::vector<std::string> mOutputs;
+  std::vector<std::string> mInternal;
+  std::vector<std::string> mInternalFB;
 };
 
 class PayloadFactory {
 public:
-  static std::unique_ptr<AbstractPayload> createPayload(const std::string& eventType, const bt_field* field);
+  static std::unique_ptr<AbstractPayload> createPayload(const std::string& paEventType, const bt_field* paField);
 };
-
-
 
 #endif //  _FORTE_TESTS_CORE_TRACE_EVENT_MESSAGE_H_

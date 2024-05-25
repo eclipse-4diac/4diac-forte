@@ -6,6 +6,10 @@
 // EventMessage methods //
 // ******************** //
 
+EventMessage::EventMessage(const std::string& paEventType, std::unique_ptr<AbstractPayload> paPayload, int64_t paTimestamp) : 
+  mEventType(paEventType), mPayload(std::move(paPayload)), mTimestamp(paTimestamp){
+}
+
 EventMessage::EventMessage(const bt_message* message)  {
     
   // Borrow the event message's event and its class
@@ -58,64 +62,73 @@ std::string EventMessage::getTimestampString() const {
 }
 
 bool EventMessage::operator==(const EventMessage& other) const {
-  return mEventType == other.mEventType  
-    && (mPayload == nullptr) == (other.mPayload == nullptr)
-    && (mPayload != nullptr ? *mPayload == *other.mPayload : true);
+  return mEventType == other.mEventType  && *mPayload == *other.mPayload;
 }
 
 // *********************** //
 // AbstractPayload Methods //
 // *********************** //
+AbstractPayload::AbstractPayload(const std::string& paTypeName, const std::string& paInstanceName) 
+  : mTypeName(paTypeName), mInstanceName(paInstanceName)  {
+}
 
 AbstractPayload::AbstractPayload(const bt_field* field) {
   auto const typeNameField = bt_field_structure_borrow_member_field_by_name_const(field, "typeName");
   auto const instanceNameField = bt_field_structure_borrow_member_field_by_name_const(field, "instanceName");
   
   mTypeName = bt_field_string_get_value(typeNameField);
-  instanceName = bt_field_string_get_value(instanceNameField);
+  mInstanceName = bt_field_string_get_value(instanceNameField);
 }
 
 std::string AbstractPayload::getString() const {
-  return "{ typeName = \"" + mTypeName + "\", instanceName = \"" + instanceName + "\"" + specificPayloadString() + " }";
+  return "{ typeName = \"" + mTypeName + "\", instanceName = \"" + mInstanceName + "\"" + specificPayloadString() + " }";
 }
 
-
 bool AbstractPayload::operator==(const AbstractPayload& other) const {
-  return mTypeName == other.mTypeName && instanceName == other.instanceName && specificPayloadEqual(other);
+  return mTypeName == other.mTypeName && mInstanceName == other.mInstanceName && specificPayloadEqual(other);
 }
 
 // ************** //
 // FBEventPayload //
 // ************** //
+FBEventPayload::FBEventPayload(const std::string& paTypeName, const std::string& paInstanceName, const uint64_t paEventId) : 
+  AbstractPayload(paTypeName, paInstanceName),
+  mEventId(paEventId) {
+}
 
 FBEventPayload::FBEventPayload(const bt_field* field) : AbstractPayload(field){
-  eventId = bt_field_integer_unsigned_get_value(
+  mEventId = bt_field_integer_unsigned_get_value(
       bt_field_structure_borrow_member_field_by_name_const(field, "eventId"));
 }
 
 std::string FBEventPayload::specificPayloadString() const {
-  return ", eventId = " + std::to_string(eventId);
+  return ", eventId = " + std::to_string(mEventId);
 }
 
 bool FBEventPayload::specificPayloadEqual(const AbstractPayload& other) const {
   const auto& childInstance = dynamic_cast<const FBEventPayload&>(other); 
-  return eventId == childInstance.eventId;
+  return mEventId == childInstance.mEventId;
 }
 
 // ************* //
 // FBDataPayload //
 // ************* //
+FBDataPayload::FBDataPayload(const std::string& paTypeName, const std::string& paInstanceName, uint64_t paDataId, const std::string& paValue) :
+  AbstractPayload(paTypeName, paInstanceName),
+  mDataId(paDataId), mValue(paValue){
+}
+
 
 FBDataPayload::FBDataPayload(const bt_field* field) : AbstractPayload(field){
-  dataId = bt_field_integer_unsigned_get_value(
+  mDataId = bt_field_integer_unsigned_get_value(
       bt_field_structure_borrow_member_field_by_name_const(field, "dataId"));
 
-  value = bt_field_string_get_value(
+  mValue = bt_field_string_get_value(
       bt_field_structure_borrow_member_field_by_name_const(field, "value"));
 }
 
 std::string FBDataPayload::specificPayloadString() const {
-  auto convertedString = value;
+  auto convertedString = mValue;
 
   // add backslash to quoutes and double quotes
   for(auto toReplace : {"\"", "\'"}){
@@ -123,22 +136,28 @@ std::string FBDataPayload::specificPayloadString() const {
       convertedString.insert(pos, "\\");
     }
   }
-  return ", dataId = " + std::to_string(dataId) + ", value = \"" + convertedString + "\"";
+  return ", dataId = " + std::to_string(mDataId) + ", value = \"" + convertedString + "\"";
 }
 
 bool FBDataPayload::specificPayloadEqual(const AbstractPayload& other) const {
   const auto& childInstance = dynamic_cast<const FBDataPayload&>(other); 
-  return dataId == childInstance.dataId && value == childInstance.value;
+  return mDataId == childInstance.mDataId && mValue == childInstance.mValue;
 }
 
 // ********************* //
 // FBInstanceDataPayload //
 // ********************* //
+FBInstanceDataPayload::FBInstanceDataPayload(const std::string& paTypeName, const std::string& paInstanceName, const std::vector<std::string>& paInputs,
+    const std::vector<std::string>& paOutputs, const std::vector<std::string>& paInternal, const std::vector<std::string>& paInternalFB) : 
+      AbstractPayload(paTypeName, paInstanceName),
+      mInputs(paInputs), mOutputs(paOutputs), mInternal(paInternal), mInternalFB(paInternalFB)
+{
+}
 
 FBInstanceDataPayload::FBInstanceDataPayload(const bt_field* field) : AbstractPayload(field){
 
   std::array<const char*, 4> fieldNames{"inputs", "outputs", "internal", "internalFB"};
-  std::array<std::vector<std::string>*, 4> storage = {&inputs, &outputs, &internal, &internalFB};
+  std::array<std::vector<std::string>*, 4> storage = {&mInputs, &mOutputs, &mInternal, &mInternalFB};
 
   for(size_t fieldRunner = 0; fieldRunner < fieldNames.size(); fieldRunner++){
     auto arrayField = bt_field_structure_borrow_member_field_by_name_const(field, fieldNames[fieldRunner]);
@@ -165,29 +184,31 @@ std::string FBInstanceDataPayload::specificPayloadString() const {
     return result;
   };
 
-  return ", _inputs_len = " + std::to_string(inputs.size()) + ", inputs = " + createStringFromVector(inputs) +
-    ", _outputs_len = " + std::to_string(outputs.size()) + ", outputs = " + createStringFromVector(outputs) +
-    ", _internal_len = " + std::to_string(internal.size()) + ", internal = " + createStringFromVector(internal) +
-    ", _internalFB_len = " + std::to_string(internalFB.size()) + ", internalFB = " + createStringFromVector(internalFB);
+  return ", _inputs_len = " + std::to_string(mInputs.size()) + ", inputs = " + createStringFromVector(mInputs) +
+    ", _outputs_len = " + std::to_string(mOutputs.size()) + ", outputs = " + createStringFromVector(mOutputs) +
+    ", _internal_len = " + std::to_string(mInternal.size()) + ", internal = " + createStringFromVector(mInternal) +
+    ", _internalFB_len = " + std::to_string(mInternalFB.size()) + ", internalFB = " + createStringFromVector(mInternalFB);
 }
 
 bool FBInstanceDataPayload::specificPayloadEqual(const AbstractPayload& other) const {
   const auto& childInstance = dynamic_cast<const FBInstanceDataPayload&>(other); 
-  return inputs == childInstance.inputs && outputs == childInstance.outputs && internal == childInstance.internal && internalFB == childInstance.internalFB;
+  return mInputs == childInstance.mInputs 
+        && mOutputs == childInstance.mOutputs 
+        && mInternal == childInstance.mInternal 
+        && mInternalFB == childInstance.mInternalFB;
 }
 
 // ************** //
 // PayloadFactory //
 // ************** //
-
-std::unique_ptr<AbstractPayload> PayloadFactory::createPayload(const std::string& eventType, const bt_field* field){
+std::unique_ptr<AbstractPayload> PayloadFactory::createPayload(const std::string& paEventType, const bt_field* paField){
   std::unique_ptr<AbstractPayload> result = nullptr;
-  if(eventType == "receiveInputEvent" || eventType == "sendOutputEvent") {
-    result.reset(new FBEventPayload(field));
-  } else if(eventType == "inputData" || eventType == "outputData") {
-    result.reset(new FBDataPayload(field));
-  } else if(eventType == "instanceData") {
-    result.reset(new FBInstanceDataPayload(field));
+  if(paEventType == "receiveInputEvent" || paEventType == "sendOutputEvent") {
+    result.reset(new FBEventPayload(paField));
+  } else if(paEventType == "inputData" || paEventType == "outputData") {
+    result.reset(new FBDataPayload(paField));
+  } else if(paEventType == "instanceData") {
+    result.reset(new FBInstanceDataPayload(paField));
   }
   return result;
 }

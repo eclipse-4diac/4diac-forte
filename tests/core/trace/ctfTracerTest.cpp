@@ -9,146 +9,169 @@
  * Contributors:
  *   Jose Cabral- initial API and implementation and/or initial documentation
  *******************************************************************************/
-
-#include <boost/test/unit_test.hpp>
-
-#include <babeltrace2/babeltrace.h>
-
-#include "EventMessage.h"
-
-#include <optional>
 #include <iomanip>
-
+#include <optional>
 #include <thread>
 
-#include "trace/barectf_platform_forte.h"
+#include <babeltrace2/babeltrace.h>
+#include <boost/test/unit_test.hpp>
+
 #include "../stdfblib/ita/EMB_RES.h"
-#include "ecet.h"
+#include "config.h"
 #include "ctfTracerTest_gen.cpp"
 #include "device.h"
-#include "resource.h"
-
-
-
+#include "ecet.h"
+#include "EventMessage.h"
+#include "trace/barectf_platform_forte.h"
 
 BOOST_AUTO_TEST_SUITE (tracer_test)
 
+/**
+ * @brief Get the list of message from a directory containing CTF traces
+ * 
+ * @param path Directory containing ctf traces and, if needed, the metadata associated to them
+ * @return sorted list of events found in path
+ */
 std::vector<EventMessage> getEventMessages(const std::string& path);
 
+/**
+ * @brief Print messages as babeltrace2 pretty print
+ * @param messages List of messages to print
+ */
+void printPrettyMessages(const std::vector<EventMessage>& messages);
 
 BOOST_AUTO_TEST_CASE(sequential_events_test) {
 
-  const std::string traceOutputPath = "/home/cochicde/ctf";
+  // remove previous trace files
+  std::filesystem::path destMetadata(CTF_OUTPUT_DIR);
+  destMetadata /= "metadata";
 
-  BarectfPlatformFORTE::setup(traceOutputPath);
+  std::filesystem::remove_all(CTF_OUTPUT_DIR);
+  std::filesystem::create_directory(CTF_OUTPUT_DIR);
+  std::filesystem::copy_file(METADATA_FILE, destMetadata);
 
-const  SFBInterfaceSpec scTestDevSpec = {
-  0, nullptr, nullptr, nullptr,
-  0, nullptr, nullptr, nullptr,
-  0, nullptr, nullptr,
-  0, nullptr, nullptr,
-  0, nullptr,
-  0, nullptr
-};
-  CDevice device(&scTestDevSpec, g_nStringIdMyDevice);
-  auto resource = new EMB_RES(g_nStringIdMyResource, device);
+  BarectfPlatformFORTE::setup(CTF_OUTPUT_DIR);
 
-  resource->initialize();
+  // create a FB network with a E_SWITCH and E_CTU 
+  // with some connections and let forte trace its data
+  // The inner scope is to make sure the destructors of the resources are 
+  // called which flushes the output
+  {
+    const  SFBInterfaceSpec scTestDevSpec = {
+      0, nullptr, nullptr, nullptr,
+      0, nullptr, nullptr, nullptr,
+      0, nullptr, nullptr,
+      0, nullptr, nullptr,
+      0, nullptr,
+      0, nullptr
+    };
 
-  auto startInstanceName = g_nStringIdSTART;
-  auto counterInstanceName = g_nStringIdCounter;
-  auto switchInstanceName = g_nStringIdSwitch;
+    CDevice device(&scTestDevSpec, g_nStringIdMyDevice);
+    auto resource = new EMB_RES(g_nStringIdMyResource, device);
+    device.addFB(resource);
 
-  resource->addFB(CTypeLib::createFB(counterInstanceName, g_nStringIdE_CTU, *resource));
-  resource->addFB(CTypeLib::createFB(switchInstanceName, g_nStringIdE_SWITCH, *resource));
+    resource->initialize();
 
-  forte::core::SManagementCMD command;
-  command.mCMD = EMGMCommandType::CreateConnection;
-  command.mDestination = CStringDictionary::scmInvalidStringId;
+    auto startInstanceName = g_nStringIdSTART;
+    auto counterInstanceName = g_nStringIdCounter;
+    auto switchInstanceName = g_nStringIdSwitch;
 
-  BOOST_TEST_INFO("Event connection: Start.COLD -> Counter.CU");
-  command.mFirstParam.pushBack(startInstanceName);
-  command.mFirstParam.pushBack(g_nStringIdCOLD);
-  command.mSecondParam.pushBack(counterInstanceName);
-  command.mSecondParam.pushBack(g_nStringIdCU);
+    resource->addFB(CTypeLib::createFB(counterInstanceName, g_nStringIdE_CTU, *resource));
+    resource->addFB(CTypeLib::createFB(switchInstanceName, g_nStringIdE_SWITCH, *resource));
 
-  BOOST_CHECK(EMGMResponse::Ready == resource->executeMGMCommand(command));
+    forte::core::SManagementCMD command;
+    command.mCMD = EMGMCommandType::CreateConnection;
+    command.mDestination = CStringDictionary::scmInvalidStringId;
 
-  BOOST_TEST_INFO("Event connection: Counter.CUO -> Switch.EI");
-  command.mFirstParam.clear();
-  command.mFirstParam.pushBack(counterInstanceName);
-  command.mFirstParam.pushBack(g_nStringIdCUO);
-  command.mSecondParam.clear();
-  command.mSecondParam.pushBack(switchInstanceName);
-  command.mSecondParam.pushBack(g_nStringIdEI);
-  BOOST_CHECK(EMGMResponse::Ready == resource->executeMGMCommand(command));
+    BOOST_TEST_INFO("Event connection: Start.COLD -> Counter.CU");
+    command.mFirstParam.pushBack(startInstanceName);
+    command.mFirstParam.pushBack(g_nStringIdCOLD);
+    command.mSecondParam.pushBack(counterInstanceName);
+    command.mSecondParam.pushBack(g_nStringIdCU);
 
-  BOOST_TEST_INFO("Data connection: Counter.Q -> Switch.G ");
-  command.mFirstParam.clear();
-  command.mFirstParam.pushBack(counterInstanceName);
-  command.mFirstParam.pushBack(g_nStringIdQ);
-  command.mSecondParam.clear();
-  command.mSecondParam.pushBack(switchInstanceName);
-  command.mSecondParam.pushBack(g_nStringIdG);
-  BOOST_CHECK(EMGMResponse::Ready == resource->executeMGMCommand(command));
+    BOOST_CHECK(EMGMResponse::Ready == resource->executeMGMCommand(command));
 
-  BOOST_TEST_INFO(" Data constant value: Counter.PV = 1");
-  command.mFirstParam.clear();
-  command.mFirstParam.pushBack(counterInstanceName);
-  command.mFirstParam.pushBack(g_nStringIdPV);
-  BOOST_CHECK(EMGMResponse::Ready == resource->writeValue(command.mFirstParam, CIEC_STRING(std::string("1")), false));
+    BOOST_TEST_INFO("Event connection: Counter.CUO -> Switch.EI");
+    command.mFirstParam.clear();
+    command.mFirstParam.pushBack(counterInstanceName);
+    command.mFirstParam.pushBack(g_nStringIdCUO);
+    command.mSecondParam.clear();
+    command.mSecondParam.pushBack(switchInstanceName);
+    command.mSecondParam.pushBack(g_nStringIdEI);
+    BOOST_CHECK(EMGMResponse::Ready == resource->executeMGMCommand(command));
 
-  BOOST_TEST_INFO("Event connection: Switch.EO1 -> Counter.R ");
-  command.mFirstParam.clear();
-  command.mFirstParam.pushBack(switchInstanceName);
-  command.mFirstParam.pushBack(g_nStringIdEO1);
-  command.mSecondParam.clear();
-  command.mSecondParam.pushBack(counterInstanceName);
-  command.mSecondParam.pushBack(g_nStringIdR);
-  BOOST_CHECK(EMGMResponse::Ready == resource->executeMGMCommand(command));
+    BOOST_TEST_INFO("Data connection: Counter.Q -> Switch.G ");
+    command.mFirstParam.clear();
+    command.mFirstParam.pushBack(counterInstanceName);
+    command.mFirstParam.pushBack(g_nStringIdQ);
+    command.mSecondParam.clear();
+    command.mSecondParam.pushBack(switchInstanceName);
+    command.mSecondParam.pushBack(g_nStringIdG);
+    BOOST_CHECK(EMGMResponse::Ready == resource->executeMGMCommand(command));
 
-  device.addFB(resource);
+    BOOST_TEST_INFO(" Data constant value: Counter.PV = 1");
+    command.mFirstParam.clear();
+    command.mFirstParam.pushBack(counterInstanceName);
+    command.mFirstParam.pushBack(g_nStringIdPV);
+    BOOST_CHECK(EMGMResponse::Ready == resource->writeValue(command.mFirstParam, CIEC_STRING(std::string("1")), false));
 
+    BOOST_TEST_INFO("Event connection: Switch.EO1 -> Counter.R ");
+    command.mFirstParam.clear();
+    command.mFirstParam.pushBack(switchInstanceName);
+    command.mFirstParam.pushBack(g_nStringIdEO1);
+    command.mSecondParam.clear();
+    command.mSecondParam.pushBack(counterInstanceName);
+    command.mSecondParam.pushBack(g_nStringIdR);
+    BOOST_CHECK(EMGMResponse::Ready == resource->executeMGMCommand(command));
 
-  device.startDevice();
-  while(resource->getResourceEventExecution()->isProcessingEvents()){
-    std::this_thread::sleep_for(std::chrono::milliseconds(50));
-  }
-  device.changeFBExecutionState(EMGMCommandType::Stop);
-  resource->getResourceEventExecution()->joinEventChainExecutionThread();
-
-  auto messages = getEventMessages(traceOutputPath);
-
-  auto getTimestampDifference = [](int64_t current, std::optional<int64_t> prev) -> std::string {
-    if(prev == std::nullopt){
-      return "(+?.\?\?\?\?\?\?\?\?\?)";
+    device.startDevice();
+    // wait for all events to be triggered
+    while(resource->getResourceEventExecution()->isProcessingEvents()){
+      std::this_thread::sleep_for(std::chrono::milliseconds(50));
     }
-
-    auto diff = current - prev.value();
-
-    auto seconds = diff / 1000000000;
-    diff %= 1000000000;
-
-
-    std::stringstream ss;
-    ss << "(" << (diff < 0 ? "-" : "+") << 
-      std::setw(1) << std::setfill('0') << seconds << 
-      "." << 
-      std::setw(9) << std::setfill('0') << diff  << ")"; 
-    
-    return ss.str();
-  };
-
-  std::optional<int64_t> lastTimestamp = std::nullopt;
-  for(const auto& message : messages) {
-    std::cout << message.getTimestampString() 
-      << " " << getTimestampDifference(message.getTimestamp(), lastTimestamp) << " "
-      << message.getPayloadString() << std::endl;
-    lastTimestamp = message.getTimestamp();
+    device.changeFBExecutionState(EMGMCommandType::Stop);
+    resource->getResourceEventExecution()->joinEventChainExecutionThread();
   }
 
   // disable logging 
-  //BarectfPlatformFORTE::setup("");
+  BarectfPlatformFORTE::setup("");
+
+  std::vector<EventMessage> expectedMessages;
+
+  // timestamp cannot properly be tested, so setting everythin to zero
+  expectedMessages.emplace_back("receiveInputEvent", std::make_unique<FBEventPayload>("E_RESTART", "START", 65534),0);
+  expectedMessages.emplace_back("sendOutputEvent", std::make_unique<FBEventPayload>("E_RESTART", "START", 0),0);
+  expectedMessages.emplace_back("receiveInputEvent", std::make_unique<FBEventPayload>("E_CTU", "Counter", 0),0);
+  expectedMessages.emplace_back("instanceData", std::make_unique<FBInstanceDataPayload>("E_CTU", "Counter", std::vector<std::string>{"1"}, std::vector<std::string>{"FALSE", "0"}, std::vector<std::string>{}, std::vector<std::string>{}), 0);
+  expectedMessages.emplace_back("sendOutputEvent", std::make_unique<FBEventPayload>("E_CTU", "Counter", 0),0);
+  expectedMessages.emplace_back("outputData", std::make_unique<FBDataPayload>("E_CTU", "Counter", 0, "TRUE"), 0);
+  expectedMessages.emplace_back("outputData", std::make_unique<FBDataPayload>("E_CTU", "Counter", 1, "1"), 0);
+  expectedMessages.emplace_back("receiveInputEvent", std::make_unique<FBEventPayload>("E_SWITCH", "Switch", 0),0);
+  expectedMessages.emplace_back("instanceData", std::make_unique<FBInstanceDataPayload>("E_SWITCH", "Switch", std::vector<std::string>{"FALSE"}, std::vector<std::string>{}, std::vector<std::string>{}, std::vector<std::string>{}), 0);
+  expectedMessages.emplace_back("inputData", std::make_unique<FBDataPayload>("E_SWITCH", "Switch", 0, "TRUE"), 0);
+  expectedMessages.emplace_back("sendOutputEvent", std::make_unique<FBEventPayload>("E_SWITCH", "Switch", 1),0);
+  expectedMessages.emplace_back("receiveInputEvent", std::make_unique<FBEventPayload>("E_CTU", "Counter", 1),0);
+  expectedMessages.emplace_back("instanceData", std::make_unique<FBInstanceDataPayload>("E_CTU", "Counter", std::vector<std::string>{"1"}, std::vector<std::string>{"TRUE", "1"}, std::vector<std::string>{}, std::vector<std::string>{}),0);
+  expectedMessages.emplace_back("sendOutputEvent", std::make_unique<FBEventPayload>("E_CTU", "Counter", 1),0);
+  expectedMessages.emplace_back("outputData", std::make_unique<FBDataPayload>("E_CTU", "Counter", 0, "FALSE"), 0);
+  expectedMessages.emplace_back("outputData", std::make_unique<FBDataPayload>("E_CTU", "Counter", 1, "0"), 0);
+  expectedMessages.emplace_back("receiveInputEvent", std::make_unique<FBEventPayload>("E_RESTART", "START", 65534),0);
+  expectedMessages.emplace_back("sendOutputEvent", std::make_unique<FBEventPayload>("E_RESTART", "START", 2),0);
+
+  auto ctfMessages = getEventMessages(CTF_OUTPUT_DIR);
+
+  BOOST_TEST_INFO("Expected vs traced: Same size ");
+  BOOST_CHECK_EQUAL(ctfMessages.size(), expectedMessages.size());
+
+  // although vectors can be check directly, this granularity helps debugging in case some message is different
+  for(size_t i = 0; i < expectedMessages.size(); i++ ){
+    BOOST_TEST_INFO("Expexted event number " + std::to_string(i));
+    BOOST_CHECK(ctfMessages[i] == expectedMessages[i]);
+  }
+
+  // add extra event to check that the comparison fails
+  expectedMessages.emplace_back("sendOutputEvent", std::make_unique<FBEventPayload>("E_RESTART", "START", 2),0);
+  BOOST_CHECK(ctfMessages != expectedMessages);
 }
 
 std::vector<EventMessage> getEventMessages(const std::string& path){
@@ -213,6 +236,37 @@ std::vector<EventMessage> getEventMessages(const std::string& path){
   BOOST_CHECK_EQUAL(BT_GRAPH_RUN_STATUS_OK, bt_graph_run(graph));
 
   return messages;	
+}
+
+void printPrettyMessages(const std::vector<EventMessage>& messages) {
+
+  // get the pretty text of a timestamp difference
+  auto getTimestampDifference = [](int64_t current, std::optional<int64_t> prev) -> std::string {
+    if(prev == std::nullopt){
+      return "(+?.\?\?\?\?\?\?\?\?\?)";
+    }
+
+    auto diff = current - prev.value();
+
+    auto seconds = diff / 1000000000;
+    diff %= 1000000000;
+
+    std::stringstream ss;
+    ss << "(" << (diff < 0 ? "-" : "+") << 
+      std::setw(1) << std::setfill('0') << seconds << 
+      "." << 
+      std::setw(9) << std::setfill('0') << diff  << ")"; 
+    
+    return ss.str();
+  };
+
+  std::optional<int64_t> lastTimestamp = std::nullopt;
+  for(const auto& message : messages) {
+    std::cout << message.getTimestampString() 
+      << " " << getTimestampDifference(message.getTimestamp(), lastTimestamp) << " "
+      << message.getPayloadString() << std::endl;
+    lastTimestamp = message.getTimestamp();
+  }
 }
 
 BOOST_AUTO_TEST_SUITE_END()

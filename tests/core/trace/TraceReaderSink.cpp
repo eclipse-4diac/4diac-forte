@@ -86,6 +86,12 @@ bt_component_class_sink_consume_method_status EventsReader::consume()
 
 }
 
+// ************************** //
+// C-Style functions needed   // 
+// by the babeltrace2 library //
+// to create the components   //
+// ************************** //
+
 bt_component_class_initialize_method_status forte_events_reader_initialize(
       bt_self_component_sink *self_component_sink,
       bt_self_component_sink_configuration *configuration,
