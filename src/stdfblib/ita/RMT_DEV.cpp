@@ -54,6 +54,10 @@ int RMT_DEV::startDevice(){
   return 0;
 }
 
+void RMT_DEV::awaitShutdown() {
+  MGR.joinResourceThread();
+}
+
 EMGMResponse RMT_DEV::changeFBExecutionState(EMGMCommandType paCommand){
   EMGMResponse eRetVal = CDevice::changeFBExecutionState(paCommand);
   if((EMGMResponse::Ready == eRetVal) && (EMGMCommandType::Kill == paCommand)){

@@ -92,7 +92,7 @@ void applicationStart(void) {
   // Starting  Runtime
   RMT_DEV dev;
   dev.startDevice();
-  dev.MGR.joinResourceThread();
+  dev.awaitShutdown();
   tx_thread_suspend(tx_thread_identify());
 }
 

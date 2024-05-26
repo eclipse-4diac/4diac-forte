@@ -64,6 +64,13 @@ class CDevice : public CResource {
       return 1;
     }
 
+
+    /*!\brief wait till the execution of this device ends.
+     *
+     * The execution of devices can be stopped by sending it the kill command.
+     */
+    virtual void awaitShutdown() = 0;
+
     /*!\brief Execute the given management command
      *
      * Evaluates the mDestination parameter of the command if empty this class tries to execute the management command if not

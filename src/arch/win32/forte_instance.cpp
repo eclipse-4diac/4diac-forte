@@ -30,7 +30,7 @@ extern "C"
 void shutdownFORTE(){
   if(0 != gDev){
     gDev->changeFBExecutionState(EMGMCommandType::Kill);
-    gDev->MGR.joinResourceThread();
+    gDev->awaitShutdown();
     delete gDev;
     gDev = 0;
   }

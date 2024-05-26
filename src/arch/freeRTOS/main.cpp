@@ -28,7 +28,7 @@ void vForteTask(void* pvParameters) {
   poDev->setMGR_ID("localhost:61499");
   poDev->startDevice();
   DEVLOG_INFO("FORTE is up and running\n");
-  poDev->MGR.joinResourceThread();
+  poDev->awaitShutdown();
   DEVLOG_INFO("FORTE finished\n");
   delete poDev;
   vTaskDelete(nullptr);

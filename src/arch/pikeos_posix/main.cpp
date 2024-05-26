@@ -74,7 +74,7 @@ void createDev(const char *paMGRID){
   poDev->setMGR_ID(paMGRID);
   poDev->startDevice();
   DEVLOG_INFO("FORTE is up and running\n");
-  poDev->MGR.joinResourceThread();
+  poDev->awaitShutdown();
   DEVLOG_INFO("FORTE finished\n");
   delete poDev;
 }
