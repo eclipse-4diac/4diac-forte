@@ -28,9 +28,21 @@ const static SFBInterfaceSpec gscTestDevSpec = {
 CDevice *CFBTestDataGlobalFixture::smTestDev;
 CResource *CFBTestDataGlobalFixture::smTestRes;
 
+class CTesterDevice : public CDevice {
+  public:
+    CTesterDevice(const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId) :
+        CDevice(paInterfaceSpec, paInstanceNameId){
+    }
+
+    void awaitShutdown() override {
+      // nothing to be done to join
+    }
+
+};
+
 CFBTestDataGlobalFixture::CFBTestDataGlobalFixture(){
   //setup is done in the setup so that boost_test can throw exceptions
-  smTestDev = new CDevice(&gscTestDevSpec, CStringDictionary::scmInvalidStringId);
+  smTestDev = new CTesterDevice(&gscTestDevSpec, CStringDictionary::scmInvalidStringId);
   //mimick the behavior provided by typelib
   smTestDev->changeFBExecutionState(EMGMCommandType::Reset);
 

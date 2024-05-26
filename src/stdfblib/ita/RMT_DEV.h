@@ -23,8 +23,6 @@
 
 class RMT_DEV : public CDevice{
   public:
-    RMT_RES MGR;
-
     RMT_DEV();
     ~RMT_DEV() override;
 
@@ -35,6 +33,8 @@ class RMT_DEV : public CDevice{
   * This is that it waits till the thread of the MGR resource has anded
   */
     int startDevice() override;
+
+    void awaitShutdown() override;
 
     EMGMResponse changeFBExecutionState(EMGMCommandType paCommand) override;
 
@@ -51,6 +51,8 @@ class RMT_DEV : public CDevice{
     CIEC_WSTRING& MGR_ID() {
       return *static_cast<CIEC_WSTRING*>(getDI(0));
     }
+
+    RMT_RES MGR;
 };
 
 #endif /*RMT_DEV_H_*/

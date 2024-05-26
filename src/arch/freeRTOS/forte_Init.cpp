@@ -92,7 +92,7 @@ int forteStartInstanceGeneric(int paArgc, char *paArgv[], TForteInstance* paResu
 void forteJoinInstance(TForteInstance paInstance) {
   RMT_DEV *poDev = static_cast<RMT_DEV*>(paInstance);
   if(0 != poDev) {
-    poDev->MGR.joinResourceThread();
+    poDev->awaitShutdown();
   }
 }
 
@@ -104,7 +104,7 @@ void forteStopInstance(int paSig, TForteInstance paInstance) {
   RMT_DEV *poDev = static_cast<RMT_DEV*>(paInstance);
   if(0 != poDev) {
     poDev->changeFBExecutionState(EMGMCommandType::Kill);
-    poDev->MGR.joinResourceThread();
+    poDev->awaitShutdown();
     DEVLOG_INFO("FORTE finished\n");
     delete poDev;
   }
