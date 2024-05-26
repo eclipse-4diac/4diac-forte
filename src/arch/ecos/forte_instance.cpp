@@ -98,7 +98,7 @@ void forteStopInstance(int paSig, TForteInstance paResultDevice){
   RMT_DEV *poDev = static_cast<RMT_DEV*>(paResultDevice);
   if(0 != poDev){
     poDev->changeFBExecutionState(EMGMCommandType::Kill);
-    poDev->MGR.joinResourceThread();
+    poDev->awaitShutdown();
     DEVLOG_INFO("FORTE finished\n");
     delete poDev;
   }
