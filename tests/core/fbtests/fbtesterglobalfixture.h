@@ -12,7 +12,9 @@
 #ifndef TESTS_CORE_FBTESTS_FBTESTERGLOBALFIXTURE_H_
 #define TESTS_CORE_FBTESTS_FBTESTERGLOBALFIXTURE_H_
 
-#include <device.h>
+#include "device.h"
+
+class CTesterDevice;
 
 /**Global fixture for providing the resource and device needed for fb testing
  *
@@ -28,7 +30,7 @@ class CFBTestDataGlobalFixture{
     }
 
   private:
-    static CDevice *smTestDev;
+    static CTesterDevice *smTestDev;
     static CResource *smTestRes;
 };
 

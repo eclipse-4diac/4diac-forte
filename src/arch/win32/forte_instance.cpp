@@ -12,27 +12,21 @@
 #include "forte_instance.h"
 #include "fortenew.h"
 #include "forte_architecture.h"
-#include <device.h>
+#include "device.h"
 
 #include <forteinit.h>
 
-CDevice *gDev = nullptr;
 
 extern "C"
 void startupFORTE(){
   CForteArchitecture::initialize();
   initForte();
-  gDev = CDevice::createDev("");
-  gDev->startDevice();
+  CDevice::startupNewDevice("");
 }
 
 extern "C"
 void shutdownFORTE(){
-  if(0 != gDev){
-    gDev->changeFBExecutionState(EMGMCommandType::Kill);
-    gDev->awaitShutdown();
-    delete gDev;
-    gDev = 0;
-  }
+  CDevice::triggerDeviceShutdown();
+  CDevice::awaitDeviceShutdown();
 }
 

@@ -15,7 +15,6 @@
 namespace ForteLibrary {
 
   void ForteComponent::Initialize(){
-    mDev = CDevice::createDev("");
   }
 
   void ForteComponent::LoadSettings(const String& /*paSettingsPath*/){
@@ -31,7 +30,7 @@ namespace ForteLibrary {
   }
 
   void ForteComponent::SetupConfig(){
-    mDev->startDevice();
+    CDevice::startupNewDevice(pIpPort);
   }
 
   void ForteComponent::ResetConfig(){
@@ -41,14 +40,10 @@ namespace ForteLibrary {
   }
 
   void ForteComponent::Dispose(){
-    delete mDev;
-    mDev = 0;
   }
 
   void ForteComponent::PowerDown(){
-    if(0 != mDev){
-      mDev->changeFBExecutionState(EMGMCommandType::Kill);
-    }
+    CDevice::triggerDeviceShutdown();
   }
 
 } // end of namespace ForteLibrary
