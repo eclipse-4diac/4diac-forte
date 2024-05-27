@@ -13,7 +13,7 @@
 #include "../forte_architecture.h"
 #include "../devlog.h"
 #include "../startuphook.h"
-#include <device.h>
+#include "device.h"
 #include "../utils/mainparam_utils.h"
 
 #include <stdio.h>
@@ -31,13 +31,8 @@ extern "C" void __cxa_pure_virtual(void){
 }
 #endif
 
-CDevice *gRunningDev = nullptr;
-
-void endForte(int paSig){
-  (void) paSig;
-  if(gRunningDev != nullptr){
-    gRunningDev->changeFBExecutionState(EMGMCommandType::Kill);
-  }
+void endForte(int ){
+  CDevice::triggerDeviceShutdown();
 }
 
 int main(int argc, char *arg[]){
@@ -50,14 +45,10 @@ int main(int argc, char *arg[]){
 
     const char *pIpPort = parseCommandLineArguments(argc, arg);
     if((0 != strlen(pIpPort)) && (nullptr != strchr(pIpPort, ':'))){
-      gRunningDev = CDevice::createDev(pIpPort);
-      if(gRunningDev != nullptr){
-        gRunningDev->startDevice();
+      if(CDevice::startupNewDevice(pIpPort)) {
         DEVLOG_INFO("FORTE is up and running\n");
-        gRunningDev->awaitShutdown();
+        CDevice::awaitDeviceShutdown();
         DEVLOG_INFO("FORTE finished\n");
-        delete gRunningDev;
-        gRunningDev = nullptr;
       }
     }
     else{ //! Lists the help for FORTE

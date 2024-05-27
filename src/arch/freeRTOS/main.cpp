@@ -15,19 +15,18 @@
 
 #include "../forte_architecture.h"
 #include "../devlog.h"
-#include <device.h>
+#include "device.h"
 
 const static unsigned mainFORTE_TASK_PRIORITY = tskIDLE_PRIORITY + 1;
 
 void vForteTask(void* pvParameters) {
   (void) pvParameters;
 
-  CDevice *dev = CDevice::createDev("localhost:61499");
-  dev->startDevice();
-  DEVLOG_INFO("FORTE is up and running\n");
-  dev->awaitShutdown();
-  DEVLOG_INFO("FORTE finished\n");
-  delete dev;
+  if(CDevice::startupNewDevice (pIpPort)) {
+    DEVLOG_INFO("FORTE is up and running\n");
+    CDevice::awaitDeviceShutdown();
+    DEVLOG_INFO("FORTE finished\n");
+  }
   vTaskDelete(nullptr);
 }
 

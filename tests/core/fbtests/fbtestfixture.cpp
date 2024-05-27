@@ -19,7 +19,7 @@
 #include "fbtestfixture_gen.cpp"
 #endif
 #include "fbtesterglobalfixture.h"
-#include <device.h>
+#include "device.h"
 #include <criticalregion.h>
 #include <ecet.h>
 

@@ -14,7 +14,7 @@
 #ifndef _RMT_DEV_H_
 #define _RMT_DEV_H_
 
-#include <device.h>
+#include "device.h"
 #include <if2indco.h>
 #include "RMT_RES.h"
 

@@ -18,7 +18,7 @@
 #include "forte_printer.h"
 #include <stdio.h>
 #include <string>
-#include <device.h>
+#include "device.h"
 
 #include "../utils/mainparam_utils.h"
 
@@ -30,7 +30,6 @@ unsigned int forte_default_port = 61499;
  */
 
 bool checkEndianess();
-void createDev(const char *paMGRID, TForteInstance* paResultInstance);
 
 void forteGlobalInitialize() {
   CForteArchitecture::initialize();
@@ -40,7 +39,7 @@ void forteGlobalDeinitialize() {
   CForteArchitecture::deinitialize();
 }
 
-int forteStartInstance(unsigned int paPort, TForteInstance* paResultInstance) {
+int forteStartInstance(unsigned int paPort) {
 
   if(65535 < paPort) {
     return FORTE_WRONG_PARAMETERS;
@@ -58,10 +57,10 @@ int forteStartInstance(unsigned int paPort, TForteInstance* paResultInstance) {
   strcat(address, port);
 
   char* arguments[] = { progName, flag, address };
-  return forteStartInstanceGeneric(3, arguments, paResultInstance);
+  return forteStartInstanceGeneric(3, arguments);
 }
 
-int forteStartInstanceGeneric(int paArgc, char *paArgv[], TForteInstance* paResultInstance) {
+int forteStartInstanceGeneric(int paArgc, char *paArgv[]) {
 
   if(!CForteArchitecture::isInitialized()) {
     return FORTE_ARCHITECTURE_NOT_READY;
@@ -81,7 +80,10 @@ int forteStartInstanceGeneric(int paArgc, char *paArgv[], TForteInstance* paResu
 
   const char *pIpPort = parseCommandLineArguments(paArgc, paArgv);
   if((0 != strlen(pIpPort)) && (nullptr != strchr(pIpPort, ':'))) {
-    createDev(pIpPort, paResultInstance);
+    if(!CDevice::startupNewDevice(ipPort)) {
+      return FORTE_COULD_NOT_CREATE_DEVICE;
+    }
+    DEVLOG_INFO("FORTE is up and running\n");
   } else { //! If needed call listHelp() to list the help for FORTE
     return FORTE_WRONG_PARAMETERS;
   }
@@ -89,36 +91,17 @@ int forteStartInstanceGeneric(int paArgc, char *paArgv[], TForteInstance* paResu
   return FORTE_OK;
 }
 
-void forteJoinInstance(TForteInstance paInstance) {
-  CDevice *poDev = static_cast<CDevice*>(paInstance);
-  if(0 != poDev) {
-    poDev->awaitShutdown();
-  }
+void forteJoinInstance() {
+  CDevice::awaitDeviceShutdown();
 }
 
-void forteStopInstance(int paSig, TForteInstance paInstance) {
+void forteStopInstance(int ) {
   if(!CForteArchitecture::isInitialized()) {
     return;
   }
-  (void) paSig;
-  CDevice *poDev = static_cast<CDevice*>(paInstance);
-  if(0 != poDev) {
-    poDev->changeFBExecutionState(EMGMCommandType::Kill);
-    poDev->awaitShutdown();
-    DEVLOG_INFO("FORTE finished\n");
-    delete poDev;
-  }
-}
-
-/*!\brief Creates the Device-Object
- * \param paMGRID A string containing IP and Port like [IP]:[Port]
- * \param The result
- */
-void createDev(const char *paMGRID, TForteInstance* paInstance) {
-  CDevice *device = CDevice::createDev(paMGRID);
-  device->startDevice();
-  *paInstance = device;
-  DEVLOG_INFO("FORTE is up and running\n");
+  CDevice::triggerDeviceShutdown();
+  CDevice::awaitDeviceShutdown();
+  DEVLOG_INFO("FORTE finished\n");
 }
 
 bool checkEndianess() {
