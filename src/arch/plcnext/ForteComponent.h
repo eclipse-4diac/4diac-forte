@@ -18,7 +18,6 @@
 
 #include "ForteComponentProgramProvider.h"
 
-#include "../../stdfblib/ita/RMT_DEV.h"
 
 using namespace Arp;
 using namespace Arp::System::Acf;
@@ -51,7 +50,6 @@ namespace ForteLibrary{
 
     private:
         ForteComponentProgramProvider mProgramProvider;
-        RMT_DEV *mDev;
   };
 
   ///////////////////////////////////////////////////////////////////////////////

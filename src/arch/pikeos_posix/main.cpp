@@ -14,7 +14,7 @@
 #include <fortenew.h>
 #include <stdio.h>
 #include <signal.h>
-#include <device.h>
+#include "device.h"
 
 #include "../utils/mainparam_utils.h"
 
@@ -42,13 +42,8 @@ extern "C" void __cxa_pure_virtual(void){
 }
 #endif
 
-CDevice *poDev = nullptr;
-
-void endForte(int paSig){
-  (void) paSig;
-  if(0 != poDev){
-    poDev->changeFBExecutionState(EMGMCommandType::Kill);
-  }
+void endForte(int ){
+  CDevice::triggerDeviceShutdown();
 }
 
 /*!\brief Creates the Device-Object
@@ -60,12 +55,11 @@ void createDev(const char *paMGRID){
   signal(SIGTERM, endForte);
   signal(SIGHUP, endForte);
 
-  poDev = CDevice::createDev(paMGRID);
-  poDev->startDevice();
-  DEVLOG_INFO("FORTE is up and running\n");
-  poDev->awaitShutdown();
-  DEVLOG_INFO("FORTE finished\n");
-  delete poDev;
+  if(CDevice::startupNewDevice (pIpPort)) {
+    DEVLOG_INFO("FORTE is up and running\n");
+    CDevice::awaitDeviceShutdown();
+    DEVLOG_INFO("FORTE finished\n");
+  }
 }
 
 int main(int argc, char *arg[]){
