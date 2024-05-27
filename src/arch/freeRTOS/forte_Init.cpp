@@ -18,7 +18,7 @@
 #include "forte_printer.h"
 #include <stdio.h>
 #include <string>
-#include "../../stdfblib/ita/RMT_DEV.h"
+#include <device.h>
 
 #include "../utils/mainparam_utils.h"
 
@@ -90,7 +90,7 @@ int forteStartInstanceGeneric(int paArgc, char *paArgv[], TForteInstance* paResu
 }
 
 void forteJoinInstance(TForteInstance paInstance) {
-  RMT_DEV *poDev = static_cast<RMT_DEV*>(paInstance);
+  CDevice *poDev = static_cast<CDevice*>(paInstance);
   if(0 != poDev) {
     poDev->awaitShutdown();
   }
@@ -101,7 +101,7 @@ void forteStopInstance(int paSig, TForteInstance paInstance) {
     return;
   }
   (void) paSig;
-  RMT_DEV *poDev = static_cast<RMT_DEV*>(paInstance);
+  CDevice *poDev = static_cast<CDevice*>(paInstance);
   if(0 != poDev) {
     poDev->changeFBExecutionState(EMGMCommandType::Kill);
     poDev->awaitShutdown();
@@ -115,10 +115,7 @@ void forteStopInstance(int paSig, TForteInstance paInstance) {
  * \param The result
  */
 void createDev(const char *paMGRID, TForteInstance* paInstance) {
-  RMT_DEV *device = new RMT_DEV;
-  device->initialize();
-
-  device->setMGR_ID(paMGRID);
+  CDevice *device = CDevice::createDev(paMGRID);
   device->startDevice();
   *paInstance = device;
   DEVLOG_INFO("FORTE is up and running\n");

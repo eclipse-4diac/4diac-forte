@@ -15,22 +15,19 @@
 
 #include "../forte_architecture.h"
 #include "../devlog.h"
-#include "../../stdfblib/ita/RMT_DEV.h"
+#include <device.h>
 
 const static unsigned mainFORTE_TASK_PRIORITY = tskIDLE_PRIORITY + 1;
 
 void vForteTask(void* pvParameters) {
   (void) pvParameters;
 
-  RMT_DEV *poDev = new RMT_DEV;
-  poDev->initialize();
-
-  poDev->setMGR_ID("localhost:61499");
-  poDev->startDevice();
+  CDevice *dev = CDevice::createDev("localhost:61499");
+  dev->startDevice();
   DEVLOG_INFO("FORTE is up and running\n");
-  poDev->awaitShutdown();
+  dev->awaitShutdown();
   DEVLOG_INFO("FORTE finished\n");
-  delete poDev;
+  delete dev;
   vTaskDelete(nullptr);
 }
 
