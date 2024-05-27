@@ -12,11 +12,7 @@
 #include <fortenew.h>
 #include <stdio.h>
 #include <signal.h>
-#include "../../stdfblib/ita/RMT_DEV.h"
-
-#ifdef CONFIG_POWERLINK_USERSTACK
-#include <EplWrapper.h>
-#endif
+#include <device.h>
 
 /*!\brief Check if the correct endianess has been configured.
  *
@@ -34,7 +30,7 @@ extern "C" void __cxa_pure_virtual(void){
 }
 #endif
 
-RMT_DEV *poDev = 0;
+CDevice *poDev = 0;
 
 void endForte(int paSig){
   (void) paSig;
@@ -52,14 +48,7 @@ void createDev(const char *paMGRID){
   signal(SIGTERM, endForte);
   signal(SIGHUP, endForte);
 
-#ifdef CONFIG_POWERLINK_USERSTACK
-  CEplStackWrapper::eplMainInit();
-#endif
-
-  poDev = new RMT_DEV;
-  poDev->initialize();
-
-  poDev->setMGR_ID(paMGRID);
+  poDev = CDevice::createDev(paMGRID);
   poDev->startDevice();
   DEVLOG_INFO("FORTE is up and running\n");
   poDev->awaitShutdown();
