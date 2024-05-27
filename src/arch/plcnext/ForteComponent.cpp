@@ -15,7 +15,7 @@
 namespace ForteLibrary {
 
   void ForteComponent::Initialize(){
-    mDev = new RMT_DEV;
+    mDev = CDevice::createDev("");
   }
 
   void ForteComponent::LoadSettings(const String& /*paSettingsPath*/){
@@ -31,7 +31,6 @@ namespace ForteLibrary {
   }
 
   void ForteComponent::SetupConfig(){
-    mDev->setMGR_ID("localhost:61499");
     mDev->startDevice();
   }
 

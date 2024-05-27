@@ -12,17 +12,17 @@
 #include "forte_instance.h"
 #include "fortenew.h"
 #include "forte_architecture.h"
-#include "../../stdfblib/ita/RMT_DEV.h"
+#include <device.h>
 
 #include <forteinit.h>
 
-RMT_DEV *gDev = 0;
+CDevice *gDev = nullptr;
 
 extern "C"
 void startupFORTE(){
   CForteArchitecture::initialize();
   initForte();
-  gDev = new RMT_DEV;
+  gDev = CDevice::createDev("");
   gDev->startDevice();
 }
 

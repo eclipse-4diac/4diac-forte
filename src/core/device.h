@@ -1,5 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2005 - 2015 ACIN, Profactor GmbH, fortiss GmbH
+ * Copyright (c) 2005, 2024 ACIN, Profactor GmbH, fortiss GmbH,
+ *                          Primetals Technologies Austria GmbH
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -30,22 +31,19 @@
  (resources function blocks) and device parameters.
  */
 class CDevice : public CResource {
-  private:
-    /*! \brief
-     *
-     */
-    CDeviceExecution mDeviceExecution;
-
   public:
-    /*! \brief Sets up all the necessary data and classes necessary for execution.
+    /*  \brief Create an instance of the device that is configured for this 4diac FORTE instance
+     *
+     * This method is to be implemented by the code providing the device to be used for this 4diac FORTE instance.
+     *
+     * \param paMGRID  string for configuring the mgr id of this device (e.g., port address for a TCP port)
+     *                 if an empty string is given the device default mgr id will be used.
+     * \return pointer to the newly created device, nullptr if it could not be created.
      *
      */
-    CDevice(const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId) :
-        CResource(paInterfaceSpec, paInstanceNameId), mDeviceExecution(*this) {
-    }
+    static CDevice *createDev(const std::string &paMGRID);
 
     ~CDevice() override = default;
-
 
     CStringDictionary::TStringId getFBTypeId() const override {
       return CStringDictionary::scmInvalidStringId;
@@ -98,6 +96,21 @@ class CDevice : public CResource {
     const CDevice* getDevice() const override {
       return this;
     }
+
+  protected:
+    /*! \brief Sets up all the necessary data and classes necessary for execution.
+     *
+     */
+    CDevice(const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId) :
+        CResource(paInterfaceSpec, paInstanceNameId), mDeviceExecution(*this) {
+    }
+
+  private:
+    /*! \brief
+     *
+     */
+    CDeviceExecution mDeviceExecution;
+
 };
 
 #endif

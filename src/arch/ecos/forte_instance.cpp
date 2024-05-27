@@ -109,10 +109,7 @@ void forteStopInstance(int paSig, TForteInstance paResultDevice){
  * \param The result
  */
 void createDev(const char *paMGRID, TForteInstance* paResultDevice){
-  RMT_DEV *poDev = new RMT_DEV;
-  poDev->initialize();
-
-  poDev->setMGR_ID(paMGRID);
+  CDevice *dev = CDevice::createDev(paMGRID);
   poDev->startDevice();
   *paResultDevice = poDev;
   DEVLOG_INFO("FORTE is up and running\n");

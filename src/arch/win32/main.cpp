@@ -13,7 +13,7 @@
 #include "../forte_architecture.h"
 #include "../devlog.h"
 #include "../startuphook.h"
-#include "../../stdfblib/ita/RMT_DEV.h"
+#include <device.h>
 #include "../utils/mainparam_utils.h"
 
 #include <stdio.h>
@@ -40,17 +40,6 @@ void endForte(int paSig){
   }
 }
 
-/*!\brief Creates the Device-Object
- * \param paMGRID A string containing IP and Port like [IP]:[Port]
- * \return the newly created and configured device object
- */
-CDevice *createDev(const char *paMGRID){
-  RMT_DEV *dev = new RMT_DEV;
-  dev->initialize();
-  dev->setMGR_ID(paMGRID);
-  return dev;
-}
-
 int main(int argc, char *arg[]){
 
   if(CForteArchitecture::initialize()){
@@ -61,7 +50,7 @@ int main(int argc, char *arg[]){
 
     const char *pIpPort = parseCommandLineArguments(argc, arg);
     if((0 != strlen(pIpPort)) && (nullptr != strchr(pIpPort, ':'))){
-      gRunningDev = createDev(pIpPort);
+      gRunningDev = CDevice::createDev(pIpPort);
       if(gRunningDev != nullptr){
         gRunningDev->startDevice();
         DEVLOG_INFO("FORTE is up and running\n");
