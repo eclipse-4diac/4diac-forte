@@ -55,10 +55,10 @@ FORTE_E_TONOF::FORTE_E_TONOF(const CStringDictionary::TStringId paInstanceNameId
 };
 
 void FORTE_E_TONOF::setInitialValues() {
-  var_IN = 0_BOOL;
-  var_PT_ON = 0_TIME;
-  var_PT_OFF = 0_TIME;
-  var_Q = 0_BOOL;
+	var_IN = 0_BOOL;
+	var_PT_ON = 0_TIME;
+	var_PT_OFF = 0_TIME;
+	var_Q = 0_BOOL;
 }
 
 const SCFB_FBInstanceData FORTE_E_TONOF::scmInternalFBs[] = {

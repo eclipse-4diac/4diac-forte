@@ -54,9 +54,9 @@ FORTE_E_TP::FORTE_E_TP(const CStringDictionary::TStringId paInstanceNameId, fort
 };
 
 void FORTE_E_TP::setInitialValues() {
-  var_IN = 0_BOOL;
-  var_PT = 0_TIME;
-  var_Q = 0_BOOL;
+	var_IN = 0_BOOL;
+	var_PT = 0_TIME;
+	var_Q = 0_BOOL;
 }
 
 const SCFB_FBInstanceData FORTE_E_TP::scmInternalFBs[] = {
