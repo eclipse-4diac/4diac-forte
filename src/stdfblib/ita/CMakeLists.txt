@@ -18,9 +18,20 @@
 SET(SOURCE_GROUP ${SOURCE_GROUP}\\ita)
 forte_add_sourcefile_hcpp(DEV_MGR  EMB_RES  RMT_DEV  RMT_RES)
 
+forte_add_device(RMT_DEV)
+
+if("${FORTE_DEVICE}" STREQUAL "RMT_DEV")
+  forte_add_sourcefile_hcpp(RMT_DEV)
+endif()
+
 if (FORTE_COM_OPC_UA)
-  forte_add_sourcefile_hcpp(OPCUA_DEV OPCUA_MGR Config_EMB_RES)
-endif (FORTE_COM_OPC_UA)
+  forte_add_sourcefile_hcpp(Config_EMB_RES)
+  
+  forte_add_device(OPCUA_DEV)
+  if("${FORTE_DEVICE}" STREQUAL "OPCUA_DEV")
+    forte_add_sourcefile_hcpp(OPCUA_DEV OPCUA_MGR)
+  endif()
+endif ()
 
 forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 

@@ -22,7 +22,7 @@
  */
 
 
-class RMT_DEV : public CDevice{
+ class RMT_DEV final : public CDevice{
   public:
     RMT_DEV(const std::string &paMGR_ID = "localhost:61499");
     ~RMT_DEV() override;

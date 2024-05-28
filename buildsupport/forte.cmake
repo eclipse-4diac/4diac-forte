@@ -207,6 +207,12 @@ FUNCTION(forte_add_architecture)
   ENDFOREACH(ARG)
 ENDFUNCTION(forte_add_architecture)
 
+FUNCTION(forte_add_device)
+  FOREACH(ARG ${ARGV})
+    set_property(GLOBAL APPEND PROPERTY FORTE_DEVICES ${ARG})
+  ENDFOREACH(ARG)
+ENDFUNCTION(forte_add_device)
+
 MACRO(forte_add_network_layer NAME ONOFF CONFIGNAME CLASSNAME FILENAME DESCRIPTION)
 # TODO: parse filename from filename
   set(FORTE_COM_${NAME} ${ONOFF} CACHE BOOL "${DESCRIPTION}")
