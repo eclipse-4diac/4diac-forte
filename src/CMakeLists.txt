@@ -253,17 +253,26 @@ ENDFOREACH(FILE)
 FILE(WRITE ${CMAKE_BINARY_DIR}/file_list.txt "${WRITE_FILE}")
 
 ######################################################################################
-# Architecutre to build forte on
+# Architecutre to build 4diac FORTE on
 ######################################################################################
 set(FORTE_ARCHITECTURE "None" CACHE STRING "Architecture to build FORTE on")
 GET_PROPERTY(architectures GLOBAL PROPERTY FORTE_ARCHITECTURES)
 list(SORT architectures)
 set_property(CACHE FORTE_ARCHITECTURE PROPERTY STRINGS None ${architectures})
 
+######################################################################################
+# Device to be used in this 4diac FORTE instance
+######################################################################################
+set(FORTE_DEVICE "RMT_DEV" CACHE STRING "Device to be used in this 4diac FORTE instance")
+GET_PROPERTY(devices GLOBAL PROPERTY FORTE_DEVICES)
+list(SORT devices)
+set_property(CACHE FORTE_DEVICE PROPERTY STRINGS None ${devices})
+
+
 #######################################################################################
 # Link Libraries to the Executable
 #######################################################################################
-# get Linker-Direcotries from Modules
+# get Linker-Directories from Modules
 get_property(LINK_LIBRARY GLOBAL PROPERTY FORTE_LINK_LIBRARY)
 
 #######################################################################################
