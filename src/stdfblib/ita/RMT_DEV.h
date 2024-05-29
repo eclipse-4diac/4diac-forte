@@ -22,12 +22,14 @@
  */
 
 
- class RMT_DEV final : public CDevice{
+ class RMT_DEV : public CDevice{
   public:
     RMT_DEV(const std::string &paMGR_ID = "localhost:61499");
     ~RMT_DEV() override;
 
     bool initialize() override;
+
+    static CDevice *createDev(const std::string &paMGRID);
 
   /*! \brief Adds additional functionality to the originals execute func of the device.
   *

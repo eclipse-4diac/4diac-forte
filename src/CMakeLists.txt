@@ -268,6 +268,7 @@ GET_PROPERTY(devices GLOBAL PROPERTY FORTE_DEVICES)
 list(SORT devices)
 set_property(CACHE FORTE_DEVICE PROPERTY STRINGS None ${devices})
 
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/forte_device_config.h.in ${CMAKE_BINARY_DIR}/forte_device_config.h)
 
 #######################################################################################
 # Link Libraries to the Executable
