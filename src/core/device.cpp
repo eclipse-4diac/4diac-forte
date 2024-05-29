@@ -17,39 +17,6 @@
 #include "ecet.h"
 #include <string.h>
 
-#include "forte_device_config.h"
-
-std::unique_ptr<CDevice> CDevice::smActiveDevice;
-
-CDevice* CDevice::createDev(const std::string &paMGRID) {
-  return FORTE_DEVICE::createDev(paMGRID);
-}
-
-bool CDevice::startupNewDevice(const std::string &paMGRID){
-  if(smActiveDevice){
-    //we have a current active device stop it
-    triggerDeviceShutdown();
-    awaitDeviceShutdown();
-  }
-  smActiveDevice.reset(createDev(paMGRID));
-  if(smActiveDevice){
-    smActiveDevice->startDevice();
-  }
-  return smActiveDevice.operator bool();
-}
-
-void CDevice::triggerDeviceShutdown() {
-  if(smActiveDevice) {
-    smActiveDevice->changeFBExecutionState(EMGMCommandType::Kill);
-  }
-}
-
-void CDevice::awaitDeviceShutdown() {
-  if(smActiveDevice) {
-    smActiveDevice->awaitShutdown();
-  }
-}
-
 EMGMResponse CDevice::executeMGMCommand(forte::core::SManagementCMD &paCommand){
   EMGMResponse retval = EMGMResponse::InvalidDst;
 

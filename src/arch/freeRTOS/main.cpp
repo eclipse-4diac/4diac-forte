@@ -15,16 +15,16 @@
 
 #include "../forte_architecture.h"
 #include "../devlog.h"
-#include "device.h"
+#include "forteinstance.h"
 
 const static unsigned mainFORTE_TASK_PRIORITY = tskIDLE_PRIORITY + 1;
 
-void vForteTask(void* pvParameters) {
-  (void) pvParameters;
+void vForteTask(void* ) {
+  C4diacFORTEInstance instance;
 
-  if(CDevice::startupNewDevice (pIpPort)) {
+  if(instance.startupNewDevice (pIpPort)) {
     DEVLOG_INFO("FORTE is up and running\n");
-    CDevice::awaitDeviceShutdown();
+    instance.awaitDeviceShutdown();
     DEVLOG_INFO("FORTE finished\n");
   }
   vTaskDelete(nullptr);

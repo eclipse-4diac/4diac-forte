@@ -13,13 +13,15 @@
 #include "../forte_architecture.h"
 #include "../devlog.h"
 #include "../startuphook.h"
-#include "device.h"
+#include "forteinstance.h"
 #include "../utils/mainparam_utils.h"
 
 #include <stdio.h>
 #include <signal.h>
 
 void hookSignals();
+
+C4diacFORTEInstance g4diacForteInstance;
 
 //this keeps away a lot of rtti and exception handling stuff
 #ifndef __cpp_exceptions
@@ -32,7 +34,7 @@ extern "C" void __cxa_pure_virtual(void){
 #endif
 
 void endForte(int ){
-  CDevice::triggerDeviceShutdown();
+  g4diacForteInstance.triggerDeviceShutdown();
 }
 
 int main(int argc, char *arg[]){
@@ -45,9 +47,9 @@ int main(int argc, char *arg[]){
 
     const char *pIpPort = parseCommandLineArguments(argc, arg);
     if((0 != strlen(pIpPort)) && (nullptr != strchr(pIpPort, ':'))){
-      if(CDevice::startupNewDevice(pIpPort)) {
+      if(g4diacForteInstance.startupNewDevice(pIpPort)) {
         DEVLOG_INFO("FORTE is up and running\n");
-        CDevice::awaitDeviceShutdown();
+        g4diacForteInstance.awaitDeviceShutdown();
         DEVLOG_INFO("FORTE finished\n");
       }
     }

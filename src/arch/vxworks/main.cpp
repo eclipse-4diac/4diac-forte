@@ -12,13 +12,15 @@
 #include <fortenew.h>
 #include <stdio.h>
 #include <signal.h>
-#include "device.h"
+#include "forteinstance.h"
 
 /*!\brief Check if the correct endianess has been configured.
  *
  * If the right endianess is not set this function will end FORTE.
  */
 void checkEndianess();
+
+C4diacFORTEInstance g4diacForteInstance;
 
 //this keeps away a lot of rtti and exception handling stuff
 #ifndef __cpp_exceptions
@@ -31,42 +33,22 @@ extern "C" void __cxa_pure_virtual(void){
 #endif
 
 void endForte(int ){
-  CDevice::triggerDeviceShutdown();
-}
-
-/*!\brief Creates the Device-Object
- * \param paMGRID A string containing IP and Port like [IP]:[Port]
- */
-void createDev(const char *paMGRID){
-
-  signal(SIGINT, endForte);
-  signal(SIGTERM, endForte);
-  signal(SIGHUP, endForte);
-
-  if(CDevice::startupNewDevice (pIpPort)) {
-    DEVLOG_INFO("FORTE is up and running\n");
-    CDevice::awaitDeviceShutdown();
-    DEVLOG_INFO("FORTE finished\n");
-  }
-}
-
-/*!\brief Lists the help for FORTE
- *
- */
-void listHelp(){
-  printf("\nUsage of FORTE:\n");
-  printf("   -h\t lists this help.\n");
-  printf("\n");
-  printf("   -c\t sets the destination for the connection.\n");
-  printf("     \t Usage: forte -c <IP>:<Port>");
-  printf("\n");
+  g4diacForteInstance.triggerDeviceShutdown();
 }
 
 int startForte(){
 
   checkEndianess();
 
-  createDev("localhost:61499");
+  signal(SIGINT, endForte);
+  signal(SIGTERM, endForte);
+  signal(SIGHUP, endForte);
+
+  if(g4diacForteInstance.startupNewDevice("")) {
+    DEVLOG_INFO("FORTE is up and running\n");
+    g4diacForteInstance.awaitDeviceShutdown();
+    DEVLOG_INFO("FORTE finished\n");
+  }
   return 0;
 }
 

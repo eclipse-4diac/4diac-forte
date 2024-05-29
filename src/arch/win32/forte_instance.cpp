@@ -12,21 +12,22 @@
 #include "forte_instance.h"
 #include "fortenew.h"
 #include "forte_architecture.h"
-#include "device.h"
+#include "forteinstance.h"
 
 #include <forteinit.h>
 
+C4diacFORTEInstance g4diacForteLibInstance;
 
 extern "C"
 void startupFORTE(){
   CForteArchitecture::initialize();
   initForte();
-  CDevice::startupNewDevice("");
+  g4diacForteLibInstance.startupNewDevice("");
 }
 
 extern "C"
 void shutdownFORTE(){
-  CDevice::triggerDeviceShutdown();
-  CDevice::awaitDeviceShutdown();
+  g4diacForteLibInstance.triggerDeviceShutdown();
+  g4diacForteLibInstance.awaitDeviceShutdown();
 }
 

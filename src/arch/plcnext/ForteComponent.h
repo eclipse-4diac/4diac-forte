@@ -50,6 +50,8 @@ namespace ForteLibrary{
 
     private:
         ForteComponentProgramProvider mProgramProvider;
+
+        C4diacFORTEInstance m4diacForteInstance;
   };
 
   ///////////////////////////////////////////////////////////////////////////////

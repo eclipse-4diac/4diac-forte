@@ -37,7 +37,7 @@ void forteGlobalDeinitialize(){
   CForteArchitecture::deinitialize();
 }
 
-int forteStartInstance(unsigned int pa_port, TForteInstance* pa_resultDevice){
+int forteStartInstance(unsigned int pa_port, TForteInstance* paResultDevice){
 
   if (65535 < pa_port){
     return FORTE_WRONG_PARAMETERS;
@@ -55,11 +55,11 @@ int forteStartInstance(unsigned int pa_port, TForteInstance* pa_resultDevice){
   strcat(address, port);
 
   char* arguments[] = { progName, flag, address };
-  return forteStartInstanceGeneric(3, arguments, pa_resultDevice);
+  return forteStartInstanceGeneric(3, arguments, paResultDevice);
 }
 
 
-int forteStartInstanceGeneric(int argc, char *arg[], TForteInstance* pa_resultDevice){
+int forteStartInstanceGeneric(int argc, char *arg[], TForteInstance* paResultDevice){
 
   if(!CForteArchitecture::isInitialized()){
     return FORTE_ARCHITECTURE_NOT_READY;
@@ -79,9 +79,12 @@ int forteStartInstanceGeneric(int argc, char *arg[], TForteInstance* pa_resultDe
 
   const char *pIpPort = parseCommandLineArguments(argc, arg);
   if((0 != strlen(pIpPort)) && (nullptr != strchr(pIpPort, ':'))){
-    if(!CDevice::startupNewDevice(ipPort)) {
+    C4diacFORTEInstance *instance = new C4diacFORTEInstance();
+    if(!instance->startupNewDevice(ipPort)) {
+      delete instance;
       return FORTE_COULD_NOT_CREATE_DEVICE;
     }
+    *paResultDevice = instance;
     DEVLOG_INFO("FORTE is up and running\n");
   }
   else{ //! If needed call listHelp() to list the help for FORTE
@@ -91,12 +94,14 @@ int forteStartInstanceGeneric(int argc, char *arg[], TForteInstance* pa_resultDe
   return FORTE_OK;
 }
 
-void forteStopInstance(int ){
-  if(!CForteArchitecture::isInitialized()){
+void forteStopInstance(int, TForteInstance paInstance){
+  if(!CForteArchitecture::isInitialized()|| paInstance != nullptr){
     return;
   }
-  CDevice::triggerDeviceShutdown();
-  CDevice::awaitDeviceShutdown();
+  C4diacFORTEInstance *instance = static_cast<C4diacFORTEInstance*>(paInstance);
+  instance->triggerDeviceShutdown();
+  instance->awaitDeviceShutdown();
+  delete instance;
   DEVLOG_INFO("FORTE finished\n");
 }
 
