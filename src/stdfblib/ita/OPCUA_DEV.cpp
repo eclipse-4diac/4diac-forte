@@ -13,21 +13,12 @@
 
 #include "OPCUA_DEV.h"
 
-OPCUA_DEV::OPCUA_DEV() :
-  RMT_DEV(), mOPCUAMgr(*this){
+OPCUA_DEV::OPCUA_DEV(const std::string &paMGRID) :
+  RMT_DEV(paMGRID), mOPCUAMgr(*this){
   changeFBExecutionState(EMGMCommandType::Reset);
 }
 
 OPCUA_DEV::~OPCUA_DEV() {
-}
-
-CDevice* OPCUA_DEV::createDev(const std::string &paMGRID) {
-  OPCUA_DEV *dev = new OPCUA_DEV;
-  dev->initialize();
-  if(paMGRID.length() != 0){
-    dev->setMGR_ID(paMGRID);
-  }
-  return dev;
 }
 
 int OPCUA_DEV::startDevice(void) {

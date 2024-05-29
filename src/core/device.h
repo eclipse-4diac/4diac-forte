@@ -32,14 +32,25 @@
  */
 class CDevice : public CResource {
   public:
-
-    static bool startupNewDevice(const std::string &paMGRID);
-
-    static void triggerDeviceShutdown();
-
-    static void awaitDeviceShutdown();
-
     ~CDevice() override = default;
+
+    /*! \brief Starts to execute FBNs.
+     *
+     *  This function will send a IEC 61499 start command to all existing resources in the device (if any).
+     *  The function will return after the start. The Forte HAL has to ensure that it is waited till the device
+     *  finishes its execution.
+     *  \return 0 on success -1 on error
+     */
+    virtual int startDevice() {
+      changeFBExecutionState(EMGMCommandType::Start);
+      return 1;
+    }
+
+    /*!\brief wait till the execution of this device ends.
+     *
+     * The execution of devices can be stopped by sending it the kill command.
+     */
+    virtual void awaitShutdown() = 0;
 
     CStringDictionary::TStringId getFBTypeId() const override {
       return CStringDictionary::scmInvalidStringId;
@@ -81,42 +92,11 @@ class CDevice : public CResource {
         CResource(paInterfaceSpec, paInstanceNameId), mDeviceExecution(*this) {
     }
 
-    /*! \brief Starts to execute FBNs.
-     *
-     *  This function will send a IEC 61499 start command to all existing resources in the device (if any).
-     *  The function will return after the start. The Forte HAL has to ensure that it is waited till the device
-     *  finishes its execution.
-     *  \return 0 on success -1 on error
-     */
-    virtual int startDevice() {
-      changeFBExecutionState(EMGMCommandType::Start);
-      return 1;
-    }
-
-    /*!\brief wait till the execution of this device ends.
-     *
-     * The execution of devices can be stopped by sending it the kill command.
-     */
-    virtual void awaitShutdown() = 0;
-
   private:
-    /*  \brief Create an instance of the device that is configured for this 4diac FORTE instance
-     *
-     * This method is to be implemented by the code providing the device to be used for this 4diac FORTE instance.
-     *
-     * \param paMGRID  string for configuring the mgr id of this device (e.g., port address for a TCP port)
-     *                 if an empty string is given the device default mgr id will be used.
-     * \return pointer to the newly created device, nullptr if it could not be created.
-     *
-     */
-    static CDevice *createDev(const std::string &paMGRID);
-
-    /*! \brief
+     /*! \brief
      *
      */
     CDeviceExecution mDeviceExecution;
-
-    static std::unique_ptr<CDevice> smActiveDevice;
 
 };
 
