@@ -17,7 +17,7 @@
 #include "forte_printer.h"
 #include <stdio.h>
 #include <string>
-#include "device.h"
+#include "forteinstance.h"
 
 #include "../utils/mainparam_utils.h"
 
@@ -40,7 +40,7 @@ void forteGlobalDeinitialize() {
   CForteArchitecture::deinitialize();
 }
 
-int forteStartInstance(unsigned int paPort) {
+int forteStartInstance(unsigned int paPort, TForteInstance* paResultInstance) {
 
   if(65535 < paPort) {
     return FORTE_WRONG_PARAMETERS;
@@ -57,10 +57,10 @@ int forteStartInstance(unsigned int paPort) {
   forte_snprintf(port, 6, "%u", paPort);
   strcat(address, port);
   char* arguments[] = { progName, flag, address };
-  return forteStartInstanceGeneric(3, arguments);
+  return forteStartInstanceGeneric(3, arguments, paResultInstance);
 }
 
-int forteStartInstanceGeneric(int paArgc, char *paArgv[]) {
+int forteStartInstanceGeneric(int paArgc, char *paArgv[], TForteInstance* paResultInstance) {
 
   if(!CForteArchitecture::isInitialized()) {
     return FORTE_ARCHITECTURE_NOT_READY;
@@ -80,9 +80,12 @@ int forteStartInstanceGeneric(int paArgc, char *paArgv[]) {
 
   const char *ipPort = parseCommandLineArguments(paArgc, paArgv);
   if((0 != strlen(ipPort)) && (NULL != strchr(ipPort, ':'))) {
-    if(!CDevice::startupNewDevice(ipPort)){
+    C4diacFORTEInstance *instance = new C4diacFORTEInstance();
+    if(!instance->startupNewDevice(ipPort)) {
+      delete instance;
       return FORTE_COULD_NOT_CREATE_DEVICE;
     }
+    *paResultInstance = instance;
     DEVLOG_INFO("FORTE is up and running\n");
   } else { //! If needed call listHelp() to list the help for FORTE
     return FORTE_WRONG_PARAMETERS;
@@ -91,16 +94,21 @@ int forteStartInstanceGeneric(int paArgc, char *paArgv[]) {
   return FORTE_OK;
 }
 
-void forteJoinInstance() {
-  CDevice::awaitDeviceShutdown();
+void forteJoinInstance(TForteInstance paInstance) {
+  C4diacFORTEInstance *instance = static_cast<C4diacFORTEInstance *>(paInstance);
+  if(instance != nullptr){
+    instance->awaitDeviceShutdown();
+  }
 }
 
-void forteStopInstance(int ) {
-  if(!CForteArchitecture::isInitialized()) {
+void forteStopInstance(int, TForteInstance paInstance) {
+  if(!CForteArchitecture::isInitialized() || paInstance != nullptr) {
     return;
   }
-  CDevice::triggerDeviceShutdown();
-  CDevice::awaitDeviceShutdown();
+  C4diacFORTEInstance *instance = static_cast<C4diacFORTEInstance *>(paInstance);
+  instance->triggerDeviceShutdown();
+  instance->awaitDeviceShutdown();
+  delete instance;
   DEVLOG_INFO("FORTE finished\n");
 }
 

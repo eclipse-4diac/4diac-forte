@@ -40,13 +40,14 @@ extern "C" {
     FORTE_COULD_NOT_CREATE_DEVICE
   };
 
+  typedef void* TForteInstance;
   /**
    * \brief Start forte instance
    * @param pa_port The port on which to forte will listen. Use 0 for default (normally 61499)
    * @param pa_resultDevice Address of an instance of forte
    * @return FORTE_OK if no error occurred, other values otherwise
    */
-  FORTE_SHARED_PREFIX int FORTE_SHARED_CALL forteStartInstance(unsigned int pa_port);
+  FORTE_SHARED_PREFIX int FORTE_SHARED_CALL forteStartInstance(unsigned int pa_port, TForteInstance* paResultInstance);
 
   /**
    * \brief Start forte instance with posibilities of more arguments
@@ -55,14 +56,14 @@ extern "C" {
    * @param pa_resultDevice Address of an instance of forte
    * @return FORTE_OK if no error occurred, other values otherwise
    */
-  FORTE_SHARED_PREFIX int FORTE_SHARED_CALL forteStartInstanceGeneric(int argc, char *arg[]);
+  FORTE_SHARED_PREFIX int FORTE_SHARED_CALL forteStartInstanceGeneric(int argc, char *arg[], TForteInstance* paResultInstance);
 
   /**
    * \brief Terminates a Forte instance
    * @param signal  Signal value to terminate instance
    * @param pa_resultDevice Instance to terminate
    */
-  FORTE_SHARED_PREFIX void FORTE_SHARED_CALL forteStopInstance(int signal);
+  FORTE_SHARED_PREFIX void FORTE_SHARED_CALL forteStopInstance(int signal, TForteInstance paInstance);
 
   /**
    * \brief Initializes the architecture. Prepare all resources needed by the Forte's instances. Must be called once before the first Forte instance is started

@@ -12,6 +12,7 @@
  *******************************************************************************/
 
 #include "forte_instance.h"
+#include "forteinstance.h"
 #include <forte_printer.h>
 
 #include "fortenew.h"
@@ -38,7 +39,7 @@ void forteGlobalDeinitialize(){
   CForteArchitecture::deinitialize();
 }
 
-int forteStartInstance(unsigned int paPort){
+int forteStartInstance(unsigned int paPort, TForteInstance* paResultInstance){
 
   if(65535 < paPort){
     return FORTE_WRONG_PARAMETERS;
@@ -56,10 +57,10 @@ int forteStartInstance(unsigned int paPort){
   strcat(address, port);
 
   char* arguments[] = { progName, flag, address };
-  return forteStartInstanceGeneric(3, arguments);
+  return forteStartInstanceGeneric(3, arguments, paResultInstance);
 }
 
-int forteStartInstanceGeneric(int argc, char *arg[]){
+int forteStartInstanceGeneric(int argc, char *arg[], TForteInstance* paResultInstance){
 
   if(!CForteArchitecture::isInitialized()){
     return FORTE_ARCHITECTURE_NOT_READY;
@@ -79,9 +80,12 @@ int forteStartInstanceGeneric(int argc, char *arg[]){
 
   const char *pIpPort = parseCommandLineArguments(argc, arg);
   if((0 != strlen(pIpPort)) && (nullptr != strchr(pIpPort, ':'))){
-    if(!CDevice::startupNewDevice(ipPort)) {
+    C4diacFORTEInstance *instance = new C4diacFORTEInstance();
+    if(!instance->startupNewDevice(ipPort)) {
+      delete instance;
       return FORTE_COULD_NOT_CREATE_DEVICE;
     }
+    *paResultInstance = instance;
     DEVLOG_INFO("FORTE is up and running\n");
   }
   else{ //! If needed call listHelp() to list the help for FORTE
@@ -91,12 +95,14 @@ int forteStartInstanceGeneric(int argc, char *arg[]){
   return FORTE_OK;
 }
 
-void forteStopInstance(int){
-  if(!CForteArchitecture::isInitialized()){
+void forteStopInstance(int, TForteInstance paInstance){
+  if(!CForteArchitecture::isInitialized() || paResultInstance == nullptr){
     return;
   }
-  CDevice::triggerDeviceShutdown();
-  CDevice::awaitDeviceShutdown();
+  C4diacFORTEInstance *instance = static_cast<C4diacFORTEInstance *>(paResultInstance);
+  instance->triggerDeviceShutdown();
+  instance->awaitDeviceShutdown();
+  delete instance;
   DEVLOG_INFO("FORTE finished\n");
 }
 

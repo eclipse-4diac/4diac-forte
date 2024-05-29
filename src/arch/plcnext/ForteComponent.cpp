@@ -30,7 +30,7 @@ namespace ForteLibrary {
   }
 
   void ForteComponent::SetupConfig(){
-    CDevice::startupNewDevice(pIpPort);
+    m4diacForteInstance.startupNewDevice(pIpPort);
   }
 
   void ForteComponent::ResetConfig(){
@@ -43,7 +43,7 @@ namespace ForteLibrary {
   }
 
   void ForteComponent::PowerDown(){
-    CDevice::triggerDeviceShutdown();
+    m4diacForteInstance.triggerDeviceShutdown();
   }
 
 } // end of namespace ForteLibrary

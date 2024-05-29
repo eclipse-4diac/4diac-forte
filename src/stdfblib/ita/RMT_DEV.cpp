@@ -17,15 +17,6 @@
 #endif
 #include <stringdict.h>
 
-CDevice* RMT_DEV::createDev(const std::string &paMGRID) {
-  RMT_DEV *dev = new RMT_DEV;
-  dev->initialize();
-  if(paMGRID.length() != 0){
-    dev->setMGR_ID(paMGRID);
-  }
-  return dev;
-}
-
 const CStringDictionary::TStringId RMT_DEV::scmDINameIds[] = { g_nStringIdMGR_ID };
 const CStringDictionary::TStringId RMT_DEV::scmDIDataTypeIds[] = {g_nStringIdWSTRING};
 

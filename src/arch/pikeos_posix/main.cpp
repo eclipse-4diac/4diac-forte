@@ -14,7 +14,7 @@
 #include <fortenew.h>
 #include <stdio.h>
 #include <signal.h>
-#include "device.h"
+#include "forteinstance.h"
 
 #include "../utils/mainparam_utils.h"
 
@@ -32,6 +32,8 @@
  */
 void checkEndianess();
 
+C4diacFORTEInstance g4diacForteInstance;
+
 //this keeps away a lot of rtti and exception handling stuff
 #ifndef __cpp_exceptions
 extern "C" void __cxa_pure_virtual(void){
@@ -43,23 +45,7 @@ extern "C" void __cxa_pure_virtual(void){
 #endif
 
 void endForte(int ){
-  CDevice::triggerDeviceShutdown();
-}
-
-/*!\brief Creates the Device-Object
- * \param paMGRID A string containing IP and Port like [IP]:[Port]
- */
-void createDev(const char *paMGRID){
-
-  signal(SIGINT, endForte);
-  signal(SIGTERM, endForte);
-  signal(SIGHUP, endForte);
-
-  if(CDevice::startupNewDevice (pIpPort)) {
-    DEVLOG_INFO("FORTE is up and running\n");
-    CDevice::awaitDeviceShutdown();
-    DEVLOG_INFO("FORTE finished\n");
-  }
+  g4diacForteInstance.triggerDeviceShutdown();
 }
 
 int main(int argc, char *arg[]){
@@ -75,11 +61,17 @@ int main(int argc, char *arg[]){
   }
 #endif
 
-  //gdb_breakpoint();
+  signal(SIGINT, endForte);
+  signal(SIGTERM, endForte);
+  signal(SIGHUP, endForte);
 
   const char *pIpPort = parseCommandLineArguments(argc, arg);
   if((0 != strlen(pIpPort)) && (nullptr != strchr(pIpPort, ':'))){
-    createDev(pIpPort);
+    if(g4diacForteInstance.startupNewDevice(pIpPort)) {
+      DEVLOG_INFO("FORTE is up and running\n");
+      g4diacForteInstance.awaitDeviceShutdown();
+      DEVLOG_INFO("FORTE finished\n");
+    }
   }
   else{ //! Lists the help for FORTE
     listHelp();

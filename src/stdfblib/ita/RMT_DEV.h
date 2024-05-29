@@ -29,8 +29,6 @@
 
     bool initialize() override;
 
-    static CDevice *createDev(const std::string &paMGRID);
-
   /*! \brief Adds additional functionality to the originals execute func of the device.
   *
   * This is that it waits till the thread of the MGR resource has anded
