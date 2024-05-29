@@ -24,7 +24,6 @@
 #include "EventMessage.h"
 #include "trace/barectf_platform_forte.h"
 
-BOOST_AUTO_TEST_SUITE (tracer_test)
 
 /**
  * @brief Get the list of message from a directory containing CTF traces
@@ -32,13 +31,15 @@ BOOST_AUTO_TEST_SUITE (tracer_test)
  * @param path Directory containing ctf traces and, if needed, the metadata associated to them
  * @return sorted list of events found in path
  */
-std::vector<EventMessage> getEventMessages(const std::string& path);
+std::vector<EventMessage> getEventMessages(std::string path);
 
 /**
  * @brief Print messages as babeltrace2 pretty print
  * @param messages List of messages to print
  */
 void printPrettyMessages(const std::vector<EventMessage>& messages);
+
+BOOST_AUTO_TEST_SUITE (tracer_test)
 
 BOOST_AUTO_TEST_CASE(sequential_events_test) {
 
@@ -174,21 +175,29 @@ BOOST_AUTO_TEST_CASE(sequential_events_test) {
   BOOST_CHECK(ctfMessages != expectedMessages);
 }
 
-std::vector<EventMessage> getEventMessages(const std::string& path){
+BOOST_AUTO_TEST_SUITE_END()
+
+std::vector<EventMessage> getEventMessages(std::string path){
   
-  BOOST_TEST_INFO("Load ctf plugin");
   const bt_plugin* ctfPlugin;
-  BOOST_CHECK_EQUAL(BT_PLUGIN_FIND_STATUS_OK, bt_plugin_find("ctf", BT_FALSE, BT_FALSE, BT_TRUE, BT_FALSE, BT_TRUE, &ctfPlugin));
+  if(BT_PLUGIN_FIND_STATUS_OK != bt_plugin_find("ctf", BT_FALSE, BT_FALSE, BT_TRUE, BT_FALSE, BT_TRUE, &ctfPlugin)){
+    std::cout << "Could not load ctf plugin" << std::endl;
+    std::abort();
+  }
   auto fileSourceClass = bt_plugin_borrow_source_component_class_by_name_const(ctfPlugin, "fs"); 
 
-  BOOST_TEST_INFO("Load utils plugin");
   const bt_plugin* utilsPlugin;
-  BOOST_CHECK_EQUAL(BT_PLUGIN_FIND_STATUS_OK, bt_plugin_find("utils", BT_FALSE, BT_FALSE, BT_TRUE, BT_FALSE, BT_TRUE, &utilsPlugin));
+  if(BT_PLUGIN_FIND_STATUS_OK != bt_plugin_find("utils", BT_FALSE, BT_FALSE, BT_TRUE, BT_FALSE, BT_TRUE, &utilsPlugin)){
+    std::cout << "Could not load utils plugin" << std::endl;
+    std::abort();
+  }
   auto muxerFilterClass = bt_plugin_borrow_filter_component_class_by_name_const(utilsPlugin, "muxer"); 
 
-  BOOST_TEST_INFO("Load forte plugin");
   const bt_plugin* fortePlugin;
-  BOOST_CHECK_EQUAL(BT_PLUGIN_FIND_STATUS_OK, bt_plugin_find("forte", BT_FALSE, BT_FALSE, BT_FALSE, BT_TRUE, BT_TRUE, &fortePlugin));
+  if(BT_PLUGIN_FIND_STATUS_OK != bt_plugin_find("forte", BT_FALSE, BT_FALSE, BT_FALSE, BT_TRUE, BT_TRUE, &fortePlugin)){
+    std::cout << "Could not load forte plugin" << std::endl;
+    std::abort();
+  }
   auto forteReaderClass = bt_plugin_borrow_sink_component_class_by_name_const(fortePlugin, "event_reader"); 
 
   // create graph
@@ -196,44 +205,61 @@ std::vector<EventMessage> getEventMessages(const std::string& path){
   
   // Source component
   // create parameters to file source component
-  const bt_component_source*  tracesComponent;
+  const bt_component_source* tracesComponent;
   auto parameters = bt_value_map_create();
   bt_value *dirsArray;
 
-  BOOST_TEST_INFO("Add empty array to map parameter for ctf.source.fs component");
-  BOOST_CHECK_EQUAL(BT_VALUE_MAP_INSERT_ENTRY_STATUS_OK, bt_value_map_insert_empty_array_entry(parameters, "inputs", &dirsArray));
+  if(BT_VALUE_MAP_INSERT_ENTRY_STATUS_OK != bt_value_map_insert_empty_array_entry(parameters, "inputs", &dirsArray)){
+    std::cout << "Could not add empty array to map parameter for ctf.source.fs component" << std::endl;
+    std::abort();
+  }
 
-  BOOST_TEST_INFO("Add input folder to ctf.source.fs component's input parameter");
-  BOOST_CHECK_EQUAL(BT_VALUE_ARRAY_APPEND_ELEMENT_STATUS_OK, bt_value_array_append_string_element(dirsArray, path.c_str()));
+  if(BT_VALUE_ARRAY_APPEND_ELEMENT_STATUS_OK != bt_value_array_append_string_element(dirsArray, path.c_str())){
+    std::cout << "Could not add input folder to ctf.source.fs component's input parameter" << std::endl;
+    std::abort();
+  }
 
-  BOOST_TEST_INFO("Create Source component");
-  BOOST_CHECK_EQUAL(BT_GRAPH_ADD_COMPONENT_STATUS_OK, bt_graph_add_source_component(graph, fileSourceClass, "traces", parameters, BT_LOGGING_LEVEL_TRACE, &tracesComponent));
+  if(BT_GRAPH_ADD_COMPONENT_STATUS_OK != bt_graph_add_source_component(graph, fileSourceClass, "traces", parameters, BT_LOGGING_LEVEL_TRACE, &tracesComponent)){
+    std::cout << "Could not create Source component" << std::endl;
+    std::abort();
+  }
   
   const bt_component_filter*  muxerComponent;
-  BOOST_CHECK_EQUAL(BT_GRAPH_ADD_COMPONENT_STATUS_OK, bt_graph_add_filter_component(graph, muxerFilterClass, "muxer", nullptr, BT_LOGGING_LEVEL_TRACE, &muxerComponent));
+  if(BT_GRAPH_ADD_COMPONENT_STATUS_OK != bt_graph_add_filter_component(graph, muxerFilterClass, "muxer", nullptr, BT_LOGGING_LEVEL_TRACE, &muxerComponent)){
+    std::cout << "Could not " << std::endl;
+    std::abort();
+  }
 
-  BOOST_TEST_INFO("Create forte event reader component");
   std::vector<EventMessage> messages;
   const bt_component_sink*  forteReaderComponent;
-  BOOST_CHECK_EQUAL(BT_GRAPH_ADD_COMPONENT_STATUS_OK, 
-   bt_graph_add_sink_component_with_initialize_method_data(graph, forteReaderClass, "forteReader", nullptr, &messages, BT_LOGGING_LEVEL_TRACE, &forteReaderComponent));
+  if(BT_GRAPH_ADD_COMPONENT_STATUS_OK != 
+   bt_graph_add_sink_component_with_initialize_method_data(graph, forteReaderClass, "forteReader", nullptr, &messages, BT_LOGGING_LEVEL_TRACE, &forteReaderComponent)){
+    std::cout << "Could not create forte event reader component" << std::endl;
+    std::abort();
+   }
 
   for(uint64_t i = 0; i < bt_component_source_get_output_port_count(tracesComponent); i++){
-    BOOST_TEST_INFO("Add connection " << i << " from source to muxer");
-    BOOST_CHECK_EQUAL(BT_GRAPH_CONNECT_PORTS_STATUS_OK,  bt_graph_connect_ports(graph, 
+    if(BT_GRAPH_CONNECT_PORTS_STATUS_OK !=  bt_graph_connect_ports(graph, 
         bt_component_source_borrow_output_port_by_index_const(tracesComponent, i), 
         bt_component_filter_borrow_input_port_by_index_const(muxerComponent, i), 
-        nullptr));
+        nullptr)){
+          std::cout << "Could not add connection " << i << " from source to muxer" << std::endl;
+          std::abort();
+      }
   }    
 
-  BOOST_TEST_INFO("Add connection from muxer to forte reader");
-  BOOST_CHECK_EQUAL(BT_GRAPH_CONNECT_PORTS_STATUS_OK,  bt_graph_connect_ports(graph, 
+  if(BT_GRAPH_CONNECT_PORTS_STATUS_OK !=  bt_graph_connect_ports(graph, 
     bt_component_filter_borrow_output_port_by_index_const(muxerComponent, 0), 
     bt_component_sink_borrow_input_port_by_index_const(forteReaderComponent, 0), 
-    nullptr));
+    nullptr)){
+      std::cout << "Could not add connection from muxer to forte reader" << std::endl;
+      std::abort();
+  }
 
-  BOOST_TEST_INFO("Run graph");
-  BOOST_CHECK_EQUAL(BT_GRAPH_RUN_STATUS_OK, bt_graph_run(graph));
+  if(BT_GRAPH_RUN_STATUS_OK != bt_graph_run(graph)){
+    std::cout << "Could not run graph" << std::endl;
+    std::abort();
+  }
 
   return messages;	
 }
@@ -269,4 +295,3 @@ void printPrettyMessages(const std::vector<EventMessage>& messages) {
   }
 }
 
-BOOST_AUTO_TEST_SUITE_END()

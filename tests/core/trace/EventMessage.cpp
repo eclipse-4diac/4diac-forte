@@ -1,20 +1,22 @@
 #include "EventMessage.h"
+
 #include <array>
 #include <iomanip>
+#include <iostream>
 
 // ******************** //
 // EventMessage methods //
 // ******************** //
 
-EventMessage::EventMessage(const std::string& paEventType, std::unique_ptr<AbstractPayload> paPayload, int64_t paTimestamp) : 
-  mEventType(paEventType), mPayload(std::move(paPayload)), mTimestamp(paTimestamp){
+EventMessage::EventMessage(std::string paEventType, std::unique_ptr<AbstractPayload> paPayload, int64_t paTimestamp) : 
+  mEventType(std::move(paEventType)), mPayload(std::move(paPayload)), mTimestamp(paTimestamp){
 }
 
-EventMessage::EventMessage(const bt_message* message)  {
-    
+EventMessage::EventMessage(const bt_message* paMessage)  {
+  
   // Borrow the event message's event and its class
   const bt_event *event =
-    bt_message_event_borrow_event_const(message);
+    bt_message_event_borrow_event_const(paMessage);
   const bt_event_class *event_class = bt_event_borrow_class_const(event);
 
   const bt_field *payload_field =
@@ -24,13 +26,15 @@ EventMessage::EventMessage(const bt_message* message)  {
   mPayload = PayloadFactory::createPayload(mEventType, payload_field);
 
   if(mPayload == nullptr){
+    std::cout << "Payload for message of " << mEventType << " type could not be created" << std::endl;
     std::abort();
   }
 
   if(BT_CLOCK_SNAPSHOT_GET_NS_FROM_ORIGIN_STATUS_OK != 
       bt_clock_snapshot_get_ns_from_origin(
-        bt_message_event_borrow_default_clock_snapshot_const(message), 
+        bt_message_event_borrow_default_clock_snapshot_const(paMessage), 
         &mTimestamp)){
+    std::cout << "Could not retrieve clock for message" << std::endl;
     std::abort();
   }	
 }
@@ -61,21 +65,37 @@ std::string EventMessage::getTimestampString() const {
   return ss.str();
 }
 
-bool EventMessage::operator==(const EventMessage& other) const {
-  return mEventType == other.mEventType  && *mPayload == *other.mPayload;
+bool EventMessage::operator==(const EventMessage& paOther) const {
+  return mEventType == paOther.mEventType  && 
+    (mPayload == nullptr) ? (paOther == nullptr) : (paOther.mPayload != nullptr && *mPayload == *paOther.mPayload);
 }
 
 // *********************** //
 // AbstractPayload Methods //
 // *********************** //
-AbstractPayload::AbstractPayload(const std::string& paTypeName, const std::string& paInstanceName) 
-  : mTypeName(paTypeName), mInstanceName(paInstanceName)  {
+AbstractPayload::AbstractPayload(std::string paTypeName, std::string paInstanceName) 
+  : mTypeName(std::move(paTypeName)), mInstanceName(std::move(paInstanceName))  {
 }
 
-AbstractPayload::AbstractPayload(const bt_field* field) {
-  auto const typeNameField = bt_field_structure_borrow_member_field_by_name_const(field, "typeName");
-  auto const instanceNameField = bt_field_structure_borrow_member_field_by_name_const(field, "instanceName");
-  
+AbstractPayload::AbstractPayload(const bt_field* paField) {
+  auto const typeNameField = bt_field_structure_borrow_member_field_by_name_const(paField, "typeName");
+  if(typeNameField == nullptr){
+    std::cout << "Could not find 'typeName' member in field" << std::endl;
+    std::abort();
+  } else if (BT_FIELD_CLASS_TYPE_STRING != bt_field_get_class_type (typeNameField)){
+    std::cout << "typeName field is not of type string" << std::endl;
+    std::abort();
+  }
+
+  auto const instanceNameField = bt_field_structure_borrow_member_field_by_name_const(paField, "instanceName");
+  if(instanceNameField == nullptr){
+    std::cout << "Could not find 'instanceName' member in field" << std::endl;
+    std::abort();
+  } else if (BT_FIELD_CLASS_TYPE_STRING != bt_field_get_class_type (instanceNameField)){
+    std::cout << "instanceName field is not of type string" << std::endl;
+    std::abort();
+  }
+
   mTypeName = bt_field_string_get_value(typeNameField);
   mInstanceName = bt_field_string_get_value(instanceNameField);
 }
@@ -84,47 +104,69 @@ std::string AbstractPayload::getString() const {
   return "{ typeName = \"" + mTypeName + "\", instanceName = \"" + mInstanceName + "\"" + specificPayloadString() + " }";
 }
 
-bool AbstractPayload::operator==(const AbstractPayload& other) const {
-  return mTypeName == other.mTypeName && mInstanceName == other.mInstanceName && specificPayloadEqual(other);
+bool AbstractPayload::operator==(const AbstractPayload& paOther) const {
+  return mTypeName == paOther.mTypeName && mInstanceName == paOther.mInstanceName && specificPayloadEqual(paOther);
 }
 
 // ************** //
 // FBEventPayload //
 // ************** //
-FBEventPayload::FBEventPayload(const std::string& paTypeName, const std::string& paInstanceName, const uint64_t paEventId) : 
-  AbstractPayload(paTypeName, paInstanceName),
+FBEventPayload::FBEventPayload(std::string paTypeName, std::string paInstanceName, const uint64_t paEventId) : 
+  AbstractPayload(std::move(paTypeName), std::move(paInstanceName)),
   mEventId(paEventId) {
 }
 
-FBEventPayload::FBEventPayload(const bt_field* field) : AbstractPayload(field){
-  mEventId = bt_field_integer_unsigned_get_value(
-      bt_field_structure_borrow_member_field_by_name_const(field, "eventId"));
+FBEventPayload::FBEventPayload(const bt_field* paField) : AbstractPayload(paField){
+  auto eventField = bt_field_structure_borrow_member_field_by_name_const(paField, "eventId");
+  if(eventField == nullptr){
+    std::cout << "Could not find 'eventId' member in field" << std::endl;
+    std::abort();
+  } else if (BT_FIELD_CLASS_TYPE_UNSIGNED_INTEGER != bt_field_get_class_type(eventField)){
+    std::cout << "eventId field is not of type unsigned integer" << std::endl;
+    std::abort();
+  }
+  mEventId = bt_field_integer_unsigned_get_value(eventField);
 }
 
 std::string FBEventPayload::specificPayloadString() const {
   return ", eventId = " + std::to_string(mEventId);
 }
 
-bool FBEventPayload::specificPayloadEqual(const AbstractPayload& other) const {
-  const auto& childInstance = dynamic_cast<const FBEventPayload&>(other); 
+bool FBEventPayload::specificPayloadEqual(const AbstractPayload& paOther) const {
+  const auto& childInstance = dynamic_cast<const FBEventPayload&>(paOther); 
   return mEventId == childInstance.mEventId;
 }
 
 // ************* //
 // FBDataPayload //
 // ************* //
-FBDataPayload::FBDataPayload(const std::string& paTypeName, const std::string& paInstanceName, uint64_t paDataId, const std::string& paValue) :
-  AbstractPayload(paTypeName, paInstanceName),
+FBDataPayload::FBDataPayload(std::string paTypeName, std::string paInstanceName, uint64_t paDataId, std::string paValue) :
+  AbstractPayload(std::move(paTypeName), std::move(paInstanceName)),
   mDataId(paDataId), mValue(paValue){
 }
 
+FBDataPayload::FBDataPayload(const bt_field* paField) : AbstractPayload(paField){
+  auto dataField = bt_field_structure_borrow_member_field_by_name_const(paField, "dataId");
+  if(dataField == nullptr){
+    std::cout << "Could not find 'dataId' member in field" << std::endl;
+    std::abort();
+  } else if (BT_FIELD_CLASS_TYPE_UNSIGNED_INTEGER != bt_field_get_class_type(dataField)){
+    std::cout << "dataId field is not of type unsigned integer" << std::endl;
+    std::abort();
+  }
 
-FBDataPayload::FBDataPayload(const bt_field* field) : AbstractPayload(field){
-  mDataId = bt_field_integer_unsigned_get_value(
-      bt_field_structure_borrow_member_field_by_name_const(field, "dataId"));
+  mDataId = bt_field_integer_unsigned_get_value(dataField);
 
-  mValue = bt_field_string_get_value(
-      bt_field_structure_borrow_member_field_by_name_const(field, "value"));
+  auto valueField = bt_field_structure_borrow_member_field_by_name_const(paField, "value");
+  if(valueField == nullptr){
+    std::cout << "Could not find 'value' member in field" << std::endl;
+    std::abort();
+  } else if (BT_FIELD_CLASS_TYPE_STRING != bt_field_get_class_type(valueField)){
+    std::cout << "value field is not of type unsigned string" << std::endl;
+    std::abort();
+  }
+
+  mValue = bt_field_string_get_value(valueField);
 }
 
 std::string FBDataPayload::specificPayloadString() const {
@@ -139,35 +181,48 @@ std::string FBDataPayload::specificPayloadString() const {
   return ", dataId = " + std::to_string(mDataId) + ", value = \"" + convertedString + "\"";
 }
 
-bool FBDataPayload::specificPayloadEqual(const AbstractPayload& other) const {
-  const auto& childInstance = dynamic_cast<const FBDataPayload&>(other); 
+bool FBDataPayload::specificPayloadEqual(const AbstractPayload& paOther) const {
+  const auto& childInstance = dynamic_cast<const FBDataPayload&>(paOther); 
   return mDataId == childInstance.mDataId && mValue == childInstance.mValue;
 }
 
 // ********************* //
 // FBInstanceDataPayload //
 // ********************* //
-FBInstanceDataPayload::FBInstanceDataPayload(const std::string& paTypeName, const std::string& paInstanceName, const std::vector<std::string>& paInputs,
+FBInstanceDataPayload::FBInstanceDataPayload(std::string paTypeName, std::string paInstanceName, const std::vector<std::string>& paInputs,
     const std::vector<std::string>& paOutputs, const std::vector<std::string>& paInternal, const std::vector<std::string>& paInternalFB) : 
-      AbstractPayload(paTypeName, paInstanceName),
+      AbstractPayload(std::move(paTypeName), std::move(paInstanceName)),
       mInputs(paInputs), mOutputs(paOutputs), mInternal(paInternal), mInternalFB(paInternalFB)
 {
 }
 
-FBInstanceDataPayload::FBInstanceDataPayload(const bt_field* field) : AbstractPayload(field){
+FBInstanceDataPayload::FBInstanceDataPayload(const bt_field* paField) : AbstractPayload(paField){
+  readDynamicArrayField(paField, "inputs", mInputs);
+  readDynamicArrayField(paField, "outputs", mOutputs);
+  readDynamicArrayField(paField, "internal", mInternal);
+  readDynamicArrayField(paField, "internalFB", mInternalFB);
+}
 
-  std::array<const char*, 4> fieldNames{"inputs", "outputs", "internal", "internalFB"};
-  std::array<std::vector<std::string>*, 4> storage = {&mInputs, &mOutputs, &mInternal, &mInternalFB};
-
-  for(size_t fieldRunner = 0; fieldRunner < fieldNames.size(); fieldRunner++){
-    auto arrayField = bt_field_structure_borrow_member_field_by_name_const(field, fieldNames[fieldRunner]);
-    auto arrayLength = bt_field_array_get_length(arrayField);
-    for(decltype(arrayLength) dynamicArrayRunner = 0; dynamicArrayRunner < arrayLength; dynamicArrayRunner++) {
-      storage[fieldRunner]->emplace_back(bt_field_string_get_value(
-          bt_field_array_borrow_element_field_by_index_const(arrayField, dynamicArrayRunner)
-      ));
-    } 
+void FBInstanceDataPayload::readDynamicArrayField(const bt_field* paField, const char* paFieldName, std::vector<std::string>& paStorage){
+  auto arrayField = bt_field_structure_borrow_member_field_by_name_const(paField, paFieldName);
+  if(arrayField == nullptr){
+    std::cout << "Could not find '" << paFieldName << "' member in field" << std::endl;
+    std::abort();
+  } else if (BT_FIELD_CLASS_TYPE_DYNAMIC_ARRAY_WITH_LENGTH_FIELD != bt_field_get_class_type(arrayField)){
+    std::cout <<  paFieldName << " field is not of type array" << std::endl;
+    std::abort();
   }
+
+  auto arrayLength = bt_field_array_get_length(arrayField);
+  for(decltype(arrayLength) dynamicArrayRunner = 0; dynamicArrayRunner < arrayLength; dynamicArrayRunner++) {
+    const auto arrayElementField = bt_field_array_borrow_element_field_by_index_const(arrayField, dynamicArrayRunner);
+ 
+    if (BT_FIELD_CLASS_TYPE_STRING != bt_field_get_class_type(arrayElementField)){
+      std::cout << "element of array " << paFieldName << "is not of type string" << std::endl;
+      std::abort();
+    }
+    paStorage.emplace_back(bt_field_string_get_value(arrayElementField));
+  } 
 }
   
 std::string FBInstanceDataPayload::specificPayloadString() const {
@@ -190,8 +245,8 @@ std::string FBInstanceDataPayload::specificPayloadString() const {
     ", _internalFB_len = " + std::to_string(mInternalFB.size()) + ", internalFB = " + createStringFromVector(mInternalFB);
 }
 
-bool FBInstanceDataPayload::specificPayloadEqual(const AbstractPayload& other) const {
-  const auto& childInstance = dynamic_cast<const FBInstanceDataPayload&>(other); 
+bool FBInstanceDataPayload::specificPayloadEqual(const AbstractPayload& paOther) const {
+  const auto& childInstance = dynamic_cast<const FBInstanceDataPayload&>(paOther); 
   return mInputs == childInstance.mInputs 
         && mOutputs == childInstance.mOutputs 
         && mInternal == childInstance.mInternal 
@@ -212,3 +267,4 @@ std::unique_ptr<AbstractPayload> PayloadFactory::createPayload(const std::string
   }
   return result;
 }
+

@@ -11,9 +11,9 @@ class AbstractPayload;
 
 class EventMessage {
 public:
-  EventMessage(const std::string& paEventType, std::unique_ptr<AbstractPayload> paPayload, int64_t paTimestamp);
+  EventMessage(std::string paEventType, std::unique_ptr<AbstractPayload> paPayload, int64_t paTimestamp);
 
-  EventMessage(const bt_message* message);
+  EventMessage(const bt_message* paMessage);
   
   std::string getPayloadString() const;
 
@@ -21,7 +21,7 @@ public:
 
   int64_t getTimestamp () const { return mTimestamp;}
 
-  bool operator==(const EventMessage& other) const;
+  bool operator==(const EventMessage& paOther) const;
 
 private:
   std::string mEventType;
@@ -31,16 +31,18 @@ private:
 
 class AbstractPayload {
 public:
-  AbstractPayload(const std::string& paTypeName, const std::string& paInstanceName);
+  AbstractPayload(std::string paTypeName, std::string paInstanceName);
 
-  AbstractPayload(const bt_field* field);
+  AbstractPayload(const bt_field* paField);
   
-  virtual std::string getString() const;
+  std::string getString() const;
 
-  virtual bool operator==(const AbstractPayload& other) const;
+  bool operator==(const AbstractPayload& paOther) const;
+
+  virtual ~AbstractPayload() = default;
 
 protected:
-  virtual bool specificPayloadEqual(const AbstractPayload& other) const = 0;
+  virtual bool specificPayloadEqual(const AbstractPayload& paOther) const = 0;
 
   virtual std::string specificPayloadString() const = 0;
 
@@ -50,28 +52,28 @@ protected:
 
 class FBEventPayload : public AbstractPayload {
 public:
-  FBEventPayload(const std::string& paTypeName, const std::string& paInstanceName, const uint64_t eventId);
+  FBEventPayload(std::string paTypeName, std::string paInstanceName, const uint64_t paEventId);
 
-  FBEventPayload(const bt_field* field);
+  FBEventPayload(const bt_field* paField);
 
 private:
-  std::string specificPayloadString() const;
+  std::string specificPayloadString() const override;
 
-  bool specificPayloadEqual(const AbstractPayload& other) const;
+  bool specificPayloadEqual(const AbstractPayload& paOther) const override;
  
   uint64_t mEventId;
 };
 
 class FBDataPayload : public AbstractPayload {
 public:
-  FBDataPayload(const std::string& paTypeName, const std::string& paInstanceName, uint64_t paDataId, const std::string& paValue);
+  FBDataPayload(std::string paTypeName, std::string paInstanceName, uint64_t paDataId, std::string paValue);
 
-  FBDataPayload(const bt_field* field);
+  FBDataPayload(const bt_field* paField);
 
 private:
-  std::string specificPayloadString() const;
+  std::string specificPayloadString() const override;
 
-  bool specificPayloadEqual(const AbstractPayload& other) const;
+  bool specificPayloadEqual(const AbstractPayload& paOther) const override;
 
   uint64_t mDataId;
   std::string mValue;
@@ -79,18 +81,20 @@ private:
 
 class FBInstanceDataPayload : public AbstractPayload {
 public:
-  FBInstanceDataPayload(const std::string& paTypeName, const std::string& paInstanceName, 
+  FBInstanceDataPayload(std::string paTypeName, std::string paInstanceName, 
         const std::vector<std::string>& paInputs,
         const std::vector<std::string>& paOutputs,
         const std::vector<std::string>& paInternal,
         const std::vector<std::string>& paInternalFB);
 
-  FBInstanceDataPayload(const bt_field* field);
+  FBInstanceDataPayload(const bt_field* paField);
   
 private:
-  std::string specificPayloadString() const;
+  std::string specificPayloadString() const override;
 
-  bool specificPayloadEqual(const AbstractPayload& other) const;
+  bool specificPayloadEqual(const AbstractPayload& paOther) const override;
+
+  void readDynamicArrayField(const bt_field* paField, const char* paFieldName, std::vector<std::string>& paStorage);
 
   std::vector<std::string> mInputs;
   std::vector<std::string> mOutputs;

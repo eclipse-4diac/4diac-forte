@@ -23,7 +23,7 @@ EventsReader::EventsReader(bt_self_component_sink *self_component_sink,
     this);
 
   bt_self_component_sink_add_input_port(mSelfComponentSink,
-      "in", NULL, NULL);
+      "in", nullptr, nullptr);
 }
 
 bt_component_class_sink_graph_is_configured_method_status EventsReader::graphIsConfigured()
@@ -92,7 +92,7 @@ bt_component_class_sink_consume_method_status EventsReader::consume()
 // to create the components   //
 // ************************** //
 
-bt_component_class_initialize_method_status forte_events_reader_initialize(
+static bt_component_class_initialize_method_status forte_events_reader_initialize(
       bt_self_component_sink *self_component_sink,
       bt_self_component_sink_configuration *configuration,
       const bt_value *params, void *initialize_method_data){
@@ -114,7 +114,7 @@ bt_component_class_initialize_method_status forte_events_reader_initialize(
 }
 
 // finalze
-void forte_events_reader_finalize(bt_self_component_sink *self_component_sink)
+static void forte_events_reader_finalize(bt_self_component_sink *self_component_sink)
 {
   forte::EventsReader* instance = static_cast<forte::EventsReader*>(bt_self_component_get_data(
       bt_self_component_sink_as_self_component(self_component_sink)));
@@ -122,7 +122,7 @@ void forte_events_reader_finalize(bt_self_component_sink *self_component_sink)
   delete instance;
 }
 
-bt_component_class_sink_graph_is_configured_method_status
+static bt_component_class_sink_graph_is_configured_method_status
 forte_events_reader_graph_is_configured(bt_self_component_sink *self_component_sink)
 {
   auto instance = static_cast<forte::EventsReader *>(bt_self_component_get_data(
@@ -131,7 +131,7 @@ forte_events_reader_graph_is_configured(bt_self_component_sink *self_component_s
   return instance->graphIsConfigured();
 }
 
-bt_component_class_sink_consume_method_status forte_events_reader_consume(
+static bt_component_class_sink_consume_method_status forte_events_reader_consume(
         bt_self_component_sink *self_component_sink)
 {
   auto instance = static_cast<forte::EventsReader *>(bt_self_component_get_data(
