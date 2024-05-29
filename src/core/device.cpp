@@ -17,7 +17,13 @@
 #include "ecet.h"
 #include <string.h>
 
+#include "forte_device_config.h"
+
 std::unique_ptr<CDevice> CDevice::smActiveDevice;
+
+CDevice* CDevice::createDev(const std::string &paMGRID) {
+  return FORTE_DEVICE::createDev(paMGRID);
+}
 
 bool CDevice::startupNewDevice(const std::string &paMGRID){
   if(smActiveDevice){

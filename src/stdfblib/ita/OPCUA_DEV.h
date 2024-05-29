@@ -24,5 +24,7 @@ public:
   OPCUA_DEV();
   virtual ~OPCUA_DEV();
 
+  static CDevice *createDev(const std::string &paMGRID);
+
   virtual int startDevice(void);
 };
