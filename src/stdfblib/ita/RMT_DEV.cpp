@@ -17,7 +17,7 @@
 #endif
 #include <stringdict.h>
 
-CDevice* CDevice::createDev(const std::string &paMGRID) {
+CDevice* RMT_DEV::createDev(const std::string &paMGRID) {
   RMT_DEV *dev = new RMT_DEV;
   dev->initialize();
   if(paMGRID.length() != 0){
