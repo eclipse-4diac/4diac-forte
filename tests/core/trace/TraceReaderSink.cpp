@@ -91,6 +91,7 @@ bt_component_class_sink_consume_method_status EventsReader::consume()
 // by the babeltrace2 library //
 // to create the components   //
 // ************************** //
+extern "C" {
 
 static bt_component_class_initialize_method_status forte_events_reader_initialize(
       bt_self_component_sink *self_component_sink,
@@ -155,3 +156,5 @@ BT_PLUGIN_SINK_COMPONENT_CLASS_INITIALIZE_METHOD(event_reader,
 BT_PLUGIN_SINK_COMPONENT_CLASS_FINALIZE_METHOD(event_reader, forte_events_reader_finalize);
 BT_PLUGIN_SINK_COMPONENT_CLASS_GRAPH_IS_CONFIGURED_METHOD(event_reader,
     forte_events_reader_graph_is_configured);
+
+} // extern "C"
