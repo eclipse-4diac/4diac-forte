@@ -50,7 +50,7 @@ class CFBTestConn : public CDataConnection {
 };
 
 CFBTestFixtureBase::CFBTestFixtureBase(CStringDictionary::TStringId paTypeId) :
-    CFunctionBlock(CFBTestDataGlobalFixture::getResource(), nullptr, 0), mTypeId(paTypeId),
+        CGenFunctionBlock<CFunctionBlock>(CFBTestDataGlobalFixture::getResource(), nullptr, 0), mTypeId(paTypeId),
         mFBUnderTest(CTypeLib::createFB(paTypeId, paTypeId, CFBTestDataGlobalFixture::getResource())) {
 }
 
@@ -150,6 +150,11 @@ void CFBTestFixtureBase::setup(const char* paConfigString){
   createEventOutputConnections();
   createDataInputConnections();
   createDataOutputConnections();
+}
+
+bool CFBTestFixtureBase::createInterfaceSpec(const char *, SFBInterfaceSpec &paInterfaceSpec) {
+  paInterfaceSpec = *mInterfaceSpec;
+  return true;
 }
 
 void CFBTestFixtureBase::executeEvent(TEventID paEIID, CEventChainExecutionThread *const) {

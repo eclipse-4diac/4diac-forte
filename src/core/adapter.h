@@ -17,7 +17,7 @@
 #ifndef _ADAPTER_H_
 #define _ADAPTER_H_
 
-#include "funcbloc.h"
+#include "genfb.h"
 
 class CAdapterConnection;
 
@@ -32,7 +32,7 @@ class CAdapterConnection;
 /*!\ingroup CORE\brief Class for handling adapters.
  *
  */
-class CAdapter : public CFunctionBlock{
+class CAdapter : public CGenFunctionBlock<CFunctionBlock> {
   public:
     /*!\brief The main constructor for an adapter instance.
      */
@@ -41,6 +41,8 @@ class CAdapter : public CFunctionBlock{
     ~CAdapter() override;
 
     bool initialize() override;
+
+    bool createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) override;
 
     /*!\brief Returns if Adapter instance is a Plug
      */

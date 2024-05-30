@@ -42,3 +42,11 @@ bool EMB_RES::initialize() {
 
 EMB_RES::~EMB_RES() = default;
 
+CIEC_ANY *EMB_RES::getDI(const size_t) {
+  return nullptr;
+}
+
+CDataConnection **EMB_RES::getDIConUnchecked(const TPortId) {
+  return nullptr;
+}
+

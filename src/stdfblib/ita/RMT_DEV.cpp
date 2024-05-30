@@ -28,17 +28,20 @@ const SFBInterfaceSpec RMT_DEV::scmFBInterfaceSpec = {
   0, nullptr
 };
 
-RMT_DEV::RMT_DEV() :
-  CDevice(&scmFBInterfaceSpec, CStringDictionary::scmInvalidStringId),
-      MGR(g_nStringIdMGR, *this){
+RMT_DEV::RMT_DEV(const std::string &paMGR_ID) :
+        CDevice(&scmFBInterfaceSpec, CStringDictionary::scmInvalidStringId),
+        var_MGR_ID(paMGR_ID.c_str()),
+        MGR(g_nStringIdMGR, *this) {
 }
 
 bool RMT_DEV::initialize() {
   if(!CDevice::initialize()) {
     return false;
   }
-  MGR.initialize();
-  MGR_ID().fromString("localhost:61499");
+
+  if(!MGR.initialize()) {
+    return false;
+  }
 
   //we nee to manually crate this interface2internal connection as the MGR is not managed by device
   mDConnMGR_ID.setSource(this, 0);
@@ -67,5 +70,20 @@ EMGMResponse RMT_DEV::changeFBExecutionState(EMGMCommandType paCommand){
 }
 
 void RMT_DEV::setMGR_ID(const char * const paConn){
-  MGR_ID().fromString(paConn);
+  var_MGR_ID.fromString(paConn);
 }
+
+CIEC_ANY *RMT_DEV::getDI(const size_t paIndex) {
+  switch(paIndex) {
+    case 0: return &var_MGR_ID;
+  }
+  return nullptr;
+}
+
+CDataConnection **RMT_DEV::getDIConUnchecked(const TPortId paIndex) {
+  switch(paIndex) {
+    case 0: return &conn_MGR_ID;
+  }
+  return nullptr;
+}
+
