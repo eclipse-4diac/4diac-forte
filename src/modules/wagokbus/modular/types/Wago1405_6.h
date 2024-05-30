@@ -14,6 +14,7 @@
 #include <funcbloc.h>
 #include <forte_bool.h>
 #include <forte_wstring.h>
+#include <forte_string.h>
 #include "WagoBusAdapter.h"
 #include "wagoSlaveBase.h"
 
@@ -25,22 +26,22 @@ class FORTE_Wago1405_6: public WagoSlaveBase{
     ~FORTE_Wago1405_6() override = default;
 
     CIEC_BOOL var_QI;
-    CIEC_WSTRING var_DigitalInput_1;
-    CIEC_WSTRING var_DigitalInput_2;
-    CIEC_WSTRING var_DigitalInput_3;
-    CIEC_WSTRING var_DigitalInput_4;
-    CIEC_WSTRING var_DigitalInput_5;
-    CIEC_WSTRING var_DigitalInput_6;
-    CIEC_WSTRING var_DigitalInput_7;
-    CIEC_WSTRING var_DigitalInput_8;
-    CIEC_WSTRING var_DigitalInput_9;
-    CIEC_WSTRING var_DigitalInput_10;
-    CIEC_WSTRING var_DigitalInput_11;
-    CIEC_WSTRING var_DigitalInput_12;
-    CIEC_WSTRING var_DigitalInput_13;
-    CIEC_WSTRING var_DigitalInput_14;
-    CIEC_WSTRING var_DigitalInput_15;
-    CIEC_WSTRING var_DigitalInput_16;
+    CIEC_STRING var_DigitalInput_1;
+    CIEC_STRING var_DigitalInput_2;
+    CIEC_STRING var_DigitalInput_3;
+    CIEC_STRING var_DigitalInput_4;
+    CIEC_STRING var_DigitalInput_5;
+    CIEC_STRING var_DigitalInput_6;
+    CIEC_STRING var_DigitalInput_7;
+    CIEC_STRING var_DigitalInput_8;
+    CIEC_STRING var_DigitalInput_9;
+    CIEC_STRING var_DigitalInput_10;
+    CIEC_STRING var_DigitalInput_11;
+    CIEC_STRING var_DigitalInput_12;
+    CIEC_STRING var_DigitalInput_13;
+    CIEC_STRING var_DigitalInput_14;
+    CIEC_STRING var_DigitalInput_15;
+    CIEC_STRING var_DigitalInput_16;
 
     CIEC_BOOL var_QO;
     CIEC_WSTRING var_STATUS;
@@ -86,7 +87,7 @@ class FORTE_Wago1405_6: public WagoSlaveBase{
     CDataConnection **getDIConUnchecked(TPortId) override;
     CDataConnection *getDOConUnchecked(TPortId) override;
 
-    void evt_MAP(const CIEC_BOOL &paQI, const CIEC_WSTRING &paDigitalInput_1, const CIEC_WSTRING &paDigitalInput_2, const CIEC_WSTRING &paDigitalInput_3, const CIEC_WSTRING &paDigitalInput_4, const CIEC_WSTRING &paDigitalInput_5, const CIEC_WSTRING &paDigitalInput_6, const CIEC_WSTRING &paDigitalInput_7, const CIEC_WSTRING &paDigitalInput_8, const CIEC_WSTRING &paDigitalInput_9, const CIEC_WSTRING &paDigitalInput_10, const CIEC_WSTRING &paDigitalInput_11, const CIEC_WSTRING &paDigitalInput_12, const CIEC_WSTRING &paDigitalInput_13, const CIEC_WSTRING &paDigitalInput_14, const CIEC_WSTRING &paDigitalInput_15, const CIEC_WSTRING &paDigitalInput_16, CIEC_BOOL &paQO, CIEC_WSTRING &paSTATUS) {
+    void evt_MAP(const CIEC_BOOL &paQI, const CIEC_STRING &paDigitalInput_1, const CIEC_STRING &paDigitalInput_2, const CIEC_STRING &paDigitalInput_3, const CIEC_STRING &paDigitalInput_4, const CIEC_STRING &paDigitalInput_5, const CIEC_STRING &paDigitalInput_6, const CIEC_STRING &paDigitalInput_7, const CIEC_STRING &paDigitalInput_8, const CIEC_STRING &paDigitalInput_9, const CIEC_STRING &paDigitalInput_10, const CIEC_STRING &paDigitalInput_11, const CIEC_STRING &paDigitalInput_12, const CIEC_STRING &paDigitalInput_13, const CIEC_STRING &paDigitalInput_14, const CIEC_STRING &paDigitalInput_15, const CIEC_STRING &paDigitalInput_16, CIEC_BOOL &paQO, CIEC_WSTRING &paSTATUS) {
       var_QI = paQI;
       var_DigitalInput_1 = paDigitalInput_1;
       var_DigitalInput_2 = paDigitalInput_2;
@@ -109,7 +110,7 @@ class FORTE_Wago1405_6: public WagoSlaveBase{
       paSTATUS = var_STATUS;
     }
 
-    void operator()(const CIEC_BOOL &paQI, const CIEC_WSTRING &paDigitalInput_1, const CIEC_WSTRING &paDigitalInput_2, const CIEC_WSTRING &paDigitalInput_3, const CIEC_WSTRING &paDigitalInput_4, const CIEC_WSTRING &paDigitalInput_5, const CIEC_WSTRING &paDigitalInput_6, const CIEC_WSTRING &paDigitalInput_7, const CIEC_WSTRING &paDigitalInput_8, const CIEC_WSTRING &paDigitalInput_9, const CIEC_WSTRING &paDigitalInput_10, const CIEC_WSTRING &paDigitalInput_11, const CIEC_WSTRING &paDigitalInput_12, const CIEC_WSTRING &paDigitalInput_13, const CIEC_WSTRING &paDigitalInput_14, const CIEC_WSTRING &paDigitalInput_15, const CIEC_WSTRING &paDigitalInput_16, CIEC_BOOL &paQO, CIEC_WSTRING &paSTATUS) {
+    void operator()(const CIEC_BOOL &paQI, const CIEC_STRING &paDigitalInput_1, const CIEC_STRING &paDigitalInput_2, const CIEC_STRING &paDigitalInput_3, const CIEC_STRING &paDigitalInput_4, const CIEC_STRING &paDigitalInput_5, const CIEC_STRING &paDigitalInput_6, const CIEC_STRING &paDigitalInput_7, const CIEC_STRING &paDigitalInput_8, const CIEC_STRING &paDigitalInput_9, const CIEC_STRING &paDigitalInput_10, const CIEC_STRING &paDigitalInput_11, const CIEC_STRING &paDigitalInput_12, const CIEC_STRING &paDigitalInput_13, const CIEC_STRING &paDigitalInput_14, const CIEC_STRING &paDigitalInput_15, const CIEC_STRING &paDigitalInput_16, CIEC_BOOL &paQO, CIEC_WSTRING &paSTATUS) {
       evt_MAP(paQI, paDigitalInput_1, paDigitalInput_2, paDigitalInput_3, paDigitalInput_4, paDigitalInput_5, paDigitalInput_6, paDigitalInput_7, paDigitalInput_8, paDigitalInput_9, paDigitalInput_10, paDigitalInput_11, paDigitalInput_12, paDigitalInput_13, paDigitalInput_14, paDigitalInput_15, paDigitalInput_16, paQO, paSTATUS);
     }
 

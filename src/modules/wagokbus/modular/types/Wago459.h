@@ -14,6 +14,7 @@
 #include <funcbloc.h>
 #include <forte_bool.h>
 #include <forte_wstring.h>
+#include <forte_string.h>
 #include "WagoBusAdapter.h"
 #include "wagoSlaveBase.h"
 
@@ -25,10 +26,10 @@ class FORTE_Wago459: public WagoSlaveBase{
     ~FORTE_Wago459() override = default;
 
     CIEC_BOOL var_QI;
-    CIEC_WSTRING var_AnalogInput_1;
-    CIEC_WSTRING var_AnalogInput_2;
-    CIEC_WSTRING var_AnalogInput_3;
-    CIEC_WSTRING var_AnalogInput_4;
+    CIEC_STRING var_AnalogInput_1;
+    CIEC_STRING var_AnalogInput_2;
+    CIEC_STRING var_AnalogInput_3;
+    CIEC_STRING var_AnalogInput_4;
 
     CIEC_BOOL var_QO;
     CIEC_WSTRING var_STATUS;
@@ -62,7 +63,7 @@ class FORTE_Wago459: public WagoSlaveBase{
     CDataConnection **getDIConUnchecked(TPortId) override;
     CDataConnection *getDOConUnchecked(TPortId) override;
 
-    void evt_MAP(const CIEC_BOOL &paQI, const CIEC_WSTRING &paAnalogInput_1, const CIEC_WSTRING &paAnalogInput_2, const CIEC_WSTRING &paAnalogInput_3, const CIEC_WSTRING &paAnalogInput_4, CIEC_BOOL &paQO, CIEC_WSTRING &paSTATUS) {
+    void evt_MAP(const CIEC_BOOL &paQI, const CIEC_STRING &paAnalogInput_1, const CIEC_STRING &paAnalogInput_2, const CIEC_STRING &paAnalogInput_3, const CIEC_STRING &paAnalogInput_4, CIEC_BOOL &paQO, CIEC_WSTRING &paSTATUS) {
       var_QI = paQI;
       var_AnalogInput_1 = paAnalogInput_1;
       var_AnalogInput_2 = paAnalogInput_2;
@@ -73,7 +74,7 @@ class FORTE_Wago459: public WagoSlaveBase{
       paSTATUS = var_STATUS;
     }
 
-    void operator()(const CIEC_BOOL &paQI, const CIEC_WSTRING &paAnalogInput_1, const CIEC_WSTRING &paAnalogInput_2, const CIEC_WSTRING &paAnalogInput_3, const CIEC_WSTRING &paAnalogInput_4, CIEC_BOOL &paQO, CIEC_WSTRING &paSTATUS) {
+    void operator()(const CIEC_BOOL &paQI, const CIEC_STRING &paAnalogInput_1, const CIEC_STRING &paAnalogInput_2, const CIEC_STRING &paAnalogInput_3, const CIEC_STRING &paAnalogInput_4, CIEC_BOOL &paQO, CIEC_WSTRING &paSTATUS) {
       evt_MAP(paQI, paAnalogInput_1, paAnalogInput_2, paAnalogInput_3, paAnalogInput_4, paQO, paSTATUS);
     }
 

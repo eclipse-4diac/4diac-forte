@@ -17,7 +17,7 @@
 DEFINE_FIRMWARE_FB(FORTE_Wago1504_5, g_nStringIdWago1504_5)
 
 const CStringDictionary::TStringId FORTE_Wago1504_5::scmDataInputNames[] = {g_nStringIdQI, g_nStringIdDigitalOutput_1, g_nStringIdDigitalOutput_2, g_nStringIdDigitalOutput_3, g_nStringIdDigitalOutput_4, g_nStringIdDigitalOutput_5, g_nStringIdDigitalOutput_6, g_nStringIdDigitalOutput_7, g_nStringIdDigitalOutput_8, g_nStringIdDigitalOutput_9, g_nStringIdDigitalOutput_10, g_nStringIdDigitalOutput_11, g_nStringIdDigitalOutput_12, g_nStringIdDigitalOutput_13, g_nStringIdDigitalOutput_14, g_nStringIdDigitalOutput_15, g_nStringIdDigitalOutput_16};
-const CStringDictionary::TStringId FORTE_Wago1504_5::scmDataInputTypeIds[] = {g_nStringIdBOOL, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING};
+const CStringDictionary::TStringId FORTE_Wago1504_5::scmDataInputTypeIds[] = {g_nStringIdBOOL, g_nStringIdSTRING, g_nStringIdSTRING, g_nStringIdSTRING, g_nStringIdSTRING, g_nStringIdSTRING, g_nStringIdSTRING, g_nStringIdSTRING, g_nStringIdSTRING, g_nStringIdSTRING, g_nStringIdSTRING, g_nStringIdSTRING, g_nStringIdSTRING, g_nStringIdSTRING, g_nStringIdSTRING, g_nStringIdSTRING, g_nStringIdSTRING};
 const CStringDictionary::TStringId FORTE_Wago1504_5::scmDataOutputNames[] = {g_nStringIdQO, g_nStringIdSTATUS};
 const CStringDictionary::TStringId FORTE_Wago1504_5::scmDataOutputTypeIds[] = {g_nStringIdBOOL, g_nStringIdWSTRING};
 const TDataIOID FORTE_Wago1504_5::scmEIWith[] = {1, 2, 5, 3, 4, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 0, scmWithListDelimiter};
@@ -68,22 +68,22 @@ FORTE_Wago1504_5::FORTE_Wago1504_5(const CStringDictionary::TStringId paInstance
 
 void FORTE_Wago1504_5::setInitialValues() {
   var_QI = 0_BOOL;
-  var_DigitalOutput_1 = u""_WSTRING;
-  var_DigitalOutput_2 = u""_WSTRING;
-  var_DigitalOutput_3 = u""_WSTRING;
-  var_DigitalOutput_4 = u""_WSTRING;
-  var_DigitalOutput_5 = u""_WSTRING;
-  var_DigitalOutput_6 = u""_WSTRING;
-  var_DigitalOutput_7 = u""_WSTRING;
-  var_DigitalOutput_8 = u""_WSTRING;
-  var_DigitalOutput_9 = u""_WSTRING;
-  var_DigitalOutput_10 = u""_WSTRING;
-  var_DigitalOutput_11 = u""_WSTRING;
-  var_DigitalOutput_12 = u""_WSTRING;
-  var_DigitalOutput_13 = u""_WSTRING;
-  var_DigitalOutput_14 = u""_WSTRING;
-  var_DigitalOutput_15 = u""_WSTRING;
-  var_DigitalOutput_16 = u""_WSTRING;
+  var_DigitalOutput_1 = ""_STRING;
+  var_DigitalOutput_2 = ""_STRING;
+  var_DigitalOutput_3 = ""_STRING;
+  var_DigitalOutput_4 = ""_STRING;
+  var_DigitalOutput_5 = ""_STRING;
+  var_DigitalOutput_6 = ""_STRING;
+  var_DigitalOutput_7 = ""_STRING;
+  var_DigitalOutput_8 = ""_STRING;
+  var_DigitalOutput_9 = ""_STRING;
+  var_DigitalOutput_10 = ""_STRING;
+  var_DigitalOutput_11 = ""_STRING;
+  var_DigitalOutput_12 = ""_STRING;
+  var_DigitalOutput_13 = ""_STRING;
+  var_DigitalOutput_14 = ""_STRING;
+  var_DigitalOutput_15 = ""_STRING;
+  var_DigitalOutput_16 = ""_STRING;
   var_QO = 0_BOOL;
   var_STATUS = u""_WSTRING;
 }
