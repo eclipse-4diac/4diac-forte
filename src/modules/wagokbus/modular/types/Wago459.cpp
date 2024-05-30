@@ -17,7 +17,7 @@
 DEFINE_FIRMWARE_FB(FORTE_Wago459, g_nStringIdWago459)
 
 const CStringDictionary::TStringId FORTE_Wago459::scmDataInputNames[] = {g_nStringIdQI, g_nStringIdAnalogInput_1, g_nStringIdAnalogInput_2, g_nStringIdAnalogInput_3, g_nStringIdAnalogInput_4};
-const CStringDictionary::TStringId FORTE_Wago459::scmDataInputTypeIds[] = {g_nStringIdBOOL, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING};
+const CStringDictionary::TStringId FORTE_Wago459::scmDataInputTypeIds[] = {g_nStringIdBOOL, g_nStringIdSTRING, g_nStringIdSTRING, g_nStringIdSTRING, g_nStringIdSTRING};
 const CStringDictionary::TStringId FORTE_Wago459::scmDataOutputNames[] = {g_nStringIdQO, g_nStringIdSTATUS};
 const CStringDictionary::TStringId FORTE_Wago459::scmDataOutputTypeIds[] = {g_nStringIdBOOL, g_nStringIdWSTRING};
 const TDataIOID FORTE_Wago459::scmEIWith[] = {1, 2, 3, 4, 0, scmWithListDelimiter};
@@ -56,10 +56,10 @@ FORTE_Wago459::FORTE_Wago459(const CStringDictionary::TStringId paInstanceNameId
 
 void FORTE_Wago459::setInitialValues() {
   var_QI = 0_BOOL;
-  var_AnalogInput_1 = u""_WSTRING;
-  var_AnalogInput_2 = u""_WSTRING;
-  var_AnalogInput_3 = u""_WSTRING;
-  var_AnalogInput_4 = u""_WSTRING;
+  var_AnalogInput_1 = ""_STRING;
+  var_AnalogInput_2 = ""_STRING;
+  var_AnalogInput_3 = ""_STRING;
+  var_AnalogInput_4 = ""_STRING;
   var_QO = 0_BOOL;
   var_STATUS = u""_WSTRING;
 }
