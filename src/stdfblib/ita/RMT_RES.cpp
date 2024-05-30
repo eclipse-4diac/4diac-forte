@@ -100,3 +100,18 @@ RMT_RES::~RMT_RES() = default;
 void RMT_RES::joinResourceThread() const {
   getResourceEventExecution()->joinEventChainExecutionThread();
 }
+
+CIEC_ANY *RMT_RES::getDI(const size_t paIndex) {
+  switch(paIndex) {
+    case 0: return &var_MGR_ID;
+  }
+  return nullptr;
+}
+
+CDataConnection **RMT_RES::getDIConUnchecked(const TPortId paIndex) {
+  switch(paIndex) {
+    case 0: return &conn_MGR_ID;
+  }
+  return nullptr;
+}
+

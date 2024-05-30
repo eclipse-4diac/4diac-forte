@@ -17,17 +17,17 @@
 #ifndef TESTS_CORE_FBTESTS_FBTESTFIXTURE_H_
 #define TESTS_CORE_FBTESTS_FBTESTFIXTURE_H_
 
-#include <fortenew.h>
-#include <funcbloc.h>
-#include <if2indco.h>
-#include <forte_sync.h>
+#include "fortenew.h"
+#include "genfb.h"
+#include "if2indco.h"
+#include "forte_sync.h"
 #include <boost/test/unit_test.hpp>
 #include <vector>
 #include <deque>
 
 #include "forte_boost_output_support.h"
 
-class CFBTestFixtureBase : public CFunctionBlock{
+class CFBTestFixtureBase : public CGenFunctionBlock<CFunctionBlock> {
   public:
     ~CFBTestFixtureBase();
 
@@ -41,6 +41,8 @@ class CFBTestFixtureBase : public CFunctionBlock{
     explicit CFBTestFixtureBase(CStringDictionary::TStringId paTypeId);
 
     void setup(const char* paConfigString = nullptr);
+
+    bool createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) override;
 
     /*!\brief invoke the FB under Test with the given event id
      *

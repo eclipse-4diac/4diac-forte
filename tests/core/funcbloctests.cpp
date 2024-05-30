@@ -63,6 +63,26 @@ BOOST_AUTO_TEST_CASE(FB_TO_STRING_BUFFER_SIZE_TEST_WITH_INRENAL_VAR){
 
         void writeOutputData(TEventID) override {
         }
+
+        CIEC_ANY *getDI(size_t) override {
+                return nullptr;
+        }
+
+        CIEC_ANY *getDO(size_t) override {
+                return nullptr;
+        }
+
+        CEventConnection *getEOConUnchecked(TPortId) override {
+                return nullptr;
+        }
+
+        CDataConnection **getDIConUnchecked(TPortId) override {
+                return nullptr;
+        }
+
+        CDataConnection *getDOConUnchecked(TPortId) override {
+                return nullptr;
+        }
 };
 
     CStringDictionary::TStringId varInternalNames[] = {g_nStringIdQU, g_nStringIdQD, g_nStringIdCV};

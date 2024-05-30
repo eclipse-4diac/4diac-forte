@@ -23,7 +23,7 @@
 
 class RMT_DEV : public CDevice{
   public:
-    RMT_DEV();
+    RMT_DEV(const std::string &paMGR_ID = "localhost:61499");
     ~RMT_DEV() override;
 
     bool initialize() override;
@@ -48,9 +48,11 @@ class RMT_DEV : public CDevice{
     static const CStringDictionary::TStringId scmDINameIds[];
     static const CStringDictionary::TStringId scmDIDataTypeIds[];
 
-    CIEC_WSTRING& MGR_ID() {
-      return *static_cast<CIEC_WSTRING*>(getDI(0));
-    }
+    CIEC_WSTRING var_MGR_ID;
+    CDataConnection *conn_MGR_ID;
+
+    CIEC_ANY *getDI(size_t) override;
+    CDataConnection **getDIConUnchecked(TPortId) override;
 
     RMT_RES MGR;
 };

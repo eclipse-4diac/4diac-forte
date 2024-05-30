@@ -38,6 +38,13 @@ class CTesterDevice : public CDevice {
       // nothing to be done to join
     }
 
+    CIEC_ANY *getDI(size_t) override {
+      return nullptr;
+    }
+
+    CDataConnection **getDIConUnchecked(TPortId) override {
+      return nullptr;
+    }
 };
 
 CFBTestDataGlobalFixture::CFBTestDataGlobalFixture(){
