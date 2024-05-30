@@ -282,7 +282,9 @@ class CFunctionBlock {
      * \param paAdapterNameId  StringId of the adapter name.
      * \return Pointer to the adapter or nullptr.
      */
-    CAdapter* getAdapter(CStringDictionary::TStringId paAdapterNameId) const;
+    CAdapter* getAdapter(CStringDictionary::TStringId paAdapterNameId);
+
+    const CAdapter* getAdapter(CStringDictionary::TStringId paAdapterNameId) const;
 
     TPortId getAdapterPortId(CStringDictionary::TStringId paAdapterNameId) const;
 
@@ -556,7 +558,7 @@ class CFunctionBlock {
      * \param paEID Event ID where event should be fired.
      * \param paExecEnv Event chain execution environment where the event will be sent to.
      */
-    void sendAdapterEvent(TPortId paAdapterID, TEventID paEID, CEventChainExecutionThread * const paECET) const;
+    void sendAdapterEvent(TPortId paAdapterID, TEventID paEID, CEventChainExecutionThread * const paECET);
 
     void setupAdapters(const SFBInterfaceSpec *paInterfaceSpec, TForteByte *paFBData);
 
@@ -597,6 +599,10 @@ class CFunctionBlock {
 
     virtual CInOutDataConnection *getDIOOutConUnchecked(TPortId) {
       return nullptr;
+    }
+
+    virtual CAdapter *getAdapterUnchecked(TPortId paAdapterNum) {
+      return mAdapters[paAdapterNum];
     }
 
     /*!\brief helper function for changeing the FB execution state for FBs with internal FBs
