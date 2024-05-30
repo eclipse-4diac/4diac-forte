@@ -375,27 +375,38 @@ CIEC_ANY *CFunctionBlock::getVar(CStringDictionary::TStringId *paNameList,
   return nullptr;
 }
 
-CAdapter *CFunctionBlock::getAdapter(CStringDictionary::TStringId paAdapterNameId) const{
+CAdapter *CFunctionBlock::getAdapter(CStringDictionary::TStringId paAdapterNameId) {
   TPortId adpPortId = getAdapterPortId(paAdapterNameId);
 
   if(cgInvalidPortId != adpPortId){
-    return mAdapters[adpPortId];
+    return getAdapterUnchecked(adpPortId);
   }
   return nullptr;
 }
 
-TPortId CFunctionBlock::getAdapterPortId(CStringDictionary::TStringId paAdapterNameId) const{
+const CAdapter *CFunctionBlock::getAdapter(CStringDictionary::TStringId paAdapterNameId) const {
+  TPortId adpPortId = getAdapterPortId(paAdapterNameId);
+
+  if(cgInvalidPortId != adpPortId){
+    return const_cast<CFunctionBlock*>(this)->getAdapterUnchecked(adpPortId);
+  }
+  return nullptr;
+}
+
+TPortId CFunctionBlock::getAdapterPortId(CStringDictionary::TStringId paAdapterNameId) const {
   for(TPortId i = 0; i < mInterfaceSpec->mNumAdapters; ++i){
-    if(mAdapters[i]->getInstanceNameId() == paAdapterNameId){
+    if(mInterfaceSpec->mAdapterInstanceDefinition[i].mAdapterNameID == paAdapterNameId){
       return i;
     }
   }
   return cgInvalidPortId;
 }
 
-void CFunctionBlock::sendAdapterEvent(TPortId paAdapterID, TEventID paEID, CEventChainExecutionThread * const paECET) const{
-  if((paAdapterID < mInterfaceSpec->mNumAdapters) && (nullptr != mAdapters[paAdapterID])){
-    mAdapters[paAdapterID]->receiveInputEvent(paEID, paECET);
+void CFunctionBlock::sendAdapterEvent(TPortId paAdapterID, TEventID paEID, CEventChainExecutionThread * const paECET) {
+  if(paAdapterID < mInterfaceSpec->mNumAdapters) {
+    if(CAdapter *adapter = getAdapterUnchecked(paAdapterID); adapter != nullptr) {
+      adapter->receiveInputEvent(paEID, paECET);
+    }
   }
 }
 
@@ -510,8 +521,8 @@ EMGMResponse CFunctionBlock::changeFBExecutionState(EMGMCommandType paCommand){
 
   if(EMGMResponse::Ready == nRetVal && nullptr != mInterfaceSpec) {
     for(TPortId i = 0; i < mInterfaceSpec->mNumAdapters; ++i) {
-      if(nullptr != mAdapters[i]) {
-        mAdapters[i]->changeFBExecutionState(paCommand);
+      if(CAdapter* adapter = getAdapterUnchecked(i); adapter != nullptr) {
+        adapter->changeFBExecutionState(paCommand);
       }
     }
   }
