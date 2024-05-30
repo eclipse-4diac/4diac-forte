@@ -50,8 +50,8 @@ bool CCompositeFB::initialize() {
 
   //remove adapter-references for CFB
   for(TPortId i = 0; i < mInterfaceSpec->mNumAdapters; i++){
-    if(nullptr != mAdapters){
-      static_cast<CAdapter*>(mAdapters[i])->setParentFB(nullptr, 0);
+    if(CAdapter* adapter = getAdapterUnchecked(i); adapter != nullptr) {
+      adapter->setParentFB(nullptr, 0);
     }
   }
   return true;
@@ -359,7 +359,7 @@ CFunctionBlock *CCompositeFB::getFunctionBlock(int paFBNum){
     if(scmAdapterMarker == (scmAdapterMarker & fbNum)){
       fbNum &= scmAdapterFBRange;
       if(fbNum < mInterfaceSpec->mNumAdapters){
-        return mAdapters[fbNum];
+        return getAdapterUnchecked(fbNum);
       }
     } else{
       if(fbNum < cmFBNData.mNumFBs){
