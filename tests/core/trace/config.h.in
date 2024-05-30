@@ -1,0 +1,3 @@
+
+const char* CTF_OUTPUT_DIR =  "${CTF_OUTPUT_DIR}";
+const char* METADATA_FILE = "${METADATA_FILE}";
