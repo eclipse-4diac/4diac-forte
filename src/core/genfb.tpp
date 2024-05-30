@@ -25,7 +25,7 @@ CGenFunctionBlock<T>::CGenFunctionBlock(forte::core::CFBContainer &paContainer, 
 template<class T>
 CGenFunctionBlock<T>::~CGenFunctionBlock(){
   if(nullptr != T::mInterfaceSpec){
-    T::freeAllData();  //clean the interface and connections first.
+    T::freeFBInterfaceData();  //clean the interface and connections first.
     T::mInterfaceSpec = nullptr; //this stops the base classes from any wrong clean-up
   }
 }

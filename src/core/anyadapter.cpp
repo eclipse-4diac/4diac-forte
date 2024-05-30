@@ -63,7 +63,6 @@ bool CAnyAdapter::disconnect(CAdapterConnection *paAdConn){
   bool bRetVal = CAdapter::disconnect(paAdConn);
 
   //clean interface data and reset to empty interface
-  freeAllData();
   setupFBInterface(&scmFBInterfaceSpec);
 
   return bRetVal;
