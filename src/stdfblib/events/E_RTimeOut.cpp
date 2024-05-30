@@ -33,8 +33,15 @@ const SFBInterfaceSpec FORTE_E_RTimeOut::scmFBInterfaceSpec = {
 };
 
 FORTE_E_RTimeOut::FORTE_E_RTimeOut(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
-    CCompositeFB(paContainer, &scmFBInterfaceSpec, paInstanceNameId, scmFBNData) {
+    CCompositeFB(paContainer, &scmFBInterfaceSpec, paInstanceNameId, scmFBNData),
+    var_TimeOutSocket(g_nStringIdTimeOutSocket, getContainer(), false) {
 };
+
+bool FORTE_E_RTimeOut::initialize() {
+  if(!var_TimeOutSocket.initialize()) { return false; }
+  var_TimeOutSocket.setParentFB(this, 0);
+  return CCompositeFB::initialize();
+}
 
 const SCFB_FBInstanceData FORTE_E_RTimeOut::scmInternalFBs[] = {
   {g_nStringIdDLY, g_nStringIdE_RDELAY}
@@ -61,14 +68,15 @@ const SCFB_FBNData FORTE_E_RTimeOut::scmFBNData = {
   0, nullptr
 };
 
-
+void FORTE_E_RTimeOut::readInternal2InterfaceOutputData(TEventID) {
+  // nothing to do
+}
 void FORTE_E_RTimeOut::readInputData(TEventID) {
+  // nothing to do
 }
 
 void FORTE_E_RTimeOut::writeOutputData(TEventID) {
-}
-
-void FORTE_E_RTimeOut::readInternal2InterfaceOutputData(TEventID) {
+  // nothing to do
 }
 
 CIEC_ANY *FORTE_E_RTimeOut::getDI(size_t) {
@@ -76,6 +84,13 @@ CIEC_ANY *FORTE_E_RTimeOut::getDI(size_t) {
 }
 
 CIEC_ANY *FORTE_E_RTimeOut::getDO(size_t) {
+  return nullptr;
+}
+
+CAdapter *FORTE_E_RTimeOut::getAdapterUnchecked(const size_t paIndex) {
+  switch(paIndex) {
+    case 0: return &var_TimeOutSocket;
+  }
   return nullptr;
 }
 
@@ -90,5 +105,4 @@ CDataConnection **FORTE_E_RTimeOut::getDIConUnchecked(TPortId) {
 CDataConnection *FORTE_E_RTimeOut::getDOConUnchecked(TPortId) {
   return nullptr;
 }
-
 

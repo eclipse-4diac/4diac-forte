@@ -13,39 +13,44 @@
  *   - initial API and implementation and/or initial documentation
  *   Martin Jobst - add readInputData and writeOutputData
  *******************************************************************************/
-#ifndef _STEST_END_H_
-#define _STEST_END_H_
 
-#include <funcbloc.h>
-#include <mgmcmdstruct.h>
+#pragma once
 
-class FORTE_STEST_END: public CFunctionBlock{
+#include "funcbloc.h"
+#include "mgmcmdstruct.h"
+
+
+class FORTE_STEST_END final : public CFunctionBlock {
   DECLARE_FIRMWARE_FB(FORTE_STEST_END)
 
-private:
-  static const TEventID scmEventREQID = 0;
-  static const TForteInt16 scmEIWithIndexes[];
-  static const CStringDictionary::TStringId scmEventInputNames[];
+  private:
+    static const TEventID scmEventREQID = 0;
+    static const TForteInt16 scmEIWithIndexes[];
+    static const CStringDictionary::TStringId scmEventInputNames[];
 
-  static const TForteInt16 scmEOWithIndexes[];
-  static const SFBInterfaceSpec scmFBInterfaceSpec;
+    static const SFBInterfaceSpec scmFBInterfaceSpec;
 
+    void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
-  void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
+    void readInputData(TEventID paEIID) override;
+    void writeOutputData(TEventID paEIID) override;
 
-  void readInputData(TEventID) override {
-  }
+  public:
+    FORTE_STEST_END(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
-  void writeOutputData(TEventID) override {
-  }
+    CIEC_ANY *getDI(size_t) override;
+    CIEC_ANY *getDO(size_t) override;
+    CEventConnection *getEOConUnchecked(TPortId) override;
+    CDataConnection **getDIConUnchecked(TPortId) override;
+    CDataConnection *getDOConUnchecked(TPortId) override;
 
-public:
-  FUNCTION_BLOCK_CTOR(FORTE_STEST_END){
-  };
+    void evt_REQ() {
+      executeEvent(scmEventREQID, nullptr);
+    }
 
-  ~FORTE_STEST_END() override = default;
-
+    void operator()() {
+      evt_REQ();
+    }
 };
 
-#endif //close the ifdef sequence from the beginning of the file
 

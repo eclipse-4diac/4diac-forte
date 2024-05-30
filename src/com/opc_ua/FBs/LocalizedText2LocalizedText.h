@@ -10,53 +10,62 @@
  *   Jose Cabral - initial implementation
  *******************************************************************************/
 
-#ifndef _LOCALIZEDTEXT2LOCALIZEDTEXT_H_
-#define _LOCALIZEDTEXT2LOCALIZEDTEXT_H_
+#pragma once
 
 #include <funcbloc.h>
 #include <forte_localizedtext.h>
 
 class FORTE_LocalizedText2LocalizedText: public CFunctionBlock{
-  DECLARE_FIRMWARE_FB(FORTE_LocalizedText2LocalizedText)
+    DECLARE_FIRMWARE_FB(FORTE_LocalizedText2LocalizedText)
 
-private:
-  static const CStringDictionary::TStringId scmDataInputNames[];
-  static const CStringDictionary::TStringId scmDataInputTypeIds[];
-  CIEC_LocalizedText &st_IN() {
-    return *static_cast<CIEC_LocalizedText*>(getDI(0));
-  };
+  private:
+    static const CStringDictionary::TStringId scmDataInputNames[];
+    static const CStringDictionary::TStringId scmDataInputTypeIds[];
+    static const CStringDictionary::TStringId scmDataOutputNames[];
+    static const CStringDictionary::TStringId scmDataOutputTypeIds[];
+    static const TEventID scmEventREQID = 0;
+    static const TForteInt16 scmEIWithIndexes[];
+    static const TDataIOID scmEIWith[];
+    static const CStringDictionary::TStringId scmEventInputNames[];
 
-  static const CStringDictionary::TStringId scmDataOutputNames[];
-  static const CStringDictionary::TStringId scmDataOutputTypeIds[];
-  CIEC_LocalizedText &st_OUT() {
-    return *static_cast<CIEC_LocalizedText*>(getDO(0));
-  };
+    static const TEventID scmEventCNFID = 0;
+    static const TForteInt16 scmEOWithIndexes[];
+    static const TDataIOID scmEOWith[];
+    static const CStringDictionary::TStringId scmEventOutputNames[];
 
-  static const TEventID scmEventREQID = 0;
-  static const TForteInt16 scmEIWithIndexes[];
-  static const TDataIOID scmEIWith[];
-  static const CStringDictionary::TStringId scmEventInputNames[];
-
-  static const TEventID scmEventCNFID = 0;
-  static const TForteInt16 scmEOWithIndexes[];
-  static const TDataIOID scmEOWith[];
-  static const CStringDictionary::TStringId scmEventOutputNames[];
-
-  static const SFBInterfaceSpec scmFBInterfaceSpec;
+    static const SFBInterfaceSpec scmFBInterfaceSpec;
 
 
-  void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
+    void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
-  void readInputData(TEventID paEIID) override;
-  void writeOutputData(TEventID paEIID) override;
+    void readInputData(TEventID paEIID) override;
+    void writeOutputData(TEventID paEIID) override;
 
-public:
-  FUNCTION_BLOCK_CTOR(FORTE_LocalizedText2LocalizedText){
-  };
+  public:
+    FORTE_LocalizedText2LocalizedText(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
-  ~FORTE_LocalizedText2LocalizedText() override = default;
+    CIEC_LocalizedText var_IN;
+    CIEC_LocalizedText var_OUT;
 
+    CIEC_LocalizedText var_conn_OUT;
+    CEventConnection conn_CNF;
+    CDataConnection *conn_IN;
+    CDataConnection conn_OUT;
+
+    CIEC_ANY *getDI(size_t) override;
+    CIEC_ANY *getDO(size_t) override;
+    CEventConnection *getEOConUnchecked(TPortId) override;
+    CDataConnection **getDIConUnchecked(TPortId) override;
+    CDataConnection *getDOConUnchecked(TPortId) override;
+
+    void evt_REQ(const CIEC_LocalizedText &pa_IN, CIEC_LocalizedText &pa_OUT) {
+      var_IN = pa_IN;
+      receiveInputEvent(scmEventREQID, nullptr);
+      pa_OUT = var_OUT;
+    }
+
+    void operator()(const CIEC_LocalizedText &pa_IN, CIEC_LocalizedText &pa_OUT) {
+      evt_REQ(pa_IN, pa_OUT);
+    }
 };
-
-#endif //close the ifdef sequence from the beginning of the file
 
