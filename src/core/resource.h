@@ -136,6 +136,18 @@ class CResource : public CFunctionBlock, public forte::core::CFBContainer{
       // nothing to write to for a resource
     }
 
+    CIEC_ANY *getDO(size_t) override {
+      return nullptr;
+    }
+
+    CEventConnection *getEOConUnchecked(TPortId) override {
+      return nullptr;
+    }
+
+    CDataConnection *getDOConUnchecked(TPortId) override {
+      return nullptr;
+    }
+
     /*! Wrapper for simplifying connection creation in resources
      *
      */

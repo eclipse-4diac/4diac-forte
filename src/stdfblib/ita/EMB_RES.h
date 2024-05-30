@@ -25,6 +25,9 @@ class EMB_RES : public CResource{
 
     bool initialize() override;
 
+    CIEC_ANY *getDI(size_t) override;
+    CDataConnection **getDIConUnchecked(TPortId) override;
+
   private:
     static const SFBInterfaceSpec scmFBInterfaceSpec;
 };

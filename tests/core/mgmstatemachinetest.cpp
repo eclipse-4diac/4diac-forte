@@ -44,6 +44,26 @@ class CFunctionBlockMock : public CFunctionBlock{
 
     void writeOutputData(TEventID) override{
     }
+
+    CIEC_ANY *getDI(size_t) override {
+      return nullptr;
+    }
+
+    CIEC_ANY *getDO(size_t) override {
+      return nullptr;
+    }
+
+    CEventConnection *getEOConUnchecked(TPortId) override {
+      return nullptr;
+    }
+
+    CDataConnection **getDIConUnchecked(TPortId) override {
+      return nullptr;
+    }
+
+    CDataConnection *getDOConUnchecked(TPortId) override {
+      return nullptr;
+    }
 };
 
 

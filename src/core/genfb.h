@@ -17,6 +17,8 @@
 
 template <class T>
 class CGenFunctionBlock : public T {
+    static_assert(std::is_base_of_v<CFunctionBlock, T>, "T must be a subclass of CFunctionBlock");
+
   public:
 
     /*!\brief The getFBType method is used by the Query command to get the instances correct type name (eg. "CLIENT_3_2")
@@ -28,10 +30,23 @@ class CGenFunctionBlock : public T {
 
     bool configureFB(const char *paConfigString) override;
 
+    CIEC_ANY* getDI(TPortId paDINum) override {
+      return mDIs[paDINum];
+    }
+
+    CIEC_ANY* getDO(TPortId paDONum) override {
+      return mDOs[paDONum];
+    }
+
   protected:
     CGenFunctionBlock(forte::core::CFBContainer &paContainer, const CStringDictionary::TStringId paInstanceNameId);
+
+    CGenFunctionBlock(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec *paInterfaceSpec,
+                      const CStringDictionary::TStringId paInstanceNameId);
+
     ~CGenFunctionBlock() override;
 
+    bool initialize();
 
     static void generateGenericInterfacePointNameArray(const char * const paPrefix,
         CStringDictionary::TStringId* paNamesArayStart,
@@ -43,6 +58,36 @@ class CGenFunctionBlock : public T {
     static size_t getDataPointSpecSize(const CIEC_ANY &paValue);
     static void fillDataPointSpec(const CIEC_ANY &paValue, CStringDictionary::TStringId *&paDataTypeIds);
 
+    static size_t calculateFBConnDataSize(const SFBInterfaceSpec &paInterfaceSpec);
+
+    static size_t calculateFBVarsDataSize(const SFBInterfaceSpec &paInterfaceSpec);
+
+    void setupFBInterface(const SFBInterfaceSpec *paInterfaceSpec);
+
+    void freeFBInterfaceData();
+
+    CEventConnection *getEOConUnchecked(TPortId paEONum) override {
+      return (mEOConns + paEONum);
+    }
+
+    CDataConnection *getDOConUnchecked(TPortId paDONum) override {
+      return mDOConns + paDONum;
+    }
+
+    CDataConnection **getDIConUnchecked(TPortId paDINum) override {
+      return mDIConns + paDINum;
+    }
+
+    CAdapter *getAdapterUnchecked(TPortId paAdapterNum) override {
+      return mAdapters[paAdapterNum];
+    }
+
+    CEventConnection *mEOConns; //!< A list of event connections pointers storing for each event output the event connection. If the output event is not connected the pointer is nullptr.
+    CDataConnection **mDIConns; //!< A list of data connections pointers storing for each data input the data connection. If the data input is not connected the pointer is nullptr.
+    CDataConnection *mDOConns; //!< A list of data connections pointers storing for each data output the data connection. If the data output is not connected the pointer is nullptr.
+    CIEC_ANY **mDIs; //!< A list of pointers to the data inputs. This allows to implement a general getDataInput()
+    CIEC_ANY **mDOs; //!< A list of pointers to the data outputs. This allows to implement a general getDataOutput()
+    CAdapter **mAdapters; //!< A list of pointers to the adapters. This allows to implement a general getAdapter().
   private:
     /*! \brief parse the config string and generate the according interface specification
      *
@@ -60,8 +105,12 @@ class CGenFunctionBlock : public T {
       mConfiguredFBTypeNameId = paTypeNameId;
     }
 
+    void setupAdapters(const SFBInterfaceSpec *paInterfaceSpec, TForteByte *paFBData);
+
     CStringDictionary::TStringId mConfiguredFBTypeNameId;
     SFBInterfaceSpec mGenInterfaceSpec;  //!< the interface spec for this specific instance of generic FB
+    void *mFBConnData; //!< Connection data buffer
+    void *mFBVarsData; //!< Variable data buffer
 };
 
 #include "genfb.tpp"
