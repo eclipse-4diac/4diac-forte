@@ -93,7 +93,7 @@ CFBTestFixtureBase::~CFBTestFixtureBase(){
   performFBDeleteTests();
 
   if(nullptr != mInterfaceSpec){
-    freeAllData();  //clean the interface and connections first.
+    freeFBInterfaceData();  //clean the interface and connections first.
     delete mInterfaceSpec;
     mInterfaceSpec = nullptr; //this stops the base classes from any wrong clean-up
   }

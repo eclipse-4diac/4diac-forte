@@ -597,7 +597,7 @@ bool DEV_MGR::initialize() {
 }
 
 DEV_MGR::~DEV_MGR(){
-  freeAllData();
+  freeFBInterfaceData();
   mInterfaceSpec = nullptr;  //block any wrong cleanup in the generic fb base class of CBaseCommFB
 }
 

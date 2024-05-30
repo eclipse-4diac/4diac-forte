@@ -57,10 +57,10 @@ bool CFunctionBlock::initialize() {
 }
 
 CFunctionBlock::~CFunctionBlock(){
-  freeAllData();
+  freeFBInterfaceData();
 }
 
-void CFunctionBlock::freeAllData(){
+void CFunctionBlock::freeFBInterfaceData(){
   if(nullptr != mInterfaceSpec){
     if(nullptr != mEOConns) {
       std::destroy_n(mEOConns, mInterfaceSpec->mNumEOs);
@@ -103,11 +103,8 @@ void CFunctionBlock::freeAllData(){
   operator delete(mFBVarsData);
   mFBVarsData = nullptr;
 
-#ifdef  FORTE_SUPPORT_MONITORING
-  delete[] mEOMonitorCount;
-  mEOMonitorCount = nullptr;
-  delete[] mEIMonitorCount;
-  mEIMonitorCount = nullptr;
+#ifdef FORTE_SUPPORT_MONITORING
+  freeEventMonitoringData();
 #endif //FORTE_SUPPORT_MONITORING
 }
 
@@ -602,7 +599,7 @@ size_t CFunctionBlock::calculateFBVarsDataSize(const SFBInterfaceSpec &paInterfa
 }
 
 void CFunctionBlock::setupFBInterface(const SFBInterfaceSpec *paInterfaceSpec) {
-  freeAllData();
+  freeFBInterfaceData();
 
   mInterfaceSpec = const_cast<SFBInterfaceSpec *>(paInterfaceSpec);
 
@@ -687,17 +684,25 @@ TPortId CFunctionBlock::getPortId(CStringDictionary::TStringId paPortNameId, TPo
 //********************************** below here are monitoring specific functions **********************************************************
 #ifdef FORTE_SUPPORT_MONITORING
 void CFunctionBlock::setupEventMonitoringData(){
-  if(0 != mInterfaceSpec->mNumEIs){
-    mEIMonitorCount = new TForteUInt32[mInterfaceSpec->mNumEIs];
-    memset(mEIMonitorCount, 0, sizeof(TForteUInt32) * mInterfaceSpec->mNumEIs);
-  }
+  freeEventMonitoringData();
 
-  if(0 != mInterfaceSpec->mNumEOs){
-    mEOMonitorCount = new TForteUInt32[mInterfaceSpec->mNumEOs];
-    memset(mEOMonitorCount, 0, sizeof(TForteUInt32) * mInterfaceSpec->mNumEOs);
+  if(mInterfaceSpec) {
+    if (0 != mInterfaceSpec->mNumEIs) {
+      mEIMonitorCount = new TForteUInt32[mInterfaceSpec->mNumEIs];
+    }
+
+    if (0 != mInterfaceSpec->mNumEOs) {
+      mEOMonitorCount = new TForteUInt32[mInterfaceSpec->mNumEOs];
+    }
   }
 }
 
+void CFunctionBlock::freeEventMonitoringData(){
+  delete[] mEOMonitorCount;
+  mEOMonitorCount = nullptr;
+  delete[] mEIMonitorCount;
+  mEIMonitorCount = nullptr;
+}
 
 CFunctionBlock *CFunctionBlock::getFB(forte::core::TNameIdentifier::CIterator &paNameListIt){
   CFunctionBlock *retVal = nullptr;
