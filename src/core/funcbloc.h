@@ -645,7 +645,7 @@ class CFunctionBlock {
 
     static EMGMResponse changeInternalFBExecutionState(const EMGMCommandType paCommand, const size_t paAmountOfInternalFBs, TFunctionBlockPtr *const paInternalFBs);
 
-    void freeAllData();
+    void freeFBInterfaceData();
 
     const SFBInterfaceSpec *mInterfaceSpec; //!< Pointer to the interface specification
     CEventConnection *mEOConns; //!< A list of event connections pointers storing for each event output the event connection. If the output event is not connected the pointer is nullptr.
@@ -695,6 +695,7 @@ class CFunctionBlock {
 
 #ifdef FORTE_SUPPORT_MONITORING
     void setupEventMonitoringData();
+    void freeEventMonitoringData();
 
     // monitoring stuff
     TForteUInt32 *mEOMonitorCount;
