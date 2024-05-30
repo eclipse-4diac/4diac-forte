@@ -20,29 +20,37 @@
 DEFINE_FIRMWARE_FB(FORTE_CFB_TEST, g_nStringIdCFB_TEST)
 
 const CStringDictionary::TStringId FORTE_CFB_TEST::scmDataInputNames[] = {g_nStringIdQI};
-
 const CStringDictionary::TStringId FORTE_CFB_TEST::scmDataInputTypeIds[] = {g_nStringIdBOOL};
-
-const CStringDictionary::TStringId FORTE_CFB_TEST::scmDataOutputNames[] = {g_nStringIdSR};
-
+const CStringDictionary::TStringId FORTE_CFB_TEST::scmDataOutputNames[] = {g_nStringIdQO};
 const CStringDictionary::TStringId FORTE_CFB_TEST::scmDataOutputTypeIds[] = {g_nStringIdBOOL};
-
-const TForteInt16 FORTE_CFB_TEST::scmEIWithIndexes[] = {0, 2};
 const TDataIOID FORTE_CFB_TEST::scmEIWith[] = {0, scmWithListDelimiter, 0, scmWithListDelimiter};
+const TForteInt16 FORTE_CFB_TEST::scmEIWithIndexes[] = {0, 2};
 const CStringDictionary::TStringId FORTE_CFB_TEST::scmEventInputNames[] = {g_nStringIdSET, g_nStringIdRESET};
-
 const TDataIOID FORTE_CFB_TEST::scmEOWith[] = {0, scmWithListDelimiter, 0, scmWithListDelimiter};
-const TForteInt16 FORTE_CFB_TEST::scmEOWithIndexes[] = {0, 2, -1};
+const TForteInt16 FORTE_CFB_TEST::scmEOWithIndexes[] = {0, 2};
 const CStringDictionary::TStringId FORTE_CFB_TEST::scmEventOutputNames[] = {g_nStringIdCNF, g_nStringIdCHANGED};
-
 const SFBInterfaceSpec FORTE_CFB_TEST::scmFBInterfaceSpec = {
   2, scmEventInputNames, scmEIWith, scmEIWithIndexes,
-  2, scmEventOutputNames, scmEOWith,scmEOWithIndexes, 1, scmDataInputNames, scmDataInputTypeIds,
+  2, scmEventOutputNames, scmEOWith, scmEOWithIndexes,
+  1, scmDataInputNames, scmDataInputTypeIds,
   1, scmDataOutputNames, scmDataOutputTypeIds,
   0, nullptr,
   0, nullptr
 };
 
+FORTE_CFB_TEST::FORTE_CFB_TEST(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+    CCompositeFB(paContainer, &scmFBInterfaceSpec, paInstanceNameId, scmFBNData),
+    var_conn_QO(var_QO),
+    conn_CNF(this, 0),
+    conn_CHANGED(this, 1),
+    conn_QI(nullptr),
+    conn_QO(this, 0, &var_conn_QO) {
+};
+
+void FORTE_CFB_TEST::setInitialValues() {
+	var_QI = 0_BOOL;
+	var_QO = 0_BOOL;
+}
 
 const SCFB_FBInstanceData FORTE_CFB_TEST::scmInternalFBs[] = {
   {g_nStringIdPERMIT_OP, g_nStringIdE_PERMIT},
@@ -73,7 +81,7 @@ const SCFB_FBFannedOutConnectionData FORTE_CFB_TEST::scmFannedOutEventConnection
 
 const SCFB_FBConnectionData FORTE_CFB_TEST::scmDataConnections[] = {
   {GENERATE_CONNECTION_PORT_ID_1_ARG(g_nStringIdQI), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdPERMIT_OP, g_nStringIdPERMIT), 0},
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdE_SR, g_nStringIdQ), 1, GENERATE_CONNECTION_PORT_ID_1_ARG(g_nStringIdSR), -1},
+  {GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdE_SR, g_nStringIdQ), 1, GENERATE_CONNECTION_PORT_ID_1_ARG(g_nStringIdQO), -1},
   {GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdE_MUX_2, g_nStringIdK), 4, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdE_DEMUX_2, g_nStringIdK), 3},
 };
 
@@ -92,15 +100,83 @@ const SCFB_FBNData FORTE_CFB_TEST::scmFBNData = {
   0, nullptr
 };
 
-void FORTE_CFB_TEST::readInputData(TEventID) {
-  readData(0, *mDIs[0], mDIConns[0]);
+void FORTE_CFB_TEST::readInternal2InterfaceOutputData(const TEventID paEOID) {
+  switch(paEOID) {
+    case scmEventCNFID: {
+      if(CDataConnection *conn = getIn2IfConUnchecked(0); conn) { conn->readData(var_QO); }
+      break;
+    }
+    case scmEventCHANGEDID: {
+      if(CDataConnection *conn = getIn2IfConUnchecked(0); conn) { conn->readData(var_QO); }
+      break;
+    }
+    default:
+      break;
+  }
+}
+void FORTE_CFB_TEST::readInputData(const TEventID paEIID) {
+  switch(paEIID) {
+    case scmEventSETID: {
+      readData(0, var_QI, conn_QI);
+      break;
+    }
+    case scmEventRESETID: {
+      readData(0, var_QI, conn_QI);
+      break;
+    }
+    default:
+      break;
+  }
 }
 
-void FORTE_CFB_TEST::writeOutputData(TEventID) {
-  writeData(0, *mDOs[0], mDOConns[0]);
+void FORTE_CFB_TEST::writeOutputData(const TEventID paEIID) {
+  switch(paEIID) {
+    case scmEventCNFID: {
+      writeData(0, var_QO, conn_QO);
+      break;
+    }
+    case scmEventCHANGEDID: {
+      writeData(0, var_QO, conn_QO);
+      break;
+    }
+    default:
+      break;
+  }
 }
 
-void FORTE_CFB_TEST::readInternal2InterfaceOutputData(TEventID) {
-  if(CDataConnection *conn = getIn2IfConUnchecked(0); conn) { conn->readData(*mDOs[0]); }
+CIEC_ANY *FORTE_CFB_TEST::getDI(const size_t paIndex) {
+  switch(paIndex) {
+    case 0: return &var_QI;
+  }
+  return nullptr;
+}
+
+CIEC_ANY *FORTE_CFB_TEST::getDO(const size_t paIndex) {
+  switch(paIndex) {
+    case 0: return &var_QO;
+  }
+  return nullptr;
+}
+
+CEventConnection *FORTE_CFB_TEST::getEOConUnchecked(const TPortId paIndex) {
+  switch(paIndex) {
+    case 0: return &conn_CNF;
+    case 1: return &conn_CHANGED;
+  }
+  return nullptr;
+}
+
+CDataConnection **FORTE_CFB_TEST::getDIConUnchecked(const TPortId paIndex) {
+  switch(paIndex) {
+    case 0: return &conn_QI;
+  }
+  return nullptr;
+}
+
+CDataConnection *FORTE_CFB_TEST::getDOConUnchecked(const TPortId paIndex) {
+  switch(paIndex) {
+    case 0: return &conn_QO;
+  }
+  return nullptr;
 }
 

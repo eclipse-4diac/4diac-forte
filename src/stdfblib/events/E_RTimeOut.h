@@ -22,40 +22,39 @@
 #include "ARTimeOut.h"
 
 
-class FORTE_E_RTimeOut: public CCompositeFB {
+class FORTE_E_RTimeOut final : public CCompositeFB {
   DECLARE_FIRMWARE_FB(FORTE_E_RTimeOut)
 
-private:
-  static const int scmTimeOutSocketAdpNum = 0;
-  
-  static const SAdapterInstanceDef scmAdapterInstances[];
+  private:
+    static const int scmTimeOutSocketAdpNum = 0;
+    static const SAdapterInstanceDef scmAdapterInstances[];
 
-  static const SFBInterfaceSpec scmFBInterfaceSpec;
+    static const SFBInterfaceSpec scmFBInterfaceSpec;
 
-  static const SCFB_FBInstanceData scmInternalFBs[];
-  static const SCFB_FBParameter scmParamters[];
-  static const SCFB_FBConnectionData scmEventConnections[];
-  static const SCFB_FBFannedOutConnectionData scmFannedOutEventConnections[];
-  static const SCFB_FBConnectionData scmDataConnections[];
-  static const SCFB_FBFannedOutConnectionData scmFannedOutDataConnections[];
-  static const SCFB_FBNData scmFBNData;
+    static const SCFB_FBInstanceData scmInternalFBs[];
+    static const SCFB_FBParameter scmParamters[];
+    static const SCFB_FBConnectionData scmEventConnections[];
+    static const SCFB_FBFannedOutConnectionData scmFannedOutEventConnections[];
+    static const SCFB_FBConnectionData scmDataConnections[];
+    static const SCFB_FBFannedOutConnectionData scmFannedOutDataConnections[];
+    static const SCFB_FBNData scmFBNData;
 
-  void readInputData(TEventID paEIID) override;
-  void writeOutputData(TEventID paEIID) override;
-  void readInternal2InterfaceOutputData(TEventID paEOID) override;
+    void readInputData(TEventID paEIID) override;
+    void writeOutputData(TEventID paEIID) override;
+    void readInternal2InterfaceOutputData(TEventID paEOID) override;
 
-public:
-  FORTE_E_RTimeOut(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+  public:
+    FORTE_E_RTimeOut(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    bool initialize() override;
 
-  CIEC_ANY *getDI(size_t) override;
-  CIEC_ANY *getDO(size_t) override;
-  FORTE_ARTimeOut &var_TimeOutSocket() {
-    return *static_cast<FORTE_ARTimeOut*>(mAdapters[0]);
-  };
-  
-  CEventConnection *getEOConUnchecked(TPortId) override;
-  CDataConnection **getDIConUnchecked(TPortId) override;
-  CDataConnection *getDOConUnchecked(TPortId) override;
+    FORTE_ARTimeOut var_TimeOutSocket;
+
+    CIEC_ANY *getDI(size_t) override;
+    CIEC_ANY *getDO(size_t) override;
+    CAdapter *getAdapterUnchecked(size_t) override;
+    CEventConnection *getEOConUnchecked(TPortId) override;
+    CDataConnection **getDIConUnchecked(TPortId) override;
+    CDataConnection *getDOConUnchecked(TPortId) override;
 };
 
 

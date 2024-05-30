@@ -24,7 +24,6 @@
 /*!\brief Base class for timed function block like E_CYCLE or E_DELAY providing this interface
  */
 class CTimedFB : public CEventSourceFB{
-private:
 protected:
   static const SFBInterfaceSpec scmFBInterfaceSpec;
   static const CStringDictionary::TStringId scmEINameIds[];
@@ -51,15 +50,18 @@ protected:
   void readInputData(TEventID paEI) override;
   void writeOutputData(TEventID paEO) override;
 
-  CIEC_TIME& DT() {
-     return *static_cast<CIEC_TIME*>(getDI(0));
-  }
-
 public:
-  ~CTimedFB() override = default;
+  CIEC_TIME var_DT;
+  CDataConnection *conn_DT;
+  CEventConnection conn_EO;
+
+  CIEC_ANY *getDI(size_t) override;
+  CIEC_ANY *getDO(size_t) override;
+  CEventConnection *getEOConUnchecked(TPortId) override;
+  CDataConnection **getDIConUnchecked(TPortId) override;
+  CDataConnection *getDOConUnchecked(TPortId) override;
 
   EMGMResponse changeFBExecutionState(EMGMCommandType paCommand) override;
-
 };
 
 #endif /*TIMEDFB_H_*/

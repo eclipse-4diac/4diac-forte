@@ -23,7 +23,7 @@ void E_CYCLE::executeEvent(TEventID paEIID, CEventChainExecutionThread *const pa
   if(paEIID == csmEventSTARTID) {
     if(!mActive){
       setEventChainExecutor(paECET);
-      getTimer().registerPeriodicTimedFB(this, DT());
+      getTimer().registerPeriodicTimedFB(this, var_DT);
       mActive = true;
     }
   } else {
