@@ -10,24 +10,30 @@
  *   Michael Hofmann, Alois Zoitl
  *   - initial API and implementation and/or initial documentation
  *******************************************************************************/
+
 #include "STEST_END.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
 #include "STEST_END_gen.cpp"
 #endif
+
 #include "../../stdfblib/ita/RMT_DEV.h"
-#include <forte_thread.h>
+#include "forte_thread.h"
 
 DEFINE_FIRMWARE_FB(FORTE_STEST_END, g_nStringIdSTEST_END)
 
 const TForteInt16 FORTE_STEST_END::scmEIWithIndexes[] = {-1};
 const CStringDictionary::TStringId FORTE_STEST_END::scmEventInputNames[] = {g_nStringIdREQ};
-
 const SFBInterfaceSpec FORTE_STEST_END::scmFBInterfaceSpec = {
-  1,  scmEventInputNames,  nullptr,  scmEIWithIndexes,
-  0,  nullptr,  nullptr, nullptr,  0,  nullptr, nullptr,
-  0,  nullptr, nullptr,
+  1, scmEventInputNames, nullptr, scmEIWithIndexes,
+  0, nullptr, nullptr, nullptr,
+  0, nullptr, nullptr,
+  0, nullptr, nullptr,
   0, nullptr,
   0, nullptr
+};
+
+FORTE_STEST_END::FORTE_STEST_END(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+    CFunctionBlock(paContainer, &scmFBInterfaceSpec, paInstanceNameId) {
 };
 
 void FORTE_STEST_END::executeEvent(TEventID paEIID, CEventChainExecutionThread *const) {
@@ -37,5 +43,31 @@ void FORTE_STEST_END::executeEvent(TEventID paEIID, CEventChainExecutionThread *
   }
 }
 
+void FORTE_STEST_END::readInputData(TEventID) {
+  // nothing to do
+}
 
+void FORTE_STEST_END::writeOutputData(TEventID) {
+  // nothing to do
+}
+
+CIEC_ANY *FORTE_STEST_END::getDI(size_t) {
+  return nullptr;
+}
+
+CIEC_ANY *FORTE_STEST_END::getDO(size_t) {
+  return nullptr;
+}
+
+CEventConnection *FORTE_STEST_END::getEOConUnchecked(TPortId) {
+  return nullptr;
+}
+
+CDataConnection **FORTE_STEST_END::getDIConUnchecked(TPortId) {
+  return nullptr;
+}
+
+CDataConnection *FORTE_STEST_END::getDOConUnchecked(TPortId) {
+  return nullptr;
+}
 

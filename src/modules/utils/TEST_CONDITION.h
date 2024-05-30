@@ -13,32 +13,28 @@
  *   Martin Jobst - add readInputData and writeOutputData
  *******************************************************************************/
 
-#ifndef _TEST_CONDITION_H_
-#define _TEST_CONDITION_H_
+#pragma once
 
-#include <funcbloc.h>
-#include <forte_bool.h>
-#include <forte_sync.h>
+#include "funcbloc.h"
+#include "forte_bool.h"
+#include "forte_sync.h"
 
-class FORTE_TEST_CONDITION: public CFunctionBlock{
+
+class FORTE_TEST_CONDITION final : public CFunctionBlock {
   DECLARE_FIRMWARE_FB(FORTE_TEST_CONDITION)
 
-private:
-  static const CStringDictionary::TStringId scmDataInputNames[];
-  static const CStringDictionary::TStringId scmDataInputTypeIds[];
-  CIEC_BOOL &check() {
-    return *static_cast<CIEC_BOOL*>(getDI(0));
-  };
+  private:
+    static const CStringDictionary::TStringId scmDataInputNames[];
+    static const CStringDictionary::TStringId scmDataInputTypeIds[];
+    static const TEventID scmEventREQID = 0;
+    static const TDataIOID scmEIWith[];
+    static const TForteInt16 scmEIWithIndexes[];
+    static const CStringDictionary::TStringId scmEventInputNames[];
+    static const TEventID scmEventCNFID = 0;
+    static const TForteInt16 scmEOWithIndexes[];
+    static const CStringDictionary::TStringId scmEventOutputNames[];
 
-  static const TEventID scmEventREQID = 0;
-  static const TForteInt16 scmEIWithIndexes[];
-  static const TDataIOID scmEIWith[];
-  static const CStringDictionary::TStringId scmEventInputNames[];
-
-  static const TEventID scmEventCNFID = 0;
-  static const CStringDictionary::TStringId scmEventOutputNames[];
-
-  static const SFBInterfaceSpec scmFBInterfaceSpec;
+    static const SFBInterfaceSpec scmFBInterfaceSpec;
 
     static unsigned int smExecutedTests;
     static unsigned int smFailedTests;
@@ -47,20 +43,38 @@ private:
 
 
 
-  void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
+    void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
-  void readInputData(TEventID paEI) override;
-  void writeOutputData(TEventID paEO) override;
+    void readInputData(TEventID paEIID) override;
+    void writeOutputData(TEventID paEIID) override;
+    void setInitialValues() override;
 
-  CSyncObject mFinalReportMutex;
+    CSyncObject mFinalReportMutex;
 
-public:
-  FUNCTION_BLOCK_CTOR(FORTE_TEST_CONDITION){
-  };
+  public:
+    FORTE_TEST_CONDITION(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    ~FORTE_TEST_CONDITION() override;
 
-  ~FORTE_TEST_CONDITION() override;
+    CIEC_BOOL var_check;
 
+    CEventConnection conn_CNF;
+
+    CDataConnection *conn_check;
+
+    CIEC_ANY *getDI(size_t) override;
+    CIEC_ANY *getDO(size_t) override;
+    CEventConnection *getEOConUnchecked(TPortId) override;
+    CDataConnection **getDIConUnchecked(TPortId) override;
+    CDataConnection *getDOConUnchecked(TPortId) override;
+
+    void evt_REQ(const CIEC_BOOL &pacheck) {
+      var_check = pacheck;
+      executeEvent(scmEventREQID, nullptr);
+    }
+
+    void operator()(const CIEC_BOOL &pacheck) {
+      evt_REQ(pacheck);
+    }
 };
 
-#endif //close the ifdef sequence from the beginning of the file
 

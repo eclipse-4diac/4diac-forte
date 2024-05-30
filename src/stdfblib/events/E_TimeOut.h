@@ -23,34 +23,35 @@
 
 #include "../arch/timerha.h"
 
-// cppcheck-suppress noConstructor
-class FORTE_E_TimeOut : public CEventSourceFB{
+class FORTE_E_TimeOut final : public CEventSourceFB {
   DECLARE_FIRMWARE_FB(FORTE_E_TimeOut)
 
   private:
+    static const int scmTimeOutSocketAdpNum = 0;
     static const SAdapterInstanceDef scmAdapterInstances[];
 
-    FORTE_ATimeOut& var_TimeOutSocket(){
-      return *static_cast<FORTE_ATimeOut*>(mAdapters[0]);
-    }
-    ;
-    static const int scmTimeOutSocketAdpNum = 0;
     static const SFBInterfaceSpec scmFBInterfaceSpec;
 
     bool mActive; //!> flag to indicate that the timed fb is currently active
 
     void executeEvent(TEventID paEIID, CEventChainExecutionThread * const paECET) override;
 
-    void readInputData(TEventID paEI) override;
-    void writeOutputData(TEventID paEO) override;
+    void readInputData(TEventID paEIID) override;
+    void writeOutputData(TEventID paEIID) override;
 
   public:
-    EVENT_SOURCE_FUNCTION_BLOCK_CTOR(FORTE_E_TimeOut), mActive(false) {
-    };
+    FORTE_E_TimeOut(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    bool initialize() override;
 
-  ~FORTE_E_TimeOut() override = default;
+    FORTE_ATimeOut var_TimeOutSocket;
 
-  EMGMResponse changeFBExecutionState(EMGMCommandType paCommand) override;
+    CIEC_ANY *getDI(size_t) override;
+    CIEC_ANY *getDO(size_t) override;
+    CAdapter *getAdapterUnchecked(size_t) override;
+    CEventConnection *getEOConUnchecked(TPortId) override;
+    CDataConnection **getDIConUnchecked(TPortId) override;
+    CDataConnection *getDOConUnchecked(TPortId) override;
 
+    EMGMResponse changeFBExecutionState(EMGMCommandType paCommand) override;
 };
 

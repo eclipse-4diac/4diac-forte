@@ -11,46 +11,48 @@
  *   Matthias Plasch
  *     - initial API and implementation and/or initial documentation
  *******************************************************************************/
-#ifndef _E_RESTART_H_
-#define _E_RESTART_H_
+
+#pragma once
 
 #include "../core/esfb.h"
 #include "../core/resource.h"
-#include <forte_sem.h>
+#include "forte_sem.h"
 
-/*! \brief Implementation of the E_RESTART FB.
- */
-// cppcheck-suppress noConstructor
-class E_RESTART : public CEventSourceFB{
-  DECLARE_FIRMWARE_FB(E_RESTART)
-private:
-  static const SFBInterfaceSpec scmFBInterfaceSpec;
+class FORTE_E_RESTART final : public CEventSourceFB {
+  DECLARE_FIRMWARE_FB(FORTE_E_RESTART)
 
+  private:
+    static const TEventID scmEventCOLDID = 0;
+    static const TEventID scmEventWARMID = 1;
+    static const TEventID scmEventSTOPID = 2;
+    static const TForteInt16 scmEOWithIndexes[];
+    static const CStringDictionary::TStringId scmEventOutputNames[];
 
-  static const TEventID csmCOLDID = 0;
-  static const TEventID csmWARMID = 1;
-  static const TEventID csmSTOPID = 2;
+    static const SFBInterfaceSpec scmFBInterfaceSpec;
 
-  static const CStringDictionary::TStringId scmEONameIds[];
+    // semaphore to ensure proper handling of STOP execution state change
+    forte::arch::CSemaphore mSuspendSemaphore;
 
-  // semaphore to ensure proper handling of STOP execution state change
-  forte::arch::CSemaphore mSuspendSemaphore;
+    TEventID mEventToSend;
 
-  TEventID mEventToSend;
+    void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
-  void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
-
-  void readInputData(TEventID paEI) override;
-  void writeOutputData(TEventID paEO) override;
+    void readInputData(TEventID paEIID) override;
+    void writeOutputData(TEventID paEIID) override;
 
 public:
-  EVENT_SOURCE_FUNCTION_BLOCK_CTOR(E_RESTART),
-        mEventToSend(cgInvalidEventID) {
-    setEventChainExecutor(getResource()->getResourceEventExecution());
-  }
-  ~E_RESTART() override = default;
+    FORTE_E_RESTART(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
-  EMGMResponse changeFBExecutionState(EMGMCommandType paCommand) override;
+    CEventConnection conn_COLD;
+    CEventConnection conn_WARM;
+    CEventConnection conn_STOP;
+
+    CIEC_ANY *getDI(size_t) override;
+    CIEC_ANY *getDO(size_t) override;
+    CEventConnection *getEOConUnchecked(TPortId) override;
+    CDataConnection **getDIConUnchecked(TPortId) override;
+    CDataConnection *getDOConUnchecked(TPortId) override;
+
+    EMGMResponse changeFBExecutionState(EMGMCommandType paCommand) override;
 };
 
-#endif /*E_RESTART_H_*/
