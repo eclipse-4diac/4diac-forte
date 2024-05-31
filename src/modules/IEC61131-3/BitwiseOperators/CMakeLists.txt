@@ -14,13 +14,13 @@ forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 #############################################################################
 # BitwiseOperators
 #############################################################################
-forte_add_sourcefile_hcpp(F_AND)
-forte_add_sourcefile_hcpp(F_NOT)
-forte_add_sourcefile_hcpp(F_OR)
-forte_add_sourcefile_hcpp(F_XOR)
-forte_add_sourcefile_hcpp(genbitbase GEN_AND GEN_OR GEN_XOR)
+forte_add_sourcefile_hcpp(F_AND_fbt)
+forte_add_sourcefile_hcpp(F_NOT_fbt)
+forte_add_sourcefile_hcpp(F_OR_fbt)
+forte_add_sourcefile_hcpp(F_XOR_fbt)
+forte_add_sourcefile_hcpp(genbitbase_fbt GEN_AND GEN_OR GEN_XOR)
 
-forte_add_sourcefile_hcpp(F_SHL)
-forte_add_sourcefile_hcpp(F_SHR)
-forte_add_sourcefile_hcpp(F_ROR)
-forte_add_sourcefile_hcpp(F_ROL)
+forte_add_sourcefile_hcpp(F_SHL_fbt)
+forte_add_sourcefile_hcpp(F_SHR_fbt)
+forte_add_sourcefile_hcpp(F_ROR_fbt)
+forte_add_sourcefile_hcpp(F_ROL_fbt)
