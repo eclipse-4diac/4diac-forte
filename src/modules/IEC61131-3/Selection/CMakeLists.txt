@@ -14,8 +14,8 @@ forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 #############################################################################
 # Selection
 #############################################################################
-forte_add_sourcefile_hcpp(F_LIMIT)
-forte_add_sourcefile_hcpp(F_MIN)
-forte_add_sourcefile_hcpp(F_MAX)
-forte_add_sourcefile_hcpp(F_SEL)
-forte_add_sourcefile_hcpp(F_MUX_2)
+forte_add_sourcefile_hcpp(F_LIMIT_fbt)
+forte_add_sourcefile_hcpp(F_MIN_fbt)
+forte_add_sourcefile_hcpp(F_MAX_fbt)
+forte_add_sourcefile_hcpp(F_SEL_fbt)
+forte_add_sourcefile_hcpp(F_MUX_2_fbt)
