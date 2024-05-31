@@ -11,6 +11,7 @@
 # *   - initial API and implementation and/or initial documentation
 # *   Martin Melik-Merkumians - removing illegal casts
 # *******************************************************************************/
+forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 #############################################################################
 # BYTE_TO_xxx Conversion
 #############################################################################
@@ -22,14 +23,12 @@ forte_add_sourcefile_hcpp(F_BYTE_TO_UDINT)
 forte_add_sourcefile_hcpp(F_BYTE_TO_UINT)
 forte_add_sourcefile_hcpp(F_BYTE_TO_USINT)
 forte_add_sourcefile_hcpp(F_BYTE_TO_WORD)
-forte_add_sourcefile_hcpp(F_BYTE_TO_STRING)
+forte_add_sourcefile_hcpp(F_BYTE_AS_STRING)
+forte_add_sourcefile_hcpp(F_BYTE_TO_LINT)
+forte_add_sourcefile_hcpp(F_BYTE_TO_LWORD)
+forte_add_sourcefile_hcpp(F_BYTE_TO_ULINT)
 
-if(FORTE_USE_64BIT_DATATYPES) 
-  forte_add_sourcefile_hcpp(F_BYTE_TO_LINT)
-  forte_add_sourcefile_hcpp(F_BYTE_TO_LWORD)
-  forte_add_sourcefile_hcpp(F_BYTE_TO_ULINT)
-endif(FORTE_USE_64BIT_DATATYPES)
 
 if(FORTE_USE_WSTRING_DATATYPE)
-  forte_add_sourcefile_hcpp(F_BYTE_TO_WSTRING)
+  forte_add_sourcefile_hcpp(F_BYTE_AS_WSTRING)
 endif(FORTE_USE_WSTRING_DATATYPE)

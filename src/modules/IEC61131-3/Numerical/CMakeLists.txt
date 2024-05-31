@@ -10,20 +10,18 @@
 #    Monika Wenger
 # *   - initial API and implementation and/or initial documentation
 # *******************************************************************************/
+forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 #############################################################################
 # Numerical
 #############################################################################
-forte_add_sourcefile_hcpp(F_ABS)
-
-if(FORTE_USE_REAL_DATATYPE)
-  forte_add_sourcefile_hcpp(F_SQRT)
-  forte_add_sourcefile_hcpp(F_LN)
-  forte_add_sourcefile_hcpp(F_LOG)
-  forte_add_sourcefile_hcpp(F_SIN)
-  forte_add_sourcefile_hcpp(F_COS)
-  forte_add_sourcefile_hcpp(F_TAN)
-  forte_add_sourcefile_hcpp(F_ASIN)
-  forte_add_sourcefile_hcpp(F_ACOS)
-  forte_add_sourcefile_hcpp(F_ATAN)
-  forte_add_sourcefile_hcpp(F_EXP)
-endif(FORTE_USE_REAL_DATATYPE)
+forte_add_sourcefile_hcpp(F_ABS_fbt)
+forte_add_sourcefile_hcpp(F_SQRT_fbt)
+forte_add_sourcefile_hcpp(F_LN_fbt)
+forte_add_sourcefile_hcpp(F_LOG_fbt)
+forte_add_sourcefile_hcpp(F_SIN_fbt)
+forte_add_sourcefile_hcpp(F_COS_fbt)
+forte_add_sourcefile_hcpp(F_TAN_fbt)
+forte_add_sourcefile_hcpp(F_ASIN_fbt)
+forte_add_sourcefile_hcpp(F_ACOS_fbt)
+forte_add_sourcefile_hcpp(F_ATAN_fbt)
+forte_add_sourcefile_hcpp(F_EXP_fbt)

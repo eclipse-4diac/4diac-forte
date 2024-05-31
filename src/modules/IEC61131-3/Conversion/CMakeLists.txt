@@ -10,6 +10,7 @@
 #    Monika Wenger, Matthias Plasch
 # *   - initial API and implementation and/or initial documentation
 # *******************************************************************************/
+forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 #############################################################################
 # Conversion
 #############################################################################
@@ -31,17 +32,11 @@ if(FORTE_USE_WSTRING_DATATYPE)
   forte_add_subdirectory(WSTRING)
 endif(FORTE_USE_WSTRING_DATATYPE)
 
-if(FORTE_USE_REAL_DATATYPE)
-  forte_add_subdirectory(REAL)
-endif(FORTE_USE_REAL_DATATYPE)
+forte_add_subdirectory(REAL)
+forte_add_subdirectory(LREAL)
+forte_add_subdirectory(ULINT)
+forte_add_subdirectory(LWORD)
+forte_add_subdirectory(LINT)
+forte_add_subdirectory(DT)
 
-if(FORTE_USE_LREAL_DATATYPE)
-  forte_add_subdirectory(LREAL)
-endif(FORTE_USE_LREAL_DATATYPE)
-
-if(FORTE_USE_64BIT_DATATYPES) 
-  forte_add_subdirectory(ULINT)
-  forte_add_subdirectory(LWORD)
-  forte_add_subdirectory(LINT)
-  forte_add_subdirectory(DT)
-endif(FORTE_USE_64BIT_DATATYPES)
+forte_add_sourcefile_hcpp(F_ANY_AS_STRING_fbt)

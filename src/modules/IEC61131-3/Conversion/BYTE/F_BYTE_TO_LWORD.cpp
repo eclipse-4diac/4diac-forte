@@ -1,5 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2011 - 2013 ACIN, fortiss GmbH
+ * Copyright (c) 2023 Martin Erich Jobst
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -7,8 +8,8 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *   Monika Wenger
- *   - initial API and implementation and/or initial documentation
+ *   Martin Jobst
+ *     - initial API and implementation and/or initial documentation
  *******************************************************************************/
 
 #include "F_BYTE_TO_LWORD.h"
@@ -16,38 +17,131 @@
 #include "F_BYTE_TO_LWORD_gen.cpp"
 #endif
 
+#include "criticalregion.h"
+#include "resource.h"
+#include "forte_lword.h"
+#include "forte_byte.h"
+#include "iec61131_functions.h"
+#include "forte_array_common.h"
+#include "forte_array.h"
+#include "forte_array_fixed.h"
+#include "forte_array_variable.h"
+
 DEFINE_FIRMWARE_FB(FORTE_F_BYTE_TO_LWORD, g_nStringIdF_BYTE_TO_LWORD)
 
-const CStringDictionary::TStringId FORTE_F_BYTE_TO_LWORD::scm_anDataInputNames[] = {g_nStringIdIN};
+const CStringDictionary::TStringId FORTE_F_BYTE_TO_LWORD::scmDataInputNames[] = {g_nStringIdIN};
 
-const CStringDictionary::TStringId FORTE_F_BYTE_TO_LWORD::scm_anDataInputTypeIds[] = {g_nStringIdBYTE};
+const CStringDictionary::TStringId FORTE_F_BYTE_TO_LWORD::scmDataInputTypeIds[] = {g_nStringIdBYTE};
 
-const CStringDictionary::TStringId FORTE_F_BYTE_TO_LWORD::scm_anDataOutputNames[] = {g_nStringIdOUT};
+const CStringDictionary::TStringId FORTE_F_BYTE_TO_LWORD::scmDataOutputNames[] = {g_nStringIdOUT};
 
-const CStringDictionary::TStringId FORTE_F_BYTE_TO_LWORD::scm_anDataOutputTypeIds[] = {g_nStringIdLWORD};
+const CStringDictionary::TStringId FORTE_F_BYTE_TO_LWORD::scmDataOutputTypeIds[] = {g_nStringIdLWORD};
 
-const TForteInt16 FORTE_F_BYTE_TO_LWORD::scm_anEIWithIndexes[] = {0};
-const TDataIOID FORTE_F_BYTE_TO_LWORD::scm_anEIWith[] = {0, 255};
-const CStringDictionary::TStringId FORTE_F_BYTE_TO_LWORD::scm_anEventInputNames[] = {g_nStringIdREQ};
+const TDataIOID FORTE_F_BYTE_TO_LWORD::scmEIWith[] = {0, scmWithListDelimiter};
+const TForteInt16 FORTE_F_BYTE_TO_LWORD::scmEIWithIndexes[] = {0};
+const CStringDictionary::TStringId FORTE_F_BYTE_TO_LWORD::scmEventInputNames[] = {g_nStringIdREQ};
 
-const TDataIOID FORTE_F_BYTE_TO_LWORD::scm_anEOWith[] = {0, 255};
-const TForteInt16 FORTE_F_BYTE_TO_LWORD::scm_anEOWithIndexes[] = {0, -1};
-const CStringDictionary::TStringId FORTE_F_BYTE_TO_LWORD::scm_anEventOutputNames[] = {g_nStringIdCNF};
+const TDataIOID FORTE_F_BYTE_TO_LWORD::scmEOWith[] = {0, scmWithListDelimiter};
+const TForteInt16 FORTE_F_BYTE_TO_LWORD::scmEOWithIndexes[] = {0};
+const CStringDictionary::TStringId FORTE_F_BYTE_TO_LWORD::scmEventOutputNames[] = {g_nStringIdCNF};
 
-const SFBInterfaceSpec FORTE_F_BYTE_TO_LWORD::scm_stFBInterfaceSpec = {
-  1,  scm_anEventInputNames,  scm_anEIWith,  scm_anEIWithIndexes,
-  1,  scm_anEventOutputNames,  scm_anEOWith, scm_anEOWithIndexes,  1,  scm_anDataInputNames, scm_anDataInputTypeIds,
-  1,  scm_anDataOutputNames, scm_anDataOutputTypeIds,
-  0, 0
+
+const SFBInterfaceSpec FORTE_F_BYTE_TO_LWORD::scmFBInterfaceSpec = {
+  1, scmEventInputNames, scmEIWith, scmEIWithIndexes,
+  1, scmEventOutputNames, scmEOWith, scmEOWithIndexes,
+  1, scmDataInputNames, scmDataInputTypeIds,
+  1, scmDataOutputNames, scmDataOutputTypeIds,
+  0, nullptr,
+  0, nullptr
 };
 
 
-void FORTE_F_BYTE_TO_LWORD::executeEvent(int pa_nEIID){
-  if(scm_nEventREQID == pa_nEIID){
-    st_OUT() = BYTE_TO_LWORD(st_IN());
-    sendOutputEvent(scm_nEventCNFID);
+FORTE_F_BYTE_TO_LWORD::FORTE_F_BYTE_TO_LWORD(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+    CSimpleFB(paContainer, &scmFBInterfaceSpec, paInstanceNameId, nullptr),
+    var_IN(CIEC_BYTE(0)),
+    var_OUT(CIEC_LWORD(0)),
+    var_conn_OUT(var_OUT),
+    conn_CNF(this, 0),
+    conn_IN(nullptr),
+    conn_OUT(this, 0, &var_conn_OUT) {
+}
+
+void FORTE_F_BYTE_TO_LWORD::alg_REQ(void) {
+  
+  var_OUT = func_BYTE_TO_LWORD(var_IN);
+}
+
+
+void FORTE_F_BYTE_TO_LWORD::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
+  switch(paEIID) {
+    case scmEventREQID:
+      alg_REQ();
+      break;
+    default:
+      break;
+  }
+  sendOutputEvent(scmEventCNFID, paECET);
+}
+
+void FORTE_F_BYTE_TO_LWORD::readInputData(TEventID paEIID) {
+  switch(paEIID) {
+    case scmEventREQID: {
+      readData(0, var_IN, conn_IN);
+      break;
+    }
+    default:
+      break;
   }
 }
 
+void FORTE_F_BYTE_TO_LWORD::writeOutputData(TEventID paEIID) {
+  switch(paEIID) {
+    case scmEventCNFID: {
+      writeData(0, var_OUT, conn_OUT);
+      break;
+    }
+    default:
+      break;
+  }
+}
+
+CIEC_ANY *FORTE_F_BYTE_TO_LWORD::getDI(size_t paIndex) {
+  switch(paIndex) {
+    case 0: return &var_IN;
+  }
+  return nullptr;
+}
+
+CIEC_ANY *FORTE_F_BYTE_TO_LWORD::getDO(size_t paIndex) {
+  switch(paIndex) {
+    case 0: return &var_OUT;
+  }
+  return nullptr;
+}
+
+CEventConnection *FORTE_F_BYTE_TO_LWORD::getEOConUnchecked(TPortId paIndex) {
+  switch(paIndex) {
+    case 0: return &conn_CNF;
+  }
+  return nullptr;
+}
+
+CDataConnection **FORTE_F_BYTE_TO_LWORD::getDIConUnchecked(TPortId paIndex) {
+  switch(paIndex) {
+    case 0: return &conn_IN;
+  }
+  return nullptr;
+}
+
+CDataConnection *FORTE_F_BYTE_TO_LWORD::getDOConUnchecked(TPortId paIndex) {
+  switch(paIndex) {
+    case 0: return &conn_OUT;
+  }
+  return nullptr;
+}
+
+CIEC_ANY *FORTE_F_BYTE_TO_LWORD::getVarInternal(size_t) {
+  return nullptr;
+}
 
 

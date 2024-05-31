@@ -10,15 +10,16 @@
 #    Monika Wenger, Alois Zoitl
 # *   - initial API and implementation and/or initial documentation
 # *******************************************************************************/
+forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 #############################################################################
 # Comparison
 #############################################################################
-forte_add_sourcefile_hcpp(F_GT)
-forte_add_sourcefile_hcpp(F_EQ)
-forte_add_sourcefile_hcpp(F_GE)
-forte_add_sourcefile_hcpp(F_LE)
-forte_add_sourcefile_hcpp(F_LT)
-forte_add_sourcefile_hcpp(F_NE)
+forte_add_sourcefile_hcpp(F_GT_fbt)
+forte_add_sourcefile_hcpp(F_EQ_fbt)
+forte_add_sourcefile_hcpp(F_GE_fbt)
+forte_add_sourcefile_hcpp(F_LE_fbt)
+forte_add_sourcefile_hcpp(F_LT_fbt)
+forte_add_sourcefile_hcpp(F_NE_fbt)
 
 
 #add_subdirectory(tests)

@@ -1,5 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2009 - 2011ACIN
+ * Copyright (c) 2023 Martin Erich Jobst
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -7,63 +8,93 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *   Monika Wenger, Alois Zoitl, Ingo Hengy
- *   - initial API and implementation and/or initial documentation
+ *   Martin Jobst
+ *     - initial API and implementation and/or initial documentation
  *******************************************************************************/
-#ifndef _FB_CTD_ULINT_H_
-#define _FB_CTD_ULINT_H_
 
-#include <funcbloc.h>
+#pragma once
 
-#ifdef FORTE_USE_64BIT_DATATYPES
+#include "simplefb.h"
+#include "forte_bool.h"
+#include "forte_ulint.h"
+#include "iec61131_functions.h"
+#include "forte_array_common.h"
+#include "forte_array.h"
+#include "forte_array_fixed.h"
+#include "forte_array_variable.h"
 
-class FB_CTD_ULINT: public CFunctionBlock{
-  DECLARE_FIRMWARE_FB(FB_CTD_ULINT)
+
+class FORTE_FB_CTD_ULINT: public CSimpleFB {
+  DECLARE_FIRMWARE_FB(FORTE_FB_CTD_ULINT)
 
 private:
-  static const CStringDictionary::TStringId scm_anDataInputNames[], scm_aunDIDataTypeIds[];
-  static const CStringDictionary::TStringId scm_anDataOutputNames[], scm_aunDODataTypeIds[];
-  static const TEventID scm_nEventREQID = 0;
-  static const TForteInt16 scm_anEIWithIndexes[];
-  static const TDataIOID scm_anEIWith[];
-  static const CStringDictionary::TStringId scm_anEventInputNames[];
+  static const CStringDictionary::TStringId scmDataInputNames[];
+  static const CStringDictionary::TStringId scmDataInputTypeIds[];
+  
+  static const CStringDictionary::TStringId scmDataOutputNames[];
+  static const CStringDictionary::TStringId scmDataOutputTypeIds[];
+  
+  static const TEventID scmEventREQID = 0;
+  
+  static const TDataIOID scmEIWith[];
+  static const TForteInt16 scmEIWithIndexes[];
+  static const CStringDictionary::TStringId scmEventInputNames[];
+  
+  static const TEventID scmEventCNFID = 0;
+  
+  static const TDataIOID scmEOWith[]; 
+  static const TForteInt16 scmEOWithIndexes[];
+  static const CStringDictionary::TStringId scmEventOutputNames[];
+  
 
-  static const TEventID scm_nEventCNFID = 0;
-  static const TForteInt16 scm_anEOWithIndexes[];
-  static const TDataIOID scm_anEOWith[];
-  static const CStringDictionary::TStringId scm_anEventOutputNames[];
+  static const SFBInterfaceSpec scmFBInterfaceSpec;
+  CIEC_ANY *getVarInternal(size_t) override;
+  void alg_REQ(void);
 
-  static const SFBInterfaceSpec scm_stFBInterfaceSpec;
+  void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
-  FORTE_FB_DATA_ARRAY(1,3,2, 0);
-
-  void executeEvent(int pa_nEIID);
-
-  CIEC_BOOL& CD() {
-     return *static_cast<CIEC_BOOL*>(getDI(0));
-   }
-   CIEC_BOOL& LD() {
-     return *static_cast<CIEC_BOOL*>(getDI(1));
-   }
-   CIEC_ULINT& PV() {
-     return *static_cast<CIEC_ULINT*>(getDI(2));
-   }
-
-
-   CIEC_BOOL& Q() {
-     return *static_cast<CIEC_BOOL*>(getDO(0));
-   }
-   CIEC_ULINT& CV() {
-     return *static_cast<CIEC_ULINT*>(getDO(1));
-   }
+  void readInputData(TEventID paEIID) override;
+  void writeOutputData(TEventID paEIID) override;
 
 public:
-  FUNCTION_BLOCK_CTOR(FB_CTD_ULINT){};
-  virtual ~FB_CTD_ULINT(){};
+  FORTE_FB_CTD_ULINT(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
+
+  CIEC_BOOL var_CD;
+  CIEC_BOOL var_LD;
+  CIEC_ULINT var_PV;
+  CIEC_BOOL var_Q;
+  CIEC_ULINT var_CV;
+  
+  CIEC_BOOL var_conn_Q;
+  CIEC_ULINT var_conn_CV;
+  CEventConnection conn_CNF;
+  CDataConnection *conn_CD;
+  CDataConnection *conn_LD;
+  CDataConnection *conn_PV;
+  CDataConnection conn_Q;
+  CDataConnection conn_CV;
+  
+  CIEC_ANY *getDI(size_t) override;
+  CIEC_ANY *getDO(size_t) override;
+  CEventConnection *getEOConUnchecked(TPortId) override;
+  CDataConnection **getDIConUnchecked(TPortId) override;
+  CDataConnection *getDOConUnchecked(TPortId) override;
+  
+  void evt_REQ(const CIEC_BOOL &pa_CD, const CIEC_BOOL &pa_LD, const CIEC_ULINT &pa_PV, CIEC_BOOL &pa_Q, CIEC_ULINT &pa_CV) {
+    var_CD = pa_CD;
+    var_LD = pa_LD;
+    var_PV = pa_PV;
+    receiveInputEvent(scmEventREQID, nullptr);
+    pa_Q = var_Q;
+    pa_CV = var_CV;
+  }
+  
+  void operator()(const CIEC_BOOL &pa_CD, const CIEC_BOOL &pa_LD, const CIEC_ULINT &pa_PV, CIEC_BOOL &pa_Q, CIEC_ULINT &pa_CV) {
+    evt_REQ(pa_CD, pa_LD, pa_PV, pa_Q, pa_CV);
+  }
+  
 };
 
-#endif
 
-#endif //close the ifdef sequence from the beginning of the file
 

@@ -1,5 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2013 ACIN
+ * Copyright (c) 2023 Martin Erich Jobst
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -7,54 +8,83 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *   Monika Wenger
- *   - initial API and implementation and/or initial documentation
+ *   Martin Jobst
+ *     - initial API and implementation and/or initial documentation
  *******************************************************************************/
 
-#ifndef _F_LREAL_TO_UDINT_H_
-#define _F_LREAL_TO_UDINT_H_
+#pragma once
 
-#include <funcbloc.h>
+#include "simplefb.h"
+#include "forte_lreal.h"
+#include "forte_udint.h"
+#include "iec61131_functions.h"
+#include "forte_array_common.h"
+#include "forte_array.h"
+#include "forte_array_fixed.h"
+#include "forte_array_variable.h"
 
-class FORTE_F_LREAL_TO_UDINT: public CFunctionBlock{
+
+class FORTE_F_LREAL_TO_UDINT: public CSimpleFB {
   DECLARE_FIRMWARE_FB(FORTE_F_LREAL_TO_UDINT)
 
 private:
-  static const CStringDictionary::TStringId scm_anDataInputNames[];
-  static const CStringDictionary::TStringId scm_anDataInputTypeIds[];
-  CIEC_LREAL &st_IN() {
-    return *static_cast<CIEC_LREAL*>(getDI(0));
-  };
+  static const CStringDictionary::TStringId scmDataInputNames[];
+  static const CStringDictionary::TStringId scmDataInputTypeIds[];
+  
+  static const CStringDictionary::TStringId scmDataOutputNames[];
+  static const CStringDictionary::TStringId scmDataOutputTypeIds[];
+  
+  static const TEventID scmEventREQID = 0;
+  
+  static const TDataIOID scmEIWith[];
+  static const TForteInt16 scmEIWithIndexes[];
+  static const CStringDictionary::TStringId scmEventInputNames[];
+  
+  static const TEventID scmEventCNFID = 0;
+  
+  static const TDataIOID scmEOWith[]; 
+  static const TForteInt16 scmEOWithIndexes[];
+  static const CStringDictionary::TStringId scmEventOutputNames[];
+  
 
-  static const CStringDictionary::TStringId scm_anDataOutputNames[];
-  static const CStringDictionary::TStringId scm_anDataOutputTypeIds[];
-  CIEC_UDINT &st_OUT() {
-    return *static_cast<CIEC_UDINT*>(getDO(0));
-  };
+  static const SFBInterfaceSpec scmFBInterfaceSpec;
+  CIEC_ANY *getVarInternal(size_t) override;
+  void alg_REQ(void);
 
-  static const TEventID scm_nEventREQID = 0;
-  static const TForteInt16 scm_anEIWithIndexes[];
-  static const TDataIOID scm_anEIWith[];
-  static const CStringDictionary::TStringId scm_anEventInputNames[];
+  void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
-  static const TEventID scm_nEventCNFID = 0;
-  static const TForteInt16 scm_anEOWithIndexes[];
-  static const TDataIOID scm_anEOWith[];
-  static const CStringDictionary::TStringId scm_anEventOutputNames[];
-
-  static const SFBInterfaceSpec scm_stFBInterfaceSpec;
-
-   FORTE_FB_DATA_ARRAY(1, 1, 1, 0);
-
-  void executeEvent(int pa_nEIID);
+  void readInputData(TEventID paEIID) override;
+  void writeOutputData(TEventID paEIID) override;
 
 public:
-  FUNCTION_BLOCK_CTOR(FORTE_F_LREAL_TO_UDINT){
-  };
+  FORTE_F_LREAL_TO_UDINT(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
-  virtual ~FORTE_F_LREAL_TO_UDINT(){};
 
+  CIEC_LREAL var_IN;
+  CIEC_UDINT var_OUT;
+  
+  CIEC_UDINT var_conn_OUT;
+  CEventConnection conn_CNF;
+  CDataConnection *conn_IN;
+  CDataConnection conn_OUT;
+  
+  CIEC_ANY *getDI(size_t) override;
+  CIEC_ANY *getDO(size_t) override;
+  CEventConnection *getEOConUnchecked(TPortId) override;
+  CDataConnection **getDIConUnchecked(TPortId) override;
+  CDataConnection *getDOConUnchecked(TPortId) override;
+  
+  void evt_REQ(const CIEC_LREAL &pa_IN, CIEC_UDINT &pa_OUT) {
+    var_IN = pa_IN;
+    receiveInputEvent(scmEventREQID, nullptr);
+    pa_OUT = var_OUT;
+  }
+  
+  void operator()(const CIEC_LREAL &pa_IN, CIEC_UDINT &pa_OUT) {
+    evt_REQ(pa_IN, pa_OUT);
+  }
+  
 };
 
-#endif //close the ifdef sequence from the beginning of the file
+
 

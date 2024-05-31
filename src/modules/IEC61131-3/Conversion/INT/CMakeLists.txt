@@ -11,6 +11,7 @@
 # *   - initial API and implementation and/or initial documentation
 # *   Martin Melik-Merkumians - removing illegal casts
 # *******************************************************************************/
+forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 #############################################################################
 # INT_TO_xxx Conversion
 #############################################################################
@@ -22,22 +23,13 @@ forte_add_sourcefile_hcpp(F_INT_TO_UDINT)
 forte_add_sourcefile_hcpp(F_INT_TO_UINT)
 forte_add_sourcefile_hcpp(F_INT_TO_USINT)
 forte_add_sourcefile_hcpp(F_INT_TO_WORD)
-forte_add_sourcefile_hcpp(F_INT_TO_STRING)
-
-if(FORTE_USE_64BIT_DATATYPES)     
-  forte_add_sourcefile_hcpp(F_INT_TO_LINT)
-  forte_add_sourcefile_hcpp(F_INT_TO_LWORD)
-  forte_add_sourcefile_hcpp(F_INT_TO_ULINT)
-endif(FORTE_USE_64BIT_DATATYPES)
-
-if(FORTE_USE_REAL_DATATYPE)
-  forte_add_sourcefile_hcpp(F_INT_TO_REAL)
-endif(FORTE_USE_REAL_DATATYPE)
-
-if(FORTE_USE_LREAL_DATATYPE)
-  forte_add_sourcefile_hcpp(F_INT_TO_LREAL)
-endif(FORTE_USE_LREAL_DATATYPE)
+forte_add_sourcefile_hcpp(F_INT_AS_STRING)
+forte_add_sourcefile_hcpp(F_INT_TO_LINT)
+forte_add_sourcefile_hcpp(F_INT_TO_LWORD)
+forte_add_sourcefile_hcpp(F_INT_TO_ULINT)
+forte_add_sourcefile_hcpp(F_INT_TO_REAL)
+forte_add_sourcefile_hcpp(F_INT_TO_LREAL)
 
 if(FORTE_USE_WSTRING_DATATYPE)
-  forte_add_sourcefile_hcpp(F_INT_TO_WSTRING)
+  forte_add_sourcefile_hcpp(F_INT_AS_WSTRING)
 endif(FORTE_USE_WSTRING_DATATYPE)

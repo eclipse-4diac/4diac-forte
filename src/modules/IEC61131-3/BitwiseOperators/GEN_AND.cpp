@@ -1,6 +1,7 @@
 /*******************************************************************************
  * Copyright (c) 2014 Profactor GmbH, fortiss GmbH
  *                      2018 Johannes Kepler University
+ *               2023 Martin Erich Jobst
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -11,6 +12,8 @@
  *   Matthias Plasch, Alois Zoitl
  *   - initial API and implementation and/or initial documentation
  *    Alois Zoitl - introduced new CGenFB class for better handling generic FBs
+ *   Martin Jobst
+ *     - refactor for ANY variant
  *******************************************************************************/
 
 #include "GEN_AND.h"
@@ -18,24 +21,27 @@
 #include "GEN_AND_gen.cpp"
 #endif
 
-#include <anyhelper.h>
-
 DEFINE_GENERIC_FIRMWARE_FB(GEN_AND, g_nStringIdGEN_AND)
 
-GEN_AND::GEN_AND(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) :
-    CGenBitBase(paInstanceNameId, paSrcRes){
+GEN_AND::GEN_AND(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+    CGenBitBase(paInstanceNameId, paContainer){
 }
 
-GEN_AND::~GEN_AND() {
-}
+GEN_AND::~GEN_AND() = default;
 
-void GEN_AND::executeEvent(int paEIID) {
+void GEN_AND::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   switch (paEIID) {
-  case scm_nEventREQID:
-
-    anyBitFBHelper<GEN_AND>(st_OUT().getDataTypeID(), *this);
-    sendOutputEvent(scm_nEventCNFID);
-
-    break;
+    case scmEventREQID:
+      if(getFBInterfaceSpec()->mNumDIs) {
+        var_OUT() = var_IN(0);
+        for (size_t i = 1; i < getFBInterfaceSpec()->mNumDIs; ++i) {
+          var_OUT() = std::visit([](auto &&paOUT, auto &&paIN) -> CIEC_ANY_BIT_VARIANT {
+            return func_AND(paOUT, paIN);
+          }, static_cast<CIEC_ANY_BIT_VARIANT::variant&>(var_OUT()),
+             static_cast<CIEC_ANY_BIT_VARIANT::variant&>(var_IN(i)));
+        }
+      }
+      sendOutputEvent(scmEventCNFID, paECET);
+      break;
   }
 }
