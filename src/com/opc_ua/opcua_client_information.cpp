@@ -22,7 +22,7 @@
 std::string gOpcuaClientConfigFile;
 
 CUA_ClientInformation::CUA_ClientInformation(const std::string &paEndpoint) :
-    mEndpointUrl(paEndpoint), mClient(nullptr), mSubscriptionInfo(nullptr), mMissingAsyncCalls(0), mNeedsReconnection(false), mWaitToInitializeActions(false),
+    mEndpointUrl(paEndpoint), mClient(nullptr), mMissingAsyncCalls(0), mNeedsReconnection(false), mWaitToInitializeActions(false),
         mIsClientValid(true),
         mLastReconnectionTry(0), mLastActionInitializationTry(0), mSomeActionWasInitialized(false) {
 }
@@ -397,17 +397,17 @@ bool CUA_ClientInformation::initializeCallMethod(CActionInfo& paActionInfo) {
 
 bool CUA_ClientInformation::initializeSubscription(CActionInfo& paActionInfo) {
   bool somethingFailed = false;
-  if(CActionInfo::eSubscribe == paActionInfo.getAction() && allocAndCreateSubscription()) {
+  if(CActionInfo::eSubscribe == paActionInfo.getAction() && createSubscription()) {
 
     size_t itemsAddedToList = 0;
 
-    CSinglyLinkedList<UA_MonitoringItemInfo>::Iterator itFirstNewMonitoringItemInfo = mSubscriptionInfo->mMonitoredItems.end();
+    auto itFirstNewMonitoringItemInfo = mSubscriptionInfo.mMonitoredItems.end();
 
     for(size_t i = 0; i < paActionInfo.getNoOfNodePairs(); i++) {
       UA_MonitoringItemInfo monitoringItemInfo(UA_SubscribeContext_Handle(paActionInfo, itemsAddedToList));
-      mSubscriptionInfo->mMonitoredItems.pushBack(monitoringItemInfo);
-      if(itFirstNewMonitoringItemInfo == mSubscriptionInfo->mMonitoredItems.end()) { //store the first added item
-        itFirstNewMonitoringItemInfo = mSubscriptionInfo->mMonitoredItems.back();
+      mSubscriptionInfo.mMonitoredItems.pushBack(monitoringItemInfo);
+      if(itFirstNewMonitoringItemInfo == mSubscriptionInfo.mMonitoredItems.end()) { //store the first added item
+        itFirstNewMonitoringItemInfo = mSubscriptionInfo.mMonitoredItems.back();
       }
       itemsAddedToList++;
     }
@@ -431,7 +431,7 @@ bool CUA_ClientInformation::initializeSubscription(CActionInfo& paActionInfo) {
 
       for(size_t i = 0; i < itemsAddedToList; i++) {
         if(i < itemsAddedToLibrary) { //remove items from the library
-          UA_StatusCode retVal = UA_Client_MonitoredItems_deleteSingle(mClient, mSubscriptionInfo->mSubscriptionId,
+          UA_StatusCode retVal = UA_Client_MonitoredItems_deleteSingle(mClient, mSubscriptionInfo.mSubscriptionId,
             (*itFirstNewMonitoringItemInfo).mMonitoringItemId);
           if(UA_STATUSCODE_GOOD != retVal) {
             DEVLOG_ERROR("[OPC UA CLIENT]: Couldn't delete recently added monitored item %u. Error: %s\n", (*itFirstNewMonitoringItemInfo).mMonitoringItemId, UA_StatusCode_name(retVal));
@@ -439,21 +439,8 @@ bool CUA_ClientInformation::initializeSubscription(CActionInfo& paActionInfo) {
         }
         itAddedMonitoringItemInfo = itFirstNewMonitoringItemInfo;
         ++itFirstNewMonitoringItemInfo;
-        mSubscriptionInfo->mMonitoredItems.erase(*itAddedMonitoringItemInfo);
+        mSubscriptionInfo.mMonitoredItems.erase(*itAddedMonitoringItemInfo);
       }
-    }
-  }
-  return !somethingFailed;
-}
-
-bool CUA_ClientInformation::allocAndCreateSubscription() {
-  bool somethingFailed = false;
-  if(!mSubscriptionInfo) {
-    mSubscriptionInfo = new UA_subscriptionInfo();
-    if(!createSubscription()) {
-      delete mSubscriptionInfo;
-      mSubscriptionInfo = nullptr;
-      somethingFailed = true;
     }
   }
   return !somethingFailed;
@@ -465,7 +452,7 @@ bool CUA_ClientInformation::createSubscription() {
   UA_CreateSubscriptionResponse response = UA_Client_Subscriptions_create(mClient, request, this, nullptr, CUA_RemoteCallbackFunctions::deleteSubscriptionCallback);
   if(UA_STATUSCODE_GOOD == response.responseHeader.serviceResult) {
     DEVLOG_INFO("[OPC UA CLIENT]: Create subscription to %s succeeded, id %u\n", mEndpointUrl.c_str(), response.subscriptionId);
-    mSubscriptionInfo->mSubscriptionId = response.subscriptionId;
+    mSubscriptionInfo.mSubscriptionId = response.subscriptionId;
     return true;
   } else {
     DEVLOG_ERROR("[OPC UA CLIENT]: Create subscription to %s failed. Error: %s\n", mEndpointUrl.c_str(), UA_StatusCode_name(response.responseHeader.serviceResult));
@@ -477,7 +464,7 @@ bool CUA_ClientInformation::createSubscription() {
 bool CUA_ClientInformation::addMonitoringItem(UA_MonitoringItemInfo &paMonitoringInfo, const UA_NodeId &paNodeId) {
 
   const UA_MonitoredItemCreateRequest monRequest = UA_MonitoredItemCreateRequest_default(paNodeId);
-  UA_MonitoredItemCreateResult monResponse = UA_Client_MonitoredItems_createDataChange(mClient, mSubscriptionInfo->mSubscriptionId, UA_TIMESTAMPSTORETURN_BOTH,
+  UA_MonitoredItemCreateResult monResponse = UA_Client_MonitoredItems_createDataChange(mClient, mSubscriptionInfo.mSubscriptionId, UA_TIMESTAMPSTORETURN_BOTH,
     monRequest, static_cast<void *>(&paMonitoringInfo.mVariableInfo), CUA_RemoteCallbackFunctions::subscriptionValueChangedCallback, nullptr);
   if(UA_STATUSCODE_GOOD == monResponse.statusCode) {
     DEVLOG_INFO("[OPC UA CLIENT]: Monitoring of FB %s at index %u succeeded. The monitoring item id is %u\n",
@@ -509,51 +496,39 @@ void CUA_ClientInformation::uninitializeAction(CActionInfo& paActionInfo) {
 }
 
 void CUA_ClientInformation::uninitializeSubscribeAction(const CActionInfo &paActionInfo) {
-  if(mSubscriptionInfo) {
-    CSinglyLinkedList<UA_MonitoringItemInfo> toDelete;
-    for(CSinglyLinkedList<UA_MonitoringItemInfo>::Iterator itMonitoringItemInfo = mSubscriptionInfo->mMonitoredItems.begin();
-        itMonitoringItemInfo != mSubscriptionInfo->mMonitoredItems.end(); ++itMonitoringItemInfo) {
-      if(&(*itMonitoringItemInfo).mVariableInfo.mActionInfo == &paActionInfo) {
-        toDelete.pushBack(*itMonitoringItemInfo);
-      }
+  CSinglyLinkedList<UA_MonitoringItemInfo> toDelete;
+  for(CSinglyLinkedList<UA_MonitoringItemInfo>::Iterator itMonitoringItemInfo = mSubscriptionInfo.mMonitoredItems.begin();
+      itMonitoringItemInfo != mSubscriptionInfo.mMonitoredItems.end(); ++itMonitoringItemInfo) {
+    if(&(*itMonitoringItemInfo).mVariableInfo.mActionInfo == &paActionInfo) {
+      toDelete.pushBack(*itMonitoringItemInfo);
     }
-    for(CSinglyLinkedList<UA_MonitoringItemInfo>::Iterator itMonitoringItemInfo = toDelete.begin(); itMonitoringItemInfo != toDelete.end();
-        ++itMonitoringItemInfo) {
-      UA_StatusCode retVal = UA_Client_MonitoredItems_deleteSingle(mClient, mSubscriptionInfo->mSubscriptionId, (*itMonitoringItemInfo).mMonitoringItemId);
-      if(UA_STATUSCODE_GOOD != retVal) {
-        DEVLOG_ERROR("[OPC UA CLIENT]: Couldn't delete monitored item %u. No further actions will be taken. Error: %s\n",
-          (*itMonitoringItemInfo).mMonitoringItemId, UA_StatusCode_name(retVal));
-
-        // if the remote is unplugged the missing subscription is detected and deleted with the previous call to the stack,
-        // so the callback is called and the subscription is cleaned already by this point
-        if(!mSubscriptionInfo) {
-          return;
-        }
-      }
-
-      mSubscriptionInfo->mMonitoredItems.erase(*itMonitoringItemInfo);
+  }
+  for(CSinglyLinkedList<UA_MonitoringItemInfo>::Iterator itMonitoringItemInfo = toDelete.begin(); itMonitoringItemInfo != toDelete.end();
+      ++itMonitoringItemInfo) {
+    UA_StatusCode retVal = UA_Client_MonitoredItems_deleteSingle(mClient, mSubscriptionInfo.mSubscriptionId, (*itMonitoringItemInfo).mMonitoringItemId);
+    if(UA_STATUSCODE_GOOD != retVal) {
+      DEVLOG_ERROR("[OPC UA CLIENT]: Couldn't delete monitored item %u. No further actions will be taken. Error: %s\n",
+        (*itMonitoringItemInfo).mMonitoringItemId, UA_StatusCode_name(retVal));
     }
 
-    if(mSubscriptionInfo->mMonitoredItems.isEmpty()) {
-      resetSubscription(true);
-    }
+    mSubscriptionInfo.mMonitoredItems.erase(*itMonitoringItemInfo);
+  }
+
+  if(mSubscriptionInfo.mMonitoredItems.isEmpty()) {
+    resetSubscription(true);
   }
 }
 
 void CUA_ClientInformation::resetSubscription(bool paDeleteSubscription) {
-  if(mSubscriptionInfo) {
-    removeAsyncCall();
-    if(paDeleteSubscription) {
-      UA_StatusCode retval = UA_Client_Subscriptions_deleteSingle(mClient, mSubscriptionInfo->mSubscriptionId);
-      if(UA_STATUSCODE_GOOD != retval) {
-        DEVLOG_ERROR("[OPC UA CLIENT]: Couldn't delete subscription %u. Failed with error %s. No further actions will be taken\n",
-          mSubscriptionInfo->mSubscriptionId, UA_StatusCode_name(retval));
-      }
+  removeAsyncCall();
+  if(paDeleteSubscription) {
+    UA_StatusCode retval = UA_Client_Subscriptions_deleteSingle(mClient, mSubscriptionInfo.mSubscriptionId);
+    if(UA_STATUSCODE_GOOD != retval) {
+      DEVLOG_ERROR("[OPC UA CLIENT]: Couldn't delete subscription %u. Failed with error %s. No further actions will be taken\n",
+        mSubscriptionInfo.mSubscriptionId, UA_StatusCode_name(retval));
     }
-
-    delete mSubscriptionInfo;
-    mSubscriptionInfo = nullptr;
   }
+
 }
 
 // ******************** CALLBACKS *************************

@@ -301,12 +301,6 @@ class CUA_ClientInformation {
     bool initializeSubscription(CActionInfo& paActionInfo);
 
     /**
-     * Allocate the memory to store the subscription information and create the subscription in the OPC UA stack
-     * @return True if no error occurred, false otherwise
-     */
-    bool allocAndCreateSubscription();
-
-    /**
      * Create the subscription in the OPC UA stack
      * @return True if no error occurred, false otherwise
      */
@@ -382,7 +376,7 @@ class CUA_ClientInformation {
     /**
      * Information needed for subscription
      */
-    UA_subscriptionInfo *mSubscriptionInfo;
+    UA_subscriptionInfo mSubscriptionInfo;
 
     /**
      * Amount of missing async calls to be performed. Read, write and method call add one when they are called, and reduced in the callbacks
