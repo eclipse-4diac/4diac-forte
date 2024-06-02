@@ -10,9 +10,9 @@
  *   Alois Zoitl - initial API and implementation and/or initial documentation
  *******************************************************************************/
 
-#include "E_RTimeOut.h"
+#include "E_RTimeOut_fbt.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "E_RTimeOut_gen.cpp"
+#include "E_RTimeOut_fbt_gen.cpp"
 #endif
 
 #include "criticalregion.h"
