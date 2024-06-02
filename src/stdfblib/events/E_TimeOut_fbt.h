@@ -19,7 +19,7 @@
 #include "forte_array.h"
 #include "forte_array_fixed.h"
 #include "forte_array_variable.h"
-#include "ATimeOut.h"
+#include "ATimeOut_adp.h"
 
 #include "../arch/timerha.h"
 
