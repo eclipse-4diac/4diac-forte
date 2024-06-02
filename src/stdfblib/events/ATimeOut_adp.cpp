@@ -10,9 +10,9 @@
  *   Alois Zoitl - initial API and implementation and/or initial documentation
  *******************************************************************************/
 
-#include "ATimeOut.h"
+#include "ATimeOut_adp.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "ATimeOut_gen.cpp"
+#include "ATimeOut_adp_gen.cpp"
 #endif
 
 #include "criticalregion.h"
