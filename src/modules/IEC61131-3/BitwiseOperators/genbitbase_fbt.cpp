@@ -14,9 +14,9 @@
  *     - refactor for ANY variant
  *     - add generic readInputData and writeOutputData
  *******************************************************************************/
-#include "genbitbase.h"
+#include "genbitbase_fbt.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "genbitbase_gen.cpp"
+#include "genbitbase_fbt_gen.cpp"
 #endif
 
 #include <ctype.h>

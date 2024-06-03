@@ -19,7 +19,7 @@
 #ifndef _GEN_XOR_H_
 #define _GEN_XOR_H_
 
-#include "genbitbase.h"
+#include "genbitbase_fbt.h"
 
 class GEN_XOR : public CGenBitBase {
   DECLARE_GENERIC_FIRMWARE_FB(GEN_XOR)

@@ -11,9 +11,9 @@
  *   Alois Zoitl - refactored from F_MOVE
  *******************************************************************************/
 
-#include "GEN_F_MOVE_fct.h"
+#include "GEN_F_MOVE_fct_fbt.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "GEN_F_MOVE_fct_gen.cpp"
+#include "GEN_F_MOVE_fct_fbt_gen.cpp"
 #endif
 
 #include "criticalregion.h"
