@@ -88,7 +88,7 @@ bool COPC_UA_ObjectStruct_Helper::createOPCUAStructType(CActionInfo &paActionInf
   const CStringDictionary::TStringId* structMemberNames = paStructType.elementNames();
   for(size_t i = 0; i < paStructType.getStructSize(); i++) {
     CIEC_ANY* structMember = paStructType.getMember(i);
-    if(!addOPCUAStructTypeComponent(server, typeNodeId, structMember, CStringDictionary::getInstance().get(structMemberNames[i]))) {
+    if(!addOPCUAStructTypeComponent(server, typeNodeId, paStructTypeName, structMember, structMemberNames[i])) {
       return false;
     } 
   }
@@ -137,10 +137,11 @@ bool COPC_UA_ObjectStruct_Helper::defineOPCUAStructTypeNode(UA_Server *paServer,
   return true;
 }
 
-bool COPC_UA_ObjectStruct_Helper::addOPCUAStructTypeComponent(UA_Server *paServer, UA_NodeId &paParentNodeId, CIEC_ANY *paStructMember, const std::string &paStructMemberName) {
-  char* memberName = new char[paStructMemberName.length() +1];
-  strncpy(memberName, paStructMemberName.c_str(), paStructMemberName.length());
-  memberName[paStructMemberName.length()] = '\0';
+bool COPC_UA_ObjectStruct_Helper::addOPCUAStructTypeComponent(UA_Server *paServer, UA_NodeId &paParentNodeId, const std::string &paStructName, CIEC_ANY *paStructMember, const CStringDictionary::TStringId paStructMemberNameId) {
+  const std::string structMemberName = CStringDictionary::getInstance().get(paStructMemberNameId);
+  char* memberName = new char[structMemberName.length() +1];
+  strncpy(memberName, structMemberName.c_str(), structMemberName.length());
+  memberName[structMemberName.length()] = '\0';
   mStructTypeNames.push_back(memberName);
   UA_VariableAttributes vAttr = UA_VariableAttributes_default;
     vAttr.displayName = UA_LOCALIZEDTEXT(smEmptyString, memberName);
@@ -152,7 +153,12 @@ bool COPC_UA_ObjectStruct_Helper::addOPCUAStructTypeComponent(UA_Server *paServe
 
   UA_NodeId memberNodeId;
   if(paParentNodeId.identifierType == UA_NODEIDTYPE_STRING) {
-   memberNodeId = UA_NODEID_STRING(mOpcuaTypeNamespaceIndex, memberName);
+    std::string memberBrowsePathStr = getStructMemberBrowsePath(paStructName, paStructMemberNameId);
+    char* memberBrowsePath = new char[memberBrowsePathStr.length() +1];
+    strncpy(memberBrowsePath, memberBrowsePathStr.c_str(), memberBrowsePathStr.length());
+    memberBrowsePath[memberBrowsePathStr.length()] = '\0';   
+    mStructTypeNames.push_back(memberBrowsePath);
+    memberNodeId = UA_NODEID_STRING(mOpcuaTypeNamespaceIndex, memberBrowsePath);
   } else {
     memberNodeId = UA_NODEID_NUMERIC(mOpcuaTypeNamespaceIndex, 0);
   }
@@ -163,7 +169,7 @@ bool COPC_UA_ObjectStruct_Helper::addOPCUAStructTypeComponent(UA_Server *paServe
 
   mStructTypeMemberNodes.push_back(memberNodeId);
   if(status != UA_STATUSCODE_GOOD) {
-    DEVLOG_ERROR("[OPC UA OBJECT STRUCT HELPER]: Failed to add Member to OPC UA Struct Type Node for Member %s, Status Code: %s\n", paStructMemberName.c_str(), UA_StatusCode_name(status));
+    DEVLOG_ERROR("[OPC UA OBJECT STRUCT HELPER]: Failed to add Member to OPC UA Struct Type Node for Member %s, Status Code: %s\n", structMemberName.c_str(), UA_StatusCode_name(status));
     return false;
   }
   return true;
@@ -286,7 +292,7 @@ forte::com_infra::EComResponse COPC_UA_ObjectStruct_Helper::initializeMemberActi
   bool isNodeIdPresent = paActionInfo.getNodePairInfo().begin()->getNodeId() != nullptr;
 
   for(size_t i = 0; i < structType.getStructSize(); i++) {
-    std::string memberBrowsePath(getStructMemberBrowsePath(paBrowsePath, structMemberNames[i]));
+    std::string memberBrowsePath(getStructMemberBrowsePathWithNSIndex(paBrowsePath, structMemberNames[i]));
 
     std::shared_ptr<CActionInfo> actionInfo = std::make_shared<CStructMemberActionInfo>(*this, mLayer, paActionInfo.getAction(), paActionInfo.getEndpoint());
     CIEC_ANY* memberVariable = structType.getMember(i);
@@ -383,11 +389,17 @@ std::string COPC_UA_ObjectStruct_Helper::getStructBrowsePath(const std::string &
 }
 
 
-std::string COPC_UA_ObjectStruct_Helper::getStructMemberBrowsePath(std::string &paBrowsePathPrefix, const CStringDictionary::TStringId structMemberNameId) {
+std::string COPC_UA_ObjectStruct_Helper::getStructMemberBrowsePathWithNSIndex(const std::string &paBrowsePathPrefix, const CStringDictionary::TStringId structMemberNameId) {
   std::stringstream ss;
   char buf[100];
   snprintf(buf, sizeof(buf), smMemberNamespaceIndex.c_str(), mOpcuaObjectNamespaceIndex);
   ss << paBrowsePathPrefix << buf << CStringDictionary::getInstance().get(structMemberNameId);
+  return ss.str();
+}
+
+std::string COPC_UA_ObjectStruct_Helper::getStructMemberBrowsePath(const std::string &paBrowsePathPrefix, const CStringDictionary::TStringId structMemberNameId) {
+  std::stringstream ss;
+  ss << paBrowsePathPrefix << "/" << CStringDictionary::getInstance().get(structMemberNameId);
   return ss.str();
 }
 
