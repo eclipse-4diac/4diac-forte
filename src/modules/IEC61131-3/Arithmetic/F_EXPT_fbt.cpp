@@ -14,7 +14,7 @@
  *     - refactor for ANY variant
  *******************************************************************************/
 
-#include "F_EXPT.h"
+#include "F_EXPT_fbt.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
 #include "F_EXPT_gen.cpp"
 #endif

@@ -14,7 +14,7 @@
  *     - refactor for ANY variant
  *******************************************************************************/
 
-#include "F_CONCAT.h"
+#include "F_CONCAT_fbt.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
 #include "F_CONCAT_gen.cpp"
 #endif

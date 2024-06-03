@@ -14,7 +14,7 @@
  *     - refactor for ANY variant
  *******************************************************************************/
 
-#include "F_ADD_DT_TIME.h"
+#include "F_ADD_DT_TIME_fbt.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
 #include "F_ADD_DT_TIME_gen.cpp"
 #endif

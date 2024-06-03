@@ -14,7 +14,7 @@
  *     - refactor for ANY variant
  *******************************************************************************/
 
-#include "F_INSERT.h"
+#include "F_INSERT_fbt.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
 #include "F_INSERT_gen.cpp"
 #endif

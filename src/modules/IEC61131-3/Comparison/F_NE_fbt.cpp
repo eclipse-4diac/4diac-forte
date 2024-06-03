@@ -14,7 +14,7 @@
  *     - refactor for ANY variant
  *******************************************************************************/
 
-#include "F_NE.h"
+#include "F_NE_fbt.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
 #include "F_NE_gen.cpp"
 #endif
