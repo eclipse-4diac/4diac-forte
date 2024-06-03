@@ -10,9 +10,9 @@
  *    Martin Melik-Merkumians - initial contribution
  *******************************************************************************/
 
-#include "SET_LOCAL_ADS_ADDRESS.h"
+#include "SET_LOCAL_ADS_ADDRESS_fbt.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "SET_LOCAL_ADS_ADDRESS_gen.cpp"
+#include "SET_LOCAL_ADS_ADDRESS_fbt_gen.cpp"
 #endif
 
 #include <sstream>
