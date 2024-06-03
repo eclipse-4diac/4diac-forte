@@ -13,7 +13,7 @@
  *   - initial API and implementation and/or initial documentation
  *   Martin Jobst - add readInputData and writeOutputData
  *******************************************************************************/
-#include "FB_TON.h"
+#include "FB_TON_fbt.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
 #include "FB_TON_gen.cpp"
 #endif
