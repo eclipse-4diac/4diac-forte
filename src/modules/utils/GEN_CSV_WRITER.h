@@ -25,7 +25,7 @@
 class GEN_CSV_WRITER : public CGenFunctionBlock<CFunctionBlock> {
     DECLARE_GENERIC_FIRMWARE_FB(GEN_CSV_WRITER)
 
-  private:
+  protected:
     CIEC_BOOL &QI(){
       return *static_cast<CIEC_BOOL*>(getDI(0));
     }
@@ -45,6 +45,14 @@ class GEN_CSV_WRITER : public CGenFunctionBlock<CFunctionBlock> {
       return *static_cast<CIEC_STRING*>(getDO(1));
     }
     ;
+
+    TPortId getNumSD() const {
+      return mInterfaceSpec->mNumDIs - 2;
+    }
+
+    CIEC_ANY **getSDs() {
+      return mDIs + 2;
+    }
 
     static const TEventID scmEventINITID = 0;
     static const TEventID scmEventREQID = 1;
