@@ -17,7 +17,7 @@
 #include <typelib.h>
 #include <forte_eventfilter.h>
 #include <forte_wstring.h>
-#include "SubscribeEventAdp.h"
+#include "SubscribeEventAdp_atp.h"
 
 class FORTE_SubscribeEvent: public CCompositeFB{
   DECLARE_FIRMWARE_FB(FORTE_SubscribeEvent)

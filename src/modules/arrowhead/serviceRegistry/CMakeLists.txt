@@ -20,7 +20,7 @@ forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 forte_add_sourcefile_hcpp(forte_serviceregistryentry forte_servicequeryform)
 
 #Service Registry 
-forte_add_sourcefile_hcpp(FieldsToServiceQueryForm FieldsToServiceRegistryEntry QueryService QueryServicesAdp RegisterService RegisterServiceAdp ServiceRegistryEntry2ServiceRegistryEntry)
+forte_add_sourcefile_hcpp(FieldsToServiceQueryForm FieldsToServiceRegistryEntry QueryService QueryServicesAdp_atp RegisterService RegisterServiceAdp_atp ServiceRegistryEntry2ServiceRegistryEntry_fbt)
                 
 if(FORTE_COM_HTTP)
   add_subdirectory(HTTP)

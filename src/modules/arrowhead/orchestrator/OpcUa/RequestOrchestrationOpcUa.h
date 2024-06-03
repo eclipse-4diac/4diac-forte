@@ -15,7 +15,7 @@
 
 #include <cfb.h>
 #include <typelib.h>
-#include "OrchestratorRequestAdp.h"
+#include "OrchestratorRequestAdp_atp.h"
 
 class FORTE_RequestOrchestrationOpcUa: public CCompositeFB{
   DECLARE_FIRMWARE_FB(FORTE_RequestOrchestrationOpcUa)

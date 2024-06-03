@@ -10,9 +10,9 @@
  *   Jose Cabral - initial implementation
  *******************************************************************************/
 
-#include "ServiceRegistryEntry2ServiceRegistryEntry.h"
+#include "ServiceRegistryEntry2ServiceRegistryEntry_fbt.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "ServiceRegistryEntry2ServiceRegistryEntry_gen.cpp"
+#include "ServiceRegistryEntry2ServiceRegistryEntry_fbt_gen.cpp"
 #endif
 
 DEFINE_FIRMWARE_FB(FORTE_ServiceRegistryEntry2ServiceRegistryEntry, g_nStringIdServiceRegistryEntry2ServiceRegistryEntry)

@@ -16,6 +16,6 @@
 
 forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
-forte_add_sourcefile_hcpp(ANYToJSON ArrowheadJSONHelper GetArrayResponseFromJSON)
+forte_add_sourcefile_hcpp(ANYToJSON_fbt ArrowheadJSONHelper GetArrayResponseFromJSON_fbt)
 
   

@@ -10,9 +10,9 @@
  *   Jose Cabral - initial implementation
  *******************************************************************************/
 
-#include "OrchestrationForm2OrchestrationForm.h"
+#include "OrchestrationForm2OrchestrationForm_fbt.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "OrchestrationForm2OrchestrationForm_gen.cpp"
+#include "OrchestrationForm2OrchestrationForm_fbt_gen.cpp"
 #endif
 
 DEFINE_FIRMWARE_FB(FORTE_OrchestrationForm2OrchestrationForm, g_nStringIdOrchestrationForm2OrchestrationForm)

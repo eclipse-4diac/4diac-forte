@@ -17,7 +17,7 @@
 #include <typelib.h>
 #include <forte_publishevent.h>
 #include <forte_wstring.h>
-#include "ArrowheadPublishAdp.h"
+#include "ArrowheadPublishAdp_atp.h"
 
 class FORTE_ArrowheadPublish: public CCompositeFB{
   DECLARE_FIRMWARE_FB(FORTE_ArrowheadPublish)
