@@ -10,9 +10,9 @@
  *   Jonathan Lainer - Initial implementation.
  *******************************************************************************/
 
-#include "Port.h"
+#include "Port_fbt.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "Port_gen.cpp"
+#include "Port_fbt_gen.cpp"
 #endif
 
 #include "core/io/mapper/io_mapper.h"

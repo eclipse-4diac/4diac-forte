@@ -10,9 +10,9 @@
  *   Jonathan Lainer - Initial implementation.
  *******************************************************************************/
 
-#include "PortAdapter.h"
+#include "PortAdapter_atp.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "PortAdapter_gen.cpp"
+#include "PortAdapter_atp_gen.cpp"
 #endif
 
 DEFINE_ADAPTER_TYPE(FORTE_PortAdapter, g_nStringIdPortAdapter)

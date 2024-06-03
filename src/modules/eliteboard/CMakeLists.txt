@@ -31,7 +31,7 @@ forte_add_definition("-ffunction-sections -fdata-sections -fno-threadsafe-static
 add_subdirectory(handler)
 forte_add_sourcefile_hcpp(handle/PinHandle)
 forte_add_sourcefile_hcpp(types/EliteBoard)
-forte_add_sourcefile_hcpp(types/Port types/PortAdapter)
+forte_add_sourcefile_hcpp(types/Port_fbt types/PortAdapter_atp)
 
 endif(FORTE_IO_ELITEBOARD)
 endif("${FORTE_ARCHITECTURE}" STREQUAL "FreeRTOSLwIP")
