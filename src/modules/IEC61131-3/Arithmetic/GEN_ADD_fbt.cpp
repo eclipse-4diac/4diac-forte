@@ -16,9 +16,9 @@
  *     - add generic readInputData and writeOutputData
  *******************************************************************************/
 
-#include "GEN_ADD.h"
+#include "GEN_ADD_fbt.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "GEN_ADD_gen.cpp"
+#include "GEN_ADD_fbt_gen.cpp"
 #endif
 
 #include <ctype.h>
