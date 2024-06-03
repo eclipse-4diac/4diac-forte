@@ -10,9 +10,9 @@
  *   Jose Cabral - initial implementation
  *******************************************************************************/
 
-#include "OrchestratorRequestAdp.h"
+#include "OrchestratorRequestAdp_atp.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "OrchestratorRequestAdp_gen.cpp"
+#include "OrchestratorRequestAdp_atp_gen.cpp"
 #endif
 
 DEFINE_ADAPTER_TYPE(FORTE_OrchestratorRequestAdp, g_nStringIdOrchestratorRequestAdp)

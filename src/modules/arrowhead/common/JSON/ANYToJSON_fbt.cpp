@@ -10,9 +10,9 @@
  *   Jose Cabral - initial implementation
  *******************************************************************************/
 
-#include "ANYToJSON.h"
+#include "ANYToJSON_fbt.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "ANYToJSON_gen.cpp"
+#include "ANYToJSON_fbt_gen.cpp"
 #endif
 #include "ArrowheadJSONHelper.h"
 

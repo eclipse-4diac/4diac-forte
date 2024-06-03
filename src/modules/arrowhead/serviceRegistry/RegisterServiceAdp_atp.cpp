@@ -10,9 +10,9 @@
  *   Jose Cabral - initial implementation
  *******************************************************************************/
 
-#include "RegisterServiceAdp.h"
+#include "RegisterServiceAdp_atp.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "RegisterServiceAdp_gen.cpp"
+#include "RegisterServiceAdp_atp_gen.cpp"
 #endif
 
 DEFINE_ADAPTER_TYPE(FORTE_RegisterServiceAdp, g_nStringIdRegisterServiceAdp)
