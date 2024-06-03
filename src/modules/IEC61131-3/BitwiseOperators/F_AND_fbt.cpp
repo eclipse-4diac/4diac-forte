@@ -16,7 +16,7 @@
 
 #include "F_AND_fbt.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "F_AND_gen.cpp"
+#include "F_AND_fbt_gen.cpp"
 #endif
 
 #include "criticalregion.h"

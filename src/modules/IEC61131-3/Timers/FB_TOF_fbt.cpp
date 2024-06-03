@@ -14,7 +14,7 @@
  *******************************************************************************/
 #include "FB_TOF_fbt.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "FB_TOF_gen.cpp"
+#include "FB_TOF_fbt_gen.cpp"
 #endif
 
 #include "criticalregion.h"
