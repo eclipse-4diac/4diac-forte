@@ -1,0 +1,57 @@
+# This starter workflow is for a CMake project running on multiple platforms. There is a different starter workflow if you just want a single platform.
+# See: https://github.com/actions/starter-workflows/blob/main/ci/cmake-single-platform.yml
+name: System Tests
+
+on:
+  push:
+    branches: [ "release", "develop", "freeze" ]
+  pull_request:
+    branches: [ "release", "develop", "freeze" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container: quay.io/eclipse4diac/4diac-fortebuildcontainer:latest
+
+    steps:
+    - uses: actions/checkout@v4.1.2
+
+    - name: Set reusable strings
+      id: strings
+      shell: bash
+      run: |
+        echo "source-dir=$GITHUB_WORKSPACE" >> "$GITHUB_OUTPUT"
+        echo "build-dir=$GITHUB_WORKSPACE/build" >> "$GITHUB_OUTPUT"
+
+    - name: Configure CMake
+      run: >
+        cmake -S ${{ steps.strings.outputs.source-dir }} -B ${{ steps.strings.outputs.build-dir }}
+        -DCMAKE_BUILD_TYPE=Debug
+        -DFORTE_ARCHITECTURE=Posix
+        -DFORTE_COM_ETH=ON
+        -DFORTE_COM_FBDK=ON
+        -DFORTE_COM_HTTP=ON
+        -DFORTE_COM_LOCAL=ON
+        -DFORTE_COM_RAW=ON
+        -DFORTE_COM_SER=ON
+        -DFORTE_COM_STRUCT_MEMBER=ON
+        -DFORTE_COM_OPC_UA=ON
+        -DFORTE_COM_OPC_UA_INCLUDE_DIR=${WORKDIR}/open62541/binStatic
+        -DFORTE_COM_OPC_UA_LIB_DIR=${WORKDIR}/open62541/binStatic/bin
+        -DFORTE_COM_OPC_UA_LIB=libopen62541.a
+        -DFORTE_IO=ON
+        -DFORTE_MODULE_CONVERT=ON
+        -DFORTE_MODULE_IEC61131=ON
+        -DFORTE_MODULE_RECONFIGURATION=ON
+        -DFORTE_MODULE_RT_Events=ON
+        -DFORTE_MODULE_SIGNALPROCESSING=ON
+        -DFORTE_MODULE_UTILS=ON
+        -DFORTE_TESTS=ON
+        -DFORTE_SYSTEM_TESTS=ON
+
+    - name: Build
+      run: cmake --build ${{ steps.strings.outputs.build-dir }}
+
+    - name: Test
+      working-directory: ${{ steps.strings.outputs.build-dir }}
+      run: ctest
