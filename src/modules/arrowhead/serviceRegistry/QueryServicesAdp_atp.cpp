@@ -10,9 +10,9 @@
  *   Jose Cabral - initial implementation
  *******************************************************************************/
 
-#include "QueryServicesAdp.h"
+#include "QueryServicesAdp_atp.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "QueryServicesAdp_gen.cpp"
+#include "QueryServicesAdp_atp_gen.cpp"
 #endif
 
 DEFINE_ADAPTER_TYPE(FORTE_QueryServicesAdp, g_nStringIdQueryServicesAdp)

@@ -15,7 +15,7 @@
 
 #include <cfb.h>
 #include <typelib.h>
-#include "QueryServicesAdp.h"
+#include "QueryServicesAdp_atp.h"
 
 class FORTE_QueryServiceHTTP: public CCompositeFB{
   DECLARE_FIRMWARE_FB(FORTE_QueryServiceHTTP)

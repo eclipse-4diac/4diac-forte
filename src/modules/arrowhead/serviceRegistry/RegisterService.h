@@ -17,7 +17,7 @@
 #include <typelib.h>
 #include <forte_serviceregistryentry.h>
 #include <forte_wstring.h>
-#include "RegisterServiceAdp.h"
+#include "RegisterServiceAdp_atp.h"
 
 class FORTE_RegisterService: public CCompositeFB{
   DECLARE_FIRMWARE_FB(FORTE_RegisterService)
