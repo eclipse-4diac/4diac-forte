@@ -19,7 +19,7 @@ forte_add_sourcefile_hcpp( BOOL2BOOL     BYTE2BYTE   DINT2DINT         DWORD2DWO
 forte_add_sourcefile_hcpp( INT2INT       SINT2SINT )
 forte_add_sourcefile_hcpp( STRING2STRING  TIME2TIME   UINT2UINT         UDINT2UDINT )
 forte_add_sourcefile_hcpp( USINT2USINT     WORD2WORD     WSTRING2WSTRING )
-forte_add_sourcefile_hcpp( GEN_STRUCT_MUX GEN_STRUCT_DEMUX )
+forte_add_sourcefile_hcpp( GEN_STRUCT_MUX_fbt GEN_STRUCT_DEMUX_fbt )
 forte_add_sourcefile_hcpp(REAL2REAL)
 forte_add_sourcefile_hcpp(LREAL2LREAL)
 
