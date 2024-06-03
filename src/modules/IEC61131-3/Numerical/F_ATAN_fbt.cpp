@@ -16,7 +16,7 @@
 
 #include "F_ATAN_fbt.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "F_ATAN_gen.cpp"
+#include "F_ATAN_fbt_gen.cpp"
 #endif
 
 #include "criticalregion.h"
