@@ -18,7 +18,7 @@ forte_add_sourcefile_hcpp(F_AND_fbt)
 forte_add_sourcefile_hcpp(F_NOT_fbt)
 forte_add_sourcefile_hcpp(F_OR_fbt)
 forte_add_sourcefile_hcpp(F_XOR_fbt)
-forte_add_sourcefile_hcpp(genbitbase_fbt GEN_AND GEN_OR GEN_XOR)
+forte_add_sourcefile_hcpp(genbitbase GEN_AND GEN_OR GEN_XOR)
 
 forte_add_sourcefile_hcpp(F_SHL_fbt)
 forte_add_sourcefile_hcpp(F_SHR_fbt)
