@@ -12,13 +12,13 @@
  *   Alois Zoitl - initial API and implementation and/or initial documentation
  *   Martin Jobst - add generic readInputData and writeOutputData
  *******************************************************************************/
-#include "GEN_STRUCT_DEMUX.h"
+#include "GEN_STRUCT_DEMUX_fbt.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "GEN_STRUCT_DEMUX_gen.cpp"
+#include "GEN_STRUCT_DEMUX_fbt_gen.cpp"
 #endif
-#include "GEN_STRUCT_MUX.h"
+#include "GEN_STRUCT_MUX_fbt.h"
 #include <stdio.h>
-#include "GEN_STRUCT_DEMUX.h"
+#include "GEN_STRUCT_DEMUX_fbt.h"
 
 #include "resource.h"
 #include "criticalregion.h"

@@ -12,9 +12,9 @@
  *   Alois Zoitl - initial API and implementation and/or initial documentation
  *   Martin Jobst - add generic readInputData and writeOutputData
  *******************************************************************************/
-#include "GEN_STRUCT_MUX.h"
+#include "GEN_STRUCT_MUX_fbt.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "GEN_STRUCT_MUX_gen.cpp"
+#include "GEN_STRUCT_MUX_fbt_gen.cpp"
 #endif
 
 #include "resource.h"
