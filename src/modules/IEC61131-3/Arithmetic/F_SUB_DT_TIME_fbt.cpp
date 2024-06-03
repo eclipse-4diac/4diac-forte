@@ -16,7 +16,7 @@
 
 #include "F_SUB_DT_TIME_fbt.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "F_SUB_DT_TIME_gen.cpp"
+#include "F_SUB_DT_TIME_fbt_gen.cpp"
 #endif
 
 #include "criticalregion.h"
