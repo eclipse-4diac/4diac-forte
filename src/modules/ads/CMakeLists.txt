@@ -26,6 +26,6 @@ forte_add_link_library( ${ADS_LIBRARY} )
 #######################################################
 
 forte_add_sourcefile_hcpp(CAdsProcessInterface CAdsConnection CAdsConnectionManager)
-forte_add_sourcefile_hcpp(ADS_SERVER_CONFIG SET_LOCAL_ADS_ADDRESS)
+forte_add_sourcefile_hcpp(ADS_SERVER_CONFIG_fbt SET_LOCAL_ADS_ADDRESS_fbt)
 forte_add_sourcefile_h(processinterface.h)
 forte_set_process_interface("ADS" IX QX IW QW ID QD IL QL)
