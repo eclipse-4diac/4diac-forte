@@ -15,9 +15,9 @@
  *    Alois Zoitl - introduced new CGenFB class for better handling generic FBs
  *    Martin Jobst - add generic readInputData and writeOutputData
  *******************************************************************************/
-#include "GEN_ARRAY2ARRAY.h"
+#include "GEN_ARRAY2ARRAY_fbt.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "GEN_ARRAY2ARRAY_gen.cpp"
+#include "GEN_ARRAY2ARRAY_fbt_gen.cpp"
 #endif
 
 #include "resource.h"

@@ -13,9 +13,9 @@
  *   Martin Jobst - add readInputData and writeOutputData
  *******************************************************************************/
 
-#include "TEST_CONDITION.h"
+#include "TEST_CONDITION_fbt.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "TEST_CONDITION_gen.cpp"
+#include "TEST_CONDITION_fbt_gen.cpp"
 #endif
 
 #include "devlog.h"

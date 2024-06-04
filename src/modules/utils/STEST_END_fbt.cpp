@@ -11,9 +11,9 @@
  *   - initial API and implementation and/or initial documentation
  *******************************************************************************/
 
-#include "STEST_END.h"
+#include "STEST_END_fbt.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "STEST_END_gen.cpp"
+#include "STEST_END_fbt_gen.cpp"
 #endif
 
 #include "../../stdfblib/ita/RMT_DEV.h"

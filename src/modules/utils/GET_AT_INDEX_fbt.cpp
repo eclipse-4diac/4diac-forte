@@ -14,9 +14,9 @@
  *     - refactor for ANY variant
  *******************************************************************************/
 
-#include "GET_AT_INDEX.h"
+#include "GET_AT_INDEX_fbt.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "GET_AT_INDEX_gen.cpp"
+#include "GET_AT_INDEX_fbt_gen.cpp"
 #endif
 
 #include "criticalregion.h"

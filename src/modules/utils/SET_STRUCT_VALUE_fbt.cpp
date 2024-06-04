@@ -14,9 +14,9 @@
  *     - refactor for ANY variant
  *******************************************************************************/
 
-#include "SET_STRUCT_VALUE.h"
+#include "SET_STRUCT_VALUE_fbt.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "SET_STRUCT_VALUE_gen.cpp"
+#include "SET_STRUCT_VALUE_fbt_gen.cpp"
 #endif
 
 #include "criticalregion.h"

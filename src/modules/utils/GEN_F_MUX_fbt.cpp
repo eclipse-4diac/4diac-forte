@@ -15,9 +15,9 @@
  *    Alois Zoitl - introduced new CGenFB class for better handling generic FBs
  *    Martin Jobst - add generic readInputData and writeOutputData
  *******************************************************************************/
-#include "GEN_F_MUX.h"
+#include "GEN_F_MUX_fbt.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "GEN_F_MUX_gen.cpp"
+#include "GEN_F_MUX_fbt_gen.cpp"
 #endif
 
 #include <ctype.h>

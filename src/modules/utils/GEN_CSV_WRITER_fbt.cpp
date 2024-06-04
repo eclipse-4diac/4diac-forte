@@ -18,9 +18,9 @@
  *   Michael Hansal
  *   - add support for array parameters
  *******************************************************************************/
-#include "GEN_CSV_WRITER.h"
+#include "GEN_CSV_WRITER_fbt.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "GEN_CSV_WRITER_gen.cpp"
+#include "GEN_CSV_WRITER_fbt_gen.cpp"
 #endif
 #include <errno.h>
 #include "devlog.h"
