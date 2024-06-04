@@ -9,9 +9,9 @@
  * Contributors:
  *   Matthias Plasch, Gerhard Ebenhofer, Alois Zoitl - initial API and implementation and/or initial documentation
  *******************************************************************************/
-#include "ST_REC_CONN.h"
+#include "ST_REC_CONN_fbt.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "ST_REC_CONN_gen.cpp"
+#include "ST_REC_CONN_fbt_gen.cpp"
 #endif
 
 #include "criticalregion.h"
