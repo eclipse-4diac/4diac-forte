@@ -14,9 +14,9 @@
  ***     1.0: 2023-10-21/franz -  -
  *************************************************************************/
 
-#include "FIELDBUS_PERCENT_TO_WORD_fct.h"
+#include "FIELDBUS_PERCENT_TO_WORD_fct_fbt.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "FIELDBUS_PERCENT_TO_WORD_fct_gen.cpp"
+#include "FIELDBUS_PERCENT_TO_WORD_fct_fbt_gen.cpp"
 #endif
 
 #include "criticalregion.h"

@@ -20,6 +20,6 @@ forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 
 forte_add_sourcefile_hcpp(DualHysteresis_fbt)
-forte_add_sourcefile_hcpp(FIELDBUS_WORD_TO_PERCENT_fct)
-forte_add_sourcefile_hcpp(FIELDBUS_PERCENT_TO_WORD_fct)
+forte_add_sourcefile_hcpp(FIELDBUS_WORD_TO_PERCENT_fct_fbt)
+forte_add_sourcefile_hcpp(FIELDBUS_PERCENT_TO_WORD_fct_fbt)
 forte_add_sourcefile_hcpp(FIELDBUS_SIGNAL_gcf)
