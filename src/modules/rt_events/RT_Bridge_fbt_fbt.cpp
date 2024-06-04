@@ -13,7 +13,7 @@
 
 #include <modules/rt_events/RT_Bridge_fbt.h>
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "RT_Bridge_fbt_gen.cpp"
+#include "RT_Bridge_fbt_fbt_gen.cpp"
 #endif
 
 #include "ifSpecBuilder.h"
