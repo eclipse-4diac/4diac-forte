@@ -37,9 +37,8 @@ if(FORTE_MODULE_WagoKbus)
     forte_add_include_system_directories(${FORTE_WAGO_INCLUDE_DIR}/OsLinux)
     forte_add_link_directories(${FORTE_WAGO_LIB_DIR})
     
-    forte_add_link_library(libdal.a liblibloader.so libpthread.so libffi.so libdbus-glib-1.so libglib-2.0.so librt.so)
-    forte_add_link_library(libtypelabel.so liboslinux.so libdbuskbuscommon.so)    
-    forte_add_link_flags("-Wall") 
+    forte_add_link_library(dal libloader pthread ffi dbus-glib-1 glib-2.0)
+    forte_add_link_library(typelabel oslinux dbuskbuscommon)
   
     #TODO: Further dependencies are to be checked and added later
 
