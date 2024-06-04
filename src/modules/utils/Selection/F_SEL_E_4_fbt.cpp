@@ -15,9 +15,9 @@
  ***     1.1: 2022-08-04/Franz Höpfinger - HR Agrartechnik GmbH -
  *************************************************************************/
 
-#include "F_SEL_E_4.h"
+#include "F_SEL_E_4_fbt.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "F_SEL_E_4_gen.cpp"
+#include "F_SEL_E_4_fbt_gen.cpp"
 #endif
 
 #include "criticalregion.h"

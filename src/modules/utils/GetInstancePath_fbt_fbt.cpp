@@ -11,9 +11,9 @@
  *   Alois Zoitl - initial API and implementation and/or initial documentation
  *******************************************************************************/
 
-#include "GetInstancePath_fbt.h"
+#include "GetInstancePath_fbt_fbt.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "GetInstancePath_fbt_gen.cpp"
+#include "GetInstancePath_fbt_fbt_gen.cpp"
 #endif
 
 #include "criticalregion.h"

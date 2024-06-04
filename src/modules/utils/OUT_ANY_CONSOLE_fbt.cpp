@@ -14,9 +14,9 @@
  *     - refactor for ANY variant
  *******************************************************************************/
 
-#include "OUT_ANY_CONSOLE.h"
+#include "OUT_ANY_CONSOLE_fbt.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "OUT_ANY_CONSOLE_gen.cpp"
+#include "OUT_ANY_CONSOLE_fbt_gen.cpp"
 #endif
 
 #include "criticalregion.h"

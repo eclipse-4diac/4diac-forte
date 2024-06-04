@@ -16,9 +16,9 @@
  *     - refactor for ANY variant
  *     - add generic readInputData and writeOutputData
  *******************************************************************************/
-#include "GEN_VALUES2ARRAY.h"
+#include "GEN_VALUES2ARRAY_fbt.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "GEN_VALUES2ARRAY_gen.cpp"
+#include "GEN_VALUES2ARRAY_fbt_gen.cpp"
 #endif
 
 #include <stdio.h>
