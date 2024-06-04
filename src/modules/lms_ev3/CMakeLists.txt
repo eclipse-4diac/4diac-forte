@@ -8,7 +8,7 @@
 # 
 # Contributors:
 #     Alois Zoitl - initial API and implementation and/or initial documentation
-# *    Jose Cabral - added fileWriter
+# *    Jose Cabral - added fileWriter_fbt
 # *******************************************************************************/ 
  
 if ("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
@@ -24,7 +24,7 @@ forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 forte_add_sourcefile_hcpp(processinterface)
 forte_set_process_interface("Lego Mindstorms EV3" IX QX IW QW ID QD)
 
-forte_add_sourcefile_hcpp(fileWriter)
-forte_add_sourcefile_hcpp(fileReader)
+forte_add_sourcefile_hcpp(fileWriter_fbt)
+forte_add_sourcefile_hcpp(fileReader_fbt)
 
 endif("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
