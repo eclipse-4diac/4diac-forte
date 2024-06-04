@@ -10,9 +10,9 @@
  *    Jose Cabral - initial API and implementation and/or initial documentation
  *******************************************************************************/
  
-#include "fileWriter.h"
+#include "fileWriter_fbt.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "fileWriter_gen.cpp"
+#include "fileWriter_fbt_gen.cpp"
 #endif
 
 #include <sstream>

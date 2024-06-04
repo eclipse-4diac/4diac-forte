@@ -10,9 +10,9 @@
  *    Jose Cabral - initial API and implementation and/or initial documentation
  *******************************************************************************/
  
-#include "fileReader.h"
+#include "fileReader_fbt.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "fileReader_gen.cpp"
+#include "fileReader_fbt_gen.cpp"
 #endif
 
 #include <sstream>
