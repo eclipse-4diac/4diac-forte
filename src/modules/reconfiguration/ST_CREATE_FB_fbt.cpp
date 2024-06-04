@@ -9,9 +9,9 @@
  * Contributors:
  *   Matthias Plasch, Gerhard Ebenhofer, Alois Zoitl - initial API and implementation and/or initial documentation
  *******************************************************************************/
-#include "ST_CREATE_FB.h"
+#include "ST_CREATE_FB_fbt.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "ST_CREATE_FB_gen.cpp"
+#include "ST_CREATE_FB_fbt_gen.cpp"
 #endif
 
 #include "criticalregion.h"
