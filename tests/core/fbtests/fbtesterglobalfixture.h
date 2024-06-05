@@ -14,7 +14,34 @@
 
 #include "device.h"
 
-class CTesterDevice;
+class CTesterDevice : public CDevice {
+  public:
+    CTesterDevice(const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId) :
+        CDevice(paInterfaceSpec, paInstanceNameId){
+    }
+
+    void awaitShutdown() override {
+      // nothing to be done to join
+    }
+
+    CIEC_ANY *getDI(size_t) override {
+      return nullptr;
+    }
+
+    CDataConnection **getDIConUnchecked(TPortId) override {
+      return nullptr;
+    }
+
+};
+
+const static SFBInterfaceSpec gscTestDevSpec = {
+  0, nullptr, nullptr, nullptr,
+  0, nullptr, nullptr, nullptr,
+  0, nullptr, nullptr,
+  0, nullptr, nullptr,
+  0, nullptr,
+  0, nullptr
+};
 
 /**Global fixture for providing the resource and device needed for fb testing
  *

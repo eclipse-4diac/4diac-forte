@@ -16,37 +16,6 @@
 #endif
 #include <boost/test/unit_test.hpp>
 
-class CTesterDevice : public CDevice {
-  public:
-    CTesterDevice(const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId) :
-        CDevice(paInterfaceSpec, paInstanceNameId){
-    }
-
-    void awaitShutdown() override {
-      // nothing to be done to join
-    }
-
-    CIEC_ANY *getDI(size_t) override {
-      return nullptr;
-    }
-
-    CDataConnection **getDIConUnchecked(TPortId) override {
-      return nullptr;
-    }
-
-    friend CFBTestDataGlobalFixture;
-
-};
-
-const static SFBInterfaceSpec gscTestDevSpec = {
-  0, nullptr, nullptr, nullptr,
-  0, nullptr, nullptr, nullptr,
-  0, nullptr, nullptr,
-  0, nullptr, nullptr,
-  0, nullptr,
-  0, nullptr
-};
-
 CTesterDevice *CFBTestDataGlobalFixture::smTestDev;
 CResource *CFBTestDataGlobalFixture::smTestRes;
 
