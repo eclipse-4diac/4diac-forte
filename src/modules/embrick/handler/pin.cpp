@@ -57,9 +57,8 @@ void EmbrickPinHandler::init() {
 
     didExport = true;
 
-    if (!writeFile("/sys/class/gpio/gpio" + pinStr + "/direction", "out")) {
+    if (!writeFile("/sys/class/gpio/gpio" + pinStr + "/direction", "out"))
       return fail(scmFailedToSetDirection);
-    }
   }
 
   // Prepare pin stream for usage
@@ -85,7 +84,6 @@ void EmbrickPinHandler::deInit() {
     if (!writeFile("/sys/class/gpio/unexport", std::to_string(mPinNumber))) {
       return fail(scmFailedToExportPin);
     }
-    didExport = false;
   }
 
   DEVLOG_INFO("emBrick[PinHandler]: GPIO %i stopped.\n", mPinNumber);
