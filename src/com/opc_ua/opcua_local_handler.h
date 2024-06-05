@@ -191,7 +191,7 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
     /**
      * For each node that is accessed by the action, an entry in this list is added
      */
-    CSinglyLinkedList<nodesReferencedByActions*> mNodesReferences;
+    CSinglyLinkedList<nodesReferencedByActions> mNodesReferences;
 
     /**
      * For all nodes that an action is referencing, it adds the action as reference
