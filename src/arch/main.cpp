@@ -12,17 +12,14 @@
  *  Martin Melik Merkumians, Ingo Hegny, Filip Andren - initial API and implementation and/or initial documentation
  *  Tarik Terzimehic - make OPC UA server port setable from the command line
  *******************************************************************************/
-#include <fortenew.h>
-#include <stdio.h>
+#include "forte_architecture.h"
+#include "src/core/forteinstance.h"
+#include "startuphook.h"
+#include "utils/mainparam_utils.h"
+#include "forteinit.h"
+
 #include <signal.h>
-#include "../startuphook.h"
-#include "forteinstance.h"
 
-#include "../utils/mainparam_utils.h"
-
-#ifdef FORTE_IO_PLCNEXT
-#include "../../modules/PLCnext/plcNextDeviceStatus.h"
-#endif
 
 /*!\brief Check if the correct endianess has been configured.
  *
@@ -34,16 +31,6 @@ void hookSignals();
 
 C4diacFORTEInstance g4diacForteInstance;
 
-//this keeps away a lot of rtti and exception handling stuff
-#ifndef __cpp_exceptions
-extern "C" void __cxa_pure_virtual(void){
-  //TODO maybe add some reporting here
-  //Although we should never get here
-  //if we are here something very very bad has happened e.g., stack overflow or other memory corruption
-
-}
-#endif
-
 void endForte(int ){
   g4diacForteInstance.triggerDeviceShutdown();
 }
@@ -52,26 +39,29 @@ int main(int argc, char *arg[]){
 
   checkEndianess();
 
-  startupHook(argc, arg);
-
-#ifdef FORTE_IO_PLCNEXT
-  sleep(3);
-  DeviceStatus::startup();
-#endif
-
   hookSignals();
 
+  if(!CForteArchitecture::initialize()){
+    return -1;
+  }
+
+  initForte();
+
+  startupHook(argc, arg);
+
   const char *pIpPort = parseCommandLineArguments(argc, arg);
-  if((0 != strlen(pIpPort)) && (nullptr != strchr(pIpPort, ':'))) {
-    if(g4diacForteInstance.startupNewDevice(pIpPort)) {
-      DEVLOG_INFO("FORTE is up and running\n");
-      g4diacForteInstance.awaitDeviceShutdown();
-      DEVLOG_INFO("FORTE finished\n");
-    }
-  }
-  else{ //! Lists the help for FORTE
+  if((0 == strlen(pIpPort)) || (nullptr == strchr(pIpPort, ':'))) {
     listHelp();
+    return -1;
   }
+
+  if(!g4diacForteInstance.startupNewDevice(pIpPort)) {
+    return -1;
+  }
+  
+  DEVLOG_INFO("FORTE is up and running\n");
+  g4diacForteInstance.awaitDeviceShutdown();
+  DEVLOG_INFO("FORTE finished\n");
 
   return 0;
 }
