@@ -58,7 +58,7 @@ BOOST_AUTO_TEST_CASE(sequential_events_test) {
   // The inner scope is to make sure the destructors of the resources are 
   // called which flushes the output
   {
-    CTesterDevice device(&gscTestDevSpec, g_nStringIdMyDevice);
+    CTesterDevice device(g_nStringIdMyDevice);
     auto resource = new EMB_RES(g_nStringIdMyResource, device);
     device.addFB(resource);
 
