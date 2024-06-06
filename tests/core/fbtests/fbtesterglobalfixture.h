@@ -14,19 +14,12 @@
 
 #include "device.h"
 
-<<<<<<< HEAD
-class CTesterDevice : public CDevice {
-  public:
-    CTesterDevice(const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId) :
-        CDevice(paInterfaceSpec, paInstanceNameId){
-=======
 #include <memory>
 
 class CTesterDevice : public CDevice {
   public:
     CTesterDevice(const CStringDictionary::TStringId paInstanceNameId = CStringDictionary::scmInvalidStringId) :
         CDevice(&scTestDevSpec, paInstanceNameId){
->>>>>>> origin/develop
     }
 
     void awaitShutdown() override {
