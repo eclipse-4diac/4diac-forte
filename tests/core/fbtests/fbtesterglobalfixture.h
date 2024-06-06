@@ -14,10 +14,12 @@
 
 #include "device.h"
 
+#include <memory>
+
 class CTesterDevice : public CDevice {
   public:
-    CTesterDevice(const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId) :
-        CDevice(paInterfaceSpec, paInstanceNameId){
+    CTesterDevice(const CStringDictionary::TStringId paInstanceNameId = CStringDictionary::scmInvalidStringId) :
+        CDevice(&scTestDevSpec, paInstanceNameId){
     }
 
     void awaitShutdown() override {
@@ -31,17 +33,17 @@ class CTesterDevice : public CDevice {
     CDataConnection **getDIConUnchecked(TPortId) override {
       return nullptr;
     }
-
+  private:
+    constexpr static SFBInterfaceSpec scTestDevSpec = {
+    0, nullptr, nullptr, nullptr,
+    0, nullptr, nullptr, nullptr,
+    0, nullptr, nullptr,
+    0, nullptr, nullptr,
+    0, nullptr,
+    0, nullptr
+  };
 };
 
-const static SFBInterfaceSpec gscTestDevSpec = {
-  0, nullptr, nullptr, nullptr,
-  0, nullptr, nullptr, nullptr,
-  0, nullptr, nullptr,
-  0, nullptr, nullptr,
-  0, nullptr,
-  0, nullptr
-};
 
 /**Global fixture for providing the resource and device needed for fb testing
  *
@@ -57,7 +59,7 @@ class CFBTestDataGlobalFixture{
     }
 
   private:
-    static CTesterDevice *smTestDev;
+    static std::unique_ptr<CTesterDevice> smTestDev;
     static CResource *smTestRes;
 };
 
