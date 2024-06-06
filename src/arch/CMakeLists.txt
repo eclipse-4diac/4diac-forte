@@ -30,7 +30,9 @@ add_subdirectory(zephyr)
 
 add_subdirectory(utils)
 
-forte_add_sourcefile_hcpp(timerha devlog)
+forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR}/common)  
+
+forte_add_sourcefile_hcpp(timerha devlog forte)
 
 SET(FORTE_LOGGER_BUFFER_SIZE "300" CACHE STRING "Buffer's length of the logger")
 mark_as_advanced(FORTE_LOGGER_BUFFER_SIZE)

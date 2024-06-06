@@ -59,6 +59,7 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "NetOs 7.4")
   endif(FORTE_FAKE_TIME)
   forte_add_sourcefile_cpp(../forte_architecture_time.cpp)
 
+  forte_add_sourcefile_cpp(../../common/forte_specific_architecture.cpp)
   forte_add_sourcefile_hcpp(../forte_thread ../forte_sync ../forte_sem)
   forte_add_sourcefile_cpp(appconf_api.c ../root.cpp ../../genforte_printer.cpp)
   forte_add_sourcefile_h(../../forte_architecture_time.h)

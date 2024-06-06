@@ -25,7 +25,9 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "VxWorks")
   endif(FORTE_FAKE_TIME)
   forte_add_sourcefile_cpp(forte_architecture_time.cpp)
 
-  forte_add_to_executable_cpp(main)
+  forte_add_sourcefile_cpp(../common/forte_specific_architecture.cpp)
+  forte_add_to_executable_cpp(../main)
+
 
   forte_add_sourcefile_hcpp(forte_thread forte_sync forte_sem)
   forte_add_sourcefile_cpp(../genforte_printer.cpp)

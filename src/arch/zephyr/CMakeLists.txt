@@ -21,7 +21,7 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "Zephyr")
   set(FORTE_LOGLEVEL "NOLOG" CACHE STRING "Loglevel to use" FORCE)
   SET(FORTE_ZEPHYR_INCLUDES "" CACHE STRING "Folders to include from the Zephyr OS")
 
-  forte_add_sourcefile_hcpp(forte_thread forte_sync forte_sem forte_Init)
+  forte_add_sourcefile_hcpp(forte_thread forte_sync forte_sem)
 
   if(FORTE_FAKE_TIME)
     forte_set_timer(../fake_time/faketimerha)
@@ -30,7 +30,8 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "Zephyr")
   endif(FORTE_FAKE_TIME)
   forte_add_sourcefile_cpp(./forte_architecture_time.cpp)
 
-  forte_add_sourcefile_cpp(forte_architecture.cpp ../genforte_printer.cpp)
+  forte_add_sourcefile_cpp(../common/forte_specific_architecture.cpp)
+  forte_add_sourcefile_cpp(../genforte_printer.cpp)
   forte_add_sourcefile_cpp(zephyrforte_fileio.cpp)
   forte_add_sourcefile_cpp(../genforte_realFunctions.cpp)
 

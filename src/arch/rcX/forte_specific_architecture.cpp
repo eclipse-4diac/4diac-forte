@@ -60,19 +60,13 @@ void initialize_destructors(void)
 /*func_ptr _init_array_start_forte[0] __attribute__ ((used, section(".init_array"), aligned(sizeof(func_ptr)))) = { };
 func_ptr _fini_array_star_fortet[0] __attribute__ ((used, section(".fini_array"), aligned(sizeof(func_ptr)))) = { };*/
 
-bool CForteArchitecture::initialize(){
-  if (!mInitialized){
-    initialize_constructors();
-    initForte();
-    CrcXSocketInterface::getInstance();
-    mInitialized = true;
-  }
-  return true;
+int CForteSpecificArchitecture::initialize(){
+  initialize_constructors();
+  CrcXSocketInterface::getInstance();
+  return 0;
 }
 
-void CForteArchitecture::deinitialize(){
-  if(mInitialized){
-    initialize_destructors(); //TODO: is it really necessary? When called, _fini_array_start_forte == _fini_array_end_forte, so no function is actually called
-    mInitialized = false;
-  }
+int CForteSpecificArchitecture::deinitialize(){
+  initialize_destructors(); //TODO: is it really necessary? When called, _fini_array_start_forte == _fini_array_end_forte, so no function is actually called
+  return 0;
 }

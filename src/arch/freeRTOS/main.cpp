@@ -22,7 +22,7 @@ const static unsigned mainFORTE_TASK_PRIORITY = tskIDLE_PRIORITY + 1;
 void vForteTask(void* ) {
   C4diacFORTEInstance instance;
 
-  if(instance.startupNewDevice (pIpPort)) {
+  if(instance.startupNewDevice ("localhost:61499")) {
     DEVLOG_INFO("FORTE is up and running\n");
     instance.awaitDeviceShutdown();
     DEVLOG_INFO("FORTE finished\n");

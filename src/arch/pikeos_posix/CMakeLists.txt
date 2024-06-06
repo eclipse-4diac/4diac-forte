@@ -40,10 +40,10 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "PikeOS_Posix")
   
    forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
    forte_add_sourcefile_hcpp(../posix/forte_sync ../utils/timespec_utils)
-   forte_add_sourcefile_cpp(main.cpp forte_thread.cpp pctimeha.cpp forte_sem.cpp forte_architecture_time.cpp
+   forte_add_sourcefile_cpp(forte_thread.cpp pctimeha.cpp forte_sem.cpp forte_architecture_time.cpp
                             ../genforte_printer.cpp ../genforte_realFunctions.cpp)
    forte_add_sourcefile_h(../forte_architecture_time.h forte_thread.h pctimeha.h)
-  
+   forte_add_sourcefile_cpp(./forte_specific_architecture.cpp)
 
    if(FORTE_COM_ETH)
       forte_add_handler(CFDSelectHandler sockhand)

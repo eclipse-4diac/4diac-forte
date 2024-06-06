@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2017 fortiss GmbH
+ * Copyright (c) 2018 fortiss GmbH
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -10,8 +10,8 @@
  *  Jose Cabral - initial API and implementation and/or initial documentation
  *******************************************************************************/
 
-#ifndef FORTE_INSTANCE_H_
-#define FORTE_INSTANCE_H_
+#ifndef SRC_ARCH_FORTE_H_
+#define SRC_ARCH_FORTE_H_
 
 /* When moving this file to the outside of the architecture,
  * the corresponding defines for exporting in windows or other platform
@@ -32,52 +32,62 @@ extern "C" {
 #endif
 
   enum FORTE_STATUS{
-    FORTE_OK,
+    FORTE_OK = 0,
     FORTE_DEVICE_ALREADY_STARTED,
     FORTE_WRONG_ENDIANESS,
     FORTE_WRONG_PARAMETERS,
     FORTE_ARCHITECTURE_NOT_READY,
-    FORTE_COULD_NOT_CREATE_DEVICE
+    FORTE_COULD_NOT_CREATE_DEVICE,
   };
 
   typedef void* TForteInstance;
+
   /**
    * \brief Start forte instance
-   * @param pa_port The port on which to forte will listen. Use 0 for default (normally 61499)
-   * @param pa_resultDevice Address of an instance of forte
+   * @param paPort The port on which to forte will listen. Use 0 for default (normally 61499)
+   * @param paResultInstance Address of an instance of forte
    * @return FORTE_OK if no error occurred, other values otherwise
    */
-  FORTE_SHARED_PREFIX int FORTE_SHARED_CALL forteStartInstance(unsigned int pa_port, TForteInstance* paResultInstance);
+  FORTE_SHARED_PREFIX FORTE_STATUS FORTE_SHARED_CALL forteStartInstance(unsigned int paPort, TForteInstance* paResultInstance);
 
   /**
    * \brief Start forte instance with posibilities of more arguments
    * @param argc Number of arguments in arg
-   * @param arg Arguments
-   * @param pa_resultDevice Address of an instance of forte
+   * @param argv Arguments
+   * @param paResultInstance Address of an instance of forte
    * @return FORTE_OK if no error occurred, other values otherwise
    */
-  FORTE_SHARED_PREFIX int FORTE_SHARED_CALL forteStartInstanceGeneric(int argc, char *arg[], TForteInstance* paResultInstance);
+  FORTE_SHARED_PREFIX FORTE_STATUS FORTE_SHARED_CALL forteStartInstanceGeneric(int argc, char *argv[], TForteInstance* paResultInstance);
 
   /**
-   * \brief Terminates a Forte instance
-   * @param signal  Signal value to terminate instance
-   * @param pa_resultDevice Instance to terminate
+   * \brief Request termination of a Forte instance
+   * @param paInstance Instance to terminate
    */
-  FORTE_SHARED_PREFIX void FORTE_SHARED_CALL forteStopInstance(int signal, TForteInstance paInstance);
+  FORTE_SHARED_PREFIX void FORTE_SHARED_CALL forteRequestStopInstance(TForteInstance paInstance);
+
+  /**
+   * \brief Waits indefinitely for the intance to stop
+   * @param paInstance Instance to terminate
+  */
+  FORTE_SHARED_PREFIX void FORTE_SHARED_CALL forteWaitForInstanceToStop(TForteInstance paInstance);
 
   /**
    * \brief Initializes the architecture. Prepare all resources needed by the Forte's instances. Must be called once before the first Forte instance is started
+   * @param argc Number of arguments in arg
+   * @param argv Arguments
+   * @return 0 if no error occurred, other values otherwise
    */
-  FORTE_SHARED_PREFIX void FORTE_SHARED_CALL forteGlobalInitialize();
+  FORTE_SHARED_PREFIX int FORTE_SHARED_CALL forteGlobalInitialize(int argc, char *argv[]);
 
   /**
    * \brief Deinitializes the architecture. Frees all resources used by Forte's instances. Must be called after the last instance is ended
+   * @return 0 if no error occurred, other values otherwise
    */
-  FORTE_SHARED_PREFIX void FORTE_SHARED_CALL forteGlobalDeinitialize();
+  FORTE_SHARED_PREFIX int FORTE_SHARED_CALL forteGlobalDeinitialize();
 
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* FORTE_INSTANCE_H_ */
+#endif /* SRC_ARCH_FORTE_H_ */

@@ -34,7 +34,7 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "Nios2")
   endif(FORTE_FAKE_TIME)
   forte_add_sourcefile_cpp(../../posix/forte_architecture_time.cpp ../../forte_standard_time.cpp)
 
-  forte_add_sourcefile_cpp(../ecoscppinit.cpp ../../genforte_printer.cpp ../forte_architecture.cpp)
+  forte_add_sourcefile_cpp(../ecoscppinit.cpp ../../genforte_printer.cpp ../../common/forte_specific_architecture.cpp)
   forte_add_sourcefile_h(../../forte_architecture_time.h)
   forte_add_sourcefile_cpp(../../genforte_realFunctions.cpp)
 

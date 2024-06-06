@@ -10,29 +10,20 @@
  *  Alois Zoitl - initial API and implementation and/or initial documentation
  *******************************************************************************/
 
-#include "../forte_architecture.h"
+#include "arch/common/forte_specific_architecture.h"
 #include <sockhand.h>
 
-bool CForteArchitecture::mInitialized = false;
+int CForteSpecificArchitecture::initialize(int, char**) {
+  // Windows Socket Startupcode
+  WORD wVersionRequested;
+  WSADATA wsaData;
 
-bool CForteArchitecture::initialize() {
-  if (!mInitialized) {
-    // Windows Socket Startupcode
-    WORD wVersionRequested;
-    WSADATA wsaData;
+  /* Use the MAKEWORD(lowbyte, highbyte) macro declared in Windef.h */
+  wVersionRequested = MAKEWORD(2, 2);
 
-    /* Use the MAKEWORD(lowbyte, highbyte) macro declared in Windef.h */
-    wVersionRequested = MAKEWORD(2, 2);
-
-    WSAStartup(wVersionRequested, &wsaData);
-    mInitialized = true;
-  }
-  return true;
+  return WSAStartup(wVersionRequested, &wsaData);
 }
 
-void CForteArchitecture::deinitialize() {
-  if (mInitialized) {
-    WSACleanup();
-    mInitialized = false;
-  }
+void CForteSpecificArchitecture::deinitialize() {
+  return WSACleanup();
 }

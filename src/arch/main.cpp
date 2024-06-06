@@ -12,77 +12,45 @@
  *  Martin Melik Merkumians, Ingo Hegny, Filip Andren - initial API and implementation and/or initial documentation
  *  Tarik Terzimehic - make OPC UA server port setable from the command line
  *******************************************************************************/
-#include "forte_architecture.h"
-#include "src/core/forteinstance.h"
-#include "startuphook.h"
+
+#include "forte.h"
 #include "utils/mainparam_utils.h"
-#include "forteinit.h"
+#include "devlog.h"
 
 #include <signal.h>
 
+void hookSignals();
+
+TForteInstance g4diacForteInstance;
 
 /*!\brief Check if the correct endianess has been configured.
  *
  * If the right endianess is not set this function will end FORTE.
  */
-void checkEndianess();
-
-void hookSignals();
-
-C4diacFORTEInstance g4diacForteInstance;
-
 void endForte(int ){
-  g4diacForteInstance.triggerDeviceShutdown();
+  forteRequestStopInstance(g4diacForteInstance);
 }
 
-int main(int argc, char *arg[]){
+int main(int argc, char *argv[]){
 
-  checkEndianess();
-
-  hookSignals();
-
-  if(!CForteArchitecture::initialize()){
-    return -1;
+  if(auto result = forteGlobalInitialize(argc, argv); result != FORTE_OK){
+    return result;
   }
 
-  initForte();
-
-  startupHook(argc, arg);
-
-  const char *pIpPort = parseCommandLineArguments(argc, arg);
-  if((0 == strlen(pIpPort)) || (nullptr == strchr(pIpPort, ':'))) {
-    listHelp();
-    return -1;
+  if(auto result = forteStartInstanceGeneric(argc, argv, &g4diacForteInstance); result != FORTE_OK){
+    if(result == FORTE_WRONG_PARAMETERS){
+      listHelp();
+    }
+    return result;
   }
 
-  if(!g4diacForteInstance.startupNewDevice(pIpPort)) {
-    return -1;
-  }
+  hookSignals();  
   
   DEVLOG_INFO("FORTE is up and running\n");
-  g4diacForteInstance.awaitDeviceShutdown();
+  forteWaitForInstanceToStop(g4diacForteInstance);
   DEVLOG_INFO("FORTE finished\n");
 
   return 0;
-}
-
-void checkEndianess(){
-  int i = 1;
-  char *p = (char *) &i;
-  if(p[0] == 1){
-    //we are on a little endian platform
-#ifdef FORTE_BIG_ENDIAN
-    DEVLOG_ERROR("Wrong endianess configured! You are on a little endian platform and have configured big endian!\n");
-    exit(-1);
-#endif
-  }
-  else{
-    //we are on a big endian platform
-#ifdef FORTE_LITTLE_ENDIAN
-    DEVLOG_ERROR("Wrong endianess configured! You are on a big endian platform and have configured little endian!\n");
-    exit(-1);
-#endif
-  }
 }
 
 void hookSignals() {
