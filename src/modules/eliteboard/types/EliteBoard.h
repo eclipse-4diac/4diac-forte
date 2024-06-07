@@ -14,7 +14,7 @@
 #define _ELITEBOARD_H_
 
 #include "core/io/configFB/io_configFB_controller.h"
-#include "PortAdapter_atp.h"
+#include "PortAdapter_adp.h"
 #include "forte_array_at.h"
 #include "funcbloc.h"
 #include <extevhandlerhelper.h>
