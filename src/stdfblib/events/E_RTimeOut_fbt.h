@@ -19,7 +19,7 @@
 #include "forte_array.h"
 #include "forte_array_fixed.h"
 #include "forte_array_variable.h"
-#include "ARTimeOut_atp.h"
+#include "ARTimeOut_adp.h"
 
 
 class FORTE_E_RTimeOut final : public CCompositeFB {
