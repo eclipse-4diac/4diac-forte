@@ -15,9 +15,9 @@
  *    Alois Zoitl - introduced new CGenFB class for better handling generic FBs
  *    Martin Jobst - add generic readInputData and writeOutputData
  *******************************************************************************/
-#include "GEN_E_DEMUX.h"
+#include "GEN_E_DEMUX_fbt.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "GEN_E_DEMUX_gen.cpp"
+#include "GEN_E_DEMUX_fbt_gen.cpp"
 #endif
 #include <stdio.h>
 
