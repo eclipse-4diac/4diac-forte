@@ -10,9 +10,9 @@
  *   Jose Cabral - initial implementation
  *******************************************************************************/
 
-#include "SubscribeEventAdp_atp.h"
+#include "SubscribeEventAdp_adp.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "SubscribeEventAdp_atp_gen.cpp"
+#include "SubscribeEventAdp_adp_gen.cpp"
 #endif
 
 DEFINE_ADAPTER_TYPE(FORTE_SubscribeEventAdp, g_nStringIdSubscribeEventAdp)
