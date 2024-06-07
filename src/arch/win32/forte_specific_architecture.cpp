@@ -24,6 +24,6 @@ int CForteSpecificArchitecture::initialize(int, char**) {
   return WSAStartup(wVersionRequested, &wsaData);
 }
 
-void CForteSpecificArchitecture::deinitialize() {
+int CForteSpecificArchitecture::deinitialize() {
   return WSACleanup();
 }

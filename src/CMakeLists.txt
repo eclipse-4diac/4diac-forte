@@ -209,9 +209,11 @@ FOREACH(STARTUP_HOOK_FUNCTION ${STARTUP_HOOK_FUNCTIONS_LIST})
   SET(FORTE_STARTUP_HOOKS_CALLS  "${FORTE_STARTUP_HOOKS_CALLS}  ${STARTUP_HOOK_FUNCTION}(argc, arg);\n")
 ENDFOREACH()
 
-CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/arch/startuphook.cpp.in ${CMAKE_BINARY_DIR}/src_gen/startuphook_new.cpp)
+CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/startuphook.cpp.in ${CMAKE_BINARY_DIR}/src_gen/startuphook_new.cpp)
 forte_replacefile_if_changed(${CMAKE_BINARY_DIR}/src_gen/startuphook_new.cpp ${CMAKE_BINARY_DIR}/src_gen/startuphook.cpp)
 file(REMOVE ${CMAKE_BINARY_DIR}/src_gen/startuphook_new.cpp)
+
+forte_add_sourcefile_with_path_cpp(${CMAKE_BINARY_DIR}/src_gen/startuphook.cpp)
 
 #############################################################################
 # Load FORTE Extension Files
