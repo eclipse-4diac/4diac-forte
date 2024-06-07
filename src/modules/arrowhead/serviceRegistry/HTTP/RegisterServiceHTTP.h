@@ -15,7 +15,7 @@
 
 #include <cfb.h>
 #include <typelib.h>
-#include "RegisterServiceAdp_atp.h"
+#include "RegisterServiceAdp_adp.h"
 
 class FORTE_RegisterServiceHTTP: public CCompositeFB{
   DECLARE_FIRMWARE_FB(FORTE_RegisterServiceHTTP)
