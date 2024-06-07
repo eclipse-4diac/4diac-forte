@@ -337,6 +337,7 @@ if(FORTE_BUILD_SHARED_LIBRARY)
   TARGET_LINK_LIBRARIES (forte-shared ${LINK_LIBRARY})
   ADD_DEPENDENCIES (forte-shared FORTE_LITE)
   install(TARGETS forte-shared ARCHIVE DESTINATION bin LIBRARY DESTINATION bin)
+  target_compile_options(FORTE_LITE PRIVATE "-fPIC")
   message("Building shared library")
 endif(FORTE_BUILD_SHARED_LIBRARY)
 
