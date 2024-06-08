@@ -11,9 +11,6 @@
  *******************************************************************************/
 #include <cyg/kernel/kapi.h>
 
-//current tests have shown that this works only if it is in the main.cpp file
-//I don't know why. The best is to copy or include it into your specific main file
-
 //Workaround for an ecos problem
 extern "C" void
 __cxa_pure_virtual(void) {

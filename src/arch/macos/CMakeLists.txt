@@ -35,7 +35,7 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "MacOs")
   forte_add_sourcefile_h(../forte_architecture_time.h)
   forte_add_sourcefile_cpp(../genforte_realFunctions.cpp  ../utils/timespec_utils.cpp)
 
-  forte_add_to_executable_cpp(../posix/main)
+  forte_add_to_executable_cpp(../main)
 
   if(FORTE_COM_ETH)
    forte_add_handler(CFDSelectHandler sockhand)

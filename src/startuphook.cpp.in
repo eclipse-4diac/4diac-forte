@@ -11,7 +11,7 @@
  *   Alois Zoitl - initial API and implementation and/or initial documentation
  *******************************************************************************/
 
-#include "arch/startuphook.h"
+#include "startuphook.h"
 
 ${FORTE_STARTUP_HOOKS_DECLS}
 

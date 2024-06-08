@@ -65,7 +65,3 @@ if (FORTE_STACKTRACE)
         endif ()
     endif ()
 endif ()
-
-forte_add_sourcefile_with_path_cpp(${CMAKE_BINARY_DIR}/src_gen/startuphook.cpp) # created file
-
-
