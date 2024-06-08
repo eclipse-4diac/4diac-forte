@@ -212,3 +212,13 @@ endif("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
 
 TARGET_LINK_LIBRARIES(forte_test ${LINK_TEST_LIBRARY})
 
+
+#######################################################################################
+# Test if main can link to forte-shared
+#######################################################################################
+
+
+GET_PROPERTY(SOURCE_EXECUTABLE_CPP GLOBAL PROPERTY FORTE_EXECUTABLE_CPP)
+add_executable (test-forte-shared ${SOURCE_EXECUTABLE_CPP})
+target_link_libraries (test-forte-shared ${LINK_LIBRARY} forte-shared)
+add_dependencies (forte forte-shared)

@@ -13,19 +13,9 @@
 #ifndef SRC_ARCH_FORTE_H_
 #define SRC_ARCH_FORTE_H_
 
-/* When moving this file to the outside of the architecture,
- * the corresponding defines for exporting in windows or other platform
- * must be added here
- *
- */
 #ifndef FORTE_SHARED_PREFIX
   #define FORTE_SHARED_PREFIX
 #endif
-
-#ifndef FORTE_SHARED_CALL
-  #define FORTE_SHARED_CALL
-#endif
-
 
 #ifdef __cplusplus
 extern "C" {
@@ -48,7 +38,7 @@ extern "C" {
    * @param paResultInstance Address  to store the created forte instance
    * @return FORTE_OK if no error occurred, other values otherwise
    */
-  FORTE_SHARED_PREFIX FORTE_STATUS FORTE_SHARED_CALL forteStartInstance(unsigned int paPort, TForteInstance* paResultInstance);
+  FORTE_SHARED_PREFIX FORTE_STATUS forteStartInstance(unsigned int paPort, TForteInstance* paResultInstance);
 
   /**
    * \brief Start forte instance with posibilities of more arguments
@@ -57,19 +47,19 @@ extern "C" {
    * @param paResultInstance Address  to store the created forte instance
    * @return FORTE_OK if no error occurred, other values otherwise
    */
-  FORTE_SHARED_PREFIX FORTE_STATUS FORTE_SHARED_CALL forteStartInstanceGeneric(int argc, char *argv[], TForteInstance* paResultInstance);
+  FORTE_SHARED_PREFIX FORTE_STATUS forteStartInstanceGeneric(int argc, char *argv[], TForteInstance* paResultInstance);
 
   /**
    * \brief Request termination of a Forte instance
    * @param paInstance Instance to request for termination
    */
-  FORTE_SHARED_PREFIX void FORTE_SHARED_CALL forteRequestStopInstance(TForteInstance paInstance);
+  FORTE_SHARED_PREFIX void forteRequestStopInstance(TForteInstance paInstance);
 
   /**
    * \brief Waits indefinitely for the intance to stop and deletes it
    * @param paInstance Instance to terminate
   */
-  FORTE_SHARED_PREFIX void FORTE_SHARED_CALL forteWaitForInstanceToStop(TForteInstance paInstance);
+  FORTE_SHARED_PREFIX void forteWaitForInstanceToStop(TForteInstance paInstance);
 
   /**
    * \brief Initializes the architecture. Prepare all resources needed by the Forte's instances. Must be called once before the first Forte instance is started
@@ -77,13 +67,13 @@ extern "C" {
    * @param argv Arguments
    * @return 0 if no error occurred, other values otherwise. Any error value is provided by the architecture and not by forte
    */
-  FORTE_SHARED_PREFIX int FORTE_SHARED_CALL forteGlobalInitialize(int argc, char *argv[]);
+  FORTE_SHARED_PREFIX int forteGlobalInitialize(int argc, char *argv[]);
 
   /**
    * \brief Deinitializes the architecture. Frees all resources used by Forte's instances. Must be called after the last instance is ended
    * @return 0 if no error occurred, other values otherwise.  Any error value is provided by the architecture and not by forte
    */
-  FORTE_SHARED_PREFIX int FORTE_SHARED_CALL forteGlobalDeinitialize();
+  FORTE_SHARED_PREFIX int forteGlobalDeinitialize();
 
 
 #ifdef __cplusplus

@@ -14,22 +14,14 @@
  *******************************************************************************/
 
 #include "forte.h"
-#include "utils/mainparam_utils.h"
-#include "devlog.h"
 
 #include <signal.h>
+
+#include <iostream>
 
 void hookSignals();
 
 TForteInstance g4diacForteInstance;
-
-/*!\brief Check if the correct endianess has been configured.
- *
- * If the right endianess is not set this function will end FORTE.
- */
-void endForte(int ){
-  forteRequestStopInstance(g4diacForteInstance);
-}
 
 int main(int argc, char *argv[]){
 
@@ -38,19 +30,21 @@ int main(int argc, char *argv[]){
   }
 
   if(auto result = forteStartInstanceGeneric(argc, argv, &g4diacForteInstance); result != FORTE_OK){
-    if(result == FORTE_WRONG_PARAMETERS){
-      listHelp();
-    }
+    forteGlobalDeinitialize();
     return result;
   }
 
   hookSignals();  
   
-  DEVLOG_INFO("FORTE is up and running\n");
+  std::cout << "FORTE is up and running" << std::endl;
   forteWaitForInstanceToStop(g4diacForteInstance);
-  DEVLOG_INFO("FORTE finished\n");
+  std::cout << "FORTE finished" << std::endl;
 
-  return 0;
+  return forteGlobalDeinitialize();
+}
+
+void endForte(int ){
+  forteRequestStopInstance(g4diacForteInstance);
 }
 
 void hookSignals() {

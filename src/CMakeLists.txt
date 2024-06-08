@@ -95,40 +95,6 @@ FOREACH(FB ${PLATFORM_REMOVES})
   forte_remove_sourcefile_cpp(${FB}.cpp)
 ENDFOREACH(FB)
 
-#######################################################################################
-# Setup Forte with all Functionblocks
-#######################################################################################
-
-#forte init is needed for the temporary forte library, which then is linked to the main.cpp
-
-forte_add_sourcefile_with_path_hcpp(${FORTE_BINARY_DIR}/forteinit)
-set_source_files_properties(${FORTE_BINARY_DIR}/forteinit.h PROPERTIES GENERATED TRUE)
-set_source_files_properties(${FORTE_BINARY_DIR}/forteinit.cpp PROPERTIES GENERATED TRUE)
-
-GET_PROPERTY(SOURCE_TIMER_CPP         GLOBAL PROPERTY FORTE_TIMER_CPP)
-GET_PROPERTY(SOURCE_TIMER_H           GLOBAL PROPERTY FORTE_TIMER_H)
-
-forte_add_sourcefile_with_path_h(${SOURCE_TIMER_H})
-forte_add_sourcefile_with_path_cpp(${SOURCE_TIMER_CPP})
-
-GET_PROPERTY(SOURCE_H              GLOBAL PROPERTY FORTE_SOURCE_H)
-GET_PROPERTY(SOURCE_H_GROUP        GLOBAL PROPERTY FORTE_SOURCE_H_GROUP)
-LIST(APPEND SOURCE_FILES           ${SOURCE_H})
-LIST(APPEND SOURCE_FILES_GROUP     ${SOURCE_H_GROUP})
-
-GET_PROPERTY(SOURCE_CPP              GLOBAL PROPERTY FORTE_SOURCE_CPP)
-GET_PROPERTY(SOURCE_CPP_GROUP_STRUCT GLOBAL PROPERTY FORTE_SOURCE_CPP_GROUP)
-LIST(APPEND SOURCE_FILES             ${SOURCE_CPP})
-LIST(APPEND SOURCE_FILES_GROUP       ${SOURCE_CPP_GROUP_STRUCT})
-
-GET_PROPERTY(SOURCE_C                GLOBAL PROPERTY FORTE_SOURCE_C)
-GET_PROPERTY(SOURCE_C_GROUP_STRUCT   GLOBAL PROPERTY FORTE_SOURCE_C_GROUP)
-LIST(APPEND SOURCE_FILES             ${SOURCE_C})
-LIST(APPEND SOURCE_FILES_GROUP       ${SOURCE_C_GROUP_STRUCT})
-
-GET_PROPERTY(SOURCE_EXECUTABLE_CPP    GLOBAL PROPERTY FORTE_EXECUTABLE_CPP)
-GET_PROPERTY(SOURCE_EXECUTABLE_H      GLOBAL PROPERTY FORTE_EXECUTABLE_H)
-
 #############################################################################
 # Configure Network Layers
 #############################################################################
@@ -227,6 +193,40 @@ IF(len GREATER 0)
   INCLUDE("${FILE}")
   ENDFOREACH(FILE)
 ENDIF(len GREATER 0)
+
+#######################################################################################
+# Setup Forte with all Functionblocks
+#######################################################################################
+
+#forte init is needed for the temporary forte library, which then is linked to the main.cpp
+
+forte_add_sourcefile_with_path_hcpp(${FORTE_BINARY_DIR}/forteinit)
+set_source_files_properties(${FORTE_BINARY_DIR}/forteinit.h PROPERTIES GENERATED TRUE)
+set_source_files_properties(${FORTE_BINARY_DIR}/forteinit.cpp PROPERTIES GENERATED TRUE)
+
+GET_PROPERTY(SOURCE_TIMER_CPP         GLOBAL PROPERTY FORTE_TIMER_CPP)
+GET_PROPERTY(SOURCE_TIMER_H           GLOBAL PROPERTY FORTE_TIMER_H)
+
+forte_add_sourcefile_with_path_h(${SOURCE_TIMER_H})
+forte_add_sourcefile_with_path_cpp(${SOURCE_TIMER_CPP})
+
+GET_PROPERTY(SOURCE_H              GLOBAL PROPERTY FORTE_SOURCE_H)
+GET_PROPERTY(SOURCE_H_GROUP        GLOBAL PROPERTY FORTE_SOURCE_H_GROUP)
+LIST(APPEND SOURCE_FILES           ${SOURCE_H})
+LIST(APPEND SOURCE_FILES_GROUP     ${SOURCE_H_GROUP})
+
+GET_PROPERTY(SOURCE_CPP              GLOBAL PROPERTY FORTE_SOURCE_CPP)
+GET_PROPERTY(SOURCE_CPP_GROUP_STRUCT GLOBAL PROPERTY FORTE_SOURCE_CPP_GROUP)
+LIST(APPEND SOURCE_FILES             ${SOURCE_CPP})
+LIST(APPEND SOURCE_FILES_GROUP       ${SOURCE_CPP_GROUP_STRUCT})
+
+GET_PROPERTY(SOURCE_C                GLOBAL PROPERTY FORTE_SOURCE_C)
+GET_PROPERTY(SOURCE_C_GROUP_STRUCT   GLOBAL PROPERTY FORTE_SOURCE_C_GROUP)
+LIST(APPEND SOURCE_FILES             ${SOURCE_C})
+LIST(APPEND SOURCE_FILES_GROUP       ${SOURCE_C_GROUP_STRUCT})
+
+GET_PROPERTY(SOURCE_EXECUTABLE_CPP    GLOBAL PROPERTY FORTE_EXECUTABLE_CPP)
+GET_PROPERTY(SOURCE_EXECUTABLE_H      GLOBAL PROPERTY FORTE_EXECUTABLE_H)
 
 #############################################################################
 # Add Files to source-group
@@ -339,7 +339,16 @@ if(FORTE_BUILD_SHARED_LIBRARY)
   TARGET_LINK_LIBRARIES (forte-shared ${LINK_LIBRARY})
   ADD_DEPENDENCIES (forte-shared FORTE_LITE)
   install(TARGETS forte-shared ARCHIVE DESTINATION bin LIBRARY DESTINATION bin)
-  target_compile_options(FORTE_LITE PRIVATE "-fPIC")
+  set_property(TARGET FORTE_LITE PROPERTY POSITION_INDEPENDENT_CODE ON)
+  set_target_properties(FORTE_LITE PROPERTIES CXX_VISIBILITY_PRESET hidden)
+  
+  IF (WIN32 OR CYGWIN)
+    SET(FORTE_SHARED_PREFIX "__declspec(dllexport)")
+  else()
+    SET(FORTE_SHARED_PREFIX "__attribute__((visibility(\"default\")))")
+  endif()
+  target_compile_definitions(FORTE_LITE PRIVATE FORTE_SHARED_PREFIX=${FORTE_SHARED_PREFIX})
+
   message("Building shared library")
 endif(FORTE_BUILD_SHARED_LIBRARY)
 
