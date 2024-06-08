@@ -28,10 +28,7 @@ static const unsigned int scMaxPortValue = 65535;
 bool checkEndianess();
 
 int forteGlobalInitialize(int argc, char *argv[]){
-  if(auto result = CForteArchitecture::initialize(argc, argv); result != 0){
-    return result;
-  }
-  return 0;
+  return CForteArchitecture::initialize(argc, argv);
 }
 
 int forteGlobalDeinitialize(){
@@ -41,7 +38,7 @@ int forteGlobalDeinitialize(){
 FORTE_STATUS forteStartInstance(unsigned int paPort, TForteInstance* paResultInstance){
 
   if(scMaxPortValue < paPort){
-    DEVLOG_ERROR("Provided port %d not valid\n", paPort);
+    DEVLOG_ERROR("Provided port %d is not valid\n", paPort);
     return FORTE_WRONG_PARAMETERS;
   }
 
@@ -63,7 +60,7 @@ FORTE_STATUS forteStartInstance(unsigned int paPort, TForteInstance* paResultIns
 FORTE_STATUS forteStartInstanceGeneric(int argc, char *argv[], TForteInstance* paResultInstance){
 
   if(nullptr == paResultInstance){
-    DEVLOG_ERROR("Provided result instance parameter not valid\n");
+    DEVLOG_ERROR("Provided result instance parameter is not valid\n");
     return FORTE_WRONG_PARAMETERS;
   }
 
