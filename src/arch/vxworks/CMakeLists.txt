@@ -27,6 +27,8 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "VxWorks")
 
   forte_add_sourcefile_cpp(../common/forte_specific_architecture.cpp)
   forte_add_to_executable_cpp(../main)
+  forte_add_to_executable_cpp(../common/main_helper)
+
 
 
   forte_add_sourcefile_hcpp(forte_thread forte_sync forte_sem)

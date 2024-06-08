@@ -102,10 +102,15 @@ enum class E_MsgLevel {
 
 #ifndef NOLOG
 
+// we also export logMessage so users of forte as shared library can also use DEVLOG macros
+#ifndef FORTE_SHARED_PREFIX
+  #define FORTE_SHARED_PREFIX
+#endif
+
 /*! \brief Adds an Entry to the LogBook
  *
  */
-void logMessage(E_MsgLevel paLevel, const char *pacMessage, ...);
+FORTE_SHARED_PREFIX void logMessage(E_MsgLevel paLevel, const char *pacMessage, ...);
 
 #endif  //#ifndef NOLOG
 

@@ -34,7 +34,7 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
   forte_add_sourcefile_cpp(../genforte_realFunctions.cpp)
   forte_add_sourcefile_cpp(../common/forte_specific_architecture.cpp)
   forte_add_to_executable_cpp(../main)
-
+  forte_add_to_executable_cpp(../common/main_helper)
 
   if(FORTE_COM_ETH)
    forte_add_handler(CFDSelectHandler sockhand)

@@ -14,14 +14,20 @@
  *******************************************************************************/
 
 #include "forte.h"
-
-#include <signal.h>
-
-#include <iostream>
-
-void hookSignals();
+#include "devlog.h"
 
 TForteInstance g4diacForteInstance;
+/**
+ * @brief This method is implemented by each architecture to call to stop forte, usually using signals.
+ * It's not part of CForteArchitecture because it's only related to the main execution and not to forte itself
+ * 
+ * @param paEndForte Callback that will end forte
+ */
+void hookEndForte(void (*paEndForte)());
+
+void endForte(){
+  forteRequestStopInstance(g4diacForteInstance);
+}
 
 int main(int argc, char *argv[]){
 
@@ -34,22 +40,15 @@ int main(int argc, char *argv[]){
     return result;
   }
 
-  hookSignals();  
+  hookEndForte(endForte);  
   
-  std::cout << "FORTE is up and running" << std::endl;
+  DEVLOG_INFO("FORTE is up and running\n");
   forteWaitForInstanceToStop(g4diacForteInstance);
-  std::cout << "FORTE finished" << std::endl;
+  DEVLOG_INFO("FORTE finished\n");
 
   return forteGlobalDeinitialize();
 }
 
-void endForte(int ){
-  forteRequestStopInstance(g4diacForteInstance);
-}
 
-void hookSignals() {
-  signal(SIGINT, endForte);
-  signal(SIGTERM, endForte);
-  signal(SIGHUP, endForte);
-}
+
 
