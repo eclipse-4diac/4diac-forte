@@ -28,10 +28,7 @@ static const unsigned int scMaxPortValue = 65535;
 bool checkEndianess();
 
 int forteGlobalInitialize(int argc, char *argv[]){
-  if(auto result = CForteArchitecture::initialize(argc, argv); result != 0){
-    return result;
-  }
-  return 0;
+  return CForteArchitecture::initialize(argc, argv);
 }
 
 int forteGlobalDeinitialize(){
