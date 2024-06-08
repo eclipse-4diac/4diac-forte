@@ -13,8 +13,7 @@
 #include "FreeRTOS.h"
 #include "task.h"
 
-#include <cstdio> 
-
+#include "devlog.h"
 #include "../forte.h"
 
 static const unsigned scForteTaskPriority = tskIDLE_PRIORITY + 1;
@@ -30,9 +29,9 @@ void vForteTask(void* ) {
     vTaskDelete(nullptr);
   }
 
-  printf("FORTE is up and running\n");
+  DEVLOG_INFO("FORTE is up and running\n");
   forteWaitForInstanceToStop(forteInstance);
-  printf("FORTE finished\n");
+  DEVLOG_INFO("FORTE finished\n");
 
   vTaskDelete(nullptr);
 }
