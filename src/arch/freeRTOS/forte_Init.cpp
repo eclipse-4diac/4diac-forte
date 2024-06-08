@@ -81,7 +81,7 @@ int forteStartInstanceGeneric(int paArgc, char *paArgv[], TForteInstance* paResu
   const char *pIpPort = parseCommandLineArguments(paArgc, paArgv);
   if((0 != strlen(pIpPort)) && (nullptr != strchr(pIpPort, ':'))) {
     C4diacFORTEInstance *instance = new C4diacFORTEInstance();
-    if(!instance->startupNewDevice(ipPort)) {
+    if(!instance->startupNewDevice(pIpPort)) {
       delete instance;
       return FORTE_COULD_NOT_CREATE_DEVICE;
     }
