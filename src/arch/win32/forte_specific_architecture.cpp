@@ -10,7 +10,7 @@
  *  Alois Zoitl - initial API and implementation and/or initial documentation
  *******************************************************************************/
 
-#include "arch/common/forte_specific_architecture.h"
+#include "arch/forte_specific_architecture.h"
 #include <sockhand.h>
 
 int CForteSpecificArchitecture::initialize(int, char**) {

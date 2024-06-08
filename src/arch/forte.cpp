@@ -21,10 +21,9 @@
 static const unsigned int scForteDefaultPort = 61499;
 static const unsigned int scMaxPortValue = 65535;
 
-/*!\brief Check if the correct endianess has been configured.
- *
- * If the right endianess is not set this function will end FORTE.
- */
+/**
+* @brief Check if the correct endianess has been configured.
+*/
 bool checkEndianess();
 
 int forteGlobalInitialize(int argc, char *argv[]){

@@ -10,7 +10,7 @@
  *  Jose Cabral - initial API and implementation and/or initial documentation
  *******************************************************************************/
 
-#include "forte_specific_architecture.h"
+#include "arch/forte_specific_architecture.h"
 
 /* CG: testing */
 #include <sys/debug.h>

@@ -13,31 +13,39 @@
 #include "FreeRTOS.h"
 #include "task.h"
 
-#include "../forte_architecture.h"
+#include "../forte.h"
 #include "../devlog.h"
-#include "forteinstance.h"
 
-const static unsigned mainFORTE_TASK_PRIORITY = tskIDLE_PRIORITY + 1;
+static const unsigned scForteTaskPriority = tskIDLE_PRIORITY + 1;
+
+static const unsigned int scDesiredFortePort = 61499;
+
+static const configSTACK_DEPTH_TYPE scStackDepth = 2000,
 
 void vForteTask(void* ) {
-  C4diacFORTEInstance instance;
+  TForteInstance forteInstance;
 
-  if(instance.startupNewDevice ("localhost:61499")) {
-    DEVLOG_INFO("FORTE is up and running\n");
-    instance.awaitDeviceShutdown();
-    DEVLOG_INFO("FORTE finished\n");
+  if(auto result = forteStartInstance(scDesiredFortePort, &forteInstance); result != FORTE_OK){
+    if(result == FORTE_WRONG_PARAMETERS){
+      listHelp();
+    }
+    vTaskDelete(nullptr);
   }
-  vTaskDelete(nullptr);
-}
 
-void vStartForteServerTask(UBaseType_t uxPriority) {
-  /* Spawn the task. */
-  xTaskCreate(vForteTask, "forte", 2000, nullptr, uxPriority, nullptr);
+  DEVLOG_INFO("FORTE is up and running\n");
+  forteWaitForInstanceToStop(forteInstance);
+  DEVLOG_INFO("FORTE finished\n");
+
+  vTaskDelete(nullptr);
 }
 
 int main() {
 
-  vStartForteServerTask(mainFORTE_TASK_PRIORITY);
+  if(auto result = forteGlobalInitialize(0, nullptr); result != FORTE_OK){
+    return result;
+  }
+
+  xTaskCreate(vForteTask, "forte", scStackDepth, nullptr, scForteTaskPriority, nullptr);
 
   vTaskStartScheduler();
 
