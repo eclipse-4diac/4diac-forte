@@ -60,7 +60,7 @@ FORTE_STATUS forteStartInstance(unsigned int paPort, TForteInstance* paResultIns
 FORTE_STATUS forteStartInstanceGeneric(int argc, char *argv[], TForteInstance* paResultInstance){
 
   if(nullptr == paResultInstance){
-    DEVLOG_ERROR("Provided result instance parameter not valid\n");
+    DEVLOG_ERROR("Provided result instance parameter is not valid\n");
     return FORTE_WRONG_PARAMETERS;
   }
 

@@ -44,8 +44,8 @@ extern "C" {
 
   /**
    * \brief Start forte instance
-   * @param paPort The port on which to forte will listen. Use 0 for default (normally 61499)
-   * @param paResultInstance Address of an instance of forte
+   * @param paPort The port on which forte will listen. Use 0 for default 61499
+   * @param paResultInstance Address  to store the created forte instance
    * @return FORTE_OK if no error occurred, other values otherwise
    */
   FORTE_SHARED_PREFIX FORTE_STATUS FORTE_SHARED_CALL forteStartInstance(unsigned int paPort, TForteInstance* paResultInstance);
@@ -54,19 +54,19 @@ extern "C" {
    * \brief Start forte instance with posibilities of more arguments
    * @param argc Number of arguments in arg
    * @param argv Arguments
-   * @param paResultInstance Address of an instance of forte
+   * @param paResultInstance Address  to store the created forte instance
    * @return FORTE_OK if no error occurred, other values otherwise
    */
   FORTE_SHARED_PREFIX FORTE_STATUS FORTE_SHARED_CALL forteStartInstanceGeneric(int argc, char *argv[], TForteInstance* paResultInstance);
 
   /**
    * \brief Request termination of a Forte instance
-   * @param paInstance Instance to terminate
+   * @param paInstance Instance to request for termination
    */
   FORTE_SHARED_PREFIX void FORTE_SHARED_CALL forteRequestStopInstance(TForteInstance paInstance);
 
   /**
-   * \brief Waits indefinitely for the intance to stop
+   * \brief Waits indefinitely for the intance to stop and deletes it
    * @param paInstance Instance to terminate
   */
   FORTE_SHARED_PREFIX void FORTE_SHARED_CALL forteWaitForInstanceToStop(TForteInstance paInstance);
@@ -75,13 +75,13 @@ extern "C" {
    * \brief Initializes the architecture. Prepare all resources needed by the Forte's instances. Must be called once before the first Forte instance is started
    * @param argc Number of arguments in arg
    * @param argv Arguments
-   * @return 0 if no error occurred, other values otherwise
+   * @return 0 if no error occurred, other values otherwise. Any error value is provided by the architecture and not by forte
    */
   FORTE_SHARED_PREFIX int FORTE_SHARED_CALL forteGlobalInitialize(int argc, char *argv[]);
 
   /**
    * \brief Deinitializes the architecture. Frees all resources used by Forte's instances. Must be called after the last instance is ended
-   * @return 0 if no error occurred, other values otherwise
+   * @return 0 if no error occurred, other values otherwise.  Any error value is provided by the architecture and not by forte
    */
   FORTE_SHARED_PREFIX int FORTE_SHARED_CALL forteGlobalDeinitialize();
 
