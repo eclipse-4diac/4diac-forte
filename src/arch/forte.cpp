@@ -38,7 +38,7 @@ int forteGlobalDeinitialize(){
 FORTE_STATUS forteStartInstance(unsigned int paPort, TForteInstance* paResultInstance){
 
   if(scMaxPortValue < paPort){
-    DEVLOG_ERROR("Provided port %d not valid\n", paPort);
+    DEVLOG_ERROR("Provided port %d is not valid\n", paPort);
     return FORTE_WRONG_PARAMETERS;
   }
 
