@@ -10,9 +10,9 @@
  *   Alois Zoitl, Gerhard Ebenhofer, Ingo Hegny, Monika Wenger,
  *    - initial API and implementation and/or initial documentation
  *******************************************************************************/
-#include "RT_E_DEMUX.h"
+#include "RT_E_DEMUX_fbt.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "RT_E_DEMUX_gen.cpp"
+#include "RT_E_DEMUX_fbt_gen.cpp"
 #endif
 
 #include "criticalregion.h"

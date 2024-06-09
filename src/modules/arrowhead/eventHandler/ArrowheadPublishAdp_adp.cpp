@@ -10,9 +10,9 @@
  *   Jose Cabral - initial implementation
  *******************************************************************************/
 
-#include "ArrowheadPublishAdp_atp.h"
+#include "ArrowheadPublishAdp_adp.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "ArrowheadPublishAdp_atp_gen.cpp"
+#include "ArrowheadPublishAdp_adp_gen.cpp"
 #endif
 
 DEFINE_ADAPTER_TYPE(FORTE_ArrowheadPublishAdp, g_nStringIdArrowheadPublishAdp)
