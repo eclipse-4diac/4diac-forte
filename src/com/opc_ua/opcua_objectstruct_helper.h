@@ -134,7 +134,7 @@ class COPC_UA_ObjectStruct_Helper {
 
      static char smEmptyString[];
 
-     std::vector<char*> mStructTypeNames;
+     std::vector<std::string> mStructTypeNames;
 
     /**
      * Pointer to ActionInfo for created OPC UA Struct Object Node

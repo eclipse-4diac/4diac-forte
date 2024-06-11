@@ -36,10 +36,6 @@ COPC_UA_ObjectStruct_Helper::COPC_UA_ObjectStruct_Helper(COPC_UA_Layer &paLayer,
 }
 
 COPC_UA_ObjectStruct_Helper::~COPC_UA_ObjectStruct_Helper() {
-  for(char* name: mStructTypeNames) {
-    delete[] name;
-  }
-
   for(UA_NodeId nodeId: mStructTypeNodes) {
     UA_NodeId_clear(&nodeId);
   }

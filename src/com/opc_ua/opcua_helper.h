@@ -86,14 +86,9 @@ class COPC_UA_Helper {
       public:
         explicit UA_RecvVariable_handle(size_t paSize) :
             UA_Variables_handle(paSize), mNodeId(nullptr) {
-          mData = new const UA_Variant*[mSize];
         }
 
-        ~UA_RecvVariable_handle() override {
-          delete[] mData;
-        }
-
-        const UA_Variant **mData;
+        const std::vector<UA_Variant*> mData;
         const UA_NodeId *mNodeId;
 
         UA_RecvVariable_handle(const UA_RecvVariable_handle &paObj) = delete;

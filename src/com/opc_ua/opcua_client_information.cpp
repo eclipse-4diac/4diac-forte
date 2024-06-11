@@ -555,7 +555,7 @@ void CUA_ClientInformation::CUA_RemoteCallbackFunctions::readAsyncCallback(UA_Cl
         size_t indexOfPair = 0;
         for(auto itNodePairs = remoteCallHandle->mActionInfo.getNodePairInfo().begin();
             itNodePairs != remoteCallHandle->mActionInfo.getNodePairInfo().end(); ++itNodePairs, indexOfPair++) {
-          varHandle.mData[indexOfPair] = &paResponse->results[indexOfPair].value;
+          varHandle.push_back(&paResponse->results[indexOfPair].value);
         }
       }
     } else {
@@ -670,7 +670,7 @@ void CUA_ClientInformation::CUA_RemoteCallbackFunctions::callMethodAsyncCallback
 
   if(!varHandle.mFailed) {
     for(size_t i = 0; i < outputSize; i++) {
-      varHandle.mData[i] = &response->results->outputArguments[i];
+      varHandle.push_back(&response->results->outputArguments[i]);
     }
   }
 
