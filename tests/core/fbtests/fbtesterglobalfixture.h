@@ -12,7 +12,38 @@
 #ifndef TESTS_CORE_FBTESTS_FBTESTERGLOBALFIXTURE_H_
 #define TESTS_CORE_FBTESTS_FBTESTERGLOBALFIXTURE_H_
 
-#include <device.h>
+#include "device.h"
+
+#include <memory>
+
+class CTesterDevice : public CDevice {
+  public:
+    CTesterDevice(const CStringDictionary::TStringId paInstanceNameId = CStringDictionary::scmInvalidStringId) :
+        CDevice(&scTestDevSpec, paInstanceNameId){
+    }
+
+    void awaitShutdown() override {
+      // nothing to be done to join
+    }
+
+    CIEC_ANY *getDI(size_t) override {
+      return nullptr;
+    }
+
+    CDataConnection **getDIConUnchecked(TPortId) override {
+      return nullptr;
+    }
+  private:
+    constexpr static SFBInterfaceSpec scTestDevSpec = {
+    0, nullptr, nullptr, nullptr,
+    0, nullptr, nullptr, nullptr,
+    0, nullptr, nullptr,
+    0, nullptr, nullptr,
+    0, nullptr,
+    0, nullptr
+  };
+};
+
 
 /**Global fixture for providing the resource and device needed for fb testing
  *
@@ -28,7 +59,7 @@ class CFBTestDataGlobalFixture{
     }
 
   private:
-    static CDevice *smTestDev;
+    static std::unique_ptr<CTesterDevice> smTestDev;
     static CResource *smTestRes;
 };
 

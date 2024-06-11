@@ -1,4 +1,4 @@
-/*************************************************************************  
+/*************************************************************************
  *** Copyright (c) 2024 HR Agrartechnik GmbH  
  *** This program and the accompanying materials are made available under the  
  *** terms of the Eclipse Public License 2.0 which is available at  
@@ -12,6 +12,7 @@
  *** Description: standard timer function block (pulse)
  *** Version:
  ***     1.0: 2024-03-04/Franz Hoepfinger - HR Agrartechnik GmbH -
+ ***     1.1: 2024-04-23/Franz Hoepfinger - HR Agrartechnik GmbH - Add a Reset to Timer FBs
  *************************************************************************/
 
 #include "E_TP_fbt.h"
@@ -53,9 +54,9 @@ FORTE_E_TP::FORTE_E_TP(const CStringDictionary::TStringId paInstanceNameId, fort
 };
 
 void FORTE_E_TP::setInitialValues() {
-  var_IN = 0_BOOL;
-  var_PT = 0_TIME;
-  var_Q = 0_BOOL;
+	var_IN = 0_BOOL;
+	var_PT = 0_TIME;
+	var_Q = 0_BOOL;
 }
 
 const SCFB_FBInstanceData FORTE_E_TP::scmInternalFBs[] = {

@@ -10,7 +10,7 @@
  *   Alois Zoitl - initial API and implementation and/or initial documentation
  *******************************************************************************/
 #include <fortenew.h>
-#include "../../../stdfblib/ita/RMT_DEV.h"
+#include "forteinstance.h"
 #include <cyg/kernel/kapi.h>
 #include <network.h>
 #include <cyg/hal/hal_io.h>             // IO macros
@@ -18,9 +18,10 @@
 externC void
 cyg_user_start( void );
 
+C4diacFORTEInstance g4diacForteInstance;
+
 void cyg_user_start(){
-  RMT_DEV *dev = new RMT_DEV;  //otherwise we would loose the var if it is only on the stack
-  dev->startDevice();
+  g4diacForteInstance.startupNewDevice("");
 }
 
 //get the stuff that fixes some ecos cpp problems which have to be near the main

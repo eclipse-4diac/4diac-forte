@@ -15,7 +15,7 @@
 
 #include <cfb.h>
 #include <typelib.h>
-#include "SubscribeEventAdp.h"
+#include "SubscribeEventAdp_adp.h"
 
 class FORTE_SubscribeEventOpcUa: public CCompositeFB{
   DECLARE_FIRMWARE_FB(FORTE_SubscribeEventOpcUa)

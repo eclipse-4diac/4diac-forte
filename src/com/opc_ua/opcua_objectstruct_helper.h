@@ -212,11 +212,18 @@ class COPC_UA_ObjectStruct_Helper {
     std::string getStructTypeName(bool paIsPublisher);
 
     /**
+     * Get the BrowsePath to the OPC UA Object Struct members from the local Struct Type with the namespace index
+     * @param paBrowsePathPrefix BrowsePath to the Struct Object Node
+     * @param structMemberNameId Name Id of Object Node Struct member
+     */
+    std::string getStructMemberBrowsePathWithNSIndex(const std::string &paBrowsePathPrefix, const CStringDictionary::TStringId structMemberNameId);
+
+    /**
      * Get the BrowsePath to the OPC UA Object Struct members from the local Struct Type
      * @param paBrowsePathPrefix BrowsePath to the Struct Object Node
      * @param structMemberNameId Name Id of Object Node Struct member
      */
-    std::string getStructMemberBrowsePath(std::string &paBrowsePathPrefix, const CStringDictionary::TStringId structMemberNameId);
+    std::string getStructMemberBrowsePath(const std::string &paBrowsePathPrefix, const CStringDictionary::TStringId structMemberNameId);
 
     /**
      * Creates an OPC UA namespace with the given name and assigns the 
@@ -239,10 +246,11 @@ class COPC_UA_ObjectStruct_Helper {
      * Creates the member variable for the OPC UA Struct Type Object Node with the given Struct Member Name
      * @param paServer The OPC UA server
      * @param paParentNodeId The NodeId of the Struct Type Object Node
+     * @param paStructName The name of the Struct
      * @param paStructMember The Struct Member
-     * @param paStructMemberName The name of the Struct Member
+     * @param paStructMemberNameId The id of the Struct Member name
     */
-    bool addOPCUAStructTypeComponent(UA_Server *paServer, UA_NodeId &paParentNodeId, CIEC_ANY *paStructMember, const std::string &paStructMemberName);
+    bool addOPCUAStructTypeComponent(UA_Server *paServer, UA_NodeId &paParentNodeId, const std::string &paStructName, CIEC_ANY *paStructMember, const CStringDictionary::TStringId paStructMemberNameId);
 
     /**
      * Creates NodeId of type string from the given browsepath

@@ -1,5 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2005 - 2015 ACIN, Profactor GmbH, fortiss GmbH
+ * Copyright (c) 2005, 2024 ACIN, Profactor GmbH, fortiss GmbH,
+ *                          Primetals Technologies Austria GmbH
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -13,7 +14,7 @@
 #ifndef _RMT_DEV_H_
 #define _RMT_DEV_H_
 
-#include <device.h>
+#include "device.h"
 #include <if2indco.h>
 #include "RMT_RES.h"
 
@@ -21,11 +22,9 @@
  */
 
 
-class RMT_DEV : public CDevice{
+ class RMT_DEV : public CDevice{
   public:
-    RMT_RES MGR;
-
-    RMT_DEV();
+    RMT_DEV(const std::string &paMGR_ID = "localhost:61499");
     ~RMT_DEV() override;
 
     bool initialize() override;
@@ -36,9 +35,11 @@ class RMT_DEV : public CDevice{
   */
     int startDevice() override;
 
+    void awaitShutdown() override;
+
     EMGMResponse changeFBExecutionState(EMGMCommandType paCommand) override;
 
-    void setMGR_ID(const char * const paConn);
+    void setMGR_ID(const std::string& paVal);
 
   private:
     CInterface2InternalDataConnection mDConnMGR_ID;
@@ -48,9 +49,13 @@ class RMT_DEV : public CDevice{
     static const CStringDictionary::TStringId scmDINameIds[];
     static const CStringDictionary::TStringId scmDIDataTypeIds[];
 
-    CIEC_WSTRING& MGR_ID() {
-      return *static_cast<CIEC_WSTRING*>(getDI(0));
-    }
+    CIEC_WSTRING var_MGR_ID;
+    CDataConnection *conn_MGR_ID;
+
+    CIEC_ANY *getDI(size_t) override;
+    CDataConnection **getDIConUnchecked(TPortId) override;
+
+    RMT_RES MGR;
 };
 
 #endif /*RMT_DEV_H_*/

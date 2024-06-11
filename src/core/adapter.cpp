@@ -21,7 +21,7 @@
 #include "ecet.h"
 
 CAdapter::CAdapter(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec *paInterfaceSpecSocket, const CStringDictionary::TStringId paInstanceNameId, const SFBInterfaceSpec *paInterfaceSpecPlug, bool paIsPlug) :
-  CFunctionBlock(paContainer, (paIsPlug) ? paInterfaceSpecPlug : paInterfaceSpecSocket, paInstanceNameId),
+  CGenFunctionBlock<CFunctionBlock>(paContainer, (paIsPlug) ? paInterfaceSpecPlug : paInterfaceSpecSocket, paInstanceNameId),
   mParentAdapterListEventID(0),
   mIsPlug(paIsPlug),
   mPeer(nullptr),
@@ -30,7 +30,7 @@ CAdapter::CAdapter(forte::core::CFBContainer &paContainer, const SFBInterfaceSpe
 }
 
 bool CAdapter::initialize() {
-  if(!CFunctionBlock::initialize()) {
+  if(!CGenFunctionBlock<CFunctionBlock>::initialize()) {
     return false;
   }
   setupEventEntryList();
@@ -48,6 +48,11 @@ CAdapter::~CAdapter(){
     }
   }
   delete[] mEventEntry;
+}
+
+bool CAdapter::createInterfaceSpec(const char *, SFBInterfaceSpec &paInterfaceSpec) {
+  paInterfaceSpec = *mInterfaceSpec;
+  return true;
 }
 
 void CAdapter::fillEventEntryList(CFunctionBlock* paParentFB){

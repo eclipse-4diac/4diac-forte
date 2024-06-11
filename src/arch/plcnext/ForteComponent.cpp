@@ -15,7 +15,6 @@
 namespace ForteLibrary {
 
   void ForteComponent::Initialize(){
-    mDev = new RMT_DEV;
   }
 
   void ForteComponent::LoadSettings(const String& /*paSettingsPath*/){
@@ -31,8 +30,7 @@ namespace ForteLibrary {
   }
 
   void ForteComponent::SetupConfig(){
-    mDev->setMGR_ID("localhost:61499");
-    mDev->startDevice();
+    m4diacForteInstance.startupNewDevice(pIpPort);
   }
 
   void ForteComponent::ResetConfig(){
@@ -42,14 +40,10 @@ namespace ForteLibrary {
   }
 
   void ForteComponent::Dispose(){
-    delete mDev;
-    mDev = 0;
   }
 
   void ForteComponent::PowerDown(){
-    if(0 != mDev){
-      mDev->changeFBExecutionState(EMGMCommandType::Kill);
-    }
+    m4diacForteInstance.triggerDeviceShutdown();
   }
 
 } // end of namespace ForteLibrary

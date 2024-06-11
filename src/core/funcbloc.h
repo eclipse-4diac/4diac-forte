@@ -282,7 +282,9 @@ class CFunctionBlock {
      * \param paAdapterNameId  StringId of the adapter name.
      * \return Pointer to the adapter or nullptr.
      */
-    CAdapter* getAdapter(CStringDictionary::TStringId paAdapterNameId) const;
+    CAdapter* getAdapter(CStringDictionary::TStringId paAdapterNameId);
+
+    const CAdapter* getAdapter(CStringDictionary::TStringId paAdapterNameId) const;
 
     TPortId getAdapterPortId(CStringDictionary::TStringId paAdapterNameId) const;
 
@@ -317,12 +319,6 @@ class CFunctionBlock {
      *
      */
     virtual bool configureFB(const char *paConfigString);
-
-    static size_t calculateFBConnDataSize(const SFBInterfaceSpec &paInterfaceSpec);
-
-    static size_t calculateFBVarsDataSize(const SFBInterfaceSpec &paInterfaceSpec);
-
-    void setupFBInterface(const SFBInterfaceSpec *paInterfaceSpec);
 
     const SFBInterfaceSpec* getFBInterfaceSpec() const {
       return mInterfaceSpec;
@@ -389,9 +385,7 @@ class CFunctionBlock {
      * @param paDINum number of the data input starting with 0
      * @return pointer to the data input
      */
-    virtual CIEC_ANY* getDI(TPortId paDINum) {
-      return mDIs[paDINum];
-    }
+    virtual CIEC_ANY* getDI(TPortId paDINum) = 0;
 
     const CIEC_ANY* getDI(TPortId paDINum) const {
       return const_cast<CFunctionBlock*>(this)->getDI(paDINum);
@@ -403,9 +397,7 @@ class CFunctionBlock {
      * @param paDONum number of the data output starting with 0
      * @return pointer to the data output
      */
-    virtual CIEC_ANY* getDO(TPortId paDONum) {
-      return mDOs[paDONum];
-    }
+    virtual CIEC_ANY* getDO(TPortId paDONum) = 0;
 
     const CIEC_ANY* getDO(TPortId paDONum) const {
       return const_cast<CFunctionBlock *>(this)->getDO(paDONum);
@@ -556,13 +548,9 @@ class CFunctionBlock {
      * \param paEID Event ID where event should be fired.
      * \param paExecEnv Event chain execution environment where the event will be sent to.
      */
-    void sendAdapterEvent(TPortId paAdapterID, TEventID paEID, CEventChainExecutionThread * const paECET) const;
+    void sendAdapterEvent(TPortId paAdapterID, TEventID paEID, CEventChainExecutionThread * const paECET);
 
-    void setupAdapters(const SFBInterfaceSpec *paInterfaceSpec, TForteByte *paFBData);
-
-    virtual CEventConnection *getEOConUnchecked(TPortId paEONum) {
-      return (mEOConns + paEONum);
-    }
+    virtual CEventConnection *getEOConUnchecked(TPortId paEONum) = 0;
 
     /*! \brief Get the data output connection with given number
      *
@@ -570,9 +558,7 @@ class CFunctionBlock {
      * @param paDONum number of the data output starting with 0
      * @return pointer to the data output connection
      */
-    virtual CDataConnection *getDOConUnchecked(TPortId paDONum) {
-      return mDOConns + paDONum;
-    }
+    virtual CDataConnection *getDOConUnchecked(TPortId paDONum) = 0;
 
     /*! \brief Get the data input connection with given number
      *
@@ -580,9 +566,7 @@ class CFunctionBlock {
      * @param paDINum number of the data input starting with 0
      * @return pointer to the data input connection
      */
-    virtual CDataConnection **getDIConUnchecked(TPortId paDINum) {
-      return mDIConns + paDINum;
-    }
+    virtual CDataConnection **getDIConUnchecked(TPortId paDINum) = 0;
 
     /*! \brief Get the data inout connection with given number
      *
@@ -596,6 +580,10 @@ class CFunctionBlock {
     }
 
     virtual CInOutDataConnection *getDIOOutConUnchecked(TPortId) {
+      return nullptr;
+    }
+
+    virtual CAdapter *getAdapterUnchecked(TPortId) {
       return nullptr;
     }
 
@@ -637,19 +625,25 @@ class CFunctionBlock {
      */
     static void nextDataPoint(const CStringDictionary::TStringId *&paDataTypeIds);
 
+    /*!\brief Function to create an adapter instance
+     *
+     * @param paAdapterInstanceDefinition the adapter instance definition
+     * @param paParentAdapterlistID the adapter index
+     * @return on success... pointer to the adapter instance
+     *         on error... nullptr
+     */
+    CAdapter *createAdapter(const SAdapterInstanceDef &paAdapterInstanceDefinition, TForteUInt8 paParentAdapterlistID);
+
+    static void destroyAdapter(CAdapter *adapter);
+
     static EMGMResponse changeInternalFBExecutionState(const EMGMCommandType paCommand, const size_t paAmountOfInternalFBs, TFunctionBlockPtr *const paInternalFBs);
 
-    void freeAllData();
-
     const SFBInterfaceSpec *mInterfaceSpec; //!< Pointer to the interface specification
-    CEventConnection *mEOConns; //!< A list of event connections pointers storing for each event output the event connection. If the output event is not connected the pointer is nullptr.
-    CDataConnection **mDIConns; //!< A list of data connections pointers storing for each data input the data connection. If the data input is not connected the pointer is nullptr.
-    CDataConnection *mDOConns; //!< A list of data connections pointers storing for each data output the data connection. If the data output is not connected the pointer is nullptr.
-    CIEC_ANY **mDIs; //!< A list of pointers to the data inputs. This allows to implement a general getDataInput()
-    CIEC_ANY **mDOs; //!< A list of pointers to the data outputs. This allows to implement a general getDataOutput()
-    CAdapter **mAdapters; //!< A list of pointers to the adapters. This allows to implement a general getAdapter().
-    void *mFBConnData; //!< Connection data buffer
-    void *mFBVarsData; //!< Variable data buffer
+
+#ifdef FORTE_SUPPORT_MONITORING
+    void setupEventMonitoringData();
+    void freeEventMonitoringData();
+#endif
   private:
 
     /*!\brief Function providing the functionality of the FB (e.g. execute ECC for basic FBs).
@@ -688,9 +682,6 @@ class CFunctionBlock {
     forte::core::CFBContainer &mContainer; //!< The container of this function block.
 
 #ifdef FORTE_SUPPORT_MONITORING
-    void setupEventMonitoringData();
-
-    // monitoring stuff
     TForteUInt32 *mEOMonitorCount;
     TForteUInt32 *mEIMonitorCount;
 #endif

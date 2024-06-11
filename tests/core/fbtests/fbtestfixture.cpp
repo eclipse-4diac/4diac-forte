@@ -19,7 +19,7 @@
 #include "fbtestfixture_gen.cpp"
 #endif
 #include "fbtesterglobalfixture.h"
-#include <device.h>
+#include "device.h"
 #include <criticalregion.h>
 #include <ecet.h>
 
@@ -50,7 +50,7 @@ class CFBTestConn : public CDataConnection {
 };
 
 CFBTestFixtureBase::CFBTestFixtureBase(CStringDictionary::TStringId paTypeId) :
-    CFunctionBlock(CFBTestDataGlobalFixture::getResource(), nullptr, 0), mTypeId(paTypeId),
+        CGenFunctionBlock<CFunctionBlock>(CFBTestDataGlobalFixture::getResource(), nullptr, 0), mTypeId(paTypeId),
         mFBUnderTest(CTypeLib::createFB(paTypeId, paTypeId, CFBTestDataGlobalFixture::getResource())) {
 }
 
@@ -93,7 +93,7 @@ CFBTestFixtureBase::~CFBTestFixtureBase(){
   performFBDeleteTests();
 
   if(nullptr != mInterfaceSpec){
-    freeAllData();  //clean the interface and connections first.
+    freeFBInterfaceData();  //clean the interface and connections first.
     delete mInterfaceSpec;
     mInterfaceSpec = nullptr; //this stops the base classes from any wrong clean-up
   }
@@ -150,6 +150,11 @@ void CFBTestFixtureBase::setup(const char* paConfigString){
   createEventOutputConnections();
   createDataInputConnections();
   createDataOutputConnections();
+}
+
+bool CFBTestFixtureBase::createInterfaceSpec(const char *, SFBInterfaceSpec &paInterfaceSpec) {
+  paInterfaceSpec = *mInterfaceSpec;
+  return true;
 }
 
 void CFBTestFixtureBase::executeEvent(TEventID paEIID, CEventChainExecutionThread *const) {

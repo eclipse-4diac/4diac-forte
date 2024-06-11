@@ -37,7 +37,10 @@ const SFBInterfaceSpec CTimedFB::scmFBInterfaceSpec = {
 };
 
 CTimedFB::CTimedFB(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
-      CEventSourceFB(paContainer, &scmFBInterfaceSpec, paInstanceNameId){
+      CEventSourceFB(paContainer, &scmFBInterfaceSpec, paInstanceNameId),
+      var_DT(0_TIME),
+      conn_DT(nullptr),
+      conn_EO(this, 0) {
   setEventChainExecutor(getResource()->getResourceEventExecution());
   mActive = false;
 }
@@ -59,10 +62,39 @@ void CTimedFB::executeEvent(TEventID paEIID, CEventChainExecutionThread * const 
 }
 
 void CTimedFB::readInputData(TEventID) {
-  readData(0, *mDIs[0], mDIConns[0]);
+  readData(0, var_DT, conn_DT);
 }
 
 void CTimedFB::writeOutputData(TEventID) {
+}
+
+CIEC_ANY *CTimedFB::getDI(const size_t paIndex) {
+  switch(paIndex) {
+    case 0: return &var_DT;
+  }
+  return nullptr;
+}
+
+CIEC_ANY *CTimedFB::getDO(const size_t) {
+  return nullptr;
+}
+
+CEventConnection *CTimedFB::getEOConUnchecked(const TPortId paIndex) {
+  switch(paIndex) {
+    case 0: return &conn_EO;
+  }
+  return nullptr;
+}
+
+CDataConnection **CTimedFB::getDIConUnchecked(const TPortId paIndex) {
+  switch(paIndex) {
+    case 0: return &conn_DT;
+  }
+  return nullptr;
+}
+
+CDataConnection *CTimedFB::getDOConUnchecked(const TPortId) {
+  return nullptr;
 }
 
 EMGMResponse CTimedFB::changeFBExecutionState(EMGMCommandType paCommand){

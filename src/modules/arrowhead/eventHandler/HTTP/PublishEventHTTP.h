@@ -15,7 +15,7 @@
 
 #include <cfb.h>
 #include <typelib.h>
-#include "ArrowheadPublishAdp.h"
+#include "ArrowheadPublishAdp_adp.h"
 
 class FORTE_PublishEventHTTP: public CCompositeFB{
   DECLARE_FIRMWARE_FB(FORTE_PublishEventHTTP)

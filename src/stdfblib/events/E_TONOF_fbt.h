@@ -1,4 +1,4 @@
-/*************************************************************************  
+/*************************************************************************
  *** Copyright (c) 2024 HR Agrartechnik GmbH  
  *** This program and the accompanying materials are made available under the  
  *** terms of the Eclipse Public License 2.0 which is available at  
@@ -12,6 +12,7 @@
  *** Description: standard timer function block (on/off-delay timing)
  *** Version:
  ***     1.0: 2024-03-04/Franz Hoepfinger - HR Agrartechnik GmbH -
+ ***     1.1: 2024-04-23/Franz Hoepfinger - HR Agrartechnik GmbH - Add a Reset to Timer FBs
  *************************************************************************/
 
 #pragma once
@@ -36,6 +37,7 @@ class FORTE_E_TONOF final : public CCompositeFB {
     static const CStringDictionary::TStringId scmDataOutputNames[];
     static const CStringDictionary::TStringId scmDataOutputTypeIds[];
     static const TEventID scmEventREQID = 0;
+    static const TEventID scmEventRID = 1;
     static const TDataIOID scmEIWith[];
     static const TForteInt16 scmEIWithIndexes[];
     static const CStringDictionary::TStringId scmEventInputNames[];
@@ -89,6 +91,14 @@ class FORTE_E_TONOF final : public CCompositeFB {
       var_PT_ON = paPT_ON;
       var_PT_OFF = paPT_OFF;
       executeEvent(scmEventREQID, nullptr);
+      paQ = var_Q;
+    }
+
+    void evt_R(const CIEC_BOOL &paIN, const CIEC_TIME &paPT_ON, const CIEC_TIME &paPT_OFF, CIEC_BOOL &paQ) {
+      var_IN = paIN;
+      var_PT_ON = paPT_ON;
+      var_PT_OFF = paPT_OFF;
+      executeEvent(scmEventRID, nullptr);
       paQ = var_Q;
     }
 

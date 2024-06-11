@@ -19,7 +19,7 @@
 #ifndef _GEN_OR_H_
 #define _GEN_OR_H_
 
-#include "genbitbase.h"
+#include "genbitbase_fbt.h"
 
 class GEN_OR : public CGenBitBase {
   DECLARE_GENERIC_FIRMWARE_FB(GEN_OR)

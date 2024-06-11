@@ -33,7 +33,7 @@ void E_RDELAY::executeEvent(TEventID paEIID, CEventChainExecutionThread * const 
         getTimer().unregisterTimedFB(this);
       }
       setEventChainExecutor(paECET);  // E_RDELAY will execute in the same thread on as from where it has been triggered.
-      getTimer().registerOneShotTimedFB(this, DT());
+      getTimer().registerOneShotTimedFB(this, var_DT);
       mActive = true;
       break;
     default:

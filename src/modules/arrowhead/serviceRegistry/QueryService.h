@@ -19,7 +19,7 @@
 #include <forte_serviceregistryentry.h>
 #include <forte_wstring.h>
 #include <forte_array.h>
-#include "QueryServicesAdp.h"
+#include "QueryServicesAdp_adp.h"
 
 class FORTE_QueryService: public CCompositeFB{
   DECLARE_FIRMWARE_FB(FORTE_QueryService)

@@ -16,21 +16,12 @@
 #endif
 #include <boost/test/unit_test.hpp>
 
-const static SFBInterfaceSpec gscTestDevSpec = {
-  0, nullptr, nullptr, nullptr,
-  0, nullptr, nullptr, nullptr,
-  0, nullptr, nullptr,
-  0, nullptr, nullptr,
-  0, nullptr,
-  0, nullptr
-};
-
-CDevice *CFBTestDataGlobalFixture::smTestDev;
+std::unique_ptr<CTesterDevice> CFBTestDataGlobalFixture::smTestDev;
 CResource *CFBTestDataGlobalFixture::smTestRes;
 
 CFBTestDataGlobalFixture::CFBTestDataGlobalFixture(){
   //setup is done in the setup so that boost_test can throw exceptions
-  smTestDev = new CDevice(&gscTestDevSpec, CStringDictionary::scmInvalidStringId);
+  smTestDev = std::make_unique<CTesterDevice>();
   //mimick the behavior provided by typelib
   smTestDev->changeFBExecutionState(EMGMCommandType::Reset);
 
@@ -45,6 +36,6 @@ CFBTestDataGlobalFixture::CFBTestDataGlobalFixture(){
 
 CFBTestDataGlobalFixture::~CFBTestDataGlobalFixture(){
   smTestDev->changeFBExecutionState(EMGMCommandType::Stop);
-  delete smTestDev;
+  smTestDev.reset();
   //we don't need to delete the res here as the res is deletes in the destructor of the device
 }

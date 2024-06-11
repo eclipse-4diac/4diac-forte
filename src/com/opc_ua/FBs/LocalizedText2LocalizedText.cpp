@@ -44,10 +44,19 @@ const SFBInterfaceSpec FORTE_LocalizedText2LocalizedText::scmFBInterfaceSpec = {
   0, nullptr, 0, nullptr
 };
 
+FORTE_LocalizedText2LocalizedText::FORTE_LocalizedText2LocalizedText(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+    CFunctionBlock(paContainer, &scmFBInterfaceSpec, paInstanceNameId),
+    var_IN(CIEC_LocalizedText()),
+    var_OUT(CIEC_LocalizedText()),
+    var_conn_OUT(var_OUT),
+    conn_CNF(this, 0),
+    conn_IN(nullptr),
+    conn_OUT(this, 0, &var_conn_OUT) {
+}
 
 void FORTE_LocalizedText2LocalizedText::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   if(scmEventREQID == paEIID) {
-    st_OUT() = st_IN();
+    var_OUT = var_IN;
     sendOutputEvent(scmEventCNFID, paECET);
   }
 }
@@ -55,7 +64,7 @@ void FORTE_LocalizedText2LocalizedText::executeEvent(TEventID paEIID, CEventChai
 void FORTE_LocalizedText2LocalizedText::readInputData(TEventID paEIID) {
   switch(paEIID) {
     case scmEventREQID: {
-      readData(0, *mDIs[0], mDIConns[0]);
+      readData(0, var_IN, conn_IN);
       break;
     }
     default:
@@ -66,11 +75,46 @@ void FORTE_LocalizedText2LocalizedText::readInputData(TEventID paEIID) {
 void FORTE_LocalizedText2LocalizedText::writeOutputData(TEventID paEIID) {
   switch(paEIID) {
     case scmEventCNFID: {
-      writeData(0, *mDOs[0], mDOConns[0]);
+      writeData(0, var_OUT, conn_OUT);
       break;
     }
     default:
       break;
   }
+}
+
+CIEC_ANY *FORTE_LocalizedText2LocalizedText::getDI(size_t paIndex) {
+  switch(paIndex) {
+    case 0: return &var_IN;
+  }
+  return nullptr;
+}
+
+CIEC_ANY *FORTE_LocalizedText2LocalizedText::getDO(size_t paIndex) {
+  switch(paIndex) {
+    case 0: return &var_OUT;
+  }
+  return nullptr;
+}
+
+CEventConnection *FORTE_LocalizedText2LocalizedText::getEOConUnchecked(TPortId paIndex) {
+  switch(paIndex) {
+    case 0: return &conn_CNF;
+  }
+  return nullptr;
+}
+
+CDataConnection **FORTE_LocalizedText2LocalizedText::getDIConUnchecked(TPortId paIndex) {
+  switch(paIndex) {
+    case 0: return &conn_IN;
+  }
+  return nullptr;
+}
+
+CDataConnection *FORTE_LocalizedText2LocalizedText::getDOConUnchecked(TPortId paIndex) {
+  switch(paIndex) {
+    case 0: return &conn_OUT;
+  }
+  return nullptr;
 }
 

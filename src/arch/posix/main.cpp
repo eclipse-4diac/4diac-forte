@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2023 ACIN, Profactor GmbH, AIT, fortiss GmbH,
+ * Copyright (c) 2006, 2024 ACIN, Profactor GmbH, AIT, fortiss GmbH,
  *                          Primetals Technologies Austria GmbH
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -16,7 +16,7 @@
 #include <stdio.h>
 #include <signal.h>
 #include "../startuphook.h"
-#include "../../stdfblib/ita/RMT_DEV.h"
+#include "forteinstance.h"
 
 #include "../utils/mainparam_utils.h"
 
@@ -30,6 +30,10 @@
  */
 void checkEndianess();
 
+void hookSignals();
+
+C4diacFORTEInstance g4diacForteInstance;
+
 //this keeps away a lot of rtti and exception handling stuff
 #ifndef __cpp_exceptions
 extern "C" void __cxa_pure_virtual(void){
@@ -40,33 +44,8 @@ extern "C" void __cxa_pure_virtual(void){
 }
 #endif
 
-RMT_DEV *poDev = nullptr;
-
-void endForte(int paSig){
-  (void) paSig;
-  if(nullptr != poDev){
-    poDev->changeFBExecutionState(EMGMCommandType::Kill);
-  }
-}
-
-/*!\brief Creates the Device-Object
- * \param paMGRID A string containing IP and Port like [IP]:[Port]
- */
-void createDev(const char *paMGRID){
-
-  signal(SIGINT, endForte);
-  signal(SIGTERM, endForte);
-  signal(SIGHUP, endForte);
-
-  poDev = new RMT_DEV;
-  poDev->initialize();
-
-  poDev->setMGR_ID(paMGRID);
-  poDev->startDevice();
-  DEVLOG_INFO("FORTE is up and running\n");
-  poDev->MGR.joinResourceThread();
-  DEVLOG_INFO("FORTE finished\n");
-  delete poDev;
+void endForte(int ){
+  g4diacForteInstance.triggerDeviceShutdown();
 }
 
 int main(int argc, char *arg[]){
@@ -80,9 +59,15 @@ int main(int argc, char *arg[]){
   DeviceStatus::startup();
 #endif
 
+  hookSignals();
+
   const char *pIpPort = parseCommandLineArguments(argc, arg);
-  if((0 != strlen(pIpPort)) && (nullptr != strchr(pIpPort, ':'))){
-    createDev(pIpPort);
+  if((0 != strlen(pIpPort)) && (nullptr != strchr(pIpPort, ':'))) {
+    if(g4diacForteInstance.startupNewDevice(pIpPort)) {
+      DEVLOG_INFO("FORTE is up and running\n");
+      g4diacForteInstance.awaitDeviceShutdown();
+      DEVLOG_INFO("FORTE finished\n");
+    }
   }
   else{ //! Lists the help for FORTE
     listHelp();
@@ -109,3 +94,10 @@ void checkEndianess(){
 #endif
   }
 }
+
+void hookSignals() {
+  signal(SIGINT, endForte);
+  signal(SIGTERM, endForte);
+  signal(SIGHUP, endForte);
+}
+

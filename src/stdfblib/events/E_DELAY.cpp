@@ -33,7 +33,7 @@ void E_DELAY::executeEvent(TEventID paEIID, CEventChainExecutionThread * const p
     case csmEventSTARTID:
       if(!mActive){
         setEventChainExecutor(paECET); // E_DELAY will execute in the same thread on as from where it has been triggered.
-        getTimer().registerOneShotTimedFB(this, DT());
+        getTimer().registerOneShotTimedFB(this, var_DT);
         mActive = true;
       }
       break;

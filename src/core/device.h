@@ -1,5 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2005 - 2015 ACIN, Profactor GmbH, fortiss GmbH
+ * Copyright (c) 2005, 2024 ACIN, Profactor GmbH, fortiss GmbH,
+ *                          Primetals Technologies Austria GmbH
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -30,27 +31,8 @@
  (resources function blocks) and device parameters.
  */
 class CDevice : public CResource {
-  private:
-    /*! \brief
-     *
-     */
-    CDeviceExecution mDeviceExecution;
-
   public:
-    /*! \brief Sets up all the necessary data and classes necessary for execution.
-     *
-     */
-    CDevice(const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId) :
-        CResource(paInterfaceSpec, paInstanceNameId), mDeviceExecution(*this) {
-    }
-
     ~CDevice() override = default;
-
-
-    CStringDictionary::TStringId getFBTypeId() const override {
-      return CStringDictionary::scmInvalidStringId;
-    }
-
 
     /*! \brief Starts to execute FBNs.
      *
@@ -62,6 +44,16 @@ class CDevice : public CResource {
     virtual int startDevice() {
       changeFBExecutionState(EMGMCommandType::Start);
       return 1;
+    }
+
+    /*!\brief wait till the execution of this device ends.
+     *
+     * The execution of devices can be stopped by sending it the kill command.
+     */
+    virtual void awaitShutdown() = 0;
+
+    CStringDictionary::TStringId getFBTypeId() const override {
+      return CStringDictionary::scmInvalidStringId;
     }
 
     /*!\brief Execute the given management command
@@ -91,6 +83,21 @@ class CDevice : public CResource {
     const CDevice* getDevice() const override {
       return this;
     }
+
+  protected:
+    /*! \brief Sets up all the necessary data and classes necessary for execution.
+     *
+     */
+    CDevice(const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId) :
+        CResource(paInterfaceSpec, paInstanceNameId), mDeviceExecution(*this) {
+    }
+
+  private:
+     /*! \brief
+     *
+     */
+    CDeviceExecution mDeviceExecution;
+
 };
 
 #endif

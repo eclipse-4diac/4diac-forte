@@ -1,4 +1,4 @@
-/*************************************************************************  
+/*************************************************************************
  *** Copyright (c) 2024 HR Agrartechnik GmbH  
  *** This program and the accompanying materials are made available under the  
  *** terms of the Eclipse Public License 2.0 which is available at  
@@ -53,9 +53,9 @@ FORTE_E_TON::FORTE_E_TON(const CStringDictionary::TStringId paInstanceNameId, fo
 };
 
 void FORTE_E_TON::setInitialValues() {
-  var_IN = 0_BOOL;
-  var_PT = 0_TIME;
-  var_Q = 0_BOOL;
+	var_IN = 0_BOOL;
+	var_PT = 0_TIME;
+	var_Q = 0_BOOL;
 }
 
 const SCFB_FBInstanceData FORTE_E_TON::scmInternalFBs[] = {

@@ -36,10 +36,10 @@ extern "C" {
     FORTE_WRONG_ENDIANESS,
     FORTE_WRONG_PARAMETERS,
     FORTE_ARCHITECTURE_NOT_READY,
+    FORTE_COULD_NOT_CREATE_DEVICE
   };
 
   typedef void* TForteInstance;
-
   /**
    * \brief Start forte instance
    * @param paPort The port on which to forte will listen. Use 0 for default (normally 61499)
@@ -55,7 +55,7 @@ extern "C" {
    * @param paResultInstance Address of an instance of forte where the new instance is stored
    * @return FORTE_OK if no error occurred, other values otherwise
    */
-  FORTE_SHARED_PREFIX int FORTE_SHARED_CALL forteStartInstanceGeneric(int paArgc, char *paArgv[], TForteInstance* paResultInstance);
+  FORTE_SHARED_PREFIX int FORTE_SHARED_CALL forteStartInstanceGeneric(int paArgc, char *paArgv[], TForteInstance pInstance);
 
   /**
    * \brief Terminates a Forte instance

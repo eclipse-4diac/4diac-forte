@@ -1,5 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2005 - 2015 ACIN, Profactor GmbH, fortiss GmbH
+ * Copyright (c) 2005, 2015 ACIN, Profactor GmbH, fortiss GmbH,
+ *                          Primetals Technologies Austria GmbH
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -28,17 +29,21 @@ const SFBInterfaceSpec RMT_DEV::scmFBInterfaceSpec = {
   0, nullptr
 };
 
-RMT_DEV::RMT_DEV() :
-  CDevice(&scmFBInterfaceSpec, CStringDictionary::scmInvalidStringId),
-      MGR(g_nStringIdMGR, *this){
+RMT_DEV::RMT_DEV(const std::string &paMGR_ID) :
+        CDevice(&scmFBInterfaceSpec, CStringDictionary::scmInvalidStringId),
+        var_MGR_ID(paMGR_ID.c_str()),
+        conn_MGR_ID(nullptr),
+        MGR(g_nStringIdMGR, *this) {
 }
 
 bool RMT_DEV::initialize() {
   if(!CDevice::initialize()) {
     return false;
   }
-  MGR.initialize();
-  MGR_ID().fromString("localhost:61499");
+
+  if(!MGR.initialize()) {
+    return false;
+  }
 
   //we nee to manually crate this interface2internal connection as the MGR is not managed by device
   mDConnMGR_ID.setSource(this, 0);
@@ -54,6 +59,10 @@ int RMT_DEV::startDevice(){
   return 0;
 }
 
+void RMT_DEV::awaitShutdown() {
+  MGR.joinResourceThread();
+}
+
 EMGMResponse RMT_DEV::changeFBExecutionState(EMGMCommandType paCommand){
   EMGMResponse eRetVal = CDevice::changeFBExecutionState(paCommand);
   if((EMGMResponse::Ready == eRetVal) && (EMGMCommandType::Kill == paCommand)){
@@ -62,6 +71,21 @@ EMGMResponse RMT_DEV::changeFBExecutionState(EMGMCommandType paCommand){
   return eRetVal;
 }
 
-void RMT_DEV::setMGR_ID(const char * const paConn){
-  MGR_ID().fromString(paConn);
+void RMT_DEV::setMGR_ID(const std::string& paVal){
+  var_MGR_ID.fromString(paVal.c_str());
 }
+
+CIEC_ANY *RMT_DEV::getDI(const size_t paIndex) {
+  switch(paIndex) {
+    case 0: return &var_MGR_ID;
+  }
+  return nullptr;
+}
+
+CDataConnection **RMT_DEV::getDIConUnchecked(const TPortId paIndex) {
+  switch(paIndex) {
+    case 0: return &conn_MGR_ID;
+  }
+  return nullptr;
+}
+

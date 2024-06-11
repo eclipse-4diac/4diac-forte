@@ -12,17 +12,15 @@
 #include <fortenew.h>
 #include <stdio.h>
 #include <signal.h>
-#include "../../stdfblib/ita/RMT_DEV.h"
-
-#ifdef CONFIG_POWERLINK_USERSTACK
-#include <EplWrapper.h>
-#endif
+#include "forteinstance.h"
 
 /*!\brief Check if the correct endianess has been configured.
  *
  * If the right endianess is not set this function will end FORTE.
  */
 void checkEndianess();
+
+C4diacFORTEInstance g4diacForteInstance;
 
 //this keeps away a lot of rtti and exception handling stuff
 #ifndef __cpp_exceptions
@@ -34,56 +32,23 @@ extern "C" void __cxa_pure_virtual(void){
 }
 #endif
 
-RMT_DEV *poDev = 0;
-
-void endForte(int paSig){
-  (void) paSig;
-  if(0 != poDev){
-    poDev->changeFBExecutionState(EMGMCommandType::Kill);
-  }
-}
-
-/*!\brief Creates the Device-Object
- * \param paMGRID A string containing IP and Port like [IP]:[Port]
- */
-void createDev(const char *paMGRID){
-
-  signal(SIGINT, endForte);
-  signal(SIGTERM, endForte);
-  signal(SIGHUP, endForte);
-
-#ifdef CONFIG_POWERLINK_USERSTACK
-  CEplStackWrapper::eplMainInit();
-#endif
-
-  poDev = new RMT_DEV;
-  poDev->initialize();
-
-  poDev->setMGR_ID(paMGRID);
-  poDev->startDevice();
-  DEVLOG_INFO("FORTE is up and running\n");
-  poDev->MGR.joinResourceThread();
-  DEVLOG_INFO("FORTE finished\n");
-  delete poDev;
-}
-
-/*!\brief Lists the help for FORTE
- *
- */
-void listHelp(){
-  printf("\nUsage of FORTE:\n");
-  printf("   -h\t lists this help.\n");
-  printf("\n");
-  printf("   -c\t sets the destination for the connection.\n");
-  printf("     \t Usage: forte -c <IP>:<Port>");
-  printf("\n");
+void endForte(int ){
+  g4diacForteInstance.triggerDeviceShutdown();
 }
 
 int startForte(){
 
   checkEndianess();
 
-  createDev("localhost:61499");
+  signal(SIGINT, endForte);
+  signal(SIGTERM, endForte);
+  signal(SIGHUP, endForte);
+
+  if(g4diacForteInstance.startupNewDevice("")) {
+    DEVLOG_INFO("FORTE is up and running\n");
+    g4diacForteInstance.awaitDeviceShutdown();
+    DEVLOG_INFO("FORTE finished\n");
+  }
   return 0;
 }
 

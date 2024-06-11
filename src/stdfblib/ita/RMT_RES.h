@@ -26,6 +26,12 @@ class RMT_RES : public CResource{
 
     void joinResourceThread() const;
 
+    CIEC_WSTRING var_MGR_ID;
+    CDataConnection *conn_MGR_ID;
+
+    CIEC_ANY *getDI(size_t) override;
+    CDataConnection **getDIConUnchecked(TPortId) override;
+
   private:
     static const SFBInterfaceSpec scmFBInterfaceSpec;
 
