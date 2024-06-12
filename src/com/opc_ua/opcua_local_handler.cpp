@@ -56,7 +56,7 @@ COPC_UA_Local_Handler::~COPC_UA_Local_Handler() {
   for(auto iter = mNodesReferences.begin(); iter != mNodesReferences.end(); ++iter) {
     UA_NodeId_delete(const_cast<UA_NodeId*>(iter->mNodeId));
   }
-  mNodesReferences.clearAll();
+  mNodesReferences.clear();
 
 #ifdef FORTE_COM_OPC_UA_MULTICAST
   for(CSinglyLinkedList<UA_String*>::Iterator iter = mRegisteredWithLds.begin(); iter != mRegisteredWithLds.end(); ++iter) {
@@ -196,7 +196,7 @@ void COPC_UA_Local_Handler::referencedNodesIncrement(const CSinglyLinkedList<UA_
     for(auto iterRef = mNodesReferences.begin(); iterRef != mNodesReferences.end(); ++iterRef) {
       if(UA_NodeId_equal(iterRef->mNodeId, (*iterNode))) {
         found = true;
-        iterRef->mActionsReferencingIt.pushFront(&paActionInfo);
+        iterRef->mActionsReferencingIt.push_back(&paActionInfo);
         break;
       }
     }
@@ -205,26 +205,25 @@ void COPC_UA_Local_Handler::referencedNodesIncrement(const CSinglyLinkedList<UA_
       UA_NodeId *newNode = UA_NodeId_new();
       UA_NodeId_copy((*iterNode), newNode);
       newRef.mNodeId = newNode;
-      newRef.mActionsReferencingIt = CSinglyLinkedList<CActionInfo*>();
-      newRef.mActionsReferencingIt.pushFront(&paActionInfo);
-      mNodesReferences.pushFront(newRef);
+      newRef.mActionsReferencingIt.push_back(&paActionInfo);
+      mNodesReferences.push_back(newRef);
     }
   }
 }
 
 void COPC_UA_Local_Handler::referencedNodesDecrement(const CActionInfo &paActionInfo) {
-  CSinglyLinkedList<const UA_NodeId*> nodesReferencedByAction;
+  std::vector<const UA_NodeId*> nodesReferencedByAction;
   getNodesReferencedByAction(paActionInfo, nodesReferencedByAction);
 
-  for(CSinglyLinkedList<const UA_NodeId*>::Iterator iterNode = nodesReferencedByAction.begin(); iterNode != nodesReferencedByAction.end(); ++iterNode) {
+  for(auto iterNode = nodesReferencedByAction.begin(); iterNode != nodesReferencedByAction.end(); ++iterNode) {
     auto nodeReferencedToDelete = mNodesReferences.end();
     for(auto iterRef = mNodesReferences.begin(); iterRef != mNodesReferences.end(); ++iterRef) {
       if(UA_NodeId_equal(iterRef->mNodeId, (*iterNode))) {
 
         bool stillSomethingThere = true;
         while(stillSomethingThere) {
-          CSinglyLinkedList<CActionInfo*>::Iterator itActionToDelete = iterRef->mActionsReferencingIt.end();
-          for(CSinglyLinkedList<CActionInfo*>::Iterator itAction = iterRef->mActionsReferencingIt.begin();
+          auto itActionToDelete = iterRef->mActionsReferencingIt.end();
+          for(auto itAction = iterRef->mActionsReferencingIt.begin();
               itAction != iterRef->mActionsReferencingIt.end(); ++itAction) {
             if((*itAction) == &paActionInfo) {
               itActionToDelete = itAction;
@@ -235,11 +234,11 @@ void COPC_UA_Local_Handler::referencedNodesDecrement(const CActionInfo &paAction
           if(iterRef->mActionsReferencingIt.end() == itActionToDelete) {
             stillSomethingThere = false;
           } else {
-            iterRef->mActionsReferencingIt.erase(*itActionToDelete);
+            iterRef->mActionsReferencingIt.erase(itActionToDelete);
           }
         }
 
-        if(iterRef->mActionsReferencingIt.isEmpty()) {
+        if(iterRef->mActionsReferencingIt.empty()) {
           nodeReferencedToDelete = iterRef;
           if(0 != iterRef->mNodeId->namespaceIndex && mUaServer) {
             UA_Server_deleteNode(mUaServer, *iterRef->mNodeId, UA_TRUE);
@@ -250,17 +249,17 @@ void COPC_UA_Local_Handler::referencedNodesDecrement(const CActionInfo &paAction
     }
     if(mNodesReferences.end() != nodeReferencedToDelete) {
       UA_NodeId_delete(const_cast<UA_NodeId*>(nodeReferencedToDelete->mNodeId));
-      mNodesReferences.erase(&(*nodeReferencedToDelete));
+      mNodesReferences.erase(nodeReferencedToDelete);
     }
   }
 }
 
-void COPC_UA_Local_Handler::getNodesReferencedByAction(const CActionInfo &paActionInfo, CSinglyLinkedList<const UA_NodeId*> &paNodes) const {
+void COPC_UA_Local_Handler::getNodesReferencedByAction(const CActionInfo &paActionInfo, std::vector<const UA_NodeId*> &paNodes) const {
   for(auto iterRef = mNodesReferences.begin(); iterRef != mNodesReferences.end(); ++iterRef) {
-    for(CSinglyLinkedList<CActionInfo*>::Iterator iterAction = iterRef->mActionsReferencingIt.begin(); iterAction != iterRef->mActionsReferencingIt.end();
+    for(auto iterAction = iterRef->mActionsReferencingIt.begin(); iterAction != iterRef->mActionsReferencingIt.end();
         ++iterAction) {
       if((*iterAction) == &paActionInfo) {
-        paNodes.pushFront(iterRef->mNodeId);
+        paNodes.push_back(iterRef->mNodeId);
         break;
       }
     }
@@ -946,7 +945,7 @@ UA_StatusCode COPC_UA_Local_Handler::executeCreateMethod(CActionInfo &paActionIn
   if(localMethodCall) {
     const CIEC_ANY *const *dataToSend = paActionInfo.getDataToSend();
     // copy SD values to output
-    for(size_t i = 0; i < localMethodCall->mSendHandle.mSize; i++) {
+    for(size_t i = 0; i < localMethodCall->mSendHandle.mData.size(); i++) {
       COPC_UA_Helper::fillVariant(*localMethodCall->mSendHandle.mData[i], *dataToSend[i]);
     }
 
@@ -1458,15 +1457,15 @@ UA_StatusCode COPC_UA_Local_Handler::CUA_LocalCallbackFunctions::onServerMethodC
         localMethodHandle->getSendSize(), paOutput);
     } else {
 
-      COPC_UA_Helper::UA_SendVariable_handle sendHandle(paOutputSize);
-      COPC_UA_Helper::UA_RecvVariable_handle recvHandle(paInputSize);
+      COPC_UA_Helper::UA_SendVariable_handle sendHandle;
+      COPC_UA_Helper::UA_RecvVariable_handle recvHandle;
 
       for(size_t i = 0; i < paInputSize; i++) {
-        recvHandle.mData[i] = &paInput[i];
+        recvHandle.mData.push_back(&paInput[i]);
       }
 
       for(size_t i = 0; i < paOutputSize; i++) {
-        sendHandle.mData[i] = &paOutput[i];
+        sendHandle.mData.push_back(&paOutput[i]);
       }
 
       // Handle return of receive mData
@@ -1505,9 +1504,9 @@ void COPC_UA_Local_Handler::CUA_LocalCallbackFunctions::onWrite(UA_Server*, cons
 
   UA_VariableContext_Handle *variableCallbackHandle = static_cast<UA_VariableContext_Handle*>(nodeContext);
 
-  COPC_UA_Helper::UA_RecvVariable_handle handleRecv(1);
+  COPC_UA_Helper::UA_RecvVariable_handle handleRecv;
 
-  handleRecv.mData[0] = data->hasValue ? &data->value : nullptr; //TODO: check this empty data
+  handleRecv.mData.push_back(data->hasValue ? &data->value : nullptr); //TODO: check this empty data
   handleRecv.mOffset = variableCallbackHandle->mPortIndex;
   handleRecv.mNodeId = nodeId;
 

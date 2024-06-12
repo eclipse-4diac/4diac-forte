@@ -537,7 +537,7 @@ void CUA_ClientInformation::CUA_RemoteCallbackFunctions::readAsyncCallback(UA_Cl
   UA_RemoteCallHandle *remoteCallHandle = static_cast<UA_RemoteCallHandle*>(paUserdata);
   remoteCallHandle->mClientInformation.removeAsyncCall();
 
-  COPC_UA_Helper::UA_RecvVariable_handle varHandle(paResponse->resultsSize);
+  COPC_UA_Helper::UA_RecvVariable_handle varHandle;
   if(UA_STATUSCODE_GOOD == paResponse->responseHeader.serviceResult) {
     if(paResponse->resultsSize == remoteCallHandle->mActionInfo.getNoOfNodePairs()) {
       //check if all results are OK first
@@ -555,7 +555,7 @@ void CUA_ClientInformation::CUA_RemoteCallbackFunctions::readAsyncCallback(UA_Cl
         size_t indexOfPair = 0;
         for(auto itNodePairs = remoteCallHandle->mActionInfo.getNodePairInfo().begin();
             itNodePairs != remoteCallHandle->mActionInfo.getNodePairInfo().end(); ++itNodePairs, indexOfPair++) {
-          varHandle.push_back(&paResponse->results[indexOfPair].value);
+          varHandle.mData.push_back(&paResponse->results[indexOfPair].value);
         }
       }
     } else {
@@ -580,7 +580,7 @@ void CUA_ClientInformation::CUA_RemoteCallbackFunctions::readAsyncCallback(UA_Cl
 void CUA_ClientInformation::CUA_RemoteCallbackFunctions::writeAsyncCallback(UA_Client *, void *paUserdata, UA_UInt32, UA_WriteResponse *paResponse) { //NOSONAR
   UA_RemoteCallHandle *remoteCallHandle = static_cast<UA_RemoteCallHandle*>(paUserdata);
   remoteCallHandle->mClientInformation.removeAsyncCall();
-  COPC_UA_Helper::UA_RecvVariable_handle varHandle(0);
+  COPC_UA_Helper::UA_RecvVariable_handle varHandle;
   if(UA_STATUSCODE_GOOD == paResponse->responseHeader.serviceResult) {
     if(paResponse->resultsSize == remoteCallHandle->mActionInfo.getNoOfNodePairs()) {
       for(size_t i = 0; i < paResponse->resultsSize; i++) {
@@ -665,12 +665,12 @@ void CUA_ClientInformation::CUA_RemoteCallbackFunctions::callMethodAsyncCallback
     outputSize = response->results->outputArgumentsSize;
   }
   //call layer even when it failed, to let the FB know
-  COPC_UA_Helper::UA_SendVariable_handle varHandle(outputSize);
+  COPC_UA_Helper::UA_SendVariable_handle varHandle;
   varHandle.mFailed = somethingFailed;
 
   if(!varHandle.mFailed) {
     for(size_t i = 0; i < outputSize; i++) {
-      varHandle.push_back(&response->results->outputArguments[i]);
+      varHandle.mData.push_back(&response->results->outputArguments[i]);
     }
   }
 
@@ -687,10 +687,10 @@ void CUA_ClientInformation::CUA_RemoteCallbackFunctions::subscriptionValueChange
 
     UA_SubscribeContext_Handle *variableContextHandle = static_cast<UA_SubscribeContext_Handle *>(paMonContext);
 
-    COPC_UA_Helper::UA_RecvVariable_handle handleRecv(1);
+    COPC_UA_Helper::UA_RecvVariable_handle handleRecv;
 
     const UA_Variant *value = &paData->value;
-    handleRecv.mData[0] = value;
+    handleRecv.mData.push_back(value);
     handleRecv.mOffset = variableContextHandle->mPortIndex;
 
     forte::com_infra::EComResponse retVal = variableContextHandle->mActionInfo.getLayer().recvData(static_cast<const void *>(&handleRecv), 0);

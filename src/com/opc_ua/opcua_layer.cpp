@@ -98,13 +98,13 @@ void COPC_UA_Layer::closeConnection() {
 
 EComResponse COPC_UA_Layer::recvData(const void *paData, unsigned int) {
   mInterruptResp = e_ProcessDataOk;
-  const COPC_UA_Helper::UA_RecvVariable_handle *handleRecv = static_cast<const COPC_UA_Helper::UA_RecvVariable_handle *>(paData);
+  auto handleRecv = static_cast<const COPC_UA_Helper::UA_RecvVariable_handle *>(paData);
 
   if(!handleRecv->mFailed) {
-    if(handleRecv->mSize) {
-      if(handleRecv->mSize + handleRecv->mOffset <= getCommFB()->getNumRD()) {
+    if(handleRecv->mData.size() != 0) {
+      if(handleRecv->mData.size() + handleRecv->mOffset <= getCommFB()->getNumRD()) {
         CCriticalRegion criticalRegion(mRDBufferMutex);
-        for(size_t i = 0; i < handleRecv->mSize; i++) {
+        for(size_t i = 0; i < handleRecv->mData.size(); i++) {
           long long bufferIndex = mIsObjectNodeStruct ? mStructObjectHelper->getRDBufferIndexFromNodeId(handleRecv->mNodeId) : handleRecv->mOffset + i;
           if(bufferIndex == -1) {
             DEVLOG_ERROR("[OPC UA LAYER]: Received Node ID %d does not match with any registered Node ID for FB %s\n", handleRecv->mNodeId, getCommFB()->getInstanceName());
@@ -123,7 +123,7 @@ EComResponse COPC_UA_Layer::recvData(const void *paData, unsigned int) {
         }
       } else {
         DEVLOG_ERROR("[OPC UA LAYER]: Receiving data for FB %s failed because the response size is %u with an offset of %u but the FB has %u RDs\n",
-          getCommFB()->getInstanceName(), handleRecv->mSize, handleRecv->mOffset, getCommFB()->getNumRD());
+          getCommFB()->getInstanceName(), handleRecv->mData.size(), handleRecv->mOffset, getCommFB()->getNumRD());
         mInterruptResp = e_ProcessDataRecvFaild;
       }
     } else { //no data received. When remote writing this will happen

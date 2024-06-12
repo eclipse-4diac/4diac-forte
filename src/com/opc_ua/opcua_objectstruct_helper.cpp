@@ -108,12 +108,9 @@ bool COPC_UA_ObjectStruct_Helper::createOPCUANamespace(char* nsName) {
 }
 
 bool COPC_UA_ObjectStruct_Helper::defineOPCUAStructTypeNode(UA_Server *paServer, UA_NodeId &paNodeId, const std::string &paStructTypeName, bool defaultCase) {
-  char* structTypeName = new char[paStructTypeName.length() +1];
-  strncpy(structTypeName, paStructTypeName.c_str(), paStructTypeName.length());
-  structTypeName[paStructTypeName.length()] = '\0';
-  mStructTypeNames.push_back(structTypeName);
+  mStructTypeNames.push_back(paStructTypeName);
   if(defaultCase) {
-    paNodeId = UA_NODEID_STRING(mOpcuaTypeNamespaceIndex, structTypeName);
+    paNodeId = UA_NODEID_STRING(mOpcuaTypeNamespaceIndex, structTypeName.c_str());
   } else {
     paNodeId = UA_NODEID_NUMERIC(mOpcuaTypeNamespaceIndex, 0);
   }
@@ -122,7 +119,7 @@ bool COPC_UA_ObjectStruct_Helper::defineOPCUAStructTypeNode(UA_Server *paServer,
   UA_StatusCode status = UA_Server_addObjectTypeNode(paServer, paNodeId,
     UA_NODEID_NUMERIC(0, UA_NS0ID_BASEOBJECTTYPE),
     UA_NODEID_NUMERIC(0, UA_NS0ID_HASSUBTYPE),
-    UA_QUALIFIEDNAME(mOpcuaTypeNamespaceIndex, structTypeName), oAttr,
+    UA_QUALIFIEDNAME(mOpcuaTypeNamespaceIndex, structTypeName.c_str()), oAttr,
     nullptr, &paNodeId);
 
   mStructTypeNodes.push_back(paNodeId);
@@ -135,10 +132,7 @@ bool COPC_UA_ObjectStruct_Helper::defineOPCUAStructTypeNode(UA_Server *paServer,
 
 bool COPC_UA_ObjectStruct_Helper::addOPCUAStructTypeComponent(UA_Server *paServer, UA_NodeId &paParentNodeId, const std::string &paStructName, CIEC_ANY *paStructMember, const CStringDictionary::TStringId paStructMemberNameId) {
   const std::string structMemberName = CStringDictionary::getInstance().get(paStructMemberNameId);
-  char* memberName = new char[structMemberName.length() +1];
-  strncpy(memberName, structMemberName.c_str(), structMemberName.length());
-  memberName[structMemberName.length()] = '\0';
-  mStructTypeNames.push_back(memberName);
+  mStructTypeNames.push_back(structMemberName);
   UA_VariableAttributes vAttr = UA_VariableAttributes_default;
     vAttr.displayName = UA_LOCALIZEDTEXT(smEmptyString, memberName);
     vAttr.valueRank = UA_VALUERANK_SCALAR;
@@ -149,18 +143,15 @@ bool COPC_UA_ObjectStruct_Helper::addOPCUAStructTypeComponent(UA_Server *paServe
 
   UA_NodeId memberNodeId;
   if(paParentNodeId.identifierType == UA_NODEIDTYPE_STRING) {
-    std::string memberBrowsePathStr = getStructMemberBrowsePath(paStructName, paStructMemberNameId);
-    char* memberBrowsePath = new char[memberBrowsePathStr.length() +1];
-    strncpy(memberBrowsePath, memberBrowsePathStr.c_str(), memberBrowsePathStr.length());
-    memberBrowsePath[memberBrowsePathStr.length()] = '\0';   
-    mStructTypeNames.push_back(memberBrowsePath);
-    memberNodeId = UA_NODEID_STRING(mOpcuaTypeNamespaceIndex, memberBrowsePath);
+    const std::string memberBrowsePathStr = getStructMemberBrowsePath(paStructName, paStructMemberNameId);
+    mStructTypeNames.push_back(memberBrowsePathStr);
+    memberNodeId = UA_NODEID_STRING(mOpcuaTypeNamespaceIndex, memberBrowsePathStr.c_str());
   } else {
     memberNodeId = UA_NODEID_NUMERIC(mOpcuaTypeNamespaceIndex, 0);
   }
   UA_StatusCode status = UA_Server_addVariableNode(paServer, memberNodeId, paParentNodeId,
     UA_NODEID_NUMERIC(0, UA_NS0ID_HASCOMPONENT),
-    UA_QUALIFIEDNAME(mOpcuaTypeNamespaceIndex, memberName),
+    UA_QUALIFIEDNAME(mOpcuaTypeNamespaceIndex, structMemberName.c_str()),
     UA_NODEID_NUMERIC(0, UA_NS0ID_BASEDATAVARIABLETYPE), vAttr, nullptr, &memberNodeId);
 
   mStructTypeMemberNodes.push_back(memberNodeId);
