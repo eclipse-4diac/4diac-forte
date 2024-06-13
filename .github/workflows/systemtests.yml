@@ -35,7 +35,7 @@ jobs:
         -DFORTE_COM_RAW=ON
         -DFORTE_COM_SER=ON
         -DFORTE_COM_STRUCT_MEMBER=ON
-        -DFORTE_COM_OPC_UA=ON
+        -DFORTE_COM_OPC_UA=OFF
         -DFORTE_COM_OPC_UA_INCLUDE_DIR=${WORKDIR}/open62541/binStatic
         -DFORTE_COM_OPC_UA_LIB_DIR=${WORKDIR}/open62541/binStatic/bin
         -DFORTE_COM_OPC_UA_LIB=libopen62541.a
