@@ -21,14 +21,14 @@
 extern "C" {
 #endif
 
-  enum FORTE_STATUS{
+  typedef enum FORTE_STATUS{
     FORTE_OK = 0,
     FORTE_DEVICE_ALREADY_STARTED,
     FORTE_WRONG_ENDIANESS,
     FORTE_WRONG_PARAMETERS,
     FORTE_ARCHITECTURE_NOT_READY,
     FORTE_COULD_NOT_CREATE_DEVICE,
-  };
+  } FORTE_STATUS;
 
   typedef void* TForteInstance;
 
