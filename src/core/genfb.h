@@ -39,10 +39,27 @@ class CGenFunctionBlock : public T {
     }
 
   protected:
-    CGenFunctionBlock(forte::core::CFBContainer &paContainer, const CStringDictionary::TStringId paInstanceNameId);
+    template<typename... Args>
+    CGenFunctionBlock(forte::core::CFBContainer &paContainer, const CStringDictionary::TStringId paInstanceNameId,
+                      Args &&... args) :
+            T(paContainer, nullptr, paInstanceNameId, std::forward<Args>(args)...),
+            mEOConns(nullptr), mDIConns(nullptr), mDOConns(nullptr), mDIs(nullptr), mDOs(nullptr),
+            mAdapters(nullptr),
+            mConfiguredFBTypeNameId(CStringDictionary::scmInvalidStringId),
+            mGenInterfaceSpec(),
+            mFBConnData(nullptr), mFBVarsData(nullptr) {
+    }
 
+    template<typename... Args>
     CGenFunctionBlock(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec *paInterfaceSpec,
-                      const CStringDictionary::TStringId paInstanceNameId);
+                      const CStringDictionary::TStringId paInstanceNameId, Args &&... args) :
+            T(paContainer, paInterfaceSpec, paInstanceNameId, std::forward<Args>(args)...),
+            mEOConns(nullptr), mDIConns(nullptr), mDOConns(nullptr), mDIs(nullptr), mDOs(nullptr),
+            mAdapters(nullptr),
+            mConfiguredFBTypeNameId(CStringDictionary::scmInvalidStringId),
+            mGenInterfaceSpec(),
+            mFBConnData(nullptr), mFBVarsData(nullptr) {
+    }
 
     ~CGenFunctionBlock() override;
 

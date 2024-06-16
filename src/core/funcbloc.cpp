@@ -541,11 +541,11 @@ void CFunctionBlock::setupEventMonitoringData(){
 
   if(mInterfaceSpec) {
     if (0 != mInterfaceSpec->mNumEIs) {
-      mEIMonitorCount = new TForteUInt32[mInterfaceSpec->mNumEIs];
+      mEIMonitorCount = new TForteUInt32[mInterfaceSpec->mNumEIs]{};
     }
 
     if (0 != mInterfaceSpec->mNumEOs) {
-      mEOMonitorCount = new TForteUInt32[mInterfaceSpec->mNumEOs];
+      mEOMonitorCount = new TForteUInt32[mInterfaceSpec->mNumEOs]{};
     }
   }
 }

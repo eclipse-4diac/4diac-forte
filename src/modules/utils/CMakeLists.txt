@@ -16,7 +16,7 @@ forte_add_module(UTILS OFF "FORTE UTILITY FBs")
 # FORTE UTILITY FBs
 #############################################################################
 
-forte_add_sourcefile_hcpp(E_STOPWATCH GetInstancePath_fbt_fbt GetInstancePathAndName_fbt)
+forte_add_sourcefile_hcpp(E_STOPWATCH GetInstancePath_fbt GetInstancePathAndName_fbt)
 forte_add_sourcefile_hcpp(OUT_ANY_CONSOLE_fbt GEN_F_MUX_fbt GEN_CSV_WRITER_fbt)
 forte_add_sourcefile_hcpp(GEN_ARRAY2VALUES_fbt GEN_VALUES2ARRAY_fbt GEN_ARRAY2ARRAY_fbt GET_AT_INDEX_fbt SET_AT_INDEX_fbt)
 forte_add_sourcefile_hcpp(FB_RANDOM GET_STRUCT_VALUE_fbt SET_STRUCT_VALUE_fbt)

@@ -15,10 +15,11 @@
 #ifndef SRC_CORE_LUACFB_H_
 #define SRC_CORE_LUACFB_H_
 
+#include "genfb.h"
 #include "cfb.h"
 #include "luacfbtypeentry.h"
 
-class CLuaCFB : public CCompositeFB {
+class CLuaCFB : public CGenFunctionBlock<CCompositeFB> {
   public:
     CLuaCFB(CStringDictionary::TStringId paInstanceNameId, const CLuaCFBTypeEntry* paTypeEntry, SCFB_FBNData &paFbnData, forte::core::CFBContainer &paContainer);
     ~CLuaCFB() override;
@@ -28,6 +29,11 @@ class CLuaCFB : public CCompositeFB {
     }
 
     bool initialize() override;
+
+    bool createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) override {
+      paInterfaceSpec = *mInterfaceSpec;
+      return true;
+    }
 
   protected:
     virtual void readInternal2InterfaceOutputData(TEventID paEOID);

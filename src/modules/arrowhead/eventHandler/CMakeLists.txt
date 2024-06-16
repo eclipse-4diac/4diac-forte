@@ -18,7 +18,7 @@ forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 forte_add_sourcefile_hcpp(forte_arrowheadevent forte_publishevent forte_eventfilter)
 forte_add_sourcefile_hcpp(FieldsToArrowheadEvent FieldsToPublishEvent FieldsToEventFilter)
-forte_add_sourcefile_hcpp(ArrowheadPublish ArrowheadPublishAdp_atp SubscribeEvent SubscribeEventAdp_atp)
+forte_add_sourcefile_hcpp(ArrowheadPublish ArrowheadPublishAdp_adp SubscribeEvent SubscribeEventAdp_adp)
 
 if(FORTE_COM_HTTP)
   add_subdirectory(HTTP)
