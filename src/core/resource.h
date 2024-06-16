@@ -101,7 +101,7 @@ class CResource : public CFunctionBlock, public forte::core::CFBContainer{
      * @param paValue the value to be writen
      * @return response of the command execution as defined in IEC 61499
      */
-    EMGMResponse writeValue(forte::core::TNameIdentifier &paNameList, const CIEC_STRING & paValue, bool paForce = false);
+    virtual EMGMResponse writeValue(forte::core::TNameIdentifier &paNameList, const CIEC_STRING & paValue, bool paForce = false);
 
 #ifdef FORTE_SUPPORT_MONITORING
     forte::core::CMonitoringHandler &getMonitoringHandler(){

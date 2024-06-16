@@ -75,6 +75,7 @@ jobs:
         -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
         -S ${{ github.workspace }}
         -DFORTE_ARCHITECTURE=${{ matrix.architecture }}
+        -DFORTE_DEVICE=RMT_DEV
         -DFORTE_COM_ETH=ON
         -DFORTE_COM_FBDK=ON
         -DFORTE_COM_HTTP=ON
