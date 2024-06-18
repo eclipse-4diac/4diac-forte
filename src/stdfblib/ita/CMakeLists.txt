@@ -16,7 +16,7 @@
 # Ita FB
 #############################################################################
 SET(SOURCE_GROUP ${SOURCE_GROUP}\\ita)
-forte_add_sourcefile_hcpp(DEV_MGR  EMB_RES  RMT_DEV  RMT_RES)
+forte_add_sourcefile_hcpp(DEV_MGR EMB_RES RMT_DEV RMT_RES)
 
 forte_add_device(RMT_DEV)
 
@@ -28,6 +28,13 @@ if (FORTE_COM_OPC_UA)
     forte_add_sourcefile_hcpp(OPCUA_DEV OPCUA_MGR)
   endif()
 endif ()
+
+if(FORTE_FAKE_TIME)
+  forte_add_device(FakeTimeDev)
+  if("${FORTE_DEVICE}" STREQUAL "FakeTimeDev")
+    forte_add_sourcefile_hcpp(FakeTimeDev)
+  endif()
+endif()
 
 forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 

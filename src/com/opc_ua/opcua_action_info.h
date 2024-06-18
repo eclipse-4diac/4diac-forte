@@ -133,9 +133,9 @@ class CActionInfo {
      * @param paParams Parameters set in the ID of the FB (string contained in the square brackets of opc_ua[...])
      * @param paLayer The layer that creates and executes the action
      * @param paTypes A list of type converters of the connections of the FB of the action (SDs/RDs)
-     * @return
+     * @return The new created action info if the parameters were valid, nullptr otherwise
      */
-    static CActionInfo* getActionInfoFromParams(const char *paParams, COPC_UA_Layer &paLayer);
+    static std::unique_ptr<CActionInfo> getActionInfoFromParams(const char *paParams, COPC_UA_Layer &paLayer);
 
     /**
      * Retrieves the array of CIEC_ANY to be sent

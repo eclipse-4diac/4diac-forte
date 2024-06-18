@@ -91,7 +91,7 @@ class COPC_UA_Layer : public forte::com_infra::CComLayer {
     /**
      * Information about the action that's returned from the CActionInfo factory, and which is later passed to the handler when initializing, executing and uninitializing the action
      */
-    CActionInfo *mActionInfo;
+    std::unique_ptr<CActionInfo> mActionInfo;
 
     /**
      * Called when INIT is triggered in the FB and QI is set to true
@@ -151,9 +151,9 @@ class COPC_UA_Layer : public forte::com_infra::CComLayer {
     CStringDictionary::TStringId getLocalPortNameId(int paPortIndex, bool paIsSD) const;
 
     /**
-     * Array of ANY pointers used as buffer to store the received data
+     * List of ANY pointers used as buffer to store the received data
      */
-    CIEC_ANY **mRDBuffer;
+    std::vector<std::unique_ptr<CIEC_ANY>> mRDBuffer;
 
     /**
      * Mutex to access the mRDBuffer

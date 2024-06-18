@@ -222,7 +222,7 @@ int COPC_UA_ObjectStruct_Helper::getRDBufferIndexFromNodeId(const UA_NodeId *paN
   return -1;
 }
 
-void COPC_UA_ObjectStruct_Helper::setMemberValues(CIEC_ANY** paRDs, CIEC_ANY **paRDBuffer) {
+void COPC_UA_ObjectStruct_Helper::setMemberValues(CIEC_ANY** paRDs, const std::vector<std::unique_ptr<CIEC_ANY>>& paRDBuffer) {
   // TODO implement layer to handle more than 1 struct
   CIEC_STRUCT& structType = static_cast<CIEC_STRUCT&>(paRDs[0]->unwrap());
   for(size_t i = 0; i < structType.getStructSize(); i++) {
@@ -230,25 +230,21 @@ void COPC_UA_ObjectStruct_Helper::setMemberValues(CIEC_ANY** paRDs, CIEC_ANY **p
   }
 }
 
-CIEC_ANY **COPC_UA_ObjectStruct_Helper::initializeRDBuffer() {
+std::vector<std::unique_ptr<CIEC_ANY>> COPC_UA_ObjectStruct_Helper::initializeRDBuffer() {
   // TODO implement layer to handle more than 1 struct
   CIEC_ANY** rds = mLayer.getCommFB()->getRDs();
   CIEC_STRUCT& structType = static_cast<CIEC_STRUCT&>(rds[0]->unwrap());
   const size_t structSize = structType.getStructSize();
-  CIEC_ANY **RDBuffer = new CIEC_ANY*[structSize];
+  std::vector<std::unique_ptr<CIEC_ANY>> RDBuffer;;
   for(size_t i = 0; i < structSize; i++) {
-    RDBuffer[i] = structType.getMember(i)->clone(nullptr);
+    RDBuffer.emplace_back(structType.getMember(i)->clone(nullptr));
   }
   return RDBuffer;
 }
 
-void COPC_UA_ObjectStruct_Helper::deleteRDBufferEntries(forte::com_infra::CBaseCommFB &paCommFB, CIEC_ANY **paRDBuffer) {
+void COPC_UA_ObjectStruct_Helper::deleteRDBufferEntries(forte::com_infra::CBaseCommFB &paCommFB, std::vector<std::unique_ptr<CIEC_ANY>>& paRDBuffer) {
   if(paCommFB.getComServiceType() == e_Subscriber) {
-    CIEC_ANY** rds = paCommFB.getRDs();
-    CIEC_STRUCT& structType = static_cast<CIEC_STRUCT&>(rds[0]->unwrap());
-    for(size_t i = 0; i < structType.getStructSize(); i++) {
-      delete paRDBuffer[i];
-    }
+    paRDBuffer.clear();
   }
 }
 

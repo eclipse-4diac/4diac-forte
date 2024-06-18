@@ -49,7 +49,7 @@ CEventChainExecutionThread* CFakeTimerHandler::getExecThread() {
     return fakeSleepFb ? fakeSleepFb->getResource()->getResourceEventExecution() : nullptr;
 }
 
-void CFakeTimerHandler::setSleepTime(CIEC_TIME &t, CFunctionBlock *fb) {
+void CFakeTimerHandler::setSleepTime(const CIEC_TIME &t, CFunctionBlock *fb) {
   fakeSleepFb = fb;
   if(sleepTime == 0) {
     sleepTime = t.getInMilliSeconds();

@@ -23,7 +23,7 @@
 #include "ecet.h"
 #include "EventMessage.h"
 #include "trace/barectf_platform_forte.h"
-
+#include "../fbtests/fbtesterglobalfixture.h"
 
 /**
  * @brief Get the list of message from a directory containing CTF traces
@@ -58,16 +58,7 @@ BOOST_AUTO_TEST_CASE(sequential_events_test) {
   // The inner scope is to make sure the destructors of the resources are 
   // called which flushes the output
   {
-    const  SFBInterfaceSpec scTestDevSpec = {
-      0, nullptr, nullptr, nullptr,
-      0, nullptr, nullptr, nullptr,
-      0, nullptr, nullptr,
-      0, nullptr, nullptr,
-      0, nullptr,
-      0, nullptr
-    };
-
-    CDevice device(&scTestDevSpec, g_nStringIdMyDevice);
+    CTesterDevice device(g_nStringIdMyDevice);
     auto resource = new EMB_RES(g_nStringIdMyResource, device);
     device.addFB(resource);
 
