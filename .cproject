@@ -1,8 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?fileVersion 4.0.0?><cproject storage_type_id="org.eclipse.cdt.core.XmlProjectDescriptionStorage">
+	<storageModule cmakelistsFolder="" moduleId="de.marw.cmake4eclipse.mbs.settings">
+		<targets>
+			<target name="all"/>
+			<target name="clean"/>
+			<target name="help"/>
+			<target name="install"/>
+			<target name="test"/>
+		</targets>
+	</storageModule>
 	<storageModule moduleId="org.eclipse.cdt.core.settings">
-		<cconfiguration id="cmake4eclipse.mbs.config.debug.1660483861">
-			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="cmake4eclipse.mbs.config.debug.1660483861" moduleId="org.eclipse.cdt.core.settings" name="Debug_Posix">
+		<cconfiguration id="cmake4eclipse.mbs.config.debug.1283498410">
+			<storageModule buildSystemId="de.marw.cmake4eclipse.mbs.cmake4eclipse" id="cmake4eclipse.mbs.config.debug.1283498410" moduleId="org.eclipse.cdt.core.settings" name="Debug">
 				<externalSettings/>
 				<extensions>
 					<extension id="org.eclipse.cdt.core.PE64" point="org.eclipse.cdt.core.BinaryParser"/>
@@ -14,80 +23,36 @@
 				</extensions>
 			</storageModule>
 			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
-				<configuration artifactName="${ProjName}" buildArtefactType="cmake4eclipse.mbs.buildArtefactType.cmake" buildProperties="org.eclipse.cdt.build.core.buildArtefactType=cmake4eclipse.mbs.buildArtefactType.cmake,org.eclipse.cdt.build.core.buildType=org.eclipse.cdt.build.core.buildType.debug" description="" id="cmake4eclipse.mbs.config.debug.1660483861" name="Debug_Posix" optionalBuildProperties="org.eclipse.cdt.docker.launcher.containerbuild.property.selectedvolumes=,org.eclipse.cdt.docker.launcher.containerbuild.property.volumes=" parent="cmake4eclipse.mbs.config.debug">
-					<folderInfo id="cmake4eclipse.mbs.config.debug.1660483861." name="/" resourcePath="">
-						<toolChain id="cmake4eclipse.mbs.config.debug.toolChain.627625016" name="CMake driven" superClass="cmake4eclipse.mbs.config.debug.toolChain">
-							<targetPlatform id="cmake4eclipse.mbs.targetPlatform.cmake.917959077" name="Any Platform" superClass="cmake4eclipse.mbs.targetPlatform.cmake"/>
-							<builder buildPath="/org.eclipse.4diac.forte/_build/Debug" id="cmake4eclipse.mbs.builder.1976008197" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="CMake Builder" superClass="cmake4eclipse.mbs.builder"/>
-							<tool id="cmake4eclipse.mbs.toolchain.tool.dummy.1827102752" name="CMake" superClass="cmake4eclipse.mbs.toolchain.tool.dummy">
-								<inputType id="cmake4eclipse.mbs.inputType.c.1847222460" superClass="cmake4eclipse.mbs.inputType.c"/>
-								<inputType id="cmake4eclipse.mbs.inputType.cpp.2120222146" superClass="cmake4eclipse.mbs.inputType.cpp"/>
+				<configuration buildProperties="org.eclipse.cdt.build.core.buildType=org.eclipse.cdt.build.core.buildType.debug" description="" id="cmake4eclipse.mbs.config.debug.1283498410" name="Debug" optionalBuildProperties="org.eclipse.cdt.docker.launcher.containerbuild.property.dockerdpath=,org.eclipse.cdt.docker.launcher.containerbuild.property.selectedvolumes=,org.eclipse.cdt.docker.launcher.containerbuild.property.volumes=" parent="cmake4eclipse.mbs.config.debug">
+					<folderInfo id="cmake4eclipse.mbs.config.debug.1283498410." name="/" resourcePath="">
+						<toolChain id="cmake4eclipse.mbs.config.debug.toolChain.1128916177" name="CMake driven" superClass="cmake4eclipse.mbs.config.debug.toolChain">
+							<targetPlatform id="cmake4eclipse.mbs.targetPlatform.cmake.1833460757" name="Any Platform" superClass="cmake4eclipse.mbs.targetPlatform.cmake"/>
+							<builder buildPath="/org.eclipse.4diac.forte/_build/Debug" id="cmake4eclipse.mbs.builder.854497440" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="CMake Builder" superClass="cmake4eclipse.mbs.builder"/>
+							<tool id="cmake4eclipse.mbs.toolchain.tool.dummy.869551843" name="CMake" superClass="cmake4eclipse.mbs.toolchain.tool.dummy">
+								<inputType id="cmake4eclipse.mbs.inputType.c.970261053" superClass="cmake4eclipse.mbs.inputType.c"/>
+								<inputType id="cmake4eclipse.mbs.inputType.cpp.1713005143" superClass="cmake4eclipse.mbs.inputType.cpp"/>
 							</tool>
 						</toolChain>
 					</folderInfo>
 				</configuration>
 			</storageModule>
-			<storageModule buildDir="build/${ConfigName}" dirtyTs="1696800405461" moduleId="de.marw.cmake4eclipse.mbs.settings">
-				<options otherArguments="-DFORTE_ARCHITECTURE=Posix&#10;    -DFORTE_COM_ETH=ON&#10;    -DFORTE_COM_FBDK=ON&#10;    -DFORTE_COM_LOCAL=ON&#10;    -DFORTE_MODULE_CONVERT=ON&#10;    -DFORTE_MODULE_IEC61131=ON&#10;    -DFORTE_MODULE_UTILS=ON"/>
-			</storageModule>
 			<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
-		</cconfiguration>
-		<cconfiguration id="cmake4eclipse.mbs.config.release.2092763462">
-			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="cmake4eclipse.mbs.config.release.2092763462" moduleId="org.eclipse.cdt.core.settings" name="Release_Posix">
-				<externalSettings/>
-				<extensions>
-					<extension id="org.eclipse.cdt.core.PE64" point="org.eclipse.cdt.core.BinaryParser"/>
-					<extension id="org.eclipse.cdt.core.GNU_ELF" point="org.eclipse.cdt.core.BinaryParser"/>
-					<extension id="org.eclipse.cdt.core.ELF" point="org.eclipse.cdt.core.BinaryParser"/>
-					<extension id="org.eclipse.cdt.core.GmakeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
-					<extension id="org.eclipse.cdt.core.GLDErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
-					<extension id="org.eclipse.cdt.core.GCCErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
-				</extensions>
+			<storageModule buildDir="build/${ConfigName}" dirtyTs="1719689122851" moduleId="de.marw.cmake4eclipse.mbs.settings">
+				<options otherArguments="-DFORTE_ARCHITECTURE=Posix&#10;-DFORTE_COM_ETH=ON&#10;-DFORTE_COM_FBDK=ON&#10;-DFORTE_COM_LOCAL=ON&#10;-DFORTE_MODULE_CONVERT=ON&#10;-DFORTE_MODULE_IEC61131=ON&#10;-DFORTE_MODULE_UTILS=ON"/>
 			</storageModule>
-			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
-				<configuration artifactName="${ProjName}" buildArtefactType="cmake4eclipse.mbs.buildArtefactType.cmake" buildProperties="org.eclipse.cdt.build.core.buildArtefactType=cmake4eclipse.mbs.buildArtefactType.cmake,org.eclipse.cdt.build.core.buildType=org.eclipse.cdt.build.core.buildType.release" description="" id="cmake4eclipse.mbs.config.release.2092763462" name="Release_Posix" optionalBuildProperties="" parent="cmake4eclipse.mbs.config.release">
-					<folderInfo id="cmake4eclipse.mbs.config.release.2092763462." name="/" resourcePath="">
-						<toolChain id="cmake4eclipse.mbs.config.release.toolChain.92782083" name="CMake driven" superClass="cmake4eclipse.mbs.config.release.toolChain">
-							<targetPlatform id="cmake4eclipse.mbs.targetPlatform.cmake.575493456" name="Any Platform" superClass="cmake4eclipse.mbs.targetPlatform.cmake"/>
-							<builder buildPath="/org.eclipse.4diac.forte/_build/Release" id="cmake4eclipse.mbs.builder.1239905550" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="CMake Builder" superClass="cmake4eclipse.mbs.builder"/>
-							<tool id="cmake4eclipse.mbs.toolchain.tool.dummy.1874874312" name="CMake" superClass="cmake4eclipse.mbs.toolchain.tool.dummy">
-								<inputType id="cmake4eclipse.mbs.inputType.c.855977962" superClass="cmake4eclipse.mbs.inputType.c"/>
-								<inputType id="cmake4eclipse.mbs.inputType.cpp.514085371" superClass="cmake4eclipse.mbs.inputType.cpp"/>
-							</tool>
-						</toolChain>
-					</folderInfo>
-				</configuration>
-			</storageModule>
-			<storageModule moduleId="de.marw.cmake4eclipse.mbs.settings"/>
-			<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
 		</cconfiguration>
+	</storageModule>
+	<storageModule moduleId="cdtBuildSystem" version="4.0.0">
+		<project id="org.eclipse.4diac.forte.cmake4eclipse.mbs.projectType.1800498883" name="" projectType="cmake4eclipse.mbs.projectType"/>
 	</storageModule>
 	<storageModule moduleId="scannerConfiguration">
 		<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
 	</storageModule>
-	<storageModule moduleId="cdtBuildSystem" version="4.0.0">
-		<project id="org.eclipse.4diac.forte.cmake4eclipse.mbs.projectType.2054396440" name="Cmake4eclipse" projectType="cmake4eclipse.mbs.projectType"/>
-	</storageModule>
-	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
 	<storageModule moduleId="refreshScope" versionNumber="2">
-		<configuration configurationName="Debug_Posix">
-			<resource resourceType="PROJECT" workspacePath="/org.eclipse.4diac.forte"/>
-		</configuration>
-		<configuration configurationName="Default">
-			<resource resourceType="PROJECT" workspacePath="/org.eclipse.4diac.forte"/>
-		</configuration>
 		<configuration configurationName="Debug">
 			<resource resourceType="PROJECT" workspacePath="/org.eclipse.4diac.forte"/>
 		</configuration>
-		<configuration configurationName="Release">
-			<resource resourceType="PROJECT" workspacePath="/org.eclipse.4diac.forte"/>
-		</configuration>
 	</storageModule>
-	<storageModule cmakelistsFolder="" moduleId="de.marw.cmake4eclipse.mbs.settings">
-		<targets>
-			<target name=""/>
-		</targets>
-	</storageModule>
+	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
 	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets"/>
-	<storageModule moduleId="org.eclipse.cdt.internal.ui.text.commentOwnerProjectMappings"/>
 </cproject>
