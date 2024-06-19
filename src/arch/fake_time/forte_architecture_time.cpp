@@ -22,17 +22,22 @@ uint_fast64_t trackFakeForteTime(){
     return fakeForteTime;
 }
 
+uint_fast64_t jumpFakeForteTime(uint_fast64_t destination) {
+    fakeForteTime = destination;
+    return fakeForteTime;
+}
+
 #ifdef FORTE_FAKE_TIME
 uint_fast64_t getNanoSecondsMonotonic() {
-    return fakeForteTime*1000000;  //ms to ns
+    return fakeForteTime * ( forte::core::constants::cNanosecondsPerSecond / forte::core::constants::cMillisecondsPerSecond );  //ms to ns
 }
 
 uint_fast64_t getNanoSecondsRealtime() {
-    return static_cast<uint_fast64_t>(time(0))*1000000000LL+fakeForteTime*1000000LL;
+    return static_cast<uint_fast64_t>(time(0)) * forte::core::constants::cNanosecondsPerSecond + fakeForteTime * ( forte::core::constants::cNanosecondsPerSecond / forte::core::constants::cMillisecondsPerSecond );
 }
 
 time_t forte_time(){
-    return time(0) + fakeForteTime / 1000;  //time() in s
+    return time(0) + fakeForteTime / forte::core::constants::cMillisecondsPerSecond;  //time() in s
 }
 #endif
 
