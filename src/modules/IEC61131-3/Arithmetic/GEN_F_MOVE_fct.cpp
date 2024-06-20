@@ -11,9 +11,9 @@
  *   Alois Zoitl - refactored from F_MOVE
  *******************************************************************************/
 
-#include "GEN_F_MOVE_fct_fbt.h"
+#include <GEN_F_MOVE_fct.h>
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "GEN_F_MOVE_fct_fbt_gen.cpp"
+#include "GEN_F_MOVE_fct_gen.cpp"
 #endif
 
 #include "criticalregion.h"
@@ -48,7 +48,7 @@ GEN_FORTE_F_MOVE::~GEN_FORTE_F_MOVE(){
 void GEN_FORTE_F_MOVE::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   switch(paEIID) {
     case scmEventREQID:
-      var_OUT() = var_IN();
+      var_OUT().setValue(var_IN());
       sendOutputEvent(scmEventCNFID, paECET);
       break;
   }
