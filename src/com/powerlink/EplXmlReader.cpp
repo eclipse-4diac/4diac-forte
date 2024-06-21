@@ -16,6 +16,8 @@
 #include <iostream>
 #include <fstream>
 #include <string.h>
+
+#include "devlog.h"
 using namespace std;
 
 #include <tinyxml.h>
@@ -55,7 +57,7 @@ void CEplXmlReader::readXmlFile(const char* paFileName){
     createProcImageIn(processImageIn);
   }
   else{
-    cout << "ERROR: Could not open XML file" << endl;
+    DEVLOG_ERROR("[powerlink] Could not open file %s\n", paFileName);
   }
 }
 
@@ -132,7 +134,7 @@ void CEplXmlReader::createProcImageOut(TiXmlNode* paProcessImage){
 
     }
 
-    cout << "<< " << currentCnId << ", " << currentModuleNr << ", " << ioName << ", " << currentIoNr << ", " << dSize << ", " << piOffset << ", " << bitOffset << endl;
+    DEVLOG_DEBUG("[powerlink] << " << currentCnId << ", " << currentModuleNr << ", " << ioName << ", " << currentIoNr << ", " << dSize << ", " << piOffset << ", " << bitOffset)
 
     delete[] nameStr;
   }
@@ -217,7 +219,7 @@ void CEplXmlReader::createProcImageIn(TiXmlNode *paProcessImage){
 
     }
 
-    cout << ">> " << currentCnId << ", " << currentModuleNr << ", " << ioName << ", " << currentIoNr << ", " << dSize << ", " << piOffset << ", " << bitOffset << endl;
+    DEVLOG_DEBUG("[powerlink] >> " << currentCnId << ", " << currentModuleNr << ", " << ioName << ", " << currentIoNr << ", " << dSize << ", " << piOffset << ", " << bitOffset)
 
     delete[] nameStr;
   }
@@ -237,7 +239,7 @@ int CEplXmlReader::getModuleNr(const char* paIoId){
   int occurences = mModuleListIn.getNrOfModules(dest);
   int modNr = mModuleListOut.getModuleNr(dest, occurences + 1);
   if(modNr == -1) {
-    cout << "ShouldNotHappenError" << endl;
+    DEVLOG_ERROR("[powerlink] Could not find module number for %s\n", dest);
   }
 
   return modNr;

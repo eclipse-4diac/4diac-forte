@@ -18,90 +18,93 @@
 #include <fortelist.h>
 #include <forte_sync.h>
 
-struct SEplMapping{
-    struct SEplMappingValues{
-        unsigned int mDataSize;
+struct EplMapping {
+    struct EplMappingValues {
+        unsigned int dataSize;
         unsigned int mPiOffset;
         unsigned int mBitOffset;
-        char* mCurrentValue;
+        char *mCurrentValue;
 
-        SEplMappingValues(unsigned int paDataSize, unsigned int paPiOffset, unsigned int paBitOffset) :
-            mDataSize(paDataSize), mPiOffset(paPiOffset), mBitOffset(paBitOffset){
-          mCurrentValue = new char[paDataSize];
-          for(unsigned int i = 0; i < paDataSize; i++){
-            mCurrentValue[i] = 0x00;
-          }
+        EplMappingValues(unsigned int pa_nDataSize, unsigned int pa_nPiOffset,
+                          unsigned int pa_nBitOffset) : dataSize(pa_nDataSize), mPiOffset(pa_nPiOffset),
+                                                        mBitOffset(pa_nBitOffset) {
+            mCurrentValue = new char[pa_nDataSize];
+            for (unsigned int i = 0; i < pa_nDataSize; i++) {
+                mCurrentValue[i] = 0x00;
+            }
         }
 
-        ~SEplMappingValues(){
-          delete[] mCurrentValue;
+        ~EplMappingValues() {
+            delete[] mCurrentValue;
         }
 
-      private:
-        SEplMappingValues(const SEplMappingValues &obj);
-        SEplMappingValues& operator=(const SEplMappingValues &obj);
+    private:
+        EplMappingValues(const EplMappingValues &obj);
+
+        EplMappingValues &operator=(const EplMappingValues &obj);
     };
 
-    typedef CSinglyLinkedList<SEplMappingValues*> TEplMappingList;
+    typedef CSinglyLinkedList<EplMappingValues *> TEplMappingList;
     TEplMappingList mCurrentValues;
 
-    ~SEplMapping(){
-      while(!mCurrentValues.isEmpty()){
-        delete *(TEplMappingList::Iterator) mCurrentValues.begin();
-        mCurrentValues.popFront();
-      }
+    ~EplMapping() {
+        while (!mCurrentValues.isEmpty()) {
+            delete *(TEplMappingList::Iterator) mCurrentValues.begin();
+            mCurrentValues.popFront();
+        }
     }
 };
 
 // CEplStackWrapper implemented as class
 // cppcheck-suppress noConstructor
-class CEplStackWrapper{
-  DECLARE_SINGLETON(CEplStackWrapper)
-    ;
-  public:
+class CEplStackWrapper {
+    DECLARE_SINGLETON(CEplStackWrapper)
+
+public:
     /*! \brief Blocking of real-time signals
      *
      *  This must be called in main.cpp before the event execution thread is started
      */
     static void eplMainInit();
 
-    int eplStackInit(char* paXmlFile, char* paCdcFile, char* paEthDeviceName);
+    int eplStackInit(const char *xmlFile, const char *cdcFile, const char *ethDeviceName);
 
     int eplStackShutdown();
 
-    CProcessImageMatrix* getProcessImageMatrixIn();
-    CProcessImageMatrix* getProcessImageMatrixOut();
+    CProcessImageMatrix *getProcessImageMatrixIn();
 
-    char* getProcImageIn();
-    char* getProcImageOut();
+    CProcessImageMatrix *getProcessImageMatrixOut();
 
-    void waitUntilOperational(bool paWait);
+    char *getProcImageIn();
 
-    void registerCallback(IEplCNCallback* paCallback);
+    char *getProcImageOut();
+
+    void waitUntilOperational(bool pa_bWait);
+
+    void registerCallback(IEplCNCallback *pa_pCallback);
 
     void executeAllCallbacks();
 
-  private:
-    char* allocProcImage(unsigned int n_bytes);
+private:
+    char *allocProcImage(unsigned int n_bytes);
 
-    bool findMAC(const char* paUserMAC, char* paDevieName);
+    bool findMAC(const char *userMAC, char *pa_pchDevieName);
 
-    bool compareMACs(const char* paMACa, const char* paMACb);
+    bool compareMACs(const char *macA, const char *macB);
 
-    CProcessImageMatrix mProcMatrixIn;
-    CProcessImageMatrix mProcMatrixOut;
+    CProcessImageMatrix procMatrixIn;
+    CProcessImageMatrix procMatrixOut;
 
     unsigned int mProcInSize;
-    char* mAppProcessImageIn_g;
-    unsigned int mProcOutSize;
-    char* mAppProcessImageOut_g;
+    char *mAppProcessImageIn;
+    unsigned int mPprocOutSize;
+    char *mAppProcessImageOut;
 
-    bool mWait;
+    bool mInitWait;
 
-    CSinglyLinkedList<IEplCNCallback*> mCallbackList;
+    CSinglyLinkedList<IEplCNCallback *> mCallbackList;
 
     CSyncObject mSync;
-
 };
 
 #endif
