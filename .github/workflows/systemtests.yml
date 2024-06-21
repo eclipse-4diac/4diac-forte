@@ -23,6 +23,11 @@ jobs:
         echo "source-dir=$GITHUB_WORKSPACE" >> "$GITHUB_OUTPUT"
         echo "build-dir=$GITHUB_WORKSPACE/build" >> "$GITHUB_OUTPUT"
 
+    - name: Install lipcap-dev
+      # libpcap-dev is required for the POWERLINK module
+      # TODO: Put this in 4diac-fortebuildcontainer
+      run: apt-get update && apt-get install -y libpcap-dev
+
     - name: Configure CMake
       run: >
         cmake -S ${{ steps.strings.outputs.source-dir }} -B ${{ steps.strings.outputs.build-dir }}
@@ -46,6 +51,7 @@ jobs:
         -DFORTE_MODULE_RT_Events=ON
         -DFORTE_MODULE_SIGNALPROCESSING=ON
         -DFORTE_MODULE_UTILS=ON
+        -DFORTE_MODULE_POWERLINK=ON
         -DFORTE_TESTS=ON
         -DFORTE_SYSTEM_TESTS=ON
 
