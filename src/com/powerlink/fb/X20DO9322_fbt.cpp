@@ -15,7 +15,6 @@
 #include "X20DO9322_fbt_gen.cpp"
 #endif
 
-#include "criticalregion.h"
 #include "resource.h"
 
 DEFINE_FIRMWARE_FB(FORTE_X20DO9322, g_nStringIdX20DO9322)
@@ -54,7 +53,7 @@ const SFBInterfaceSpec FORTE_X20DO9322::scmFBInterfaceSpec = {
 };
 
 FORTE_X20DO9322::FORTE_X20DO9322(const CStringDictionary::TStringId paInstanceNameId,
-                                 forte::core::CFBContainer &paContainer) : CFunctionBlock(paContainer,
+                                 forte::core::CFBContainer &paContainer) : PowerlinkFunctionBlockDO(paContainer,
                                                                                &scmFBInterfaceSpec, paInstanceNameId),
                                                                            var_conn_QO(var_QO),
                                                                            var_conn_CNIDO(var_CNIDO),
@@ -103,50 +102,16 @@ void FORTE_X20DO9322::setInitialValues() {
 }
 
 void FORTE_X20DO9322::executeEvent(const TEventID paEIID, CEventChainExecutionThread *const paECET) {
-    switch (paEIID) {
-        case scmEventINITID:
-            if (var_QI == true) {
-                initOk = false;
-
-                CEplStackWrapper &eplStack = CEplStackWrapper::getInstance();
-
-                // Get settings for intputs
-                CProcessImageMatrix *moduleIOs = eplStack.getProcessImageMatrixIn()->getModuleEntries(
-                    var_CNID.getUnsignedValue(), var_MODID.getUnsignedValue());
-
-                if (moduleIOs) {
-                    // Outputs (process inputs) always start with i = 0
-                    // Check xap.xml if a BitUnused is present
-                    for(unsigned int i = 0; i < moduleIOs->getNrOfEntries() - 1; i++){
-                        eplMapping.mCurrentValues.pushBack(new EplMapping::EplMappingValues(moduleIOs->getEntry(i)[0], moduleIOs->getEntry(i)[1], moduleIOs->getEntry(i)[2]));
-                    }
-                    delete moduleIOs;
-                    eplStack.registerCallback(this);
-
-                    initOk = true;
-                } else {
-                    DEVLOG_ERROR("[powerlink] No module IOs");
-                }
-            }
-
-            sendOutputEvent(scmEventINITOID, paECET);
-            break;
-        case scmEventREQID:
-            if (var_QI == true && initOk) {
-                sync.lock();
-                EplMapping::TEplMappingList::Iterator itEnd = eplMapping.mCurrentValues.end();
-                EplMapping::TEplMappingList::Iterator it = eplMapping.mCurrentValues.begin();
-                for(int i = 3; i < mInterfaceSpec->mNumDIs && it != itEnd; i++, ++it){
-                    bool ioVal = *static_cast<CIEC_BOOL*>(getDI(i));
-                    *(it->mCurrentValue) = (char) ioVal;
-                }
-
-                sync.unlock();
-            }
-            var_QO = var_QI;
-            sendOutputEvent(scmEventCNFID, paECET);
-            break;
-    }
+    executePowerlinkEvent(paEIID,
+                          paECET,
+                          scmEventINITID,
+                          scmEventREQID,
+                          scmEventINITOID,
+                          scmEventCNFID,
+                          var_QI,
+                          var_QO,
+                          var_CNID,
+                          var_MODID);
 }
 
 void FORTE_X20DO9322::readInputData(const TEventID paEIID) {
@@ -262,19 +227,4 @@ CDataConnection *FORTE_X20DO9322::getDOConUnchecked(const TPortId paIndex) {
         case 2: return &conn_STATUS;
     }
     return nullptr;
-}
-
-void FORTE_X20DO9322::cnSynchCallback() {
-    CEplStackWrapper &eplStack = CEplStackWrapper::getInstance();
-    sync.lock();
-
-    EplMapping::TEplMappingList::Iterator itEnd = eplMapping.mCurrentValues.end();
-    EplMapping::TEplMappingList::Iterator it = eplMapping.mCurrentValues.begin();
-    for(it; it != itEnd; ++it){
-        bool ioVal = *(it->mCurrentValue) != 0x00;
-        (eplStack.getProcImageIn())[it->mPiOffset] &= (char) (~(0x01 << it->mBitOffset));
-        (eplStack.getProcImageIn())[it->mPiOffset] |= (char) (ioVal << it->mBitOffset);
-    }
-
-    sync.unlock();
 }

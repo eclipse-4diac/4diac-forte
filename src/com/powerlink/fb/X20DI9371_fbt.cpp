@@ -15,8 +15,6 @@
 #include "X20DI9371_fbt_gen.cpp"
 #endif
 
-#include "criticalregion.h"
-#include "EplWrapper.h"
 #include "resource.h"
 
 DEFINE_FIRMWARE_FB(FORTE_X20DI9371, g_nStringIdX20DI9371)
@@ -55,7 +53,7 @@ const SFBInterfaceSpec FORTE_X20DI9371::scmFBInterfaceSpec = {
 };
 
 FORTE_X20DI9371::FORTE_X20DI9371(const CStringDictionary::TStringId paInstanceNameId,
-                                 forte::core::CFBContainer &paContainer) : CFunctionBlock(paContainer,
+                                 forte::core::CFBContainer &paContainer) : PowerlinkFunctionBlockDI(paContainer,
                                                                                &scmFBInterfaceSpec, paInstanceNameId),
                                                                            var_conn_QO(var_QO),
                                                                            var_conn_CNIDO(var_CNIDO),
@@ -116,50 +114,16 @@ void FORTE_X20DI9371::setInitialValues() {
 }
 
 void FORTE_X20DI9371::executeEvent(const TEventID paEIID, CEventChainExecutionThread *const paECET) {
-    switch (paEIID) {
-        case scmEventINITID:
-            if (var_QI == true) {
-                initOk = false;
-
-                CEplStackWrapper &eplStack = CEplStackWrapper::getInstance();
-
-                // Get settings for intputs
-                CProcessImageMatrix *moduleIOs = eplStack.getProcessImageMatrixOut()->getModuleEntries(
-                    var_CNID.getUnsignedValue(), var_MODID.getUnsignedValue());
-
-                if (moduleIOs) {
-                    // Inputs (process inputs) always start with i = 1
-                    // Check xap.xml if a BitUnused is present
-                    for (unsigned int i = 1; i < moduleIOs->getNrOfEntries() - 1; i++) {
-                        eplMapping.mCurrentValues.pushBack(new EplMapping::EplMappingValues(
-                            moduleIOs->getEntry(i)[0], moduleIOs->getEntry(i)[1], moduleIOs->getEntry(i)[2]));
-                    }
-
-                    delete moduleIOs;
-
-                    eplStack.registerCallback(this);
-
-                    initOk = true;
-                }
-            }
-
-            sendOutputEvent(scmEventINITOID, paECET);
-            break;
-        case scmEventREQID:
-            if (var_QI == true && initOk) {
-                sync.lock();
-                EplMapping::TEplMappingList::Iterator itEnd = eplMapping.mCurrentValues.end();
-                EplMapping::TEplMappingList::Iterator it = eplMapping.mCurrentValues.begin();
-                for (int i = 3; i < mInterfaceSpec->mNumDOs && it != itEnd; i++, ++it) {
-                    bool ioVal = *(it->mCurrentValue) != 0x00;
-                    *static_cast<CIEC_BOOL*>(getDO(i)) = CIEC_BOOL(ioVal);
-                }
-                sync.unlock();
-            }
-            var_QO = var_QI;
-            sendOutputEvent(scmEventCNFID, paECET);
-            break;
-    }
+    executePowerlinkEvent(paEIID,
+                          paECET,
+                          scmEventINITID,
+                          scmEventREQID,
+                          scmEventINITOID,
+                          scmEventCNFID,
+                          var_QI,
+                          var_QO,
+                          var_CNID,
+                          var_MODID);
 }
 
 void FORTE_X20DI9371::readInputData(const TEventID paEIID) {
@@ -276,19 +240,3 @@ CDataConnection *FORTE_X20DI9371::getDOConUnchecked(const TPortId paIndex) {
     }
     return nullptr;
 }
-
-void FORTE_X20DI9371::cnSynchCallback(){
-    CEplStackWrapper &eplStack = CEplStackWrapper::getInstance();
-
-    sync.lock();
-
-    EplMapping::TEplMappingList::Iterator itEnd = eplMapping.mCurrentValues.end();
-    EplMapping::TEplMappingList::Iterator it = eplMapping.mCurrentValues.begin();
-    for(; it != itEnd; ++it){
-        bool ioVal = (eplStack.getProcImageOut()[it->mPiOffset] & (char) (0x01 << it->mBitOffset)) != 0x00;
-        *(it->mCurrentValue) = (char) ioVal;
-    }
-
-    sync.unlock();
-}
-

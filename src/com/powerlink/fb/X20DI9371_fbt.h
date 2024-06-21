@@ -12,7 +12,7 @@
 
 #pragma once
 
-#include "EplWrapper.h"
+#include "PowerlinkFunctionBlockDI.h"
 #include "funcbloc.h"
 #include "forte_bool.h"
 #include "forte_usint.h"
@@ -26,7 +26,7 @@
 #include "forte_sync.h"
 
 
-class FORTE_X20DI9371 final : public CFunctionBlock, public IEplCNCallback {
+class FORTE_X20DI9371 final : public PowerlinkFunctionBlockDI {
     DECLARE_FIRMWARE_FB(FORTE_X20DI9371)
 
 private:
@@ -54,13 +54,6 @@ private:
     void writeOutputData(TEventID paEIID) override;
 
     void setInitialValues() override;
-
-    // Variables for mapping between inputs and POWERLINK stack
-    EplMapping eplMapping;
-    CSyncObject sync;
-    bool initOk;
-
-    void cnSynchCallback() override;
 
 public:
     FORTE_X20DI9371(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
