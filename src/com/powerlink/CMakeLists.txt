@@ -55,8 +55,8 @@ elseif ("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
     if (NOT FORTE_MODULE_POWERLINK_LIB_DIR)
         FetchContent_Declare(
                 openpowerlink
-                URL https://downloads.sourceforge.net/project/openpowerlink/openPOWERLINK/V1.8.5/openPOWERLINK-V1.08.5.zip
-                URL_HASH SHA256=20d3161121a2085632c9bc3e00bc099798a87f76d093cb716fcc0406f44f6345
+                URL https://downloads.sourceforge.net/project/openpowerlink/openPOWERLINK/V1.8.0/openPOWERLINK-V1.08.zip
+                URL_HASH MD5=7ae68359cbc9092d125d43c75b4794ad
         )
         FetchContent_Populate(openpowerlink)
 
