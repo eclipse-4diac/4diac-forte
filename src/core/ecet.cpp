@@ -99,6 +99,7 @@ void CEventChainExecutionThread::changeExecutionState(EMGMCommandType paCommand)
       [[fallthrough]];
     case EMGMCommandType::Stop:
       setAlive(false); //end thread in both cases
+      end();
       break;
     default:
       break;
