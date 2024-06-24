@@ -91,6 +91,9 @@ forte_add_sourcefile_h(EplWrapper.h)
 forte_add_sourcefile_hcpp(
         fb/PowerlinkFunctionBlockDI
         fb/PowerlinkFunctionBlockDO
+        fb/PowerlinkFunctionBlockAI
+        fb/PowerlinkFunctionBlockAO
+        fb/PowerlinkFunctionBlockAT
         fb/POWERLINK_MN_fbt
         fb/X20DI9371_fbt
         fb/X20DO9322_fbt

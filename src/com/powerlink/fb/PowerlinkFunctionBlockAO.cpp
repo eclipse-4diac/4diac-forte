@@ -2,24 +2,30 @@
 // Created by GafertM on 21.06.2024.
 //
 
-#include "PowerlinkFunctionBlockDI.h"
+#include "PowerlinkFunctionBlockAO.h"
 
 
-void PowerlinkFunctionBlockDI::cnSynchCallback() {
+void PowerlinkFunctionBlockAO::cnSynchCallback() {
     CEplStackWrapper &eplStack = CEplStackWrapper::getInstance();
     sync.lock();
 
     EplMapping::TEplMappingList::Iterator itEnd = eplMapping.mCurrentValues.end();
     EplMapping::TEplMappingList::Iterator it = eplMapping.mCurrentValues.begin();
-    for (; it != itEnd; ++it) {
-        bool ioVal = (eplStack.getProcImageOut()[it->mPiOffset] & (char) (0x01 << it->mBitOffset)) != 0x00;
-        *(it->mCurrentValue) = (char) ioVal;
+    for (it; it != itEnd; ++it) {
+        short ioVal = *((short *) (it->mCurrentValue));
+        char highByte = (char) ((ioVal & 0xFF00) >> 8);
+        char lowByte = (char) (ioVal & 0x00FF);
+        (eplStack.getProcImageIn())[it->mPiOffset] &= (~(0xFF << it->mBitOffset));
+        (eplStack.getProcImageIn())[it->mPiOffset] |= (lowByte << (it->mBitOffset));
+
+        (eplStack.getProcImageIn())[it->mPiOffset + 1] &= (~(0xFF << it->mBitOffset));
+        (eplStack.getProcImageIn())[it->mPiOffset + 1] |= (highByte << (it->mBitOffset));
     }
 
     sync.unlock();
 }
 
-void PowerlinkFunctionBlockDI::executePowerlinkEvent(const TEventID paEIID,
+void PowerlinkFunctionBlockAO::executePowerlinkEvent(const TEventID paEIID,
                                                      CEventChainExecutionThread *const paECET,
                                                      TEventID scmEventINITID,
                                                      TEventID scmEventREQID,
@@ -35,13 +41,13 @@ void PowerlinkFunctionBlockDI::executePowerlinkEvent(const TEventID paEIID,
 
             CEplStackWrapper &eplStack = CEplStackWrapper::getInstance();
 
-            CProcessImageMatrix *moduleIOs = eplStack.getProcessImageMatrixOut()->getModuleEntries(
+            CProcessImageMatrix *moduleIOs = eplStack.getProcessImageMatrixIn()->getModuleEntries(
                 var_CNID.getUnsignedValue(), var_MODID.getUnsignedValue());
 
             if (moduleIOs) {
-                // Inputs (process inputs) always start with i = 1
+                // Outputs (process inputs) always start with i = 0
                 // Check xap.xml if a BitUnused is present
-                for (unsigned int i = 1; i < moduleIOs->getNrOfEntries() - 1; i++) {
+                for (unsigned int i = 0; i < moduleIOs->getNrOfEntries() - 1; i++) {
                     eplMapping.mCurrentValues.pushBack(new EplMapping::EplMappingValues(
                         moduleIOs->getEntry(i)[0], moduleIOs->getEntry(i)[1], moduleIOs->getEntry(i)[2]));
                 }
@@ -61,9 +67,9 @@ void PowerlinkFunctionBlockDI::executePowerlinkEvent(const TEventID paEIID,
             sync.lock();
             EplMapping::TEplMappingList::Iterator itEnd = eplMapping.mCurrentValues.end();
             EplMapping::TEplMappingList::Iterator it = eplMapping.mCurrentValues.begin();
-            for (int i = 3; i < mInterfaceSpec->mNumDOs && it != itEnd; i++, ++it) {
-                bool ioVal = *(it->mCurrentValue) != 0x00;
-                *static_cast<CIEC_BOOL *>(getDO(i)) = CIEC_BOOL(ioVal);
+            for (int i = 3; i < mInterfaceSpec->mNumDIs && it != itEnd; i++, ++it) {
+                short ioVal = static_cast<CIEC_INT *>(getDI(i))->getSignedValue();
+                *((short*) (it->mCurrentValue)) = ioVal;
             }
             sync.unlock();
         }

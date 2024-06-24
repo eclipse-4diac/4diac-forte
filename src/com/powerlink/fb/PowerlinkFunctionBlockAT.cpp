@@ -2,24 +2,30 @@
 // Created by GafertM on 21.06.2024.
 //
 
-#include "PowerlinkFunctionBlockDI.h"
+#include "PowerlinkFunctionBlockAT.h"
 
 
-void PowerlinkFunctionBlockDI::cnSynchCallback() {
+void PowerlinkFunctionBlockAT::cnSynchCallback() {
     CEplStackWrapper &eplStack = CEplStackWrapper::getInstance();
     sync.lock();
 
     EplMapping::TEplMappingList::Iterator itEnd = eplMapping.mCurrentValues.end();
     EplMapping::TEplMappingList::Iterator it = eplMapping.mCurrentValues.begin();
     for (; it != itEnd; ++it) {
-        bool ioVal = (eplStack.getProcImageOut()[it->mPiOffset] & (char) (0x01 << it->mBitOffset)) != 0x00;
-        *(it->mCurrentValue) = (char) ioVal;
+        short ioVal = 0x0000;
+        char lowByte;
+        char highByte;
+        lowByte = (eplStack.getProcImageOut()[it->mPiOffset] & (0xFF << it->mBitOffset)) >> it->mBitOffset;
+        highByte = (eplStack.getProcImageOut()[it->mPiOffset + 1] & (0xFF << it->mBitOffset)) >> it->mBitOffset;
+        ioVal = (short) ((0xFF00 & (highByte << 8))) | (short) (0xFF & lowByte);
+
+        *((short *) (it->mCurrentValue)) = ioVal;
     }
 
     sync.unlock();
 }
 
-void PowerlinkFunctionBlockDI::executePowerlinkEvent(const TEventID paEIID,
+void PowerlinkFunctionBlockAT::executePowerlinkEvent(const TEventID paEIID,
                                                      CEventChainExecutionThread *const paECET,
                                                      TEventID scmEventINITID,
                                                      TEventID scmEventREQID,
@@ -62,8 +68,8 @@ void PowerlinkFunctionBlockDI::executePowerlinkEvent(const TEventID paEIID,
             EplMapping::TEplMappingList::Iterator itEnd = eplMapping.mCurrentValues.end();
             EplMapping::TEplMappingList::Iterator it = eplMapping.mCurrentValues.begin();
             for (int i = 3; i < mInterfaceSpec->mNumDOs && it != itEnd; i++, ++it) {
-                bool ioVal = *(it->mCurrentValue) != 0x00;
-                *static_cast<CIEC_BOOL *>(getDO(i)) = CIEC_BOOL(ioVal);
+                short ioVal = *((short *) (it->mCurrentValue));
+                *static_cast<CIEC_REAL *>(getDO(i)) = CIEC_REAL(ioVal / 10);
             }
             sync.unlock();
         }
