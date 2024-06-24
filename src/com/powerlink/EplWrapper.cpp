@@ -711,7 +711,7 @@ tEplKernel PUBLIC appCbEvent(
                     // -> also shut down EplApiProcess() and main()
                     ret = kEplShutdown;
 #if EPL_DEFINED_STACK_VERSION >= EPL_STACK_VERSION(1, 8, 2)
-          DEVLOG_DEBUG("[powerlink] %s(kEplNmtGsOff) originating event = 0x%X\n", __func__, pEventArg_p->m_NmtStateChange.m_NmtEvent);
+          DEVLOG_DEBUG("[powerlink] %s(kEplNmtGsOff) originating event = 0x%X\n", __func__, eventArg->m_NmtStateChange.m_NmtEvent);
 #else
                     DEVLOG_DEBUG("[powerlink] %s(kEplNmtGsOff) originating event = 0x%X\n", __func__,
                             eventArg->m_NmtStateChange.m_NmtEvent);
@@ -731,8 +731,8 @@ tEplKernel PUBLIC appCbEvent(
 #if EPL_DEFINED_STACK_VERSION >= EPL_STACK_VERSION(1, 8, 2)
           DEVLOG_DEBUG("[powerlink] %s(0x%X) originating event = 0x%X\n",
               __func__,
-              pEventArg_p->m_NmtStateChange.m_NewNmtState,
-              pEventArg_p->m_NmtStateChange.m_NmtEvent);
+              eventArg->m_NmtStateChange.m_NewNmtState,
+              eventArg->m_NmtStateChange.m_NmtEvent);
 #else
                     DEVLOG_DEBUG("[powerlink] %s(0x%X) originating event = 0x%X\n",
                             __func__,
@@ -767,10 +767,10 @@ tEplKernel PUBLIC appCbEvent(
             // error or warning occured within the stack or the application
             // on error the API layer stops the NMT state machine
 #if EPL_DEFINED_STACK_VERSION >= EPL_STACK_VERSION(1, 8, 2)
-      DEVLOG_DEBUG("[powerlink] %s(Err/Warn): Source=%02X EplError=0x%03X",
+      DEVLOG_DEBUG("[powerlink] %s(Err/Warn): Source=%02X EplError=0x%03X\n",
           __func__,
-          pEventArg_p->m_InternalError.m_EventSource,
-          pEventArg_p->m_InternalError.m_EplError);
+          eventArg->m_InternalError.m_EventSource,
+          eventArg->m_InternalError.m_EplError);
 #else
             DEVLOG_DEBUG("[powerlink] %s(Err/Warn): Source=%02X EplError=0x%03X",
                     __func__,
@@ -784,7 +784,7 @@ tEplKernel PUBLIC appCbEvent(
                     // error occured within event processing
                     // either in kernel or in user part
 #if EPL_DEFINED_STACK_VERSION >= EPL_STACK_VERSION(1, 8, 2)
-          DEVLOG_DEBUG(" OrgSource=%02X\n", pEventArg_p->m_InternalError.m_Arg.m_EventSource);
+          DEVLOG_DEBUG(" OrgSource=%02X\n", eventArg->m_InternalError.m_Arg.m_EventSource);
 #else
                     DEVLOG_DEBUG(" OrgSource=%02X\n", eventArg->m_InternalError.m_Arg.m_EventSource);
 #endif
@@ -795,7 +795,7 @@ tEplKernel PUBLIC appCbEvent(
                     // error occured within the data link layer (e.g. interrupt processing)
                     // the DWORD argument contains the DLL state and the NMT event
 #if EPL_DEFINED_STACK_VERSION >= EPL_STACK_VERSION(1, 8, 2)
-          DEVLOG_DEBUG(" val=%lX\n", pEventArg_p->m_InternalError.m_Arg.m_dwArg);
+          DEVLOG_DEBUG(" val=%lX\n", eventArg->m_InternalError.m_Arg.m_dwArg);
 #else
                     DEVLOG_DEBUG(" val=%lX\n", eventArg->m_InternalError.m_Arg.m_dwArg);
 #endif
@@ -807,7 +807,7 @@ tEplKernel PUBLIC appCbEvent(
                     // error occured within OBD module
                     // either in kernel or in user part
 #if EPL_DEFINED_STACK_VERSION >= EPL_STACK_VERSION(1, 8, 2)
-          DEVLOG_DEBUG(" Object=0x%04X/%u\n", pEventArg_p->m_InternalError.m_Arg.m_ObdError.m_uiIndex, pEventArg_p->m_InternalError.m_Arg.m_ObdError.m_uiSubIndex);
+          DEVLOG_DEBUG(" Object=0x%04X/%u\n", eventArg->m_InternalError.m_Arg.m_ObdError.m_uiIndex, eventArg->m_InternalError.m_Arg.m_ObdError.m_uiSubIndex);
 #else
                     DEVLOG_DEBUG(" Object=0x%04X/%u\n", eventArg->m_InternalError.m_Arg.m_ObdError.m_uiIndex,
                             eventArg->m_InternalError.m_Arg.m_ObdError.m_uiSubIndex);
@@ -849,7 +849,7 @@ tEplKernel PUBLIC appCbEvent(
             switch (eventArg->m_Node.m_NodeEvent) {
                 case kEplNmtNodeEventCheckConf: {
 #if EPL_DEFINED_STACK_VERSION >= EPL_STACK_VERSION(1, 8, 2)
-          DEVLOG_DEBUG("[powerlink] %s(Node=0x%X, CheckConf)\n", __func__, pEventArg_p->m_Node.m_uiNodeId);
+          DEVLOG_DEBUG("[powerlink] %s(Node=0x%X, CheckConf)\n", __func__, eventArg->m_Node.m_uiNodeId);
 #else
                     DEVLOG_DEBUG("[powerlink] %s(Node=0x%X, CheckConf)\n", __func__, eventArg->m_Node.m_uiNodeId);
 #endif
@@ -858,7 +858,7 @@ tEplKernel PUBLIC appCbEvent(
 
                 case kEplNmtNodeEventUpdateConf: {
 #if EPL_DEFINED_STACK_VERSION >= EPL_STACK_VERSION(1, 8, 2)
-          DEVLOG_DEBUG("[powerlink] %s(Node=0x%X, UpdateConf)\n", __func__, pEventArg_p->m_Node.m_uiNodeId);
+          DEVLOG_DEBUG("[powerlink] %s(Node=0x%X, UpdateConf)\n", __func__, eventArg->m_Node.m_uiNodeId);
 #else
                     DEVLOG_DEBUG("[powerlink] %s(Node=0x%X, UpdateConf)\n", __func__, eventArg->m_Node.m_uiNodeId);
 #endif
@@ -867,7 +867,7 @@ tEplKernel PUBLIC appCbEvent(
 
                 case kEplNmtNodeEventNmtState: {
 #if EPL_DEFINED_STACK_VERSION >= EPL_STACK_VERSION(1, 8, 2)
-          DEVLOG_DEBUG("%s(Node=0x%X, NmtState=0x%X)\n", __func__, pEventArg_p->m_Node.m_uiNodeId, pEventArg_p->m_Node.m_NmtState);
+          DEVLOG_DEBUG("%s(Node=0x%X, NmtState=0x%X)\n", __func__, eventArg->m_Node.m_uiNodeId, eventArg->m_Node.m_NmtState);
 #else
                     DEVLOG_DEBUG("[powerlink] %s(Node=0x%X, NmtState=0x%X)\n", __func__, eventArg->m_Node.m_uiNodeId,
                             eventArg->m_Node.m_NmtState);
@@ -881,7 +881,7 @@ tEplKernel PUBLIC appCbEvent(
 
                 case kEplNmtNodeEventError: {
 #if EPL_DEFINED_STACK_VERSION >= EPL_STACK_VERSION(1, 8, 2)
-          DEVLOG_DEBUG("[powerlink] %s(Node=0x%X, Error=0x%X)\n", __func__, pEventArg_p->m_Node.m_uiNodeId, pEventArg_p->m_Node.m_wErrorCode);
+          DEVLOG_DEBUG("[powerlink] %s(Node=0x%X, Error=0x%X)\n", __func__, eventArg->m_Node.m_uiNodeId, eventArg->m_Node.m_wErrorCode);
 #else
                     DEVLOG_DEBUG("[powerlink] %s(Node=0x%X, Error=0x%X)\n", __func__, eventArg->m_Node.m_uiNodeId,
                             eventArg->m_Node.m_wErrorCode);
@@ -891,7 +891,7 @@ tEplKernel PUBLIC appCbEvent(
 
                 case kEplNmtNodeEventFound: {
 #if EPL_DEFINED_STACK_VERSION >= EPL_STACK_VERSION(1, 8, 2)
-          DEVLOG_DEBUG("[powerlink] %s(Node=0x%X, Found)\n", __func__, pEventArg_p->m_Node.m_uiNodeId);
+          DEVLOG_DEBUG("[powerlink] %s(Node=0x%X, Found)\n", __func__, eventArg->m_Node.m_uiNodeId);
 #else
                     DEVLOG_DEBUG("[powerlink] %s(Node=0x%X, Found)\n", __func__, eventArg->m_Node.m_uiNodeId);
 #endif
@@ -908,8 +908,8 @@ tEplKernel PUBLIC appCbEvent(
 #if (((EPL_MODULE_INTEGRATION) & (EPL_MODULE_CFM)) != 0)
         case kEplApiEventCfmProgress: {
 #if EPL_DEFINED_STACK_VERSION >= EPL_STACK_VERSION(1, 8, 2)
-      DEVLOG_DEBUG("[powerlink] %s(Node=0x%X, CFM-Progress: Object 0x%X/%u, ", __func__, pEventArg_p->m_CfmProgress.m_uiNodeId, pEventArg_p->m_CfmProgress.m_uiObjectIndex, pEventArg_p->m_CfmProgress.m_uiObjectSubIndex);
-      DEVLOG_DEBUG("%u/%u Bytes", pEventArg_p->m_CfmProgress.m_dwBytesDownloaded, pEventArg_p->m_CfmProgress.m_dwTotalNumberOfBytes);
+      DEVLOG_DEBUG("[powerlink] %s(Node=0x%X, CFM-Progress: Object 0x%X/%u, ", __func__, eventArg->m_CfmProgress.m_uiNodeId, eventArg->m_CfmProgress.m_uiObjectIndex, eventArg->m_CfmProgress.m_uiObjectSubIndex);
+      DEVLOG_DEBUG("%u/%u Bytes", eventArg->m_CfmProgress.m_dwBytesDownloaded, eventArg->m_CfmProgress.m_dwTotalNumberOfBytes);
 #else
             DEVLOG_DEBUG("[powerlink] %s(Node=0x%X, CFM-Progress: Object 0x%X/%u, ", __func__, eventArg->m_CfmProgress.m_uiNodeId,
                     eventArg->m_CfmProgress.m_uiObjectIndex, eventArg->m_CfmProgress.m_uiObjectSubIndex);
@@ -919,7 +919,7 @@ tEplKernel PUBLIC appCbEvent(
             if ((eventArg->m_CfmProgress.m_dwSdoAbortCode != 0)
                 || (eventArg->m_CfmProgress.m_EplError != kEplSuccessful)) {
 #if EPL_DEFINED_STACK_VERSION >= EPL_STACK_VERSION(1, 8, 2)
-        DEVLOG_DEBUG(" -> SDO Abort=0x%lX, Error=0x%X)\n", pEventArg_p->m_CfmProgress.m_dwSdoAbortCode, pEventArg_p->m_CfmProgress.m_EplError);
+        DEVLOG_DEBUG(" -> SDO Abort=0x%lX, Error=0x%X)\n", eventArg->m_CfmProgress.m_dwSdoAbortCode, eventArg->m_CfmProgress.m_EplError);
 #else
                 DEVLOG_DEBUG(" -> SDO Abort=0x%lX, Error=0x%X)\n", eventArg->m_CfmProgress.m_dwSdoAbortCode,
                         eventArg->m_CfmProgress.m_EplError);
@@ -938,7 +938,7 @@ tEplKernel PUBLIC appCbEvent(
             switch (eventArg->m_CfmResult.m_NodeCommand) {
                 case kEplNmtNodeCommandConfOk: {
 #if EPL_DEFINED_STACK_VERSION >= EPL_STACK_VERSION(1, 8, 2)
-          DEVLOG_DEBUG("[powerlink] %s(Node=0x%X, ConfOk)\n", __func__, pEventArg_p->m_CfmResult.m_uiNodeId);
+          DEVLOG_DEBUG("[powerlink] %s(Node=0x%X, ConfOk)\n", __func__, eventArg->m_CfmResult.m_uiNodeId);
 #else
                     DEVLOG_DEBUG("[powerlink] %s(Node=0x%X, ConfOk)\n", __func__, eventArg->m_CfmResult.m_uiNodeId);
 #endif
@@ -947,7 +947,7 @@ tEplKernel PUBLIC appCbEvent(
 
                 case kEplNmtNodeCommandConfErr: {
 #if EPL_DEFINED_STACK_VERSION >= EPL_STACK_VERSION(1, 8, 2)
-          DEVLOG_DEBUG("[powerlink] %s(Node=0x%X, ConfErr)\n", __func__, pEventArg_p->m_CfmResult.m_uiNodeId);
+          DEVLOG_DEBUG("[powerlink] %s(Node=0x%X, ConfErr)\n", __func__, eventArg->m_CfmResult.m_uiNodeId);
 #else
                     DEVLOG_DEBUG("[powerlink] %s(Node=0x%X, ConfErr)\n", __func__, eventArg->m_CfmResult.m_uiNodeId);
 #endif
@@ -956,7 +956,7 @@ tEplKernel PUBLIC appCbEvent(
 
                 case kEplNmtNodeCommandConfReset: {
 #if EPL_DEFINED_STACK_VERSION >= EPL_STACK_VERSION(1, 8, 2)
-          DEVLOG_DEBUG("[powerlink] %s(Node=0x%X, ConfReset)\n", __func__, pEventArg_p->m_CfmResult.m_uiNodeId);
+          DEVLOG_DEBUG("[powerlink] %s(Node=0x%X, ConfReset)\n", __func__, eventArg->m_CfmResult.m_uiNodeId);
 #else
                     DEVLOG_DEBUG("[powerlink] %s(Node=0x%X, ConfReset)\n", __func__, eventArg->m_CfmResult.m_uiNodeId);
 #endif
@@ -965,7 +965,7 @@ tEplKernel PUBLIC appCbEvent(
 
                 case kEplNmtNodeCommandConfRestored: {
 #if EPL_DEFINED_STACK_VERSION >= EPL_STACK_VERSION(1, 8, 2)
-          DEVLOG_DEBUG("[powerlink] %s(Node=0x%X, ConfRestored)\n", __func__, pEventArg_p->m_CfmResult.m_uiNodeId);
+          DEVLOG_DEBUG("[powerlink] %s(Node=0x%X, ConfRestored)\n", __func__, eventArg->m_CfmResult.m_uiNodeId);
 #else
                     DEVLOG_DEBUG("[powerlink] %s(Node=0x%X, ConfRestored)\n", __func__, eventArg->m_CfmResult.m_uiNodeId);
 #endif
@@ -974,7 +974,7 @@ tEplKernel PUBLIC appCbEvent(
 
                 default: {
 #if EPL_DEFINED_STACK_VERSION >= EPL_STACK_VERSION(1, 8, 2)
-          DEVLOG_DEBUG("[powerlink] %s(Node=0x%X, CfmResult=0x%X)\n", __func__, pEventArg_p->m_CfmResult.m_uiNodeId, pEventArg_p->m_CfmResult.m_NodeCommand);
+          DEVLOG_DEBUG("[powerlink] %s(Node=0x%X, CfmResult=0x%X)\n", __func__, eventArg->m_CfmResult.m_uiNodeId, pEventArg_p->m_CfmResult.m_NodeCommand);
 #else
                     DEVLOG_DEBUG("[powerlink] %s(Node=0x%X, CfmResult=0x%X)\n", __func__, eventArg->m_CfmResult.m_uiNodeId,
                             eventArg->m_CfmResult.m_NodeCommand);

@@ -134,7 +134,7 @@ void CEplXmlReader::createProcImageOut(TiXmlNode* paProcessImage){
 
     }
 
-    DEVLOG_DEBUG("[powerlink] << " << currentCnId << ", " << currentModuleNr << ", " << ioName << ", " << currentIoNr << ", " << dSize << ", " << piOffset << ", " << bitOffset)
+    DEVLOG_DEBUG("[powerlink] << %d, %d, %d, %d, %d, %d, %d\n",currentCnId, currentModuleNr, ioName, currentIoNr, dSize, piOffset, bitOffset);
 
     delete[] nameStr;
   }
@@ -219,7 +219,7 @@ void CEplXmlReader::createProcImageIn(TiXmlNode *paProcessImage){
 
     }
 
-    DEVLOG_DEBUG("[powerlink] >> " << currentCnId << ", " << currentModuleNr << ", " << ioName << ", " << currentIoNr << ", " << dSize << ", " << piOffset << ", " << bitOffset)
+    DEVLOG_DEBUG("[powerlink] << %d, %d, %d, %d, %d, %d, %d\n",currentCnId, currentModuleNr, ioName, currentIoNr, dSize, piOffset, bitOffset);
 
     delete[] nameStr;
   }
