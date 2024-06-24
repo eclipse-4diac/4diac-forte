@@ -95,7 +95,17 @@ forte_add_sourcefile_hcpp(
         fb/PowerlinkFunctionBlockAO
         fb/PowerlinkFunctionBlockAT
         fb/POWERLINK_MN_fbt
+        fb/X20AI2622_fbt
+        fb/X20AI4622_fbt
+        fb/X20AO4622_fbt
+        fb/X20AT2402_fbt
+        fb/X20AT4222_fbt
+        fb/X20DI4653_fbt
         fb/X20DI9371_fbt
+        fb/X20DI9372_fbt
+        fb/X20DO4623_fbt
+        fb/X20DO4649_fbt
+        fb/X20DO9321_fbt
         fb/X20DO9322_fbt
         EplXmlReader
         ModuleList
