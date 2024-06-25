@@ -54,8 +54,8 @@ FORTE_E_PULSE::FORTE_E_PULSE(const CStringDictionary::TStringId paInstanceNameId
 };
 
 void FORTE_E_PULSE::setInitialValues() {
-	var_PT = 0_TIME;
-	var_Q = 0_BOOL;
+    var_PT = 0_TIME;
+    var_Q = 0_BOOL;
 }
 
 const SCFB_FBInstanceData FORTE_E_PULSE::scmInternalFBs[] = {
