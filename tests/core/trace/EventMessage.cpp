@@ -36,7 +36,7 @@ EventMessage::EventMessage(const bt_message* paMessage)  {
         &mTimestamp)){
     std::cout << "Could not retrieve clock for message" << std::endl;
     std::abort();
-  }	
+  }
 }
 
 std::string EventMessage::getPayloadString() const {

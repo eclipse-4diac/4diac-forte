@@ -89,6 +89,6 @@ public:
   virtual ~FORTE_EBBusAdapter() = default;
   
   private:
-	  static const TForteUInt8 scmSlaveConfigurationIO[];
-  	static const TForteUInt8 scmSlaveConfigurationIONum;
+    static const TForteUInt8 scmSlaveConfigurationIO[];
+    static const TForteUInt8 scmSlaveConfigurationIONum;
 };

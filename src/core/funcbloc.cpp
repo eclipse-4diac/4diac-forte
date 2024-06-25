@@ -375,7 +375,7 @@ void CFunctionBlock::readData(size_t paDINum, CIEC_ANY& paValue, const CDataConn
 
 #ifdef FORTE_TRACE_CTF
 void CFunctionBlock::writeData(size_t paDONum, CIEC_ANY& paValue, CDataConnection& paConn) {
-	if(paConn.isConnected()) {
+  if(paConn.isConnected()) {
 #ifdef FORTE_SUPPORT_MONITORING
     if(paValue.isForced() != true) {
 #endif //FORTE_SUPPORT_MONITORING
