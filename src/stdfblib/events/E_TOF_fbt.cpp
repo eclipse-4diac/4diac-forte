@@ -54,9 +54,9 @@ FORTE_E_TOF::FORTE_E_TOF(const CStringDictionary::TStringId paInstanceNameId, fo
 };
 
 void FORTE_E_TOF::setInitialValues() {
-	var_IN = 0_BOOL;
-	var_PT = 0_TIME;
-	var_Q = 0_BOOL;
+    var_IN = 0_BOOL;
+    var_PT = 0_TIME;
+    var_Q = 0_BOOL;
 }
 
 const SCFB_FBInstanceData FORTE_E_TOF::scmInternalFBs[] = {
