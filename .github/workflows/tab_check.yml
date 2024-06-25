@@ -1,0 +1,20 @@
+# This starter workflow is for a CMake project running on multiple platforms. There is a different starter workflow if you just want a single platform.
+# See: https://github.com/actions/starter-workflows/blob/main/ci/cmake-single-platform.yml
+name: Check for Tabs
+
+on:
+  push:
+    branches: [ "release", "develop", "freeze" ]
+  pull_request:
+    branches: [ "release", "develop", "freeze" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container: quay.io/eclipse4diac/4diac-fortebuildcontainer:latest
+
+    steps:
+    - uses: actions/checkout@v4.1.2
+
+    - name: Test for Tabs
+      run: tests/findTabs.sh
