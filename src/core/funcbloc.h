@@ -528,7 +528,7 @@ class CFunctionBlock {
           paConn.readData(paValue);
         }
 #endif //FORTE_SUPPORT_MONITORING
-			}
+      }
     }
 #endif //FORTE_TRACE_CTF
 

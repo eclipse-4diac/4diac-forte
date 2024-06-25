@@ -33,11 +33,11 @@ namespace forte {
      *    structmemb[localgroupname;structtype;structmembername]
      *
      * It is also possible to wirte to children of the structs using:
-     * 		structmemb[localgroupname;structtype;structmembername.structchildmembername]
+     *      structmemb[localgroupname;structtype;structmembername.structchildmembername]
      *
      * or writing to array elements using:
-     *  	structmemb[localgroupname;structtype;structmembername(10).structchildmembername]
-     * 		Note: Please use 'array(0)' to access instead of 'array[0]'!!
+     *      structmemb[localgroupname;structtype;structmembername(10).structchildmembername]
+     *      Note: Please use 'array(0)' to access instead of 'array[0]'!!
      *
      *
      *  - localgroupname:  is the local group this local com layer should attach to. If this is the
@@ -69,9 +69,9 @@ namespace forte {
         bool parseArrayIndexFromString(const char *paNestedStructString, CIEC_INT& targetIndex);
 
         enum EComStringIndex {
-        	e_LOCALGROUPNAME,
-					e_STRUCTTYPE,
-					e_STRUCTMEMBERNAME
+          e_LOCALGROUPNAME,
+          e_STRUCTTYPE,
+          e_STRUCTMEMBERNAME
         };
     };
   }
