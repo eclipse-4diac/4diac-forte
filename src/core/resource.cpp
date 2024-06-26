@@ -247,12 +247,16 @@ EMGMResponse CResource::writeValue(forte::core::TNameIdentifier &paNameList, con
   CFunctionBlock *fb = this;
   if(paNameList.size() >= 1){
     //this is not an identifier for the resource interface
-    fb = getContainedFB(runner); // the last entry is the input name therefore reduce list here by one
+    fb = getContainedFB(runner);
+    if(!runner.isLastEntry()){
+    	// currently we can not write values of FBs inside of FBs
+    	return EMGMResponse::NoSuchObject;
+    }
   }
 
-  if((nullptr != fb) && (runner.isLastEntry())){
+  if(fb != nullptr){
     CIEC_ANY *const var = fb->getVar(&portName, 1);
-    if(nullptr != var){
+    if(var != nullptr){
       // 0 is not supported in the fromString method
       if((paValue.length() > 0) && (paValue.length() == var->fromString(paValue.getStorage().c_str()))){
         //if we cannot parse the full value the value is not valid
@@ -265,8 +269,7 @@ EMGMResponse CResource::writeValue(forte::core::TNameIdentifier &paNameList, con
           }
         }
         retVal = EMGMResponse::Ready;
-      }
-      else{
+      }else{
         retVal = EMGMResponse::BadParams;
       }
     }
