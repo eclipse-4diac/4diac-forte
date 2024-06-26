@@ -14,8 +14,9 @@
 #define MGMCMDSTRUCT_H_
 
 #include "mgmcmd.h"
-#include "datatypes/forte_string.h"
 #include "utils/fixedcapvector.h"
+#include "stringdict.h"
+#include <string>
 
 namespace forte {
   namespace core {
@@ -70,7 +71,7 @@ namespace forte {
 
         /*!\brief Additional params needed by a MGM command (e.g., to return results of query commands)
          */
-        CIEC_STRING mAdditionalParams;
+        std::string mAdditionalParams;
 
         /*\brief pointer to the ID to generate the correct response */
         char *mID;

@@ -176,7 +176,7 @@ bool DEV_MGR::parseXType(char *paRequestPartLeft, forte::core::SManagementCMD &p
       char* endOfRequest = strchr(paRequestPartLeft, '<');
       *endOfRequest = '\0';
       forte::core::util::transformEscapedXMLToNonEscapedText(paRequestPartLeft);
-      paCommand.mAdditionalParams = CIEC_STRING(paRequestPartLeft);
+      paCommand.mAdditionalParams = paRequestPartLeft;
       retVal = true;
     }
   }
@@ -267,11 +267,10 @@ bool DEV_MGR::parseWriteConnectionData(char *paRequestPartLeft, forte::core::SMa
       return false;
     }
     *endOfSource = '\0';
-    paCommand.mAdditionalParams = CIEC_STRING(paRequestPartLeft, strlen(paRequestPartLeft));
-    char *addParams = new char[paCommand.mAdditionalParams.getStorage().length() + 1]();
-    strcpy(addParams, paCommand.mAdditionalParams.getStorage().c_str());
+    char *addParams = new char[strlen(paRequestPartLeft) + 1]();
+    strcpy(addParams, paRequestPartLeft);
     forte::core::util::transformEscapedXMLToNonEscapedText(addParams);
-    paCommand.mAdditionalParams.assign(addParams, static_cast<TForteUInt16>(strlen(addParams)));
+    paCommand.mAdditionalParams = addParams;
     delete[](addParams);
     *endOfSource = '"'; // restore the string
     paRequestPartLeft = strchr(endOfSource + 1, '\"');
@@ -382,13 +381,13 @@ void DEV_MGR::parseWriteData(char *paRequestPartLeft, forte::core::SManagementCM
         paCommand.mCMD = EMGMCommandType::MonitoringClearForce;
       }
     } else if ((2 == paCommand.mAdditionalParams.length()) &&
-      (('$' == paCommand.mAdditionalParams.getStorage()[0]) &&
-        (('e' == paCommand.mAdditionalParams.getStorage()[1]) ||('E' == paCommand.mAdditionalParams.getStorage()[1]) ))){
+      (('$' == paCommand.mAdditionalParams[0]) &&
+        (('e' == paCommand.mAdditionalParams[1]) ||('E' == paCommand.mAdditionalParams[1]) ))){
       paCommand.mCMD = EMGMCommandType::MonitoringTriggerEvent;
     }else if ((3 == paCommand.mAdditionalParams.length()) &&
-      (('$' == paCommand.mAdditionalParams.getStorage()[0]) &&
-       (('e' == paCommand.mAdditionalParams.getStorage()[1]) ||('E' == paCommand.mAdditionalParams.getStorage()[1]) ) &&
-       (('r' == paCommand.mAdditionalParams.getStorage()[2]) ||('R' == paCommand.mAdditionalParams.getStorage()[2]) ) )){
+      (('$' == paCommand.mAdditionalParams[0]) &&
+       (('e' == paCommand.mAdditionalParams[1]) ||('E' == paCommand.mAdditionalParams[1]) ) &&
+       (('r' == paCommand.mAdditionalParams[2]) ||('R' == paCommand.mAdditionalParams[2]) ) )){
       paCommand.mCMD = EMGMCommandType::MonitoringResetEventCount;
     }else
 #endif // FORTE_SUPPORT_MONITORING
@@ -607,7 +606,7 @@ EMGMResponse DEV_MGR::parseAndExecuteMGMCommand(const char *const paDest, char *
     mCommand.mDestination = (strlen(paDest) != 0) ? CStringDictionary::getInstance().insert(paDest) : CStringDictionary::scmInvalidStringId;
     mCommand.mFirstParam.clear();
     mCommand.mSecondParam.clear();
-    if ( 255 <= mCommand.mAdditionalParams.getCapacity()) {
+    if ( 255 <= mCommand.mAdditionalParams.capacity()) {
       mCommand.mAdditionalParams.reserve(255);
     }
     mCommand.mID=nullptr;
