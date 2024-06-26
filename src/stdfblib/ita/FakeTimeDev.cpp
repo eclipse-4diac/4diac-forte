@@ -98,7 +98,7 @@ EMGMResponse FakeTimeDev::writeValue(forte::core::TNameIdentifier &paNameList, c
   EMGMResponse eRetVal = CDevice::writeValue(paNameList, paValue, paForce);
   if((EMGMResponse::Ready == eRetVal) && (g_nStringIdFakeTime == portName)){
     //fake time was written, update CFakeTimerHandler
-    static_cast<CFakeTimerHandler&>(getTimer()).sleepToTime(var_FakeTime, getResourceEventExecution());
+    static_cast<CFakeTimerHandler&>(getTimer()).sleepToTime(var_FakeTime);
   }
   return eRetVal;
 }

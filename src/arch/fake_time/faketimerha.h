@@ -48,7 +48,7 @@ class CFakeTimerHandler : public CTimerHandler, public CThread {
     virtual int getPriority(void) const override;
 
     void setSleepTime(const CIEC_TIME&, CFunctionBlock *fb);
-    void sleepToTime(const CIEC_TIME&, CEventChainExecutionThread *execThread);
+    void sleepToTime(const CIEC_TIME&);
 
   private:
     struct napinfo {
