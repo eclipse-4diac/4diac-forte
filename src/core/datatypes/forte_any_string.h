@@ -87,7 +87,7 @@ class CIEC_ANY_STRING : public CIEC_ANY_CHARS {
      *
      * @return number of bytes that this string has allocated for use
      */
-    TForteUInt16 getCapacity() const {
+    virtual TForteUInt16 getCapacity() const {
       return (nullptr != getGenData()) ? (*((TForteUInt16 *)(getGenData() + 2))) : static_cast<TForteUInt16>(0);
     }
 

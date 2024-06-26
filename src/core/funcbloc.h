@@ -157,7 +157,7 @@ class CFunctionBlock {
 
     /*!\brief Returns the type name of this FB instance
      */
-    const char * getFBTypeName(){
+    const char * getFBTypeName() const {
       return CStringDictionary::getInstance().get(getFBTypeId());
     }
 

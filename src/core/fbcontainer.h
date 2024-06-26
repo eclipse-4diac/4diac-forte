@@ -21,6 +21,7 @@
 
 class CFunctionBlock;
 class CDevice;
+class CResource;
 
 namespace forte {
   namespace core {
