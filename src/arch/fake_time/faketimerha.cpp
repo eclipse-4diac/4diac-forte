@@ -75,7 +75,7 @@ void CFakeTimerHandler::run() {
   }
 }
 
-void CFakeTimerHandler::sleepToTime(const CIEC_TIME &t, CEventChainExecutionThread *execThread) {
+void CFakeTimerHandler::sleepToTime(const CIEC_TIME &t) {
   const auto wakeup = t.getInMilliSeconds();
   sleepTimes.push({
     .napDuration = 0,
