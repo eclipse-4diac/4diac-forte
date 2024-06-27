@@ -53,7 +53,7 @@ class CFakeTimerHandler : public CTimerHandler, public CThread {
   private:
     struct napinfo {
       uint_fast64_t napDuration;
-      uint_fast64_t wakupTime;
+      uint_fast64_t wakeupTime;
       CFunctionBlock *fakeSleepFb;
     };
 
