@@ -174,6 +174,8 @@ EMGMResponse CResource::changeFBExecutionState(EMGMCommandType paCommand){
             conn->readData(*getDI(i));
           }
         }
+      }else if(EMGMCommandType::Reset == paCommand){
+        setInitialValues();
       }
       if(nullptr != mResourceEventExecution){
         // if we have a mResourceEventExecution handle it
@@ -267,6 +269,11 @@ EMGMResponse CResource::writeValue(forte::core::TNameIdentifier &paNameList, con
             //if we have got a connection it was a DO mirror the forced value there
             con->writeData(*var);
           }
+        }else{
+          InitValue value;
+          value.ptr = var;
+          value.str = paValue.getStorage().c_str();
+          mInitList.push_back(value);
         }
         retVal = EMGMResponse::Ready;
       }else{
