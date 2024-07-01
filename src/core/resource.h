@@ -148,6 +148,15 @@ class CResource : public CFunctionBlock, public forte::core::CFBContainer{
       return nullptr;
     }
 
+    struct InitValue {
+        CIEC_ANY* ptr;
+        std::string str;
+    };
+
+    std::vector<InitValue> mInitList;
+
+    void setInitialValues() override;
+
     /*! Wrapper for simplifying connection creation in resources
      *
      */
