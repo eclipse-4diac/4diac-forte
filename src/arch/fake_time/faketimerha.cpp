@@ -38,20 +38,22 @@ void CFakeTimerHandler::run() {
     if(!sleepTimes.empty()) {
       CFakeTimerHandler::napinfo nap = sleepTimes.front();
       sleepTimes.pop();
-      if(nap.napDuration == 0 && nap.wakupTime < (getNanoSecondsMonotonic() / cNanosecondsToMilliseconds)) {
+      if(nap.napDuration == 0 && nap.wakeupTime < (getNanoSecondsMonotonic() / cNanosecondsToMilliseconds)) {
         // We have to go back in time!
         nextTick();
-        jumpFakeForteTime(nap.wakupTime);
-        DEVLOG_DEBUG("[FAKETIME]: time-jumping to destination %d ms\n", nap.wakupTime);
+        jumpFakeForteTime(nap.wakeupTime);
+        DEVLOG_DEBUG("[FAKETIME]: time-jumping to destination %d ms\n", nap.wakeupTime);
         sleepThread(0);
       } else {
-        nap.napDuration = nap.wakupTime - getNanoSecondsMonotonic() / cNanosecondsToMilliseconds;
+        if(nap.wakeupTime != 0) {
+          nap.napDuration = nap.wakeupTime - getNanoSecondsMonotonic() / cNanosecondsToMilliseconds;
+        }
         if(nap.napDuration > cHourInMilliseconds) {
           // if a destination time is more than one hour away from the current time:
           // skip to one hour before the destination and start simulation from there
           // this is done to avoid timeouts when communicating with 4diac-ide
-          jumpFakeForteTime(nap.wakupTime - cHourInMilliseconds);
-          DEVLOG_DEBUG("[FAKETIME]: time-jumping to one hour before destination %d ms\n", nap.wakupTime - cHourInMilliseconds);
+          jumpFakeForteTime(nap.wakeupTime - cHourInMilliseconds);
+          DEVLOG_DEBUG("[FAKETIME]: time-jumping to one hour before destination %d ms\n", nap.wakeupTime - cHourInMilliseconds);
           nap.napDuration = cHourInMilliseconds;
         }
         DEVLOG_DEBUG("[FAKETIME]: advance time for %d ms\n", nap.napDuration);
@@ -79,7 +81,7 @@ void CFakeTimerHandler::sleepToTime(const CIEC_TIME &t) {
   const auto wakeup = t.getInMilliSeconds();
   sleepTimes.push({
     .napDuration = 0,
-    .wakupTime = wakeup,
+    .wakeupTime = wakeup,
     .fakeSleepFb = nullptr
   });
   DEVLOG_DEBUG("[FAKETIME]: received time destination %d ms\n", wakeup);
@@ -97,7 +99,7 @@ void CFakeTimerHandler::setSleepTime(const CIEC_TIME &t, CFunctionBlock *fb) {
   const auto duration = t.getInMilliSeconds();
   sleepTimes.push({
     .napDuration = duration,
-    .wakupTime = 0,
+    .wakeupTime = 0,
     .fakeSleepFb = fb
   });
   DEVLOG_DEBUG("[FAKETIME]: received sleep time of %d ms\n", duration);
