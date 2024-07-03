@@ -249,8 +249,8 @@ EMGMResponse CResource::writeValue(forte::core::TNameIdentifier &paNameList, con
     //this is not an identifier for the resource interface
     fb = getContainedFB(runner);
     if(!runner.isLastEntry()){
-    	// currently we can not write values of FBs inside of FBs
-    	return EMGMResponse::NoSuchObject;
+      // currently we can not write values of FBs inside of FBs
+      return EMGMResponse::NoSuchObject;
     }
   }
 

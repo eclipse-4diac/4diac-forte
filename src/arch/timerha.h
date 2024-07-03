@@ -59,15 +59,15 @@ class CTimerHandler : public CExternalEventHandler{
 
     /*!\brief Register an Event source Function Block for receiving a single timed event.
      *
-     * \param paTimedFB   		the event source FB to be registered
-     * \param paTimeInterval	delta time to next event
+     * \param paTimedFB         the event source FB to be registered
+     * \param paTimeInterval    delta time to next event
      */
     void registerOneShotTimedFB(CEventSourceFB *const paTimedFB, const CIEC_TIME &paTimeInterval);
 
     /*!\brief Register an Event source Function Block for receiving a periodic events.
      *
-     * \param paTimedFB   		the event source FB to be registered
-     * \param paTimeInterval	delta time between two events
+     * \param paTimedFB         the event source FB to be registered
+     * \param paTimeInterval    delta time between two events
      */
     void registerPeriodicTimedFB(CEventSourceFB *const paTimedFB, const CIEC_TIME &paTimeInterval);
 

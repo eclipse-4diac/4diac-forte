@@ -131,6 +131,6 @@ CIEC_ANY *FORTE_F_ANY_AS_STRING::getVarInternal(size_t) {
 }
 
 void FORTE_F_ANY_AS_STRING::alg_REQ(void) {
-	var_OUT = func_ANY_AS_STRING(var_IN);
+  var_OUT = func_ANY_AS_STRING(var_IN);
 }
 

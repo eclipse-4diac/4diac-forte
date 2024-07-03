@@ -31,9 +31,9 @@
 #endif
 
 inline in_addr_t inet_addr(const char *cp) {
-	in_addr_t in_addr;
-	if (0 == net_addr_pton(AF_INET, cp, &in_addr)) return in_addr;
-	return -1;
+  in_addr_t in_addr;
+  if (0 == net_addr_pton(AF_INET, cp, &in_addr)) return in_addr;
+  return -1;
 }
 
 void setupMulticastGroup(char* paIPAddr, const char* paMCInterface);
