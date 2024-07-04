@@ -7,7 +7,7 @@ export forte_bin_dir="bin/posix"
 #rm old folder
 rm -r "./$forte_bin_dir"
 
-#call setup_esp32c3.sh
+#call setup_posix.sh
 ./setup_posix.sh
 
 #goto new Directory

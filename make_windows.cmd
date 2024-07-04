@@ -1,25 +1,25 @@
-#!/bin/bash
+@echo off
 echo "----------------------------------------------------------------------------"
 
 
-export forte_bin_dir="bin/windows"
+set forte_bin_dir="bin\windows"
 
-#rm old folder
-rm -r "./$forte_bin_dir"
+::rm old folder
+rm -r "%forte_bin_dir%"
 
-#call setup_esp32c3.sh
-./setup_windows.sh
+::call setup_windows.sh
+sh.exe ./setup_windows.sh
 
-#goto new Directory
-cd "./$forte_bin_dir"
+::goto new Directory
+cd "%forte_bin_dir%"
 
-#make
+::make
 make
 
 
 echo "----------------------------------------------------------------------------"
 echo " DONE. to re-make just type:"
-echo "cd ./$forte_bin_dir"
+echo "cd %forte_bin_dir%"
 echo "make -j" 
 echo "----------------------------------------------------------------------------"
 
