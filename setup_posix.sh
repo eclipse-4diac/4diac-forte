@@ -33,6 +33,7 @@ if [ -d "$forte_bin_dir" ]; then
   
   cmake -G "Unix Makefiles" \
     -DFORTE_ARCHITECTURE=Posix \
+    -DFORTE_LOGLEVEL=LOGINFO \
     -DFORTE_COM_ETH=ON \
     -DFORTE_COM_FBDK=ON \
     -DFORTE_COM_LOCAL=ON \
