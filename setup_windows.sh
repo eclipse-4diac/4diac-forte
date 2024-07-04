@@ -32,7 +32,7 @@ if [ -d "$forte_bin_dir" ]; then
   cd "./$forte_bin_dir"
   
   cmake -G "Unix Makefiles" \
-    -DFORTE_ARCHITECTURE=Posix \
+    -DFORTE_ARCHITECTURE=Win32 \
     -DFORTE_COM_ETH=ON \
     -DFORTE_COM_FBDK=ON \
     -DFORTE_COM_LOCAL=ON \
