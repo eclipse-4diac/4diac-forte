@@ -2,7 +2,7 @@
 echo "----------------------------------------------------------------------------"
 
 
-set forte_bin_dir="bin\windows"
+set forte_bin_dir="bin\win32"
 
 ::rm old folder
 rm -r "%forte_bin_dir%"

@@ -11,7 +11,7 @@ echo " set FORTE_TESTS-option to 'ON'"
 echo ""
 echo "----------------------------------------------------------------------------"
 
-export forte_bin_dir="bin/windows"
+export forte_bin_dir="bin/win32"
 
 #set to boost-include directory
 export forte_boost_test_inc_dirs=""
