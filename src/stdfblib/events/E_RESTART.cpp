@@ -89,9 +89,7 @@ EMGMResponse FORTE_E_RESTART::changeFBExecutionState(EMGMCommandType paCommand){
   if(EMGMResponse::Ready == eRetVal){
     switch(paCommand){
       case EMGMCommandType::Start:
-        if (scmEventWARMID != mEventToSend) {
-          mEventToSend = (scmEventSTOPID == mEventToSend) ? scmEventWARMID : scmEventCOLDID;
-        }
+        mEventToSend = (scmEventSTOPID == mEventToSend) ? scmEventWARMID : scmEventCOLDID;
         getDevice()->getDeviceExecution().startNewEventChain(this);
         break;
       case EMGMCommandType::Stop:
@@ -100,9 +98,6 @@ EMGMResponse FORTE_E_RESTART::changeFBExecutionState(EMGMCommandType paCommand){
         getDevice()->getDeviceExecution().startNewEventChain(this);
         // wait until semaphore is released, after STOP eventExecution was completed
         mSuspendSemaphore.waitIndefinitely();
-        break;
-      case EMGMCommandType::Reset:
-        mEventToSend = scmEventWARMID;
         break;
       default:
         mEventToSend = cgInvalidEventID;
