@@ -15,6 +15,8 @@
 #ifndef _RESOURCE_H_
 #define _RESOURCE_H_
 
+#include <utility>
+
 #include "fbcontainer.h"
 #include "funcbloc.h"
 #include "forte_sync.h"
@@ -148,12 +150,26 @@ class CResource : public CFunctionBlock, public forte::core::CFBContainer{
       return nullptr;
     }
 
-    struct InitValue {
-        CIEC_ANY* ptr;
-        std::string str;
+    class CInitialValue {
+      private:
+        CIEC_ANY& mIECVariable;
+        const std::string mInitString;
+
+      public:
+        CInitialValue(CIEC_ANY& paVariable, std::string paInitString) : mIECVariable(paVariable), mInitString(std::move(paInitString)) {}
+
+        [[nodiscard]]
+        const std::string& getInitString() const{
+          return mInitString;
+        }
+
+        CIEC_ANY& getIECVariable() {
+          return mIECVariable;
+        }
+
     };
 
-    std::vector<InitValue> mInitList;
+    std::vector<CInitialValue> mInitialValues;
 
     void setInitialValues() override;
 

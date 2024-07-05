@@ -270,10 +270,7 @@ EMGMResponse CResource::writeValue(forte::core::TNameIdentifier &paNameList, con
             con->writeData(*var);
           }
         }else{
-          InitValue value;
-          value.ptr = var;
-          value.str = paValue.getStorage().c_str();
-          mInitList.push_back(value);
+          mInitialValues.emplace_back(*var, paValue.getStorage());
         }
         retVal = EMGMResponse::Ready;
       }else{
@@ -282,6 +279,17 @@ EMGMResponse CResource::writeValue(forte::core::TNameIdentifier &paNameList, con
     }
   }
   return retVal;
+}
+
+void CResource::setInitialValues() {
+  CFunctionBlock::setInitialValues();
+  if(mInitialValues.empty()){
+    DEVLOG_ERROR("Error initializing values during reset\r\n");
+  }
+
+  for(auto it : mInitialValues){
+    it.getIECVariable().fromString(it.getInitString().c_str());
+  }
 }
 
 EMGMResponse CResource::readValue(forte::core::TNameIdentifier &paNameList, std::string & paValue){
