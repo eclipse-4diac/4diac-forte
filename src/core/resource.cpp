@@ -283,10 +283,6 @@ EMGMResponse CResource::writeValue(forte::core::TNameIdentifier &paNameList, con
 
 void CResource::setInitialValues() {
   CFunctionBlock::setInitialValues();
-  if(mInitialValues.empty()){
-    DEVLOG_ERROR("Error initializing values during reset\r\n");
-  }
-
   for(auto it : mInitialValues){
     it.getIECVariable().fromString(it.getInitString().c_str());
   }
