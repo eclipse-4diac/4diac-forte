@@ -270,7 +270,7 @@ EMGMResponse CResource::writeValue(forte::core::TNameIdentifier &paNameList, con
             con->writeData(*var);
           }
         }else{
-          mInitialValues.emplace_back(*var, paValue.getStorage());
+          mInitialValues.emplace_back(*var, paValue);
         }
         retVal = EMGMResponse::Ready;
       }else{
