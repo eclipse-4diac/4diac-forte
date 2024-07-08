@@ -40,6 +40,14 @@ GEN_STRUCT_MUX::GEN_STRUCT_MUX(const CStringDictionary::TStringId paInstanceName
     CGenFunctionBlock<CFunctionBlock>(paContainer, paInstanceNameId){
 }
 
+bool GEN_STRUCT_MUX::initialize() {
+  CFunctionBlock::initialize();
+  for (TPortId i = 0; i < st_OUT().getStructSize(); i++) {
+    getDI(i)->setValue(st_OUT().getMember(i)->unwrap());
+  }
+  return true;
+}
+
 GEN_STRUCT_MUX::~GEN_STRUCT_MUX(){
   if(nullptr!= mInterfaceSpec){
     delete[](mInterfaceSpec->mDINames);

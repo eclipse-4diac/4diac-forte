@@ -61,6 +61,14 @@ void GEN_STRUCT_DEMUX::writeOutputData(TEventID) {
   }
 }
 
+bool GEN_STRUCT_DEMUX::initialize() {
+  CFunctionBlock::initialize();
+  for (TPortId i = 0; i < st_IN().getStructSize(); i++) {
+    getDO(i)->setValue(st_IN().getMember(i)->unwrap());
+  }
+  return true;
+}
+
 bool GEN_STRUCT_DEMUX::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) {
   bool retval = false;
   CStringDictionary::TStringId structTypeNameId = GEN_STRUCT_MUX::getStructNameId(paConfigString);
