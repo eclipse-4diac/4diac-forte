@@ -41,6 +41,8 @@ class GEN_STRUCT_DEMUX : public CGenFunctionBlock<CFunctionBlock> {
        return *static_cast<CIEC_STRUCT*>(getDI(0));
     }
 
+    bool initialize() override;
+
   public:
 
     GEN_STRUCT_DEMUX(const GEN_STRUCT_DEMUX &paOther) = delete;
