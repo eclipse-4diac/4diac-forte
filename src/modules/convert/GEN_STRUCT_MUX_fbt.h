@@ -42,6 +42,8 @@ class GEN_STRUCT_MUX : public CGenFunctionBlock<CFunctionBlock> {
      }
 
     bool initialize() override;
+    void setInitialValues() override;
+    void copyStructValuesToInputs();
 
   public:
 
