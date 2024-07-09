@@ -62,11 +62,22 @@ void GEN_STRUCT_DEMUX::writeOutputData(TEventID) {
 }
 
 bool GEN_STRUCT_DEMUX::initialize() {
-  CFunctionBlock::initialize();
+  if(CGenFunctionBlock::initialize()) {
+    copyStructValuesToOutputs();
+    return true;
+  }
+  return false;
+}
+
+void GEN_STRUCT_DEMUX::setInitialValues() {
+  CFunctionBlock::setInitialValues();
+  copyStructValuesToOutputs();
+}
+
+void GEN_STRUCT_DEMUX::copyStructValuesToOutputs() {
   for (TPortId i = 0; i < st_IN().getStructSize(); i++) {
     getDO(i)->setValue(st_IN().getMember(i)->unwrap());
   }
-  return true;
 }
 
 bool GEN_STRUCT_DEMUX::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) {

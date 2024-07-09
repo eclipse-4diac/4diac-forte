@@ -42,6 +42,8 @@ class GEN_STRUCT_DEMUX : public CGenFunctionBlock<CFunctionBlock> {
     }
 
     bool initialize() override;
+    void setInitialValues() override;
+    void copyStructValuesToOutputs();
 
   public:
 

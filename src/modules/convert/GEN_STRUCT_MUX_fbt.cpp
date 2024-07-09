@@ -40,12 +40,23 @@ GEN_STRUCT_MUX::GEN_STRUCT_MUX(const CStringDictionary::TStringId paInstanceName
     CGenFunctionBlock<CFunctionBlock>(paContainer, paInstanceNameId){
 }
 
+void GEN_STRUCT_MUX::setInitialValues() {
+  CFunctionBlock::setInitialValues();
+  copyStructValuesToInputs();
+}
+
 bool GEN_STRUCT_MUX::initialize() {
-  CFunctionBlock::initialize();
+  if (CGenFunctionBlock::initialize()) {
+    copyStructValuesToInputs();
+    return true;
+  }
+  return false;
+}
+
+void GEN_STRUCT_MUX::copyStructValuesToInputs() {
   for (TPortId i = 0; i < st_OUT().getStructSize(); i++) {
     getDI(i)->setValue(st_OUT().getMember(i)->unwrap());
   }
-  return true;
 }
 
 GEN_STRUCT_MUX::~GEN_STRUCT_MUX(){
