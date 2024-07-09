@@ -164,20 +164,20 @@ EMGMResponse CResource::executeMGMCommand(forte::core::SManagementCMD &paCommand
 
 EMGMResponse CResource::changeFBExecutionState(EMGMCommandType paCommand){
   EMGMResponse retVal = CFunctionBlock::changeFBExecutionState(paCommand);
-  if(EMGMResponse::Ready == retVal){
+  if(retVal == EMGMResponse::Ready){
     retVal = changeContainedFBsExecutionState(paCommand);
-    if(EMGMResponse::Ready == retVal){
-      if(EMGMCommandType::Start == paCommand && nullptr != mInterfaceSpec) { //on start, sample inputs
+    if(retVal == EMGMResponse::Ready){
+      if(paCommand == EMGMCommandType::Start && mInterfaceSpec != nullptr) { //on start, sample inputs
         for(TPortId i = 0; i < mInterfaceSpec->mNumDIs; ++i) {
           CDataConnection *conn = *getDIConUnchecked(i);
-          if(nullptr != conn) {
+          if(conn != nullptr) {
             conn->readData(*getDI(i));
           }
         }
-      }else if(EMGMCommandType::Reset == paCommand){
+      }else if(paCommand == EMGMCommandType::Reset){
         setInitialValues();
       }
-      if(nullptr != mResourceEventExecution){
+      if(mResourceEventExecution != nullptr){
         // if we have a mResourceEventExecution handle it
         mResourceEventExecution->changeExecutionState(paCommand);
       }
