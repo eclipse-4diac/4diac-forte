@@ -367,7 +367,7 @@ void CFunctionBlock::readData(size_t paDINum, CIEC_ANY& paValue, const CDataConn
     paValue.toString(valueString.data(), valueString.capacity());
     barectf_default_trace_inputData(this->getResource()->getTracePlatformContext().getContext(),
                                     getFBTypeName() ?: "null",
-                                    getInstanceName() ?: "null",
+                                    getFullQualifiedApplicationInstanceName('.').c_str() ?: "null",
                                     static_cast<uint64_t>(paDINum), valueString.c_str());
   }
 }
@@ -375,7 +375,7 @@ void CFunctionBlock::readData(size_t paDINum, CIEC_ANY& paValue, const CDataConn
 
 #ifdef FORTE_TRACE_CTF
 void CFunctionBlock::writeData(size_t paDONum, CIEC_ANY& paValue, CDataConnection& paConn) {
-	if(paConn.isConnected()) {
+  if(paConn.isConnected()) {
 #ifdef FORTE_SUPPORT_MONITORING
     if(paValue.isForced() != true) {
 #endif //FORTE_SUPPORT_MONITORING
@@ -393,7 +393,7 @@ void CFunctionBlock::writeData(size_t paDONum, CIEC_ANY& paValue, CDataConnectio
     paValue.toString(valueString.data(), valueString.capacity());
     barectf_default_trace_outputData(this->getResource()->getTracePlatformContext().getContext(),
                                      getFBTypeName() ?: "null",
-                                     getInstanceName() ?: "null",
+                                     getFullQualifiedApplicationInstanceName('.').c_str() ?: "null",
                                      static_cast<uint64_t>(paDONum), valueString.c_str());
   }
 }
@@ -696,7 +696,7 @@ void CFunctionBlock::traceInputEvent(TEventID paEIID){
   if(barectf_is_tracing_enabled(getResource()->getTracePlatformContext().getContext())) {
     barectf_default_trace_receiveInputEvent(this->getResource()->getTracePlatformContext().getContext(),
                                             getFBTypeName() ?: "null",
-                                            getInstanceName() ?: "null",
+                                            getFullQualifiedApplicationInstanceName('.').c_str() ?: "null",
                                             static_cast<uint64_t>(paEIID));
     traceInstanceData();
   }
@@ -706,7 +706,7 @@ void CFunctionBlock::traceOutputEvent(TEventID paEOID){
   if(barectf_is_tracing_enabled(getResource()->getTracePlatformContext().getContext())) {
     barectf_default_trace_sendOutputEvent(this->getResource()->getTracePlatformContext().getContext(),
                                           getFBTypeName() ?: "null",
-                                          getInstanceName() ?: "null",
+                                          getFullQualifiedApplicationInstanceName('.').c_str() ?: "null",
                                           static_cast<uint64_t>(paEOID));
   }
 }

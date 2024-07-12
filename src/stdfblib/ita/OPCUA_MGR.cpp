@@ -1280,7 +1280,7 @@ void OPCUA_MGR::setMGMCommand(EMGMCommandType paCMD, CStringDictionary::TStringI
     mCommand.mSecondParam.pushBack(CStringDictionary::getInstance().insert(paSecondParam));
   }
   if (paAdditionalParams != nullptr) {
-    mCommand.mAdditionalParams = CIEC_STRING(paAdditionalParams);
+    mCommand.mAdditionalParams = paAdditionalParams;
   }
 }
 
@@ -1301,7 +1301,7 @@ void OPCUA_MGR::setMGMCommand(EMGMCommandType paCMD, CStringDictionary::TStringI
     }
   }
   if (paAdditionalParams != nullptr) {
-    mCommand.mAdditionalParams = CIEC_STRING(paAdditionalParams);
+    mCommand.mAdditionalParams = paAdditionalParams;
   }
 }
 

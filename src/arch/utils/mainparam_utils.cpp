@@ -16,6 +16,10 @@
 #include <string.h>
 #include <stdlib.h>
 
+#ifdef FORTE_TRACE_CTF
+#include <string>
+#endif
+
 /*!\brief Lists the help for FORTE
  *
  */

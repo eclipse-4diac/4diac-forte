@@ -56,12 +56,12 @@ public:
   GEN_FORTE_F_MOVE(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
   ~GEN_FORTE_F_MOVE() override;
 
-  CIEC_ANY_VARIANT& var_IN() {
-    return *static_cast<CIEC_ANY_VARIANT*>(getDI(0));
+  CIEC_ANY& var_IN() {
+    return *static_cast<CIEC_ANY*>(getDI(0));
   }
 
-  CIEC_ANY_VARIANT& var_OUT() {
-    return *static_cast<CIEC_ANY_VARIANT*>(getDO(0));
+  CIEC_ANY& var_OUT() {
+    return *static_cast<CIEC_ANY*>(getDO(0));
   }
 
 };

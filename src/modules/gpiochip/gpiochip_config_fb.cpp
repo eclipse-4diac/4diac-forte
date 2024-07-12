@@ -52,13 +52,13 @@ void GPIOChipConfigFB::setInitialValues() {
 
 void GPIOChipConfigFB::readInputData(const TEventID paEIID) {
   for (auto i = 0; i < 7; i++) {
-  	readData(i, *mDIs[i], mDIConns[i]);
+    readData(i, *mDIs[i], mDIConns[i]);
   }
 }
 
 void GPIOChipConfigFB::writeOutputData(const TEventID paEIID) {
   for (auto i = 0; i < 2; i++) {
-  	writeData(i, *mDOs[i], mDOConns[i]);
+    writeData(i, *mDOs[i], mDOConns[i]);
   }
 }
 

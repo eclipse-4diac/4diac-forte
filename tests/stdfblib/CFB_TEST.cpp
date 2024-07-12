@@ -48,8 +48,8 @@ FORTE_CFB_TEST::FORTE_CFB_TEST(const CStringDictionary::TStringId paInstanceName
 };
 
 void FORTE_CFB_TEST::setInitialValues() {
-	var_QI = 0_BOOL;
-	var_QO = 0_BOOL;
+    var_QI = 0_BOOL;
+    var_QO = 0_BOOL;
 }
 
 const SCFB_FBInstanceData FORTE_CFB_TEST::scmInternalFBs[] = {

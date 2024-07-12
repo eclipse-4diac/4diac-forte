@@ -506,7 +506,7 @@ void CMonitoringHandler::appendEventWatch(std::string &paResponse, SEventWatchEn
   paResponse += "\"/>\n</Port>"s;
 }
 
-void CMonitoringHandler::createFullFBName(CIEC_STRING &paFullName, forte::core::TNameIdentifier &paNameList){
+void CMonitoringHandler::createFullFBName(std::string &paFullName, forte::core::TNameIdentifier &paNameList){
   for(forte::core::TNameIdentifier::CIterator runner(paNameList.begin()); runner != paNameList.end(); ++runner){
     paFullName.append(CStringDictionary::getInstance().get(*runner));
     if(!runner.isLastEntry()){

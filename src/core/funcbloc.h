@@ -157,7 +157,7 @@ class CFunctionBlock {
 
     /*!\brief Returns the type name of this FB instance
      */
-    const char * getFBTypeName(){
+    const char * getFBTypeName() const {
       return CStringDictionary::getInstance().get(getFBTypeId());
     }
 
@@ -528,7 +528,7 @@ class CFunctionBlock {
           paConn.readData(paValue);
         }
 #endif //FORTE_SUPPORT_MONITORING
-			}
+      }
     }
 #endif //FORTE_TRACE_CTF
 

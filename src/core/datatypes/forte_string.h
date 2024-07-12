@@ -182,6 +182,10 @@ class CIEC_STRING : public CIEC_ANY_STRING {
       return scmMaxStringLen;
     }
 
+    TForteUInt16 getCapacity() const override {
+      return static_cast<TForteUInt16>(mValue.capacity());
+    }
+
     void reserve(const TForteUInt16 paRequestedSize) override;
 
     void assign(const char *paData, const TForteUInt16 paLen) override;
