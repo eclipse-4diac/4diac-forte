@@ -33,8 +33,6 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "Win32")
   forte_add_sourcefile_cpp(../genforte_realFunctions.cpp)
   
   forte_add_to_executable_cpp(../main)
-  forte_add_to_executable_cpp(main_helper)
-
 
   if(FORTE_BUILD_SHARED_LIBRARY)
     set(FORTE_EXTERNAL_TIMEHA OFF CACHE BOOL "Use External Time Handler")

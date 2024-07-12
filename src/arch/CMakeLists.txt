@@ -30,7 +30,7 @@ add_subdirectory(zephyr)
 
 add_subdirectory(utils)
 
-forte_add_sourcefile_hcpp(timerha devlog forte)
+forte_add_sourcefile_hcpp(timerha devlog)
 
 SET(FORTE_LOGGER_BUFFER_SIZE "300" CACHE STRING "Buffer's length of the logger")
 mark_as_advanced(FORTE_LOGGER_BUFFER_SIZE)
@@ -63,3 +63,5 @@ if (FORTE_STACKTRACE)
         endif ()
     endif ()
 endif ()
+
+forte_add_sourcefile_with_path_cpp(${CMAKE_BINARY_DIR}/src_gen/startuphook.cpp)

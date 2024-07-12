@@ -40,7 +40,7 @@ class DeviceStatus {
     static volatile bool started;
     static volatile bool ready;
 
-    static bool startup();
+    static bool startup(int, char*);
     static bool isReady();
     static void plcCallbackOperationHandler(enum PlcOperation operation);
 

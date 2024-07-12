@@ -21,23 +21,10 @@
 DEFINE_HANDLER(CFDSelectHandler)
 CFDSelectHandler::CFDSelectHandler(CDeviceExecution& paDeviceExecution) : CExternalEventHandler(paDeviceExecution)  {
   mConnectionListChanged = false;
-#ifdef WIN32
-  // Windows Socket Startupcode
-  WORD wVersionRequested;
-  WSADATA wsaData;
-
-  /* Use the MAKEWORD(lowbyte, highbyte) macro declared in Windef.h */
-  wVersionRequested = MAKEWORD(2, 2);
-
-  WSAStartup(wVersionRequested, &wsaData);
-#endif
 }
 
 CFDSelectHandler::~CFDSelectHandler(){
   this->end();
-#ifdef WIN32
-  WSACleanup();
-#endif
 }
 
 // single-threaded-network-code

@@ -62,6 +62,9 @@ mark_as_advanced(FORTE_BUILD_STATIC_LIBRARY)
 set(FORTE_BUILD_SHARED_LIBRARY OFF CACHE BOOL "Build FORTE as shared library")
 mark_as_advanced(FORTE_BUILD_SHARED_LIBRARY)
 
+SET(FORTE_C_INTERFACE ON CACHE BOOL "Build C interface to Forte")
+mark_as_advanced(FORTE_C_INTERFACE)
+
 #######################################################################################
 # Determine the loglevel
 #######################################################################################

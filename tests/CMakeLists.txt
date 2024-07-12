@@ -105,8 +105,8 @@ FILE(WRITE ${CMAKE_BINARY_DIR}/file_test_list.txt "${WRITE_FILE}")
 # Create Exe File
 #######################################################################################
 
-ADD_EXECUTABLE(forte_test $<TARGET_OBJECTS:FORTE_LITE> ${SOURCE_H} ${SOURCE_CPP})
-target_compile_features(forte_test PRIVATE cxx_std_17)
+ADD_EXECUTABLE(forte_test ${SOURCE_H} ${SOURCE_CPP})
+target_link_libraries(forte_test FORTE_LITE)
 
 #######################################################################################
 # Add definitions
@@ -132,7 +132,6 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "Win32")
  endif()
 endif("${FORTE_ARCHITECTURE}" STREQUAL "Win32")
 
-add_dependencies(forte_test FORTE_LITE)
 add_dependencies(forte_test forte_stringlist_generator)
 
 SET_TARGET_PROPERTIES(forte_test PROPERTIES LINKER_LANGUAGE CXX)
@@ -200,25 +199,65 @@ target_include_directories(forte_test PUBLIC ${INCLUDE_DIRECTORIES})
 INCLUDE_DIRECTORIES(SYSTEM ${INCLUDE_TEST_SYSTEM_DIRECTORIES})
 
 #######################################################################################
-# Link Libraries to the Executeable
+# Link Libraries to the Executable
 #######################################################################################
 
 #Link flags
 get_property(LINK_TEST_LIBRARY GLOBAL PROPERTY FORTE_LINK_LIBRARY)
-
 if("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
     SET_PROPERTY(GLOBAL APPEND PROPERTY LINK_TEST_LIBRARY "-lboost_unit_test_framework -lboost_prg_exec_monitor -lboost_test_exec_monitor")
 endif("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
 
 TARGET_LINK_LIBRARIES(forte_test ${LINK_TEST_LIBRARY})
 
+#######################################################################################
+# Link Libraries to the C Interface Executable
+#######################################################################################
+
+if(FORTE_C_INTERFACE)
+  if(FORTE_BUILD_STATIC_LIBRARY)
+    SET(FORTE_C_STATIC_TEST_NAME "forte_c_static_test")
+    ADD_EXECUTABLE(${FORTE_C_STATIC_TEST_NAME} ${CMAKE_CURRENT_SOURCE_DIR}/arch/forte_c_test.cpp)
+
+    TARGET_LINK_LIBRARIES(${FORTE_C_STATIC_TEST_NAME} $<TARGET_NAME:forte-c-static>)
+    add_test(${FORTE_C_STATIC_TEST_NAME} ${EXECUTABLE_OUTPUT_PATH}/${FORTE_C_STATIC_TEST_NAME})
+
+    TARGET_LINK_LIBRARIES(${FORTE_C_STATIC_TEST_NAME} "-lboost_unit_test_framework")
+  endif(FORTE_BUILD_STATIC_LIBRARY)
+
+  if(FORTE_BUILD_SHARED_LIBRARY)
+    SET(FORTE_C_SHARED_TEST_NAME "forte_c_shared_test")
+    ADD_EXECUTABLE(${FORTE_C_SHARED_TEST_NAME} ${CMAKE_CURRENT_SOURCE_DIR}/arch/forte_c_test.cpp)
+
+    TARGET_LINK_LIBRARIES(${FORTE_C_SHARED_TEST_NAME} $<TARGET_NAME:forte-c-shared>)
+    add_test(${FORTE_C_SHARED_TEST_NAME} ${EXECUTABLE_OUTPUT_PATH}/${FORTE_C_SHARED_TEST_NAME})
+
+    TARGET_LINK_LIBRARIES(${FORTE_C_SHARED_TEST_NAME} "-lboost_unit_test_framework")
+  endif(FORTE_BUILD_SHARED_LIBRARY) 
+
+
+endif(FORTE_C_INTERFACE)
+
+#######################################################################################
+# Test if main can link to forte-static
+#######################################################################################
+if(FORTE_BUILD_STATIC_LIBRARY)
+  SET(TEST_FORTE_STATIC "forte_test_static")
+  GET_PROPERTY(SOURCE_EXECUTABLE_CPP GLOBAL PROPERTY FORTE_EXECUTABLE_CPP)
+  add_executable (${TEST_FORTE_STATIC} ${SOURCE_EXECUTABLE_CPP})
+  target_include_directories(${TEST_FORTE_STATIC} PRIVATE ${INCLUDE_DIRECTORIES})
+  target_link_libraries (${TEST_FORTE_STATIC} $<TARGET_NAME:forte-static>)
+  add_dependencies (${TEST_FORTE_STATIC} forte-static)
+endif(FORTE_BUILD_STATIC_LIBRARY)
 
 #######################################################################################
 # Test if main can link to forte-shared
 #######################################################################################
 if(FORTE_BUILD_SHARED_LIBRARY)
+  SET(TEST_FORTE_SHARED "forte_test_shared")
   GET_PROPERTY(SOURCE_EXECUTABLE_CPP GLOBAL PROPERTY FORTE_EXECUTABLE_CPP)
-  add_executable (test-forte-shared ${SOURCE_EXECUTABLE_CPP})
-  target_link_libraries (test-forte-shared ${LINK_LIBRARY} forte-shared)
-  add_dependencies (test-forte-shared forte-shared)
+  add_executable (${TEST_FORTE_SHARED} ${SOURCE_EXECUTABLE_CPP})
+  target_include_directories(${TEST_FORTE_SHARED} PRIVATE ${INCLUDE_DIRECTORIES})
+  target_link_libraries (${TEST_FORTE_SHARED} $<TARGET_NAME:forte-shared>)
+  add_dependencies (${TEST_FORTE_SHARED} forte-shared)
 endif(FORTE_BUILD_SHARED_LIBRARY)

@@ -13,42 +13,89 @@
  *  Tarik Terzimehic - make OPC UA server port setable from the command line
  *******************************************************************************/
 
-#include "forte.h"
-#include "devlog.h"
+#include <stdio.h>
+#include <signal.h>
+#include "startuphook.h"
+#include "../core/forteinstance.h"
+#include "forte_architecture.h"
 
-TForteInstance g4diacForteInstance;
-/**
- * @brief This method is implemented by each architecture to call to stop forte, usually using signals.
- * It's not part of CForteArchitecture because it's only related to the main execution and not to forte itself
- * 
- * @param paEndForte Callback that will end forte
+#include "../utils/mainparam_utils.h"
+
+/*!\brief Check if the correct endianess has been configured.
+ *
+ * If the right endianess is not set this function will end FORTE.
  */
-void hookEndForte(void (*paEndForte)());
+void checkEndianess();
 
-void endForte(){
-  forteRequestStopInstance(g4diacForteInstance);
+void hookSignals();
+
+C4diacFORTEInstance g4diacForteInstance;
+
+void endForte(int ){
+  g4diacForteInstance.triggerDeviceShutdown();
 }
 
-int main(int argc, char *argv[]){
+int main(int argc, char *arg[]){
 
-  if(auto result = forteGlobalInitialize(argc, argv); result != FORTE_OK){
-    return result;
+  checkEndianess();
+
+  if(auto result = CForteArchitecture::initialize(argc, arg); result != 0){
+     return result;
   }
 
-  if(auto result = forteStartInstanceGeneric(argc, argv, &g4diacForteInstance); result != FORTE_OK){
-    forteGlobalDeinitialize();
-    return result;
+  struct callOnExit {
+    int (*onExit)();
+    ~callOnExit() { onExit(); }
+  };
+
+  callOnExit{CForteArchitecture::deinitialize};
+
+  startupHook(argc, arg);
+
+  hookSignals();
+
+  const char *pIpPort = parseCommandLineArguments(argc, arg);
+  if((0 == strlen(pIpPort)) || (nullptr == strchr(pIpPort, ':'))) {
+    //! Lists the help for FORTE
+    listHelp();
+    return -1;
   }
 
-  hookEndForte(endForte);  
-  
+  if(!g4diacForteInstance.startupNewDevice(pIpPort)) {
+    DEVLOG_INFO("Could not start a new device\n");
+    return -1;
+  }
+
   DEVLOG_INFO("FORTE is up and running\n");
-  forteWaitForInstanceToStop(g4diacForteInstance);
+  g4diacForteInstance.awaitDeviceShutdown();
   DEVLOG_INFO("FORTE finished\n");
 
-  return forteGlobalDeinitialize();
+  return 0;
 }
 
+void checkEndianess(){
+  int i = 1;
+  char *p = (char *) &i;
+  if(p[0] == 1){
+    //we are on a little endian platform
+#ifdef FORTE_BIG_ENDIAN
+    DEVLOG_ERROR("Wrong endianess configured! You are on a little endian platform and have configured big endian!\n");
+    exit(-1);
+#endif
+  }
+  else{
+    //we are on a big endian platform
+#ifdef FORTE_LITTLE_ENDIAN
+    DEVLOG_ERROR("Wrong endianess configured! You are on a big endian platform and have configured little endian!\n");
+    exit(-1);
+#endif
+  }
+}
 
-
-
+void hookSignals() {
+  signal(SIGINT, endForte);
+  signal(SIGTERM, endForte);
+#ifndef WIN32
+  signal(SIGHUP, endForte);
+#endif
+}

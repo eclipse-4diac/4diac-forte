@@ -33,46 +33,11 @@ forte_add_sourcefile_with_path_hcpp(${FORTE_BINARY_DIR}/stringlist)
 set_source_files_properties(${FORTE_BINARY_DIR}/stringlist.h PROPERTIES GENERATED TRUE)
 set_source_files_properties(${FORTE_BINARY_DIR}/stringlist.cpp PROPERTIES GENERATED TRUE)
 
-#######################################################################################
-# Define global Include-directorys
-#######################################################################################
-
 forte_add_include_directories(./)
 forte_add_include_directories(${FORTE_BINARY_DIR})
 forte_add_include_directories(${FORTE_BINARY_DIR}/src_gen)
 
-GET_PROPERTY(INCLUDE_DIRECTORIES GLOBAL PROPERTY FORTE_INCLUDE_DIRECTORIES)
 
-LIST(LENGTH INCLUDE_DIRECTORIES len)
-IF(len GREATER 0)
-  LIST(REMOVE_DUPLICATES INCLUDE_DIRECTORIES)
-  LIST(REVERSE INCLUDE_DIRECTORIES) # bugfix, for replaced include files
-ENDIF(len GREATER 0)
-
-GET_PROPERTY(INCLUDE_SYSTEM_DIRECTORIES GLOBAL PROPERTY FORTE_INCLUDE_SYSTEM_DIRECTORIES)
-LIST(LENGTH INCLUDE_SYSTEM_DIRECTORIES len)
-IF(len GREATER 0)
-  LIST(REMOVE_DUPLICATES INCLUDE_SYSTEM_DIRECTORIES)
-  LIST(REVERSE INCLUDE_SYSTEM_DIRECTORIES) # bugfix, for replaced include files
-ENDIF(len GREATER 0)
-
-INCLUDE_DIRECTORIES(${INCLUDE_DIRECTORIES})
-INCLUDE_DIRECTORIES(SYSTEM ${INCLUDE_SYSTEM_DIRECTORIES})
-#######################################################################################
-# Define directories for Libraries
-#######################################################################################
-GET_PROPERTY(LINK_DIRECTORIES GLOBAL PROPERTY FORTE_LINK_DIRECTORIES)
-LIST(LENGTH LINK_DIRECTORIES len)
-IF(len GREATER 0)
-  LIST(REMOVE_DUPLICATES LINK_DIRECTORIES)
-ENDIF(len GREATER 0)
-LINK_DIRECTORIES(${LINK_DIRECTORIES})
-
-#######################################################################################
-# Define directories for Libraries
-#######################################################################################
-GET_PROPERTY(DEFINITION GLOBAL PROPERTY FORTE_DEFINITION)
-ADD_DEFINITIONS (${DEFINITION})
 
 #######################################################################################
 # Exclude FBs
@@ -175,11 +140,10 @@ FOREACH(STARTUP_HOOK_FUNCTION ${STARTUP_HOOK_FUNCTIONS_LIST})
   SET(FORTE_STARTUP_HOOKS_CALLS  "${FORTE_STARTUP_HOOKS_CALLS}  ${STARTUP_HOOK_FUNCTION}(argc, arg);\n")
 ENDFOREACH()
 
-CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/startuphook.cpp.in ${CMAKE_BINARY_DIR}/src_gen/startuphook_new.cpp)
+CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/arch/startuphook.cpp.in ${CMAKE_BINARY_DIR}/src_gen/startuphook_new.cpp)
 forte_replacefile_if_changed(${CMAKE_BINARY_DIR}/src_gen/startuphook_new.cpp ${CMAKE_BINARY_DIR}/src_gen/startuphook.cpp)
 file(REMOVE ${CMAKE_BINARY_DIR}/src_gen/startuphook_new.cpp)
 
-forte_add_sourcefile_with_path_cpp(${CMAKE_BINARY_DIR}/src_gen/startuphook.cpp)
 
 #############################################################################
 # Load FORTE Extension Files
@@ -299,58 +263,128 @@ if(existing_link_flags)
 endif()
 
 GET_PROPERTY(link_flags GLOBAL PROPERTY FORTE_LINK_FLAGS)
-
-add_library(FORTE_LITE OBJECT ${SOURCE_FILES}) #no executables.
-TARGET_LINK_LIBRARIES (FORTE_LITE ${LINK_LIBRARY})
-
 list(JOIN link_flags " " link_flags_string)
+
+#######################################################################################
+# Define global Include-directorys
+#######################################################################################
+
+GET_PROPERTY(INCLUDE_DIRECTORIES GLOBAL PROPERTY FORTE_INCLUDE_DIRECTORIES)
+
+LIST(LENGTH INCLUDE_DIRECTORIES len)
+IF(len GREATER 0)
+  LIST(REMOVE_DUPLICATES INCLUDE_DIRECTORIES)
+  LIST(REVERSE INCLUDE_DIRECTORIES) # bugfix, for replaced include files
+ENDIF(len GREATER 0)
+
+GET_PROPERTY(INCLUDE_SYSTEM_DIRECTORIES GLOBAL PROPERTY FORTE_INCLUDE_SYSTEM_DIRECTORIES)
+LIST(LENGTH INCLUDE_SYSTEM_DIRECTORIES len)
+IF(len GREATER 0)
+  LIST(REMOVE_DUPLICATES INCLUDE_SYSTEM_DIRECTORIES)
+  LIST(REVERSE INCLUDE_SYSTEM_DIRECTORIES) # bugfix, for replaced include files
+ENDIF(len GREATER 0)
+
+#######################################################################################
+# Define directories for Libraries
+#######################################################################################
+GET_PROPERTY(LINK_DIRECTORIES GLOBAL PROPERTY FORTE_LINK_DIRECTORIES)
+LIST(LENGTH LINK_DIRECTORIES len)
+IF(len GREATER 0)
+  LIST(REMOVE_DUPLICATES LINK_DIRECTORIES)
+ENDIF(len GREATER 0)
+
+#######################################################################################
+# Define directories for Libraries
+#######################################################################################
+GET_PROPERTY(DEFINITIONS GLOBAL PROPERTY FORTE_DEFINITION)
+string (REPLACE ";" " " DEFINITIONS "${DEFINITIONS}")
+
+# Create an object library with all configurations needed which is then
+# used by the others targets
+add_library(FORTE_LITE OBJECT ${SOURCE_FILES}) #no executables.
+target_link_libraries(FORTE_LITE INTERFACE ${LINK_LIBRARY}) # add all needed libraries
+target_link_directories(FORTE_LITE INTERFACE ${${LINK_DIRECTORIES}})
+target_compile_definitions(FORTE_LITE PUBLIC ${DEFINITIONS})
+set_target_properties(FORTE_LITE PROPERTIES LINK_FLAGS "${link_flags_string}")
+target_compile_features(FORTE_LITE PUBLIC cxx_std_17)
+target_include_directories(FORTE_LITE PUBLIC ${INCLUDE_DIRECTORIES})
+target_include_directories(FORTE_LITE SYSTEM PUBLIC ${INCLUDE_SYSTEM_DIRECTORIES})
 
 set(FORTE_LINK_STATIC OFF CACHE BOOL "Force static linking of forte binary")
 
 if(FORTE_BUILD_EXECUTABLE)
-  ADD_EXECUTABLE (forte $<TARGET_OBJECTS:FORTE_LITE> ${SOURCE_EXECUTABLE_CPP} ${FORTE_EXECUTABLE_H})
-  set_target_properties(forte PROPERTIES LINK_FLAGS "${link_flags_string}")
+  SET(FORTE_EXECUTABLE_NAME forte)
+  ADD_EXECUTABLE (${FORTE_EXECUTABLE_NAME} ${SOURCE_EXECUTABLE_CPP} ${FORTE_EXECUTABLE_H})
   if (FORTE_LINK_STATIC)
-    set_target_properties(forte PROPERTIES LINK_SEARCH_START_STATIC ON)
-    set_target_properties(forte PROPERTIES LINK_SEARCH_END_STATIC ON)
-    target_link_options(forte PRIVATE -static-libgcc -static-libstdc++ -static)
+    set_target_properties(${FORTE_EXECUTABLE_NAME} PROPERTIES LINK_SEARCH_START_STATIC ON)
+    set_target_properties(${FORTE_EXECUTABLE_NAME} PROPERTIES LINK_SEARCH_END_STATIC ON)
+    target_link_options(${FORTE_EXECUTABLE_NAME} PRIVATE -static-libgcc -static-libstdc++ -static)
   endif()
-  target_compile_features(forte PUBLIC cxx_std_17)
-  TARGET_LINK_LIBRARIES (forte ${LINK_LIBRARY})
-  ADD_DEPENDENCIES (forte FORTE_LITE)
+  TARGET_LINK_LIBRARIES (forte PUBLIC FORTE_LITE)
   install(TARGETS forte RUNTIME DESTINATION bin)
   message("Building executable")
 endif(FORTE_BUILD_EXECUTABLE)
 
 if(FORTE_BUILD_STATIC_LIBRARY)
-  ADD_LIBRARY (forte-static STATIC $<TARGET_OBJECTS:FORTE_LITE>)
-  set_target_properties(forte-static PROPERTIES LINK_FLAGS "${link_flags_string}")
-  target_compile_features(forte-static PUBLIC cxx_std_17)
-  TARGET_LINK_LIBRARIES (forte-static ${LINK_LIBRARY})
-  ADD_DEPENDENCIES (forte-static FORTE_LITE)
-  install(TARGETS forte-static ARCHIVE DESTINATION bin)
+  SET(FORTE_STATIC_LIBRARY_NAME forte-static)
+  ADD_LIBRARY (${FORTE_STATIC_LIBRARY_NAME} STATIC)
+  TARGET_LINK_LIBRARIES (${FORTE_STATIC_LIBRARY_NAME} PUBLIC FORTE_LITE)
+  install(TARGETS ${FORTE_STATIC_LIBRARY_NAME} ARCHIVE DESTINATION bin)
   message("Building static library")
 endif(FORTE_BUILD_STATIC_LIBRARY)
 
 if(FORTE_BUILD_SHARED_LIBRARY)
-  ADD_LIBRARY (forte-shared SHARED $<TARGET_OBJECTS:FORTE_LITE>)
-  set_target_properties(forte-shared PROPERTIES LINK_FLAGS "${link_flags_string}")
-  target_compile_features(forte-shared PUBLIC cxx_std_17)
-  TARGET_LINK_LIBRARIES (forte-shared ${LINK_LIBRARY})
-  ADD_DEPENDENCIES (forte-shared FORTE_LITE)
-  install(TARGETS forte-shared ARCHIVE DESTINATION bin LIBRARY DESTINATION bin)
-  set_property(TARGET FORTE_LITE PROPERTY POSITION_INDEPENDENT_CODE ON)
-  set_target_properties(FORTE_LITE PROPERTIES CXX_VISIBILITY_PRESET hidden)
-  
-  IF (WIN32 OR CYGWIN)
-    SET(FORTE_SHARED_PREFIX "__declspec(dllexport)")
-  else()
-    SET(FORTE_SHARED_PREFIX "__attribute__((visibility(\"default\")))")
-  endif()
-  target_compile_definitions(FORTE_LITE PRIVATE FORTE_SHARED_PREFIX=${FORTE_SHARED_PREFIX})
+  SET(FORTE_SHARED_LIBRARY_NAME forte-shared)
 
+  ADD_LIBRARY (${FORTE_SHARED_LIBRARY_NAME} SHARED)
+  TARGET_LINK_LIBRARIES (${FORTE_SHARED_LIBRARY_NAME} PUBLIC FORTE_LITE)
+  install(TARGETS ${FORTE_SHARED_LIBRARY_NAME} ARCHIVE DESTINATION bin)
+  set_property(TARGET FORTE_LITE PROPERTY POSITION_INDEPENDENT_CODE ON)
   message("Building shared library")
 endif(FORTE_BUILD_SHARED_LIBRARY)
+
+if(FORTE_C_INTERFACE)
+  # function for configuring common things in both static and shared c libraries
+  FUNCTION(commonCLibraryConfiguration TARGET_NAME)
+    set_target_properties(${TARGET_NAME}
+       PROPERTIES PUBLIC_HEADER ${CMAKE_CURRENT_SOURCE_DIR}/arch/c_interface/forte_c.h)
+
+    TARGET_LINK_LIBRARIES (${TARGET_NAME} PRIVATE FORTE_LITE)
+    install(TARGETS ${TARGET_NAME} 
+          LIBRARY DESTINATION bin
+          PUBLIC_HEADER DESTINATION include)
+  ENDFUNCTION()
+
+  SET(FORTE_C_LIBRARY_NAME "forte-c")
+
+  if(FORTE_BUILD_STATIC_LIBRARY)
+    SET(FORTE_C_LIBRARY_STATIC_NAME ${FORTE_C_LIBRARY_NAME}-static)
+    ADD_LIBRARY (${FORTE_C_LIBRARY_STATIC_NAME} STATIC ${CMAKE_CURRENT_SOURCE_DIR}/arch/c_interface/forte_c.cpp)
+    commonCLibraryConfiguration(${FORTE_C_LIBRARY_STATIC_NAME})
+    message("Building C interface static library")
+  endif(FORTE_BUILD_STATIC_LIBRARY)
+
+  if(FORTE_BUILD_SHARED_LIBRARY)
+    SET(FORTE_C_LIBRARY_SHARED_NAME ${FORTE_C_LIBRARY_NAME}-shared)
+    ADD_LIBRARY (${FORTE_C_LIBRARY_SHARED_NAME} SHARED ${CMAKE_CURRENT_SOURCE_DIR}/arch/c_interface/forte_c.cpp)
+  
+    # hide all symbols except the ones from the C interface
+    set_target_properties(${FORTE_C_LIBRARY_SHARED_NAME} PROPERTIES CXX_VISIBILITY_PRESET hidden)
+  
+    IF (WIN32 OR CYGWIN)
+      SET(FORTE_SHARED_PREFIX "__declspec(dllexport)")
+    else()
+      SET(FORTE_SHARED_PREFIX "__attribute__((visibility(\"default\")))")
+    endif()
+    target_compile_definitions(${FORTE_C_LIBRARY_SHARED_NAME} PRIVATE FORTE_SHARED_PREFIX=${FORTE_SHARED_PREFIX})
+  
+    commonCLibraryConfiguration(${FORTE_C_LIBRARY_SHARED_NAME})
+
+    message("Building C interface shared library")
+  endif(FORTE_BUILD_SHARED_LIBRARY)
+
+
+endif(FORTE_C_INTERFACE)
 
 #######################################################################################
 # Generate stringlist and modules
@@ -396,9 +430,15 @@ if(NOT LEN_POST_BUILD_COM EQUAL 0)
 
   if(FORTE_BUILD_STATIC_LIBRARY)
     ADD_CUSTOM_COMMAND(TARGET forte-static POST_BUILD ${POST_BUILD_COM})
+    if(FORTE_C_INTERFACE)
+      ADD_CUSTOM_COMMAND(TARGET forte-c-static POST_BUILD ${POST_BUILD_COM})
+    endif(FORTE_C_INTERFACE)
   endif(FORTE_BUILD_STATIC_LIBRARY)
   
   if(FORTE_BUILD_SHARED_LIBRARY)
     ADD_CUSTOM_COMMAND(TARGET forte-shared POST_BUILD ${POST_BUILD_COM})
+    if(FORTE_C_INTERFACE)
+      ADD_CUSTOM_COMMAND(TARGET forte-c-shared POST_BUILD ${POST_BUILD_COM})
+    endif(FORTE_C_INTERFACE)  
   endif(FORTE_BUILD_SHARED_LIBRARY)
 endif(NOT LEN_POST_BUILD_COM EQUAL 0)
