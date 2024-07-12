@@ -14,7 +14,7 @@
 #include "task.h"
 
 #include "devlog.h"
-#include "../forte.h"
+#include "../c_interface/forte_c.h"
 
 static const unsigned scForteTaskPriority = tskIDLE_PRIORITY + 1;
 
@@ -25,13 +25,15 @@ static const configSTACK_DEPTH_TYPE scStackDepth = 2000,
 void vForteTask(void* ) {
   TForteInstance forteInstance;
 
+  if(auto result = CForteArchitecture::initialize(0, NULL); result != 0){
+    vTaskDelete(nullptr);
+  }
+
   if(auto result = forteStartInstance(scDesiredFortePort, &forteInstance); result != FORTE_OK){
     vTaskDelete(nullptr);
   }
 
-  DEVLOG_INFO("FORTE is up and running\n");
   forteWaitForInstanceToStop(forteInstance);
-  DEVLOG_INFO("FORTE finished\n");
 
   vTaskDelete(nullptr);
 }
