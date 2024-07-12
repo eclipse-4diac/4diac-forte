@@ -304,7 +304,7 @@ string (REPLACE ";" " " DEFINITIONS "${DEFINITIONS}")
 add_library(FORTE_LITE OBJECT ${SOURCE_FILES}) #no executables.
 target_link_libraries(FORTE_LITE INTERFACE ${LINK_LIBRARY}) # add all needed libraries
 target_link_directories(FORTE_LITE INTERFACE ${${LINK_DIRECTORIES}})
-target_compile_definitions(FORTE_LITE PUBLIC ${DEFINITIONS})
+target_compile_definitions(FORTE_LITE PUBLIC "${DEFINITIONS}")
 set_target_properties(FORTE_LITE PROPERTIES LINK_FLAGS "${link_flags_string}")
 target_compile_features(FORTE_LITE PUBLIC cxx_std_17)
 target_include_directories(FORTE_LITE PUBLIC ${INCLUDE_DIRECTORIES})
