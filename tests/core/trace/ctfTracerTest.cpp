@@ -105,7 +105,7 @@ BOOST_AUTO_TEST_CASE(sequential_events_test) {
     command.mFirstParam.clear();
     command.mFirstParam.pushBack(counterInstanceName);
     command.mFirstParam.pushBack(g_nStringIdPV);
-    BOOST_CHECK(EMGMResponse::Ready == resource->writeValue(command.mFirstParam, CIEC_STRING(std::string("1")), false));
+    BOOST_CHECK(EMGMResponse::Ready == resource->writeValue(command.mFirstParam, std::string("1"), false));
 
     BOOST_TEST_INFO("Event connection: Switch.EO1 -> Counter.R ");
     command.mFirstParam.clear();

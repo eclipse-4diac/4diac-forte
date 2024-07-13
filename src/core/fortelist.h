@@ -19,7 +19,7 @@
 #include <fortenew.h>
 #include "fortenode.h"
 #include "forteiterator.h"
-  
+
 #ifndef _FORTELIST_H_
 #define _FORTELIST_H_
 

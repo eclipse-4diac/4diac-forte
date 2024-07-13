@@ -10,8 +10,8 @@
  *  Jose Cabral - initial API and implementation and/or initial documentation
  *******************************************************************************/
 
-#ifndef SRC_ARCH_FORTE_H_
-#define SRC_ARCH_FORTE_H_
+#ifndef SRC_ARCH_FORTE_C_H_
+#define SRC_ARCH_FORTE_C_H_
 
 #ifndef FORTE_SHARED_PREFIX
   #define FORTE_SHARED_PREFIX
@@ -80,4 +80,4 @@ extern "C" {
 }
 #endif
 
-#endif /* SRC_ARCH_FORTE_H_ */
+#endif /* SRC_ARCH_FORTE_C_H_ */
