@@ -251,4 +251,10 @@ if(FORTE_BUILD_SHARED_LIBRARY)
   target_include_directories(${TEST_FORTE_SHARED} PRIVATE ${INCLUDE_DIRECTORIES})
   target_link_libraries (${TEST_FORTE_SHARED} forte-shared)
   add_dependencies (${TEST_FORTE_SHARED} forte-shared)
+  
+  if(FORTE_LINKED_STRINGDICT)
+    ADD_DEPENDENCIES (${TEST_FORTE_SHARED} forte_stringlist_externals)
+  endif(FORTE_LINKED_STRINGDICT)
+
 endif(FORTE_BUILD_SHARED_LIBRARY)
+  
