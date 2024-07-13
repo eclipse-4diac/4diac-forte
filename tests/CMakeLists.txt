@@ -55,6 +55,12 @@ FUNCTION(forte_test_add_inc_system_directories)
   ENDFOREACH(ARG)
 ENDFUNCTION(forte_test_add_inc_system_directories)
 
+FUNCTION(forte_test_add_link_library)
+  FOREACH(ARG ${ARGV})
+    SET_PROPERTY(GLOBAL APPEND PROPERTY FORTE_TEST_LIBRARIES ${ARG})
+  ENDFOREACH(ARG)
+ENDFUNCTION(forte_test_add_link_library)
+
 #######################################################################################
 # add subdirectories
 #######################################################################################
@@ -136,13 +142,6 @@ add_dependencies(forte_test forte_stringlist_generator)
 
 SET_TARGET_PROPERTIES(forte_test PROPERTIES LINKER_LANGUAGE CXX)
 
-get_target_property(existing_link_flags_test forte_test LINK_FLAGS)
-if(existing_link_flags_test)
-  set_property(GLOBAL APPEND PROPERTY FORTE_TEST_LINK_FLAGS ${existing_link_flags_test})
-endif()
-
-GET_PROPERTY(link_flags_test GLOBAL PROPERTY FORTE_TEST_LINK_FLAGS)
-
 #add forte_test to the list of test to be executed by ctest
 add_test(forte_test ${EXECUTABLE_OUTPUT_PATH}/forte_test)
 
@@ -174,16 +173,8 @@ endif(ENABLE_GENERATED_SOURCE_CPP)
 forte_test_add_inc_system_directories(${FORTE_TESTS_INC_DIRS})
 forte_test_add_inc_system_directories(./)
 
-GET_PROPERTY(INCLUDE_DIRECTORIES GLOBAL PROPERTY FORTE_INCLUDE_DIRECTORIES)
 GET_PROPERTY(FORTE_TEST_INC GLOBAL PROPERTY FORTE_TEST_INC_DIRECTORIES)
-
-LIST(APPEND INCLUDE_DIRECTORIES ${FORTE_TEST_INC})
-
-LIST(LENGTH INCLUDE_DIRECTORIES len)
-IF(len GREATER 0)
-  LIST(REMOVE_DUPLICATES INCLUDE_DIRECTORIES)
-  LIST(REVERSE INCLUDE_DIRECTORIES) # bugfix, for replaced include files
-ENDIF(len GREATER 0)
+target_include_directories(forte_test PUBLIC ${FORTE_TEST_INC})
 
 GET_PROPERTY(INCLUDE_SYSTEM_DIRECTORIES GLOBAL PROPERTY FORTE_INCLUDE_SYSTEM_DIRECTORIES)
 GET_PROPERTY(INCLUDE_TEST_SYSTEM_DIRECTORIES GLOBAL PROPERTY FORTE_TEST_INC_SYSTEM_DIRECTORIES)
@@ -195,7 +186,6 @@ IF(len GREATER 0)
   LIST(REVERSE INCLUDE_TEST_SYSTEM_DIRECTORIES) # bugfix, for replaced include files
 ENDIF(len GREATER 0)
 
-target_include_directories(forte_test PUBLIC ${INCLUDE_DIRECTORIES})
 INCLUDE_DIRECTORIES(SYSTEM ${INCLUDE_TEST_SYSTEM_DIRECTORIES})
 
 #######################################################################################
@@ -203,9 +193,9 @@ INCLUDE_DIRECTORIES(SYSTEM ${INCLUDE_TEST_SYSTEM_DIRECTORIES})
 #######################################################################################
 
 #Link flags
-get_property(LINK_TEST_LIBRARY GLOBAL PROPERTY FORTE_LINK_LIBRARY)
+get_property(LINK_TEST_LIBRARY GLOBAL PROPERTY FORTE_TEST_LIBRARIES)
 if("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
-    SET_PROPERTY(GLOBAL APPEND PROPERTY LINK_TEST_LIBRARY "-lboost_unit_test_framework -lboost_prg_exec_monitor -lboost_test_exec_monitor")
+    LIST(APPEND LINK_TEST_LIBRARY "boost_unit_test_framework")
 endif("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
 
 TARGET_LINK_LIBRARIES(forte_test ${LINK_TEST_LIBRARY})
@@ -217,24 +207,23 @@ TARGET_LINK_LIBRARIES(forte_test ${LINK_TEST_LIBRARY})
 if(FORTE_C_INTERFACE)
   if(FORTE_BUILD_STATIC_LIBRARY)
     SET(FORTE_C_STATIC_TEST_NAME "forte_c_static_test")
+
     ADD_EXECUTABLE(${FORTE_C_STATIC_TEST_NAME} ${CMAKE_CURRENT_SOURCE_DIR}/arch/forte_c_test.cpp)
+    TARGET_LINK_LIBRARIES(${FORTE_C_STATIC_TEST_NAME} $<TARGET_NAME:forte-c-static> ${LINK_TEST_LIBRARY})
+    target_include_directories(${FORTE_C_STATIC_TEST_NAME} PRIVATE ${FORTE_TEST_INC})
 
-    TARGET_LINK_LIBRARIES(${FORTE_C_STATIC_TEST_NAME} $<TARGET_NAME:forte-c-static>)
     add_test(${FORTE_C_STATIC_TEST_NAME} ${EXECUTABLE_OUTPUT_PATH}/${FORTE_C_STATIC_TEST_NAME})
-
-    TARGET_LINK_LIBRARIES(${FORTE_C_STATIC_TEST_NAME} "-lboost_unit_test_framework")
   endif(FORTE_BUILD_STATIC_LIBRARY)
 
   if(FORTE_BUILD_SHARED_LIBRARY)
     SET(FORTE_C_SHARED_TEST_NAME "forte_c_shared_test")
+  
     ADD_EXECUTABLE(${FORTE_C_SHARED_TEST_NAME} ${CMAKE_CURRENT_SOURCE_DIR}/arch/forte_c_test.cpp)
-
-    TARGET_LINK_LIBRARIES(${FORTE_C_SHARED_TEST_NAME} $<TARGET_NAME:forte-c-shared>)
+    target_include_directories(${FORTE_C_SHARED_TEST_NAME} PRIVATE ${FORTE_TEST_INC})
+    TARGET_LINK_LIBRARIES(${FORTE_C_SHARED_TEST_NAME} $<TARGET_NAME:forte-c-shared> ${LINK_TEST_LIBRARY})
+  
     add_test(${FORTE_C_SHARED_TEST_NAME} ${EXECUTABLE_OUTPUT_PATH}/${FORTE_C_SHARED_TEST_NAME})
-
-    TARGET_LINK_LIBRARIES(${FORTE_C_SHARED_TEST_NAME} "-lboost_unit_test_framework")
   endif(FORTE_BUILD_SHARED_LIBRARY) 
-
 
 endif(FORTE_C_INTERFACE)
 

@@ -24,7 +24,7 @@ if(FORTE_TRACE_CTF_TEST)
   forte_test_add_sourcefile_cpp(TraceReaderSink.cpp)
   forte_test_add_sourcefile_cpp(EventMessage.cpp)
 
-  forte_add_link_library(babeltrace2)
+  forte_test_add_link_library(babeltrace2)
 
   SET(CTF_OUTPUT_DIR ${CMAKE_BINARY_DIR}/ctfOutput)
   SET(METADATA_FILE ${CMAKE_BINARY_DIR}/src/core/trace/metadata)
