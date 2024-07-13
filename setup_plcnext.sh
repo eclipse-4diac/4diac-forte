@@ -39,7 +39,7 @@ if [ -d "$forte_bin_dir" ]; then
     -DFORTE_COM_FBDK=ON \
     -DFORTE_COM_LOCAL=ON \
     -DFORTE_TESTS=OFF \
-    -DFORTE_MODULE_CONVERT=ON \
+    -DFORTE_MODULE_CONVERT=OFF \
     -DFORTE_MODULE_IEC61131=ON \
     -DFORTE_MODULE_UTILS=ON \
     ../../org.eclipse.4diac.forte

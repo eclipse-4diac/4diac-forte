@@ -39,7 +39,7 @@ if [ -d "$forte_bin_dir" ]; then
     -DFORTE_TESTS=OFF \
     -DFORTE_TESTS_INC_DIRS=${forte_boost_test_inc_dirs} \
     -DFORTE_TESTS_LINK_DIRS=${forte_boost_test_inc_dirs} \
-    -DFORTE_MODULE_CONVERT=ON \
+    -DFORTE_MODULE_CONVERT=OFF \
     -DFORTE_MODULE_IEC61131=ON \
     -DFORTE_MODULE_UTILS=ON \
     ../../

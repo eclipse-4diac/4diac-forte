@@ -65,7 +65,7 @@ if [ -d "$forte_bin_dir" ]; then
     -DFORTE_BootfileLocation="/data/test_FORTE_PC.fboot" \
     -DFORTE_TESTS=OFF \
     -DFORTE_MODULE_IEC61131=ON \
-    -DFORTE_MODULE_CONVERT=ON \
+    -DFORTE_MODULE_CONVERT=OFF \
     -DFORTE_MODULE_UTILS=ON \
     ../../
 else
