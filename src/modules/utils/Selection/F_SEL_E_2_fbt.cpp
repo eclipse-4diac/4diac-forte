@@ -13,6 +13,7 @@
  *** Version:
  ***     1.0: 2012-03-25/Monika Wenger - TU Wien ACIN -
  ***     1.1: 2022-08-04/Franz Höpfinger - HR Agrartechnik GmbH -
+ ***     1.2: 2024-07-13/Franz Höpfinger - HR Agrartechnik GmbH - changed to Basic FB
  *************************************************************************/
 
 #include "F_SEL_E_2_fbt.h"
@@ -22,6 +23,13 @@
 
 #include "criticalregion.h"
 #include "resource.h"
+#include "forte_any_variant.h"
+#include "forte_bool.h"
+#include "iec61131_functions.h"
+#include "forte_array_common.h"
+#include "forte_array.h"
+#include "forte_array_fixed.h"
+#include "forte_array_variable.h"
 
 DEFINE_FIRMWARE_FB(FORTE_F_SEL_E_2, g_nStringIdF_SEL_E_2)
 
@@ -45,42 +53,69 @@ const SFBInterfaceSpec FORTE_F_SEL_E_2::scmFBInterfaceSpec = {
 };
 
 FORTE_F_SEL_E_2::FORTE_F_SEL_E_2(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
-    CFunctionBlock(paContainer, &scmFBInterfaceSpec, paInstanceNameId),
+    CBasicFB(paContainer, &scmFBInterfaceSpec, paInstanceNameId, nullptr),
     var_conn_OUT(var_OUT),
     conn_CNF(this, 0),
     conn_IN0(nullptr),
     conn_IN1(nullptr),
     conn_OUT(this, 0, &var_conn_OUT) {
-};
-
-void FORTE_F_SEL_E_2::setInitialValues() {
-  var_IN0 = CIEC_ANY_VARIANT();
-  var_IN1 = CIEC_ANY_VARIANT();
-  var_OUT = CIEC_ANY_VARIANT();
 }
 
-void FORTE_F_SEL_E_2::executeEvent(const TEventID paEIID, CEventChainExecutionThread *const paECET) {
-  switch(paEIID) {
-    case scmEventREQ0ID:
-      var_OUT = var_IN0;
-      sendOutputEvent(scmEventCNFID, paECET);
-      break;
-    case scmEventREQ1ID:
-      var_OUT = var_IN1;
-      sendOutputEvent(scmEventCNFID, paECET);
-      break;
-  }
+void FORTE_F_SEL_E_2::setInitialValues() {
+	var_IN0 = CIEC_ANY_VARIANT();
+	var_IN1 = CIEC_ANY_VARIANT();
+	var_OUT = CIEC_ANY_VARIANT();
+}
+
+void FORTE_F_SEL_E_2::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
+  do {
+    switch(mECCState) {
+      case scmStateSTART:
+        if(scmEventREQ0ID == paEIID) enterStateCOPY0(paECET);
+        else
+        if(scmEventREQ1ID == paEIID) enterStateCOPY1(paECET);
+        else return; //no transition cleared
+        break;
+      case scmStateCOPY0:
+        if(1) enterStateSTART(paECET);
+        else return; //no transition cleared
+        break;
+      case scmStateCOPY1:
+        if(1) enterStateSTART(paECET);
+        else return; //no transition cleared
+        break;
+      default:
+        DEVLOG_ERROR("The state is not in the valid range! The state value is: %d. The max value can be: 3.", mECCState.operator TForteUInt16 ());
+        mECCState = 0; // 0 is always the initial state
+        return;
+    }
+    paEIID = cgInvalidEventID; // we have to clear the event after the first check in order to ensure correct behavior
+  } while(true);
+}
+
+void FORTE_F_SEL_E_2::enterStateSTART(CEventChainExecutionThread *const) {
+  mECCState = scmStateSTART;
+}
+
+void FORTE_F_SEL_E_2::enterStateCOPY0(CEventChainExecutionThread *const paECET) {
+  mECCState = scmStateCOPY0;
+  alg_COPY0();
+  sendOutputEvent(scmEventCNFID, paECET);
+}
+
+void FORTE_F_SEL_E_2::enterStateCOPY1(CEventChainExecutionThread *const paECET) {
+  mECCState = scmStateCOPY1;
+  alg_COPY1();
+  sendOutputEvent(scmEventCNFID, paECET);
 }
 
 void FORTE_F_SEL_E_2::readInputData(const TEventID paEIID) {
   switch(paEIID) {
     case scmEventREQ0ID: {
-      
       readData(0, var_IN0, conn_IN0);
       break;
     }
     case scmEventREQ1ID: {
-      
       readData(1, var_IN1, conn_IN1);
       break;
     }
@@ -92,7 +127,6 @@ void FORTE_F_SEL_E_2::readInputData(const TEventID paEIID) {
 void FORTE_F_SEL_E_2::writeOutputData(const TEventID paEIID) {
   switch(paEIID) {
     case scmEventCNFID: {
-      
       writeData(0, var_OUT, conn_OUT);
       break;
     }
@@ -113,10 +147,6 @@ CIEC_ANY *FORTE_F_SEL_E_2::getDO(const size_t paIndex) {
   switch(paIndex) {
     case 0: return &var_OUT;
   }
-  return nullptr;
-}
-
-CIEC_ANY *FORTE_F_SEL_E_2::getDIO(size_t) {
   return nullptr;
 }
 
@@ -142,11 +172,19 @@ CDataConnection *FORTE_F_SEL_E_2::getDOConUnchecked(const TPortId paIndex) {
   return nullptr;
 }
 
-CInOutDataConnection **FORTE_F_SEL_E_2::getDIOInConUnchecked(TPortId) {
+CIEC_ANY *FORTE_F_SEL_E_2::getVarInternal(size_t) {
   return nullptr;
 }
 
-CInOutDataConnection *FORTE_F_SEL_E_2::getDIOOutConUnchecked(TPortId) {
-  return nullptr;
+void FORTE_F_SEL_E_2::alg_COPY0(void) {
+
+  #line 2 "F_SEL_E_2.fbt"
+  var_OUT.setValue(var_IN0.unwrap());
+}
+
+void FORTE_F_SEL_E_2::alg_COPY1(void) {
+
+  #line 6 "F_SEL_E_2.fbt"
+  var_OUT.setValue(var_IN1.unwrap());
 }
 
