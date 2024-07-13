@@ -23,28 +23,28 @@
 
 
 void recWBSD(
-		   bool     qTimedOut,                  // True means cyclic PGN is not received timely
-		   int32_t  s32TimeStamp,               // Time stamp of the message in ms
-		   uint16_t wheelbasedmachinespeed,     // SPN_WHEELBASEDMACHINESPEED,     1u, 1u, 16u
-		   uint32_t wheelbasedmachinedistance,  // SPN_WHEELBASEDMACHINEDISTANCE,  3u, 1u, 32u
-		   uint8_t  wheelbasedmachinedirection, // SPN_WHEELBASEDMACHINEDIRECTION, 8u, 1u, 2u
-		   uint8_t  keyswitchstate,             // SPN_KEYSWITCHSTATE,             8u, 3u, 2u
-		   uint8_t  maxi_timeoftracpower,       // SPN_MAXI_TIMEOFTRACPOWER,       7u, 1u, 8u
-		   uint8_t  operator_direc_reversed,    // SPN_OPERATOR_DIREC_REVERSED,    8u, 7u, 2u
-		   uint8_t  start_stop_state            // SPN_START_STOP_STATE,           8u, 5u, 8u
-		)
+           bool     qTimedOut,                  // True means cyclic PGN is not received timely
+           int32_t  s32TimeStamp,               // Time stamp of the message in ms
+           uint16_t wheelbasedmachinespeed,     // SPN_WHEELBASEDMACHINESPEED,     1u, 1u, 16u
+           uint32_t wheelbasedmachinedistance,  // SPN_WHEELBASEDMACHINEDISTANCE,  3u, 1u, 32u
+           uint8_t  wheelbasedmachinedirection, // SPN_WHEELBASEDMACHINEDIRECTION, 8u, 1u, 2u
+           uint8_t  keyswitchstate,             // SPN_KEYSWITCHSTATE,             8u, 3u, 2u
+           uint8_t  maxi_timeoftracpower,       // SPN_MAXI_TIMEOFTRACPOWER,       7u, 1u, 8u
+           uint8_t  operator_direc_reversed,    // SPN_OPERATOR_DIREC_REVERSED,    8u, 7u, 2u
+           uint8_t  start_stop_state            // SPN_START_STOP_STATE,           8u, 5u, 8u
+        )
 {
-	FORTE_I_WBSD::CbWBSDHandler::recWBSD(
-		   qTimedOut,                  // True means cyclic PGN is not received timely
-		   s32TimeStamp,               // Time stamp of the message in ms
-		   wheelbasedmachinespeed,     // SPN_WHEELBASEDMACHINESPEED,     1u, 1u, 16u
-		   wheelbasedmachinedistance,  // SPN_WHEELBASEDMACHINEDISTANCE,  3u, 1u, 32u
-		   wheelbasedmachinedirection, // SPN_WHEELBASEDMACHINEDIRECTION, 8u, 1u, 2u
-		   keyswitchstate,             // SPN_KEYSWITCHSTATE,             8u, 3u, 2u
-		   maxi_timeoftracpower,       // SPN_MAXI_TIMEOFTRACPOWER,       7u, 1u, 8u
-		   operator_direc_reversed,    // SPN_OPERATOR_DIREC_REVERSED,    8u, 7u, 2u
-		   start_stop_state            // SPN_START_STOP_STATE,           8u, 5u, 8u
-		);
+    FORTE_I_WBSD::CbWBSDHandler::recWBSD(
+           qTimedOut,                  // True means cyclic PGN is not received timely
+           s32TimeStamp,               // Time stamp of the message in ms
+           wheelbasedmachinespeed,     // SPN_WHEELBASEDMACHINESPEED,     1u, 1u, 16u
+           wheelbasedmachinedistance,  // SPN_WHEELBASEDMACHINEDISTANCE,  3u, 1u, 32u
+           wheelbasedmachinedirection, // SPN_WHEELBASEDMACHINEDIRECTION, 8u, 1u, 2u
+           keyswitchstate,             // SPN_KEYSWITCHSTATE,             8u, 3u, 2u
+           maxi_timeoftracpower,       // SPN_MAXI_TIMEOFTRACPOWER,       7u, 1u, 8u
+           operator_direc_reversed,    // SPN_OPERATOR_DIREC_REVERSED,    8u, 7u, 2u
+           start_stop_state            // SPN_START_STOP_STATE,           8u, 5u, 8u
+        );
 }
 
 
@@ -101,24 +101,24 @@ FORTE_I_WBSD::FORTE_I_WBSD(const CStringDictionary::TStringId paInstanceNameId, 
     conn_KEYSWITCHSTATE(this, 9, &var_conn_KEYSWITCHSTATE),
     conn_START_STOP_STATE(this, 10, &var_conn_START_STOP_STATE),
     conn_OPERATOR_DIREC_REVERSED(this, 11, &var_conn_OPERATOR_DIREC_REVERSED) {
-	setEventChainExecutor(getResource()->getResourceEventExecution());
-	g_vts = nullptr;
+    setEventChainExecutor(getResource()->getResourceEventExecution());
+    g_vts = nullptr;
 };
 
 void FORTE_I_WBSD::setInitialValues() {
-	var_QI = 0_BOOL;
-	var_QO = 0_BOOL;
-	var_STATUS = ""_STRING;
-	var_Q_timeout = 0_BOOL;
-	var_timestamp_timeout = 0_UINT;
-	var_timestamp_data = 0_UINT;
-	var_WHEELBASEDMACHINESPEED = 0_UINT;
-	var_WHEELBASEDMACHINEDISTANCE = 0_UDINT;
-	var_MAXI_TIMEOFTRACPOWER = 0_USINT;
-	var_WHEELBASEDMACHINEDIRECTION = 0_BYTE;
-	var_KEYSWITCHSTATE = 0_BYTE;
-	var_START_STOP_STATE = 0_BYTE;
-	var_OPERATOR_DIREC_REVERSED = 0_BYTE;
+    var_QI = 0_BOOL;
+    var_QO = 0_BOOL;
+    var_STATUS = ""_STRING;
+    var_Q_timeout = 0_BOOL;
+    var_timestamp_timeout = 0_UINT;
+    var_timestamp_data = 0_UINT;
+    var_WHEELBASEDMACHINESPEED = 0_UINT;
+    var_WHEELBASEDMACHINEDISTANCE = 0_UDINT;
+    var_MAXI_TIMEOFTRACPOWER = 0_USINT;
+    var_WHEELBASEDMACHINEDIRECTION = 0_BYTE;
+    var_KEYSWITCHSTATE = 0_BYTE;
+    var_START_STOP_STATE = 0_BYTE;
+    var_OPERATOR_DIREC_REVERSED = 0_BYTE;
 }
 
 void FORTE_I_WBSD::executeEvent(const TEventID paEIID, CEventChainExecutionThread *const paECET) {
@@ -126,10 +126,10 @@ void FORTE_I_WBSD::executeEvent(const TEventID paEIID, CEventChainExecutionThrea
     case cgExternalEventID:
       if(var_Q_timeout == true) {
           var_STATUS = "timeout"_STRING;
-    	  sendOutputEvent(scmEventTIMEOUTID, paECET);
+          sendOutputEvent(scmEventTIMEOUTID, paECET);
       } else {
-    	  var_STATUS = "OK"_STRING;
-    	  sendOutputEvent(scmEventINDID, paECET);
+          var_STATUS = "OK"_STRING;
+          sendOutputEvent(scmEventINDID, paECET);
       }
       break;
     case scmEventINITID:
@@ -255,9 +255,9 @@ DEFINE_HANDLER(FORTE_I_WBSD::CbWBSDHandler);
 
 
 bool FORTE_I_WBSD::initialize() {
-	bool ret = CFunctionBlock::initialize();
-	  g_vts = this;
-	return ret;
+    bool ret = CFunctionBlock::initialize();
+      g_vts = this;
+    return ret;
 }
 
 
@@ -274,94 +274,94 @@ FORTE_I_WBSD::CbWBSDHandler::~CbWBSDHandler() {
 
 //Static Callback
 void FORTE_I_WBSD::CbWBSDHandler::recWBSD(
-		   bool     qTimedOut,                  // True means cyclic PGN is not received timely
-		   int32_t  s32TimeStamp,               // Time stamp of the message in ms
-		   uint16_t wheelbasedmachinespeed,     // SPN_WHEELBASEDMACHINESPEED,     1u, 1u, 16u
-		   uint32_t wheelbasedmachinedistance,  // SPN_WHEELBASEDMACHINEDISTANCE,  3u, 1u, 32u
-		   uint8_t  wheelbasedmachinedirection, // SPN_WHEELBASEDMACHINEDIRECTION, 8u, 1u, 2u
-		   uint8_t  keyswitchstate,             // SPN_KEYSWITCHSTATE,             8u, 3u, 2u
-		   uint8_t  maxi_timeoftracpower,       // SPN_MAXI_TIMEOFTRACPOWER,       7u, 1u, 8u
-		   uint8_t  operator_direc_reversed,    // SPN_OPERATOR_DIREC_REVERSED,    8u, 7u, 2u
-		   uint8_t  start_stop_state            // SPN_START_STOP_STATE,           8u, 5u, 8u
-		)
+           bool     qTimedOut,                  // True means cyclic PGN is not received timely
+           int32_t  s32TimeStamp,               // Time stamp of the message in ms
+           uint16_t wheelbasedmachinespeed,     // SPN_WHEELBASEDMACHINESPEED,     1u, 1u, 16u
+           uint32_t wheelbasedmachinedistance,  // SPN_WHEELBASEDMACHINEDISTANCE,  3u, 1u, 32u
+           uint8_t  wheelbasedmachinedirection, // SPN_WHEELBASEDMACHINEDIRECTION, 8u, 1u, 2u
+           uint8_t  keyswitchstate,             // SPN_KEYSWITCHSTATE,             8u, 3u, 2u
+           uint8_t  maxi_timeoftracpower,       // SPN_MAXI_TIMEOFTRACPOWER,       7u, 1u, 8u
+           uint8_t  operator_direc_reversed,    // SPN_OPERATOR_DIREC_REVERSED,    8u, 7u, 2u
+           uint8_t  start_stop_state            // SPN_START_STOP_STATE,           8u, 5u, 8u
+        )
 {
   if(g_vth == nullptr)
   {
     //no callback registered
   } else {
     g_vth->recWBSD_ic(
- 		   qTimedOut,                  // True means cyclic PGN is not received timely
- 		   s32TimeStamp,               // Time stamp of the message in ms
- 		   wheelbasedmachinespeed,     // SPN_WHEELBASEDMACHINESPEED,     1u, 1u, 16u
- 		   wheelbasedmachinedistance,  // SPN_WHEELBASEDMACHINEDISTANCE,  3u, 1u, 32u
- 		   wheelbasedmachinedirection, // SPN_WHEELBASEDMACHINEDIRECTION, 8u, 1u, 2u
- 		   keyswitchstate,             // SPN_KEYSWITCHSTATE,             8u, 3u, 2u
- 		   maxi_timeoftracpower,       // SPN_MAXI_TIMEOFTRACPOWER,       7u, 1u, 8u
- 		   operator_direc_reversed,    // SPN_OPERATOR_DIREC_REVERSED,    8u, 7u, 2u
- 		   start_stop_state            // SPN_START_STOP_STATE,           8u, 5u, 8u
-    		);
+            qTimedOut,                  // True means cyclic PGN is not received timely
+            s32TimeStamp,               // Time stamp of the message in ms
+            wheelbasedmachinespeed,     // SPN_WHEELBASEDMACHINESPEED,     1u, 1u, 16u
+            wheelbasedmachinedistance,  // SPN_WHEELBASEDMACHINEDISTANCE,  3u, 1u, 32u
+            wheelbasedmachinedirection, // SPN_WHEELBASEDMACHINEDIRECTION, 8u, 1u, 2u
+            keyswitchstate,             // SPN_KEYSWITCHSTATE,             8u, 3u, 2u
+            maxi_timeoftracpower,       // SPN_MAXI_TIMEOFTRACPOWER,       7u, 1u, 8u
+            operator_direc_reversed,    // SPN_OPERATOR_DIREC_REVERSED,    8u, 7u, 2u
+            start_stop_state            // SPN_START_STOP_STATE,           8u, 5u, 8u
+            );
   }
 }
 
 //in-Class Callback
 void FORTE_I_WBSD::CbWBSDHandler::recWBSD_ic(
-		   bool     qTimedOut,                  // True means cyclic PGN is not received timely
-		   int32_t  s32TimeStamp,               // Time stamp of the message in ms
-		   uint16_t wheelbasedmachinespeed,     // SPN_WHEELBASEDMACHINESPEED,     1u, 1u, 16u
-		   uint32_t wheelbasedmachinedistance,  // SPN_WHEELBASEDMACHINEDISTANCE,  3u, 1u, 32u
-		   uint8_t  wheelbasedmachinedirection, // SPN_WHEELBASEDMACHINEDIRECTION, 8u, 1u, 2u
-		   uint8_t  keyswitchstate,             // SPN_KEYSWITCHSTATE,             8u, 3u, 2u
-		   uint8_t  maxi_timeoftracpower,       // SPN_MAXI_TIMEOFTRACPOWER,       7u, 1u, 8u
-		   uint8_t  operator_direc_reversed,    // SPN_OPERATOR_DIREC_REVERSED,    8u, 7u, 2u
-		   uint8_t  start_stop_state            // SPN_START_STOP_STATE,           8u, 5u, 8u
-		)
+           bool     qTimedOut,                  // True means cyclic PGN is not received timely
+           int32_t  s32TimeStamp,               // Time stamp of the message in ms
+           uint16_t wheelbasedmachinespeed,     // SPN_WHEELBASEDMACHINESPEED,     1u, 1u, 16u
+           uint32_t wheelbasedmachinedistance,  // SPN_WHEELBASEDMACHINEDISTANCE,  3u, 1u, 32u
+           uint8_t  wheelbasedmachinedirection, // SPN_WHEELBASEDMACHINEDIRECTION, 8u, 1u, 2u
+           uint8_t  keyswitchstate,             // SPN_KEYSWITCHSTATE,             8u, 3u, 2u
+           uint8_t  maxi_timeoftracpower,       // SPN_MAXI_TIMEOFTRACPOWER,       7u, 1u, 8u
+           uint8_t  operator_direc_reversed,    // SPN_OPERATOR_DIREC_REVERSED,    8u, 7u, 2u
+           uint8_t  start_stop_state            // SPN_START_STOP_STATE,           8u, 5u, 8u
+        )
 {
   if(FORTE_I_WBSD::g_vts == nullptr) {
     //no callback registered
   } else {
     FORTE_I_WBSD::g_vts->recWBSD(
- 		   qTimedOut,                  // True means cyclic PGN is not received timely
- 		   s32TimeStamp,               // Time stamp of the message in ms
-    	   wheelbasedmachinespeed,     // SPN_WHEELBASEDMACHINESPEED,     1u, 1u, 16u
-  		   wheelbasedmachinedistance,  // SPN_WHEELBASEDMACHINEDISTANCE,  3u, 1u, 32u
-  		   wheelbasedmachinedirection, // SPN_WHEELBASEDMACHINEDIRECTION, 8u, 1u, 2u
-  		   keyswitchstate,             // SPN_KEYSWITCHSTATE,             8u, 3u, 2u
-  		   maxi_timeoftracpower,       // SPN_MAXI_TIMEOFTRACPOWER,       7u, 1u, 8u
-  		   operator_direc_reversed,    // SPN_OPERATOR_DIREC_REVERSED,    8u, 7u, 2u
-  		   start_stop_state            // SPN_START_STOP_STATE,           8u, 5u, 8u
-     		);
+            qTimedOut,                  // True means cyclic PGN is not received timely
+            s32TimeStamp,               // Time stamp of the message in ms
+           wheelbasedmachinespeed,     // SPN_WHEELBASEDMACHINESPEED,     1u, 1u, 16u
+             wheelbasedmachinedistance,  // SPN_WHEELBASEDMACHINEDISTANCE,  3u, 1u, 32u
+             wheelbasedmachinedirection, // SPN_WHEELBASEDMACHINEDIRECTION, 8u, 1u, 2u
+             keyswitchstate,             // SPN_KEYSWITCHSTATE,             8u, 3u, 2u
+             maxi_timeoftracpower,       // SPN_MAXI_TIMEOFTRACPOWER,       7u, 1u, 8u
+             operator_direc_reversed,    // SPN_OPERATOR_DIREC_REVERSED,    8u, 7u, 2u
+             start_stop_state            // SPN_START_STOP_STATE,           8u, 5u, 8u
+             );
     startNewEventChain(FORTE_I_WBSD::g_vts);
   }
 }
 
 void FORTE_I_WBSD::recWBSD(
-		   bool     qTimedOut,                  // True means cyclic PGN is not received timely
-		   int32_t  s32TimeStamp,               // Time stamp of the message in ms
-		   uint16_t wheelbasedmachinespeed,     // SPN_WHEELBASEDMACHINESPEED,     1u, 1u, 16u
-		   uint32_t wheelbasedmachinedistance,  // SPN_WHEELBASEDMACHINEDISTANCE,  3u, 1u, 32u
-		   uint8_t  wheelbasedmachinedirection, // SPN_WHEELBASEDMACHINEDIRECTION, 8u, 1u, 2u
-		   uint8_t  keyswitchstate,             // SPN_KEYSWITCHSTATE,             8u, 3u, 2u
-		   uint8_t  maxi_timeoftracpower,       // SPN_MAXI_TIMEOFTRACPOWER,       7u, 1u, 8u
-		   uint8_t  operator_direc_reversed,    // SPN_OPERATOR_DIREC_REVERSED,    8u, 7u, 2u
-		   uint8_t  start_stop_state            // SPN_START_STOP_STATE,           8u, 5u, 8u
-		)
+           bool     qTimedOut,                  // True means cyclic PGN is not received timely
+           int32_t  s32TimeStamp,               // Time stamp of the message in ms
+           uint16_t wheelbasedmachinespeed,     // SPN_WHEELBASEDMACHINESPEED,     1u, 1u, 16u
+           uint32_t wheelbasedmachinedistance,  // SPN_WHEELBASEDMACHINEDISTANCE,  3u, 1u, 32u
+           uint8_t  wheelbasedmachinedirection, // SPN_WHEELBASEDMACHINEDIRECTION, 8u, 1u, 2u
+           uint8_t  keyswitchstate,             // SPN_KEYSWITCHSTATE,             8u, 3u, 2u
+           uint8_t  maxi_timeoftracpower,       // SPN_MAXI_TIMEOFTRACPOWER,       7u, 1u, 8u
+           uint8_t  operator_direc_reversed,    // SPN_OPERATOR_DIREC_REVERSED,    8u, 7u, 2u
+           uint8_t  start_stop_state            // SPN_START_STOP_STATE,           8u, 5u, 8u
+        )
 {
 
-	   var_Q_timeout                  = CIEC_BOOL(qTimedOut);                  // True means cyclic PGN is not received timely
+       var_Q_timeout                  = CIEC_BOOL(qTimedOut);                  // True means cyclic PGN is not received timely
 
-	   if(qTimedOut)  {
-		   var_timestamp_timeout          = CIEC_UINT(s32TimeStamp);                // Time stamp of the message in ms
-	   } else {
-		   var_timestamp_data             = CIEC_UINT(s32TimeStamp);                // Time stamp of the message in ms
-		   var_WHEELBASEDMACHINESPEED     = CIEC_UINT(wheelbasedmachinespeed);      // SPN_WHEELBASEDMACHINESPEED,     1u, 1u, 16u
-		   var_WHEELBASEDMACHINEDISTANCE  = CIEC_UDINT(wheelbasedmachinedistance);  // SPN_WHEELBASEDMACHINEDISTANCE,  3u, 1u, 32u
-		   var_WHEELBASEDMACHINEDIRECTION = CIEC_BYTE(wheelbasedmachinedirection);  // SPN_WHEELBASEDMACHINEDIRECTION, 8u, 1u, 2u
-		   var_KEYSWITCHSTATE             = CIEC_BYTE(keyswitchstate);              // SPN_KEYSWITCHSTATE,             8u, 3u, 2u
-		   var_MAXI_TIMEOFTRACPOWER       = CIEC_USINT(maxi_timeoftracpower);       // SPN_MAXI_TIMEOFTRACPOWER,       7u, 1u, 8u
-		   var_OPERATOR_DIREC_REVERSED    = CIEC_BYTE(operator_direc_reversed);     // SPN_OPERATOR_DIREC_REVERSED,    8u, 7u, 2u
-		   var_START_STOP_STATE           = CIEC_BYTE(start_stop_state);            // SPN_START_STOP_STATE,           8u, 5u, 8u
+       if(qTimedOut)  {
+           var_timestamp_timeout          = CIEC_UINT(s32TimeStamp);                // Time stamp of the message in ms
+       } else {
+           var_timestamp_data             = CIEC_UINT(s32TimeStamp);                // Time stamp of the message in ms
+           var_WHEELBASEDMACHINESPEED     = CIEC_UINT(wheelbasedmachinespeed);      // SPN_WHEELBASEDMACHINESPEED,     1u, 1u, 16u
+           var_WHEELBASEDMACHINEDISTANCE  = CIEC_UDINT(wheelbasedmachinedistance);  // SPN_WHEELBASEDMACHINEDISTANCE,  3u, 1u, 32u
+           var_WHEELBASEDMACHINEDIRECTION = CIEC_BYTE(wheelbasedmachinedirection);  // SPN_WHEELBASEDMACHINEDIRECTION, 8u, 1u, 2u
+           var_KEYSWITCHSTATE             = CIEC_BYTE(keyswitchstate);              // SPN_KEYSWITCHSTATE,             8u, 3u, 2u
+           var_MAXI_TIMEOFTRACPOWER       = CIEC_USINT(maxi_timeoftracpower);       // SPN_MAXI_TIMEOFTRACPOWER,       7u, 1u, 8u
+           var_OPERATOR_DIREC_REVERSED    = CIEC_BYTE(operator_direc_reversed);     // SPN_OPERATOR_DIREC_REVERSED,    8u, 7u, 2u
+           var_START_STOP_STATE           = CIEC_BYTE(start_stop_state);            // SPN_START_STOP_STATE,           8u, 5u, 8u
 
-	   }
+       }
 
 }
 
