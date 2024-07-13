@@ -11,10 +11,10 @@
 # *******************************************************************************/ 
 
 #############################################################################
-# ISOBUS ISO 11783  integration.
+# ISOBUS ISO 11783 TECU integration.
 #############################################################################
 
-# option to enable OPC UA with cmake
+# option to enable ISOBUS_TECU with cmake
 forte_add_module(ISOBUS_TECU OFF "Enable ISOBUS_TECU communication layer")
 
 forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
