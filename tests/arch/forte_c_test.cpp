@@ -10,8 +10,7 @@
  *   Jose Cabral - initial API and implementation and/or initial documentation
  *******************************************************************************/
 #define BOOST_TEST_MODULE FORTE_C_TEST
-
-#include <boost/test/unit_test.hpp>
+#include <boost/test/included/unit_test.hpp>
 
 #include "../../src/arch/c_interface/forte_c.h"
 
