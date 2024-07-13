@@ -23,4 +23,5 @@ forte_add_sourcefile_hcpp(FB_RANDOM GET_STRUCT_VALUE_fbt SET_STRUCT_VALUE_fbt)
 
 forte_add_sourcefile_hcpp(STEST_END_fbt)
 forte_add_sourcefile_hcpp(TEST_CONDITION_fbt)
+forte_add_subdirectory(convert)
 forte_add_subdirectory(Selection)
