@@ -62,9 +62,9 @@ FORTE_F_SEL_E_2::FORTE_F_SEL_E_2(const CStringDictionary::TStringId paInstanceNa
 }
 
 void FORTE_F_SEL_E_2::setInitialValues() {
-	var_IN0 = CIEC_ANY_VARIANT();
-	var_IN1 = CIEC_ANY_VARIANT();
-	var_OUT = CIEC_ANY_VARIANT();
+    var_IN0 = CIEC_ANY_VARIANT();
+    var_IN1 = CIEC_ANY_VARIANT();
+    var_OUT = CIEC_ANY_VARIANT();
 }
 
 void FORTE_F_SEL_E_2::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
