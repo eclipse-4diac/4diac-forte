@@ -75,7 +75,6 @@ extern "C" {
    */
   FORTE_SHARED_PREFIX int forteGlobalDeinitialize();
 
-
 #ifdef __cplusplus
 }
 #endif

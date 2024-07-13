@@ -15,7 +15,6 @@
 
 #include <stdio.h>
 #include <signal.h>
-#include "startuphook.h"
 #include "../core/forteinstance.h"
 #include "forte_architecture.h"
 
@@ -49,8 +48,6 @@ int main(int argc, char *arg[]){
   };
 
   callOnExit{CForteArchitecture::deinitialize};
-
-  startupHook(argc, arg);
 
   hookSignals();
 

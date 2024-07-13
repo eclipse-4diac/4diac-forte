@@ -271,7 +271,6 @@ endif()
 GET_PROPERTY(link_flags GLOBAL PROPERTY FORTE_LINK_FLAGS)
 list(JOIN link_flags " " link_flags_string)
 
-# set_target_properties(${FORTE_BASE_TARGET_NAME} PROPERTIES LINK_FLAGS "${link_flags_string}")
 target_link_options(${FORTE_BASE_TARGET_NAME} INTERFACE "${link_flags_string}")
 
 #######################################################################################
@@ -378,13 +377,17 @@ if(FORTE_C_INTERFACE)
     ADD_LIBRARY (${FORTE_C_LIBRARY_SHARED_NAME} SHARED ${CMAKE_CURRENT_SOURCE_DIR}/arch/c_interface/forte_c.cpp)
   
     # hide all symbols except the ones from the C interface
+    # NOTE: This is still not working. The dynamic symbols are still being exported
+    # --exclude-libs is an option for gcc but it does not work with OBJECT libraries
+    # Exporting the dynamic symbols makes the loading time of the library longer
+    # but it still can be used as usual
     set_target_properties(${FORTE_C_LIBRARY_SHARED_NAME} PROPERTIES 
         CXX_VISIBILITY_PRESET hidden
         VISIBILITY_INLINES_HIDDEN ON)
     set_target_properties(${FORTE_C_LIBRARY_SHARED_NAME} PROPERTIES 
         C_VISIBILITY_PRESET hidden
         VISIBILITY_INLINES_HIDDEN ON)
-  
+
     IF (WIN32 OR CYGWIN)
       SET(FORTE_SHARED_PREFIX "__declspec(dllexport)")
     else()
@@ -395,7 +398,6 @@ if(FORTE_C_INTERFACE)
     commonCLibraryConfiguration(${FORTE_C_LIBRARY_SHARED_NAME})
     message("Building C interface shared library")
   endif(FORTE_BUILD_SHARED_LIBRARY)
-
 
 endif(FORTE_C_INTERFACE)
 
