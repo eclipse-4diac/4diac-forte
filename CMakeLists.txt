@@ -136,8 +136,6 @@ endif(FORTE_SUPPORT_MONITORING)
 
 
 if (WIN32)
-  # make all possible shared libraries export their symbols so they can be used
-  set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
   if (MSVC)
     set(FORTE_ADDITIONAL_CXX_FLAGS "/MP " CACHE STRING "Additional compile flags appended to CMAKE_CXX_FLAGS.")
     mark_as_advanced(FORTE_ADDITIONAL_CXX_FLAGS)

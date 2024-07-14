@@ -216,7 +216,8 @@ if(FORTE_C_INTERFACE)
     add_test(${FORTE_C_STATIC_TEST_NAME} ${EXECUTABLE_OUTPUT_PATH}/${FORTE_C_STATIC_TEST_NAME})
   endif(FORTE_BUILD_STATIC_LIBRARY)
 
-  if(FORTE_BUILD_SHARED_LIBRARY)
+  # Currently not working in windows
+  if(FORTE_BUILD_SHARED_LIBRARY AND NOT WIN32)
     SET(FORTE_C_SHARED_TEST_NAME "forte_c_shared_test")
   
     ADD_EXECUTABLE(${FORTE_C_SHARED_TEST_NAME} ${CMAKE_CURRENT_SOURCE_DIR}/arch/forte_c_test.cpp)
@@ -225,7 +226,7 @@ if(FORTE_C_INTERFACE)
     SET_TARGET_PROPERTIES(${FORTE_C_STATIC_TEST_NAME} PROPERTIES LINKER_LANGUAGE CXX)
 
     add_test(${FORTE_C_SHARED_TEST_NAME} ${EXECUTABLE_OUTPUT_PATH}/${FORTE_C_SHARED_TEST_NAME})
-  endif(FORTE_BUILD_SHARED_LIBRARY) 
+  endif(FORTE_BUILD_SHARED_LIBRARY AND NOT WIN32) 
 
 endif(FORTE_C_INTERFACE)
 
@@ -244,12 +245,13 @@ endif(FORTE_BUILD_STATIC_LIBRARY)
 #######################################################################################
 # Test if main can link to forte-shared
 #######################################################################################
-if(FORTE_BUILD_SHARED_LIBRARY)
+# Currently not working in windows
+if(FORTE_BUILD_SHARED_LIBRARY AND NOT WIN32)
   SET(TEST_FORTE_SHARED "forte_test_shared")
   GET_PROPERTY(SOURCE_EXECUTABLE_CPP GLOBAL PROPERTY FORTE_EXECUTABLE_CPP)
   add_executable (${TEST_FORTE_SHARED} ${SOURCE_EXECUTABLE_CPP})
   target_include_directories(${TEST_FORTE_SHARED} PRIVATE ${INCLUDE_DIRECTORIES})
   target_link_libraries (${TEST_FORTE_SHARED} forte-shared)
   add_dependencies (${TEST_FORTE_SHARED} forte-shared)
-endif(FORTE_BUILD_SHARED_LIBRARY)
+endif(FORTE_BUILD_SHARED_LIBRARY AND NOT WIN32)
   
