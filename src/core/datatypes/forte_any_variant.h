@@ -134,6 +134,9 @@ public:
     [[nodiscard]] bool equals(const CIEC_ANY &paOther) const override {
       return unwrap().equals(paOther.unwrap());
     }
+
+  private:
+    static void replaceUnderscoreInPackageName(char *paValue, size_t paLength);
 };
 
 static_assert(std::is_copy_constructible_v<CIEC_ANY_VARIANT>);

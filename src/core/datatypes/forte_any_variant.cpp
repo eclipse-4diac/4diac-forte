@@ -289,6 +289,9 @@ int CIEC_ANY_VARIANT::toString(char *paValue, size_t paBufferSize) const {
       size_t typeNameLength = strlen(typeName);
       if (paBufferSize > typeNameLength + 2) {
         memcpy(paValue, typeName, typeNameLength);
+        if (value.getDataTypeID() == EDataTypeID::e_STRUCT) {
+          replaceUnderscoreInPackageName(paValue, static_cast<size_t>(typeNameLength));
+        }
         paValue[typeNameLength] = '#';
         result = static_cast<int>(typeNameLength) + 1 +
                  value.toString(paValue + typeNameLength + 1, paBufferSize - typeNameLength - 1);
@@ -316,10 +319,20 @@ size_t CIEC_ANY_VARIANT::getToStringBufferSize() const {
       break;
     default:
       const char *typeName = CStringDictionary::getInstance().get(value.getTypeNameID());
-      size_t typeNameLength = strlen(typeName);
+      const size_t typeNameLength = strlen(typeName);
       result = typeNameLength + 1 + value.getToStringBufferSize();
       break;
   }
   return result;
+}
+
+void CIEC_ANY_VARIANT::replaceUnderscoreInPackageName(char *paValue, size_t paLength) {
+  for (size_t i = 1; i < paLength - 1; i++) {
+    if (paValue[i] == '_' && paValue[i-1] == '_') {
+      paValue[i] = ':';
+      paValue[i-1] = ':';
+      i++;
+    }
+  }
 }
 
