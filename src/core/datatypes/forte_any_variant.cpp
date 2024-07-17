@@ -286,7 +286,7 @@ int CIEC_ANY_VARIANT::toString(char *paValue, size_t paBufferSize) const {
       break;
     default:
       const char *typeName = CStringDictionary::getInstance().get(value.getTypeNameID());
-      size_t typeNameLength = strlen(typeName);
+      const size_t typeNameLength = strlen(typeName);
       if (paBufferSize > typeNameLength + 2) {
         memcpy(paValue, typeName, typeNameLength);
         if (value.getDataTypeID() == EDataTypeID::e_STRUCT) {
