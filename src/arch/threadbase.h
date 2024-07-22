@@ -50,8 +50,13 @@ namespace forte {
          */
         void start();
 
-
         /*! \brief Stops the execution of the thread
+         *
+         *  This function immediately stops the execution of the thread (setting alive to false).
+         */
+        void stop();
+
+        /*! \brief Stops the execution of the thread and waits for its end
          *
          *  This function immediately stops the execution of the thread (setting alive to false) and waits till
          *  this is finished.
