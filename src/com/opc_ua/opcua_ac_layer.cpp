@@ -94,20 +94,31 @@ UA_StatusCode COPC_UA_AC_Layer::triggerAlarm() {
   char *activeStateProperty = getNameFromString("ActiveState");
   char *idProperty = getNameFromString("Id");
   char *timeProperty = getNameFromString("Time");
+  char *retainProperty = getNameFromString("Retain");
   UA_QualifiedName activeStateField = UA_QUALIFIEDNAME(0,activeStateProperty);
   UA_QualifiedName activeStateIdField = UA_QUALIFIEDNAME(0,idProperty);
+  UA_QualifiedName retainField = UA_QUALIFIEDNAME(0,retainProperty);
+
   UA_Variant value;
+  UA_Boolean retainValue = true;
+  UA_Variant_setScalar(&value, &retainValue, &UA_TYPES[UA_TYPES_BOOLEAN]);
+  UA_StatusCode status = UA_Server_setConditionField(server, mConditionInstanceId,
+                                                      &value, retainField);
+  if(status != UA_STATUSCODE_GOOD) {
+    DEVLOG_ERROR("[OPC UA A&C LAYER]: Writing Retain Property failed, StatusCode: %s\n", UA_StatusCode_name(status));
+    return status;
+  }
   UA_DateTime alarmTime = UA_DateTime_now();
-  UA_StatusCode status = UA_Server_writeObjectProperty_scalar(server, mConditionInstanceId,
-                                                              UA_QUALIFIEDNAME(0, timeProperty),
-                                                              &alarmTime,
-                                                              &UA_TYPES[UA_TYPES_DATETIME]);
+  status = UA_Server_writeObjectProperty_scalar(server, mConditionInstanceId,
+                                                  UA_QUALIFIEDNAME(0, timeProperty),
+                                                  &alarmTime,
+                                                  &UA_TYPES[UA_TYPES_DATETIME]);
   if(status != UA_STATUSCODE_GOOD) {
     DEVLOG_ERROR("[OPC UA A&C LAYER]: Writing Alarm Property failed, StatusCode: %s\n", UA_StatusCode_name(status));
     return status;
   }
-  UA_Boolean activeStateId = true;
-  UA_Variant_setScalar(&value, &activeStateId, &UA_TYPES[UA_TYPES_BOOLEAN]);
+  UA_Boolean activeState = true;
+  UA_Variant_setScalar(&value, &activeState, &UA_TYPES[UA_TYPES_BOOLEAN]);
   status = UA_Server_setConditionVariableFieldProperty(server, mConditionInstanceId,
                                               &value, activeStateField,
                                               activeStateIdField);
@@ -236,8 +247,22 @@ UA_StatusCode COPC_UA_AC_Layer::addOPCUACondition(UA_Server *paServer) {
                           UA_NODEID_NUMERIC(0, UA_NS0ID_HASCOMPONENT),
                           &mConditionInstanceId);
   if(status != UA_STATUSCODE_GOOD) {
-    DEVLOG_ERROR("[OPC UA A&C LAYER]: Adding Condition failed. StatusCode %s\n", UA_StatusCode_name(status));  
+    DEVLOG_ERROR("[OPC UA A&C LAYER]: Adding Condition failed for FB %s. StatusCode %s\n", getCommFB()->getInstanceName(), UA_StatusCode_name(status));  
   }
+  char *enabledStateProperty = getNameFromString("EnabledState");
+  char *idProperty = getNameFromString("Id");
+  UA_QualifiedName enabledStateField = UA_QUALIFIEDNAME(0,enabledStateProperty);
+  UA_QualifiedName enabledStateIdField = UA_QUALIFIEDNAME(0,idProperty);
+  UA_Boolean enabledState = true;
+
+  UA_Variant value;
+  UA_Variant_setScalar(&value, &enabledState, &UA_TYPES[UA_TYPES_BOOLEAN]);
+  status = UA_Server_setConditionVariableFieldProperty(paServer, mConditionInstanceId,
+                                                        &value, enabledStateField,
+                                                        enabledStateIdField);
+  if(status != UA_STATUSCODE_GOOD) {
+    DEVLOG_ERROR("[OPC UA A&C LAYER]: Enabling Condition failed for FB %s, StatusCode: %s\n", getCommFB()->getInstanceName(), UA_StatusCode_name(status));
+  }  
   return status;
 }
 
