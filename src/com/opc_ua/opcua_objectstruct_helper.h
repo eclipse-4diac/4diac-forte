@@ -104,6 +104,21 @@ class COPC_UA_ObjectStruct_Helper {
      * @return True if connected data type is Struct, false otherwise
     */
     static bool isStructType(const COPC_UA_Layer &paLayer, bool paIsPublisher);
+
+    /**
+     * Get the BrowsePath to the OPC UA Object Type
+     * @param paPathPrefix The BrowsePath directory with namespace (e.g. /Objects/1:)
+     * @param paObjectName The name of the object the BrowsePath refers to
+     * @param paNamespaceIndex The Namespace index the type should be in
+     */
+    static std::string getBrowsePath(const std::string &paPathPrefix, const std::string &paObjectName, UA_UInt16 paNamespaceIndex);
+
+    /**
+     * Get the BrowsePath to the OPC UA Object member
+     * @param paBrowsePathPrefix BrowsePath to the Struct Object Node
+     * @param paMemberName Name of OPC UA Object Member
+     */
+    static std::string getMemberBrowsePath(const std::string &paBrowsePathPrefix, const std::string &paMemberName);
     
   private:
 
@@ -217,13 +232,6 @@ class COPC_UA_ObjectStruct_Helper {
      * @param structMemberNameId Name Id of Object Node Struct member
      */
     std::string getStructMemberBrowsePathWithNSIndex(const std::string &paBrowsePathPrefix, const CStringDictionary::TStringId structMemberNameId);
-
-    /**
-     * Get the BrowsePath to the OPC UA Object Struct members from the local Struct Type
-     * @param paBrowsePathPrefix BrowsePath to the Struct Object Node
-     * @param structMemberNameId Name Id of Object Node Struct member
-     */
-    std::string getStructMemberBrowsePath(const std::string &paBrowsePathPrefix, const CStringDictionary::TStringId structMemberNameId);
 
     /**
      * Creates an OPC UA namespace with the given name and assigns the 

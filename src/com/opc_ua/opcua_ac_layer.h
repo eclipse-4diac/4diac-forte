@@ -50,9 +50,19 @@ class COPC_UA_AC_Layer : public forte::com_infra::CComLayer {
     static const std::string scmTypeALARM;
     static const std::string scmTypeEVENT;
 
+    static const std::string scmAlarmTypeBrowsePath;
+    static const std::string scmEventTypeBrowsePath;
+    static const std::string scmUserTextAttribute;
+
+    static char smEmptyString[];
+
     static const size_t scmNumberOfParameters = 3;
 
     COPC_UA_HandlerAbstract *mHandler;
+
+    UA_NodeId mTypeNodeId;
+    std::vector<char*> mTypeNames;
+    std::vector<UA_NodeId> mTypePropertyNodes;
 
     /**
      * Called when INIT is triggered in the FB and QI is set to true
@@ -65,4 +75,24 @@ class COPC_UA_AC_Layer : public forte::com_infra::CComLayer {
      * Called when INIT is triggered in the FB and QI is set to false
      */
     void closeConnection() override;
+
+    forte::com_infra::EComResponse initOPCUAType(const std::string &paMode, const std::string &paType, const std::string &paTypeName);
+
+    forte::com_infra::EComResponse createAlarmType(UA_Server *paServer, const std::string &paTypeName);
+
+    forte::com_infra::EComResponse createEventType(UA_Server *paServer, const std::string &paTypeName);
+    
+    forte::com_infra::EComResponse addOPCUATypeProperties(UA_Server *paServer, const std::string &paMode, const std::string &paTypeName);
+
+    forte::com_infra::EComResponse addOPCUATypeMSGProperties(UA_Server *paServer, const std::string &paParentTypeName, bool paIsPublisher);
+
+    forte::com_infra::EComResponse addOPCUATypeUSERProperties(UA_Server *paServer, const std::string &paParentTypeName, bool paIsPublisher);
+
+    UA_StatusCode addVariableNode(UA_Server *paServer, const std::string &paParentTypeName, char *paVariableName, CIEC_ANY &paVariableType);
+
+    bool isOPCUAObjectPresent(std::string &paBrowsePath);
+
+    std::string getPortNameFromConnection(CStringDictionary::TStringId paPortNameId, bool paIsPublisher);
+
+    char *getNameFromString(const std::string &paName);
 };

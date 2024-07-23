@@ -153,7 +153,7 @@ bool COPC_UA_ObjectStruct_Helper::addOPCUAStructTypeComponent(UA_Server *paServe
 
   UA_NodeId memberNodeId;
   if(paParentNodeId.identifierType == UA_NODEIDTYPE_STRING) {
-    std::string memberBrowsePathStr = getStructMemberBrowsePath(paStructName, paStructMemberNameId);
+    std::string memberBrowsePathStr = getMemberBrowsePath(paStructName, structMemberName);
     char* memberBrowsePath = new char[memberBrowsePathStr.length() +1];
     strncpy(memberBrowsePath, memberBrowsePathStr.c_str(), memberBrowsePathStr.length());
     memberBrowsePath[memberBrowsePathStr.length()] = '\0';   
@@ -374,13 +374,17 @@ std::string COPC_UA_ObjectStruct_Helper::removeNamespaceIndicesFromBrowsePath(co
 
 std::string COPC_UA_ObjectStruct_Helper::getStructBrowsePath(const std::string &paPathPrefix, bool paIsPublisher) {
   std::string structTypeName(getStructTypeName(paIsPublisher));
-  if(structTypeName.empty()) {
+  return getBrowsePath(paPathPrefix, structTypeName, mOpcuaTypeNamespaceIndex);
+}
+
+std::string COPC_UA_ObjectStruct_Helper::getBrowsePath(const std::string &paPathPrefix, const std::string &paObjectName, UA_UInt16 paNamespaceIndex) {
+  if(paObjectName.empty()) {
     return std::string();
   }
   std::stringstream ss;
-  char buf[100];
-  snprintf(buf, sizeof(buf), paPathPrefix.c_str(), mOpcuaTypeNamespaceIndex);
-  ss << buf << structTypeName;
+  char buf[1000];
+  snprintf(buf, sizeof(buf), paPathPrefix.c_str(), paNamespaceIndex);
+  ss << buf << paObjectName;
   return ss.str();
 }
 
@@ -393,9 +397,9 @@ std::string COPC_UA_ObjectStruct_Helper::getStructMemberBrowsePathWithNSIndex(co
   return ss.str();
 }
 
-std::string COPC_UA_ObjectStruct_Helper::getStructMemberBrowsePath(const std::string &paBrowsePathPrefix, const CStringDictionary::TStringId structMemberNameId) {
+std::string COPC_UA_ObjectStruct_Helper::getMemberBrowsePath(const std::string &paBrowsePathPrefix, const std::string &paMemberName) {
   std::stringstream ss;
-  ss << paBrowsePathPrefix << "/" << CStringDictionary::getInstance().get(structMemberNameId);
+  ss << paBrowsePathPrefix << "/" << paMemberName;
   return ss.str();
 }
 
