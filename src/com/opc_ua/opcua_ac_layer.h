@@ -5,8 +5,8 @@
 #include "../../core/cominfra/comlayer.h"
 #include "open62541.h"
 
-// class COPC_UA_Local_Handler;
 class COPC_UA_HandlerAbstract;
+class CActionInfo;
 
 class COPC_UA_AC_Layer : public forte::com_infra::CComLayer {
   public:
@@ -55,6 +55,8 @@ class COPC_UA_AC_Layer : public forte::com_infra::CComLayer {
     static const std::string scmEventTypeBrowsePath;
     static const std::string scmUserTextAttribute;
 
+    static const std::string scmAlarmConditionName;
+
     static char smEmptyString[];
 
     static const size_t scmNumberOfParameters = 3;
@@ -64,7 +66,8 @@ class COPC_UA_AC_Layer : public forte::com_infra::CComLayer {
     UA_NodeId mTypeNodeId;
     UA_NodeId mConditionSourceId;
     UA_NodeId mConditionInstanceId;
-    std::vector<char*> mTypeNames;
+   
+    std::vector<char*> mNames;
     std::vector<UA_NodeId> mTypePropertyNodes;
 
     std::string mInitType;

@@ -18,6 +18,9 @@ const std::string COPC_UA_AC_Layer::scmAlarmTypeBrowsePath = "/Types/0:EventType
 const std::string COPC_UA_AC_Layer::scmEventTypeBrowsePath = "/Types/0:EventTypes/0:BaseEventType/%d:";
 const std::string COPC_UA_AC_Layer::scmUserTextAttribute = "TEXT0%d";
 
+
+const std::string COPC_UA_AC_Layer::scmAlarmConditionName = "AlarmCondition";
+
 char COPC_UA_AC_Layer::smEmptyString[] = "";
 
 COPC_UA_AC_Layer::COPC_UA_AC_Layer(CComLayer *paUpperLayer, CBaseCommFB *paComFB) :
@@ -26,16 +29,15 @@ COPC_UA_AC_Layer::COPC_UA_AC_Layer(CComLayer *paUpperLayer, CBaseCommFB *paComFB
 }
 
 COPC_UA_AC_Layer::~COPC_UA_AC_Layer() {
-  UA_NodeId_clear(&mTypeNodeId);
-  for(char *typeName : mTypeNames) {
-    delete[] typeName;
-  }
+  UA_NodeId_clear(&mConditionInstanceId);
+  UA_NodeId_clear(&mConditionSourceId);
   for(UA_NodeId nodeId : mTypePropertyNodes) {
     UA_NodeId_clear(&nodeId);
   }
   UA_NodeId_clear(&mTypeNodeId);
-  UA_NodeId_clear(&mConditionSourceId);
-  UA_NodeId_clear(&mConditionInstanceId);
+  for(char *typeName : mNames) {
+    delete[] typeName;
+  }
 }
 
 EComResponse COPC_UA_AC_Layer::openConnection(char *paLayerParameter) {
@@ -216,10 +218,12 @@ UA_StatusCode COPC_UA_AC_Layer::createOPCUAObjectNode(UA_Server *paServer) {
     return UA_STATUSCODE_BAD;
   }
   char *instanceName = getNameFromString(instanceNameStr);
+  char *browsePath = getNameFromString(COPC_UA_ObjectStruct_Helper::getMemberBrowsePath("/Objects", instanceNameStr));    
+  mConditionSourceId = UA_NODEID_STRING(1, browsePath);     // TODO Change 1 to namespaceIndex
   UA_ObjectAttributes attr = UA_ObjectAttributes_default;
     attr.eventNotifier = UA_EVENTNOTIFIER_SUBSCRIBE_TO_EVENT;
     attr.displayName = UA_LOCALIZEDTEXT(smEmptyString, instanceName);
-    UA_StatusCode status =  UA_Server_addObjectNode(paServer, UA_NODEID_NULL,
+    UA_StatusCode status =  UA_Server_addObjectNode(paServer, mConditionSourceId,
                               UA_NODEID_NUMERIC(0, UA_NS0ID_OBJECTSFOLDER),
                               UA_NODEID_NUMERIC(0, UA_NS0ID_ORGANIZES),
                               UA_QUALIFIEDNAME(1, instanceName),            // TODO Change 1 to namespaceIndex
@@ -232,7 +236,7 @@ UA_StatusCode COPC_UA_AC_Layer::createOPCUAObjectNode(UA_Server *paServer) {
     }
     status = UA_Server_addReference(paServer, UA_NODEID_NUMERIC(0, UA_NS0ID_SERVER),
               UA_NODEID_NUMERIC(0, UA_NS0ID_HASNOTIFIER),
-              UA_EXPANDEDNODEID_NUMERIC(mConditionSourceId.namespaceIndex, mConditionSourceId.identifier.numeric),
+              UA_EXPANDEDNODEID_STRING(mConditionSourceId.namespaceIndex, getNameFromString(browsePath)),
               UA_TRUE);
     if(status != UA_STATUSCODE_GOOD) {
       DEVLOG_ERROR("[OPC UA A&C LAYER]: Adding reference to Object Node failed. StatusCode %s\n", UA_StatusCode_name(status));
@@ -241,13 +245,16 @@ UA_StatusCode COPC_UA_AC_Layer::createOPCUAObjectNode(UA_Server *paServer) {
 }
 
 UA_StatusCode COPC_UA_AC_Layer::addOPCUACondition(UA_Server *paServer) {
-  char *conditionName = getNameFromString("AlarmCondition");
-  UA_StatusCode status = UA_Server_createCondition(paServer, UA_NODEID_NULL, mTypeNodeId,
+  char *conditionName = getNameFromString(scmAlarmConditionName);
+  char *conditionBrowsePath = getNameFromString(COPC_UA_ObjectStruct_Helper::getMemberBrowsePath("/Objects/OPCUAMessageHandlerTest", scmAlarmConditionName));
+  mConditionInstanceId = UA_NODEID_STRING(1, conditionBrowsePath);      // TODO Change 1 to namespaceIndex   
+  UA_StatusCode status = UA_Server_createCondition(paServer, mConditionInstanceId, mTypeNodeId,
                           UA_QUALIFIEDNAME(1, conditionName), mConditionSourceId,
                           UA_NODEID_NUMERIC(0, UA_NS0ID_HASCOMPONENT),
                           &mConditionInstanceId);
   if(status != UA_STATUSCODE_GOOD) {
-    DEVLOG_ERROR("[OPC UA A&C LAYER]: Adding Condition failed for FB %s. StatusCode %s\n", getCommFB()->getInstanceName(), UA_StatusCode_name(status));  
+    DEVLOG_ERROR("[OPC UA A&C LAYER]: Adding Condition failed for FB %s. StatusCode %s\n", getCommFB()->getInstanceName(), UA_StatusCode_name(status)); 
+    return status;
   }
   char *enabledStateProperty = getNameFromString("EnabledState");
   char *idProperty = getNameFromString("Id");
@@ -359,7 +366,7 @@ forte::com_infra::EComResponse COPC_UA_AC_Layer::addOPCUATypeUSERProperties(UA_S
     char* propertyName = new char[scmUserTextAttribute.length() + 2];
     snprintf(propertyName, scmUserTextAttribute.length() + 2, scmUserTextAttribute.c_str(), i+1);
     propertyName[scmUserTextAttribute.length() + 1] = '\0';
-    mTypeNames.emplace_back(propertyName);
+    mNames.emplace_back(propertyName);
 
     UA_StatusCode status = addVariableNode(paServer, paParentTypeName, propertyName, apoDataPorts[i]->unwrap());
     if(status != UA_STATUSCODE_GOOD) {
@@ -390,9 +397,7 @@ UA_StatusCode COPC_UA_AC_Layer::addVariableNode(UA_Server *paServer, const std::
   if(status != UA_STATUSCODE_GOOD) {
     return status;
   }
-  return UA_Server_addReference(paServer, memberNodeId,
-          UA_NODEID_NUMERIC(0, UA_NS0ID_HASMODELLINGRULE),
-          UA_EXPANDEDNODEID_NUMERIC(0, UA_NS0ID_MODELLINGRULE_MANDATORY), UA_TRUE);
+  return status;
 }
 
 bool COPC_UA_AC_Layer::isOPCUAObjectPresent(std::string &paBrowsePath) {
@@ -444,6 +449,6 @@ char *COPC_UA_AC_Layer::getNameFromString(const std::string &paName) {
   char* name = new char[length + 1];
   strncpy(name, paName.c_str(), length);
   name[length] = '\0';
-  mTypeNames.emplace_back(name);
+  mNames.emplace_back(name);
   return name;
 }
