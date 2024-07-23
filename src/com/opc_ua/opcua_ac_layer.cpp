@@ -43,16 +43,16 @@ COPC_UA_AC_Layer::~COPC_UA_AC_Layer() {
 
 EComResponse COPC_UA_AC_Layer::openConnection(char *paLayerParameter) {
   EComResponse eRetVal = e_InitTerminated;
-  CParameterParser parser(paLayerParameter, ';', scmNumberOfParameters);
+  CParameterParser parser(paLayerParameter, ';');
   size_t nrOfParams = parser.parseParameters();
-  if(nrOfParams == scmNumberOfParameters) {
+  if(nrOfParams == scmNumberOfAlarmParameters || nrOfParams == scmNumberOfEventParameters) {
     std::string mode = parser[Mode];
     mInitType = parser[InitType];
     mHandler = static_cast<COPC_UA_HandlerAbstract*>(&getExtEvHandler<COPC_UA_Local_Handler>());
     if(mode == scmModeINITMSG || mode == scmModeINITUSERTEXT) {
       eRetVal = initOPCUAType(mode, mInitType, parser[TypeName]);
     } else if (mode == scmModeTRIGGER) {
-      eRetVal = createOPCUAObject(mInitType, parser[TypeName]);
+      eRetVal = createOPCUAObject(mInitType, parser[TypeName], parser[PathToInstance] ? parser[PathToInstance] : std::string());
     } else {
       DEVLOG_ERROR("[OPC UA A&C LAYER]: Wrong usage of layer parameters! Expected first param: %s | %s | %s, actual: %s\n", scmModeINITMSG.c_str(), scmModeINITUSERTEXT.c_str(), scmModeTRIGGER.c_str(), mode.c_str());
       return eRetVal;   
@@ -190,7 +190,7 @@ EComResponse COPC_UA_AC_Layer::initOPCUAType(const std::string &paMode, const st
     return eRetVal == e_InitOk ? addOPCUATypeProperties(server, paMode, paTypeName) : eRetVal;
 }
 
-EComResponse COPC_UA_AC_Layer::createOPCUAObject(const std::string &paType, const std::string &paTypeName) {
+EComResponse COPC_UA_AC_Layer::createOPCUAObject(const std::string &paType, const std::string &paTypeName, const std::string &paPathToInstance) {
   std::string browsePathPrefix;
   if(paType == scmTypeALARM) {
     browsePathPrefix = scmAlarmTypeBrowsePath;
@@ -209,34 +209,49 @@ EComResponse COPC_UA_AC_Layer::createOPCUAObject(const std::string &paType, cons
   localHandler->enableHandler();
   UA_Server *server = localHandler->getUAServer();
   if(paType == scmTypeALARM) {
-    if(createOPCUAObjectNode(server) != UA_STATUSCODE_GOOD) {
+    std::string objectBrowsePath;
+    if(createOPCUAObjectNode(server, paPathToInstance, objectBrowsePath) != UA_STATUSCODE_GOOD) {
       return e_InitTerminated;
     }
-    if(addOPCUACondition(server) != UA_STATUSCODE_GOOD) {
+    std::string conditionBrowsePath;
+    if(addOPCUACondition(server, objectBrowsePath, conditionBrowsePath) != UA_STATUSCODE_GOOD) {
       return e_InitTerminated;
     }
-    mMemberActionInfo.reset(new CActionInfo(*this, CActionInfo::UA_ActionType::eWrite, std::string()));
-    if(initializeMemberActions() != e_InitOk) {
+    if(initializeMemberActions(conditionBrowsePath) != e_InitOk) {
       return e_InitTerminated;
     }
   }
   return e_InitOk;
 }
 
-UA_StatusCode COPC_UA_AC_Layer::createOPCUAObjectNode(UA_Server *paServer) {
+UA_StatusCode COPC_UA_AC_Layer::createOPCUAObjectNode(UA_Server *paServer, const std::string &paPathToInstance, std::string &paBrowsePath) {
+  if(!COPC_UA_Helper::isBrowsePathValid(paPathToInstance)) {
+    return UA_STATUSCODE_BAD;
+  }
   std::string instanceNameStr(getFBNameFromConnection());
   if(instanceNameStr.empty()) {
     DEVLOG_ERROR("[OPC UA A&C LAYER]: Retrieving FB Instance Name failed!");
     return UA_STATUSCODE_BAD;
   }
+
+  COPC_UA_Local_Handler* localHandler = static_cast<COPC_UA_Local_Handler*>(mHandler);
+  CSinglyLinkedList<UA_NodeId*> referencedNodes;
+  paBrowsePath = COPC_UA_ObjectStruct_Helper::getMemberBrowsePath(paPathToInstance, instanceNameStr);
+  UA_StatusCode status = localHandler->splitAndCreateFolders(paBrowsePath, instanceNameStr, referencedNodes);   // Overwrites instanceNameStr to the same value as before, but we get the OPC UA folders
+  if(status != UA_STATUSCODE_GOOD || referencedNodes.isEmpty()) {
+    DEVLOG_ERROR("[OPC UA A&C LAYER]: Creating OPC UA Folders failed, Browsepath: %s, StatusCode: %s\n", paBrowsePath.c_str(), UA_StatusCode_name(status));
+    return UA_STATUSCODE_BAD;
+  }
+
   char *instanceName = getNameFromString(instanceNameStr);
-  char *browsePath = getNameFromString(COPC_UA_ObjectStruct_Helper::getMemberBrowsePath("/Objects", instanceNameStr));    
+  char *browsePath = getNameFromString(paBrowsePath);    
+  const UA_NodeId *parentNodeId = *referencedNodes.back();
   mConditionSourceId = UA_NODEID_STRING(1, browsePath);     // TODO Change 1 to namespaceIndex
   UA_ObjectAttributes attr = UA_ObjectAttributes_default;
     attr.eventNotifier = UA_EVENTNOTIFIER_SUBSCRIBE_TO_EVENT;
     attr.displayName = UA_LOCALIZEDTEXT(smEmptyString, instanceName);
-    UA_StatusCode status =  UA_Server_addObjectNode(paServer, mConditionSourceId,
-                              UA_NODEID_NUMERIC(0, UA_NS0ID_OBJECTSFOLDER),
+    status =  UA_Server_addObjectNode(paServer, mConditionSourceId,
+                              *parentNodeId,
                               UA_NODEID_NUMERIC(0, UA_NS0ID_ORGANIZES),
                               UA_QUALIFIEDNAME(1, instanceName),            // TODO Change 1 to namespaceIndex
                               UA_NODEID_NUMERIC(0, UA_NS0ID_BASEOBJECTTYPE),
@@ -253,12 +268,16 @@ UA_StatusCode COPC_UA_AC_Layer::createOPCUAObjectNode(UA_Server *paServer) {
     if(status != UA_STATUSCODE_GOOD) {
       DEVLOG_ERROR("[OPC UA A&C LAYER]: Adding reference to Object Node failed. StatusCode %s\n", UA_StatusCode_name(status));
     }
+    for(CSinglyLinkedList<UA_NodeId*>::Iterator itReferencedNodes = referencedNodes.begin(); itReferencedNodes != referencedNodes.end(); ++itReferencedNodes) {
+      UA_NodeId_delete(*itReferencedNodes);
+    }
     return status;
 }
 
-UA_StatusCode COPC_UA_AC_Layer::addOPCUACondition(UA_Server *paServer) {
+UA_StatusCode COPC_UA_AC_Layer::addOPCUACondition(UA_Server *paServer, const std::string &paPathToInstance, std::string &paBrowsePath) {
   char *conditionName = getNameFromString(scmAlarmConditionName);
-  char *conditionBrowsePath = getNameFromString(COPC_UA_ObjectStruct_Helper::getMemberBrowsePath("/Objects/OPCUAMessageHandlerTest", scmAlarmConditionName));
+  paBrowsePath = COPC_UA_ObjectStruct_Helper::getMemberBrowsePath(paPathToInstance, scmAlarmConditionName);
+  char *conditionBrowsePath = getNameFromString(paBrowsePath);
   mConditionInstanceId = UA_NODEID_STRING(1, conditionBrowsePath);      // TODO Change 1 to namespaceIndex   
   UA_StatusCode status = UA_Server_createCondition(paServer, mConditionInstanceId, mTypeNodeId,
                           UA_QUALIFIEDNAME(1, conditionName), mConditionSourceId,
@@ -285,13 +304,14 @@ UA_StatusCode COPC_UA_AC_Layer::addOPCUACondition(UA_Server *paServer) {
   return status;
 }
 
-forte::com_infra::EComResponse COPC_UA_AC_Layer::initializeMemberActions() {
+forte::com_infra::EComResponse COPC_UA_AC_Layer::initializeMemberActions(const std::string &paParentBrowsePath) {
+  mMemberActionInfo.reset(new CActionInfo(*this, CActionInfo::UA_ActionType::eWrite, std::string()));
   size_t numPorts = getCommFB()->getNumSD();
   const SFBInterfaceSpec *interfaceSpec = getCommFB()->getFBInterfaceSpec();
   const CStringDictionary::TStringId *dataPortNameIds = interfaceSpec->mDINames;
   for(size_t i = 0; i < numPorts; i++) {
     std::string dataPortName = getPortNameFromConnection(dataPortNameIds[i+2], true);
-    std::string memberBrowsePath(COPC_UA_ObjectStruct_Helper::getMemberBrowsePath("/Objects/OPCUAMessageHandlerTest/AlarmCondition", dataPortName));
+    std::string memberBrowsePath(COPC_UA_ObjectStruct_Helper::getMemberBrowsePath(paParentBrowsePath, dataPortName));
     UA_NodeId *nodeId = COPC_UA_ObjectStruct_Helper::createStringNodeIdFromBrowsepath(memberBrowsePath);
     mMemberActionInfo->getNodePairInfo().emplace_back(nodeId, memberBrowsePath);
   }

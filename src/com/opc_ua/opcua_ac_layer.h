@@ -42,7 +42,8 @@ class COPC_UA_AC_Layer : public COPC_UA_Layer {
     enum Parameters {
       Mode,
       InitType,
-      TypeName
+      TypeName,
+      PathToInstance
     };
 
     static const std::string scmModeINITMSG;
@@ -59,7 +60,9 @@ class COPC_UA_AC_Layer : public COPC_UA_Layer {
 
     static char smEmptyString[];
 
-    static const size_t scmNumberOfParameters = 3;
+    static const size_t scmNumberOfAlarmParameters = 4;
+
+    static const size_t scmNumberOfEventParameters = 3;
 
     COPC_UA_HandlerAbstract *mHandler;
 
@@ -91,11 +94,11 @@ class COPC_UA_AC_Layer : public COPC_UA_Layer {
 
     forte::com_infra::EComResponse initOPCUAType(const std::string &paMode, const std::string &paType, const std::string &paTypeName);
 
-    forte::com_infra::EComResponse createOPCUAObject(const std::string &paType, const std::string &paTypeName);
+    forte::com_infra::EComResponse createOPCUAObject(const std::string &paType, const std::string &paTypeName, const std::string &paPathToInstance);
 
-    UA_StatusCode createOPCUAObjectNode(UA_Server *paServer);
+    UA_StatusCode createOPCUAObjectNode(UA_Server *paServer, const std::string &paPathToInstance, std::string &paBrowsePath);
 
-    UA_StatusCode addOPCUACondition(UA_Server *paServer);
+    UA_StatusCode addOPCUACondition(UA_Server *paServer, const std::string &paPathToInstance, std::string &paBrowsePath);
 
     forte::com_infra::EComResponse createAlarmType(UA_Server *paServer, const std::string &paTypeName);
 
@@ -109,7 +112,7 @@ class COPC_UA_AC_Layer : public COPC_UA_Layer {
 
     UA_StatusCode addVariableNode(UA_Server *paServer, const std::string &paParentTypeName, char *paVariableName, CIEC_ANY &paVariableType);
 
-    forte::com_infra::EComResponse initializeMemberActions();
+    forte::com_infra::EComResponse initializeMemberActions(const std::string &paParentBrowsePath);
 
     bool isOPCUAObjectPresent(std::string &paBrowsePath);
 
