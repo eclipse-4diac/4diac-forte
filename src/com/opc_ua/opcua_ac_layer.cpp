@@ -5,6 +5,8 @@
 #include "../../core/cominfra/basecommfb.h"
 #include "opcua_local_handler.h"
 #include "opcua_objectstruct_helper.h"
+#include "opcua_action_info.h"
+#include <memory>
 
 using namespace forte::com_infra;
 
@@ -24,8 +26,7 @@ const std::string COPC_UA_AC_Layer::scmAlarmConditionName = "AlarmCondition";
 char COPC_UA_AC_Layer::smEmptyString[] = "";
 
 COPC_UA_AC_Layer::COPC_UA_AC_Layer(CComLayer *paUpperLayer, CBaseCommFB *paComFB) :
-  CComLayer(paUpperLayer, paComFB), mHandler(nullptr) {
-  
+  COPC_UA_Layer(paUpperLayer, paComFB), mHandler(nullptr), mMemberActionInfo(nullptr) {
 }
 
 COPC_UA_AC_Layer::~COPC_UA_AC_Layer() {
@@ -61,7 +62,9 @@ EComResponse COPC_UA_AC_Layer::openConnection(char *paLayerParameter) {
 }
 
 void COPC_UA_AC_Layer::closeConnection() {
-  // TODO
+  if(mMemberActionInfo) {
+    mHandler->uninitializeAction(*mMemberActionInfo);
+  }
 }
 
 EComResponse COPC_UA_AC_Layer::recvData(const void*, unsigned int) {
@@ -69,6 +72,11 @@ EComResponse COPC_UA_AC_Layer::recvData(const void*, unsigned int) {
 }
 
 EComResponse COPC_UA_AC_Layer::sendData(void*, unsigned int) {
+  if(mMemberActionInfo) {
+    if(mHandler->executeAction(*mMemberActionInfo) != UA_STATUSCODE_GOOD) {
+      return e_ProcessDataSendFailed;
+    }
+  }
   if(mInitType == scmTypeALARM) {
     if(triggerAlarm() != UA_STATUSCODE_GOOD) {
       DEVLOG_ERROR("[OPC UA A&C LAYER]: Sending Alarm Data failed!\n");
@@ -207,6 +215,10 @@ EComResponse COPC_UA_AC_Layer::createOPCUAObject(const std::string &paType, cons
     if(addOPCUACondition(server) != UA_STATUSCODE_GOOD) {
       return e_InitTerminated;
     }
+    mMemberActionInfo.reset(new CActionInfo(*this, CActionInfo::UA_ActionType::eWrite, std::string()));
+    if(initializeMemberActions() != e_InitOk) {
+      return e_InitTerminated;
+    }
   }
   return e_InitOk;
 }
@@ -271,6 +283,23 @@ UA_StatusCode COPC_UA_AC_Layer::addOPCUACondition(UA_Server *paServer) {
     DEVLOG_ERROR("[OPC UA A&C LAYER]: Enabling Condition failed for FB %s, StatusCode: %s\n", getCommFB()->getInstanceName(), UA_StatusCode_name(status));
   }  
   return status;
+}
+
+forte::com_infra::EComResponse COPC_UA_AC_Layer::initializeMemberActions() {
+  size_t numPorts = getCommFB()->getNumSD();
+  const SFBInterfaceSpec *interfaceSpec = getCommFB()->getFBInterfaceSpec();
+  const CStringDictionary::TStringId *dataPortNameIds = interfaceSpec->mDINames;
+  for(size_t i = 0; i < numPorts; i++) {
+    std::string dataPortName = getPortNameFromConnection(dataPortNameIds[i+2], true);
+    std::string memberBrowsePath(COPC_UA_ObjectStruct_Helper::getMemberBrowsePath("/Objects/OPCUAMessageHandlerTest/AlarmCondition", dataPortName));
+    UA_NodeId *nodeId = COPC_UA_ObjectStruct_Helper::createStringNodeIdFromBrowsepath(memberBrowsePath);
+    mMemberActionInfo->getNodePairInfo().emplace_back(nodeId, memberBrowsePath);
+  }
+  if(mHandler->initializeAction(*mMemberActionInfo) != UA_STATUSCODE_GOOD) {
+      DEVLOG_ERROR("[OPC UA A&C LAYER]: Error occured in FB %s while initializing members\n", getCommFB()->getInstanceName());
+      return e_InitTerminated;
+    }
+  return e_InitOk;
 }
 
 EComResponse COPC_UA_AC_Layer::createAlarmType(UA_Server *paServer, const std::string &paTypeName) {

@@ -119,6 +119,13 @@ class COPC_UA_ObjectStruct_Helper {
      * @param paMemberName Name of OPC UA Object Member
      */
     static std::string getMemberBrowsePath(const std::string &paBrowsePathPrefix, const std::string &paMemberName);
+
+    /**
+     * Creates NodeId of type string from the given browsepath
+     * @param paBrowsePath The browsepath of the Object Struct
+     * @return The NodeId of type string 
+    */
+    static UA_NodeId *createStringNodeIdFromBrowsepath(const std::string& paBrowsePath);
     
   private:
 
@@ -259,13 +266,6 @@ class COPC_UA_ObjectStruct_Helper {
      * @param paStructMemberNameId The id of the Struct Member name
     */
     bool addOPCUAStructTypeComponent(UA_Server *paServer, UA_NodeId &paParentNodeId, const std::string &paStructName, CIEC_ANY *paStructMember, const CStringDictionary::TStringId paStructMemberNameId);
-
-    /**
-     * Creates NodeId of type string from the given browsepath
-     * @param paBrowsePath The browsepath of the Object Struct
-     * @return The NodeId of type string 
-    */
-    static UA_NodeId *createStringNodeIdFromBrowsepath(const std::string& paBrowsePath);
 
     /**
      * Returns the namespace index of the Object Struct Instance from the given browsepath

@@ -205,7 +205,7 @@ CIEC_ANY const *COPC_UA_ObjectStruct_Helper::getStructMember(CActionInfo &paActi
 forte::com_infra::EComResponse COPC_UA_ObjectStruct_Helper::executeStructAction() {
   for(std::shared_ptr<CActionInfo> actionInfo : mStructMemberActionInfos) {
     if(UA_STATUSCODE_GOOD != mHandler->executeAction(*actionInfo)) {
-      return e_ProcessDataDataTypeError;
+      return e_ProcessDataSendFailed;
     }
   }
   return e_ProcessDataOk;

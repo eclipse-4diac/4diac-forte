@@ -2,13 +2,13 @@
 
 #pragma once
 
-#include "../../core/cominfra/comlayer.h"
+#include "opcua_layer.h"
 #include "open62541.h"
 
 class COPC_UA_HandlerAbstract;
 class CActionInfo;
 
-class COPC_UA_AC_Layer : public forte::com_infra::CComLayer {
+class COPC_UA_AC_Layer : public COPC_UA_Layer {
   public:
 
     COPC_UA_AC_Layer(forte::com_infra::CComLayer *paUpperLayer, forte::com_infra::CBaseCommFB *paComFB);
@@ -69,6 +69,7 @@ class COPC_UA_AC_Layer : public forte::com_infra::CComLayer {
    
     std::vector<char*> mNames;
     std::vector<UA_NodeId> mTypePropertyNodes;
+    std::unique_ptr<CActionInfo> mMemberActionInfo;
 
     std::string mInitType;
 
@@ -107,6 +108,8 @@ class COPC_UA_AC_Layer : public forte::com_infra::CComLayer {
     forte::com_infra::EComResponse addOPCUATypeUSERProperties(UA_Server *paServer, const std::string &paParentTypeName, bool paIsPublisher);
 
     UA_StatusCode addVariableNode(UA_Server *paServer, const std::string &paParentTypeName, char *paVariableName, CIEC_ANY &paVariableType);
+
+    forte::com_infra::EComResponse initializeMemberActions();
 
     bool isOPCUAObjectPresent(std::string &paBrowsePath);
 
