@@ -67,6 +67,8 @@ class COPC_UA_AC_Layer : public forte::com_infra::CComLayer {
     std::vector<char*> mTypeNames;
     std::vector<UA_NodeId> mTypePropertyNodes;
 
+    std::string mInitType;
+
     /**
      * Called when INIT is triggered in the FB and QI is set to true
      * @param paLayerParameter String conatained between the square brackets in the ID data input (opc_ua[...])
@@ -80,6 +82,8 @@ class COPC_UA_AC_Layer : public forte::com_infra::CComLayer {
     void closeConnection() override;
 
     UA_StatusCode triggerAlarm();
+
+    UA_StatusCode triggerEvent();
 
     forte::com_infra::EComResponse initOPCUAType(const std::string &paMode, const std::string &paType, const std::string &paTypeName);
 
