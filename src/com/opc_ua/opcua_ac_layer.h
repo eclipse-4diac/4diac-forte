@@ -47,6 +47,7 @@ class COPC_UA_AC_Layer : public forte::com_infra::CComLayer {
 
     static const std::string scmModeINITMSG;
     static const std::string scmModeINITUSERTEXT;
+    static const std::string scmModeTRIGGER;
     static const std::string scmTypeALARM;
     static const std::string scmTypeEVENT;
 
@@ -61,6 +62,8 @@ class COPC_UA_AC_Layer : public forte::com_infra::CComLayer {
     COPC_UA_HandlerAbstract *mHandler;
 
     UA_NodeId mTypeNodeId;
+    UA_NodeId mConditionSourceId;
+    UA_NodeId mConditionInstanceId;
     std::vector<char*> mTypeNames;
     std::vector<UA_NodeId> mTypePropertyNodes;
 
@@ -78,6 +81,12 @@ class COPC_UA_AC_Layer : public forte::com_infra::CComLayer {
 
     forte::com_infra::EComResponse initOPCUAType(const std::string &paMode, const std::string &paType, const std::string &paTypeName);
 
+    forte::com_infra::EComResponse createOPCUAObject(const std::string &paType, const std::string &paTypeName);
+
+    UA_StatusCode createOPCUAObjectNode(UA_Server *paServer);
+
+    UA_StatusCode addOPCUACondition(UA_Server *paServer);
+
     forte::com_infra::EComResponse createAlarmType(UA_Server *paServer, const std::string &paTypeName);
 
     forte::com_infra::EComResponse createEventType(UA_Server *paServer, const std::string &paTypeName);
@@ -93,6 +102,8 @@ class COPC_UA_AC_Layer : public forte::com_infra::CComLayer {
     bool isOPCUAObjectPresent(std::string &paBrowsePath);
 
     std::string getPortNameFromConnection(CStringDictionary::TStringId paPortNameId, bool paIsPublisher);
+
+    std::string getFBNameFromConnection();
 
     char *getNameFromString(const std::string &paName);
 };
