@@ -66,12 +66,45 @@ EComResponse COPC_UA_AC_Layer::recvData(const void*, unsigned int) {
 }
 
 EComResponse COPC_UA_AC_Layer::sendData(void*, unsigned int) {
+  if(triggerAlarm() != UA_STATUSCODE_GOOD) {
+    DEVLOG_ERROR("[OPC UA A&C LAYER]: Sending Data failed!\n");
+    return e_ProcessDataSendFailed;
+  }
   return e_ProcessDataOk;
 }
 
 EComResponse COPC_UA_AC_Layer::processInterrupt() {
   // TODO
   return e_ProcessDataOk;
+}
+
+UA_StatusCode COPC_UA_AC_Layer::triggerAlarm() {
+  COPC_UA_Local_Handler* localHandler = static_cast<COPC_UA_Local_Handler*>(mHandler);
+  UA_Server *server = localHandler->getUAServer();
+  char *activeStateProperty = getNameFromString(std::string("ActiveState"));
+  char *idProperty = getNameFromString(std::string("Id"));
+  char *timeProperty = getNameFromString(std::string("Time"));
+  UA_QualifiedName activeStateField = UA_QUALIFIEDNAME(0,activeStateProperty);
+  UA_QualifiedName activeStateIdField = UA_QUALIFIEDNAME(0,idProperty);
+  UA_Variant value;
+  UA_DateTime alarmTime = UA_DateTime_now();
+  UA_StatusCode status = UA_Server_writeObjectProperty_scalar(server, mConditionInstanceId,
+                                                              UA_QUALIFIEDNAME(0, timeProperty),
+                                                              &alarmTime,
+                                                              &UA_TYPES[UA_TYPES_DATETIME]);
+  if(status != UA_STATUSCODE_GOOD) {
+    DEVLOG_ERROR("[OPC UA A&C LAYER]: Writing Alarm Property failed, StatusCode: %s\n", UA_StatusCode_name(status));
+    return status;
+  }
+  UA_Boolean activeStateId = true;
+  UA_Variant_setScalar(&value, &activeStateId, &UA_TYPES[UA_TYPES_BOOLEAN]);
+  status = UA_Server_setConditionVariableFieldProperty(server, mConditionInstanceId,
+                                              &value, activeStateField,
+                                              activeStateIdField);
+  if(status != UA_STATUSCODE_GOOD) {
+    DEVLOG_ERROR("[OPC UA A&C LAYER]: Activating Alarm failed, StatusCode: %s\n", UA_StatusCode_name(status));
+  }                                       
+  return status;
 }
 
 EComResponse COPC_UA_AC_Layer::initOPCUAType(const std::string &paMode, const std::string &paType, const std::string &paTypeName) {

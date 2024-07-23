@@ -79,6 +79,8 @@ class COPC_UA_AC_Layer : public forte::com_infra::CComLayer {
      */
     void closeConnection() override;
 
+    UA_StatusCode triggerAlarm();
+
     forte::com_infra::EComResponse initOPCUAType(const std::string &paMode, const std::string &paType, const std::string &paTypeName);
 
     forte::com_infra::EComResponse createOPCUAObject(const std::string &paType, const std::string &paTypeName);
