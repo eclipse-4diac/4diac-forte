@@ -46,7 +46,6 @@ template <typename TThreadHandle, TThreadHandle nullHandle, typename ThreadDelet
 void CThreadBase<TThreadHandle, nullHandle, ThreadDeletePolicy>::stop() {
   if(nullHandle != mThreadHandle){
     setAlive(false);
-    mThreadHandle = nullHandle;  //indicate that thread is in shutdownmode
   }
 }
 
@@ -75,6 +74,7 @@ void CThreadBase<TThreadHandle, nullHandle, ThreadDeletePolicy>::runThread(CThre
     paThread->setAlive(true);
     paThread->run();
     paThread->setAlive(false);
+    paThread->mThreadHandle = nullHandle;
     paThread->mJoinSem.inc();
     ThreadDeletePolicy::deleteThread(threadHandle);
   } else {
