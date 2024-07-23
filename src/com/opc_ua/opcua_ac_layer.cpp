@@ -314,7 +314,12 @@ UA_StatusCode COPC_UA_AC_Layer::addVariableNode(UA_Server *paServer, const std::
     UA_QUALIFIEDNAME(1, propertyBrowsePath),    // TODO Change 1 to namespaceIndex
     UA_NODEID_NUMERIC(0, UA_NS0ID_BASEDATAVARIABLETYPE), vAttr, nullptr, &memberNodeId);
   mTypePropertyNodes.emplace_back(memberNodeId);
-  return status;
+  if(status != UA_STATUSCODE_GOOD) {
+    return status;
+  }
+  return UA_Server_addReference(paServer, memberNodeId,
+    UA_NODEID_NUMERIC(0, UA_NS0ID_HASMODELLINGRULE),
+    UA_EXPANDEDNODEID_NUMERIC(0, UA_NS0ID_MODELLINGRULE_MANDATORY), UA_TRUE);
 }
 
 bool COPC_UA_AC_Layer::isOPCUAObjectPresent(std::string &paBrowsePath) {
