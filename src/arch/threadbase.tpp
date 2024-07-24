@@ -43,13 +43,19 @@ void CThreadBase<TThreadHandle, nullHandle, ThreadDeletePolicy>::start(){
 }
 
 template <typename TThreadHandle, TThreadHandle nullHandle, typename ThreadDeletePolicy>
+void CThreadBase<TThreadHandle, nullHandle, ThreadDeletePolicy>::stop() {
+  if(nullHandle != mThreadHandle){
+    setAlive(false);
+    mThreadHandle = nullHandle;  //indicate that thread is in shutdownmode
+  }
+}
+
+template <typename TThreadHandle, TThreadHandle nullHandle, typename ThreadDeletePolicy>
 void CThreadBase<TThreadHandle, nullHandle, ThreadDeletePolicy>::end() {
   CCriticalRegion criticalRegion(mThreadMutex);
   if(nullHandle != mThreadHandle){
-    setAlive(false);
+    stop();
     join();
-    ThreadDeletePolicy::deleteThread(mThreadHandle);
-    mThreadHandle = nullHandle;
   }
 }
 
@@ -65,10 +71,12 @@ template <typename TThreadHandle, TThreadHandle nullHandle, typename ThreadDelet
 void CThreadBase<TThreadHandle, nullHandle, ThreadDeletePolicy>::runThread(CThreadBase *paThread) {
   // if pointer is ok
   if (nullptr != paThread) {
+    TThreadHandle threadHandle = paThread->mThreadHandle;
     paThread->setAlive(true);
     paThread->run();
     paThread->setAlive(false);
     paThread->mJoinSem.inc();
+    ThreadDeletePolicy::deleteThread(threadHandle);
   } else {
     DEVLOG_ERROR("pThread pointer is 0!");
   }

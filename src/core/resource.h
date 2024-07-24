@@ -15,6 +15,8 @@
 #ifndef _RESOURCE_H_
 #define _RESOURCE_H_
 
+#include <utility>
+
 #include "fbcontainer.h"
 #include "funcbloc.h"
 #include "forte_sync.h"
@@ -147,6 +149,29 @@ class CResource : public CFunctionBlock, public forte::core::CFBContainer{
     CDataConnection *getDOConUnchecked(TPortId) override {
       return nullptr;
     }
+
+    class CInitialValue {
+      private:
+        CIEC_ANY& mIECVariable;
+        const std::string mInitString;
+
+      public:
+        CInitialValue(CIEC_ANY& paVariable, std::string paInitString) : mIECVariable(paVariable), mInitString(std::move(paInitString)) {}
+
+        [[nodiscard]]
+        const std::string& getInitString() const{
+          return mInitString;
+        }
+
+        CIEC_ANY& getIECVariable() {
+          return mIECVariable;
+        }
+
+    };
+
+    std::vector<CInitialValue> mInitialValues;
+
+    void setInitialValues() override;
 
     /*! Wrapper for simplifying connection creation in resources
      *
