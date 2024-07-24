@@ -97,8 +97,8 @@ CDataConnection *CTimedFB::getDOConUnchecked(const TPortId) {
   return nullptr;
 }
 
-EMGMResponse CTimedFB::changeFBExecutionState(EMGMCommandType paCommand){
-  EMGMResponse eRetVal = CFunctionBlock::changeFBExecutionState(paCommand);
+EMGMResponse CTimedFB::changeExecutionState(EMGMCommandType paCommand){
+  EMGMResponse eRetVal = CFunctionBlock::changeExecutionState(paCommand);
   if((EMGMResponse::Ready == eRetVal) && ((EMGMCommandType::Stop == paCommand) || (EMGMCommandType::Kill == paCommand)) && mActive) {
     getTimer().unregisterTimedFB(this);
     mActive = false;

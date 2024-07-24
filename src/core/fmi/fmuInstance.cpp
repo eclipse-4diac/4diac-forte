@@ -92,8 +92,8 @@ bool fmuInstance::loadFBs(){
 
   CFunctionBlock* devMgr = CTypeLib::createFB(g_nStringIdMGR, g_nStringIdDEV_MGR, mResource);
   devMgr->getDataInput(g_nStringIdQI)->fromString("1");
-  devMgr->changeFBExecutionState(EMGMCommandType::Reset);
-  devMgr->changeFBExecutionState(EMGMCommandType::Start);
+  devMgr->changeExecutionState(EMGMCommandType::Reset);
+  devMgr->changeExecutionState(EMGMCommandType::Start);
   FMU_DEBUG_LOG(this, MODEL_GUID << " About to load FBs from file " << getBootFileLocation().getValue() << "\n--------------\n");
   CIEC_STRING val = "FORTE_BOOT_FILE=";
   val.append(mBootFileLocation.getValue());
@@ -285,11 +285,11 @@ void fmuInstance::fillInterfaceElementsArray(CFunctionBlock* paFB, bool isInput,
 
 void fmuInstance::startInstance(){
   resetInstance();
-  changeFBExecutionState(EMGMCommandType::Start);
+  changeExecutionState(EMGMCommandType::Start);
 }
 
 void fmuInstance::resetInstance(){
-  changeFBExecutionState(EMGMCommandType::Reset);
+  changeExecutionState(EMGMCommandType::Reset);
 }
 
 
@@ -299,5 +299,5 @@ void fmuInstance::stopInstance(){
   for(unsigned int i = 0; i < mNumberOfEcets; i++){
     mEcetSemaphore.inc();
   }
-  changeFBExecutionState(EMGMCommandType::Stop);
+  changeExecutionState(EMGMCommandType::Stop);
 }

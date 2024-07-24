@@ -35,7 +35,7 @@ const SFBInterfaceSpec FORTE_E_TimeOut::scmFBInterfaceSpec = {
 FORTE_E_TimeOut::FORTE_E_TimeOut(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CEventSourceFB(paContainer, &scmFBInterfaceSpec, paInstanceNameId),
     mActive(false),
-    var_TimeOutSocket(g_nStringIdTimeOutSocket, getContainer(), false) {
+    var_TimeOutSocket(g_nStringIdTimeOutSocket, *this, false) {
 };
 
 bool FORTE_E_TimeOut::initialize() {
@@ -99,8 +99,8 @@ CDataConnection *FORTE_E_TimeOut::getDOConUnchecked(TPortId) {
   return nullptr;
 }
 
-EMGMResponse FORTE_E_TimeOut::changeFBExecutionState(EMGMCommandType paCommand){
-  EMGMResponse eRetVal = CFunctionBlock::changeFBExecutionState(paCommand);
+EMGMResponse FORTE_E_TimeOut::changeExecutionState(EMGMCommandType paCommand){
+  EMGMResponse eRetVal = CFunctionBlock::changeExecutionState(paCommand);
   if((EMGMResponse::Ready == eRetVal) && ((EMGMCommandType::Stop == paCommand) || (EMGMCommandType::Kill == paCommand))){
     if(mActive){
       getTimer().unregisterTimedFB(this);

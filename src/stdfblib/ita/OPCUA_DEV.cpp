@@ -15,7 +15,7 @@
 
 OPCUA_DEV::OPCUA_DEV(const std::string &paMGRID) :
   RMT_DEV(paMGRID), mOPCUAMgr(*this){
-  changeFBExecutionState(EMGMCommandType::Reset);
+  changeExecutionState(EMGMCommandType::Reset);
 }
 
 OPCUA_DEV::~OPCUA_DEV() {

@@ -24,7 +24,7 @@ F_EQ_TIME_tester::F_EQ_TIME_tester(CResource *mTestResource) :
         mIn_IN1_Conn(mTestee, g_nStringIdIN1, &mIN1),
         mIn_IN2_Conn(mTestee, g_nStringIdIN2, &mIN2),
         mOut_OUT_Conn(mTestee, g_nStringIdOUT, &mOut_OUT){
-  mTestee.changeFBExecutionState(EMGMCommandType::Start);
+  mTestee.changeExecutionState(EMGMCommandType::Start);
 }
 
 void F_EQ_TIME_tester::executeAllTests(){

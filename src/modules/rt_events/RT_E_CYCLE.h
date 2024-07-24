@@ -57,7 +57,7 @@ private:
 public:
   FORTE_RT_E_CYCLE(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
-  EMGMResponse changeFBExecutionState(EMGMCommandType paCommand) override;
+  EMGMResponse changeExecutionState(EMGMCommandType paCommand) override;
 
   CIEC_TIME var_DT;
   CIEC_TIME var_Deadline;

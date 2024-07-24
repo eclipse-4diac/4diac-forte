@@ -25,7 +25,6 @@
 CCompositeFB::CCompositeFB(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec *paInterfaceSpec,
                            CStringDictionary::TStringId paInstanceNameId, const SCFB_FBNData & paFBNData) :
         CFunctionBlock(paContainer, paInterfaceSpec, paInstanceNameId),
-        forte::core::CFBContainer(paInstanceNameId, paContainer, paFBNData.mNumFBs),
         mIf2InDConns(nullptr),
         mIn2IfDConns(nullptr),
         cmFBNData(paFBNData),
@@ -117,37 +116,15 @@ bool CCompositeFB::configureGenericDO(TPortId paDOPortId, const CIEC_ANY &paRefV
   return bRetVal;
 }
 
-EMGMResponse CCompositeFB::changeFBExecutionState(EMGMCommandType paCommand){
-  EMGMResponse nRetVal = CFunctionBlock::changeFBExecutionState(paCommand);
-  if (EMGMResponse::Ready == nRetVal) {
-    nRetVal = CFBContainer::changeContainedFBsExecutionState(paCommand);
-  }
+EMGMResponse CCompositeFB::changeExecutionState(EMGMCommandType paCommand){
+  EMGMResponse nRetVal = CFunctionBlock::changeExecutionState(paCommand);
+
   //Update FB parameters that maybe got overwritten by default values of the FB
   if((EMGMCommandType::Reset == paCommand) && (E_FBStates::Idle == getState())){
     setParams();
   }
   return nRetVal;
 }
-
-#ifdef FORTE_SUPPORT_MONITORING
-
-CFunctionBlock *CCompositeFB::getFB(forte::core::TNameIdentifier::CIterator &paNameListIt){
-  CFunctionBlock *retVal = forte::core::CFBContainer::getFB(*paNameListIt);
-
-  if(retVal != nullptr){
-      if(!paNameListIt.isLastEntry()){
-         //we are looking for a child of this fB
-        ++paNameListIt;
-        retVal = retVal->getFB(paNameListIt);
-      }
-  } else {
-    //check if it is an adapter of the function block
-    retVal = CFunctionBlock::getFB(paNameListIt);
-  }
-  return retVal;
-}
-
-#endif
 
 CIEC_ANY *CCompositeFB::getVar(CStringDictionary::TStringId *paNameList, unsigned int paNameListSize){
   CIEC_ANY *retVal = nullptr;

@@ -61,7 +61,7 @@ public:
   CDataConnection **getDIConUnchecked(TPortId) override;
   CDataConnection *getDOConUnchecked(TPortId) override;
 
-  EMGMResponse changeFBExecutionState(EMGMCommandType paCommand) override;
+  EMGMResponse changeExecutionState(EMGMCommandType paCommand) override;
 };
 
 #endif /*TIMEDFB_H_*/

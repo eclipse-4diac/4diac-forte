@@ -58,8 +58,8 @@ bool CFBTestFixtureBase::initialize() {
   if(!CFunctionBlock::initialize()) {
     return false;
   }
-  changeFBExecutionState(EMGMCommandType::Reset);
-  changeFBExecutionState(EMGMCommandType::Start);
+  changeExecutionState(EMGMCommandType::Reset);
+  changeExecutionState(EMGMCommandType::Start);
   //assure that we are in running state
   BOOST_REQUIRE_EQUAL(CFunctionBlock::E_FBStates::Running, getState());
   BOOST_REQUIRE(nullptr != mFBUnderTest);
@@ -102,8 +102,8 @@ CFBTestFixtureBase::~CFBTestFixtureBase(){
 void CFBTestFixtureBase::performFBResetTests() {
   const SFBInterfaceSpec* interfaceSpec = mFBUnderTest->getFBInterfaceSpec();
 
-  BOOST_CHECK_EQUAL(EMGMResponse::Ready, mFBUnderTest->changeFBExecutionState(EMGMCommandType::Stop));
-  BOOST_CHECK_EQUAL(EMGMResponse::Ready, mFBUnderTest->changeFBExecutionState(EMGMCommandType::Reset));
+  BOOST_CHECK_EQUAL(EMGMResponse::Ready, mFBUnderTest->changeExecutionState(EMGMCommandType::Stop));
+  BOOST_CHECK_EQUAL(EMGMResponse::Ready, mFBUnderTest->changeExecutionState(EMGMCommandType::Reset));
 
   CFunctionBlock *freshInstance = CTypeLib::createFB(mTypeId, mTypeId, *getResource());
   BOOST_REQUIRE(freshInstance != nullptr);
@@ -121,13 +121,13 @@ void CFBTestFixtureBase::performFBResetTests() {
 
   BOOST_CHECK(CTypeLib::deleteFB(freshInstance));
 
-  BOOST_CHECK_EQUAL(EMGMResponse::Ready, mFBUnderTest->changeFBExecutionState(EMGMCommandType::Start));
+  BOOST_CHECK_EQUAL(EMGMResponse::Ready, mFBUnderTest->changeExecutionState(EMGMCommandType::Start));
 }
 
 void CFBTestFixtureBase::performFBDeleteTests() {
   BOOST_CHECK(!mFBUnderTest->isCurrentlyDeleteable());
 
-  BOOST_CHECK_EQUAL(EMGMResponse::Ready, mFBUnderTest->changeFBExecutionState(EMGMCommandType::Stop));
+  BOOST_CHECK_EQUAL(EMGMResponse::Ready, mFBUnderTest->changeExecutionState(EMGMCommandType::Stop));
 
   BOOST_CHECK(mFBUnderTest->isCurrentlyDeleteable());
 
@@ -145,7 +145,7 @@ void CFBTestFixtureBase::setup(const char* paConfigString){
   setupTestInterface();
   performDataInterfaceTests();
 
-  mFBUnderTest->changeFBExecutionState(EMGMCommandType::Start);
+  mFBUnderTest->changeExecutionState(EMGMCommandType::Start);
 
   createEventOutputConnections();
   createDataInputConnections();

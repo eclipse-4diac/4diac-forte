@@ -66,13 +66,7 @@ EMGMResponse CMonitoringHandler::executeMonitoringCommand(SManagementCMD &paComm
 
 CFunctionBlock* CMonitoringHandler::getFB(forte::core::TNameIdentifier &paNameList){
   forte::core::TNameIdentifier::CIterator runner(paNameList.begin());
-
-  CFunctionBlock *fb = mResource.getContainedFB(runner);
-  if((nullptr != fb) && (!runner.isLastEntry())){
-    ++runner;
-    fb = fb->getFB(runner);
-  }
-  return fb;
+  return mResource.getFB(runner);
 }
 
 EMGMResponse CMonitoringHandler::addWatch(forte::core::TNameIdentifier &paNameList){
@@ -150,8 +144,8 @@ EMGMResponse CMonitoringHandler::readWatches(std::string &paResponse){
   paResponse.clear();
   if(&mResource == &mResource.getParent()){
     //we are in the device
-    for(CFBContainer::TFunctionBlockList::iterator itRunner = mResource.getFBList().begin();
-        itRunner != mResource.getFBList().end();
+    for(CFBContainer::TFBContainerList::iterator itRunner = mResource.getChildren().begin();
+        itRunner != mResource.getChildren().end();
         ++itRunner){
       static_cast<CResource*>(*itRunner)->getMonitoringHandler().readResourceWatches(paResponse);
     }

@@ -247,7 +247,7 @@ SINT32 CFORTEModule::AppEOI(VOID){
  *-------------------------------------------------------------------------*/
 SINT32 CFORTEModule::AppStop(VOID){
   if(0 != mDev){
-    mDev->changeFBExecutionState(EMGMCommandType::Stop);
+    mDev->changeExecutionState(EMGMCommandType::Stop);
   }
 
   return OK;
