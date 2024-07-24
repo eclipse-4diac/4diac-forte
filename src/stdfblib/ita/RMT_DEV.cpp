@@ -55,7 +55,7 @@ RMT_DEV::~RMT_DEV() = default;
 
 int RMT_DEV::startDevice(){
   CDevice::startDevice();
-  MGR.changeFBExecutionState(EMGMCommandType::Start);
+  MGR.changeExecutionState(EMGMCommandType::Start);
   return 0;
 }
 
@@ -63,10 +63,10 @@ void RMT_DEV::awaitShutdown() {
   MGR.joinResourceThread();
 }
 
-EMGMResponse RMT_DEV::changeFBExecutionState(EMGMCommandType paCommand){
-  EMGMResponse eRetVal = CDevice::changeFBExecutionState(paCommand);
+EMGMResponse RMT_DEV::changeExecutionState(EMGMCommandType paCommand){
+  EMGMResponse eRetVal = CDevice::changeExecutionState(paCommand);
   if((EMGMResponse::Ready == eRetVal) && (EMGMCommandType::Kill == paCommand)){
-    MGR.changeFBExecutionState(EMGMCommandType::Kill);
+    MGR.changeExecutionState(EMGMCommandType::Kill);
   }
   return eRetVal;
 }

@@ -38,11 +38,8 @@ class CInterface2InternalDataConnection;
 /*! \ingroup CORE\brief Base class for all resources handling the reconfiguration management within this
  * resource and the background execution of event chains.
  *
- * CResource is inherited from CFBContainer in order to make the implementation of getResource easier. Furthermore
- * also the forwarding of management commands is less effort.
- * TODO think if CFBContainer inheritance should be public or private
  */
-class CResource : public CFunctionBlock, public forte::core::CFBContainer{
+class CResource : public CFunctionBlock{
 
   public:
     /*! \brief The main constructor for a resource.
@@ -95,7 +92,7 @@ class CResource : public CFunctionBlock, public forte::core::CFBContainer{
       return mResourceEventExecution;
     };
 
-    EMGMResponse changeFBExecutionState(EMGMCommandType paCommand) override;
+    EMGMResponse changeExecutionState(EMGMCommandType paCommand) override;
 
     /*!\brief Write a parameter value to a given FB-input
      *
@@ -122,6 +119,10 @@ class CResource : public CFunctionBlock, public forte::core::CFBContainer{
       return tracePlatformContext;
     }
 #endif
+
+    bool isFB() override {
+       return false;
+    }
 
   protected:
     CResource(const SFBInterfaceSpec *paInterfaceSpec, CStringDictionary::TStringId paInstanceNameId);

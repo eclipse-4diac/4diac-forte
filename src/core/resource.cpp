@@ -43,7 +43,7 @@
 using namespace std::string_literals;
 
 CResource::CResource(forte::core::CFBContainer &paDevice, const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId) :
-    CFunctionBlock(paDevice, paInterfaceSpec, paInstanceNameId), forte::core::CFBContainer(CStringDictionary::scmInvalidStringId, paDevice), // the fbcontainer of resources does not have a seperate name as it is stored in the resource
+    CFunctionBlock(paDevice, paInterfaceSpec, paInstanceNameId),
     mResourceEventExecution(CEventChainExecutionThread::createEcet()), mResIf2InConnections(nullptr)
 #ifdef FORTE_SUPPORT_MONITORING
 , mMonitoringHandler(*this)
@@ -54,7 +54,7 @@ CResource::CResource(forte::core::CFBContainer &paDevice, const SFBInterfaceSpec
 {}
 
 CResource::CResource(const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId) :
-    CFunctionBlock(*this, paInterfaceSpec, paInstanceNameId), forte::core::CFBContainer(CStringDictionary::scmInvalidStringId, *this), // the fbcontainer of resources does not have a seperate name as it is stored in the resource
+    CFunctionBlock(*this, paInterfaceSpec, paInstanceNameId),
     mResourceEventExecution(nullptr), mResIf2InConnections(nullptr)
 #ifdef FORTE_SUPPORT_MONITORING
 , mMonitoringHandler(*this)
@@ -162,25 +162,23 @@ EMGMResponse CResource::executeMGMCommand(forte::core::SManagementCMD &paCommand
   return retVal;
 }
 
-EMGMResponse CResource::changeFBExecutionState(EMGMCommandType paCommand){
-  EMGMResponse retVal = CFunctionBlock::changeFBExecutionState(paCommand);
-  if(retVal == EMGMResponse::Ready){
-    retVal = changeContainedFBsExecutionState(paCommand);
-    if(retVal == EMGMResponse::Ready){
-      if(paCommand == EMGMCommandType::Start && mInterfaceSpec != nullptr) { //on start, sample inputs
-        for(TPortId i = 0; i < mInterfaceSpec->mNumDIs; ++i) {
-          CDataConnection *conn = *getDIConUnchecked(i);
-          if(conn != nullptr) {
-            conn->readData(*getDI(i));
-          }
+EMGMResponse CResource::changeExecutionState(EMGMCommandType paCommand) {
+  EMGMResponse retVal = CFunctionBlock::changeExecutionState(paCommand);
+
+  if(retVal == EMGMResponse::Ready) {
+    if(paCommand == EMGMCommandType::Start && mInterfaceSpec != nullptr) { //on start, sample inputs
+      for(TPortId i = 0; i < mInterfaceSpec->mNumDIs; ++i) {
+        CDataConnection *conn = *getDIConUnchecked(i);
+        if(conn != nullptr) {
+          conn->readData(*getDI(i));
         }
-      }else if(paCommand == EMGMCommandType::Reset){
-        setInitialValues();
       }
-      if(mResourceEventExecution != nullptr){
-        // if we have a mResourceEventExecution handle it
-        mResourceEventExecution->changeExecutionState(paCommand);
-      }
+    } else if(paCommand == EMGMCommandType::Reset) {
+      setInitialValues();
+    }
+    if(mResourceEventExecution != nullptr) {
+      // if we have a mResourceEventExecution handle it
+      mResourceEventExecution->changeExecutionState(paCommand);
     }
   }
   return retVal;
@@ -192,11 +190,11 @@ EMGMResponse CResource::handleExecutionStateCmd(EMGMCommandType paCMD, forte::co
 
   if(!paTarget.isEmpty()){
     forte::core::TNameIdentifier::CIterator itRunner(paTarget.begin());
-    fb = getContainedFB(itRunner);
+    fb = getFB(itRunner);
   }
 
   if(nullptr != fb){
-    retVal = fb->changeFBExecutionState(paCMD);
+    retVal = fb->changeExecutionState(paCMD);
   }
   return retVal;
 }
@@ -213,7 +211,7 @@ EMGMResponse CResource::createConnection(forte::core::TNameIdentifier &paSrcName
     CStringDictionary::TStringId portName = paDstNameList.back();
     paDstNameList.popBack();
     forte::core::TNameIdentifier::CIterator runner(paDstNameList.begin());
-    CFunctionBlock *dstFB = getContainedFB(runner);
+    CFunctionBlock *dstFB = getFB(runner);
     if((nullptr != dstFB) && (runner.isLastEntry())){
       retVal = con->connect(dstFB, portName);
     }
@@ -230,7 +228,7 @@ EMGMResponse CResource::deleteConnection(forte::core::TNameIdentifier &paSrcName
     CStringDictionary::TStringId portName = paDstNameList.back();
     paDstNameList.popBack();
     forte::core::TNameIdentifier::CIterator runner(paDstNameList.begin());
-    CFunctionBlock *dstFB = getContainedFB(runner);
+    CFunctionBlock *dstFB = getFB(runner);
     if((nullptr != dstFB) && (runner.isLastEntry())){
       retVal = con->disconnect(dstFB, portName);
     }
@@ -249,7 +247,7 @@ EMGMResponse CResource::writeValue(forte::core::TNameIdentifier &paNameList, con
   CFunctionBlock *fb = this;
   if(paNameList.size() >= 1){
     //this is not an identifier for the resource interface
-    fb = getContainedFB(runner);
+    fb = getFB(runner);
     if(!runner.isLastEntry()){
       // currently we can not write values of FBs inside of FBs
       return EMGMResponse::NoSuchObject;
@@ -364,12 +362,18 @@ void CResource::appedTypeNameList(std::string & paValue, CTypeLib::CTypeEntry *p
 }
 
 EMGMResponse CResource::queryFBs(std::string & paValue){
+  bool first = true;
 
-  for(TFunctionBlockList::iterator itRunner = getFBList().begin(); itRunner != getFBList().end(); ++itRunner){
-    if(itRunner != getFBList().begin()){
-      paValue.append("\n");
+  for(TFBContainerList::iterator itRunner = getChildren().begin(); itRunner !=  getChildren().end(); ++itRunner){
+    if((*itRunner)->isFB()){
+      if(!first){
+        paValue.append("\n");
+      } else {
+        first = false;
+      }
+      CFunctionBlock *fb = static_cast<CFunctionBlock*>(*itRunner);
+      createFBResponseMessage(*fb, fb->getInstanceName(), paValue);
     }
-    createFBResponseMessage(*static_cast<CFunctionBlock *>(*itRunner) ,(static_cast<CFunctionBlock *>(*itRunner))->getInstanceName(),paValue);
   }
 
   return querySubapps(paValue, *this, "");
@@ -378,28 +382,31 @@ EMGMResponse CResource::queryFBs(std::string & paValue){
 
 EMGMResponse CResource::querySubapps(std::string & paValue, CFBContainer& container, const std::string prefix){
 
-  for(TFBContainerList::iterator itRunner(container.getSubContainerList().begin()); itRunner != container.getSubContainerList().end(); ++itRunner){
-    CFBContainer* subapp = (static_cast<CFBContainer*>(*itRunner));
-    std::string subapp_prefix = prefix;
+  for(TFBContainerList::iterator itRunner(container.getChildren().begin()); itRunner != container.getChildren().end(); ++itRunner){
+    if(!(*itRunner)->isFB()){
+      CFBContainer* subapp = (static_cast<CFBContainer*>(*itRunner));
+      std::string subapp_prefix = prefix;
 
-    if(!prefix.empty()){
-      subapp_prefix += ".";
-    }
-    subapp_prefix += subapp->getName();
-
-    for(TFunctionBlockList::iterator itRunner2 = subapp->getFBList().begin(); itRunner2 != subapp->getFBList().end(); ++itRunner2){
-
-      std::string fullFBName = (static_cast<CFunctionBlock *>(*itRunner2))->getInstanceName();
-      fullFBName = "." + fullFBName;
-      fullFBName = subapp_prefix + fullFBName;
-
-      if(itRunner2 != getFBList().begin()){
-        paValue.append("\n");
+      if(!prefix.empty()){
+        subapp_prefix += ".";
       }
+      subapp_prefix += subapp->getInstanceName();
 
-      createFBResponseMessage(*static_cast<CFunctionBlock *>(*itRunner2) ,fullFBName.c_str(),paValue);
+      bool first = true;
+      for(TFBContainerList::iterator fbRunner = subapp->getChildren().begin(); fbRunner != subapp->getChildren().end(); ++fbRunner){
+        if((*itRunner)->isFB()) {
+          if(!first) {
+            paValue.append("\n");
+          } else {
+            first = false;
+          }
+          CFunctionBlock *fb = static_cast<CFunctionBlock*>(*fbRunner);
+          std::string fullFBName = subapp_prefix + "." + fb->getInstanceName();
+          createFBResponseMessage(*fb, fullFBName.c_str(), paValue);
+        }
+      }
+      querySubapps(paValue,*subapp,subapp_prefix);
     }
-    querySubapps(paValue,*subapp,subapp_prefix);
   }
   return EMGMResponse::Ready;
 }
@@ -407,15 +414,16 @@ EMGMResponse CResource::querySubapps(std::string & paValue, CFBContainer& contai
 EMGMResponse CResource::queryConnections(std::string & paReqResult, CFBContainer& container){
 
   EMGMResponse retVal = EMGMResponse::UnsupportedType;
-  for(TFunctionBlockList::iterator itRunner2 = container.getFBList().begin(); itRunner2 != container.getFBList().end(); ++itRunner2){
-    createEOConnectionResponse(**itRunner2, paReqResult);
-    createDOConnectionResponse(**itRunner2, paReqResult);
-    createAOConnectionResponse(**itRunner2, paReqResult);
-  }
-
-  for(TFBContainerList::iterator itRunner(container.getSubContainerList().begin()); itRunner != container.getSubContainerList().end(); ++itRunner) {
-    CFBContainer* subapp = (static_cast<CFBContainer*>(*itRunner));
-    queryConnections(paReqResult,*subapp);
+  for(TFBContainerList::iterator itRunner(container.getChildren().begin()); itRunner != container.getChildren().end(); ++itRunner) {
+    if((*itRunner)->isFB()) {
+      CFunctionBlock &fb = static_cast<CFunctionBlock &>(**itRunner);
+      createEOConnectionResponse(fb, paReqResult);
+      createDOConnectionResponse(fb, paReqResult);
+      createAOConnectionResponse(fb, paReqResult);
+    } else {
+      CFBContainer *subapp = (static_cast<CFBContainer*>(*itRunner));
+      queryConnections(paReqResult, *subapp);
+    }
   }
   retVal = EMGMResponse::Ready;
   return retVal;
@@ -490,13 +498,13 @@ void CResource::createConnectionResponseMessage(const CStringDictionary::TString
   fullName += "."s;
   fullName += CStringDictionary::getInstance().get(srcId);
 
-  CFBContainer* parent = &(paSrcFb.getContainer());
+  CFBContainer* parent = &(paSrcFb.getParent());
   const CDevice *dev = getDevice();
 
   if(paSrcFb.getInstanceNameId() != g_nStringIdSTART ){
-    while(parent != dev && parent->getName() != 0){
+    while(parent != dev && parent->getInstanceName() != 0){
       fullName.insert(0, "."s);
-      fullName.insert(0, parent->getName());
+      fullName.insert(0, parent->getInstanceName());
       parent = &parent->getParent();
     }
   }
@@ -506,10 +514,10 @@ void CResource::createConnectionResponseMessage(const CStringDictionary::TString
   fullName += "."s;
   fullName += CStringDictionary::getInstance().get(dstId);
 
-  parent = &(paDstFb.getContainer());
-  while(parent != dev && parent->getName() != 0){
+  parent = &(paDstFb.getParent());
+  while(parent != dev && parent->getInstanceName() != 0){
     fullName.insert(0, "."s);
-    fullName.insert(0, parent->getName());
+    fullName.insert(0, parent->getInstanceName());
     parent = &parent->getParent();
   }
   fullName.shrink_to_fit();
@@ -689,7 +697,7 @@ CIEC_ANY *CResource::getVariable(forte::core::TNameIdentifier &paNameList){
   CFunctionBlock *fb = this;
   if(paNameList.size() >= 1){
     //this is not an identifier for the resource interface
-    fb = getContainedFB(runner); // the last entry is the input name therefore reduce list here by one
+    fb = getFB(runner); // the last entry is the input name therefore reduce list here by one
   }
 
   CIEC_ANY *var = nullptr;
@@ -709,7 +717,7 @@ CConnection *CResource::getConnection(forte::core::TNameIdentifier &paSrcNameLis
     paSrcNameList.popBack();
     forte::core::TNameIdentifier::CIterator runner(paSrcNameList.begin());
 
-    CFunctionBlock *srcFB = getContainedFB(runner);
+    CFunctionBlock *srcFB = getFB(runner);
     if((nullptr != srcFB) && (runner.isLastEntry())) {
       //only use the found result if we have really the last result in the list
       con = srcFB->getEOConnection(portName);

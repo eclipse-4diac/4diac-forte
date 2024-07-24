@@ -60,7 +60,7 @@ FakeTimeDev::~FakeTimeDev() = default;
 
 int FakeTimeDev::startDevice(){
   CDevice::startDevice();
-  MGR.changeFBExecutionState(EMGMCommandType::Start);
+  MGR.changeExecutionState(EMGMCommandType::Start);
   return 0;
 }
 
@@ -68,10 +68,10 @@ void FakeTimeDev::awaitShutdown() {
   MGR.joinResourceThread();
 }
 
-EMGMResponse FakeTimeDev::changeFBExecutionState(EMGMCommandType paCommand){
-  EMGMResponse eRetVal = CDevice::changeFBExecutionState(paCommand);
+EMGMResponse FakeTimeDev::changeExecutionState(EMGMCommandType paCommand){
+  EMGMResponse eRetVal = CDevice::changeExecutionState(paCommand);
   if((EMGMResponse::Ready == eRetVal) && (EMGMCommandType::Kill == paCommand)){
-    MGR.changeFBExecutionState(EMGMCommandType::Kill);
+    MGR.changeExecutionState(EMGMCommandType::Kill);
   }
   return eRetVal;
 }

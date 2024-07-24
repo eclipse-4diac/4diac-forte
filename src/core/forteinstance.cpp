@@ -37,7 +37,7 @@ bool C4diacFORTEInstance::startupNewDevice(const std::string &paMGRID){
 
 void C4diacFORTEInstance::triggerDeviceShutdown() {
   if(mActiveDevice) {
-    mActiveDevice->changeFBExecutionState(EMGMCommandType::Kill);
+    mActiveDevice->changeExecutionState(EMGMCommandType::Kill);
   }
 }
 

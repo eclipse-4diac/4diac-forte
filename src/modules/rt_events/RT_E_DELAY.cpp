@@ -98,9 +98,9 @@ void FORTE_RT_E_DELAY::executeEvent(TEventID paEIID, CEventChainExecutionThread 
   }
 }
 
-EMGMResponse FORTE_RT_E_DELAY::changeFBExecutionState(EMGMCommandType paCommand){
+EMGMResponse FORTE_RT_E_DELAY::changeExecutionState(EMGMCommandType paCommand){
   mECEO.changeExecutionState(paCommand);
-  EMGMResponse eRetVal = CFunctionBlock::changeFBExecutionState(paCommand);
+  EMGMResponse eRetVal = CFunctionBlock::changeExecutionState(paCommand);
   if((EMGMResponse::Ready == eRetVal) && ((EMGMCommandType::Stop == paCommand) || (EMGMCommandType::Kill == paCommand)) && mActive) {
     getTimer().unregisterTimedFB(this);
     mActive = false;

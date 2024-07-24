@@ -50,8 +50,8 @@ CBaseCommFB::~CBaseCommFB() {
   }
 }
 
-EMGMResponse CBaseCommFB::changeFBExecutionState(EMGMCommandType paCommand) {
-  EMGMResponse retVal = CEventSourceFB::changeFBExecutionState(paCommand);
+EMGMResponse CBaseCommFB::changeExecutionState(EMGMCommandType paCommand) {
+  EMGMResponse retVal = CEventSourceFB::changeExecutionState(paCommand);
   if ((EMGMResponse::Ready == retVal) && (EMGMCommandType::Kill == paCommand)) {
     //when we are killed we'll close the connection so that it can safely be opened again after an reset
     closeConnection();

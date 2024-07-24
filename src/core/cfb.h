@@ -80,7 +80,7 @@ GENERATE_CONNECTION_PORT_ID_2_ARG(CStringDictionary::scmInvalidStringId, PortNam
 /*!\ingroup CORE
  * \brief Class for handling firmware composite function blocks.
  */
-class CCompositeFB: public CFunctionBlock, public forte::core::CFBContainer {
+class CCompositeFB: public CFunctionBlock {
 
   public:
     /*! \brief Indicator that the given FB id is an adapter.
@@ -124,11 +124,7 @@ class CCompositeFB: public CFunctionBlock, public forte::core::CFBContainer {
     CIEC_ANY* getVar(CStringDictionary::TStringId *paNameList,
         unsigned int paNameListSize) override;
 
-    EMGMResponse changeFBExecutionState(EMGMCommandType paCommand) override;
-
-#ifdef FORTE_SUPPORT_MONITORING
-    CFunctionBlock *getFB(forte::core::TNameIdentifier::CIterator &paNameListIt) override;
-#endif
+    EMGMResponse changeExecutionState(EMGMCommandType paCommand) override;
 
   protected:
     CDataConnection *getIn2IfConUnchecked(TPortId paIndex) {

@@ -121,7 +121,7 @@ BOOST_AUTO_TEST_CASE(sequential_events_test) {
     while(resource->getResourceEventExecution()->isProcessingEvents()){
       std::this_thread::sleep_for(std::chrono::milliseconds(50));
     }
-    device.changeFBExecutionState(EMGMCommandType::Stop);
+    device.changeExecutionState(EMGMCommandType::Stop);
     resource->getResourceEventExecution()->joinEventChainExecutionThread();
   }
 

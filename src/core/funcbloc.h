@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2023 ACIN, Profactor GmbH, nxtControl GmbH, fortiss GmbH,
+ * Copyright (c) 2005, 2024 ACIN, Profactor GmbH, nxtControl GmbH, fortiss GmbH,
  *                          Johannes Kepler University, Martin Erich Jobst,
  *                          Primetals Technologies Austria GmbH
  *
@@ -21,6 +21,7 @@
 #define _FUNCBLOC_H_
 
 #include <forte_config.h>
+#include "fbcontainer.h"
 #include "mgmcmd.h"
 #include "event.h"
 #include "dataconn.h"
@@ -103,7 +104,7 @@ struct SFBInterfaceSpec {
 
 /*!\ingroup CORE\brief Base class for all function blocks.
  */
-class CFunctionBlock {
+class CFunctionBlock : public forte::core::CFBContainer {
   public:
     constexpr static TDataIOID scmWithListDelimiter = cgInvalidPortId; //!< value identifying the end of a with list
     constexpr static TForteInt16 scmNoDataAssociated = static_cast<TForteInt16>(cgInvalidPortId); //!< value identifying the end of a with list
@@ -129,22 +130,6 @@ class CFunctionBlock {
     virtual bool initialize();
 
     virtual ~CFunctionBlock();
-
-    /*!\brief Get the resource the function block is contained in.
-     */
-    virtual CResource* getResource();
-    virtual const CResource* getResource() const {
-      return const_cast<CFunctionBlock *>(this)->getResource();
-    }
-
-    virtual CDevice* getDevice();
-    virtual const CDevice* getDevice() const {
-      return const_cast<CFunctionBlock *>(this)->getDevice();
-    }
-
-    forte::core::CFBContainer& getContainer() const {
-      return mContainer;
-    }
 
     /*!\brief Get the timer of the device where the FB is contained.
      */
@@ -324,30 +309,7 @@ class CFunctionBlock {
       return mInterfaceSpec;
     }
 
-    virtual EMGMResponse changeFBExecutionState(EMGMCommandType paCommand);
-
-    /*!\brief Get/set the instance name
-     */
-    CStringDictionary::TStringId getInstanceNameId() const {
-      return mFBInstanceName;
-    }
-    ;
-
-    /*! \brief Get the full hierarchical name of this FB in its application
-     *
-     * Generates a dot separated name list of this FB excluding device and resource
-     *
-     * \return full hierarchical name
-     */
-    std::string getFullQualifiedApplicationInstanceName(const char sepChar) const;
-
-    const char* getInstanceName() const {
-      return CStringDictionary::getInstance().get(mFBInstanceName);
-    }
-
-    void setInstanceNameId(const CStringDictionary::TStringId paInstanceNameId) {
-      mFBInstanceName = paInstanceNameId;
-    }
+    EMGMResponse changeExecutionState(EMGMCommandType paCommand) override;
 
     /*!\brief Get information if the runable object is deletable by a management command.
      *
@@ -355,14 +317,14 @@ class CFunctionBlock {
     bool getDeletable() const {
       return mDeletable;
     }
-    ;
+
     /*!\brief Set attribute to enable/disable the runable object deletion by a management command.
      *
      */
     void setDeletable(const bool &paDelAble) {
       mDeletable = paDelAble;
     }
-    ;
+
     /*!\brief Return if the runable object is allowed to be deleted now.
      *
      * This is more complex then the simple deleteable flag as the current state has to be incorporated.
@@ -418,17 +380,16 @@ class CFunctionBlock {
       return const_cast<CFunctionBlock *>(this)->getDIO(paDIONum);
     }
 
-#ifdef FORTE_SUPPORT_MONITORING
-    TForteUInt32 &getEIMonitorData(TEventID paEIID);
-
-    TForteUInt32 &getEOMonitorData(TEventID paEOID);
-
     /*!\brief get any internal FB referenced by the iterator to the name list
      *
      * This allows that also adapters and the internals of a CFB can be monitored.
      */
-    virtual CFunctionBlock *getFB(forte::core::TNameIdentifier::CIterator &paNameListIt);
+    CFunctionBlock *getFB(forte::core::TNameIdentifier::CIterator &paNameListIt) override;
 
+#ifdef FORTE_SUPPORT_MONITORING
+    TForteUInt32 &getEIMonitorData(TEventID paEIID);
+
+    TForteUInt32 &getEOMonitorData(TEventID paEOID);
 #endif //FORTE_SUPPORT_MONITORING
     
     virtual int toString(char* paValue, size_t paBufferSize) const;
@@ -587,15 +548,6 @@ class CFunctionBlock {
       return nullptr;
     }
 
-    /*!\brief helper function for changeing the FB execution state for FBs with internal FBs
-     *
-     * @param paCommand the reqeusted state change (i.e., start, stop, kill, reset)
-     * @param paAmountOfInternalFBs number of internal FBs contained in this FB
-     * @param paInternalFBs  array with the internal FBs of this FB
-     * @return success status of the requested state change
-     */
-    EMGMResponse changeFBExecutionStateHelper(const EMGMCommandType paCommand, const size_t paAmountOfInternalFBs, TFunctionBlockPtr *const paInternalFBs);
-
     /*!\brief Get the size of a data point
      *
      * @param paDataTypeIds pointer to the data type ids. If the datatype
@@ -636,8 +588,6 @@ class CFunctionBlock {
 
     static void destroyAdapter(CAdapter *adapter);
 
-    static EMGMResponse changeInternalFBExecutionState(const EMGMCommandType paCommand, const size_t paAmountOfInternalFBs, TFunctionBlockPtr *const paInternalFBs);
-
     const SFBInterfaceSpec *mInterfaceSpec; //!< Pointer to the interface specification
 
 #ifdef FORTE_SUPPORT_MONITORING
@@ -645,6 +595,9 @@ class CFunctionBlock {
     void freeEventMonitoringData();
 #endif
   private:
+    bool isFB() override {
+       return true;
+    }
 
     /*!\brief Function providing the functionality of the FB (e.g. execute ECC for basic FBs).
      *
@@ -679,8 +632,6 @@ class CFunctionBlock {
     void configureGenericDI(TPortId paDIPortId, const CIEC_ANY *paRefValue);
     void configureGenericDIO(TPortId paDIOPortId, const CIEC_ANY *paRefValue);
 
-    forte::core::CFBContainer &mContainer; //!< The container of this function block.
-
 #ifdef FORTE_SUPPORT_MONITORING
     TForteUInt32 *mEOMonitorCount;
     TForteUInt32 *mEIMonitorCount;
@@ -690,8 +641,6 @@ class CFunctionBlock {
     void traceInputEvent(TEventID paEIID);
     void traceOutputEvent(TEventID paEOID);
 #endif
-    //! the instance name of the object
-    CStringDictionary::TStringId mFBInstanceName;
 
     /*!\brief Current state of the runnable object.
      *
