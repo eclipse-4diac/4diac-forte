@@ -47,7 +47,15 @@ BOOST_AUTO_TEST_CASE(FB_TO_STRING_BUFFER_SIZE_TEST_WITH_INRENAL_VAR){
         }
 
         CIEC_ANY *getVarInternal(size_t paVarIntNum) override {
-            return CBasicFB::getVarInternal(paVarIntNum);
+          switch (paVarIntNum) {
+            case 0:
+              return &var_QU;
+            case 1:
+              return &var_QD;
+            case 2:
+              return &var_CV;
+          }
+          return nullptr;
         }
 
         CStringDictionary::TStringId getFBTypeId() const override {
@@ -83,6 +91,11 @@ BOOST_AUTO_TEST_CASE(FB_TO_STRING_BUFFER_SIZE_TEST_WITH_INRENAL_VAR){
         CDataConnection *getDOConUnchecked(TPortId) override {
                 return nullptr;
         }
+
+      private:
+        CIEC_BOOL var_QU;
+        CIEC_BOOL var_QD;
+        CIEC_UINT var_CV;
 };
 
     CStringDictionary::TStringId varInternalNames[] = {g_nStringIdQU, g_nStringIdQD, g_nStringIdCV};
