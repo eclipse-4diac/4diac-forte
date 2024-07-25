@@ -21,7 +21,7 @@ CBasicFB::CBasicFB(forte::core::CFBContainer &paContainer, const SFBInterfaceSpe
                    const CStringDictionary::TStringId paInstanceNameId,
                    const SInternalVarsInformation *paVarInternals) :
         CFunctionBlock(paContainer, paInterfaceSpec, paInstanceNameId), mECCState(0),
-        cmVarInternals(paVarInternals), mBasicFBVarsData(nullptr), mInternals(nullptr) {
+        cmVarInternals(paVarInternals) {
 }
 
 bool CBasicFB::initialize() {
@@ -36,32 +36,10 @@ bool CBasicFB::initialize() {
       }
     }
   }
-
-  if((nullptr != cmVarInternals) && (cmVarInternals->mNumIntVars)) {
-    size_t basicVarsDataSize = calculateBasicFBVarsDataSize(*cmVarInternals);
-    mBasicFBVarsData = basicVarsDataSize ? operator new(basicVarsDataSize) : nullptr;
-
-    auto *basicVarsData = reinterpret_cast<TForteByte *>(mBasicFBVarsData);
-    mInternals = reinterpret_cast<CIEC_ANY**>(basicVarsData);
-    basicVarsData += cmVarInternals->mNumIntVars * sizeof(CIEC_ANY *);
-    const CStringDictionary::TStringId *pnDataIds = cmVarInternals->mIntVarsDataTypeNames;
-    for(TPortId i = 0; i < cmVarInternals->mNumIntVars; ++i) {
-      mInternals[i] = createDataPoint(pnDataIds, basicVarsData);
-    }
-  }
   return true;
 }
 
 CBasicFB::~CBasicFB() {
-  if(nullptr != mInternals) {
-    for(TPortId i = 0; i < cmVarInternals->mNumIntVars; ++i) {
-      if(CIEC_ANY* value = mInternals[i]; nullptr != value) {
-        std::destroy_at(value);
-      }
-    }
-  }
-  operator delete(mBasicFBVarsData);
-  mBasicFBVarsData = nullptr;
   //CFBContainer shall not handle internal function blocks therefore we are clearing the list here
   getChildren().clear();
 }
@@ -77,19 +55,6 @@ void CBasicFB::setInitialValues() {
       delete value;
     }
   }
-}
-
-size_t CBasicFB::calculateBasicFBVarsDataSize(const SInternalVarsInformation &paVarInternals) {
-  size_t result = 0;
-  const CStringDictionary::TStringId *pnDataIds;
-
-  result += paVarInternals.mNumIntVars * sizeof(CIEC_ANY *);
-  pnDataIds = paVarInternals.mIntVarsDataTypeNames;
-  for (TPortId i = 0; i < paVarInternals.mNumIntVars; ++i) {
-    result += getDataPointSize(pnDataIds);
-  }
-
-  return result;
 }
 
 CIEC_ANY* CBasicFB::getVar(CStringDictionary::TStringId *paNameList, unsigned int paNameListSize) {

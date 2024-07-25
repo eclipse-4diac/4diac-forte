@@ -61,9 +61,7 @@ class CBasicFB : public CFunctionBlock {
      * @param paVarIntNum number of the internal variable starting with 0
      * @return pointer to the internal variable
      */
-    virtual CIEC_ANY* getVarInternal(size_t paVarIntNum) {
-      return mInternals[paVarIntNum];
-    }
+    virtual CIEC_ANY* getVarInternal(size_t paVarIntNum) = 0;
 
     const CIEC_ANY* getVarInternal(size_t paVarIntNum) const {
       return const_cast<CBasicFB *>(this)->getVarInternal(paVarIntNum);
@@ -71,10 +69,6 @@ class CBasicFB : public CFunctionBlock {
 
     CIEC_STATE mECCState; //! the current state of the ecc. start value is 0 = initial state id
     const SInternalVarsInformation *const cmVarInternals; //!< struct holding the information on the internal vars.
-
-    static size_t calculateBasicFBVarsDataSize(const SInternalVarsInformation &paVarInternals);
-
-    void *mBasicFBVarsData;
   private:
     /*!\brief Get the pointer to a internal variable of the basic FB.
      *
@@ -84,8 +78,6 @@ class CBasicFB : public CFunctionBlock {
     CIEC_ANY* getInternalVar(CStringDictionary::TStringId paInternalName);
 
     void setInitialValues() override;
-
-    CIEC_ANY **mInternals; //!< A list of pointers to the internal variables.
 
 #ifdef FORTE_FMU
         friend class fmuInstance;
