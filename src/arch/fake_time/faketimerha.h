@@ -51,9 +51,11 @@ class CFakeTimerHandler : public CTimerHandler, public CThread {
     void sleepToTime(const CIEC_TIME&);
 
   private:
+    typedef TForteUInt64 TLargestUIntValueType;
+
     struct napinfo {
-      uint_fast64_t napDuration;
-      uint_fast64_t wakeupTime;
+      TLargestUIntValueType napDuration;
+      TLargestUIntValueType wakeupTime;
       CFunctionBlock *fakeSleepFb;
     };
 

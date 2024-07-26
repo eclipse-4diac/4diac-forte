@@ -92,7 +92,7 @@ CDataConnection **FakeTimeDev::getDIConUnchecked(const TPortId paIndex) {
   return nullptr;
 }
 
-EMGMResponse FakeTimeDev::writeValue(forte::core::TNameIdentifier &paNameList, const CIEC_STRING & paValue, bool paForce) {
+EMGMResponse FakeTimeDev::writeValue(forte::core::TNameIdentifier &paNameList, const std::string & paValue, bool paForce) {
   // parent writeValue is modifying the name list so we need to get the name as backup here
   CStringDictionary::TStringId portName = paNameList.back();
   EMGMResponse eRetVal = CDevice::writeValue(paNameList, paValue, paForce);

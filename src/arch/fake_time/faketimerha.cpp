@@ -78,14 +78,14 @@ void CFakeTimerHandler::run() {
 }
 
 void CFakeTimerHandler::sleepToTime(const CIEC_TIME &t) {
-  const auto wakeup = t.getInMilliSeconds();
+  const TLargestUIntValueType wakeup = static_cast<TLargestUIntValueType>(t.getInMilliSeconds());
   sleepTimes.push({
     .napDuration = 0,
     .wakeupTime = wakeup,
     .fakeSleepFb = nullptr
   });
   DEVLOG_DEBUG("[FAKETIME]: received time destination %d ms\n", wakeup);
-  while((getNanoSecondsMonotonic() / cNanosecondsToMilliseconds) != (t.getInNanoSeconds() / cNanosecondsToMilliseconds)) {
+  while((getNanoSecondsMonotonic() / cNanosecondsToMilliseconds) != (wakeup / cNanosecondsToMilliseconds)) {
     sleepThread(20);
   }
   DEVLOG_DEBUG("[FAKETIME]: finished waiting for target time\n");
@@ -96,7 +96,7 @@ CEventChainExecutionThread* CFakeTimerHandler::getExecThread(CFunctionBlock *fak
 }
 
 void CFakeTimerHandler::setSleepTime(const CIEC_TIME &t, CFunctionBlock *fb) {
-  const auto duration = t.getInMilliSeconds();
+  const TLargestUIntValueType duration = static_cast<TLargestUIntValueType>(t.getInMilliSeconds());
   sleepTimes.push({
     .napDuration = duration,
     .wakeupTime = 0,
