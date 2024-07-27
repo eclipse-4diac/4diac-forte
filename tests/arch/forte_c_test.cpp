@@ -14,6 +14,9 @@
 
 #include "../../src/arch/c_interface/forte_c.h"
 
+#include <chrono>
+#include <thread>
+
 BOOST_AUTO_TEST_CASE(forte_c_interface)
 {
   TForteInstance instance{nullptr};
@@ -66,6 +69,10 @@ BOOST_AUTO_TEST_CASE(forte_c_interface)
     // stopping non runnning instance should no crash
     forteRequestStopInstance(instance2);
     forteWaitForInstanceToStop(instance2);
+
+    // let it sleep for some time to since if too fast, the stopping signal 
+    // comes too early
+    std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 
     // stop running instance
     forteRequestStopInstance(instance);
