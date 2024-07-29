@@ -252,7 +252,7 @@ std::vector<EventMessage> getEventMessages(std::string path){
     std::abort();
   }
 
-  return messages;	
+  return messages;
 }
 
 void printPrettyMessages(const std::vector<EventMessage>& messages) {

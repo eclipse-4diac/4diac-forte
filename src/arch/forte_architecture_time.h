@@ -74,6 +74,4 @@ uint_fast64_t getNanoSecondsMonotonic();
 
 uint_fast64_t getNanoSecondsRealtime();
 
-uint_fast64_t trackFakeForteTime();
-
 #endif /* SRC_ARCH_FORTE_ARCHITECTURE_TIME_H_ */

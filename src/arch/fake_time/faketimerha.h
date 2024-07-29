@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2022 Primetals Technologies Austria GmbH
+ * Copyright (c) 2022, 2024 Primetals Technologies Austria GmbH
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -8,11 +8,14 @@
  *
  * Contributors:
  *    Christoph Binder - initial implementation
+ *    Ernst Blecha - add jumping to a point in time that has already passed
  *******************************************************************************/
 
 #include "forte_thread.h"
 #include "timerha.h"
 #include "funcbloc.h"
+
+#include <queue>
 
 /*! \brief the fake timer handler for testing.
  *
@@ -44,11 +47,20 @@ class CFakeTimerHandler : public CTimerHandler, public CThread {
      */
     virtual int getPriority(void) const override;
 
-    void setSleepTime(CIEC_TIME&, CFunctionBlock *fb);
+    void setSleepTime(const CIEC_TIME&, CFunctionBlock *fb);
+    void sleepToTime(const CIEC_TIME&);
 
   private:
-    CEventChainExecutionThread* getExecThread();
-    void startOutputEvent();
-    uint_fast64_t sleepTime;
-    CFunctionBlock *fakeSleepFb;
+    typedef TForteUInt64 TLargestUIntValueType;
+
+    struct napinfo {
+      TLargestUIntValueType napDuration;
+      TLargestUIntValueType wakeupTime;
+      CFunctionBlock *fakeSleepFb;
+    };
+
+    void startOutputEvent(CFunctionBlock *fb);
+    CEventChainExecutionThread* getExecThread(CFunctionBlock *fakeSleepFb);
+
+    std::queue<CFakeTimerHandler::napinfo> sleepTimes;
 };

@@ -1,5 +1,5 @@
 /*************************************************************************
- *** Copyright (c) 2024 HR Agrartechnik GmbH  
+ *** Copyright (c) 2023, 2024 HR Agrartechnik GmbH  
  *** This program and the accompanying materials are made available under the  
  *** terms of the Eclipse Public License 2.0 which is available at  
  *** http://www.eclipse.org/legal/epl-2.0.  
@@ -54,8 +54,8 @@ FORTE_E_PULSE::FORTE_E_PULSE(const CStringDictionary::TStringId paInstanceNameId
 };
 
 void FORTE_E_PULSE::setInitialValues() {
-	var_PT = 0_TIME;
-	var_Q = 0_BOOL;
+    var_PT = 0_TIME;
+    var_Q = 0_BOOL;
 }
 
 const SCFB_FBInstanceData FORTE_E_PULSE::scmInternalFBs[] = {

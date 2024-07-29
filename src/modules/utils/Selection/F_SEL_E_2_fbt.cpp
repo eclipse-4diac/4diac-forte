@@ -1,5 +1,5 @@
 /************************************************************************* 
- *** Copyright (c) 2012, 2023 TU Wien ACIN, HR Agrartechnik GmbH 
+ *** Copyright (c) 2012, 2022 TU Wien ACIN, HR Agrartechnik GmbH 
  *** This program and the accompanying materials are made available under the 
  *** terms of the Eclipse Public License 2.0 which is available at 
  *** http://www.eclipse.org/legal/epl-2.0. 

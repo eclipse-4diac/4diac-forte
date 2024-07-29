@@ -54,7 +54,7 @@ const char CLuaBFB::LUA_NAME[] = "FORTE_CLuaFB";
 const luaL_Reg CLuaBFB::LUA_FUNCS[] = { { "__index", CLuaFB_index }, { "__newindex", CLuaFB_newindex }, { "__call", CLuaFB_call }, { nullptr, nullptr } };
 
 CLuaBFB::CLuaBFB(CStringDictionary::TStringId paInstanceNameId, const CLuaBFBTypeEntry* paTypeEntry, forte::core::CFBContainer &paContainer) :
-    CBasicFB(paContainer, paTypeEntry->getInterfaceSpec(), paInstanceNameId, paTypeEntry->getInternalVarsInformation()),
+    CGenFunctionBlock<CBasicFB>(paContainer, paTypeEntry->getInterfaceSpec(), paInstanceNameId, paTypeEntry->getInternalVarsInformation()),
         mTypeEntry(paTypeEntry) {
   CLuaEngine *luaEngine = getResource()->getLuaEngine();
   luaEngine->registerType<CLuaBFB>();
@@ -67,7 +67,7 @@ CLuaBFB::~CLuaBFB() = default;
 bool CLuaBFB::initialize() {
   //before calling super we need to configure the interface of the FB
   setupFBInterface(getFBInterfaceSpec());
-  return CBasicFB::initialize();
+  return CGenFunctionBlock<CBasicFB>::initialize();
 }
 
 void CLuaBFB::executeEvent(TEventID paEIID, CEventChainExecutionThread *paECET) {

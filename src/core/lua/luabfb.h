@@ -14,6 +14,7 @@
 #ifndef SRC_CORE_LUABFB_H_
 #define SRC_CORE_LUABFB_H_
 
+#include "genfb.h"
 #include "basicfb.h"
 #include "luabfbtypeentry.h"
 
@@ -28,7 +29,7 @@ extern "C" {
   int CLuaFB_call(lua_State *luaState);
 }
 
-class CLuaBFB : public CBasicFB {
+class CLuaBFB : public CGenFunctionBlock<CBasicFB> {
   private:
     static constexpr TForteUInt32 scmLuaFBVarMax = 65535;
     static constexpr TForteUInt32 scmLuaAdpVarMax = 255;
@@ -56,6 +57,11 @@ class CLuaBFB : public CBasicFB {
     ~CLuaBFB() override;
 
     bool initialize() override;
+
+    bool createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) override {
+      paInterfaceSpec = *mInterfaceSpec;
+      return true;
+    }
 
     void executeEvent(TEventID paEIID, CEventChainExecutionThread *paECET) override;
 

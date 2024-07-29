@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2022 Primetals Technologies Austria GmbH
+ * Copyright (c) 2022, 2024 Primetals Technologies Austria GmbH
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -8,18 +8,25 @@
  *
  * Contributors:
  *    Christoph Binder - initial implementation
+ *    Ernst Blecha - add jumping to a point in time that has already passed
  *******************************************************************************/
 #include "faketimerha.h"
 #include "../../core/devexec.h"
 #include "ecet.h"
 #include "device.h"
 
+uint_fast64_t trackFakeForteTime();
+uint_fast64_t jumpFakeForteTime(uint_fast64_t destination);
+
+const CIEC_TIME::TValueType cNanosecondsToMilliseconds = forte::core::constants::cNanosecondsPerSecond / forte::core::constants::cMillisecondsPerSecond;
+const CIEC_TIME::TValueType cHourInMilliseconds = 60 * 60 * forte::core::constants::cMillisecondsPerSecond;
+
 CTimerHandler* CTimerHandler::createTimerHandler(CDeviceExecution &paDeviceExecution) {
   return new CFakeTimerHandler(paDeviceExecution);
 }
 
 CFakeTimerHandler::CFakeTimerHandler(CDeviceExecution &paDeviceExecution) :
-  CTimerHandler(paDeviceExecution), sleepTime(0), fakeSleepFb(nullptr) {
+  CTimerHandler(paDeviceExecution) {
 }
 
 CFakeTimerHandler::~CFakeTimerHandler() {
@@ -28,45 +35,82 @@ CFakeTimerHandler::~CFakeTimerHandler() {
 
 void CFakeTimerHandler::run() {
   while(isAlive()) {
-    if(sleepTime > 0) {
-      CEventChainExecutionThread *execThread = getExecThread(); //get execThread for every sleep fake, since resource potentially changed
-      while(sleepTime > 0) {
+    if(!sleepTimes.empty()) {
+      CFakeTimerHandler::napinfo nap = sleepTimes.front();
+      sleepTimes.pop();
+      if(nap.napDuration == 0 && nap.wakeupTime < (getNanoSecondsMonotonic() / cNanosecondsToMilliseconds)) {
+        // We have to go back in time!
         nextTick();
-        trackFakeForteTime();
-        sleepTime--;
-        while(execThread != 0 && execThread->isProcessingEvents()) {
-          sleepThread(0);
+        jumpFakeForteTime(nap.wakeupTime);
+        DEVLOG_DEBUG("[FAKETIME]: time-jumping to destination %d ms\n", nap.wakeupTime);
+        sleepThread(0);
+      } else {
+        if(nap.wakeupTime != 0) {
+          nap.napDuration = nap.wakeupTime - getNanoSecondsMonotonic() / cNanosecondsToMilliseconds;
+        }
+        if(nap.napDuration > cHourInMilliseconds) {
+          // if a destination time is more than one hour away from the current time:
+          // skip to one hour before the destination and start simulation from there
+          // this is done to avoid timeouts when communicating with 4diac-ide
+          jumpFakeForteTime(nap.wakeupTime - cHourInMilliseconds);
+          DEVLOG_DEBUG("[FAKETIME]: time-jumping to one hour before destination %d ms\n", nap.wakeupTime - cHourInMilliseconds);
+          nap.napDuration = cHourInMilliseconds;
+        }
+        DEVLOG_DEBUG("[FAKETIME]: advance time for %d ms\n", nap.napDuration);
+        auto execThread = getExecThread(nap.fakeSleepFb);
+        while(nap.napDuration  > 0) {
+          nextTick();
+          trackFakeForteTime();
+          nap.napDuration--;
+          while(execThread != 0 && execThread->isProcessingEvents()) {
+            sleepThread(0);
+          }
+        }
+        if(nap.napDuration == 0) {
+          DEVLOG_DEBUG("[FAKETIME]: reached target time\n");
         }
       }
-      startOutputEvent();
+      startOutputEvent(nap.fakeSleepFb);
     } else {
-      sleepThread(1);
+      sleepThread(0);
     }
   }
 }
 
-CEventChainExecutionThread* CFakeTimerHandler::getExecThread() {
-    return fakeSleepFb ? fakeSleepFb->getResource()->getResourceEventExecution() : nullptr;
+void CFakeTimerHandler::sleepToTime(const CIEC_TIME &t) {
+  const TLargestUIntValueType wakeup = static_cast<TLargestUIntValueType>(t.getInMilliSeconds());
+  sleepTimes.push({
+    .napDuration = 0,
+    .wakeupTime = wakeup,
+    .fakeSleepFb = nullptr
+  });
+  DEVLOG_DEBUG("[FAKETIME]: received time destination %d ms\n", wakeup);
+  while((getNanoSecondsMonotonic() / cNanosecondsToMilliseconds) != (wakeup / cNanosecondsToMilliseconds)) {
+    sleepThread(20);
+  }
+  DEVLOG_DEBUG("[FAKETIME]: finished waiting for target time\n");
 }
 
-void CFakeTimerHandler::setSleepTime(CIEC_TIME &t, CFunctionBlock *fb) {
-  fakeSleepFb = fb;
-  if(sleepTime == 0) {
-    sleepTime = t.getInMilliSeconds();
-    if(sleepTime == 0) {
-      startOutputEvent();
-    }
-  }
+CEventChainExecutionThread* CFakeTimerHandler::getExecThread(CFunctionBlock *fakeSleepFb) {
+  return fakeSleepFb ? fakeSleepFb->getResource()->getResourceEventExecution() : nullptr;
 }
 
-void CFakeTimerHandler::startOutputEvent() {
-  if(fakeSleepFb) {
-    CEventChainExecutionThread *execThread = getExecThread();
-    if(execThread) {
-        fakeSleepFb->receiveInputEvent(cgExternalEventID, execThread);
-        execThread->resumeSelfSuspend();
-    }
+void CFakeTimerHandler::setSleepTime(const CIEC_TIME &t, CFunctionBlock *fb) {
+  const TLargestUIntValueType duration = static_cast<TLargestUIntValueType>(t.getInMilliSeconds());
+  sleepTimes.push({
+    .napDuration = duration,
+    .wakeupTime = 0,
+    .fakeSleepFb = fb
+  });
+  DEVLOG_DEBUG("[FAKETIME]: received sleep time of %d ms\n", duration);
+}
+
+void CFakeTimerHandler::startOutputEvent(CFunctionBlock *fakeSleepFb) {
+  const auto execThread = getExecThread(fakeSleepFb);
+  if(fakeSleepFb && execThread) {
+    fakeSleepFb->receiveInputEvent(cgExternalEventID, execThread);
   }
+  sleepThread(0);
 }
 
 void CFakeTimerHandler::enableHandler(void) {

@@ -15,29 +15,6 @@
 #endif
 
 template<class T>
-CGenFunctionBlock<T>::CGenFunctionBlock(forte::core::CFBContainer &paContainer, const CStringDictionary::TStringId paInstanceNameId) :
-        T(paContainer, nullptr, paInstanceNameId),
-        mEOConns(nullptr), mDIConns(nullptr), mDOConns(nullptr), mDIs(nullptr), mDOs(nullptr),
-        mAdapters(nullptr),
-        mConfiguredFBTypeNameId(CStringDictionary::scmInvalidStringId),
-        mGenInterfaceSpec(),
-        mFBConnData(nullptr), mFBVarsData(nullptr)
-{
-}
-
-template<class T>
-CGenFunctionBlock<T>::CGenFunctionBlock(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec *paInterfaceSpec,
-                                        const CStringDictionary::TStringId paInstanceNameId) :
-        T(paContainer, paInterfaceSpec, paInstanceNameId),
-        mEOConns(nullptr), mDIConns(nullptr), mDOConns(nullptr), mDIs(nullptr), mDOs(nullptr),
-        mAdapters(nullptr),
-        mConfiguredFBTypeNameId(CStringDictionary::scmInvalidStringId),
-        mGenInterfaceSpec(),
-        mFBConnData(nullptr), mFBVarsData(nullptr)
-{
-}
-
-template<class T>
 CGenFunctionBlock<T>::~CGenFunctionBlock(){
   if(nullptr != T::mInterfaceSpec){
     freeFBInterfaceData();  //clean the interface and connections first.
@@ -48,7 +25,7 @@ CGenFunctionBlock<T>::~CGenFunctionBlock(){
 template<class T>
 bool CGenFunctionBlock<T>::initialize() {
   setupFBInterface(T::mInterfaceSpec);
-  return true;
+  return T::initialize();
 }
 
 template<class T>
