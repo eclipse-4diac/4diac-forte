@@ -31,14 +31,17 @@ jobs:
             c_compiler: cl
             cpp_compiler: cl
             architecture: "Win32"
+            include_modbus: OFF
           - os: ubuntu-latest
             c_compiler: gcc
             cpp_compiler: g++
             architecture: "Posix"
+            include_modbus: ON
           - os: ubuntu-latest
             c_compiler: clang
             cpp_compiler: clang++
             architecture: "Posix"
+            include_modbus: ON
         exclude:
           - os: windows-latest
             c_compiler: gcc
@@ -57,13 +60,20 @@ jobs:
       run: |
         echo "build-output-dir=${{ github.workspace }}/build" >> "$GITHUB_OUTPUT"
     
-    - name: Install libboost (Linux)
+    - name: Install libboost, libmodbus (Linux)
       if: ${{ matrix.os != 'windows-latest' }}
-      run: sudo apt-get install -y libboost-all-dev
+      run: sudo apt-get install -y libboost-all-dev libmodbus-dev
 
     - name: Install boost (Windows)
       if: ${{ matrix.os == 'windows-latest' }}
       run: nuget install boost -Version 1.84.0
+
+    - name: Build Paho MQTT
+      run: |
+        git clone https://github.com/eclipse/paho.mqtt.c.git -b v1.3.13
+        cd paho.mqtt.c
+        cmake -B static -DCMAKE_C_COMPILER=${{ matrix.c_compiler }} -DCMAKE_BUILD_TYPE=Release -DPAHO_BUILD_STATIC=ON -DPAHO_BUILD_SHARED=OFF -DPAHO_WITH_SSL=ON
+        cmake --build static --config Release
 
     - name: Configure CMake
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
@@ -80,6 +90,11 @@ jobs:
         -DFORTE_COM_FBDK=ON
         -DFORTE_COM_HTTP=ON
         -DFORTE_COM_LOCAL=ON
+        -DFORTE_COM_MODBUS=${{ matrix.include_modbus }}
+        -DFORTE_COM_PAHOMQTT=ON
+        -DFORTE_COM_PAHOMQTT_INCLUDE_DIR=${{ format('{0}/paho.mqtt.c/src', github.workspace) }}
+        -DFORTE_COM_PAHOMQTT_LIB=${{ matrix.os == 'windows-latest' && 'paho-mqtt3a-static.lib' || 'libpaho-mqtt3as.a' }}
+        -DFORTE_COM_PAHOMQTT_LIB_DIR=${{ format(matrix.os == 'windows-latest' && '{0}/paho.mqtt.c/static/src/Release' || '{0}/paho.mqtt.c/static/src' , github.workspace) }}
         -DFORTE_COM_RAW=ON
         -DFORTE_COM_SER=ON
         -DFORTE_COM_STRUCT_MEMBER=ON
@@ -91,7 +106,7 @@ jobs:
         -DFORTE_MODULE_SIGNALPROCESSING=ON
         -DFORTE_MODULE_UTILS=ON
         -DFORTE_TESTS=ON
-        ${{ matrix.os == 'windows-latest' && format('-DFORTE_TESTS_INC_DIRS={0}/boost.1.84.0/lib/native/include', github.workspace) || '' }}
+        -DFORTE_TESTS_INC_DIRS=${{ matrix.os == 'windows-latest' && format('{0}/boost.1.84.0/lib/native/include', github.workspace) || '' }}
 
     - name: Build
       # Build your program with the given configuration. Note that --config is needed because the default Windows generator is a multi-config generator (Visual Studio generator).
