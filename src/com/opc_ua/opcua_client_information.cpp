@@ -22,9 +22,7 @@
 std::string gOpcuaClientConfigFile;
 
 CUA_ClientInformation::CUA_ClientInformation(const std::string &paEndpoint) :
-    mEndpointUrl(paEndpoint), mClient(nullptr), mMissingAsyncCalls(0), mNeedsReconnection(false), mWaitToInitializeActions(false),
-        mIsClientValid(true),
-        mLastReconnectionTry(0), mLastActionInitializationTry(0), mSomeActionWasInitialized(false) {
+    mEndpointUrl(paEndpoint)
 }
 
 CUA_ClientInformation::~CUA_ClientInformation() {
@@ -497,13 +495,13 @@ void CUA_ClientInformation::uninitializeAction(CActionInfo& paActionInfo) {
 
 void CUA_ClientInformation::uninitializeSubscribeAction(const CActionInfo &paActionInfo) {
   CSinglyLinkedList<UA_MonitoringItemInfo> toDelete;
-  for(CSinglyLinkedList<UA_MonitoringItemInfo>::Iterator itMonitoringItemInfo = mSubscriptionInfo.mMonitoredItems.begin();
+  for(auto itMonitoringItemInfo = mSubscriptionInfo.mMonitoredItems.begin();
       itMonitoringItemInfo != mSubscriptionInfo.mMonitoredItems.end(); ++itMonitoringItemInfo) {
     if(&(*itMonitoringItemInfo).mVariableInfo.mActionInfo == &paActionInfo) {
       toDelete.pushBack(*itMonitoringItemInfo);
     }
   }
-  for(CSinglyLinkedList<UA_MonitoringItemInfo>::Iterator itMonitoringItemInfo = toDelete.begin(); itMonitoringItemInfo != toDelete.end();
+  for(auto itMonitoringItemInfo = toDelete.begin(); itMonitoringItemInfo != toDelete.end();
       ++itMonitoringItemInfo) {
     UA_StatusCode retVal = UA_Client_MonitoredItems_deleteSingle(mClient, mSubscriptionInfo.mSubscriptionId, (*itMonitoringItemInfo).mMonitoringItemId);
     if(UA_STATUSCODE_GOOD != retVal) {

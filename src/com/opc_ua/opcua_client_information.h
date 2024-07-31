@@ -366,7 +366,7 @@ class CUA_ClientInformation {
     /**
      * Handler of the OPC UA stack client
      */
-    UA_Client *mClient;
+    UA_Client *mClient{nullptr};
 
     /**
      * Mutex of the client
@@ -382,7 +382,7 @@ class CUA_ClientInformation {
      * Amount of missing async calls to be performed. Read, write and method call add one when they are called, and reduced in the callbacks
      * Subscription increases one when created, and only reduced when no more subscription are present
      */
-    size_t mMissingAsyncCalls;
+    size_t mMissingAsyncCalls{0};
 
     /**
      * List of actions that use this client
@@ -397,13 +397,13 @@ class CUA_ClientInformation {
     /**
      * Indicates if the client should wait scmConnectionRetryTimeoutNano before trying to reconnect. This is true when an action fails to connect once
      */
-    bool mNeedsReconnection;
+    bool mNeedsReconnection{false};
 
     /**
      * Indicates if the client should wait scmInitializeActionRetryNano before trying to initialize the actions. This is true when an action fails, so
      * it doesn't fail too often. If an action is added after another fail, this becomes false, so the new action can be initialized and doesn't have to wait
      */
-    bool mWaitToInitializeActions;
+    bool mWaitToInitializeActions{false};
 
     /**
      * Indicate the client is about to be deleted, so it's not added to new lists.
@@ -416,22 +416,22 @@ class CUA_ClientInformation {
      *
      *  So this variable prevents the re-adding to any iteration list if it was set already to invalid, when is about to be deleted
      */
-    bool mIsClientValid;
+    bool mIsClientValid{false};
 
     /**
      * Store the time when the connection last failed
      */
-    uint_fast64_t mLastReconnectionTry;
+    uint_fast64_t mLastReconnectionTry{0};
 
     /**
      * Store the time when an action last failed to initialized
      */
-    uint_fast64_t mLastActionInitializationTry;
+    uint_fast64_t mLastActionInitializationTry{0};
 
     /**
      * True if an action was initialized in the last iteration of handleClientState()
      */
-    bool mSomeActionWasInitialized;
+    bool mSomeActionWasInitialized{false};
 
     /**
      * Time in nanoseconds that the client should wait before another reconnection try
