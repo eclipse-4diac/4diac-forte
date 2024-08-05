@@ -161,11 +161,10 @@ size_t CBasicFB::getToStringBufferSize() const {
 
 #ifdef FORTE_TRACE_CTF
 void CBasicFB::traceInstanceData() {
-
   std::vector<std::string> inputs(mInterfaceSpec->mNumDIs);
   std::vector<std::string> outputs(mInterfaceSpec->mNumDOs);
   std::vector<std::string> internals(cmVarInternals ? cmVarInternals->mNumIntVars : 0);
-  std::vector<std::string> internalFbs(getInternalFBNum());
+  std::vector<std::string> internalFbs(getChildren().size());
   std::vector<const char *> inputs_c_str(inputs.size());
   std::vector<const char *> outputs_c_str(outputs.size());
   std::vector<const char *> internals_c_str(internals.size());
@@ -195,12 +194,14 @@ void CBasicFB::traceInstanceData() {
     internals_c_str[i] = valueString.c_str();
   }
 
-  for(TPortId i = 0; i < internalFbs.size(); ++i) {
-    CFunctionBlock *value = getInternalFB(i);
+  TPortId i = 0;
+  for(auto child : getChildren()){
+    CFunctionBlock &value = static_cast<CFunctionBlock &>(*child);
     std::string &valueString = internalFbs[i];
-    valueString.reserve(value->getToStringBufferSize());
-    value->toString(valueString.data(), valueString.capacity());
+    valueString.reserve(value.getToStringBufferSize());
+    value.toString(valueString.data(), valueString.capacity());
     internalFbs_c_str[i] = valueString.c_str();
+    ++i;
   }
 
   barectf_default_trace_instanceData(getResource()->getTracePlatformContext().getContext(),
