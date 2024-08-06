@@ -59,6 +59,10 @@ namespace forte {
           return mChildren;
         }
 
+        const TFBContainerList &getChildren() const {
+          return mChildren;
+        }
+
         CFBContainer& getParent() const { return mParent;}
 
         virtual CResource* getResource(){
@@ -90,6 +94,10 @@ namespace forte {
 
         virtual bool isFB() {
           return false;
+        }
+
+        virtual bool isDynamicContainer() {
+          return true;
         }
 
       protected:

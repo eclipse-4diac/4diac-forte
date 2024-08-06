@@ -138,7 +138,7 @@ EMGMResponse CResource::executeMGMCommand(forte::core::SManagementCMD &paCommand
         retVal = queryAllAdapterTypes(paCommand.mAdditionalParams);
         break;
         case EMGMCommandType::QueryFB:
-        retVal = queryFBs(paCommand.mAdditionalParams);
+        retVal = queryFBs(paCommand.mAdditionalParams, *this, "");
         break;
         case EMGMCommandType::QueryFBType:
         retVal = createFBTypeResponseMessage(paCommand.mFirstParam.front(), paCommand.mAdditionalParams);
@@ -361,72 +361,30 @@ void CResource::appedTypeNameList(std::string & paValue, CTypeLib::CTypeEntry *p
   }
 }
 
-EMGMResponse CResource::queryFBs(std::string & paValue){
-  bool first = true;
-
-  for(TFBContainerList::iterator itRunner = getChildren().begin(); itRunner !=  getChildren().end(); ++itRunner){
-    if((*itRunner)->isFB()){
-      if(!first){
-        paValue.append("\n");
-      } else {
-        first = false;
-      }
-      CFunctionBlock *fb = static_cast<CFunctionBlock*>(*itRunner);
-      createFBResponseMessage(*fb, fb->getInstanceName(), paValue);
-    }
-  }
-
-  return querySubapps(paValue, *this, "");
-}
-
-
-EMGMResponse CResource::querySubapps(std::string & paValue, CFBContainer& container, const std::string prefix){
-
-  for(TFBContainerList::iterator itRunner(container.getChildren().begin()); itRunner != container.getChildren().end(); ++itRunner){
-    if(!(*itRunner)->isFB()){
-      CFBContainer* subapp = (static_cast<CFBContainer*>(*itRunner));
-      std::string subapp_prefix = prefix;
-
-      if(!prefix.empty()){
-        subapp_prefix += ".";
-      }
-      subapp_prefix += subapp->getInstanceName();
-
-      bool first = true;
-      for(TFBContainerList::iterator fbRunner = subapp->getChildren().begin(); fbRunner != subapp->getChildren().end(); ++fbRunner){
-        if((*itRunner)->isFB()) {
-          if(!first) {
-            paValue.append("\n");
-          } else {
-            first = false;
-          }
-          CFunctionBlock *fb = static_cast<CFunctionBlock*>(*fbRunner);
-          std::string fullFBName = subapp_prefix + "." + fb->getInstanceName();
-          createFBResponseMessage(*fb, fullFBName.c_str(), paValue);
-        }
-      }
-      querySubapps(paValue,*subapp,subapp_prefix);
+EMGMResponse CResource::queryFBs(std::string &paValue, const CFBContainer &container, const std::string prefix) {
+  for (auto itRunner: container.getChildren()) {
+    if (itRunner->isFB()) {
+      const CFunctionBlock &fb = static_cast<const CFunctionBlock &>(*itRunner);
+      createFBResponseMessage(fb, prefix + fb.getInstanceName(), paValue);
+    } else {
+      queryFBs(paValue, *itRunner, prefix + itRunner->getInstanceName() + ".");
     }
   }
   return EMGMResponse::Ready;
 }
 
-EMGMResponse CResource::queryConnections(std::string & paReqResult, CFBContainer& container){
-
-  EMGMResponse retVal = EMGMResponse::UnsupportedType;
-  for(TFBContainerList::iterator itRunner(container.getChildren().begin()); itRunner != container.getChildren().end(); ++itRunner) {
-    if((*itRunner)->isFB()) {
-      CFunctionBlock &fb = static_cast<CFunctionBlock &>(**itRunner);
+EMGMResponse CResource::queryConnections(std::string & paReqResult, const CFBContainer& container){
+  for (auto itRunner : container.getChildren()) {
+    if (itRunner->isFB()) {
+      const CFunctionBlock &fb = static_cast<const CFunctionBlock &>(*itRunner);
       createEOConnectionResponse(fb, paReqResult);
       createDOConnectionResponse(fb, paReqResult);
       createAOConnectionResponse(fb, paReqResult);
     } else {
-      CFBContainer *subapp = (static_cast<CFBContainer*>(*itRunner));
-      queryConnections(paReqResult, *subapp);
+      queryConnections(paReqResult, *itRunner);
     }
   }
-  retVal = EMGMResponse::Ready;
-  return retVal;
+  return EMGMResponse::Ready;
 }
 
 void CResource::createEOConnectionResponse(const CFunctionBlock& paFb, std::string& paReqResult){
@@ -480,7 +438,10 @@ void CResource::createAOConnectionResponse(const CFunctionBlock& paFb, std::stri
   }
 }
 
-void CResource::createFBResponseMessage(const CFunctionBlock& paFb, const char* fullName, std::string& paValue){
+void CResource::createFBResponseMessage(const CFunctionBlock &paFb, const std::string &fullName, std::string &paValue) {
+  if (!paValue.empty()) {
+    paValue.append("\n");
+  }
   paValue.append("<FB name=\"");
   paValue.append(fullName);
   paValue.append("\" type=\"");
