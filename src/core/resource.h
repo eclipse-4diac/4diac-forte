@@ -120,8 +120,8 @@ class CResource : public CFunctionBlock{
     }
 #endif
 
-    bool isFB() override {
-       return false;
+    bool isDynamicContainer() override {
+      return true;
     }
 
   protected:
@@ -241,12 +241,10 @@ class CResource : public CFunctionBlock{
      * @param paValue the result of the query
      * @return response of the command execution as defined in IEC 61499
      */
-    EMGMResponse queryFBs(std::string& paValue);
-    void createFBResponseMessage(const CFunctionBlock& paFb, const char* fullName, std::string& paValue);
+    static EMGMResponse queryFBs(std::string &paValue, const CFBContainer &container, std::string prefix);
+    static void createFBResponseMessage(const CFunctionBlock &paFb, const std::string &fullName, std::string &paValue);
 
-    EMGMResponse querySubapps(std::string& paValue, CFBContainer& container, std::string prefix);
-
-    EMGMResponse queryConnections(std::string &paValue, CFBContainer& container);
+    EMGMResponse queryConnections(std::string &paValue, const CFBContainer& container);
     void createEOConnectionResponse(const CFunctionBlock& paFb, std::string& paReqResult);
     void createDOConnectionResponse(const CFunctionBlock& paFb, std::string& paReqResult);
     void createAOConnectionResponse(const CFunctionBlock& paFb, std::string& paReqResult);

@@ -599,6 +599,10 @@ class CFunctionBlock : public forte::core::CFBContainer {
        return true;
     }
 
+    bool isDynamicContainer() override {
+      return false;
+    }
+
     /*!\brief Function providing the functionality of the FB (e.g. execute ECC for basic FBs).
      *
      * \param paECET the event chain execution thread this FB was invoked from
