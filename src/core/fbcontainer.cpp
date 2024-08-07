@@ -1,6 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2015 - 2016 fortiss GmbH, 2018 TU Wien/ACIN
- *                      2023 Primetals Technologies Austria GmbH
+ * Copyright (c) 2015, 2024 fortiss GmbH, 2018 TU Wien/ACIN,
+ *                          Primetals Technologies Austria GmbH
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -8,13 +8,11 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    Alois Zoitl
- *      - initial implementation and rework communication infrastructure
- *    Martin Jobst - adapt for LUA integration
- *    Martin Melik Merkumians
- *      - implementation for checkForActionEquivalentState
- *    Fabio Gandolfi
- *      - refactored fb and container list to sorted vectors
+ *   Alois Zoitl  - initial implementation and rework communication infrastructure
+ *   Martin Jobst - adapt for LUA integration
+ *   Martin Melik Merkumians - implementation for checkForActionEquivalentState
+ *   Fabio Gandolfi - refactored fb and container list to sorted vectors
+ *   Alois Zoitl  - merged fbs and containers in one list
  *******************************************************************************/
 #include "funcbloc.h"
 #include "fbcontainer.h"
@@ -36,34 +34,24 @@ EMGMResponse checkForActionEquivalentState(const CFunctionBlock &paFB, const EMG
   return EMGMResponse::InvalidState;
 }
 
-CFBContainer::CFBContainer(CStringDictionary::TStringId paContainerName, CFBContainer &paParent) :
-    mContainerName(paContainerName), mParent(paParent) {
-}
-
-CFBContainer::CFBContainer(CStringDictionary::TStringId paContainerName, CFBContainer &paParent, size_t paNumFBs) :
-    mContainerName(paContainerName), mParent(paParent) {
-  mFunctionBlocks.reserve(paNumFBs);
+CFBContainer::CFBContainer(CStringDictionary::TStringId paContInstanceName, CFBContainer &paParent) :
+    mContInstanceName(paContInstanceName), mParent(paParent) {
 }
 
 CFBContainer::~CFBContainer() {
-  for (TFunctionBlockList::iterator itRunner(mFunctionBlocks.begin()); itRunner != mFunctionBlocks.end(); ++itRunner) {
-    CTypeLib::deleteFB(*itRunner);
-  }
-  mFunctionBlocks.clear();
-
-  for (TFBContainerList::iterator itRunner(mSubContainers.begin()); itRunner != mSubContainers.end(); ++itRunner) {
+  for (TFBContainerList::iterator itRunner(mChildren.begin()); itRunner != mChildren.end(); ++itRunner) {
     delete (*itRunner);
   }
-  mSubContainers.clear();
+  mChildren.clear();
 }
 
-EMGMResponse CFBContainer::addFB(CFunctionBlock* paFuncBlock){
-  EMGMResponse eRetVal = EMGMResponse::InvalidObject;
+EMGMResponse CFBContainer::addFB(CFunctionBlock* paFuncBlock) {
+  EMGMResponse retVal = EMGMResponse::InvalidObject;
   if(nullptr != paFuncBlock){
-    mFunctionBlocks.insert(getFBIterator(paFuncBlock->getInstanceNameId()), paFuncBlock);
-    eRetVal = EMGMResponse::Ready;
+    mChildren.insert(getChildrenIterator(paFuncBlock->getInstanceNameId()), paFuncBlock);
+    retVal = EMGMResponse::Ready;
   }
-  return eRetVal;
+  return retVal;
 }
 
 std::string CFBContainer::getFullQualifiedApplicationInstanceName(const char sepChar) const {
@@ -71,32 +59,33 @@ std::string CFBContainer::getFullQualifiedApplicationInstanceName(const char sep
   if(!result.empty()){
     result += sepChar;
   }
-  result += getName();
+  result += getInstanceName();
   return result;
 }
 
 EMGMResponse CFBContainer::createFB(forte::core::TNameIdentifier::CIterator &paNameListIt, CStringDictionary::TStringId paTypeName){
   if(paNameListIt.isLastEntry()){
     return createFB(*paNameListIt, paTypeName);
-  } else{
+  } else if(isDynamicContainer()) {
     //we have more than one name in the fb name list. Find or create the container and hand the create command to this container.
     CFBContainer *childCont = findOrCreateContainer(*paNameListIt);
-    if(nullptr != childCont){
+    if(childCont != nullptr && childCont->isDynamicContainer()){
       //remove the container from the name list
       ++paNameListIt;
       return childCont->createFB(paNameListIt, paTypeName);
     }
   }
-  return EMGMResponse::InvalidState;
+  return EMGMResponse::InvalidDst;
 }
 
 EMGMResponse CFBContainer::createFB(CStringDictionary::TStringId paInstanceNameId, CStringDictionary::TStringId paTypeName) {
+  TFBContainerList::iterator childIt = getChildrenIterator(paInstanceNameId);
   // test if the container does not contain any FB or a container with the same name
-  if((nullptr == getFB(paInstanceNameId)) && (nullptr == getFBContainer(paInstanceNameId))) {
+  if(!isChild(childIt, paInstanceNameId)) {
     CFunctionBlock *newFB = CTypeLib::createFB(paInstanceNameId, paTypeName, *this);
-    if(nullptr != newFB) {
+    if(newFB != nullptr) {
       //we could create a FB now add it to the list of contained FBs
-      addFB(newFB);
+      mChildren.insert(childIt, newFB);
       return EMGMResponse::Ready;
     }
     return CTypeLib::getLastError();
@@ -107,23 +96,22 @@ EMGMResponse CFBContainer::createFB(CStringDictionary::TStringId paInstanceNameI
 EMGMResponse CFBContainer::deleteFB(forte::core::TNameIdentifier::CIterator &paNameListIt){
   EMGMResponse retval = EMGMResponse::NoSuchObject;
 
-  if(!paNameListIt.isLastEntry()){
-    //we have more than one name in the fb name list. Find or create the container and hand the create command to this container.
-    CFBContainer *childCont = findOrCreateContainer(*paNameListIt);
-    if(nullptr != childCont){
-      //remove the container from the name list
-      ++paNameListIt;
-      retval = childCont->deleteFB(paNameListIt);
-    }
-  }
-  else{
-    CStringDictionary::TStringId fBNameId = *paNameListIt;
-
-    if((CStringDictionary::scmInvalidStringId != fBNameId) && (!mFunctionBlocks.empty())) {
-      TFunctionBlockList::iterator it = getFBIterator(fBNameId);
-      if(fBIteratorIsValid(it,fBNameId) && (*it)->isCurrentlyDeleteable()){
-        CTypeLib::deleteFB(*it);
-        mFunctionBlocks.erase(it);
+  CStringDictionary::TStringId childName = *paNameListIt;
+  TFBContainerList::iterator childIt = getChildrenIterator(childName);
+  if(isChild(childIt, childName)){
+    CFBContainer *child = *childIt;
+    if(!paNameListIt.isLastEntry()){
+      //we have more than one name in the fb name list. Hand the process on to the child if it is a dynamic container
+      if(child->isDynamicContainer()){
+        //remove the container from the name list
+        ++paNameListIt;
+        retval = child->deleteFB(paNameListIt);
+      }
+    } else if(child->isFB()){
+      CFunctionBlock *fb = static_cast<CFunctionBlock *>(child);
+      if(fb->isCurrentlyDeleteable()){
+        CTypeLib::deleteFB(fb);
+        mChildren.erase(childIt);
         retval = EMGMResponse::Ready;
       } else {
         retval = EMGMResponse::InvalidState;
@@ -135,95 +123,70 @@ EMGMResponse CFBContainer::deleteFB(forte::core::TNameIdentifier::CIterator &paN
 
 CFunctionBlock *CFBContainer::getFB(CStringDictionary::TStringId paFBName) {
   if(CStringDictionary::scmInvalidStringId != paFBName){
-    TFunctionBlockList::iterator retIter = getFBIterator(paFBName);
-    if(fBIteratorIsValid(retIter,paFBName))
-      return *retIter;
+    CFBContainer *child = getChild(paFBName);
+    if(child != nullptr && child->isFB()){
+      return static_cast<CFunctionBlock *>(child);
+    }
   }
   return nullptr;
 }
 
-CFBContainer::TFunctionBlockList::iterator CFBContainer::getFBIterator(CStringDictionary::TStringId paFBName){
-  if(CStringDictionary::scmInvalidStringId != paFBName) {
-    return lower_bound(mFunctionBlocks.begin(), mFunctionBlocks.end(), paFBName,
-                              [](CFunctionBlock *fb,
-                                 CStringDictionary::TStringId fbName) {
-                                return fb->getInstanceNameId() < fbName;
-                              });
-  }
-  return mFunctionBlocks.end();;
-}
 
-CFunctionBlock* CFBContainer::getContainedFB(forte::core::TNameIdentifier::CIterator &paNameListIt)  {
+CFunctionBlock* CFBContainer::getFB(forte::core::TNameIdentifier::CIterator &paNameListIt)  {
   if(!paNameListIt.isLastEntry()){
     //we have more than one name in the fb name list. Find or create the container and hand the create command to this container.
-    CFBContainer *childCont = getFBContainer(*paNameListIt);
-    if(nullptr != childCont){
+    CFBContainer *childCont = getChild(*paNameListIt);
+    if(childCont != nullptr){
       //remove the container from the name list
       ++paNameListIt;
-      return childCont->getContainedFB(paNameListIt);
+      return childCont->getFB(paNameListIt);
     }
   }
-
   return getFB(*paNameListIt);
 }
 
-CFBContainer* CFBContainer::getFBContainer(CStringDictionary::TStringId paContainerName)  {
-  TFBContainerList::iterator it = getFBContainerIterator(paContainerName);
-  if(it != mSubContainers.end() && (*it)->getNameId() == paContainerName){
-    return *it;
-  }
-  return nullptr;
+CFBContainer* CFBContainer::getChild(CStringDictionary::TStringId paName)  {
+  TFBContainerList::iterator it = getChildrenIterator(paName);
+  return isChild(it, paName) ? *it : nullptr;
 }
 
-CFBContainer::TFBContainerList::iterator CFBContainer::getFBContainerIterator(CStringDictionary::TStringId paContainerName)  {
-  if(CStringDictionary::scmInvalidStringId != paContainerName && !mSubContainers.empty()){
-    return std::lower_bound(mSubContainers.begin(), mSubContainers.end(), paContainerName,
+CFBContainer::TFBContainerList::iterator CFBContainer::getChildrenIterator(CStringDictionary::TStringId paName)  {
+  if(paName != CStringDictionary::scmInvalidStringId && !mChildren.empty()){
+    return std::lower_bound(mChildren.begin(), mChildren.end(), paName,
                                                      [](CFBContainer* container, CStringDictionary::TStringId containerName)
-                                                     { return container->getNameId() < containerName; });
+                                                     { return container->getInstanceNameId() < containerName; });
   }
-  return mSubContainers.end();
+  return mChildren.end();
 }
 
 CFBContainer *CFBContainer::findOrCreateContainer(CStringDictionary::TStringId paContainerName) {
   CFBContainer *retVal;
-  if (mSubContainers.empty()) {
+  if (mChildren.empty()) {
     retVal = new CFBContainer(paContainerName, *this);
-    mSubContainers.insert(mSubContainers.begin(), retVal);
+    mChildren.insert(mChildren.begin(), retVal);
   } else {
-    TFBContainerList::iterator it = getFBContainerIterator(paContainerName);
-    if (nullptr == getFB(paContainerName) && (it == mSubContainers.end() || (*it)->getNameId() != paContainerName)) {
+    TFBContainerList::iterator childIt = getChildrenIterator(paContainerName);
+    if (isChild(childIt, paContainerName)) {
+      retVal = *childIt;
+    } else {
       //the container with the given name does not exist but only create it if there is no FB with the same name.
       retVal = new CFBContainer(paContainerName, *this);
-      mSubContainers.insert(it, retVal);
-    } else {
-      retVal = (*it);
+      mChildren.insert(childIt, retVal);
     }
   }
   return retVal;
 }
 
-EMGMResponse CFBContainer::changeContainedFBsExecutionState(EMGMCommandType paCommand){
+EMGMResponse CFBContainer::changeExecutionState(EMGMCommandType paCommand){
   EMGMResponse retVal = EMGMResponse::Ready;
 
-  for(TFBContainerList::iterator it(mSubContainers.begin());
-      ((it != mSubContainers.end()) && (EMGMResponse::Ready == retVal));
+  for(TFBContainerList::iterator it(mChildren.begin());
+      ((it != mChildren.end()) && (EMGMResponse::Ready == retVal));
       ++it){
-    retVal = (*it)->changeContainedFBsExecutionState(paCommand);
-  }
-
-  if(EMGMResponse::Ready == retVal){
-    for(TFunctionBlockList::iterator itRunner = mFunctionBlocks.begin();
-        ((itRunner != mFunctionBlocks.end()) && (EMGMResponse::Ready == retVal));
-        ++itRunner){
-      retVal = (*itRunner)->changeFBExecutionState(paCommand);
-      if(EMGMResponse::Ready != retVal) {
-        retVal = checkForActionEquivalentState(*(*itRunner), paCommand);
-      }
+    retVal = (*it)->changeExecutionState(paCommand);
+    if((EMGMResponse::Ready != retVal) && (*it)->isFB()) {
+      retVal = checkForActionEquivalentState(static_cast<CFunctionBlock &>(**it), paCommand);
     }
   }
   return retVal;
-}
-
-bool CFBContainer::fBIteratorIsValid(CFBContainer::TFunctionBlockList::iterator iterator,CStringDictionary::TStringId paFBName){
-  return (iterator != mFunctionBlocks.end() && paFBName == ((*(*iterator)).getInstanceNameId()));
 }

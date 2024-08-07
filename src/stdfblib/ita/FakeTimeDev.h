@@ -34,7 +34,7 @@ class FakeTimeDev : public CDevice{
 
     void awaitShutdown() override;
 
-    EMGMResponse changeFBExecutionState(EMGMCommandType paCommand) override;
+    EMGMResponse changeExecutionState(EMGMCommandType paCommand) override;
 
     EMGMResponse writeValue(forte::core::TNameIdentifier &paNameList, const std::string & paValue, bool paForce = false) override;
 

@@ -43,8 +43,8 @@ CCommFB::CCommFB(const CStringDictionary::TStringId paInstanceNameId, forte::cor
 
 CCommFB::~CCommFB() = default;
 
-EMGMResponse CCommFB::changeFBExecutionState(EMGMCommandType paCommand) {
-  EMGMResponse retVal = CEventSourceFB::changeFBExecutionState(paCommand);
+EMGMResponse CCommFB::changeExecutionState(EMGMCommandType paCommand) {
+  EMGMResponse retVal = CEventSourceFB::changeExecutionState(paCommand);
   if ((EMGMResponse::Ready == retVal) && (EMGMCommandType::Kill == paCommand)) {
     //when we are killed we'll close the connection so that it can safely be opened again after an reset
     closeConnection();

@@ -34,7 +34,7 @@ namespace forte {
     public:
       ~CBaseCommFB() override;
 
-      EMGMResponse changeFBExecutionState(EMGMCommandType paCommand) override;
+      EMGMResponse changeExecutionState(EMGMCommandType paCommand) override;
 
       forte::com_infra::EComServiceType getComServiceType() const {
         return mCommServiceType;

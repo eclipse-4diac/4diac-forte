@@ -58,7 +58,7 @@ bool RMT_RES::initialize() {
 
   command.mFirstParam.clear();
   command.mFirstParam.pushBack(g_nStringIdSTART);
-  command.mFirstParam.pushBack(g_nStringIdwARM);
+  command.mFirstParam.pushBack(g_nStringIdWARM);
   command.mSecondParam.clear();
   command.mSecondParam.pushBack(g_nStringIdMGR_FF);
   command.mSecondParam.pushBack(g_nStringIdS);

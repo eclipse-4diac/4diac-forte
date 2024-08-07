@@ -38,12 +38,11 @@
 
 CFunctionBlock::CFunctionBlock(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec *paInterfaceSpec,
                                CStringDictionary::TStringId paInstanceNameId) :
+        CFBContainer(paInstanceNameId, paContainer),
         mInterfaceSpec(paInterfaceSpec),
-        mContainer(paContainer),
 #ifdef FORTE_SUPPORT_MONITORING
         mEOMonitorCount(nullptr), mEIMonitorCount(nullptr),
 #endif
-        mFBInstanceName(paInstanceNameId),
         mFBState(E_FBStates::Idle), // put the FB in the idle state to avoid a useless reset after creation
         mDeletable(true) {
 }
@@ -59,14 +58,6 @@ CFunctionBlock::~CFunctionBlock(){
 #ifdef  FORTE_SUPPORT_MONITORING
   freeEventMonitoringData();
 #endif //FORTE_SUPPORT_MONITORING
-}
-
-CResource* CFunctionBlock::getResource() {
-  return mContainer.getResource();
-}
-
-CDevice* CFunctionBlock::getDevice() {
-  return mContainer.getDevice();
 }
 
 CTimerHandler& CFunctionBlock::getTimer() {
@@ -421,7 +412,7 @@ void CFunctionBlock::setInitialValues() {
   }
 }
 
-EMGMResponse CFunctionBlock::changeFBExecutionState(EMGMCommandType paCommand){
+EMGMResponse CFunctionBlock::changeExecutionState(EMGMCommandType paCommand){
   EMGMResponse nRetVal = EMGMResponse::InvalidState;
   switch (paCommand){
     case EMGMCommandType::Start:
@@ -457,19 +448,15 @@ EMGMResponse CFunctionBlock::changeFBExecutionState(EMGMCommandType paCommand){
   if(EMGMResponse::Ready == nRetVal && nullptr != mInterfaceSpec) {
     for(TPortId i = 0; i < mInterfaceSpec->mNumAdapters; ++i) {
       if(CAdapter* adapter = getAdapterUnchecked(i); adapter != nullptr) {
-        adapter->changeFBExecutionState(paCommand);
+        adapter->changeExecutionState(paCommand);
       }
     }
   }
-  return nRetVal;
-}
 
-EMGMResponse CFunctionBlock::changeFBExecutionStateHelper(const EMGMCommandType paCommand, size_t paAmountOfInternalFBs,
-    TFunctionBlockPtr *const paInternalFBs){
-  EMGMResponse nRetVal = CFunctionBlock::changeFBExecutionState(paCommand);
-  if(EMGMResponse::Ready == nRetVal){
-    nRetVal = changeInternalFBExecutionState(paCommand, paAmountOfInternalFBs, paInternalFBs);
+  if (EMGMResponse::Ready == nRetVal) {
+    nRetVal = CFBContainer::changeExecutionState(paCommand);
   }
+
   return nRetVal;
 }
 
@@ -503,7 +490,7 @@ void CFunctionBlock::nextDataPoint(const CStringDictionary::TStringId *&paDataTy
 CAdapter *CFunctionBlock::createAdapter(const SAdapterInstanceDef &paAdapterInstanceDefinition, TForteUInt8 paParentAdapterlistID) {
   CAdapter *adapter = CTypeLib::createAdapter(paAdapterInstanceDefinition.mAdapterNameID,
                                               paAdapterInstanceDefinition.mAdapterTypeNameID,
-                                              getContainer(),
+                                              *this,
                                               paAdapterInstanceDefinition.mIsPlug);
   if(adapter) {
     adapter->setParentFB(this, paParentAdapterlistID);
@@ -513,16 +500,6 @@ CAdapter *CFunctionBlock::createAdapter(const SAdapterInstanceDef &paAdapterInst
 
 void CFunctionBlock::destroyAdapter(CAdapter *paAdapter) {
   delete paAdapter;
-}
-
-EMGMResponse CFunctionBlock::changeInternalFBExecutionState(const EMGMCommandType paCommand, const size_t paAmountOfInternalFBs, TFunctionBlockPtr *const paInternalFBs) {
-  EMGMResponse nRetVal = EMGMResponse::Ready;
-  for (size_t i = 0; ((i < paAmountOfInternalFBs) && (EMGMResponse::Ready == nRetVal)); ++i) {
-    if(paInternalFBs[i]) {
-      nRetVal = paInternalFBs[i]->changeFBExecutionState(paCommand);
-    }
-  }
-  return nRetVal;
 }
 
 TPortId CFunctionBlock::getPortId(CStringDictionary::TStringId paPortNameId, TPortId paMaxPortNames, const CStringDictionary::TStringId* paPortNames){
@@ -564,6 +541,9 @@ CFunctionBlock *CFunctionBlock::getFB(forte::core::TNameIdentifier::CIterator &p
     //only check for adpaters if it we have the last entry in the line
     retVal = getAdapter(*paNameListIt);
   }
+  if(retVal == nullptr){
+    retVal = CFBContainer::getFB(paNameListIt);
+  }
 
   return retVal;
 }
@@ -574,16 +554,6 @@ TForteUInt32 &CFunctionBlock::getEIMonitorData(TEventID paEIID){
 
 TForteUInt32 &CFunctionBlock::getEOMonitorData(TEventID paEOID){
   return mEOMonitorCount[paEOID];
-}
-
-std::string CFunctionBlock::getFullQualifiedApplicationInstanceName(const char sepChar) const {
-  std::string fullName(mContainer.getFullQualifiedApplicationInstanceName(sepChar));
-
-  if(!fullName.empty()){
-    fullName += sepChar;
-  }
-  fullName += getInstanceName();
-  return fullName;
 }
 
 #endif //FORTE_SUPPORT_MONITORING

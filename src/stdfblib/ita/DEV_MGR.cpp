@@ -63,7 +63,7 @@ void DEV_MGR::executeEvent(TEventID paEIID, CEventChainExecutionThread *const pa
       //this is the first time init is called try to load a boot file
       ForteBootFileLoader loader(*this);
       if(loader.needsExit()){
-        getDevice()->changeFBExecutionState(EMGMCommandType::Kill);
+        getDevice()->changeExecutionState(EMGMCommandType::Kill);
         return;
       }
       if(loader.isOpen() && LOAD_RESULT_OK == loader.loadBootFile()){

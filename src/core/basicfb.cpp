@@ -28,6 +28,15 @@ bool CBasicFB::initialize() {
   if(!CFunctionBlock::initialize()) {
     return false;
   }
+  // initialize all internal FBs
+  for(TFBContainerList::iterator it(getChildren().begin()); it != getChildren().end(); ++it){
+    if((*it)->isFB()) {
+      if(!static_cast<CFunctionBlock &>(**it).initialize()){
+        return false;
+      }
+    }
+  }
+
   if((nullptr != cmVarInternals) && (cmVarInternals->mNumIntVars)) {
     size_t basicVarsDataSize = calculateBasicFBVarsDataSize(*cmVarInternals);
     mBasicFBVarsData = basicVarsDataSize ? operator new(basicVarsDataSize) : nullptr;
@@ -53,6 +62,8 @@ CBasicFB::~CBasicFB() {
   }
   operator delete(mBasicFBVarsData);
   mBasicFBVarsData = nullptr;
+  //CFBContainer shall not handle internal function blocks therefore we are clearing the list here
+  getChildren().clear();
 }
 
 void CBasicFB::setInitialValues() {
@@ -103,24 +114,6 @@ CIEC_ANY* CBasicFB::getInternalVar(CStringDictionary::TStringId paInternalName) 
   return retVal;
 }
 
-TFunctionBlockPtr *CBasicFB::createInternalFBs(const size_t paAmountOfInternalFBs, const SCFB_FBInstanceData *const paInternalFBData, forte::core::CFBContainer &paContainer) {
-  TFunctionBlockPtr *internalFBs = nullptr;
-  if (paAmountOfInternalFBs) {
-    internalFBs = new TFunctionBlockPtr[paAmountOfInternalFBs];
-    for(size_t i = 0; i < paAmountOfInternalFBs; ++i) {
-      internalFBs[i] = CTypeLib::createFB(paInternalFBData[i].mFBInstanceNameId, paInternalFBData[i].mFBTypeNameId, paContainer);
-    }
-  }
-  return internalFBs;
-}
-
-void CBasicFB::deleteInternalFBs(const size_t paAmountOfInternalFBs, TFunctionBlockPtr *const paInternalFBs) {
-  for (size_t i = 0; i < paAmountOfInternalFBs; ++i) {
-    delete paInternalFBs[i];
-  }
-  delete[] paInternalFBs;
-};
-
 int CBasicFB::toString(char *paValue, size_t paBufferSize) const {
   int usedBuffer = CFunctionBlock::toString(paValue, paBufferSize);
   if (usedBuffer < 1 || cmVarInternals == nullptr || (cmVarInternals != nullptr && cmVarInternals->mNumIntVars == 0)) {
@@ -168,11 +161,10 @@ size_t CBasicFB::getToStringBufferSize() const {
 
 #ifdef FORTE_TRACE_CTF
 void CBasicFB::traceInstanceData() {
-
   std::vector<std::string> inputs(mInterfaceSpec->mNumDIs);
   std::vector<std::string> outputs(mInterfaceSpec->mNumDOs);
   std::vector<std::string> internals(cmVarInternals ? cmVarInternals->mNumIntVars : 0);
-  std::vector<std::string> internalFbs(getInternalFBNum());
+  std::vector<std::string> internalFbs(getChildren().size());
   std::vector<const char *> inputs_c_str(inputs.size());
   std::vector<const char *> outputs_c_str(outputs.size());
   std::vector<const char *> internals_c_str(internals.size());
@@ -202,12 +194,14 @@ void CBasicFB::traceInstanceData() {
     internals_c_str[i] = valueString.c_str();
   }
 
-  for(TPortId i = 0; i < internalFbs.size(); ++i) {
-    CFunctionBlock *value = getInternalFB(i);
+  TPortId i = 0;
+  for(auto child : getChildren()){
+    CFunctionBlock &value = static_cast<CFunctionBlock &>(*child);
     std::string &valueString = internalFbs[i];
-    valueString.reserve(value->getToStringBufferSize());
-    value->toString(valueString.data(), valueString.capacity());
+    valueString.reserve(value.getToStringBufferSize());
+    value.toString(valueString.data(), valueString.capacity());
     internalFbs_c_str[i] = valueString.c_str();
+    ++i;
   }
 
   barectf_default_trace_instanceData(getResource()->getTracePlatformContext().getContext(),

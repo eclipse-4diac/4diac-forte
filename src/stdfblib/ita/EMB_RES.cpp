@@ -29,7 +29,7 @@ const SFBInterfaceSpec EMB_RES::scmFBInterfaceSpec = {
 };
 
 EMB_RES::EMB_RES(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paDevice) :
-    CResource(paDevice, nullptr, paInstanceNameId){
+    CResource(paDevice, &scmFBInterfaceSpec, paInstanceNameId){
 }
 
 bool EMB_RES::initialize() {

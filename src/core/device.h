@@ -42,7 +42,7 @@ class CDevice : public CResource {
      *  \return 0 on success -1 on error
      */
     virtual int startDevice() {
-      changeFBExecutionState(EMGMCommandType::Start);
+      changeExecutionState(EMGMCommandType::Start);
       return 1;
     }
 
@@ -65,7 +65,7 @@ class CDevice : public CResource {
      */
     EMGMResponse executeMGMCommand(forte::core::SManagementCMD &paCommand) override;
 
-    EMGMResponse changeFBExecutionState(EMGMCommandType paCommand) override;
+    EMGMResponse changeExecutionState(EMGMCommandType paCommand) override;
 
     //! Retrieve the device execution of this device
     CDeviceExecution &getDeviceExecution() {

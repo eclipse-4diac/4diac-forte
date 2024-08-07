@@ -61,7 +61,7 @@ private:
 public:
   FORTE_RT_E_DELAY(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
-  EMGMResponse changeFBExecutionState(EMGMCommandType paCommand) override;
+  EMGMResponse changeExecutionState(EMGMCommandType paCommand) override;
 
   CIEC_BOOL var_QI;
   CIEC_TIME var_DT;
