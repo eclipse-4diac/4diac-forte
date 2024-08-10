@@ -24,7 +24,7 @@ namespace forte {
 
       class IOConfigFBPartController : public IOConfigFBBase {
         public:
-          IOConfigFBPartController(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId);
+          IOConfigFBPartController(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec &paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId);
 
         protected:
           CIEC_BOOL &QI() {

@@ -153,7 +153,7 @@ void fmuInstance::populateInputsAndOutputsCore(CFunctionBlock* paFB){
         std::vector<fmuValueContainer*>* outputs = new std::vector<fmuValueContainer*>;
         std::vector<fmuValueContainer*>* inputs = new std::vector<fmuValueContainer*>;
 
-        for(unsigned int i = 2; i < paFB->getFBInterfaceSpec()->mNumDIs; i++){
+        for(unsigned int i = 2; i < paFB->getFBInterfaceSpec().mNumDIs; i++){
           type = getConnectedDataType(i, true, paFB);
           fmuValueContainer* newValue = new fmuValueContainer(fmuValueContainer::getValueFromType(type), false);
           inputs->push_back(newValue); //if an error occur, the fmuValueContainer will have the flag error to true. This must be checked by the FMI interface to kill the simulation
@@ -161,7 +161,7 @@ void fmuInstance::populateInputsAndOutputsCore(CFunctionBlock* paFB){
           FMU_DEBUG_LOG(this, "VARIABLES: COMM: " <<   paFB->getInstanceName() <<  " INPUT PORT " << i << " ADDED SUCCESSFULLY\n")
         }
 
-        for(unsigned int i = 2; i < paFB->getFBInterfaceSpec()->mNumDOs; i++){
+        for(unsigned int i = 2; i < paFB->getFBInterfaceSpec().mNumDOs; i++){
           type = getConnectedDataType(i, false, paFB);
           fmuValueContainer* newValue = new fmuValueContainer(fmuValueContainer::getValueFromType(type), false);
           newValue->setCallbackArgument(newValue);
@@ -228,7 +228,7 @@ CIEC_ANY::EDataTypeID fmuInstance::getConnectedDataType(unsigned int portIndex, 
 
   CIEC_ANY::EDataTypeID retVal = CIEC_ANY::e_Max;
   /* Retrieve Publisher, Connection and Signals Source Function Block Information */
-  const CStringDictionary::TStringId portNameId = paInput ? paFB->getFBInterfaceSpec()->mDINames[portIndex] : paFB->getFBInterfaceSpec()->mDONames[portIndex];
+  const CStringDictionary::TStringId portNameId = paInput ? paFB->getFBInterfaceSpec().mDINames[portIndex] : paFB->getFBInterfaceSpec().mDONames[portIndex];
   const CDataConnection *portConnection = paInput ? paFB->getDIConnection(portNameId) : paFB->getDOConnection(portNameId);
   if(portConnection != nullptr){
     //TODO for now we assume that the subscriber connection only has one destination. Needs fix!
@@ -254,18 +254,18 @@ CIEC_ANY::EDataTypeID fmuInstance::getConnectedDataType(unsigned int portIndex, 
 void fmuInstance::fillInterfaceElementsArray(CFunctionBlock* paFB, bool isInput, bool isEvent){
 
   if(isEvent){
-    TEventID noOfElements = isInput ? paFB->getFBInterfaceSpec()->mNumEIs : paFB->getFBInterfaceSpec()->mNumEOs;
+    TEventID noOfElements = isInput ? paFB->getFBInterfaceSpec().mNumEIs : paFB->getFBInterfaceSpec().mNumEOs;
     for(TEventID i = 0; i < noOfElements; i++){
       fmuValueContainer* newValue = new fmuValueContainer(fmuValueContainer::valueType::INTEGER, true);
       newValue->setEventCounterPointer(isInput ? &(paFB->getEIMonitorData(i)) : &(paFB->getEOMonitorData(i)));
       mOutputsAndInputs.push_back(newValue);
-      FMU_DEBUG_LOG(this, "VARIABLES: INTERFACE: " << paFB->getInstanceName() << "." << CStringDictionary::getInstance().get(isInput ? paFB->getFBInterfaceSpec()->mEINames[i] : paFB->getFBInterfaceSpec()->mEONames[i]) << " ADDED SUCCESSFULLY\n")
+      FMU_DEBUG_LOG(this, "VARIABLES: INTERFACE: " << paFB->getInstanceName() << "." << CStringDictionary::getInstance().get(isInput ? paFB->getFBInterfaceSpec().mEINames[i] : paFB->getFBInterfaceSpec().mEONames[i]) << " ADDED SUCCESSFULLY\n")
     }
   }
   else{
-    unsigned int noOfElements = isInput ? paFB->getFBInterfaceSpec()->mNumDIs : paFB->getFBInterfaceSpec()->mNumDOs;
+    unsigned int noOfElements = isInput ? paFB->getFBInterfaceSpec().mNumDIs : paFB->getFBInterfaceSpec().mNumDOs;
     for(unsigned int i = 0; i < noOfElements; i++){
-      FMU_DEBUG_LOG(this, "VARIABLES: INTERFACE: " << paFB->getInstanceName() << "." << CStringDictionary::getInstance().get(isInput ? paFB->getFBInterfaceSpec()->mDINames[i] : paFB->getFBInterfaceSpec()->mDONames[i]) << ": ");
+      FMU_DEBUG_LOG(this, "VARIABLES: INTERFACE: " << paFB->getInstanceName() << "." << CStringDictionary::getInstance().get(isInput ? paFB->getFBInterfaceSpec().mDINames[i] : paFB->getFBInterfaceSpec().mDONames[i]) << ": ");
       fmuValueContainer::valueType valueType = fmuValueContainer::getValueFromType(isInput ? paFB->getDIFromPortId(static_cast<TPortId>(i))->getDataTypeID() : paFB->getDOFromPortId(static_cast<TPortId>(i))->getDataTypeID());
       if(fmuValueContainer::valueType::WRONG == valueType){
         valueType = fmuValueContainer::getValueFromType(getConnectedDataType(i, isInput, paFB));

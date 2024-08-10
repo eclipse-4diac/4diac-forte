@@ -30,32 +30,30 @@ const SFBInterfaceSpec CAnyAdapter::scmFBInterfaceSpec = {
 };
 
 CAnyAdapter::CAnyAdapter(CStringDictionary::TStringId paAdapterInstanceName, forte::core::CFBContainer &paContainer, bool paIsPlug) :
-    CAdapter(paContainer, &scmFBInterfaceSpec, paAdapterInstanceName, &scmFBInterfaceSpec, paIsPlug), m_ParentFB(nullptr),
+    CAdapter(paContainer, scmFBInterfaceSpec, paAdapterInstanceName, scmFBInterfaceSpec, paIsPlug), m_ParentFB(nullptr),
     mParentAdapterlistID(0){
-  memset(&mCurrentFBInterfaceSpec, 0, sizeof(SFBInterfaceSpec));
 }
 
 CAnyAdapter::~CAnyAdapter() = default;
 
 void CAnyAdapter::typifyAnyAdapter(CAdapter *paPeer){
-  mCurrentFBInterfaceSpec.mNumEIs = paPeer->getAdapterInterfaceSpec()->mNumEOs;
-  mCurrentFBInterfaceSpec.mEINames = paPeer->getAdapterInterfaceSpec()->mEONames;
-  mCurrentFBInterfaceSpec.mEIWith = paPeer->getAdapterInterfaceSpec()->mEOWith;
-  mCurrentFBInterfaceSpec.mEIWithIndexes = paPeer->getAdapterInterfaceSpec()->mEOWithIndexes;
-  mCurrentFBInterfaceSpec.mNumEOs = paPeer->getAdapterInterfaceSpec()->mNumEIs;
-  mCurrentFBInterfaceSpec.mEONames = paPeer->getAdapterInterfaceSpec()->mEINames;
-  mCurrentFBInterfaceSpec.mEOWith = paPeer->getAdapterInterfaceSpec()->mEIWith;
-  mCurrentFBInterfaceSpec.mEOWithIndexes = paPeer->getAdapterInterfaceSpec()->mEIWithIndexes;
-  mCurrentFBInterfaceSpec.mNumDIs = paPeer->getAdapterInterfaceSpec()->mNumDOs;
-  mCurrentFBInterfaceSpec.mDINames = paPeer->getAdapterInterfaceSpec()->mDONames;
-  mCurrentFBInterfaceSpec.mDIDataTypeNames = paPeer->getAdapterInterfaceSpec()->mDODataTypeNames;
-  mCurrentFBInterfaceSpec.mNumDOs = paPeer->getAdapterInterfaceSpec()->mNumDIs;
-  mCurrentFBInterfaceSpec.mDONames = paPeer->getAdapterInterfaceSpec()->mDINames;
-  mCurrentFBInterfaceSpec.mDODataTypeNames = paPeer->getAdapterInterfaceSpec()->mDIDataTypeNames;
-  mCurrentFBInterfaceSpec.mNumDIOs = paPeer->getAdapterInterfaceSpec()->mNumDIOs;
-  mCurrentFBInterfaceSpec.mDIONames = paPeer->getAdapterInterfaceSpec()->mDIONames;
-
-  setupFBInterface(&mCurrentFBInterfaceSpec);
+  getGenInterfaceSpec().mNumEIs = paPeer->getFBInterfaceSpec().mNumEOs;
+  getGenInterfaceSpec().mEINames = paPeer->getFBInterfaceSpec().mEONames;
+  getGenInterfaceSpec().mEIWith = paPeer->getFBInterfaceSpec().mEOWith;
+  getGenInterfaceSpec().mEIWithIndexes = paPeer->getFBInterfaceSpec().mEOWithIndexes;
+  getGenInterfaceSpec().mNumEOs = paPeer->getFBInterfaceSpec().mNumEIs;
+  getGenInterfaceSpec().mEONames = paPeer->getFBInterfaceSpec().mEINames;
+  getGenInterfaceSpec().mEOWith = paPeer->getFBInterfaceSpec().mEIWith;
+  getGenInterfaceSpec().mEOWithIndexes = paPeer->getFBInterfaceSpec().mEIWithIndexes;
+  getGenInterfaceSpec().mNumDIs = paPeer->getFBInterfaceSpec().mNumDOs;
+  getGenInterfaceSpec().mDINames = paPeer->getFBInterfaceSpec().mDONames;
+  getGenInterfaceSpec().mDIDataTypeNames = paPeer->getFBInterfaceSpec().mDODataTypeNames;
+  getGenInterfaceSpec().mNumDOs = paPeer->getFBInterfaceSpec().mNumDIs;
+  getGenInterfaceSpec().mDONames = paPeer->getFBInterfaceSpec().mDINames;
+  getGenInterfaceSpec().mDODataTypeNames = paPeer->getFBInterfaceSpec().mDIDataTypeNames;
+  getGenInterfaceSpec().mNumDIOs = paPeer->getFBInterfaceSpec().mNumDIOs;
+  getGenInterfaceSpec().mDIONames = paPeer->getFBInterfaceSpec().mDIONames;
+  setupFBInterface();
   fillEventEntryList(m_ParentFB);
 }
 
@@ -63,7 +61,8 @@ bool CAnyAdapter::disconnect(CAdapterConnection *paAdConn){
   bool bRetVal = CAdapter::disconnect(paAdConn);
 
   //clean interface data and reset to empty interface
-  setupFBInterface(&scmFBInterfaceSpec);
+  getGenInterfaceSpec() = scmFBInterfaceSpec;
+  setupFBInterface();
 
   return bRetVal;
 }

@@ -41,7 +41,7 @@ const SFBInterfaceSpec FORTE_RT_E_TRAIN::scmFBInterfaceSpec = {
 };
 
 FORTE_RT_E_TRAIN::FORTE_RT_E_TRAIN(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
-    CCompositeFB(paContainer, &scmFBInterfaceSpec, paInstanceNameId, scmFBNData),
+    CCompositeFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, scmFBNData),
     fb_RT_E_CYCLE(g_nStringIdRT_E_CYCLE, *this),
     fb_E_CTU(g_nStringIdE_CTU, *this),
     fb_E_SWITCH(g_nStringIdE_SWITCH, *this),

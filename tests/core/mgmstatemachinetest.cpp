@@ -14,12 +14,11 @@
 #include "../../src/core/funcbloc.h"
 #include "fbcontainermock.h"
 
-
 class CFunctionBlockMock : public CFunctionBlock{
 
   public:
     CFunctionBlockMock() :
-        CFunctionBlock(CFBContainerMock::smDefaultFBContMock, nullptr, 0){
+        CFunctionBlock(CFBContainerMock::smDefaultFBContMock, scmFunctionBlockMockInterface, 0){
     }
 
     bool initialize() override {
@@ -64,8 +63,11 @@ class CFunctionBlockMock : public CFunctionBlock{
     CDataConnection *getDOConUnchecked(TPortId) override {
       return nullptr;
     }
+
+    static const SFBInterfaceSpec scmFunctionBlockMockInterface;
 };
 
+const SFBInterfaceSpec CFunctionBlockMock::scmFunctionBlockMockInterface = {};
 
 BOOST_AUTO_TEST_SUITE(ManagedObjectStateMachine)
 

@@ -48,7 +48,7 @@ const SFBInterfaceSpec FORTE_EBSlave2181::scmFBInterfaceSpec = {
 
 FORTE_EBSlave2181::FORTE_EBSlave2181(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     EmbrickSlave( scmSlaveConfigurationIO, scmSlaveConfigurationIONum, EmbrickSlaveHandler::G_8Di8Do,
-        paContainer, &scmFBInterfaceSpec, paInstanceNameId),
+        paContainer, scmFBInterfaceSpec, paInstanceNameId),
     var_conn_QO(var_QO),
     var_conn_STATUS(var_STATUS),
     conn_MAPO(this, 0),

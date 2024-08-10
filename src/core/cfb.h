@@ -105,7 +105,7 @@ class CCompositeFB: public CFunctionBlock {
      * \param paInstanceNameId StringId of instance name
      * \param paFBNData        const pointer to description of internal structure of FB (FBs, Connections, ...)
      */
-    CCompositeFB(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec *paInterfaceSpec,
+    CCompositeFB(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec& paInterfaceSpec,
                  CStringDictionary::TStringId paInstanceNameId,
                  const SCFB_FBNData & paFBNData);
 
@@ -180,6 +180,6 @@ class CCompositeFB: public CFunctionBlock {
 
 #define COMPOSITE_FUNCTION_BLOCK_CTOR(fbclass) \
  fbclass(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) : \
- CCompositeFB(paContainer, &scmFBInterfaceSpec, paInstanceNameId, scmFBNData)
+ CCompositeFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, scmFBNData)
 
 #endif /*_CFB_H_*/

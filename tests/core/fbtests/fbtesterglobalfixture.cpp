@@ -22,7 +22,8 @@
 std::unique_ptr<CTesterDevice> CFBTestDataGlobalFixture::smTestDev;
 
 CTesterDevice::CTesterDevice(const CStringDictionary::TStringId paInstanceNameId) :
-        CDevice(&scTestDevSpec, paInstanceNameId), mResource(g_nStringIdEMB_RES, *this) {
+    CDevice(scTestDevSpec, paInstanceNameId),
+    mResource(g_nStringIdEMB_RES, *this) {
 }
 
 CFBTestDataGlobalFixture::CFBTestDataGlobalFixture(){

@@ -35,7 +35,7 @@ const SFBInterfaceSpec RMT_RES::scmFBInterfaceSpec = {
 
 
 RMT_RES::RMT_RES(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paDevice):
-       CResource(paDevice, &scmFBInterfaceSpec, paInstanceNameId),
+       CResource(paDevice, scmFBInterfaceSpec, paInstanceNameId),
        var_MGR_ID(""),
        conn_MGR_ID(nullptr),
        fb_START(g_nStringIdSTART, *this),

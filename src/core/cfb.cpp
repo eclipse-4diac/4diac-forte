@@ -24,7 +24,7 @@
 #include "if2indco.h"
 #include "adapterconn.h"
 
-CCompositeFB::CCompositeFB(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec *paInterfaceSpec,
+CCompositeFB::CCompositeFB(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec& paInterfaceSpec,
                            CStringDictionary::TStringId paInstanceNameId, const SCFB_FBNData & paFBNData) :
         CFunctionBlock(paContainer, paInterfaceSpec, paInstanceNameId),
         mIf2InDConns(nullptr),
@@ -50,7 +50,7 @@ bool CCompositeFB::initialize() {
   setParams();
 
   //remove adapter-references for CFB
-  for(TPortId i = 0; i < mInterfaceSpec->mNumAdapters; i++){
+  for(TPortId i = 0; i < getFBInterfaceSpec().mNumAdapters; i++){
     if(CAdapter* adapter = getAdapterUnchecked(i); adapter != nullptr) {
       adapter->setParentFB(nullptr, 0);
     }
@@ -62,7 +62,7 @@ CCompositeFB::~CCompositeFB() {
   //only delete the interface to internal event connections all other connections are managed by their source's FBs
   //this has to be done even if we don't have any event connection to ensure correct behavior
   if (mInterface2InternalEventCons) {
-    for (unsigned int i = 0; i < mInterfaceSpec->mNumEIs; ++i) {
+    for (unsigned int i = 0; i < getFBInterfaceSpec().mNumEIs; ++i) {
       delete mInterface2InternalEventCons[i];
     }
     delete[] mInterface2InternalEventCons;
@@ -90,12 +90,12 @@ bool CCompositeFB::connectDI(TPortId paDIPortId, CDataConnection *paDataCon){
 
   if(cgInternal2InterfaceMarker & paDIPortId){
     paDIPortId = static_cast<TPortId>(paDIPortId & cgInternal2InterfaceRemovalMask);
-    if(paDIPortId < mInterfaceSpec->mNumDOs){
+    if(paDIPortId < getFBInterfaceSpec().mNumDOs){
       mIn2IfDConns[paDIPortId] = paDataCon;
       retVal = true;
     }
   }
-  else if(paDIPortId < mInterfaceSpec->mNumDIs){
+  else if(paDIPortId < getFBInterfaceSpec().mNumDIs){
     bool needsCloning = (getDI(paDIPortId)->getDataTypeID() == CIEC_ANY::e_ANY);
     retVal = CFunctionBlock::connectDI(paDIPortId, paDataCon);
     if((true == retVal) && (true == needsCloning) && (nullptr != paDataCon)
@@ -152,7 +152,7 @@ void CCompositeFB::executeEvent(TEventID paEIID, CEventChainExecutionThread * co
     sendOutputEvent(internalEvent, paECET);
   }
   else{
-    if(paEIID < mInterfaceSpec->mNumEIs && nullptr != mInterface2InternalEventCons[paEIID]){
+    if(paEIID < getFBInterfaceSpec().mNumEIs && nullptr != mInterface2InternalEventCons[paEIID]){
       mInterface2InternalEventCons[paEIID]->triggerEvent(paECET);
     }
   }
@@ -193,10 +193,10 @@ void CCompositeFB::createEventConnections(){
 }
 
 void CCompositeFB::prepareIf2InEventCons(){
-  if(0 != mInterfaceSpec->mNumEIs){
-    mInterface2InternalEventCons = new TEventConnectionPtr[mInterfaceSpec->mNumEIs];
+  if(0 != getFBInterfaceSpec().mNumEIs){
+    mInterface2InternalEventCons = new TEventConnectionPtr[getFBInterfaceSpec().mNumEIs];
     //FIXME find a way to avoid that each connection has to be allocated separately
-    for(TPortId i = 0; i < mInterfaceSpec->mNumEIs; i++){
+    for(TPortId i = 0; i < getFBInterfaceSpec().mNumEIs; i++){
       mInterface2InternalEventCons[i] = new CEventConnection(this, i);
     }
   }
@@ -214,12 +214,12 @@ void CCompositeFB::establishConnection(CConnection *paCon, CFunctionBlock *paDst
 
 void CCompositeFB::createDataConnections(){
   if(cmFBNData.mNumDataConnections){
-    if(mInterfaceSpec->mNumDIs){
+    if(getFBInterfaceSpec().mNumDIs){
       prepareIf2InDataCons();
     }
-    if(mInterfaceSpec->mNumDOs){
-      mIn2IfDConns = new CDataConnection *[mInterfaceSpec->mNumDOs];
-      for(TPortId i = 0; i < mInterfaceSpec->mNumDOs; i++){
+    if(getFBInterfaceSpec().mNumDOs){
+      mIn2IfDConns = new CDataConnection *[getFBInterfaceSpec().mNumDOs];
+      for(TPortId i = 0; i < getFBInterfaceSpec().mNumDOs; i++){
         mIn2IfDConns[i] = nullptr;
       }
     }
@@ -289,8 +289,8 @@ void CCompositeFB::createAdapterConnections(){
 }
 
 void CCompositeFB::prepareIf2InDataCons(){
-  mIf2InDConns = new CInterface2InternalDataConnection[mInterfaceSpec->mNumDIs];
-  for(TPortId i = 0; i < mInterfaceSpec->mNumDIs; i++){
+  mIf2InDConns = new CInterface2InternalDataConnection[getFBInterfaceSpec().mNumDIs];
+  for(TPortId i = 0; i < getFBInterfaceSpec().mNumDIs; i++){
     (mIf2InDConns + i)->setSource(this, i);
   }
 }
@@ -321,7 +321,7 @@ CFunctionBlock *CCompositeFB::getFunctionBlock(int paFBNum){
     TForteUInt32 fbNum = static_cast<TForteUInt32>(paFBNum);
     if(scmAdapterMarker == (scmAdapterMarker & fbNum)){
       fbNum &= scmAdapterFBRange;
-      if(fbNum < mInterfaceSpec->mNumAdapters){
+      if(fbNum < getFBInterfaceSpec().mNumAdapters){
         return getAdapterUnchecked(fbNum);
       }
     } else{

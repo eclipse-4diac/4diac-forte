@@ -36,7 +36,7 @@ class CBasicFB : public CFunctionBlock {
   public:
     /*!\brief The main constructur for a basic function block.
      */
-    CBasicFB(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec *paInterfaceSpec,
+    CBasicFB(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec& paInterfaceSpec,
              CStringDictionary::TStringId paInstanceNameId,
              const SInternalVarsInformation *paVarInternals);
 

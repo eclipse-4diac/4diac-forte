@@ -29,9 +29,10 @@ const SFBInterfaceSpec EMB_RES::scmFBInterfaceSpec = {
 };
 
 EMB_RES::EMB_RES(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paDevice) :
-    CResource(paDevice, &scmFBInterfaceSpec, paInstanceNameId),
+    CResource(paDevice, scmFBInterfaceSpec, paInstanceNameId),
     fb_START(g_nStringIdSTART, *this) {
 }
+
 EMB_RES::~EMB_RES() = default;
 
 CIEC_ANY *EMB_RES::getDI(const size_t) {

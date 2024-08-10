@@ -57,7 +57,7 @@ const SFBInterfaceSpec FORTE_FB_CTUD_DINT::scmFBInterfaceSpec = {
 
 
 FORTE_FB_CTUD_DINT::FORTE_FB_CTUD_DINT(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
-    CSimpleFB(paContainer, &scmFBInterfaceSpec, paInstanceNameId, nullptr),
+    CSimpleFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, nullptr),
     var_CU(CIEC_BOOL(0)),
     var_CD(CIEC_BOOL(0)),
     var_R(CIEC_BOOL(0)),

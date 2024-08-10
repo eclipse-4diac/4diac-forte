@@ -36,7 +36,7 @@
 #include "trace/barectf_platform_forte.h"
 #endif
 
-CFunctionBlock::CFunctionBlock(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec *paInterfaceSpec,
+CFunctionBlock::CFunctionBlock(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec &paInterfaceSpec,
                                CStringDictionary::TStringId paInstanceNameId) :
         CFBContainer(paInstanceNameId, paContainer),
         mInterfaceSpec(paInterfaceSpec),
@@ -69,7 +69,7 @@ CTimerHandler& CFunctionBlock::getTimer() {
 
 CEventConnection *CFunctionBlock::getEOConnection(CStringDictionary::TStringId paEONameId) {
   CEventConnection *retVal = nullptr;
-  TPortId portId = getPortId(paEONameId, mInterfaceSpec->mNumEOs, mInterfaceSpec->mEONames);
+  TPortId portId = getPortId(paEONameId, getFBInterfaceSpec().mNumEOs, getFBInterfaceSpec().mEONames);
   if(cgInvalidPortId != portId){
     retVal = getEOConUnchecked(portId);
   }
@@ -78,7 +78,7 @@ CEventConnection *CFunctionBlock::getEOConnection(CStringDictionary::TStringId p
 
 const CEventConnection *CFunctionBlock::getEOConnection(CStringDictionary::TStringId paEONameId) const {
   const CEventConnection *retVal = nullptr;
-  TPortId portId = getPortId(paEONameId, mInterfaceSpec->mNumEOs, mInterfaceSpec->mEONames);
+  TPortId portId = getPortId(paEONameId, getFBInterfaceSpec().mNumEOs, getFBInterfaceSpec().mEONames);
   if(cgInvalidPortId != portId){
     retVal = const_cast<CFunctionBlock*>(this)->getEOConUnchecked(portId);
   }
@@ -88,7 +88,7 @@ const CEventConnection *CFunctionBlock::getEOConnection(CStringDictionary::TStri
 bool CFunctionBlock::connectDI(TPortId paDIPortId, CDataConnection *paDataCon){
   bool bRetVal = false;
 
-  if(mInterfaceSpec->mNumDIs > paDIPortId) { //catch invalid ID
+  if(getFBInterfaceSpec().mNumDIs > paDIPortId) { //catch invalid ID
     if(nullptr == paDataCon){
       *getDIConUnchecked(paDIPortId) = nullptr;
       bRetVal = true;
@@ -101,7 +101,7 @@ bool CFunctionBlock::connectDI(TPortId paDIPortId, CDataConnection *paDataCon){
           configureGenericDI(paDIPortId, paDataCon->getValue());
           bRetVal = true;
         } else {
-          DEVLOG_ERROR("%s cannot connect input data %s to more sources, using the latest connection attempt\n", getInstanceName(), CStringDictionary::getInstance().get(mInterfaceSpec->mDINames[paDIPortId]));
+          DEVLOG_ERROR("%s cannot connect input data %s to more sources, using the latest connection attempt\n", getInstanceName(), CStringDictionary::getInstance().get(getFBInterfaceSpec().mDINames[paDIPortId]));
         }
       } else {
         *getDIConUnchecked(paDIPortId) = paDataCon;
@@ -121,7 +121,7 @@ void CFunctionBlock::configureGenericDI(TPortId paDIPortId, const CIEC_ANY* paRe
 }
 
 bool CFunctionBlock::connectDIO(TPortId paDIOPortId, CInOutDataConnection *paDataCon){
-  if(mInterfaceSpec->mNumDIOs > paDIOPortId) { //catch invalid ID
+  if(getFBInterfaceSpec().mNumDIOs > paDIOPortId) { //catch invalid ID
     if(nullptr == paDataCon){
       *getDIOInConUnchecked(paDIOPortId) = nullptr;
       return true;
@@ -136,7 +136,7 @@ bool CFunctionBlock::connectDIO(TPortId paDIOPortId, CInOutDataConnection *paDat
           getDIOOutConUnchecked(paDIOPortId)->setValue(paDataCon->getValue());
           return true;
         } else {
-          DEVLOG_ERROR("%s cannot connect InOut data %s to more sources, using the latest connection attempt\n", getInstanceName(), CStringDictionary::getInstance().get(mInterfaceSpec->mDIONames[paDIOPortId]));
+          DEVLOG_ERROR("%s cannot connect InOut data %s to more sources, using the latest connection attempt\n", getInstanceName(), CStringDictionary::getInstance().get(getFBInterfaceSpec().mDIONames[paDIOPortId]));
         }
       } else {
         *getDIOInConUnchecked(paDIOPortId) = paDataCon;
@@ -231,7 +231,7 @@ const CInOutDataConnection *CFunctionBlock::getDIOOutConnection(CStringDictionar
 bool CFunctionBlock::configureGenericDO(TPortId paDOPortId, const CIEC_ANY &paRefValue){
   bool retVal = false;
 
-  if(mInterfaceSpec->mNumDOs > paDOPortId){
+  if(getFBInterfaceSpec().mNumDOs > paDOPortId){
     CIEC_ANY *dataOutput = getDO(paDOPortId);
     if(dataOutput->getDataTypeID() == CIEC_ANY::e_ANY){
       dataOutput->setValue(paRefValue);
@@ -263,7 +263,7 @@ CIEC_ANY *CFunctionBlock::getDataInput(CStringDictionary::TStringId paDINameId) 
 
 CIEC_ANY* CFunctionBlock::getDIFromPortId(TPortId paDIPortId) {
   CIEC_ANY *retVal = nullptr;
-  if(paDIPortId < mInterfaceSpec->mNumDIs){
+  if(paDIPortId < getFBInterfaceSpec().mNumDIs){
     retVal = getDI(paDIPortId);
   }
   return retVal;
@@ -271,14 +271,14 @@ CIEC_ANY* CFunctionBlock::getDIFromPortId(TPortId paDIPortId) {
 
 CIEC_ANY* CFunctionBlock::getDOFromPortId(TPortId paDOPortId) {
   CIEC_ANY *retVal = nullptr;
-  if(paDOPortId < mInterfaceSpec->mNumDOs){
+  if(paDOPortId < getFBInterfaceSpec().mNumDOs){
     retVal = getDO(paDOPortId);
   }
   return retVal;
 }
 
 CIEC_ANY* CFunctionBlock::getDIOFromPortId(TPortId paDIPortId) {
-  if(paDIPortId < mInterfaceSpec->mNumDIOs){
+  if(paDIPortId < getFBInterfaceSpec().mNumDIOs){
     return getDIO(paDIPortId);
   }
   return nullptr;
@@ -323,8 +323,8 @@ const CAdapter *CFunctionBlock::getAdapter(CStringDictionary::TStringId paAdapte
 }
 
 TPortId CFunctionBlock::getAdapterPortId(CStringDictionary::TStringId paAdapterNameId) const {
-  for(TPortId i = 0; i < mInterfaceSpec->mNumAdapters; ++i){
-    if(mInterfaceSpec->mAdapterInstanceDefinition[i].mAdapterNameID == paAdapterNameId){
+  for(TPortId i = 0; i < getFBInterfaceSpec().mNumAdapters; ++i){
+    if(getFBInterfaceSpec().mAdapterInstanceDefinition[i].mAdapterNameID == paAdapterNameId){
       return i;
     }
   }
@@ -332,7 +332,7 @@ TPortId CFunctionBlock::getAdapterPortId(CStringDictionary::TStringId paAdapterN
 }
 
 void CFunctionBlock::sendAdapterEvent(TPortId paAdapterID, TEventID paEID, CEventChainExecutionThread * const paECET) {
-  if(paAdapterID < mInterfaceSpec->mNumAdapters) {
+  if(paAdapterID < getFBInterfaceSpec().mNumAdapters) {
     if(CAdapter *adapter = getAdapterUnchecked(paAdapterID); adapter != nullptr) {
       adapter->receiveInputEvent(paEID, paECET);
     }
@@ -394,24 +394,26 @@ void CFunctionBlock::writeData(size_t paDONum, CIEC_ANY& paValue, CDataConnectio
 #endif //FORTE_TRACE_CTF
 
 void CFunctionBlock::setInitialValues() {
-  if(mInterfaceSpec) {
-    const CStringDictionary::TStringId *pnDataIds;
+  const CStringDictionary::TStringId *pnDataIds;
 
-    pnDataIds = mInterfaceSpec->mDIDataTypeNames;
-    for (TPortId i = 0; i < mInterfaceSpec->mNumDIs; ++i) {
-      TForteByte *varsData = nullptr;
-      CIEC_ANY *value = createDataPoint(pnDataIds, varsData);
-      if (value) { getDI(i)->setValue(*value); }
-      delete value;
+  pnDataIds = getFBInterfaceSpec().mDIDataTypeNames;
+  for(TPortId i = 0; i < getFBInterfaceSpec().mNumDIs; ++i) {
+    TForteByte *varsData = nullptr;
+    CIEC_ANY *value = createDataPoint(pnDataIds, varsData);
+    if(value != nullptr) {
+      getDI(i)->setValue(*value);
     }
+    delete value;
+  }
 
-    pnDataIds = mInterfaceSpec->mDODataTypeNames;
-    for (TPortId i = 0; i < mInterfaceSpec->mNumDOs; ++i) {
-      TForteByte *varsData = nullptr;
-      CIEC_ANY *value = createDataPoint(pnDataIds, varsData);
-      if (value) { getDO(i)->setValue(*value); }
-      delete value;
+  pnDataIds = getFBInterfaceSpec().mDODataTypeNames;
+  for(TPortId i = 0; i < getFBInterfaceSpec().mNumDOs; ++i) {
+    TForteByte *varsData = nullptr;
+    CIEC_ANY *value = createDataPoint(pnDataIds, varsData);
+    if(value != nullptr) {
+      getDO(i)->setValue(*value);
     }
+    delete value;
   }
 }
 
@@ -448,8 +450,8 @@ EMGMResponse CFunctionBlock::changeExecutionState(EMGMCommandType paCommand){
       break;
   }
 
-  if(EMGMResponse::Ready == nRetVal && nullptr != mInterfaceSpec) {
-    for(TPortId i = 0; i < mInterfaceSpec->mNumAdapters; ++i) {
+  if(EMGMResponse::Ready == nRetVal) {
+    for(TPortId i = 0; i < getFBInterfaceSpec().mNumAdapters; ++i) {
       if(CAdapter* adapter = getAdapterUnchecked(i); adapter != nullptr) {
         adapter->changeExecutionState(paCommand);
       }
@@ -519,14 +521,12 @@ TPortId CFunctionBlock::getPortId(CStringDictionary::TStringId paPortNameId, TPo
 void CFunctionBlock::setupEventMonitoringData(){
   freeEventMonitoringData();
 
-  if(mInterfaceSpec) {
-    if (0 != mInterfaceSpec->mNumEIs) {
-      mEIMonitorCount = new TForteUInt32[mInterfaceSpec->mNumEIs]{};
-    }
+  if (0 != getFBInterfaceSpec().mNumEIs) {
+    mEIMonitorCount = new TForteUInt32[getFBInterfaceSpec().mNumEIs]{};
+  }
 
-    if (0 != mInterfaceSpec->mNumEOs) {
-      mEOMonitorCount = new TForteUInt32[mInterfaceSpec->mNumEOs]{};
-    }
+  if (0 != getFBInterfaceSpec().mNumEOs) {
+    mEOMonitorCount = new TForteUInt32[getFBInterfaceSpec().mNumEOs]{};
   }
 }
 
@@ -586,9 +586,9 @@ int CFunctionBlock::toString(char *paValue, size_t paBufferSize) const {
   }
   *paValue = '(';
   ++usedBuffer;
-  for (size_t i = 0; i < getFBInterfaceSpec()->mNumDIs; ++i) {
+  for (size_t i = 0; i < getFBInterfaceSpec().mNumDIs; ++i) {
     const CIEC_ANY *const variable = getDI(i);
-    const CStringDictionary::TStringId nameId = getFBInterfaceSpec()->mDINames[i];
+    const CStringDictionary::TStringId nameId = getFBInterfaceSpec().mDINames[i];
     int result = writeToStringNameValuePair(paValue + usedBuffer, paBufferSize - usedBuffer, nameId, variable);
     if(result >= 0) {
       usedBuffer += static_cast<size_t>(result);
@@ -602,9 +602,9 @@ int CFunctionBlock::toString(char *paValue, size_t paBufferSize) const {
       return -1;
     }
   }
-  for (size_t i = 0; i < getFBInterfaceSpec()->mNumDOs; ++i) {
+  for (size_t i = 0; i < getFBInterfaceSpec().mNumDOs; ++i) {
     const CIEC_ANY *const variable = getDO(i);
-    const CStringDictionary::TStringId nameId = getFBInterfaceSpec()->mDONames[i];
+    const CStringDictionary::TStringId nameId = getFBInterfaceSpec().mDONames[i];
     int result = writeToStringNameValuePair(paValue + usedBuffer, paBufferSize - usedBuffer, nameId, variable);
     if(result >= 0) {
       usedBuffer += static_cast<size_t>(result);
@@ -618,9 +618,9 @@ int CFunctionBlock::toString(char *paValue, size_t paBufferSize) const {
       return -1;
     }
   }
-  for (size_t i = 0; i < getFBInterfaceSpec()->mNumDIOs; ++i) {
+  for (size_t i = 0; i < getFBInterfaceSpec().mNumDIOs; ++i) {
     const CIEC_ANY *const variable = getDIO(i);
-    const CStringDictionary::TStringId nameId = getFBInterfaceSpec()->mDIONames[i];
+    const CStringDictionary::TStringId nameId = getFBInterfaceSpec().mDIONames[i];
     int result = writeToStringNameValuePair(paValue + usedBuffer, paBufferSize - usedBuffer, nameId, variable);
     if(result >= 0) {
       usedBuffer += static_cast<size_t>(result);
@@ -641,21 +641,21 @@ int CFunctionBlock::toString(char *paValue, size_t paBufferSize) const {
 
 size_t CFunctionBlock::getToStringBufferSize() const {
   size_t bufferSize = 3; 
-  for (size_t i = 0; i < getFBInterfaceSpec()->mNumDIs; ++i) {
+  for (size_t i = 0; i < getFBInterfaceSpec().mNumDIs; ++i) {
       const CIEC_ANY *const variable = getDI(i);
-      const CStringDictionary::TStringId nameId = getFBInterfaceSpec()->mDINames[i];
+      const CStringDictionary::TStringId nameId = getFBInterfaceSpec().mDINames[i];
       const char *varName = CStringDictionary::getInstance().get(nameId);
       bufferSize += strlen(varName) + 4 + variable->getToStringBufferSize(); // compensation for := and , for every variable
   }
-  for (size_t i = 0; i < getFBInterfaceSpec()->mNumDOs; ++i) {
+  for (size_t i = 0; i < getFBInterfaceSpec().mNumDOs; ++i) {
       const CIEC_ANY *const variable = getDO(i);
-      const CStringDictionary::TStringId nameId = getFBInterfaceSpec()->mDONames[i];
+      const CStringDictionary::TStringId nameId = getFBInterfaceSpec().mDONames[i];
       const char *varName = CStringDictionary::getInstance().get(nameId);
       bufferSize += strlen(varName) + 4 + variable->getToStringBufferSize(); // compensation for := and , for every variable
   }
-   for (size_t i = 0; i < getFBInterfaceSpec()->mNumDIOs; ++i) {
+   for (size_t i = 0; i < getFBInterfaceSpec().mNumDIOs; ++i) {
       const CIEC_ANY *const variable = getDIO(i);
-      const CStringDictionary::TStringId nameId = getFBInterfaceSpec()->mDIONames[i];
+      const CStringDictionary::TStringId nameId = getFBInterfaceSpec().mDIONames[i];
       const char *varName = CStringDictionary::getInstance().get(nameId); 
       bufferSize += strlen(varName) + 4 + variable->getToStringBufferSize(); // compensation for := and , for every variable
    }

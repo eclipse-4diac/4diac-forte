@@ -41,7 +41,7 @@ const SFBInterfaceSpec FORTE_E_REND::scmFBInterfaceSpec = {
 };
 
 FORTE_E_REND::FORTE_E_REND(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
-    CBasicFB(paContainer, &scmFBInterfaceSpec, paInstanceNameId, nullptr),
+    CBasicFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, nullptr),
     conn_EO(this, 0) {
 }
 

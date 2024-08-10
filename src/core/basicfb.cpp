@@ -17,7 +17,7 @@
 #include "basicfb.h"
 #include "resource.h"
 
-CBasicFB::CBasicFB(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec *paInterfaceSpec,
+CBasicFB::CBasicFB(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec& paInterfaceSpec,
                    const CStringDictionary::TStringId paInstanceNameId,
                    const SInternalVarsInformation *paVarInternals) :
         CFunctionBlock(paContainer, paInterfaceSpec, paInstanceNameId), mECCState(0),
@@ -106,8 +106,8 @@ size_t CBasicFB::getToStringBufferSize() const {
 
 #ifdef FORTE_TRACE_CTF
 void CBasicFB::traceInstanceData() {
-  std::vector<std::string> inputs(mInterfaceSpec->mNumDIs);
-  std::vector<std::string> outputs(mInterfaceSpec->mNumDOs);
+  std::vector<std::string> inputs(getFBInterfaceSpec().mNumDIs);
+  std::vector<std::string> outputs(getFBInterfaceSpec().mNumDOs);
   std::vector<std::string> internals(cmVarInternals ? cmVarInternals->mNumIntVars : 0);
   std::vector<std::string> internalFbs(getChildren().size());
   std::vector<const char *> inputs_c_str(inputs.size());

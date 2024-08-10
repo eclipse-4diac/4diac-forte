@@ -35,7 +35,7 @@ class CInternalVarTestFB : public CBasicFB{
 
   public:
     CInternalVarTestFB(const SInternalVarsInformation *paVarInternals) :
-      CBasicFB(CFBContainerMock::smDefaultFBContMock, &gcEmptyInterface, CStringDictionary::scmInvalidStringId, paVarInternals),
+      CBasicFB(CFBContainerMock::smDefaultFBContMock, gcEmptyInterface, CStringDictionary::scmInvalidStringId, paVarInternals),
       var_QU(false_BOOL), var_QD(false_BOOL), var_CV(0_UINT) {
     }
 

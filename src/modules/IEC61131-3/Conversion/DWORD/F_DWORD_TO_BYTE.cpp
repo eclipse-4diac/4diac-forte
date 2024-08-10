@@ -57,7 +57,7 @@ const SFBInterfaceSpec FORTE_F_DWORD_TO_BYTE::scmFBInterfaceSpec = {
 
 
 FORTE_F_DWORD_TO_BYTE::FORTE_F_DWORD_TO_BYTE(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
-    CSimpleFB(paContainer, &scmFBInterfaceSpec, paInstanceNameId, nullptr),
+    CSimpleFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, nullptr),
     var_IN(CIEC_DWORD(0)),
     var_OUT(CIEC_BYTE(0)),
     var_conn_OUT(var_OUT),

@@ -51,7 +51,7 @@ const SFBInterfaceSpec FORTE_Esp32EthernetKitIO::scmFBInterfaceSpec = {
 
 FORTE_Esp32EthernetKitIO::FORTE_Esp32EthernetKitIO(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
 #pragma region base class spec
-    FORTE_ZephyrIOBase(paContainer, &scmFBInterfaceSpec, paInstanceNameId),
+    FORTE_ZephyrIOBase(paContainer, scmFBInterfaceSpec, paInstanceNameId),
 #pragma endregion base class spec
     var_UpdateInterval(40000000_TIME),
     var_conn_QO(var_QO),

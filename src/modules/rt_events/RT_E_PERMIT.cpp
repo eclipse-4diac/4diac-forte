@@ -40,7 +40,7 @@ const SFBInterfaceSpec FORTE_RT_E_PERMIT::scmFBInterfaceSpec = {
 };
 
 FORTE_RT_E_PERMIT::FORTE_RT_E_PERMIT(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
-        CRTEventSingle(paContainer, &scmFBInterfaceSpec, paInstanceNameId),
+        CRTEventSingle(paContainer, scmFBInterfaceSpec, paInstanceNameId),
     var_conn_QO(var_QO),
     conn_INITO(this, 0),
     conn_EO(this, 1),

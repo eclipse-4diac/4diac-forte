@@ -42,7 +42,7 @@
 
 using namespace std::string_literals;
 
-CResource::CResource(forte::core::CFBContainer &paDevice, const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId) :
+CResource::CResource(forte::core::CFBContainer &paDevice, const SFBInterfaceSpec& paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId) :
     CFunctionBlock(paDevice, paInterfaceSpec, paInstanceNameId),
     mResourceEventExecution(CEventChainExecutionThread::createEcet()), mResIf2InConnections(nullptr)
 #ifdef FORTE_SUPPORT_MONITORING
@@ -53,7 +53,7 @@ CResource::CResource(forte::core::CFBContainer &paDevice, const SFBInterfaceSpec
 #endif
 {}
 
-CResource::CResource(const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId) :
+CResource::CResource(const SFBInterfaceSpec& paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId) :
     CFunctionBlock(*this, paInterfaceSpec, paInstanceNameId),
     mResourceEventExecution(nullptr), mResIf2InConnections(nullptr)
 #ifdef FORTE_SUPPORT_MONITORING
@@ -166,8 +166,8 @@ EMGMResponse CResource::changeExecutionState(EMGMCommandType paCommand) {
   EMGMResponse retVal = CFunctionBlock::changeExecutionState(paCommand);
 
   if(retVal == EMGMResponse::Ready) {
-    if(paCommand == EMGMCommandType::Start && mInterfaceSpec != nullptr) { //on start, sample inputs
-      for(TPortId i = 0; i < mInterfaceSpec->mNumDIs; ++i) {
+    if(paCommand == EMGMCommandType::Start) { //on start, sample inputs
+      for(TPortId i = 0; i < getFBInterfaceSpec().mNumDIs; ++i) {
         CDataConnection *conn = *getDIConUnchecked(i);
         if(conn != nullptr) {
           conn->readData(*getDI(i));
@@ -387,52 +387,45 @@ EMGMResponse CResource::queryConnections(std::string & paReqResult, const CFBCon
   return EMGMResponse::Ready;
 }
 
-void CResource::createEOConnectionResponse(const CFunctionBlock& paFb, std::string& paReqResult){
-  const SFBInterfaceSpec * const spec = paFb.getFBInterfaceSpec();
-  if(spec->mNumEOs > 0){
-    for(size_t i = 0; spec->mEONames[i] != spec->mEONames[spec->mNumEOs]; i++){
-      const CEventConnection* eConn = paFb.getEOConnection(spec->mEONames[i]);
-      for(const auto& it : eConn->getDestinationList()){
-        if(it != eConn->getDestinationList().front()){
-          paReqResult.append("\n");
-        }
-        createConnectionResponseMessage(spec->mEONames[i], it.mFB->getFBInterfaceSpec()->mEINames[it.mPortId], *it.mFB, paFb, paReqResult);
+void CResource::createEOConnectionResponse(const CFunctionBlock &paFb, std::string &paReqResult) {
+  const SFBInterfaceSpec &spec(paFb.getFBInterfaceSpec());
+  for(size_t i = 0; i < spec.mNumEOs; i++) {
+    const CEventConnection *eConn = paFb.getEOConnection(spec.mEONames[i]);
+    for(const auto &it : eConn->getDestinationList()) {
+      if(it != eConn->getDestinationList().front()) {
+        paReqResult.append("\n");
       }
+      createConnectionResponseMessage(spec.mEONames[i], it.mFB->getFBInterfaceSpec().mEINames[it.mPortId], *it.mFB, paFb, paReqResult);
     }
   }
 }
 
 void CResource::createDOConnectionResponse(const CFunctionBlock& paFb, std::string& paReqResult){
-  const SFBInterfaceSpec * const spec = paFb.getFBInterfaceSpec();
-  if(spec->mNumDOs > 0){
-    for(size_t i = 0; spec->mDONames[i] != spec->mDONames[spec->mNumDOs]; i++){
-      const CDataConnection * const dConn = paFb.getDOConnection(spec->mDONames[i]);
-      for(const auto& it : dConn->getDestinationList()){
-        if(it != dConn->getDestinationList().front()){
-          paReqResult.append("\n");
-        }
-        createConnectionResponseMessage(spec->mDONames[i], it.mFB->getFBInterfaceSpec()->mDINames[it.mPortId], *it.mFB, paFb, paReqResult);
+  const SFBInterfaceSpec &spec(paFb.getFBInterfaceSpec());
+  for(size_t i = 0; i < spec.mNumDOs; i++) {
+    const CDataConnection *const dConn = paFb.getDOConnection(spec.mDONames[i]);
+    for(const auto &it : dConn->getDestinationList()) {
+      if(it != dConn->getDestinationList().front()) {
+        paReqResult.append("\n");
       }
+      createConnectionResponseMessage(spec.mDONames[i], it.mFB->getFBInterfaceSpec().mDINames[it.mPortId], *it.mFB, paFb, paReqResult);
     }
   }
 }
 
 void CResource::createAOConnectionResponse(const CFunctionBlock& paFb, std::string& paReqResult){
-  const SFBInterfaceSpec * const spec = paFb.getFBInterfaceSpec();
-  if(spec->mNumAdapters > 0){
-    for(size_t i = 0; i < spec->mNumAdapters; i++){
-      const CAdapter * const adapter = paFb.getAdapter(spec->mAdapterInstanceDefinition[i].mAdapterNameID);
-      const CAdapterConnection* aConn = adapter->getAdapterConnection();
-      if(spec->mAdapterInstanceDefinition[i].mIsPlug && nullptr != aConn){
-        if(i != 0){
-          paReqResult.append("\n");
-        }
-        if(!aConn->isEmpty()){
-          const auto & dest = aConn->getDestinationList().front();
-          createConnectionResponseMessage(spec->mAdapterInstanceDefinition[i].mAdapterNameID,
-              dest.mFB->getFBInterfaceSpec()->mAdapterInstanceDefinition[dest.mPortId].mAdapterNameID, *dest.mFB, paFb,
-              paReqResult);
-        }
+  const SFBInterfaceSpec& spec(paFb.getFBInterfaceSpec());
+  for(size_t i = 0; i < spec.mNumAdapters; i++) {
+    const CAdapter *const adapter = paFb.getAdapter(spec.mAdapterInstanceDefinition[i].mAdapterNameID);
+    const CAdapterConnection *aConn = adapter->getAdapterConnection();
+    if(spec.mAdapterInstanceDefinition[i].mIsPlug && nullptr != aConn) {
+      if(i != 0) {
+        paReqResult.append("\n");
+      }
+      if(!aConn->isEmpty()) {
+        const auto &dest = aConn->getDestinationList().front();
+        createConnectionResponseMessage(spec.mAdapterInstanceDefinition[i].mAdapterNameID,
+          dest.mFB->getFBInterfaceSpec().mAdapterInstanceDefinition[dest.mPortId].mAdapterNameID, *dest.mFB, paFb, paReqResult);
       }
     }
   }
@@ -706,20 +699,16 @@ CConnection *CResource::getConnection(forte::core::TNameIdentifier &paSrcNameLis
 
 CConnection *CResource::getResIf2InConnection(CStringDictionary::TStringId paResInput) const{
   CConnection *con = nullptr;
-  if(nullptr != mInterfaceSpec){
-    TPortId inPortId = getDIID(paResInput);
-    if(cgInvalidPortId != inPortId){
-      con = mResIf2InConnections + inPortId;
-    }
+  TPortId inPortId = getDIID(paResInput);
+  if(cgInvalidPortId != inPortId) {
+    con = mResIf2InConnections + inPortId;
   }
   return con;
 }
 
 void CResource::initializeResIf2InConnections(){
-  if(nullptr != mInterfaceSpec){
-    mResIf2InConnections = new CInterface2InternalDataConnection[mInterfaceSpec->mNumDIs];
-    for(TPortId i = 0; i < mInterfaceSpec->mNumDIs; i++){
+    mResIf2InConnections = new CInterface2InternalDataConnection[getFBInterfaceSpec().mNumDIs];
+    for(TPortId i = 0; i < getFBInterfaceSpec().mNumDIs; i++){
       (mResIf2InConnections + i)->setSource(this, i);
     }
-  }
 }

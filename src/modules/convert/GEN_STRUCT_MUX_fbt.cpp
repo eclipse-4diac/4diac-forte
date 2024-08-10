@@ -60,15 +60,13 @@ void GEN_STRUCT_MUX::copyStructValuesToInputs() {
 }
 
 GEN_STRUCT_MUX::~GEN_STRUCT_MUX(){
-  if(nullptr!= mInterfaceSpec){
-    delete[](mInterfaceSpec->mDINames);
-    delete[](mInterfaceSpec->mDIDataTypeNames);
-    delete[](mInterfaceSpec->mDODataTypeNames);
-  }
+  delete[](getGenInterfaceSpec().mDINames);
+  delete[](getGenInterfaceSpec().mDIDataTypeNames);
+  delete[](getGenInterfaceSpec().mDODataTypeNames);
 }
 
 void GEN_STRUCT_MUX::readInputData(TEventID) {
-  for(TPortId i = 0; i < mInterfaceSpec->mNumDIs; ++i) {
+  for(TPortId i = 0; i < getFBInterfaceSpec().mNumDIs; ++i) {
     readData(i, *mDIs[i], mDIConns[i]);
   }
 }

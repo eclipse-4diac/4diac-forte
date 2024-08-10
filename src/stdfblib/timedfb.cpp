@@ -37,7 +37,7 @@ const SFBInterfaceSpec CTimedFB::scmFBInterfaceSpec = {
 };
 
 CTimedFB::CTimedFB(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
-      CEventSourceFB(paContainer, &scmFBInterfaceSpec, paInstanceNameId),
+      CEventSourceFB(paContainer, scmFBInterfaceSpec, paInstanceNameId),
       var_DT(0_TIME),
       conn_DT(nullptr),
       conn_EO(this, 0) {

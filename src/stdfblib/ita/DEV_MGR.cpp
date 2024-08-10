@@ -583,13 +583,13 @@ void DEV_MGR::appendIdentifierName(CIEC_STRING& paDest, forte::core::TNameIdenti
 DEV_MGR::DEV_MGR(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CCommFB(paInstanceNameId, paContainer, forte::com_infra::e_Server),
     mDevice(*paContainer.getDevice()) {
+  getGenInterfaceSpec() = scmFBInterfaceSpec;
 }
 
 bool DEV_MGR::initialize() {
   if(!CCommFB::initialize()) {
     return false;
   }
-  setupFBInterface(&scmFBInterfaceSpec);
   mCommand.mAdditionalParams.reserve(255);
   mCommand.mAdditionalParams.clear();
   return true;
@@ -597,7 +597,7 @@ bool DEV_MGR::initialize() {
 
 DEV_MGR::~DEV_MGR(){
   freeFBInterfaceData();
-  mInterfaceSpec = nullptr;  //block any wrong cleanup in the generic fb base class of CBaseCommFB
+  getGenInterfaceSpec() = {};  //block any wrong cleanup in the generic fb base class of CBaseCommFB
 }
 
 EMGMResponse DEV_MGR::parseAndExecuteMGMCommand(const char *const paDest, char *paCommand){

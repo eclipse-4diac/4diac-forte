@@ -51,7 +51,7 @@ const SFBInterfaceSpec FORTE_signalprocessing__DualHysteresis::scmFBInterfaceSpe
 };
 
 FORTE_signalprocessing__DualHysteresis::FORTE_signalprocessing__DualHysteresis(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
-    CBasicFB(paContainer, &scmFBInterfaceSpec, paInstanceNameId, nullptr),
+    CBasicFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, nullptr),
     var_MI(0.5_REAL),
     var_DEAD(0.1_REAL),
     var_HYSTERESIS(0.1_REAL),

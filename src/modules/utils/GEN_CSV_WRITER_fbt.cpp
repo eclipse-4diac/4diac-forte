@@ -77,7 +77,7 @@ void GEN_CSV_WRITER::readInputData(TEventID paEI) {
     }
     case scmEventREQID: {
       readData(0, *mDIs[0], mDIConns[0]);
-      for(TPortId i = 2; i < mInterfaceSpec->mNumDIs; i++){
+      for(TPortId i = 2; i < getFBInterfaceSpec().mNumDIs; i++){
         readData(i, *mDIs[i], mDIConns[i]);
       }
       break;
@@ -159,11 +159,11 @@ void GEN_CSV_WRITER::closeCSVFile() {
 
 bool GEN_CSV_WRITER::areDIsSameArrayLength(size_t& commonArraySize) {
   constexpr TPortId firstDataDI = 2;
-  if(mInterfaceSpec->mNumDIs <= firstDataDI) {
+  if(getFBInterfaceSpec().mNumDIs <= firstDataDI) {
     return false;
   }
 
-  for(TPortId i = firstDataDI; i < mInterfaceSpec->mNumDIs; i++) {
+  for(TPortId i = firstDataDI; i < getFBInterfaceSpec().mNumDIs; i++) {
     auto& value = getDI(i)->unwrap();
     if(value.getDataTypeID() != CIEC_ANY::e_ARRAY) {
       return false;
@@ -190,7 +190,7 @@ void GEN_CSV_WRITER::writeCSVFileLine() {
 
     char acBuffer[scmWriteBufferSize];
     for(size_t line = 0; line < numLines; line++) {
-      for(TPortId i = 2; i < mInterfaceSpec->mNumDIs; i++) {
+      for(TPortId i = 2; i < getFBInterfaceSpec().mNumDIs; i++) {
         auto& value = getDI(i)->unwrap();
         int nLen;
         if(multiline) {
