@@ -35,7 +35,7 @@ enum UMIC_IO_TYPE{
 class CUMICProcessInterface : public CProcessInterfaceBase{
 
   public:
-    CUMICProcessInterface(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId);
+    CUMICProcessInterface(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec& paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId);
     ~CUMICProcessInterface() override;
 
   protected:

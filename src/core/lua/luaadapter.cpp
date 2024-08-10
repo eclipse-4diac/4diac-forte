@@ -30,8 +30,8 @@ bool CLuaAdapter::initialize() {
 
 
 void CLuaAdapter::readInputData(TEventID paEIID) {
-  if(nullptr != mInterfaceSpec->mEIWithIndexes && scmNoDataAssociated != mInterfaceSpec->mEIWithIndexes[paEIID]) {
-    const TDataIOID *eiWithStart = &(mInterfaceSpec->mEIWith[mInterfaceSpec->mEIWithIndexes[paEIID]]);
+  if(nullptr != getFBInterfaceSpec().mEIWithIndexes && scmNoDataAssociated != getFBInterfaceSpec().mEIWithIndexes[paEIID]) {
+    const TDataIOID *eiWithStart = &(getFBInterfaceSpec().mEIWith[getFBInterfaceSpec().mEIWithIndexes[paEIID]]);
     for(size_t i = 0; eiWithStart[i] != scmWithListDelimiter; ++i) {
       TDataIOID diNum = eiWithStart[i];
       readData(diNum, *getDI(diNum), *getDIConUnchecked(diNum));
@@ -40,8 +40,8 @@ void CLuaAdapter::readInputData(TEventID paEIID) {
 }
 
 void CLuaAdapter::writeOutputData(TEventID paEO) {
-  if (nullptr != mInterfaceSpec->mEOWithIndexes && -1 != mInterfaceSpec->mEOWithIndexes[paEO]) {
-    const TDataIOID *eiWithStart = &(mInterfaceSpec->mEOWith[mInterfaceSpec->mEOWithIndexes[paEO]]);
+  if (nullptr != getFBInterfaceSpec().mEOWithIndexes && -1 != getFBInterfaceSpec().mEOWithIndexes[paEO]) {
+    const TDataIOID *eiWithStart = &(getFBInterfaceSpec().mEOWith[getFBInterfaceSpec().mEOWithIndexes[paEO]]);
     for (size_t i = 0; eiWithStart[i] != scmWithListDelimiter; ++i) {
       TDataIOID doNum = eiWithStart[i];
       writeData(doNum, *getDO(doNum), *getDOConUnchecked(doNum));

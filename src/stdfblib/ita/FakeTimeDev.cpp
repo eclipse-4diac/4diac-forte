@@ -33,7 +33,7 @@ const SFBInterfaceSpec FakeTimeDev::scmFBInterfaceSpec = {
 };
 
 FakeTimeDev::FakeTimeDev(const std::string &paMGR_ID) :
-  CDevice(&scmFBInterfaceSpec, CStringDictionary::scmInvalidStringId),
+  CDevice(scmFBInterfaceSpec, CStringDictionary::scmInvalidStringId),
       var_MGR_ID(paMGR_ID.c_str()),
       var_FakeTime(),
       conn_MGR_ID(nullptr),

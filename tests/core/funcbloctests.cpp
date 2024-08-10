@@ -43,7 +43,7 @@ BOOST_AUTO_TEST_CASE(FB_TO_STRING_BUFFER_SIZE_TEST_WITH_INRENAL_VAR){
             0, nullptr};
 
     public:
-        CInternalVarTestFB(const SInternalVarsInformation *paVarInternals) : CBasicFB(CFBContainerMock::smDefaultFBContMock, &gcEmptyInterface, CStringDictionary::scmInvalidStringId, paVarInternals) {
+        CInternalVarTestFB(const SInternalVarsInformation *paVarInternals) : CBasicFB(CFBContainerMock::smDefaultFBContMock, gcEmptyInterface, CStringDictionary::scmInvalidStringId, paVarInternals) {
         }
 
         CIEC_ANY *getVarInternal(size_t paVarIntNum) override {

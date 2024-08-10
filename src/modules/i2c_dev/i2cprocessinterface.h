@@ -21,7 +21,7 @@
 class CI2CProcessInterface : public CProcessInterfaceBase{
 
   public:
-    CI2CProcessInterface(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec *paInterfaceSpec,
+    CI2CProcessInterface(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec& paInterfaceSpec,
         const CStringDictionary::TStringId paInstanceNameId);
     ~CI2CProcessInterface() override;
 

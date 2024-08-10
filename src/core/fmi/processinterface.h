@@ -20,7 +20,7 @@
 
 class CFMUProcessInterface : public CProcessInterfaceBase{
   public:
-    CFMUProcessInterface(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId);
+    CFMUProcessInterface(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec& paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId);
     CFMUProcessInterface(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     void setValueContainer(fmuValueContainer* paValueContainer);

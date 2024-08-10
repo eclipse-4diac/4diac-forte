@@ -60,7 +60,7 @@ private:
 
 public:
   FORTE_SVIsend_1(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
-       BE_SVIFB(paContainer, &scmFBInterfaceSpec, paInstanceNameId){
+       BE_SVIFB(paContainer, scmFBInterfaceSpec, paInstanceNameId){
   };
 
   ~FORTE_SVIsend_1() override = default;

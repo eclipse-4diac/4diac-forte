@@ -96,7 +96,7 @@ void GEN_F_MUX::readInputData(TEventID paEI) {
 }
 
 void GEN_F_MUX::writeOutputData(TEventID) {
-  for(TPortId i = 0; i < mInterfaceSpec->mNumDOs; ++i) {
+  for(TPortId i = 0; i < getFBInterfaceSpec().mNumDOs; ++i) {
     writeData(i, *mDOs[i], mDOConns[i]);
   }
 }

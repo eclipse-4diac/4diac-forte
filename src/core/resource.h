@@ -51,7 +51,7 @@ class CResource : public CFunctionBlock{
      *  \param paObjectHandler    reference to object handler
      *  \param paFBData           Byte-array for resource-specific data
      */
-    CResource(forte::core::CFBContainer &paDevice, const SFBInterfaceSpec *paInterfaceSpec, CStringDictionary::TStringId paInstanceNameId);
+    CResource(forte::core::CFBContainer &paDevice, const SFBInterfaceSpec& paInterfaceSpec, CStringDictionary::TStringId paInstanceNameId);
 
     ~CResource() override;
 
@@ -125,7 +125,7 @@ class CResource : public CFunctionBlock{
     }
 
   protected:
-    CResource(const SFBInterfaceSpec *paInterfaceSpec, CStringDictionary::TStringId paInstanceNameId);
+    CResource(const SFBInterfaceSpec& paInterfaceSpec, CStringDictionary::TStringId paInstanceNameId);
 
     void executeEvent(TEventID, CEventChainExecutionThread * const) override {
       // nothing to do here for a resource

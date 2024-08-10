@@ -27,7 +27,7 @@
 
 class CMLPIFaceProcessInterface : public CProcessInterfaceBase{
   public:
-    CMLPIFaceProcessInterface(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec *paInterfaceSpec,
+    CMLPIFaceProcessInterface(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec& paInterfaceSpec,
         const CStringDictionary::TStringId paInstanceNameId);
 
     ~CMLPIFaceProcessInterface() override;

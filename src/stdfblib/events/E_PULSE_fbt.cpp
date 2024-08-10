@@ -46,7 +46,7 @@ const SFBInterfaceSpec FORTE_E_PULSE::scmFBInterfaceSpec = {
 };
 
 FORTE_E_PULSE::FORTE_E_PULSE(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
-    CCompositeFB(paContainer, &scmFBInterfaceSpec, paInstanceNameId, scmFBNData),
+    CCompositeFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, scmFBNData),
     fb_E_DELAY(g_nStringIdE_DELAY, *this),
     fb_E_SR(g_nStringIdE_SR, *this),
     var_conn_Q(var_Q),

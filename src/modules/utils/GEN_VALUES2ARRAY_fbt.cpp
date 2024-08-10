@@ -60,7 +60,7 @@ void GEN_VALUES2ARRAY::executeEvent(TEventID paEIID, CEventChainExecutionThread 
 }
 
 void GEN_VALUES2ARRAY::readInputData(TEventID) {
-  for(TPortId i = 0; i < mInterfaceSpec->mNumDIs; ++i) {
+  for(TPortId i = 0; i < getFBInterfaceSpec().mNumDIs; ++i) {
     readData(i, *mDIs[i], mDIConns[i]);
   }
 }

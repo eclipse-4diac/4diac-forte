@@ -14,12 +14,14 @@
 
 #include "EMB_RES.h"
 
-class Config_EMB_RES : public EMB_RES {
+class Config_EMB_RES : public CResource {
   DECLARE_FIRMWARE_FB(Config_EMB_RES);
 
   public:
     Config_EMB_RES(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paDevice);
     ~Config_EMB_RES() override;
+
+    bool initialize() override;
 
   private:
     static const SFBInterfaceSpec scmFBInterfaceSpec;

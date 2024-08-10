@@ -52,7 +52,7 @@ const CStringDictionary::TStringId FORTE_E_STOPWATCH::scmInternalsTypeIds[] = {g
 const SInternalVarsInformation FORTE_E_STOPWATCH::scmInternalVars = {1, scmInternalsNames, scmInternalsTypeIds};
 
 FORTE_E_STOPWATCH::FORTE_E_STOPWATCH(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
-    CBasicFB(paContainer, &scmFBInterfaceSpec, paInstanceNameId, &scmInternalVars),
+    CBasicFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, &scmInternalVars),
     var_conn_TD(var_TD),
     conn_EO(this, 0),
     conn_TD(this, 0, &var_conn_TD) {

@@ -39,7 +39,7 @@ const SFBInterfaceSpec FORTE_CFB_TEST::scmFBInterfaceSpec = {
 };
 
 FORTE_CFB_TEST::FORTE_CFB_TEST(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
-    CCompositeFB(paContainer, &scmFBInterfaceSpec, paInstanceNameId, scmFBNData),
+    CCompositeFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, scmFBNData),
     fb_PERMIT_OP(g_nStringIdPERMIT_OP, *this),
     fb_E_SR(g_nStringIdE_SR, *this),
     fb_SET_CHANGED(g_nStringIdSET_CHANGED, *this),

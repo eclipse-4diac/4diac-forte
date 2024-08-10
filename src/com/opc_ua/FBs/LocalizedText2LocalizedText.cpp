@@ -45,7 +45,7 @@ const SFBInterfaceSpec FORTE_LocalizedText2LocalizedText::scmFBInterfaceSpec = {
 };
 
 FORTE_LocalizedText2LocalizedText::FORTE_LocalizedText2LocalizedText(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
-    CFunctionBlock(paContainer, &scmFBInterfaceSpec, paInstanceNameId),
+    CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId),
     var_IN(CIEC_LocalizedText()),
     var_OUT(CIEC_LocalizedText()),
     var_conn_OUT(var_OUT),

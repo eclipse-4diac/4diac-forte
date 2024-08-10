@@ -39,7 +39,7 @@ void FORTE_GEN_RT_Bridge::executeEvent(const TEventID paEIID, CEventChainExecuti
       sendOutputEvent(scmEventRDOID, paECET);
       break;
     case scmEventWRID:
-      for(size_t i = 0; i < getFBInterfaceSpec()->mNumDIs; i++) {
+      for(size_t i = 0; i < getFBInterfaceSpec().mNumDIs; i++) {
         getDO(i)->setValue(getDI(i)->unwrap());
       }
       break;
@@ -48,7 +48,7 @@ void FORTE_GEN_RT_Bridge::executeEvent(const TEventID paEIID, CEventChainExecuti
 
 void FORTE_GEN_RT_Bridge::readInputData(const TEventID paEIID) {
   if(paEIID == scmEventWRID) {
-    for(size_t i = 0; i < getFBInterfaceSpec()->mNumDIs; i++){
+    for(size_t i = 0; i < getFBInterfaceSpec().mNumDIs; i++){
       readData(i, *getDI(i), *getDIConUnchecked(i));
     }
   }
@@ -56,7 +56,7 @@ void FORTE_GEN_RT_Bridge::readInputData(const TEventID paEIID) {
 
 void FORTE_GEN_RT_Bridge::writeOutputData(const TEventID paEIID) {
   if(paEIID == scmEventRDOID){
-    for(size_t i = 0; i < getFBInterfaceSpec()->mNumDOs; i++){
+    for(size_t i = 0; i < getFBInterfaceSpec().mNumDOs; i++){
       writeData(i, *getDO(i), *getDOConUnchecked(i));
     }
   }

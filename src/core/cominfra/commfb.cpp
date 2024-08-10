@@ -106,7 +106,7 @@ void CCommFB::readInputData(TEventID paEI) {
       break;
     }
     case scmSendNotificationEventID: {
-      for(TPortId i = 0; i < mInterfaceSpec->mNumDIs; ++i) {
+      for(TPortId i = 0; i < getFBInterfaceSpec().mNumDIs; ++i) {
         readData(i, *mDIs[i], mDIConns[i]);
       }
       break;
@@ -125,7 +125,7 @@ void CCommFB::writeOutputData(TEventID paEO) {
     }
     case scmReceiveNotificationEventID: {
       CCriticalRegion lock(getFBLock());
-      for(TPortId i = 0; i < mInterfaceSpec->mNumDOs; ++i) {
+      for(TPortId i = 0; i < getFBInterfaceSpec().mNumDOs; ++i) {
         writeData(i, *mDOs[i], mDOConns[i]);
       }
       break;
@@ -140,7 +140,7 @@ EComResponse CCommFB::sendData() {
   if (true == QI()) {
     if (mCommServiceType != e_Subscriber) {
       if (nullptr != mTopOfComStack) {
-        resp = mTopOfComStack->sendData(static_cast<void*>(getSDs()), static_cast<unsigned int>(mInterfaceSpec->mNumDIs - 2));
+        resp = mTopOfComStack->sendData(static_cast<void*>(getSDs()), static_cast<unsigned int>(getFBInterfaceSpec().mNumDIs - 2));
         if ((resp == e_ProcessDataOk) && (mCommServiceType != e_Publisher)) {
           // client and server will not directly send a cnf/ind event
           resp = e_Nothing;

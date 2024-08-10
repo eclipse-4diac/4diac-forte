@@ -47,7 +47,7 @@ class GEN_CSV_WRITER : public CGenFunctionBlock<CFunctionBlock> {
     ;
 
     TPortId getNumSD() const {
-      return mInterfaceSpec->mNumDIs - 2;
+      return getFBInterfaceSpec().mNumDIs - 2;
     }
 
     CIEC_ANY **getSDs() {

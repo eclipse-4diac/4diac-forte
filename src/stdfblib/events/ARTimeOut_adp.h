@@ -66,7 +66,7 @@ public:
 
 public:
   FORTE_ARTimeOut(CStringDictionary::TStringId paAdapterInstanceName, forte::core::CFBContainer &paContainer, bool paIsPlug) :
-      CAdapter(paContainer, &scmFBInterfaceSpecSocket, paAdapterInstanceName, &scmFBInterfaceSpecPlug, paIsPlug) {
+      CAdapter(paContainer, scmFBInterfaceSpecSocket, paAdapterInstanceName, scmFBInterfaceSpecPlug, paIsPlug) {
    };
 
   virtual ~FORTE_ARTimeOut() = default;

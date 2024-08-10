@@ -56,7 +56,7 @@ const SFBInterfaceSpec FORTE_USINT2USINT::scmFBInterfaceSpec = {
 
 
 FORTE_USINT2USINT::FORTE_USINT2USINT(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
-    CSimpleFB(paContainer, &scmFBInterfaceSpec, paInstanceNameId, nullptr),
+    CSimpleFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, nullptr),
     var_IN(CIEC_USINT(0)),
     var_OUT(CIEC_USINT(0)),
     var_conn_OUT(var_OUT),
