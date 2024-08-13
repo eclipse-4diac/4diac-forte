@@ -34,6 +34,10 @@ void endForte(int ){
   g4diacForteInstance.triggerDeviceShutdown();
 }
 
+void callOnExit(){
+  CForteArchitecture::deinitialize();
+}
+
 int main(int argc, char *arg[]){
 
   checkEndianess();
@@ -42,23 +46,18 @@ int main(int argc, char *arg[]){
      return result;
   }
 
-  struct callOnExit {
-    int (*onExit)();
-    ~callOnExit() { onExit(); }
-  };
-
-  callOnExit{CForteArchitecture::deinitialize};
+  std::atexit(callOnExit);
 
   hookSignals();
 
-  const char *pIpPort = parseCommandLineArguments(argc, arg);
-  if((0 == strlen(pIpPort)) || (nullptr == strchr(pIpPort, ':'))) {
+  const char *ipPort = parseCommandLineArguments(argc, arg);
+  if((0 == strlen(ipPort)) || (nullptr == strchr(ipPort, ':'))) {
     //! Lists the help for FORTE
     listHelp();
     return -1;
   }
 
-  if(!g4diacForteInstance.startupNewDevice(pIpPort)) {
+  if(!g4diacForteInstance.startupNewDevice(ipPort)) {
     DEVLOG_INFO("Could not start a new device\n");
     return -1;
   }

@@ -18,8 +18,10 @@
 #include "forte_printer.h"
 #include "forteinstance.h"
 
-static const unsigned int scForteDefaultPort = 61499;
-static const unsigned int scMaxPortValue = 65535;
+namespace {
+  const unsigned int defaultPort = 61499;
+  const unsigned int maxPortValue = 65535;
+}
 
 /**
 * @brief Check if the correct endianess has been configured.
@@ -36,13 +38,13 @@ int forteGlobalDeinitialize(){
 
 FORTE_STATUS forteStartInstance(unsigned int paPort, TForteInstance* paResultInstance){
 
-  if(scMaxPortValue < paPort){
+  if(maxPortValue < paPort){
     DEVLOG_ERROR("Provided port %d is not valid\n", paPort);
     return FORTE_WRONG_PARAMETERS;
   }
 
   if(0 == paPort){
-    paPort = scForteDefaultPort;
+    paPort = defaultPort;
   }
 
   char progName[] = "forte";

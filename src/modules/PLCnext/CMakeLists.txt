@@ -46,7 +46,6 @@ forte_add_link_flags("-Wno-undef")
 
 forte_add_startup_hook(DeviceStatus::startup)
 
-
 else("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
   MESSAGE(FATAL_ERROR "PLCnext IO system is only supported for FORTE on Linux (Posix) platforms!")
 endif("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
