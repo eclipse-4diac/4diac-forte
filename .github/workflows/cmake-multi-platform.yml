@@ -65,6 +65,14 @@ jobs:
       if: ${{ matrix.os == 'windows-latest' }}
       run: nuget install boost -Version 1.84.0
 
+    - name: Install OPC-UA
+      run: |
+        git clone https://github.com/open62541/open62541 -b v1.3.4
+        cd open62541
+        git submodule update --recursive --init
+        cmake -B static -DCMAKE_CXX_COMPILER=${{ matrix.cpp_compiler }} -DCMAKE_C_COMPILER=${{ matrix.c_compiler }} -DCMAKE_BUILD_TYPE=Release -DUA_ENABLE_AMALGAMATION=ON -DUA_ENABLE_DISCOVERY=ON -DUA_ENABLE_DISCOVERY_MULTICAST=ON -DUA_ENABLE_SUBSCRIPTIONS_EVENTS=ON -DUA_FORCE_WERROR=OFF -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=OFF
+        cmake --build static
+
     - name: Configure CMake
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
       # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
@@ -80,6 +88,10 @@ jobs:
         -DFORTE_COM_FBDK=ON
         -DFORTE_COM_HTTP=ON
         -DFORTE_COM_LOCAL=ON
+        -DFORTE_COM_OPC_UA=ON
+        -DFORTE_COM_OPC_UA_INCLUDE_DIR=${{ github.workspace }}/open62541/static
+        -DFORTE_COM_OPC_UA_LIB_DIR=${{ github.workspace }}/open62541/static/bin/${{ matrix.os == 'windows-latest' && matrix.build_type || '' }}
+        -DFORTE_COM_OPC_UA_MULTICAST=ON
         -DFORTE_COM_RAW=ON
         -DFORTE_COM_SER=ON
         -DFORTE_COM_STRUCT_MEMBER=ON
@@ -91,7 +103,7 @@ jobs:
         -DFORTE_MODULE_SIGNALPROCESSING=ON
         -DFORTE_MODULE_UTILS=ON
         -DFORTE_TESTS=ON
-        ${{ matrix.os == 'windows-latest' && format('-DFORTE_TESTS_INC_DIRS={0}/boost.1.84.0/lib/native/include', github.workspace) || '' }}
+        -DFORTE_TESTS_INC_DIRS=${{ matrix.os == 'windows-latest' && format('{0}/boost.1.84.0/lib/native/include', github.workspace) || '' }}
 
     - name: Build
       # Build your program with the given configuration. Note that --config is needed because the default Windows generator is a multi-config generator (Visual Studio generator).
