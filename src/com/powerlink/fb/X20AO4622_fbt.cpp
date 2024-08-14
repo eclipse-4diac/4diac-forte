@@ -1,13 +1,15 @@
-/*************************************************************************
- *** FORTE Library Element
- ***
- *** This file was generated using the 4DIAC FORTE Export Filter V1.0.x NG!
- ***
- *** Name: X20AO4622
- *** Description: Service Interface Function Block Type
- *** Version:
- ***     0.0: 2011-08-01/4DIAC-IDE - 4DIAC-Consortium -
- *************************************************************************/
+/*******************************************************************************
+* Copyright (c) 2012 - 2024 AIT
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ *
+ * Contributors:
+ *   Filip Andren - initial API and implementation and/or initial documentation
+ *   Michael Gafert - moved common functions to super class, changed to new FB style
+ *******************************************************************************/
 
 #include "X20AO4622_fbt.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
