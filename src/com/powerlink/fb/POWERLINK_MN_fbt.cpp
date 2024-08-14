@@ -54,12 +54,12 @@ FORTE_POWERLINK_MN::FORTE_POWERLINK_MN(const CStringDictionary::TStringId paInst
 };
 
 void FORTE_POWERLINK_MN::setInitialValues() {
-	var_QI = 0_BOOL;
-	var_CDC_CFG = ""_STRING;
-	var_APP_CFG = ""_STRING;
-	var_DEV_NAME = ""_STRING;
-	var_QO = 0_BOOL;
-	var_STATUS = ""_STRING;
+  var_QI = 0_BOOL;
+  var_CDC_CFG = ""_STRING;
+  var_APP_CFG = ""_STRING;
+  var_DEV_NAME = ""_STRING;
+  var_QO = 0_BOOL;
+  var_STATUS = ""_STRING;
 }
 
 void FORTE_POWERLINK_MN::executeEvent(const TEventID paEIID, CEventChainExecutionThread *const paECET) {

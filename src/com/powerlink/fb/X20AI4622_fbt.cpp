@@ -64,16 +64,16 @@ FORTE_X20AI4622::FORTE_X20AI4622(const CStringDictionary::TStringId paInstanceNa
 };
 
 void FORTE_X20AI4622::setInitialValues() {
-	var_QI = 0_BOOL;
-	var_CNID = 0_USINT;
-	var_MODID = 0_UINT;
-	var_QO = 0_BOOL;
-	var_CNIDO = 0_USINT;
-	var_STATUS = ""_STRING;
-	var_AI01 = 0_INT;
-	var_AI02 = 0_INT;
-	var_AI03 = 0_INT;
-	var_AI04 = 0_INT;
+  var_QI = 0_BOOL;
+  var_CNID = 0_USINT;
+  var_MODID = 0_UINT;
+  var_QO = 0_BOOL;
+  var_CNIDO = 0_USINT;
+  var_STATUS = ""_STRING;
+  var_AI01 = 0_INT;
+  var_AI02 = 0_INT;
+  var_AI03 = 0_INT;
+  var_AI04 = 0_INT;
 }
 
 void FORTE_X20AI4622::executeEvent(const TEventID paEIID, CEventChainExecutionThread *const paECET) {
