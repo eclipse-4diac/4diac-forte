@@ -15,12 +15,6 @@
 #ifndef SRC_ARCH_FORTE_ARCHITECTURE_H_
 #define SRC_ARCH_FORTE_ARCHITECTURE_H_
 
-#include "forte_specific_architecture.h"
-
-#include "forteinit.h"
-#include "startuphook.h"
-
-template<typename SpecificArchitectureT>
 class CForteGeneralArchitecture{
 
   public:
@@ -54,41 +48,6 @@ class CForteGeneralArchitecture{
     static bool mInitialized; 
 };
 
-template <typename SpecificArchitectureT>
-int CForteGeneralArchitecture<SpecificArchitectureT>::initialize(int argc, char *argv[]){
-  if(mInitialized) {
-    return 0;
-  }
-  if(auto result = SpecificArchitectureT::initialize(argc, argv); result != 0){
-    return result;
-  }
-  initForte();
-  startupHook(argc, argv);
-  CForteGeneralArchitecture::mInitialized = true;
-  return 0;
-}
-
-template <typename SpecificArchitectureT>
-int CForteGeneralArchitecture<SpecificArchitectureT>::deinitialize() {
-  if(!mInitialized) {
-    return 0;
-  }
-
-  if(auto result = SpecificArchitectureT::deinitialize(); result != 0){
-    return result;
-  }
-  CForteGeneralArchitecture::mInitialized = false;
-  return 0;
-}
-
-template <typename SpecificArchitectureT>
-bool CForteGeneralArchitecture<SpecificArchitectureT>::isInitialized(){
-  return mInitialized;
-}
-
-template <typename SpecificArchitectureT>
-bool CForteGeneralArchitecture<SpecificArchitectureT>::mInitialized = false;
-
-using CForteArchitecture = CForteGeneralArchitecture<CForteSpecificArchitecture>;
+using CForteArchitecture = CForteGeneralArchitecture;
 
 #endif /* SRC_ARCH_FORTE_ARCHITECTURE_H_ */
