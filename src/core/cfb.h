@@ -1,6 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2023 Profactor GmbH, ACIN, fortiss GmbH,
+ * Copyright (c) 2005, 2024 Profactor GmbH, ACIN, fortiss GmbH,
  *                          Johannes Kepler University Linz
+ *                          Martin Erich Jobst
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -13,6 +14,7 @@
  *    Ingo Hegny
  *      - initial implementation and rework communication infrastructure
  *    Alois Zoitl - added support for adapter connections in CFBs
+ *    Martin Jobst - add smart pointer for internal FBs
  *******************************************************************************/
 #ifndef _CFB_H_
 #define _CFB_H_
@@ -131,12 +133,19 @@ class CCompositeFB: public CFunctionBlock {
       return mIn2IfDConns[paIndex];
     }
 
+    const SCFB_FBNData &getFBNData() const {
+      return cmFBNData;
+    }
+
     virtual void readInternal2InterfaceOutputData(TEventID paEOID) = 0;
     void executeEvent(TEventID paEIID, CEventChainExecutionThread * const paECET) override final;
 
   private:
 
-    bool createInternalFBs();
+    virtual bool createInternalFBs() {
+      return true;
+    }
+
     void createEventConnections();
     void prepareIf2InEventCons();
     void establishConnection(CConnection *paCon, CFunctionBlock *paDstFb, CStringDictionary::TStringId paDstNameId);

@@ -23,6 +23,9 @@
 #include "forte_array_fixed.h"
 #include "forte_array_variable.h"
 
+#include "RT_E_CYCLE.h"
+#include "E_CTU.h"
+#include "E_SWITCH.h"
 
 class FORTE_RT_E_TRAIN final : public CCompositeFB {
   DECLARE_FIRMWARE_FB(FORTE_RT_E_TRAIN)
@@ -51,6 +54,10 @@ private:
   static const SCFB_FBConnectionData scmDataConnections[];
   static const SCFB_FBFannedOutConnectionData scmFannedOutDataConnections[];
   static const SCFB_FBNData scmFBNData;
+
+  forte::core::CInternalFB<FORTE_RT_E_CYCLE> fb_RT_E_CYCLE;
+  forte::core::CInternalFB<FORTE_E_CTU> fb_E_CTU;
+  forte::core::CInternalFB<FORTE_E_SWITCH> fb_E_SWITCH;
 
   void readInputData(TEventID paEIID) override;
   void writeOutputData(TEventID paEIID) override;

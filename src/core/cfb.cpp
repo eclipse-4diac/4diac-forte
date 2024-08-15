@@ -1,6 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2023 Profactor GmbH, ACIN, fortiss GmbH,
+ * Copyright (c) 2005, 2024 Profactor GmbH, ACIN, fortiss GmbH,
  *                          Johannes Kepler University Linz
+ *                          Martin Erich Jobst
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -13,6 +14,7 @@
  *    Ingo Hegny
  *      - initial implementation and rework communication infrastructure
  *    Alois Zoitl - added support for adapter connections in CFBs
+ *    Martin Jobst - add smart pointer for internal FBs
  *******************************************************************************/
 #include <string.h>
 #include "cfb.h"
@@ -154,22 +156,6 @@ void CCompositeFB::executeEvent(TEventID paEIID, CEventChainExecutionThread * co
       mInterface2InternalEventCons[paEIID]->triggerEvent(paECET);
     }
   }
-}
-
-bool CCompositeFB::createInternalFBs(){
-  if(cmFBNData.mNumFBs){
-    for(size_t i = 0; i < cmFBNData.mNumFBs; ++i){
-      const SCFB_FBInstanceData &cfbInstanceData(cmFBNData.mFBInstances[i]);
-      if(createFB(cfbInstanceData.mFBInstanceNameId, cfbInstanceData.mFBTypeNameId) != EMGMResponse::Ready){
-        DEVLOG_ERROR("Cannot create internal FB (name: %s, type: %s) in CFB (type: %s)!\n",
-            CStringDictionary::getInstance().get(cfbInstanceData.mFBInstanceNameId),
-            CStringDictionary::getInstance().get(cfbInstanceData.mFBTypeNameId),
-            getFBTypeName());
-        return false;
-      }
-    }
-  }
-  return true;
 }
 
 void CCompositeFB::createEventConnections(){
