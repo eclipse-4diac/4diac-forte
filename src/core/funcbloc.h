@@ -127,7 +127,7 @@ class CFunctionBlock : public forte::core::CFBContainer {
     static_assert((scmMaxInterfaceEvents & (scmMaxInterfaceEvents + 1)) == 0,
                   "scmMaxInterfaceEvents must be a valid bitmask");
 
-    virtual bool initialize();
+    bool initialize() override;
 
     virtual ~CFunctionBlock();
 

@@ -13,8 +13,8 @@
 #ifndef _EMB_RES_H_
 #define _EMB_RES_H_
 
-#include <resource.h>
-
+#include "resource.h"
+#include "E_RESTART.h"
 
 class EMB_RES : public CResource{
   DECLARE_FIRMWARE_FB(EMB_RES);
@@ -23,12 +23,11 @@ class EMB_RES : public CResource{
     EMB_RES(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paDevice);
     ~EMB_RES() override;
 
-    bool initialize() override;
-
     CIEC_ANY *getDI(size_t) override;
     CDataConnection **getDIConUnchecked(TPortId) override;
 
   private:
+    forte::core::CInternalFB<FORTE_E_RESTART> fb_START;
     static const SFBInterfaceSpec scmFBInterfaceSpec;
 };
 

@@ -48,6 +48,9 @@ CFunctionBlock::CFunctionBlock(forte::core::CFBContainer &paContainer, const SFB
 }
 
 bool CFunctionBlock::initialize() {
+  if(!CFBContainer::initialize()) {
+    return false;
+  }
 #ifdef  FORTE_SUPPORT_MONITORING
   setupEventMonitoringData();
 #endif //FORTE_SUPPORT_MONITORING

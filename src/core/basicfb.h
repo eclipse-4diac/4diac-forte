@@ -40,9 +40,7 @@ class CBasicFB : public CFunctionBlock {
              CStringDictionary::TStringId paInstanceNameId,
              const SInternalVarsInformation *paVarInternals);
 
-    bool initialize() override;
-
-    ~CBasicFB() override;
+    ~CBasicFB() override = default;
 
     CIEC_ANY* getVar(CStringDictionary::TStringId *paNameList, unsigned int paNameListSize) override;
 

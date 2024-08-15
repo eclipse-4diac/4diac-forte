@@ -24,26 +24,6 @@ CBasicFB::CBasicFB(forte::core::CFBContainer &paContainer, const SFBInterfaceSpe
         cmVarInternals(paVarInternals) {
 }
 
-bool CBasicFB::initialize() {
-  if(!CFunctionBlock::initialize()) {
-    return false;
-  }
-  // initialize all internal FBs
-  for(TFBContainerList::iterator it(getChildren().begin()); it != getChildren().end(); ++it){
-    if((*it)->isFB()) {
-      if(!static_cast<CFunctionBlock &>(**it).initialize()){
-        return false;
-      }
-    }
-  }
-  return true;
-}
-
-CBasicFB::~CBasicFB() {
-  //CFBContainer shall not handle internal function blocks therefore we are clearing the list here
-  getChildren().clear();
-}
-
 void CBasicFB::setInitialValues() {
   CFunctionBlock::setInitialValues();
   if(cmVarInternals) {

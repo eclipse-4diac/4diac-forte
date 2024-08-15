@@ -1,6 +1,8 @@
 /*******************************************************************************
  * Copyright (c) 2015, 2024 fortiss GmbH, 2018 TU Wien/ACIN,
  *                          Primetals Technologies Austria GmbH
+ *                          Martin Erich Jobst
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -13,6 +15,7 @@
  *   Martin Melik Merkumians - implementation for checkForActionEquivalentState
  *   Fabio Gandolfi - refactored fb and container list to sorted vectors
  *   Alois Zoitl  - merged fbs and containers in one list
+ *   Martin Jobst - add smart pointer for internal FBs
  *******************************************************************************/
 #include "funcbloc.h"
 #include "fbcontainer.h"
@@ -38,6 +41,18 @@ CFBContainer::CFBContainer(CStringDictionary::TStringId paContInstanceName, CFBC
     mContInstanceName(paContInstanceName), mParent(paParent) {
 }
 
+bool CFBContainer::initialize() {
+  // initialize all statically added internal FBs
+  for (auto it: getChildren()) {
+    if (it->isFB()) {
+      if (!static_cast<CFunctionBlock *>(it)->initialize()) {
+        return false;
+      }
+    }
+  }
+  return true;
+}
+
 CFBContainer::~CFBContainer() {
   for (TFBContainerList::iterator itRunner(mChildren.begin()); itRunner != mChildren.end(); ++itRunner) {
     delete (*itRunner);
@@ -45,13 +60,12 @@ CFBContainer::~CFBContainer() {
   mChildren.clear();
 }
 
-EMGMResponse CFBContainer::addFB(CFunctionBlock* paFuncBlock) {
-  EMGMResponse retVal = EMGMResponse::InvalidObject;
-  if(nullptr != paFuncBlock){
-    mChildren.insert(getChildrenIterator(paFuncBlock->getInstanceNameId()), paFuncBlock);
-    retVal = EMGMResponse::Ready;
-  }
-  return retVal;
+void CFBContainer::addFB(CFunctionBlock &paFuncBlock) {
+  mChildren.insert(getChildrenIterator(paFuncBlock.getInstanceNameId()), &paFuncBlock);
+}
+
+void CFBContainer::removeFB(CFunctionBlock &paFuncBlock) {
+  mChildren.erase(std::remove(mChildren.begin(), mChildren.end(), &paFuncBlock), mChildren.end());
 }
 
 std::string CFBContainer::getFullQualifiedApplicationInstanceName(const char sepChar) const {
