@@ -1,5 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2017, 2023 fortiss GmbH, Johannes Kepler University Linz
+ * Copyright (c) 2017, 2024 fortiss GmbH, Johannes Kepler University Linz
+ *                          Martin Erich Jobst
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -10,6 +11,7 @@
  * Contributors:
  *   Monika Wenger - initial API and implementation and/or initial documentation
  *   Alois Zoitl   - upgraded to new FB memory layout
+ *   Martin Jobst  - added dynamic internal FB creation from CCompositeFB
  *******************************************************************************/
 
 #include "luacfb.h"
@@ -27,6 +29,23 @@ bool CLuaCFB::initialize() {
   //before calling super we need to configure the interface of the FB
   setupFBInterface(getFBInterfaceSpec());
   return CGenFunctionBlock<CCompositeFB>::initialize();
+}
+
+bool CLuaCFB::createInternalFBs(){
+  const SCFB_FBNData &fbnData = getFBNData();
+  if(fbnData.mNumFBs){
+    for(size_t i = 0; i < fbnData.mNumFBs; ++i){
+      const SCFB_FBInstanceData &cfbInstanceData(fbnData.mFBInstances[i]);
+      if(createFB(cfbInstanceData.mFBInstanceNameId, cfbInstanceData.mFBTypeNameId) != EMGMResponse::Ready){
+        DEVLOG_ERROR("Cannot create internal FB (name: %s, type: %s) in CFB (type: %s)!\n",
+                     CStringDictionary::getInstance().get(cfbInstanceData.mFBInstanceNameId),
+                     CStringDictionary::getInstance().get(cfbInstanceData.mFBTypeNameId),
+                     getFBTypeName());
+        return false;
+      }
+    }
+  }
+  return true;
 }
 
 void CLuaCFB::readInputData(TEventID paEIID) {

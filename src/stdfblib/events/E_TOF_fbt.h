@@ -26,6 +26,9 @@
 #include "forte_array.h"
 #include "forte_array_fixed.h"
 #include "forte_array_variable.h"
+#include "E_SWITCH.h"
+#include "E_DELAY.h"
+#include "E_RS.h"
 
 
 class FORTE_E_TOF final : public CCompositeFB {
@@ -55,6 +58,10 @@ class FORTE_E_TOF final : public CCompositeFB {
     static const SCFB_FBConnectionData scmDataConnections[];
     static const SCFB_FBFannedOutConnectionData scmFannedOutDataConnections[];
     static const SCFB_FBNData scmFBNData;
+
+    forte::core::CInternalFB<FORTE_E_SWITCH> fb_E_SWITCH;
+    forte::core::CInternalFB<E_DELAY> fb_E_DELAY;
+    forte::core::CInternalFB<FORTE_E_RS> fb_E_RS;
 
     void readInputData(TEventID paEIID) override;
     void writeOutputData(TEventID paEIID) override;

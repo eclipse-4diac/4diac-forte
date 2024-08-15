@@ -46,6 +46,9 @@ const SFBInterfaceSpec FORTE_E_TP::scmFBInterfaceSpec = {
 
 FORTE_E_TP::FORTE_E_TP(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CCompositeFB(paContainer, &scmFBInterfaceSpec, paInstanceNameId, scmFBNData),
+    fb_E_DELAY(g_nStringIdE_DELAY, *this),
+    fb_E_RS(g_nStringIdE_RS, *this),
+    fb_E_PERMIT(g_nStringIdE_PERMIT, *this),
     var_conn_Q(var_Q),
     conn_CNF(this, 0),
     conn_IN(nullptr),

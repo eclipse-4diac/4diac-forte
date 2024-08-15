@@ -23,6 +23,9 @@
 #include "forte_array.h"
 #include "forte_array_fixed.h"
 #include "forte_array_variable.h"
+#include "E_CTU.h"
+#include "E_SWITCH.h"
+#include "E_DELAY.h"
 
 
 class FORTE_E_TRAIN: public CCompositeFB {
@@ -52,6 +55,10 @@ private:
   static const SCFB_FBConnectionData scmDataConnections[];
   static const SCFB_FBFannedOutConnectionData scmFannedOutDataConnections[];
   static const SCFB_FBNData scmFBNData;
+
+  forte::core::CInternalFB<FORTE_E_CTU> fb_CTR;
+  forte::core::CInternalFB<FORTE_E_SWITCH> fb_GATE;
+  forte::core::CInternalFB<E_DELAY> fb_DLY;
 
   void readInputData(TEventID paEIID) override;
   void writeOutputData(TEventID paEIID) override;

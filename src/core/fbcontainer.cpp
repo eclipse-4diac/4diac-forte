@@ -93,6 +93,9 @@ EMGMResponse CFBContainer::createFB(forte::core::TNameIdentifier::CIterator &paN
 }
 
 EMGMResponse CFBContainer::createFB(CStringDictionary::TStringId paInstanceNameId, CStringDictionary::TStringId paTypeName) {
+  if(!isDynamicContainer()) {
+    return EMGMResponse::InvalidDst;
+  }
   TFBContainerList::iterator childIt = getChildrenIterator(paInstanceNameId);
   // test if the container does not contain any FB or a container with the same name
   if(!isChild(childIt, paInstanceNameId)) {
