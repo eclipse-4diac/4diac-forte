@@ -153,7 +153,7 @@ BOOST_AUTO_TEST_CASE(sequential_events_test) {
   auto ctfMessages = getEventMessages(CTF_OUTPUT_DIR);
 
   BOOST_TEST_INFO("Expected vs traced: Same size ");
-  BOOST_CHECK_EQUAL(ctfMessages.size(), expectedMessages.size());
+  BOOST_TEST(ctfMessages.size() == expectedMessages.size());
 
   // although vectors can be check directly, this granularity helps debugging in case some message is different
   for(size_t i = 0; i < expectedMessages.size(); i++ ){
@@ -163,7 +163,7 @@ BOOST_AUTO_TEST_CASE(sequential_events_test) {
 
   // add extra event to check that the comparison fails
   expectedMessages.emplace_back("sendOutputEvent", std::make_unique<FBEventPayload>("E_RESTART", "START", 2),0);
-  BOOST_CHECK(ctfMessages != expectedMessages);
+  BOOST_TEST(ctfMessages != expectedMessages);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

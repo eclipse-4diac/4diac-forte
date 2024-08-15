@@ -23,10 +23,10 @@ BOOST_AUTO_TEST_CASE(forte_c_interface)
 
   // forteStartInstance
   // invalid instance result
-  BOOST_CHECK_EQUAL(forteStartInstance(61499, nullptr), FORTE_WRONG_PARAMETERS);
+  BOOST_TEST(forteStartInstance(61499, nullptr) == FORTE_WRONG_PARAMETERS);
   
   // invalid port number, greater than maximum 65535
-  BOOST_CHECK_EQUAL(forteStartInstance(65536, &instance), FORTE_WRONG_PARAMETERS);
+  BOOST_TEST(forteStartInstance(65536, &instance) == FORTE_WRONG_PARAMETERS);
 
   char executable[] = "forte";
   char ipPortFlag[] = "-c";
@@ -39,29 +39,29 @@ BOOST_AUTO_TEST_CASE(forte_c_interface)
     int argc = 3;
     char invalidAddress[] = "localhost";
     char* argv[] = {executable, ipPortFlag, invalidAddress};
-    BOOST_CHECK_EQUAL(forteStartInstanceGeneric(argc, argv, nullptr), FORTE_WRONG_PARAMETERS);
+    BOOST_TEST(forteStartInstanceGeneric(argc, argv, nullptr) == FORTE_WRONG_PARAMETERS);
 
     char nonExistingParameter[] = "--unknown";
     char* argv2[] = {executable, nonExistingParameter};
-    BOOST_CHECK_EQUAL(forteStartInstanceGeneric(argc, argv2, nullptr), FORTE_WRONG_PARAMETERS);
+    BOOST_TEST(forteStartInstanceGeneric(argc, argv2, nullptr) == FORTE_WRONG_PARAMETERS);
   }
 
   // architecture not initialized
   {
-    BOOST_CHECK_EQUAL(forteStartInstanceGeneric(validArgc, validArgV, &instance), FORTE_ARCHITECTURE_NOT_READY);
+    BOOST_TEST(forteStartInstanceGeneric(validArgc, validArgV, &instance) == FORTE_ARCHITECTURE_NOT_READY);
   }
 
   // valid case and invalid case based on an existing running device
   {
-    BOOST_CHECK_EQUAL(forteGlobalInitialize(validArgc, validArgV), 0);
+    BOOST_TEST(forteGlobalInitialize(validArgc, validArgV) == 0);
 
     // double initialization of the architecture should not fail
-    BOOST_CHECK_EQUAL(forteGlobalInitialize(validArgc, validArgV), 0);
+    BOOST_TEST(forteGlobalInitialize(validArgc, validArgV) == 0);
 
-    BOOST_CHECK_EQUAL(forteStartInstanceGeneric(validArgc, validArgV, &instance), FORTE_OK);
+    BOOST_TEST(forteStartInstanceGeneric(validArgc, validArgV, &instance) == FORTE_OK);
 
     // try starting on already started device
-    BOOST_CHECK_EQUAL(forteStartInstanceGeneric(validArgc, validArgV, &instance), FORTE_DEVICE_ALREADY_STARTED);
+    BOOST_TEST(forteStartInstanceGeneric(validArgc, validArgV, &instance) == FORTE_DEVICE_ALREADY_STARTED);
 
     // another instance on same port
     TForteInstance instance2{nullptr};
@@ -78,10 +78,10 @@ BOOST_AUTO_TEST_CASE(forte_c_interface)
     forteRequestStopInstance(instance);
     forteWaitForInstanceToStop(instance);
 
-    BOOST_CHECK_EQUAL(forteGlobalDeinitialize(), 0);
+    BOOST_TEST(forteGlobalDeinitialize() == 0);
 
     // double de-initialization of the architecture should not fail
-    BOOST_CHECK_EQUAL(forteGlobalDeinitialize(), 0);
+    BOOST_TEST(forteGlobalDeinitialize() == 0);
   }
 }
 
