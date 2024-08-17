@@ -116,7 +116,7 @@ class FORTE_Wago1506: public WagoSlaveBase {
 
   protected:
 
-    INIT_HANLDLES(8, 8, 0, 0)
+    INIT_HANDLES(8, 8, 0, 0)
 
   private:
     static const CStringDictionary::TStringId scmDataInputNames[];
