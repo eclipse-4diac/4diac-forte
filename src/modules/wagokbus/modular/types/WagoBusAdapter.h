@@ -10,26 +10,26 @@
 
 #pragma once
 
-#include "../../../../core/io/configFB/io_adapter_multi.h"
-#include <typelib.h>
-#include <forte_bool.h>
-#include <forte_uint.h>
+#include <io/configFB/io_adapter_multi.h>
+#include "adapter.h"
+#include "typelib.h"
+#include "forte_bool.h"
+#include "forte_uint.h"
 
 class FORTE_WagoBusAdapter : public forte::core::io::IOConfigFBMultiAdapter {
   DECLARE_ADAPTER_TYPE(FORTE_WagoBusAdapter)
 
   public:
-
     ADAPTER_CTOR_FOR_IO_MULTI (FORTE_WagoBusAdapter){
     };
+    virtual ~FORTE_WagoBusAdapter(){};
 
     static const TForteUInt8 scmSlaveConfigurationIO[];
     static const TForteUInt8 scmSlaveConfigurationIONum;
 
-    ~FORTE_WagoBusAdapter() override = default;
-
     static const TEventID scmEventINITOID = 0;
     static const TEventID scmEventINITID = 0;
+
     CIEC_BOOL &var_QO() {
       return *static_cast<CIEC_BOOL*>((isSocket()) ? getDI(0) : getDO(0));
     }
@@ -56,19 +56,19 @@ class FORTE_WagoBusAdapter : public forte::core::io::IOConfigFBMultiAdapter {
 
   private:
     static const CStringDictionary::TStringId scmDataInputNames[];
-        static const CStringDictionary::TStringId scmDataInputTypeIds[];
-        static const CStringDictionary::TStringId scmDataOutputNames[];
-        static const CStringDictionary::TStringId scmDataOutputTypeIds[];
-        static const TDataIOID scmEIWith[];
-        static const TForteInt16 scmEIWithIndexes[];
-        static const CStringDictionary::TStringId scmEventInputNames[];
-        static const TDataIOID scmEOWith[];
-        static const TForteInt16 scmEOWithIndexes[];
-        static const CStringDictionary::TStringId scmEventOutputNames[];
+    static const CStringDictionary::TStringId scmDataInputTypeIds[];
+    static const CStringDictionary::TStringId scmDataOutputNames[];
+    static const CStringDictionary::TStringId scmDataOutputTypeIds[];
+    static const TDataIOID scmEIWith[];
+    static const TForteInt16 scmEIWithIndexes[];
+    static const CStringDictionary::TStringId scmEventInputNames[];
+    static const TDataIOID scmEOWith[];
+    static const TForteInt16 scmEOWithIndexes[];
+    static const CStringDictionary::TStringId scmEventOutputNames[];
 
-        static const SFBInterfaceSpec scmFBInterfaceSpecSocket;
-        static const SFBInterfaceSpec scmFBInterfaceSpecPlug;
+    static const SFBInterfaceSpec scmFBInterfaceSpecSocket;
+    static const SFBInterfaceSpec scmFBInterfaceSpecPlug;
 
-        void readInputData(TEventID paEIID) override;
-        void writeOutputData(TEventID paEIID) override;
+    void readInputData(TEventID paEIID) override;
+    void writeOutputData(TEventID paEIID) override;
 };

@@ -26,9 +26,6 @@ const TDataIOID FORTE_WagoBusAdapter::scmEOWith[] = {2, 1, 0, scmWithListDelimit
 const TForteInt16 FORTE_WagoBusAdapter::scmEOWithIndexes[] = {0};
 const CStringDictionary::TStringId FORTE_WagoBusAdapter::scmEventOutputNames[] = {g_nStringIdINIT};
 
-const TForteUInt8 FORTE_WagoBusAdapter::scmSlaveConfigurationIO[] = { };
-const TForteUInt8 FORTE_WagoBusAdapter::scmSlaveConfigurationIONum = 0;
-
 const SFBInterfaceSpec FORTE_WagoBusAdapter::scmFBInterfaceSpecSocket = {
   1, scmEventInputNames, scmEIWith, scmEIWithIndexes,
   1, scmEventOutputNames, scmEOWith, scmEOWithIndexes,
@@ -94,3 +91,6 @@ void FORTE_WagoBusAdapter::writeOutputData(const TEventID paEIID) {
     }
   }
 }
+
+const TForteUInt8 FORTE_WagoBusAdapter::scmSlaveConfigurationIO[] = { };
+const TForteUInt8 FORTE_WagoBusAdapter::scmSlaveConfigurationIONum = 0;
