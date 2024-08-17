@@ -68,14 +68,14 @@ const char* WagoDeviceController::init() {
   for(size_t i = 0; i < mTerminalCount; ++i) { // find kbus device
     if(0 == strcmp(deviceList[i].DeviceName, scmKBusDeviceName)) {
       mKBusDeviceId = deviceList[i].DeviceId;
-      if(0 != mAppDevInterface->OpenDevice(mKBusDeviceId)) {
+      if(DAL_SUCCESS != mAppDevInterface->OpenDevice(mKBusDeviceId)) {
         DEVLOG_ERROR("[WagoDeviceController] %s \n", scmFailedToOpenKBusDevice);
         return scmFailedToOpenKBusDevice;
       }
-
-      return loadTerminalInformation();
     }
   }
+
+  loadTerminalInformation();
 
   for(size_t i = 0; i < mTerminalCount; i++) {
     DEVLOG_INFO("[WagoDeviceController] Found device with ID: %d\n", mTerminalIds[i]);
