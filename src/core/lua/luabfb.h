@@ -1,5 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2015, 2023 fortiss GmbH, Johannes Kepler University Linz
+ * Copyright (c) 2015, 2024 fortiss GmbH, Johannes Kepler University Linz
+ *                          Martin Erich Jobst
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -9,6 +11,7 @@
  * Contributors:
  *   Martin Jobst - initial API and implementation and/or initial documentation
  *   Alois Zoitl  - upgraded to new FB memory layout
+ *   Martin Jobst - add dynamic internal variable setup from CBasicFB
  *******************************************************************************/
 
 #ifndef SRC_CORE_LUABFB_H_
@@ -45,7 +48,7 @@ class CLuaBFB : public CGenFunctionBlock<CBasicFB> {
 
     CIEC_ANY* getVariable(TForteUInt32 paId);
 
-    int recalculateID(int paEIID) {
+    TEventID recalculateID(TEventID paEIID) {
       return CLuaBFB::scmLuaFBAdpFlag | ((((paEIID >> 8) - 1) << 16) & 0xFF0000) | (paEIID & 0x00FF);
     }
 
@@ -74,8 +77,19 @@ class CLuaBFB : public CGenFunctionBlock<CBasicFB> {
     friend int CLuaFB_call(lua_State *paLuaState);
 
   private:
-    virtual void readInputData(TEventID paEIID);
-    virtual void writeOutputData(TEventID paEO);
+    void readInputData(TEventID paEIID) override;
+    void writeOutputData(TEventID paEO) override;
+
+    void createVarInternals();
+
+    static size_t calculateInternalVarsDataSize(const SInternalVarsInformation &paVarInternals);
+
+    CIEC_ANY* getVarInternal(size_t paVarIntNum) override {
+      return mInternals[paVarIntNum];
+    }
+
+    CIEC_ANY **mInternals; //!< A list of pointers to the internal variables.
+    void *mInternalVarsData;
 };
 
 #endif /* SRC_CORE_LUABFB_H_ */
