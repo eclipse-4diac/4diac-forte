@@ -69,9 +69,9 @@ unsigned int CModbusComLayer::convertDataInput(void *paInData, unsigned int paDa
       ***************************************************************************/
       case CIEC_ANY::e_BOOL: // 1bit data type
       {
-        TForteUInt8 out = (bool) static_cast<CIEC_BOOL&>(anyVal);
-        *(TForteUInt8*) (&convertedData[outLength]) = out;
-        outLength += sizeof(TForteUInt8);
+    	TForteByte out = (bool) static_cast<CIEC_BOOL&>(anyVal);
+        *(TForteByte*) (&convertedData[outLength]) = out;
+        outLength += sizeof(TForteByte);
         break;
       }
       /***************************************************************************
@@ -79,23 +79,23 @@ unsigned int CModbusComLayer::convertDataInput(void *paInData, unsigned int paDa
        ***************************************************************************/
       case CIEC_ANY::e_SINT: // 8bit data type signed
       {
-        TForteInt16 out = (TForteInt8) static_cast<CIEC_SINT&>(anyVal);
-        *(TForteInt16*) (&convertedData[outLength]) = out;
-        outLength += sizeof(TForteInt16);
+    	TForteInt8 out = (TForteInt8) static_cast<CIEC_SINT&>(anyVal);
+        *(TForteInt8*) (&convertedData[outLength]) = out;
+        outLength += sizeof(TForteInt8);
         break;
       }
       case CIEC_ANY::e_USINT:  // 8bit data type unsigned
       {
-        TForteUInt16 out = (TForteUInt8) static_cast<CIEC_USINT&>(anyVal);
-        *(TForteUInt16*) (&convertedData[outLength]) = out;
-        outLength += sizeof(TForteUInt16);
+        TForteUInt8 out = (TForteUInt8) static_cast<CIEC_USINT&>(anyVal);
+        *(TForteUInt8*) (&convertedData[outLength]) = out;
+        outLength += sizeof(TForteUInt8);
         break;
       }
       case CIEC_ANY::e_BYTE:  // 8bit data type
       {
-        TForteUInt16 out = (TForteByte) static_cast<CIEC_BYTE&>(anyVal);
-        *(TForteUInt16*) (&convertedData[outLength]) = out;
-        outLength += sizeof(TForteUInt16);
+    	TForteByte out = (TForteByte) static_cast<CIEC_BYTE&>(anyVal);
+        *(TForteByte*) (&convertedData[outLength]) = out;
+        outLength += sizeof(TForteByte);
         break;
       }
       /***************************************************************************
