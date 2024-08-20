@@ -69,7 +69,7 @@ unsigned int CModbusComLayer::convertDataInput(void *paInData, unsigned int paDa
       ***************************************************************************/
       case CIEC_ANY::e_BOOL: // 1bit data type
       {
-    	TForteByte out = (bool) static_cast<CIEC_BOOL&>(anyVal);
+        TForteByte out = (bool) static_cast<CIEC_BOOL&>(anyVal);
         *(TForteByte*) (&convertedData[outLength]) = out;
         outLength += sizeof(TForteByte);
         break;
@@ -79,7 +79,7 @@ unsigned int CModbusComLayer::convertDataInput(void *paInData, unsigned int paDa
        ***************************************************************************/
       case CIEC_ANY::e_SINT: // 8bit data type signed
       {
-    	TForteInt8 out = (TForteInt8) static_cast<CIEC_SINT&>(anyVal);
+        TForteInt8 out = (TForteInt8) static_cast<CIEC_SINT&>(anyVal);
         *(TForteInt8*) (&convertedData[outLength]) = out;
         outLength += sizeof(TForteInt8);
         break;
@@ -93,7 +93,7 @@ unsigned int CModbusComLayer::convertDataInput(void *paInData, unsigned int paDa
       }
       case CIEC_ANY::e_BYTE:  // 8bit data type
       {
-    	TForteByte out = (TForteByte) static_cast<CIEC_BYTE&>(anyVal);
+        TForteByte out = (TForteByte) static_cast<CIEC_BYTE&>(anyVal);
         *(TForteByte*) (&convertedData[outLength]) = out;
         outLength += sizeof(TForteByte);
         break;
