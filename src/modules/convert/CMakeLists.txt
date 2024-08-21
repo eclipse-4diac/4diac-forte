@@ -15,12 +15,12 @@ forte_add_module(CONVERT OFF "Convert Function Blocks")
 #############################################################################
 # Convert FB
 #############################################################################
-forte_add_sourcefile_hcpp( BOOL2BOOL     BYTE2BYTE   DINT2DINT         DWORD2DWORD )
-forte_add_sourcefile_hcpp( INT2INT       SINT2SINT )
-forte_add_sourcefile_hcpp( STRING2STRING  TIME2TIME   UINT2UINT         UDINT2UDINT )
-forte_add_sourcefile_hcpp( USINT2USINT     WORD2WORD     WSTRING2WSTRING )
+forte_add_sourcefile_hcpp( BOOL2BOOL_fbt     BYTE2BYTE_fbt   DINT2DINT_fbt         DWORD2DWORD_fbt )
+forte_add_sourcefile_hcpp( INT2INT_fbt       SINT2SINT_fbt )
+forte_add_sourcefile_hcpp( STRING2STRING_fbt  TIME2TIME_fbt   UINT2UINT_fbt         UDINT2UDINT_fbt )
+forte_add_sourcefile_hcpp( USINT2USINT_fbt     WORD2WORD_fbt     WSTRING2WSTRING_fbt )
 forte_add_sourcefile_hcpp( GEN_STRUCT_MUX_fbt GEN_STRUCT_DEMUX_fbt )
-forte_add_sourcefile_hcpp(REAL2REAL)
-forte_add_sourcefile_hcpp(LREAL2LREAL)
+forte_add_sourcefile_hcpp(REAL2REAL_fbt)
+forte_add_sourcefile_hcpp(LREAL2LREAL_fbt)
 
 
