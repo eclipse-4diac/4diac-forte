@@ -14,5 +14,5 @@ forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 #############################################################################
 # EdgeDetection
 #############################################################################
-forte_add_sourcefile_hcpp(FB_F_TRIG)
-forte_add_sourcefile_hcpp(FB_R_TRIG)
+forte_add_sourcefile_hcpp(FB_F_TRIG_fbt)
+forte_add_sourcefile_hcpp(FB_R_TRIG_fbt)
