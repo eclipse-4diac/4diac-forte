@@ -11,9 +11,9 @@
  *   - initial API and implementation and/or initial documentation
  *******************************************************************************/
 
-#include "FB_RANDOM.h"
+#include "FB_RANDOM_fbt.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "FB_RANDOM_gen.cpp"
+#include "FB_RANDOM_fbt_gen.cpp"
 #endif
 
 #include "criticalregion.h"
