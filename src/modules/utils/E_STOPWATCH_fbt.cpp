@@ -14,9 +14,9 @@
  *                   NOW_MONOTONIC function
  *******************************************************************************/
 
-#include "E_STOPWATCH.h"
+#include "E_STOPWATCH_fbt.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "E_STOPWATCH_gen.cpp"
+#include "E_STOPWATCH_fbt_gen.cpp"
 #endif
 
 #include "criticalregion.h"
