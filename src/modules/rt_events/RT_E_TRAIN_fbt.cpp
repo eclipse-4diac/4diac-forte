@@ -11,9 +11,9 @@
  *    - initial API and implementation and/or initial documentation
  *******************************************************************************/
 
-#include "RT_E_TRAIN.h"
+#include "RT_E_TRAIN_fbt.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "RT_E_TRAIN_gen.cpp"
+#include "RT_E_TRAIN_fbt_gen.cpp"
 #endif
 
 #include "criticalregion.h"

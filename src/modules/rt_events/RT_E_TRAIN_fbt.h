@@ -23,7 +23,7 @@
 #include "forte_array_fixed.h"
 #include "forte_array_variable.h"
 
-#include "RT_E_CYCLE.h"
+#include "RT_E_CYCLE_fbt.h"
 #include "E_CTU.h"
 #include "E_SWITCH.h"
 
