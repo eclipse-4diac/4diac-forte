@@ -34,9 +34,6 @@ GEN_ADD::GEN_ADD(const CStringDictionary::TStringId paInstanceNameId, forte::cor
     CGenFunctionBlock<CFunctionBlock>(paContainer, paInstanceNameId), mDInputs(0){
 }
 
-GEN_ADD::~GEN_ADD(){
-}
-
 void GEN_ADD::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   switch (paEIID){
     case scmEventREQID:

@@ -24,6 +24,7 @@ class FORTE_GEN_RT_Bridge final : public CGenFunctionBlock<CFunctionBlock>  {
 
   public:
     FORTE_GEN_RT_Bridge(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    ~FORTE_GEN_RT_Bridge() override = default;
 
   private:
     static const TEventID scmEventRDID = 0;
