@@ -47,7 +47,7 @@ bool CCompositeFB::initialize() {
   createEventConnections();
   createDataConnections();
   createAdapterConnections();
-  setParams();
+  setFBNetworkInitialValues();
 
   //remove adapter-references for CFB
   for(TPortId i = 0; i < getFBInterfaceSpec().mNumAdapters; i++){
@@ -123,7 +123,7 @@ EMGMResponse CCompositeFB::changeExecutionState(EMGMCommandType paCommand){
 
   //Update FB parameters that maybe got overwritten by default values of the FB
   if((EMGMCommandType::Reset == paCommand) && (E_FBStates::Idle == getState())){
-    setParams();
+    setFBNetworkInitialValues();
   }
   return nRetVal;
 }
@@ -295,7 +295,7 @@ void CCompositeFB::prepareIf2InDataCons(){
   }
 }
 
-void CCompositeFB::setParams() {
+void CCompositeFB::setFBNetworkInitialValues() {
   for(size_t i = 0; i < cmFBNData.mNumParams; ++i){
     const SCFB_FBParameter &currentParam(cmFBNData.mParams[i]);
     CFunctionBlock *child = getFunctionBlock(currentParam.mFBNum);

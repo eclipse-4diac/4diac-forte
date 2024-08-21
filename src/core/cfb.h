@@ -153,7 +153,7 @@ class CCompositeFB: public CFunctionBlock {
     CDataConnection * getDataConn(CFunctionBlock *paSrcFB, CStringDictionary::TStringId paSrcNameId);
     void createAdapterConnections();
     void prepareIf2InDataCons();
-    void setParams();
+    virtual void setFBNetworkInitialValues();
 
     //!Acquire the functionblock for a given function block number this may be a contained fb, an adapter, or the composite itself.
     CFunctionBlock *getFunctionBlock(int paFBNum);
