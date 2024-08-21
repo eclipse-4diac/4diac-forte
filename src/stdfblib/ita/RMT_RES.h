@@ -15,8 +15,8 @@
 
 #include "resource.h"
 #include "DEV_MGR.h"
-#include "E_RESTART.h"
-#include "E_SR.h"
+#include "E_RESTART_fbt.h"
+#include "E_SR_fbt.h"
 
 class RMT_RES : public CResource{
   DECLARE_FIRMWARE_FB(RMT_RES)

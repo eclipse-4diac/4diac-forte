@@ -14,7 +14,7 @@
 #define _EMB_RES_H_
 
 #include "resource.h"
-#include "E_RESTART.h"
+#include "E_RESTART_fbt.h"
 
 class EMB_RES : public CResource{
   DECLARE_FIRMWARE_FB(EMB_RES);

@@ -20,7 +20,7 @@
 #include "forte_array_fixed.h"
 #include "forte_array_variable.h"
 #include "ARTimeOut_adp.h"
-#include "E_RDELAY.h"
+#include "E_RDELAY_fbt.h"
 
 
 class FORTE_E_RTimeOut final : public CCompositeFB {
@@ -40,7 +40,7 @@ class FORTE_E_RTimeOut final : public CCompositeFB {
     static const SCFB_FBFannedOutConnectionData scmFannedOutDataConnections[];
     static const SCFB_FBNData scmFBNData;
 
-    forte::core::CInternalFB<E_RDELAY> fb_DLY;
+    forte::core::CInternalFB<FORTE_E_RDELAY> fb_DLY;
 
     void readInputData(TEventID paEIID) override;
     void writeOutputData(TEventID paEIID) override;
