@@ -233,6 +233,6 @@ const CDataConnection* COPC_UA_Layer::getLocalPortConnection(int paPortIndex, bo
 }
 
 CStringDictionary::TStringId COPC_UA_Layer::getLocalPortNameId(int paPortIndex, bool paIsSD) const {
-  const SFBInterfaceSpec *localInterfaceSpec = getCommFB()->getFBInterfaceSpec();
-  return paIsSD ? localInterfaceSpec->mDINames[paPortIndex] : localInterfaceSpec->mDONames[paPortIndex];
+  const SFBInterfaceSpec& localInterfaceSpec(getCommFB()->getFBInterfaceSpec());
+  return paIsSD ? localInterfaceSpec.mDINames[paPortIndex] : localInterfaceSpec.mDONames[paPortIndex];
 }

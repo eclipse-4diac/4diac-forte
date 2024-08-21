@@ -319,9 +319,6 @@ bool COPC_UA_ObjectStruct_Helper::isOPCUAObjectPresent(std::string &paBrowsePath
 }
 
 void COPC_UA_ObjectStruct_Helper::checkOPCUANamespace() {
-  if(!mLayer.getCommFB()->getResource()->getFBInterfaceSpec()) {
-    return;
-  }
   CIEC_WSTRING* configPort = static_cast<CIEC_WSTRING*>(mLayer.getCommFB()->getResource()->getDataInput(g_nStringIdOPCUA_Namespace));
   if(configPort && configPort->length() > 0) {
     if(!createOPCUANamespace(configPort->getValue())) {
