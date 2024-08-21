@@ -23,7 +23,11 @@ class Config_EMB_RES : public CResource {
 
     bool initialize() override;
 
+    CIEC_ANY *getDI(size_t) override;
+    CDataConnection **getDIConUnchecked(TPortId) override;
+
   private:
+    forte::core::CInternalFB<FORTE_E_RESTART> fb_START;
     static const SFBInterfaceSpec scmFBInterfaceSpec;
 
     static const CStringDictionary::TStringId scmVarInputNameIds[];

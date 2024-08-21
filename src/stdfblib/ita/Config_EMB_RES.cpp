@@ -31,7 +31,8 @@ const SFBInterfaceSpec Config_EMB_RES::scmFBInterfaceSpec = {
 };
 
 Config_EMB_RES::Config_EMB_RES(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paDevice) :
-    CResource(paDevice, scmFBInterfaceSpec, paInstanceNameId){
+    CResource(paDevice, scmFBInterfaceSpec, paInstanceNameId),
+    fb_START(g_nStringIdSTART, *this) {
 }
 
 Config_EMB_RES::~Config_EMB_RES() = default;
@@ -40,6 +41,13 @@ bool Config_EMB_RES::initialize() {
   if(!CResource::initialize()) {
     return false;
   }
-  addFB(CTypeLib::createFB(g_nStringIdSTART, g_nStringIdE_RESTART, *this));
   return true;
+}
+
+CIEC_ANY *Config_EMB_RES::getDI(const size_t) {
+  return nullptr;
+}
+
+CDataConnection **Config_EMB_RES::getDIConUnchecked(const TPortId) {
+  return nullptr;
 }
