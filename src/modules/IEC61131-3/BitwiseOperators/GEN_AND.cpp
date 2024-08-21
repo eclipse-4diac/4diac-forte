@@ -27,8 +27,6 @@ GEN_AND::GEN_AND(const CStringDictionary::TStringId paInstanceNameId, forte::cor
     CGenBitBase(paInstanceNameId, paContainer){
 }
 
-GEN_AND::~GEN_AND() = default;
-
 void GEN_AND::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   switch (paEIID) {
     case scmEventREQID:

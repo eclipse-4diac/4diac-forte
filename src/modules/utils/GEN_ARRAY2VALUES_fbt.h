@@ -52,10 +52,10 @@ class GEN_ARRAY2VALUES : public CGenFunctionBlock<CFunctionBlock> {
 
     bool createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) override;
 
+  public:
     GEN_ARRAY2VALUES(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
     ~GEN_ARRAY2VALUES() override;
 
-  public:
 };
 
 #endif //_GEN_ARRAY2VALUES_H_

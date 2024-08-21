@@ -27,8 +27,6 @@ GEN_XOR::GEN_XOR(const CStringDictionary::TStringId paInstanceNameId, forte::cor
     CGenBitBase(paInstanceNameId, paContainer){
 }
 
-GEN_XOR::~GEN_XOR() = default;
-
 void GEN_XOR::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   switch (paEIID) {
     case scmEventREQID:
