@@ -14,5 +14,5 @@ forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 #############################################################################
 # BistableElements
 #############################################################################
-forte_add_sourcefile_hcpp(FB_RS)
-forte_add_sourcefile_hcpp(FB_SR)
+forte_add_sourcefile_hcpp(FB_RS_fbt)
+forte_add_sourcefile_hcpp(FB_SR_fbt)
