@@ -12,9 +12,9 @@
  *     - initial API and implementation and/or initial documentation
  *******************************************************************************/
 
-#include "STRING2STRING.h"
+#include "STRING2STRING_fbt.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "STRING2STRING_gen.cpp"
+#include "STRING2STRING_fbt_gen.cpp"
 #endif
 
 #include "criticalregion.h"

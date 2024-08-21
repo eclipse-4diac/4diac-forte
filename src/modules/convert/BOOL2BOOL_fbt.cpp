@@ -12,40 +12,40 @@
  *     - initial API and implementation and/or initial documentation
  *******************************************************************************/
 
-#include "BYTE2BYTE.h"
+#include "BOOL2BOOL_fbt.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "BYTE2BYTE_gen.cpp"
+#include "BOOL2BOOL_fbt_gen.cpp"
 #endif
 
 #include "criticalregion.h"
 #include "resource.h"
-#include "forte_byte.h"
+#include "forte_bool.h"
 #include "iec61131_functions.h"
 #include "forte_array_common.h"
 #include "forte_array.h"
 #include "forte_array_fixed.h"
 #include "forte_array_variable.h"
 
-DEFINE_FIRMWARE_FB(FORTE_BYTE2BYTE, g_nStringIdBYTE2BYTE)
+DEFINE_FIRMWARE_FB(FORTE_BOOL2BOOL, g_nStringIdBOOL2BOOL)
 
-const CStringDictionary::TStringId FORTE_BYTE2BYTE::scmDataInputNames[] = {g_nStringIdIN};
+const CStringDictionary::TStringId FORTE_BOOL2BOOL::scmDataInputNames[] = {g_nStringIdIN};
 
-const CStringDictionary::TStringId FORTE_BYTE2BYTE::scmDataInputTypeIds[] = {g_nStringIdBYTE};
+const CStringDictionary::TStringId FORTE_BOOL2BOOL::scmDataInputTypeIds[] = {g_nStringIdBOOL};
 
-const CStringDictionary::TStringId FORTE_BYTE2BYTE::scmDataOutputNames[] = {g_nStringIdOUT};
+const CStringDictionary::TStringId FORTE_BOOL2BOOL::scmDataOutputNames[] = {g_nStringIdOUT};
 
-const CStringDictionary::TStringId FORTE_BYTE2BYTE::scmDataOutputTypeIds[] = {g_nStringIdBYTE};
+const CStringDictionary::TStringId FORTE_BOOL2BOOL::scmDataOutputTypeIds[] = {g_nStringIdBOOL};
 
-const TDataIOID FORTE_BYTE2BYTE::scmEIWith[] = {0, scmWithListDelimiter};
-const TForteInt16 FORTE_BYTE2BYTE::scmEIWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_BYTE2BYTE::scmEventInputNames[] = {g_nStringIdREQ};
+const TDataIOID FORTE_BOOL2BOOL::scmEIWith[] = {0, scmWithListDelimiter};
+const TForteInt16 FORTE_BOOL2BOOL::scmEIWithIndexes[] = {0};
+const CStringDictionary::TStringId FORTE_BOOL2BOOL::scmEventInputNames[] = {g_nStringIdREQ};
 
-const TDataIOID FORTE_BYTE2BYTE::scmEOWith[] = {0, scmWithListDelimiter};
-const TForteInt16 FORTE_BYTE2BYTE::scmEOWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_BYTE2BYTE::scmEventOutputNames[] = {g_nStringIdCNF};
+const TDataIOID FORTE_BOOL2BOOL::scmEOWith[] = {0, scmWithListDelimiter};
+const TForteInt16 FORTE_BOOL2BOOL::scmEOWithIndexes[] = {0};
+const CStringDictionary::TStringId FORTE_BOOL2BOOL::scmEventOutputNames[] = {g_nStringIdCNF};
 
 
-const SFBInterfaceSpec FORTE_BYTE2BYTE::scmFBInterfaceSpec = {
+const SFBInterfaceSpec FORTE_BOOL2BOOL::scmFBInterfaceSpec = {
   1, scmEventInputNames, scmEIWith, scmEIWithIndexes,
   1, scmEventOutputNames, scmEOWith, scmEOWithIndexes,
   1, scmDataInputNames, scmDataInputTypeIds,
@@ -55,23 +55,23 @@ const SFBInterfaceSpec FORTE_BYTE2BYTE::scmFBInterfaceSpec = {
 };
 
 
-FORTE_BYTE2BYTE::FORTE_BYTE2BYTE(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_BOOL2BOOL::FORTE_BOOL2BOOL(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CSimpleFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, nullptr),
-    var_IN(CIEC_BYTE(0)),
-    var_OUT(CIEC_BYTE(0)),
+    var_IN(CIEC_BOOL(0)),
+    var_OUT(CIEC_BOOL(0)),
     var_conn_OUT(var_OUT),
     conn_CNF(this, 0),
     conn_IN(nullptr),
     conn_OUT(this, 0, &var_conn_OUT) {
 }
 
-void FORTE_BYTE2BYTE::alg_REQ(void) {
+void FORTE_BOOL2BOOL::alg_REQ(void) {
   
   var_OUT = var_IN;
 }
 
 
-void FORTE_BYTE2BYTE::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
+void FORTE_BOOL2BOOL::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   switch(paEIID) {
     case scmEventREQID:
       alg_REQ();
@@ -82,7 +82,7 @@ void FORTE_BYTE2BYTE::executeEvent(TEventID paEIID, CEventChainExecutionThread *
   sendOutputEvent(scmEventCNFID, paECET);
 }
 
-void FORTE_BYTE2BYTE::readInputData(TEventID paEIID) {
+void FORTE_BOOL2BOOL::readInputData(TEventID paEIID) {
   switch(paEIID) {
     case scmEventREQID: {
       readData(0, var_IN, conn_IN);
@@ -93,7 +93,7 @@ void FORTE_BYTE2BYTE::readInputData(TEventID paEIID) {
   }
 }
 
-void FORTE_BYTE2BYTE::writeOutputData(TEventID paEIID) {
+void FORTE_BOOL2BOOL::writeOutputData(TEventID paEIID) {
   switch(paEIID) {
     case scmEventCNFID: {
       writeData(0, var_OUT, conn_OUT);
@@ -104,42 +104,42 @@ void FORTE_BYTE2BYTE::writeOutputData(TEventID paEIID) {
   }
 }
 
-CIEC_ANY *FORTE_BYTE2BYTE::getDI(size_t paIndex) {
+CIEC_ANY *FORTE_BOOL2BOOL::getDI(size_t paIndex) {
   switch(paIndex) {
     case 0: return &var_IN;
   }
   return nullptr;
 }
 
-CIEC_ANY *FORTE_BYTE2BYTE::getDO(size_t paIndex) {
+CIEC_ANY *FORTE_BOOL2BOOL::getDO(size_t paIndex) {
   switch(paIndex) {
     case 0: return &var_OUT;
   }
   return nullptr;
 }
 
-CEventConnection *FORTE_BYTE2BYTE::getEOConUnchecked(TPortId paIndex) {
+CEventConnection *FORTE_BOOL2BOOL::getEOConUnchecked(TPortId paIndex) {
   switch(paIndex) {
     case 0: return &conn_CNF;
   }
   return nullptr;
 }
 
-CDataConnection **FORTE_BYTE2BYTE::getDIConUnchecked(TPortId paIndex) {
+CDataConnection **FORTE_BOOL2BOOL::getDIConUnchecked(TPortId paIndex) {
   switch(paIndex) {
     case 0: return &conn_IN;
   }
   return nullptr;
 }
 
-CDataConnection *FORTE_BYTE2BYTE::getDOConUnchecked(TPortId paIndex) {
+CDataConnection *FORTE_BOOL2BOOL::getDOConUnchecked(TPortId paIndex) {
   switch(paIndex) {
     case 0: return &conn_OUT;
   }
   return nullptr;
 }
 
-CIEC_ANY *FORTE_BYTE2BYTE::getVarInternal(size_t) {
+CIEC_ANY *FORTE_BOOL2BOOL::getVarInternal(size_t) {
   return nullptr;
 }
 
