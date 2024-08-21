@@ -10,27 +10,27 @@
  *   Alois Zoitl, Gerhard Ebenhofer, Ingo Hegny, Monika Wenger,
  *    - initial API and implementation and/or initial documentation
  *******************************************************************************/
-#include "RT_E_EC_COUPLER.h"
+#include "RT_E_F_TRIG_fbt.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "RT_E_EC_COUPLER_gen.cpp"
+#include "RT_E_F_TRIG_fbt_gen.cpp"
 #endif
 
 #include "criticalregion.h"
 #include "resource.h"
 
-DEFINE_FIRMWARE_FB(FORTE_RT_E_EC_COUPLER, g_nStringIdRT_E_EC_COUPLER)
+DEFINE_FIRMWARE_FB(FORTE_RT_E_F_TRIG, g_nStringIdRT_E_F_TRIG)
 
-const CStringDictionary::TStringId FORTE_RT_E_EC_COUPLER::scmDataInputNames[] = {g_nStringIdQI, g_nStringIdTmin, g_nStringIdDeadline, g_nStringIdWCET};
-const CStringDictionary::TStringId FORTE_RT_E_EC_COUPLER::scmDataInputTypeIds[] = {g_nStringIdBOOL, g_nStringIdTIME, g_nStringIdTIME, g_nStringIdTIME};
-const CStringDictionary::TStringId FORTE_RT_E_EC_COUPLER::scmDataOutputNames[] = {g_nStringIdQO};
-const CStringDictionary::TStringId FORTE_RT_E_EC_COUPLER::scmDataOutputTypeIds[] = {g_nStringIdBOOL};
-const TDataIOID FORTE_RT_E_EC_COUPLER::scmEIWith[] = {0, 1, 2, 3, scmWithListDelimiter};
-const TForteInt16 FORTE_RT_E_EC_COUPLER::scmEIWithIndexes[] = {0, -1};
-const CStringDictionary::TStringId FORTE_RT_E_EC_COUPLER::scmEventInputNames[] = {g_nStringIdINIT, g_nStringIdEI};
-const TDataIOID FORTE_RT_E_EC_COUPLER::scmEOWith[] = {0, scmWithListDelimiter};
-const TForteInt16 FORTE_RT_E_EC_COUPLER::scmEOWithIndexes[] = {0, -1};
-const CStringDictionary::TStringId FORTE_RT_E_EC_COUPLER::scmEventOutputNames[] = {g_nStringIdINITO, g_nStringIdEO};
-const SFBInterfaceSpec FORTE_RT_E_EC_COUPLER::scmFBInterfaceSpec = {
+const CStringDictionary::TStringId FORTE_RT_E_F_TRIG::scmDataInputNames[] = {g_nStringIdQI, g_nStringIdTmin, g_nStringIdDeadline, g_nStringIdWCET};
+const CStringDictionary::TStringId FORTE_RT_E_F_TRIG::scmDataInputTypeIds[] = {g_nStringIdBOOL, g_nStringIdTIME, g_nStringIdTIME, g_nStringIdTIME};
+const CStringDictionary::TStringId FORTE_RT_E_F_TRIG::scmDataOutputNames[] = {g_nStringIdQO};
+const CStringDictionary::TStringId FORTE_RT_E_F_TRIG::scmDataOutputTypeIds[] = {g_nStringIdBOOL};
+const TDataIOID FORTE_RT_E_F_TRIG::scmEIWith[] = {0, 1, 2, 3, scmWithListDelimiter, 0, scmWithListDelimiter};
+const TForteInt16 FORTE_RT_E_F_TRIG::scmEIWithIndexes[] = {0, 5};
+const CStringDictionary::TStringId FORTE_RT_E_F_TRIG::scmEventInputNames[] = {g_nStringIdINIT, g_nStringIdEI};
+const TDataIOID FORTE_RT_E_F_TRIG::scmEOWith[] = {0, scmWithListDelimiter};
+const TForteInt16 FORTE_RT_E_F_TRIG::scmEOWithIndexes[] = {0, -1};
+const CStringDictionary::TStringId FORTE_RT_E_F_TRIG::scmEventOutputNames[] = {g_nStringIdINITO, g_nStringIdEO};
+const SFBInterfaceSpec FORTE_RT_E_F_TRIG::scmFBInterfaceSpec = {
   2, scmEventInputNames, scmEIWith, scmEIWithIndexes,
   2, scmEventOutputNames, scmEOWith, scmEOWithIndexes,
   4, scmDataInputNames, scmDataInputTypeIds,
@@ -39,7 +39,7 @@ const SFBInterfaceSpec FORTE_RT_E_EC_COUPLER::scmFBInterfaceSpec = {
   0, nullptr
 };
 
-FORTE_RT_E_EC_COUPLER::FORTE_RT_E_EC_COUPLER(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_RT_E_F_TRIG::FORTE_RT_E_F_TRIG(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
         CRTEventSingle(paContainer, scmFBInterfaceSpec, paInstanceNameId),
     var_conn_QO(var_QO),
     conn_INITO(this, 0),
@@ -51,7 +51,7 @@ FORTE_RT_E_EC_COUPLER::FORTE_RT_E_EC_COUPLER(const CStringDictionary::TStringId 
     conn_QO(this, 0, &var_conn_QO) {
 };
 
-void FORTE_RT_E_EC_COUPLER::setInitialValues() {
+void FORTE_RT_E_F_TRIG::setInitialValues() {
   var_QI = 0_BOOL;
   var_Tmin = 0_TIME;
   var_Deadline = 0_TIME;
@@ -59,7 +59,17 @@ void FORTE_RT_E_EC_COUPLER::setInitialValues() {
   var_QO = 0_BOOL;
 }
 
-void FORTE_RT_E_EC_COUPLER::readInputData(TEventID paEIID) {
+bool FORTE_RT_E_F_TRIG::checkActivation(TEventID){
+  bool bRetval = false;
+
+  if(!var_QI && mWasHigh) {
+    bRetval = true;
+  }
+  mWasHigh = var_QI;
+  return bRetval;
+}
+
+void FORTE_RT_E_F_TRIG::readInputData(TEventID paEIID) {
   switch(paEIID) {
     case scmEventINITID: {
       readData(0, var_QI, conn_QI);
@@ -69,6 +79,7 @@ void FORTE_RT_E_EC_COUPLER::readInputData(TEventID paEIID) {
       break;
     }
     case scmEventEIID: {
+      readData(0, var_QI, conn_QI);
       break;
     }
     default:
@@ -76,7 +87,7 @@ void FORTE_RT_E_EC_COUPLER::readInputData(TEventID paEIID) {
   }
 }
 
-void FORTE_RT_E_EC_COUPLER::writeOutputData(TEventID paEIID) {
+void FORTE_RT_E_F_TRIG::writeOutputData(TEventID paEIID) {
   switch(paEIID) {
     case scmEventINITOID: {
       writeData(0, var_QO, conn_QO);
@@ -90,7 +101,7 @@ void FORTE_RT_E_EC_COUPLER::writeOutputData(TEventID paEIID) {
   }
 }
 
-CIEC_ANY *FORTE_RT_E_EC_COUPLER::getDI(size_t paIndex) {
+CIEC_ANY *FORTE_RT_E_F_TRIG::getDI(size_t paIndex) {
   switch(paIndex) {
     case 0: return &var_QI;
     case 1: return &var_Tmin;
@@ -100,14 +111,14 @@ CIEC_ANY *FORTE_RT_E_EC_COUPLER::getDI(size_t paIndex) {
   return nullptr;
 }
 
-CIEC_ANY *FORTE_RT_E_EC_COUPLER::getDO(size_t paIndex) {
+CIEC_ANY *FORTE_RT_E_F_TRIG::getDO(size_t paIndex) {
   switch(paIndex) {
     case 0: return &var_QO;
   }
   return nullptr;
 }
 
-CEventConnection *FORTE_RT_E_EC_COUPLER::getEOConUnchecked(TPortId paIndex) {
+CEventConnection *FORTE_RT_E_F_TRIG::getEOConUnchecked(TPortId paIndex) {
   switch(paIndex) {
     case 0: return &conn_INITO;
     case 1: return &conn_EO;
@@ -115,7 +126,7 @@ CEventConnection *FORTE_RT_E_EC_COUPLER::getEOConUnchecked(TPortId paIndex) {
   return nullptr;
 }
 
-CDataConnection **FORTE_RT_E_EC_COUPLER::getDIConUnchecked(TPortId paIndex) {
+CDataConnection **FORTE_RT_E_F_TRIG::getDIConUnchecked(TPortId paIndex) {
   switch(paIndex) {
     case 0: return &conn_QI;
     case 1: return &conn_Tmin;
@@ -125,11 +136,10 @@ CDataConnection **FORTE_RT_E_EC_COUPLER::getDIConUnchecked(TPortId paIndex) {
   return nullptr;
 }
 
-CDataConnection *FORTE_RT_E_EC_COUPLER::getDOConUnchecked(TPortId paIndex) {
+CDataConnection *FORTE_RT_E_F_TRIG::getDOConUnchecked(TPortId paIndex) {
   switch(paIndex) {
     case 0: return &conn_QO;
   }
   return nullptr;
 }
-
 
