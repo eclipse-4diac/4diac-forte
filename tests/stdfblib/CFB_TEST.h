@@ -15,9 +15,9 @@
 #include "cfb.h"
 #include "typelib.h"
 #include "forte_bool.h"
-#include "E_PERMIT.h"
-#include "E_SR.h"
-#include "E_SWITCH.h"
+#include "E_PERMIT_fbt.h"
+#include "E_SR_fbt.h"
+#include "E_SWITCH_fbt.h"
 #include "GEN_E_DEMUX_fbt.h"
 #include "GEN_E_MUX_fbt.h"
 

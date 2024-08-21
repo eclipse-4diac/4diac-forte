@@ -27,8 +27,8 @@
 #include "forte_array.h"
 #include "forte_array_fixed.h"
 #include "forte_array_variable.h"
-#include "E_DELAY.h"
-#include "E_SR.h"
+#include "E_DELAY_fbt.h"
+#include "E_SR_fbt.h"
 
 
 class FORTE_E_PULSE final : public CCompositeFB {
@@ -59,7 +59,7 @@ class FORTE_E_PULSE final : public CCompositeFB {
     static const SCFB_FBFannedOutConnectionData scmFannedOutDataConnections[];
     static const SCFB_FBNData scmFBNData;
 
-    forte::core::CInternalFB<E_DELAY> fb_E_DELAY;
+    forte::core::CInternalFB<FORTE_E_DELAY> fb_E_DELAY;
     forte::core::CInternalFB<FORTE_E_SR> fb_E_SR;
 
     void readInputData(TEventID paEIID) override;

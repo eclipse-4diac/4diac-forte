@@ -13,7 +13,7 @@
 
 #include <boost/test/unit_test.hpp>
 
-#include "E_CTUD.h"
+#include "E_CTUD_fbt.h"
 #include "basicfb.h"
 #include "funcbloctests_gen.cpp"
 #include "fbcontainermock.h"
