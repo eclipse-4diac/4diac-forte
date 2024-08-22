@@ -28,6 +28,9 @@ class Config_EMB_RES : public CResource {
 
   private:
     forte::core::CInternalFB<FORTE_E_RESTART> fb_START;
+
+    CIEC_WSTRING var_OPCUA_Namespace;
+
     static const SFBInterfaceSpec scmFBInterfaceSpec;
 
     static const CStringDictionary::TStringId scmVarInputNameIds[];
