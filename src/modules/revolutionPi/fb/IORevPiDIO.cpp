@@ -49,7 +49,7 @@ const TForteUInt8 FORTE_IORevPiDIO::scmSlaveConfigurationIO[] = { };
 const TForteUInt8 FORTE_IORevPiDIO::scmSlaveConfigurationIONum = 0;
 
 FORTE_IORevPiDIO::FORTE_IORevPiDIO(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
-    IOConfigFBMultiSlave(scmSlaveConfigurationIO, scmSlaveConfigurationIONum, 96, paContainer, &scmFBInterfaceSpec, paInstanceNameId),
+    IOConfigFBMultiSlave(scmSlaveConfigurationIO, scmSlaveConfigurationIONum, 96, paContainer, scmFBInterfaceSpec, paInstanceNameId),
     var_conn_QO(var_QO),
     var_conn_STATUS(var_STATUS),
     conn_MAPO(this, 0),

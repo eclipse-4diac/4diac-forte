@@ -37,7 +37,7 @@ class CAdapter : public CGenFunctionBlock<CFunctionBlock> {
     /*!\brief The main constructor for an adapter instance.
      */
     //TODO: think on interface
-    CAdapter(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec *paInterfaceSpecSocket, const CStringDictionary::TStringId paInstanceNameId, const SFBInterfaceSpec *paInterfaceSpecPlug, bool paIsPlug);
+    CAdapter(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec& paInterfaceSpecSocket, const CStringDictionary::TStringId paInstanceNameId, const SFBInterfaceSpec& paInterfaceSpecPlug, bool paIsPlug);
     ~CAdapter() override;
 
     bool initialize() override;
@@ -86,27 +86,20 @@ class CAdapter : public CGenFunctionBlock<CFunctionBlock> {
      */
     bool isCompatible(CAdapter *paPeer) const;
 
-    /*! provides access to the interface spec used for the specific adatpter instnace (i.e., plug or socket)
-     *  Is required mainly by the anyadapter
-     */
-    const SFBInterfaceSpec* getAdapterInterfaceSpec() const{
-      return mInterfaceSpec;
-    }
-
     const TForteInt16 *getEventInputWithIndices() const{
-      return getAdapterInterfaceSpec()->mEIWithIndexes;
+      return getFBInterfaceSpec().mEIWithIndexes;
     }
 
     const TForteInt16 *getEventOutputWithIndices() const{
-      return getAdapterInterfaceSpec()->mEOWithIndexes;
+      return getFBInterfaceSpec().mEOWithIndexes;
     }
 
     const TDataIOID *getEventInputWith() const{
-      return getAdapterInterfaceSpec()->mEIWith;
+      return getFBInterfaceSpec().mEIWith;
     }
 
     const TDataIOID *getEventOutputWith() const{
-      return getAdapterInterfaceSpec()->mEOWith;
+      return getFBInterfaceSpec().mEOWith;
     }
 
     CAdapter *getPeer(){

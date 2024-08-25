@@ -75,7 +75,7 @@ private:
 
 public:
   FORTE_FieldsToArrowheadEvent(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) : 
-       CBasicFB(paContainer, &scmFBInterfaceSpec, paInstanceNameId,
+       CBasicFB(paContainer, scmFBInterfaceSpec, paInstanceNameId,
               0){
   };
 

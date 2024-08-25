@@ -23,7 +23,7 @@ namespace forte {
 
       class IOConfigFBBase : public CGenFunctionBlock<CEventSourceFB> {
         public:
-          IOConfigFBBase(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId);
+          IOConfigFBBase(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec &paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId);
           ~IOConfigFBBase() override;
           bool createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) override;
       };

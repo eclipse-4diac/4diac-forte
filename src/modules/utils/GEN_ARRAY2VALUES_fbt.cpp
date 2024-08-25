@@ -64,7 +64,7 @@ void GEN_ARRAY2VALUES::readInputData(TEventID) {
 }
 
 void GEN_ARRAY2VALUES::writeOutputData(TEventID) {
-  for(TPortId i = 0; i < mInterfaceSpec->mNumDOs; ++i) {
+  for(TPortId i = 0; i < getFBInterfaceSpec().mNumDOs; ++i) {
     writeData(i, *mDOs[i], mDOConns[i]);
   }
 }

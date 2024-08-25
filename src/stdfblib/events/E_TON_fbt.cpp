@@ -44,7 +44,10 @@ const SFBInterfaceSpec FORTE_E_TON::scmFBInterfaceSpec = {
 };
 
 FORTE_E_TON::FORTE_E_TON(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
-    CCompositeFB(paContainer, &scmFBInterfaceSpec, paInstanceNameId, scmFBNData),
+    CCompositeFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, scmFBNData),
+    fb_E_SWITCH(g_nStringIdE_SWITCH, *this),
+    fb_E_DELAY(g_nStringIdE_DELAY, *this),
+    fb_E_RS(g_nStringIdE_RS, *this),
     var_conn_Q(var_Q),
     conn_CNF(this, 0),
     conn_IN(nullptr),

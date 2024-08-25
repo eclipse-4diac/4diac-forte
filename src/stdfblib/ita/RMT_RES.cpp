@@ -35,18 +35,18 @@ const SFBInterfaceSpec RMT_RES::scmFBInterfaceSpec = {
 
 
 RMT_RES::RMT_RES(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paDevice):
-       CResource(paDevice, &scmFBInterfaceSpec, paInstanceNameId),
+       CResource(paDevice, scmFBInterfaceSpec, paInstanceNameId),
        var_MGR_ID(""),
-       conn_MGR_ID(nullptr) {
+       conn_MGR_ID(nullptr),
+       fb_START(g_nStringIdSTART, *this),
+       fb_MGR_FF(g_nStringIdMGR_FF, *this),
+       fb_MGR(g_nStringIdMGR, *this) {
 }
 
 bool RMT_RES::initialize() {
   if(!CResource::initialize()) {
     return false;
   }
-  addFB(CTypeLib::createFB(g_nStringIdSTART, g_nStringIdE_RESTART, *this));
-  addFB(CTypeLib::createFB(g_nStringIdMGR_FF, g_nStringIdE_SR, *this));
-  addFB(CTypeLib::createFB(g_nStringIdMGR, g_nStringIdDEV_MGR, *this));
 
   forte::core::SManagementCMD command;
 

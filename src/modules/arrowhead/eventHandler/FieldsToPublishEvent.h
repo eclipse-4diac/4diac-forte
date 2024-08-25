@@ -67,7 +67,7 @@ private:
 
 public:
   FORTE_FieldsToPublishEvent(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) : 
-       CBasicFB(paContainer, &scmFBInterfaceSpec, paInstanceNameId,
+       CBasicFB(paContainer, scmFBInterfaceSpec, paInstanceNameId,
               0){
   };
 

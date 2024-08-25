@@ -42,7 +42,7 @@ const SFBInterfaceSpec FORTE_EC_START_ELEM::scmFBInterfaceSpec = {
 };
 
 FORTE_EC_START_ELEM::FORTE_EC_START_ELEM(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
-    CFunctionBlock(paContainer, &scmFBInterfaceSpec, paInstanceNameId),
+    CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId),
     var_conn_QO(var_QO),
     var_conn_STATUS(var_STATUS),
     conn_CNF(this, 0),

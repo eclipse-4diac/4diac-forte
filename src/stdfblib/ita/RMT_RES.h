@@ -13,7 +13,10 @@
 #ifndef _RMT_RES_H_
 #define _RMT_RES_H_
 
-#include <resource.h>
+#include "resource.h"
+#include "DEV_MGR.h"
+#include "E_RESTART_fbt.h"
+#include "E_SR_fbt.h"
 
 class RMT_RES : public CResource{
   DECLARE_FIRMWARE_FB(RMT_RES)
@@ -33,6 +36,10 @@ class RMT_RES : public CResource{
     CDataConnection **getDIConUnchecked(TPortId) override;
 
   private:
+    forte::core::CInternalFB<FORTE_E_RESTART> fb_START;
+    forte::core::CInternalFB<FORTE_E_SR> fb_MGR_FF;
+    forte::core::CInternalFB<DEV_MGR> fb_MGR;
+
     static const SFBInterfaceSpec scmFBInterfaceSpec;
 
     static const CStringDictionary::TStringId scmVarInputNameIds[];

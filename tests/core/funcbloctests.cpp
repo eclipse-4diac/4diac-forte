@@ -13,7 +13,7 @@
 
 #include <boost/test/unit_test.hpp>
 
-#include "E_CTUD.h"
+#include "E_CTUD_fbt.h"
 #include "basicfb.h"
 #include "funcbloctests_gen.cpp"
 #include "fbcontainermock.h"
@@ -43,11 +43,19 @@ BOOST_AUTO_TEST_CASE(FB_TO_STRING_BUFFER_SIZE_TEST_WITH_INRENAL_VAR){
             0, nullptr};
 
     public:
-        CInternalVarTestFB(const SInternalVarsInformation *paVarInternals) : CBasicFB(CFBContainerMock::smDefaultFBContMock, &gcEmptyInterface, CStringDictionary::scmInvalidStringId, paVarInternals) {
+        CInternalVarTestFB(const SInternalVarsInformation *paVarInternals) : CBasicFB(CFBContainerMock::smDefaultFBContMock, gcEmptyInterface, CStringDictionary::scmInvalidStringId, paVarInternals) {
         }
 
         CIEC_ANY *getVarInternal(size_t paVarIntNum) override {
-            return CBasicFB::getVarInternal(paVarIntNum);
+          switch (paVarIntNum) {
+            case 0:
+              return &var_QU;
+            case 1:
+              return &var_QD;
+            case 2:
+              return &var_CV;
+          }
+          return nullptr;
         }
 
         CStringDictionary::TStringId getFBTypeId() const override {
@@ -83,6 +91,11 @@ BOOST_AUTO_TEST_CASE(FB_TO_STRING_BUFFER_SIZE_TEST_WITH_INRENAL_VAR){
         CDataConnection *getDOConUnchecked(TPortId) override {
                 return nullptr;
         }
+
+      private:
+        CIEC_BOOL var_QU;
+        CIEC_BOOL var_QD;
+        CIEC_UINT var_CV;
 };
 
     CStringDictionary::TStringId varInternalNames[] = {g_nStringIdQU, g_nStringIdQD, g_nStringIdCV};

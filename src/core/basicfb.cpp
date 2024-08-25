@@ -17,53 +17,11 @@
 #include "basicfb.h"
 #include "resource.h"
 
-CBasicFB::CBasicFB(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec *paInterfaceSpec,
+CBasicFB::CBasicFB(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec& paInterfaceSpec,
                    const CStringDictionary::TStringId paInstanceNameId,
                    const SInternalVarsInformation *paVarInternals) :
         CFunctionBlock(paContainer, paInterfaceSpec, paInstanceNameId), mECCState(0),
-        cmVarInternals(paVarInternals), mBasicFBVarsData(nullptr), mInternals(nullptr) {
-}
-
-bool CBasicFB::initialize() {
-  if(!CFunctionBlock::initialize()) {
-    return false;
-  }
-  // initialize all internal FBs
-  for(TFBContainerList::iterator it(getChildren().begin()); it != getChildren().end(); ++it){
-    if((*it)->isFB()) {
-      if(!static_cast<CFunctionBlock &>(**it).initialize()){
-        return false;
-      }
-    }
-  }
-
-  if((nullptr != cmVarInternals) && (cmVarInternals->mNumIntVars)) {
-    size_t basicVarsDataSize = calculateBasicFBVarsDataSize(*cmVarInternals);
-    mBasicFBVarsData = basicVarsDataSize ? operator new(basicVarsDataSize) : nullptr;
-
-    auto *basicVarsData = reinterpret_cast<TForteByte *>(mBasicFBVarsData);
-    mInternals = reinterpret_cast<CIEC_ANY**>(basicVarsData);
-    basicVarsData += cmVarInternals->mNumIntVars * sizeof(CIEC_ANY *);
-    const CStringDictionary::TStringId *pnDataIds = cmVarInternals->mIntVarsDataTypeNames;
-    for(TPortId i = 0; i < cmVarInternals->mNumIntVars; ++i) {
-      mInternals[i] = createDataPoint(pnDataIds, basicVarsData);
-    }
-  }
-  return true;
-}
-
-CBasicFB::~CBasicFB() {
-  if(nullptr != mInternals) {
-    for(TPortId i = 0; i < cmVarInternals->mNumIntVars; ++i) {
-      if(CIEC_ANY* value = mInternals[i]; nullptr != value) {
-        std::destroy_at(value);
-      }
-    }
-  }
-  operator delete(mBasicFBVarsData);
-  mBasicFBVarsData = nullptr;
-  //CFBContainer shall not handle internal function blocks therefore we are clearing the list here
-  getChildren().clear();
+        cmVarInternals(paVarInternals) {
 }
 
 void CBasicFB::setInitialValues() {
@@ -77,19 +35,6 @@ void CBasicFB::setInitialValues() {
       delete value;
     }
   }
-}
-
-size_t CBasicFB::calculateBasicFBVarsDataSize(const SInternalVarsInformation &paVarInternals) {
-  size_t result = 0;
-  const CStringDictionary::TStringId *pnDataIds;
-
-  result += paVarInternals.mNumIntVars * sizeof(CIEC_ANY *);
-  pnDataIds = paVarInternals.mIntVarsDataTypeNames;
-  for (TPortId i = 0; i < paVarInternals.mNumIntVars; ++i) {
-    result += getDataPointSize(pnDataIds);
-  }
-
-  return result;
 }
 
 CIEC_ANY* CBasicFB::getVar(CStringDictionary::TStringId *paNameList, unsigned int paNameListSize) {
@@ -161,8 +106,8 @@ size_t CBasicFB::getToStringBufferSize() const {
 
 #ifdef FORTE_TRACE_CTF
 void CBasicFB::traceInstanceData() {
-  std::vector<std::string> inputs(mInterfaceSpec->mNumDIs);
-  std::vector<std::string> outputs(mInterfaceSpec->mNumDOs);
+  std::vector<std::string> inputs(getFBInterfaceSpec().mNumDIs);
+  std::vector<std::string> outputs(getFBInterfaceSpec().mNumDOs);
   std::vector<std::string> internals(cmVarInternals ? cmVarInternals->mNumIntVars : 0);
   std::vector<std::string> internalFbs(getChildren().size());
   std::vector<const char *> inputs_c_str(inputs.size());

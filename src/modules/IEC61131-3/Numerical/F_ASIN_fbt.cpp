@@ -51,7 +51,7 @@ const SFBInterfaceSpec FORTE_F_ASIN::scmFBInterfaceSpec = {
 };
 
 FORTE_F_ASIN::FORTE_F_ASIN(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
-    CFunctionBlock(paContainer, &scmFBInterfaceSpec, paInstanceNameId),
+    CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId),
     var_IN(CIEC_ANY_REAL_VARIANT()),
     var_OUT(CIEC_ANY_REAL_VARIANT()),
     var_conn_OUT(var_OUT),

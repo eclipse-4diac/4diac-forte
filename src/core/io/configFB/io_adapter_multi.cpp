@@ -16,8 +16,8 @@
 using namespace forte::core::io;
 
 IOConfigFBMultiAdapter::IOConfigFBMultiAdapter(const TForteUInt8* const paSlaveConfigurationIO, const TForteUInt8 paSlaveConfigurationIONum,
-    forte::core::CFBContainer &paContainer, const SFBInterfaceSpec *paInterfaceSpecSocket, const CStringDictionary::TStringId paInstanceNameId,
-    const SFBInterfaceSpec *paInterfaceSpecPlug, bool paIsPlug) :
+    forte::core::CFBContainer &paContainer, const SFBInterfaceSpec& paInterfaceSpecSocket, const CStringDictionary::TStringId paInstanceNameId,
+    const SFBInterfaceSpec& paInterfaceSpecPlug, bool paIsPlug) :
     CAdapter(paContainer, paInterfaceSpecSocket, paInstanceNameId, paInterfaceSpecPlug, paIsPlug),
         cmSlaveConfigurationIO(paSlaveConfigurationIO), mSlaveConfigurationIONum(paSlaveConfigurationIONum) {
 }

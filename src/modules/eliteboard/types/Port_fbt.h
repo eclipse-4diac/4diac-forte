@@ -81,7 +81,7 @@ private:
 public:
   FORTE_Port(const CStringDictionary::TStringId paInstanceNameId,
              forte::core::CFBContainer &paContainer)
-      : CFunctionBlock(paContainer, &scmFBInterfaceSpec, paInstanceNameId),
+      : CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId),
         mRegistered{} {};
 
   ~FORTE_Port() override = default;

@@ -43,12 +43,10 @@ GEN_STRUCT_DEMUX::GEN_STRUCT_DEMUX(const CStringDictionary::TStringId paInstance
     CGenFunctionBlock<CFunctionBlock>(paContainer, paInstanceNameId){
 }
 
-GEN_STRUCT_DEMUX::~GEN_STRUCT_DEMUX(){
-  if(nullptr != mInterfaceSpec){
-    delete[](mInterfaceSpec->mDIDataTypeNames);
-    delete[](mInterfaceSpec->mDONames);
-    delete[](mInterfaceSpec->mDODataTypeNames);
-  }
+GEN_STRUCT_DEMUX::~GEN_STRUCT_DEMUX() {
+  delete[] (getGenInterfaceSpec().mDIDataTypeNames);
+  delete[] (getGenInterfaceSpec().mDONames);
+  delete[] (getGenInterfaceSpec().mDODataTypeNames);
 }
 
 void GEN_STRUCT_DEMUX::readInputData(TEventID) {
@@ -56,7 +54,7 @@ void GEN_STRUCT_DEMUX::readInputData(TEventID) {
 }
 
 void GEN_STRUCT_DEMUX::writeOutputData(TEventID) {
-  for(TPortId i = 0; i < mInterfaceSpec->mNumDOs; ++i) {
+  for(TPortId i = 0; i < getFBInterfaceSpec().mNumDOs; ++i) {
     writeData(i, *mDOs[i], mDOConns[i]);
   }
 }

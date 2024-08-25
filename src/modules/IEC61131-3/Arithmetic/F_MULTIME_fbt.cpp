@@ -51,7 +51,7 @@ const SFBInterfaceSpec FORTE_F_MULTIME::scmFBInterfaceSpec = {
 };
 
 FORTE_F_MULTIME::FORTE_F_MULTIME(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
-    CFunctionBlock(paContainer, &scmFBInterfaceSpec, paInstanceNameId),
+    CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId),
     var_IN1(CIEC_TIME(0)),
     var_IN2(CIEC_ANY_NUM_VARIANT()),
     var_OUT(CIEC_TIME(0)),

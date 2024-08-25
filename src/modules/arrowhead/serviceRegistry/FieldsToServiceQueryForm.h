@@ -71,7 +71,7 @@ private:
 
 public:
   FORTE_FieldsToServiceQueryForm(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) : 
-       CBasicFB(paContainer, &scmFBInterfaceSpec, paInstanceNameId,
+       CBasicFB(paContainer, scmFBInterfaceSpec, paInstanceNameId,
               0){
   };
 

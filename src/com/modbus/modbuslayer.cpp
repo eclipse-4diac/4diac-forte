@@ -64,96 +64,121 @@ unsigned int CModbusComLayer::convertDataInput(void *paInData, unsigned int paDa
   for(unsigned int i = 0; i < nrSDs; i++){
     CIEC_ANY &anyVal(apoSDs[i]->unwrap());
     switch (anyVal.getDataTypeID()) {
+      /***************************************************************************
+      1bit data type
+      ***************************************************************************/
       case CIEC_ANY::e_BOOL: // 1bit data type
       {
-        TForteUInt8 out = (bool) static_cast<CIEC_BOOL&>(anyVal);
+        TForteByte out = (bool) static_cast<CIEC_BOOL&>(anyVal);
+        *(TForteByte*) (&convertedData[outLength]) = out;
+        outLength += sizeof(TForteByte);
+        break;
+      }
+      /***************************************************************************
+       8bit data types
+       ***************************************************************************/
+      case CIEC_ANY::e_SINT: // 8bit data type signed
+      {
+        TForteInt8 out = (TForteInt8) static_cast<CIEC_SINT&>(anyVal);
+        *(TForteInt8*) (&convertedData[outLength]) = out;
+        outLength += sizeof(TForteInt8);
+        break;
+      }
+      case CIEC_ANY::e_USINT:  // 8bit data type unsigned
+      {
+        TForteUInt8 out = (TForteUInt8) static_cast<CIEC_USINT&>(anyVal);
         *(TForteUInt8*) (&convertedData[outLength]) = out;
         outLength += sizeof(TForteUInt8);
         break;
       }
-      case CIEC_ANY::e_SINT: // 8bit data types
+      case CIEC_ANY::e_BYTE:  // 8bit data type
       {
-        TForteInt16 out = (TForteInt8) static_cast<CIEC_SINT&>(anyVal);
-        *(TForteInt16*) (&convertedData[outLength]) = out;
-        outLength += sizeof(TForteInt16);
+        TForteByte out = (TForteByte) static_cast<CIEC_BYTE&>(anyVal);
+        *(TForteByte*) (&convertedData[outLength]) = out;
+        outLength += sizeof(TForteByte);
         break;
       }
-      case CIEC_ANY::e_USINT: {
-        TForteUInt16 out = (TForteUInt8) static_cast<CIEC_USINT&>(anyVal);
-        *(TForteUInt16*) (&convertedData[outLength]) = out;
-        outLength += sizeof(TForteUInt16);
-        break;
-      }
-      case CIEC_ANY::e_BYTE: {
-        TForteUInt16 out = (TForteByte) static_cast<CIEC_BYTE&>(anyVal);
-        *(TForteUInt16*) (&convertedData[outLength]) = out;
-        outLength += sizeof(TForteUInt16);
-        break;
-      }
-      case CIEC_ANY::e_INT: // 16bit data types
+      /***************************************************************************
+       16bit data types
+       ***************************************************************************/
+      case CIEC_ANY::e_INT: // 16bit data type signed
       {
         TForteInt16 out = (TForteInt16) static_cast<CIEC_INT&>(anyVal);
         *(TForteInt16*) (&convertedData[outLength]) = out;
         outLength += sizeof(TForteInt16);
         break;
       }
-      case CIEC_ANY::e_UINT: {
+      case CIEC_ANY::e_UINT: // 16bit data type unsigned
+      {
         TForteUInt16 out = (TForteUInt16) static_cast<CIEC_UINT&>(anyVal);
         *(TForteUInt16*) (&convertedData[outLength]) = out;
         outLength += sizeof(TForteUInt16);
         break;
       }
-      case CIEC_ANY::e_WORD: {
+      case CIEC_ANY::e_WORD: // 16bit data type
+      {
         TForteWord out = (TForteWord) static_cast<CIEC_WORD&>(anyVal);
         *(TForteWord*) (&convertedData[outLength]) = out;
         outLength += sizeof(TForteWord);
         break;
       }
-      case CIEC_ANY::e_DINT: // 32bit data types
+      /***************************************************************************
+       32bit data types
+       ***************************************************************************/
+      case CIEC_ANY::e_DINT: // 32bit data type signed
       {
         TForteInt32 out = (TForteInt32) static_cast<CIEC_DINT&>(anyVal);
         *(TForteInt32*) (&convertedData[outLength]) = convertFBOutput<TForteInt32>((TForteByte*) &out, sizeof(TForteInt32));
         outLength += sizeof(TForteInt32);
         break;
       }
-      case CIEC_ANY::e_UDINT: {
+      case CIEC_ANY::e_UDINT: // 32bit data type unsigned
+      {
         TForteUInt32 out = (TForteUInt32) static_cast<CIEC_UDINT&>(anyVal);
         *(TForteUInt32*) (&convertedData[outLength]) = convertFBOutput<TForteUInt32>((TForteByte*) &out, sizeof(TForteUInt32));
         outLength += sizeof(TForteUInt32);
         break;
       }
-      case CIEC_ANY::e_DWORD: {
+      case CIEC_ANY::e_DWORD: // 32bit data type
+      {
         TForteDWord out = (TForteDWord) static_cast<CIEC_DWORD&>(anyVal);
         *(TForteDWord*) (&convertedData[outLength]) = convertFBOutput<TForteDWord>((TForteByte*) &out, sizeof(TForteDWord));
         outLength += sizeof(TForteDWord);
         break;
       }
-      case CIEC_ANY::e_REAL: {
+      case CIEC_ANY::e_REAL: // 32bit data type
+      {
         TForteFloat out = (TForteFloat) static_cast<CIEC_REAL&>(anyVal);
         *(TForteFloat*) (&convertedData[outLength]) = convertFBOutput<TForteFloat>((TForteByte*) &out, sizeof(TForteFloat));
         outLength += sizeof(TForteFloat);
         break;
       }
-      case CIEC_ANY::e_LINT: // 64bit data types
+      /***************************************************************************
+       64bit data types
+       ***************************************************************************/
+      case CIEC_ANY::e_LINT: // 64bit data type signed
       {
         TForteInt64 out = (TForteInt64) static_cast<CIEC_LINT&>(anyVal);
         *(TForteInt64*) (&convertedData[outLength]) = convertFBOutput<TForteInt64>((TForteByte*) &out, sizeof(TForteInt64));
         outLength += sizeof(TForteInt64);
         break;
       }
-      case CIEC_ANY::e_ULINT: {
+      case CIEC_ANY::e_ULINT: // 64bit data type unsigned
+      {
         TForteUInt64 out = (TForteUInt64) static_cast<CIEC_ULINT&>(anyVal);
         *(TForteUInt64*) (&convertedData[outLength]) = convertFBOutput<TForteUInt64>((TForteByte*) &out, sizeof(TForteUInt64));
         outLength += sizeof(TForteUInt64);
         break;
       }
-      case CIEC_ANY::e_LWORD: {
+      case CIEC_ANY::e_LWORD: // 64bit data type
+      {
         TForteLWord out = (TForteLWord) static_cast<CIEC_LWORD&>(anyVal);
         *(TForteLWord*) (&convertedData[outLength]) = convertFBOutput<TForteLWord>((TForteByte*) &out, sizeof(TForteLWord));
         outLength += sizeof(TForteLWord);
         break;
       }
-      case CIEC_ANY::e_LREAL: {
+      case CIEC_ANY::e_LREAL: // 64bit data type
+      {
         TForteDFloat out = (TForteDFloat) static_cast<CIEC_LREAL&>(anyVal);
         *(TForteDFloat*) (&convertedData[outLength]) = convertFBOutput<TForteDFloat>((TForteByte*) &out, sizeof(TForteDFloat));
         outLength += sizeof(TForteDFloat);

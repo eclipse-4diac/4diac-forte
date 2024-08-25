@@ -1,5 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2015, 2024 fortiss GmbH, Primetals Technologies Austria GmbH
+ *                          Martin Erich Jobst
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -10,6 +11,7 @@
  * Contributors:
  *   Alois Zoitl - initial implementation and rework communication infrastructure
  *               - merged fbs and containers in one list
+ *   Martin Jobst - add smart pointer for internal FBs
  *******************************************************************************/
 #ifndef _FBCONTAINER_H_
 #define _FBCONTAINER_H_
@@ -18,6 +20,7 @@
 #include "stringdict.h"
 #include "mgmcmdstruct.h"
 #include <vector>
+#include <memory>
 
 class CFunctionBlock;
 class CDevice;
@@ -27,8 +30,13 @@ namespace forte {
   namespace core {
 
     class CFBContainer{
+        template<typename U>
+        friend class CInternalFB;
       public:
         CFBContainer(CStringDictionary::TStringId paContInstanceName, CFBContainer &paParent);
+
+        virtual bool initialize();
+
         virtual ~CFBContainer();
 
         CStringDictionary::TStringId getInstanceNameId() const{
@@ -39,12 +47,13 @@ namespace forte {
           return CStringDictionary::getInstance().get(mContInstanceName);
         }
 
-        /*!\brief Adds a function block created via the typelib to the FB-List
+        /*!\brief Create a new FB instance of given type and name
          *
-         * @param paFuncBlock new function block to add to the FB-List
+         * @param paInstanceNameId    instance name for the FB to be created
+         * @param paTypeName      the type name of the FB to be created
          * @return response of the command execution as defined in IEC 61499
          */
-        EMGMResponse addFB(CFunctionBlock *paFuncBlock);
+        EMGMResponse createFB(CStringDictionary::TStringId paInstanceNameId, CStringDictionary::TStringId paTypeName);
 
         /*!\brief Gets a function block from the container or recursively from its subcontainers
          *
@@ -109,14 +118,6 @@ namespace forte {
          */
         EMGMResponse createFB(forte::core::TNameIdentifier::CIterator &paNameListIt, CStringDictionary::TStringId paTypeName);
 
-        /*!\brief Create a new FB instance of given type and name
-         *
-         * @param paInstanceNameId    instance name for the FB to be created
-         * @param paTypeName      the type name of the FB to be created
-         * @return response of the command execution as defined in IEC 61499
-         */
-        EMGMResponse createFB(CStringDictionary::TStringId paInstanceNameId, CStringDictionary::TStringId paTypeName);
-
         /*!\brief Delete a FB instance with given name
          *
          * @param paNameListIt    iterator to the current position in the name list for the FB to be deleted (e.g., SubApp1.SubApp2.FBName, FBName2)
@@ -134,6 +135,17 @@ namespace forte {
         TFBContainerList::iterator getChildrenIterator(CStringDictionary::TStringId paName);
 
       private:
+        /*!\brief Adds a function block created via the typelib to the FB-List
+         *
+         * @param paFuncBlock new function block to add to the FB-List
+         */
+        void addFB(CFunctionBlock &paFuncBlock);
+
+        /*!\brief Removes a function block from the FB-List
+         *
+         * @param paFuncBlock function block to remove from the FB-List
+         */
+        void removeFB(CFunctionBlock &paFuncBlock);
 
         /*!\brief Check if the given iterator points to a valid child with the provide name
          *
@@ -155,6 +167,46 @@ namespace forte {
         TFBContainerList mChildren; //!< List of children (i.e, fbs or subapplications in this container)
     };
 
+    template<typename T>
+    class CInternalFB {
+        static_assert(std::is_base_of_v<CFunctionBlock, T>, "T must be a CFunctionBlock");
+      public:
+        CInternalFB(CStringDictionary::TStringId paInstanceNameId, CFBContainer &paContainer) :
+                mFB(std::make_unique<T>(paInstanceNameId, paContainer)) {
+          paContainer.addFB(*mFB);
+        }
+
+        CInternalFB(CStringDictionary::TStringId paInstanceNameId, const char *paConfigString,
+                    CFBContainer &paContainer) :
+                mFB(std::make_unique<T>(paInstanceNameId, paContainer)) {
+          mFB->configureFB(paConfigString);
+          paContainer.addFB(*mFB);
+        }
+
+        ~CInternalFB() {
+          mFB->getParent().removeFB(*mFB);
+        }
+
+        T *get() noexcept {
+          return mFB.get();
+        }
+
+        T &operator*() noexcept {
+          return mFB.operator*();
+        }
+
+        T *operator->() noexcept {
+          return mFB.operator->();
+        }
+
+        template<typename... Args>
+        auto operator()(Args &&...args) {
+          return (*mFB)(std::forward<Args>(args)...);
+        }
+
+      private:
+        std::unique_ptr<T> mFB;
+    };
   } /* namespace core */
 } /* namespace forte */
 

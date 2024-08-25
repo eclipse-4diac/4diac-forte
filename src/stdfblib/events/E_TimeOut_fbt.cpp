@@ -33,7 +33,7 @@ const SFBInterfaceSpec FORTE_E_TimeOut::scmFBInterfaceSpec = {
 };
 
 FORTE_E_TimeOut::FORTE_E_TimeOut(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
-    CEventSourceFB(paContainer, &scmFBInterfaceSpec, paInstanceNameId),
+    CEventSourceFB(paContainer, scmFBInterfaceSpec, paInstanceNameId),
     mActive(false),
     var_TimeOutSocket(g_nStringIdTimeOutSocket, *this, false) {
 };

@@ -37,27 +37,27 @@ class CAnyAdapter : public CAdapter{
 
     //! Helper functions allowing to retrieve interface information from any_adpaters TODO look for Doxygen grouping syntax
     TEventID getNumEIs() const {
-      return mInterfaceSpec->mNumEIs;
+      return getFBInterfaceSpec().mNumEIs;
     }
 
     TEventID getNumEOs() const {
-      return mInterfaceSpec->mNumEOs;
+      return getFBInterfaceSpec().mNumEOs;
     }
 
     const TForteInt16* getEIWithIndexes() const {
-      return mInterfaceSpec->mEIWithIndexes;
+      return getFBInterfaceSpec().mEIWithIndexes;
     }
 
     const TDataIOID* getEIWiths() const {
-      return mInterfaceSpec->mEIWith;
+      return getFBInterfaceSpec().mEIWith;
     }
 
     TPortId getNumDIs() const {
-      return mInterfaceSpec->mNumDIs;
+      return getFBInterfaceSpec().mNumDIs;
     }
 
     const CStringDictionary::TStringId* getDataInputNames() const {
-      return mInterfaceSpec->mDINames;
+      return getFBInterfaceSpec().mDINames;
     }
 
     CIEC_ANY* getDataInputs(){
@@ -65,11 +65,11 @@ class CAnyAdapter : public CAdapter{
     }
 
     TPortId getNumDOs() const {
-      return mInterfaceSpec->mNumDOs;
+      return getFBInterfaceSpec().mNumDOs;
     }
 
     const CStringDictionary::TStringId* getDataOutputNames() const {
-      return mInterfaceSpec->mDONames;
+      return getFBInterfaceSpec().mDONames;
     }
 
     CIEC_ANY* getDataOutputs(){
@@ -85,9 +85,6 @@ class CAnyAdapter : public CAdapter{
 
   private:
     static const SFBInterfaceSpec scmFBInterfaceSpec; //! interface spec for the empty interface of an any adapter will be used for plug and socket
-
-    //!Interface specification to be used when configured
-    SFBInterfaceSpec mCurrentFBInterfaceSpec;
 
     CFunctionBlock *m_ParentFB; //!< Pointer to the parent FB
     TForteUInt8 mParentAdapterlistID; //!< Adapter list ID in respect to the parent FB

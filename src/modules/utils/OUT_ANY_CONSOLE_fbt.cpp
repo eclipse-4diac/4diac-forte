@@ -51,7 +51,7 @@ const SFBInterfaceSpec FORTE_OUT_ANY_CONSOLE::scmFBInterfaceSpec = {
 };
 
 FORTE_OUT_ANY_CONSOLE::FORTE_OUT_ANY_CONSOLE(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
-    CFunctionBlock(paContainer, &scmFBInterfaceSpec, paInstanceNameId),
+    CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId),
     var_QI(CIEC_BOOL(0)),
     var_LABEL(CIEC_STRING("", 0)),
     var_IN(CIEC_ANY_VARIANT()),

@@ -28,7 +28,7 @@ const CIEC_STRING ProcessInterface::scmMappedWrongDirectionInput("Mapped invalid
 const CIEC_STRING ProcessInterface::scmMappedWrongDataType("Mapped invalid data type."_STRING);
 
 
-ProcessInterface::ProcessInterface(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId) :
+ProcessInterface::ProcessInterface(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec& paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId) :
     CProcessInterfaceBase(paContainer, paInterfaceSpec, paInstanceNameId), IOObserver() {
   mIsListening = false;
   mIsReady = false;
@@ -40,7 +40,7 @@ ProcessInterface::~ProcessInterface() {
 
 bool ProcessInterface::initialise(bool paIsInput, CEventChainExecutionThread *const paECET) {
   mDirection = paIsInput ? IOMapper::In : IOMapper::Out;
-  if(paIsInput && (getFBInterfaceSpec()->mNumDOs < 3)) {
+  if(paIsInput && (getFBInterfaceSpec().mNumDOs < 3)) {
     mType = CIEC_ANY::e_Max; //we assume that any FB which has no "IN" Output must be a EVENT-Only FB.
   }
   else {
