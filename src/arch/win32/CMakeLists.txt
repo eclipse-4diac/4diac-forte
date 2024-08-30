@@ -1,5 +1,6 @@
 #*******************************************************************************
 # Copyright (c) 2010 - 2015 ACIN, Profactor GmbH, fortiss GmbH
+#               2024 Samator Indo Gas
 # This program and the accompanying materials are made available under the
 # terms of the Eclipse Public License 2.0 which is available at
 # http://www.eclipse.org/legal/epl-2.0.
@@ -9,6 +10,7 @@
 # Contributors:
 #   Alois Zoitl, Gerhard Ebenhofer, Martin Melik-Merkumians - initial API and implementation and/or initial documentation
 #   Christoph Binder - add possibility to configure simulated time
+#   Ketut Kumajaya - option to run as a Windows service
 # *******************************************************************************/
 
 SET(SOURCE_GROUP ${SOURCE_GROUP}\\win32)
@@ -93,4 +95,10 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "Win32")
   endif(FORTE_TESTS AND FORTE_USE_TEST_CONFIG_IN_FORTE)
   
  
+  set(FORTE_WINDOWS_SERVICE OFF CACHE BOOL "Set as a Windows service")
+  if(FORTE_WINDOWS_SERVICE)
+    forte_add_definition("-DFORTE_WINDOWS_SERVICE")
+    add_subdirectory(service)
+  endif()
+
 endif()

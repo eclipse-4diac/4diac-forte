@@ -1,5 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2010 - 2018 ACIN, Profactor GmbH, fortiss GmbH
+ *               2024 Samator Indo Gas
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -9,6 +10,7 @@
  * Contributors:
  *  Alois Zoitl, Ingo Hegny, Gerhard Ebenhofer - initial API and implementation and/or initial documentation
  *  Alois Zoitl - cleaned up main, inserted new architecture initilasation api
+ *  Ketut Kumajaya - option to run as a Windows service
  *******************************************************************************/
 #include "../forte_architecture.h"
 #include "../devlog.h"
@@ -37,7 +39,7 @@ void endForte(int ){
   g4diacForteInstance.triggerDeviceShutdown();
 }
 
-int main(int argc, char *arg[]){
+int _main(int argc, char *arg[]){
 
   if(CForteArchitecture::initialize()){
 
@@ -70,3 +72,9 @@ void hookSignals() {
   signal(SIGINT, endForte);
   signal(SIGTERM, endForte);
 }
+
+#ifndef FORTE_WINDOWS_SERVICE
+int main(int argc, char *arg[]){
+  return _main(argc, arg);
+}
+#endif
