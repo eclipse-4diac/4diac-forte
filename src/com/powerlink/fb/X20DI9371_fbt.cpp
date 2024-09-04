@@ -55,7 +55,7 @@ const SFBInterfaceSpec FORTE_X20DI9371::scmFBInterfaceSpec = {
 
 FORTE_X20DI9371::FORTE_X20DI9371(const CStringDictionary::TStringId paInstanceNameId,
                                  forte::core::CFBContainer &paContainer) : PowerlinkFunctionBlockDI(paContainer,
-                                                                               &scmFBInterfaceSpec, paInstanceNameId),
+                                                                               scmFBInterfaceSpec, paInstanceNameId),
                                                                            var_conn_QO(var_QO),
                                                                            var_conn_CNIDO(var_CNIDO),
                                                                            var_conn_STATUS(var_STATUS),

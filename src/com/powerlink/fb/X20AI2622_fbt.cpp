@@ -41,7 +41,7 @@ const SFBInterfaceSpec FORTE_X20AI2622::scmFBInterfaceSpec = {
 };
 
 FORTE_X20AI2622::FORTE_X20AI2622(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
-    PowerlinkFunctionBlockAI(paContainer, &scmFBInterfaceSpec, paInstanceNameId),
+    PowerlinkFunctionBlockAI(paContainer, scmFBInterfaceSpec, paInstanceNameId),
     var_conn_QO(var_QO),
     var_conn_CNIDO(var_CNIDO),
     var_conn_STATUS(var_STATUS),
