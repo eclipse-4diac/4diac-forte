@@ -31,6 +31,7 @@ if (NOT FORTE_MODULE_POWERLINK_TINYXML_DIR)
             tinyxml
             URL https://downloads.sourceforge.net/project/tinyxml/tinyxml/2.6.2/tinyxml_2_6_2.zip
             URL_HASH   SHA256=ac6bb9501c6f50cc922d22f26b02fab168db47521be5e845b83d3451a3e1d512
+            DOWNLOAD_EXTRACT_TIMESTAMP true
     )
 
     FetchContent_Populate(tinyxml)
@@ -54,10 +55,12 @@ if ("${FORTE_ARCHITECTURE}" STREQUAL "Win32")
 elseif ("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
     # Download and build openPOWERLINK only for posix as there are too many problems with the Windows build
     if (NOT FORTE_MODULE_POWERLINK_LIB_DIR)
+        # Only V1.08 of openPOWERLINK is supported
         FetchContent_Declare(
                 openpowerlink
                 URL https://downloads.sourceforge.net/project/openpowerlink/openPOWERLINK/V1.8.0/openPOWERLINK-V1.08.zip
                 URL_HASH MD5=7ae68359cbc9092d125d43c75b4794ad
+                DOWNLOAD_EXTRACT_TIMESTAMP true
         )
         FetchContent_Populate(openpowerlink)
 
