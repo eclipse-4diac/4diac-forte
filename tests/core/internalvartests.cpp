@@ -35,11 +35,20 @@ class CInternalVarTestFB : public CBasicFB{
 
   public:
     CInternalVarTestFB(const SInternalVarsInformation *paVarInternals) :
-      CBasicFB(CFBContainerMock::smDefaultFBContMock, &gcEmptyInterface, CStringDictionary::scmInvalidStringId, paVarInternals) {
+      CBasicFB(CFBContainerMock::smDefaultFBContMock, gcEmptyInterface, CStringDictionary::scmInvalidStringId, paVarInternals),
+      var_QU(false_BOOL), var_QD(false_BOOL), var_CV(0_UINT) {
     }
 
     CIEC_ANY *getVarInternal(size_t paVarIntNum) override {
-      return CBasicFB::getVarInternal(paVarIntNum);
+      switch (paVarIntNum) {
+        case 0:
+          return &var_QU;
+        case 1:
+          return &var_QD;
+        case 2:
+          return &var_CV;
+      }
+      return nullptr;
     }
 
     CStringDictionary::TStringId getFBTypeId() const override {
@@ -75,6 +84,11 @@ class CInternalVarTestFB : public CBasicFB{
     CDataConnection *getDOConUnchecked(TPortId) override {
       return nullptr;
     }
+
+  private:
+    CIEC_BOOL var_QU;
+    CIEC_BOOL var_QD;
+    CIEC_UINT var_CV;
 };
 
 BOOST_AUTO_TEST_SUITE(internal_vars)

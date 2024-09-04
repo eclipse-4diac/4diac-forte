@@ -46,7 +46,7 @@ const SFBInterfaceSpec FORTE_TEST_CONDITION::scmFBInterfaceSpec = {
 };
 
 FORTE_TEST_CONDITION::FORTE_TEST_CONDITION(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
-        CFunctionBlock(paContainer, &scmFBInterfaceSpec, paInstanceNameId),
+        CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId),
         conn_CNF(this, 0),
         conn_check(nullptr) {
 };

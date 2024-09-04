@@ -156,7 +156,7 @@ EComResponse COPC_UA_Layer::sendData(void *, unsigned int) {
 EComResponse COPC_UA_Layer::processInterrupt() {
   CCriticalRegion criticalRegion(mRDBufferMutex);
   if(mIsObjectNodeStruct) { 
-	  COPC_UA_ObjectStruct_Helper::setMemberValues(getCommFB()->getRDs(), mRDBuffer);
+    COPC_UA_ObjectStruct_Helper::setMemberValues(getCommFB()->getRDs(), mRDBuffer);
   } else {
     for(size_t i = 0; i < getCommFB()->getNumRD(); ++i) {
       getCommFB()->getRDs()[i]->setValue(*mRDBuffer[i]);
@@ -233,6 +233,6 @@ const CDataConnection* COPC_UA_Layer::getLocalPortConnection(int paPortIndex, bo
 }
 
 CStringDictionary::TStringId COPC_UA_Layer::getLocalPortNameId(int paPortIndex, bool paIsSD) const {
-  const SFBInterfaceSpec *localInterfaceSpec = getCommFB()->getFBInterfaceSpec();
-  return paIsSD ? localInterfaceSpec->mDINames[paPortIndex] : localInterfaceSpec->mDONames[paPortIndex];
+  const SFBInterfaceSpec& localInterfaceSpec(getCommFB()->getFBInterfaceSpec());
+  return paIsSD ? localInterfaceSpec.mDINames[paPortIndex] : localInterfaceSpec.mDONames[paPortIndex];
 }

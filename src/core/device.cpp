@@ -24,7 +24,7 @@ EMGMResponse CDevice::executeMGMCommand(forte::core::SManagementCMD &paCommand){
     retval = CResource::executeMGMCommand(paCommand);
   }
   else{
-    CResource *res = static_cast<CResource *>(CFBContainer::getFB(paCommand.mDestination));
+    CResource *res = static_cast<CResource *>(CFBContainer::getChild(paCommand.mDestination));
     if(nullptr != res){
       paCommand.mDestination = CStringDictionary::scmInvalidStringId;
       retval = res->executeMGMCommand(paCommand);
@@ -33,9 +33,9 @@ EMGMResponse CDevice::executeMGMCommand(forte::core::SManagementCMD &paCommand){
   return retval;
 }
 
-EMGMResponse CDevice::changeFBExecutionState(EMGMCommandType paCommand){
+EMGMResponse CDevice::changeExecutionState(EMGMCommandType paCommand){
   if(EMGMCommandType::Kill == paCommand){
     mDeviceExecution.disableHandlers();
   }
-  return CResource::changeFBExecutionState(paCommand);
+  return CResource::changeExecutionState(paCommand);
 }

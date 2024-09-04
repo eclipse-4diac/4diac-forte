@@ -23,7 +23,7 @@ const char * const CI2CProcessInterface::scmInvalidParam = "Invalid parameter";
 const char * const CI2CProcessInterface::scmCouldNotRead = "Could not read value";
 const char * const CI2CProcessInterface::scmCouldNotWrite = "Could not write value";
 
-CI2CProcessInterface::CI2CProcessInterface(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId) :
+CI2CProcessInterface::CI2CProcessInterface(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec& paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId) :
     CProcessInterfaceBase(paContainer, paInterfaceSpec, paInstanceNameId), mFd(-1), mValueAddress(-1){
 }
 

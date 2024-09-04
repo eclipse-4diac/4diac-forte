@@ -59,17 +59,14 @@ BOOST_AUTO_TEST_CASE(sequential_events_test) {
   // called which flushes the output
   {
     CTesterDevice device(g_nStringIdMyDevice);
-    auto resource = new EMB_RES(g_nStringIdMyResource, device);
-    device.addFB(resource);
-
-    resource->initialize();
+    CResource &resource = device.getTestResource();
 
     auto startInstanceName = g_nStringIdSTART;
     auto counterInstanceName = g_nStringIdCounter;
     auto switchInstanceName = g_nStringIdSwitch;
 
-    resource->addFB(CTypeLib::createFB(counterInstanceName, g_nStringIdE_CTU, *resource));
-    resource->addFB(CTypeLib::createFB(switchInstanceName, g_nStringIdE_SWITCH, *resource));
+    resource.createFB(counterInstanceName, g_nStringIdE_CTU);
+    resource.createFB(switchInstanceName, g_nStringIdE_SWITCH);
 
     forte::core::SManagementCMD command;
     command.mCMD = EMGMCommandType::CreateConnection;
@@ -81,7 +78,7 @@ BOOST_AUTO_TEST_CASE(sequential_events_test) {
     command.mSecondParam.pushBack(counterInstanceName);
     command.mSecondParam.pushBack(g_nStringIdCU);
 
-    BOOST_CHECK(EMGMResponse::Ready == resource->executeMGMCommand(command));
+    BOOST_CHECK(EMGMResponse::Ready == resource.executeMGMCommand(command));
 
     BOOST_TEST_INFO("Event connection: Counter.CUO -> Switch.EI");
     command.mFirstParam.clear();
@@ -90,7 +87,7 @@ BOOST_AUTO_TEST_CASE(sequential_events_test) {
     command.mSecondParam.clear();
     command.mSecondParam.pushBack(switchInstanceName);
     command.mSecondParam.pushBack(g_nStringIdEI);
-    BOOST_CHECK(EMGMResponse::Ready == resource->executeMGMCommand(command));
+    BOOST_CHECK(EMGMResponse::Ready == resource.executeMGMCommand(command));
 
     BOOST_TEST_INFO("Data connection: Counter.Q -> Switch.G ");
     command.mFirstParam.clear();
@@ -99,13 +96,13 @@ BOOST_AUTO_TEST_CASE(sequential_events_test) {
     command.mSecondParam.clear();
     command.mSecondParam.pushBack(switchInstanceName);
     command.mSecondParam.pushBack(g_nStringIdG);
-    BOOST_CHECK(EMGMResponse::Ready == resource->executeMGMCommand(command));
+    BOOST_CHECK(EMGMResponse::Ready == resource.executeMGMCommand(command));
 
     BOOST_TEST_INFO(" Data constant value: Counter.PV = 1");
     command.mFirstParam.clear();
     command.mFirstParam.pushBack(counterInstanceName);
     command.mFirstParam.pushBack(g_nStringIdPV);
-    BOOST_CHECK(EMGMResponse::Ready == resource->writeValue(command.mFirstParam, CIEC_STRING(std::string("1")), false));
+    BOOST_CHECK(EMGMResponse::Ready == resource.writeValue(command.mFirstParam, "1", false));
 
     BOOST_TEST_INFO("Event connection: Switch.EO1 -> Counter.R ");
     command.mFirstParam.clear();
@@ -114,15 +111,15 @@ BOOST_AUTO_TEST_CASE(sequential_events_test) {
     command.mSecondParam.clear();
     command.mSecondParam.pushBack(counterInstanceName);
     command.mSecondParam.pushBack(g_nStringIdR);
-    BOOST_CHECK(EMGMResponse::Ready == resource->executeMGMCommand(command));
+    BOOST_CHECK(EMGMResponse::Ready == resource.executeMGMCommand(command));
 
     device.startDevice();
     // wait for all events to be triggered
-    while(resource->getResourceEventExecution()->isProcessingEvents()){
+    while(resource.getResourceEventExecution()->isProcessingEvents()){
       std::this_thread::sleep_for(std::chrono::milliseconds(50));
     }
-    device.changeFBExecutionState(EMGMCommandType::Stop);
-    resource->getResourceEventExecution()->joinEventChainExecutionThread();
+    device.changeExecutionState(EMGMCommandType::Stop);
+    resource.getResourceEventExecution()->joinEventChainExecutionThread();
   }
 
   // disable logging 
@@ -252,7 +249,7 @@ std::vector<EventMessage> getEventMessages(std::string path){
     std::abort();
   }
 
-  return messages;	
+  return messages;
 }
 
 void printPrettyMessages(const std::vector<EventMessage>& messages) {

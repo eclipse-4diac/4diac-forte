@@ -29,8 +29,8 @@ const CStringDictionary::TStringId GEN_STRUCT_MUX::scmDataOutputNames[] = { g_nS
 
 void GEN_STRUCT_MUX::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   if(scmEventREQID == paEIID) {
-    for (size_t i = 0; i < st_OUT().getStructSize(); i++){
-      st_OUT().getMember(i)->setValue(*getDI(static_cast<unsigned int>(i)));
+    for (TPortId i = 0; i < st_OUT().getStructSize(); i++){
+      st_OUT().getMember(i)->setValue(*getDI(i));
     }
     sendOutputEvent(scmEventCNFID, paECET);
   }
@@ -40,16 +40,33 @@ GEN_STRUCT_MUX::GEN_STRUCT_MUX(const CStringDictionary::TStringId paInstanceName
     CGenFunctionBlock<CFunctionBlock>(paContainer, paInstanceNameId){
 }
 
-GEN_STRUCT_MUX::~GEN_STRUCT_MUX(){
-  if(nullptr!= mInterfaceSpec){
-    delete[](mInterfaceSpec->mDINames);
-    delete[](mInterfaceSpec->mDIDataTypeNames);
-    delete[](mInterfaceSpec->mDODataTypeNames);
+void GEN_STRUCT_MUX::setInitialValues() {
+  CFunctionBlock::setInitialValues();
+  copyStructValuesToInputs();
+}
+
+bool GEN_STRUCT_MUX::initialize() {
+  if (CGenFunctionBlock::initialize()) {
+    copyStructValuesToInputs();
+    return true;
+  }
+  return false;
+}
+
+void GEN_STRUCT_MUX::copyStructValuesToInputs() {
+  for (TPortId i = 0; i < st_OUT().getStructSize(); i++) {
+    getDI(i)->setValue(st_OUT().getMember(i)->unwrap());
   }
 }
 
+GEN_STRUCT_MUX::~GEN_STRUCT_MUX(){
+  delete[](getGenInterfaceSpec().mDINames);
+  delete[](getGenInterfaceSpec().mDIDataTypeNames);
+  delete[](getGenInterfaceSpec().mDODataTypeNames);
+}
+
 void GEN_STRUCT_MUX::readInputData(TEventID) {
-  for(TPortId i = 0; i < mInterfaceSpec->mNumDIs; ++i) {
+  for(TPortId i = 0; i < getFBInterfaceSpec().mNumDIs; ++i) {
     readData(i, *mDIs[i], mDIConns[i]);
   }
 }

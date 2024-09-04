@@ -48,7 +48,7 @@ const SFBInterfaceSpec FORTE_GetInstancePathAndName::scmFBInterfaceSpec = {
 };
 
 FORTE_GetInstancePathAndName::FORTE_GetInstancePathAndName(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
-    CSimpleFB(paContainer, &scmFBInterfaceSpec, paInstanceNameId, nullptr),
+    CSimpleFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, nullptr),
     var_Sep(0x2f_CHAR),
     var_conn_Path(var_Path),
     var_conn_Name(var_Name),
@@ -140,7 +140,7 @@ CIEC_ANY *FORTE_GetInstancePathAndName::getVarInternal(size_t) {
 }
 
 void FORTE_GetInstancePathAndName::alg_REQ(void) {
-  var_Path = CIEC_STRING(getContainer().getFullQualifiedApplicationInstanceName(var_Sep.operator TForteChar()));
+  var_Path = CIEC_STRING(getParent().getFullQualifiedApplicationInstanceName(var_Sep.operator TForteChar()));
   var_Name = CIEC_STRING(getInstanceName(), strlen(getInstanceName()));
 }
 

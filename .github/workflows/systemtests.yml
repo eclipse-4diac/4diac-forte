@@ -54,6 +54,7 @@ jobs:
         -DFORTE_MODULE_POWERLINK=ON
         -DFORTE_TESTS=ON
         -DFORTE_SYSTEM_TESTS=ON
+        -DFORTE_TEST_SANITIZE=ON
 
     - name: Build
       run: cmake --build ${{ steps.strings.outputs.build-dir }}

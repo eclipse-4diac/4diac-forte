@@ -19,7 +19,8 @@
 
 #include "forte_array_common.h"
 #include <array>
-#include <devlog.h>
+#include <algorithm>
+#include "devlog.h"
 
 #include "forte_ulint.h"
 

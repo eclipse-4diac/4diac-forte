@@ -40,7 +40,7 @@ const SFBInterfaceSpec FORTE_RT_E_SPLIT::scmFBInterfaceSpec = {
 };
 
 FORTE_RT_E_SPLIT::FORTE_RT_E_SPLIT(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
-    CFunctionBlock(paContainer, &scmFBInterfaceSpec, paInstanceNameId),
+    CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId),
     var_conn_QO(var_QO),
     conn_INITO(this, 0),
     conn_EO1(this, 1),

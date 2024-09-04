@@ -1,5 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2017, 2023 fortiss GmbH, Johannes Kepler University Linz
+ * Copyright (c) 2017, 2024 fortiss GmbH, Johannes Kepler University Linz
+ *                          Martin Erich Jobst
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -10,6 +11,7 @@
  * Contributors:
  *   Monika Wenger - initial API and implementation and/or initial documentation
  *   Alois Zoitl   - upgraded to new FB memory layout
+ *   Martin Jobst  - added dynamic internal FB creation from CCompositeFB
  *******************************************************************************/
 
 #ifndef SRC_CORE_LUACFB_H_
@@ -30,17 +32,19 @@ class CLuaCFB : public CGenFunctionBlock<CCompositeFB> {
 
     bool initialize() override;
 
-    bool createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) override {
+    bool createInterfaceSpec(const char *, SFBInterfaceSpec &paInterfaceSpec) override {
       paInterfaceSpec = *mInterfaceSpec;
       return true;
     }
 
   protected:
-    virtual void readInternal2InterfaceOutputData(TEventID paEOID);
+    void readInternal2InterfaceOutputData(TEventID paEOID) override;
 
   private:
-    virtual void readInputData(TEventID paEIID);
-    virtual void writeOutputData(TEventID paEO);
+    void readInputData(TEventID paEIID) override;
+    void writeOutputData(TEventID paEO) override;
+
+    bool createInternalFBs() override;
 
     const CLuaCFBTypeEntry* mTypeEntry;
 };

@@ -15,6 +15,8 @@
 #ifndef _RESOURCE_H_
 #define _RESOURCE_H_
 
+#include <utility>
+
 #include "fbcontainer.h"
 #include "funcbloc.h"
 #include "forte_sync.h"
@@ -36,11 +38,8 @@ class CInterface2InternalDataConnection;
 /*! \ingroup CORE\brief Base class for all resources handling the reconfiguration management within this
  * resource and the background execution of event chains.
  *
- * CResource is inherited from CFBContainer in order to make the implementation of getResource easier. Furthermore
- * also the forwarding of management commands is less effort.
- * TODO think if CFBContainer inheritance should be public or private
  */
-class CResource : public CFunctionBlock, public forte::core::CFBContainer{
+class CResource : public CFunctionBlock{
 
   public:
     /*! \brief The main constructor for a resource.
@@ -52,7 +51,7 @@ class CResource : public CFunctionBlock, public forte::core::CFBContainer{
      *  \param paObjectHandler    reference to object handler
      *  \param paFBData           Byte-array for resource-specific data
      */
-    CResource(forte::core::CFBContainer &paDevice, const SFBInterfaceSpec *paInterfaceSpec, CStringDictionary::TStringId paInstanceNameId);
+    CResource(forte::core::CFBContainer &paDevice, const SFBInterfaceSpec& paInterfaceSpec, CStringDictionary::TStringId paInstanceNameId);
 
     ~CResource() override;
 
@@ -93,7 +92,7 @@ class CResource : public CFunctionBlock, public forte::core::CFBContainer{
       return mResourceEventExecution;
     };
 
-    EMGMResponse changeFBExecutionState(EMGMCommandType paCommand) override;
+    EMGMResponse changeExecutionState(EMGMCommandType paCommand) override;
 
     /*!\brief Write a parameter value to a given FB-input
      *
@@ -101,7 +100,7 @@ class CResource : public CFunctionBlock, public forte::core::CFBContainer{
      * @param paValue the value to be writen
      * @return response of the command execution as defined in IEC 61499
      */
-    virtual EMGMResponse writeValue(forte::core::TNameIdentifier &paNameList, const CIEC_STRING & paValue, bool paForce = false);
+    virtual EMGMResponse writeValue(forte::core::TNameIdentifier &paNameList, const std::string & paValue, bool paForce = false);
 
 #ifdef FORTE_SUPPORT_MONITORING
     forte::core::CMonitoringHandler &getMonitoringHandler(){
@@ -121,8 +120,12 @@ class CResource : public CFunctionBlock, public forte::core::CFBContainer{
     }
 #endif
 
+    bool isDynamicContainer() override {
+      return true;
+    }
+
   protected:
-    CResource(const SFBInterfaceSpec *paInterfaceSpec, CStringDictionary::TStringId paInstanceNameId);
+    CResource(const SFBInterfaceSpec& paInterfaceSpec, CStringDictionary::TStringId paInstanceNameId);
 
     void executeEvent(TEventID, CEventChainExecutionThread * const) override {
       // nothing to do here for a resource
@@ -147,6 +150,29 @@ class CResource : public CFunctionBlock, public forte::core::CFBContainer{
     CDataConnection *getDOConUnchecked(TPortId) override {
       return nullptr;
     }
+
+    class CInitialValue {
+      private:
+        CIEC_ANY& mIECVariable;
+        const std::string mInitString;
+
+      public:
+        CInitialValue(CIEC_ANY& paVariable, std::string paInitString) : mIECVariable(paVariable), mInitString(std::move(paInitString)) {}
+
+        [[nodiscard]]
+        const std::string& getInitString() const{
+          return mInitString;
+        }
+
+        CIEC_ANY& getIECVariable() {
+          return mIECVariable;
+        }
+
+    };
+
+    std::vector<CInitialValue> mInitialValues;
+
+    void setInitialValues() override;
 
     /*! Wrapper for simplifying connection creation in resources
      *
@@ -193,48 +219,48 @@ class CResource : public CFunctionBlock, public forte::core::CFBContainer{
      * @param paValue the destination for the value to be read
      * @return response of the command execution as defined in IEC 61499
      */
-    EMGMResponse readValue(forte::core::TNameIdentifier &paNameList, CIEC_STRING & paValue);
+    EMGMResponse readValue(forte::core::TNameIdentifier &paNameList, std::string & paValue);
 
 #ifdef FORTE_SUPPORT_QUERY_CMD
     /*!\brief Read the existing fb types.
      *
      * @return response of the command execution as defined in IEC 61499
      */
-    static EMGMResponse queryAllFBTypes(CIEC_STRING& paValue);
+    static EMGMResponse queryAllFBTypes(std::string& paValue);
 
     /*!\brief Read the existing adapter types.
      *
      * @return response of the command execution as defined in IEC 61499
      */
-    static EMGMResponse queryAllAdapterTypes(CIEC_STRING& paValue);
+    static EMGMResponse queryAllAdapterTypes(std::string& paValue);
+
+    static void appedTypeNameList(std::string & paValue, CTypeLib::CTypeEntry *paTypeListStart);
 
     /*!\brief Retrieve the list of FB instances
      *
      * @param paValue the result of the query
      * @return response of the command execution as defined in IEC 61499
      */
-    EMGMResponse queryFBs(CIEC_STRING& paValue);
-    void createFBResponseMessage(const CFunctionBlock& paFb, const char* fullName, CIEC_STRING& paValue);
+    static EMGMResponse queryFBs(std::string &paValue, const CFBContainer &container, std::string prefix);
+    static void createFBResponseMessage(const CFunctionBlock &paFb, const std::string &fullName, std::string &paValue);
 
-    EMGMResponse querySubapps(CIEC_STRING& paValue, CFBContainer& container, std::string prefix);
-
-    EMGMResponse queryConnections(CIEC_STRING &paValue, CFBContainer& container);
-    void createEOConnectionResponse(const CFunctionBlock& paFb, CIEC_STRING& paReqResult);
-    void createDOConnectionResponse(const CFunctionBlock& paFb, CIEC_STRING& paReqResult);
-    void createAOConnectionResponse(const CFunctionBlock& paFb, CIEC_STRING& paReqResult);
+    EMGMResponse queryConnections(std::string &paValue, const CFBContainer& container);
+    void createEOConnectionResponse(const CFunctionBlock& paFb, std::string& paReqResult);
+    void createDOConnectionResponse(const CFunctionBlock& paFb, std::string& paReqResult);
+    void createAOConnectionResponse(const CFunctionBlock& paFb, std::string& paReqResult);
     void createConnectionResponseMessage(const CStringDictionary::TStringId srcId, const CStringDictionary::TStringId dstId, const CFunctionBlock& paDstFb,
-        const CFunctionBlock& paFb, CIEC_STRING& paValue) const;
+        const CFunctionBlock& paFb, std::string& paValue) const;
 
-    EMGMResponse createFBTypeResponseMessage(const CStringDictionary::TStringId paValue, CIEC_STRING & paReqResult);
-    EMGMResponse createAdapterTypeResponseMessage(const CStringDictionary::TStringId paValue, CIEC_STRING & paReqResult);
-    EMGMResponse createXTypeResponseMessage(const CTypeLib::CSpecTypeEntry* paInterfaceSpec, const CStringDictionary::TStringId paValue, EMGMResponse retVal, CIEC_STRING& paReqResult);
-    void createEventInterfaceResponseMessage(const SFBInterfaceSpec* paInterfaceSpec, CIEC_STRING& paReqResult);
-    void createDataInterfaceResponseMessage(const SFBInterfaceSpec* paInterfaceSpec, CIEC_STRING& paReqResult);
-    void createAdapterInterfaceResponseMessage(const SFBInterfaceSpec* paInterfaceSpec, CIEC_STRING& paReqResult);
-    void createInterfaceResponseMessages(CIEC_STRING& paReqResult, const char *paCommand, const CStringDictionary::TStringId* paNameList,
+    EMGMResponse createFBTypeResponseMessage(const CStringDictionary::TStringId paValue, std::string & paReqResult);
+    EMGMResponse createAdapterTypeResponseMessage(const CStringDictionary::TStringId paValue, std::string & paReqResult);
+    EMGMResponse createXTypeResponseMessage(const CTypeLib::CSpecTypeEntry* paInterfaceSpec, const CStringDictionary::TStringId paValue, EMGMResponse retVal, std::string& paReqResult);
+    void createEventInterfaceResponseMessage(const SFBInterfaceSpec* paInterfaceSpec, std::string& paReqResult);
+    void createDataInterfaceResponseMessage(const SFBInterfaceSpec* paInterfaceSpec, std::string& paReqResult);
+    void createAdapterInterfaceResponseMessage(const SFBInterfaceSpec* paInterfaceSpec, std::string& paReqResult);
+    void createInterfaceResponseMessages(std::string& paReqResult, const char *paCommand, const CStringDictionary::TStringId* paNameList,
         const CStringDictionary::TStringId* paTypeList, const TEventID paNumberOfElements = 0, const TDataIOID* paEWith = nullptr, const TForteInt16* paEWithIndexes = nullptr,
         const CStringDictionary::TStringId* paDNameList = nullptr);
-    void createInterfaceResponseMessage(CIEC_STRING& paReqResult, const char* paCommand, const CIEC_STRING& paName, const CIEC_STRING& paType,
+    void createInterfaceResponseMessage(std::string& paReqResult, const char* paCommand, const std::string& paName, const std::string& paType,
         const TDataIOID* paEWith = nullptr, const TForteInt16* paEWithIndexes = nullptr, const TEventID paIndex = 0,
         const CStringDictionary::TStringId* paENameList = nullptr) const;
 

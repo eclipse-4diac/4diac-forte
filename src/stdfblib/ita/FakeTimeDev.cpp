@@ -33,7 +33,7 @@ const SFBInterfaceSpec FakeTimeDev::scmFBInterfaceSpec = {
 };
 
 FakeTimeDev::FakeTimeDev(const std::string &paMGR_ID) :
-  CDevice(&scmFBInterfaceSpec, CStringDictionary::scmInvalidStringId),
+  CDevice(scmFBInterfaceSpec, CStringDictionary::scmInvalidStringId),
       var_MGR_ID(paMGR_ID.c_str()),
       var_FakeTime(),
       conn_MGR_ID(nullptr),
@@ -60,7 +60,7 @@ FakeTimeDev::~FakeTimeDev() = default;
 
 int FakeTimeDev::startDevice(){
   CDevice::startDevice();
-  MGR.changeFBExecutionState(EMGMCommandType::Start);
+  MGR.changeExecutionState(EMGMCommandType::Start);
   return 0;
 }
 
@@ -68,10 +68,10 @@ void FakeTimeDev::awaitShutdown() {
   MGR.joinResourceThread();
 }
 
-EMGMResponse FakeTimeDev::changeFBExecutionState(EMGMCommandType paCommand){
-  EMGMResponse eRetVal = CDevice::changeFBExecutionState(paCommand);
+EMGMResponse FakeTimeDev::changeExecutionState(EMGMCommandType paCommand){
+  EMGMResponse eRetVal = CDevice::changeExecutionState(paCommand);
   if((EMGMResponse::Ready == eRetVal) && (EMGMCommandType::Kill == paCommand)){
-    MGR.changeFBExecutionState(EMGMCommandType::Kill);
+    MGR.changeExecutionState(EMGMCommandType::Kill);
   }
   return eRetVal;
 }
@@ -92,13 +92,13 @@ CDataConnection **FakeTimeDev::getDIConUnchecked(const TPortId paIndex) {
   return nullptr;
 }
 
-EMGMResponse FakeTimeDev::writeValue(forte::core::TNameIdentifier &paNameList, const CIEC_STRING & paValue, bool paForce) {
+EMGMResponse FakeTimeDev::writeValue(forte::core::TNameIdentifier &paNameList, const std::string & paValue, bool paForce) {
   // parent writeValue is modifying the name list so we need to get the name as backup here
   CStringDictionary::TStringId portName = paNameList.back();
   EMGMResponse eRetVal = CDevice::writeValue(paNameList, paValue, paForce);
   if((EMGMResponse::Ready == eRetVal) && (g_nStringIdFakeTime == portName)){
-    //fake time was written update CFakeTimerHandler
-    static_cast<CFakeTimerHandler&>(getTimer()).setSleepTime(func_SUB_TIME(var_FakeTime, func_NOW_MONOTONIC()), nullptr);
+    //fake time was written, update CFakeTimerHandler
+    static_cast<CFakeTimerHandler&>(getTimer()).sleepToTime(var_FakeTime);
   }
   return eRetVal;
 }

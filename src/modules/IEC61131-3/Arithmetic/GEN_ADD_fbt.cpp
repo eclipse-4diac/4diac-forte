@@ -34,9 +34,6 @@ GEN_ADD::GEN_ADD(const CStringDictionary::TStringId paInstanceNameId, forte::cor
     CGenFunctionBlock<CFunctionBlock>(paContainer, paInstanceNameId), mDInputs(0){
 }
 
-GEN_ADD::~GEN_ADD(){
-}
-
 void GEN_ADD::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   switch (paEIID){
     case scmEventREQID:
@@ -64,7 +61,7 @@ void GEN_ADD::executeEvent(TEventID paEIID, CEventChainExecutionThread *const pa
 }
 
 void GEN_ADD::readInputData(TEventID) {
-  for(TPortId i = 0; i < mInterfaceSpec->mNumDIs; ++i) {
+  for(TPortId i = 0; i < getFBInterfaceSpec().mNumDIs; ++i) {
     readData(i, *mDIs[i], mDIConns[i]);
   }
 }

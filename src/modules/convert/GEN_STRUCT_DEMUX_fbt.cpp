@@ -32,8 +32,8 @@ const CStringDictionary::TStringId GEN_STRUCT_DEMUX::scmDataInputNames[] = { g_n
 
 void GEN_STRUCT_DEMUX::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   if(scmEventREQID == paEIID) {
-    for (size_t i = 0; i < st_IN().getStructSize(); i++){
-      getDO(static_cast<unsigned int>(i))->setValue(*st_IN().getMember(i));
+    for (TPortId i = 0; i < st_IN().getStructSize(); i++){
+      getDO(i)->setValue(*st_IN().getMember(i));
     }
     sendOutputEvent(scmEventCNFID, paECET);
   }
@@ -43,12 +43,10 @@ GEN_STRUCT_DEMUX::GEN_STRUCT_DEMUX(const CStringDictionary::TStringId paInstance
     CGenFunctionBlock<CFunctionBlock>(paContainer, paInstanceNameId){
 }
 
-GEN_STRUCT_DEMUX::~GEN_STRUCT_DEMUX(){
-  if(nullptr != mInterfaceSpec){
-    delete[](mInterfaceSpec->mDIDataTypeNames);
-    delete[](mInterfaceSpec->mDONames);
-    delete[](mInterfaceSpec->mDODataTypeNames);
-  }
+GEN_STRUCT_DEMUX::~GEN_STRUCT_DEMUX() {
+  delete[] (getGenInterfaceSpec().mDIDataTypeNames);
+  delete[] (getGenInterfaceSpec().mDONames);
+  delete[] (getGenInterfaceSpec().mDODataTypeNames);
 }
 
 void GEN_STRUCT_DEMUX::readInputData(TEventID) {
@@ -56,8 +54,27 @@ void GEN_STRUCT_DEMUX::readInputData(TEventID) {
 }
 
 void GEN_STRUCT_DEMUX::writeOutputData(TEventID) {
-  for(TPortId i = 0; i < mInterfaceSpec->mNumDOs; ++i) {
+  for(TPortId i = 0; i < getFBInterfaceSpec().mNumDOs; ++i) {
     writeData(i, *mDOs[i], mDOConns[i]);
+  }
+}
+
+bool GEN_STRUCT_DEMUX::initialize() {
+  if(CGenFunctionBlock::initialize()) {
+    copyStructValuesToOutputs();
+    return true;
+  }
+  return false;
+}
+
+void GEN_STRUCT_DEMUX::setInitialValues() {
+  CFunctionBlock::setInitialValues();
+  copyStructValuesToOutputs();
+}
+
+void GEN_STRUCT_DEMUX::copyStructValuesToOutputs() {
+  for (TPortId i = 0; i < st_IN().getStructSize(); i++) {
+    getDO(i)->setValue(st_IN().getMember(i)->unwrap());
   }
 }
 

@@ -46,7 +46,7 @@ const SFBInterfaceSpec FORTE_F_ANY_AS_STRING::scmFBInterfaceSpec = {
 };
 
 FORTE_F_ANY_AS_STRING::FORTE_F_ANY_AS_STRING(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
-    CSimpleFB(paContainer, &scmFBInterfaceSpec, paInstanceNameId, nullptr),
+    CSimpleFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, nullptr),
     var_conn_OUT(var_OUT),
     conn_CNF(this, 0),
     conn_IN(nullptr),
@@ -131,6 +131,6 @@ CIEC_ANY *FORTE_F_ANY_AS_STRING::getVarInternal(size_t) {
 }
 
 void FORTE_F_ANY_AS_STRING::alg_REQ(void) {
-	var_OUT = func_ANY_AS_STRING(var_IN);
+  var_OUT = func_ANY_AS_STRING(var_IN);
 }
 

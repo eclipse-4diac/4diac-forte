@@ -42,7 +42,7 @@ class CGenFunctionBlock : public T {
     template<typename... Args>
     CGenFunctionBlock(forte::core::CFBContainer &paContainer, const CStringDictionary::TStringId paInstanceNameId,
                       Args &&... args) :
-            T(paContainer, nullptr, paInstanceNameId, std::forward<Args>(args)...),
+            T(paContainer, mGenInterfaceSpec, paInstanceNameId, std::forward<Args>(args)...),
             mEOConns(nullptr), mDIConns(nullptr), mDOConns(nullptr), mDIs(nullptr), mDOs(nullptr),
             mAdapters(nullptr),
             mConfiguredFBTypeNameId(CStringDictionary::scmInvalidStringId),
@@ -51,13 +51,13 @@ class CGenFunctionBlock : public T {
     }
 
     template<typename... Args>
-    CGenFunctionBlock(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec *paInterfaceSpec,
+    CGenFunctionBlock(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec &paInterfaceSpec,
                       const CStringDictionary::TStringId paInstanceNameId, Args &&... args) :
-            T(paContainer, paInterfaceSpec, paInstanceNameId, std::forward<Args>(args)...),
+            T(paContainer, mGenInterfaceSpec, paInstanceNameId, std::forward<Args>(args)...),
             mEOConns(nullptr), mDIConns(nullptr), mDOConns(nullptr), mDIs(nullptr), mDOs(nullptr),
             mAdapters(nullptr),
             mConfiguredFBTypeNameId(CStringDictionary::scmInvalidStringId),
-            mGenInterfaceSpec(),
+            mGenInterfaceSpec(paInterfaceSpec),
             mFBConnData(nullptr), mFBVarsData(nullptr) {
     }
 
@@ -79,7 +79,7 @@ class CGenFunctionBlock : public T {
 
     static size_t calculateFBVarsDataSize(const SFBInterfaceSpec &paInterfaceSpec);
 
-    void setupFBInterface(const SFBInterfaceSpec *paInterfaceSpec);
+    void setupFBInterface();
 
     void freeFBInterfaceData();
 
@@ -97,6 +97,10 @@ class CGenFunctionBlock : public T {
 
     CAdapter *getAdapterUnchecked(TPortId paAdapterNum) override {
       return mAdapters[paAdapterNum];
+    }
+
+    SFBInterfaceSpec &getGenInterfaceSpec() {
+      return mGenInterfaceSpec;
     }
 
     CEventConnection *mEOConns; //!< A list of event connections pointers storing for each event output the event connection. If the output event is not connected the pointer is nullptr.
@@ -122,7 +126,7 @@ class CGenFunctionBlock : public T {
       mConfiguredFBTypeNameId = paTypeNameId;
     }
 
-    void setupAdapters(const SFBInterfaceSpec *paInterfaceSpec, TForteByte *paFBData);
+    void setupAdapters(TForteByte *paFBData);
 
     CStringDictionary::TStringId mConfiguredFBTypeNameId;
     SFBInterfaceSpec mGenInterfaceSpec;  //!< the interface spec for this specific instance of generic FB

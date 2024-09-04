@@ -51,7 +51,7 @@ const SFBInterfaceSpec FORTE_GET_AT_INDEX::scmFBInterfaceSpec = {
 };
 
 FORTE_GET_AT_INDEX::FORTE_GET_AT_INDEX(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
-    CFunctionBlock(paContainer, &scmFBInterfaceSpec, paInstanceNameId),
+    CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId),
     var_IN_ARRAY(CIEC_ANY_VARIANT()),
     var_INDEX(CIEC_UINT(0)),
     var_QO(CIEC_BOOL(0)),

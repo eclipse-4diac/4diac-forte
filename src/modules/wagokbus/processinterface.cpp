@@ -17,7 +17,7 @@
 
 DEFINE_HANDLER(WagoPFCProcessInterface::CKBusHandler)
 
-WagoPFCProcessInterface::WagoPFCProcessInterface(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec *paInterfaceSpec,
+WagoPFCProcessInterface::WagoPFCProcessInterface(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec& paInterfaceSpec,
     const CStringDictionary::TStringId paInstanceNameId) :
     CProcessInterfaceBase(paContainer, paInterfaceSpec, paInstanceNameId), mSlot(0), mChannel(0), mTerminalInfo(0), mInitialized(false) {
 }

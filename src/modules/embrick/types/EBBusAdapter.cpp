@@ -37,6 +37,7 @@ const SFBInterfaceSpec FORTE_EBBusAdapter::scmFBInterfaceSpecSocket = {
   1, scmEventOutputNames, scmEOWith, scmEOWithIndexes,
   1, scmDataInputNames, scmDataInputTypeIds,
   4, scmDataOutputNames, scmDataOutputTypeIds,
+  0, nullptr,
   0, nullptr
 };
 
@@ -45,6 +46,7 @@ const SFBInterfaceSpec FORTE_EBBusAdapter::scmFBInterfaceSpecPlug = {
   1, scmEventInputNames, scmEIWith, scmEIWithIndexes,
   4, scmDataOutputNames, scmDataOutputTypeIds,
   1, scmDataInputNames, scmDataInputTypeIds,
+  0, nullptr,
   0, nullptr
 };
 

@@ -15,7 +15,7 @@
 
 using namespace forte::core::io;
 
-IOConfigFBPartController::IOConfigFBPartController(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec *paInterfaceSpec,
+IOConfigFBPartController::IOConfigFBPartController(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec &paInterfaceSpec,
     const CStringDictionary::TStringId paInstanceNameId) :
     IOConfigFBBase(paContainer, paInterfaceSpec, paInstanceNameId), mMaster(nullptr) {
 }

@@ -40,7 +40,7 @@ GEN_E_MUX::~GEN_E_MUX(){
 }
 
 void GEN_E_MUX::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
-  if(paEIID < mInterfaceSpec->mNumEIs){
+  if(paEIID < getFBInterfaceSpec().mNumEIs){
     K() = CIEC_UINT(static_cast<TForteUInt16>(paEIID));
     sendOutputEvent(scmEventEOID, paECET);
   }

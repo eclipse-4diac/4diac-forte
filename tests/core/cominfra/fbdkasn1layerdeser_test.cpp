@@ -66,36 +66,34 @@ class CDeserTestMockCommFB : public forte::com_infra::CCommFB{
 
   public:
     CDeserTestMockCommFB(TForteUInt8 paNumRD, const CStringDictionary::TStringId * const paDODataTypeNames) :
-        forte::com_infra::CCommFB(CStringDictionary::scmInvalidStringId, mResource, forte::com_infra::e_Publisher),
-        mMockFBInterface(){
+        forte::com_infra::CCommFB(CStringDictionary::scmInvalidStringId, mResource, forte::com_infra::e_Publisher){
 
-      mMockFBInterface.mEINames = nullptr;
-      mMockFBInterface.mEIWith = nullptr;
-      mMockFBInterface.mEIWithIndexes = nullptr;
-      mMockFBInterface.mNumEOs = 0;
-      mMockFBInterface.mEONames = nullptr;
-      mMockFBInterface.mEOWith = nullptr;
-      mMockFBInterface.mEOWithIndexes = nullptr;
-      mMockFBInterface.mNumDIs = 2;
-      mMockFBInterface.mDINames = nullptr;
-      mMockFBInterface.mDIDataTypeNames = scmInputTypes;
-      mMockFBInterface.mNumDOs = paNumRD + 2U;
-      mMockFBInterface.mDONames = nullptr;
-      mMockFBInterface.mDODataTypeNames = paDODataTypeNames;
+      SFBInterfaceSpec &mockFBInterface(getGenInterfaceSpec());
+      mockFBInterface.mEINames = nullptr;
+      mockFBInterface.mEIWith = nullptr;
+      mockFBInterface.mEIWithIndexes = nullptr;
+      mockFBInterface.mNumEOs = 0;
+      mockFBInterface.mEONames = nullptr;
+      mockFBInterface.mEOWith = nullptr;
+      mockFBInterface.mEOWithIndexes = nullptr;
+      mockFBInterface.mNumDIs = 2;
+      mockFBInterface.mDINames = nullptr;
+      mockFBInterface.mDIDataTypeNames = scmInputTypes;
+      mockFBInterface.mNumDOs = paNumRD + 2U;
+      mockFBInterface.mDONames = nullptr;
+      mockFBInterface.mDODataTypeNames = paDODataTypeNames;
 
-      setupFBInterface(&mMockFBInterface);
+      setupFBInterface();
     }
 
     virtual ~CDeserTestMockCommFB(){
       freeFBInterfaceData();
-      mInterfaceSpec = nullptr;
+      getGenInterfaceSpec() = {};
     }
 
   private:
     static const CStringDictionary::TStringId scmInputTypes[];
     static EMB_RES mResource;
-
-    SFBInterfaceSpec mMockFBInterface;
 };
 
 const CStringDictionary::TStringId CDeserTestMockCommFB::scmInputTypes[] = { g_nStringIdBOOL, g_nStringIdBOOL };

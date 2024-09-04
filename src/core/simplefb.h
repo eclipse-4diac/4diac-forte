@@ -23,7 +23,7 @@
 
 class CSimpleFB : public CBasicFB {
 public:
-    CSimpleFB(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec *paInterfaceSpec, CStringDictionary::TStringId paInstanceNameId,
+    CSimpleFB(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec& paInterfaceSpec, CStringDictionary::TStringId paInstanceNameId,
         const SInternalVarsInformation *paVarInternals) :
           CBasicFB(paContainer, paInterfaceSpec, paInstanceNameId, paVarInternals) {}
 };

@@ -76,7 +76,7 @@ namespace forte {
         typedef CSinglyLinkedList<SEventWatchEntry> TEventWatchList;
 
         struct SFBMonitoringEntry{
-            CIEC_STRING mFullFBName;
+            std::string mFullFBName;
             CFunctionBlock *mFB;
             TDataWatchList mWatchedDataPoints;
             TEventWatchList mWatchedEventPoints;
@@ -106,7 +106,7 @@ namespace forte {
         static void appendPortTag(std::string &paResponse, CStringDictionary::TStringId paPortId);
         void appendEventWatch(std::string &paResponse, SEventWatchEntry &paEventWatchEntry);
 
-        static void createFullFBName(CIEC_STRING &paFullName, forte::core::TNameIdentifier &paNameList);
+        static void createFullFBName(std::string &paFullName, forte::core::TNameIdentifier &paNameList);
 
         static size_t getExtraSizeForEscapedChars(const CIEC_ANY& paDataValue);
 

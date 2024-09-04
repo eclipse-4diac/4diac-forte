@@ -14,14 +14,23 @@
 
 #include "EMB_RES.h"
 
-class Config_EMB_RES : public EMB_RES {
+class Config_EMB_RES : public CResource {
   DECLARE_FIRMWARE_FB(Config_EMB_RES);
 
   public:
     Config_EMB_RES(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paDevice);
     ~Config_EMB_RES() override;
 
+    bool initialize() override;
+
+    CIEC_ANY *getDI(size_t) override;
+    CDataConnection **getDIConUnchecked(TPortId) override;
+
   private:
+    forte::core::CInternalFB<FORTE_E_RESTART> fb_START;
+
+    CIEC_WSTRING var_OPCUA_Namespace;
+
     static const SFBInterfaceSpec scmFBInterfaceSpec;
 
     static const CStringDictionary::TStringId scmVarInputNameIds[];

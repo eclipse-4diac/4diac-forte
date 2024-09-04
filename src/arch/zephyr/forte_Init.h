@@ -63,13 +63,13 @@ extern "C" {
    * @param paSignal  Signal value to terminate instance
    * @param paInstance Instance to terminate
    */
-  FORTE_SHARED_PREFIX void FORTE_SHARED_CALL forteStopInstance(int paSignal, TForteInstance* paResultInstance);
+  FORTE_SHARED_PREFIX void FORTE_SHARED_CALL forteStopInstance(int paSignal, TForteInstance paInstance);
 
   /**
    * \brief Terminates a Forte instance
    * @param paInstance Instance to terminate
    */
-  FORTE_SHARED_PREFIX void FORTE_SHARED_CALL forteJoinInstance(TForteInstance* paResultInstance);
+  FORTE_SHARED_PREFIX void FORTE_SHARED_CALL forteJoinInstance(TForteInstance paInstance);
 
   /**
    * \brief Initializes the architecture. Prepare all resources needed by the Forte's instances. Must be called once before the first Forte instance is started

@@ -15,6 +15,11 @@
 #include "cfb.h"
 #include "typelib.h"
 #include "forte_bool.h"
+#include "E_PERMIT_fbt.h"
+#include "E_SR_fbt.h"
+#include "E_SWITCH_fbt.h"
+#include "GEN_E_DEMUX_fbt.h"
+#include "GEN_E_MUX_fbt.h"
 
 
 class FORTE_CFB_TEST final : public CCompositeFB {
@@ -49,6 +54,13 @@ class FORTE_CFB_TEST final : public CCompositeFB {
 
     static const SCFB_FBFannedOutConnectionData scmFannedOutDataConnections[];
     static const SCFB_FBNData scmFBNData;
+
+    forte::core::CInternalFB<FORTE_E_PERMIT> fb_PERMIT_OP;
+    forte::core::CInternalFB<FORTE_E_SR> fb_E_SR;
+    forte::core::CInternalFB<FORTE_E_SWITCH> fb_SET_CHANGED;
+    forte::core::CInternalFB<GEN_E_DEMUX> fb_E_DEMUX_2;
+    forte::core::CInternalFB<GEN_E_MUX> fb_E_MUX_2;
+    forte::core::CInternalFB<FORTE_E_SWITCH> fb_RESET_CHANGED;
 
     void readInputData(TEventID paEIID) override;
     void writeOutputData(TEventID paEIID) override;

@@ -13,7 +13,7 @@
 #include <extevhandlerhelper.h>
 
 CPiFaceProcessInterface::CPiFaceProcessInterface(forte::core::CFBContainer &paContainer,
-    const SFBInterfaceSpec *paInterfaceSpec,
+    const SFBInterfaceSpec& paInterfaceSpec,
     const CStringDictionary::TStringId paInstanceNameId) :
     CProcessInterfaceBase(paContainer, paInterfaceSpec, paInstanceNameId),
         mPin(0){

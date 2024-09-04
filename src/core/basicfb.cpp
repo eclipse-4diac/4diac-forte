@@ -17,42 +17,11 @@
 #include "basicfb.h"
 #include "resource.h"
 
-CBasicFB::CBasicFB(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec *paInterfaceSpec,
+CBasicFB::CBasicFB(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec& paInterfaceSpec,
                    const CStringDictionary::TStringId paInstanceNameId,
                    const SInternalVarsInformation *paVarInternals) :
         CFunctionBlock(paContainer, paInterfaceSpec, paInstanceNameId), mECCState(0),
-        cmVarInternals(paVarInternals), mBasicFBVarsData(nullptr), mInternals(nullptr) {
-}
-
-bool CBasicFB::initialize() {
-  if(!CFunctionBlock::initialize()) {
-    return false;
-  }
-  if((nullptr != cmVarInternals) && (cmVarInternals->mNumIntVars)) {
-    size_t basicVarsDataSize = calculateBasicFBVarsDataSize(*cmVarInternals);
-    mBasicFBVarsData = basicVarsDataSize ? operator new(basicVarsDataSize) : nullptr;
-
-    auto *basicVarsData = reinterpret_cast<TForteByte *>(mBasicFBVarsData);
-    mInternals = reinterpret_cast<CIEC_ANY**>(basicVarsData);
-    basicVarsData += cmVarInternals->mNumIntVars * sizeof(CIEC_ANY *);
-    const CStringDictionary::TStringId *pnDataIds = cmVarInternals->mIntVarsDataTypeNames;
-    for(TPortId i = 0; i < cmVarInternals->mNumIntVars; ++i) {
-      mInternals[i] = createDataPoint(pnDataIds, basicVarsData);
-    }
-  }
-  return true;
-}
-
-CBasicFB::~CBasicFB() {
-  if(nullptr != mInternals) {
-    for(TPortId i = 0; i < cmVarInternals->mNumIntVars; ++i) {
-      if(CIEC_ANY* value = mInternals[i]; nullptr != value) {
-        std::destroy_at(value);
-      }
-    }
-  }
-  operator delete(mBasicFBVarsData);
-  mBasicFBVarsData = nullptr;
+        cmVarInternals(paVarInternals) {
 }
 
 void CBasicFB::setInitialValues() {
@@ -66,19 +35,6 @@ void CBasicFB::setInitialValues() {
       delete value;
     }
   }
-}
-
-size_t CBasicFB::calculateBasicFBVarsDataSize(const SInternalVarsInformation &paVarInternals) {
-  size_t result = 0;
-  const CStringDictionary::TStringId *pnDataIds;
-
-  result += paVarInternals.mNumIntVars * sizeof(CIEC_ANY *);
-  pnDataIds = paVarInternals.mIntVarsDataTypeNames;
-  for (TPortId i = 0; i < paVarInternals.mNumIntVars; ++i) {
-    result += getDataPointSize(pnDataIds);
-  }
-
-  return result;
 }
 
 CIEC_ANY* CBasicFB::getVar(CStringDictionary::TStringId *paNameList, unsigned int paNameListSize) {
@@ -102,24 +58,6 @@ CIEC_ANY* CBasicFB::getInternalVar(CStringDictionary::TStringId paInternalName) 
   }
   return retVal;
 }
-
-TFunctionBlockPtr *CBasicFB::createInternalFBs(const size_t paAmountOfInternalFBs, const SCFB_FBInstanceData *const paInternalFBData, forte::core::CFBContainer &paContainer) {
-  TFunctionBlockPtr *internalFBs = nullptr;
-  if (paAmountOfInternalFBs) {
-    internalFBs = new TFunctionBlockPtr[paAmountOfInternalFBs];
-    for(size_t i = 0; i < paAmountOfInternalFBs; ++i) {
-      internalFBs[i] = CTypeLib::createFB(paInternalFBData[i].mFBInstanceNameId, paInternalFBData[i].mFBTypeNameId, paContainer);
-    }
-  }
-  return internalFBs;
-}
-
-void CBasicFB::deleteInternalFBs(const size_t paAmountOfInternalFBs, TFunctionBlockPtr *const paInternalFBs) {
-  for (size_t i = 0; i < paAmountOfInternalFBs; ++i) {
-    delete paInternalFBs[i];
-  }
-  delete[] paInternalFBs;
-};
 
 int CBasicFB::toString(char *paValue, size_t paBufferSize) const {
   int usedBuffer = CFunctionBlock::toString(paValue, paBufferSize);
@@ -168,11 +106,10 @@ size_t CBasicFB::getToStringBufferSize() const {
 
 #ifdef FORTE_TRACE_CTF
 void CBasicFB::traceInstanceData() {
-
-  std::vector<std::string> inputs(mInterfaceSpec->mNumDIs);
-  std::vector<std::string> outputs(mInterfaceSpec->mNumDOs);
+  std::vector<std::string> inputs(getFBInterfaceSpec().mNumDIs);
+  std::vector<std::string> outputs(getFBInterfaceSpec().mNumDOs);
   std::vector<std::string> internals(cmVarInternals ? cmVarInternals->mNumIntVars : 0);
-  std::vector<std::string> internalFbs(getInternalFBNum());
+  std::vector<std::string> internalFbs(getChildren().size());
   std::vector<const char *> inputs_c_str(inputs.size());
   std::vector<const char *> outputs_c_str(outputs.size());
   std::vector<const char *> internals_c_str(internals.size());
@@ -202,17 +139,19 @@ void CBasicFB::traceInstanceData() {
     internals_c_str[i] = valueString.c_str();
   }
 
-  for(TPortId i = 0; i < internalFbs.size(); ++i) {
-    CFunctionBlock *value = getInternalFB(i);
+  TPortId i = 0;
+  for(auto child : getChildren()){
+    CFunctionBlock &value = static_cast<CFunctionBlock &>(*child);
     std::string &valueString = internalFbs[i];
-    valueString.reserve(value->getToStringBufferSize());
-    value->toString(valueString.data(), valueString.capacity());
+    valueString.reserve(value.getToStringBufferSize());
+    value.toString(valueString.data(), valueString.capacity());
     internalFbs_c_str[i] = valueString.c_str();
+    ++i;
   }
 
   barectf_default_trace_instanceData(getResource()->getTracePlatformContext().getContext(),
                                      getFBTypeName() ?: "null",
-                                     getInstanceName() ?: "null",
+                                     getFullQualifiedApplicationInstanceName('.').c_str() ?: "null",
                                      static_cast<uint32_t >(inputs.size()), inputs_c_str.data(),
                                      static_cast<uint32_t >(outputs.size()), outputs_c_str.data(),
                                      static_cast<uint32_t >(internals.size()), internals_c_str.data(),

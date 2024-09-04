@@ -42,6 +42,7 @@ class GEN_E_DEMUX : public CGenFunctionBlock<CFunctionBlock>{
       return *static_cast<CIEC_UINT*>(getDI(0));
     }
 
+  public:
     GEN_E_DEMUX(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
     ~GEN_E_DEMUX() override;
 

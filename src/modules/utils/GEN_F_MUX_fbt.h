@@ -48,6 +48,7 @@ class GEN_F_MUX : public CGenFunctionBlock<CFunctionBlock> {
 
     bool createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) override;
 
+  public:
     GEN_F_MUX(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
     ~GEN_F_MUX() override;
 };

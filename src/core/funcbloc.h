@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2023 ACIN, Profactor GmbH, nxtControl GmbH, fortiss GmbH,
+ * Copyright (c) 2005, 2024 ACIN, Profactor GmbH, nxtControl GmbH, fortiss GmbH,
  *                          Johannes Kepler University, Martin Erich Jobst,
  *                          Primetals Technologies Austria GmbH
  *
@@ -21,6 +21,7 @@
 #define _FUNCBLOC_H_
 
 #include <forte_config.h>
+#include "fbcontainer.h"
 #include "mgmcmd.h"
 #include "event.h"
 #include "dataconn.h"
@@ -103,7 +104,7 @@ struct SFBInterfaceSpec {
 
 /*!\ingroup CORE\brief Base class for all function blocks.
  */
-class CFunctionBlock {
+class CFunctionBlock : public forte::core::CFBContainer {
   public:
     constexpr static TDataIOID scmWithListDelimiter = cgInvalidPortId; //!< value identifying the end of a with list
     constexpr static TForteInt16 scmNoDataAssociated = static_cast<TForteInt16>(cgInvalidPortId); //!< value identifying the end of a with list
@@ -126,25 +127,9 @@ class CFunctionBlock {
     static_assert((scmMaxInterfaceEvents & (scmMaxInterfaceEvents + 1)) == 0,
                   "scmMaxInterfaceEvents must be a valid bitmask");
 
-    virtual bool initialize();
+    bool initialize() override;
 
     virtual ~CFunctionBlock();
-
-    /*!\brief Get the resource the function block is contained in.
-     */
-    virtual CResource* getResource();
-    virtual const CResource* getResource() const {
-      return const_cast<CFunctionBlock *>(this)->getResource();
-    }
-
-    virtual CDevice* getDevice();
-    virtual const CDevice* getDevice() const {
-      return const_cast<CFunctionBlock *>(this)->getDevice();
-    }
-
-    forte::core::CFBContainer& getContainer() const {
-      return mContainer;
-    }
 
     /*!\brief Get the timer of the device where the FB is contained.
      */
@@ -157,7 +142,7 @@ class CFunctionBlock {
 
     /*!\brief Returns the type name of this FB instance
      */
-    const char * getFBTypeName(){
+    const char * getFBTypeName() const {
       return CStringDictionary::getInstance().get(getFBTypeId());
     }
 
@@ -167,7 +152,7 @@ class CFunctionBlock {
      * \return The ID of the event input or cgInvalidEventID.
      */
     TEventID getEIID(CStringDictionary::TStringId paEINameId) const {
-      return static_cast<TEventID>(getPortId(paEINameId, mInterfaceSpec->mNumEIs, mInterfaceSpec->mEINames));
+      return static_cast<TEventID>(getPortId(paEINameId, getFBInterfaceSpec().mNumEIs, getFBInterfaceSpec().mEINames));
     }
 
     /*!\brief Get the ID of a specific event output of the FB.
@@ -176,7 +161,7 @@ class CFunctionBlock {
      * \return The ID of the event output or cgInvalidEventID.
      */
     TEventID getEOID(CStringDictionary::TStringId paEONameId) const {
-      return static_cast<TEventID>(getPortId(paEONameId, mInterfaceSpec->mNumEOs, mInterfaceSpec->mEONames));
+      return static_cast<TEventID>(getPortId(paEONameId, getFBInterfaceSpec().mNumEOs, getFBInterfaceSpec().mEONames));
     }
 
     CEventConnection* getEOConnection(CStringDictionary::TStringId paEONameId);
@@ -204,7 +189,7 @@ class CFunctionBlock {
      * \return Returns index of the Data Input Array of a FB
      */
     TPortId getDIID(CStringDictionary::TStringId paDINameId) const {
-      return getPortId(paDINameId, mInterfaceSpec->mNumDIs, mInterfaceSpec->mDINames);
+      return getPortId(paDINameId, getFBInterfaceSpec().mNumDIs, getFBInterfaceSpec().mDINames);
     }
 
     /*!\brief Get the pointer to a data input of the FB.
@@ -223,7 +208,7 @@ class CFunctionBlock {
      * \return Returns index of the Data Output Array of a FB
      */
     TPortId getDOID(CStringDictionary::TStringId paDONameId) const {
-      return getPortId(paDONameId, mInterfaceSpec->mNumDOs, mInterfaceSpec->mDONames);
+      return getPortId(paDONameId, getFBInterfaceSpec().mNumDOs, getFBInterfaceSpec().mDONames);
     }
 
     /*! \brief Gets the index of the mDONames array of a specific data output of a FB
@@ -231,7 +216,7 @@ class CFunctionBlock {
      * \return Returns index of the Data Output Array of a FB
      */
     TPortId getDIOID(CStringDictionary::TStringId paDIONameId) const {
-      return getPortId(paDIONameId, mInterfaceSpec->mNumDIOs, mInterfaceSpec->mDIONames);
+      return getPortId(paDIONameId, getFBInterfaceSpec().mNumDIOs, getFBInterfaceSpec().mDIONames);
     }
 
     /*!\brief get the pointer to a data output using the portId as identifier
@@ -294,14 +279,14 @@ class CFunctionBlock {
      * \param paExecEnv Event chain execution environment the FB will be executed in (used for adding output events).
      */
     void receiveInputEvent(TEventID paEIID, CEventChainExecutionThread *paExecEnv) {
-      FORTE_TRACE("InputEvent: Function Block (%s) got event: %d (maxid: %d)\n", CStringDictionary::getInstance().get(getInstanceNameId()), paEIID, mInterfaceSpec->mNumEIs - 1);
+      FORTE_TRACE("InputEvent: Function Block (%s) got event: %d (maxid: %d)\n", CStringDictionary::getInstance().get(getInstanceNameId()), paEIID, getFBInterfaceSpec().mNumEIs - 1);
 
       #ifdef FORTE_TRACE_CTF
         traceInputEvent(paEIID);
       #endif
 
       if(E_FBStates::Running == getState()){
-        if(paEIID < mInterfaceSpec->mNumEIs) {
+        if(paEIID < getFBInterfaceSpec().mNumEIs) {
           readInputData(paEIID);
           #ifdef FORTE_SUPPORT_MONITORING
                 // Count Event for monitoring
@@ -320,34 +305,11 @@ class CFunctionBlock {
      */
     virtual bool configureFB(const char *paConfigString);
 
-    const SFBInterfaceSpec* getFBInterfaceSpec() const {
+    const SFBInterfaceSpec& getFBInterfaceSpec() const {
       return mInterfaceSpec;
     }
 
-    virtual EMGMResponse changeFBExecutionState(EMGMCommandType paCommand);
-
-    /*!\brief Get/set the instance name
-     */
-    CStringDictionary::TStringId getInstanceNameId() const {
-      return mFBInstanceName;
-    }
-    ;
-
-    /*! \brief Get the full hierarchical name of this FB in its application
-     *
-     * Generates a dot separated name list of this FB excluding device and resource
-     *
-     * \return full hierarchical name
-     */
-    std::string getFullQualifiedApplicationInstanceName(const char sepChar) const;
-
-    const char* getInstanceName() const {
-      return CStringDictionary::getInstance().get(mFBInstanceName);
-    }
-
-    void setInstanceNameId(const CStringDictionary::TStringId paInstanceNameId) {
-      mFBInstanceName = paInstanceNameId;
-    }
+    EMGMResponse changeExecutionState(EMGMCommandType paCommand) override;
 
     /*!\brief Get information if the runable object is deletable by a management command.
      *
@@ -355,14 +317,14 @@ class CFunctionBlock {
     bool getDeletable() const {
       return mDeletable;
     }
-    ;
+
     /*!\brief Set attribute to enable/disable the runable object deletion by a management command.
      *
      */
     void setDeletable(const bool &paDelAble) {
       mDeletable = paDelAble;
     }
-    ;
+
     /*!\brief Return if the runable object is allowed to be deleted now.
      *
      * This is more complex then the simple deleteable flag as the current state has to be incorporated.
@@ -418,17 +380,16 @@ class CFunctionBlock {
       return const_cast<CFunctionBlock *>(this)->getDIO(paDIONum);
     }
 
-#ifdef FORTE_SUPPORT_MONITORING
-    TForteUInt32 &getEIMonitorData(TEventID paEIID);
-
-    TForteUInt32 &getEOMonitorData(TEventID paEOID);
-
     /*!\brief get any internal FB referenced by the iterator to the name list
      *
      * This allows that also adapters and the internals of a CFB can be monitored.
      */
-    virtual CFunctionBlock *getFB(forte::core::TNameIdentifier::CIterator &paNameListIt);
+    CFunctionBlock *getFB(forte::core::TNameIdentifier::CIterator &paNameListIt) override;
 
+#ifdef FORTE_SUPPORT_MONITORING
+    TForteUInt32 &getEIMonitorData(TEventID paEIID);
+
+    TForteUInt32 &getEOMonitorData(TEventID paEOID);
 #endif //FORTE_SUPPORT_MONITORING
     
     virtual int toString(char* paValue, size_t paBufferSize) const;
@@ -457,7 +418,7 @@ class CFunctionBlock {
      *                               sizeof(CIEC_ANY)) * Number of Data outputs +
      *                               sizeof(TAdapterPtr) * ta_nNumAdapters
      */
-    CFunctionBlock(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec *paInterfaceSpec, CStringDictionary::TStringId paInstanceNameId);
+    CFunctionBlock(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec& paInterfaceSpec, CStringDictionary::TStringId paInstanceNameId);
 
     static TPortId getPortId(CStringDictionary::TStringId paPortNameId, TPortId paMaxPortNames, const CStringDictionary::TStringId *paPortNames);
 
@@ -469,13 +430,13 @@ class CFunctionBlock {
      * \param paExecEnv Event chain execution environment where the event will be sent to.
      */
     void sendOutputEvent(TEventID paEO, CEventChainExecutionThread * const paECET){
-      FORTE_TRACE("OutputEvent: Function Block sending event: %d (maxid: %d)\n", paEO, mInterfaceSpec->mNumEOs - 1);
+      FORTE_TRACE("OutputEvent: Function Block sending event: %d (maxid: %d)\n", paEO, getFBInterfaceSpec().mNumEOs - 1);
 
       #ifdef FORTE_TRACE_CTF
         traceOutputEvent(paEO);
       #endif
 
-      if(paEO < mInterfaceSpec->mNumEOs) {
+      if(paEO < getFBInterfaceSpec().mNumEOs) {
         writeOutputData(paEO);
         getEOConUnchecked(static_cast<TPortId>(paEO))->triggerEvent(paECET);
 
@@ -528,7 +489,7 @@ class CFunctionBlock {
           paConn.readData(paValue);
         }
 #endif //FORTE_SUPPORT_MONITORING
-			}
+      }
     }
 #endif //FORTE_TRACE_CTF
 
@@ -587,15 +548,6 @@ class CFunctionBlock {
       return nullptr;
     }
 
-    /*!\brief helper function for changeing the FB execution state for FBs with internal FBs
-     *
-     * @param paCommand the reqeusted state change (i.e., start, stop, kill, reset)
-     * @param paAmountOfInternalFBs number of internal FBs contained in this FB
-     * @param paInternalFBs  array with the internal FBs of this FB
-     * @return success status of the requested state change
-     */
-    EMGMResponse changeFBExecutionStateHelper(const EMGMCommandType paCommand, const size_t paAmountOfInternalFBs, TFunctionBlockPtr *const paInternalFBs);
-
     /*!\brief Get the size of a data point
      *
      * @param paDataTypeIds pointer to the data type ids. If the datatype
@@ -636,15 +588,20 @@ class CFunctionBlock {
 
     static void destroyAdapter(CAdapter *adapter);
 
-    static EMGMResponse changeInternalFBExecutionState(const EMGMCommandType paCommand, const size_t paAmountOfInternalFBs, TFunctionBlockPtr *const paInternalFBs);
-
-    const SFBInterfaceSpec *mInterfaceSpec; //!< Pointer to the interface specification
+    const SFBInterfaceSpec &mInterfaceSpec; //!< Pointer to the interface specification
 
 #ifdef FORTE_SUPPORT_MONITORING
     void setupEventMonitoringData();
     void freeEventMonitoringData();
 #endif
   private:
+    bool isFB() override {
+       return true;
+    }
+
+    bool isDynamicContainer() override {
+      return false;
+    }
 
     /*!\brief Function providing the functionality of the FB (e.g. execute ECC for basic FBs).
      *
@@ -679,8 +636,6 @@ class CFunctionBlock {
     void configureGenericDI(TPortId paDIPortId, const CIEC_ANY *paRefValue);
     void configureGenericDIO(TPortId paDIOPortId, const CIEC_ANY *paRefValue);
 
-    forte::core::CFBContainer &mContainer; //!< The container of this function block.
-
 #ifdef FORTE_SUPPORT_MONITORING
     TForteUInt32 *mEOMonitorCount;
     TForteUInt32 *mEIMonitorCount;
@@ -690,8 +645,6 @@ class CFunctionBlock {
     void traceInputEvent(TEventID paEIID);
     void traceOutputEvent(TEventID paEOID);
 #endif
-    //! the instance name of the object
-    CStringDictionary::TStringId mFBInstanceName;
 
     /*!\brief Current state of the runnable object.
      *
@@ -716,11 +669,11 @@ class CFunctionBlock {
 
 #define FUNCTION_BLOCK_CTOR(fbclass) \
  fbclass(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) : \
- CFunctionBlock(paContainer, &scmFBInterfaceSpec, paInstanceNameId)
+ CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId)
 
 #define FUNCTION_BLOCK_CTOR_WITH_BASE_CLASS(fbclass, fbBaseClass) \
  fbclass(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) : \
- fbBaseClass(paContainer, &scmFBInterfaceSpec, paInstanceNameId)
+ fbBaseClass(paContainer, scmFBInterfaceSpec, paInstanceNameId)
 
 
 #ifdef OPTIONAL
