@@ -24,8 +24,8 @@ using namespace std;
 #include <tinyxml.h>
 
 CEplXmlReader::CEplXmlReader(CProcessImageMatrix* paIn, CProcessImageMatrix* paOut){
-	mProcImageIn = paIn;
-	mProcImageOut = paOut;
+  mProcImageIn = paIn;
+  mProcImageOut = paOut;
 }
 
 CEplXmlReader::~CEplXmlReader(){
@@ -33,215 +33,215 @@ CEplXmlReader::~CEplXmlReader(){
 }
 
 void CEplXmlReader::setProcessImageIn(CProcessImageMatrix* paIn){
-	mProcImageIn = paIn;
+  mProcImageIn = paIn;
 }
 
 void CEplXmlReader::setProcessImageOut(CProcessImageMatrix* paOut){
-	mProcImageOut = paOut;
+  mProcImageOut = paOut;
 }
 
 void CEplXmlReader::readXmlFile(const char* paFileName){
 
-	TiXmlDocument xmlDoc(paFileName);
+  TiXmlDocument xmlDoc(paFileName);
 
-	if(xmlDoc.LoadFile()){
-		TiXmlNode *appProcess = xmlDoc.FirstChild("ApplicationProcess");
-		TiXmlNode *processImageIn;
-		for(TiXmlNode *processImage = appProcess->ToElement()->FirstChild("ProcessImage"); processImage != nullptr; processImage = processImage->NextSibling("ProcessImage")){
-			if(strcmp(processImage->ToElement()->Attribute("type"), "output") == 0){
-				createProcImageOut(processImage);
-			}
-			else if(strcmp(processImage->ToElement()->Attribute("type"), "input") == 0){
-				processImageIn = processImage;
-			}
-		}
-		createProcImageIn(processImageIn);
-	}
-	else{
-		DEVLOG_ERROR("[powerlink] Could not open file %s\n", paFileName);
-	}
+  if(xmlDoc.LoadFile()){
+    TiXmlNode *appProcess = xmlDoc.FirstChild("ApplicationProcess");
+    TiXmlNode *processImageIn;
+    for(TiXmlNode *processImage = appProcess->ToElement()->FirstChild("ProcessImage"); processImage != nullptr; processImage = processImage->NextSibling("ProcessImage")){
+      if(strcmp(processImage->ToElement()->Attribute("type"), "output") == 0){
+        createProcImageOut(processImage);
+      }
+      else if(strcmp(processImage->ToElement()->Attribute("type"), "input") == 0){
+        processImageIn = processImage;
+      }
+    }
+    createProcImageIn(processImageIn);
+  }
+  else{
+    DEVLOG_ERROR("[powerlink] Could not open file %s\n", paFileName);
+  }
 }
 
 void CEplXmlReader::createProcImageOut(TiXmlNode* paProcessImage){
-	int currentCnId = -1;
-	int currentModuleNr = -1;
-	char currentModuleId[256];
-	int currentIoNr = -1;
+  int currentCnId = -1;
+  int currentModuleNr = -1;
+  char currentModuleId[256];
+  int currentIoNr = -1;
 
-	TiXmlNode *channel;
-	for(channel = paProcessImage->FirstChild("Channel"); channel != nullptr; channel = channel->NextSibling("Channel")){
-		// New IO
-		currentIoNr++;
+  TiXmlNode *channel;
+  for(channel = paProcessImage->FirstChild("Channel"); channel != nullptr; channel = channel->NextSibling("Channel")){
+    // New IO
+    currentIoNr++;
 
-		// Get "Name" attribute
-		const char *ioName = channel->ToElement()->Attribute("Name");
-		char *nameStr = new char[strlen(ioName) + 1];
-		strcpy(nameStr, ioName);
+    // Get "Name" attribute
+    const char *ioName = channel->ToElement()->Attribute("Name");
+    char *nameStr = new char[strlen(ioName) + 1];
+    strcpy(nameStr, ioName);
 
-		// Get CN ID
-		char* pch = strtok(nameStr, ".CN");
-		int cnId = forte::core::util::strtol(pch,0,10);
+    // Get CN ID
+    char* pch = strtok(nameStr, ".CN");
+    int cnId = forte::core::util::strtol(pch,0,10);
 
-		// Get module ID
-		char* modId = strtok(nullptr, ".");
+    // Get module ID
+    char* modId = strtok(nullptr, ".");
 
-		// Get dataSize
-		const char *temp = channel->ToElement()->Attribute("dataSize");
-		int dSize = forte::core::util::strtoul(temp,0,10);
+    // Get dataSize
+    const char *temp = channel->ToElement()->Attribute("dataSize");
+    int dSize = forte::core::util::strtoul(temp,0,10);
 
-		// Get PIOffset
-		temp = channel->ToElement()->Attribute("PIOffset");
-		long piOffset = forte::core::util::strtol(temp, nullptr, 16);
+    // Get PIOffset
+    temp = channel->ToElement()->Attribute("PIOffset");
+    long piOffset = forte::core::util::strtol(temp, nullptr, 16);
 
-		// Get BitOffset
-		long bitOffset = 0;
-		temp = channel->ToElement()->Attribute("BitOffset");
-		if(temp != nullptr){
-			bitOffset = forte::core::util::strtol(temp, nullptr, 16);
-		}
+    // Get BitOffset
+    long bitOffset = 0;
+    temp = channel->ToElement()->Attribute("BitOffset");
+    if(temp != nullptr){
+      bitOffset = forte::core::util::strtol(temp, nullptr, 16);
+    }
 
-		// Check CN id, module number and add new IO
-		if(cnId != currentCnId){ // New CN
-			currentCnId = cnId;
-			currentModuleNr = 0;
-			strcpy(currentModuleId, modId);
-			currentIoNr = 0;
+    // Check CN id, module number and add new IO
+    if(cnId != currentCnId){ // New CN
+      currentCnId = cnId;
+      currentModuleNr = 0;
+      strcpy(currentModuleId, modId);
+      currentIoNr = 0;
 
-			mModuleListOut.addEntry(ioName, piOffset, bitOffset, currentModuleNr);
-			mProcImageOut->addEntry(cnId, currentModuleNr, currentIoNr, dSize, piOffset, bitOffset);
+      mModuleListOut.addEntry(ioName, piOffset, bitOffset, currentModuleNr);
+      mProcImageOut->addEntry(cnId, currentModuleNr, currentIoNr, dSize, piOffset, bitOffset);
 
-		}
-		else if(mModuleListOut.moduleNameExist(ioName)){ // IO name exist => this must be a new module with same brand as another
-			currentModuleNr++;
-			strcpy(currentModuleId, modId);
-			currentIoNr = 0;
+    }
+    else if(mModuleListOut.moduleNameExist(ioName)){ // IO name exist => this must be a new module with same brand as another
+      currentModuleNr++;
+      strcpy(currentModuleId, modId);
+      currentIoNr = 0;
 
-			mModuleListOut.addEntry(ioName, piOffset, bitOffset, currentModuleNr);
-			mProcImageOut->addEntry(cnId, currentModuleNr, currentIoNr, dSize, piOffset, bitOffset);
+      mModuleListOut.addEntry(ioName, piOffset, bitOffset, currentModuleNr);
+      mProcImageOut->addEntry(cnId, currentModuleNr, currentIoNr, dSize, piOffset, bitOffset);
 
-		}
-		else if(strcmp(modId, currentModuleId) == 0){ // same module ID as IO before => must be same module
+    }
+    else if(strcmp(modId, currentModuleId) == 0){ // same module ID as IO before => must be same module
 
-			mProcImageOut->addEntry(cnId, currentModuleNr, currentIoNr, dSize, piOffset, bitOffset);
+      mProcImageOut->addEntry(cnId, currentModuleNr, currentIoNr, dSize, piOffset, bitOffset);
 
-		}
-		else{ // new module ID => new module
-			currentModuleNr++;
-			strcpy(currentModuleId, modId);
-			currentIoNr = 0;
+    }
+    else{ // new module ID => new module
+      currentModuleNr++;
+      strcpy(currentModuleId, modId);
+      currentIoNr = 0;
 
-			mModuleListOut.addEntry(ioName, piOffset, bitOffset, currentModuleNr);
-			mProcImageOut->addEntry(cnId, currentModuleNr, currentIoNr, dSize, piOffset, bitOffset);
+      mModuleListOut.addEntry(ioName, piOffset, bitOffset, currentModuleNr);
+      mProcImageOut->addEntry(cnId, currentModuleNr, currentIoNr, dSize, piOffset, bitOffset);
 
-		}
+    }
 
-		DEVLOG_DEBUG("[powerlink] << %d, %d, %d, %d, %d, %d, %d\n",currentCnId, currentModuleNr, ioName, currentIoNr, dSize, piOffset, bitOffset);
+    DEVLOG_DEBUG("[powerlink] << %d, %d, %d, %d, %d, %d, %d\n",currentCnId, currentModuleNr, ioName, currentIoNr, dSize, piOffset, bitOffset);
 
-		delete[] nameStr;
-	}
+    delete[] nameStr;
+  }
 }
 
 void CEplXmlReader::createProcImageIn(TiXmlNode *paProcessImage){
-	int currentCnId = -1;
-	int currentModuleNr = -1;
-	char currentModuleId[256];
-	int currentIoNr = -1;
+  int currentCnId = -1;
+  int currentModuleNr = -1;
+  char currentModuleId[256];
+  int currentIoNr = -1;
 
-	TiXmlNode *channel;
-	for(channel = paProcessImage->FirstChild("Channel"); channel != nullptr; channel = channel->NextSibling("Channel")){
-		// New IO
-		currentIoNr++;
+  TiXmlNode *channel;
+  for(channel = paProcessImage->FirstChild("Channel"); channel != nullptr; channel = channel->NextSibling("Channel")){
+    // New IO
+    currentIoNr++;
 
-		// Get "Name" attribute
-		const char *ioName = channel->ToElement()->Attribute("Name");
-		char *nameStr = new char[strlen(ioName) + 1];
-		strcpy(nameStr, ioName);
+    // Get "Name" attribute
+    const char *ioName = channel->ToElement()->Attribute("Name");
+    char *nameStr = new char[strlen(ioName) + 1];
+    strcpy(nameStr, ioName);
 
-		// Get CN ID
-		char* pch = strtok(nameStr, ".CN");
-		int cnId = forte::core::util::strtoul(pch,0,10);
+    // Get CN ID
+    char* pch = strtok(nameStr, ".CN");
+    int cnId = forte::core::util::strtoul(pch,0,10);
 
-		// Get module ID
-		char* modId = strtok(nullptr, ".");
+    // Get module ID
+    char* modId = strtok(nullptr, ".");
 
-		// Get dataSize
-		const char *temp = channel->ToElement()->Attribute("dataSize");
-		int dSize = forte::core::util::strtoul(temp,0,10);
+    // Get dataSize
+    const char *temp = channel->ToElement()->Attribute("dataSize");
+    int dSize = forte::core::util::strtoul(temp,0,10);
 
-		// Get PIOffset
-		temp = channel->ToElement()->Attribute("PIOffset");
-		long piOffset = forte::core::util::strtol(temp, nullptr, 16);
+    // Get PIOffset
+    temp = channel->ToElement()->Attribute("PIOffset");
+    long piOffset = forte::core::util::strtol(temp, nullptr, 16);
 
-		// Get BitOffset
-		long bitOffset = 0;
-		temp = channel->ToElement()->Attribute("BitOffset");
-		if(temp != nullptr){
-			bitOffset = forte::core::util::strtol(temp, nullptr, 16);
-		}
+    // Get BitOffset
+    long bitOffset = 0;
+    temp = channel->ToElement()->Attribute("BitOffset");
+    if(temp != nullptr){
+      bitOffset = forte::core::util::strtol(temp, nullptr, 16);
+    }
 
-		// Check CN id, module number and add new IO
-		if(cnId != currentCnId){ // New CN
-			currentCnId = cnId;
+    // Check CN id, module number and add new IO
+    if(cnId != currentCnId){ // New CN
+      currentCnId = cnId;
 
-			currentModuleNr = getModuleNr(ioName);
+      currentModuleNr = getModuleNr(ioName);
 
-			strcpy(currentModuleId, modId);
-			currentIoNr = 0;
+      strcpy(currentModuleId, modId);
+      currentIoNr = 0;
 
-			mModuleListIn.addEntry(ioName, piOffset, bitOffset, currentModuleNr);
-			mProcImageIn->addEntry(cnId, currentModuleNr, currentIoNr, dSize, piOffset, bitOffset);
+      mModuleListIn.addEntry(ioName, piOffset, bitOffset, currentModuleNr);
+      mProcImageIn->addEntry(cnId, currentModuleNr, currentIoNr, dSize, piOffset, bitOffset);
 
-		}
-		else if(mModuleListIn.moduleNameExist(ioName)){ // IO name exist => this must be a new module with same brand as another
+    }
+    else if(mModuleListIn.moduleNameExist(ioName)){ // IO name exist => this must be a new module with same brand as another
 
-			currentModuleNr = getModuleNr(ioName);
+      currentModuleNr = getModuleNr(ioName);
 
-			strcpy(currentModuleId, modId);
-			currentIoNr = 0;
+      strcpy(currentModuleId, modId);
+      currentIoNr = 0;
 
-			mModuleListIn.addEntry(ioName, piOffset, bitOffset, currentModuleNr);
-			mProcImageIn->addEntry(cnId, currentModuleNr, currentIoNr, dSize, piOffset, bitOffset);
+      mModuleListIn.addEntry(ioName, piOffset, bitOffset, currentModuleNr);
+      mProcImageIn->addEntry(cnId, currentModuleNr, currentIoNr, dSize, piOffset, bitOffset);
 
-		}
-		else if(strcmp(modId, currentModuleId) == 0){ // same module ID as IO before => must be same module
+    }
+    else if(strcmp(modId, currentModuleId) == 0){ // same module ID as IO before => must be same module
 
-			mProcImageIn->addEntry(cnId, currentModuleNr, currentIoNr, dSize, piOffset, bitOffset);
+      mProcImageIn->addEntry(cnId, currentModuleNr, currentIoNr, dSize, piOffset, bitOffset);
 
-		}
-		else{ // new module ID => new module
+    }
+    else{ // new module ID => new module
 
-			currentModuleNr = getModuleNr(ioName);
+      currentModuleNr = getModuleNr(ioName);
 
-			strcpy(currentModuleId, modId);
-			currentIoNr = 0;
+      strcpy(currentModuleId, modId);
+      currentIoNr = 0;
 
-			mModuleListIn.addEntry(ioName, piOffset, bitOffset, currentModuleNr);
-			mProcImageIn->addEntry(cnId, currentModuleNr, currentIoNr, dSize, piOffset, bitOffset);
+      mModuleListIn.addEntry(ioName, piOffset, bitOffset, currentModuleNr);
+      mProcImageIn->addEntry(cnId, currentModuleNr, currentIoNr, dSize, piOffset, bitOffset);
 
-		}
+    }
 
-		DEVLOG_DEBUG("[powerlink] << %d, %d, %d, %d, %d, %d, %d\n",currentCnId, currentModuleNr, ioName, currentIoNr, dSize, piOffset, bitOffset);
+    DEVLOG_DEBUG("[powerlink] << %d, %d, %d, %d, %d, %d, %d\n",currentCnId, currentModuleNr, ioName, currentIoNr, dSize, piOffset, bitOffset);
 
-		delete[] nameStr;
-	}
+    delete[] nameStr;
+  }
 }
 
 int CEplXmlReader::getModuleNr(const char* paIoId){
-	char localCopy[256];
-	strcpy(localCopy, paIoId);
+  char localCopy[256];
+  strcpy(localCopy, paIoId);
 
-	char dest[256];
-	char* pch = strtok(localCopy, ".");
-	strcpy(dest, pch);
-	strcat(dest, ".");
-	pch = strtok(nullptr, ".");
-	strcat(dest, pch);
+  char dest[256];
+  char* pch = strtok(localCopy, ".");
+  strcpy(dest, pch);
+  strcat(dest, ".");
+  pch = strtok(nullptr, ".");
+  strcat(dest, pch);
 
-	int occurences = mModuleListIn.getNrOfModules(dest);
-	int modNr = mModuleListOut.getModuleNr(dest, occurences + 1);
-	if(modNr == -1) {
-		DEVLOG_ERROR("[powerlink] Could not find module number for %s\n", dest);
-	}
+  int occurences = mModuleListIn.getNrOfModules(dest);
+  int modNr = mModuleListOut.getModuleNr(dest, occurences + 1);
+  if(modNr == -1) {
+    DEVLOG_ERROR("[powerlink] Could not find module number for %s\n", dest);
+  }
 
-	return modNr;
+  return modNr;
 }

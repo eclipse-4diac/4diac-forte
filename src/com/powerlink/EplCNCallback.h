@@ -15,10 +15,10 @@
 class IEplCNCallback{
   public:
 
-	virtual void cnSynchCallback() = 0;
+    virtual void cnSynchCallback() = 0;
 
   protected:
-	virtual ~IEplCNCallback() = default;
+    virtual ~IEplCNCallback() = default;
 
 };
 

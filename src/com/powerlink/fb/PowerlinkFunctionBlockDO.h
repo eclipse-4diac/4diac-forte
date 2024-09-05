@@ -20,25 +20,25 @@
 #include "EplWrapper.h"
 
 class PowerlinkFunctionBlockDO : public CFunctionBlock, public IEplCNCallback {
-	EplMapping eplMapping;
-	CSyncObject sync;
-	bool initOk;
+  EplMapping eplMapping;
+  CSyncObject sync;
+  bool initOk;
 
-	void cnSynchCallback() override;
+  void cnSynchCallback() override;
 
-	using CFunctionBlock::CFunctionBlock;
+  using CFunctionBlock::CFunctionBlock;
 
 protected:
-	void executePowerlinkEvent(TEventID paEIID,
-							   CEventChainExecutionThread *paECET,
-							   TEventID scmEventINITID,
-							   TEventID scmEventREQID,
-							   TEventID scmEventINITOID,
-							   TEventID scmEventCNFID,
-							   const CIEC_BOOL &var_QI,
-							   CIEC_BOOL &var_QO,
-							   const CIEC_USINT &var_CNID,
-							   const CIEC_UINT &var_MODID);
+  void executePowerlinkEvent(TEventID paEIID,
+                 CEventChainExecutionThread *paECET,
+                 TEventID scmEventINITID,
+                 TEventID scmEventREQID,
+                 TEventID scmEventINITOID,
+                 TEventID scmEventCNFID,
+                 const CIEC_BOOL &var_QI,
+                 CIEC_BOOL &var_QO,
+                 const CIEC_USINT &var_CNID,
+                 const CIEC_UINT &var_MODID);
 };
 
 
