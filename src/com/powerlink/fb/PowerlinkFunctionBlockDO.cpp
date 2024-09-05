@@ -17,12 +17,11 @@ void PowerlinkFunctionBlockDO::cnSynchCallback() {
     CEplStackWrapper &eplStack = CEplStackWrapper::getInstance();
     sync.lock();
 
-    EplMapping::TEplMappingList::Iterator itEnd = eplMapping.mCurrentValues.end();
-    EplMapping::TEplMappingList::Iterator it = eplMapping.mCurrentValues.begin();
-    for (it; it != itEnd; ++it) {
-        bool ioVal = *(it->mCurrentValue) != 0x00;
-        (eplStack.getProcImageIn())[it->mPiOffset] &= (char) (~(0x01 << it->mBitOffset));
-        (eplStack.getProcImageIn())[it->mPiOffset] |= (char) (ioVal << it->mBitOffset);
+    const auto &procImageIn = eplStack.getProcImageIn();
+    for (const auto &mappingValue : eplMapping.mCurrentValues) {
+        bool ioVal = *(mappingValue->mCurrentValue) != 0x00;
+        procImageIn[mappingValue->mPiOffset] &= static_cast<char>(~(0x01 << mappingValue->mBitOffset));
+        procImageIn[mappingValue->mPiOffset] |= static_cast<char>(ioVal << mappingValue->mBitOffset);
     }
 
     sync.unlock();
@@ -72,7 +71,7 @@ void PowerlinkFunctionBlockDO::executePowerlinkEvent(const TEventID paEIID,
             EplMapping::TEplMappingList::Iterator it = eplMapping.mCurrentValues.begin();
             for (int i = 3; i < getFBInterfaceSpec().mNumDIs && it != itEnd; i++, ++it) {
                 bool ioVal = *static_cast<CIEC_BOOL *>(getDI(i));
-                *(it->mCurrentValue) = (char) ioVal;
+                *(it->mCurrentValue) = static_cast<char>(ioVal);
             }
             sync.unlock();
         }

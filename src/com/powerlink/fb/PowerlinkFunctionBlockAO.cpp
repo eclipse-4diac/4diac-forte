@@ -17,17 +17,17 @@ void PowerlinkFunctionBlockAO::cnSynchCallback() {
     CEplStackWrapper &eplStack = CEplStackWrapper::getInstance();
     sync.lock();
 
-    EplMapping::TEplMappingList::Iterator itEnd = eplMapping.mCurrentValues.end();
-    EplMapping::TEplMappingList::Iterator it = eplMapping.mCurrentValues.begin();
-    for (it; it != itEnd; ++it) {
-        short ioVal = *((short *) (it->mCurrentValue));
-        char highByte = (char) ((ioVal & 0xFF00) >> 8);
-        char lowByte = (char) (ioVal & 0x00FF);
-        (eplStack.getProcImageIn())[it->mPiOffset] &= (~(0xFF << it->mBitOffset));
-        (eplStack.getProcImageIn())[it->mPiOffset] |= (lowByte << (it->mBitOffset));
+    const auto &procImageIn = eplStack.getProcImageIn();
+    for (const auto &mappingValue : eplMapping.mCurrentValues) {
+        short ioVal = *reinterpret_cast<short *>(mappingValue->mCurrentValue);
+        char highByte = static_cast<char>((ioVal & 0xFF00) >> 8);
+        char lowByte = static_cast<char>(ioVal & 0x00FF);
 
-        (eplStack.getProcImageIn())[it->mPiOffset + 1] &= (~(0xFF << it->mBitOffset));
-        (eplStack.getProcImageIn())[it->mPiOffset + 1] |= (highByte << (it->mBitOffset));
+        procImageIn[mappingValue->mPiOffset] &= ~(0xFF << mappingValue->mBitOffset);
+        procImageIn[mappingValue->mPiOffset] |= (lowByte << mappingValue->mBitOffset);
+
+        procImageIn[mappingValue->mPiOffset + 1] &= ~(0xFF << mappingValue->mBitOffset);
+        procImageIn[mappingValue->mPiOffset + 1] |= (highByte << mappingValue->mBitOffset);
     }
 
     sync.unlock();
@@ -75,9 +75,9 @@ void PowerlinkFunctionBlockAO::executePowerlinkEvent(const TEventID paEIID,
             sync.lock();
             EplMapping::TEplMappingList::Iterator itEnd = eplMapping.mCurrentValues.end();
             EplMapping::TEplMappingList::Iterator it = eplMapping.mCurrentValues.begin();
-            for (int i = 3; i < getFBInterfaceSpec().mNumDIs && it != itEnd; i++, ++it) {
+            for (TPortId i = 3; i < getFBInterfaceSpec().mNumDIs && it != itEnd; i++, ++it) {
                 short ioVal = static_cast<CIEC_INT *>(getDI(i))->getSignedValue();
-                *((short*) (it->mCurrentValue)) = ioVal;
+                *reinterpret_cast<short*>(it->mCurrentValue) = ioVal;
             }
             sync.unlock();
         }

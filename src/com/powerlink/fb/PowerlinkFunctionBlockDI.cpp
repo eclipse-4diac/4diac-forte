@@ -17,11 +17,10 @@ void PowerlinkFunctionBlockDI::cnSynchCallback() {
     CEplStackWrapper &eplStack = CEplStackWrapper::getInstance();
     sync.lock();
 
-    EplMapping::TEplMappingList::Iterator itEnd = eplMapping.mCurrentValues.end();
-    EplMapping::TEplMappingList::Iterator it = eplMapping.mCurrentValues.begin();
-    for (; it != itEnd; ++it) {
-        bool ioVal = (eplStack.getProcImageOut()[it->mPiOffset] & (char) (0x01 << it->mBitOffset)) != 0x00;
-        *(it->mCurrentValue) = (char) ioVal;
+    const auto &procImageOut = eplStack.getProcImageOut();
+    for (const auto &mappingValue : eplMapping.mCurrentValues) {
+        bool ioVal = (procImageOut[mappingValue->mPiOffset] & static_cast<char>(0x01 << mappingValue->mBitOffset)) != 0x00;
+        *(mappingValue->mCurrentValue) = static_cast<char>(ioVal);
     }
 
     sync.unlock();

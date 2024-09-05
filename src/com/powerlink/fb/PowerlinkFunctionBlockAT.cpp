@@ -75,8 +75,8 @@ void PowerlinkFunctionBlockAT::executePowerlinkEvent(const TEventID paEIID,
             sync.lock();
             EplMapping::TEplMappingList::Iterator itEnd = eplMapping.mCurrentValues.end();
             EplMapping::TEplMappingList::Iterator it = eplMapping.mCurrentValues.begin();
-            for (int i = 3; i < getFBInterfaceSpec().mNumDOs && it != itEnd; i++, ++it) {
-                short ioVal = *((short *) (it->mCurrentValue));
+            for (TPortId i = 3; i < getFBInterfaceSpec().mNumDOs && it != itEnd; i++, ++it) {
+                short ioVal = *reinterpret_cast<short*>(it->mCurrentValue);
                 *static_cast<CIEC_REAL *>(getDO(i)) = CIEC_REAL(ioVal / 10);
             }
             sync.unlock();

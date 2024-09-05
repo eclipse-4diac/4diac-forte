@@ -17,17 +17,14 @@ void PowerlinkFunctionBlockAI::cnSynchCallback() {
     CEplStackWrapper &eplStack = CEplStackWrapper::getInstance();
     sync.lock();
 
-    EplMapping::TEplMappingList::Iterator itEnd = eplMapping.mCurrentValues.end();
-    EplMapping::TEplMappingList::Iterator it = eplMapping.mCurrentValues.begin();
-    for (; it != itEnd; ++it) {
+    const auto &procImageOut = eplStack.getProcImageOut();
+    for (const auto &mappingValue : eplMapping.mCurrentValues) {
         short ioVal = 0x0000;
-        char lowByte;
-        char highByte;
-        lowByte = (eplStack.getProcImageOut()[it->mPiOffset] & (0xFF << it->mBitOffset)) >> it->mBitOffset;
-        highByte = (eplStack.getProcImageOut()[it->mPiOffset + 1] & (0xFF << it->mBitOffset)) >> it->mBitOffset;
-        ioVal = (short) ((0xFF00 & (highByte << 8))) | (short) (0xFF & lowByte);
+        char lowByte = (procImageOut[mappingValue->mPiOffset] & (0xFF << mappingValue->mBitOffset)) >> mappingValue->mBitOffset;
+        char highByte = (procImageOut[mappingValue->mPiOffset + 1] & (0xFF << mappingValue->mBitOffset)) >> mappingValue->mBitOffset;
+        ioVal = static_cast<short>((0xFF00 & (highByte << 8)) | (0xFF & lowByte));
 
-        *((short *) (it->mCurrentValue)) = ioVal;
+        *reinterpret_cast<short *>(mappingValue->mCurrentValue) = ioVal;
     }
 
     sync.unlock();
@@ -75,9 +72,9 @@ void PowerlinkFunctionBlockAI::executePowerlinkEvent(const TEventID paEIID,
             sync.lock();
             EplMapping::TEplMappingList::Iterator itEnd = eplMapping.mCurrentValues.end();
             EplMapping::TEplMappingList::Iterator it = eplMapping.mCurrentValues.begin();
-            for (int i = 3; i < getFBInterfaceSpec().mNumDOs && it != itEnd; i++, ++it) {
+            for (TPortId i = 3; i < getFBInterfaceSpec().mNumDOs && it != itEnd; i++, ++it) {
                 short ioVal = 0x0000;
-                ioVal = *((short *) (it->mCurrentValue));
+                ioVal = *reinterpret_cast<short*>(it->mCurrentValue);
                 *static_cast<CIEC_INT *>(getDO(i)) = CIEC_INT(ioVal);
             }
             sync.unlock();
