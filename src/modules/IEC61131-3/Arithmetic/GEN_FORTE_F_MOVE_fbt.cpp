@@ -65,9 +65,14 @@ void GEN_FORTE_F_MOVE::writeOutputData(TEventID paEOID) {
 }
 
 bool GEN_FORTE_F_MOVE::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) {
-  CTypeLib::CTypeEntry *poToCreate = CTypeLib::findType(getDataTypeNameId(paConfigString), CTypeLib::getDTLibStart());
-  if (nullptr == poToCreate) {
-    return false;
+  const CTypeLib::CTypeEntry *poToCreate;
+  if(strcmp(paConfigString, "F_MOVE") == 0) {
+    poToCreate = &CIEC_ANY_VARIANT::csmFirmwareDataTypeEntry_ANY_VARIANT;
+  } else {
+    poToCreate = CTypeLib::findType(getDataTypeNameId(paConfigString), CTypeLib::getDTLibStart());
+    if (nullptr == poToCreate) {
+      return false;
+    }
   }
 
   CStringDictionary::TStringId *diDataTypeNames = new CStringDictionary::TStringId[1];
