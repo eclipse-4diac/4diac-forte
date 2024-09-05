@@ -126,18 +126,18 @@ void *powerlinkSyncThread(void * arg);
 // this function prototype here. If you want to use more than one Epl
 // instances then the function name of each object dictionary has to differ.
 
-extern "C" tEplKernel PUBLIC EplObdInitRam(tEplObdInitParam MEM*pInitParam_p);
+extern "C" tEplKernel PUBLIC EplObdInitRam(tEplObdInitParam MEM*paInitParam);
 
 tEplKernel PUBLIC appCbEvent(
-    tEplApiEventType eventType, // IN: event type (enum)
-    tEplApiEventArg *eventArg, // IN: event argument (union)
-    void GENERIC*userArg);
+    tEplApiEventType paEventType, // IN: event type (enum)
+    tEplApiEventArg *paEventArg, // IN: event argument (union)
+    void GENERIC*paUserArg);
 
-tEplKernel PUBLIC AppCbSync();
+tEplKernel PUBLIC appCbSync();
 
-char *CEplStackWrapper::allocProcImage(unsigned int n_bytes) {
-    auto procImage = static_cast<char *>(malloc(n_bytes));
-    for (unsigned int i = 0; i < n_bytes; i++) {
+char *CEplStackWrapper::allocProcImage(unsigned int pa_nNumOfBytes) {
+    auto procImage = static_cast<char *>(malloc(pa_nNumOfBytes));
+    for (unsigned int i = 0; i < pa_nNumOfBytes; i++) {
         procImage[i] = 0x00;
     }
 
@@ -179,20 +179,20 @@ CEplStackWrapper::CEplStackWrapper() {
 CEplStackWrapper::~CEplStackWrapper() {
 }
 
-int CEplStackWrapper::eplStackInit(const char *xmlFile, const char *cdcFile, const char *ethDeviceName) {
+int CEplStackWrapper::eplStackInit(const char *pa_pXmlFile, const char *pa_pCdcFile, const char *pa_pEthDeviceName) {
     tEplKernel ret;
     static tEplApiInitParam eplApiInitParam;
     const char *hostname = HOSTNAME;
 
     // Read and process XML file
-    CEplXmlReader xmlReader(&procMatrixIn, &procMatrixOut);
-    xmlReader.readXmlFile(xmlFile);
+    CEplXmlReader xmlReader(&mProcMatrixIn, &mProcMatrixOut);
+    xmlReader.readXmlFile(pa_pXmlFile);
 
-    mProcInSize = procMatrixIn.getProcessImageSize();
-    mPprocOutSize = procMatrixOut.getProcessImageSize();
+    mProcInSize = mProcMatrixIn.getProcessImageSize();
+    mProcOutSize = mProcMatrixOut.getProcessImageSize();
 
     mAppProcessImageIn = allocProcImage(mProcInSize);
-    mAppProcessImageOut = allocProcImage(mPprocOutSize);
+    mAppProcessImageOut = allocProcImage(mProcOutSize);
 
 #ifdef CONFIG_POWERLINK_USERSTACK
 #if (TARGET_SYSTEM == _LINUX_)
@@ -252,7 +252,7 @@ int CEplStackWrapper::eplStackInit(const char *xmlFile, const char *cdcFile, con
     ////////////////////////////////////////////////////////////////////////////////
 
     char correctDevName[1024];
-    bool macFound = findMAC(ethDeviceName, &correctDevName[0]);
+    bool macFound = findMAC(pa_pEthDeviceName, &correctDevName[0]);
 
     /* Retrieve the device list on the local machine */
 
@@ -282,13 +282,13 @@ int CEplStackWrapper::eplStackInit(const char *xmlFile, const char *cdcFile, con
         }
 
         if (seldev->description) {
-            const char *userDescLoc = strstr(seldev->description, ethDeviceName);
+            const char *userDescLoc = strstr(seldev->description, pa_pEthDeviceName);
             if (userDescLoc != nullptr) {
                 DEVLOG_INFO("[powerlink] Chosen Ethernet Card: %s\n", seldev->description);
                 break;
             }
         } else {
-            const char *userDescLoc = strstr(seldev->name, ethDeviceName);
+            const char *userDescLoc = strstr(seldev->name, pa_pEthDeviceName);
             if (userDescLoc != nullptr) {
                 DEVLOG_INFO("[powerlink] Chosen Ethernet Card: %s\n", seldev->name);
                 break;
@@ -354,7 +354,7 @@ int CEplStackWrapper::eplStackInit(const char *xmlFile, const char *cdcFile, con
 
 #ifdef CONFIG_POWERLINK_USERSTACK
     eplApiInitParam.m_pfnObdInitRam = EplObdInitRam;
-    eplApiInitParam.m_pfnCbSync = AppCbSync;
+    eplApiInitParam.m_pfnCbSync = appCbSync;
 #else
   EplApiInitParam.m_pfnCbSync = nullptr;
 #endif
@@ -377,9 +377,9 @@ int CEplStackWrapper::eplStackInit(const char *xmlFile, const char *cdcFile, con
     /* At this point, we don't need any more the device list. Free it */
     pcap_freealldevs(alldevs);
 
-    ret = EplApiSetCdcFilename(const_cast<char*>(cdcFile));
+    ret = EplApiSetCdcFilename(const_cast<char*>(pa_pCdcFile));
     if (ret != kEplSuccessful) {
-        DEVLOG_ERROR("[powerlink] Could not set CDC filename at EplApiSetCdcFilename\n", cdcFile);
+        DEVLOG_ERROR("[powerlink] Could not set CDC filename at EplApiSetCdcFilename\n", pa_pCdcFile);
         return ret;
     }
 #else
@@ -401,9 +401,9 @@ int CEplStackWrapper::eplStackInit(const char *xmlFile, const char *cdcFile, con
     AppProcessImageCopyJob_g.m_In.m_uiSize = mProcInSize;
     AppProcessImageCopyJob_g.m_Out.m_pPart = mAppProcessImageOut;
     AppProcessImageCopyJob_g.m_Out.m_uiOffset = 0;
-    AppProcessImageCopyJob_g.m_Out.m_uiSize = mPprocOutSize;
+    AppProcessImageCopyJob_g.m_Out.m_uiSize = mProcOutSize;
 
-    ret = EplApiProcessImageAlloc(mProcInSize, mPprocOutSize, 2, 2);
+    ret = EplApiProcessImageAlloc(mProcInSize, mProcOutSize, 2, 2);
     if (ret != kEplSuccessful) {
         DEVLOG_ERROR("[powerlink] Could not allocate process image at EplApiProcessImageAlloc\n");
         eplStackShutdown();
@@ -448,8 +448,8 @@ int CEplStackWrapper::eplStackShutdown() {
     tEplKernel eplRet = EplApiShutdown();
     DEVLOG_INFO("EplApiShutdown():  0x%X\n", eplRet);
 
-    procMatrixIn.clearAll();
-    procMatrixOut.clearAll();
+    mProcMatrixIn.clearAll();
+    mProcMatrixOut.clearAll();
     mCallbackList.clearAll();
     free(mAppProcessImageIn);
     free(mAppProcessImageOut);
@@ -458,11 +458,11 @@ int CEplStackWrapper::eplStackShutdown() {
 }
 
 CProcessImageMatrix *CEplStackWrapper::getProcessImageMatrixIn() {
-    return &procMatrixIn;
+    return &mProcMatrixIn;
 }
 
 CProcessImageMatrix *CEplStackWrapper::getProcessImageMatrixOut() {
-    return &procMatrixOut;
+    return &mProcMatrixOut;
 }
 
 char *CEplStackWrapper::getProcImageIn() {
@@ -483,7 +483,7 @@ void CEplStackWrapper::registerCallback(IEplCNCallback *pa_pCallback) {
     mSync.unlock();
 }
 
-bool CEplStackWrapper::findMAC(const char *userMAC, char *deviceName) {
+bool CEplStackWrapper::findMAC(const char *pa_pUserMAC, char *pa_pDeviceName) {
     //char* correctDevName;
 
 #if (TARGET_SYSTEM == _LINUX_)
@@ -538,8 +538,8 @@ bool CEplStackWrapper::findMAC(const char *userMAC, char *deviceName) {
                 (unsigned char) ifReq.ifr_hwaddr.sa_data[3], (unsigned char) ifReq.ifr_hwaddr.sa_data[4],
                 (unsigned char) ifReq.ifr_hwaddr.sa_data[5]);
 
-        if (compareMACs(chMAC, userMAC)) {
-            strncpy(deviceName, ifList->if_name, IF_NAMESIZE);
+        if (compareMACs(chMAC, pa_pUserMAC)) {
+            strncpy(pa_pDeviceName, ifList->if_name, IF_NAMESIZE);
 
             //
             // Clean up things and return
@@ -600,18 +600,18 @@ bool CEplStackWrapper::findMAC(const char *userMAC, char *deviceName) {
     return false;
 }
 
-bool CEplStackWrapper::compareMACs(const char *macA, const char *macB) {
-    if (strcmp(macA, macB) == 0) {
+bool CEplStackWrapper::compareMACs(const char *pa_pMacA, const char *pa_pMacB) {
+    if (strcmp(pa_pMacA, pa_pMacB) == 0) {
         return true;
     }
 
-    auto *macCopyA = new char[strlen(macA) + 1];
-    strcpy(macCopyA, macA);
-    auto *macCopyB = new char[strlen(macB) + 1];
-    strcpy(macCopyB, macB);
+    auto *macCopyA = new char[strlen(pa_pMacA) + 1];
+    strcpy(macCopyA, pa_pMacA);
+    auto *macCopyB = new char[strlen(pa_pMacB) + 1];
+    strcpy(macCopyB, pa_pMacB);
 
     // Change to upper case
-    for (int i = 0; i < strlen(macA); i++) {
+    for (int i = 0; i < strlen(pa_pMacA); i++) {
         switch (macCopyA[i]) {
             case 'a':
                 macCopyA[i] = 'A';
@@ -633,7 +633,7 @@ bool CEplStackWrapper::compareMACs(const char *macA, const char *macB) {
                 break;
         }
     }
-    for (int i = 0; i < strlen(macB); i++) {
+    for (int i = 0; i < strlen(pa_pMacB); i++) {
         switch (macCopyB[i]) {
             case 'a':
                 macCopyB[i] = 'A';
@@ -695,17 +695,17 @@ bool CEplStackWrapper::compareMACs(const char *macA, const char *macB) {
 //---------------------------------------------------------------------------
 
 tEplKernel PUBLIC appCbEvent(
-    tEplApiEventType eventType, // IN: event type (enum)
-    tEplApiEventArg *eventArg, // IN: event argument (union)
-    void GENERIC* userArg) {
+    tEplApiEventType paEventType, // IN: event type (enum)
+    tEplApiEventArg *paEventArg, // IN: event argument (union)
+    void GENERIC* paUserArg) {
     tEplKernel ret = kEplSuccessful;
 
     UNUSED_PARAMETER(userArg);
 
     // check if NMT_GS_OFF is reached
-    switch (eventType) {
+    switch (paEventType) {
         case kEplApiEventNmtStateChange: {
-            switch (eventArg->m_NmtStateChange.m_NewNmtState) {
+            switch (paEventArg->m_NmtStateChange.m_NewNmtState) {
                 case kEplNmtGsOff: {
                     // NMT state machine was shut down,
                     // because of user signal (CTRL-C) or critical EPL stack error
@@ -715,7 +715,7 @@ tEplKernel PUBLIC appCbEvent(
           DEVLOG_DEBUG("[powerlink] %s(kEplNmtGsOff) originating event = 0x%X\n", __func__, eventArg->m_NmtStateChange.m_NmtEvent);
 #else
                     DEVLOG_DEBUG("[powerlink] %s(kEplNmtGsOff) originating event = 0x%X\n", __func__,
-                            eventArg->m_NmtStateChange.m_NmtEvent);
+                            paEventArg->m_NmtStateChange.m_NmtEvent);
 #endif
                     break;
                 }
@@ -737,8 +737,8 @@ tEplKernel PUBLIC appCbEvent(
 #else
                     DEVLOG_DEBUG("[powerlink] %s(0x%X) originating event = 0x%X\n",
                             __func__,
-                            eventArg->m_NmtStateChange.m_NewNmtState,
-                            eventArg->m_NmtStateChange.m_NmtEvent);
+                            paEventArg->m_NmtStateChange.m_NewNmtState,
+                            paEventArg->m_NmtStateChange.m_NmtEvent);
 #endif
 
                     // continue
@@ -775,11 +775,11 @@ tEplKernel PUBLIC appCbEvent(
 #else
             DEVLOG_DEBUG("[powerlink] %s(Err/Warn): Source=%02X EplError=0x%03X",
                     __func__,
-                    eventArg->m_InternalError.m_EventSource,
-                    eventArg->m_InternalError.m_EplError);
+                    paEventArg->m_InternalError.m_EventSource,
+                    paEventArg->m_InternalError.m_EplError);
 #endif
             // check additional argument
-            switch (eventArg->m_InternalError.m_EventSource) {
+            switch (paEventArg->m_InternalError.m_EventSource) {
                 case kEplEventSourceEventk:
                 case kEplEventSourceEventu: {
                     // error occured within event processing
@@ -787,7 +787,7 @@ tEplKernel PUBLIC appCbEvent(
 #if EPL_DEFINED_STACK_VERSION >= EPL_STACK_VERSION(1, 8, 2)
           DEVLOG_DEBUG(" OrgSource=%02X\n", eventArg->m_InternalError.m_Arg.m_EventSource);
 #else
-                    DEVLOG_DEBUG(" OrgSource=%02X\n", eventArg->m_InternalError.m_Arg.m_EventSource);
+                    DEVLOG_DEBUG(" OrgSource=%02X\n", paEventArg->m_InternalError.m_Arg.m_EventSource);
 #endif
                     break;
                 }
@@ -798,7 +798,7 @@ tEplKernel PUBLIC appCbEvent(
 #if EPL_DEFINED_STACK_VERSION >= EPL_STACK_VERSION(1, 8, 2)
           DEVLOG_DEBUG(" val=%lX\n", eventArg->m_InternalError.m_Arg.m_dwArg);
 #else
-                    DEVLOG_DEBUG(" val=%lX\n", eventArg->m_InternalError.m_Arg.m_dwArg);
+                    DEVLOG_DEBUG(" val=%lX\n", paEventArg->m_InternalError.m_Arg.m_dwArg);
 #endif
                     break;
                 }
@@ -810,8 +810,8 @@ tEplKernel PUBLIC appCbEvent(
 #if EPL_DEFINED_STACK_VERSION >= EPL_STACK_VERSION(1, 8, 2)
           DEVLOG_DEBUG(" Object=0x%04X/%u\n", eventArg->m_InternalError.m_Arg.m_ObdError.m_uiIndex, eventArg->m_InternalError.m_Arg.m_ObdError.m_uiSubIndex);
 #else
-                    DEVLOG_DEBUG(" Object=0x%04X/%u\n", eventArg->m_InternalError.m_Arg.m_ObdError.m_uiIndex,
-                            eventArg->m_InternalError.m_Arg.m_ObdError.m_uiSubIndex);
+                    DEVLOG_DEBUG(" Object=0x%04X/%u\n", paEventArg->m_InternalError.m_Arg.m_ObdError.m_uiIndex,
+                            paEventArg->m_InternalError.m_Arg.m_ObdError.m_uiSubIndex);
 #endif
                     break;
                 }
@@ -832,27 +832,27 @@ tEplKernel PUBLIC appCbEvent(
             // new history entry
             DEVLOG_DEBUG("[powerlink] %s(HistoryEntry): Type=0x%04X Code=0x%04X (0x%02X %02X %02X %02X %02X %02X %02X %02X)\n",
                    __func__,
-                   eventArg->m_ErrHistoryEntry.m_wEntryType,
-                   eventArg->m_ErrHistoryEntry.m_wErrorCode,
-                   (WORD) eventArg->m_ErrHistoryEntry.m_abAddInfo[0],
-                   (WORD) eventArg->m_ErrHistoryEntry.m_abAddInfo[1],
-                   (WORD) eventArg->m_ErrHistoryEntry.m_abAddInfo[2],
-                   (WORD) eventArg->m_ErrHistoryEntry.m_abAddInfo[3],
-                   (WORD) eventArg->m_ErrHistoryEntry.m_abAddInfo[4],
-                   (WORD) eventArg->m_ErrHistoryEntry.m_abAddInfo[5],
-                   (WORD) eventArg->m_ErrHistoryEntry.m_abAddInfo[6],
-                   (WORD) eventArg->m_ErrHistoryEntry.m_abAddInfo[7]);
+                   paEventArg->m_ErrHistoryEntry.m_wEntryType,
+                   paEventArg->m_ErrHistoryEntry.m_wErrorCode,
+                   (WORD) paEventArg->m_ErrHistoryEntry.m_abAddInfo[0],
+                   (WORD) paEventArg->m_ErrHistoryEntry.m_abAddInfo[1],
+                   (WORD) paEventArg->m_ErrHistoryEntry.m_abAddInfo[2],
+                   (WORD) paEventArg->m_ErrHistoryEntry.m_abAddInfo[3],
+                   (WORD) paEventArg->m_ErrHistoryEntry.m_abAddInfo[4],
+                   (WORD) paEventArg->m_ErrHistoryEntry.m_abAddInfo[5],
+                   (WORD) paEventArg->m_ErrHistoryEntry.m_abAddInfo[6],
+                   (WORD) paEventArg->m_ErrHistoryEntry.m_abAddInfo[7]);
             break;
         }
 
         case kEplApiEventNode: {
             // check additional argument
-            switch (eventArg->m_Node.m_NodeEvent) {
+            switch (paEventArg->m_Node.m_NodeEvent) {
                 case kEplNmtNodeEventCheckConf: {
 #if EPL_DEFINED_STACK_VERSION >= EPL_STACK_VERSION(1, 8, 2)
           DEVLOG_DEBUG("[powerlink] %s(Node=0x%X, CheckConf)\n", __func__, eventArg->m_Node.m_uiNodeId);
 #else
-                    DEVLOG_DEBUG("[powerlink] %s(Node=0x%X, CheckConf)\n", __func__, eventArg->m_Node.m_uiNodeId);
+                    DEVLOG_DEBUG("[powerlink] %s(Node=0x%X, CheckConf)\n", __func__, paEventArg->m_Node.m_uiNodeId);
 #endif
                     break;
                 }
@@ -861,7 +861,7 @@ tEplKernel PUBLIC appCbEvent(
 #if EPL_DEFINED_STACK_VERSION >= EPL_STACK_VERSION(1, 8, 2)
           DEVLOG_DEBUG("[powerlink] %s(Node=0x%X, UpdateConf)\n", __func__, eventArg->m_Node.m_uiNodeId);
 #else
-                    DEVLOG_DEBUG("[powerlink] %s(Node=0x%X, UpdateConf)\n", __func__, eventArg->m_Node.m_uiNodeId);
+                    DEVLOG_DEBUG("[powerlink] %s(Node=0x%X, UpdateConf)\n", __func__, paEventArg->m_Node.m_uiNodeId);
 #endif
                     break;
                 }
@@ -870,10 +870,10 @@ tEplKernel PUBLIC appCbEvent(
 #if EPL_DEFINED_STACK_VERSION >= EPL_STACK_VERSION(1, 8, 2)
           DEVLOG_DEBUG("%s(Node=0x%X, NmtState=0x%X)\n", __func__, eventArg->m_Node.m_uiNodeId, eventArg->m_Node.m_NmtState);
 #else
-                    DEVLOG_DEBUG("[powerlink] %s(Node=0x%X, NmtState=0x%X)\n", __func__, eventArg->m_Node.m_uiNodeId,
-                            eventArg->m_Node.m_NmtState);
+                    DEVLOG_DEBUG("[powerlink] %s(Node=0x%X, NmtState=0x%X)\n", __func__, paEventArg->m_Node.m_uiNodeId,
+                            paEventArg->m_Node.m_NmtState);
 #endif
-                    if (eventArg->m_Node.m_NmtState == kEplNmtCsOperational) {
+                    if (paEventArg->m_Node.m_NmtState == kEplNmtCsOperational) {
                         DEVLOG_INFO("[powerlink] Init finished\n");
                         waitingUntilOperational = true;
                     }
@@ -884,8 +884,8 @@ tEplKernel PUBLIC appCbEvent(
 #if EPL_DEFINED_STACK_VERSION >= EPL_STACK_VERSION(1, 8, 2)
           DEVLOG_DEBUG("[powerlink] %s(Node=0x%X, Error=0x%X)\n", __func__, eventArg->m_Node.m_uiNodeId, eventArg->m_Node.m_wErrorCode);
 #else
-                    DEVLOG_DEBUG("[powerlink] %s(Node=0x%X, Error=0x%X)\n", __func__, eventArg->m_Node.m_uiNodeId,
-                            eventArg->m_Node.m_wErrorCode);
+                    DEVLOG_DEBUG("[powerlink] %s(Node=0x%X, Error=0x%X)\n", __func__, paEventArg->m_Node.m_uiNodeId,
+                            paEventArg->m_Node.m_wErrorCode);
 #endif
                     break;
                 }
@@ -894,7 +894,7 @@ tEplKernel PUBLIC appCbEvent(
 #if EPL_DEFINED_STACK_VERSION >= EPL_STACK_VERSION(1, 8, 2)
           DEVLOG_DEBUG("[powerlink] %s(Node=0x%X, Found)\n", __func__, eventArg->m_Node.m_uiNodeId);
 #else
-                    DEVLOG_DEBUG("[powerlink] %s(Node=0x%X, Found)\n", __func__, eventArg->m_Node.m_uiNodeId);
+                    DEVLOG_DEBUG("[powerlink] %s(Node=0x%X, Found)\n", __func__, paEventArg->m_Node.m_uiNodeId);
 #endif
                     break;
                 }
@@ -912,18 +912,18 @@ tEplKernel PUBLIC appCbEvent(
       DEVLOG_DEBUG("[powerlink] %s(Node=0x%X, CFM-Progress: Object 0x%X/%u, ", __func__, eventArg->m_CfmProgress.m_uiNodeId, eventArg->m_CfmProgress.m_uiObjectIndex, eventArg->m_CfmProgress.m_uiObjectSubIndex);
       DEVLOG_DEBUG("%u/%u Bytes", eventArg->m_CfmProgress.m_dwBytesDownloaded, eventArg->m_CfmProgress.m_dwTotalNumberOfBytes);
 #else
-            DEVLOG_DEBUG("[powerlink] %s(Node=0x%X, CFM-Progress: Object 0x%X/%u, ", __func__, eventArg->m_CfmProgress.m_uiNodeId,
-                    eventArg->m_CfmProgress.m_uiObjectIndex, eventArg->m_CfmProgress.m_uiObjectSubIndex);
-            DEVLOG_DEBUG("%u/%u Bytes", eventArg->m_CfmProgress.m_dwBytesDownloaded,
-                    eventArg->m_CfmProgress.m_dwTotalNumberOfBytes);
+            DEVLOG_DEBUG("[powerlink] %s(Node=0x%X, CFM-Progress: Object 0x%X/%u, ", __func__, paEventArg->m_CfmProgress.m_uiNodeId,
+                    paEventArg->m_CfmProgress.m_uiObjectIndex, paEventArg->m_CfmProgress.m_uiObjectSubIndex);
+            DEVLOG_DEBUG("%u/%u Bytes", paEventArg->m_CfmProgress.m_dwBytesDownloaded,
+                    paEventArg->m_CfmProgress.m_dwTotalNumberOfBytes);
 #endif
-            if ((eventArg->m_CfmProgress.m_dwSdoAbortCode != 0)
-                || (eventArg->m_CfmProgress.m_EplError != kEplSuccessful)) {
+            if ((paEventArg->m_CfmProgress.m_dwSdoAbortCode != 0)
+                || (paEventArg->m_CfmProgress.m_EplError != kEplSuccessful)) {
 #if EPL_DEFINED_STACK_VERSION >= EPL_STACK_VERSION(1, 8, 2)
         DEVLOG_DEBUG(" -> SDO Abort=0x%lX, Error=0x%X)\n", eventArg->m_CfmProgress.m_dwSdoAbortCode, eventArg->m_CfmProgress.m_EplError);
 #else
-                DEVLOG_DEBUG(" -> SDO Abort=0x%lX, Error=0x%X)\n", eventArg->m_CfmProgress.m_dwSdoAbortCode,
-                        eventArg->m_CfmProgress.m_EplError);
+                DEVLOG_DEBUG(" -> SDO Abort=0x%lX, Error=0x%X)\n", paEventArg->m_CfmProgress.m_dwSdoAbortCode,
+                        paEventArg->m_CfmProgress.m_EplError);
 #endif
             } else {
 #if EPL_DEFINED_STACK_VERSION >= EPL_STACK_VERSION(1, 8, 2)
@@ -936,12 +936,12 @@ tEplKernel PUBLIC appCbEvent(
         }
 
         case kEplApiEventCfmResult: {
-            switch (eventArg->m_CfmResult.m_NodeCommand) {
+            switch (paEventArg->m_CfmResult.m_NodeCommand) {
                 case kEplNmtNodeCommandConfOk: {
 #if EPL_DEFINED_STACK_VERSION >= EPL_STACK_VERSION(1, 8, 2)
           DEVLOG_DEBUG("[powerlink] %s(Node=0x%X, ConfOk)\n", __func__, eventArg->m_CfmResult.m_uiNodeId);
 #else
-                    DEVLOG_DEBUG("[powerlink] %s(Node=0x%X, ConfOk)\n", __func__, eventArg->m_CfmResult.m_uiNodeId);
+                    DEVLOG_DEBUG("[powerlink] %s(Node=0x%X, ConfOk)\n", __func__, paEventArg->m_CfmResult.m_uiNodeId);
 #endif
                     break;
                 }
@@ -950,7 +950,7 @@ tEplKernel PUBLIC appCbEvent(
 #if EPL_DEFINED_STACK_VERSION >= EPL_STACK_VERSION(1, 8, 2)
           DEVLOG_DEBUG("[powerlink] %s(Node=0x%X, ConfErr)\n", __func__, eventArg->m_CfmResult.m_uiNodeId);
 #else
-                    DEVLOG_DEBUG("[powerlink] %s(Node=0x%X, ConfErr)\n", __func__, eventArg->m_CfmResult.m_uiNodeId);
+                    DEVLOG_DEBUG("[powerlink] %s(Node=0x%X, ConfErr)\n", __func__, paEventArg->m_CfmResult.m_uiNodeId);
 #endif
                     break;
                 }
@@ -959,7 +959,7 @@ tEplKernel PUBLIC appCbEvent(
 #if EPL_DEFINED_STACK_VERSION >= EPL_STACK_VERSION(1, 8, 2)
           DEVLOG_DEBUG("[powerlink] %s(Node=0x%X, ConfReset)\n", __func__, eventArg->m_CfmResult.m_uiNodeId);
 #else
-                    DEVLOG_DEBUG("[powerlink] %s(Node=0x%X, ConfReset)\n", __func__, eventArg->m_CfmResult.m_uiNodeId);
+                    DEVLOG_DEBUG("[powerlink] %s(Node=0x%X, ConfReset)\n", __func__, paEventArg->m_CfmResult.m_uiNodeId);
 #endif
                     break;
                 }
@@ -968,7 +968,7 @@ tEplKernel PUBLIC appCbEvent(
 #if EPL_DEFINED_STACK_VERSION >= EPL_STACK_VERSION(1, 8, 2)
           DEVLOG_DEBUG("[powerlink] %s(Node=0x%X, ConfRestored)\n", __func__, eventArg->m_CfmResult.m_uiNodeId);
 #else
-                    DEVLOG_DEBUG("[powerlink] %s(Node=0x%X, ConfRestored)\n", __func__, eventArg->m_CfmResult.m_uiNodeId);
+                    DEVLOG_DEBUG("[powerlink] %s(Node=0x%X, ConfRestored)\n", __func__, paEventArg->m_CfmResult.m_uiNodeId);
 #endif
                     break;
                 }
@@ -977,8 +977,8 @@ tEplKernel PUBLIC appCbEvent(
 #if EPL_DEFINED_STACK_VERSION >= EPL_STACK_VERSION(1, 8, 2)
           DEVLOG_DEBUG("[powerlink] %s(Node=0x%X, CfmResult=0x%X)\n", __func__, eventArg->m_CfmResult.m_uiNodeId, pEventArg_p->m_CfmResult.m_NodeCommand);
 #else
-                    DEVLOG_DEBUG("[powerlink] %s(Node=0x%X, CfmResult=0x%X)\n", __func__, eventArg->m_CfmResult.m_uiNodeId,
-                            eventArg->m_CfmResult.m_NodeCommand);
+                    DEVLOG_DEBUG("[powerlink] %s(Node=0x%X, CfmResult=0x%X)\n", __func__, paEventArg->m_CfmResult.m_uiNodeId,
+                            paEventArg->m_CfmResult.m_NodeCommand);
 #endif
                     break;
                 }
@@ -1013,7 +1013,7 @@ tEplKernel PUBLIC appCbEvent(
 //
 //---------------------------------------------------------------------------
 
-tEplKernel PUBLIC AppCbSync() {
+tEplKernel PUBLIC appCbSync() {
     tEplKernel ret = EplApiProcessImageExchange(&AppProcessImageCopyJob_g);
 
     // Loop through callback list and call each FB in the list

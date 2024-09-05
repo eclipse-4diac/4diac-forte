@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 - 2104 AIT, ACIN, fortiss
+ * Copyright (c) 2012 - 2024 AIT, ACIN, fortiss
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -20,13 +20,13 @@
 
 struct EplMapping {
     struct EplMappingValues {
-        unsigned int dataSize;
+        unsigned int mDataSize;
         unsigned int mPiOffset;
         unsigned int mBitOffset;
         char *mCurrentValue;
 
         EplMappingValues(unsigned int pa_nDataSize, unsigned int pa_nPiOffset,
-                          unsigned int pa_nBitOffset) : dataSize(pa_nDataSize), mPiOffset(pa_nPiOffset),
+                          unsigned int pa_nBitOffset) : mDataSize(pa_nDataSize), mPiOffset(pa_nPiOffset),
                                                         mBitOffset(pa_nBitOffset) {
             mCurrentValue = new char[pa_nDataSize];
             for (unsigned int i = 0; i < pa_nDataSize; i++) {
@@ -67,7 +67,7 @@ public:
      */
     static void eplMainInit();
 
-    int eplStackInit(const char *xmlFile, const char *cdcFile, const char *ethDeviceName);
+    int eplStackInit(const char *pa_pXmlFile, const char *pa_pCdcFile, const char *pa_pEthDeviceName);
 
     int eplStackShutdown();
 
@@ -86,18 +86,18 @@ public:
     void executeAllCallbacks();
 
 private:
-    char *allocProcImage(unsigned int n_bytes);
+    char *allocProcImage(unsigned int pa_nNumOfBytes);
 
-    bool findMAC(const char *userMAC, char *pa_pchDevieName);
+    bool findMAC(const char *pa_pUserMAC, char *pa_pChDeviceName);
 
-    bool compareMACs(const char *macA, const char *macB);
+    bool compareMACs(const char *pa_pMacA, const char *pa_pMacB);
 
-    CProcessImageMatrix procMatrixIn;
-    CProcessImageMatrix procMatrixOut;
+    CProcessImageMatrix mProcMatrixIn;
+    CProcessImageMatrix mProcMatrixOut;
 
     unsigned int mProcInSize;
     char *mAppProcessImageIn;
-    unsigned int mPprocOutSize;
+    unsigned int mProcOutSize;
     char *mAppProcessImageOut;
 
     bool mInitWait;
