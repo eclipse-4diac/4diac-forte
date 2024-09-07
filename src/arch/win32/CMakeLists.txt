@@ -70,7 +70,7 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "Win32")
   
   if(MINGW)
     #force MINGW to statically link libc and lib stdc++ so that no mingw dlls are needed for forte.exe
-    forte_add_link_flags("-static-libgcc -static-libstdc++")
+    forte_add_link_flags("-static-libgcc" "-static-libstdc++")
     forte_add_definition("-W -Wall -Wextra -Woverloaded-virtual -Wconversion -Wshadow")
   elseif(MSVC)
     forte_add_definition("-wd4595")  #warning 4595: 'operator delete/delete[]': non-member operator new or delete functions may not be declared inline
