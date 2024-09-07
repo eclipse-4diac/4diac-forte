@@ -21,7 +21,7 @@ TControllerList IOConfigFBSplitController::mInstances;
 TForteUInt16 IOConfigFBSplitController::mInstancesIncrement = 0;
 
 IOConfigFBSplitController::IOConfigFBSplitController(const TForteUInt8* const paSplitAdapter, const TForteUInt8 paSplitAdapterNum, forte::core::CFBContainer &paContainer,
-    const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId) :
+    const SFBInterfaceSpec& paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId) :
     IOConfigFBController(paContainer, paInterfaceSpec, paInstanceNameId), scmSplitAdapter(paSplitAdapter),
         scmSplitAdapterNum(paSplitAdapterNum), mSplitIterator(0) {
   mId = mInstancesIncrement++;

@@ -38,11 +38,8 @@ class CInterface2InternalDataConnection;
 /*! \ingroup CORE\brief Base class for all resources handling the reconfiguration management within this
  * resource and the background execution of event chains.
  *
- * CResource is inherited from CFBContainer in order to make the implementation of getResource easier. Furthermore
- * also the forwarding of management commands is less effort.
- * TODO think if CFBContainer inheritance should be public or private
  */
-class CResource : public CFunctionBlock, public forte::core::CFBContainer{
+class CResource : public CFunctionBlock{
 
   public:
     /*! \brief The main constructor for a resource.
@@ -54,7 +51,7 @@ class CResource : public CFunctionBlock, public forte::core::CFBContainer{
      *  \param paObjectHandler    reference to object handler
      *  \param paFBData           Byte-array for resource-specific data
      */
-    CResource(forte::core::CFBContainer &paDevice, const SFBInterfaceSpec *paInterfaceSpec, CStringDictionary::TStringId paInstanceNameId);
+    CResource(forte::core::CFBContainer &paDevice, const SFBInterfaceSpec& paInterfaceSpec, CStringDictionary::TStringId paInstanceNameId);
 
     ~CResource() override;
 
@@ -95,7 +92,7 @@ class CResource : public CFunctionBlock, public forte::core::CFBContainer{
       return mResourceEventExecution;
     };
 
-    EMGMResponse changeFBExecutionState(EMGMCommandType paCommand) override;
+    EMGMResponse changeExecutionState(EMGMCommandType paCommand) override;
 
     /*!\brief Write a parameter value to a given FB-input
      *
@@ -123,8 +120,12 @@ class CResource : public CFunctionBlock, public forte::core::CFBContainer{
     }
 #endif
 
+    bool isDynamicContainer() override {
+      return true;
+    }
+
   protected:
-    CResource(const SFBInterfaceSpec *paInterfaceSpec, CStringDictionary::TStringId paInstanceNameId);
+    CResource(const SFBInterfaceSpec& paInterfaceSpec, CStringDictionary::TStringId paInstanceNameId);
 
     void executeEvent(TEventID, CEventChainExecutionThread * const) override {
       // nothing to do here for a resource
@@ -240,12 +241,10 @@ class CResource : public CFunctionBlock, public forte::core::CFBContainer{
      * @param paValue the result of the query
      * @return response of the command execution as defined in IEC 61499
      */
-    EMGMResponse queryFBs(std::string& paValue);
-    void createFBResponseMessage(const CFunctionBlock& paFb, const char* fullName, std::string& paValue);
+    static EMGMResponse queryFBs(std::string &paValue, const CFBContainer &container, std::string prefix);
+    static void createFBResponseMessage(const CFunctionBlock &paFb, const std::string &fullName, std::string &paValue);
 
-    EMGMResponse querySubapps(std::string& paValue, CFBContainer& container, std::string prefix);
-
-    EMGMResponse queryConnections(std::string &paValue, CFBContainer& container);
+    EMGMResponse queryConnections(std::string &paValue, const CFBContainer& container);
     void createEOConnectionResponse(const CFunctionBlock& paFb, std::string& paReqResult);
     void createDOConnectionResponse(const CFunctionBlock& paFb, std::string& paReqResult);
     void createAOConnectionResponse(const CFunctionBlock& paFb, std::string& paReqResult);

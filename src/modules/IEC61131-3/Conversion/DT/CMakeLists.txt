@@ -14,5 +14,5 @@ forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 #############################################################################
 # DT_TO_xxx Conversion
 #############################################################################
-forte_add_sourcefile_hcpp(F_DT_TO_TOD)
-forte_add_sourcefile_hcpp(F_DT_TO_DATE)
+forte_add_sourcefile_hcpp(F_DT_TO_TOD_fbt)
+forte_add_sourcefile_hcpp(F_DT_TO_DATE_fbt)

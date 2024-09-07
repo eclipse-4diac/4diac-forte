@@ -13,7 +13,7 @@
 #include "ZephyrIOBase.h"
 #include "handler/IODeviceController.h"
 
-FORTE_ZephyrIOBase::FORTE_ZephyrIOBase(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId) :
+FORTE_ZephyrIOBase::FORTE_ZephyrIOBase(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec& paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId) :
     forte::core::io::IOConfigFBController(paContainer, paInterfaceSpec, paInstanceNameId) {
 };
 

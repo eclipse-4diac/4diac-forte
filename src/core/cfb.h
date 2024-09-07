@@ -1,6 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2023 Profactor GmbH, ACIN, fortiss GmbH,
+ * Copyright (c) 2005, 2024 Profactor GmbH, ACIN, fortiss GmbH,
  *                          Johannes Kepler University Linz
+ *                          Martin Erich Jobst
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -13,6 +14,7 @@
  *    Ingo Hegny
  *      - initial implementation and rework communication infrastructure
  *    Alois Zoitl - added support for adapter connections in CFBs
+ *    Martin Jobst - add smart pointer for internal FBs
  *******************************************************************************/
 #ifndef _CFB_H_
 #define _CFB_H_
@@ -80,7 +82,7 @@ GENERATE_CONNECTION_PORT_ID_2_ARG(CStringDictionary::scmInvalidStringId, PortNam
 /*!\ingroup CORE
  * \brief Class for handling firmware composite function blocks.
  */
-class CCompositeFB: public CFunctionBlock, public forte::core::CFBContainer {
+class CCompositeFB: public CFunctionBlock {
 
   public:
     /*! \brief Indicator that the given FB id is an adapter.
@@ -103,7 +105,7 @@ class CCompositeFB: public CFunctionBlock, public forte::core::CFBContainer {
      * \param paInstanceNameId StringId of instance name
      * \param paFBNData        const pointer to description of internal structure of FB (FBs, Connections, ...)
      */
-    CCompositeFB(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec *paInterfaceSpec,
+    CCompositeFB(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec& paInterfaceSpec,
                  CStringDictionary::TStringId paInstanceNameId,
                  const SCFB_FBNData & paFBNData);
 
@@ -124,15 +126,15 @@ class CCompositeFB: public CFunctionBlock, public forte::core::CFBContainer {
     CIEC_ANY* getVar(CStringDictionary::TStringId *paNameList,
         unsigned int paNameListSize) override;
 
-    EMGMResponse changeFBExecutionState(EMGMCommandType paCommand) override;
-
-#ifdef FORTE_SUPPORT_MONITORING
-    CFunctionBlock *getFB(forte::core::TNameIdentifier::CIterator &paNameListIt) override;
-#endif
+    EMGMResponse changeExecutionState(EMGMCommandType paCommand) override;
 
   protected:
     CDataConnection *getIn2IfConUnchecked(TPortId paIndex) {
       return mIn2IfDConns[paIndex];
+    }
+
+    const SCFB_FBNData &getFBNData() const {
+      return cmFBNData;
     }
 
     virtual void readInternal2InterfaceOutputData(TEventID paEOID) = 0;
@@ -140,7 +142,10 @@ class CCompositeFB: public CFunctionBlock, public forte::core::CFBContainer {
 
   private:
 
-    bool createInternalFBs();
+    virtual bool createInternalFBs() {
+      return true;
+    }
+
     void createEventConnections();
     void prepareIf2InEventCons();
     void establishConnection(CConnection *paCon, CFunctionBlock *paDstFb, CStringDictionary::TStringId paDstNameId);
@@ -148,7 +153,7 @@ class CCompositeFB: public CFunctionBlock, public forte::core::CFBContainer {
     CDataConnection * getDataConn(CFunctionBlock *paSrcFB, CStringDictionary::TStringId paSrcNameId);
     void createAdapterConnections();
     void prepareIf2InDataCons();
-    void setParams();
+    virtual void setFBNetworkInitialValues();
 
     //!Acquire the functionblock for a given function block number this may be a contained fb, an adapter, or the composite itself.
     CFunctionBlock *getFunctionBlock(int paFBNum);
@@ -175,6 +180,6 @@ class CCompositeFB: public CFunctionBlock, public forte::core::CFBContainer {
 
 #define COMPOSITE_FUNCTION_BLOCK_CTOR(fbclass) \
  fbclass(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) : \
- CCompositeFB(paContainer, &scmFBInterfaceSpec, paInstanceNameId, scmFBNData)
+ CCompositeFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, scmFBNData)
 
 #endif /*_CFB_H_*/

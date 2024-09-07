@@ -71,7 +71,7 @@ void FORTE_X20AT2402::executeEvent(TEventID paEIID, CEventChainExecutionThread *
         mSync.lock();
         SEplMapping::TEplMappingList::Iterator itEnd = mEplMapping.mCurrentValues.end();
         SEplMapping::TEplMappingList::Iterator it = mEplMapping.mCurrentValues.begin();
-        for(int i = 3; i < mInterfaceSpec->mNumDOs && it != itEnd; i++, ++it){
+        for(int i = 3; i < getFBInterfaceSpec().mNumDOs && it != itEnd; i++, ++it){
           short ioVal = *((short*) (it->mCurrentValue));
           TForteFloat ioValFloat = static_cast<TForteFloat>(ioVal);
           *static_cast<CIEC_REAL*>(getDO(i)) = ioValFloat / 10;

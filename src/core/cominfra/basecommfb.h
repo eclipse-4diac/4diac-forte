@@ -34,18 +34,18 @@ namespace forte {
     public:
       ~CBaseCommFB() override;
 
-      EMGMResponse changeFBExecutionState(EMGMCommandType paCommand) override;
+      EMGMResponse changeExecutionState(EMGMCommandType paCommand) override;
 
       forte::com_infra::EComServiceType getComServiceType() const {
         return mCommServiceType;
       }
 
       TPortId getNumSD() const {
-        return mInterfaceSpec->mNumDIs - 2;
+        return getFBInterfaceSpec().mNumDIs - 2;
       }
 
       TPortId getNumRD() const {
-        return mInterfaceSpec->mNumDOs - 2;
+        return getFBInterfaceSpec().mNumDOs - 2;
       }
 
       CIEC_ANY **getSDs() {

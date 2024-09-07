@@ -37,7 +37,7 @@
 
     void awaitShutdown() override;
 
-    EMGMResponse changeFBExecutionState(EMGMCommandType paCommand) override;
+    EMGMResponse changeExecutionState(EMGMCommandType paCommand) override;
 
     void setMGR_ID(const std::string& paVal);
 

@@ -33,7 +33,7 @@ const SFBInterfaceSpec FakeTimeDev::scmFBInterfaceSpec = {
 };
 
 FakeTimeDev::FakeTimeDev(const std::string &paMGR_ID) :
-  CDevice(&scmFBInterfaceSpec, CStringDictionary::scmInvalidStringId),
+  CDevice(scmFBInterfaceSpec, CStringDictionary::scmInvalidStringId),
       var_MGR_ID(paMGR_ID.c_str()),
       var_FakeTime(),
       conn_MGR_ID(nullptr),
@@ -60,7 +60,7 @@ FakeTimeDev::~FakeTimeDev() = default;
 
 int FakeTimeDev::startDevice(){
   CDevice::startDevice();
-  MGR.changeFBExecutionState(EMGMCommandType::Start);
+  MGR.changeExecutionState(EMGMCommandType::Start);
   return 0;
 }
 
@@ -68,10 +68,10 @@ void FakeTimeDev::awaitShutdown() {
   MGR.joinResourceThread();
 }
 
-EMGMResponse FakeTimeDev::changeFBExecutionState(EMGMCommandType paCommand){
-  EMGMResponse eRetVal = CDevice::changeFBExecutionState(paCommand);
+EMGMResponse FakeTimeDev::changeExecutionState(EMGMCommandType paCommand){
+  EMGMResponse eRetVal = CDevice::changeExecutionState(paCommand);
   if((EMGMResponse::Ready == eRetVal) && (EMGMCommandType::Kill == paCommand)){
-    MGR.changeFBExecutionState(EMGMCommandType::Kill);
+    MGR.changeExecutionState(EMGMCommandType::Kill);
   }
   return eRetVal;
 }

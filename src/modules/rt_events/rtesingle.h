@@ -61,7 +61,7 @@ private:
   }
 
 public:
-  CRTEventSingle(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec *paInterfaceSpec,
+  CRTEventSingle(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec& paInterfaceSpec,
                  const CStringDictionary::TStringId paInstanceNameId) :
           CFunctionBlock(paContainer, paInterfaceSpec, paInstanceNameId) {
   };

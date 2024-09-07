@@ -39,7 +39,13 @@ const SFBInterfaceSpec FORTE_CFB_TEST::scmFBInterfaceSpec = {
 };
 
 FORTE_CFB_TEST::FORTE_CFB_TEST(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
-    CCompositeFB(paContainer, &scmFBInterfaceSpec, paInstanceNameId, scmFBNData),
+    CCompositeFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, scmFBNData),
+    fb_PERMIT_OP(g_nStringIdPERMIT_OP, *this),
+    fb_E_SR(g_nStringIdE_SR, *this),
+    fb_SET_CHANGED(g_nStringIdSET_CHANGED, *this),
+    fb_E_DEMUX_2(g_nStringIdE_DEMUX_2, "E_DEMUX_2", *this),
+    fb_E_MUX_2(g_nStringIdE_MUX_2, "E_MUX_2", *this),
+    fb_RESET_CHANGED(g_nStringIdRESET_CHANGED, *this),
     var_conn_QO(var_QO),
     conn_CNF(this, 0),
     conn_CHANGED(this, 1),

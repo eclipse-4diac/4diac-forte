@@ -247,6 +247,11 @@ class CIEC_STRING : public CIEC_ANY_STRING {
           }
         }
 
+        PARTIAL_ACCESS_TYPE &operator=(const PARTIAL_ACCESS_TYPE &paValue) {
+          CIEC_CHAR::operator=(paValue);
+          return *this;
+        }
+
         operator value_type() const {
           return getChar8();
         }

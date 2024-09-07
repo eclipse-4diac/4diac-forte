@@ -51,7 +51,7 @@ const SFBInterfaceSpec FORTE_GET_STRUCT_VALUE::scmFBInterfaceSpec = {
 };
 
 FORTE_GET_STRUCT_VALUE::FORTE_GET_STRUCT_VALUE(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
-    CFunctionBlock(paContainer, &scmFBInterfaceSpec, paInstanceNameId),
+    CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId),
     var_in_struct(CIEC_ANY_VARIANT()),
     var_member(CIEC_STRING("", 0)),
     var_QO(CIEC_BOOL(0)),

@@ -33,13 +33,13 @@ const SFBInterfaceSpec FORTE_STEST_END::scmFBInterfaceSpec = {
 };
 
 FORTE_STEST_END::FORTE_STEST_END(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
-    CFunctionBlock(paContainer, &scmFBInterfaceSpec, paInstanceNameId) {
+    CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId) {
 };
 
 void FORTE_STEST_END::executeEvent(TEventID paEIID, CEventChainExecutionThread *const) {
   if(scmEventREQID == paEIID){
     CThread::sleepThread(250); //avoid killing the device before it was properly started (DEV_MGR still was initializing the ipCommlayer when it was killed)
-    getDevice()->changeFBExecutionState(EMGMCommandType::Kill);
+    getDevice()->changeExecutionState(EMGMCommandType::Kill);
   }
 }
 

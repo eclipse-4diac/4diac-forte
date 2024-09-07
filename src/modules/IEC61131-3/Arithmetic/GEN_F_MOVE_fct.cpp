@@ -39,10 +39,8 @@ GEN_FORTE_F_MOVE::GEN_FORTE_F_MOVE(const CStringDictionary::TStringId paInstance
 }
 
 GEN_FORTE_F_MOVE::~GEN_FORTE_F_MOVE(){
-  if(nullptr!= mInterfaceSpec){
-    delete[](mInterfaceSpec->mDIDataTypeNames);
-    delete[](mInterfaceSpec->mDODataTypeNames);
-  }
+    delete[](getGenInterfaceSpec().mDIDataTypeNames);
+    delete[](getGenInterfaceSpec().mDODataTypeNames);
 }
 
 void GEN_FORTE_F_MOVE::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {

@@ -13,7 +13,7 @@
 #include "processinterface.h"
 
 COdroidProcessInterface::COdroidProcessInterface(forte::core::CFBContainer &paContainer,
-    const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId) :
+    const SFBInterfaceSpec& paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId) :
     CSysFsProcessInterface(paContainer, paInterfaceSpec, paInstanceNameId){
 
 }

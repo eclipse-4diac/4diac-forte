@@ -16,7 +16,7 @@
 
 #define FUNCTION_BLOCK_CTOR_FOR_WAGO_SLAVES(fbclass, type) \
   fbclass(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) : \
-  WagoSlaveBase(type, paContainer, &scmFBInterfaceSpec, paInstanceNameId)
+  WagoSlaveBase(type, paContainer, scmFBInterfaceSpec, paInstanceNameId)
 
 #define INIT_HANLDLES(noOfBoolInputs, noOfBoolOutputs, noOfAnalogInputs, noOfAnalogOutputs) \
    void initHandles() override {initHandlesBase(noOfBoolInputs, noOfBoolOutputs, noOfAnalogInputs, noOfAnalogOutputs);};
@@ -24,7 +24,7 @@
 class WagoSlaveBase : public forte::core::io::IOConfigFBMultiSlave {
 
   public:
-    WagoSlaveBase(int paType, forte::core::CFBContainer &paContainer, const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId);
+    WagoSlaveBase(int paType, forte::core::CFBContainer &paContainer, const SFBInterfaceSpec& paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId);
 
     ~WagoSlaveBase() override = default;
 

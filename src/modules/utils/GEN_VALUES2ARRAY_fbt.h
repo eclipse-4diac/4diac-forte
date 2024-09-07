@@ -49,6 +49,7 @@ class GEN_VALUES2ARRAY : public CGenFunctionBlock<CFunctionBlock>{
 
     bool createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) override;
 
+  public:
     GEN_VALUES2ARRAY(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
     ~GEN_VALUES2ARRAY() override;
 

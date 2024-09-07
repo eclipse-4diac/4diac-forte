@@ -40,18 +40,14 @@ CBaseCommFB::CBaseCommFB(const CStringDictionary::TStringId paInstanceNameId, fo
 
 CBaseCommFB::~CBaseCommFB() {
   closeConnection();
-
-  if(nullptr != mInterfaceSpec) {
-    //Free the memory allocated for the interface, only do this if we dynamically created it (i.e., getManagesFBData is true)
-    delete[](mInterfaceSpec->mDINames);
-    delete[](mInterfaceSpec->mDIDataTypeNames);
-    delete[](mInterfaceSpec->mDONames);
-    delete[](mInterfaceSpec->mDODataTypeNames);
-  }
+  delete[](getFBInterfaceSpec().mDINames);
+  delete[](getFBInterfaceSpec().mDIDataTypeNames);
+  delete[](getFBInterfaceSpec().mDONames);
+  delete[](getFBInterfaceSpec().mDODataTypeNames);
 }
 
-EMGMResponse CBaseCommFB::changeFBExecutionState(EMGMCommandType paCommand) {
-  EMGMResponse retVal = CEventSourceFB::changeFBExecutionState(paCommand);
+EMGMResponse CBaseCommFB::changeExecutionState(EMGMCommandType paCommand) {
+  EMGMResponse retVal = CEventSourceFB::changeExecutionState(paCommand);
   if ((EMGMResponse::Ready == retVal) && (EMGMCommandType::Kill == paCommand)) {
     //when we are killed we'll close the connection so that it can safely be opened again after an reset
     closeConnection();

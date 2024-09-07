@@ -16,15 +16,13 @@
 
 template<class T>
 CGenFunctionBlock<T>::~CGenFunctionBlock(){
-  if(nullptr != T::mInterfaceSpec){
     freeFBInterfaceData();  //clean the interface and connections first.
-    T::mInterfaceSpec = nullptr; //this stops the base classes from any wrong clean-up
-  }
+    mGenInterfaceSpec = {}; //this stops the base classes from any wrong clean-up
 }
 
 template<class T>
 bool CGenFunctionBlock<T>::initialize() {
-  setupFBInterface(T::mInterfaceSpec);
+  setupFBInterface();
   return T::initialize();
 }
 
@@ -32,7 +30,7 @@ template<class T>
 bool CGenFunctionBlock<T>::configureFB(const char *paConfigString){
   setConfiguredTypeNameId(CStringDictionary::getInstance().insert(paConfigString));
   if(createInterfaceSpec(paConfigString, mGenInterfaceSpec)){
-    setupFBInterface(&mGenInterfaceSpec);
+    setupFBInterface();
     return true;
   }
   return false;
@@ -154,116 +152,110 @@ size_t CGenFunctionBlock<T>::calculateFBVarsDataSize(const SFBInterfaceSpec &paI
 }
 
 template<class T>
-void CGenFunctionBlock<T>::setupFBInterface(const SFBInterfaceSpec *paInterfaceSpec) {
+void CGenFunctionBlock<T>::setupFBInterface() {
   freeFBInterfaceData();
 
-  T::mInterfaceSpec = const_cast<SFBInterfaceSpec *>(paInterfaceSpec);
+  size_t connDataSize = calculateFBConnDataSize(T::getFBInterfaceSpec());
+  size_t varsDataSize = calculateFBVarsDataSize(T::getFBInterfaceSpec());
+  mFBConnData = connDataSize ? operator new(connDataSize) : nullptr;
+  mFBVarsData = varsDataSize ? operator new(varsDataSize) : nullptr;
 
-  if (nullptr != paInterfaceSpec) {
-    size_t connDataSize = calculateFBConnDataSize(*paInterfaceSpec);
-    size_t varsDataSize = calculateFBVarsDataSize(*paInterfaceSpec);
-    mFBConnData = connDataSize ? operator new(connDataSize) : nullptr;
-    mFBVarsData = varsDataSize ? operator new(varsDataSize) : nullptr;
+  auto *connData = reinterpret_cast<TForteByte *>(mFBConnData);
+  auto *varsData = reinterpret_cast<TForteByte *>(mFBVarsData);
 
-    auto *connData = reinterpret_cast<TForteByte *>(mFBConnData);
-    auto *varsData = reinterpret_cast<TForteByte *>(mFBVarsData);
+  TPortId i;
+  if (T::getFBInterfaceSpec().mNumEOs) {
+    mEOConns = reinterpret_cast<CEventConnection *>(connData);
 
-    TPortId i;
-    if (T::mInterfaceSpec->mNumEOs) {
-      mEOConns = reinterpret_cast<CEventConnection *>(connData);
-
-      for (i = 0; i < T::mInterfaceSpec->mNumEOs; ++i) {
-        //create an event connection for each event output and initialize its source port
-        new(connData)CEventConnection(this, i);
-        connData += sizeof(CEventConnection);
-      }
-    } else {
-      mEOConns = nullptr;
+    for (i = 0; i < T::getFBInterfaceSpec().mNumEOs; ++i) {
+      //create an event connection for each event output and initialize its source port
+      new(connData)CEventConnection(this, i);
+      connData += sizeof(CEventConnection);
     }
+  } else {
+    mEOConns = nullptr;
+  }
 
-    const CStringDictionary::TStringId *pnDataIds;
-    if (T::mInterfaceSpec->mNumDIs) {
-      mDIConns = reinterpret_cast<TDataConnectionPtr *>(connData);
-      connData += sizeof(TDataConnectionPtr) * T::mInterfaceSpec->mNumDIs;
+  const CStringDictionary::TStringId *pnDataIds;
+  if (T::getFBInterfaceSpec().mNumDIs) {
+    mDIConns = reinterpret_cast<TDataConnectionPtr *>(connData);
+    connData += sizeof(TDataConnectionPtr) * T::getFBInterfaceSpec().mNumDIs;
 
-      mDIs = reinterpret_cast<CIEC_ANY **>(varsData);
-      varsData += T::mInterfaceSpec->mNumDIs * sizeof(CIEC_ANY *);
+    mDIs = reinterpret_cast<CIEC_ANY **>(varsData);
+    varsData += T::getFBInterfaceSpec().mNumDIs * sizeof(CIEC_ANY *);
 
-      pnDataIds = paInterfaceSpec->mDIDataTypeNames;
-      for (i = 0; i < T::mInterfaceSpec->mNumDIs; ++i) {
-        mDIs[i] = T::createDataPoint(pnDataIds, varsData);
-        mDIConns[i] = nullptr;
-      }
-    } else {
-      mDIConns = nullptr;
-      mDIs = nullptr;
+    pnDataIds = T::getFBInterfaceSpec().mDIDataTypeNames;
+    for (i = 0; i < T::getFBInterfaceSpec().mNumDIs; ++i) {
+      mDIs[i] = T::createDataPoint(pnDataIds, varsData);
+      mDIConns[i] = nullptr;
     }
+  } else {
+    mDIConns = nullptr;
+    mDIs = nullptr;
+  }
 
-    if (T::mInterfaceSpec->mNumDOs) {
-      //let mDOConns point to the first data output connection
-      mDOConns = reinterpret_cast<CDataConnection *>(connData);
+  if (T::getFBInterfaceSpec().mNumDOs) {
+    //let mDOConns point to the first data output connection
+    mDOConns = reinterpret_cast<CDataConnection *>(connData);
 
-      mDOs = reinterpret_cast<CIEC_ANY **>(varsData);
-      varsData += T::mInterfaceSpec->mNumDOs * sizeof(CIEC_ANY *);
+    mDOs = reinterpret_cast<CIEC_ANY **>(varsData);
+    varsData += T::getFBInterfaceSpec().mNumDOs * sizeof(CIEC_ANY *);
 
-      pnDataIds = paInterfaceSpec->mDODataTypeNames;
-      for (i = 0; i < T::mInterfaceSpec->mNumDOs; ++i) {
-        mDOs[i] = T::createDataPoint(pnDataIds, varsData);
-        CIEC_ANY* connVar = mDOs[i]->clone(varsData);
-        varsData += connVar->getSizeof();
-        new(connData)CDataConnection(this, i, connVar);
-        connData += sizeof(CDataConnection);
-      }
-    } else {
-      mDOConns = nullptr;
-      mDOs = nullptr;
+    pnDataIds = T::getFBInterfaceSpec().mDODataTypeNames;
+    for (i = 0; i < T::getFBInterfaceSpec().mNumDOs; ++i) {
+      mDOs[i] = T::createDataPoint(pnDataIds, varsData);
+      CIEC_ANY* connVar = mDOs[i]->clone(varsData);
+      varsData += connVar->getSizeof();
+      new(connData)CDataConnection(this, i, connVar);
+      connData += sizeof(CDataConnection);
     }
-    if (T::mInterfaceSpec->mNumAdapters) {
-      setupAdapters(paInterfaceSpec, varsData);
-    }
+  } else {
+    mDOConns = nullptr;
+    mDOs = nullptr;
+  }
+  if (T::getFBInterfaceSpec().mNumAdapters) {
+    setupAdapters(varsData);
+  }
 
 #ifdef FORTE_SUPPORT_MONITORING
-    T::setupEventMonitoringData();
+  T::setupEventMonitoringData();
 #endif
-  }
 }
 
 template<class T>
 void CGenFunctionBlock<T>::freeFBInterfaceData(){
-  if(nullptr != T::mInterfaceSpec){
-    if(nullptr != mEOConns) {
-      std::destroy_n(mEOConns, T::mInterfaceSpec->mNumEOs);
-    }
+  if(nullptr != mEOConns) {
+    std::destroy_n(mEOConns, T::getFBInterfaceSpec().mNumEOs);
+  }
 
-    if(nullptr != mDOConns) {
-      for (TPortId i = 0; i < T::mInterfaceSpec->mNumDOs; ++i) {
-        if(CIEC_ANY* value = mDOConns[i].getValue(); nullptr != value) {
-          std::destroy_at(value);
-        }
-      }
-      std::destroy_n(mDOConns, T::mInterfaceSpec->mNumDOs);
-    }
-
-    if(nullptr != mDIs) {
-      for (TPortId i = 0; i < T::mInterfaceSpec->mNumDIs; ++i) {
-        if(CIEC_ANY* value = mDIs[i]; nullptr != value) {
-          std::destroy_at(value);
-        }
+  if(nullptr != mDOConns) {
+    for (TPortId i = 0; i < T::getFBInterfaceSpec().mNumDOs; ++i) {
+      if(CIEC_ANY* value = mDOConns[i].getValue(); nullptr != value) {
+        std::destroy_at(value);
       }
     }
+    std::destroy_n(mDOConns, T::getFBInterfaceSpec().mNumDOs);
+  }
 
-    if(nullptr != mDOs) {
-      for (TPortId i = 0; i < T::mInterfaceSpec->mNumDOs; ++i) {
-        if(CIEC_ANY* value = mDOs[i]; nullptr != value) {
-          std::destroy_at(value);
-        }
+  if(nullptr != mDIs) {
+    for (TPortId i = 0; i < T::getFBInterfaceSpec().mNumDIs; ++i) {
+      if(CIEC_ANY* value = mDIs[i]; nullptr != value) {
+        std::destroy_at(value);
       }
     }
+  }
 
-    if(nullptr != mAdapters) {
-      for (TPortId i = 0; i < T::mInterfaceSpec->mNumAdapters; ++i) {
-        T::destroyAdapter(mAdapters[i]);
+  if(nullptr != mDOs) {
+    for (TPortId i = 0; i < T::getFBInterfaceSpec().mNumDOs; ++i) {
+      if(CIEC_ANY* value = mDOs[i]; nullptr != value) {
+        std::destroy_at(value);
       }
+    }
+  }
+
+  if(nullptr != mAdapters) {
+    for (TPortId i = 0; i < T::getFBInterfaceSpec().mNumAdapters; ++i) {
+      T::destroyAdapter(mAdapters[i]);
     }
   }
 
@@ -278,11 +270,11 @@ void CGenFunctionBlock<T>::freeFBInterfaceData(){
 }
 
 template<class T>
-void CGenFunctionBlock<T>::setupAdapters(const SFBInterfaceSpec *paInterfaceSpec, TForteByte *paFBData){
-  if((nullptr != paInterfaceSpec) && (nullptr != paFBData) && (paInterfaceSpec->mNumAdapters)) {
+void CGenFunctionBlock<T>::setupAdapters(TForteByte *paFBData){
+  if((nullptr != paFBData) && (T::getFBInterfaceSpec().mNumAdapters)) {
     mAdapters = reinterpret_cast<TAdapterPtr *>(paFBData);
-    for(TPortId i = 0; i < paInterfaceSpec->mNumAdapters; ++i) {
-      mAdapters[i] = T::createAdapter(paInterfaceSpec->mAdapterInstanceDefinition[i], static_cast<TForteUInt8>(i));
+    for(TPortId i = 0; i < T::getFBInterfaceSpec().mNumAdapters; ++i) {
+      mAdapters[i] = T::createAdapter(T::getFBInterfaceSpec().mAdapterInstanceDefinition[i], static_cast<TForteUInt8>(i));
     }
   }
 }

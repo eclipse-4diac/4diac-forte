@@ -243,6 +243,7 @@ IF(FORTE_TESTS)
     if("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
         set(FORTE_TEST_CODE_COVERAGE_ANALYSIS OFF CACHE BOOL "Perform code coverage analyis with GCOV and presentation with LCOV")
         mark_as_advanced(FORTE_TEST_CODE_COVERAGE_ANALYSIS)
+        set(FORTE_TEST_SANITIZE OFF CACHE BOOL "Perform address sanitizer analysis")
     endif()
 ENDIF(FORTE_TESTS)
 

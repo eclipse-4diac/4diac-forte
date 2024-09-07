@@ -33,8 +33,9 @@ const SFBInterfaceSpec FORTE_E_RTimeOut::scmFBInterfaceSpec = {
 };
 
 FORTE_E_RTimeOut::FORTE_E_RTimeOut(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
-    CCompositeFB(paContainer, &scmFBInterfaceSpec, paInstanceNameId, scmFBNData),
-    var_TimeOutSocket(g_nStringIdTimeOutSocket, getContainer(), false) {
+    CCompositeFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, scmFBNData),
+    fb_DLY(g_nStringIdDLY, *this),
+    var_TimeOutSocket(g_nStringIdTimeOutSocket, *this, false) {
 };
 
 bool FORTE_E_RTimeOut::initialize() {

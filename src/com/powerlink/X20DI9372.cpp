@@ -71,7 +71,7 @@ void FORTE_X20DI9372::executeEvent(TEventID paEIID, CEventChainExecutionThread *
         mSync.lock();
         SEplMapping::TEplMappingList::Iterator itEnd = mEplMapping.mCurrentValues.end();
         SEplMapping::TEplMappingList::Iterator it = mEplMapping.mCurrentValues.begin();
-        for(int i = 3; i < mInterfaceSpec->mNumDOs && it != itEnd; i++, ++it){
+        for(int i = 3; i < getFBInterfaceSpec().mNumDOs && it != itEnd; i++, ++it){
           bool ioVal = *(it->mCurrentValue) != 0x00;
           *static_cast<CIEC_BOOL*>(getDO(i)) = ioVal;
         }

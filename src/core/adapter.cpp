@@ -20,7 +20,7 @@
 #include "adapterconn.h"
 #include "ecet.h"
 
-CAdapter::CAdapter(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec *paInterfaceSpecSocket, const CStringDictionary::TStringId paInstanceNameId, const SFBInterfaceSpec *paInterfaceSpecPlug, bool paIsPlug) :
+CAdapter::CAdapter(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec& paInterfaceSpecSocket, const CStringDictionary::TStringId paInstanceNameId, const SFBInterfaceSpec& paInterfaceSpecPlug, bool paIsPlug) :
   CGenFunctionBlock<CFunctionBlock>(paContainer, (paIsPlug) ? paInterfaceSpecPlug : paInterfaceSpecSocket, paInstanceNameId),
   mParentAdapterListEventID(0),
   mIsPlug(paIsPlug),
@@ -50,13 +50,12 @@ CAdapter::~CAdapter(){
   delete[] mEventEntry;
 }
 
-bool CAdapter::createInterfaceSpec(const char *, SFBInterfaceSpec &paInterfaceSpec) {
-  paInterfaceSpec = *mInterfaceSpec;
+bool CAdapter::createInterfaceSpec(const char *, SFBInterfaceSpec &) {
   return true;
 }
 
 void CAdapter::fillEventEntryList(CFunctionBlock* paParentFB){
-  for (TEventID i = 0; i < mInterfaceSpec->mNumEOs; ++i) {
+  for (TEventID i = 0; i < getFBInterfaceSpec().mNumEOs; ++i) {
     mEventEntry[i].mFB = paParentFB;
     mEventEntry[i].mPortId = static_cast<TPortId>(mParentAdapterListEventID + i);
   }
@@ -115,5 +114,5 @@ void CAdapter::executeEvent(TEventID paEIID, CEventChainExecutionThread * const 
 }
 
 void CAdapter::setupEventEntryList(){
-  mEventEntry = new TEventEntry[mInterfaceSpec->mNumEOs];
+  mEventEntry = new TEventEntry[getFBInterfaceSpec().mNumEOs];
 }

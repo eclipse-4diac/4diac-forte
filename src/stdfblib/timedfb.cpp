@@ -37,7 +37,7 @@ const SFBInterfaceSpec CTimedFB::scmFBInterfaceSpec = {
 };
 
 CTimedFB::CTimedFB(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
-      CEventSourceFB(paContainer, &scmFBInterfaceSpec, paInstanceNameId),
+      CEventSourceFB(paContainer, scmFBInterfaceSpec, paInstanceNameId),
       var_DT(0_TIME),
       conn_DT(nullptr),
       conn_EO(this, 0) {
@@ -97,8 +97,8 @@ CDataConnection *CTimedFB::getDOConUnchecked(const TPortId) {
   return nullptr;
 }
 
-EMGMResponse CTimedFB::changeFBExecutionState(EMGMCommandType paCommand){
-  EMGMResponse eRetVal = CFunctionBlock::changeFBExecutionState(paCommand);
+EMGMResponse CTimedFB::changeExecutionState(EMGMCommandType paCommand){
+  EMGMResponse eRetVal = CFunctionBlock::changeExecutionState(paCommand);
   if((EMGMResponse::Ready == eRetVal) && ((EMGMCommandType::Stop == paCommand) || (EMGMCommandType::Kill == paCommand)) && mActive) {
     getTimer().unregisterTimedFB(this);
     mActive = false;

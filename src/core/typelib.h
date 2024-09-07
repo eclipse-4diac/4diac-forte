@@ -67,6 +67,7 @@ namespace forte {
     CStringDictionary::TStringId getFBTypeId() const override;\
   private:
 
+    //const SFBInterfaceSpec& getFBInterfaceSpec() const override { return scmFBInterfaceSpec;}
 
 #define DEFINE_GENERIC_FIRMWARE_FB(fbclass, fbTypeNameId)\
   extern const CStringDictionary::TStringId g_nStringId##fbclass; \

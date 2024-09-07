@@ -1,5 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2015, 2023 fortiss GmbH, Johannes Kepler University Linz
+ * Copyright (c) 2015, 2024 fortiss GmbH, Johannes Kepler University Linz
+ *                          Martin Erich Jobst
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -9,6 +11,7 @@
  * Contributors:
  *   Martin Jobst - initial API and implementation and/or initial documentation
  *   Alois Zoitl  - upgraded to new FB memory layout
+ *   Martin Jobst - add dynamic internal variable setup from CBasicFB
  *******************************************************************************/
 
 #include "luabfb.h"
@@ -62,12 +65,38 @@ CLuaBFB::CLuaBFB(CStringDictionary::TStringId paInstanceNameId, const CLuaBFBTyp
   luaEngine->store(this);
 }
 
-CLuaBFB::~CLuaBFB() = default;
-
 bool CLuaBFB::initialize() {
   //before calling super we need to configure the interface of the FB
   setupFBInterface(getFBInterfaceSpec());
+  createVarInternals();
   return CGenFunctionBlock<CBasicFB>::initialize();
+}
+
+CLuaBFB::~CLuaBFB() {
+  if(mInternals) {
+    for(TPortId i = 0; i < cmVarInternals->mNumIntVars; ++i) {
+      if(CIEC_ANY* value = mInternals[i]; nullptr != value) {
+        std::destroy_at(value);
+      }
+    }
+  }
+  operator delete(mInternalVarsData);
+  mInternalVarsData = nullptr;
+}
+
+void CLuaBFB::createVarInternals() {
+  if(cmVarInternals && cmVarInternals->mNumIntVars) {
+    size_t internalVarsDataSize = calculateInternalVarsDataSize(*cmVarInternals);
+    mInternalVarsData = internalVarsDataSize ? operator new(internalVarsDataSize) : nullptr;
+
+    auto *internalVarsData = reinterpret_cast<TForteByte *>(mInternalVarsData);
+    mInternals = reinterpret_cast<CIEC_ANY**>(internalVarsData);
+    internalVarsData += cmVarInternals->mNumIntVars * sizeof(CIEC_ANY *);
+    const CStringDictionary::TStringId *pnDataIds = cmVarInternals->mIntVarsDataTypeNames;
+    for(TPortId i = 0; i < cmVarInternals->mNumIntVars; ++i) {
+      mInternals[i] = createDataPoint(pnDataIds, internalVarsData);
+    }
+  }
 }
 
 void CLuaBFB::executeEvent(TEventID paEIID, CEventChainExecutionThread *paECET) {
@@ -107,8 +136,8 @@ CIEC_ANY* CLuaBFB::getVariable(TForteUInt32 paId) {
 }
 
 void CLuaBFB::readInputData(TEventID paEIID) {
-  if(nullptr != mInterfaceSpec->mEIWithIndexes && scmNoDataAssociated != mInterfaceSpec->mEIWithIndexes[paEIID]) {
-    const TDataIOID *eiWithStart = &(mInterfaceSpec->mEIWith[mInterfaceSpec->mEIWithIndexes[paEIID]]);
+  if(nullptr != getFBInterfaceSpec().mEIWithIndexes && scmNoDataAssociated != getFBInterfaceSpec().mEIWithIndexes[paEIID]) {
+    const TDataIOID *eiWithStart = &(getFBInterfaceSpec().mEIWith[getFBInterfaceSpec().mEIWithIndexes[paEIID]]);
     for(size_t i = 0; eiWithStart[i] != scmWithListDelimiter; ++i) {
       TDataIOID diNum = eiWithStart[i];
       readData(diNum, *getDI(diNum), *getDIConUnchecked(diNum));
@@ -117,11 +146,25 @@ void CLuaBFB::readInputData(TEventID paEIID) {
 }
 
 void CLuaBFB::writeOutputData(TEventID paEO) {
-  if (nullptr != mInterfaceSpec->mEOWithIndexes && -1 != mInterfaceSpec->mEOWithIndexes[paEO]) {
-    const TDataIOID *eiWithStart = &(mInterfaceSpec->mEOWith[mInterfaceSpec->mEOWithIndexes[paEO]]);
+  if (nullptr != getFBInterfaceSpec().mEOWithIndexes && -1 != getFBInterfaceSpec().mEOWithIndexes[paEO]) {
+    const TDataIOID *eiWithStart = &(getFBInterfaceSpec().mEOWith[getFBInterfaceSpec().mEOWithIndexes[paEO]]);
     for (size_t i = 0; eiWithStart[i] != scmWithListDelimiter; ++i) {
       TDataIOID doNum = eiWithStart[i];
       writeData(doNum, *getDO(doNum), *getDOConUnchecked(doNum));
     }
   }
 }
+
+size_t CLuaBFB::calculateInternalVarsDataSize(const SInternalVarsInformation &paVarInternals) {
+  size_t result = 0;
+  const CStringDictionary::TStringId *pnDataIds;
+
+  result += paVarInternals.mNumIntVars * sizeof(CIEC_ANY *);
+  pnDataIds = paVarInternals.mIntVarsDataTypeNames;
+  for (TPortId i = 0; i < paVarInternals.mNumIntVars; ++i) {
+    result += getDataPointSize(pnDataIds);
+  }
+
+  return result;
+}
+
