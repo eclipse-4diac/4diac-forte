@@ -269,9 +269,8 @@ if(existing_link_flags)
 endif()
 
 GET_PROPERTY(link_flags GLOBAL PROPERTY FORTE_LINK_FLAGS)
-list(JOIN link_flags " " link_flags_string)
 
-target_link_options(${FORTE_BASE_TARGET_NAME} INTERFACE ${link_flags_string})
+target_link_options(${FORTE_BASE_TARGET_NAME} INTERFACE ${link_flags})
 
 #######################################################################################
 # Define global Include-directorys
