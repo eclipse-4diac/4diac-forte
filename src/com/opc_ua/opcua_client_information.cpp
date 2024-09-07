@@ -22,7 +22,7 @@
 std::string gOpcuaClientConfigFile;
 
 CUA_ClientInformation::CUA_ClientInformation(const std::string &paEndpoint) :
-    mEndpointUrl(paEndpoint)
+    mEndpointUrl(paEndpoint) {
 }
 
 CUA_ClientInformation::~CUA_ClientInformation() {
@@ -526,7 +526,6 @@ void CUA_ClientInformation::resetSubscription(bool paDeleteSubscription) {
         mSubscriptionInfo.mSubscriptionId, UA_StatusCode_name(retval));
     }
   }
-
 }
 
 // ******************** CALLBACKS *************************

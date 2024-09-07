@@ -416,7 +416,7 @@ class CUA_ClientInformation {
      *
      *  So this variable prevents the re-adding to any iteration list if it was set already to invalid, when is about to be deleted
      */
-    bool mIsClientValid{false};
+    bool mIsClientValid{true};
 
     /**
      * Store the time when the connection last failed
