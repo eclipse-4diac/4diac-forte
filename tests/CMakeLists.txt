@@ -122,7 +122,6 @@ GET_PROPERTY(DEFINITION GLOBAL PROPERTY FORTE_DEFINITION)
 add_definitions(${DEFINITION}) #using target_compile_definitions put the definitions at the beginning giving problems sometimes because cmake adds -O3.
 
 if("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
- ADD_DEFINITIONS (-DBOOST_TEST_DYN_LINK)
  if(FORTE_LINK_STATIC)
   set_target_properties(forte_test PROPERTIES LINK_SEARCH_START_STATIC ON)
   set_target_properties(forte_test PROPERTIES LINK_SEARCH_END_STATIC ON)
@@ -194,10 +193,6 @@ INCLUDE_DIRECTORIES(SYSTEM ${INCLUDE_TEST_SYSTEM_DIRECTORIES})
 
 #Link flags
 get_property(LINK_TEST_LIBRARY GLOBAL PROPERTY FORTE_TEST_LIBRARIES)
-if("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
-    LIST(APPEND LINK_TEST_LIBRARY "boost_unit_test_framework")
-endif("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
-
 TARGET_LINK_LIBRARIES(forte_test ${LINK_TEST_LIBRARY})
 
 #######################################################################################
@@ -254,4 +249,3 @@ if(FORTE_BUILD_SHARED_LIBRARY AND NOT WIN32)
   target_link_libraries (${TEST_FORTE_SHARED} forte-shared)
   add_dependencies (${TEST_FORTE_SHARED} forte-shared)
 endif(FORTE_BUILD_SHARED_LIBRARY AND NOT WIN32)
-  

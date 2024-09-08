@@ -92,7 +92,7 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "PikeOS_Posix")
    mark_as_advanced(FORTE_RTTI_AND_EXCEPTIONS)
   
    if("$ENV{POSIX_DEBUG}" STREQUAL "true")
-      forte_add_definition("-DBOOST_TEST_DYN_LINK -g -O0 --coverage -fno-inline -fno-elide-constructors -fexceptions -fsanitize=address")
+      forte_add_definition("-g -O0 --coverage -fno-inline -fno-elide-constructors -fexceptions -fsanitize=address")
       forte_add_link_library("-fsanitize=address")
       forte_add_link_library("--coverage")
    else()
