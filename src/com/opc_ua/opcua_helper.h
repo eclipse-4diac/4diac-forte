@@ -64,15 +64,12 @@ class COPC_UA_Helper {
      */
     class UA_Variables_handle {
       public:
-        explicit UA_Variables_handle(size_t paSize) :
-            mFailed(false), mOffset(0), mSize(paSize) {
-        }
+        explicit UA_Variables_handle() = default;
 
         virtual ~UA_Variables_handle() = default;
 
-        bool mFailed;
-        size_t mOffset;
-        size_t mSize;
+        bool mFailed{false};
+        size_t mOffset{0};
 
         UA_Variables_handle(const UA_Variables_handle &paObj) = delete;
         UA_Variables_handle& operator=(const UA_Variables_handle& other) = delete;
@@ -84,17 +81,10 @@ class COPC_UA_Helper {
      */
     class UA_RecvVariable_handle : public UA_Variables_handle {
       public:
-        explicit UA_RecvVariable_handle(size_t paSize) :
-            UA_Variables_handle(paSize), mNodeId(nullptr) {
-          mData = new const UA_Variant*[mSize];
-        }
+        UA_RecvVariable_handle() = default;
 
-        ~UA_RecvVariable_handle() override {
-          delete[] mData;
-        }
-
-        const UA_Variant **mData;
-        const UA_NodeId *mNodeId;
+        std::vector<const UA_Variant*> mData;
+        const UA_NodeId *mNodeId{nullptr};
 
         UA_RecvVariable_handle(const UA_RecvVariable_handle &paObj) = delete;
         UA_RecvVariable_handle& operator=(const UA_RecvVariable_handle& other) = delete;
@@ -105,16 +95,9 @@ class COPC_UA_Helper {
      */
     class UA_SendVariable_handle : public UA_Variables_handle {
       public:
-        explicit UA_SendVariable_handle(size_t paSize) :
-            UA_Variables_handle(paSize) {
-          mData = new UA_Variant*[mSize];
-        }
+        UA_SendVariable_handle() = default;
 
-        ~UA_SendVariable_handle() override {
-          delete[] mData;
-        }
-
-        UA_Variant **mData;
+        std::vector<UA_Variant*> mData;
 
         UA_SendVariable_handle(const UA_SendVariable_handle &paObj) = delete;
         UA_SendVariable_handle& operator=(const UA_SendVariable_handle& other) = delete;

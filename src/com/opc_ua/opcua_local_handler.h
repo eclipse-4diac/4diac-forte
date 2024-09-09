@@ -185,13 +185,13 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
      */
     struct nodesReferencedByActions {
         const UA_NodeId *mNodeId;
-        CSinglyLinkedList<CActionInfo*> mActionsReferencingIt;
+        std::vector<CActionInfo*> mActionsReferencingIt;
     };
 
     /**
      * For each node that is accessed by the action, an entry in this list is added
      */
-    CSinglyLinkedList<nodesReferencedByActions*> mNodesReferences;
+    std::vector<nodesReferencedByActions> mNodesReferences;
 
     /**
      * For all nodes that an action is referencing, it adds the action as reference
@@ -211,7 +211,7 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
      * @param paActionInfo Action to be look for as a reference
      * @param paNodes Place to store the nodes that are referencing the action
      */
-    void getNodesReferencedByAction(const CActionInfo &paActionInfo, CSinglyLinkedList<const UA_NodeId*> &paNodes) const;
+    void getNodesReferencedByAction(const CActionInfo &paActionInfo, std::vector<const UA_NodeId*> &paNodes) const;
 
     /**
      * Parent class that encapsulates the information needed to create something in the OPC UA Stack
