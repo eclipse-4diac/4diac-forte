@@ -238,18 +238,22 @@ const CIEC_ANY &CIEC_ANY_VARIANT::unwrap() const {
 }
 
 int CIEC_ANY_VARIANT::fromString(const char *paValue) {
-  int nRetVal = -1;
+  int retVal = -1;
   const char *hashPos = strchr(paValue, '#');
   if (nullptr != hashPos) {
     CStringDictionary::TStringId typeNameId = parseTypeName(paValue, hashPos);
     CIEC_ANY::EDataTypeID dataTypeId = CIEC_ANY_ELEMENTARY::getElementaryDataTypeId(typeNameId);
     if (setDefaultValue(dataTypeId)) {
       CIEC_ANY &value = unwrap();
-      nRetVal = value.fromString(paValue);
+      retVal = value.fromString(paValue);
     } else {
       CIEC_ANY *value = CTypeLib::createDataTypeInstance(typeNameId, nullptr);
       if (value) {
-        nRetVal = value->fromString(paValue);
+        retVal = value->fromString(hashPos + 1); // start after '#'
+        if(retVal < 0) {
+          return retVal;
+        }
+        retVal += static_cast<int>(hashPos - paValue + 1); // add count for type including '#'
         switch (value->getDataTypeID()) {
           case e_ARRAY:
             operator=(CIEC_ANY_UNIQUE_PTR<CIEC_ARRAY>(
@@ -265,7 +269,7 @@ int CIEC_ANY_VARIANT::fromString(const char *paValue) {
       }
     }
   }
-  return nRetVal;
+  return retVal;
 }
 
 int CIEC_ANY_VARIANT::toString(char *paValue, size_t paBufferSize) const {
