@@ -25,11 +25,11 @@ struct EplMapping {
     unsigned int mBitOffset;
     char *mCurrentValue;
 
-    EplMappingValues(unsigned int pa_nDataSize, unsigned int pa_nPiOffset,
-              unsigned int pa_nBitOffset) : mDataSize(pa_nDataSize), mPiOffset(pa_nPiOffset),
-                            mBitOffset(pa_nBitOffset) {
-      mCurrentValue = new char[pa_nDataSize];
-      for (unsigned int i = 0; i < pa_nDataSize; i++) {
+    EplMappingValues(unsigned int paDataSize, unsigned int paPiOffset,
+              unsigned int paBitOffset) : mDataSize(paDataSize), mPiOffset(paPiOffset),
+                            mBitOffset(paBitOffset) {
+      mCurrentValue = new char[paDataSize];
+      for (unsigned int i = 0; i < paDataSize; i++) {
         mCurrentValue[i] = 0x00;
       }
     }
@@ -39,9 +39,9 @@ struct EplMapping {
     }
 
   private:
-    EplMappingValues(const EplMappingValues &obj);
+    EplMappingValues(const EplMappingValues &paObj);
 
-    EplMappingValues &operator=(const EplMappingValues &obj);
+    EplMappingValues &operator=(const EplMappingValues &paObj);
   };
 
   typedef CSinglyLinkedList<EplMappingValues *> TEplMappingList;
@@ -67,7 +67,7 @@ public:
    */
   static void eplMainInit();
 
-  int eplStackInit(const char *pa_pXmlFile, const char *pa_pCdcFile, const char *pa_pEthDeviceName);
+  int eplStackInit(const char *paXmlFile, const char *paCdcFile, const char *paEthDeviceName);
 
   int eplStackShutdown();
 
@@ -79,18 +79,18 @@ public:
 
   char *getProcImageOut();
 
-  void waitUntilOperational(bool pa_bWait);
+  void waitUntilOperational(bool paWait);
 
-  void registerCallback(IEplCNCallback *pa_pCallback);
+  void registerCallback(IEplCNCallback *paCallback);
 
   void executeAllCallbacks();
 
 private:
-  char *allocProcImage(unsigned int pa_nNumOfBytes);
+  char *allocProcImage(unsigned int paNumOfBytes);
 
-  bool findMAC(const char *pa_pUserMAC, char *pa_pChDeviceName);
+  bool findMAC(const char *paUserMAC, char *paChDeviceName);
 
-  bool compareMACs(const char *pa_pMacA, const char *pa_pMacB);
+  bool compareMACs(const char *paMacA, const char *paMacB);
 
   CProcessImageMatrix mProcMatrixIn;
   CProcessImageMatrix mProcMatrixOut;

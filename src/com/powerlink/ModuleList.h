@@ -42,8 +42,8 @@ class CModuleList{
         unsigned int mModuleNr;
 
       private:
-        IoModule(const IoModule& obj);
-        IoModule& operator=(const IoModule& obj);
+        IoModule(const IoModule& paObj);
+        IoModule& operator=(const IoModule& paObj);
     };
 
     //std::vector<IoModule*> mModules;

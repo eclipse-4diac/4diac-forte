@@ -105,8 +105,6 @@ static bool waitingUntilOperational;
 
 #ifdef CONFIG_POWERLINK_USERSTACK
 
-//static char* pszCdcFilename_g = "mnobd.cdc";
-
 #else
 
 static pthread_t eventThreadId;
@@ -135,9 +133,9 @@ tEplKernel PUBLIC appCbEvent(
 
 tEplKernel PUBLIC appCbSync();
 
-char *CEplStackWrapper::allocProcImage(unsigned int pa_nNumOfBytes) {
-  auto procImage = static_cast<char *>(malloc(pa_nNumOfBytes));
-  for (unsigned int i = 0; i < pa_nNumOfBytes; i++) {
+char *CEplStackWrapper::allocProcImage(unsigned int paNumOfBytes) {
+  auto procImage = static_cast<char *>(malloc(paNumOfBytes));
+  for (unsigned int i = 0; i < paNumOfBytes; i++) {
     procImage[i] = 0x00;
   }
 
@@ -179,14 +177,14 @@ CEplStackWrapper::CEplStackWrapper() {
 CEplStackWrapper::~CEplStackWrapper() {
 }
 
-int CEplStackWrapper::eplStackInit(const char *pa_pXmlFile, const char *pa_pCdcFile, const char *pa_pEthDeviceName) {
+int CEplStackWrapper::eplStackInit(const char *paXmlFile, const char *paCdcFile, const char *paEthDeviceName) {
   tEplKernel ret;
   static tEplApiInitParam eplApiInitParam;
   const char *hostname = HOSTNAME;
 
   // Read and process XML file
   CEplXmlReader xmlReader(&mProcMatrixIn, &mProcMatrixOut);
-  xmlReader.readXmlFile(pa_pXmlFile);
+  xmlReader.readXmlFile(paXmlFile);
 
   mProcInSize = mProcMatrixIn.getProcessImageSize();
   mProcOutSize = mProcMatrixOut.getProcessImageSize();
@@ -252,7 +250,7 @@ int CEplStackWrapper::eplStackInit(const char *pa_pXmlFile, const char *pa_pCdcF
   ////////////////////////////////////////////////////////////////////////////////
 
   char correctDevName[1024];
-  bool macFound = findMAC(pa_pEthDeviceName, &correctDevName[0]);
+  bool macFound = findMAC(paEthDeviceName, &correctDevName[0]);
 
   /* Retrieve the device list on the local machine */
 
@@ -282,13 +280,13 @@ int CEplStackWrapper::eplStackInit(const char *pa_pXmlFile, const char *pa_pCdcF
     }
 
     if (seldev->description) {
-      const char *userDescLoc = strstr(seldev->description, pa_pEthDeviceName);
+      const char *userDescLoc = strstr(seldev->description, paEthDeviceName);
       if (userDescLoc != nullptr) {
         DEVLOG_INFO("[powerlink] Chosen Ethernet Card: %s\n", seldev->description);
         break;
       }
     } else {
-      const char *userDescLoc = strstr(seldev->name, pa_pEthDeviceName);
+      const char *userDescLoc = strstr(seldev->name, paEthDeviceName);
       if (userDescLoc != nullptr) {
         DEVLOG_INFO("[powerlink] Chosen Ethernet Card: %s\n", seldev->name);
         break;
@@ -377,9 +375,9 @@ int CEplStackWrapper::eplStackInit(const char *pa_pXmlFile, const char *pa_pCdcF
   /* At this point, we don't need any more the device list. Free it */
   pcap_freealldevs(alldevs);
 
-  ret = EplApiSetCdcFilename(const_cast<char*>(pa_pCdcFile));
+  ret = EplApiSetCdcFilename(const_cast<char*>(paCdcFile));
   if (ret != kEplSuccessful) {
-    DEVLOG_ERROR("[powerlink] Could not set CDC filename at EplApiSetCdcFilename\n", pa_pCdcFile);
+    DEVLOG_ERROR("[powerlink] Could not set CDC filename at EplApiSetCdcFilename\n", paCdcFile);
     return ret;
   }
 #else
@@ -473,17 +471,17 @@ char *CEplStackWrapper::getProcImageOut() {
   return mAppProcessImageOut;
 }
 
-void CEplStackWrapper::waitUntilOperational(bool pa_bWait) {
-  mInitWait = pa_bWait;
+void CEplStackWrapper::waitUntilOperational(bool paWait) {
+  mInitWait = paWait;
 }
 
-void CEplStackWrapper::registerCallback(IEplCNCallback *pa_pCallback) {
+void CEplStackWrapper::registerCallback(IEplCNCallback *paCallback) {
   mSync.lock();
-  mCallbackList.pushBack(pa_pCallback);
+  mCallbackList.pushBack(paCallback);
   mSync.unlock();
 }
 
-bool CEplStackWrapper::findMAC(const char *pa_pUserMAC, char *pa_pDeviceName) {
+bool CEplStackWrapper::findMAC(const char *paUserMAC, char *paDeviceName) {
   //char* correctDevName;
 
 #if (TARGET_SYSTEM == _LINUX_)
@@ -538,8 +536,8 @@ bool CEplStackWrapper::findMAC(const char *pa_pUserMAC, char *pa_pDeviceName) {
         (unsigned char) ifReq.ifr_hwaddr.sa_data[3], (unsigned char) ifReq.ifr_hwaddr.sa_data[4],
         (unsigned char) ifReq.ifr_hwaddr.sa_data[5]);
 
-    if (compareMACs(chMAC, pa_pUserMAC)) {
-      strncpy(pa_pDeviceName, ifList->if_name, IF_NAMESIZE);
+    if (compareMACs(chMAC, paUserMAC)) {
+      strncpy(paDeviceName, ifList->if_name, IF_NAMESIZE);
 
       //
       // Clean up things and return
@@ -580,9 +578,9 @@ bool CEplStackWrapper::findMAC(const char *pa_pUserMAC, char *pa_pDeviceName) {
     sprintf(&chMAC[i],"%02x",*macAddr++);
   }
 
-  if (compareMACs(chMAC, pa_pchUserMAC)){
+  if (compareMACs(chMAC, paUserMAC)){
     //correctDevName = new char[strlen(pAdapterInfo->AdapterName)+1];
-    strcpy(pa_pchDeviceName,pAdapterInfo->AdapterName);
+    strcpy(paDeviceName,pAdapterInfo->AdapterName);
     delete chMAC;
 
     //deviceName = correctDevName;
@@ -600,18 +598,18 @@ bool CEplStackWrapper::findMAC(const char *pa_pUserMAC, char *pa_pDeviceName) {
   return false;
 }
 
-bool CEplStackWrapper::compareMACs(const char *pa_pMacA, const char *pa_pMacB) {
-  if (strcmp(pa_pMacA, pa_pMacB) == 0) {
+bool CEplStackWrapper::compareMACs(const char *paMacA, const char *paMacB) {
+  if (strcmp(paMacA, paMacB) == 0) {
     return true;
   }
 
-  auto *macCopyA = new char[strlen(pa_pMacA) + 1];
-  strcpy(macCopyA, pa_pMacA);
-  auto *macCopyB = new char[strlen(pa_pMacB) + 1];
-  strcpy(macCopyB, pa_pMacB);
+  auto *macCopyA = new char[strlen(paMacA) + 1];
+  strcpy(macCopyA, paMacA);
+  auto *macCopyB = new char[strlen(paMacB) + 1];
+  strcpy(macCopyB, paMacB);
 
   // Change to upper case
-  for (int i = 0; i < strlen(pa_pMacA); i++) {
+  for (int i = 0; i < strlen(paMacA); i++) {
     switch (macCopyA[i]) {
       case 'a':
         macCopyA[i] = 'A';
@@ -633,7 +631,7 @@ bool CEplStackWrapper::compareMACs(const char *pa_pMacA, const char *pa_pMacB) {
         break;
     }
   }
-  for (int i = 0; i < strlen(pa_pMacB); i++) {
+  for (int i = 0; i < strlen(paMacB); i++) {
     switch (macCopyB[i]) {
       case 'a':
         macCopyB[i] = 'A';
