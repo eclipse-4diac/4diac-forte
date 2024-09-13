@@ -12,6 +12,6 @@
 
 #include <EplWrapper.h>
 
-void powerlinkStartupHook(int argc, char *arg[]){
+void powerlinkStartupHook([[maybe_unused]] int paArgc, [[maybe_unused]] char *paArg[]){
   CEplStackWrapper::eplMainInit();
 }

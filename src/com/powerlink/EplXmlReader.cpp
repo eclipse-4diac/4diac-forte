@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 - 2014 AIT, ACIN, fortiss GmbH
+ * Copyright (c) 2012 - 2024 AIT, ACIN, fortiss GmbH
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -8,6 +8,7 @@
  *
  * Contributors:
  *   Filip Andren, Alois Zoitl - initial API and implementation and/or initial documentation
+ *   Michael Gafert - changed logging
  *******************************************************************************/
 #include "EplXmlReader.h"
 
@@ -16,6 +17,8 @@
 #include <iostream>
 #include <fstream>
 #include <string.h>
+
+#include "devlog.h"
 using namespace std;
 
 #include <tinyxml.h>
@@ -55,7 +58,7 @@ void CEplXmlReader::readXmlFile(const char* paFileName){
     createProcImageIn(processImageIn);
   }
   else{
-    cout << "ERROR: Could not open XML file" << endl;
+    DEVLOG_ERROR("[powerlink] Could not open file %s\n", paFileName);
   }
 }
 
@@ -132,7 +135,7 @@ void CEplXmlReader::createProcImageOut(TiXmlNode* paProcessImage){
 
     }
 
-    cout << "<< " << currentCnId << ", " << currentModuleNr << ", " << ioName << ", " << currentIoNr << ", " << dSize << ", " << piOffset << ", " << bitOffset << endl;
+    DEVLOG_DEBUG("[powerlink] << %d, %d, %d, %d, %d, %d, %d\n",currentCnId, currentModuleNr, ioName, currentIoNr, dSize, piOffset, bitOffset);
 
     delete[] nameStr;
   }
@@ -217,7 +220,7 @@ void CEplXmlReader::createProcImageIn(TiXmlNode *paProcessImage){
 
     }
 
-    cout << ">> " << currentCnId << ", " << currentModuleNr << ", " << ioName << ", " << currentIoNr << ", " << dSize << ", " << piOffset << ", " << bitOffset << endl;
+    DEVLOG_DEBUG("[powerlink] << %d, %d, %d, %d, %d, %d, %d\n",currentCnId, currentModuleNr, ioName, currentIoNr, dSize, piOffset, bitOffset);
 
     delete[] nameStr;
   }
@@ -237,7 +240,7 @@ int CEplXmlReader::getModuleNr(const char* paIoId){
   int occurences = mModuleListIn.getNrOfModules(dest);
   int modNr = mModuleListOut.getModuleNr(dest, occurences + 1);
   if(modNr == -1) {
-    cout << "ShouldNotHappenError" << endl;
+    DEVLOG_ERROR("[powerlink] Could not find module number for %s\n", dest);
   }
 
   return modNr;
