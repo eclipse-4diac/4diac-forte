@@ -108,33 +108,10 @@ void CIEC_REAL::castRealData(const CIEC_REAL &paSrcValue, CIEC_ANY &paDestValue)
       // bit string will cast to the binary representation of the real value
       paDestValue.setValue(paSrcValue);
       break;
-    case CIEC_ANY::e_BOOL:    //bool works better when treated as signed so that negative numbers will be treated as true to
-    case CIEC_ANY::e_SINT:
-    case CIEC_ANY::e_INT:
-    case CIEC_ANY::e_DINT:
-    case CIEC_ANY::e_LINT: {
-      CIEC_REAL::TValueType floatValue = static_cast<CIEC_REAL::TValueType>(paSrcValue);
-      if(0 < floatValue){
-        floatValue += 0.5F;
-      }
-      if(0 > floatValue){
-        floatValue -= 0.5F;
-      }
-      *((CIEC_ANY::TLargestIntValueType *) paDestValue.getDataPtr()) = static_cast<CIEC_ANY::TLargestIntValueType>(floatValue);
-    }
-      break;
     default: {
-      //TODO maybe we should check for destination id to be in valid range (i.e., any_bit, any_unsigned_int, and time)
-      //should not be necessary because of connect function, but who knows.
       CIEC_REAL::TValueType floatValue = static_cast<CIEC_REAL::TValueType>(paSrcValue);
-      if(0 < floatValue){
-        floatValue += 0.5F;
-      }
-      if(0 > floatValue){
-        floatValue -= 0.5F;
-      }
-      *(reinterpret_cast<CIEC_ANY::TLargestUIntValueType*>(paDestValue.getDataPtr())) = static_cast<CIEC_ANY::TLargestUIntValueType>(floatValue);
-    }
+      *(reinterpret_cast<CIEC_ANY::TLargestUIntValueType*>(paDestValue.getDataPtr())) = static_cast<CIEC_ANY::TLargestUIntValueType>(std::llrint(floatValue));
       break;
+    }
   }
 }
