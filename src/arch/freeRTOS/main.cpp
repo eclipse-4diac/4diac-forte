@@ -13,14 +13,14 @@
 #include "FreeRTOS.h"
 #include "task.h"
 
-#include "devlog.h"
 #include "../c_interface/forte_c.h"
 
-static const unsigned scForteTaskPriority = tskIDLE_PRIORITY + 1;
+namespace {
+  const unsigned forteTaskPriority = tskIDLE_PRIORITY + 1;
+  const unsigned int desiredFortePort = 61499;
+  const configSTACK_DEPTH_TYPE stackDepth = 2000;
+}
 
-static const unsigned int scDesiredFortePort = 61499;
-
-static const configSTACK_DEPTH_TYPE scStackDepth = 2000,
 
 void vForteTask(void* ) {
   TForteInstance forteInstance;
@@ -29,7 +29,7 @@ void vForteTask(void* ) {
     vTaskDelete(nullptr);
   }
 
-  if(auto result = forteStartInstance(scDesiredFortePort, &forteInstance); result != FORTE_OK){
+  if(auto result = forteStartInstance(desiredFortePort, &forteInstance); result != FORTE_OK){
     vTaskDelete(nullptr);
   }
 
@@ -44,7 +44,7 @@ int main() {
     return result;
   }
 
-  xTaskCreate(vForteTask, "forte", scStackDepth, nullptr, scForteTaskPriority, nullptr);
+  xTaskCreate(vForteTask, "forte", stackDepth, nullptr, forteTaskPriority, nullptr);
 
   vTaskStartScheduler();
 
