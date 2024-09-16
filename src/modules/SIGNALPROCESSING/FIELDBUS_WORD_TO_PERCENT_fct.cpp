@@ -146,7 +146,7 @@ CDataConnection *FORTE_signalprocessing__FIELDBUS_WORD_TO_PERCENT::getDOConUnche
   return nullptr;
 }
 
-void FORTE_signalprocessing__FIELDBUS_WORD_TO_PERCENT::executeEvent(const TEventID paEIID, CEventChainExecutionThread *const paECET) {
+void FORTE_signalprocessing__FIELDBUS_WORD_TO_PERCENT::executeEvent(const TEventID, CEventChainExecutionThread *const paECET) {
   func_FIELDBUS_WORD_TO_PERCENT(var_QI, var_WI, var_RO_E, var_QO, var_RO, var_WO);
   sendOutputEvent(scmEventCNFID, paECET);
 }

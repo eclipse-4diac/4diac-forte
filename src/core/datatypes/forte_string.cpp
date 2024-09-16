@@ -40,6 +40,41 @@ CIEC_STRING::storage_type &CIEC_STRING::getStorageMutable() {
   return mValue;
 }
 
+static int getSpecialSymbol(const char inputString, char &specialSymbol) {
+  switch (inputString) {
+  case '\'':
+    specialSymbol = '\'';
+    break;
+  case 'L':
+  case 'l':
+    specialSymbol = '\x10';
+    break;
+  case 'N':
+  case 'n':
+    specialSymbol = '\n';
+    break;
+  case 'P':
+  case 'p':
+    specialSymbol = '\f';
+    break;
+  case 'R':
+  case 'r':
+    specialSymbol = '\r';
+    break;
+  case 'T':
+  case 't':
+    specialSymbol = '\t';
+    break;
+  case '$':
+    specialSymbol = '$';
+    break;
+  default:
+    DEVLOG_ERROR("Unknown escape symbol %c encountered", inputString);
+    return -1;
+  }
+  return 0;
+}
+
 int CIEC_STRING::fromString(const char *paValue) {
   const std::string_view inputString(paValue);
   constexpr std::string_view typePrefix("STRING#"); // a C-String on purpose to avoid a dangling reference
@@ -69,37 +104,9 @@ int CIEC_STRING::fromString(const char *paValue) {
         continue;
       } else {
         char specialSymbol;
-        switch (inputString[i + 1]) {
-          case '\'':
-            specialSymbol = '\'';
-            break;
-          case 'L':
-          case 'l':
-            specialSymbol = '\x10';
-            break;
-          case 'N':
-          case 'n':
-            specialSymbol = '\n';
-            break;
-          case 'P':
-          case 'p':
-            specialSymbol = '\f';
-            break;
-          case 'R':
-          case 'r':
-            specialSymbol = '\r';
-            break;
-          case 'T':
-          case 't':
-            specialSymbol = '\t';
-            break;
-          case '$':
-            specialSymbol = '$';
-            break;
-          default:
-            DEVLOG_ERROR("Unknown escape symbol %c encountered", inputString[i + 1]);
+        if (getSpecialSymbol(inputString[i + 1], specialSymbol) != -1) {
+          unescapedString += specialSymbol; // append escaped char
         }
-        unescapedString += specialSymbol; // append escaped char
         i += 1;
         continue;
       }
