@@ -267,7 +267,7 @@ void FORTE_NVS::executeSet() {
       break;
     case CIEC_ANY::e_STRING: {
       CIEC_STRING value_ciecString = static_cast<CIEC_STRING&>(value);
-      const char *const value_buf = value_ciecString.getValue();
+      const char *const value_buf = value_ciecString.c_str();
       err = handle->set_string(key, value_buf);
     }
       break;
