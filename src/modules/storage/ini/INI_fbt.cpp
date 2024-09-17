@@ -276,7 +276,7 @@ void FORTE_INI::executeSet() {
       break;
     case CIEC_ANY::e_STRING:{
       CIEC_STRING value_ciecString = static_cast<CIEC_STRING&>(value);
-      const char *const value_buf = value_ciecString.getValue();
+      const char *const value_buf = value_ciecString.c_str();
       setString(section, key, value_buf);
     }
       break;
@@ -361,7 +361,7 @@ void FORTE_INI::executeGet() {
       break;
     case CIEC_ANY::e_STRING: {
       CIEC_STRING default_value_ciecString = static_cast<CIEC_STRING&>(default_value);
-      const char *const default_value_buf = default_value_ciecString.getValue();
+      const char *const default_value_buf = default_value_ciecString.c_str();
       char val[16] = { 0 };
       getString(section, key, default_value_buf, val, 16U);
       var_VALUEO.setValue(CIEC_STRING(val));
