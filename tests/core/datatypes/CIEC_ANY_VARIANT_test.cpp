@@ -14,6 +14,57 @@
 #include "forte_boost_output_support.h"
 #include "../../../src/core/datatypes/forte_any_variant.h"
 
+#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
+#include "CIEC_ANY_VARIANT_test_gen.cpp"
+#endif
+
+class CIEC_AnyTestStruct : public CIEC_STRUCT {
+  DECLARE_FIRMWARE_DATATYPE(AnyTestStruct)
+  public:
+    CIEC_STRING Var1;
+    CIEC_BOOL Var2;
+    CIEC_INT Var3;
+
+    CIEC_AnyTestStruct() = default;
+
+    size_t getStructSize() const override {
+      return 3;
+    }
+
+    const CStringDictionary::TStringId* elementNames() const override {
+      return scmElementNames;
+    }
+
+    CStringDictionary::TStringId getStructTypeNameID() const override {
+      return g_nStringIdAnyTestStruct;
+    }
+
+    CIEC_ANY *getMember(size_t paMemberIndex) override {
+      switch(paMemberIndex) {
+        case 0: return &Var1;
+        case 1: return &Var2;
+        case 2: return &Var3;
+      }
+      return nullptr;
+    }
+
+    const CIEC_ANY *getMember(size_t paMemberIndex) const override {
+      switch(paMemberIndex) {
+        case 0: return &Var1;
+        case 1: return &Var2;
+        case 2: return &Var3;
+      }
+      return nullptr;
+    }
+
+  private:
+    static const CStringDictionary::TStringId scmElementNames[];
+};
+
+const CStringDictionary::TStringId CIEC_AnyTestStruct::scmElementNames[] = { g_nStringIdVar1, g_nStringIdVar2, g_nStringIdVar3 };
+
+DEFINE_FIRMWARE_DATATYPE(AnyTestStruct, g_nStringIdAnyTestStruct)
+
 BOOST_AUTO_TEST_SUITE(CIEC_ANY_VARIANT_function_test)
 
     BOOST_AUTO_TEST_CASE(Type_test) {
@@ -103,6 +154,7 @@ BOOST_AUTO_TEST_SUITE(CIEC_ANY_VARIANT_function_test)
       checkStringConversion(test, "LINT#123123123123", CIEC_ANY::e_LINT);
       checkStringConversion(test, "ULINT#123123123123123", CIEC_ANY::e_ULINT);
       checkStringConversion(test, "LWORD#123123123123123", CIEC_ANY::e_LWORD);
+      checkStringConversion(test, "AnyTestStruct#(Var1:='test',Var2:=TRUE,Var3:=17)", CIEC_ANY::e_STRUCT);
     }
 
     BOOST_AUTO_TEST_CASE(Equality_test) {

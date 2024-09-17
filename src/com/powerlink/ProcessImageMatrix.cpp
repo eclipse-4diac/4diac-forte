@@ -12,10 +12,8 @@
 #include "ProcessImageMatrix.h"
 
 CProcessImageMatrix::CProcessImageMatrix(){
-
   mBitSize = 0;
   mNumberOfEntries = 0;
-
 }
 
 CProcessImageMatrix::~CProcessImageMatrix(){
@@ -23,7 +21,6 @@ CProcessImageMatrix::~CProcessImageMatrix(){
 }
 
 void CProcessImageMatrix::addEntry(unsigned int paCN, unsigned int paModule, unsigned int paIoId, unsigned int paDataSize, unsigned int paPiOffset, unsigned int paBitOffset){
-
   mMatrix.pushBack(new SChannelEntry(paCN, paModule, paIoId, paDataSize, paPiOffset, paBitOffset));
 
   // Check if 8, 16, 32 bit aligned

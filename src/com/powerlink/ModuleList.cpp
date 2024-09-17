@@ -13,7 +13,7 @@
 #include <cstring>
 
 CModuleList::IoModule::IoModule(const char* paName, unsigned int paPiOffset, unsigned int paBitOffset, unsigned int paModuleNr) :
-    mPiOffset(paPiOffset), mBitOffset(paBitOffset), mModuleNr(paModuleNr){
+  mPiOffset(paPiOffset), mBitOffset(paBitOffset), mModuleNr(paModuleNr){
 
   mName = new char[strlen(paName) + 1];
   strcpy(mName, paName);
@@ -25,13 +25,11 @@ CModuleList::IoModule::~IoModule(){
 
 CModuleList::CModuleList() :
     mNumberOfModules(0){
-
 }
 
 CModuleList::~CModuleList(){
   // Delete modules in list
   mModules.clearAll();
-
 }
 
 void CModuleList::addEntry(const char* paName, unsigned int paPiOffset, unsigned int paBitOffset, unsigned int paModuleNr){
@@ -41,7 +39,6 @@ void CModuleList::addEntry(const char* paName, unsigned int paPiOffset, unsigned
 }
 
 int CModuleList::getModuleNr(const char* paName, unsigned int paPiOffset, unsigned int paBitOffset){
-
   TModuleList::Iterator itEnd(mModules.end());
   for(TModuleList::Iterator it(mModules.begin()); it != itEnd; ++it){
     if(strcmp(it->mName, paName) == 0 && it->mPiOffset == paPiOffset && it->mBitOffset == paBitOffset){

@@ -36,17 +36,6 @@ COPC_UA_ObjectStruct_Helper::COPC_UA_ObjectStruct_Helper(COPC_UA_Layer &paLayer,
 }
 
 COPC_UA_ObjectStruct_Helper::~COPC_UA_ObjectStruct_Helper() {
-  for(char* name: mStructTypeNames) {
-    delete[] name;
-  }
-
-  for(UA_NodeId nodeId: mStructTypeNodes) {
-    UA_NodeId_clear(&nodeId);
-  }
-
-  for(UA_NodeId nodeId: mStructTypeMemberNodes) {
-    UA_NodeId_clear(&nodeId);
-  }
   mHandler = nullptr;
 }
 
@@ -112,39 +101,31 @@ bool COPC_UA_ObjectStruct_Helper::createOPCUANamespace(char* nsName) {
 }
 
 bool COPC_UA_ObjectStruct_Helper::defineOPCUAStructTypeNode(UA_Server *paServer, UA_NodeId &paNodeId, const std::string &paStructTypeName, bool defaultCase) {
-  char* structTypeName = new char[paStructTypeName.length() +1];
-  strncpy(structTypeName, paStructTypeName.c_str(), paStructTypeName.length());
-  structTypeName[paStructTypeName.length()] = '\0';
-  mStructTypeNames.push_back(structTypeName);
+  std::string structTypeName = paStructTypeName;
   if(defaultCase) {
-    paNodeId = UA_NODEID_STRING(mOpcuaTypeNamespaceIndex, structTypeName);
+    paNodeId = UA_NODEID_STRING(mOpcuaTypeNamespaceIndex, &structTypeName[0]);
   } else {
     paNodeId = UA_NODEID_NUMERIC(mOpcuaTypeNamespaceIndex, 0);
   }
   UA_ObjectTypeAttributes oAttr = UA_ObjectTypeAttributes_default;
-  oAttr.displayName = UA_LOCALIZEDTEXT(smEmptyString, structTypeName);
+  oAttr.displayName = UA_LOCALIZEDTEXT(smEmptyString, &structTypeName[0]);
   UA_StatusCode status = UA_Server_addObjectTypeNode(paServer, paNodeId,
     UA_NODEID_NUMERIC(0, UA_NS0ID_BASEOBJECTTYPE),
     UA_NODEID_NUMERIC(0, UA_NS0ID_HASSUBTYPE),
-    UA_QUALIFIEDNAME(mOpcuaTypeNamespaceIndex, structTypeName), oAttr,
+    UA_QUALIFIEDNAME(mOpcuaTypeNamespaceIndex, &structTypeName[0]), oAttr,
     nullptr, &paNodeId);
 
-  mStructTypeNodes.push_back(paNodeId);
   if (status != UA_STATUSCODE_GOOD) {
-    DEVLOG_ERROR("[OPC UA OBJECT STRUCT HELPER]: Failed to create OPC UA Struct Type Node for Type %s, Status Code: %s\n", paStructTypeName.c_str(), UA_StatusCode_name(status));
+    DEVLOG_ERROR("[OPC UA OBJECT STRUCT HELPER]: Failed to create OPC UA Struct Type Node for Type %s, Status Code: %s\n", structTypeName.c_str(), UA_StatusCode_name(status));
     return false;
   }
   return true;
 }
 
 bool COPC_UA_ObjectStruct_Helper::addOPCUAStructTypeComponent(UA_Server *paServer, UA_NodeId &paParentNodeId, const std::string &paStructName, CIEC_ANY *paStructMember, const CStringDictionary::TStringId paStructMemberNameId) {
-  const std::string structMemberName = CStringDictionary::getInstance().get(paStructMemberNameId);
-  char* memberName = new char[structMemberName.length() +1];
-  strncpy(memberName, structMemberName.c_str(), structMemberName.length());
-  memberName[structMemberName.length()] = '\0';
-  mStructTypeNames.push_back(memberName);
+  std::string structMemberName = CStringDictionary::getInstance().get(paStructMemberNameId);
   UA_VariableAttributes vAttr = UA_VariableAttributes_default;
-    vAttr.displayName = UA_LOCALIZEDTEXT(smEmptyString, memberName);
+    vAttr.displayName = UA_LOCALIZEDTEXT(smEmptyString, &structMemberName[0]);
     vAttr.valueRank = UA_VALUERANK_SCALAR;
     vAttr.minimumSamplingInterval = 0.000000;
     vAttr.userAccessLevel = UA_ACCESSLEVELMASK_READ | UA_ACCESSLEVELMASK_WRITE;
@@ -154,20 +135,15 @@ bool COPC_UA_ObjectStruct_Helper::addOPCUAStructTypeComponent(UA_Server *paServe
   UA_NodeId memberNodeId;
   if(paParentNodeId.identifierType == UA_NODEIDTYPE_STRING) {
     std::string memberBrowsePathStr = getStructMemberBrowsePath(paStructName, paStructMemberNameId);
-    char* memberBrowsePath = new char[memberBrowsePathStr.length() +1];
-    strncpy(memberBrowsePath, memberBrowsePathStr.c_str(), memberBrowsePathStr.length());
-    memberBrowsePath[memberBrowsePathStr.length()] = '\0';   
-    mStructTypeNames.push_back(memberBrowsePath);
-    memberNodeId = UA_NODEID_STRING(mOpcuaTypeNamespaceIndex, memberBrowsePath);
+    memberNodeId = UA_NODEID_STRING(mOpcuaTypeNamespaceIndex, &memberBrowsePathStr[0]);
   } else {
     memberNodeId = UA_NODEID_NUMERIC(mOpcuaTypeNamespaceIndex, 0);
   }
   UA_StatusCode status = UA_Server_addVariableNode(paServer, memberNodeId, paParentNodeId,
     UA_NODEID_NUMERIC(0, UA_NS0ID_HASCOMPONENT),
-    UA_QUALIFIEDNAME(mOpcuaTypeNamespaceIndex, memberName),
+    UA_QUALIFIEDNAME(mOpcuaTypeNamespaceIndex, &structMemberName[0]),
     UA_NODEID_NUMERIC(0, UA_NS0ID_BASEDATAVARIABLETYPE), vAttr, nullptr, &memberNodeId);
 
-  mStructTypeMemberNodes.push_back(memberNodeId);
   if(status != UA_STATUSCODE_GOOD) {
     DEVLOG_ERROR("[OPC UA OBJECT STRUCT HELPER]: Failed to add Member to OPC UA Struct Type Node for Member %s, Status Code: %s\n", structMemberName.c_str(), UA_StatusCode_name(status));
     return false;
