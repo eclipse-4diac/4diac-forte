@@ -16,7 +16,7 @@
 
 #include "SCALE_fct.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "signalprocessing/SCALE_fct_gen.cpp"
+#include "SCALE_fct_gen.cpp"
 #endif
 
 #include "criticalregion.h"
@@ -27,7 +27,7 @@
 #include "forte_array.h"
 #include "forte_array_fixed.h"
 #include "forte_array_variable.h"
-#include "signalprocessing/SCALE_fct.h"
+#include "SCALE_fct.h"
 
 DEFINE_FIRMWARE_FB(FORTE_signalprocessing__SCALE, g_nStringIdsignalprocessing__SCALE)
 
