@@ -85,7 +85,7 @@ void CFakeTimerHandler::sleepToTime(const CIEC_TIME &t) {
     .fakeSleepFb = nullptr
   });
   DEVLOG_DEBUG("[FAKETIME]: received time destination %d ms\n", wakeup);
-  while((getNanoSecondsMonotonic() / cNanosecondsToMilliseconds) != (wakeup / cNanosecondsToMilliseconds)) {
+  while((getNanoSecondsMonotonic() / cNanosecondsToMilliseconds) != wakeup) {
     sleepThread(20);
   }
   DEVLOG_DEBUG("[FAKETIME]: finished waiting for target time\n");
