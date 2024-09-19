@@ -21,8 +21,8 @@
 
 #include "criticalregion.h"
 #include "resource.h"
-#include "forte_real.h"
 #include "forte_bool.h"
+#include "forte_real.h"
 #include "iec61131_functions.h"
 #include "forte_array_common.h"
 #include "forte_array.h"
@@ -297,4 +297,3 @@ void FORTE_signalprocessing__DualHysteresis::alg_alDown(void) {
     var_DO_DOWN = true_BOOL;
   }
 }
-
