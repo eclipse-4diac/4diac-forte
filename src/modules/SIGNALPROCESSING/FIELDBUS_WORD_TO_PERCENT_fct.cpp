@@ -17,7 +17,7 @@
 
 #include "FIELDBUS_WORD_TO_PERCENT_fct.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "signalprocessing/FIELDBUS_WORD_TO_PERCENT_fct_gen.cpp"
+#include "FIELDBUS_WORD_TO_PERCENT_fct_gen.cpp"
 #endif
 
 #include "criticalregion.h"
@@ -30,8 +30,8 @@
 #include "forte_array.h"
 #include "forte_array_fixed.h"
 #include "forte_array_variable.h"
-#include "signalprocessing/FIELDBUS_SIGNAL_gcf.h"
-#include "signalprocessing/FIELDBUS_WORD_TO_PERCENT_fct.h"
+#include "FIELDBUS_SIGNAL_gcf.h"
+#include "FIELDBUS_WORD_TO_PERCENT_fct.h"
 
 DEFINE_FIRMWARE_FB(FORTE_signalprocessing__FIELDBUS_WORD_TO_PERCENT, g_nStringIdsignalprocessing__FIELDBUS_WORD_TO_PERCENT)
 

@@ -16,7 +16,7 @@
 
 #include "DualHysteresis_fbt.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "signalprocessing/DualHysteresis_fbt_gen.cpp"
+#include "DualHysteresis_fbt_gen.cpp"
 #endif
 
 #include "criticalregion.h"
