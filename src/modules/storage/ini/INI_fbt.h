@@ -11,7 +11,7 @@
  *** Name: INI
  *** Description: Load and Store Data from settings.ini by Section and Key
  *** Version:
- ***     1.0: 2022-09-23/Franz Höpfinger - HR Agrartechnik GmbH -
+ ***     1.0: 2024-09-17/Franz Höpfinger - HR Agrartechnik GmbH -
  *************************************************************************/
 
 #pragma once
