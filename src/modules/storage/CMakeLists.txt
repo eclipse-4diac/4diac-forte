@@ -16,7 +16,7 @@
 # FORTE_MODULE_STORAGE  integration.
 #############################################################################
 
-# option to enable OPC UA with cmake
+# option to enable this Module 'FORTE_MODULE_STORAGE' with cmake
 forte_add_module(STORAGE OFF "Interacting with ini File")
 
 forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
