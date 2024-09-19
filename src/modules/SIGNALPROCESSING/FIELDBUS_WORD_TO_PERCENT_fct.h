@@ -9,23 +9,22 @@
  *** This file was generated using the 4DIAC FORTE Export Filter V1.0.x NG!
  ***
  *** Name: FIELDBUS_WORD_TO_PERCENT
- *** Description:
+ *** Description: Convert a REAL in the Range 0.0 to 100.0 to a WORD Value Range 0-FAFF
  *** Version:
- ***     1.0: 2023-10-21/franz -  -
+ ***     1.0: 2023-10-21/Franz Höpfinger - HR Agrartechnik GmbH -
+ ***     1.1: 2024-09-19/Franz Höpfinger - HR Agrartechnik GmbH - Update to a more Function like Interface
  *************************************************************************/
 
 #pragma once
 
 #include "funcbloc.h"
-#include "forte_bool.h"
-#include "forte_word.h"
 #include "forte_real.h"
+#include "forte_word.h"
 #include "iec61131_functions.h"
 #include "forte_array_common.h"
 #include "forte_array.h"
 #include "forte_array_fixed.h"
 #include "forte_array_variable.h"
-
 
 class FORTE_signalprocessing__FIELDBUS_WORD_TO_PERCENT final : public CFunctionBlock {
   DECLARE_FIRMWARE_FB(FORTE_signalprocessing__FIELDBUS_WORD_TO_PERCENT)
@@ -55,26 +54,19 @@ class FORTE_signalprocessing__FIELDBUS_WORD_TO_PERCENT final : public CFunctionB
   public:
     FORTE_signalprocessing__FIELDBUS_WORD_TO_PERCENT(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
-    CIEC_BOOL var_QI;
     CIEC_WORD var_WI;
-    CIEC_REAL var_RO_E;
 
-    CIEC_BOOL var_QO;
-    CIEC_REAL var_RO;
+    CIEC_REAL var_;
     CIEC_WORD var_WO;
 
-    CIEC_BOOL var_conn_QO;
-    CIEC_REAL var_conn_RO;
+    CIEC_REAL var_conn_;
     CIEC_WORD var_conn_WO;
 
     CEventConnection conn_CNF;
 
-    CDataConnection *conn_QI;
     CDataConnection *conn_WI;
-    CDataConnection *conn_RO_E;
 
-    CDataConnection conn_QO;
-    CDataConnection conn_RO;
+    CDataConnection conn_;
     CDataConnection conn_WO;
 
     CIEC_ANY *getDI(size_t) override;
@@ -83,21 +75,17 @@ class FORTE_signalprocessing__FIELDBUS_WORD_TO_PERCENT final : public CFunctionB
     CDataConnection **getDIConUnchecked(TPortId) override;
     CDataConnection *getDOConUnchecked(TPortId) override;
 
-    void evt_REQ(const CIEC_BOOL &paQI, const CIEC_WORD &paWI, const CIEC_REAL &paRO_E, CIEC_BOOL &paQO, CIEC_REAL &paRO, CIEC_WORD &paWO) {
-      var_QI = paQI;
+    void evt_REQ(const CIEC_WORD &paWI, CIEC_REAL &pa, CIEC_WORD &paWO) {
       var_WI = paWI;
-      var_RO_E = paRO_E;
       executeEvent(scmEventREQID, nullptr);
-      paQO = var_QO;
-      paRO = var_RO;
+      pa = var_;
       paWO = var_WO;
     }
 
-    void operator()(const CIEC_BOOL &paQI, const CIEC_WORD &paWI, const CIEC_REAL &paRO_E, CIEC_BOOL &paQO, CIEC_REAL &paRO, CIEC_WORD &paWO) {
-      evt_REQ(paQI, paWI, paRO_E, paQO, paRO, paWO);
+    void operator()(const CIEC_WORD &paWI, CIEC_REAL &pa, CIEC_WORD &paWO) {
+      evt_REQ(paWI, pa, paWO);
     }
 };
 
-void func_FIELDBUS_WORD_TO_PERCENT(CIEC_BOOL st_lv_QI, CIEC_WORD st_lv_WI, CIEC_REAL st_lv_RO_E, CIEC_BOOL &st_lv_QO, CIEC_REAL &st_lv_RO, CIEC_WORD &st_lv_WO);
-
+CIEC_REAL func_FIELDBUS_WORD_TO_PERCENT(CIEC_WORD st_lv_WI, CIEC_WORD &st_lv_WO);
 
