@@ -19,8 +19,6 @@
 #include "SCALE_fct_gen.cpp"
 #endif
 
-#include "criticalregion.h"
-#include "resource.h"
 #include "forte_real.h"
 #include "iec61131_functions.h"
 #include "forte_array_common.h"
@@ -31,7 +29,7 @@
 
 DEFINE_FIRMWARE_FB(FORTE_signalprocessing__SCALE, g_nStringIdsignalprocessing__SCALE)
 
-const CStringDictionary::TStringId FORTE_signalprocessing__SCALE::scmDataInputNames[] = {g_nStringIdIN, g_nStringIdMAX1, g_nStringIdMIN1, g_nStringIdMAX2, g_nStringIdMIN2};
+const CStringDictionary::TStringId FORTE_signalprocessing__SCALE::scmDataInputNames[] = {g_nStringIdIN, g_nStringIdMAX_IN, g_nStringIdMIN_IN, g_nStringIdMAX_OUT, g_nStringIdMIN_OUT};
 const CStringDictionary::TStringId FORTE_signalprocessing__SCALE::scmDataInputTypeIds[] = {g_nStringIdREAL, g_nStringIdREAL, g_nStringIdREAL, g_nStringIdREAL, g_nStringIdREAL};
 const CStringDictionary::TStringId FORTE_signalprocessing__SCALE::scmDataOutputNames[] = {g_nStringId};
 const CStringDictionary::TStringId FORTE_signalprocessing__SCALE::scmDataOutputTypeIds[] = {g_nStringIdREAL};
@@ -55,19 +53,19 @@ FORTE_signalprocessing__SCALE::FORTE_signalprocessing__SCALE(const CStringDictio
     var_conn_(var_),
     conn_CNF(this, 0),
     conn_IN(nullptr),
-    conn_MAX1(nullptr),
-    conn_MIN1(nullptr),
-    conn_MAX2(nullptr),
-    conn_MIN2(nullptr),
+    conn_MAX_IN(nullptr),
+    conn_MIN_IN(nullptr),
+    conn_MAX_OUT(nullptr),
+    conn_MIN_OUT(nullptr),
     conn_(this, 0, &var_conn_) {
 }
 
 void FORTE_signalprocessing__SCALE::setInitialValues() {
   var_IN = 0_REAL;
-  var_MAX1 = 0_REAL;
-  var_MIN1 = 0_REAL;
-  var_MAX2 = 0_REAL;
-  var_MIN2 = 0_REAL;
+  var_MAX_IN = 0_REAL;
+  var_MIN_IN = 0_REAL;
+  var_MAX_OUT = 0_REAL;
+  var_MIN_OUT = 0_REAL;
   var_ = 0_REAL;
 }
 
@@ -75,10 +73,10 @@ void FORTE_signalprocessing__SCALE::readInputData(const TEventID paEIID) {
   switch(paEIID) {
     case scmEventREQID: {
       readData(0, var_IN, conn_IN);
-      readData(1, var_MAX1, conn_MAX1);
-      readData(2, var_MIN1, conn_MIN1);
-      readData(3, var_MAX2, conn_MAX2);
-      readData(4, var_MIN2, conn_MIN2);
+      readData(1, var_MAX_IN, conn_MAX_IN);
+      readData(2, var_MIN_IN, conn_MIN_IN);
+      readData(3, var_MAX_OUT, conn_MAX_OUT);
+      readData(4, var_MIN_OUT, conn_MIN_OUT);
       break;
     }
     default:
@@ -100,10 +98,10 @@ void FORTE_signalprocessing__SCALE::writeOutputData(const TEventID paEIID) {
 CIEC_ANY *FORTE_signalprocessing__SCALE::getDI(const size_t paIndex) {
   switch(paIndex) {
     case 0: return &var_IN;
-    case 1: return &var_MAX1;
-    case 2: return &var_MIN1;
-    case 3: return &var_MAX2;
-    case 4: return &var_MIN2;
+    case 1: return &var_MAX_IN;
+    case 2: return &var_MIN_IN;
+    case 3: return &var_MAX_OUT;
+    case 4: return &var_MIN_OUT;
   }
   return nullptr;
 }
@@ -125,10 +123,10 @@ CEventConnection *FORTE_signalprocessing__SCALE::getEOConUnchecked(const TPortId
 CDataConnection **FORTE_signalprocessing__SCALE::getDIConUnchecked(const TPortId paIndex) {
   switch(paIndex) {
     case 0: return &conn_IN;
-    case 1: return &conn_MAX1;
-    case 2: return &conn_MIN1;
-    case 3: return &conn_MAX2;
-    case 4: return &conn_MIN2;
+    case 1: return &conn_MAX_IN;
+    case 2: return &conn_MIN_IN;
+    case 3: return &conn_MAX_OUT;
+    case 4: return &conn_MIN_OUT;
   }
   return nullptr;
 }
@@ -141,15 +139,15 @@ CDataConnection *FORTE_signalprocessing__SCALE::getDOConUnchecked(const TPortId 
 }
 
 void FORTE_signalprocessing__SCALE::executeEvent(const TEventID, CEventChainExecutionThread *const paECET) {
-  var_ = func_SCALE(var_IN, var_MAX1, var_MIN1, var_MAX2, var_MIN2);
+  var_ = func_SCALE(var_IN, var_MAX_IN, var_MIN_IN, var_MAX_OUT, var_MIN_OUT);
   sendOutputEvent(scmEventCNFID, paECET);
 }
 
-CIEC_REAL func_SCALE(CIEC_REAL st_lv_IN, CIEC_REAL st_lv_MAX1, CIEC_REAL st_lv_MIN1, CIEC_REAL st_lv_MAX2, CIEC_REAL st_lv_MIN2) {
+CIEC_REAL func_SCALE(CIEC_REAL st_lv_IN, CIEC_REAL st_lv_MAX_IN, CIEC_REAL st_lv_MIN_IN, CIEC_REAL st_lv_MAX_OUT, CIEC_REAL st_lv_MIN_OUT) {
   CIEC_REAL st_ret_val = 0_REAL;
 
   #line 13 "SCALE.fct"
-  st_ret_val = func_ADD<CIEC_REAL>(func_DIV<CIEC_REAL>(func_MUL<CIEC_REAL>(func_SUB<CIEC_REAL>(st_lv_IN, st_lv_MIN1), func_SUB<CIEC_REAL>(st_lv_MAX2, st_lv_MIN2)), func_SUB<CIEC_REAL>(st_lv_MAX1, st_lv_MIN1)), st_lv_MIN2);
+  st_ret_val = func_ADD<CIEC_REAL>(func_DIV<CIEC_REAL>(func_MUL<CIEC_REAL>(func_SUB<CIEC_REAL>(st_lv_IN, st_lv_MIN_IN), func_SUB<CIEC_REAL>(st_lv_MAX_OUT, st_lv_MIN_OUT)), func_SUB<CIEC_REAL>(st_lv_MAX_IN, st_lv_MIN_IN)), st_lv_MIN_OUT);
 
   return st_ret_val;
 }

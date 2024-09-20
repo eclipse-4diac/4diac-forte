@@ -53,10 +53,10 @@ class FORTE_signalprocessing__SCALE final : public CFunctionBlock {
     FORTE_signalprocessing__SCALE(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     CIEC_REAL var_IN;
-    CIEC_REAL var_MAX1;
-    CIEC_REAL var_MIN1;
-    CIEC_REAL var_MAX2;
-    CIEC_REAL var_MIN2;
+    CIEC_REAL var_MAX_IN;
+    CIEC_REAL var_MIN_IN;
+    CIEC_REAL var_MAX_OUT;
+    CIEC_REAL var_MIN_OUT;
 
     CIEC_REAL var_;
 
@@ -65,10 +65,10 @@ class FORTE_signalprocessing__SCALE final : public CFunctionBlock {
     CEventConnection conn_CNF;
 
     CDataConnection *conn_IN;
-    CDataConnection *conn_MAX1;
-    CDataConnection *conn_MIN1;
-    CDataConnection *conn_MAX2;
-    CDataConnection *conn_MIN2;
+    CDataConnection *conn_MAX_IN;
+    CDataConnection *conn_MIN_IN;
+    CDataConnection *conn_MAX_OUT;
+    CDataConnection *conn_MIN_OUT;
 
     CDataConnection conn_;
 
@@ -78,20 +78,20 @@ class FORTE_signalprocessing__SCALE final : public CFunctionBlock {
     CDataConnection **getDIConUnchecked(TPortId) override;
     CDataConnection *getDOConUnchecked(TPortId) override;
 
-    void evt_REQ(const CIEC_REAL &paIN, const CIEC_REAL &paMAX1, const CIEC_REAL &paMIN1, const CIEC_REAL &paMAX2, const CIEC_REAL &paMIN2, CIEC_REAL &pa) {
+    void evt_REQ(const CIEC_REAL &paIN, const CIEC_REAL &paMAX_IN, const CIEC_REAL &paMIN_IN, const CIEC_REAL &paMAX_OUT, const CIEC_REAL &paMIN_OUT, CIEC_REAL &pa) {
       var_IN = paIN;
-      var_MAX1 = paMAX1;
-      var_MIN1 = paMIN1;
-      var_MAX2 = paMAX2;
-      var_MIN2 = paMIN2;
+      var_MAX_IN = paMAX_IN;
+      var_MIN_IN = paMIN_IN;
+      var_MAX_OUT = paMAX_OUT;
+      var_MIN_OUT = paMIN_OUT;
       executeEvent(scmEventREQID, nullptr);
       pa = var_;
     }
 
-    void operator()(const CIEC_REAL &paIN, const CIEC_REAL &paMAX1, const CIEC_REAL &paMIN1, const CIEC_REAL &paMAX2, const CIEC_REAL &paMIN2, CIEC_REAL &pa) {
-      evt_REQ(paIN, paMAX1, paMIN1, paMAX2, paMIN2, pa);
+    void operator()(const CIEC_REAL &paIN, const CIEC_REAL &paMAX_IN, const CIEC_REAL &paMIN_IN, const CIEC_REAL &paMAX_OUT, const CIEC_REAL &paMIN_OUT, CIEC_REAL &pa) {
+      evt_REQ(paIN, paMAX_IN, paMIN_IN, paMAX_OUT, paMIN_OUT, pa);
     }
 };
 
-CIEC_REAL func_SCALE(CIEC_REAL st_lv_IN, CIEC_REAL st_lv_MAX1, CIEC_REAL st_lv_MIN1, CIEC_REAL st_lv_MAX2, CIEC_REAL st_lv_MIN2);
+CIEC_REAL func_SCALE(CIEC_REAL st_lv_IN, CIEC_REAL st_lv_MAX_IN, CIEC_REAL st_lv_MIN_IN, CIEC_REAL st_lv_MAX_OUT, CIEC_REAL st_lv_MIN_OUT);
 
