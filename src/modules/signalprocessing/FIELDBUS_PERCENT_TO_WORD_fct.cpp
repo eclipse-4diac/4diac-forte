@@ -20,8 +20,6 @@
 #include "FIELDBUS_PERCENT_TO_WORD_fct_gen.cpp"
 #endif
 
-#include "criticalregion.h"
-#include "resource.h"
 #include "forte_real.h"
 #include "forte_udint.h"
 #include "forte_word.h"
