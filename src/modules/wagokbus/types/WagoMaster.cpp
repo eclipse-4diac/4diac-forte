@@ -1,12 +1,10 @@
 /*************************************************************************
- *** FORTE Library Element
- ***
- *** This file was generated using the 4DIAC FORTE Export Filter V1.0.x!
- ***
- *** Name: WagoMaster
- *** Description: Service Interface Function Block Type
- *** Version:
- ***     1.0: 2018-09-12/cabral - null -
+ * Copyright (c) 2018, 2024 fortiss GmbH
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *************************************************************************/
 
 #include "WagoMaster.h"
