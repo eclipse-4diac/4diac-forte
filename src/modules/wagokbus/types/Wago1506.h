@@ -1,12 +1,10 @@
 /*************************************************************************
- *** FORTE Library Element
- ***
- *** This file was generated using the 4DIAC FORTE Export Filter V1.0.x!
- ***
- *** Name: Wago1506
- *** Description: Service Interface Function Block Type
- *** Version:
- ***     0.0: 2016-11-30/4DIAC-IDE - 4DIAC-Consortium -
+ * Copyright (c) 2016, 2024 fortiss GmbH
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *************************************************************************/
 
 #pragma once
