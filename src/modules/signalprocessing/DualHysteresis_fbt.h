@@ -25,7 +25,6 @@
 #include "forte_array_fixed.h"
 #include "forte_array_variable.h"
 
-
 class FORTE_signalprocessing__DualHysteresis final : public CBasicFB {
   DECLARE_FIRMWARE_FB(FORTE_signalprocessing__DualHysteresis)
 
@@ -139,5 +138,4 @@ class FORTE_signalprocessing__DualHysteresis final : public CBasicFB {
       evt_INIT(paQI, paMI, paDEAD, paHYSTERESIS, paINPUT, paQO, paDO_UP, paDO_DOWN);
     }
 };
-
 

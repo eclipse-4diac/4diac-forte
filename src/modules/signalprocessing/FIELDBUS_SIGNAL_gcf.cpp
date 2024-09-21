@@ -18,8 +18,8 @@
 
 #include "iec61131_functions.h"
 #include "forte_byte.h"
-#include "forte_word.h"
 #include "forte_dword.h"
+#include "forte_word.h"
 #include "iec61131_functions.h"
 #include "forte_array_common.h"
 #include "forte_array.h"
