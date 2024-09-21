@@ -43,7 +43,7 @@ const SFBInterfaceSpec FORTE_WagoMaster::scmFBInterfaceSpec = {
 };
 
 FORTE_WagoMaster::FORTE_WagoMaster(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
-    IOConfigFBMultiMaster(paContainer, &scmFBInterfaceSpec, paInstanceNameId),
+    IOConfigFBMultiMaster(paContainer, scmFBInterfaceSpec, paInstanceNameId),
     var_UpdateInterval(25_UINT),
     var_conn_QO(var_QO),
     var_conn_STATUS(var_STATUS),

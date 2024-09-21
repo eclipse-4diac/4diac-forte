@@ -40,7 +40,7 @@ const SFBInterfaceSpec FORTE_Wago1405_6::scmFBInterfaceSpec = {
 };
 
 FORTE_Wago1405_6::FORTE_Wago1405_6(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
-    WagoSlaveBase(36865, paContainer, &scmFBInterfaceSpec, paInstanceNameId),
+    WagoSlaveBase(36865, paContainer, scmFBInterfaceSpec, paInstanceNameId),
     var_conn_QO(var_QO),
     var_conn_STATUS(var_STATUS),
     conn_MAPO(this, 0),
