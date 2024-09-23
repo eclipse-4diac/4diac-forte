@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010 - 2014 ACIN, Profactor GmbH, fortiss GmbH
+ * Copyright (c) 2010 - 2024 ACIN, Profactor GmbH, fortiss GmbH, Jose Cabral
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -21,23 +21,10 @@
 DEFINE_HANDLER(CFDSelectHandler)
 CFDSelectHandler::CFDSelectHandler(CDeviceExecution& paDeviceExecution) : CExternalEventHandler(paDeviceExecution)  {
   mConnectionListChanged = false;
-#ifdef WIN32
-  // Windows Socket Startupcode
-  WORD wVersionRequested;
-  WSADATA wsaData;
-
-  /* Use the MAKEWORD(lowbyte, highbyte) macro declared in Windef.h */
-  wVersionRequested = MAKEWORD(2, 2);
-
-  WSAStartup(wVersionRequested, &wsaData);
-#endif
 }
 
 CFDSelectHandler::~CFDSelectHandler(){
   this->end();
-#ifdef WIN32
-  WSACleanup();
-#endif
 }
 
 // single-threaded-network-code

@@ -1,5 +1,5 @@
 #*******************************************************************************
-# Copyright (c) 2010 - 2018 ACIN
+# Copyright (c) 2010 - 2024 ACIN, Jose Cabral
 # This program and the accompanying materials are made available under the
 # terms of the Eclipse Public License 2.0 which is available at
 # http://www.eclipse.org/legal/epl-2.0.
@@ -30,7 +30,7 @@ add_subdirectory(zephyr)
 
 add_subdirectory(utils)
 
-forte_add_sourcefile_hcpp(timerha devlog)
+forte_add_sourcefile_hcpp(timerha devlog forte_architecture)
 
 SET(FORTE_LOGGER_BUFFER_SIZE "300" CACHE STRING "Buffer's length of the logger")
 mark_as_advanced(FORTE_LOGGER_BUFFER_SIZE)
@@ -64,6 +64,4 @@ if (FORTE_STACKTRACE)
     endif ()
 endif ()
 
-forte_add_sourcefile_with_path_cpp(${CMAKE_BINARY_DIR}/src_gen/startuphook.cpp) # created file
-
-
+forte_add_sourcefile_with_path_cpp(${CMAKE_BINARY_DIR}/src_gen/startuphook.cpp)

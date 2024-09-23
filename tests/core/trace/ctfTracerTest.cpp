@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2019 fotiss GmbH
+ * Copyright (c) 2024 Jose Cabral
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -16,6 +16,7 @@
 #include <babeltrace2/babeltrace.h>
 #include <boost/test/unit_test.hpp>
 
+#include "forte_boost_output_support.h"
 #include "../stdfblib/ita/EMB_RES.h"
 #include "config.h"
 #include "ctfTracerTest_gen.cpp"
@@ -77,8 +78,7 @@ BOOST_AUTO_TEST_CASE(sequential_events_test) {
     command.mFirstParam.pushBack(g_nStringIdCOLD);
     command.mSecondParam.pushBack(counterInstanceName);
     command.mSecondParam.pushBack(g_nStringIdCU);
-
-    BOOST_CHECK(EMGMResponse::Ready == resource.executeMGMCommand(command));
+    BOOST_TEST(EMGMResponse::Ready == resource.executeMGMCommand(command));
 
     BOOST_TEST_INFO("Event connection: Counter.CUO -> Switch.EI");
     command.mFirstParam.clear();
@@ -87,7 +87,7 @@ BOOST_AUTO_TEST_CASE(sequential_events_test) {
     command.mSecondParam.clear();
     command.mSecondParam.pushBack(switchInstanceName);
     command.mSecondParam.pushBack(g_nStringIdEI);
-    BOOST_CHECK(EMGMResponse::Ready == resource.executeMGMCommand(command));
+    BOOST_TEST(EMGMResponse::Ready == resource.executeMGMCommand(command));
 
     BOOST_TEST_INFO("Data connection: Counter.Q -> Switch.G ");
     command.mFirstParam.clear();
@@ -96,13 +96,13 @@ BOOST_AUTO_TEST_CASE(sequential_events_test) {
     command.mSecondParam.clear();
     command.mSecondParam.pushBack(switchInstanceName);
     command.mSecondParam.pushBack(g_nStringIdG);
-    BOOST_CHECK(EMGMResponse::Ready == resource.executeMGMCommand(command));
+    BOOST_TEST(EMGMResponse::Ready == resource.executeMGMCommand(command));
 
     BOOST_TEST_INFO(" Data constant value: Counter.PV = 1");
     command.mFirstParam.clear();
     command.mFirstParam.pushBack(counterInstanceName);
     command.mFirstParam.pushBack(g_nStringIdPV);
-    BOOST_CHECK(EMGMResponse::Ready == resource.writeValue(command.mFirstParam, "1", false));
+    BOOST_TEST(EMGMResponse::Ready == resource.writeValue(command.mFirstParam, "1", false));
 
     BOOST_TEST_INFO("Event connection: Switch.EO1 -> Counter.R ");
     command.mFirstParam.clear();
@@ -111,7 +111,7 @@ BOOST_AUTO_TEST_CASE(sequential_events_test) {
     command.mSecondParam.clear();
     command.mSecondParam.pushBack(counterInstanceName);
     command.mSecondParam.pushBack(g_nStringIdR);
-    BOOST_CHECK(EMGMResponse::Ready == resource.executeMGMCommand(command));
+    BOOST_TEST(EMGMResponse::Ready == resource.executeMGMCommand(command));
 
     device.startDevice();
     // wait for all events to be triggered
@@ -150,7 +150,7 @@ BOOST_AUTO_TEST_CASE(sequential_events_test) {
   auto ctfMessages = getEventMessages(CTF_OUTPUT_DIR);
 
   BOOST_TEST_INFO("Expected vs traced: Same size ");
-  BOOST_CHECK_EQUAL(ctfMessages.size(), expectedMessages.size());
+  BOOST_TEST(ctfMessages.size() == expectedMessages.size());
 
   // although vectors can be check directly, this granularity helps debugging in case some message is different
   for(size_t i = 0; i < expectedMessages.size(); i++ ){
@@ -160,7 +160,7 @@ BOOST_AUTO_TEST_CASE(sequential_events_test) {
 
   // add extra event to check that the comparison fails
   expectedMessages.emplace_back("sendOutputEvent", std::make_unique<FBEventPayload>("E_RESTART", "START", 2),0);
-  BOOST_CHECK(ctfMessages != expectedMessages);
+  BOOST_TEST(ctfMessages != expectedMessages);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

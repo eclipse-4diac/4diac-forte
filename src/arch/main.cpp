@@ -12,17 +12,13 @@
  *  Martin Melik Merkumians, Ingo Hegny, Filip Andren - initial API and implementation and/or initial documentation
  *  Tarik Terzimehic - make OPC UA server port setable from the command line
  *******************************************************************************/
-#include <fortenew.h>
+
 #include <stdio.h>
 #include <signal.h>
-#include "../startuphook.h"
-#include "forteinstance.h"
+#include "../core/forteinstance.h"
+#include "forte_architecture.h"
 
 #include "../utils/mainparam_utils.h"
-
-#ifdef FORTE_IO_PLCNEXT
-#include "../../modules/PLCnext/plcNextDeviceStatus.h"
-#endif
 
 /*!\brief Check if the correct endianess has been configured.
  *
@@ -34,44 +30,41 @@ void hookSignals();
 
 C4diacFORTEInstance g4diacForteInstance;
 
-//this keeps away a lot of rtti and exception handling stuff
-#ifndef __cpp_exceptions
-extern "C" void __cxa_pure_virtual(void){
-  //TODO maybe add some reporting here
-  //Although we should never get here
-  //if we are here something very very bad has happened e.g., stack overflow or other memory corruption
-
-}
-#endif
-
 void endForte(int ){
   g4diacForteInstance.triggerDeviceShutdown();
+}
+
+void callOnExit(){
+  CForteArchitecture::deinitialize();
 }
 
 int main(int argc, char *arg[]){
 
   checkEndianess();
 
-  startupHook(argc, arg);
+  if(auto result = CForteArchitecture::initialize(argc, arg); result != 0){
+     return result;
+  }
 
-#ifdef FORTE_IO_PLCNEXT
-  sleep(3);
-  DeviceStatus::startup();
-#endif
+  std::atexit(callOnExit);
 
   hookSignals();
 
-  const char *pIpPort = parseCommandLineArguments(argc, arg);
-  if((0 != strlen(pIpPort)) && (nullptr != strchr(pIpPort, ':'))) {
-    if(g4diacForteInstance.startupNewDevice(pIpPort)) {
-      DEVLOG_INFO("FORTE is up and running\n");
-      g4diacForteInstance.awaitDeviceShutdown();
-      DEVLOG_INFO("FORTE finished\n");
-    }
-  }
-  else{ //! Lists the help for FORTE
+  const char *ipPort = parseCommandLineArguments(argc, arg);
+  if((0 == strlen(ipPort)) || (nullptr == strchr(ipPort, ':'))) {
+    //! Lists the help for FORTE
     listHelp();
+    return -1;
   }
+
+  if(!g4diacForteInstance.startupNewDevice(ipPort)) {
+    DEVLOG_INFO("Could not start a new device\n");
+    return -1;
+  }
+
+  DEVLOG_INFO("FORTE is up and running\n");
+  g4diacForteInstance.awaitDeviceShutdown();
+  DEVLOG_INFO("FORTE finished\n");
 
   return 0;
 }
@@ -98,6 +91,7 @@ void checkEndianess(){
 void hookSignals() {
   signal(SIGINT, endForte);
   signal(SIGTERM, endForte);
+#ifndef WIN32
   signal(SIGHUP, endForte);
+#endif
 }
-

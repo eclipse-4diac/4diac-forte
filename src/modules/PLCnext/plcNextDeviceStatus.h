@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2022 Peirlberger Juergen
+ * Copyright (c) 2022, 2024 Peirlberger Juergen, Jose Cabral
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -40,7 +40,7 @@ class DeviceStatus {
     static volatile bool started;
     static volatile bool ready;
 
-    static bool startup();
+    static bool startup(int, char*);
     static bool isReady();
     static void plcCallbackOperationHandler(enum PlcOperation operation);
 
