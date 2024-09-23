@@ -23,3 +23,6 @@ forte_add_sourcefile_hcpp(DualHysteresis_fbt)
 forte_add_sourcefile_hcpp(FIELDBUS_WORD_TO_PERCENT_fct)
 forte_add_sourcefile_hcpp(FIELDBUS_PERCENT_TO_WORD_fct)
 forte_add_sourcefile_hcpp(FIELDBUS_SIGNAL_gcf)
+# forte_add_sourcefile_hcpp(SCALE_fct) // other PR
+# forte_add_sourcefile_hcpp(SCALE_LIM_fct) // other PR
+forte_add_sourcefile_hcpp(STEPPER_fbt)
