@@ -4,8 +4,8 @@ SET(FORTE_ARCHITECTURE "FreeRTOSLwIP")
 
 
 
-set(CMAKE_C_FLAGS     "${CMAKE_C_FLAGS} -ffunction-sections -fdata-sections -fno-threadsafe-statics -fno-rtti -fno-exceptions ")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ffunction-sections -fdata-sections -fno-threadsafe-statics -fno-rtti -fno-exceptions ")
+set(CMAKE_C_FLAGS     "${CMAKE_C_FLAGS} -ffunction-sections -fdata-sections -fno-threadsafe-statics -fno-rtti -fno-exceptions")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ffunction-sections -fdata-sections -fno-threadsafe-statics -fno-rtti -fno-exceptions")
 
 
 
