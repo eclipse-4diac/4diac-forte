@@ -1,5 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2018 Johannes Kepler University
+ * Copyright (c) 2018, 2024 Johannes Kepler University
+ *                          Martin Erich Jobst
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -9,6 +10,7 @@
  *
  * Contributors:
  *    Alois Zoitl - initial implementation and rework communication infrastructure
+ *    Martin Erich Jobst - add generic event accessor helpers
  *******************************************************************************/
 #ifndef _GENFB_H_
 #define _GENFB_H_
@@ -64,6 +66,66 @@ class CGenFunctionBlock : public T {
     ~CGenFunctionBlock() override;
 
     bool initialize();
+
+    template<typename ...Args>
+    void writeArguments(Args &&...paArgs) {
+      TPortId index = 0;
+      (writeArgument(index++, std::forward<Args>(paArgs)), ...);
+    }
+
+    template<typename Arg>
+    void writeArgument(TPortId paIndex, const Arg &paArg) {
+      const SFBInterfaceSpec &interfaceSpec = T::getFBInterfaceSpec();
+      if (paIndex < interfaceSpec.mNumDIs) {
+        T::getDIFromPortId(paIndex)->setValue(paArg);
+      } else if (paIndex < interfaceSpec.mNumDIs + interfaceSpec.mNumDIOs) {
+        T::getDIOFromPortId(paIndex - interfaceSpec.mNumDIs)->setValue(paArg);
+      } else if (paIndex < interfaceSpec.mNumDIs + interfaceSpec.mNumDIOs + interfaceSpec.mNumDOs) {
+        T::getDOFromPortId(paIndex - interfaceSpec.mNumDIs - interfaceSpec.mNumDIOs)->setValue(paArg);
+      }
+    }
+
+    template<typename ...Args>
+    void writeInputArguments(Args &&...paArgs) {
+      TPortId index = 0;
+      (writeInputArgument(index++, std::forward<Args>(paArgs)), ...);
+    }
+
+    template<typename Arg>
+    void writeInputArgument(TPortId paIndex, const Arg &paArg) {
+      const SFBInterfaceSpec &interfaceSpec = T::getFBInterfaceSpec();
+      if (paIndex < interfaceSpec.mNumDIs) {
+        T::getDIFromPortId(paIndex)->setValue(paArg);
+      } else if (paIndex < interfaceSpec.mNumDIs + interfaceSpec.mNumDIOs) {
+        T::getDIOFromPortId(paIndex - interfaceSpec.mNumDIs)->setValue(paArg);
+      } // skip DO
+    }
+
+    template<typename ...Args>
+    void readOutputArguments(Args &&...paArgs) {
+      TPortId index = 0;
+      (readOutputArgument(index++, std::forward<Args>(paArgs)), ...);
+    }
+
+    template<typename Arg>
+    void readOutputArgument(TPortId paIndex, Arg &&paArg) {
+      const SFBInterfaceSpec &interfaceSpec = T::getFBInterfaceSpec();
+      if (paIndex < interfaceSpec.mNumDIs) {
+        // do nothing
+      } else if (paIndex < interfaceSpec.mNumDIs + interfaceSpec.mNumDIOs) {
+        if constexpr (std::is_const_v<std::remove_reference_t<Arg>>) {
+          DEVLOG_ERROR("[CGenFunctionBlock] Trying to pass const argument to in/out variable\n");
+        } else {
+          paArg.setValue(T::getDIOFromPortId(paIndex - interfaceSpec.mNumDIs)->unwrap());
+        }
+      } else if (paIndex < interfaceSpec.mNumDIs + interfaceSpec.mNumDIOs + interfaceSpec.mNumDOs) {
+        if constexpr (std::is_const_v<std::remove_reference_t<Arg>>) {
+          DEVLOG_ERROR("[CGenFunctionBlock] Trying to pass const argument to output variable\n");
+        } else {
+          paArg.setValue(T::getDOFromPortId(paIndex - interfaceSpec.mNumDIs - interfaceSpec.mNumDIOs)->unwrap());
+        }
+      }
+    }
 
     static void generateGenericInterfacePointNameArray(const char * const paPrefix,
         CStringDictionary::TStringId* paNamesArayStart,

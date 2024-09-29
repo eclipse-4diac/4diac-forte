@@ -1,5 +1,5 @@
 #*******************************************************************************
-# Copyright (c) 2011, 2014 ACIN, fortiss GmbH
+# Copyright (c) 2011, 2014, 2024 ACIN, fortiss GmbH, Jose Cabral
 # This program and the accompanying materials are made available under the
 # terms of the Eclipse Public License 2.0 which is available at
 # http://www.eclipse.org/legal/epl-2.0.
@@ -59,6 +59,7 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "NetOs 7.4")
   endif(FORTE_FAKE_TIME)
   forte_add_sourcefile_cpp(../forte_architecture_time.cpp)
 
+  forte_add_sourcefile_cpp(../../common/forte_specific_architecture.cpp)
   forte_add_sourcefile_hcpp(../forte_thread ../forte_sync ../forte_sem)
   forte_add_sourcefile_cpp(appconf_api.c ../root.cpp ../../genforte_printer.cpp)
   forte_add_sourcefile_h(../../forte_architecture_time.h)

@@ -1,5 +1,5 @@
 #*******************************************************************************
-# * Copyright (c) 2022 Peirlberger Juergen
+# * Copyright (c) 2022, 2024 Peirlberger Juergen, Jose Cabral
 # * This program and the accompanying materials are made available under the
 # * terms of the Eclipse Public License 2.0 which is available at
 # * http://www.eclipse.org/legal/epl-2.0.
@@ -43,6 +43,8 @@ forte_add_link_library_beginning(Arp.System.Module)
 forte_add_link_library_beginning(Arp.Plc.AnsiC)
 
 forte_add_link_flags("-Wno-undef")
+
+forte_add_startup_hook(DeviceStatus::startup)
 
 else("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
   MESSAGE(FATAL_ERROR "PLCnext IO system is only supported for FORTE on Linux (Posix) platforms!")

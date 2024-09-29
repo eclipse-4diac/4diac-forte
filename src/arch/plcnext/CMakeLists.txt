@@ -1,5 +1,5 @@
 #*******************************************************************************
-# Copyright (c) 2018 Johannes Kepler University  
+# Copyright (c) 2018, 2024 Johannes Kepler University, Jose Cabral  
 # This program and the accompanying materials are made available under the
 # terms of the Eclipse Public License 2.0 which is available at
 # http://www.eclipse.org/legal/epl-2.0.
@@ -25,6 +25,7 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "PLCnext")
   endif(FORTE_FAKE_TIME)
   forte_add_sourcefile_cpp(../posix/forte_architecture_time.cpp ../forte_standard_time.cpp)
 
+  forte_add_sourcefile_cpp(../common/forte_specific_architecture.cpp)
   forte_add_sourcefile_hcpp(../posix/forte_thread ../posix/forte_sync ../posix/forte_sem)
   forte_add_sourcefile_cpp(../genforte_printer.cpp)
   forte_add_sourcefile_cpp(../genforte_fileio.cpp)

@@ -1,5 +1,5 @@
 #*******************************************************************************
-# Copyright (c) 2010 - 2015 ACIN, Profactor GmbH, fortiss GmbH
+# Copyright (c) 2010 - 2024 ACIN, Profactor GmbH, fortiss GmbH, Jose Cabral
 # This program and the accompanying materials are made available under the
 # terms of the Eclipse Public License 2.0 which is available at
 # http://www.eclipse.org/legal/epl-2.0.
@@ -28,12 +28,11 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "Win32")
   else()
     forte_add_sourcefile_cpp(forte_sync.cpp)
   endif()
-  forte_add_sourcefile_cpp(forte_architecture.cpp winforte_printer.cpp forte_architecture_time.cpp ../forte_standard_time.cpp)
+  forte_add_sourcefile_cpp(forte_specific_architecture.cpp winforte_printer.cpp forte_architecture_time.cpp ../forte_standard_time.cpp)
   forte_add_sourcefile_cpp(../genforte_fileio.cpp)
   forte_add_sourcefile_cpp(../genforte_realFunctions.cpp)
   
-  forte_add_sourcefile_hcpp(forte_instance)
-  forte_add_to_executable_cpp(main)
+  forte_add_to_executable_cpp(../main)
 
   if(FORTE_BUILD_SHARED_LIBRARY)
     set(FORTE_EXTERNAL_TIMEHA OFF CACHE BOOL "Use External Time Handler")
@@ -71,7 +70,7 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "Win32")
   
   if(MINGW)
     #force MINGW to statically link libc and lib stdc++ so that no mingw dlls are needed for forte.exe
-    forte_add_link_flags("-static-libgcc -static-libstdc++")
+    forte_add_link_flags("-static-libgcc" "-static-libstdc++")
     forte_add_definition("-W -Wall -Wextra -Woverloaded-virtual -Wconversion -Wshadow")
   elseif(MSVC)
     forte_add_definition("-wd4595")  #warning 4595: 'operator delete/delete[]': non-member operator new or delete functions may not be declared inline

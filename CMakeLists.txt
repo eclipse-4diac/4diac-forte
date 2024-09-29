@@ -2,6 +2,7 @@
 # Copyright (c) 2010 - 2015 Profactor GmbH, AIT, fortiss GmbH
 #               2010-2015, 2020 TU Wien/ACIN
 #               2022 Martin Erich Jobst
+#               2024 Jose Cabral
 #
 # This program and the accompanying materials are made available under the
 # terms of the Eclipse Public License 2.0 which is available at
@@ -61,6 +62,9 @@ mark_as_advanced(FORTE_BUILD_STATIC_LIBRARY)
 
 set(FORTE_BUILD_SHARED_LIBRARY OFF CACHE BOOL "Build FORTE as shared library")
 mark_as_advanced(FORTE_BUILD_SHARED_LIBRARY)
+
+SET(FORTE_C_INTERFACE OFF CACHE BOOL "Build C interface to Forte")
+mark_as_advanced(FORTE_C_INTERFACE)
 
 #######################################################################################
 # Determine the loglevel
