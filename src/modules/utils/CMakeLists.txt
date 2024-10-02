@@ -1,5 +1,5 @@
 #*******************************************************************************
-# Copyright (c) 2011 - 2018 AIT, ACIN, Profactor GmbH, fortiss GmbH
+# Copyright (c) 2011 - 2018, 2024 AIT, ACIN, Profactor GmbH, fortiss GmbH
 # This program and the accompanying materials are made available under the
 # terms of the Eclipse Public License 2.0 which is available at
 # http://www.eclipse.org/legal/epl-2.0.
@@ -23,4 +23,4 @@ forte_add_sourcefile_hcpp(FB_RANDOM_fbt GET_STRUCT_VALUE_fbt SET_STRUCT_VALUE_fb
 
 forte_add_sourcefile_hcpp(STEST_END_fbt)
 forte_add_sourcefile_hcpp(TEST_CONDITION_fbt)
-forte_add_subdirectory(Selection)
+forte_add_subdirectory(selection)
