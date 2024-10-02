@@ -16,3 +16,4 @@ forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 forte_add_sourcefile_hcpp(F_NOW_fct)
 forte_add_sourcefile_hcpp(F_NOW_MONOTONIC_fct)
+forte_add_sourcefile_hcpp(E_STOPWATCH_fbt)
