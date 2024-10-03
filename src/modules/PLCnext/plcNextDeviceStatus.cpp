@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2022 Peirlberger Juergen
+ * Copyright (c) 2022, 2024 Peirlberger Juergen, Jose Cabral
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -23,6 +23,8 @@
 #include <devlog.h>
 #include "plcNextDeviceStatus.h"
 
+#include <unistd.h>
+
 using namespace Arp;
 using namespace Arp::System::Rsc;
 using namespace Arp::Device::Interface::Services;
@@ -35,7 +37,10 @@ bool DeviceStatus::isReady() {
     return DeviceStatus::started && DeviceStatus::ready;
 }
 
-bool DeviceStatus::startup() {
+bool DeviceStatus::startup(int, char*) {
+
+    // this sleep came from the main. Check again if it's actually needed
+    sleep(3);
 
     // register callback function to get information when plc is ready
     ArpPlcDomain_SetHandler(DeviceStatus::plcCallbackOperationHandler);

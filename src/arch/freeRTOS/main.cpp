@@ -1,5 +1,5 @@
 /************************************************************************************
- * Copyright (c) 2016 fortiss GmbH
+ * Copyright (c) 2016, 2024 fortiss GmbH, Jose Cabral
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -13,31 +13,38 @@
 #include "FreeRTOS.h"
 #include "task.h"
 
-#include "../forte_architecture.h"
-#include "../devlog.h"
-#include "forteinstance.h"
+#include "../c_interface/forte_c.h"
 
-const static unsigned mainFORTE_TASK_PRIORITY = tskIDLE_PRIORITY + 1;
-
-void vForteTask(void* ) {
-  C4diacFORTEInstance instance;
-
-  if(instance.startupNewDevice (pIpPort)) {
-    DEVLOG_INFO("FORTE is up and running\n");
-    instance.awaitDeviceShutdown();
-    DEVLOG_INFO("FORTE finished\n");
-  }
-  vTaskDelete(nullptr);
+namespace {
+  const unsigned forteTaskPriority = tskIDLE_PRIORITY + 1;
+  const unsigned int desiredFortePort = 61499;
+  const configSTACK_DEPTH_TYPE stackDepth = 2000;
 }
 
-void vStartForteServerTask(UBaseType_t uxPriority) {
-  /* Spawn the task. */
-  xTaskCreate(vForteTask, "forte", 2000, nullptr, uxPriority, nullptr);
+
+void vForteTask(void* ) {
+  TForteInstance forteInstance;
+
+  if(auto result = CForteArchitecture::initialize(0, NULL); result != 0){
+    vTaskDelete(nullptr);
+  }
+
+  if(auto result = forteStartInstance(desiredFortePort, &forteInstance); result != FORTE_OK){
+    vTaskDelete(nullptr);
+  }
+
+  forteWaitForInstanceToStop(forteInstance);
+
+  vTaskDelete(nullptr);
 }
 
 int main() {
 
-  vStartForteServerTask(mainFORTE_TASK_PRIORITY);
+  if(auto result = forteGlobalInitialize(0, nullptr); result != FORTE_OK){
+    return result;
+  }
+
+  xTaskCreate(vForteTask, "forte", stackDepth, nullptr, forteTaskPriority, nullptr);
 
   vTaskStartScheduler();
 

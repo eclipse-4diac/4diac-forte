@@ -1,5 +1,5 @@
 #/************************************************************************************
-# Copyright (c) 2016, 2023 fortiss GmbH, HR Agrartechnik GmbH
+# Copyright (c) 2016, 2024 fortiss GmbH, HR Agrartechnik GmbH, Jose Cabral
 #
 # This program and the accompanying materials are made available under the
 # terms of the Eclipse Public License 2.0 which is available at
@@ -63,7 +63,7 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "FreeRTOSLwIP")
   SET(FORTE_FreeRTOSLwIP_LIB_DIR "" CACHE PATH "Only for executable: ABSOLUTE path to FreeRTOSLwIP folder with object library FORTE_FreeRTOSLwIP_LIB")
   SET(FORTE_FreeRTOSLwIP_LIB "" CACHE STRING "Only for executable: FreeRTOSLwIP Library file in FORTE_FreeRTOSLwIP_DIR to be linked to forte")
 
-  forte_add_sourcefile_hcpp(forte_thread forte_sync forte_sem forte_Init)
+  forte_add_sourcefile_hcpp(forte_thread forte_sync forte_sem)
 
   if(FORTE_FAKE_TIME)
     forte_set_timer(../fake_time/faketimerha)
@@ -72,7 +72,8 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "FreeRTOSLwIP")
   endif(FORTE_FAKE_TIME)
   forte_add_sourcefile_cpp(./forte_architecture_time.cpp)
 
-  forte_add_sourcefile_cpp(forte_architecture.cpp ../genforte_printer.cpp)
+  forte_add_sourcefile_cpp(../common/forte_specific_architecture.cpp)
+  forte_add_sourcefile_cpp(../genforte_printer.cpp)
   forte_add_sourcefile_cpp(../genforte_fileio.cpp)
   forte_add_sourcefile_cpp(../genforte_realFunctions.cpp)
 

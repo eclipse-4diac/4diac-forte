@@ -1,5 +1,5 @@
 #*******************************************************************************
-# Copyright (c) 2018, 2021 SYSGO GmbH
+# Copyright (c) 2018, 2021, 2024 SYSGO GmbH, Jose Cabral
 # This program and the accompanying materials are made available under the
 # terms of the Eclipse Public License 2.0 which is available at
 # http://www.eclipse.org/legal/epl-2.0.
@@ -40,10 +40,10 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "PikeOS_Posix")
   
    forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
    forte_add_sourcefile_hcpp(../posix/forte_sync ../utils/timespec_utils)
-   forte_add_sourcefile_cpp(main.cpp forte_thread.cpp pctimeha.cpp forte_sem.cpp forte_architecture_time.cpp
+   forte_add_sourcefile_cpp(forte_thread.cpp pctimeha.cpp forte_sem.cpp forte_architecture_time.cpp
                             ../genforte_printer.cpp ../genforte_realFunctions.cpp)
    forte_add_sourcefile_h(../forte_architecture_time.h forte_thread.h pctimeha.h)
-  
+   forte_add_sourcefile_cpp(./forte_specific_architecture.cpp)
 
    if(FORTE_COM_ETH)
       forte_add_handler(CFDSelectHandler sockhand)
@@ -92,7 +92,7 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "PikeOS_Posix")
    mark_as_advanced(FORTE_RTTI_AND_EXCEPTIONS)
   
    if("$ENV{POSIX_DEBUG}" STREQUAL "true")
-      forte_add_definition("-DBOOST_TEST_DYN_LINK -g -O0 --coverage -fno-inline -fno-elide-constructors -fexceptions -fsanitize=address")
+      forte_add_definition("-g -O0 --coverage -fno-inline -fno-elide-constructors -fexceptions -fsanitize=address")
       forte_add_link_library("-fsanitize=address")
       forte_add_link_library("--coverage")
    else()

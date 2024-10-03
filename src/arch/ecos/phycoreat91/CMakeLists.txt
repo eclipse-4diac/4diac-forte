@@ -1,5 +1,5 @@
 #*******************************************************************************
-# Copyright (c) 2010 -2105 ACIN, fortiss GmbH
+# Copyright (c) 2010 - 2024 ACIN, fortiss GmbH, Jose Cabral
 # This program and the accompanying materials are made available under the
 # terms of the Eclipse Public License 2.0 which is available at
 # http://www.eclipse.org/legal/epl-2.0.
@@ -25,7 +25,7 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "Phycore AT91")
   else(FORTE_FAKE_TIME)
     forte_add_sourcefile_hcpp(../ecostiha)
   endif(FORTE_FAKE_TIME)
-  forte_add_sourcefile_cpp(../../posix/forte_architecture_time.cpp ../../forte_standard_time.cpp)
+  forte_add_sourcefile_cpp(../ecoscppinit.cpp ../../posix/forte_architecture_time.cpp ../../forte_standard_time.cpp ../../common/forte_specific_architecture.cpp)
 
   forte_add_sourcefile_cpp(../../genforte_printer.cpp)
   forte_add_sourcefile_h(../../forte_architecture_time.h)

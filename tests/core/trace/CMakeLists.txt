@@ -1,5 +1,5 @@
 #*******************************************************************************
-# Copyright (c) 2024
+# Copyright (c) 2024 Jose Cabral
 # This program and the accompanying materials are made available under the
 # terms of the Eclipse Public License 2.0 which is available at
 # http://www.eclipse.org/legal/epl-2.0.
@@ -24,7 +24,7 @@ if(FORTE_TRACE_CTF_TEST)
   forte_test_add_sourcefile_cpp(TraceReaderSink.cpp)
   forte_test_add_sourcefile_cpp(EventMessage.cpp)
 
-  forte_add_link_library(babeltrace2)
+  forte_test_add_link_library(babeltrace2)
 
   SET(CTF_OUTPUT_DIR ${CMAKE_BINARY_DIR}/ctfOutput)
   SET(METADATA_FILE ${CMAKE_BINARY_DIR}/src/core/trace/metadata)
