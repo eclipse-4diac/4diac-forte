@@ -20,6 +20,7 @@
 #include "forte_any.h"
 
 #include <string>
+#include <vector>
 
 class CIEC_STRUCT;
 
