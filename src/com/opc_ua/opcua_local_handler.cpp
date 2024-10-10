@@ -170,7 +170,11 @@ void COPC_UA_Local_Handler::configureUAServer(UA_ServerStrings &paServerStrings,
   UA_String serverUrls[1];
   size_t serverUrlsSize = 0;
   char serverUrlBuffer[512];
+#ifdef FORTE_COM_OPC_UA_CUSTOM_HOSTNAME
+  snprintf(serverUrlBuffer, sizeof(serverUrlBuffer), "opc.tcp://%s:%u", FORTE_COM_OPC_UA_CUSTOM_HOSTNAME, paServerPort);
+#else
   snprintf(serverUrlBuffer, sizeof(serverUrlBuffer), "opc.tcp://:%u", paServerPort);
+#endif
   serverUrls[serverUrlsSize] = UA_STRING(serverUrlBuffer);
   serverUrlsSize++;
   UA_StatusCode retVal = UA_Array_copy(serverUrls, serverUrlsSize, (void**)&paUaServerConfig.serverUrls, &UA_TYPES[UA_TYPES_STRING]);
@@ -178,10 +182,6 @@ void COPC_UA_Local_Handler::configureUAServer(UA_ServerStrings &paServerStrings,
     return;
   }
   paUaServerConfig.serverUrlsSize = serverUrlsSize;
-
-#ifdef FORTE_COM_OPC_UA_CUSTOM_HOSTNAME
-  
-#endif
 
   // delete pre-initialized values
   UA_LocalizedText_clear(&paUaServerConfig.applicationDescription.applicationName);
