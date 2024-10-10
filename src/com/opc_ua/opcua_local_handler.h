@@ -701,7 +701,11 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
     /**
      * List of LDS servers where this instance is already registered.
      */
-    CSinglyLinkedList<UA_String*> mRegisteredWithLds;
+    typedef struct {
+      UA_String *discoveryUrl;
+      UA_Client *client;
+    } ClientWithLds;
+    CSinglyLinkedList<ClientWithLds*> mRegisteredWithLds;
 
     const UA_String* getDiscoveryUrl() const;
     void registerWithLds(const UA_String *paDiscoveryUrl);

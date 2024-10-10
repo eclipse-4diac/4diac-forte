@@ -59,9 +59,13 @@ COPC_UA_Local_Handler::~COPC_UA_Local_Handler() {
   mNodesReferences.clear();
 
 #ifdef FORTE_COM_OPC_UA_MULTICAST
-  for(CSinglyLinkedList<UA_String*>::Iterator iter = mRegisteredWithLds.begin(); iter != mRegisteredWithLds.end(); ++iter) {
-    UA_String_delete(*iter);
+  for(CSinglyLinkedList<ClientWithLds*>::Iterator iter = mRegisteredWithLds.begin(); iter != mRegisteredWithLds.end(); ++iter) {
+    UA_Client_disconnect((*iter)->client);
+    UA_Client_delete((*iter)->client);
+    UA_String_delete((*iter)->discoveryUrl);
+    mRegisteredWithLds.erase(*iter);
   }
+  mRegisteredWithLds.clearAll();
 #endif //FORTE_COM_OPC_UA_MULTICAST
 }
 
@@ -86,11 +90,10 @@ void COPC_UA_Local_Handler::run() {
     configureUAServer(serverStrings, *uaServerConfig);
 
     if(initializeNodesets(*mUaServer)) {
+      UA_StatusCode retVal = UA_Server_run_startup(mUaServer);
 #ifdef FORTE_COM_OPC_UA_MULTICAST
       UA_Server_setServerOnNetworkCallback(mUaServer, serverOnNetworkCallback, this);
 #endif //FORTE_COM_OPC_UA_MULTICAST
-
-      UA_StatusCode retVal = UA_Server_run_startup(mUaServer);
       if(UA_STATUSCODE_GOOD == retVal) {
         mServerStarted.inc();
         while(isAlive()) {
@@ -164,6 +167,16 @@ void COPC_UA_Local_Handler::configureUAServer(UA_ServerStrings &paServerStrings,
   // hostname will be added by mdns library
   UA_String_clear(&paUaServerConfig.mdnsConfig.mdnsServerName);
   paUaServerConfig.mdnsConfig.mdnsServerName = UA_String_fromChars(paServerStrings.mMdnsServerName.c_str());
+  // Enable the mDNS announce and response functionality
+  paUaServerConfig.mdnsEnabled = true;
+
+  if (gOpcuaServerPort == 4840) { //only server on port 4840 announce "LDS" message
+    paUaServerConfig.mdnsConfig.serverCapabilitiesSize = 2;
+    UA_String *caps = (UA_String *) UA_Array_new(2, &UA_TYPES[UA_TYPES_STRING]);
+    caps[0] = UA_String_fromChars("LDS");
+    caps[1] = UA_String_fromChars("NA");
+    paUaServerConfig.mdnsConfig.serverCapabilities = caps;
+  }
 #endif //FORTE_COM_OPC_UA_MULTICAST
 
   UA_String_clear(&paUaServerConfig.customHostname);
@@ -312,35 +325,44 @@ void COPC_UA_Local_Handler::serverOnNetworkCallback(const UA_ServerOnNetwork *pa
 
 void COPC_UA_Local_Handler::registerWithLds(const UA_String *paDiscoveryUrl) {
   // check if already registered with the given LDS
-  for(CSinglyLinkedList<UA_String*>::Iterator iter = mRegisteredWithLds.begin(); iter != mRegisteredWithLds.end(); ++iter) {
-    if(UA_String_equal(paDiscoveryUrl, *iter)) {
+  for(CSinglyLinkedList<ClientWithLds*>::Iterator iter = mRegisteredWithLds.begin(); iter != mRegisteredWithLds.end(); ++iter) {
+    if(UA_String_equal(paDiscoveryUrl, (*iter)->discoveryUrl)) {
       return;
     }
   }
 
   // will be freed when removed from list
-  UA_String *discoveryUrlChar = 0;
+  UA_String *discoveryUrlChar = new UA_String();
   UA_String_copy(paDiscoveryUrl, discoveryUrlChar);
 
-  mRegisteredWithLds.pushFront(discoveryUrlChar);
-  DEVLOG_INFO("[OPC UA LOCAL]: Registering with LDS '%.*s'\n", paDiscoveryUrl->length, paDiscoveryUrl->data);
-  UA_StatusCode retVal = UA_Server_addPeriodicServerRegisterCallback(mUaServer, 0, reinterpret_cast<const char*>(discoveryUrlChar->data), 10 * 60 * 1000, 500, 0);
+  UA_Client *client = UA_Client_new();
+  UA_ClientConfig_setDefault(UA_Client_getConfig(client));
+
+  UA_StatusCode retVal = UA_Server_addPeriodicServerRegisterCallback(mUaServer, client, reinterpret_cast<const char*>(discoveryUrlChar->data), 10 * 60 * 1000, 500, nullptr);
   if( UA_STATUSCODE_GOOD != retVal) {
     DEVLOG_ERROR("[OPC UA LOCAL]: Could not register with LDS. Error: %s\n", UA_StatusCode_name(retVal));
+    UA_Client_disconnect(client);
+    UA_Client_delete(client);
+    UA_String_delete(discoveryUrlChar);
+    return;
   }
+  ClientWithLds *sClientWithLds = new ClientWithLds();
+  sClientWithLds->discoveryUrl = discoveryUrlChar;
+  sClientWithLds->client = client;
+  mRegisteredWithLds.pushFront(sClientWithLds);
+  DEVLOG_INFO("[OPC UA LOCAL]: Registered to LDS '%.*s'\n", paDiscoveryUrl->length, paDiscoveryUrl->data);
 }
 
 void COPC_UA_Local_Handler::removeLdsRegister(const UA_String *paDiscoveryUrl) {
-  UA_String *toDelete = 0;
-  for(CSinglyLinkedList<UA_String*>::Iterator iter = mRegisteredWithLds.begin(); iter != mRegisteredWithLds.end(); ++iter) {
-    if(UA_String_equal(paDiscoveryUrl, *iter)) {
-      toDelete = *iter;
+  for(CSinglyLinkedList<ClientWithLds*>::Iterator iter = mRegisteredWithLds.begin(); iter != mRegisteredWithLds.end(); ++iter) {
+    if(UA_String_equal(paDiscoveryUrl, (*iter)->discoveryUrl)) {
+      DEVLOG_INFO("[OPC UA LOCAL]: Unregistered from LDS '%.*s'\n", (*iter)->discoveryUrl->length, (*iter)->discoveryUrl->data);
+      UA_Client_disconnect((*iter)->client);
+      UA_Client_delete((*iter)->client);
+      UA_String_delete((*iter)->discoveryUrl);
+      mRegisteredWithLds.erase(*iter);
       break;
     }
-  }
-  if(toDelete) {
-    mRegisteredWithLds.erase(toDelete);
-    UA_String_delete(toDelete);
   }
 }
 
