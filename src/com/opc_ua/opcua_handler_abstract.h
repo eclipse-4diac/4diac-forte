@@ -78,10 +78,10 @@ class COPC_UA_HandlerAbstract : public CExternalEventHandler {
 
   private:
 
-    static void UA_Log_Forte_clear(void *paLogContext);
     static const UA_Logger UA_Forte_logger;
 
     static void UA_Log_Forte(void*, UA_LogLevel paLevel, UA_LogCategory paCategory, const char *paMsg, va_list paArgs);
+    static void UA_Log_Forte_clear(UA_Logger *paLogger);
 
     /**
      * Maximum size of the logging buffer

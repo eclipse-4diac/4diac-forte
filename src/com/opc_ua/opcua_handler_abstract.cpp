@@ -91,7 +91,7 @@ void COPC_UA_HandlerAbstract::UA_Log_Forte( //We omit SONAR only for the paramet
 }
 
 void COPC_UA_HandlerAbstract::UA_Log_Forte_clear( //We omit SONAR only for the parameters
-    void* //NOSONAR
+    UA_Logger* //NOSONAR
     ) {
   //do nothing
 }

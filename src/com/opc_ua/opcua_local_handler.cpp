@@ -156,8 +156,8 @@ void COPC_UA_Local_Handler::generateServerStrings(TForteUInt16 paUAServerPort, U
 }
 
 void COPC_UA_Local_Handler::configureUAServer(UA_ServerStrings &paServerStrings, UA_ServerConfig &paUaServerConfig) const {
-
-  paUaServerConfig.logger = COPC_UA_HandlerAbstract::getLogger();
+  UA_Logger logger = COPC_UA_HandlerAbstract::getLogger();
+  paUaServerConfig.logging = &logger;
 
 #ifdef FORTE_COM_OPC_UA_MULTICAST
   paUaServerConfig.applicationDescription.applicationType = UA_APPLICATIONTYPE_DISCOVERYSERVER;
@@ -166,10 +166,8 @@ void COPC_UA_Local_Handler::configureUAServer(UA_ServerStrings &paServerStrings,
   paUaServerConfig.mdnsConfig.mdnsServerName = UA_String_fromChars(paServerStrings.mMdnsServerName.c_str());
 #endif //FORTE_COM_OPC_UA_MULTICAST
 
-  UA_String_clear(&paUaServerConfig.customHostname);
 #ifdef FORTE_COM_OPC_UA_CUSTOM_HOSTNAME
-  UA_String customHost = UA_String_fromChars(paServerStrings.mHostname.c_str());
-  UA_String_copy(&customHost, &paUaServerConfig.customHostname);
+  
 #endif
 
   // delete pre-initialized values
