@@ -79,11 +79,10 @@ void COPC_UA_Local_Handler::run() {
   mUaServer = UA_Server_new();
   if(mUaServer) {
     UA_ServerConfig *uaServerConfig = UA_Server_getConfig(mUaServer);
-    UA_ServerConfig_setMinimal(uaServerConfig, gOpcuaServerPort, nullptr);
 
     UA_ServerStrings serverStrings;
     generateServerStrings(gOpcuaServerPort, serverStrings);
-    configureUAServer(serverStrings, *uaServerConfig);
+    configureUAServer(serverStrings, *uaServerConfig, gOpcuaServerPort);
 
     if(initializeNodesets(*mUaServer)) {
 #ifdef FORTE_COM_OPC_UA_MULTICAST
@@ -155,16 +154,30 @@ void COPC_UA_Local_Handler::generateServerStrings(TForteUInt16 paUAServerPort, U
 
 }
 
-void COPC_UA_Local_Handler::configureUAServer(UA_ServerStrings &paServerStrings, UA_ServerConfig &paUaServerConfig) const {
-  UA_Logger logger = COPC_UA_HandlerAbstract::getLogger();
-  paUaServerConfig.logging = &logger;
-
+void COPC_UA_Local_Handler::configureUAServer(UA_ServerStrings &paServerStrings, UA_ServerConfig &paUaServerConfig, UA_UInt16 paServerPort) const {
+  configureUAServerLogger(paUaServerConfig);
 #ifdef FORTE_COM_OPC_UA_MULTICAST
   paUaServerConfig.applicationDescription.applicationType = UA_APPLICATIONTYPE_DISCOVERYSERVER;
   // hostname will be added by mdns library
   UA_String_clear(&paUaServerConfig.mdnsConfig.mdnsServerName);
   paUaServerConfig.mdnsConfig.mdnsServerName = UA_String_fromChars(paServerStrings.mMdnsServerName.c_str());
 #endif //FORTE_COM_OPC_UA_MULTICAST
+
+  UA_Array_delete(paUaServerConfig.serverUrls, paUaServerConfig.serverUrlsSize, &UA_TYPES[UA_TYPES_STRING]);
+  paUaServerConfig.serverUrls = nullptr;
+  paUaServerConfig.serverUrlsSize = 0;
+
+  UA_String serverUrls[1];
+  size_t serverUrlsSize = 0;
+  char serverUrlBuffer[512];
+  snprintf(serverUrlBuffer, sizeof(serverUrlBuffer), "opc.tcp://:%u", paServerPort);
+  serverUrls[serverUrlsSize] = UA_STRING(serverUrlBuffer);
+  serverUrlsSize++;
+  UA_StatusCode retVal = UA_Array_copy(serverUrls, serverUrlsSize, (void**)&paUaServerConfig.serverUrls, &UA_TYPES[UA_TYPES_STRING]);
+  if(retVal != UA_STATUSCODE_GOOD) {
+    return;
+  }
+  paUaServerConfig.serverUrlsSize = serverUrlsSize;
 
 #ifdef FORTE_COM_OPC_UA_CUSTOM_HOSTNAME
   
@@ -186,6 +199,14 @@ void COPC_UA_Local_Handler::configureUAServer(UA_ServerStrings &paServerStrings,
     UA_String_copy(&paUaServerConfig.applicationDescription.applicationUri, &paUaServerConfig.endpoints[i].server.applicationUri);
     UA_LocalizedText_copy(&paUaServerConfig.applicationDescription.applicationName, &paUaServerConfig.endpoints[i].server.applicationName);
   }
+}
+
+void COPC_UA_Local_Handler::configureUAServerLogger(UA_ServerConfig &paUaServerConfig) const {
+  UA_free(paUaServerConfig.logging);
+  paUaServerConfig.logging = &COPC_UA_HandlerAbstract::getLogger();
+  paUaServerConfig.sessionPKI.logging = &COPC_UA_HandlerAbstract::getLogger();
+  paUaServerConfig.secureChannelPKI.logging = &COPC_UA_HandlerAbstract::getLogger();
+  paUaServerConfig.eventLoop->logger = &COPC_UA_HandlerAbstract::getLogger();
 }
 
 void COPC_UA_Local_Handler::referencedNodesIncrement(const CSinglyLinkedList<UA_NodeId*> &paNodes, CActionInfo &paActionInfo) {

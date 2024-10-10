@@ -37,8 +37,7 @@ bool CUA_ClientInformation::configureClient() {
 
   if(configureClientFromFile(*configPointer)) {
     configPointer->stateCallback = CUA_RemoteCallbackFunctions::clientStateChangeCallback;
-    UA_Logger logger = COPC_UA_HandlerAbstract::getLogger();
-    configPointer->logging = &logger;
+    configPointer->logging = &COPC_UA_HandlerAbstract::getLogger();
     configPointer->timeout = scmClientTimeoutInMilli;
   } else {
     UA_Client_delete(mClient);

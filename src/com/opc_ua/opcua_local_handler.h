@@ -159,8 +159,14 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
      *  Creates the configuration for the OPC UA Server.
      * @param paServerStrings Strings needed to configure the server
      * @param paUaServerConfig Place to store all the configurations
+     * @param paServerPort Port to the server
      */
-    void configureUAServer(UA_ServerStrings &paServerStrings, UA_ServerConfig &paUaServerConfig) const;
+    void configureUAServer(UA_ServerStrings &paServerStrings, UA_ServerConfig &paUaServerConfig, UA_UInt16 paServerPort) const;
+    /**
+     * Assigns the UA_Forte_Logger to the OPC UA Server.
+     * @param paUaServerConfig Place to store all the configurations
+     */
+    void configureUAServerLogger(UA_ServerConfig &paUaServerConfig) const;
 
     /**
      * Handler of the OPC UA stack server
