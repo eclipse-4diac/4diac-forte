@@ -79,6 +79,12 @@ void COPC_UA_Local_Handler::run() {
   mUaServer = UA_Server_new();
   if(mUaServer) {
     UA_ServerConfig *uaServerConfig = UA_Server_getConfig(mUaServer);
+    /* The original logger is needed to avoid memory leak on shutdown.
+     * It is reassigned before the server shutdown so that freeing the memory
+     * works properly.
+     */
+    UA_Logger uaLogger = *uaServerConfig->logging;
+    *uaServerConfig->logging = COPC_UA_HandlerAbstract::getLogger();
 
     UA_ServerStrings serverStrings;
     generateServerStrings(gOpcuaServerPort, serverStrings);
@@ -116,6 +122,8 @@ void COPC_UA_Local_Handler::run() {
     } else {
       DEVLOG_ERROR("[OPC UA LOCAL]: Couldn't initialize Nodesets\n", gOpcuaServerPort);
     }
+    /* Reassign original logger to avoid memory leak. */
+    *uaServerConfig->logging = uaLogger;
     UA_Server_delete(mUaServer);
     mUaServer = nullptr;
   }
@@ -155,7 +163,6 @@ void COPC_UA_Local_Handler::generateServerStrings(TForteUInt16 paUAServerPort, U
 }
 
 void COPC_UA_Local_Handler::configureUAServer(UA_ServerStrings &paServerStrings, UA_ServerConfig &paUaServerConfig, UA_UInt16 paServerPort) const {
-  configureUAServerLogger(paUaServerConfig);
 #ifdef FORTE_COM_OPC_UA_MULTICAST
   paUaServerConfig.applicationDescription.applicationType = UA_APPLICATIONTYPE_DISCOVERYSERVER;
   // hostname will be added by mdns library
@@ -199,14 +206,6 @@ void COPC_UA_Local_Handler::configureUAServer(UA_ServerStrings &paServerStrings,
     UA_String_copy(&paUaServerConfig.applicationDescription.applicationUri, &paUaServerConfig.endpoints[i].server.applicationUri);
     UA_LocalizedText_copy(&paUaServerConfig.applicationDescription.applicationName, &paUaServerConfig.endpoints[i].server.applicationName);
   }
-}
-
-void COPC_UA_Local_Handler::configureUAServerLogger(UA_ServerConfig &paUaServerConfig) const {
-  UA_free(paUaServerConfig.logging);
-  paUaServerConfig.logging = &COPC_UA_HandlerAbstract::getLogger();
-  paUaServerConfig.sessionPKI.logging = &COPC_UA_HandlerAbstract::getLogger();
-  paUaServerConfig.secureChannelPKI.logging = &COPC_UA_HandlerAbstract::getLogger();
-  paUaServerConfig.eventLoop->logger = &COPC_UA_HandlerAbstract::getLogger();
 }
 
 void COPC_UA_Local_Handler::referencedNodesIncrement(const CSinglyLinkedList<UA_NodeId*> &paNodes, CActionInfo &paActionInfo) {
