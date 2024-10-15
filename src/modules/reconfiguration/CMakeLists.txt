@@ -13,6 +13,8 @@
 
 forte_add_module(RECONFIGURATION OFF "FORTE Online Reconfiguration")
 
+forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+
 #############################################################################
 # FORTE Reconfiguration FBs
 #############################################################################
