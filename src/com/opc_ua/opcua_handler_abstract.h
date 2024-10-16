@@ -74,14 +74,14 @@ class COPC_UA_HandlerAbstract : public CExternalEventHandler {
      * Get the logger used by the the OPC UA stack
      * @return Logger used by the OPC UA stack
      */
-    static UA_Logger getLogger();
+    static UA_Logger &getLogger();
 
   private:
 
-    static void UA_Log_Forte_clear(void *paLogContext);
-    static const UA_Logger UA_Forte_logger;
+    static UA_Logger UA_Forte_logger;
 
     static void UA_Log_Forte(void*, UA_LogLevel paLevel, UA_LogCategory paCategory, const char *paMsg, va_list paArgs);
+    static void UA_Log_Forte_clear(UA_Logger *paLogger);
 
     /**
      * Maximum size of the logging buffer

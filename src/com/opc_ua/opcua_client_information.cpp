@@ -37,7 +37,7 @@ bool CUA_ClientInformation::configureClient() {
 
   if(configureClientFromFile(*configPointer)) {
     configPointer->stateCallback = CUA_RemoteCallbackFunctions::clientStateChangeCallback;
-    configPointer->logger = COPC_UA_HandlerAbstract::getLogger();
+    configPointer->logging = &COPC_UA_HandlerAbstract::getLogger();
     configPointer->timeout = scmClientTimeoutInMilli;
   } else {
     UA_Client_delete(mClient);
@@ -242,7 +242,7 @@ UA_StatusCode CUA_ClientInformation::executeCallMethod(CActionInfo& paActionInfo
   }
 
   UA_RemoteCallHandle *remoteCallHandle = new UA_RemoteCallHandle(paActionInfo, *this);
-  retVal = UA_Client_sendAsyncRequest(mClient, &request, &UA_TYPES[UA_TYPES_CALLREQUEST], CUA_RemoteCallbackFunctions::callMethodAsyncCallback,
+  retVal = __UA_Client_AsyncService(mClient, &request, &UA_TYPES[UA_TYPES_CALLREQUEST], CUA_RemoteCallbackFunctions::callMethodAsyncCallback,
         &UA_TYPES[UA_TYPES_CALLRESPONSE], remoteCallHandle, nullptr);
 
   if(UA_STATUSCODE_GOOD != retVal) {

@@ -14,24 +14,32 @@
 #include <forte_printer.h>
 #include <devlog.h>
 #include <parameterParser.h>
+#include <map>
 
 //we tried to use the logLevelNames and logCategoryNames as extern from open62541 but it failed when using with shared libray
-const char *const LogLevelNames[6] = {
-  "trace",
-  "debug",
-  "info",
-  "warning",
-  "error",
-  "fatal" };
-const char *const LogCategoryNames[7] = {
+const std::unordered_map<size_t, const char*> LogLevelNames {
+  {100, "trace"},
+  {200, "debug"},
+  {300, "info"},
+  {400, "warning"},
+  {500, "error"},
+  {600, "fatal"},
+};
+
+const char *const LogCategoryNames[10] = {
   "network",
   "channel",
   "session",
   "server",
   "client",
-  "userland" };
+  "userland",
+  "securitypolicy",
+  "eventloop",
+  "pubsub",
+  "discovery" 
+};
 
-const UA_Logger COPC_UA_HandlerAbstract::UA_Forte_logger = {UA_Log_Forte, nullptr, UA_Log_Forte_clear};
+UA_Logger COPC_UA_HandlerAbstract::UA_Forte_logger = {UA_Log_Forte, nullptr, UA_Log_Forte_clear};
 
 COPC_UA_HandlerAbstract::COPC_UA_HandlerAbstract(CDeviceExecution& paDeviceExecution) :
     CExternalEventHandler(paDeviceExecution) {
@@ -52,7 +60,7 @@ int COPC_UA_HandlerAbstract::getPriority() const {
   return 0;
 }
 
-UA_Logger COPC_UA_HandlerAbstract::getLogger() {
+UA_Logger &COPC_UA_HandlerAbstract::getLogger() {
   return UA_Forte_logger;
 }
 
@@ -61,7 +69,7 @@ void COPC_UA_HandlerAbstract::UA_Log_Forte( //We omit SONAR only for the paramet
     ) {
 
   char tmpStr[mMaxLogLength];
-  forte_snprintf(tmpStr, mMaxLogLength, "[OPC UA LOGGER] %s/%s\t", LogLevelNames[paLevel], LogCategoryNames[paCategory]);
+  forte_snprintf(tmpStr, mMaxLogLength, "[OPC UA LOGGER] %s/%s\t", LogLevelNames.at(paLevel), LogCategoryNames[paCategory]);
   char *start = &tmpStr[strlen(tmpStr)];
 
   forte_vsnprintf(start, mMaxLogLength, paMsg, paArgs);
@@ -91,7 +99,7 @@ void COPC_UA_HandlerAbstract::UA_Log_Forte( //We omit SONAR only for the paramet
 }
 
 void COPC_UA_HandlerAbstract::UA_Log_Forte_clear( //We omit SONAR only for the parameters
-    void* //NOSONAR
+    UA_Logger* //NOSONAR
     ) {
   //do nothing
 }
