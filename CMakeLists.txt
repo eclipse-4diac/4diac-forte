@@ -66,6 +66,26 @@ mark_as_advanced(FORTE_BUILD_SHARED_LIBRARY)
 SET(FORTE_C_INTERFACE OFF CACHE BOOL "Build C interface to Forte")
 mark_as_advanced(FORTE_C_INTERFACE)
 
+if(FORTE_BUILD_EXECUTABLE)
+  SET(FORTE_EXECUTABLE_NAME forte)
+endif(FORTE_BUILD_EXECUTABLE)
+
+if(FORTE_BUILD_STATIC_LIBRARY)
+  if(FORTE_C_INTERFACE)
+    SET(FORTE_STATIC_LIBRARY_NAME forte-c-static)
+  else()
+    SET(FORTE_STATIC_LIBRARY_NAME forte-static)
+  endif(FORTE_C_INTERFACE)
+endif(FORTE_BUILD_STATIC_LIBRARY)
+
+if(FORTE_BUILD_SHARED_LIBRARY)
+  if(FORTE_C_INTERFACE)
+    SET(FORTE_SHARED_LIBRARY_NAME forte-c-shared)
+  else()
+    SET(FORTE_SHARED_LIBRARY_NAME forte-shared)
+  endif(FORTE_C_INTERFACE)
+endif(FORTE_BUILD_SHARED_LIBRARY)
+
 #######################################################################################
 # Determine the loglevel
 #######################################################################################
@@ -398,11 +418,11 @@ if(FORTE_LINKED_STRINGDICT)
   endif(FORTE_BUILD_EXECUTABLE)
 
   if(FORTE_BUILD_STATIC_LIBRARY)
-      ADD_DEPENDENCIES (forte-static forte_stringlist_externals)
+    ADD_DEPENDENCIES (${FORTE_STATIC_LIBRARY_NAME} forte_stringlist_externals)
   endif(FORTE_BUILD_STATIC_LIBRARY)
   
   if(FORTE_BUILD_SHARED_LIBRARY)
-     ADD_DEPENDENCIES (forte-shared forte_stringlist_externals)
+    ADD_DEPENDENCIES (${FORTE_SHARED_LIBRARY_NAME} forte_stringlist_externals)
   endif(FORTE_BUILD_SHARED_LIBRARY)
 endif(FORTE_LINKED_STRINGDICT)
 

@@ -320,77 +320,67 @@ ADD_DEFINITIONS(${DEFINITIONS})
 set(FORTE_LINK_STATIC OFF CACHE BOOL "Force static linking of forte binary")
 
 if(FORTE_BUILD_EXECUTABLE)
-  SET(FORTE_EXECUTABLE_NAME forte)
   ADD_EXECUTABLE (${FORTE_EXECUTABLE_NAME} ${SOURCE_EXECUTABLE_CPP} ${FORTE_EXECUTABLE_H})
   if (FORTE_LINK_STATIC)
     set_target_properties(${FORTE_EXECUTABLE_NAME} PROPERTIES LINK_SEARCH_START_STATIC ON)
     set_target_properties(${FORTE_EXECUTABLE_NAME} PROPERTIES LINK_SEARCH_END_STATIC ON)
     target_link_options(${FORTE_EXECUTABLE_NAME} PRIVATE -static-libgcc -static-libstdc++ -static)
   endif()
-  TARGET_LINK_LIBRARIES (forte PUBLIC ${FORTE_BASE_TARGET_NAME})
-  install(TARGETS forte RUNTIME DESTINATION bin)
+  TARGET_LINK_LIBRARIES (${FORTE_EXECUTABLE_NAME} PUBLIC ${FORTE_BASE_TARGET_NAME})
+  install(TARGETS ${FORTE_EXECUTABLE_NAME} RUNTIME DESTINATION bin)
   message("Building executable")
 endif(FORTE_BUILD_EXECUTABLE)
 
+# function for configuring common things in both static and shared c libraries
+FUNCTION(configure_c_library LIBRARY_NAME)
+  target_sources(${LIBRARY_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/arch/c_interface/forte_c.cpp)
+  set_target_properties(${TARGET_NAME}
+    PROPERTIES PUBLIC_HEADER ${CMAKE_CURRENT_SOURCE_DIR}/arch/c_interface/forte_c.h)
+
+  install(TARGETS ${TARGET_NAME} 
+      LIBRARY DESTINATION bin
+      PUBLIC_HEADER DESTINATION include)
+ENDFUNCTION()
+
 if(FORTE_BUILD_STATIC_LIBRARY)
-  SET(FORTE_STATIC_LIBRARY_NAME forte-static)
+  message("Building static library")
+
   ADD_LIBRARY (${FORTE_STATIC_LIBRARY_NAME} STATIC)
   TARGET_LINK_LIBRARIES (${FORTE_STATIC_LIBRARY_NAME} PUBLIC ${FORTE_BASE_TARGET_NAME})
-  install(TARGETS ${FORTE_STATIC_LIBRARY_NAME} ARCHIVE DESTINATION bin)
-  message("Building static library")
-endif(FORTE_BUILD_STATIC_LIBRARY)
+
+  if(FORTE_C_INTERFACE)
+   configure_c_library(${FORTE_STATIC_LIBRARY_NAME})
+  else()
+    install(TARGETS ${FORTE_STATIC_LIBRARY_NAME} ARCHIVE DESTINATION bin)
+  endif(FORTE_C_INTERFACE)
+
+  endif(FORTE_BUILD_STATIC_LIBRARY)
 
 if(FORTE_BUILD_SHARED_LIBRARY)
+  message("Building shared library")
+
   if(WIN32)
     message(WARNING "Shared library in windows might not be linkable.")
   endif(WIN32)
   
-  SET(FORTE_SHARED_LIBRARY_NAME forte-shared)
-
   ADD_LIBRARY (${FORTE_SHARED_LIBRARY_NAME} SHARED)
   TARGET_LINK_LIBRARIES (${FORTE_SHARED_LIBRARY_NAME} PUBLIC ${FORTE_BASE_TARGET_NAME})
-  install(TARGETS ${FORTE_SHARED_LIBRARY_NAME} ARCHIVE DESTINATION bin)
-  set_property(TARGET ${FORTE_BASE_TARGET_NAME} PROPERTY POSITION_INDEPENDENT_CODE ON)
+  set_target_properties(${FORTE_BASE_TARGET_NAME} PROPERTIES POSITION_INDEPENDENT_CODE ON)
+  set_target_properties(${FORTE_SHARED_LIBRARY_NAME} PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS ON)
 
-  set_target_properties(${WINDOWS_EXPORT_ALL_SYMBOLS} PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS ON)
-  
-  message("Building shared library")
-endif(FORTE_BUILD_SHARED_LIBRARY)
 
-if(FORTE_C_INTERFACE)
-  # function for configuring common things in both static and shared c libraries
-  FUNCTION(commonCLibraryConfiguration TARGET_NAME)
-    set_target_properties(${TARGET_NAME}
-       PROPERTIES PUBLIC_HEADER ${CMAKE_CURRENT_SOURCE_DIR}/arch/c_interface/forte_c.h)
+  if(FORTE_C_INTERFACE)
+    configure_c_library(${FORTE_SHARED_LIBRARY_NAME})
 
-    TARGET_LINK_LIBRARIES (${TARGET_NAME} PUBLIC ${FORTE_BASE_TARGET_NAME})
-    install(TARGETS ${TARGET_NAME} 
-          LIBRARY DESTINATION bin
-          PUBLIC_HEADER DESTINATION include)
-  ENDFUNCTION()
-
-  SET(FORTE_C_LIBRARY_NAME "forte-c")
-
-  if(FORTE_BUILD_STATIC_LIBRARY)
-    SET(FORTE_C_LIBRARY_STATIC_NAME ${FORTE_C_LIBRARY_NAME}-static)
-    ADD_LIBRARY (${FORTE_C_LIBRARY_STATIC_NAME} STATIC ${CMAKE_CURRENT_SOURCE_DIR}/arch/c_interface/forte_c.cpp)
-    commonCLibraryConfiguration(${FORTE_C_LIBRARY_STATIC_NAME})
-    message("Building C interface static library")
-  endif(FORTE_BUILD_STATIC_LIBRARY)
-
-  if(FORTE_BUILD_SHARED_LIBRARY)
-    SET(FORTE_C_LIBRARY_SHARED_NAME ${FORTE_C_LIBRARY_NAME}-shared)
-    ADD_LIBRARY (${FORTE_C_LIBRARY_SHARED_NAME} SHARED ${CMAKE_CURRENT_SOURCE_DIR}/arch/c_interface/forte_c.cpp)
-  
     # hide all symbols except the ones from the C interface
     # NOTE: This is still not working. The dynamic symbols are still being exported
     # --exclude-libs is an option for gcc but it does not work with OBJECT libraries
     # Exporting the dynamic symbols makes the loading time of the library longer
     # but it still can be used as usual
-    set_target_properties(${FORTE_C_LIBRARY_SHARED_NAME} PROPERTIES 
+    set_target_properties(${FORTE_SHARED_LIBRARY_NAME} PROPERTIES 
         CXX_VISIBILITY_PRESET hidden
         VISIBILITY_INLINES_HIDDEN ON)
-    set_target_properties(${FORTE_C_LIBRARY_SHARED_NAME} PROPERTIES 
+    set_target_properties(${FORTE_SHARED_LIBRARY_NAME} PROPERTIES 
         C_VISIBILITY_PRESET hidden
         VISIBILITY_INLINES_HIDDEN ON)
 
@@ -399,13 +389,11 @@ if(FORTE_C_INTERFACE)
     else()
       SET(FORTE_SHARED_PREFIX "__attribute__((visibility(\"default\")))")
     endif()
-    target_compile_definitions(${FORTE_C_LIBRARY_SHARED_NAME} PRIVATE FORTE_SHARED_PREFIX=${FORTE_SHARED_PREFIX})
-  
-    commonCLibraryConfiguration(${FORTE_C_LIBRARY_SHARED_NAME})
-    message("Building C interface shared library")
-  endif(FORTE_BUILD_SHARED_LIBRARY)
-
-endif(FORTE_C_INTERFACE)
+    target_compile_definitions(${FORTE_SHARED_LIBRARY_NAME} PRIVATE FORTE_SHARED_PREFIX=${FORTE_SHARED_PREFIX})
+  else()
+    install(TARGETS ${FORTE_SHARED_LIBRARY_NAME} ARCHIVE DESTINATION bin)
+  endif(FORTE_C_INTERFACE)
+endif(FORTE_BUILD_SHARED_LIBRARY)
 
 #######################################################################################
 # Generate stringlist and modules
@@ -446,20 +434,14 @@ GET_PROPERTY(POST_BUILD_COM GLOBAL PROPERTY FORTE_POST_BUILD_COMMAND)
 STRING(LENGTH "${POST_BUILD_COM}" LEN_POST_BUILD_COM)
 if(NOT LEN_POST_BUILD_COM EQUAL 0)
   if(FORTE_BUILD_EXECUTABLE)
-    ADD_CUSTOM_COMMAND(TARGET forte POST_BUILD ${POST_BUILD_COM})
+    ADD_CUSTOM_COMMAND(TARGET ${FORTE_BUILD_EXECUTABLE} POST_BUILD ${POST_BUILD_COM})
   endif(FORTE_BUILD_EXECUTABLE)
 
   if(FORTE_BUILD_STATIC_LIBRARY)
-    ADD_CUSTOM_COMMAND(TARGET forte-static POST_BUILD ${POST_BUILD_COM})
-    if(FORTE_C_INTERFACE)
-      ADD_CUSTOM_COMMAND(TARGET forte-c-static POST_BUILD ${POST_BUILD_COM})
-    endif(FORTE_C_INTERFACE)
+    ADD_CUSTOM_COMMAND(TARGET ${FORTE_STATIC_LIBRARY_NAME} POST_BUILD ${POST_BUILD_COM})
   endif(FORTE_BUILD_STATIC_LIBRARY)
   
   if(FORTE_BUILD_SHARED_LIBRARY)
-    ADD_CUSTOM_COMMAND(TARGET forte-shared POST_BUILD ${POST_BUILD_COM})
-    if(FORTE_C_INTERFACE)
-      ADD_CUSTOM_COMMAND(TARGET forte-c-shared POST_BUILD ${POST_BUILD_COM})
-    endif(FORTE_C_INTERFACE)  
+    ADD_CUSTOM_COMMAND(TARGET ${FORTE_SHARED_LIBRARY_NAME} POST_BUILD ${POST_BUILD_COM})
   endif(FORTE_BUILD_SHARED_LIBRARY)
 endif(NOT LEN_POST_BUILD_COM EQUAL 0)
