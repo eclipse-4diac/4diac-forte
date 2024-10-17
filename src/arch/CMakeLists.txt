@@ -27,7 +27,6 @@ add_subdirectory(vxworks)
 add_subdirectory(fake_time)
 add_subdirectory(win32)
 add_subdirectory(zephyr)
-
 add_subdirectory(utils)
 
 forte_add_sourcefile_hcpp(timerha devlog forte_architecture)
@@ -65,3 +64,4 @@ if (FORTE_STACKTRACE)
 endif ()
 
 forte_add_sourcefile_with_path_cpp(${CMAKE_BINARY_DIR}/src_gen/startuphook.cpp)
+forte_add_sourcefile_with_path_cpp(${CMAKE_BINARY_DIR}/arch/timerHandlerFactory.cpp) # created file

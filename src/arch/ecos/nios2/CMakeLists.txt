@@ -26,12 +26,9 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "Nios2")
   forte_add_include_directories(${FORTE_ECOS_FOLDER}/include) 
   forte_add_link_directories(${FORTE_ECOS_FOLDER}/lib)
 
-  forte_add_sourcefile_hcpp(../forte_thread ../forte_sync ../forte_sem ../forte_instance)
-  if(FORTE_FAKE_TIME)
-    forte_set_timer(../../fake_time/faketimerha)
-  else(FORTE_FAKE_TIME)
-    forte_add_sourcefile_hcpp(../ecostiha)
-  endif(FORTE_FAKE_TIME)
+  forte_add_sourcefile_hcpp(../forte_thread ../forte_sync ../forte_sem ../forte_instance ../ecostiha)
+
+  forte_add_timerhandler(CECOSTimerHandler ecostiha )
   forte_add_sourcefile_cpp(../../posix/forte_architecture_time.cpp ../../forte_standard_time.cpp)
 
   forte_add_sourcefile_cpp(../ecoscppinit.cpp ../../genforte_printer.cpp ../../common/forte_specific_architecture.cpp)

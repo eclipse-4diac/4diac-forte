@@ -19,12 +19,10 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "Phycore AT91")
 
   forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR}/..)
   
-  forte_add_sourcefile_hcpp(../forte_thread ../forte_sync ../forte_sem)
-  if(FORTE_FAKE_TIME)
-    forte_set_timer(../../fake_time/faketimerha)
-  else(FORTE_FAKE_TIME)
-    forte_add_sourcefile_hcpp(../ecostiha)
-  endif(FORTE_FAKE_TIME)
+  forte_add_sourcefile_hcpp(../forte_thread ../forte_sync ../forte_sem ../ecostiha)
+
+  forte_add_timerhandler(CECOSTimerHandler ecostiha )
+
   forte_add_sourcefile_cpp(../ecoscppinit.cpp ../../posix/forte_architecture_time.cpp ../../forte_standard_time.cpp ../../common/forte_specific_architecture.cpp)
 
   forte_add_sourcefile_cpp(../../genforte_printer.cpp)

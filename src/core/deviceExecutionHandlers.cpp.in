@@ -11,7 +11,7 @@
  *    Jose Cabral - initial implementation and rework handler infrastructure
  *******************************************************************************/
 
-#include <timerha.h>
+#include <timerHandlerFactory.h>
 #include <devexec.h>
 
 ${HANDLERMANAGER_INCLUDE}
@@ -21,6 +21,6 @@ ${HANDLERMANAGER_VARIABLES}
 
 void CDeviceExecution::createHandlers(CDeviceExecution& paDeviceExecution){
 
-  paDeviceExecution.mRegisteredEventHandlers[0].mHandler = CTimerHandler::createTimerHandler(paDeviceExecution);
+  paDeviceExecution.mRegisteredEventHandlers[0].mHandler = CTimerHandlerFactory::createTimerHandler(paDeviceExecution);
 ${HANDLERMANAGER_INSTANCE}
 }

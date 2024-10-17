@@ -13,7 +13,7 @@
 #include "../../core/devexec.h"
 #include <windows.h>
 
-CExternTimerHandler *CExternTimerHandler::smFORTEExtTimer = 0;
+CExternTimerHandler *CExternTimerHandler::smFORTEExtTimer = nullptr;
 
 const TForteInt32 CExternTimerHandler::csmTicksPerSecond = 1000;
 
@@ -27,19 +27,15 @@ unsigned int __stdcall getTicksPerSecond(){
   return CExternTimerHandler::getExternTicksPerSecond();
 }
 
-CTimerHandler* CTimerHandler::createTimerHandler(CDeviceExecution& paDeviceExecution){
-  if(!CExternTimerHandler::smFORTEExtTimer){ //creating two timers is not possible
-    CExternTimerHandler::smFORTEExtTimer = new CExternTimerHandler(paDeviceExecution);
-  }
-  return CExternTimerHandler::smFORTEExtTimer;
-}
-
 CExternTimerHandler::CExternTimerHandler(CDeviceExecution& paDeviceExecution) : CTimerHandler(paDeviceExecution)  {
+  if(CExternTimerHandler::smFORTEExtTimer != nullptr){ //creating two timers is not possible
+    CExternTimerHandler::smFORTEExtTimer = this;
+  }
 }
 
 CExternTimerHandler::~CExternTimerHandler(){
   disableHandler();
-  CExternTimerHandler::smFORTEExtTimer = 0;
+  CExternTimerHandler::smFORTEExtTimer = nullptr;
 }
 
 void CExternTimerHandler::externNextTick(){

@@ -24,6 +24,8 @@
  */
 class CTXTimerHandler : public CTimerHandler{
   public:
+    explicit CTXTimerHandler(CDeviceExecution& paDeviceExecution);
+
     ~CTXTimerHandler() override;
 
     /*!\brief Enables this event source
@@ -51,13 +53,8 @@ class CTXTimerHandler : public CTimerHandler{
         static_cast<CTXTimerHandler*>(data)->nextTick();
       }
     }
-    ;
-
-    explicit CTXTimerHandler(CDeviceExecution& paDeviceExecution);
-
+    
     TX_TIMER mTimer;
-
-    friend class CTimerHandler;
 };
 
 #endif /*PCTIMEHA_H_*/

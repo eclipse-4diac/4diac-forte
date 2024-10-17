@@ -15,10 +15,6 @@
 
 cyg_sem_t CECOSTimerHandler::mSemaphore;
 
-CTimerHandler* CTimerHandler::createTimerHandler(CDeviceExecution& paDeviceExecution){
-  return new CECOSTimerHandler(paDeviceExecution);
-}
-
 CECOSTimerHandler::CECOSTimerHandler(CDeviceExecution& paDeviceExecution) : CTimerHandler(paDeviceExecution)  {
   cyg_semaphore_init(&mSemaphore, 0);
 

@@ -13,10 +13,6 @@
 #include "fortenew.h"
 #include "freertostiha.h"
 
-CTimerHandler* CTimerHandler::createTimerHandler(CDeviceExecution& paDeviceExecution) {
-  return new CFreeRTOSTimerHandler(paDeviceExecution);
-}
-
 CFreeRTOSTimerHandler::CFreeRTOSTimerHandler(CDeviceExecution& paDeviceExecution) :
     CTimerHandler(paDeviceExecution) {
   mTimer = xTimerCreate("FORTETimer", pdMS_TO_TICKS(1000 / getTicksPerSecond()), pdTRUE, (void *) this, vCallbackFunction);

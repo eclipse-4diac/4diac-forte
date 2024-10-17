@@ -20,10 +20,6 @@
 #endif // K_FP_REGS
 
 
-CTimerHandler* CTimerHandler::createTimerHandler(CDeviceExecution& paDeviceExecution) {
-  return new CZephyrTimerHandler(paDeviceExecution);
-}
-
 CZephyrTimerHandler::CZephyrTimerHandler(CDeviceExecution& paDeviceExecution) :
   CTimerHandler(paDeviceExecution) {
   k_timer_init(&timer, NULL, NULL);

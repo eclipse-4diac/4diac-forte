@@ -33,12 +33,7 @@ class CTimerHandler : public CExternalEventHandler{
   DECLARE_HANDLER(CTimerHandler)
     ;
   public:
-    /*!\brief create the timer handler and set the parameter pointer with the the new timer handler.
-     *
-     * This function is not implemented in the standardtimerhandler and has to be implemented in the specific implementation.
-     * implementations should check that not two timerhanlders can be created.
-     */
-    static CTimerHandler* createTimerHandler(CDeviceExecution &paDeviceExecution);
+    
     /*!\brief Sets the priority of the event source
      *
      * \param paPriority new priority of the event source

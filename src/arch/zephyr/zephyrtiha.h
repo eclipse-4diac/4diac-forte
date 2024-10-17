@@ -23,6 +23,9 @@
  */
 class CZephyrTimerHandler : public CTimerHandler {
   public:
+
+    explicit CZephyrTimerHandler(CDeviceExecution& paDeviceExecution);
+
     ~CZephyrTimerHandler() override;
 
     /*!\brief Enables this event source
@@ -45,15 +48,11 @@ class CZephyrTimerHandler : public CTimerHandler {
 
   private:
 
-    explicit CZephyrTimerHandler(CDeviceExecution& paDeviceExecution);
-
     struct k_timer timer;
     k_thread_stack_t* stack{ 0 };
     struct k_thread* thread{ 0 };
     static void thread_fn(void* arg1, void* arg2, void* arg3);
     k_tid_t thread_id;
-
-    friend class CTimerHandler;
 };
 
 #endif /* SRC_ARCH_ZEPHYR_ZEPHYRTIHA_H_ */

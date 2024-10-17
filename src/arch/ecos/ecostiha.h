@@ -22,6 +22,9 @@
  */
 class CECOSTimerHandler : public CTimerHandler, private CThread{
   public:
+
+    explicit CECOSTimerHandler(CDeviceExecution& paDeviceExecution);
+
     ~CECOSTimerHandler() override;
 
     /*!\brief Enables this event source
@@ -52,14 +55,11 @@ class CECOSTimerHandler : public CTimerHandler, private CThread{
       cyg_semaphore_post(&mSemaphore);
     }
 
-    explicit CECOSTimerHandler(CDeviceExecution& paDeviceExecution);
     virtual void run();
 
     cyg_handle_t mAlarmHandle;
     cyg_handle_t mCounterHandle, mSystemclockHandle;
     cyg_alarm mAlarm;
-
-    friend class CTimerHandler;
 };
 
 #endif /*_ECOSTIMEHA_H_*/

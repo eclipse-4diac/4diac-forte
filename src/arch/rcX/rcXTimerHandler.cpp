@@ -15,11 +15,6 @@
 #include "../devlog.h"
 
 
-CTimerHandler* CTimerHandler::createTimerHandler(CDeviceExecution& paDeviceExecution){
-  return new CrcXTimerHandler(paDeviceExecution);
-}
-
-
 CrcXTimerHandler::CrcXTimerHandler(CDeviceExecution& paDeviceExecution) : CTimerHandler(paDeviceExecution),
   mTimer(0), mFirstTime(true){
   mTimer = forte_malloc(RX_TIMER_SIZE);
