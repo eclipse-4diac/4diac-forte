@@ -48,8 +48,8 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "Win32")
       unset(FORTE_EXTERNAL_TIMEHA CACHE)
   endif(FORTE_BUILD_SHARED_LIBRARY)
 
-  forte_add_timerhandler(CPCTimerHandler pctimeha )
-
+  forte_add_timerhandler(CPCTimerHandler pctimeha)
+  forte_add_sourcefile_hcpp(pctimeha)
 
   if(FORTE_COM_ETH)
    forte_add_handler(CFDSelectHandler sockhand)
