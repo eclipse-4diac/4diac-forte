@@ -196,56 +196,51 @@ get_property(LINK_TEST_LIBRARY GLOBAL PROPERTY FORTE_TEST_LIBRARIES)
 TARGET_LINK_LIBRARIES(forte_test ${LINK_TEST_LIBRARY})
 
 #######################################################################################
-# Link Libraries to the C Interface Executable
+# Create a test to check if the C library is working (shared / static)
 #######################################################################################
+FUNCTION(create_c_library_test TEST_NAME LIBRARY_NAME)
+  ADD_EXECUTABLE(${TEST_NAME} ${CMAKE_CURRENT_SOURCE_DIR}/arch/forte_c_test.cpp)
+  SET_TARGET_PROPERTIES(${TEST_NAME} PROPERTIES LINKER_LANGUAGE CXX)
+  TARGET_LINK_LIBRARIES(${TEST_NAME} ${LIBRARY_NAME} ${LINK_TEST_LIBRARY})
+  ADD_TEST(${TEST_NAME} ${EXECUTABLE_OUTPUT_PATH}/${TEST_NAME})
+ENDFUNCTION()
 
-if(FORTE_C_INTERFACE)
-  if(FORTE_BUILD_STATIC_LIBRARY)
-    SET(FORTE_C_STATIC_TEST_NAME "forte_c_static_test")
 
-    ADD_EXECUTABLE(${FORTE_C_STATIC_TEST_NAME} ${CMAKE_CURRENT_SOURCE_DIR}/arch/forte_c_test.cpp)
-    TARGET_LINK_LIBRARIES(${FORTE_C_STATIC_TEST_NAME} forte-c-static ${LINK_TEST_LIBRARY})
-    target_include_directories(${FORTE_C_STATIC_TEST_NAME} PRIVATE ${FORTE_TEST_INC})
-    SET_TARGET_PROPERTIES(${FORTE_C_STATIC_TEST_NAME} PROPERTIES LINKER_LANGUAGE CXX)
-
-    add_test(${FORTE_C_STATIC_TEST_NAME} ${EXECUTABLE_OUTPUT_PATH}/${FORTE_C_STATIC_TEST_NAME})
-  endif(FORTE_BUILD_STATIC_LIBRARY)
-
-  # Currently not working in windows
-  if(FORTE_BUILD_SHARED_LIBRARY AND NOT WIN32)
-    SET(FORTE_C_SHARED_TEST_NAME "forte_c_shared_test")
-  
-    ADD_EXECUTABLE(${FORTE_C_SHARED_TEST_NAME} ${CMAKE_CURRENT_SOURCE_DIR}/arch/forte_c_test.cpp)
-    TARGET_LINK_LIBRARIES(${FORTE_C_SHARED_TEST_NAME} forte-c-shared ${LINK_TEST_LIBRARY})
-    target_include_directories(${FORTE_C_SHARED_TEST_NAME} PRIVATE ${FORTE_TEST_INC})
-    SET_TARGET_PROPERTIES(${FORTE_C_STATIC_TEST_NAME} PROPERTIES LINKER_LANGUAGE CXX)
-
-    add_test(${FORTE_C_SHARED_TEST_NAME} ${EXECUTABLE_OUTPUT_PATH}/${FORTE_C_SHARED_TEST_NAME})
-  endif(FORTE_BUILD_SHARED_LIBRARY AND NOT WIN32) 
-
-endif(FORTE_C_INTERFACE)
-
-#######################################################################################
-# Test if main can link to forte-static
-#######################################################################################
 if(FORTE_BUILD_STATIC_LIBRARY)
-  SET(TEST_FORTE_STATIC "forte_test_static")
-  GET_PROPERTY(SOURCE_EXECUTABLE_CPP GLOBAL PROPERTY FORTE_EXECUTABLE_CPP)
-  add_executable (${TEST_FORTE_STATIC} ${SOURCE_EXECUTABLE_CPP})
-  target_include_directories(${TEST_FORTE_STATIC} PRIVATE ${INCLUDE_DIRECTORIES})
-  target_link_libraries (${TEST_FORTE_STATIC} forte-static)
-  add_dependencies (${TEST_FORTE_STATIC} forte-static)
+  if(FORTE_C_INTERFACE)
+    #######################################################################################
+    # Link test to C static library
+    #######################################################################################
+    create_c_library_test("forte_c_static_test" ${FORTE_STATIC_LIBRARY_NAME})
+  else()
+    #######################################################################################
+    # Test if main can link to forte-static
+    #######################################################################################
+    SET(FORTE_STATIC_TEST_NAME "forte_test_static")
+    GET_PROPERTY(SOURCE_EXECUTABLE_CPP GLOBAL PROPERTY FORTE_EXECUTABLE_CPP)
+    add_executable(${FORTE_STATIC_TEST_NAME} ${SOURCE_EXECUTABLE_CPP})
+    add_dependencies(${FORTE_STATIC_TEST_NAME} ${FORTE_STATIC_LIBRARY_NAME})
+    TARGET_LINK_LIBRARIES(${FORTE_STATIC_TEST_NAME} ${FORTE_STATIC_LIBRARY_NAME})
+    target_include_directories(${FORTE_STATIC_TEST_NAME} PRIVATE ${FORTE_TEST_INC})
+  endif(FORTE_C_INTERFACE)
 endif(FORTE_BUILD_STATIC_LIBRARY)
 
-#######################################################################################
-# Test if main can link to forte-shared
-#######################################################################################
 # Currently not working in windows
 if(FORTE_BUILD_SHARED_LIBRARY AND NOT WIN32)
-  SET(TEST_FORTE_SHARED "forte_test_shared")
-  GET_PROPERTY(SOURCE_EXECUTABLE_CPP GLOBAL PROPERTY FORTE_EXECUTABLE_CPP)
-  add_executable (${TEST_FORTE_SHARED} ${SOURCE_EXECUTABLE_CPP})
-  target_include_directories(${TEST_FORTE_SHARED} PRIVATE ${INCLUDE_DIRECTORIES})
-  target_link_libraries (${TEST_FORTE_SHARED} forte-shared)
-  add_dependencies (${TEST_FORTE_SHARED} forte-shared)
+  if(FORTE_C_INTERFACE)
+    #######################################################################################
+    # Link test to C shared library
+    #######################################################################################
+    create_c_library_test("forte_c_shared_test" ${FORTE_SHARED_LIBRARY_NAME})
+  else()
+    #######################################################################################
+    # Test if main can link to forte-shared
+    #######################################################################################
+    SET(FORTE_SHARED_TEST_NAME "forte_test_shared")
+    GET_PROPERTY(SOURCE_EXECUTABLE_CPP GLOBAL PROPERTY FORTE_EXECUTABLE_CPP)
+    add_executable(${FORTE_SHARED_TEST_NAME} ${SOURCE_EXECUTABLE_CPP})
+    target_include_directories(${FORTE_SHARED_TEST_NAME} PRIVATE ${INCLUDE_DIRECTORIES})
+    target_link_libraries(${FORTE_SHARED_TEST_NAME} ${FORTE_SHARED_LIBRARY_NAME})
+    add_dependencies(${FORTE_SHARED_TEST_NAME} ${FORTE_SHARED_LIBRARY_NAME})
+  endif(FORTE_C_INTERFACE)
 endif(FORTE_BUILD_SHARED_LIBRARY AND NOT WIN32)
