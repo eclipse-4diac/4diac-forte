@@ -21,10 +21,6 @@ uint_fast64_t jumpFakeForteTime(uint_fast64_t destination);
 const CIEC_TIME::TValueType cNanosecondsToMilliseconds = forte::core::constants::cNanosecondsPerSecond / forte::core::constants::cMillisecondsPerSecond;
 const CIEC_TIME::TValueType cHourInMilliseconds = 60 * 60 * forte::core::constants::cMillisecondsPerSecond;
 
-CTimerHandler* CTimerHandler::createTimerHandler(CDeviceExecution &paDeviceExecution) {
-  return new CFakeTimerHandler(paDeviceExecution);
-}
-
 CFakeTimerHandler::CFakeTimerHandler(CDeviceExecution &paDeviceExecution) :
   CTimerHandler(paDeviceExecution) {
 }

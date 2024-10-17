@@ -39,11 +39,9 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "rcX")
   SET(FORTE_RCX_POOL_MAX "32" CACHE STRING "Max number of elements for the pool for originated messages in the forte task")
   SET(FORTE_RCX_INCLUDES "" CACHE STRING "Folders to include from the rcX OS. It must have inside of it the following folders: API, Configuration, TLR, TCPIP, CPUs/netX{10,51,100,..}")
 
-  if(FORTE_FAKE_TIME)
-    forte_set_timer(../fake_time/faketimerha)
-  else(FORTE_FAKE_TIME)
-    forte_set_timer(rcXTimerHandler)
-  endif(FORTE_FAKE_TIME)
+  forte_add_timerhandler(CrcXTimerHandler rcXTimerHandler )
+  forte_add_sourcefile_hcpp(rcXTimerHandler)
+
   forte_add_sourcefile_cpp(forte_architecture_time.cpp)
 
   forte_add_sourcefile_hcpp(forte_thread rcXUtilities forte_sync forte_sem forte_instance)

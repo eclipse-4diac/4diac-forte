@@ -17,10 +17,6 @@
 #include <sys/time.h>
 #include "../utils/timespec_utils.h"
 
-CTimerHandler* CTimerHandler::createTimerHandler(CDeviceExecution& paDeviceExecution){
-  return new CPCTimerHandler(paDeviceExecution);
-}
-
 CPCTimerHandler::CPCTimerHandler(CDeviceExecution& paDeviceExecution) : CTimerHandler(paDeviceExecution)  {
 }
 

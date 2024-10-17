@@ -18,6 +18,9 @@
 
 class CrcXTimerHandler : public CTimerHandler {
   public:
+
+    explicit CrcXTimerHandler(CDeviceExecution& paDeviceExecution);
+
     ~CrcXTimerHandler() override;
 
     /*!\brief Callback function for the timer.
@@ -43,12 +46,9 @@ class CrcXTimerHandler : public CTimerHandler {
      */
     int getPriority() const override;
   private:
-    CrcXTimerHandler();
 
     RX_HANDLE mTimer;
     bool mFirstTime;
-
-    friend class CTimerHandler;
 };
 
 

@@ -151,10 +151,22 @@ FUNCTION(forte_replace_sourcefile_cpp)
   ENDFOREACH(ARG)
 ENDFUNCTION(forte_replace_sourcefile_cpp)
 
-FUNCTION(forte_set_timer) #don't append as only one timer can be present
-  SET_PROPERTY(GLOBAL PROPERTY FORTE_TIMER_CPP ${CMAKE_CURRENT_SOURCE_DIR}/${ARGV}.cpp) 
-  SET_PROPERTY(GLOBAL PROPERTY FORTE_TIMER_H ${CMAKE_CURRENT_SOURCE_DIR}/${ARGV}.h)
-ENDFUNCTION(forte_set_timer)
+# Add a new possible timer to be created. Pass an extra variable to be used as 
+# name for the timer handler. If not passed, the default empty string will be used
+FUNCTION(forte_add_timerhandler CLASSNAME FILENAME) 
+    set_property(GLOBAL APPEND PROPERTY FORTE_TIMERHANDLER_CLASS ${CLASSNAME})
+    set_property(GLOBAL APPEND PROPERTY FORTE_TIMERHANDLER_FILENAME "${FILENAME}.h")
+    if(DEFINED ARGV2)
+      set(TIMERHANDLER_NAME ${ARGV2})
+    else()
+      set(TIMERHANDLER_NAME "\"\"") # default to empty string
+    endif()
+    set_property(GLOBAL APPEND PROPERTY FORTE_TIMERHANDLER_NAME "${TIMERHANDLER_NAME}")
+ENDFUNCTION(forte_add_timerhandler)
+
+MACRO(forte_set_default_timerhandler TIMERHANDLER_NAME) #don't append as there can only be one default timer
+  set_property(GLOBAL PROPERTY FORTE_TIMERHANDLER_DEFAULT ${TIMERHANDLER_NAME})
+ENDMACRO(forte_set_default_timerhandler)
 
 FUNCTION(forte_add_to_executable_h)
   FOREACH(ARG ${ARGV})
@@ -229,7 +241,6 @@ MACRO(forte_add_handler CLASSNAME FILENAME)
     set_property(GLOBAL APPEND PROPERTY FORTE_HANDLER_CLASS ${CLASSNAME})
     set_property(GLOBAL APPEND PROPERTY FORTE_HANDLER_FILENAME "${FILENAME}.h")
 ENDMACRO(forte_add_handler)
-
 
 MACRO(forte_add_startup_hook FUNCTION_NAME)
     set_property(GLOBAL APPEND PROPERTY FORTE_STARTUP_HOOK_FUNCTIONS ${FUNCTION_NAME})

@@ -24,6 +24,9 @@
  */
 class CFreeRTOSTimerHandler : public CTimerHandler {
   public:
+
+    explicit CFreeRTOSTimerHandler(CDeviceExecution& paDeviceExecution);
+
     ~CFreeRTOSTimerHandler() override;
 
     /*!\brief Enables this event source
@@ -46,13 +49,10 @@ class CFreeRTOSTimerHandler : public CTimerHandler {
 
   private:
 
-    explicit CFreeRTOSTimerHandler(CDeviceExecution& paDeviceExecution);
 
     static void vCallbackFunction(TimerHandle_t paTimer);
 
     TimerHandle_t mTimer;
-
-    friend class CTimerHandler;
 };
 
 #endif /* SRC_ARCH_FREERTOS_FREERTOSTIHA_H_ */

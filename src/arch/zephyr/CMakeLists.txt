@@ -23,11 +23,9 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "Zephyr")
 
   forte_add_sourcefile_hcpp(forte_thread forte_sync forte_sem)
 
-  if(FORTE_FAKE_TIME)
-    forte_set_timer(../fake_time/faketimerha)
-  else(FORTE_FAKE_TIME)
-    forte_set_timer(zephyrtiha)
-  endif(FORTE_FAKE_TIME)
+  forte_add_timerhandler(CZephyrTimerHandler zephyrtiha )
+  forte_add_sourcefile_hcpp(zephyrtiha)
+
   forte_add_sourcefile_cpp(./forte_architecture_time.cpp)
 
   forte_add_sourcefile_cpp(../common/forte_specific_architecture.cpp)

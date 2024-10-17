@@ -21,6 +21,8 @@
  */
 class CPCTimerHandler : public CTimerHandler, private CThread {
   public:
+    explicit CPCTimerHandler(CDeviceExecution& paDeviceExecution);
+
     ~CPCTimerHandler() override;
 
     void run() override;
@@ -42,11 +44,6 @@ class CPCTimerHandler : public CTimerHandler, private CThread {
      * \return current priority
      */
     int getPriority() const override;
-  private:
-    explicit CPCTimerHandler(CDeviceExecution& paDeviceExecution);
-
-    friend class CTimerHandler;
-
 };
 
 #endif /*PCTIMEHA_H_*/

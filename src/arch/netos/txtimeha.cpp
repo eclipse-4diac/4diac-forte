@@ -14,10 +14,6 @@
 #include "txtimeha.h"
 #include "../../core/devexec.h"
 
-CTimerHandler* CTimerHandler::createTimerHandler(CDeviceExecution& paDeviceExecution){
-  return new CTXTimerHandler(paDeviceExecution);
-}
-
 CTXTimerHandler::CTXTimerHandler(CDeviceExecution& paDeviceExecution) : CTimerHandler(paDeviceExecution)  {
 // setup the handler for recieving the timer calls  
   //TODO handle ticks per second correctly here
