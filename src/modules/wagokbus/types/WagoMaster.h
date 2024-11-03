@@ -9,7 +9,7 @@
 
 #pragma once
 
-#include "../../../../core/io/configFB/io_master_multi.h"
+#include "../../../core/io/configFB/io_master_multi.h"
 #include "WagoBusAdapter.h"
 
 class FORTE_WagoMaster : public forte::core::io::IOConfigFBMultiMaster {

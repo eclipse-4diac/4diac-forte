@@ -19,36 +19,35 @@ WagoSlaveBase::WagoSlaveBase(int paType, forte::core::CFBContainer &paContainer,
         IOConfigFBMultiSlave(scmSlaveConfigurationIO, scmSlaveConfigurationIONum, paType, paContainer, paInterfaceSpec, paInstanceNameId) {
 }
 
+void WagoSlaveBase::initWagoHandle (int paDIIndex, int paIOIndex, CIEC_ANY::EDataTypeID paType, forte::core::io::IOMapper::Direction paDirection) {
+  WagoDeviceController::WagoHandleDescriptor desc(
+      static_cast<CIEC_STRING*>(getDI(paDIIndex))->getStorage(), paDirection, mIndex,
+      paType, static_cast<TForteUInt32>(paIOIndex));
+  initHandle(desc);
+}
+
 void WagoSlaveBase::initHandlesBase(size_t paNumberOfBoolInputs, size_t paNumberOfBoolOutputs, size_t paNumberOfAnalogInputs, size_t paNumberOfAnalogOutputs) {
   size_t offset = 1; //skip QI
 
   for(size_t i = 0; i < paNumberOfBoolInputs; i++) {
-    WagoDeviceController::WagoHandleDescriptor desc(static_cast<CIEC_STRING*>(getDI(offset + i))->getStorage(),
-      IOMapper::In, mIndex, CIEC_ANY::e_BOOL, static_cast<TForteUInt32>(i));
-    initHandle(desc);
+    initWagoHandle(offset + i, i, CIEC_ANY::e_BOOL, IOMapper::In);
   }
 
   offset += paNumberOfBoolInputs;
 
   for(size_t i = 0; i < paNumberOfBoolOutputs; i++) {
-    WagoDeviceController::WagoHandleDescriptor desc(static_cast<CIEC_STRING*>(getDI(offset + i))->getStorage(),
-      IOMapper::Out, mIndex, CIEC_ANY::e_BOOL, static_cast<TForteUInt32>(i));
-    initHandle(desc);
+    initWagoHandle(offset + i, i, CIEC_ANY::e_BOOL, IOMapper::Out);
   }
 
   offset += paNumberOfBoolOutputs;
 
   for(size_t i = 0; i < paNumberOfAnalogInputs; i++) {
-    WagoDeviceController::WagoHandleDescriptor desc(static_cast<CIEC_STRING*>(getDI(offset + i))->getStorage(),
-      IOMapper::In, mIndex, CIEC_ANY::e_WORD, static_cast<TForteUInt32>(i));
-    initHandle(desc);
+    initWagoHandle(offset + i, i, CIEC_ANY::e_WORD, IOMapper::In);
   }
 
   offset += paNumberOfAnalogInputs;
 
   for(size_t i = 0; i < paNumberOfAnalogOutputs; i++) {
-    WagoDeviceController::WagoHandleDescriptor desc(static_cast<CIEC_STRING*>(getDI(offset + i))->getStorage(),
-      IOMapper::Out, mIndex, CIEC_ANY::e_WORD, static_cast<TForteUInt32>(i));
-    initHandle(desc);
+    initWagoHandle(offset + i, i, CIEC_ANY::e_WORD, IOMapper::Out);
   }
 }

@@ -14,6 +14,7 @@
 #define SRC_MODULES_WAGOKBUS_MODULAR_WAGOHANDLE_H_
 
 #include "../../../core/datatypes/forte_word.h"
+#include "../../../core/datatypes/forte_dword.h"
 #include "../../../core/io/mapper/io_handle.h"
 #include "wagoDeviceController.h"
 
@@ -33,16 +34,15 @@ class WagoHandle : public forte::core::io::IOHandle {
   private:
 
     void getBoolean(CIEC_BOOL &paState);
-
-    void getWord(CIEC_WORD &paState);
-
     void setBoolean(const CIEC_BOOL &paState);
 
+    void getWord(CIEC_WORD &paState);
     void setWord(const CIEC_WORD &paState);
 
-    bool checkBoolean();
+    void getDWord(CIEC_DWORD &paState);
+    void setDWord(const CIEC_DWORD &paState);
 
-    bool checkWord();
+    template<typename T> bool checkValue();
 
     tApplicationDeviceInterface *mAppDevInterface;
     uint32_t mTaskId;
@@ -52,7 +52,6 @@ class WagoHandle : public forte::core::io::IOHandle {
     CIEC_ANY* mLastValue;
 
     virtual void dropObserver() override;
-
 };
 
 #endif /* SRC_MODULES_WAGOKBUS_MODULAR_WAGOHANDLE_H_ */

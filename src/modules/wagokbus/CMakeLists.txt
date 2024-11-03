@@ -22,7 +22,7 @@ if(FORTE_MODULE_WagoKbus)
       forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})  
       forte_add_sourcefile_hcpp(wagoHandle wagoDeviceController)
       forte_add_sourcefile_hcpp(types/WagoMaster types/WagoBusAdapter types/wagoSlaveBase)
-      forte_add_sourcefile_hcpp(types/Wago1506 types/Wago1405_6 types/Wago1504_5 types/Wago459)
+      forte_add_sourcefile_hcpp(types/Wago1506 types/Wago1405_6 types/Wago1504_5 types/Wago459 types/Wago636_fbt)
       message("Building Modular Wago IOs")
     endif(FORTE_IO)
   

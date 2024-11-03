@@ -71,11 +71,12 @@ const char* WagoDeviceController::init() {
       if(DAL_SUCCESS != mAppDevInterface->OpenDevice(mKBusDeviceId)) {
         DEVLOG_ERROR("[WagoDeviceController] %s \n", scmFailedToOpenKBusDevice);
         return scmFailedToOpenKBusDevice;
+      } else {
+        loadTerminalInformation();
+        break;
       }
     }
   }
-
-  loadTerminalInformation();
 
   for(size_t i = 0; i < mTerminalCount; i++) {
     DEVLOG_INFO("[WagoDeviceController] Found device with ID: %d\n", mTerminalIds[i]);
@@ -96,6 +97,10 @@ forte::core::io::IOHandle* WagoDeviceController::createIOHandle(forte::core::io:
     case CIEC_ANY::e_WORD:
       outputOffset = mTerminalInfos[desc.mSlaveIndex].OffsetOutput_bits + (2 * desc.mChannel);
       inputOffset = mTerminalInfos[desc.mSlaveIndex].OffsetInput_bits + (2 * desc.mChannel);
+      break;
+    case CIEC_ANY::e_DWORD:
+      outputOffset = mTerminalInfos[desc.mSlaveIndex].OffsetOutput_bits + (4 * desc.mChannel);
+      inputOffset = mTerminalInfos[desc.mSlaveIndex].OffsetInput_bits + (4 * desc.mChannel);
       break;
     default:
       return 0;
