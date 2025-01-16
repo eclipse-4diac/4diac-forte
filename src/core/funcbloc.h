@@ -431,6 +431,13 @@ class CFunctionBlock : public forte::core::CFBContainer {
     */
     void triggerEventsOfType(TEventTypeID paEventTypeId);
 
+    /*!\brief initialize the data structure which holds conneciton counts per pin
+     * \param paNumEIs number of eventInputs
+     */
+    void setupInputConnectionTrackingData(TEventID paNumEIs) {
+      mInputEventConnectionCount = std::make_unique<size_t[]>(paNumEIs);
+    }
+
   protected:
 
     /*!\brief The main constructor for a function block.

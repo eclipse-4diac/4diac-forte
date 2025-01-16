@@ -51,7 +51,7 @@ bool CFunctionBlock::initialize() {
   setupEventMonitoringData();
 #endif //FORTE_SUPPORT_MONITORING
   if (getFBInterfaceSpec().mEITypeNames != nullptr) {
-    mInputEventConnectionCount = std::make_unique<size_t[]>(getFBInterfaceSpec().mNumEIs);
+    setupInputConnectionTrackingData(getFBInterfaceSpec().mNumEIs);
   }
   return true;
 }
