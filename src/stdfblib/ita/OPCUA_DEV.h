@@ -21,7 +21,7 @@ public:
 
   OPCUA_MGR mOPCUAMgr;
 
-  OPCUA_DEV(const std::string &paMGRID = "localhost:61499");
+  OPCUA_DEV(const std::string &paMGRID = "opc.tcp://localhost:4840");
   virtual ~OPCUA_DEV();
 
   virtual int startDevice(void);
