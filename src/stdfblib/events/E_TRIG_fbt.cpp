@@ -56,7 +56,7 @@ void FORTE_E_TRIG::executeEvent(const TEventID paEIID, CEventChainExecutionThrea
     case scmEventREQID:
       const TEventTypeID eventTypeId = CStringDictionary::getInstance().getId(var_EVENTTYPE.c_str());
       if (eventTypeId != CStringDictionary::scmInvalidStringId) {
-        triggerEvents(getResource(), eventTypeId);
+        triggerEventsInResource(getResource(), eventTypeId, paECET);
         sendOutputEvent(scmEventCNFID, paECET);
       }
       break;
@@ -107,15 +107,27 @@ CDataConnection *FORTE_E_TRIG::getDOConUnchecked(TPortId) {
   return nullptr;
 }
 
-void FORTE_E_TRIG::triggerEvents(forte::core::CFBContainer* paContainer, TEventTypeID paEventType) {
+void FORTE_E_TRIG::triggerEventsInResource(forte::core::CFBContainer* paContainer, const TEventTypeID paEventType, CEventChainExecutionThread *const paECET) {
   if (paContainer != nullptr) {
     if (paContainer->isFB()) {
-      static_cast<CFunctionBlock*>(paContainer)->triggerEventsOfType(paEventType);
+      triggerEventsOfType(paEventType, static_cast<CFunctionBlock*>(paContainer), paECET);
     }
     if (paContainer->isDynamicContainer()) {
       for (auto child: paContainer->getChildren()) {
-        triggerEvents(child, paEventType);
+        triggerEventsInResource(child, paEventType, paECET);
       }
+    }
+  }
+}
+
+void FORTE_E_TRIG::triggerEventsOfType(TEventTypeID paEventTypeId, CFunctionBlock* paFb, CEventChainExecutionThread *const paECET) {
+  //most of the FBs will only have the basic event type -> mEITypes == nullptr
+  if (paFb->getFBInterfaceSpec().mEITypeNames == nullptr) {
+    return;
+  }
+  for (TEventID eventId = 0; eventId < paFb->getFBInterfaceSpec().mNumEIs; eventId++) {
+    if (paFb->getEIType(eventId) == paEventTypeId && !paFb->isInputEventConnected(eventId)) {
+      paECET->addEventEntry(CConnectionPoint(paFb,eventId));
     }
   }
 }
