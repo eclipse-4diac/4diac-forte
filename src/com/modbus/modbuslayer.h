@@ -39,7 +39,7 @@ namespace forte {
 
       private:
         struct STcpParams {
-          char mIp[15];
+          char mIp[16];
           unsigned int mPort;
         };
         struct SRtuParams {
