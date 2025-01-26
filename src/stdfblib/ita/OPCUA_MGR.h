@@ -13,22 +13,41 @@
 
 #pragma once
 
-#include "commfb.h"
 #include "opcua_local_handler.h"
-#include <vector>
+#include "core/mgmcmd.h"
 
-class OPCUA_DEV;
+#include <vector>
+#include <string>
+
+class CDevice;
 
 class OPCUA_MGR {
 public:
 
-  OPCUA_MGR(OPCUA_DEV& paUaDevice);
+  OPCUA_MGR(CDevice& paUaDevice);
   
   virtual ~OPCUA_MGR();
   
   EMGMResponse initialize();
   
   bool isInitialized();
+
+  static void initArgument(UA_Argument& paArgument, int paTypeId, char* paName, char* paDescription);
+
+  struct MethodInformation {
+    std::string mMethodName;
+    std::string mDisplayName;
+    std::string mDescription;
+    std::vector<UA_Argument> mInArguments;
+    std::vector<UA_Argument> mOutArguments;
+    UA_MethodCallback mCallback;
+    void* mNodeContext;
+  };
+
+  void addExtraMgmMethod(const MethodInformation& paMethod);
+
+  void addExtraResourceMethod(const MethodInformation& paMethod);
+
 private:
 
   static char smEmptyLocale[];
@@ -252,7 +271,7 @@ private:
 
   static const UA_UInt16 smNamespaces[];
 
-  OPCUA_DEV& mUaDevice;
+  CDevice& mUaDevice;
   
   COPC_UA_Local_Handler& mUaHandler;
 
@@ -265,6 +284,10 @@ private:
   UA_NodeId mResourceTypeId;
 
   std::map<std::string, UA_NodeId> resourceNodeMap;
+
+  std::vector<MethodInformation> mExtraMgmMethods;
+
+  std::vector<MethodInformation> mExtraResourceMethods;
   
   /**** OPCUA Methods ****/
   
@@ -516,9 +539,7 @@ private:
 
   EMGMResponse addMethodNode(UA_Server* paServer, char* paMethodName, UA_NodeId paParentNodeId, 
     UA_MethodAttributes paAttr, const UA_Argument *paInArgs, size_t paInArgSize, const UA_Argument *paOutArgs, 
-    size_t paOutArgSize, UA_MethodCallback paCallback);
-
-  void initArgument(UA_Argument& paArgument, int paTypeId, char* paName, char* paDescription);
+    size_t paOutArgSize, UA_MethodCallback paCallback, void* nodeContext = nullptr);
 
   UA_MethodAttributes createAttribute(char* paDisplayName, char* paDescription);
 
@@ -537,4 +558,6 @@ private:
   static std::string getInputValue(UA_String paInput);
 
   static void parseDestinationName(const std::string& paDestination, std::vector<std::string>& paTarget);
+
+  EMGMResponse addExtraMethods(UA_Server* paServer, UA_NodeId paParentNodeId, std::vector<MethodInformation>& paMethods);
 };

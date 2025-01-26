@@ -12,9 +12,8 @@
  *******************************************************************************/
 
 #include "OPCUA_MGR.h"
-#include <string>
-#include <vector>
-#include "OPCUA_DEV.h"
+
+#include "device.h"
 #include "stringdict.h"
 
 /* Management and Resource Type */
@@ -251,7 +250,7 @@ const std::map<EMGMResponse, UA_StatusCode> OPCUA_MGR::scResponseMap = {
 
 const UA_UInt16 OPCUA_MGR::smNamespaces[] = {0, 1};
 
-OPCUA_MGR::OPCUA_MGR(OPCUA_DEV& paUaDevice) :
+OPCUA_MGR::OPCUA_MGR(CDevice& paUaDevice) :
   mUaDevice(paUaDevice),
     mUaHandler(paUaDevice.getDeviceExecution().getExtEvHandler<COPC_UA_Local_Handler>()){
 }
@@ -295,6 +294,7 @@ EMGMResponse OPCUA_MGR::createIEC61499MgmtObject(UA_Server* paServer) {
 #ifdef FORTE_SUPPORT_MONITORING
   if (addReadWatchesMethod(paServer) != EMGMResponse::Ready) return eRetVal;
 #endif // FORTE_SUPPORT_MONITORING
+  if(addExtraMethods(paServer, mMgmtTypeId, mExtraMgmMethods) != EMGMResponse::Ready) return eRetVal;
   return addMgmtObjectInstance();
 }
 
@@ -351,6 +351,7 @@ EMGMResponse OPCUA_MGR::createIEC61499ResourceObjectType(UA_Server* paServer) {
   if (addForceValueMethod(paServer) != EMGMResponse::Ready) return eRetVal;
   if (addClearForceMethod(paServer) != EMGMResponse::Ready) return eRetVal;
 #endif // FORTE_SUPPORT_MONITORING
+  if(addExtraMethods(paServer, mResourceTypeId, mExtraResourceMethods) != EMGMResponse::Ready) return eRetVal;
   return EMGMResponse::Ready;
 }
 
@@ -1215,7 +1216,7 @@ UA_StatusCode OPCUA_MGR::onClearForce(UA_Server*,
 
 EMGMResponse OPCUA_MGR::addMethodNode(UA_Server* paServer, char* paMethodNodeName, UA_NodeId paParentNodeId, UA_MethodAttributes paAttr, 
     const UA_Argument *paInArgs, size_t paInArgSize, const UA_Argument *paOutArgs, 
-    size_t paOutArgSize, UA_MethodCallback paCallback) {
+    size_t paOutArgSize, UA_MethodCallback paCallback, void* nodeContext) {
   EMGMResponse eRetVal = EMGMResponse::Ready;
   UA_NodeId methodId;
   UA_StatusCode status = UA_Server_addMethodNode(paServer, UA_NODEID_STRING(smNamespaces[1], paMethodNodeName),
@@ -1224,7 +1225,7 @@ EMGMResponse OPCUA_MGR::addMethodNode(UA_Server* paServer, char* paMethodNodeNam
     UA_QUALIFIEDNAME(smNamespaces[1], paMethodNodeName),
     paAttr, paCallback,
     paInArgSize, paInArgs, paOutArgSize, paOutArgs,
-    this, &methodId);
+    nodeContext == nullptr ? this : nodeContext, &methodId);
 
   if (status != UA_STATUSCODE_GOOD) {
     return EMGMResponse::InvalidState;
@@ -1322,4 +1323,25 @@ void OPCUA_MGR::parseDestinationName(const std::string& paDestination, std::vect
     index = dst.find_first_of(".");
   }
   paFbName.push_back(dst.substr(0, index));
+}
+
+void OPCUA_MGR::addExtraMgmMethod(const MethodInformation& paMethod){
+  mExtraMgmMethods.emplace_back(paMethod);
+}
+
+void OPCUA_MGR::addExtraResourceMethod(const MethodInformation& paMethod){
+  mExtraResourceMethods.emplace_back(paMethod);
+}
+
+EMGMResponse OPCUA_MGR::addExtraMethods(UA_Server* paServer, UA_NodeId paParentNodeId, std::vector<MethodInformation>& paMethods) {
+  for(auto& method : paMethods){
+    auto attributes = createAttribute(method.mDisplayName.data(), method.mDescription.data());
+    if (auto result = addMethodNode(paServer, method.mMethodName.data(), paParentNodeId, attributes, 
+          method.mInArguments.data(), method.mInArguments.size(), 
+          method.mOutArguments.data(), method.mOutArguments.size(), method.mCallback, method.mNodeContext); result != EMGMResponse::Ready){
+        
+        return result;
+    }
+  }
+  return EMGMResponse::Ready;
 }
