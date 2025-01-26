@@ -16,13 +16,26 @@
 #include "ecet.h"
 
 #include <functional>
-#include <mutex>
-#include <condition_variable>
-#include <set>
 #include <optional>
+#include <set>
 
 /**
- * @brief An ecet which can be fully controlled from outside the class 
+ * @brief An ecet which can be fully controlled from outside the class
+ * The ecet has two modes:
+ * - Normal: 
+ *    - The thread processing of events runs as usual
+ *    - External events are added to the queue of external events as usual
+ *    - manual methods are disabled: triggerNextEvent, insertFront, removeFromBack, getNextEvent
+ * 
+ * - Remote:
+ *   - The thread processing events is suspended. Events can be triggered only via triggerNextEvent
+ *   - External events are discarded
+ *   - manual methods are enabled: triggerNextEvent, insertFront, removeFromBack, getNextEvent
+ * 
+ * When a breakpoint is hit, the usual behaviour is to set all ecets from the device in remote mode, 
+ * but since this class does not have a reference to the device, a callback needs to be passed which will
+ * be called when a breakpoint is hit. 
+ * The caller should then take care of setting all ecets to remote mode.
  * 
  */
 class CFakeEventExecutionThread : public CEventChainExecutionThread{
@@ -38,6 +51,24 @@ class CFakeEventExecutionThread : public CEventChainExecutionThread{
     ~CFakeEventExecutionThread() override = default;
 
     /**
+     * @brief Let the ecet run freely and not controlled from outside anymore
+     */
+    void removeExternalControl();
+
+    /**
+     * @brief Enable control from outside the class. Events are triggered only when requested 
+     */
+    void takeExternalControl();
+
+    /**
+     * @brief Set the callback that will be called for each event that is triggered. By default the callback does nothing
+     * This ecet enters in remote mode, and the callback offers the change for extra work to be done by the caller.
+     * 
+     * @param paCallback Callback to be used
+     */
+    void setRemoteCallbackForEventTriggering(HandleEvent paCallback);
+
+    /**
      * @brief Triggers the next event in the list if there's any
      * 
      * How the event trigger is handled can be configured via a callback. 
@@ -45,44 +76,11 @@ class CFakeEventExecutionThread : public CEventChainExecutionThread{
     void triggerNextEvent();
 
     /**
-     * @brief Set the callback that will be called for each event that is triggered.
-     * If set to std::nullopt, the event is supressed
-     * 
-     * @param paCallback Callback to be used
-     */
-    void setCallbackForEventTriggering(std::optional<HandleEvent> paCallback = std::nullopt);
-    
-    /**
-     * @brief Set the callback for event trigger to the default one, 
-     * which calls receiveInputEvent on the Function Block 
-     */
-    void setDefaultCallbackForEventTrigger();
-    
-    /**
-     * @brief Starts a new chain event. If a callback was set, it is called. * Initially,
-     * the callback is set to call the same function in the parent ecet
+     * @brief Starts a new chain event. In remote mode, this doesn't do anything 
      * 
      * @param paEventToAdd event starting the chain 
      */
     void startEventChain(TEventEntry paEventToAdd) override;
-
-    /**
-     * @brief Set a new callback that will be called when a new event chain would be started. If set
-     * to std::nullopt, the new event chain is supressed
-     * 
-     * @param paCallback function to be called when a new chain of event starts
-     */
-    void setCallbackForNewEventChain(std::optional<HandleEvent> paCallback = std::nullopt);
-
-    /**
-     * @brief Set the callback for new event chains to the default one which calls the parent startEventChain
-     */
-    void setDefaultCallbackForNewEventChain();
-
-    /**
-     * @brief Let the ecet run freely and not controlled from outside anymore
-     */
-    void removeExternalControl();
 
     /**
      * @brief Insert a new event at the front of the list of events
@@ -105,12 +103,46 @@ class CFakeEventExecutionThread : public CEventChainExecutionThread{
      */
     std::optional<TEventEntry> getNextEvent();
 
+    /**
+     * @brief Add a new breakpoint. If the breakpoint already exists, nothing happens
+
+     * @param paBreakpoint breakpoint to add
+     */
+    void addBreakpoint(TEventEntry paBreakpoint);
+
+    /**
+     * @brief Remove breakpoint. If the breakpoint does not exist, nothing happen
+
+     * @param paBreakpoint breakpoint to remove
+     */
+    void removeBreakpoint(TEventEntry paBreakpoint);
+
+    /**
+     * @brief Set the callback that will be called when a breakpoint is hit.
+     * 
+     * @param paCallback Callback to be used
+     */
+    void setBreakpointHitCallback(HandleEvent paCallback);
+
 private:
 
     void run() override;
-    bool mIsControlledFromOutside{true};
-    std::optional<HandleEvent> mNewEventChainCallback;
-    std::optional<HandleEvent> mProcessEventCallback;
+    bool mIsRemoteEnabled{true};
+    HandleEvent mProcessEventCallback;
+    HandleEvent mBreakpointWasHit{[](TEventEntry){}};
+
+    struct EventEntryComparator {
+      bool operator() (const TEventEntry& paFirst, const TEventEntry& paSecond) const {
+        if(paFirst.mFB < paSecond.mFB){
+          return true;
+        } else if (paFirst.mFB > paSecond.mFB){
+          return false;
+        } 
+        return paFirst.mPortId < paSecond.mPortId;
+      }
+    };
+
+    std::set<TEventEntry, EventEntryComparator> mBreakpoints;
 };
 
 #endif /*_CORE_FAKE_ECET_H_*/
