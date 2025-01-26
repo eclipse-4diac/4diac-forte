@@ -61,11 +61,6 @@ void CFakeEventExecutionThread::startEventChain(TEventEntry paEvent) {
 
 // remote methods
 void CFakeEventExecutionThread::insertFront(TEventEntry paEvent){
- // if remote is not enabled, we don't manually insert events
-  if(!mIsRemoteEnabled){
-    return;
-  }
-
   // the ring buffer does not have a way to insert in the front,
   // so we create a new one and push the event first there and then the rest
   // and then copy the events back to the original list
@@ -101,11 +96,6 @@ void CFakeEventExecutionThread::removeFromBack(size_t paNumberOfItemsToRemove){
 }
 
 std::optional<TEventEntry> CFakeEventExecutionThread::getNextEvent(){
- // if remote is not enabled, we don't manually access the events
-  if(!mIsRemoteEnabled){
-    return std::nullopt;
-  }
-
   auto nextEvent = mEventList.pop(); // get a copy, but need to pop for it
   if(nextEvent == nullptr){
     return std::nullopt;
@@ -115,8 +105,6 @@ std::optional<TEventEntry> CFakeEventExecutionThread::getNextEvent(){
   return *nextEvent;
 }
 
-// we don't need the complexities of a separate thread, so 
-// the funtion just set to sleep when is controlled from outside
 void CFakeEventExecutionThread::run(){
   while(isAlive()){
     if(mIsRemoteEnabled){

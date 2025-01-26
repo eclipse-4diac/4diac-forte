@@ -25,12 +25,12 @@
  * - Normal: 
  *    - The thread processing of events runs as usual
  *    - External events are added to the queue of external events as usual
- *    - manual methods are disabled: triggerNextEvent, insertFront, removeFromBack, getNextEvent
+ *    - manual methods are disabled: triggerNextEvent, removeFromBack
  * 
  * - Remote:
  *   - The thread processing events is suspended. Events can be triggered only via triggerNextEvent
  *   - External events are discarded
- *   - manual methods are enabled: triggerNextEvent, insertFront, removeFromBack, getNextEvent
+ *   - manual methods are enabled: triggerNextEvent, removeFromBack
  * 
  * When a breakpoint is hit, the usual behaviour is to set all ecets from the device in remote mode, 
  * but since this class does not have a reference to the device, a callback needs to be passed which will
