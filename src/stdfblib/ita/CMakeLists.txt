@@ -39,3 +39,5 @@ forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 if(FORTE_SUPPORT_BOOT_FILE)
   forte_add_sourcefile_hcpp(ForteBootFileLoader)
 endif(FORTE_SUPPORT_BOOT_FILE)
+
+add_subdirectory(debug_device)
