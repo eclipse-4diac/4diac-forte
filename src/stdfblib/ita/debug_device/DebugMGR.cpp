@@ -16,8 +16,8 @@
 #include "core/ecetFactory.h"
 #include "core/ecetFake.h"
 
-DebugMGR::DebugMGR(CDevice& paDevice) : 
-  mOpcuaMgr(paDevice), mDevice(paDevice) {
+DebugMGR::DebugMGR(CDevice& paDevice, OPCUA_MGR& paOpcuaMgr) : 
+  mDevice(paDevice), mOpcuaMgr(paOpcuaMgr) {
   // we need the fake ecet to debug control the device remotely
   EcetFactory::setEcetToCreate(EcetFactory::AvailableEcets::fake);
 }
@@ -28,12 +28,6 @@ bool DebugMGR::initialize(){
   addAddBreakpointMethod();
   addRemoveBreakpointMethod();
 
-  if (mOpcuaMgr.initialize() != EMGMResponse::Ready) {
-    mArgumentsInformation.clear();
-    return false;
-  }
-  // we don't need the strings anymore
-  mArgumentsInformation.clear();
   return true;
 }
 

@@ -14,13 +14,17 @@
 #include "DebugDevice.h"
 
 DebugDevice::DebugDevice(const std::string &paMGRID) : 
-  RMT_DEV(paMGRID), mDebugMgr(*this) {
+  RMT_DEV(paMGRID), mOpcuaMgr(*this), mDebugMgr(*this, mOpcuaMgr) {
 }
 
 int DebugDevice::startDevice() {
   RMT_DEV::startDevice();
   if (!mDebugMgr.initialize()) {
     return -1;
+  }
+
+  if(mOpcuaMgr.initialize() != EMGMResponse::Ready){
+    return -2;
   }
   return 0;
 }

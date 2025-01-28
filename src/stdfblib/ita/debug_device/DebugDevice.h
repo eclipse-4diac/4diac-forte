@@ -28,5 +28,7 @@ public:
 
   int startDevice() override;
 
+  OPCUA_MGR mOpcuaMgr;
+
   DebugMGR mDebugMgr;
 };

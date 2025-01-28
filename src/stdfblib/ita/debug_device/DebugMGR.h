@@ -25,7 +25,7 @@ class CResource;
 class CFakeEventExecutionThread;
 
 /**
- * @brief Owns a OPCUA_MGR and adds device and resource methods on top of that
+ * @brief Gets a OPCUA_MGR object and adds device and resource methods on top of that
  * Device-level Methods:
  * - Remote Control (bool): void -> Allows enabling/disabling remote control of the device. Pause/Continue buttons in regular debuggers
  * 
@@ -38,26 +38,24 @@ class DebugMGR {
 
 public:
 
-  DebugMGR(CDevice& paDevice);
+  DebugMGR(CDevice& paDevice, OPCUA_MGR& paOpcuaMgr);
   ~DebugMGR() = default;
   
   /**
-   * @brief Initializes the OpcUa MGR with the extra debugging methods
+   * @brief Add debugging methods to the OPCUA_MGR object
    * 
    * @return true if no problem occurred while initializing, false otherwise.  
    */
   bool initialize();
 
-  /**
-   * @brief OpcUa Mgr on top of which the extra debugging methods will be added
-   * 
-   */
-  OPCUA_MGR mOpcuaMgr;
-
 private:
 
   // device on which the methods will be executed
   CDevice& mDevice;
+  
+  // OpcUa Mgr on top of which the extra debugging methods will be added
+  OPCUA_MGR& mOpcuaMgr;
+
 
   // the definition of the methods (and therefore its arguments) is done in different functions
   // therefore we need to store the strings for the the arguments so they live until
