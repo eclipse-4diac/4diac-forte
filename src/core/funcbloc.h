@@ -624,11 +624,10 @@ class CFunctionBlock : public forte::core::CFBContainer {
     const SFBInterfaceSpec &mInterfaceSpec; //!< Pointer to the interface specification
 
     /*!\brief initialize the data structure which holds connection counts per pin
-    * \param paNumEIs number of eventInputs
     */
-    void setupInputConnectionTrackingData(TEventID paNumEIs) {
+    void setupInputConnectionTrackingData() {
       if (getFBInterfaceSpec().mEITypeNames != nullptr) {
-        mInputEventConnectionCount = std::make_unique<size_t[]>(paNumEIs);
+        mInputEventConnectionCount = std::make_unique<size_t[]>(getFBInterfaceSpec().mNumEIs);
       }
     }
 

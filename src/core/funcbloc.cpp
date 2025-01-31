@@ -50,7 +50,7 @@ bool CFunctionBlock::initialize() {
 #ifdef  FORTE_SUPPORT_MONITORING
   setupEventMonitoringData();
 #endif //FORTE_SUPPORT_MONITORING
-  setupInputConnectionTrackingData(getFBInterfaceSpec().mNumEIs);
+  setupInputConnectionTrackingData();
   return true;
 }
 

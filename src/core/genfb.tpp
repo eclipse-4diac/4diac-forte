@@ -217,7 +217,7 @@ void CGenFunctionBlock<T>::setupFBInterface() {
     setupAdapters(varsData);
   }
 
-  T::setupInputConnectionTrackingData(T::getFBInterfaceSpec().mNumEIs);
+  T::setupInputConnectionTrackingData();
 
 #ifdef FORTE_SUPPORT_MONITORING
   T::setupEventMonitoringData();
