@@ -13,14 +13,17 @@
 
 #pragma once
 
-#include "RMT_DEV.h"
+#include "device.h"
 #include "DebugMGR.h"
+
+// std includes
+#include <future>
 
 /**
  * @brief Device that adds debug commands to the device. The commands are defined in DebugMGR
  * 
  */
-class DebugDevice : public RMT_DEV {
+class DebugDevice : public CDevice {
 public:
 
   DebugDevice(const std::string &paMGRID = "localhost:61499");
@@ -31,4 +34,21 @@ public:
   OPCUA_MGR mOpcuaMgr;
 
   DebugMGR mDebugMgr;
+
+  private:
+
+    // the kill signal sent by main is handled by this promise
+    // which is used just as a inter-thread communication
+    // to avoid condition variables and such
+    std::promise<void> mKillSignal;
+
+    static const SFBInterfaceSpec scmFBInterfaceSpec;
+
+    EMGMResponse changeExecutionState(EMGMCommandType paCommand) override;
+
+    void awaitShutdown() override;
+
+    // needed as these are abstract in the parent
+    CIEC_ANY *getDI(size_t) override;
+    CDataConnection **getDIConUnchecked(TPortId) override;
 };

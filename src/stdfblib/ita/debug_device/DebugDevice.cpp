@@ -13,12 +13,22 @@
 
 #include "DebugDevice.h"
 
-DebugDevice::DebugDevice(const std::string &paMGRID) : 
-  RMT_DEV(paMGRID), mOpcuaMgr(*this), mDebugMgr(*this, mOpcuaMgr) {
+const SFBInterfaceSpec DebugDevice::scmFBInterfaceSpec = {
+  0, nullptr, nullptr, nullptr, nullptr,
+  0, nullptr, nullptr, nullptr, nullptr,
+  0, nullptr, nullptr,
+  0, nullptr, nullptr,
+  0, nullptr,
+  0, nullptr
+};
+
+DebugDevice::DebugDevice(const std::string&) : 
+  CDevice(scmFBInterfaceSpec, CStringDictionary::scmInvalidStringId), 
+  mOpcuaMgr(*this), mDebugMgr(*this, mOpcuaMgr) {
 }
 
 int DebugDevice::startDevice() {
-  RMT_DEV::startDevice();
+  CDevice::startDevice();
   if (!mDebugMgr.initialize()) {
     return -1;
   }
@@ -28,3 +38,26 @@ int DebugDevice::startDevice() {
   }
   return 0;
 }
+
+EMGMResponse DebugDevice::changeExecutionState(EMGMCommandType paCommand){
+  EMGMResponse eRetVal = CDevice::changeExecutionState(paCommand);
+  if(EMGMCommandType::Kill == paCommand){
+    mKillSignal.set_value();
+  }
+  return eRetVal;
+}
+
+void DebugDevice::awaitShutdown() {
+  // wait for the kill signal to arrive
+  mKillSignal.get_future().wait();
+}
+
+CIEC_ANY* DebugDevice::getDI(size_t) {
+  return nullptr;
+}
+
+CDataConnection** DebugDevice::getDIConUnchecked(TPortId) {
+  return nullptr;
+}
+
+
