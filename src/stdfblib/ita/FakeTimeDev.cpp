@@ -20,6 +20,8 @@
 #include "stringdict.h"
 #include "../arch/fake_time/faketimerha.h"
 
+#include "arch/timerHandlerFactory.h"
+
 const CStringDictionary::TStringId FakeTimeDev::scmDINameIds[] = { g_nStringIdMGR_ID, g_nStringIdFakeTime};
 const CStringDictionary::TStringId FakeTimeDev::scmDIDataTypeIds[] = {g_nStringIdWSTRING, g_nStringIdTIME};
 
@@ -33,7 +35,7 @@ const SFBInterfaceSpec FakeTimeDev::scmFBInterfaceSpec = {
 };
 
 FakeTimeDev::FakeTimeDev(const std::string &paMGR_ID) :
-  CDevice(scmFBInterfaceSpec, CStringDictionary::scmInvalidStringId),
+  CDevice(scmFBInterfaceSpec, initializeTimer()),
       var_MGR_ID(paMGR_ID.c_str()),
       var_FakeTime(),
       conn_MGR_ID(nullptr),
@@ -102,3 +104,9 @@ EMGMResponse FakeTimeDev::writeValue(forte::core::TNameIdentifier &paNameList, c
   }
   return eRetVal;
 }
+
+CStringDictionary::TStringId FakeTimeDev::initializeTimer(){
+  TimerHandlerFactory::setTimeHandlerNameToCreate(TimerHandlerFactory::AvailableTimers::fakeTimer);
+  return CStringDictionary::scmInvalidStringId;
+}
+

@@ -55,4 +55,8 @@ class FakeTimeDev : public CDevice{
     CDataConnection** getDIConUnchecked(TPortId) override;
 
     RMT_RES MGR;
+
+    // allows to set the fake timer before calling the parent CDevice which
+    // will create the timer already at construction
+    CStringDictionary::TStringId initializeTimer();
 };
