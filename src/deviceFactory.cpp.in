@@ -31,6 +31,12 @@ std::string getAvailableDevices() {
   return "${DEVICE_NAMES}";
 }
 
+std::string getCurrentDeviceToCreate(){
+${DEVICE_CURRENT}
+  return "";
+}
+
+
 std::unique_ptr<CDevice> createDevice(const std::string &paMGRID){
 ${DEVICE_CREATE}
   return nullptr;

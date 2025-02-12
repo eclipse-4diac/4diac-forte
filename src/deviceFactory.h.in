@@ -33,6 +33,8 @@ namespace DeviceFactory {
 
   std::string getAvailableDevices();
 
+  std::string getCurrentDeviceToCreate();
+
 };
 
 #else // FORTE_MULTIPLE_DEVICES

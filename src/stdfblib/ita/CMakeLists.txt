@@ -41,3 +41,5 @@ if(FORTE_SUPPORT_BOOT_FILE)
 endif(FORTE_SUPPORT_BOOT_FILE)
 
 add_subdirectory(debug_device)
+add_subdirectory(multi)
+
