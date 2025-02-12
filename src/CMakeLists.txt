@@ -240,7 +240,8 @@ ELSE()
 
     SET(DEVICE_STRING_TO_ENUM  "${DEVICE_STRING_TO_ENUM}  if(paDevice == \"${DEVICE_NAME}\") {\n    deviceToCreate = AvailableDevices::${DEVICE_NAME};\n    return true;\n  }\n")
 
-
+    SET(DEVICE_CURRENT  "${DEVICE_CURRENT}\n if(deviceToCreate == AvailableDevices::${DEVICE_NAME}) return \"${DEVICE_NAME}\";")
+    
     SET(DEVICE_CREATE "${DEVICE_CREATE}  if(deviceToCreate == AvailableDevices::${DEVICE_NAME})\n    return (paMGRID.length() != 0) ? std::make_unique<${CLASS}>(paMGRID) : std::make_unique<${CLASS}>();\n")
   ENDFOREACH(POS)
 
