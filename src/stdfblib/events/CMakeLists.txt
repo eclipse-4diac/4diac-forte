@@ -20,7 +20,7 @@ SET(SOURCE_GROUP ${SOURCE_GROUP}\\events)
 
 forte_add_sourcefile_hcpp(E_CTU_fbt E_CTD_fbt E_CTUD_fbt E_CTUD_UDINT_fbt E_DELAY_fbt  E_D_FF_fbt    E_MERGE_fbt)
 forte_add_sourcefile_hcpp( E_REND_fbt   E_RS_fbt     E_SELECT_fbt  E_SR_fbt)
-forte_add_sourcefile_hcpp(E_CYCLE_fbt   E_DEMUX_fbt  E_F_TRIG_fbt  E_PERMIT_fbt) 
+forte_add_sourcefile_hcpp(E_CYCLE_fbt   E_DEMUX_fbt  E_DEMUX8_fbt E_F_TRIG_fbt  E_PERMIT_fbt) 
 forte_add_sourcefile_hcpp(E_RDELAY_fbt   E_RESTART_fbt E_R_TRIG_fbt E_SPLIT_fbt   E_SWITCH_fbt)
 forte_add_sourcefile_hcpp(GEN_E_DEMUX_fbt GEN_E_MUX_fbt)
 forte_add_sourcefile_hcpp(ATimeOut_adp E_TimeOut_fbt ARTimeOut_adp E_RTimeOut_fbt E_T_FF_fbt)
