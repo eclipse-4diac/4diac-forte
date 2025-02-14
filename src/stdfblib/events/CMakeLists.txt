@@ -27,3 +27,4 @@ forte_add_sourcefile_hcpp(ATimeOut_adp E_TimeOut_fbt ARTimeOut_adp E_RTimeOut_fb
 forte_add_sourcefile_hcpp(E_TRAIN_fbt)
 forte_add_sourcefile_hcpp(E_PULSE_fbt E_TP_fbt E_TON_fbt E_TOF_fbt E_TONOF_fbt)
 forte_add_sourcefile_hcpp(E_TRIG_fbt)
+forte_add_sourcefile_hcpp(E_TABLE_fbt E_N_TABLE_fbt E_TABLE_CTRL_fbt)
