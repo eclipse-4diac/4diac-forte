@@ -6,18 +6,23 @@
  *
  * SPDX-License-Identifier: EPL-2.0
  *
+ *** FORTE Library Element
+ ***
+ *** This file was generated using the 4DIAC FORTE Export Filter V1.0.x NG!
+ ***
+ *** Name: E_SPLIT
+ *** Description: Split an event
+ *** Version:
+ ***     1.0: 2017/Alois Zoitl - fortiss GmbH - initial API and implementation and/or initial documentation
  * Contributors:
  *   Alois Zoitl, Gerhard Ebenhofer, Ingo Hegny
- *     - initial API and implementation and/or initial documentation
- *******************************************************************************/
+ *************************************************************************/
 
 #include "E_SPLIT_fbt.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
 #include "E_SPLIT_fbt_gen.cpp"
 #endif
 
-#include "criticalregion.h"
-#include "resource.h"
 #include "forte_bool.h"
 #include "iec61131_functions.h"
 #include "forte_array_common.h"
@@ -29,13 +34,11 @@ DEFINE_FIRMWARE_FB(FORTE_E_SPLIT, g_nStringIdE_SPLIT)
 
 const TForteInt16 FORTE_E_SPLIT::scmEIWithIndexes[] = {-1};
 const CStringDictionary::TStringId FORTE_E_SPLIT::scmEventInputNames[] = {g_nStringIdEI};
-const CStringDictionary::TStringId FORTE_E_SPLIT::scmEventInputTypeIds[] = {g_nStringIdEvent};
 const TForteInt16 FORTE_E_SPLIT::scmEOWithIndexes[] = {-1, -1};
 const CStringDictionary::TStringId FORTE_E_SPLIT::scmEventOutputNames[] = {g_nStringIdEO1, g_nStringIdEO2};
-const CStringDictionary::TStringId FORTE_E_SPLIT::scmEventOutputTypeIds[] = {g_nStringIdEvent, g_nStringIdEvent};
 const SFBInterfaceSpec FORTE_E_SPLIT::scmFBInterfaceSpec = {
-  1, scmEventInputNames, scmEventInputTypeIds, nullptr, scmEIWithIndexes,
-  2, scmEventOutputNames, scmEventOutputTypeIds, nullptr, scmEOWithIndexes,
+  1, scmEventInputNames, nullptr, nullptr, scmEIWithIndexes,
+  2, scmEventOutputNames, nullptr, nullptr, scmEOWithIndexes,
   0, nullptr, nullptr,
   0, nullptr, nullptr,
   0, nullptr,
@@ -113,4 +116,3 @@ CDataConnection *FORTE_E_SPLIT::getDOConUnchecked(TPortId) {
 CIEC_ANY *FORTE_E_SPLIT::getVarInternal(size_t) {
   return nullptr;
 }
-

@@ -6,18 +6,23 @@
  *
  * SPDX-License-Identifier: EPL-2.0
  *
+ *** FORTE Library Element
+ ***
+ *** This file was generated using the 4DIAC FORTE Export Filter V1.0.x NG!
+ ***
+ *** Name: E_MERGE
+ *** Description: Merge (OR) of two input events
+ *** Version:
+ ***     1.0: 2017/Alois Zoitl - fortiss GmbH - initial API and implementation and/or initial documentation
  * Contributors:
  *   Alois Zoitl, Gerhard Ebenhofer, Ingo Hegny
- *     - initial API and implementation and/or initial documentation
- *******************************************************************************/
+ *************************************************************************/
 
 #include "E_MERGE_fbt.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
 #include "E_MERGE_fbt_gen.cpp"
 #endif
 
-#include "criticalregion.h"
-#include "resource.h"
 #include "forte_bool.h"
 #include "iec61131_functions.h"
 #include "forte_array_common.h"
@@ -29,13 +34,11 @@ DEFINE_FIRMWARE_FB(FORTE_E_MERGE, g_nStringIdE_MERGE)
 
 const TForteInt16 FORTE_E_MERGE::scmEIWithIndexes[] = {-1, -1};
 const CStringDictionary::TStringId FORTE_E_MERGE::scmEventInputNames[] = {g_nStringIdEI1, g_nStringIdEI2};
-const CStringDictionary::TStringId FORTE_E_MERGE::scmEventInputTypeIds[] = {g_nStringIdEvent, g_nStringIdEvent};
 const TForteInt16 FORTE_E_MERGE::scmEOWithIndexes[] = {-1};
 const CStringDictionary::TStringId FORTE_E_MERGE::scmEventOutputNames[] = {g_nStringIdEO};
-const CStringDictionary::TStringId FORTE_E_MERGE::scmEventOutputTypeIds[] = {g_nStringIdEvent};
 const SFBInterfaceSpec FORTE_E_MERGE::scmFBInterfaceSpec = {
-  2, scmEventInputNames, scmEventInputTypeIds, nullptr, scmEIWithIndexes,
-  1, scmEventOutputNames, scmEventOutputTypeIds, nullptr, scmEOWithIndexes,
+  2, scmEventInputNames, nullptr, nullptr, scmEIWithIndexes,
+  1, scmEventOutputNames, nullptr, nullptr, scmEOWithIndexes,
   0, nullptr, nullptr,
   0, nullptr, nullptr,
   0, nullptr,
@@ -112,4 +115,3 @@ CDataConnection *FORTE_E_MERGE::getDOConUnchecked(TPortId) {
 CIEC_ANY *FORTE_E_MERGE::getVarInternal(size_t) {
   return nullptr;
 }
-
