@@ -14,6 +14,7 @@
  *** Description: Support function block for E_TABLE
  *** Version:
  ***     1.0: 2017-09-22/Alois Zoitl - fortiss GmbH - initial API and implementation and/or initial documentation
+ ***     1.1: 2025-02-17/Franz Höpfinger - Rename INIT to START - Rename INIT to START
  *************************************************************************/
 
 #pragma once

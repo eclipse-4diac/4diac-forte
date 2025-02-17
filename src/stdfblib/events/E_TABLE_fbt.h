@@ -11,9 +11,10 @@
  *** This file was generated using the 4DIAC FORTE Export Filter V1.0.x NG!
  ***
  *** Name: E_TABLE
- *** Description: Composite Function Block Type
+ *** Description: Generation of a finite train of events, table driven
  *** Version:
  ***     1.0: 2017-09-22/Alois Zoitl - fortiss GmbH - initial API and implementation and/or initial documentation
+ ***     1.1: 2025-02-17/Franz Höpfinger - Rename INIT to START - Rename INIT to START
  *************************************************************************/
 
 #pragma once
