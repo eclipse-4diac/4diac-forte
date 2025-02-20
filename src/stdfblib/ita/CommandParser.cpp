@@ -297,7 +297,7 @@ bool CommandParser::parseFBData(char *paRequestPartLeft){
     if(acBuf != nullptr){
       if(acBuf[1] != '*'){
         ++acBuf;
-        i = parseIdentifier(acBuf, mCommand.mSecondParam);
+        i = parseTypeName(acBuf, mCommand.mSecondParam);
         if(-1 != i){
           acBuf = strchr(&(acBuf[i + 1]), '\"');
           if(acBuf != nullptr){
@@ -336,6 +336,18 @@ int CommandParser::parseIdentifier(char *paIdentifierStart, forte::core::TNameId
     }
   }
   return -1;
+}
+
+int CommandParser::parseTypeName(const std::string_view paTypeName, forte::core::TNameIdentifier &paIdentifier){
+  size_t endIndex = paTypeName.find('"');
+  if(endIndex == std::string::npos) {
+    return -1;
+  }
+  const std::string_view result = paTypeName.substr(0, endIndex);
+  if(!paIdentifier.pushBack(CStringDictionary::getInstance().insert(result.data(), result.length()))){
+    return -1;
+  }
+  return static_cast<int>(result.length());
 }
 
 bool CommandParser::parseConnectionData(char *paRequestPartLeft){

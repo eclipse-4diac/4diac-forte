@@ -114,6 +114,14 @@ namespace forte::ita {
       */
     int parseIdentifier(char *paIdentifierStart, forte::core::TNameIdentifier &paIdentifier);
 
+    /*! \brief Parse the name of the type
+      *
+      * @param paTypeName string containing the type name that will be parsed
+      * @param paIdentifier identifier vector where to write the parsed identifiers to
+      * @return number of bytes used from the character array or -1 if the identifier could not be parsed
+      */
+    int parseTypeName(const std::string_view paTypeName, forte::core::TNameIdentifier &paIdentifier);
+
   #ifdef FORTE_SUPPORT_MONITORING
     bool parseMonitoringData(char *paRequestPartLeft);
     std::string generateMonitorResponse();
