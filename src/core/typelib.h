@@ -276,6 +276,8 @@ private:
   static CDataTypeEntry *mDTLibStart, //!< pointer to the begin of the data type library
                  *mDTLibEnd; //!< pointer to the end of the data type library
 
+  static CFunctionBlock *createGenericFB(CStringDictionary::TStringId paInstanceNameId, CStringDictionary::TStringId paFBTypeId, forte::core::CFBContainer &paContainer);
+
   //! find the position of the first underscore that marks the end of the type name and the beginning of the generic part
   static const char* getFirstNonTypeNameUnderscorePos(const char* paTypeName);
 };

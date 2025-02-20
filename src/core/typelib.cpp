@@ -25,6 +25,8 @@
 #include "adapter.h"
 #include <stddef.h>
 
+using namespace std::string_literals;
+
 CTypeLib::CTypeEntry::CTypeEntry(CStringDictionary::TStringId paTypeNameId) :
   mTypeNameId(paTypeNameId),
   mNext(nullptr){
@@ -113,54 +115,60 @@ CAdapter *CTypeLib::createAdapter(CStringDictionary::TStringId paInstanceNameId,
 }
 
 CFunctionBlock *CTypeLib::createFB(CStringDictionary::TStringId paInstanceNameId, CStringDictionary::TStringId paFBTypeId, forte::core::CFBContainer &paContainer) {
-  CFunctionBlock *poNewFB = nullptr;
-  CTypeEntry *poToCreate = findType(paFBTypeId, mFBLibStart);
+  CFunctionBlock *newFB = nullptr;
+  CTypeEntry *typeEntry = findType(paFBTypeId, mFBLibStart);
   //TODO: Avoid that the user can create generic blocks.
-  if (nullptr != poToCreate) {
-    poNewFB = (static_cast<CFBTypeEntry *>(poToCreate))->createFBInstance(paInstanceNameId, paContainer);
-    if(nullptr == poNewFB) { // we could not create the requested object
+  if (typeEntry != nullptr) {
+    newFB = (static_cast<CFBTypeEntry *>(typeEntry))->createFBInstance(paInstanceNameId, paContainer);
+    if(nullptr == newFB) { // we could not create the requested object
       mLastErrorMSG = EMGMResponse::Overflow;
     }
   } else { //check for parameterizable FBs (e.g. SERVER)
-    TIdentifier acGenFBName = { "GEN_" };
-    const char *acTypeBuf = CStringDictionary::get(paFBTypeId);
-    const char *pcUnderScore = getFirstNonTypeNameUnderscorePos(acTypeBuf);
+    newFB = createGenericFB(paInstanceNameId, paFBTypeId, paContainer);
+  }
 
-    if (nullptr != pcUnderScore) { // We found no underscore in the type name therefore it can not be a generic type
-      ptrdiff_t nCopyLen = pcUnderScore - acTypeBuf;
-      if(nCopyLen > static_cast<ptrdiff_t>(cgIdentifierLength - 4)) {
-        nCopyLen = cgIdentifierLength - 4;
-      }
-      memcpy(&(acGenFBName[4]), acTypeBuf, nCopyLen);
-      acGenFBName[cgIdentifierLength] = '\0';
-      poToCreate = findType(CStringDictionary::getId(acGenFBName), mFBLibStart);
-      if (nullptr != poToCreate) {
-        poNewFB = (static_cast<CFBTypeEntry *>(poToCreate))->createFBInstance(paInstanceNameId, paContainer);
-        if (nullptr == poNewFB){ // we could not create the requested object
-          mLastErrorMSG = EMGMResponse::Overflow;
-        }
-        else { // we got a configurable block
-          if (!poNewFB->configureFB(acTypeBuf)) {
-            deleteFB(poNewFB);
-            poNewFB = nullptr;
-          }
-        }
-      }
-      else{
-        mLastErrorMSG = EMGMResponse::UnsupportedType;
-      }
-    }
-    else{
-      mLastErrorMSG = EMGMResponse::UnsupportedType;
+  if(nullptr != newFB && !newFB->initialize()) {
+    deleteFB(newFB);
+    newFB = nullptr;
+  }
+
+  return newFB;
+}
+
+CFunctionBlock *CTypeLib::createGenericFB(CStringDictionary::TStringId paInstanceNameId, CStringDictionary::TStringId paFBTypeId, forte::core::CFBContainer &paContainer) {
+  const char *const typeBuf = CStringDictionary::get(paFBTypeId);
+  const char *const underScore = getFirstNonTypeNameUnderscorePos(typeBuf);
+
+  if(underScore == nullptr) {
+    // We found no underscore in the type name therefore it can not be a generic type
+    mLastErrorMSG = EMGMResponse::UnsupportedType;
+    return nullptr;
+  }
+
+  ptrdiff_t typeNameLen = underScore - typeBuf;
+  std::string genFBName;
+  genFBName.reserve(4 + typeNameLen);
+  genFBName += "GEN_"s;
+  genFBName.append(typeBuf, typeNameLen);
+
+  CTypeEntry *typeEntry = findType(CStringDictionary::getId(genFBName.c_str()), mFBLibStart);
+
+  if(typeEntry == nullptr) {
+    mLastErrorMSG = EMGMResponse::UnsupportedType;
+    return nullptr;
+  }
+
+  CFunctionBlock *newFB = (static_cast<CFBTypeEntry*>(typeEntry))->createFBInstance(paInstanceNameId, paContainer);
+  if(newFB == nullptr) { // we could not create the requested object
+    mLastErrorMSG = EMGMResponse::Overflow;
+  } else { // we got a configurable block
+    if(!newFB->configureFB(typeBuf)) {
+      deleteFB (newFB);
+      return nullptr;
     }
   }
 
-  if(nullptr != poNewFB && !poNewFB->initialize()) {
-    deleteFB(poNewFB);
-    poNewFB = nullptr;
-  }
-
-  return poNewFB;
+  return newFB;
 }
 
 bool CTypeLib::deleteFB(CFunctionBlock *paFBToDelete) {
