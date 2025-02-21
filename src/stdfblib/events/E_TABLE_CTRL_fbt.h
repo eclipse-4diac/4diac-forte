@@ -1,11 +1,12 @@
-/*******************************************************************************
- * Copyright (c) 2017 fortiss GmbH
- * This program and the accompanying materials are made available under the
- * terms of the Eclipse Public License 2.0 which is available at
- * http://www.eclipse.org/legal/epl-2.0.
- *
- * SPDX-License-Identifier: EPL-2.0
- *
+/************************************************************************* 
+ *** Copyright (c) 2017 fortiss GmbH 
+ ***   
+ *** This program and the accompanying materials are made 
+ *** available under the terms of the Eclipse Public License 2.0 
+ *** which is available at https://www.eclipse.org/legal/epl-2.0/ 
+ ***  
+ *** SPDX-License-Identifier: EPL-2.0 
+ *** 
  *** FORTE Library Element
  ***
  *** This file was generated using the 4DIAC FORTE Export Filter V1.0.x NG!
@@ -35,7 +36,7 @@ class FORTE_E_TABLE_CTRL final : public CBasicFB {
     static const CStringDictionary::TStringId scmDataInputTypeIds[];
     static const CStringDictionary::TStringId scmDataOutputNames[];
     static const CStringDictionary::TStringId scmDataOutputTypeIds[];
-    static const TEventID scmEventSTARTID = 0;
+    static const TEventID scmEventINITID = 0;
     static const TEventID scmEventCLKID = 1;
     static const TDataIOID scmEIWith[];
     static const TForteInt16 scmEIWithIndexes[];
@@ -94,10 +95,10 @@ class FORTE_E_TABLE_CTRL final : public CBasicFB {
     CDataConnection **getDIConUnchecked(TPortId) override;
     CDataConnection *getDOConUnchecked(TPortId) override;
 
-    void evt_START(const CIEC_ARRAY_COMMON<CIEC_TIME> &paDT, const CIEC_UINT &paN, CIEC_TIME &paDTO, CIEC_UINT &paCV) {
+    void evt_INIT(const CIEC_ARRAY_COMMON<CIEC_TIME> &paDT, const CIEC_UINT &paN, CIEC_TIME &paDTO, CIEC_UINT &paCV) {
       var_DT = paDT;
       var_N = paN;
-      executeEvent(scmEventSTARTID, nullptr);
+      executeEvent(scmEventINITID, nullptr);
       paDTO = var_DTO;
       paCV = var_CV;
     }
@@ -111,7 +112,7 @@ class FORTE_E_TABLE_CTRL final : public CBasicFB {
     }
 
     void operator()(const CIEC_ARRAY_COMMON<CIEC_TIME> &paDT, const CIEC_UINT &paN, CIEC_TIME &paDTO, CIEC_UINT &paCV) {
-      evt_START(paDT, paN, paDTO, paCV);
+      evt_INIT(paDT, paN, paDTO, paCV);
     }
 };
 

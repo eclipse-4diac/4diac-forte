@@ -1,11 +1,12 @@
-/*******************************************************************************
- * Copyright (c) 2017 fortiss GmbH
- * This program and the accompanying materials are made available under the
- * terms of the Eclipse Public License 2.0 which is available at
- * http://www.eclipse.org/legal/epl-2.0.
- *
- * SPDX-License-Identifier: EPL-2.0
- *
+/************************************************************************* 
+ *** Copyright (c) 2017 fortiss GmbH 
+ ***   
+ *** This program and the accompanying materials are made 
+ *** available under the terms of the Eclipse Public License 2.0 
+ *** which is available at https://www.eclipse.org/legal/epl-2.0/ 
+ ***  
+ *** SPDX-License-Identifier: EPL-2.0 
+ *** 
  *** FORTE Library Element
  ***
  *** This file was generated using the 4DIAC FORTE Export Filter V1.0.x NG!
@@ -40,7 +41,7 @@ const CStringDictionary::TStringId FORTE_E_TABLE_CTRL::scmDataOutputNames[] = {g
 const CStringDictionary::TStringId FORTE_E_TABLE_CTRL::scmDataOutputTypeIds[] = {g_nStringIdTIME, g_nStringIdUINT};
 const TDataIOID FORTE_E_TABLE_CTRL::scmEIWith[] = {0, 1, scmWithListDelimiter};
 const TForteInt16 FORTE_E_TABLE_CTRL::scmEIWithIndexes[] = {0, -1};
-const CStringDictionary::TStringId FORTE_E_TABLE_CTRL::scmEventInputNames[] = {g_nStringIdSTART, g_nStringIdCLK};
+const CStringDictionary::TStringId FORTE_E_TABLE_CTRL::scmEventInputNames[] = {g_nStringIdINIT, g_nStringIdCLK};
 const TDataIOID FORTE_E_TABLE_CTRL::scmEOWith[] = {0, 1, scmWithListDelimiter};
 const TForteInt16 FORTE_E_TABLE_CTRL::scmEOWithIndexes[] = {0};
 const CStringDictionary::TStringId FORTE_E_TABLE_CTRL::scmEventOutputNames[] = {g_nStringIdCLKO};
@@ -79,7 +80,7 @@ void FORTE_E_TABLE_CTRL::executeEvent(TEventID paEIID, CEventChainExecutionThrea
   do {
     switch(mECCState) {
       case scmStateSTART:
-        if(scmEventSTARTID == paEIID) enterStateINIT(paECET);
+        if(scmEventINITID == paEIID) enterStateINIT(paECET);
         else
         if((scmEventCLKID == paEIID) && (func_LT(var_CV, func_MIN(3_UINT, func_SUB<CIEC_UINT>(var_N, 1_UINT))))) enterStateNEXT_STEP(paECET);
         else return; //no transition cleared
@@ -129,7 +130,7 @@ void FORTE_E_TABLE_CTRL::enterStateNEXT_STEP(CEventChainExecutionThread *const p
 
 void FORTE_E_TABLE_CTRL::readInputData(const TEventID paEIID) {
   switch(paEIID) {
-    case scmEventSTARTID: {
+    case scmEventINITID: {
       readData(0, var_DT, conn_DT);
       readData(1, var_N, conn_N);
       break;
