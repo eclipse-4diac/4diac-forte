@@ -1,0 +1,93 @@
+logiBUS-io
+
+# esp_adc component
+PackageName: component-esp_adc
+SPDXID: SPDXRef-COMPONENT-esp-adc
+PackageVersion: v5.4
+PackageSupplier: Organization: Espressif Systems (Shanghai) CO LTD
+PackageDownloadLocation: NOASSERTION
+FilesAnalyzed: false
+PackageLicenseConcluded: NOASSERTION
+PackageLicenseDeclared: NOASSERTION
+PackageCopyrightText: NOASSERTION
+ExternalRef: OTHER repository https://github.com/espressif/esp-idf.git@67c1de1eebe095d554d281952fde63c16ee2dca0#components/esp_adc
+Relationship: SPDXRef-COMPONENT-esp-adc DEPENDS_ON SPDXRef-COMPONENT-efuse
+Relationship: SPDXRef-COMPONENT-esp-adc DEPENDS_ON SPDXRef-COMPONENT-esp-mm
+Relationship: SPDXRef-COMPONENT-esp-adc DEPENDS_ON SPDXRef-COMPONENT-esp-pm
+Relationship: SPDXRef-COMPONENT-esp-adc DEPENDS_ON SPDXRef-COMPONENT-esp-driver-gpio
+Relationship: SPDXRef-COMPONENT-esp-adc DEPENDS_ON SPDXRef-COMPONENT-esp-ringbuf
+
+
+# esp_driver_gpio component
+PackageName: component-esp_driver_gpio
+SPDXID: SPDXRef-COMPONENT-esp-driver-gpio
+PackageVersion: v5.4
+PackageSupplier: Organization: Espressif Systems (Shanghai) CO LTD
+PackageDownloadLocation: NOASSERTION
+FilesAnalyzed: false
+PackageLicenseConcluded: NOASSERTION
+PackageLicenseDeclared: NOASSERTION
+PackageCopyrightText: NOASSERTION
+ExternalRef: OTHER repository https://github.com/espressif/esp-idf.git@67c1de1eebe095d554d281952fde63c16ee2dca0#components/esp_driver_gpio
+Relationship: SPDXRef-COMPONENT-esp-driver-gpio DEPENDS_ON SPDXRef-COMPONENT-esp-pm
+
+
+# esp_driver_ledc component
+PackageName: component-esp_driver_ledc
+SPDXID: SPDXRef-COMPONENT-esp-driver-ledc
+PackageVersion: v5.4
+PackageSupplier: Organization: Espressif Systems (Shanghai) CO LTD
+PackageDownloadLocation: NOASSERTION
+FilesAnalyzed: false
+PackageLicenseConcluded: NOASSERTION
+PackageLicenseDeclared: NOASSERTION
+PackageCopyrightText: NOASSERTION
+ExternalRef: OTHER repository https://github.com/espressif/esp-idf.git@67c1de1eebe095d554d281952fde63c16ee2dca0#components/esp_driver_ledc
+Relationship: SPDXRef-COMPONENT-esp-driver-ledc DEPENDS_ON SPDXRef-COMPONENT-esp-driver-gpio
+Relationship: SPDXRef-COMPONENT-esp-driver-ledc DEPENDS_ON SPDXRef-COMPONENT-esp-pm
+
+
+# espressif__button component
+PackageName: component-espressif__button
+PackageSummary: <text>GPIO and ADC and Matrix button driver</text>
+SPDXID: SPDXRef-COMPONENT-espressif--button
+PackageVersion: 4.0.0
+PackageSupplier: Organization: Espressif Systems (Shanghai) CO LTD
+PackageDownloadLocation: https://github.com/espressif/esp-iot-solution/tree/master/components/button
+FilesAnalyzed: false
+PackageLicenseConcluded: NOASSERTION
+PackageLicenseDeclared: NOASSERTION
+PackageCopyrightText: NOASSERTION
+ExternalRef: OTHER repository git://github.com/espressif/esp-iot-solution.git
+Relationship: SPDXRef-COMPONENT-espressif--button DEPENDS_ON SPDXRef-COMPONENT-esp-timer
+
+
+# espressif__led_indicator component
+PackageName: component-espressif__led_indicator
+PackageSummary: <text>LED indicator driver</text>
+SPDXID: SPDXRef-COMPONENT-espressif--led-indicator
+PackageVersion: 1.0.0
+PackageSupplier: Organization: Espressif Systems (Shanghai) CO LTD
+PackageDownloadLocation: https://github.com/espressif/esp-iot-solution/tree/master/components/led/led_indicator
+FilesAnalyzed: false
+PackageLicenseConcluded: NOASSERTION
+PackageLicenseDeclared: NOASSERTION
+PackageCopyrightText: NOASSERTION
+ExternalRef: OTHER repository git://github.com/espressif/esp-iot-solution.git
+Relationship: SPDXRef-COMPONENT-espressif--led-indicator DEPENDS_ON SPDXRef-COMPONENT-espressif--led-strip
+
+# espressif__led_strip component
+PackageName: component-espressif__led_strip
+PackageSummary: <text>Driver for Addressable LED Strip (WS2812, etc)</text>
+SPDXID: SPDXRef-COMPONENT-espressif--led-strip
+PackageVersion: 2.5.5
+PackageSupplier: Organization: Espressif Systems (Shanghai) CO LTD
+PackageDownloadLocation: https://github.com/espressif/idf-extra-components/tree/master/led_strip
+FilesAnalyzed: false
+PackageLicenseConcluded: NOASSERTION
+PackageLicenseDeclared: NOASSERTION
+PackageCopyrightText: NOASSERTION
+ExternalRef: OTHER repository git://github.com/espressif/idf-extra-components.git
+Relationship: SPDXRef-COMPONENT-espressif--led-strip DEPENDS_ON SPDXRef-COMPONENT-esp-driver-rmt
+Relationship: SPDXRef-COMPONENT-espressif--led-strip DEPENDS_ON SPDXRef-COMPONENT-esp-driver-spi
+
