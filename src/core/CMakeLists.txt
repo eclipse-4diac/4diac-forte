@@ -22,7 +22,7 @@ forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 forte_add_subdirectory(cominfra)
 forte_add_subdirectory(datatypes)
-forte_add_subdirectory(utils)
+forte_add_subdirectory(util)
 forte_add_subdirectory(io)
 forte_add_subdirectory(fmi)
 
