@@ -13,6 +13,7 @@
 #include "../../../src/core/util/string_utils.h"
 #include <errno.h>
 #include <stdlib.h>
+#include <array>
 
 BOOST_AUTO_TEST_SUITE(CIEC_ARRAY_function_test)
 
@@ -412,7 +413,7 @@ BOOST_AUTO_TEST_SUITE(CIEC_ARRAY_function_test)
 
   }
 
-  const char* sNonEscapedData[] = {
+  const auto sNonEscapedData = std::array {
       "", "A", "AB", //no escaped chars
       "\"", "'", "&",  "<", ">", //single examples
       "\"\"", "''", "&&",  "<<", ">>", //double examples
@@ -423,7 +424,7 @@ BOOST_AUTO_TEST_SUITE(CIEC_ARRAY_function_test)
       "\"'", "\"'&", "\"'&<",  "\"'&<>", "\"A'B&C<D>EFGH" //mixed escaped chars
   };
 
-  unsigned int sExtraSize[] = {
+  const auto sExtraSize = std::array{
       0, 0, 0, //no escaped chars
       5, 5, 4, 3, 3, //single examples
       10, 10, 8, 6, 6, //double examples
@@ -433,7 +434,7 @@ BOOST_AUTO_TEST_SUITE(CIEC_ARRAY_function_test)
       10, 10, 8, 6, 6, //one char in the middle
       10, 14, 17, 20, 20  }; //mixed escaped chars
 
-  const char* sEscapedData[] = {
+  const auto sEscapedData = std::array<std::string, sNonEscapedData.size()> {
       "", "A", "AB", //no escaped chars
       "&quot;", "&apos;", "&amp;",  "&lt;", "&gt;",  //single examples
       "&quot;&quot;", "&apos;&apos;", "&amp;&amp;",  "&lt;&lt;", "&gt;&gt;", //double examples
@@ -452,19 +453,19 @@ BOOST_AUTO_TEST_SUITE(CIEC_ARRAY_function_test)
 
     BOOST_AUTO_TEST_CASE(transformNonEscapedToEscapedXMLText){
       char toTest[50];
-      for(size_t i = 0; i < sizeof(sNonEscapedData) / sizeof(const char*); i++){
+      for(size_t i = 0; i < sNonEscapedData.size(); i++){
         memset(toTest, 0, 50);
         memcpy(toTest, sNonEscapedData[i], strlen(sNonEscapedData[i]));
         BOOST_CHECK_EQUAL(forte::core::util::transformNonEscapedToEscapedXMLText(toTest), sExtraSize[i]);
-        BOOST_CHECK_EQUAL(0, strcmp(toTest, sEscapedData[i]));
+        BOOST_CHECK_EQUAL(std::string(toTest), sEscapedData[i]);
       }
     }
 
     BOOST_AUTO_TEST_CASE(transformEscapedXMLToNonEscapedText){
       char toTest[50];
-      for(size_t i = 0; i < sizeof(sNonEscapedData) / sizeof(const char*); i++){
+      for(size_t i = 0; i < sNonEscapedData.size(); i++){
         memset(toTest, 0, 50);
-        memcpy(toTest, sEscapedData[i], strlen(sEscapedData[i]));
+        memcpy(toTest, sEscapedData[i].c_str(), sEscapedData[i].length());
         BOOST_CHECK_EQUAL(forte::core::util::transformEscapedXMLToNonEscapedText(toTest), sExtraSize[i]);
         BOOST_CHECK_EQUAL(0, strcmp(toTest, sNonEscapedData[i]));
       }

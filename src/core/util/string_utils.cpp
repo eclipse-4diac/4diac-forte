@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 fortiss GmbH
+ * Copyright (c) 2013, 2025 fortiss GmbH, Johannes Kepler University Linz
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -7,18 +7,29 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *   Alois Zoitl
- *    - initial API and implementation and/or initial documentation
+ *   Alois Zoitl - initial API and implementation and/or initial documentation
  *******************************************************************************/
 #include "string_utils.h"
-#include <forte_dint.h>
-#include <forte_udint.h>
-#include <forte_lint.h>
-#include <forte_ulint.h>
+#include "../datatypes/forte_dint.h"
+#include "../datatypes/forte_udint.h"
+#include "../datatypes/forte_lint.h"
+#include "../datatypes/forte_ulint.h"
 #include "../../arch/devlog.h"
 
 #include <errno.h>
 #include <string.h>
+#include <array>
+#include <map>
+
+constexpr auto scCharacters2Escape = std::array {"&quot;", "&apos;", "&amp;", "&lt;", "&gt;"};
+
+const std::map<char, std::tuple<const char *, size_t>> scEscapeMap = {
+    {'"',  {scCharacters2Escape[0], std::char_traits<char>::length(scCharacters2Escape[0])}},
+    {'\'', {scCharacters2Escape[1], std::char_traits<char>::length(scCharacters2Escape[1])}},
+    {'&',  {scCharacters2Escape[2], std::char_traits<char>::length(scCharacters2Escape[2])}},
+    {'<',  {scCharacters2Escape[3], std::char_traits<char>::length(scCharacters2Escape[3])}},
+    {'>',  {scCharacters2Escape[4], std::char_traits<char>::length(scCharacters2Escape[4])}}
+};
 
 bool forte::core::util::isAtoFChar(char paValue){
   paValue = static_cast<char>(toupper(paValue));
@@ -203,11 +214,9 @@ unsigned long long int forte::core::util::strtoull(const char *nptr, char **endp
 size_t forte::core::util::getExtraSizeForXMLEscapedChars(const char* paString){
   size_t retVal = 0;
   while(0 != *paString){
-    for(size_t i = 0; i < sizeof(forte::core::util::scReplacementForXMLEscapedCharacters) / sizeof(const char* const); i++){
-      if(forte::core::util::scXMLEscapedCharacters[i] == *paString){
-        retVal += strlen(forte::core::util::scReplacementForXMLEscapedCharacters[i]) - 1;
-        break;
-      }
+    auto escapeChar = scEscapeMap.find(*paString);
+    if(escapeChar != scEscapeMap.end()){
+      retVal += std::get<1>(escapeChar->second) - 1;
     }
     paString++;
   }
@@ -220,19 +229,12 @@ size_t forte::core::util::transformNonEscapedToEscapedXMLText(char* const paStri
   char* originalEnd = runner;
   runner--;
   while(paString <= runner){
-    const char* toCopy = nullptr;
-
-    for(size_t i = 0; i < sizeof(forte::core::util::scReplacementForXMLEscapedCharacters) / sizeof(const char* const ); i++){
-      if(forte::core::util::scXMLEscapedCharacters[i] == *runner){
-        toCopy = forte::core::util::scReplacementForXMLEscapedCharacters[i];
-        break;
-      }
-    }
-
-    if(nullptr != toCopy){
-      size_t toMove = strlen(toCopy);
+    auto escapeChar = scEscapeMap.find(*runner);
+    if(escapeChar != scEscapeMap.end()){
+      const char *const escapSeq = std::get<0>(escapeChar->second);
+      size_t toMove = std::get<1>(escapeChar->second);
       memmove(&runner[toMove], runner + 1, originalEnd - runner + retVal);
-      memcpy(runner, toCopy, toMove);
+      memcpy(runner, escapSeq, toMove);
       retVal += toMove - 1;
     }
     runner--;
@@ -249,12 +251,14 @@ size_t forte::core::util::transformEscapedXMLToNonEscapedText(char* const paStri
       char toCopy = 0;
       size_t toMove = 0;
 
-      for(size_t i = 0; i < sizeof(forte::core::util::scReplacementForXMLEscapedCharacters) / sizeof(const char* const ); i++){
-        if(0 == strncmp(runner, forte::core::util::scReplacementForXMLEscapedCharacters[i], strlen(forte::core::util::scReplacementForXMLEscapedCharacters[i]))){
-          toCopy = forte::core::util::scXMLEscapedCharacters[i];
-          toMove = strlen(forte::core::util::scReplacementForXMLEscapedCharacters[i]);
+      for(const auto& [characters2Escape, escapeSeqTuple] : scEscapeMap){
+        const char * escapSeq = std::get<0>(escapeSeqTuple);
+        size_t escapeSequLen = std::get<1>(escapeSeqTuple);
+        if(0 == strncmp(runner, escapSeq, escapeSequLen)) {
+          toCopy = characters2Escape;
+          toMove = escapeSequLen;
           break;
-        }
+         }
       }
 
       if(0 != toCopy){

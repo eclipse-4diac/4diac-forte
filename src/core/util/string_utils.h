@@ -47,10 +47,6 @@ namespace forte {
 
       unsigned long long int strtoull(const char *nptr, char **endptr, int base);
 
-      const char scXMLEscapedCharacters[] = { '"', '\'', '&', '<', '>'};
-
-      const char* const scReplacementForXMLEscapedCharacters[sizeof(scXMLEscapedCharacters)] = {"&quot;", "&apos;", "&amp;",  "&lt;", "&gt;"};
-
       /**
        * Gets the extra space needed in a string for escaped chars.
        * @param paString The null ended C-string that's being checked for chars that need to be escaped
