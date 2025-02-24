@@ -16,7 +16,7 @@
 #ifndef SRC_CORE_IO_MAPPER_MAPPER_H_
 #define SRC_CORE_IO_MAPPER_MAPPER_H_
 
-#include <utils/singlet.h>
+#include "core/util/singlet.h"
 #include <forte_wstring.h>
 #include <map>
 #include <string>

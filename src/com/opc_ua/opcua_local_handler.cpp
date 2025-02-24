@@ -21,14 +21,14 @@
  *      - Add support for Object Structs
  *******************************************************************************/
 
-#include "../../core/devexec.h"
-#include "../../core/iec61131_functions.h"
-#include "../../core/cominfra/basecommfb.h"
-#include "../../core/utils/parameterParser.h"
-#include "../../core/utils/string_utils.h"
+#include "core/devexec.h"
+#include "core/iec61131_functions.h"
+#include "core/cominfra/basecommfb.h"
+#include "core/util/parameterParser.h"
+#include "core/util/string_utils.h"
 #include "criticalregion.h"
 #include "forte_printer.h"
-#include "../../arch/utils/mainparam_utils.h"
+#include "arch/utils/mainparam_utils.h"
 #include "opcua_local_handler.h"
 #include "struct_action_info.h"
 #ifdef FORTE_COM_OPC_UA_MULTICAST

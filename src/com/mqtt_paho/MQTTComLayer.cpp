@@ -13,7 +13,7 @@
  *******************************************************************************/
 
 #include "MQTTComLayer.h"
-#include "../../core/utils/parameterParser.h"
+#include "core/util/parameterParser.h"
 #include "MQTTHandler.h"
 #include "MQTTClient.h"
 #include "commfb.h"

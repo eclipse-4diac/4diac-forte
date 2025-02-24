@@ -22,11 +22,11 @@
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
 #include "DEV_MGR_gen.cpp"
 #endif
-#include "../../core/device.h"
+#include "core/device.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include "ForteBootFileLoader.h"
-#include "../../core/utils/string_utils.h"
+#include "core/util/string_utils.h"
 
 DEFINE_FIRMWARE_FB(DEV_MGR, g_nStringIdDEV_MGR)
 

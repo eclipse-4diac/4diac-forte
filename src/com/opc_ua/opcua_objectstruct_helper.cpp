@@ -18,9 +18,9 @@
 #include "opcua_layer.h"
 #include "struct_member_action_info.h"
 #include "struct_action_info.h"
-#include "../../core/cominfra/basecommfb.h"
+#include "core/cominfra/basecommfb.h"
 #include "opcua_local_handler.h"
-#include "../../core/utils/parameterParser.h"
+#include "core/util/parameterParser.h"
 #include <sstream>
 
 using namespace forte::com_infra;

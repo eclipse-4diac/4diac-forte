@@ -27,8 +27,8 @@
 #include "adapter.h"
 #include "adapterconn.h"
 #include "if2indco.h"
-#include "utils/criticalregion.h"
-#include "utils/fixedcapvector.h"
+#include "core/util/criticalregion.h"
+#include "core/util/fixedcapvector.h"
 #include "core/ecetFactory.h"
 
 #ifdef FORTE_DYNAMIC_TYPE_LOAD

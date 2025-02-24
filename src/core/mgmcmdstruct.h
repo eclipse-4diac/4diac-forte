@@ -14,7 +14,7 @@
 #define MGMCMDSTRUCT_H_
 
 #include "mgmcmd.h"
-#include "utils/fixedcapvector.h"
+#include "core/util/fixedcapvector.h"
 #include "stringdict.h"
 #include <string>
 

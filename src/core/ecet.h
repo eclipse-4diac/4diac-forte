@@ -16,7 +16,7 @@
 
 #include "event.h"
 #include "datatypes/forte_time.h"
-#include "utils/ringbuf.h"
+#include "core/util/ringbuf.h"
 #include <forte_thread.h>
 #include <forte_sync.h>
 #include <forte_sem.h>

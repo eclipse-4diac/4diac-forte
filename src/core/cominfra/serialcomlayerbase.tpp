@@ -11,7 +11,7 @@
  *******************************************************************************/
 
 #include "serialcomlayerbase.h"
-#include "../utils/parameterParser.h"
+#include "core/util/parameterParser.h"
 #include <criticalregion.h>
 
 template <typename TThreadHandle, TThreadHandle nullHandle>

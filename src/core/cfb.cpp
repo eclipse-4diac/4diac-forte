@@ -20,7 +20,7 @@
 #include "cfb.h"
 #include "adapter.h"
 #include "resource.h"
-#include "utils/criticalregion.h"
+#include "core/util/criticalregion.h"
 #include "if2indco.h"
 #include "adapterconn.h"
 

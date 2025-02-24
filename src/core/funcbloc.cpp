@@ -25,7 +25,7 @@
 #include "adapter.h"
 #include "device.h"
 #include "connectiondestinationtype.h"
-#include "utils/criticalregion.h"
+#include "core/util/criticalregion.h"
 #include "../arch/timerha.h"
 #include <string.h>
 #include <stdlib.h>

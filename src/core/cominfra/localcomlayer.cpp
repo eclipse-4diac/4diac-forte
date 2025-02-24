@@ -18,7 +18,7 @@
 #include "commfb.h"
 #include "../resource.h"
 #include "../device.h"
-#include "../utils/criticalregion.h"
+#include "core/util/criticalregion.h"
 
 
 using namespace forte::com_infra;

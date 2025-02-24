@@ -19,8 +19,8 @@
 #include "resource.h"
 #include "device.h"
 #include "ecet.h"
-#include "utils/criticalregion.h"
-#include "utils/string_utils.h"
+#include "core/util/criticalregion.h"
+#include "core/util/string_utils.h"
 
 using namespace std::string_literals;
 using namespace forte::core;

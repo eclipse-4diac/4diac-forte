@@ -22,7 +22,7 @@
 #include "comlayer.h"
 #include <forte_string.h>
 #include "ipcomlayer.h"
-#include "../../core/utils/parameterParser.h"
+#include "core/util/parameterParser.h"
 
 namespace forte {
 

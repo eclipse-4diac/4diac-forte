@@ -15,7 +15,7 @@
 
 #include <cstring>
 
-#include "core/utils/string_utils.h"
+#include "core/util/string_utils.h"
 #include "core/device.h"
 
 
