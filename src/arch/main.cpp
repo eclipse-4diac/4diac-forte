@@ -18,7 +18,7 @@
 #include "../core/forteinstance.h"
 #include "forte_architecture.h"
 
-#include "../utils/mainparam_utils.h"
+#include "arch/utils/mainparam_utils.h"
 
 /*!\brief Check if the correct endianess has been configured.
  *

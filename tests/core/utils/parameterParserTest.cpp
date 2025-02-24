@@ -13,7 +13,7 @@
  *      primitve types
  *******************************************************************************/
 #include <boost/test/unit_test.hpp>
-#include "../../../src/core/utils/parameterParser.h"
+#include "../../../src/core/util/parameterParser.h"
 #include "../../../src/core/datatypes/forte_string.h"
 #include <string.h>
 

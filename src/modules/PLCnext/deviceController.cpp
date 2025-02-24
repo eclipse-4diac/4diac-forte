@@ -10,7 +10,7 @@
  *   Peirlberger Juergen - initial API and implementation and/or initial documentation
  *******************************************************************************/
 
-#include "../../../core/utils/criticalregion.h"
+#include "core/util/criticalregion.h"
 #include "deviceController.h"
 #include "slaveHandle/bitSlaveHandle.h"
 #include "slaveHandle/slaveHandle.h"

@@ -20,8 +20,8 @@
 #include <time.h>
 
 #include "forte_sem.h"
-#include "../devlog.h"
-#include "../utils/timespec_utils.h"
+#include "arch/devlog.h"
+#include "arch/utils/timespec_utils.h"
 
 namespace forte {
   namespace arch {

@@ -13,7 +13,7 @@
 
 #include "forte_c.h"
 
-#include "../utils/mainparam_utils.h"
+#include "arch/utils/mainparam_utils.h"
 #include "forte_architecture.h"
 #include "forte_printer.h"
 #include "forteinstance.h"

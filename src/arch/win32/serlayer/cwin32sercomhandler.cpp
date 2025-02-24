@@ -11,8 +11,8 @@
  *******************************************************************************/
 #include "cwin32sercomhandler.h"
 #include "cwin32sercomlayer.h"
-#include "../../../core/utils/criticalregion.h"
-#include "../../../core/cominfra/basecommfb.h"
+#include "core/util/criticalregion.h"
+#include "core/cominfra/basecommfb.h"
 
 
 DEFINE_HANDLER(CWin32SerComHandler)

@@ -10,7 +10,7 @@
  *   Alois Zoitl  - initial API and implementation and/or initial documentation
  *******************************************************************************/
 #include <boost/test/unit_test.hpp>
-#include "../../../src/core/utils/string_utils.h"
+#include "../../../src/core/util/string_utils.h"
 #include <errno.h>
 #include <stdlib.h>
 

@@ -17,7 +17,7 @@
 
 #include "CAdsConnectionManager.h"
 
-#include "../../core/utils/parameterParser.h"
+#include "core/util/parameterParser.h"
 
 namespace forte {
   namespace ads {

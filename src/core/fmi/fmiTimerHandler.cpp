@@ -12,7 +12,7 @@
 #include "fmiTimerHandler.h"
 #include "devexec.h"
 #include "fmuInstance.h"
-#include "../../arch/utils/timespec_utils.h"
+#include "arch/utils/timespec_utils.h"
 #include <time.h>
 
 CTimerHandler* CTimerHandler::createTimerHandler(CDeviceExecution& paDeviceExecution){

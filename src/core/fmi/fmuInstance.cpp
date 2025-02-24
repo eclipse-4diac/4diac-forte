@@ -21,7 +21,7 @@
 #include "../basicfb.h"
 #include "../cfb.h"
 #include <stdlib.h>
-#include "../utils/criticalregion.h"
+#include "core/util/criticalregion.h"
 
 fmuInstance* fmuInstance::sFmuInstance = 0;
 

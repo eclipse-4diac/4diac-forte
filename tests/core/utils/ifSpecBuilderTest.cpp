@@ -12,8 +12,8 @@
 
 #include <cstring>
 #include <boost/test/unit_test.hpp>
-#include "../../../src/core/utils/mixedStorage.h"
-#include "../../../src/core/utils/ifSpecBuilder.h"
+#include "../../../src/core/util/mixedStorage.h"
+#include "../../../src/core/util/ifSpecBuilder.h"
 
 #if BOOST_VERSION < 106400
     BOOST_TEST_DONT_PRINT_LOG_VALUE(std::nullptr_t)

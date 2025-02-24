@@ -12,8 +12,8 @@
  *******************************************************************************/
 
 #include "opcua_ac_layer.h"
-#include "../../core/utils/parameterParser.h"
-#include "../../core/cominfra/basecommfb.h"
+#include "core/util/parameterParser.h"
+#include "core/cominfra/basecommfb.h"
 #include "opcua_local_handler.h"
 #include "opcua_objectstruct_helper.h"
 #include "opcua_action_info.h"

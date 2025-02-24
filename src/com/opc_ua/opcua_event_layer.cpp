@@ -12,8 +12,8 @@
  *******************************************************************************/
 
 #include "opcua_event_layer.h"
-#include "../../core/utils/parameterParser.h"
-#include "../../core/cominfra/basecommfb.h"
+#include "core/util/parameterParser.h"
+#include "core/cominfra/basecommfb.h"
 #include "opcua_local_handler.h"
 
 using namespace forte::com_infra;

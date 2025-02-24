@@ -15,9 +15,9 @@
  *                  - Proper memory usage and deallocation
  *******************************************************************************/
 #include "opccomlayer.h"
-#include "../../arch/devlog.h"
+#include "arch/devlog.h"
 #include "commfb.h"
-#include "../../core/utils/parameterParser.h"
+#include "core/util/parameterParser.h"
 
 #include "opcconnection.h"
 #include "opcconnectionhandler.h"
