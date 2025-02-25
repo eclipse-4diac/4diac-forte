@@ -90,7 +90,7 @@ void DEV_MGR::executeRQST(){
   strcpy(request, RQST().getStorage().c_str());
 
   mCommandParser.parseAndExecuteMGMCommand(DST().getStorage().c_str(), request);
-  RESP() = CIEC_STRING(mCommandParser.generateResponse());
+  mCommandParser.generateResponse(RESP());
 
   delete[](request);
 }

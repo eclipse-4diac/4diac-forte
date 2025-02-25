@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2024 Jose Cabral
+ * Copyright (c) 2024, 2025 Jose Cabral
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -16,6 +16,7 @@
 
 #include "core/mgmcmd.h"
 #include "core/mgmcmdstruct.h"
+#include "core/datatypes/forte_string.h"
 
 #include <string>
 
@@ -30,7 +31,7 @@ namespace forte::ita {
     CommandParser(CDevice& paDevice);
 
     /**
-     * @brief Parse and executes a commmand on a destination in a device
+     * @brief Parse and executes a command on a destination in a device
      * 
      * @param paDest destination where to executed the command
      * @param paCommand the command to be executed
@@ -41,9 +42,9 @@ namespace forte::ita {
 
     /*! \brief Generate a response string according to the previous executed command
      *
-     * @return generated response
+     * @param paResponse generated response, the given string is used to reduce memory load on the system
      */
-    std::string generateResponse();
+    void generateResponse(CIEC_STRING &aResponse);
 
   private:
 
@@ -124,22 +125,22 @@ namespace forte::ita {
 
   #ifdef FORTE_SUPPORT_MONITORING
     bool parseMonitoringData(char *paRequestPartLeft);
-    std::string generateMonitorResponse();
+    void generateMonitorResponse(CIEC_STRING &paResponse);
   #endif //FORTE_SUPPORT_MONITORING
 
     /*! \brief Generate a short response string according to the previous executed command
       *
-      * @return generated response
+      * @param paResponse generated response, the given string is used to reduce memory load on the system
       */
-    std::string generateShortResponse();
+    void generateShortResponse(CIEC_STRING &paResponse);
 
     /*! \brief Generate a response string according to the previous executed command
       *
-      * @return generated response
+      * @param paResponse generated response, the given string is used to reduce memory load on the system
       */
-    std::string generateLongResponse();
+    void generateLongResponse(CIEC_STRING &paResponse);
 
-    void appendIdentifierName(std::string& paDest, forte::core::TNameIdentifier& paIdentifier);
+    void appendIdentifierName(CIEC_STRING &paDest, forte::core::TNameIdentifier& paIdentifier);
 
   };
 

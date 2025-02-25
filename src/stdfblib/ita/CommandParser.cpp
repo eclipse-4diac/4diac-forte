@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2024 Jose Cabral
+ * Copyright (c) 2024, 2025 Jose Cabral
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -90,114 +90,112 @@ EMGMResponse CommandParser::parseAndExecuteMGMCommand(const char *const paDest, 
 }
 
 
-std::string CommandParser::generateResponse(){
+void CommandParser::generateResponse(CIEC_STRING &paResponse){
+  paResponse.clear();
 #ifdef FORTE_SUPPORT_MONITORING
-  if (0 != mCommand.mMonitorResponse.length()) {
-    return generateMonitorResponse();
+  if (!mCommand.mMonitorResponse.empty()) {
+    generateMonitorResponse(paResponse);
+    return;
   }
 #endif //FORTE_SUPPORT_MONITORING
 
-  if(0 < mCommand.mAdditionalParams.length()){
-    return generateLongResponse();
+  if(!mCommand.mAdditionalParams.empty()){
+    generateLongResponse(paResponse);
+  } else {
+    generateShortResponse(paResponse);
   }
-
-  return generateShortResponse();
 }
 
-std::string CommandParser::generateShortResponse(){
-  std::string response;
-  response.append("<Response ID=\"");
+void CommandParser::generateShortResponse(CIEC_STRING &paResponse){
+  paResponse.append("<Response ID=\"");
   if (nullptr != mCommand.mID) {
-    response.append(mCommand.mID);
+    paResponse.append(mCommand.mID);
   }
-  response.append("\"");
+  paResponse.append("\"");
   if(EMGMResponse::Ready != mLastResponse){
-    response.append(" Reason=\"");
-    response.append(forte::mgm_cmd::getResponseText(mLastResponse));
-    response.append("\"");
+    paResponse.append(" Reason=\"");
+    paResponse.append(forte::mgm_cmd::getResponseText(mLastResponse));
+    paResponse.append("\"");
   }
-  response.append(" />");
-  return response;
+  paResponse.append(" />");
 }
 
-std::string CommandParser::generateLongResponse(){
-  std::string response;
-  response.reserve(static_cast<TForteUInt16>(255 + (mCommand.mAdditionalParams.length())));
-  response.append("<Response ID=\"");
+void CommandParser::generateLongResponse(CIEC_STRING &paResponse){
+  paResponse.reserve(static_cast<TForteUInt16>(255 + (mCommand.mAdditionalParams.length())));
+  paResponse.append("<Response ID=\"");
   if (nullptr != mCommand.mID) {
-    response.append(mCommand.mID);
+    paResponse.append(mCommand.mID);
   }
-  response.append("\"");
+  paResponse.append("\"");
   if(EMGMResponse::Ready != mLastResponse){
-    response.append(" Reason=\"");
-    response.append(forte::mgm_cmd::getResponseText(mLastResponse));
-    response.append("\">\n  ");
+    paResponse.append(" Reason=\"");
+    paResponse.append(forte::mgm_cmd::getResponseText(mLastResponse));
+    paResponse.append("\">\n  ");
   }
   else{
-    response.append(">\n  ");
+    paResponse.append(">\n  ");
     if(mCommand.mCMD == EMGMCommandType::Read){
-      response.append("<Connection Source=\"");
-      appendIdentifierName(response, mCommand.mFirstParam);
-      response.append("\" Destination=\"");
-      response.append(mCommand.mAdditionalParams);
-      response.append("\" />");
+      paResponse.append("<Connection Source=\"");
+      appendIdentifierName(paResponse, mCommand.mFirstParam);
+      paResponse.append("\" Destination=\"");
+      paResponse.append(mCommand.mAdditionalParams);
+      paResponse.append("\" />");
     }
 #ifdef FORTE_SUPPORT_QUERY_CMD
     else if(mCommand.mCMD == EMGMCommandType::QueryConnection){
       if ((mCommand.mFirstParam.empty()) &&
           (mCommand.mSecondParam.empty())) { //src & dst = *
-          response.append(mCommand.mAdditionalParams);
+          paResponse.append(mCommand.mAdditionalParams);
       }
       else { //either src or dst = * (both != * should be treated by generateResponse
-        response.append("<EndpointList>\n    ");
-        response.append(mCommand.mAdditionalParams);
-        response.append("\n  </EndpointList>");
+        paResponse.append("<EndpointList>\n    ");
+        paResponse.append(mCommand.mAdditionalParams);
+        paResponse.append("\n  </EndpointList>");
       }
     }
     else if(mCommand.mCMD == EMGMCommandType::QueryFB){
       if(!mCommand.mFirstParam.empty()) {  //Name != "*"
         if(!mCommand.mSecondParam.empty()){ //Type != "*"
-          response.append("<FBStatus Status=\"");
-          response.append(mCommand.mAdditionalParams);
-          response.append("\" />");
+          paResponse.append("<FBStatus Status=\"");
+          paResponse.append(mCommand.mAdditionalParams);
+          paResponse.append("\" />");
         } else { //Type == "*"
-          response.append("<FB Name=\"");
-          appendIdentifierName(response, mCommand.mFirstParam);
-          response.append("\" Type=\"");
-          response.append(mCommand.mAdditionalParams);
-          response.append("\" />");
+          paResponse.append("<FB Name=\"");
+          appendIdentifierName(paResponse, mCommand.mFirstParam);
+          paResponse.append("\" Type=\"");
+          paResponse.append(mCommand.mAdditionalParams);
+          paResponse.append("\" />");
         }
       }
       else{
-        response.append("<FBList>\n    ");
-        response.append(mCommand.mAdditionalParams);
-        response.append("\n  </FBList>");
+        paResponse.append("<FBList>\n    ");
+        paResponse.append(mCommand.mAdditionalParams);
+        paResponse.append("\n  </FBList>");
       }
     }
     else if(mCommand.mCMD == EMGMCommandType::QueryFBTypes || mCommand.mCMD == EMGMCommandType::QueryAdapterTypes){
-      response.append("<NameList>\n    ");
-      response.append(mCommand.mAdditionalParams);
-      response.append("\n  </NameList>");
+      paResponse.append("<NameList>\n    ");
+      paResponse.append(mCommand.mAdditionalParams);
+      paResponse.append("\n  </NameList>");
     }
     else if(mCommand.mCMD == EMGMCommandType::QueryDTTypes){
-      response.append("<DTList>\n    ");
-      response.append(mCommand.mAdditionalParams);
-      response.append("\n  </DTList>");
+      paResponse.append("<DTList>\n    ");
+      paResponse.append(mCommand.mAdditionalParams);
+      paResponse.append("\n  </DTList>");
     }
     else if(mCommand.mCMD == EMGMCommandType::QueryFBType){
-      response.append("<FBType Comment=\"generated\" ");
-      response.append(mCommand.mAdditionalParams);
-      response.append("  </FBType>");
+      paResponse.append("<FBType Comment=\"generated\" ");
+      paResponse.append(mCommand.mAdditionalParams);
+      paResponse.append("  </FBType>");
     }
     else if(mCommand.mCMD == EMGMCommandType::QueryAdapterType){
-      response.append("<AdapterType Comment=\"generated\" ");
-      response.append(mCommand.mAdditionalParams);
-      response.append("   <Service Comment=\"generated\" LeftInterface=\"SOCKET\" RightInterface=\"PLUG\"/>\n</AdapterType>");
+      paResponse.append("<AdapterType Comment=\"generated\" ");
+      paResponse.append(mCommand.mAdditionalParams);
+      paResponse.append("   <Service Comment=\"generated\" LeftInterface=\"SOCKET\" RightInterface=\"PLUG\"/>\n</AdapterType>");
     }
 #endif
   }
-  response.append("\n</Response>");
-  return response;
+  paResponse.append("\n</Response>");
 }
 
 char* CommandParser::parseRequest(char *paRequestString){
@@ -584,7 +582,7 @@ bool CommandParser::parseTypeListData(char *paRequestPartLeft){
 #endif
 
 
-void CommandParser::appendIdentifierName(std::string& paDest, forte::core::TNameIdentifier& paIdentifier) {
+void CommandParser::appendIdentifierName(CIEC_STRING &paDest, forte::core::TNameIdentifier& paIdentifier) {
   if(!paIdentifier.empty()){
     for (const auto &runner : paIdentifier) {
       paDest.append(CStringDictionary::get(runner));
@@ -611,33 +609,22 @@ bool CommandParser::parseMonitoringData(char *paRequestPartLeft){
   return bRetVal;
 }
 
-std::string CommandParser::generateMonitorResponse(){
-  std::string response; 
+void CommandParser::generateMonitorResponse(CIEC_STRING &paResponse){
   if(EMGMResponse::Ready != mLastResponse){
-    response.append("<Response ID=\"");
-    response.append(mCommand.mID);
-    response.append("\"");
-    response.append(" Reason=\"");
-    response.append(forte::mgm_cmd::getResponseText(mLastResponse));
-    response.append("\">\n  ");
-    response.append("\n</Response>");
+    generateShortResponse(paResponse);
   }else{
-    TForteUInt16 size = static_cast<TForteUInt16>(mCommand.mMonitorResponse.length() + strlen(mCommand.mID) + 74);
-    response.reserve(size);
-
-    response.clear();
-    response.append("<Response ID=\"");
-    response.append(mCommand.mID);
-    response.append("\"");
-    response.append(">\n  ");
+    paResponse.reserve(mCommand.mMonitorResponse.length() + strlen(mCommand.mID) + 74);
+    paResponse.append("<Response ID=\"");
+    paResponse.append(mCommand.mID);
+    paResponse.append("\"");
+    paResponse.append(">\n  ");
     if(mCommand.mCMD == EMGMCommandType::MonitoringReadWatches) {
-      response.append("<Watches>\n    ");
-      response.append(mCommand.mMonitorResponse);
-      response.append("\n  </Watches>");
+      paResponse.append("<Watches>\n    ");
+      paResponse.append(mCommand.mMonitorResponse);
+      paResponse.append("\n  </Watches>");
     }
-    response.append("\n</Response>");
+    paResponse.append("\n</Response>");
   }
-  return response;
 }
 
 #endif // FORTE_SUPPORT_MONITORING
