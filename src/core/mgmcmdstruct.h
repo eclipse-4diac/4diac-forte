@@ -14,7 +14,7 @@
 #define MGMCMDSTRUCT_H_
 
 #include "mgmcmd.h"
-#include "core/util/fixedcapvector.h"
+#include "core/util/inplace_vector.h"
 #include "stringdict.h"
 #include <string>
 
@@ -26,7 +26,7 @@ namespace forte {
      */
     /*@{*/
 
-    typedef util::CFixedCapazityVector<CStringDictionary::TStringId,
+    typedef util::inplace_vector<CStringDictionary::TStringId,
         FORTE_MGM_MAX_SUPPORTED_NAME_HIERARCHY> TNameIdentifier;
 
     /*!\brief All the data necessary for processing a management command.
