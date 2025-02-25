@@ -546,15 +546,15 @@ void CFunctionBlock::freeEventMonitoringData(){
   mEIMonitorCount = nullptr;
 }
 
-CFunctionBlock *CFunctionBlock::getFB(forte::core::TNameIdentifier::const_iterator &paNameListIt){
+CFunctionBlock *CFunctionBlock::getFB(NameIterator &paNameListIt, NameIterator paNameListEnd){
   CFunctionBlock *retVal = nullptr;
 
-  if(paNameListIt.isLastEntry()){
+  if (paNameListIt+1 == paNameListEnd) {
     //only check for adpaters if it we have the last entry in the line
     retVal = getAdapter(*paNameListIt);
   }
   if(retVal == nullptr){
-    retVal = CFBContainer::getFB(paNameListIt);
+    retVal = CFBContainer::getFB(paNameListIt, paNameListEnd);
   }
 
   return retVal;

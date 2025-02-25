@@ -502,10 +502,9 @@ void CMonitoringHandler::appendEventWatch(std::string &paResponse, SEventWatchEn
 
 void CMonitoringHandler::createFullFBName(std::string &paFullName, forte::core::TNameIdentifier &paNameList){
   for (const auto &runner : paNameList) {
-    paFullName.append(CStringDictionary::getInstance().get(*runner));
-    if(!runner.isLastEntry()){
-      paFullName.append(".");
-    }
+    paFullName.append(CStringDictionary::getInstance().get(runner));
+    paFullName.append(".");
   }
+  paFullName.pop_back();
 }
 

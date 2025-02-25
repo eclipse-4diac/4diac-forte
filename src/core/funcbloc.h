@@ -107,6 +107,9 @@ struct SFBInterfaceSpec {
 /*!\ingroup CORE\brief Base class for all function blocks.
  */
 class CFunctionBlock : public forte::core::CFBContainer {
+  protected:
+    using CFBContainer::NameIterator;
+
   public:
     constexpr static TDataIOID scmWithListDelimiter = cgInvalidPortId; //!< value identifying the end of a with list
     constexpr static TForteInt16 scmNoDataAssociated = static_cast<TForteInt16>(cgInvalidPortId); //!< value identifying the end of a with list
@@ -398,7 +401,7 @@ class CFunctionBlock : public forte::core::CFBContainer {
      *
      * This allows that also adapters and the internals of a CFB can be monitored.
      */
-    CFunctionBlock *getFB(forte::core::TNameIdentifier::const_iterator &paNameListIt) override;
+    CFunctionBlock *getFB(NameIterator &paNameListIt, NameIterator paNameListEnd) override;
 
 #ifdef FORTE_SUPPORT_MONITORING
     TForteUInt32 &getEIMonitorData(TEventID paEIID);

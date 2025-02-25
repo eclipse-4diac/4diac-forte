@@ -211,7 +211,7 @@ EMGMResponse CResource::createConnection(forte::core::TNameIdentifier &paSrcName
     paDstNameList.popBack();
     auto runner = paDstNameList.cbegin();
     CFunctionBlock *dstFB = getFB(runner);
-    if((nullptr != dstFB) && (runner.isLastEntry())){
+    if ((nullptr != dstFB) && (runner+1 == paDstNameList.cend())) {
       retVal = con->connect(dstFB, portName);
     }
   }
@@ -228,7 +228,7 @@ EMGMResponse CResource::deleteConnection(forte::core::TNameIdentifier &paSrcName
     paDstNameList.popBack();
     auto runner = paDstNameList.cbegin();
     CFunctionBlock *dstFB = getFB(runner);
-    if((nullptr != dstFB) && (runner.isLastEntry())){
+    if ((nullptr != dstFB) && (runner+1 == paDstNameList.cend())) {
       retVal = con->disconnect(dstFB, portName);
     }
   }
@@ -247,7 +247,7 @@ EMGMResponse CResource::writeValue(forte::core::TNameIdentifier &paNameList, con
   if(paNameList.size() >= 1){
     //this is not an identifier for the resource interface
     fb = getFB(runner);
-    if(!runner.isLastEntry()){
+    if (runner+1 != paNameList.cend()) {
       // currently we can not write values of FBs inside of FBs
       return EMGMResponse::NoSuchObject;
     }
@@ -654,7 +654,7 @@ CIEC_ANY *CResource::getVariable(forte::core::TNameIdentifier &paNameList){
   }
 
   CIEC_ANY *var = nullptr;
-  if((nullptr != fb) && (runner.isLastEntry())){
+  if ((nullptr != fb) && (runner+1 == paNameList.cend())) {
     var = fb->getVar(&portName, 1);
   }
   return var;
@@ -671,7 +671,7 @@ CConnection *CResource::getConnection(forte::core::TNameIdentifier &paSrcNameLis
     auto runner = paSrcNameList.cbegin();
 
     CFunctionBlock *srcFB = getFB(runner);
-    if((nullptr != srcFB) && (runner.isLastEntry())) {
+    if((nullptr != srcFB) && (runner+1 == paSrcNameList.cend())) {
       //only use the found result if we have really the last result in the list
       con = srcFB->getEOConnection(portName);
       if(nullptr == con) {
