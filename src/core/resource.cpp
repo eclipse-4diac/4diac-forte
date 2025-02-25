@@ -89,7 +89,7 @@ EMGMResponse CResource::executeMGMCommand(forte::core::SManagementCMD &paCommand
     switch (paCommand.mCMD){
       case EMGMCommandType::CreateFBInstance: {
         auto itRunner = paCommand.mFirstParam.cbegin();
-        retVal = createFB(itRunner, paCommand.mSecondParam.front());
+        retVal = createFB(itRunner, paCommand.mFirstParam.cend(), paCommand.mSecondParam.front());
       }
         break;
       case EMGMCommandType::CreateFBType:
