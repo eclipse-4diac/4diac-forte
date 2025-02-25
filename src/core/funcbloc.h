@@ -398,7 +398,7 @@ class CFunctionBlock : public forte::core::CFBContainer {
      *
      * This allows that also adapters and the internals of a CFB can be monitored.
      */
-    CFunctionBlock *getFB(forte::core::TNameIdentifier::CIterator &paNameListIt) override;
+    CFunctionBlock *getFB(forte::core::TNameIdentifier::const_iterator &paNameListIt) override;
 
 #ifdef FORTE_SUPPORT_MONITORING
     TForteUInt32 &getEIMonitorData(TEventID paEIID);

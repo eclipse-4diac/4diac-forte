@@ -546,7 +546,7 @@ void CFunctionBlock::freeEventMonitoringData(){
   mEIMonitorCount = nullptr;
 }
 
-CFunctionBlock *CFunctionBlock::getFB(forte::core::TNameIdentifier::CIterator &paNameListIt){
+CFunctionBlock *CFunctionBlock::getFB(forte::core::TNameIdentifier::const_iterator &paNameListIt){
   CFunctionBlock *retVal = nullptr;
 
   if(paNameListIt.isLastEntry()){

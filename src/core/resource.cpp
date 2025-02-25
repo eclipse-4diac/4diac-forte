@@ -88,7 +88,7 @@ EMGMResponse CResource::executeMGMCommand(forte::core::SManagementCMD &paCommand
   if(CStringDictionary::scmInvalidStringId == paCommand.mDestination){
     switch (paCommand.mCMD){
       case EMGMCommandType::CreateFBInstance: {
-        forte::core::TNameIdentifier::CIterator itRunner(paCommand.mFirstParam.begin());
+        auto itRunner = paCommand.mFirstParam.cbegin();
         retVal = createFB(itRunner, paCommand.mSecondParam.front());
       }
         break;
@@ -107,7 +107,7 @@ EMGMResponse CResource::executeMGMCommand(forte::core::SManagementCMD &paCommand
 #endif
         break;
       case EMGMCommandType::DeleteFBInstance: {
-        forte::core::TNameIdentifier::CIterator itRunner(paCommand.mFirstParam.begin());
+        auto itRunner = paCommand.mFirstParam.cbegin();
         retVal = deleteFB(itRunner);
       }
         break;
@@ -188,7 +188,7 @@ EMGMResponse CResource::handleExecutionStateCmd(EMGMCommandType paCMD, forte::co
   CFunctionBlock *fb = this;
 
   if(!paTarget.isEmpty()){
-    forte::core::TNameIdentifier::CIterator itRunner(paTarget.begin());
+    auto itRunner = paTarget.cbegin();
     fb = getFB(itRunner);
   }
 
@@ -209,7 +209,7 @@ EMGMResponse CResource::createConnection(forte::core::TNameIdentifier &paSrcName
   if(nullptr != con){
     CStringDictionary::TStringId portName = paDstNameList.back();
     paDstNameList.popBack();
-    forte::core::TNameIdentifier::CIterator runner(paDstNameList.begin());
+    auto runner = paDstNameList.cbegin();
     CFunctionBlock *dstFB = getFB(runner);
     if((nullptr != dstFB) && (runner.isLastEntry())){
       retVal = con->connect(dstFB, portName);
@@ -226,7 +226,7 @@ EMGMResponse CResource::deleteConnection(forte::core::TNameIdentifier &paSrcName
   if(nullptr != con){
     CStringDictionary::TStringId portName = paDstNameList.back();
     paDstNameList.popBack();
-    forte::core::TNameIdentifier::CIterator runner(paDstNameList.begin());
+    auto runner = paDstNameList.cbegin();
     CFunctionBlock *dstFB = getFB(runner);
     if((nullptr != dstFB) && (runner.isLastEntry())){
       retVal = con->disconnect(dstFB, portName);
@@ -241,7 +241,7 @@ EMGMResponse CResource::writeValue(forte::core::TNameIdentifier &paNameList, con
 
   CStringDictionary::TStringId portName = paNameList.back();
   paNameList.popBack();
-  forte::core::TNameIdentifier::CIterator runner(paNameList.begin());
+  auto runner = paNameList.cbegin();
 
   CFunctionBlock *fb = this;
   if(paNameList.size() >= 1){
@@ -645,7 +645,7 @@ EMGMResponse CResource::createAdapterTypeFromLua(CStringDictionary::TStringId ty
 CIEC_ANY *CResource::getVariable(forte::core::TNameIdentifier &paNameList){
   CStringDictionary::TStringId portName = paNameList.back();
   paNameList.popBack();
-  forte::core::TNameIdentifier::CIterator runner(paNameList.begin());
+  auto runner = paNameList.cbegin();
 
   CFunctionBlock *fb = this;
   if(paNameList.size() >= 1){
@@ -668,7 +668,7 @@ CConnection *CResource::getConnection(forte::core::TNameIdentifier &paSrcNameLis
   else if(paSrcNameList.size() > 1){
     CStringDictionary::TStringId portName = paSrcNameList.back();
     paSrcNameList.popBack();
-    forte::core::TNameIdentifier::CIterator runner(paSrcNameList.begin());
+    auto runner = paSrcNameList.cbegin();
 
     CFunctionBlock *srcFB = getFB(runner);
     if((nullptr != srcFB) && (runner.isLastEntry())) {

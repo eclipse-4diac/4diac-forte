@@ -586,8 +586,7 @@ bool CommandParser::parseTypeListData(char *paRequestPartLeft){
 
 void CommandParser::appendIdentifierName(std::string& paDest, forte::core::TNameIdentifier& paIdentifier) {
   if(!paIdentifier.isEmpty()){
-    for(forte::core::TNameIdentifier::CIterator runner(paIdentifier.begin());
-        runner != paIdentifier.end(); ++runner){
+    for (const auto &runner : paIdentifier) {
       paDest.append(CStringDictionary::getInstance().get(*runner));
       paDest.append(".");
     }

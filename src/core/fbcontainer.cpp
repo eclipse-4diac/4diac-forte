@@ -77,7 +77,7 @@ std::string CFBContainer::getFullQualifiedApplicationInstanceName(const char sep
   return result;
 }
 
-EMGMResponse CFBContainer::createFB(forte::core::TNameIdentifier::CIterator &paNameListIt, CStringDictionary::TStringId paTypeName){
+EMGMResponse CFBContainer::createFB(forte::core::TNameIdentifier::const_iterator &paNameListIt, CStringDictionary::TStringId paTypeName){
   if(paNameListIt.isLastEntry()){
     return createFB(*paNameListIt, paTypeName);
   } else if(isDynamicContainer()) {
@@ -110,7 +110,7 @@ EMGMResponse CFBContainer::createFB(CStringDictionary::TStringId paInstanceNameI
   return EMGMResponse::InvalidState;
 }
 
-EMGMResponse CFBContainer::deleteFB(forte::core::TNameIdentifier::CIterator &paNameListIt){
+EMGMResponse CFBContainer::deleteFB(forte::core::TNameIdentifier::const_iterator &paNameListIt){
   EMGMResponse retval = EMGMResponse::NoSuchObject;
 
   CStringDictionary::TStringId childName = *paNameListIt;
@@ -149,7 +149,7 @@ CFunctionBlock *CFBContainer::getFB(CStringDictionary::TStringId paFBName) {
 }
 
 
-CFunctionBlock* CFBContainer::getFB(forte::core::TNameIdentifier::CIterator &paNameListIt)  {
+CFunctionBlock* CFBContainer::getFB(forte::core::TNameIdentifier::const_iterator &paNameListIt)  {
   if(!paNameListIt.isLastEntry()){
     //we have more than one name in the fb name list. Find or create the container and hand the create command to this container.
     CFBContainer *childCont = getChild(*paNameListIt);

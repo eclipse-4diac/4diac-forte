@@ -101,8 +101,8 @@ BOOST_AUTO_TEST_SUITE(TNameIdentifierTests)
     }
 
     int i = 0;
-    for(forte::core::TNameIdentifier::CIterator it(identifier.begin()); it != identifier.end(); ++it, ++i){
-      BOOST_CHECK_EQUAL(i, *it);
+    for (const auto &it : identifier) {
+      BOOST_CHECK_EQUAL(++i, it);
     }
     BOOST_CHECK_EQUAL(FORTE_MGM_MAX_SUPPORTED_NAME_HIERARCHY, i);  //we should have exactly visited each element once but started at zero
   }

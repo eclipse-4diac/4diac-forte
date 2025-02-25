@@ -65,7 +65,7 @@ EMGMResponse CMonitoringHandler::executeMonitoringCommand(SManagementCMD &paComm
 }
 
 CFunctionBlock* CMonitoringHandler::getFB(forte::core::TNameIdentifier &paNameList){
-  forte::core::TNameIdentifier::CIterator runner(paNameList.begin());
+  auto runner = paNameList.cbegin();
   return mResource.getFB(runner);
 }
 
@@ -501,7 +501,7 @@ void CMonitoringHandler::appendEventWatch(std::string &paResponse, SEventWatchEn
 }
 
 void CMonitoringHandler::createFullFBName(std::string &paFullName, forte::core::TNameIdentifier &paNameList){
-  for(forte::core::TNameIdentifier::CIterator runner(paNameList.begin()); runner != paNameList.end(); ++runner){
+  for (const auto &runner : paNameList) {
     paFullName.append(CStringDictionary::getInstance().get(*runner));
     if(!runner.isLastEntry()){
       paFullName.append(".");

@@ -60,7 +60,7 @@ namespace forte {
          * @param paNameList iterator to the name hierarchy the requested function block, if retval is not 0 it will point to the the item which found the FB
          * @return pointer to the requested function block, returns 0 if function block is not in the list
          */
-        virtual CFunctionBlock *getFB(forte::core::TNameIdentifier::CIterator &paNameListIt);
+        virtual CFunctionBlock *getFB(forte::core::TNameIdentifier::const_iterator &paNameListIt);
 
         typedef std::vector<CFBContainer *> TFBContainerList;
 
@@ -116,14 +116,14 @@ namespace forte {
          * @param paTypeName      the type name of the FB to be created
          * @return response of the command execution as defined in IEC 61499
          */
-        EMGMResponse createFB(forte::core::TNameIdentifier::CIterator &paNameListIt, CStringDictionary::TStringId paTypeName);
+        EMGMResponse createFB(forte::core::TNameIdentifier::const_iterator &paNameListIt, CStringDictionary::TStringId paTypeName);
 
         /*!\brief Delete a FB instance with given name
          *
          * @param paNameListIt    iterator to the current position in the name list for the FB to be deleted (e.g., SubApp1.SubApp2.FBName, FBName2)
          * @return response of the command execution as defined in IEC 61499
          */
-        EMGMResponse deleteFB(forte::core::TNameIdentifier::CIterator &paNameListIt);
+        EMGMResponse deleteFB(forte::core::TNameIdentifier::const_iterator &paNameListIt);
 
         /*! get fb contained in this fbcontainer
          *
