@@ -1274,10 +1274,10 @@ void OPCUA_MGR::setMGMCommand(EMGMCommandType paCMD, CStringDictionary::TStringI
   mCommand.mCMD = paCMD;
   mCommand.mDestination = paDestination;
   if (paFirstParam != nullptr) {
-    mCommand.mFirstParam.pushBack(CStringDictionary::getInstance().insert(paFirstParam));
+    mCommand.mFirstParam.push_back(CStringDictionary::getInstance().insert(paFirstParam));
   }
   if (paSecondParam != nullptr) {
-    mCommand.mSecondParam.pushBack(CStringDictionary::getInstance().insert(paSecondParam));
+    mCommand.mSecondParam.push_back(CStringDictionary::getInstance().insert(paSecondParam));
   }
   if (paAdditionalParams != nullptr) {
     mCommand.mAdditionalParams = paAdditionalParams;
@@ -1292,12 +1292,12 @@ void OPCUA_MGR::setMGMCommand(EMGMCommandType paCMD, CStringDictionary::TStringI
   mCommand.mDestination = paDestination;
   if (!paFirstParam.empty()) {
     for (std::string param : paFirstParam) {
-      mCommand.mFirstParam.pushBack(CStringDictionary::getInstance().insert(param.c_str()));
+      mCommand.mFirstParam.push_back(CStringDictionary::getInstance().insert(param.c_str()));
     }
   }
   if (!paSecondParam.empty()) {
     for (std::string param : paSecondParam) {
-      mCommand.mSecondParam.pushBack(CStringDictionary::getInstance().insert(param.c_str()));
+      mCommand.mSecondParam.push_back(CStringDictionary::getInstance().insert(param.c_str()));
     }
   }
   if (paAdditionalParams != nullptr) {

@@ -144,8 +144,8 @@ std::string CommandParser::generateLongResponse(){
     }
 #ifdef FORTE_SUPPORT_QUERY_CMD
     else if(mCommand.mCMD == EMGMCommandType::QueryConnection){
-      if ((mCommand.mFirstParam.isEmpty()) &&
-          (mCommand.mSecondParam.isEmpty())) { //src & dst = *
+      if ((mCommand.mFirstParam.empty()) &&
+          (mCommand.mSecondParam.empty())) { //src & dst = *
           response.append(mCommand.mAdditionalParams);
       }
       else { //either src or dst = * (both != * should be treated by generateResponse
@@ -155,8 +155,8 @@ std::string CommandParser::generateLongResponse(){
       }
     }
     else if(mCommand.mCMD == EMGMCommandType::QueryFB){
-      if(!mCommand.mFirstParam.isEmpty()) {  //Name != "*"
-        if(!mCommand.mSecondParam.isEmpty()){ //Type != "*"
+      if(!mCommand.mFirstParam.empty()) {  //Name != "*"
+        if(!mCommand.mSecondParam.empty()){ //Type != "*"
           response.append("<FBStatus Status=\"");
           response.append(mCommand.mAdditionalParams);
           response.append("\" />");
@@ -321,14 +321,14 @@ int CommandParser::parseIdentifier(char *paIdentifierStart, forte::core::TNameId
   for(char *runner = paIdentifierStart, *start = paIdentifierStart; '\0' != *runner; ++runner){
     if('.' == *runner){
       *runner = '\0';
-      if(!paIdentifier.pushBack(CStringDictionary::getInstance().insert(start))){
+      if(!paIdentifier.push_back(CStringDictionary::getInstance().insert(start))){
         return -1;
       }
       *runner = '.';
       start = runner + 1;
     } else if ('"' == *runner){
       *runner = '\0';
-      if(!paIdentifier.pushBack(CStringDictionary::getInstance().insert(start))){
+      if(!paIdentifier.push_back(CStringDictionary::getInstance().insert(start))){
         return -1;
       }
       *runner = '"';
@@ -344,7 +344,7 @@ int CommandParser::parseTypeName(const std::string_view paTypeName, forte::core:
     return -1;
   }
   const std::string_view result = paTypeName.substr(0, endIndex);
-  if(!paIdentifier.pushBack(CStringDictionary::getInstance().insert(result.data(), result.length()))){
+  if(!paIdentifier.push_back(CStringDictionary::getInstance().insert(result.data(), result.length()))){
     return -1;
   }
   return static_cast<int>(result.length());
@@ -585,9 +585,9 @@ bool CommandParser::parseTypeListData(char *paRequestPartLeft){
 
 
 void CommandParser::appendIdentifierName(std::string& paDest, forte::core::TNameIdentifier& paIdentifier) {
-  if(!paIdentifier.isEmpty()){
+  if(!paIdentifier.empty()){
     for (const auto &runner : paIdentifier) {
-      paDest.append(CStringDictionary::getInstance().get(*runner));
+      paDest.append(CStringDictionary::getInstance().get(runner));
       paDest.append(".");
     }
     paDest.append(CStringDictionary::getInstance().get(paIdentifier.back()));

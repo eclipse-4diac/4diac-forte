@@ -187,7 +187,7 @@ EMGMResponse CResource::handleExecutionStateCmd(EMGMCommandType paCMD, forte::co
   EMGMResponse retVal = EMGMResponse::NoSuchObject;
   CFunctionBlock *fb = this;
 
-  if(!paTarget.isEmpty()){
+  if (!paTarget.empty()) {
     auto itRunner = paTarget.cbegin();
     fb = getFB(itRunner, paTarget.cend());
   }
@@ -208,7 +208,7 @@ EMGMResponse CResource::createConnection(forte::core::TNameIdentifier &paSrcName
   CConnection *const con = getConnection(paSrcNameList);
   if(nullptr != con){
     CStringDictionary::TStringId portName = paDstNameList.back();
-    paDstNameList.popBack();
+    paDstNameList.pop_back();
     auto runner = paDstNameList.cbegin();
     CFunctionBlock *dstFB = getFB(runner, paDstNameList.cend());
     if ((nullptr != dstFB) && (runner+1 == paDstNameList.cend())) {
@@ -225,7 +225,7 @@ EMGMResponse CResource::deleteConnection(forte::core::TNameIdentifier &paSrcName
   CConnection *const con = getConnection(paSrcNameList);
   if(nullptr != con){
     CStringDictionary::TStringId portName = paDstNameList.back();
-    paDstNameList.popBack();
+    paDstNameList.pop_back();
     auto runner = paDstNameList.cbegin();
     CFunctionBlock *dstFB = getFB(runner, paDstNameList.cend());
     if ((nullptr != dstFB) && (runner+1 == paDstNameList.cend())) {
@@ -240,7 +240,7 @@ EMGMResponse CResource::writeValue(forte::core::TNameIdentifier &paNameList, con
   EMGMResponse retVal = EMGMResponse::NoSuchObject;
 
   CStringDictionary::TStringId portName = paNameList.back();
-  paNameList.popBack();
+  paNameList.pop_back();
   auto runner = paNameList.cbegin();
 
   CFunctionBlock *fb = this;
@@ -644,7 +644,7 @@ EMGMResponse CResource::createAdapterTypeFromLua(CStringDictionary::TStringId ty
 
 CIEC_ANY *CResource::getVariable(forte::core::TNameIdentifier &paNameList){
   CStringDictionary::TStringId portName = paNameList.back();
-  paNameList.popBack();
+  paNameList.pop_back();
   auto runner = paNameList.cbegin();
 
   CFunctionBlock *fb = this;
@@ -667,7 +667,7 @@ CConnection *CResource::getConnection(forte::core::TNameIdentifier &paSrcNameLis
   }
   else if(paSrcNameList.size() > 1){
     CStringDictionary::TStringId portName = paSrcNameList.back();
-    paSrcNameList.popBack();
+    paSrcNameList.pop_back();
     auto runner = paSrcNameList.cbegin();
 
     CFunctionBlock *srcFB = getFB(runner, paSrcNameList.cend());

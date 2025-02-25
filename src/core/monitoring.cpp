@@ -73,7 +73,7 @@ EMGMResponse CMonitoringHandler::addWatch(forte::core::TNameIdentifier &paNameLi
   EMGMResponse eRetVal = EMGMResponse::NoSuchObject;
 
   CStringDictionary::TStringId portName = paNameList.back();
-  paNameList.popBack();
+  paNameList.pop_back();
   CFunctionBlock *fB = getFB(paNameList);
 
   if(nullptr != fB){
@@ -107,7 +107,7 @@ EMGMResponse CMonitoringHandler::removeWatch(forte::core::TNameIdentifier &paNam
   EMGMResponse eRetVal = EMGMResponse::NoSuchObject;
 
   CStringDictionary::TStringId portName = paNameList.back();
-  paNameList.popBack();
+  paNameList.pop_back();
   CFunctionBlock *fB = getFB(paNameList);
   if(nullptr != fB){
     TFBMonitoringList::Iterator itRefNode = mFBMonitoringList.end(); //needed for deleting the entry from the list
@@ -161,7 +161,7 @@ EMGMResponse CMonitoringHandler::readWatches(std::string &paResponse){
 EMGMResponse CMonitoringHandler::clearForce(forte::core::TNameIdentifier &paNameList){
   EMGMResponse eRetVal = EMGMResponse::NoSuchObject;
   CStringDictionary::TStringId portName = paNameList.back();
-  paNameList.popBack();
+  paNameList.pop_back();
   CFunctionBlock *fB = getFB(paNameList);
 
   if(nullptr != fB){
@@ -177,7 +177,7 @@ EMGMResponse CMonitoringHandler::clearForce(forte::core::TNameIdentifier &paName
 EMGMResponse CMonitoringHandler::triggerEvent(forte::core::TNameIdentifier &paNameList){
   EMGMResponse eRetVal = EMGMResponse::NoSuchObject;
   CStringDictionary::TStringId portName = paNameList.back();
-  paNameList.popBack();
+  paNameList.pop_back();
   CFunctionBlock *fB = getFB(paNameList);
   if(nullptr != fB){
     TEventID eventId = fB->getEIID(portName);
@@ -205,7 +205,7 @@ EMGMResponse CMonitoringHandler::triggerEvent(forte::core::TNameIdentifier &paNa
 EMGMResponse CMonitoringHandler::resetEventCount(forte::core::TNameIdentifier &paNameList){
   EMGMResponse eRetVal = EMGMResponse::NoSuchObject;
   CStringDictionary::TStringId portName = paNameList.back();
-  paNameList.popBack();
+  paNameList.pop_back();
   CFunctionBlock *fB = getFB(paNameList);
   if(nullptr != fB){
     TEventID eventId = fB->getEIID(portName);

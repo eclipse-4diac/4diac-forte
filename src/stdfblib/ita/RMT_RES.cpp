@@ -50,49 +50,49 @@ bool RMT_RES::initialize() {
 
   forte::core::SManagementCMD command;
 
-  command.mFirstParam.pushBack(g_nStringIdSTART);
-  command.mFirstParam.pushBack(g_nStringIdCOLD);
-  command.mSecondParam.pushBack(g_nStringIdMGR_FF);
-  command.mSecondParam.pushBack(g_nStringIdS);
+  command.mFirstParam.push_back(g_nStringIdSTART);
+  command.mFirstParam.push_back(g_nStringIdCOLD);
+  command.mSecondParam.push_back(g_nStringIdMGR_FF);
+  command.mSecondParam.push_back(g_nStringIdS);
   createConnection(command);
 
   command.mFirstParam.clear();
-  command.mFirstParam.pushBack(g_nStringIdSTART);
-  command.mFirstParam.pushBack(g_nStringIdWARM);
+  command.mFirstParam.push_back(g_nStringIdSTART);
+  command.mFirstParam.push_back(g_nStringIdWARM);
   command.mSecondParam.clear();
-  command.mSecondParam.pushBack(g_nStringIdMGR_FF);
-  command.mSecondParam.pushBack(g_nStringIdS);
+  command.mSecondParam.push_back(g_nStringIdMGR_FF);
+  command.mSecondParam.push_back(g_nStringIdS);
   createConnection(command);
 
   command.mFirstParam.clear();
-  command.mFirstParam.pushBack(g_nStringIdSTART);
-  command.mFirstParam.pushBack(g_nStringIdSTOP);
+  command.mFirstParam.push_back(g_nStringIdSTART);
+  command.mFirstParam.push_back(g_nStringIdSTOP);
   command.mSecondParam.clear();
-  command.mSecondParam.pushBack(g_nStringIdMGR_FF);
-  command.mSecondParam.pushBack(g_nStringIdR);
+  command.mSecondParam.push_back(g_nStringIdMGR_FF);
+  command.mSecondParam.push_back(g_nStringIdR);
   createConnection(command);
 
   command.mFirstParam.clear();
-  command.mFirstParam.pushBack(g_nStringIdMGR_FF);
-  command.mFirstParam.pushBack(g_nStringIdEO);
+  command.mFirstParam.push_back(g_nStringIdMGR_FF);
+  command.mFirstParam.push_back(g_nStringIdEO);
   command.mSecondParam.clear();
-  command.mSecondParam.pushBack(g_nStringIdMGR);
-  command.mSecondParam.pushBack(g_nStringIdINIT);
+  command.mSecondParam.push_back(g_nStringIdMGR);
+  command.mSecondParam.push_back(g_nStringIdINIT);
   createConnection(command);
 
   command.mFirstParam.clear();
-  command.mFirstParam.pushBack(g_nStringIdMGR_FF);
-  command.mFirstParam.pushBack(g_nStringIdQ);
+  command.mFirstParam.push_back(g_nStringIdMGR_FF);
+  command.mFirstParam.push_back(g_nStringIdQ);
   command.mSecondParam.clear();
-  command.mSecondParam.pushBack(g_nStringIdMGR);
-  command.mSecondParam.pushBack(g_nStringIdQI);
+  command.mSecondParam.push_back(g_nStringIdMGR);
+  command.mSecondParam.push_back(g_nStringIdQI);
   createConnection(command);
 
   command.mFirstParam.clear();
-  command.mFirstParam.pushBack(g_nStringIdMGR_ID);
+  command.mFirstParam.push_back(g_nStringIdMGR_ID);
   command.mSecondParam.clear();
-  command.mSecondParam.pushBack(g_nStringIdMGR);
-  command.mSecondParam.pushBack(g_nStringIdID);
+  command.mSecondParam.push_back(g_nStringIdMGR);
+  command.mSecondParam.push_back(g_nStringIdID);
   createConnection(command);
   return true;
 }
