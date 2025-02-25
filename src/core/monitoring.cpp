@@ -66,7 +66,7 @@ EMGMResponse CMonitoringHandler::executeMonitoringCommand(SManagementCMD &paComm
 
 CFunctionBlock* CMonitoringHandler::getFB(forte::core::TNameIdentifier &paNameList){
   auto runner = paNameList.cbegin();
-  return mResource.getFB(runner);
+  return mResource.getFB(runner, paNameList.cend());
 }
 
 EMGMResponse CMonitoringHandler::addWatch(forte::core::TNameIdentifier &paNameList){

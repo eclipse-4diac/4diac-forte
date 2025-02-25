@@ -189,7 +189,7 @@ EMGMResponse CResource::handleExecutionStateCmd(EMGMCommandType paCMD, forte::co
 
   if(!paTarget.isEmpty()){
     auto itRunner = paTarget.cbegin();
-    fb = getFB(itRunner);
+    fb = getFB(itRunner, paTarget.cend());
   }
 
   if(nullptr != fb){
@@ -210,7 +210,7 @@ EMGMResponse CResource::createConnection(forte::core::TNameIdentifier &paSrcName
     CStringDictionary::TStringId portName = paDstNameList.back();
     paDstNameList.popBack();
     auto runner = paDstNameList.cbegin();
-    CFunctionBlock *dstFB = getFB(runner);
+    CFunctionBlock *dstFB = getFB(runner, paDstNameList.cend());
     if ((nullptr != dstFB) && (runner+1 == paDstNameList.cend())) {
       retVal = con->connect(dstFB, portName);
     }
@@ -227,7 +227,7 @@ EMGMResponse CResource::deleteConnection(forte::core::TNameIdentifier &paSrcName
     CStringDictionary::TStringId portName = paDstNameList.back();
     paDstNameList.popBack();
     auto runner = paDstNameList.cbegin();
-    CFunctionBlock *dstFB = getFB(runner);
+    CFunctionBlock *dstFB = getFB(runner, paDstNameList.cend());
     if ((nullptr != dstFB) && (runner+1 == paDstNameList.cend())) {
       retVal = con->disconnect(dstFB, portName);
     }
@@ -246,7 +246,7 @@ EMGMResponse CResource::writeValue(forte::core::TNameIdentifier &paNameList, con
   CFunctionBlock *fb = this;
   if(paNameList.size() >= 1){
     //this is not an identifier for the resource interface
-    fb = getFB(runner);
+    fb = getFB(runner, paNameList.cend());
     if (runner+1 != paNameList.cend()) {
       // currently we can not write values of FBs inside of FBs
       return EMGMResponse::NoSuchObject;
@@ -650,7 +650,7 @@ CIEC_ANY *CResource::getVariable(forte::core::TNameIdentifier &paNameList){
   CFunctionBlock *fb = this;
   if(paNameList.size() >= 1){
     //this is not an identifier for the resource interface
-    fb = getFB(runner); // the last entry is the input name therefore reduce list here by one
+    fb = getFB(runner, paNameList.cend()); // the last entry is the input name therefore reduce list here by one
   }
 
   CIEC_ANY *var = nullptr;
@@ -670,7 +670,7 @@ CConnection *CResource::getConnection(forte::core::TNameIdentifier &paSrcNameLis
     paSrcNameList.popBack();
     auto runner = paSrcNameList.cbegin();
 
-    CFunctionBlock *srcFB = getFB(runner);
+    CFunctionBlock *srcFB = getFB(runner, paSrcNameList.cend());
     if((nullptr != srcFB) && (runner+1 == paSrcNameList.cend())) {
       //only use the found result if we have really the last result in the list
       con = srcFB->getEOConnection(portName);
