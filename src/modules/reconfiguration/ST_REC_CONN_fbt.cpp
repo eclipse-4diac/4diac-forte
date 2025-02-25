@@ -94,10 +94,10 @@ void FORTE_ST_REC_CONN::executeRQST(){
   forte::core::SManagementCMD theCommand;
   // delete old connection
   theCommand.mDestination = CStringDictionary::getInstance().getId(var_DST.getValue());
-  theCommand.mFirstParam.pushBack(CStringDictionary::getInstance().getId(var_OLD_SRC_FB.getValue()));
-  theCommand.mFirstParam.pushBack(CStringDictionary::getInstance().getId(var_OLD_SRC_FB_OUT.getValue()));
-  theCommand.mSecondParam.pushBack(CStringDictionary::getInstance().getId(var_OLD_DST_FB.getValue()));
-  theCommand.mSecondParam.pushBack(CStringDictionary::getInstance().getId(var_OLD_DST_FB_IN.getValue()));
+  theCommand.mFirstParam.push_back(CStringDictionary::getInstance().getId(var_OLD_SRC_FB.getValue()));
+  theCommand.mFirstParam.push_back(CStringDictionary::getInstance().getId(var_OLD_SRC_FB_OUT.getValue()));
+  theCommand.mSecondParam.push_back(CStringDictionary::getInstance().getId(var_OLD_DST_FB.getValue()));
+  theCommand.mSecondParam.push_back(CStringDictionary::getInstance().getId(var_OLD_DST_FB_IN.getValue()));
   theCommand.mCMD = EMGMCommandType::DeleteConnection;
 
   EMGMResponse resp = getDevice()->executeMGMCommand(theCommand);
@@ -106,10 +106,10 @@ void FORTE_ST_REC_CONN::executeRQST(){
     // create new connection
     theCommand.mDestination = CStringDictionary::getInstance().getId(var_DST.getValue());
     theCommand.mFirstParam.clear();
-    theCommand.mFirstParam.pushBack(CStringDictionary::getInstance().getId(var_NEW_SRC_FB.getValue()));
-    theCommand.mFirstParam.pushBack(CStringDictionary::getInstance().getId(var_NEW_SRC_FB_OUT.getValue()));
-    theCommand.mSecondParam.pushBack(CStringDictionary::getInstance().getId(var_NEW_DST_FB.getValue()));
-    theCommand.mSecondParam.pushBack(CStringDictionary::getInstance().getId(var_NEW_DST_FB_IN.getValue()));
+    theCommand.mFirstParam.push_back(CStringDictionary::getInstance().getId(var_NEW_SRC_FB.getValue()));
+    theCommand.mFirstParam.push_back(CStringDictionary::getInstance().getId(var_NEW_SRC_FB_OUT.getValue()));
+    theCommand.mSecondParam.push_back(CStringDictionary::getInstance().getId(var_NEW_DST_FB.getValue()));
+    theCommand.mSecondParam.push_back(CStringDictionary::getInstance().getId(var_NEW_DST_FB_IN.getValue()));
     theCommand.mCMD = EMGMCommandType::CreateConnection;
     resp = getDevice()->executeMGMCommand(theCommand);
   }

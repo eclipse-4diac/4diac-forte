@@ -86,10 +86,10 @@ void FORTE_ST_DEL_CONN::executeRQST(){
   forte::core::SManagementCMD theCommand;
 
   theCommand.mDestination = CStringDictionary::getInstance().getId(var_DST.getValue());
-  theCommand.mFirstParam.pushBack(CStringDictionary::getInstance().getId(var_SRC_FB.getValue()));
-  theCommand.mFirstParam.pushBack(CStringDictionary::getInstance().getId(var_SRC_FB_OUT.getValue()));
-  theCommand.mSecondParam.pushBack(CStringDictionary::getInstance().getId(var_DST_FB.getValue()));
-  theCommand.mSecondParam.pushBack(CStringDictionary::getInstance().getId(var_DST_FB_IN.getValue()));
+  theCommand.mFirstParam.push_back(CStringDictionary::getInstance().getId(var_SRC_FB.getValue()));
+  theCommand.mFirstParam.push_back(CStringDictionary::getInstance().getId(var_SRC_FB_OUT.getValue()));
+  theCommand.mSecondParam.push_back(CStringDictionary::getInstance().getId(var_DST_FB.getValue()));
+  theCommand.mSecondParam.push_back(CStringDictionary::getInstance().getId(var_DST_FB_IN.getValue()));
   theCommand.mCMD = EMGMCommandType::DeleteConnection;
 
   EMGMResponse resp = getDevice()->executeMGMCommand(theCommand);

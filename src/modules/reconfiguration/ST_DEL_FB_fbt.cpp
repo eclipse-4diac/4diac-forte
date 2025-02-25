@@ -80,7 +80,7 @@ void FORTE_ST_DEL_FB::executeRQST(){
   forte::core::SManagementCMD theCommand;
 
   theCommand.mDestination = CStringDictionary::getInstance().getId(var_DST.getValue());
-  theCommand.mFirstParam.pushBack(CStringDictionary::getInstance().getId(var_FB_NAME.getValue()));
+  theCommand.mFirstParam.push_back(CStringDictionary::getInstance().getId(var_FB_NAME.getValue()));
   theCommand.mCMD = EMGMCommandType::DeleteFBInstance;
 
   EMGMResponse resp = getDevice()->executeMGMCommand(theCommand);

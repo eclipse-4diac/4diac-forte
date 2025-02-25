@@ -80,7 +80,7 @@ void FORTE_EC_STOP_ELEM::executeRQST(){
   forte::core::SManagementCMD theCommand;
 
   theCommand.mDestination = CStringDictionary::getInstance().getId(var_DST.getValue());
-  theCommand.mFirstParam.pushBack(CStringDictionary::getInstance().getId(var_ELEM_NAME.getValue()));
+  theCommand.mFirstParam.push_back(CStringDictionary::getInstance().getId(var_ELEM_NAME.getValue()));
   theCommand.mCMD = EMGMCommandType::Stop;
 
   EMGMResponse resp = getDevice()->executeMGMCommand(theCommand);
