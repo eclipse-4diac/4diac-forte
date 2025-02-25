@@ -108,7 +108,7 @@ EMGMResponse CResource::executeMGMCommand(forte::core::SManagementCMD &paCommand
         break;
       case EMGMCommandType::DeleteFBInstance: {
         auto itRunner = paCommand.mFirstParam.cbegin();
-        retVal = deleteFB(itRunner);
+        retVal = deleteFB(itRunner, paCommand.mFirstParam.cend());
       }
         break;
       case EMGMCommandType::CreateConnection:
