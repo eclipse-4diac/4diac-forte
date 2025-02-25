@@ -68,7 +68,7 @@ int CIEC_STRING::fromString(const char *paValue) {
         i += 2;
         continue;
       } else {
-        char specialSymbol;
+        char specialSymbol = 0;
         switch (inputString[i + 1]) {
           case '\'':
             specialSymbol = '\'';

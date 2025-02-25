@@ -103,7 +103,8 @@ const SCFB_FBNData FORTE_E_TRAIN::scmFBNData = {
   1, scmFannedOutEventConnections,
   4, scmDataConnections,
   0, nullptr,
-  0, nullptr
+  0, nullptr,
+  0, nullptr,
 };
 
 void FORTE_E_TRAIN::readInternal2InterfaceOutputData(const TEventID paEOID) {
