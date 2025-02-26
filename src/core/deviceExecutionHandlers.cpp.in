@@ -21,8 +21,11 @@ ${HANDLERMANAGER_INCLUDE}
 const size_t CTimerHandler::mHandlerIdentifier = 0;
 ${HANDLERMANAGER_VARIABLES} 
 
-void CDeviceExecution::createHandlers(CDeviceExecution& paDeviceExecution){
+CDeviceExecution::CDeviceExecution(CDevice& paDevice) :
+  mDevice(paDevice), mRegisteredEventHandlers(${HANDLER_CLASS_LEN_ORIGINAL}) {
 
-  paDeviceExecution.mRegisteredEventHandlers[0].mHandler = TimerHandlerFactory::createTimerHandler(paDeviceExecution);
+    mRegisteredEventHandlers[0].mHandler = std::unique_ptr<CTimerHandler>(TimerHandlerFactory::createTimerHandler(*this));
 ${HANDLERMANAGER_INSTANCE}
+
+    getTimer().enableHandler();
 }

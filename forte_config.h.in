@@ -66,8 +66,6 @@ const TForteUInt32 cgStringInitialSize = ${FORTE_STRINGINITIALSIZE};
  */
 const TForteUInt32 cgStringDictInitialMaxNrOfStrings = ${FORTE_STRINGDICTINITIALMAXNROFSTRINGS};
 
-const TForteUInt32 cgNumberOfHandlers = ${FORTE_NUMBER_OF_HANDLERS};
-
 ${FORTE_CUSTOM_CONFIGURATIONS}
 
 #endif

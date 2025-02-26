@@ -19,7 +19,8 @@ class CExternalEventHandler;
 class CTimerHandler;
 class CDevice;
 
-#include <forte_config.h>
+#include <memory>
+#include <vector>
 
 /**\ingroup CORE
  Handles all the IEC 61499 execution requests and aspects within one device
@@ -77,20 +78,18 @@ class CDeviceExecution {
      */
     struct SEventHandlerElement {
         bool mOccured; //!<flag indicating that the external event has occurred between the last invocation.
-        CExternalEventHandler *mHandler; //!< pointer to the external event handler instance.
+        std::unique_ptr<CExternalEventHandler> mHandler; //!< pointer to the external event handler instance.
     };
 
     CExternalEventHandler* getExtEvHandler(size_t paIdentifer) const;
 
-    static void createHandlers(CDeviceExecution& paDeviceExecution);
+    CDevice& mDevice;
 
     /*!\brief List of currently available external event sources.
      *
      * The element 0 is always the timer event source.
      */
-    SEventHandlerElement mRegisteredEventHandlers[cgNumberOfHandlers];
-
-    CDevice& mDevice;
+    std::vector<SEventHandlerElement> mRegisteredEventHandlers;
 };
 
 #endif
