@@ -1,4 +1,5 @@
-/*******************************************************************************
+/*****************
+**************************************************************
  * Copyright (c) 2021, 2022 Jonathan Lainer (kontakt@lainer.co.at)
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -11,11 +12,15 @@
  *******************************************************************************/
 
 #include "PinHandle.h"
+#include <forte_bool.h>
+#include "devlog.h"
+
 
 IOHandleGPIO::IOHandleGPIO(EliteBoardDeviceController *paDeviceCtrl,
                            GPIO_TypeDef *paGPIO_Port, uint16_t paGPIO_Pin)
     : IOHandle(static_cast<forte::core::io::IODeviceController*>(paDeviceCtrl), IOMapper::UnknownDirection, CIEC_ANY::e_BOOL),
-      mGPIO_Port(paGPIO_Port), mGPIO_Pin(paGPIO_Pin) {}
+      mGPIO_Port(paGPIO_Port), mGPIO_Pin(paGPIO_Pin) {
+      }
 
 void IOHandleGPIO::onObserver(IOObserver *paObserver) {
   IOHandle::onObserver(paObserver);
@@ -38,7 +43,7 @@ void IOHandleGPIO::dropObserver() {
 
 void IOHandleGPIO::get(CIEC_ANY &paState) {
   static_cast<CIEC_BOOL &>(paState) =
-      HAL_GPIO_ReadPin(mGPIO_Port, mGPIO_Pin) ? true : false;
+      HAL_GPIO_ReadPin(mGPIO_Port, mGPIO_Pin) ? CIEC_BOOL(true) : CIEC_BOOL(false);
 }
 
 void IOHandleGPIO::set(const CIEC_ANY &paState) {

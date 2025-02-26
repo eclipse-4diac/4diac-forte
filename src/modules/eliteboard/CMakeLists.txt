@@ -20,8 +20,6 @@ forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 # eLITe-Borad specific fixes
 #############################################################################
 
-forte_add_sourcefile_cpp(arm_fix.cpp)
-forte_add_definition("-DFORTE_EXTERNAL_LOG_HANDLER")
 forte_add_definition("-ffunction-sections -fdata-sections -fno-threadsafe-statics -fno-rtti -fno-exceptions -Wl,--gc-sections")
 
 #############################################################################

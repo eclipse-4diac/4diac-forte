@@ -1,121 +1,95 @@
-/*******************************************************************************
- * Copyright (c) 2021, 2022 Jonathan Lainer (kontakt@lainer.co.at)
- * This program and the accompanying materials are made available under the
- * terms of the Eclipse Public License 2.0 which is available at
- * http://www.eclipse.org/legal/epl-2.0.
- *
- * SPDX-License-Identifier: EPL-2.0
- *
- * Contributors:
- *   Jonathan Lainer - Initial implementation.
- *******************************************************************************/
+/*************************************************************************
+ *** FORTE Library Element
+ ***
+ *** This file was generated using the 4DIAC FORTE Export Filter V1.0.x NG!
+ ***
+ *** Name: EliteBoard
+ *** Description: Service Interface Function Block Type
+ *** Version:
+ ***     1.0: 2021-02-22/Jonathan Lainer -  - Initial Contribution
+ *************************************************************************/
 
-#ifndef _ELITEBOARD_H_
-#define _ELITEBOARD_H_
+#pragma once
 
-#include "core/io/configFB/io_configFB_controller.h"
-#include "PortAdapter_adp.h"
-#include "forte_array_at.h"
 #include "funcbloc.h"
-#include <extevhandlerhelper.h>
-#include <handler/EliteBoardDeviceController.h>
+#include "PortAdapter_adp.h"
+#include "forte_dword.h"
+#include "iec61131_functions.h"
+#include "forte_array_common.h"
+#include "forte_array.h"
+#include "forte_array_fixed.h"
+#include "forte_array_variable.h"
 
-class FORTE_EliteBoard : public forte::core::io::IOConfigFBController {
+#include "../handler/EliteBoardDeviceController.h"
+
+class FORTE_EliteBoard final : public CFunctionBlock {
   DECLARE_FIRMWARE_FB(FORTE_EliteBoard)
 
-private:
-  static const TEventID scmEventMAPID = 0;
+  private:
+    static const TEventID scmEventMAPID = 0;
+    static const TForteInt16 scmEIWithIndexes[];
+    static const CStringDictionary::TStringId scmEventInputNames[];
+    static const TEventID scmEventMAPOID = 0;
+    static const TForteInt16 scmEOWithIndexes[];
+    static const CStringDictionary::TStringId scmEventOutputNames[];
+    static const int scmPortAAdpNum = 0;
+    static const int scmPortBAdpNum = 1;
+    static const int scmPortCAdpNum = 2;
+    static const int scmPortDAdpNum = 3;
+    static const int scmPortEAdpNum = 4;
+    static const int scmPortFAdpNum = 5;
+    static const int scmPortGAdpNum = 6;
+    static const int scmPortHAdpNum = 7;
+    static const int scmPortIAdpNum = 8;
+    static const int scmPortJAdpNum = 9;
+    static const int scmPortKAdpNum = 10;
+    static const SAdapterInstanceDef scmAdapterInstances[];
 
-  static const TForteInt16 scmEIWithIndexes[];
-  static const CStringDictionary::TStringId scmEventInputNames[];
-  static const CStringDictionary::TStringId scmEventInputTypeIds[];
+    static const SFBInterfaceSpec scmFBInterfaceSpec;
 
-  static const TEventID scmEventMAPOID = 0;
+    void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
-  static const TForteInt16 scmEOWithIndexes[];
-  static const CStringDictionary::TStringId scmEventOutputNames[];
-  static const CStringDictionary::TStringId scmEventOutputTypeIds[];
+    void readInputData(TEventID paEIID) override;
+    void writeOutputData(TEventID paEIID) override;
 
-  static const int scmPortAAdpNum = 0;
-  static const int scmPortBAdpNum = 1;
-  static const int scmPortCAdpNum = 2;
-  static const int scmPortDAdpNum = 3;
-  static const int scmPortEAdpNum = 4;
-  static const int scmPortFAdpNum = 5;
-  static const int scmPortGAdpNum = 6;
-  static const int scmPortHAdpNum = 7;
-  static const int scmPortIAdpNum = 8;
-  static const int scmPortJAdpNum = 9;
-  static const int scmPortKAdpNum = 10;
+    int mCurrentAdapterIndex = 0;
+    static const int mAdapterCount = scmPortKAdpNum + 1;
 
-  static const SAdapterInstanceDef scmAdapterInstances[];
+    FORTE_PortAdapter &getPortAdapterByIndex(int index);
+	  bool configurePortFB(int index, CEventChainExecutionThread * const paECET);
+    int configPorts(CEventChainExecutionThread *const paECET);
 
-  static const SFBInterfaceSpec scmFBInterfaceSpec;
+  public:
+    FORTE_EliteBoard(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    bool initialize() override;
 
-  FORTE_PortAdapter &st_PortA() {
-    return (*static_cast<FORTE_PortAdapter *>(mAdapters[0]));
-  };
+    FORTE_PortAdapter var_PortA;
+    FORTE_PortAdapter var_PortB;
+    FORTE_PortAdapter var_PortC;
+    FORTE_PortAdapter var_PortD;
+    FORTE_PortAdapter var_PortE;
+    FORTE_PortAdapter var_PortF;
+    FORTE_PortAdapter var_PortG;
+    FORTE_PortAdapter var_PortH;
+    FORTE_PortAdapter var_PortI;
+    FORTE_PortAdapter var_PortJ;
+    FORTE_PortAdapter var_PortK;
 
-  FORTE_PortAdapter &st_PortB() {
-    return (*static_cast<FORTE_PortAdapter *>(mAdapters[1]));
-  };
+    CEventConnection conn_MAPO;
 
-  FORTE_PortAdapter &st_PortC() {
-    return (*static_cast<FORTE_PortAdapter *>(mAdapters[2]));
-  };
+    CIEC_ANY *getDI(size_t) override;
+    CIEC_ANY *getDO(size_t) override;
+    CAdapter *getAdapterUnchecked(size_t) override;
+    CEventConnection *getEOConUnchecked(TPortId) override;
+    CDataConnection **getDIConUnchecked(TPortId) override;
+    CDataConnection *getDOConUnchecked(TPortId) override;
 
-  FORTE_PortAdapter &st_PortD() {
-    return (*static_cast<FORTE_PortAdapter *>(mAdapters[3]));
-  };
+    void evt_MAP() {
+      executeEvent(scmEventMAPID, nullptr);
+    }
 
-  FORTE_PortAdapter &st_PortE() {
-    return (*static_cast<FORTE_PortAdapter *>(mAdapters[4]));
-  };
-
-  FORTE_PortAdapter &st_PortF() {
-    return (*static_cast<FORTE_PortAdapter *>(mAdapters[5]));
-  };
-
-  FORTE_PortAdapter &st_PortG() {
-    return (*static_cast<FORTE_PortAdapter *>(mAdapters[6]));
-  };
-
-  FORTE_PortAdapter &st_PortH() {
-    return (*static_cast<FORTE_PortAdapter *>(mAdapters[7]));
-  };
-
-  FORTE_PortAdapter &st_PortI() {
-    return (*static_cast<FORTE_PortAdapter *>(mAdapters[8]));
-  };
-
-  FORTE_PortAdapter &st_PortJ() {
-    return (*static_cast<FORTE_PortAdapter *>(mAdapters[9]));
-  };
-
-  FORTE_PortAdapter &st_PortK() {
-    return (*static_cast<FORTE_PortAdapter *>(mAdapters[10]));
-  };
-
-
-  void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
- 
-  void setConfig() {}
-  
-  EliteBoardDeviceController& mEventHandler;
-  int mCurrentAdapterIndex = 0;
-  static const int mAdapterCount = scmPortKAdpNum + 1;
-
-  forte::core::io::IODeviceController *
-  createDeviceController(CDeviceExecution &paDeviceExecution);
-  FORTE_PortAdapter &getPortAdapterByIndex(int index);
-  bool configurePortFB(int index);
-
-public:
-
-  FORTE_EliteBoard(const CStringDictionary::TStringId paInstanceNameId, 
-      forte::core::CFBContainer &paContainer);
-
-  ~FORTE_EliteBoard() override = default;
+    void operator()() {
+      evt_MAP();
+    }
 };
 
-#endif // _ELITEBOARD_H_

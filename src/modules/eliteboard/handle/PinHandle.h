@@ -15,10 +15,11 @@
 
 #include <core/io/mapper/io_handle.h>
 #include <core/io/mapper/io_observer.h>
-#include <handler/EliteBoardDeviceController.h>
+#include "../handler/EliteBoardDeviceController.h"
 #include <stdint.h>
-#include <stm32h743xx.h>
-#include <stm32h7xx_hal_gpio.h>
+
+#include "stm32h743xx.h"
+#include "stm32h7xx_hal_gpio.h"
 
 class EliteBoardDeviceController;
 
