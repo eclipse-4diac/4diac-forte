@@ -15,9 +15,6 @@
  *                 - refactor struct memory layout
  *******************************************************************************/
 #include "forte_struct.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "forte_struct_gen.cpp"
-#endif
 #include <cstring>
 
 CIEC_ANY *CIEC_STRUCT::getMemberNamed(CStringDictionary::TStringId paMemberNameId) {

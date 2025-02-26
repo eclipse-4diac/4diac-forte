@@ -11,9 +11,6 @@
  *******************************************************************************/
 
 #include "processinterface.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "processinterface_gen.cpp"
-#endif
 #include <iostream>
 #include "fmuInstance.h"
 

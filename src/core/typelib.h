@@ -20,7 +20,7 @@
 
 #include "fortenew.h"
 #include "mgmcmd.h"
-#include "stringlist.h"
+#include "core/stringdict.h"
 
 //forward declaration of a few classes to reduce include file dependencies
 class CFunctionBlock;
@@ -70,7 +70,6 @@ namespace forte {
     //const SFBInterfaceSpec& getFBInterfaceSpec() const override { return scmFBInterfaceSpec;}
 
 #define DEFINE_GENERIC_FIRMWARE_FB(fbclass, fbTypeNameId)\
-  extern const CStringDictionary::TStringId g_nStringId##fbclass; \
   const CTypeLib::CFBTypeEntry fbclass::csmFirmwareFBEntry_##fbclass((fbTypeNameId), fbclass::createFB, 0); \
   FORTE_DUMMY_INIT_DEF(fbclass)
 
@@ -78,7 +77,6 @@ namespace forte {
  * prebuild script that generates the constant string list.
  */
 #define DEFINE_FIRMWARE_FB(fbclass, fbTypeNameId) \
-    extern const CStringDictionary::TStringId g_nStringId##fbclass; \
     const CTypeLib::CFBTypeEntry fbclass::csmFirmwareFBEntry_##fbclass((fbTypeNameId), fbclass::createFB, &(fbclass::scmFBInterfaceSpec)); \
     FORTE_DUMMY_INIT_DEF(fbclass) \
     CStringDictionary::TStringId fbclass::getFBTypeId() const {return (fbTypeNameId); }

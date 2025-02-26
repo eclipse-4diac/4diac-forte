@@ -93,7 +93,6 @@ string(REGEX REPLACE "(.)" ",'\\1'" scmConstStringBuf_Str "${scmConstStringBuf_S
 string(REPLACE "\\" "\\0" scmConstStringBuf_Str "${scmConstStringBuf_Str}")
 string(SUBSTRING "${scmConstStringBuf_Str}" 1 -1 scmConstStringBuf_Str)
 
-CONFIGURE_FILE(${FORTE_SOURCE_DIR}/stringlist.h.in ${FORTE_BINARY_DIR}/stringlist_new.h)
 CONFIGURE_FILE(${FORTE_SOURCE_DIR}/stringlist.cpp.in ${FORTE_BINARY_DIR}/stringlist_new.cpp)
 
 # only copy files if different

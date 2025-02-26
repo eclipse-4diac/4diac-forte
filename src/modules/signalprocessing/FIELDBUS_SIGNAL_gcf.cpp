@@ -12,9 +12,6 @@
  *************************************************************************/
 
 #include "FIELDBUS_SIGNAL_gcf.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "FIELDBUS_SIGNAL_gcf_gen.cpp"
-#endif
 
 #include "iec61131_functions.h"
 #include "forte_byte.h"

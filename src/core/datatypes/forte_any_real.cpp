@@ -12,9 +12,6 @@
  *      - initial implementation and rework communication infrastructure
  *******************************************************************************/
 #include "forte_any_real.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "forte_any_real_gen.cpp"
-#endif
 
 int CIEC_ANY_REAL::normalizeToStringRepresentation(char *paValue, size_t paBufferSize, int paUsedBytes) const {
   size_t i = 0;

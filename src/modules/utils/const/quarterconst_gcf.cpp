@@ -14,9 +14,6 @@
  *************************************************************************/
 
 #include "quarterconst_gcf.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "quarterconst_gcf_gen.cpp"
-#endif
 
 #include "iec61131_functions.h"
 #include "forte_byte.h"

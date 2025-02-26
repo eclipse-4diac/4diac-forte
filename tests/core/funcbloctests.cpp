@@ -15,7 +15,9 @@
 
 #include "E_CTUD_fbt.h"
 #include "basicfb.h"
+#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
 #include "funcbloctests_gen.cpp"
+#endif
 #include "fbcontainermock.h"
 
 

@@ -14,9 +14,6 @@
  *******************************************************************************/
 
 #include "opcua_helper.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "opcua_helper_gen.cpp"
-#endif
 #include "core/util/parameterParser.h"
 #include "arch/devlog.h"
 #include "convert_functions.h"

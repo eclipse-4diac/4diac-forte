@@ -14,7 +14,9 @@
 #include "GEN_SUBL_fbt.h"
 #include "comlayersmanager.h"
 
-DEFINE_GENERIC_FIRMWARE_FB(GEN_SUBL, g_nStringIdGEN_SUBL)
+USE_STRING_ID(GEN_SUBL)
+
+DEFINE_GENERIC_FIRMWARE_FB(GEN_SUBL, STRID(GEN_SUBL))
 
 
 const char * const GEN_SUBL::scmLocalIDPrefix = "loc[";

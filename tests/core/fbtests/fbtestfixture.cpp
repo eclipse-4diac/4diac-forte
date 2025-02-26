@@ -202,9 +202,6 @@ void CFBTestFixtureBase::setOutputData(std::initializer_list<CIEC_ANY*> paOutput
 
 void CFBTestFixtureBase::setupTestInterface(){
   BOOST_CHECK_EQUAL(CFunctionBlock::E_FBStates::Idle, mFBUnderTest->getState());
-  if (mFBUnderTest->getFBTypeId() < g_nStringIdNextFreeId) { // not a generic block
-    BOOST_CHECK_EQUAL(getFBTypeId(), mFBUnderTest->getFBTypeId());
-  }
   BOOST_CHECK_EQUAL(getFBTypeId(), mFBUnderTest->getInstanceNameId());
 
   const SFBInterfaceSpec& interfaceSpec(mFBUnderTest->getFBInterfaceSpec());

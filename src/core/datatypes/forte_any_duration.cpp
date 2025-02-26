@@ -12,9 +12,6 @@
  *      - initial implementation and rework communication infrastructure
  *******************************************************************************/
 #include "forte_any_duration.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "forte_any_duration_gen.cpp"
-#endif
 #include "../../arch/timerha.h"
 #include <stdio.h>
 #include <cinttypes>

@@ -13,7 +13,9 @@
  *******************************************************************************/
 #include "GEN_PUBLISH_fbt.h"
 
-DEFINE_GENERIC_FIRMWARE_FB(GEN_PUBLISH, g_nStringIdGEN_PUBLISH)
+USE_STRING_ID(GEN_PUBLISH)
+
+DEFINE_GENERIC_FIRMWARE_FB(GEN_PUBLISH, STRID(GEN_PUBLISH))
 
 GEN_PUBLISH::GEN_PUBLISH(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer):
              forte::com_infra::CCommFB( paInstanceNameId, paContainer, forte::com_infra::e_Publisher){
