@@ -79,8 +79,8 @@ void FORTE_EC_START_ELEM::executeEvent(TEventID paEIID, CEventChainExecutionThre
 void FORTE_EC_START_ELEM::executeRQST(){
   forte::core::SManagementCMD theCommand;
 
-  theCommand.mDestination = CStringDictionary::getInstance().getId(var_DST.getValue());
-  theCommand.mFirstParam.push_back(CStringDictionary::getInstance().getId(var_ELEM_NAME.getValue()));
+  theCommand.mDestination = CStringDictionary::getId(var_DST.getValue());
+  theCommand.mFirstParam.push_back(CStringDictionary::getId(var_ELEM_NAME.getValue()));
   theCommand.mCMD = EMGMCommandType::Start;
 
   EMGMResponse resp = getDevice()->executeMGMCommand(theCommand);

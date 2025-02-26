@@ -123,7 +123,7 @@ CFunctionBlock *CTypeLib::createFB(CStringDictionary::TStringId paInstanceNameId
     }
   } else { //check for parameterizable FBs (e.g. SERVER)
     TIdentifier acGenFBName = { "GEN_" };
-    const char *acTypeBuf = CStringDictionary::getInstance().get(paFBTypeId);
+    const char *acTypeBuf = CStringDictionary::get(paFBTypeId);
     const char *pcUnderScore = getFirstNonTypeNameUnderscorePos(acTypeBuf);
 
     if (nullptr != pcUnderScore) { // We found no underscore in the type name therefore it can not be a generic type
@@ -133,7 +133,7 @@ CFunctionBlock *CTypeLib::createFB(CStringDictionary::TStringId paInstanceNameId
       }
       memcpy(&(acGenFBName[4]), acTypeBuf, nCopyLen);
       acGenFBName[cgIdentifierLength] = '\0';
-      poToCreate = findType(CStringDictionary::getInstance().getId(acGenFBName), mFBLibStart);
+      poToCreate = findType(CStringDictionary::getId(acGenFBName), mFBLibStart);
       if (nullptr != poToCreate) {
         poNewFB = (static_cast<CFBTypeEntry *>(poToCreate))->createFBInstance(paInstanceNameId, paContainer);
         if (nullptr == poNewFB){ // we could not create the requested object

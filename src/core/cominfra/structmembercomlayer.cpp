@@ -80,11 +80,11 @@ CStructMemberLocalComLayer::TTargetStructIndexList CStructMemberLocalComLayer::b
     bool containsIndex = CStructMemberLocalComLayer::parseArrayIndexFromString(parser[i], arrayIndex);
 
     if (!containsIndex) {
-      id = CStringDictionary::getInstance().insert(parser[i]);
+      id = CStringDictionary::insert(parser[i]);
     } else {
       std::string sub = parser[i];
       sub.erase(sub.find('['), std::string::npos);
-      id = CStringDictionary::getInstance().insert(sub.data());
+      id = CStringDictionary::insert(sub.data());
     }
 
     size_t memberIndex = static_cast<CIEC_STRUCT*>(paRoot)->getMemberIndex(id);
@@ -132,8 +132,8 @@ EComResponse CStructMemberLocalComLayer::openConnection(char *paLayerParameter){
     return e_InitInvalidId;
   }
 
-  CStringDictionary::TStringId groupNameID = mGroupID = CStringDictionary::getInstance().insert(parser[EComStringIndex::e_LOCALGROUPNAME]);
-  CStringDictionary::TStringId dataTypeNameID = CStringDictionary::getInstance().insert(parser[EComStringIndex::e_STRUCTTYPE]);
+  CStringDictionary::TStringId groupNameID = mGroupID = CStringDictionary::insert(parser[EComStringIndex::e_LOCALGROUPNAME]);
+  CStringDictionary::TStringId dataTypeNameID = CStringDictionary::insert(parser[EComStringIndex::e_STRUCTTYPE]);
 
   CIEC_STRUCT *const dummy = static_cast<CIEC_STRUCT* >(CTypeLib::createDataTypeInstance(dataTypeNameID, nullptr));
 

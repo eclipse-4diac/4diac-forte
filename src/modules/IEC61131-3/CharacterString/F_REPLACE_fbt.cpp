@@ -78,8 +78,8 @@ void FORTE_F_REPLACE::executeEvent(TEventID paEIID, CEventChainExecutionThread *
             return func_REPLACE(paIN1, paIN2, paP, paL);
           }
           DEVLOG_ERROR("Replacing incompatible types %s and %s\n",
-                       CStringDictionary::getInstance().get(paIN1.getTypeNameID()),
-                       CStringDictionary::getInstance().get(paIN2.getTypeNameID()));
+                       CStringDictionary::get(paIN1.getTypeNameID()),
+                       CStringDictionary::get(paIN2.getTypeNameID()));
           return CIEC_ANY_STRING_VARIANT();
       }, static_cast<CIEC_ANY_STRING_VARIANT::variant&>(var_IN1),
          static_cast<CIEC_ANY_STRING_VARIANT::variant&>(var_IN2),

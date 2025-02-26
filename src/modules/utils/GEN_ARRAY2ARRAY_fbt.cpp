@@ -69,7 +69,7 @@ bool GEN_ARRAY2ARRAY::createInterfaceSpec(const char *paConfigString, SFBInterfa
     if(nullptr != dTypePos){
       //there is a number and a data type of inputs within the typename
       mArrayLength = static_cast<unsigned int>(forte::core::util::strtoul(dNumberPos, nullptr, 10));
-      m_ValueTypeID = CStringDictionary::getInstance().getId(++dTypePos);
+      m_ValueTypeID = CStringDictionary::getId(++dTypePos);
     }
     else{
       m_ValueTypeID = CStringDictionary::scmInvalidStringId;

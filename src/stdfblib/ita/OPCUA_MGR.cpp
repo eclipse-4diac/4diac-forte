@@ -477,7 +477,7 @@ UA_StatusCode OPCUA_MGR::onCreateFB(UA_Server*,
 
   const char* resourceName = static_cast<const char*>(objectContext);
   OPCUA_MGR* uaMGR = static_cast<OPCUA_MGR*>(methodContext);
-  uaMGR->setMGMCommand(EMGMCommandType::CreateFBInstance, CStringDictionary::getInstance().insert(resourceName), nullptr, fullFbName, fbType);
+  uaMGR->setMGMCommand(EMGMCommandType::CreateFBInstance, CStringDictionary::insert(resourceName), nullptr, fullFbName, fbType);
   eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
   return scResponseMap.find(eRetVal)->second;
 }
@@ -511,7 +511,7 @@ UA_StatusCode OPCUA_MGR::onCreateConnection(UA_Server*,
 
   const char* resourceName = static_cast<const char*>(objectContext);
   OPCUA_MGR* uaMGR = static_cast<OPCUA_MGR*>(methodContext);
-  uaMGR->setMGMCommand(EMGMCommandType::CreateConnection, CStringDictionary::getInstance().insert(resourceName), nullptr, sourceFullName, destinationFullName);
+  uaMGR->setMGMCommand(EMGMCommandType::CreateConnection, CStringDictionary::insert(resourceName), nullptr, sourceFullName, destinationFullName);
   eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
   return scResponseMap.find(eRetVal)->second;
 }
@@ -565,7 +565,7 @@ UA_StatusCode OPCUA_MGR::onWriteResource(UA_Server*,
   const std::string writeValue(getInputValue(*static_cast<UA_String*>(input[1].data)));
 
   OPCUA_MGR* uaMGR = static_cast<OPCUA_MGR*>(methodContext);
-  uaMGR->setMGMCommand(EMGMCommandType::Write, CStringDictionary::getInstance().insert(resourceName.c_str()), writeValue.c_str(), nullptr, nullptr);
+  uaMGR->setMGMCommand(EMGMCommandType::Write, CStringDictionary::insert(resourceName.c_str()), writeValue.c_str(), nullptr, nullptr);
   eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
   return scResponseMap.find(eRetVal)->second;
 }
@@ -596,7 +596,7 @@ UA_StatusCode OPCUA_MGR::onWriteFB(UA_Server*,
 
   const char* resourceName = static_cast<const char*>(objectContext);
   OPCUA_MGR* uaMGR = static_cast<OPCUA_MGR*>(methodContext);
-  uaMGR->setMGMCommand(EMGMCommandType::Write, CStringDictionary::getInstance().insert(resourceName), writeValue.c_str(), writeDestination);
+  uaMGR->setMGMCommand(EMGMCommandType::Write, CStringDictionary::insert(resourceName), writeValue.c_str(), writeDestination);
   eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
   return scResponseMap.find(eRetVal)->second;
 }
@@ -642,7 +642,7 @@ UA_StatusCode OPCUA_MGR::onStartResource(UA_Server*,
   EMGMResponse eRetVal = EMGMResponse::UnsupportedType;
   const std::string resourceName(getInputValue(*static_cast<UA_String*>(input[0].data)));
   OPCUA_MGR* uaMGR = static_cast<OPCUA_MGR*>(methodContext);
-  uaMGR->setMGMCommand(EMGMCommandType::Start, CStringDictionary::getInstance().insert(resourceName.c_str()), nullptr, nullptr, nullptr);
+  uaMGR->setMGMCommand(EMGMCommandType::Start, CStringDictionary::insert(resourceName.c_str()), nullptr, nullptr, nullptr);
   eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
   return scResponseMap.find(eRetVal)->second;
 }
@@ -671,7 +671,7 @@ UA_StatusCode OPCUA_MGR::onStartFB(UA_Server*,
 
   const char* resourceName = static_cast<const char*>(objectContext);
   OPCUA_MGR* uaMGR = static_cast<OPCUA_MGR*>(methodContext);
-  uaMGR->setMGMCommand(EMGMCommandType::Start, CStringDictionary::getInstance().insert(resourceName), nullptr, fullFbName);
+  uaMGR->setMGMCommand(EMGMCommandType::Start, CStringDictionary::insert(resourceName), nullptr, fullFbName);
   eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
   return scResponseMap.find(eRetVal)->second;
 }
@@ -746,7 +746,7 @@ UA_StatusCode OPCUA_MGR::onStopFB(UA_Server*,
 
   const char* resourceName = static_cast<const char*>(objectContext);
   OPCUA_MGR* uaMGR = static_cast<OPCUA_MGR*>(methodContext);
-  uaMGR->setMGMCommand(EMGMCommandType::Stop, CStringDictionary::getInstance().insert(resourceName), nullptr, fullFbName);
+  uaMGR->setMGMCommand(EMGMCommandType::Stop, CStringDictionary::insert(resourceName), nullptr, fullFbName);
   eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
   return scResponseMap.find(eRetVal)->second;
 
@@ -823,7 +823,7 @@ UA_StatusCode OPCUA_MGR::onResetFB(UA_Server*,
 
   const char* resourceName = static_cast<const char*>(objectContext);
   OPCUA_MGR* uaMGR = static_cast<OPCUA_MGR*>(methodContext);
-  uaMGR->setMGMCommand(EMGMCommandType::Reset, CStringDictionary::getInstance().insert(resourceName), nullptr, fullFbName);
+  uaMGR->setMGMCommand(EMGMCommandType::Reset, CStringDictionary::insert(resourceName), nullptr, fullFbName);
   eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
   return scResponseMap.find(eRetVal)->second;
 }
@@ -898,7 +898,7 @@ UA_StatusCode OPCUA_MGR::onKillFB(UA_Server*,
 
   const char* resourceName = static_cast<const char*>(objectContext);
   OPCUA_MGR* uaMGR = static_cast<OPCUA_MGR*>(methodContext);
-  uaMGR->setMGMCommand(EMGMCommandType::Kill, CStringDictionary::getInstance().insert(resourceName), nullptr, fullFbName);
+  uaMGR->setMGMCommand(EMGMCommandType::Kill, CStringDictionary::insert(resourceName), nullptr, fullFbName);
   eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
   return scResponseMap.find(eRetVal)->second;
 }
@@ -962,7 +962,7 @@ UA_StatusCode OPCUA_MGR::onDeleteFB(UA_Server*,
   const char* resourceName = static_cast<const char*>(objectContext);
   OPCUA_MGR* uaMGR = static_cast<OPCUA_MGR*>(methodContext);
 
-  uaMGR->setMGMCommand(EMGMCommandType::DeleteFBInstance, CStringDictionary::getInstance().insert(resourceName), nullptr, fullFbName);
+  uaMGR->setMGMCommand(EMGMCommandType::DeleteFBInstance, CStringDictionary::insert(resourceName), nullptr, fullFbName);
   eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
   return scResponseMap.find(eRetVal)->second;
 }
@@ -995,7 +995,7 @@ UA_StatusCode OPCUA_MGR::onDeleteConnection(UA_Server*,
 
   const char* resourceName = static_cast<const char*>(objectContext);
   OPCUA_MGR* uaMGR = static_cast<OPCUA_MGR*>(methodContext);
-  uaMGR->setMGMCommand(EMGMCommandType::DeleteConnection, CStringDictionary::getInstance().insert(resourceName), nullptr, sourceFullName, destinationFullName);
+  uaMGR->setMGMCommand(EMGMCommandType::DeleteConnection, CStringDictionary::insert(resourceName), nullptr, sourceFullName, destinationFullName);
   eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
   return scResponseMap.find(eRetVal)->second;
 }
@@ -1057,7 +1057,7 @@ UA_StatusCode OPCUA_MGR::onAddWatch(UA_Server*,
 
   const char* resourceName = static_cast<const char*>(objectContext);
   OPCUA_MGR* uaMGR = static_cast<OPCUA_MGR*>(methodContext);
-  uaMGR->setMGMCommand(EMGMCommandType::MonitoringAddWatch, CStringDictionary::getInstance().insert(resourceName), nullptr, fullFbName);
+  uaMGR->setMGMCommand(EMGMCommandType::MonitoringAddWatch, CStringDictionary::insert(resourceName), nullptr, fullFbName);
   eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
   return scResponseMap.find(eRetVal)->second;
 }
@@ -1116,7 +1116,7 @@ UA_StatusCode OPCUA_MGR::onRemoveWatch(UA_Server*,
 
   const char* resourceName = static_cast<const char*>(objectContext);
   OPCUA_MGR* uaMGR = static_cast<OPCUA_MGR*>(methodContext);
-  uaMGR->setMGMCommand(EMGMCommandType::MonitoringRemoveWatch, CStringDictionary::getInstance().insert(resourceName), nullptr, fullFbName);
+  uaMGR->setMGMCommand(EMGMCommandType::MonitoringRemoveWatch, CStringDictionary::insert(resourceName), nullptr, fullFbName);
   eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
   return scResponseMap.find(eRetVal)->second;
 }
@@ -1145,7 +1145,7 @@ UA_StatusCode OPCUA_MGR::onTriggerEvent(UA_Server*,
 
   const char* resourceName = static_cast<const char*>(objectContext);
   OPCUA_MGR* uaMGR = static_cast<OPCUA_MGR*>(methodContext);
-  uaMGR->setMGMCommand(EMGMCommandType::MonitoringTriggerEvent, CStringDictionary::getInstance().insert(resourceName), OPCUA_MGR::scmTriggerEventParam, fullFbName);
+  uaMGR->setMGMCommand(EMGMCommandType::MonitoringTriggerEvent, CStringDictionary::insert(resourceName), OPCUA_MGR::scmTriggerEventParam, fullFbName);
   eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
   return scResponseMap.find(eRetVal)->second;
 }
@@ -1176,7 +1176,7 @@ UA_StatusCode OPCUA_MGR::onForceValue(UA_Server*,
 
   const char* resourceName = static_cast<const char*>(objectContext);
   OPCUA_MGR* uaMGR = static_cast<OPCUA_MGR*>(methodContext);
-  uaMGR->setMGMCommand(EMGMCommandType::MonitoringForce, CStringDictionary::getInstance().insert(resourceName), writeValue.c_str(), writeDestination);
+  uaMGR->setMGMCommand(EMGMCommandType::MonitoringForce, CStringDictionary::insert(resourceName), writeValue.c_str(), writeDestination);
   eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
   return scResponseMap.find(eRetVal)->second;
 }
@@ -1205,7 +1205,7 @@ UA_StatusCode OPCUA_MGR::onClearForce(UA_Server*,
 
   const char* resourceName = static_cast<const char*>(objectContext);
   OPCUA_MGR* uaMGR = static_cast<OPCUA_MGR*>(methodContext);
-  uaMGR->setMGMCommand(EMGMCommandType::MonitoringClearForce, CStringDictionary::getInstance().insert(resourceName), nullptr, fullFbName);
+  uaMGR->setMGMCommand(EMGMCommandType::MonitoringClearForce, CStringDictionary::insert(resourceName), nullptr, fullFbName);
   eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
   return scResponseMap.find(eRetVal)->second;
 }
@@ -1275,10 +1275,10 @@ void OPCUA_MGR::setMGMCommand(EMGMCommandType paCMD, CStringDictionary::TStringI
   mCommand.mCMD = paCMD;
   mCommand.mDestination = paDestination;
   if (paFirstParam != nullptr) {
-    mCommand.mFirstParam.push_back(CStringDictionary::getInstance().insert(paFirstParam));
+    mCommand.mFirstParam.push_back(CStringDictionary::insert(paFirstParam));
   }
   if (paSecondParam != nullptr) {
-    mCommand.mSecondParam.push_back(CStringDictionary::getInstance().insert(paSecondParam));
+    mCommand.mSecondParam.push_back(CStringDictionary::insert(paSecondParam));
   }
   if (paAdditionalParams != nullptr) {
     mCommand.mAdditionalParams = paAdditionalParams;
@@ -1293,12 +1293,12 @@ void OPCUA_MGR::setMGMCommand(EMGMCommandType paCMD, CStringDictionary::TStringI
   mCommand.mDestination = paDestination;
   if (!paFirstParam.empty()) {
     for (std::string param : paFirstParam) {
-      mCommand.mFirstParam.push_back(CStringDictionary::getInstance().insert(param.c_str()));
+      mCommand.mFirstParam.push_back(CStringDictionary::insert(param.c_str()));
     }
   }
   if (!paSecondParam.empty()) {
     for (std::string param : paSecondParam) {
-      mCommand.mSecondParam.push_back(CStringDictionary::getInstance().insert(param.c_str()));
+      mCommand.mSecondParam.push_back(CStringDictionary::insert(param.c_str()));
     }
   }
   if (paAdditionalParams != nullptr) {

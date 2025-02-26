@@ -63,7 +63,7 @@ void CLocalComLayer::setRDs(forte::com_infra::CBaseCommFB& paSubl, CIEC_ANY **pa
 }
 
 EComResponse CLocalComLayer::openConnection(char *const paLayerParameter){
-  mGroupID = CStringDictionary::getInstance().insert(paLayerParameter);
+  mGroupID = CStringDictionary::insert(paLayerParameter);
 
   switch(mFb->getComServiceType()){
     case e_Server:

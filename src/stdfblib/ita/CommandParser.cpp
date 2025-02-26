@@ -37,7 +37,7 @@ EMGMResponse CommandParser::parseAndExecuteMGMCommand(const char *const paDest, 
     mCommand.mMonitorResponse.clear();
 #endif // FORTE_SUPPORT_MONITORING
 
-    mCommand.mDestination = (strlen(paDest) != 0) ? CStringDictionary::getInstance().insert(paDest) : CStringDictionary::scmInvalidStringId;
+    mCommand.mDestination = (strlen(paDest) != 0) ? CStringDictionary::insert(paDest) : CStringDictionary::scmInvalidStringId;
     if ( 255 <= mCommand.mAdditionalParams.capacity()) {
       mCommand.mAdditionalParams.reserve(255);
     }
@@ -321,14 +321,14 @@ int CommandParser::parseIdentifier(char *paIdentifierStart, forte::core::TNameId
   for(char *runner = paIdentifierStart, *start = paIdentifierStart; '\0' != *runner; ++runner){
     if('.' == *runner){
       *runner = '\0';
-      if(!paIdentifier.push_back(CStringDictionary::getInstance().insert(start))){
+      if(!paIdentifier.push_back(CStringDictionary::insert(start))){
         return -1;
       }
       *runner = '.';
       start = runner + 1;
     } else if ('"' == *runner){
       *runner = '\0';
-      if(!paIdentifier.push_back(CStringDictionary::getInstance().insert(start))){
+      if(!paIdentifier.push_back(CStringDictionary::insert(start))){
         return -1;
       }
       *runner = '"';
@@ -344,7 +344,7 @@ int CommandParser::parseTypeName(const std::string_view paTypeName, forte::core:
     return -1;
   }
   const std::string_view result = paTypeName.substr(0, endIndex);
-  if(!paIdentifier.push_back(CStringDictionary::getInstance().insert(result.data(), result.length()))){
+  if(!paIdentifier.push_back(CStringDictionary::insert(result.data(), result.length()))){
     return -1;
   }
   return static_cast<int>(result.length());
@@ -587,10 +587,10 @@ bool CommandParser::parseTypeListData(char *paRequestPartLeft){
 void CommandParser::appendIdentifierName(std::string& paDest, forte::core::TNameIdentifier& paIdentifier) {
   if(!paIdentifier.empty()){
     for (const auto &runner : paIdentifier) {
-      paDest.append(CStringDictionary::getInstance().get(runner));
+      paDest.append(CStringDictionary::get(runner));
       paDest.append(".");
     }
-    paDest.append(CStringDictionary::getInstance().get(paIdentifier.back()));
+    paDest.append(CStringDictionary::get(paIdentifier.back()));
   }
 }
 

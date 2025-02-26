@@ -148,7 +148,7 @@ class CFunctionBlock : public forte::core::CFBContainer {
     /*!\brief Returns the type name of this FB instance
      */
     const char * getFBTypeName() const {
-      return CStringDictionary::getInstance().get(getFBTypeId());
+      return CStringDictionary::get(getFBTypeId());
     }
 
     /*!\brief Get the ID of a specific event input of the FB.
@@ -296,7 +296,7 @@ class CFunctionBlock : public forte::core::CFBContainer {
      * \param paExecEnv Event chain execution environment the FB will be executed in (used for adding output events).
      */
     void receiveInputEvent(TEventID paEIID, CEventChainExecutionThread *paExecEnv) {
-      FORTE_TRACE("InputEvent: Function Block (%s) got event: %d (maxid: %d)\n", CStringDictionary::getInstance().get(getInstanceNameId()), paEIID, getFBInterfaceSpec().mNumEIs - 1);
+      FORTE_TRACE("InputEvent: Function Block (%s) got event: %d (maxid: %d)\n", CStringDictionary::get(getInstanceNameId()), paEIID, getFBInterfaceSpec().mNumEIs - 1);
 
       #ifdef FORTE_TRACE_CTF
         traceInputEvent(paEIID);

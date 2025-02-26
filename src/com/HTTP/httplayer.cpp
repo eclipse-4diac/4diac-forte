@@ -90,14 +90,14 @@ bool CHttpComLayer::checkSDsAndRDsType() const {
   for(size_t i = 2; i < mFb->getNumSD(); i++) {
     CIEC_ANY::EDataTypeID typeToCheck = mFb->getDI(static_cast<unsigned int>(i))->getDataTypeID();
     if(CIEC_ANY::e_ANY != typeToCheck && CIEC_ANY::e_STRING != typeToCheck && CIEC_ANY::e_WSTRING != typeToCheck) {
-      DEVLOG_ERROR("[HTTP Layer] Client called %s has an invalid SD_%d\n", CStringDictionary::getInstance().get(mFb->getInstanceNameId()), i);
+      DEVLOG_ERROR("[HTTP Layer] Client called %s has an invalid SD_%d\n", CStringDictionary::get(mFb->getInstanceNameId()), i);
       return false;
     }
   }
   for(size_t i = 2; i < mFb->getNumRD(); i++) {
     CIEC_ANY::EDataTypeID typeToCheck = mFb->getDO(static_cast<unsigned int>(i))->getDataTypeID();
     if(CIEC_ANY::e_ANY != typeToCheck && CIEC_ANY::e_STRING != typeToCheck && CIEC_ANY::e_WSTRING != typeToCheck) {
-      DEVLOG_ERROR("[HTTP Layer] Client called %s has an invalid RD_%d\n", CStringDictionary::getInstance().get(mFb->getInstanceNameId()), i);
+      DEVLOG_ERROR("[HTTP Layer] Client called %s has an invalid RD_%d\n", CStringDictionary::get(mFb->getInstanceNameId()), i);
       return false;
     }
   }

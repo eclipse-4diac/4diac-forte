@@ -85,11 +85,11 @@ void FORTE_ST_CREATE_CONN::executeEvent(TEventID paEIID, CEventChainExecutionThr
 void FORTE_ST_CREATE_CONN::executeRQST(){
   forte::core::SManagementCMD theCommand;
 
-  theCommand.mDestination = CStringDictionary::getInstance().getId(var_DST.getValue());
-  theCommand.mFirstParam.push_back(CStringDictionary::getInstance().getId(var_SRC_FB.getValue()));
-  theCommand.mFirstParam.push_back(CStringDictionary::getInstance().getId(var_SRC_FB_OUT.getValue()));
-  theCommand.mSecondParam.push_back(CStringDictionary::getInstance().getId(var_DST_FB.getValue()));
-  theCommand.mSecondParam.push_back(CStringDictionary::getInstance().getId(var_DST_FB_IN.getValue()));
+  theCommand.mDestination = CStringDictionary::getId(var_DST.getValue());
+  theCommand.mFirstParam.push_back(CStringDictionary::getId(var_SRC_FB.getValue()));
+  theCommand.mFirstParam.push_back(CStringDictionary::getId(var_SRC_FB_OUT.getValue()));
+  theCommand.mSecondParam.push_back(CStringDictionary::getId(var_DST_FB.getValue()));
+  theCommand.mSecondParam.push_back(CStringDictionary::getId(var_DST_FB_IN.getValue()));
   theCommand.mCMD = EMGMCommandType::CreateConnection;
 
   EMGMResponse resp = getDevice()->executeMGMCommand(theCommand);

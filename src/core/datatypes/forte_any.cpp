@@ -32,7 +32,7 @@ CStringDictionary::TStringId CIEC_ANY::getTypeNameID() const {
 }
 
 CStringDictionary::TStringId CIEC_ANY::parseTypeName(const char *paValue, const char *paHashPos) {
-  return CStringDictionary::getInstance().getId(paValue, static_cast<size_t>(paHashPos - paValue));
+  return CStringDictionary::getId(paValue, static_cast<size_t>(paHashPos - paValue));
 }
 
 bool CIEC_ANY::isCastable(EDataTypeID paSource, EDataTypeID paDestination, bool &paUpCast, bool &paDownCast){

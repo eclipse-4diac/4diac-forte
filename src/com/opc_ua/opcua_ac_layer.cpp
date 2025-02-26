@@ -365,7 +365,7 @@ std::string COPC_UA_AC_Layer::getPortNameFromConnection(CStringDictionary::TStri
   const CDataConnection *portConnection = paIsPublisher ? getCommFB()->getDIConnection(paPortNameId) : getCommFB()->getDOConnection(paPortNameId);
   const CConnectionPoint connectionPoint = portConnection->getSourceId();
   TPortId portId = connectionPoint.mPortId;
-  return std::string(CStringDictionary::getInstance().get(connectionPoint.mFB->getFBInterfaceSpec().mDINames[portId]));
+  return std::string(CStringDictionary::get(connectionPoint.mFB->getFBInterfaceSpec().mDINames[portId]));
 }
 
 std::string COPC_UA_AC_Layer::getFBNameFromConnection(bool paIsPublisher) {

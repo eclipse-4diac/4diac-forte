@@ -99,7 +99,7 @@ void ArrowheadJSONHelper::transformStructToJSON(const CIEC_STRUCT& paSource, CIE
   paResult.append("{");
 
   for(unsigned int i = 0; i < unSize; ++i) {
-    const char *acMemberName = CStringDictionary::getInstance().get(punMemberNameIds[i]);
+    const char *acMemberName = CStringDictionary::get(punMemberNameIds[i]);
 
     paResult.append("\"");
     paResult.append(acMemberName);

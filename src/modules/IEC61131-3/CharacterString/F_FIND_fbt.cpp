@@ -74,8 +74,8 @@ void FORTE_F_FIND::executeEvent(TEventID paEIID, CEventChainExecutionThread *con
           paOUT = func_FIND<std::remove_reference_t<decltype(paOUT)>>(paIN1, paIN2);
         } else {
           DEVLOG_ERROR("Incompatible types IN1:%s and IN2:%s for FIND\n",
-                     CStringDictionary::getInstance().get(paIN1.getTypeNameID()),
-                     CStringDictionary::getInstance().get(paIN2.getTypeNameID()));
+                     CStringDictionary::get(paIN1.getTypeNameID()),
+                     CStringDictionary::get(paIN2.getTypeNameID()));
         }
       }, static_cast<CIEC_ANY_STRING_VARIANT::variant&>(var_IN1),
          static_cast<CIEC_ANY_STRING_VARIANT::variant&>(var_IN2),

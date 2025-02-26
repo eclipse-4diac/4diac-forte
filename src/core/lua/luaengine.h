@@ -150,11 +150,11 @@ public:
   }
 
   void pushStringId(CStringDictionary::TStringId value) {
-    pushString(CStringDictionary::getInstance().get(value));
+    pushString(CStringDictionary::get(value));
   }
 
   CStringDictionary::TStringId getStringId(int index) {
-    return CStringDictionary::getInstance().insert(lua_tostring(luaState, index));
+    return CStringDictionary::insert(lua_tostring(luaState, index));
   }
 
   template<class T, T (CLuaEngine::*F)(int)>

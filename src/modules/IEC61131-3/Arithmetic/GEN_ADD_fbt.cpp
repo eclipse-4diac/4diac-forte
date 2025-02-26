@@ -48,8 +48,8 @@ void GEN_ADD::executeEvent(TEventID paEIID, CEventChainExecutionThread *const pa
                 return func_ADD(paOUT, paIN);
               }
               DEVLOG_ERROR("Adding incompatible types %s and %s\n",
-                           CStringDictionary::getInstance().get(paOUT.getTypeNameID()),
-                           CStringDictionary::getInstance().get(paIN.getTypeNameID()));
+                           CStringDictionary::get(paOUT.getTypeNameID()),
+                           CStringDictionary::get(paIN.getTypeNameID()));
               return paOUT;
           }, static_cast<CIEC_ANY_MAGNITUDE_VARIANT::variant&>(var_OUT()), 
              static_cast<CIEC_ANY_MAGNITUDE_VARIANT::variant&>(var_IN(i)));

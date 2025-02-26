@@ -100,7 +100,7 @@ CStringDictionary::TStringId GEN_FORTE_F_MOVE::getDataTypeNameId(const char *paC
     acPos = strchr(acPos, '_');
     if(nullptr != acPos){
       acPos += 2;  //put the position one after the separating number
-      return CStringDictionary::getInstance().getId(acPos);
+      return CStringDictionary::getId(acPos);
     }
   }
   return CStringDictionary::scmInvalidStringId;

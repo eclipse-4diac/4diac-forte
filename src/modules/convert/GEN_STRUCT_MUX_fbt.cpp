@@ -82,12 +82,12 @@ bool GEN_STRUCT_MUX::createInterfaceSpec(const char *paConfigString, SFBInterfac
   std::unique_ptr<CIEC_ANY> data(CTypeLib::createDataTypeInstance(structTypeNameId, nullptr));
 
   if(nullptr == data) {
-    DEVLOG_ERROR("[GEN_STRUCT_MUX]: Couldn't create structure of type: %s\n", CStringDictionary::getInstance().get(structTypeNameId));
+    DEVLOG_ERROR("[GEN_STRUCT_MUX]: Couldn't create structure of type: %s\n", CStringDictionary::get(structTypeNameId));
     return false;
   }
 
   if(data->getDataTypeID() != CIEC_ANY::e_STRUCT) {
-    DEVLOG_ERROR("[GEN_STRUCT_MUX]: data type is not a structure: %s\n", CStringDictionary::getInstance().get(structTypeNameId));
+    DEVLOG_ERROR("[GEN_STRUCT_MUX]: data type is not a structure: %s\n", CStringDictionary::get(structTypeNameId));
     return false;
   }
   
@@ -97,7 +97,7 @@ bool GEN_STRUCT_MUX::createInterfaceSpec(const char *paConfigString, SFBInterfac
   const auto structSize = structInstance->getStructSize();
   if(structSize == 0 || structSize >= cgInvalidPortId) { //the structure size must be non zero and less than cgInvalidPortId (maximum number of data input)
     DEVLOG_ERROR("[GEN_STRUCT_MUX]: The structure %s has a size is not within range > 0 and < %u\n",
-                CStringDictionary::getInstance().get(structTypeNameId), cgInvalidPortId);
+                CStringDictionary::get(structTypeNameId), cgInvalidPortId);
     return false;
   }
   
@@ -135,7 +135,7 @@ CStringDictionary::TStringId GEN_STRUCT_MUX::getStructNameId(const char *paConfi
     acPos = strchr(acPos, '_');
     if(nullptr != acPos){
       acPos += 2;  //put the position one after the separating number
-      return CStringDictionary::getInstance().getId(acPos);
+      return CStringDictionary::getId(acPos);
     }
   }
   return CStringDictionary::scmInvalidStringId;

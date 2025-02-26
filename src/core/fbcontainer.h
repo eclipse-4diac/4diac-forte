@@ -48,7 +48,7 @@ namespace forte {
         }
 
         const char* getInstanceName() const {
-          return CStringDictionary::getInstance().get(mContInstanceName);
+          return CStringDictionary::get(mContInstanceName);
         }
 
         /*!\brief Create a new FB instance of given type and name

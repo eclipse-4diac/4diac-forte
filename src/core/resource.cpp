@@ -449,7 +449,7 @@ void CResource::createConnectionResponseMessage(const CStringDictionary::TString
   fullName.reserve(cgStringInitialSize);
   fullName = paSrcFb.getInstanceName();
   fullName += "."s;
-  fullName += CStringDictionary::getInstance().get(srcId);
+  fullName += CStringDictionary::get(srcId);
 
   CFBContainer* parent = &(paSrcFb.getParent());
   const CDevice *dev = getDevice();
@@ -465,7 +465,7 @@ void CResource::createConnectionResponseMessage(const CStringDictionary::TString
   paReqResult.append("\" Destination=\""s);
   fullName = paDstFb.getInstanceName();
   fullName += "."s;
-  fullName += CStringDictionary::getInstance().get(dstId);
+  fullName += CStringDictionary::get(dstId);
 
   parent = &(paDstFb.getParent());
   while(parent != dev && parent->getInstanceName() != 0){
@@ -500,7 +500,7 @@ EMGMResponse  CResource::createXTypeResponseMessage(const CTypeLib::CSpecTypeEnt
   const SFBInterfaceSpec* paInterfaceSpec = paTypeEntry->getInterfaceSpec();
   if(nullptr != paInterfaceSpec){
     paReqResult.append("Name=\"");
-    paReqResult.append(CStringDictionary::getInstance().get(paValue));
+    paReqResult.append(CStringDictionary::get(paValue));
     paReqResult.append("\">\n    <InterfaceList>\n      ");
     createEventInterfaceResponseMessage(paInterfaceSpec, paReqResult);
     createDataInterfaceResponseMessage(paInterfaceSpec, paReqResult);
@@ -543,13 +543,13 @@ void CResource::createAdapterInterfaceResponseMessage(const SFBInterfaceSpec* pa
     std::string plugs;
     for(TPortId i = 0; i < paInterfaceSpec->mNumAdapters; i++){
       if(paInterfaceSpec->mAdapterInstanceDefinition[i].mIsPlug){
-        const char *adapterName = CStringDictionary::getInstance().get(paInterfaceSpec->mAdapterInstanceDefinition[i].mAdapterNameID);
-        const char *adapterTypeName = CStringDictionary::getInstance().get(paInterfaceSpec->mAdapterInstanceDefinition[i].mAdapterTypeNameID);
+        const char *adapterName = CStringDictionary::get(paInterfaceSpec->mAdapterInstanceDefinition[i].mAdapterNameID);
+        const char *adapterTypeName = CStringDictionary::get(paInterfaceSpec->mAdapterInstanceDefinition[i].mAdapterTypeNameID);
         createInterfaceResponseMessage(plugs, "AdapterDeclaration", adapterName, adapterTypeName);
       }
       else{
-        const char *adapterName = CStringDictionary::getInstance().get(paInterfaceSpec->mAdapterInstanceDefinition[i].mAdapterNameID);
-        const char *adapterTypeName = CStringDictionary::getInstance().get(paInterfaceSpec->mAdapterInstanceDefinition[i].mAdapterTypeNameID);
+        const char *adapterName = CStringDictionary::get(paInterfaceSpec->mAdapterInstanceDefinition[i].mAdapterNameID);
+        const char *adapterTypeName = CStringDictionary::get(paInterfaceSpec->mAdapterInstanceDefinition[i].mAdapterTypeNameID);
         createInterfaceResponseMessage(sockets, "AdapterDeclaration", adapterName, adapterTypeName);
       }
     }
@@ -571,12 +571,12 @@ void CResource::createInterfaceResponseMessages(std::string &paReqResult, const 
     const TEventID paNumberOfElements, const TDataIOID* paEWith, const TForteInt16* paEWithIndexes, const CStringDictionary::TStringId* paDNameList){
   for(TEventID nIndex = 0; nIndex < paNumberOfElements; nIndex++){
     if(nullptr != paTypeList){
-      const char *name = CStringDictionary::getInstance().get(paNameList[nIndex]);
-      const char *type = CStringDictionary::getInstance().get(paTypeList[nIndex]);
+      const char *name = CStringDictionary::get(paNameList[nIndex]);
+      const char *type = CStringDictionary::get(paTypeList[nIndex]);
       createInterfaceResponseMessage(paReqResult, paCommand, name, type);
     }
     else{
-      const char *name = CStringDictionary::getInstance().get(paNameList[nIndex]);
+      const char *name = CStringDictionary::get(paNameList[nIndex]);
       constexpr char event[] = "Event";
       createInterfaceResponseMessage(paReqResult, paCommand, name, event, paEWith, paEWithIndexes, nIndex, paDNameList);
     }
@@ -595,7 +595,7 @@ void CResource::createInterfaceResponseMessage(std::string& paReqResult, const c
     paReqResult.append("\">\n         ");
     for(int nRunIndex = paEWithIndexes[paIndex]; scmWithListDelimiter != paEWith[nRunIndex]; nRunIndex++){
       paReqResult.append("<With Var=\"");
-      paReqResult.append(CStringDictionary::getInstance().get(paENameList[paEWith[nRunIndex]]));
+      paReqResult.append(CStringDictionary::get(paENameList[paEWith[nRunIndex]]));
       paReqResult.append("\"/>\n      ");
     }
     paReqResult.append("</Event>\n      ");

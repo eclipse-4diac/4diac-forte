@@ -142,7 +142,7 @@ void fmuInstance::populateInputsAndOutputsCore(CFunctionBlock* paFB){
   }
   else{
     //check Communication Blocks
-    const char* functionBlockName = CStringDictionary::getInstance().get(functionBlockType);
+    const char* functionBlockName = CStringDictionary::get(functionBlockType);
     if(strncmp(functionBlockName, "PUBLISH_", 8) == 0
         || strncmp(functionBlockName, "SUBSCRIBE_", 10) == 0
         || strncmp(functionBlockName, "CLIENT_", 7) == 0
@@ -197,19 +197,19 @@ void fmuInstance::populateInputsAndOutputsCore(CFunctionBlock* paFB){
             fmuValueContainer* newValue = new fmuValueContainer(fmuValueContainer::getValueFromType(var->getDataTypeID()), true);
             newValue->setValuePointer(testBasic->getVar(&varId, 1));
             mOutputsAndInputs.push_back(newValue);
-            FMU_DEBUG_LOG(this, "VARIABLES: INTERNAL: " << testBasic->getInstanceName() << "." << CStringDictionary::getInstance().get(varId) << " ADDED SUCCESSFULLY\n")
+            FMU_DEBUG_LOG(this, "VARIABLES: INTERNAL: " << testBasic->getInstanceName() << "." << CStringDictionary::get(varId) << " ADDED SUCCESSFULLY\n")
           }else{
-            FMU_DEBUG_LOG(this, "--------ERROR: Unexpected behavior when getting the internal variable " <<  CStringDictionary::getInstance().get(varId) << " of Function Block: " << testBasic->getInstanceName() << ".\n");
+            FMU_DEBUG_LOG(this, "--------ERROR: Unexpected behavior when getting the internal variable " <<  CStringDictionary::get(varId) << " of Function Block: " << testBasic->getInstanceName() << ".\n");
           }
 
         }
       }
       //store state of ECC
       fmuValueContainer* newValue = new fmuValueContainer(fmuValueContainer::INTEGER, true);
-      CStringDictionary::TStringId eccId = CStringDictionary::getInstance().getId("$ECC");
+      CStringDictionary::TStringId eccId = CStringDictionary::getId("$ECC");
       if(CStringDictionary::scmInvalidStringId == eccId){
-        CStringDictionary::getInstance().insert("$ECC");
-        eccId = CStringDictionary::getInstance().getId("$ECC");
+        CStringDictionary::insert("$ECC");
+        eccId = CStringDictionary::getId("$ECC");
       }
       newValue->setValuePointer(testBasic->getVar(&eccId, 1));
       mOutputsAndInputs.push_back(newValue);
@@ -245,7 +245,7 @@ CIEC_ANY::EDataTypeID fmuInstance::getConnectedDataType(unsigned int portIndex, 
     }
   }
   else{
-    FMU_DEBUG_LOG(this, "--------ERROR: Got invalid port connection on FB " << paFB->getInstanceName() << " at port " << CStringDictionary::getInstance().get(portNameId) << ". It must be connected to another FB.\n");
+    FMU_DEBUG_LOG(this, "--------ERROR: Got invalid port connection on FB " << paFB->getInstanceName() << " at port " << CStringDictionary::get(portNameId) << ". It must be connected to another FB.\n");
   }
 
   return retVal;
@@ -259,13 +259,13 @@ void fmuInstance::fillInterfaceElementsArray(CFunctionBlock* paFB, bool isInput,
       fmuValueContainer* newValue = new fmuValueContainer(fmuValueContainer::valueType::INTEGER, true);
       newValue->setEventCounterPointer(isInput ? &(paFB->getEIMonitorData(i)) : &(paFB->getEOMonitorData(i)));
       mOutputsAndInputs.push_back(newValue);
-      FMU_DEBUG_LOG(this, "VARIABLES: INTERFACE: " << paFB->getInstanceName() << "." << CStringDictionary::getInstance().get(isInput ? paFB->getFBInterfaceSpec().mEINames[i] : paFB->getFBInterfaceSpec().mEONames[i]) << " ADDED SUCCESSFULLY\n")
+      FMU_DEBUG_LOG(this, "VARIABLES: INTERFACE: " << paFB->getInstanceName() << "." << CStringDictionary::get(isInput ? paFB->getFBInterfaceSpec().mEINames[i] : paFB->getFBInterfaceSpec().mEONames[i]) << " ADDED SUCCESSFULLY\n")
     }
   }
   else{
     unsigned int noOfElements = isInput ? paFB->getFBInterfaceSpec().mNumDIs : paFB->getFBInterfaceSpec().mNumDOs;
     for(unsigned int i = 0; i < noOfElements; i++){
-      FMU_DEBUG_LOG(this, "VARIABLES: INTERFACE: " << paFB->getInstanceName() << "." << CStringDictionary::getInstance().get(isInput ? paFB->getFBInterfaceSpec().mDINames[i] : paFB->getFBInterfaceSpec().mDONames[i]) << ": ");
+      FMU_DEBUG_LOG(this, "VARIABLES: INTERFACE: " << paFB->getInstanceName() << "." << CStringDictionary::get(isInput ? paFB->getFBInterfaceSpec().mDINames[i] : paFB->getFBInterfaceSpec().mDONames[i]) << ": ");
       fmuValueContainer::valueType valueType = fmuValueContainer::getValueFromType(isInput ? paFB->getDIFromPortId(static_cast<TPortId>(i))->getDataTypeID() : paFB->getDOFromPortId(static_cast<TPortId>(i))->getDataTypeID());
       if(fmuValueContainer::valueType::WRONG == valueType){
         valueType = fmuValueContainer::getValueFromType(getConnectedDataType(i, isInput, paFB));

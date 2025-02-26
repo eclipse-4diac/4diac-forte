@@ -31,8 +31,8 @@ bool CLuaCFB::createInternalFBs(){
       const SCFB_FBInstanceData &cfbInstanceData(fbnData.mFBInstances[i]);
       if(createFB(cfbInstanceData.mFBInstanceNameId, cfbInstanceData.mFBTypeNameId) != EMGMResponse::Ready){
         DEVLOG_ERROR("Cannot create internal FB (name: %s, type: %s) in CFB (type: %s)!\n",
-                     CStringDictionary::getInstance().get(cfbInstanceData.mFBInstanceNameId),
-                     CStringDictionary::getInstance().get(cfbInstanceData.mFBTypeNameId),
+                     CStringDictionary::get(cfbInstanceData.mFBInstanceNameId),
+                     CStringDictionary::get(cfbInstanceData.mFBTypeNameId),
                      getFBTypeName());
         return false;
       }

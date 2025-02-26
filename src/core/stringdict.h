@@ -17,12 +17,11 @@
  *    Jörg Walter
  *      - rework to use std::vector/inplace_vecctor
  *******************************************************************************/
-#ifndef _CStringDictionary_H_
-#define _CStringDictionary_H_
+
+#pragma once
 
 #include "forte_config.h"
-#include "core/util/singlet.h"
-#include "datatype.h"
+#include "arch/datatype.h"
 
 #include <limits>
 
@@ -30,29 +29,27 @@
  *
  * Manages a dictionary of strings that can be referenced by ids
  */
-// cppcheck-suppress noConstructor
-class CStringDictionary{
-  DECLARE_SINGLETON(CStringDictionary)
-public:
+struct CStringDictionary {
+
+  //!\brief Datatype for string IDs
   typedef size_t TStringId;
 
   //!\brief Invalid string id
   static const TStringId scmInvalidStringId = std::numeric_limits<TStringId>::max();
-
 
   /*!\brief Get a string from the dictionary
    *
    * \param paId String id
    * \return the found string or 0 if not found
    */
-  const char *get(TStringId paId);
+  static const char *get(TStringId paId);
 
   /*!\brief Insert a string into the dictionary
    *
    * \param paStr String to be inserted
    * \return id of the inserted string (or the existing one if the dictionary already has it)
    */
-  TStringId insert(const char *paStr);
+  static TStringId insert(const char *paStr);
 
   /*!\brief Insert a string into the dictionary
    *
@@ -60,14 +57,14 @@ public:
    * \param paStrSize Size of the string (excluding any terminating '\0' character)
    * \return id of the inserted string (or the existing one if the dictionary already has it)
    */
-  TStringId insert(const char *paStr, size_t paStrSize);
+  static TStringId insert(const char *paStr, size_t paStrSize);
 
   /*!\brief Retrieve the Id of a given string if it is already in the dictionary
    *
    * \param paStr String to be searched for
    * \return id of the string (or scmInvalidStringId if it is not in the dictionary)
    */
-  TStringId getId(const char *paStr) const;
+  static TStringId getId(const char *paStr);
 
   /*!\brief Retrieve the Id of a given string if it is already in the dictionary
    *
@@ -75,11 +72,6 @@ public:
    * \param paStrSize Size of the string (excluding any terminating '\0' character)
    * \return id of the string (or scmInvalidStringId if it is not in the dictionary)
    */
-  TStringId getId(const char *paStr, size_t paStrSize) const;
+  static TStringId getId(const char *paStr, size_t paStrSize);
 
-private:
-  // Find an exact match or place to be the new index
-  TStringId findEntry(const char *paStr, size_t paStrSize, unsigned int &paIdx) const;
 };
-
-#endif // _CStringDictionary_H_

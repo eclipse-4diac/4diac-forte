@@ -79,8 +79,8 @@ void FORTE_EC_KILL_ELEM::executeEvent(TEventID paEIID, CEventChainExecutionThrea
 void FORTE_EC_KILL_ELEM::executeRQST(){
   forte::core::SManagementCMD theCommand;
 
-  theCommand.mDestination = CStringDictionary::getInstance().getId(var_DST.getValue());
-  theCommand.mFirstParam.push_back(CStringDictionary::getInstance().getId(var_ELEM_NAME.getValue()));
+  theCommand.mDestination = CStringDictionary::getId(var_DST.getValue());
+  theCommand.mFirstParam.push_back(CStringDictionary::getId(var_ELEM_NAME.getValue()));
   theCommand.mCMD = EMGMCommandType::Kill;
 
   EMGMResponse resp = getDevice()->executeMGMCommand(theCommand);

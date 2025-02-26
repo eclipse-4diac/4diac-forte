@@ -480,7 +480,7 @@ size_t CMonitoringHandler::getExtraSizeForEscapedCharsStruct(const CIEC_STRUCT& 
 void CMonitoringHandler::appendPortTag(std::string &paResponse,
     CStringDictionary::TStringId paPortId){
   paResponse += "<Port name=\""s;
-  paResponse += CStringDictionary::getInstance().get(paPortId);
+  paResponse += CStringDictionary::get(paPortId);
   paResponse += cgClosingXMLTag;
 }
 
@@ -502,7 +502,7 @@ void CMonitoringHandler::appendEventWatch(std::string &paResponse, SEventWatchEn
 
 void CMonitoringHandler::createFullFBName(std::string &paFullName, forte::core::TNameIdentifier &paNameList){
   for (const auto &runner : paNameList) {
-    paFullName.append(CStringDictionary::getInstance().get(runner));
+    paFullName.append(CStringDictionary::get(runner));
     paFullName.append(".");
   }
   paFullName.pop_back();

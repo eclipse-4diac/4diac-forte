@@ -76,8 +76,8 @@ void FORTE_F_INSERT::executeEvent(TEventID paEIID, CEventChainExecutionThread *c
             return func_INSERT(paIN1, paIN2, paP);
           }
           DEVLOG_ERROR("Inserting incompatible types %s and %s\n",
-                       CStringDictionary::getInstance().get(paIN1.getTypeNameID()),
-                       CStringDictionary::getInstance().get(paIN2.getTypeNameID()));
+                       CStringDictionary::get(paIN1.getTypeNameID()),
+                       CStringDictionary::get(paIN2.getTypeNameID()));
           return CIEC_ANY_STRING_VARIANT();
       }, static_cast<CIEC_ANY_STRING_VARIANT::variant&>(var_IN1),
          static_cast<CIEC_ANY_STRING_VARIANT::variant&>(var_IN2),

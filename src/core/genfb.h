@@ -214,7 +214,7 @@ bool CGenFunctionBlock<T>::initialize() {
 
 template<class T>
 bool CGenFunctionBlock<T>::configureFB(const char *paConfigString){
-  setConfiguredTypeNameId(CStringDictionary::getInstance().insert(paConfigString));
+  setConfiguredTypeNameId(CStringDictionary::insert(paConfigString));
   if(createInterfaceSpec(paConfigString, mGenInterfaceSpec)){
     setupFBInterface();
     return true;
@@ -262,7 +262,7 @@ void CGenFunctionBlock<T>::generateGenericInterfacePointNameArray(const char * c
         }
         acBuffer[len + 2] = static_cast<char>(0x30 + i % 10);
       }
-      paNamesArayStart[i - 1] = CStringDictionary::getInstance().insert(acBuffer);
+      paNamesArayStart[i - 1] = CStringDictionary::insert(acBuffer);
     }
   }
   else{

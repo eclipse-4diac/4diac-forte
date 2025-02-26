@@ -73,8 +73,8 @@ void FORTE_F_ROL::executeEvent(TEventID paEIID, CEventChainExecutionThread *cons
             return func_ROL(paIN, paN);
           }
           DEVLOG_ERROR("Rotating left incompatible types %s and %s\n",
-                       CStringDictionary::getInstance().get(paIN.getTypeNameID()),
-                       CStringDictionary::getInstance().get(paN.getTypeNameID()));
+                       CStringDictionary::get(paIN.getTypeNameID()),
+                       CStringDictionary::get(paN.getTypeNameID()));
           return CIEC_ANY_BIT_VARIANT();
       }, static_cast<CIEC_ANY_BIT_VARIANT::variant&>(var_IN),
          static_cast<CIEC_ANY_INT_VARIANT::variant&>(var_N));

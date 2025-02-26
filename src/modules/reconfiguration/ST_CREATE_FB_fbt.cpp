@@ -82,9 +82,9 @@ void FORTE_ST_CREATE_FB::executeEvent(TEventID paEIID, CEventChainExecutionThrea
 void FORTE_ST_CREATE_FB::executeRQST(){
   forte::core::SManagementCMD theCommand;
 
-  theCommand.mDestination = CStringDictionary::getInstance().getId(var_DST.getValue());
-  theCommand.mFirstParam.push_back(CStringDictionary::getInstance().insert(var_FB_NAME.getValue()));
-  theCommand.mSecondParam.push_back(CStringDictionary::getInstance().getId(var_FB_TYPE.getValue()));
+  theCommand.mDestination = CStringDictionary::getId(var_DST.getValue());
+  theCommand.mFirstParam.push_back(CStringDictionary::insert(var_FB_NAME.getValue()));
+  theCommand.mSecondParam.push_back(CStringDictionary::getId(var_FB_TYPE.getValue()));
   theCommand.mCMD = EMGMCommandType::CreateFBInstance;
 
   EMGMResponse resp = getDevice()->executeMGMCommand(theCommand);

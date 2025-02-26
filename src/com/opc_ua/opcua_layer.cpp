@@ -200,12 +200,12 @@ bool COPC_UA_Layer::checkPortConnectionInfo(unsigned int paPortIndex, bool paIsS
   const CDataConnection *localPortConnection = getLocalPortConnection(paPortIndex, paIsSD);
   if(!localPortConnection) {
     DEVLOG_ERROR("[OPC UA LAYER]: Got invalid port connection on FB %s at port %s. It must be connected to another FB.\n", getCommFB()->getInstanceName(),
-      CStringDictionary::getInstance().get(localPortNameId));
+      CStringDictionary::get(localPortNameId));
     return false;
   }
 
   if(!localPortConnection->isConnected()) {
-    DEVLOG_ERROR("[OPC UA LAYER]: Connection %s of FB %s is not connected to anything.\n", CStringDictionary::getInstance().get(localPortNameId),
+    DEVLOG_ERROR("[OPC UA LAYER]: Connection %s of FB %s is not connected to anything.\n", CStringDictionary::get(localPortNameId),
       getCommFB()->getInstanceName());
     return false;
   }
@@ -215,7 +215,7 @@ bool COPC_UA_Layer::checkPortConnectionInfo(unsigned int paPortIndex, bool paIsS
   if(!COPC_UA_Helper::getOPCUATypeFromAny(remoteType)) {
     if(!COPC_UA_ObjectStruct_Helper::isStructType(*this, paIsSD)) {
       DEVLOG_ERROR("[OPC UA LAYER]: Invalid  type %d in FB %s at connection %s\n", remoteType.getDataTypeID(), getCommFB()->getInstanceName(),
-      CStringDictionary::getInstance().get(localPortNameId));
+      CStringDictionary::get(localPortNameId));
     }
     return false;
   }

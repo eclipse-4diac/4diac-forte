@@ -81,9 +81,9 @@ void FORTE_EC_SET_EVT::executeEvent(TEventID paEIID, CEventChainExecutionThread 
 
 void FORTE_EC_SET_EVT::executeRQST(){
   forte::core::SManagementCMD theCommand;
-  theCommand.mDestination = CStringDictionary::getInstance().getId(var_DST.getValue());
-  theCommand.mFirstParam.push_back(CStringDictionary::getInstance().getId(var_FB_NAME.getValue()));
-  theCommand.mFirstParam.push_back(CStringDictionary::getInstance().getId(var_FB_EVENT_IO.getValue()));
+  theCommand.mDestination = CStringDictionary::getId(var_DST.getValue());
+  theCommand.mFirstParam.push_back(CStringDictionary::getId(var_FB_NAME.getValue()));
+  theCommand.mFirstParam.push_back(CStringDictionary::getId(var_FB_EVENT_IO.getValue()));
   theCommand.mCMD = EMGMCommandType::MonitoringTriggerEvent;
 
   EMGMResponse resp = getDevice()->executeMGMCommand(theCommand);

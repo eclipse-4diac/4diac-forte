@@ -792,12 +792,12 @@ void COPC_UA_Local_Handler::createMethodArguments(CActionInfo &paActionInfo, CCr
     if(i < paCreateMethodInfo.mOutputSize) {
       arg = &(paCreateMethodInfo.mOutputArguments)[i];
       UA_Argument_init(arg);
-      arg->name = UA_STRING_ALLOC(CStringDictionary::getInstance().get(interfaceFB.mDINames[i + 2])); //we store the names of the SDs/RDs as names for the arguments names. Not so nice. + 2 skips the QI and ID
+      arg->name = UA_STRING_ALLOC(CStringDictionary::get(interfaceFB.mDINames[i + 2])); //we store the names of the SDs/RDs as names for the arguments names. Not so nice. + 2 skips the QI and ID
       arg->dataType = COPC_UA_Helper::getOPCUATypeFromAny(*dataToSend[i])->typeId;
     } else {
       arg = &(paCreateMethodInfo.mInputArguments)[i - paCreateMethodInfo.mOutputSize];
       UA_Argument_init(arg);
-      arg->name = UA_STRING_ALLOC(CStringDictionary::getInstance().get(interfaceFB.mDONames[i - paCreateMethodInfo.mOutputSize + 2])); // + 2 skips the QO and STATUS
+      arg->name = UA_STRING_ALLOC(CStringDictionary::get(interfaceFB.mDONames[i - paCreateMethodInfo.mOutputSize + 2])); // + 2 skips the QO and STATUS
       arg->dataType = COPC_UA_Helper::getOPCUATypeFromAny(*dataToReceive[i - paCreateMethodInfo.mOutputSize])->typeId;
     }
 

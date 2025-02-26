@@ -79,8 +79,8 @@ void FORTE_ST_DEL_FB::executeEvent(TEventID paEIID, CEventChainExecutionThread *
 void FORTE_ST_DEL_FB::executeRQST(){
   forte::core::SManagementCMD theCommand;
 
-  theCommand.mDestination = CStringDictionary::getInstance().getId(var_DST.getValue());
-  theCommand.mFirstParam.push_back(CStringDictionary::getInstance().getId(var_FB_NAME.getValue()));
+  theCommand.mDestination = CStringDictionary::getId(var_DST.getValue());
+  theCommand.mFirstParam.push_back(CStringDictionary::getId(var_FB_NAME.getValue()));
   theCommand.mCMD = EMGMCommandType::DeleteFBInstance;
 
   EMGMResponse resp = getDevice()->executeMGMCommand(theCommand);

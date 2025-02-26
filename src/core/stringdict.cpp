@@ -17,67 +17,94 @@
  *    Jörg Walter
  *      - rework to use std::vector/inplace_vecctor
  *******************************************************************************/
+
 #include "stringdict.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "stringdict_gen.cpp"
-#endif
 #include <cstring>
 #include <stringlist.cpp>
 
-DEFINE_SINGLETON(CStringDictionary)
+using TStringId = CStringDictionary::TStringId;
 
 #ifdef FORTE_STRING_DICT_FIXED_MEMORY
 #include "core/util/inplace_vector.h"
-static forte::core::util::inplace_vector<CStringDictionary::TStringId, FORTE_STRINGDICT_MAXNROFSTRINGS> scmIdList = INDEX_LIST;
-static forte::core::util::inplace_vector<char, FORTE_STRINGDICT_BUFFERSIZE> scmStringBuf = STRING_BUF;
+static forte::core::util::inplace_vector<TStringId, FORTE_STRINGDICT_MAXNROFSTRINGS> sIdList = INDEX_LIST;
+static forte::core::util::inplace_vector<char, FORTE_STRINGDICT_BUFFERSIZE> sStringBuf = STRING_BUF;
 
 #else
 #include <vector>
-static std::vector<CStringDictionary::TStringId> scmIdList = INDEX_LIST;
-static std::vector<char> scmStringBuf = STRING_BUF;
+static std::vector<CStringDictionary::TStringId> sIdList = INDEX_LIST;
+static std::vector<char> sStringBuf = STRING_BUF;
 
 #endif
 
-CStringDictionary::CStringDictionary()
+// Find an exact match or place to be the new index
+static TStringId findEntry(const char *paStr, size_t paStrSize, unsigned int &paIdx)
 {
+  paIdx = 0;
+  if (sIdList.empty()) {
+    return CStringDictionary::scmInvalidStringId;
+  }
+
+  int r = 0;
+
+  unsigned int low = 0, high = unsigned(sIdList.size());
+
+  while(low < high){
+    paIdx = (low + high) / 2;
+
+    r = strncmp(paStr, &sStringBuf[sIdList[paIdx]], paStrSize);
+    if(!r) {
+      r = -!!sStringBuf[sIdList[paIdx]+paStrSize];
+    }
+
+    if(!r){
+      return sIdList[paIdx];
+    }
+
+    if(r > 0) {
+      low = paIdx + 1;
+    } else {
+      high = paIdx;
+    }
+  }
+
+  if(r > 0) {
+    paIdx++;
+  }
+
+  return CStringDictionary::scmInvalidStringId;
 }
 
-CStringDictionary::~CStringDictionary()
-{
-}
-
-CStringDictionary::TStringId CStringDictionary::getId(const char *paStr) const
+TStringId CStringDictionary::getId(const char *paStr)
 {
   return getId(paStr, strlen(paStr));
 }
 
-CStringDictionary::TStringId CStringDictionary::getId(const char *paStr, size_t paStrSize) const
+TStringId CStringDictionary::getId(const char *paStr, size_t paStrSize)
 {
   unsigned int nIdx;
   return findEntry(paStr, paStrSize, nIdx);
 }
 
-// get a string (0 if not found)
 const char *CStringDictionary::get(TStringId paId)
 {
-  if (paId >= scmStringBuf.size() || paId < 1) {
+  if (paId >= sStringBuf.size() || paId < 1) {
     return nullptr;
   }
 
-  if (scmStringBuf[paId-1] != '\0') {
+  if (sStringBuf[paId-1] != '\0') {
     return nullptr;
   }
 
-  return &scmStringBuf[paId];
+  return &sStringBuf[paId];
 }
 
-CStringDictionary::TStringId CStringDictionary::insert(const char *paStr)
+TStringId CStringDictionary::insert(const char *paStr)
 {
   return insert(paStr, strlen(paStr));
 }
 
 // insert a string and return a string id (InvalidTStringId for no memory or other error)
-CStringDictionary::TStringId CStringDictionary::insert(const char *paStr, size_t paStrSize)
+TStringId CStringDictionary::insert(const char *paStr, size_t paStrSize)
 {
   TStringId nRetVal = scmInvalidStringId;
 
@@ -93,54 +120,17 @@ CStringDictionary::TStringId CStringDictionary::insert(const char *paStr, size_t
   }
 
 #ifdef FORTE_STRING_DICT_FIXED_MEMORY
-  if (scmIdList.capacity() < scmIdList.size()+1 || scmStringBuf.capacity() < scmStringBuf.size()+paStrSize+1) {
+  if (sIdList.capacity() < sIdList.size()+1 || sStringBuf.capacity() < sStringBuf.size()+paStrSize+1) {
     return scmInvalidStringId;
   }
 #endif
 
-  nRetVal = scmStringBuf.size();
-  scmStringBuf.resize(nRetVal+paStrSize+1, 0);
-  memcpy(&scmStringBuf[nRetVal], paStr, paStrSize);
+  nRetVal = sStringBuf.size();
+  sStringBuf.resize(nRetVal+paStrSize+1, 0);
+  memcpy(&sStringBuf[nRetVal], paStr, paStrSize);
 
-  scmIdList.insert(scmIdList.begin()+idx, nRetVal);
+  sIdList.insert(sIdList.begin()+idx, nRetVal);
 
   return nRetVal;
 }
 
-// Find an exact match or place to be the new index
-CStringDictionary::TStringId CStringDictionary::findEntry(const char *paStr, size_t paStrSize, unsigned int &paIdx) const
-{
-  paIdx = 0;
-  if (scmIdList.empty()) {
-    return scmInvalidStringId;
-  }
-
-  int r = 0;
-
-  unsigned int low = 0, high = unsigned(scmIdList.size());
-
-  while(low < high){
-    paIdx = (low + high) / 2;
-
-    r = strncmp(paStr, &scmStringBuf[scmIdList[paIdx]], paStrSize);
-    if(!r) {
-      r = -!!scmStringBuf[scmIdList[paIdx]+paStrSize];
-    }
-
-    if(!r){
-      return scmIdList[paIdx];
-    }
-
-    if(r > 0) {
-      low = paIdx + 1;
-    } else {
-      high = paIdx;
-    }
-  }
-
-  if(r > 0) {
-    paIdx++;
-  }
-
-  return scmInvalidStringId;
-}

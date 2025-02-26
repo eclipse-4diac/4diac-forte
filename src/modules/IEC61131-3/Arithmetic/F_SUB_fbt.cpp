@@ -75,8 +75,8 @@ void FORTE_F_SUB::executeEvent(TEventID paEIID, CEventChainExecutionThread *cons
           return func_SUB(paIN1, paIN2);
         }
         DEVLOG_ERROR("Subtracting incompatible types %s and %s\n",
-                     CStringDictionary::getInstance().get(paIN1.getTypeNameID()),
-                     CStringDictionary::getInstance().get(paIN2.getTypeNameID()));
+                     CStringDictionary::get(paIN1.getTypeNameID()),
+                     CStringDictionary::get(paIN2.getTypeNameID()));
         return CIEC_ANY_MAGNITUDE_VARIANT();
       }, static_cast<CIEC_ANY_MAGNITUDE_VARIANT::variant&>(var_IN1),
          static_cast<CIEC_ANY_MAGNITUDE_VARIANT::variant&>(var_IN2));

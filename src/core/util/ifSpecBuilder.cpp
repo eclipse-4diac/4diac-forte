@@ -43,11 +43,11 @@ int CStringIdListSpecBuilder::addString(CStringDictionary::TStringId paString) {
 }
 
 int CStringIdListSpecBuilder::addString(const char *paString) {
-  return addString(CStringDictionary::getInstance().insert(paString));
+  return addString(CStringDictionary::insert(paString));
 }
 
 int CStringIdListSpecBuilder::findString(const char *paString) const {
-  auto nString = CStringDictionary::getInstance().getId(paString);
+  auto nString = CStringDictionary::getId(paString);
   if (nString == CStringDictionary::scmInvalidStringId) {
     return -1;
   }
@@ -100,7 +100,7 @@ std::pair<int, int> CDataSpecBuilderBase::addDataRange(const char *paPrefix, int
 }
 
 std::pair<int, int> CDataSpecBuilderBase::addDataRange(const char *paPrefix, int paRangeSize, const char *paTypeName) {
-  return addDataRange(paPrefix, paRangeSize, CStringDictionary::getInstance().insert(paTypeName));
+  return addDataRange(paPrefix, paRangeSize, CStringDictionary::insert(paTypeName));
 }
 
 std::pair<int, int> CDataSpecBuilderBase::addDataRange(const char *paPrefix, int paRangeSize, CStringDictionary::TStringId paTypeName) {
@@ -221,11 +221,9 @@ void CAdapterSpecBuilder::addAdapter(const CStringDictionary::TStringId paName, 
 }
 
 void CAdapterSpecBuilder::addAdapter(const char *paName, const char *paType, bool paIsPlug) {
-  auto &str_dict = CStringDictionary::getInstance();
-
   addAdapter(
-      str_dict.insert(paName),
-      str_dict.insert(paType),
+      CStringDictionary::insert(paName),
+      CStringDictionary::insert(paType),
       paIsPlug
   );
 }

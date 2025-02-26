@@ -171,7 +171,7 @@ bool GEN_F_MUX::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec
       for(size_t di = 0; di < mDOutputs; di++) {
         forte_snprintf(&(diNames[3]), 11 - 3, "%u_%u", ei + 1, di + 1);
         di_posIndex = ei * mDOutputs + di;
-        mDataInputNames[di_posIndex] = CStringDictionary::getInstance().insert(diNames);
+        mDataInputNames[di_posIndex] = CStringDictionary::insert(diNames);
         mDataInputTypeIds[di_posIndex] = g_nStringIdANY;
       }
     }
@@ -181,9 +181,9 @@ bool GEN_F_MUX::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec
     mDataOutputTypeIds = std::make_unique<CStringDictionary::TStringId[]>(mDOutputs + 2);
 
     //data outputs for status and QO
-    mDataOutputNames[0] = CStringDictionary::getInstance().insert("QO");
+    mDataOutputNames[0] = CStringDictionary::insert("QO");
     mDataOutputTypeIds[0] = g_nStringIdBOOL;
-    mDataOutputNames[1] = CStringDictionary::getInstance().insert("STATUS");
+    mDataOutputNames[1] = CStringDictionary::insert("STATUS");
     mDataOutputTypeIds[1] = g_nStringIdWSTRING;
 
     generateGenericDataPointArrays("OUT_", &(mDataOutputTypeIds[2]), &(mDataOutputNames[2]), mDOutputs);

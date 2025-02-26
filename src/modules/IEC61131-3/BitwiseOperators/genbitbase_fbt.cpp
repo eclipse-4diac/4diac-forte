@@ -75,7 +75,7 @@ bool CGenBitBase::createInterfaceSpec(const char *paConfigString, SFBInterfaceSp
 
     for (size_t di = 0; di < paInterfaceSpec.mNumDIs; ++di) {
       forte_snprintf(&(diNames[2]), 5 - 2, "%i", di + 1);
-      mDataInputNames[di] = CStringDictionary::getInstance().insert(diNames);
+      mDataInputNames[di] = CStringDictionary::insert(diNames);
       mDataInputTypeIds[di] = g_nStringIdANY_BIT;
     }
 

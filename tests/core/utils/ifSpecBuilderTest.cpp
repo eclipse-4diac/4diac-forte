@@ -103,7 +103,7 @@ BOOST_AUTO_TEST_SUITE(IfSpecBuilder_Test)
   }
 
   static auto strid(const char *s) {
-    auto strId = CStringDictionary::getInstance().getId(s);
+    auto strId = CStringDictionary::getId(s);
     BOOST_REQUIRE(strId != CStringDictionary::scmInvalidStringId);
     return strId;
   }

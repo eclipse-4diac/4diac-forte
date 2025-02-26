@@ -54,7 +54,7 @@ void FORTE_E_TRIG::setInitialValues() {
 void FORTE_E_TRIG::executeEvent(const TEventID paEIID, CEventChainExecutionThread *const paECET) {
   switch(paEIID) {
     case scmEventREQID:
-      const TEventTypeID eventTypeId = CStringDictionary::getInstance().getId(var_EVENTTYPE.c_str());
+      const TEventTypeID eventTypeId = CStringDictionary::getId(var_EVENTTYPE.c_str());
       if (eventTypeId != CStringDictionary::scmInvalidStringId) {
         triggerEventsInResource(getResource(), eventTypeId, paECET);
         sendOutputEvent(scmEventCNFID, paECET);

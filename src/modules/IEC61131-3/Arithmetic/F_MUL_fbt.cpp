@@ -75,8 +75,8 @@ void FORTE_F_MUL::executeEvent(TEventID paEIID, CEventChainExecutionThread *cons
           return func_MUL(paIN1, paIN2);
         }
         DEVLOG_ERROR("Multiplying incompatible types %s and %s\n",
-                     CStringDictionary::getInstance().get(paIN1.getTypeNameID()),
-                     CStringDictionary::getInstance().get(paIN2.getTypeNameID()));
+                     CStringDictionary::get(paIN1.getTypeNameID()),
+                     CStringDictionary::get(paIN2.getTypeNameID()));
         return CIEC_ANY_NUM_VARIANT();
       }, static_cast<CIEC_ANY_NUM_VARIANT::variant&>(var_IN1), 
          static_cast<CIEC_ANY_NUM_VARIANT::variant&>(var_IN2));

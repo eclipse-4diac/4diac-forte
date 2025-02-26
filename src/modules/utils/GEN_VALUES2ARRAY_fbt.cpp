@@ -76,7 +76,7 @@ bool GEN_VALUES2ARRAY::createInterfaceSpec(const char *paConfigString, SFBInterf
     if(nullptr != dTypePos){
       //there is a number and a data type of inputs within the typename
       mDInputs = static_cast<unsigned int>(forte::core::util::strtoul(dNumberPos, nullptr, 10));
-      m_ValueTypeID = CStringDictionary::getInstance().getId(++dTypePos);
+      m_ValueTypeID = CStringDictionary::getId(++dTypePos);
     }
     else{
       m_ValueTypeID = CStringDictionary::scmInvalidStringId;
@@ -95,7 +95,7 @@ bool GEN_VALUES2ARRAY::createInterfaceSpec(const char *paConfigString, SFBInterf
     char diNames[cgIdentifierLength] = { "IN_" };
     for(unsigned int di = 0; di < mDInputs; di = di + 1){
       forte_snprintf(&(diNames[3]), 7 - 3, "%u", di + 1);
-      mDataInputNames[di] = CStringDictionary::getInstance().insert(diNames);
+      mDataInputNames[di] = CStringDictionary::insert(diNames);
       mDataInputTypeIds[di] = m_ValueTypeID;
     }
 
