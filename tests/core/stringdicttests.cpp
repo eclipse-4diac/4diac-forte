@@ -82,6 +82,7 @@ BOOST_AUTO_TEST_SUITE(StringDictTests)
         std::string mString;
     };
 
+#ifndef FORTE_STRING_DICT_FIXED_MEMORY
   BOOST_AUTO_TEST_CASE(reallocateTest){
     //Test a large amount of strings so that a reallocation of the stringdict buffers is necessary
 
@@ -113,5 +114,6 @@ BOOST_AUTO_TEST_SUITE(StringDictTests)
     }
 
   }
+#endif
 
 BOOST_AUTO_TEST_SUITE_END()
