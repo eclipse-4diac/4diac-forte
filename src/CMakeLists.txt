@@ -29,7 +29,6 @@ endif()
 forte_add_subdirectory(stdfblib)
 
 SET(SOURCE_GROUP core)  
-forte_add_sourcefile_with_path_hcpp(${FORTE_BINARY_DIR}/stringlist)
 set_source_files_properties(${FORTE_BINARY_DIR}/stringlist.h PROPERTIES GENERATED TRUE)
 set_source_files_properties(${FORTE_BINARY_DIR}/stringlist.cpp PROPERTIES GENERATED TRUE)
 

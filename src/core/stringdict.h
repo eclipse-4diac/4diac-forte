@@ -1,6 +1,7 @@
 /*******************************************************************************
  * Copyright (c) 2008, 2023 nxtControl GmbH, ACIN, fortiss GmbH,
  *                          Martin Erich Jobst
+ *               2025 Jörg Walter
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -13,6 +14,8 @@
  *      - initial implementation and rework communication infrastructure
  *    Martin Jobst
  *      - add string functions accepting a size parameter
+ *    Jörg Walter
+ *      - rework to use std::vector/inplace_vecctor
  *******************************************************************************/
 #ifndef _CStringDictionary_H_
 #define _CStringDictionary_H_
@@ -64,10 +67,7 @@ public:
    * \param paStr String to be searched for
    * \return id of the string (or scmInvalidStringId if it is not in the dictionary)
    */
-  TStringId getId(const char *paStr) const{
-    unsigned int nIdx;
-    return findEntry(paStr, nIdx);
-  }
+  TStringId getId(const char *paStr) const;
 
   /*!\brief Retrieve the Id of a given string if it is already in the dictionary
    *
@@ -75,59 +75,11 @@ public:
    * \param paStrSize Size of the string (excluding any terminating '\0' character)
    * \return id of the string (or scmInvalidStringId if it is not in the dictionary)
    */
-  TStringId getId(const char *paStr, size_t paStrSize) const{
-    unsigned int nIdx;
-    return findEntry(paStr, paStrSize, nIdx);
-  }
+  TStringId getId(const char *paStr, size_t paStrSize) const;
+
 private:
-  //!\brief Remove all dictionary entries
-  void clear();
-
   // Find an exact match or place to be the new index
-  TStringId findEntry(const char *paStr, unsigned int &paIdx) const;
   TStringId findEntry(const char *paStr, size_t paStrSize, unsigned int &paIdx) const;
-
-  // Reallocate the buffer
-  bool reallocateStringIdBuf(unsigned int paNewMaxNrOfStrings);
-  bool reallocateStringBuf(size_t paNewBufSize);
-
-  // Insert the string at the specified position
-  TStringId insertAt(const char *paStr, unsigned int paIdx, size_t paLen);
-
-  // Get an address
-  const char *getStringAddress(TStringId paId) const {
-    return mStringBufAddr + paId;
-  };
-
-  char *getStringAddress(TStringId paId) {
-    return mStringBufAddr + paId;
-  };
-
-  //!Buffer for the String Ids. The Ids are sorted according to their values they are pointing at
-  TStringId *mStringIdBufAddr;
-
-  //! Buffer for the strings
-  char *mStringBufAddr;
-
-  // Size of the allocated space
-  size_t mStringBufSize;
-
-  // Maximum number of strings we can hold (size of the StringIdBufer)
-  unsigned int mMaxNrOfStrings;
-
-  // Number of strings we are actually holding
-  unsigned int mNrOfStrings;
-
-  // Next string gets written here
-  TStringId mNextString;
-
-#ifdef FORTE_STRING_DICT_FIXED_MEMORY
-  static TStringId scmIdList[cgStringDictInitialMaxNrOfStrings];
-  static char scmConstStringBuf[cgStringDictInitialStringBufSize];
-#else
-  static const TStringId scmIdList[];
-  static const char scmConstStringBuf[];
-#endif
 };
 
 #endif // _CStringDictionary_H_

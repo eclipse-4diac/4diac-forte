@@ -16,18 +16,7 @@
 
 ${STRINGLIST_CPP}
 
-#ifdef FORTE_STRING_DICT_FIXED_MEMORY
-  CStringDictionary::TStringId CStringDictionary::scmIdList[cgFORTE_StringDictInitialMaxNrOfStrings]
-#else
-  const CStringDictionary::TStringId CStringDictionary::scmIdList[] 
-#endif
-  = {${scmIdList_Str}};
-
-#ifdef FORTE_STRING_DICT_FIXED_MEMORY
-  char CStringDictionary::scmConstStringBuf[cgFORTE_StringDictInitialStringBufSize]
-#else
-  const char CStringDictionary::scmConstStringBuf[] 
-#endif
-  = {"${scmConstStringBuf_Str}"};
+#define INDEX_LIST {${scmIdList_Str}}
+#define STRING_BUF {${scmConstStringBuf_Str}}
 
 ${ErrorStringBuf}

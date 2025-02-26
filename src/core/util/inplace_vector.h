@@ -42,8 +42,23 @@ public:
         : mNumElements(0) {
     }
 
-    void clear(){
+    constexpr inplace_vector(std::initializer_list<value_type> il) {
+        // TODO: improve this to eliminate all static initialization code in stringdict.cpp
+        for (auto elt : il) {
+            mDataStorage[mNumElements++] = elt;
+        }
+    }
+
+    void clear() {
         mNumElements = 0;
+    }
+
+    void resize(size_type newsize, value_type initval) {
+        assert(newsize <= capacity());
+        for (; mNumElements <= newsize; mNumElements++) {
+            mDataStorage[mNumElements] = initval;
+        }
+        mNumElements = newsize;
     }
 
     pointer try_push_back(const_reference val) {
