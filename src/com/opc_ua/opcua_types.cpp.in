@@ -10,9 +10,7 @@
   *******************************************************************************/
 
 #include <opcua_helper.h>
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "opcua_types_gen.cpp"
-#endif
+
 ${FORTE_OPCUA_EXTERNAL_TYPES_INCLUDE}
 
 const COPC_UA_Helper::UA_TypeConvert_external COPC_UA_Helper::scmExternalMapForteTypeIdToOpcUa[] = {

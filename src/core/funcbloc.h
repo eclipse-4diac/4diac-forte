@@ -30,7 +30,7 @@
 #include "stringdict.h"
 #include "../arch/devlog.h"
 #include "iec61131_functions.h"
-#include <stringlist.h>
+#include "core/stringdict.h"
 #include "forte_state.h"
 #include "forte_st_iterator.h"
 #include "forte_st_util.h"

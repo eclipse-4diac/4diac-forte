@@ -229,12 +229,6 @@ if(FORTE_STACKTRACE)
 endif(FORTE_STACKTRACE)
 
 #######################################################################################
-# Early definition of option how to generate stringlist for every source file
-#######################################################################################
-SET(FORTE_LINKED_STRINGDICT ON CACHE BOOL "FORTE will resolve references to the stringdict at link-stage and not compile-stage. This will reduce compiletime if the stringdict changes.")
-mark_as_advanced(FORTE_LINKED_STRINGDICT)
-
-#######################################################################################
 # clang-tidy
 #######################################################################################
 set(FORTE_CLANG_TIDY_MODE "OFF" CACHE STRING "Run clang-tidy with the compiler.")
@@ -381,48 +375,6 @@ LIST(REMOVE_DUPLICATES SOURCE_FILES)
 #######################################################################################
 SET(FORTE_MODIFY_SOURCES_ON_MISSING_GENERATED_INCLUDES ON CACHE BOOL "FORTE change the source-files if includes for the generated includes are missing.")
 mark_as_advanced(FORTE_MODIFY_SOURCES_ON_MISSING_GENERATED_INCLUDES)
-
-if(FORTE_LINKED_STRINGDICT)
-  FOREACH( FBLIB_FILE ${SOURCE_FILES})
-    # Do not pars stringlist, as these files will be generated
-    STRING(REGEX MATCH  ".*stringlist\\.(cpp|h).*" REGEX_STRINGS ${FBLIB_FILE})
-    IF(NOT REGEX_STRINGS)
-      STRING(REGEX MATCH  ".*forteinit\\.(cpp|h).*" REGEX_STRINGS ${FBLIB_FILE})
-    ENDIF(NOT REGEX_STRINGS)
-    IF(NOT REGEX_STRINGS)
-      # Just the File name
-      STRING(REGEX REPLACE  ".*/" "" FBLIB_FILE_NAME ${FBLIB_FILE})
-      STRING(REGEX REPLACE  "\\." "_gen." FBLIB_FILE_NAME ${FBLIB_FILE_NAME})
-
-      IF(EXISTS "${FBLIB_FILE}")
-        FILE(READ ${FBLIB_FILE} FILE_STRING)
-        STRING(REGEX MATCH "#include \"([^\\\"]*${FBLIB_FILE_NAME})\"" FBLIB_GEN_INCLUDE ${FILE_STRING})
-      ENDIF()
-
-      IF(FBLIB_GEN_INCLUDE)
-          SET(FBLIB_GEN_PATH "${CMAKE_MATCH_1}")
-      ELSE(FBLIB_GEN_INCLUDE)
-          SET(FBLIB_GEN_PATH "${FBLIB_FILE_NAME}")
-      ENDIF(FBLIB_GEN_INCLUDE)
-      ADD_CUSTOM_COMMAND(OUTPUT ${FORTE_BINARY_DIR}/src_gen/${FBLIB_GEN_PATH} COMMAND ${CMAKE_COMMAND} -DFORTE_MODIFY_SOURCES_ON_MISSING_GENERATED_INCLUDES:STRING="${FORTE_MODIFY_SOURCES_ON_MISSING_GENERATED_INCLUDES}" -DFORTE_SOURCE_DIR:STRING="${FORTE_SOURCE_DIR}/src" -DFORTE_BINARY_DIR:STRING="${FORTE_BINARY_DIR}/src_gen" -DFBLIB_FILE:STRING="${FBLIB_FILE}" -P ${FORTE_BUILDSUPPORT_DIRECTORY}/generate_stringlist_include_files.cmake MAIN_DEPENDENCY ${FBLIB_FILE})
-      set_source_files_properties(${FORTE_BINARY_DIR}/src_gen/${FBLIB_GEN_PATH} HEADER_FILE_ONLY true)
-    ENDIF(NOT REGEX_STRINGS)
-  ENDFOREACH(FBLIB_FILE)
-  # this is a hack; add_custom_target is always run, but we only want to run builds on modified files, maybe only valid for visual studio projects
-  add_library(forte_stringlist_externals STATIC ${SOURCE_FILES})
-  
-  if(FORTE_BUILD_EXECUTABLE)
-      ADD_DEPENDENCIES (forte forte_stringlist_externals)
-  endif(FORTE_BUILD_EXECUTABLE)
-
-  if(FORTE_BUILD_STATIC_LIBRARY)
-    ADD_DEPENDENCIES (${FORTE_STATIC_LIBRARY_NAME} forte_stringlist_externals)
-  endif(FORTE_BUILD_STATIC_LIBRARY)
-  
-  if(FORTE_BUILD_SHARED_LIBRARY)
-    ADD_DEPENDENCIES (${FORTE_SHARED_LIBRARY_NAME} forte_stringlist_externals)
-  endif(FORTE_BUILD_SHARED_LIBRARY)
-endif(FORTE_LINKED_STRINGDICT)
 
 if(FORTE_COM_OPC_UA)
   forte_opcua_configure()

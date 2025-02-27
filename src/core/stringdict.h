@@ -25,6 +25,9 @@
 
 #include <limits>
 
+#define STRID(name) (g_nStringId ## name)
+#define USE_STRING_ID(name) extern const CStringDictionary::TStringId g_nStringId ## name;
+
 /**\ingroup CORE\brief Manages a dictionary of strings that can be referenced by ids
  *
  * Manages a dictionary of strings that can be referenced by ids
