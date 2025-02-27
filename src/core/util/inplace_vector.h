@@ -55,7 +55,7 @@ public:
 
     void resize(size_type newsize, value_type initval) {
         assert(newsize <= capacity());
-        for (; mNumElements <= newsize; mNumElements++) {
+        for (; mNumElements < newsize; mNumElements++) {
             mDataStorage[mNumElements] = initval;
         }
         mNumElements = newsize;
@@ -82,6 +82,7 @@ public:
 
         std::move_backward(pos, end(), end()+1);
         *pos = val;
+        mNumElements++;
         return pos;
     }
 
