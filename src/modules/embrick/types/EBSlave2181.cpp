@@ -1,21 +1,35 @@
-/*******************************************************************************
- * Copyright (c) 2016 - 2018 Johannes Messmer (admin@jomess.com), fortiss GmbH
- * This program and the accompanying materials are made available under the
- * terms of the Eclipse Public License 2.0 which is available at
- * http://www.eclipse.org/legal/epl-2.0.
- *
- * SPDX-License-Identifier: EPL-2.0
- *
- * Contributors:
- *   Johannes Messmer - initial API and implementation and/or initial documentation
- *   Jose Cabral - Cleaning of namespaces
- *******************************************************************************/
+/************************************************************************* 
+ *** Copyright (c) 2016, 2018 fortiss GmbH, Jose Cabral
+ ***  
+ *** This program and the accompanying materials are made  
+ *** available under the terms of the Eclipse Public License 2.0  
+ *** which is available at https://www.eclipse.org/legal/epl-2.0/  
+ ***  
+ *** SPDX-License-Identifier: EPL-2.0  
+ *** 
+ *** FORTE Library Element
+ ***
+ *** This file was generated using the 4DIAC FORTE Export Filter V1.0.x NG!
+ ***
+ *** Name: EBMaster
+ *** Description: Service Interface Function Block Type
+ *** Version:
+ ***     1.0: 2016-11-30/Johannes Messmer - fortiss GmbH - initial API and implementation and/or initial documentation
+ ***     1.1: 2018-01-01/Jose Cabral - - Cleaning of namespaces
+ *************************************************************************/
+
 
 #include "EBSlave2181.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
 #include "EBSlave2181_gen.cpp"
 #endif
 
+#include "EBBusAdapter.h"
+#include "iec61131_functions.h"
+#include "forte_array_common.h"
+#include "forte_array.h"
+#include "forte_array_fixed.h"
+#include "forte_array_variable.h"
 #include "criticalregion.h"
 #include "resource.h"
 #include "../handler/bus.h"
@@ -29,18 +43,16 @@ const CStringDictionary::TStringId FORTE_EBSlave2181::scmDataOutputTypeIds[] = {
 const TDataIOID FORTE_EBSlave2181::scmEIWith[] = {1, 2, 5, 3, 4, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 0, scmWithListDelimiter};
 const TForteInt16 FORTE_EBSlave2181::scmEIWithIndexes[] = {0};
 const CStringDictionary::TStringId FORTE_EBSlave2181::scmEventInputNames[] = {g_nStringIdMAP};
-const CStringDictionary::TStringId FORTE_EBSlave2181::scmEventInputTypeIds[] = {g_nStringIdEvent};
 const TDataIOID FORTE_EBSlave2181::scmEOWith[] = {0, scmWithListDelimiter, 0, 1, scmWithListDelimiter};
 const TForteInt16 FORTE_EBSlave2181::scmEOWithIndexes[] = {0, 2};
 const CStringDictionary::TStringId FORTE_EBSlave2181::scmEventOutputNames[] = {g_nStringIdMAPO, g_nStringIdIND};
-const CStringDictionary::TStringId FORTE_EBSlave2181::scmEventOutputTypeIds[] = {g_nStringIdEvent, g_nStringIdEvent};
 const SAdapterInstanceDef FORTE_EBSlave2181::scmAdapterInstances[] = {
   {g_nStringIdEBBusAdapter, g_nStringIdBusAdapterIn, false},
   {g_nStringIdEBBusAdapter, g_nStringIdBusAdapterOut, true}
 };
 const SFBInterfaceSpec FORTE_EBSlave2181::scmFBInterfaceSpec = {
-  1, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,
-  2, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes,
+  1, scmEventInputNames, nullptr, scmEIWith, scmEIWithIndexes,
+  2, scmEventOutputNames, nullptr, scmEOWith, scmEOWithIndexes,
   18, scmDataInputNames, scmDataInputTypeIds,
   2, scmDataOutputNames, scmDataOutputTypeIds,
   0, nullptr,
@@ -51,6 +63,28 @@ const SFBInterfaceSpec FORTE_EBSlave2181::scmFBInterfaceSpec = {
 FORTE_EBSlave2181::FORTE_EBSlave2181(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     EmbrickSlave( scmSlaveConfigurationIO, scmSlaveConfigurationIONum, EmbrickSlaveHandler::G_8Di8Do,
         paContainer, scmFBInterfaceSpec, paInstanceNameId),
+    var_QI(0_BOOL),
+    var_DigitalInput_1(u""_WSTRING),
+    var_DigitalInput_2(u""_WSTRING),
+    var_DigitalInput_3(u""_WSTRING),
+    var_DigitalInput_4(u""_WSTRING),
+    var_DigitalInput_5(u""_WSTRING),
+    var_DigitalInput_6(u""_WSTRING),
+    var_DigitalInput_7(u""_WSTRING),
+    var_DigitalInput_8(u""_WSTRING),
+    var_DigitalOutput_1(u""_WSTRING),
+    var_DigitalOutput_2(u""_WSTRING),
+    var_DigitalOutput_3(u""_WSTRING),
+    var_DigitalOutput_4(u""_WSTRING),
+    var_DigitalOutput_5(u""_WSTRING),
+    var_DigitalOutput_6(u""_WSTRING),
+    var_DigitalOutput_7(u""_WSTRING),
+    var_DigitalOutput_8(u""_WSTRING),
+    var_UpdateInterval(0_UINT),
+    var_QO(0_BOOL),
+    var_STATUS(u""_WSTRING),
+    var_BusAdapterIn(g_nStringIdBusAdapterIn, *this, false),
+    var_BusAdapterOut(g_nStringIdBusAdapterOut, *this, true),
     var_conn_QO(var_QO),
     var_conn_STATUS(var_STATUS),
     conn_MAPO(this, 0),
@@ -76,6 +110,14 @@ FORTE_EBSlave2181::FORTE_EBSlave2181(const CStringDictionary::TStringId paInstan
     conn_QO(this, 0, &var_conn_QO),
     conn_STATUS(this, 1, &var_conn_STATUS) {
 };
+
+bool FORTE_EBSlave2181::initialize() {
+  if(!var_BusAdapterIn.initialize()) { return false; }
+  if(!var_BusAdapterOut.initialize()) { return false; }
+  var_BusAdapterIn.setParentFB(this, 0);
+  var_BusAdapterOut.setParentFB(this, 1);
+  return CFunctionBlock::initialize();
+}
 
 void FORTE_EBSlave2181::setInitialValues() {
   var_QI = 0_BOOL;
@@ -171,6 +213,14 @@ CIEC_ANY *FORTE_EBSlave2181::getDO(const size_t paIndex) {
   switch(paIndex) {
     case 0: return &var_QO;
     case 1: return &var_STATUS;
+  }
+  return nullptr;
+}
+
+CAdapter *FORTE_EBSlave2181::getAdapterUnchecked(const size_t paIndex) {
+  switch(paIndex) {
+    case 0: return &var_BusAdapterIn;
+    case 1: return &var_BusAdapterOut;
   }
   return nullptr;
 }

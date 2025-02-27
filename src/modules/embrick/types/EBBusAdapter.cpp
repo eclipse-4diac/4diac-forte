@@ -1,15 +1,22 @@
-/*******************************************************************************
- * Copyright (c) 2016 - 2018 Johannes Messmer (admin@jomess.com), fortiss GmbH
- * This program and the accompanying materials are made available under the
- * terms of the Eclipse Public License 2.0 which is available at
- * http://www.eclipse.org/legal/epl-2.0.
- *
- * SPDX-License-Identifier: EPL-2.0
- *
- * Contributors:
- *   Johannes Messmer - initial API and implementation and/or initial documentation
- *   Jose Cabral - Cleaning of namespaces
- *******************************************************************************/
+/************************************************************************* 
+ *** Copyright (c) 2016, 2018 fortiss GmbH, Jose Cabral
+ ***  
+ *** This program and the accompanying materials are made  
+ *** available under the terms of the Eclipse Public License 2.0  
+ *** which is available at https://www.eclipse.org/legal/epl-2.0/  
+ ***  
+ *** SPDX-License-Identifier: EPL-2.0   
+ *** 
+ *** FORTE Library Element
+ ***
+ *** This file was generated using the 4DIAC FORTE Export Filter V1.0.x NG!
+ ***
+ *** Name: EBBusAdapter
+ *** Description:
+ *** Version:
+ ***     1.0: 2016-11-30/Johannes Messmer - fortiss GmbH - initial API and implementation and/or initial documentation
+ ***     1.1: 2018-01-01/Jose Cabral - - Cleaning of namespaces
+ *************************************************************************/
 
 #include "EBBusAdapter.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
@@ -18,6 +25,11 @@
 
 #include "criticalregion.h"
 #include "resource.h"
+#include "iec61131_functions.h"
+#include "forte_array_common.h"
+#include "forte_array.h"
+#include "forte_array_fixed.h"
+#include "forte_array_variable.h"
 
 DEFINE_ADAPTER_TYPE(FORTE_EBBusAdapter, g_nStringIdEBBusAdapter)
 
@@ -28,11 +40,11 @@ const CStringDictionary::TStringId FORTE_EBBusAdapter::scmDataOutputTypeIds[] = 
 const TDataIOID FORTE_EBBusAdapter::scmEIWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_EBBusAdapter::scmEIWithIndexes[] = {0};
 const CStringDictionary::TStringId FORTE_EBBusAdapter::scmEventInputNames[] = {g_nStringIdINITO};
-const CStringDictionary::TStringId FORTE_EBBusAdapter::scmEventInputTypeIds[] = {g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_EBBusAdapter::scmEventInputTypeIds[] = {g_nStringIdEInit};
 const TDataIOID FORTE_EBBusAdapter::scmEOWith[] = {2, 3, 1, 0, scmWithListDelimiter};
 const TForteInt16 FORTE_EBBusAdapter::scmEOWithIndexes[] = {0};
 const CStringDictionary::TStringId FORTE_EBBusAdapter::scmEventOutputNames[] = {g_nStringIdINIT};
-const CStringDictionary::TStringId FORTE_EBBusAdapter::scmEventOutputTypeIds[] = {g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_EBBusAdapter::scmEventOutputTypeIds[] = {g_nStringIdEInit};
 
 const SFBInterfaceSpec FORTE_EBBusAdapter::scmFBInterfaceSpecSocket = {
   1, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,

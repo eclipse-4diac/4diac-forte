@@ -1,15 +1,23 @@
-/*******************************************************************************
- * Copyright (c) 2016 - 2018 Johannes Messmer (admin@jomess.com), fortiss GmbH
- * This program and the accompanying materials are made available under the
- * terms of the Eclipse Public License 2.0 which is available at
- * http://www.eclipse.org/legal/epl-2.0.
- *
- * SPDX-License-Identifier: EPL-2.0
- *
- * Contributors:
- *   Johannes Messmer - initial API and implementation and/or initial documentation
- *   Jose Cabral - Cleaning of namespaces
- *******************************************************************************/
+/*************************************************************************
+ *** Copyright (c) 2016, 2018 fortiss GmbH, Jose Cabral
+ ***
+ *** This program and the accompanying materials are made
+ *** available under the terms of the Eclipse Public License 2.0
+ *** which is available at https://www.eclipse.org/legal/epl-2.0/
+ ***
+ *** SPDX-License-Identifier: EPL-2.0
+ ***
+ *** FORTE Library Element
+ ***
+ *** This file was generated using the 4DIAC FORTE Export Filter V1.0.x NG!
+ ***
+ *** Name: EBBusAdapter
+ *** Description:
+ *** Version:
+ ***     1.0: 2016-11-30/Johannes Messmer - fortiss GmbH - initial API and implementation and/or initial documentation
+ ***     1.1: 2018-01-01/Jose Cabral - - Cleaning of namespaces
+ *************************************************************************/
+
 
 #pragma once
 
@@ -84,6 +92,10 @@ public:
   TEventID evt_INIT() {
     return mParentAdapterListEventID + scmEventINITID;
   }
+
+    FORTE_EBBusAdapter(CStringDictionary::TStringId paAdapterInstanceName, forte::core::CFBContainer &paContainer, bool paIsPlug) :
+        CAdapter(paContainer, scmFBInterfaceSpecSocket, paAdapterInstanceName, scmFBInterfaceSpecPlug, paIsPlug) {
+    };
 
   ADAPTER_CTOR_FOR_IO_MULTI(FORTE_EBBusAdapter){
   };

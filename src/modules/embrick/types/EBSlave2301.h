@@ -1,15 +1,23 @@
-/*******************************************************************************
- * Copyright (c) 2016 - 2018 Johannes Messmer (admin@jomess.com), fortiss GmbH
- * This program and the accompanying materials are made available under the
- * terms of the Eclipse Public License 2.0 which is available at
- * http://www.eclipse.org/legal/epl-2.0.
- *
- * SPDX-License-Identifier: EPL-2.0
- *
- * Contributors:
- *   Johannes Messmer - initial API and implementation and/or initial documentation
- *   Jose Cabral - Cleaning of namespaces
- *******************************************************************************/
+/************************************************************************* 
+ *** Copyright (c) 2016, 2018 fortiss GmbH, Jose Cabral
+ ***  
+ *** This program and the accompanying materials are made  
+ *** available under the terms of the Eclipse Public License 2.0  
+ *** which is available at https://www.eclipse.org/legal/epl-2.0/  
+ ***  
+ *** SPDX-License-Identifier: EPL-2.0  
+ *** 
+ *** FORTE Library Element
+ ***
+ *** This file was generated using the 4DIAC FORTE Export Filter V1.0.x NG!
+ ***
+ *** Name: EBMaster
+ *** Description: Service Interface Function Block Type
+ *** Version:
+ ***     1.0: 2016-11-30/Johannes Messmer - fortiss GmbH - initial API and implementation and/or initial documentation
+ ***     1.1: 2018-01-01/Jose Cabral - - Cleaning of namespaces
+ *************************************************************************/
+
 
 #pragma once
 
@@ -38,19 +46,18 @@ private:
   static const TDataIOID scmEIWith[];
   static const TForteInt16 scmEIWithIndexes[];
   static const CStringDictionary::TStringId scmEventInputNames[];
-  static const CStringDictionary::TStringId scmEventInputTypeIds[];
   static const TEventID scmEventMAPOID = 0;
   static const TEventID scmEventINDID = 1;
   static const TDataIOID scmEOWith[];
   static const TForteInt16 scmEOWithIndexes[];
   static const CStringDictionary::TStringId scmEventOutputNames[];
-  static const CStringDictionary::TStringId scmEventOutputTypeIds[];
   static const int scmBusAdapterInAdpNum = 0;
   static const int scmBusAdapterOutAdpNum = 1;
   static const SAdapterInstanceDef scmAdapterInstances[];
 
   static const SFBInterfaceSpec scmFBInterfaceSpec;
 
+  void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
   void readInputData(TEventID paEIID) override;
   void writeOutputData(TEventID paEIID) override;
   void setInitialValues() override;
@@ -62,6 +69,7 @@ private:
 
 public:
   FORTE_EBSlave2301(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+  bool initialize() override;
 
   CIEC_BOOL var_QI;
   CIEC_WSTRING var_Relay_1;
@@ -74,6 +82,10 @@ public:
 
   CIEC_BOOL var_QO;
   CIEC_WSTRING var_STATUS;
+  
+  FORTE_EBBusAdapter var_BusAdapterIn;
+
+  FORTE_EBBusAdapter var_BusAdapterOut;
 
   CIEC_BOOL var_conn_QO;
   CIEC_WSTRING var_conn_STATUS;
@@ -95,6 +107,7 @@ public:
 
   CIEC_ANY *getDI(size_t) override;
   CIEC_ANY *getDO(size_t) override;
+  CAdapter *getAdapterUnchecked(size_t) override;
   FORTE_EBBusAdapter &var_BusAdapterIn() {
     return *static_cast<FORTE_EBBusAdapter*>(mAdapters[0]);
   };
@@ -125,5 +138,4 @@ public:
     evt_MAP(paQI, paRelay_1, paRelay_2, paRelay_3, paRelay_4, paRelay_5, paRelay_6, paUpdateInterval, paQO, paSTATUS);
   }
 };
-
 
