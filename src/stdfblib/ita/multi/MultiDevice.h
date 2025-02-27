@@ -16,9 +16,6 @@
 #include "device.h"
 #include "MultiMGR.h"
 
-#include "core/ecetFake.h"
-
-
 #include <vector>
 #include <memory>
 #include <future>

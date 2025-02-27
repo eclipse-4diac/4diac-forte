@@ -15,9 +15,8 @@
 
 #include "open62541.h"
 
+#include <string>
 #include <vector>
-#include <memory>
-#include <future> // to indicate that the this device should die 
 
 class MultiDevice;
 class OPCUA_MGR;

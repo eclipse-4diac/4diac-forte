@@ -16,7 +16,6 @@
 #include "stdfblib/ita/OPCUA_MGR.h"
 #include "stdfblib/ita/multi/utils.h"
 #include "deviceFactory.h"
-
 #include "devlog.h"
 
 const SFBInterfaceSpec MultiDevice::scmFBInterfaceSpec = {

@@ -19,9 +19,9 @@
 #include "stdfblib/ita/debug_device/DebugDevice.h"
 #endif // FORTE_DEBUG_DEVICE
 
-#ifdef FORTE_DISABLE_OPCUA_DEV
+#ifdef FORTE_OPCUA_DEVICE
 #include "stdfblib/ita/OPCUA_DEV.h"
-#endif // FORTE_DISABLE_OPCUA_DEV
+#endif // FORTE_OPCUA_DEVICE
 
 namespace forte::ita::multi::utils {
 
@@ -32,11 +32,11 @@ OPCUA_MGR* getOpcuaMgr(CDevice& paDevice){
     return &static_cast<DebugDevice*>(&paDevice)->mOpcuaMgr;
   }
 #endif // FORTE_DEBUG_DEVICE
-#ifdef FORTE_DISABLE_OPCUA_DEV
+#ifdef FORTE_OPCUA_DEVICE
   if (currentDevice == "OPCUA_DEV"){
     return &static_cast<OPCUA_DEV*>(&paDevice)->mOPCUAMgr;
   } 
-#endif // FORTE_DISABLE_OPCUA_DEV
+#endif // FORTE_OPCUA_DEVICE
   return nullptr;
 }
 

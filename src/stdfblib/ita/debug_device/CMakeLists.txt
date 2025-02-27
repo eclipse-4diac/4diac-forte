@@ -15,6 +15,7 @@
 if (FORTE_COM_OPC_UA)
   set(FORTE_DEBUG_DEVICE FALSE CACHE BOOL "Compile the debug Device")
   if (FORTE_DEBUG_DEVICE)
+    forte_add_definition("-DFORTE_DEBUG_DEVICE")
     forte_add_device(DebugDevice "stdfblib/ita/debug_device/DebugDevice" "DebugDevice")
     forte_add_sourcefile_hcpp(DebugMGR DebugDevice)
   endif()

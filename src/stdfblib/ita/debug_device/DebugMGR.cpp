@@ -51,11 +51,11 @@ std::optional<TEventEntry> DebugMGR::getEventEntry(CResource* paResource, std::s
   size_t index = paDestination.find_first_of(".");
   while (index != std::string::npos) {
     auto currentPart = paDestination.substr(0, index); 
-    fullName.pushBack(CStringDictionary::getInstance().insert(currentPart.c_str()));
+    fullName.push_back(CStringDictionary::insert(currentPart.c_str()));
     paDestination = paDestination.substr(currentPart.length() + 1);
     index = paDestination.find_first_of(".");
   }
-  fullName.pushBack(CStringDictionary::getInstance().insert(paDestination.substr(0, index).c_str()));
+  fullName.push_back(CStringDictionary::insert(paDestination.substr(0, index).c_str()));
 
   if(fullName.size() < 2){ // at least the FB and the event port must be present
     return std::nullopt;
@@ -63,10 +63,10 @@ std::optional<TEventEntry> DebugMGR::getEventEntry(CResource* paResource, std::s
 
   // separate the fb name from the event id
   auto eventId = fullName.back();
-  fullName.popBack();
+  fullName.pop_back();
 
-  forte::core::TNameIdentifier::CIterator it(fullName, 0);
-  auto functionBlock = paResource->getFB(it);
+  auto it = fullName.cbegin();
+  auto functionBlock = paResource->getFB(it, fullName.cend());
   if(functionBlock == nullptr){
     // no function block found
     return std::nullopt;
