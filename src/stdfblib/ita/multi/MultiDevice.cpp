@@ -33,22 +33,20 @@ MultiDevice::MultiDevice(const std::string &paMGRID) :
   mMGRID(paMGRID) {
   
   // avoid creating another MultiDevice in case it was set to it in cmake
-  DeviceFactory::setDeviceToCreate(scmDefaultDeviceToCreate);
+  if(DeviceFactory::getCurrentDeviceToCreate() == scmMultiDeviceName){
+    DeviceFactory::setDeviceToCreate(scmDefaultDeviceToCreate);
+  }
 
   DEVLOG_INFO("Starting a %s device\n", scmMultiDeviceName.c_str());
 }
 
 void MultiDevice::awaitShutdown(){
-  // wait for the kill signal to arrive
+  // wait for the kill signal from main to arrive
   mKillSignal.get_future().wait();
 }
 
-void MultiDevice::setRestartSignal(std::future<void> paSignal){
-  mRestartSignalHandler = std::move(paSignal);
-}
-
 EMGMResponse MultiDevice::changeExecutionState(EMGMCommandType paCommand) {
-  // handle the actual kill signal coming from main
+  // handle the actual kill signal coming from main, ignore the rest
   if(EMGMCommandType::Kill == paCommand){
     killControlledDevice();
     mKillSignal.set_value();
@@ -70,6 +68,12 @@ void MultiDevice::killControlledDevice(){
   }
 }
 
+void MultiDevice::requestResetControlledDevice(){
+  mRestartSignalHandler = std::async(std::launch::async, [this](){
+   resetControlledDevice();
+  });
+}
+
 int MultiDevice::resetControlledDevice(){
   killControlledDevice();
 
@@ -78,7 +82,6 @@ int MultiDevice::resetControlledDevice(){
   forte::ita::multi::utils::setFactoriesSettings(forte::ita::multi::utils::FactoriesSettings());
 
   DEVLOG_INFO("The controlled device is a %s\n", DeviceFactory::getCurrentDeviceToCreate().c_str());
-
 
   mControlledDevice = DeviceFactory::createDevice(mMGRID);
 
@@ -94,8 +97,9 @@ int MultiDevice::resetControlledDevice(){
     mOpcuaMgr = std::make_unique<OPCUA_MGR>(*mControlledDevice);
   }
 
+  // initialize the opcua methods
   auto result = std::visit([this](auto&& paOpcuaMgr) -> int {
-    // initialize the multi mgr commands and pass the opcua mgr we have stored (own or borrowed from the device)
+    // initialize the multi mgr commands and pass the opcua mgr object we have stored (own or borrowed from the device)
     mMultiMgr = std::make_unique<MultiMGR>(*this, *paOpcuaMgr);
     if(!mMultiMgr->initialize()){
       return -1;

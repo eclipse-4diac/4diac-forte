@@ -12,23 +12,33 @@
  *******************************************************************************/
 
 #include "stdfblib/ita/multi/utils.h"
-#include "stdfblib/ita/debug_device/DebugDevice.h"
-#include "stdfblib/ita/OPCUA_DEV.h"
 #include "deviceFactory.h"
 #include "device.h"
+
+#ifdef FORTE_DEBUG_DEVICE
+#include "stdfblib/ita/debug_device/DebugDevice.h"
+#endif // FORTE_DEBUG_DEVICE
+
+#ifdef FORTE_DISABLE_OPCUA_DEV
+#include "stdfblib/ita/OPCUA_DEV.h"
+#endif // FORTE_DISABLE_OPCUA_DEV
 
 namespace forte::ita::multi::utils {
 
 OPCUA_MGR* getOpcuaMgr(CDevice& paDevice){
-  if(auto currentDevice = DeviceFactory::getCurrentDeviceToCreate(); 
-      currentDevice == "DebugDevice"){
+  auto currentDevice = DeviceFactory::getCurrentDeviceToCreate();
+#ifdef FORTE_DEBUG_DEVICE
+  if(currentDevice == "DebugDevice"){
     return &static_cast<DebugDevice*>(&paDevice)->mOpcuaMgr;
-  }else if (currentDevice == "OPCUA_DEV"){
+  }
+#endif // FORTE_DEBUG_DEVICE
+#ifdef FORTE_DISABLE_OPCUA_DEV
+  if (currentDevice == "OPCUA_DEV"){
     return &static_cast<OPCUA_DEV*>(&paDevice)->mOPCUAMgr;
   } 
+#endif // FORTE_DISABLE_OPCUA_DEV
   return nullptr;
 }
-
 
 void setFactoriesSettings(FactoriesSettings paFactoriesSettings){
   EcetFactory::setEcetToCreate(paFactoriesSettings.mEcet);

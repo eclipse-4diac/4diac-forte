@@ -22,6 +22,11 @@
 class MultiDevice;
 class OPCUA_MGR;
 
+/**
+ * @brief Gets an OPCUA_MGR object and adds device on top of that
+ * - Restart device: deleted the current device and creates a new one according the default one
+ * - Set default device to create: set the default device to create
+ */
 class MultiMGR {
 public:
 
@@ -35,15 +40,6 @@ private:
   MultiDevice& mDevice;
 
   OPCUA_MGR& mOpcuaMgr;
-
-  // For restart signal coming from the OPCUA server
-  // killing the device will wait for the opcua handler to finish before returning
-  // so it the method callback will block.
-  // The killing of the device (and the opcua server in the handler) is made asynchonously.
-  // the last future referencing the shared state with the promise of the async will block untill
-  // the async finishes, so we move the future into this class outside of the opcua callback,
-  // so the callback does not block. 
-  std::future<void> mRestartSignalHandler;
 
   // the arguments strings are passed by pointer and not stored, so they should leave until
   // the methods are created

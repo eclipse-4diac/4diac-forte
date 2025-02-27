@@ -82,12 +82,8 @@ UA_StatusCode MultiMGR::onRestartDevice(UA_Server*,
   size_t, UA_Variant* ) {
 
   auto multiMgr = static_cast<MultiMGR*>(methodContext);
-  // restart the controlled device asyncrhonously
-  // the returned future is moved into the Multi Device, so the a reference
-  // to the future remains alive and therefore the async lambda does not wait 
-  multiMgr->mDevice.setRestartSignal(std::async(std::launch::async, [multiMgr](){
-   multiMgr->mDevice.resetControlledDevice();
-  }));
+  // restart the controlled device asynchronously
+  multiMgr->mDevice.requestResetControlledDevice();
 
   return UA_STATUSCODE_GOOD;
 }
