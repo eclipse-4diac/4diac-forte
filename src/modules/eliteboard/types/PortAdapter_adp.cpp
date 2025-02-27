@@ -1,13 +1,14 @@
-/*************************************************************************
- *** FORTE Library Element
- ***
- *** This file was generated using the 4DIAC FORTE Export Filter V1.0.x NG!
- ***
- *** Name: PortAdapter
- *** Description: Adapter Interface
- *** Version:
- ***     0.1: 2020-03-13/Jonathan Lainer - 4DIAC-Consortium - Initial Contribution
- *************************************************************************/
+/*******************************************************************************
+ * Copyright (c) 2021, 2022 Jonathan Lainer (kontakt@lainer.co.at)
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ *
+ * Contributors:
+ *   Jonathan Lainer - Initial implementation.
+ *******************************************************************************/
 
 #include "PortAdapter_adp.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP

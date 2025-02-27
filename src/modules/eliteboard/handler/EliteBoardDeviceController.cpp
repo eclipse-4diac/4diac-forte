@@ -14,8 +14,6 @@
 #include "../handler/EliteBoardDeviceController.h"
 #include "../handle/PinHandle.h"
 
-#include "devlog.h"
-
 DEFINE_HANDLER(EliteBoardDeviceController);
 
 EliteBoardDeviceController::EliteBoardDeviceController(CDeviceExecution& paDeviceExecution)

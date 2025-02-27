@@ -1,13 +1,14 @@
-/*************************************************************************
- *** FORTE Library Element
- ***
- *** This file was generated using the 4DIAC FORTE Export Filter V1.0.x NG!
- ***
- *** Name: EliteBoard
- *** Description: Service Interface Function Block Type
- *** Version:
- ***     1.0: 2021-02-22/Jonathan Lainer -  - Initial Contribution
- *************************************************************************/
+/*******************************************************************************
+ * Copyright (c) 2021, 2022 Jonathan Lainer (kontakt@lainer.co.at)
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ *
+ * Contributors:
+ *   Jonathan Lainer - Initial implementation.
+ *******************************************************************************/
 
 #pragma once
 
@@ -56,7 +57,7 @@ class FORTE_EliteBoard final : public CFunctionBlock {
     static const int mAdapterCount = scmPortKAdpNum + 1;
 
     FORTE_PortAdapter &getPortAdapterByIndex(int index);
-	  bool configurePortFB(int index, CEventChainExecutionThread * const paECET);
+    bool configurePortFB(int index, CEventChainExecutionThread * const paECET);
     int configPorts(CEventChainExecutionThread *const paECET);
 
   public:
