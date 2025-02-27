@@ -1,15 +1,22 @@
-/*******************************************************************************
- * Copyright (c) 2012, 20113, 2015 Profactor GmbH, fortiss GmbH
- * This program and the accompanying materials are made available under the
- * terms of the Eclipse Public License 2.0 which is available at
- * http://www.eclipse.org/legal/epl-2.0.
- *
- * SPDX-License-Identifier: EPL-2.0
- *
- * Contributors:
- *   Gerhard Ebenhofer, Alois Zoitl
- *   - initial API and implementation and/or initial documentation
- *******************************************************************************/
+/************************************************************************* 
+ *** Copyright (c) 2012, 2015 Profactor GmbH, fortiss GmbH
+ ***  
+ *** This program and the accompanying materials are made
+ *** available under the terms of the Eclipse Public License 2.0
+ *** which is available at https://www.eclipse.org/legal/epl-2.0/
+ *** 
+ *** SPDX-License-Identifier: EPL-2.0  
+ *** 
+ *** FORTE Library Element
+ ***
+ *** This file was generated using the 4DIAC FORTE Export Filter V1.0.x NG!
+ ***
+ *** Name: FB_RANDOM
+ *** Description: Generate a REAL Randomly
+ *** Version:
+ ***     1.0: 2012-05-31/Gerhard Ebenhofer - Profactor GmbH - initial API and implementation and/or initial documentation
+ ***     1.1: 2015-01-01/Alois Zoitl - fortiss GmbH -
+ *************************************************************************/
 
 #include "FB_RANDOM_fbt.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
@@ -18,8 +25,8 @@
 
 #include "criticalregion.h"
 #include "resource.h"
-#include "forte_uint.h"
 #include "forte_bool.h"
+#include "forte_uint.h"
 #include "iec61131_functions.h"
 #include "forte_array_common.h"
 #include "forte_array.h"
@@ -39,7 +46,7 @@ const CStringDictionary::TStringId FORTE_FB_RANDOM::scmEventInputTypeIds[] = {g_
 const TDataIOID FORTE_FB_RANDOM::scmEOWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_FB_RANDOM::scmEOWithIndexes[] = {-1, 0};
 const CStringDictionary::TStringId FORTE_FB_RANDOM::scmEventOutputNames[] = {g_nStringIdINITO, g_nStringIdCNF};
-const CStringDictionary::TStringId FORTE_FB_RANDOM::scmEventOutputTypeIds[] = {g_nStringIdEvent, g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_FB_RANDOM::scmEventOutputTypeIds[] = {g_nStringIdEInit, g_nStringIdEvent};
 const SFBInterfaceSpec FORTE_FB_RANDOM::scmFBInterfaceSpec = {
   2, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,
   2, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes,
@@ -52,6 +59,7 @@ const SFBInterfaceSpec FORTE_FB_RANDOM::scmFBInterfaceSpec = {
 FORTE_FB_RANDOM::FORTE_FB_RANDOM(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CBasicFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, nullptr),
     var_SEED(0_UINT),
+    var_VAL(0_REAL),
     var_conn_VAL(var_VAL),
     conn_INITO(this, 0),
     conn_CNF(this, 1),
@@ -178,9 +186,6 @@ void FORTE_FB_RANDOM::alg_INIT(void) {
   }
 }
 
-
 void FORTE_FB_RANDOM::alg_REQ(void) {
   var_VAL = CIEC_REAL(mDistribution(mRandomGenerator));
 }
-
-
