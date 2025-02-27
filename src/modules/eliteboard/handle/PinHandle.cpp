@@ -40,7 +40,7 @@ void IOHandleGPIO::dropObserver() {
 
 void IOHandleGPIO::get(CIEC_ANY &paState) {
   static_cast<CIEC_BOOL &>(paState) =
-      HAL_GPIO_ReadPin(mGPIO_Port, mGPIO_Pin) ? CIEC_BOOL(true) : CIEC_BOOL(false);
+      HAL_GPIO_ReadPin(mGPIO_Port, mGPIO_Pin) ? true_BOOL : false_BOOL;
 }
 
 void IOHandleGPIO::set(const CIEC_ANY &paState) {
