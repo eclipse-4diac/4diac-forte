@@ -1,26 +1,36 @@
-/*******************************************************************************
- * Copyright (c) 2018 TU Wien/ACIN
- * This program and the accompanying materials are made available under the
- * terms of the Eclipse Public License 2.0 which is available at
- * http://www.eclipse.org/legal/epl-2.0.
- *
- * SPDX-License-Identifier: EPL-2.0
- *
- * Contributors:
- *    Martin Melik-Merkumians - initial contribution
- *******************************************************************************/
+/************************************************************************* 
+ *** Copyright (c) 2018 TU Vienna/ACIN  
+ ***  
+ *** This program and the accompanying materials are made  
+ *** available under the terms of the Eclipse Public License 2.0  
+ *** which is available at https://www.eclipse.org/legal/epl-2.0/  
+ ***  
+ *** SPDX-License-Identifier: EPL-2.0  
+ *** 
+ *** FORTE Library Element
+ ***
+ *** This file was generated using the 4DIAC FORTE Export Filter V1.0.x NG!
+ ***
+ *** Name: ADS_SERVER_CONFIG
+ *** Description: Service Interface Function Block Type
+ *** Version:
+ ***     1.0: 2018-08-28/Martin Melik Merkumians - TU Vienna/ACIN - initial contribution
+ *************************************************************************/
 
-#ifndef _ADS_SERVER_CONFIG_H_
-#define _ADS_SERVER_CONFIG_H_
+#pragma once
 
-#include <funcbloc.h>
-#include <forte_bool.h>
-#include <forte_string.h>
-#include <forte_uint.h>
-#include <forte_wstring.h>
+#include "funcbloc.h"
+#include "forte_bool.h"
+#include "forte_uint.h"
+#include "forte_wstring.h"
+#include "iec61131_functions.h"
+#include "forte_array_common.h"
+#include "forte_array.h"
+#include "forte_array_fixed.h"
+#include "forte_array_variable.h"
 
-class FORTE_ADS_SERVER_CONFIG : public CFunctionBlock{
-    DECLARE_FIRMWARE_FB (FORTE_ADS_SERVER_CONFIG)
+class FORTE_ADS_SERVER_CONFIG final : public CFunctionBlock {
+  DECLARE_FIRMWARE_FB(FORTE_ADS_SERVER_CONFIG)
 
   private:
     static const CStringDictionary::TStringId scmDataInputNames[];
@@ -56,28 +66,72 @@ class FORTE_ADS_SERVER_CONFIG : public CFunctionBlock{
     };
 
     static const TEventID scmEventINITID = 0;
-    static const TForteInt16 scmEIWithIndexes[];
     static const TDataIOID scmEIWith[];
+    static const TForteInt16 scmEIWithIndexes[];
     static const CStringDictionary::TStringId scmEventInputNames[];
     static const CStringDictionary::TStringId scmEventInputTypeIds[];
-
     static const TEventID scmEventINITOID = 0;
-    static const TForteInt16 scmEOWithIndexes[];
     static const TDataIOID scmEOWith[];
+    static const TForteInt16 scmEOWithIndexes[];
     static const CStringDictionary::TStringId scmEventOutputNames[];
     static const CStringDictionary::TStringId scmEventOutputTypeIds[];
 
     static const SFBInterfaceSpec scmFBInterfaceSpec;
 
-
     void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
+
+    void readInputData(TEventID paEIID) override;
+    void writeOutputData(TEventID paEIID) override;
+    void setInitialValues() override;
 
   public:
     FUNCTION_BLOCK_CTOR (FORTE_ADS_SERVER_CONFIG) { };
-
     ~FORTE_ADS_SERVER_CONFIG() override = default;
 
-};
+    FORTE_ADS_SERVER_CONFIG(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
-#endif //close the ifdef sequence from the beginning of the file
+    CIEC_BOOL var_QI;
+    CIEC_WSTRING var_FRIENDLY_NAME;
+    CIEC_WSTRING var_SERVER_ADS_ADDRESS;
+    CIEC_UINT var_ADS_PORT;
+    CIEC_WSTRING var_SERVER_IPV4_OR_HOSTNAME;
+
+    CIEC_BOOL var_QO;
+    CIEC_WSTRING var_STATUS;
+
+    CIEC_BOOL var_conn_QO;
+    CIEC_WSTRING var_conn_STATUS;
+
+    CEventConnection conn_INITO;
+
+    CDataConnection *conn_QI;
+    CDataConnection *conn_FRIENDLY_NAME;
+    CDataConnection *conn_SERVER_ADS_ADDRESS;
+    CDataConnection *conn_ADS_PORT;
+    CDataConnection *conn_SERVER_IPV4_OR_HOSTNAME;
+
+    CDataConnection conn_QO;
+    CDataConnection conn_STATUS;
+
+    CIEC_ANY *getDI(size_t) override;
+    CIEC_ANY *getDO(size_t) override;
+    CEventConnection *getEOConUnchecked(TPortId) override;
+    CDataConnection **getDIConUnchecked(TPortId) override;
+    CDataConnection *getDOConUnchecked(TPortId) override;
+
+    void evt_INIT(const CIEC_BOOL &paQI, const CIEC_WSTRING &paFRIENDLY_NAME, const CIEC_WSTRING &paSERVER_ADS_ADDRESS, const CIEC_UINT &paADS_PORT, const CIEC_WSTRING &paSERVER_IPV4_OR_HOSTNAME, CIEC_BOOL &paQO, CIEC_WSTRING &paSTATUS) {
+      var_QI = paQI;
+      var_FRIENDLY_NAME = paFRIENDLY_NAME;
+      var_SERVER_ADS_ADDRESS = paSERVER_ADS_ADDRESS;
+      var_ADS_PORT = paADS_PORT;
+      var_SERVER_IPV4_OR_HOSTNAME = paSERVER_IPV4_OR_HOSTNAME;
+      executeEvent(scmEventINITID, nullptr);
+      paQO = var_QO;
+      paSTATUS = var_STATUS;
+    }
+
+    void operator()(const CIEC_BOOL &paQI, const CIEC_WSTRING &paFRIENDLY_NAME, const CIEC_WSTRING &paSERVER_ADS_ADDRESS, const CIEC_UINT &paADS_PORT, const CIEC_WSTRING &paSERVER_IPV4_OR_HOSTNAME, CIEC_BOOL &paQO, CIEC_WSTRING &paSTATUS) {
+      evt_INIT(paQI, paFRIENDLY_NAME, paSERVER_ADS_ADDRESS, paADS_PORT, paSERVER_IPV4_OR_HOSTNAME, paQO, paSTATUS);
+    }
+};
 
