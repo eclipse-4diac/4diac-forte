@@ -1,6 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2016, 2023 Johannes Messmer (admin@jomess.com), fortiss GmbH,
- *                          Johannes Kepler University Linz
+ * Copyright (c) 2016, 2025 Johannes Messmer (admin@jomess.com), fortiss GmbH,
+ *                          Johannes Kepler University Linz, Thomas Öllinger
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -56,13 +56,7 @@ bool ProcessInterface::initialise(bool paIsInput, CEventChainExecutionThread *co
   deinitialise();
 
   // Register interface
-  if (PARAMS().length()) {  // If PARAMS is not empty we use the string specified here "as is" for the IO mapping to the configuration. Otherwise use the full qualified instance name of our FB.
-    if (!(mIsListening = IOMapper::getInstance().registerObserver(std::string(PARAMS().c_str()), this))) {
-      STATUS() = scmFailedToRegister;
-      return false;
-    }
-  }
-  else if(!(mIsListening = IOMapper::getInstance().registerObserver(getFullQualifiedApplicationInstanceName('.'), this))) {
+  if(!(mIsListening = IOMapper::getInstance().registerObserver(getId(), this))) {
     STATUS() = scmFailedToRegister;
     return false;
   }
@@ -72,6 +66,17 @@ bool ProcessInterface::initialise(bool paIsInput, CEventChainExecutionThread *co
   }
 
   return mIsReady;
+}
+
+// If PARAMS is not empty use the string specified here "as is" for the IO mapping to the configuration.
+// Otherwise use the full qualified instance name of our FB.
+std::string ProcessInterface::getId() {
+  if (PARAMS().length()) {  
+    return PARAMS().getStorage();
+  }
+  else {
+    return getFullQualifiedApplicationInstanceName('.');
+  }
 }
 
 bool ProcessInterface::deinitialise() {
