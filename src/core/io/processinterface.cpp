@@ -12,6 +12,7 @@
  *   Johannes Messmer - initial API and implementation and/or initial documentation
  *   Jose Cabral - Cleaning of namespaces
  *   Alois Zoitl - further clean-ups and performance improvements on IOHandle
+ *   Thomas Öllinger - use PARAMS to reference to I/O configuration
  *******************************************************************************/
 
 #include "processinterface.h"
@@ -55,7 +56,13 @@ bool ProcessInterface::initialise(bool paIsInput, CEventChainExecutionThread *co
   deinitialise();
 
   // Register interface
-  if(!(mIsListening = IOMapper::getInstance().registerObserver(getFullQualifiedApplicationInstanceName('.'), this))) {
+  if (PARAMS().length()) {  // If PARAMS is not empty we use the string specified here "as is" for the IO mapping to the configuration. Otherwise use the full qualified instance name of our FB.
+    if (!(mIsListening = IOMapper::getInstance().registerObserver(std::string(PARAMS().c_str()), this))) {
+      STATUS() = scmFailedToRegister;
+      return false;
+    }
+  }
+  else if(!(mIsListening = IOMapper::getInstance().registerObserver(getFullQualifiedApplicationInstanceName('.'), this))) {
     STATUS() = scmFailedToRegister;
     return false;
   }
