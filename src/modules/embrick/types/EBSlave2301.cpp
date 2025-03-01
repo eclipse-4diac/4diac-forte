@@ -16,6 +16,12 @@
 #include "EBSlave2301_gen.cpp"
 #endif
 
+#include "EBBusAdapter_adp.h"
+#include "iec61131_functions.h"
+#include "forte_array_common.h"
+#include "forte_array.h"
+#include "forte_array_fixed.h"
+#include "forte_array_variable.h"
 #include "criticalregion.h"
 #include "resource.h"
 #include "../handler/bus.h"
@@ -29,18 +35,16 @@ const CStringDictionary::TStringId FORTE_EBSlave2301::scmDataOutputTypeIds[] = {
 const TDataIOID FORTE_EBSlave2301::scmEIWith[] = {1, 2, 3, 4, 5, 6, 0, scmWithListDelimiter};
 const TForteInt16 FORTE_EBSlave2301::scmEIWithIndexes[] = {0};
 const CStringDictionary::TStringId FORTE_EBSlave2301::scmEventInputNames[] = {g_nStringIdMAP};
-const CStringDictionary::TStringId FORTE_EBSlave2301::scmEventInputTypeIds[] = {g_nStringIdEvent};
 const TDataIOID FORTE_EBSlave2301::scmEOWith[] = {0, scmWithListDelimiter, 0, 1, scmWithListDelimiter};
 const TForteInt16 FORTE_EBSlave2301::scmEOWithIndexes[] = {0, 2};
 const CStringDictionary::TStringId FORTE_EBSlave2301::scmEventOutputNames[] = {g_nStringIdMAPO, g_nStringIdIND};
-const CStringDictionary::TStringId FORTE_EBSlave2301::scmEventOutputTypeIds[] = {g_nStringIdEvent, g_nStringIdEvent};
 const SAdapterInstanceDef FORTE_EBSlave2301::scmAdapterInstances[] = {
   {g_nStringIdEBBusAdapter, g_nStringIdBusAdapterIn, false},
   {g_nStringIdEBBusAdapter, g_nStringIdBusAdapterOut, true}
 };
 const SFBInterfaceSpec FORTE_EBSlave2301::scmFBInterfaceSpec = {
-  1, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,
-  2, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes,
+  1, scmEventInputNames, nullptr, scmEIWith, scmEIWithIndexes,
+  2, scmEventOutputNames, nullptr, scmEOWith, scmEOWithIndexes,
   8, scmDataInputNames, scmDataInputTypeIds,
   2, scmDataOutputNames, scmDataOutputTypeIds,
   0, nullptr,
@@ -50,6 +54,19 @@ const SFBInterfaceSpec FORTE_EBSlave2301::scmFBInterfaceSpec = {
 FORTE_EBSlave2301::FORTE_EBSlave2301(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     EmbrickSlave(scmSlaveConfigurationIO, scmSlaveConfigurationIONum, EmbrickSlaveHandler::G_2RelNo4RelCo,
         paContainer, scmFBInterfaceSpec, paInstanceNameId),
+    CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId),
+    var_QI(0_BOOL),
+    var_Relay_1(u""_WSTRING),
+    var_Relay_2(u""_WSTRING),
+    var_Relay_3(u""_WSTRING),
+    var_Relay_4(u""_WSTRING),
+    var_Relay_5(u""_WSTRING),
+    var_Relay_6(u""_WSTRING),
+    var_UpdateInterval(0_UINT),
+    var_QO(0_BOOL),
+    var_STATUS(u""_WSTRING),
+    var_BusAdapterIn(g_nStringIdBusAdapterIn, *this, false),
+    var_BusAdapterOut(g_nStringIdBusAdapterOut, *this, true),
     var_conn_QO(var_QO),
     var_conn_STATUS(var_STATUS),
     conn_MAPO(this, 0),
@@ -65,6 +82,14 @@ FORTE_EBSlave2301::FORTE_EBSlave2301(const CStringDictionary::TStringId paInstan
     conn_QO(this, 0, &var_conn_QO),
     conn_STATUS(this, 1, &var_conn_STATUS) {
 };
+
+bool FORTE_EBSlave2301::initialize() {
+  if(!var_BusAdapterIn.initialize()) { return false; }
+  if(!var_BusAdapterOut.initialize()) { return false; }
+  var_BusAdapterIn.setParentFB(this, 0);
+  var_BusAdapterOut.setParentFB(this, 1);
+  return CFunctionBlock::initialize();
+}
 
 void FORTE_EBSlave2301::setInitialValues() {
   var_QI = 0_BOOL;
@@ -130,6 +155,14 @@ CIEC_ANY *FORTE_EBSlave2301::getDO(const size_t paIndex) {
   switch(paIndex) {
     case 0: return &var_QO;
     case 1: return &var_STATUS;
+  }
+  return nullptr;
+}
+
+CAdapter *FORTE_EBSlave2301::getAdapterUnchecked(const size_t paIndex) {
+  switch(paIndex) {
+    case 0: return &var_BusAdapterIn;
+    case 1: return &var_BusAdapterOut;
   }
   return nullptr;
 }

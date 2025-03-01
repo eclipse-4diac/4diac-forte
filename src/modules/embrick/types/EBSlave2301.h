@@ -15,8 +15,8 @@
 
 #include "funcbloc.h"
 #include "forte_bool.h"
-#include "forte_wstring.h"
 #include "forte_uint.h"
+#include "forte_wstring.h"
 #include "iec61131_functions.h"
 #include "forte_array_common.h"
 #include "forte_array.h"
@@ -38,19 +38,18 @@ private:
   static const TDataIOID scmEIWith[];
   static const TForteInt16 scmEIWithIndexes[];
   static const CStringDictionary::TStringId scmEventInputNames[];
-  static const CStringDictionary::TStringId scmEventInputTypeIds[];
   static const TEventID scmEventMAPOID = 0;
   static const TEventID scmEventINDID = 1;
   static const TDataIOID scmEOWith[];
   static const TForteInt16 scmEOWithIndexes[];
   static const CStringDictionary::TStringId scmEventOutputNames[];
-  static const CStringDictionary::TStringId scmEventOutputTypeIds[];
   static const int scmBusAdapterInAdpNum = 0;
   static const int scmBusAdapterOutAdpNum = 1;
   static const SAdapterInstanceDef scmAdapterInstances[];
 
   static const SFBInterfaceSpec scmFBInterfaceSpec;
 
+  void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
   void readInputData(TEventID paEIID) override;
   void writeOutputData(TEventID paEIID) override;
   void setInitialValues() override;
@@ -62,6 +61,7 @@ private:
 
 public:
   FORTE_EBSlave2301(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+  bool initialize() override;
 
   CIEC_BOOL var_QI;
   CIEC_WSTRING var_Relay_1;
@@ -74,6 +74,9 @@ public:
 
   CIEC_BOOL var_QO;
   CIEC_WSTRING var_STATUS;
+  FORTE_EBBusAdapter var_BusAdapterIn;
+
+  FORTE_EBBusAdapter var_BusAdapterOut;
 
   CIEC_BOOL var_conn_QO;
   CIEC_WSTRING var_conn_STATUS;
@@ -95,6 +98,7 @@ public:
 
   CIEC_ANY *getDI(size_t) override;
   CIEC_ANY *getDO(size_t) override;
+  CAdapter *getAdapterUnchecked(size_t) override;
   FORTE_EBBusAdapter &var_BusAdapterIn() {
     return *static_cast<FORTE_EBBusAdapter*>(mAdapters[0]);
   };
