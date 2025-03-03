@@ -40,7 +40,6 @@ namespace forte {
         protected:
           bool initialise(bool paIsInput, CEventChainExecutionThread *const paECET);
           bool deinitialise();
-          std::string getId();
           bool readPin() {
             return read(IN_X());
           }
@@ -92,6 +91,8 @@ namespace forte {
           static const CIEC_STRING scmMappedWrongDirectionOutput;
           static const CIEC_STRING scmMappedWrongDirectionInput;
           static const CIEC_STRING scmMappedWrongDataType;
+          
+          std::string getId(); 
       };
 
     } //namespace IO
