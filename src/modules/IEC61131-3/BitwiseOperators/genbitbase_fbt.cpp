@@ -1,6 +1,5 @@
 /*******************************************************************************
- * Copyright (c)2018 Johannes Kepler University
- *               2023 Martin Erich Jobst
+ * Copyright (c)2018, 2024 Johannes Kepler University, Martin Erich Jobst, HR Agartechnik GmbH
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -13,6 +12,8 @@
  *   Martin Jobst
  *     - refactor for ANY variant
  *     - add generic readInputData and writeOutputData
+ *   Fanz Höpfinger
+ *     - enable Typesafe Blocks
  *******************************************************************************/
 #include "genbitbase_fbt.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
