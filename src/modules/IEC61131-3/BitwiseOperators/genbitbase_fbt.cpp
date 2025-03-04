@@ -51,7 +51,7 @@ bool CGenBitBase::createInterfaceSpec(const char *paConfigString, SFBInterfaceSp
   const char *pcPos = strrchr(paConfigString, '_');
 
   if (nullptr != pcPos) {
-    pcPos++;
+    pcPos++;  // move after underscore
     //we have an underscore and it is the first underscore after AND/OR/XOR
     paInterfaceSpec.mNumDIs = static_cast<TPortId>(forte::core::util::strtoul(pcPos, nullptr, 10));
     DEVLOG_DEBUG("DIs: %d;\n", paInterfaceSpec.mNumDIs);
