@@ -48,7 +48,7 @@ void CGenBitBase::writeOutputData(TEventID) {
 }
 
 bool CGenBitBase::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) {
-  const char *pcPos = strrchr(paConfigString, '_');
+  const char *pcPos = strchr(paConfigString, '_');
 
   if (nullptr != pcPos) {
     pcPos++;  // move after underscore
