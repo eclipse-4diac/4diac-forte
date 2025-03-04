@@ -25,8 +25,11 @@ USE_STRING_ID(UINT);
 
 #include <stdio.h>
 
-#include "resource.h"
-#include "criticalregion.h"
+#include "iec61131_functions.h"
+#include "forte_array_common.h"
+#include "forte_array.h"
+#include "forte_array_fixed.h"
+#include "forte_array_variable.h"
 
 DEFINE_GENERIC_FIRMWARE_FB(GEN_E_MUX, STRID(GEN_E_MUX));
 
@@ -34,24 +37,39 @@ const CStringDictionary::TStringId GEN_E_MUX::scmDataOutputNames[] = { STRID(K) 
 const CStringDictionary::TStringId GEN_E_MUX::scmDODataTypeIds[] = { STRID(UINT) };
 
 const CStringDictionary::TStringId GEN_E_MUX::scmEventOutputNames[] = { STRID(EO) };
-const CStringDictionary::TStringId GEN_E_MUX::scmEventOutputTypeIds[] = { STRID(Event) };
 
 GEN_E_MUX::GEN_E_MUX(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
-    CGenFunctionBlock<CFunctionBlock>(paContainer, paInstanceNameId) {
+    CGenFunctionBlock<CFunctionBlock>(paContainer, paInstanceNameId),
+    var_K(0_UINT),
+    var_conn_K(var_K),
+    conn_EO(this, 0),
+    conn_K(this, 0, &var_conn_K) {
+};
+
+void GEN_E_MUX::setInitialValues() {
+  var_K = 0_UINT;
 }
 
-void GEN_E_MUX::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
+void GEN_E_MUX::executeEvent(const TEventID paEIID, CEventChainExecutionThread *const paECET) {
   if(paEIID < getFBInterfaceSpec().mNumEIs){
-    K() = CIEC_UINT(static_cast<TForteUInt16>(paEIID));
+    var_K = CIEC_UINT(static_cast<TForteUInt16>(paEIID));
     sendOutputEvent(scmEventEOID, paECET);
   }
 }
 
 void GEN_E_MUX::readInputData(TEventID) {
+  // nothing to do
 }
 
-void GEN_E_MUX::writeOutputData(TEventID) {
-  writeData(0, *mDOs[0], mDOConns[0]);
+void GEN_E_MUX::writeOutputData(const TEventID paEIID) {
+  switch(paEIID) {
+    case scmEventEOID: {
+      writeData(0, var_K, conn_K);
+      break;
+    }
+    default:
+      break;
+  }
 }
 
 bool GEN_E_MUX::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec){
@@ -64,21 +82,21 @@ bool GEN_E_MUX::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec
       paInterfaceSpec.mNumEIs = static_cast<TEventID>(forte::core::util::strtoul(acPos, nullptr, 10));
 
       if(paInterfaceSpec.mNumEIs < CFunctionBlock::scmMaxInterfaceEvents && paInterfaceSpec.mNumEIs >= 2){
-        mEventInputNames = std::make_unique<CStringDictionary::TStringId[]>(paInterfaceSpec.mNumEIs);
+        scmEventInputNames = std::make_unique<CStringDictionary::TStringId[]>(paInterfaceSpec.mNumEIs);
 
-        generateGenericInterfacePointNameArray("EI", mEventInputNames.get(), paInterfaceSpec.mNumEIs);
+        generateGenericInterfacePointNameArray("EI", scmEventInputNames.get(), paInterfaceSpec.mNumEIs);
 
-        paInterfaceSpec.mEINames = mEventInputNames.get();
+        paInterfaceSpec.mEINames = scmEventInputNames.get();
         paInterfaceSpec.mNumEOs = 1;
         paInterfaceSpec.mEONames = scmEventOutputNames;
         paInterfaceSpec.mEITypeNames = nullptr;
-        paInterfaceSpec.mEOTypeNames = scmEventOutputTypeIds;
+        paInterfaceSpec.mEOTypeNames = nullptr;
         paInterfaceSpec.mNumDIs = 0;
         paInterfaceSpec.mDINames = nullptr;
         paInterfaceSpec.mDIDataTypeNames = nullptr;
         paInterfaceSpec.mNumDOs = 1;
         paInterfaceSpec.mDONames = scmDataOutputNames;
-        paInterfaceSpec.mDODataTypeNames = scmDODataTypeIds;
+        paInterfaceSpec.mDODataTypeNames = scmDataOutputTypeIds;
         return true;
       }
       else{
@@ -92,4 +110,33 @@ bool GEN_E_MUX::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec
     }
   }
   return false;
+}
+
+CIEC_ANY *GEN_E_MUX::getDI(size_t) {
+  return nullptr;
+}
+
+CIEC_ANY *GEN_E_MUX::getDO(const size_t paIndex) {
+  switch(paIndex) {
+    case 0: return &var_K;
+  }
+  return nullptr;
+}
+
+CEventConnection *GEN_E_MUX::getEOConUnchecked(const TPortId paIndex) {
+  switch(paIndex) {
+    case 0: return &conn_EO;
+  }
+  return nullptr;
+}
+
+CDataConnection **GEN_E_MUX::getDIConUnchecked(TPortId) {
+  return nullptr;
+}
+
+CDataConnection *GEN_E_MUX::getDOConUnchecked(const TPortId paIndex) {
+  switch(paIndex) {
+    case 0: return &conn_K;
+  }
+  return nullptr;
 }

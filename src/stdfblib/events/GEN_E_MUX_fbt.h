@@ -1,7 +1,8 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2023 ACIN
+ * Copyright (c) 2011, 2025 ACIN, Profactor GmbH, fortiss GmbH
  *                          Johannes Kepler University
  *                          Martin Erich Jobst
+ *                          HR Agrartechnik GmbH
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -10,45 +11,60 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *   Alois Zoitl
+ *   Alois Zoitl, Matthias Plasch
  *     - initial API and implementation and/or initial documentation
  *    Alois Zoitl - introduced new CGenFB class for better handling generic FBs
  *    Martin Jobst - add generic readInputData and writeOutputData
+ *....Franz Höpfinger - Update it to represent latest Generation Format from 4diac IDE. no Functional Changes. 
  *******************************************************************************/
-#ifndef _GEN_E_MUX_H_
-#define _GEN_E_MUX_H_
 
-#include <genfb.h>
+#pragma once
 
-#include <memory>
+#include "genfb.h"
+#include "forte_uint.h"
+#include "iec61131_functions.h"
+#include "forte_array_common.h"
+#include "forte_array.h"
+#include "forte_array_fixed.h"
+#include "forte_array_variable.h"
 
-class GEN_E_MUX : public CGenFunctionBlock<CFunctionBlock>{
+class GEN_E_MUX final : public CGenFunctionBlock<CFunctionBlock> {
   DECLARE_GENERIC_FIRMWARE_FB(GEN_E_MUX)
 
   private:
-    static const CStringDictionary::TStringId scmDataOutputNames[], scmDODataTypeIds[];
+    static const CStringDictionary::TStringId scmDataOutputNames[];
+    static const CStringDictionary::TStringId scmDataOutputTypeIds[];
 
+    std::unique_ptr<CStringDictionary::TStringId[]> scmEventInputNames;
     static const TEventID scmEventEOID = 0;
     static const CStringDictionary::TStringId scmEventOutputNames[];
-    static const CStringDictionary::TStringId scmEventOutputTypeIds[];
 
-    std::unique_ptr<CStringDictionary::TStringId[]> mEventInputNames;
-    std::unique_ptr<CStringDictionary::TStringId[]> mEventInputTypeIds;
+
 
     void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
-    void readInputData(TEventID paEI) override;
-    void writeOutputData(TEventID paEO) override;
+    void readInputData(TEventID paEIID) override;
+    void writeOutputData(TEventID paEIID) override;
+    void setInitialValues() override;
 
     bool createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) override;
 
-    CIEC_UINT& K(){
-      return *static_cast<CIEC_UINT*>(getDO(0));
-    }
-
   public:
-    GEN_E_MUX(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
-    ~GEN_E_MUX() override = default;
+    GEN_E_MUX(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+
+    CIEC_UINT var_K;
+
+    CIEC_UINT var_conn_K;
+
+    CEventConnection conn_EO;
+
+    CDataConnection conn_K;
+
+    CIEC_ANY *getDI(size_t) override;
+    CIEC_ANY *getDO(size_t) override;
+    CEventConnection *getEOConUnchecked(TPortId) override;
+    CDataConnection **getDIConUnchecked(TPortId) override;
+    CDataConnection *getDOConUnchecked(TPortId) override;
 
 };
-#endif //_GEN_E_MUX_H_
+
