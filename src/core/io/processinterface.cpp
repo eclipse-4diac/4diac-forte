@@ -71,7 +71,7 @@ bool ProcessInterface::initialise(bool paIsInput, CEventChainExecutionThread *co
 // If PARAMS is not empty use the string specified here "as is" for the IO mapping to the configuration.
 // Otherwise use the full qualified instance name of our FB.
 std::string ProcessInterface::getId() {
-  if (PARAMS().length()) {  
+  if (!PARAMS().empty()) {  
     return static_cast<std::string>(PARAMS());
   }
   else {
