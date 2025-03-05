@@ -72,7 +72,7 @@ bool ProcessInterface::initialise(bool paIsInput, CEventChainExecutionThread *co
 // Otherwise use the full qualified instance name of our FB.
 std::string ProcessInterface::getId() {
   if (PARAMS().length()) {  
-    return PARAMS().getStorage();
+    return static_cast<std::string>(PARAMS());
   }
   else {
     return getFullQualifiedApplicationInstanceName('.');
