@@ -25,7 +25,7 @@
 #include "adapter.h"
 #include "device.h"
 #include "connectiondestinationtype.h"
-#include "utils/criticalregion.h"
+#include "core/util/criticalregion.h"
 #include "../arch/timerha.h"
 #include <string.h>
 #include <stdlib.h>
@@ -50,6 +50,7 @@ bool CFunctionBlock::initialize() {
 #ifdef  FORTE_SUPPORT_MONITORING
   setupEventMonitoringData();
 #endif //FORTE_SUPPORT_MONITORING
+  setupInputConnectionTrackingData();
   return true;
 }
 
@@ -61,6 +62,20 @@ CFunctionBlock::~CFunctionBlock(){
 
 CTimerHandler& CFunctionBlock::getTimer() {
   return getDevice()->getTimer();
+}
+
+CStringDictionary::TStringId CFunctionBlock::getEIType(TEventID paEIID) const {
+  if (getFBInterfaceSpec().mEITypeNames != nullptr) {
+    return getFBInterfaceSpec().mEITypeNames[paEIID];
+  }
+  return g_nStringIdEvent;
+}
+
+CStringDictionary::TStringId CFunctionBlock::getEOType(TEventID paEOID) const {
+  if (getFBInterfaceSpec().mEOTypeNames != nullptr) {
+    return getFBInterfaceSpec().mEOTypeNames[paEOID];
+  }
+  return g_nStringIdEvent;
 }
 
 CEventConnection *CFunctionBlock::getEOConnection(CStringDictionary::TStringId paEONameId) {
@@ -97,7 +112,7 @@ bool CFunctionBlock::connectDI(TPortId paDIPortId, CDataConnection *paDataCon){
           configureGenericDI(paDIPortId, paDataCon->getValue());
           bRetVal = true;
         } else {
-          DEVLOG_ERROR("%s cannot connect input data %s to more sources, using the latest connection attempt\n", getInstanceName(), CStringDictionary::getInstance().get(getFBInterfaceSpec().mDINames[paDIPortId]));
+          DEVLOG_ERROR("%s cannot connect input data %s to more sources, using the latest connection attempt\n", getInstanceName(), CStringDictionary::get(getFBInterfaceSpec().mDINames[paDIPortId]));
         }
       } else {
         *getDIConUnchecked(paDIPortId) = paDataCon;
@@ -132,7 +147,7 @@ bool CFunctionBlock::connectDIO(TPortId paDIOPortId, CInOutDataConnection *paDat
           getDIOOutConUnchecked(paDIOPortId)->setValue(paDataCon->getValue());
           return true;
         } else {
-          DEVLOG_ERROR("%s cannot connect InOut data %s to more sources, using the latest connection attempt\n", getInstanceName(), CStringDictionary::getInstance().get(getFBInterfaceSpec().mDIONames[paDIOPortId]));
+          DEVLOG_ERROR("%s cannot connect InOut data %s to more sources, using the latest connection attempt\n", getInstanceName(), CStringDictionary::get(getFBInterfaceSpec().mDIONames[paDIOPortId]));
         }
       } else {
         *getDIOInConUnchecked(paDIOPortId) = paDataCon;
@@ -531,15 +546,15 @@ void CFunctionBlock::freeEventMonitoringData(){
   mEIMonitorCount = nullptr;
 }
 
-CFunctionBlock *CFunctionBlock::getFB(forte::core::TNameIdentifier::CIterator &paNameListIt){
+CFunctionBlock *CFunctionBlock::getFB(NameIterator &paNameListIt, NameIterator paNameListEnd){
   CFunctionBlock *retVal = nullptr;
 
-  if(paNameListIt.isLastEntry()){
+  if (paNameListIt+1 == paNameListEnd) {
     //only check for adpaters if it we have the last entry in the line
     retVal = getAdapter(*paNameListIt);
   }
   if(retVal == nullptr){
-    retVal = CFBContainer::getFB(paNameListIt);
+    retVal = CFBContainer::getFB(paNameListIt, paNameListEnd);
   }
 
   return retVal;
@@ -557,7 +572,7 @@ TForteUInt32 &CFunctionBlock::getEOMonitorData(TEventID paEOID){
 
 int CFunctionBlock::writeToStringNameValuePair(char *paValue, size_t paBufferSize, const CStringDictionary::TStringId variableNameId, const CIEC_ANY *const variable) const {
   size_t usedBuffer = 0;
-  const char *const variableName = CStringDictionary::getInstance().get(variableNameId);
+  const char *const variableName = CStringDictionary::get(variableNameId);
   size_t nameLength = strlen(variableName);
   if ((paBufferSize - usedBuffer) < nameLength + 3) { // := and \0
     return -1;
@@ -638,19 +653,19 @@ size_t CFunctionBlock::getToStringBufferSize() const {
   for (size_t i = 0; i < getFBInterfaceSpec().mNumDIs; ++i) {
       const CIEC_ANY *const variable = getDI(i);
       const CStringDictionary::TStringId nameId = getFBInterfaceSpec().mDINames[i];
-      const char *varName = CStringDictionary::getInstance().get(nameId);
+      const char *varName = CStringDictionary::get(nameId);
       bufferSize += strlen(varName) + 4 + variable->getToStringBufferSize(); // compensation for := and , for every variable
   }
   for (size_t i = 0; i < getFBInterfaceSpec().mNumDOs; ++i) {
       const CIEC_ANY *const variable = getDO(i);
       const CStringDictionary::TStringId nameId = getFBInterfaceSpec().mDONames[i];
-      const char *varName = CStringDictionary::getInstance().get(nameId);
+      const char *varName = CStringDictionary::get(nameId);
       bufferSize += strlen(varName) + 4 + variable->getToStringBufferSize(); // compensation for := and , for every variable
   }
    for (size_t i = 0; i < getFBInterfaceSpec().mNumDIOs; ++i) {
       const CIEC_ANY *const variable = getDIO(i);
       const CStringDictionary::TStringId nameId = getFBInterfaceSpec().mDIONames[i];
-      const char *varName = CStringDictionary::getInstance().get(nameId); 
+      const char *varName = CStringDictionary::get(nameId); 
       bufferSize += strlen(varName) + 4 + variable->getToStringBufferSize(); // compensation for := and , for every variable
    }
    return bufferSize;

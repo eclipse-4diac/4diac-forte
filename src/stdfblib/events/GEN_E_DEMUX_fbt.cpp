@@ -30,13 +30,10 @@ const CStringDictionary::TStringId GEN_E_DEMUX::scmDataInputNames[] = { g_nStrin
 const CStringDictionary::TStringId GEN_E_DEMUX::scmDIDataTypeIds[] = { g_nStringIdUINT };
 
 const CStringDictionary::TStringId GEN_E_DEMUX::scmEventInputNames[] = { g_nStringIdEI };
+const CStringDictionary::TStringId GEN_E_DEMUX::scmEventInputTypeIds[] = { g_nStringIdEvent };
 
 GEN_E_DEMUX::GEN_E_DEMUX(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CGenFunctionBlock<CFunctionBlock>(paContainer, paInstanceNameId), mEventOutputNames(nullptr){
-}
-
-GEN_E_DEMUX::~GEN_E_DEMUX(){
-  delete[] mEventOutputNames;
 }
 
 void GEN_E_DEMUX::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
@@ -62,13 +59,15 @@ bool GEN_E_DEMUX::createInterfaceSpec(const char *paConfigString, SFBInterfaceSp
       paInterfaceSpec.mNumEOs = static_cast<TEventID>(forte::core::util::strtoul(acPos, nullptr, 10));
 
       if(paInterfaceSpec.mNumEOs < CFunctionBlock::scmMaxInterfaceEvents){
-        mEventOutputNames = new CStringDictionary::TStringId[paInterfaceSpec.mNumEOs];
-
-        generateGenericInterfacePointNameArray("EO", mEventOutputNames, paInterfaceSpec.mNumEOs);
+        mEventOutputNames = std::make_unique<CStringDictionary::TStringId[]>(paInterfaceSpec.mNumEOs);
+        
+        generateGenericInterfacePointNameArray("EO", mEventOutputNames.get(), paInterfaceSpec.mNumEOs);
 
         paInterfaceSpec.mNumEIs = 1;
         paInterfaceSpec.mEINames = scmEventInputNames;
-        paInterfaceSpec.mEONames = mEventOutputNames;
+        paInterfaceSpec.mEONames = mEventOutputNames.get();
+        paInterfaceSpec.mEITypeNames = scmEventInputTypeIds;
+        paInterfaceSpec.mEOTypeNames = nullptr;
         paInterfaceSpec.mNumDIs = 1;
         paInterfaceSpec.mDINames = scmDataInputNames;
         paInterfaceSpec.mDIDataTypeNames = scmDIDataTypeIds;

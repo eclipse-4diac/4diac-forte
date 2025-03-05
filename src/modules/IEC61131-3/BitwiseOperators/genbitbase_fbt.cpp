@@ -34,12 +34,7 @@ const CStringDictionary::TStringId CGenBitBase::scmEventInputNames[] = {g_nStrin
 const CStringDictionary::TStringId CGenBitBase::scmEventOutputNames[] = { g_nStringIdCNF };
 
 CGenBitBase::CGenBitBase(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
-    CGenFunctionBlock<CFunctionBlock>(paContainer, paInstanceNameId), mDataInputNames(nullptr), mDataInputTypeIds(nullptr) {
-}
-
-CGenBitBase::~CGenBitBase(){
-  delete[] mDataInputNames;
-  delete[] mDataInputTypeIds;
+    CGenFunctionBlock<CFunctionBlock>(paContainer, paInstanceNameId) {
 }
 
 void CGenBitBase::readInputData(TEventID) {
@@ -73,14 +68,14 @@ bool CGenBitBase::createInterfaceSpec(const char *paConfigString, SFBInterfaceSp
   if (paInterfaceSpec.mNumDIs < CFunctionBlock::scmMaxInterfaceEvents) {
 
     //create the data inputs
-    mDataInputNames = new CStringDictionary::TStringId[paInterfaceSpec.mNumDIs];
-    mDataInputTypeIds = new CStringDictionary::TStringId[paInterfaceSpec.mNumDIs];
+    mDataInputNames = std::make_unique<CStringDictionary::TStringId[]>(paInterfaceSpec.mNumDIs);
+    mDataInputTypeIds = std::make_unique<CStringDictionary::TStringId[]>(paInterfaceSpec.mNumDIs);
 
     char diNames[cgIdentifierLength] = { "IN" };
 
     for (size_t di = 0; di < paInterfaceSpec.mNumDIs; ++di) {
       forte_snprintf(&(diNames[2]), 5 - 2, "%i", di + 1);
-      mDataInputNames[di] = CStringDictionary::getInstance().insert(diNames);
+      mDataInputNames[di] = CStringDictionary::insert(diNames);
       mDataInputTypeIds[di] = g_nStringIdANY_BIT;
     }
 
@@ -89,8 +84,8 @@ bool CGenBitBase::createInterfaceSpec(const char *paConfigString, SFBInterfaceSp
     paInterfaceSpec.mEINames = scmEventInputNames;
     paInterfaceSpec.mNumEOs = 1;
     paInterfaceSpec.mEONames = scmEventOutputNames;
-    paInterfaceSpec.mDINames = mDataInputNames;
-    paInterfaceSpec.mDIDataTypeNames = mDataInputTypeIds;
+    paInterfaceSpec.mDINames = mDataInputNames.get();
+    paInterfaceSpec.mDIDataTypeNames = mDataInputTypeIds.get();
     paInterfaceSpec.mNumDOs = 1;
     paInterfaceSpec.mDONames = scmDataOutputNames;
     paInterfaceSpec.mDODataTypeNames = scmDataOutputTypeIds;

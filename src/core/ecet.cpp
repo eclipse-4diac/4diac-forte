@@ -18,11 +18,11 @@
 #include <fortenew.h>
 #include "ecet.h"
 #include "esfb.h"
-#include "utils/criticalregion.h"
-#include "../arch/devlog.h"
+#include "core/util/criticalregion.h"
+#include "arch/devlog.h"
 
 CEventChainExecutionThread::CEventChainExecutionThread() :
-    CThread(), mSuspendSemaphore(false), mProcessingEvents(false){
+    CThread(){
   clear();
 }
 

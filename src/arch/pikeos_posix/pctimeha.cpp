@@ -16,7 +16,7 @@
 #include "../../core/devexec.h"
 #include <time.h>
 #include <sys/time.h>
-#include "../utils/timespec_utils.h"
+#include "arch/utils/timespec_utils.h"
 
 CTimerHandler* CTimerHandler::createTimerHandler(CDeviceExecution& paDeviceExecution){
   return new CPCTimerHandler(paDeviceExecution);

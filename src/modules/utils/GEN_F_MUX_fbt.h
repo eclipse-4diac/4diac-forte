@@ -20,26 +20,29 @@
 
 #include <genfb.h>
 
+#include <memory>
+
 class GEN_F_MUX : public CGenFunctionBlock<CFunctionBlock> {
   DECLARE_GENERIC_FIRMWARE_FB(GEN_F_MUX)
 
   private:
     //we know for sure that there is one output event
     static const CStringDictionary::TStringId scmEventOutputNames[];
+    static const CStringDictionary::TStringId scmEventOutputTypeIds[];
 
     static const TEventID scmEventEOID = 0;
 
-    CStringDictionary::TStringId *mEventInputNames;
-    CStringDictionary::TStringId *mDataOutputNames;
-    CStringDictionary::TStringId *mDataInputNames;
-    CStringDictionary::TStringId *mDataOutputTypeIds;
-    CStringDictionary::TStringId *mDataInputTypeIds;
+    std::unique_ptr<CStringDictionary::TStringId[]> mEventInputNames;
+    std::unique_ptr<CStringDictionary::TStringId[]> mDataOutputNames;
+    std::unique_ptr<CStringDictionary::TStringId[]> mDataInputNames;
+    std::unique_ptr<CStringDictionary::TStringId[]> mDataOutputTypeIds;
+    std::unique_ptr<CStringDictionary::TStringId[]> mDataInputTypeIds;
 
     //self-defined members
-    size_t mEInputs;
-    size_t mEOutputs;
-    size_t mDInputs;
-    size_t mDOutputs;
+    size_t mEInputs{0};
+    size_t mEOutputs{0};
+    size_t mDInputs{0};
+    size_t mDOutputs{0};
 
     void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
@@ -50,6 +53,6 @@ class GEN_F_MUX : public CGenFunctionBlock<CFunctionBlock> {
 
   public:
     GEN_F_MUX(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
-    ~GEN_F_MUX() override;
+    ~GEN_F_MUX() override = default;
 };
 #endif //_GEN_F_MUX_H_

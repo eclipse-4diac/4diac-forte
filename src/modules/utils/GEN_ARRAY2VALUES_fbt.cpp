@@ -31,17 +31,13 @@ DEFINE_GENERIC_FIRMWARE_FB(GEN_ARRAY2VALUES, g_nStringIdGEN_ARRAY2VALUES)
 const CStringDictionary::TStringId GEN_ARRAY2VALUES::scmDataInputNames[] = { g_nStringIdIN };
 
 const CStringDictionary::TStringId GEN_ARRAY2VALUES::scmEventInputNames[] = { g_nStringIdREQ };
+const CStringDictionary::TStringId GEN_ARRAY2VALUES::scmEventInputTypeIds[] = {g_nStringIdEvent};
 
 const CStringDictionary::TStringId GEN_ARRAY2VALUES::scmEventOutputNames[] = { g_nStringIdCNF };
+const CStringDictionary::TStringId GEN_ARRAY2VALUES::scmEventOutputTypeIds[] = {g_nStringIdEvent};
 
 GEN_ARRAY2VALUES::GEN_ARRAY2VALUES(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
-    CGenFunctionBlock<CFunctionBlock>(paContainer, paInstanceNameId), mDataOutputNames(nullptr), mDataOutputTypeIds(nullptr), mDataInputTypeIds(nullptr), mDOutputs(0), mValueTypeID(CStringDictionary::scmInvalidStringId){
-}
-
-GEN_ARRAY2VALUES::~GEN_ARRAY2VALUES(){
-  delete[] mDataOutputNames;
-  delete[] mDataInputTypeIds;
-  delete[] mDataOutputTypeIds;
+    CGenFunctionBlock<CFunctionBlock>(paContainer, paInstanceNameId) {
 }
 
 void GEN_ARRAY2VALUES::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
@@ -80,7 +76,7 @@ bool GEN_ARRAY2VALUES::createInterfaceSpec(const char *paConfigString, SFBInterf
     if(nullptr != dTypePos){
       //there is a number and a data type of inputs within the typename
       mDOutputs = static_cast<size_t>(forte::core::util::strtoul(dNumberPos, nullptr, 10));
-      mValueTypeID = CStringDictionary::getInstance().getId(++dTypePos);
+      mValueTypeID = CStringDictionary::getId(++dTypePos);
     }
     else{
       mValueTypeID = CStringDictionary::scmInvalidStringId;
@@ -93,18 +89,17 @@ bool GEN_ARRAY2VALUES::createInterfaceSpec(const char *paConfigString, SFBInterf
 
   if(mValueTypeID != CStringDictionary::scmInvalidStringId && mDOutputs >= 2){
     //create the data outputs
-    mDataOutputNames = new CStringDictionary::TStringId[mDOutputs];
-    mDataOutputTypeIds = new CStringDictionary::TStringId[mDOutputs];
+    mDataOutputNames = std::make_unique<CStringDictionary::TStringId[]>(mDOutputs);
+    mDataOutputTypeIds = std::make_unique<CStringDictionary::TStringId[]>(mDOutputs);
 
     char doNames[cgIdentifierLength] = { "OUT_" };
     for(size_t doIndex = 0; doIndex < mDOutputs; ++doIndex){
       forte_snprintf(&(doNames[4]), 8 - 4, "%i", doIndex + 1);
-      mDataOutputNames[doIndex] = CStringDictionary::getInstance().insert(doNames);
+      mDataOutputNames[doIndex] = CStringDictionary::insert(doNames);
       mDataOutputTypeIds[doIndex] = mValueTypeID;
     }
 
     //create data input type
-    mDataInputTypeIds = new CStringDictionary::TStringId[3];
     mDataInputTypeIds[0] = g_nStringIdARRAY;
     mDataInputTypeIds[1] = static_cast<CStringDictionary::TStringId>(mDOutputs);
     mDataInputTypeIds[2] = mValueTypeID;
@@ -116,10 +111,10 @@ bool GEN_ARRAY2VALUES::createInterfaceSpec(const char *paConfigString, SFBInterf
     paInterfaceSpec.mEONames = scmEventOutputNames;
     paInterfaceSpec.mNumDIs = 1;
     paInterfaceSpec.mDINames = scmDataInputNames;
-    paInterfaceSpec.mDIDataTypeNames = mDataInputTypeIds;
+    paInterfaceSpec.mDIDataTypeNames = mDataInputTypeIds.data();
     paInterfaceSpec.mNumDOs = mDOutputs;
-    paInterfaceSpec.mDONames = mDataOutputNames;
-    paInterfaceSpec.mDODataTypeNames = mDataOutputTypeIds;
+    paInterfaceSpec.mDONames = mDataOutputNames.get();
+    paInterfaceSpec.mDODataTypeNames = mDataOutputTypeIds.get();
     return true;
   }
 

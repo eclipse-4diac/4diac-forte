@@ -29,7 +29,7 @@ CIEC_ANY *CIEC_STRUCT::getMemberNamed(CStringDictionary::TStringId paMemberNameI
 }
 
 CIEC_ANY *CIEC_STRUCT::getMemberNamed(const char *paMemberName) {
-  CStringDictionary::TStringId elementNameId = CStringDictionary::getInstance().getId(paMemberName);
+  CStringDictionary::TStringId elementNameId = CStringDictionary::getId(paMemberName);
   if (CStringDictionary::scmInvalidStringId != elementNameId) {
     return getMemberNamed(elementNameId);
   }
@@ -114,7 +114,7 @@ CStringDictionary::TStringId CIEC_STRUCT::parseNextElementId(const char *&paRunn
   const char *identifierEnd = std::strpbrk(paRunner, " :)");
   if (identifierEnd) {
     paRunner = identifierEnd;
-    result = CStringDictionary::getInstance().getId(identifierStart,
+    result = CStringDictionary::getId(identifierStart,
                                                     static_cast<size_t>(identifierEnd - identifierStart));
   }
   return result;
@@ -133,7 +133,7 @@ int CIEC_STRUCT::toString(char *paValue, size_t paBufferSize) const {
   size_t structSize = getStructSize();
   const CStringDictionary::TStringId *memberNameIds = elementNames();
   for (size_t i = 0; i < structSize; ++i) {
-    const char *memberName = CStringDictionary::getInstance().get(memberNameIds[i]);
+    const char *memberName = CStringDictionary::get(memberNameIds[i]);
     size_t memberNameSize = std::strlen(memberName);
     if (memberNameSize + 2 > paBufferSize) {
       return -1;
@@ -173,7 +173,7 @@ size_t CIEC_STRUCT::getToStringBufferSize() const {
   retVal += structSize ? structSize - 1 : 0; //for the commas between the elements
   retVal += structSize * 2; //for the := of each element
   for (size_t i = 0; i < structSize; i++) {
-    retVal += strlen(CStringDictionary::getInstance().get(elementNames()[i])); //element name
+    retVal += strlen(CStringDictionary::get(elementNames()[i])); //element name
     retVal += getMember(i)->getToStringBufferSize() - 1; //length of the element itself. -1 for the included \0 in each element
   }
   return retVal;

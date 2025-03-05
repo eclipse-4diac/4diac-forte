@@ -35,15 +35,17 @@ const CStringDictionary::TStringId FORTE_F_MUL::scmDataOutputTypeIds[] = {g_nStr
 const TDataIOID FORTE_F_MUL::scmEIWith[] = {0, 1, scmWithListDelimiter};
 const TForteInt16 FORTE_F_MUL::scmEIWithIndexes[] = {0};
 const CStringDictionary::TStringId FORTE_F_MUL::scmEventInputNames[] = {g_nStringIdREQ};
+const CStringDictionary::TStringId FORTE_F_MUL::scmEventInputTypeIds[] = {g_nStringIdEvent};
 
 const TDataIOID FORTE_F_MUL::scmEOWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_F_MUL::scmEOWithIndexes[] = {0};
 const CStringDictionary::TStringId FORTE_F_MUL::scmEventOutputNames[] = {g_nStringIdCNF};
+const CStringDictionary::TStringId FORTE_F_MUL::scmEventOutputTypeIds[] = {g_nStringIdEvent};
 
 
 const SFBInterfaceSpec FORTE_F_MUL::scmFBInterfaceSpec = {
-  1, scmEventInputNames, scmEIWith, scmEIWithIndexes,
-  1, scmEventOutputNames, scmEOWith, scmEOWithIndexes,
+  1, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,
+  1, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes,
   2, scmDataInputNames, scmDataInputTypeIds,
   1, scmDataOutputNames, scmDataOutputTypeIds,
   0, nullptr,
@@ -73,8 +75,8 @@ void FORTE_F_MUL::executeEvent(TEventID paEIID, CEventChainExecutionThread *cons
           return func_MUL(paIN1, paIN2);
         }
         DEVLOG_ERROR("Multiplying incompatible types %s and %s\n",
-                     CStringDictionary::getInstance().get(paIN1.getTypeNameID()),
-                     CStringDictionary::getInstance().get(paIN2.getTypeNameID()));
+                     CStringDictionary::get(paIN1.getTypeNameID()),
+                     CStringDictionary::get(paIN2.getTypeNameID()));
         return CIEC_ANY_NUM_VARIANT();
       }, static_cast<CIEC_ANY_NUM_VARIANT::variant&>(var_IN1), 
          static_cast<CIEC_ANY_NUM_VARIANT::variant&>(var_IN2));

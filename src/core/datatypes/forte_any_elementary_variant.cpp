@@ -253,7 +253,7 @@ int CIEC_ANY_ELEMENTARY_VARIANT::toString(char *paValue, size_t paBufferSize) co
       result = value.toString(paValue, paBufferSize);
       break;
     default:
-      const char *typeName = CStringDictionary::getInstance().get(value.getTypeNameID());
+      const char *typeName = CStringDictionary::get(value.getTypeNameID());
       size_t typeNameLength = strlen(typeName);
       if (paBufferSize > typeNameLength + 2) {
         memcpy(paValue, typeName, typeNameLength);
@@ -283,7 +283,7 @@ size_t CIEC_ANY_ELEMENTARY_VARIANT::getToStringBufferSize() const {
       result = value.getToStringBufferSize();
       break;
     default:
-      const char *typeName = CStringDictionary::getInstance().get(value.getTypeNameID());
+      const char *typeName = CStringDictionary::get(value.getTypeNameID());
       size_t typeNameLength = strlen(typeName);
       result = typeNameLength + 1 + value.getToStringBufferSize();
       break;
@@ -304,8 +304,8 @@ int CIEC_ANY_ELEMENTARY_VARIANT::compare(const CIEC_ANY_ELEMENTARY_VARIANT &paVa
           return strcmp(static_cast<commonType>(value).getValue(), static_cast<commonType>(other).getValue());
         } else {
           DEVLOG_ERROR("Comparing incompatible types %s and %s\n",
-                     CStringDictionary::getInstance().get(value.getTypeNameID()),
-                     CStringDictionary::getInstance().get(other.getTypeNameID()));
+                     CStringDictionary::get(value.getTypeNameID()),
+                     CStringDictionary::get(other.getTypeNameID()));
           return -1;
         }
       } else if constexpr (!std::is_same_v<commonType, forte::core::mpl::NullType>) {
@@ -314,8 +314,8 @@ int CIEC_ANY_ELEMENTARY_VARIANT::compare(const CIEC_ANY_ELEMENTARY_VARIANT &paVa
         return (primitiveValue > primitiveOther) - (primitiveValue < primitiveOther);
       } else {
         DEVLOG_ERROR("Comparing incompatible types %s and %s\n",
-                     CStringDictionary::getInstance().get(value.getTypeNameID()),
-                     CStringDictionary::getInstance().get(other.getTypeNameID()));
+                     CStringDictionary::get(value.getTypeNameID()),
+                     CStringDictionary::get(other.getTypeNameID()));
         return -1;
       }
   }, static_cast<const CIEC_ANY_ELEMENTARY_VARIANT::variant&>(paValue), 

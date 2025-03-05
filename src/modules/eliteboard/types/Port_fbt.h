@@ -10,81 +10,88 @@
  *   Jonathan Lainer - Initial implementation.
  *******************************************************************************/
 
-#ifndef _PORT_H_
-#define _PORT_H_
+#pragma once
 
-#include <array>
+#include "funcbloc.h"
 #include "PortAdapter_adp.h"
-#include "forte_array_at.h"
+#include "forte_dword.h"
 #include "forte_wstring.h"
+#include "iec61131_functions.h"
+#include "forte_array_common.h"
+#include "forte_array.h"
+#include "forte_array_fixed.h"
+#include "forte_array_variable.h"
 #include "funcbloc.h"
 
-class FORTE_Port : public CFunctionBlock {
+class FORTE_Port final : public CFunctionBlock {
   DECLARE_FIRMWARE_FB(FORTE_Port)
 
-private:
-  static const CStringDictionary::TStringId scmDataInputNames[];
-  static const CStringDictionary::TStringId scmDataInputTypeIds[];
+  private:
+    static const CStringDictionary::TStringId scmDataInputNames[];
+    static const CStringDictionary::TStringId scmDataInputTypeIds[];
+    static const int scmPortInAdapterAdpNum = 0;
+    static const SAdapterInstanceDef scmAdapterInstances[];
 
-  static const int scmPortInAdapterAdpNum = 0;
+    static const SFBInterfaceSpec scmFBInterfaceSpec;
 
-  static const SAdapterInstanceDef scmAdapterInstances[];
+    void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
-  static const SFBInterfaceSpec scmFBInterfaceSpec;
+    void readInputData(TEventID paEIID) override;
+    void writeOutputData(TEventID paEIID) override;
+    void setInitialValues() override;
 
-  CIEC_WSTRING &st_Pin0() { return *static_cast<CIEC_WSTRING *>(getDI(0)); }
+    // The (maximum) number  of IO pins available on a GPIO port.
+    static constexpr size_t pin_cnt = 16;
+    std::array<CIEC_STRING *, pin_cnt> mRegistered;
 
-  CIEC_WSTRING &st_Pin1() { return *static_cast<CIEC_WSTRING *>(getDI(1)); }
+    void deregister_handles();
+    void register_handles();
 
-  CIEC_WSTRING &st_Pin2() { return *static_cast<CIEC_WSTRING *>(getDI(2)); }
+  public:
+    FORTE_Port(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    bool initialize() override;
 
-  CIEC_WSTRING &st_Pin3() { return *static_cast<CIEC_WSTRING *>(getDI(3)); }
+    CIEC_STRING var_Pin0;
+    CIEC_STRING var_Pin1;
+    CIEC_STRING var_Pin2;
+    CIEC_STRING var_Pin3;
+    CIEC_STRING var_Pin4;
+    CIEC_STRING var_Pin5;
+    CIEC_STRING var_Pin6;
+    CIEC_STRING var_Pin7;
+    CIEC_STRING var_Pin8;
+    CIEC_STRING var_Pin9;
+    CIEC_STRING var_Pin10;
+    CIEC_STRING var_Pin11;
+    CIEC_STRING var_Pin12;
+    CIEC_STRING var_Pin13;
+    CIEC_STRING var_Pin14;
+    CIEC_STRING var_Pin15;
 
-  CIEC_WSTRING &st_Pin4() { return *static_cast<CIEC_WSTRING *>(getDI(4)); }
+    FORTE_PortAdapter var_PortInAdapter;
 
-  CIEC_WSTRING &st_Pin5() { return *static_cast<CIEC_WSTRING *>(getDI(5)); }
+    CDataConnection *conn_Pin0;
+    CDataConnection *conn_Pin1;
+    CDataConnection *conn_Pin2;
+    CDataConnection *conn_Pin3;
+    CDataConnection *conn_Pin4;
+    CDataConnection *conn_Pin5;
+    CDataConnection *conn_Pin6;
+    CDataConnection *conn_Pin7;
+    CDataConnection *conn_Pin8;
+    CDataConnection *conn_Pin9;
+    CDataConnection *conn_Pin10;
+    CDataConnection *conn_Pin11;
+    CDataConnection *conn_Pin12;
+    CDataConnection *conn_Pin13;
+    CDataConnection *conn_Pin14;
+    CDataConnection *conn_Pin15;
 
-  CIEC_WSTRING &st_Pin6() { return *static_cast<CIEC_WSTRING *>(getDI(6)); }
-
-  CIEC_WSTRING &st_Pin7() { return *static_cast<CIEC_WSTRING *>(getDI(7)); }
-
-  CIEC_WSTRING &st_Pin8() { return *static_cast<CIEC_WSTRING *>(getDI(8)); }
-
-  CIEC_WSTRING &st_Pin9() { return *static_cast<CIEC_WSTRING *>(getDI(9)); }
-
-  CIEC_WSTRING &st_Pin10() { return *static_cast<CIEC_WSTRING *>(getDI(10)); }
-
-  CIEC_WSTRING &st_Pin11() { return *static_cast<CIEC_WSTRING *>(getDI(11)); }
-
-  CIEC_WSTRING &st_Pin12() { return *static_cast<CIEC_WSTRING *>(getDI(12)); }
-
-  CIEC_WSTRING &st_Pin13() { return *static_cast<CIEC_WSTRING *>(getDI(13)); }
-
-  CIEC_WSTRING &st_Pin14() { return *static_cast<CIEC_WSTRING *>(getDI(14)); }
-
-  CIEC_WSTRING &st_Pin15() { return *static_cast<CIEC_WSTRING *>(getDI(15)); }
-
-  FORTE_PortAdapter &st_PortInAdapter() {
-    return (*static_cast<FORTE_PortAdapter *>(mAdapters[0]));
-  };
-
-
-  // The (maximum) number  of IO pins available on a GPIO port.
-  static constexpr size_t pin_cnt = 16;
-  std::array<CIEC_WSTRING *, pin_cnt> mRegistered;
-
-  void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
-  void deregister_handles();
-  void register_handles();
-
-
-public:
-  FORTE_Port(const CStringDictionary::TStringId paInstanceNameId,
-             forte::core::CFBContainer &paContainer)
-      : CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId),
-        mRegistered{} {};
-
-  ~FORTE_Port() override = default;
+    CIEC_ANY *getDI(size_t) override;
+    CIEC_ANY *getDO(size_t) override;
+    CAdapter *getAdapterUnchecked(size_t) override;
+    CEventConnection *getEOConUnchecked(TPortId) override;
+    CDataConnection **getDIConUnchecked(TPortId) override;
+    CDataConnection *getDOConUnchecked(TPortId) override;
 };
 
-#endif // _PORT_H_

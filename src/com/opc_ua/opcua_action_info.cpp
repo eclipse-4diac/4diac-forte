@@ -13,8 +13,8 @@
  *******************************************************************************/
 
 #include "opcua_action_info.h"
-#include "../../core/utils/parameterParser.h"
-#include "../../core/cominfra/basecommfb.h"
+#include "core/util/parameterParser.h"
+#include "core/cominfra/basecommfb.h"
 
 const char *const CActionInfo::mActionNames[] = { "READ", "WRITE", "CREATE_METHOD", "CALL_METHOD", "SUBSCRIBE", "CREATE_OBJECT", "CREATE_VARIABLE",
   "DELETE_OBJECT", "DELETE_VARIABLE" };

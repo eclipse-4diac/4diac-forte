@@ -18,7 +18,7 @@
 
 #include "comtypes.h"
 #include "comCallback.h"
-#include "utils/extevhandlerhelper.h"
+#include "core/util/extevhandlerhelper.h"
 
 namespace forte {
   namespace com_infra {

@@ -204,13 +204,13 @@ class CIEC_STRING : public CIEC_ANY_STRING {
 
     int compare(const CIEC_STRING& paValue) const;
 
-    [[deprecated("Don't use this anymore")]]
+    [[deprecated("Don't use this anymore, use c_str() instead")]]
     virtual char* getValue() override {
       DEVLOG_ERROR("Attempt to call getValue dummy function in CIEC_STRING\n");
       return nullptr;
     }
 
-    [[deprecated("Don't use this anymore")]]
+    [[deprecated("Don't use this anymore, use c_str() instead")]]
     virtual const char* getValue() const override {
       DEVLOG_ERROR("Attempt to call const getValue dummy function in CIEC_STRING\n");
       return nullptr;

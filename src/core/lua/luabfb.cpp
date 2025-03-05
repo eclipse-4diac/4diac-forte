@@ -67,7 +67,6 @@ CLuaBFB::CLuaBFB(CStringDictionary::TStringId paInstanceNameId, const CLuaBFBTyp
 
 bool CLuaBFB::initialize() {
   //before calling super we need to configure the interface of the FB
-  setupFBInterface(getFBInterfaceSpec());
   createVarInternals();
   return CGenFunctionBlock<CBasicFB>::initialize();
 }

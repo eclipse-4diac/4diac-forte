@@ -17,7 +17,6 @@
 #include "criticalregion.h"
 #include "resource.h"
 
-#include "../../stdfblib/ita/DEV_MGR.h"
 #include "device.h"
 
 DEFINE_FIRMWARE_FB(FORTE_EC_KILL_ELEM, g_nStringIdEC_KILL_ELEM)
@@ -29,12 +28,14 @@ const CStringDictionary::TStringId FORTE_EC_KILL_ELEM::scmDataOutputTypeIds[] = 
 const TDataIOID FORTE_EC_KILL_ELEM::scmEIWith[] = {1, 2, 0, scmWithListDelimiter};
 const TForteInt16 FORTE_EC_KILL_ELEM::scmEIWithIndexes[] = {0};
 const CStringDictionary::TStringId FORTE_EC_KILL_ELEM::scmEventInputNames[] = {g_nStringIdREQ};
+const CStringDictionary::TStringId FORTE_EC_KILL_ELEM::scmEventInputTypeIds[] = {g_nStringIdEvent};
 const TDataIOID FORTE_EC_KILL_ELEM::scmEOWith[] = {1, 0, scmWithListDelimiter};
 const TForteInt16 FORTE_EC_KILL_ELEM::scmEOWithIndexes[] = {0};
 const CStringDictionary::TStringId FORTE_EC_KILL_ELEM::scmEventOutputNames[] = {g_nStringIdCNF};
+const CStringDictionary::TStringId FORTE_EC_KILL_ELEM::scmEventOutputTypeIds[] = {g_nStringIdEvent};
 const SFBInterfaceSpec FORTE_EC_KILL_ELEM::scmFBInterfaceSpec = {
-  1, scmEventInputNames, scmEIWith, scmEIWithIndexes,
-  1, scmEventOutputNames, scmEOWith, scmEOWithIndexes,
+  1, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,
+  1, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes,
   3, scmDataInputNames, scmDataInputTypeIds,
   2, scmDataOutputNames, scmDataOutputTypeIds,
   0, nullptr,
@@ -78,15 +79,15 @@ void FORTE_EC_KILL_ELEM::executeEvent(TEventID paEIID, CEventChainExecutionThrea
 void FORTE_EC_KILL_ELEM::executeRQST(){
   forte::core::SManagementCMD theCommand;
 
-  theCommand.mDestination = CStringDictionary::getInstance().getId(var_DST.getValue());
-  theCommand.mFirstParam.pushBack(CStringDictionary::getInstance().getId(var_ELEM_NAME.getValue()));
+  theCommand.mDestination = CStringDictionary::getId(var_DST.getValue());
+  theCommand.mFirstParam.push_back(CStringDictionary::getId(var_ELEM_NAME.getValue()));
   theCommand.mCMD = EMGMCommandType::Kill;
 
   EMGMResponse resp = getDevice()->executeMGMCommand(theCommand);
 
   //calculate return value
   var_QO = CIEC_BOOL(resp == EMGMResponse::Ready);
-  const std::string retVal(DEV_MGR::getResponseText(resp));
+  const std::string retVal(forte::mgm_cmd::getResponseText(resp));
   DEVLOG_DEBUG("%s\n", retVal.c_str());
   var_STATUS = CIEC_WSTRING(retVal.c_str());
 }

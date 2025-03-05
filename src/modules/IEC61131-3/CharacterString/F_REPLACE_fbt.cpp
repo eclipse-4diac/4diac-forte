@@ -35,15 +35,17 @@ const CStringDictionary::TStringId FORTE_F_REPLACE::scmDataOutputTypeIds[] = {g_
 const TDataIOID FORTE_F_REPLACE::scmEIWith[] = {0, 1, 2, 3, scmWithListDelimiter};
 const TForteInt16 FORTE_F_REPLACE::scmEIWithIndexes[] = {0};
 const CStringDictionary::TStringId FORTE_F_REPLACE::scmEventInputNames[] = {g_nStringIdREQ};
+const CStringDictionary::TStringId FORTE_F_REPLACE::scmEventInputTypeIds[] = {g_nStringIdEvent};
 
 const TDataIOID FORTE_F_REPLACE::scmEOWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_F_REPLACE::scmEOWithIndexes[] = {0};
 const CStringDictionary::TStringId FORTE_F_REPLACE::scmEventOutputNames[] = {g_nStringIdCNF};
+const CStringDictionary::TStringId FORTE_F_REPLACE::scmEventOutputTypeIds[] = {g_nStringIdEvent};
 
 
 const SFBInterfaceSpec FORTE_F_REPLACE::scmFBInterfaceSpec = {
-  1, scmEventInputNames, scmEIWith, scmEIWithIndexes,
-  1, scmEventOutputNames, scmEOWith, scmEOWithIndexes,
+  1, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,
+  1, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes,
   4, scmDataInputNames, scmDataInputTypeIds,
   1, scmDataOutputNames, scmDataOutputTypeIds,
   0, nullptr,
@@ -76,8 +78,8 @@ void FORTE_F_REPLACE::executeEvent(TEventID paEIID, CEventChainExecutionThread *
             return func_REPLACE(paIN1, paIN2, paP, paL);
           }
           DEVLOG_ERROR("Replacing incompatible types %s and %s\n",
-                       CStringDictionary::getInstance().get(paIN1.getTypeNameID()),
-                       CStringDictionary::getInstance().get(paIN2.getTypeNameID()));
+                       CStringDictionary::get(paIN1.getTypeNameID()),
+                       CStringDictionary::get(paIN2.getTypeNameID()));
           return CIEC_ANY_STRING_VARIANT();
       }, static_cast<CIEC_ANY_STRING_VARIANT::variant&>(var_IN1),
          static_cast<CIEC_ANY_STRING_VARIANT::variant&>(var_IN2),

@@ -11,13 +11,13 @@
  *******************************************************************************/
 
 #include "EliteBoardDeviceController.h"
-#include <handler/EliteBoardDeviceController.h>
-#include <handle/PinHandle.h>
+#include "../handler/EliteBoardDeviceController.h"
+#include "../handle/PinHandle.h"
 
 DEFINE_HANDLER(EliteBoardDeviceController);
 
-EliteBoardDeviceController::EliteBoardDeviceController(CDeviceExecution& paDeviceExecution) 
-: forte::core::io::IODeviceController(paDeviceExecution){
+EliteBoardDeviceController::EliteBoardDeviceController(CDeviceExecution& paDeviceExecution)
+    : forte::core::io::IODeviceController(paDeviceExecution){
 }
 
 EliteBoardDeviceController::~EliteBoardDeviceController() {}

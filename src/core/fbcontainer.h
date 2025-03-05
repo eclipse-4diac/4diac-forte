@@ -32,6 +32,10 @@ namespace forte {
     class CFBContainer{
         template<typename U>
         friend class CInternalFB;
+
+      protected:
+        using NameIterator = forte::core::TNameIdentifier::const_iterator;
+
       public:
         CFBContainer(CStringDictionary::TStringId paContInstanceName, CFBContainer &paParent);
 
@@ -44,7 +48,7 @@ namespace forte {
         }
 
         const char* getInstanceName() const {
-          return CStringDictionary::getInstance().get(mContInstanceName);
+          return CStringDictionary::get(mContInstanceName);
         }
 
         /*!\brief Create a new FB instance of given type and name
@@ -60,7 +64,7 @@ namespace forte {
          * @param paNameList iterator to the name hierarchy the requested function block, if retval is not 0 it will point to the the item which found the FB
          * @return pointer to the requested function block, returns 0 if function block is not in the list
          */
-        virtual CFunctionBlock *getFB(forte::core::TNameIdentifier::CIterator &paNameListIt);
+        virtual CFunctionBlock *getFB(NameIterator &paNameListIt, NameIterator paNameListEnd);
 
         typedef std::vector<CFBContainer *> TFBContainerList;
 
@@ -116,14 +120,14 @@ namespace forte {
          * @param paTypeName      the type name of the FB to be created
          * @return response of the command execution as defined in IEC 61499
          */
-        EMGMResponse createFB(forte::core::TNameIdentifier::CIterator &paNameListIt, CStringDictionary::TStringId paTypeName);
+        EMGMResponse createFB(NameIterator &paNameListIt, NameIterator paNameListEnd, CStringDictionary::TStringId paTypeName);
 
         /*!\brief Delete a FB instance with given name
          *
          * @param paNameListIt    iterator to the current position in the name list for the FB to be deleted (e.g., SubApp1.SubApp2.FBName, FBName2)
          * @return response of the command execution as defined in IEC 61499
          */
-        EMGMResponse deleteFB(forte::core::TNameIdentifier::CIterator &paNameListIt);
+        EMGMResponse deleteFB(NameIterator &paNameListIt, NameIterator paNameListEnd);
 
         /*! get fb contained in this fbcontainer
          *

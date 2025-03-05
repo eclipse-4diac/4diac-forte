@@ -152,7 +152,7 @@ FUNCTION(forte_replace_sourcefile_cpp)
 ENDFUNCTION(forte_replace_sourcefile_cpp)
 
 # Add a new possible timer to be created. Pass an extra variable to be used as 
-# name for the timer handler. If not passed, the default empty string will be used
+# name for the timer handler. If not passed, the default string will be used
 FUNCTION(forte_add_timerhandler CLASSNAME FILENAME) 
     set_property(GLOBAL APPEND PROPERTY FORTE_TIMERHANDLER_CLASS ${CLASSNAME})
     set_property(GLOBAL APPEND PROPERTY FORTE_TIMERHANDLER_FILENAME "${FILENAME}.h")
@@ -219,12 +219,6 @@ FUNCTION(forte_add_architecture)
   ENDFOREACH(ARG)
 ENDFUNCTION(forte_add_architecture)
 
-FUNCTION(forte_add_device)
-  FOREACH(ARG ${ARGV})
-    set_property(GLOBAL APPEND PROPERTY FORTE_DEVICES ${ARG})
-  ENDFOREACH(ARG)
-ENDFUNCTION(forte_add_device)
-
 MACRO(forte_add_network_layer NAME ONOFF CONFIGNAME CLASSNAME FILENAME DESCRIPTION)
 # TODO: parse filename from filename
   set(FORTE_COM_${NAME} ${ONOFF} CACHE BOOL "${DESCRIPTION}")
@@ -241,6 +235,18 @@ MACRO(forte_add_handler CLASSNAME FILENAME)
     set_property(GLOBAL APPEND PROPERTY FORTE_HANDLER_CLASS ${CLASSNAME})
     set_property(GLOBAL APPEND PROPERTY FORTE_HANDLER_FILENAME "${FILENAME}.h")
 ENDMACRO(forte_add_handler)
+
+MACRO(forte_add_ecet CLASSNAME FILENAME ECET_NAME)
+    set_property(GLOBAL APPEND PROPERTY FORTE_ECET_CLASS ${CLASSNAME})
+    set_property(GLOBAL APPEND PROPERTY FORTE_ECET_FILENAME "${FILENAME}.h")
+    set_property(GLOBAL APPEND PROPERTY FORTE_ECET_NAME "${ECET_NAME}")
+ENDMACRO(forte_add_ecet)
+
+MACRO(forte_add_device CLASSNAME FILENAME DEVICE_NAME)
+    set_property(GLOBAL APPEND PROPERTY FORTE_DEVICE_CLASSES ${CLASSNAME})
+    set_property(GLOBAL APPEND PROPERTY FORTE_DEVICE_FILENAMES "${FILENAME}.h")
+    set_property(GLOBAL APPEND PROPERTY FORTE_DEVICE_NAMES "${DEVICE_NAME}")
+ENDMACRO(forte_add_device)
 
 MACRO(forte_add_startup_hook FUNCTION_NAME)
     set_property(GLOBAL APPEND PROPERTY FORTE_STARTUP_HOOK_FUNCTIONS ${FUNCTION_NAME})

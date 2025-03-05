@@ -18,7 +18,6 @@
 #include "resource.h"
 
 #include "device.h"
-#include "../../stdfblib/ita/DEV_MGR.h"
 
 DEFINE_FIRMWARE_FB(FORTE_ST_SET_PARM, g_nStringIdST_SET_PARM)
 
@@ -29,12 +28,14 @@ const CStringDictionary::TStringId FORTE_ST_SET_PARM::scmDataOutputTypeIds[] = {
 const TDataIOID FORTE_ST_SET_PARM::scmEIWith[] = {1, 2, 3, 4, 0, scmWithListDelimiter};
 const TForteInt16 FORTE_ST_SET_PARM::scmEIWithIndexes[] = {0};
 const CStringDictionary::TStringId FORTE_ST_SET_PARM::scmEventInputNames[] = {g_nStringIdREQ};
+const CStringDictionary::TStringId FORTE_ST_SET_PARM::scmEventInputTypeIds[] = {g_nStringIdEvent};
 const TDataIOID FORTE_ST_SET_PARM::scmEOWith[] = {1, 0, scmWithListDelimiter};
 const TForteInt16 FORTE_ST_SET_PARM::scmEOWithIndexes[] = {0};
 const CStringDictionary::TStringId FORTE_ST_SET_PARM::scmEventOutputNames[] = {g_nStringIdCNF};
+const CStringDictionary::TStringId FORTE_ST_SET_PARM::scmEventOutputTypeIds[] = {g_nStringIdEvent};
 const SFBInterfaceSpec FORTE_ST_SET_PARM::scmFBInterfaceSpec = {
-  1, scmEventInputNames, scmEIWith, scmEIWithIndexes,
-  1, scmEventOutputNames, scmEOWith, scmEOWithIndexes,
+  1, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,
+  1, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes,
   5, scmDataInputNames, scmDataInputTypeIds,
   2, scmDataOutputNames, scmDataOutputTypeIds,
   0, nullptr,
@@ -81,9 +82,9 @@ void FORTE_ST_SET_PARM::executeEvent(TEventID paEIID, CEventChainExecutionThread
 
 void FORTE_ST_SET_PARM::executeRQST() {
   forte::core::SManagementCMD theCommand;
-  theCommand.mDestination = CStringDictionary::getInstance().getId(var_DST.getValue());
-  theCommand.mFirstParam.pushBack(CStringDictionary::getInstance().getId(var_ELEM_NAME.getValue()));
-  theCommand.mFirstParam.pushBack(CStringDictionary::getInstance().getId(var_ELEM_DATA_IN.getValue()));
+  theCommand.mDestination = CStringDictionary::getId(var_DST.getValue());
+  theCommand.mFirstParam.push_back(CStringDictionary::getId(var_ELEM_NAME.getValue()));
+  theCommand.mFirstParam.push_back(CStringDictionary::getId(var_ELEM_DATA_IN.getValue()));
   theCommand.mAdditionalParams = func_WSTRING_TO_STRING(var_PARM_VAL).getStorage();
   theCommand.mCMD = EMGMCommandType::Write;
 
@@ -91,7 +92,7 @@ void FORTE_ST_SET_PARM::executeRQST() {
 
   //calculate return value
   var_QO = CIEC_BOOL(resp == EMGMResponse::Ready);
-  const std::string retVal(DEV_MGR::getResponseText(resp));
+  const std::string retVal(forte::mgm_cmd::getResponseText(resp));
   DEVLOG_DEBUG("%s\n", retVal.c_str());
   var_STATUS = CIEC_WSTRING(retVal.c_str());
 }

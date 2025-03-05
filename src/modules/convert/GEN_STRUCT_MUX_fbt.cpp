@@ -23,7 +23,9 @@
 DEFINE_GENERIC_FIRMWARE_FB(GEN_STRUCT_MUX, g_nStringIdGEN_STRUCT_MUX);
 
 const CStringDictionary::TStringId GEN_STRUCT_MUX::scmEventInputNames[] = { g_nStringIdREQ };
+const CStringDictionary::TStringId GEN_STRUCT_MUX::scmEventInputTypeIds[] = {g_nStringIdEvent};
 const CStringDictionary::TStringId GEN_STRUCT_MUX::scmEventOutputNames[] = { g_nStringIdCNF };
+const CStringDictionary::TStringId GEN_STRUCT_MUX::scmEventOutputTypeIds[] = {g_nStringIdEvent};
 
 const CStringDictionary::TStringId GEN_STRUCT_MUX::scmDataOutputNames[] = { g_nStringIdOUT };
 
@@ -59,12 +61,6 @@ void GEN_STRUCT_MUX::copyStructValuesToInputs() {
   }
 }
 
-GEN_STRUCT_MUX::~GEN_STRUCT_MUX(){
-  delete[](getGenInterfaceSpec().mDINames);
-  delete[](getGenInterfaceSpec().mDIDataTypeNames);
-  delete[](getGenInterfaceSpec().mDODataTypeNames);
-}
-
 void GEN_STRUCT_MUX::readInputData(TEventID) {
   for(TPortId i = 0; i < getFBInterfaceSpec().mNumDIs; ++i) {
     readData(i, *mDIs[i], mDIConns[i]);
@@ -86,12 +82,12 @@ bool GEN_STRUCT_MUX::createInterfaceSpec(const char *paConfigString, SFBInterfac
   std::unique_ptr<CIEC_ANY> data(CTypeLib::createDataTypeInstance(structTypeNameId, nullptr));
 
   if(nullptr == data) {
-    DEVLOG_ERROR("[GEN_STRUCT_MUX]: Couldn't create structure of type: %s\n", CStringDictionary::getInstance().get(structTypeNameId));
+    DEVLOG_ERROR("[GEN_STRUCT_MUX]: Couldn't create structure of type: %s\n", CStringDictionary::get(structTypeNameId));
     return false;
   }
 
   if(data->getDataTypeID() != CIEC_ANY::e_STRUCT) {
-    DEVLOG_ERROR("[GEN_STRUCT_MUX]: data type is not a structure: %s\n", CStringDictionary::getInstance().get(structTypeNameId));
+    DEVLOG_ERROR("[GEN_STRUCT_MUX]: data type is not a structure: %s\n", CStringDictionary::get(structTypeNameId));
     return false;
   }
   
@@ -101,32 +97,34 @@ bool GEN_STRUCT_MUX::createInterfaceSpec(const char *paConfigString, SFBInterfac
   const auto structSize = structInstance->getStructSize();
   if(structSize == 0 || structSize >= cgInvalidPortId) { //the structure size must be non zero and less than cgInvalidPortId (maximum number of data input)
     DEVLOG_ERROR("[GEN_STRUCT_MUX]: The structure %s has a size is not within range > 0 and < %u\n",
-                CStringDictionary::getInstance().get(structTypeNameId), cgInvalidPortId);
+                CStringDictionary::get(structTypeNameId), cgInvalidPortId);
     return false;
   }
+  
+  mDiDataTypeNames = std::make_unique<CStringDictionary::TStringId[]>(calcStructTypeNameSize(*structInstance));
+  mDiNames = std::make_unique<CStringDictionary::TStringId[]>(structSize);
 
-  auto* diDataTypeNames = new CStringDictionary::TStringId[calcStructTypeNameSize(*structInstance)];
-  auto* diNames = new CStringDictionary::TStringId[structSize];
-  auto* doDataTypeNames = new CStringDictionary::TStringId[1];
+  mDoDataTypeNames[0] = structTypeNameId;
 
   paInterfaceSpec.mNumEIs = 1;
   paInterfaceSpec.mEINames = scmEventInputNames;
+  paInterfaceSpec.mEITypeNames = scmEventInputTypeIds;
   paInterfaceSpec.mNumEOs = 1;
   paInterfaceSpec.mEONames = scmEventOutputNames;
+  paInterfaceSpec.mEOTypeNames = scmEventOutputTypeIds;
   paInterfaceSpec.mNumDIs = structSize;
-  paInterfaceSpec.mDINames = diNames;
-  paInterfaceSpec.mDIDataTypeNames = diDataTypeNames;
+  paInterfaceSpec.mDINames = mDiNames.get();
+  paInterfaceSpec.mDIDataTypeNames = mDiDataTypeNames.get();
   paInterfaceSpec.mNumDOs = 1;
   paInterfaceSpec.mDONames = scmDataOutputNames;
-  paInterfaceSpec.mDODataTypeNames = doDataTypeNames;
-  doDataTypeNames[0] = structTypeNameId;
+  paInterfaceSpec.mDODataTypeNames = mDoDataTypeNames.data();
 
+  auto diDataTypeNames = mDiDataTypeNames.get();
   for(decltype(paInterfaceSpec.mNumDIs) i = 0; i < paInterfaceSpec.mNumDIs; i++) {
     const auto& member = *structInstance->getMember(i);
-    diNames[i] = structInstance->elementNames()[i];
+    mDiNames[i] = structInstance->elementNames()[i];
     fillDataPointSpec(member, diDataTypeNames);
   }
-  
   return true;
 }
 
@@ -137,7 +135,7 @@ CStringDictionary::TStringId GEN_STRUCT_MUX::getStructNameId(const char *paConfi
     acPos = strchr(acPos, '_');
     if(nullptr != acPos){
       acPos += 2;  //put the position one after the separating number
-      return CStringDictionary::getInstance().getId(acPos);
+      return CStringDictionary::getId(acPos);
     }
   }
   return CStringDictionary::scmInvalidStringId;

@@ -77,8 +77,8 @@ std::string CFBContainer::getFullQualifiedApplicationInstanceName(const char sep
   return result;
 }
 
-EMGMResponse CFBContainer::createFB(forte::core::TNameIdentifier::CIterator &paNameListIt, CStringDictionary::TStringId paTypeName){
-  if(paNameListIt.isLastEntry()){
+EMGMResponse CFBContainer::createFB(NameIterator &paNameListIt, NameIterator paNameListEnd, CStringDictionary::TStringId paTypeName){
+  if (paNameListIt+1 == paNameListEnd) {
     return createFB(*paNameListIt, paTypeName);
   } else if(isDynamicContainer()) {
     //we have more than one name in the fb name list. Find or create the container and hand the create command to this container.
@@ -86,7 +86,7 @@ EMGMResponse CFBContainer::createFB(forte::core::TNameIdentifier::CIterator &paN
     if(childCont != nullptr && childCont->isDynamicContainer()){
       //remove the container from the name list
       ++paNameListIt;
-      return childCont->createFB(paNameListIt, paTypeName);
+      return childCont->createFB(paNameListIt, paNameListEnd, paTypeName);
     }
   }
   return EMGMResponse::InvalidDst;
@@ -110,19 +110,19 @@ EMGMResponse CFBContainer::createFB(CStringDictionary::TStringId paInstanceNameI
   return EMGMResponse::InvalidState;
 }
 
-EMGMResponse CFBContainer::deleteFB(forte::core::TNameIdentifier::CIterator &paNameListIt){
+EMGMResponse CFBContainer::deleteFB(NameIterator &paNameListIt, NameIterator paNameListEnd){
   EMGMResponse retval = EMGMResponse::NoSuchObject;
 
   CStringDictionary::TStringId childName = *paNameListIt;
   TFBContainerList::iterator childIt = getChildrenIterator(childName);
   if(isChild(childIt, childName)){
     CFBContainer *child = *childIt;
-    if(!paNameListIt.isLastEntry()){
+    if (paNameListIt+1 != paNameListEnd) {
       //we have more than one name in the fb name list. Hand the process on to the child if it is a dynamic container
       if(child->isDynamicContainer()){
         //remove the container from the name list
         ++paNameListIt;
-        retval = child->deleteFB(paNameListIt);
+        retval = child->deleteFB(paNameListIt, paNameListEnd);
       }
     } else if(child->isFB()){
       CFunctionBlock *fb = static_cast<CFunctionBlock *>(child);
@@ -149,14 +149,14 @@ CFunctionBlock *CFBContainer::getFB(CStringDictionary::TStringId paFBName) {
 }
 
 
-CFunctionBlock* CFBContainer::getFB(forte::core::TNameIdentifier::CIterator &paNameListIt)  {
-  if(!paNameListIt.isLastEntry()){
+CFunctionBlock* CFBContainer::getFB(NameIterator &paNameListIt, NameIterator paNameListEnd)  {
+  if (paNameListIt+1 != paNameListEnd) {
     //we have more than one name in the fb name list. Find or create the container and hand the create command to this container.
     CFBContainer *childCont = getChild(*paNameListIt);
     if(childCont != nullptr){
       //remove the container from the name list
       ++paNameListIt;
-      return childCont->getFB(paNameListIt);
+      return childCont->getFB(paNameListIt, paNameListEnd);
     }
   }
   return getFB(*paNameListIt);

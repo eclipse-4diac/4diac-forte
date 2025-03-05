@@ -19,8 +19,8 @@
 #include "resource.h"
 #include "device.h"
 #include "ecet.h"
-#include "utils/criticalregion.h"
-#include "utils/string_utils.h"
+#include "core/util/criticalregion.h"
+#include "core/util/string_utils.h"
 
 using namespace std::string_literals;
 using namespace forte::core;
@@ -65,15 +65,15 @@ EMGMResponse CMonitoringHandler::executeMonitoringCommand(SManagementCMD &paComm
 }
 
 CFunctionBlock* CMonitoringHandler::getFB(forte::core::TNameIdentifier &paNameList){
-  forte::core::TNameIdentifier::CIterator runner(paNameList.begin());
-  return mResource.getFB(runner);
+  auto runner = paNameList.cbegin();
+  return mResource.getFB(runner, paNameList.cend());
 }
 
 EMGMResponse CMonitoringHandler::addWatch(forte::core::TNameIdentifier &paNameList){
   EMGMResponse eRetVal = EMGMResponse::NoSuchObject;
 
   CStringDictionary::TStringId portName = paNameList.back();
-  paNameList.popBack();
+  paNameList.pop_back();
   CFunctionBlock *fB = getFB(paNameList);
 
   if(nullptr != fB){
@@ -107,7 +107,7 @@ EMGMResponse CMonitoringHandler::removeWatch(forte::core::TNameIdentifier &paNam
   EMGMResponse eRetVal = EMGMResponse::NoSuchObject;
 
   CStringDictionary::TStringId portName = paNameList.back();
-  paNameList.popBack();
+  paNameList.pop_back();
   CFunctionBlock *fB = getFB(paNameList);
   if(nullptr != fB){
     TFBMonitoringList::Iterator itRefNode = mFBMonitoringList.end(); //needed for deleting the entry from the list
@@ -161,7 +161,7 @@ EMGMResponse CMonitoringHandler::readWatches(std::string &paResponse){
 EMGMResponse CMonitoringHandler::clearForce(forte::core::TNameIdentifier &paNameList){
   EMGMResponse eRetVal = EMGMResponse::NoSuchObject;
   CStringDictionary::TStringId portName = paNameList.back();
-  paNameList.popBack();
+  paNameList.pop_back();
   CFunctionBlock *fB = getFB(paNameList);
 
   if(nullptr != fB){
@@ -177,7 +177,7 @@ EMGMResponse CMonitoringHandler::clearForce(forte::core::TNameIdentifier &paName
 EMGMResponse CMonitoringHandler::triggerEvent(forte::core::TNameIdentifier &paNameList){
   EMGMResponse eRetVal = EMGMResponse::NoSuchObject;
   CStringDictionary::TStringId portName = paNameList.back();
-  paNameList.popBack();
+  paNameList.pop_back();
   CFunctionBlock *fB = getFB(paNameList);
   if(nullptr != fB){
     TEventID eventId = fB->getEIID(portName);
@@ -205,7 +205,7 @@ EMGMResponse CMonitoringHandler::triggerEvent(forte::core::TNameIdentifier &paNa
 EMGMResponse CMonitoringHandler::resetEventCount(forte::core::TNameIdentifier &paNameList){
   EMGMResponse eRetVal = EMGMResponse::NoSuchObject;
   CStringDictionary::TStringId portName = paNameList.back();
-  paNameList.popBack();
+  paNameList.pop_back();
   CFunctionBlock *fB = getFB(paNameList);
   if(nullptr != fB){
     TEventID eventId = fB->getEIID(portName);
@@ -480,7 +480,7 @@ size_t CMonitoringHandler::getExtraSizeForEscapedCharsStruct(const CIEC_STRUCT& 
 void CMonitoringHandler::appendPortTag(std::string &paResponse,
     CStringDictionary::TStringId paPortId){
   paResponse += "<Port name=\""s;
-  paResponse += CStringDictionary::getInstance().get(paPortId);
+  paResponse += CStringDictionary::get(paPortId);
   paResponse += cgClosingXMLTag;
 }
 
@@ -501,11 +501,10 @@ void CMonitoringHandler::appendEventWatch(std::string &paResponse, SEventWatchEn
 }
 
 void CMonitoringHandler::createFullFBName(std::string &paFullName, forte::core::TNameIdentifier &paNameList){
-  for(forte::core::TNameIdentifier::CIterator runner(paNameList.begin()); runner != paNameList.end(); ++runner){
-    paFullName.append(CStringDictionary::getInstance().get(*runner));
-    if(!runner.isLastEntry()){
-      paFullName.append(".");
-    }
+  for (const auto &runner : paNameList) {
+    paFullName.append(CStringDictionary::get(runner));
+    paFullName.append(".");
   }
+  paFullName.pop_back();
 }
 

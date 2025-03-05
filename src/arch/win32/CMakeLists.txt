@@ -85,7 +85,7 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "Win32")
   forte_add_definition("-D_SCL_SECURE_NO_WARNINGS")
   forte_add_definition("-D_CRT_SECURE_NO_WARNINGS")
   forte_add_definition("-D_NO_W32_PSEUDO_MODIFIERS")   #takes care of IN, OUT and OPTIONAL in mingw
-  
+  forte_add_definition("-DFORTE_USE_DEFAULT_NEW_AND_DELETE")
 
   
   if(FORTE_TESTS AND FORTE_USE_TEST_CONFIG_IN_FORTE)

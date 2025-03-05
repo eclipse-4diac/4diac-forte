@@ -41,7 +41,7 @@ CIEC_ANY* CBasicFB::getVar(CStringDictionary::TStringId *paNameList, unsigned in
   CIEC_ANY *poRetVal = CFunctionBlock::getVar(paNameList, paNameListSize);
   if((nullptr == poRetVal) && (1 == paNameListSize)) {
     poRetVal = getInternalVar(*paNameList);
-    if(nullptr == poRetVal && !strcmp("!ECC", CStringDictionary::getInstance().get(*paNameList))) { //TODO consider if this can also be an string ID in a different way
+    if(nullptr == poRetVal && !strcmp("!ECC", CStringDictionary::get(*paNameList))) { //TODO consider if this can also be an string ID in a different way
       poRetVal = &mECCState;
     }
   }
@@ -97,7 +97,7 @@ size_t CBasicFB::getToStringBufferSize() const {
     for (size_t i = 0; i < cmVarInternals->mNumIntVars; ++i) {
         const CIEC_ANY *const variable = getVarInternal(i);
         const CStringDictionary::TStringId nameId = cmVarInternals->mIntVarsNames[i];
-        const char *varName = CStringDictionary::getInstance().get(nameId); 
+        const char *varName = CStringDictionary::get(nameId); 
         bufferSize += strlen(varName) + 4 + variable->getToStringBufferSize();
     }   
   }

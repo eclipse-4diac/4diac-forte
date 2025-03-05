@@ -20,11 +20,13 @@
 #include "../genfb.h"
 #include "forte_any_bit_variant.h"
 
+#include <memory>
+
 class CGenBitBase : public CGenFunctionBlock<CFunctionBlock> {
 
   protected:
     CGenBitBase(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
-    ~CGenBitBase() override;
+    ~CGenBitBase() override = default;
 
     CIEC_ANY_BIT_VARIANT& var_IN(size_t paIndex) {
       return *static_cast<CIEC_ANY_BIT_VARIANT *>(getDI(paIndex));
@@ -38,15 +40,17 @@ class CGenBitBase : public CGenFunctionBlock<CFunctionBlock> {
     static const TEventID scmEventCNFID = 0;
 
   private:
-    CStringDictionary::TStringId *mDataInputNames;
-    CStringDictionary::TStringId *mDataInputTypeIds;
+    std::unique_ptr<CStringDictionary::TStringId[]> mDataInputNames;
+    std::unique_ptr<CStringDictionary::TStringId[]> mDataInputTypeIds;
 
     static const CStringDictionary::TStringId scmDataOutputNames[];
     static const CStringDictionary::TStringId scmDataOutputTypeIds[];
 
     static const CStringDictionary::TStringId scmEventInputNames[];
+    static const CStringDictionary::TStringId scmEventInputTypeIds[];
 
     static const CStringDictionary::TStringId scmEventOutputNames[];
+    static const CStringDictionary::TStringId scmEventOutputTypeIds[];
 
     void readInputData(TEventID paEI) override;
     void writeOutputData(TEventID paEO) override;

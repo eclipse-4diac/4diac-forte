@@ -17,15 +17,14 @@
 #include "ForteBootFileLoader.h"
 #include "../../arch/devlog.h"
 #include "../../../src/core/datatypes/forte_string.h"
-#include "IBootFileCallback.h"
 #include "mgmcmd.h"
 #include "mgmcmdstruct.h"
 #include "../../core/device.h"
 
 char* gCommandLineBootFile = nullptr;
 
-ForteBootFileLoader::ForteBootFileLoader(IBootFileCallback &paCallback) : mBootfile(nullptr), mCallback(paCallback), mNeedsExit(false){
-  openBootFile();
+ForteBootFileLoader::ForteBootFileLoader(BootFileCallback paCallback, std::optional<std::string> paPathToFile) : mCallback(paCallback) {
+  openBootFile(paPathToFile);
 }
 
 ForteBootFileLoader::~ForteBootFileLoader() {
@@ -35,23 +34,29 @@ ForteBootFileLoader::~ForteBootFileLoader() {
   }
 }
 
-bool ForteBootFileLoader::openBootFile() {
+bool ForteBootFileLoader::openBootFile(std::optional<std::string> paPathToFile) {
   bool retVal = false;
   std::string bootFileName;
-  if(gCommandLineBootFile) {
-    DEVLOG_INFO("Using provided bootfile location set in the command line: %s\n", gCommandLineBootFile);
-    bootFileName = std::string(gCommandLineBootFile);
+  if(paPathToFile.has_value()){
+    bootFileName = paPathToFile.value();
+    DEVLOG_INFO("Using provided bootfile location passed as parameter: %s\n", bootFileName.c_str());
   } else {
-    // select provided or default boot file name
-    char * envBootFileName = forte_getenv("FORTE_BOOT_FILE");
-    if(nullptr != envBootFileName) {
-      DEVLOG_INFO("Using provided bootfile location from environment variable: %s\n", envBootFileName);
-      bootFileName = std::string(envBootFileName);
+    if(gCommandLineBootFile) {
+        DEVLOG_INFO("Using provided bootfile location set in the command line: %s\n", gCommandLineBootFile);
+        bootFileName = std::string(gCommandLineBootFile);
     } else {
-      DEVLOG_INFO("Using provided bootfile location set in CMake: %s\n", FORTE_BOOT_FILE_LOCATION);
-      bootFileName = std::string(FORTE_BOOT_FILE_LOCATION);
+      // select provided or default boot file name
+      char * envBootFileName = forte_getenv("FORTE_BOOT_FILE");
+      if(nullptr != envBootFileName) {
+        DEVLOG_INFO("Using provided bootfile location from environment variable: %s\n", envBootFileName);
+        bootFileName = std::string(envBootFileName);
+      } else {
+        DEVLOG_INFO("Using provided bootfile location set in CMake: %s\n", FORTE_BOOT_FILE_LOCATION);
+        bootFileName = std::string(FORTE_BOOT_FILE_LOCATION);
+      }
     }
   }
+  
 
   // check if we finally have a boot file name
   if(bootFileName.empty()){
@@ -92,7 +97,7 @@ LoadBootResult ForteBootFileLoader::loadBootFile(){
         std::string destination(line.substr(0, sepPosition));
         char *commandBuffer = new char[command.length() + 1]{};
         strcpy(commandBuffer, command.c_str());
-        if(!mCallback.executeCommand(destination.c_str(), commandBuffer)) {
+        if(!mCallback(destination.c_str(), commandBuffer)) {
           //command was not successful
           DEVLOG_ERROR("Boot file command could not be executed. Line: %d: %s\n", nLineCount, commandBuffer);
           eResp = EXTERNAL_ERROR;

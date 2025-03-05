@@ -14,7 +14,7 @@
 #include "../util/fileres.h"
 #include <string>
 #include <iostream>
-#include "../../../core/utils/criticalregion.h"
+#include "core/util/criticalregion.h"
 
 namespace CONMELEON {
 

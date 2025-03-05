@@ -19,9 +19,9 @@
 #include <TcpipTcpTask_Functionlist.h>
 #include <TcpipTcpTask_Public.h>
 #include "../../core/fortelist.h"
-#include "../../core/extevhan.h"
-#include "../../core/cominfra/comlayer.h"
-#include "../../core/utils/singlet.h"
+#include "core/extevhan.h"
+#include "core/cominfra/comlayer.h"
+#include "core/util/singlet.h"
 #include "forte_sync.h"
 #include "forte_thread.h"
 

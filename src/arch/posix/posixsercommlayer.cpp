@@ -62,7 +62,7 @@ forte::com_infra::EComResponse CPosixSerCommLayer::recvData(const void *, unsign
       break;
     default:
       //we successfully received data
-      mBufFillSize += nReadCount;
+      mBufFillSize += unsigned(nReadCount);
       mInterruptResp = forte::com_infra::e_ProcessDataOk;
       break;
   }
@@ -75,7 +75,7 @@ forte::com_infra::EComResponse CPosixSerCommLayer::openSerialConnection(const SS
   forte::com_infra::EComResponse eRetVal = forte::com_infra::e_ProcessDataNoSocket;
 
   //as first shot take the serial interface device as param (e.g., /dev/ttyS0 )
-  CFDSelectHandler::TFileDescriptor fileDescriptor = open(paSerialParameters.interfaceName.getValue(), O_RDWR | O_NOCTTY);
+  CFDSelectHandler::TFileDescriptor fileDescriptor = open(paSerialParameters.interfaceName.c_str(), O_RDWR | O_NOCTTY);
 
   if(CFDSelectHandler::scmInvalidFileDescriptor != fileDescriptor){
     tcgetattr(fileDescriptor, &mOldTIO);

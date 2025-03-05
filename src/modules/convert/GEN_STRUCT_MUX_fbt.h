@@ -18,17 +18,27 @@
 #include <genfb.h>
 #include <stdio.h>
 
+#include <memory>
+#include <array>
+
 class GEN_STRUCT_MUX : public CGenFunctionBlock<CFunctionBlock> {
     DECLARE_GENERIC_FIRMWARE_FB(GEN_STRUCT_MUX)
 
   private:
+
+    std::unique_ptr<CStringDictionary::TStringId[]> mDiDataTypeNames;
+    std::unique_ptr<CStringDictionary::TStringId[]> mDiNames;
+
     static const CStringDictionary::TStringId scmDataOutputNames[];
+    std::array<CStringDictionary::TStringId, 1> mDoDataTypeNames;
 
     static const TEventID scmEventREQID = 0;
     static const CStringDictionary::TStringId scmEventInputNames[];
+    static const CStringDictionary::TStringId scmEventInputTypeIds[];
 
     static const TEventID scmEventCNFID = 0;
     static const CStringDictionary::TStringId scmEventOutputNames[];
+    static const CStringDictionary::TStringId scmEventOutputTypeIds[];
 
     void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
@@ -49,7 +59,7 @@ class GEN_STRUCT_MUX : public CGenFunctionBlock<CFunctionBlock> {
 
     GEN_STRUCT_MUX(const GEN_STRUCT_MUX &paOther) = delete;
     GEN_STRUCT_MUX(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
-    ~GEN_STRUCT_MUX() override;
+    ~GEN_STRUCT_MUX() override = default;
 
     static CStringDictionary::TStringId getStructNameId(const char *paConfigString);
 

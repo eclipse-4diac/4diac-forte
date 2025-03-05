@@ -17,7 +17,7 @@
 
 #include "forte_any.h"
 #include <ctype.h>
-#include "../utils/string_utils.h"
+#include "core/util/string_utils.h"
 #include <map>
 
 /*!\ingroup COREDTS IIEC_ANY_ELEMENTARY represents the elementary data types according to

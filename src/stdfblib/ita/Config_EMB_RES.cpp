@@ -22,8 +22,8 @@ const CStringDictionary::TStringId Config_EMB_RES::scmVarInputNameIds[] = {g_nSt
 const CStringDictionary::TStringId Config_EMB_RES::scmDIDataTypeIds[] = {g_nStringIdWSTRING};
 
 const SFBInterfaceSpec Config_EMB_RES::scmFBInterfaceSpec = {
-  0, nullptr, nullptr, nullptr,
-  0, nullptr, nullptr, nullptr,
+  0, nullptr, nullptr, nullptr, nullptr,
+  0, nullptr, nullptr, nullptr, nullptr,
   1, scmVarInputNameIds, scmDIDataTypeIds,
   0, nullptr, nullptr,
   0, nullptr,
@@ -33,7 +33,8 @@ const SFBInterfaceSpec Config_EMB_RES::scmFBInterfaceSpec = {
 Config_EMB_RES::Config_EMB_RES(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paDevice) :
     CResource(paDevice, scmFBInterfaceSpec, paInstanceNameId),
     fb_START(g_nStringIdSTART, *this),
-    var_OPCUA_Namespace(){
+    var_OPCUA_Namespace(),
+    conn_opcua_namespace(nullptr) {
 }
 
 Config_EMB_RES::~Config_EMB_RES() = default;
@@ -52,6 +53,9 @@ CIEC_ANY *Config_EMB_RES::getDI(const size_t paIndex) {
   return nullptr;
 }
 
-CDataConnection **Config_EMB_RES::getDIConUnchecked(const TPortId) {
+CDataConnection **Config_EMB_RES::getDIConUnchecked(const TPortId paIndex) {
+  switch(paIndex) {
+    case 0: return &conn_opcua_namespace;
+  }
   return nullptr;
 }

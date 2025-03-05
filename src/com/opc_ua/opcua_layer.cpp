@@ -62,15 +62,19 @@ EComResponse COPC_UA_Layer::openConnection(char *paLayerParameter) {
       } else {
         return response;
       }
-      
       CActionInfo::UA_ActionType action = mActionInfo->getAction();
       mStructObjectHelper = std::make_unique<COPC_UA_ObjectStruct_Helper>(*this, mHandler);
-      if(COPC_UA_ObjectStruct_Helper::isStructType(*this, isPublisher) && mStructObjectHelper->checkStructTypeConnection(*mActionInfo, isPublisher) && (CActionInfo::eWrite == action || CActionInfo::eRead == action) ) {
+      if(COPC_UA_ObjectStruct_Helper::isStructType(*this, isPublisher) && (CActionInfo::eWrite == action || CActionInfo::eRead == action) ) {
         mIsObjectNodeStruct = true;
-        response = mStructObjectHelper->createObjectNode(*mActionInfo, isPublisher);
+        CIEC_ANY** apoDataPorts = isPublisher ? getCommFB()->getSDs() : getCommFB()->getRDs();
+        CIEC_STRUCT& structType = static_cast<CIEC_STRUCT&>(apoDataPorts[0]->unwrap());
+        if(!mStructObjectHelper->checkStructTypeConnection(*mActionInfo, structType)) {
+          return response;
+        }
+        response = mStructObjectHelper->createObjectNode(*mActionInfo, structType);
         if(!isPublisher && (response == e_InitOk)) {
           CCriticalRegion criticalRegion(mRDBufferMutex);
-          mRDBuffer = mStructObjectHelper->initializeRDBuffer();
+          mRDBuffer = mStructObjectHelper->initializeRDBuffer(structType);
         }
       }
     }   
@@ -155,8 +159,9 @@ EComResponse COPC_UA_Layer::sendData(void *, unsigned int) {
 
 EComResponse COPC_UA_Layer::processInterrupt() {
   CCriticalRegion criticalRegion(mRDBufferMutex);
-  if(mIsObjectNodeStruct) { 
-    COPC_UA_ObjectStruct_Helper::setMemberValues(getCommFB()->getRDs(), mRDBuffer);
+  if(mIsObjectNodeStruct) {
+    CIEC_STRUCT& structType = static_cast<CIEC_STRUCT&>(getCommFB()->getRDs()[0]->unwrap());
+    COPC_UA_ObjectStruct_Helper::setMemberValues(structType, mRDBuffer);
   } else {
     for(size_t i = 0; i < getCommFB()->getNumRD(); ++i) {
       getCommFB()->getRDs()[i]->setValue(*mRDBuffer[i]);
@@ -195,12 +200,12 @@ bool COPC_UA_Layer::checkPortConnectionInfo(unsigned int paPortIndex, bool paIsS
   const CDataConnection *localPortConnection = getLocalPortConnection(paPortIndex, paIsSD);
   if(!localPortConnection) {
     DEVLOG_ERROR("[OPC UA LAYER]: Got invalid port connection on FB %s at port %s. It must be connected to another FB.\n", getCommFB()->getInstanceName(),
-      CStringDictionary::getInstance().get(localPortNameId));
+      CStringDictionary::get(localPortNameId));
     return false;
   }
 
   if(!localPortConnection->isConnected()) {
-    DEVLOG_ERROR("[OPC UA LAYER]: Connection %s of FB %s is not connected to anything.\n", CStringDictionary::getInstance().get(localPortNameId),
+    DEVLOG_ERROR("[OPC UA LAYER]: Connection %s of FB %s is not connected to anything.\n", CStringDictionary::get(localPortNameId),
       getCommFB()->getInstanceName());
     return false;
   }
@@ -210,7 +215,7 @@ bool COPC_UA_Layer::checkPortConnectionInfo(unsigned int paPortIndex, bool paIsS
   if(!COPC_UA_Helper::getOPCUATypeFromAny(remoteType)) {
     if(!COPC_UA_ObjectStruct_Helper::isStructType(*this, paIsSD)) {
       DEVLOG_ERROR("[OPC UA LAYER]: Invalid  type %d in FB %s at connection %s\n", remoteType.getDataTypeID(), getCommFB()->getInstanceName(),
-      CStringDictionary::getInstance().get(localPortNameId));
+      CStringDictionary::get(localPortNameId));
     }
     return false;
   }

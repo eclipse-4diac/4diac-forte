@@ -25,7 +25,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <devlog.h>
-#include "core/utils/string_utils.h"
+#include "core/util/string_utils.h"
 
 using namespace forte::com_infra;
 
@@ -40,10 +40,6 @@ CBaseCommFB::CBaseCommFB(const CStringDictionary::TStringId paInstanceNameId, fo
 
 CBaseCommFB::~CBaseCommFB() {
   closeConnection();
-  delete[](getFBInterfaceSpec().mDINames);
-  delete[](getFBInterfaceSpec().mDIDataTypeNames);
-  delete[](getFBInterfaceSpec().mDONames);
-  delete[](getFBInterfaceSpec().mDODataTypeNames);
 }
 
 EMGMResponse CBaseCommFB::changeExecutionState(EMGMCommandType paCommand) {

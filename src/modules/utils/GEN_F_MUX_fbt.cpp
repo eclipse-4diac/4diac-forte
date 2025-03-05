@@ -30,26 +30,10 @@
 DEFINE_GENERIC_FIRMWARE_FB(GEN_F_MUX, g_nStringIdGEN_F_MUX);
 
 const CStringDictionary::TStringId GEN_F_MUX::scmEventOutputNames[] = { g_nStringIdEO };
+const CStringDictionary::TStringId GEN_F_MUX::scmEventOutputTypeIds[] = {g_nStringIdEvent};
 
 GEN_F_MUX::GEN_F_MUX(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
-    CGenFunctionBlock<CFunctionBlock>(paContainer, paInstanceNameId),
-  mEventInputNames(nullptr),
-  mDataOutputNames(nullptr),
-  mDataInputNames(nullptr),
-  mDataOutputTypeIds(nullptr),
-  mDataInputTypeIds(nullptr),
-  mEInputs(0),
-  mEOutputs(0),
-  mDInputs(0),
-  mDOutputs(0){
-}
-
-GEN_F_MUX::~GEN_F_MUX(){
-  delete[] mEventInputNames;
-  delete[] mDataInputNames;
-  delete[] mDataInputTypeIds;
-  delete[] mDataOutputNames;
-  delete[] mDataOutputTypeIds;
+    CGenFunctionBlock<CFunctionBlock>(paContainer, paInstanceNameId){
 }
 
 void GEN_F_MUX::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
@@ -173,13 +157,13 @@ bool GEN_F_MUX::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec
   //create the eventInputs
   if(mEInputs < CFunctionBlock::scmMaxInterfaceEvents && mDInputs < CFunctionBlock::scmMaxInterfaceEvents){
     //create the eventInputs
-    mEventInputNames = new CStringDictionary::TStringId[mEInputs];
+    mEventInputNames = std::make_unique<CStringDictionary::TStringId[]>(mEInputs);
 
-    generateGenericInterfacePointNameArray("EI", mEventInputNames,  mEInputs);
+    generateGenericInterfacePointNameArray("EI", mEventInputNames.get(),  mEInputs);
 
     //create the data inputs
-    mDataInputNames = new CStringDictionary::TStringId[mDInputs];
-    mDataInputTypeIds = new CStringDictionary::TStringId[mDInputs];
+    mDataInputNames = std::make_unique<CStringDictionary::TStringId[]>(mDInputs);
+    mDataInputTypeIds = std::make_unique<CStringDictionary::TStringId[]>(mDInputs);
     char diNames[cgIdentifierLength] = { "IN_" };
     size_t di_posIndex = 0;
     for(size_t ei = 0; ei < mEInputs; ei++) {
@@ -187,34 +171,34 @@ bool GEN_F_MUX::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec
       for(size_t di = 0; di < mDOutputs; di++) {
         forte_snprintf(&(diNames[3]), 11 - 3, "%u_%u", ei + 1, di + 1);
         di_posIndex = ei * mDOutputs + di;
-        mDataInputNames[di_posIndex] = CStringDictionary::getInstance().insert(diNames);
+        mDataInputNames[di_posIndex] = CStringDictionary::insert(diNames);
         mDataInputTypeIds[di_posIndex] = g_nStringIdANY;
       }
     }
 
     //create the data outputs
-    mDataOutputNames = new CStringDictionary::TStringId[mDOutputs + 2];
-    mDataOutputTypeIds = new CStringDictionary::TStringId[mDOutputs + 2];
+    mDataOutputNames = std::make_unique<CStringDictionary::TStringId[]>(mDOutputs + 2);
+    mDataOutputTypeIds = std::make_unique<CStringDictionary::TStringId[]>(mDOutputs + 2);
 
     //data outputs for status and QO
-    mDataOutputNames[0] = CStringDictionary::getInstance().insert("QO");
+    mDataOutputNames[0] = CStringDictionary::insert("QO");
     mDataOutputTypeIds[0] = g_nStringIdBOOL;
-    mDataOutputNames[1] = CStringDictionary::getInstance().insert("STATUS");
+    mDataOutputNames[1] = CStringDictionary::insert("STATUS");
     mDataOutputTypeIds[1] = g_nStringIdWSTRING;
 
     generateGenericDataPointArrays("OUT_", &(mDataOutputTypeIds[2]), &(mDataOutputNames[2]), mDOutputs);
 
     //create the interface Specification
     paInterfaceSpec.mNumEIs = mEInputs;
-    paInterfaceSpec.mEINames = mEventInputNames;
+    paInterfaceSpec.mEINames = mEventInputNames.get();
     paInterfaceSpec.mNumEOs = mEOutputs;
     paInterfaceSpec.mEONames = scmEventOutputNames;
     paInterfaceSpec.mNumDIs = mDInputs;
-    paInterfaceSpec.mDINames = mDataInputNames;
-    paInterfaceSpec.mDIDataTypeNames = mDataInputTypeIds;
+    paInterfaceSpec.mDINames = mDataInputNames.get();
+    paInterfaceSpec.mDIDataTypeNames = mDataInputTypeIds.get();
     paInterfaceSpec.mNumDOs = mDOutputs + 2;
-    paInterfaceSpec.mDONames = mDataOutputNames;
-    paInterfaceSpec.mDODataTypeNames = mDataOutputTypeIds;
+    paInterfaceSpec.mDONames = mDataOutputNames.get();
+    paInterfaceSpec.mDODataTypeNames = mDataOutputTypeIds.get();
     return true;
   }
   return false;

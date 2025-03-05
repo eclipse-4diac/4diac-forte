@@ -35,15 +35,17 @@ const CStringDictionary::TStringId FORTE_F_ROL::scmDataOutputTypeIds[] = {g_nStr
 const TDataIOID FORTE_F_ROL::scmEIWith[] = {0, 1, scmWithListDelimiter};
 const TForteInt16 FORTE_F_ROL::scmEIWithIndexes[] = {0};
 const CStringDictionary::TStringId FORTE_F_ROL::scmEventInputNames[] = {g_nStringIdREQ};
+const CStringDictionary::TStringId FORTE_F_ROL::scmEventInputTypeIds[] = {g_nStringIdEvent};
 
 const TDataIOID FORTE_F_ROL::scmEOWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_F_ROL::scmEOWithIndexes[] = {0};
 const CStringDictionary::TStringId FORTE_F_ROL::scmEventOutputNames[] = {g_nStringIdCNF};
+const CStringDictionary::TStringId FORTE_F_ROL::scmEventOutputTypeIds[] = {g_nStringIdEvent};
 
 
 const SFBInterfaceSpec FORTE_F_ROL::scmFBInterfaceSpec = {
-  1, scmEventInputNames, scmEIWith, scmEIWithIndexes,
-  1, scmEventOutputNames, scmEOWith, scmEOWithIndexes,
+  1, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,
+  1, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes,
   2, scmDataInputNames, scmDataInputTypeIds,
   1, scmDataOutputNames, scmDataOutputTypeIds,
   0, nullptr,
@@ -71,8 +73,8 @@ void FORTE_F_ROL::executeEvent(TEventID paEIID, CEventChainExecutionThread *cons
             return func_ROL(paIN, paN);
           }
           DEVLOG_ERROR("Rotating left incompatible types %s and %s\n",
-                       CStringDictionary::getInstance().get(paIN.getTypeNameID()),
-                       CStringDictionary::getInstance().get(paN.getTypeNameID()));
+                       CStringDictionary::get(paIN.getTypeNameID()),
+                       CStringDictionary::get(paN.getTypeNameID()));
           return CIEC_ANY_BIT_VARIANT();
       }, static_cast<CIEC_ANY_BIT_VARIANT::variant&>(var_IN),
          static_cast<CIEC_ANY_INT_VARIANT::variant&>(var_N));

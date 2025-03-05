@@ -13,7 +13,7 @@
 
 #include "forte_c.h"
 
-#include "../utils/mainparam_utils.h"
+#include "arch/utils/mainparam_utils.h"
 #include "forte_architecture.h"
 #include "forte_printer.h"
 #include "forteinstance.h"
@@ -81,7 +81,7 @@ FORTE_STATUS forteStartInstanceGeneric(int argc, char *argv[], TForteInstance* p
   }
 
   const auto ipPort = parseCommandLineArguments(argc, argv);
-  if((0 == strlen(ipPort)) || (nullptr == strchr(ipPort, ':'))){
+  if((ipPort == nullptr) || (0 == strlen(ipPort)) || (nullptr == strchr(ipPort, ':'))){
     listHelp();
     return FORTE_WRONG_PARAMETERS;
   }

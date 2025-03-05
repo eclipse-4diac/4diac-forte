@@ -37,6 +37,9 @@ const CStringDictionary::TStringId CCommFB::scmRequesterEventOutputNameIds[2] = 
 const CStringDictionary::TStringId CCommFB::scmResponderEventInputNameIds[2] = { g_nStringIdINIT, g_nStringIdRSP };
 const CStringDictionary::TStringId CCommFB::scmResponderEventOutputNameIds[2] = { g_nStringIdINITO, g_nStringIdIND };
 
+const CStringDictionary::TStringId CCommFB::scmEventInputTypeIds[2] = {g_nStringIdEInit, g_nStringIdEvent};
+const CStringDictionary::TStringId CCommFB::scmEventOutputTypeIds[2] = {g_nStringIdEvent, g_nStringIdEvent};
+
 CCommFB::CCommFB(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer, forte::com_infra::EComServiceType paCommServiceType) :
   CBaseCommFB(paInstanceNameId, paContainer, paCommServiceType) {
 }
@@ -203,73 +206,69 @@ bool CCommFB::createInterfaceSpec(const char* paConfigString, SFBInterfaceSpec& 
       paInterfaceSpec.mEONames = scmResponderEventOutputNameIds;
     }
   }
+  paInterfaceSpec.mEITypeNames = scmEventInputTypeIds;
+  paInterfaceSpec.mEOTypeNames = scmEventOutputTypeIds;
 
   return true;
 }
 
-void CCommFB::configureDIs(const char* paDIConfigString, SFBInterfaceSpec& paInterfaceSpec) const {
-  CStringDictionary::TStringId* diDataTypeNames;
-  CStringDictionary::TStringId* diNames;
-
+void CCommFB::configureDIs(const char* paDIConfigString, SFBInterfaceSpec& paInterfaceSpec) {
   paInterfaceSpec.mNumDIs = 2;
 
   if (forte::com_infra::e_DataInputs == (forte::com_infra::e_DataInputs & mCommServiceType)) {
       //TODO: Check range of sParamA
       paInterfaceSpec.mNumDIs = paInterfaceSpec.mNumDIs +
                                   static_cast<TPortId>(forte::core::util::strtol(paDIConfigString, nullptr, 10));
-      diDataTypeNames = new CStringDictionary::TStringId[paInterfaceSpec.mNumDIs];
-      diNames = new CStringDictionary::TStringId[paInterfaceSpec.mNumDIs];
+      mDiDataTypeNames = std::make_unique<CStringDictionary::TStringId[]>(paInterfaceSpec.mNumDIs);
+      mDiNames = std::make_unique<CStringDictionary::TStringId[]>(paInterfaceSpec.mNumDIs);
 
-      generateGenericDataPointArrays("SD_", &(diDataTypeNames[2]), &(diNames[2]), paInterfaceSpec.mNumDIs - 2);
+      generateGenericDataPointArrays("SD_", &(mDiDataTypeNames[2]), &(mDiNames[2]), paInterfaceSpec.mNumDIs - 2);
     }
     else {
-      diDataTypeNames = new CStringDictionary::TStringId[paInterfaceSpec.mNumDIs];
-      diNames = new CStringDictionary::TStringId[paInterfaceSpec.mNumDIs];
+      mDiDataTypeNames = std::make_unique<CStringDictionary::TStringId[]>(paInterfaceSpec.mNumDIs);
+      mDiNames = std::make_unique<CStringDictionary::TStringId[]>(paInterfaceSpec.mNumDIs);
     }
-    paInterfaceSpec.mDIDataTypeNames = diDataTypeNames;
-    paInterfaceSpec.mDINames = diNames;
+    paInterfaceSpec.mDIDataTypeNames = mDiDataTypeNames.get();
+    paInterfaceSpec.mDINames = mDiNames.get();
 
-    diDataTypeNames[0] = g_nStringIdBOOL;
-    diNames[0] = g_nStringIdQI;
+    mDiDataTypeNames[0] = g_nStringIdBOOL;
+    mDiNames[0] = g_nStringIdQI;
 #ifdef FORTE_USE_WSTRING_DATATYPE
-    diDataTypeNames[1] = g_nStringIdWSTRING;
+    mDiDataTypeNames[1] = g_nStringIdWSTRING;
 #else //FORTE_USE_WSTRING_DATATYPE
-    diDataTypeNames[1] = g_nStringIdSTRING;
+    mDiDataTypeNames[1] = g_nStringIdSTRING;
 #endif //FORTE_USE_WSTRING_DATATYPE
-    diNames[1] = g_nStringIdID;
+    mDiNames[1] = g_nStringIdID;
 }
 
-void CCommFB::configureDOs(const char* paDOConfigString, SFBInterfaceSpec& paInterfaceSpec) const {
-  CStringDictionary::TStringId* doDataTypeNames;
-  CStringDictionary::TStringId* doNames;
-
+void CCommFB::configureDOs(const char* paDOConfigString, SFBInterfaceSpec& paInterfaceSpec) {
   paInterfaceSpec.mNumDOs = 2;
 
   if(forte::com_infra::e_DataOutputs == (forte::com_infra::e_DataOutputs & mCommServiceType)){
     //TODO: Check range of sParamA
     paInterfaceSpec.mNumDOs = paInterfaceSpec.mNumDOs +
                                 static_cast<TPortId>(forte::core::util::strtol(paDOConfigString, nullptr, 10));
-    doDataTypeNames  = new CStringDictionary::TStringId[paInterfaceSpec.mNumDOs];
-    doNames = new CStringDictionary::TStringId[paInterfaceSpec.mNumDOs];
+    mDoDataTypeNames = std::make_unique<CStringDictionary::TStringId[]>(paInterfaceSpec.mNumDOs);
+    mDoNames = std::make_unique<CStringDictionary::TStringId[]>(paInterfaceSpec.mNumDOs);
 
-    generateGenericDataPointArrays("RD_", &(doDataTypeNames[2]), &(doNames[2]), paInterfaceSpec.mNumDOs - 2);
+    generateGenericDataPointArrays("RD_", &(mDoDataTypeNames[2]), &(mDoNames[2]), paInterfaceSpec.mNumDOs - 2);
   }
   else{
-    doDataTypeNames = new CStringDictionary::TStringId[paInterfaceSpec.mNumDOs];
-    doNames = new CStringDictionary::TStringId[paInterfaceSpec.mNumDOs];
+    mDoDataTypeNames = std::make_unique<CStringDictionary::TStringId[]>(paInterfaceSpec.mNumDOs);
+    mDoNames = std::make_unique<CStringDictionary::TStringId[]>(paInterfaceSpec.mNumDOs);
   }
 
-  paInterfaceSpec.mDONames = doNames;
-  paInterfaceSpec.mDODataTypeNames = doDataTypeNames;
+  paInterfaceSpec.mDONames = mDoNames.get();
+  paInterfaceSpec.mDODataTypeNames = mDoDataTypeNames.get();
 
-  doDataTypeNames[0] = g_nStringIdBOOL;
-  doNames[0] = g_nStringIdQO;
+  mDoDataTypeNames[0] = g_nStringIdBOOL;
+  mDoNames[0] = g_nStringIdQO;
 #ifdef FORTE_USE_WSTRING_DATATYPE
-  doDataTypeNames[1] = g_nStringIdWSTRING;
+  mDoDataTypeNames[1] = g_nStringIdWSTRING;
 #else
-  doDataTypeNames[1] = g_nStringIdSTRING;
+  mDoDataTypeNames[1] = g_nStringIdSTRING;
 #endif
-  doNames[1] = g_nStringIdSTATUS;
+  mDoNames[1] = g_nStringIdSTATUS;
 
 }
 

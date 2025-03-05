@@ -17,7 +17,7 @@
 # include <forte_config.h>
 # include "timerha.h"
 # include "forte_printer.h"
-# include "../core/utils/criticalregion.h"
+# include "core/util/criticalregion.h"
 # include "forte_architecture_time.h"
 # include <cstdlib>
 # include <cstdarg>

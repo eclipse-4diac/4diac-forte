@@ -43,11 +43,11 @@ int CStringIdListSpecBuilder::addString(CStringDictionary::TStringId paString) {
 }
 
 int CStringIdListSpecBuilder::addString(const char *paString) {
-  return addString(CStringDictionary::getInstance().insert(paString));
+  return addString(CStringDictionary::insert(paString));
 }
 
 int CStringIdListSpecBuilder::findString(const char *paString) const {
-  auto nString = CStringDictionary::getInstance().getId(paString);
+  auto nString = CStringDictionary::getId(paString);
   if (nString == CStringDictionary::scmInvalidStringId) {
     return -1;
   }
@@ -100,7 +100,7 @@ std::pair<int, int> CDataSpecBuilderBase::addDataRange(const char *paPrefix, int
 }
 
 std::pair<int, int> CDataSpecBuilderBase::addDataRange(const char *paPrefix, int paRangeSize, const char *paTypeName) {
-  return addDataRange(paPrefix, paRangeSize, CStringDictionary::getInstance().insert(paTypeName));
+  return addDataRange(paPrefix, paRangeSize, CStringDictionary::insert(paTypeName));
 }
 
 std::pair<int, int> CDataSpecBuilderBase::addDataRange(const char *paPrefix, int paRangeSize, CStringDictionary::TStringId paTypeName) {
@@ -221,11 +221,9 @@ void CAdapterSpecBuilder::addAdapter(const CStringDictionary::TStringId paName, 
 }
 
 void CAdapterSpecBuilder::addAdapter(const char *paName, const char *paType, bool paIsPlug) {
-  auto &str_dict = CStringDictionary::getInstance();
-
   addAdapter(
-      str_dict.insert(paName),
-      str_dict.insert(paType),
+      CStringDictionary::insert(paName),
+      CStringDictionary::insert(paType),
       paIsPlug
   );
 }
@@ -250,12 +248,15 @@ bool CIfSpecBuilder::build(CMixedStorage &paStorage, SFBInterfaceSpec &paInterfa
 
   std::size_t storageSize =
     mEI.calcStorageSize() + mEO.calcStorageSize() +
+    mEITypes.calcStorageSize() + mEOTypes.calcStorageSize() +
     mDI.calcStorageSize() + mDO.calcStorageSize() +
     mIWith.calcStorageSize(mEI.getNumEvents()) + mOWith.calcStorageSize(mEO.getNumEvents()) +
     mAdapter.calcStorageSize();
   paStorage.reserve(storageSize);
   std::tie(paInterfaceSpec.mEINames, paInterfaceSpec.mNumEIs) = mEI.build(paStorage);
   std::tie(paInterfaceSpec.mEONames, paInterfaceSpec.mNumEOs) = mEO.build(paStorage);
+  std::tie(paInterfaceSpec.mEITypeNames, paInterfaceSpec.mNumEIs) = mEITypes.build(paStorage);
+  std::tie(paInterfaceSpec.mEOTypeNames, paInterfaceSpec.mNumEOs) = mEOTypes.build(paStorage);
   std::tie(
     paInterfaceSpec.mDINames, paInterfaceSpec.mDIDataTypeNames,
     paInterfaceSpec.mNumDIs
@@ -273,5 +274,5 @@ bool CIfSpecBuilder::build(CMixedStorage &paStorage, SFBInterfaceSpec &paInterfa
 }
 
 bool CIfSpecBuilder::isGood() const {
-  return mEI.isGood() && mEO.isGood() && mDI.isGood() && mDO.isGood() && mIWith.isGood() && mOWith.isGood() && mIsGood;
+  return mEI.isGood() && mEO.isGood() && mDI.isGood() && mDO.isGood() && mIWith.isGood() && mOWith.isGood() && mEOTypes.isGood() && mEITypes.isGood() && mIsGood;
 }

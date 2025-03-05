@@ -147,7 +147,7 @@ class CTypeLib{
 
       CStringDictionary::TStringId getTypeNameId() const { return mTypeNameId; };
 
-      const char * getTypeName() const { return CStringDictionary::getInstance().get(getTypeNameId()); };
+      const char * getTypeName() const { return CStringDictionary::get(getTypeNameId()); };
   };
 
   class CSpecTypeEntry : public CTypeEntry {

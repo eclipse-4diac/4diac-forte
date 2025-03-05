@@ -4,7 +4,8 @@
  *** terms of the Eclipse Public License 2.0 which is available at  
  *** http://www.eclipse.org/legal/epl-2.0.  
  ***  
- *** SPDX-License-Identifier: EPL-2.0  
+ *** SPDX-License-Identifier: EPL-2.0 
+ *** FORTE Library Element
  ***
  *** This file was generated using the 4DIAC FORTE Export Filter V1.0.x NG!
  ***
@@ -38,12 +39,14 @@ const CStringDictionary::TStringId FORTE_signalprocessing__DualHysteresis::scmDa
 const TDataIOID FORTE_signalprocessing__DualHysteresis::scmEIWith[] = {0, scmWithListDelimiter, 0, 1, 2, 4, 3, scmWithListDelimiter};
 const TForteInt16 FORTE_signalprocessing__DualHysteresis::scmEIWithIndexes[] = {0, 2};
 const CStringDictionary::TStringId FORTE_signalprocessing__DualHysteresis::scmEventInputNames[] = {g_nStringIdINIT, g_nStringIdREQ};
+const CStringDictionary::TStringId FORTE_signalprocessing__DualHysteresis::scmEventInputTypeIds[] = {g_nStringIdEInit, g_nStringIdEvent};
 const TDataIOID FORTE_signalprocessing__DualHysteresis::scmEOWith[] = {0, scmWithListDelimiter, 1, 2, scmWithListDelimiter};
 const TForteInt16 FORTE_signalprocessing__DualHysteresis::scmEOWithIndexes[] = {0, 2};
 const CStringDictionary::TStringId FORTE_signalprocessing__DualHysteresis::scmEventOutputNames[] = {g_nStringIdINITO, g_nStringIdCNF};
+const CStringDictionary::TStringId FORTE_signalprocessing__DualHysteresis::scmEventOutputTypeIds[] = {g_nStringIdEInit, g_nStringIdEvent};
 const SFBInterfaceSpec FORTE_signalprocessing__DualHysteresis::scmFBInterfaceSpec = {
-  2, scmEventInputNames, scmEIWith, scmEIWithIndexes,
-  2, scmEventOutputNames, scmEOWith, scmEOWithIndexes,
+  2, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,
+  2, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes,
   5, scmDataInputNames, scmDataInputTypeIds,
   3, scmDataOutputNames, scmDataOutputTypeIds,
   0, nullptr,
@@ -52,9 +55,14 @@ const SFBInterfaceSpec FORTE_signalprocessing__DualHysteresis::scmFBInterfaceSpe
 
 FORTE_signalprocessing__DualHysteresis::FORTE_signalprocessing__DualHysteresis(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CBasicFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, nullptr),
+    var_QI(0_BOOL),
     var_MI(0.5_REAL),
     var_DEAD(0.1_REAL),
     var_HYSTERESIS(0.1_REAL),
+    var_INPUT(0_REAL),
+    var_QO(0_BOOL),
+    var_DO_UP(0_BOOL),
+    var_DO_DOWN(0_BOOL),
     var_conn_QO(var_QO),
     var_conn_DO_UP(var_DO_UP),
     var_conn_DO_DOWN(var_DO_DOWN),

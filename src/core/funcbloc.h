@@ -41,8 +41,6 @@ class CAdapter;
 class CTimerHandler;
 class CDevice;
 
-typedef CFunctionBlock *TFunctionBlockPtr;
-
 namespace forte {
   namespace core {
     class CFBContainer;
@@ -62,6 +60,8 @@ namespace forte {
 typedef CAdapter *TAdapterPtr;
 
 typedef TPortId TDataIOID; //!< \ingroup CORE Type for holding an data In- or output ID
+
+typedef CStringDictionary::TStringId TEventTypeID;
 
 /*!\ingroup CORE\brief Structure to hold all data of adapters instantiated in the function block.
  */
@@ -84,10 +84,12 @@ struct SCFB_FBInstanceData {
 struct SFBInterfaceSpec {
     TEventID mNumEIs; //!< Number of event inputs
     const CStringDictionary::TStringId *mEINames; //!< List of the event input names
+    const CStringDictionary::TStringId *mEITypeNames; //!< List of the event input types
     const TDataIOID *mEIWith; //!< Input WITH reference list. This list contains an array of input data ids. For each input event the associated data inputs are listed. The start for each input event is specified in the mEIWithIndexes field. The end is defined by the value scmWithListDelimiter.
     const TForteInt16 *mEIWithIndexes; //!< Index list for each input event. This list gives for each input event an entry in the mEIWith. Input events are numbered starting from 0. if the input event has no assciated data inputs -1 is the entry at this event inputs postion.
     TEventID mNumEOs; //!< Number of event outputs
     const CStringDictionary::TStringId *mEONames; //!< List of the event output names
+    const CStringDictionary::TStringId *mEOTypeNames; //!< List of the event output types
     const TDataIOID *mEOWith; //!< Output WITH reference list. This list contains an array of output data ids. For each output event the associated data outputs are listed. The start for each output event is specified in the mEOWithIndexes field. The end is defined by the value scmWithListDelimiter.
     const TForteInt16 *mEOWithIndexes; //!< Index list for each output event. This list gives for each output event an entry in the mEOWith. Output events are numbered starting from 0. If the output event has no assciated data outputs -1 is the entry at this event outputs postion. Additionally at the postion mNumEOs in this list an index to an own list in the mEOWith list is stored specifying all output data port that are not associated with any output event. That values will be updated on every FB invocation.
     TPortId mNumDIs; //!< Number of data inputs
@@ -105,6 +107,9 @@ struct SFBInterfaceSpec {
 /*!\ingroup CORE\brief Base class for all function blocks.
  */
 class CFunctionBlock : public forte::core::CFBContainer {
+  protected:
+    using CFBContainer::NameIterator;
+
   public:
     constexpr static TDataIOID scmWithListDelimiter = cgInvalidPortId; //!< value identifying the end of a with list
     constexpr static TForteInt16 scmNoDataAssociated = static_cast<TForteInt16>(cgInvalidPortId); //!< value identifying the end of a with list
@@ -143,7 +148,7 @@ class CFunctionBlock : public forte::core::CFBContainer {
     /*!\brief Returns the type name of this FB instance
      */
     const char * getFBTypeName() const {
-      return CStringDictionary::getInstance().get(getFBTypeId());
+      return CStringDictionary::get(getFBTypeId());
     }
 
     /*!\brief Get the ID of a specific event input of the FB.
@@ -163,6 +168,18 @@ class CFunctionBlock : public forte::core::CFBContainer {
     TEventID getEOID(CStringDictionary::TStringId paEONameId) const {
       return static_cast<TEventID>(getPortId(paEONameId, getFBInterfaceSpec().mNumEOs, getFBInterfaceSpec().mEONames));
     }
+
+    /*! \brief Gets the EventTypeID of a specific input event
+     * \param paEIID  StringId of the event name.
+     * \return Returns the EventTypeID of a specific input event
+     */
+    CStringDictionary::TStringId getEIType(TEventID paEIID) const;
+
+    /*! \brief Gets the EventTypeID of a specific output event
+     * \param paEOID  StringId of the event name.
+     * \return Returns the EventTypeID of a specific output event
+    */
+    CStringDictionary::TStringId getEOType(TEventID paEOID) const;
 
     CEventConnection* getEOConnection(CStringDictionary::TStringId paEONameId);
 
@@ -279,7 +296,7 @@ class CFunctionBlock : public forte::core::CFBContainer {
      * \param paExecEnv Event chain execution environment the FB will be executed in (used for adding output events).
      */
     void receiveInputEvent(TEventID paEIID, CEventChainExecutionThread *paExecEnv) {
-      FORTE_TRACE("InputEvent: Function Block (%s) got event: %d (maxid: %d)\n", CStringDictionary::getInstance().get(getInstanceNameId()), paEIID, getFBInterfaceSpec().mNumEIs - 1);
+      FORTE_TRACE("InputEvent: Function Block (%s) got event: %d (maxid: %d)\n", CStringDictionary::get(getInstanceNameId()), paEIID, getFBInterfaceSpec().mNumEIs - 1);
 
       #ifdef FORTE_TRACE_CTF
         traceInputEvent(paEIID);
@@ -384,7 +401,7 @@ class CFunctionBlock : public forte::core::CFBContainer {
      *
      * This allows that also adapters and the internals of a CFB can be monitored.
      */
-    CFunctionBlock *getFB(forte::core::TNameIdentifier::CIterator &paNameListIt) override;
+    CFunctionBlock *getFB(NameIterator &paNameListIt, NameIterator paNameListEnd) override;
 
 #ifdef FORTE_SUPPORT_MONITORING
     TForteUInt32 &getEIMonitorData(TEventID paEIID);
@@ -399,6 +416,25 @@ class CFunctionBlock : public forte::core::CFBContainer {
 #ifdef FORTE_TRACE_CTF
     virtual void traceInstanceData() {}
 #endif //FORTE_TRACE_CTF
+
+    void addInputEventConnection(TEventID paEIID) {
+      if (getFBInterfaceSpec().mEITypeNames != nullptr) {
+        mInputEventConnectionCount[paEIID]++;
+      }
+    }
+
+    void removeInputEventConnection(TEventID paEIID) {
+      if (mInputEventConnectionCount != nullptr && mInputEventConnectionCount[paEIID] > 0) {
+        mInputEventConnectionCount[paEIID]--;
+      }
+    }
+
+    /* !\brief checks if an input event pin is connected
+ *
+ */
+    [[nodiscard]] bool isInputEventConnected(TEventID paEIID) const {
+      return mInputEventConnectionCount != nullptr && mInputEventConnectionCount[paEIID] > 0;
+    }
 
   protected:
 
@@ -590,6 +626,14 @@ class CFunctionBlock : public forte::core::CFBContainer {
 
     const SFBInterfaceSpec &mInterfaceSpec; //!< Pointer to the interface specification
 
+    /*!\brief initialize the data structure which holds connection counts per pin
+    */
+    void setupInputConnectionTrackingData() {
+      if (getFBInterfaceSpec().mEITypeNames != nullptr) {
+        mInputEventConnectionCount = std::make_unique<size_t[]>(getFBInterfaceSpec().mNumEIs);
+      }
+    }
+
 #ifdef FORTE_SUPPORT_MONITORING
     void setupEventMonitoringData();
     void freeEventMonitoringData();
@@ -657,6 +701,10 @@ class CFunctionBlock : public forte::core::CFBContainer {
      * If the runnable object is declared in a device or resource specification it must be set to false.
      */
     bool mDeletable;
+
+    /*!\brief Stores the number of input connections for each event pin
+    */
+    std::unique_ptr<size_t[]> mInputEventConnectionCount;
 
 #ifdef FORTE_SUPPORT_MONITORING
     friend class forte::core::CMonitoringHandler;

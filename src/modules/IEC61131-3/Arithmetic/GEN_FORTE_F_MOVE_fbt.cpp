@@ -28,19 +28,16 @@ const CStringDictionary::TStringId GEN_FORTE_F_MOVE::scmDataOutputNames[] = {g_n
 const TDataIOID GEN_FORTE_F_MOVE::scmEIWith[] = {0, scmWithListDelimiter};
 const TForteInt16 GEN_FORTE_F_MOVE::scmEIWithIndexes[] = {0};
 const CStringDictionary::TStringId GEN_FORTE_F_MOVE::scmEventInputNames[] = {g_nStringIdREQ};
+const CStringDictionary::TStringId GEN_FORTE_F_MOVE::scmEventInputTypeIds[] = {g_nStringIdEvent};
 
 const TDataIOID GEN_FORTE_F_MOVE::scmEOWith[] = {0, scmWithListDelimiter};
 const TForteInt16 GEN_FORTE_F_MOVE::scmEOWithIndexes[] = {0};
 const CStringDictionary::TStringId GEN_FORTE_F_MOVE::scmEventOutputNames[] = {g_nStringIdCNF};
+const CStringDictionary::TStringId GEN_FORTE_F_MOVE::scmEventOutputTypeIds[] = {g_nStringIdEvent};
 
 
 GEN_FORTE_F_MOVE::GEN_FORTE_F_MOVE(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CGenFunctionBlock<CFunctionBlock>(paContainer, paInstanceNameId) {
-}
-
-GEN_FORTE_F_MOVE::~GEN_FORTE_F_MOVE(){
-    delete[](getGenInterfaceSpec().mDIDataTypeNames);
-    delete[](getGenInterfaceSpec().mDODataTypeNames);
 }
 
 void GEN_FORTE_F_MOVE::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
@@ -75,10 +72,8 @@ bool GEN_FORTE_F_MOVE::createInterfaceSpec(const char *paConfigString, SFBInterf
     }
   }
 
-  CStringDictionary::TStringId *diDataTypeNames = new CStringDictionary::TStringId[1];
-  diDataTypeNames[0] = poToCreate->getTypeNameId();
-  CStringDictionary::TStringId *doDataTypeNames = new CStringDictionary::TStringId[1];
-  doDataTypeNames[0] = poToCreate->getTypeNameId();
+  mDiDataTypeNames[0] = poToCreate->getTypeNameId();
+  mDoDataTypeNames[0] = poToCreate->getTypeNameId();
 
   paInterfaceSpec.mNumEIs = 1;
   paInterfaceSpec.mEINames = scmEventInputNames;
@@ -90,10 +85,10 @@ bool GEN_FORTE_F_MOVE::createInterfaceSpec(const char *paConfigString, SFBInterf
   paInterfaceSpec.mEOWithIndexes = scmEOWithIndexes;
   paInterfaceSpec.mNumDIs = 1;
   paInterfaceSpec.mDINames = scmDataInputNames;
-  paInterfaceSpec.mDIDataTypeNames = diDataTypeNames;
+  paInterfaceSpec.mDIDataTypeNames = mDiDataTypeNames.data();
   paInterfaceSpec.mNumDOs = 1;
   paInterfaceSpec.mDONames = scmDataOutputNames;
-  paInterfaceSpec.mDODataTypeNames = doDataTypeNames;
+  paInterfaceSpec.mDODataTypeNames = mDoDataTypeNames.data();
 
   return true;
 }
@@ -105,7 +100,7 @@ CStringDictionary::TStringId GEN_FORTE_F_MOVE::getDataTypeNameId(const char *paC
     acPos = strchr(acPos, '_');
     if(nullptr != acPos){
       acPos += 2;  //put the position one after the separating number
-      return CStringDictionary::getInstance().getId(acPos);
+      return CStringDictionary::getId(acPos);
     }
   }
   return CStringDictionary::scmInvalidStringId;

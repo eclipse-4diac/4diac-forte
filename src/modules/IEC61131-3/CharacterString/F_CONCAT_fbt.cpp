@@ -35,15 +35,17 @@ const CStringDictionary::TStringId FORTE_F_CONCAT::scmDataOutputTypeIds[] = {g_n
 const TDataIOID FORTE_F_CONCAT::scmEIWith[] = {0, 1, scmWithListDelimiter};
 const TForteInt16 FORTE_F_CONCAT::scmEIWithIndexes[] = {0};
 const CStringDictionary::TStringId FORTE_F_CONCAT::scmEventInputNames[] = {g_nStringIdREQ};
+const CStringDictionary::TStringId FORTE_F_CONCAT::scmEventInputTypeIds[] = {g_nStringIdEvent};
 
 const TDataIOID FORTE_F_CONCAT::scmEOWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_F_CONCAT::scmEOWithIndexes[] = {0};
 const CStringDictionary::TStringId FORTE_F_CONCAT::scmEventOutputNames[] = {g_nStringIdCNF};
+const CStringDictionary::TStringId FORTE_F_CONCAT::scmEventOutputTypeIds[] = {g_nStringIdEvent};
 
 
 const SFBInterfaceSpec FORTE_F_CONCAT::scmFBInterfaceSpec = {
-  1, scmEventInputNames, scmEIWith, scmEIWithIndexes,
-  1, scmEventOutputNames, scmEOWith, scmEOWithIndexes,
+  1, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,
+  1, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes,
   2, scmDataInputNames, scmDataInputTypeIds,
   1, scmDataOutputNames, scmDataOutputTypeIds,
   0, nullptr,
@@ -72,8 +74,8 @@ void FORTE_F_CONCAT::executeEvent(TEventID paEIID, CEventChainExecutionThread *c
             return func_CONCAT(paIN1, paIN2);
           }
           DEVLOG_ERROR("Concatenating incompatible types %s and %s\n",
-                       CStringDictionary::getInstance().get(paIN1.getTypeNameID()),
-                       CStringDictionary::getInstance().get(paIN2.getTypeNameID()));
+                       CStringDictionary::get(paIN1.getTypeNameID()),
+                       CStringDictionary::get(paIN2.getTypeNameID()));
           return CIEC_ANY_STRING_VARIANT();
       }, static_cast<CIEC_ANY_STRING_VARIANT::variant&>(var_IN1),
          static_cast<CIEC_ANY_STRING_VARIANT::variant&>(var_IN2));

@@ -22,8 +22,6 @@
 #include "E_T_FF_SR_fbt_gen.cpp"
 #endif
 
-#include "criticalregion.h"
-#include "resource.h"
 #include "forte_bool.h"
 #include "iec61131_functions.h"
 #include "forte_array_common.h"
@@ -41,8 +39,8 @@ const TDataIOID FORTE_E_T_FF_SR::scmEOWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_E_T_FF_SR::scmEOWithIndexes[] = {0};
 const CStringDictionary::TStringId FORTE_E_T_FF_SR::scmEventOutputNames[] = {g_nStringIdEO};
 const SFBInterfaceSpec FORTE_E_T_FF_SR::scmFBInterfaceSpec = {
-  3, scmEventInputNames, nullptr, scmEIWithIndexes,
-  1, scmEventOutputNames, scmEOWith, scmEOWithIndexes,
+  3, scmEventInputNames, nullptr, nullptr, scmEIWithIndexes,
+  1, scmEventOutputNames, nullptr, scmEOWith, scmEOWithIndexes,
   0, nullptr, nullptr,
   1, scmDataOutputNames, scmDataOutputTypeIds,
   0, nullptr,
@@ -51,6 +49,7 @@ const SFBInterfaceSpec FORTE_E_T_FF_SR::scmFBInterfaceSpec = {
 
 FORTE_E_T_FF_SR::FORTE_E_T_FF_SR(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CBasicFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, nullptr),
+    var_Q(0_BOOL),
     var_conn_Q(var_Q),
     conn_EO(this, 0),
     conn_Q(this, 0, &var_conn_Q) {
@@ -165,4 +164,3 @@ void FORTE_E_T_FF_SR::alg_RESET(void) {
   #line 6 "E_T_FF_SR.fbt"
   var_Q = false_BOOL;
 }
-

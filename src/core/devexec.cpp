@@ -18,23 +18,9 @@
 #include "../arch/devlog.h"
 #include "device.h"
 
-CDeviceExecution::CDeviceExecution(CDevice& paDevice) :
-  mDevice(paDevice) {
-  memset(mRegisteredEventHandlers, 0, sizeof(SEventHandlerElement) * cgNumberOfHandlers);
-
-  CDeviceExecution::createHandlers(*this);
-
-  getTimer().enableHandler();
-}
-
 CDeviceExecution::~CDeviceExecution() {
-  for(size_t i = 0; i < cgNumberOfHandlers; i++) {
-    if(nullptr != mRegisteredEventHandlers[i].mHandler) { //for the test cases, only the timer handler is created
-      mRegisteredEventHandlers[i].mHandler->disableHandler();
-      delete mRegisteredEventHandlers[i].mHandler;
-      mRegisteredEventHandlers[i].mHandler = nullptr;
-    }
-  }
+  // FIXME: deleting a handler should disable it automatically
+  disableHandlers();
 }
 
 void CDeviceExecution::startNewEventChain(CEventSourceFB* paECStartFB) const {
@@ -52,17 +38,17 @@ void CDeviceExecution::startNewEventChain(CEventSourceFB* paECStartFB) const {
 }
 
 CExternalEventHandler* CDeviceExecution::getExtEvHandler(size_t paIdentifer) const {
-  return mRegisteredEventHandlers[paIdentifer].mHandler;
+  return mRegisteredEventHandlers[paIdentifer].mHandler.get();
 }
 
 CTimerHandler& CDeviceExecution::getTimer() const {
-  return *static_cast<CTimerHandler*>(mRegisteredEventHandlers[0].mHandler);
+  return *static_cast<CTimerHandler*>(mRegisteredEventHandlers[0].mHandler.get());
 }
 
 void CDeviceExecution::disableHandlers() {
-  for(size_t i = 0; i < cgNumberOfHandlers; i++) {
-    if(nullptr != mRegisteredEventHandlers[i].mHandler) {
-      mRegisteredEventHandlers[i].mHandler->disableHandler();
+  for (auto &handler : mRegisteredEventHandlers) {
+    if (handler.mHandler) {
+      handler.mHandler->disableHandler();
     }
   }
 }

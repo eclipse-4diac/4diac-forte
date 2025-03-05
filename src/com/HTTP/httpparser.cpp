@@ -17,9 +17,9 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "../../arch/datatype.h"
-#include "../../arch/devlog.h"
-#include "../../core/utils/parameterParser.h"
+#include "arch/datatype.h"
+#include "arch/devlog.h"
+#include "core/util/parameterParser.h"
 
 using namespace forte::com_infra;
 using namespace std::string_literals;

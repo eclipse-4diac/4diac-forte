@@ -16,10 +16,10 @@
  *                 Bug #568902
  *******************************************************************************/
 #include "timerha.h"
-#include "../core/datatypes/forte_any_duration.h"
-#include "../core/devexec.h"
-#include "../core/esfb.h"
-#include "../core/utils/criticalregion.h"
+#include "core/datatypes/forte_any_duration.h"
+#include "core/devexec.h"
+#include "core/esfb.h"
+#include "core/util/criticalregion.h"
 #include <algorithm>
 #include <functional>
 

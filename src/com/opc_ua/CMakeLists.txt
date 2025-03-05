@@ -34,6 +34,8 @@ if (FORTE_COM_OPC_UA)
     SET(FORTE_COM_OPC_UA_PORT 4840 CACHE STRING "Port where the OPC_UA server will listen")
     SET(FORTE_COM_OPC_UA_SERVER_PUB_INTERVAL 100.0 CACHE STRING "OPC UA Server publishing interval in ms")
     SET(FORTE_COM_OPC_UA_CLIENT_PUB_INTERVAL 100.0 CACHE STRING "OPC UA Client requested publishing interval via OPC UA data subscription in ms")
+    SET(FORTE_COM_OPC_UA_SERVER_MAX_ITERATION_INTERVAL 10 CACHE STRING "The maximum time in OPC UA server will wait to iterate again")
+
     SET(FORTE_COM_OPC_UA_MULTICAST OFF CACHE BOOL "Enable multicast support for OPC UA and registering with LDS")
     SET(FORTE_COM_OPC_UA_INCLUDE_DIR "" CACHE PATH "ABSOLUTE path to open62541.h file in the OPC UA project")
     SET(FORTE_COM_OPC_UA_LIB_DIR "" CACHE PATH "ABSOLUTE path to OPC UA folder with object library FORTE_COM_OPC_UA_LIB")
@@ -64,9 +66,10 @@ if (FORTE_COM_OPC_UA)
     forte_add_handler(COPC_UA_Local_Handler opcua_local_handler)
     forte_add_handler(COPC_UA_Remote_Handler opcua_remote_handler)
     # OPC UA Event Layer
-    forte_add_network_layer(OPC_UA_Events ON "ua_ev" COPC_UA_Event_Layer opcua_event_layer "Enable OPC UA Event Support")
-    forte_add_sourcefile_hcpp(opcua_layer opcua_local_handler opcua_helper opcua_remote_handler opcua_handler_abstract opcua_client_information opcua_action_info opcua_objectstruct_helper 
-        opcua_event_layer opcua_client_config_parser)
+    forte_add_network_layer(OPC_UA_Events OFF "ua_ev" COPC_UA_Event_Layer opcua_event_layer "Enable OPC UA Event Support")
+    forte_add_network_layer(OPC_UA_AC OFF "ua_ac" COPC_UA_AC_Layer opcua_ac_layer "Enable OPC UA A&C Support")
+    forte_add_sourcefile_hcpp(opcua_local_handler opcua_helper opcua_remote_handler opcua_handler_abstract opcua_client_information opcua_action_info opcua_objectstruct_helper 
+        opcua_client_config_parser)
     if (NOT EXISTS ${FORTE_COM_OPC_UA_INCLUDE_DIR})
         message(SEND_ERROR "FORTE_COM_OPC_UA_INCLUDE_DIR not set or does not exist")
     endif (NOT EXISTS ${FORTE_COM_OPC_UA_INCLUDE_DIR})
@@ -76,7 +79,9 @@ if (FORTE_COM_OPC_UA)
         message(SEND_ERROR "OPC UA library not found '${FORTE_COM_OPC_UA_LIB}'. Check the value of FORTE_COM_OPC_UA_LIB_DIR and optionally define an absolute path for FORTE_COM_OPC_UA_LIB.")
     endif()
     
-    forte_add_custom_configuration("#define FORTE_COM_OPC_UA_PORT ${FORTE_COM_OPC_UA_PORT}") 
+    forte_add_custom_configuration("#define FORTE_COM_OPC_UA_PORT ${FORTE_COM_OPC_UA_PORT}")
+    forte_add_custom_configuration("#define FORTE_COM_OPC_UA_SERVER_MAX_ITERATION_INTERVAL ${FORTE_COM_OPC_UA_SERVER_MAX_ITERATION_INTERVAL}")
+    forte_add_custom_configuration("extern TForteUInt16 gOpcuaServerMaxIterationInterval\;")
     forte_add_custom_configuration("extern TForteUInt16 gOpcuaServerPort\;")
     forte_add_custom_configuration("#include <string>")
     forte_add_custom_configuration("extern std::string gOpcuaClientConfigFile\;")
@@ -91,6 +96,8 @@ if (FORTE_COM_OPC_UA)
 
     add_subdirectory(FBs)    
     add_subdirectory(types)
+    add_subdirectory(detail)
+
     
     if(FORTE_COM_OPC_UA_ENCRYPTION)
       SET(FORTE_COM_OPC_UA_ENCRYPTION_INCLUDE_DIR "" CACHE STRING "ABSOLUTE path to encryption headers")

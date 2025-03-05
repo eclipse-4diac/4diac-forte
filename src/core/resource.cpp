@@ -27,9 +27,8 @@
 #include "adapter.h"
 #include "adapterconn.h"
 #include "if2indco.h"
-#include "utils/criticalregion.h"
-#include "utils/fixedcapvector.h"
-#include "ecet.h"
+#include "core/util/criticalregion.h"
+#include "core/ecetFactory.h"
 
 #ifdef FORTE_DYNAMIC_TYPE_LOAD
 #include "lua/luaengine.h"
@@ -44,7 +43,7 @@ using namespace std::string_literals;
 
 CResource::CResource(forte::core::CFBContainer &paDevice, const SFBInterfaceSpec& paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId) :
     CFunctionBlock(paDevice, paInterfaceSpec, paInstanceNameId),
-    mResourceEventExecution(CEventChainExecutionThread::createEcet()), mResIf2InConnections(nullptr)
+    mResourceEventExecution(EcetFactory::createEcet()), mResIf2InConnections(nullptr)
 #ifdef FORTE_SUPPORT_MONITORING
 , mMonitoringHandler(*this)
 #endif
@@ -89,8 +88,8 @@ EMGMResponse CResource::executeMGMCommand(forte::core::SManagementCMD &paCommand
   if(CStringDictionary::scmInvalidStringId == paCommand.mDestination){
     switch (paCommand.mCMD){
       case EMGMCommandType::CreateFBInstance: {
-        forte::core::TNameIdentifier::CIterator itRunner(paCommand.mFirstParam.begin());
-        retVal = createFB(itRunner, paCommand.mSecondParam.front());
+        auto itRunner = paCommand.mFirstParam.cbegin();
+        retVal = createFB(itRunner, paCommand.mFirstParam.cend(), paCommand.mSecondParam.front());
       }
         break;
       case EMGMCommandType::CreateFBType:
@@ -108,8 +107,8 @@ EMGMResponse CResource::executeMGMCommand(forte::core::SManagementCMD &paCommand
 #endif
         break;
       case EMGMCommandType::DeleteFBInstance: {
-        forte::core::TNameIdentifier::CIterator itRunner(paCommand.mFirstParam.begin());
-        retVal = deleteFB(itRunner);
+        auto itRunner = paCommand.mFirstParam.cbegin();
+        retVal = deleteFB(itRunner, paCommand.mFirstParam.cend());
       }
         break;
       case EMGMCommandType::CreateConnection:
@@ -188,9 +187,9 @@ EMGMResponse CResource::handleExecutionStateCmd(EMGMCommandType paCMD, forte::co
   EMGMResponse retVal = EMGMResponse::NoSuchObject;
   CFunctionBlock *fb = this;
 
-  if(!paTarget.isEmpty()){
-    forte::core::TNameIdentifier::CIterator itRunner(paTarget.begin());
-    fb = getFB(itRunner);
+  if (!paTarget.empty()) {
+    auto itRunner = paTarget.cbegin();
+    fb = getFB(itRunner, paTarget.cend());
   }
 
   if(nullptr != fb){
@@ -209,10 +208,10 @@ EMGMResponse CResource::createConnection(forte::core::TNameIdentifier &paSrcName
   CConnection *const con = getConnection(paSrcNameList);
   if(nullptr != con){
     CStringDictionary::TStringId portName = paDstNameList.back();
-    paDstNameList.popBack();
-    forte::core::TNameIdentifier::CIterator runner(paDstNameList.begin());
-    CFunctionBlock *dstFB = getFB(runner);
-    if((nullptr != dstFB) && (runner.isLastEntry())){
+    paDstNameList.pop_back();
+    auto runner = paDstNameList.cbegin();
+    CFunctionBlock *dstFB = getFB(runner, paDstNameList.cend());
+    if ((nullptr != dstFB) && (runner+1 == paDstNameList.cend())) {
       retVal = con->connect(dstFB, portName);
     }
   }
@@ -226,10 +225,10 @@ EMGMResponse CResource::deleteConnection(forte::core::TNameIdentifier &paSrcName
   CConnection *const con = getConnection(paSrcNameList);
   if(nullptr != con){
     CStringDictionary::TStringId portName = paDstNameList.back();
-    paDstNameList.popBack();
-    forte::core::TNameIdentifier::CIterator runner(paDstNameList.begin());
-    CFunctionBlock *dstFB = getFB(runner);
-    if((nullptr != dstFB) && (runner.isLastEntry())){
+    paDstNameList.pop_back();
+    auto runner = paDstNameList.cbegin();
+    CFunctionBlock *dstFB = getFB(runner, paDstNameList.cend());
+    if ((nullptr != dstFB) && (runner+1 == paDstNameList.cend())) {
       retVal = con->disconnect(dstFB, portName);
     }
   }
@@ -241,14 +240,14 @@ EMGMResponse CResource::writeValue(forte::core::TNameIdentifier &paNameList, con
   EMGMResponse retVal = EMGMResponse::NoSuchObject;
 
   CStringDictionary::TStringId portName = paNameList.back();
-  paNameList.popBack();
-  forte::core::TNameIdentifier::CIterator runner(paNameList.begin());
+  paNameList.pop_back();
+  auto runner = paNameList.cbegin();
 
   CFunctionBlock *fb = this;
   if(paNameList.size() >= 1){
     //this is not an identifier for the resource interface
-    fb = getFB(runner);
-    if(!runner.isLastEntry()){
+    fb = getFB(runner, paNameList.cend());
+    if (runner+1 != paNameList.cend()) {
       // currently we can not write values of FBs inside of FBs
       return EMGMResponse::NoSuchObject;
     }
@@ -341,16 +340,16 @@ EMGMResponse CResource::readValue(forte::core::TNameIdentifier &paNameList, std:
 #ifdef FORTE_SUPPORT_QUERY_CMD
 
 EMGMResponse CResource::queryAllFBTypes(std::string & paValue){
-  appedTypeNameList(paValue, CTypeLib::getFBLibStart());
+  appendTypeNameList(paValue, CTypeLib::getFBLibStart());
   return EMGMResponse::Ready;
 }
 
 EMGMResponse CResource::queryAllAdapterTypes(std::string & paValue){
-  appedTypeNameList(paValue, CTypeLib::getAdapterLibStart());
+  appendTypeNameList(paValue, CTypeLib::getAdapterLibStart());
   return EMGMResponse::Ready;
 }
 
-void CResource::appedTypeNameList(std::string & paValue, CTypeLib::CTypeEntry *paTypeListStart) {
+void CResource::appendTypeNameList(std::string & paValue, CTypeLib::CTypeEntry *paTypeListStart) {
   if(paTypeListStart != nullptr) {
     for(; paTypeListStart != nullptr; paTypeListStart = paTypeListStart->mNext) {
       paValue += paTypeListStart->getTypeName();
@@ -450,7 +449,7 @@ void CResource::createConnectionResponseMessage(const CStringDictionary::TString
   fullName.reserve(cgStringInitialSize);
   fullName = paSrcFb.getInstanceName();
   fullName += "."s;
-  fullName += CStringDictionary::getInstance().get(srcId);
+  fullName += CStringDictionary::get(srcId);
 
   CFBContainer* parent = &(paSrcFb.getParent());
   const CDevice *dev = getDevice();
@@ -466,7 +465,7 @@ void CResource::createConnectionResponseMessage(const CStringDictionary::TString
   paReqResult.append("\" Destination=\""s);
   fullName = paDstFb.getInstanceName();
   fullName += "."s;
-  fullName += CStringDictionary::getInstance().get(dstId);
+  fullName += CStringDictionary::get(dstId);
 
   parent = &(paDstFb.getParent());
   while(parent != dev && parent->getInstanceName() != 0){
@@ -501,7 +500,7 @@ EMGMResponse  CResource::createXTypeResponseMessage(const CTypeLib::CSpecTypeEnt
   const SFBInterfaceSpec* paInterfaceSpec = paTypeEntry->getInterfaceSpec();
   if(nullptr != paInterfaceSpec){
     paReqResult.append("Name=\"");
-    paReqResult.append(CStringDictionary::getInstance().get(paValue));
+    paReqResult.append(CStringDictionary::get(paValue));
     paReqResult.append("\">\n    <InterfaceList>\n      ");
     createEventInterfaceResponseMessage(paInterfaceSpec, paReqResult);
     createDataInterfaceResponseMessage(paInterfaceSpec, paReqResult);
@@ -544,13 +543,13 @@ void CResource::createAdapterInterfaceResponseMessage(const SFBInterfaceSpec* pa
     std::string plugs;
     for(TPortId i = 0; i < paInterfaceSpec->mNumAdapters; i++){
       if(paInterfaceSpec->mAdapterInstanceDefinition[i].mIsPlug){
-        const char *adapterName = CStringDictionary::getInstance().get(paInterfaceSpec->mAdapterInstanceDefinition[i].mAdapterNameID);
-        const char *adapterTypeName = CStringDictionary::getInstance().get(paInterfaceSpec->mAdapterInstanceDefinition[i].mAdapterTypeNameID);
+        const char *adapterName = CStringDictionary::get(paInterfaceSpec->mAdapterInstanceDefinition[i].mAdapterNameID);
+        const char *adapterTypeName = CStringDictionary::get(paInterfaceSpec->mAdapterInstanceDefinition[i].mAdapterTypeNameID);
         createInterfaceResponseMessage(plugs, "AdapterDeclaration", adapterName, adapterTypeName);
       }
       else{
-        const char *adapterName = CStringDictionary::getInstance().get(paInterfaceSpec->mAdapterInstanceDefinition[i].mAdapterNameID);
-        const char *adapterTypeName = CStringDictionary::getInstance().get(paInterfaceSpec->mAdapterInstanceDefinition[i].mAdapterTypeNameID);
+        const char *adapterName = CStringDictionary::get(paInterfaceSpec->mAdapterInstanceDefinition[i].mAdapterNameID);
+        const char *adapterTypeName = CStringDictionary::get(paInterfaceSpec->mAdapterInstanceDefinition[i].mAdapterTypeNameID);
         createInterfaceResponseMessage(sockets, "AdapterDeclaration", adapterName, adapterTypeName);
       }
     }
@@ -572,12 +571,12 @@ void CResource::createInterfaceResponseMessages(std::string &paReqResult, const 
     const TEventID paNumberOfElements, const TDataIOID* paEWith, const TForteInt16* paEWithIndexes, const CStringDictionary::TStringId* paDNameList){
   for(TEventID nIndex = 0; nIndex < paNumberOfElements; nIndex++){
     if(nullptr != paTypeList){
-      const char *name = CStringDictionary::getInstance().get(paNameList[nIndex]);
-      const char *type = CStringDictionary::getInstance().get(paTypeList[nIndex]);
+      const char *name = CStringDictionary::get(paNameList[nIndex]);
+      const char *type = CStringDictionary::get(paTypeList[nIndex]);
       createInterfaceResponseMessage(paReqResult, paCommand, name, type);
     }
     else{
-      const char *name = CStringDictionary::getInstance().get(paNameList[nIndex]);
+      const char *name = CStringDictionary::get(paNameList[nIndex]);
       constexpr char event[] = "Event";
       createInterfaceResponseMessage(paReqResult, paCommand, name, event, paEWith, paEWithIndexes, nIndex, paDNameList);
     }
@@ -596,7 +595,7 @@ void CResource::createInterfaceResponseMessage(std::string& paReqResult, const c
     paReqResult.append("\">\n         ");
     for(int nRunIndex = paEWithIndexes[paIndex]; scmWithListDelimiter != paEWith[nRunIndex]; nRunIndex++){
       paReqResult.append("<With Var=\"");
-      paReqResult.append(CStringDictionary::getInstance().get(paENameList[paEWith[nRunIndex]]));
+      paReqResult.append(CStringDictionary::get(paENameList[paEWith[nRunIndex]]));
       paReqResult.append("\"/>\n      ");
     }
     paReqResult.append("</Event>\n      ");
@@ -645,17 +644,17 @@ EMGMResponse CResource::createAdapterTypeFromLua(CStringDictionary::TStringId ty
 
 CIEC_ANY *CResource::getVariable(forte::core::TNameIdentifier &paNameList){
   CStringDictionary::TStringId portName = paNameList.back();
-  paNameList.popBack();
-  forte::core::TNameIdentifier::CIterator runner(paNameList.begin());
+  paNameList.pop_back();
+  auto runner = paNameList.cbegin();
 
   CFunctionBlock *fb = this;
   if(paNameList.size() >= 1){
     //this is not an identifier for the resource interface
-    fb = getFB(runner); // the last entry is the input name therefore reduce list here by one
+    fb = getFB(runner, paNameList.cend()); // the last entry is the input name therefore reduce list here by one
   }
 
   CIEC_ANY *var = nullptr;
-  if((nullptr != fb) && (runner.isLastEntry())){
+  if ((nullptr != fb) && (runner+1 == paNameList.cend())) {
     var = fb->getVar(&portName, 1);
   }
   return var;
@@ -668,11 +667,11 @@ CConnection *CResource::getConnection(forte::core::TNameIdentifier &paSrcNameLis
   }
   else if(paSrcNameList.size() > 1){
     CStringDictionary::TStringId portName = paSrcNameList.back();
-    paSrcNameList.popBack();
-    forte::core::TNameIdentifier::CIterator runner(paSrcNameList.begin());
+    paSrcNameList.pop_back();
+    auto runner = paSrcNameList.cbegin();
 
-    CFunctionBlock *srcFB = getFB(runner);
-    if((nullptr != srcFB) && (runner.isLastEntry())) {
+    CFunctionBlock *srcFB = getFB(runner, paSrcNameList.cend());
+    if((nullptr != srcFB) && (runner+1 == paSrcNameList.cend())) {
       //only use the found result if we have really the last result in the list
       con = srcFB->getEOConnection(portName);
       if(nullptr == con) {

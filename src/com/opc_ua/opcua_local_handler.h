@@ -88,6 +88,23 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
     UA_StatusCode initializeActionForObjectStruct(std::shared_ptr<CActionInfo> &paActionInfo, CIEC_ANY &paMember);
 
     /**
+     * Execute action for the given struct member
+     * @param paActionInfo Action of Struct member to be executed
+     * @param paMember Struct member
+     * @return UA_STATUSCODE_GOOD if no problem occurred, other value otherwise
+     */
+    UA_StatusCode executeStructAction(CActionInfo &paActionInfo, CIEC_ANY &paMember);
+
+    /**
+     * Splits a browsepath into folders and node name. The non-existing folders are created in the local server
+     * @param paBrowsePath Browsepath to be splitted
+     * @param paNodeName Place to store the nodename
+     * @param paRreferencedNodes List of nodes that are used by this browsename. It will include all folders, but not the end node since it was not created yet
+     * @return UA_STATUSCODE_GOOD is no problem occurred, other value otherwise
+     */
+    UA_StatusCode splitAndCreateFolders(const std::string &paBrowsePath, std::string &paNodeName, CSinglyLinkedList<UA_NodeId*> &paRreferencedNodes) const;
+
+    /**
      * Default value for the namespace of the browsename for all created nodes
      */
     static const UA_UInt16 scmDefaultBrowsenameNameSpace = 1;
@@ -516,6 +533,14 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
     UA_StatusCode executeWrite(CActionInfo &paActionInfo);
 
     /**
+     * Execute the write action for a struct member
+     * @param paActionInfo Action to be executed
+     * @param paMember Struct member
+     * @return UA_STATUSCODE_GOOD is no problem occurred, other value otherwise
+     */
+    UA_StatusCode executeStructWrite(CActionInfo &paActionInfo, CIEC_ANY &paMember);
+
+    /**
      * When the FB of the local method is triggered to signalize the end of the method, this function is called
      * @param paActionInfo Action to be executed
      * @return UA_STATUSCODE_GOOD is no problem occurred, other value otherwise
@@ -597,15 +622,6 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
      * @return UA_STATUSCODE_GOOD on success, other value otherwise
      */
     UA_StatusCode createFolders(const char *paFolders, CSinglyLinkedList<UA_NodeId*> &paCreatedNodeIds) const;
-
-    /**
-     * Splits a browsepath into folders and node name. The non-existing folders are created in the local server
-     * @param paBrowsePath Browsepath to be splitted
-     * @param paNodeName Place to store the nodename
-     * @param paRreferencedNodes List of nodes that are used by this browsename. It will include all folders, but not the end node since it was not created yet
-     * @return UA_STATUSCODE_GOOD is no problem occurred, other value otherwise
-     */
-    UA_StatusCode splitAndCreateFolders(const std::string &paBrowsePath, std::string &paNodeName, CSinglyLinkedList<UA_NodeId*> &paRreferencedNodes) const;
 
     /**
      * Split a string into folders and node name. The provided place for store of the folder and node name are only
@@ -694,23 +710,6 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
      * Default description for variable nodes
      */
     static const char *const mDefaultDescriptionForVariableNodes;
-
-#ifdef FORTE_COM_OPC_UA_MULTICAST
-# ifndef UA_ENABLE_DISCOVERY_MULTICAST
-#  error open62541 needs to be built with UA_ENABLE_DISCOVERY=ON and UA_ENABLE_DISCOVERY_MULTICAST=ON
-# else // UA_ENABLE_DISCOVERY_MULTICAST
-    /**
-     * List of LDS servers where this instance is already registered.
-     */
-    CSinglyLinkedList<UA_String*> mRegisteredWithLds;
-
-    const UA_String* getDiscoveryUrl() const;
-    void registerWithLds(const UA_String *paDiscoveryUrl);
-    void removeLdsRegister(const UA_String *paDiscoveryUrl);
-    static void serverOnNetworkCallback(const UA_ServerOnNetwork *paServerOnNetwork, UA_Boolean paIsServerAnnounce, UA_Boolean paIsTxtReceived, void *paData);
-# endif //UA_ENABLE_DISCOVERY_MULTICAST
-#endif //FORTE_COM_OPC_UA_MULTICAST
-
 };
 
 #endif /* SRC_MODULES_OPC_UA_OPCUALOCALHANDLER_H_ */

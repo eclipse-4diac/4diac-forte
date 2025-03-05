@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015, 2023 Florian Froschermeier <florian.froschermeier@tum.de>,
+ * Copyright (c) 2015, 2024 Florian Froschermeier <florian.froschermeier@tum.de>,
  *                          fortiss GmbH, Primetals Technologies Austria GmbH
  *
  * This program and the accompanying materials are made available under the
@@ -21,15 +21,19 @@
  *      - Add support for Object Structs
  *******************************************************************************/
 
-#include "../../core/devexec.h"
-#include "../../core/iec61131_functions.h"
-#include "../../core/cominfra/basecommfb.h"
-#include "../../core/utils/parameterParser.h"
-#include "../../core/utils/string_utils.h"
+#include "core/devexec.h"
+#include "core/iec61131_functions.h"
+#include "core/cominfra/basecommfb.h"
+#include "core/util/parameterParser.h"
+#include "core/util/string_utils.h"
 #include "criticalregion.h"
 #include "forte_printer.h"
-#include "../../arch/utils/mainparam_utils.h"
+#include "arch/utils/mainparam_utils.h"
 #include "opcua_local_handler.h"
+#include "struct_action_info.h"
+#ifdef FORTE_COM_OPC_UA_MULTICAST
+#include "detail/lds_me_handler.h"
+#endif //FORTE_COM_OPC_UA_MULTICAST
 #include <string>
 
 #ifndef FORTE_COM_OPC_UA_CUSTOM_HOSTNAME
@@ -40,6 +44,7 @@ const char *const COPC_UA_Local_Handler::mEnglishLocaleForNodes = "en-US";
 const char *const COPC_UA_Local_Handler::mDefaultDescriptionForVariableNodes = "Digital port of Function Block";
 
 TForteUInt16 gOpcuaServerPort = FORTE_COM_OPC_UA_PORT;
+TForteUInt16 gOpcuaServerMaxIterationInterval = FORTE_COM_OPC_UA_SERVER_MAX_ITERATION_INTERVAL;
 
 using namespace forte::com_infra;
 using namespace std::string_literals;
@@ -57,12 +62,6 @@ COPC_UA_Local_Handler::~COPC_UA_Local_Handler() {
     UA_NodeId_delete(const_cast<UA_NodeId*>(iter->mNodeId));
   }
   mNodesReferences.clear();
-
-#ifdef FORTE_COM_OPC_UA_MULTICAST
-  for(CSinglyLinkedList<UA_String*>::Iterator iter = mRegisteredWithLds.begin(); iter != mRegisteredWithLds.end(); ++iter) {
-    UA_String_delete(*iter);
-  }
-#endif //FORTE_COM_OPC_UA_MULTICAST
 }
 
 void COPC_UA_Local_Handler::enableHandler() {
@@ -91,12 +90,15 @@ void COPC_UA_Local_Handler::run() {
     configureUAServer(serverStrings, *uaServerConfig);
 
     if(initializeNodesets(*mUaServer)) {
-#ifdef FORTE_COM_OPC_UA_MULTICAST
-      UA_Server_setServerOnNetworkCallback(mUaServer, serverOnNetworkCallback, this);
-#endif //FORTE_COM_OPC_UA_MULTICAST
-
       UA_StatusCode retVal = UA_Server_run_startup(mUaServer);
       if(UA_STATUSCODE_GOOD == retVal) {
+        {
+#ifdef FORTE_COM_OPC_UA_MULTICAST
+          // the extra curly brace on top is to limit the lifetime of this object. 
+          // it was avoided to have inside this ifdef to also avoid the closing brace
+          // with the exta ifdef making it cleaner this way
+          auto mLdsMeHandler = forte::com::opc_ua::detail::LdsMeHandler(*mUaServer);
+#endif //FORTE_COM_OPC_UA_MULTICAST
         mServerStarted.inc();
         while(isAlive()) {
           UA_UInt16 timeToSleepMs;
@@ -104,11 +106,16 @@ void COPC_UA_Local_Handler::run() {
             CCriticalRegion criticalRegion(mServerAccessMutex);
             timeToSleepMs = UA_Server_run_iterate(mUaServer, false);
           }
+
           if(timeToSleepMs < scmMinimumIterationWaitTime) {
             timeToSleepMs = scmMinimumIterationWaitTime;
           }
+          else if(timeToSleepMs > gOpcuaServerMaxIterationInterval) {
+            timeToSleepMs = gOpcuaServerMaxIterationInterval;
+          }
 
           mServerNeedsIteration.timedWait(static_cast<TForteUInt64>(timeToSleepMs) * 1000000ULL);
+        }
         }
         retVal = UA_Server_run_shutdown(mUaServer);
         if(UA_STATUSCODE_GOOD == retVal) {
@@ -166,10 +173,7 @@ void COPC_UA_Local_Handler::generateServerStrings(TForteUInt16 paUAServerPort, U
 
 void COPC_UA_Local_Handler::configureUAServer(UA_ServerStrings &paServerStrings, UA_ServerConfig &paUaServerConfig) const {
 #ifdef FORTE_COM_OPC_UA_MULTICAST
-  paUaServerConfig.applicationDescription.applicationType = UA_APPLICATIONTYPE_DISCOVERYSERVER;
-  // hostname will be added by mdns library
-  UA_String_clear(&paUaServerConfig.mdnsConfig.mdnsServerName);
-  paUaServerConfig.mdnsConfig.mdnsServerName = UA_String_fromChars(paServerStrings.mMdnsServerName.c_str());
+  forte::com::opc_ua::detail::LdsMeHandler::configureServer(paUaServerConfig, paServerStrings.mMdnsServerName);
 #endif //FORTE_COM_OPC_UA_MULTICAST
 
   UA_Array_delete(paUaServerConfig.serverUrls, paUaServerConfig.serverUrlsSize, &UA_TYPES[UA_TYPES_STRING]);
@@ -280,85 +284,7 @@ void COPC_UA_Local_Handler::getNodesReferencedByAction(const CActionInfo &paActi
   }
 }
 
-#ifdef FORTE_COM_OPC_UA_MULTICAST
 
-const UA_String* COPC_UA_Local_Handler::getDiscoveryUrl() const {
-
-  UA_ServerConfig *mServerConfig = UA_Server_getConfig(mUaServer); //change mServerConfig to serverConfig when only master branch is present
-  if(0 == mServerConfig->networkLayersSize) {
-    return 0;
-  }
-  return &mServerConfig->networkLayers[0].discoveryUrl;
-}
-
-void COPC_UA_Local_Handler::serverOnNetworkCallback(const UA_ServerOnNetwork *paServerOnNetwork, UA_Boolean paIsServerAnnounce, UA_Boolean paIsTxtReceived,
-    void *paData) { //NOSONAR
-  COPC_UA_Local_Handler *handler = static_cast<COPC_UA_Local_Handler*>(paData);
-
-  const UA_String *ownDiscoverUrl = handler->getDiscoveryUrl();
-
-  if(!ownDiscoverUrl || UA_String_equal(&paServerOnNetwork->discoveryUrl, ownDiscoverUrl)) {
-    // skip self
-    return;
-  }
-
-  if(!paIsTxtReceived) {
-    return; // we wait until the corresponding TXT record is announced.
-  }
-
-  DEVLOG_DEBUG("[OPC UA LOCAL]: mDNS %s '%.*s' with url '%.*s'\n", paIsServerAnnounce ? "announce" : "remove", paServerOnNetwork->serverName.length,
-      paServerOnNetwork->serverName.data, paServerOnNetwork->discoveryUrl.length, paServerOnNetwork->discoveryUrl.data);
-
-  // check if server is LDS, and then register
-  UA_String ldsStr = UA_String_fromChars("LDS");
-  for(unsigned int i = 0; i < paServerOnNetwork->serverCapabilitiesSize; i++) {
-    if(UA_String_equal(&paServerOnNetwork->serverCapabilities[i], &ldsStr)) {
-      if(paIsServerAnnounce) {
-        handler->registerWithLds(&paServerOnNetwork->discoveryUrl);
-      } else {
-        handler->removeLdsRegister(&paServerOnNetwork->discoveryUrl);
-      }
-      break;
-    }
-  }
-  UA_String_clear(&ldsStr);
-}
-
-void COPC_UA_Local_Handler::registerWithLds(const UA_String *paDiscoveryUrl) {
-  // check if already registered with the given LDS
-  for(CSinglyLinkedList<UA_String*>::Iterator iter = mRegisteredWithLds.begin(); iter != mRegisteredWithLds.end(); ++iter) {
-    if(UA_String_equal(paDiscoveryUrl, *iter)) {
-      return;
-    }
-  }
-
-  // will be freed when removed from list
-  UA_String *discoveryUrlChar = 0;
-  UA_String_copy(paDiscoveryUrl, discoveryUrlChar);
-
-  mRegisteredWithLds.pushFront(discoveryUrlChar);
-  DEVLOG_INFO("[OPC UA LOCAL]: Registering with LDS '%.*s'\n", paDiscoveryUrl->length, paDiscoveryUrl->data);
-  UA_StatusCode retVal = UA_Server_addPeriodicServerRegisterCallback(mUaServer, 0, reinterpret_cast<const char*>(discoveryUrlChar->data), 10 * 60 * 1000, 500, 0);
-  if( UA_STATUSCODE_GOOD != retVal) {
-    DEVLOG_ERROR("[OPC UA LOCAL]: Could not register with LDS. Error: %s\n", UA_StatusCode_name(retVal));
-  }
-}
-
-void COPC_UA_Local_Handler::removeLdsRegister(const UA_String *paDiscoveryUrl) {
-  UA_String *toDelete = 0;
-  for(CSinglyLinkedList<UA_String*>::Iterator iter = mRegisteredWithLds.begin(); iter != mRegisteredWithLds.end(); ++iter) {
-    if(UA_String_equal(paDiscoveryUrl, *iter)) {
-      toDelete = *iter;
-      break;
-    }
-  }
-  if(toDelete) {
-    mRegisteredWithLds.erase(toDelete);
-    UA_String_delete(toDelete);
-  }
-}
-
-#endif //FORTE_COM_OPC_UA_MULTICAST
 
 UA_StatusCode COPC_UA_Local_Handler::initializeAction(CActionInfo &paActionInfo) {
   enableHandler();
@@ -433,6 +359,24 @@ UA_StatusCode COPC_UA_Local_Handler::executeAction(CActionInfo &paActionInfo) {
       break;
     default: //eCallMethod, eSubscribe will never reach here since they weren't initialized. eRead is a Subscribe FB
       DEVLOG_ERROR("[OPC UA LOCAL]: Action %d to be executed is unknown or invalid\n", paActionInfo.getAction());
+      break;
+  }
+
+  mServerNeedsIteration.inc();
+
+  return retVal;
+}
+
+UA_StatusCode COPC_UA_Local_Handler::executeStructAction(CActionInfo &paActionInfo, CIEC_ANY &paMember) {
+  UA_StatusCode retVal = UA_STATUSCODE_BADINTERNALERROR;
+
+  CCriticalRegion criticalRegion(mServerAccessMutex);
+  switch(paActionInfo.getAction()){
+    case CActionInfo::eWrite:
+      retVal = executeStructWrite(paActionInfo, paMember);
+      break;
+    default: //eCallMethod, eSubscribe will never reach here since they weren't initialized. eRead is a Subscribe FB
+      DEVLOG_ERROR("[OPC UA LOCAL]: Struct Action %d to be executed is unknown or invalid\n", paActionInfo.getAction());
       break;
   }
 
@@ -848,12 +792,12 @@ void COPC_UA_Local_Handler::createMethodArguments(CActionInfo &paActionInfo, CCr
     if(i < paCreateMethodInfo.mOutputSize) {
       arg = &(paCreateMethodInfo.mOutputArguments)[i];
       UA_Argument_init(arg);
-      arg->name = UA_STRING_ALLOC(CStringDictionary::getInstance().get(interfaceFB.mDINames[i + 2])); //we store the names of the SDs/RDs as names for the arguments names. Not so nice. + 2 skips the QI and ID
+      arg->name = UA_STRING_ALLOC(CStringDictionary::get(interfaceFB.mDINames[i + 2])); //we store the names of the SDs/RDs as names for the arguments names. Not so nice. + 2 skips the QI and ID
       arg->dataType = COPC_UA_Helper::getOPCUATypeFromAny(*dataToSend[i])->typeId;
     } else {
       arg = &(paCreateMethodInfo.mInputArguments)[i - paCreateMethodInfo.mOutputSize];
       UA_Argument_init(arg);
-      arg->name = UA_STRING_ALLOC(CStringDictionary::getInstance().get(interfaceFB.mDONames[i - paCreateMethodInfo.mOutputSize + 2])); // + 2 skips the QO and STATUS
+      arg->name = UA_STRING_ALLOC(CStringDictionary::get(interfaceFB.mDONames[i - paCreateMethodInfo.mOutputSize + 2])); // + 2 skips the QO and STATUS
       arg->dataType = COPC_UA_Helper::getOPCUATypeFromAny(*dataToReceive[i - paCreateMethodInfo.mOutputSize])->typeId;
     }
 
@@ -947,6 +891,34 @@ UA_StatusCode COPC_UA_Local_Handler::executeWrite(CActionInfo &paActionInfo) {
       break;
     }
 
+  }
+  return retVal;
+}
+
+UA_StatusCode COPC_UA_Local_Handler::executeStructWrite(CActionInfo &paActionInfo, CIEC_ANY &paMember) {
+  UA_StatusCode retVal = UA_STATUSCODE_GOOD;
+
+  if(paMember.getDataTypeID() == CIEC_ANY::e_STRUCT) {
+    CIEC_STRUCT& structType = static_cast<CIEC_STRUCT&>(paMember);
+    CStructActionInfo &structActionInfo = static_cast<CStructActionInfo&>(paActionInfo);
+    std::vector<std::shared_ptr<CActionInfo>> memberActionInfos = structActionInfo.getMemberActionInfos();
+    for(size_t i = 0; i < memberActionInfos.size(); i++) {
+      std::shared_ptr<CActionInfo> memberActionInfo = memberActionInfos[i];
+      CIEC_ANY *member = structType.getMember(i);
+      retVal = executeStructWrite(*memberActionInfo, *member);
+      if(retVal != UA_STATUSCODE_GOOD) {
+        return retVal;
+      }
+    }
+  } else {
+    auto it = paActionInfo.getNodePairInfo().begin();
+    retVal = updateNodeValue(*it->getNodeId(), &paMember);
+    if(UA_STATUSCODE_GOOD != retVal) {   
+      DEVLOG_ERROR("[OPC UA LOCAL]: Could not convert value to write for node %s at FB %s. Error: %s\n",
+        (*paActionInfo.getNodePairInfo().begin()).getBrowsePath(),
+        paActionInfo.getLayer().getCommFB()->getInstanceName(), UA_StatusCode_name(retVal));
+      return retVal;
+    }
   }
   return retVal;
 }
@@ -1068,6 +1040,7 @@ UA_StatusCode COPC_UA_Local_Handler::createObjectNode(const CCreateObjectInfo &p
     DEVLOG_ERROR("[OPC UA LOCAL]: Could not addObjectNode. Error: %s\n", UA_StatusCode_name(retVal));
   }
   UA_NodeId_clear(&requestedNodeId);
+  UA_NodeId_clear(&parentNodeId);
   UA_ObjectAttributes_clear(&oAttr);
 
   return retVal;

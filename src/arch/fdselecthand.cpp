@@ -13,10 +13,10 @@
 #include <sockhand.h>      //needs to be first pulls in the platform specific includes
 #include "fdselecthand.h"
 #include "devlog.h"
-#include "../core/devexec.h"
-#include "../core/cominfra/commfb.h"
-#include "../core/cominfra/comCallback.h"
-#include "../core/utils/criticalregion.h"
+#include "core/devexec.h"
+#include "core/cominfra/commfb.h"
+#include "core/cominfra/comCallback.h"
+#include "core/util/criticalregion.h"
 
 DEFINE_HANDLER(CFDSelectHandler)
 CFDSelectHandler::CFDSelectHandler(CDeviceExecution& paDeviceExecution) : CExternalEventHandler(paDeviceExecution)  {

@@ -17,6 +17,7 @@
 
 #include <utility>
 
+#include "ecet.h"
 #include "fbcontainer.h"
 #include "funcbloc.h"
 #include "forte_sync.h"
@@ -234,7 +235,7 @@ class CResource : public CFunctionBlock{
      */
     static EMGMResponse queryAllAdapterTypes(std::string& paValue);
 
-    static void appedTypeNameList(std::string & paValue, CTypeLib::CTypeEntry *paTypeListStart);
+    static void appendTypeNameList(std::string & paValue, CTypeLib::CTypeEntry *paTypeListStart);
 
     /*!\brief Retrieve the list of FB instances
      *

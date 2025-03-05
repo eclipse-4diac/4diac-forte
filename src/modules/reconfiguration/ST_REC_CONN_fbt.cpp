@@ -18,7 +18,6 @@
 #include "resource.h"
 
 #include "device.h"
-#include "../../stdfblib/ita/DEV_MGR.h"
 
 DEFINE_FIRMWARE_FB(FORTE_ST_REC_CONN, g_nStringIdST_REC_CONN)
 
@@ -29,12 +28,14 @@ const CStringDictionary::TStringId FORTE_ST_REC_CONN::scmDataOutputTypeIds[] = {
 const TDataIOID FORTE_ST_REC_CONN::scmEIWith[] = {1, 2, 3, 4, 9, 5, 6, 7, 8, 0, scmWithListDelimiter};
 const TForteInt16 FORTE_ST_REC_CONN::scmEIWithIndexes[] = {0};
 const CStringDictionary::TStringId FORTE_ST_REC_CONN::scmEventInputNames[] = {g_nStringIdREQ};
+const CStringDictionary::TStringId FORTE_ST_REC_CONN::scmEventInputTypeIds[] = {g_nStringIdEvent};
 const TDataIOID FORTE_ST_REC_CONN::scmEOWith[] = {1, 0, scmWithListDelimiter};
 const TForteInt16 FORTE_ST_REC_CONN::scmEOWithIndexes[] = {0};
 const CStringDictionary::TStringId FORTE_ST_REC_CONN::scmEventOutputNames[] = {g_nStringIdCNF};
+const CStringDictionary::TStringId FORTE_ST_REC_CONN::scmEventOutputTypeIds[] = {g_nStringIdEvent};
 const SFBInterfaceSpec FORTE_ST_REC_CONN::scmFBInterfaceSpec = {
-  1, scmEventInputNames, scmEIWith, scmEIWithIndexes,
-  1, scmEventOutputNames, scmEOWith, scmEOWithIndexes,
+  1, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,
+  1, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes,
   10, scmDataInputNames, scmDataInputTypeIds,
   2, scmDataOutputNames, scmDataOutputTypeIds,
   0, nullptr,
@@ -92,30 +93,30 @@ void FORTE_ST_REC_CONN::executeEvent(TEventID paEIID, CEventChainExecutionThread
 void FORTE_ST_REC_CONN::executeRQST(){
   forte::core::SManagementCMD theCommand;
   // delete old connection
-  theCommand.mDestination = CStringDictionary::getInstance().getId(var_DST.getValue());
-  theCommand.mFirstParam.pushBack(CStringDictionary::getInstance().getId(var_OLD_SRC_FB.getValue()));
-  theCommand.mFirstParam.pushBack(CStringDictionary::getInstance().getId(var_OLD_SRC_FB_OUT.getValue()));
-  theCommand.mSecondParam.pushBack(CStringDictionary::getInstance().getId(var_OLD_DST_FB.getValue()));
-  theCommand.mSecondParam.pushBack(CStringDictionary::getInstance().getId(var_OLD_DST_FB_IN.getValue()));
+  theCommand.mDestination = CStringDictionary::getId(var_DST.getValue());
+  theCommand.mFirstParam.push_back(CStringDictionary::getId(var_OLD_SRC_FB.getValue()));
+  theCommand.mFirstParam.push_back(CStringDictionary::getId(var_OLD_SRC_FB_OUT.getValue()));
+  theCommand.mSecondParam.push_back(CStringDictionary::getId(var_OLD_DST_FB.getValue()));
+  theCommand.mSecondParam.push_back(CStringDictionary::getId(var_OLD_DST_FB_IN.getValue()));
   theCommand.mCMD = EMGMCommandType::DeleteConnection;
 
   EMGMResponse resp = getDevice()->executeMGMCommand(theCommand);
 
   if (resp == EMGMResponse::Ready) {
     // create new connection
-    theCommand.mDestination = CStringDictionary::getInstance().getId(var_DST.getValue());
+    theCommand.mDestination = CStringDictionary::getId(var_DST.getValue());
     theCommand.mFirstParam.clear();
-    theCommand.mFirstParam.pushBack(CStringDictionary::getInstance().getId(var_NEW_SRC_FB.getValue()));
-    theCommand.mFirstParam.pushBack(CStringDictionary::getInstance().getId(var_NEW_SRC_FB_OUT.getValue()));
-    theCommand.mSecondParam.pushBack(CStringDictionary::getInstance().getId(var_NEW_DST_FB.getValue()));
-    theCommand.mSecondParam.pushBack(CStringDictionary::getInstance().getId(var_NEW_DST_FB_IN.getValue()));
+    theCommand.mFirstParam.push_back(CStringDictionary::getId(var_NEW_SRC_FB.getValue()));
+    theCommand.mFirstParam.push_back(CStringDictionary::getId(var_NEW_SRC_FB_OUT.getValue()));
+    theCommand.mSecondParam.push_back(CStringDictionary::getId(var_NEW_DST_FB.getValue()));
+    theCommand.mSecondParam.push_back(CStringDictionary::getId(var_NEW_DST_FB_IN.getValue()));
     theCommand.mCMD = EMGMCommandType::CreateConnection;
     resp = getDevice()->executeMGMCommand(theCommand);
   }
 
   //calculate return value
   var_QO = CIEC_BOOL(resp == EMGMResponse::Ready);
-  const std::string retVal(DEV_MGR::getResponseText(resp));
+  const std::string retVal(forte::mgm_cmd::getResponseText(resp));
   DEVLOG_DEBUG("%s\n", retVal.c_str());
   var_STATUS = CIEC_WSTRING(retVal.c_str());
 }

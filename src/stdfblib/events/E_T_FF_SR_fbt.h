@@ -101,4 +101,3 @@ class FORTE_E_T_FF_SR final : public CBasicFB {
     }
 };
 
-

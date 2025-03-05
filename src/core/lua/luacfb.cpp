@@ -24,13 +24,6 @@ CLuaCFB::CLuaCFB(CStringDictionary::TStringId paInstanceNameId, const CLuaCFBTyp
 
 CLuaCFB::~CLuaCFB() = default;
 
-
-bool CLuaCFB::initialize() {
-  //before calling super we need to configure the interface of the FB
-  setupFBInterface(getFBInterfaceSpec());
-  return CGenFunctionBlock<CCompositeFB>::initialize();
-}
-
 bool CLuaCFB::createInternalFBs(){
   const SCFB_FBNData &fbnData = getFBNData();
   if(fbnData.mNumFBs){
@@ -38,8 +31,8 @@ bool CLuaCFB::createInternalFBs(){
       const SCFB_FBInstanceData &cfbInstanceData(fbnData.mFBInstances[i]);
       if(createFB(cfbInstanceData.mFBInstanceNameId, cfbInstanceData.mFBTypeNameId) != EMGMResponse::Ready){
         DEVLOG_ERROR("Cannot create internal FB (name: %s, type: %s) in CFB (type: %s)!\n",
-                     CStringDictionary::getInstance().get(cfbInstanceData.mFBInstanceNameId),
-                     CStringDictionary::getInstance().get(cfbInstanceData.mFBTypeNameId),
+                     CStringDictionary::get(cfbInstanceData.mFBInstanceNameId),
+                     CStringDictionary::get(cfbInstanceData.mFBTypeNameId),
                      getFBTypeName());
         return false;
       }

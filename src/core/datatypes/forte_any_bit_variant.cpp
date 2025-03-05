@@ -107,7 +107,7 @@ int CIEC_ANY_BIT_VARIANT::fromString(const char *paValue) {
 int CIEC_ANY_BIT_VARIANT::toString(char *paValue, size_t paBufferSize) const {
   int result = -1;
   const CIEC_ANY &value = unwrap();
-  const char *typeName = CStringDictionary::getInstance().get(value.getTypeNameID());
+  const char *typeName = CStringDictionary::get(value.getTypeNameID());
   size_t typeNameLength = strlen(typeName);
   if (paBufferSize > typeNameLength + 2) {
     memcpy(paValue, typeName, typeNameLength);
@@ -120,7 +120,7 @@ int CIEC_ANY_BIT_VARIANT::toString(char *paValue, size_t paBufferSize) const {
 
 size_t CIEC_ANY_BIT_VARIANT::getToStringBufferSize() const {
   const CIEC_ANY &value = unwrap();
-  const char *typeName = CStringDictionary::getInstance().get(value.getTypeNameID());
+  const char *typeName = CStringDictionary::get(value.getTypeNameID());
   size_t typeNameLength = strlen(typeName);
   return typeNameLength + 1 + value.getToStringBufferSize();
 }
