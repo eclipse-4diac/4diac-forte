@@ -12,7 +12,7 @@
 #include "WagoMaster_gen.cpp"
 #endif
 
-#include "../wagoDeviceController.h"
+#include "../WagoDeviceController.h"
 
 using namespace forte::core::io;
 
@@ -25,15 +25,17 @@ const CStringDictionary::TStringId FORTE_WagoMaster::scmDataOutputTypeIds[] = {g
 const TDataIOID FORTE_WagoMaster::scmEIWith[] = {0, 1, scmWithListDelimiter};
 const TForteInt16 FORTE_WagoMaster::scmEIWithIndexes[] = {0};
 const CStringDictionary::TStringId FORTE_WagoMaster::scmEventInputNames[] = {g_nStringIdINIT};
+const CStringDictionary::TStringId FORTE_WagoMaster::scmEventInputTypeIds[] = {g_nStringIdEvent};
 const TDataIOID FORTE_WagoMaster::scmEOWith[] = {0, 1, scmWithListDelimiter, 1, 0, scmWithListDelimiter};
 const TForteInt16 FORTE_WagoMaster::scmEOWithIndexes[] = {0, 3};
 const CStringDictionary::TStringId FORTE_WagoMaster::scmEventOutputNames[] = {g_nStringIdINITO, g_nStringIdIND};
+const CStringDictionary::TStringId FORTE_WagoMaster::scmEventOutputTypeIds[] = {g_nStringIdEvent, g_nStringIdEvent};
 const SAdapterInstanceDef FORTE_WagoMaster::scmAdapterInstances[] = {
   {g_nStringIdWagoBusAdapter, g_nStringIdBusAdapterOut, true}
 };
 const SFBInterfaceSpec FORTE_WagoMaster::scmFBInterfaceSpec = {
-  1, scmEventInputNames, scmEIWith, scmEIWithIndexes,
-  2, scmEventOutputNames, scmEOWith, scmEOWithIndexes,
+  1, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,
+  2, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes,
   2, scmDataInputNames, scmDataInputTypeIds,
   2, scmDataOutputNames, scmDataOutputTypeIds,
   0, nullptr,
@@ -42,7 +44,10 @@ const SFBInterfaceSpec FORTE_WagoMaster::scmFBInterfaceSpec = {
 
 FORTE_WagoMaster::FORTE_WagoMaster(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     IOConfigFBMultiMaster(paContainer, scmFBInterfaceSpec, paInstanceNameId),
+    var_QI(0_BOOL),
     var_UpdateInterval(25_UINT),
+    var_QO(0_BOOL),
+    var_STATUS(u""_WSTRING),
     var_conn_QO(var_QO),
     var_conn_STATUS(var_STATUS),
     conn_INITO(this, 0),

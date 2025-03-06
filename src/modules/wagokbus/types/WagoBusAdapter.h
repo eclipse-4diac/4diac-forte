@@ -9,11 +9,11 @@
 
 #pragma once
 
-#include <io/configFB/io_adapter_multi.h>
-#include "adapter.h"
-#include "typelib.h"
-#include "forte_bool.h"
-#include "forte_uint.h"
+#include "io/configFB/io_adapter_multi.h"
+#include "core/adapter.h"
+#include "core/typelib.h"
+#include "core/datatypes/forte_bool.h"
+#include "core/datatypes/forte_uint.h"
 
 class FORTE_WagoBusAdapter : public forte::core::io::IOConfigFBMultiAdapter {
   DECLARE_ADAPTER_TYPE(FORTE_WagoBusAdapter)
@@ -61,9 +61,11 @@ class FORTE_WagoBusAdapter : public forte::core::io::IOConfigFBMultiAdapter {
     static const TDataIOID scmEIWith[];
     static const TForteInt16 scmEIWithIndexes[];
     static const CStringDictionary::TStringId scmEventInputNames[];
+    static const CStringDictionary::TStringId scmEventInputTypeIds[];
     static const TDataIOID scmEOWith[];
     static const TForteInt16 scmEOWithIndexes[];
     static const CStringDictionary::TStringId scmEventOutputNames[];
+    static const CStringDictionary::TStringId scmEventOutputTypeIds[];
 
     static const SFBInterfaceSpec scmFBInterfaceSpecSocket;
     static const SFBInterfaceSpec scmFBInterfaceSpecPlug;

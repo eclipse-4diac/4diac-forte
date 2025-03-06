@@ -9,12 +9,12 @@
 
 #pragma once
 
-#include <funcbloc.h>
-#include <forte_bool.h>
-#include <forte_wstring.h>
-#include <forte_string.h>
+#include "core/funcbloc.h"
+#include "core/datatypes/forte_bool.h"
+#include "core/datatypes/forte_string.h"
+#include "core/datatypes/forte_wstring.h"
 #include "WagoBusAdapter.h"
-#include "wagoSlaveBase.h"
+#include "WagoSlaveBase.h"
 
 class FORTE_Wago459: public WagoSlaveBase{
   DECLARE_FIRMWARE_FB(FORTE_Wago459)
@@ -89,11 +89,13 @@ class FORTE_Wago459: public WagoSlaveBase{
     static const TDataIOID scmEIWith[];
     static const TForteInt16 scmEIWithIndexes[];
     static const CStringDictionary::TStringId scmEventInputNames[];
+    static const CStringDictionary::TStringId scmEventInputTypeIds[];
     static const TEventID scmEventMAPOID = 0;
     static const TEventID scmEventINDID = 1;
     static const TDataIOID scmEOWith[];
     static const TForteInt16 scmEOWithIndexes[];
     static const CStringDictionary::TStringId scmEventOutputNames[];
+    static const CStringDictionary::TStringId scmEventOutputTypeIds[];
     static const int scmBusAdapterInAdpNum = 0;
     static const int scmBusAdapterOutAdpNum = 1;
     static const SAdapterInstanceDef scmAdapterInstances[];

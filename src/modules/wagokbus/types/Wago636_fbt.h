@@ -9,17 +9,12 @@
 
 #pragma once
 
-#include "funcbloc.h"
-#include "forte_bool.h"
-#include "forte_string.h"
-#include "forte_uint.h"
-#include "forte_wstring.h"
-#include "forte_array_common.h"
-#include "forte_array.h"
-#include "forte_array_fixed.h"
-#include "forte_array_variable.h"
+#include "core/funcbloc.h"
+#include "core/datatypes/forte_bool.h"
+#include "core/datatypes/forte_string.h"
+#include "core/datatypes/forte_wstring.h"
 #include "WagoBusAdapter.h"
-#include "wagoSlaveBase.h"
+#include "WagoSlaveBase.h"
 
 class FORTE_Wago636 final : public WagoSlaveBase {
   DECLARE_FIRMWARE_FB(FORTE_Wago636)
@@ -33,11 +28,13 @@ class FORTE_Wago636 final : public WagoSlaveBase {
     static const TDataIOID scmEIWith[];
     static const TForteInt16 scmEIWithIndexes[];
     static const CStringDictionary::TStringId scmEventInputNames[];
+    static const CStringDictionary::TStringId scmEventInputTypeIds[];
     static const TEventID scmEventMAPOID = 0;
     static const TEventID scmEventINDID = 1;
     static const TDataIOID scmEOWith[];
     static const TForteInt16 scmEOWithIndexes[];
     static const CStringDictionary::TStringId scmEventOutputNames[];
+    static const CStringDictionary::TStringId scmEventOutputTypeIds[];
     static const int scmBusAdapterInAdpNum = 0;
     static const int scmBusAdapterOutAdpNum = 1;
     static const SAdapterInstanceDef scmAdapterInstances[];
@@ -50,7 +47,7 @@ class FORTE_Wago636 final : public WagoSlaveBase {
 
   protected:
       void initHandlesBase(size_t paNumberOfBoolInputs, size_t paNumberOfBoolOutputs, size_t paNumberOfAnalogInputs, size_t paNumberOfAnalogOutputs);
-      INIT_HANDLES(3, 5, 1, 1)
+      INIT_HANDLES(7, 5, 1, 1)
 
   public:
     FORTE_Wago636(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
@@ -60,6 +57,10 @@ class FORTE_Wago636 final : public WagoSlaveBase {
     CIEC_STRING var_Busy;
     CIEC_STRING var_LimitSwitchN;
     CIEC_STRING var_LimitSwitchP;
+    CIEC_STRING var_PresetInputEnabled;
+    CIEC_STRING var_OptimizeOn;
+    CIEC_STRING var_ExtendedInfoOn;
+    CIEC_STRING var_ReferenceOk;
     CIEC_STRING var_CurrentPosition;
     CIEC_STRING var_TargetPosition;
     CIEC_STRING var_MotorN;
@@ -81,6 +82,10 @@ class FORTE_Wago636 final : public WagoSlaveBase {
     CDataConnection *conn_Busy;
     CDataConnection *conn_LimitSwitchN;
     CDataConnection *conn_LimitSwitchP;
+    CDataConnection *conn_PresetInputEnabled;
+    CDataConnection *conn_OptimizeOn;
+    CDataConnection *conn_ExtendedInfoOn;
+    CDataConnection *conn_ReferenceOk;
     CDataConnection *conn_CurrentPosition;
     CDataConnection *conn_TargetPosition;
     CDataConnection *conn_MotorN;
@@ -105,11 +110,15 @@ class FORTE_Wago636 final : public WagoSlaveBase {
     CDataConnection **getDIConUnchecked(TPortId) override;
     CDataConnection *getDOConUnchecked(TPortId) override;
 
-    void evt_MAP(const CIEC_BOOL &paQI, const CIEC_STRING &paBusy, const CIEC_STRING &paLimitSwitchN, const CIEC_STRING &paLimitSwitchP, const CIEC_STRING &paCurrentPosition, const CIEC_STRING &paTargetPosition, const CIEC_STRING &paMotorN, const CIEC_STRING &paMotorP, const CIEC_STRING &paPositioning, const CIEC_STRING &paPreset, const CIEC_STRING &paQuitErrors, CIEC_BOOL &paQO, CIEC_WSTRING &paSTATUS) {
+    void evt_MAP(const CIEC_BOOL &paQI, const CIEC_STRING &paBusy, const CIEC_STRING &paLimitSwitchN, const CIEC_STRING &paLimitSwitchP, const CIEC_STRING &paPresetInputEnabled, const CIEC_STRING &paOptimizeOn, const CIEC_STRING &paExtendedInfoOn, const CIEC_STRING &paReferenceOk, const CIEC_STRING &paCurrentPosition, const CIEC_STRING &paTargetPosition, const CIEC_STRING &paMotorN, const CIEC_STRING &paMotorP, const CIEC_STRING &paPositioning, const CIEC_STRING &paPreset, const CIEC_STRING &paQuitErrors, CIEC_BOOL &paQO, CIEC_WSTRING &paSTATUS) {
       var_QI = paQI;
       var_Busy = paBusy;
       var_LimitSwitchN = paLimitSwitchN;
       var_LimitSwitchP = paLimitSwitchP;
+      var_PresetInputEnabled = paPresetInputEnabled;
+      var_OptimizeOn = paOptimizeOn;
+      var_ExtendedInfoOn = paExtendedInfoOn;
+      var_ReferenceOk = paReferenceOk;
       var_CurrentPosition = paCurrentPosition;
       var_TargetPosition = paTargetPosition;
       var_MotorN = paMotorN;
@@ -122,8 +131,8 @@ class FORTE_Wago636 final : public WagoSlaveBase {
       paSTATUS = var_STATUS;
     }
 
-    void operator()(const CIEC_BOOL &paQI, const CIEC_STRING &paBusy, const CIEC_STRING &paLimitSwitchN, const CIEC_STRING &paLimitSwitchP, const CIEC_STRING &paCurrentPosition, const CIEC_STRING &paTargetPosition, const CIEC_STRING &paMotorN, const CIEC_STRING &paMotorP, const CIEC_STRING &paPositioning, const CIEC_STRING &paPreset, const CIEC_STRING &paQuitErrors, CIEC_BOOL &paQO, CIEC_WSTRING &paSTATUS) {
-      evt_MAP(paQI, paBusy, paLimitSwitchN, paLimitSwitchP, paCurrentPosition, paTargetPosition, paMotorN, paMotorP, paPositioning, paPreset, paQuitErrors, paQO, paSTATUS);
+    void operator()(const CIEC_BOOL &paQI, const CIEC_STRING &paBusy, const CIEC_STRING &paLimitSwitchN, const CIEC_STRING &paLimitSwitchP, const CIEC_STRING &paPresetInputEnabled, const CIEC_STRING &paOptimizeOn, const CIEC_STRING &paExtendedInfoOn, const CIEC_STRING &paReferenceOk, const CIEC_STRING &paCurrentPosition, const CIEC_STRING &paTargetPosition, const CIEC_STRING &paMotorN, const CIEC_STRING &paMotorP, const CIEC_STRING &paPositioning, const CIEC_STRING &paPreset, const CIEC_STRING &paQuitErrors, CIEC_BOOL &paQO, CIEC_WSTRING &paSTATUS) {
+      evt_MAP(paQI, paBusy, paLimitSwitchN, paLimitSwitchP, paPresetInputEnabled, paOptimizeOn, paExtendedInfoOn, paReferenceOk, paCurrentPosition, paTargetPosition, paMotorN, paMotorP, paPositioning, paPreset, paQuitErrors, paQO, paSTATUS);
     }
 };
 

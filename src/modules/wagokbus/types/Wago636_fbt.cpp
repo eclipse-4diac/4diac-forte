@@ -11,41 +11,59 @@
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
 #include "Wago636_fbt_gen.cpp"
 #endif
-#include "wagoSlaveBase.h"
-#include "../wagoDeviceController.h"
+#include "WagoSlaveBase.h"
+#include "../WagoDeviceController.h"
 
 using namespace forte::core::io;
 
 DEFINE_FIRMWARE_FB(FORTE_Wago636, g_nStringIdWago636)
 
 const CStringDictionary::TStringId FORTE_Wago636::scmDataInputNames[] = { g_nStringIdQI,
-    g_nStringIdBusy, g_nStringIdLimitSwitchN, g_nStringIdLimitSwitchP, g_nStringIdCurrentPosition,
-    g_nStringIdTargetPosition, g_nStringIdMotorN, g_nStringIdMotorP, g_nStringIdPositioning,
+    g_nStringIdBusy, g_nStringIdLimitSwitchN, g_nStringIdLimitSwitchP, g_nStringIdPresetInputEnabled, g_nStringIdOptimizeOn, g_nStringIdExtendedInfoOn, g_nStringIdReferenceOk, g_nStringIdCurrentPosition, g_nStringIdTargetPosition, g_nStringIdMotorN, g_nStringIdMotorP, g_nStringIdPositioning,
     g_nStringIdPreset, g_nStringIdQuitErrors };
-const CStringDictionary::TStringId FORTE_Wago636::scmDataInputTypeIds[] = { g_nStringIdBOOL, g_nStringIdSTRING, g_nStringIdSTRING, g_nStringIdSTRING, g_nStringIdSTRING, g_nStringIdSTRING, g_nStringIdSTRING, g_nStringIdSTRING, g_nStringIdSTRING, g_nStringIdSTRING, g_nStringIdSTRING };
+const CStringDictionary::TStringId FORTE_Wago636::scmDataInputTypeIds[] = { g_nStringIdBOOL, g_nStringIdSTRING, g_nStringIdSTRING, g_nStringIdSTRING, g_nStringIdSTRING, g_nStringIdSTRING, g_nStringIdSTRING, g_nStringIdSTRING, g_nStringIdSTRING, g_nStringIdSTRING, g_nStringIdSTRING, g_nStringIdSTRING, g_nStringIdSTRING, g_nStringIdSTRING, g_nStringIdSTRING };
 const CStringDictionary::TStringId FORTE_Wago636::scmDataOutputNames[] = { g_nStringIdQO,
     g_nStringIdSTATUS };
 const CStringDictionary::TStringId FORTE_Wago636::scmDataOutputTypeIds[] = { g_nStringIdBOOL,
     g_nStringIdWSTRING };
-const TDataIOID FORTE_Wago636::scmEIWith[] = { 3, 2, 0, 7, 6, 4, 5, 10, 8, 9, 1, scmWithListDelimiter };
+const TDataIOID FORTE_Wago636::scmEIWith[] = { 3, 2, 0, 11, 10, 8, 9, 14, 12, 13, 1, 4, 5, 6, 7, scmWithListDelimiter };
 const TForteInt16 FORTE_Wago636::scmEIWithIndexes[] = { 0 };
 const CStringDictionary::TStringId FORTE_Wago636::scmEventInputNames[] = { g_nStringIdMAP };
+const CStringDictionary::TStringId FORTE_Wago636::scmEventInputTypeIds[] = {g_nStringIdEvent};
 const TDataIOID FORTE_Wago636::scmEOWith[] = { 0, scmWithListDelimiter, 0, 1, scmWithListDelimiter };
 const TForteInt16 FORTE_Wago636::scmEOWithIndexes[] = { 0, 2 };
-const CStringDictionary::TStringId FORTE_Wago636::scmEventOutputNames[] = { g_nStringIdMAPO,
-    g_nStringIdIND };
-const SAdapterInstanceDef FORTE_Wago636::scmAdapterInstances[] =
-    { { g_nStringIdWagoBusAdapter, g_nStringIdBusAdapterOut, true }, { g_nStringIdWagoBusAdapter,
-        g_nStringIdBusAdapterIn, false } };
+const CStringDictionary::TStringId FORTE_Wago636::scmEventOutputNames[] = { g_nStringIdMAPO, g_nStringIdIND };
+const CStringDictionary::TStringId FORTE_Wago636::scmEventOutputTypeIds[] = {g_nStringIdEvent, g_nStringIdEvent};
+const SAdapterInstanceDef FORTE_Wago636::scmAdapterInstances[] = {
+  { g_nStringIdWagoBusAdapter, g_nStringIdBusAdapterOut, true },
+  { g_nStringIdWagoBusAdapter, g_nStringIdBusAdapterIn, false }
+};
 const SFBInterfaceSpec FORTE_Wago636::scmFBInterfaceSpec = {
-    1, scmEventInputNames, scmEIWith, scmEIWithIndexes,
-    2, scmEventOutputNames, scmEOWith, scmEOWithIndexes,
-    11, scmDataInputNames, scmDataInputTypeIds,
+    1, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,
+    2, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes,
+    15, scmDataInputNames, scmDataInputTypeIds,
     2, scmDataOutputNames, scmDataOutputTypeIds,
     0, nullptr,
     2, scmAdapterInstances };
 
 FORTE_Wago636::FORTE_Wago636 (const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) : WagoSlaveBase(636, paContainer, scmFBInterfaceSpec, paInstanceNameId),
+    var_QI(0_BOOL),
+    var_Busy(""_STRING),
+    var_LimitSwitchN(""_STRING),
+    var_LimitSwitchP(""_STRING),
+    var_PresetInputEnabled(""_STRING),
+    var_OptimizeOn(""_STRING),
+    var_ExtendedInfoOn(""_STRING),
+    var_ReferenceOk(""_STRING),
+    var_CurrentPosition(""_STRING),
+    var_TargetPosition(""_STRING),
+    var_MotorN(""_STRING),
+    var_MotorP(""_STRING),
+    var_Positioning(""_STRING),
+    var_Preset(""_STRING),
+    var_QuitErrors(""_STRING),
+    var_QO(0_BOOL),
+    var_STATUS(u""_WSTRING),
     var_conn_QO(var_QO),
     var_conn_STATUS(var_STATUS),
     conn_MAPO(this, 0),
@@ -54,6 +72,10 @@ FORTE_Wago636::FORTE_Wago636 (const CStringDictionary::TStringId paInstanceNameI
     conn_Busy(nullptr),
     conn_LimitSwitchN(nullptr),
     conn_LimitSwitchP(nullptr),
+    conn_PresetInputEnabled(nullptr),
+    conn_OptimizeOn(nullptr),
+    conn_ExtendedInfoOn(nullptr),
+    conn_ReferenceOk(nullptr),
     conn_CurrentPosition(nullptr),
     conn_TargetPosition(nullptr),
     conn_MotorN(nullptr),
@@ -63,14 +85,17 @@ FORTE_Wago636::FORTE_Wago636 (const CStringDictionary::TStringId paInstanceNameI
     conn_QuitErrors(nullptr),
     conn_QO(this, 0, &var_conn_QO),
     conn_STATUS(this, 1, &var_conn_STATUS) {
-}
-;
+};
 
 void FORTE_Wago636::setInitialValues () {
   var_QI = 0_BOOL;
   var_Busy = ""_STRING;
   var_LimitSwitchN = ""_STRING;
   var_LimitSwitchP = ""_STRING;
+  var_PresetInputEnabled = ""_STRING;
+  var_OptimizeOn = ""_STRING;
+  var_ExtendedInfoOn = ""_STRING;
+  var_ReferenceOk = ""_STRING;
   var_CurrentPosition = ""_STRING;
   var_TargetPosition = ""_STRING;
   var_MotorN = ""_STRING;
@@ -89,13 +114,17 @@ void FORTE_Wago636::readInputData (const TEventID paEIID) {
       readData(1, var_Busy, conn_Busy);
       readData(2, var_LimitSwitchN, conn_LimitSwitchN);
       readData(3, var_LimitSwitchP, conn_LimitSwitchP);
-      readData(4, var_CurrentPosition, conn_CurrentPosition);
-      readData(5, var_TargetPosition, conn_TargetPosition);
-      readData(6, var_MotorN, conn_MotorN);
-      readData(7, var_MotorP, conn_MotorP);
-      readData(8, var_Positioning, conn_Positioning);
-      readData(9, var_Preset, conn_Preset);
-      readData(10, var_QuitErrors, conn_QuitErrors);
+      readData(4, var_PresetInputEnabled, conn_PresetInputEnabled);
+      readData(5, var_OptimizeOn, conn_OptimizeOn);
+      readData(6, var_ExtendedInfoOn, conn_ExtendedInfoOn);
+      readData(7, var_ReferenceOk, conn_ReferenceOk);
+      readData(8, var_CurrentPosition, conn_CurrentPosition);
+      readData(9, var_TargetPosition, conn_TargetPosition);
+      readData(10, var_MotorN, conn_MotorN);
+      readData(11, var_MotorP, conn_MotorP);
+      readData(12, var_Positioning, conn_Positioning);
+      readData(13, var_Preset, conn_Preset);
+      readData(14, var_QuitErrors, conn_QuitErrors);
       break;
     }
     default:
@@ -130,18 +159,26 @@ CIEC_ANY* FORTE_Wago636::getDI (const size_t paIndex) {
     case 3:
       return &var_LimitSwitchP;
     case 4:
-      return &var_CurrentPosition;
+      return &var_PresetInputEnabled;
     case 5:
-      return &var_TargetPosition;
+      return &var_OptimizeOn;
     case 6:
-      return &var_MotorN;
+      return &var_ExtendedInfoOn;
     case 7:
-      return &var_MotorP;
+      return &var_ReferenceOk;
     case 8:
-      return &var_Positioning;
+      return &var_CurrentPosition;
     case 9:
-      return &var_Preset;
+      return &var_TargetPosition;
     case 10:
+      return &var_MotorN;
+    case 11:
+      return &var_MotorP;
+    case 12:
+      return &var_Positioning;
+    case 13:
+      return &var_Preset;
+    case 14:
       return &var_QuitErrors;
   }
   return nullptr;
@@ -178,18 +215,26 @@ CDataConnection** FORTE_Wago636::getDIConUnchecked (const TPortId paIndex) {
     case 3:
       return &conn_LimitSwitchP;
     case 4:
-      return &conn_CurrentPosition;
+      return &conn_PresetInputEnabled;
     case 5:
-      return &conn_TargetPosition;
+      return &conn_OptimizeOn;
     case 6:
-      return &conn_MotorN;
+      return &conn_ExtendedInfoOn;
     case 7:
-      return &conn_MotorP;
+      return &conn_ReferenceOk;
     case 8:
-      return &conn_Positioning;
+      return &conn_CurrentPosition;
     case 9:
-      return &conn_Preset;
+      return &conn_TargetPosition;
     case 10:
+      return &conn_MotorN;
+    case 11:
+      return &conn_MotorP;
+    case 12:
+      return &conn_Positioning;
+    case 13:
+      return &conn_Preset;
+    case 14:
       return &conn_QuitErrors;
   }
   return nullptr;
@@ -208,10 +253,14 @@ CDataConnection* FORTE_Wago636::getDOConUnchecked (const TPortId paIndex) {
 void FORTE_Wago636::initHandlesBase (size_t paNumberOfBoolInputs, size_t paNumberOfBoolOutputs, size_t paNumberOfAnalogInputs, size_t paNumberOfAnalogOutputs) {
   size_t offset = 1; //skip QI
 
-  if (paNumberOfBoolInputs == 3) {
+  if (paNumberOfBoolInputs == 7) {
     initWagoHandle(offset, 3, CIEC_ANY::e_BOOL, IOMapper::In); // busy - Status-Byte 0 Bit 3
     initWagoHandle(offset + 1, 14, CIEC_ANY::e_BOOL, IOMapper::In); // switch negative - Status-Byte 1 Bit 6
     initWagoHandle(offset + 2, 15, CIEC_ANY::e_BOOL, IOMapper::In); // switch positive - Status-Byte 1 Bit 7
+    initWagoHandle(offset + 3, 8, CIEC_ANY::e_BOOL, IOMapper::In); // preset input enabled - Status-Byte 1 Bit 0
+    initWagoHandle(offset + 4, 9, CIEC_ANY::e_BOOL, IOMapper::In); // optimize on - Status-Byte 1 Bit 1
+    initWagoHandle(offset + 5, 10, CIEC_ANY::e_BOOL, IOMapper::In); // extended info on - Status-Byte 1 Bit 2
+    initWagoHandle(offset + 6, 5, CIEC_ANY::e_BOOL, IOMapper::In); // reference ok - Status-Byte 0 Bit 5
   }
   else {
     DEVLOG_ERROR("[Wago636] only supports 3 BOOL inputs, but got %d.\n", paNumberOfBoolInputs);

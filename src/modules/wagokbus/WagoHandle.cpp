@@ -10,7 +10,8 @@
  *   Jose Cabral - initial API and implementation and/or initial documentation
  *************************************************************************/
 
-#include "wagoHandle.h"
+#include "WagoHandle.h"
+
 #include "iec61131_functions.h"
 
 WagoHandle::WagoHandle(WagoDeviceController *paController, CIEC_ANY::EDataTypeID paType, forte::core::io::IOMapper::Direction paDirection,

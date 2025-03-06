@@ -21,16 +21,18 @@ const CStringDictionary::TStringId FORTE_Wago1405_6::scmDataOutputTypeIds[] = {g
 const TDataIOID FORTE_Wago1405_6::scmEIWith[] = {1, 2, 5, 3, 4, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 0, scmWithListDelimiter};
 const TForteInt16 FORTE_Wago1405_6::scmEIWithIndexes[] = {0};
 const CStringDictionary::TStringId FORTE_Wago1405_6::scmEventInputNames[] = {g_nStringIdMAP};
+const CStringDictionary::TStringId FORTE_Wago1405_6::scmEventInputTypeIds[] = {g_nStringIdEvent};
 const TDataIOID FORTE_Wago1405_6::scmEOWith[] = {0, scmWithListDelimiter, 0, 1, scmWithListDelimiter};
 const TForteInt16 FORTE_Wago1405_6::scmEOWithIndexes[] = {0, 2};
 const CStringDictionary::TStringId FORTE_Wago1405_6::scmEventOutputNames[] = {g_nStringIdMAPO, g_nStringIdIND};
+const CStringDictionary::TStringId FORTE_Wago1405_6::scmEventOutputTypeIds[] = {g_nStringIdEvent, g_nStringIdEvent};
 const SAdapterInstanceDef FORTE_Wago1405_6::scmAdapterInstances[] = {
   {g_nStringIdWagoBusAdapter, g_nStringIdBusAdapterOut, true},
   {g_nStringIdWagoBusAdapter, g_nStringIdBusAdapterIn, false}
 };
 const SFBInterfaceSpec FORTE_Wago1405_6::scmFBInterfaceSpec = {
-  1, scmEventInputNames, scmEIWith, scmEIWithIndexes,
-  2, scmEventOutputNames, scmEOWith, scmEOWithIndexes,
+  1, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,
+  2, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes,
   17, scmDataInputNames, scmDataInputTypeIds,
   2, scmDataOutputNames, scmDataOutputTypeIds,
   0, nullptr,
@@ -38,7 +40,26 @@ const SFBInterfaceSpec FORTE_Wago1405_6::scmFBInterfaceSpec = {
 };
 
 FORTE_Wago1405_6::FORTE_Wago1405_6(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
-    WagoSlaveBase(36865, paContainer, scmFBInterfaceSpec, paInstanceNameId),
+     WagoSlaveBase(36865, paContainer, scmFBInterfaceSpec, paInstanceNameId),
+    var_QI(0_BOOL),
+    var_DigitalInput_1(""_STRING),
+    var_DigitalInput_2(""_STRING),
+    var_DigitalInput_3(""_STRING),
+    var_DigitalInput_4(""_STRING),
+    var_DigitalInput_5(""_STRING),
+    var_DigitalInput_6(""_STRING),
+    var_DigitalInput_7(""_STRING),
+    var_DigitalInput_8(""_STRING),
+    var_DigitalInput_9(""_STRING),
+    var_DigitalInput_10(""_STRING),
+    var_DigitalInput_11(""_STRING),
+    var_DigitalInput_12(""_STRING),
+    var_DigitalInput_13(""_STRING),
+    var_DigitalInput_14(""_STRING),
+    var_DigitalInput_15(""_STRING),
+    var_DigitalInput_16(""_STRING),
+    var_QO(0_BOOL),
+    var_STATUS(u""_WSTRING),
     var_conn_QO(var_QO),
     var_conn_STATUS(var_STATUS),
     conn_MAPO(this, 0),

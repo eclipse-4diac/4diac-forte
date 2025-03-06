@@ -16,7 +16,7 @@
 #include "../../../core/datatypes/forte_word.h"
 #include "../../../core/datatypes/forte_dword.h"
 #include "../../../core/io/mapper/io_handle.h"
-#include "wagoDeviceController.h"
+#include "WagoDeviceController.h"
 
 class WagoHandle : public forte::core::io::IOHandle {
   public:

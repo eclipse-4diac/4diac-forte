@@ -7,8 +7,9 @@
  * SPDX-License-Identifier: EPL-2.0
  *************************************************************************/
 
-#include "wagoSlaveBase.h"
-#include "../wagoDeviceController.h"
+#include "WagoSlaveBase.h"
+
+#include "../WagoDeviceController.h"
 
 using namespace forte::core::io;
 

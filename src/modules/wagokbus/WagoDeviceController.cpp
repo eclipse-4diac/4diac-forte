@@ -10,9 +10,10 @@
  *   Jose Cabral - initial API and implementation and/or initial documentation
  *************************************************************************/
 
-#include "wagoDeviceController.h"
-#include "wagoHandle.h"
+#include "WagoDeviceController.h"
+
 #include "core/util/criticalregion.h"
+#include "WagoHandle.h"
 
 const char * const WagoDeviceController::scmKBusDeviceName = "libpackbus";
 

@@ -21,16 +21,18 @@ const CStringDictionary::TStringId FORTE_Wago459::scmDataOutputTypeIds[] = {g_nS
 const TDataIOID FORTE_Wago459::scmEIWith[] = {1, 2, 3, 4, 0, scmWithListDelimiter};
 const TForteInt16 FORTE_Wago459::scmEIWithIndexes[] = {0};
 const CStringDictionary::TStringId FORTE_Wago459::scmEventInputNames[] = {g_nStringIdMAP};
+const CStringDictionary::TStringId FORTE_Wago459::scmEventInputTypeIds[] = {g_nStringIdEvent};
 const TDataIOID FORTE_Wago459::scmEOWith[] = {0, scmWithListDelimiter, 0, 1, scmWithListDelimiter};
 const TForteInt16 FORTE_Wago459::scmEOWithIndexes[] = {0, 2};
 const CStringDictionary::TStringId FORTE_Wago459::scmEventOutputNames[] = {g_nStringIdMAPO, g_nStringIdIND};
+const CStringDictionary::TStringId FORTE_Wago459::scmEventOutputTypeIds[] = {g_nStringIdEvent, g_nStringIdEvent};
 const SAdapterInstanceDef FORTE_Wago459::scmAdapterInstances[] = {
   {g_nStringIdWagoBusAdapter, g_nStringIdBusAdapterOut, true},
   {g_nStringIdWagoBusAdapter, g_nStringIdBusAdapterIn, false}
 };
 const SFBInterfaceSpec FORTE_Wago459::scmFBInterfaceSpec = {
-  1, scmEventInputNames, scmEIWith, scmEIWithIndexes,
-  2, scmEventOutputNames, scmEOWith, scmEOWithIndexes,
+  1, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,
+  2, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes,
   5, scmDataInputNames, scmDataInputTypeIds,
   2, scmDataOutputNames, scmDataOutputTypeIds,
   0, nullptr,
@@ -39,6 +41,13 @@ const SFBInterfaceSpec FORTE_Wago459::scmFBInterfaceSpec = {
 
 FORTE_Wago459::FORTE_Wago459(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     WagoSlaveBase(459, paContainer, scmFBInterfaceSpec, paInstanceNameId),
+    var_QI(0_BOOL),
+    var_AnalogInput_1(""_STRING),
+    var_AnalogInput_2(""_STRING),
+    var_AnalogInput_3(""_STRING),
+    var_AnalogInput_4(""_STRING),
+    var_QO(0_BOOL),
+    var_STATUS(u""_WSTRING),
     var_conn_QO(var_QO),
     var_conn_STATUS(var_STATUS),
     conn_MAPO(this, 0),
