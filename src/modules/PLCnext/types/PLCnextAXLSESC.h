@@ -1,19 +1,27 @@
-/*******************************************************************************
- * Copyright (c) 2022 Peirlberger Juergen
- * This program and the accompanying materials are made available under the
- * terms of the Eclipse Public License 2.0 which is available at
- * http://www.eclipse.org/legal/epl-2.0.
- *
- * SPDX-License-Identifier: EPL-2.0
- *
- * Contributors:
- *   Peirlberger Juergen - initial API and implementation and/or initial documentation
- *******************************************************************************/
+/*************************************************************************
+ *** Copyright (c) 2022 Peirlberger Juergen
+ ***
+ *** This program and the accompanying materials are made
+ *** available under the terms of the Eclipse Public License 2.0
+ *** which is available at https://www.eclipse.org/legal/epl-2.0/
+ ***
+ *** SPDX-License-Identifier: EPL-2.0
+ ***
+ *** FORTE Library Element
+ ***
+ *** This file was generated using the 4DIAC FORTE Export Filter V1.0.x NG!
+ ***
+ *** Name: PLCnextAXLSESC
+ *** Description: Service Interface Function Block Type
+ *** Version:
+ ***     1.0: 2022-04-07/Peirlberger Juergen -  - initial API and implementation and/or initial documentation
+ *************************************************************************/
 
 #pragma once
 
 #include "funcbloc.h"
 #include "forte_bool.h"
+#include "forte_uint.h"
 #include "forte_wstring.h"
 #include "iec61131_functions.h"
 #include "forte_array_common.h"
@@ -48,6 +56,8 @@ private:
 
   static const SFBInterfaceSpec scmFBInterfaceSpec;
 
+  void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
+
   void readInputData(TEventID paEIID) override;
   void writeOutputData(TEventID paEIID) override;
   void setInitialValues() override;
@@ -57,11 +67,16 @@ private:
 
 public:
   FORTE_PLCnextAXLSESC(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+  bool initialize() override;
 
   CIEC_BOOL var_QI;
 
   CIEC_BOOL var_QO;
   CIEC_WSTRING var_STATUS;
+
+  FORTE_PLCnextBusAdapter var_BusAdapterIn;
+
+  FORTE_PLCnextBusAdapter var_BusAdapterOut;
 
   CIEC_BOOL var_conn_QO;
   CIEC_WSTRING var_conn_STATUS;
@@ -76,7 +91,7 @@ public:
 
   CIEC_ANY *getDI(size_t) override;
   CIEC_ANY *getDO(size_t) override;
-
+  CAdapter *getAdapterUnchecked(size_t) override;
   FORTE_PLCnextBusAdapter &var_BusAdapterIn() {
     return *static_cast<FORTE_PLCnextBusAdapter*>(mAdapters[0]);
   };

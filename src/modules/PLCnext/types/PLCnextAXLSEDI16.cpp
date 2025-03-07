@@ -1,20 +1,33 @@
-/*******************************************************************************
- * Copyright (c) 2022 Peirlberger Juergen
- * This program and the accompanying materials are made available under the
- * terms of the Eclipse Public License 2.0 which is available at
- * http://www.eclipse.org/legal/epl-2.0.
- *
- * SPDX-License-Identifier: EPL-2.0
- *
- * Contributors:
- *   Peirlberger Juergen - initial API and implementation and/or initial documentation
- *******************************************************************************/
+/************************************************************************* 
+ *** Copyright (c) 2022 Peirlberger Juergen  
+ ***  
+ *** This program and the accompanying materials are made  
+ *** available under the terms of the Eclipse Public License 2.0  
+ *** which is available at https://www.eclipse.org/legal/epl-2.0/  
+ ***  
+ *** SPDX-License-Identifier: EPL-2.0   
+ *** 
+ *** FORTE Library Element
+ ***
+ *** This file was generated using the 4DIAC FORTE Export Filter V1.0.x NG!
+ ***
+ *** Name: PLCnextAXLSEDI16
+ *** Description: Service Interface Function Block Type
+ *** Version:
+ ***     1.0: 2022-04-07/Peirlberger Juergen -  - initial API and implementation and/or initial documentation
+ *************************************************************************/
 
 #include "PLCnextAXLSEDI16.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
 #include "PLCnextAXLSEDI16_gen.cpp"
 #endif
 
+#include "PLCnextBusAdapter.h"
+#include "iec61131_functions.h"
+#include "forte_array_common.h"
+#include "forte_array.h"
+#include "forte_array_fixed.h"
+#include "forte_array_variable.h"
 #include "criticalregion.h"
 #include "resource.h"
 
@@ -31,7 +44,7 @@ const CStringDictionary::TStringId FORTE_PLCnextAXLSEDI16::scmEventInputTypeIds[
 const TDataIOID FORTE_PLCnextAXLSEDI16::scmEOWith[] = {0, 1, scmWithListDelimiter, 0, 1, scmWithListDelimiter};
 const TForteInt16 FORTE_PLCnextAXLSEDI16::scmEOWithIndexes[] = {0, 3};
 const CStringDictionary::TStringId FORTE_PLCnextAXLSEDI16::scmEventOutputNames[] = {g_nStringIdINITO, g_nStringIdIND};
-const CStringDictionary::TStringId FORTE_PLCnextAXLSEDI16::scmEventOutputTypeIds[] = {g_nStringIdEvent, g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_PLCnextAXLSEDI16::scmEventOutputTypeIds[] = {g_nStringIdEInit, g_nStringIdEvent};
 const SAdapterInstanceDef FORTE_PLCnextAXLSEDI16::scmAdapterInstances[] = {
   {g_nStringIdPLCnextBusAdapter, g_nStringIdBusAdapterIn, false},
   {g_nStringIdPLCnextBusAdapter, g_nStringIdBusAdapterOut, true}
@@ -47,6 +60,27 @@ const SFBInterfaceSpec FORTE_PLCnextAXLSEDI16::scmFBInterfaceSpec = {
 
 FORTE_PLCnextAXLSEDI16::FORTE_PLCnextAXLSEDI16(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     PLCnextSlaveHandler (PLCnextSlaveHandler::Input, pa_poSrcRes, &scm_stFBInterfaceSpec, pa_nInstanceNameId, m_anFBConnData, m_anFBVarsData),
+    var_QI(0_BOOL),
+    var_DI_1(""_STRING),
+    var_DI_2(""_STRING),
+    var_DI_3(""_STRING),
+    var_DI_4(""_STRING),
+    var_DI_5(""_STRING),
+    var_DI_6(""_STRING),
+    var_DI_7(""_STRING),
+    var_DI_8(""_STRING),
+    var_DI_9(""_STRING),
+    var_DI_10(""_STRING),
+    var_DI_11(""_STRING),
+    var_DI_12(""_STRING),
+    var_DI_13(""_STRING),
+    var_DI_14(""_STRING),
+    var_DI_15(""_STRING),
+    var_DI_16(""_STRING),
+    var_QO(0_BOOL),
+    var_STATUS(u""_WSTRING),
+    var_BusAdapterIn(g_nStringIdBusAdapterIn, *this, false),
+    var_BusAdapterOut(g_nStringIdBusAdapterOut, *this, true),
     var_conn_QO(var_QO),
     var_conn_STATUS(var_STATUS),
     conn_INITO(this, 0),
@@ -71,6 +105,14 @@ FORTE_PLCnextAXLSEDI16::FORTE_PLCnextAXLSEDI16(const CStringDictionary::TStringI
     conn_QO(this, 0, &var_conn_QO),
     conn_STATUS(this, 1, &var_conn_STATUS) {
 };
+
+bool FORTE_PLCnextAXLSEDI16::initialize() {
+  if(!var_BusAdapterIn.initialize()) { return false; }
+  if(!var_BusAdapterOut.initialize()) { return false; }
+  var_BusAdapterIn.setParentFB(this, 0);
+  var_BusAdapterOut.setParentFB(this, 1);
+  return CFunctionBlock::initialize();
+}
 
 void FORTE_PLCnextAXLSEDI16::setInitialValues() {
   var_QI = 0_BOOL;
@@ -165,6 +207,14 @@ CIEC_ANY *FORTE_PLCnextAXLSEDI16::getDO(const size_t paIndex) {
   switch(paIndex) {
     case 0: return &var_QO;
     case 1: return &var_STATUS;
+  }
+  return nullptr;
+}
+
+CAdapter *FORTE_PLCnextAXLSEDI16::getAdapterUnchecked(const size_t paIndex) {
+  switch(paIndex) {
+    case 0: return &var_BusAdapterIn;
+    case 1: return &var_BusAdapterOut;
   }
   return nullptr;
 }

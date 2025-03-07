@@ -1,20 +1,33 @@
-/*******************************************************************************
- * Copyright (c) 2022 Peirlberger Juergen
- * This program and the accompanying materials are made available under the
- * terms of the Eclipse Public License 2.0 which is available at
- * http://www.eclipse.org/legal/epl-2.0.
- *
- * SPDX-License-Identifier: EPL-2.0
- *
- * Contributors:
- *   Peirlberger Juergen - initial API and implementation and/or initial documentation
- *******************************************************************************/
+/*************************************************************************
+ *** Copyright (c) 2022 Peirlberger Juergen
+ ***
+ *** This program and the accompanying materials are made
+ *** available under the terms of the Eclipse Public License 2.0
+ *** which is available at https://www.eclipse.org/legal/epl-2.0/
+ ***
+ *** SPDX-License-Identifier: EPL-2.0
+ ***
+ *** FORTE Library Element
+ ***
+ *** This file was generated using the 4DIAC FORTE Export Filter V1.0.x NG!
+ ***
+ *** Name: PLCnextAXLSESC
+ *** Description: Service Interface Function Block Type
+ *** Version:
+ ***     1.0: 2022-04-07/Peirlberger Juergen -  - initial API and implementation and/or initial documentation
+ *************************************************************************/
 
 #include "PLCnextAXLSESC.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
 #include "PLCnextAXLSESC_gen.cpp"
 #endif
 
+#include "PLCnextBusAdapter.h"
+#include "iec61131_functions.h"
+#include "forte_array_common.h"
+#include "forte_array.h"
+#include "forte_array_fixed.h"
+#include "forte_array_variable.h"
 #include "criticalregion.h"
 #include "resource.h"
 
@@ -31,7 +44,7 @@ const CStringDictionary::TStringId FORTE_PLCnextAXLSESC::scmEventInputTypeIds[] 
 const TDataIOID FORTE_PLCnextAXLSESC::scmEOWith[] = {0, 1, scmWithListDelimiter, 0, 1, scmWithListDelimiter};
 const TForteInt16 FORTE_PLCnextAXLSESC::scmEOWithIndexes[] = {0, 3};
 const CStringDictionary::TStringId FORTE_PLCnextAXLSESC::scmEventOutputNames[] = {g_nStringIdINITO, g_nStringIdIND};
-const CStringDictionary::TStringId FORTE_PLCnextAXLSESC::scmEventOutputTypeIds[] = {g_nStringIdEvent, g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_PLCnextAXLSESC::scmEventOutputTypeIds[] = {g_nStringIdEInit, g_nStringIdEvent};
 const SAdapterInstanceDef FORTE_PLCnextAXLSESC::scmAdapterInstances[] = {
   {g_nStringIdPLCnextBusAdapter, g_nStringIdBusAdapterIn, false},
   {g_nStringIdPLCnextBusAdapter, g_nStringIdBusAdapterOut, true}
@@ -47,6 +60,11 @@ const SFBInterfaceSpec FORTE_PLCnextAXLSESC::scmFBInterfaceSpec = {
 
 FORTE_PLCnextAXLSESC::FORTE_PLCnextAXLSESC(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     PLCnextSlaveHandler (PLCnextSlaveHandler::NoUsage, pa_poSrcRes, &scm_stFBInterfaceSpec, pa_nInstanceNameId, m_anFBConnData, m_anFBVarsData),
+    var_QI(0_BOOL),
+    var_QO(0_BOOL),
+    var_STATUS(u""_WSTRING),
+    var_BusAdapterIn(g_nStringIdBusAdapterIn, *this, false),
+    var_BusAdapterOut(g_nStringIdBusAdapterOut, *this, true),
     var_conn_QO(var_QO),
     var_conn_STATUS(var_STATUS),
     conn_INITO(this, 0),
@@ -55,6 +73,14 @@ FORTE_PLCnextAXLSESC::FORTE_PLCnextAXLSESC(const CStringDictionary::TStringId pa
     conn_QO(this, 0, &var_conn_QO),
     conn_STATUS(this, 1, &var_conn_STATUS) {
 };
+
+bool FORTE_PLCnextAXLSESC::initialize() {
+  if(!var_BusAdapterIn.initialize()) { return false; }
+  if(!var_BusAdapterOut.initialize()) { return false; }
+  var_BusAdapterIn.setParentFB(this, 0);
+  var_BusAdapterOut.setParentFB(this, 1);
+  return CFunctionBlock::initialize();
+}
 
 void FORTE_PLCnextAXLSESC::setInitialValues() {
   var_QI = 0_BOOL;
@@ -101,6 +127,14 @@ CIEC_ANY *FORTE_PLCnextAXLSESC::getDO(const size_t paIndex) {
   switch(paIndex) {
     case 0: return &var_QO;
     case 1: return &var_STATUS;
+  }
+  return nullptr;
+}
+
+CAdapter *FORTE_PLCnextAXLSESC::getAdapterUnchecked(const size_t paIndex) {
+  switch(paIndex) {
+    case 0: return &var_BusAdapterIn;
+    case 1: return &var_BusAdapterOut;
   }
   return nullptr;
 }

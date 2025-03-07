@@ -1,20 +1,34 @@
-/*******************************************************************************
- * Copyright (c) 2022 Peirlberger Juergen
- * This program and the accompanying materials are made available under the
- * terms of the Eclipse Public License 2.0 which is available at
- * http://www.eclipse.org/legal/epl-2.0.
- *
- * SPDX-License-Identifier: EPL-2.0
- *
- * Contributors:
- *   Peirlberger Juergen - initial API and implementation and/or initial documentation
- *******************************************************************************/
+/*************************************************************************
+ *** Copyright (c) 2022 Peirlberger Juergen
+ ***
+ *** This program and the accompanying materials are made
+ *** available under the terms of the Eclipse Public License 2.0
+ *** which is available at https://www.eclipse.org/legal/epl-2.0/
+ ***
+ *** SPDX-License-Identifier: EPL-2.0
+ ***
+ *** FORTE Library Element
+ ***
+ *** This file was generated using the 4DIAC FORTE Export Filter V1.0.x NG!
+ ***
+ *** Name: PLCnextMaster
+ *** Description: Service Interface Function Block Type
+ *** Version:
+ ***     1.0: 2022-04-07/Peirlberger Juergen -  - initial API and implementation and/or initial documentation
+ *************************************************************************/
 
 #include "PLCnextMaster.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
 #include "PLCnextMaster_gen.cpp"
 #endif
 
+#include "PLCnextBusAdapter.h"
+#include "forte_uint.h"
+#include "iec61131_functions.h"
+#include "forte_array_common.h"
+#include "forte_array.h"
+#include "forte_array_fixed.h"
+#include "forte_array_variable.h"
 #include "criticalregion.h"
 #include "resource.h"
 
@@ -31,7 +45,7 @@ const CStringDictionary::TStringId FORTE_PLCnextMaster::scmEventInputTypeIds[] =
 const TDataIOID FORTE_PLCnextMaster::scmEOWith[] = {0, 1, scmWithListDelimiter, 0, 1, scmWithListDelimiter};
 const TForteInt16 FORTE_PLCnextMaster::scmEOWithIndexes[] = {0, 3};
 const CStringDictionary::TStringId FORTE_PLCnextMaster::scmEventOutputNames[] = {g_nStringIdINITO, g_nStringIdIND};
-const CStringDictionary::TStringId FORTE_PLCnextMaster::scmEventOutputTypeIds[] = {g_nStringIdEvent, g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_PLCnextMaster::scmEventOutputTypeIds[] = {g_nStringIdEInit, g_nStringIdEvent};
 const SAdapterInstanceDef FORTE_PLCnextMaster::scmAdapterInstances[] = {
   {g_nStringIdPLCnextBusAdapter, g_nStringIdBusAdapterOut, true}
 };
@@ -46,6 +60,11 @@ const SFBInterfaceSpec FORTE_PLCnextMaster::scmFBInterfaceSpec = {
 
 FORTE_PLCnextMaster::FORTE_PLCnextMaster(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     forte::core::io::IOConfigFBMultiMaster(paContainer, scmFBInterfaceSpec, paInstanceNameId),
+    var_QI(0_BOOL),
+    var_SlaveUpdateInterval(25_UINT),
+    var_QO(0_BOOL),
+    var_STATUS(u""_WSTRING),
+    var_BusAdapterOut(g_nStringIdBusAdapterOut, *this, true),
     var_conn_QO(var_QO),
     var_conn_STATUS(var_STATUS),
     conn_INITO(this, 0),
@@ -55,6 +74,12 @@ FORTE_PLCnextMaster::FORTE_PLCnextMaster(const CStringDictionary::TStringId paIn
     conn_QO(this, 0, &var_conn_QO),
     conn_STATUS(this, 1, &var_conn_STATUS) {
 };
+
+bool FORTE_PLCnextMaster::initialize() {
+  if(!var_BusAdapterOut.initialize()) { return false; }
+  var_BusAdapterOut.setParentFB(this, 0);
+  return CFunctionBlock::initialize();
+}
 
 void FORTE_PLCnextMaster::setInitialValues() {
   var_QI = 0_BOOL;
@@ -108,6 +133,12 @@ CIEC_ANY *FORTE_PLCnextMaster::getDO(const size_t paIndex) {
   return nullptr;
 }
 
+CAdapter *FORTE_PLCnextMaster::getAdapterUnchecked(const size_t paIndex) {
+  switch(paIndex) {
+    case 0: return &var_BusAdapterOut;
+  }
+  return nullptr;
+}
 
 CEventConnection *FORTE_PLCnextMaster::getEOConUnchecked(const TPortId paIndex) {
   switch(paIndex) {

@@ -1,14 +1,21 @@
-/*******************************************************************************
- * Copyright (c) 2022 Peirlberger Juergen
- * This program and the accompanying materials are made available under the
- * terms of the Eclipse Public License 2.0 which is available at
- * http://www.eclipse.org/legal/epl-2.0.
- *
- * SPDX-License-Identifier: EPL-2.0
- *
- * Contributors:
- *   Peirlberger Juergen - initial API and implementation and/or initial documentation
- *******************************************************************************/
+/*************************************************************************
+ *** Copyright (c) 2022 Peirlberger Juergen
+ ***
+ *** This program and the accompanying materials are made
+ *** available under the terms of the Eclipse Public License 2.0
+ *** which is available at https://www.eclipse.org/legal/epl-2.0/
+ ***
+ *** SPDX-License-Identifier: EPL-2.0
+ ***
+ *** FORTE Library Element
+ ***
+ *** This file was generated using the 4DIAC FORTE Export Filter V1.0.x NG!
+ ***
+ *** Name: PLCnextBusAdapter
+ *** Description: Service Interface Function Block Type
+ *** Version:
+ ***     1.0: 2022-04-07/Peirlberger Juergen -  - initial API and implementation and/or initial documentation
+ *************************************************************************/
 
 #pragma once
 
@@ -85,7 +92,10 @@ public:
 
   ADAPTER_CTOR_FOR_IO_MULTI(FORTE_PLCnextBusAdapter) {};
 
+  FORTE_PLCnextBusAdapter(CStringDictionary::TStringId paAdapterInstanceName, forte::core::CFBContainer &paContainer, bool paIsPlug) :
+    CAdapter(paContainer, scmFBInterfaceSpecSocket, paAdapterInstanceName, scmFBInterfaceSpecPlug, paIsPlug) {
+  };
+
   virtual ~FORTE_PLCnextBusAdapter() = default;
 };
-
 
