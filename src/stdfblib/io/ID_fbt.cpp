@@ -16,6 +16,11 @@
 #include "ID_fbt_gen.cpp"
 #endif
 
+#include "iec61131_functions.h"
+#include "forte_array_common.h"
+#include "forte_array.h"
+#include "forte_array_fixed.h"
+#include "forte_array_variable.h"
 #include "criticalregion.h"
 #include "resource.h"
 
@@ -32,7 +37,7 @@ const CStringDictionary::TStringId FORTE_ID::scmEventInputTypeIds[] = {g_nString
 const TDataIOID FORTE_ID::scmEOWith[] = {0, 1, scmWithListDelimiter, 0, 1, 2, scmWithListDelimiter, 0, 1, 2, scmWithListDelimiter};
 const TForteInt16 FORTE_ID::scmEOWithIndexes[] = {0, 3, 7};
 const CStringDictionary::TStringId FORTE_ID::scmEventOutputNames[] = {g_nStringIdINITO, g_nStringIdCNF, g_nStringIdIND};
-const CStringDictionary::TStringId FORTE_ID::scmEventOutputTypeIds[] = {g_nStringIdEvent, g_nStringIdEvent, g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_ID::scmEventOutputTypeIds[] = {g_nStringIdEInit, g_nStringIdEvent, g_nStringIdEvent};
 const SFBInterfaceSpec FORTE_ID::scmFBInterfaceSpec = {
   2, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,
   3, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes,
@@ -43,7 +48,12 @@ const SFBInterfaceSpec FORTE_ID::scmFBInterfaceSpec = {
 };
 
 FORTE_ID::FORTE_ID(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
-        CProcessInterface(paContainer, scmFBInterfaceSpec, paInstanceNameId),
+    CProcessInterface(paContainer, scmFBInterfaceSpec, paInstanceNameId),
+    var_QI(0_BOOL),
+    var_PARAMS(""_STRING),
+    var_QO(0_BOOL),
+    var_STATUS(""_STRING),
+    var_IN(0_DWORD),
     var_conn_QO(var_QO),
     var_conn_STATUS(var_STATUS),
     var_conn_IN(var_IN),
@@ -65,7 +75,7 @@ void FORTE_ID::setInitialValues() {
   var_IN = 0_DWORD;
 }
 
-void FORTE_ID::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
+void FORTE_ID::executeEvent(const TEventID paEIID, CEventChainExecutionThread *const paECET) {
   switch(paEIID) {
     case cgExternalEventID:
       sendOutputEvent(scmEventINDID, paECET);
@@ -89,7 +99,7 @@ void FORTE_ID::executeEvent(TEventID paEIID, CEventChainExecutionThread *const p
   }
 }
 
-void FORTE_ID::readInputData(TEventID paEIID) {
+void FORTE_ID::readInputData(const TEventID paEIID) {
   switch(paEIID) {
     case scmEventINITID: {
       readData(0, var_QI, conn_QI);
@@ -105,7 +115,7 @@ void FORTE_ID::readInputData(TEventID paEIID) {
   }
 }
 
-void FORTE_ID::writeOutputData(TEventID paEIID) {
+void FORTE_ID::writeOutputData(const TEventID paEIID) {
   switch(paEIID) {
     case scmEventINITOID: {
       writeData(0, var_QO, conn_QO);
@@ -129,7 +139,7 @@ void FORTE_ID::writeOutputData(TEventID paEIID) {
   }
 }
 
-CIEC_ANY *FORTE_ID::getDI(size_t paIndex) {
+CIEC_ANY *FORTE_ID::getDI(const size_t paIndex) {
   switch(paIndex) {
     case 0: return &var_QI;
     case 1: return &var_PARAMS;
@@ -137,7 +147,7 @@ CIEC_ANY *FORTE_ID::getDI(size_t paIndex) {
   return nullptr;
 }
 
-CIEC_ANY *FORTE_ID::getDO(size_t paIndex) {
+CIEC_ANY *FORTE_ID::getDO(const size_t paIndex) {
   switch(paIndex) {
     case 0: return &var_QO;
     case 1: return &var_STATUS;
@@ -146,7 +156,7 @@ CIEC_ANY *FORTE_ID::getDO(size_t paIndex) {
   return nullptr;
 }
 
-CEventConnection *FORTE_ID::getEOConUnchecked(TPortId paIndex) {
+CEventConnection *FORTE_ID::getEOConUnchecked(const TPortId paIndex) {
   switch(paIndex) {
     case 0: return &conn_INITO;
     case 1: return &conn_CNF;
@@ -155,7 +165,7 @@ CEventConnection *FORTE_ID::getEOConUnchecked(TPortId paIndex) {
   return nullptr;
 }
 
-CDataConnection **FORTE_ID::getDIConUnchecked(TPortId paIndex) {
+CDataConnection **FORTE_ID::getDIConUnchecked(const TPortId paIndex) {
   switch(paIndex) {
     case 0: return &conn_QI;
     case 1: return &conn_PARAMS;
@@ -163,7 +173,7 @@ CDataConnection **FORTE_ID::getDIConUnchecked(TPortId paIndex) {
   return nullptr;
 }
 
-CDataConnection *FORTE_ID::getDOConUnchecked(TPortId paIndex) {
+CDataConnection *FORTE_ID::getDOConUnchecked(const TPortId paIndex) {
   switch(paIndex) {
     case 0: return &conn_QO;
     case 1: return &conn_STATUS;
@@ -171,5 +181,3 @@ CDataConnection *FORTE_ID::getDOConUnchecked(TPortId paIndex) {
   }
   return nullptr;
 }
-
-

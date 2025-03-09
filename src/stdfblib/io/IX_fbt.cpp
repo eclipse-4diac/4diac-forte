@@ -9,11 +9,17 @@
  * Contributors:
  *   Alois Zoitl, Waldemar Eisenmenger, Monika Wenger - initial API and implementation and/or initial documentation
  *******************************************************************************/
+ 
 #include "IX_fbt.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
 #include "IX_fbt_gen.cpp"
 #endif
 
+#include "iec61131_functions.h"
+#include "forte_array_common.h"
+#include "forte_array.h"
+#include "forte_array_fixed.h"
+#include "forte_array_variable.h"
 #include "criticalregion.h"
 #include "resource.h"
 
@@ -30,7 +36,7 @@ const CStringDictionary::TStringId FORTE_IX::scmEventInputTypeIds[] = {g_nString
 const TDataIOID FORTE_IX::scmEOWith[] = {0, 1, scmWithListDelimiter, 0, 1, 2, scmWithListDelimiter, 0, 1, 2, scmWithListDelimiter};
 const TForteInt16 FORTE_IX::scmEOWithIndexes[] = {0, 3, 7};
 const CStringDictionary::TStringId FORTE_IX::scmEventOutputNames[] = {g_nStringIdINITO, g_nStringIdCNF, g_nStringIdIND};
-const CStringDictionary::TStringId FORTE_IX::scmEventOutputTypeIds[] = {g_nStringIdEvent, g_nStringIdEvent, g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_IX::scmEventOutputTypeIds[] = {g_nStringIdEInit, g_nStringIdEvent, g_nStringIdEvent};
 const SFBInterfaceSpec FORTE_IX::scmFBInterfaceSpec = {
   2, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,
   3, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes,
@@ -41,7 +47,12 @@ const SFBInterfaceSpec FORTE_IX::scmFBInterfaceSpec = {
 };
 
 FORTE_IX::FORTE_IX(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
-        CProcessInterface(paContainer, scmFBInterfaceSpec, paInstanceNameId),
+    CProcessInterface(paContainer, scmFBInterfaceSpec, paInstanceNameId),
+    var_QI(0_BOOL),
+    var_PARAMS(""_STRING),
+    var_QO(0_BOOL),
+    var_STATUS(""_STRING),
+    var_IN(0_BOOL),
     var_conn_QO(var_QO),
     var_conn_STATUS(var_STATUS),
     var_conn_IN(var_IN),
@@ -63,7 +74,7 @@ void FORTE_IX::setInitialValues() {
   var_IN = 0_BOOL;
 }
 
-void FORTE_IX::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
+void FORTE_IX::executeEvent(const TEventID paEIID, CEventChainExecutionThread *const paECET) {
   switch(paEIID) {
     case cgExternalEventID:
       sendOutputEvent(scmEventINDID, paECET);
@@ -87,7 +98,7 @@ void FORTE_IX::executeEvent(TEventID paEIID, CEventChainExecutionThread *const p
   }
 }
 
-void FORTE_IX::readInputData(TEventID paEIID) {
+void FORTE_IX::readInputData(const TEventID paEIID) {
   switch(paEIID) {
     case scmEventINITID: {
       readData(0, var_QI, conn_QI);
@@ -103,7 +114,7 @@ void FORTE_IX::readInputData(TEventID paEIID) {
   }
 }
 
-void FORTE_IX::writeOutputData(TEventID paEIID) {
+void FORTE_IX::writeOutputData(const TEventID paEIID) {
   switch(paEIID) {
     case scmEventINITOID: {
       writeData(0, var_QO, conn_QO);
@@ -127,7 +138,7 @@ void FORTE_IX::writeOutputData(TEventID paEIID) {
   }
 }
 
-CIEC_ANY *FORTE_IX::getDI(size_t paIndex) {
+CIEC_ANY *FORTE_IX::getDI(const size_t paIndex) {
   switch(paIndex) {
     case 0: return &var_QI;
     case 1: return &var_PARAMS;
@@ -135,7 +146,7 @@ CIEC_ANY *FORTE_IX::getDI(size_t paIndex) {
   return nullptr;
 }
 
-CIEC_ANY *FORTE_IX::getDO(size_t paIndex) {
+CIEC_ANY *FORTE_IX::getDO(const size_t paIndex) {
   switch(paIndex) {
     case 0: return &var_QO;
     case 1: return &var_STATUS;
@@ -144,7 +155,7 @@ CIEC_ANY *FORTE_IX::getDO(size_t paIndex) {
   return nullptr;
 }
 
-CEventConnection *FORTE_IX::getEOConUnchecked(TPortId paIndex) {
+CEventConnection *FORTE_IX::getEOConUnchecked(const TPortId paIndex) {
   switch(paIndex) {
     case 0: return &conn_INITO;
     case 1: return &conn_CNF;
@@ -153,7 +164,7 @@ CEventConnection *FORTE_IX::getEOConUnchecked(TPortId paIndex) {
   return nullptr;
 }
 
-CDataConnection **FORTE_IX::getDIConUnchecked(TPortId paIndex) {
+CDataConnection **FORTE_IX::getDIConUnchecked(const TPortId paIndex) {
   switch(paIndex) {
     case 0: return &conn_QI;
     case 1: return &conn_PARAMS;
@@ -161,7 +172,7 @@ CDataConnection **FORTE_IX::getDIConUnchecked(TPortId paIndex) {
   return nullptr;
 }
 
-CDataConnection *FORTE_IX::getDOConUnchecked(TPortId paIndex) {
+CDataConnection *FORTE_IX::getDOConUnchecked(const TPortId paIndex) {
   switch(paIndex) {
     case 0: return &conn_QO;
     case 1: return &conn_STATUS;
@@ -169,5 +180,3 @@ CDataConnection *FORTE_IX::getDOConUnchecked(TPortId paIndex) {
   }
   return nullptr;
 }
-
-
