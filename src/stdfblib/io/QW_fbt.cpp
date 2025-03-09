@@ -1,5 +1,5 @@
 /*************************************************************************
- * Copyright (c) 2015 fortiss GmbH
+ * Copyright (c) 2015, 2025 fortiss GmbH
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -15,6 +15,11 @@
 #include "QW_fbt_gen.cpp"
 #endif
 
+#include "iec61131_functions.h"
+#include "forte_array_common.h"
+#include "forte_array.h"
+#include "forte_array_fixed.h"
+#include "forte_array_variable.h"
 #include "criticalregion.h"
 #include "resource.h"
 
@@ -31,7 +36,7 @@ const CStringDictionary::TStringId FORTE_QW::scmEventInputTypeIds[] = {g_nString
 const TDataIOID FORTE_QW::scmEOWith[] = {0, 1, scmWithListDelimiter, 0, 1, scmWithListDelimiter};
 const TForteInt16 FORTE_QW::scmEOWithIndexes[] = {0, 3};
 const CStringDictionary::TStringId FORTE_QW::scmEventOutputNames[] = {g_nStringIdINITO, g_nStringIdCNF};
-const CStringDictionary::TStringId FORTE_QW::scmEventOutputTypeIds[] = {g_nStringIdEvent, g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_QW::scmEventOutputTypeIds[] = {g_nStringIdEInit, g_nStringIdEvent};
 const SFBInterfaceSpec FORTE_QW::scmFBInterfaceSpec = {
   2, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,
   2, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes,
@@ -42,7 +47,12 @@ const SFBInterfaceSpec FORTE_QW::scmFBInterfaceSpec = {
 };
 
 FORTE_QW::FORTE_QW(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
-        CProcessInterface(paContainer, scmFBInterfaceSpec, paInstanceNameId),
+    CProcessInterface(paContainer, scmFBInterfaceSpec, paInstanceNameId),
+    var_QI(0_BOOL),
+    var_PARAMS(""_STRING),
+    var_OUT(0_WORD),
+    var_QO(0_BOOL),
+    var_STATUS(""_STRING),
     var_conn_QO(var_QO),
     var_conn_STATUS(var_STATUS),
     conn_INITO(this, 0),
@@ -62,7 +72,7 @@ void FORTE_QW::setInitialValues() {
   var_STATUS = ""_STRING;
 }
 
-void FORTE_QW::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
+void FORTE_QW::executeEvent(const TEventID paEIID, CEventChainExecutionThread *const paECET) {
   switch(paEIID) {
     case scmEventINITID:
       if (var_QI) {
@@ -83,7 +93,7 @@ void FORTE_QW::executeEvent(TEventID paEIID, CEventChainExecutionThread *const p
   }
 }
 
-void FORTE_QW::readInputData(TEventID paEIID) {
+void FORTE_QW::readInputData(const TEventID paEIID) {
   switch(paEIID) {
     case scmEventINITID: {
       readData(0, var_QI, conn_QI);
@@ -100,7 +110,7 @@ void FORTE_QW::readInputData(TEventID paEIID) {
   }
 }
 
-void FORTE_QW::writeOutputData(TEventID paEIID) {
+void FORTE_QW::writeOutputData(const TEventID paEIID) {
   switch(paEIID) {
     case scmEventINITOID: {
       writeData(0, var_QO, conn_QO);
@@ -117,7 +127,7 @@ void FORTE_QW::writeOutputData(TEventID paEIID) {
   }
 }
 
-CIEC_ANY *FORTE_QW::getDI(size_t paIndex) {
+CIEC_ANY *FORTE_QW::getDI(const size_t paIndex) {
   switch(paIndex) {
     case 0: return &var_QI;
     case 1: return &var_PARAMS;
@@ -126,7 +136,7 @@ CIEC_ANY *FORTE_QW::getDI(size_t paIndex) {
   return nullptr;
 }
 
-CIEC_ANY *FORTE_QW::getDO(size_t paIndex) {
+CIEC_ANY *FORTE_QW::getDO(const size_t paIndex) {
   switch(paIndex) {
     case 0: return &var_QO;
     case 1: return &var_STATUS;
@@ -134,7 +144,7 @@ CIEC_ANY *FORTE_QW::getDO(size_t paIndex) {
   return nullptr;
 }
 
-CEventConnection *FORTE_QW::getEOConUnchecked(TPortId paIndex) {
+CEventConnection *FORTE_QW::getEOConUnchecked(const TPortId paIndex) {
   switch(paIndex) {
     case 0: return &conn_INITO;
     case 1: return &conn_CNF;
@@ -142,7 +152,7 @@ CEventConnection *FORTE_QW::getEOConUnchecked(TPortId paIndex) {
   return nullptr;
 }
 
-CDataConnection **FORTE_QW::getDIConUnchecked(TPortId paIndex) {
+CDataConnection **FORTE_QW::getDIConUnchecked(const TPortId paIndex) {
   switch(paIndex) {
     case 0: return &conn_QI;
     case 1: return &conn_PARAMS;
@@ -151,12 +161,10 @@ CDataConnection **FORTE_QW::getDIConUnchecked(TPortId paIndex) {
   return nullptr;
 }
 
-CDataConnection *FORTE_QW::getDOConUnchecked(TPortId paIndex) {
+CDataConnection *FORTE_QW::getDOConUnchecked(const TPortId paIndex) {
   switch(paIndex) {
     case 0: return &conn_QO;
     case 1: return &conn_STATUS;
   }
   return nullptr;
 }
-
-
