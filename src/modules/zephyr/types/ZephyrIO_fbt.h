@@ -1,4 +1,12 @@
-/*************************************************************************
+/************************************************************************* 
+ *** Copyright (c) 2024 KT Elektronik GmbH 
+ ***  
+ *** This program and the accompanying materials are made  
+ *** available under the terms of the Eclipse Public License 2.0  
+ *** which is available at https://www.eclipse.org/legal/epl-2.0/  
+ ***  
+ *** SPDX-License-Identifier: EPL-2.0   
+ *** 
  *** FORTE Library Element
  ***
  *** This file was generated using the 4DIAC FORTE Export Filter V1.0.x NG!
@@ -7,17 +15,19 @@
  *** Description: Template for Modular IO with boards running Zephyr OS
  *** Version:
  ***     1.0: 2024-01-12/Dirk Kaar -  -
- ***
- *** Copyright (c) 2024 KT Elektronik GmbH
- *** This program and the accompanying materials are made available under the
- *** terms of the Eclipse Public License 2.0 which is available at
- *** http://www.eclipse.org/legal/epl-2.0.
- ***
- *** SPDX-License-Identifier: EPL-2.0
  *************************************************************************/
 
 #pragma once
 
+#include "funcbloc.h"
+#include "forte_bool.h"
+#include "forte_string.h"
+#include "forte_time.h"
+#include "iec61131_functions.h"
+#include "forte_array_common.h"
+#include "forte_array.h"
+#include "forte_array_fixed.h"
+#include "forte_array_variable.h"
 #pragma region includes
 #include <types/ZephyrIOBase.h>
 #pragma endregion includes
@@ -100,5 +110,4 @@ class FORTE_ZephyrIO final : public FORTE_ZephyrIOBase {
       evt_INIT(paQI, paUpdateInterval, paQO, paSTATUS);
     }
 };
-
 

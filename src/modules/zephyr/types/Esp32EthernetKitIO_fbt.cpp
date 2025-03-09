@@ -1,4 +1,12 @@
-/*************************************************************************
+/************************************************************************* 
+ *** Copyright (c) 2024 KT Elektronik GmbH 
+ ***  
+ *** This program and the accompanying materials are made  
+ *** available under the terms of the Eclipse Public License 2.0  
+ *** which is available at https://www.eclipse.org/legal/epl-2.0/  
+ ***  
+ *** SPDX-License-Identifier: EPL-2.0   
+ *** 
  *** FORTE Library Element
  ***
  *** This file was generated using the 4DIAC FORTE Export Filter V1.0.x NG!
@@ -7,13 +15,6 @@
  *** Description: Template for Modular IO with Esp32EthernetKit board
  *** Version:
  ***     1.0: 2024-01-13/Dirk O. Kaar -  -
- ***
- *** Copyright (c) 2024 KT Elektronik GmbH
- *** This program and the accompanying materials are made available under the
- *** terms of the Eclipse Public License 2.0 which is available at
- *** http://www.eclipse.org/legal/epl-2.0.
- ***
- *** SPDX-License-Identifier: EPL-2.0
  *************************************************************************/
 
 #include "Esp32EthernetKitIO_fbt.h"
@@ -21,6 +22,12 @@
 #include "Esp32EthernetKitIO_fbt_gen.cpp"
 #endif
 
+#include "forte_time.h"
+#include "iec61131_functions.h"
+#include "forte_array_common.h"
+#include "forte_array.h"
+#include "forte_array_fixed.h"
+#include "forte_array_variable.h"
 #pragma region includes
 #include <handler/IOHandleGPIODescriptor.h>
 #include <handler/IOHandleADCDescriptor.h>
@@ -41,7 +48,7 @@ const CStringDictionary::TStringId FORTE_Esp32EthernetKitIO::scmEventInputTypeId
 const TDataIOID FORTE_Esp32EthernetKitIO::scmEOWith[] = {0, 1, scmWithListDelimiter};
 const TForteInt16 FORTE_Esp32EthernetKitIO::scmEOWithIndexes[] = {0};
 const CStringDictionary::TStringId FORTE_Esp32EthernetKitIO::scmEventOutputNames[] = {g_nStringIdINITO};
-const CStringDictionary::TStringId FORTE_Esp32EthernetKitIO::scmEventOutputTypeIds[] = {g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_Esp32EthernetKitIO::scmEventOutputTypeIds[] = {g_nStringIdEInit};
 const SFBInterfaceSpec FORTE_Esp32EthernetKitIO::scmFBInterfaceSpec = {
   1, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,
   1, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes,
@@ -55,7 +62,14 @@ FORTE_Esp32EthernetKitIO::FORTE_Esp32EthernetKitIO(const CStringDictionary::TStr
 #pragma region base class spec
     FORTE_ZephyrIOBase(paContainer, scmFBInterfaceSpec, paInstanceNameId),
 #pragma endregion base class spec
+    var_QI(0_BOOL),
+    var_LED0(""_STRING),
+    var_SW0(""_STRING),
+    var_ADC_CH_0(""_STRING),
+    var_PWM(""_STRING),
     var_UpdateInterval(40000000_TIME),
+    var_QO(0_BOOL),
+    var_STATUS(""_STRING),
     var_conn_QO(var_QO),
     var_conn_STATUS(var_STATUS),
     conn_INITO(this, 0),

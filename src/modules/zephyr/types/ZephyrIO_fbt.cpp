@@ -1,4 +1,12 @@
-/*************************************************************************
+/************************************************************************* 
+ *** Copyright (c) 2024 KT Elektronik GmbH 
+ ***  
+ *** This program and the accompanying materials are made  
+ *** available under the terms of the Eclipse Public License 2.0  
+ *** which is available at https://www.eclipse.org/legal/epl-2.0/  
+ ***  
+ *** SPDX-License-Identifier: EPL-2.0   
+ *** 
  *** FORTE Library Element
  ***
  *** This file was generated using the 4DIAC FORTE Export Filter V1.0.x NG!
@@ -7,13 +15,6 @@
  *** Description: Template for Modular IO with boards running Zephyr OS
  *** Version:
  ***     1.0: 2024-01-12/Dirk Kaar -  -
- ***
- *** Copyright (c) 2024 KT Elektronik GmbH
- *** This program and the accompanying materials are made available under the
- *** terms of the Eclipse Public License 2.0 which is available at
- *** http://www.eclipse.org/legal/epl-2.0.
- ***
- *** SPDX-License-Identifier: EPL-2.0
  *************************************************************************/
 
 #include "ZephyrIO_fbt.h"
@@ -21,6 +22,12 @@
 #include "ZephyrIO_fbt_gen.cpp"
 #endif
 
+#include "forte_time.h"
+#include "iec61131_functions.h"
+#include "forte_array_common.h"
+#include "forte_array.h"
+#include "forte_array_fixed.h"
+#include "forte_array_variable.h"
 #pragma region includes
 #include <handler/IOHandleGPIODescriptor.h>
 #include <handler/IOHandleADCDescriptor.h>
@@ -40,7 +47,7 @@ const CStringDictionary::TStringId FORTE_ZephyrIO::scmEventInputTypeIds[] = {g_n
 const TDataIOID FORTE_ZephyrIO::scmEOWith[] = {0, 1, scmWithListDelimiter};
 const TForteInt16 FORTE_ZephyrIO::scmEOWithIndexes[] = {0};
 const CStringDictionary::TStringId FORTE_ZephyrIO::scmEventOutputNames[] = {g_nStringIdINITO};
-const CStringDictionary::TStringId FORTE_ZephyrIO::scmEventOutputTypeIds[] = {g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_ZephyrIO::scmEventOutputTypeIds[] = {g_nStringIdEInit};
 const SFBInterfaceSpec FORTE_ZephyrIO::scmFBInterfaceSpec = {
   1, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,
   1, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes,
@@ -54,7 +61,10 @@ FORTE_ZephyrIO::FORTE_ZephyrIO(const CStringDictionary::TStringId paInstanceName
 #pragma region base class spec
     FORTE_ZephyrIOBase(paContainer, scmFBInterfaceSpec, paInstanceNameId),
 #pragma endregion base class spec
+    var_QI(0_BOOL),
     var_UpdateInterval(40000000_TIME),
+    var_QO(0_BOOL),
+    var_STATUS(""_STRING),
     var_conn_QO(var_QO),
     var_conn_STATUS(var_STATUS),
     conn_INITO(this, 0),
