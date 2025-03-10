@@ -14,7 +14,7 @@
 #include "IORevPiBusAdapter.h"
 
 USE_STRING_ID(BOOL);
-USE_STRING_ID(Event);
+USE_STRING_ID(EInit);
 USE_STRING_ID(Index);
 USE_STRING_ID(INIT);
 USE_STRING_ID(INITO);
@@ -34,11 +34,11 @@ const CStringDictionary::TStringId FORTE_IORevPiBusAdapter::scmDataOutputTypeIds
 const TDataIOID FORTE_IORevPiBusAdapter::scmEIWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_IORevPiBusAdapter::scmEIWithIndexes[] = {0};
 const CStringDictionary::TStringId FORTE_IORevPiBusAdapter::scmEventInputNames[] = {STRID(INITO)};
-const CStringDictionary::TStringId FORTE_IORevPiBusAdapter::scmEventInputTypeIds[] = {STRID(Event)};
+const CStringDictionary::TStringId FORTE_IORevPiBusAdapter::scmEventInputTypeIds[] = {STRID(EInit)};
 const TDataIOID FORTE_IORevPiBusAdapter::scmEOWith[] = {2, 1, 0, scmWithListDelimiter};
 const TForteInt16 FORTE_IORevPiBusAdapter::scmEOWithIndexes[] = {0};
 const CStringDictionary::TStringId FORTE_IORevPiBusAdapter::scmEventOutputNames[] = {STRID(INIT)};
-const CStringDictionary::TStringId FORTE_IORevPiBusAdapter::scmEventOutputTypeIds[] = {STRID(Event), STRID(Event)};
+const CStringDictionary::TStringId FORTE_IORevPiBusAdapter::scmEventOutputTypeIds[] = {STRID(EInit)};
 
 const SFBInterfaceSpec FORTE_IORevPiBusAdapter::scmFBInterfaceSpecSocket = {
   1, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,

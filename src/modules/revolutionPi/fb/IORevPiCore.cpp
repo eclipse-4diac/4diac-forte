@@ -45,7 +45,7 @@ const CStringDictionary::TStringId FORTE_IORevPiCore::scmEventInputTypeIds[] = {
 const TDataIOID FORTE_IORevPiCore::scmEOWith[] = {0, 1, scmWithListDelimiter, 0, 1, scmWithListDelimiter};
 const TForteInt16 FORTE_IORevPiCore::scmEOWithIndexes[] = {0, 3};
 const CStringDictionary::TStringId FORTE_IORevPiCore::scmEventOutputNames[] = {STRID(INITO), STRID(IND)};
-const CStringDictionary::TStringId FORTE_IORevPiCore::scmEventOutputTypeIds[] = {STRID(Event), STRID(Event)};
+const CStringDictionary::TStringId FORTE_IORevPiCore::scmEventOutputTypeIds[] = {STRID(EInit), STRID(Event)};
 const SAdapterInstanceDef FORTE_IORevPiCore::scmAdapterInstances[] = {
   {STRID(IORevPiBusAdapter), STRID(BusAdapterOut), true}
 };
@@ -157,3 +157,4 @@ CDataConnection *FORTE_IORevPiCore::getDOConUnchecked(const TPortId paIndex) {
   }
   return nullptr;
 }
+
