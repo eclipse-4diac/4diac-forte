@@ -11,6 +11,7 @@
 
 USE_STRING_ID(BOOL);
 USE_STRING_ID(BusAdapterOut);
+USE_STRING_ID(EInit);
 USE_STRING_ID(Event);
 USE_STRING_ID(IND);
 USE_STRING_ID(INIT);
@@ -38,11 +39,11 @@ const CStringDictionary::TStringId FORTE_WagoMaster::scmDataOutputTypeIds[] = {S
 const TDataIOID FORTE_WagoMaster::scmEIWith[] = {0, 1, scmWithListDelimiter};
 const TForteInt16 FORTE_WagoMaster::scmEIWithIndexes[] = {0};
 const CStringDictionary::TStringId FORTE_WagoMaster::scmEventInputNames[] = {STRID(INIT)};
-const CStringDictionary::TStringId FORTE_WagoMaster::scmEventInputTypeIds[] = {STRID(Event)};
+const CStringDictionary::TStringId FORTE_WagoMaster::scmEventInputTypeIds[] = {STRID(EInit)};
 const TDataIOID FORTE_WagoMaster::scmEOWith[] = {0, 1, scmWithListDelimiter, 1, 0, scmWithListDelimiter};
 const TForteInt16 FORTE_WagoMaster::scmEOWithIndexes[] = {0, 3};
 const CStringDictionary::TStringId FORTE_WagoMaster::scmEventOutputNames[] = {STRID(INITO), STRID(IND)};
-const CStringDictionary::TStringId FORTE_WagoMaster::scmEventOutputTypeIds[] = {STRID(Event), STRID(Event)};
+const CStringDictionary::TStringId FORTE_WagoMaster::scmEventOutputTypeIds[] = {STRID(EInit), STRID(Event)};
 const SAdapterInstanceDef FORTE_WagoMaster::scmAdapterInstances[] = {
   {STRID(WagoBusAdapter), STRID(BusAdapterOut), true}
 };

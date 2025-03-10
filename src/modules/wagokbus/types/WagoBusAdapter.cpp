@@ -10,7 +10,7 @@
 #include "WagoBusAdapter.h"
 
 USE_STRING_ID(BOOL);
-USE_STRING_ID(Event);
+USE_STRING_ID(EInit);
 USE_STRING_ID(Index);
 USE_STRING_ID(INIT);
 USE_STRING_ID(INITO);
@@ -30,11 +30,11 @@ const CStringDictionary::TStringId FORTE_WagoBusAdapter::scmDataOutputTypeIds[] 
 const TDataIOID FORTE_WagoBusAdapter::scmEIWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_WagoBusAdapter::scmEIWithIndexes[] = {0};
 const CStringDictionary::TStringId FORTE_WagoBusAdapter::scmEventInputNames[] = {STRID(INITO)};
-const CStringDictionary::TStringId FORTE_WagoBusAdapter::scmEventInputTypeIds[] = {STRID(Event)};
+const CStringDictionary::TStringId FORTE_WagoBusAdapter::scmEventInputTypeIds[] = {STRID(EInit)};
 const TDataIOID FORTE_WagoBusAdapter::scmEOWith[] = {2, 1, 0, scmWithListDelimiter};
 const TForteInt16 FORTE_WagoBusAdapter::scmEOWithIndexes[] = {0};
 const CStringDictionary::TStringId FORTE_WagoBusAdapter::scmEventOutputNames[] = {STRID(INIT)};
-const CStringDictionary::TStringId FORTE_WagoBusAdapter::scmEventOutputTypeIds[] = {STRID(Event), STRID(Event)};
+const CStringDictionary::TStringId FORTE_WagoBusAdapter::scmEventOutputTypeIds[] = {STRID(EInit)};
 
 const SFBInterfaceSpec FORTE_WagoBusAdapter::scmFBInterfaceSpecSocket = {
   1, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,
@@ -46,8 +46,8 @@ const SFBInterfaceSpec FORTE_WagoBusAdapter::scmFBInterfaceSpecSocket = {
 };
 
 const SFBInterfaceSpec FORTE_WagoBusAdapter::scmFBInterfaceSpecPlug = {
-  1, scmEventOutputNames, nullptr, scmEOWith, scmEOWithIndexes,
-  1, scmEventInputNames, nullptr, scmEIWith, scmEIWithIndexes,
+  1, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes,
+  1, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,
   3, scmDataOutputNames, scmDataOutputTypeIds,
   1, scmDataInputNames, scmDataInputTypeIds,
   0, nullptr,
