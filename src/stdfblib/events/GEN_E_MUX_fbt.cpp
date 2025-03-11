@@ -1,7 +1,8 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2023 ACIN, Profactor GmbH, fortiss GmbH
+ * Copyright (c) 2011, 2025 ACIN, Profactor GmbH, fortiss GmbH
  *                          Johannes Kepler University
  *                          Martin Erich Jobst
+ *                          HR Agrartechnik GmbH
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -14,6 +15,7 @@
  *     - initial API and implementation and/or initial documentation
  *    Alois Zoitl - introduced new CGenFB class for better handling generic FBs
  *    Martin Jobst - add generic readInputData and writeOutputData
+ *....Franz Höpfinger - Update it to represent latest Generation Format from 4diac IDE. no Functional Changes. 
  *******************************************************************************/
 #include "GEN_E_MUX_fbt.h"
 

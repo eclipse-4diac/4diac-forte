@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2025 ACIN, Profactor GmbH, fortiss GmbH
+ * Copyright (c) 2011, 2025 ACIN
  *                          Johannes Kepler University
  *                          Martin Erich Jobst
  *                          HR Agrartechnik GmbH
@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *   Alois Zoitl, Matthias Plasch
+ *   Alois Zoitl
  *     - initial API and implementation and/or initial documentation
  *    Alois Zoitl - introduced new CGenFB class for better handling generic FBs
  *    Martin Jobst - add generic readInputData and writeOutputData
