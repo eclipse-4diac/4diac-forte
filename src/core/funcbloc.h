@@ -509,7 +509,8 @@ class CFunctionBlock : public forte::core::CFBContainer {
      * \param paValue Variable to write from.
      * \param paConn Connection to write into.
      */
-    void writeData([[maybe_unused]] TPortId paDONum, CIEC_ANY& paValue, CDataConnection& paConn) {
+    template<typename T, typename U>
+    void writeData([[maybe_unused]] TPortId paDONum, T& paValue, U& paConn) {
       if(paConn.isConnected()) {
 #ifdef FORTE_SUPPORT_MONITORING
         if(!paValue.isForced()) {
