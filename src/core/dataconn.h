@@ -54,7 +54,7 @@ class CDataConnection : public CConnection {
     *   Read data value from connection data variable to FB data input.
     *   \param paValue pointer to FB data input
     */
-    void readData(CIEC_ANY& paValue) const {
+    virtual void readData(CIEC_ANY& paValue) const {
       if(mValue){
         paValue.setValue(mValue->unwrap());
       }
@@ -92,6 +92,25 @@ class CDataConnection : public CConnection {
     /*! \brief Value for storing the current data of the connection
      */
     CIEC_ANY *mValue;
+};
+
+template<typename T>
+class COutDataConnection final : public CDataConnection {
+  public:
+    COutDataConnection(CFunctionBlock *paSrcFB, TPortId paSrcPortId, const T &paValue)
+      : CDataConnection(paSrcFB, paSrcPortId, &mValue), mValue(paValue) {
+    }
+
+    void writeData(const T &paValue) {
+      mValue = paValue;
+    };
+
+    void readData(CIEC_ANY &paValue) const override {
+      paValue.setValue(mValue.unwrap());
+    }
+
+  private:
+    T mValue;
 };
 
 typedef CDataConnection *TDataConnectionPtr;
