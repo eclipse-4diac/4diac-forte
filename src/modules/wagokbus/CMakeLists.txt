@@ -1,5 +1,5 @@
 #*******************************************************************************
-# Copyright (c) 2016, 2024 fortiss GmbH
+# Copyright (c) 2016, 2025 fortiss GmbH, Monika Wenger
 # This program and the accompanying materials are made available under the
 # terms of the Eclipse Public License 2.0 which is available at
 # http://www.eclipse.org/legal/epl-2.0.
@@ -9,6 +9,7 @@
 # Contributors:
 #     Milan Vathoopan, Alois Zoitl - initial API and implementation and/or initial documentation
 #     Jose Cabral - Add modular IOs
+#     Monika Wenger - all files start with capital letters
 # *******************************************************************************/ 
 #############################################################################
 # WAGO KBUS SIFBs
