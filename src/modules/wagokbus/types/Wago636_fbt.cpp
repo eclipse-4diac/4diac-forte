@@ -263,7 +263,7 @@ void FORTE_Wago636::initHandlesBase (size_t paNumberOfBoolInputs, size_t paNumbe
     initWagoHandle(offset + 6, 5, CIEC_ANY::e_BOOL, IOMapper::In); // reference ok - Status-Byte 0 Bit 5
   }
   else {
-    DEVLOG_ERROR("[Wago636] only supports 3 BOOL inputs, but got %d.\n", paNumberOfBoolInputs);
+    DEVLOG_ERROR("[Wago636] only supports 7 BOOL inputs, but got %d.\n", paNumberOfBoolInputs);
   }
 
   offset += paNumberOfBoolInputs;
@@ -272,7 +272,7 @@ void FORTE_Wago636::initHandlesBase (size_t paNumberOfBoolInputs, size_t paNumbe
     initWagoHandle(offset, 16, CIEC_ANY::e_DWORD, IOMapper::In); // current position - Status-Byte 2-5
   }
   else {
-    DEVLOG_ERROR("[Wago636] only supports 1 DINT input, but got %d.\n", paNumberOfAnalogInputs);
+    DEVLOG_ERROR("[Wago636] only supports 1 DWORD input, but got %d.\n", paNumberOfAnalogInputs);
   }
 
   offset += paNumberOfAnalogInputs;
@@ -281,7 +281,7 @@ void FORTE_Wago636::initHandlesBase (size_t paNumberOfBoolInputs, size_t paNumbe
     initWagoHandle(offset, 16, CIEC_ANY::e_DWORD, IOMapper::Out); // target position - Status-Byte 2-5
   }
   else {
-    DEVLOG_ERROR("[Wago636] only supports 1 DINT output, but got %d.\n", paNumberOfAnalogOutputs);
+    DEVLOG_ERROR("[Wago636] only supports 1 DWORD output, but got %d.\n", paNumberOfAnalogOutputs);
   }
 
   offset += paNumberOfAnalogOutputs;

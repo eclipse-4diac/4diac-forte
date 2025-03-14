@@ -116,11 +116,8 @@ void WagoHandle::getWord(CIEC_WORD &paState) {
 
 void WagoHandle::getDWord(CIEC_DWORD &paState) {
   TForteByte inDataDWord[4];
-  int retval = mAppDevInterface->ReadBytes(mKBusDeviceId, mTaskId, mInputOffset, 4, inDataDWord);
-  TForteDWord tmp = (inDataDWord[3] << 24) & (inDataDWord[2] << 16) & (inDataDWord[1] << 8) & inDataDWord[0];
-  DEVLOG_INFO("[WagoHandle] retval=%d, dword=%d\n", retval, tmp);
-  DEVLOG_INFO("[WagoHandle] byte1=%d, byte2=%d, byte3=%d, byte4=%d\n", inDataDWord[0], inDataDWord[1], inDataDWord[2], inDataDWord[3]);
-  paState = CIEC_DWORD(tmp);
+  mAppDevInterface->ReadBytes(mKBusDeviceId, mTaskId, mInputOffset, 4, inDataDWord);
+  paState = CIEC_DWORD( (inDataDWord[3] << 24) & (inDataDWord[2] << 16) & (inDataDWord[1] << 8) & inDataDWord[0] );
 }
 
 void WagoHandle::setBoolean(const CIEC_BOOL &paState) {
