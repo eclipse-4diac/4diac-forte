@@ -18,10 +18,10 @@
 class CEventSourceFB;
 class CFunctionBlock;
 
-#define DECLARE_HANDLER(TypeName)                             \
-  public:                                                     \
-    static const size_t mHandlerIdentifier;              \
-    virtual size_t getIdentifier() const;               \
+#define DECLARE_HANDLER(TypeName)                          \
+  public:                                                  \
+    static const size_t mHandlerIdentifier;                \
+    virtual size_t getIdentifier() const override;         \
     explicit TypeName(CDeviceExecution& paDeviceExecution);\
     ~TypeName();
 
