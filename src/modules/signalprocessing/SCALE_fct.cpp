@@ -15,9 +15,19 @@
  *************************************************************************/
 
 #include "SCALE_fct.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "SCALE_fct_gen.cpp"
-#endif
+
+USE_STRING_ID();
+USE_STRING_ID(CNF);
+USE_STRING_ID(Event);
+USE_STRING_ID(IN);
+USE_STRING_ID(MAX_IN);
+USE_STRING_ID(MAX_OUT);
+USE_STRING_ID(MIN_IN);
+USE_STRING_ID(MIN_OUT);
+USE_STRING_ID(REAL);
+USE_STRING_ID(REQ);
+USE_STRING_ID(signalprocessing__SCALE);
+
 
 #include "forte_real.h"
 #include "iec61131_functions.h"
@@ -27,20 +37,20 @@
 #include "forte_array_variable.h"
 #include "SCALE_fct.h"
 
-DEFINE_FIRMWARE_FB(FORTE_signalprocessing__SCALE, g_nStringIdsignalprocessing__SCALE)
+DEFINE_FIRMWARE_FB(FORTE_signalprocessing__SCALE, STRID(signalprocessing__SCALE))
 
-const CStringDictionary::TStringId FORTE_signalprocessing__SCALE::scmDataInputNames[] = {g_nStringIdIN, g_nStringIdMAX_IN, g_nStringIdMIN_IN, g_nStringIdMAX_OUT, g_nStringIdMIN_OUT};
-const CStringDictionary::TStringId FORTE_signalprocessing__SCALE::scmDataInputTypeIds[] = {g_nStringIdREAL, g_nStringIdREAL, g_nStringIdREAL, g_nStringIdREAL, g_nStringIdREAL};
-const CStringDictionary::TStringId FORTE_signalprocessing__SCALE::scmDataOutputNames[] = {g_nStringId};
-const CStringDictionary::TStringId FORTE_signalprocessing__SCALE::scmDataOutputTypeIds[] = {g_nStringIdREAL};
+const CStringDictionary::TStringId FORTE_signalprocessing__SCALE::scmDataInputNames[] = {STRID(IN), STRID(MAX_IN), STRID(MIN_IN), STRID(MAX_OUT), STRID(MIN_OUT)};
+const CStringDictionary::TStringId FORTE_signalprocessing__SCALE::scmDataInputTypeIds[] = {STRID(REAL), STRID(REAL), STRID(REAL), STRID(REAL), STRID(REAL)};
+const CStringDictionary::TStringId FORTE_signalprocessing__SCALE::scmDataOutputNames[] = {STRID()};
+const CStringDictionary::TStringId FORTE_signalprocessing__SCALE::scmDataOutputTypeIds[] = {STRID(REAL)};
 const TDataIOID FORTE_signalprocessing__SCALE::scmEIWith[] = {0, 1, 2, 3, 4, scmWithListDelimiter};
 const TForteInt16 FORTE_signalprocessing__SCALE::scmEIWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_signalprocessing__SCALE::scmEventInputNames[] = {g_nStringIdREQ};
-const CStringDictionary::TStringId FORTE_signalprocessing__SCALE::scmEventInputTypeIds[] = {g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_signalprocessing__SCALE::scmEventInputNames[] = {STRID(REQ)};
+const CStringDictionary::TStringId FORTE_signalprocessing__SCALE::scmEventInputTypeIds[] = {STRID(Event)};
 const TDataIOID FORTE_signalprocessing__SCALE::scmEOWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_signalprocessing__SCALE::scmEOWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_signalprocessing__SCALE::scmEventOutputNames[] = {g_nStringIdCNF};
-const CStringDictionary::TStringId FORTE_signalprocessing__SCALE::scmEventOutputTypeIds[] = {g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_signalprocessing__SCALE::scmEventOutputNames[] = {STRID(CNF)};
+const CStringDictionary::TStringId FORTE_signalprocessing__SCALE::scmEventOutputTypeIds[] = {STRID(Event)};
 const SFBInterfaceSpec FORTE_signalprocessing__SCALE::scmFBInterfaceSpec = {
   1, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,
   1, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes,

@@ -14,14 +14,14 @@
 #include <forte_uint.h>
 #include <forte_bool.h>
 
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "E_CTD_tester_gen.cpp"
-#endif
+
+USE_STRING_ID(E_CTD);
+
 
 struct E_CTD_TestFixture : public CFBTestFixtureBase {
 
     E_CTD_TestFixture() :
-        CFBTestFixtureBase(g_nStringIdE_CTD) {
+        CFBTestFixtureBase(STRID(E_CTD)) {
       setInputData({&mInPV});
       setOutputData({&mOutQ, &mOutCV});
       CFBTestFixtureBase::setup();

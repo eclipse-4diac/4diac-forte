@@ -12,27 +12,46 @@
  *******************************************************************************/
 
 #include "X20AT2402_fbt.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "X20AT2402_fbt_gen.cpp"
-#endif
+
+USE_STRING_ID(BOOL);
+USE_STRING_ID(CNF);
+USE_STRING_ID(CNID);
+USE_STRING_ID(CNIDO);
+USE_STRING_ID(EInit);
+USE_STRING_ID(Event);
+USE_STRING_ID(INIT);
+USE_STRING_ID(INITO);
+USE_STRING_ID(MODID);
+USE_STRING_ID(QI);
+USE_STRING_ID(QO);
+USE_STRING_ID(REAL);
+USE_STRING_ID(REQ);
+USE_STRING_ID(STATUS);
+USE_STRING_ID(STRING);
+USE_STRING_ID(T01);
+USE_STRING_ID(T02);
+USE_STRING_ID(UINT);
+USE_STRING_ID(USINT);
+USE_STRING_ID(X20AT2402);
+
 
 #include "criticalregion.h"
 #include "resource.h"
 
-DEFINE_FIRMWARE_FB(FORTE_X20AT2402, g_nStringIdX20AT2402)
+DEFINE_FIRMWARE_FB(FORTE_X20AT2402, STRID(X20AT2402))
 
-const CStringDictionary::TStringId FORTE_X20AT2402::scmDataInputNames[] = {g_nStringIdQI, g_nStringIdCNID, g_nStringIdMODID};
-const CStringDictionary::TStringId FORTE_X20AT2402::scmDataInputTypeIds[] = {g_nStringIdBOOL, g_nStringIdUSINT, g_nStringIdUINT};
-const CStringDictionary::TStringId FORTE_X20AT2402::scmDataOutputNames[] = {g_nStringIdQO, g_nStringIdCNIDO, g_nStringIdSTATUS, g_nStringIdT01, g_nStringIdT02};
-const CStringDictionary::TStringId FORTE_X20AT2402::scmDataOutputTypeIds[] = {g_nStringIdBOOL, g_nStringIdUSINT, g_nStringIdSTRING, g_nStringIdREAL, g_nStringIdREAL};
+const CStringDictionary::TStringId FORTE_X20AT2402::scmDataInputNames[] = {STRID(QI), STRID(CNID), STRID(MODID)};
+const CStringDictionary::TStringId FORTE_X20AT2402::scmDataInputTypeIds[] = {STRID(BOOL), STRID(USINT), STRID(UINT)};
+const CStringDictionary::TStringId FORTE_X20AT2402::scmDataOutputNames[] = {STRID(QO), STRID(CNIDO), STRID(STATUS), STRID(T01), STRID(T02)};
+const CStringDictionary::TStringId FORTE_X20AT2402::scmDataOutputTypeIds[] = {STRID(BOOL), STRID(USINT), STRID(STRING), STRID(REAL), STRID(REAL)};
 const TDataIOID FORTE_X20AT2402::scmEIWith[] = {0, 1, 2, scmWithListDelimiter, 0, scmWithListDelimiter};
 const TForteInt16 FORTE_X20AT2402::scmEIWithIndexes[] = {0, 4};
-const CStringDictionary::TStringId FORTE_X20AT2402::scmEventInputNames[] = {g_nStringIdINIT, g_nStringIdREQ};
-const CStringDictionary::TStringId FORTE_X20AT2402::scmEventInputTypeIds[] = {g_nStringIdEInit, g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_X20AT2402::scmEventInputNames[] = {STRID(INIT), STRID(REQ)};
+const CStringDictionary::TStringId FORTE_X20AT2402::scmEventInputTypeIds[] = {STRID(EInit), STRID(Event)};
 const TDataIOID FORTE_X20AT2402::scmEOWith[] = {0, 1, 2, scmWithListDelimiter, 2, 3, 4, 0, scmWithListDelimiter};
 const TForteInt16 FORTE_X20AT2402::scmEOWithIndexes[] = {0, 4};
-const CStringDictionary::TStringId FORTE_X20AT2402::scmEventOutputNames[] = {g_nStringIdINITO, g_nStringIdCNF};
-const CStringDictionary::TStringId FORTE_X20AT2402::scmEventOutputTypeIds[] = {g_nStringIdEvent, g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_X20AT2402::scmEventOutputNames[] = {STRID(INITO), STRID(CNF)};
+const CStringDictionary::TStringId FORTE_X20AT2402::scmEventOutputTypeIds[] = {STRID(Event), STRID(Event)};
 const SFBInterfaceSpec FORTE_X20AT2402::scmFBInterfaceSpec = {
   2, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,
   2, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes,

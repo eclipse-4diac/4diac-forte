@@ -11,16 +11,22 @@
  *******************************************************************************/
 
 #include "forte_publishevent.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "forte_publishevent_gen.cpp"
-#endif
 
-DEFINE_FIRMWARE_DATATYPE(PublishEvent, g_nStringIdPublishEvent);
+USE_STRING_ID(ArrowheadEvent);
+USE_STRING_ID(ArrowheadSystem);
+USE_STRING_ID(deliveryCompleteUri);
+USE_STRING_ID(event);
+USE_STRING_ID(PublishEvent);
+USE_STRING_ID(source);
+USE_STRING_ID(WSTRING);
+
+
+DEFINE_FIRMWARE_DATATYPE(PublishEvent, STRID(PublishEvent));
 
 CIEC_PublishEvent::CIEC_PublishEvent() :
-    CIEC_STRUCT(g_nStringIdPublishEvent, 3, scmElementTypes, scmElementNames, e_APPLICATION + e_CONSTRUCTED + 1) {
+    CIEC_STRUCT(STRID(PublishEvent), 3, scmElementTypes, scmElementNames, e_APPLICATION + e_CONSTRUCTED + 1) {
 }
 
-const CStringDictionary::TStringId CIEC_PublishEvent::scmElementTypes[] = { g_nStringIdArrowheadSystem, g_nStringIdArrowheadEvent, g_nStringIdWSTRING};
+const CStringDictionary::TStringId CIEC_PublishEvent::scmElementTypes[] = { STRID(ArrowheadSystem), STRID(ArrowheadEvent), STRID(WSTRING)};
 const CStringDictionary::TStringId CIEC_PublishEvent::scmElementNames[] =
-  { g_nStringIdsource, g_nStringIdevent, g_nStringIddeliveryCompleteUri};
+  { STRID(source), STRID(event), STRID(deliveryCompleteUri)};

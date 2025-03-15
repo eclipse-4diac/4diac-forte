@@ -13,9 +13,15 @@
  *******************************************************************************/
 
 #include "DINT2DINT_fbt.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "DINT2DINT_fbt_gen.cpp"
-#endif
+
+USE_STRING_ID(CNF);
+USE_STRING_ID(DINT);
+USE_STRING_ID(DINT2DINT);
+USE_STRING_ID(Event);
+USE_STRING_ID(IN);
+USE_STRING_ID(OUT);
+USE_STRING_ID(REQ);
+
 
 #include "criticalregion.h"
 #include "resource.h"
@@ -26,25 +32,25 @@
 #include "forte_array_fixed.h"
 #include "forte_array_variable.h"
 
-DEFINE_FIRMWARE_FB(FORTE_DINT2DINT, g_nStringIdDINT2DINT)
+DEFINE_FIRMWARE_FB(FORTE_DINT2DINT, STRID(DINT2DINT))
 
-const CStringDictionary::TStringId FORTE_DINT2DINT::scmDataInputNames[] = {g_nStringIdIN};
+const CStringDictionary::TStringId FORTE_DINT2DINT::scmDataInputNames[] = {STRID(IN)};
 
-const CStringDictionary::TStringId FORTE_DINT2DINT::scmDataInputTypeIds[] = {g_nStringIdDINT};
+const CStringDictionary::TStringId FORTE_DINT2DINT::scmDataInputTypeIds[] = {STRID(DINT)};
 
-const CStringDictionary::TStringId FORTE_DINT2DINT::scmDataOutputNames[] = {g_nStringIdOUT};
+const CStringDictionary::TStringId FORTE_DINT2DINT::scmDataOutputNames[] = {STRID(OUT)};
 
-const CStringDictionary::TStringId FORTE_DINT2DINT::scmDataOutputTypeIds[] = {g_nStringIdDINT};
+const CStringDictionary::TStringId FORTE_DINT2DINT::scmDataOutputTypeIds[] = {STRID(DINT)};
 
 const TDataIOID FORTE_DINT2DINT::scmEIWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_DINT2DINT::scmEIWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_DINT2DINT::scmEventInputNames[] = {g_nStringIdREQ};
-const CStringDictionary::TStringId FORTE_DINT2DINT::scmEventInputTypeIds[] = {g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_DINT2DINT::scmEventInputNames[] = {STRID(REQ)};
+const CStringDictionary::TStringId FORTE_DINT2DINT::scmEventInputTypeIds[] = {STRID(Event)};
 
 const TDataIOID FORTE_DINT2DINT::scmEOWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_DINT2DINT::scmEOWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_DINT2DINT::scmEventOutputNames[] = {g_nStringIdCNF};
-const CStringDictionary::TStringId FORTE_DINT2DINT::scmEventOutputTypeIds[] = {g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_DINT2DINT::scmEventOutputNames[] = {STRID(CNF)};
+const CStringDictionary::TStringId FORTE_DINT2DINT::scmEventOutputTypeIds[] = {STRID(Event)};
 
 
 const SFBInterfaceSpec FORTE_DINT2DINT::scmFBInterfaceSpec = {

@@ -15,32 +15,38 @@
  *******************************************************************************/
 
 #include "F_TAN_fbt.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "F_TAN_fbt_gen.cpp"
-#endif
+
+USE_STRING_ID(ANY_REAL);
+USE_STRING_ID(CNF);
+USE_STRING_ID(Event);
+USE_STRING_ID(F_TAN);
+USE_STRING_ID(IN);
+USE_STRING_ID(OUT);
+USE_STRING_ID(REQ);
+
 
 #include "criticalregion.h"
 #include "resource.h"
 
-DEFINE_FIRMWARE_FB(FORTE_F_TAN, g_nStringIdF_TAN)
+DEFINE_FIRMWARE_FB(FORTE_F_TAN, STRID(F_TAN))
 
-const CStringDictionary::TStringId FORTE_F_TAN::scmDataInputNames[] = {g_nStringIdIN};
+const CStringDictionary::TStringId FORTE_F_TAN::scmDataInputNames[] = {STRID(IN)};
 
-const CStringDictionary::TStringId FORTE_F_TAN::scmDataInputTypeIds[] = {g_nStringIdANY_REAL};
+const CStringDictionary::TStringId FORTE_F_TAN::scmDataInputTypeIds[] = {STRID(ANY_REAL)};
 
-const CStringDictionary::TStringId FORTE_F_TAN::scmDataOutputNames[] = {g_nStringIdOUT};
+const CStringDictionary::TStringId FORTE_F_TAN::scmDataOutputNames[] = {STRID(OUT)};
 
-const CStringDictionary::TStringId FORTE_F_TAN::scmDataOutputTypeIds[] = {g_nStringIdANY_REAL};
+const CStringDictionary::TStringId FORTE_F_TAN::scmDataOutputTypeIds[] = {STRID(ANY_REAL)};
 
 const TDataIOID FORTE_F_TAN::scmEIWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_F_TAN::scmEIWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_F_TAN::scmEventInputNames[] = {g_nStringIdREQ};
-const CStringDictionary::TStringId FORTE_F_TAN::scmEventInputTypeIds[] = {g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_F_TAN::scmEventInputNames[] = {STRID(REQ)};
+const CStringDictionary::TStringId FORTE_F_TAN::scmEventInputTypeIds[] = {STRID(Event)};
 
 const TDataIOID FORTE_F_TAN::scmEOWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_F_TAN::scmEOWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_F_TAN::scmEventOutputNames[] = {g_nStringIdCNF};
-const CStringDictionary::TStringId FORTE_F_TAN::scmEventOutputTypeIds[] = {g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_F_TAN::scmEventOutputNames[] = {STRID(CNF)};
+const CStringDictionary::TStringId FORTE_F_TAN::scmEventOutputTypeIds[] = {STRID(Event)};
 
 
 const SFBInterfaceSpec FORTE_F_TAN::scmFBInterfaceSpec = {

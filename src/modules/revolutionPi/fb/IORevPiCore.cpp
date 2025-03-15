@@ -12,28 +12,42 @@
  *******************************************************************************/
 
 #include "IORevPiCore.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "IORevPiCore_gen.cpp"
-#endif
+
+USE_STRING_ID(BOOL);
+USE_STRING_ID(BusAdapterOut);
+USE_STRING_ID(EInit);
+USE_STRING_ID(Event);
+USE_STRING_ID(IND);
+USE_STRING_ID(INIT);
+USE_STRING_ID(INITO);
+USE_STRING_ID(IORevPiBusAdapter);
+USE_STRING_ID(IORevPiCore);
+USE_STRING_ID(QI);
+USE_STRING_ID(QO);
+USE_STRING_ID(STATUS);
+USE_STRING_ID(UINT);
+USE_STRING_ID(UpdateInterval);
+USE_STRING_ID(WSTRING);
+
 
 #include "../RevPiController.h"
 
-DEFINE_FIRMWARE_FB(FORTE_IORevPiCore, g_nStringIdIORevPiCore)
+DEFINE_FIRMWARE_FB(FORTE_IORevPiCore, STRID(IORevPiCore))
 
-const CStringDictionary::TStringId FORTE_IORevPiCore::scmDataInputNames[] = {g_nStringIdQI, g_nStringIdUpdateInterval};
-const CStringDictionary::TStringId FORTE_IORevPiCore::scmDataInputTypeIds[] = {g_nStringIdBOOL, g_nStringIdUINT};
-const CStringDictionary::TStringId FORTE_IORevPiCore::scmDataOutputNames[] = {g_nStringIdQO, g_nStringIdSTATUS};
-const CStringDictionary::TStringId FORTE_IORevPiCore::scmDataOutputTypeIds[] = {g_nStringIdBOOL, g_nStringIdWSTRING};
+const CStringDictionary::TStringId FORTE_IORevPiCore::scmDataInputNames[] = {STRID(QI), STRID(UpdateInterval)};
+const CStringDictionary::TStringId FORTE_IORevPiCore::scmDataInputTypeIds[] = {STRID(BOOL), STRID(UINT)};
+const CStringDictionary::TStringId FORTE_IORevPiCore::scmDataOutputNames[] = {STRID(QO), STRID(STATUS)};
+const CStringDictionary::TStringId FORTE_IORevPiCore::scmDataOutputTypeIds[] = {STRID(BOOL), STRID(WSTRING)};
 const TDataIOID FORTE_IORevPiCore::scmEIWith[] = {0, 1, scmWithListDelimiter};
 const TForteInt16 FORTE_IORevPiCore::scmEIWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_IORevPiCore::scmEventInputNames[] = {g_nStringIdINIT};
-const CStringDictionary::TStringId FORTE_IORevPiCore::scmEventInputTypeIds[] = {g_nStringIdEInit};
+const CStringDictionary::TStringId FORTE_IORevPiCore::scmEventInputNames[] = {STRID(INIT)};
+const CStringDictionary::TStringId FORTE_IORevPiCore::scmEventInputTypeIds[] = {STRID(EInit)};
 const TDataIOID FORTE_IORevPiCore::scmEOWith[] = {0, 1, scmWithListDelimiter, 0, 1, scmWithListDelimiter};
 const TForteInt16 FORTE_IORevPiCore::scmEOWithIndexes[] = {0, 3};
-const CStringDictionary::TStringId FORTE_IORevPiCore::scmEventOutputNames[] = {g_nStringIdINITO, g_nStringIdIND};
-const CStringDictionary::TStringId FORTE_IORevPiCore::scmEventOutputTypeIds[] = {g_nStringIdEvent, g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_IORevPiCore::scmEventOutputNames[] = {STRID(INITO), STRID(IND)};
+const CStringDictionary::TStringId FORTE_IORevPiCore::scmEventOutputTypeIds[] = {STRID(Event), STRID(Event)};
 const SAdapterInstanceDef FORTE_IORevPiCore::scmAdapterInstances[] = {
-  {g_nStringIdIORevPiBusAdapter, g_nStringIdBusAdapterOut, true}
+  {STRID(IORevPiBusAdapter), STRID(BusAdapterOut), true}
 };
 const SFBInterfaceSpec FORTE_IORevPiCore::scmFBInterfaceSpec = {
   1, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,

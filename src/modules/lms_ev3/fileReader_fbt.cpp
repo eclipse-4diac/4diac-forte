@@ -11,33 +11,47 @@
  *******************************************************************************/
  
 #include "fileReader_fbt.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "fileReader_fbt_gen.cpp"
-#endif
+
+USE_STRING_ID(BOOL);
+USE_STRING_ID(CNF);
+USE_STRING_ID(EInit);
+USE_STRING_ID(Event);
+USE_STRING_ID(FILE_NAME);
+USE_STRING_ID(fileReader);
+USE_STRING_ID(INIT);
+USE_STRING_ID(INITO);
+USE_STRING_ID(QI);
+USE_STRING_ID(QO);
+USE_STRING_ID(REQ);
+USE_STRING_ID(S1);
+USE_STRING_ID(STATUS);
+USE_STRING_ID(STRING);
+USE_STRING_ID(WSTRING);
+
 
 #include <sstream>
 #include <ostream>
 #include <iostream>
 
-DEFINE_FIRMWARE_FB(fileReader, g_nStringIdfileReader)
+DEFINE_FIRMWARE_FB(fileReader, STRID(fileReader))
 
-const CStringDictionary::TStringId fileReader::scmDataInputNames[] = {g_nStringIdQI, g_nStringIdFILE_NAME};
+const CStringDictionary::TStringId fileReader::scmDataInputNames[] = {STRID(QI), STRID(FILE_NAME)};
 
-const CStringDictionary::TStringId fileReader::scmDataInputTypeIds[] = {g_nStringIdBOOL, g_nStringIdSTRING};
+const CStringDictionary::TStringId fileReader::scmDataInputTypeIds[] = {STRID(BOOL), STRID(STRING)};
 
-const CStringDictionary::TStringId fileReader::scmDataOutputNames[] = {g_nStringIdQO, g_nStringIdSTATUS, g_nStringIdS1};
+const CStringDictionary::TStringId fileReader::scmDataOutputNames[] = {STRID(QO), STRID(STATUS), STRID(S1)};
 
-const CStringDictionary::TStringId fileReader::scmDataOutputTypeIds[] = {g_nStringIdBOOL, g_nStringIdWSTRING, g_nStringIdSTRING};
+const CStringDictionary::TStringId fileReader::scmDataOutputTypeIds[] = {STRID(BOOL), STRID(WSTRING), STRID(STRING)};
 
 const TForteInt16 fileReader::scmEIWithIndexes[] = {0, 3};
 const TDataIOID fileReader::scmEIWith[] = {0, 1, scmWithListDelimiter, 0, scmWithListDelimiter};
-const CStringDictionary::TStringId fileReader::scmEventInputNames[] = {g_nStringIdINIT, g_nStringIdREQ};
-const CStringDictionary::TStringId fileReader::scmEventInputTypeIds[] = {g_nStringIdEInit, g_nStringIdEvent};
+const CStringDictionary::TStringId fileReader::scmEventInputNames[] = {STRID(INIT), STRID(REQ)};
+const CStringDictionary::TStringId fileReader::scmEventInputTypeIds[] = {STRID(EInit), STRID(Event)};
 
 const TDataIOID fileReader::scmEOWith[] = {0, 1, 2, scmWithListDelimiter, 0, 1, 2, scmWithListDelimiter};
 const TForteInt16 fileReader::scmEOWithIndexes[] = {0, 4, -1};
-const CStringDictionary::TStringId fileReader::scmEventOutputNames[] = {g_nStringIdINITO, g_nStringIdCNF};
-const CStringDictionary::TStringId fileReader::scmEventOutputTypeIds[] = {g_nStringIdEvent, g_nStringIdEvent};
+const CStringDictionary::TStringId fileReader::scmEventOutputNames[] = {STRID(INITO), STRID(CNF)};
+const CStringDictionary::TStringId fileReader::scmEventOutputTypeIds[] = {STRID(Event), STRID(Event)};
 
 const SFBInterfaceSpec fileReader::scmFBInterfaceSpec = {
   2,  scmEventInputNames, scmEventInputTypeIds,  scmEIWith,  scmEIWithIndexes,

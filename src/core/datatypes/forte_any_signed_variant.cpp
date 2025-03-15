@@ -11,11 +11,11 @@
  *    Martin Erich Jobst - initial implementation
  *******************************************************************************/
 #include "forte_any_signed_variant.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "forte_any_signed_variant_gen.cpp"
-#endif
 
-DEFINE_FIRMWARE_DATATYPE(ANY_SIGNED_VARIANT, g_nStringIdANY_SIGNED)
+USE_STRING_ID(ANY_SIGNED);
+
+
+DEFINE_FIRMWARE_DATATYPE(ANY_SIGNED_VARIANT, STRID(ANY_SIGNED))
 
 void CIEC_ANY_SIGNED_VARIANT::setValue(const CIEC_ANY &paValue) {
   switch (paValue.getDataTypeID()) {

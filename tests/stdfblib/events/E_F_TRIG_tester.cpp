@@ -13,14 +13,14 @@
  *******************************************************************************/
 #include "../../core/fbtests/fbtestfixture.h"
 
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "E_F_TRIG_tester_gen.cpp"
-#endif
+
+USE_STRING_ID(E_F_TRIG);
+
 
 
 struct E_F_TRIG_TestFixture : public CFBTestFixtureBase{
 
-    E_F_TRIG_TestFixture() : CFBTestFixtureBase(g_nStringIdE_F_TRIG){
+    E_F_TRIG_TestFixture() : CFBTestFixtureBase(STRID(E_F_TRIG)){
       setInputData({&mInQI});
       CFBTestFixtureBase::setup();
     }

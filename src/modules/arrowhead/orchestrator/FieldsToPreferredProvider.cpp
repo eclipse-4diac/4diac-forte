@@ -11,29 +11,38 @@
  *******************************************************************************/
 
 #include "FieldsToPreferredProvider.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "FieldsToPreferredProvider_gen.cpp"
-#endif
 
-DEFINE_FIRMWARE_FB(FORTE_FieldsToPreferredProvider, g_nStringIdFieldsToPreferredProvider)
+USE_STRING_ID(ArrowheadCloud);
+USE_STRING_ID(ArrowheadSystem);
+USE_STRING_ID(CNF);
+USE_STRING_ID(Event);
+USE_STRING_ID(FieldsToPreferredProvider);
+USE_STRING_ID(preferredProvider);
+USE_STRING_ID(PreferredProvider);
+USE_STRING_ID(providerCloud);
+USE_STRING_ID(providerSystem);
+USE_STRING_ID(REQ);
 
-const CStringDictionary::TStringId FORTE_FieldsToPreferredProvider::scmDataInputNames[] = {g_nStringIdproviderSystem, g_nStringIdproviderCloud};
 
-const CStringDictionary::TStringId FORTE_FieldsToPreferredProvider::scmDataInputTypeIds[] = {g_nStringIdArrowheadSystem, g_nStringIdArrowheadCloud};
+DEFINE_FIRMWARE_FB(FORTE_FieldsToPreferredProvider, STRID(FieldsToPreferredProvider))
 
-const CStringDictionary::TStringId FORTE_FieldsToPreferredProvider::scmDataOutputNames[] = {g_nStringIdpreferredProvider};
+const CStringDictionary::TStringId FORTE_FieldsToPreferredProvider::scmDataInputNames[] = {STRID(providerSystem), STRID(providerCloud)};
 
-const CStringDictionary::TStringId FORTE_FieldsToPreferredProvider::scmDataOutputTypeIds[] = {g_nStringIdPreferredProvider};
+const CStringDictionary::TStringId FORTE_FieldsToPreferredProvider::scmDataInputTypeIds[] = {STRID(ArrowheadSystem), STRID(ArrowheadCloud)};
+
+const CStringDictionary::TStringId FORTE_FieldsToPreferredProvider::scmDataOutputNames[] = {STRID(preferredProvider)};
+
+const CStringDictionary::TStringId FORTE_FieldsToPreferredProvider::scmDataOutputTypeIds[] = {STRID(PreferredProvider)};
 
 const TForteInt16 FORTE_FieldsToPreferredProvider::scmEIWithIndexes[] = {0};
 const TDataIOID FORTE_FieldsToPreferredProvider::scmEIWith[] = {0, 1, scmWithListDelimiter};
-const CStringDictionary::TStringId FORTE_FieldsToPreferredProvider::scmEventInputNames[] = {g_nStringIdREQ};
-const CStringDictionary::TStringId FORTE_FieldsToPreferredProvider::scmEventInputTypeIds[] = {g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_FieldsToPreferredProvider::scmEventInputNames[] = {STRID(REQ)};
+const CStringDictionary::TStringId FORTE_FieldsToPreferredProvider::scmEventInputTypeIds[] = {STRID(Event)};
 
 const TDataIOID FORTE_FieldsToPreferredProvider::scmEOWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_FieldsToPreferredProvider::scmEOWithIndexes[] = {0, -1};
-const CStringDictionary::TStringId FORTE_FieldsToPreferredProvider::scmEventOutputNames[] = {g_nStringIdCNF};
-const CStringDictionary::TStringId FORTE_FieldsToPreferredProvider::scmEventOutputTypeIds[] = {g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_FieldsToPreferredProvider::scmEventOutputNames[] = {STRID(CNF)};
+const CStringDictionary::TStringId FORTE_FieldsToPreferredProvider::scmEventOutputTypeIds[] = {STRID(Event)};
 
 const SFBInterfaceSpec FORTE_FieldsToPreferredProvider::scmFBInterfaceSpec = {
   1,  scmEventInputNames, scmEventInputTypeIds,  scmEIWith,  scmEIWithIndexes,

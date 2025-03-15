@@ -14,14 +14,14 @@
 #include "../../core/fbtests/fbtestfixture.h"
 #include <forte_bool.h>
 
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "E_SELECT_tester_gen.cpp"
-#endif
+
+USE_STRING_ID(E_SELECT);
+
 
 struct E_SELECT_TestFixture : public CFBTestFixtureBase {
 
     E_SELECT_TestFixture() :
-        CFBTestFixtureBase(g_nStringIdE_SELECT) {
+        CFBTestFixtureBase(STRID(E_SELECT)) {
       setInputData({&mInG});
       CFBTestFixtureBase::setup();
     }

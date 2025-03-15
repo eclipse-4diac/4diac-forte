@@ -11,17 +11,24 @@
  *******************************************************************************/
 
 #include "forte_servicequeryform.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "forte_servicequeryform_gen.cpp"
-#endif
 
-DEFINE_FIRMWARE_DATATYPE(ServiceQueryForm, g_nStringIdServiceQueryForm);
+USE_STRING_ID(ArrowheadService);
+USE_STRING_ID(BOOL);
+USE_STRING_ID(DINT);
+USE_STRING_ID(metadataSearch);
+USE_STRING_ID(pingProviders);
+USE_STRING_ID(service);
+USE_STRING_ID(ServiceQueryForm);
+USE_STRING_ID(version);
+
+
+DEFINE_FIRMWARE_DATATYPE(ServiceQueryForm, STRID(ServiceQueryForm));
 
 CIEC_ServiceQueryForm::CIEC_ServiceQueryForm() :
-    CIEC_STRUCT(g_nStringIdServiceQueryForm, 4, scmElementTypes, scmElementNames, e_APPLICATION + e_CONSTRUCTED + 1) {
+    CIEC_STRUCT(STRID(ServiceQueryForm), 4, scmElementTypes, scmElementNames, e_APPLICATION + e_CONSTRUCTED + 1) {
 }
 
-const CStringDictionary::TStringId CIEC_ServiceQueryForm::scmElementTypes[] = { g_nStringIdArrowheadService, g_nStringIdBOOL, g_nStringIdBOOL,
-  g_nStringIdDINT };
-const CStringDictionary::TStringId CIEC_ServiceQueryForm::scmElementNames[] = { g_nStringIdservice, g_nStringIdmetadataSearch, g_nStringIdpingProviders,
-  g_nStringIdversion };
+const CStringDictionary::TStringId CIEC_ServiceQueryForm::scmElementTypes[] = { STRID(ArrowheadService), STRID(BOOL), STRID(BOOL),
+  STRID(DINT) };
+const CStringDictionary::TStringId CIEC_ServiceQueryForm::scmElementNames[] = { STRID(service), STRID(metadataSearch), STRID(pingProviders),
+  STRID(version) };

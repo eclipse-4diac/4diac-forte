@@ -18,9 +18,18 @@
  *******************************************************************************/
 
 #include "ASSEMBLE_BYTE_FROM_QUARTERS_fct.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "ASSEMBLE_BYTE_FROM_QUARTERS_fct_gen.cpp"
-#endif
+
+USE_STRING_ID();
+USE_STRING_ID(ASSEMBLE_BYTE_FROM_QUARTERS);
+USE_STRING_ID(BYTE);
+USE_STRING_ID(CNF);
+USE_STRING_ID(Event);
+USE_STRING_ID(QUARTER_BYTE_00);
+USE_STRING_ID(QUARTER_BYTE_01);
+USE_STRING_ID(QUARTER_BYTE_02);
+USE_STRING_ID(QUARTER_BYTE_03);
+USE_STRING_ID(REQ);
+
 
 #include "criticalregion.h"
 #include "resource.h"
@@ -35,20 +44,20 @@
 #include "quarterconst_gcf.h"
 #include "ASSEMBLE_BYTE_FROM_QUARTERS_fct.h"
 
-DEFINE_FIRMWARE_FB(FORTE_ASSEMBLE_BYTE_FROM_QUARTERS, g_nStringIdASSEMBLE_BYTE_FROM_QUARTERS)
+DEFINE_FIRMWARE_FB(FORTE_ASSEMBLE_BYTE_FROM_QUARTERS, STRID(ASSEMBLE_BYTE_FROM_QUARTERS))
 
-const CStringDictionary::TStringId FORTE_ASSEMBLE_BYTE_FROM_QUARTERS::scmDataInputNames[] = {g_nStringIdQUARTER_BYTE_00, g_nStringIdQUARTER_BYTE_01, g_nStringIdQUARTER_BYTE_02, g_nStringIdQUARTER_BYTE_03};
-const CStringDictionary::TStringId FORTE_ASSEMBLE_BYTE_FROM_QUARTERS::scmDataInputTypeIds[] = {g_nStringIdBYTE, g_nStringIdBYTE, g_nStringIdBYTE, g_nStringIdBYTE};
-const CStringDictionary::TStringId FORTE_ASSEMBLE_BYTE_FROM_QUARTERS::scmDataOutputNames[] = {g_nStringId};
-const CStringDictionary::TStringId FORTE_ASSEMBLE_BYTE_FROM_QUARTERS::scmDataOutputTypeIds[] = {g_nStringIdBYTE};
+const CStringDictionary::TStringId FORTE_ASSEMBLE_BYTE_FROM_QUARTERS::scmDataInputNames[] = {STRID(QUARTER_BYTE_00), STRID(QUARTER_BYTE_01), STRID(QUARTER_BYTE_02), STRID(QUARTER_BYTE_03)};
+const CStringDictionary::TStringId FORTE_ASSEMBLE_BYTE_FROM_QUARTERS::scmDataInputTypeIds[] = {STRID(BYTE), STRID(BYTE), STRID(BYTE), STRID(BYTE)};
+const CStringDictionary::TStringId FORTE_ASSEMBLE_BYTE_FROM_QUARTERS::scmDataOutputNames[] = {STRID()};
+const CStringDictionary::TStringId FORTE_ASSEMBLE_BYTE_FROM_QUARTERS::scmDataOutputTypeIds[] = {STRID(BYTE)};
 const TDataIOID FORTE_ASSEMBLE_BYTE_FROM_QUARTERS::scmEIWith[] = {0, 1, 2, 3, scmWithListDelimiter};
 const TForteInt16 FORTE_ASSEMBLE_BYTE_FROM_QUARTERS::scmEIWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_ASSEMBLE_BYTE_FROM_QUARTERS::scmEventInputNames[] = {g_nStringIdREQ};
-const CStringDictionary::TStringId FORTE_ASSEMBLE_BYTE_FROM_QUARTERS::scmEventInputTypeIds[] = {g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_ASSEMBLE_BYTE_FROM_QUARTERS::scmEventInputNames[] = {STRID(REQ)};
+const CStringDictionary::TStringId FORTE_ASSEMBLE_BYTE_FROM_QUARTERS::scmEventInputTypeIds[] = {STRID(Event)};
 const TDataIOID FORTE_ASSEMBLE_BYTE_FROM_QUARTERS::scmEOWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_ASSEMBLE_BYTE_FROM_QUARTERS::scmEOWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_ASSEMBLE_BYTE_FROM_QUARTERS::scmEventOutputNames[] = {g_nStringIdCNF};
-const CStringDictionary::TStringId FORTE_ASSEMBLE_BYTE_FROM_QUARTERS::scmEventOutputTypeIds[] = {g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_ASSEMBLE_BYTE_FROM_QUARTERS::scmEventOutputNames[] = {STRID(CNF)};
+const CStringDictionary::TStringId FORTE_ASSEMBLE_BYTE_FROM_QUARTERS::scmEventOutputTypeIds[] = {STRID(Event)};
 const SFBInterfaceSpec FORTE_ASSEMBLE_BYTE_FROM_QUARTERS::scmFBInterfaceSpec = {
   1, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,
   1, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes,

@@ -11,27 +11,36 @@
  *******************************************************************************/
 
 #include "QueryServicesAdp_adp.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "QueryServicesAdp_adp_gen.cpp"
-#endif
 
-DEFINE_ADAPTER_TYPE(FORTE_QueryServicesAdp, g_nStringIdQueryServicesAdp)
+USE_STRING_ID(ARRAY);
+USE_STRING_ID(endpoint);
+USE_STRING_ID(queried);
+USE_STRING_ID(query);
+USE_STRING_ID(QueryServicesAdp);
+USE_STRING_ID(serviceEntries);
+USE_STRING_ID(serviceQueryForm);
+USE_STRING_ID(ServiceQueryForm);
+USE_STRING_ID(ServiceRegistryEntry);
+USE_STRING_ID(WSTRING);
 
-const CStringDictionary::TStringId FORTE_QueryServicesAdp::scmDataInputNames[] = {g_nStringIdserviceEntries};
 
-const CStringDictionary::TStringId FORTE_QueryServicesAdp::scmDataInputTypeIds[] = {g_nStringIdARRAY, 10, g_nStringIdServiceRegistryEntry};
+DEFINE_ADAPTER_TYPE(FORTE_QueryServicesAdp, STRID(QueryServicesAdp))
 
-const CStringDictionary::TStringId FORTE_QueryServicesAdp::scmDataOutputNames[] = {g_nStringIdserviceQueryForm, g_nStringIdendpoint};
+const CStringDictionary::TStringId FORTE_QueryServicesAdp::scmDataInputNames[] = {STRID(serviceEntries)};
 
-const CStringDictionary::TStringId FORTE_QueryServicesAdp::scmDataOutputTypeIds[] = {g_nStringIdServiceQueryForm, g_nStringIdWSTRING};
+const CStringDictionary::TStringId FORTE_QueryServicesAdp::scmDataInputTypeIds[] = {STRID(ARRAY), 10, STRID(ServiceRegistryEntry)};
+
+const CStringDictionary::TStringId FORTE_QueryServicesAdp::scmDataOutputNames[] = {STRID(serviceQueryForm), STRID(endpoint)};
+
+const CStringDictionary::TStringId FORTE_QueryServicesAdp::scmDataOutputTypeIds[] = {STRID(ServiceQueryForm), STRID(WSTRING)};
 
 const TDataIOID FORTE_QueryServicesAdp::scmEIWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_QueryServicesAdp::scmEIWithIndexes[] = {0, -1};
-const CStringDictionary::TStringId FORTE_QueryServicesAdp::scmEventInputNames[] = {g_nStringIdqueried};
+const CStringDictionary::TStringId FORTE_QueryServicesAdp::scmEventInputNames[] = {STRID(queried)};
 
 const TDataIOID FORTE_QueryServicesAdp::scmEOWith[] = {0, 1, scmWithListDelimiter};
 const TForteInt16 FORTE_QueryServicesAdp::scmEOWithIndexes[] = {0, -1};
-const CStringDictionary::TStringId FORTE_QueryServicesAdp::scmEventOutputNames[] = {g_nStringIdquery};
+const CStringDictionary::TStringId FORTE_QueryServicesAdp::scmEventOutputNames[] = {STRID(query)};
 
 const SFBInterfaceSpec FORTE_QueryServicesAdp::scmFBInterfaceSpecSocket = {
   1,  scmEventInputNames,  scmEIWith,  scmEIWithIndexes,

@@ -12,9 +12,9 @@
  *    Martin Melik-Merkumians - adds typifyAnyAdapter
  *******************************************************************************/
 #include "adapterconn.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "adapterconn_gen.cpp"
-#endif
+
+USE_STRING_ID(ANY_ADAPTER);
+
 #include "funcbloc.h"
 #include "adapter.h"
 #include "anyadapter.h"
@@ -28,11 +28,11 @@ CAdapterConnection::~CAdapterConnection(){
 }
 
 void CAdapterConnection::typifyAnyAdapter(CAdapter *paSocket, CAdapter *paPlug){
-  if(g_nStringIdANY_ADAPTER == paSocket->getFBTypeId()){
+  if(STRID(ANY_ADAPTER) == paSocket->getFBTypeId()){
     static_cast<CAnyAdapter*>(paSocket)->typifyAnyAdapter(paPlug);
   }
 
-  if(g_nStringIdANY_ADAPTER == paPlug->getFBTypeId()){
+  if(STRID(ANY_ADAPTER) == paPlug->getFBTypeId()){
     static_cast<CAnyAdapter*>(paPlug)->typifyAnyAdapter(paSocket);
   }
 }

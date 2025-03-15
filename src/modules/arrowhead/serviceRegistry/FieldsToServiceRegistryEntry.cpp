@@ -11,29 +11,46 @@
  *******************************************************************************/
 
 #include "FieldsToServiceRegistryEntry.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "FieldsToServiceRegistryEntry_gen.cpp"
-#endif
 
-DEFINE_FIRMWARE_FB(FORTE_FieldsToServiceRegistryEntry, g_nStringIdFieldsToServiceRegistryEntry)
+USE_STRING_ID(ArrowheadService);
+USE_STRING_ID(ArrowheadSystem);
+USE_STRING_ID(BOOL);
+USE_STRING_ID(CNF);
+USE_STRING_ID(DINT);
+USE_STRING_ID(Event);
+USE_STRING_ID(FieldsToServiceRegistryEntry);
+USE_STRING_ID(metadata);
+USE_STRING_ID(providedService);
+USE_STRING_ID(provider);
+USE_STRING_ID(REQ);
+USE_STRING_ID(serviceRegistryEntry);
+USE_STRING_ID(ServiceRegistryEntry);
+USE_STRING_ID(serviceURI);
+USE_STRING_ID(ttl);
+USE_STRING_ID(udp);
+USE_STRING_ID(version);
+USE_STRING_ID(WSTRING);
 
-const CStringDictionary::TStringId FORTE_FieldsToServiceRegistryEntry::scmDataInputNames[] = {g_nStringIdprovidedService, g_nStringIdprovider, g_nStringIdserviceURI, g_nStringIdversion, g_nStringIdudp, g_nStringIdttl, g_nStringIdmetadata};
 
-const CStringDictionary::TStringId FORTE_FieldsToServiceRegistryEntry::scmDataInputTypeIds[] = {g_nStringIdArrowheadService, g_nStringIdArrowheadSystem, g_nStringIdWSTRING, g_nStringIdDINT, g_nStringIdBOOL, g_nStringIdDINT, g_nStringIdWSTRING};
+DEFINE_FIRMWARE_FB(FORTE_FieldsToServiceRegistryEntry, STRID(FieldsToServiceRegistryEntry))
 
-const CStringDictionary::TStringId FORTE_FieldsToServiceRegistryEntry::scmDataOutputNames[] = {g_nStringIdserviceRegistryEntry};
+const CStringDictionary::TStringId FORTE_FieldsToServiceRegistryEntry::scmDataInputNames[] = {STRID(providedService), STRID(provider), STRID(serviceURI), STRID(version), STRID(udp), STRID(ttl), STRID(metadata)};
 
-const CStringDictionary::TStringId FORTE_FieldsToServiceRegistryEntry::scmDataOutputTypeIds[] = {g_nStringIdServiceRegistryEntry};
+const CStringDictionary::TStringId FORTE_FieldsToServiceRegistryEntry::scmDataInputTypeIds[] = {STRID(ArrowheadService), STRID(ArrowheadSystem), STRID(WSTRING), STRID(DINT), STRID(BOOL), STRID(DINT), STRID(WSTRING)};
+
+const CStringDictionary::TStringId FORTE_FieldsToServiceRegistryEntry::scmDataOutputNames[] = {STRID(serviceRegistryEntry)};
+
+const CStringDictionary::TStringId FORTE_FieldsToServiceRegistryEntry::scmDataOutputTypeIds[] = {STRID(ServiceRegistryEntry)};
 
 const TForteInt16 FORTE_FieldsToServiceRegistryEntry::scmEIWithIndexes[] = {0};
 const TDataIOID FORTE_FieldsToServiceRegistryEntry::scmEIWith[] = {6, 5, 4, 3, 2, 1, 0, scmWithListDelimiter};
-const CStringDictionary::TStringId FORTE_FieldsToServiceRegistryEntry::scmEventInputNames[] = {g_nStringIdREQ};
-const CStringDictionary::TStringId FORTE_FieldsToServiceRegistryEntry::scmEventInputTypeIds[] = {g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_FieldsToServiceRegistryEntry::scmEventInputNames[] = {STRID(REQ)};
+const CStringDictionary::TStringId FORTE_FieldsToServiceRegistryEntry::scmEventInputTypeIds[] = {STRID(Event)};
 
 const TDataIOID FORTE_FieldsToServiceRegistryEntry::scmEOWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_FieldsToServiceRegistryEntry::scmEOWithIndexes[] = {0, -1};
-const CStringDictionary::TStringId FORTE_FieldsToServiceRegistryEntry::scmEventOutputNames[] = {g_nStringIdCNF};
-const CStringDictionary::TStringId FORTE_FieldsToServiceRegistryEntry::scmEventOutputTypeIds[] = {g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_FieldsToServiceRegistryEntry::scmEventOutputNames[] = {STRID(CNF)};
+const CStringDictionary::TStringId FORTE_FieldsToServiceRegistryEntry::scmEventOutputTypeIds[] = {STRID(Event)};
 
 const SFBInterfaceSpec FORTE_FieldsToServiceRegistryEntry::scmFBInterfaceSpec = {
   1,  scmEventInputNames, scmEventInputTypeIds,  scmEIWith,  scmEIWithIndexes,

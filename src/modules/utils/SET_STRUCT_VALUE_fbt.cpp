@@ -15,32 +15,41 @@
  *******************************************************************************/
 
 #include "SET_STRUCT_VALUE_fbt.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "SET_STRUCT_VALUE_fbt_gen.cpp"
-#endif
+
+USE_STRING_ID(ANY);
+USE_STRING_ID(CNF);
+USE_STRING_ID(element_value);
+USE_STRING_ID(Event);
+USE_STRING_ID(in_struct);
+USE_STRING_ID(member);
+USE_STRING_ID(out_struct);
+USE_STRING_ID(REQ);
+USE_STRING_ID(SET_STRUCT_VALUE);
+USE_STRING_ID(STRING);
+
 
 #include "criticalregion.h"
 #include "resource.h"
 
-DEFINE_FIRMWARE_FB(FORTE_SET_STRUCT_VALUE, g_nStringIdSET_STRUCT_VALUE)
+DEFINE_FIRMWARE_FB(FORTE_SET_STRUCT_VALUE, STRID(SET_STRUCT_VALUE))
 
-const CStringDictionary::TStringId FORTE_SET_STRUCT_VALUE::scmDataInputNames[] = {g_nStringIdin_struct, g_nStringIdmember, g_nStringIdelement_value};
+const CStringDictionary::TStringId FORTE_SET_STRUCT_VALUE::scmDataInputNames[] = {STRID(in_struct), STRID(member), STRID(element_value)};
 
-const CStringDictionary::TStringId FORTE_SET_STRUCT_VALUE::scmDataInputTypeIds[] = {g_nStringIdANY, g_nStringIdSTRING, g_nStringIdANY};
+const CStringDictionary::TStringId FORTE_SET_STRUCT_VALUE::scmDataInputTypeIds[] = {STRID(ANY), STRID(STRING), STRID(ANY)};
 
-const CStringDictionary::TStringId FORTE_SET_STRUCT_VALUE::scmDataOutputNames[] = {g_nStringIdout_struct};
+const CStringDictionary::TStringId FORTE_SET_STRUCT_VALUE::scmDataOutputNames[] = {STRID(out_struct)};
 
-const CStringDictionary::TStringId FORTE_SET_STRUCT_VALUE::scmDataOutputTypeIds[] = {g_nStringIdANY};
+const CStringDictionary::TStringId FORTE_SET_STRUCT_VALUE::scmDataOutputTypeIds[] = {STRID(ANY)};
 
 const TDataIOID FORTE_SET_STRUCT_VALUE::scmEIWith[] = {1, 0, 2, scmWithListDelimiter};
 const TForteInt16 FORTE_SET_STRUCT_VALUE::scmEIWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_SET_STRUCT_VALUE::scmEventInputNames[] = {g_nStringIdREQ};
-const CStringDictionary::TStringId FORTE_SET_STRUCT_VALUE::scmEventInputTypeIds[] = {g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_SET_STRUCT_VALUE::scmEventInputNames[] = {STRID(REQ)};
+const CStringDictionary::TStringId FORTE_SET_STRUCT_VALUE::scmEventInputTypeIds[] = {STRID(Event)};
 
 const TDataIOID FORTE_SET_STRUCT_VALUE::scmEOWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_SET_STRUCT_VALUE::scmEOWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_SET_STRUCT_VALUE::scmEventOutputNames[] = {g_nStringIdCNF};
-const CStringDictionary::TStringId FORTE_SET_STRUCT_VALUE::scmEventOutputTypeIds[] = {g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_SET_STRUCT_VALUE::scmEventOutputNames[] = {STRID(CNF)};
+const CStringDictionary::TStringId FORTE_SET_STRUCT_VALUE::scmEventOutputTypeIds[] = {STRID(Event)};
 
 
 const SFBInterfaceSpec FORTE_SET_STRUCT_VALUE::scmFBInterfaceSpec = {

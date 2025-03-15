@@ -12,9 +12,14 @@
  *******************************************************************************/
 
 #include "E_REND_fbt.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "E_REND_fbt_gen.cpp"
-#endif
+
+USE_STRING_ID(EI1);
+USE_STRING_ID(EI2);
+USE_STRING_ID(EO);
+USE_STRING_ID(E_REND);
+USE_STRING_ID(Event);
+USE_STRING_ID(R);
+
 
 #include "criticalregion.h"
 #include "resource.h"
@@ -25,14 +30,14 @@
 #include "forte_array_fixed.h"
 #include "forte_array_variable.h"
 
-DEFINE_FIRMWARE_FB(FORTE_E_REND, g_nStringIdE_REND)
+DEFINE_FIRMWARE_FB(FORTE_E_REND, STRID(E_REND))
 
 const TForteInt16 FORTE_E_REND::scmEIWithIndexes[] = {-1, -1, -1};
-const CStringDictionary::TStringId FORTE_E_REND::scmEventInputNames[] = {g_nStringIdEI1, g_nStringIdEI2, g_nStringIdR};
-const CStringDictionary::TStringId FORTE_E_REND::scmEventInputTypeIds[] = {g_nStringIdEvent, g_nStringIdEvent, g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_E_REND::scmEventInputNames[] = {STRID(EI1), STRID(EI2), STRID(R)};
+const CStringDictionary::TStringId FORTE_E_REND::scmEventInputTypeIds[] = {STRID(Event), STRID(Event), STRID(Event)};
 const TForteInt16 FORTE_E_REND::scmEOWithIndexes[] = {-1};
-const CStringDictionary::TStringId FORTE_E_REND::scmEventOutputNames[] = {g_nStringIdEO};
-const CStringDictionary::TStringId FORTE_E_REND::scmEventOutputTypeIds[] = {g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_E_REND::scmEventOutputNames[] = {STRID(EO)};
+const CStringDictionary::TStringId FORTE_E_REND::scmEventOutputTypeIds[] = {STRID(Event)};
 const SFBInterfaceSpec FORTE_E_REND::scmFBInterfaceSpec = {
   3, scmEventInputNames, scmEventInputTypeIds, nullptr, scmEIWithIndexes,
   1, scmEventOutputNames, scmEventOutputTypeIds, nullptr, scmEOWithIndexes,

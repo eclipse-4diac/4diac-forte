@@ -12,19 +12,24 @@
  *******************************************************************************/
 
 #include <modules/rt_events/RT_Bridge_fbt.h>
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "RT_Bridge_fbt_gen.cpp"
-#endif
+
+USE_STRING_ID(ANY);
+USE_STRING_ID(Event);
+USE_STRING_ID(GEN_RT_Bridge);
+USE_STRING_ID(RD);
+USE_STRING_ID(RDO);
+USE_STRING_ID(WR);
+
 
 #include "ifSpecBuilder.h"
 #include "resource.h"
 
-DEFINE_GENERIC_FIRMWARE_FB(FORTE_GEN_RT_Bridge, g_nStringIdGEN_RT_Bridge)
+DEFINE_GENERIC_FIRMWARE_FB(FORTE_GEN_RT_Bridge, STRID(GEN_RT_Bridge))
 
-const CStringDictionary::TStringId FORTE_GEN_RT_Bridge::scmEventInputNames[] = {g_nStringIdRD, g_nStringIdWR};
-const CStringDictionary::TStringId FORTE_GEN_RT_Bridge::scmEventInputTypeIds[] = {g_nStringIdEvent, g_nStringIdEvent};
-const CStringDictionary::TStringId FORTE_GEN_RT_Bridge::scmEventOutputNames[] = {g_nStringIdRDO};
-const CStringDictionary::TStringId FORTE_GEN_RT_Bridge::scmEventOutputTypeIds[] = {g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_GEN_RT_Bridge::scmEventInputNames[] = {STRID(RD), STRID(WR)};
+const CStringDictionary::TStringId FORTE_GEN_RT_Bridge::scmEventInputTypeIds[] = {STRID(Event), STRID(Event)};
+const CStringDictionary::TStringId FORTE_GEN_RT_Bridge::scmEventOutputNames[] = {STRID(RDO)};
+const CStringDictionary::TStringId FORTE_GEN_RT_Bridge::scmEventOutputTypeIds[] = {STRID(Event)};
 
 
 FORTE_GEN_RT_Bridge::FORTE_GEN_RT_Bridge(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
@@ -79,14 +84,14 @@ bool FORTE_GEN_RT_Bridge::createInterfaceSpec(const char *paConfigString, SFBInt
     return false;
   }
 
-  static const std::array<CStringDictionary::TStringId, 2>anEventInputNames = { g_nStringIdRD, g_nStringIdWR};
-  static const std::array<CStringDictionary::TStringId, 1>anEventOutputNames = { g_nStringIdRDO};
+  static const std::array<CStringDictionary::TStringId, 2>anEventInputNames = { STRID(RD), STRID(WR)};
+  static const std::array<CStringDictionary::TStringId, 1>anEventOutputNames = { STRID(RDO)};
 
   forte::core::util::CIfSpecBuilder isb;
   isb.mEI.setStaticEvents(anEventInputNames);
   isb.mEO.setStaticEvents(anEventOutputNames);
-  isb.mDI.addDataRange("SD_", static_cast<int>(numPorts), g_nStringIdANY);
-  isb.mDO.addDataRange("RD_", static_cast<int>(numPorts), g_nStringIdANY);
+  isb.mDI.addDataRange("SD_", static_cast<int>(numPorts), STRID(ANY));
+  isb.mDO.addDataRange("RD_", static_cast<int>(numPorts), STRID(ANY));
 
   return isb.build(mIfSpecStorage, paInterfaceSpec);
 }

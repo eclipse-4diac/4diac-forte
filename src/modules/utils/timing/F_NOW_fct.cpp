@@ -16,9 +16,14 @@
  *************************************************************************/
 
 #include "F_NOW_fct.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "F_NOW_fct_gen.cpp"
-#endif
+
+USE_STRING_ID();
+USE_STRING_ID(CNF);
+USE_STRING_ID(DATE_AND_TIME);
+USE_STRING_ID(Event);
+USE_STRING_ID(REQ);
+USE_STRING_ID(utils__timing__F_NOW);
+
 
 #include "forte_date_and_time.h"
 #include "iec61131_functions.h"
@@ -28,17 +33,17 @@
 #include "forte_array_variable.h"
 #include "F_NOW_fct.h"
 
-DEFINE_FIRMWARE_FB(FORTE_utils__timing__F_NOW, g_nStringIdutils__timing__F_NOW)
+DEFINE_FIRMWARE_FB(FORTE_utils__timing__F_NOW, STRID(utils__timing__F_NOW))
 
-const CStringDictionary::TStringId FORTE_utils__timing__F_NOW::scmDataOutputNames[] = {g_nStringId};
-const CStringDictionary::TStringId FORTE_utils__timing__F_NOW::scmDataOutputTypeIds[] = {g_nStringIdDATE_AND_TIME};
+const CStringDictionary::TStringId FORTE_utils__timing__F_NOW::scmDataOutputNames[] = {STRID()};
+const CStringDictionary::TStringId FORTE_utils__timing__F_NOW::scmDataOutputTypeIds[] = {STRID(DATE_AND_TIME)};
 const TForteInt16 FORTE_utils__timing__F_NOW::scmEIWithIndexes[] = {-1};
-const CStringDictionary::TStringId FORTE_utils__timing__F_NOW::scmEventInputNames[] = {g_nStringIdREQ};
-const CStringDictionary::TStringId FORTE_utils__timing__F_NOW::scmEventInputTypeIds[] = {g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_utils__timing__F_NOW::scmEventInputNames[] = {STRID(REQ)};
+const CStringDictionary::TStringId FORTE_utils__timing__F_NOW::scmEventInputTypeIds[] = {STRID(Event)};
 const TDataIOID FORTE_utils__timing__F_NOW::scmEOWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_utils__timing__F_NOW::scmEOWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_utils__timing__F_NOW::scmEventOutputNames[] = {g_nStringIdCNF};
-const CStringDictionary::TStringId FORTE_utils__timing__F_NOW::scmEventOutputTypeIds[] = {g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_utils__timing__F_NOW::scmEventOutputNames[] = {STRID(CNF)};
+const CStringDictionary::TStringId FORTE_utils__timing__F_NOW::scmEventOutputTypeIds[] = {STRID(Event)};
 const SFBInterfaceSpec FORTE_utils__timing__F_NOW::scmFBInterfaceSpec = {
   1, scmEventInputNames, scmEventInputTypeIds, nullptr, scmEIWithIndexes,
   1, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes,

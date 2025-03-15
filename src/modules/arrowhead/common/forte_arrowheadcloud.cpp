@@ -11,18 +11,28 @@
  *******************************************************************************/
 
 #include "forte_arrowheadcloud.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "forte_arrowheadcloud_gen.cpp"
-#endif
 
-DEFINE_FIRMWARE_DATATYPE(ArrowheadCloud, g_nStringIdArrowheadCloud);
+USE_STRING_ID(address);
+USE_STRING_ID(ArrowheadCloud);
+USE_STRING_ID(authenticationInfo);
+USE_STRING_ID(BOOL);
+USE_STRING_ID(cloudName);
+USE_STRING_ID(DINT);
+USE_STRING_ID(gatekeeperServiceURI);
+USE_STRING_ID(operator);
+USE_STRING_ID(port);
+USE_STRING_ID(secure);
+USE_STRING_ID(WSTRING);
+
+
+DEFINE_FIRMWARE_DATATYPE(ArrowheadCloud, STRID(ArrowheadCloud));
 
 CIEC_ArrowheadCloud::CIEC_ArrowheadCloud() :
-    CIEC_STRUCT(g_nStringIdArrowheadCloud, 7, scmElementTypes, scmElementNames, e_APPLICATION + e_CONSTRUCTED + 1) {
+    CIEC_STRUCT(STRID(ArrowheadCloud), 7, scmElementTypes, scmElementNames, e_APPLICATION + e_CONSTRUCTED + 1) {
 }
 
-const CStringDictionary::TStringId CIEC_ArrowheadCloud::scmElementTypes[] = { g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdDINT,
-  g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdBOOL };
+const CStringDictionary::TStringId CIEC_ArrowheadCloud::scmElementTypes[] = { STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(DINT),
+  STRID(WSTRING), STRID(WSTRING), STRID(BOOL) };
 const CStringDictionary::TStringId CIEC_ArrowheadCloud::scmElementNames[] =
-  { g_nStringIdoperator, g_nStringIdcloudName, g_nStringIdaddress, g_nStringIdport,
-  g_nStringIdgatekeeperServiceURI, g_nStringIdauthenticationInfo, g_nStringIdsecure };
+  { STRID(operator), STRID(cloudName), STRID(address), STRID(port),
+  STRID(gatekeeperServiceURI), STRID(authenticationInfo), STRID(secure) };

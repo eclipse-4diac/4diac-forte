@@ -15,9 +15,12 @@
  *     - add generic readInputData and writeOutputData
  *******************************************************************************/
 #include "genbitbase_fbt.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "genbitbase_fbt_gen.cpp"
-#endif
+
+USE_STRING_ID(ANY_BIT);
+USE_STRING_ID(CNF);
+USE_STRING_ID(OUT);
+USE_STRING_ID(REQ);
+
 
 #include <ctype.h>
 #include <stdio.h>
@@ -26,12 +29,12 @@
 #include "criticalregion.h"
 
 
-const CStringDictionary::TStringId CGenBitBase::scmDataOutputNames[] = { g_nStringIdOUT };
-const CStringDictionary::TStringId CGenBitBase::scmDataOutputTypeIds[] = {g_nStringIdANY_BIT };
+const CStringDictionary::TStringId CGenBitBase::scmDataOutputNames[] = { STRID(OUT) };
+const CStringDictionary::TStringId CGenBitBase::scmDataOutputTypeIds[] = {STRID(ANY_BIT) };
 
-const CStringDictionary::TStringId CGenBitBase::scmEventInputNames[] = {g_nStringIdREQ };
+const CStringDictionary::TStringId CGenBitBase::scmEventInputNames[] = {STRID(REQ) };
 
-const CStringDictionary::TStringId CGenBitBase::scmEventOutputNames[] = { g_nStringIdCNF };
+const CStringDictionary::TStringId CGenBitBase::scmEventOutputNames[] = { STRID(CNF) };
 
 CGenBitBase::CGenBitBase(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CGenFunctionBlock<CFunctionBlock>(paContainer, paInstanceNameId) {
@@ -76,7 +79,7 @@ bool CGenBitBase::createInterfaceSpec(const char *paConfigString, SFBInterfaceSp
     for (size_t di = 0; di < paInterfaceSpec.mNumDIs; ++di) {
       forte_snprintf(&(diNames[2]), 5 - 2, "%i", di + 1);
       mDataInputNames[di] = CStringDictionary::insert(diNames);
-      mDataInputTypeIds[di] = g_nStringIdANY_BIT;
+      mDataInputTypeIds[di] = STRID(ANY_BIT);
     }
 
     //setup the interface Specification

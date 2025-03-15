@@ -14,11 +14,11 @@
  *    Alois Zoitl - introduced new CGenFB class for better handling generic FBs
  *******************************************************************************/
 #include "anyadapter.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "anyadapter_gen.cpp"
-#endif
 
-DEFINE_GENERIC_ADAPTER_TYPE(CAnyAdapter, g_nStringIdANY_ADAPTER)
+USE_STRING_ID(ANY_ADAPTER);
+
+
+DEFINE_GENERIC_ADAPTER_TYPE(CAnyAdapter, STRID(ANY_ADAPTER))
 
 const SFBInterfaceSpec CAnyAdapter::scmFBInterfaceSpec = {
   0, nullptr, nullptr, nullptr, nullptr,

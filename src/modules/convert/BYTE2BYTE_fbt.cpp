@@ -13,9 +13,15 @@
  *******************************************************************************/
 
 #include "BYTE2BYTE_fbt.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "BYTE2BYTE_fbt_gen.cpp"
-#endif
+
+USE_STRING_ID(BYTE);
+USE_STRING_ID(BYTE2BYTE);
+USE_STRING_ID(CNF);
+USE_STRING_ID(Event);
+USE_STRING_ID(IN);
+USE_STRING_ID(OUT);
+USE_STRING_ID(REQ);
+
 
 #include "criticalregion.h"
 #include "resource.h"
@@ -26,25 +32,25 @@
 #include "forte_array_fixed.h"
 #include "forte_array_variable.h"
 
-DEFINE_FIRMWARE_FB(FORTE_BYTE2BYTE, g_nStringIdBYTE2BYTE)
+DEFINE_FIRMWARE_FB(FORTE_BYTE2BYTE, STRID(BYTE2BYTE))
 
-const CStringDictionary::TStringId FORTE_BYTE2BYTE::scmDataInputNames[] = {g_nStringIdIN};
+const CStringDictionary::TStringId FORTE_BYTE2BYTE::scmDataInputNames[] = {STRID(IN)};
 
-const CStringDictionary::TStringId FORTE_BYTE2BYTE::scmDataInputTypeIds[] = {g_nStringIdBYTE};
+const CStringDictionary::TStringId FORTE_BYTE2BYTE::scmDataInputTypeIds[] = {STRID(BYTE)};
 
-const CStringDictionary::TStringId FORTE_BYTE2BYTE::scmDataOutputNames[] = {g_nStringIdOUT};
+const CStringDictionary::TStringId FORTE_BYTE2BYTE::scmDataOutputNames[] = {STRID(OUT)};
 
-const CStringDictionary::TStringId FORTE_BYTE2BYTE::scmDataOutputTypeIds[] = {g_nStringIdBYTE};
+const CStringDictionary::TStringId FORTE_BYTE2BYTE::scmDataOutputTypeIds[] = {STRID(BYTE)};
 
 const TDataIOID FORTE_BYTE2BYTE::scmEIWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_BYTE2BYTE::scmEIWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_BYTE2BYTE::scmEventInputNames[] = {g_nStringIdREQ};
-const CStringDictionary::TStringId FORTE_BYTE2BYTE::scmEventInputTypeIds[] = {g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_BYTE2BYTE::scmEventInputNames[] = {STRID(REQ)};
+const CStringDictionary::TStringId FORTE_BYTE2BYTE::scmEventInputTypeIds[] = {STRID(Event)};
 
 const TDataIOID FORTE_BYTE2BYTE::scmEOWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_BYTE2BYTE::scmEOWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_BYTE2BYTE::scmEventOutputNames[] = {g_nStringIdCNF};
-const CStringDictionary::TStringId FORTE_BYTE2BYTE::scmEventOutputTypeIds[] = {g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_BYTE2BYTE::scmEventOutputNames[] = {STRID(CNF)};
+const CStringDictionary::TStringId FORTE_BYTE2BYTE::scmEventOutputTypeIds[] = {STRID(Event)};
 
 
 const SFBInterfaceSpec FORTE_BYTE2BYTE::scmFBInterfaceSpec = {

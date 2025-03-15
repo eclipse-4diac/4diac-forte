@@ -13,9 +13,17 @@
 
 
 #include "GetInstancePathAndName_fbt.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "GetInstancePathAndName_fbt_gen.cpp"
-#endif
+
+USE_STRING_ID(CHAR);
+USE_STRING_ID(CNF);
+USE_STRING_ID(Event);
+USE_STRING_ID(GetInstancePathAndName);
+USE_STRING_ID(Name);
+USE_STRING_ID(Path);
+USE_STRING_ID(REQ);
+USE_STRING_ID(Sep);
+USE_STRING_ID(STRING);
+
 
 #include "criticalregion.h"
 #include "resource.h"
@@ -26,20 +34,20 @@
 #include "forte_array_fixed.h"
 #include "forte_array_variable.h"
 
-DEFINE_FIRMWARE_FB(FORTE_GetInstancePathAndName, g_nStringIdGetInstancePathAndName)
+DEFINE_FIRMWARE_FB(FORTE_GetInstancePathAndName, STRID(GetInstancePathAndName))
 
-const CStringDictionary::TStringId FORTE_GetInstancePathAndName::scmDataInputNames[] = {g_nStringIdSep};
-const CStringDictionary::TStringId FORTE_GetInstancePathAndName::scmDataInputTypeIds[] = {g_nStringIdCHAR};
-const CStringDictionary::TStringId FORTE_GetInstancePathAndName::scmDataOutputNames[] = {g_nStringIdPath, g_nStringIdName};
-const CStringDictionary::TStringId FORTE_GetInstancePathAndName::scmDataOutputTypeIds[] = {g_nStringIdSTRING, g_nStringIdSTRING};
+const CStringDictionary::TStringId FORTE_GetInstancePathAndName::scmDataInputNames[] = {STRID(Sep)};
+const CStringDictionary::TStringId FORTE_GetInstancePathAndName::scmDataInputTypeIds[] = {STRID(CHAR)};
+const CStringDictionary::TStringId FORTE_GetInstancePathAndName::scmDataOutputNames[] = {STRID(Path), STRID(Name)};
+const CStringDictionary::TStringId FORTE_GetInstancePathAndName::scmDataOutputTypeIds[] = {STRID(STRING), STRID(STRING)};
 const TDataIOID FORTE_GetInstancePathAndName::scmEIWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_GetInstancePathAndName::scmEIWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_GetInstancePathAndName::scmEventInputNames[] = {g_nStringIdREQ};
-const CStringDictionary::TStringId FORTE_GetInstancePathAndName::scmEventInputTypeIds[] = {g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_GetInstancePathAndName::scmEventInputNames[] = {STRID(REQ)};
+const CStringDictionary::TStringId FORTE_GetInstancePathAndName::scmEventInputTypeIds[] = {STRID(Event)};
 const TDataIOID FORTE_GetInstancePathAndName::scmEOWith[] = {0, 1, scmWithListDelimiter};
 const TForteInt16 FORTE_GetInstancePathAndName::scmEOWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_GetInstancePathAndName::scmEventOutputNames[] = {g_nStringIdCNF};
-const CStringDictionary::TStringId FORTE_GetInstancePathAndName::scmEventOutputTypeIds[] = {g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_GetInstancePathAndName::scmEventOutputNames[] = {STRID(CNF)};
+const CStringDictionary::TStringId FORTE_GetInstancePathAndName::scmEventOutputTypeIds[] = {STRID(Event)};
 const SFBInterfaceSpec FORTE_GetInstancePathAndName::scmFBInterfaceSpec = {
   1, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,
   1, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes,

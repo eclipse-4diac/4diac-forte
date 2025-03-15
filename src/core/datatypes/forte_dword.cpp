@@ -13,8 +13,8 @@
  *      - initial implementation and rework communication infrastructure
   *******************************************************************************/
 #include "forte_dword.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "forte_dword_gen.cpp"
-#endif
 
-DEFINE_FIRMWARE_DATATYPE(DWORD, g_nStringIdDWORD)
+USE_STRING_ID(DWORD);
+
+
+DEFINE_FIRMWARE_DATATYPE(DWORD, STRID(DWORD))

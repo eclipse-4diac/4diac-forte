@@ -18,9 +18,39 @@
  *************************************************************************/
 
 #include "PLCnextAXLSEDI16.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "PLCnextAXLSEDI16_gen.cpp"
-#endif
+
+USE_STRING_ID(BOOL);
+USE_STRING_ID(BusAdapterIn);
+USE_STRING_ID(BusAdapterOut);
+USE_STRING_ID(DI_1);
+USE_STRING_ID(DI_10);
+USE_STRING_ID(DI_11);
+USE_STRING_ID(DI_12);
+USE_STRING_ID(DI_13);
+USE_STRING_ID(DI_14);
+USE_STRING_ID(DI_15);
+USE_STRING_ID(DI_16);
+USE_STRING_ID(DI_2);
+USE_STRING_ID(DI_3);
+USE_STRING_ID(DI_4);
+USE_STRING_ID(DI_5);
+USE_STRING_ID(DI_6);
+USE_STRING_ID(DI_7);
+USE_STRING_ID(DI_8);
+USE_STRING_ID(DI_9);
+USE_STRING_ID(EInit);
+USE_STRING_ID(Event);
+USE_STRING_ID(IND);
+USE_STRING_ID(INIT);
+USE_STRING_ID(INITO);
+USE_STRING_ID(PLCnextAXLSEDI16);
+USE_STRING_ID(PLCnextBusAdapter);
+USE_STRING_ID(QI);
+USE_STRING_ID(QO);
+USE_STRING_ID(STATUS);
+USE_STRING_ID(STRING);
+USE_STRING_ID(WSTRING);
+
 
 #include "PLCnextBusAdapter.h"
 #include "iec61131_functions.h"
@@ -31,23 +61,23 @@
 #include "criticalregion.h"
 #include "resource.h"
 
-DEFINE_FIRMWARE_FB(FORTE_PLCnextAXLSEDI16, g_nStringIdPLCnextAXLSEDI16)
+DEFINE_FIRMWARE_FB(FORTE_PLCnextAXLSEDI16, STRID(PLCnextAXLSEDI16))
 
-const CStringDictionary::TStringId FORTE_PLCnextAXLSEDI16::scmDataInputNames[] = {g_nStringIdQI, g_nStringIdDI_1, g_nStringIdDI_2, g_nStringIdDI_3, g_nStringIdDI_4, g_nStringIdDI_5, g_nStringIdDI_6, g_nStringIdDI_7, g_nStringIdDI_8, g_nStringIdDI_9, g_nStringIdDI_10, g_nStringIdDI_11, g_nStringIdDI_12, g_nStringIdDI_13, g_nStringIdDI_14, g_nStringIdDI_15, g_nStringIdDI_16};
-const CStringDictionary::TStringId FORTE_PLCnextAXLSEDI16::scmDataInputTypeIds[] = {g_nStringIdBOOL, g_nStringIdSTRING, g_nStringIdSTRING, g_nStringIdSTRING, g_nStringIdSTRING, g_nStringIdSTRING, g_nStringIdSTRING, g_nStringIdSTRING, g_nStringIdSTRING, g_nStringIdSTRING, g_nStringIdSTRING, g_nStringIdSTRING, g_nStringIdSTRING, g_nStringIdSTRING, g_nStringIdSTRING, g_nStringIdSTRING, g_nStringIdSTRING};
-const CStringDictionary::TStringId FORTE_PLCnextAXLSEDI16::scmDataOutputNames[] = {g_nStringIdQO, g_nStringIdSTATUS};
-const CStringDictionary::TStringId FORTE_PLCnextAXLSEDI16::scmDataOutputTypeIds[] = {g_nStringIdBOOL, g_nStringIdWSTRING};
+const CStringDictionary::TStringId FORTE_PLCnextAXLSEDI16::scmDataInputNames[] = {STRID(QI), STRID(DI_1), STRID(DI_2), STRID(DI_3), STRID(DI_4), STRID(DI_5), STRID(DI_6), STRID(DI_7), STRID(DI_8), STRID(DI_9), STRID(DI_10), STRID(DI_11), STRID(DI_12), STRID(DI_13), STRID(DI_14), STRID(DI_15), STRID(DI_16)};
+const CStringDictionary::TStringId FORTE_PLCnextAXLSEDI16::scmDataInputTypeIds[] = {STRID(BOOL), STRID(STRING), STRID(STRING), STRID(STRING), STRID(STRING), STRID(STRING), STRID(STRING), STRID(STRING), STRID(STRING), STRID(STRING), STRID(STRING), STRID(STRING), STRID(STRING), STRID(STRING), STRID(STRING), STRID(STRING), STRID(STRING)};
+const CStringDictionary::TStringId FORTE_PLCnextAXLSEDI16::scmDataOutputNames[] = {STRID(QO), STRID(STATUS)};
+const CStringDictionary::TStringId FORTE_PLCnextAXLSEDI16::scmDataOutputTypeIds[] = {STRID(BOOL), STRID(WSTRING)};
 const TDataIOID FORTE_PLCnextAXLSEDI16::scmEIWith[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, scmWithListDelimiter};
 const TForteInt16 FORTE_PLCnextAXLSEDI16::scmEIWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_PLCnextAXLSEDI16::scmEventInputNames[] = {g_nStringIdINIT};
-const CStringDictionary::TStringId FORTE_PLCnextAXLSEDI16::scmEventInputTypeIds[] = {g_nStringIdEInit};
+const CStringDictionary::TStringId FORTE_PLCnextAXLSEDI16::scmEventInputNames[] = {STRID(INIT)};
+const CStringDictionary::TStringId FORTE_PLCnextAXLSEDI16::scmEventInputTypeIds[] = {STRID(EInit)};
 const TDataIOID FORTE_PLCnextAXLSEDI16::scmEOWith[] = {0, 1, scmWithListDelimiter, 0, 1, scmWithListDelimiter};
 const TForteInt16 FORTE_PLCnextAXLSEDI16::scmEOWithIndexes[] = {0, 3};
-const CStringDictionary::TStringId FORTE_PLCnextAXLSEDI16::scmEventOutputNames[] = {g_nStringIdINITO, g_nStringIdIND};
-const CStringDictionary::TStringId FORTE_PLCnextAXLSEDI16::scmEventOutputTypeIds[] = {g_nStringIdEInit, g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_PLCnextAXLSEDI16::scmEventOutputNames[] = {STRID(INITO), STRID(IND)};
+const CStringDictionary::TStringId FORTE_PLCnextAXLSEDI16::scmEventOutputTypeIds[] = {STRID(EInit), STRID(Event)};
 const SAdapterInstanceDef FORTE_PLCnextAXLSEDI16::scmAdapterInstances[] = {
-  {g_nStringIdPLCnextBusAdapter, g_nStringIdBusAdapterIn, false},
-  {g_nStringIdPLCnextBusAdapter, g_nStringIdBusAdapterOut, true}
+  {STRID(PLCnextBusAdapter), STRID(BusAdapterIn), false},
+  {STRID(PLCnextBusAdapter), STRID(BusAdapterOut), true}
 };
 const SFBInterfaceSpec FORTE_PLCnextAXLSEDI16::scmFBInterfaceSpec = {
   1, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,
@@ -79,8 +109,8 @@ FORTE_PLCnextAXLSEDI16::FORTE_PLCnextAXLSEDI16(const CStringDictionary::TStringI
     var_DI_16(""_STRING),
     var_QO(0_BOOL),
     var_STATUS(u""_WSTRING),
-    var_BusAdapterIn(g_nStringIdBusAdapterIn, *this, false),
-    var_BusAdapterOut(g_nStringIdBusAdapterOut, *this, true),
+    var_BusAdapterIn(STRID(BusAdapterIn), *this, false),
+    var_BusAdapterOut(STRID(BusAdapterOut), *this, true),
     var_conn_QO(var_QO),
     var_conn_STATUS(var_STATUS),
     conn_INITO(this, 0),

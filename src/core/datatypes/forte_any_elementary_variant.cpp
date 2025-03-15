@@ -12,13 +12,11 @@
  *******************************************************************************/
 #include "forte_any_elementary_variant.h"
 
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
 
-#include "forte_any_elementary_variant_gen.cpp"
+USE_STRING_ID(ANY_ELEMENTARY);
 
-#endif
 
-DEFINE_FIRMWARE_DATATYPE(ANY_ELEMENTARY_VARIANT, g_nStringIdANY_ELEMENTARY)
+DEFINE_FIRMWARE_DATATYPE(ANY_ELEMENTARY_VARIANT, STRID(ANY_ELEMENTARY))
 
 void CIEC_ANY_ELEMENTARY_VARIANT::setValue(const CIEC_ANY &paValue) {
   switch (paValue.getDataTypeID()) {

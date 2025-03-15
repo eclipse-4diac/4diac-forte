@@ -15,32 +15,40 @@
  *******************************************************************************/
 
 #include "F_SUB_TOD_TIME_fbt.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "F_SUB_TOD_TIME_fbt_gen.cpp"
-#endif
+
+USE_STRING_ID(CNF);
+USE_STRING_ID(Event);
+USE_STRING_ID(F_SUB_TOD_TIME);
+USE_STRING_ID(IN1);
+USE_STRING_ID(IN2);
+USE_STRING_ID(OUT);
+USE_STRING_ID(REQ);
+USE_STRING_ID(TIME);
+USE_STRING_ID(TIME_OF_DAY);
+
 
 #include "criticalregion.h"
 #include "resource.h"
 
-DEFINE_FIRMWARE_FB(FORTE_F_SUB_TOD_TIME, g_nStringIdF_SUB_TOD_TIME)
+DEFINE_FIRMWARE_FB(FORTE_F_SUB_TOD_TIME, STRID(F_SUB_TOD_TIME))
 
-const CStringDictionary::TStringId FORTE_F_SUB_TOD_TIME::scmDataInputNames[] = {g_nStringIdIN1, g_nStringIdIN2};
+const CStringDictionary::TStringId FORTE_F_SUB_TOD_TIME::scmDataInputNames[] = {STRID(IN1), STRID(IN2)};
 
-const CStringDictionary::TStringId FORTE_F_SUB_TOD_TIME::scmDataInputTypeIds[] = {g_nStringIdTIME_OF_DAY, g_nStringIdTIME};
+const CStringDictionary::TStringId FORTE_F_SUB_TOD_TIME::scmDataInputTypeIds[] = {STRID(TIME_OF_DAY), STRID(TIME)};
 
-const CStringDictionary::TStringId FORTE_F_SUB_TOD_TIME::scmDataOutputNames[] = {g_nStringIdOUT};
+const CStringDictionary::TStringId FORTE_F_SUB_TOD_TIME::scmDataOutputNames[] = {STRID(OUT)};
 
-const CStringDictionary::TStringId FORTE_F_SUB_TOD_TIME::scmDataOutputTypeIds[] = {g_nStringIdTIME_OF_DAY};
+const CStringDictionary::TStringId FORTE_F_SUB_TOD_TIME::scmDataOutputTypeIds[] = {STRID(TIME_OF_DAY)};
 
 const TDataIOID FORTE_F_SUB_TOD_TIME::scmEIWith[] = {0, 1, scmWithListDelimiter};
 const TForteInt16 FORTE_F_SUB_TOD_TIME::scmEIWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_F_SUB_TOD_TIME::scmEventInputNames[] = {g_nStringIdREQ};
-const CStringDictionary::TStringId FORTE_F_SUB_TOD_TIME::scmEventInputTypeIds[] = {g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_F_SUB_TOD_TIME::scmEventInputNames[] = {STRID(REQ)};
+const CStringDictionary::TStringId FORTE_F_SUB_TOD_TIME::scmEventInputTypeIds[] = {STRID(Event)};
 
 const TDataIOID FORTE_F_SUB_TOD_TIME::scmEOWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_F_SUB_TOD_TIME::scmEOWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_F_SUB_TOD_TIME::scmEventOutputNames[] = {g_nStringIdCNF};
-const CStringDictionary::TStringId FORTE_F_SUB_TOD_TIME::scmEventOutputTypeIds[] = {g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_F_SUB_TOD_TIME::scmEventOutputNames[] = {STRID(CNF)};
+const CStringDictionary::TStringId FORTE_F_SUB_TOD_TIME::scmEventOutputTypeIds[] = {STRID(Event)};
 
 
 const SFBInterfaceSpec FORTE_F_SUB_TOD_TIME::scmFBInterfaceSpec = {

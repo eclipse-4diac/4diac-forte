@@ -13,12 +13,12 @@
  *   Alois Zoitl  - Reworked to new timer handler interface
  *******************************************************************************/
 #include "E_DELAY_fbt.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "E_DELAY_fbt_gen.cpp"
-#endif
+
+USE_STRING_ID(E_DELAY);
+
 #include "../../arch/timerha.h"
 
-DEFINE_FIRMWARE_FB(FORTE_E_DELAY, g_nStringIdE_DELAY)
+DEFINE_FIRMWARE_FB(FORTE_E_DELAY, STRID(E_DELAY))
 
 FORTE_E_DELAY::FORTE_E_DELAY(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer):
          CTimedFB( paInstanceNameId, paContainer){

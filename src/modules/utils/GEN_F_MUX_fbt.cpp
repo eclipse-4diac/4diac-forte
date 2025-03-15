@@ -16,9 +16,14 @@
  *    Martin Jobst - add generic readInputData and writeOutputData
  *******************************************************************************/
 #include "GEN_F_MUX_fbt.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "GEN_F_MUX_fbt_gen.cpp"
-#endif
+
+USE_STRING_ID(ANY);
+USE_STRING_ID(BOOL);
+USE_STRING_ID(EO);
+USE_STRING_ID(Event);
+USE_STRING_ID(GEN_F_MUX);
+USE_STRING_ID(WSTRING);
+
 
 #include <ctype.h>
 #include <stdio.h>
@@ -27,10 +32,10 @@
 #include "resource.h"
 #include "criticalregion.h"
 
-DEFINE_GENERIC_FIRMWARE_FB(GEN_F_MUX, g_nStringIdGEN_F_MUX);
+DEFINE_GENERIC_FIRMWARE_FB(GEN_F_MUX, STRID(GEN_F_MUX));
 
-const CStringDictionary::TStringId GEN_F_MUX::scmEventOutputNames[] = { g_nStringIdEO };
-const CStringDictionary::TStringId GEN_F_MUX::scmEventOutputTypeIds[] = {g_nStringIdEvent};
+const CStringDictionary::TStringId GEN_F_MUX::scmEventOutputNames[] = { STRID(EO) };
+const CStringDictionary::TStringId GEN_F_MUX::scmEventOutputTypeIds[] = {STRID(Event)};
 
 GEN_F_MUX::GEN_F_MUX(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CGenFunctionBlock<CFunctionBlock>(paContainer, paInstanceNameId){
@@ -172,7 +177,7 @@ bool GEN_F_MUX::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec
         forte_snprintf(&(diNames[3]), 11 - 3, "%u_%u", ei + 1, di + 1);
         di_posIndex = ei * mDOutputs + di;
         mDataInputNames[di_posIndex] = CStringDictionary::insert(diNames);
-        mDataInputTypeIds[di_posIndex] = g_nStringIdANY;
+        mDataInputTypeIds[di_posIndex] = STRID(ANY);
       }
     }
 
@@ -182,9 +187,9 @@ bool GEN_F_MUX::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec
 
     //data outputs for status and QO
     mDataOutputNames[0] = CStringDictionary::insert("QO");
-    mDataOutputTypeIds[0] = g_nStringIdBOOL;
+    mDataOutputTypeIds[0] = STRID(BOOL);
     mDataOutputNames[1] = CStringDictionary::insert("STATUS");
-    mDataOutputTypeIds[1] = g_nStringIdWSTRING;
+    mDataOutputTypeIds[1] = STRID(WSTRING);
 
     generateGenericDataPointArrays("OUT_", &(mDataOutputTypeIds[2]), &(mDataOutputNames[2]), mDOutputs);
 

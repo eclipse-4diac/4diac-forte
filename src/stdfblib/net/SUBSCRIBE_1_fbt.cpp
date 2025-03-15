@@ -12,11 +12,11 @@
  *******************************************************************************/
 
 #include "SUBSCRIBE_1_fbt.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "SUBSCRIBE_1_fbt_gen.cpp"
-#endif
 
-DEFINE_GENERIC_FIRMWARE_FB(FORTE_SUBSCRIBE_1, g_nStringIdSUBSCRIBE_1)
+USE_STRING_ID(SUBSCRIBE_1);
+
+
+DEFINE_GENERIC_FIRMWARE_FB(FORTE_SUBSCRIBE_1, STRID(SUBSCRIBE_1))
 
 FORTE_SUBSCRIBE_1::FORTE_SUBSCRIBE_1(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
                    GEN_SUBSCRIBE(paInstanceNameId, paContainer) {

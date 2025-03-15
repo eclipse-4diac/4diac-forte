@@ -11,15 +11,54 @@
  *******************************************************************************/
 
 #include "QueryServiceHTTP.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "QueryServiceHTTP_gen.cpp"
-#endif
 
-DEFINE_FIRMWARE_FB(FORTE_QueryServiceHTTP, g_nStringIdQueryServiceHTTP)
+USE_STRING_ID(ANYToJSON);
+USE_STRING_ID(APPEND_STRING_3);
+USE_STRING_ID(CLIENT_1_2);
+USE_STRING_ID(CNF);
+USE_STRING_ID(EI);
+USE_STRING_ID(endpoint);
+USE_STRING_ID(EO);
+USE_STRING_ID(E_PERMIT);
+USE_STRING_ID(E_SR);
+USE_STRING_ID(F_STRING_TO_WSTRING);
+USE_STRING_ID(GetArrayResponseFromJSON);
+USE_STRING_ID(GetHTTPResult);
+USE_STRING_ID(ID);
+USE_STRING_ID(IN);
+USE_STRING_ID(IN_1);
+USE_STRING_ID(IN_2);
+USE_STRING_ID(IN_3);
+USE_STRING_ID(INIT);
+USE_STRING_ID(InitFlag);
+USE_STRING_ID(INITO);
+USE_STRING_ID(input);
+USE_STRING_ID(OUT);
+USE_STRING_ID(output);
+USE_STRING_ID(PERMIT);
+USE_STRING_ID(Q);
+USE_STRING_ID(QI);
+USE_STRING_ID(queried);
+USE_STRING_ID(query);
+USE_STRING_ID(Query);
+USE_STRING_ID(QueryServiceHTTP);
+USE_STRING_ID(queryServices);
+USE_STRING_ID(QueryServicesAdp);
+USE_STRING_ID(R);
+USE_STRING_ID(RD_2);
+USE_STRING_ID(REQ);
+USE_STRING_ID(response);
+USE_STRING_ID(S);
+USE_STRING_ID(SD_1);
+USE_STRING_ID(serviceEntries);
+USE_STRING_ID(serviceQueryForm);
+
+
+DEFINE_FIRMWARE_FB(FORTE_QueryServiceHTTP, STRID(QueryServiceHTTP))
 
 const TForteInt16 FORTE_QueryServiceHTTP::scmEOWithIndexes[] = {-1};
 const SAdapterInstanceDef FORTE_QueryServiceHTTP::scmAdapterInstances[] = {
-{g_nStringIdQueryServicesAdp, g_nStringIdqueryServices, false }};
+{STRID(QueryServicesAdp), STRID(queryServices), false }};
 
 const SFBInterfaceSpec FORTE_QueryServiceHTTP::scmFBInterfaceSpec = {
   0,  0, nullptr,  0,  0,
@@ -29,49 +68,49 @@ const SFBInterfaceSpec FORTE_QueryServiceHTTP::scmFBInterfaceSpec = {
 
 
 const SCFB_FBInstanceData FORTE_QueryServiceHTTP::scmInternalFBs[] = {
-  {g_nStringIdAPPEND_STRING_3, g_nStringIdAPPEND_STRING_3},
-  {g_nStringIdQuery, g_nStringIdCLIENT_1_2},
-  {g_nStringIdF_STRING_TO_WSTRING, g_nStringIdF_STRING_TO_WSTRING},
-  {g_nStringIdInitFlag, g_nStringIdE_SR},
-  {g_nStringIdE_PERMIT, g_nStringIdE_PERMIT},
-  {g_nStringIdANYToJSON, g_nStringIdANYToJSON},
-  {g_nStringIdGetHTTPResult, g_nStringIdGetArrayResponseFromJSON},
+  {STRID(APPEND_STRING_3), STRID(APPEND_STRING_3)},
+  {STRID(Query), STRID(CLIENT_1_2)},
+  {STRID(F_STRING_TO_WSTRING), STRID(F_STRING_TO_WSTRING)},
+  {STRID(InitFlag), STRID(E_SR)},
+  {STRID(E_PERMIT), STRID(E_PERMIT)},
+  {STRID(ANYToJSON), STRID(ANYToJSON)},
+  {STRID(GetHTTPResult), STRID(GetArrayResponseFromJSON)},
 };
 
 const SCFB_FBParameter FORTE_QueryServiceHTTP::scmParamters[] = {
-  {0, g_nStringIdIN_1, "STRING#http["},
-  {0, g_nStringIdIN_3, "STRING#/query; PUT; application/json]"},
+  {0, STRID(IN_1), "STRING#http["},
+  {0, STRID(IN_3), "STRING#/query; PUT; application/json]"},
 };
 
 const SCFB_FBConnectionData FORTE_QueryServiceHTTP::scmEventConnections[] = {
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdAPPEND_STRING_3, g_nStringIdCNF), 0, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdF_STRING_TO_WSTRING, g_nStringIdREQ), 2},
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdF_STRING_TO_WSTRING, g_nStringIdCNF), 2, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdInitFlag, g_nStringIdS), 3},
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdInitFlag, g_nStringIdEO), 3, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdQuery, g_nStringIdINIT), 1},
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdQuery, g_nStringIdINITO), 1, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdE_PERMIT, g_nStringIdEI), 4},
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdE_PERMIT, g_nStringIdEO), 4, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdQuery, g_nStringIdREQ), 1},
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdQuery, g_nStringIdCNF), 1, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdInitFlag, g_nStringIdR), 3},
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdANYToJSON, g_nStringIdCNF), 5, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdAPPEND_STRING_3, g_nStringIdREQ), 0},
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdqueryServices, g_nStringIdquery), CCompositeFB::scmAdapterMarker |0, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdANYToJSON, g_nStringIdREQ), 5},
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdGetHTTPResult, g_nStringIdCNF), 6, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdqueryServices, g_nStringIdqueried), CCompositeFB::scmAdapterMarker |0},
+  {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(APPEND_STRING_3), STRID(CNF)), 0, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(F_STRING_TO_WSTRING), STRID(REQ)), 2},
+  {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(F_STRING_TO_WSTRING), STRID(CNF)), 2, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(InitFlag), STRID(S)), 3},
+  {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(InitFlag), STRID(EO)), 3, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(Query), STRID(INIT)), 1},
+  {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(Query), STRID(INITO)), 1, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_PERMIT), STRID(EI)), 4},
+  {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_PERMIT), STRID(EO)), 4, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(Query), STRID(REQ)), 1},
+  {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(Query), STRID(CNF)), 1, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(InitFlag), STRID(R)), 3},
+  {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(ANYToJSON), STRID(CNF)), 5, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(APPEND_STRING_3), STRID(REQ)), 0},
+  {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(queryServices), STRID(query)), CCompositeFB::scmAdapterMarker |0, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(ANYToJSON), STRID(REQ)), 5},
+  {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(GetHTTPResult), STRID(CNF)), 6, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(queryServices), STRID(queried)), CCompositeFB::scmAdapterMarker |0},
 };
 
 const SCFB_FBFannedOutConnectionData FORTE_QueryServiceHTTP::scmFannedOutEventConnections[] = {
-  {5, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdGetHTTPResult, g_nStringIdREQ), 6},
+  {5, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(GetHTTPResult), STRID(REQ)), 6},
 };
 
 const SCFB_FBConnectionData FORTE_QueryServiceHTTP::scmDataConnections[] = {
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdAPPEND_STRING_3, g_nStringIdOUT), 0, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdF_STRING_TO_WSTRING, g_nStringIdIN), 2},
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdF_STRING_TO_WSTRING, g_nStringIdOUT), 2, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdQuery, g_nStringIdID), 1},
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdInitFlag, g_nStringIdQ), 3, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdE_PERMIT, g_nStringIdPERMIT), 4},
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdANYToJSON, g_nStringIdoutput), 5, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdQuery, g_nStringIdSD_1), 1},
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdqueryServices, g_nStringIdserviceQueryForm), CCompositeFB::scmAdapterMarker |0, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdANYToJSON, g_nStringIdinput), 5},
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdqueryServices, g_nStringIdendpoint), CCompositeFB::scmAdapterMarker |0, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdAPPEND_STRING_3, g_nStringIdIN_2), 0},
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdQuery, g_nStringIdRD_2), 1, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdGetHTTPResult, g_nStringIdresponse), 6},
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdGetHTTPResult, g_nStringIdoutput), 6, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdqueryServices, g_nStringIdserviceEntries), CCompositeFB::scmAdapterMarker |0},
+  {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(APPEND_STRING_3), STRID(OUT)), 0, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(F_STRING_TO_WSTRING), STRID(IN)), 2},
+  {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(F_STRING_TO_WSTRING), STRID(OUT)), 2, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(Query), STRID(ID)), 1},
+  {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(InitFlag), STRID(Q)), 3, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_PERMIT), STRID(PERMIT)), 4},
+  {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(ANYToJSON), STRID(output)), 5, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(Query), STRID(SD_1)), 1},
+  {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(queryServices), STRID(serviceQueryForm)), CCompositeFB::scmAdapterMarker |0, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(ANYToJSON), STRID(input)), 5},
+  {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(queryServices), STRID(endpoint)), CCompositeFB::scmAdapterMarker |0, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(APPEND_STRING_3), STRID(IN_2)), 0},
+  {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(Query), STRID(RD_2)), 1, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(GetHTTPResult), STRID(response)), 6},
+  {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(GetHTTPResult), STRID(output)), 6, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(queryServices), STRID(serviceEntries)), CCompositeFB::scmAdapterMarker |0},
 };
 
 const SCFB_FBFannedOutConnectionData FORTE_QueryServiceHTTP::scmFannedOutDataConnections[] = {
-  {2, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdQuery, g_nStringIdQI), 1},
+  {2, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(Query), STRID(QI)), 1},
 };
 
 const SCFB_FBNData FORTE_QueryServiceHTTP::scmFBNData = {

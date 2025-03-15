@@ -16,9 +16,9 @@
 
 #include "forte_printer.h"
 #include "ifSpecBuilder.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "ifSpecBuilder_gen.cpp"
-#endif
+
+USE_STRING_ID(ANY);
+
 
 using namespace forte::core::util;
 
@@ -96,7 +96,7 @@ std::pair<int, int> CEventSpecBuilderBase::addEventRange(const char *paPrefix, i
 }
 
 std::pair<int, int> CDataSpecBuilderBase::addDataRange(const char *paPrefix, int paRangeSize) {
-  return addDataRange(paPrefix, paRangeSize, g_nStringIdANY);
+  return addDataRange(paPrefix, paRangeSize, STRID(ANY));
 }
 
 std::pair<int, int> CDataSpecBuilderBase::addDataRange(const char *paPrefix, int paRangeSize, const char *paTypeName) {

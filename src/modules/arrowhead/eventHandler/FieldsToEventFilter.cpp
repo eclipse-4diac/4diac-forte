@@ -11,29 +11,47 @@
  *******************************************************************************/
 
 #include "FieldsToEventFilter.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "FieldsToEventFilter_gen.cpp"
-#endif
 
-DEFINE_FIRMWARE_FB(FORTE_FieldsToEventFilter, g_nStringIdFieldsToEventFilter)
+USE_STRING_ID(ARRAY);
+USE_STRING_ID(ArrowheadSystem);
+USE_STRING_ID(BOOL);
+USE_STRING_ID(CNF);
+USE_STRING_ID(consumer);
+USE_STRING_ID(DATE_AND_TIME);
+USE_STRING_ID(endDate);
+USE_STRING_ID(Event);
+USE_STRING_ID(eventFilter);
+USE_STRING_ID(EventFilter);
+USE_STRING_ID(eventType);
+USE_STRING_ID(FieldsToEventFilter);
+USE_STRING_ID(filterMetadata);
+USE_STRING_ID(matchMetadata);
+USE_STRING_ID(notifyUri);
+USE_STRING_ID(REQ);
+USE_STRING_ID(sources);
+USE_STRING_ID(startDate);
+USE_STRING_ID(WSTRING);
 
-const CStringDictionary::TStringId FORTE_FieldsToEventFilter::scmDataInputNames[] = {g_nStringIdeventType, g_nStringIdconsumer, g_nStringIdsources, g_nStringIdstartDate, g_nStringIdendDate, g_nStringIdfilterMetadata, g_nStringIdnotifyUri, g_nStringIdmatchMetadata};
 
-const CStringDictionary::TStringId FORTE_FieldsToEventFilter::scmDataInputTypeIds[] = {g_nStringIdWSTRING, g_nStringIdArrowheadSystem, g_nStringIdARRAY, 10, g_nStringIdArrowheadSystem, g_nStringIdDATE_AND_TIME, g_nStringIdDATE_AND_TIME, g_nStringIdARRAY, 10, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdBOOL};
+DEFINE_FIRMWARE_FB(FORTE_FieldsToEventFilter, STRID(FieldsToEventFilter))
 
-const CStringDictionary::TStringId FORTE_FieldsToEventFilter::scmDataOutputNames[] = {g_nStringIdeventFilter};
+const CStringDictionary::TStringId FORTE_FieldsToEventFilter::scmDataInputNames[] = {STRID(eventType), STRID(consumer), STRID(sources), STRID(startDate), STRID(endDate), STRID(filterMetadata), STRID(notifyUri), STRID(matchMetadata)};
 
-const CStringDictionary::TStringId FORTE_FieldsToEventFilter::scmDataOutputTypeIds[] = {g_nStringIdEventFilter};
+const CStringDictionary::TStringId FORTE_FieldsToEventFilter::scmDataInputTypeIds[] = {STRID(WSTRING), STRID(ArrowheadSystem), STRID(ARRAY), 10, STRID(ArrowheadSystem), STRID(DATE_AND_TIME), STRID(DATE_AND_TIME), STRID(ARRAY), 10, STRID(WSTRING), STRID(WSTRING), STRID(BOOL)};
+
+const CStringDictionary::TStringId FORTE_FieldsToEventFilter::scmDataOutputNames[] = {STRID(eventFilter)};
+
+const CStringDictionary::TStringId FORTE_FieldsToEventFilter::scmDataOutputTypeIds[] = {STRID(EventFilter)};
 
 const TForteInt16 FORTE_FieldsToEventFilter::scmEIWithIndexes[] = {0};
 const TDataIOID FORTE_FieldsToEventFilter::scmEIWith[] = {0, 1, 3, 6, 2, 4, 5, 7, scmWithListDelimiter};
-const CStringDictionary::TStringId FORTE_FieldsToEventFilter::scmEventInputNames[] = {g_nStringIdREQ};
-const CStringDictionary::TStringId FORTE_FieldsToEventFilter::scmEventInputTypeIds[] = {g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_FieldsToEventFilter::scmEventInputNames[] = {STRID(REQ)};
+const CStringDictionary::TStringId FORTE_FieldsToEventFilter::scmEventInputTypeIds[] = {STRID(Event)};
 
 const TDataIOID FORTE_FieldsToEventFilter::scmEOWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_FieldsToEventFilter::scmEOWithIndexes[] = {0, -1};
-const CStringDictionary::TStringId FORTE_FieldsToEventFilter::scmEventOutputNames[] = {g_nStringIdCNF};
-const CStringDictionary::TStringId FORTE_FieldsToEventFilter::scmEventOutputTypeIds[] = {g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_FieldsToEventFilter::scmEventOutputNames[] = {STRID(CNF)};
+const CStringDictionary::TStringId FORTE_FieldsToEventFilter::scmEventOutputTypeIds[] = {STRID(Event)};
 
 const SFBInterfaceSpec FORTE_FieldsToEventFilter::scmFBInterfaceSpec = {
   1,  scmEventInputNames, scmEventInputTypeIds,  scmEIWith,  scmEIWithIndexes,

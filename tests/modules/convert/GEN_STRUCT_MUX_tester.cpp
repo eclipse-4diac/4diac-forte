@@ -11,9 +11,17 @@
  *******************************************************************************/
 #include "../../core/fbtests/fbtestfixture.h"
 
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "GEN_STRUCT_MUX_tester_gen.cpp"
-#endif
+
+USE_STRING_ID(InstanceName);
+USE_STRING_ID(STRUCT_MUX_1REAL);
+USE_STRING_ID(STRUCT_MUX_1STRING);
+USE_STRING_ID(STRUCT_MUX_1Struct_Muxer_Test_Struct_1);
+USE_STRING_ID(STRUCT_MUX_1Struct_Muxer_Test_Struct_2);
+USE_STRING_ID(STRUCT_MUX_1Struct_Muxer_Test_Struct_3);
+USE_STRING_ID(STRUCT_MUX_1Struct_Muxer_Test_Struct_4);
+USE_STRING_ID(STRUCT_MUX_1Struct_Muxer_Test_Struct_5);
+USE_STRING_ID(STRUCT_MUX_1UnknownType);
+
 
 #include "struct_mux_demux_data.h"
 #include "fbcontainermock.h"
@@ -21,7 +29,7 @@
 
 struct STRUCT_MUX_TestFixture_1 : public CFBTestFixtureBase{
 
-    STRUCT_MUX_TestFixture_1() : CFBTestFixtureBase(g_nStringIdSTRUCT_MUX_1Struct_Muxer_Test_Struct_1){
+    STRUCT_MUX_TestFixture_1() : CFBTestFixtureBase(STRID(STRUCT_MUX_1Struct_Muxer_Test_Struct_1)){
       setInputData({&mVar1, &mVar2, &mVar3});
       setOutputData({&mOut});
       CFBTestFixtureBase::setup();
@@ -91,7 +99,7 @@ BOOST_AUTO_TEST_SUITE_END()
 
 struct STRUCT_MUX_TestFixture_2 : public CFBTestFixtureBase{
 
-    STRUCT_MUX_TestFixture_2() : CFBTestFixtureBase(g_nStringIdSTRUCT_MUX_1Struct_Muxer_Test_Struct_2){
+    STRUCT_MUX_TestFixture_2() : CFBTestFixtureBase(STRID(STRUCT_MUX_1Struct_Muxer_Test_Struct_2)){
       setInputData({&mVar1, &mVar2, &mVar3});
       setOutputData({&mOut});
       CFBTestFixtureBase::setup();
@@ -133,25 +141,25 @@ BOOST_AUTO_TEST_SUITE_END()
 BOOST_AUTO_TEST_SUITE(STRUCT_MUX_FailedCreationTest)
 
   BOOST_AUTO_TEST_CASE(missingDataType){
-    CFunctionBlock *fb = CTypeLib::createFB(g_nStringIdInstanceName, g_nStringIdSTRUCT_MUX_1UnknownType, CFBContainerMock::smDefaultFBContMock);
+    CFunctionBlock *fb = CTypeLib::createFB(STRID(InstanceName), STRID(STRUCT_MUX_1UnknownType), CFBContainerMock::smDefaultFBContMock);
     BOOST_CHECK(nullptr == fb);
   }
 
   BOOST_AUTO_TEST_CASE(wrongDataType){
-    CFunctionBlock *fb = CTypeLib::createFB(g_nStringIdInstanceName, g_nStringIdSTRUCT_MUX_1STRING, CFBContainerMock::smDefaultFBContMock);
+    CFunctionBlock *fb = CTypeLib::createFB(STRID(InstanceName), STRID(STRUCT_MUX_1STRING), CFBContainerMock::smDefaultFBContMock);
     BOOST_CHECK(nullptr == fb);
 
-    fb = CTypeLib::createFB(g_nStringIdInstanceName, g_nStringIdSTRUCT_MUX_1REAL, CFBContainerMock::smDefaultFBContMock);
+    fb = CTypeLib::createFB(STRID(InstanceName), STRID(STRUCT_MUX_1REAL), CFBContainerMock::smDefaultFBContMock);
     BOOST_CHECK(nullptr == fb);
   }
 
 BOOST_AUTO_TEST_CASE(emptyStruct) {
-CFunctionBlock *fb = CTypeLib::createFB(g_nStringIdInstanceName, g_nStringIdSTRUCT_MUX_1Struct_Muxer_Test_Struct_3, CFBContainerMock::smDefaultFBContMock);
+CFunctionBlock *fb = CTypeLib::createFB(STRID(InstanceName), STRID(STRUCT_MUX_1Struct_Muxer_Test_Struct_3), CFBContainerMock::smDefaultFBContMock);
 BOOST_CHECK(nullptr == fb);
 }
 
 BOOST_AUTO_TEST_CASE(bigStruct) {
-CFunctionBlock *fb = CTypeLib::createFB(g_nStringIdInstanceName, g_nStringIdSTRUCT_MUX_1Struct_Muxer_Test_Struct_4, CFBContainerMock::smDefaultFBContMock);
+CFunctionBlock *fb = CTypeLib::createFB(STRID(InstanceName), STRID(STRUCT_MUX_1Struct_Muxer_Test_Struct_4), CFBContainerMock::smDefaultFBContMock);
 BOOST_CHECK(nullptr != fb);
 delete fb;
 }
@@ -160,7 +168,7 @@ BOOST_AUTO_TEST_SUITE_END()
 
 struct STRUCT_MUX_TestFixture_5 : public CFBTestFixtureBase {
 
-  STRUCT_MUX_TestFixture_5() : CFBTestFixtureBase(g_nStringIdSTRUCT_MUX_1Struct_Muxer_Test_Struct_5) {
+  STRUCT_MUX_TestFixture_5() : CFBTestFixtureBase(STRID(STRUCT_MUX_1Struct_Muxer_Test_Struct_5)) {
     setInputData({&mVar1, &mVar2, &mVar3});
     setOutputData({&mOut});
     CFBTestFixtureBase::setup();

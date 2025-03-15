@@ -12,13 +12,11 @@
  *******************************************************************************/
 #include "forte_any_magnitude_variant.h"
 
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
 
-#include "forte_any_magnitude_variant_gen.cpp"
+USE_STRING_ID(ANY_MAGNITUDE);
 
-#endif
 
-DEFINE_FIRMWARE_DATATYPE(ANY_MAGNITUDE_VARIANT, g_nStringIdANY_MAGNITUDE)
+DEFINE_FIRMWARE_DATATYPE(ANY_MAGNITUDE_VARIANT, STRID(ANY_MAGNITUDE))
 
 void CIEC_ANY_MAGNITUDE_VARIANT::setValue(const CIEC_ANY &paValue) {
   switch (paValue.getDataTypeID()) {

@@ -15,9 +15,16 @@
  *************************************************************************/
 
 #include "TIMESTAMP_NS_fct.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "TIMESTAMP_NS_fct_gen.cpp"
-#endif
+
+USE_STRING_ID();
+USE_STRING_ID(CNF);
+USE_STRING_ID(DATE_AND_TIME);
+USE_STRING_ID(Event);
+USE_STRING_ID(REQ);
+USE_STRING_ID(startDate);
+USE_STRING_ID(TIMESTAMP_NS);
+USE_STRING_ID(ULINT);
+
 
 #include "forte_any_duration_variant.h"
 #include "forte_date_and_time.h"
@@ -29,20 +36,20 @@
 #include "forte_array_variable.h"
 #include "TIMESTAMP_NS_fct.h"
 
-DEFINE_FIRMWARE_FB(FORTE_TIMESTAMP_NS, g_nStringIdTIMESTAMP_NS)
+DEFINE_FIRMWARE_FB(FORTE_TIMESTAMP_NS, STRID(TIMESTAMP_NS))
 
-const CStringDictionary::TStringId FORTE_TIMESTAMP_NS::scmDataInputNames[] = {g_nStringIdstartDate};
-const CStringDictionary::TStringId FORTE_TIMESTAMP_NS::scmDataInputTypeIds[] = {g_nStringIdDATE_AND_TIME};
-const CStringDictionary::TStringId FORTE_TIMESTAMP_NS::scmDataOutputNames[] = {g_nStringId};
-const CStringDictionary::TStringId FORTE_TIMESTAMP_NS::scmDataOutputTypeIds[] = {g_nStringIdULINT};
+const CStringDictionary::TStringId FORTE_TIMESTAMP_NS::scmDataInputNames[] = {STRID(startDate)};
+const CStringDictionary::TStringId FORTE_TIMESTAMP_NS::scmDataInputTypeIds[] = {STRID(DATE_AND_TIME)};
+const CStringDictionary::TStringId FORTE_TIMESTAMP_NS::scmDataOutputNames[] = {STRID()};
+const CStringDictionary::TStringId FORTE_TIMESTAMP_NS::scmDataOutputTypeIds[] = {STRID(ULINT)};
 const TDataIOID FORTE_TIMESTAMP_NS::scmEIWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_TIMESTAMP_NS::scmEIWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_TIMESTAMP_NS::scmEventInputNames[] = {g_nStringIdREQ};
-const CStringDictionary::TStringId FORTE_TIMESTAMP_NS::scmEventInputTypeIds[] = {g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_TIMESTAMP_NS::scmEventInputNames[] = {STRID(REQ)};
+const CStringDictionary::TStringId FORTE_TIMESTAMP_NS::scmEventInputTypeIds[] = {STRID(Event)};
 const TDataIOID FORTE_TIMESTAMP_NS::scmEOWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_TIMESTAMP_NS::scmEOWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_TIMESTAMP_NS::scmEventOutputNames[] = {g_nStringIdCNF};
-const CStringDictionary::TStringId FORTE_TIMESTAMP_NS::scmEventOutputTypeIds[] = {g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_TIMESTAMP_NS::scmEventOutputNames[] = {STRID(CNF)};
+const CStringDictionary::TStringId FORTE_TIMESTAMP_NS::scmEventOutputTypeIds[] = {STRID(Event)};
 const SFBInterfaceSpec FORTE_TIMESTAMP_NS::scmFBInterfaceSpec = {
   1, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,
   1, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes,

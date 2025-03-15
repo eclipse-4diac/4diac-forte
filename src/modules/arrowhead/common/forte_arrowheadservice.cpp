@@ -11,17 +11,22 @@
  *******************************************************************************/
 
 #include "forte_arrowheadservice.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "forte_arrowheadservice_gen.cpp"
-#endif
 
-DEFINE_FIRMWARE_DATATYPE(ArrowheadService, g_nStringIdArrowheadService);
+USE_STRING_ID(ARRAY);
+USE_STRING_ID(ArrowheadService);
+USE_STRING_ID(interfaces);
+USE_STRING_ID(serviceDefinition);
+USE_STRING_ID(serviceMetadata);
+USE_STRING_ID(WSTRING);
+
+
+DEFINE_FIRMWARE_DATATYPE(ArrowheadService, STRID(ArrowheadService));
 
 CIEC_ArrowheadService::CIEC_ArrowheadService() :
-    CIEC_STRUCT(g_nStringIdArrowheadService, 3, scmElementTypes, scmElementNames, e_APPLICATION + e_CONSTRUCTED + 1) {
+    CIEC_STRUCT(STRID(ArrowheadService), 3, scmElementTypes, scmElementNames, e_APPLICATION + e_CONSTRUCTED + 1) {
 }
 
-const CStringDictionary::TStringId CIEC_ArrowheadService::scmElementTypes[] = { g_nStringIdWSTRING, g_nStringIdARRAY, 10, g_nStringIdWSTRING, g_nStringIdARRAY,
-  10, g_nStringIdWSTRING };
+const CStringDictionary::TStringId CIEC_ArrowheadService::scmElementTypes[] = { STRID(WSTRING), STRID(ARRAY), 10, STRID(WSTRING), STRID(ARRAY),
+  10, STRID(WSTRING) };
 const CStringDictionary::TStringId CIEC_ArrowheadService::scmElementNames[] =
-  { g_nStringIdserviceDefinition, g_nStringIdinterfaces, g_nStringIdserviceMetadata };
+  { STRID(serviceDefinition), STRID(interfaces), STRID(serviceMetadata) };

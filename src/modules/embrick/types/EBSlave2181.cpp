@@ -13,9 +13,38 @@
 
 
 #include "EBSlave2181.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "EBSlave2181_gen.cpp"
-#endif
+
+USE_STRING_ID(BOOL);
+USE_STRING_ID(BusAdapterIn);
+USE_STRING_ID(BusAdapterOut);
+USE_STRING_ID(DigitalInput_1);
+USE_STRING_ID(DigitalInput_2);
+USE_STRING_ID(DigitalInput_3);
+USE_STRING_ID(DigitalInput_4);
+USE_STRING_ID(DigitalInput_5);
+USE_STRING_ID(DigitalInput_6);
+USE_STRING_ID(DigitalInput_7);
+USE_STRING_ID(DigitalInput_8);
+USE_STRING_ID(DigitalOutput_1);
+USE_STRING_ID(DigitalOutput_2);
+USE_STRING_ID(DigitalOutput_3);
+USE_STRING_ID(DigitalOutput_4);
+USE_STRING_ID(DigitalOutput_5);
+USE_STRING_ID(DigitalOutput_6);
+USE_STRING_ID(DigitalOutput_7);
+USE_STRING_ID(DigitalOutput_8);
+USE_STRING_ID(EBBusAdapter);
+USE_STRING_ID(EBSlave2181);
+USE_STRING_ID(IND);
+USE_STRING_ID(MAP);
+USE_STRING_ID(MAPO);
+USE_STRING_ID(QI);
+USE_STRING_ID(QO);
+USE_STRING_ID(STATUS);
+USE_STRING_ID(UINT);
+USE_STRING_ID(UpdateInterval);
+USE_STRING_ID(WSTRING);
+
 
 #include "EBBusAdapter.h"
 #include "iec61131_functions.h"
@@ -27,21 +56,21 @@
 #include "resource.h"
 #include "../handler/bus.h"
 
-DEFINE_FIRMWARE_FB(FORTE_EBSlave2181, g_nStringIdEBSlave2181)
+DEFINE_FIRMWARE_FB(FORTE_EBSlave2181, STRID(EBSlave2181))
 
-const CStringDictionary::TStringId FORTE_EBSlave2181::scmDataInputNames[] = {g_nStringIdQI, g_nStringIdDigitalInput_1, g_nStringIdDigitalInput_2, g_nStringIdDigitalInput_3, g_nStringIdDigitalInput_4, g_nStringIdDigitalInput_5, g_nStringIdDigitalInput_6, g_nStringIdDigitalInput_7, g_nStringIdDigitalInput_8, g_nStringIdDigitalOutput_1, g_nStringIdDigitalOutput_2, g_nStringIdDigitalOutput_3, g_nStringIdDigitalOutput_4, g_nStringIdDigitalOutput_5, g_nStringIdDigitalOutput_6, g_nStringIdDigitalOutput_7, g_nStringIdDigitalOutput_8, g_nStringIdUpdateInterval};
-const CStringDictionary::TStringId FORTE_EBSlave2181::scmDataInputTypeIds[] = {g_nStringIdBOOL, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdUINT};
-const CStringDictionary::TStringId FORTE_EBSlave2181::scmDataOutputNames[] = {g_nStringIdQO, g_nStringIdSTATUS};
-const CStringDictionary::TStringId FORTE_EBSlave2181::scmDataOutputTypeIds[] = {g_nStringIdBOOL, g_nStringIdWSTRING};
+const CStringDictionary::TStringId FORTE_EBSlave2181::scmDataInputNames[] = {STRID(QI), STRID(DigitalInput_1), STRID(DigitalInput_2), STRID(DigitalInput_3), STRID(DigitalInput_4), STRID(DigitalInput_5), STRID(DigitalInput_6), STRID(DigitalInput_7), STRID(DigitalInput_8), STRID(DigitalOutput_1), STRID(DigitalOutput_2), STRID(DigitalOutput_3), STRID(DigitalOutput_4), STRID(DigitalOutput_5), STRID(DigitalOutput_6), STRID(DigitalOutput_7), STRID(DigitalOutput_8), STRID(UpdateInterval)};
+const CStringDictionary::TStringId FORTE_EBSlave2181::scmDataInputTypeIds[] = {STRID(BOOL), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(UINT)};
+const CStringDictionary::TStringId FORTE_EBSlave2181::scmDataOutputNames[] = {STRID(QO), STRID(STATUS)};
+const CStringDictionary::TStringId FORTE_EBSlave2181::scmDataOutputTypeIds[] = {STRID(BOOL), STRID(WSTRING)};
 const TDataIOID FORTE_EBSlave2181::scmEIWith[] = {1, 2, 5, 3, 4, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 0, scmWithListDelimiter};
 const TForteInt16 FORTE_EBSlave2181::scmEIWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_EBSlave2181::scmEventInputNames[] = {g_nStringIdMAP};
+const CStringDictionary::TStringId FORTE_EBSlave2181::scmEventInputNames[] = {STRID(MAP)};
 const TDataIOID FORTE_EBSlave2181::scmEOWith[] = {0, scmWithListDelimiter, 0, 1, scmWithListDelimiter};
 const TForteInt16 FORTE_EBSlave2181::scmEOWithIndexes[] = {0, 2};
-const CStringDictionary::TStringId FORTE_EBSlave2181::scmEventOutputNames[] = {g_nStringIdMAPO, g_nStringIdIND};
+const CStringDictionary::TStringId FORTE_EBSlave2181::scmEventOutputNames[] = {STRID(MAPO), STRID(IND)};
 const SAdapterInstanceDef FORTE_EBSlave2181::scmAdapterInstances[] = {
-  {g_nStringIdEBBusAdapter, g_nStringIdBusAdapterIn, false},
-  {g_nStringIdEBBusAdapter, g_nStringIdBusAdapterOut, true}
+  {STRID(EBBusAdapter), STRID(BusAdapterIn), false},
+  {STRID(EBBusAdapter), STRID(BusAdapterOut), true}
 };
 const SFBInterfaceSpec FORTE_EBSlave2181::scmFBInterfaceSpec = {
   1, scmEventInputNames, nullptr, scmEIWith, scmEIWithIndexes,
@@ -76,8 +105,8 @@ FORTE_EBSlave2181::FORTE_EBSlave2181(const CStringDictionary::TStringId paInstan
     var_UpdateInterval(0_UINT),
     var_QO(0_BOOL),
     var_STATUS(u""_WSTRING),
-    var_BusAdapterIn(g_nStringIdBusAdapterIn, *this, false),
-    var_BusAdapterOut(g_nStringIdBusAdapterOut, *this, true),
+    var_BusAdapterIn(STRID(BusAdapterIn), *this, false),
+    var_BusAdapterOut(STRID(BusAdapterOut), *this, true),
     var_conn_QO(var_QO),
     var_conn_STATUS(var_STATUS),
     conn_MAPO(this, 0),

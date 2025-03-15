@@ -37,11 +37,30 @@
 #include "../../src/core/datatypes/forte_wstring.h"
 
 
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "typelibdatatypetests_gen.cpp"
-#else
-#include "stringlist.h"
-#endif
+
+USE_STRING_ID(ANY);
+USE_STRING_ID(BOOL);
+USE_STRING_ID(BYTE);
+USE_STRING_ID(DATE);
+USE_STRING_ID(DATE_AND_TIME);
+USE_STRING_ID(DINT);
+USE_STRING_ID(DWORD);
+USE_STRING_ID(INT);
+USE_STRING_ID(LINT);
+USE_STRING_ID(LREAL);
+USE_STRING_ID(LWORD);
+USE_STRING_ID(REAL);
+USE_STRING_ID(SINT);
+USE_STRING_ID(STRING);
+USE_STRING_ID(TIME);
+USE_STRING_ID(TIME_OF_DAY);
+USE_STRING_ID(UDINT);
+USE_STRING_ID(UINT);
+USE_STRING_ID(ULINT);
+USE_STRING_ID(USINT);
+USE_STRING_ID(WORD);
+USE_STRING_ID(WSTRING);
+
 
 using namespace std::string_literals;
 
@@ -49,21 +68,21 @@ BOOST_AUTO_TEST_SUITE(TypeLibDataTypeTests)
 
   BOOST_AUTO_TEST_CASE(createANY){
     TForteByte acDataBuf[sizeof(CIEC_ANY_VARIANT)];
-    CIEC_ANY *poVal = CTypeLib::createDataTypeInstance(g_nStringIdANY, acDataBuf);
+    CIEC_ANY *poVal = CTypeLib::createDataTypeInstance(STRID(ANY), acDataBuf);
     BOOST_CHECK_EQUAL(CIEC_ANY::e_ANY, poVal->getDataTypeID());
 
-    poVal = CTypeLib::createDataTypeInstance(g_nStringIdANY, nullptr);
+    poVal = CTypeLib::createDataTypeInstance(STRID(ANY), nullptr);
     BOOST_CHECK_EQUAL(CIEC_ANY::e_ANY, poVal->getDataTypeID());
     delete poVal;
   }
 
   BOOST_AUTO_TEST_CASE(createBOOL){
     TForteByte acDataBuf[sizeof(CIEC_BOOL)];
-    CIEC_ANY *poVal = CTypeLib::createDataTypeInstance(g_nStringIdBOOL, acDataBuf);
+    CIEC_ANY *poVal = CTypeLib::createDataTypeInstance(STRID(BOOL), acDataBuf);
     BOOST_CHECK_EQUAL(CIEC_ANY::e_BOOL, poVal->getDataTypeID());
     BOOST_CHECK_EQUAL(false, *static_cast<CIEC_BOOL *>(poVal));
 
-    poVal = CTypeLib::createDataTypeInstance(g_nStringIdBOOL, nullptr);
+    poVal = CTypeLib::createDataTypeInstance(STRID(BOOL), nullptr);
     BOOST_CHECK_EQUAL(CIEC_ANY::e_BOOL, poVal->getDataTypeID());
     BOOST_CHECK_EQUAL(false, *static_cast<CIEC_BOOL *>(poVal));
     delete poVal;
@@ -71,11 +90,11 @@ BOOST_AUTO_TEST_SUITE(TypeLibDataTypeTests)
 
   BOOST_AUTO_TEST_CASE(createSINT){
     TForteByte acDataBuf[sizeof(CIEC_SINT)];
-    CIEC_ANY *poVal = CTypeLib::createDataTypeInstance(g_nStringIdSINT, acDataBuf);
+    CIEC_ANY *poVal = CTypeLib::createDataTypeInstance(STRID(SINT), acDataBuf);
     BOOST_CHECK_EQUAL(CIEC_ANY::e_SINT, poVal->getDataTypeID());
     BOOST_CHECK_EQUAL(0, static_cast<CIEC_SINT::TValueType>(*static_cast<CIEC_SINT *>(poVal)));
 
-    poVal = CTypeLib::createDataTypeInstance(g_nStringIdSINT, nullptr);
+    poVal = CTypeLib::createDataTypeInstance(STRID(SINT), nullptr);
     BOOST_CHECK_EQUAL(CIEC_ANY::e_SINT, poVal->getDataTypeID());
     BOOST_CHECK_EQUAL(0, static_cast<CIEC_SINT::TValueType>(*static_cast<CIEC_SINT *>(poVal)));
     delete poVal;
@@ -83,11 +102,11 @@ BOOST_AUTO_TEST_SUITE(TypeLibDataTypeTests)
 
   BOOST_AUTO_TEST_CASE(createINT){
     TForteByte acDataBuf[sizeof(CIEC_INT)];
-    CIEC_ANY *poVal = CTypeLib::createDataTypeInstance(g_nStringIdINT, acDataBuf);
+    CIEC_ANY *poVal = CTypeLib::createDataTypeInstance(STRID(INT), acDataBuf);
     BOOST_CHECK_EQUAL(CIEC_ANY::e_INT, poVal->getDataTypeID());
     BOOST_CHECK_EQUAL(0, static_cast<CIEC_INT::TValueType>(*static_cast<CIEC_INT *>(poVal)));
 
-    poVal = CTypeLib::createDataTypeInstance(g_nStringIdINT, nullptr);
+    poVal = CTypeLib::createDataTypeInstance(STRID(INT), nullptr);
     BOOST_CHECK_EQUAL(CIEC_ANY::e_INT, poVal->getDataTypeID());
     BOOST_CHECK_EQUAL(0, static_cast<CIEC_INT::TValueType>(*static_cast<CIEC_INT *>(poVal)));
     delete poVal;
@@ -95,11 +114,11 @@ BOOST_AUTO_TEST_SUITE(TypeLibDataTypeTests)
 
   BOOST_AUTO_TEST_CASE(createDINT){
     TForteByte acDataBuf[sizeof(CIEC_DINT)];
-    CIEC_ANY *poVal = CTypeLib::createDataTypeInstance(g_nStringIdDINT, acDataBuf);
+    CIEC_ANY *poVal = CTypeLib::createDataTypeInstance(STRID(DINT), acDataBuf);
     BOOST_CHECK_EQUAL(CIEC_ANY::e_DINT, poVal->getDataTypeID());
     BOOST_CHECK_EQUAL(0, static_cast<CIEC_DINT::TValueType>(* static_cast<CIEC_DINT *>(poVal)));
 
-    poVal = CTypeLib::createDataTypeInstance(g_nStringIdDINT, nullptr);
+    poVal = CTypeLib::createDataTypeInstance(STRID(DINT), nullptr);
     BOOST_CHECK_EQUAL(CIEC_ANY::e_DINT, poVal->getDataTypeID());
     BOOST_CHECK_EQUAL(0, static_cast<CIEC_DINT::TValueType>(*static_cast<CIEC_DINT *>(poVal)));
     delete poVal;
@@ -107,11 +126,11 @@ BOOST_AUTO_TEST_SUITE(TypeLibDataTypeTests)
 
   BOOST_AUTO_TEST_CASE(createLINT){
     TForteByte acDataBuf[sizeof(CIEC_LINT)];
-    CIEC_ANY *poVal = CTypeLib::createDataTypeInstance(g_nStringIdLINT, acDataBuf);
+    CIEC_ANY *poVal = CTypeLib::createDataTypeInstance(STRID(LINT), acDataBuf);
     BOOST_CHECK_EQUAL(CIEC_ANY::e_LINT, poVal->getDataTypeID());
     BOOST_CHECK_EQUAL(0, static_cast<CIEC_LINT::TValueType>(*static_cast<CIEC_LINT *>(poVal)));
 
-    poVal = CTypeLib::createDataTypeInstance(g_nStringIdLINT, nullptr);
+    poVal = CTypeLib::createDataTypeInstance(STRID(LINT), nullptr);
     BOOST_CHECK_EQUAL(CIEC_ANY::e_LINT, poVal->getDataTypeID());
     BOOST_CHECK_EQUAL(0, static_cast<CIEC_LINT::TValueType>(*static_cast<CIEC_LINT *>(poVal)));
     delete poVal;
@@ -119,11 +138,11 @@ BOOST_AUTO_TEST_SUITE(TypeLibDataTypeTests)
 
   BOOST_AUTO_TEST_CASE(createUSINT){
     TForteByte acDataBuf[sizeof(CIEC_USINT)];
-    CIEC_ANY *poVal = CTypeLib::createDataTypeInstance(g_nStringIdUSINT, acDataBuf);
+    CIEC_ANY *poVal = CTypeLib::createDataTypeInstance(STRID(USINT), acDataBuf);
     BOOST_CHECK_EQUAL(CIEC_ANY::e_USINT, poVal->getDataTypeID());
     BOOST_CHECK_EQUAL(0, static_cast<CIEC_USINT::TValueType>(*static_cast<CIEC_USINT *>(poVal)));
 
-    poVal = CTypeLib::createDataTypeInstance(g_nStringIdUSINT, nullptr);
+    poVal = CTypeLib::createDataTypeInstance(STRID(USINT), nullptr);
     BOOST_CHECK_EQUAL(CIEC_ANY::e_USINT, poVal->getDataTypeID());
     BOOST_CHECK_EQUAL(0, static_cast<CIEC_USINT::TValueType>(*static_cast<CIEC_USINT *>(poVal)));
     delete poVal;
@@ -131,11 +150,11 @@ BOOST_AUTO_TEST_SUITE(TypeLibDataTypeTests)
 
   BOOST_AUTO_TEST_CASE(createUINT){
     TForteByte acDataBuf[sizeof(CIEC_UINT)];
-    CIEC_ANY *poVal = CTypeLib::createDataTypeInstance(g_nStringIdUINT, acDataBuf);
+    CIEC_ANY *poVal = CTypeLib::createDataTypeInstance(STRID(UINT), acDataBuf);
     BOOST_CHECK_EQUAL(CIEC_ANY::e_UINT, poVal->getDataTypeID());
     BOOST_TEST(0 == static_cast<CIEC_UINT::TValueType>(* static_cast<CIEC_UINT *>(poVal)));
 
-    poVal = CTypeLib::createDataTypeInstance(g_nStringIdUINT, nullptr);
+    poVal = CTypeLib::createDataTypeInstance(STRID(UINT), nullptr);
     BOOST_CHECK_EQUAL(CIEC_ANY::e_UINT, poVal->getDataTypeID());
     BOOST_TEST(0 == static_cast<CIEC_UINT::TValueType>(*static_cast<CIEC_UINT *>(poVal)));
     delete poVal;
@@ -143,11 +162,11 @@ BOOST_AUTO_TEST_SUITE(TypeLibDataTypeTests)
 
   BOOST_AUTO_TEST_CASE(createUDINT){
     TForteByte acDataBuf[sizeof(CIEC_UDINT)];
-    CIEC_ANY *poVal = CTypeLib::createDataTypeInstance(g_nStringIdUDINT, acDataBuf);
+    CIEC_ANY *poVal = CTypeLib::createDataTypeInstance(STRID(UDINT), acDataBuf);
     BOOST_CHECK_EQUAL(CIEC_ANY::e_UDINT, poVal->getDataTypeID());
     BOOST_CHECK_EQUAL(0, static_cast<CIEC_UDINT::TValueType>(*static_cast<CIEC_UDINT *>(poVal)));
 
-    poVal = CTypeLib::createDataTypeInstance(g_nStringIdUDINT, nullptr);
+    poVal = CTypeLib::createDataTypeInstance(STRID(UDINT), nullptr);
     BOOST_CHECK_EQUAL(CIEC_ANY::e_UDINT, poVal->getDataTypeID());
     BOOST_CHECK_EQUAL(0, static_cast<CIEC_UDINT::TValueType>(*static_cast<CIEC_UDINT *>(poVal)));
     delete poVal;
@@ -155,11 +174,11 @@ BOOST_AUTO_TEST_SUITE(TypeLibDataTypeTests)
 
   BOOST_AUTO_TEST_CASE(createULINT){
     TForteByte acDataBuf[sizeof(CIEC_ULINT)];
-    CIEC_ANY *poVal = CTypeLib::createDataTypeInstance(g_nStringIdULINT, acDataBuf);
+    CIEC_ANY *poVal = CTypeLib::createDataTypeInstance(STRID(ULINT), acDataBuf);
     BOOST_CHECK_EQUAL(CIEC_ANY::e_ULINT, poVal->getDataTypeID());
     BOOST_CHECK_EQUAL(0, static_cast<CIEC_ULINT::TValueType>(*static_cast<CIEC_ULINT *>(poVal)));
 
-    poVal = CTypeLib::createDataTypeInstance(g_nStringIdULINT, nullptr);
+    poVal = CTypeLib::createDataTypeInstance(STRID(ULINT), nullptr);
     BOOST_CHECK_EQUAL(CIEC_ANY::e_ULINT, poVal->getDataTypeID());
     BOOST_CHECK_EQUAL(0, static_cast<CIEC_ULINT::TValueType>(*static_cast<CIEC_ULINT *>(poVal)));
     delete poVal;
@@ -167,11 +186,11 @@ BOOST_AUTO_TEST_SUITE(TypeLibDataTypeTests)
 
   BOOST_AUTO_TEST_CASE(createBYTE){
     TForteByte acDataBuf[sizeof(CIEC_BYTE)];
-    CIEC_ANY *poVal = CTypeLib::createDataTypeInstance(g_nStringIdBYTE, acDataBuf);
+    CIEC_ANY *poVal = CTypeLib::createDataTypeInstance(STRID(BYTE), acDataBuf);
     BOOST_CHECK_EQUAL(CIEC_ANY::e_BYTE, poVal->getDataTypeID());
     BOOST_CHECK_EQUAL(0, *static_cast<CIEC_BYTE *>(poVal));
 
-    poVal = CTypeLib::createDataTypeInstance(g_nStringIdBYTE, nullptr);
+    poVal = CTypeLib::createDataTypeInstance(STRID(BYTE), nullptr);
     BOOST_CHECK_EQUAL(CIEC_ANY::e_BYTE, poVal->getDataTypeID());
     BOOST_CHECK_EQUAL(0, *static_cast<CIEC_BYTE *>(poVal));
     delete poVal;
@@ -179,11 +198,11 @@ BOOST_AUTO_TEST_SUITE(TypeLibDataTypeTests)
 
   BOOST_AUTO_TEST_CASE(createWORD){
     TForteByte acDataBuf[sizeof(CIEC_WORD)];
-    CIEC_ANY *poVal = CTypeLib::createDataTypeInstance(g_nStringIdWORD, acDataBuf);
+    CIEC_ANY *poVal = CTypeLib::createDataTypeInstance(STRID(WORD), acDataBuf);
     BOOST_CHECK_EQUAL(CIEC_ANY::e_WORD, poVal->getDataTypeID());
     BOOST_CHECK_EQUAL(0, *static_cast<CIEC_WORD *>(poVal));
 
-    poVal = CTypeLib::createDataTypeInstance(g_nStringIdWORD, nullptr);
+    poVal = CTypeLib::createDataTypeInstance(STRID(WORD), nullptr);
     BOOST_CHECK_EQUAL(CIEC_ANY::e_WORD, poVal->getDataTypeID());
     BOOST_CHECK_EQUAL(0, *static_cast<CIEC_WORD *>(poVal));
     delete poVal;
@@ -191,11 +210,11 @@ BOOST_AUTO_TEST_SUITE(TypeLibDataTypeTests)
 
   BOOST_AUTO_TEST_CASE(createDWORD){
     TForteByte acDataBuf[sizeof(CIEC_DWORD)];
-    CIEC_ANY *poVal = CTypeLib::createDataTypeInstance(g_nStringIdDWORD, acDataBuf);
+    CIEC_ANY *poVal = CTypeLib::createDataTypeInstance(STRID(DWORD), acDataBuf);
     BOOST_CHECK_EQUAL(CIEC_ANY::e_DWORD, poVal->getDataTypeID());
     BOOST_CHECK_EQUAL(0, *static_cast<CIEC_DWORD *>(poVal));
 
-    poVal = CTypeLib::createDataTypeInstance(g_nStringIdDWORD, nullptr);
+    poVal = CTypeLib::createDataTypeInstance(STRID(DWORD), nullptr);
     BOOST_CHECK_EQUAL(CIEC_ANY::e_DWORD, poVal->getDataTypeID());
     BOOST_CHECK_EQUAL(0, *static_cast<CIEC_DWORD *>(poVal));
     delete poVal;
@@ -203,11 +222,11 @@ BOOST_AUTO_TEST_SUITE(TypeLibDataTypeTests)
 
   BOOST_AUTO_TEST_CASE(createLWORD){
     TForteByte acDataBuf[sizeof(CIEC_LWORD)];
-    CIEC_ANY *poVal = CTypeLib::createDataTypeInstance(g_nStringIdLWORD, acDataBuf);
+    CIEC_ANY *poVal = CTypeLib::createDataTypeInstance(STRID(LWORD), acDataBuf);
     BOOST_CHECK_EQUAL(CIEC_ANY::e_LWORD, poVal->getDataTypeID());
     BOOST_CHECK_EQUAL(0, *static_cast<CIEC_LWORD *>(poVal));
 
-    poVal = CTypeLib::createDataTypeInstance(g_nStringIdLWORD, nullptr);
+    poVal = CTypeLib::createDataTypeInstance(STRID(LWORD), nullptr);
     BOOST_CHECK_EQUAL(CIEC_ANY::e_LWORD, poVal->getDataTypeID());
     BOOST_CHECK_EQUAL(0, *static_cast<CIEC_LWORD *>(poVal));
     delete poVal;
@@ -215,11 +234,11 @@ BOOST_AUTO_TEST_SUITE(TypeLibDataTypeTests)
 
   BOOST_AUTO_TEST_CASE(createDATE){
     TForteByte acDataBuf[sizeof(CIEC_DATE)];
-    CIEC_ANY *poVal = CTypeLib::createDataTypeInstance(g_nStringIdDATE, acDataBuf);
+    CIEC_ANY *poVal = CTypeLib::createDataTypeInstance(STRID(DATE), acDataBuf);
     BOOST_CHECK_EQUAL(CIEC_ANY::e_DATE, poVal->getDataTypeID());
     BOOST_CHECK_EQUAL(0, *static_cast<CIEC_DATE *>(poVal));
 
-    poVal = CTypeLib::createDataTypeInstance(g_nStringIdDATE, nullptr);
+    poVal = CTypeLib::createDataTypeInstance(STRID(DATE), nullptr);
     BOOST_CHECK_EQUAL(CIEC_ANY::e_DATE, poVal->getDataTypeID());
     BOOST_CHECK_EQUAL(0, *static_cast<CIEC_DATE *>(poVal));
     delete poVal;
@@ -227,11 +246,11 @@ BOOST_AUTO_TEST_SUITE(TypeLibDataTypeTests)
 
   BOOST_AUTO_TEST_CASE(createTIME_OF_DAY){
     TForteByte acDataBuf[sizeof(CIEC_TIME_OF_DAY)];
-    CIEC_ANY *poVal = CTypeLib::createDataTypeInstance(g_nStringIdTIME_OF_DAY, acDataBuf);
+    CIEC_ANY *poVal = CTypeLib::createDataTypeInstance(STRID(TIME_OF_DAY), acDataBuf);
     BOOST_CHECK_EQUAL(CIEC_ANY::e_TIME_OF_DAY, poVal->getDataTypeID());
     BOOST_CHECK_EQUAL(0, static_cast<CIEC_TIME_OF_DAY::TValueType>(*static_cast<CIEC_TIME_OF_DAY *>(poVal)));
 
-    poVal = CTypeLib::createDataTypeInstance(g_nStringIdTIME_OF_DAY, nullptr);
+    poVal = CTypeLib::createDataTypeInstance(STRID(TIME_OF_DAY), nullptr);
     BOOST_CHECK_EQUAL(CIEC_ANY::e_TIME_OF_DAY, poVal->getDataTypeID());
     BOOST_CHECK_EQUAL(0, static_cast<CIEC_TIME_OF_DAY::TValueType>(*static_cast<CIEC_TIME_OF_DAY *>(poVal)));
     delete poVal;
@@ -239,11 +258,11 @@ BOOST_AUTO_TEST_SUITE(TypeLibDataTypeTests)
 
   BOOST_AUTO_TEST_CASE(createDATE_AND_TIME){
     TForteByte acDataBuf[sizeof(CIEC_DATE_AND_TIME)];
-    CIEC_ANY *poVal = CTypeLib::createDataTypeInstance(g_nStringIdDATE_AND_TIME, acDataBuf);
+    CIEC_ANY *poVal = CTypeLib::createDataTypeInstance(STRID(DATE_AND_TIME), acDataBuf);
     BOOST_CHECK_EQUAL(CIEC_ANY::e_DATE_AND_TIME, poVal->getDataTypeID());
     BOOST_CHECK_EQUAL(0, *static_cast<CIEC_DATE_AND_TIME *>(poVal));
 
-    poVal = CTypeLib::createDataTypeInstance(g_nStringIdDATE_AND_TIME, nullptr);
+    poVal = CTypeLib::createDataTypeInstance(STRID(DATE_AND_TIME), nullptr);
     BOOST_CHECK_EQUAL(CIEC_ANY::e_DATE_AND_TIME, poVal->getDataTypeID());
     BOOST_CHECK_EQUAL(0, *static_cast<CIEC_DATE_AND_TIME *>(poVal));
     delete poVal;
@@ -251,11 +270,11 @@ BOOST_AUTO_TEST_SUITE(TypeLibDataTypeTests)
 
   BOOST_AUTO_TEST_CASE(createTIME){
     TForteByte acDataBuf[sizeof(CIEC_TIME)];
-    CIEC_ANY *poVal = CTypeLib::createDataTypeInstance(g_nStringIdTIME, acDataBuf);
+    CIEC_ANY *poVal = CTypeLib::createDataTypeInstance(STRID(TIME), acDataBuf);
     BOOST_CHECK_EQUAL(CIEC_ANY::e_TIME, poVal->getDataTypeID());
     BOOST_CHECK_EQUAL(0, static_cast<CIEC_TIME::TValueType>(* static_cast<CIEC_TIME *>(poVal)));
 
-    poVal = CTypeLib::createDataTypeInstance(g_nStringIdTIME, nullptr);
+    poVal = CTypeLib::createDataTypeInstance(STRID(TIME), nullptr);
     BOOST_CHECK_EQUAL(CIEC_ANY::e_TIME, poVal->getDataTypeID());
     BOOST_CHECK_EQUAL(0, static_cast<CIEC_TIME::TValueType>(*static_cast<CIEC_TIME *>(poVal)));
     delete poVal;
@@ -263,11 +282,11 @@ BOOST_AUTO_TEST_SUITE(TypeLibDataTypeTests)
 
   BOOST_AUTO_TEST_CASE(createREAL){
     TForteByte acDataBuf[sizeof(CIEC_REAL)];
-    CIEC_ANY *poVal = CTypeLib::createDataTypeInstance(g_nStringIdREAL, acDataBuf);
+    CIEC_ANY *poVal = CTypeLib::createDataTypeInstance(STRID(REAL), acDataBuf);
     BOOST_CHECK_EQUAL(CIEC_ANY::e_REAL, poVal->getDataTypeID());
     BOOST_CHECK_EQUAL(0.0f, *static_cast<CIEC_REAL *>(poVal));
 
-    poVal = CTypeLib::createDataTypeInstance(g_nStringIdREAL, nullptr);
+    poVal = CTypeLib::createDataTypeInstance(STRID(REAL), nullptr);
     BOOST_CHECK_EQUAL(CIEC_ANY::e_REAL, poVal->getDataTypeID());
     BOOST_CHECK_EQUAL(0.0f, *static_cast<CIEC_REAL *>(poVal));
     delete poVal;
@@ -275,11 +294,11 @@ BOOST_AUTO_TEST_SUITE(TypeLibDataTypeTests)
 
   BOOST_AUTO_TEST_CASE(createLREAL){
     TForteByte acDataBuf[sizeof(CIEC_LREAL)];
-    CIEC_ANY *poVal = CTypeLib::createDataTypeInstance(g_nStringIdLREAL, acDataBuf);
+    CIEC_ANY *poVal = CTypeLib::createDataTypeInstance(STRID(LREAL), acDataBuf);
     BOOST_TEST(CIEC_ANY::e_LREAL == poVal->getDataTypeID());
     BOOST_TEST(0.0 == static_cast<CIEC_LREAL::TValueType>(*static_cast<CIEC_LREAL *>(poVal)));
 
-    poVal = CTypeLib::createDataTypeInstance(g_nStringIdLREAL, nullptr);
+    poVal = CTypeLib::createDataTypeInstance(STRID(LREAL), nullptr);
     BOOST_TEST(CIEC_ANY::e_LREAL == poVal->getDataTypeID());
     BOOST_TEST(0.0 == static_cast<CIEC_LREAL::TValueType>(*static_cast<CIEC_LREAL *>(poVal)));
     delete poVal;
@@ -287,11 +306,11 @@ BOOST_AUTO_TEST_SUITE(TypeLibDataTypeTests)
 
   BOOST_AUTO_TEST_CASE(createSTRING){
     TForteByte acDataBuf[sizeof(CIEC_STRING)];
-    CIEC_ANY *poVal = CTypeLib::createDataTypeInstance(g_nStringIdSTRING, acDataBuf);
+    CIEC_ANY *poVal = CTypeLib::createDataTypeInstance(STRID(STRING), acDataBuf);
     BOOST_CHECK_EQUAL(CIEC_ANY::e_STRING, poVal->getDataTypeID());
     BOOST_TEST(""s == static_cast<CIEC_STRING *>(poVal)->getStorage());
 
-    poVal = CTypeLib::createDataTypeInstance(g_nStringIdSTRING, nullptr);
+    poVal = CTypeLib::createDataTypeInstance(STRID(STRING), nullptr);
     BOOST_CHECK_EQUAL(CIEC_ANY::e_STRING, poVal->getDataTypeID());
     BOOST_TEST(""s == static_cast<CIEC_STRING *>(poVal)->getStorage());
     delete poVal;
@@ -300,11 +319,11 @@ BOOST_AUTO_TEST_SUITE(TypeLibDataTypeTests)
 #ifdef FORTE_USE_WSTRING_DATATYPE
   BOOST_AUTO_TEST_CASE(createWSTRING){
     TForteByte acDataBuf[sizeof(CIEC_WSTRING)];
-    CIEC_ANY *poVal = CTypeLib::createDataTypeInstance(g_nStringIdWSTRING, acDataBuf);
+    CIEC_ANY *poVal = CTypeLib::createDataTypeInstance(STRID(WSTRING), acDataBuf);
     BOOST_CHECK_EQUAL(CIEC_ANY::e_WSTRING, poVal->getDataTypeID());
     BOOST_CHECK_EQUAL("", static_cast<CIEC_WSTRING *>(poVal)->getValue());
 
-    poVal = CTypeLib::createDataTypeInstance(g_nStringIdWSTRING, nullptr);
+    poVal = CTypeLib::createDataTypeInstance(STRID(WSTRING), nullptr);
     BOOST_CHECK_EQUAL(CIEC_ANY::e_WSTRING, poVal->getDataTypeID());
     BOOST_CHECK_EQUAL("", static_cast<CIEC_WSTRING *>(poVal)->getValue());
     delete poVal;

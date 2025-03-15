@@ -12,18 +12,20 @@
  *******************************************************************************/
 
 #include "STEST_END_fbt.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "STEST_END_fbt_gen.cpp"
-#endif
+
+USE_STRING_ID(Event);
+USE_STRING_ID(REQ);
+USE_STRING_ID(STEST_END);
+
 
 #include "../../stdfblib/ita/RMT_DEV.h"
 #include "forte_thread.h"
 
-DEFINE_FIRMWARE_FB(FORTE_STEST_END, g_nStringIdSTEST_END)
+DEFINE_FIRMWARE_FB(FORTE_STEST_END, STRID(STEST_END))
 
 const TForteInt16 FORTE_STEST_END::scmEIWithIndexes[] = {-1};
-const CStringDictionary::TStringId FORTE_STEST_END::scmEventInputNames[] = {g_nStringIdREQ};
-const CStringDictionary::TStringId FORTE_STEST_END::scmEventInputTypeIds[] = {g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_STEST_END::scmEventInputNames[] = {STRID(REQ)};
+const CStringDictionary::TStringId FORTE_STEST_END::scmEventInputTypeIds[] = {STRID(Event)};
 const SFBInterfaceSpec FORTE_STEST_END::scmFBInterfaceSpec = {
   1, scmEventInputNames, scmEventInputTypeIds, nullptr, scmEIWithIndexes,
   0, nullptr, nullptr, nullptr, nullptr,

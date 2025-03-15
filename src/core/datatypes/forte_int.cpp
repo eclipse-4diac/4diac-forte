@@ -13,11 +13,11 @@
  *      - initial implementation and rework communication infrastructure
   *******************************************************************************/
 #include "forte_int.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "forte_int_gen.cpp"
-#endif
 
-DEFINE_FIRMWARE_DATATYPE(INT, g_nStringIdINT)
+USE_STRING_ID(INT);
+
+
+DEFINE_FIRMWARE_DATATYPE(INT, STRID(INT))
 
 template CIEC_INT &CIEC_INT::operator=<>(const CIEC_SINT &paValue);
 

@@ -11,22 +11,30 @@
  *******************************************************************************/
 
 #include "RegisterServiceAdp_adp.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "RegisterServiceAdp_adp_gen.cpp"
-#endif
 
-DEFINE_ADAPTER_TYPE(FORTE_RegisterServiceAdp, g_nStringIdRegisterServiceAdp)
+USE_STRING_ID(doneRegister);
+USE_STRING_ID(doneUnregister);
+USE_STRING_ID(endpoint);
+USE_STRING_ID(registerService);
+USE_STRING_ID(RegisterServiceAdp);
+USE_STRING_ID(serviceRegistryEntry);
+USE_STRING_ID(ServiceRegistryEntry);
+USE_STRING_ID(unregisterService);
+USE_STRING_ID(WSTRING);
 
-const CStringDictionary::TStringId FORTE_RegisterServiceAdp::scmDataOutputNames[] = {g_nStringIdserviceRegistryEntry, g_nStringIdendpoint};
 
-const CStringDictionary::TStringId FORTE_RegisterServiceAdp::scmDataOutputTypeIds[] = {g_nStringIdServiceRegistryEntry, g_nStringIdWSTRING};
+DEFINE_ADAPTER_TYPE(FORTE_RegisterServiceAdp, STRID(RegisterServiceAdp))
+
+const CStringDictionary::TStringId FORTE_RegisterServiceAdp::scmDataOutputNames[] = {STRID(serviceRegistryEntry), STRID(endpoint)};
+
+const CStringDictionary::TStringId FORTE_RegisterServiceAdp::scmDataOutputTypeIds[] = {STRID(ServiceRegistryEntry), STRID(WSTRING)};
 
 const TForteInt16 FORTE_RegisterServiceAdp::scmEIWithIndexes[] = {-1, -1, -1};
-const CStringDictionary::TStringId FORTE_RegisterServiceAdp::scmEventInputNames[] = {g_nStringIddoneRegister, g_nStringIddoneUnregister};
+const CStringDictionary::TStringId FORTE_RegisterServiceAdp::scmEventInputNames[] = {STRID(doneRegister), STRID(doneUnregister)};
 
 const TDataIOID FORTE_RegisterServiceAdp::scmEOWith[] = {0, 1, scmWithListDelimiter, 0, 1, scmWithListDelimiter};
 const TForteInt16 FORTE_RegisterServiceAdp::scmEOWithIndexes[] = {0, 3, -1};
-const CStringDictionary::TStringId FORTE_RegisterServiceAdp::scmEventOutputNames[] = {g_nStringIdregisterService, g_nStringIdunregisterService};
+const CStringDictionary::TStringId FORTE_RegisterServiceAdp::scmEventOutputNames[] = {STRID(registerService), STRID(unregisterService)};
 
 const SFBInterfaceSpec FORTE_RegisterServiceAdp::scmFBInterfaceSpecSocket = {
   2,  scmEventInputNames,  0,  scmEIWithIndexes,

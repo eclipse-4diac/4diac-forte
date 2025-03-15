@@ -11,24 +11,30 @@
  *******************************************************************************/
 
 #include "ATimeOut_adp.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "ATimeOut_adp_gen.cpp"
-#endif
+
+USE_STRING_ID(ATimeOut);
+USE_STRING_ID(DT);
+USE_STRING_ID(Event);
+USE_STRING_ID(START);
+USE_STRING_ID(STOP);
+USE_STRING_ID(TIME);
+USE_STRING_ID(TimeOut);
+
 
 #include "criticalregion.h"
 #include "resource.h"
 
-DEFINE_ADAPTER_TYPE(FORTE_ATimeOut, g_nStringIdATimeOut)
+DEFINE_ADAPTER_TYPE(FORTE_ATimeOut, STRID(ATimeOut))
 
-const CStringDictionary::TStringId FORTE_ATimeOut::scmDataOutputNames[] = {g_nStringIdDT};
-const CStringDictionary::TStringId FORTE_ATimeOut::scmDataOutputTypeIds[] = {g_nStringIdTIME};
+const CStringDictionary::TStringId FORTE_ATimeOut::scmDataOutputNames[] = {STRID(DT)};
+const CStringDictionary::TStringId FORTE_ATimeOut::scmDataOutputTypeIds[] = {STRID(TIME)};
 const TForteInt16 FORTE_ATimeOut::scmEIWithIndexes[] = {-1};
-const CStringDictionary::TStringId FORTE_ATimeOut::scmEventInputNames[] = {g_nStringIdTimeOut};
-const CStringDictionary::TStringId FORTE_ATimeOut::scmEventInputTypeIds[] = {g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_ATimeOut::scmEventInputNames[] = {STRID(TimeOut)};
+const CStringDictionary::TStringId FORTE_ATimeOut::scmEventInputTypeIds[] = {STRID(Event)};
 const TDataIOID FORTE_ATimeOut::scmEOWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_ATimeOut::scmEOWithIndexes[] = {0, -1};
-const CStringDictionary::TStringId FORTE_ATimeOut::scmEventOutputNames[] = {g_nStringIdSTART, g_nStringIdSTOP};
-const CStringDictionary::TStringId FORTE_ATimeOut::scmEventOutputTypeIds[] = {g_nStringIdEvent, g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_ATimeOut::scmEventOutputNames[] = {STRID(START), STRID(STOP)};
+const CStringDictionary::TStringId FORTE_ATimeOut::scmEventOutputTypeIds[] = {STRID(Event), STRID(Event)};
 
 const SFBInterfaceSpec FORTE_ATimeOut::scmFBInterfaceSpecSocket = {
   1, scmEventInputNames,scmEventInputTypeIds,nullptr, scmEIWithIndexes,

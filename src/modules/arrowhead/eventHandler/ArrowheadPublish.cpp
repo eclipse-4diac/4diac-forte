@@ -11,27 +11,35 @@
  *******************************************************************************/
 
 #include "ArrowheadPublish.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "ArrowheadPublish_gen.cpp"
-#endif
 
-DEFINE_FIRMWARE_FB(FORTE_ArrowheadPublish, g_nStringIdArrowheadPublish)
+USE_STRING_ID(ArrowheadPublish);
+USE_STRING_ID(ArrowheadPublishAdp);
+USE_STRING_ID(endpoint);
+USE_STRING_ID(Event);
+USE_STRING_ID(publish);
+USE_STRING_ID(published);
+USE_STRING_ID(publishEvent);
+USE_STRING_ID(PublishEvent);
+USE_STRING_ID(WSTRING);
 
-const CStringDictionary::TStringId FORTE_ArrowheadPublish::scmDataInputNames[] = {g_nStringIdpublishEvent, g_nStringIdendpoint};
 
-const CStringDictionary::TStringId FORTE_ArrowheadPublish::scmDataInputTypeIds[] = {g_nStringIdPublishEvent, g_nStringIdWSTRING};
+DEFINE_FIRMWARE_FB(FORTE_ArrowheadPublish, STRID(ArrowheadPublish))
+
+const CStringDictionary::TStringId FORTE_ArrowheadPublish::scmDataInputNames[] = {STRID(publishEvent), STRID(endpoint)};
+
+const CStringDictionary::TStringId FORTE_ArrowheadPublish::scmDataInputTypeIds[] = {STRID(PublishEvent), STRID(WSTRING)};
 
 const TForteInt16 FORTE_ArrowheadPublish::scmEIWithIndexes[] = {0};
 const TDataIOID FORTE_ArrowheadPublish::scmEIWith[] = {0, 1, scmWithListDelimiter};
-const CStringDictionary::TStringId FORTE_ArrowheadPublish::scmEventInputNames[] = {g_nStringIdpublish};
-const CStringDictionary::TStringId FORTE_ArrowheadPublish::scmEventInputTypeIds[] = {g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_ArrowheadPublish::scmEventInputNames[] = {STRID(publish)};
+const CStringDictionary::TStringId FORTE_ArrowheadPublish::scmEventInputTypeIds[] = {STRID(Event)};
 
 const TForteInt16 FORTE_ArrowheadPublish::scmEOWithIndexes[] = {-1, -1};
-const CStringDictionary::TStringId FORTE_ArrowheadPublish::scmEventOutputNames[] = {g_nStringIdpublished};
-const CStringDictionary::TStringId FORTE_ArrowheadPublish::scmEventOutputTypeIds[] = {g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_ArrowheadPublish::scmEventOutputNames[] = {STRID(published)};
+const CStringDictionary::TStringId FORTE_ArrowheadPublish::scmEventOutputTypeIds[] = {STRID(Event)};
 
 const SAdapterInstanceDef FORTE_ArrowheadPublish::scmAdapterInstances[] = {
-{g_nStringIdArrowheadPublishAdp, g_nStringIdArrowheadPublishAdp, true }};
+{STRID(ArrowheadPublishAdp), STRID(ArrowheadPublishAdp), true }};
 
 const SFBInterfaceSpec FORTE_ArrowheadPublish::scmFBInterfaceSpec = {
   1,  scmEventInputNames, scmEventInputTypeIds,  scmEIWith,  scmEIWithIndexes,
@@ -41,13 +49,13 @@ const SFBInterfaceSpec FORTE_ArrowheadPublish::scmFBInterfaceSpec = {
 
 
 const SCFB_FBConnectionData FORTE_ArrowheadPublish::scmEventConnections[] = {
-  {GENERATE_CONNECTION_PORT_ID_1_ARG(g_nStringIdpublish), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdArrowheadPublishAdp, g_nStringIdpublish), CCompositeFB::scmAdapterMarker |0},
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdArrowheadPublishAdp, g_nStringIdpublished), CCompositeFB::scmAdapterMarker |0, GENERATE_CONNECTION_PORT_ID_1_ARG(g_nStringIdpublished), -1},
+  {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(publish)), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(ArrowheadPublishAdp), STRID(publish)), CCompositeFB::scmAdapterMarker |0},
+  {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(ArrowheadPublishAdp), STRID(published)), CCompositeFB::scmAdapterMarker |0, GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(published)), -1},
 };
 
 const SCFB_FBConnectionData FORTE_ArrowheadPublish::scmDataConnections[] = {
-  {GENERATE_CONNECTION_PORT_ID_1_ARG(g_nStringIdpublishEvent), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdArrowheadPublishAdp, g_nStringIdpublishEvent), CCompositeFB::scmAdapterMarker |0},
-  {GENERATE_CONNECTION_PORT_ID_1_ARG(g_nStringIdendpoint), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdArrowheadPublishAdp, g_nStringIdendpoint), CCompositeFB::scmAdapterMarker |0},
+  {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(publishEvent)), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(ArrowheadPublishAdp), STRID(publishEvent)), CCompositeFB::scmAdapterMarker |0},
+  {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(endpoint)), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(ArrowheadPublishAdp), STRID(endpoint)), CCompositeFB::scmAdapterMarker |0},
 };
 
 const SCFB_FBNData FORTE_ArrowheadPublish::scmFBNData = {

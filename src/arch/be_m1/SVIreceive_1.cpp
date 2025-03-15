@@ -11,25 +11,25 @@
  *******************************************************************************/
 #include "SVIreceive_1.h"
 
-DEFINE_FIRMWARE_FB(FORTE_SVIreceive_1, g_nStringIdSVIreceive_1)
+DEFINE_FIRMWARE_FB(FORTE_SVIreceive_1, STRID(SVIreceive_1))
 
-const CStringDictionary::TStringId FORTE_SVIreceive_1::scmDataInputNames[] = { g_nStringIdQI, g_nStringIdID };
+const CStringDictionary::TStringId FORTE_SVIreceive_1::scmDataInputNames[] = { STRID(QI), STRID(ID) };
 
-const CStringDictionary::TStringId FORTE_SVIreceive_1::scmDataInputTypeIds[] = { g_nStringIdBOOL, g_nStringIdSTRING };
+const CStringDictionary::TStringId FORTE_SVIreceive_1::scmDataInputTypeIds[] = { STRID(BOOL), STRID(STRING) };
 
-const CStringDictionary::TStringId FORTE_SVIreceive_1::scmDataOutputNames[] = { g_nStringIdQO, g_nStringIdRD_1 };
+const CStringDictionary::TStringId FORTE_SVIreceive_1::scmDataOutputNames[] = { STRID(QO), STRID(RD_1) };
 
-const CStringDictionary::TStringId FORTE_SVIreceive_1::scmDataOutputTypeIds[] = { g_nStringIdBOOL, g_nStringIdANY };
+const CStringDictionary::TStringId FORTE_SVIreceive_1::scmDataOutputTypeIds[] = { STRID(BOOL), STRID(ANY) };
 
 const TForteInt16 FORTE_SVIreceive_1::scmEIWithIndexes[] = { 0, 3 };
 const TDataIOID FORTE_SVIreceive_1::scmEIWith[] = { 0, 1, scmWithListDelimiter, 0, scmWithListDelimiter };
-const CStringDictionary::TStringId FORTE_SVIreceive_1::scmEventInputNames[] = { g_nStringIdINIT, g_nStringIdREQ };
-const CStringDictionary::TStringId FORTE_SVIreceive_1::scmEventInputTypeIds[] = {g_nStringIdEInit, g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_SVIreceive_1::scmEventInputNames[] = { STRID(INIT), STRID(REQ) };
+const CStringDictionary::TStringId FORTE_SVIreceive_1::scmEventInputTypeIds[] = {STRID(EInit), STRID(Event)};
 
 const TDataIOID FORTE_SVIreceive_1::scmEOWith[] = { 0, scmWithListDelimiter, 0, 1, scmWithListDelimiter };
 const TForteInt16 FORTE_SVIreceive_1::scmEOWithIndexes[] = { 0, 2, -1 };
-const CStringDictionary::TStringId FORTE_SVIreceive_1::scmEventOutputNames[] = { g_nStringIdINITO, g_nStringIdCNF };
-const CStringDictionary::TStringId FORTE_SVIreceive_1::scmEventOutputTypeIds[] = {g_nStringIdEvent, g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_SVIreceive_1::scmEventOutputNames[] = { STRID(INITO), STRID(CNF) };
+const CStringDictionary::TStringId FORTE_SVIreceive_1::scmEventOutputTypeIds[] = {STRID(Event), STRID(Event)};
 
 const SFBInterfaceSpec FORTE_SVIreceive_1::scmFBInterfaceSpec = { 2, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes, 2, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes, 2, scmDataInputNames, scmDataInputTypeIds, 2, scmDataOutputNames, scmDataOutputTypeIds, 0, 0 };
 

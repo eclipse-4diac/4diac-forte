@@ -19,9 +19,9 @@
 #include <cstdlib>
 #include <cstdio>
 #include "forte_real.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "forte_real_gen.cpp"
-#endif
+
+USE_STRING_ID(REAL);
+
 #include "forte_lreal.h"
 #include "forte_lint.h"
 #include "forte_ulint.h"
@@ -29,7 +29,7 @@
 #include <forte_printer.h>
 #include "../../arch/forte_realFunctions.h"
 
-DEFINE_FIRMWARE_DATATYPE(REAL, g_nStringIdREAL)
+DEFINE_FIRMWARE_DATATYPE(REAL, STRID(REAL))
 
 int CIEC_REAL::fromString(const char *paValue){
   char *pcEnd;

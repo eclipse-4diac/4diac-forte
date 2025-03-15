@@ -17,9 +17,14 @@
  *******************************************************************************/
 
 #include "GEN_ADD_fbt.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "GEN_ADD_fbt_gen.cpp"
-#endif
+
+USE_STRING_ID(ANY_MAGNITUDE);
+USE_STRING_ID(CNF);
+USE_STRING_ID(Event);
+USE_STRING_ID(GEN_ADD);
+USE_STRING_ID(OUT);
+USE_STRING_ID(REQ);
+
 
 #include <ctype.h>
 #include <stdio.h>
@@ -28,7 +33,7 @@
 #include "resource.h"
 #include "criticalregion.h"
 
-DEFINE_GENERIC_FIRMWARE_FB(GEN_ADD, g_nStringIdGEN_ADD)
+DEFINE_GENERIC_FIRMWARE_FB(GEN_ADD, STRID(GEN_ADD))
 
 GEN_ADD::GEN_ADD(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CGenFunctionBlock<CFunctionBlock>(paContainer, paInstanceNameId), mDInputs(0){
@@ -89,19 +94,19 @@ bool GEN_ADD::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &
   //now the number of needed eventInputs and dataOutputs are available in the integer array
   //create the eventInputs
 
-  static const std::array<CStringDictionary::TStringId, 1>anEventInputNames = { g_nStringIdREQ };
-  static const std::array<CStringDictionary::TStringId, 1>anEventOutputNames = { g_nStringIdCNF };
-  static const std::array<CStringDictionary::TStringId, 1>anDataOutputNames = { g_nStringIdOUT };
-  static const std::array<CStringDictionary::TStringId, 1>anDataOutputTypeIds = { g_nStringIdANY_MAGNITUDE };
-  static const std::array<CStringDictionary::TStringId, 1>anEventInputTypes = { g_nStringIdEvent };
-  static const std::array<CStringDictionary::TStringId, 1>anEventOutputTypes = { g_nStringIdEvent };
+  static const std::array<CStringDictionary::TStringId, 1>anEventInputNames = { STRID(REQ) };
+  static const std::array<CStringDictionary::TStringId, 1>anEventOutputNames = { STRID(CNF) };
+  static const std::array<CStringDictionary::TStringId, 1>anDataOutputNames = { STRID(OUT) };
+  static const std::array<CStringDictionary::TStringId, 1>anDataOutputTypeIds = { STRID(ANY_MAGNITUDE) };
+  static const std::array<CStringDictionary::TStringId, 1>anEventInputTypes = { STRID(Event) };
+  static const std::array<CStringDictionary::TStringId, 1>anEventOutputTypes = { STRID(Event) };
 
   forte::core::util::CIfSpecBuilder isb;
   isb.mEI.setStaticEvents(anEventInputNames);
   isb.mEO.setStaticEvents(anEventOutputNames);
   isb.mEITypes.setStaticEvents(anEventInputTypes);
   isb.mEOTypes.setStaticEvents(anEventOutputTypes);
-  isb.mDI.addDataRange("IN", static_cast<int>(mDInputs), g_nStringIdANY_MAGNITUDE);
+  isb.mDI.addDataRange("IN", static_cast<int>(mDInputs), STRID(ANY_MAGNITUDE));
   isb.mDO.setStaticData(anDataOutputNames, anDataOutputTypeIds);
   return isb.build(mIfSpecStorage, paInterfaceSpec);
 }

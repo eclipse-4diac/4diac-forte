@@ -12,9 +12,15 @@
  *******************************************************************************/
 
 #include "E_SR_fbt.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "E_SR_fbt_gen.cpp"
-#endif
+
+USE_STRING_ID(BOOL);
+USE_STRING_ID(EO);
+USE_STRING_ID(E_SR);
+USE_STRING_ID(Event);
+USE_STRING_ID(Q);
+USE_STRING_ID(R);
+USE_STRING_ID(S);
+
 
 #include "criticalregion.h"
 #include "resource.h"
@@ -25,17 +31,17 @@
 #include "forte_array_fixed.h"
 #include "forte_array_variable.h"
 
-DEFINE_FIRMWARE_FB(FORTE_E_SR, g_nStringIdE_SR)
+DEFINE_FIRMWARE_FB(FORTE_E_SR, STRID(E_SR))
 
-const CStringDictionary::TStringId FORTE_E_SR::scmDataOutputNames[] = {g_nStringIdQ};
-const CStringDictionary::TStringId FORTE_E_SR::scmDataOutputTypeIds[] = {g_nStringIdBOOL};
+const CStringDictionary::TStringId FORTE_E_SR::scmDataOutputNames[] = {STRID(Q)};
+const CStringDictionary::TStringId FORTE_E_SR::scmDataOutputTypeIds[] = {STRID(BOOL)};
 const TForteInt16 FORTE_E_SR::scmEIWithIndexes[] = {-1, -1};
-const CStringDictionary::TStringId FORTE_E_SR::scmEventInputNames[] = {g_nStringIdS, g_nStringIdR};
-const CStringDictionary::TStringId FORTE_E_SR::scmEventInputTypeIds[] = {g_nStringIdEvent, g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_E_SR::scmEventInputNames[] = {STRID(S), STRID(R)};
+const CStringDictionary::TStringId FORTE_E_SR::scmEventInputTypeIds[] = {STRID(Event), STRID(Event)};
 const TDataIOID FORTE_E_SR::scmEOWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_E_SR::scmEOWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_E_SR::scmEventOutputNames[] = {g_nStringIdEO};
-const CStringDictionary::TStringId FORTE_E_SR::scmEventOutputTypeIds[] = {g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_E_SR::scmEventOutputNames[] = {STRID(EO)};
+const CStringDictionary::TStringId FORTE_E_SR::scmEventOutputTypeIds[] = {STRID(Event)};
 const SFBInterfaceSpec FORTE_E_SR::scmFBInterfaceSpec = {
   2, scmEventInputNames, scmEventInputTypeIds, nullptr, scmEIWithIndexes,
   1, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes,

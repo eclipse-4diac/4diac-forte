@@ -11,22 +11,30 @@
  *******************************************************************************/
 
 #include "SubscribeEventAdp_adp.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "SubscribeEventAdp_adp_gen.cpp"
-#endif
 
-DEFINE_ADAPTER_TYPE(FORTE_SubscribeEventAdp, g_nStringIdSubscribeEventAdp)
+USE_STRING_ID(endpoint);
+USE_STRING_ID(eventFilter);
+USE_STRING_ID(EventFilter);
+USE_STRING_ID(Subscribe);
+USE_STRING_ID(Subscribed);
+USE_STRING_ID(SubscribeEventAdp);
+USE_STRING_ID(Unsubscribe);
+USE_STRING_ID(Unsubscribed);
+USE_STRING_ID(WSTRING);
 
-const CStringDictionary::TStringId FORTE_SubscribeEventAdp::scmDataOutputNames[] = {g_nStringIdeventFilter, g_nStringIdendpoint};
 
-const CStringDictionary::TStringId FORTE_SubscribeEventAdp::scmDataOutputTypeIds[] = {g_nStringIdEventFilter, g_nStringIdWSTRING};
+DEFINE_ADAPTER_TYPE(FORTE_SubscribeEventAdp, STRID(SubscribeEventAdp))
+
+const CStringDictionary::TStringId FORTE_SubscribeEventAdp::scmDataOutputNames[] = {STRID(eventFilter), STRID(endpoint)};
+
+const CStringDictionary::TStringId FORTE_SubscribeEventAdp::scmDataOutputTypeIds[] = {STRID(EventFilter), STRID(WSTRING)};
 
 const TForteInt16 FORTE_SubscribeEventAdp::scmEIWithIndexes[] = {-1, -1, -1};
-const CStringDictionary::TStringId FORTE_SubscribeEventAdp::scmEventInputNames[] = {g_nStringIdSubscribed, g_nStringIdUnsubscribed};
+const CStringDictionary::TStringId FORTE_SubscribeEventAdp::scmEventInputNames[] = {STRID(Subscribed), STRID(Unsubscribed)};
 
 const TDataIOID FORTE_SubscribeEventAdp::scmEOWith[] = {0, 1, scmWithListDelimiter, 1, 0, scmWithListDelimiter};
 const TForteInt16 FORTE_SubscribeEventAdp::scmEOWithIndexes[] = {0, 3, -1};
-const CStringDictionary::TStringId FORTE_SubscribeEventAdp::scmEventOutputNames[] = {g_nStringIdSubscribe, g_nStringIdUnsubscribe};
+const CStringDictionary::TStringId FORTE_SubscribeEventAdp::scmEventOutputNames[] = {STRID(Subscribe), STRID(Unsubscribe)};
 
 const SFBInterfaceSpec FORTE_SubscribeEventAdp::scmFBInterfaceSpecSocket = {
   2,  scmEventInputNames, scmEventInputTypeIds, 0,  scmEIWithIndexes,

@@ -12,13 +12,13 @@
  *******************************************************************************/
 #include "../../core/fbtests/fbtestfixture.h"
 
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "F_DIVTIME_tester_gen.cpp"
-#endif
+
+USE_STRING_ID(F_DIVTIME);
+
 
 struct F_DIVTIME_TestFixture : public CFBTestFixtureBase{
 
-  F_DIVTIME_TestFixture() : CFBTestFixtureBase(g_nStringIdF_DIVTIME) {
+  F_DIVTIME_TestFixture() : CFBTestFixtureBase(STRID(F_DIVTIME)) {
     setInputData({&mIn_TIME_DIVTIME, &mIn_REAL_DIVTIME});
     setOutputData({&mOut_TIME_DIVTIME});
     CFBTestFixtureBase::setup();

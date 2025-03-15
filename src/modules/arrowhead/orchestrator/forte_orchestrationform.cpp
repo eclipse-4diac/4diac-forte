@@ -11,17 +11,28 @@
  *******************************************************************************/
 
 #include "forte_orchestrationform.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "forte_orchestrationform_gen.cpp"
-#endif
 
-DEFINE_FIRMWARE_DATATYPE(OrchestrationForm, g_nStringIdOrchestrationForm);
+USE_STRING_ID(ARRAY);
+USE_STRING_ID(ArrowheadService);
+USE_STRING_ID(ArrowheadSystem);
+USE_STRING_ID(authorizationToken);
+USE_STRING_ID(instruction);
+USE_STRING_ID(OrchestrationForm);
+USE_STRING_ID(provider);
+USE_STRING_ID(service);
+USE_STRING_ID(serviceURI);
+USE_STRING_ID(signature);
+USE_STRING_ID(warnings);
+USE_STRING_ID(WSTRING);
+
+
+DEFINE_FIRMWARE_DATATYPE(OrchestrationForm, STRID(OrchestrationForm));
 
 CIEC_OrchestrationForm::CIEC_OrchestrationForm() :
-    CIEC_STRUCT(g_nStringIdOrchestrationForm, 7, scmElementTypes, scmElementNames, e_APPLICATION + e_CONSTRUCTED + 1) {
+    CIEC_STRUCT(STRID(OrchestrationForm), 7, scmElementTypes, scmElementNames, e_APPLICATION + e_CONSTRUCTED + 1) {
 }
 
-const CStringDictionary::TStringId CIEC_OrchestrationForm::scmElementTypes[] = { g_nStringIdArrowheadService, g_nStringIdArrowheadSystem, g_nStringIdWSTRING,
-  g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdARRAY, 10, g_nStringIdWSTRING };
-const CStringDictionary::TStringId CIEC_OrchestrationForm::scmElementNames[] = { g_nStringIdservice, g_nStringIdprovider, g_nStringIdserviceURI,
-  g_nStringIdinstruction, g_nStringIdauthorizationToken, g_nStringIdsignature, g_nStringIdwarnings };
+const CStringDictionary::TStringId CIEC_OrchestrationForm::scmElementTypes[] = { STRID(ArrowheadService), STRID(ArrowheadSystem), STRID(WSTRING),
+  STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(ARRAY), 10, STRID(WSTRING) };
+const CStringDictionary::TStringId CIEC_OrchestrationForm::scmElementNames[] = { STRID(service), STRID(provider), STRID(serviceURI),
+  STRID(instruction), STRID(authorizationToken), STRID(signature), STRID(warnings) };

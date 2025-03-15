@@ -16,9 +16,9 @@
 #pragma once
 
 #include "funcbloc.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "forte_any_gen.cpp"
-#endif
+
+USE_STRING_ID(ANY);
+
 
 template <class T>
 class CGenFunctionBlock : public T {
@@ -276,7 +276,7 @@ void CGenFunctionBlock<T>::generateGenericDataPointArrays(const char * const paP
   generateGenericInterfacePointNameArray(paPrefix, paNamesArrayStart, paNumGenericDataPoints);
 
   for(size_t i = 0; i < paNumGenericDataPoints; i++){
-    paDataTypeNamesArrayStart[i] = g_nStringIdANY;
+    paDataTypeNamesArrayStart[i] = STRID(ANY);
   }
 }
 

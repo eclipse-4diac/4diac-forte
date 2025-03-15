@@ -11,15 +11,19 @@
  *******************************************************************************/
 
 #include "forte_preferredprovider.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "forte_preferredprovider_gen.cpp"
-#endif
 
-DEFINE_FIRMWARE_DATATYPE(PreferredProvider, g_nStringIdPreferredProvider);
+USE_STRING_ID(ArrowheadCloud);
+USE_STRING_ID(ArrowheadSystem);
+USE_STRING_ID(PreferredProvider);
+USE_STRING_ID(providerCloud);
+USE_STRING_ID(providerSystem);
+
+
+DEFINE_FIRMWARE_DATATYPE(PreferredProvider, STRID(PreferredProvider));
 
 CIEC_PreferredProvider::CIEC_PreferredProvider() :
-    CIEC_STRUCT(g_nStringIdPreferredProvider, 2, scmElementTypes, scmElementNames, e_APPLICATION + e_CONSTRUCTED + 1) {
+    CIEC_STRUCT(STRID(PreferredProvider), 2, scmElementTypes, scmElementNames, e_APPLICATION + e_CONSTRUCTED + 1) {
 }
 
-const CStringDictionary::TStringId CIEC_PreferredProvider::scmElementTypes[] = { g_nStringIdArrowheadSystem, g_nStringIdArrowheadCloud };
-const CStringDictionary::TStringId CIEC_PreferredProvider::scmElementNames[] = { g_nStringIdproviderSystem, g_nStringIdproviderCloud };
+const CStringDictionary::TStringId CIEC_PreferredProvider::scmElementTypes[] = { STRID(ArrowheadSystem), STRID(ArrowheadCloud) };
+const CStringDictionary::TStringId CIEC_PreferredProvider::scmElementNames[] = { STRID(providerSystem), STRID(providerCloud) };

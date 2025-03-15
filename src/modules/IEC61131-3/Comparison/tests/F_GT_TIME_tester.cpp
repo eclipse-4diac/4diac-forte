@@ -11,19 +11,23 @@
  *   - initial API and implementation and/or initial documentation
  *******************************************************************************/
 #include <F_GT_TIME_tester.h>
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "F_GT_TIME_gen.cpp"
-#endif
 
-DEFINE_FB_TESTER(F_GT_TIME_tester, g_nStringIdF_GT)
+USE_STRING_ID(CNF);
+USE_STRING_ID(F_GT);
+USE_STRING_ID(IN1);
+USE_STRING_ID(IN2);
+USE_STRING_ID(OUT);
+
+
+DEFINE_FB_TESTER(F_GT_TIME_tester, STRID(F_GT))
 
 F_GT_TIME_tester::F_GT_TIME_tester(CResource *mTestResource) :
     CFBTester(mTestee, mTestResource),
         mTestee(0, mTestResource),
-        mOut_EO_Conn(mTestee, g_nStringIdCNF),
-        mIn_IN1_Conn(mTestee, g_nStringIdIN1, &mIN1),
-        mIn_IN2_Conn(mTestee, g_nStringIdIN2, &mIN2),
-        mOut_OUT_Conn(mTestee, g_nStringIdOUT, &mOut_OUT){
+        mOut_EO_Conn(mTestee, STRID(CNF)),
+        mIn_IN1_Conn(mTestee, STRID(IN1), &mIN1),
+        mIn_IN2_Conn(mTestee, STRID(IN2), &mIN2),
+        mOut_OUT_Conn(mTestee, STRID(OUT), &mOut_OUT){
   mTestee.changeExecutionState(EMGMCommandType::Start);
 }
 

@@ -12,16 +12,20 @@
  *     - initial API and implementation and/or initial documentation
  *******************************************************************************/
 #include "E_RESTART_fbt.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "E_RESTART_fbt_gen.cpp"
-#endif
+
+USE_STRING_ID(COLD);
+USE_STRING_ID(E_RESTART);
+USE_STRING_ID(Event);
+USE_STRING_ID(STOP);
+USE_STRING_ID(WARM);
+
 #include "../../core/device.h"
 
-DEFINE_FIRMWARE_FB(FORTE_E_RESTART, g_nStringIdE_RESTART)
+DEFINE_FIRMWARE_FB(FORTE_E_RESTART, STRID(E_RESTART))
 
 const TForteInt16 FORTE_E_RESTART::scmEOWithIndexes[] = {-1, -1, -1};
-const CStringDictionary::TStringId FORTE_E_RESTART::scmEventOutputNames[] = {g_nStringIdCOLD, g_nStringIdWARM, g_nStringIdSTOP};
-const CStringDictionary::TStringId FORTE_E_RESTART::scmEventOutputTypeIds[] = {g_nStringIdEvent, g_nStringIdEvent, g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_E_RESTART::scmEventOutputNames[] = {STRID(COLD), STRID(WARM), STRID(STOP)};
+const CStringDictionary::TStringId FORTE_E_RESTART::scmEventOutputTypeIds[] = {STRID(Event), STRID(Event), STRID(Event)};
 const SFBInterfaceSpec FORTE_E_RESTART::scmFBInterfaceSpec = {
   0, nullptr, nullptr, nullptr, nullptr,
   3, scmEventOutputNames, scmEventOutputTypeIds, nullptr, scmEOWithIndexes,

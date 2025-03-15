@@ -16,23 +16,29 @@
  *    Martin Jobst - add generic readInputData and writeOutputData
  *******************************************************************************/
 #include "GEN_ARRAY2ARRAY_fbt.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "GEN_ARRAY2ARRAY_fbt_gen.cpp"
-#endif
+
+USE_STRING_ID(ARRAY);
+USE_STRING_ID(CNF);
+USE_STRING_ID(Event);
+USE_STRING_ID(GEN_ARRAY2ARRAY);
+USE_STRING_ID(IN);
+USE_STRING_ID(OUT);
+USE_STRING_ID(REQ);
+
 
 #include "resource.h"
 #include "criticalregion.h"
 
-DEFINE_GENERIC_FIRMWARE_FB(GEN_ARRAY2ARRAY, g_nStringIdGEN_ARRAY2ARRAY)
+DEFINE_GENERIC_FIRMWARE_FB(GEN_ARRAY2ARRAY, STRID(GEN_ARRAY2ARRAY))
 
-const CStringDictionary::TStringId GEN_ARRAY2ARRAY::scmDataInputNames[] = { g_nStringIdIN };
-const CStringDictionary::TStringId GEN_ARRAY2ARRAY::scmDataOutputNames[] = { g_nStringIdOUT };
+const CStringDictionary::TStringId GEN_ARRAY2ARRAY::scmDataInputNames[] = { STRID(IN) };
+const CStringDictionary::TStringId GEN_ARRAY2ARRAY::scmDataOutputNames[] = { STRID(OUT) };
 
-const CStringDictionary::TStringId GEN_ARRAY2ARRAY::scmEventInputNames[] = { g_nStringIdREQ };
-const CStringDictionary::TStringId GEN_ARRAY2ARRAY::scmEventInputTypeIds[] = {g_nStringIdEvent};
+const CStringDictionary::TStringId GEN_ARRAY2ARRAY::scmEventInputNames[] = { STRID(REQ) };
+const CStringDictionary::TStringId GEN_ARRAY2ARRAY::scmEventInputTypeIds[] = {STRID(Event)};
 
-const CStringDictionary::TStringId GEN_ARRAY2ARRAY::scmEventOutputNames[] = { g_nStringIdCNF };
-const CStringDictionary::TStringId GEN_ARRAY2ARRAY::scmEventOutputTypeIds[] = {g_nStringIdEvent};
+const CStringDictionary::TStringId GEN_ARRAY2ARRAY::scmEventOutputNames[] = { STRID(CNF) };
+const CStringDictionary::TStringId GEN_ARRAY2ARRAY::scmEventOutputTypeIds[] = {STRID(Event)};
 
 GEN_ARRAY2ARRAY::GEN_ARRAY2ARRAY(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CGenFunctionBlock<CFunctionBlock>(paContainer, paInstanceNameId) {
@@ -82,12 +88,12 @@ bool GEN_ARRAY2ARRAY::createInterfaceSpec(const char *paConfigString, SFBInterfa
 
   if(m_ValueTypeID != CStringDictionary::scmInvalidStringId && mArrayLength >= 1){
     //create data input type
-    mDataInputTypeIds[0] = g_nStringIdARRAY;
+    mDataInputTypeIds[0] = STRID(ARRAY);
     mDataInputTypeIds[1] = mArrayLength;
     mDataInputTypeIds[2] = m_ValueTypeID;
 
     //create data output type
-    mDataOutputTypeIds[0] = g_nStringIdARRAY;
+    mDataOutputTypeIds[0] = STRID(ARRAY);
     mDataOutputTypeIds[1] = mArrayLength;
     mDataOutputTypeIds[2] = m_ValueTypeID;
 

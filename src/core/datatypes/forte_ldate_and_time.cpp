@@ -17,15 +17,15 @@
 #include <string.h>
 #include <ctype.h>
 #include "forte_ldate_and_time.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "forte_ldate_and_time_gen.cpp"
-#endif
+
+USE_STRING_ID(LDATE_AND_TIME);
+
 #include "forte_ldate.h"
 #include "forte_ltime_of_day.h"
 #include "../../arch/timerha.h"
 #include <forte_printer.h>
 
-DEFINE_FIRMWARE_DATATYPE(LDATE_AND_TIME, g_nStringIdLDATE_AND_TIME)
+DEFINE_FIRMWARE_DATATYPE(LDATE_AND_TIME, STRID(LDATE_AND_TIME))
 
 int CIEC_LDATE_AND_TIME::fromString(const char *paValue){
   // 2007-12-21-15:00:00.000

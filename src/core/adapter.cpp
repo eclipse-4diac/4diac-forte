@@ -14,9 +14,9 @@
  *******************************************************************************/
 #include <string.h>
 #include "adapter.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "adapter_gen.cpp"
-#endif
+
+USE_STRING_ID(ANY_ADAPTER);
+
 #include "adapterconn.h"
 #include "ecet.h"
 
@@ -102,7 +102,7 @@ bool CAdapter::disconnect(CAdapterConnection *paAdConn){
 
 bool CAdapter::isCompatible(CAdapter *paPeer) const {
   //Need to check any adapter here as we don't know which adapter side is used for checking compatibility
-  return ((getFBTypeId() == paPeer->getFBTypeId()) || ((getFBTypeId() == g_nStringIdANY_ADAPTER) && (g_nStringIdANY_ADAPTER != paPeer->getFBTypeId())) || ((getFBTypeId() != g_nStringIdANY_ADAPTER) && (g_nStringIdANY_ADAPTER == paPeer->getFBTypeId())));
+  return ((getFBTypeId() == paPeer->getFBTypeId()) || ((getFBTypeId() == STRID(ANY_ADAPTER)) && (STRID(ANY_ADAPTER) != paPeer->getFBTypeId())) || ((getFBTypeId() != STRID(ANY_ADAPTER)) && (STRID(ANY_ADAPTER) == paPeer->getFBTypeId())));
 }
 
 void CAdapter::executeEvent(TEventID paEIID, CEventChainExecutionThread * const paECET){

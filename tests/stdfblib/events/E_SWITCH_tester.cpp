@@ -14,14 +14,14 @@
 #include "../../core/fbtests/fbtestfixture.h"
 #include <forte_bool.h>
 
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "E_SWITCH_tester_gen.cpp"
-#endif
+
+USE_STRING_ID(E_SWITCH);
+
 
 struct E_SWITCH_TestFixture : public CFBTestFixtureBase {
 
     E_SWITCH_TestFixture() :
-        CFBTestFixtureBase(g_nStringIdE_SWITCH) {
+        CFBTestFixtureBase(STRID(E_SWITCH)) {
       setInputData({&mInG});
       CFBTestFixtureBase::setup();
     }

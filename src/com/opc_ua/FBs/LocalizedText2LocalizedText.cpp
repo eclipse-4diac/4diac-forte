@@ -12,32 +12,38 @@
  *******************************************************************************/
 
 #include "LocalizedText2LocalizedText.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "LocalizedText2LocalizedText_gen.cpp"
-#endif
+
+USE_STRING_ID(CNF);
+USE_STRING_ID(Event);
+USE_STRING_ID(IN);
+USE_STRING_ID(LocalizedText);
+USE_STRING_ID(LocalizedText2LocalizedText);
+USE_STRING_ID(OUT);
+USE_STRING_ID(REQ);
+
 
 #include "criticalregion.h"
 #include "resource.h"
 
-DEFINE_FIRMWARE_FB(FORTE_LocalizedText2LocalizedText, g_nStringIdLocalizedText2LocalizedText)
+DEFINE_FIRMWARE_FB(FORTE_LocalizedText2LocalizedText, STRID(LocalizedText2LocalizedText))
 
-const CStringDictionary::TStringId FORTE_LocalizedText2LocalizedText::scmDataInputNames[] = {g_nStringIdIN};
+const CStringDictionary::TStringId FORTE_LocalizedText2LocalizedText::scmDataInputNames[] = {STRID(IN)};
 
-const CStringDictionary::TStringId FORTE_LocalizedText2LocalizedText::scmDataInputTypeIds[] = {g_nStringIdLocalizedText};
+const CStringDictionary::TStringId FORTE_LocalizedText2LocalizedText::scmDataInputTypeIds[] = {STRID(LocalizedText)};
 
-const CStringDictionary::TStringId FORTE_LocalizedText2LocalizedText::scmDataOutputNames[] = {g_nStringIdOUT};
+const CStringDictionary::TStringId FORTE_LocalizedText2LocalizedText::scmDataOutputNames[] = {STRID(OUT)};
 
-const CStringDictionary::TStringId FORTE_LocalizedText2LocalizedText::scmDataOutputTypeIds[] = {g_nStringIdLocalizedText};
+const CStringDictionary::TStringId FORTE_LocalizedText2LocalizedText::scmDataOutputTypeIds[] = {STRID(LocalizedText)};
 
 const TForteInt16 FORTE_LocalizedText2LocalizedText::scmEIWithIndexes[] = {0};
 const TDataIOID FORTE_LocalizedText2LocalizedText::scmEIWith[] = {0, scmWithListDelimiter};
-const CStringDictionary::TStringId FORTE_LocalizedText2LocalizedText::scmEventInputNames[] = {g_nStringIdREQ};
-const CStringDictionary::TStringId FORTE_LocalizedText2LocalizedText::scmEventInputTypeIds[] = {g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_LocalizedText2LocalizedText::scmEventInputNames[] = {STRID(REQ)};
+const CStringDictionary::TStringId FORTE_LocalizedText2LocalizedText::scmEventInputTypeIds[] = {STRID(Event)};
 
 const TDataIOID FORTE_LocalizedText2LocalizedText::scmEOWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_LocalizedText2LocalizedText::scmEOWithIndexes[] = {0, -1};
-const CStringDictionary::TStringId FORTE_LocalizedText2LocalizedText::scmEventOutputNames[] = {g_nStringIdCNF};
-const CStringDictionary::TStringId FORTE_LocalizedText2LocalizedText::scmEventOutputTypeIds[] = {g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_LocalizedText2LocalizedText::scmEventOutputNames[] = {STRID(CNF)};
+const CStringDictionary::TStringId FORTE_LocalizedText2LocalizedText::scmEventOutputTypeIds[] = {STRID(Event)};
 
 const SFBInterfaceSpec FORTE_LocalizedText2LocalizedText::scmFBInterfaceSpec = {
   1,  scmEventInputNames, scmEventInputTypeIds,  scmEIWith,  scmEIWithIndexes,

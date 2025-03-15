@@ -18,9 +18,15 @@
  *************************************************************************/
 
 #include "E_T_FF_SR_fbt.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "E_T_FF_SR_fbt_gen.cpp"
-#endif
+
+USE_STRING_ID(BOOL);
+USE_STRING_ID(CLK);
+USE_STRING_ID(EO);
+USE_STRING_ID(E_T_FF_SR);
+USE_STRING_ID(Q);
+USE_STRING_ID(R);
+USE_STRING_ID(S);
+
 
 #include "forte_bool.h"
 #include "iec61131_functions.h"
@@ -29,15 +35,15 @@
 #include "forte_array_fixed.h"
 #include "forte_array_variable.h"
 
-DEFINE_FIRMWARE_FB(FORTE_E_T_FF_SR, g_nStringIdE_T_FF_SR)
+DEFINE_FIRMWARE_FB(FORTE_E_T_FF_SR, STRID(E_T_FF_SR))
 
-const CStringDictionary::TStringId FORTE_E_T_FF_SR::scmDataOutputNames[] = {g_nStringIdQ};
-const CStringDictionary::TStringId FORTE_E_T_FF_SR::scmDataOutputTypeIds[] = {g_nStringIdBOOL};
+const CStringDictionary::TStringId FORTE_E_T_FF_SR::scmDataOutputNames[] = {STRID(Q)};
+const CStringDictionary::TStringId FORTE_E_T_FF_SR::scmDataOutputTypeIds[] = {STRID(BOOL)};
 const TForteInt16 FORTE_E_T_FF_SR::scmEIWithIndexes[] = {-1, -1, -1};
-const CStringDictionary::TStringId FORTE_E_T_FF_SR::scmEventInputNames[] = {g_nStringIdS, g_nStringIdR, g_nStringIdCLK};
+const CStringDictionary::TStringId FORTE_E_T_FF_SR::scmEventInputNames[] = {STRID(S), STRID(R), STRID(CLK)};
 const TDataIOID FORTE_E_T_FF_SR::scmEOWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_E_T_FF_SR::scmEOWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_E_T_FF_SR::scmEventOutputNames[] = {g_nStringIdEO};
+const CStringDictionary::TStringId FORTE_E_T_FF_SR::scmEventOutputNames[] = {STRID(EO)};
 const SFBInterfaceSpec FORTE_E_T_FF_SR::scmFBInterfaceSpec = {
   3, scmEventInputNames, nullptr, nullptr, scmEIWithIndexes,
   1, scmEventOutputNames, nullptr, scmEOWith, scmEOWithIndexes,

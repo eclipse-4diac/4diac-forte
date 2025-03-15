@@ -18,9 +18,9 @@
 #include <stdio.h>
 #include <errno.h>
 #include "forte_lreal.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "forte_lreal_gen.cpp"
-#endif
+
+USE_STRING_ID(LREAL);
+
 
 #include "forte_real.h"
 #include "forte_string.h"
@@ -30,7 +30,7 @@
 
 #include <forte_printer.h>
 
-DEFINE_FIRMWARE_DATATYPE(LREAL, g_nStringIdLREAL)
+DEFINE_FIRMWARE_DATATYPE(LREAL, STRID(LREAL))
 
 int CIEC_LREAL::fromString(const char *paValue){
   char *pcEnd;

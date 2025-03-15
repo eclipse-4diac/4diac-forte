@@ -10,29 +10,46 @@
  *   Matthias Plasch, Gerhard Ebenhofer, Alois Zoitl - initial API and implementation and/or initial documentation
  *******************************************************************************/
 #include "ST_REC_CONN_fbt.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "ST_REC_CONN_fbt_gen.cpp"
-#endif
+
+USE_STRING_ID(BOOL);
+USE_STRING_ID(CNF);
+USE_STRING_ID(DST);
+USE_STRING_ID(Event);
+USE_STRING_ID(NEW_DST_FB);
+USE_STRING_ID(NEW_DST_FB_IN);
+USE_STRING_ID(NEW_SRC_FB);
+USE_STRING_ID(NEW_SRC_FB_OUT);
+USE_STRING_ID(OLD_DST_FB);
+USE_STRING_ID(OLD_DST_FB_IN);
+USE_STRING_ID(OLD_SRC_FB);
+USE_STRING_ID(OLD_SRC_FB_OUT);
+USE_STRING_ID(QI);
+USE_STRING_ID(QO);
+USE_STRING_ID(REQ);
+USE_STRING_ID(STATUS);
+USE_STRING_ID(ST_REC_CONN);
+USE_STRING_ID(WSTRING);
+
 
 #include "criticalregion.h"
 #include "resource.h"
 
 #include "device.h"
 
-DEFINE_FIRMWARE_FB(FORTE_ST_REC_CONN, g_nStringIdST_REC_CONN)
+DEFINE_FIRMWARE_FB(FORTE_ST_REC_CONN, STRID(ST_REC_CONN))
 
-const CStringDictionary::TStringId FORTE_ST_REC_CONN::scmDataInputNames[] = {g_nStringIdQI, g_nStringIdOLD_SRC_FB, g_nStringIdOLD_SRC_FB_OUT, g_nStringIdOLD_DST_FB, g_nStringIdOLD_DST_FB_IN, g_nStringIdNEW_SRC_FB, g_nStringIdNEW_SRC_FB_OUT, g_nStringIdNEW_DST_FB, g_nStringIdNEW_DST_FB_IN, g_nStringIdDST};
-const CStringDictionary::TStringId FORTE_ST_REC_CONN::scmDataInputTypeIds[] = {g_nStringIdBOOL, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING};
-const CStringDictionary::TStringId FORTE_ST_REC_CONN::scmDataOutputNames[] = {g_nStringIdQO, g_nStringIdSTATUS};
-const CStringDictionary::TStringId FORTE_ST_REC_CONN::scmDataOutputTypeIds[] = {g_nStringIdBOOL, g_nStringIdWSTRING};
+const CStringDictionary::TStringId FORTE_ST_REC_CONN::scmDataInputNames[] = {STRID(QI), STRID(OLD_SRC_FB), STRID(OLD_SRC_FB_OUT), STRID(OLD_DST_FB), STRID(OLD_DST_FB_IN), STRID(NEW_SRC_FB), STRID(NEW_SRC_FB_OUT), STRID(NEW_DST_FB), STRID(NEW_DST_FB_IN), STRID(DST)};
+const CStringDictionary::TStringId FORTE_ST_REC_CONN::scmDataInputTypeIds[] = {STRID(BOOL), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING)};
+const CStringDictionary::TStringId FORTE_ST_REC_CONN::scmDataOutputNames[] = {STRID(QO), STRID(STATUS)};
+const CStringDictionary::TStringId FORTE_ST_REC_CONN::scmDataOutputTypeIds[] = {STRID(BOOL), STRID(WSTRING)};
 const TDataIOID FORTE_ST_REC_CONN::scmEIWith[] = {1, 2, 3, 4, 9, 5, 6, 7, 8, 0, scmWithListDelimiter};
 const TForteInt16 FORTE_ST_REC_CONN::scmEIWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_ST_REC_CONN::scmEventInputNames[] = {g_nStringIdREQ};
-const CStringDictionary::TStringId FORTE_ST_REC_CONN::scmEventInputTypeIds[] = {g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_ST_REC_CONN::scmEventInputNames[] = {STRID(REQ)};
+const CStringDictionary::TStringId FORTE_ST_REC_CONN::scmEventInputTypeIds[] = {STRID(Event)};
 const TDataIOID FORTE_ST_REC_CONN::scmEOWith[] = {1, 0, scmWithListDelimiter};
 const TForteInt16 FORTE_ST_REC_CONN::scmEOWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_ST_REC_CONN::scmEventOutputNames[] = {g_nStringIdCNF};
-const CStringDictionary::TStringId FORTE_ST_REC_CONN::scmEventOutputTypeIds[] = {g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_ST_REC_CONN::scmEventOutputNames[] = {STRID(CNF)};
+const CStringDictionary::TStringId FORTE_ST_REC_CONN::scmEventOutputTypeIds[] = {STRID(Event)};
 const SFBInterfaceSpec FORTE_ST_REC_CONN::scmFBInterfaceSpec = {
   1, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,
   1, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes,

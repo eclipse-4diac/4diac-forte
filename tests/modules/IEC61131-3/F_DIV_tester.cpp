@@ -13,13 +13,13 @@
  *******************************************************************************/
 #include "../../core/fbtests/fbtestfixture.h"
 
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "F_DIV_tester_gen.cpp"
-#endif
+
+USE_STRING_ID(F_DIV);
+
 
 struct F_DIV_TestFixture : public CFBTestFixtureBase{
 
-  F_DIV_TestFixture() : CFBTestFixtureBase(g_nStringIdF_DIV) {
+  F_DIV_TestFixture() : CFBTestFixtureBase(STRID(F_DIV)) {
     setInputData({&mIn1_DIV, &mIn2_DIV});
     setOutputData({&mOut_DIV});
     CFBTestFixtureBase::setup();

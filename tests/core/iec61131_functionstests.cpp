@@ -37,9 +37,13 @@
 
 using namespace std::string_literals;
 
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "iec61131_functionstests_gen.cpp"
-#endif
+
+USE_STRING_ID(EndianessTestStruct);
+USE_STRING_ID(LWORD);
+USE_STRING_ID(Val1);
+USE_STRING_ID(Val2);
+USE_STRING_ID(Val3);
+
 
 /*** STRUCT for tests *********/
 class CIEC_EndianessTestStruct : public CIEC_STRUCT {
@@ -64,7 +68,7 @@ public:
     }
 
     CStringDictionary::TStringId getStructTypeNameID() const override {
-      return g_nStringIdEndianessTestStruct;
+      return STRID(EndianessTestStruct);
     }
 
     CIEC_ANY *getMember(size_t paMemberIndex) override {
@@ -88,9 +92,9 @@ private:
   static const CStringDictionary::TStringId scmElementNames[];
 };
 
-const CStringDictionary::TStringId CIEC_EndianessTestStruct::scmElementNames[] = {g_nStringIdVal1, g_nStringIdVal2, g_nStringIdVal3};
+const CStringDictionary::TStringId CIEC_EndianessTestStruct::scmElementNames[] = {STRID(Val1), STRID(Val2), STRID(Val3)};
 
-DEFINE_FIRMWARE_DATATYPE(EndianessTestStruct, g_nStringIdEndianessTestStruct)
+DEFINE_FIRMWARE_DATATYPE(EndianessTestStruct, STRID(EndianessTestStruct))
 
 void testSTInIsOutBoolDummyFunction(CIEC_BOOL paIn, CIEC_BOOL &paOut) {
   paOut = paIn;
@@ -2114,7 +2118,7 @@ BOOST_AUTO_TEST_CASE(func_to_big_endian_array_variable_copy_ctor) {
 }
 
 BOOST_AUTO_TEST_CASE(func_to_big_endian_array_typelib_copy_ctor) {
-  CIEC_ARRAY_DYNAMIC originalArray(3, g_nStringIdLWORD);
+  CIEC_ARRAY_DYNAMIC originalArray(3, STRID(LWORD));
   originalArray[0].setValue(CIEC_LWORD(1));
   originalArray[1].setValue(CIEC_LWORD(2));
   originalArray[2].setValue(CIEC_LWORD(3));
@@ -2128,15 +2132,15 @@ BOOST_AUTO_TEST_CASE(func_to_big_endian_array_typelib_copy_ctor) {
 BOOST_AUTO_TEST_CASE(func_to_big_endian_struct){
   CIEC_EndianessTestStruct original;
 
-  (*static_cast<CIEC_BOOL *>(original.getMemberNamed(g_nStringIdVal1))) = CIEC_BOOL(true);
-  (*static_cast<CIEC_DINT *>(original.getMemberNamed(g_nStringIdVal2))) = CIEC_DINT(55);
-  (*static_cast<CIEC_LWORD *>(original.getMemberNamed(g_nStringIdVal3))) = CIEC_LWORD(65536UL);
+  (*static_cast<CIEC_BOOL *>(original.getMemberNamed(STRID(Val1)))) = CIEC_BOOL(true);
+  (*static_cast<CIEC_DINT *>(original.getMemberNamed(STRID(Val2)))) = CIEC_DINT(55);
+  (*static_cast<CIEC_LWORD *>(original.getMemberNamed(STRID(Val3)))) = CIEC_LWORD(65536UL);
 
   CIEC_EndianessTestStruct reversed;
   reversed = func_TO_BIG_ENDIAN(original);
-  BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(*reinterpret_cast<CIEC_BOOL *>(reversed.getMemberNamed(g_nStringIdVal1))) == true);
-  BOOST_TEST(static_cast<CIEC_DINT::TValueType>(*reinterpret_cast<CIEC_DINT *>(reversed.getMemberNamed(g_nStringIdVal2))) == 922746880);
-  BOOST_TEST(static_cast<CIEC_LWORD::TValueType>(*reinterpret_cast<CIEC_LWORD *>(reversed.getMemberNamed(g_nStringIdVal3))) == 1099511627776);
+  BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(*reinterpret_cast<CIEC_BOOL *>(reversed.getMemberNamed(STRID(Val1)))) == true);
+  BOOST_TEST(static_cast<CIEC_DINT::TValueType>(*reinterpret_cast<CIEC_DINT *>(reversed.getMemberNamed(STRID(Val2)))) == 922746880);
+  BOOST_TEST(static_cast<CIEC_LWORD::TValueType>(*reinterpret_cast<CIEC_LWORD *>(reversed.getMemberNamed(STRID(Val3)))) == 1099511627776);
 }
 
 BOOST_AUTO_TEST_CASE(output_negation_bool_test){

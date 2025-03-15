@@ -13,9 +13,15 @@
  *******************************************************************************/
 
 #include "BOOL2BOOL_fbt.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "BOOL2BOOL_fbt_gen.cpp"
-#endif
+
+USE_STRING_ID(BOOL);
+USE_STRING_ID(BOOL2BOOL);
+USE_STRING_ID(CNF);
+USE_STRING_ID(Event);
+USE_STRING_ID(IN);
+USE_STRING_ID(OUT);
+USE_STRING_ID(REQ);
+
 
 #include "criticalregion.h"
 #include "resource.h"
@@ -26,25 +32,25 @@
 #include "forte_array_fixed.h"
 #include "forte_array_variable.h"
 
-DEFINE_FIRMWARE_FB(FORTE_BOOL2BOOL, g_nStringIdBOOL2BOOL)
+DEFINE_FIRMWARE_FB(FORTE_BOOL2BOOL, STRID(BOOL2BOOL))
 
-const CStringDictionary::TStringId FORTE_BOOL2BOOL::scmDataInputNames[] = {g_nStringIdIN};
+const CStringDictionary::TStringId FORTE_BOOL2BOOL::scmDataInputNames[] = {STRID(IN)};
 
-const CStringDictionary::TStringId FORTE_BOOL2BOOL::scmDataInputTypeIds[] = {g_nStringIdBOOL};
+const CStringDictionary::TStringId FORTE_BOOL2BOOL::scmDataInputTypeIds[] = {STRID(BOOL)};
 
-const CStringDictionary::TStringId FORTE_BOOL2BOOL::scmDataOutputNames[] = {g_nStringIdOUT};
+const CStringDictionary::TStringId FORTE_BOOL2BOOL::scmDataOutputNames[] = {STRID(OUT)};
 
-const CStringDictionary::TStringId FORTE_BOOL2BOOL::scmDataOutputTypeIds[] = {g_nStringIdBOOL};
+const CStringDictionary::TStringId FORTE_BOOL2BOOL::scmDataOutputTypeIds[] = {STRID(BOOL)};
 
 const TDataIOID FORTE_BOOL2BOOL::scmEIWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_BOOL2BOOL::scmEIWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_BOOL2BOOL::scmEventInputNames[] = {g_nStringIdREQ};
-const CStringDictionary::TStringId FORTE_BOOL2BOOL::scmEventInputTypeIds[] = {g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_BOOL2BOOL::scmEventInputNames[] = {STRID(REQ)};
+const CStringDictionary::TStringId FORTE_BOOL2BOOL::scmEventInputTypeIds[] = {STRID(Event)};
 
 const TDataIOID FORTE_BOOL2BOOL::scmEOWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_BOOL2BOOL::scmEOWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_BOOL2BOOL::scmEventOutputNames[] = {g_nStringIdCNF};
-const CStringDictionary::TStringId FORTE_BOOL2BOOL::scmEventOutputTypeIds[] = {g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_BOOL2BOOL::scmEventOutputNames[] = {STRID(CNF)};
+const CStringDictionary::TStringId FORTE_BOOL2BOOL::scmEventOutputTypeIds[] = {STRID(Event)};
 
 
 const SFBInterfaceSpec FORTE_BOOL2BOOL::scmFBInterfaceSpec = {

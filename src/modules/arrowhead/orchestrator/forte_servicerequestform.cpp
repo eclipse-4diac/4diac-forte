@@ -11,18 +11,30 @@
  *******************************************************************************/
 
 #include "forte_servicerequestform.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "forte_servicerequestform_gen.cpp"
-#endif
 
-DEFINE_FIRMWARE_DATATYPE(ServiceRequestForm, g_nStringIdServiceRequestForm);
+USE_STRING_ID(ARRAY);
+USE_STRING_ID(ArrowheadCloud);
+USE_STRING_ID(ArrowheadService);
+USE_STRING_ID(ArrowheadSystem);
+USE_STRING_ID(orchestrationFlags);
+USE_STRING_ID(PreferredProvider);
+USE_STRING_ID(preferredProviders);
+USE_STRING_ID(requestedQoS);
+USE_STRING_ID(requestedService);
+USE_STRING_ID(requesterCloud);
+USE_STRING_ID(requesterSystem);
+USE_STRING_ID(ServiceRequestForm);
+USE_STRING_ID(WSTRING);
+
+
+DEFINE_FIRMWARE_DATATYPE(ServiceRequestForm, STRID(ServiceRequestForm));
 
 CIEC_ServiceRequestForm::CIEC_ServiceRequestForm() :
-    CIEC_STRUCT(g_nStringIdServiceRequestForm, 6, scmElementTypes, scmElementNames, e_APPLICATION + e_CONSTRUCTED + 1) {
+    CIEC_STRUCT(STRID(ServiceRequestForm), 6, scmElementTypes, scmElementNames, e_APPLICATION + e_CONSTRUCTED + 1) {
 }
 
-const CStringDictionary::TStringId CIEC_ServiceRequestForm::scmElementTypes[] = { g_nStringIdArrowheadSystem, g_nStringIdArrowheadCloud,
-  g_nStringIdArrowheadService, g_nStringIdARRAY, 10, g_nStringIdWSTRING, g_nStringIdARRAY, 10, g_nStringIdPreferredProvider, g_nStringIdARRAY, 10,
-  g_nStringIdWSTRING };
-const CStringDictionary::TStringId CIEC_ServiceRequestForm::scmElementNames[] = { g_nStringIdrequesterSystem, g_nStringIdrequesterCloud,
-  g_nStringIdrequestedService, g_nStringIdorchestrationFlags, g_nStringIdpreferredProviders, g_nStringIdrequestedQoS };
+const CStringDictionary::TStringId CIEC_ServiceRequestForm::scmElementTypes[] = { STRID(ArrowheadSystem), STRID(ArrowheadCloud),
+  STRID(ArrowheadService), STRID(ARRAY), 10, STRID(WSTRING), STRID(ARRAY), 10, STRID(PreferredProvider), STRID(ARRAY), 10,
+  STRID(WSTRING) };
+const CStringDictionary::TStringId CIEC_ServiceRequestForm::scmElementNames[] = { STRID(requesterSystem), STRID(requesterCloud),
+  STRID(requestedService), STRID(orchestrationFlags), STRID(preferredProviders), STRID(requestedQoS) };

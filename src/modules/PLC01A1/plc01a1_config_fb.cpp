@@ -11,9 +11,37 @@
  *******************************************************************************/
 
 #include "plc01a1_config_fb.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "plc01a1_config_fb_gen.cpp"
-#endif
+
+USE_STRING_ID(BOOL);
+USE_STRING_ID(EInit);
+USE_STRING_ID(Event);
+USE_STRING_ID(IN1);
+USE_STRING_ID(IN2);
+USE_STRING_ID(IN3);
+USE_STRING_ID(IN4);
+USE_STRING_ID(IN5);
+USE_STRING_ID(IN6);
+USE_STRING_ID(IN7);
+USE_STRING_ID(IN8);
+USE_STRING_ID(IND);
+USE_STRING_ID(INIT);
+USE_STRING_ID(INITO);
+USE_STRING_ID(OUT1);
+USE_STRING_ID(OUT2);
+USE_STRING_ID(OUT3);
+USE_STRING_ID(OUT4);
+USE_STRING_ID(OUT5);
+USE_STRING_ID(OUT6);
+USE_STRING_ID(OUT7);
+USE_STRING_ID(OUT8);
+USE_STRING_ID(PLC01A1);
+USE_STRING_ID(QI);
+USE_STRING_ID(QO);
+USE_STRING_ID(STATUS);
+USE_STRING_ID(UINT);
+USE_STRING_ID(UpdateInterval);
+USE_STRING_ID(WSTRING);
+
 
 #include "forte_uint.h"
 #include "iec61131_functions.h"
@@ -23,28 +51,28 @@
 #include "forte_array_variable.h"
 #include "plc01a1_controller.h"
 
-DEFINE_FIRMWARE_FB(PLC01A1ConfigFB, g_nStringIdPLC01A1)
+DEFINE_FIRMWARE_FB(PLC01A1ConfigFB, STRID(PLC01A1))
 
 
-const CStringDictionary::TStringId PLC01A1ConfigFB::scmDataInputNames[] = { g_nStringIdQI, g_nStringIdIN1, g_nStringIdIN2, g_nStringIdIN3, g_nStringIdIN4,
-  g_nStringIdIN5, g_nStringIdIN6, g_nStringIdIN7, g_nStringIdIN8, g_nStringIdOUT1, g_nStringIdOUT2, g_nStringIdOUT3, g_nStringIdOUT4, g_nStringIdOUT5,
-  g_nStringIdOUT6, g_nStringIdOUT7, g_nStringIdOUT8, g_nStringIdUpdateInterval };
+const CStringDictionary::TStringId PLC01A1ConfigFB::scmDataInputNames[] = { STRID(QI), STRID(IN1), STRID(IN2), STRID(IN3), STRID(IN4),
+  STRID(IN5), STRID(IN6), STRID(IN7), STRID(IN8), STRID(OUT1), STRID(OUT2), STRID(OUT3), STRID(OUT4), STRID(OUT5),
+  STRID(OUT6), STRID(OUT7), STRID(OUT8), STRID(UpdateInterval) };
 
-const CStringDictionary::TStringId PLC01A1ConfigFB::scmDataInputTypeIds[] = { g_nStringIdBOOL, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING,
-  g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING,
-  g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdUINT };
+const CStringDictionary::TStringId PLC01A1ConfigFB::scmDataInputTypeIds[] = { STRID(BOOL), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING),
+  STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING),
+  STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(UINT) };
 
-const CStringDictionary::TStringId PLC01A1ConfigFB::scmDataOutputNames[] = { g_nStringIdQO, g_nStringIdSTATUS };
-const CStringDictionary::TStringId PLC01A1ConfigFB::scmDataOutputTypeIds[] = { g_nStringIdBOOL, g_nStringIdWSTRING };
+const CStringDictionary::TStringId PLC01A1ConfigFB::scmDataOutputNames[] = { STRID(QO), STRID(STATUS) };
+const CStringDictionary::TStringId PLC01A1ConfigFB::scmDataOutputTypeIds[] = { STRID(BOOL), STRID(WSTRING) };
 const TForteInt16 PLC01A1ConfigFB::scmEIWithIndexes[] = { 0 };
 const TDataIOID PLC01A1ConfigFB::scmEIWith[] = { 0, 17, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, scmWithListDelimiter };
 const TForteInt16 PLC01A1ConfigFB::scmEIWithIndexes[] = {0};
-const CStringDictionary::TStringId PLC01A1ConfigFB::scmEventInputNames[] = { g_nStringIdINIT };
-const CStringDictionary::TStringId PLC01A1ConfigFB::scmEventInputTypeIds[] = {g_nStringIdEInit};
+const CStringDictionary::TStringId PLC01A1ConfigFB::scmEventInputNames[] = { STRID(INIT) };
+const CStringDictionary::TStringId PLC01A1ConfigFB::scmEventInputTypeIds[] = {STRID(EInit)};
 const TDataIOID PLC01A1ConfigFB::scmEOWith[] = { 0, 1, scmWithListDelimiter, 0, 1, scmWithListDelimiter };
 const TForteInt16 PLC01A1ConfigFB::scmEOWithIndexes[] = { 0, 3, -1 };
-const CStringDictionary::TStringId PLC01A1ConfigFB::scmEventOutputNames[] = { g_nStringIdINITO, g_nStringIdIND };
-const CStringDictionary::TStringId PLC01A1ConfigFB::scmEventOutputTypeIds[] = {g_nStringIdEvent, g_nStringIdEvent};
+const CStringDictionary::TStringId PLC01A1ConfigFB::scmEventOutputNames[] = { STRID(INITO), STRID(IND) };
+const CStringDictionary::TStringId PLC01A1ConfigFB::scmEventOutputTypeIds[] = {STRID(Event), STRID(Event)};
 const SFBInterfaceSpec PLC01A1ConfigFB::scmFBInterfaceSpec = {
   1,  scmEventInputNames, scmEventInputTypeIds,  scmEIWith,  scmEIWithIndexes,
   2,  scmEventOutputNames, scmEventOutputTypeIds,  scmEOWith, scmEOWithIndexes,  18,  scmDataInputNames, scmDataInputTypeIds,

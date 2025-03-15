@@ -14,13 +14,13 @@
 #include "../../core/fbtests/fbtestfixture.h"
 #include <forte_bool.h>
 
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "E_SR_tester_gen.cpp"
-#endif
+
+USE_STRING_ID(E_SR);
+
 
 struct E_SR_TestFixture : public CFBTestFixtureBase{
 
-    E_SR_TestFixture() : CFBTestFixtureBase(g_nStringIdE_SR){
+    E_SR_TestFixture() : CFBTestFixtureBase(STRID(E_SR)){
       setOutputData({&mOutQ});
       CFBTestFixtureBase::setup();
     }

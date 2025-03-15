@@ -21,9 +21,23 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "commfb.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "commfb_gen.cpp"
-#endif
+
+USE_STRING_ID(BOOL);
+USE_STRING_ID(CNF);
+USE_STRING_ID(EInit);
+USE_STRING_ID(Event);
+USE_STRING_ID(ID);
+USE_STRING_ID(IND);
+USE_STRING_ID(INIT);
+USE_STRING_ID(INITO);
+USE_STRING_ID(QI);
+USE_STRING_ID(QO);
+USE_STRING_ID(REQ);
+USE_STRING_ID(RSP);
+USE_STRING_ID(STATUS);
+USE_STRING_ID(STRING);
+USE_STRING_ID(WSTRING);
+
 #include "../resource.h"
 #include "comlayer.h"
 #include "comlayersmanager.h"
@@ -31,14 +45,14 @@
 
 using namespace forte::com_infra;
 
-const CStringDictionary::TStringId CCommFB::scmRequesterEventInputNameIds[2] = { g_nStringIdINIT, g_nStringIdREQ };
-const CStringDictionary::TStringId CCommFB::scmRequesterEventOutputNameIds[2] = { g_nStringIdINITO, g_nStringIdCNF };
+const CStringDictionary::TStringId CCommFB::scmRequesterEventInputNameIds[2] = { STRID(INIT), STRID(REQ) };
+const CStringDictionary::TStringId CCommFB::scmRequesterEventOutputNameIds[2] = { STRID(INITO), STRID(CNF) };
 
-const CStringDictionary::TStringId CCommFB::scmResponderEventInputNameIds[2] = { g_nStringIdINIT, g_nStringIdRSP };
-const CStringDictionary::TStringId CCommFB::scmResponderEventOutputNameIds[2] = { g_nStringIdINITO, g_nStringIdIND };
+const CStringDictionary::TStringId CCommFB::scmResponderEventInputNameIds[2] = { STRID(INIT), STRID(RSP) };
+const CStringDictionary::TStringId CCommFB::scmResponderEventOutputNameIds[2] = { STRID(INITO), STRID(IND) };
 
-const CStringDictionary::TStringId CCommFB::scmEventInputTypeIds[2] = {g_nStringIdEInit, g_nStringIdEvent};
-const CStringDictionary::TStringId CCommFB::scmEventOutputTypeIds[2] = {g_nStringIdEvent, g_nStringIdEvent};
+const CStringDictionary::TStringId CCommFB::scmEventInputTypeIds[2] = {STRID(EInit), STRID(Event)};
+const CStringDictionary::TStringId CCommFB::scmEventOutputTypeIds[2] = {STRID(Event), STRID(Event)};
 
 CCommFB::CCommFB(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer, forte::com_infra::EComServiceType paCommServiceType) :
   CBaseCommFB(paInstanceNameId, paContainer, paCommServiceType) {
@@ -231,14 +245,14 @@ void CCommFB::configureDIs(const char* paDIConfigString, SFBInterfaceSpec& paInt
     paInterfaceSpec.mDIDataTypeNames = mDiDataTypeNames.get();
     paInterfaceSpec.mDINames = mDiNames.get();
 
-    mDiDataTypeNames[0] = g_nStringIdBOOL;
-    mDiNames[0] = g_nStringIdQI;
+    mDiDataTypeNames[0] = STRID(BOOL);
+    mDiNames[0] = STRID(QI);
 #ifdef FORTE_USE_WSTRING_DATATYPE
-    mDiDataTypeNames[1] = g_nStringIdWSTRING;
+    mDiDataTypeNames[1] = STRID(WSTRING);
 #else //FORTE_USE_WSTRING_DATATYPE
-    mDiDataTypeNames[1] = g_nStringIdSTRING;
+    mDiDataTypeNames[1] = STRID(STRING);
 #endif //FORTE_USE_WSTRING_DATATYPE
-    mDiNames[1] = g_nStringIdID;
+    mDiNames[1] = STRID(ID);
 }
 
 void CCommFB::configureDOs(const char* paDOConfigString, SFBInterfaceSpec& paInterfaceSpec) {
@@ -261,14 +275,14 @@ void CCommFB::configureDOs(const char* paDOConfigString, SFBInterfaceSpec& paInt
   paInterfaceSpec.mDONames = mDoNames.get();
   paInterfaceSpec.mDODataTypeNames = mDoDataTypeNames.get();
 
-  mDoDataTypeNames[0] = g_nStringIdBOOL;
-  mDoNames[0] = g_nStringIdQO;
+  mDoDataTypeNames[0] = STRID(BOOL);
+  mDoNames[0] = STRID(QO);
 #ifdef FORTE_USE_WSTRING_DATATYPE
-  mDoDataTypeNames[1] = g_nStringIdWSTRING;
+  mDoDataTypeNames[1] = STRID(WSTRING);
 #else
-  mDoDataTypeNames[1] = g_nStringIdSTRING;
+  mDoDataTypeNames[1] = STRID(STRING);
 #endif
-  mDoNames[1] = g_nStringIdSTATUS;
+  mDoNames[1] = STRID(STATUS);
 
 }
 

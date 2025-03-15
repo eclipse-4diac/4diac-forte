@@ -12,16 +12,16 @@
  *      - initial implementation and rework communication infrastructure
  *******************************************************************************/
 #include "forte_wchar.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "forte_wchar_gen.cpp"
-#endif
+
+USE_STRING_ID(WCHAR);
+
 
 #include "unicode_utils.h"
 
 #include <limits>
 #include <stdio.h>
 
-DEFINE_FIRMWARE_DATATYPE(WCHAR, g_nStringIdWCHAR)
+DEFINE_FIRMWARE_DATATYPE(WCHAR, STRID(WCHAR))
 
 int CIEC_WCHAR::toString(char *paValue, size_t paBufferSize) const {
   const char longestStringSerialization[] = "WCHAR#\"$0000\"";

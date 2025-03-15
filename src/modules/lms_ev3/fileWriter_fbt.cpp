@@ -11,33 +11,49 @@
  *******************************************************************************/
  
 #include "fileWriter_fbt.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "fileWriter_fbt_gen.cpp"
-#endif
+
+USE_STRING_ID(APPCHAR);
+USE_STRING_ID(APPEND);
+USE_STRING_ID(BOOL);
+USE_STRING_ID(CNF);
+USE_STRING_ID(EInit);
+USE_STRING_ID(Event);
+USE_STRING_ID(FILE_NAME);
+USE_STRING_ID(fileWriter);
+USE_STRING_ID(INIT);
+USE_STRING_ID(INITO);
+USE_STRING_ID(QI);
+USE_STRING_ID(QO);
+USE_STRING_ID(REQ);
+USE_STRING_ID(S1);
+USE_STRING_ID(STATUS);
+USE_STRING_ID(STRING);
+USE_STRING_ID(WSTRING);
+
 
 #include <sstream>
 #include <ostream>
 #include <iostream>
 
-DEFINE_FIRMWARE_FB(fileWriter, g_nStringIdfileWriter)
+DEFINE_FIRMWARE_FB(fileWriter, STRID(fileWriter))
 
-const CStringDictionary::TStringId fileWriter::scmDataInputNames[] = {g_nStringIdQI, g_nStringIdFILE_NAME, g_nStringIdS1, g_nStringIdAPPEND, g_nStringIdAPPCHAR};
+const CStringDictionary::TStringId fileWriter::scmDataInputNames[] = {STRID(QI), STRID(FILE_NAME), STRID(S1), STRID(APPEND), STRID(APPCHAR)};
 
-const CStringDictionary::TStringId fileWriter::scmDataInputTypeIds[] = {g_nStringIdBOOL, g_nStringIdSTRING, g_nStringIdSTRING, g_nStringIdBOOL, g_nStringIdSTRING};
+const CStringDictionary::TStringId fileWriter::scmDataInputTypeIds[] = {STRID(BOOL), STRID(STRING), STRID(STRING), STRID(BOOL), STRID(STRING)};
 
-const CStringDictionary::TStringId fileWriter::scmDataOutputNames[] = {g_nStringIdQO, g_nStringIdSTATUS};
+const CStringDictionary::TStringId fileWriter::scmDataOutputNames[] = {STRID(QO), STRID(STATUS)};
 
-const CStringDictionary::TStringId fileWriter::scmDataOutputTypeIds[] = {g_nStringIdBOOL, g_nStringIdWSTRING};
+const CStringDictionary::TStringId fileWriter::scmDataOutputTypeIds[] = {STRID(BOOL), STRID(WSTRING)};
 
 const TForteInt16 fileWriter::scmEIWithIndexes[] = {0, 3};
 const TDataIOID fileWriter::scmEIWith[] = {0, 1, scmWithListDelimiter, 0, 2, 3, 4, scmWithListDelimiter};
-const CStringDictionary::TStringId fileWriter::scmEventInputNames[] = {g_nStringIdINIT, g_nStringIdREQ};
-const CStringDictionary::TStringId fileWriter::scmEventInputTypeIds[] = {g_nStringIdEInit, g_nStringIdEvent};
+const CStringDictionary::TStringId fileWriter::scmEventInputNames[] = {STRID(INIT), STRID(REQ)};
+const CStringDictionary::TStringId fileWriter::scmEventInputTypeIds[] = {STRID(EInit), STRID(Event)};
 
 const TDataIOID fileWriter::scmEOWith[] = {0, 1, scmWithListDelimiter, 0, 1, scmWithListDelimiter};
 const TForteInt16 fileWriter::scmEOWithIndexes[] = {0, 3, -1};
-const CStringDictionary::TStringId fileWriter::scmEventOutputNames[] = {g_nStringIdINITO, g_nStringIdCNF};
-const CStringDictionary::TStringId fileWriter::scmEventOutputTypeIds[] = {g_nStringIdEvent, g_nStringIdEvent};
+const CStringDictionary::TStringId fileWriter::scmEventOutputNames[] = {STRID(INITO), STRID(CNF)};
+const CStringDictionary::TStringId fileWriter::scmEventOutputTypeIds[] = {STRID(Event), STRID(Event)};
 
 const SFBInterfaceSpec fileWriter::scmFBInterfaceSpec = {
   2,  scmEventInputNames, scmEventInputTypeIds,  scmEIWith,  scmEIWithIndexes,

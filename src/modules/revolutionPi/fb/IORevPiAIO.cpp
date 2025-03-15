@@ -12,31 +12,52 @@
  *******************************************************************************/
 
 #include "IORevPiAIO.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "IORevPiAIO_gen.cpp"
-#endif
+
+USE_STRING_ID(AnalogInput_1);
+USE_STRING_ID(AnalogInput_2);
+USE_STRING_ID(AnalogInput_3);
+USE_STRING_ID(AnalogInput_4);
+USE_STRING_ID(AnalogOutput_1);
+USE_STRING_ID(AnalogOutput_2);
+USE_STRING_ID(BOOL);
+USE_STRING_ID(BusAdapterIn);
+USE_STRING_ID(BusAdapterOut);
+USE_STRING_ID(Event);
+USE_STRING_ID(IND);
+USE_STRING_ID(IORevPiAIO);
+USE_STRING_ID(IORevPiBusAdapter);
+USE_STRING_ID(MAP);
+USE_STRING_ID(MAPO);
+USE_STRING_ID(QI);
+USE_STRING_ID(QO);
+USE_STRING_ID(RTD_1);
+USE_STRING_ID(RTD_2);
+USE_STRING_ID(STATUS);
+USE_STRING_ID(STRING);
+USE_STRING_ID(WSTRING);
+
 
 #include "../RevPiController.h"
 
 using namespace forte::core::io;
 
-DEFINE_FIRMWARE_FB(FORTE_IORevPiAIO, g_nStringIdIORevPiAIO)
+DEFINE_FIRMWARE_FB(FORTE_IORevPiAIO, STRID(IORevPiAIO))
 
-const CStringDictionary::TStringId FORTE_IORevPiAIO::scmDataInputNames[] = {g_nStringIdQI, g_nStringIdAnalogInput_1, g_nStringIdAnalogInput_2, g_nStringIdAnalogInput_3, g_nStringIdAnalogInput_4, g_nStringIdRTD_1, g_nStringIdRTD_2, g_nStringIdAnalogOutput_1, g_nStringIdAnalogOutput_2};
-const CStringDictionary::TStringId FORTE_IORevPiAIO::scmDataInputTypeIds[] = {g_nStringIdBOOL, g_nStringIdSTRING, g_nStringIdSTRING, g_nStringIdSTRING, g_nStringIdSTRING, g_nStringIdSTRING, g_nStringIdSTRING, g_nStringIdSTRING, g_nStringIdSTRING};
-const CStringDictionary::TStringId FORTE_IORevPiAIO::scmDataOutputNames[] = {g_nStringIdQO, g_nStringIdSTATUS};
-const CStringDictionary::TStringId FORTE_IORevPiAIO::scmDataOutputTypeIds[] = {g_nStringIdBOOL, g_nStringIdWSTRING};
+const CStringDictionary::TStringId FORTE_IORevPiAIO::scmDataInputNames[] = {STRID(QI), STRID(AnalogInput_1), STRID(AnalogInput_2), STRID(AnalogInput_3), STRID(AnalogInput_4), STRID(RTD_1), STRID(RTD_2), STRID(AnalogOutput_1), STRID(AnalogOutput_2)};
+const CStringDictionary::TStringId FORTE_IORevPiAIO::scmDataInputTypeIds[] = {STRID(BOOL), STRID(STRING), STRID(STRING), STRID(STRING), STRID(STRING), STRID(STRING), STRID(STRING), STRID(STRING), STRID(STRING)};
+const CStringDictionary::TStringId FORTE_IORevPiAIO::scmDataOutputNames[] = {STRID(QO), STRID(STATUS)};
+const CStringDictionary::TStringId FORTE_IORevPiAIO::scmDataOutputTypeIds[] = {STRID(BOOL), STRID(WSTRING)};
 const TDataIOID FORTE_IORevPiAIO::scmEIWith[] = {1, 2, 5, 3, 4, 6, 7, 8, 0, scmWithListDelimiter};
 const TForteInt16 FORTE_IORevPiAIO::scmEIWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_IORevPiAIO::scmEventInputNames[] = {g_nStringIdMAP};
-const CStringDictionary::TStringId FORTE_IORevPiAIO::scmEventInputTypeIds[] = {g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_IORevPiAIO::scmEventInputNames[] = {STRID(MAP)};
+const CStringDictionary::TStringId FORTE_IORevPiAIO::scmEventInputTypeIds[] = {STRID(Event)};
 const TDataIOID FORTE_IORevPiAIO::scmEOWith[] = {0, scmWithListDelimiter, 0, 1, scmWithListDelimiter};
 const TForteInt16 FORTE_IORevPiAIO::scmEOWithIndexes[] = {0, 2};
-const CStringDictionary::TStringId FORTE_IORevPiAIO::scmEventOutputNames[] = {g_nStringIdMAPO, g_nStringIdIND};
-const CStringDictionary::TStringId FORTE_IORevPiAIO::scmEventOutputTypeIds[] = {g_nStringIdEvent, g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_IORevPiAIO::scmEventOutputNames[] = {STRID(MAPO), STRID(IND)};
+const CStringDictionary::TStringId FORTE_IORevPiAIO::scmEventOutputTypeIds[] = {STRID(Event), STRID(Event)};
 const SAdapterInstanceDef FORTE_IORevPiAIO::scmAdapterInstances[] = {
-  {g_nStringIdIORevPiBusAdapter, g_nStringIdBusAdapterOut, true},
-  {g_nStringIdIORevPiBusAdapter, g_nStringIdBusAdapterIn, false}
+  {STRID(IORevPiBusAdapter), STRID(BusAdapterOut), true},
+  {STRID(IORevPiBusAdapter), STRID(BusAdapterIn), false}
 };
 const SFBInterfaceSpec FORTE_IORevPiAIO::scmFBInterfaceSpec = {
   1, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,

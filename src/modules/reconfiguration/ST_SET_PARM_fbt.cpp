@@ -10,29 +10,41 @@
  *   Matthias Plasch, Gerhard Ebenhofer, Alois Zoitl - initial API and implementation and/or initial documentation
  *******************************************************************************/
 #include "ST_SET_PARM_fbt.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "ST_SET_PARM_fbt_gen.cpp"
-#endif
+
+USE_STRING_ID(BOOL);
+USE_STRING_ID(CNF);
+USE_STRING_ID(DST);
+USE_STRING_ID(ELEM_DATA_IN);
+USE_STRING_ID(ELEM_NAME);
+USE_STRING_ID(Event);
+USE_STRING_ID(PARM_VAL);
+USE_STRING_ID(QI);
+USE_STRING_ID(QO);
+USE_STRING_ID(REQ);
+USE_STRING_ID(STATUS);
+USE_STRING_ID(ST_SET_PARM);
+USE_STRING_ID(WSTRING);
+
 
 #include "criticalregion.h"
 #include "resource.h"
 
 #include "device.h"
 
-DEFINE_FIRMWARE_FB(FORTE_ST_SET_PARM, g_nStringIdST_SET_PARM)
+DEFINE_FIRMWARE_FB(FORTE_ST_SET_PARM, STRID(ST_SET_PARM))
 
-const CStringDictionary::TStringId FORTE_ST_SET_PARM::scmDataInputNames[] = {g_nStringIdQI, g_nStringIdELEM_NAME, g_nStringIdELEM_DATA_IN, g_nStringIdPARM_VAL, g_nStringIdDST};
-const CStringDictionary::TStringId FORTE_ST_SET_PARM::scmDataInputTypeIds[] = {g_nStringIdBOOL, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING};
-const CStringDictionary::TStringId FORTE_ST_SET_PARM::scmDataOutputNames[] = {g_nStringIdQO, g_nStringIdSTATUS};
-const CStringDictionary::TStringId FORTE_ST_SET_PARM::scmDataOutputTypeIds[] = {g_nStringIdBOOL, g_nStringIdWSTRING};
+const CStringDictionary::TStringId FORTE_ST_SET_PARM::scmDataInputNames[] = {STRID(QI), STRID(ELEM_NAME), STRID(ELEM_DATA_IN), STRID(PARM_VAL), STRID(DST)};
+const CStringDictionary::TStringId FORTE_ST_SET_PARM::scmDataInputTypeIds[] = {STRID(BOOL), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING)};
+const CStringDictionary::TStringId FORTE_ST_SET_PARM::scmDataOutputNames[] = {STRID(QO), STRID(STATUS)};
+const CStringDictionary::TStringId FORTE_ST_SET_PARM::scmDataOutputTypeIds[] = {STRID(BOOL), STRID(WSTRING)};
 const TDataIOID FORTE_ST_SET_PARM::scmEIWith[] = {1, 2, 3, 4, 0, scmWithListDelimiter};
 const TForteInt16 FORTE_ST_SET_PARM::scmEIWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_ST_SET_PARM::scmEventInputNames[] = {g_nStringIdREQ};
-const CStringDictionary::TStringId FORTE_ST_SET_PARM::scmEventInputTypeIds[] = {g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_ST_SET_PARM::scmEventInputNames[] = {STRID(REQ)};
+const CStringDictionary::TStringId FORTE_ST_SET_PARM::scmEventInputTypeIds[] = {STRID(Event)};
 const TDataIOID FORTE_ST_SET_PARM::scmEOWith[] = {1, 0, scmWithListDelimiter};
 const TForteInt16 FORTE_ST_SET_PARM::scmEOWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_ST_SET_PARM::scmEventOutputNames[] = {g_nStringIdCNF};
-const CStringDictionary::TStringId FORTE_ST_SET_PARM::scmEventOutputTypeIds[] = {g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_ST_SET_PARM::scmEventOutputNames[] = {STRID(CNF)};
+const CStringDictionary::TStringId FORTE_ST_SET_PARM::scmEventOutputTypeIds[] = {STRID(Event)};
 const SFBInterfaceSpec FORTE_ST_SET_PARM::scmFBInterfaceSpec = {
   1, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,
   1, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes,

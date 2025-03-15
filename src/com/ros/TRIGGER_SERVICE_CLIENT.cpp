@@ -16,29 +16,44 @@
 #include <extevhandlerhelper.h>
 
 #include "TRIGGER_SERVICE_CLIENT.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "TRIGGER_SERVICE_CLIENT_gen.cpp"
-#endif
 
-DEFINE_FIRMWARE_FB(FORTE_TRIGGER_SERVICE_CLIENT, g_nStringIdTRIGGER_SERVICE_CLIENT)
+USE_STRING_ID(BOOL);
+USE_STRING_ID(CNF);
+USE_STRING_ID(EInit);
+USE_STRING_ID(Event);
+USE_STRING_ID(INIT);
+USE_STRING_ID(INITO);
+USE_STRING_ID(MESSAGE);
+USE_STRING_ID(NAMESPACE);
+USE_STRING_ID(QI);
+USE_STRING_ID(QO);
+USE_STRING_ID(REQ);
+USE_STRING_ID(SRVNAME);
+USE_STRING_ID(STATUS);
+USE_STRING_ID(STRING);
+USE_STRING_ID(SUCCESS);
+USE_STRING_ID(TRIGGER_SERVICE_CLIENT);
 
-const CStringDictionary::TStringId FORTE_TRIGGER_SERVICE_CLIENT::scmDataInputNames[] = { g_nStringIdQI, g_nStringIdNAMESPACE, g_nStringIdSRVNAME };
 
-const CStringDictionary::TStringId FORTE_TRIGGER_SERVICE_CLIENT::scmDataInputTypeIds[] = { g_nStringIdBOOL, g_nStringIdSTRING, g_nStringIdSTRING };
+DEFINE_FIRMWARE_FB(FORTE_TRIGGER_SERVICE_CLIENT, STRID(TRIGGER_SERVICE_CLIENT))
 
-const CStringDictionary::TStringId FORTE_TRIGGER_SERVICE_CLIENT::scmDataOutputNames[] = { g_nStringIdQO, g_nStringIdSTATUS, g_nStringIdSUCCESS, g_nStringIdMESSAGE };
+const CStringDictionary::TStringId FORTE_TRIGGER_SERVICE_CLIENT::scmDataInputNames[] = { STRID(QI), STRID(NAMESPACE), STRID(SRVNAME) };
 
-const CStringDictionary::TStringId FORTE_TRIGGER_SERVICE_CLIENT::scmDataOutputTypeIds[] = { g_nStringIdBOOL, g_nStringIdSTRING, g_nStringIdBOOL, g_nStringIdSTRING };
+const CStringDictionary::TStringId FORTE_TRIGGER_SERVICE_CLIENT::scmDataInputTypeIds[] = { STRID(BOOL), STRID(STRING), STRID(STRING) };
+
+const CStringDictionary::TStringId FORTE_TRIGGER_SERVICE_CLIENT::scmDataOutputNames[] = { STRID(QO), STRID(STATUS), STRID(SUCCESS), STRID(MESSAGE) };
+
+const CStringDictionary::TStringId FORTE_TRIGGER_SERVICE_CLIENT::scmDataOutputTypeIds[] = { STRID(BOOL), STRID(STRING), STRID(BOOL), STRID(STRING) };
 
 const TForteInt16 FORTE_TRIGGER_SERVICE_CLIENT::scmEIWithIndexes[] = { 0, 4 };
 const TDataIOID FORTE_TRIGGER_SERVICE_CLIENT::scmEIWith[] = { 0, 1, 2, scmWithListDelimiter, 0, scmWithListDelimiter };
-const CStringDictionary::TStringId FORTE_TRIGGER_SERVICE_CLIENT::scmEventInputNames[] = { g_nStringIdINIT, g_nStringIdREQ };
-const CStringDictionary::TStringId FORTE_TRIGGER_SERVICE_CLIENT::scmEventInputTypeIds[] = {g_nStringIdEInit, g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_TRIGGER_SERVICE_CLIENT::scmEventInputNames[] = { STRID(INIT), STRID(REQ) };
+const CStringDictionary::TStringId FORTE_TRIGGER_SERVICE_CLIENT::scmEventInputTypeIds[] = {STRID(EInit), STRID(Event)};
 
 const TDataIOID FORTE_TRIGGER_SERVICE_CLIENT::scmEOWith[] = { 0, 1, scmWithListDelimiter, 0, 1, 2, 3, scmWithListDelimiter };
 const TForteInt16 FORTE_TRIGGER_SERVICE_CLIENT::scmEOWithIndexes[] = { 0, 3, -1 };
-const CStringDictionary::TStringId FORTE_TRIGGER_SERVICE_CLIENT::scmEventOutputNames[] = { g_nStringIdINITO, g_nStringIdCNF };
-const CStringDictionary::TStringId FORTE_TRIGGER_SERVICE_CLIENT::scmEventOutputTypeIds[] = {g_nStringIdEvent, g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_TRIGGER_SERVICE_CLIENT::scmEventOutputNames[] = { STRID(INITO), STRID(CNF) };
+const CStringDictionary::TStringId FORTE_TRIGGER_SERVICE_CLIENT::scmEventOutputTypeIds[] = {STRID(Event), STRID(Event)};
 
 const SFBInterfaceSpec FORTE_TRIGGER_SERVICE_CLIENT::scmFBInterfaceSpec = { 2, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes, 2, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes, 3, scmDataInputNames, scmDataInputTypeIds, 4, scmDataOutputNames, scmDataOutputTypeIds, 0, 0 };
 

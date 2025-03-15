@@ -17,11 +17,11 @@
  *******************************************************************************/
 
 #include "GEN_OR_fbt.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "GEN_OR_fbt_gen.cpp"
-#endif
 
-DEFINE_GENERIC_FIRMWARE_FB(GEN_OR, g_nStringIdGEN_OR)
+USE_STRING_ID(GEN_OR);
+
+
+DEFINE_GENERIC_FIRMWARE_FB(GEN_OR, STRID(GEN_OR))
 
 GEN_OR::GEN_OR(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CGenBitBase(paInstanceNameId, paContainer){

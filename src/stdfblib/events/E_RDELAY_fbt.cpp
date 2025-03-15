@@ -10,12 +10,12 @@
  *   Alois Zoitl - initial API and implementation and/or initial documentation
  *******************************************************************************/
 #include "E_RDELAY_fbt.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "E_RDELAY_fbt_gen.cpp"
-#endif
+
+USE_STRING_ID(E_RDELAY);
+
 #include "../../arch/timerha.h"
 
-DEFINE_FIRMWARE_FB(FORTE_E_RDELAY, g_nStringIdE_RDELAY)
+DEFINE_FIRMWARE_FB(FORTE_E_RDELAY, STRID(E_RDELAY))
 
 FORTE_E_RDELAY::FORTE_E_RDELAY(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer):
     CTimedFB(paInstanceNameId, paContainer){

@@ -11,32 +11,44 @@
  *******************************************************************************/
 
 #include "RequestOrchestrationForm.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "RequestOrchestrationForm_gen.cpp"
-#endif
 
-DEFINE_FIRMWARE_FB(FORTE_RequestOrchestrationForm, g_nStringIdRequestOrchestrationForm)
+USE_STRING_ID(ARRAY);
+USE_STRING_ID(endpoint);
+USE_STRING_ID(Event);
+USE_STRING_ID(OrchestrationForm);
+USE_STRING_ID(orchestrationResponse);
+USE_STRING_ID(OrchestratorRequestAdp);
+USE_STRING_ID(requestOrchestator);
+USE_STRING_ID(requestOrchestration);
+USE_STRING_ID(RequestOrchestrationForm);
+USE_STRING_ID(responseReceived);
+USE_STRING_ID(serviceRequestForm);
+USE_STRING_ID(ServiceRequestForm);
+USE_STRING_ID(WSTRING);
 
-const CStringDictionary::TStringId FORTE_RequestOrchestrationForm::scmDataInputNames[] = {g_nStringIdserviceRequestForm, g_nStringIdendpoint};
 
-const CStringDictionary::TStringId FORTE_RequestOrchestrationForm::scmDataInputTypeIds[] = {g_nStringIdServiceRequestForm, g_nStringIdWSTRING};
+DEFINE_FIRMWARE_FB(FORTE_RequestOrchestrationForm, STRID(RequestOrchestrationForm))
 
-const CStringDictionary::TStringId FORTE_RequestOrchestrationForm::scmDataOutputNames[] = {g_nStringIdorchestrationResponse};
+const CStringDictionary::TStringId FORTE_RequestOrchestrationForm::scmDataInputNames[] = {STRID(serviceRequestForm), STRID(endpoint)};
 
-const CStringDictionary::TStringId FORTE_RequestOrchestrationForm::scmDataOutputTypeIds[] = {g_nStringIdARRAY, 10, g_nStringIdOrchestrationForm};
+const CStringDictionary::TStringId FORTE_RequestOrchestrationForm::scmDataInputTypeIds[] = {STRID(ServiceRequestForm), STRID(WSTRING)};
+
+const CStringDictionary::TStringId FORTE_RequestOrchestrationForm::scmDataOutputNames[] = {STRID(orchestrationResponse)};
+
+const CStringDictionary::TStringId FORTE_RequestOrchestrationForm::scmDataOutputTypeIds[] = {STRID(ARRAY), 10, STRID(OrchestrationForm)};
 
 const TForteInt16 FORTE_RequestOrchestrationForm::scmEIWithIndexes[] = {0};
 const TDataIOID FORTE_RequestOrchestrationForm::scmEIWith[] = {0, 1, scmWithListDelimiter};
-const CStringDictionary::TStringId FORTE_RequestOrchestrationForm::scmEventInputNames[] = {g_nStringIdrequestOrchestator};
-const CStringDictionary::TStringId FORTE_RequestOrchestrationForm::scmEventInputTypeIds[] = {g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_RequestOrchestrationForm::scmEventInputNames[] = {STRID(requestOrchestator)};
+const CStringDictionary::TStringId FORTE_RequestOrchestrationForm::scmEventInputTypeIds[] = {STRID(Event)};
 
 const TDataIOID FORTE_RequestOrchestrationForm::scmEOWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_RequestOrchestrationForm::scmEOWithIndexes[] = {0, -1};
-const CStringDictionary::TStringId FORTE_RequestOrchestrationForm::scmEventOutputNames[] = {g_nStringIdresponseReceived};
-const CStringDictionary::TStringId FORTE_RequestOrchestrationForm::scmEventOutputTypeIds[] = {g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_RequestOrchestrationForm::scmEventOutputNames[] = {STRID(responseReceived)};
+const CStringDictionary::TStringId FORTE_RequestOrchestrationForm::scmEventOutputTypeIds[] = {STRID(Event)};
 
 const SAdapterInstanceDef FORTE_RequestOrchestrationForm::scmAdapterInstances[] = {
-{g_nStringIdOrchestratorRequestAdp, g_nStringIdrequestOrchestration, true }};
+{STRID(OrchestratorRequestAdp), STRID(requestOrchestration), true }};
 
 const SFBInterfaceSpec FORTE_RequestOrchestrationForm::scmFBInterfaceSpec = {
   1,  scmEventInputNames, scmEventInputTypeIds,  scmEIWith,  scmEIWithIndexes,
@@ -46,14 +58,14 @@ const SFBInterfaceSpec FORTE_RequestOrchestrationForm::scmFBInterfaceSpec = {
 
 
 const SCFB_FBConnectionData FORTE_RequestOrchestrationForm::scmEventConnections[] = {
-  {GENERATE_CONNECTION_PORT_ID_1_ARG(g_nStringIdrequestOrchestator), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdrequestOrchestration, g_nStringIdrequestOrchestator), CCompositeFB::scmAdapterMarker |0},
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdrequestOrchestration, g_nStringIdresponseReceived), CCompositeFB::scmAdapterMarker |0, GENERATE_CONNECTION_PORT_ID_1_ARG(g_nStringIdresponseReceived), -1},
+  {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(requestOrchestator)), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(requestOrchestration), STRID(requestOrchestator)), CCompositeFB::scmAdapterMarker |0},
+  {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(requestOrchestration), STRID(responseReceived)), CCompositeFB::scmAdapterMarker |0, GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(responseReceived)), -1},
 };
 
 const SCFB_FBConnectionData FORTE_RequestOrchestrationForm::scmDataConnections[] = {
-  {GENERATE_CONNECTION_PORT_ID_1_ARG(g_nStringIdserviceRequestForm), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdrequestOrchestration, g_nStringIdserviceRequestForm), CCompositeFB::scmAdapterMarker |0},
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdrequestOrchestration, g_nStringIdorchestrationResponse), CCompositeFB::scmAdapterMarker |0, GENERATE_CONNECTION_PORT_ID_1_ARG(g_nStringIdorchestrationResponse), -1},
-  {GENERATE_CONNECTION_PORT_ID_1_ARG(g_nStringIdendpoint), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdrequestOrchestration, g_nStringIdendpoint), CCompositeFB::scmAdapterMarker |0},
+  {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(serviceRequestForm)), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(requestOrchestration), STRID(serviceRequestForm)), CCompositeFB::scmAdapterMarker |0},
+  {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(requestOrchestration), STRID(orchestrationResponse)), CCompositeFB::scmAdapterMarker |0, GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(orchestrationResponse)), -1},
+  {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(endpoint)), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(requestOrchestration), STRID(endpoint)), CCompositeFB::scmAdapterMarker |0},
 };
 
 const SCFB_FBNData FORTE_RequestOrchestrationForm::scmFBNData = {

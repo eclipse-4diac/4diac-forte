@@ -19,34 +19,50 @@
  *******************************************************************************/
 #include <string.h>
 #include "DEV_MGR.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "DEV_MGR_gen.cpp"
-#endif
+
+USE_STRING_ID(BOOL);
+USE_STRING_ID(CNF);
+USE_STRING_ID(DEV_MGR);
+USE_STRING_ID(DST);
+USE_STRING_ID(EInit);
+USE_STRING_ID(Event);
+USE_STRING_ID(ID);
+USE_STRING_ID(INIT);
+USE_STRING_ID(INITO);
+USE_STRING_ID(QI);
+USE_STRING_ID(QO);
+USE_STRING_ID(REQ);
+USE_STRING_ID(RESP);
+USE_STRING_ID(RQST);
+USE_STRING_ID(STATUS);
+USE_STRING_ID(STRING);
+USE_STRING_ID(WSTRING);
+
 #include "core/device.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include "ForteBootFileLoader.h"
 #include "core/util/string_utils.h"
 
-DEFINE_FIRMWARE_FB(DEV_MGR, g_nStringIdDEV_MGR)
+DEFINE_FIRMWARE_FB(DEV_MGR, STRID(DEV_MGR))
 
-const CStringDictionary::TStringId DEV_MGR::scmDataInputNames[] = {g_nStringIdQI, g_nStringIdID, g_nStringIdRESP};
+const CStringDictionary::TStringId DEV_MGR::scmDataInputNames[] = {STRID(QI), STRID(ID), STRID(RESP)};
 
-const CStringDictionary::TStringId DEV_MGR::scmDataInputTypeIds[] = {g_nStringIdBOOL, g_nStringIdWSTRING, g_nStringIdSTRING};
+const CStringDictionary::TStringId DEV_MGR::scmDataInputTypeIds[] = {STRID(BOOL), STRID(WSTRING), STRID(STRING)};
 
-const CStringDictionary::TStringId DEV_MGR::scmDataOutputNames[] = {g_nStringIdQO, g_nStringIdSTATUS, g_nStringIdDST, g_nStringIdRQST};
+const CStringDictionary::TStringId DEV_MGR::scmDataOutputNames[] = {STRID(QO), STRID(STATUS), STRID(DST), STRID(RQST)};
 
-const CStringDictionary::TStringId DEV_MGR::scmDataOutputTypeIds[] = {g_nStringIdBOOL, g_nStringIdSTRING, g_nStringIdSTRING, g_nStringIdSTRING};
+const CStringDictionary::TStringId DEV_MGR::scmDataOutputTypeIds[] = {STRID(BOOL), STRID(STRING), STRID(STRING), STRID(STRING)};
 
 const TForteInt16 DEV_MGR::scmEIWithIndexes[] = {0, -1};
 const TDataIOID DEV_MGR::scmEIWith[] = {0, 1, scmWithListDelimiter};
-const CStringDictionary::TStringId DEV_MGR::scmEventInputNames[] = {g_nStringIdINIT, g_nStringIdREQ};
-const CStringDictionary::TStringId DEV_MGR::scmEventInputTypeIds[] = {g_nStringIdEInit, g_nStringIdEvent};
+const CStringDictionary::TStringId DEV_MGR::scmEventInputNames[] = {STRID(INIT), STRID(REQ)};
+const CStringDictionary::TStringId DEV_MGR::scmEventInputTypeIds[] = {STRID(EInit), STRID(Event)};
 
 const TDataIOID DEV_MGR::scmEOWith[] = {0, 1, scmWithListDelimiter, 2, 3, scmWithListDelimiter};
 const TForteInt16 DEV_MGR::scmEOWithIndexes[] = {0, -1, 3};
-const CStringDictionary::TStringId DEV_MGR::scmEventOutputNames[] = {g_nStringIdINITO, g_nStringIdCNF};
-const CStringDictionary::TStringId DEV_MGR::scmEventOutputTypeIds[] = {g_nStringIdEvent, g_nStringIdEvent};
+const CStringDictionary::TStringId DEV_MGR::scmEventOutputNames[] = {STRID(INITO), STRID(CNF)};
+const CStringDictionary::TStringId DEV_MGR::scmEventOutputTypeIds[] = {STRID(Event), STRID(Event)};
 
 const SFBInterfaceSpec DEV_MGR::scmFBInterfaceSpec = {
   2, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,

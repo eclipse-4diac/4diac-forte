@@ -11,18 +11,31 @@
  *******************************************************************************/
 
 #include "forte_eventfilter.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "forte_eventfilter_gen.cpp"
-#endif
 
-DEFINE_FIRMWARE_DATATYPE(EventFilter, g_nStringIdEventFilter);
+USE_STRING_ID(ARRAY);
+USE_STRING_ID(ArrowheadSystem);
+USE_STRING_ID(BOOL);
+USE_STRING_ID(consumer);
+USE_STRING_ID(DATE_AND_TIME);
+USE_STRING_ID(endDate);
+USE_STRING_ID(EventFilter);
+USE_STRING_ID(eventType);
+USE_STRING_ID(filterMetada);
+USE_STRING_ID(matchMetada);
+USE_STRING_ID(notifyUri);
+USE_STRING_ID(sources);
+USE_STRING_ID(startDate);
+USE_STRING_ID(WSTRING);
+
+
+DEFINE_FIRMWARE_DATATYPE(EventFilter, STRID(EventFilter));
 
 CIEC_EventFilter::CIEC_EventFilter() :
-    CIEC_STRUCT(g_nStringIdEventFilter, 8, scmElementTypes, scmElementNames, e_APPLICATION + e_CONSTRUCTED + 1) {
+    CIEC_STRUCT(STRID(EventFilter), 8, scmElementTypes, scmElementNames, e_APPLICATION + e_CONSTRUCTED + 1) {
 }
 
 const CStringDictionary::TStringId CIEC_EventFilter::scmElementTypes[] =
-  { g_nStringIdWSTRING, g_nStringIdArrowheadSystem, g_nStringIdARRAY, 10, g_nStringIdArrowheadSystem, g_nStringIdDATE_AND_TIME, g_nStringIdDATE_AND_TIME,
-    g_nStringIdARRAY, 10, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdBOOL };
-const CStringDictionary::TStringId CIEC_EventFilter::scmElementNames[] = { g_nStringIdeventType, g_nStringIdconsumer, g_nStringIdsources, g_nStringIdstartDate,
-  g_nStringIdendDate, g_nStringIdfilterMetada, g_nStringIdnotifyUri, g_nStringIdmatchMetada };
+  { STRID(WSTRING), STRID(ArrowheadSystem), STRID(ARRAY), 10, STRID(ArrowheadSystem), STRID(DATE_AND_TIME), STRID(DATE_AND_TIME),
+    STRID(ARRAY), 10, STRID(WSTRING), STRID(WSTRING), STRID(BOOL) };
+const CStringDictionary::TStringId CIEC_EventFilter::scmElementNames[] = { STRID(eventType), STRID(consumer), STRID(sources), STRID(startDate),
+  STRID(endDate), STRID(filterMetada), STRID(notifyUri), STRID(matchMetada) };

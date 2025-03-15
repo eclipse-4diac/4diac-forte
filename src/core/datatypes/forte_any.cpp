@@ -16,9 +16,9 @@
  *      - add support for data types with different size
  *******************************************************************************/
 #include "forte_any.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "forte_any_gen.cpp"
-#endif
+
+USE_STRING_ID(ANY);
+
 #include "forte_real.h"
 #include "forte_lreal.h"
 #include <devlog.h>
@@ -28,7 +28,7 @@ int CIEC_ANY::dummyInit(){
 }
 
 CStringDictionary::TStringId CIEC_ANY::getTypeNameID() const {
-  return g_nStringIdANY;
+  return STRID(ANY);
 }
 
 CStringDictionary::TStringId CIEC_ANY::parseTypeName(const char *paValue, const char *paHashPos) {

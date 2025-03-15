@@ -15,32 +15,41 @@
  *******************************************************************************/
 
 #include "F_MUX_2_fbt.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "F_MUX_2_fbt_gen.cpp"
-#endif
+
+USE_STRING_ID(ANY);
+USE_STRING_ID(ANY_INT);
+USE_STRING_ID(CNF);
+USE_STRING_ID(Event);
+USE_STRING_ID(F_MUX_2);
+USE_STRING_ID(IN1);
+USE_STRING_ID(IN2);
+USE_STRING_ID(K);
+USE_STRING_ID(OUT);
+USE_STRING_ID(REQ);
+
 
 #include "criticalregion.h"
 #include "resource.h"
 
-DEFINE_FIRMWARE_FB(FORTE_F_MUX_2, g_nStringIdF_MUX_2)
+DEFINE_FIRMWARE_FB(FORTE_F_MUX_2, STRID(F_MUX_2))
 
-const CStringDictionary::TStringId FORTE_F_MUX_2::scmDataInputNames[] = {g_nStringIdK, g_nStringIdIN1, g_nStringIdIN2};
+const CStringDictionary::TStringId FORTE_F_MUX_2::scmDataInputNames[] = {STRID(K), STRID(IN1), STRID(IN2)};
 
-const CStringDictionary::TStringId FORTE_F_MUX_2::scmDataInputTypeIds[] = {g_nStringIdANY_INT, g_nStringIdANY, g_nStringIdANY};
+const CStringDictionary::TStringId FORTE_F_MUX_2::scmDataInputTypeIds[] = {STRID(ANY_INT), STRID(ANY), STRID(ANY)};
 
-const CStringDictionary::TStringId FORTE_F_MUX_2::scmDataOutputNames[] = {g_nStringIdOUT};
+const CStringDictionary::TStringId FORTE_F_MUX_2::scmDataOutputNames[] = {STRID(OUT)};
 
-const CStringDictionary::TStringId FORTE_F_MUX_2::scmDataOutputTypeIds[] = {g_nStringIdANY};
+const CStringDictionary::TStringId FORTE_F_MUX_2::scmDataOutputTypeIds[] = {STRID(ANY)};
 
 const TDataIOID FORTE_F_MUX_2::scmEIWith[] = {1, 2, 0, scmWithListDelimiter};
 const TForteInt16 FORTE_F_MUX_2::scmEIWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_F_MUX_2::scmEventInputNames[] = {g_nStringIdREQ};
-const CStringDictionary::TStringId FORTE_F_MUX_2::scmEventInputTypeIds[] = {g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_F_MUX_2::scmEventInputNames[] = {STRID(REQ)};
+const CStringDictionary::TStringId FORTE_F_MUX_2::scmEventInputTypeIds[] = {STRID(Event)};
 
 const TDataIOID FORTE_F_MUX_2::scmEOWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_F_MUX_2::scmEOWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_F_MUX_2::scmEventOutputNames[] = {g_nStringIdCNF};
-const CStringDictionary::TStringId FORTE_F_MUX_2::scmEventOutputTypeIds[] = {g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_F_MUX_2::scmEventOutputNames[] = {STRID(CNF)};
+const CStringDictionary::TStringId FORTE_F_MUX_2::scmEventOutputTypeIds[] = {STRID(Event)};
 
 
 const SFBInterfaceSpec FORTE_F_MUX_2::scmFBInterfaceSpec = {

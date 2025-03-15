@@ -12,9 +12,9 @@
  *******************************************************************************/
 
 #include "opcua_objectstruct_helper.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "opcua_objectstruct_helper_gen.cpp"
-#endif
+
+USE_STRING_ID(OPCUA_Namespace);
+
 #include "opcua_layer.h"
 #include "struct_member_action_info.h"
 #include "struct_action_info.h"
@@ -438,7 +438,7 @@ bool COPC_UA_ObjectStruct_Helper::isOPCUAObjectPresent(CActionInfo::CNodePairInf
 }
 
 void COPC_UA_ObjectStruct_Helper::checkOPCUANamespace() {
-  CIEC_WSTRING* configPort = static_cast<CIEC_WSTRING*>(mLayer.getCommFB()->getResource()->getDataInput(g_nStringIdOPCUA_Namespace));
+  CIEC_WSTRING* configPort = static_cast<CIEC_WSTRING*>(mLayer.getCommFB()->getResource()->getDataInput(STRID(OPCUA_Namespace)));
   if(configPort && configPort->length() > 0) {
     if(!createOPCUANamespace(configPort->getValue())) {
       DEVLOG_ERROR("[OPC UA OBJECT STRUCT HELPER]: Failed to create OPC UA Namespace with value: %s", configPort->getValue());

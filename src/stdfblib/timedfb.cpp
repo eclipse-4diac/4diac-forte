@@ -14,20 +14,25 @@
  *   Martin Jobst - add generic readInputData and writeOutputData
  *******************************************************************************/
 #include "timedfb.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "timedfb_gen.cpp"
-#endif
+
+USE_STRING_ID(DT);
+USE_STRING_ID(EO);
+USE_STRING_ID(Event);
+USE_STRING_ID(START);
+USE_STRING_ID(STOP);
+USE_STRING_ID(TIME);
+
 
 #include "resource.h"
 #include "criticalregion.h"
 
-const CStringDictionary::TStringId CTimedFB::scmEINameIds[] = {g_nStringIdSTART, g_nStringIdSTOP};
-const CStringDictionary::TStringId CTimedFB::scmEventInputTypeIds[] = {g_nStringIdEvent, g_nStringIdEvent};
-const CStringDictionary::TStringId CTimedFB::scmEONameIds[] = {g_nStringIdEO};
-const CStringDictionary::TStringId CTimedFB::scmEventOutputTypeIds[] = {g_nStringIdEvent, g_nStringIdEvent};
+const CStringDictionary::TStringId CTimedFB::scmEINameIds[] = {STRID(START), STRID(STOP)};
+const CStringDictionary::TStringId CTimedFB::scmEventInputTypeIds[] = {STRID(Event), STRID(Event)};
+const CStringDictionary::TStringId CTimedFB::scmEONameIds[] = {STRID(EO)};
+const CStringDictionary::TStringId CTimedFB::scmEventOutputTypeIds[] = {STRID(Event), STRID(Event)};
 
-const CStringDictionary::TStringId CTimedFB::scmDINameIds[] = {g_nStringIdDT};
-const CStringDictionary::TStringId CTimedFB::scmDIDataTypeNameIds[] = {g_nStringIdTIME};
+const CStringDictionary::TStringId CTimedFB::scmDINameIds[] = {STRID(DT)};
+const CStringDictionary::TStringId CTimedFB::scmDIDataTypeNameIds[] = {STRID(TIME)};
 
 const SFBInterfaceSpec CTimedFB::scmFBInterfaceSpec = {
   2, scmEINameIds, scmEventInputTypeIds,nullptr, nullptr,

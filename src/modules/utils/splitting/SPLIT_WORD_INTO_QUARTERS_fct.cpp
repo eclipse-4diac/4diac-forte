@@ -18,9 +18,23 @@
  *************************************************************************/
 
 #include "SPLIT_WORD_INTO_QUARTERS_fct.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "SPLIT_WORD_INTO_QUARTERS_fct_gen.cpp"
-#endif
+
+USE_STRING_ID(BYTE);
+USE_STRING_ID(CNF);
+USE_STRING_ID(Event);
+USE_STRING_ID(IN);
+USE_STRING_ID(QUARTER_BYTE_00);
+USE_STRING_ID(QUARTER_BYTE_01);
+USE_STRING_ID(QUARTER_BYTE_02);
+USE_STRING_ID(QUARTER_BYTE_03);
+USE_STRING_ID(QUARTER_BYTE_04);
+USE_STRING_ID(QUARTER_BYTE_05);
+USE_STRING_ID(QUARTER_BYTE_06);
+USE_STRING_ID(QUARTER_BYTE_07);
+USE_STRING_ID(REQ);
+USE_STRING_ID(SPLIT_WORD_INTO_QUARTERS);
+USE_STRING_ID(WORD);
+
 
 #include "criticalregion.h"
 #include "resource.h"
@@ -35,20 +49,20 @@
 #include "forte_array_variable.h"
 #include "quarterconst_gcf.h"
 
-DEFINE_FIRMWARE_FB(FORTE_SPLIT_WORD_INTO_QUARTERS, g_nStringIdSPLIT_WORD_INTO_QUARTERS)
+DEFINE_FIRMWARE_FB(FORTE_SPLIT_WORD_INTO_QUARTERS, STRID(SPLIT_WORD_INTO_QUARTERS))
 
-const CStringDictionary::TStringId FORTE_SPLIT_WORD_INTO_QUARTERS::scmDataInputNames[] = {g_nStringIdIN};
-const CStringDictionary::TStringId FORTE_SPLIT_WORD_INTO_QUARTERS::scmDataInputTypeIds[] = {g_nStringIdWORD};
-const CStringDictionary::TStringId FORTE_SPLIT_WORD_INTO_QUARTERS::scmDataOutputNames[] = {g_nStringIdQUARTER_BYTE_00, g_nStringIdQUARTER_BYTE_01, g_nStringIdQUARTER_BYTE_02, g_nStringIdQUARTER_BYTE_03, g_nStringIdQUARTER_BYTE_04, g_nStringIdQUARTER_BYTE_05, g_nStringIdQUARTER_BYTE_06, g_nStringIdQUARTER_BYTE_07};
-const CStringDictionary::TStringId FORTE_SPLIT_WORD_INTO_QUARTERS::scmDataOutputTypeIds[] = {g_nStringIdBYTE, g_nStringIdBYTE, g_nStringIdBYTE, g_nStringIdBYTE, g_nStringIdBYTE, g_nStringIdBYTE, g_nStringIdBYTE, g_nStringIdBYTE};
+const CStringDictionary::TStringId FORTE_SPLIT_WORD_INTO_QUARTERS::scmDataInputNames[] = {STRID(IN)};
+const CStringDictionary::TStringId FORTE_SPLIT_WORD_INTO_QUARTERS::scmDataInputTypeIds[] = {STRID(WORD)};
+const CStringDictionary::TStringId FORTE_SPLIT_WORD_INTO_QUARTERS::scmDataOutputNames[] = {STRID(QUARTER_BYTE_00), STRID(QUARTER_BYTE_01), STRID(QUARTER_BYTE_02), STRID(QUARTER_BYTE_03), STRID(QUARTER_BYTE_04), STRID(QUARTER_BYTE_05), STRID(QUARTER_BYTE_06), STRID(QUARTER_BYTE_07)};
+const CStringDictionary::TStringId FORTE_SPLIT_WORD_INTO_QUARTERS::scmDataOutputTypeIds[] = {STRID(BYTE), STRID(BYTE), STRID(BYTE), STRID(BYTE), STRID(BYTE), STRID(BYTE), STRID(BYTE), STRID(BYTE)};
 const TDataIOID FORTE_SPLIT_WORD_INTO_QUARTERS::scmEIWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_SPLIT_WORD_INTO_QUARTERS::scmEIWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_SPLIT_WORD_INTO_QUARTERS::scmEventInputNames[] = {g_nStringIdREQ};
-const CStringDictionary::TStringId FORTE_SPLIT_WORD_INTO_QUARTERS::scmEventInputTypeIds[] = {g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_SPLIT_WORD_INTO_QUARTERS::scmEventInputNames[] = {STRID(REQ)};
+const CStringDictionary::TStringId FORTE_SPLIT_WORD_INTO_QUARTERS::scmEventInputTypeIds[] = {STRID(Event)};
 const TDataIOID FORTE_SPLIT_WORD_INTO_QUARTERS::scmEOWith[] = {0, 1, 2, 3, 4, 5, 6, 7, scmWithListDelimiter};
 const TForteInt16 FORTE_SPLIT_WORD_INTO_QUARTERS::scmEOWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_SPLIT_WORD_INTO_QUARTERS::scmEventOutputNames[] = {g_nStringIdCNF};
-const CStringDictionary::TStringId FORTE_SPLIT_WORD_INTO_QUARTERS::scmEventOutputTypeIds[] = {g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_SPLIT_WORD_INTO_QUARTERS::scmEventOutputNames[] = {STRID(CNF)};
+const CStringDictionary::TStringId FORTE_SPLIT_WORD_INTO_QUARTERS::scmEventOutputTypeIds[] = {STRID(Event)};
 const SFBInterfaceSpec FORTE_SPLIT_WORD_INTO_QUARTERS::scmFBInterfaceSpec = {
   1, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,
   1, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes,

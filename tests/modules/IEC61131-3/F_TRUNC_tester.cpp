@@ -13,13 +13,13 @@
  *******************************************************************************/
 #include "../../core/fbtests/fbtestfixture.h"
 
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "F_TRUNC_tester_gen.cpp"
-#endif
+
+USE_STRING_ID(F_TRUNC);
+
 
 struct F_TRUNC_TestFixture : public CFBTestFixtureBase {
 
-  F_TRUNC_TestFixture() : CFBTestFixtureBase(g_nStringIdF_TRUNC) {
+  F_TRUNC_TestFixture() : CFBTestFixtureBase(STRID(F_TRUNC)) {
     setInputData({&mIn_TRUNC});
     setOutputData({&mOut_TRUNC});
     CFBTestFixtureBase::setup();

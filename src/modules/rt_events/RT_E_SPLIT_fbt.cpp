@@ -11,27 +11,43 @@
  *    - initial API and implementation and/or initial documentation
  *******************************************************************************/
 #include "RT_E_SPLIT_fbt.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "RT_E_SPLIT_fbt_gen.cpp"
-#endif
+
+USE_STRING_ID(BOOL);
+USE_STRING_ID(Deadline_EO1);
+USE_STRING_ID(Deadline_EO2);
+USE_STRING_ID(EI);
+USE_STRING_ID(EInit);
+USE_STRING_ID(EO1);
+USE_STRING_ID(EO2);
+USE_STRING_ID(Event);
+USE_STRING_ID(INIT);
+USE_STRING_ID(INITO);
+USE_STRING_ID(QI);
+USE_STRING_ID(QO);
+USE_STRING_ID(RT_E_SPLIT);
+USE_STRING_ID(TIME);
+USE_STRING_ID(Tmin);
+USE_STRING_ID(WCET_EO1);
+USE_STRING_ID(WCET_EO2);
+
 
 #include "criticalregion.h"
 #include "resource.h"
 
-DEFINE_FIRMWARE_FB(FORTE_RT_E_SPLIT, g_nStringIdRT_E_SPLIT)
+DEFINE_FIRMWARE_FB(FORTE_RT_E_SPLIT, STRID(RT_E_SPLIT))
 
-const CStringDictionary::TStringId FORTE_RT_E_SPLIT::scmDataInputNames[] = {g_nStringIdQI, g_nStringIdTmin, g_nStringIdDeadline_EO1, g_nStringIdWCET_EO1, g_nStringIdDeadline_EO2, g_nStringIdWCET_EO2};
-const CStringDictionary::TStringId FORTE_RT_E_SPLIT::scmDataInputTypeIds[] = {g_nStringIdBOOL, g_nStringIdTIME, g_nStringIdTIME, g_nStringIdTIME, g_nStringIdTIME, g_nStringIdTIME};
-const CStringDictionary::TStringId FORTE_RT_E_SPLIT::scmDataOutputNames[] = {g_nStringIdQO};
-const CStringDictionary::TStringId FORTE_RT_E_SPLIT::scmDataOutputTypeIds[] = {g_nStringIdBOOL};
+const CStringDictionary::TStringId FORTE_RT_E_SPLIT::scmDataInputNames[] = {STRID(QI), STRID(Tmin), STRID(Deadline_EO1), STRID(WCET_EO1), STRID(Deadline_EO2), STRID(WCET_EO2)};
+const CStringDictionary::TStringId FORTE_RT_E_SPLIT::scmDataInputTypeIds[] = {STRID(BOOL), STRID(TIME), STRID(TIME), STRID(TIME), STRID(TIME), STRID(TIME)};
+const CStringDictionary::TStringId FORTE_RT_E_SPLIT::scmDataOutputNames[] = {STRID(QO)};
+const CStringDictionary::TStringId FORTE_RT_E_SPLIT::scmDataOutputTypeIds[] = {STRID(BOOL)};
 const TDataIOID FORTE_RT_E_SPLIT::scmEIWith[] = {0, 1, 2, 3, 4, 5, scmWithListDelimiter};
 const TForteInt16 FORTE_RT_E_SPLIT::scmEIWithIndexes[] = {0, -1};
-const CStringDictionary::TStringId FORTE_RT_E_SPLIT::scmEventInputNames[] = {g_nStringIdINIT, g_nStringIdEI};
-const CStringDictionary::TStringId FORTE_RT_E_SPLIT::scmEventInputTypeIds[] = {g_nStringIdEInit, g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_RT_E_SPLIT::scmEventInputNames[] = {STRID(INIT), STRID(EI)};
+const CStringDictionary::TStringId FORTE_RT_E_SPLIT::scmEventInputTypeIds[] = {STRID(EInit), STRID(Event)};
 const TDataIOID FORTE_RT_E_SPLIT::scmEOWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_RT_E_SPLIT::scmEOWithIndexes[] = {0, -1, -1};
-const CStringDictionary::TStringId FORTE_RT_E_SPLIT::scmEventOutputNames[] = {g_nStringIdINITO, g_nStringIdEO1, g_nStringIdEO2};
-const CStringDictionary::TStringId FORTE_RT_E_SPLIT::scmEventOutputTypeIds[] = {g_nStringIdEvent, g_nStringIdEvent, g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_RT_E_SPLIT::scmEventOutputNames[] = {STRID(INITO), STRID(EO1), STRID(EO2)};
+const CStringDictionary::TStringId FORTE_RT_E_SPLIT::scmEventOutputTypeIds[] = {STRID(Event), STRID(Event), STRID(Event)};
 const SFBInterfaceSpec FORTE_RT_E_SPLIT::scmFBInterfaceSpec = {
   2, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,
   3, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes,

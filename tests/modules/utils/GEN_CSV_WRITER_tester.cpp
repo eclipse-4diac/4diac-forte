@@ -10,9 +10,9 @@
  *   Michael Hansal - initial tests
  *******************************************************************************/
 #include "../../core/fbtests/fbtestfixture.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "GEN_CSV_WRITER_tester_gen.cpp"
-#endif
+
+USE_STRING_ID(GEN_CSV_WRITER);
+
 
 #include <cstdio>
 #include <fstream>
@@ -25,7 +25,7 @@ template<typename T1, typename T2>
 class GEN_CSV_WRITER_TestFixture : public CFBTestFixtureBase {
   public:
     GEN_CSV_WRITER_TestFixture(T1 v1 = T1(), T2 v2 = T2()) :
-            CFBTestFixtureBase(g_nStringIdGEN_CSV_WRITER),
+            CFBTestFixtureBase(STRID(GEN_CSV_WRITER)),
             mSD_1(v1), mSD_2(v2) {
       setInputData({&mQI, &mFILE_NAME, &mSD_1, &mSD_2});
       setOutputData({&mQO, &mSTATUS});

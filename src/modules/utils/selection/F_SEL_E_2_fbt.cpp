@@ -16,27 +16,35 @@
  *************************************************************************/
 
 #include "F_SEL_E_2_fbt.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "F_SEL_E_2_fbt_gen.cpp"
-#endif
+
+USE_STRING_ID(ANY);
+USE_STRING_ID(CNF);
+USE_STRING_ID(Event);
+USE_STRING_ID(F_SEL_E_2);
+USE_STRING_ID(IN0);
+USE_STRING_ID(IN1);
+USE_STRING_ID(OUT);
+USE_STRING_ID(REQ0);
+USE_STRING_ID(REQ1);
+
 
 #include "criticalregion.h"
 #include "resource.h"
 
-DEFINE_FIRMWARE_FB(FORTE_F_SEL_E_2, g_nStringIdF_SEL_E_2)
+DEFINE_FIRMWARE_FB(FORTE_F_SEL_E_2, STRID(F_SEL_E_2))
 
-const CStringDictionary::TStringId FORTE_F_SEL_E_2::scmDataInputNames[] = {g_nStringIdIN0, g_nStringIdIN1};
-const CStringDictionary::TStringId FORTE_F_SEL_E_2::scmDataInputTypeIds[] = {g_nStringIdANY, g_nStringIdANY};
-const CStringDictionary::TStringId FORTE_F_SEL_E_2::scmDataOutputNames[] = {g_nStringIdOUT};
-const CStringDictionary::TStringId FORTE_F_SEL_E_2::scmDataOutputTypeIds[] = {g_nStringIdANY};
+const CStringDictionary::TStringId FORTE_F_SEL_E_2::scmDataInputNames[] = {STRID(IN0), STRID(IN1)};
+const CStringDictionary::TStringId FORTE_F_SEL_E_2::scmDataInputTypeIds[] = {STRID(ANY), STRID(ANY)};
+const CStringDictionary::TStringId FORTE_F_SEL_E_2::scmDataOutputNames[] = {STRID(OUT)};
+const CStringDictionary::TStringId FORTE_F_SEL_E_2::scmDataOutputTypeIds[] = {STRID(ANY)};
 const TDataIOID FORTE_F_SEL_E_2::scmEIWith[] = {0, scmWithListDelimiter, 1, scmWithListDelimiter};
 const TForteInt16 FORTE_F_SEL_E_2::scmEIWithIndexes[] = {0, 2};
-const CStringDictionary::TStringId FORTE_F_SEL_E_2::scmEventInputNames[] = {g_nStringIdREQ0, g_nStringIdREQ1};
-const CStringDictionary::TStringId FORTE_F_SEL_E_2::scmEventInputTypeIds[] = {g_nStringIdEvent, g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_F_SEL_E_2::scmEventInputNames[] = {STRID(REQ0), STRID(REQ1)};
+const CStringDictionary::TStringId FORTE_F_SEL_E_2::scmEventInputTypeIds[] = {STRID(Event), STRID(Event)};
 const TDataIOID FORTE_F_SEL_E_2::scmEOWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_F_SEL_E_2::scmEOWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_F_SEL_E_2::scmEventOutputNames[] = {g_nStringIdCNF};
-const CStringDictionary::TStringId FORTE_F_SEL_E_2::scmEventOutputTypeIds[] = {g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_F_SEL_E_2::scmEventOutputNames[] = {STRID(CNF)};
+const CStringDictionary::TStringId FORTE_F_SEL_E_2::scmEventOutputTypeIds[] = {STRID(Event)};
 const SFBInterfaceSpec FORTE_F_SEL_E_2::scmFBInterfaceSpec = {
   2, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,
   1, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes,

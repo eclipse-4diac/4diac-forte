@@ -24,9 +24,18 @@
 #include "../../../src/core/typelib.h"
 #include "../../../src/core/datatypes/forte_struct.h"
 
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "CIEC_ARRAY_test_gen.cpp"
-#endif
+
+USE_STRING_ID(ARRAY);
+USE_STRING_ID(ArrayOfStructTest);
+USE_STRING_ID(BOOL);
+USE_STRING_ID(INT);
+USE_STRING_ID(STRING);
+USE_STRING_ID(UNDEFINEDDATATYPE);
+USE_STRING_ID(Val1);
+USE_STRING_ID(Val2);
+USE_STRING_ID(Val3);
+USE_STRING_ID(WSTRING);
+
 
 using namespace std::string_literals;
 
@@ -57,7 +66,7 @@ class CIEC_ArrayOfStructTest : public CIEC_STRUCT {
     }
 
     CStringDictionary::TStringId getStructTypeNameID() const override {
-      return g_nStringIdArrayOfStructTest;
+      return STRID(ArrayOfStructTest);
     }
 
     CIEC_ANY *getMember(size_t paMemberIndex) override {
@@ -82,14 +91,14 @@ class CIEC_ArrayOfStructTest : public CIEC_STRUCT {
     static const CStringDictionary::TStringId scmElementNames[];
 };
 
-const CStringDictionary::TStringId CIEC_ArrayOfStructTest::scmElementNames[] = { g_nStringIdVal1, g_nStringIdVal2, g_nStringIdVal3 };
+const CStringDictionary::TStringId CIEC_ArrayOfStructTest::scmElementNames[] = { STRID(Val1), STRID(Val2), STRID(Val3) };
 
-DEFINE_FIRMWARE_DATATYPE(ArrayOfStructTest, g_nStringIdArrayOfStructTest);
+DEFINE_FIRMWARE_DATATYPE(ArrayOfStructTest, STRID(ArrayOfStructTest));
 
 BOOST_AUTO_TEST_SUITE(CIEC_ARRAY_function_test)
 BOOST_AUTO_TEST_CASE(Array_assignment_test_BOOL)
 {
-  CIEC_ARRAY_DYNAMIC nTest(3, g_nStringIdBOOL);
+  CIEC_ARRAY_DYNAMIC nTest(3, STRID(BOOL));
 
   BOOST_CHECK_EQUAL(nTest.size(), 3);
   BOOST_CHECK_EQUAL(nTest.getElementDataTypeID(), CIEC_ANY::e_BOOL);
@@ -125,7 +134,7 @@ BOOST_AUTO_TEST_CASE(Array_assignment_test_BOOL)
 
 BOOST_AUTO_TEST_CASE(Array_assignment_test_INT)
 {
-  CIEC_ARRAY_DYNAMIC nTest(5, g_nStringIdINT);
+  CIEC_ARRAY_DYNAMIC nTest(5, STRID(INT));
 
   BOOST_CHECK_EQUAL(nTest.size(), 5);
 
@@ -151,7 +160,7 @@ BOOST_AUTO_TEST_CASE(Array_assignment_test_INT)
 
 BOOST_AUTO_TEST_CASE(Array_assignment_test_INT_with_IEC_type_indices)
 {
-  CIEC_ARRAY_DYNAMIC nTest(5, g_nStringIdINT);
+  CIEC_ARRAY_DYNAMIC nTest(5, STRID(INT));
 
   BOOST_CHECK_EQUAL(nTest.size(), 5);
 
@@ -177,7 +186,7 @@ BOOST_AUTO_TEST_CASE(Array_assignment_test_INT_with_IEC_type_indices)
 
 BOOST_AUTO_TEST_CASE(Array_assignment_test_array)
 {
-  CIEC_ARRAY_DYNAMIC nTest(5, g_nStringIdINT);
+  CIEC_ARRAY_DYNAMIC nTest(5, STRID(INT));
   char acBuffer[30];
 
   BOOST_CHECK_EQUAL(nTest.fromString("[1,2,3,4,5]"), 11);
@@ -260,7 +269,7 @@ BOOST_AUTO_TEST_CASE(Array_assignment_test_array)
   BOOST_CHECK_EQUAL(nTest.fromString("10,20,test,40,50"), -1);
   BOOST_CHECK_EQUAL(nTest.fromString("wrong string"), -1);
 
-  CIEC_ARRAY_DYNAMIC nLargeTest(256, g_nStringIdINT);
+  CIEC_ARRAY_DYNAMIC nLargeTest(256, STRID(INT));
   BOOST_CHECK_EQUAL(nLargeTest.toString(acBuffer, 30), 8);
   BOOST_CHECK_EQUAL(strcmp(acBuffer, "[256(0)]"), 0);
 
@@ -271,8 +280,8 @@ BOOST_AUTO_TEST_CASE(Array_assignment_test_array)
 
 
 BOOST_AUTO_TEST_CASE(Array_copy_test){
-  CIEC_ARRAY_DYNAMIC nTest1(5, g_nStringIdINT);
-  CIEC_ARRAY_DYNAMIC nTest2(5, g_nStringIdINT);
+  CIEC_ARRAY_DYNAMIC nTest1(5, STRID(INT));
+  CIEC_ARRAY_DYNAMIC nTest2(5, STRID(INT));
 
   //TODO think on implementing array assignment
 //  BOOST_CHECK_EQUAL(nTest1.fromString("[1,2,3,4,5]"), true);
@@ -322,8 +331,8 @@ BOOST_AUTO_TEST_CASE(Array_copy_test){
 }
 
 BOOST_AUTO_TEST_CASE(Array_equality_test){
-  CIEC_ARRAY_DYNAMIC nTest1(5, g_nStringIdINT);
-  CIEC_ARRAY_DYNAMIC nTest2(5, g_nStringIdINT);
+  CIEC_ARRAY_DYNAMIC nTest1(5, STRID(INT));
+  CIEC_ARRAY_DYNAMIC nTest2(5, STRID(INT));
 
   BOOST_CHECK(nTest1.equals(nTest2));
   BOOST_CHECK(!nTest1.equals(CIEC_INT(0)));
@@ -340,9 +349,9 @@ BOOST_AUTO_TEST_CASE(Array_equality_test){
 }
 
 BOOST_AUTO_TEST_CASE(Configure_test){
-  CIEC_ARRAY_DYNAMIC *pTest = static_cast<CIEC_ARRAY_DYNAMIC *>(CTypeLib::createDataTypeInstance(g_nStringIdARRAY, nullptr));
+  CIEC_ARRAY_DYNAMIC *pTest = static_cast<CIEC_ARRAY_DYNAMIC *>(CTypeLib::createDataTypeInstance(STRID(ARRAY), nullptr));
 
-  pTest->setup(8, g_nStringIdINT);
+  pTest->setup(8, STRID(INT));
 
   BOOST_CHECK_EQUAL(pTest->size(), 8);
 
@@ -367,7 +376,7 @@ BOOST_AUTO_TEST_CASE(Configure_test){
   BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(static_cast<CIEC_INT &>((*pTest)[4])), -32259);
   BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(static_cast<CIEC_INT &>((*pTest)[7])), 256);
 
-  pTest->setup(15, g_nStringIdSTRING);
+  pTest->setup(15, STRID(STRING));
   BOOST_CHECK_EQUAL(pTest->size(), 15);
 
   BOOST_CHECK_EQUAL((*pTest)[0].getDataTypeID(), CIEC_ANY::e_STRING);
@@ -395,7 +404,7 @@ BOOST_AUTO_TEST_CASE(Configure_test){
 
 BOOST_AUTO_TEST_CASE(Array_fromString_StringArrayTest)
 {
-  CIEC_ARRAY_DYNAMIC nTest(3, g_nStringIdSTRING);
+  CIEC_ARRAY_DYNAMIC nTest(3, STRID(STRING));
   const char cTestString1[] = {"[\'String 1\',\'String 2\',\'String 3\']"};
   const char cTestString2[] = {"[\'String 1\']"};
   const char cTestString2fromStringResult[] = {"[\'String 1\',\'\',\'\']"};
@@ -438,7 +447,7 @@ BOOST_AUTO_TEST_CASE(Array_fromString_StringArrayTest)
   BOOST_CHECK_EQUAL(nTest.toString(acBuffer, 50), strlen(cTestString3fromStringResult));
   BOOST_CHECK_EQUAL(strcmp(acBuffer, cTestString3fromStringResult), 0);
 
-  CIEC_ARRAY_DYNAMIC nTest2(3, g_nStringIdSTRING);
+  CIEC_ARRAY_DYNAMIC nTest2(3, STRID(STRING));
   BOOST_CHECK_EQUAL(nTest2.fromString(cTestString4), -1);
   BOOST_TEST(static_cast<CIEC_STRING &>(nTest2[0]).getStorage() == "String 1"s);
   BOOST_TEST(static_cast<CIEC_STRING &>(nTest2[1]).getStorage() == "String 2"s);
@@ -521,7 +530,7 @@ BOOST_AUTO_TEST_CASE(Array_fromString_StringArrayTest)
 
 BOOST_AUTO_TEST_CASE(Array_fromString_WStringArrayTest)
 {
-  CIEC_ARRAY_DYNAMIC nTest(3, g_nStringIdWSTRING);
+  CIEC_ARRAY_DYNAMIC nTest(3, STRID(WSTRING));
   const char cTestString1[] = {"[\"String 1\",\"String 2\",\"String 3\"]"};
   const char cTestString2[] = {"[\"String 1\"]"};
   const char cTestString2fromStringResult[] = {"[\"String 1\",\"\",\"\"]"};
@@ -564,7 +573,7 @@ BOOST_AUTO_TEST_CASE(Array_fromString_WStringArrayTest)
   BOOST_CHECK_EQUAL(nTest.toString(acBuffer, 50), strlen(cTestString3fromStringResult));
   BOOST_CHECK_EQUAL(strcmp(acBuffer, cTestString3fromStringResult), 0);
 
-  CIEC_ARRAY_DYNAMIC nTest2(3, g_nStringIdWSTRING);
+  CIEC_ARRAY_DYNAMIC nTest2(3, STRID(WSTRING));
   BOOST_CHECK_EQUAL(nTest2.fromString(cTestString4), -1);
   BOOST_CHECK_EQUAL(strcmp(static_cast<CIEC_WSTRING &>(nTest2[0]).getValue(), "String 1"), 0);
   BOOST_CHECK_EQUAL(strcmp(static_cast<CIEC_WSTRING &>(nTest2[1]).getValue(), "String 2"), 0);
@@ -653,7 +662,7 @@ BOOST_AUTO_TEST_CASE(Array_fromString_WStringArrayTest)
     BOOST_CHECK_EQUAL(paEmptyArray.getToStringBufferSize(), sizeof("[]"));
     BOOST_CHECK_EQUAL(paEmptyArray.toString(acBuffer, 30), 2);
 
-    CIEC_ARRAY_DYNAMIC nTest1(1, g_nStringIdINT);
+    CIEC_ARRAY_DYNAMIC nTest1(1, STRID(INT));
     BOOST_CHECK_EQUAL(nTest1.fromString("[2]"), 3);
     paEmptyArray.setValue(nTest1); //shouldn't change or break anything
 
@@ -671,7 +680,7 @@ BOOST_AUTO_TEST_CASE(Array_fromString_WStringArrayTest)
 
 BOOST_AUTO_TEST_CASE(Array_emptyArray)
 {
-  CIEC_ARRAY_DYNAMIC nTest(0, g_nStringIdINT);
+  CIEC_ARRAY_DYNAMIC nTest(0, STRID(INT));
     checkEmptyArray(nTest);
 }
 
@@ -705,7 +714,7 @@ void checkArrayOfStructTest_TestDataSet1(CIEC_ArrayOfStructTest &paStruct) {
 
 BOOST_AUTO_TEST_CASE(Array_arrayOfStructs)
 {
-  CIEC_ARRAY_DYNAMIC nTest(3, g_nStringIdArrayOfStructTest);
+  CIEC_ARRAY_DYNAMIC nTest(3, STRID(ArrayOfStructTest));
 
   char acBuffer[230];
 
@@ -740,7 +749,7 @@ BOOST_AUTO_TEST_CASE(Array_arrayOfStructs)
   BOOST_CHECK_EQUAL(nTest.toString(acBuffer, 230), sizeof("[(Val1:=['Check string!','Check string 2!'],Val2:=TRUE,Val3:=[24534]),(Val1:=['Check string!','Check string 2!'],Val2:=TRUE,Val3:=[24534]),(Val1:=['Check string!','Check string 2!'],Val2:=TRUE,Val3:=[24534])]") - 1);
   BOOST_CHECK_EQUAL(strcmp(acBuffer, "[(Val1:=['Check string!','Check string 2!'],Val2:=TRUE,Val3:=[24534]),(Val1:=['Check string!','Check string 2!'],Val2:=TRUE,Val3:=[24534]),(Val1:=['Check string!','Check string 2!'],Val2:=TRUE,Val3:=[24534])]"), 0);
 
-  CIEC_ARRAY_DYNAMIC nTest1(3, g_nStringIdArrayOfStructTest);
+  CIEC_ARRAY_DYNAMIC nTest1(3, STRID(ArrayOfStructTest));
   (void) nTest1.fromString("[(Val1:=['Check string!','Check string 2!'],Val2:=TRUE,Val3:=[24534]),(Val1:=['Check string!','Check string 2!'],Val2:=TRUE,Val3:=[24534]),(Val1:=['Check string!','Check string 2!'],Val2:=TRUE,Val3:=[24534])]");
 
   for(size_t i = 0; i < 3; i++) {
@@ -759,7 +768,7 @@ BOOST_AUTO_TEST_CASE(Array_arrayOfStructs)
 }
 
   BOOST_AUTO_TEST_CASE(Array_arrayOfUndefined) {
-    CIEC_ARRAY_DYNAMIC nTest(3, g_nStringIdUNDEFINEDDATATYPE);
+    CIEC_ARRAY_DYNAMIC nTest(3, STRID(UNDEFINEDDATATYPE));
     checkEmptyArray(nTest);
   }
 

@@ -12,16 +12,16 @@
  *      - initial implementation and rework communication infrastructure
  *******************************************************************************/
 #include "forte_char.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "forte_char_gen.cpp"
-#endif
+
+USE_STRING_ID(CHAR);
+
 
 #include "unicode_utils.h"
 
 #include <limits>
 #include <stdio.h>
 
-DEFINE_FIRMWARE_DATATYPE(CHAR, g_nStringIdCHAR)
+DEFINE_FIRMWARE_DATATYPE(CHAR, STRID(CHAR))
 
 int CIEC_CHAR::toString(char *paValue, size_t paBufferSize) const {
   const char longestStringSerialization[] = "CHAR#'$00'";

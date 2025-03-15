@@ -11,29 +11,40 @@
  *******************************************************************************/
 
 #include "FieldsToPublishEvent.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "FieldsToPublishEvent_gen.cpp"
-#endif
 
-DEFINE_FIRMWARE_FB(FORTE_FieldsToPublishEvent, g_nStringIdFieldsToPublishEvent)
+USE_STRING_ID(ArrowheadEvent);
+USE_STRING_ID(ArrowheadSystem);
+USE_STRING_ID(CNF);
+USE_STRING_ID(deliveryCompleteUri);
+USE_STRING_ID(event);
+USE_STRING_ID(Event);
+USE_STRING_ID(FieldsToPublishEvent);
+USE_STRING_ID(publishEvent);
+USE_STRING_ID(PublishEvent);
+USE_STRING_ID(REQ);
+USE_STRING_ID(source);
+USE_STRING_ID(WSTRING);
 
-const CStringDictionary::TStringId FORTE_FieldsToPublishEvent::scmDataInputNames[] = {g_nStringIdsource, g_nStringIdevent, g_nStringIddeliveryCompleteUri};
 
-const CStringDictionary::TStringId FORTE_FieldsToPublishEvent::scmDataInputTypeIds[] = {g_nStringIdArrowheadSystem, g_nStringIdArrowheadEvent, g_nStringIdWSTRING};
+DEFINE_FIRMWARE_FB(FORTE_FieldsToPublishEvent, STRID(FieldsToPublishEvent))
 
-const CStringDictionary::TStringId FORTE_FieldsToPublishEvent::scmDataOutputNames[] = {g_nStringIdpublishEvent};
+const CStringDictionary::TStringId FORTE_FieldsToPublishEvent::scmDataInputNames[] = {STRID(source), STRID(event), STRID(deliveryCompleteUri)};
 
-const CStringDictionary::TStringId FORTE_FieldsToPublishEvent::scmDataOutputTypeIds[] = {g_nStringIdPublishEvent};
+const CStringDictionary::TStringId FORTE_FieldsToPublishEvent::scmDataInputTypeIds[] = {STRID(ArrowheadSystem), STRID(ArrowheadEvent), STRID(WSTRING)};
+
+const CStringDictionary::TStringId FORTE_FieldsToPublishEvent::scmDataOutputNames[] = {STRID(publishEvent)};
+
+const CStringDictionary::TStringId FORTE_FieldsToPublishEvent::scmDataOutputTypeIds[] = {STRID(PublishEvent)};
 
 const TForteInt16 FORTE_FieldsToPublishEvent::scmEIWithIndexes[] = {0};
 const TDataIOID FORTE_FieldsToPublishEvent::scmEIWith[] = {0, 1, 2, scmWithListDelimiter};
-const CStringDictionary::TStringId FORTE_FieldsToPublishEvent::scmEventInputNames[] = {g_nStringIdREQ};
-const CStringDictionary::TStringId FORTE_FieldsToPublishEvent::scmEventInputTypeIds[] = {g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_FieldsToPublishEvent::scmEventInputNames[] = {STRID(REQ)};
+const CStringDictionary::TStringId FORTE_FieldsToPublishEvent::scmEventInputTypeIds[] = {STRID(Event)};
 
 const TDataIOID FORTE_FieldsToPublishEvent::scmEOWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_FieldsToPublishEvent::scmEOWithIndexes[] = {0, -1};
-const CStringDictionary::TStringId FORTE_FieldsToPublishEvent::scmEventOutputNames[] = {g_nStringIdCNF};
-const CStringDictionary::TStringId FORTE_FieldsToPublishEvent::scmEventOutputTypeIds[] = {g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_FieldsToPublishEvent::scmEventOutputNames[] = {STRID(CNF)};
+const CStringDictionary::TStringId FORTE_FieldsToPublishEvent::scmEventOutputTypeIds[] = {STRID(Event)};
 
 const SFBInterfaceSpec FORTE_FieldsToPublishEvent::scmFBInterfaceSpec = {
   1,  scmEventInputNames, scmEventInputTypeIds,  scmEIWith,  scmEIWithIndexes,

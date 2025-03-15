@@ -15,13 +15,13 @@
  *      - refactored array type structure
   *******************************************************************************/
 #include "forte_array_dynamic.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "forte_array_dynamic_gen.cpp"
-#endif
+
+USE_STRING_ID(ARRAY);
+
 
 #include "forte_ulint.h"
 
-DEFINE_FIRMWARE_DATATYPE(ARRAY_DYNAMIC, g_nStringIdARRAY)
+DEFINE_FIRMWARE_DATATYPE(ARRAY_DYNAMIC, STRID(ARRAY))
 
 //!Function to configure the array if it is created via the typelib
 void CIEC_ARRAY_DYNAMIC::setup(TForteUInt16 paLength, CStringDictionary::TStringId paArrayType) {
@@ -79,7 +79,7 @@ void CIEC_ARRAY_DYNAMIC::setup(const CStringDictionary::TStringId *paParameters)
     auto *dest = static_cast<TForteByte *>(mData);
     for (; mSize < size; ++mSize) { // increment size one-by-one to track allocated elements for destruction
       CIEC_ANY *element = mElementDataTypeEntry->createDataTypeInstance(dest);
-      if(elementType == g_nStringIdARRAY) {
+      if(elementType == STRID(ARRAY)) {
         static_cast<CIEC_ARRAY_DYNAMIC *>(element)->setup(paParameters + 3);
       }
       dest += mElementSize;

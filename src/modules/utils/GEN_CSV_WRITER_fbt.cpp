@@ -19,25 +19,37 @@
  *   - add support for array parameters
  *******************************************************************************/
 #include "GEN_CSV_WRITER_fbt.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "GEN_CSV_WRITER_fbt_gen.cpp"
-#endif
+
+USE_STRING_ID(BOOL);
+USE_STRING_ID(CNF);
+USE_STRING_ID(EInit);
+USE_STRING_ID(Event);
+USE_STRING_ID(FILE_NAME);
+USE_STRING_ID(GEN_CSV_WRITER);
+USE_STRING_ID(INIT);
+USE_STRING_ID(INITO);
+USE_STRING_ID(QI);
+USE_STRING_ID(QO);
+USE_STRING_ID(REQ);
+USE_STRING_ID(STATUS);
+USE_STRING_ID(STRING);
+
 #include <errno.h>
 #include "devlog.h"
 #include "resource.h"
 #include "criticalregion.h"
 
-DEFINE_GENERIC_FIRMWARE_FB(GEN_CSV_WRITER, g_nStringIdGEN_CSV_WRITER);
+DEFINE_GENERIC_FIRMWARE_FB(GEN_CSV_WRITER, STRID(GEN_CSV_WRITER));
 
-const CStringDictionary::TStringId GEN_CSV_WRITER::scmDataOutputNames[] = { g_nStringIdQO, g_nStringIdSTATUS };
+const CStringDictionary::TStringId GEN_CSV_WRITER::scmDataOutputNames[] = { STRID(QO), STRID(STATUS) };
 
-const CStringDictionary::TStringId GEN_CSV_WRITER::scmDataOutputTypeIds[] = { g_nStringIdBOOL, g_nStringIdSTRING };
+const CStringDictionary::TStringId GEN_CSV_WRITER::scmDataOutputTypeIds[] = { STRID(BOOL), STRID(STRING) };
 
-const CStringDictionary::TStringId GEN_CSV_WRITER::scmEventInputNames[] = { g_nStringIdINIT, g_nStringIdREQ };
-const CStringDictionary::TStringId GEN_CSV_WRITER::scmEventInputTypeIds[] = {g_nStringIdEInit, g_nStringIdEvent};
+const CStringDictionary::TStringId GEN_CSV_WRITER::scmEventInputNames[] = { STRID(INIT), STRID(REQ) };
+const CStringDictionary::TStringId GEN_CSV_WRITER::scmEventInputTypeIds[] = {STRID(EInit), STRID(Event)};
 
-const CStringDictionary::TStringId GEN_CSV_WRITER::scmEventOutputNames[] = { g_nStringIdINITO, g_nStringIdCNF };
-const CStringDictionary::TStringId GEN_CSV_WRITER::scmEventOutputTypeIds[] = {g_nStringIdEvent, g_nStringIdEvent};
+const CStringDictionary::TStringId GEN_CSV_WRITER::scmEventOutputNames[] = { STRID(INITO), STRID(CNF) };
+const CStringDictionary::TStringId GEN_CSV_WRITER::scmEventOutputTypeIds[] = {STRID(Event), STRID(Event)};
 
 const CIEC_STRING GEN_CSV_WRITER::scmOK = "OK"_STRING;
 const CIEC_STRING GEN_CSV_WRITER::scmFileAlreadyOpened = "File already opened"_STRING;
@@ -101,10 +113,10 @@ bool GEN_CSV_WRITER::createInterfaceSpec(const char *paConfigString, SFBInterfac
     mDataInputNames = std::make_unique<CStringDictionary::TStringId[]>(paInterfaceSpec.mNumDIs);
     mDataInputTypeIds = std::make_unique<CStringDictionary::TStringId[]>(paInterfaceSpec.mNumDIs);
 
-    mDataInputNames[0] = g_nStringIdQI;
-    mDataInputTypeIds[0] = g_nStringIdBOOL;
-    mDataInputNames[1] = g_nStringIdFILE_NAME;
-    mDataInputTypeIds[1] = g_nStringIdSTRING;
+    mDataInputNames[0] = STRID(QI);
+    mDataInputTypeIds[0] = STRID(BOOL);
+    mDataInputNames[1] = STRID(FILE_NAME);
+    mDataInputTypeIds[1] = STRID(STRING);
 
     generateGenericDataPointArrays("SD_", &(mDataInputTypeIds[2]), &(mDataInputNames[2]), paInterfaceSpec.mNumDIs - 2);
 

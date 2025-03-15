@@ -13,9 +13,10 @@
  *******************************************************************************/
 
 #include "GEN_E_SPLIT_fbt.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "GEN_E_SPLIT_fbt_gen.cpp"
-#endif
+
+USE_STRING_ID(EI);
+USE_STRING_ID(GEN_E_SPLIT);
+
 
 #include "iec61131_functions.h"
 #include "forte_array_common.h"
@@ -23,9 +24,9 @@
 #include "forte_array_fixed.h"
 #include "forte_array_variable.h"
 
-DEFINE_GENERIC_FIRMWARE_FB(GEN_E_SPLIT, g_nStringIdGEN_E_SPLIT)
+DEFINE_GENERIC_FIRMWARE_FB(GEN_E_SPLIT, STRID(GEN_E_SPLIT))
 
-const CStringDictionary::TStringId GEN_E_SPLIT::scmEventInputNames[] = {g_nStringIdEI};
+const CStringDictionary::TStringId GEN_E_SPLIT::scmEventInputNames[] = {STRID(EI)};
 
 
 GEN_E_SPLIT::GEN_E_SPLIT(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :

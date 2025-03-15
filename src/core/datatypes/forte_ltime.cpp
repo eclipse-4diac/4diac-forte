@@ -15,9 +15,9 @@
  *    Hesam Rezaee - developing new format for time variables including different time element
  *******************************************************************************/
 #include "forte_ltime.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "forte_ltime_gen.cpp"
-#endif
+
+USE_STRING_ID(LTIME);
+
 
 #include "../../arch/timerha.h"
 #include <cstring>
@@ -25,7 +25,7 @@
 #include <cctype>
 #include "forte_constants.h"
 
-DEFINE_FIRMWARE_DATATYPE(LTIME, g_nStringIdLTIME)
+DEFINE_FIRMWARE_DATATYPE(LTIME, STRID(LTIME))
 
 int CIEC_LTIME::fromString(const char *paValue) {
   int nRetVal = -1;

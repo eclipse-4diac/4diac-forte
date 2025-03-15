@@ -14,14 +14,14 @@
  *      - fixes behavior for getToStringBufferSize
  *******************************************************************************/
 #include "forte_wstring.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "forte_wstring_gen.cpp"
-#endif
+
+USE_STRING_ID(WSTRING);
+
 #include <devlog.h>
 
 #include "unicode_utils.h"
 
-DEFINE_FIRMWARE_DATATYPE(WSTRING, g_nStringIdWSTRING)
+DEFINE_FIRMWARE_DATATYPE(WSTRING, STRID(WSTRING))
 
 bool CIEC_WSTRING::fromUTF16(const TForteWChar *paBuffer, unsigned int paBufferLen) {
   return fromUTF16(reinterpret_cast<const TForteByte*>(paBuffer), 2 * paBufferLen);

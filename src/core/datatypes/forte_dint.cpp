@@ -12,11 +12,11 @@
  *      - initial implementation and rework communication infrastructure
  *******************************************************************************/
 #include "forte_dint.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "forte_dint_gen.cpp"
-#endif
 
-DEFINE_FIRMWARE_DATATYPE(DINT, g_nStringIdDINT)
+USE_STRING_ID(DINT);
+
+
+DEFINE_FIRMWARE_DATATYPE(DINT, STRID(DINT))
 
 template CIEC_DINT &CIEC_DINT::operator=<>(const CIEC_SINT &paValue);
 

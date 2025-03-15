@@ -13,9 +13,9 @@
 #include "../../core/fbtests/fbtester.h"
 #include <forte_time.h>
 #include <E_DELAY.h>
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "E_DELAY_tester_gen.cpp"
-#endif
+
+USE_STRING_ID(E_DELAY);
+
 
 #ifdef WIN32
   #include <windows.h>
@@ -97,4 +97,4 @@ class E_DELAY_tester  : public CFBTester{
 /***********************************************************************************/
 /***********************************************************************************/
 
-DEFINE_FB_TESTER(E_DELAY_tester, g_nStringIdE_DELAY)
+DEFINE_FB_TESTER(E_DELAY_tester, STRID(E_DELAY))

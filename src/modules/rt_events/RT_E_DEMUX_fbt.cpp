@@ -11,27 +11,51 @@
  *    - initial API and implementation and/or initial documentation
  *******************************************************************************/
 #include "RT_E_DEMUX_fbt.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "RT_E_DEMUX_fbt_gen.cpp"
-#endif
+
+USE_STRING_ID(BOOL);
+USE_STRING_ID(Deadline0);
+USE_STRING_ID(Deadline1);
+USE_STRING_ID(Deadline2);
+USE_STRING_ID(Deadline3);
+USE_STRING_ID(EI);
+USE_STRING_ID(EInit);
+USE_STRING_ID(EO0);
+USE_STRING_ID(EO1);
+USE_STRING_ID(EO2);
+USE_STRING_ID(EO3);
+USE_STRING_ID(Event);
+USE_STRING_ID(INIT);
+USE_STRING_ID(INITO);
+USE_STRING_ID(K);
+USE_STRING_ID(QI);
+USE_STRING_ID(QO);
+USE_STRING_ID(RT_E_DEMUX);
+USE_STRING_ID(TIME);
+USE_STRING_ID(Tmin);
+USE_STRING_ID(UINT);
+USE_STRING_ID(WCET0);
+USE_STRING_ID(WCET1);
+USE_STRING_ID(WCET2);
+USE_STRING_ID(WCET3);
+
 
 #include "criticalregion.h"
 #include "resource.h"
 
-DEFINE_FIRMWARE_FB(FORTE_RT_E_DEMUX, g_nStringIdRT_E_DEMUX)
+DEFINE_FIRMWARE_FB(FORTE_RT_E_DEMUX, STRID(RT_E_DEMUX))
 
-const CStringDictionary::TStringId FORTE_RT_E_DEMUX::scmDataInputNames[] = {g_nStringIdQI, g_nStringIdK, g_nStringIdTmin, g_nStringIdDeadline0, g_nStringIdWCET0, g_nStringIdDeadline1, g_nStringIdWCET1, g_nStringIdDeadline2, g_nStringIdWCET2, g_nStringIdDeadline3, g_nStringIdWCET3};
-const CStringDictionary::TStringId FORTE_RT_E_DEMUX::scmDataInputTypeIds[] = {g_nStringIdBOOL, g_nStringIdUINT, g_nStringIdTIME, g_nStringIdTIME, g_nStringIdTIME, g_nStringIdTIME, g_nStringIdTIME, g_nStringIdTIME, g_nStringIdTIME, g_nStringIdTIME, g_nStringIdTIME};
-const CStringDictionary::TStringId FORTE_RT_E_DEMUX::scmDataOutputNames[] = {g_nStringIdQO};
-const CStringDictionary::TStringId FORTE_RT_E_DEMUX::scmDataOutputTypeIds[] = {g_nStringIdBOOL};
+const CStringDictionary::TStringId FORTE_RT_E_DEMUX::scmDataInputNames[] = {STRID(QI), STRID(K), STRID(Tmin), STRID(Deadline0), STRID(WCET0), STRID(Deadline1), STRID(WCET1), STRID(Deadline2), STRID(WCET2), STRID(Deadline3), STRID(WCET3)};
+const CStringDictionary::TStringId FORTE_RT_E_DEMUX::scmDataInputTypeIds[] = {STRID(BOOL), STRID(UINT), STRID(TIME), STRID(TIME), STRID(TIME), STRID(TIME), STRID(TIME), STRID(TIME), STRID(TIME), STRID(TIME), STRID(TIME)};
+const CStringDictionary::TStringId FORTE_RT_E_DEMUX::scmDataOutputNames[] = {STRID(QO)};
+const CStringDictionary::TStringId FORTE_RT_E_DEMUX::scmDataOutputTypeIds[] = {STRID(BOOL)};
 const TDataIOID FORTE_RT_E_DEMUX::scmEIWith[] = {0, 2, 3, 4, 5, 6, 7, 8, 9, 10, scmWithListDelimiter, 1, scmWithListDelimiter};
 const TForteInt16 FORTE_RT_E_DEMUX::scmEIWithIndexes[] = {0, 11};
-const CStringDictionary::TStringId FORTE_RT_E_DEMUX::scmEventInputNames[] = {g_nStringIdINIT, g_nStringIdEI};
-const CStringDictionary::TStringId FORTE_RT_E_DEMUX::scmEventInputTypeIds[] = {g_nStringIdEInit, g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_RT_E_DEMUX::scmEventInputNames[] = {STRID(INIT), STRID(EI)};
+const CStringDictionary::TStringId FORTE_RT_E_DEMUX::scmEventInputTypeIds[] = {STRID(EInit), STRID(Event)};
 const TDataIOID FORTE_RT_E_DEMUX::scmEOWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_RT_E_DEMUX::scmEOWithIndexes[] = {0, -1, -1, -1, -1};
-const CStringDictionary::TStringId FORTE_RT_E_DEMUX::scmEventOutputNames[] = {g_nStringIdINITO, g_nStringIdEO0, g_nStringIdEO1, g_nStringIdEO2, g_nStringIdEO3};
-const CStringDictionary::TStringId FORTE_RT_E_DEMUX::scmEventOutputTypeIds[] = {g_nStringIdEvent, g_nStringIdEvent, g_nStringIdEvent, g_nStringIdEvent, g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_RT_E_DEMUX::scmEventOutputNames[] = {STRID(INITO), STRID(EO0), STRID(EO1), STRID(EO2), STRID(EO3)};
+const CStringDictionary::TStringId FORTE_RT_E_DEMUX::scmEventOutputTypeIds[] = {STRID(Event), STRID(Event), STRID(Event), STRID(Event), STRID(Event)};
 const SFBInterfaceSpec FORTE_RT_E_DEMUX::scmFBInterfaceSpec = {
   2, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,
   5, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes,

@@ -11,9 +11,14 @@
  *******************************************************************************/
 
 #include "PortAdapter_adp.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "PortAdapter_adp_gen.cpp"
-#endif
+
+USE_STRING_ID(DWORD);
+USE_STRING_ID(Event);
+USE_STRING_ID(GPIO_Port_Addr);
+USE_STRING_ID(MAP);
+USE_STRING_ID(MAPO);
+USE_STRING_ID(PortAdapter);
+
 
 #include "iec61131_functions.h"
 #include "forte_array_common.h"
@@ -21,18 +26,18 @@
 #include "forte_array_fixed.h"
 #include "forte_array_variable.h"
 
-DEFINE_ADAPTER_TYPE(FORTE_PortAdapter, g_nStringIdPortAdapter)
+DEFINE_ADAPTER_TYPE(FORTE_PortAdapter, STRID(PortAdapter))
 
-const CStringDictionary::TStringId FORTE_PortAdapter::scmDataOutputNames[] = {g_nStringIdGPIO_Port_Addr};
-const CStringDictionary::TStringId FORTE_PortAdapter::scmDataOutputTypeIds[] = {g_nStringIdDWORD};
+const CStringDictionary::TStringId FORTE_PortAdapter::scmDataOutputNames[] = {STRID(GPIO_Port_Addr)};
+const CStringDictionary::TStringId FORTE_PortAdapter::scmDataOutputTypeIds[] = {STRID(DWORD)};
 const TForteInt16 FORTE_PortAdapter::scmEIWithIndexes[] = {-1};
-const CStringDictionary::TStringId FORTE_PortAdapter::scmEventInputNames[] = {g_nStringIdMAPO};
+const CStringDictionary::TStringId FORTE_PortAdapter::scmEventInputNames[] = {STRID(MAPO)};
 const TDataIOID FORTE_PortAdapter::scmEOWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_PortAdapter::scmEOWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_PortAdapter::scmEventOutputNames[] = {g_nStringIdMAP};
+const CStringDictionary::TStringId FORTE_PortAdapter::scmEventOutputNames[] = {STRID(MAP)};
 
-const CStringDictionary::TStringId FORTE_PortAdapter::scmEventInputTypeIds[] = {g_nStringIdEvent};
-const CStringDictionary::TStringId FORTE_PortAdapter::scmEventOutputTypeIds[] = {g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_PortAdapter::scmEventInputTypeIds[] = {STRID(Event)};
+const CStringDictionary::TStringId FORTE_PortAdapter::scmEventOutputTypeIds[] = {STRID(Event)};
 
 const SFBInterfaceSpec FORTE_PortAdapter::scmFBInterfaceSpecSocket = {
   1, scmEventInputNames, scmEventInputTypeIds, nullptr, scmEIWithIndexes,

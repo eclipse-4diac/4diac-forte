@@ -17,24 +17,29 @@
  *     - add generic readInputData and writeOutputData
  *******************************************************************************/
 #include "GEN_VALUES2ARRAY_fbt.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "GEN_VALUES2ARRAY_fbt_gen.cpp"
-#endif
+
+USE_STRING_ID(ARRAY);
+USE_STRING_ID(CNF);
+USE_STRING_ID(Event);
+USE_STRING_ID(GEN_VALUES2ARRAY);
+USE_STRING_ID(OUT);
+USE_STRING_ID(REQ);
+
 
 #include <stdio.h>
 #include "forte_printer.h"
 #include "resource.h"
 #include "criticalregion.h"
 
-DEFINE_GENERIC_FIRMWARE_FB(GEN_VALUES2ARRAY, g_nStringIdGEN_VALUES2ARRAY)
+DEFINE_GENERIC_FIRMWARE_FB(GEN_VALUES2ARRAY, STRID(GEN_VALUES2ARRAY))
 
-const CStringDictionary::TStringId GEN_VALUES2ARRAY::scmDataOutputNames[] = { g_nStringIdOUT };
+const CStringDictionary::TStringId GEN_VALUES2ARRAY::scmDataOutputNames[] = { STRID(OUT) };
 
-const CStringDictionary::TStringId GEN_VALUES2ARRAY::scmEventInputNames[] = { g_nStringIdREQ };
-const CStringDictionary::TStringId GEN_VALUES2ARRAY::scmEventInputTypeIds[] = {g_nStringIdEvent};
+const CStringDictionary::TStringId GEN_VALUES2ARRAY::scmEventInputNames[] = { STRID(REQ) };
+const CStringDictionary::TStringId GEN_VALUES2ARRAY::scmEventInputTypeIds[] = {STRID(Event)};
 
-const CStringDictionary::TStringId GEN_VALUES2ARRAY::scmEventOutputNames[] = { g_nStringIdCNF };
-const CStringDictionary::TStringId GEN_VALUES2ARRAY::scmEventOutputTypeIds[] = {g_nStringIdEvent};
+const CStringDictionary::TStringId GEN_VALUES2ARRAY::scmEventOutputNames[] = { STRID(CNF) };
+const CStringDictionary::TStringId GEN_VALUES2ARRAY::scmEventOutputTypeIds[] = {STRID(Event)};
 
 GEN_VALUES2ARRAY::GEN_VALUES2ARRAY(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CGenFunctionBlock<CFunctionBlock>(paContainer, paInstanceNameId), mDataInputNames(nullptr), mDInputs(0), m_ValueTypeID(CStringDictionary::CStringDictionary::scmInvalidStringId){
@@ -100,7 +105,7 @@ bool GEN_VALUES2ARRAY::createInterfaceSpec(const char *paConfigString, SFBInterf
     }
 
     //create data output type
-    mDataOutputTypeIds[0] = g_nStringIdARRAY;
+    mDataOutputTypeIds[0] = STRID(ARRAY);
     mDataOutputTypeIds[1] = mDInputs;
     mDataOutputTypeIds[2] = m_ValueTypeID;
 

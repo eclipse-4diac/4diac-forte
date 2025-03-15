@@ -14,16 +14,20 @@
  *   Alois Zoitl - Copied and modified from CFakeTimeDev.h
  *******************************************************************************/
 #include "FakeTimeDev.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "FakeTimeDev_gen.cpp"
-#endif
+
+USE_STRING_ID(FakeTime);
+USE_STRING_ID(MGR);
+USE_STRING_ID(MGR_ID);
+USE_STRING_ID(TIME);
+USE_STRING_ID(WSTRING);
+
 #include "stringdict.h"
 #include "../arch/fake_time/faketimerha.h"
 
 #include "arch/timerHandlerFactory.h"
 
-const CStringDictionary::TStringId FakeTimeDev::scmDINameIds[] = { g_nStringIdMGR_ID, g_nStringIdFakeTime};
-const CStringDictionary::TStringId FakeTimeDev::scmDIDataTypeIds[] = {g_nStringIdWSTRING, g_nStringIdTIME};
+const CStringDictionary::TStringId FakeTimeDev::scmDINameIds[] = { STRID(MGR_ID), STRID(FakeTime)};
+const CStringDictionary::TStringId FakeTimeDev::scmDIDataTypeIds[] = {STRID(WSTRING), STRID(TIME)};
 
 const SFBInterfaceSpec FakeTimeDev::scmFBInterfaceSpec = {
   0, nullptr, nullptr, nullptr, nullptr,
@@ -40,7 +44,7 @@ FakeTimeDev::FakeTimeDev(const std::string &paMGR_ID) :
       var_FakeTime(),
       conn_MGR_ID(nullptr),
       conn_FakeTime(nullptr),
-      MGR(g_nStringIdMGR, *this){
+      MGR(STRID(MGR), *this){
 }
 
 bool FakeTimeDev::initialize() {
@@ -54,7 +58,7 @@ bool FakeTimeDev::initialize() {
 
   //we need to manually crate this interface2internal connection as the MGR is not managed by device
   mDConnMGR_ID.setSource(this, 0);
-  mDConnMGR_ID.connect(&MGR, g_nStringIdMGR_ID);
+  mDConnMGR_ID.connect(&MGR, STRID(MGR_ID));
   return true;
 }
 
@@ -98,7 +102,7 @@ EMGMResponse FakeTimeDev::writeValue(forte::core::TNameIdentifier &paNameList, c
   // parent writeValue is modifying the name list so we need to get the name as backup here
   CStringDictionary::TStringId portName = paNameList.back();
   EMGMResponse eRetVal = CDevice::writeValue(paNameList, paValue, paForce);
-  if((EMGMResponse::Ready == eRetVal) && (g_nStringIdFakeTime == portName)){
+  if((EMGMResponse::Ready == eRetVal) && (STRID(FakeTime) == portName)){
     //fake time was written, update CFakeTimerHandler
     static_cast<CFakeTimerHandler&>(getTimer()).sleepToTime(var_FakeTime);
   }

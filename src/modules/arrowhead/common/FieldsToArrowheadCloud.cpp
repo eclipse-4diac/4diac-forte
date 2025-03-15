@@ -11,29 +11,44 @@
  *******************************************************************************/
 
 #include "FieldsToArrowheadCloud.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "FieldsToArrowheadCloud_gen.cpp"
-#endif
 
-DEFINE_FIRMWARE_FB(FORTE_FieldsToArrowheadCloud, g_nStringIdFieldsToArrowheadCloud)
+USE_STRING_ID(address);
+USE_STRING_ID(arrowheadCloud);
+USE_STRING_ID(ArrowheadCloud);
+USE_STRING_ID(authenticationInfo);
+USE_STRING_ID(BOOL);
+USE_STRING_ID(cloudName);
+USE_STRING_ID(CNF);
+USE_STRING_ID(DINT);
+USE_STRING_ID(Event);
+USE_STRING_ID(FieldsToArrowheadCloud);
+USE_STRING_ID(gatekeeperServiceURI);
+USE_STRING_ID(Operator);
+USE_STRING_ID(port);
+USE_STRING_ID(REQ);
+USE_STRING_ID(secure);
+USE_STRING_ID(WSTRING);
 
-const CStringDictionary::TStringId FORTE_FieldsToArrowheadCloud::scmDataInputNames[] = {g_nStringIdOperator, g_nStringIdcloudName, g_nStringIdaddress, g_nStringIdport, g_nStringIdgatekeeperServiceURI, g_nStringIdauthenticationInfo, g_nStringIdsecure};
 
-const CStringDictionary::TStringId FORTE_FieldsToArrowheadCloud::scmDataInputTypeIds[] = {g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdDINT, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdBOOL};
+DEFINE_FIRMWARE_FB(FORTE_FieldsToArrowheadCloud, STRID(FieldsToArrowheadCloud))
 
-const CStringDictionary::TStringId FORTE_FieldsToArrowheadCloud::scmDataOutputNames[] = {g_nStringIdarrowheadCloud};
+const CStringDictionary::TStringId FORTE_FieldsToArrowheadCloud::scmDataInputNames[] = {STRID(Operator), STRID(cloudName), STRID(address), STRID(port), STRID(gatekeeperServiceURI), STRID(authenticationInfo), STRID(secure)};
 
-const CStringDictionary::TStringId FORTE_FieldsToArrowheadCloud::scmDataOutputTypeIds[] = {g_nStringIdArrowheadCloud};
+const CStringDictionary::TStringId FORTE_FieldsToArrowheadCloud::scmDataInputTypeIds[] = {STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(DINT), STRID(WSTRING), STRID(WSTRING), STRID(BOOL)};
+
+const CStringDictionary::TStringId FORTE_FieldsToArrowheadCloud::scmDataOutputNames[] = {STRID(arrowheadCloud)};
+
+const CStringDictionary::TStringId FORTE_FieldsToArrowheadCloud::scmDataOutputTypeIds[] = {STRID(ArrowheadCloud)};
 
 const TForteInt16 FORTE_FieldsToArrowheadCloud::scmEIWithIndexes[] = {0};
 const TDataIOID FORTE_FieldsToArrowheadCloud::scmEIWith[] = {0, 1, 2, 6, 5, 4, 3, scmWithListDelimiter};
-const CStringDictionary::TStringId FORTE_FieldsToArrowheadCloud::scmEventInputNames[] = {g_nStringIdREQ};
-const CStringDictionary::TStringId FORTE_FieldsToArrowheadCloud::scmEventInputTypeIds[] = {g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_FieldsToArrowheadCloud::scmEventInputNames[] = {STRID(REQ)};
+const CStringDictionary::TStringId FORTE_FieldsToArrowheadCloud::scmEventInputTypeIds[] = {STRID(Event)};
 
 const TDataIOID FORTE_FieldsToArrowheadCloud::scmEOWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_FieldsToArrowheadCloud::scmEOWithIndexes[] = {0, -1};
-const CStringDictionary::TStringId FORTE_FieldsToArrowheadCloud::scmEventOutputNames[] = {g_nStringIdCNF};
-const CStringDictionary::TStringId FORTE_FieldsToArrowheadCloud::scmEventOutputTypeIds[] = {g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_FieldsToArrowheadCloud::scmEventOutputNames[] = {STRID(CNF)};
+const CStringDictionary::TStringId FORTE_FieldsToArrowheadCloud::scmEventOutputTypeIds[] = {STRID(Event)};
 
 const SFBInterfaceSpec FORTE_FieldsToArrowheadCloud::scmFBInterfaceSpec = {
   1,  scmEventInputNames, scmEventInputTypeIds,  scmEIWith,  scmEIWithIndexes,

@@ -20,9 +20,9 @@
  *******************************************************************************/
 #include "fortenew.h"
 #include "resource.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "resource_gen.cpp"
-#endif
+
+USE_STRING_ID(START);
+
 #include "device.h"
 #include "adapter.h"
 #include "adapterconn.h"
@@ -454,7 +454,7 @@ void CResource::createConnectionResponseMessage(const CStringDictionary::TString
   CFBContainer* parent = &(paSrcFb.getParent());
   const CDevice *dev = getDevice();
 
-  if(paSrcFb.getInstanceNameId() != g_nStringIdSTART ){
+  if(paSrcFb.getInstanceNameId() != STRID(START) ){
     while(parent != dev && parent->getInstanceName() != 0){
       fullName.insert(0, "."s);
       fullName.insert(0, parent->getInstanceName());

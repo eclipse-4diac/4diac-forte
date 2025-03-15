@@ -12,13 +12,11 @@
  *******************************************************************************/
 #include "forte_any_duration_variant.h"
 
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
 
-#include "forte_any_duration_variant_gen.cpp"
+USE_STRING_ID(ANY_DURATION);
 
-#endif
 
-DEFINE_FIRMWARE_DATATYPE(ANY_DURATION_VARIANT, g_nStringIdANY_DURATION)
+DEFINE_FIRMWARE_DATATYPE(ANY_DURATION_VARIANT, STRID(ANY_DURATION))
 
 void CIEC_ANY_DURATION_VARIANT::setValue(const CIEC_ANY &paValue) {
   switch (paValue.getDataTypeID()) {

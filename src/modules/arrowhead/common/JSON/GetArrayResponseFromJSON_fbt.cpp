@@ -11,31 +11,38 @@
  *******************************************************************************/
 
 #include "GetArrayResponseFromJSON_fbt.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "GetArrayResponseFromJSON_fbt_gen.cpp"
-#endif
+
+USE_STRING_ID(ANY);
+USE_STRING_ID(CNF);
+USE_STRING_ID(Event);
+USE_STRING_ID(GetArrayResponseFromJSON);
+USE_STRING_ID(output);
+USE_STRING_ID(REQ);
+USE_STRING_ID(response);
+USE_STRING_ID(STRING);
+
 
 #include "ArrowheadJSONHelper.h"
 
-DEFINE_FIRMWARE_FB(FORTE_GetArrayResponseFromJSON, g_nStringIdGetArrayResponseFromJSON)
+DEFINE_FIRMWARE_FB(FORTE_GetArrayResponseFromJSON, STRID(GetArrayResponseFromJSON))
 
-const CStringDictionary::TStringId FORTE_GetArrayResponseFromJSON::scmDataInputNames[] = {g_nStringIdresponse};
+const CStringDictionary::TStringId FORTE_GetArrayResponseFromJSON::scmDataInputNames[] = {STRID(response)};
 
-const CStringDictionary::TStringId FORTE_GetArrayResponseFromJSON::scmDataInputTypeIds[] = {g_nStringIdSTRING};
+const CStringDictionary::TStringId FORTE_GetArrayResponseFromJSON::scmDataInputTypeIds[] = {STRID(STRING)};
 
-const CStringDictionary::TStringId FORTE_GetArrayResponseFromJSON::scmDataOutputNames[] = {g_nStringIdoutput};
+const CStringDictionary::TStringId FORTE_GetArrayResponseFromJSON::scmDataOutputNames[] = {STRID(output)};
 
-const CStringDictionary::TStringId FORTE_GetArrayResponseFromJSON::scmDataOutputTypeIds[] = {g_nStringIdANY};
+const CStringDictionary::TStringId FORTE_GetArrayResponseFromJSON::scmDataOutputTypeIds[] = {STRID(ANY)};
 
 const TForteInt16 FORTE_GetArrayResponseFromJSON::scmEIWithIndexes[] = {0};
 const TDataIOID FORTE_GetArrayResponseFromJSON::scmEIWith[] = {0, scmWithListDelimiter};
-const CStringDictionary::TStringId FORTE_GetArrayResponseFromJSON::scmEventInputNames[] = {g_nStringIdREQ};
-const CStringDictionary::TStringId FORTE_GetArrayResponseFromJSON::scmEventInputTypeIds[] = {g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_GetArrayResponseFromJSON::scmEventInputNames[] = {STRID(REQ)};
+const CStringDictionary::TStringId FORTE_GetArrayResponseFromJSON::scmEventInputTypeIds[] = {STRID(Event)};
 
 const TDataIOID FORTE_GetArrayResponseFromJSON::scmEOWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_GetArrayResponseFromJSON::scmEOWithIndexes[] = {0, -1};
-const CStringDictionary::TStringId FORTE_GetArrayResponseFromJSON::scmEventOutputNames[] = {g_nStringIdCNF};
-const CStringDictionary::TStringId FORTE_GetArrayResponseFromJSON::scmEventOutputTypeIds[] = {g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_GetArrayResponseFromJSON::scmEventOutputNames[] = {STRID(CNF)};
+const CStringDictionary::TStringId FORTE_GetArrayResponseFromJSON::scmEventOutputTypeIds[] = {STRID(Event)};
 
 const SFBInterfaceSpec FORTE_GetArrayResponseFromJSON::scmFBInterfaceSpec = {
   1,  scmEventInputNames, scmEventInputTypeIds,  scmEIWith,  scmEIWithIndexes,

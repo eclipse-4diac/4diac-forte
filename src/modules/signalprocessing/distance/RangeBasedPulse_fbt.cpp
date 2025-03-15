@@ -16,9 +16,19 @@
  *************************************************************************/
 
 #include "RangeBasedPulse_fbt.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "RangeBasedPulse_fbt_gen.cpp"
-#endif
+
+USE_STRING_ID(BOOL);
+USE_STRING_ID(CNF);
+USE_STRING_ID(DIST_HIGH);
+USE_STRING_ID(DIST_IN);
+USE_STRING_ID(DIST_LOW);
+USE_STRING_ID(DIST_OFF);
+USE_STRING_ID(DIST_REMAINDER);
+USE_STRING_ID(Q);
+USE_STRING_ID(REQ);
+USE_STRING_ID(signalprocessing__distance__RangeBasedPulse);
+USE_STRING_ID(UDINT);
+
 
 #include "forte_bool.h"
 #include "forte_udint.h"
@@ -28,18 +38,18 @@
 #include "forte_array_fixed.h"
 #include "forte_array_variable.h"
 
-DEFINE_FIRMWARE_FB(FORTE_signalprocessing__distance__RangeBasedPulse, g_nStringIdsignalprocessing__distance__RangeBasedPulse)
+DEFINE_FIRMWARE_FB(FORTE_signalprocessing__distance__RangeBasedPulse, STRID(signalprocessing__distance__RangeBasedPulse))
 
-const CStringDictionary::TStringId FORTE_signalprocessing__distance__RangeBasedPulse::scmDataInputNames[] = {g_nStringIdDIST_IN, g_nStringIdDIST_OFF, g_nStringIdDIST_HIGH, g_nStringIdDIST_LOW};
-const CStringDictionary::TStringId FORTE_signalprocessing__distance__RangeBasedPulse::scmDataInputTypeIds[] = {g_nStringIdUDINT, g_nStringIdUDINT, g_nStringIdUDINT, g_nStringIdUDINT};
-const CStringDictionary::TStringId FORTE_signalprocessing__distance__RangeBasedPulse::scmDataOutputNames[] = {g_nStringIdQ};
-const CStringDictionary::TStringId FORTE_signalprocessing__distance__RangeBasedPulse::scmDataOutputTypeIds[] = {g_nStringIdBOOL};
+const CStringDictionary::TStringId FORTE_signalprocessing__distance__RangeBasedPulse::scmDataInputNames[] = {STRID(DIST_IN), STRID(DIST_OFF), STRID(DIST_HIGH), STRID(DIST_LOW)};
+const CStringDictionary::TStringId FORTE_signalprocessing__distance__RangeBasedPulse::scmDataInputTypeIds[] = {STRID(UDINT), STRID(UDINT), STRID(UDINT), STRID(UDINT)};
+const CStringDictionary::TStringId FORTE_signalprocessing__distance__RangeBasedPulse::scmDataOutputNames[] = {STRID(Q)};
+const CStringDictionary::TStringId FORTE_signalprocessing__distance__RangeBasedPulse::scmDataOutputTypeIds[] = {STRID(BOOL)};
 const TDataIOID FORTE_signalprocessing__distance__RangeBasedPulse::scmEIWith[] = {0, 1, 2, 3, scmWithListDelimiter};
 const TForteInt16 FORTE_signalprocessing__distance__RangeBasedPulse::scmEIWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_signalprocessing__distance__RangeBasedPulse::scmEventInputNames[] = {g_nStringIdREQ};
+const CStringDictionary::TStringId FORTE_signalprocessing__distance__RangeBasedPulse::scmEventInputNames[] = {STRID(REQ)};
 const TDataIOID FORTE_signalprocessing__distance__RangeBasedPulse::scmEOWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_signalprocessing__distance__RangeBasedPulse::scmEOWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_signalprocessing__distance__RangeBasedPulse::scmEventOutputNames[] = {g_nStringIdCNF};
+const CStringDictionary::TStringId FORTE_signalprocessing__distance__RangeBasedPulse::scmEventOutputNames[] = {STRID(CNF)};
 const SFBInterfaceSpec FORTE_signalprocessing__distance__RangeBasedPulse::scmFBInterfaceSpec = {
   1, scmEventInputNames, nullptr, scmEIWith, scmEIWithIndexes,
   1, scmEventOutputNames, nullptr, scmEOWith, scmEOWithIndexes,
@@ -49,8 +59,8 @@ const SFBInterfaceSpec FORTE_signalprocessing__distance__RangeBasedPulse::scmFBI
   0, nullptr
 };
 
-const CStringDictionary::TStringId FORTE_signalprocessing__distance__RangeBasedPulse::scmInternalsNames[] = {g_nStringIdDIST_REMAINDER};
-const CStringDictionary::TStringId FORTE_signalprocessing__distance__RangeBasedPulse::scmInternalsTypeIds[] = {g_nStringIdUDINT};
+const CStringDictionary::TStringId FORTE_signalprocessing__distance__RangeBasedPulse::scmInternalsNames[] = {STRID(DIST_REMAINDER)};
+const CStringDictionary::TStringId FORTE_signalprocessing__distance__RangeBasedPulse::scmInternalsTypeIds[] = {STRID(UDINT)};
 const SInternalVarsInformation FORTE_signalprocessing__distance__RangeBasedPulse::scmInternalVars = {1, scmInternalsNames, scmInternalsTypeIds};
 
 FORTE_signalprocessing__distance__RangeBasedPulse::FORTE_signalprocessing__distance__RangeBasedPulse(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :

@@ -8,27 +8,44 @@
  *************************************************************************/
 
 #include "Wago459.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "Wago459_gen.cpp"
-#endif
 
-DEFINE_FIRMWARE_FB(FORTE_Wago459, g_nStringIdWago459)
+USE_STRING_ID(AnalogInput_1);
+USE_STRING_ID(AnalogInput_2);
+USE_STRING_ID(AnalogInput_3);
+USE_STRING_ID(AnalogInput_4);
+USE_STRING_ID(BOOL);
+USE_STRING_ID(BusAdapterIn);
+USE_STRING_ID(BusAdapterOut);
+USE_STRING_ID(Event);
+USE_STRING_ID(IND);
+USE_STRING_ID(MAP);
+USE_STRING_ID(MAPO);
+USE_STRING_ID(QI);
+USE_STRING_ID(QO);
+USE_STRING_ID(STATUS);
+USE_STRING_ID(STRING);
+USE_STRING_ID(Wago459);
+USE_STRING_ID(WagoBusAdapter);
+USE_STRING_ID(WSTRING);
 
-const CStringDictionary::TStringId FORTE_Wago459::scmDataInputNames[] = {g_nStringIdQI, g_nStringIdAnalogInput_1, g_nStringIdAnalogInput_2, g_nStringIdAnalogInput_3, g_nStringIdAnalogInput_4};
-const CStringDictionary::TStringId FORTE_Wago459::scmDataInputTypeIds[] = {g_nStringIdBOOL, g_nStringIdSTRING, g_nStringIdSTRING, g_nStringIdSTRING, g_nStringIdSTRING};
-const CStringDictionary::TStringId FORTE_Wago459::scmDataOutputNames[] = {g_nStringIdQO, g_nStringIdSTATUS};
-const CStringDictionary::TStringId FORTE_Wago459::scmDataOutputTypeIds[] = {g_nStringIdBOOL, g_nStringIdWSTRING};
+
+DEFINE_FIRMWARE_FB(FORTE_Wago459, STRID(Wago459))
+
+const CStringDictionary::TStringId FORTE_Wago459::scmDataInputNames[] = {STRID(QI), STRID(AnalogInput_1), STRID(AnalogInput_2), STRID(AnalogInput_3), STRID(AnalogInput_4)};
+const CStringDictionary::TStringId FORTE_Wago459::scmDataInputTypeIds[] = {STRID(BOOL), STRID(STRING), STRID(STRING), STRID(STRING), STRID(STRING)};
+const CStringDictionary::TStringId FORTE_Wago459::scmDataOutputNames[] = {STRID(QO), STRID(STATUS)};
+const CStringDictionary::TStringId FORTE_Wago459::scmDataOutputTypeIds[] = {STRID(BOOL), STRID(WSTRING)};
 const TDataIOID FORTE_Wago459::scmEIWith[] = {1, 2, 3, 4, 0, scmWithListDelimiter};
 const TForteInt16 FORTE_Wago459::scmEIWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_Wago459::scmEventInputNames[] = {g_nStringIdMAP};
-const CStringDictionary::TStringId FORTE_Wago459::scmEventInputTypeIds[] = {g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_Wago459::scmEventInputNames[] = {STRID(MAP)};
+const CStringDictionary::TStringId FORTE_Wago459::scmEventInputTypeIds[] = {STRID(Event)};
 const TDataIOID FORTE_Wago459::scmEOWith[] = {0, scmWithListDelimiter, 0, 1, scmWithListDelimiter};
 const TForteInt16 FORTE_Wago459::scmEOWithIndexes[] = {0, 2};
-const CStringDictionary::TStringId FORTE_Wago459::scmEventOutputNames[] = {g_nStringIdMAPO, g_nStringIdIND};
-const CStringDictionary::TStringId FORTE_Wago459::scmEventOutputTypeIds[] = {g_nStringIdEvent, g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_Wago459::scmEventOutputNames[] = {STRID(MAPO), STRID(IND)};
+const CStringDictionary::TStringId FORTE_Wago459::scmEventOutputTypeIds[] = {STRID(Event), STRID(Event)};
 const SAdapterInstanceDef FORTE_Wago459::scmAdapterInstances[] = {
-  {g_nStringIdWagoBusAdapter, g_nStringIdBusAdapterOut, true},
-  {g_nStringIdWagoBusAdapter, g_nStringIdBusAdapterIn, false}
+  {STRID(WagoBusAdapter), STRID(BusAdapterOut), true},
+  {STRID(WagoBusAdapter), STRID(BusAdapterIn), false}
 };
 const SFBInterfaceSpec FORTE_Wago459::scmFBInterfaceSpec = {
   1, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,

@@ -18,9 +18,23 @@
  *************************************************************************/
 
 #include "Esp32EthernetKitIO_fbt.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "Esp32EthernetKitIO_fbt_gen.cpp"
-#endif
+
+USE_STRING_ID(ADC_CH_0);
+USE_STRING_ID(BOOL);
+USE_STRING_ID(EInit);
+USE_STRING_ID(Esp32EthernetKitIO);
+USE_STRING_ID(INIT);
+USE_STRING_ID(INITO);
+USE_STRING_ID(LED0);
+USE_STRING_ID(PWM);
+USE_STRING_ID(QI);
+USE_STRING_ID(QO);
+USE_STRING_ID(STATUS);
+USE_STRING_ID(STRING);
+USE_STRING_ID(SW0);
+USE_STRING_ID(TIME);
+USE_STRING_ID(UpdateInterval);
+
 
 #include "forte_time.h"
 #include "iec61131_functions.h"
@@ -35,20 +49,20 @@
 #include "handler/IODeviceController.h"
 #pragma endregion includes
 
-DEFINE_FIRMWARE_FB(FORTE_Esp32EthernetKitIO, g_nStringIdEsp32EthernetKitIO)
+DEFINE_FIRMWARE_FB(FORTE_Esp32EthernetKitIO, STRID(Esp32EthernetKitIO))
 
-const CStringDictionary::TStringId FORTE_Esp32EthernetKitIO::scmDataInputNames[] = {g_nStringIdQI, g_nStringIdLED0, g_nStringIdSW0, g_nStringIdADC_CH_0, g_nStringIdPWM, g_nStringIdUpdateInterval};
-const CStringDictionary::TStringId FORTE_Esp32EthernetKitIO::scmDataInputTypeIds[] = {g_nStringIdBOOL, g_nStringIdSTRING, g_nStringIdSTRING, g_nStringIdSTRING, g_nStringIdSTRING, g_nStringIdTIME};
-const CStringDictionary::TStringId FORTE_Esp32EthernetKitIO::scmDataOutputNames[] = {g_nStringIdQO, g_nStringIdSTATUS};
-const CStringDictionary::TStringId FORTE_Esp32EthernetKitIO::scmDataOutputTypeIds[] = {g_nStringIdBOOL, g_nStringIdSTRING};
+const CStringDictionary::TStringId FORTE_Esp32EthernetKitIO::scmDataInputNames[] = {STRID(QI), STRID(LED0), STRID(SW0), STRID(ADC_CH_0), STRID(PWM), STRID(UpdateInterval)};
+const CStringDictionary::TStringId FORTE_Esp32EthernetKitIO::scmDataInputTypeIds[] = {STRID(BOOL), STRID(STRING), STRID(STRING), STRID(STRING), STRID(STRING), STRID(TIME)};
+const CStringDictionary::TStringId FORTE_Esp32EthernetKitIO::scmDataOutputNames[] = {STRID(QO), STRID(STATUS)};
+const CStringDictionary::TStringId FORTE_Esp32EthernetKitIO::scmDataOutputTypeIds[] = {STRID(BOOL), STRID(STRING)};
 const TDataIOID FORTE_Esp32EthernetKitIO::scmEIWith[] = {0, 5, 1, 2, 3, 4, scmWithListDelimiter};
 const TForteInt16 FORTE_Esp32EthernetKitIO::scmEIWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_Esp32EthernetKitIO::scmEventInputNames[] = {g_nStringIdINIT};
-const CStringDictionary::TStringId FORTE_Esp32EthernetKitIO::scmEventInputTypeIds[] = {g_nStringIdEInit};
+const CStringDictionary::TStringId FORTE_Esp32EthernetKitIO::scmEventInputNames[] = {STRID(INIT)};
+const CStringDictionary::TStringId FORTE_Esp32EthernetKitIO::scmEventInputTypeIds[] = {STRID(EInit)};
 const TDataIOID FORTE_Esp32EthernetKitIO::scmEOWith[] = {0, 1, scmWithListDelimiter};
 const TForteInt16 FORTE_Esp32EthernetKitIO::scmEOWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_Esp32EthernetKitIO::scmEventOutputNames[] = {g_nStringIdINITO};
-const CStringDictionary::TStringId FORTE_Esp32EthernetKitIO::scmEventOutputTypeIds[] = {g_nStringIdEInit};
+const CStringDictionary::TStringId FORTE_Esp32EthernetKitIO::scmEventOutputNames[] = {STRID(INITO)};
+const CStringDictionary::TStringId FORTE_Esp32EthernetKitIO::scmEventOutputTypeIds[] = {STRID(EInit)};
 const SFBInterfaceSpec FORTE_Esp32EthernetKitIO::scmFBInterfaceSpec = {
   1, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,
   1, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes,

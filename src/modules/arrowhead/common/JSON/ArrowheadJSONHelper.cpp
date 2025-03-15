@@ -11,9 +11,14 @@
  *******************************************************************************/
 
 #include "ArrowheadJSONHelper.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "ArrowheadJSONHelper_gen.cpp"
-#endif
+
+USE_STRING_ID(ArrowheadEvent);
+USE_STRING_ID(ArrowheadService);
+USE_STRING_ID(ArrowheadSystem);
+USE_STRING_ID(EventFilter);
+USE_STRING_ID(PublishEvent);
+USE_STRING_ID(ServiceRequestForm);
+
 #include <forte_bool.h>
 #include <parameterParser.h>
 #include <devlog.h>
@@ -21,17 +26,17 @@
 void ArrowheadJSONHelper::transformANYToJSON(const CIEC_ANY& paSource, CIEC_STRING& paResult) {
   switch(paSource.getDataTypeID()){
     case CIEC_ANY::e_STRUCT:
-      if(g_nStringIdArrowheadSystem == static_cast<const CIEC_STRUCT&>(paSource).getStructTypeNameID()) {
+      if(STRID(ArrowheadSystem) == static_cast<const CIEC_STRUCT&>(paSource).getStructTypeNameID()) {
         transformSystemToJSON(const_cast<CIEC_ArrowheadSystem&>(static_cast<const CIEC_ArrowheadSystem&>(paSource)), paResult);
-      } else if(g_nStringIdArrowheadService == static_cast<const CIEC_STRUCT&>(paSource).getStructTypeNameID()) {
+      } else if(STRID(ArrowheadService) == static_cast<const CIEC_STRUCT&>(paSource).getStructTypeNameID()) {
         transformServiceToJSON(const_cast<CIEC_ArrowheadService&>(static_cast<const CIEC_ArrowheadService&>(paSource)), paResult);
-      } else if(g_nStringIdServiceRequestForm == static_cast<const CIEC_STRUCT&>(paSource).getStructTypeNameID()) {
+      } else if(STRID(ServiceRequestForm) == static_cast<const CIEC_STRUCT&>(paSource).getStructTypeNameID()) {
         transformOrchServciceRequestFormToJSON(const_cast<CIEC_ServiceRequestForm&>(static_cast<const CIEC_ServiceRequestForm&>(paSource)), paResult);
-      } else if(g_nStringIdArrowheadEvent == static_cast<const CIEC_STRUCT&>(paSource).getStructTypeNameID()) {
+      } else if(STRID(ArrowheadEvent) == static_cast<const CIEC_STRUCT&>(paSource).getStructTypeNameID()) {
         transformArrowheadEventToJSON(const_cast<CIEC_ArrowheadEvent&>(static_cast<const CIEC_ArrowheadEvent&>(paSource)), paResult);
-      } else if(g_nStringIdPublishEvent == static_cast<const CIEC_STRUCT&>(paSource).getStructTypeNameID()) {
+      } else if(STRID(PublishEvent) == static_cast<const CIEC_STRUCT&>(paSource).getStructTypeNameID()) {
         transformPublishEventToJSON(const_cast<CIEC_PublishEvent&>(static_cast<const CIEC_PublishEvent&>(paSource)), paResult);
-      } else if(g_nStringIdEventFilter == static_cast<const CIEC_STRUCT&>(paSource).getStructTypeNameID()) {
+      } else if(STRID(EventFilter) == static_cast<const CIEC_STRUCT&>(paSource).getStructTypeNameID()) {
         transformEventFilterToJSON(const_cast<CIEC_EventFilter&>(static_cast<const CIEC_EventFilter&>(paSource)), paResult);
       } else {
         transformStructToJSON(static_cast<const CIEC_STRUCT&>(paSource), paResult);

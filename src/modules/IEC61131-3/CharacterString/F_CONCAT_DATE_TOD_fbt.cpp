@@ -15,32 +15,41 @@
  *******************************************************************************/
 
 #include "F_CONCAT_DATE_TOD_fbt.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "F_CONCAT_DATE_TOD_fbt_gen.cpp"
-#endif
+
+USE_STRING_ID(CNF);
+USE_STRING_ID(DATE);
+USE_STRING_ID(DATE_AND_TIME);
+USE_STRING_ID(Event);
+USE_STRING_ID(F_CONCAT_DATE_TOD);
+USE_STRING_ID(IN1);
+USE_STRING_ID(IN2);
+USE_STRING_ID(OUT);
+USE_STRING_ID(REQ);
+USE_STRING_ID(TIME_OF_DAY);
+
 
 #include "criticalregion.h"
 #include "resource.h"
 
-DEFINE_FIRMWARE_FB(FORTE_F_CONCAT_DATE_TOD, g_nStringIdF_CONCAT_DATE_TOD)
+DEFINE_FIRMWARE_FB(FORTE_F_CONCAT_DATE_TOD, STRID(F_CONCAT_DATE_TOD))
 
-const CStringDictionary::TStringId FORTE_F_CONCAT_DATE_TOD::scmDataInputNames[] = {g_nStringIdIN1, g_nStringIdIN2};
+const CStringDictionary::TStringId FORTE_F_CONCAT_DATE_TOD::scmDataInputNames[] = {STRID(IN1), STRID(IN2)};
 
-const CStringDictionary::TStringId FORTE_F_CONCAT_DATE_TOD::scmDataInputTypeIds[] = {g_nStringIdDATE, g_nStringIdTIME_OF_DAY};
+const CStringDictionary::TStringId FORTE_F_CONCAT_DATE_TOD::scmDataInputTypeIds[] = {STRID(DATE), STRID(TIME_OF_DAY)};
 
-const CStringDictionary::TStringId FORTE_F_CONCAT_DATE_TOD::scmDataOutputNames[] = {g_nStringIdOUT};
+const CStringDictionary::TStringId FORTE_F_CONCAT_DATE_TOD::scmDataOutputNames[] = {STRID(OUT)};
 
-const CStringDictionary::TStringId FORTE_F_CONCAT_DATE_TOD::scmDataOutputTypeIds[] = {g_nStringIdDATE_AND_TIME};
+const CStringDictionary::TStringId FORTE_F_CONCAT_DATE_TOD::scmDataOutputTypeIds[] = {STRID(DATE_AND_TIME)};
 
 const TDataIOID FORTE_F_CONCAT_DATE_TOD::scmEIWith[] = {0, 1, scmWithListDelimiter};
 const TForteInt16 FORTE_F_CONCAT_DATE_TOD::scmEIWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_F_CONCAT_DATE_TOD::scmEventInputNames[] = {g_nStringIdREQ};
-const CStringDictionary::TStringId FORTE_F_CONCAT_DATE_TOD::scmEventInputTypeIds[] = {g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_F_CONCAT_DATE_TOD::scmEventInputNames[] = {STRID(REQ)};
+const CStringDictionary::TStringId FORTE_F_CONCAT_DATE_TOD::scmEventInputTypeIds[] = {STRID(Event)};
 
 const TDataIOID FORTE_F_CONCAT_DATE_TOD::scmEOWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_F_CONCAT_DATE_TOD::scmEOWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_F_CONCAT_DATE_TOD::scmEventOutputNames[] = {g_nStringIdCNF};
-const CStringDictionary::TStringId FORTE_F_CONCAT_DATE_TOD::scmEventOutputTypeIds[] = {g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_F_CONCAT_DATE_TOD::scmEventOutputNames[] = {STRID(CNF)};
+const CStringDictionary::TStringId FORTE_F_CONCAT_DATE_TOD::scmEventOutputTypeIds[] = {STRID(Event)};
 
 
 const SFBInterfaceSpec FORTE_F_CONCAT_DATE_TOD::scmFBInterfaceSpec = {

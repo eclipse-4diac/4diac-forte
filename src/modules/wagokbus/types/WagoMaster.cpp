@@ -8,30 +8,43 @@
  *************************************************************************/
 
 #include "WagoMaster.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "WagoMaster_gen.cpp"
-#endif
+
+USE_STRING_ID(BOOL);
+USE_STRING_ID(BusAdapterOut);
+USE_STRING_ID(Event);
+USE_STRING_ID(IND);
+USE_STRING_ID(INIT);
+USE_STRING_ID(INITO);
+USE_STRING_ID(QI);
+USE_STRING_ID(QO);
+USE_STRING_ID(STATUS);
+USE_STRING_ID(UINT);
+USE_STRING_ID(UpdateInterval);
+USE_STRING_ID(WagoBusAdapter);
+USE_STRING_ID(WagoMaster);
+USE_STRING_ID(WSTRING);
+
 
 #include "../WagoDeviceController.h"
 
 using namespace forte::core::io;
 
-DEFINE_FIRMWARE_FB(FORTE_WagoMaster, g_nStringIdWagoMaster)
+DEFINE_FIRMWARE_FB(FORTE_WagoMaster, STRID(WagoMaster))
 
-const CStringDictionary::TStringId FORTE_WagoMaster::scmDataInputNames[] = {g_nStringIdQI, g_nStringIdUpdateInterval};
-const CStringDictionary::TStringId FORTE_WagoMaster::scmDataInputTypeIds[] = {g_nStringIdBOOL, g_nStringIdUINT};
-const CStringDictionary::TStringId FORTE_WagoMaster::scmDataOutputNames[] = {g_nStringIdQO, g_nStringIdSTATUS};
-const CStringDictionary::TStringId FORTE_WagoMaster::scmDataOutputTypeIds[] = {g_nStringIdBOOL, g_nStringIdWSTRING};
+const CStringDictionary::TStringId FORTE_WagoMaster::scmDataInputNames[] = {STRID(QI), STRID(UpdateInterval)};
+const CStringDictionary::TStringId FORTE_WagoMaster::scmDataInputTypeIds[] = {STRID(BOOL), STRID(UINT)};
+const CStringDictionary::TStringId FORTE_WagoMaster::scmDataOutputNames[] = {STRID(QO), STRID(STATUS)};
+const CStringDictionary::TStringId FORTE_WagoMaster::scmDataOutputTypeIds[] = {STRID(BOOL), STRID(WSTRING)};
 const TDataIOID FORTE_WagoMaster::scmEIWith[] = {0, 1, scmWithListDelimiter};
 const TForteInt16 FORTE_WagoMaster::scmEIWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_WagoMaster::scmEventInputNames[] = {g_nStringIdINIT};
-const CStringDictionary::TStringId FORTE_WagoMaster::scmEventInputTypeIds[] = {g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_WagoMaster::scmEventInputNames[] = {STRID(INIT)};
+const CStringDictionary::TStringId FORTE_WagoMaster::scmEventInputTypeIds[] = {STRID(Event)};
 const TDataIOID FORTE_WagoMaster::scmEOWith[] = {0, 1, scmWithListDelimiter, 1, 0, scmWithListDelimiter};
 const TForteInt16 FORTE_WagoMaster::scmEOWithIndexes[] = {0, 3};
-const CStringDictionary::TStringId FORTE_WagoMaster::scmEventOutputNames[] = {g_nStringIdINITO, g_nStringIdIND};
-const CStringDictionary::TStringId FORTE_WagoMaster::scmEventOutputTypeIds[] = {g_nStringIdEvent, g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_WagoMaster::scmEventOutputNames[] = {STRID(INITO), STRID(IND)};
+const CStringDictionary::TStringId FORTE_WagoMaster::scmEventOutputTypeIds[] = {STRID(Event), STRID(Event)};
 const SAdapterInstanceDef FORTE_WagoMaster::scmAdapterInstances[] = {
-  {g_nStringIdWagoBusAdapter, g_nStringIdBusAdapterOut, true}
+  {STRID(WagoBusAdapter), STRID(BusAdapterOut), true}
 };
 const SFBInterfaceSpec FORTE_WagoMaster::scmFBInterfaceSpec = {
   1, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,

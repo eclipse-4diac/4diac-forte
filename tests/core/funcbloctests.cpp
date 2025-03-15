@@ -15,9 +15,13 @@
 
 #include "E_CTUD_fbt.h"
 #include "basicfb.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "funcbloctests_gen.cpp"
-#endif
+
+USE_STRING_ID(BOOL);
+USE_STRING_ID(CV);
+USE_STRING_ID(QD);
+USE_STRING_ID(QU);
+USE_STRING_ID(UINT);
+
 #include "fbcontainermock.h"
 
 
@@ -101,8 +105,8 @@ BOOST_AUTO_TEST_CASE(FB_TO_STRING_BUFFER_SIZE_TEST_WITH_INRENAL_VAR){
         CIEC_UINT var_CV;
 };
 
-    CStringDictionary::TStringId varInternalNames[] = {g_nStringIdQU, g_nStringIdQD, g_nStringIdCV};
-    CStringDictionary::TStringId varInternalTypeIds[] = {g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdUINT};
+    CStringDictionary::TStringId varInternalNames[] = {STRID(QU), STRID(QD), STRID(CV)};
+    CStringDictionary::TStringId varInternalTypeIds[] = {STRID(BOOL), STRID(BOOL), STRID(UINT)};
     SInternalVarsInformation varData{3, varInternalNames, varInternalTypeIds};
     CInternalVarTestFB testFb(&varData);
     BOOST_ASSERT(testFb.initialize());

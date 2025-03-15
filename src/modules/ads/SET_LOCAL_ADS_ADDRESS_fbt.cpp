@@ -18,9 +18,20 @@
  *************************************************************************/
 
 #include "SET_LOCAL_ADS_ADDRESS_fbt.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "SET_LOCAL_ADS_ADDRESS_fbt_gen.cpp"
-#endif
+
+USE_STRING_ID(BOOL);
+USE_STRING_ID(EInit);
+USE_STRING_ID(INIT);
+USE_STRING_ID(INITO);
+USE_STRING_ID(LOCAL_ADS_ADDRESS);
+USE_STRING_ID(PARAMS);
+USE_STRING_ID(QI);
+USE_STRING_ID(QO);
+USE_STRING_ID(SET_LOCAL_ADS_ADDRESS);
+USE_STRING_ID(STATUS);
+USE_STRING_ID(STRING);
+USE_STRING_ID(WSTRING);
+
 
 #include "iec61131_functions.h"
 #include "forte_array_common.h"
@@ -30,20 +41,20 @@
 #include "sstream"
 #include "AdsLib.h"
 
-DEFINE_FIRMWARE_FB(FORTE_SET_LOCAL_ADS_ADDRESS, g_nStringIdSET_LOCAL_ADS_ADDRESS)
+DEFINE_FIRMWARE_FB(FORTE_SET_LOCAL_ADS_ADDRESS, STRID(SET_LOCAL_ADS_ADDRESS))
 
-const CStringDictionary::TStringId FORTE_SET_LOCAL_ADS_ADDRESS::scmDataInputNames[] = {g_nStringIdQI, g_nStringIdPARAMS};
-const CStringDictionary::TStringId FORTE_SET_LOCAL_ADS_ADDRESS::scmDataInputTypeIds[] = {g_nStringIdBOOL, g_nStringIdSTRING};
-const CStringDictionary::TStringId FORTE_SET_LOCAL_ADS_ADDRESS::scmDataOutputNames[] = {g_nStringIdQO, g_nStringIdSTATUS, g_nStringIdLOCAL_ADS_ADDRESS};
-const CStringDictionary::TStringId FORTE_SET_LOCAL_ADS_ADDRESS::scmDataOutputTypeIds[] = {g_nStringIdBOOL, g_nStringIdWSTRING, g_nStringIdSTRING};
+const CStringDictionary::TStringId FORTE_SET_LOCAL_ADS_ADDRESS::scmDataInputNames[] = {STRID(QI), STRID(PARAMS)};
+const CStringDictionary::TStringId FORTE_SET_LOCAL_ADS_ADDRESS::scmDataInputTypeIds[] = {STRID(BOOL), STRID(STRING)};
+const CStringDictionary::TStringId FORTE_SET_LOCAL_ADS_ADDRESS::scmDataOutputNames[] = {STRID(QO), STRID(STATUS), STRID(LOCAL_ADS_ADDRESS)};
+const CStringDictionary::TStringId FORTE_SET_LOCAL_ADS_ADDRESS::scmDataOutputTypeIds[] = {STRID(BOOL), STRID(WSTRING), STRID(STRING)};
 const TDataIOID FORTE_SET_LOCAL_ADS_ADDRESS::scmEIWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_SET_LOCAL_ADS_ADDRESS::scmEIWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_SET_LOCAL_ADS_ADDRESS::scmEventInputNames[] = {g_nStringIdINIT};
-const CStringDictionary::TStringId FORTE_SET_LOCAL_ADS_ADDRESS::scmEventInputTypeIds[] = {g_nStringIdEInit};
+const CStringDictionary::TStringId FORTE_SET_LOCAL_ADS_ADDRESS::scmEventInputNames[] = {STRID(INIT)};
+const CStringDictionary::TStringId FORTE_SET_LOCAL_ADS_ADDRESS::scmEventInputTypeIds[] = {STRID(EInit)};
 const TDataIOID FORTE_SET_LOCAL_ADS_ADDRESS::scmEOWith[] = {0, 1, 2, scmWithListDelimiter};
 const TForteInt16 FORTE_SET_LOCAL_ADS_ADDRESS::scmEOWithIndexes[] = { 0, -1 };
-const CStringDictionary::TStringId FORTE_SET_LOCAL_ADS_ADDRESS::scmEventOutputNames[] = {g_nStringIdINITO};
-const CStringDictionary::TStringId FORTE_SET_LOCAL_ADS_ADDRESS::scmEventOutputTypeIds[] = {g_nStringIdEInit};
+const CStringDictionary::TStringId FORTE_SET_LOCAL_ADS_ADDRESS::scmEventOutputNames[] = {STRID(INITO)};
+const CStringDictionary::TStringId FORTE_SET_LOCAL_ADS_ADDRESS::scmEventOutputTypeIds[] = {STRID(EInit)};
 const SFBInterfaceSpec FORTE_SET_LOCAL_ADS_ADDRESS::scmFBInterfaceSpec = {
   1, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,
   1, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes,

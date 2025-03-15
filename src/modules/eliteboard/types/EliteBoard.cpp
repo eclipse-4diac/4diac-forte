@@ -11,9 +11,23 @@
  *******************************************************************************/
 
 #include "EliteBoard.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "EliteBoard_gen.cpp"
-#endif
+
+USE_STRING_ID(EliteBoard);
+USE_STRING_ID(MAP);
+USE_STRING_ID(MAPO);
+USE_STRING_ID(PortA);
+USE_STRING_ID(PortAdapter);
+USE_STRING_ID(PortB);
+USE_STRING_ID(PortC);
+USE_STRING_ID(PortD);
+USE_STRING_ID(PortE);
+USE_STRING_ID(PortF);
+USE_STRING_ID(PortG);
+USE_STRING_ID(PortH);
+USE_STRING_ID(PortI);
+USE_STRING_ID(PortJ);
+USE_STRING_ID(PortK);
+
 
 #include "PortAdapter_adp.h"
 #include "iec61131_functions.h"
@@ -27,24 +41,24 @@
 #include "stm32h743xx.h"
 #include "stm32h7xx_hal_gpio.h"
 
-DEFINE_FIRMWARE_FB(FORTE_EliteBoard, g_nStringIdEliteBoard)
+DEFINE_FIRMWARE_FB(FORTE_EliteBoard, STRID(EliteBoard))
 
 const TForteInt16 FORTE_EliteBoard::scmEIWithIndexes[] = {-1};
-const CStringDictionary::TStringId FORTE_EliteBoard::scmEventInputNames[] = {g_nStringIdMAP};
+const CStringDictionary::TStringId FORTE_EliteBoard::scmEventInputNames[] = {STRID(MAP)};
 const TForteInt16 FORTE_EliteBoard::scmEOWithIndexes[] = {-1};
-const CStringDictionary::TStringId FORTE_EliteBoard::scmEventOutputNames[] = {g_nStringIdMAPO};
+const CStringDictionary::TStringId FORTE_EliteBoard::scmEventOutputNames[] = {STRID(MAPO)};
 const SAdapterInstanceDef FORTE_EliteBoard::scmAdapterInstances[] = {
-  {g_nStringIdPortAdapter, g_nStringIdPortA, true},
-  {g_nStringIdPortAdapter, g_nStringIdPortB, true},
-  {g_nStringIdPortAdapter, g_nStringIdPortC, true},
-  {g_nStringIdPortAdapter, g_nStringIdPortD, true},
-  {g_nStringIdPortAdapter, g_nStringIdPortE, true},
-  {g_nStringIdPortAdapter, g_nStringIdPortF, true},
-  {g_nStringIdPortAdapter, g_nStringIdPortG, true},
-  {g_nStringIdPortAdapter, g_nStringIdPortH, true},
-  {g_nStringIdPortAdapter, g_nStringIdPortI, true},
-  {g_nStringIdPortAdapter, g_nStringIdPortJ, true},
-  {g_nStringIdPortAdapter, g_nStringIdPortK, true}
+  {STRID(PortAdapter), STRID(PortA), true},
+  {STRID(PortAdapter), STRID(PortB), true},
+  {STRID(PortAdapter), STRID(PortC), true},
+  {STRID(PortAdapter), STRID(PortD), true},
+  {STRID(PortAdapter), STRID(PortE), true},
+  {STRID(PortAdapter), STRID(PortF), true},
+  {STRID(PortAdapter), STRID(PortG), true},
+  {STRID(PortAdapter), STRID(PortH), true},
+  {STRID(PortAdapter), STRID(PortI), true},
+  {STRID(PortAdapter), STRID(PortJ), true},
+  {STRID(PortAdapter), STRID(PortK), true}
 };
 const SFBInterfaceSpec FORTE_EliteBoard::scmFBInterfaceSpec = {
   1, scmEventInputNames, nullptr, nullptr, scmEIWithIndexes,
@@ -57,17 +71,17 @@ const SFBInterfaceSpec FORTE_EliteBoard::scmFBInterfaceSpec = {
 
 FORTE_EliteBoard::FORTE_EliteBoard(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId),
-    var_PortA(g_nStringIdPortA, *this, true),
-    var_PortB(g_nStringIdPortB, *this, true),
-    var_PortC(g_nStringIdPortC, *this, true),
-    var_PortD(g_nStringIdPortD, *this, true),
-    var_PortE(g_nStringIdPortE, *this, true),
-    var_PortF(g_nStringIdPortF, *this, true),
-    var_PortG(g_nStringIdPortG, *this, true),
-    var_PortH(g_nStringIdPortH, *this, true),
-    var_PortI(g_nStringIdPortI, *this, true),
-    var_PortJ(g_nStringIdPortJ, *this, true),
-    var_PortK(g_nStringIdPortK, *this, true),
+    var_PortA(STRID(PortA), *this, true),
+    var_PortB(STRID(PortB), *this, true),
+    var_PortC(STRID(PortC), *this, true),
+    var_PortD(STRID(PortD), *this, true),
+    var_PortE(STRID(PortE), *this, true),
+    var_PortF(STRID(PortF), *this, true),
+    var_PortG(STRID(PortG), *this, true),
+    var_PortH(STRID(PortH), *this, true),
+    var_PortI(STRID(PortI), *this, true),
+    var_PortJ(STRID(PortJ), *this, true),
+    var_PortK(STRID(PortK), *this, true),
     conn_MAPO(this, 0) {
 };
 

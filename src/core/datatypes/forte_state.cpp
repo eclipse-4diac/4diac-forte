@@ -11,10 +11,10 @@
  *      - initial implementation and rework communication infrastructure,
  *******************************************************************************/
 #include "forte_state.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "forte_state_gen.cpp"
-#endif
 
-DEFINE_FIRMWARE_DATATYPE(STATE, g_nStringIdSTATE)
+USE_STRING_ID(STATE);
+
+
+DEFINE_FIRMWARE_DATATYPE(STATE, STRID(STATE))
 
 const CIEC_STATE::TValueType CIEC_STATE::scmMaxVal = std::numeric_limits<CIEC_STATE::TValueType>::max();

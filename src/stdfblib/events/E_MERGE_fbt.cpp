@@ -12,9 +12,13 @@
  *******************************************************************************/
 
 #include "E_MERGE_fbt.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "E_MERGE_fbt_gen.cpp"
-#endif
+
+USE_STRING_ID(EI1);
+USE_STRING_ID(EI2);
+USE_STRING_ID(E_MERGE);
+USE_STRING_ID(EO);
+USE_STRING_ID(Event);
+
 
 #include "criticalregion.h"
 #include "resource.h"
@@ -25,14 +29,14 @@
 #include "forte_array_fixed.h"
 #include "forte_array_variable.h"
 
-DEFINE_FIRMWARE_FB(FORTE_E_MERGE, g_nStringIdE_MERGE)
+DEFINE_FIRMWARE_FB(FORTE_E_MERGE, STRID(E_MERGE))
 
 const TForteInt16 FORTE_E_MERGE::scmEIWithIndexes[] = {-1, -1};
-const CStringDictionary::TStringId FORTE_E_MERGE::scmEventInputNames[] = {g_nStringIdEI1, g_nStringIdEI2};
-const CStringDictionary::TStringId FORTE_E_MERGE::scmEventInputTypeIds[] = {g_nStringIdEvent, g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_E_MERGE::scmEventInputNames[] = {STRID(EI1), STRID(EI2)};
+const CStringDictionary::TStringId FORTE_E_MERGE::scmEventInputTypeIds[] = {STRID(Event), STRID(Event)};
 const TForteInt16 FORTE_E_MERGE::scmEOWithIndexes[] = {-1};
-const CStringDictionary::TStringId FORTE_E_MERGE::scmEventOutputNames[] = {g_nStringIdEO};
-const CStringDictionary::TStringId FORTE_E_MERGE::scmEventOutputTypeIds[] = {g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_E_MERGE::scmEventOutputNames[] = {STRID(EO)};
+const CStringDictionary::TStringId FORTE_E_MERGE::scmEventOutputTypeIds[] = {STRID(Event)};
 const SFBInterfaceSpec FORTE_E_MERGE::scmFBInterfaceSpec = {
   2, scmEventInputNames, scmEventInputTypeIds, nullptr, scmEIWithIndexes,
   1, scmEventOutputNames, scmEventOutputTypeIds, nullptr, scmEOWithIndexes,

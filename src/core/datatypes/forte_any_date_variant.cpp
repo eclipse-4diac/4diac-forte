@@ -12,13 +12,11 @@
  *******************************************************************************/
 #include "forte_any_date_variant.h"
 
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
 
-#include "forte_any_date_variant_gen.cpp"
+USE_STRING_ID(ANY_DATE);
 
-#endif
 
-DEFINE_FIRMWARE_DATATYPE(ANY_DATE_VARIANT, g_nStringIdANY_DATE)
+DEFINE_FIRMWARE_DATATYPE(ANY_DATE_VARIANT, STRID(ANY_DATE))
 
 void CIEC_ANY_DATE_VARIANT::setValue(const CIEC_ANY &paValue) {
   switch (paValue.getDataTypeID()) {

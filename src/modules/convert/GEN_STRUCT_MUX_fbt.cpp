@@ -13,21 +13,25 @@
  *   Martin Jobst - add generic readInputData and writeOutputData
  *******************************************************************************/
 #include "GEN_STRUCT_MUX_fbt.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "GEN_STRUCT_MUX_fbt_gen.cpp"
-#endif
+
+USE_STRING_ID(CNF);
+USE_STRING_ID(Event);
+USE_STRING_ID(GEN_STRUCT_MUX);
+USE_STRING_ID(OUT);
+USE_STRING_ID(REQ);
+
 
 #include "resource.h"
 #include "criticalregion.h"
 
-DEFINE_GENERIC_FIRMWARE_FB(GEN_STRUCT_MUX, g_nStringIdGEN_STRUCT_MUX);
+DEFINE_GENERIC_FIRMWARE_FB(GEN_STRUCT_MUX, STRID(GEN_STRUCT_MUX));
 
-const CStringDictionary::TStringId GEN_STRUCT_MUX::scmEventInputNames[] = { g_nStringIdREQ };
-const CStringDictionary::TStringId GEN_STRUCT_MUX::scmEventInputTypeIds[] = {g_nStringIdEvent};
-const CStringDictionary::TStringId GEN_STRUCT_MUX::scmEventOutputNames[] = { g_nStringIdCNF };
-const CStringDictionary::TStringId GEN_STRUCT_MUX::scmEventOutputTypeIds[] = {g_nStringIdEvent};
+const CStringDictionary::TStringId GEN_STRUCT_MUX::scmEventInputNames[] = { STRID(REQ) };
+const CStringDictionary::TStringId GEN_STRUCT_MUX::scmEventInputTypeIds[] = {STRID(Event)};
+const CStringDictionary::TStringId GEN_STRUCT_MUX::scmEventOutputNames[] = { STRID(CNF) };
+const CStringDictionary::TStringId GEN_STRUCT_MUX::scmEventOutputTypeIds[] = {STRID(Event)};
 
-const CStringDictionary::TStringId GEN_STRUCT_MUX::scmDataOutputNames[] = { g_nStringIdOUT };
+const CStringDictionary::TStringId GEN_STRUCT_MUX::scmDataOutputNames[] = { STRID(OUT) };
 
 void GEN_STRUCT_MUX::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   if(scmEventREQID == paEIID) {

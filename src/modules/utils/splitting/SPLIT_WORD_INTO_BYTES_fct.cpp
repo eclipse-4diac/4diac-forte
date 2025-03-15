@@ -18,9 +18,17 @@
  *************************************************************************/
 
 #include "SPLIT_WORD_INTO_BYTES_fct.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "SPLIT_WORD_INTO_BYTES_fct_gen.cpp"
-#endif
+
+USE_STRING_ID(BYTE);
+USE_STRING_ID(BYTE_00);
+USE_STRING_ID(BYTE_01);
+USE_STRING_ID(CNF);
+USE_STRING_ID(Event);
+USE_STRING_ID(IN);
+USE_STRING_ID(REQ);
+USE_STRING_ID(SPLIT_WORD_INTO_BYTES);
+USE_STRING_ID(WORD);
+
 
 #include "criticalregion.h"
 #include "resource.h"
@@ -32,20 +40,20 @@
 #include "forte_array_fixed.h"
 #include "forte_array_variable.h"
 
-DEFINE_FIRMWARE_FB(FORTE_SPLIT_WORD_INTO_BYTES, g_nStringIdSPLIT_WORD_INTO_BYTES)
+DEFINE_FIRMWARE_FB(FORTE_SPLIT_WORD_INTO_BYTES, STRID(SPLIT_WORD_INTO_BYTES))
 
-const CStringDictionary::TStringId FORTE_SPLIT_WORD_INTO_BYTES::scmDataInputNames[] = {g_nStringIdIN};
-const CStringDictionary::TStringId FORTE_SPLIT_WORD_INTO_BYTES::scmDataInputTypeIds[] = {g_nStringIdWORD};
-const CStringDictionary::TStringId FORTE_SPLIT_WORD_INTO_BYTES::scmDataOutputNames[] = {g_nStringIdBYTE_00, g_nStringIdBYTE_01};
-const CStringDictionary::TStringId FORTE_SPLIT_WORD_INTO_BYTES::scmDataOutputTypeIds[] = {g_nStringIdBYTE, g_nStringIdBYTE};
+const CStringDictionary::TStringId FORTE_SPLIT_WORD_INTO_BYTES::scmDataInputNames[] = {STRID(IN)};
+const CStringDictionary::TStringId FORTE_SPLIT_WORD_INTO_BYTES::scmDataInputTypeIds[] = {STRID(WORD)};
+const CStringDictionary::TStringId FORTE_SPLIT_WORD_INTO_BYTES::scmDataOutputNames[] = {STRID(BYTE_00), STRID(BYTE_01)};
+const CStringDictionary::TStringId FORTE_SPLIT_WORD_INTO_BYTES::scmDataOutputTypeIds[] = {STRID(BYTE), STRID(BYTE)};
 const TDataIOID FORTE_SPLIT_WORD_INTO_BYTES::scmEIWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_SPLIT_WORD_INTO_BYTES::scmEIWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_SPLIT_WORD_INTO_BYTES::scmEventInputNames[] = {g_nStringIdREQ};
-const CStringDictionary::TStringId FORTE_SPLIT_WORD_INTO_BYTES::scmEventInputTypeIds[] = {g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_SPLIT_WORD_INTO_BYTES::scmEventInputNames[] = {STRID(REQ)};
+const CStringDictionary::TStringId FORTE_SPLIT_WORD_INTO_BYTES::scmEventInputTypeIds[] = {STRID(Event)};
 const TDataIOID FORTE_SPLIT_WORD_INTO_BYTES::scmEOWith[] = {0, 1, scmWithListDelimiter};
 const TForteInt16 FORTE_SPLIT_WORD_INTO_BYTES::scmEOWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_SPLIT_WORD_INTO_BYTES::scmEventOutputNames[] = {g_nStringIdCNF};
-const CStringDictionary::TStringId FORTE_SPLIT_WORD_INTO_BYTES::scmEventOutputTypeIds[] = {g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_SPLIT_WORD_INTO_BYTES::scmEventOutputNames[] = {STRID(CNF)};
+const CStringDictionary::TStringId FORTE_SPLIT_WORD_INTO_BYTES::scmEventOutputTypeIds[] = {STRID(Event)};
 const SFBInterfaceSpec FORTE_SPLIT_WORD_INTO_BYTES::scmFBInterfaceSpec = {
   1, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,
   1, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes,

@@ -11,17 +11,29 @@
  *******************************************************************************/
 
 #include "forte_serviceregistryentry.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "forte_serviceregistryentry_gen.cpp"
-#endif
 
-DEFINE_FIRMWARE_DATATYPE(ServiceRegistryEntry, g_nStringIdServiceRegistryEntry);
+USE_STRING_ID(ArrowheadService);
+USE_STRING_ID(ArrowheadSystem);
+USE_STRING_ID(BOOL);
+USE_STRING_ID(DINT);
+USE_STRING_ID(metadata);
+USE_STRING_ID(providedService);
+USE_STRING_ID(provider);
+USE_STRING_ID(ServiceRegistryEntry);
+USE_STRING_ID(serviceURI);
+USE_STRING_ID(ttl);
+USE_STRING_ID(udp);
+USE_STRING_ID(version);
+USE_STRING_ID(WSTRING);
+
+
+DEFINE_FIRMWARE_DATATYPE(ServiceRegistryEntry, STRID(ServiceRegistryEntry));
 
 CIEC_ServiceRegistryEntry::CIEC_ServiceRegistryEntry() :
-    CIEC_STRUCT(g_nStringIdServiceRegistryEntry, 7, scmElementTypes, scmElementNames, e_APPLICATION + e_CONSTRUCTED + 1) {
+    CIEC_STRUCT(STRID(ServiceRegistryEntry), 7, scmElementTypes, scmElementNames, e_APPLICATION + e_CONSTRUCTED + 1) {
 }
 
-const CStringDictionary::TStringId CIEC_ServiceRegistryEntry::scmElementTypes[] = { g_nStringIdArrowheadService, g_nStringIdArrowheadSystem, g_nStringIdWSTRING,
-  g_nStringIdDINT, g_nStringIdBOOL, g_nStringIdDINT, g_nStringIdWSTRING };
-const CStringDictionary::TStringId CIEC_ServiceRegistryEntry::scmElementNames[] = { g_nStringIdprovidedService, g_nStringIdprovider, g_nStringIdserviceURI,
-  g_nStringIdversion, g_nStringIdudp, g_nStringIdttl, g_nStringIdmetadata };
+const CStringDictionary::TStringId CIEC_ServiceRegistryEntry::scmElementTypes[] = { STRID(ArrowheadService), STRID(ArrowheadSystem), STRID(WSTRING),
+  STRID(DINT), STRID(BOOL), STRID(DINT), STRID(WSTRING) };
+const CStringDictionary::TStringId CIEC_ServiceRegistryEntry::scmElementNames[] = { STRID(providedService), STRID(provider), STRID(serviceURI),
+  STRID(version), STRID(udp), STRID(ttl), STRID(metadata) };

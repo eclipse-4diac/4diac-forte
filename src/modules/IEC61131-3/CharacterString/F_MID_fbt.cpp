@@ -15,32 +15,41 @@
  *******************************************************************************/
 
 #include "F_MID_fbt.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "F_MID_fbt_gen.cpp"
-#endif
+
+USE_STRING_ID(ANY_INT);
+USE_STRING_ID(ANY_STRING);
+USE_STRING_ID(CNF);
+USE_STRING_ID(Event);
+USE_STRING_ID(F_MID);
+USE_STRING_ID(IN);
+USE_STRING_ID(L);
+USE_STRING_ID(OUT);
+USE_STRING_ID(P);
+USE_STRING_ID(REQ);
+
 
 #include "criticalregion.h"
 #include "resource.h"
 
-DEFINE_FIRMWARE_FB(FORTE_F_MID, g_nStringIdF_MID)
+DEFINE_FIRMWARE_FB(FORTE_F_MID, STRID(F_MID))
 
-const CStringDictionary::TStringId FORTE_F_MID::scmDataInputNames[] = {g_nStringIdIN, g_nStringIdL, g_nStringIdP};
+const CStringDictionary::TStringId FORTE_F_MID::scmDataInputNames[] = {STRID(IN), STRID(L), STRID(P)};
 
-const CStringDictionary::TStringId FORTE_F_MID::scmDataInputTypeIds[] = {g_nStringIdANY_STRING, g_nStringIdANY_INT, g_nStringIdANY_INT};
+const CStringDictionary::TStringId FORTE_F_MID::scmDataInputTypeIds[] = {STRID(ANY_STRING), STRID(ANY_INT), STRID(ANY_INT)};
 
-const CStringDictionary::TStringId FORTE_F_MID::scmDataOutputNames[] = {g_nStringIdOUT};
+const CStringDictionary::TStringId FORTE_F_MID::scmDataOutputNames[] = {STRID(OUT)};
 
-const CStringDictionary::TStringId FORTE_F_MID::scmDataOutputTypeIds[] = {g_nStringIdANY_STRING};
+const CStringDictionary::TStringId FORTE_F_MID::scmDataOutputTypeIds[] = {STRID(ANY_STRING)};
 
 const TDataIOID FORTE_F_MID::scmEIWith[] = {0, 1, 2, scmWithListDelimiter};
 const TForteInt16 FORTE_F_MID::scmEIWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_F_MID::scmEventInputNames[] = {g_nStringIdREQ};
-const CStringDictionary::TStringId FORTE_F_MID::scmEventInputTypeIds[] = {g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_F_MID::scmEventInputNames[] = {STRID(REQ)};
+const CStringDictionary::TStringId FORTE_F_MID::scmEventInputTypeIds[] = {STRID(Event)};
 
 const TDataIOID FORTE_F_MID::scmEOWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_F_MID::scmEOWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_F_MID::scmEventOutputNames[] = {g_nStringIdCNF};
-const CStringDictionary::TStringId FORTE_F_MID::scmEventOutputTypeIds[] = {g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_F_MID::scmEventOutputNames[] = {STRID(CNF)};
+const CStringDictionary::TStringId FORTE_F_MID::scmEventOutputTypeIds[] = {STRID(Event)};
 
 
 const SFBInterfaceSpec FORTE_F_MID::scmFBInterfaceSpec = {

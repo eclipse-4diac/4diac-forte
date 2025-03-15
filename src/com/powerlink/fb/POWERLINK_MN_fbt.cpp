@@ -12,27 +12,39 @@
  *******************************************************************************/
 
 #include "POWERLINK_MN_fbt.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "POWERLINK_MN_fbt_gen.cpp"
-#endif
+
+USE_STRING_ID(APP_CFG);
+USE_STRING_ID(BOOL);
+USE_STRING_ID(CDC_CFG);
+USE_STRING_ID(DEV_NAME);
+USE_STRING_ID(EInit);
+USE_STRING_ID(Event);
+USE_STRING_ID(INIT);
+USE_STRING_ID(INITO);
+USE_STRING_ID(POWERLINK_MN);
+USE_STRING_ID(QI);
+USE_STRING_ID(QO);
+USE_STRING_ID(STATUS);
+USE_STRING_ID(STRING);
+
 
 #include "criticalregion.h"
 #include "resource.h"
 
-DEFINE_FIRMWARE_FB(FORTE_POWERLINK_MN, g_nStringIdPOWERLINK_MN)
+DEFINE_FIRMWARE_FB(FORTE_POWERLINK_MN, STRID(POWERLINK_MN))
 
-const CStringDictionary::TStringId FORTE_POWERLINK_MN::scmDataInputNames[] = {g_nStringIdQI, g_nStringIdCDC_CFG, g_nStringIdAPP_CFG, g_nStringIdDEV_NAME};
-const CStringDictionary::TStringId FORTE_POWERLINK_MN::scmDataInputTypeIds[] = {g_nStringIdBOOL, g_nStringIdSTRING, g_nStringIdSTRING, g_nStringIdSTRING};
-const CStringDictionary::TStringId FORTE_POWERLINK_MN::scmDataOutputNames[] = {g_nStringIdQO, g_nStringIdSTATUS};
-const CStringDictionary::TStringId FORTE_POWERLINK_MN::scmDataOutputTypeIds[] = {g_nStringIdBOOL, g_nStringIdSTRING};
+const CStringDictionary::TStringId FORTE_POWERLINK_MN::scmDataInputNames[] = {STRID(QI), STRID(CDC_CFG), STRID(APP_CFG), STRID(DEV_NAME)};
+const CStringDictionary::TStringId FORTE_POWERLINK_MN::scmDataInputTypeIds[] = {STRID(BOOL), STRID(STRING), STRID(STRING), STRID(STRING)};
+const CStringDictionary::TStringId FORTE_POWERLINK_MN::scmDataOutputNames[] = {STRID(QO), STRID(STATUS)};
+const CStringDictionary::TStringId FORTE_POWERLINK_MN::scmDataOutputTypeIds[] = {STRID(BOOL), STRID(STRING)};
 const TDataIOID FORTE_POWERLINK_MN::scmEIWith[] = {0, 1, 2, 3, scmWithListDelimiter};
 const TForteInt16 FORTE_POWERLINK_MN::scmEIWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_POWERLINK_MN::scmEventInputNames[] = {g_nStringIdINIT};
-const CStringDictionary::TStringId FORTE_POWERLINK_MN::scmEventInputTypeIds[] = {g_nStringIdEInit};
+const CStringDictionary::TStringId FORTE_POWERLINK_MN::scmEventInputNames[] = {STRID(INIT)};
+const CStringDictionary::TStringId FORTE_POWERLINK_MN::scmEventInputTypeIds[] = {STRID(EInit)};
 const TDataIOID FORTE_POWERLINK_MN::scmEOWith[] = {0, 1, scmWithListDelimiter};
 const TForteInt16 FORTE_POWERLINK_MN::scmEOWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_POWERLINK_MN::scmEventOutputNames[] = {g_nStringIdINITO};
-const CStringDictionary::TStringId FORTE_POWERLINK_MN::scmEventOutputTypeIds[] = {g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_POWERLINK_MN::scmEventOutputNames[] = {STRID(INITO)};
+const CStringDictionary::TStringId FORTE_POWERLINK_MN::scmEventOutputTypeIds[] = {STRID(Event)};
 const SFBInterfaceSpec FORTE_POWERLINK_MN::scmFBInterfaceSpec = {
   1, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,
   1, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes,

@@ -12,9 +12,17 @@
  *******************************************************************************/
 
 #include "E_DEMUX_fbt.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "E_DEMUX_fbt_gen.cpp"
-#endif
+
+USE_STRING_ID(E_DEMUX);
+USE_STRING_ID(EI);
+USE_STRING_ID(EO0);
+USE_STRING_ID(EO1);
+USE_STRING_ID(EO2);
+USE_STRING_ID(EO3);
+USE_STRING_ID(Event);
+USE_STRING_ID(K);
+USE_STRING_ID(UINT);
+
 
 #include "criticalregion.h"
 #include "resource.h"
@@ -26,17 +34,17 @@
 #include "forte_array_fixed.h"
 #include "forte_array_variable.h"
 
-DEFINE_FIRMWARE_FB(FORTE_E_DEMUX, g_nStringIdE_DEMUX)
+DEFINE_FIRMWARE_FB(FORTE_E_DEMUX, STRID(E_DEMUX))
 
-const CStringDictionary::TStringId FORTE_E_DEMUX::scmDataInputNames[] = {g_nStringIdK};
-const CStringDictionary::TStringId FORTE_E_DEMUX::scmDataInputTypeIds[] = {g_nStringIdUINT};
+const CStringDictionary::TStringId FORTE_E_DEMUX::scmDataInputNames[] = {STRID(K)};
+const CStringDictionary::TStringId FORTE_E_DEMUX::scmDataInputTypeIds[] = {STRID(UINT)};
 const TDataIOID FORTE_E_DEMUX::scmEIWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_E_DEMUX::scmEIWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_E_DEMUX::scmEventInputNames[] = {g_nStringIdEI};
-const CStringDictionary::TStringId FORTE_E_DEMUX::scmEventInputTypeIds[] = {g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_E_DEMUX::scmEventInputNames[] = {STRID(EI)};
+const CStringDictionary::TStringId FORTE_E_DEMUX::scmEventInputTypeIds[] = {STRID(Event)};
 const TForteInt16 FORTE_E_DEMUX::scmEOWithIndexes[] = {-1, -1, -1, -1};
-const CStringDictionary::TStringId FORTE_E_DEMUX::scmEventOutputNames[] = {g_nStringIdEO0, g_nStringIdEO1, g_nStringIdEO2, g_nStringIdEO3};
-const CStringDictionary::TStringId FORTE_E_DEMUX::scmEventOutputTypeIds[] = {g_nStringIdEvent, g_nStringIdEvent, g_nStringIdEvent, g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_E_DEMUX::scmEventOutputNames[] = {STRID(EO0), STRID(EO1), STRID(EO2), STRID(EO3)};
+const CStringDictionary::TStringId FORTE_E_DEMUX::scmEventOutputTypeIds[] = {STRID(Event), STRID(Event), STRID(Event), STRID(Event)};
 const SFBInterfaceSpec FORTE_E_DEMUX::scmFBInterfaceSpec = {
   1, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,
   4, scmEventOutputNames, scmEventOutputTypeIds, nullptr, scmEOWithIndexes,

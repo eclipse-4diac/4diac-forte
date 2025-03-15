@@ -13,9 +13,17 @@
 #include "fmuInstance.h"
 #include "device.h"
 
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "fmuInstance_gen.cpp"
-#endif
+
+USE_STRING_ID(DEV_MGR);
+USE_STRING_ID(EMB_RES);
+USE_STRING_ID(E_RESTART);
+USE_STRING_ID(IW);
+USE_STRING_ID(IX);
+USE_STRING_ID(MGR);
+USE_STRING_ID(QI);
+USE_STRING_ID(QW);
+USE_STRING_ID(QX);
+
 #include "device.h"
 #include "./comm/fmuHandler.h"
 #include "../basicfb.h"
@@ -90,8 +98,8 @@ fmuInstance::~fmuInstance(){
 
 bool fmuInstance::loadFBs(){
 
-  CFunctionBlock* devMgr = CTypeLib::createFB(g_nStringIdMGR, g_nStringIdDEV_MGR, mResource);
-  devMgr->getDataInput(g_nStringIdQI)->fromString("1");
+  CFunctionBlock* devMgr = CTypeLib::createFB(STRID(MGR), STRID(DEV_MGR), mResource);
+  devMgr->getDataInput(STRID(QI))->fromString("1");
   devMgr->changeExecutionState(EMGMCommandType::Reset);
   devMgr->changeExecutionState(EMGMCommandType::Start);
   FMU_DEBUG_LOG(this, MODEL_GUID << " About to load FBs from file " << getBootFileLocation().getValue() << "\n--------------\n");
@@ -124,16 +132,16 @@ void fmuInstance::populateInputsOutputs(forte::core::CFBContainer* resource){
 void fmuInstance::populateInputsAndOutputsCore(CFunctionBlock* paFB){
 
   CStringDictionary::TStringId functionBlockType = paFB->getFBTypeId();
-  if(g_nStringIdEMB_RES == functionBlockType){
+  if(STRID(EMB_RES) == functionBlockType){
     populateInputsOutputs(static_cast<CResource*>(paFB));
     return;
-  }else if(g_nStringIdIX == functionBlockType || g_nStringIdQX == functionBlockType){
+  }else if(STRID(IX) == functionBlockType || STRID(QX) == functionBlockType){
     FMU_DEBUG_LOG(this, "VARIABLES: IO: " << paFB->getInstanceName() << " ADDED SUCCESSFULLY\n");
     fmuValueContainer* newValue = new fmuValueContainer(fmuValueContainer::BOOL, false);
     CFMUProcessInterface* ioFB = static_cast<CFMUProcessInterface*>(paFB);
     ioFB->setValueContainer(newValue);
     mOutputsAndInputs.push_back(newValue);
-  }else if(g_nStringIdIW == functionBlockType || g_nStringIdQW == functionBlockType){
+  }else if(STRID(IW) == functionBlockType || STRID(QW) == functionBlockType){
     FMU_DEBUG_LOG(this, "VARIABLES: IO: " << paFB->getInstanceName() << " ADDED SUCCESSFULLY\n");
     fmuValueContainer* newValue = new fmuValueContainer(fmuValueContainer::INTEGER, false);
     CFMUProcessInterface* ioFB = static_cast<CFMUProcessInterface*>(paFB);
@@ -178,7 +186,7 @@ void fmuInstance::populateInputsAndOutputsCore(CFunctionBlock* paFB){
     }
   }
 
-  if(g_nStringIdE_RESTART != functionBlockType){
+  if(STRID(E_RESTART) != functionBlockType){
     //Add interface of the FB as local variables to the FMU
     fillInterfaceElementsArray(paFB, true, false); //data inputs
     fillInterfaceElementsArray(paFB, false, false); //data outputs

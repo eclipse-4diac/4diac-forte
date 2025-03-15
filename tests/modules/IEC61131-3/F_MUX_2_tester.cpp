@@ -12,13 +12,13 @@
 *******************************************************************************/
 #include "../../core/fbtests/fbtestfixture.h"
 
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "F_MUX_2_tester_gen.cpp"
-#endif
+
+USE_STRING_ID(F_MUX_2);
+
 
 struct F_MUX_2_TestFixture : public CFBTestFixtureBase{
 
-  F_MUX_2_TestFixture() : CFBTestFixtureBase(g_nStringIdF_MUX_2) {
+  F_MUX_2_TestFixture() : CFBTestFixtureBase(STRID(F_MUX_2)) {
     setInputData({&mK_MUX_2, &mIn0_MUX_2, &mIn1_MUX_2});
     setOutputData({&mOut_MUX_2});
     CFBTestFixtureBase::setup();

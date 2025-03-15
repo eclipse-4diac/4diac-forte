@@ -11,29 +11,41 @@
  *******************************************************************************/
 
 #include "FieldsToServiceQueryForm.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "FieldsToServiceQueryForm_gen.cpp"
-#endif
 
-DEFINE_FIRMWARE_FB(FORTE_FieldsToServiceQueryForm, g_nStringIdFieldsToServiceQueryForm)
+USE_STRING_ID(ArrowheadService);
+USE_STRING_ID(BOOL);
+USE_STRING_ID(CNF);
+USE_STRING_ID(DINT);
+USE_STRING_ID(Event);
+USE_STRING_ID(FieldsToServiceQueryForm);
+USE_STRING_ID(metadataSearch);
+USE_STRING_ID(pingProviders);
+USE_STRING_ID(REQ);
+USE_STRING_ID(service);
+USE_STRING_ID(serviceQueryForm);
+USE_STRING_ID(ServiceQueryForm);
+USE_STRING_ID(version);
 
-const CStringDictionary::TStringId FORTE_FieldsToServiceQueryForm::scmDataInputNames[] = {g_nStringIdservice, g_nStringIdmetadataSearch, g_nStringIdpingProviders, g_nStringIdversion};
 
-const CStringDictionary::TStringId FORTE_FieldsToServiceQueryForm::scmDataInputTypeIds[] = {g_nStringIdArrowheadService, g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdDINT};
+DEFINE_FIRMWARE_FB(FORTE_FieldsToServiceQueryForm, STRID(FieldsToServiceQueryForm))
 
-const CStringDictionary::TStringId FORTE_FieldsToServiceQueryForm::scmDataOutputNames[] = {g_nStringIdserviceQueryForm};
+const CStringDictionary::TStringId FORTE_FieldsToServiceQueryForm::scmDataInputNames[] = {STRID(service), STRID(metadataSearch), STRID(pingProviders), STRID(version)};
 
-const CStringDictionary::TStringId FORTE_FieldsToServiceQueryForm::scmDataOutputTypeIds[] = {g_nStringIdServiceQueryForm};
+const CStringDictionary::TStringId FORTE_FieldsToServiceQueryForm::scmDataInputTypeIds[] = {STRID(ArrowheadService), STRID(BOOL), STRID(BOOL), STRID(DINT)};
+
+const CStringDictionary::TStringId FORTE_FieldsToServiceQueryForm::scmDataOutputNames[] = {STRID(serviceQueryForm)};
+
+const CStringDictionary::TStringId FORTE_FieldsToServiceQueryForm::scmDataOutputTypeIds[] = {STRID(ServiceQueryForm)};
 
 const TForteInt16 FORTE_FieldsToServiceQueryForm::scmEIWithIndexes[] = {0};
 const TDataIOID FORTE_FieldsToServiceQueryForm::scmEIWith[] = {0, 3, 2, 1, scmWithListDelimiter};
-const CStringDictionary::TStringId FORTE_FieldsToServiceQueryForm::scmEventInputNames[] = {g_nStringIdREQ};
-const CStringDictionary::TStringId FORTE_FieldsToServiceQueryForm::scmEventInputTypeIds[] = {g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_FieldsToServiceQueryForm::scmEventInputNames[] = {STRID(REQ)};
+const CStringDictionary::TStringId FORTE_FieldsToServiceQueryForm::scmEventInputTypeIds[] = {STRID(Event)};
 
 const TDataIOID FORTE_FieldsToServiceQueryForm::scmEOWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_FieldsToServiceQueryForm::scmEOWithIndexes[] = {0, -1};
-const CStringDictionary::TStringId FORTE_FieldsToServiceQueryForm::scmEventOutputNames[] = {g_nStringIdCNF};
-const CStringDictionary::TStringId FORTE_FieldsToServiceQueryForm::scmEventOutputTypeIds[] = {g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_FieldsToServiceQueryForm::scmEventOutputNames[] = {STRID(CNF)};
+const CStringDictionary::TStringId FORTE_FieldsToServiceQueryForm::scmEventOutputTypeIds[] = {STRID(Event)};
 
 const SFBInterfaceSpec FORTE_FieldsToServiceQueryForm::scmFBInterfaceSpec = {
   1,  scmEventInputNames, scmEventInputTypeIds,  scmEIWith,  scmEIWithIndexes,

@@ -18,9 +18,23 @@
  *************************************************************************/
 
 #include "ASSEMBLE_BYTE_FROM_BOOLS_fct.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "ASSEMBLE_BYTE_FROM_BOOLS_fct_gen.cpp"
-#endif
+
+USE_STRING_ID();
+USE_STRING_ID(ASSEMBLE_BYTE_FROM_BOOLS);
+USE_STRING_ID(BIT_00);
+USE_STRING_ID(BIT_01);
+USE_STRING_ID(BIT_02);
+USE_STRING_ID(BIT_03);
+USE_STRING_ID(BIT_04);
+USE_STRING_ID(BIT_05);
+USE_STRING_ID(BIT_06);
+USE_STRING_ID(BIT_07);
+USE_STRING_ID(BOOL);
+USE_STRING_ID(BYTE);
+USE_STRING_ID(CNF);
+USE_STRING_ID(Event);
+USE_STRING_ID(REQ);
+
 
 #include "criticalregion.h"
 #include "resource.h"
@@ -33,20 +47,20 @@
 #include "forte_array_variable.h"
 #include "ASSEMBLE_BYTE_FROM_BOOLS_fct.h"
 
-DEFINE_FIRMWARE_FB(FORTE_ASSEMBLE_BYTE_FROM_BOOLS, g_nStringIdASSEMBLE_BYTE_FROM_BOOLS)
+DEFINE_FIRMWARE_FB(FORTE_ASSEMBLE_BYTE_FROM_BOOLS, STRID(ASSEMBLE_BYTE_FROM_BOOLS))
 
-const CStringDictionary::TStringId FORTE_ASSEMBLE_BYTE_FROM_BOOLS::scmDataInputNames[] = {g_nStringIdBIT_00, g_nStringIdBIT_01, g_nStringIdBIT_02, g_nStringIdBIT_03, g_nStringIdBIT_04, g_nStringIdBIT_05, g_nStringIdBIT_06, g_nStringIdBIT_07};
-const CStringDictionary::TStringId FORTE_ASSEMBLE_BYTE_FROM_BOOLS::scmDataInputTypeIds[] = {g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdBOOL};
-const CStringDictionary::TStringId FORTE_ASSEMBLE_BYTE_FROM_BOOLS::scmDataOutputNames[] = {g_nStringId};
-const CStringDictionary::TStringId FORTE_ASSEMBLE_BYTE_FROM_BOOLS::scmDataOutputTypeIds[] = {g_nStringIdBYTE};
+const CStringDictionary::TStringId FORTE_ASSEMBLE_BYTE_FROM_BOOLS::scmDataInputNames[] = {STRID(BIT_00), STRID(BIT_01), STRID(BIT_02), STRID(BIT_03), STRID(BIT_04), STRID(BIT_05), STRID(BIT_06), STRID(BIT_07)};
+const CStringDictionary::TStringId FORTE_ASSEMBLE_BYTE_FROM_BOOLS::scmDataInputTypeIds[] = {STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL)};
+const CStringDictionary::TStringId FORTE_ASSEMBLE_BYTE_FROM_BOOLS::scmDataOutputNames[] = {STRID()};
+const CStringDictionary::TStringId FORTE_ASSEMBLE_BYTE_FROM_BOOLS::scmDataOutputTypeIds[] = {STRID(BYTE)};
 const TDataIOID FORTE_ASSEMBLE_BYTE_FROM_BOOLS::scmEIWith[] = {0, 1, 2, 3, 4, 5, 6, 7, scmWithListDelimiter};
 const TForteInt16 FORTE_ASSEMBLE_BYTE_FROM_BOOLS::scmEIWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_ASSEMBLE_BYTE_FROM_BOOLS::scmEventInputNames[] = {g_nStringIdREQ};
-const CStringDictionary::TStringId FORTE_ASSEMBLE_BYTE_FROM_BOOLS::scmEventInputTypeIds[] = {g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_ASSEMBLE_BYTE_FROM_BOOLS::scmEventInputNames[] = {STRID(REQ)};
+const CStringDictionary::TStringId FORTE_ASSEMBLE_BYTE_FROM_BOOLS::scmEventInputTypeIds[] = {STRID(Event)};
 const TDataIOID FORTE_ASSEMBLE_BYTE_FROM_BOOLS::scmEOWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_ASSEMBLE_BYTE_FROM_BOOLS::scmEOWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_ASSEMBLE_BYTE_FROM_BOOLS::scmEventOutputNames[] = {g_nStringIdCNF};
-const CStringDictionary::TStringId FORTE_ASSEMBLE_BYTE_FROM_BOOLS::scmEventOutputTypeIds[] = {g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_ASSEMBLE_BYTE_FROM_BOOLS::scmEventOutputNames[] = {STRID(CNF)};
+const CStringDictionary::TStringId FORTE_ASSEMBLE_BYTE_FROM_BOOLS::scmEventOutputTypeIds[] = {STRID(Event)};
 const SFBInterfaceSpec FORTE_ASSEMBLE_BYTE_FROM_BOOLS::scmFBInterfaceSpec = {
   1, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,
   1, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes,

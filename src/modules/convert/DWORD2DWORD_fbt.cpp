@@ -13,9 +13,15 @@
  *******************************************************************************/
 
 #include "DWORD2DWORD_fbt.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "DWORD2DWORD_fbt_gen.cpp"
-#endif
+
+USE_STRING_ID(CNF);
+USE_STRING_ID(DWORD);
+USE_STRING_ID(DWORD2DWORD);
+USE_STRING_ID(Event);
+USE_STRING_ID(IN);
+USE_STRING_ID(OUT);
+USE_STRING_ID(REQ);
+
 
 #include "criticalregion.h"
 #include "resource.h"
@@ -26,25 +32,25 @@
 #include "forte_array_fixed.h"
 #include "forte_array_variable.h"
 
-DEFINE_FIRMWARE_FB(FORTE_DWORD2DWORD, g_nStringIdDWORD2DWORD)
+DEFINE_FIRMWARE_FB(FORTE_DWORD2DWORD, STRID(DWORD2DWORD))
 
-const CStringDictionary::TStringId FORTE_DWORD2DWORD::scmDataInputNames[] = {g_nStringIdIN};
+const CStringDictionary::TStringId FORTE_DWORD2DWORD::scmDataInputNames[] = {STRID(IN)};
 
-const CStringDictionary::TStringId FORTE_DWORD2DWORD::scmDataInputTypeIds[] = {g_nStringIdDWORD};
+const CStringDictionary::TStringId FORTE_DWORD2DWORD::scmDataInputTypeIds[] = {STRID(DWORD)};
 
-const CStringDictionary::TStringId FORTE_DWORD2DWORD::scmDataOutputNames[] = {g_nStringIdOUT};
+const CStringDictionary::TStringId FORTE_DWORD2DWORD::scmDataOutputNames[] = {STRID(OUT)};
 
-const CStringDictionary::TStringId FORTE_DWORD2DWORD::scmDataOutputTypeIds[] = {g_nStringIdDWORD};
+const CStringDictionary::TStringId FORTE_DWORD2DWORD::scmDataOutputTypeIds[] = {STRID(DWORD)};
 
 const TDataIOID FORTE_DWORD2DWORD::scmEIWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_DWORD2DWORD::scmEIWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_DWORD2DWORD::scmEventInputNames[] = {g_nStringIdREQ};
-const CStringDictionary::TStringId FORTE_DWORD2DWORD::scmEventInputTypeIds[] = {g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_DWORD2DWORD::scmEventInputNames[] = {STRID(REQ)};
+const CStringDictionary::TStringId FORTE_DWORD2DWORD::scmEventInputTypeIds[] = {STRID(Event)};
 
 const TDataIOID FORTE_DWORD2DWORD::scmEOWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_DWORD2DWORD::scmEOWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_DWORD2DWORD::scmEventOutputNames[] = {g_nStringIdCNF};
-const CStringDictionary::TStringId FORTE_DWORD2DWORD::scmEventOutputTypeIds[] = {g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_DWORD2DWORD::scmEventOutputNames[] = {STRID(CNF)};
+const CStringDictionary::TStringId FORTE_DWORD2DWORD::scmEventOutputTypeIds[] = {STRID(Event)};
 
 
 const SFBInterfaceSpec FORTE_DWORD2DWORD::scmFBInterfaceSpec = {

@@ -12,9 +12,28 @@
  *******************************************************************************/
 
 #include "EBSlave2301.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "EBSlave2301_gen.cpp"
-#endif
+
+USE_STRING_ID(BOOL);
+USE_STRING_ID(BusAdapterIn);
+USE_STRING_ID(BusAdapterOut);
+USE_STRING_ID(EBBusAdapter);
+USE_STRING_ID(EBSlave2301);
+USE_STRING_ID(IND);
+USE_STRING_ID(MAP);
+USE_STRING_ID(MAPO);
+USE_STRING_ID(QI);
+USE_STRING_ID(QO);
+USE_STRING_ID(Relay_1);
+USE_STRING_ID(Relay_2);
+USE_STRING_ID(Relay_3);
+USE_STRING_ID(Relay_4);
+USE_STRING_ID(Relay_5);
+USE_STRING_ID(Relay_6);
+USE_STRING_ID(STATUS);
+USE_STRING_ID(UINT);
+USE_STRING_ID(UpdateInterval);
+USE_STRING_ID(WSTRING);
+
 
 #include "EBBusAdapter_adp.h"
 #include "iec61131_functions.h"
@@ -26,21 +45,21 @@
 #include "resource.h"
 #include "../handler/bus.h"
 
-DEFINE_FIRMWARE_FB(FORTE_EBSlave2301, g_nStringIdEBSlave2301)
+DEFINE_FIRMWARE_FB(FORTE_EBSlave2301, STRID(EBSlave2301))
 
-const CStringDictionary::TStringId FORTE_EBSlave2301::scmDataInputNames[] = {g_nStringIdQI, g_nStringIdRelay_1, g_nStringIdRelay_2, g_nStringIdRelay_3, g_nStringIdRelay_4, g_nStringIdRelay_5, g_nStringIdRelay_6, g_nStringIdUpdateInterval};
-const CStringDictionary::TStringId FORTE_EBSlave2301::scmDataInputTypeIds[] = {g_nStringIdBOOL, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdUINT};
-const CStringDictionary::TStringId FORTE_EBSlave2301::scmDataOutputNames[] = {g_nStringIdQO, g_nStringIdSTATUS};
-const CStringDictionary::TStringId FORTE_EBSlave2301::scmDataOutputTypeIds[] = {g_nStringIdBOOL, g_nStringIdWSTRING};
+const CStringDictionary::TStringId FORTE_EBSlave2301::scmDataInputNames[] = {STRID(QI), STRID(Relay_1), STRID(Relay_2), STRID(Relay_3), STRID(Relay_4), STRID(Relay_5), STRID(Relay_6), STRID(UpdateInterval)};
+const CStringDictionary::TStringId FORTE_EBSlave2301::scmDataInputTypeIds[] = {STRID(BOOL), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(UINT)};
+const CStringDictionary::TStringId FORTE_EBSlave2301::scmDataOutputNames[] = {STRID(QO), STRID(STATUS)};
+const CStringDictionary::TStringId FORTE_EBSlave2301::scmDataOutputTypeIds[] = {STRID(BOOL), STRID(WSTRING)};
 const TDataIOID FORTE_EBSlave2301::scmEIWith[] = {1, 2, 3, 4, 5, 6, 0, scmWithListDelimiter};
 const TForteInt16 FORTE_EBSlave2301::scmEIWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_EBSlave2301::scmEventInputNames[] = {g_nStringIdMAP};
+const CStringDictionary::TStringId FORTE_EBSlave2301::scmEventInputNames[] = {STRID(MAP)};
 const TDataIOID FORTE_EBSlave2301::scmEOWith[] = {0, scmWithListDelimiter, 0, 1, scmWithListDelimiter};
 const TForteInt16 FORTE_EBSlave2301::scmEOWithIndexes[] = {0, 2};
-const CStringDictionary::TStringId FORTE_EBSlave2301::scmEventOutputNames[] = {g_nStringIdMAPO, g_nStringIdIND};
+const CStringDictionary::TStringId FORTE_EBSlave2301::scmEventOutputNames[] = {STRID(MAPO), STRID(IND)};
 const SAdapterInstanceDef FORTE_EBSlave2301::scmAdapterInstances[] = {
-  {g_nStringIdEBBusAdapter, g_nStringIdBusAdapterIn, false},
-  {g_nStringIdEBBusAdapter, g_nStringIdBusAdapterOut, true}
+  {STRID(EBBusAdapter), STRID(BusAdapterIn), false},
+  {STRID(EBBusAdapter), STRID(BusAdapterOut), true}
 };
 const SFBInterfaceSpec FORTE_EBSlave2301::scmFBInterfaceSpec = {
   1, scmEventInputNames, nullptr, scmEIWith, scmEIWithIndexes,
@@ -65,8 +84,8 @@ FORTE_EBSlave2301::FORTE_EBSlave2301(const CStringDictionary::TStringId paInstan
     var_UpdateInterval(0_UINT),
     var_QO(0_BOOL),
     var_STATUS(u""_WSTRING),
-    var_BusAdapterIn(g_nStringIdBusAdapterIn, *this, false),
-    var_BusAdapterOut(g_nStringIdBusAdapterOut, *this, true),
+    var_BusAdapterIn(STRID(BusAdapterIn), *this, false),
+    var_BusAdapterOut(STRID(BusAdapterOut), *this, true),
     var_conn_QO(var_QO),
     var_conn_STATUS(var_STATUS),
     conn_MAPO(this, 0),

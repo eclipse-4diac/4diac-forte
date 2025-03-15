@@ -11,29 +11,46 @@
  *******************************************************************************/
 
 #include "FieldsToServiceRequestForm.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "FieldsToServiceRequestForm_gen.cpp"
-#endif
 
-DEFINE_FIRMWARE_FB(FORTE_FieldsToServiceRequestForm, g_nStringIdFieldsToServiceRequestForm)
+USE_STRING_ID(ARRAY);
+USE_STRING_ID(ArrowheadCloud);
+USE_STRING_ID(ArrowheadService);
+USE_STRING_ID(ArrowheadSystem);
+USE_STRING_ID(CNF);
+USE_STRING_ID(Event);
+USE_STRING_ID(FieldsToServiceRequestForm);
+USE_STRING_ID(orchestrationFlags);
+USE_STRING_ID(PreferredProvider);
+USE_STRING_ID(preferredProviders);
+USE_STRING_ID(REQ);
+USE_STRING_ID(requestedQoS);
+USE_STRING_ID(requestedService);
+USE_STRING_ID(requesterCloud);
+USE_STRING_ID(requesterSystem);
+USE_STRING_ID(serviceRequestForm);
+USE_STRING_ID(ServiceRequestForm);
+USE_STRING_ID(WSTRING);
 
-const CStringDictionary::TStringId FORTE_FieldsToServiceRequestForm::scmDataInputNames[] = {g_nStringIdrequesterSystem, g_nStringIdrequesterCloud, g_nStringIdrequestedService, g_nStringIdorchestrationFlags, g_nStringIdpreferredProviders, g_nStringIdrequestedQoS};
 
-const CStringDictionary::TStringId FORTE_FieldsToServiceRequestForm::scmDataInputTypeIds[] = {g_nStringIdArrowheadSystem, g_nStringIdArrowheadCloud, g_nStringIdArrowheadService, g_nStringIdARRAY, 10, g_nStringIdWSTRING, g_nStringIdARRAY, 10, g_nStringIdPreferredProvider, g_nStringIdARRAY, 10, g_nStringIdWSTRING};
+DEFINE_FIRMWARE_FB(FORTE_FieldsToServiceRequestForm, STRID(FieldsToServiceRequestForm))
 
-const CStringDictionary::TStringId FORTE_FieldsToServiceRequestForm::scmDataOutputNames[] = {g_nStringIdserviceRequestForm};
+const CStringDictionary::TStringId FORTE_FieldsToServiceRequestForm::scmDataInputNames[] = {STRID(requesterSystem), STRID(requesterCloud), STRID(requestedService), STRID(orchestrationFlags), STRID(preferredProviders), STRID(requestedQoS)};
 
-const CStringDictionary::TStringId FORTE_FieldsToServiceRequestForm::scmDataOutputTypeIds[] = {g_nStringIdServiceRequestForm};
+const CStringDictionary::TStringId FORTE_FieldsToServiceRequestForm::scmDataInputTypeIds[] = {STRID(ArrowheadSystem), STRID(ArrowheadCloud), STRID(ArrowheadService), STRID(ARRAY), 10, STRID(WSTRING), STRID(ARRAY), 10, STRID(PreferredProvider), STRID(ARRAY), 10, STRID(WSTRING)};
+
+const CStringDictionary::TStringId FORTE_FieldsToServiceRequestForm::scmDataOutputNames[] = {STRID(serviceRequestForm)};
+
+const CStringDictionary::TStringId FORTE_FieldsToServiceRequestForm::scmDataOutputTypeIds[] = {STRID(ServiceRequestForm)};
 
 const TForteInt16 FORTE_FieldsToServiceRequestForm::scmEIWithIndexes[] = {0};
 const TDataIOID FORTE_FieldsToServiceRequestForm::scmEIWith[] = {0, 1, 5, 4, 3, 2, scmWithListDelimiter};
-const CStringDictionary::TStringId FORTE_FieldsToServiceRequestForm::scmEventInputNames[] = {g_nStringIdREQ};
-const CStringDictionary::TStringId FORTE_FieldsToServiceRequestForm::scmEventInputTypeIds[] = {g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_FieldsToServiceRequestForm::scmEventInputNames[] = {STRID(REQ)};
+const CStringDictionary::TStringId FORTE_FieldsToServiceRequestForm::scmEventInputTypeIds[] = {STRID(Event)};
 
 const TDataIOID FORTE_FieldsToServiceRequestForm::scmEOWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_FieldsToServiceRequestForm::scmEOWithIndexes[] = {0, -1};
-const CStringDictionary::TStringId FORTE_FieldsToServiceRequestForm::scmEventOutputNames[] = {g_nStringIdCNF};
-const CStringDictionary::TStringId FORTE_FieldsToServiceRequestForm::scmEventOutputTypeIds[] = {g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_FieldsToServiceRequestForm::scmEventOutputNames[] = {STRID(CNF)};
+const CStringDictionary::TStringId FORTE_FieldsToServiceRequestForm::scmEventOutputTypeIds[] = {STRID(Event)};
 
 const SFBInterfaceSpec FORTE_FieldsToServiceRequestForm::scmFBInterfaceSpec = {
   1,  scmEventInputNames, scmEventInputTypeIds,  scmEIWith,  scmEIWithIndexes,

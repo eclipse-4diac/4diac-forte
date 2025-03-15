@@ -12,9 +12,13 @@
  *******************************************************************************/
 
 #include "E_SPLIT_fbt.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "E_SPLIT_fbt_gen.cpp"
-#endif
+
+USE_STRING_ID(EI);
+USE_STRING_ID(EO1);
+USE_STRING_ID(EO2);
+USE_STRING_ID(E_SPLIT);
+USE_STRING_ID(Event);
+
 
 #include "criticalregion.h"
 #include "resource.h"
@@ -25,14 +29,14 @@
 #include "forte_array_fixed.h"
 #include "forte_array_variable.h"
 
-DEFINE_FIRMWARE_FB(FORTE_E_SPLIT, g_nStringIdE_SPLIT)
+DEFINE_FIRMWARE_FB(FORTE_E_SPLIT, STRID(E_SPLIT))
 
 const TForteInt16 FORTE_E_SPLIT::scmEIWithIndexes[] = {-1};
-const CStringDictionary::TStringId FORTE_E_SPLIT::scmEventInputNames[] = {g_nStringIdEI};
-const CStringDictionary::TStringId FORTE_E_SPLIT::scmEventInputTypeIds[] = {g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_E_SPLIT::scmEventInputNames[] = {STRID(EI)};
+const CStringDictionary::TStringId FORTE_E_SPLIT::scmEventInputTypeIds[] = {STRID(Event)};
 const TForteInt16 FORTE_E_SPLIT::scmEOWithIndexes[] = {-1, -1};
-const CStringDictionary::TStringId FORTE_E_SPLIT::scmEventOutputNames[] = {g_nStringIdEO1, g_nStringIdEO2};
-const CStringDictionary::TStringId FORTE_E_SPLIT::scmEventOutputTypeIds[] = {g_nStringIdEvent, g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_E_SPLIT::scmEventOutputNames[] = {STRID(EO1), STRID(EO2)};
+const CStringDictionary::TStringId FORTE_E_SPLIT::scmEventOutputTypeIds[] = {STRID(Event), STRID(Event)};
 const SFBInterfaceSpec FORTE_E_SPLIT::scmFBInterfaceSpec = {
   1, scmEventInputNames, scmEventInputTypeIds, nullptr, scmEIWithIndexes,
   2, scmEventOutputNames, scmEventOutputTypeIds, nullptr, scmEOWithIndexes,

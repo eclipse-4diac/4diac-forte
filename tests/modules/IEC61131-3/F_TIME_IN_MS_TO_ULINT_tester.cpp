@@ -11,14 +11,14 @@
  *******************************************************************************/
 #include "../../core/fbtests/fbtestfixture.h"
 
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "F_TIME_IN_MS_TO_ULINT_tester_gen.cpp"
-#endif
+
+USE_STRING_ID(F_TIME_IN_MS_TO_ULINT);
+
 
 struct F_TIME_IN_MS_TO_ULINT_TestFixture : public CFBTestFixtureBase {
 
     F_TIME_IN_MS_TO_ULINT_TestFixture() :
-        CFBTestFixtureBase(g_nStringIdF_TIME_IN_MS_TO_ULINT) {
+        CFBTestFixtureBase(STRID(F_TIME_IN_MS_TO_ULINT)) {
       setInputData({&mIn_F_TIME_IN_MS_TO_ULINT});
       setOutputData({&mOut_F_TIME_IN_MS_TO_ULINT});
       CFBTestFixtureBase::setup();

@@ -11,24 +11,30 @@
  *******************************************************************************/
 
 #include "ARTimeOut_adp.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "ARTimeOut_adp_gen.cpp"
-#endif
+
+USE_STRING_ID(ARTimeOut);
+USE_STRING_ID(DT);
+USE_STRING_ID(Event);
+USE_STRING_ID(START);
+USE_STRING_ID(STOP);
+USE_STRING_ID(TIME);
+USE_STRING_ID(TimeOut);
+
 
 #include "criticalregion.h"
 #include "resource.h"
 
-DEFINE_ADAPTER_TYPE(FORTE_ARTimeOut, g_nStringIdARTimeOut)
+DEFINE_ADAPTER_TYPE(FORTE_ARTimeOut, STRID(ARTimeOut))
 
-const CStringDictionary::TStringId FORTE_ARTimeOut::scmDataOutputNames[] = {g_nStringIdDT};
-const CStringDictionary::TStringId FORTE_ARTimeOut::scmDataOutputTypeIds[] = {g_nStringIdTIME};
+const CStringDictionary::TStringId FORTE_ARTimeOut::scmDataOutputNames[] = {STRID(DT)};
+const CStringDictionary::TStringId FORTE_ARTimeOut::scmDataOutputTypeIds[] = {STRID(TIME)};
 const TForteInt16 FORTE_ARTimeOut::scmEIWithIndexes[] = {-1};
-const CStringDictionary::TStringId FORTE_ARTimeOut::scmEventInputNames[] = {g_nStringIdTimeOut};
-const CStringDictionary::TStringId FORTE_ARTimeOut::scmEventInputTypeIds[] = {g_nStringIdEvent, g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_ARTimeOut::scmEventInputNames[] = {STRID(TimeOut)};
+const CStringDictionary::TStringId FORTE_ARTimeOut::scmEventInputTypeIds[] = {STRID(Event), STRID(Event)};
 const TDataIOID FORTE_ARTimeOut::scmEOWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_ARTimeOut::scmEOWithIndexes[] = {0, -1};
-const CStringDictionary::TStringId FORTE_ARTimeOut::scmEventOutputNames[] = {g_nStringIdSTART, g_nStringIdSTOP};
-const CStringDictionary::TStringId FORTE_ARTimeOut::scmEventOutputTypeIds[] = {g_nStringIdEvent, g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_ARTimeOut::scmEventOutputNames[] = {STRID(START), STRID(STOP)};
+const CStringDictionary::TStringId FORTE_ARTimeOut::scmEventOutputTypeIds[] = {STRID(Event), STRID(Event)};
 
 const SFBInterfaceSpec FORTE_ARTimeOut::scmFBInterfaceSpecSocket = {
   1, scmEventInputNames, scmEventInputTypeIds, nullptr, scmEIWithIndexes,

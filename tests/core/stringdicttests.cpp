@@ -12,11 +12,12 @@
 #include <boost/test/unit_test.hpp>
 #include "../../src/core/stringdict.h"
 
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "stringdicttests_gen.cpp"
-#else
-#include "stringlist.h"
-#endif
+
+USE_STRING_ID(BOOL);
+USE_STRING_ID(lowercasetest);
+USE_STRING_ID(LOWERCASETEST);
+USE_STRING_ID(STRING);
+
 
 #include <list>
 #include <stdio.h>
@@ -45,11 +46,11 @@ BOOST_AUTO_TEST_SUITE(StringDictTests)
 
   BOOST_AUTO_TEST_CASE(availableString){
     //test if a string that should be pre inserted in the stringdict on compile time is available
-    std::string sBool(CStringDictionary::get(g_nStringIdBOOL));
+    std::string sBool(CStringDictionary::get(STRID(BOOL)));
     BOOST_CHECK_EQUAL(sBool, "BOOL");
 
-    BOOST_CHECK_EQUAL(g_nStringIdBOOL, CStringDictionary::getId(sBool.c_str()));
-    BOOST_CHECK_EQUAL(g_nStringIdBOOL, CStringDictionary::getId(sBool.c_str(), sBool.size()));
+    BOOST_CHECK_EQUAL(STRID(BOOL), CStringDictionary::getId(sBool.c_str()));
+    BOOST_CHECK_EQUAL(STRID(BOOL), CStringDictionary::getId(sBool.c_str(), sBool.size()));
 
   }
 
@@ -62,13 +63,13 @@ BOOST_AUTO_TEST_SUITE(StringDictTests)
 
   BOOST_AUTO_TEST_CASE(reinsertAvailableString){
     //Test that a reinsert of a string does not corrupt the string dict
-    BOOST_CHECK_EQUAL(g_nStringIdSTRING, CStringDictionary::insert("STRING"));
+    BOOST_CHECK_EQUAL(STRID(STRING), CStringDictionary::insert("STRING"));
   }
 
   BOOST_AUTO_TEST_CASE(availableLowerUpperCaseTest){
     //test if lower and upper case strings are correctly sorted by the build system and look up of them works
-    stringIdTest(g_nStringIdlowercasetest, "lowercasetest");
-    stringIdTest(g_nStringIdLOWERCASETEST, "LOWERCASETEST");
+    stringIdTest(STRID(lowercasetest), "lowercasetest");
+    stringIdTest(STRID(LOWERCASETEST), "LOWERCASETEST");
   }
 
   BOOST_AUTO_TEST_CASE(newLowerUpperCaseTest){

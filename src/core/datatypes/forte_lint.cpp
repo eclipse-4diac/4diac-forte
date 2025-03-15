@@ -12,11 +12,11 @@
  *      - initial implementation and rework communication infrastructure
  *******************************************************************************/
 #include "forte_lint.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "forte_lint_gen.cpp"
-#endif
 
-DEFINE_FIRMWARE_DATATYPE(LINT, g_nStringIdLINT);
+USE_STRING_ID(LINT);
+
+
+DEFINE_FIRMWARE_DATATYPE(LINT, STRID(LINT));
 
 template CIEC_LINT &CIEC_LINT::operator=<>(const CIEC_SINT &paValue);
 

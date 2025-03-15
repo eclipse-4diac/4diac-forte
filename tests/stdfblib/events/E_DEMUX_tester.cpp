@@ -14,9 +14,9 @@
 #include "../../core/fbtests/fbtester.h"
 #include <forte_bool.h>
 #include <E_DEMUX.h>
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "E_DEMUX_tester_gen.cpp"
-#endif
+
+USE_STRING_ID(E_DEMUX);
+
 
 
 class E_DEMUX_tester : public CFBTester{
@@ -82,4 +82,4 @@ class E_DEMUX_tester : public CFBTester{
 
 /***********************************************************************************/
 
-DEFINE_FB_TESTER(E_DEMUX_tester, g_nStringIdE_DEMUX);
+DEFINE_FB_TESTER(E_DEMUX_tester, STRID(E_DEMUX));

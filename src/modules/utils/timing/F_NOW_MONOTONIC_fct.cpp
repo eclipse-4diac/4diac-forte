@@ -16,9 +16,14 @@
  *************************************************************************/
 
 #include "F_NOW_MONOTONIC_fct.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "F_NOW_MONOTONIC_fct_gen.cpp"
-#endif
+
+USE_STRING_ID();
+USE_STRING_ID(CNF);
+USE_STRING_ID(Event);
+USE_STRING_ID(REQ);
+USE_STRING_ID(TIME);
+USE_STRING_ID(utils__timing__F_NOW_MONOTONIC);
+
 
 #include "forte_time.h"
 #include "iec61131_functions.h"
@@ -28,17 +33,17 @@
 #include "forte_array_variable.h"
 #include "F_NOW_MONOTONIC_fct.h"
 
-DEFINE_FIRMWARE_FB(FORTE_utils__timing__F_NOW_MONOTONIC, g_nStringIdutils__timing__F_NOW_MONOTONIC)
+DEFINE_FIRMWARE_FB(FORTE_utils__timing__F_NOW_MONOTONIC, STRID(utils__timing__F_NOW_MONOTONIC))
 
-const CStringDictionary::TStringId FORTE_utils__timing__F_NOW_MONOTONIC::scmDataOutputNames[] = {g_nStringId};
-const CStringDictionary::TStringId FORTE_utils__timing__F_NOW_MONOTONIC::scmDataOutputTypeIds[] = {g_nStringIdTIME};
+const CStringDictionary::TStringId FORTE_utils__timing__F_NOW_MONOTONIC::scmDataOutputNames[] = {STRID()};
+const CStringDictionary::TStringId FORTE_utils__timing__F_NOW_MONOTONIC::scmDataOutputTypeIds[] = {STRID(TIME)};
 const TForteInt16 FORTE_utils__timing__F_NOW_MONOTONIC::scmEIWithIndexes[] = {-1};
-const CStringDictionary::TStringId FORTE_utils__timing__F_NOW_MONOTONIC::scmEventInputNames[] = {g_nStringIdREQ};
-const CStringDictionary::TStringId FORTE_utils__timing__F_NOW_MONOTONIC::scmEventInputTypeIds[] = {g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_utils__timing__F_NOW_MONOTONIC::scmEventInputNames[] = {STRID(REQ)};
+const CStringDictionary::TStringId FORTE_utils__timing__F_NOW_MONOTONIC::scmEventInputTypeIds[] = {STRID(Event)};
 const TDataIOID FORTE_utils__timing__F_NOW_MONOTONIC::scmEOWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_utils__timing__F_NOW_MONOTONIC::scmEOWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_utils__timing__F_NOW_MONOTONIC::scmEventOutputNames[] = {g_nStringIdCNF};
-const CStringDictionary::TStringId FORTE_utils__timing__F_NOW_MONOTONIC::scmEventOutputTypeIds[] = {g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_utils__timing__F_NOW_MONOTONIC::scmEventOutputNames[] = {STRID(CNF)};
+const CStringDictionary::TStringId FORTE_utils__timing__F_NOW_MONOTONIC::scmEventOutputTypeIds[] = {STRID(Event)};
 const SFBInterfaceSpec FORTE_utils__timing__F_NOW_MONOTONIC::scmFBInterfaceSpec = {
   1, scmEventInputNames, scmEventInputTypeIds, nullptr, scmEIWithIndexes,
   1, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes,

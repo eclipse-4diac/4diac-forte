@@ -15,32 +15,40 @@
  *******************************************************************************/
 
 #include "F_FIND_fbt.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "F_FIND_fbt_gen.cpp"
-#endif
+
+USE_STRING_ID(ANY_INT);
+USE_STRING_ID(ANY_STRING);
+USE_STRING_ID(CNF);
+USE_STRING_ID(Event);
+USE_STRING_ID(F_FIND);
+USE_STRING_ID(IN1);
+USE_STRING_ID(IN2);
+USE_STRING_ID(OUT);
+USE_STRING_ID(REQ);
+
 
 #include "criticalregion.h"
 #include "resource.h"
 
-DEFINE_FIRMWARE_FB(FORTE_F_FIND, g_nStringIdF_FIND)
+DEFINE_FIRMWARE_FB(FORTE_F_FIND, STRID(F_FIND))
 
-const CStringDictionary::TStringId FORTE_F_FIND::scmDataInputNames[] = {g_nStringIdIN1, g_nStringIdIN2};
+const CStringDictionary::TStringId FORTE_F_FIND::scmDataInputNames[] = {STRID(IN1), STRID(IN2)};
 
-const CStringDictionary::TStringId FORTE_F_FIND::scmDataInputTypeIds[] = {g_nStringIdANY_STRING, g_nStringIdANY_STRING};
+const CStringDictionary::TStringId FORTE_F_FIND::scmDataInputTypeIds[] = {STRID(ANY_STRING), STRID(ANY_STRING)};
 
-const CStringDictionary::TStringId FORTE_F_FIND::scmDataOutputNames[] = {g_nStringIdOUT};
+const CStringDictionary::TStringId FORTE_F_FIND::scmDataOutputNames[] = {STRID(OUT)};
 
-const CStringDictionary::TStringId FORTE_F_FIND::scmDataOutputTypeIds[] = {g_nStringIdANY_INT};
+const CStringDictionary::TStringId FORTE_F_FIND::scmDataOutputTypeIds[] = {STRID(ANY_INT)};
 
 const TDataIOID FORTE_F_FIND::scmEIWith[] = {0, 1, scmWithListDelimiter};
 const TForteInt16 FORTE_F_FIND::scmEIWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_F_FIND::scmEventInputNames[] = {g_nStringIdREQ};
-const CStringDictionary::TStringId FORTE_F_FIND::scmEventInputTypeIds[] = {g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_F_FIND::scmEventInputNames[] = {STRID(REQ)};
+const CStringDictionary::TStringId FORTE_F_FIND::scmEventInputTypeIds[] = {STRID(Event)};
 
 const TDataIOID FORTE_F_FIND::scmEOWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_F_FIND::scmEOWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_F_FIND::scmEventOutputNames[] = {g_nStringIdCNF};
-const CStringDictionary::TStringId FORTE_F_FIND::scmEventOutputTypeIds[] = {g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_F_FIND::scmEventOutputNames[] = {STRID(CNF)};
+const CStringDictionary::TStringId FORTE_F_FIND::scmEventOutputTypeIds[] = {STRID(Event)};
 
 
 const SFBInterfaceSpec FORTE_F_FIND::scmFBInterfaceSpec = {

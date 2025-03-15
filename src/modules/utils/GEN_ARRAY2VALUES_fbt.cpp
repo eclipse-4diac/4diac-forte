@@ -17,24 +17,29 @@
  *     - add generic readInputData and writeOutputData
  *******************************************************************************/
 #include "GEN_ARRAY2VALUES_fbt.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "GEN_ARRAY2VALUES_fbt_gen.cpp"
-#endif
+
+USE_STRING_ID(ARRAY);
+USE_STRING_ID(CNF);
+USE_STRING_ID(Event);
+USE_STRING_ID(GEN_ARRAY2VALUES);
+USE_STRING_ID(IN);
+USE_STRING_ID(REQ);
+
 
 #include <stdio.h>
 #include "forte_printer.h"
 #include "resource.h"
 #include "criticalregion.h"
 
-DEFINE_GENERIC_FIRMWARE_FB(GEN_ARRAY2VALUES, g_nStringIdGEN_ARRAY2VALUES)
+DEFINE_GENERIC_FIRMWARE_FB(GEN_ARRAY2VALUES, STRID(GEN_ARRAY2VALUES))
 
-const CStringDictionary::TStringId GEN_ARRAY2VALUES::scmDataInputNames[] = { g_nStringIdIN };
+const CStringDictionary::TStringId GEN_ARRAY2VALUES::scmDataInputNames[] = { STRID(IN) };
 
-const CStringDictionary::TStringId GEN_ARRAY2VALUES::scmEventInputNames[] = { g_nStringIdREQ };
-const CStringDictionary::TStringId GEN_ARRAY2VALUES::scmEventInputTypeIds[] = {g_nStringIdEvent};
+const CStringDictionary::TStringId GEN_ARRAY2VALUES::scmEventInputNames[] = { STRID(REQ) };
+const CStringDictionary::TStringId GEN_ARRAY2VALUES::scmEventInputTypeIds[] = {STRID(Event)};
 
-const CStringDictionary::TStringId GEN_ARRAY2VALUES::scmEventOutputNames[] = { g_nStringIdCNF };
-const CStringDictionary::TStringId GEN_ARRAY2VALUES::scmEventOutputTypeIds[] = {g_nStringIdEvent};
+const CStringDictionary::TStringId GEN_ARRAY2VALUES::scmEventOutputNames[] = { STRID(CNF) };
+const CStringDictionary::TStringId GEN_ARRAY2VALUES::scmEventOutputTypeIds[] = {STRID(Event)};
 
 GEN_ARRAY2VALUES::GEN_ARRAY2VALUES(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CGenFunctionBlock<CFunctionBlock>(paContainer, paInstanceNameId) {
@@ -100,7 +105,7 @@ bool GEN_ARRAY2VALUES::createInterfaceSpec(const char *paConfigString, SFBInterf
     }
 
     //create data input type
-    mDataInputTypeIds[0] = g_nStringIdARRAY;
+    mDataInputTypeIds[0] = STRID(ARRAY);
     mDataInputTypeIds[1] = static_cast<CStringDictionary::TStringId>(mDOutputs);
     mDataInputTypeIds[2] = mValueTypeID;
 

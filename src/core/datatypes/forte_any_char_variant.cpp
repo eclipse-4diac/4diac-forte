@@ -12,13 +12,11 @@
  *******************************************************************************/
 #include "forte_any_char_variant.h"
 
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
 
-#include "forte_any_char_variant_gen.cpp"
+USE_STRING_ID(ANY_CHAR);
 
-#endif
 
-DEFINE_FIRMWARE_DATATYPE(ANY_CHAR_VARIANT, g_nStringIdANY_CHAR)
+DEFINE_FIRMWARE_DATATYPE(ANY_CHAR_VARIANT, STRID(ANY_CHAR))
 
 void CIEC_ANY_CHAR_VARIANT::setValue(const CIEC_ANY &paValue) {
   switch (paValue.getDataTypeID()) {

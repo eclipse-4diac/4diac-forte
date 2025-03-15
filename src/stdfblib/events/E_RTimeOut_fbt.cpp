@@ -11,17 +11,26 @@
  *******************************************************************************/
 
 #include "E_RTimeOut_fbt.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "E_RTimeOut_fbt_gen.cpp"
-#endif
+
+USE_STRING_ID(ARTimeOut);
+USE_STRING_ID(DLY);
+USE_STRING_ID(DT);
+USE_STRING_ID(EO);
+USE_STRING_ID(E_RDELAY);
+USE_STRING_ID(E_RTimeOut);
+USE_STRING_ID(START);
+USE_STRING_ID(STOP);
+USE_STRING_ID(TimeOut);
+USE_STRING_ID(TimeOutSocket);
+
 
 #include "criticalregion.h"
 #include "resource.h"
 
-DEFINE_FIRMWARE_FB(FORTE_E_RTimeOut, g_nStringIdE_RTimeOut)
+DEFINE_FIRMWARE_FB(FORTE_E_RTimeOut, STRID(E_RTimeOut))
 
 const SAdapterInstanceDef FORTE_E_RTimeOut::scmAdapterInstances[] = {
-  {g_nStringIdARTimeOut, g_nStringIdTimeOutSocket, false}
+  {STRID(ARTimeOut), STRID(TimeOutSocket), false}
 };
 const SFBInterfaceSpec FORTE_E_RTimeOut::scmFBInterfaceSpec = {
   0, nullptr, nullptr, nullptr, nullptr,
@@ -34,8 +43,8 @@ const SFBInterfaceSpec FORTE_E_RTimeOut::scmFBInterfaceSpec = {
 
 FORTE_E_RTimeOut::FORTE_E_RTimeOut(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CCompositeFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, scmFBNData),
-    fb_DLY(g_nStringIdDLY, *this),
-    var_TimeOutSocket(g_nStringIdTimeOutSocket, *this, false) {
+    fb_DLY(STRID(DLY), *this),
+    var_TimeOutSocket(STRID(TimeOutSocket), *this, false) {
 };
 
 bool FORTE_E_RTimeOut::initialize() {
@@ -45,18 +54,18 @@ bool FORTE_E_RTimeOut::initialize() {
 }
 
 const SCFB_FBInstanceData FORTE_E_RTimeOut::scmInternalFBs[] = {
-  {g_nStringIdDLY, g_nStringIdE_RDELAY}
+  {STRID(DLY), STRID(E_RDELAY)}
 };
 
 
 const SCFB_FBConnectionData FORTE_E_RTimeOut::scmEventConnections[] = {
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdTimeOutSocket, g_nStringIdSTART), CCompositeFB::scmAdapterMarker | 0, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdDLY, g_nStringIdSTART), 0},
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdTimeOutSocket, g_nStringIdSTOP), CCompositeFB::scmAdapterMarker | 0, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdDLY, g_nStringIdSTOP), 0},
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdDLY, g_nStringIdEO), 0, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdTimeOutSocket, g_nStringIdTimeOut), CCompositeFB::scmAdapterMarker | 0},
+  {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(TimeOutSocket), STRID(START)), CCompositeFB::scmAdapterMarker | 0, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(DLY), STRID(START)), 0},
+  {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(TimeOutSocket), STRID(STOP)), CCompositeFB::scmAdapterMarker | 0, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(DLY), STRID(STOP)), 0},
+  {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(DLY), STRID(EO)), 0, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(TimeOutSocket), STRID(TimeOut)), CCompositeFB::scmAdapterMarker | 0},
 };
 
 const SCFB_FBConnectionData FORTE_E_RTimeOut::scmDataConnections[] = {
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdTimeOutSocket, g_nStringIdDT), CCompositeFB::scmAdapterMarker | 0, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdDLY, g_nStringIdDT), 0},
+  {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(TimeOutSocket), STRID(DT)), CCompositeFB::scmAdapterMarker | 0, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(DLY), STRID(DT)), 0},
 };
 
 const SCFB_FBNData FORTE_E_RTimeOut::scmFBNData = {

@@ -12,16 +12,31 @@
  *    - initial API and implementation and/or initial documentation
  *******************************************************************************/
 #include "RMT_RES.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "RMT_RES_gen.cpp"
-#endif
+
+USE_STRING_ID(COLD);
+USE_STRING_ID(EO);
+USE_STRING_ID(ID);
+USE_STRING_ID(INIT);
+USE_STRING_ID(MGR);
+USE_STRING_ID(MGR_FF);
+USE_STRING_ID(MGR_ID);
+USE_STRING_ID(Q);
+USE_STRING_ID(QI);
+USE_STRING_ID(R);
+USE_STRING_ID(RMT_RES);
+USE_STRING_ID(S);
+USE_STRING_ID(START);
+USE_STRING_ID(STOP);
+USE_STRING_ID(WARM);
+USE_STRING_ID(WSTRING);
+
 
 #include "../../core/ecet.h"
 
-DEFINE_FIRMWARE_FB(RMT_RES, g_nStringIdRMT_RES);
+DEFINE_FIRMWARE_FB(RMT_RES, STRID(RMT_RES));
 
-const CStringDictionary::TStringId RMT_RES::scmVarInputNameIds[] = {g_nStringIdMGR_ID};
-const CStringDictionary::TStringId RMT_RES::scmDIDataTypeIds[] = {g_nStringIdWSTRING};
+const CStringDictionary::TStringId RMT_RES::scmVarInputNameIds[] = {STRID(MGR_ID)};
+const CStringDictionary::TStringId RMT_RES::scmDIDataTypeIds[] = {STRID(WSTRING)};
 
 
 const SFBInterfaceSpec RMT_RES::scmFBInterfaceSpec = {
@@ -38,9 +53,9 @@ RMT_RES::RMT_RES(CStringDictionary::TStringId paInstanceNameId, forte::core::CFB
        CResource(paDevice, scmFBInterfaceSpec, paInstanceNameId),
        var_MGR_ID(""),
        conn_MGR_ID(nullptr),
-       fb_START(g_nStringIdSTART, *this),
-       fb_MGR_FF(g_nStringIdMGR_FF, *this),
-       fb_MGR(g_nStringIdMGR, *this) {
+       fb_START(STRID(START), *this),
+       fb_MGR_FF(STRID(MGR_FF), *this),
+       fb_MGR(STRID(MGR), *this) {
 }
 
 bool RMT_RES::initialize() {
@@ -50,49 +65,49 @@ bool RMT_RES::initialize() {
 
   forte::core::SManagementCMD command;
 
-  command.mFirstParam.push_back(g_nStringIdSTART);
-  command.mFirstParam.push_back(g_nStringIdCOLD);
-  command.mSecondParam.push_back(g_nStringIdMGR_FF);
-  command.mSecondParam.push_back(g_nStringIdS);
+  command.mFirstParam.push_back(STRID(START));
+  command.mFirstParam.push_back(STRID(COLD));
+  command.mSecondParam.push_back(STRID(MGR_FF));
+  command.mSecondParam.push_back(STRID(S));
   createConnection(command);
 
   command.mFirstParam.clear();
-  command.mFirstParam.push_back(g_nStringIdSTART);
-  command.mFirstParam.push_back(g_nStringIdWARM);
+  command.mFirstParam.push_back(STRID(START));
+  command.mFirstParam.push_back(STRID(WARM));
   command.mSecondParam.clear();
-  command.mSecondParam.push_back(g_nStringIdMGR_FF);
-  command.mSecondParam.push_back(g_nStringIdS);
+  command.mSecondParam.push_back(STRID(MGR_FF));
+  command.mSecondParam.push_back(STRID(S));
   createConnection(command);
 
   command.mFirstParam.clear();
-  command.mFirstParam.push_back(g_nStringIdSTART);
-  command.mFirstParam.push_back(g_nStringIdSTOP);
+  command.mFirstParam.push_back(STRID(START));
+  command.mFirstParam.push_back(STRID(STOP));
   command.mSecondParam.clear();
-  command.mSecondParam.push_back(g_nStringIdMGR_FF);
-  command.mSecondParam.push_back(g_nStringIdR);
+  command.mSecondParam.push_back(STRID(MGR_FF));
+  command.mSecondParam.push_back(STRID(R));
   createConnection(command);
 
   command.mFirstParam.clear();
-  command.mFirstParam.push_back(g_nStringIdMGR_FF);
-  command.mFirstParam.push_back(g_nStringIdEO);
+  command.mFirstParam.push_back(STRID(MGR_FF));
+  command.mFirstParam.push_back(STRID(EO));
   command.mSecondParam.clear();
-  command.mSecondParam.push_back(g_nStringIdMGR);
-  command.mSecondParam.push_back(g_nStringIdINIT);
+  command.mSecondParam.push_back(STRID(MGR));
+  command.mSecondParam.push_back(STRID(INIT));
   createConnection(command);
 
   command.mFirstParam.clear();
-  command.mFirstParam.push_back(g_nStringIdMGR_FF);
-  command.mFirstParam.push_back(g_nStringIdQ);
+  command.mFirstParam.push_back(STRID(MGR_FF));
+  command.mFirstParam.push_back(STRID(Q));
   command.mSecondParam.clear();
-  command.mSecondParam.push_back(g_nStringIdMGR);
-  command.mSecondParam.push_back(g_nStringIdQI);
+  command.mSecondParam.push_back(STRID(MGR));
+  command.mSecondParam.push_back(STRID(QI));
   createConnection(command);
 
   command.mFirstParam.clear();
-  command.mFirstParam.push_back(g_nStringIdMGR_ID);
+  command.mFirstParam.push_back(STRID(MGR_ID));
   command.mSecondParam.clear();
-  command.mSecondParam.push_back(g_nStringIdMGR);
-  command.mSecondParam.push_back(g_nStringIdID);
+  command.mSecondParam.push_back(STRID(MGR));
+  command.mSecondParam.push_back(STRID(ID));
   createConnection(command);
   return true;
 }

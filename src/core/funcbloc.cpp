@@ -19,9 +19,10 @@
  *                 - account for data type size in FB initialization
  *******************************************************************************/
 #include "funcbloc.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "funcbloc_gen.cpp"
-#endif
+
+USE_STRING_ID(ARRAY);
+USE_STRING_ID(Event);
+
 #include "adapter.h"
 #include "device.h"
 #include "connectiondestinationtype.h"
@@ -68,14 +69,14 @@ CStringDictionary::TStringId CFunctionBlock::getEIType(TEventID paEIID) const {
   if (getFBInterfaceSpec().mEITypeNames != nullptr) {
     return getFBInterfaceSpec().mEITypeNames[paEIID];
   }
-  return g_nStringIdEvent;
+  return STRID(Event);
 }
 
 CStringDictionary::TStringId CFunctionBlock::getEOType(TEventID paEOID) const {
   if (getFBInterfaceSpec().mEOTypeNames != nullptr) {
     return getFBInterfaceSpec().mEOTypeNames[paEOID];
   }
-  return g_nStringIdEvent;
+  return STRID(Event);
 }
 
 CEventConnection *CFunctionBlock::getEOConnection(CStringDictionary::TStringId paEONameId) {
@@ -486,7 +487,7 @@ CIEC_ANY *CFunctionBlock::createDataPoint(const CStringDictionary::TStringId *&p
   CStringDictionary::TStringId dataTypeId = *paDataTypeIds;
   CIEC_ANY *poRetVal = CTypeLib::createDataTypeInstance(dataTypeId, paDataBuf);
   if (nullptr != poRetVal) {
-    if (g_nStringIdARRAY == dataTypeId) {
+    if (STRID(ARRAY) == dataTypeId) {
       static_cast<CIEC_ARRAY_DYNAMIC *>(poRetVal)->setup(paDataTypeIds + 1);
     }
     paDataBuf += poRetVal->getSizeof();
@@ -496,7 +497,7 @@ CIEC_ANY *CFunctionBlock::createDataPoint(const CStringDictionary::TStringId *&p
 }
 
 void CFunctionBlock::nextDataPoint(const CStringDictionary::TStringId *&paDataTypeIds) {
-  while(*(paDataTypeIds++) == g_nStringIdARRAY) {
+  while(*(paDataTypeIds++) == STRID(ARRAY)) {
     paDataTypeIds += 2;
   }
 }

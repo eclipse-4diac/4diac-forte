@@ -18,9 +18,23 @@
  *************************************************************************/
 
 #include "PLCnextMaster.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "PLCnextMaster_gen.cpp"
-#endif
+
+USE_STRING_ID(BOOL);
+USE_STRING_ID(BusAdapterOut);
+USE_STRING_ID(EInit);
+USE_STRING_ID(Event);
+USE_STRING_ID(IND);
+USE_STRING_ID(INIT);
+USE_STRING_ID(INITO);
+USE_STRING_ID(PLCnextBusAdapter);
+USE_STRING_ID(PLCnextMaster);
+USE_STRING_ID(QI);
+USE_STRING_ID(QO);
+USE_STRING_ID(SlaveUpdateInterval);
+USE_STRING_ID(STATUS);
+USE_STRING_ID(UINT);
+USE_STRING_ID(WSTRING);
+
 
 #include "PLCnextBusAdapter.h"
 #include "forte_uint.h"
@@ -32,22 +46,22 @@
 #include "criticalregion.h"
 #include "resource.h"
 
-DEFINE_FIRMWARE_FB(FORTE_PLCnextMaster, g_nStringIdPLCnextMaster)
+DEFINE_FIRMWARE_FB(FORTE_PLCnextMaster, STRID(PLCnextMaster))
 
-const CStringDictionary::TStringId FORTE_PLCnextMaster::scmDataInputNames[] = {g_nStringIdQI, g_nStringIdSlaveUpdateInterval};
-const CStringDictionary::TStringId FORTE_PLCnextMaster::scmDataInputTypeIds[] = {g_nStringIdBOOL, g_nStringIdUINT};
-const CStringDictionary::TStringId FORTE_PLCnextMaster::scmDataOutputNames[] = {g_nStringIdQO, g_nStringIdSTATUS};
-const CStringDictionary::TStringId FORTE_PLCnextMaster::scmDataOutputTypeIds[] = {g_nStringIdBOOL, g_nStringIdWSTRING};
+const CStringDictionary::TStringId FORTE_PLCnextMaster::scmDataInputNames[] = {STRID(QI), STRID(SlaveUpdateInterval)};
+const CStringDictionary::TStringId FORTE_PLCnextMaster::scmDataInputTypeIds[] = {STRID(BOOL), STRID(UINT)};
+const CStringDictionary::TStringId FORTE_PLCnextMaster::scmDataOutputNames[] = {STRID(QO), STRID(STATUS)};
+const CStringDictionary::TStringId FORTE_PLCnextMaster::scmDataOutputTypeIds[] = {STRID(BOOL), STRID(WSTRING)};
 const TDataIOID FORTE_PLCnextMaster::scmEIWith[] = {0, 1, scmWithListDelimiter};
 const TForteInt16 FORTE_PLCnextMaster::scmEIWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_PLCnextMaster::scmEventInputNames[] = {g_nStringIdINIT};
-const CStringDictionary::TStringId FORTE_PLCnextMaster::scmEventInputTypeIds[] = {g_nStringIdEInit};
+const CStringDictionary::TStringId FORTE_PLCnextMaster::scmEventInputNames[] = {STRID(INIT)};
+const CStringDictionary::TStringId FORTE_PLCnextMaster::scmEventInputTypeIds[] = {STRID(EInit)};
 const TDataIOID FORTE_PLCnextMaster::scmEOWith[] = {0, 1, scmWithListDelimiter, 0, 1, scmWithListDelimiter};
 const TForteInt16 FORTE_PLCnextMaster::scmEOWithIndexes[] = {0, 3};
-const CStringDictionary::TStringId FORTE_PLCnextMaster::scmEventOutputNames[] = {g_nStringIdINITO, g_nStringIdIND};
-const CStringDictionary::TStringId FORTE_PLCnextMaster::scmEventOutputTypeIds[] = {g_nStringIdEInit, g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_PLCnextMaster::scmEventOutputNames[] = {STRID(INITO), STRID(IND)};
+const CStringDictionary::TStringId FORTE_PLCnextMaster::scmEventOutputTypeIds[] = {STRID(EInit), STRID(Event)};
 const SAdapterInstanceDef FORTE_PLCnextMaster::scmAdapterInstances[] = {
-  {g_nStringIdPLCnextBusAdapter, g_nStringIdBusAdapterOut, true}
+  {STRID(PLCnextBusAdapter), STRID(BusAdapterOut), true}
 };
 const SFBInterfaceSpec FORTE_PLCnextMaster::scmFBInterfaceSpec = {
   1, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,
@@ -64,7 +78,7 @@ FORTE_PLCnextMaster::FORTE_PLCnextMaster(const CStringDictionary::TStringId paIn
     var_SlaveUpdateInterval(25_UINT),
     var_QO(0_BOOL),
     var_STATUS(u""_WSTRING),
-    var_BusAdapterOut(g_nStringIdBusAdapterOut, *this, true),
+    var_BusAdapterOut(STRID(BusAdapterOut), *this, true),
     var_conn_QO(var_QO),
     var_conn_STATUS(var_STATUS),
     conn_INITO(this, 0),

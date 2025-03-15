@@ -12,13 +12,13 @@
  *******************************************************************************/
 #include "../../core/fbtests/fbtestfixture.h"
 
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "F_MULTIME_tester_gen.cpp"
-#endif
+
+USE_STRING_ID(F_MULTIME);
+
 
 struct F_MULTIME_TestFixture : public CFBTestFixtureBase{
 
-  F_MULTIME_TestFixture() : CFBTestFixtureBase(g_nStringIdF_MULTIME)
+  F_MULTIME_TestFixture() : CFBTestFixtureBase(STRID(F_MULTIME))
   {
     setInputData({&mIn_TIME_MULTIME, &mIn_REAL_MULTIME});
     setOutputData({&mOut_TIME_MULTIME});

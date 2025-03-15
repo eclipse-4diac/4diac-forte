@@ -13,12 +13,12 @@
  *      - initial implementation and rework communication infrastructure
  *******************************************************************************/
 #include "forte_bool.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "forte_bool_gen.cpp"
-#endif
+
+USE_STRING_ID(BOOL);
+
 #include <stdlib.h>
 
-DEFINE_FIRMWARE_DATATYPE(BOOL, g_nStringIdBOOL)
+DEFINE_FIRMWARE_DATATYPE(BOOL, STRID(BOOL))
 
 int CIEC_BOOL::fromString(const char *paValue){
   int nRetVal = 0;

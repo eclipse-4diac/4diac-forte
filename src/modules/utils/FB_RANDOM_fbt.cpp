@@ -19,9 +19,19 @@
  *************************************************************************/
 
 #include "FB_RANDOM_fbt.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "FB_RANDOM_fbt_gen.cpp"
-#endif
+
+USE_STRING_ID(CNF);
+USE_STRING_ID(EInit);
+USE_STRING_ID(Event);
+USE_STRING_ID(FB_RANDOM);
+USE_STRING_ID(INIT);
+USE_STRING_ID(INITO);
+USE_STRING_ID(REAL);
+USE_STRING_ID(REQ);
+USE_STRING_ID(SEED);
+USE_STRING_ID(UINT);
+USE_STRING_ID(VAL);
+
 
 #include "criticalregion.h"
 #include "resource.h"
@@ -33,20 +43,20 @@
 #include "forte_array_fixed.h"
 #include "forte_array_variable.h"
 
-DEFINE_FIRMWARE_FB(FORTE_FB_RANDOM, g_nStringIdFB_RANDOM)
+DEFINE_FIRMWARE_FB(FORTE_FB_RANDOM, STRID(FB_RANDOM))
 
-const CStringDictionary::TStringId FORTE_FB_RANDOM::scmDataInputNames[] = {g_nStringIdSEED};
-const CStringDictionary::TStringId FORTE_FB_RANDOM::scmDataInputTypeIds[] = {g_nStringIdUINT};
-const CStringDictionary::TStringId FORTE_FB_RANDOM::scmDataOutputNames[] = {g_nStringIdVAL};
-const CStringDictionary::TStringId FORTE_FB_RANDOM::scmDataOutputTypeIds[] = {g_nStringIdREAL};
+const CStringDictionary::TStringId FORTE_FB_RANDOM::scmDataInputNames[] = {STRID(SEED)};
+const CStringDictionary::TStringId FORTE_FB_RANDOM::scmDataInputTypeIds[] = {STRID(UINT)};
+const CStringDictionary::TStringId FORTE_FB_RANDOM::scmDataOutputNames[] = {STRID(VAL)};
+const CStringDictionary::TStringId FORTE_FB_RANDOM::scmDataOutputTypeIds[] = {STRID(REAL)};
 const TDataIOID FORTE_FB_RANDOM::scmEIWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_FB_RANDOM::scmEIWithIndexes[] = {0, -1};
-const CStringDictionary::TStringId FORTE_FB_RANDOM::scmEventInputNames[] = {g_nStringIdINIT, g_nStringIdREQ};
-const CStringDictionary::TStringId FORTE_FB_RANDOM::scmEventInputTypeIds[] = {g_nStringIdEInit, g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_FB_RANDOM::scmEventInputNames[] = {STRID(INIT), STRID(REQ)};
+const CStringDictionary::TStringId FORTE_FB_RANDOM::scmEventInputTypeIds[] = {STRID(EInit), STRID(Event)};
 const TDataIOID FORTE_FB_RANDOM::scmEOWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_FB_RANDOM::scmEOWithIndexes[] = {-1, 0};
-const CStringDictionary::TStringId FORTE_FB_RANDOM::scmEventOutputNames[] = {g_nStringIdINITO, g_nStringIdCNF};
-const CStringDictionary::TStringId FORTE_FB_RANDOM::scmEventOutputTypeIds[] = {g_nStringIdEInit, g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_FB_RANDOM::scmEventOutputNames[] = {STRID(INITO), STRID(CNF)};
+const CStringDictionary::TStringId FORTE_FB_RANDOM::scmEventOutputTypeIds[] = {STRID(EInit), STRID(Event)};
 const SFBInterfaceSpec FORTE_FB_RANDOM::scmFBInterfaceSpec = {
   2, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,
   2, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes,

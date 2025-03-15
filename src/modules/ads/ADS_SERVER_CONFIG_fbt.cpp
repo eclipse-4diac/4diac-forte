@@ -18,9 +18,22 @@
  *************************************************************************/
 
 #include "ADS_SERVER_CONFIG_fbt.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "ADS_SERVER_CONFIG_fbt_gen.cpp"
-#endif
+
+USE_STRING_ID(ADS_PORT);
+USE_STRING_ID(ADS_SERVER_CONFIG);
+USE_STRING_ID(BOOL);
+USE_STRING_ID(EInit);
+USE_STRING_ID(FRIENDLY_NAME);
+USE_STRING_ID(INIT);
+USE_STRING_ID(INITO);
+USE_STRING_ID(QI);
+USE_STRING_ID(QO);
+USE_STRING_ID(SERVER_ADS_ADDRESS);
+USE_STRING_ID(SERVER_IPV4_OR_HOSTNAME);
+USE_STRING_ID(STATUS);
+USE_STRING_ID(UINT);
+USE_STRING_ID(WSTRING);
+
 
 #include "iec61131_functions.h"
 #include "forte_array_common.h"
@@ -29,20 +42,20 @@
 #include "forte_array_variable.h"
 #include "CAdsConnectionManager.h"
 
-DEFINE_FIRMWARE_FB(FORTE_ADS_SERVER_CONFIG, g_nStringIdADS_SERVER_CONFIG)
+DEFINE_FIRMWARE_FB(FORTE_ADS_SERVER_CONFIG, STRID(ADS_SERVER_CONFIG))
 
-const CStringDictionary::TStringId FORTE_ADS_SERVER_CONFIG::scmDataInputNames[] = {g_nStringIdQI, g_nStringIdFRIENDLY_NAME, g_nStringIdSERVER_ADS_ADDRESS, g_nStringIdADS_PORT, g_nStringIdSERVER_IPV4_OR_HOSTNAME};
-const CStringDictionary::TStringId FORTE_ADS_SERVER_CONFIG::scmDataInputTypeIds[] = {g_nStringIdBOOL, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdUINT, g_nStringIdWSTRING};
-const CStringDictionary::TStringId FORTE_ADS_SERVER_CONFIG::scmDataOutputNames[] = {g_nStringIdQO, g_nStringIdSTATUS};
-const CStringDictionary::TStringId FORTE_ADS_SERVER_CONFIG::scmDataOutputTypeIds[] = {g_nStringIdBOOL, g_nStringIdWSTRING};
+const CStringDictionary::TStringId FORTE_ADS_SERVER_CONFIG::scmDataInputNames[] = {STRID(QI), STRID(FRIENDLY_NAME), STRID(SERVER_ADS_ADDRESS), STRID(ADS_PORT), STRID(SERVER_IPV4_OR_HOSTNAME)};
+const CStringDictionary::TStringId FORTE_ADS_SERVER_CONFIG::scmDataInputTypeIds[] = {STRID(BOOL), STRID(WSTRING), STRID(WSTRING), STRID(UINT), STRID(WSTRING)};
+const CStringDictionary::TStringId FORTE_ADS_SERVER_CONFIG::scmDataOutputNames[] = {STRID(QO), STRID(STATUS)};
+const CStringDictionary::TStringId FORTE_ADS_SERVER_CONFIG::scmDataOutputTypeIds[] = {STRID(BOOL), STRID(WSTRING)};
 const TDataIOID FORTE_ADS_SERVER_CONFIG::scmEIWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_ADS_SERVER_CONFIG::scmEIWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_ADS_SERVER_CONFIG::scmEventInputNames[] = {g_nStringIdINIT};
-const CStringDictionary::TStringId FORTE_ADS_SERVER_CONFIG::scmEventInputTypeIds[] = {g_nStringIdEInit};
+const CStringDictionary::TStringId FORTE_ADS_SERVER_CONFIG::scmEventInputNames[] = {STRID(INIT)};
+const CStringDictionary::TStringId FORTE_ADS_SERVER_CONFIG::scmEventInputTypeIds[] = {STRID(EInit)};
 const TDataIOID FORTE_ADS_SERVER_CONFIG::scmEOWith[] = {0, 1, scmWithListDelimiter};
 const TForteInt16 FORTE_ADS_SERVER_CONFIG::scmEOWithIndexes[] = {0, -1};
-const CStringDictionary::TStringId FORTE_ADS_SERVER_CONFIG::scmEventOutputNames[] = {g_nStringIdINITO};
-const CStringDictionary::TStringId FORTE_ADS_SERVER_CONFIG::scmEventOutputTypeIds[] = {g_nStringIdEInit};
+const CStringDictionary::TStringId FORTE_ADS_SERVER_CONFIG::scmEventOutputNames[] = {STRID(INITO)};
+const CStringDictionary::TStringId FORTE_ADS_SERVER_CONFIG::scmEventOutputTypeIds[] = {STRID(EInit)};
 const SFBInterfaceSpec FORTE_ADS_SERVER_CONFIG::scmFBInterfaceSpec = {
   1, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,
   1, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes,

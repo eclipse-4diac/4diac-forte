@@ -12,12 +12,13 @@
  *******************************************************************************/
 #include <stringdict.h>
 #include "EMB_RES.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "EMB_RES_gen.cpp"
-#endif
+
+USE_STRING_ID(EMB_RES);
+USE_STRING_ID(START);
 
 
-DEFINE_FIRMWARE_FB(EMB_RES, g_nStringIdEMB_RES);
+
+DEFINE_FIRMWARE_FB(EMB_RES, STRID(EMB_RES));
 
 const SFBInterfaceSpec EMB_RES::scmFBInterfaceSpec = {
   0, nullptr, nullptr, nullptr, nullptr,
@@ -30,7 +31,7 @@ const SFBInterfaceSpec EMB_RES::scmFBInterfaceSpec = {
 
 EMB_RES::EMB_RES(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paDevice) :
     CResource(paDevice, scmFBInterfaceSpec, paInstanceNameId),
-    fb_START(g_nStringIdSTART, *this) {
+    fb_START(STRID(START), *this) {
 }
 
 EMB_RES::~EMB_RES() = default;

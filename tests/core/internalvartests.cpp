@@ -15,11 +15,14 @@
 #include <basicfb.h>
 #include "fbcontainermock.h"
 
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "internalvartests_gen.cpp"
-#else
-# include "stringlist.h"
-#endif
+
+USE_STRING_ID(BOOL);
+USE_STRING_ID(CV);
+USE_STRING_ID(DT);
+USE_STRING_ID(QD);
+USE_STRING_ID(QU);
+USE_STRING_ID(UINT);
+
 
 const SFBInterfaceSpec gcEmptyInterface = {
   0, nullptr, nullptr, nullptr, nullptr,
@@ -94,7 +97,7 @@ BOOST_AUTO_TEST_SUITE(internal_vars)
 
 BOOST_AUTO_TEST_CASE(checkNullInternalVarsAreAllowed){
   //check that we can create an FB where we have a 0 internal struct which has all parts set to zero
-  CStringDictionary::TStringId namelist[1] = {g_nStringIdDT};
+  CStringDictionary::TStringId namelist[1] = {STRID(DT)};
 
   CInternalVarTestFB testFB(nullptr);
   BOOST_CHECK(nullptr == testFB.getVar(namelist, 1));
@@ -107,7 +110,7 @@ BOOST_AUTO_TEST_CASE(checkNullInternalVarsAreAllowed){
 BOOST_AUTO_TEST_CASE(checkEmptyInternalVarsAreAllowed){
   //check that we can create an FB where we have a var internal struct which has all parts set to zero
   SInternalVarsInformation varData = {0,nullptr,nullptr};
-  CStringDictionary::TStringId namelist[1] = {g_nStringIdDT};
+  CStringDictionary::TStringId namelist[1] = {STRID(DT)};
 
   CInternalVarTestFB testFB(&varData);
   BOOST_CHECK(nullptr == testFB.getVar(namelist, 1));
@@ -118,8 +121,8 @@ BOOST_AUTO_TEST_CASE(checkEmptyInternalVarsAreAllowed){
 
 BOOST_AUTO_TEST_CASE(sampleInteralVarList){
 
-  CStringDictionary::TStringId varInternalNames[] = {g_nStringIdQU, g_nStringIdQD, g_nStringIdCV};
-  CStringDictionary::TStringId varInternalTypeIds[] = {g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdUINT};
+  CStringDictionary::TStringId varInternalNames[] = {STRID(QU), STRID(QD), STRID(CV)};
+  CStringDictionary::TStringId varInternalTypeIds[] = {STRID(BOOL), STRID(BOOL), STRID(UINT)};
 
   SInternalVarsInformation varData{3, varInternalNames, varInternalTypeIds};
 
@@ -139,8 +142,8 @@ BOOST_AUTO_TEST_CASE(sampleInteralVarList){
 
 BOOST_AUTO_TEST_CASE(testToStringWithInternalVariables){
 
-  CStringDictionary::TStringId varInternalNames[] = {g_nStringIdQU, g_nStringIdQD, g_nStringIdCV};
-  CStringDictionary::TStringId varInternalTypeIds[] = {g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdUINT};
+  CStringDictionary::TStringId varInternalNames[] = {STRID(QU), STRID(QD), STRID(CV)};
+  CStringDictionary::TStringId varInternalTypeIds[] = {STRID(BOOL), STRID(BOOL), STRID(UINT)};
 
   SInternalVarsInformation varData{3, varInternalNames, varInternalTypeIds};
 

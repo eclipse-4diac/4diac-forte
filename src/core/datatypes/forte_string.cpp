@@ -17,9 +17,9 @@
  *                            - changes storage to std::string
  *******************************************************************************/
 #include "forte_string.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "forte_string_gen.cpp"
-#endif
+
+USE_STRING_ID(STRING);
+
 #include <devlog.h>
 #include "forte_uint.h"
 #include "unicode_utils.h"
@@ -28,7 +28,7 @@
 
 using namespace std::string_literals;
 
-DEFINE_FIRMWARE_DATATYPE(STRING, g_nStringIdSTRING);
+DEFINE_FIRMWARE_DATATYPE(STRING, STRID(STRING));
 
 CIEC_STRING::CIEC_STRING(const char* paValue) : mValue(paValue, forte_strnlen_s(paValue, scmMaxStringLen)) {
 }

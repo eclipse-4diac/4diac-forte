@@ -11,16 +11,22 @@
  *******************************************************************************/
 
 #include "forte_arrowheadsystem.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "forte_arrowheadsystem_gen.cpp"
-#endif
 
-DEFINE_FIRMWARE_DATATYPE(ArrowheadSystem, g_nStringIdArrowheadSystem);
+USE_STRING_ID(address);
+USE_STRING_ID(ArrowheadSystem);
+USE_STRING_ID(authenticationInfo);
+USE_STRING_ID(DINT);
+USE_STRING_ID(port);
+USE_STRING_ID(systemName);
+USE_STRING_ID(WSTRING);
+
+
+DEFINE_FIRMWARE_DATATYPE(ArrowheadSystem, STRID(ArrowheadSystem));
 
 CIEC_ArrowheadSystem::CIEC_ArrowheadSystem() :
-    CIEC_STRUCT(g_nStringIdArrowheadSystem, 4, scmElementTypes, scmElementNames, e_APPLICATION + e_CONSTRUCTED + 1) {
+    CIEC_STRUCT(STRID(ArrowheadSystem), 4, scmElementTypes, scmElementNames, e_APPLICATION + e_CONSTRUCTED + 1) {
 }
 
-const CStringDictionary::TStringId CIEC_ArrowheadSystem::scmElementTypes[] = { g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdDINT, g_nStringIdWSTRING };
-const CStringDictionary::TStringId CIEC_ArrowheadSystem::scmElementNames[] = { g_nStringIdsystemName, g_nStringIdaddress, g_nStringIdport,
-  g_nStringIdauthenticationInfo };
+const CStringDictionary::TStringId CIEC_ArrowheadSystem::scmElementTypes[] = { STRID(WSTRING), STRID(WSTRING), STRID(DINT), STRID(WSTRING) };
+const CStringDictionary::TStringId CIEC_ArrowheadSystem::scmElementNames[] = { STRID(systemName), STRID(address), STRID(port),
+  STRID(authenticationInfo) };

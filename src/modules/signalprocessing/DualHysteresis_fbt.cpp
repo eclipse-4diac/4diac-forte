@@ -16,9 +16,25 @@
  *************************************************************************/
 
 #include "DualHysteresis_fbt.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "DualHysteresis_fbt_gen.cpp"
-#endif
+
+USE_STRING_ID(BOOL);
+USE_STRING_ID(CNF);
+USE_STRING_ID(DEAD);
+USE_STRING_ID(DO_DOWN);
+USE_STRING_ID(DO_UP);
+USE_STRING_ID(EInit);
+USE_STRING_ID(Event);
+USE_STRING_ID(HYSTERESIS);
+USE_STRING_ID(INIT);
+USE_STRING_ID(INITO);
+USE_STRING_ID(INPUT);
+USE_STRING_ID(MI);
+USE_STRING_ID(QI);
+USE_STRING_ID(QO);
+USE_STRING_ID(REAL);
+USE_STRING_ID(REQ);
+USE_STRING_ID(signalprocessing__DualHysteresis);
+
 
 #include "criticalregion.h"
 #include "resource.h"
@@ -30,20 +46,20 @@
 #include "forte_array_fixed.h"
 #include "forte_array_variable.h"
 
-DEFINE_FIRMWARE_FB(FORTE_signalprocessing__DualHysteresis, g_nStringIdsignalprocessing__DualHysteresis)
+DEFINE_FIRMWARE_FB(FORTE_signalprocessing__DualHysteresis, STRID(signalprocessing__DualHysteresis))
 
-const CStringDictionary::TStringId FORTE_signalprocessing__DualHysteresis::scmDataInputNames[] = {g_nStringIdQI, g_nStringIdMI, g_nStringIdDEAD, g_nStringIdHYSTERESIS, g_nStringIdINPUT};
-const CStringDictionary::TStringId FORTE_signalprocessing__DualHysteresis::scmDataInputTypeIds[] = {g_nStringIdBOOL, g_nStringIdREAL, g_nStringIdREAL, g_nStringIdREAL, g_nStringIdREAL};
-const CStringDictionary::TStringId FORTE_signalprocessing__DualHysteresis::scmDataOutputNames[] = {g_nStringIdQO, g_nStringIdDO_UP, g_nStringIdDO_DOWN};
-const CStringDictionary::TStringId FORTE_signalprocessing__DualHysteresis::scmDataOutputTypeIds[] = {g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdBOOL};
+const CStringDictionary::TStringId FORTE_signalprocessing__DualHysteresis::scmDataInputNames[] = {STRID(QI), STRID(MI), STRID(DEAD), STRID(HYSTERESIS), STRID(INPUT)};
+const CStringDictionary::TStringId FORTE_signalprocessing__DualHysteresis::scmDataInputTypeIds[] = {STRID(BOOL), STRID(REAL), STRID(REAL), STRID(REAL), STRID(REAL)};
+const CStringDictionary::TStringId FORTE_signalprocessing__DualHysteresis::scmDataOutputNames[] = {STRID(QO), STRID(DO_UP), STRID(DO_DOWN)};
+const CStringDictionary::TStringId FORTE_signalprocessing__DualHysteresis::scmDataOutputTypeIds[] = {STRID(BOOL), STRID(BOOL), STRID(BOOL)};
 const TDataIOID FORTE_signalprocessing__DualHysteresis::scmEIWith[] = {0, scmWithListDelimiter, 0, 1, 2, 4, 3, scmWithListDelimiter};
 const TForteInt16 FORTE_signalprocessing__DualHysteresis::scmEIWithIndexes[] = {0, 2};
-const CStringDictionary::TStringId FORTE_signalprocessing__DualHysteresis::scmEventInputNames[] = {g_nStringIdINIT, g_nStringIdREQ};
-const CStringDictionary::TStringId FORTE_signalprocessing__DualHysteresis::scmEventInputTypeIds[] = {g_nStringIdEInit, g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_signalprocessing__DualHysteresis::scmEventInputNames[] = {STRID(INIT), STRID(REQ)};
+const CStringDictionary::TStringId FORTE_signalprocessing__DualHysteresis::scmEventInputTypeIds[] = {STRID(EInit), STRID(Event)};
 const TDataIOID FORTE_signalprocessing__DualHysteresis::scmEOWith[] = {0, scmWithListDelimiter, 1, 2, scmWithListDelimiter};
 const TForteInt16 FORTE_signalprocessing__DualHysteresis::scmEOWithIndexes[] = {0, 2};
-const CStringDictionary::TStringId FORTE_signalprocessing__DualHysteresis::scmEventOutputNames[] = {g_nStringIdINITO, g_nStringIdCNF};
-const CStringDictionary::TStringId FORTE_signalprocessing__DualHysteresis::scmEventOutputTypeIds[] = {g_nStringIdEInit, g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_signalprocessing__DualHysteresis::scmEventOutputNames[] = {STRID(INITO), STRID(CNF)};
+const CStringDictionary::TStringId FORTE_signalprocessing__DualHysteresis::scmEventOutputTypeIds[] = {STRID(EInit), STRID(Event)};
 const SFBInterfaceSpec FORTE_signalprocessing__DualHysteresis::scmFBInterfaceSpec = {
   2, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,
   2, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes,

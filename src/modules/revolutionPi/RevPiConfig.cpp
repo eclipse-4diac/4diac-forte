@@ -12,33 +12,73 @@
  *******************************************************************************/
 
 #include "RevPiConfig.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "RevPiConfig_gen.cpp"
-#endif
+
+USE_STRING_ID(BOOL);
+USE_STRING_ID(DigitalInput_1);
+USE_STRING_ID(DigitalInput_10);
+USE_STRING_ID(DigitalInput_11);
+USE_STRING_ID(DigitalInput_12);
+USE_STRING_ID(DigitalInput_13);
+USE_STRING_ID(DigitalInput_14);
+USE_STRING_ID(DigitalInput_2);
+USE_STRING_ID(DigitalInput_3);
+USE_STRING_ID(DigitalInput_4);
+USE_STRING_ID(DigitalInput_5);
+USE_STRING_ID(DigitalInput_6);
+USE_STRING_ID(DigitalInput_7);
+USE_STRING_ID(DigitalInput_8);
+USE_STRING_ID(DigitalInput_9);
+USE_STRING_ID(DigitalOutput_1);
+USE_STRING_ID(DigitalOutput_10);
+USE_STRING_ID(DigitalOutput_11);
+USE_STRING_ID(DigitalOutput_12);
+USE_STRING_ID(DigitalOutput_13);
+USE_STRING_ID(DigitalOutput_14);
+USE_STRING_ID(DigitalOutput_2);
+USE_STRING_ID(DigitalOutput_3);
+USE_STRING_ID(DigitalOutput_4);
+USE_STRING_ID(DigitalOutput_5);
+USE_STRING_ID(DigitalOutput_6);
+USE_STRING_ID(DigitalOutput_7);
+USE_STRING_ID(DigitalOutput_8);
+USE_STRING_ID(DigitalOutput_9);
+USE_STRING_ID(EInit);
+USE_STRING_ID(Event);
+USE_STRING_ID(IND);
+USE_STRING_ID(INIT);
+USE_STRING_ID(INITO);
+USE_STRING_ID(IORevPi);
+USE_STRING_ID(QI);
+USE_STRING_ID(QO);
+USE_STRING_ID(STATUS);
+USE_STRING_ID(UINT);
+USE_STRING_ID(UpdateInterval);
+USE_STRING_ID(WSTRING);
+
 
 #include "RevPiController.h"
 
 using namespace forte::core::io;
 
-DEFINE_FIRMWARE_FB(RevPiConfig, g_nStringIdIORevPi)
+DEFINE_FIRMWARE_FB(RevPiConfig, STRID(IORevPi))
 
-const CStringDictionary::TStringId RevPiConfig::scm_anDataInputNames[] = {g_nStringIdQI, g_nStringIdDigitalInput_1, g_nStringIdDigitalInput_2, g_nStringIdDigitalInput_3, g_nStringIdDigitalInput_4, g_nStringIdDigitalInput_5, g_nStringIdDigitalInput_6, g_nStringIdDigitalInput_7, g_nStringIdDigitalInput_8, g_nStringIdDigitalInput_9, g_nStringIdDigitalInput_10, g_nStringIdDigitalInput_11, g_nStringIdDigitalInput_12, g_nStringIdDigitalInput_13, g_nStringIdDigitalInput_14, g_nStringIdDigitalOutput_1, g_nStringIdDigitalOutput_2, g_nStringIdDigitalOutput_3, g_nStringIdDigitalOutput_4, g_nStringIdDigitalOutput_5, g_nStringIdDigitalOutput_6, g_nStringIdDigitalOutput_7, g_nStringIdDigitalOutput_8, g_nStringIdDigitalOutput_9, g_nStringIdDigitalOutput_10, g_nStringIdDigitalOutput_11, g_nStringIdDigitalOutput_12, g_nStringIdDigitalOutput_13, g_nStringIdDigitalOutput_14, g_nStringIdUpdateInterval};
+const CStringDictionary::TStringId RevPiConfig::scm_anDataInputNames[] = {STRID(QI), STRID(DigitalInput_1), STRID(DigitalInput_2), STRID(DigitalInput_3), STRID(DigitalInput_4), STRID(DigitalInput_5), STRID(DigitalInput_6), STRID(DigitalInput_7), STRID(DigitalInput_8), STRID(DigitalInput_9), STRID(DigitalInput_10), STRID(DigitalInput_11), STRID(DigitalInput_12), STRID(DigitalInput_13), STRID(DigitalInput_14), STRID(DigitalOutput_1), STRID(DigitalOutput_2), STRID(DigitalOutput_3), STRID(DigitalOutput_4), STRID(DigitalOutput_5), STRID(DigitalOutput_6), STRID(DigitalOutput_7), STRID(DigitalOutput_8), STRID(DigitalOutput_9), STRID(DigitalOutput_10), STRID(DigitalOutput_11), STRID(DigitalOutput_12), STRID(DigitalOutput_13), STRID(DigitalOutput_14), STRID(UpdateInterval)};
 
-const CStringDictionary::TStringId RevPiConfig::scm_anDataInputTypeIds[] = {g_nStringIdBOOL, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdUINT};
+const CStringDictionary::TStringId RevPiConfig::scm_anDataInputTypeIds[] = {STRID(BOOL), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(UINT)};
 
-const CStringDictionary::TStringId RevPiConfig::scm_anDataOutputNames[] = {g_nStringIdQO, g_nStringIdSTATUS};
+const CStringDictionary::TStringId RevPiConfig::scm_anDataOutputNames[] = {STRID(QO), STRID(STATUS)};
 
-const CStringDictionary::TStringId RevPiConfig::scm_anDataOutputTypeIds[] = {g_nStringIdBOOL, g_nStringIdWSTRING};
+const CStringDictionary::TStringId RevPiConfig::scm_anDataOutputTypeIds[] = {STRID(BOOL), STRID(WSTRING)};
 
 const TForteInt16 RevPiConfig::scm_anEIWithIndexes[] = {0};
 const TDataIOID RevPiConfig::scm_anEIWith[] = {0, 29, 1, 2, 3, 4, 5, 6, 9, 8, 7, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 255};
-const CStringDictionary::TStringId RevPiConfig::scm_anEventInputNames[] = {g_nStringIdINIT};
-const CStringDictionary::TStringId RevPiConfig::scmEventInputTypeIds[] = {g_nStringIdEInit};
+const CStringDictionary::TStringId RevPiConfig::scm_anEventInputNames[] = {STRID(INIT)};
+const CStringDictionary::TStringId RevPiConfig::scmEventInputTypeIds[] = {STRID(EInit)};
 
 const TDataIOID RevPiConfig::scm_anEOWith[] = {0, 1, 255, 0, 1, 255};
 const TForteInt16 RevPiConfig::scm_anEOWithIndexes[] = {0, 3, -1};
-const CStringDictionary::TStringId RevPiConfig::scm_anEventOutputNames[] = {g_nStringIdINITO, g_nStringIdIND};
-const CStringDictionary::TStringId RevPiConfig::scmEventOutputTypeIds[] = {g_nStringIdEvent,g_nStringIdEvent};
+const CStringDictionary::TStringId RevPiConfig::scm_anEventOutputNames[] = {STRID(INITO), STRID(IND)};
+const CStringDictionary::TStringId RevPiConfig::scmEventOutputTypeIds[] = {STRID(Event),STRID(Event)};
 
 const SFBInterfaceSpec RevPiConfig::scm_stFBInterfaceSpec = {
   1,  scm_anEventInputNames, scmEventInputTypeIds,  scm_anEIWith,  scm_anEIWithIndexes,

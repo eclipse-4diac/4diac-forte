@@ -12,11 +12,11 @@
  *      - initial implementation and rework communication infrastructure
  *******************************************************************************/
 #include "forte_ulint.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "forte_ulint_gen.cpp"
-#endif
 
-DEFINE_FIRMWARE_DATATYPE(ULINT, g_nStringIdULINT)
+USE_STRING_ID(ULINT);
+
+
+DEFINE_FIRMWARE_DATATYPE(ULINT, STRID(ULINT))
 
 template CIEC_ULINT &CIEC_ULINT::operator=<>(const CIEC_USINT &paValue);
 

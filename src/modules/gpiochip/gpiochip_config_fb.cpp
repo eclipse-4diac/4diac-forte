@@ -11,31 +11,48 @@
  *******************************************************************************/
 
 #include "gpiochip_config_fb.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "gpiochip_config_fb_gen.cpp"
-#endif
+
+USE_STRING_ID(ActiveLow);
+USE_STRING_ID(BiasMode);
+USE_STRING_ID(BOOL);
+USE_STRING_ID(ChipNumber);
+USE_STRING_ID(EInit);
+USE_STRING_ID(Event);
+USE_STRING_ID(GPIOChip);
+USE_STRING_ID(IND);
+USE_STRING_ID(INIT);
+USE_STRING_ID(INITO);
+USE_STRING_ID(LineNumber);
+USE_STRING_ID(QI);
+USE_STRING_ID(QO);
+USE_STRING_ID(ReadWriteMode);
+USE_STRING_ID(STATUS);
+USE_STRING_ID(UINT);
+USE_STRING_ID(VALUE);
+USE_STRING_ID(WSTRING);
+
 
 #include "gpiochip_controller.h"
 
-DEFINE_FIRMWARE_FB(GPIOChipConfigFB, g_nStringIdGPIOChip)
+DEFINE_FIRMWARE_FB(GPIOChipConfigFB, STRID(GPIOChip))
 
 
-const CStringDictionary::TStringId GPIOChipConfigFB::scmDataInputNames[] = { g_nStringIdQI, g_nStringIdVALUE, g_nStringIdChipNumber, g_nStringIdLineNumber, g_nStringIdReadWriteMode, g_nStringIdBiasMode, g_nStringIdActiveLow };
+const CStringDictionary::TStringId GPIOChipConfigFB::scmDataInputNames[] = { STRID(QI), STRID(VALUE), STRID(ChipNumber), STRID(LineNumber), STRID(ReadWriteMode), STRID(BiasMode), STRID(ActiveLow) };
 
-const CStringDictionary::TStringId GPIOChipConfigFB::scmDataInputTypeIds[] = { g_nStringIdBOOL, g_nStringIdWSTRING, g_nStringIdUINT, g_nStringIdUINT, g_nStringIdUINT, g_nStringIdUINT, g_nStringIdBOOL };
+const CStringDictionary::TStringId GPIOChipConfigFB::scmDataInputTypeIds[] = { STRID(BOOL), STRID(WSTRING), STRID(UINT), STRID(UINT), STRID(UINT), STRID(UINT), STRID(BOOL) };
 
-const CStringDictionary::TStringId GPIOChipConfigFB::scmDataOutputNames[] = { g_nStringIdQO, g_nStringIdSTATUS };
+const CStringDictionary::TStringId GPIOChipConfigFB::scmDataOutputNames[] = { STRID(QO), STRID(STATUS) };
 
-const CStringDictionary::TStringId GPIOChipConfigFB::scmDataOutputTypeIds[] = { g_nStringIdBOOL, g_nStringIdWSTRING };
+const CStringDictionary::TStringId GPIOChipConfigFB::scmDataOutputTypeIds[] = { STRID(BOOL), STRID(WSTRING) };
 
 const TForteInt16 GPIOChipConfigFB::scmEIWithIndexes[] = { 0 };
 const TDataIOID GPIOChipConfigFB::scmEIWith[] = { 0, 1, 2, 3, 4, 5, 6, scmWithListDelimiter };
-const CStringDictionary::TStringId GPIOChipConfigFB::scmEventInputNames[] = { g_nStringIdINIT };
-const CStringDictionary::TStringId GPIOChipConfigFB::scmEventInputTypeIds[] = {g_nStringIdEInit};
+const CStringDictionary::TStringId GPIOChipConfigFB::scmEventInputNames[] = { STRID(INIT) };
+const CStringDictionary::TStringId GPIOChipConfigFB::scmEventInputTypeIds[] = {STRID(EInit)};
 const TDataIOID GPIOChipConfigFB::scmEOWith[] = { 0, 1, scmWithListDelimiter, 0, 1, scmWithListDelimiter };
 const TForteInt16 GPIOChipConfigFB::scmEOWithIndexes[] = { 0, 3, -1 };
-const CStringDictionary::TStringId GPIOChipConfigFB::scmEventOutputNames[] = { g_nStringIdINITO, g_nStringIdIND };
-const CStringDictionary::TStringId GPIOChipConfigFB::scmEventOutputTypeIds[] = {g_nStringIdEvent, g_nStringIdEvent};
+const CStringDictionary::TStringId GPIOChipConfigFB::scmEventOutputNames[] = { STRID(INITO), STRID(IND) };
+const CStringDictionary::TStringId GPIOChipConfigFB::scmEventOutputTypeIds[] = {STRID(Event), STRID(Event)};
 const SFBInterfaceSpec GPIOChipConfigFB::scmFBInterfaceSpec = {
   1,  scmEventInputNames, scmEventInputTypeIds,  scmEIWith,  scmEIWithIndexes,
   2,  scmEventOutputNames, scmEventOutputTypeIds,  scmEOWith, scmEOWithIndexes,

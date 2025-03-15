@@ -11,15 +11,56 @@
  *******************************************************************************/
 
 #include "SubscribeEventHTTP.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "SubscribeEventHTTP_gen.cpp"
-#endif
 
-DEFINE_FIRMWARE_FB(FORTE_SubscribeEventHTTP, g_nStringIdSubscribeEventHTTP)
+USE_STRING_ID(ANYToJSON);
+USE_STRING_ID(APPEND_STRING_3);
+USE_STRING_ID(CLIENT_1_2);
+USE_STRING_ID(CNF);
+USE_STRING_ID(CreateRegisterID);
+USE_STRING_ID(CreateRegisterID_1);
+USE_STRING_ID(EI);
+USE_STRING_ID(endpoint);
+USE_STRING_ID(EO);
+USE_STRING_ID(E_PERMIT);
+USE_STRING_ID(E_PERMIT_1);
+USE_STRING_ID(E_SR);
+USE_STRING_ID(eventFilter);
+USE_STRING_ID(F_STRING_TO_WSTRING);
+USE_STRING_ID(F_STRING_TO_WSTRING_2);
+USE_STRING_ID(ID);
+USE_STRING_ID(IN);
+USE_STRING_ID(IN_1);
+USE_STRING_ID(IN_2);
+USE_STRING_ID(IN_3);
+USE_STRING_ID(INIT);
+USE_STRING_ID(InitFlagReg);
+USE_STRING_ID(InitFlagUnReg);
+USE_STRING_ID(INITO);
+USE_STRING_ID(input);
+USE_STRING_ID(OUT);
+USE_STRING_ID(output);
+USE_STRING_ID(PERMIT);
+USE_STRING_ID(Q);
+USE_STRING_ID(QI);
+USE_STRING_ID(R);
+USE_STRING_ID(Register);
+USE_STRING_ID(REQ);
+USE_STRING_ID(S);
+USE_STRING_ID(SD_1);
+USE_STRING_ID(Subscribe);
+USE_STRING_ID(Subscribed);
+USE_STRING_ID(SubscribeEventAdp);
+USE_STRING_ID(SubscribeEventHTTP);
+USE_STRING_ID(Unregister);
+USE_STRING_ID(Unsubscribe);
+USE_STRING_ID(Unsubscribed);
+
+
+DEFINE_FIRMWARE_FB(FORTE_SubscribeEventHTTP, STRID(SubscribeEventHTTP))
 
 const TForteInt16 FORTE_SubscribeEventHTTP::scmEOWithIndexes[] = {-1};
 const SAdapterInstanceDef FORTE_SubscribeEventHTTP::scmAdapterInstances[] = {
-{g_nStringIdSubscribeEventAdp, g_nStringIdSubscribeEventAdp, false }};
+{STRID(SubscribeEventAdp), STRID(SubscribeEventAdp), false }};
 
 const SFBInterfaceSpec FORTE_SubscribeEventHTTP::scmFBInterfaceSpec = {
   0,  0, nullptr,  0,  0,
@@ -29,67 +70,67 @@ const SFBInterfaceSpec FORTE_SubscribeEventHTTP::scmFBInterfaceSpec = {
 
 
 const SCFB_FBInstanceData FORTE_SubscribeEventHTTP::scmInternalFBs[] = {
-  {g_nStringIdInitFlagReg, g_nStringIdE_SR},
-  {g_nStringIdE_PERMIT, g_nStringIdE_PERMIT},
-  {g_nStringIdInitFlagUnReg, g_nStringIdE_SR},
-  {g_nStringIdF_STRING_TO_WSTRING, g_nStringIdF_STRING_TO_WSTRING},
-  {g_nStringIdCreateRegisterID, g_nStringIdAPPEND_STRING_3},
-  {g_nStringIdANYToJSON, g_nStringIdANYToJSON},
-  {g_nStringIdE_PERMIT_1, g_nStringIdE_PERMIT},
-  {g_nStringIdRegister, g_nStringIdCLIENT_1_2},
-  {g_nStringIdUnregister, g_nStringIdCLIENT_1_2},
-  {g_nStringIdCreateRegisterID_1, g_nStringIdAPPEND_STRING_3},
-  {g_nStringIdF_STRING_TO_WSTRING_2, g_nStringIdF_STRING_TO_WSTRING},
+  {STRID(InitFlagReg), STRID(E_SR)},
+  {STRID(E_PERMIT), STRID(E_PERMIT)},
+  {STRID(InitFlagUnReg), STRID(E_SR)},
+  {STRID(F_STRING_TO_WSTRING), STRID(F_STRING_TO_WSTRING)},
+  {STRID(CreateRegisterID), STRID(APPEND_STRING_3)},
+  {STRID(ANYToJSON), STRID(ANYToJSON)},
+  {STRID(E_PERMIT_1), STRID(E_PERMIT)},
+  {STRID(Register), STRID(CLIENT_1_2)},
+  {STRID(Unregister), STRID(CLIENT_1_2)},
+  {STRID(CreateRegisterID_1), STRID(APPEND_STRING_3)},
+  {STRID(F_STRING_TO_WSTRING_2), STRID(F_STRING_TO_WSTRING)},
 };
 
 const SCFB_FBParameter FORTE_SubscribeEventHTTP::scmParamters[] = {
-  {4, g_nStringIdIN_1, "STRING#http["},
-  {4, g_nStringIdIN_3, "STRING#/subscription; POST; application/json]"},
-  {9, g_nStringIdIN_1, "STRING#http["},
-  {9, g_nStringIdIN_3, "STRING#/subscription; PUT; application/json]"},
+  {4, STRID(IN_1), "STRING#http["},
+  {4, STRID(IN_3), "STRING#/subscription; POST; application/json]"},
+  {9, STRID(IN_1), "STRING#http["},
+  {9, STRID(IN_3), "STRING#/subscription; PUT; application/json]"},
 };
 
 const SCFB_FBConnectionData FORTE_SubscribeEventHTTP::scmEventConnections[] = {
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdRegister, g_nStringIdINITO), 7, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdE_PERMIT, g_nStringIdEI), 1},
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdRegister, g_nStringIdCNF), 7, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdInitFlagReg, g_nStringIdR), 0},
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdInitFlagReg, g_nStringIdEO), 0, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdRegister, g_nStringIdINIT), 7},
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdCreateRegisterID, g_nStringIdCNF), 4, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdF_STRING_TO_WSTRING, g_nStringIdREQ), 3},
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdF_STRING_TO_WSTRING, g_nStringIdCNF), 3, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdANYToJSON, g_nStringIdREQ), 5},
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdE_PERMIT, g_nStringIdEO), 1, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdRegister, g_nStringIdREQ), 7},
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdSubscribeEventAdp, g_nStringIdSubscribe), CCompositeFB::scmAdapterMarker |0, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdCreateRegisterID, g_nStringIdREQ), 4},
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdInitFlagUnReg, g_nStringIdEO), 2, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdUnregister, g_nStringIdINIT), 8},
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdE_PERMIT_1, g_nStringIdEO), 6, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdUnregister, g_nStringIdREQ), 8},
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdUnregister, g_nStringIdINITO), 8, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdE_PERMIT_1, g_nStringIdEI), 6},
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdUnregister, g_nStringIdCNF), 8, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdSubscribeEventAdp, g_nStringIdUnsubscribed), CCompositeFB::scmAdapterMarker |0},
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdSubscribeEventAdp, g_nStringIdUnsubscribe), CCompositeFB::scmAdapterMarker |0, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdCreateRegisterID_1, g_nStringIdREQ), 9},
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdCreateRegisterID_1, g_nStringIdCNF), 9, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdF_STRING_TO_WSTRING_2, g_nStringIdREQ), 10},
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdF_STRING_TO_WSTRING_2, g_nStringIdCNF), 10, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdANYToJSON, g_nStringIdREQ), 5},
+  {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(Register), STRID(INITO)), 7, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_PERMIT), STRID(EI)), 1},
+  {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(Register), STRID(CNF)), 7, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(InitFlagReg), STRID(R)), 0},
+  {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(InitFlagReg), STRID(EO)), 0, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(Register), STRID(INIT)), 7},
+  {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(CreateRegisterID), STRID(CNF)), 4, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(F_STRING_TO_WSTRING), STRID(REQ)), 3},
+  {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(F_STRING_TO_WSTRING), STRID(CNF)), 3, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(ANYToJSON), STRID(REQ)), 5},
+  {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_PERMIT), STRID(EO)), 1, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(Register), STRID(REQ)), 7},
+  {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(SubscribeEventAdp), STRID(Subscribe)), CCompositeFB::scmAdapterMarker |0, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(CreateRegisterID), STRID(REQ)), 4},
+  {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(InitFlagUnReg), STRID(EO)), 2, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(Unregister), STRID(INIT)), 8},
+  {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_PERMIT_1), STRID(EO)), 6, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(Unregister), STRID(REQ)), 8},
+  {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(Unregister), STRID(INITO)), 8, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_PERMIT_1), STRID(EI)), 6},
+  {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(Unregister), STRID(CNF)), 8, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(SubscribeEventAdp), STRID(Unsubscribed)), CCompositeFB::scmAdapterMarker |0},
+  {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(SubscribeEventAdp), STRID(Unsubscribe)), CCompositeFB::scmAdapterMarker |0, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(CreateRegisterID_1), STRID(REQ)), 9},
+  {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(CreateRegisterID_1), STRID(CNF)), 9, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(F_STRING_TO_WSTRING_2), STRID(REQ)), 10},
+  {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(F_STRING_TO_WSTRING_2), STRID(CNF)), 10, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(ANYToJSON), STRID(REQ)), 5},
 };
 
 const SCFB_FBFannedOutConnectionData FORTE_SubscribeEventHTTP::scmFannedOutEventConnections[] = {
-  {1, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdSubscribeEventAdp, g_nStringIdSubscribed), CCompositeFB::scmAdapterMarker |0},
-  {4, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdInitFlagReg, g_nStringIdS), 0},
-  {10, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdInitFlagUnReg, g_nStringIdR), 2},
-  {13, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdInitFlagUnReg, g_nStringIdS), 2},
+  {1, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(SubscribeEventAdp), STRID(Subscribed)), CCompositeFB::scmAdapterMarker |0},
+  {4, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(InitFlagReg), STRID(S)), 0},
+  {10, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(InitFlagUnReg), STRID(R)), 2},
+  {13, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(InitFlagUnReg), STRID(S)), 2},
 };
 
 const SCFB_FBConnectionData FORTE_SubscribeEventHTTP::scmDataConnections[] = {
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdInitFlagUnReg, g_nStringIdQ), 2, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdE_PERMIT_1, g_nStringIdPERMIT), 6},
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdInitFlagReg, g_nStringIdQ), 0, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdRegister, g_nStringIdQI), 7},
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdANYToJSON, g_nStringIdoutput), 5, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdRegister, g_nStringIdSD_1), 7},
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdCreateRegisterID, g_nStringIdOUT), 4, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdF_STRING_TO_WSTRING, g_nStringIdIN), 3},
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdF_STRING_TO_WSTRING, g_nStringIdOUT), 3, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdRegister, g_nStringIdID), 7},
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdSubscribeEventAdp, g_nStringIdendpoint), CCompositeFB::scmAdapterMarker |0, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdCreateRegisterID, g_nStringIdIN_2), 4},
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdSubscribeEventAdp, g_nStringIdeventFilter), CCompositeFB::scmAdapterMarker |0, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdANYToJSON, g_nStringIdinput), 5},
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdCreateRegisterID_1, g_nStringIdOUT), 9, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdF_STRING_TO_WSTRING_2, g_nStringIdIN), 10},
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdF_STRING_TO_WSTRING_2, g_nStringIdOUT), 10, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdUnregister, g_nStringIdID), 8},
+  {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(InitFlagUnReg), STRID(Q)), 2, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_PERMIT_1), STRID(PERMIT)), 6},
+  {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(InitFlagReg), STRID(Q)), 0, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(Register), STRID(QI)), 7},
+  {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(ANYToJSON), STRID(output)), 5, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(Register), STRID(SD_1)), 7},
+  {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(CreateRegisterID), STRID(OUT)), 4, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(F_STRING_TO_WSTRING), STRID(IN)), 3},
+  {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(F_STRING_TO_WSTRING), STRID(OUT)), 3, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(Register), STRID(ID)), 7},
+  {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(SubscribeEventAdp), STRID(endpoint)), CCompositeFB::scmAdapterMarker |0, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(CreateRegisterID), STRID(IN_2)), 4},
+  {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(SubscribeEventAdp), STRID(eventFilter)), CCompositeFB::scmAdapterMarker |0, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(ANYToJSON), STRID(input)), 5},
+  {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(CreateRegisterID_1), STRID(OUT)), 9, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(F_STRING_TO_WSTRING_2), STRID(IN)), 10},
+  {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(F_STRING_TO_WSTRING_2), STRID(OUT)), 10, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(Unregister), STRID(ID)), 8},
 };
 
 const SCFB_FBFannedOutConnectionData FORTE_SubscribeEventHTTP::scmFannedOutDataConnections[] = {
-  {0, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdUnregister, g_nStringIdQI), 8},
-  {1, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdE_PERMIT, g_nStringIdPERMIT), 1},
-  {2, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdUnregister, g_nStringIdSD_1), 8},
-  {5, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdCreateRegisterID_1, g_nStringIdIN_2), 9},
+  {0, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(Unregister), STRID(QI)), 8},
+  {1, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_PERMIT), STRID(PERMIT)), 1},
+  {2, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(Unregister), STRID(SD_1)), 8},
+  {5, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(CreateRegisterID_1), STRID(IN_2)), 9},
 };
 
 const SCFB_FBNData FORTE_SubscribeEventHTTP::scmFBNData = {

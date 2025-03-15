@@ -14,9 +14,12 @@
 #include "forte_boost_output_support.h"
 #include "../../../src/core/datatypes/forte_any_variant.h"
 
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "CIEC_ANY_VARIANT_test_gen.cpp"
-#endif
+
+USE_STRING_ID(AnyTestStruct);
+USE_STRING_ID(Var1);
+USE_STRING_ID(Var2);
+USE_STRING_ID(Var3);
+
 
 class CIEC_AnyTestStruct : public CIEC_STRUCT {
   DECLARE_FIRMWARE_DATATYPE(AnyTestStruct)
@@ -36,7 +39,7 @@ class CIEC_AnyTestStruct : public CIEC_STRUCT {
     }
 
     CStringDictionary::TStringId getStructTypeNameID() const override {
-      return g_nStringIdAnyTestStruct;
+      return STRID(AnyTestStruct);
     }
 
     CIEC_ANY *getMember(size_t paMemberIndex) override {
@@ -61,9 +64,9 @@ class CIEC_AnyTestStruct : public CIEC_STRUCT {
     static const CStringDictionary::TStringId scmElementNames[];
 };
 
-const CStringDictionary::TStringId CIEC_AnyTestStruct::scmElementNames[] = { g_nStringIdVar1, g_nStringIdVar2, g_nStringIdVar3 };
+const CStringDictionary::TStringId CIEC_AnyTestStruct::scmElementNames[] = { STRID(Var1), STRID(Var2), STRID(Var3) };
 
-DEFINE_FIRMWARE_DATATYPE(AnyTestStruct, g_nStringIdAnyTestStruct)
+DEFINE_FIRMWARE_DATATYPE(AnyTestStruct, STRID(AnyTestStruct))
 
 BOOST_AUTO_TEST_SUITE(CIEC_ANY_VARIANT_function_test)
 

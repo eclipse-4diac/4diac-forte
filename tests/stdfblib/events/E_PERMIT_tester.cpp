@@ -13,13 +13,13 @@
  *******************************************************************************/
 #include "../../core/fbtests/fbtestfixture.h"
 
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "E_PERMIT_tester_gen.cpp"
-#endif
+
+USE_STRING_ID(E_PERMIT);
+
 
 struct E_PERMIT_TestFixture : public CFBTestFixtureBase{
 
-    E_PERMIT_TestFixture() : CFBTestFixtureBase(g_nStringIdE_PERMIT){
+    E_PERMIT_TestFixture() : CFBTestFixtureBase(STRID(E_PERMIT)){
       setInputData({&mInPERMIT});
       CFBTestFixtureBase::setup();
     }

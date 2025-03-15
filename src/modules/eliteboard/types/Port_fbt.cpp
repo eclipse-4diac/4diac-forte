@@ -11,9 +11,28 @@
  *******************************************************************************/
 
 #include "Port_fbt.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "Port_fbt_gen.cpp"
-#endif
+
+USE_STRING_ID(Pin0);
+USE_STRING_ID(Pin1);
+USE_STRING_ID(Pin10);
+USE_STRING_ID(Pin11);
+USE_STRING_ID(Pin12);
+USE_STRING_ID(Pin13);
+USE_STRING_ID(Pin14);
+USE_STRING_ID(Pin15);
+USE_STRING_ID(Pin2);
+USE_STRING_ID(Pin3);
+USE_STRING_ID(Pin4);
+USE_STRING_ID(Pin5);
+USE_STRING_ID(Pin6);
+USE_STRING_ID(Pin7);
+USE_STRING_ID(Pin8);
+USE_STRING_ID(Pin9);
+USE_STRING_ID(Port);
+USE_STRING_ID(PortAdapter);
+USE_STRING_ID(PortInAdapter);
+USE_STRING_ID(WSTRING);
+
 
 #include "PortAdapter_adp.h"
 #include "iec61131_functions.h"
@@ -29,12 +48,12 @@
 
 using namespace forte::core::io;
 
-DEFINE_FIRMWARE_FB(FORTE_Port, g_nStringIdPort)
+DEFINE_FIRMWARE_FB(FORTE_Port, STRID(Port))
 
-const CStringDictionary::TStringId FORTE_Port::scmDataInputNames[] = {g_nStringIdPin0, g_nStringIdPin1, g_nStringIdPin2, g_nStringIdPin3, g_nStringIdPin4, g_nStringIdPin5, g_nStringIdPin6, g_nStringIdPin7, g_nStringIdPin8, g_nStringIdPin9, g_nStringIdPin10, g_nStringIdPin11, g_nStringIdPin12, g_nStringIdPin13, g_nStringIdPin14, g_nStringIdPin15};
-const CStringDictionary::TStringId FORTE_Port::scmDataInputTypeIds[] = {g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdWSTRING};
+const CStringDictionary::TStringId FORTE_Port::scmDataInputNames[] = {STRID(Pin0), STRID(Pin1), STRID(Pin2), STRID(Pin3), STRID(Pin4), STRID(Pin5), STRID(Pin6), STRID(Pin7), STRID(Pin8), STRID(Pin9), STRID(Pin10), STRID(Pin11), STRID(Pin12), STRID(Pin13), STRID(Pin14), STRID(Pin15)};
+const CStringDictionary::TStringId FORTE_Port::scmDataInputTypeIds[] = {STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING)};
 const SAdapterInstanceDef FORTE_Port::scmAdapterInstances[] = {
-  {g_nStringIdPortAdapter, g_nStringIdPortInAdapter, false}
+  {STRID(PortAdapter), STRID(PortInAdapter), false}
 };
 const SFBInterfaceSpec FORTE_Port::scmFBInterfaceSpec = {
   0, nullptr, nullptr, nullptr, nullptr,
@@ -63,7 +82,7 @@ FORTE_Port::FORTE_Port(const CStringDictionary::TStringId paInstanceNameId, fort
     var_Pin13(""_STRING),
     var_Pin14(""_STRING),
     var_Pin15(""_STRING),
-    var_PortInAdapter(g_nStringIdPortInAdapter, *this, false),
+    var_PortInAdapter(STRID(PortInAdapter), *this, false),
     conn_Pin0(nullptr),
     conn_Pin1(nullptr),
     conn_Pin2(nullptr),

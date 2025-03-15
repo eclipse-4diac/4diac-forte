@@ -12,13 +12,15 @@
  *    - initial API and implementation and/or initial documentation
  *******************************************************************************/
 #include "RMT_DEV.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "RMT_DEV_gen.cpp"
-#endif
+
+USE_STRING_ID(MGR);
+USE_STRING_ID(MGR_ID);
+USE_STRING_ID(WSTRING);
+
 #include <stringdict.h>
 
-const CStringDictionary::TStringId RMT_DEV::scmDINameIds[] = { g_nStringIdMGR_ID };
-const CStringDictionary::TStringId RMT_DEV::scmDIDataTypeIds[] = {g_nStringIdWSTRING};
+const CStringDictionary::TStringId RMT_DEV::scmDINameIds[] = { STRID(MGR_ID) };
+const CStringDictionary::TStringId RMT_DEV::scmDIDataTypeIds[] = {STRID(WSTRING)};
 
 const SFBInterfaceSpec RMT_DEV::scmFBInterfaceSpec = {
   0, nullptr, nullptr, nullptr, nullptr,
@@ -33,7 +35,7 @@ RMT_DEV::RMT_DEV(const std::string &paMGR_ID) :
         CDevice(scmFBInterfaceSpec, CStringDictionary::scmInvalidStringId),
         var_MGR_ID(paMGR_ID.c_str()),
         conn_MGR_ID(nullptr),
-        MGR(g_nStringIdMGR, *this) {
+        MGR(STRID(MGR), *this) {
 }
 
 bool RMT_DEV::initialize() {
@@ -47,7 +49,7 @@ bool RMT_DEV::initialize() {
 
   //we nee to manually crate this interface2internal connection as the MGR is not managed by device
   mDConnMGR_ID.setSource(this, 0);
-  mDConnMGR_ID.connect(&MGR, g_nStringIdMGR_ID);
+  mDConnMGR_ID.connect(&MGR, STRID(MGR_ID));
   return true;
 }
 

@@ -11,29 +11,40 @@
  *******************************************************************************/
 
 #include "FieldsToArrowheadSystem.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "FieldsToArrowheadSystem_gen.cpp"
-#endif
 
-DEFINE_FIRMWARE_FB(FORTE_FieldsToArrowheadSystem, g_nStringIdFieldsToArrowheadSystem)
+USE_STRING_ID(address);
+USE_STRING_ID(arrowheadSystem);
+USE_STRING_ID(ArrowheadSystem);
+USE_STRING_ID(authenticationInfo);
+USE_STRING_ID(CNF);
+USE_STRING_ID(DINT);
+USE_STRING_ID(Event);
+USE_STRING_ID(FieldsToArrowheadSystem);
+USE_STRING_ID(port);
+USE_STRING_ID(REQ);
+USE_STRING_ID(systemName);
+USE_STRING_ID(WSTRING);
 
-const CStringDictionary::TStringId FORTE_FieldsToArrowheadSystem::scmDataInputNames[] = {g_nStringIdsystemName, g_nStringIdaddress, g_nStringIdport, g_nStringIdauthenticationInfo};
 
-const CStringDictionary::TStringId FORTE_FieldsToArrowheadSystem::scmDataInputTypeIds[] = {g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdDINT, g_nStringIdWSTRING};
+DEFINE_FIRMWARE_FB(FORTE_FieldsToArrowheadSystem, STRID(FieldsToArrowheadSystem))
 
-const CStringDictionary::TStringId FORTE_FieldsToArrowheadSystem::scmDataOutputNames[] = {g_nStringIdarrowheadSystem};
+const CStringDictionary::TStringId FORTE_FieldsToArrowheadSystem::scmDataInputNames[] = {STRID(systemName), STRID(address), STRID(port), STRID(authenticationInfo)};
 
-const CStringDictionary::TStringId FORTE_FieldsToArrowheadSystem::scmDataOutputTypeIds[] = {g_nStringIdArrowheadSystem};
+const CStringDictionary::TStringId FORTE_FieldsToArrowheadSystem::scmDataInputTypeIds[] = {STRID(WSTRING), STRID(WSTRING), STRID(DINT), STRID(WSTRING)};
+
+const CStringDictionary::TStringId FORTE_FieldsToArrowheadSystem::scmDataOutputNames[] = {STRID(arrowheadSystem)};
+
+const CStringDictionary::TStringId FORTE_FieldsToArrowheadSystem::scmDataOutputTypeIds[] = {STRID(ArrowheadSystem)};
 
 const TForteInt16 FORTE_FieldsToArrowheadSystem::scmEIWithIndexes[] = {0};
 const TDataIOID FORTE_FieldsToArrowheadSystem::scmEIWith[] = {3, 2, 1, 0, scmWithListDelimiter};
-const CStringDictionary::TStringId FORTE_FieldsToArrowheadSystem::scmEventInputNames[] = {g_nStringIdREQ};
-const CStringDictionary::TStringId FORTE_FieldsToArrowheadSystem::scmEventInputTypeIds[] = {g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_FieldsToArrowheadSystem::scmEventInputNames[] = {STRID(REQ)};
+const CStringDictionary::TStringId FORTE_FieldsToArrowheadSystem::scmEventInputTypeIds[] = {STRID(Event)};
 
 const TDataIOID FORTE_FieldsToArrowheadSystem::scmEOWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_FieldsToArrowheadSystem::scmEOWithIndexes[] = {0, -1};
-const CStringDictionary::TStringId FORTE_FieldsToArrowheadSystem::scmEventOutputNames[] = {g_nStringIdCNF};
-const CStringDictionary::TStringId FORTE_FieldsToArrowheadSystem::scmEventOutputTypeIds[] = {g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_FieldsToArrowheadSystem::scmEventOutputNames[] = {STRID(CNF)};
+const CStringDictionary::TStringId FORTE_FieldsToArrowheadSystem::scmEventOutputTypeIds[] = {STRID(Event)};
 
 const SFBInterfaceSpec FORTE_FieldsToArrowheadSystem::scmFBInterfaceSpec = {
   1,  scmEventInputNames, scmEventInputTypeIds,  scmEIWith,  scmEIWithIndexes,

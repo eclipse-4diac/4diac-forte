@@ -15,27 +15,48 @@
  *************************************************************************/
 
 #include "E_TON_fbt.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "E_TON_fbt_gen.cpp"
-#endif
+
+USE_STRING_ID(BOOL);
+USE_STRING_ID(CNF);
+USE_STRING_ID(DT);
+USE_STRING_ID(E_DELAY);
+USE_STRING_ID(EI);
+USE_STRING_ID(EO);
+USE_STRING_ID(EO0);
+USE_STRING_ID(EO1);
+USE_STRING_ID(E_RS);
+USE_STRING_ID(E_SWITCH);
+USE_STRING_ID(E_TON);
+USE_STRING_ID(Event);
+USE_STRING_ID(G);
+USE_STRING_ID(IN);
+USE_STRING_ID(PT);
+USE_STRING_ID(Q);
+USE_STRING_ID(R);
+USE_STRING_ID(REQ);
+USE_STRING_ID(S);
+USE_STRING_ID(START);
+USE_STRING_ID(STOP);
+USE_STRING_ID(TIME);
+
 
 #include "criticalregion.h"
 #include "resource.h"
 
-DEFINE_FIRMWARE_FB(FORTE_E_TON, g_nStringIdE_TON)
+DEFINE_FIRMWARE_FB(FORTE_E_TON, STRID(E_TON))
 
-const CStringDictionary::TStringId FORTE_E_TON::scmDataInputNames[] = {g_nStringIdIN, g_nStringIdPT};
-const CStringDictionary::TStringId FORTE_E_TON::scmDataInputTypeIds[] = {g_nStringIdBOOL, g_nStringIdTIME};
-const CStringDictionary::TStringId FORTE_E_TON::scmDataOutputNames[] = {g_nStringIdQ};
-const CStringDictionary::TStringId FORTE_E_TON::scmDataOutputTypeIds[] = {g_nStringIdBOOL};
+const CStringDictionary::TStringId FORTE_E_TON::scmDataInputNames[] = {STRID(IN), STRID(PT)};
+const CStringDictionary::TStringId FORTE_E_TON::scmDataInputTypeIds[] = {STRID(BOOL), STRID(TIME)};
+const CStringDictionary::TStringId FORTE_E_TON::scmDataOutputNames[] = {STRID(Q)};
+const CStringDictionary::TStringId FORTE_E_TON::scmDataOutputTypeIds[] = {STRID(BOOL)};
 const TDataIOID FORTE_E_TON::scmEIWith[] = {0, 1, scmWithListDelimiter};
 const TForteInt16 FORTE_E_TON::scmEIWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_E_TON::scmEventInputNames[] = {g_nStringIdREQ};
-const CStringDictionary::TStringId FORTE_E_TON::scmEventInputTypeIds[] = {g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_E_TON::scmEventInputNames[] = {STRID(REQ)};
+const CStringDictionary::TStringId FORTE_E_TON::scmEventInputTypeIds[] = {STRID(Event)};
 const TDataIOID FORTE_E_TON::scmEOWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_E_TON::scmEOWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_E_TON::scmEventOutputNames[] = {g_nStringIdCNF};
-const CStringDictionary::TStringId FORTE_E_TON::scmEventOutputTypeIds[] = {g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_E_TON::scmEventOutputNames[] = {STRID(CNF)};
+const CStringDictionary::TStringId FORTE_E_TON::scmEventOutputTypeIds[] = {STRID(Event)};
 const SFBInterfaceSpec FORTE_E_TON::scmFBInterfaceSpec = {
   1, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,
   1, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes,
@@ -47,9 +68,9 @@ const SFBInterfaceSpec FORTE_E_TON::scmFBInterfaceSpec = {
 
 FORTE_E_TON::FORTE_E_TON(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CCompositeFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, scmFBNData),
-    fb_E_SWITCH(g_nStringIdE_SWITCH, *this),
-    fb_E_DELAY(g_nStringIdE_DELAY, *this),
-    fb_E_RS(g_nStringIdE_RS, *this),
+    fb_E_SWITCH(STRID(E_SWITCH), *this),
+    fb_E_DELAY(STRID(E_DELAY), *this),
+    fb_E_RS(STRID(E_RS), *this),
     var_conn_Q(var_Q),
     conn_CNF(this, 0),
     conn_IN(nullptr),
@@ -64,28 +85,28 @@ void FORTE_E_TON::setInitialValues() {
 }
 
 const SCFB_FBInstanceData FORTE_E_TON::scmInternalFBs[] = {
-  {g_nStringIdE_SWITCH, g_nStringIdE_SWITCH},
-  {g_nStringIdE_DELAY, g_nStringIdE_DELAY},
-  {g_nStringIdE_RS, g_nStringIdE_RS}
+  {STRID(E_SWITCH), STRID(E_SWITCH)},
+  {STRID(E_DELAY), STRID(E_DELAY)},
+  {STRID(E_RS), STRID(E_RS)}
 };
 
 
 const SCFB_FBConnectionData FORTE_E_TON::scmEventConnections[] = {
-  {GENERATE_CONNECTION_PORT_ID_1_ARG(g_nStringIdREQ), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdE_SWITCH, g_nStringIdEI), 0},
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdE_SWITCH, g_nStringIdEO1), 0, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdE_DELAY, g_nStringIdSTART), 1},
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdE_SWITCH, g_nStringIdEO0), 0, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdE_DELAY, g_nStringIdSTOP), 1},
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdE_DELAY, g_nStringIdEO), 1, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdE_RS, g_nStringIdS), 2},
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdE_RS, g_nStringIdEO), 2, GENERATE_CONNECTION_PORT_ID_1_ARG(g_nStringIdCNF), -1},
+  {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(REQ)), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_SWITCH), STRID(EI)), 0},
+  {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_SWITCH), STRID(EO1)), 0, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_DELAY), STRID(START)), 1},
+  {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_SWITCH), STRID(EO0)), 0, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_DELAY), STRID(STOP)), 1},
+  {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_DELAY), STRID(EO)), 1, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_RS), STRID(S)), 2},
+  {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_RS), STRID(EO)), 2, GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(CNF)), -1},
 };
 
 const SCFB_FBFannedOutConnectionData FORTE_E_TON::scmFannedOutEventConnections[] = {
-  {2, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdE_RS, g_nStringIdR), 2},
+  {2, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_RS), STRID(R)), 2},
 };
 
 const SCFB_FBConnectionData FORTE_E_TON::scmDataConnections[] = {
-  {GENERATE_CONNECTION_PORT_ID_1_ARG(g_nStringIdIN), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdE_SWITCH, g_nStringIdG), 0},
-  {GENERATE_CONNECTION_PORT_ID_1_ARG(g_nStringIdPT), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdE_DELAY, g_nStringIdDT), 1},
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdE_RS, g_nStringIdQ), 2, GENERATE_CONNECTION_PORT_ID_1_ARG(g_nStringIdQ), -1},
+  {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(IN)), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_SWITCH), STRID(G)), 0},
+  {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(PT)), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_DELAY), STRID(DT)), 1},
+  {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_RS), STRID(Q)), 2, GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(Q)), -1},
 };
 
 const SCFB_FBNData FORTE_E_TON::scmFBNData = {

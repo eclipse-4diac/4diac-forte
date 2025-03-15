@@ -24,14 +24,14 @@
  *******************************************************************************/
 
 #include "forte_array.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "forte_array_gen.cpp"
-#endif
+
+USE_STRING_ID(ARRAY);
+
 
 #include "forte_ulint.h"
 
 CStringDictionary::TStringId CIEC_ARRAY::getTypeNameID() const {
-  return g_nStringIdARRAY;
+  return STRID(ARRAY);
 }
 
 void CIEC_ARRAY::setValue(const CIEC_ANY &paValue) {

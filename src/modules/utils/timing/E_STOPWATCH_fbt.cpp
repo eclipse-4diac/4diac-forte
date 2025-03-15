@@ -18,9 +18,20 @@
  *************************************************************************/
 
 #include "E_STOPWATCH_fbt.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "E_STOPWATCH_fbt_gen.cpp"
-#endif
+
+USE_STRING_ID(EO);
+USE_STRING_ID(E_STOPWATCH);
+USE_STRING_ID(ET);
+USE_STRING_ID(ETO);
+USE_STRING_ID(Event);
+USE_STRING_ID(RESET);
+USE_STRING_ID(RESETO);
+USE_STRING_ID(START);
+USE_STRING_ID(startTime);
+USE_STRING_ID(STOP);
+USE_STRING_ID(TD);
+USE_STRING_ID(TIME);
+
 
 #include "forte_bool.h"
 #include "forte_time.h"
@@ -30,17 +41,17 @@
 #include "forte_array_fixed.h"
 #include "forte_array_variable.h"
 
-DEFINE_FIRMWARE_FB(FORTE_E_STOPWATCH, g_nStringIdE_STOPWATCH)
+DEFINE_FIRMWARE_FB(FORTE_E_STOPWATCH, STRID(E_STOPWATCH))
 
-const CStringDictionary::TStringId FORTE_E_STOPWATCH::scmDataOutputNames[] = {g_nStringIdTD};
-const CStringDictionary::TStringId FORTE_E_STOPWATCH::scmDataOutputTypeIds[] = {g_nStringIdTIME};
+const CStringDictionary::TStringId FORTE_E_STOPWATCH::scmDataOutputNames[] = {STRID(TD)};
+const CStringDictionary::TStringId FORTE_E_STOPWATCH::scmDataOutputTypeIds[] = {STRID(TIME)};
 const TForteInt16 FORTE_E_STOPWATCH::scmEIWithIndexes[] = {-1, -1, -1, -1};
-const CStringDictionary::TStringId FORTE_E_STOPWATCH::scmEventInputNames[] = {g_nStringIdSTART, g_nStringIdET, g_nStringIdSTOP, g_nStringIdRESET};
-const CStringDictionary::TStringId FORTE_E_STOPWATCH::scmEventInputTypeIds[] = {g_nStringIdEvent, g_nStringIdEvent, g_nStringIdEvent, g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_E_STOPWATCH::scmEventInputNames[] = {STRID(START), STRID(ET), STRID(STOP), STRID(RESET)};
+const CStringDictionary::TStringId FORTE_E_STOPWATCH::scmEventInputTypeIds[] = {STRID(Event), STRID(Event), STRID(Event), STRID(Event)};
 const TDataIOID FORTE_E_STOPWATCH::scmEOWith[] = {0, scmWithListDelimiter, 0, scmWithListDelimiter, 0, scmWithListDelimiter};
 const TForteInt16 FORTE_E_STOPWATCH::scmEOWithIndexes[] = {0, 2, 4};
-const CStringDictionary::TStringId FORTE_E_STOPWATCH::scmEventOutputNames[] = {g_nStringIdEO, g_nStringIdETO, g_nStringIdRESETO};
-const CStringDictionary::TStringId FORTE_E_STOPWATCH::scmEventOutputTypeIds[] = {g_nStringIdEvent, g_nStringIdEvent, g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_E_STOPWATCH::scmEventOutputNames[] = {STRID(EO), STRID(ETO), STRID(RESETO)};
+const CStringDictionary::TStringId FORTE_E_STOPWATCH::scmEventOutputTypeIds[] = {STRID(Event), STRID(Event), STRID(Event)};
 const SFBInterfaceSpec FORTE_E_STOPWATCH::scmFBInterfaceSpec = {
   4, scmEventInputNames, scmEventInputTypeIds, nullptr, scmEIWithIndexes,
   3, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes,
@@ -50,8 +61,8 @@ const SFBInterfaceSpec FORTE_E_STOPWATCH::scmFBInterfaceSpec = {
   0, nullptr
 };
 
-const CStringDictionary::TStringId FORTE_E_STOPWATCH::scmInternalsNames[] = {g_nStringIdstartTime};
-const CStringDictionary::TStringId FORTE_E_STOPWATCH::scmInternalsTypeIds[] = {g_nStringIdTIME};
+const CStringDictionary::TStringId FORTE_E_STOPWATCH::scmInternalsNames[] = {STRID(startTime)};
+const CStringDictionary::TStringId FORTE_E_STOPWATCH::scmInternalsTypeIds[] = {STRID(TIME)};
 const SInternalVarsInformation FORTE_E_STOPWATCH::scmInternalVars = {1, scmInternalsNames, scmInternalsTypeIds};
 
 FORTE_E_STOPWATCH::FORTE_E_STOPWATCH(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :

@@ -13,9 +13,44 @@
  *      - initial implementation and rework communication infrastructure
  *******************************************************************************/
 #include "forte_any_elementary.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "forte_any_elementary_gen.cpp"
-#endif
+
+USE_STRING_ID(ANY);
+USE_STRING_ID(BOOL);
+USE_STRING_ID(BYTE);
+USE_STRING_ID(CHAR);
+USE_STRING_ID(D);
+USE_STRING_ID(DATE);
+USE_STRING_ID(DATE_AND_TIME);
+USE_STRING_ID(DINT);
+USE_STRING_ID(DT);
+USE_STRING_ID(DWORD);
+USE_STRING_ID(INT);
+USE_STRING_ID(LD);
+USE_STRING_ID(LDATE);
+USE_STRING_ID(LDATE_AND_TIME);
+USE_STRING_ID(LDT);
+USE_STRING_ID(LINT);
+USE_STRING_ID(LREAL);
+USE_STRING_ID(LT);
+USE_STRING_ID(LTIME);
+USE_STRING_ID(LTIME_OF_DAY);
+USE_STRING_ID(LTOD);
+USE_STRING_ID(LWORD);
+USE_STRING_ID(REAL);
+USE_STRING_ID(SINT);
+USE_STRING_ID(STRING);
+USE_STRING_ID(T);
+USE_STRING_ID(TIME);
+USE_STRING_ID(TIME_OF_DAY);
+USE_STRING_ID(TOD);
+USE_STRING_ID(UDINT);
+USE_STRING_ID(UINT);
+USE_STRING_ID(ULINT);
+USE_STRING_ID(USINT);
+USE_STRING_ID(WCHAR);
+USE_STRING_ID(WORD);
+USE_STRING_ID(WSTRING);
+
 #include <stdlib.h>
 #include <errno.h>
 #include "forte_sint.h"
@@ -28,42 +63,42 @@
 #include "forte_ulint.h"
 
 const std::map<CStringDictionary::TStringId, CIEC_ANY::EDataTypeID> CIEC_ANY_ELEMENTARY::scm_StringToTypeId = {
-    {g_nStringIdANY, CIEC_ANY::e_ANY},
-    {g_nStringIdBOOL, CIEC_ANY::e_BOOL},
-    {g_nStringIdSINT, CIEC_ANY::e_SINT},
-    {g_nStringIdINT, CIEC_ANY::e_INT},
-    {g_nStringIdDINT, CIEC_ANY::e_DINT},
-    {g_nStringIdLINT, CIEC_ANY::e_LINT},
-    {g_nStringIdUSINT, CIEC_ANY::e_USINT},
-    {g_nStringIdUINT, CIEC_ANY::e_UINT},
-    {g_nStringIdUDINT, CIEC_ANY::e_UDINT},
-    {g_nStringIdULINT, CIEC_ANY::e_ULINT},
-    {g_nStringIdBYTE, CIEC_ANY::e_BYTE},
-    {g_nStringIdWORD, CIEC_ANY::e_WORD},
-    {g_nStringIdDWORD, CIEC_ANY::e_DWORD},
-    {g_nStringIdLWORD, CIEC_ANY::e_LWORD},
-    {g_nStringIdT, CIEC_ANY::e_TIME},
-    {g_nStringIdTIME, CIEC_ANY::e_TIME},
-    {g_nStringIdD, CIEC_ANY::e_DATE},
-    {g_nStringIdDATE, CIEC_ANY::e_DATE},
-    {g_nStringIdTOD, CIEC_ANY::e_TIME_OF_DAY},
-    {g_nStringIdTIME_OF_DAY, CIEC_ANY::e_TIME_OF_DAY},
-    {g_nStringIdDT, CIEC_ANY::e_DATE_AND_TIME},
-    {g_nStringIdDATE_AND_TIME, CIEC_ANY::e_DATE_AND_TIME},
-    {g_nStringIdLT, CIEC_ANY::e_LTIME},
-    {g_nStringIdLTIME, CIEC_ANY::e_LTIME},
-    {g_nStringIdLD, CIEC_ANY::e_LDATE},
-    {g_nStringIdLDATE, CIEC_ANY::e_LDATE},
-    {g_nStringIdLTOD, CIEC_ANY::e_LTIME_OF_DAY},
-    {g_nStringIdLTIME_OF_DAY, CIEC_ANY::e_LTIME_OF_DAY},
-    {g_nStringIdLDT, CIEC_ANY::e_LDATE_AND_TIME},
-    {g_nStringIdLDATE_AND_TIME, CIEC_ANY::e_LDATE_AND_TIME},
-    {g_nStringIdCHAR, CIEC_ANY::e_CHAR},
-    {g_nStringIdWCHAR, CIEC_ANY::e_WCHAR},
-    {g_nStringIdREAL, CIEC_ANY::e_REAL},
-    {g_nStringIdLREAL, CIEC_ANY::e_LREAL},
-    {g_nStringIdSTRING, CIEC_ANY::e_STRING},
-    {g_nStringIdWSTRING, CIEC_ANY::e_WSTRING}};
+    {STRID(ANY), CIEC_ANY::e_ANY},
+    {STRID(BOOL), CIEC_ANY::e_BOOL},
+    {STRID(SINT), CIEC_ANY::e_SINT},
+    {STRID(INT), CIEC_ANY::e_INT},
+    {STRID(DINT), CIEC_ANY::e_DINT},
+    {STRID(LINT), CIEC_ANY::e_LINT},
+    {STRID(USINT), CIEC_ANY::e_USINT},
+    {STRID(UINT), CIEC_ANY::e_UINT},
+    {STRID(UDINT), CIEC_ANY::e_UDINT},
+    {STRID(ULINT), CIEC_ANY::e_ULINT},
+    {STRID(BYTE), CIEC_ANY::e_BYTE},
+    {STRID(WORD), CIEC_ANY::e_WORD},
+    {STRID(DWORD), CIEC_ANY::e_DWORD},
+    {STRID(LWORD), CIEC_ANY::e_LWORD},
+    {STRID(T), CIEC_ANY::e_TIME},
+    {STRID(TIME), CIEC_ANY::e_TIME},
+    {STRID(D), CIEC_ANY::e_DATE},
+    {STRID(DATE), CIEC_ANY::e_DATE},
+    {STRID(TOD), CIEC_ANY::e_TIME_OF_DAY},
+    {STRID(TIME_OF_DAY), CIEC_ANY::e_TIME_OF_DAY},
+    {STRID(DT), CIEC_ANY::e_DATE_AND_TIME},
+    {STRID(DATE_AND_TIME), CIEC_ANY::e_DATE_AND_TIME},
+    {STRID(LT), CIEC_ANY::e_LTIME},
+    {STRID(LTIME), CIEC_ANY::e_LTIME},
+    {STRID(LD), CIEC_ANY::e_LDATE},
+    {STRID(LDATE), CIEC_ANY::e_LDATE},
+    {STRID(LTOD), CIEC_ANY::e_LTIME_OF_DAY},
+    {STRID(LTIME_OF_DAY), CIEC_ANY::e_LTIME_OF_DAY},
+    {STRID(LDT), CIEC_ANY::e_LDATE_AND_TIME},
+    {STRID(LDATE_AND_TIME), CIEC_ANY::e_LDATE_AND_TIME},
+    {STRID(CHAR), CIEC_ANY::e_CHAR},
+    {STRID(WCHAR), CIEC_ANY::e_WCHAR},
+    {STRID(REAL), CIEC_ANY::e_REAL},
+    {STRID(LREAL), CIEC_ANY::e_LREAL},
+    {STRID(STRING), CIEC_ANY::e_STRING},
+    {STRID(WSTRING), CIEC_ANY::e_WSTRING}};
 
 int CIEC_ANY_ELEMENTARY::toString(char* paValue, size_t paBufferSize) const {
   int nRetVal = 0;

@@ -12,9 +12,15 @@
  *******************************************************************************/
 
 #include "E_SWITCH_fbt.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "E_SWITCH_fbt_gen.cpp"
-#endif
+
+USE_STRING_ID(BOOL);
+USE_STRING_ID(EI);
+USE_STRING_ID(EO0);
+USE_STRING_ID(EO1);
+USE_STRING_ID(E_SWITCH);
+USE_STRING_ID(Event);
+USE_STRING_ID(G);
+
 
 #include "criticalregion.h"
 #include "resource.h"
@@ -25,17 +31,17 @@
 #include "forte_array_fixed.h"
 #include "forte_array_variable.h"
 
-DEFINE_FIRMWARE_FB(FORTE_E_SWITCH, g_nStringIdE_SWITCH)
+DEFINE_FIRMWARE_FB(FORTE_E_SWITCH, STRID(E_SWITCH))
 
-const CStringDictionary::TStringId FORTE_E_SWITCH::scmDataInputNames[] = {g_nStringIdG};
-const CStringDictionary::TStringId FORTE_E_SWITCH::scmDataInputTypeIds[] = {g_nStringIdBOOL};
+const CStringDictionary::TStringId FORTE_E_SWITCH::scmDataInputNames[] = {STRID(G)};
+const CStringDictionary::TStringId FORTE_E_SWITCH::scmDataInputTypeIds[] = {STRID(BOOL)};
 const TDataIOID FORTE_E_SWITCH::scmEIWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_E_SWITCH::scmEIWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_E_SWITCH::scmEventInputNames[] = {g_nStringIdEI};
-const CStringDictionary::TStringId FORTE_E_SWITCH::scmEventInputTypeIds[] = {g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_E_SWITCH::scmEventInputNames[] = {STRID(EI)};
+const CStringDictionary::TStringId FORTE_E_SWITCH::scmEventInputTypeIds[] = {STRID(Event)};
 const TForteInt16 FORTE_E_SWITCH::scmEOWithIndexes[] = {-1, -1};
-const CStringDictionary::TStringId FORTE_E_SWITCH::scmEventOutputNames[] = {g_nStringIdEO0, g_nStringIdEO1};
-const CStringDictionary::TStringId FORTE_E_SWITCH::scmEventOutputTypeIds[] = {g_nStringIdEvent, g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_E_SWITCH::scmEventOutputNames[] = {STRID(EO0), STRID(EO1)};
+const CStringDictionary::TStringId FORTE_E_SWITCH::scmEventOutputTypeIds[] = {STRID(Event), STRID(Event)};
 const SFBInterfaceSpec FORTE_E_SWITCH::scmFBInterfaceSpec = {
   1, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,
   2, scmEventOutputNames, scmEventOutputTypeIds, nullptr, scmEOWithIndexes,

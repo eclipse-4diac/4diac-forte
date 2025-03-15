@@ -13,11 +13,11 @@
  *   Alois Zoitl  - Reworked to new timer handler interface
  *******************************************************************************/
 #include "E_CYCLE_fbt.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "E_CYCLE_fbt_gen.cpp"
-#endif
 
-DEFINE_FIRMWARE_FB(FORTE_E_CYCLE, g_nStringIdE_CYCLE)
+USE_STRING_ID(E_CYCLE);
+
+
+DEFINE_FIRMWARE_FB(FORTE_E_CYCLE, STRID(E_CYCLE))
 
 void FORTE_E_CYCLE::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   if(paEIID == csmEventSTARTID) {

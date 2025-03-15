@@ -12,9 +12,19 @@
  *******************************************************************************/
 
 #include "EBBusAdapter.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "EBBusAdapter_gen.cpp"
-#endif
+
+USE_STRING_ID(BOOL);
+USE_STRING_ID(EBBusAdapter);
+USE_STRING_ID(EInit);
+USE_STRING_ID(Index);
+USE_STRING_ID(INIT);
+USE_STRING_ID(INITO);
+USE_STRING_ID(MasterId);
+USE_STRING_ID(QI);
+USE_STRING_ID(QO);
+USE_STRING_ID(UINT);
+USE_STRING_ID(UpdateInterval);
+
 
 #include "criticalregion.h"
 #include "resource.h"
@@ -24,20 +34,20 @@
 #include "forte_array_fixed.h"
 #include "forte_array_variable.h"
 
-DEFINE_ADAPTER_TYPE(FORTE_EBBusAdapter, g_nStringIdEBBusAdapter)
+DEFINE_ADAPTER_TYPE(FORTE_EBBusAdapter, STRID(EBBusAdapter))
 
-const CStringDictionary::TStringId FORTE_EBBusAdapter::scmDataInputNames[] = {g_nStringIdQO};
-const CStringDictionary::TStringId FORTE_EBBusAdapter::scmDataInputTypeIds[] = {g_nStringIdBOOL};
-const CStringDictionary::TStringId FORTE_EBBusAdapter::scmDataOutputNames[] = {g_nStringIdQI, g_nStringIdMasterId, g_nStringIdIndex, g_nStringIdUpdateInterval};
-const CStringDictionary::TStringId FORTE_EBBusAdapter::scmDataOutputTypeIds[] = {g_nStringIdBOOL, g_nStringIdUINT, g_nStringIdUINT, g_nStringIdUINT};
+const CStringDictionary::TStringId FORTE_EBBusAdapter::scmDataInputNames[] = {STRID(QO)};
+const CStringDictionary::TStringId FORTE_EBBusAdapter::scmDataInputTypeIds[] = {STRID(BOOL)};
+const CStringDictionary::TStringId FORTE_EBBusAdapter::scmDataOutputNames[] = {STRID(QI), STRID(MasterId), STRID(Index), STRID(UpdateInterval)};
+const CStringDictionary::TStringId FORTE_EBBusAdapter::scmDataOutputTypeIds[] = {STRID(BOOL), STRID(UINT), STRID(UINT), STRID(UINT)};
 const TDataIOID FORTE_EBBusAdapter::scmEIWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_EBBusAdapter::scmEIWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_EBBusAdapter::scmEventInputNames[] = {g_nStringIdINITO};
-const CStringDictionary::TStringId FORTE_EBBusAdapter::scmEventInputTypeIds[] = {g_nStringIdEInit};
+const CStringDictionary::TStringId FORTE_EBBusAdapter::scmEventInputNames[] = {STRID(INITO)};
+const CStringDictionary::TStringId FORTE_EBBusAdapter::scmEventInputTypeIds[] = {STRID(EInit)};
 const TDataIOID FORTE_EBBusAdapter::scmEOWith[] = {2, 3, 1, 0, scmWithListDelimiter};
 const TForteInt16 FORTE_EBBusAdapter::scmEOWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_EBBusAdapter::scmEventOutputNames[] = {g_nStringIdINIT};
-const CStringDictionary::TStringId FORTE_EBBusAdapter::scmEventOutputTypeIds[] = {g_nStringIdEInit};
+const CStringDictionary::TStringId FORTE_EBBusAdapter::scmEventOutputNames[] = {STRID(INIT)};
+const CStringDictionary::TStringId FORTE_EBBusAdapter::scmEventOutputTypeIds[] = {STRID(EInit)};
 
 const SFBInterfaceSpec FORTE_EBBusAdapter::scmFBInterfaceSpecSocket = {
   1, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,

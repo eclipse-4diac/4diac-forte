@@ -11,17 +11,19 @@
  *******************************************************************************/
 
 #include "E_TimeOut_fbt.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "E_TimeOut_fbt_gen.cpp"
-#endif
+
+USE_STRING_ID(ATimeOut);
+USE_STRING_ID(E_TimeOut);
+USE_STRING_ID(TimeOutSocket);
+
 
 #include "criticalregion.h"
 #include "resource.h"
 
-DEFINE_FIRMWARE_FB(FORTE_E_TimeOut, g_nStringIdE_TimeOut)
+DEFINE_FIRMWARE_FB(FORTE_E_TimeOut, STRID(E_TimeOut))
 
 const SAdapterInstanceDef FORTE_E_TimeOut::scmAdapterInstances[] = {
-  {g_nStringIdATimeOut, g_nStringIdTimeOutSocket, false}
+  {STRID(ATimeOut), STRID(TimeOutSocket), false}
 };
 const SFBInterfaceSpec FORTE_E_TimeOut::scmFBInterfaceSpec = {
   0, nullptr, nullptr, nullptr, nullptr,
@@ -35,7 +37,7 @@ const SFBInterfaceSpec FORTE_E_TimeOut::scmFBInterfaceSpec = {
 FORTE_E_TimeOut::FORTE_E_TimeOut(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CEventSourceFB(paContainer, scmFBInterfaceSpec, paInstanceNameId),
     mActive(false),
-    var_TimeOutSocket(g_nStringIdTimeOutSocket, *this, false) {
+    var_TimeOutSocket(STRID(TimeOutSocket), *this, false) {
 };
 
 bool FORTE_E_TimeOut::initialize() {

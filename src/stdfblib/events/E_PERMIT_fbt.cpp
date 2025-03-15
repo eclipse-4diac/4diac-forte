@@ -12,9 +12,14 @@
  *******************************************************************************/
 
 #include "E_PERMIT_fbt.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "E_PERMIT_fbt_gen.cpp"
-#endif
+
+USE_STRING_ID(BOOL);
+USE_STRING_ID(EI);
+USE_STRING_ID(EO);
+USE_STRING_ID(E_PERMIT);
+USE_STRING_ID(Event);
+USE_STRING_ID(PERMIT);
+
 
 #include "criticalregion.h"
 #include "resource.h"
@@ -25,17 +30,17 @@
 #include "forte_array_fixed.h"
 #include "forte_array_variable.h"
 
-DEFINE_FIRMWARE_FB(FORTE_E_PERMIT, g_nStringIdE_PERMIT)
+DEFINE_FIRMWARE_FB(FORTE_E_PERMIT, STRID(E_PERMIT))
 
-const CStringDictionary::TStringId FORTE_E_PERMIT::scmDataInputNames[] = {g_nStringIdPERMIT};
-const CStringDictionary::TStringId FORTE_E_PERMIT::scmDataInputTypeIds[] = {g_nStringIdBOOL};
+const CStringDictionary::TStringId FORTE_E_PERMIT::scmDataInputNames[] = {STRID(PERMIT)};
+const CStringDictionary::TStringId FORTE_E_PERMIT::scmDataInputTypeIds[] = {STRID(BOOL)};
 const TDataIOID FORTE_E_PERMIT::scmEIWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_E_PERMIT::scmEIWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_E_PERMIT::scmEventInputNames[] = {g_nStringIdEI};
-const CStringDictionary::TStringId FORTE_E_PERMIT::scmEventInputTypeIds[] = {g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_E_PERMIT::scmEventInputNames[] = {STRID(EI)};
+const CStringDictionary::TStringId FORTE_E_PERMIT::scmEventInputTypeIds[] = {STRID(Event)};
 const TForteInt16 FORTE_E_PERMIT::scmEOWithIndexes[] = {-1};
-const CStringDictionary::TStringId FORTE_E_PERMIT::scmEventOutputNames[] = {g_nStringIdEO};
-const CStringDictionary::TStringId FORTE_E_PERMIT::scmEventOutputTypeIds[] = {g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_E_PERMIT::scmEventOutputNames[] = {STRID(EO)};
+const CStringDictionary::TStringId FORTE_E_PERMIT::scmEventOutputTypeIds[] = {STRID(Event)};
 const SFBInterfaceSpec FORTE_E_PERMIT::scmFBInterfaceSpec = {
   1, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,
   1, scmEventOutputNames, scmEventOutputTypeIds, nullptr, scmEOWithIndexes,

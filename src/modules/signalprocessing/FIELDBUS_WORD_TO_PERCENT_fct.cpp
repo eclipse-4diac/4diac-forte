@@ -16,9 +16,17 @@
  *************************************************************************/
 
 #include "FIELDBUS_WORD_TO_PERCENT_fct.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "FIELDBUS_WORD_TO_PERCENT_fct_gen.cpp"
-#endif
+
+USE_STRING_ID();
+USE_STRING_ID(CNF);
+USE_STRING_ID(Event);
+USE_STRING_ID(REAL);
+USE_STRING_ID(REQ);
+USE_STRING_ID(signalprocessing__FIELDBUS_WORD_TO_PERCENT);
+USE_STRING_ID(WI);
+USE_STRING_ID(WO);
+USE_STRING_ID(WORD);
+
 
 #include "forte_real.h"
 #include "forte_udint.h"
@@ -31,20 +39,20 @@
 #include "FIELDBUS_SIGNAL_gcf.h"
 #include "FIELDBUS_WORD_TO_PERCENT_fct.h"
 
-DEFINE_FIRMWARE_FB(FORTE_signalprocessing__FIELDBUS_WORD_TO_PERCENT, g_nStringIdsignalprocessing__FIELDBUS_WORD_TO_PERCENT)
+DEFINE_FIRMWARE_FB(FORTE_signalprocessing__FIELDBUS_WORD_TO_PERCENT, STRID(signalprocessing__FIELDBUS_WORD_TO_PERCENT))
 
-const CStringDictionary::TStringId FORTE_signalprocessing__FIELDBUS_WORD_TO_PERCENT::scmDataInputNames[] = {g_nStringIdWI};
-const CStringDictionary::TStringId FORTE_signalprocessing__FIELDBUS_WORD_TO_PERCENT::scmDataInputTypeIds[] = {g_nStringIdWORD};
-const CStringDictionary::TStringId FORTE_signalprocessing__FIELDBUS_WORD_TO_PERCENT::scmDataOutputNames[] = {g_nStringId, g_nStringIdWO};
-const CStringDictionary::TStringId FORTE_signalprocessing__FIELDBUS_WORD_TO_PERCENT::scmDataOutputTypeIds[] = {g_nStringIdREAL, g_nStringIdWORD};
+const CStringDictionary::TStringId FORTE_signalprocessing__FIELDBUS_WORD_TO_PERCENT::scmDataInputNames[] = {STRID(WI)};
+const CStringDictionary::TStringId FORTE_signalprocessing__FIELDBUS_WORD_TO_PERCENT::scmDataInputTypeIds[] = {STRID(WORD)};
+const CStringDictionary::TStringId FORTE_signalprocessing__FIELDBUS_WORD_TO_PERCENT::scmDataOutputNames[] = {STRID(), STRID(WO)};
+const CStringDictionary::TStringId FORTE_signalprocessing__FIELDBUS_WORD_TO_PERCENT::scmDataOutputTypeIds[] = {STRID(REAL), STRID(WORD)};
 const TDataIOID FORTE_signalprocessing__FIELDBUS_WORD_TO_PERCENT::scmEIWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_signalprocessing__FIELDBUS_WORD_TO_PERCENT::scmEIWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_signalprocessing__FIELDBUS_WORD_TO_PERCENT::scmEventInputNames[] = {g_nStringIdREQ};
-const CStringDictionary::TStringId FORTE_signalprocessing__FIELDBUS_WORD_TO_PERCENT::scmEventInputTypeIds[] = {g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_signalprocessing__FIELDBUS_WORD_TO_PERCENT::scmEventInputNames[] = {STRID(REQ)};
+const CStringDictionary::TStringId FORTE_signalprocessing__FIELDBUS_WORD_TO_PERCENT::scmEventInputTypeIds[] = {STRID(Event)};
 const TDataIOID FORTE_signalprocessing__FIELDBUS_WORD_TO_PERCENT::scmEOWith[] = {0, 1, scmWithListDelimiter};
 const TForteInt16 FORTE_signalprocessing__FIELDBUS_WORD_TO_PERCENT::scmEOWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_signalprocessing__FIELDBUS_WORD_TO_PERCENT::scmEventOutputNames[] = {g_nStringIdCNF};
-const CStringDictionary::TStringId FORTE_signalprocessing__FIELDBUS_WORD_TO_PERCENT::scmEventOutputTypeIds[] = {g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_signalprocessing__FIELDBUS_WORD_TO_PERCENT::scmEventOutputNames[] = {STRID(CNF)};
+const CStringDictionary::TStringId FORTE_signalprocessing__FIELDBUS_WORD_TO_PERCENT::scmEventOutputTypeIds[] = {STRID(Event)};
 const SFBInterfaceSpec FORTE_signalprocessing__FIELDBUS_WORD_TO_PERCENT::scmFBInterfaceSpec = {
   1, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,
   1, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes,

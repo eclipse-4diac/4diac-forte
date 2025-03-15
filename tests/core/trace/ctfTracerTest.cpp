@@ -59,16 +59,16 @@ BOOST_AUTO_TEST_CASE(sequential_events_test) {
   // The inner scope is to make sure the destructors of the resources are 
   // called which flushes the output
   {
-    CTesterDevice device(g_nStringIdMyDevice);
+    CTesterDevice device(STRID(MyDevice));
     device.initialize();
     CResource &resource = device.getTestResource();
 
-    auto startInstanceName = g_nStringIdSTART;
-    auto counterInstanceName = g_nStringIdCounter;
-    auto switchInstanceName = g_nStringIdSwitch;
+    auto startInstanceName = STRID(START);
+    auto counterInstanceName = STRID(Counter);
+    auto switchInstanceName = STRID(Switch);
 
-    resource.createFB(counterInstanceName, g_nStringIdE_CTU);
-    resource.createFB(switchInstanceName, g_nStringIdE_SWITCH);
+    resource.createFB(counterInstanceName, STRID(E_CTU));
+    resource.createFB(switchInstanceName, STRID(E_SWITCH));
 
     forte::core::SManagementCMD command;
     command.mCMD = EMGMCommandType::CreateConnection;
@@ -76,42 +76,42 @@ BOOST_AUTO_TEST_CASE(sequential_events_test) {
 
     BOOST_TEST_INFO("Event connection: Start.COLD -> Counter.CU");
     command.mFirstParam.pushBack(startInstanceName);
-    command.mFirstParam.pushBack(g_nStringIdCOLD);
+    command.mFirstParam.pushBack(STRID(COLD));
     command.mSecondParam.pushBack(counterInstanceName);
-    command.mSecondParam.pushBack(g_nStringIdCU);
+    command.mSecondParam.pushBack(STRID(CU));
     BOOST_TEST(EMGMResponse::Ready == resource.executeMGMCommand(command));
 
     BOOST_TEST_INFO("Event connection: Counter.CUO -> Switch.EI");
     command.mFirstParam.clear();
     command.mFirstParam.pushBack(counterInstanceName);
-    command.mFirstParam.pushBack(g_nStringIdCUO);
+    command.mFirstParam.pushBack(STRID(CUO));
     command.mSecondParam.clear();
     command.mSecondParam.pushBack(switchInstanceName);
-    command.mSecondParam.pushBack(g_nStringIdEI);
+    command.mSecondParam.pushBack(STRID(EI));
     BOOST_TEST(EMGMResponse::Ready == resource.executeMGMCommand(command));
 
     BOOST_TEST_INFO("Data connection: Counter.Q -> Switch.G ");
     command.mFirstParam.clear();
     command.mFirstParam.pushBack(counterInstanceName);
-    command.mFirstParam.pushBack(g_nStringIdQ);
+    command.mFirstParam.pushBack(STRID(Q));
     command.mSecondParam.clear();
     command.mSecondParam.pushBack(switchInstanceName);
-    command.mSecondParam.pushBack(g_nStringIdG);
+    command.mSecondParam.pushBack(STRID(G));
     BOOST_TEST(EMGMResponse::Ready == resource.executeMGMCommand(command));
 
     BOOST_TEST_INFO(" Data constant value: Counter.PV = 1");
     command.mFirstParam.clear();
     command.mFirstParam.pushBack(counterInstanceName);
-    command.mFirstParam.pushBack(g_nStringIdPV);
+    command.mFirstParam.pushBack(STRID(PV));
     BOOST_TEST(EMGMResponse::Ready == resource.writeValue(command.mFirstParam, "1", false));
 
     BOOST_TEST_INFO("Event connection: Switch.EO1 -> Counter.R ");
     command.mFirstParam.clear();
     command.mFirstParam.pushBack(switchInstanceName);
-    command.mFirstParam.pushBack(g_nStringIdEO1);
+    command.mFirstParam.pushBack(STRID(EO1));
     command.mSecondParam.clear();
     command.mSecondParam.pushBack(counterInstanceName);
-    command.mSecondParam.pushBack(g_nStringIdR);
+    command.mSecondParam.pushBack(STRID(R));
     BOOST_TEST(EMGMResponse::Ready == resource.executeMGMCommand(command));
 
     device.startDevice();

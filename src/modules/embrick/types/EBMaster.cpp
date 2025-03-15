@@ -12,9 +12,28 @@
  *******************************************************************************/
 
 #include "EBMaster.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "EBMaster_gen.cpp"
-#endif
+
+USE_STRING_ID(BOOL);
+USE_STRING_ID(BusAdapterOut);
+USE_STRING_ID(BusInitSpeed);
+USE_STRING_ID(BusInterface);
+USE_STRING_ID(BusLoopSpeed);
+USE_STRING_ID(BusSelectPin);
+USE_STRING_ID(EBBusAdapter);
+USE_STRING_ID(EBMaster);
+USE_STRING_ID(EInit);
+USE_STRING_ID(Event);
+USE_STRING_ID(IND);
+USE_STRING_ID(INIT);
+USE_STRING_ID(INITO);
+USE_STRING_ID(QI);
+USE_STRING_ID(QO);
+USE_STRING_ID(SlaveUpdateInterval);
+USE_STRING_ID(STATUS);
+USE_STRING_ID(UDINT);
+USE_STRING_ID(UINT);
+USE_STRING_ID(WSTRING);
+
 
 #include "criticalregion.h"
 #include "resource.h"
@@ -27,22 +46,22 @@
 #include "forte_array_fixed.h"
 #include "forte_array_variable.h"
 
-DEFINE_FIRMWARE_FB(FORTE_EBMaster, g_nStringIdEBMaster)
+DEFINE_FIRMWARE_FB(FORTE_EBMaster, STRID(EBMaster))
 
-const CStringDictionary::TStringId FORTE_EBMaster::scmDataInputNames[] = {g_nStringIdQI, g_nStringIdBusInterface, g_nStringIdBusSelectPin, g_nStringIdBusInitSpeed, g_nStringIdBusLoopSpeed, g_nStringIdSlaveUpdateInterval};
-const CStringDictionary::TStringId FORTE_EBMaster::scmDataInputTypeIds[] = {g_nStringIdBOOL, g_nStringIdUINT, g_nStringIdUINT, g_nStringIdUDINT, g_nStringIdUDINT, g_nStringIdUINT};
-const CStringDictionary::TStringId FORTE_EBMaster::scmDataOutputNames[] = {g_nStringIdQO, g_nStringIdSTATUS};
-const CStringDictionary::TStringId FORTE_EBMaster::scmDataOutputTypeIds[] = {g_nStringIdBOOL, g_nStringIdWSTRING};
+const CStringDictionary::TStringId FORTE_EBMaster::scmDataInputNames[] = {STRID(QI), STRID(BusInterface), STRID(BusSelectPin), STRID(BusInitSpeed), STRID(BusLoopSpeed), STRID(SlaveUpdateInterval)};
+const CStringDictionary::TStringId FORTE_EBMaster::scmDataInputTypeIds[] = {STRID(BOOL), STRID(UINT), STRID(UINT), STRID(UDINT), STRID(UDINT), STRID(UINT)};
+const CStringDictionary::TStringId FORTE_EBMaster::scmDataOutputNames[] = {STRID(QO), STRID(STATUS)};
+const CStringDictionary::TStringId FORTE_EBMaster::scmDataOutputTypeIds[] = {STRID(BOOL), STRID(WSTRING)};
 const TDataIOID FORTE_EBMaster::scmEIWith[] = {0, 3, 5, 4, 1, 2, scmWithListDelimiter};
 const TForteInt16 FORTE_EBMaster::scmEIWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_EBMaster::scmEventInputNames[] = {g_nStringIdINIT};
-const CStringDictionary::TStringId FORTE_EBMaster::scmEventInputTypeIds[] = {g_nStringIdEInit};
+const CStringDictionary::TStringId FORTE_EBMaster::scmEventInputNames[] = {STRID(INIT)};
+const CStringDictionary::TStringId FORTE_EBMaster::scmEventInputTypeIds[] = {STRID(EInit)};
 const TDataIOID FORTE_EBMaster::scmEOWith[] = {0, 1, scmWithListDelimiter, 0, 1, scmWithListDelimiter};
 const TForteInt16 FORTE_EBMaster::scmEOWithIndexes[] = {0, 3};
-const CStringDictionary::TStringId FORTE_EBMaster::scmEventOutputNames[] = {g_nStringIdINITO, g_nStringIdIND};
-const CStringDictionary::TStringId FORTE_EBMaster::scmEventOutputTypeIds[] = {g_nStringIdEInit, g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_EBMaster::scmEventOutputNames[] = {STRID(INITO), STRID(IND)};
+const CStringDictionary::TStringId FORTE_EBMaster::scmEventOutputTypeIds[] = {STRID(EInit), STRID(Event)};
 const SAdapterInstanceDef FORTE_EBMaster::scmAdapterInstances[] = {
-  {g_nStringIdEBBusAdapter, g_nStringIdBusAdapterOut, true}
+  {STRID(EBBusAdapter), STRID(BusAdapterOut), true}
 };
 const SFBInterfaceSpec FORTE_EBMaster::scmFBInterfaceSpec = {
   1, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,
@@ -63,7 +82,7 @@ FORTE_EBMaster::FORTE_EBMaster(const CStringDictionary::TStringId paInstanceName
     var_SlaveUpdateInterval(25_UINT),
     var_QO(0_BOOL),
     var_STATUS(u""_WSTRING),
-    var_BusAdapterOut(g_nStringIdBusAdapterOut, *this, true),
+    var_BusAdapterOut(STRID(BusAdapterOut), *this, true),
     var_conn_QO(var_QO),
     var_conn_STATUS(var_STATUS),
     conn_INITO(this, 0),

@@ -13,9 +13,16 @@
  *******************************************************************************/
 
 #include "F_USINT_TO_BCD_BYTE_fbt.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "F_USINT_TO_BCD_BYTE_fbt_gen.cpp"
-#endif
+
+USE_STRING_ID(BYTE);
+USE_STRING_ID(CNF);
+USE_STRING_ID(Event);
+USE_STRING_ID(F_USINT_TO_BCD_BYTE);
+USE_STRING_ID(IN);
+USE_STRING_ID(OUT);
+USE_STRING_ID(REQ);
+USE_STRING_ID(USINT);
+
 
 #include "criticalregion.h"
 #include "resource.h"
@@ -27,25 +34,25 @@
 #include "forte_array_fixed.h"
 #include "forte_array_variable.h"
 
-DEFINE_FIRMWARE_FB(FORTE_F_USINT_TO_BCD_BYTE, g_nStringIdF_USINT_TO_BCD_BYTE)
+DEFINE_FIRMWARE_FB(FORTE_F_USINT_TO_BCD_BYTE, STRID(F_USINT_TO_BCD_BYTE))
 
-const CStringDictionary::TStringId FORTE_F_USINT_TO_BCD_BYTE::scmDataInputNames[] = {g_nStringIdIN};
+const CStringDictionary::TStringId FORTE_F_USINT_TO_BCD_BYTE::scmDataInputNames[] = {STRID(IN)};
 
-const CStringDictionary::TStringId FORTE_F_USINT_TO_BCD_BYTE::scmDataInputTypeIds[] = {g_nStringIdUSINT};
+const CStringDictionary::TStringId FORTE_F_USINT_TO_BCD_BYTE::scmDataInputTypeIds[] = {STRID(USINT)};
 
-const CStringDictionary::TStringId FORTE_F_USINT_TO_BCD_BYTE::scmDataOutputNames[] = {g_nStringIdOUT};
+const CStringDictionary::TStringId FORTE_F_USINT_TO_BCD_BYTE::scmDataOutputNames[] = {STRID(OUT)};
 
-const CStringDictionary::TStringId FORTE_F_USINT_TO_BCD_BYTE::scmDataOutputTypeIds[] = {g_nStringIdBYTE};
+const CStringDictionary::TStringId FORTE_F_USINT_TO_BCD_BYTE::scmDataOutputTypeIds[] = {STRID(BYTE)};
 
 const TDataIOID FORTE_F_USINT_TO_BCD_BYTE::scmEIWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_F_USINT_TO_BCD_BYTE::scmEIWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_F_USINT_TO_BCD_BYTE::scmEventInputNames[] = {g_nStringIdREQ};
-const CStringDictionary::TStringId FORTE_F_USINT_TO_BCD_BYTE::scmEventInputTypeIds[] = {g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_F_USINT_TO_BCD_BYTE::scmEventInputNames[] = {STRID(REQ)};
+const CStringDictionary::TStringId FORTE_F_USINT_TO_BCD_BYTE::scmEventInputTypeIds[] = {STRID(Event)};
 
 const TDataIOID FORTE_F_USINT_TO_BCD_BYTE::scmEOWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_F_USINT_TO_BCD_BYTE::scmEOWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_F_USINT_TO_BCD_BYTE::scmEventOutputNames[] = {g_nStringIdCNF};
-const CStringDictionary::TStringId FORTE_F_USINT_TO_BCD_BYTE::scmEventOutputTypeIds[] = {g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_F_USINT_TO_BCD_BYTE::scmEventOutputNames[] = {STRID(CNF)};
+const CStringDictionary::TStringId FORTE_F_USINT_TO_BCD_BYTE::scmEventOutputTypeIds[] = {STRID(Event)};
 
 
 const SFBInterfaceSpec FORTE_F_USINT_TO_BCD_BYTE::scmFBInterfaceSpec = {

@@ -12,28 +12,33 @@
  *******************************************************************************/
 
 #include "GEN_FORTE_F_MOVE_fbt.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "GEN_FORTE_F_MOVE_fbt_gen.cpp"
-#endif
+
+USE_STRING_ID(CNF);
+USE_STRING_ID(Event);
+USE_STRING_ID(GEN_F_MOVE);
+USE_STRING_ID(IN);
+USE_STRING_ID(OUT);
+USE_STRING_ID(REQ);
+
 
 #include "criticalregion.h"
 #include "resource.h"
 
-DEFINE_GENERIC_FIRMWARE_FB(GEN_FORTE_F_MOVE, g_nStringIdGEN_F_MOVE)
+DEFINE_GENERIC_FIRMWARE_FB(GEN_FORTE_F_MOVE, STRID(GEN_F_MOVE))
 
-const CStringDictionary::TStringId GEN_FORTE_F_MOVE::scmDataInputNames[] = {g_nStringIdIN};
+const CStringDictionary::TStringId GEN_FORTE_F_MOVE::scmDataInputNames[] = {STRID(IN)};
 
-const CStringDictionary::TStringId GEN_FORTE_F_MOVE::scmDataOutputNames[] = {g_nStringIdOUT};
+const CStringDictionary::TStringId GEN_FORTE_F_MOVE::scmDataOutputNames[] = {STRID(OUT)};
 
 const TDataIOID GEN_FORTE_F_MOVE::scmEIWith[] = {0, scmWithListDelimiter};
 const TForteInt16 GEN_FORTE_F_MOVE::scmEIWithIndexes[] = {0};
-const CStringDictionary::TStringId GEN_FORTE_F_MOVE::scmEventInputNames[] = {g_nStringIdREQ};
-const CStringDictionary::TStringId GEN_FORTE_F_MOVE::scmEventInputTypeIds[] = {g_nStringIdEvent};
+const CStringDictionary::TStringId GEN_FORTE_F_MOVE::scmEventInputNames[] = {STRID(REQ)};
+const CStringDictionary::TStringId GEN_FORTE_F_MOVE::scmEventInputTypeIds[] = {STRID(Event)};
 
 const TDataIOID GEN_FORTE_F_MOVE::scmEOWith[] = {0, scmWithListDelimiter};
 const TForteInt16 GEN_FORTE_F_MOVE::scmEOWithIndexes[] = {0};
-const CStringDictionary::TStringId GEN_FORTE_F_MOVE::scmEventOutputNames[] = {g_nStringIdCNF};
-const CStringDictionary::TStringId GEN_FORTE_F_MOVE::scmEventOutputTypeIds[] = {g_nStringIdEvent};
+const CStringDictionary::TStringId GEN_FORTE_F_MOVE::scmEventOutputNames[] = {STRID(CNF)};
+const CStringDictionary::TStringId GEN_FORTE_F_MOVE::scmEventOutputTypeIds[] = {STRID(Event)};
 
 
 GEN_FORTE_F_MOVE::GEN_FORTE_F_MOVE(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :

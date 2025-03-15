@@ -10,9 +10,13 @@
  *************************************************************************/
 
 #include "E_TRIG_fbt.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "E_TRIG_fbt_gen.cpp"
-#endif
+
+USE_STRING_ID(CNF);
+USE_STRING_ID(E_TRIG);
+USE_STRING_ID(EVENTTYPE);
+USE_STRING_ID(REQ);
+USE_STRING_ID(STRING);
+
 
 #include "iec61131_functions.h"
 #include "forte_array_common.h"
@@ -22,15 +26,15 @@
 
 #include "resource.h"
 
-DEFINE_FIRMWARE_FB(FORTE_E_TRIG, g_nStringIdE_TRIG)
+DEFINE_FIRMWARE_FB(FORTE_E_TRIG, STRID(E_TRIG))
 
-const CStringDictionary::TStringId FORTE_E_TRIG::scmDataInputNames[] = {g_nStringIdEVENTTYPE};
-const CStringDictionary::TStringId FORTE_E_TRIG::scmDataInputTypeIds[] = {g_nStringIdSTRING};
+const CStringDictionary::TStringId FORTE_E_TRIG::scmDataInputNames[] = {STRID(EVENTTYPE)};
+const CStringDictionary::TStringId FORTE_E_TRIG::scmDataInputTypeIds[] = {STRID(STRING)};
 const TDataIOID FORTE_E_TRIG::scmEIWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_E_TRIG::scmEIWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_E_TRIG::scmEventInputNames[] = {g_nStringIdREQ};
+const CStringDictionary::TStringId FORTE_E_TRIG::scmEventInputNames[] = {STRID(REQ)};
 const TForteInt16 FORTE_E_TRIG::scmEOWithIndexes[] = {-1};
-const CStringDictionary::TStringId FORTE_E_TRIG::scmEventOutputNames[] = {g_nStringIdCNF};
+const CStringDictionary::TStringId FORTE_E_TRIG::scmEventOutputNames[] = {STRID(CNF)};
 const SFBInterfaceSpec FORTE_E_TRIG::scmFBInterfaceSpec = {
   1, scmEventInputNames, nullptr, scmEIWith, scmEIWithIndexes,
   1, scmEventOutputNames, nullptr, nullptr, scmEOWithIndexes,

@@ -18,9 +18,19 @@
  *************************************************************************/
 
 #include "ZephyrIO_fbt.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "ZephyrIO_fbt_gen.cpp"
-#endif
+
+USE_STRING_ID(BOOL);
+USE_STRING_ID(EInit);
+USE_STRING_ID(INIT);
+USE_STRING_ID(INITO);
+USE_STRING_ID(QI);
+USE_STRING_ID(QO);
+USE_STRING_ID(STATUS);
+USE_STRING_ID(STRING);
+USE_STRING_ID(TIME);
+USE_STRING_ID(UpdateInterval);
+USE_STRING_ID(ZephyrIO);
+
 
 #include "forte_time.h"
 #include "iec61131_functions.h"
@@ -34,20 +44,20 @@
 #include "handler/IODeviceController.h"
 #pragma endregion includes
 
-DEFINE_FIRMWARE_FB(FORTE_ZephyrIO, g_nStringIdZephyrIO)
+DEFINE_FIRMWARE_FB(FORTE_ZephyrIO, STRID(ZephyrIO))
 
-const CStringDictionary::TStringId FORTE_ZephyrIO::scmDataInputNames[] = {g_nStringIdQI, g_nStringIdUpdateInterval};
-const CStringDictionary::TStringId FORTE_ZephyrIO::scmDataInputTypeIds[] = {g_nStringIdBOOL, g_nStringIdTIME};
-const CStringDictionary::TStringId FORTE_ZephyrIO::scmDataOutputNames[] = {g_nStringIdQO, g_nStringIdSTATUS};
-const CStringDictionary::TStringId FORTE_ZephyrIO::scmDataOutputTypeIds[] = {g_nStringIdBOOL, g_nStringIdSTRING};
+const CStringDictionary::TStringId FORTE_ZephyrIO::scmDataInputNames[] = {STRID(QI), STRID(UpdateInterval)};
+const CStringDictionary::TStringId FORTE_ZephyrIO::scmDataInputTypeIds[] = {STRID(BOOL), STRID(TIME)};
+const CStringDictionary::TStringId FORTE_ZephyrIO::scmDataOutputNames[] = {STRID(QO), STRID(STATUS)};
+const CStringDictionary::TStringId FORTE_ZephyrIO::scmDataOutputTypeIds[] = {STRID(BOOL), STRID(STRING)};
 const TDataIOID FORTE_ZephyrIO::scmEIWith[] = {0, 1, scmWithListDelimiter};
 const TForteInt16 FORTE_ZephyrIO::scmEIWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_ZephyrIO::scmEventInputNames[] = {g_nStringIdINIT};
-const CStringDictionary::TStringId FORTE_ZephyrIO::scmEventInputTypeIds[] = {g_nStringIdEInit};
+const CStringDictionary::TStringId FORTE_ZephyrIO::scmEventInputNames[] = {STRID(INIT)};
+const CStringDictionary::TStringId FORTE_ZephyrIO::scmEventInputTypeIds[] = {STRID(EInit)};
 const TDataIOID FORTE_ZephyrIO::scmEOWith[] = {0, 1, scmWithListDelimiter};
 const TForteInt16 FORTE_ZephyrIO::scmEOWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_ZephyrIO::scmEventOutputNames[] = {g_nStringIdINITO};
-const CStringDictionary::TStringId FORTE_ZephyrIO::scmEventOutputTypeIds[] = {g_nStringIdEInit};
+const CStringDictionary::TStringId FORTE_ZephyrIO::scmEventOutputNames[] = {STRID(INITO)};
+const CStringDictionary::TStringId FORTE_ZephyrIO::scmEventOutputTypeIds[] = {STRID(EInit)};
 const SFBInterfaceSpec FORTE_ZephyrIO::scmFBInterfaceSpec = {
   1, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,
   1, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes,

@@ -16,29 +16,50 @@
 #include <extevhandlerhelper.h>
 
 #include "EXECUTE_ACTION_CLIENT.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "EXECUTE_ACTION_CLIENT_gen.cpp"
-#endif
 
-DEFINE_FIRMWARE_FB(FORTE_EXECUTE_ACTION_CLIENT, g_nStringIdEXECUTE_ACTION_CLIENT)
+USE_STRING_ID(ACTIONMSGNAME);
+USE_STRING_ID(ACTIONNAMESPACE);
+USE_STRING_ID(ACTIONSTATUS);
+USE_STRING_ID(BOOL);
+USE_STRING_ID(CNF);
+USE_STRING_ID(COMMAND);
+USE_STRING_ID(DINT);
+USE_STRING_ID(EInit);
+USE_STRING_ID(Event);
+USE_STRING_ID(EXECUTE_ACTION_CLIENT);
+USE_STRING_ID(FBSTATUS);
+USE_STRING_ID(ID);
+USE_STRING_ID(ID1);
+USE_STRING_ID(ID2);
+USE_STRING_ID(INIT);
+USE_STRING_ID(INITO);
+USE_STRING_ID(QI);
+USE_STRING_ID(QO);
+USE_STRING_ID(REQ);
+USE_STRING_ID(RESULT);
+USE_STRING_ID(STATE);
+USE_STRING_ID(STRING);
 
-const CStringDictionary::TStringId FORTE_EXECUTE_ACTION_CLIENT::scmDataInputNames[] = { g_nStringIdQI, g_nStringIdACTIONNAMESPACE, g_nStringIdACTIONMSGNAME, g_nStringIdCOMMAND, g_nStringIdID1, g_nStringIdID2 };
 
-const CStringDictionary::TStringId FORTE_EXECUTE_ACTION_CLIENT::scmDataInputTypeIds[] = { g_nStringIdBOOL, g_nStringIdSTRING, g_nStringIdSTRING, g_nStringIdSTRING, g_nStringIdDINT, g_nStringIdDINT };
+DEFINE_FIRMWARE_FB(FORTE_EXECUTE_ACTION_CLIENT, STRID(EXECUTE_ACTION_CLIENT))
 
-const CStringDictionary::TStringId FORTE_EXECUTE_ACTION_CLIENT::scmDataOutputNames[] = { g_nStringIdQO, g_nStringIdFBSTATUS, g_nStringIdACTIONSTATUS, g_nStringIdRESULT, g_nStringIdID, g_nStringIdSTATE };
+const CStringDictionary::TStringId FORTE_EXECUTE_ACTION_CLIENT::scmDataInputNames[] = { STRID(QI), STRID(ACTIONNAMESPACE), STRID(ACTIONMSGNAME), STRID(COMMAND), STRID(ID1), STRID(ID2) };
 
-const CStringDictionary::TStringId FORTE_EXECUTE_ACTION_CLIENT::scmDataOutputTypeIds[] = { g_nStringIdBOOL, g_nStringIdSTRING, g_nStringIdSTRING, g_nStringIdSTRING, g_nStringIdDINT, g_nStringIdSTRING };
+const CStringDictionary::TStringId FORTE_EXECUTE_ACTION_CLIENT::scmDataInputTypeIds[] = { STRID(BOOL), STRID(STRING), STRID(STRING), STRID(STRING), STRID(DINT), STRID(DINT) };
+
+const CStringDictionary::TStringId FORTE_EXECUTE_ACTION_CLIENT::scmDataOutputNames[] = { STRID(QO), STRID(FBSTATUS), STRID(ACTIONSTATUS), STRID(RESULT), STRID(ID), STRID(STATE) };
+
+const CStringDictionary::TStringId FORTE_EXECUTE_ACTION_CLIENT::scmDataOutputTypeIds[] = { STRID(BOOL), STRID(STRING), STRID(STRING), STRID(STRING), STRID(DINT), STRID(STRING) };
 
 const TForteInt16 FORTE_EXECUTE_ACTION_CLIENT::scmEIWithIndexes[] = { 0, 4 };
 const TDataIOID FORTE_EXECUTE_ACTION_CLIENT::scmEIWith[] = { 0, 1, 2, scmWithListDelimiter, 0, 3, 4, 5, scmWithListDelimiter };
-const CStringDictionary::TStringId FORTE_EXECUTE_ACTION_CLIENT::scmEventInputNames[] = { g_nStringIdINIT, g_nStringIdREQ };
-const CStringDictionary::TStringId FORTE_EXECUTE_ACTION_CLIENT::scmEventInputTypeIds[] = {g_nStringIdEInit, g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_EXECUTE_ACTION_CLIENT::scmEventInputNames[] = { STRID(INIT), STRID(REQ) };
+const CStringDictionary::TStringId FORTE_EXECUTE_ACTION_CLIENT::scmEventInputTypeIds[] = {STRID(EInit), STRID(Event)};
 
 const TDataIOID FORTE_EXECUTE_ACTION_CLIENT::scmEOWith[] = { 0, 1, scmWithListDelimiter, 0, 1, 2, 4, 3, scmWithListDelimiter, 5, scmWithListDelimiter };
 const TForteInt16 FORTE_EXECUTE_ACTION_CLIENT::scmEOWithIndexes[] = { 0, 3, 9 };
-const CStringDictionary::TStringId FORTE_EXECUTE_ACTION_CLIENT::scmEventOutputNames[] = { g_nStringIdINITO, g_nStringIdCNF };
-const CStringDictionary::TStringId FORTE_EXECUTE_ACTION_CLIENT::scmEventOutputTypeIds[] = {g_nStringIdEvent, g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_EXECUTE_ACTION_CLIENT::scmEventOutputNames[] = { STRID(INITO), STRID(CNF) };
+const CStringDictionary::TStringId FORTE_EXECUTE_ACTION_CLIENT::scmEventOutputTypeIds[] = {STRID(Event), STRID(Event)};
 
 const SFBInterfaceSpec FORTE_EXECUTE_ACTION_CLIENT::scmFBInterfaceSpec = { 2, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes, 2, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes, 6, scmDataInputNames, scmDataInputTypeIds, 6, scmDataOutputNames, scmDataOutputTypeIds, 0, 0 };
 

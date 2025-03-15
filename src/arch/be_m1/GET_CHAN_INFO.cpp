@@ -15,25 +15,25 @@
 #include <mio.h>
 #include <mio_e.h>
 
-DEFINE_FIRMWARE_FB(FORTE_GET_CHAN_INFO, g_nStringIdGET_CHAN_INFO)
+DEFINE_FIRMWARE_FB(FORTE_GET_CHAN_INFO, STRID(GET_CHAN_INFO))
 
-const CStringDictionary::TStringId FORTE_GET_CHAN_INFO::scmDataInputNames[] = { g_nStringIdSYMB_NAME };
+const CStringDictionary::TStringId FORTE_GET_CHAN_INFO::scmDataInputNames[] = { STRID(SYMB_NAME) };
 
-const CStringDictionary::TStringId FORTE_GET_CHAN_INFO::scmDataInputTypeIds[] = { g_nStringIdSTRING };
+const CStringDictionary::TStringId FORTE_GET_CHAN_INFO::scmDataInputTypeIds[] = { STRID(STRING) };
 
-const CStringDictionary::TStringId FORTE_GET_CHAN_INFO::scmDataOutputNames[] = { g_nStringIdRET_CODE, g_nStringIdMOD_NB, g_nStringIdCHAN_NB };
+const CStringDictionary::TStringId FORTE_GET_CHAN_INFO::scmDataOutputNames[] = { STRID(RET_CODE), STRID(MOD_NB), STRID(CHAN_NB) };
 
-const CStringDictionary::TStringId FORTE_GET_CHAN_INFO::scmDataOutputTypeIds[] = { g_nStringIdINT, g_nStringIdINT, g_nStringIdINT };
+const CStringDictionary::TStringId FORTE_GET_CHAN_INFO::scmDataOutputTypeIds[] = { STRID(INT), STRID(INT), STRID(INT) };
 
 const TForteInt16 FORTE_GET_CHAN_INFO::scmEIWithIndexes[] = { 0 };
 const TDataIOID FORTE_GET_CHAN_INFO::scmEIWith[] = { 0, scmWithListDelimiter };
-const CStringDictionary::TStringId FORTE_GET_CHAN_INFO::scmEventInputNames[] = { g_nStringIdINIT };
-const CStringDictionary::TStringId FORTE_GET_CHAN_INFO::scmEventInputTypeIds[] = {g_nStringIdEInit};
+const CStringDictionary::TStringId FORTE_GET_CHAN_INFO::scmEventInputNames[] = { STRID(INIT) };
+const CStringDictionary::TStringId FORTE_GET_CHAN_INFO::scmEventInputTypeIds[] = {STRID(EInit)};
 
 const TDataIOID FORTE_GET_CHAN_INFO::scmEOWith[] = { 0, 1, 2, scmWithListDelimiter };
 const TForteInt16 FORTE_GET_CHAN_INFO::scmEOWithIndexes[] = { 0, -1 };
-const CStringDictionary::TStringId FORTE_GET_CHAN_INFO::scmEventOutputNames[] = { g_nStringIdINITO };
-const CStringDictionary::TStringId FORTE_GET_CHAN_INFO::scmEventOutputTypeIds[] = {g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_GET_CHAN_INFO::scmEventOutputNames[] = { STRID(INITO) };
+const CStringDictionary::TStringId FORTE_GET_CHAN_INFO::scmEventOutputTypeIds[] = {STRID(Event)};
 
 const SFBInterfaceSpec FORTE_GET_CHAN_INFO::scmFBInterfaceSpec = { 1, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes, 1, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes, 1, scmDataInputNames, scmDataInputTypeIds, 3, scmDataOutputNames, scmDataOutputTypeIds, 0, 0 };
 

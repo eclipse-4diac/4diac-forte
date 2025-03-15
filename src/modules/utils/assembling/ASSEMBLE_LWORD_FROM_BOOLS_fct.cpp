@@ -18,9 +18,79 @@
  *************************************************************************/
 
 #include "ASSEMBLE_LWORD_FROM_BOOLS_fct.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "ASSEMBLE_LWORD_FROM_BOOLS_fct_gen.cpp"
-#endif
+
+USE_STRING_ID();
+USE_STRING_ID(ASSEMBLE_LWORD_FROM_BOOLS);
+USE_STRING_ID(BIT_00);
+USE_STRING_ID(BIT_01);
+USE_STRING_ID(BIT_02);
+USE_STRING_ID(BIT_03);
+USE_STRING_ID(BIT_04);
+USE_STRING_ID(BIT_05);
+USE_STRING_ID(BIT_06);
+USE_STRING_ID(BIT_07);
+USE_STRING_ID(BIT_08);
+USE_STRING_ID(BIT_09);
+USE_STRING_ID(BIT_10);
+USE_STRING_ID(BIT_11);
+USE_STRING_ID(BIT_12);
+USE_STRING_ID(BIT_13);
+USE_STRING_ID(BIT_14);
+USE_STRING_ID(BIT_15);
+USE_STRING_ID(BIT_16);
+USE_STRING_ID(BIT_17);
+USE_STRING_ID(BIT_18);
+USE_STRING_ID(BIT_19);
+USE_STRING_ID(BIT_20);
+USE_STRING_ID(BIT_21);
+USE_STRING_ID(BIT_22);
+USE_STRING_ID(BIT_23);
+USE_STRING_ID(BIT_24);
+USE_STRING_ID(BIT_25);
+USE_STRING_ID(BIT_26);
+USE_STRING_ID(BIT_27);
+USE_STRING_ID(BIT_28);
+USE_STRING_ID(BIT_29);
+USE_STRING_ID(BIT_30);
+USE_STRING_ID(BIT_31);
+USE_STRING_ID(BIT_32);
+USE_STRING_ID(BIT_33);
+USE_STRING_ID(BIT_34);
+USE_STRING_ID(BIT_35);
+USE_STRING_ID(BIT_36);
+USE_STRING_ID(BIT_37);
+USE_STRING_ID(BIT_38);
+USE_STRING_ID(BIT_39);
+USE_STRING_ID(BIT_40);
+USE_STRING_ID(BIT_41);
+USE_STRING_ID(BIT_42);
+USE_STRING_ID(BIT_43);
+USE_STRING_ID(BIT_44);
+USE_STRING_ID(BIT_45);
+USE_STRING_ID(BIT_46);
+USE_STRING_ID(BIT_47);
+USE_STRING_ID(BIT_48);
+USE_STRING_ID(BIT_49);
+USE_STRING_ID(BIT_50);
+USE_STRING_ID(BIT_51);
+USE_STRING_ID(BIT_52);
+USE_STRING_ID(BIT_53);
+USE_STRING_ID(BIT_54);
+USE_STRING_ID(BIT_55);
+USE_STRING_ID(BIT_56);
+USE_STRING_ID(BIT_57);
+USE_STRING_ID(BIT_58);
+USE_STRING_ID(BIT_59);
+USE_STRING_ID(BIT_60);
+USE_STRING_ID(BIT_61);
+USE_STRING_ID(BIT_62);
+USE_STRING_ID(BIT_63);
+USE_STRING_ID(BOOL);
+USE_STRING_ID(CNF);
+USE_STRING_ID(Event);
+USE_STRING_ID(LWORD);
+USE_STRING_ID(REQ);
+
 
 #include "criticalregion.h"
 #include "resource.h"
@@ -33,20 +103,20 @@
 #include "forte_array_variable.h"
 #include "ASSEMBLE_LWORD_FROM_BOOLS_fct.h"
 
-DEFINE_FIRMWARE_FB(FORTE_ASSEMBLE_LWORD_FROM_BOOLS, g_nStringIdASSEMBLE_LWORD_FROM_BOOLS)
+DEFINE_FIRMWARE_FB(FORTE_ASSEMBLE_LWORD_FROM_BOOLS, STRID(ASSEMBLE_LWORD_FROM_BOOLS))
 
-const CStringDictionary::TStringId FORTE_ASSEMBLE_LWORD_FROM_BOOLS::scmDataInputNames[] = {g_nStringIdBIT_00, g_nStringIdBIT_01, g_nStringIdBIT_02, g_nStringIdBIT_03, g_nStringIdBIT_04, g_nStringIdBIT_05, g_nStringIdBIT_06, g_nStringIdBIT_07, g_nStringIdBIT_08, g_nStringIdBIT_09, g_nStringIdBIT_10, g_nStringIdBIT_11, g_nStringIdBIT_12, g_nStringIdBIT_13, g_nStringIdBIT_14, g_nStringIdBIT_15, g_nStringIdBIT_16, g_nStringIdBIT_17, g_nStringIdBIT_18, g_nStringIdBIT_19, g_nStringIdBIT_20, g_nStringIdBIT_21, g_nStringIdBIT_22, g_nStringIdBIT_23, g_nStringIdBIT_24, g_nStringIdBIT_25, g_nStringIdBIT_26, g_nStringIdBIT_27, g_nStringIdBIT_28, g_nStringIdBIT_29, g_nStringIdBIT_30, g_nStringIdBIT_31, g_nStringIdBIT_32, g_nStringIdBIT_33, g_nStringIdBIT_34, g_nStringIdBIT_35, g_nStringIdBIT_36, g_nStringIdBIT_37, g_nStringIdBIT_38, g_nStringIdBIT_39, g_nStringIdBIT_40, g_nStringIdBIT_41, g_nStringIdBIT_42, g_nStringIdBIT_43, g_nStringIdBIT_44, g_nStringIdBIT_45, g_nStringIdBIT_46, g_nStringIdBIT_47, g_nStringIdBIT_48, g_nStringIdBIT_49, g_nStringIdBIT_50, g_nStringIdBIT_51, g_nStringIdBIT_52, g_nStringIdBIT_53, g_nStringIdBIT_54, g_nStringIdBIT_55, g_nStringIdBIT_56, g_nStringIdBIT_57, g_nStringIdBIT_58, g_nStringIdBIT_59, g_nStringIdBIT_60, g_nStringIdBIT_61, g_nStringIdBIT_62, g_nStringIdBIT_63};
-const CStringDictionary::TStringId FORTE_ASSEMBLE_LWORD_FROM_BOOLS::scmDataInputTypeIds[] = {g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdBOOL};
-const CStringDictionary::TStringId FORTE_ASSEMBLE_LWORD_FROM_BOOLS::scmDataOutputNames[] = {g_nStringId};
-const CStringDictionary::TStringId FORTE_ASSEMBLE_LWORD_FROM_BOOLS::scmDataOutputTypeIds[] = {g_nStringIdLWORD};
+const CStringDictionary::TStringId FORTE_ASSEMBLE_LWORD_FROM_BOOLS::scmDataInputNames[] = {STRID(BIT_00), STRID(BIT_01), STRID(BIT_02), STRID(BIT_03), STRID(BIT_04), STRID(BIT_05), STRID(BIT_06), STRID(BIT_07), STRID(BIT_08), STRID(BIT_09), STRID(BIT_10), STRID(BIT_11), STRID(BIT_12), STRID(BIT_13), STRID(BIT_14), STRID(BIT_15), STRID(BIT_16), STRID(BIT_17), STRID(BIT_18), STRID(BIT_19), STRID(BIT_20), STRID(BIT_21), STRID(BIT_22), STRID(BIT_23), STRID(BIT_24), STRID(BIT_25), STRID(BIT_26), STRID(BIT_27), STRID(BIT_28), STRID(BIT_29), STRID(BIT_30), STRID(BIT_31), STRID(BIT_32), STRID(BIT_33), STRID(BIT_34), STRID(BIT_35), STRID(BIT_36), STRID(BIT_37), STRID(BIT_38), STRID(BIT_39), STRID(BIT_40), STRID(BIT_41), STRID(BIT_42), STRID(BIT_43), STRID(BIT_44), STRID(BIT_45), STRID(BIT_46), STRID(BIT_47), STRID(BIT_48), STRID(BIT_49), STRID(BIT_50), STRID(BIT_51), STRID(BIT_52), STRID(BIT_53), STRID(BIT_54), STRID(BIT_55), STRID(BIT_56), STRID(BIT_57), STRID(BIT_58), STRID(BIT_59), STRID(BIT_60), STRID(BIT_61), STRID(BIT_62), STRID(BIT_63)};
+const CStringDictionary::TStringId FORTE_ASSEMBLE_LWORD_FROM_BOOLS::scmDataInputTypeIds[] = {STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL)};
+const CStringDictionary::TStringId FORTE_ASSEMBLE_LWORD_FROM_BOOLS::scmDataOutputNames[] = {STRID()};
+const CStringDictionary::TStringId FORTE_ASSEMBLE_LWORD_FROM_BOOLS::scmDataOutputTypeIds[] = {STRID(LWORD)};
 const TDataIOID FORTE_ASSEMBLE_LWORD_FROM_BOOLS::scmEIWith[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, scmWithListDelimiter};
 const TForteInt16 FORTE_ASSEMBLE_LWORD_FROM_BOOLS::scmEIWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_ASSEMBLE_LWORD_FROM_BOOLS::scmEventInputNames[] = {g_nStringIdREQ};
-const CStringDictionary::TStringId FORTE_ASSEMBLE_LWORD_FROM_BOOLS::scmEventInputTypeIds[] = {g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_ASSEMBLE_LWORD_FROM_BOOLS::scmEventInputNames[] = {STRID(REQ)};
+const CStringDictionary::TStringId FORTE_ASSEMBLE_LWORD_FROM_BOOLS::scmEventInputTypeIds[] = {STRID(Event)};
 const TDataIOID FORTE_ASSEMBLE_LWORD_FROM_BOOLS::scmEOWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_ASSEMBLE_LWORD_FROM_BOOLS::scmEOWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_ASSEMBLE_LWORD_FROM_BOOLS::scmEventOutputNames[] = {g_nStringIdCNF};
-const CStringDictionary::TStringId FORTE_ASSEMBLE_LWORD_FROM_BOOLS::scmEventOutputTypeIds[] = {g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_ASSEMBLE_LWORD_FROM_BOOLS::scmEventOutputNames[] = {STRID(CNF)};
+const CStringDictionary::TStringId FORTE_ASSEMBLE_LWORD_FROM_BOOLS::scmEventOutputTypeIds[] = {STRID(Event)};
 const SFBInterfaceSpec FORTE_ASSEMBLE_LWORD_FROM_BOOLS::scmFBInterfaceSpec = {
   1, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,
   1, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes,

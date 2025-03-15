@@ -16,21 +16,25 @@
  *    Martin Jobst - add generic readInputData and writeOutputData
  *******************************************************************************/
 #include "GEN_E_MUX_fbt.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "GEN_E_MUX_fbt_gen.cpp"
-#endif
+
+USE_STRING_ID(EO);
+USE_STRING_ID(Event);
+USE_STRING_ID(GEN_E_MUX);
+USE_STRING_ID(K);
+USE_STRING_ID(UINT);
+
 #include <stdio.h>
 
 #include "resource.h"
 #include "criticalregion.h"
 
-DEFINE_GENERIC_FIRMWARE_FB(GEN_E_MUX, g_nStringIdGEN_E_MUX);
+DEFINE_GENERIC_FIRMWARE_FB(GEN_E_MUX, STRID(GEN_E_MUX));
 
-const CStringDictionary::TStringId GEN_E_MUX::scmDataOutputNames[] = { g_nStringIdK };
-const CStringDictionary::TStringId GEN_E_MUX::scmDODataTypeIds[] = { g_nStringIdUINT };
+const CStringDictionary::TStringId GEN_E_MUX::scmDataOutputNames[] = { STRID(K) };
+const CStringDictionary::TStringId GEN_E_MUX::scmDODataTypeIds[] = { STRID(UINT) };
 
-const CStringDictionary::TStringId GEN_E_MUX::scmEventOutputNames[] = { g_nStringIdEO };
-const CStringDictionary::TStringId GEN_E_MUX::scmEventOutputTypeIds[] = { g_nStringIdEvent };
+const CStringDictionary::TStringId GEN_E_MUX::scmEventOutputNames[] = { STRID(EO) };
+const CStringDictionary::TStringId GEN_E_MUX::scmEventOutputTypeIds[] = { STRID(Event) };
 
 GEN_E_MUX::GEN_E_MUX(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CGenFunctionBlock<CFunctionBlock>(paContainer, paInstanceNameId) {

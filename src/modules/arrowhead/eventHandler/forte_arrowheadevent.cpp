@@ -11,16 +11,23 @@
  *******************************************************************************/
 
 #include "forte_arrowheadevent.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "forte_arrowheadevent_gen.cpp"
-#endif
 
-DEFINE_FIRMWARE_DATATYPE(ArrowheadEvent, g_nStringIdArrowheadEvent);
+USE_STRING_ID(ARRAY);
+USE_STRING_ID(ArrowheadEvent);
+USE_STRING_ID(DATE_AND_TIME);
+USE_STRING_ID(eventMetadata);
+USE_STRING_ID(payload);
+USE_STRING_ID(timestamp);
+USE_STRING_ID(type);
+USE_STRING_ID(WSTRING);
+
+
+DEFINE_FIRMWARE_DATATYPE(ArrowheadEvent, STRID(ArrowheadEvent));
 
 CIEC_ArrowheadEvent::CIEC_ArrowheadEvent() :
-    CIEC_STRUCT(g_nStringIdArrowheadEvent, 4, scmElementTypes, scmElementNames, e_APPLICATION + e_CONSTRUCTED + 1) {
+    CIEC_STRUCT(STRID(ArrowheadEvent), 4, scmElementTypes, scmElementNames, e_APPLICATION + e_CONSTRUCTED + 1) {
 }
 
-const CStringDictionary::TStringId CIEC_ArrowheadEvent::scmElementTypes[] = { g_nStringIdWSTRING, g_nStringIdWSTRING, g_nStringIdDATE_AND_TIME, g_nStringIdARRAY, 10, g_nStringIdWSTRING};
+const CStringDictionary::TStringId CIEC_ArrowheadEvent::scmElementTypes[] = { STRID(WSTRING), STRID(WSTRING), STRID(DATE_AND_TIME), STRID(ARRAY), 10, STRID(WSTRING)};
 const CStringDictionary::TStringId CIEC_ArrowheadEvent::scmElementNames[] =
-  { g_nStringIdtype, g_nStringIdpayload, g_nStringIdtimestamp, g_nStringIdeventMetadata };
+  { STRID(type), STRID(payload), STRID(timestamp), STRID(eventMetadata) };

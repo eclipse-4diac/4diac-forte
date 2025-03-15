@@ -16,29 +16,50 @@
 #include <extevhandlerhelper.h>
 
 #include "EXECUTE_ACTION_SERVER.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "EXECUTE_ACTION_SERVER_gen.cpp"
-#endif
 
-DEFINE_FIRMWARE_FB(FORTE_EXECUTE_ACTION_SERVER, g_nStringIdEXECUTE_ACTION_SERVER)
+USE_STRING_ID(ACTIONMSGNAME);
+USE_STRING_ID(ACTIONNAMESPACE);
+USE_STRING_ID(ACTIONSTATUS);
+USE_STRING_ID(BOOL);
+USE_STRING_ID(COMMAND);
+USE_STRING_ID(DINT);
+USE_STRING_ID(EInit);
+USE_STRING_ID(Event);
+USE_STRING_ID(EXECUTE_ACTION_SERVER);
+USE_STRING_ID(FBSTATUS);
+USE_STRING_ID(ID);
+USE_STRING_ID(ID1);
+USE_STRING_ID(ID2);
+USE_STRING_ID(IND);
+USE_STRING_ID(INIT);
+USE_STRING_ID(INITO);
+USE_STRING_ID(QI);
+USE_STRING_ID(QO);
+USE_STRING_ID(RESULT);
+USE_STRING_ID(RSP);
+USE_STRING_ID(STATE);
+USE_STRING_ID(STRING);
 
-const CStringDictionary::TStringId FORTE_EXECUTE_ACTION_SERVER::scmDataInputNames[] = { g_nStringIdQI, g_nStringIdACTIONNAMESPACE, g_nStringIdACTIONMSGNAME, g_nStringIdRESULT, g_nStringIdID, g_nStringIdSTATE };
 
-const CStringDictionary::TStringId FORTE_EXECUTE_ACTION_SERVER::scmDataInputTypeIds[] = { g_nStringIdBOOL, g_nStringIdSTRING, g_nStringIdSTRING, g_nStringIdSTRING, g_nStringIdDINT, g_nStringIdSTRING };
+DEFINE_FIRMWARE_FB(FORTE_EXECUTE_ACTION_SERVER, STRID(EXECUTE_ACTION_SERVER))
 
-const CStringDictionary::TStringId FORTE_EXECUTE_ACTION_SERVER::scmDataOutputNames[] = { g_nStringIdQO, g_nStringIdFBSTATUS, g_nStringIdACTIONSTATUS, g_nStringIdCOMMAND, g_nStringIdID1, g_nStringIdID2 };
+const CStringDictionary::TStringId FORTE_EXECUTE_ACTION_SERVER::scmDataInputNames[] = { STRID(QI), STRID(ACTIONNAMESPACE), STRID(ACTIONMSGNAME), STRID(RESULT), STRID(ID), STRID(STATE) };
 
-const CStringDictionary::TStringId FORTE_EXECUTE_ACTION_SERVER::scmDataOutputTypeIds[] = { g_nStringIdBOOL, g_nStringIdSTRING, g_nStringIdSTRING, g_nStringIdSTRING, g_nStringIdDINT, g_nStringIdDINT };
+const CStringDictionary::TStringId FORTE_EXECUTE_ACTION_SERVER::scmDataInputTypeIds[] = { STRID(BOOL), STRID(STRING), STRID(STRING), STRID(STRING), STRID(DINT), STRID(STRING) };
+
+const CStringDictionary::TStringId FORTE_EXECUTE_ACTION_SERVER::scmDataOutputNames[] = { STRID(QO), STRID(FBSTATUS), STRID(ACTIONSTATUS), STRID(COMMAND), STRID(ID1), STRID(ID2) };
+
+const CStringDictionary::TStringId FORTE_EXECUTE_ACTION_SERVER::scmDataOutputTypeIds[] = { STRID(BOOL), STRID(STRING), STRID(STRING), STRID(STRING), STRID(DINT), STRID(DINT) };
 
 const TForteInt16 FORTE_EXECUTE_ACTION_SERVER::scmEIWithIndexes[] = { 0, 4 };
 const TDataIOID FORTE_EXECUTE_ACTION_SERVER::scmEIWith[] = { 0, 1, 2, scmWithListDelimiter, 0, 5, 4, 3, scmWithListDelimiter };
-const CStringDictionary::TStringId FORTE_EXECUTE_ACTION_SERVER::scmEventInputNames[] = { g_nStringIdINIT, g_nStringIdRSP };
-const CStringDictionary::TStringId FORTE_EXECUTE_ACTION_SERVER::scmEventInputTypeIds[] = {g_nStringIdEInit, g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_EXECUTE_ACTION_SERVER::scmEventInputNames[] = { STRID(INIT), STRID(RSP) };
+const CStringDictionary::TStringId FORTE_EXECUTE_ACTION_SERVER::scmEventInputTypeIds[] = {STRID(EInit), STRID(Event)};
 
 const TDataIOID FORTE_EXECUTE_ACTION_SERVER::scmEOWith[] = { 0, 1, scmWithListDelimiter, 0, 1, 3, 2, 4, 5, scmWithListDelimiter };
 const TForteInt16 FORTE_EXECUTE_ACTION_SERVER::scmEOWithIndexes[] = { 0, 3, -1 };
-const CStringDictionary::TStringId FORTE_EXECUTE_ACTION_SERVER::scmEventOutputNames[] = { g_nStringIdINITO, g_nStringIdIND };
-const CStringDictionary::TStringId FORTE_EXECUTE_ACTION_SERVER::scmEventOutputTypeIds[] = {g_nStringIdEvent, g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_EXECUTE_ACTION_SERVER::scmEventOutputNames[] = { STRID(INITO), STRID(IND) };
+const CStringDictionary::TStringId FORTE_EXECUTE_ACTION_SERVER::scmEventOutputTypeIds[] = {STRID(Event), STRID(Event)};
 
 const SFBInterfaceSpec FORTE_EXECUTE_ACTION_SERVER::scmFBInterfaceSpec = { 2, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes, 2, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes, 6, scmDataInputNames, scmDataInputTypeIds, 6, scmDataOutputNames, scmDataOutputTypeIds, 0, 0 };
 

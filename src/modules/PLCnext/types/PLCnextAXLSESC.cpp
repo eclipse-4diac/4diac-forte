@@ -18,9 +18,22 @@
  *************************************************************************/
 
 #include "PLCnextAXLSESC.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "PLCnextAXLSESC_gen.cpp"
-#endif
+
+USE_STRING_ID(BOOL);
+USE_STRING_ID(BusAdapterIn);
+USE_STRING_ID(BusAdapterOut);
+USE_STRING_ID(EInit);
+USE_STRING_ID(Event);
+USE_STRING_ID(IND);
+USE_STRING_ID(INIT);
+USE_STRING_ID(INITO);
+USE_STRING_ID(PLCnextAXLSESC);
+USE_STRING_ID(PLCnextBusAdapter);
+USE_STRING_ID(QI);
+USE_STRING_ID(QO);
+USE_STRING_ID(STATUS);
+USE_STRING_ID(WSTRING);
+
 
 #include "PLCnextBusAdapter.h"
 #include "iec61131_functions.h"
@@ -31,23 +44,23 @@
 #include "criticalregion.h"
 #include "resource.h"
 
-DEFINE_FIRMWARE_FB(FORTE_PLCnextAXLSESC, g_nStringIdPLCnextAXLSESC)
+DEFINE_FIRMWARE_FB(FORTE_PLCnextAXLSESC, STRID(PLCnextAXLSESC))
 
-const CStringDictionary::TStringId FORTE_PLCnextAXLSESC::scmDataInputNames[] = {g_nStringIdQI};
-const CStringDictionary::TStringId FORTE_PLCnextAXLSESC::scmDataInputTypeIds[] = {g_nStringIdBOOL};
-const CStringDictionary::TStringId FORTE_PLCnextAXLSESC::scmDataOutputNames[] = {g_nStringIdQO, g_nStringIdSTATUS};
-const CStringDictionary::TStringId FORTE_PLCnextAXLSESC::scmDataOutputTypeIds[] = {g_nStringIdBOOL, g_nStringIdWSTRING};
+const CStringDictionary::TStringId FORTE_PLCnextAXLSESC::scmDataInputNames[] = {STRID(QI)};
+const CStringDictionary::TStringId FORTE_PLCnextAXLSESC::scmDataInputTypeIds[] = {STRID(BOOL)};
+const CStringDictionary::TStringId FORTE_PLCnextAXLSESC::scmDataOutputNames[] = {STRID(QO), STRID(STATUS)};
+const CStringDictionary::TStringId FORTE_PLCnextAXLSESC::scmDataOutputTypeIds[] = {STRID(BOOL), STRID(WSTRING)};
 const TDataIOID FORTE_PLCnextAXLSESC::scmEIWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_PLCnextAXLSESC::scmEIWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_PLCnextAXLSESC::scmEventInputNames[] = {g_nStringIdINIT};
-const CStringDictionary::TStringId FORTE_PLCnextAXLSESC::scmEventInputTypeIds[] = {g_nStringIdEInit};
+const CStringDictionary::TStringId FORTE_PLCnextAXLSESC::scmEventInputNames[] = {STRID(INIT)};
+const CStringDictionary::TStringId FORTE_PLCnextAXLSESC::scmEventInputTypeIds[] = {STRID(EInit)};
 const TDataIOID FORTE_PLCnextAXLSESC::scmEOWith[] = {0, 1, scmWithListDelimiter, 0, 1, scmWithListDelimiter};
 const TForteInt16 FORTE_PLCnextAXLSESC::scmEOWithIndexes[] = {0, 3};
-const CStringDictionary::TStringId FORTE_PLCnextAXLSESC::scmEventOutputNames[] = {g_nStringIdINITO, g_nStringIdIND};
-const CStringDictionary::TStringId FORTE_PLCnextAXLSESC::scmEventOutputTypeIds[] = {g_nStringIdEInit, g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_PLCnextAXLSESC::scmEventOutputNames[] = {STRID(INITO), STRID(IND)};
+const CStringDictionary::TStringId FORTE_PLCnextAXLSESC::scmEventOutputTypeIds[] = {STRID(EInit), STRID(Event)};
 const SAdapterInstanceDef FORTE_PLCnextAXLSESC::scmAdapterInstances[] = {
-  {g_nStringIdPLCnextBusAdapter, g_nStringIdBusAdapterIn, false},
-  {g_nStringIdPLCnextBusAdapter, g_nStringIdBusAdapterOut, true}
+  {STRID(PLCnextBusAdapter), STRID(BusAdapterIn), false},
+  {STRID(PLCnextBusAdapter), STRID(BusAdapterOut), true}
 };
 const SFBInterfaceSpec FORTE_PLCnextAXLSESC::scmFBInterfaceSpec = {
   1, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,
@@ -63,8 +76,8 @@ FORTE_PLCnextAXLSESC::FORTE_PLCnextAXLSESC(const CStringDictionary::TStringId pa
     var_QI(0_BOOL),
     var_QO(0_BOOL),
     var_STATUS(u""_WSTRING),
-    var_BusAdapterIn(g_nStringIdBusAdapterIn, *this, false),
-    var_BusAdapterOut(g_nStringIdBusAdapterOut, *this, true),
+    var_BusAdapterIn(STRID(BusAdapterIn), *this, false),
+    var_BusAdapterOut(STRID(BusAdapterOut), *this, true),
     var_conn_QO(var_QO),
     var_conn_STATUS(var_STATUS),
     conn_INITO(this, 0),

@@ -12,9 +12,15 @@
  *******************************************************************************/
 
 #include "E_SELECT_fbt.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "E_SELECT_fbt_gen.cpp"
-#endif
+
+USE_STRING_ID(BOOL);
+USE_STRING_ID(EI0);
+USE_STRING_ID(EI1);
+USE_STRING_ID(EO);
+USE_STRING_ID(E_SELECT);
+USE_STRING_ID(Event);
+USE_STRING_ID(G);
+
 
 #include "criticalregion.h"
 #include "resource.h"
@@ -25,17 +31,17 @@
 #include "forte_array_fixed.h"
 #include "forte_array_variable.h"
 
-DEFINE_FIRMWARE_FB(FORTE_E_SELECT, g_nStringIdE_SELECT)
+DEFINE_FIRMWARE_FB(FORTE_E_SELECT, STRID(E_SELECT))
 
-const CStringDictionary::TStringId FORTE_E_SELECT::scmDataInputNames[] = {g_nStringIdG};
-const CStringDictionary::TStringId FORTE_E_SELECT::scmDataInputTypeIds[] = {g_nStringIdBOOL};
+const CStringDictionary::TStringId FORTE_E_SELECT::scmDataInputNames[] = {STRID(G)};
+const CStringDictionary::TStringId FORTE_E_SELECT::scmDataInputTypeIds[] = {STRID(BOOL)};
 const TDataIOID FORTE_E_SELECT::scmEIWith[] = {0, scmWithListDelimiter, 0, scmWithListDelimiter};
 const TForteInt16 FORTE_E_SELECT::scmEIWithIndexes[] = {0, 2};
-const CStringDictionary::TStringId FORTE_E_SELECT::scmEventInputNames[] = {g_nStringIdEI0, g_nStringIdEI1};
-const CStringDictionary::TStringId FORTE_E_SELECT::scmEventInputTypeIds[] = {g_nStringIdEvent, g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_E_SELECT::scmEventInputNames[] = {STRID(EI0), STRID(EI1)};
+const CStringDictionary::TStringId FORTE_E_SELECT::scmEventInputTypeIds[] = {STRID(Event), STRID(Event)};
 const TForteInt16 FORTE_E_SELECT::scmEOWithIndexes[] = {-1};
-const CStringDictionary::TStringId FORTE_E_SELECT::scmEventOutputNames[] = {g_nStringIdEO};
-const CStringDictionary::TStringId FORTE_E_SELECT::scmEventOutputTypeIds[] = {g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_E_SELECT::scmEventOutputNames[] = {STRID(EO)};
+const CStringDictionary::TStringId FORTE_E_SELECT::scmEventOutputTypeIds[] = {STRID(Event)};
 const SFBInterfaceSpec FORTE_E_SELECT::scmFBInterfaceSpec = {
   2, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,
   1, scmEventOutputNames, scmEventOutputTypeIds, nullptr, scmEOWithIndexes,

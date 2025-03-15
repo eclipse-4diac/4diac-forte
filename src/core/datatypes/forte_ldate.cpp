@@ -17,14 +17,14 @@
 #include <stdio.h>
 #include <ctype.h>
 #include "forte_ldate.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "forte_ldate_gen.cpp"
-#endif
+
+USE_STRING_ID(LDATE);
+
 #include "../../arch/timerha.h"
 #include <forte_printer.h>
 #include <forte_architecture_time.h>
 
-DEFINE_FIRMWARE_DATATYPE(LDATE, g_nStringIdLDATE)
+DEFINE_FIRMWARE_DATATYPE(LDATE, STRID(LDATE))
 
 int CIEC_LDATE::fromString(const char *paValue){
   // 2007-12-21

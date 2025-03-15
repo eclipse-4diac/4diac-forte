@@ -13,9 +13,13 @@
  *   Martin Jobst - add generic readInputData and writeOutputData
  *******************************************************************************/
 #include "GEN_STRUCT_DEMUX_fbt.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "GEN_STRUCT_DEMUX_fbt_gen.cpp"
-#endif
+
+USE_STRING_ID(CNF);
+USE_STRING_ID(Event);
+USE_STRING_ID(GEN_STRUCT_DEMUX);
+USE_STRING_ID(IN);
+USE_STRING_ID(REQ);
+
 #include "GEN_STRUCT_MUX_fbt.h"
 #include <stdio.h>
 #include "GEN_STRUCT_DEMUX_fbt.h"
@@ -23,14 +27,14 @@
 #include "resource.h"
 #include "criticalregion.h"
 
-DEFINE_GENERIC_FIRMWARE_FB(GEN_STRUCT_DEMUX, g_nStringIdGEN_STRUCT_DEMUX);
+DEFINE_GENERIC_FIRMWARE_FB(GEN_STRUCT_DEMUX, STRID(GEN_STRUCT_DEMUX));
 
-const CStringDictionary::TStringId GEN_STRUCT_DEMUX::scmEventInputNames[] = { g_nStringIdREQ };
-const CStringDictionary::TStringId GEN_STRUCT_DEMUX::scmEventInputTypeIds[] = {g_nStringIdEvent};
-const CStringDictionary::TStringId GEN_STRUCT_DEMUX::scmEventOutputNames[] = { g_nStringIdCNF };
-const CStringDictionary::TStringId GEN_STRUCT_DEMUX::scmEventOutputTypeIds[] = {g_nStringIdEvent};
+const CStringDictionary::TStringId GEN_STRUCT_DEMUX::scmEventInputNames[] = { STRID(REQ) };
+const CStringDictionary::TStringId GEN_STRUCT_DEMUX::scmEventInputTypeIds[] = {STRID(Event)};
+const CStringDictionary::TStringId GEN_STRUCT_DEMUX::scmEventOutputNames[] = { STRID(CNF) };
+const CStringDictionary::TStringId GEN_STRUCT_DEMUX::scmEventOutputTypeIds[] = {STRID(Event)};
 
-const CStringDictionary::TStringId GEN_STRUCT_DEMUX::scmDataInputNames[] = { g_nStringIdIN };
+const CStringDictionary::TStringId GEN_STRUCT_DEMUX::scmDataInputNames[] = { STRID(IN) };
 
 void GEN_STRUCT_DEMUX::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   if(scmEventREQID == paEIID) {

@@ -10,27 +10,56 @@
  *   Alois Zoitl  - initial API and implementation and/or initial documentation
  *******************************************************************************/
 #include "CFB_TEST.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "CFB_TEST_gen.cpp"
-#endif
+
+USE_STRING_ID(BOOL);
+USE_STRING_ID(CFB_TEST);
+USE_STRING_ID(CHANGED);
+USE_STRING_ID(CNF);
+USE_STRING_ID(E_DEMUX_2);
+USE_STRING_ID(EI);
+USE_STRING_ID(EI1);
+USE_STRING_ID(EI2);
+USE_STRING_ID(E_MUX_2);
+USE_STRING_ID(EO);
+USE_STRING_ID(EO0);
+USE_STRING_ID(EO1);
+USE_STRING_ID(EO2);
+USE_STRING_ID(E_PERMIT);
+USE_STRING_ID(E_SR);
+USE_STRING_ID(E_SWITCH);
+USE_STRING_ID(Event);
+USE_STRING_ID(G);
+USE_STRING_ID(K);
+USE_STRING_ID(PERMIT);
+USE_STRING_ID(PERMIT_OP);
+USE_STRING_ID(Q);
+USE_STRING_ID(QI);
+USE_STRING_ID(QO);
+USE_STRING_ID(R);
+USE_STRING_ID(RESET);
+USE_STRING_ID(RESET_CHANGED);
+USE_STRING_ID(S);
+USE_STRING_ID(SET);
+USE_STRING_ID(SET_CHANGED);
+
 
 #include "resource.h"
 #include "criticalregion.h"
 
-DEFINE_FIRMWARE_FB(FORTE_CFB_TEST, g_nStringIdCFB_TEST)
+DEFINE_FIRMWARE_FB(FORTE_CFB_TEST, STRID(CFB_TEST))
 
-const CStringDictionary::TStringId FORTE_CFB_TEST::scmDataInputNames[] = {g_nStringIdQI};
-const CStringDictionary::TStringId FORTE_CFB_TEST::scmDataInputTypeIds[] = {g_nStringIdBOOL};
-const CStringDictionary::TStringId FORTE_CFB_TEST::scmDataOutputNames[] = {g_nStringIdQO};
-const CStringDictionary::TStringId FORTE_CFB_TEST::scmDataOutputTypeIds[] = {g_nStringIdBOOL};
+const CStringDictionary::TStringId FORTE_CFB_TEST::scmDataInputNames[] = {STRID(QI)};
+const CStringDictionary::TStringId FORTE_CFB_TEST::scmDataInputTypeIds[] = {STRID(BOOL)};
+const CStringDictionary::TStringId FORTE_CFB_TEST::scmDataOutputNames[] = {STRID(QO)};
+const CStringDictionary::TStringId FORTE_CFB_TEST::scmDataOutputTypeIds[] = {STRID(BOOL)};
 const TDataIOID FORTE_CFB_TEST::scmEIWith[] = {0, scmWithListDelimiter, 0, scmWithListDelimiter};
 const TForteInt16 FORTE_CFB_TEST::scmEIWithIndexes[] = {0, 2};
-const CStringDictionary::TStringId FORTE_CFB_TEST::scmEventInputNames[] = {g_nStringIdSET, g_nStringIdRESET};
-const CStringDictionary::TStringId FORTE_CFB_TEST::scmEventInputTypeIds[] = {g_nStringIdEvent, g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_CFB_TEST::scmEventInputNames[] = {STRID(SET), STRID(RESET)};
+const CStringDictionary::TStringId FORTE_CFB_TEST::scmEventInputTypeIds[] = {STRID(Event), STRID(Event)};
 const TDataIOID FORTE_CFB_TEST::scmEOWith[] = {0, scmWithListDelimiter, 0, scmWithListDelimiter};
 const TForteInt16 FORTE_CFB_TEST::scmEOWithIndexes[] = {0, 2};
-const CStringDictionary::TStringId FORTE_CFB_TEST::scmEventOutputNames[] = {g_nStringIdCNF, g_nStringIdCHANGED};
-const CStringDictionary::TStringId FORTE_CFB_TEST::scmEventOutputTypeIds[] = {g_nStringIdEvent, g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_CFB_TEST::scmEventOutputNames[] = {STRID(CNF), STRID(CHANGED)};
+const CStringDictionary::TStringId FORTE_CFB_TEST::scmEventOutputTypeIds[] = {STRID(Event), STRID(Event)};
 const SFBInterfaceSpec FORTE_CFB_TEST::scmFBInterfaceSpec = {
   2, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,
   2, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes,
@@ -42,12 +71,12 @@ const SFBInterfaceSpec FORTE_CFB_TEST::scmFBInterfaceSpec = {
 
 FORTE_CFB_TEST::FORTE_CFB_TEST(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CCompositeFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, scmFBNData),
-    fb_PERMIT_OP(g_nStringIdPERMIT_OP, *this),
-    fb_E_SR(g_nStringIdE_SR, *this),
-    fb_SET_CHANGED(g_nStringIdSET_CHANGED, *this),
-    fb_E_DEMUX_2(g_nStringIdE_DEMUX_2, "E_DEMUX_2", *this),
-    fb_E_MUX_2(g_nStringIdE_MUX_2, "E_MUX_2", *this),
-    fb_RESET_CHANGED(g_nStringIdRESET_CHANGED, *this),
+    fb_PERMIT_OP(STRID(PERMIT_OP), *this),
+    fb_E_SR(STRID(E_SR), *this),
+    fb_SET_CHANGED(STRID(SET_CHANGED), *this),
+    fb_E_DEMUX_2(STRID(E_DEMUX_2), "E_DEMUX_2", *this),
+    fb_E_MUX_2(STRID(E_MUX_2), "E_MUX_2", *this),
+    fb_RESET_CHANGED(STRID(RESET_CHANGED), *this),
     var_conn_QO(var_QO),
     conn_CNF(this, 0),
     conn_CHANGED(this, 1),
@@ -61,41 +90,41 @@ void FORTE_CFB_TEST::setInitialValues() {
 }
 
 const SCFB_FBInstanceData FORTE_CFB_TEST::scmInternalFBs[] = {
-  {g_nStringIdPERMIT_OP, g_nStringIdE_PERMIT},
-  {g_nStringIdE_SR, g_nStringIdE_SR},
-  {g_nStringIdSET_CHANGED, g_nStringIdE_SWITCH},
-  {g_nStringIdE_DEMUX_2, g_nStringIdE_DEMUX_2},
-  {g_nStringIdE_MUX_2, g_nStringIdE_MUX_2},
-  {g_nStringIdRESET_CHANGED, g_nStringIdE_SWITCH},
+  {STRID(PERMIT_OP), STRID(E_PERMIT)},
+  {STRID(E_SR), STRID(E_SR)},
+  {STRID(SET_CHANGED), STRID(E_SWITCH)},
+  {STRID(E_DEMUX_2), STRID(E_DEMUX_2)},
+  {STRID(E_MUX_2), STRID(E_MUX_2)},
+  {STRID(RESET_CHANGED), STRID(E_SWITCH)},
 };
 
 const SCFB_FBConnectionData FORTE_CFB_TEST::scmEventConnections[] = {
-  {GENERATE_CONNECTION_PORT_ID_1_ARG(g_nStringIdSET), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdE_MUX_2, g_nStringIdEI1), 4},
-  {GENERATE_CONNECTION_PORT_ID_1_ARG(g_nStringIdRESET), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdE_MUX_2, g_nStringIdEI2), 4},
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdE_MUX_2, g_nStringIdEO), 4, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdPERMIT_OP, g_nStringIdEI), 0},
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdSET_CHANGED, g_nStringIdEO1), 2, GENERATE_CONNECTION_PORT_ID_1_ARG(g_nStringIdCNF), -1},
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdSET_CHANGED, g_nStringIdEO0), 2, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdE_SR, g_nStringIdS), 1},
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdRESET_CHANGED, g_nStringIdEO0), 5, GENERATE_CONNECTION_PORT_ID_1_ARG(g_nStringIdCNF), -1},
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdRESET_CHANGED, g_nStringIdEO1), 5, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdE_SR, g_nStringIdR), 1},
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdPERMIT_OP, g_nStringIdEO), 0, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdE_DEMUX_2, g_nStringIdEI), 3},
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdE_DEMUX_2, g_nStringIdEO1), 3, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdSET_CHANGED, g_nStringIdEI), 2},
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdE_DEMUX_2, g_nStringIdEO2), 3, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdRESET_CHANGED, g_nStringIdEI), 5},
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdE_SR, g_nStringIdEO), 1, GENERATE_CONNECTION_PORT_ID_1_ARG(g_nStringIdCNF), -1},
+  {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(SET)), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_MUX_2), STRID(EI1)), 4},
+  {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(RESET)), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_MUX_2), STRID(EI2)), 4},
+  {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_MUX_2), STRID(EO)), 4, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(PERMIT_OP), STRID(EI)), 0},
+  {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(SET_CHANGED), STRID(EO1)), 2, GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(CNF)), -1},
+  {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(SET_CHANGED), STRID(EO0)), 2, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_SR), STRID(S)), 1},
+  {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(RESET_CHANGED), STRID(EO0)), 5, GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(CNF)), -1},
+  {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(RESET_CHANGED), STRID(EO1)), 5, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_SR), STRID(R)), 1},
+  {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(PERMIT_OP), STRID(EO)), 0, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_DEMUX_2), STRID(EI)), 3},
+  {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_DEMUX_2), STRID(EO1)), 3, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(SET_CHANGED), STRID(EI)), 2},
+  {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_DEMUX_2), STRID(EO2)), 3, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(RESET_CHANGED), STRID(EI)), 5},
+  {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_SR), STRID(EO)), 1, GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(CNF)), -1},
 };
 
 const SCFB_FBFannedOutConnectionData FORTE_CFB_TEST::scmFannedOutEventConnections[] = {
-  {10, GENERATE_CONNECTION_PORT_ID_1_ARG(g_nStringIdCHANGED), -1},
+  {10, GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(CHANGED)), -1},
 };
 
 const SCFB_FBConnectionData FORTE_CFB_TEST::scmDataConnections[] = {
-  {GENERATE_CONNECTION_PORT_ID_1_ARG(g_nStringIdQI), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdPERMIT_OP, g_nStringIdPERMIT), 0},
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdE_SR, g_nStringIdQ), 1, GENERATE_CONNECTION_PORT_ID_1_ARG(g_nStringIdQO), -1},
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdE_MUX_2, g_nStringIdK), 4, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdE_DEMUX_2, g_nStringIdK), 3},
+  {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(QI)), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(PERMIT_OP), STRID(PERMIT)), 0},
+  {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_SR), STRID(Q)), 1, GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(QO)), -1},
+  {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_MUX_2), STRID(K)), 4, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_DEMUX_2), STRID(K)), 3},
 };
 
 const SCFB_FBFannedOutConnectionData FORTE_CFB_TEST::scmFannedOutDataConnections[] = {
-  {1, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdSET_CHANGED, g_nStringIdG), 2},
-  {1, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdRESET_CHANGED, g_nStringIdG), 5},
+  {1, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(SET_CHANGED), STRID(G)), 2},
+  {1, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(RESET_CHANGED), STRID(G)), 5},
 };
 
 const SCFB_FBNData FORTE_CFB_TEST::scmFBNData = {

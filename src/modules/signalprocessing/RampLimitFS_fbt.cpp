@@ -16,9 +16,25 @@
  *************************************************************************/
 
 #include "RampLimitFS_fbt.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "RampLimitFS_fbt_gen.cpp"
-#endif
+
+USE_STRING_ID(CNF);
+USE_STRING_ID(DINT);
+USE_STRING_ID(DOWN_FAST);
+USE_STRING_ID(DOWN_SLOW);
+USE_STRING_ID(Event);
+USE_STRING_ID(FAST);
+USE_STRING_ID(FULL);
+USE_STRING_ID(LOAD);
+USE_STRING_ID(OUT);
+USE_STRING_ID(PV);
+USE_STRING_ID(signalprocessing__RampLimitFS);
+USE_STRING_ID(SLOW);
+USE_STRING_ID(UP_FAST);
+USE_STRING_ID(UP_SLOW);
+USE_STRING_ID(VAL_FULL);
+USE_STRING_ID(VAL_ZERO);
+USE_STRING_ID(ZERO);
+
 
 #include "forte_any_elementary_variant.h"
 #include "forte_any_num_variant.h"
@@ -29,20 +45,20 @@
 #include "forte_array_fixed.h"
 #include "forte_array_variable.h"
 
-DEFINE_FIRMWARE_FB(FORTE_signalprocessing__RampLimitFS, g_nStringIdsignalprocessing__RampLimitFS)
+DEFINE_FIRMWARE_FB(FORTE_signalprocessing__RampLimitFS, STRID(signalprocessing__RampLimitFS))
 
-const CStringDictionary::TStringId FORTE_signalprocessing__RampLimitFS::scmDataInputNames[] = {g_nStringIdPV, g_nStringIdVAL_ZERO, g_nStringIdSLOW, g_nStringIdFAST, g_nStringIdVAL_FULL};
-const CStringDictionary::TStringId FORTE_signalprocessing__RampLimitFS::scmDataInputTypeIds[] = {g_nStringIdDINT, g_nStringIdDINT, g_nStringIdDINT, g_nStringIdDINT, g_nStringIdDINT};
-const CStringDictionary::TStringId FORTE_signalprocessing__RampLimitFS::scmDataOutputNames[] = {g_nStringIdOUT};
-const CStringDictionary::TStringId FORTE_signalprocessing__RampLimitFS::scmDataOutputTypeIds[] = {g_nStringIdDINT};
+const CStringDictionary::TStringId FORTE_signalprocessing__RampLimitFS::scmDataInputNames[] = {STRID(PV), STRID(VAL_ZERO), STRID(SLOW), STRID(FAST), STRID(VAL_FULL)};
+const CStringDictionary::TStringId FORTE_signalprocessing__RampLimitFS::scmDataInputTypeIds[] = {STRID(DINT), STRID(DINT), STRID(DINT), STRID(DINT), STRID(DINT)};
+const CStringDictionary::TStringId FORTE_signalprocessing__RampLimitFS::scmDataOutputNames[] = {STRID(OUT)};
+const CStringDictionary::TStringId FORTE_signalprocessing__RampLimitFS::scmDataOutputTypeIds[] = {STRID(DINT)};
 const TDataIOID FORTE_signalprocessing__RampLimitFS::scmEIWith[] = {1, scmWithListDelimiter, 2, scmWithListDelimiter, 3, scmWithListDelimiter, 2, scmWithListDelimiter, 3, scmWithListDelimiter, 4, scmWithListDelimiter, 0, scmWithListDelimiter};
 const TForteInt16 FORTE_signalprocessing__RampLimitFS::scmEIWithIndexes[] = {0, 2, 4, 6, 8, 10, 12};
-const CStringDictionary::TStringId FORTE_signalprocessing__RampLimitFS::scmEventInputNames[] = {g_nStringIdZERO, g_nStringIdUP_SLOW, g_nStringIdUP_FAST, g_nStringIdDOWN_SLOW, g_nStringIdDOWN_FAST, g_nStringIdFULL, g_nStringIdLOAD};
-const CStringDictionary::TStringId FORTE_signalprocessing__RampLimitFS::scmEventInputTypeIds[] = {g_nStringIdEvent, g_nStringIdEvent, g_nStringIdEvent, g_nStringIdEvent, g_nStringIdEvent, g_nStringIdEvent, g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_signalprocessing__RampLimitFS::scmEventInputNames[] = {STRID(ZERO), STRID(UP_SLOW), STRID(UP_FAST), STRID(DOWN_SLOW), STRID(DOWN_FAST), STRID(FULL), STRID(LOAD)};
+const CStringDictionary::TStringId FORTE_signalprocessing__RampLimitFS::scmEventInputTypeIds[] = {STRID(Event), STRID(Event), STRID(Event), STRID(Event), STRID(Event), STRID(Event), STRID(Event)};
 const TDataIOID FORTE_signalprocessing__RampLimitFS::scmEOWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_signalprocessing__RampLimitFS::scmEOWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_signalprocessing__RampLimitFS::scmEventOutputNames[] = {g_nStringIdCNF};
-const CStringDictionary::TStringId FORTE_signalprocessing__RampLimitFS::scmEventOutputTypeIds[] = {g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_signalprocessing__RampLimitFS::scmEventOutputNames[] = {STRID(CNF)};
+const CStringDictionary::TStringId FORTE_signalprocessing__RampLimitFS::scmEventOutputTypeIds[] = {STRID(Event)};
 const SFBInterfaceSpec FORTE_signalprocessing__RampLimitFS::scmFBInterfaceSpec = {
   7, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,
   1, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes,

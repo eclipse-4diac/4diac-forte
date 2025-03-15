@@ -14,9 +14,14 @@
  *******************************************************************************/
 
 #include "TEST_CONDITION_fbt.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "TEST_CONDITION_fbt_gen.cpp"
-#endif
+
+USE_STRING_ID(BOOL);
+USE_STRING_ID(check);
+USE_STRING_ID(CNF);
+USE_STRING_ID(Event);
+USE_STRING_ID(REQ);
+USE_STRING_ID(TEST_CONDITION);
+
 
 #include "devlog.h"
 #include "resource.h"
@@ -27,17 +32,17 @@ unsigned int FORTE_TEST_CONDITION::smFailedTests = 0;
 
 bool FORTE_TEST_CONDITION::smfinalReportPrinted = false;
 
-DEFINE_FIRMWARE_FB(FORTE_TEST_CONDITION, g_nStringIdTEST_CONDITION)
+DEFINE_FIRMWARE_FB(FORTE_TEST_CONDITION, STRID(TEST_CONDITION))
 
-const CStringDictionary::TStringId FORTE_TEST_CONDITION::scmDataInputNames[] = {g_nStringIdcheck};
-const CStringDictionary::TStringId FORTE_TEST_CONDITION::scmDataInputTypeIds[] = {g_nStringIdBOOL};
+const CStringDictionary::TStringId FORTE_TEST_CONDITION::scmDataInputNames[] = {STRID(check)};
+const CStringDictionary::TStringId FORTE_TEST_CONDITION::scmDataInputTypeIds[] = {STRID(BOOL)};
 const TDataIOID FORTE_TEST_CONDITION::scmEIWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_TEST_CONDITION::scmEIWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_TEST_CONDITION::scmEventInputNames[] = {g_nStringIdREQ};
-const CStringDictionary::TStringId FORTE_TEST_CONDITION::scmEventInputTypeIds[] = {g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_TEST_CONDITION::scmEventInputNames[] = {STRID(REQ)};
+const CStringDictionary::TStringId FORTE_TEST_CONDITION::scmEventInputTypeIds[] = {STRID(Event)};
 const TForteInt16 FORTE_TEST_CONDITION::scmEOWithIndexes[] = {-1};
-const CStringDictionary::TStringId FORTE_TEST_CONDITION::scmEventOutputNames[] = {g_nStringIdCNF};
-const CStringDictionary::TStringId FORTE_TEST_CONDITION::scmEventOutputTypeIds[] = {g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_TEST_CONDITION::scmEventOutputNames[] = {STRID(CNF)};
+const CStringDictionary::TStringId FORTE_TEST_CONDITION::scmEventOutputTypeIds[] = {STRID(Event)};
 const SFBInterfaceSpec FORTE_TEST_CONDITION::scmFBInterfaceSpec = {
   1, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,
   1, scmEventOutputNames, scmEventOutputTypeIds, nullptr, scmEOWithIndexes,

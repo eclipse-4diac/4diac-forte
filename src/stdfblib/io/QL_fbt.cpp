@@ -11,9 +11,23 @@
  *************************************************************************/
 
 #include "QL_fbt.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "QL_fbt_gen.cpp"
-#endif
+
+USE_STRING_ID(BOOL);
+USE_STRING_ID(CNF);
+USE_STRING_ID(EInit);
+USE_STRING_ID(Event);
+USE_STRING_ID(INIT);
+USE_STRING_ID(INITO);
+USE_STRING_ID(LWORD);
+USE_STRING_ID(OUT);
+USE_STRING_ID(PARAMS);
+USE_STRING_ID(QI);
+USE_STRING_ID(QL);
+USE_STRING_ID(QO);
+USE_STRING_ID(REQ);
+USE_STRING_ID(STATUS);
+USE_STRING_ID(STRING);
+
 
 #include "iec61131_functions.h"
 #include "forte_array_common.h"
@@ -23,20 +37,20 @@
 #include "criticalregion.h"
 #include "resource.h"
 
-DEFINE_FIRMWARE_FB(FORTE_QL, g_nStringIdQL)
+DEFINE_FIRMWARE_FB(FORTE_QL, STRID(QL))
 
-const CStringDictionary::TStringId FORTE_QL::scmDataInputNames[] = {g_nStringIdQI, g_nStringIdPARAMS, g_nStringIdOUT};
-const CStringDictionary::TStringId FORTE_QL::scmDataInputTypeIds[] = {g_nStringIdBOOL, g_nStringIdSTRING, g_nStringIdLWORD};
-const CStringDictionary::TStringId FORTE_QL::scmDataOutputNames[] = {g_nStringIdQO, g_nStringIdSTATUS};
-const CStringDictionary::TStringId FORTE_QL::scmDataOutputTypeIds[] = {g_nStringIdBOOL, g_nStringIdSTRING};
+const CStringDictionary::TStringId FORTE_QL::scmDataInputNames[] = {STRID(QI), STRID(PARAMS), STRID(OUT)};
+const CStringDictionary::TStringId FORTE_QL::scmDataInputTypeIds[] = {STRID(BOOL), STRID(STRING), STRID(LWORD)};
+const CStringDictionary::TStringId FORTE_QL::scmDataOutputNames[] = {STRID(QO), STRID(STATUS)};
+const CStringDictionary::TStringId FORTE_QL::scmDataOutputTypeIds[] = {STRID(BOOL), STRID(STRING)};
 const TDataIOID FORTE_QL::scmEIWith[] = {0, 1, scmWithListDelimiter, 0, 2, scmWithListDelimiter};
 const TForteInt16 FORTE_QL::scmEIWithIndexes[] = {0, 3};
-const CStringDictionary::TStringId FORTE_QL::scmEventInputNames[] = {g_nStringIdINIT, g_nStringIdREQ};
-const CStringDictionary::TStringId FORTE_QL::scmEventInputTypeIds[] = {g_nStringIdEInit, g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_QL::scmEventInputNames[] = {STRID(INIT), STRID(REQ)};
+const CStringDictionary::TStringId FORTE_QL::scmEventInputTypeIds[] = {STRID(EInit), STRID(Event)};
 const TDataIOID FORTE_QL::scmEOWith[] = {0, 1, scmWithListDelimiter, 0, 1, scmWithListDelimiter};
 const TForteInt16 FORTE_QL::scmEOWithIndexes[] = {0, 3};
-const CStringDictionary::TStringId FORTE_QL::scmEventOutputNames[] = {g_nStringIdINITO, g_nStringIdCNF};
-const CStringDictionary::TStringId FORTE_QL::scmEventOutputTypeIds[] = {g_nStringIdEInit, g_nStringIdEvent};
+const CStringDictionary::TStringId FORTE_QL::scmEventOutputNames[] = {STRID(INITO), STRID(CNF)};
+const CStringDictionary::TStringId FORTE_QL::scmEventOutputTypeIds[] = {STRID(EInit), STRID(Event)};
 const SFBInterfaceSpec FORTE_QL::scmFBInterfaceSpec = {
   2, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,
   2, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes,

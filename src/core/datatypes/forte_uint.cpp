@@ -12,10 +12,10 @@
  *      - initial implementation and rework communication infrastructure
  *******************************************************************************/
 #include "forte_uint.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "forte_uint_gen.cpp"
-#endif
 
-DEFINE_FIRMWARE_DATATYPE(UINT, g_nStringIdUINT)
+USE_STRING_ID(UINT);
+
+
+DEFINE_FIRMWARE_DATATYPE(UINT, STRID(UINT))
 
 template CIEC_UINT &CIEC_UINT::operator=<>(const CIEC_USINT &paValue);

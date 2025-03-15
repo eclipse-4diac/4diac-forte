@@ -13,9 +13,9 @@
  *      - initial implementation and rework communication infrastructure
  *******************************************************************************/
 #include "forte_sint.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "forte_sint_gen.cpp"
-#endif
 
-DEFINE_FIRMWARE_DATATYPE(SINT, g_nStringIdSINT)
+USE_STRING_ID(SINT);
+
+
+DEFINE_FIRMWARE_DATATYPE(SINT, STRID(SINT))
 

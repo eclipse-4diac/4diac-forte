@@ -22,9 +22,9 @@
 #include "../../../src/core/datatypes/forte_dint.h"
 #include "../../../src/core/typelib.h"
 
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "CIEC_ARRAY_TEMPLATE_test_gen.cpp"
-#endif
+
+USE_STRING_ID(INT);
+
 
 BOOST_AUTO_TEST_SUITE(CIEC_ARRAY_TEMPLATE_function_test)
 
@@ -325,7 +325,7 @@ BOOST_AUTO_TEST_CASE(CopyFromVariableToStaticArray)
 }
 
 BOOST_AUTO_TEST_CASE(CopyFromPlainOldToStaticArray) {
-  CIEC_ARRAY_DYNAMIC arraySource(5, g_nStringIdINT);
+  CIEC_ARRAY_DYNAMIC arraySource(5, STRID(INT));
 
   BOOST_TEST(arraySource.getLowerBound() == 0);
   BOOST_TEST(arraySource.getUpperBound() == 4);
@@ -350,7 +350,7 @@ BOOST_AUTO_TEST_CASE(CopyFromPlainOldToStaticArray) {
 }
 
 BOOST_AUTO_TEST_CASE(CopyFromPlainOldToVariableArray) {
-  CIEC_ARRAY_DYNAMIC arraySource(5, g_nStringIdINT);
+  CIEC_ARRAY_DYNAMIC arraySource(5, STRID(INT));
 
   static_cast<CIEC_INT &>(arraySource[0]) = CIEC_INT(1);
   static_cast<CIEC_INT &>(arraySource[1]) = CIEC_INT(-32259);

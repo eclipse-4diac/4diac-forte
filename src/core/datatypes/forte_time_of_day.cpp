@@ -17,13 +17,13 @@
 #include <string.h>
 #include <ctype.h>
 #include "forte_time_of_day.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "forte_time_of_day_gen.cpp"
-#endif
+
+USE_STRING_ID(TIME_OF_DAY);
+
 #include "../../arch/timerha.h"
 #include <forte_printer.h>
 
-DEFINE_FIRMWARE_DATATYPE(TIME_OF_DAY, g_nStringIdTIME_OF_DAY)
+DEFINE_FIRMWARE_DATATYPE(TIME_OF_DAY, STRID(TIME_OF_DAY))
 
 int CIEC_TIME_OF_DAY::fromString(const char *paValue){
   // 15:00:00.000

@@ -14,16 +14,16 @@
  *******************************************************************************/
 
 #include "fbtesterglobalfixture.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "fbtesterglobalfixture_gen.cpp"
-#endif
+
+USE_STRING_ID(EMB_RES);
+
 #include <boost/test/unit_test.hpp>
 
 std::unique_ptr<CTesterDevice> CFBTestDataGlobalFixture::smTestDev;
 
 CTesterDevice::CTesterDevice(const CStringDictionary::TStringId paInstanceNameId) :
     CDevice(scTestDevSpec, paInstanceNameId),
-    mResource(g_nStringIdEMB_RES, *this) {
+    mResource(STRID(EMB_RES), *this) {
 }
 
 CFBTestDataGlobalFixture::CFBTestDataGlobalFixture(){
