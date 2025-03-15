@@ -21,7 +21,7 @@ class CFunctionBlock;
 #define DECLARE_HANDLER(TypeName)                          \
   public:                                                  \
     static const size_t mHandlerIdentifier;                \
-    virtual size_t getIdentifier() const override;         \
+    size_t getIdentifier() const override;                 \
     explicit TypeName(CDeviceExecution& paDeviceExecution);\
     ~TypeName();
 
