@@ -13,7 +13,7 @@
 
 #include "io_controller.h"
 
-#include "../processinterface.h"
+#include "../processinterfacefb.h"
 #include "../configFB/io_configFB_controller.h"
 #include "criticalregion.h"
 
@@ -73,7 +73,7 @@ void IODeviceController::addHandle(HandleDescriptor &paHandleDescriptor) {
 }
 
 void IODeviceController::fireIndicationEvent(IOObserver* paObserver) {
-  startNewEventChain((CProcessInterface*) paObserver);
+  startNewEventChain(static_cast<CProcessInterfaceFB*>(paObserver));
 }
 
 void IODeviceController::handleChangeEvent(IOHandle*) {

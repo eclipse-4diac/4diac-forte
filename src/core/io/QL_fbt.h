@@ -1,5 +1,6 @@
 /*************************************************************************
- * Copyright (c) 2018 TU Wien/ACIN
+ * Copyright (c) 2018, 2025 TU Wien/ACIN, Johannes Kepler University Linz
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -8,10 +9,13 @@
  *
  * Contributors:
  *   Martin Melik-Merkumians - adds intial implememtation
- *************************************************************************/
+ *   Alois Zoitl - copied to core/io and adjusted to core/io process
+ *                 interface needs
+ *******************************************************************************/
 
 #pragma once
 
+#include <processinterfacefb.h>
 #include "funcbloc.h"
 #include "forte_bool.h"
 #include "forte_lword.h"
@@ -22,9 +26,8 @@
 #include "forte_array_fixed.h"
 #include "forte_array_variable.h"
 
-#include "processinterface.h"
 
-class FORTE_QL final : public CProcessInterface {
+class FORTE_QL final : public forte::core::io::CProcessInterfaceFB {
   DECLARE_FIRMWARE_FB(FORTE_QL)
 
   private:
@@ -50,37 +53,21 @@ class FORTE_QL final : public CProcessInterface {
     void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
     void readInputData(TEventID paEIID) override;
-    void writeOutputData(TEventID paEIID) override;
     void setInitialValues() override;
+
+    CIEC_BOOL write() override {
+      return forte::core::io::CProcessInterfaceFB::read(var_OUT);
+    }
 
   public:
     FORTE_QL(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
-    CIEC_BOOL var_QI;
-    CIEC_STRING var_PARAMS;
     CIEC_LWORD var_OUT;
 
-    CIEC_BOOL var_QO;
-    CIEC_STRING var_STATUS;
-
-    CIEC_BOOL var_conn_QO;
-    CIEC_STRING var_conn_STATUS;
-
-    CEventConnection conn_INITO;
-    CEventConnection conn_CNF;
-
-    CDataConnection *conn_QI;
-    CDataConnection *conn_PARAMS;
     CDataConnection *conn_OUT;
 
-    CDataConnection conn_QO;
-    CDataConnection conn_STATUS;
-
     CIEC_ANY *getDI(size_t) override;
-    CIEC_ANY *getDO(size_t) override;
-    CEventConnection *getEOConUnchecked(TPortId) override;
     CDataConnection **getDIConUnchecked(TPortId) override;
-    CDataConnection *getDOConUnchecked(TPortId) override;
 
     void evt_INIT(const CIEC_BOOL &paQI, const CIEC_STRING &paPARAMS, const CIEC_LWORD &paOUT, CIEC_BOOL &paQO, CIEC_STRING &paSTATUS) {
       var_QI = paQI;

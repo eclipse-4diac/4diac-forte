@@ -27,7 +27,7 @@ IOObserver::~IOObserver() {
   IOMapper::getInstance().deregisterObserver(this);
 }
 
-void IOObserver::onHandle(IOHandle *paHandle) {
+void IOObserver::onHandle(IOHandle* const paHandle) {
   this->mHandle = paHandle;
 }
 

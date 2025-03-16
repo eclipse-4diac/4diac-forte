@@ -1,5 +1,6 @@
 /*************************************************************************
- * Copyright (c) 2018 TU Wien/ACIN
+ * Copyright (c) 2025 TU Wien/ACIN, Johannes Kepler University Linz
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -8,6 +9,8 @@
  *
  * Contributors:
  *   Martin Melik-Merkumians - adds intial implememtation
+ *   Alois Zoitl - copied to core/io and adjusted to core/io process
+ *                 interface needs
  *************************************************************************/
 
 #include "IB_fbt.h"
@@ -38,6 +41,8 @@ USE_STRING_ID(STRING);
 #include "criticalregion.h"
 #include "resource.h"
 
+using namespace forte::core::io;
+
 DEFINE_FIRMWARE_FB(FORTE_IB, STRID(IB))
 
 const CStringDictionary::TStringId FORTE_IB::scmDataInputNames[] = {STRID(QI), STRID(PARAMS)};
@@ -62,30 +67,15 @@ const SFBInterfaceSpec FORTE_IB::scmFBInterfaceSpec = {
 };
 
 FORTE_IB::FORTE_IB(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
-    CProcessInterface(paContainer, scmFBInterfaceSpec, paInstanceNameId),
-    var_QI(0_BOOL),
-    var_PARAMS(""_STRING),
-    var_QO(0_BOOL),
-    var_STATUS(""_STRING),
+    CProcessInterfaceFB(paContainer, scmFBInterfaceSpec, paInstanceNameId),
     var_IN(0_BYTE),
-    var_conn_QO(var_QO),
-    var_conn_STATUS(var_STATUS),
     var_conn_IN(var_IN),
-    conn_INITO(this, 0),
-    conn_CNF(this, 1),
     conn_IND(this, 2),
-    conn_QI(nullptr),
-    conn_PARAMS(nullptr),
-    conn_QO(this, 0, &var_conn_QO),
-    conn_STATUS(this, 1, &var_conn_STATUS),
     conn_IN(this, 2, &var_conn_IN) {
 };
 
 void FORTE_IB::setInitialValues() {
-  var_QI = 0_BOOL;
-  var_PARAMS = ""_STRING;
-  var_QO = 0_BOOL;
-  var_STATUS = ""_STRING;
+  CProcessInterfaceFB::setInitialValues();
   var_IN = 0_BYTE;
 }
 
@@ -96,15 +86,15 @@ void FORTE_IB::executeEvent(const TEventID paEIID, CEventChainExecutionThread *c
       break;
     case scmEventINITID:
       if (var_QI) {
-        var_QO = CIEC_BOOL(CProcessInterface::initialise(true, paECET)); //initialise as input
+        var_QO = CIEC_BOOL(CProcessInterfaceFB::initialise(true, paECET)); //initialise as input
       } else {
-        var_QO = CIEC_BOOL(CProcessInterface::deinitialise());
+        var_QO = CIEC_BOOL(CProcessInterfaceFB::deinitialise());
       }
       sendOutputEvent(scmEventINITOID, paECET);
       break;
     case scmEventREQID:
       if (var_QI) {
-        var_QO = CIEC_BOOL(CProcessInterface::read(var_IN));
+        var_QO = CProcessInterfaceFB::read(var_IN);
       } else {
         var_QO = false_BOOL;
       }
@@ -113,29 +103,9 @@ void FORTE_IB::executeEvent(const TEventID paEIID, CEventChainExecutionThread *c
   }
 }
 
-void FORTE_IB::readInputData(const TEventID paEIID) {
-  switch(paEIID) {
-    case scmEventINITID: {
-      readData(0, var_QI, conn_QI);
-      readData(1, var_PARAMS, conn_PARAMS);
-      break;
-    }
-    case scmEventREQID: {
-      readData(0, var_QI, conn_QI);
-      break;
-    }
-    default:
-      break;
-  }
-}
 
 void FORTE_IB::writeOutputData(const TEventID paEIID) {
   switch(paEIID) {
-    case scmEventINITOID: {
-      writeData(0, var_QO, conn_QO);
-      writeData(1, var_STATUS, conn_STATUS);
-      break;
-    }
     case scmEventCNFID: {
       writeData(0, var_QO, conn_QO);
       writeData(1, var_STATUS, conn_STATUS);
@@ -149,49 +119,28 @@ void FORTE_IB::writeOutputData(const TEventID paEIID) {
       break;
     }
     default:
+      CProcessInterfaceFB::writeOutputData(paEIID);
       break;
   }
 }
 
-CIEC_ANY *FORTE_IB::getDI(const size_t paIndex) {
-  switch(paIndex) {
-    case 0: return &var_QI;
-    case 1: return &var_PARAMS;
-  }
-  return nullptr;
-}
-
 CIEC_ANY *FORTE_IB::getDO(const size_t paIndex) {
-  switch(paIndex) {
-    case 0: return &var_QO;
-    case 1: return &var_STATUS;
-    case 2: return &var_IN;
+  if(paIndex == 2){
+    return &var_IN;
   }
-  return nullptr;
+  return CProcessInterfaceFB::getDO(paIndex);
 }
 
 CEventConnection *FORTE_IB::getEOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
-    case 0: return &conn_INITO;
-    case 1: return &conn_CNF;
-    case 2: return &conn_IND;
+  if(paIndex == 2) {
+    return &conn_IND;
   }
-  return nullptr;
-}
-
-CDataConnection **FORTE_IB::getDIConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
-    case 0: return &conn_QI;
-    case 1: return &conn_PARAMS;
-  }
-  return nullptr;
+  return CProcessInterfaceFB::getEOConUnchecked(paIndex);
 }
 
 CDataConnection *FORTE_IB::getDOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
-    case 0: return &conn_QO;
-    case 1: return &conn_STATUS;
-    case 2: return &conn_IN;
+  if(paIndex == 2) {
+    return &conn_IN;
   }
-  return nullptr;
+  return CProcessInterfaceFB::getDOConUnchecked(paIndex);
 }

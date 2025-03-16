@@ -1,5 +1,6 @@
 /*************************************************************************
- * Copyright (c) 2015, 2025 fortiss GmbH
+ * Copyright (c) 2015, 2025 fortiss GmbH, Johannes Kepler University Linz
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -8,10 +9,13 @@
  *
  * Contributors:
  *   Gerd Kainz - initial API and implementation and/or initial documentation
- *************************************************************************/
+ *   Alois Zoitl - copied to core/io and adjusted to core/io process
+ *                 interface needs
+ *******************************************************************************/
 
 #pragma once
 
+#include <processinterfacefb.h>
 #include "funcbloc.h"
 #include "forte_bool.h"
 #include "forte_string.h"
@@ -22,30 +26,11 @@
 #include "forte_array_fixed.h"
 #include "forte_array_variable.h"
 
-#include "processinterface.h"
 
 /*! /brief generic class for IW function blocks providing access to one word physical input
  *
- * In order that this FB can be used implementations need to provide a class CProcessInterface
- * this class needs to inherit from CProcessInterfaceBase and provide the following functions
- *
- *   - bool initialise(bool paInput, CEventChainExecutionThread *const paECET)
- *     Initialize the physical input identified with the value of the PARAMS input
- *       - @param paInput: if true it should be an input, if false it should be an output
- *       - @return true on success, false on error
- *
- *   - bool deinitialise()
- *     Deinitialize the physical port
- *       - @return true on success, false on error
- *
- *   - bool readWord()
- *     Read the value of the physical input word and apply it to the function block's OUT() data output
- *       - @return true on success, false on error
- *
- * TODO a higher flexibility and easier use could be achieve if the base class would be a template parameter. However
- *   currently it is very hard to templatize a function block class.
  */
-class FORTE_IW final : public CProcessInterface {
+class FORTE_IW final : public forte::core::io::CProcessInterfaceFB {
   DECLARE_FIRMWARE_FB(FORTE_IW)
 
   private:
@@ -71,39 +56,26 @@ class FORTE_IW final : public CProcessInterface {
 
     void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
-    void readInputData(TEventID paEIID) override;
     void writeOutputData(TEventID paEIID) override;
     void setInitialValues() override;
+
+    CIEC_BOOL read() override {
+      return forte::core::io::CProcessInterfaceFB::read(var_IN);
+    }
 
   public:
     FORTE_IW(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
-    CIEC_BOOL var_QI;
-    CIEC_STRING var_PARAMS;
-
-    CIEC_BOOL var_QO;
-    CIEC_STRING var_STATUS;
     CIEC_WORD var_IN;
 
-    CIEC_BOOL var_conn_QO;
-    CIEC_STRING var_conn_STATUS;
     CIEC_WORD var_conn_IN;
 
-    CEventConnection conn_INITO;
-    CEventConnection conn_CNF;
     CEventConnection conn_IND;
 
-    CDataConnection *conn_QI;
-    CDataConnection *conn_PARAMS;
-
-    CDataConnection conn_QO;
-    CDataConnection conn_STATUS;
     CDataConnection conn_IN;
 
-    CIEC_ANY *getDI(size_t) override;
     CIEC_ANY *getDO(size_t) override;
     CEventConnection *getEOConUnchecked(TPortId) override;
-    CDataConnection **getDIConUnchecked(TPortId) override;
     CDataConnection *getDOConUnchecked(TPortId) override;
 
     void evt_INIT(const CIEC_BOOL &paQI, const CIEC_STRING &paPARAMS, CIEC_BOOL &paQO, CIEC_STRING &paSTATUS, CIEC_WORD &paIN) {
