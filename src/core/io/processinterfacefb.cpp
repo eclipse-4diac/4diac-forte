@@ -200,10 +200,11 @@ void CProcessInterfaceFB::onHandle(IOHandle* const  paHandle) {
 }
 
 EMGMResponse CProcessInterfaceFB::changeExecutionState(EMGMCommandType paCommand) {
-  if(EMGMCommandType::Kill == paCommand) {
+  EMGMResponse response = CFunctionBlock::changeExecutionState(paCommand);
+  if(response == EMGMResponse::Ready && (paCommand == EMGMCommandType::Kill || paCommand == EMGMCommandType::Reset)) {
     deinitialise();
   }
-  return CFunctionBlock::changeExecutionState(paCommand);
+  return response;
 }
 
 CIEC_ANY *CProcessInterfaceFB::getDI(const size_t paIndex) {
