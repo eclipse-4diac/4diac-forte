@@ -27,6 +27,15 @@
   #define I8_IO       (GPIO_NUM_NC ) /*!< Use to signal not connected to S/W */
   #define ACTIVE_LEVEL (1)
 #else
-  #error no known Target for dual_can_digital_in
+  #define I0_IO       (GPIO_NUM_NC) /*!< Use to signal not connected to S/W */
+  #define I1_IO       (GPIO_NUM_NC) /**/
+  #define I2_IO       (GPIO_NUM_NC) /**/
+  #define I3_IO       (GPIO_NUM_NC ) /**/
+  #define I4_IO       (GPIO_NUM_NC ) /**/
+  #define I5_IO       (GPIO_NUM_NC) /*!< Use to signal not connected to S/W */
+  #define I6_IO       (GPIO_NUM_NC) /*!< Use to signal not connected to S/W */
+  #define I7_IO       (GPIO_NUM_NC ) /*!< Use to signal not connected to S/W */
+  #define I8_IO       (GPIO_NUM_NC ) /*!< Use to signal not connected to S/W */
+  #define ACTIVE_LEVEL (1)
 #endif
 
