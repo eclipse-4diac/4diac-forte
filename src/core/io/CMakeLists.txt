@@ -1,5 +1,5 @@
 #*******************************************************************************
-# Copyright (c) 2017 fortiss GmbH
+# Copyright (c) 2017, 2025 fortiss GmbH, Johannes Kepler University Linz
 # This program and the accompanying materials are made available under the
 # terms of the Eclipse Public License 2.0 which is available at
 # http://www.eclipse.org/legal/epl-2.0.
@@ -30,4 +30,5 @@ add_subdirectory(device)
 add_subdirectory(mapper)
 
 forte_add_sourcefile_hcpp(processinterface)
-forte_set_process_interface("Modular IO" IE IX QX IB QB IW QW ID QD IL QL)
+forte_add_sourcefile_hcpp(IB_fbt ID_fbt IE_fbt IL_fbt IW_fbt IX_fbt QB_fbt QD_fbt QL_fbt QW_fbt QX_fbt)
+forte_set_process_interface("Modular IO" )
