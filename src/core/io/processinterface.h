@@ -37,6 +37,8 @@ namespace forte {
 
           bool onChange() override;
 
+          EMGMResponse changeExecutionState(EMGMCommandType paCommand) override;
+
         protected:
           bool initialise(bool paIsInput, CEventChainExecutionThread *const paECET);
           bool deinitialise();

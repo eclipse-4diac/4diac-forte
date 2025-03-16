@@ -83,6 +83,7 @@ bool ProcessInterface::deinitialise() {
   // Deregister interface
   if(mIsListening) {
     IOMapper::getInstance().deregisterObserver(this);
+    mIsListening = false; // we are deregistered ! 
   }
 
   return !mIsReady;
@@ -204,6 +205,13 @@ void ProcessInterface::onHandle(IOHandle* paHandle) {
   } else {
     QO() = CIEC_BOOL(write());
   }
+}
+
+EMGMResponse ProcessInterface::changeExecutionState(EMGMCommandType paCommand) {
+  if(EMGMCommandType::Kill == paCommand) {
+    deinitialise();
+  }
+  return CFunctionBlock::changeExecutionState(paCommand);
 }
 
 void ProcessInterface::dropHandle() {
