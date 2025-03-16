@@ -34,17 +34,8 @@ USE_STRING_ID(UDINT);
 USE_STRING_ID(UINT);
 USE_STRING_ID(WSTRING);
 
-
 #include "criticalregion.h"
 #include "resource.h"
-#include "EBBusAdapter_adp.h"
-#include "forte_udint.h"
-#include "forte_uint.h"
-#include "iec61131_functions.h"
-#include "forte_array_common.h"
-#include "forte_array.h"
-#include "forte_array_fixed.h"
-#include "forte_array_variable.h"
 
 DEFINE_FIRMWARE_FB(FORTE_EBMaster, STRID(EBMaster))
 
@@ -74,15 +65,11 @@ const SFBInterfaceSpec FORTE_EBMaster::scmFBInterfaceSpec = {
 
 FORTE_EBMaster::FORTE_EBMaster(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     forte::core::io::IOConfigFBMultiMaster(paContainer, scmFBInterfaceSpec, paInstanceNameId),
-    var_QI(0_BOOL),
     var_BusInterface(1_UINT),
     var_BusSelectPin(49_UINT),
     var_BusInitSpeed(300000_UDINT),
     var_BusLoopSpeed(700000_UDINT),
     var_SlaveUpdateInterval(25_UINT),
-    var_QO(0_BOOL),
-    var_STATUS(u""_WSTRING),
-    var_BusAdapterOut(STRID(BusAdapterOut), *this, true),
     var_conn_QO(var_QO),
     var_conn_STATUS(var_STATUS),
     conn_INITO(this, 0),
@@ -96,12 +83,6 @@ FORTE_EBMaster::FORTE_EBMaster(const CStringDictionary::TStringId paInstanceName
     conn_QO(this, 0, &var_conn_QO),
     conn_STATUS(this, 1, &var_conn_STATUS) {
 };
-
-bool FORTE_EBMaster::initialize() {
-  if(!var_BusAdapterOut.initialize()) { return false; }
-  var_BusAdapterOut.setParentFB(this, 0);
-  return CFunctionBlock::initialize();
-}
 
 void FORTE_EBMaster::setInitialValues() {
   var_QI = 0_BOOL;
@@ -117,7 +98,7 @@ void FORTE_EBMaster::setInitialValues() {
 void FORTE_EBMaster::readInputData(const TEventID paEIID) {
   switch(paEIID) {
     case scmEventINITID: {
-      readData(0, var_QI, conn_QI);
+       readData(0, var_QI, conn_QI);
       readData(3, var_BusInitSpeed, conn_BusInitSpeed);
       readData(5, var_SlaveUpdateInterval, conn_SlaveUpdateInterval);
       readData(4, var_BusLoopSpeed, conn_BusLoopSpeed);
@@ -163,13 +144,6 @@ CIEC_ANY *FORTE_EBMaster::getDO(const size_t paIndex) {
   switch(paIndex) {
     case 0: return &var_QO;
     case 1: return &var_STATUS;
-  }
-  return nullptr;
-}
-
-CAdapter *FORTE_EBMaster::getAdapterUnchecked(const size_t paIndex) {
-  switch(paIndex) {
-    case 0: return &var_BusAdapterOut;
   }
   return nullptr;
 }

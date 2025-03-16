@@ -11,7 +11,6 @@
  *   Jose Cabral - Cleaning of namespaces
  *******************************************************************************/
 
-
 #pragma once
 
 #include "funcbloc.h"
@@ -50,7 +49,6 @@ private:
 
   static const SFBInterfaceSpec scmFBInterfaceSpec;
 
-  void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
   void readInputData(TEventID paEIID) override;
   void writeOutputData(TEventID paEIID) override;
   void setInitialValues() override;
@@ -62,7 +60,6 @@ private:
 
 public:
   FORTE_EBSlave2181(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
-    bool initialize() override;
 
   CIEC_BOOL var_QI;
   CIEC_WSTRING var_DigitalInput_1;
@@ -85,9 +82,6 @@ public:
 
   CIEC_BOOL var_QO;
   CIEC_WSTRING var_STATUS;
-  FORTE_EBBusAdapter var_BusAdapterIn;
-
-  FORTE_EBBusAdapter var_BusAdapterOut;
 
   CIEC_BOOL var_conn_QO;
   CIEC_WSTRING var_conn_STATUS;
@@ -119,7 +113,6 @@ public:
 
   CIEC_ANY *getDI(size_t) override;
   CIEC_ANY *getDO(size_t) override;
-  CAdapter *getAdapterUnchecked(size_t) override;
   FORTE_EBBusAdapter &var_BusAdapterIn() {
     return *static_cast<FORTE_EBBusAdapter*>(mAdapters[0]);
   };
@@ -160,4 +153,5 @@ public:
     evt_MAP(paQI, paDigitalInput_1, paDigitalInput_2, paDigitalInput_3, paDigitalInput_4, paDigitalInput_5, paDigitalInput_6, paDigitalInput_7, paDigitalInput_8, paDigitalOutput_1, paDigitalOutput_2, paDigitalOutput_3, paDigitalOutput_4, paDigitalOutput_5, paDigitalOutput_6, paDigitalOutput_7, paDigitalOutput_8, paUpdateInterval, paQO, paSTATUS);
   }
 };
+
 

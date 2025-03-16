@@ -11,7 +11,6 @@
  *   Jose Cabral - Cleaning of namespaces
  *******************************************************************************/
 
-
 #pragma once
 
 #include "funcbloc.h"
@@ -53,12 +52,10 @@ private:
 
   static const SFBInterfaceSpec scmFBInterfaceSpec;
 
-  void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
-
   void readInputData(TEventID paEIID) override;
   void writeOutputData(TEventID paEIID) override;
   void setInitialValues() override;
-
+  
 protected:
   forte::core::io::IODeviceController* createDeviceController(CDeviceExecution& paDeviceExecution);
 
@@ -68,7 +65,6 @@ protected:
 
 public:
   FORTE_EBMaster(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
-    bool initialize() override;
 
   CIEC_BOOL var_QI;
   CIEC_UINT var_BusInterface;
@@ -79,8 +75,6 @@ public:
 
   CIEC_BOOL var_QO;
   CIEC_WSTRING var_STATUS;
-
-  FORTE_EBBusAdapter var_BusAdapterOut;
 
   CIEC_BOOL var_conn_QO;
   CIEC_WSTRING var_conn_STATUS;
@@ -100,7 +94,6 @@ public:
 
   CIEC_ANY *getDI(size_t) override;
   CIEC_ANY *getDO(size_t) override;
-  CAdapter *getAdapterUnchecked(size_t) override;
   FORTE_EBBusAdapter &var_BusAdapterOut() {
     return *static_cast<FORTE_EBBusAdapter*>(mAdapters[0]);
   };
@@ -125,4 +118,5 @@ public:
     evt_INIT(paQI, paBusInterface, paBusSelectPin, paBusInitSpeed, paBusLoopSpeed, paSlaveUpdateInterval, paQO, paSTATUS);
   }
 };
+
 

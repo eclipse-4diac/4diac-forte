@@ -11,7 +11,6 @@
  *   Jose Cabral - Cleaning of namespaces
  *******************************************************************************/
 
-
 #pragma once
 
 #include <io/configFB/io_adapter_multi.h>
@@ -85,10 +84,6 @@ public:
   TEventID evt_INIT() {
     return mParentAdapterListEventID + scmEventINITID;
   }
-
-    FORTE_EBBusAdapter(CStringDictionary::TStringId paAdapterInstanceName, forte::core::CFBContainer &paContainer, bool paIsPlug) :
-        CAdapter(paContainer, scmFBInterfaceSpecSocket, paAdapterInstanceName, scmFBInterfaceSpecPlug, paIsPlug) {
-    };
 
   ADAPTER_CTOR_FOR_IO_MULTI(FORTE_EBBusAdapter){
   };

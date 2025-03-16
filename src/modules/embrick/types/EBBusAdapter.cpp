@@ -25,14 +25,8 @@ USE_STRING_ID(QO);
 USE_STRING_ID(UINT);
 USE_STRING_ID(UpdateInterval);
 
-
 #include "criticalregion.h"
 #include "resource.h"
-#include "iec61131_functions.h"
-#include "forte_array_common.h"
-#include "forte_array.h"
-#include "forte_array_fixed.h"
-#include "forte_array_variable.h"
 
 DEFINE_ADAPTER_TYPE(FORTE_EBBusAdapter, STRID(EBBusAdapter))
 
