@@ -22,10 +22,7 @@
 
 #include "mapper/io_mapper.h"
 #include "mapper/io_observer.h"
-
-#include <forte_sync.h>
 #include "../esfb.h"
-
 #include <string>
 
 namespace forte::core::io {
@@ -56,8 +53,8 @@ namespace forte::core::io {
         CIEC_BOOL read(CIEC_ANY &paData);
         CIEC_BOOL write(const CIEC_ANY &paData);
 
-        void onHandle(IOHandle* const paHandle) override;
-        void dropHandle() override;
+        void onHandle(IOHandle* const paHandle) final override;
+        void dropHandle() final override;
 
         CIEC_BOOL var_QI;
         CIEC_STRING var_PARAMS;
@@ -87,9 +84,10 @@ namespace forte::core::io {
           return false_BOOL;
         }
 
+        std::string getId() const;
+
         bool mIsListening;
         bool mIsReady;
-        CSyncObject mSyncMutex;
 
         static const CIEC_STRING scmOK;
         static const CIEC_STRING scmWaitingForHandle;
@@ -102,8 +100,6 @@ namespace forte::core::io {
         static const TEventID scmEventREQID = 1;
         static const TEventID scmEventINITOID = 0;
         static const TEventID scmEventCNFID = 1;
-
-        std::string getId() const;
     };
 
 }

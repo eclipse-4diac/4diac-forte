@@ -34,13 +34,19 @@ namespace forte {
 
           IOMapper::Direction getDirection();
 
+          IOHandle* getHandle(){
+            return mHandle;
+          }
+
         protected:
-          IOHandle* mHandle;
           CIEC_ANY::EDataTypeID mType;
           IOMapper::Direction mDirection;
 
           virtual void onHandle(IOHandle* const paHandle);
           virtual void dropHandle();
+
+        private:
+          IOHandle* mHandle;
 
       };
 

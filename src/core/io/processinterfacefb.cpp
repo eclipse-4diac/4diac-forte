@@ -146,23 +146,24 @@ bool CProcessInterfaceFB::deinitialise() {
 }
 
 CIEC_BOOL CProcessInterfaceFB::read(CIEC_ANY &paData) {
-  CCriticalRegion criticalRegion(mSyncMutex);
-  if(!mIsReady) {
+  auto curHandle = getHandle();
+
+  if(!mIsReady || curHandle == nullptr) {
     return false_BOOL;
   }
 
-  mHandle->get(paData);
+  curHandle->get(paData);
 
   return true_BOOL;
 }
 
 CIEC_BOOL CProcessInterfaceFB::write(const CIEC_ANY &paData) {
-  CCriticalRegion criticalRegion(mSyncMutex);
-  if(!mIsReady) {
+  auto curHandle = getHandle();
+  if(!mIsReady || curHandle == nullptr) {
     return false_BOOL;
   }
 
-  mHandle->set(paData);
+  curHandle->set(paData);
 
   return true_BOOL;
 }
@@ -172,24 +173,20 @@ bool CProcessInterfaceFB::onChange() {
 }
 
 void CProcessInterfaceFB::onHandle(IOHandle* const  paHandle) {
-  {
-    CCriticalRegion criticalRegion(mSyncMutex);
+  IOObserver::onHandle(paHandle);
 
-    IOObserver::onHandle(paHandle);
-
-    if(paHandle->getIOHandleDataType() != mType) {
-      var_STATUS = scmMappedWrongDataType;
-      return;
-    }
-
-    if(paHandle->getDirection() != mDirection) {
-      var_STATUS = mDirection == IOMapper::In ? scmMappedWrongDirectionInput : scmMappedWrongDirectionOutput;
-      return;
-    }
-
-    var_STATUS = scmOK;
-    mIsReady = true;
+  if(paHandle->getIOHandleDataType() != mType) {
+    var_STATUS = scmMappedWrongDataType;
+    return;
   }
+
+  if(paHandle->getDirection() != mDirection) {
+    var_STATUS = mDirection == IOMapper::In ? scmMappedWrongDirectionInput : scmMappedWrongDirectionOutput;
+    return;
+  }
+
+  var_STATUS = scmOK;
+  mIsReady = true;
 
   // Read & write current state
   if(mDirection == IOMapper::In) {
@@ -248,11 +245,8 @@ CDataConnection *CProcessInterfaceFB::getDOConUnchecked(const TPortId paIndex) {
 }
 
 void CProcessInterfaceFB::dropHandle() {
-  CCriticalRegion criticalRegion(mSyncMutex);
-
   IOObserver::dropHandle();
-
-  var_QO = CIEC_BOOL(false);
+  var_QO = false_BOOL;
   var_STATUS = scmWaitingForHandle;
   mIsReady = false;
 }
