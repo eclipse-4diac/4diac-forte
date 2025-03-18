@@ -15,22 +15,13 @@
 
 #pragma once
 
-#include <processinterfacefb.h>
-#include "funcbloc.h"
-#include "forte_bool.h"
-#include "forte_string.h"
+#include "outputfb.h"
 #include "forte_word.h"
-#include "iec61131_functions.h"
-#include "forte_array_common.h"
-#include "forte_array.h"
-#include "forte_array_fixed.h"
-#include "forte_array_variable.h"
-
 
 /*! /brief generic class for QW function blocks providing access to one word physical output
  *
  */
-class FORTE_QW final : public forte::core::io::CProcessInterfaceFB {
+class FORTE_QW final : public forte::core::io::COutputFB<CIEC_WORD> {
   DECLARE_FIRMWARE_FB(FORTE_QW)
 
   private:
@@ -53,24 +44,8 @@ class FORTE_QW final : public forte::core::io::CProcessInterfaceFB {
 
     static const SFBInterfaceSpec scmFBInterfaceSpec;
 
-    void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
-
-    void readInputData(TEventID paEIID) override;
-    void setInitialValues() override;
-
-    CIEC_BOOL write() override {
-      return forte::core::io::CProcessInterfaceFB::read(var_OUT);
-    }
-
   public:
     FORTE_QW(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
-
-    CIEC_WORD var_OUT;
-
-    CDataConnection *conn_OUT;
-
-    CIEC_ANY *getDI(size_t) override;
-    CDataConnection **getDIConUnchecked(TPortId) override;
 
     void evt_INIT(const CIEC_BOOL &paQI, const CIEC_STRING &paPARAMS, const CIEC_WORD &paOUT, CIEC_BOOL &paQO, CIEC_STRING &paSTATUS) {
       var_QI = paQI;
@@ -90,8 +65,5 @@ class FORTE_QW final : public forte::core::io::CProcessInterfaceFB {
       paSTATUS = var_STATUS;
     }
 
-    void operator()(const CIEC_BOOL &paQI, const CIEC_STRING &paPARAMS, const CIEC_WORD &paOUT, CIEC_BOOL &paQO, CIEC_STRING &paSTATUS) {
-      evt_INIT(paQI, paPARAMS, paOUT, paQO, paSTATUS);
-    }
 };
 

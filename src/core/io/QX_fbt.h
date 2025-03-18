@@ -16,21 +16,13 @@
 
 #pragma once
 
-#include <processinterfacefb.h>
-#include "funcbloc.h"
+#include "outputfb.h"
 #include "forte_bool.h"
-#include "forte_string.h"
-#include "iec61131_functions.h"
-#include "forte_array_common.h"
-#include "forte_array.h"
-#include "forte_array_fixed.h"
-#include "forte_array_variable.h"
-
 
 /*! /brief generic class for QX function blocks providing access to one boolean physical output
  *
  */
-class FORTE_QX final : public forte::core::io::CProcessInterfaceFB {
+class FORTE_QX final : public forte::core::io::COutputFB<CIEC_BOOL> {
   DECLARE_FIRMWARE_FB(FORTE_QX)
 
 private:
@@ -53,24 +45,8 @@ private:
 
   static const SFBInterfaceSpec scmFBInterfaceSpec;
 
-  void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
-
-  void readInputData(TEventID paEIID) override;
-  void setInitialValues() override;
-
-  CIEC_BOOL write() override {
-    return forte::core::io::CProcessInterfaceFB::read(var_OUT);
-  }
-
 public:
   FORTE_QX(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
-
-  CIEC_BOOL var_OUT;
-
-  CDataConnection *conn_OUT;
-
-  CIEC_ANY *getDI(size_t) override;
-  CDataConnection **getDIConUnchecked(TPortId) override;
 
   void evt_INIT(const CIEC_BOOL &pa_QI, const CIEC_STRING &pa_PARAMS, const CIEC_BOOL &pa_OUT, CIEC_BOOL &pa_QO, CIEC_STRING &pa_STATUS) {
     var_QI = pa_QI;
@@ -80,6 +56,7 @@ public:
     pa_QO = var_QO;
     pa_STATUS = var_STATUS;
   }
+
   void evt_REQ(const CIEC_BOOL &pa_QI, const CIEC_STRING &pa_PARAMS, const CIEC_BOOL &pa_OUT, CIEC_BOOL &pa_QO, CIEC_STRING &pa_STATUS) {
     var_QI = pa_QI;
     var_PARAMS = pa_PARAMS;
@@ -88,9 +65,7 @@ public:
     pa_QO = var_QO;
     pa_STATUS = var_STATUS;
   }
-  void operator()(const CIEC_BOOL &pa_QI, const CIEC_STRING &pa_PARAMS, const CIEC_BOOL &pa_OUT, CIEC_BOOL &pa_QO, CIEC_STRING &pa_STATUS) {
-    evt_INIT(pa_QI, pa_PARAMS, pa_OUT, pa_QO, pa_STATUS);
-  }
+
 };
 
 

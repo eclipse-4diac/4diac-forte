@@ -32,15 +32,6 @@ USE_STRING_ID(REQ);
 USE_STRING_ID(STATUS);
 USE_STRING_ID(STRING);
 
-
-#include "iec61131_functions.h"
-#include "forte_array_common.h"
-#include "forte_array.h"
-#include "forte_array_fixed.h"
-#include "forte_array_variable.h"
-#include "criticalregion.h"
-#include "resource.h"
-
 using namespace forte::core::io;
 
 DEFINE_FIRMWARE_FB(FORTE_QD, STRID(QD))
@@ -67,60 +58,5 @@ const SFBInterfaceSpec FORTE_QD::scmFBInterfaceSpec = {
 };
 
 FORTE_QD::FORTE_QD(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
-    CProcessInterfaceFB(paContainer, scmFBInterfaceSpec, paInstanceNameId),
-    var_OUT(0_DWORD),
-    conn_OUT(nullptr) {
-};
-
-void FORTE_QD::setInitialValues() {
-  CProcessInterfaceFB::setInitialValues();
-  var_OUT = 0_DWORD;
-}
-
-void FORTE_QD::executeEvent(const TEventID paEIID, CEventChainExecutionThread *const paECET) {
-  switch(paEIID) {
-    case scmEventINITID:
-      if (var_QI) {
-        var_QO = CIEC_BOOL(CProcessInterfaceFB::initialise(false, paECET)); //initialise as output
-      } else {
-        var_QO = CIEC_BOOL(CProcessInterfaceFB::deinitialise());
-      }
-      sendOutputEvent(scmEventINITOID, paECET);
-      break;
-    case scmEventREQID:
-      if (var_QI) {
-        var_QO = CProcessInterfaceFB::write(var_OUT);
-      } else {
-        var_QO = false_BOOL;
-      }
-      sendOutputEvent(scmEventCNFID, paECET);
-      break;
-  }
-}
-
-void FORTE_QD::readInputData(const TEventID paEIID) {
-  switch(paEIID) {
-    case scmEventREQID: {
-      readData(0, var_QI, conn_QI);
-      readData(2, var_OUT, conn_OUT);
-      break;
-    }
-    default:
-      CProcessInterfaceFB::readInputData(paEIID);
-      break;
-  }
-}
-
-CIEC_ANY *FORTE_QD::getDI(const size_t paIndex) {
-  if(paIndex == 2) {
-    return &var_OUT;
-  }
-  return CProcessInterfaceFB::getDI(paIndex);
-}
-
-CDataConnection **FORTE_QD::getDIConUnchecked(const TPortId paIndex) {
-  if(paIndex == 2) {
-    return &conn_OUT;
-  }
-  return CProcessInterfaceFB::getDIConUnchecked(paIndex);
+    COutputFB<CIEC_DWORD>(paContainer, scmFBInterfaceSpec, paInstanceNameId) {
 }

@@ -30,10 +30,6 @@ USE_STRING_ID(REQ);
 USE_STRING_ID(STATUS);
 USE_STRING_ID(STRING);
 
-
-#include "criticalregion.h"
-#include "resource.h"
-
 using namespace forte::core::io;
 
 DEFINE_FIRMWARE_FB(FORTE_QX, STRID(QX))
@@ -60,60 +56,5 @@ const SFBInterfaceSpec FORTE_QX::scmFBInterfaceSpec = {
 };
 
 FORTE_QX::FORTE_QX(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
-    CProcessInterfaceFB(paContainer, scmFBInterfaceSpec, paInstanceNameId),
-    var_OUT(0_BOOL),
-    conn_OUT(nullptr) {
-};
-
-void FORTE_QX::setInitialValues() {
-  CProcessInterfaceFB::setInitialValues();
-  var_OUT = 0_BOOL;
-}
-
-void FORTE_QX::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
-  switch(paEIID) {
-    case scmEventINITID:
-      if (var_QI) {
-        var_QO = CIEC_BOOL(CProcessInterfaceFB::initialise(false, paECET)); //initialise as output
-      } else {
-        var_QO = CIEC_BOOL(CProcessInterfaceFB::deinitialise());
-      }
-      sendOutputEvent(scmEventINITOID, paECET);
-      break;
-    case scmEventREQID:
-      if (var_QI) {
-        var_QO = CProcessInterfaceFB::write(var_OUT);
-      } else {
-        var_QO = false_BOOL;
-      }
-      sendOutputEvent(scmEventCNFID, paECET);
-      break;
-  }
-}
-
-void FORTE_QX::readInputData(TEventID paEIID) {
-  switch(paEIID) {
-    case scmEventREQID: {
-      readData(0, var_QI, conn_QI);
-      readData(2, var_OUT, conn_OUT);
-      break;
-    }
-    default:
-      CProcessInterfaceFB::readInputData(paEIID);
-      break;
-  }
-}
-
-CIEC_ANY *FORTE_QX::getDI(size_t paIndex) {
-  if(paIndex == 2) {
-    return &var_OUT;
-  }
-  return CProcessInterfaceFB::getDI(paIndex);
-}
-
-CDataConnection **FORTE_QX::getDIConUnchecked(TPortId paIndex) {
-  if(paIndex == 2) {
-    return &conn_OUT;
-  }
-  return CProcessInterfaceFB::getDIConUnchecked(paIndex);
+    COutputFB<CIEC_BOOL>(paContainer, scmFBInterfaceSpec, paInstanceNameId) {
 }
