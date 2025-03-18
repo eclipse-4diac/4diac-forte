@@ -9,24 +9,16 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *   Alois Zoitl, Waldemar Eisenmenger, Monika Wenger - initial API and implementation and/or initial documentation
+ *   Alois Zoitl, Waldemar Eisenmenger, Monika Wenger
+ *                    - initial API and implementation and/or initial documentation
  *   Franz Hoepfinger - copied over IX to IE, and removed the IN
- *   Alois Zoitl - copied to core/io and adjusted to core/io process
- *                 interface needs
+ *   Alois Zoitl      - copied to core/io and adjusted to core/io process
+ *                      interface needs
  *******************************************************************************/
 
 #pragma once
 
-#include <processinterfacefb.h>
-#include "funcbloc.h"
-#include "forte_bool.h"
-#include "forte_string.h"
-#include "iec61131_functions.h"
-#include "forte_array_common.h"
-#include "forte_array.h"
-#include "forte_array_fixed.h"
-#include "forte_array_variable.h"
-
+#include "processinterfacefb.h"
 
 class FORTE_IE final : public forte::core::io::CProcessInterfaceFB {
   DECLARE_FIRMWARE_FB(FORTE_IE)
@@ -36,14 +28,10 @@ class FORTE_IE final : public forte::core::io::CProcessInterfaceFB {
     static const CStringDictionary::TStringId scmDataInputTypeIds[];
     static const CStringDictionary::TStringId scmDataOutputNames[];
     static const CStringDictionary::TStringId scmDataOutputTypeIds[];
-    static const TEventID scmEventINITID = 0;
-    static const TEventID scmEventREQID = 1;
     static const TDataIOID scmEIWith[];
     static const TForteInt16 scmEIWithIndexes[];
     static const CStringDictionary::TStringId scmEventInputNames[];
     static const CStringDictionary::TStringId scmEventInputTypeIds[];
-    static const TEventID scmEventINITOID = 0;
-    static const TEventID scmEventCNFID = 1;
     static const TEventID scmEventINDID = 2;
     static const TDataIOID scmEOWith[];
     static const TForteInt16 scmEOWithIndexes[];
@@ -87,8 +75,5 @@ class FORTE_IE final : public forte::core::io::CProcessInterfaceFB {
       paSTATUS = var_STATUS;
     }
 
-    void operator()(const CIEC_BOOL &paQI, const CIEC_STRING &paPARAMS, CIEC_BOOL &paQO, CIEC_STRING &paSTATUS) {
-      evt_INIT(paQI, paPARAMS, paQO, paSTATUS);
-    }
 };
 

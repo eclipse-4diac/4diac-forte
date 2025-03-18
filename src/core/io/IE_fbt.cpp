@@ -9,10 +9,11 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *   Alois Zoitl, Waldemar Eisenmenger, Monika Wenger - initial API and implementation and/or initial documentation
+ *   Alois Zoitl, Waldemar Eisenmenger, Monika Wenger
+ *                    - initial API and implementation and/or initial documentation
  *   Franz Hoepfinger - copied over IX to IE, and removed the IN
- *   Alois Zoitl - copied to core/io and adjusted to core/io process
- *                 interface needs
+ *   Alois Zoitl      - copied to core/io and adjusted to core/io process
+ *                      interface needs
  *******************************************************************************/
  
 #include "IE_fbt.h"
@@ -31,15 +32,6 @@ USE_STRING_ID(QO);
 USE_STRING_ID(REQ);
 USE_STRING_ID(STATUS);
 USE_STRING_ID(STRING);
-
-
-#include "iec61131_functions.h"
-#include "forte_array_common.h"
-#include "forte_array.h"
-#include "forte_array_fixed.h"
-#include "forte_array_variable.h"
-#include "criticalregion.h"
-#include "resource.h"
 
 using namespace forte::core::io;
 
@@ -76,12 +68,8 @@ void FORTE_IE::executeEvent(const TEventID paEIID, CEventChainExecutionThread *c
     case cgExternalEventID:
       sendOutputEvent(scmEventINDID, paECET);
       break;
-   case scmEventREQID:
-      if (var_QI) {
-        var_QO = true_BOOL;
-      } else {
-        var_QO = false_BOOL;
-      }
+    case scmEventREQID:
+      var_QO = var_QI;
       sendOutputEvent(scmEventCNFID, paECET);
       break;
    default:
