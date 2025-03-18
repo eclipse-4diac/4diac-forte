@@ -63,6 +63,11 @@ class FORTE_IE final : public forte::core::io::CProcessInterfaceFB {
 
     CEventConnection *getEOConUnchecked(TPortId) override;
 
+
+    forte::core::io::IOMapper::Direction getDirection() override {
+      return forte::core::io::IOMapper::In;
+    }
+
     void evt_INIT(const CIEC_BOOL &paQI, const CIEC_STRING &paPARAMS, CIEC_BOOL &paQO, CIEC_STRING &paSTATUS) {
       var_QI = paQI;
       var_PARAMS = paPARAMS;

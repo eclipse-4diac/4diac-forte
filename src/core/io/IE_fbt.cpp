@@ -76,21 +76,16 @@ void FORTE_IE::executeEvent(const TEventID paEIID, CEventChainExecutionThread *c
     case cgExternalEventID:
       sendOutputEvent(scmEventINDID, paECET);
       break;
-    case scmEventINITID:
-      if (var_QI) {
-        var_QO = CIEC_BOOL(CProcessInterfaceFB::initialise(true, paECET)); //initialise as input
-      } else {
-        var_QO = CIEC_BOOL(CProcessInterfaceFB::deinitialise());
-      }
-      sendOutputEvent(scmEventINITOID, paECET);
-      break;
-    case scmEventREQID:
+   case scmEventREQID:
       if (var_QI) {
         var_QO = true_BOOL;
       } else {
         var_QO = false_BOOL;
       }
       sendOutputEvent(scmEventCNFID, paECET);
+      break;
+   default:
+      CProcessInterfaceFB::executeEvent(paEIID, paECET);
       break;
   }
 }

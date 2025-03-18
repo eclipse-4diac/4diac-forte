@@ -38,6 +38,10 @@ namespace forte::core::io {
         return CProcessInterfaceFB::getDI(paIndex);
       }
 
+      IOMapper::Direction getDirection() final override {
+        return IOMapper::Out;
+      }
+
     protected:
       CDataConnection **getDIConUnchecked(TPortId paIndex) override final {
         if(paIndex == 2) {
@@ -48,28 +52,20 @@ namespace forte::core::io {
 
     private:
       void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) final override {
-        switch(paEIID) {
-          case scmEventINITID:
-            if (var_QI) {
-              var_QO = CIEC_BOOL(CProcessInterfaceFB::initialise(false, paECET)); //initialise as output
-            } else {
-              var_QO = CIEC_BOOL(CProcessInterfaceFB::deinitialise());
-            }
-            sendOutputEvent(scmEventINITOID, paECET);
-            break;
-          case scmEventREQID:
-            if (var_QI) {
-              var_QO = CProcessInterfaceFB::write(var_OUT);
-            } else {
-              var_QO = false_BOOL;
-            }
-            sendOutputEvent(scmEventCNFID, paECET);
-            break;
+        if(paEIID == scmEventREQID) {
+          if(var_QI) {
+            var_QO = CProcessInterfaceFB::write(var_OUT);
+          } else {
+            var_QO = false_BOOL;
+          }
+          sendOutputEvent(scmEventCNFID, paECET);
+        } else {
+          CProcessInterfaceFB::executeEvent(paEIID, paECET);
         }
       }
 
       void readInputData(TEventID paEIID) final override {
-        switch(paEIID) {
+        switch(paEIID){
           case scmEventREQID: {
             readData(0, var_QI, conn_QI);
             readData(2, var_OUT, conn_OUT);

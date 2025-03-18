@@ -54,6 +54,10 @@ namespace forte::core::io {
         return CProcessInterfaceFB::getDOConUnchecked(paIndex);
       }
 
+      IOMapper::Direction getDirection() final override {
+        return IOMapper::In;
+      }
+
       T var_IN;
       T var_conn_IN;
       CEventConnection conn_IND;
@@ -67,14 +71,6 @@ namespace forte::core::io {
           case cgExternalEventID:
             sendOutputEvent(scmEventINDID, paECET);
             break;
-          case scmEventINITID:
-            if(var_QI) {
-              var_QO = CIEC_BOOL(CProcessInterfaceFB::initialise(true, paECET)); //initialise as input
-            } else {
-              var_QO = CIEC_BOOL(CProcessInterfaceFB::deinitialise());
-            }
-            sendOutputEvent(scmEventINITOID, paECET);
-            break;
           case scmEventREQID:
             if(var_QI) {
               var_QO = CProcessInterfaceFB::read(var_IN);
@@ -82,6 +78,9 @@ namespace forte::core::io {
               var_QO = false_BOOL;
             }
             sendOutputEvent(scmEventCNFID, paECET);
+            break;
+          default:
+            CProcessInterfaceFB::executeEvent(paEIID, paECET);
             break;
         }
       }

@@ -13,45 +13,37 @@
  *   Jonathan Lainer - Adding getter for mDirection.
  *******************************************************************************/
 
-#ifndef SRC_CORE_IO_MAPPER_OBSERVER_H_
-#define SRC_CORE_IO_MAPPER_OBSERVER_H_
+#pragma once
 
 #include "io_handle.h"
 #include "io_mapper.h"
 
-namespace forte {
-  namespace core {
-    namespace io {
+namespace forte::core::io {
 
-      class IOObserver {
-          friend class IOMapper;
+  class IOObserver {
+      friend class IOMapper;
 
-        public:
-          IOObserver();
-          virtual ~IOObserver();
+    public:
+      IOObserver();
+      virtual ~IOObserver();
 
-          virtual bool onChange() = 0;
+      virtual bool onChange() = 0;
 
-          IOMapper::Direction getDirection();
+      virtual IOMapper::Direction getDirection() = 0;
 
-          IOHandle* getHandle(){
-            return mHandle;
-          }
+      IOHandle* getHandle(){
+        return mHandle;
+      }
 
-        protected:
-          CIEC_ANY::EDataTypeID mType;
-          IOMapper::Direction mDirection;
+    protected:
+      CIEC_ANY::EDataTypeID mType;
 
-          virtual void onHandle(IOHandle* const paHandle);
-          virtual void dropHandle();
+      virtual void onHandle(IOHandle* const paHandle);
+      virtual void dropHandle();
 
-        private:
-          IOHandle* mHandle;
+    private:
+      IOHandle* mHandle;
 
-      };
+  };
 
-    } //namespace IO
-  } //namepsace core
-} //namespace forte
-
-#endif /* SRC_CORE_IO_MAPPER_OBSERVER_H_ */
+}

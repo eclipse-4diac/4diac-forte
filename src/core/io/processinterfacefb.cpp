@@ -95,14 +95,25 @@ CProcessInterfaceFB::~CProcessInterfaceFB() {
   deinitialise();
 }
 
-bool CProcessInterfaceFB::initialise(bool paIsInput, CEventChainExecutionThread *const paECET) {
-  mDirection = paIsInput ? IOMapper::In : IOMapper::Out;
-  if(paIsInput && (getFBInterfaceSpec().mNumDOs < 3)) {
+void CProcessInterfaceFB::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
+  if(paEIID == scmEventINITID) {
+    if (var_QI) {
+      var_QO = CProcessInterfaceFB::initialise(paECET);
+    } else {
+      var_QO = CProcessInterfaceFB::deinitialise();
+    }
+    sendOutputEvent(scmEventINITOID, paECET);
+  }
+}
+
+
+CIEC_BOOL CProcessInterfaceFB::initialise(CEventChainExecutionThread *const paECET) {
+  if(getDirection() == IOMapper::In && (getFBInterfaceSpec().mNumDOs < 3)) {
     mType = CIEC_ANY::e_Max; //we assume that any FB which has no "IN" Output must be a EVENT-Only FB.
   }
   else {
     //as it has a index 2 here, we safely can do this
-    mType = (paIsInput ? getDO(2) : getDI(2))->getDataTypeID();
+    mType = (getDirection() == IOMapper::In ? getDO(2) : getDI(2))->getDataTypeID();
   }
 
   mIsReady = false;
@@ -114,14 +125,14 @@ bool CProcessInterfaceFB::initialise(bool paIsInput, CEventChainExecutionThread 
   // Register interface
   if(!(mIsListening = IOMapper::getInstance().registerObserver(getId(), this))) {
     var_STATUS = scmFailedToRegister;
-    return false;
+    return false_BOOL;
   }
 
-  if(mDirection == IOMapper::In) {
+  if(getDirection() == IOMapper::In) {
     setEventChainExecutor(paECET);
   }
 
-  return mIsReady;
+  return mIsReady ? true_BOOL : false_BOOL;
 }
 
 // If PARAMS is not empty use the string specified here "as is" for the IO mapping to the configuration.
@@ -135,14 +146,14 @@ std::string CProcessInterfaceFB::getId()  const {
   }
 }
 
-bool CProcessInterfaceFB::deinitialise() {
+CIEC_BOOL CProcessInterfaceFB::deinitialise() {
   // Deregister interface
   if(mIsListening) {
     IOMapper::getInstance().deregisterObserver(this);
     mIsListening = false; // we are deregistered ! 
   }
 
-  return !mIsReady;
+  return mIsReady ? true_BOOL : false_BOOL;
 }
 
 CIEC_BOOL CProcessInterfaceFB::read(CIEC_ANY &paData) {
@@ -180,8 +191,8 @@ void CProcessInterfaceFB::onHandle(IOHandle* const  paHandle) {
     return;
   }
 
-  if(paHandle->getDirection() != mDirection) {
-    var_STATUS = mDirection == IOMapper::In ? scmMappedWrongDirectionInput : scmMappedWrongDirectionOutput;
+  if(paHandle->getDirection() != getDirection()) {
+    var_STATUS = getDirection() == IOMapper::In ? scmMappedWrongDirectionInput : scmMappedWrongDirectionOutput;
     return;
   }
 
@@ -189,7 +200,7 @@ void CProcessInterfaceFB::onHandle(IOHandle* const  paHandle) {
   mIsReady = true;
 
   // Read & write current state
-  if(mDirection == IOMapper::In) {
+  if(getDirection() == IOMapper::In) {
     var_QO = read();
   } else {
     var_QO = write();
