@@ -50,7 +50,7 @@ namespace forte::core::io {
       void onHandle(IOHandle *const paHandle) final override {
         CProcessInterfaceFB::onHandle(paHandle);
         if(isReady()) {
-          var_QO = CProcessInterfaceFB::write(var_OUT);
+          var_QO = write();
         }
       }
 
@@ -65,7 +65,7 @@ namespace forte::core::io {
       void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) final override {
         if(paEIID == scmEventREQID) {
           if(var_QI) {
-            var_QO = CProcessInterfaceFB::write(var_OUT);
+            var_QO = write();
           } else {
             var_QO = false_BOOL;
           }
@@ -91,6 +91,17 @@ namespace forte::core::io {
       void setInitialValues() final override {
         CProcessInterfaceFB::setInitialValues();
         var_OUT = T(0);
+      }
+
+      CIEC_BOOL write() {
+        auto curHandle = getHandle();
+        if(!isReady() || curHandle == nullptr) {
+          return false_BOOL;
+        }
+
+        curHandle->set(var_OUT);
+
+        return true_BOOL;
       }
 
   };

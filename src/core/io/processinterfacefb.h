@@ -54,12 +54,8 @@ namespace forte::core::io {
       CDataConnection **getDIConUnchecked(TPortId) override;
       CDataConnection *getDOConUnchecked(TPortId) override;
 
-      CIEC_BOOL read(CIEC_ANY &paData);
-      CIEC_BOOL write(const CIEC_ANY &paData);
-
       void onHandle(IOHandle* const paHandle) override;
       void dropHandle() final override;
-
 
       bool isReady() {
         return mIsReady;

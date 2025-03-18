@@ -63,7 +63,7 @@ namespace forte::core::io {
       }
 
       bool onChange() final override {
-        return CProcessInterfaceFB::read(var_IN);
+        return read();
       }
 
       T var_IN;
@@ -75,7 +75,7 @@ namespace forte::core::io {
       void onHandle(IOHandle* const paHandle) final override{
         CProcessInterfaceFB::onHandle(paHandle);
         if(isReady()) {
-           var_QO = CProcessInterfaceFB::read(var_IN);
+           var_QO = read();
         }
       }
 
@@ -87,7 +87,7 @@ namespace forte::core::io {
             break;
           case scmEventREQID:
             if(var_QI) {
-              var_QO = CProcessInterfaceFB::read(var_IN);
+              var_QO = read();
             } else {
               var_QO = false_BOOL;
             }
@@ -122,6 +122,18 @@ namespace forte::core::io {
       void setInitialValues() final override {
         CProcessInterfaceFB::setInitialValues();
         var_IN = T(0);
+      }
+
+      CIEC_BOOL read() {
+        auto curHandle = getHandle();
+
+        if(!isReady() || curHandle == nullptr) {
+          return false_BOOL;
+        }
+
+        curHandle->get(var_IN);
+
+        return true_BOOL;
       }
 
   };

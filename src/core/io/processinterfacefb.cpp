@@ -148,29 +148,6 @@ CIEC_BOOL CProcessInterfaceFB::deinitialise() {
   return mIsReady ? true_BOOL : false_BOOL;
 }
 
-CIEC_BOOL CProcessInterfaceFB::read(CIEC_ANY &paData) {
-  auto curHandle = getHandle();
-
-  if(!mIsReady || curHandle == nullptr) {
-    return false_BOOL;
-  }
-
-  curHandle->get(paData);
-
-  return true_BOOL;
-}
-
-CIEC_BOOL CProcessInterfaceFB::write(const CIEC_ANY &paData) {
-  auto curHandle = getHandle();
-  if(!mIsReady || curHandle == nullptr) {
-    return false_BOOL;
-  }
-
-  curHandle->set(paData);
-
-  return true_BOOL;
-}
-
 bool CProcessInterfaceFB::onChange() {
   //per default we do not need to do anything
   return true;
