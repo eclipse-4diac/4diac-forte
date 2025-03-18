@@ -89,4 +89,11 @@ namespace std {
   };
 }
 
+namespace forte {
+  template <>
+  struct CDataTypeTrait<CIEC_WCHAR> {
+      static constexpr CIEC_ANY::EDataTypeID scmDataTypeId = CIEC_ANY::e_WCHAR;
+  };
+}
+
 #endif /*_FORTE_WCHAR_H_*/

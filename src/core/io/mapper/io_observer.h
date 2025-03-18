@@ -29,18 +29,17 @@ namespace forte::core::io {
 
       virtual bool onChange() = 0;
 
+      virtual CIEC_ANY::EDataTypeID getIOObserverDataType() = 0;
       virtual IOMapper::Direction getDirection() = 0;
 
       IOHandle* getHandle(){
         return mHandle;
       }
 
-    protected:
-      CIEC_ANY::EDataTypeID mType;
 
-      virtual void onHandle(IOHandle* const paHandle);
-      virtual void dropHandle();
-
+        protected:
+          virtual void onHandle(IOHandle* const paHandle);
+          virtual void dropHandle();
     private:
       IOHandle* mHandle;
 

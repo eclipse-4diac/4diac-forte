@@ -113,4 +113,11 @@ namespace std {
   };
 }
 
+namespace forte {
+  template <>
+  struct CDataTypeTrait<CIEC_LDATE> {
+      static constexpr CIEC_ANY::EDataTypeID scmDataTypeId = CIEC_ANY::e_LDATE;
+  };
+}
+
 #endif /*_FORTE_LDATE_H_*/

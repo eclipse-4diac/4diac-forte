@@ -63,6 +63,9 @@ class FORTE_IE final : public forte::core::io::CProcessInterfaceFB {
 
     CEventConnection *getEOConUnchecked(TPortId) override;
 
+    CIEC_ANY::EDataTypeID getIOObserverDataType() override {
+      return CIEC_ANY::e_Max;
+    }
 
     forte::core::io::IOMapper::Direction getDirection() override {
       return forte::core::io::IOMapper::In;

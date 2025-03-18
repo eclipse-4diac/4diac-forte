@@ -124,4 +124,11 @@ namespace std {
   };
 }
 
+namespace forte {
+  template <>
+  struct CDataTypeTrait<CIEC_TIME> {
+      static constexpr CIEC_ANY::EDataTypeID scmDataTypeId = CIEC_ANY::e_TIME;
+  };
+}
+
 #endif /*_FORTE_TIME_H_*/

@@ -18,8 +18,7 @@
 
 using namespace forte::core::io;
 
-IOObserver::IOObserver() :
-    mHandle(nullptr), mType(CIEC_ANY::e_ANY) {
+IOObserver::IOObserver() : mHandle(nullptr) {
 }
 
 IOObserver::~IOObserver() {

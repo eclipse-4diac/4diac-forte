@@ -165,4 +165,11 @@ private:
     static CStringDictionary::TStringId parseNextElementId(const char *&paRunner);
 };
 
+namespace forte {
+  template <>
+  struct CDataTypeTrait<CIEC_STRUCT> {
+      static constexpr CIEC_ANY::EDataTypeID scmDataTypeId = CIEC_ANY::e_STRUCT;
+  };
+}
+
 #endif /*_FORTE_STRUCT_H_*/

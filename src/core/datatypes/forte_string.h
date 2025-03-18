@@ -394,4 +394,11 @@ inline CIEC_STRING operator ""_STRING(const char* paValue, size_t paLength) {
   return CIEC_STRING(paValue, paLength);
 }
 
+namespace forte {
+  template <>
+  struct CDataTypeTrait<CIEC_STRING> {
+      static constexpr CIEC_ANY::EDataTypeID scmDataTypeId = CIEC_ANY::e_STRING;
+  };
+}
+
 #endif /*_FORTE_STRING_H_*/

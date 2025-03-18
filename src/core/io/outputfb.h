@@ -38,6 +38,10 @@ namespace forte::core::io {
         return CProcessInterfaceFB::getDI(paIndex);
       }
 
+      CIEC_ANY::EDataTypeID getIOObserverDataType() override {
+        return forte::CDataTypeTrait<T>::scmDataTypeId;
+      }
+
       IOMapper::Direction getDirection() final override {
         return IOMapper::Out;
       }

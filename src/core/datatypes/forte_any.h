@@ -574,7 +574,14 @@ namespace forte {
       static constexpr bool tinyness_before = std::numeric_limits<typename T::TValueType>::tinyness_before;
       static constexpr std::float_round_style round_style = std::numeric_limits<typename T::TValueType>::round_style;
     };
+
   }
+
+  template <typename T, typename = typename std::enable_if_t<std::is_base_of_v<CIEC_ANY, T>>>
+  struct CDataTypeTrait {
+      static constexpr CIEC_ANY::EDataTypeID scmDataTypeId = CIEC_ANY::e_Max;
+  };
+
 }
 
 #endif /*_MANY_H_*/

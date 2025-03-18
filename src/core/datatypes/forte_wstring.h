@@ -249,6 +249,13 @@ inline CIEC_WSTRING operator ""_WSTRING(const char16_t *paValue, size_t paLength
   return CIEC_WSTRING(paValue, paLength);
 }
 
+namespace forte {
+  template <>
+  struct CDataTypeTrait<CIEC_WSTRING> {
+      static constexpr CIEC_ANY::EDataTypeID scmDataTypeId = CIEC_ANY::e_WSTRING;
+  };
+}
+
 #endif
 
 #endif /*_FORTE_WSTRING_H_*/

@@ -112,4 +112,11 @@ namespace std {
   };
 }
 
+namespace forte {
+  template <>
+  struct CDataTypeTrait<CIEC_ULINT> {
+      static constexpr CIEC_ANY::EDataTypeID scmDataTypeId = CIEC_ANY::e_ULINT;
+  };
+}
+
 #endif /*_FORTE_ULINT_H_*/

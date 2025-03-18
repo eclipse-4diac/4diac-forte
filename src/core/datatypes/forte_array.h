@@ -155,3 +155,10 @@ private:
 static_assert(std::is_copy_assignable_v<CIEC_ARRAY>);
 static_assert(std::is_destructible_v<CIEC_ARRAY>);
 
+namespace forte {
+  template <>
+  struct CDataTypeTrait<CIEC_ARRAY> {
+      static constexpr CIEC_ANY::EDataTypeID scmDataTypeId = CIEC_ANY::e_ARRAY;
+  };
+}
+

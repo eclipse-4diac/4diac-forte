@@ -108,14 +108,6 @@ void CProcessInterfaceFB::executeEvent(TEventID paEIID, CEventChainExecutionThre
 
 
 CIEC_BOOL CProcessInterfaceFB::initialise(CEventChainExecutionThread *const paECET) {
-  if(getDirection() == IOMapper::In && (getFBInterfaceSpec().mNumDOs < 3)) {
-    mType = CIEC_ANY::e_Max; //we assume that any FB which has no "IN" Output must be a EVENT-Only FB.
-  }
-  else {
-    //as it has a index 2 here, we safely can do this
-    mType = (getDirection() == IOMapper::In ? getDO(2) : getDI(2))->getDataTypeID();
-  }
-
   mIsReady = false;
   var_STATUS = scmWaitingForHandle;
 
@@ -186,7 +178,7 @@ bool CProcessInterfaceFB::onChange() {
 void CProcessInterfaceFB::onHandle(IOHandle* const  paHandle) {
   IOObserver::onHandle(paHandle);
 
-  if(paHandle->getIOHandleDataType() != mType) {
+  if(paHandle->getIOHandleDataType() != getIOObserverDataType()) {
     var_STATUS = scmMappedWrongDataType;
     return;
   }
