@@ -62,12 +62,22 @@ namespace forte::core::io {
         return IOMapper::In;
       }
 
+      bool onChange() final override {
+        return CProcessInterfaceFB::read(var_IN);
+      }
+
       T var_IN;
       T var_conn_IN;
       CEventConnection conn_IND;
       CDataConnection conn_IN;
 
     protected:
+      void onHandle(IOHandle* const paHandle) final override{
+        CProcessInterfaceFB::onHandle(paHandle);
+        if(isReady()) {
+           var_QO = CProcessInterfaceFB::read(var_IN);
+        }
+      }
 
     private:
       void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) final override {
@@ -114,9 +124,6 @@ namespace forte::core::io {
         var_IN = T(0);
       }
 
-      CIEC_BOOL read() final override {
-        return forte::core::io::CProcessInterfaceFB::read(var_IN);
-      }
   };
 
 }

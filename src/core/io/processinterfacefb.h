@@ -57,8 +57,13 @@ namespace forte::core::io {
       CIEC_BOOL read(CIEC_ANY &paData);
       CIEC_BOOL write(const CIEC_ANY &paData);
 
-      void onHandle(IOHandle* const paHandle) final override;
+      void onHandle(IOHandle* const paHandle) override;
       void dropHandle() final override;
+
+
+      bool isReady() {
+        return mIsReady;
+      }
 
       CIEC_BOOL var_QI;
       CIEC_STRING var_PARAMS;
@@ -81,14 +86,6 @@ namespace forte::core::io {
     private:
       CIEC_BOOL initialise(CEventChainExecutionThread *const paECET);
       CIEC_BOOL deinitialise();
-
-      virtual CIEC_BOOL read() {
-        return false_BOOL;
-      }
-
-      virtual CIEC_BOOL write() {
-        return false_BOOL;
-      }
 
       std::string getId() const;
 

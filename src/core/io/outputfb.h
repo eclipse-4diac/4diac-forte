@@ -47,6 +47,13 @@ namespace forte::core::io {
       }
 
     protected:
+      void onHandle(IOHandle *const paHandle) final override {
+        CProcessInterfaceFB::onHandle(paHandle);
+        if(isReady()) {
+          var_QO = CProcessInterfaceFB::write(var_OUT);
+        }
+      }
+
       CDataConnection **getDIConUnchecked(TPortId paIndex) override final {
         if(paIndex == 2) {
           return &conn_OUT;
@@ -86,9 +93,6 @@ namespace forte::core::io {
         var_OUT = T(0);
       }
 
-      CIEC_BOOL write() final override {
-        return forte::core::io::CProcessInterfaceFB::read(var_OUT);
-      }
-
   };
+
 }

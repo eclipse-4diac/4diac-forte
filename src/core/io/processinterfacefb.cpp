@@ -172,7 +172,8 @@ CIEC_BOOL CProcessInterfaceFB::write(const CIEC_ANY &paData) {
 }
 
 bool CProcessInterfaceFB::onChange() {
-  return read();
+  //per default we do not need to do anything
+  return true;
 }
 
 void CProcessInterfaceFB::onHandle(IOHandle* const  paHandle) {
@@ -190,13 +191,6 @@ void CProcessInterfaceFB::onHandle(IOHandle* const  paHandle) {
 
   var_STATUS = scmOK;
   mIsReady = true;
-
-  // Read & write current state
-  if(getDirection() == IOMapper::In) {
-    var_QO = read();
-  } else {
-    var_QO = write();
-  }
 }
 
 EMGMResponse CProcessInterfaceFB::changeExecutionState(EMGMCommandType paCommand) {
