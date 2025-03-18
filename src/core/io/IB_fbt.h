@@ -15,19 +15,11 @@
 
 #pragma once
 
-#include <processinterfacefb.h>
-#include "funcbloc.h"
-#include "forte_bool.h"
-#include "forte_byte.h"
-#include "forte_string.h"
-#include "iec61131_functions.h"
-#include "forte_array_common.h"
-#include "forte_array.h"
-#include "forte_array_fixed.h"
-#include "forte_array_variable.h"
+#include "inputfb.h"
+#include "../datatypes/forte_byte.h"
 
 
-class FORTE_IB final : public forte::core::io::CProcessInterfaceFB {
+class FORTE_IB final : public forte::core::io::CInputFB<CIEC_BYTE> {
   DECLARE_FIRMWARE_FB(FORTE_IB)
 
   private:
@@ -35,15 +27,10 @@ class FORTE_IB final : public forte::core::io::CProcessInterfaceFB {
     static const CStringDictionary::TStringId scmDataInputTypeIds[];
     static const CStringDictionary::TStringId scmDataOutputNames[];
     static const CStringDictionary::TStringId scmDataOutputTypeIds[];
-    static const TEventID scmEventINITID = 0;
-    static const TEventID scmEventREQID = 1;
     static const TDataIOID scmEIWith[];
     static const TForteInt16 scmEIWithIndexes[];
     static const CStringDictionary::TStringId scmEventInputNames[];
     static const CStringDictionary::TStringId scmEventInputTypeIds[];
-    static const TEventID scmEventINITOID = 0;
-    static const TEventID scmEventCNFID = 1;
-    static const TEventID scmEventINDID = 2;
     static const TDataIOID scmEOWith[];
     static const TForteInt16 scmEOWithIndexes[];
     static const CStringDictionary::TStringId scmEventOutputNames[];
@@ -51,29 +38,8 @@ class FORTE_IB final : public forte::core::io::CProcessInterfaceFB {
 
     static const SFBInterfaceSpec scmFBInterfaceSpec;
 
-    void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
-
-    void writeOutputData(TEventID paEIID) override;
-    void setInitialValues() override;
-
-    CIEC_BOOL read() override {
-      return forte::core::io::CProcessInterfaceFB::read(var_IN);
-    }
-
   public:
     FORTE_IB(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
-
-    CIEC_BYTE var_IN;
-
-    CIEC_BYTE var_conn_IN;
-
-    CEventConnection conn_IND;
-
-    CDataConnection conn_IN;
-
-    CIEC_ANY *getDO(size_t) override;
-    CEventConnection *getEOConUnchecked(TPortId) override;
-    CDataConnection *getDOConUnchecked(TPortId) override;
 
     void evt_INIT(const CIEC_BOOL &paQI, const CIEC_STRING &paPARAMS, CIEC_BOOL &paQO, CIEC_STRING &paSTATUS, CIEC_BYTE &paIN) {
       var_QI = paQI;
@@ -93,8 +59,5 @@ class FORTE_IB final : public forte::core::io::CProcessInterfaceFB {
       paIN = var_IN;
     }
 
-    void operator()(const CIEC_BOOL &paQI, const CIEC_STRING &paPARAMS, CIEC_BOOL &paQO, CIEC_STRING &paSTATUS, CIEC_BYTE &paIN) {
-      evt_INIT(paQI, paPARAMS, paQO, paSTATUS, paIN);
-    }
 };
 

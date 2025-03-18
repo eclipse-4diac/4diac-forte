@@ -40,13 +40,20 @@ namespace forte::core::io {
         CIEC_ANY *getDI(size_t) override;
         CIEC_ANY *getDO(size_t) override;
 
+
       protected:
+        static const TEventID scmEventINITID = 0;
+        static const TEventID scmEventREQID = 1;
+        static const TEventID scmEventINITOID = 0;
+        static const TEventID scmEventCNFID = 1;
+
         void readInputData(TEventID paEIID) override;
         void writeOutputData(TEventID paEIID) override;
         void setInitialValues() override;
         CEventConnection *getEOConUnchecked(TPortId) override;
         CDataConnection **getDIConUnchecked(TPortId) override;
         CDataConnection *getDOConUnchecked(TPortId) override;
+
         bool initialise(bool paIsInput, CEventChainExecutionThread *const paECET);
         bool deinitialise();
 
@@ -95,11 +102,6 @@ namespace forte::core::io {
         static const CIEC_STRING scmMappedWrongDirectionOutput;
         static const CIEC_STRING scmMappedWrongDirectionInput;
         static const CIEC_STRING scmMappedWrongDataType;
-
-        static const TEventID scmEventINITID = 0;
-        static const TEventID scmEventREQID = 1;
-        static const TEventID scmEventINITOID = 0;
-        static const TEventID scmEventCNFID = 1;
     };
 
 }

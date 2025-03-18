@@ -30,5 +30,6 @@ add_subdirectory(device)
 add_subdirectory(mapper)
 
 forte_add_sourcefile_hcpp(processinterfacefb)
+forte_add_sourcefile_h(inputfb.h)
 forte_add_sourcefile_hcpp(IB_fbt ID_fbt IE_fbt IL_fbt IW_fbt IX_fbt QB_fbt QD_fbt QL_fbt QW_fbt QX_fbt)
 forte_set_process_interface("Modular IO" )

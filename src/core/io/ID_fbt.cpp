@@ -33,15 +33,6 @@ USE_STRING_ID(REQ);
 USE_STRING_ID(STATUS);
 USE_STRING_ID(STRING);
 
-
-#include "iec61131_functions.h"
-#include "forte_array_common.h"
-#include "forte_array.h"
-#include "forte_array_fixed.h"
-#include "forte_array_variable.h"
-#include "criticalregion.h"
-#include "resource.h"
-
 using namespace forte::core::io;
 
 DEFINE_FIRMWARE_FB(FORTE_ID, STRID(ID))
@@ -68,79 +59,5 @@ const SFBInterfaceSpec FORTE_ID::scmFBInterfaceSpec = {
 };
 
 FORTE_ID::FORTE_ID(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
-    CProcessInterfaceFB(paContainer, scmFBInterfaceSpec, paInstanceNameId),
-    var_IN(0_DWORD),
-    var_conn_IN(var_IN),
-    conn_IND(this, 2),
-    conn_IN(this, 2, &var_conn_IN) {
+    CInputFB<CIEC_DWORD>(paContainer, scmFBInterfaceSpec, paInstanceNameId) {
 };
-
-void FORTE_ID::setInitialValues() {
-  CProcessInterfaceFB::setInitialValues();
-  var_IN = 0_DWORD;
-}
-
-void FORTE_ID::executeEvent(const TEventID paEIID, CEventChainExecutionThread *const paECET) {
-  switch(paEIID) {
-    case cgExternalEventID:
-      sendOutputEvent(scmEventINDID, paECET);
-      break;
-    case scmEventINITID:
-      if (var_QI) {
-        var_QO = CIEC_BOOL(CProcessInterfaceFB::initialise(true, paECET)); //initialise as input
-      } else {
-        var_QO = CIEC_BOOL(CProcessInterfaceFB::deinitialise());
-      }
-      sendOutputEvent(scmEventINITOID, paECET);
-      break;
-    case scmEventREQID:
-      if (var_QI) {
-        var_QO = CProcessInterfaceFB::read(var_IN);
-      } else {
-        var_QO = false_BOOL;
-      }
-      sendOutputEvent(scmEventCNFID, paECET);
-      break;
-  }
-}
-
-void FORTE_ID::writeOutputData(const TEventID paEIID) {
-  switch(paEIID) {
-    case scmEventCNFID: {
-      writeData(0, var_QO, conn_QO);
-      writeData(1, var_STATUS, conn_STATUS);
-      writeData(2, var_IN, conn_IN);
-      break;
-    }
-    case scmEventINDID: {
-      writeData(0, var_QO, conn_QO);
-      writeData(1, var_STATUS, conn_STATUS);
-      writeData(2, var_IN, conn_IN);
-      break;
-    }
-    default:
-      CProcessInterfaceFB::writeOutputData(paEIID);
-      break;
-  }
-}
-
-CIEC_ANY *FORTE_ID::getDO(const size_t paIndex) {
-  if(paIndex == 2){
-    return &var_IN;
-  }
-  return CProcessInterfaceFB::getDO(paIndex);
-}
-
-CEventConnection *FORTE_ID::getEOConUnchecked(const TPortId paIndex) {
-  if(paIndex == 2) {
-    return &conn_IND;
-  }
-  return CProcessInterfaceFB::getEOConUnchecked(paIndex);
-}
-
-CDataConnection *FORTE_ID::getDOConUnchecked(const TPortId paIndex) {
-  if(paIndex == 2) {
-    return &conn_IN;
-  }
-  return CProcessInterfaceFB::getDOConUnchecked(paIndex);
-}
