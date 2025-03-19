@@ -48,24 +48,6 @@ private:
 public:
   FORTE_QX(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
-  void evt_INIT(const CIEC_BOOL &pa_QI, const CIEC_STRING &pa_PARAMS, const CIEC_BOOL &pa_OUT, CIEC_BOOL &pa_QO, CIEC_STRING &pa_STATUS) {
-    var_QI = pa_QI;
-    var_PARAMS = pa_PARAMS;
-    var_OUT = pa_OUT;
-    receiveInputEvent(scmEventINITID, nullptr);
-    pa_QO = var_QO;
-    pa_STATUS = var_STATUS;
-  }
-
-  void evt_REQ(const CIEC_BOOL &pa_QI, const CIEC_STRING &pa_PARAMS, const CIEC_BOOL &pa_OUT, CIEC_BOOL &pa_QO, CIEC_STRING &pa_STATUS) {
-    var_QI = pa_QI;
-    var_PARAMS = pa_PARAMS;
-    var_OUT = pa_OUT;
-    receiveInputEvent(scmEventREQID, nullptr);
-    pa_QO = var_QO;
-    pa_STATUS = var_STATUS;
-  }
-
 };
 
 

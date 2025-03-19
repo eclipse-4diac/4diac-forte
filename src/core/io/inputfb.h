@@ -66,6 +66,15 @@ namespace forte::core::io {
         return read();
       }
 
+      void evt_REQ(const CIEC_BOOL &paQI, const CIEC_STRING &paPARAMS, CIEC_BOOL &paQO, CIEC_STRING &paSTATUS, CIEC_BYTE &paIN) {
+        var_QI = paQI;
+        var_PARAMS = paPARAMS;
+        receiveInputEvent(scmEventREQID, nullptr);
+        paQO = var_QO;
+        paSTATUS = var_STATUS;
+        paIN = var_IN;
+      }
+
       T var_IN;
       T var_conn_IN;
       CEventConnection conn_IND;

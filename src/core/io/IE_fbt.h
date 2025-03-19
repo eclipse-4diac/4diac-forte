@@ -59,14 +59,6 @@ class FORTE_IE final : public forte::core::io::CProcessInterfaceFB {
       return forte::core::io::IOMapper::In;
     }
 
-    void evt_INIT(const CIEC_BOOL &paQI, const CIEC_STRING &paPARAMS, CIEC_BOOL &paQO, CIEC_STRING &paSTATUS) {
-      var_QI = paQI;
-      var_PARAMS = paPARAMS;
-      receiveInputEvent(scmEventINITID, nullptr);
-      paQO = var_QO;
-      paSTATUS = var_STATUS;
-    }
-
     void evt_REQ(const CIEC_BOOL &paQI, const CIEC_STRING &paPARAMS, CIEC_BOOL &paQO, CIEC_STRING &paSTATUS) {
       var_QI = paQI;
       var_PARAMS = paPARAMS;

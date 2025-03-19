@@ -44,23 +44,5 @@ class FORTE_ID final : public forte::core::io::CInputFB<CIEC_DWORD> {
   public:
     FORTE_ID(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
-    void evt_INIT(const CIEC_BOOL &paQI, const CIEC_STRING &paPARAMS, CIEC_BOOL &paQO, CIEC_STRING &paSTATUS, CIEC_DWORD &paIN) {
-      var_QI = paQI;
-      var_PARAMS = paPARAMS;
-      receiveInputEvent(scmEventINITID, nullptr);
-      paQO = var_QO;
-      paSTATUS = var_STATUS;
-      paIN = var_IN;
-    }
-
-    void evt_REQ(const CIEC_BOOL &paQI, const CIEC_STRING &paPARAMS, CIEC_BOOL &paQO, CIEC_STRING &paSTATUS, CIEC_DWORD &paIN) {
-      var_QI = paQI;
-      var_PARAMS = paPARAMS;
-      receiveInputEvent(scmEventREQID, nullptr);
-      paQO = var_QO;
-      paSTATUS = var_STATUS;
-      paIN = var_IN;
-    }
-
 };
 

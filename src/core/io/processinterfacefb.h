@@ -40,6 +40,20 @@ namespace forte::core::io {
       CIEC_ANY *getDI(size_t) override;
       CIEC_ANY *getDO(size_t) override;
 
+      void evt_INIT(const CIEC_BOOL &paQI, const CIEC_STRING &paPARAMS, CIEC_BOOL &paQO, CIEC_STRING &paSTATUS) {
+        var_QI = paQI;
+        var_PARAMS = paPARAMS;
+        receiveInputEvent(scmEventINITID, nullptr);
+        paQO = var_QO;
+        paSTATUS = var_STATUS;
+      }
+
+      CIEC_BOOL var_QI;
+      CIEC_STRING var_PARAMS;
+
+      CIEC_BOOL var_QO;
+      CIEC_STRING var_STATUS;
+
     protected:
       static const TEventID scmEventINITID = 0;
       static const TEventID scmEventREQID = 1;
@@ -60,12 +74,6 @@ namespace forte::core::io {
       bool isReady() {
         return mIsReady;
       }
-
-      CIEC_BOOL var_QI;
-      CIEC_STRING var_PARAMS;
-
-      CIEC_BOOL var_QO;
-      CIEC_STRING var_STATUS;
 
       CIEC_BOOL var_conn_QO;
       CIEC_STRING var_conn_STATUS;

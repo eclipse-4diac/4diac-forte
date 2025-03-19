@@ -47,23 +47,5 @@ class FORTE_QW final : public forte::core::io::COutputFB<CIEC_WORD> {
   public:
     FORTE_QW(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
-    void evt_INIT(const CIEC_BOOL &paQI, const CIEC_STRING &paPARAMS, const CIEC_WORD &paOUT, CIEC_BOOL &paQO, CIEC_STRING &paSTATUS) {
-      var_QI = paQI;
-      var_PARAMS = paPARAMS;
-      var_OUT = paOUT;
-      receiveInputEvent(scmEventINITID, nullptr);
-      paQO = var_QO;
-      paSTATUS = var_STATUS;
-    }
-
-    void evt_REQ(const CIEC_BOOL &paQI, const CIEC_STRING &paPARAMS, const CIEC_WORD &paOUT, CIEC_BOOL &paQO, CIEC_STRING &paSTATUS) {
-      var_QI = paQI;
-      var_PARAMS = paPARAMS;
-      var_OUT = paOUT;
-      receiveInputEvent(scmEventREQID, nullptr);
-      paQO = var_QO;
-      paSTATUS = var_STATUS;
-    }
-
 };
 
