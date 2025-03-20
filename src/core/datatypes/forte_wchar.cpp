@@ -103,3 +103,5 @@ int CIEC_WCHAR::fromString(const char *paValue) {
 
   return -1; //no match so something must be wrong
 }
+
+const CStringDictionary::TStringId forte::CDataTypeTrait<CIEC_WCHAR>::scmDataTypeName = STRID(WCHAR);

@@ -340,3 +340,5 @@ void CIEC_WSTRING::fromCharString(const char* const paValue){
     DEVLOG_WARNING("CIEC_WSTRING::fromCharString - Attempt to assign null, no action performed!\n");
   }
 }
+
+const CStringDictionary::TStringId forte::CDataTypeTrait<CIEC_WSTRING>::scmDataTypeName = STRID(WSTRING);

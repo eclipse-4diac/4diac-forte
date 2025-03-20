@@ -29,3 +29,5 @@ template CIEC_LINT &CIEC_LINT::operator=<>(const CIEC_USINT &paValue);
 template CIEC_LINT &CIEC_LINT::operator=<>(const CIEC_UINT &paValue);
 
 template CIEC_LINT &CIEC_LINT::operator=<>(const CIEC_UDINT &paValue);
+
+const CStringDictionary::TStringId forte::CDataTypeTrait<CIEC_LINT>::scmDataTypeName = STRID(LINT);

@@ -78,3 +78,5 @@ int CIEC_BOOL::toString(char* paValue, size_t paBufferSize) const {
   }
   return nRetval;
 }
+
+const CStringDictionary::TStringId forte::CDataTypeTrait<CIEC_BOOL>::scmDataTypeName = STRID(BOOL);

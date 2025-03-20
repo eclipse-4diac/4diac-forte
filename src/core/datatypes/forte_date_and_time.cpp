@@ -126,3 +126,5 @@ int CIEC_DATE_AND_TIME::toString(char* paValue, size_t paBufferSize) const {
 int CIEC_DATE_AND_TIME::toGMTString(char* paValue, unsigned int paBufferSize) const{
   return toString(paValue, paBufferSize);
 }
+
+const CStringDictionary::TStringId forte::CDataTypeTrait<CIEC_DATE_AND_TIME>::scmDataTypeName = STRID(DATE_AND_TIME);

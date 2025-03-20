@@ -115,3 +115,5 @@ void CIEC_LREAL::castLRealData(const CIEC_LREAL &paSrcValue, CIEC_ANY &paDestVal
     }
   }
 }
+
+const CStringDictionary::TStringId forte::CDataTypeTrait<CIEC_LREAL>::scmDataTypeName = STRID(LREAL);

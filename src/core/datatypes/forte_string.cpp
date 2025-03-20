@@ -278,5 +278,7 @@ int CIEC_STRING::toUTF8(char* paBuffer, size_t paBufferSize, bool paEscape) cons
   return static_cast<int>(pEncRunner - paBuffer);
 }
 
+const CStringDictionary::TStringId forte::CDataTypeTrait<CIEC_STRING>::scmDataTypeName = STRID(STRING);
+
 #endif
 

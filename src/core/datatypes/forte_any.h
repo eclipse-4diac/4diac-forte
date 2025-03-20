@@ -580,6 +580,7 @@ namespace forte {
   template <typename T, typename = typename std::enable_if_t<std::is_base_of_v<CIEC_ANY, T>>>
   struct CDataTypeTrait {
       static constexpr CIEC_ANY::EDataTypeID scmDataTypeId = CIEC_ANY::e_Max;
+      static constexpr CStringDictionary::TStringId scmDataTypeName = CStringDictionary::scmInvalidStringId;
   };
 
 }

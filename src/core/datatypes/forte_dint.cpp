@@ -25,3 +25,5 @@ template CIEC_DINT &CIEC_DINT::operator=<>(const CIEC_INT &paValue);
 template CIEC_DINT &CIEC_DINT::operator=<>(const CIEC_USINT &paValue);
 
 template CIEC_DINT &CIEC_DINT::operator=<>(const CIEC_UINT &paValue);
+
+const CStringDictionary::TStringId forte::CDataTypeTrait<CIEC_DINT>::scmDataTypeName = STRID(DINT);

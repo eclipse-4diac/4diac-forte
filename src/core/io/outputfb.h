@@ -15,6 +15,22 @@
 
 #include "processinterfacefb.h"
 
+USE_STRING_ID(BOOL);
+USE_STRING_ID(BYTE);
+USE_STRING_ID(CNF);
+USE_STRING_ID(EInit);
+USE_STRING_ID(Event);
+USE_STRING_ID(INIT);
+USE_STRING_ID(INITO);
+USE_STRING_ID(OUT);
+USE_STRING_ID(PARAMS);
+USE_STRING_ID(QB);
+USE_STRING_ID(QI);
+USE_STRING_ID(QO);
+USE_STRING_ID(REQ);
+USE_STRING_ID(STATUS);
+USE_STRING_ID(STRING);
+
 namespace forte::core::io {
 
   template<class T>
@@ -22,8 +38,8 @@ namespace forte::core::io {
       static_assert(std::is_base_of_v<CIEC_ANY_BIT, T>, "T must be a subclass of CIEC_ANY_BIT");
 
     public:
-      COutputFB(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec &paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId) :
-          CProcessInterfaceFB(paContainer, paInterfaceSpec, paInstanceNameId),
+      COutputFB(forte::core::CFBContainer &paContainer, const CStringDictionary::TStringId paInstanceNameId) :
+          CProcessInterfaceFB(paContainer, scmFBInterfaceSpec, paInstanceNameId),
           var_OUT(),
           conn_OUT(nullptr) {
       }
@@ -56,6 +72,8 @@ namespace forte::core::io {
       }
 
     protected:
+      static const SFBInterfaceSpec scmFBInterfaceSpec;
+
       void onHandle(IOHandle *const paHandle) final override {
         CProcessInterfaceFB::onHandle(paHandle);
         if(isReady()) {
@@ -71,6 +89,19 @@ namespace forte::core::io {
       }
 
     private:
+      static const CStringDictionary::TStringId scmDataInputNames[];
+      static const CStringDictionary::TStringId scmDataInputTypeIds[];
+      static const CStringDictionary::TStringId scmDataOutputNames[];
+      static const CStringDictionary::TStringId scmDataOutputTypeIds[];
+      static const TDataIOID scmEIWith[];
+      static const TForteInt16 scmEIWithIndexes[];
+      static const CStringDictionary::TStringId scmEventInputNames[];
+      static const CStringDictionary::TStringId scmEventInputTypeIds[];
+      static const TDataIOID scmEOWith[];
+      static const TForteInt16 scmEOWithIndexes[];
+      static const CStringDictionary::TStringId scmEventOutputNames[];
+      static const CStringDictionary::TStringId scmEventOutputTypeIds[];
+
       void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) final override {
         if(paEIID == scmEventREQID) {
           if(var_QI) {
@@ -113,6 +144,40 @@ namespace forte::core::io {
         return true_BOOL;
       }
 
+  };
+
+  template<class T>
+  const CStringDictionary::TStringId COutputFB<T>::scmDataInputNames[] = {STRID(QI), STRID(PARAMS), STRID(OUT)};
+  template<class T>
+  const CStringDictionary::TStringId COutputFB<T>::scmDataInputTypeIds[] = {STRID(BOOL), STRID(STRING), forte::CDataTypeTrait<T>::scmDataTypeName};
+  template<class T>
+  const CStringDictionary::TStringId COutputFB<T>::scmDataOutputNames[] = {STRID(QO), STRID(STATUS)};
+  template<class T>
+  const CStringDictionary::TStringId COutputFB<T>::scmDataOutputTypeIds[] = {STRID(BOOL), STRID(STRING)};
+  template<class T>
+  const TDataIOID COutputFB<T>::scmEIWith[] = {0, 1, scmWithListDelimiter, 0, 2, scmWithListDelimiter};
+  template<class T>
+  const TForteInt16 COutputFB<T>::scmEIWithIndexes[] = {0, 3};
+  template<class T>
+  const CStringDictionary::TStringId COutputFB<T>::scmEventInputNames[] = {STRID(INIT), STRID(REQ)};
+  template<class T>
+  const CStringDictionary::TStringId COutputFB<T>::scmEventInputTypeIds[] = {STRID(EInit), STRID(Event)};
+  template<class T>
+  const TDataIOID COutputFB<T>::scmEOWith[] = {0, 1, scmWithListDelimiter, 0, 1, scmWithListDelimiter};
+  template<class T>
+  const TForteInt16 COutputFB<T>::scmEOWithIndexes[] = {0, 3};
+  template<class T>
+  const CStringDictionary::TStringId COutputFB<T>::scmEventOutputNames[] = {STRID(INITO), STRID(CNF)};
+  template<class T>
+  const CStringDictionary::TStringId COutputFB<T>::scmEventOutputTypeIds[] = {STRID(EInit), STRID(Event)};
+  template<class T>
+  const SFBInterfaceSpec COutputFB<T>::scmFBInterfaceSpec = {
+    2, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,
+    2, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes,
+    3, scmDataInputNames, scmDataInputTypeIds,
+    2, scmDataOutputNames, scmDataOutputTypeIds,
+    0, nullptr,
+    0, nullptr
   };
 
 }

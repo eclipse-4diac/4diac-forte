@@ -196,4 +196,3 @@ bool CIEC_STRUCT::equals(const CIEC_ANY &paOther) const {
   }
   return false;
 }
-

@@ -15,48 +15,12 @@
 
 #include "IW_fbt.h"
 
-USE_STRING_ID(BOOL);
-USE_STRING_ID(CNF);
-USE_STRING_ID(EInit);
-USE_STRING_ID(Event);
-USE_STRING_ID(IN);
-USE_STRING_ID(IND);
-USE_STRING_ID(INIT);
-USE_STRING_ID(INITO);
 USE_STRING_ID(IW);
-USE_STRING_ID(PARAMS);
-USE_STRING_ID(QI);
-USE_STRING_ID(QO);
-USE_STRING_ID(REQ);
-USE_STRING_ID(STATUS);
-USE_STRING_ID(STRING);
-USE_STRING_ID(WORD);
 
 using namespace forte::core::io;
 
 DEFINE_FIRMWARE_FB(FORTE_IW, STRID(IW))
 
-const CStringDictionary::TStringId FORTE_IW::scmDataInputNames[] = {STRID(QI), STRID(PARAMS)};
-const CStringDictionary::TStringId FORTE_IW::scmDataInputTypeIds[] = {STRID(BOOL), STRID(STRING)};
-const CStringDictionary::TStringId FORTE_IW::scmDataOutputNames[] = {STRID(QO), STRID(STATUS), STRID(IN)};
-const CStringDictionary::TStringId FORTE_IW::scmDataOutputTypeIds[] = {STRID(BOOL), STRID(STRING), STRID(WORD)};
-const TDataIOID FORTE_IW::scmEIWith[] = {0, 1, scmWithListDelimiter, 0, scmWithListDelimiter};
-const TForteInt16 FORTE_IW::scmEIWithIndexes[] = {0, 3};
-const CStringDictionary::TStringId FORTE_IW::scmEventInputNames[] = {STRID(INIT), STRID(REQ)};
-const CStringDictionary::TStringId FORTE_IW::scmEventInputTypeIds[] = {STRID(EInit), STRID(Event)};
-const TDataIOID FORTE_IW::scmEOWith[] = {0, 1, scmWithListDelimiter, 0, 1, 2, scmWithListDelimiter, 0, 1, 2, scmWithListDelimiter};
-const TForteInt16 FORTE_IW::scmEOWithIndexes[] = {0, 3, 7};
-const CStringDictionary::TStringId FORTE_IW::scmEventOutputNames[] = {STRID(INITO), STRID(CNF), STRID(IND)};
-const CStringDictionary::TStringId FORTE_IW::scmEventOutputTypeIds[] = {STRID(EInit), STRID(Event), STRID(Event)};
-const SFBInterfaceSpec FORTE_IW::scmFBInterfaceSpec = {
-  2, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,
-  3, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes,
-  2, scmDataInputNames, scmDataInputTypeIds,
-  3, scmDataOutputNames, scmDataOutputTypeIds,
-  0, nullptr,
-  0, nullptr
-};
-
 FORTE_IW::FORTE_IW(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
-    CInputFB<CIEC_WORD>(paContainer, scmFBInterfaceSpec, paInstanceNameId) {
+    CInputFB<CIEC_WORD>(paContainer, paInstanceNameId) {
 }

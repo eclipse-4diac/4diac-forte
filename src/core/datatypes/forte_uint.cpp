@@ -19,3 +19,5 @@ USE_STRING_ID(UINT);
 DEFINE_FIRMWARE_DATATYPE(UINT, STRID(UINT))
 
 template CIEC_UINT &CIEC_UINT::operator=<>(const CIEC_USINT &paValue);
+
+const CStringDictionary::TStringId forte::CDataTypeTrait<CIEC_UINT>::scmDataTypeName = STRID(UINT);

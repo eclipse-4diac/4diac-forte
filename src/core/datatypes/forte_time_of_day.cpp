@@ -109,3 +109,5 @@ int CIEC_TIME_OF_DAY::toString(char* paValue, size_t paBufferSize) const {
   }
   return nRetVal;
 }
+
+const CStringDictionary::TStringId forte::CDataTypeTrait<CIEC_TIME_OF_DAY>::scmDataTypeName = STRID(TIME_OF_DAY);

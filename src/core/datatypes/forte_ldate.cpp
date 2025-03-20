@@ -85,3 +85,5 @@ int CIEC_LDATE::toString(char* paValue, size_t paBufferSize) const {
   }
   return nRetVal;
 }
+
+const CStringDictionary::TStringId forte::CDataTypeTrait<CIEC_LDATE>::scmDataTypeName = STRID(LDATE);

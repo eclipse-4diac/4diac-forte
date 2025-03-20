@@ -23,3 +23,5 @@ template CIEC_ULINT &CIEC_ULINT::operator=<>(const CIEC_USINT &paValue);
 template CIEC_ULINT &CIEC_ULINT::operator=<>(const CIEC_UINT &paValue);
 
 template CIEC_ULINT &CIEC_ULINT::operator=<>(const CIEC_UDINT &paValue);
+
+const CStringDictionary::TStringId forte::CDataTypeTrait<CIEC_ULINT>::scmDataTypeName = STRID(ULINT);

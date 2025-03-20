@@ -121,6 +121,7 @@ namespace forte {
   template <>
   struct CDataTypeTrait<CIEC_LTIME_OF_DAY> {
       static constexpr CIEC_ANY::EDataTypeID scmDataTypeId = CIEC_ANY::e_LTIME_OF_DAY;
+      static const CStringDictionary::TStringId scmDataTypeName;
   };
 }
 

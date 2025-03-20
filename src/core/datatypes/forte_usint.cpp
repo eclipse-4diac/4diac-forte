@@ -18,3 +18,5 @@ USE_STRING_ID(USINT);
 
 DEFINE_FIRMWARE_DATATYPE(USINT, STRID(USINT))
 
+const CStringDictionary::TStringId forte::CDataTypeTrait<CIEC_USINT>::scmDataTypeName = STRID(USINT);
+

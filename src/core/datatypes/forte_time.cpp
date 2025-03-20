@@ -279,3 +279,5 @@ void CIEC_TIME::setFromNanoSeconds(TValueType paValue) {
           paValue * (csmForteTimeBaseUnitsPerSecond / forte::core::constants::cNanosecondsPerSecond) :
           paValue / (forte::core::constants::cNanosecondsPerSecond / csmForteTimeBaseUnitsPerSecond));
 }
+
+const CStringDictionary::TStringId forte::CDataTypeTrait<CIEC_TIME>::scmDataTypeName = STRID(TIME);

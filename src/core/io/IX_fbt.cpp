@@ -15,47 +15,12 @@
  *******************************************************************************/
 #include "IX_fbt.h"
 
-USE_STRING_ID(BOOL);
-USE_STRING_ID(CNF);
-USE_STRING_ID(EInit);
-USE_STRING_ID(Event);
-USE_STRING_ID(IN);
-USE_STRING_ID(IND);
-USE_STRING_ID(INIT);
-USE_STRING_ID(INITO);
 USE_STRING_ID(IX);
-USE_STRING_ID(PARAMS);
-USE_STRING_ID(QI);
-USE_STRING_ID(QO);
-USE_STRING_ID(REQ);
-USE_STRING_ID(STATUS);
-USE_STRING_ID(STRING);
 
 using namespace forte::core::io;
 
 DEFINE_FIRMWARE_FB(FORTE_IX, STRID(IX))
 
-const CStringDictionary::TStringId FORTE_IX::scmDataInputNames[] = {STRID(QI), STRID(PARAMS)};
-const CStringDictionary::TStringId FORTE_IX::scmDataInputTypeIds[] = {STRID(BOOL), STRID(STRING)};
-const CStringDictionary::TStringId FORTE_IX::scmDataOutputNames[] = {STRID(QO), STRID(STATUS), STRID(IN)};
-const CStringDictionary::TStringId FORTE_IX::scmDataOutputTypeIds[] = {STRID(BOOL), STRID(STRING), STRID(BOOL)};
-const TDataIOID FORTE_IX::scmEIWith[] = {0, 1, scmWithListDelimiter, 0, scmWithListDelimiter};
-const TForteInt16 FORTE_IX::scmEIWithIndexes[] = {0, 3};
-const CStringDictionary::TStringId FORTE_IX::scmEventInputNames[] = {STRID(INIT), STRID(REQ)};
-const CStringDictionary::TStringId FORTE_IX::scmEventInputTypeIds[] = {STRID(EInit), STRID(Event)};
-const TDataIOID FORTE_IX::scmEOWith[] = {0, 1, scmWithListDelimiter, 0, 1, 2, scmWithListDelimiter, 0, 1, 2, scmWithListDelimiter};
-const TForteInt16 FORTE_IX::scmEOWithIndexes[] = {0, 3, 7};
-const CStringDictionary::TStringId FORTE_IX::scmEventOutputNames[] = {STRID(INITO), STRID(CNF), STRID(IND)};
-const CStringDictionary::TStringId FORTE_IX::scmEventOutputTypeIds[] = {STRID(EInit), STRID(Event), STRID(Event)};
-const SFBInterfaceSpec FORTE_IX::scmFBInterfaceSpec = {
-  2, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,
-  3, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes,
-  2, scmDataInputNames, scmDataInputTypeIds,
-  3, scmDataOutputNames, scmDataOutputTypeIds,
-  0, nullptr,
-  0, nullptr
-};
-
 FORTE_IX::FORTE_IX(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
-    CInputFB<CIEC_BOOL>(paContainer, scmFBInterfaceSpec, paInstanceNameId) {
+    CInputFB<CIEC_BOOL>(paContainer, paInstanceNameId) {
 }
