@@ -73,19 +73,19 @@ FORTE_E_N_TABLE::FORTE_E_N_TABLE(const CStringDictionary::TStringId paInstanceNa
     fb_E_TABLE(STRID(E_TABLE), *this),
     fb_E_DEMUX(STRID(E_DEMUX), *this),
     fb_F_SUB(STRID(F_SUB), *this),
-    var_DT(CIEC_ARRAY_FIXED<CIEC_TIME, 0, 3>{}),
-    var_N(0_UINT),
     conn_EO0(this, 0),
     conn_EO1(this, 1),
     conn_EO2(this, 2),
     conn_EO3(this, 3),
     conn_DT(nullptr),
-    conn_N(nullptr) {
+    conn_N(nullptr),
+    conn_if2in_DT(this, 0, CIEC_ARRAY_FIXED<CIEC_TIME, 0, 3>{}),
+    conn_if2in_N(this, 0, 0_UINT) {
 };
 
 void FORTE_E_N_TABLE::setInitialValues() {
-  var_DT = CIEC_ARRAY_FIXED<CIEC_TIME, 0, 3>{};
-  var_N = 0_UINT;
+    conn_if2in_DT.getValue() = CIEC_ARRAY_FIXED<CIEC_TIME, 0, 3>{};
+    conn_if2in_N.getValue() = 0_UINT;
 }
 
 void FORTE_E_N_TABLE::setFBNetworkInitialValues() {
@@ -125,14 +125,11 @@ const SCFB_FBNData FORTE_E_N_TABLE::scmFBNData = {
   0, nullptr
 };
 
-void FORTE_E_N_TABLE::readInternal2InterfaceOutputData(TEventID) {
-  // nothing to do
-}
 void FORTE_E_N_TABLE::readInputData(const TEventID paEIID) {
   switch(paEIID) {
     case scmEventSTARTID: {
-      readData(0, var_DT, conn_DT);
-      readData(1, var_N, conn_N);
+      readData(0, conn_if2in_DT.getValue(), conn_DT);
+      readData(1, conn_if2in_N.getValue(), conn_N);
       break;
     }
     default:
@@ -146,8 +143,8 @@ void FORTE_E_N_TABLE::writeOutputData(TEventID) {
 
 CIEC_ANY *FORTE_E_N_TABLE::getDI(const size_t paIndex) {
   switch(paIndex) {
-    case 0: return &var_DT;
-    case 1: return &var_N;
+    case 0: return &conn_if2in_DT.getValue();
+    case 1: return &conn_if2in_N.getValue();
   }
   return nullptr;
 }
@@ -175,5 +172,13 @@ CDataConnection **FORTE_E_N_TABLE::getDIConUnchecked(const TPortId paIndex) {
 }
 
 CDataConnection *FORTE_E_N_TABLE::getDOConUnchecked(TPortId) {
+  return nullptr;
+}
+
+CDataConnection *FORTE_E_N_TABLE::getIf2InConUnchecked(TPortId paIndex) {
+  switch(paIndex) {
+    case 0: return &conn_if2in_DT;
+    case 1: return &conn_if2in_N;
+  }
   return nullptr;
 }

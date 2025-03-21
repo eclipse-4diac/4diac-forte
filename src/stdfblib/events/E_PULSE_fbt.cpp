@@ -68,12 +68,13 @@ FORTE_E_PULSE::FORTE_E_PULSE(const CStringDictionary::TStringId paInstanceNameId
     fb_E_SR(STRID(E_SR), *this),
     conn_CNF(this, 0),
     conn_PT(nullptr),
-    conn_Q(this, 0, var_Q) {
+    conn_Q(this, 0, 0_BOOL),
+    conn_if2in_PT(this, 0, 0_TIME) {
 };
 
 void FORTE_E_PULSE::setInitialValues() {
-    var_PT = 0_TIME;
-    var_Q = 0_BOOL;
+    conn_if2in_PT.getValue() = 0_TIME;
+    fb_E_SR->conn_Q.getValue() = 0_BOOL;
 }
 
 const SCFB_FBInstanceData FORTE_E_PULSE::scmInternalFBs[] = {
@@ -109,20 +110,10 @@ const SCFB_FBNData FORTE_E_PULSE::scmFBNData = {
   0, nullptr
 };
 
-void FORTE_E_PULSE::readInternal2InterfaceOutputData(const TEventID paEOID) {
-  switch(paEOID) {
-    case scmEventCNFID: {
-      if(CDataConnection *conn = getIn2IfConUnchecked(0); conn) { conn->readData(var_Q); }
-      break;
-    }
-    default:
-      break;
-  }
-}
 void FORTE_E_PULSE::readInputData(const TEventID paEIID) {
   switch(paEIID) {
     case scmEventREQID: {
-      readData(0, var_PT, conn_PT);
+      readData(0, conn_if2in_PT.getValue(), conn_PT);
       break;
     }
     default:
@@ -133,7 +124,7 @@ void FORTE_E_PULSE::readInputData(const TEventID paEIID) {
 void FORTE_E_PULSE::writeOutputData(const TEventID paEIID) {
   switch(paEIID) {
     case scmEventCNFID: {
-      writeData(0, var_Q, conn_Q);
+      writeData(0, fb_E_SR->conn_Q.getValue(), conn_Q);
       break;
     }
     default:
@@ -143,14 +134,14 @@ void FORTE_E_PULSE::writeOutputData(const TEventID paEIID) {
 
 CIEC_ANY *FORTE_E_PULSE::getDI(const size_t paIndex) {
   switch(paIndex) {
-    case 0: return &var_PT;
+    case 0: return &conn_if2in_PT.getValue();
   }
   return nullptr;
 }
 
 CIEC_ANY *FORTE_E_PULSE::getDO(const size_t paIndex) {
   switch(paIndex) {
-    case 0: return &var_Q;
+    case 0: return &fb_E_SR->conn_Q.getValue();
   }
   return nullptr;
 }
@@ -172,6 +163,13 @@ CDataConnection **FORTE_E_PULSE::getDIConUnchecked(const TPortId paIndex) {
 CDataConnection *FORTE_E_PULSE::getDOConUnchecked(const TPortId paIndex) {
   switch(paIndex) {
     case 0: return &conn_Q;
+  }
+  return nullptr;
+}
+
+CDataConnection *FORTE_E_PULSE::getIf2InConUnchecked(TPortId paIndex) {
+  switch(paIndex) {
+    case 0: return &conn_if2in_PT;
   }
   return nullptr;
 }
