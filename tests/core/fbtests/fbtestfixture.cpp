@@ -78,8 +78,6 @@ CFBTestFixtureBase::~CFBTestFixtureBase(){
 
   for(size_t i = 0; i < interfaceSpec.mNumDOs; ++i) {
    CDataConnection *dataCon = mFBUnderTest->getDOConnection(interfaceSpec.mDONames[i]);
-   //set it to zero so that when the FB under test is deleted it will not delete our test output data
-   dataCon->setValue(nullptr);
 
    BOOST_CHECK_EQUAL(EMGMResponse::Ready, dataCon->disconnect(this, interfaceSpec.mDONames[i]));
   }
@@ -169,6 +167,10 @@ void CFBTestFixtureBase::triggerEvent(TPortId paEIId) {
     usleep(1);
   } while(execThread->isProcessingEvents());
 
+  for (TPortId index = 0; index < mOutputDataBuffers.size(); ++index) {
+    mOutputDataBuffers[index]->setValue(
+      mFBUnderTest->getDOConnection(mFBUnderTest->getFBInterfaceSpec().mDONames[index])->getValue()->unwrap());
+  }
 }
 
 TEventID CFBTestFixtureBase::pullFirstChainEventID() {
@@ -307,8 +309,6 @@ void CFBTestFixtureBase::createDataOutputConnections() {
     if(CFBTestConn::canBeConnected(mOutputDataBuffers[i], mFBUnderTest->getDataOutput(interfaceSpec.mDONames[i]))) {
       CDataConnection *dataCon = mFBUnderTest->getDOConnection(interfaceSpec.mDONames[i]);
       BOOST_REQUIRE_EQUAL(EMGMResponse::Ready, dataCon->connect(this, interfaceSpec.mDONames[i]));
-      std::destroy_at(dataCon->getValue());
-      dataCon->setValue(mOutputDataBuffers[i]);
     }
   }
 }
