@@ -69,27 +69,18 @@ class FORTE_SPLIT_BYTE_INTO_BOOLS final : public CFunctionBlock {
     CIEC_BOOL var_BIT_06;
     CIEC_BOOL var_BIT_07;
 
-    CIEC_BOOL var_conn_BIT_00;
-    CIEC_BOOL var_conn_BIT_01;
-    CIEC_BOOL var_conn_BIT_02;
-    CIEC_BOOL var_conn_BIT_03;
-    CIEC_BOOL var_conn_BIT_04;
-    CIEC_BOOL var_conn_BIT_05;
-    CIEC_BOOL var_conn_BIT_06;
-    CIEC_BOOL var_conn_BIT_07;
-
     CEventConnection conn_CNF;
 
     CDataConnection *conn_IN;
 
-    CDataConnection conn_BIT_00;
-    CDataConnection conn_BIT_01;
-    CDataConnection conn_BIT_02;
-    CDataConnection conn_BIT_03;
-    CDataConnection conn_BIT_04;
-    CDataConnection conn_BIT_05;
-    CDataConnection conn_BIT_06;
-    CDataConnection conn_BIT_07;
+    COutDataConnection<CIEC_BOOL> conn_BIT_00;
+    COutDataConnection<CIEC_BOOL> conn_BIT_01;
+    COutDataConnection<CIEC_BOOL> conn_BIT_02;
+    COutDataConnection<CIEC_BOOL> conn_BIT_03;
+    COutDataConnection<CIEC_BOOL> conn_BIT_04;
+    COutDataConnection<CIEC_BOOL> conn_BIT_05;
+    COutDataConnection<CIEC_BOOL> conn_BIT_06;
+    COutDataConnection<CIEC_BOOL> conn_BIT_07;
 
     CIEC_ANY *getDI(size_t) override;
     CIEC_ANY *getDO(size_t) override;

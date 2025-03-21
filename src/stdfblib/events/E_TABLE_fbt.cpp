@@ -69,11 +69,10 @@ FORTE_E_TABLE::FORTE_E_TABLE(const CStringDictionary::TStringId paInstanceNameId
     var_DT(CIEC_ARRAY_FIXED<CIEC_TIME, 0, 3>{}),
     var_N(0_UINT),
     var_CV(0_UINT),
-    var_conn_CV(var_CV),
     conn_EO(this, 0),
     conn_DT(nullptr),
     conn_N(nullptr),
-    conn_CV(this, 0, &var_conn_CV) {
+    conn_CV(this, 0, var_CV) {
 };
 
 void FORTE_E_TABLE::setInitialValues() {

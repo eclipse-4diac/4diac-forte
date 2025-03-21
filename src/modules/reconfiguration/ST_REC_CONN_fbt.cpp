@@ -61,8 +61,6 @@ const SFBInterfaceSpec FORTE_ST_REC_CONN::scmFBInterfaceSpec = {
 
 FORTE_ST_REC_CONN::FORTE_ST_REC_CONN(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId),
-    var_conn_QO(var_QO),
-    var_conn_STATUS(var_STATUS),
     conn_CNF(this, 0),
     conn_QI(nullptr),
     conn_OLD_SRC_FB(nullptr),
@@ -74,8 +72,8 @@ FORTE_ST_REC_CONN::FORTE_ST_REC_CONN(const CStringDictionary::TStringId paInstan
     conn_NEW_DST_FB(nullptr),
     conn_NEW_DST_FB_IN(nullptr),
     conn_DST(nullptr),
-    conn_QO(this, 0, &var_conn_QO),
-    conn_STATUS(this, 1, &var_conn_STATUS) {
+    conn_QO(this, 0, var_QO),
+    conn_STATUS(this, 1, var_STATUS) {
 };
 
 void FORTE_ST_REC_CONN::setInitialValues() {

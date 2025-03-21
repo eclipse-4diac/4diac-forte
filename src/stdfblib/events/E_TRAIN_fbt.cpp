@@ -81,11 +81,10 @@ FORTE_E_TRAIN::FORTE_E_TRAIN(const CStringDictionary::TStringId paInstanceNameId
     var_DT(0_TIME),
     var_N(0_UINT),
     var_CV(0_UINT),
-    var_conn_CV(var_CV),
     conn_EO(this, 0),
     conn_DT(nullptr),
     conn_N(nullptr),
-    conn_CV(this, 0, &var_conn_CV) {
+    conn_CV(this, 0, var_CV) {
 };
 
 void FORTE_E_TRAIN::setInitialValues() {

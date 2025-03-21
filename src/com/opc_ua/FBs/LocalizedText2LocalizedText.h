@@ -49,10 +49,9 @@ class FORTE_LocalizedText2LocalizedText: public CFunctionBlock{
     CIEC_LocalizedText var_IN;
     CIEC_LocalizedText var_OUT;
 
-    CIEC_LocalizedText var_conn_OUT;
     CEventConnection conn_CNF;
     CDataConnection *conn_IN;
-    CDataConnection conn_OUT;
+    COutDataConnection<CIEC_LocalizedText> conn_OUT;
 
     CIEC_ANY *getDI(size_t) override;
     CIEC_ANY *getDO(size_t) override;

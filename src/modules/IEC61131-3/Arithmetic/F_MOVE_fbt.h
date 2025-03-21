@@ -63,10 +63,9 @@ public:
   CIEC_ANY_VARIANT var_IN;
   CIEC_ANY_VARIANT var_OUT;
   
-  CIEC_ANY_VARIANT var_conn_OUT;
   CEventConnection conn_CNF;
   CDataConnection *conn_IN;
-  CDataConnection conn_OUT;
+  COutDataConnection<CIEC_ANY_VARIANT> conn_OUT;
   
   CIEC_ANY *getDI(size_t) override;
   CIEC_ANY *getDO(size_t) override;

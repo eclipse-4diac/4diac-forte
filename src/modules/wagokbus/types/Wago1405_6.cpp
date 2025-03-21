@@ -89,8 +89,6 @@ FORTE_Wago1405_6::FORTE_Wago1405_6(const CStringDictionary::TStringId paInstance
     var_DigitalInput_16(""_STRING),
     var_QO(0_BOOL),
     var_STATUS(u""_WSTRING),
-    var_conn_QO(var_QO),
-    var_conn_STATUS(var_STATUS),
     conn_MAPO(this, 0),
     conn_IND(this, 1),
     conn_QI(nullptr),
@@ -110,8 +108,8 @@ FORTE_Wago1405_6::FORTE_Wago1405_6(const CStringDictionary::TStringId paInstance
     conn_DigitalInput_14(nullptr),
     conn_DigitalInput_15(nullptr),
     conn_DigitalInput_16(nullptr),
-    conn_QO(this, 0, &var_conn_QO),
-    conn_STATUS(this, 1, &var_conn_STATUS) {
+    conn_QO(this, 0, var_QO),
+    conn_STATUS(this, 1, var_STATUS) {
 };
 
 void FORTE_Wago1405_6::setInitialValues() {

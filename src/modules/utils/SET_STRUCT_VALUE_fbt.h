@@ -68,12 +68,11 @@ public:
   CIEC_ANY_VARIANT var_element_value;
   CIEC_ANY_VARIANT var_out_struct;
   
-  CIEC_ANY_VARIANT var_conn_out_struct;
   CEventConnection conn_CNF;
   CDataConnection *conn_in_struct;
   CDataConnection *conn_member;
   CDataConnection *conn_element_value;
-  CDataConnection conn_out_struct;
+  COutDataConnection<CIEC_ANY_VARIANT> conn_out_struct;
   
   CIEC_ANY *getDI(size_t) override;
   CIEC_ANY *getDO(size_t) override;

@@ -62,10 +62,9 @@ FORTE_F_SQRT::FORTE_F_SQRT(const CStringDictionary::TStringId paInstanceNameId, 
     CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId),
     var_IN(CIEC_ANY_REAL_VARIANT()),
     var_OUT(CIEC_ANY_REAL_VARIANT()),
-    var_conn_OUT(var_OUT),
     conn_CNF(this, 0),
     conn_IN(nullptr),
-    conn_OUT(this, 0, &var_conn_OUT) {
+    conn_OUT(this, 0, var_OUT) {
 };
 
 void FORTE_F_SQRT::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {

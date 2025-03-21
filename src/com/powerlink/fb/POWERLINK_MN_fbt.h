@@ -63,9 +63,6 @@ class FORTE_POWERLINK_MN final : public CFunctionBlock {
     CIEC_BOOL var_QO;
     CIEC_STRING var_STATUS;
 
-    CIEC_BOOL var_conn_QO;
-    CIEC_STRING var_conn_STATUS;
-
     CEventConnection conn_INITO;
 
     CDataConnection *conn_QI;
@@ -73,8 +70,8 @@ class FORTE_POWERLINK_MN final : public CFunctionBlock {
     CDataConnection *conn_APP_CFG;
     CDataConnection *conn_DEV_NAME;
 
-    CDataConnection conn_QO;
-    CDataConnection conn_STATUS;
+    COutDataConnection<CIEC_BOOL> conn_QO;
+    COutDataConnection<CIEC_STRING> conn_STATUS;
 
     CIEC_ANY *getDI(size_t) override;
     CIEC_ANY *getDO(size_t) override;

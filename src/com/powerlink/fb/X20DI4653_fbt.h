@@ -70,14 +70,6 @@ class FORTE_X20DI4653 final : public PowerlinkFunctionBlockDI {
     CIEC_BOOL var_DI03;
     CIEC_BOOL var_DI04;
 
-    CIEC_BOOL var_conn_QO;
-    CIEC_USINT var_conn_CNIDO;
-    CIEC_STRING var_conn_STATUS;
-    CIEC_BOOL var_conn_DI01;
-    CIEC_BOOL var_conn_DI02;
-    CIEC_BOOL var_conn_DI03;
-    CIEC_BOOL var_conn_DI04;
-
     CEventConnection conn_INITO;
     CEventConnection conn_CNF;
 
@@ -85,13 +77,13 @@ class FORTE_X20DI4653 final : public PowerlinkFunctionBlockDI {
     CDataConnection *conn_CNID;
     CDataConnection *conn_MODID;
 
-    CDataConnection conn_QO;
-    CDataConnection conn_CNIDO;
-    CDataConnection conn_STATUS;
-    CDataConnection conn_DI01;
-    CDataConnection conn_DI02;
-    CDataConnection conn_DI03;
-    CDataConnection conn_DI04;
+    COutDataConnection<CIEC_BOOL> conn_QO;
+    COutDataConnection<CIEC_USINT> conn_CNIDO;
+    COutDataConnection<CIEC_STRING> conn_STATUS;
+    COutDataConnection<CIEC_BOOL> conn_DI01;
+    COutDataConnection<CIEC_BOOL> conn_DI02;
+    COutDataConnection<CIEC_BOOL> conn_DI03;
+    COutDataConnection<CIEC_BOOL> conn_DI04;
 
     CIEC_ANY *getDI(size_t) override;
     CIEC_ANY *getDO(size_t) override;

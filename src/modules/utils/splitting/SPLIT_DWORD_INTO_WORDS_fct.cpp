@@ -65,12 +65,10 @@ const SFBInterfaceSpec FORTE_SPLIT_DWORD_INTO_WORDS::scmFBInterfaceSpec = {
 
 FORTE_SPLIT_DWORD_INTO_WORDS::FORTE_SPLIT_DWORD_INTO_WORDS(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId),
-    var_conn_WORD_00(var_WORD_00),
-    var_conn_WORD_01(var_WORD_01),
     conn_CNF(this, 0),
     conn_IN(nullptr),
-    conn_WORD_00(this, 0, &var_conn_WORD_00),
-    conn_WORD_01(this, 1, &var_conn_WORD_01) {
+    conn_WORD_00(this, 0, var_WORD_00),
+    conn_WORD_01(this, 1, var_WORD_01) {
 }
 
 void FORTE_SPLIT_DWORD_INTO_WORDS::setInitialValues() {

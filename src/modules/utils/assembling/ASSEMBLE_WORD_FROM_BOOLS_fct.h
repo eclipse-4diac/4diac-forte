@@ -77,8 +77,6 @@ class FORTE_ASSEMBLE_WORD_FROM_BOOLS final : public CFunctionBlock {
 
     CIEC_WORD var_;
 
-    CIEC_WORD var_conn_;
-
     CEventConnection conn_CNF;
 
     CDataConnection *conn_BIT_00;
@@ -98,7 +96,7 @@ class FORTE_ASSEMBLE_WORD_FROM_BOOLS final : public CFunctionBlock {
     CDataConnection *conn_BIT_14;
     CDataConnection *conn_BIT_15;
 
-    CDataConnection conn_;
+    COutDataConnection<CIEC_WORD> conn_;
 
     CIEC_ANY *getDI(size_t) override;
     CIEC_ANY *getDO(size_t) override;

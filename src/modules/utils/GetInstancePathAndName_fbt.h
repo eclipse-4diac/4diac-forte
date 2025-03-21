@@ -62,15 +62,12 @@ class FORTE_GetInstancePathAndName final : public CSimpleFB {
     CIEC_STRING var_Path;
     CIEC_STRING var_Name;
 
-    CIEC_STRING var_conn_Path;
-    CIEC_STRING var_conn_Name;
-
     CEventConnection conn_CNF;
 
     CDataConnection *conn_Sep;
 
-    CDataConnection conn_Path;
-    CDataConnection conn_Name;
+    COutDataConnection<CIEC_STRING> conn_Path;
+    COutDataConnection<CIEC_STRING> conn_Name;
 
     CIEC_ANY *getDI(size_t) override;
     CIEC_ANY *getDO(size_t) override;

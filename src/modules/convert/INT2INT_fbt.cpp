@@ -67,10 +67,9 @@ FORTE_INT2INT::FORTE_INT2INT(CStringDictionary::TStringId paInstanceNameId, fort
     CSimpleFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, nullptr),
     var_IN(CIEC_INT(0)),
     var_OUT(CIEC_INT(0)),
-    var_conn_OUT(var_OUT),
     conn_CNF(this, 0),
     conn_IN(nullptr),
-    conn_OUT(this, 0, &var_conn_OUT) {
+    conn_OUT(this, 0, var_OUT) {
 }
 
 void FORTE_INT2INT::alg_REQ(void) {

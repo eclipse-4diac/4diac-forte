@@ -64,25 +64,18 @@ const SFBInterfaceSpec FORTE_X20DI4653::scmFBInterfaceSpec = {
 
 FORTE_X20DI4653::FORTE_X20DI4653(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
   PowerlinkFunctionBlockDI(paContainer, scmFBInterfaceSpec, paInstanceNameId),
-  var_conn_QO(var_QO),
-  var_conn_CNIDO(var_CNIDO),
-  var_conn_STATUS(var_STATUS),
-  var_conn_DI01(var_DI01),
-  var_conn_DI02(var_DI02),
-  var_conn_DI03(var_DI03),
-  var_conn_DI04(var_DI04),
   conn_INITO(this, 0),
   conn_CNF(this, 1),
   conn_QI(nullptr),
   conn_CNID(nullptr),
   conn_MODID(nullptr),
-  conn_QO(this, 0, &var_conn_QO),
-  conn_CNIDO(this, 1, &var_conn_CNIDO),
-  conn_STATUS(this, 2, &var_conn_STATUS),
-  conn_DI01(this, 3, &var_conn_DI01),
-  conn_DI02(this, 4, &var_conn_DI02),
-  conn_DI03(this, 5, &var_conn_DI03),
-  conn_DI04(this, 6, &var_conn_DI04) {
+  conn_QO(this, 0, var_QO),
+  conn_CNIDO(this, 1, var_CNIDO),
+  conn_STATUS(this, 2, var_STATUS),
+  conn_DI01(this, 3, var_DI01),
+  conn_DI02(this, 4, var_DI02),
+  conn_DI03(this, 5, var_DI03),
+  conn_DI04(this, 6, var_DI04) {
 };
 
 void FORTE_X20DI4653::setInitialValues() {

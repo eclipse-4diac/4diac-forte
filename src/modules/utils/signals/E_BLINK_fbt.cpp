@@ -76,11 +76,10 @@ FORTE_E_BLINK::FORTE_E_BLINK(const CStringDictionary::TStringId paInstanceNameId
     var_TIMELOW(0_TIME),
     var_TIMEHIGH(0_TIME),
     var_OUT(0_BOOL),
-    var_conn_OUT(var_OUT),
     conn_CNF(this, 0),
     conn_TIMELOW(nullptr),
     conn_TIMEHIGH(nullptr),
-    conn_OUT(this, 0, &var_conn_OUT) {
+    conn_OUT(this, 0, var_OUT) {
 };
 
 void FORTE_E_BLINK::setInitialValues() {

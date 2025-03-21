@@ -72,11 +72,10 @@ FORTE_E_TOF::FORTE_E_TOF(const CStringDictionary::TStringId paInstanceNameId, fo
     fb_E_SWITCH(STRID(E_SWITCH), *this),
     fb_E_DELAY(STRID(E_DELAY), *this),
     fb_E_RS(STRID(E_RS), *this),
-    var_conn_Q(var_Q),
     conn_CNF(this, 0),
     conn_IN(nullptr),
     conn_PT(nullptr),
-    conn_Q(this, 0, &var_conn_Q) {
+    conn_Q(this, 0, var_Q) {
 };
 
 void FORTE_E_TOF::setInitialValues() {

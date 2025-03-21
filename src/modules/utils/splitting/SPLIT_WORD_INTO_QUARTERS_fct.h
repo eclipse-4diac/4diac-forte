@@ -69,27 +69,18 @@ class FORTE_SPLIT_WORD_INTO_QUARTERS final : public CFunctionBlock {
     CIEC_BYTE var_QUARTER_BYTE_06;
     CIEC_BYTE var_QUARTER_BYTE_07;
 
-    CIEC_BYTE var_conn_QUARTER_BYTE_00;
-    CIEC_BYTE var_conn_QUARTER_BYTE_01;
-    CIEC_BYTE var_conn_QUARTER_BYTE_02;
-    CIEC_BYTE var_conn_QUARTER_BYTE_03;
-    CIEC_BYTE var_conn_QUARTER_BYTE_04;
-    CIEC_BYTE var_conn_QUARTER_BYTE_05;
-    CIEC_BYTE var_conn_QUARTER_BYTE_06;
-    CIEC_BYTE var_conn_QUARTER_BYTE_07;
-
     CEventConnection conn_CNF;
 
     CDataConnection *conn_IN;
 
-    CDataConnection conn_QUARTER_BYTE_00;
-    CDataConnection conn_QUARTER_BYTE_01;
-    CDataConnection conn_QUARTER_BYTE_02;
-    CDataConnection conn_QUARTER_BYTE_03;
-    CDataConnection conn_QUARTER_BYTE_04;
-    CDataConnection conn_QUARTER_BYTE_05;
-    CDataConnection conn_QUARTER_BYTE_06;
-    CDataConnection conn_QUARTER_BYTE_07;
+    COutDataConnection<CIEC_BYTE> conn_QUARTER_BYTE_00;
+    COutDataConnection<CIEC_BYTE> conn_QUARTER_BYTE_01;
+    COutDataConnection<CIEC_BYTE> conn_QUARTER_BYTE_02;
+    COutDataConnection<CIEC_BYTE> conn_QUARTER_BYTE_03;
+    COutDataConnection<CIEC_BYTE> conn_QUARTER_BYTE_04;
+    COutDataConnection<CIEC_BYTE> conn_QUARTER_BYTE_05;
+    COutDataConnection<CIEC_BYTE> conn_QUARTER_BYTE_06;
+    COutDataConnection<CIEC_BYTE> conn_QUARTER_BYTE_07;
 
     CIEC_ANY *getDI(size_t) override;
     CIEC_ANY *getDO(size_t) override;

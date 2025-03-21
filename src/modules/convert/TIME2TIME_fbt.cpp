@@ -67,10 +67,9 @@ FORTE_TIME2TIME::FORTE_TIME2TIME(CStringDictionary::TStringId paInstanceNameId, 
     CSimpleFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, nullptr),
     var_IN(CIEC_TIME(0)),
     var_OUT(CIEC_TIME(0)),
-    var_conn_OUT(var_OUT),
     conn_CNF(this, 0),
     conn_IN(nullptr),
-    conn_OUT(this, 0, &var_conn_OUT) {
+    conn_OUT(this, 0, var_OUT) {
 }
 
 void FORTE_TIME2TIME::alg_REQ(void) {

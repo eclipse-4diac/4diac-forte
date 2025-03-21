@@ -66,12 +66,11 @@ FORTE_F_LIMIT::FORTE_F_LIMIT(const CStringDictionary::TStringId paInstanceNameId
     var_IN(CIEC_ANY_ELEMENTARY_VARIANT()),
     var_MX(CIEC_ANY_ELEMENTARY_VARIANT()),
     var_OUT(CIEC_ANY_ELEMENTARY_VARIANT()),
-    var_conn_OUT(var_OUT),
     conn_CNF(this, 0),
     conn_MN(nullptr),
     conn_IN(nullptr),
     conn_MX(nullptr),
-    conn_OUT(this, 0, &var_conn_OUT) {
+    conn_OUT(this, 0, var_OUT) {
 };
 
 void FORTE_F_LIMIT::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {

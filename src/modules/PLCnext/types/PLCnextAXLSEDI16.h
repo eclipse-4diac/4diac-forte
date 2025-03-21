@@ -94,9 +94,6 @@ public:
 
   FORTE_PLCnextBusAdapter var_BusAdapterOut;
 
-  CIEC_BOOL var_conn_QO;
-  CIEC_WSTRING var_conn_STATUS;
-
   CEventConnection conn_INITO;
   CEventConnection conn_IND;
 
@@ -118,8 +115,8 @@ public:
   CDataConnection *conn_DI_15;
   CDataConnection *conn_DI_16;
 
-  CDataConnection conn_QO;
-  CDataConnection conn_STATUS;
+  COutDataConnection<CIEC_BOOL> conn_QO;
+  COutDataConnection<CIEC_WSTRING> conn_STATUS;
 
   CIEC_ANY *getDI(size_t) override;
   CIEC_ANY *getDO(size_t) override;

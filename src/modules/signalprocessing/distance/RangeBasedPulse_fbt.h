@@ -73,8 +73,6 @@ class FORTE_signalprocessing__distance__RangeBasedPulse final : public CSimpleFB
 
     CIEC_BOOL var_Q;
 
-    CIEC_BOOL var_conn_Q;
-
     CEventConnection conn_CNF;
 
     CDataConnection *conn_DIST_IN;
@@ -82,7 +80,7 @@ class FORTE_signalprocessing__distance__RangeBasedPulse final : public CSimpleFB
     CDataConnection *conn_DIST_HIGH;
     CDataConnection *conn_DIST_LOW;
 
-    CDataConnection conn_Q;
+    COutDataConnection<CIEC_BOOL> conn_Q;
 
     CIEC_ANY *getDI(size_t) override;
     CIEC_ANY *getDO(size_t) override;

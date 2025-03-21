@@ -57,16 +57,11 @@ public:
   FORTE_F_TIME_IN_MS_TO_UDINT(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
   CIEC_TIME var_IN;
-
   CIEC_UDINT var_OUT;
 
-  CIEC_UDINT var_conn_OUT;
-
   CEventConnection conn_CNF;
-
   CDataConnection *conn_IN;
-
-  CDataConnection conn_OUT;
+  COutDataConnection<CIEC_UDINT> conn_OUT;
 
   CIEC_ANY *getDI(size_t) override;
   CIEC_ANY *getDO(size_t) override;

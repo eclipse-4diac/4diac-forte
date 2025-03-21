@@ -54,14 +54,12 @@ const SFBInterfaceSpec FORTE_EC_STOP_ELEM::scmFBInterfaceSpec = {
 
 FORTE_EC_STOP_ELEM::FORTE_EC_STOP_ELEM(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId),
-    var_conn_QO(var_QO),
-    var_conn_STATUS(var_STATUS),
     conn_CNF(this, 0),
     conn_QI(nullptr),
     conn_ELEM_NAME(nullptr),
     conn_DST(nullptr),
-    conn_QO(this, 0, &var_conn_QO),
-    conn_STATUS(this, 1, &var_conn_STATUS) {
+    conn_QO(this, 0, var_QO),
+    conn_STATUS(this, 1, var_STATUS) {
 };
 
 void FORTE_EC_STOP_ELEM::setInitialValues() {

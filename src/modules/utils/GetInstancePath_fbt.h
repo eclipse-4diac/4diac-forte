@@ -57,13 +57,11 @@ class FORTE_GetInstancePath final : public CFunctionBlock {
 
     CIEC_STRING var_Path;
 
-    CIEC_STRING var_conn_Path;
-
     CEventConnection conn_CNF;
 
     CDataConnection *conn_Sep;
 
-    CDataConnection conn_Path;
+    COutDataConnection<CIEC_STRING> conn_Path;
 
     CIEC_ANY *getDI(size_t) override;
     CIEC_ANY *getDO(size_t) override;

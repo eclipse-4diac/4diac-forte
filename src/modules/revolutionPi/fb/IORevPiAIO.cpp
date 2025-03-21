@@ -73,8 +73,6 @@ const TForteUInt8 FORTE_IORevPiAIO::scmSlaveConfigurationIONum = 0;
 
 FORTE_IORevPiAIO::FORTE_IORevPiAIO(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     IOConfigFBMultiSlave(scmSlaveConfigurationIO, scmSlaveConfigurationIONum, 103, paContainer, scmFBInterfaceSpec, paInstanceNameId),
-    var_conn_QO(var_QO),
-    var_conn_STATUS(var_STATUS),
     conn_MAPO(this, 0),
     conn_IND(this, 1),
     conn_QI(nullptr),
@@ -86,8 +84,8 @@ FORTE_IORevPiAIO::FORTE_IORevPiAIO(const CStringDictionary::TStringId paInstance
     conn_RTD_2(nullptr),
     conn_AnalogOutput_1(nullptr),
     conn_AnalogOutput_2(nullptr),
-    conn_QO(this, 0, &var_conn_QO),
-    conn_STATUS(this, 1, &var_conn_STATUS){
+    conn_QO(this, 0, var_QO),
+    conn_STATUS(this, 1, var_STATUS){
 
 };
 

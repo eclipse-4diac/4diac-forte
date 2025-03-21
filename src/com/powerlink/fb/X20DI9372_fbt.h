@@ -78,22 +78,6 @@ class FORTE_X20DI9372 final : public PowerlinkFunctionBlockDI {
     CIEC_BOOL var_DI11;
     CIEC_BOOL var_DI12;
 
-    CIEC_BOOL var_conn_QO;
-    CIEC_USINT var_conn_CNIDO;
-    CIEC_STRING var_conn_STATUS;
-    CIEC_BOOL var_conn_DI01;
-    CIEC_BOOL var_conn_DI02;
-    CIEC_BOOL var_conn_DI03;
-    CIEC_BOOL var_conn_DI04;
-    CIEC_BOOL var_conn_DI05;
-    CIEC_BOOL var_conn_DI06;
-    CIEC_BOOL var_conn_DI07;
-    CIEC_BOOL var_conn_DI08;
-    CIEC_BOOL var_conn_DI09;
-    CIEC_BOOL var_conn_DI10;
-    CIEC_BOOL var_conn_DI11;
-    CIEC_BOOL var_conn_DI12;
-
     CEventConnection conn_INITO;
     CEventConnection conn_CNF;
 
@@ -101,21 +85,21 @@ class FORTE_X20DI9372 final : public PowerlinkFunctionBlockDI {
     CDataConnection *conn_CNID;
     CDataConnection *conn_MODID;
 
-    CDataConnection conn_QO;
-    CDataConnection conn_CNIDO;
-    CDataConnection conn_STATUS;
-    CDataConnection conn_DI01;
-    CDataConnection conn_DI02;
-    CDataConnection conn_DI03;
-    CDataConnection conn_DI04;
-    CDataConnection conn_DI05;
-    CDataConnection conn_DI06;
-    CDataConnection conn_DI07;
-    CDataConnection conn_DI08;
-    CDataConnection conn_DI09;
-    CDataConnection conn_DI10;
-    CDataConnection conn_DI11;
-    CDataConnection conn_DI12;
+    COutDataConnection<CIEC_BOOL> conn_QO;
+    COutDataConnection<CIEC_USINT> conn_CNIDO;
+    COutDataConnection<CIEC_STRING> conn_STATUS;
+    COutDataConnection<CIEC_BOOL> conn_DI01;
+    COutDataConnection<CIEC_BOOL> conn_DI02;
+    COutDataConnection<CIEC_BOOL> conn_DI03;
+    COutDataConnection<CIEC_BOOL> conn_DI04;
+    COutDataConnection<CIEC_BOOL> conn_DI05;
+    COutDataConnection<CIEC_BOOL> conn_DI06;
+    COutDataConnection<CIEC_BOOL> conn_DI07;
+    COutDataConnection<CIEC_BOOL> conn_DI08;
+    COutDataConnection<CIEC_BOOL> conn_DI09;
+    COutDataConnection<CIEC_BOOL> conn_DI10;
+    COutDataConnection<CIEC_BOOL> conn_DI11;
+    COutDataConnection<CIEC_BOOL> conn_DI12;
 
     CIEC_ANY *getDI(size_t) override;
     CIEC_ANY *getDO(size_t) override;

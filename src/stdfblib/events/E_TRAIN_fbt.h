@@ -78,14 +78,12 @@ class FORTE_E_TRAIN final : public CCompositeFB {
 
     CIEC_UINT var_CV;
 
-    CIEC_UINT var_conn_CV;
-
     CEventConnection conn_EO;
 
     CDataConnection *conn_DT;
     CDataConnection *conn_N;
 
-    CDataConnection conn_CV;
+    COutDataConnection<CIEC_UINT> conn_CV;
 
     CIEC_ANY *getDI(size_t) override;
     CIEC_ANY *getDO(size_t) override;

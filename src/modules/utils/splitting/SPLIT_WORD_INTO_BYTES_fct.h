@@ -63,15 +63,12 @@ class FORTE_SPLIT_WORD_INTO_BYTES final : public CFunctionBlock {
     CIEC_BYTE var_BYTE_00;
     CIEC_BYTE var_BYTE_01;
 
-    CIEC_BYTE var_conn_BYTE_00;
-    CIEC_BYTE var_conn_BYTE_01;
-
     CEventConnection conn_CNF;
 
     CDataConnection *conn_IN;
 
-    CDataConnection conn_BYTE_00;
-    CDataConnection conn_BYTE_01;
+    COutDataConnection<CIEC_BYTE> conn_BYTE_00;
+    COutDataConnection<CIEC_BYTE> conn_BYTE_01;
 
     CIEC_ANY *getDI(size_t) override;
     CIEC_ANY *getDO(size_t) override;

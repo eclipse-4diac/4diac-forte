@@ -81,16 +81,13 @@ class FORTE_ZephyrIO final : public FORTE_ZephyrIOBase {
     CIEC_BOOL var_QO;
     CIEC_STRING var_STATUS;
 
-    CIEC_BOOL var_conn_QO;
-    CIEC_STRING var_conn_STATUS;
-
     CEventConnection conn_INITO;
 
     CDataConnection *conn_QI;
     CDataConnection *conn_UpdateInterval;
 
-    CDataConnection conn_QO;
-    CDataConnection conn_STATUS;
+    COutDataConnection<CIEC_BOOL> conn_QO;
+    COutDataConnection<CIEC_STRING> conn_STATUS;
 
     CIEC_ANY *getDI(size_t) override;
     CIEC_ANY *getDO(size_t) override;

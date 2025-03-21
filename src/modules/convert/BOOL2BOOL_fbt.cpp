@@ -67,10 +67,9 @@ FORTE_BOOL2BOOL::FORTE_BOOL2BOOL(CStringDictionary::TStringId paInstanceNameId, 
     CSimpleFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, nullptr),
     var_IN(CIEC_BOOL(0)),
     var_OUT(CIEC_BOOL(0)),
-    var_conn_OUT(var_OUT),
     conn_CNF(this, 0),
     conn_IN(nullptr),
-    conn_OUT(this, 0, &var_conn_OUT) {
+    conn_OUT(this, 0, var_OUT) {
 }
 
 void FORTE_BOOL2BOOL::alg_REQ(void) {

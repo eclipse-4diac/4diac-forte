@@ -69,10 +69,9 @@ FORTE_F_USINT_TO_BYTE::FORTE_F_USINT_TO_BYTE(CStringDictionary::TStringId paInst
     CSimpleFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, nullptr),
     var_IN(CIEC_USINT(0)),
     var_OUT(CIEC_BYTE(0)),
-    var_conn_OUT(var_OUT),
     conn_CNF(this, 0),
     conn_IN(nullptr),
-    conn_OUT(this, 0, &var_conn_OUT) {
+    conn_OUT(this, 0, var_OUT) {
 }
 
 void FORTE_F_USINT_TO_BYTE::alg_REQ(void) {

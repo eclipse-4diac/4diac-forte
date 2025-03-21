@@ -89,9 +89,6 @@ public:
   CIEC_BOOL var_QO;
   CIEC_WSTRING var_STATUS;
 
-  CIEC_BOOL var_conn_QO;
-  CIEC_WSTRING var_conn_STATUS;
-
   CEventConnection conn_MAPO;
   CEventConnection conn_IND;
 
@@ -125,8 +122,8 @@ public:
   CDataConnection *conn_DigitalOutput_13;
   CDataConnection *conn_DigitalOutput_14;
 
-  CDataConnection conn_QO;
-  CDataConnection conn_STATUS;
+  COutDataConnection<CIEC_BOOL> conn_QO;
+  COutDataConnection<CIEC_WSTRING> conn_STATUS;
 
   CIEC_ANY *getDI(size_t) override;
   CIEC_ANY *getDO(size_t) override;

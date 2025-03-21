@@ -70,14 +70,12 @@ FORTE_SET_AT_INDEX::FORTE_SET_AT_INDEX(const CStringDictionary::TStringId paInst
     var_VALUE(CIEC_ANY_VARIANT()),
     var_QO(CIEC_BOOL(0)),
     var_OUT_ARRAY(CIEC_ANY_VARIANT()),
-    var_conn_QO(var_QO),
-    var_conn_OUT_ARRAY(var_OUT_ARRAY),
     conn_CNF(this, 0),
     conn_IN_ARRAY(nullptr),
     conn_INDEX(nullptr),
     conn_VALUE(nullptr),
-    conn_QO(this, 0, &var_conn_QO),
-    conn_OUT_ARRAY(this, 1, &var_conn_OUT_ARRAY) {
+    conn_QO(this, 0, var_QO),
+    conn_OUT_ARRAY(this, 1, var_OUT_ARRAY) {
 };
 
 void FORTE_SET_AT_INDEX::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
