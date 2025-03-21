@@ -76,14 +76,12 @@ class FORTE_CFB_TEST final : public CCompositeFB {
 
     CIEC_BOOL var_QO;
 
-    CIEC_BOOL var_conn_QO;
-
     CEventConnection conn_CNF;
     CEventConnection conn_CHANGED;
 
     CDataConnection *conn_QI;
 
-    CDataConnection conn_QO;
+    COutDataConnection<CIEC_BOOL> conn_QO;
 
     CIEC_ANY *getDI(size_t) override;
     CIEC_ANY *getDO(size_t) override;

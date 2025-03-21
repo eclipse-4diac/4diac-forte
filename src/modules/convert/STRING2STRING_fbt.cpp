@@ -67,10 +67,9 @@ FORTE_STRING2STRING::FORTE_STRING2STRING(CStringDictionary::TStringId paInstance
     CSimpleFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, nullptr),
     var_IN(CIEC_STRING("", 0)),
     var_OUT(CIEC_STRING("", 0)),
-    var_conn_OUT(var_OUT),
     conn_CNF(this, 0),
     conn_IN(nullptr),
-    conn_OUT(this, 0, &var_conn_OUT) {
+    conn_OUT(this, 0, var_OUT) {
 }
 
 void FORTE_STRING2STRING::alg_REQ(void) {

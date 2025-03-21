@@ -62,14 +62,13 @@ const SFBInterfaceSpec FORTE_signalprocessing__SCALE::scmFBInterfaceSpec = {
 
 FORTE_signalprocessing__SCALE::FORTE_signalprocessing__SCALE(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId),
-    var_conn_(var_),
     conn_CNF(this, 0),
     conn_IN(nullptr),
     conn_MAX_IN(nullptr),
     conn_MIN_IN(nullptr),
     conn_MAX_OUT(nullptr),
     conn_MIN_OUT(nullptr),
-    conn_(this, 0, &var_conn_) {
+    conn_(this, 0, var_) {
 }
 
 void FORTE_signalprocessing__SCALE::setInitialValues() {

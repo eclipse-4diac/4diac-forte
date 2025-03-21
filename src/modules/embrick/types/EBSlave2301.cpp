@@ -66,8 +66,6 @@ const SFBInterfaceSpec FORTE_EBSlave2301::scmFBInterfaceSpec = {
 FORTE_EBSlave2301::FORTE_EBSlave2301(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     EmbrickSlave(scmSlaveConfigurationIO, scmSlaveConfigurationIONum, EmbrickSlaveHandler::G_2RelNo4RelCo,
         paContainer, scmFBInterfaceSpec, paInstanceNameId),
-    var_conn_QO(var_QO),
-    var_conn_STATUS(var_STATUS),
     conn_MAPO(this, 0),
     conn_IND(this, 1),
     conn_QI(nullptr),
@@ -78,8 +76,8 @@ FORTE_EBSlave2301::FORTE_EBSlave2301(const CStringDictionary::TStringId paInstan
     conn_Relay_5(nullptr),
     conn_Relay_6(nullptr),
     conn_UpdateInterval(nullptr),
-    conn_QO(this, 0, &var_conn_QO),
-    conn_STATUS(this, 1, &var_conn_STATUS) {
+    conn_QO(this, 0, var_QO),
+    conn_STATUS(this, 1, var_STATUS) {
 };
 
 void FORTE_EBSlave2301::setInitialValues() {

@@ -65,12 +65,11 @@ public:
   CIEC_ANY_ELEMENTARY_VARIANT var_MX;
   CIEC_ANY_ELEMENTARY_VARIANT var_OUT;
   
-  CIEC_ANY_ELEMENTARY_VARIANT var_conn_OUT;
   CEventConnection conn_CNF;
   CDataConnection *conn_MN;
   CDataConnection *conn_IN;
   CDataConnection *conn_MX;
-  CDataConnection conn_OUT;
+  COutDataConnection<CIEC_ANY_ELEMENTARY_VARIANT> conn_OUT;
   
   CIEC_ANY *getDI(size_t) override;
   CIEC_ANY *getDO(size_t) override;

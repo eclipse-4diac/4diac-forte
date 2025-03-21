@@ -60,13 +60,11 @@ class FORTE_signalprocessing__FIELDBUS_PERCENT_TO_WORD final : public CFunctionB
 
     CIEC_WORD var_;
 
-    CIEC_WORD var_conn_;
-
     CEventConnection conn_CNF;
 
     CDataConnection *conn_RI;
 
-    CDataConnection conn_;
+    COutDataConnection<CIEC_WORD> conn_;
 
     CIEC_ANY *getDI(size_t) override;
     CIEC_ANY *getDO(size_t) override;

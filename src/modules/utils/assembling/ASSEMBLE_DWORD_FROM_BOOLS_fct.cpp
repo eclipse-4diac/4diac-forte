@@ -96,7 +96,6 @@ const SFBInterfaceSpec FORTE_ASSEMBLE_DWORD_FROM_BOOLS::scmFBInterfaceSpec = {
 
 FORTE_ASSEMBLE_DWORD_FROM_BOOLS::FORTE_ASSEMBLE_DWORD_FROM_BOOLS(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId),
-    var_conn_(var_),
     conn_CNF(this, 0),
     conn_BIT_00(nullptr),
     conn_BIT_01(nullptr),
@@ -130,7 +129,7 @@ FORTE_ASSEMBLE_DWORD_FROM_BOOLS::FORTE_ASSEMBLE_DWORD_FROM_BOOLS(const CStringDi
     conn_BIT_29(nullptr),
     conn_BIT_30(nullptr),
     conn_BIT_31(nullptr),
-    conn_(this, 0, &var_conn_) {
+    conn_(this, 0, var_) {
 }
 
 void FORTE_ASSEMBLE_DWORD_FROM_BOOLS::setInitialValues() {

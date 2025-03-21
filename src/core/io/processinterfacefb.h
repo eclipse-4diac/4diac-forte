@@ -75,17 +75,14 @@ namespace forte::core::io {
         return mIsReady;
       }
 
-      CIEC_BOOL var_conn_QO;
-      CIEC_STRING var_conn_STATUS;
-
       CEventConnection conn_INITO;
       CEventConnection conn_CNF;
 
       CDataConnection *conn_QI;
       CDataConnection *conn_PARAMS;
 
-      CDataConnection conn_QO;
-      CDataConnection conn_STATUS;
+      COutDataConnection<CIEC_BOOL> conn_QO;
+      COutDataConnection<CIEC_STRING> conn_STATUS;
 
     private:
       CIEC_BOOL initialise(CEventChainExecutionThread *const paECET);

@@ -67,12 +67,11 @@ FORTE_F_MID::FORTE_F_MID(const CStringDictionary::TStringId paInstanceNameId, fo
     var_L(CIEC_ANY_INT_VARIANT()),
     var_P(CIEC_ANY_INT_VARIANT()),
     var_OUT(CIEC_ANY_STRING_VARIANT()),
-    var_conn_OUT(var_OUT),
     conn_CNF(this, 0),
     conn_IN(nullptr),
     conn_L(nullptr),
     conn_P(nullptr),
-    conn_OUT(this, 0, &var_conn_OUT) {
+    conn_OUT(this, 0, var_OUT) {
 };
 
 void FORTE_F_MID::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {

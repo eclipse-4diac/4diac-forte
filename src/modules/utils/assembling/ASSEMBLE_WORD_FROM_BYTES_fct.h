@@ -63,14 +63,12 @@ class FORTE_ASSEMBLE_WORD_FROM_BYTES final : public CFunctionBlock {
 
     CIEC_WORD var_;
 
-    CIEC_WORD var_conn_;
-
     CEventConnection conn_CNF;
 
     CDataConnection *conn_BYTE_00;
     CDataConnection *conn_BYTE_01;
 
-    CDataConnection conn_;
+    COutDataConnection<CIEC_WORD> conn_;
 
     CIEC_ANY *getDI(size_t) override;
     CIEC_ANY *getDO(size_t) override;

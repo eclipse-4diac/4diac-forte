@@ -65,11 +65,10 @@ FORTE_F_ROR::FORTE_F_ROR(const CStringDictionary::TStringId paInstanceNameId, fo
     var_IN(CIEC_ANY_BIT_VARIANT()),
     var_N(CIEC_ANY_INT_VARIANT()),
     var_OUT(CIEC_ANY_BIT_VARIANT()),
-    var_conn_OUT(var_OUT),
     conn_CNF(this, 0),
     conn_IN(nullptr),
     conn_N(nullptr),
-    conn_OUT(this, 0, &var_conn_OUT) {
+    conn_OUT(this, 0, var_OUT) {
 };
 
 void FORTE_F_ROR::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {

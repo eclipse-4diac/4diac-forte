@@ -71,14 +71,6 @@ class FORTE_X20AT4222 final : public PowerlinkFunctionBlockAT {
     CIEC_REAL var_T03;
     CIEC_REAL var_T04;
 
-    CIEC_BOOL var_conn_QO;
-    CIEC_USINT var_conn_CNIDO;
-    CIEC_STRING var_conn_STATUS;
-    CIEC_REAL var_conn_T01;
-    CIEC_REAL var_conn_T02;
-    CIEC_REAL var_conn_T03;
-    CIEC_REAL var_conn_T04;
-
     CEventConnection conn_INITO;
     CEventConnection conn_CNF;
 
@@ -86,13 +78,13 @@ class FORTE_X20AT4222 final : public PowerlinkFunctionBlockAT {
     CDataConnection *conn_CNID;
     CDataConnection *conn_MODID;
 
-    CDataConnection conn_QO;
-    CDataConnection conn_CNIDO;
-    CDataConnection conn_STATUS;
-    CDataConnection conn_T01;
-    CDataConnection conn_T02;
-    CDataConnection conn_T03;
-    CDataConnection conn_T04;
+    COutDataConnection<CIEC_BOOL> conn_QO;
+    COutDataConnection<CIEC_USINT> conn_CNIDO;
+    COutDataConnection<CIEC_STRING> conn_STATUS;
+    COutDataConnection<CIEC_REAL> conn_T01;
+    COutDataConnection<CIEC_REAL> conn_T02;
+    COutDataConnection<CIEC_REAL> conn_T03;
+    COutDataConnection<CIEC_REAL> conn_T04;
 
     CIEC_ANY *getDI(size_t) override;
     CIEC_ANY *getDO(size_t) override;

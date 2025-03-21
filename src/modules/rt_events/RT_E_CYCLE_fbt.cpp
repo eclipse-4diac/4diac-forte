@@ -52,12 +52,11 @@ const SFBInterfaceSpec FORTE_RT_E_CYCLE::scmFBInterfaceSpec = {
 
 FORTE_RT_E_CYCLE::FORTE_RT_E_CYCLE(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
         CEventSourceFB(paContainer, scmFBInterfaceSpec, paInstanceNameId),
-    var_conn_QO(var_QO),
     conn_EO(this, 0),
     conn_DT(nullptr),
     conn_Deadline(nullptr),
     conn_WCET(nullptr),
-    conn_QO(this, 0, &var_conn_QO) {
+    conn_QO(this, 0, var_QO) {
   setEventChainExecutor(&mECEO);
 };
 

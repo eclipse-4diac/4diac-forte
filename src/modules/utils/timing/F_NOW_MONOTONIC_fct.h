@@ -54,11 +54,9 @@ class FORTE_utils__timing__F_NOW_MONOTONIC final : public CFunctionBlock {
 
     CIEC_TIME var_;
 
-    CIEC_TIME var_conn_;
-
     CEventConnection conn_CNF;
 
-    CDataConnection conn_;
+    COutDataConnection<CIEC_TIME> conn_;
 
     CIEC_ANY *getDI(size_t) override;
     CIEC_ANY *getDO(size_t) override;

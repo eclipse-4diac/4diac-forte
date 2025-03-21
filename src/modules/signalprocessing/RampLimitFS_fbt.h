@@ -79,8 +79,6 @@ class FORTE_signalprocessing__RampLimitFS final : public CSimpleFB {
 
     CIEC_DINT var_OUT;
 
-    CIEC_DINT var_conn_OUT;
-
     CEventConnection conn_CNF;
 
     CDataConnection *conn_PV;
@@ -89,7 +87,7 @@ class FORTE_signalprocessing__RampLimitFS final : public CSimpleFB {
     CDataConnection *conn_FAST;
     CDataConnection *conn_VAL_FULL;
 
-    CDataConnection conn_OUT;
+    COutDataConnection<CIEC_DINT> conn_OUT;
 
     CIEC_ANY *getDI(size_t) override;
     CIEC_ANY *getDO(size_t) override;

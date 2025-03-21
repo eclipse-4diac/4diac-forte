@@ -78,10 +78,6 @@ class FORTE_X20DO9321 final : public PowerlinkFunctionBlockDO {
     CIEC_USINT var_CNIDO;
     CIEC_STRING var_STATUS;
 
-    CIEC_BOOL var_conn_QO;
-    CIEC_USINT var_conn_CNIDO;
-    CIEC_STRING var_conn_STATUS;
-
     CEventConnection conn_INITO;
     CEventConnection conn_CNF;
 
@@ -101,9 +97,9 @@ class FORTE_X20DO9321 final : public PowerlinkFunctionBlockDO {
     CDataConnection *conn_DO11;
     CDataConnection *conn_DO12;
 
-    CDataConnection conn_QO;
-    CDataConnection conn_CNIDO;
-    CDataConnection conn_STATUS;
+    COutDataConnection<CIEC_BOOL> conn_QO;
+    COutDataConnection<CIEC_USINT> conn_CNIDO;
+    COutDataConnection<CIEC_STRING> conn_STATUS;
 
     CIEC_ANY *getDI(size_t) override;
     CIEC_ANY *getDO(size_t) override;

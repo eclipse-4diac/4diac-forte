@@ -99,9 +99,6 @@ class FORTE_ADS_SERVER_CONFIG final : public CFunctionBlock {
     CIEC_BOOL var_QO;
     CIEC_WSTRING var_STATUS;
 
-    CIEC_BOOL var_conn_QO;
-    CIEC_WSTRING var_conn_STATUS;
-
     CEventConnection conn_INITO;
 
     CDataConnection *conn_QI;
@@ -110,8 +107,8 @@ class FORTE_ADS_SERVER_CONFIG final : public CFunctionBlock {
     CDataConnection *conn_ADS_PORT;
     CDataConnection *conn_SERVER_IPV4_OR_HOSTNAME;
 
-    CDataConnection conn_QO;
-    CDataConnection conn_STATUS;
+    COutDataConnection<CIEC_BOOL> conn_QO;
+    COutDataConnection<CIEC_WSTRING> conn_STATUS;
 
     CIEC_ANY *getDI(size_t) override;
     CIEC_ANY *getDO(size_t) override;

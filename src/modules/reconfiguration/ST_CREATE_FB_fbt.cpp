@@ -56,15 +56,13 @@ const SFBInterfaceSpec FORTE_ST_CREATE_FB::scmFBInterfaceSpec = {
 
 FORTE_ST_CREATE_FB::FORTE_ST_CREATE_FB(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId),
-    var_conn_QO(var_QO),
-    var_conn_STATUS(var_STATUS),
     conn_CNF(this, 0),
     conn_QI(nullptr),
     conn_FB_NAME(nullptr),
     conn_FB_TYPE(nullptr),
     conn_DST(nullptr),
-    conn_QO(this, 0, &var_conn_QO),
-    conn_STATUS(this, 1, &var_conn_STATUS) {
+    conn_QO(this, 0, var_QO),
+    conn_STATUS(this, 1, var_STATUS) {
 };
 
 void FORTE_ST_CREATE_FB::setInitialValues() {

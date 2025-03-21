@@ -69,13 +69,12 @@ const SFBInterfaceSpec FORTE_ASSEMBLE_BYTE_FROM_QUARTERS::scmFBInterfaceSpec = {
 
 FORTE_ASSEMBLE_BYTE_FROM_QUARTERS::FORTE_ASSEMBLE_BYTE_FROM_QUARTERS(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId),
-    var_conn_(var_),
     conn_CNF(this, 0),
     conn_QUARTER_BYTE_00(nullptr),
     conn_QUARTER_BYTE_01(nullptr),
     conn_QUARTER_BYTE_02(nullptr),
     conn_QUARTER_BYTE_03(nullptr),
-    conn_(this, 0, &var_conn_) {
+    conn_(this, 0, var_) {
 }
 
 void FORTE_ASSEMBLE_BYTE_FROM_QUARTERS::setInitialValues() {

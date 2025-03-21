@@ -62,10 +62,9 @@ const SFBInterfaceSpec FORTE_TIMESTAMP_NS::scmFBInterfaceSpec = {
 FORTE_TIMESTAMP_NS::FORTE_TIMESTAMP_NS(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId),
     var_startDate(0_DATE_AND_TIME),
-    var_conn_(var_),
     conn_CNF(this, 0),
     conn_startDate(nullptr),
-    conn_(this, 0, &var_conn_) {
+    conn_(this, 0, var_) {
 }
 
 void FORTE_TIMESTAMP_NS::setInitialValues() {

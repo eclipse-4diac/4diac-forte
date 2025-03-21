@@ -62,8 +62,6 @@ class FORTE_signalprocessing__SCALE final : public CFunctionBlock {
 
     CIEC_REAL var_;
 
-    CIEC_REAL var_conn_;
-
     CEventConnection conn_CNF;
 
     CDataConnection *conn_IN;
@@ -72,7 +70,7 @@ class FORTE_signalprocessing__SCALE final : public CFunctionBlock {
     CDataConnection *conn_MAX_OUT;
     CDataConnection *conn_MIN_OUT;
 
-    CDataConnection conn_;
+    COutDataConnection<CIEC_REAL> conn_;
 
     CIEC_ANY *getDI(size_t) override;
     CIEC_ANY *getDO(size_t) override;

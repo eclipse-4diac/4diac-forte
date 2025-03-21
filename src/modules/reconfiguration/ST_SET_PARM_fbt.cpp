@@ -56,16 +56,14 @@ const SFBInterfaceSpec FORTE_ST_SET_PARM::scmFBInterfaceSpec = {
 
 FORTE_ST_SET_PARM::FORTE_ST_SET_PARM(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId),
-    var_conn_QO(var_QO),
-    var_conn_STATUS(var_STATUS),
     conn_CNF(this, 0),
     conn_QI(nullptr),
     conn_ELEM_NAME(nullptr),
     conn_ELEM_DATA_IN(nullptr),
     conn_PARM_VAL(nullptr),
     conn_DST(nullptr),
-    conn_QO(this, 0, &var_conn_QO),
-    conn_STATUS(this, 1, &var_conn_STATUS) {
+    conn_QO(this, 0, var_QO),
+    conn_STATUS(this, 1, var_STATUS) {
 };
 
 void FORTE_ST_SET_PARM::setInitialValues() {

@@ -66,11 +66,10 @@ public:
   CIEC_TIME_OF_DAY var_IN2;
   CIEC_DATE_AND_TIME var_OUT;
   
-  CIEC_DATE_AND_TIME var_conn_OUT;
   CEventConnection conn_CNF;
   CDataConnection *conn_IN1;
   CDataConnection *conn_IN2;
-  CDataConnection conn_OUT;
+  COutDataConnection<CIEC_DATE_AND_TIME> conn_OUT;
   
   CIEC_ANY *getDI(size_t) override;
   CIEC_ANY *getDO(size_t) override;

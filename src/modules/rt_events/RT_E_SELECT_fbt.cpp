@@ -58,7 +58,6 @@ const SFBInterfaceSpec FORTE_RT_E_SELECT::scmFBInterfaceSpec = {
 
 FORTE_RT_E_SELECT::FORTE_RT_E_SELECT(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
         CRTEventSingle(paContainer, scmFBInterfaceSpec, paInstanceNameId),
-    var_conn_QO(var_QO),
     conn_INITO(this, 0),
     conn_EO(this, 1),
     conn_QI(nullptr),
@@ -66,7 +65,7 @@ FORTE_RT_E_SELECT::FORTE_RT_E_SELECT(const CStringDictionary::TStringId paInstan
     conn_Tmin(nullptr),
     conn_Deadline(nullptr),
     conn_WCET(nullptr),
-    conn_QO(this, 0, &var_conn_QO) {
+    conn_QO(this, 0, var_QO) {
 };
 
 void FORTE_RT_E_SELECT::setInitialValues() {

@@ -60,12 +60,10 @@ const SFBInterfaceSpec FORTE_GetInstancePathAndName::scmFBInterfaceSpec = {
 FORTE_GetInstancePathAndName::FORTE_GetInstancePathAndName(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CSimpleFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, nullptr),
     var_Sep(0x2f_CHAR),
-    var_conn_Path(var_Path),
-    var_conn_Name(var_Name),
     conn_CNF(this, 0),
     conn_Sep(nullptr),
-    conn_Path(this, 0, &var_conn_Path),
-    conn_Name(this, 1, &var_conn_Name) {
+    conn_Path(this, 0, var_Path),
+    conn_Name(this, 1, var_Name) {
 }
 
 void FORTE_GetInstancePathAndName::setInitialValues() {

@@ -64,11 +64,10 @@ FORTE_F_MUL::FORTE_F_MUL(const CStringDictionary::TStringId paInstanceNameId, fo
     var_IN1(CIEC_ANY_NUM_VARIANT()),
     var_IN2(CIEC_ANY_NUM_VARIANT()),
     var_OUT(CIEC_ANY_NUM_VARIANT()),
-    var_conn_OUT(var_OUT),
     conn_CNF(this, 0),
     conn_IN1(nullptr),
     conn_IN2(nullptr),
-    conn_OUT(this, 0, &var_conn_OUT) {
+    conn_OUT(this, 0, var_OUT) {
 };
 
 void FORTE_F_MUL::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {

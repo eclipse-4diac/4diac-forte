@@ -104,8 +104,6 @@ PLC01A1ConfigFB::PLC01A1ConfigFB(const CStringDictionary::TStringId paInstanceNa
     var_UpdateInterval(25_UINT),
     var_QO(0_BOOL),
     var_STATUS(u""_WSTRING),
-    var_conn_QO(var_QO),
-    var_conn_STATUS(var_STATUS),
     conn_INITO(this, 0),
     conn_IND(this, 1),
     conn_QI(nullptr),
@@ -126,8 +124,8 @@ PLC01A1ConfigFB::PLC01A1ConfigFB(const CStringDictionary::TStringId paInstanceNa
     conn_OUT7(nullptr),
     conn_OUT8(nullptr),
     conn_UpdateInterval(nullptr),
-    conn_QO(this, 0, &var_conn_QO),
-    conn_STATUS(this, 1, &var_conn_STATUS) {
+    conn_QO(this, 0, var_QO),
+    conn_STATUS(this, 1, var_STATUS) {
 };
 
 void PLC01A1ConfigFB::setInitialValues() {

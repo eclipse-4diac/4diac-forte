@@ -63,15 +63,12 @@ class FORTE_SPLIT_DWORD_INTO_WORDS final : public CFunctionBlock {
     CIEC_WORD var_WORD_00;
     CIEC_WORD var_WORD_01;
 
-    CIEC_WORD var_conn_WORD_00;
-    CIEC_WORD var_conn_WORD_01;
-
     CEventConnection conn_CNF;
 
     CDataConnection *conn_IN;
 
-    CDataConnection conn_WORD_00;
-    CDataConnection conn_WORD_01;
+    COutDataConnection<CIEC_WORD> conn_WORD_00;
+    COutDataConnection<CIEC_WORD> conn_WORD_01;
 
     CIEC_ANY *getDI(size_t) override;
     CIEC_ANY *getDO(size_t) override;

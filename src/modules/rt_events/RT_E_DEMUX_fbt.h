@@ -78,7 +78,6 @@ public:
   CIEC_TIME var_Deadline3;
   CIEC_TIME var_WCET3;
   CIEC_BOOL var_QO;
-  CIEC_BOOL var_conn_QO;
   CEventConnection conn_INITO;
   CEventConnection conn_EO0;
   CEventConnection conn_EO1;
@@ -95,7 +94,7 @@ public:
   CDataConnection *conn_WCET2;
   CDataConnection *conn_Deadline3;
   CDataConnection *conn_WCET3;
-  CDataConnection conn_QO;
+  COutDataConnection<CIEC_BOOL> conn_QO;
   CIEC_ANY *getDI(size_t) override;
   CIEC_ANY *getDO(size_t) override;
   CEventConnection *getEOConUnchecked(TPortId) override;

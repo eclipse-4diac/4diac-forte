@@ -70,10 +70,9 @@ public:
   CIEC_BOOL var_CLK;
   CIEC_BOOL var_Q;
   
-  CIEC_BOOL var_conn_Q;
   CEventConnection conn_CNF;
   CDataConnection *conn_CLK;
-  CDataConnection conn_Q;
+  COutDataConnection<CIEC_BOOL> conn_Q;
   
   CIEC_ANY *getDI(size_t) override;
   CIEC_ANY *getDO(size_t) override;

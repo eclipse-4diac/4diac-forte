@@ -79,9 +79,6 @@ FORTE_signalprocessing__DualHysteresis::FORTE_signalprocessing__DualHysteresis(c
     var_QO(0_BOOL),
     var_DO_UP(0_BOOL),
     var_DO_DOWN(0_BOOL),
-    var_conn_QO(var_QO),
-    var_conn_DO_UP(var_DO_UP),
-    var_conn_DO_DOWN(var_DO_DOWN),
     conn_INITO(this, 0),
     conn_CNF(this, 1),
     conn_QI(nullptr),
@@ -89,9 +86,9 @@ FORTE_signalprocessing__DualHysteresis::FORTE_signalprocessing__DualHysteresis(c
     conn_DEAD(nullptr),
     conn_HYSTERESIS(nullptr),
     conn_INPUT(nullptr),
-    conn_QO(this, 0, &var_conn_QO),
-    conn_DO_UP(this, 1, &var_conn_DO_UP),
-    conn_DO_DOWN(this, 2, &var_conn_DO_DOWN) {
+    conn_QO(this, 0, var_QO),
+    conn_DO_UP(this, 1, var_DO_UP),
+    conn_DO_DOWN(this, 2, var_DO_DOWN) {
 }
 
 void FORTE_signalprocessing__DualHysteresis::setInitialValues() {

@@ -70,11 +70,10 @@ FORTE_FB_RANDOM::FORTE_FB_RANDOM(const CStringDictionary::TStringId paInstanceNa
     CBasicFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, nullptr),
     var_SEED(0_UINT),
     var_VAL(0_REAL),
-    var_conn_VAL(var_VAL),
     conn_INITO(this, 0),
     conn_CNF(this, 1),
     conn_SEED(nullptr),
-    conn_VAL(this, 0, &var_conn_VAL) {
+    conn_VAL(this, 0, var_VAL) {
       mRandomGenerator.seed(mRandomDevice());
 }
 

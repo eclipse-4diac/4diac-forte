@@ -84,14 +84,12 @@ public:
 
     CIEC_REAL var_VAL;
 
-    CIEC_REAL var_conn_VAL;
-
     CEventConnection conn_INITO;
     CEventConnection conn_CNF;
 
     CDataConnection *conn_SEED;
 
-    CDataConnection conn_VAL;
+    COutDataConnection<CIEC_REAL> conn_VAL;
 
     CIEC_ANY *getDI(size_t) override;
     CIEC_ANY *getDO(size_t) override;
