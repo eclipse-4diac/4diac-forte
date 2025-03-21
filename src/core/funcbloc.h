@@ -511,18 +511,16 @@ class CFunctionBlock : public forte::core::CFBContainer {
      */
     template<typename T, typename U>
     void writeData([[maybe_unused]] TPortId paDONum, T& paValue, U& paConn) {
-      if(paConn.isConnected()) {
 #ifdef FORTE_SUPPORT_MONITORING
-        if(!paValue.isForced()) {
+      if(!paValue.isForced()) {
 #endif //FORTE_SUPPORT_MONITORING
-          paConn.writeData(paValue);
+        paConn.writeData(paValue);
 #ifdef FORTE_SUPPORT_MONITORING
-        } else {
-          //when forcing we write back the value from the connection to keep the forced value on the output
-          paConn.readData(paValue);
-        }
-#endif //FORTE_SUPPORT_MONITORING
+      } else {
+        //when forcing we write back the value from the connection to keep the forced value on the output
+        paConn.readData(paValue);
       }
+#endif //FORTE_SUPPORT_MONITORING
 #ifdef FORTE_TRACE_CTF
       traceWriteData(paDONum, paValue);
 #endif //FORTE_TRACE_CTF
