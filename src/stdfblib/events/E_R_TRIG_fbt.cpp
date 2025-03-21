@@ -55,10 +55,14 @@ FORTE_E_R_TRIG::FORTE_E_R_TRIG(const CStringDictionary::TStringId paInstanceName
     CCompositeFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, scmFBNData),
     fb_E_D_FF(STRID(E_D_FF), *this),
     fb_E_SWITCH(STRID(E_SWITCH), *this),
-    var_QI(CIEC_BOOL(0)),
     conn_EO(this, 0),
-    conn_QI(nullptr) {
+    conn_QI(nullptr),
+    conn_if2in_QI(this, 0, 0_BOOL) {
 };
+
+void FORTE_E_R_TRIG::setInitialValues() {
+  conn_if2in_QI.getValue() = 0_BOOL;
+}
 
 const SCFB_FBInstanceData FORTE_E_R_TRIG::scmInternalFBs[] = {
   {STRID(E_D_FF), STRID(E_D_FF)},
@@ -91,7 +95,7 @@ const SCFB_FBNData FORTE_E_R_TRIG::scmFBNData = {
 void FORTE_E_R_TRIG::readInputData(TEventID paEIID) {
   switch(paEIID) {
     case scmEventEIID: {
-      readData(0, var_QI, conn_QI);
+      readData(0, conn_if2in_QI.getValue(), conn_QI);
       break;
     }
     default:
@@ -102,12 +106,9 @@ void FORTE_E_R_TRIG::readInputData(TEventID paEIID) {
 void FORTE_E_R_TRIG::writeOutputData(TEventID) {
 }
 
-void FORTE_E_R_TRIG::readInternal2InterfaceOutputData(TEventID) {
-}
-
 CIEC_ANY *FORTE_E_R_TRIG::getDI(size_t paIndex) {
   switch(paIndex) {
-    case 0: return &var_QI;
+    case 0: return &conn_if2in_QI.getValue();
   }
   return nullptr;
 }
@@ -131,6 +132,13 @@ CDataConnection **FORTE_E_R_TRIG::getDIConUnchecked(TPortId paIndex) {
 }
 
 CDataConnection *FORTE_E_R_TRIG::getDOConUnchecked(TPortId) {
+  return nullptr;
+}
+
+CDataConnection *FORTE_E_R_TRIG::getIf2InConUnchecked(TPortId paIndex) {
+  switch(paIndex) {
+    case 0: return &conn_if2in_QI;
+  }
   return nullptr;
 }
 

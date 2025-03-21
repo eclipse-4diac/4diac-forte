@@ -65,16 +65,11 @@ class FORTE_E_BLINK final : public CCompositeFB {
 
     void readInputData(TEventID paEIID) override;
     void writeOutputData(TEventID paEIID) override;
-    void readInternal2InterfaceOutputData(TEventID paEOID) override;
     void setInitialValues() override;
+    CDataConnection *getIf2InConUnchecked(TPortId paDIID) override;
 
   public:
     FORTE_E_BLINK(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
-
-    CIEC_TIME var_TIMELOW;
-    CIEC_TIME var_TIMEHIGH;
-
-    CIEC_BOOL var_OUT;
 
     CEventConnection conn_CNF;
 
@@ -83,28 +78,13 @@ class FORTE_E_BLINK final : public CCompositeFB {
 
     COutDataConnection<CIEC_BOOL> conn_OUT;
 
+    COutDataConnection<CIEC_TIME> conn_if2in_TIMELOW;
+    COutDataConnection<CIEC_TIME> conn_if2in_TIMEHIGH;
+
     CIEC_ANY *getDI(size_t) override;
     CIEC_ANY *getDO(size_t) override;
     CEventConnection *getEOConUnchecked(TPortId) override;
     CDataConnection **getDIConUnchecked(TPortId) override;
     CDataConnection *getDOConUnchecked(TPortId) override;
-
-    void evt_START(const CIEC_TIME &paTIMELOW, const CIEC_TIME &paTIMEHIGH, CIEC_BOOL &paOUT) {
-      var_TIMELOW = paTIMELOW;
-      var_TIMEHIGH = paTIMEHIGH;
-      executeEvent(scmEventSTARTID, nullptr);
-      paOUT = var_OUT;
-    }
-
-    void evt_STOP(const CIEC_TIME &paTIMELOW, const CIEC_TIME &paTIMEHIGH, CIEC_BOOL &paOUT) {
-      var_TIMELOW = paTIMELOW;
-      var_TIMEHIGH = paTIMEHIGH;
-      executeEvent(scmEventSTOPID, nullptr);
-      paOUT = var_OUT;
-    }
-
-    void operator()(const CIEC_TIME &paTIMELOW, const CIEC_TIME &paTIMEHIGH, CIEC_BOOL &paOUT) {
-      evt_START(paTIMELOW, paTIMEHIGH, paOUT);
-    }
 };
 

@@ -27,8 +27,6 @@
 CCompositeFB::CCompositeFB(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec& paInterfaceSpec,
                            CStringDictionary::TStringId paInstanceNameId, const SCFB_FBNData & paFBNData) :
         CFunctionBlock(paContainer, paInterfaceSpec, paInstanceNameId),
-        mIf2InDConns(nullptr),
-        mIn2IfDConns(nullptr),
         cmFBNData(paFBNData),
         mEventConnections(nullptr),
         mDataConnections(nullptr),
@@ -76,45 +74,21 @@ CCompositeFB::~CCompositeFB() {
     if (nullptr != mDataConnections) {
       delete[] mDataConnections;
     }
-    if (nullptr != mIf2InDConns) {
-      delete[] mIf2InDConns;
-    }
-    if (nullptr != mIn2IfDConns) {
-      delete[] mIn2IfDConns;
-    }
   }
 }
 
 bool CCompositeFB::connectDI(TPortId paDIPortId, CDataConnection *paDataCon){
-  bool retVal = false;
-
+  // TODO remove?
   if(cgInternal2InterfaceMarker & paDIPortId){
     paDIPortId = static_cast<TPortId>(paDIPortId & cgInternal2InterfaceRemovalMask);
-    if(paDIPortId < getFBInterfaceSpec().mNumDOs){
-      mIn2IfDConns[paDIPortId] = paDataCon;
-      retVal = true;
-    }
+    return paDIPortId < getFBInterfaceSpec().mNumDOs;
   }
-  else if(paDIPortId < getFBInterfaceSpec().mNumDIs){
-    bool needsCloning = (getDI(paDIPortId)->getDataTypeID() == CIEC_ANY::e_ANY);
-    retVal = CFunctionBlock::connectDI(paDIPortId, paDataCon);
-    if((true == retVal) && (true == needsCloning) && (nullptr != paDataCon)) {
-      //if internal connected update the connections data type and maybe internal further connection points
-      (mIf2InDConns + paDIPortId)->setValue(getDI(paDIPortId));
-      (mIf2InDConns + paDIPortId)->cloneInputInterfaceValue();
-    }
-  }
-  return retVal;
+  return CFunctionBlock::connectDI(paDIPortId, paDataCon);
 }
 
 bool CCompositeFB::configureGenericDO(TPortId paDOPortId, const CIEC_ANY &paRefValue){
-  bool bRetVal = CFunctionBlock::configureGenericDO(paDOPortId, paRefValue);
-  CDataConnection *dataCon = mIn2IfDConns[paDOPortId];
-  if(bRetVal && dataCon != nullptr){
-    //issue a reconfiguration attempt so that all connection end points in this connection are also correctly configured
-    dataCon->handleAnySrcPortConnection(paRefValue);
-  }
-  return bRetVal;
+  // TODO remove?
+  return CFunctionBlock::configureGenericDO(paDOPortId, paRefValue);
 }
 
 EMGMResponse CCompositeFB::changeExecutionState(EMGMCommandType paCommand){
@@ -147,7 +121,6 @@ CIEC_ANY *CCompositeFB::getVar(CStringDictionary::TStringId *paNameList, unsigne
 void CCompositeFB::executeEvent(TEventID paEIID, CEventChainExecutionThread * const paECET){
   if(cgInternal2InterfaceMarker & paEIID){
     TEventID internalEvent = static_cast<TEventID>(paEIID & cgInternal2InterfaceRemovalMask);
-    readInternal2InterfaceOutputData(internalEvent);
     sendOutputEvent(internalEvent, paECET);
   }
   else{
@@ -213,16 +186,6 @@ void CCompositeFB::establishConnection(CConnection *paCon, CFunctionBlock *paDst
 
 void CCompositeFB::createDataConnections(){
   if(cmFBNData.mNumDataConnections){
-    if(getFBInterfaceSpec().mNumDIs){
-      prepareIf2InDataCons();
-    }
-    if(getFBInterfaceSpec().mNumDOs){
-      mIn2IfDConns = new CDataConnection *[getFBInterfaceSpec().mNumDOs];
-      for(TPortId i = 0; i < getFBInterfaceSpec().mNumDOs; i++){
-        mIn2IfDConns[i] = nullptr;
-      }
-    }
-
     mDataConnections = new CDataConnection *[cmFBNData.mNumDataConnections];
 
     for(size_t i = 0; i < cmFBNData.mNumDataConnections; ++i){
@@ -252,7 +215,7 @@ CDataConnection * CCompositeFB::getDataConn(CFunctionBlock *paSrcFB, CStringDict
   if(this == paSrcFB){
     TPortId diId = getDIID(paSrcNameId);
     if(diId != cgInvalidPortId) {
-      return &(mIf2InDConns[diId]);
+      return getIf2InConUnchecked(diId);
     } else {
       TPortId dioId = getDIOID(paSrcNameId);
       return getDIOOutConInternalUnchecked(dioId);
@@ -284,13 +247,6 @@ void CCompositeFB::createAdapterConnections(){
     } else{
       DEVLOG_ERROR("[CFB Creation] Source or destination not found in adapter connection!");
     }
-  }
-}
-
-void CCompositeFB::prepareIf2InDataCons(){
-  mIf2InDConns = new CInterface2InternalDataConnection[getFBInterfaceSpec().mNumDIs];
-  for(TPortId i = 0; i < getFBInterfaceSpec().mNumDIs; i++){
-    (mIf2InDConns + i)->setSource(this, i);
   }
 }
 

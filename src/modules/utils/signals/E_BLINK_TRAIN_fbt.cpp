@@ -75,22 +75,21 @@ FORTE_E_BLINK_TRAIN::FORTE_E_BLINK_TRAIN(const CStringDictionary::TStringId paIn
     fb_E_TP(STRID(E_TP), *this),
     fb_E_TRAIN(STRID(E_TRAIN), *this),
     fb_ADD_2(STRID(ADD_2), "ADD_2", *this),
-    var_TIMELOW(0_TIME),
-    var_TIMEHIGH(0_TIME),
-    var_N(0_UINT),
-    var_OUT(0_BOOL),
     conn_CNF(this, 0),
     conn_TIMELOW(nullptr),
     conn_TIMEHIGH(nullptr),
     conn_N(nullptr),
-    conn_OUT(this, 0, var_OUT) {
+    conn_OUT(this, 0, 0_BOOL),
+    conn_if2in_TIMELOW(this, 0, 0_TIME),
+    conn_if2in_TIMEHIGH(this, 1, 0_TIME),
+    conn_if2in_N(this, 2, 0_UINT) {
 };
 
 void FORTE_E_BLINK_TRAIN::setInitialValues() {
-  var_TIMELOW = 0_TIME;
-  var_TIMEHIGH = 0_TIME;
-  var_N = 0_UINT;
-  var_OUT = 0_BOOL;
+  conn_if2in_TIMELOW.getValue() = 0_TIME;
+  conn_if2in_TIMEHIGH.getValue() = 0_TIME;
+  conn_if2in_N.getValue() = 0_UINT;
+  fb_E_TP->conn_Q.getValue() = 0_BOOL;
 }
 
 const SCFB_FBInstanceData FORTE_E_BLINK_TRAIN::scmInternalFBs[] = {
@@ -132,22 +131,12 @@ const SCFB_FBNData FORTE_E_BLINK_TRAIN::scmFBNData = {
   0, nullptr
 };
 
-void FORTE_E_BLINK_TRAIN::readInternal2InterfaceOutputData(const TEventID paEOID) {
-  switch(paEOID) {
-    case scmEventCNFID: {
-      if(CDataConnection *conn = getIn2IfConUnchecked(0); conn) { conn->readData(var_OUT); }
-      break;
-    }
-    default:
-      break;
-  }
-}
 void FORTE_E_BLINK_TRAIN::readInputData(const TEventID paEIID) {
   switch(paEIID) {
     case scmEventSTARTID: {
-      readData(0, var_TIMELOW, conn_TIMELOW);
-      readData(1, var_TIMEHIGH, conn_TIMEHIGH);
-      readData(2, var_N, conn_N);
+      readData(0, conn_if2in_TIMELOW.getValue(), conn_TIMELOW);
+      readData(1, conn_if2in_TIMEHIGH.getValue(), conn_TIMEHIGH);
+      readData(2, conn_if2in_N.getValue(), conn_N);
       break;
     }
     default:
@@ -158,7 +147,7 @@ void FORTE_E_BLINK_TRAIN::readInputData(const TEventID paEIID) {
 void FORTE_E_BLINK_TRAIN::writeOutputData(const TEventID paEIID) {
   switch(paEIID) {
     case scmEventCNFID: {
-      writeData(0, var_OUT, conn_OUT);
+      writeData(0, fb_E_TP->conn_Q.getValue(), conn_OUT);
       break;
     }
     default:
@@ -168,16 +157,16 @@ void FORTE_E_BLINK_TRAIN::writeOutputData(const TEventID paEIID) {
 
 CIEC_ANY *FORTE_E_BLINK_TRAIN::getDI(const size_t paIndex) {
   switch(paIndex) {
-    case 0: return &var_TIMELOW;
-    case 1: return &var_TIMEHIGH;
-    case 2: return &var_N;
+    case 0: return &conn_if2in_TIMELOW.getValue();
+    case 1: return &conn_if2in_TIMEHIGH.getValue();
+    case 2: return &conn_if2in_N.getValue();
   }
   return nullptr;
 }
 
 CIEC_ANY *FORTE_E_BLINK_TRAIN::getDO(const size_t paIndex) {
   switch(paIndex) {
-    case 0: return &var_OUT;
+    case 0: return &fb_E_TP->conn_Q.getValue();
   }
   return nullptr;
 }
@@ -201,6 +190,15 @@ CDataConnection **FORTE_E_BLINK_TRAIN::getDIConUnchecked(const TPortId paIndex) 
 CDataConnection *FORTE_E_BLINK_TRAIN::getDOConUnchecked(const TPortId paIndex) {
   switch(paIndex) {
     case 0: return &conn_OUT;
+  }
+  return nullptr;
+}
+
+CDataConnection *FORTE_E_BLINK_TRAIN::getIf2InConUnchecked(TPortId paIndex) {
+  switch(paIndex) {
+    case 0: return &conn_if2in_TIMELOW;
+    case 1: return &conn_if2in_TIMEHIGH;
+    case 2: return &conn_if2in_N;
   }
   return nullptr;
 }

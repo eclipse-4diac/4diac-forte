@@ -78,9 +78,6 @@ const SCFB_FBNData FORTE_E_RTimeOut::scmFBNData = {
   0, nullptr
 };
 
-void FORTE_E_RTimeOut::readInternal2InterfaceOutputData(TEventID) {
-  // nothing to do
-}
 void FORTE_E_RTimeOut::readInputData(TEventID) {
   // nothing to do
 }
@@ -113,6 +110,10 @@ CDataConnection **FORTE_E_RTimeOut::getDIConUnchecked(TPortId) {
 }
 
 CDataConnection *FORTE_E_RTimeOut::getDOConUnchecked(TPortId) {
+  return nullptr;
+}
+
+CDataConnection *FORTE_E_RTimeOut::getIf2InConUnchecked(TPortId) {
   return nullptr;
 }
 

@@ -63,47 +63,28 @@ private:
 
   void readInputData(TEventID paEIID) override;
   void writeOutputData(TEventID paEIID) override;
-  void readInternal2InterfaceOutputData(TEventID paEOID) override;
   void setInitialValues() override;
+  CDataConnection *getIf2InConUnchecked(TPortId paDIID) override;
 
 public:
   FORTE_RT_E_TRAIN(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
-  CIEC_TIME var_DT;
-  CIEC_UINT var_N;
-  CIEC_TIME var_Deadline;
-  CIEC_TIME var_WCET;
-  CIEC_UINT var_CV;
   CEventConnection conn_EO;
   CDataConnection *conn_DT;
   CDataConnection *conn_N;
   CDataConnection *conn_Deadline;
   CDataConnection *conn_WCET;
   COutDataConnection<CIEC_UINT> conn_CV;
+  COutDataConnection<CIEC_TIME> conn_if2in_DT;
+  COutDataConnection<CIEC_UINT> conn_if2in_N;
+  COutDataConnection<CIEC_TIME> conn_if2in_Deadline;
+  COutDataConnection<CIEC_TIME> conn_if2in_WCET;
+
   CIEC_ANY *getDI(size_t) override;
   CIEC_ANY *getDO(size_t) override;
   CEventConnection *getEOConUnchecked(TPortId) override;
   CDataConnection **getDIConUnchecked(TPortId) override;
   CDataConnection *getDOConUnchecked(TPortId) override;
-  void evt_START(const CIEC_TIME &pa_DT, const CIEC_UINT &pa_N, const CIEC_TIME &pa_Deadline, const CIEC_TIME &pa_WCET, CIEC_UINT &pa_CV) {
-    var_DT = pa_DT;
-    var_N = pa_N;
-    var_Deadline = pa_Deadline;
-    var_WCET = pa_WCET;
-    receiveInputEvent(scmEventSTARTID, nullptr);
-    pa_CV = var_CV;
-  }
-  void evt_STOP(const CIEC_TIME &pa_DT, const CIEC_UINT &pa_N, const CIEC_TIME &pa_Deadline, const CIEC_TIME &pa_WCET, CIEC_UINT &pa_CV) {
-    var_DT = pa_DT;
-    var_N = pa_N;
-    var_Deadline = pa_Deadline;
-    var_WCET = pa_WCET;
-    receiveInputEvent(scmEventSTOPID, nullptr);
-    pa_CV = var_CV;
-  }
-  void operator()(const CIEC_TIME &pa_DT, const CIEC_UINT &pa_N, const CIEC_TIME &pa_Deadline, const CIEC_TIME &pa_WCET, CIEC_UINT &pa_CV) {
-    evt_START(pa_DT, pa_N, pa_Deadline, pa_WCET, pa_CV);
-  }
 };
 
 

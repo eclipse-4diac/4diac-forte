@@ -44,7 +44,7 @@ class FORTE_E_RTimeOut final : public CCompositeFB {
 
     void readInputData(TEventID paEIID) override;
     void writeOutputData(TEventID paEIID) override;
-    void readInternal2InterfaceOutputData(TEventID paEOID) override;
+    CDataConnection *getIf2InConUnchecked(TPortId paDIID) override;
 
   public:
     FORTE_E_RTimeOut(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);

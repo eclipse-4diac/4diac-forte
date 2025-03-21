@@ -129,15 +129,10 @@ class CCompositeFB: public CFunctionBlock {
     EMGMResponse changeExecutionState(EMGMCommandType paCommand) override;
 
   protected:
-    CDataConnection *getIn2IfConUnchecked(TPortId paIndex) {
-      return mIn2IfDConns[paIndex];
-    }
-
     const SCFB_FBNData &getFBNData() const {
       return cmFBNData;
     }
 
-    virtual void readInternal2InterfaceOutputData(TEventID paEOID) = 0;
     void executeEvent(TEventID paEIID, CEventChainExecutionThread * const paECET) override final;
 
   private:
@@ -152,18 +147,15 @@ class CCompositeFB: public CFunctionBlock {
     void createDataConnections();
     CDataConnection * getDataConn(CFunctionBlock *paSrcFB, CStringDictionary::TStringId paSrcNameId);
     void createAdapterConnections();
-    void prepareIf2InDataCons();
     virtual void setFBNetworkInitialValues();
 
     //!Acquire the functionblock for a given function block number this may be a contained fb, an adapter, or the composite itself.
     CFunctionBlock *getFunctionBlock(int paFBNum);
 
+    virtual CDataConnection *getIf2InConUnchecked(TPortId) = 0;
     virtual CInOutDataConnection *getDIOOutConInternalUnchecked(TPortId) {
       return nullptr;
     }
-
-    CInterface2InternalDataConnection *mIf2InDConns;
-    CDataConnection **mIn2IfDConns;
 
     const SCFB_FBNData & cmFBNData;
 
