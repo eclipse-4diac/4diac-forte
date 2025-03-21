@@ -19,12 +19,27 @@
 #include "forte_boost_output_support.h"
 #include "../stdfblib/ita/EMB_RES.h"
 #include "config.h"
-#include "ctfTracerTest_gen.cpp"
 #include "device.h"
 #include "ecet.h"
 #include "EventMessage.h"
 #include "trace/barectf_platform_forte.h"
 #include "../fbtests/fbtesterglobalfixture.h"
+
+USE_STRING_ID(Counter);
+USE_STRING_ID(COLD);
+USE_STRING_ID(CU);
+USE_STRING_ID(CUO);
+USE_STRING_ID(EI);
+USE_STRING_ID(EO1);
+USE_STRING_ID(E_CTU);
+USE_STRING_ID(E_SWITCH);
+USE_STRING_ID(G);
+USE_STRING_ID(MyDevice);
+USE_STRING_ID(PV);
+USE_STRING_ID(Q);
+USE_STRING_ID(R);
+USE_STRING_ID(START);
+USE_STRING_ID(Switch);
 
 /**
  * @brief Get the list of message from a directory containing CTF traces
@@ -75,43 +90,43 @@ BOOST_AUTO_TEST_CASE(sequential_events_test) {
     command.mDestination = CStringDictionary::scmInvalidStringId;
 
     BOOST_TEST_INFO("Event connection: Start.COLD -> Counter.CU");
-    command.mFirstParam.pushBack(startInstanceName);
-    command.mFirstParam.pushBack(STRID(COLD));
-    command.mSecondParam.pushBack(counterInstanceName);
-    command.mSecondParam.pushBack(STRID(CU));
+    command.mFirstParam.push_back(startInstanceName);
+    command.mFirstParam.push_back(STRID(COLD));
+    command.mSecondParam.push_back(counterInstanceName);
+    command.mSecondParam.push_back(STRID(CU));
     BOOST_TEST(EMGMResponse::Ready == resource.executeMGMCommand(command));
 
     BOOST_TEST_INFO("Event connection: Counter.CUO -> Switch.EI");
     command.mFirstParam.clear();
-    command.mFirstParam.pushBack(counterInstanceName);
-    command.mFirstParam.pushBack(STRID(CUO));
+    command.mFirstParam.push_back(counterInstanceName);
+    command.mFirstParam.push_back(STRID(CUO));
     command.mSecondParam.clear();
-    command.mSecondParam.pushBack(switchInstanceName);
-    command.mSecondParam.pushBack(STRID(EI));
+    command.mSecondParam.push_back(switchInstanceName);
+    command.mSecondParam.push_back(STRID(EI));
     BOOST_TEST(EMGMResponse::Ready == resource.executeMGMCommand(command));
 
     BOOST_TEST_INFO("Data connection: Counter.Q -> Switch.G ");
     command.mFirstParam.clear();
-    command.mFirstParam.pushBack(counterInstanceName);
-    command.mFirstParam.pushBack(STRID(Q));
+    command.mFirstParam.push_back(counterInstanceName);
+    command.mFirstParam.push_back(STRID(Q));
     command.mSecondParam.clear();
-    command.mSecondParam.pushBack(switchInstanceName);
-    command.mSecondParam.pushBack(STRID(G));
+    command.mSecondParam.push_back(switchInstanceName);
+    command.mSecondParam.push_back(STRID(G));
     BOOST_TEST(EMGMResponse::Ready == resource.executeMGMCommand(command));
 
     BOOST_TEST_INFO(" Data constant value: Counter.PV = 1");
     command.mFirstParam.clear();
-    command.mFirstParam.pushBack(counterInstanceName);
-    command.mFirstParam.pushBack(STRID(PV));
+    command.mFirstParam.push_back(counterInstanceName);
+    command.mFirstParam.push_back(STRID(PV));
     BOOST_TEST(EMGMResponse::Ready == resource.writeValue(command.mFirstParam, "1", false));
 
     BOOST_TEST_INFO("Event connection: Switch.EO1 -> Counter.R ");
     command.mFirstParam.clear();
-    command.mFirstParam.pushBack(switchInstanceName);
-    command.mFirstParam.pushBack(STRID(EO1));
+    command.mFirstParam.push_back(switchInstanceName);
+    command.mFirstParam.push_back(STRID(EO1));
     command.mSecondParam.clear();
-    command.mSecondParam.pushBack(counterInstanceName);
-    command.mSecondParam.pushBack(STRID(R));
+    command.mSecondParam.push_back(counterInstanceName);
+    command.mSecondParam.push_back(STRID(R));
     BOOST_TEST(EMGMResponse::Ready == resource.executeMGMCommand(command));
 
     device.startDevice();
