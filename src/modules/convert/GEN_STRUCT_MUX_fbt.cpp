@@ -128,14 +128,14 @@ bool GEN_STRUCT_MUX::createInterfaceSpec(const char *paConfigString, SFBInterfac
   return true;
 }
 
-CStringDictionary::TStringId GEN_STRUCT_MUX::getStructNameId(const char *paConfigString) {
-  const char *acPos = strchr(paConfigString, '_');
-  if(nullptr != acPos){
-    acPos++;
-    acPos = strchr(acPos, '_');
-    if(nullptr != acPos){
-      acPos += 2;  //put the position one after the separating number
-      return CStringDictionary::getId(acPos);
+CStringDictionary::TStringId GEN_STRUCT_MUX::getStructNameId(std::string_view paConfigString) {
+  size_t index = paConfigString.find('_');
+  if(index != std::string::npos) {
+    std::string_view nameId = paConfigString.substr(index + 1);
+    index = nameId.find('_');  
+    if(index != std::string::npos) {
+      nameId = nameId.substr(index + 2); //put the position one after the separating number
+      return CStringDictionary::getId(nameId.data(), nameId.length());
     }
   }
   return CStringDictionary::scmInvalidStringId;
