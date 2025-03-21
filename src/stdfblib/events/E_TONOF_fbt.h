@@ -68,17 +68,11 @@ class FORTE_E_TONOF final : public CCompositeFB {
 
     void readInputData(TEventID paEIID) override;
     void writeOutputData(TEventID paEIID) override;
-    void readInternal2InterfaceOutputData(TEventID paEOID) override;
     void setInitialValues() override;
+    CDataConnection *getIf2InConUnchecked(TPortId paDIID) override;
 
   public:
     FORTE_E_TONOF(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
-
-    CIEC_BOOL var_IN;
-    CIEC_TIME var_PT_ON;
-    CIEC_TIME var_PT_OFF;
-
-    CIEC_BOOL var_Q;
 
     CEventConnection conn_CNF;
 
@@ -88,31 +82,15 @@ class FORTE_E_TONOF final : public CCompositeFB {
 
     COutDataConnection<CIEC_BOOL> conn_Q;
 
+    COutDataConnection<CIEC_BOOL> conn_if2in_IN;
+    COutDataConnection<CIEC_TIME> conn_if2in_PT_ON;
+    COutDataConnection<CIEC_TIME> conn_if2in_PT_OFF;
+
     CIEC_ANY *getDI(size_t) override;
     CIEC_ANY *getDO(size_t) override;
     CEventConnection *getEOConUnchecked(TPortId) override;
     CDataConnection **getDIConUnchecked(TPortId) override;
     CDataConnection *getDOConUnchecked(TPortId) override;
-
-    void evt_REQ(const CIEC_BOOL &paIN, const CIEC_TIME &paPT_ON, const CIEC_TIME &paPT_OFF, CIEC_BOOL &paQ) {
-      var_IN = paIN;
-      var_PT_ON = paPT_ON;
-      var_PT_OFF = paPT_OFF;
-      executeEvent(scmEventREQID, nullptr);
-      paQ = var_Q;
-    }
-
-    void evt_R(const CIEC_BOOL &paIN, const CIEC_TIME &paPT_ON, const CIEC_TIME &paPT_OFF, CIEC_BOOL &paQ) {
-      var_IN = paIN;
-      var_PT_ON = paPT_ON;
-      var_PT_OFF = paPT_OFF;
-      executeEvent(scmEventRID, nullptr);
-      paQ = var_Q;
-    }
-
-    void operator()(const CIEC_BOOL &paIN, const CIEC_TIME &paPT_ON, const CIEC_TIME &paPT_OFF, CIEC_BOOL &paQ) {
-      evt_REQ(paIN, paPT_ON, paPT_OFF, paQ);
-    }
 };
 
 

@@ -80,12 +80,13 @@ FORTE_CFB_TEST::FORTE_CFB_TEST(const CStringDictionary::TStringId paInstanceName
     conn_CNF(this, 0),
     conn_CHANGED(this, 1),
     conn_QI(nullptr),
-    conn_QO(this, 0, var_QO) {
+    conn_QO(this, 0, 0_BOOL),
+    conn_if2in_QI(this, 0, 0_BOOL) {
 };
 
 void FORTE_CFB_TEST::setInitialValues() {
-    var_QI = 0_BOOL;
-    var_QO = 0_BOOL;
+    conn_if2in_QI.getValue() = 0_BOOL;
+    fb_E_SR->conn_Q.getValue() = 0_BOOL;
 }
 
 const SCFB_FBInstanceData FORTE_CFB_TEST::scmInternalFBs[] = {
@@ -136,28 +137,14 @@ const SCFB_FBNData FORTE_CFB_TEST::scmFBNData = {
   0, nullptr
 };
 
-void FORTE_CFB_TEST::readInternal2InterfaceOutputData(const TEventID paEOID) {
-  switch(paEOID) {
-    case scmEventCNFID: {
-      if(CDataConnection *conn = getIn2IfConUnchecked(0); conn) { conn->readData(var_QO); }
-      break;
-    }
-    case scmEventCHANGEDID: {
-      if(CDataConnection *conn = getIn2IfConUnchecked(0); conn) { conn->readData(var_QO); }
-      break;
-    }
-    default:
-      break;
-  }
-}
 void FORTE_CFB_TEST::readInputData(const TEventID paEIID) {
   switch(paEIID) {
     case scmEventSETID: {
-      readData(0, var_QI, conn_QI);
+      readData(0, conn_if2in_QI.getValue(), conn_QI);
       break;
     }
     case scmEventRESETID: {
-      readData(0, var_QI, conn_QI);
+      readData(0, conn_if2in_QI.getValue(), conn_QI);
       break;
     }
     default:
@@ -168,11 +155,11 @@ void FORTE_CFB_TEST::readInputData(const TEventID paEIID) {
 void FORTE_CFB_TEST::writeOutputData(const TEventID paEIID) {
   switch(paEIID) {
     case scmEventCNFID: {
-      writeData(0, var_QO, conn_QO);
+      writeData(0, fb_E_SR->conn_Q.getValue(), conn_QO);
       break;
     }
     case scmEventCHANGEDID: {
-      writeData(0, var_QO, conn_QO);
+      writeData(0, fb_E_SR->conn_Q.getValue(), conn_QO);
       break;
     }
     default:
@@ -182,14 +169,14 @@ void FORTE_CFB_TEST::writeOutputData(const TEventID paEIID) {
 
 CIEC_ANY *FORTE_CFB_TEST::getDI(const size_t paIndex) {
   switch(paIndex) {
-    case 0: return &var_QI;
+    case 0: return &conn_if2in_QI.getValue();
   }
   return nullptr;
 }
 
 CIEC_ANY *FORTE_CFB_TEST::getDO(const size_t paIndex) {
   switch(paIndex) {
-    case 0: return &var_QO;
+    case 0: return &fb_E_SR->conn_Q.getValue();
   }
   return nullptr;
 }
@@ -212,6 +199,13 @@ CDataConnection **FORTE_CFB_TEST::getDIConUnchecked(const TPortId paIndex) {
 CDataConnection *FORTE_CFB_TEST::getDOConUnchecked(const TPortId paIndex) {
   switch(paIndex) {
     case 0: return &conn_QO;
+  }
+  return nullptr;
+}
+
+CDataConnection *FORTE_CFB_TEST::getIf2InConUnchecked(TPortId paIndex) {
+  switch(paIndex) {
+    case 0: return &conn_if2in_QI;
   }
   return nullptr;
 }

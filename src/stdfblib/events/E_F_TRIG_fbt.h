@@ -56,26 +56,20 @@ private:
 
   void readInputData(TEventID paEIID) override;
   void writeOutputData(TEventID paEIID) override;
-  void readInternal2InterfaceOutputData(TEventID paEOID) override;
+  void setInitialValues() override;
+  CDataConnection *getIf2InConUnchecked(TPortId paDIID) override;
 
 public:
   FORTE_E_F_TRIG(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
-  CIEC_BOOL var_QI;
   CEventConnection conn_EO;
   CDataConnection *conn_QI;
+  COutDataConnection<CIEC_BOOL> conn_if2in_QI;
   CIEC_ANY *getDI(size_t) override;
   CIEC_ANY *getDO(size_t) override;
   CEventConnection *getEOConUnchecked(TPortId) override;
   CDataConnection **getDIConUnchecked(TPortId) override;
   CDataConnection *getDOConUnchecked(TPortId) override;
-  void evt_EI(const CIEC_BOOL &pa_QI) {
-    var_QI = pa_QI;
-    receiveInputEvent(scmEventEIID, nullptr);
-  }
-  void operator()(const CIEC_BOOL &pa_QI) {
-    evt_EI(pa_QI);
-  }
 };
 
 

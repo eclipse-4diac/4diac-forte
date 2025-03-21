@@ -74,13 +74,15 @@ FORTE_E_TON::FORTE_E_TON(const CStringDictionary::TStringId paInstanceNameId, fo
     conn_CNF(this, 0),
     conn_IN(nullptr),
     conn_PT(nullptr),
-    conn_Q(this, 0, var_Q) {
+    conn_Q(this, 0, 0_BOOL),
+    conn_if2in_IN(this, 0, 0_BOOL),
+    conn_if2in_PT(this, 1, 0_TIME) {
 };
 
 void FORTE_E_TON::setInitialValues() {
-    var_IN = 0_BOOL;
-    var_PT = 0_TIME;
-    var_Q = 0_BOOL;
+    conn_if2in_IN.getValue() = 0_BOOL;
+    conn_if2in_PT.getValue() = 0_TIME;
+    fb_E_RS->conn_Q.getValue() = 0_BOOL;
 }
 
 const SCFB_FBInstanceData FORTE_E_TON::scmInternalFBs[] = {
@@ -118,21 +120,11 @@ const SCFB_FBNData FORTE_E_TON::scmFBNData = {
   0, nullptr
 };
 
-void FORTE_E_TON::readInternal2InterfaceOutputData(const TEventID paEOID) {
-  switch(paEOID) {
-    case scmEventCNFID: {
-      if(CDataConnection *conn = getIn2IfConUnchecked(0); conn) { conn->readData(var_Q); }
-      break;
-    }
-    default:
-      break;
-  }
-}
 void FORTE_E_TON::readInputData(const TEventID paEIID) {
   switch(paEIID) {
     case scmEventREQID: {
-      readData(0, var_IN, conn_IN);
-      readData(1, var_PT, conn_PT);
+      readData(0, conn_if2in_IN.getValue(), conn_IN);
+      readData(1, conn_if2in_PT.getValue(), conn_PT);
       break;
     }
     default:
@@ -143,7 +135,7 @@ void FORTE_E_TON::readInputData(const TEventID paEIID) {
 void FORTE_E_TON::writeOutputData(const TEventID paEIID) {
   switch(paEIID) {
     case scmEventCNFID: {
-      writeData(0, var_Q, conn_Q);
+      writeData(0, fb_E_RS->conn_Q.getValue(), conn_Q);
       break;
     }
     default:
@@ -153,15 +145,15 @@ void FORTE_E_TON::writeOutputData(const TEventID paEIID) {
 
 CIEC_ANY *FORTE_E_TON::getDI(const size_t paIndex) {
   switch(paIndex) {
-    case 0: return &var_IN;
-    case 1: return &var_PT;
+    case 0: return &conn_if2in_IN.getValue();
+    case 1: return &conn_if2in_PT.getValue();
   }
   return nullptr;
 }
 
 CIEC_ANY *FORTE_E_TON::getDO(const size_t paIndex) {
   switch(paIndex) {
-    case 0: return &var_Q;
+    case 0: return &fb_E_RS->conn_Q.getValue();
   }
   return nullptr;
 }
@@ -184,6 +176,14 @@ CDataConnection **FORTE_E_TON::getDIConUnchecked(const TPortId paIndex) {
 CDataConnection *FORTE_E_TON::getDOConUnchecked(const TPortId paIndex) {
   switch(paIndex) {
     case 0: return &conn_Q;
+  }
+  return nullptr;
+}
+
+CDataConnection *FORTE_E_TON::getIf2InConUnchecked(TPortId paIndex) {
+  switch(paIndex) {
+    case 0: return &conn_if2in_IN;
+    case 1: return &conn_if2in_PT;
   }
   return nullptr;
 }

@@ -62,16 +62,11 @@ class FORTE_E_TABLE final : public CCompositeFB {
 
     void readInputData(TEventID paEIID) override;
     void writeOutputData(TEventID paEIID) override;
-    void readInternal2InterfaceOutputData(TEventID paEOID) override;
     void setInitialValues() override;
+    CDataConnection *getIf2InConUnchecked(TPortId paDIID) override;
 
   public:
     FORTE_E_TABLE(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
-
-    CIEC_ARRAY_FIXED<CIEC_TIME, 0, 3> var_DT;
-    CIEC_UINT var_N;
-
-    CIEC_UINT var_CV;
 
     CEventConnection conn_EO;
 
@@ -80,28 +75,13 @@ class FORTE_E_TABLE final : public CCompositeFB {
 
     COutDataConnection<CIEC_UINT> conn_CV;
 
+    COutDataConnection<CIEC_ARRAY_FIXED<CIEC_TIME, 0, 3>> conn_if2in_DT;
+    COutDataConnection<CIEC_UINT> conn_if2in_N;
+
     CIEC_ANY *getDI(size_t) override;
     CIEC_ANY *getDO(size_t) override;
     CEventConnection *getEOConUnchecked(TPortId) override;
     CDataConnection **getDIConUnchecked(TPortId) override;
     CDataConnection *getDOConUnchecked(TPortId) override;
-
-    void evt_START(const CIEC_ARRAY_COMMON<CIEC_TIME> &paDT, const CIEC_UINT &paN, CIEC_UINT &paCV) {
-      var_DT = paDT;
-      var_N = paN;
-      executeEvent(scmEventSTARTID, nullptr);
-      paCV = var_CV;
-    }
-
-    void evt_STOP(const CIEC_ARRAY_COMMON<CIEC_TIME> &paDT, const CIEC_UINT &paN, CIEC_UINT &paCV) {
-      var_DT = paDT;
-      var_N = paN;
-      executeEvent(scmEventSTOPID, nullptr);
-      paCV = var_CV;
-    }
-
-    void operator()(const CIEC_ARRAY_COMMON<CIEC_TIME> &paDT, const CIEC_UINT &paN, CIEC_UINT &paCV) {
-      evt_START(paDT, paN, paCV);
-    }
 };
 

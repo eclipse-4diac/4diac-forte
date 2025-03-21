@@ -78,19 +78,18 @@ FORTE_E_TRAIN::FORTE_E_TRAIN(const CStringDictionary::TStringId paInstanceNameId
     fb_CTR(STRID(CTR), *this),
     fb_GATE(STRID(GATE), *this),
     fb_DLY(STRID(DLY), *this),
-    var_DT(0_TIME),
-    var_N(0_UINT),
-    var_CV(0_UINT),
     conn_EO(this, 0),
     conn_DT(nullptr),
     conn_N(nullptr),
-    conn_CV(this, 0, var_CV) {
+    conn_CV(this, 0, 0_UINT),
+    conn_if2in_DT(this, 0, 0_TIME),
+    conn_if2in_N(this, 1, 0_UINT) {
 };
 
 void FORTE_E_TRAIN::setInitialValues() {
-  var_DT = 0_TIME;
-  var_N = 0_UINT;
-  var_CV = 0_UINT;
+  conn_if2in_DT.getValue() = 0_TIME;
+  conn_if2in_N.getValue() = 0_UINT;
+  fb_CTR->conn_CV.getValue() = 0_UINT;
 }
 
 const SCFB_FBInstanceData FORTE_E_TRAIN::scmInternalFBs[] = {
@@ -129,21 +128,11 @@ const SCFB_FBNData FORTE_E_TRAIN::scmFBNData = {
   0, nullptr,
 };
 
-void FORTE_E_TRAIN::readInternal2InterfaceOutputData(const TEventID paEOID) {
-  switch(paEOID) {
-    case scmEventEOID: {
-      if(CDataConnection *conn = getIn2IfConUnchecked(0); conn) { conn->readData(var_CV); }
-      break;
-    }
-    default:
-      break;
-  }
-}
 void FORTE_E_TRAIN::readInputData(const TEventID paEIID) {
   switch(paEIID) {
     case scmEventSTARTID: {
-      readData(0, var_DT, conn_DT);
-      readData(1, var_N, conn_N);
+      readData(0, conn_if2in_DT.getValue(), conn_DT);
+      readData(1, conn_if2in_N.getValue(), conn_N);
       break;
     }
     default:
@@ -154,7 +143,7 @@ void FORTE_E_TRAIN::readInputData(const TEventID paEIID) {
 void FORTE_E_TRAIN::writeOutputData(const TEventID paEIID) {
   switch(paEIID) {
     case scmEventEOID: {
-      writeData(0, var_CV, conn_CV);
+      writeData(0, fb_CTR->conn_CV.getValue(), conn_CV);
       break;
     }
     default:
@@ -164,15 +153,15 @@ void FORTE_E_TRAIN::writeOutputData(const TEventID paEIID) {
 
 CIEC_ANY *FORTE_E_TRAIN::getDI(const size_t paIndex) {
   switch(paIndex) {
-    case 0: return &var_DT;
-    case 1: return &var_N;
+    case 0: return &conn_if2in_DT.getValue();
+    case 1: return &conn_if2in_N.getValue();
   }
   return nullptr;
 }
 
 CIEC_ANY *FORTE_E_TRAIN::getDO(const size_t paIndex) {
   switch(paIndex) {
-    case 0: return &var_CV;
+    case 0: return &fb_CTR->conn_CV.getValue();
   }
   return nullptr;
 }
@@ -195,6 +184,14 @@ CDataConnection **FORTE_E_TRAIN::getDIConUnchecked(const TPortId paIndex) {
 CDataConnection *FORTE_E_TRAIN::getDOConUnchecked(const TPortId paIndex) {
   switch(paIndex) {
     case 0: return &conn_CV;
+  }
+  return nullptr;
+}
+
+CDataConnection *FORTE_E_TRAIN::getIf2InConUnchecked(TPortId paIndex) {
+  switch(paIndex) {
+    case 0: return &conn_if2in_DT;
+    case 1: return &conn_if2in_N;
   }
   return nullptr;
 }
