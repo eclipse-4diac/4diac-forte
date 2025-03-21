@@ -59,13 +59,11 @@ class FORTE_TIMESTAMP_NS final : public CFunctionBlock {
 
     CIEC_ULINT var_;
 
-    CIEC_ULINT var_conn_;
-
     CEventConnection conn_CNF;
 
     CDataConnection *conn_startDate;
 
-    CDataConnection conn_;
+    COutDataConnection<CIEC_ULINT> conn_;
 
     CIEC_ANY *getDI(size_t) override;
     CIEC_ANY *getDO(size_t) override;

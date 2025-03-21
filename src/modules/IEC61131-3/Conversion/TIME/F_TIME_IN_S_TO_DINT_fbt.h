@@ -57,16 +57,11 @@ public:
   FORTE_F_TIME_IN_S_TO_DINT(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
   CIEC_TIME var_IN;
-
   CIEC_DINT var_OUT;
 
-  CIEC_DINT var_conn_OUT;
-
   CEventConnection conn_CNF;
-
   CDataConnection *conn_IN;
-
-  CDataConnection conn_OUT;
+  COutDataConnection<CIEC_DINT> conn_OUT;
 
   CIEC_ANY *getDI(size_t) override;
   CIEC_ANY *getDO(size_t) override;

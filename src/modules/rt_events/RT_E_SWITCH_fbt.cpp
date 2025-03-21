@@ -60,7 +60,6 @@ const SFBInterfaceSpec FORTE_RT_E_SWITCH::scmFBInterfaceSpec = {
 
 FORTE_RT_E_SWITCH::FORTE_RT_E_SWITCH(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId),
-    var_conn_QO(var_QO),
     conn_INITO(this, 0),
     conn_EO1(this, 1),
     conn_EO2(this, 2),
@@ -71,7 +70,7 @@ FORTE_RT_E_SWITCH::FORTE_RT_E_SWITCH(const CStringDictionary::TStringId paInstan
     conn_WCET_EO1(nullptr),
     conn_Deadline_EO2(nullptr),
     conn_WCET_EO2(nullptr),
-    conn_QO(this, 0, &var_conn_QO) {
+    conn_QO(this, 0, var_QO) {
 };
 
 void FORTE_RT_E_SWITCH::setInitialValues() {

@@ -70,14 +70,13 @@ const SFBInterfaceSpec FORTE_signalprocessing__RampLimitFS::scmFBInterfaceSpec =
 
 FORTE_signalprocessing__RampLimitFS::FORTE_signalprocessing__RampLimitFS(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CSimpleFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, nullptr),
-    var_conn_OUT(var_OUT),
     conn_CNF(this, 0),
     conn_PV(nullptr),
     conn_VAL_ZERO(nullptr),
     conn_SLOW(nullptr),
     conn_FAST(nullptr),
     conn_VAL_FULL(nullptr),
-    conn_OUT(this, 0, &var_conn_OUT) {
+    conn_OUT(this, 0, var_OUT) {
 }
 
 void FORTE_signalprocessing__RampLimitFS::setInitialValues() {

@@ -67,10 +67,9 @@ FORTE_WORD2WORD::FORTE_WORD2WORD(CStringDictionary::TStringId paInstanceNameId, 
     CSimpleFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, nullptr),
     var_IN(CIEC_WORD(0)),
     var_OUT(CIEC_WORD(0)),
-    var_conn_OUT(var_OUT),
     conn_CNF(this, 0),
     conn_IN(nullptr),
-    conn_OUT(this, 0, &var_conn_OUT) {
+    conn_OUT(this, 0, var_OUT) {
 }
 
 void FORTE_WORD2WORD::alg_REQ(void) {

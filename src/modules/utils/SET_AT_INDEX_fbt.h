@@ -68,14 +68,12 @@ public:
   CIEC_BOOL var_QO;
   CIEC_ANY_VARIANT var_OUT_ARRAY;
   
-  CIEC_BOOL var_conn_QO;
-  CIEC_ANY_VARIANT var_conn_OUT_ARRAY;
   CEventConnection conn_CNF;
   CDataConnection *conn_IN_ARRAY;
   CDataConnection *conn_INDEX;
   CDataConnection *conn_VALUE;
-  CDataConnection conn_QO;
-  CDataConnection conn_OUT_ARRAY;
+  COutDataConnection<CIEC_BOOL> conn_QO;
+  COutDataConnection<CIEC_ANY_VARIANT> conn_OUT_ARRAY;
   
   CIEC_ANY *getDI(size_t) override;
   CIEC_ANY *getDO(size_t) override;

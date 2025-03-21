@@ -77,16 +77,13 @@ class FORTE_E_TABLE_CTRL final : public CBasicFB {
     CIEC_TIME var_DTO;
     CIEC_UINT var_CV;
 
-    CIEC_TIME var_conn_DTO;
-    CIEC_UINT var_conn_CV;
-
     CEventConnection conn_CLKO;
 
     CDataConnection *conn_DT;
     CDataConnection *conn_N;
 
-    CDataConnection conn_DTO;
-    CDataConnection conn_CV;
+    COutDataConnection<CIEC_TIME> conn_DTO;
+    COutDataConnection<CIEC_UINT> conn_CV;
 
     CIEC_ANY *getDI(size_t) override;
     CIEC_ANY *getDO(size_t) override;

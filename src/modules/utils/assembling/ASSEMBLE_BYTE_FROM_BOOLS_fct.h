@@ -69,8 +69,6 @@ class FORTE_ASSEMBLE_BYTE_FROM_BOOLS final : public CFunctionBlock {
 
     CIEC_BYTE var_;
 
-    CIEC_BYTE var_conn_;
-
     CEventConnection conn_CNF;
 
     CDataConnection *conn_BIT_00;
@@ -82,7 +80,7 @@ class FORTE_ASSEMBLE_BYTE_FROM_BOOLS final : public CFunctionBlock {
     CDataConnection *conn_BIT_06;
     CDataConnection *conn_BIT_07;
 
-    CDataConnection conn_;
+    COutDataConnection<CIEC_BYTE> conn_;
 
     CIEC_ANY *getDI(size_t) override;
     CIEC_ANY *getDO(size_t) override;

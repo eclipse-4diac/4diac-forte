@@ -66,10 +66,9 @@ FORTE_E_PULSE::FORTE_E_PULSE(const CStringDictionary::TStringId paInstanceNameId
     CCompositeFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, scmFBNData),
     fb_E_DELAY(STRID(E_DELAY), *this),
     fb_E_SR(STRID(E_SR), *this),
-    var_conn_Q(var_Q),
     conn_CNF(this, 0),
     conn_PT(nullptr),
-    conn_Q(this, 0, &var_conn_Q) {
+    conn_Q(this, 0, var_Q) {
 };
 
 void FORTE_E_PULSE::setInitialValues() {

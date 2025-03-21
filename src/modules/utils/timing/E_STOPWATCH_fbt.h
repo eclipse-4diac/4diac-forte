@@ -85,13 +85,11 @@ class FORTE_E_STOPWATCH final : public CBasicFB {
 
     CIEC_TIME var_TD;
 
-    CIEC_TIME var_conn_TD;
-
     CEventConnection conn_EO;
     CEventConnection conn_ETO;
     CEventConnection conn_RESETO;
 
-    CDataConnection conn_TD;
+    COutDataConnection<CIEC_TIME> conn_TD;
 
     CIEC_ANY *getDI(size_t) override;
     CIEC_ANY *getDO(size_t) override;

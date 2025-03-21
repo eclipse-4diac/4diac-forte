@@ -65,11 +65,10 @@ public:
   CIEC_BOOL var_R;
   CIEC_BOOL var_Q1;
   
-  CIEC_BOOL var_conn_Q1;
   CEventConnection conn_CNF;
   CDataConnection *conn_S1;
   CDataConnection *conn_R;
-  CDataConnection conn_Q1;
+  COutDataConnection<CIEC_BOOL> conn_Q1;
   
   CIEC_ANY *getDI(size_t) override;
   CIEC_ANY *getDO(size_t) override;

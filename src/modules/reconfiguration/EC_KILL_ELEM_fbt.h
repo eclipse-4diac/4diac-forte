@@ -59,14 +59,12 @@ public:
   CIEC_WSTRING var_DST;
   CIEC_BOOL var_QO;
   CIEC_WSTRING var_STATUS;
-  CIEC_BOOL var_conn_QO;
-  CIEC_WSTRING var_conn_STATUS;
   CEventConnection conn_CNF;
   CDataConnection *conn_QI;
   CDataConnection *conn_ELEM_NAME;
   CDataConnection *conn_DST;
-  CDataConnection conn_QO;
-  CDataConnection conn_STATUS;
+  COutDataConnection<CIEC_BOOL> conn_QO;
+  COutDataConnection<CIEC_WSTRING> conn_STATUS;
   CIEC_ANY *getDI(size_t) override;
   CIEC_ANY *getDO(size_t) override;
   CEventConnection *getEOConUnchecked(TPortId) override;

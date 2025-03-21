@@ -54,13 +54,11 @@ const SFBInterfaceSpec FORTE_FB_TOF::scmFBInterfaceSpec = {
 
 FORTE_FB_TOF::FORTE_FB_TOF(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId),
-    var_conn_Q(var_Q),
-    var_conn_ET(var_ET),
     conn_CNF(this, 0),
     conn_IN(nullptr),
     conn_PT(nullptr),
-    conn_Q(this, 0, &var_conn_Q),
-    conn_ET(this, 1, &var_conn_ET) {
+    conn_Q(this, 0, var_Q),
+    conn_ET(this, 1, var_ET) {
 };
 
 void FORTE_FB_TOF::setInitialValues() {

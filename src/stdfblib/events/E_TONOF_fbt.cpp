@@ -76,12 +76,11 @@ FORTE_E_TONOF::FORTE_E_TONOF(const CStringDictionary::TStringId paInstanceNameId
     fb_E_DELAY_ON(STRID(E_DELAY_ON), *this),
     fb_E_RS(STRID(E_RS), *this),
     fb_E_DELAY_OFF(STRID(E_DELAY_OFF), *this),
-    var_conn_Q(var_Q),
     conn_CNF(this, 0),
     conn_IN(nullptr),
     conn_PT_ON(nullptr),
     conn_PT_OFF(nullptr),
-    conn_Q(this, 0, &var_conn_Q) {
+    conn_Q(this, 0, var_Q) {
 };
 
 void FORTE_E_TONOF::setInitialValues() {

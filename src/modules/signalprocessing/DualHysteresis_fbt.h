@@ -90,10 +90,6 @@ class FORTE_signalprocessing__DualHysteresis final : public CBasicFB {
     CIEC_BOOL var_DO_UP;
     CIEC_BOOL var_DO_DOWN;
 
-    CIEC_BOOL var_conn_QO;
-    CIEC_BOOL var_conn_DO_UP;
-    CIEC_BOOL var_conn_DO_DOWN;
-
     CEventConnection conn_INITO;
     CEventConnection conn_CNF;
 
@@ -103,9 +99,9 @@ class FORTE_signalprocessing__DualHysteresis final : public CBasicFB {
     CDataConnection *conn_HYSTERESIS;
     CDataConnection *conn_INPUT;
 
-    CDataConnection conn_QO;
-    CDataConnection conn_DO_UP;
-    CDataConnection conn_DO_DOWN;
+    COutDataConnection<CIEC_BOOL> conn_QO;
+    COutDataConnection<CIEC_BOOL> conn_DO_UP;
+    COutDataConnection<CIEC_BOOL> conn_DO_DOWN;
 
     CIEC_ANY *getDI(size_t) override;
     CIEC_ANY *getDO(size_t) override;

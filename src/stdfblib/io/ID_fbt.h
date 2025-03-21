@@ -86,10 +86,6 @@ class FORTE_ID final : public CProcessInterface {
     CIEC_STRING var_STATUS;
     CIEC_DWORD var_IN;
 
-    CIEC_BOOL var_conn_QO;
-    CIEC_STRING var_conn_STATUS;
-    CIEC_DWORD var_conn_IN;
-
     CEventConnection conn_INITO;
     CEventConnection conn_CNF;
     CEventConnection conn_IND;
@@ -97,9 +93,9 @@ class FORTE_ID final : public CProcessInterface {
     CDataConnection *conn_QI;
     CDataConnection *conn_PARAMS;
 
-    CDataConnection conn_QO;
-    CDataConnection conn_STATUS;
-    CDataConnection conn_IN;
+    COutDataConnection<CIEC_BOOL> conn_QO;
+    COutDataConnection<CIEC_STRING> conn_STATUS;
+    COutDataConnection<CIEC_DWORD> conn_IN;
 
     CIEC_ANY *getDI(size_t) override;
     CIEC_ANY *getDO(size_t) override;

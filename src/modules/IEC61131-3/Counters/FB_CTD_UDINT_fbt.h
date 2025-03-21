@@ -68,14 +68,12 @@ public:
   CIEC_BOOL var_Q;
   CIEC_UDINT var_CV;
   
-  CIEC_BOOL var_conn_Q;
-  CIEC_UDINT var_conn_CV;
   CEventConnection conn_CNF;
   CDataConnection *conn_CD;
   CDataConnection *conn_LD;
   CDataConnection *conn_PV;
-  CDataConnection conn_Q;
-  CDataConnection conn_CV;
+  COutDataConnection<CIEC_BOOL> conn_Q;
+  COutDataConnection<CIEC_UDINT> conn_CV;
   
   CIEC_ANY *getDI(size_t) override;
   CIEC_ANY *getDO(size_t) override;

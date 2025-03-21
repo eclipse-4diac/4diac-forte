@@ -71,13 +71,12 @@ FORTE_RT_E_TRAIN::FORTE_RT_E_TRAIN(const CStringDictionary::TStringId paInstance
     fb_RT_E_CYCLE(STRID(RT_E_CYCLE), *this),
     fb_E_CTU(STRID(E_CTU), *this),
     fb_E_SWITCH(STRID(E_SWITCH), *this),
-    var_conn_CV(var_CV),
     conn_EO(this, 0),
     conn_DT(nullptr),
     conn_N(nullptr),
     conn_Deadline(nullptr),
     conn_WCET(nullptr),
-    conn_CV(this, 0, &var_conn_CV) {
+    conn_CV(this, 0, var_CV) {
 };
 
 void FORTE_RT_E_TRAIN::setInitialValues() {

@@ -75,14 +75,12 @@ FORTE_FB_CTU_LINT::FORTE_FB_CTU_LINT(CStringDictionary::TStringId paInstanceName
     var_PV(CIEC_LINT(0)),
     var_Q(CIEC_BOOL(0)),
     var_CV(CIEC_LINT(0)),
-    var_conn_Q(var_Q),
-    var_conn_CV(var_CV),
     conn_CNF(this, 0),
     conn_CU(nullptr),
     conn_R(nullptr),
     conn_PV(nullptr),
-    conn_Q(this, 0, &var_conn_Q),
-    conn_CV(this, 1, &var_conn_CV) {
+    conn_Q(this, 0, var_Q),
+    conn_CV(this, 1, var_CV) {
 }
 
 void FORTE_FB_CTU_LINT::alg_REQ(void) {

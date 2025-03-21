@@ -74,13 +74,12 @@ public:
   CIEC_TIME var_Deadline;
   CIEC_TIME var_WCET;
   CIEC_UINT var_CV;
-  CIEC_UINT var_conn_CV;
   CEventConnection conn_EO;
   CDataConnection *conn_DT;
   CDataConnection *conn_N;
   CDataConnection *conn_Deadline;
   CDataConnection *conn_WCET;
-  CDataConnection conn_CV;
+  COutDataConnection<CIEC_UINT> conn_CV;
   CIEC_ANY *getDI(size_t) override;
   CIEC_ANY *getDO(size_t) override;
   CEventConnection *getEOConUnchecked(TPortId) override;

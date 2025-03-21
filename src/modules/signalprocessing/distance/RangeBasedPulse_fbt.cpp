@@ -65,13 +65,12 @@ const SInternalVarsInformation FORTE_signalprocessing__distance__RangeBasedPulse
 
 FORTE_signalprocessing__distance__RangeBasedPulse::FORTE_signalprocessing__distance__RangeBasedPulse(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CSimpleFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, &scmInternalVars),
-    var_conn_Q(var_Q),
     conn_CNF(this, 0),
     conn_DIST_IN(nullptr),
     conn_DIST_OFF(nullptr),
     conn_DIST_HIGH(nullptr),
     conn_DIST_LOW(nullptr),
-    conn_Q(this, 0, &var_conn_Q) {
+    conn_Q(this, 0, var_Q) {
 }
 
 void FORTE_signalprocessing__distance__RangeBasedPulse::setInitialValues() {

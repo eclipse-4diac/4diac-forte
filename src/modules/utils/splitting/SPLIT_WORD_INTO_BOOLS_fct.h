@@ -77,43 +77,26 @@ class FORTE_SPLIT_WORD_INTO_BOOLS final : public CFunctionBlock {
     CIEC_BOOL var_BIT_14;
     CIEC_BOOL var_BIT_15;
 
-    CIEC_BOOL var_conn_BIT_00;
-    CIEC_BOOL var_conn_BIT_01;
-    CIEC_BOOL var_conn_BIT_02;
-    CIEC_BOOL var_conn_BIT_03;
-    CIEC_BOOL var_conn_BIT_04;
-    CIEC_BOOL var_conn_BIT_05;
-    CIEC_BOOL var_conn_BIT_06;
-    CIEC_BOOL var_conn_BIT_07;
-    CIEC_BOOL var_conn_BIT_08;
-    CIEC_BOOL var_conn_BIT_09;
-    CIEC_BOOL var_conn_BIT_10;
-    CIEC_BOOL var_conn_BIT_11;
-    CIEC_BOOL var_conn_BIT_12;
-    CIEC_BOOL var_conn_BIT_13;
-    CIEC_BOOL var_conn_BIT_14;
-    CIEC_BOOL var_conn_BIT_15;
-
     CEventConnection conn_CNF;
 
     CDataConnection *conn_IN;
 
-    CDataConnection conn_BIT_00;
-    CDataConnection conn_BIT_01;
-    CDataConnection conn_BIT_02;
-    CDataConnection conn_BIT_03;
-    CDataConnection conn_BIT_04;
-    CDataConnection conn_BIT_05;
-    CDataConnection conn_BIT_06;
-    CDataConnection conn_BIT_07;
-    CDataConnection conn_BIT_08;
-    CDataConnection conn_BIT_09;
-    CDataConnection conn_BIT_10;
-    CDataConnection conn_BIT_11;
-    CDataConnection conn_BIT_12;
-    CDataConnection conn_BIT_13;
-    CDataConnection conn_BIT_14;
-    CDataConnection conn_BIT_15;
+    COutDataConnection<CIEC_BOOL> conn_BIT_00;
+    COutDataConnection<CIEC_BOOL> conn_BIT_01;
+    COutDataConnection<CIEC_BOOL> conn_BIT_02;
+    COutDataConnection<CIEC_BOOL> conn_BIT_03;
+    COutDataConnection<CIEC_BOOL> conn_BIT_04;
+    COutDataConnection<CIEC_BOOL> conn_BIT_05;
+    COutDataConnection<CIEC_BOOL> conn_BIT_06;
+    COutDataConnection<CIEC_BOOL> conn_BIT_07;
+    COutDataConnection<CIEC_BOOL> conn_BIT_08;
+    COutDataConnection<CIEC_BOOL> conn_BIT_09;
+    COutDataConnection<CIEC_BOOL> conn_BIT_10;
+    COutDataConnection<CIEC_BOOL> conn_BIT_11;
+    COutDataConnection<CIEC_BOOL> conn_BIT_12;
+    COutDataConnection<CIEC_BOOL> conn_BIT_13;
+    COutDataConnection<CIEC_BOOL> conn_BIT_14;
+    COutDataConnection<CIEC_BOOL> conn_BIT_15;
 
     CIEC_ANY *getDI(size_t) override;
     CIEC_ANY *getDO(size_t) override;

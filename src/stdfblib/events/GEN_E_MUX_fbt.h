@@ -54,11 +54,9 @@ class GEN_E_MUX final : public CGenFunctionBlock<CFunctionBlock> {
 
     CIEC_UINT var_K;
 
-    CIEC_UINT var_conn_K;
-
     CEventConnection conn_EO;
 
-    CDataConnection conn_K;
+    COutDataConnection<CIEC_UINT> conn_K;
 
     CIEC_ANY *getDI(size_t) override;
     CIEC_ANY *getDO(size_t) override;

@@ -72,9 +72,6 @@ class FORTE_Wago636 final : public WagoSlaveBase {
     CIEC_BOOL var_QO;
     CIEC_WSTRING var_STATUS;
 
-    CIEC_BOOL var_conn_QO;
-    CIEC_WSTRING var_conn_STATUS;
-
     CEventConnection conn_MAPO;
     CEventConnection conn_IND;
 
@@ -94,8 +91,8 @@ class FORTE_Wago636 final : public WagoSlaveBase {
     CDataConnection *conn_Preset;
     CDataConnection *conn_QuitErrors;
 
-    CDataConnection conn_QO;
-    CDataConnection conn_STATUS;
+    COutDataConnection<CIEC_BOOL> conn_QO;
+    COutDataConnection<CIEC_WSTRING> conn_STATUS;
 
     CIEC_ANY *getDI(size_t) override;
     CIEC_ANY *getDO(size_t) override;

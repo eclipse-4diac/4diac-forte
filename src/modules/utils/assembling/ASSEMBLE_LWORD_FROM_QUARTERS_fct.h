@@ -93,8 +93,6 @@ class FORTE_ASSEMBLE_LWORD_FROM_QUARTERS final : public CFunctionBlock {
 
     CIEC_LWORD var_;
 
-    CIEC_LWORD var_conn_;
-
     CEventConnection conn_CNF;
 
     CDataConnection *conn_QUARTER_BYTE_00;
@@ -130,7 +128,7 @@ class FORTE_ASSEMBLE_LWORD_FROM_QUARTERS final : public CFunctionBlock {
     CDataConnection *conn_QUARTER_BYTE_30;
     CDataConnection *conn_QUARTER_BYTE_31;
 
-    CDataConnection conn_;
+    COutDataConnection<CIEC_LWORD> conn_;
 
     CIEC_ANY *getDI(size_t) override;
     CIEC_ANY *getDO(size_t) override;

@@ -68,15 +68,13 @@ FORTE_QD::FORTE_QD(const CStringDictionary::TStringId paInstanceNameId, forte::c
     var_OUT(0_DWORD),
     var_QO(0_BOOL),
     var_STATUS(""_STRING),
-    var_conn_QO(var_QO),
-    var_conn_STATUS(var_STATUS),
     conn_INITO(this, 0),
     conn_CNF(this, 1),
     conn_QI(nullptr),
     conn_PARAMS(nullptr),
     conn_OUT(nullptr),
-    conn_QO(this, 0, &var_conn_QO),
-    conn_STATUS(this, 1, &var_conn_STATUS) {
+    conn_QO(this, 0, var_QO),
+    conn_STATUS(this, 1, var_STATUS) {
 };
 
 void FORTE_QD::setInitialValues() {

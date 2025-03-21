@@ -164,9 +164,6 @@ virtual void setInitialValues();
     CIEC_BOOL var_QO;
     CIEC_WSTRING var_STATUS;
 
-    CIEC_BOOL var_conn_QO;
-    CIEC_WSTRING var_conn_STATUS;
-
     CEventConnection conn_INITO;
     CEventConnection conn_IND;
 
@@ -189,8 +186,8 @@ virtual void setInitialValues();
     CDataConnection *conn_OUT8;
     CDataConnection *conn_UpdateInterval;
 
-    CDataConnection conn_QO;
-    CDataConnection conn_STATUS;
+    COutDataConnection<CIEC_BOOL> conn_QO;
+    COutDataConnection<CIEC_WSTRING> conn_STATUS;
 
     CIEC_ANY *getDI(size_t) override;
     CIEC_ANY *getDO(size_t) override;

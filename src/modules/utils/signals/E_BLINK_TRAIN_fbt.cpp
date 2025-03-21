@@ -79,12 +79,11 @@ FORTE_E_BLINK_TRAIN::FORTE_E_BLINK_TRAIN(const CStringDictionary::TStringId paIn
     var_TIMEHIGH(0_TIME),
     var_N(0_UINT),
     var_OUT(0_BOOL),
-    var_conn_OUT(var_OUT),
     conn_CNF(this, 0),
     conn_TIMELOW(nullptr),
     conn_TIMEHIGH(nullptr),
     conn_N(nullptr),
-    conn_OUT(this, 0, &var_conn_OUT) {
+    conn_OUT(this, 0, var_OUT) {
 };
 
 void FORTE_E_BLINK_TRAIN::setInitialValues() {

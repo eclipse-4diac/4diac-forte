@@ -68,13 +68,11 @@ FORTE_GET_AT_INDEX::FORTE_GET_AT_INDEX(const CStringDictionary::TStringId paInst
     var_INDEX(CIEC_UINT(0)),
     var_QO(CIEC_BOOL(0)),
     var_OUT(CIEC_ANY_VARIANT()),
-    var_conn_QO(var_QO),
-    var_conn_OUT(var_OUT),
     conn_CNF(this, 0),
     conn_IN_ARRAY(nullptr),
     conn_INDEX(nullptr),
-    conn_QO(this, 0, &var_conn_QO),
-    conn_OUT(this, 1, &var_conn_OUT) {
+    conn_QO(this, 0, var_QO),
+    conn_OUT(this, 1, var_OUT) {
 };
 
 void FORTE_GET_AT_INDEX::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {

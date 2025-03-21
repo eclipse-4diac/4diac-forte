@@ -58,12 +58,11 @@ const SFBInterfaceSpec FORTE_F_SEL_E_3::scmFBInterfaceSpec = {
 
 FORTE_F_SEL_E_3::FORTE_F_SEL_E_3(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId),
-    var_conn_OUT(var_OUT),
     conn_CNF(this, 0),
     conn_IN0(nullptr),
     conn_IN1(nullptr),
     conn_IN2(nullptr),
-    conn_OUT(this, 0, &var_conn_OUT) {
+    conn_OUT(this, 0, var_OUT) {
 };
 
 void FORTE_F_SEL_E_3::setInitialValues() {

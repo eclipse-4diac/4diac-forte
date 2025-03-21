@@ -94,18 +94,14 @@ class FORTE_SET_LOCAL_ADS_ADDRESS final : public CFunctionBlock {
     CIEC_WSTRING var_STATUS;
     CIEC_STRING var_LOCAL_ADS_ADDRESS;
 
-    CIEC_BOOL var_conn_QO;
-    CIEC_WSTRING var_conn_STATUS;
-    CIEC_STRING var_conn_LOCAL_ADS_ADDRESS;
-
     CEventConnection conn_INITO;
 
     CDataConnection *conn_QI;
     CDataConnection *conn_PARAMS;
 
-    CDataConnection conn_QO;
-    CDataConnection conn_STATUS;
-    CDataConnection conn_LOCAL_ADS_ADDRESS;
+    COutDataConnection<CIEC_BOOL> conn_QO;
+    COutDataConnection<CIEC_WSTRING> conn_STATUS;
+    COutDataConnection<CIEC_STRING> conn_LOCAL_ADS_ADDRESS;
 
     CIEC_ANY *getDI(size_t) override;
     CIEC_ANY *getDO(size_t) override;

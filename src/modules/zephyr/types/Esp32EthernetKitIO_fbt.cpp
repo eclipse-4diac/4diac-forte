@@ -84,8 +84,6 @@ FORTE_Esp32EthernetKitIO::FORTE_Esp32EthernetKitIO(const CStringDictionary::TStr
     var_UpdateInterval(40000000_TIME),
     var_QO(0_BOOL),
     var_STATUS(""_STRING),
-    var_conn_QO(var_QO),
-    var_conn_STATUS(var_STATUS),
     conn_INITO(this, 0),
     conn_QI(nullptr),
     conn_LED0(nullptr),
@@ -93,8 +91,8 @@ FORTE_Esp32EthernetKitIO::FORTE_Esp32EthernetKitIO(const CStringDictionary::TStr
     conn_ADC_CH_0(nullptr),
     conn_PWM(nullptr),
     conn_UpdateInterval(nullptr),
-    conn_QO(this, 0, &var_conn_QO),
-    conn_STATUS(this, 1, &var_conn_STATUS) {
+    conn_QO(this, 0, var_QO),
+    conn_STATUS(this, 1, var_STATUS) {
 };
 
 void FORTE_Esp32EthernetKitIO::setInitialValues() {
