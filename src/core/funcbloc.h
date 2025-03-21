@@ -485,13 +485,11 @@ class CFunctionBlock : public forte::core::CFBContainer {
 
     /*!\brief Function to read data from an input connection into a variable of the FB.
      *
+     * \param paDINum Input index
      * \param paValue Variable to read into.
      * \param paConn Connection to read from.
      */
-#ifdef FORTE_TRACE_CTF
-    void readData(size_t paDONum, CIEC_ANY &paValue, const CDataConnection *const paConn);
-#else
-    void readData(size_t, CIEC_ANY &paValue, const CDataConnection *const paConn) {
+    void readData([[maybe_unused]] TPortId paDINum, CIEC_ANY &paValue, const CDataConnection *const paConn) {
       if(!paConn) {
         return;
       }
@@ -502,18 +500,18 @@ class CFunctionBlock : public forte::core::CFBContainer {
 #ifdef FORTE_SUPPORT_MONITORING
       }
 #endif //FORTE_SUPPORT_MONITORING
-    }
+#ifdef FORTE_TRACE_CTF
+      traceReadData(paDINum, paValue);
 #endif //FORTE_TRACE_CTF
+    }
 
     /*!\brief Function to write data to an output connection from a variable of the FB.
      *
+     * \param paDONum Output index
      * \param paValue Variable to write from.
      * \param paConn Connection to write into.
      */
-#ifdef FORTE_TRACE_CTF
-    void writeData(size_t paDONum, CIEC_ANY& paValue, CDataConnection& paConn);
-#else
-    void writeData(size_t, CIEC_ANY& paValue, CDataConnection& paConn) {
+    void writeData([[maybe_unused]] TPortId paDONum, CIEC_ANY& paValue, CDataConnection& paConn) {
       if(paConn.isConnected()) {
 #ifdef FORTE_SUPPORT_MONITORING
         if(!paValue.isForced()) {
@@ -526,8 +524,10 @@ class CFunctionBlock : public forte::core::CFBContainer {
         }
 #endif //FORTE_SUPPORT_MONITORING
       }
-    }
+#ifdef FORTE_TRACE_CTF
+      traceWriteData(paDONum, paValue);
 #endif //FORTE_TRACE_CTF
+    }
 
     /*!\brief Set the initial values of data inputs, outputs, and internal vars.
      *
@@ -688,6 +688,8 @@ class CFunctionBlock : public forte::core::CFBContainer {
 #ifdef FORTE_TRACE_CTF
     void traceInputEvent(TEventID paEIID);
     void traceOutputEvent(TEventID paEOID);
+    void traceReadData(TPortId paDINum, CIEC_ANY& paValue);
+    void traceWriteData(TPortId paDONum, CIEC_ANY& paValue);
 #endif
 
     /*!\brief Current state of the runnable object.
