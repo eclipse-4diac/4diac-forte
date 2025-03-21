@@ -61,7 +61,7 @@ class GEN_STRUCT_MUX : public CGenFunctionBlock<CFunctionBlock> {
     GEN_STRUCT_MUX(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
     ~GEN_STRUCT_MUX() override = default;
 
-    static CStringDictionary::TStringId getStructNameId(const char *paConfigString);
+    static CStringDictionary::TStringId getStructNameId(std::string_view paConfigString);
 
     static size_t calcStructTypeNameSize(CIEC_STRUCT &paStruct);
 
