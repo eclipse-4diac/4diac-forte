@@ -4,9 +4,9 @@ name: System Tests
 
 on:
   push:
-    branches: [ "release", "develop", "freeze" ]
+    branches: [ "release", "develop", "freeze", "feature/**" ]
   pull_request:
-    branches: [ "release", "develop", "freeze" ]
+    branches: [ "release", "develop", "freeze", "feature/**" ]
 
 jobs:
   build:
