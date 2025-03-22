@@ -19,7 +19,6 @@
 
 #include "fortenew.h"
 #include "genfb.h"
-#include "if2indco.h"
 #include "forte_sync.h"
 #include <boost/test/unit_test.hpp>
 #include <vector>
@@ -94,7 +93,7 @@ class CFBTestFixtureBase : public CGenFunctionBlock<CFunctionBlock> {
     CStringDictionary::TStringId mTypeId;
     std::string mConfigString;
     CFunctionBlock *mFBUnderTest;
-    std::vector<CInterface2InternalDataConnection *> mDIConnections;
+    std::vector<std::unique_ptr<CDataConnection>> mDIConnections;
 
     /*! \brief list for storing the output events received from the testee
      *

@@ -125,10 +125,10 @@ bool CFunctionBlock::connectDI(TPortId paDIPortId, CDataConnection *paDataCon){
   return bRetVal;
 }
 
-void CFunctionBlock::configureGenericDI(TPortId paDIPortId, const CIEC_ANY* paRefValue) {
+void CFunctionBlock::configureGenericDI(TPortId paDIPortId, const CIEC_ANY& paRefValue) {
   CIEC_ANY *di = getDI(paDIPortId);
-  if(di->getDataTypeID() == CIEC_ANY::e_ANY && (nullptr != paRefValue)) {
-    di->setValue(paRefValue->unwrap());
+  if(di->getDataTypeID() == CIEC_ANY::e_ANY) {
+    di->setValue(paRefValue.unwrap());
   }
 }
 
@@ -145,7 +145,7 @@ bool CFunctionBlock::connectDIO(TPortId paDIOPortId, CInOutDataConnection *paDat
         if(conn == paDataCon) {
           //we have a reconfiguration attempt
           configureGenericDIO(paDIOPortId, paDataCon->getValue());
-          getDIOOutConUnchecked(paDIOPortId)->setValue(paDataCon->getValue());
+          getDIOOutConUnchecked(paDIOPortId)->setValue(&paDataCon->getValue());
           return true;
         } else {
           DEVLOG_ERROR("%s cannot connect InOut data %s to more sources, using the latest connection attempt\n", getInstanceName(), CStringDictionary::get(getFBInterfaceSpec().mDIONames[paDIOPortId]));
@@ -153,7 +153,7 @@ bool CFunctionBlock::connectDIO(TPortId paDIOPortId, CInOutDataConnection *paDat
       } else {
         *getDIOInConUnchecked(paDIOPortId) = paDataCon;
         configureGenericDIO(paDIOPortId, paDataCon->getValue());
-        getDIOOutConUnchecked(paDIOPortId)->setValue(paDataCon->getValue());
+        getDIOOutConUnchecked(paDIOPortId)->setValue(&paDataCon->getValue());
         return true;
       }
     }
@@ -161,10 +161,10 @@ bool CFunctionBlock::connectDIO(TPortId paDIOPortId, CInOutDataConnection *paDat
   return false;
 }
 
-void CFunctionBlock::configureGenericDIO(TPortId paDIOPortId, const CIEC_ANY* paRefValue) {
+void CFunctionBlock::configureGenericDIO(TPortId paDIOPortId, const CIEC_ANY& paRefValue) {
   CIEC_ANY *dio = getDIO(paDIOPortId);
-  if(dio->getDataTypeID() == CIEC_ANY::e_ANY && (nullptr != paRefValue)) {
-    dio->setValue(paRefValue->unwrap());
+  if(dio->getDataTypeID() == CIEC_ANY::e_ANY) {
+    dio->setValue(paRefValue.unwrap());
   }
 }
 

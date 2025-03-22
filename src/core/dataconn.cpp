@@ -28,7 +28,7 @@ EMGMResponse CDataConnection::connect(CFunctionBlock *paDstFB,
   TPortId dstPortId = paDstFB->getDIID(paDstPortNameId);
   if(cgInvalidPortId != dstPortId){
     CIEC_ANY *dstDataPoint = paDstFB->getDIFromPortId(dstPortId);
-    retVal = CDataConnection::establishDataConnection(paDstFB, dstPortId, dstDataPoint);
+    retVal = CDataConnection::establishDataConnection(paDstFB, dstPortId, *dstDataPoint);
   }
   return retVal;
 }
@@ -41,7 +41,7 @@ EMGMResponse CDataConnection::connectToCFBInterface(CFunctionBlock *paDstFB,
   if(cgInvalidEventID != nDOID){
     CIEC_ANY *dstDataPoint = paDstFB->getDataOutput(paDstPortNameId);
     nDOID |= cgInternal2InterfaceMarker;
-    retVal = establishDataConnection(paDstFB, nDOID, dstDataPoint);
+    retVal = establishDataConnection(paDstFB, nDOID, *dstDataPoint);
   }
 
   return retVal;
@@ -49,7 +49,7 @@ EMGMResponse CDataConnection::connectToCFBInterface(CFunctionBlock *paDstFB,
 
 void CDataConnection::handleAnySrcPortConnection(const CIEC_ANY &paDstDataPoint){
   if(CIEC_ANY::e_ANY != paDstDataPoint.getDataTypeID()){
-    mValue->setValue(paDstDataPoint);
+    getValue().setValue(paDstDataPoint);
     getSourceId().mFB->configureGenericDO(getSourceId().mPortId, paDstDataPoint);
     if(isConnected()){
       //We already have some connection also set their correct type
@@ -75,10 +75,10 @@ CDataConnection::disconnect(CFunctionBlock *paDstFB, CStringDictionary::TStringI
   return retval;
 }
 
-bool CDataConnection::canBeConnected(const CIEC_ANY *paSrcDataPoint,
-    const CIEC_ANY *paDstDataPoint){
-  CIEC_ANY::EDataTypeID eSrcId = paSrcDataPoint->getDataTypeID();
-  CIEC_ANY::EDataTypeID eDstId = paDstDataPoint->getDataTypeID();
+bool CDataConnection::canBeConnected(const CIEC_ANY &paSrcDataPoint,
+    const CIEC_ANY &paDstDataPoint){
+  CIEC_ANY::EDataTypeID eSrcId = paSrcDataPoint.getDataTypeID();
+  CIEC_ANY::EDataTypeID eDstId = paDstDataPoint.getDataTypeID();
   bool bCanConnect = false;
 
   if(eSrcId == eDstId){
@@ -96,17 +96,15 @@ bool CDataConnection::canBeConnected(const CIEC_ANY *paSrcDataPoint,
 }
 
 EMGMResponse CDataConnection::establishDataConnection(CFunctionBlock *paDstFB, TPortId paDstPortId,
-    CIEC_ANY *paDstDataPoint){
+    const CIEC_ANY &paDstDataPoint){
   EMGMResponse retVal = EMGMResponse::InvalidOperation;
 
-  if(mValue) {
-    if (mValue->getDataTypeID() == CIEC_ANY::e_ANY) {
-      handleAnySrcPortConnection(*paDstDataPoint);
+  if (getValue().getDataTypeID() == CIEC_ANY::e_ANY) {
+    handleAnySrcPortConnection(paDstDataPoint);
+    retVal = EMGMResponse::Ready;
+  } else {
+    if (canBeConnected(getValue(), paDstDataPoint)) {
       retVal = EMGMResponse::Ready;
-    } else {
-      if (canBeConnected(mValue, paDstDataPoint)) {
-        retVal = EMGMResponse::Ready;
-      }
     }
   }
 

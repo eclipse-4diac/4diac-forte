@@ -418,7 +418,8 @@ void CGenFunctionBlock<T>::freeFBInterfaceData(){
 
   if(nullptr != mDOConns) {
     for (TPortId i = 0; i < T::getFBInterfaceSpec().mNumDOs; ++i) {
-      if(CIEC_ANY* value = mDOConns[i].getValue(); nullptr != value) {
+      //FIXME move gen DO con value handling into dedicated connection class
+      if(CIEC_ANY* value = &mDOConns[i].getValue(); nullptr != value) {
         std::destroy_at(value);
       }
     }

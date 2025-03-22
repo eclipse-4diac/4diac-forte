@@ -98,8 +98,7 @@ bool CCompositeFB::connectDI(TPortId paDIPortId, CDataConnection *paDataCon){
   else if(paDIPortId < getFBInterfaceSpec().mNumDIs){
     bool needsCloning = (getDI(paDIPortId)->getDataTypeID() == CIEC_ANY::e_ANY);
     retVal = CFunctionBlock::connectDI(paDIPortId, paDataCon);
-    if((true == retVal) && (true == needsCloning) && (nullptr != paDataCon)
-        && (nullptr != paDataCon->getValue())){
+    if((true == retVal) && (true == needsCloning) && (nullptr != paDataCon)) {
       //if internal connected update the connections data type and maybe internal further connection points
       (mIf2InDConns + paDIPortId)->setValue(getDI(paDIPortId));
       (mIf2InDConns + paDIPortId)->cloneInputInterfaceValue();
