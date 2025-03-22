@@ -1,6 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2020, 2023 Johannes Kepler University
- *                          Martin Erich Jobst
+ * Copyright (c) 2020, 2025 Johannes Kepler University, Martin Erich Jobst,
+ *                          Primetals Technologies Austria GmbH
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -26,6 +26,9 @@ class GEN_STRUCT_DEMUX : public CGenFunctionBlock<CFunctionBlock> {
 
   private:
 
+    static constexpr char NESTED_VAR_SEPARATOR = '%';
+    static constexpr std::string_view STRUCT_NAME_SEPARATOR = "____";
+
     std::unique_ptr<CStringDictionary::TStringId[]> mDoDataTypeNames;
     std::unique_ptr<CStringDictionary::TStringId[]> mDoNames;
 
@@ -47,6 +50,9 @@ class GEN_STRUCT_DEMUX : public CGenFunctionBlock<CFunctionBlock> {
 
     bool createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) override;
 
+    void fillConfiguredInterfaceSpec(CIEC_STRUCT *paStructType, std::vector<std::string_view> &paConfiguredMemberNames);
+    void fillInterfaceSpec(CIEC_STRUCT *paStructType);
+
     CIEC_STRUCT& st_IN() {
        return *static_cast<CIEC_STRUCT*>(getDI(0));
     }
@@ -54,6 +60,9 @@ class GEN_STRUCT_DEMUX : public CGenFunctionBlock<CFunctionBlock> {
     bool initialize() override;
     void setInitialValues() override;
     void copyStructValuesToOutputs();
+    std::vector<std::string_view> getConfiguredMemberNames(std::string_view paMemberNameString);
+    CIEC_ANY *getNestedMember(const CStringDictionary::TStringId paNameId, CIEC_STRUCT *paStructType);
+    size_t calcConfiguredStructTypeNameSize(CIEC_STRUCT *paStructType, std::vector<std::string_view> &paConfiguredMemberNames);
 
   public:
 
