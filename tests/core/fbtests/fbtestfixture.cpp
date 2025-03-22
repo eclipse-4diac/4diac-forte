@@ -15,9 +15,6 @@
  *   Martin Jobst - add reset tests
  *******************************************************************************/
 #include "fbtestfixture.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "fbtestfixture_gen.cpp"
-#endif
 #include "fbtesterglobalfixture.h"
 #include "device.h"
 #include <criticalregion.h>
@@ -27,26 +24,34 @@
 # define usleep(x) Sleep((x)/1000)
 #endif
 
-/**Helper functor for deleting stuff in containers
- *
- */
-struct SDeleteFunctor {
-    template<class T>
-    void operator()(T* paVal) const {
-      delete paVal;
-    }
-};
-
 //! Helper class allowing to access the can be connected function from the FBTester
-class CFBTestConn : public CDataConnection {
+class CFBTestConn final : public CDataConnection {
   public:
-    static bool canBeConnected(const CIEC_ANY *paSrcDataPoint, const CIEC_ANY *paDstDataPoint) {
+    static bool canBeConnected(const CIEC_ANY &paSrcDataPoint, const CIEC_ANY &paDstDataPoint) {
       return CDataConnection::canBeConnected(paSrcDataPoint, paDstDataPoint);
     }
   private:
     //you are not allowed to create this class therefor constructor and destructor are private
     CFBTestConn();
     virtual ~CFBTestConn();
+};
+
+class CFBTestInputDataConn final : public CDataConnection {
+  public:
+    CFBTestInputDataConn(CIEC_ANY &paValue) : CDataConnection(nullptr, CStringDictionary::scmInvalidStringId, nullptr),
+        mValue(paValue) {
+    }
+
+    void readData(CIEC_ANY &paValue) const override {
+      paValue.setValue(mValue.unwrap());
+    }
+
+    CIEC_ANY& getValue() override {
+      return mValue;
+    }
+
+  private:
+    CIEC_ANY &mValue;
 };
 
 CFBTestFixtureBase::CFBTestFixtureBase(CStringDictionary::TStringId paTypeId) :
@@ -85,8 +90,6 @@ CFBTestFixtureBase::~CFBTestFixtureBase(){
   for(size_t i = 0; i < interfaceSpec.mNumDIs; ++i) {
    BOOST_CHECK_EQUAL(EMGMResponse::Ready, mDIConnections[i]->disconnect(mFBUnderTest, interfaceSpec.mDINames[i]));
   }
-
-  for_each(mDIConnections.begin(), mDIConnections.end(), SDeleteFunctor());
 
   performFBDeleteTests();
 
@@ -169,7 +172,7 @@ void CFBTestFixtureBase::triggerEvent(TPortId paEIId) {
 
   for (TPortId index = 0; index < mOutputDataBuffers.size(); ++index) {
     mOutputDataBuffers[index]->setValue(
-      mFBUnderTest->getDOConnection(mFBUnderTest->getFBInterfaceSpec().mDONames[index])->getValue()->unwrap());
+      mFBUnderTest->getDOConnection(mFBUnderTest->getFBInterfaceSpec().mDONames[index])->getValue().unwrap());
   }
 }
 
@@ -293,11 +296,10 @@ void CFBTestFixtureBase::createEventOutputConnections() {
 
 void CFBTestFixtureBase::createDataInputConnections() {
   const SFBInterfaceSpec& interfaceSpec(mFBUnderTest->getFBInterfaceSpec());
+  mDIConnections.reserve(interfaceSpec.mNumDIs);
 
   for(size_t i = 0; i < interfaceSpec.mNumDIs; ++i) {
-    CInterface2InternalDataConnection *con = new CInterface2InternalDataConnection();
-    mDIConnections.push_back(con);
-    con->setValue(mInputDataBuffers[i]);
+    auto& con = mDIConnections.emplace_back(std::make_unique<CFBTestInputDataConn>(*mInputDataBuffers[i]));
     BOOST_REQUIRE_EQUAL(EMGMResponse::Ready, con->connect(mFBUnderTest, interfaceSpec.mDINames[i]));
   }
 }
@@ -306,7 +308,7 @@ void CFBTestFixtureBase::createDataOutputConnections() {
   const SFBInterfaceSpec& interfaceSpec(mFBUnderTest->getFBInterfaceSpec());
 
   for(size_t i = 0; i < interfaceSpec.mNumDOs; ++i) {
-    if(CFBTestConn::canBeConnected(mOutputDataBuffers[i], mFBUnderTest->getDataOutput(interfaceSpec.mDONames[i]))) {
+    if(CFBTestConn::canBeConnected(*mOutputDataBuffers[i], *mFBUnderTest->getDataOutput(interfaceSpec.mDONames[i]))) {
       CDataConnection *dataCon = mFBUnderTest->getDOConnection(interfaceSpec.mDONames[i]);
       BOOST_REQUIRE_EQUAL(EMGMResponse::Ready, dataCon->connect(this, interfaceSpec.mDONames[i]));
     }

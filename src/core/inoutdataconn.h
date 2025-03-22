@@ -32,7 +32,7 @@ class CInOutDataConnection : public CDataConnection {
     bool isConnected() const override;
 
   protected:
-    EMGMResponse establishDataConnection(CFunctionBlock *paDstFB, TPortId paDstPortId, CIEC_ANY *paDstDataPoint);
+    EMGMResponse establishDataConnection(CFunctionBlock *paDstFB, TPortId paDstPortId, const CIEC_ANY &paDstDataPoint) override;
 };
 
 #endif /* _INOUTDATACONN_H_ */

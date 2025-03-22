@@ -31,7 +31,7 @@ EMGMResponse CInOutDataConnection::connect(CFunctionBlock *paDstFB,
   TPortId dstPortId = paDstFB->getDIOID(paDstPortNameId);
   if(cgInvalidPortId != dstPortId){
     CIEC_ANY *dstDataPoint = paDstFB->getDIOFromPortId(dstPortId);
-    retVal = establishDataConnection(paDstFB, dstPortId, dstDataPoint);
+    retVal = establishDataConnection(paDstFB, dstPortId, *dstDataPoint);
   }
   
   return retVal;
@@ -67,17 +67,15 @@ void CInOutDataConnection::setValue(CIEC_ANY *paValue) {
 }
 
 EMGMResponse CInOutDataConnection::establishDataConnection(CFunctionBlock *paDstFB, TPortId paDstPortId,
-    CIEC_ANY *paDstDataPoint) {
+    const CIEC_ANY &paDstDataPoint) {
   EMGMResponse retVal = EMGMResponse::InvalidOperation;
 
-  if(mValue) {
-    if (mValue->getDataTypeID() == CIEC_ANY::e_ANY) {
-      handleAnySrcPortConnection(*paDstDataPoint);
+  if(getValue().getDataTypeID() == CIEC_ANY::e_ANY) {
+    handleAnySrcPortConnection(paDstDataPoint);
+    retVal = EMGMResponse::Ready;
+  } else {
+    if(canBeConnected(getValue(), paDstDataPoint)) {
       retVal = EMGMResponse::Ready;
-    } else {
-      if (canBeConnected(mValue, paDstDataPoint)) {
-        retVal = EMGMResponse::Ready;
-      }
     }
   }
 

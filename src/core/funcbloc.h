@@ -676,8 +676,8 @@ class CFunctionBlock : public forte::core::CFBContainer {
     constexpr static char csmToStringSeparator[] = ", ";
 
   private:
-    void configureGenericDI(TPortId paDIPortId, const CIEC_ANY *paRefValue);
-    void configureGenericDIO(TPortId paDIOPortId, const CIEC_ANY *paRefValue);
+    void configureGenericDI(TPortId paDIPortId, const CIEC_ANY &paRefValue);
+    void configureGenericDIO(TPortId paDIOPortId, const CIEC_ANY &paRefValue);
 
 #ifdef FORTE_SUPPORT_MONITORING
     TForteUInt32 *mEOMonitorCount;
