@@ -84,9 +84,7 @@ const SCFB_FBConnectionData FORTE_E_R_TRIG::scmDataConnections[] = {
 const SCFB_FBNData FORTE_E_R_TRIG::scmFBNData = {
   2, scmInternalFBs,
   3, scmEventConnections,
-  0, nullptr,
   2, scmDataConnections,
-  0, nullptr,
   0, nullptr,
   0, nullptr
 };

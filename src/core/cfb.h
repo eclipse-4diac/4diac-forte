@@ -22,23 +22,9 @@
 #include "funcbloc.h"
 #include "fbcontainer.h"
 
-class CInterface2InternalDataConnection;
-
 struct SCFB_FBConnectionData {
     CStringDictionary::TStringId mSrcId;
     int mSrcFBNum;
-    CStringDictionary::TStringId mDstId;
-    int mDstFBNum;
-};
-
-/*! \ingroup CORE
- * \brief Connection data for a fanned out connection of a composite's FB network
- *
- * As fanned out connections are attached together they need different data than
- * the first connection.
- */
-struct SCFB_FBFannedOutConnectionData {
-    int mConnectionNum; //!<the connection this fanned out connection should be attached to.
     CStringDictionary::TStringId mDstId;
     int mDstFBNum;
 };
@@ -54,12 +40,8 @@ struct SCFB_FBNData {
     const SCFB_FBInstanceData * mFBInstances;
     unsigned int mNumEventConnections;
     const SCFB_FBConnectionData * mEventConnections;
-    unsigned int mNumFannedOutEventConnections;
-    const SCFB_FBFannedOutConnectionData * mFannedOutEventConnections;
     unsigned int mNumDataConnections;
     const SCFB_FBConnectionData * mDataConnections;
-    unsigned int mNumFannedOutDataConnections;
-    const SCFB_FBFannedOutConnectionData * mFannedOutDataConnections;
     unsigned int mNumAdapterConnections;
     const SCFB_FBConnectionData * mAdapterConnections;
     unsigned int mNumParams;
@@ -108,7 +90,7 @@ class CCompositeFB: public CFunctionBlock {
                  CStringDictionary::TStringId paInstanceNameId,
                  const SCFB_FBNData & paFBNData);
 
-    ~CCompositeFB() override;
+    ~CCompositeFB() override = default;
 
     bool initialize() override;
 
@@ -157,9 +139,6 @@ class CCompositeFB: public CFunctionBlock {
     }
 
     const SCFB_FBNData & cmFBNData;
-
-    CEventConnection **mEventConnections;
-    CDataConnection **mDataConnections;
 
     //!The connections to be used in the execute event for triggering the internal FBs
     std::vector<std::unique_ptr<CEventConnection>> mInterface2InternalEventCons;

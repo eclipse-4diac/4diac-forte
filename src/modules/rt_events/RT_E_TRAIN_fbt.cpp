@@ -120,9 +120,7 @@ const SCFB_FBConnectionData FORTE_RT_E_TRAIN::scmDataConnections[] = {
 const SCFB_FBNData FORTE_RT_E_TRAIN::scmFBNData = {
   3, scmInternalFBs,
   7, scmEventConnections,
-  0, nullptr,
   6, scmDataConnections,
-  0, nullptr,
   0, nullptr,
   0, nullptr
 };

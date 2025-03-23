@@ -46,9 +46,7 @@ private:
   static const SCFB_FBInstanceData scmInternalFBs[];
   static const SCFB_FBParameter scmParamters[];
   static const SCFB_FBConnectionData scmEventConnections[];
-  static const SCFB_FBFannedOutConnectionData scmFannedOutEventConnections[];
   static const SCFB_FBConnectionData scmDataConnections[];
-  static const SCFB_FBFannedOutConnectionData scmFannedOutDataConnections[];
   static const SCFB_FBNData scmFBNData;
 
   forte::core::CInternalFB<FORTE_E_D_FF> fb_E_D_FF;

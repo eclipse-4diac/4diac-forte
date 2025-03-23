@@ -119,7 +119,6 @@ const SCFB_FBConnectionData FORTE_E_N_TABLE::scmDataConnections[] = {
 const SCFB_FBNData FORTE_E_N_TABLE::scmFBNData = {
   3, scmInternalFBs,
   8, scmEventConnections,
-  0, nullptr,
   4, scmDataConnections,
   0, nullptr,
   0, nullptr

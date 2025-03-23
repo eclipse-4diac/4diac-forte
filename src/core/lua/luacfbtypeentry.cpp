@@ -39,16 +39,6 @@ namespace luatype {
     return true;
   }
 
-  bool getFBFannedOutConnectionData(SCFB_FBFannedOutConnectionData& paDef, CLuaEngine* paLuaEngine, int paIndex) {
-    paDef.mConnectionNum = paLuaEngine->getField<int, &CLuaEngine::getInteger<int> >(paIndex, "connectionNum");
-    paDef.mDstFBNum = paLuaEngine->getField<int, &CLuaEngine::getInteger<int> >(paIndex, "dstFBNum");
-    paDef.mDstId = paLuaEngine->getField<CStringDictionary::TStringId, &CLuaEngine::getStringId>(paIndex, "dstID");
-    if(paDef.mDstId == CStringDictionary::scmInvalidStringId) {
-      return false;
-    }
-    return true;
-  }
-
   bool getFBParameter(SCFB_FBParameter& paDef, CLuaEngine* paLuaEngine, int paIndex) {
     paDef.mParamValue = paLuaEngine->getField<const char *, &CLuaEngine::getString>(paIndex, "paramValue");
     paDef.mDINameID = paLuaEngine->getField<CStringDictionary::TStringId, &CLuaEngine::getStringId>(paIndex, "diNameID");
@@ -187,21 +177,11 @@ bool CLuaCFBTypeEntry::initFbnSpec(SCFB_FBNData& paFbnSpec, CLuaEngine* paLuaEng
   size_t numECons = paFbnSpec.mNumEventConnections;
   paFbnSpec.mEventConnections = paLuaEngine->getCustomArrayField<SCFB_FBConnectionData, luatype::getFBConnectionData>(paIndex, "eventConnections",
     numECons);
-  //fannedOutEventConnections
-  paFbnSpec.mNumFannedOutEventConnections = paLuaEngine->getField<TForteUInt8, &CLuaEngine::getInteger<TForteUInt8> >(paIndex, "numFECons");
-  size_t numFECons = paFbnSpec.mNumFannedOutEventConnections;
-  paFbnSpec.mFannedOutEventConnections = paLuaEngine->getCustomArrayField<SCFB_FBFannedOutConnectionData, luatype::getFBFannedOutConnectionData>(paIndex,
-    "fannedOutEventConnections", numFECons);
   //dataConnections
   paFbnSpec.mNumDataConnections = paLuaEngine->getField<TForteUInt8, &CLuaEngine::getInteger<TForteUInt8> >(paIndex, "numDCons");
   size_t numDCons = paFbnSpec.mNumDataConnections;
   paFbnSpec.mDataConnections = paLuaEngine->getCustomArrayField<SCFB_FBConnectionData, luatype::getFBConnectionData>(paIndex, "dataConnections", numDCons);
-  //fannedOutDataConnections
-  paFbnSpec.mNumFannedOutDataConnections = paLuaEngine->getField<TForteUInt8, &CLuaEngine::getInteger<TForteUInt8> >(paIndex, "numFDCons");
-  size_t numFDCons = paFbnSpec.mNumFannedOutDataConnections;
-  paFbnSpec.mFannedOutDataConnections = paLuaEngine->getCustomArrayField<SCFB_FBFannedOutConnectionData, luatype::getFBFannedOutConnectionData>(paIndex,
-    "fannedOutDataConnections", numFDCons);
-  //dataConnections
+  //adapterConnections
   paFbnSpec.mNumAdapterConnections = paLuaEngine->getField<TForteUInt8, &CLuaEngine::getInteger<TForteUInt8> >(paIndex, "numAdpCons");
   size_t numAdpCons = paFbnSpec.mNumAdapterConnections;
   paFbnSpec.mAdapterConnections = paLuaEngine->getCustomArrayField<SCFB_FBConnectionData, luatype::getFBConnectionData>(paIndex, "adapterConnections", numAdpCons);
