@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2024 Profactor GmbH, ACIN, fortiss GmbH,
+ * Copyright (c) 2005, 2025 Profactor GmbH, ACIN, fortiss GmbH,
  *                          Johannes Kepler University Linz
  *                          Martin Erich Jobst
  *
@@ -52,7 +52,6 @@ struct SCFB_FBParameter {
 struct SCFB_FBNData {
     unsigned int mNumFBs;
     const SCFB_FBInstanceData * mFBInstances;
-    //TODO add FB parameters
     unsigned int mNumEventConnections;
     const SCFB_FBConnectionData * mEventConnections;
     unsigned int mNumFannedOutEventConnections;
@@ -162,8 +161,8 @@ class CCompositeFB: public CFunctionBlock {
     CEventConnection **mEventConnections;
     CDataConnection **mDataConnections;
 
-    //!Array storing the holding the connections to be used in the execute event for triggering the internal FBs
-    CEventConnection **mInterface2InternalEventCons;
+    //!The connections to be used in the execute event for triggering the internal FBs
+    std::vector<std::unique_ptr<CEventConnection>> mInterface2InternalEventCons;
 
 #ifdef FORTE_FMU
     friend class fmuInstance;
