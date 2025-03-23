@@ -71,9 +71,7 @@ const SCFB_FBConnectionData FORTE_E_RTimeOut::scmDataConnections[] = {
 const SCFB_FBNData FORTE_E_RTimeOut::scmFBNData = {
   1, scmInternalFBs,
   3, scmEventConnections,
-  0, nullptr,
   1, scmDataConnections,
-  0, nullptr,
   0, nullptr,
   0, nullptr
 };
