@@ -105,10 +105,7 @@ const SCFB_FBConnectionData FORTE_E_TRAIN::scmEventConnections[] = {
   {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(GATE), STRID(EO0)), 1, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(DLY), STRID(START)), 2},
   {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(STOP)), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(DLY), STRID(STOP)), 2},
   {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(DLY), STRID(EO)), 2, GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(EO)), -1},
-};
-
-const SCFB_FBFannedOutConnectionData FORTE_E_TRAIN::scmFannedOutEventConnections[] = {
-  {5, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(CTR), STRID(CU)), 0},
+  {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(DLY), STRID(EO)), 2, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(CTR), STRID(CU)), 0}
 };
 
 const SCFB_FBConnectionData FORTE_E_TRAIN::scmDataConnections[] = {
@@ -120,10 +117,8 @@ const SCFB_FBConnectionData FORTE_E_TRAIN::scmDataConnections[] = {
 
 const SCFB_FBNData FORTE_E_TRAIN::scmFBNData = {
   3, scmInternalFBs,
-  6, scmEventConnections,
-  1, scmFannedOutEventConnections,
+  7, scmEventConnections,
   4, scmDataConnections,
-  0, nullptr,
   0, nullptr,
   0, nullptr,
 };
