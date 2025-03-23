@@ -1,5 +1,16 @@
-#ifndef _FORTE_TESTS_CORE_TRACE_EVENT_MESSAGE_H_
-#define _FORTE_TESTS_CORE_TRACE_EVENT_MESSAGE_H_
+/*******************************************************************************
+ * Copyright (c) 2024 - Jose Cabral
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ *
+ * Contributors:
+ *    Jose Cabral - initial API and implementation and/or initial documentation
+ *******************************************************************************/
+
+#pragma once
 
 #include <memory>
 #include <string>
@@ -122,6 +133,20 @@ public:
 
   bool operator==(const AbstractPayload& paOther) const;
 
+  /**
+   * @brief Get the type name of the FB of the payload
+   * 
+   * @return type name of FB of the payload 
+   */
+  std::string getTypeName() const;
+
+  /**
+   * @brief Get the instance name of the FB of the payload
+   * 
+   * @return instance name of FB of the payload 
+   */
+  std::string getInstanceName() const;
+
 protected:
 
   /**
@@ -139,6 +164,7 @@ protected:
    */
   virtual std::string specificPayloadString() const = 0;
 
+private:
   std::string mTypeName;
   std::string mInstanceName;
 };
@@ -231,5 +257,3 @@ template<typename T>
 std::unique_ptr<T> EventMessage::getPayload() const {
   return std::unique_ptr<T>(dynamic_cast<T*>(mPayload->clone().release()));
 }
-
-#endif //  _FORTE_TESTS_CORE_TRACE_EVENT_MESSAGE_H_

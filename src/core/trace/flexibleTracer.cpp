@@ -1,5 +1,3 @@
-
-
 /*******************************************************************************
  * Copyright (c) 2024 Jose Cabral
  *
@@ -19,6 +17,11 @@
 void CFlexibleTracer::setTracer(AvailableTracers paTracerType) {
   CFlexibleTracer::mCurrentTracer = paTracerType;
 }
+
+const CFlexibleTracer::TracerVariant& CFlexibleTracer::getTracerVariant() const{
+  return mTracer;
+}
+
 
 CFlexibleTracer::CFlexibleTracer(CStringDictionary::TStringId instanceName, size_t bufferSize) {
   if(mCurrentTracer == AvailableTracers::BareCtf){
@@ -63,7 +66,7 @@ void CFlexibleTracer::traceReceiveInputEvent(const char * const paTypeName, cons
 }
 
 
-void CFlexibleTracer::traceSendOutputEvent(const char * const paTypeName, const char * const paInstanceName, const uint64_t paEventId){
+void CFlexibleTracer::traceSendOutputEvent(const char * const paTypeName, const char * const paInstanceName, const uint64_t paEventId) {
     std::visit(
       [&](auto &&paTracer){
         using T = std::decay_t<decltype(paTracer)>;

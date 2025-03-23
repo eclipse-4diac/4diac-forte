@@ -36,6 +36,8 @@ public:
       Internal
     };
 
+    using TracerVariant = std::variant<std::monostate, BarectfPlatformFORTE, CInternalTracer>;
+
     CFlexibleTracer(CStringDictionary::TStringId instanceName, size_t bufferSize);
 
     ~CFlexibleTracer() = default;
@@ -64,6 +66,8 @@ public:
 
     bool isEnabled();
 
+    const TracerVariant& getTracerVariant() const;
+
     /**
      * @brief Select the tracer to use
      * @param paTracerType the type of tracer to be used
@@ -74,7 +78,7 @@ private:
 
   static inline AvailableTracers mCurrentTracer{AvailableTracers::BareCtf};
 
-  std::variant<std::monostate, BarectfPlatformFORTE, CInternalTracer> mTracer{};
+  TracerVariant mTracer{};
 };
 
 #endif // FLEXIBLE_TRACER_H

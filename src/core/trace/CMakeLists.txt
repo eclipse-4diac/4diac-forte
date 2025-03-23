@@ -39,6 +39,8 @@ forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 forte_add_sourcefile_hcpp(barectf_platform_forte)
 
 if(FORTE_TRACE_CTF_TEST)
+  forte_add_custom_configuration("#define FORTE_TRACE_CTF_TEST")
+
   forte_add_sourcefile_hcpp(EventMessage)
   forte_add_sourcefile_hcpp(internalTracer)
   forte_add_sourcefile_hcpp(flexibleTracer)

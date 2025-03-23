@@ -101,7 +101,7 @@ BarectfPlatformFORTE::BarectfPlatformFORTE(CStringDictionary::TStringId instance
 
 BarectfPlatformFORTE::~BarectfPlatformFORTE() {
   if (enabled) {
-    if (barectf_packet_is_open(&context) && !barectf_packet_is_empty(&context)) {
+    if (barectf_packet_is_open(&context)) {
       closePacket(this);
     }
     output.flush();

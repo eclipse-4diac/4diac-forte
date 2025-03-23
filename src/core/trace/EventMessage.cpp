@@ -1,8 +1,37 @@
+/*******************************************************************************
+ * Copyright (c) 2024 - Jose Cabral
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ *
+ * Contributors:
+ *    Jose Cabral - initial API and implementation and/or initial documentation
+ *******************************************************************************/
+
 #include "EventMessage.h"
 
 #include <array>
 #include <iomanip>
 
+// ******************** //
+// Helper methods //
+// ******************** //
+
+namespace {
+  std::string createStringFromVector(const std::vector<std::string>& paVector){
+    std::string result = "[";
+    for(size_t i = 0; i < paVector.size(); i++) {
+      if(i != 0) {
+        result += ",";
+      }
+      result += " [" + std::to_string(i) + "] = \"" + paVector[i] + "\""; 
+    }
+    result += " ]";
+    return result;
+  };
+}
 
 // ******************** //
 // EventMessage methods //
@@ -77,9 +106,13 @@ bool AbstractPayload::operator==(const AbstractPayload& paOther) const {
   return mTypeName == paOther.mTypeName && mInstanceName == paOther.mInstanceName && specificPayloadEqual(paOther);
 }
 
-// std::string AbstractPayload::getTypeName() const {
-//   return mTypeName;
-// }
+std::string AbstractPayload::getTypeName() const {
+  return mTypeName;
+}
+
+std::string AbstractPayload::getInstanceName() const {
+  return mInstanceName;
+}
 
 
 // ******************* //
@@ -174,19 +207,6 @@ std::unique_ptr<AbstractPayload> FBInstanceDataPayload::clone() const {
 }
 
 std::string FBInstanceDataPayload::specificPayloadString() const {
-
-  auto createStringFromVector = [](const std::vector<std::string>& vec) -> std::string {
-    std::string result = "[";
-    for(size_t i = 0; i < vec.size(); i++) {
-      if(i != 0) {
-        result += ",";
-      }
-      result += " [" + std::to_string(i) + "] = \"" + vec[i] + "\""; 
-    }
-    result += " ]";
-    return result;
-  };
-
   return ", _inputs_len = " + std::to_string(mInputs.size()) + ", inputs = " + createStringFromVector(mInputs) +
     ", _outputs_len = " + std::to_string(mOutputs.size()) + ", outputs = " + createStringFromVector(mOutputs) +
     ", _internal_len = " + std::to_string(mInternal.size()) + ", internal = " + createStringFromVector(mInternal) +

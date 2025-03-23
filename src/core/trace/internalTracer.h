@@ -15,7 +15,6 @@
 #ifndef INTERNAL_TRACER_H
 #define INTERNAL_TRACER_H
 
-#include <unordered_map>
 #include <vector>
 
 #include "EventMessage.h"
@@ -31,7 +30,7 @@
 class CInternalTracer final {
 public: 
 
-    CInternalTracer(CStringDictionary::TStringId instanceName, size_t bufferSize);
+    CInternalTracer(CStringDictionary::TStringId, size_t);
 
     virtual ~CInternalTracer() = default;
 
@@ -57,30 +56,29 @@ public:
     void traceOutputData(const char * const paTypeName, const char * const paInstanceName, const uint64_t paDataId, 
       const char * const paValue);
 
-    /**
-     * @brief Fills the given vector with the array of const char* information. The vector must already contain the
-     * expected amount of elements to be inserted, defined by paLen. This help performance by allocating the vector
-     * with a size that won't change while filling it 
-     * 
-     * @param paIn the input of texts that will be inserted into the vector
-     * @param paLen the length of paIn 
-     * @param paOut output where to store the passed texts
-     */
-    void fillStringsVector(const char * const * const paIn, const uint32_t paLen, std::vector<std::string>& paOut);
-
     bool isEnabled();
 
     /**
-     * @brief Get the map of resource name to the events traced by that resource
+     * @brief Get the traced events
      * 
-     * @return the map containing the event messages for each resource
+     * @return list of events that were traces
      */
-    static const std::unordered_map<CStringDictionary::TStringId, std::vector<EventMessage>>& getResourceOutputMap();
+    const std::vector<EventMessage>& getEvents() const;
 
 private: 
-  std::vector<EventMessage>& mOutput;
 
-  static inline std::unordered_map<CStringDictionary::TStringId, std::vector<EventMessage>> smResourceOutputMap;
+  /**
+   * @brief Fills the given vector with the array of const char* information. The vector must already contain the
+   * expected amount of elements to be inserted, defined by paLen. This help performance by allocating the vector
+   * with a size that won't change while filling it 
+   * 
+   * @param paIn the input of texts that will be inserted into the vector
+   * @param paLen the length of paIn 
+   * @param paOut output where to store the passed texts
+   */
+  void fillStringsVector(const char * const * const paIn, const uint32_t paLen, std::vector<std::string>& paOut);
+
+  std::vector<EventMessage> mEvents;
 };
 
 #endif // INTERNAL_TRACER_H
