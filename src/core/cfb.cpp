@@ -29,8 +29,7 @@ CCompositeFB::CCompositeFB(forte::core::CFBContainer &paContainer, const SFBInte
         CFunctionBlock(paContainer, paInterfaceSpec, paInstanceNameId),
         cmFBNData(paFBNData),
         mEventConnections(nullptr),
-        mDataConnections(nullptr),
-        mInterface2InternalEventCons(nullptr){
+        mDataConnections(nullptr) {
 }
 
 bool CCompositeFB::initialize() {
@@ -57,15 +56,6 @@ bool CCompositeFB::initialize() {
 }
 
 CCompositeFB::~CCompositeFB() {
-  //only delete the interface to internal event connections all other connections are managed by their source's FBs
-  //this has to be done even if we don't have any event connection to ensure correct behavior
-  if (mInterface2InternalEventCons) {
-    for (unsigned int i = 0; i < getFBInterfaceSpec().mNumEIs; ++i) {
-      delete mInterface2InternalEventCons[i];
-    }
-    delete[] mInterface2InternalEventCons;
-  }
-
   if (cmFBNData.mNumEventConnections) {
     delete[] mEventConnections;
   }
@@ -118,13 +108,12 @@ CIEC_ANY *CCompositeFB::getVar(CStringDictionary::TStringId *paNameList, unsigne
   return retVal;
 }
 
-void CCompositeFB::executeEvent(TEventID paEIID, CEventChainExecutionThread * const paECET){
-  if(cgInternal2InterfaceMarker & paEIID){
+void CCompositeFB::executeEvent(TEventID paEIID, CEventChainExecutionThread * const paECET) {
+  if(cgInternal2InterfaceMarker & paEIID) {
     TEventID internalEvent = static_cast<TEventID>(paEIID & cgInternal2InterfaceRemovalMask);
     sendOutputEvent(internalEvent, paECET);
-  }
-  else{
-    if(paEIID < getFBInterfaceSpec().mNumEIs && nullptr != mInterface2InternalEventCons[paEIID]){
+  } else {
+    if(paEIID < getFBInterfaceSpec().mNumEIs && mInterface2InternalEventCons[paEIID]) {
       mInterface2InternalEventCons[paEIID]->triggerEvent(paECET);
     }
   }
@@ -144,7 +133,7 @@ void CCompositeFB::createEventConnections(){
       if((nullptr != srcFB) && (nullptr != dstFB)){
         if(this == srcFB){
           mEventConnections[i] =
-              mInterface2InternalEventCons[getEIID(currentConn->mSrcId)];
+              mInterface2InternalEventCons[getEIID(currentConn->mSrcId)].get();
         }
         else{
           mEventConnections[i] = srcFB->getEOConnection(currentConn->mSrcId);
@@ -165,12 +154,9 @@ void CCompositeFB::createEventConnections(){
 }
 
 void CCompositeFB::prepareIf2InEventCons(){
-  if(0 != getFBInterfaceSpec().mNumEIs){
-    mInterface2InternalEventCons = new TEventConnectionPtr[getFBInterfaceSpec().mNumEIs];
-    //FIXME find a way to avoid that each connection has to be allocated separately
-    for(TPortId i = 0; i < getFBInterfaceSpec().mNumEIs; i++){
-      mInterface2InternalEventCons[i] = new CEventConnection(this, i);
-    }
+  mInterface2InternalEventCons.reserve(getFBInterfaceSpec().mNumEIs);
+  for(TPortId i = 0; i < getFBInterfaceSpec().mNumEIs; i++){
+    mInterface2InternalEventCons.emplace_back(std::make_unique<CEventConnection>(this, i));
   }
 }
 
