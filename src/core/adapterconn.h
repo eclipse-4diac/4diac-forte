@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 - 2015 ACIN, fortiss GmbH, 2018 TU Vienna/ACIN
+ * Copyright (c) 2008, 2025 ACIN, fortiss GmbH, 2018 TU Vienna/ACIN
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -22,7 +22,7 @@ class CAdapter;
  */
 class CAdapterConnection : public CConnection{
   public:
-    CAdapterConnection(CFunctionBlock *paSrcFB, TPortId paSrcPortId, CAdapter *paPlug);
+    CAdapterConnection(CFunctionBlock *paSrcFB, TPortId paSrcPortId, CAdapter &paPlug);
     ~CAdapterConnection() override;
 
     EMGMResponse connect(CFunctionBlock *paDstFB, CStringDictionary::TStringId paDstPortNameId) override;
@@ -30,7 +30,11 @@ class CAdapterConnection : public CConnection{
 
     EMGMResponse disconnect(CFunctionBlock *paDstFB, CStringDictionary::TStringId paDstPortNameId) override;
 
-    CAdapter *getPlug(){
+    bool isConnected() const override{
+      return mSocket != nullptr;
+    }
+
+    CAdapter &getPlug(){
       return mPlug;
     }
 
@@ -44,10 +48,10 @@ class CAdapterConnection : public CConnection{
 
   private:
 
-    static void typifyAnyAdapter(CAdapter *paSocket, CAdapter *paPlug);
+    void typifyAnyAdapter(CAdapter *paSocket);
     void performDisconnect();
 
-    CAdapter *mPlug;
+    CAdapter &mPlug;
     CAdapter *mSocket;
 
 };

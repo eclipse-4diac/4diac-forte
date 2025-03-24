@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 - 2015 ACIN, fortiss GmbH, 2018 TU Vienna/ACIN
+ * Copyright (c) 2008, 2025 ACIN, fortiss GmbH, 2018 TU Vienna/ACIN
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -19,7 +19,7 @@ USE_STRING_ID(ANY_ADAPTER);
 #include "adapter.h"
 #include "anyadapter.h"
 
-CAdapterConnection::CAdapterConnection(CFunctionBlock *paSrcFB, TPortId paSrcPortId, CAdapter *paPlug) :
+CAdapterConnection::CAdapterConnection(CFunctionBlock *paSrcFB, TPortId paSrcPortId, CAdapter &paPlug) :
     CConnection(paSrcFB, paSrcPortId), mPlug(paPlug), mSocket(nullptr){
 }
 
@@ -27,13 +27,13 @@ CAdapterConnection::~CAdapterConnection(){
   performDisconnect();
 }
 
-void CAdapterConnection::typifyAnyAdapter(CAdapter *paSocket, CAdapter *paPlug){
+void CAdapterConnection::typifyAnyAdapter(CAdapter *paSocket){
   if(STRID(ANY_ADAPTER) == paSocket->getFBTypeId()){
-    static_cast<CAnyAdapter*>(paSocket)->typifyAnyAdapter(paPlug);
+    static_cast<CAnyAdapter*>(paSocket)->typifyAnyAdapter(mPlug);
   }
 
-  if(STRID(ANY_ADAPTER) == paPlug->getFBTypeId()){
-    static_cast<CAnyAdapter*>(paPlug)->typifyAnyAdapter(paSocket);
+  if(STRID(ANY_ADAPTER) == mPlug.getFBTypeId()){
+    static_cast<CAnyAdapter&>(mPlug).typifyAnyAdapter(*paSocket);
   }
 }
 
@@ -44,16 +44,15 @@ EMGMResponse CAdapterConnection::connect(CFunctionBlock *paDstFB, CStringDiction
   if(cgInvalidPortId != portId){
     if(!isConnected()){
       CAdapter *socket = paDstFB->getAdapter(paDstPortNameId);
-      typifyAnyAdapter(socket, mPlug);
+      typifyAnyAdapter(socket);
 
       if((socket->isSocket()) && (socket->isCompatible(mPlug))){
-        if(mPlug->connect(socket, this) && socket->connect(mPlug, this)) {
+        if(mPlug.connect(socket, this) && socket->connect(&mPlug, this)) {
           mSocket = socket;
-          addDestination(CConnectionPoint(paDstFB, portId));
           retVal = EMGMResponse::Ready;
         }
         else{
-          mPlug->disconnect();
+          mPlug.disconnect();
           socket->disconnect();
           retVal = EMGMResponse::InvalidObject;
         }
@@ -76,20 +75,19 @@ EMGMResponse CAdapterConnection::connectToCFBInterface(CFunctionBlock *, CString
 EMGMResponse CAdapterConnection::disconnect(CFunctionBlock *paDstFB, CStringDictionary::TStringId paDstPortNameId){
   EMGMResponse retVal = EMGMResponse::NoSuchObject;
 
-  TPortId portId = paDstFB->getAdapterPortId(paDstPortNameId);
-  if(cgInvalidPortId != portId){
-    retVal = CConnection::removeDestination(CConnectionPoint(paDstFB, portId));
-    if(EMGMResponse::Ready == retVal){
+  if(isConnected()) {
+    CAdapter *socket = paDstFB->getAdapter(paDstPortNameId);
+    if(socket == mSocket) {
       performDisconnect();
+      retVal = EMGMResponse::Ready;
     }
   }
+
   return retVal;
 }
 
 void CAdapterConnection::performDisconnect(){
-  if(mPlug != nullptr){
-    mPlug->disconnect(this);
-  }
+  mPlug.disconnect(this);
 
   if(mSocket != nullptr){
     mSocket->disconnect(this);
