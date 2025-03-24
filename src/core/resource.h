@@ -246,11 +246,11 @@ class CResource : public CFunctionBlock{
     static void createFBResponseMessage(const CFunctionBlock &paFb, const std::string &fullName, std::string &paValue);
 
     EMGMResponse queryConnections(std::string &paValue, const CFBContainer& container);
-    void createEOConnectionResponse(const CFunctionBlock& paFb, std::string& paReqResult);
-    void createDOConnectionResponse(const CFunctionBlock& paFb, std::string& paReqResult);
-    void createAOConnectionResponse(const CFunctionBlock& paFb, std::string& paReqResult);
-    void createConnectionResponseMessage(const CStringDictionary::TStringId srcId, const CStringDictionary::TStringId dstId, const CFunctionBlock& paDstFb,
-        const CFunctionBlock& paFb, std::string& paValue) const;
+    static void createEOConnectionResponse(const CFunctionBlock& paFb, std::string& paReqResult);
+    static void createDOConnectionResponse(const CFunctionBlock& paFb, std::string& paReqResult);
+    static void createAOConnectionResponse(const CFunctionBlock& paFb, std::string& paReqResult);
+    static void createConnectionResponseMessage(const CFunctionBlock& paSrcFb, const CStringDictionary::TStringId paSrcId,
+        const CFunctionBlock& paDstFb, const CStringDictionary::TStringId paDstId, std::string& paReqResult);
 
     EMGMResponse createFBTypeResponseMessage(const CStringDictionary::TStringId paValue, std::string & paReqResult);
     EMGMResponse createAdapterTypeResponseMessage(const CStringDictionary::TStringId paValue, std::string & paReqResult);
