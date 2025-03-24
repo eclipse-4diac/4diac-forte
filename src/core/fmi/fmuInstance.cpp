@@ -233,27 +233,11 @@ void fmuInstance::populateInputsAndOutputsCore(CFunctionBlock* paFB){
 }
 
 CIEC_ANY::EDataTypeID fmuInstance::getConnectedDataType(unsigned int portIndex, bool paInput, CFunctionBlock* paFB) {
-
   CIEC_ANY::EDataTypeID retVal = CIEC_ANY::e_Max;
-  /* Retrieve Publisher, Connection and Signals Source Function Block Information */
-  const CStringDictionary::TStringId portNameId = paInput ? paFB->getFBInterfaceSpec().mDINames[portIndex] : paFB->getFBInterfaceSpec().mDONames[portIndex];
-  const CDataConnection *portConnection = paInput ? paFB->getDIConnection(portNameId) : paFB->getDOConnection(portNameId);
-  if(portConnection != nullptr){
-    //TODO for now we assume that the subscriber connection only has one destination. Needs fix!
-    if(!paInput && portConnection->getDestinationList().isEmpty()){
-      FMU_DEBUG_LOG(this, "--------ERROR: Subscriber does not have any connection.\n");
-    }
-    else{
-      CSinglyLinkedList<CConnectionPoint>::Iterator it = portConnection->getDestinationList().begin();
-      const CConnectionPoint remoteConnectionPoint = paInput ? portConnection->getSourceId() : *it;
+  const CIEC_ANY *portValue = paInput ? paFB->getDI(portIndex) : paFB->getDO(portIndex);
 
-      const CIEC_ANY *remotePort = paInput ? remoteConnectionPoint.mFB->getDOFromPortId(remoteConnectionPoint.mPortId) : remoteConnectionPoint.mFB->getDIFromPortId(remoteConnectionPoint.mPortId);
-
-      retVal = remotePort->getDataTypeID();
-    }
-  }
-  else{
-    FMU_DEBUG_LOG(this, "--------ERROR: Got invalid port connection on FB " << paFB->getInstanceName() << " at port " << CStringDictionary::get(portNameId) << ". It must be connected to another FB.\n");
+  if(portValue != nullptr) {
+    retVal = portValue->unwrap().getDataTypeID();
   }
 
   return retVal;
