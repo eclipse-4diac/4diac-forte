@@ -1,6 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2008 - 2015 ACIN, fortiss GmbH, 2018 TU Vienna/ACIN
- *               2023 Martin Erich Jobst
+ * Copyright (c) 2008, 2025 ACIN, fortiss GmbH, 2018 TU Vienna/ACIN,
+ *                          Martin Erich Jobst
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -84,7 +84,7 @@ class CAdapter : public CGenFunctionBlock<CFunctionBlock> {
      *   \param paPeer Pointer to a potential peer, whose compatibility has to be checked.
      *   \return compatibility status
      */
-    bool isCompatible(CAdapter *paPeer) const;
+    bool isCompatible(const CAdapter &paPeer) const;
 
     const TForteInt16 *getEventInputWithIndices() const{
       return getFBInterfaceSpec().mEIWithIndexes;

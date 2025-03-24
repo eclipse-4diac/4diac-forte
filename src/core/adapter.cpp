@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 - 2015 ACIN, fortiss GmbH, 2018 TU Vienna/ACIN
+ * Copyright (c) 2008, 2025 ACIN, fortiss GmbH, 2018 TU Vienna/ACIN
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -70,7 +70,7 @@ void CAdapter::setParentFB(CFunctionBlock *paParentFB, TForteUInt8 paParentAdapt
 
   if (isPlug()) {
     //the plug is in charge of managing the adapter connection
-    mAdapterConn = new CAdapterConnection(this, paParentAdapterlistID, this);
+    mAdapterConn = new CAdapterConnection(paParentFB, paParentAdapterlistID, *this);
   }
 }
 
@@ -100,9 +100,9 @@ bool CAdapter::disconnect(CAdapterConnection *paAdConn){
   return true;
 }
 
-bool CAdapter::isCompatible(CAdapter *paPeer) const {
+bool CAdapter::isCompatible(const CAdapter &paPeer) const {
   //Need to check any adapter here as we don't know which adapter side is used for checking compatibility
-  return ((getFBTypeId() == paPeer->getFBTypeId()) || ((getFBTypeId() == STRID(ANY_ADAPTER)) && (STRID(ANY_ADAPTER) != paPeer->getFBTypeId())) || ((getFBTypeId() != STRID(ANY_ADAPTER)) && (STRID(ANY_ADAPTER) == paPeer->getFBTypeId())));
+  return ((getFBTypeId() == paPeer.getFBTypeId()) || ((getFBTypeId() == STRID(ANY_ADAPTER)) && (STRID(ANY_ADAPTER) != paPeer.getFBTypeId())) || ((getFBTypeId() != STRID(ANY_ADAPTER)) && (STRID(ANY_ADAPTER) == paPeer.getFBTypeId())));
 }
 
 void CAdapter::executeEvent(TEventID paEIID, CEventChainExecutionThread * const paECET){
