@@ -23,6 +23,10 @@
 #include "stdfblib/ita/OPCUA_DEV.h"
 #endif // FORTE_OPCUA_DEVICE
 
+#ifdef FORTE_REPLAY_DEVICE
+#include "stdfblib/ita/replay/ReplayDevice.h"
+#endif // FORTE_REPLAY_DEVICE
+
 namespace forte::ita::multi::utils {
 
 OPCUA_MGR* getOpcuaMgr(CDevice& paDevice){
@@ -37,6 +41,12 @@ OPCUA_MGR* getOpcuaMgr(CDevice& paDevice){
     return &static_cast<OPCUA_DEV*>(&paDevice)->mOPCUAMgr;
   } 
 #endif // FORTE_OPCUA_DEVICE
+
+#ifdef FORTE_REPLAY_DEVICE
+  if (currentDevice == "ReplayDevice"){
+    return &static_cast<ReplayDevice*>(&paDevice)->mOpcuaMgr;
+  }
+#endif 
   return nullptr;
 }
 

@@ -11,9 +11,19 @@
 # *    - initial API and implementation and/or initial documentation
 # *******************************************************************************/
 
-if(FORTE_TRACE_CTF)
-  forte_add_sourcefile_cpp(bt2MessageFactory.cpp)
-  forte_add_sourcefile_cpp(TraceReaderSink.cpp)
-  forte_add_link_library(babeltrace2)
-  forte_add_sourcefile_hcpp(deviceReplayer resourceReplayer utils)
+
+if (FORTE_COM_OPC_UA)
+
+  set(FORTE_REPLAY_DEVICE FALSE CACHE BOOL "Compile the replay Device")
+
+  if (FORTE_REPLAY_DEVICE)
+    forte_add_definition("-DFORTE_REPLAY_DEVICE")
+    forte_add_sourcefile_cpp(bt2MessageFactory.cpp)
+    forte_add_sourcefile_cpp(TraceReaderSink.cpp)
+    forte_add_link_library(babeltrace2)
+
+    forte_add_device(ReplayDevice "stdfblib/ita/replay/ReplayDevice" "ReplayDevice")
+    forte_add_sourcefile_hcpp(deviceReplayer resourceReplayer utils ReplayDevice ReplayMGR)
+  endif()
+
 endif()
