@@ -1,5 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2023 Primetals Technologies Austria GmbH
+ * Copyright (c) 2023, 2025 Primetals Technologies Austria GmbH
+ *                          Martin Erich Jobst
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -10,10 +11,10 @@
  * Contributors:
  *    Martin Melik Merkumians
  *      - initial implementation
+ *    Martin Erich Jobst
+ *      - templated connection rework
  *******************************************************************************/
 #pragma once
-#ifndef _INOUTDATACONN_H_
-#define _INOUTDATACONN_H_
 
 #include "./datatypes/forte_any.h"
 #include "dataconn.h"
@@ -21,7 +22,9 @@
 
 class CInOutDataConnection : public CDataConnection {
   public:
-    CInOutDataConnection(CFunctionBlock *paSrcFB, TPortId paSrcPortId, CIEC_ANY *paValue);
+    CInOutDataConnection(CFunctionBlock *paSrcFB, TPortId paSrcPortId, CIEC_ANY *paValue)
+      : CDataConnection(paSrcFB, paSrcPortId, paValue) {
+    }
 
     EMGMResponse connect(CFunctionBlock *paDstFB, CStringDictionary::TStringId paDstPortNameId) override;
 
@@ -29,10 +32,22 @@ class CInOutDataConnection : public CDataConnection {
 
     void setValue(CIEC_ANY *paValue) override;
 
-    bool isConnected() const override;
+    bool isConnected() const override {
+      return true;
+    };
 
   protected:
-    EMGMResponse establishDataConnection(CFunctionBlock *paDstFB, TPortId paDstPortId, const CIEC_ANY &paDstDataPoint) override;
+    EMGMResponse
+    establishDataConnection(CFunctionBlock *paDstFB, TPortId paDstPortId, const CIEC_ANY &paDstDataPoint) override;
 };
 
-#endif /* _INOUTDATACONN_H_ */
+template<typename T>
+class COutInOutDataConnection final : public CInOutDataConnection {
+  public:
+    COutInOutDataConnection(CFunctionBlock *paSrcFB, TPortId paSrcPortId, const T &paValue)
+      : CInOutDataConnection(paSrcFB, paSrcPortId, &mValue), mValue(paValue) {
+    }
+
+  private:
+    T mValue;
+};

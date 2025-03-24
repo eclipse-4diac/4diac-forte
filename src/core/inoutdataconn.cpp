@@ -16,9 +16,6 @@
 
 #include "funcbloc.h"
 
-CInOutDataConnection::CInOutDataConnection(CFunctionBlock *paSrcFB, TPortId paSrcPortId, CIEC_ANY *paValue) : CDataConnection(paSrcFB, paSrcPortId, paValue) {
-}
-
 EMGMResponse CInOutDataConnection::connect(CFunctionBlock *paDstFB,
     CStringDictionary::TStringId paDstPortNameId){
   //Check if the superclass connect is working (connection with plain IN)
@@ -88,7 +85,3 @@ EMGMResponse CInOutDataConnection::establishDataConnection(CFunctionBlock *paDst
   }
   return retVal;
 }
-
-bool CInOutDataConnection::isConnected() const {
-  return true;
-};
