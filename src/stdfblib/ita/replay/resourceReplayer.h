@@ -55,7 +55,6 @@ class  CResourceReplayer {
   CResourceReplayer(CResourceReplayer&& paOther);
   CResourceReplayer& operator=(CResourceReplayer&& paOther) = delete;
 
-
   /**
    * @brief Executes the algorithm tha generates the full set of events of the resource
    * 

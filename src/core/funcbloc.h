@@ -717,9 +717,9 @@ class CFunctionBlock : public forte::core::CFBContainer {
     friend class fmuInstance;
 #endif //FORTE_FMU
 
-#ifdef FORTE_TRACE_CTF_TEST
+#ifdef FORTE_REPLAY_DEVICE
     friend class CResourceReplayer;
-#endif // FORTE_TRACE_CTF_TEST
+#endif // FORTE_REPLAY_DEVICE
 };
 
 #define FUNCTION_BLOCK_CTOR(fbclass) \
