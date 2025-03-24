@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 fortiss GmbH, 2018 TU Vienna/ACIN
+ * Copyright (c) 2013, 2025 fortiss GmbH, TU Vienna/ACIN
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -29,7 +29,7 @@ class CAnyAdapter : public CAdapter{
     CAnyAdapter(CStringDictionary::TStringId paAdapterInstanceName, forte::core::CFBContainer &paContainer, bool paIsPlug);
     ~CAnyAdapter() override;
 
-    void typifyAnyAdapter(CAdapter *paPeer);
+    void typifyAnyAdapter(const CAdapter &paPeer);
 
     void setParentFB(CFunctionBlock *paParentFB, TForteUInt8 paParentAdapterlistID) override;
 
