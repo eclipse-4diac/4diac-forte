@@ -141,9 +141,9 @@ bool FBInputEventPayload::specificPayloadEqual(const AbstractPayload& paOther) c
 // ******************* //
 // FBOutputEventPayload //
 // ******************* //
-FBOutputEventPayload::FBOutputEventPayload(std::string paTypeName, std::string paInstanceName, const uint64_t paEventId) : 
+FBOutputEventPayload::FBOutputEventPayload(std::string paTypeName, std::string paInstanceName, const uint64_t paEventId, uint64_t paEventCounter, const std::vector<std::string>& paOutputs) : 
   AbstractPayload(std::move(paTypeName), std::move(paInstanceName)),
-   mEventId(paEventId) {
+   mEventId(paEventId), mEventCounter(paEventCounter), mOutputs(paOutputs) {
 }
 
 std::unique_ptr<AbstractPayload> FBOutputEventPayload::clone() const {
@@ -151,12 +151,14 @@ std::unique_ptr<AbstractPayload> FBOutputEventPayload::clone() const {
 }
 
 std::string FBOutputEventPayload::specificPayloadString() const {
-  return ", eventId = " + std::to_string(mEventId);
+  return ", eventId = " + std::to_string(mEventId) + " eventCounter = " + std::to_string(mEventCounter) + 
+    ", _outputs_len = " + std::to_string(mOutputs.size()) + ", outputs = " + createStringFromVector(mOutputs);
 }
 
 bool FBOutputEventPayload::specificPayloadEqual(const AbstractPayload& paOther) const {
   if(const auto childInstance = dynamic_cast<const FBOutputEventPayload*>(&paOther); childInstance != nullptr){
-      return mEventId == childInstance->mEventId; 
+      return mEventId == childInstance->mEventId && mEventCounter == childInstance->mEventCounter 
+        && mOutputs == childInstance->mOutputs; 
   }
   return false;
 }

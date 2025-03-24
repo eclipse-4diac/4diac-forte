@@ -194,7 +194,7 @@ private:
  */
 class FBOutputEventPayload : public AbstractPayload {
 public:
-  FBOutputEventPayload(std::string paTypeName, std::string paInstanceName, const uint64_t paEventId);
+  FBOutputEventPayload(std::string paTypeName, std::string paInstanceName, const uint64_t paEventId, uint64_t paEventCounter, const std::vector<std::string>& paOutputs);
 
   std::unique_ptr<AbstractPayload> clone() const override;
 

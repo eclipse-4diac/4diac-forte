@@ -148,7 +148,13 @@ namespace {
     if(paEventType == "receiveInputEvent") {
       result.reset(new FBInputEventPayload(typeName, instanceName, readUint64Field(paField, "eventId")));
     } else if(paEventType == "sendOutputEvent"){
-      result.reset(new FBOutputEventPayload(typeName, instanceName, readUint64Field(paField, "eventId")));
+      std::vector<std::string> outputs;
+      readDynamicArrayField(paField, "outputs", outputs);
+
+      result.reset(new FBOutputEventPayload(typeName, instanceName, 
+          readUint64Field(paField, "eventId"), 
+          readUint64Field(paField, "eventCounter"), 
+          outputs));
     } 
     else if(paEventType == "inputData" || paEventType == "outputData") {
       result.reset(new FBDataPayload(typeName, instanceName, getDataId(paField), getValue(paField)));

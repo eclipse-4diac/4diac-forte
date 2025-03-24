@@ -66,7 +66,7 @@ void CFakeEventExecutionThread::insertFront(TEventEntry paEvent){
   // and then copy the events back to the original list
   decltype(mEventList) temp;
   temp.push(paEvent);
-  while(!mEventList.isEmpty()){
+  while(hasEvent()){
     temp.push(*mEventList.pop());
   }
 
@@ -82,12 +82,13 @@ void CFakeEventExecutionThread::removeFromBack(size_t paNumberOfItemsToRemove){
   }
 
   std::vector<TEventEntry> temp;
-  while(!mEventList.isEmpty()){
+  while(hasEvent()){
     temp.push_back(*mEventList.pop());
   }
 
   while(paNumberOfItemsToRemove-- != 0){
     temp.pop_back();
+    mEventCounter--;
   }
 
   for(auto& event : temp){
@@ -105,6 +106,16 @@ std::optional<TEventEntry> CFakeEventExecutionThread::getNextEvent(){
   return *nextEvent;
 }
 
+uint64_t CFakeEventExecutionThread::getEventCounter() {
+  return mEventCounter;
+}
+
+inline bool CFakeEventExecutionThread::hasEvent() {
+  return !mEventList.isEmpty();
+}
+
+// we don't need the complexities of a separate thread, so 
+// the funtion just set to sleep when is controlled from outside
 void CFakeEventExecutionThread::run(){
   while(isAlive()){
     if(mIsRemoteEnabled){

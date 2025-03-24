@@ -62,6 +62,12 @@ trace:
                 - typeName: string # FB type name
                 - instanceName: string # FB instance name
                 - eventId: uint64 # Event id
+                - eventCounter: uint64 # event counter of the execution
+                - outputs: # Data values
+                    field-type:
+                      class: dynamic-array
+                      element-field-type:
+                        class: string
           # inputData
           inputData:
             payload-field-type:

@@ -44,6 +44,11 @@ class CEventChainExecutionThread : public CThread{
       if(!mEventList.push(paEventToAdd)){
         DEVLOG_ERROR("Event queue is full, event dropped!\n");
       }
+#ifdef FORTE_TRACE_CTF
+      else if(paEventToAdd.mPortId != cgExternalEventID){
+        mEventCounter++; 
+      }
+#endif // FORTE_TRACE_CTF
     }
 
     /*!\brief allow to start, stop, and kill the execution of the event chain execution thread
@@ -63,7 +68,9 @@ class CEventChainExecutionThread : public CThread{
     void resumeSelfSuspend(){
       mSuspendSemaphore.inc();
     }
-
+#ifdef FORTE_TRACE_CTF
+    uint64_t mEventCounter{0}; 
+#endif // FORTE_TRACE_CTF
   protected:
     /*! \brief List of input events to deliver.
      *

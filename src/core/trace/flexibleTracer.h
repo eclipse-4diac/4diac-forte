@@ -56,7 +56,7 @@ public:
 
     void traceReceiveInputEvent(const char * const paTypeName, const char * const paInstanceName, const uint64_t paEventId);
 
-    void traceSendOutputEvent(const char * const paTypeName, const char * const paInstanceName, const uint64_t paEventId);
+    void traceSendOutputEvent(const char * const paTypeName, const char * const paInstanceName, const uint64_t paEventId, const uint64_t paEventCounter, const uint32_t paOutputsLength, const char * const * const paOutputs);
 
     void traceInputData( const char * const paTypeName, const char * const paInstanceName,
       const uint64_t paDataId, const char * const paValue);
