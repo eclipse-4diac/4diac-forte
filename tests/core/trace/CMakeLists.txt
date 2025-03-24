@@ -20,11 +20,6 @@ if(FORTE_TRACE_CTF_TEST)
   SET(SOURCE_GROUP ${SOURCE_GROUP}\\trace)
 
   forte_test_add_sourcefile_cpp(ctfTracerTest.cpp)
-  forte_test_add_sourcefile_cpp(TraceReaderSink.cpp)
-  forte_test_add_sourcefile_cpp(bt2MessageFactory.cpp)
-
-
-  forte_test_add_link_library(babeltrace2)
 
   SET(CTF_OUTPUT_DIR ${CMAKE_BINARY_DIR}/ctfOutput)
   SET(METADATA_FILE ${CMAKE_BINARY_DIR}/src/core/trace/metadata)

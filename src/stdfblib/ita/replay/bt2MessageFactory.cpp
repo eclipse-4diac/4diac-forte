@@ -1,3 +1,14 @@
+/*******************************************************************************
+ * Copyright (c) 2024 Jose Cabral
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ *
+ * Contributors:
+ *   Jose Cabral- initial API and implementation and/or initial documentation
+ *******************************************************************************/
 
 #include "bt2MessageFactory.h"
 
@@ -175,7 +186,7 @@ namespace {
   }
 }
 
-EventMessage Bt2MessageFactory::createMessage(const bt_message* paMessage){
+EventMessage forte::ita::replay::Bt2MessageFactory::createMessage(const bt_message* paMessage){
   // Borrow the event message's event and its class
   const bt_event *event =
     bt_message_event_borrow_event_const(paMessage);
