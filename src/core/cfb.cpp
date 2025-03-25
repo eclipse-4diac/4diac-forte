@@ -21,7 +21,6 @@
 #include "adapter.h"
 #include "resource.h"
 #include "core/util/criticalregion.h"
-#include "if2indco.h"
 #include "adapterconn.h"
 
 CCompositeFB::CCompositeFB(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec& paInterfaceSpec,

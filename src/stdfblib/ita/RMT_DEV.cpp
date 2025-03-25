@@ -33,9 +33,10 @@ const SFBInterfaceSpec RMT_DEV::scmFBInterfaceSpec = {
 
 RMT_DEV::RMT_DEV(const std::string &paMGR_ID) :
         CDevice(scmFBInterfaceSpec, CStringDictionary::scmInvalidStringId),
-        var_MGR_ID(paMGR_ID.c_str()),
+        conn_MGR_ID_int(this, 0, u""_WSTRING),
         conn_MGR_ID(nullptr),
         MGR(STRID(MGR), *this) {
+  setMGR_ID(paMGR_ID);
 }
 
 bool RMT_DEV::initialize() {
@@ -47,9 +48,8 @@ bool RMT_DEV::initialize() {
     return false;
   }
 
-  //we nee to manually crate this interface2internal connection as the MGR is not managed by device
-  mDConnMGR_ID.setSource(this, 0);
-  mDConnMGR_ID.connect(&MGR, STRID(MGR_ID));
+  //we need to manually create this connection as the MGR is not managed by device
+  conn_MGR_ID_int.connect(&MGR, STRID(MGR_ID));
   return true;
 }
 
@@ -74,12 +74,12 @@ EMGMResponse RMT_DEV::changeExecutionState(EMGMCommandType paCommand){
 }
 
 void RMT_DEV::setMGR_ID(const std::string& paVal){
-  var_MGR_ID.fromString(paVal.c_str());
+  conn_MGR_ID_int.getValue().fromString(paVal.c_str());
 }
 
 CIEC_ANY *RMT_DEV::getDI(const size_t paIndex) {
   switch(paIndex) {
-    case 0: return &var_MGR_ID;
+    case 0: return &conn_MGR_ID_int.getValue();
   }
   return nullptr;
 }
@@ -87,6 +87,13 @@ CIEC_ANY *RMT_DEV::getDI(const size_t paIndex) {
 CDataConnection **RMT_DEV::getDIConUnchecked(const TPortId paIndex) {
   switch(paIndex) {
     case 0: return &conn_MGR_ID;
+  }
+  return nullptr;
+}
+
+CConnection *RMT_DEV::getResIf2InConnectionUnchecked(const TPortId paIndex) {
+  switch(paIndex) {
+    case 0: return &conn_MGR_ID_int;
   }
   return nullptr;
 }
