@@ -16,18 +16,18 @@
 #include "if2indco.h"
 #include "funcbloc.h"
 
-CInterface2InternalDataConnection::CInterface2InternalDataConnection() :
-    CDataConnection(nullptr, cgInvalidPortId, nullptr){
+CInterface2InternalDataConnection::CInterface2InternalDataConnection()
+  : CDataConnection(nullptr, cgInvalidPortId),
+    mValue(nullptr) {
 }
 
-void CInterface2InternalDataConnection::cloneInputInterfaceValue(){
-  for(const auto& it : mDestinationIds){
+void CInterface2InternalDataConnection::cloneInputInterfaceValue() {
+  for (const auto &it: mDestinationIds) {
     it.mFB->connectDI(it.mPortId, this);
   }
 }
 
-void CInterface2InternalDataConnection::setSource(CFunctionBlock *paSrcFB, TPortId paSrcPortId){
+void CInterface2InternalDataConnection::setSource(CFunctionBlock *paSrcFB, TPortId paSrcPortId) {
   CConnection::setSource(paSrcFB, paSrcPortId);
   mValue = paSrcFB->getDIFromPortId(paSrcPortId);
 }
-

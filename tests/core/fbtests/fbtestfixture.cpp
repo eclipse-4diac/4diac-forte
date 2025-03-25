@@ -38,8 +38,12 @@ class CFBTestConn final : public CDataConnection {
 
 class CFBTestInputDataConn final : public CDataConnection {
   public:
-    CFBTestInputDataConn(CIEC_ANY &paValue) : CDataConnection(nullptr, CStringDictionary::scmInvalidStringId, nullptr),
+    CFBTestInputDataConn(CIEC_ANY &paValue) : CDataConnection(nullptr, CStringDictionary::scmInvalidStringId),
         mValue(paValue) {
+    }
+
+    void writeData(const CIEC_ANY &paValue) override {
+      mValue.setValue(paValue.unwrap());
     }
 
     void readData(CIEC_ANY &paValue) const override {

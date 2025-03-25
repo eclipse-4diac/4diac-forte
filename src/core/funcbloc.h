@@ -442,16 +442,6 @@ class CFunctionBlock : public forte::core::CFBContainer {
      * \param paContainer      FB container this function block is contained in (mainly necessary for management functions and service interfaces)
      * \param paInterfaceSpec  const pointer to the interface spec
      * \param paInstanceNameId string id
-     * \param paFBConnData     Byte-array for fb-specific connection data. It will need space for the event output connections,
-     *                             data input connections, and data output connections, in that order. The space requirements are:
-     *                               sizeof(TEventConnectionPtr) * Number of Event outputs +
-     *                               sizeof(TDataConnectionPtr)  * Number of Data inputs +
-     *                               sizeof(TDataConnectionPtr)  * Number of Data outputs
-     * \param paFBVarsData    Byte-array for fb-specific variable data. It will need space for the data inputs, data outputs, and adapters in that order.
-     *                             The space requirements are:
-     *                               sizeof(CIEC_ANY)) * Number of Data inputs +
-     *                               sizeof(CIEC_ANY)) * Number of Data outputs +
-     *                               sizeof(TAdapterPtr) * ta_nNumAdapters
      */
     CFunctionBlock(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec& paInterfaceSpec, CStringDictionary::TStringId paInstanceNameId);
 
