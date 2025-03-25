@@ -170,7 +170,7 @@ class CGenFunctionBlock : public T {
 
     CEventConnection *mEOConns; //!< A list of event connections pointers storing for each event output the event connection. If the output event is not connected the pointer is nullptr.
     CDataConnection **mDIConns; //!< A list of data connections pointers storing for each data input the data connection. If the data input is not connected the pointer is nullptr.
-    CDataConnection *mDOConns; //!< A list of data connections pointers storing for each data output the data connection. If the data output is not connected the pointer is nullptr.
+    CGenDataConnection *mDOConns; //!< A list of data connections pointers storing for each data output the data connection. If the data output is not connected the pointer is nullptr.
     CIEC_ANY **mDIs; //!< A list of pointers to the data inputs. This allows to implement a general getDataInput()
     CIEC_ANY **mDOs; //!< A list of pointers to the data outputs. This allows to implement a general getDataOutput()
     CAdapter **mAdapters; //!< A list of pointers to the adapters. This allows to implement a general getAdapter().
@@ -312,8 +312,8 @@ void CGenFunctionBlock<T>::fillDataPointSpec(const CIEC_ANY &paValue, CStringDic
 template<class T>
 size_t CGenFunctionBlock<T>::calculateFBConnDataSize(const SFBInterfaceSpec &paInterfaceSpec) {
   return sizeof(CEventConnection) * paInterfaceSpec.mNumEOs +
-         sizeof(TDataConnectionPtr) * paInterfaceSpec.mNumDIs +
-         sizeof(CDataConnection) * paInterfaceSpec.mNumDOs;
+         sizeof(CDataConnection*) * paInterfaceSpec.mNumDIs +
+         sizeof(CGenDataConnection) * paInterfaceSpec.mNumDOs;
 }
 
 template<class T>
@@ -364,8 +364,8 @@ void CGenFunctionBlock<T>::setupFBInterface() {
 
   const CStringDictionary::TStringId *pnDataIds;
   if (T::getFBInterfaceSpec().mNumDIs) {
-    mDIConns = reinterpret_cast<TDataConnectionPtr *>(connData);
-    connData += sizeof(TDataConnectionPtr) * T::getFBInterfaceSpec().mNumDIs;
+    mDIConns = reinterpret_cast<CDataConnection**>(connData);
+    connData += sizeof(CDataConnection*) * T::getFBInterfaceSpec().mNumDIs;
 
     mDIs = reinterpret_cast<CIEC_ANY **>(varsData);
     varsData += T::getFBInterfaceSpec().mNumDIs * sizeof(CIEC_ANY *);
@@ -382,7 +382,7 @@ void CGenFunctionBlock<T>::setupFBInterface() {
 
   if (T::getFBInterfaceSpec().mNumDOs) {
     //let mDOConns point to the first data output connection
-    mDOConns = reinterpret_cast<CDataConnection *>(connData);
+    mDOConns = reinterpret_cast<CGenDataConnection *>(connData);
 
     mDOs = reinterpret_cast<CIEC_ANY **>(varsData);
     varsData += T::getFBInterfaceSpec().mNumDOs * sizeof(CIEC_ANY *);
@@ -392,8 +392,8 @@ void CGenFunctionBlock<T>::setupFBInterface() {
       mDOs[i] = T::createDataPoint(pnDataIds, varsData);
       CIEC_ANY* connVar = mDOs[i]->clone(varsData);
       varsData += connVar->getSizeof();
-      new(connData)CDataConnection(this, i, connVar);
-      connData += sizeof(CDataConnection);
+      new(connData)CGenDataConnection(this, i, connVar);
+      connData += sizeof(CGenDataConnection);
     }
   } else {
     mDOConns = nullptr;

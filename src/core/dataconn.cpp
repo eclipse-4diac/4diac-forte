@@ -17,8 +17,8 @@
 #include "dataconn.h"
 #include "funcbloc.h"
 
-CDataConnection::CDataConnection(CFunctionBlock *paSrcFB, TPortId paSrcPortId, CIEC_ANY *paValue)
-        : CConnection(paSrcFB, paSrcPortId), mValue(paValue) {
+CDataConnection::CDataConnection(CFunctionBlock *paSrcFB, TPortId paSrcPortId)
+        : CConnection(paSrcFB, paSrcPortId) {
 }
 
 EMGMResponse CDataConnection::connect(CFunctionBlock *paDstFB,
