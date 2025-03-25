@@ -14,8 +14,7 @@
 #ifndef _RMT_DEV_H_
 #define _RMT_DEV_H_
 
-#include "device.h"
-#include <if2indco.h>
+#include "../../core/device.h"
 #include "RMT_RES.h"
 
 /*! \brief Implementation of the RMT_DEV.
@@ -42,18 +41,17 @@
     void setMGR_ID(const std::string& paVal);
 
   private:
-    CInterface2InternalDataConnection mDConnMGR_ID;
-
     static const SFBInterfaceSpec scmFBInterfaceSpec;
 
     static const CStringDictionary::TStringId scmDINameIds[];
     static const CStringDictionary::TStringId scmDIDataTypeIds[];
 
-    CIEC_WSTRING var_MGR_ID;
-    CDataConnection *conn_MGR_ID;
-
     CIEC_ANY *getDI(size_t) override;
     CDataConnection **getDIConUnchecked(TPortId) override;
+    CConnection *getResIf2InConnectionUnchecked(TPortId ) override;
+
+    COutDataConnection<CIEC_WSTRING> conn_MGR_ID_int;
+    CDataConnection *conn_MGR_ID;
 
     RMT_RES MGR;
 };

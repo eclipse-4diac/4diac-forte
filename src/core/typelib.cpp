@@ -21,7 +21,6 @@
 #include "dataconn.h"
 #include "adapterconn.h"
 #include "resource.h"
-#include "if2indco.h"
 #include "adapter.h"
 #include <stddef.h>
 

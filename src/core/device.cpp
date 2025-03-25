@@ -13,7 +13,6 @@
  *******************************************************************************/
 
 #include "device.h"
-#include "if2indco.h"
 #include "ecet.h"
 #include <string.h>
 

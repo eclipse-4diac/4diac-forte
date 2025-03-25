@@ -26,8 +26,7 @@ USE_STRING_ID(START);
 #include "device.h"
 #include "adapter.h"
 #include "adapterconn.h"
-#include "if2indco.h"
-#include "core/util/criticalregion.h"
+#include "util/criticalregion.h"
 #include "core/ecetFactory.h"
 
 #ifdef FORTE_DYNAMIC_TYPE_LOAD
@@ -43,7 +42,7 @@ using namespace std::string_literals;
 
 CResource::CResource(forte::core::CFBContainer &paDevice, const SFBInterfaceSpec& paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId) :
     CFunctionBlock(paDevice, paInterfaceSpec, paInstanceNameId),
-    mResourceEventExecution(EcetFactory::createEcet()), mResIf2InConnections(nullptr)
+    mResourceEventExecution(EcetFactory::createEcet())
 #ifdef FORTE_SUPPORT_MONITORING
 , mMonitoringHandler(*this)
 #endif
@@ -54,7 +53,7 @@ CResource::CResource(forte::core::CFBContainer &paDevice, const SFBInterfaceSpec
 
 CResource::CResource(const SFBInterfaceSpec& paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId) :
     CFunctionBlock(*this, paInterfaceSpec, paInstanceNameId),
-    mResourceEventExecution(nullptr), mResIf2InConnections(nullptr)
+    mResourceEventExecution(nullptr)
 #ifdef FORTE_SUPPORT_MONITORING
 , mMonitoringHandler(*this)
 #endif
@@ -70,7 +69,6 @@ bool CResource::initialize() {
 #ifdef FORTE_DYNAMIC_TYPE_LOAD
   luaEngine = new CLuaEngine();
 #endif
-  initializeResIf2InConnections();
   return true;
 }
 
@@ -79,7 +77,6 @@ CResource::~CResource(){
   delete luaEngine;
 #endif
   delete mResourceEventExecution;
-  delete[] mResIf2InConnections;
 }
 
 EMGMResponse CResource::executeMGMCommand(forte::core::SManagementCMD &paCommand){
@@ -666,18 +663,7 @@ CConnection *CResource::getConnection(forte::core::TNameIdentifier &paSrcNameLis
   return con;
 }
 
-CConnection *CResource::getResIf2InConnection(CStringDictionary::TStringId paResInput) const{
-  CConnection *con = nullptr;
+CConnection *CResource::getResIf2InConnection(CStringDictionary::TStringId paResInput) {
   TPortId inPortId = getDIID(paResInput);
-  if(cgInvalidPortId != inPortId) {
-    con = mResIf2InConnections + inPortId;
-  }
-  return con;
-}
-
-void CResource::initializeResIf2InConnections(){
-    mResIf2InConnections = new CInterface2InternalDataConnection[getFBInterfaceSpec().mNumDIs];
-    for(TPortId i = 0; i < getFBInterfaceSpec().mNumDIs; i++){
-      (mResIf2InConnections + i)->setSource(this, i);
-    }
+  return (inPortId != cgInvalidPortId )  ? getResIf2InConnectionUnchecked(inPortId) : nullptr;
 }

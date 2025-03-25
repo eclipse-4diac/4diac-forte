@@ -34,8 +34,6 @@ class CLuaEngine;
 #include "tracerConfig.h"
 #endif
 
-class CInterface2InternalDataConnection;
-
 /*! \ingroup CORE\brief Base class for all resources handling the reconfiguration management within this
  * resource and the background execution of event chains.
  *
@@ -292,15 +290,15 @@ class CResource : public CFunctionBlock{
      */
     CConnection *getConnection(forte::core::TNameIdentifier &paSrcNameList);
 
-    CConnection *getResIf2InConnection(CStringDictionary::TStringId paResInput) const;
+    CConnection *getResIf2InConnection(CStringDictionary::TStringId paResInput);
 
-    void initializeResIf2InConnections();
+    virtual CConnection *getResIf2InConnectionUnchecked(TPortId ) {
+      return nullptr;
+    }
 
     /*!\brief The event chain execution of background (low priority) event chains started within this resource
      */
     CEventChainExecutionThread *mResourceEventExecution;
-
-    CInterface2InternalDataConnection *mResIf2InConnections; //!< List of all connections from the res interface to internal FBs
 
 #ifdef FORTE_SUPPORT_MONITORING
     forte::core::CMonitoringHandler mMonitoringHandler;

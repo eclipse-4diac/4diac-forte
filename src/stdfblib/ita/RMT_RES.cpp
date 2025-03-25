@@ -51,8 +51,8 @@ const SFBInterfaceSpec RMT_RES::scmFBInterfaceSpec = {
 
 RMT_RES::RMT_RES(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paDevice):
        CResource(paDevice, scmFBInterfaceSpec, paInstanceNameId),
-       var_MGR_ID(""),
        conn_MGR_ID(nullptr),
+       conn_MGR_ID_int(this, 0, u""_WSTRING),
        fb_START(STRID(START), *this),
        fb_MGR_FF(STRID(MGR_FF), *this),
        fb_MGR(STRID(MGR), *this) {
@@ -120,7 +120,7 @@ void RMT_RES::joinResourceThread() const {
 
 CIEC_ANY *RMT_RES::getDI(const size_t paIndex) {
   switch(paIndex) {
-    case 0: return &var_MGR_ID;
+    case 0: return &conn_MGR_ID_int.getValue();
   }
   return nullptr;
 }
@@ -128,6 +128,13 @@ CIEC_ANY *RMT_RES::getDI(const size_t paIndex) {
 CDataConnection **RMT_RES::getDIConUnchecked(const TPortId paIndex) {
   switch(paIndex) {
     case 0: return &conn_MGR_ID;
+  }
+  return nullptr;
+}
+
+CConnection *RMT_RES::getResIf2InConnectionUnchecked(const TPortId paIndex) {
+  switch(paIndex) {
+    case 0: return &conn_MGR_ID_int;
   }
   return nullptr;
 }
