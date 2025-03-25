@@ -14,8 +14,8 @@
  *******************************************************************************/
 #pragma once
 
-#include "device.h"
-#include "if2indco.h"
+#include "../../core/device.h"
+#include "../../core/dataconn.h"
 #include "RMT_RES.h"
 
 class FakeTimeDev : public CDevice{
@@ -39,20 +39,21 @@ class FakeTimeDev : public CDevice{
     EMGMResponse writeValue(forte::core::TNameIdentifier &paNameList, const std::string & paValue, bool paForce = false) override;
 
   private:
-    CInterface2InternalDataConnection mDConnMGR_ID;
 
     static const SFBInterfaceSpec scmFBInterfaceSpec;
 
     static const CStringDictionary::TStringId scmDINameIds[];
     static const CStringDictionary::TStringId scmDIDataTypeIds[];
 
-    CIEC_WSTRING var_MGR_ID;
-    CIEC_TIME var_FakeTime;
-    CDataConnection *conn_MGR_ID;
-    CDataConnection *conn_FakeTime;
+    COutDataConnection<CIEC_WSTRING>  conn_MGR_ID;
+    COutDataConnection<CIEC_TIME>  conn_FakeTime;
 
     CIEC_ANY* getDI(size_t) override;
-    CDataConnection** getDIConUnchecked(TPortId) override;
+    CDataConnection** getDIConUnchecked(TPortId) override {
+      return nullptr;
+    }
+
+    CConnection *getResIf2InConnectionUnchecked(TPortId ) override;
 
     RMT_RES MGR;
 

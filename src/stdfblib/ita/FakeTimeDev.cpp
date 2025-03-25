@@ -21,8 +21,8 @@ USE_STRING_ID(MGR_ID);
 USE_STRING_ID(TIME);
 USE_STRING_ID(WSTRING);
 
-#include "stringdict.h"
-#include "../arch/fake_time/faketimerha.h"
+#include "../../core/stringdict.h"
+#include "../../arch/fake_time/faketimerha.h"
 
 #include "arch/timerHandlerFactory.h"
 
@@ -40,11 +40,10 @@ const SFBInterfaceSpec FakeTimeDev::scmFBInterfaceSpec = {
 
 FakeTimeDev::FakeTimeDev(const std::string &paMGR_ID) :
   CDevice(scmFBInterfaceSpec, initializeTimer()),
-      var_MGR_ID(paMGR_ID.c_str()),
-      var_FakeTime(),
-      conn_MGR_ID(nullptr),
-      conn_FakeTime(nullptr),
+      conn_MGR_ID(this, 0, u""_WSTRING),
+      conn_FakeTime(this, 0, 0_TIME),
       MGR(STRID(MGR), *this){
+  conn_MGR_ID.getValue().fromString(paMGR_ID.c_str());
 }
 
 bool FakeTimeDev::initialize() {
@@ -56,9 +55,8 @@ bool FakeTimeDev::initialize() {
     return false;
   }
 
-  //we need to manually crate this interface2internal connection as the MGR is not managed by device
-  mDConnMGR_ID.setSource(this, 0);
-  mDConnMGR_ID.connect(&MGR, STRID(MGR_ID));
+  //we need to manually crate this connection as the MGR is not managed by device
+  conn_MGR_ID.connect(&MGR, STRID(MGR_ID));
   return true;
 }
 
@@ -84,13 +82,13 @@ EMGMResponse FakeTimeDev::changeExecutionState(EMGMCommandType paCommand){
 
 CIEC_ANY *FakeTimeDev::getDI(const size_t paIndex) {
   switch(paIndex) {
-    case 0: return &var_MGR_ID;
-    case 1: return &var_FakeTime;
+    case 0: return &conn_MGR_ID.getValue();
+    case 1: return &conn_FakeTime.getValue();
   }
   return nullptr;
 }
 
-CDataConnection **FakeTimeDev::getDIConUnchecked(const TPortId paIndex) {
+CConnection *FakeTimeDev::getResIf2InConnectionUnchecked(const TPortId paIndex) {
   switch(paIndex) {
     case 0: return &conn_MGR_ID;
     case 1: return &conn_FakeTime;
@@ -104,7 +102,7 @@ EMGMResponse FakeTimeDev::writeValue(forte::core::TNameIdentifier &paNameList, c
   EMGMResponse eRetVal = CDevice::writeValue(paNameList, paValue, paForce);
   if((EMGMResponse::Ready == eRetVal) && (STRID(FakeTime) == portName)){
     //fake time was written, update CFakeTimerHandler
-    static_cast<CFakeTimerHandler&>(getTimer()).sleepToTime(var_FakeTime);
+    static_cast<CFakeTimerHandler&>(getTimer()).sleepToTime(conn_FakeTime.getValue());
   }
   return eRetVal;
 }

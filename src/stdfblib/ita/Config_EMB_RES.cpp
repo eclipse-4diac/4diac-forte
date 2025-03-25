@@ -10,7 +10,7 @@
  *   Markus Meingast
  *    - initial API and implementation and/or initial documentation
  *******************************************************************************/
-#include <stringdict.h>
+#include "../../core/stringdict.h"
 #include "Config_EMB_RES.h"
 
 USE_STRING_ID(Config_EMB_RES);
@@ -36,8 +36,8 @@ const SFBInterfaceSpec Config_EMB_RES::scmFBInterfaceSpec = {
 Config_EMB_RES::Config_EMB_RES(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paDevice) :
     CResource(paDevice, scmFBInterfaceSpec, paInstanceNameId),
     fb_START(STRID(START), *this),
-    var_OPCUA_Namespace(),
-    conn_opcua_namespace(nullptr) {
+    conn_opcua_namespace(nullptr),
+    conn_opcua_namespace_int(this, 0, u""_WSTRING) {
 }
 
 Config_EMB_RES::~Config_EMB_RES() = default;
@@ -51,7 +51,7 @@ bool Config_EMB_RES::initialize() {
 
 CIEC_ANY *Config_EMB_RES::getDI(const size_t paIndex) {
   switch(paIndex) {
-    case 0: return &var_OPCUA_Namespace;
+    case 0: return &conn_opcua_namespace_int.getValue();
   }
   return nullptr;
 }
@@ -59,6 +59,13 @@ CIEC_ANY *Config_EMB_RES::getDI(const size_t paIndex) {
 CDataConnection **Config_EMB_RES::getDIConUnchecked(const TPortId paIndex) {
   switch(paIndex) {
     case 0: return &conn_opcua_namespace;
+  }
+  return nullptr;
+}
+
+CConnection *Config_EMB_RES::getResIf2InConnectionUnchecked(const TPortId paIndex) {
+  switch(paIndex) {
+    case 0: return &conn_opcua_namespace_int;
   }
   return nullptr;
 }

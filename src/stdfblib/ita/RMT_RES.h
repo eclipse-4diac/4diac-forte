@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005 - 2011 ACIN, Profactor GmbH
+ * Copyright (c) 2005, 2025 ACIN, Profactor GmbH
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -13,12 +13,12 @@
 #ifndef _RMT_RES_H_
 #define _RMT_RES_H_
 
-#include "resource.h"
+#include "../../core/resource.h"
 #include "DEV_MGR.h"
-#include "E_RESTART_fbt.h"
-#include "E_SR_fbt.h"
+#include "../events/E_RESTART_fbt.h"
+#include "../events/E_SR_fbt.h"
 
-class RMT_RES : public CResource{
+class RMT_RES final : public CResource{
   DECLARE_FIRMWARE_FB(RMT_RES)
 
   public:
@@ -29,13 +29,16 @@ class RMT_RES : public CResource{
 
     void joinResourceThread() const;
 
-    CIEC_WSTRING var_MGR_ID;
-    CDataConnection *conn_MGR_ID;
 
     CIEC_ANY *getDI(size_t) override;
-    CDataConnection **getDIConUnchecked(TPortId) override;
 
   private:
+    CDataConnection **getDIConUnchecked(TPortId) override;
+    CConnection *getResIf2InConnectionUnchecked(TPortId ) override;
+
+    CDataConnection *conn_MGR_ID;
+    COutDataConnection<CIEC_WSTRING> conn_MGR_ID_int;
+
     forte::core::CInternalFB<FORTE_E_RESTART> fb_START;
     forte::core::CInternalFB<FORTE_E_SR> fb_MGR_FF;
     forte::core::CInternalFB<DEV_MGR> fb_MGR;

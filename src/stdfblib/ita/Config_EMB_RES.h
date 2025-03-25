@@ -14,7 +14,7 @@
 
 #include "EMB_RES.h"
 
-class Config_EMB_RES : public CResource {
+class Config_EMB_RES final : public CResource {
   DECLARE_FIRMWARE_FB(Config_EMB_RES);
 
   public:
@@ -24,14 +24,16 @@ class Config_EMB_RES : public CResource {
     bool initialize() override;
 
     CIEC_ANY *getDI(size_t) override;
-    CDataConnection **getDIConUnchecked(TPortId) override;
 
   private:
+    CDataConnection **getDIConUnchecked(TPortId) override;
+
+    CConnection *getResIf2InConnectionUnchecked(TPortId ) override;
+
     forte::core::CInternalFB<FORTE_E_RESTART> fb_START;
 
-    CIEC_WSTRING var_OPCUA_Namespace;
-
     CDataConnection *conn_opcua_namespace;
+    COutDataConnection<CIEC_WSTRING> conn_opcua_namespace_int;
 
     static const SFBInterfaceSpec scmFBInterfaceSpec;
 
