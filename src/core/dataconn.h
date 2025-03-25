@@ -25,7 +25,7 @@
  */
 class CDataConnection : public CConnection {
   public:
-    CDataConnection(CFunctionBlock *paSrcFB, TPortId paSrcPortId, CIEC_ANY *paValue);
+    CDataConnection(CFunctionBlock *paSrcFB, TPortId paSrcPortId);
 
     EMGMResponse connect(CFunctionBlock *paDstFB, CStringDictionary::TStringId paDstPortNameId) override;
 
@@ -43,40 +43,21 @@ class CDataConnection : public CConnection {
     *     - TRUE ... write successful
     *     - FALSE ... no such data connection exists
     */
-    void writeData(const CIEC_ANY& paValue) {
-      if(mValue){
-        mValue->setValue(paValue.unwrap());
-      }
-    };
+    virtual void writeData(const CIEC_ANY& paValue) = 0;
 
     /*! \brief Read connection data value.
     *
     *   Read data value from connection data variable to FB data input.
     *   \param paValue pointer to FB data input
     */
-    virtual void readData(CIEC_ANY& paValue) const {
-      if(mValue){
-        paValue.setValue(mValue->unwrap());
-      }
-    }
-
-    /*! \brief Set class member variable mValue.
-     *
-     *   Set class member variable mValue.
-     *   \param paValue ... pointer to data variable
-     */
-    virtual void setValue(CIEC_ANY *paValue) {
-      mValue = paValue;
-    }
+    virtual void readData(CIEC_ANY &paValue) const = 0;
 
     /*! \brief Get class member variable mValue.
     *
     *   Get class member variable mValue.
     *   \return pointer to class member variable mValue
     */
-    virtual CIEC_ANY& getValue() {
-      return *mValue;
-    }
+    virtual CIEC_ANY &getValue() = 0;
 
   protected:
     /*! \brief check if the the given data points are compatible so that a connection can be established
@@ -87,29 +68,30 @@ class CDataConnection : public CConnection {
      */
     static bool canBeConnected(const CIEC_ANY &paSrcDataPoint, const CIEC_ANY &paDstDataPoint);
 
-    virtual EMGMResponse establishDataConnection(CFunctionBlock *paDstFB, TPortId paDstPortId, const CIEC_ANY &paDstDataPoint);
-
-    /*! \brief Value for storing the current data of the connection
-     */
-    CIEC_ANY *mValue;
+    virtual EMGMResponse establishDataConnection(CFunctionBlock *paDstFB, TPortId paDstPortId,
+                                                 const CIEC_ANY &paDstDataPoint);
 };
 
 template<typename T>
 class COutDataConnection final : public CDataConnection {
   public:
     COutDataConnection(CFunctionBlock *paSrcFB, TPortId paSrcPortId, const T &paValue)
-      : CDataConnection(paSrcFB, paSrcPortId, nullptr), mValue(paValue) {
+      : CDataConnection(paSrcFB, paSrcPortId), mValue(paValue) {
     }
 
     void writeData(const T &paValue) {
       mValue = paValue;
-    };
+    }
+
+    void writeData(const CIEC_ANY &paValue) override {
+      mValue.setValue(paValue.unwrap());
+    }
 
     void readData(CIEC_ANY &paValue) const override {
       paValue.setValue(mValue.unwrap());
     }
 
-    T& getValue() override {
+    T &getValue() override {
       return mValue;
     }
 
@@ -117,6 +99,26 @@ class COutDataConnection final : public CDataConnection {
     T mValue;
 };
 
-typedef CDataConnection *TDataConnectionPtr;
+class CGenDataConnection final : public CDataConnection {
+  public:
+    CGenDataConnection(CFunctionBlock *paSrcFB, TPortId paSrcPortId, CIEC_ANY *paValue)
+      : CDataConnection(paSrcFB, paSrcPortId), mValue(paValue) {
+    }
+
+    void writeData(const CIEC_ANY &paValue) override {
+      mValue->setValue(paValue.unwrap());
+    }
+
+    void readData(CIEC_ANY &paValue) const override {
+      paValue.setValue(mValue->unwrap());
+    }
+
+    CIEC_ANY &getValue() override {
+      return *mValue;
+    }
+
+  private:
+    CIEC_ANY *mValue;
+};
 
 #endif /*_DATACONN_H_*/

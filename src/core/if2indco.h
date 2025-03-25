@@ -33,10 +33,26 @@ class CInterface2InternalDataConnection : public CDataConnection {
 
     void setSource(CFunctionBlock *paSrcFB, TPortId paSrcPortId);
 
-  protected:
+    void writeData(const CIEC_ANY &paValue) override {
+      if (mValue) {
+        mValue->setValue(paValue.unwrap());
+      }
+    }
+
+    void readData(CIEC_ANY &paValue) const override {
+      if (mValue) {
+        paValue.setValue(mValue->unwrap());
+      }
+    }
+
+    CIEC_ANY &getValue() override {
+      return *mValue;
+    }
 
   private:
-
+    /*! \brief Value for storing the current data of the connection
+     */
+    CIEC_ANY *mValue;
 };
 
 typedef CInterface2InternalDataConnection *TCInterface2InternalDataConnectionPtr;
