@@ -18,7 +18,6 @@
 
 #include "./datatypes/forte_any.h"
 #include "dataconn.h"
-#include "connectiondestinationtype.h"
 
 class CInOutDataConnection : public CDataConnection {
   public:
@@ -58,6 +57,7 @@ class CInOutDataConnection : public CDataConnection {
 
   private:
     CIEC_ANY *mValue;
+    std::vector<CConnectionPoint> mInOutDestinationIds;
 };
 
 template<typename T>
