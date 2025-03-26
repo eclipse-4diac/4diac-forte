@@ -11,6 +11,7 @@
  * Contributors:
  *   Alois Zoitl - initial API and implementation and/or initial documentation
  *   Martin Jobst - add generic readInputData and writeOutputData
+ *   Markus Meingast - add support for configured struct demux instances
  *******************************************************************************/
 #include "GEN_STRUCT_DEMUX_fbt.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
@@ -34,9 +35,7 @@ const CStringDictionary::TStringId GEN_STRUCT_DEMUX::scmDataInputNames[] = { g_n
 
 void GEN_STRUCT_DEMUX::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   if(scmEventREQID == paEIID) {
-    for (TPortId i = 0; i < st_IN().getStructSize(); i++){
-      getDO(i)->setValue(*st_IN().getMember(i));
-    }
+    copyStructValuesToOutputs();
     sendOutputEvent(scmEventCNFID, paECET);
   }
 }
@@ -57,6 +56,7 @@ void GEN_STRUCT_DEMUX::writeOutputData(TEventID) {
 
 bool GEN_STRUCT_DEMUX::initialize() {
   if(CGenFunctionBlock::initialize()) {
+    setConfiguredDOPorts();
     copyStructValuesToOutputs();
     return true;
   }
@@ -69,9 +69,9 @@ void GEN_STRUCT_DEMUX::setInitialValues() {
 }
 
 void GEN_STRUCT_DEMUX::copyStructValuesToOutputs() {
-  for (TPortId i = 0; i < st_IN().getStructSize(); i++) {
-    getDO(i)->setValue(st_IN().getMember(i)->unwrap());
-  }
+  for (TPortId i = 0; i < mConfiguredDOPorts.size(); i++){
+      getDO(i)->setValue(mConfiguredDOPorts[i]->unwrap());
+    }
 }
 
 bool GEN_STRUCT_DEMUX::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) {
@@ -172,6 +172,16 @@ std::vector<std::string_view> GEN_STRUCT_DEMUX::getConfiguredMemberNames(std::st
     configuredMemberNames.emplace_back(paMemberNameString.substr(0));
   }
   return configuredMemberNames;
+}
+
+void GEN_STRUCT_DEMUX::setConfiguredDOPorts() {
+  const SFBInterfaceSpec interfaceSpec = getGenInterfaceSpec();
+  const CStringDictionary::TStringId *names = interfaceSpec.mDONames;
+  CIEC_STRUCT *structType = &st_IN();
+  for(TPortId i = 0; i < interfaceSpec.mNumDOs; i++){
+    CIEC_ANY *member = getNestedMember(names[i], structType);
+    mConfiguredDOPorts.emplace_back(member);
+  }
 }
 
 CIEC_ANY *GEN_STRUCT_DEMUX::getNestedMember(const CStringDictionary::TStringId paNameId, CIEC_STRUCT *paStructType) {

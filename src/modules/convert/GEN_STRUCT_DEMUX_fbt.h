@@ -11,6 +11,7 @@
  * Contributors:
  *   Alois Zoitl - initial API and implementation and/or initial documentation
  *   Martin Jobst - add generic readInputData and writeOutputData
+ *   Markus Meingast - add support for configured struct demux instances
  *******************************************************************************/
 #ifndef _GEN_STRUCT_DEMUX_H_
 #define _GEN_STRUCT_DEMUX_H_
@@ -31,6 +32,7 @@ class GEN_STRUCT_DEMUX : public CGenFunctionBlock<CFunctionBlock> {
 
     std::unique_ptr<CStringDictionary::TStringId[]> mDoDataTypeNames;
     std::unique_ptr<CStringDictionary::TStringId[]> mDoNames;
+    std::vector<CIEC_ANY*> mConfiguredDOPorts;
 
     static const CStringDictionary::TStringId scmDataInputNames[];
     std::array<CStringDictionary::TStringId, 1> mDiDataTypeNames;
@@ -61,6 +63,7 @@ class GEN_STRUCT_DEMUX : public CGenFunctionBlock<CFunctionBlock> {
     void setInitialValues() override;
     void copyStructValuesToOutputs();
     std::vector<std::string_view> getConfiguredMemberNames(std::string_view paMemberNameString);
+    void setConfiguredDOPorts();
     CIEC_ANY *getNestedMember(const CStringDictionary::TStringId paNameId, CIEC_STRUCT *paStructType);
     size_t calcConfiguredStructTypeNameSize(CIEC_STRUCT *paStructType, std::vector<std::string_view> &paConfiguredMemberNames);
 
