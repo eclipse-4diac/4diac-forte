@@ -25,7 +25,6 @@ USE_STRING_ID(Event);
 
 #include "adapter.h"
 #include "device.h"
-#include "connectiondestinationtype.h"
 #include "core/util/criticalregion.h"
 #include "../arch/timerha.h"
 #include <string.h>
