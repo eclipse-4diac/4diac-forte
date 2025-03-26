@@ -68,11 +68,11 @@ FORTE_GET_STRUCT_VALUE::FORTE_GET_STRUCT_VALUE(const CStringDictionary::TStringI
     var_member(CIEC_STRING("", 0)),
     var_QO(CIEC_BOOL(0)),
     var_output(CIEC_ANY_VARIANT()),
-    conn_CNF(this, 0),
+    conn_CNF(*this, 0),
     conn_in_struct(nullptr),
     conn_member(nullptr),
-    conn_QO(this, 0, var_QO),
-    conn_output(this, 1, var_output) {
+    conn_QO(*this, 0, var_QO),
+    conn_output(*this, 1, var_output) {
 };
 
 CIEC_ANY *FORTE_GET_STRUCT_VALUE::lookForMember(CIEC_STRUCT &paWhereToLook, char *paMemberName) {

@@ -55,11 +55,11 @@ const SFBInterfaceSpec FORTE_FB_TON::scmFBInterfaceSpec = {
 
 FORTE_FB_TON::FORTE_FB_TON(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId),
-    conn_CNF(this, 0),
+    conn_CNF(*this, 0),
     conn_IN(nullptr),
     conn_PT(nullptr),
-    conn_Q(this, 0, var_Q),
-    conn_ET(this, 1, var_ET) {
+    conn_Q(*this, 0, var_Q),
+    conn_ET(*this, 1, var_ET) {
 };
 
 void FORTE_FB_TON::setInitialValues() {

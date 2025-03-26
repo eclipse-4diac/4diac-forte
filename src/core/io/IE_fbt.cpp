@@ -60,7 +60,7 @@ const SFBInterfaceSpec FORTE_IE::scmFBInterfaceSpec = {
 
 FORTE_IE::FORTE_IE(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CProcessInterfaceFB(paContainer, scmFBInterfaceSpec, paInstanceNameId),
-    conn_IND(this, 2){
+    conn_IND(*this, 2){
 };
 
 void FORTE_IE::executeEvent(const TEventID paEIID, CEventChainExecutionThread *const paECET) {

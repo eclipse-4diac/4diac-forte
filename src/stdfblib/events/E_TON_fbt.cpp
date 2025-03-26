@@ -71,12 +71,12 @@ FORTE_E_TON::FORTE_E_TON(const CStringDictionary::TStringId paInstanceNameId, fo
     fb_E_SWITCH(STRID(E_SWITCH), *this),
     fb_E_DELAY(STRID(E_DELAY), *this),
     fb_E_RS(STRID(E_RS), *this),
-    conn_CNF(this, 0),
+    conn_CNF(*this, 0),
     conn_IN(nullptr),
     conn_PT(nullptr),
-    conn_Q(this, 0, 0_BOOL),
-    conn_if2in_IN(this, 0, 0_BOOL),
-    conn_if2in_PT(this, 1, 0_TIME) {
+    conn_Q(*this, 0, 0_BOOL),
+    conn_if2in_IN(*this, 0, 0_BOOL),
+    conn_if2in_PT(*this, 1, 0_TIME) {
 };
 
 void FORTE_E_TON::setInitialValues() {

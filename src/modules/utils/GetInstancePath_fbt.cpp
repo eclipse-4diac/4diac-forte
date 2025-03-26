@@ -52,9 +52,9 @@ const SFBInterfaceSpec FORTE_GetInstancePath::scmFBInterfaceSpec = {
 FORTE_GetInstancePath::FORTE_GetInstancePath(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId),
     var_Sep(0x2f_CHAR),
-    conn_CNF(this, 0),
+    conn_CNF(*this, 0),
     conn_Sep(nullptr),
-    conn_Path(this, 0, var_Path) {
+    conn_Path(*this, 0, var_Path) {
 };
 
 void FORTE_GetInstancePath::setInitialValues() {

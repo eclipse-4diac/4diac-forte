@@ -14,7 +14,7 @@
 #include "conn.h"
 #include <algorithm>
 
-CConnection::CConnection(CFunctionBlock *paSrcFB, TPortId paSrcPortId) :
+CConnection::CConnection(CFunctionBlock &paSrcFB, const TPortId paSrcPortId) :
     mSourceId(paSrcFB, paSrcPortId) {
 
 }
@@ -36,11 +36,6 @@ EMGMResponse CConnection::removeDestination(const CConnectionPoint &paDestPoint)
     return EMGMResponse::Ready;
   }
   return EMGMResponse::InvalidState;
-}
-
-void CConnection::setSource(CFunctionBlock *paSrcFB, TPortId paSrcPortId){
-  mSourceId.mFB = paSrcFB;
-  mSourceId.mPortId = paSrcPortId;
 }
 
 bool CConnection::dstExists(const CConnectionPoint& paDestPoint) const {

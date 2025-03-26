@@ -30,8 +30,7 @@ const SFBInterfaceSpec CAnyAdapter::scmFBInterfaceSpec = {
 };
 
 CAnyAdapter::CAnyAdapter(CStringDictionary::TStringId paAdapterInstanceName, forte::core::CFBContainer &paContainer, bool paIsPlug) :
-    CAdapter(paContainer, scmFBInterfaceSpec, paAdapterInstanceName, scmFBInterfaceSpec, paIsPlug), m_ParentFB(nullptr),
-    mParentAdapterlistID(0){
+    CAdapter(paContainer, scmFBInterfaceSpec, paAdapterInstanceName, scmFBInterfaceSpec, paIsPlug) {
 }
 
 CAnyAdapter::~CAnyAdapter() = default;
@@ -54,7 +53,9 @@ void CAnyAdapter::typifyAnyAdapter(const CAdapter &paPeer){
   getGenInterfaceSpec().mNumDIOs = paPeer.getFBInterfaceSpec().mNumDIOs;
   getGenInterfaceSpec().mDIONames = paPeer.getFBInterfaceSpec().mDIONames;
   setupFBInterface();
-  fillEventEntryList(m_ParentFB);
+
+  mOutputEventIds.resize(getFBInterfaceSpec().mNumEOs);
+  fillEventEntryList();
 }
 
 bool CAnyAdapter::disconnect(CAdapterConnection *paAdConn){
@@ -67,14 +68,3 @@ bool CAnyAdapter::disconnect(CAdapterConnection *paAdConn){
   return bRetVal;
 }
 
-// Saves parentFB for later use
-void CAnyAdapter::setParentFB(CFunctionBlock *paParentFB, TForteUInt8 paParentAdapterlistID){
-  if(nullptr == m_ParentFB){
-    m_ParentFB = paParentFB;
-  }
-  if(0 == mParentAdapterlistID){
-    mParentAdapterlistID = paParentAdapterlistID;
-  }
-
-  CAdapter::setParentFB(m_ParentFB, mParentAdapterlistID);
-}

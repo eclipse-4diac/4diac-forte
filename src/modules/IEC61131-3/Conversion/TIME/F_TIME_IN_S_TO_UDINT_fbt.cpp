@@ -64,9 +64,9 @@ const SFBInterfaceSpec FORTE_F_TIME_IN_S_TO_UDINT::scmFBInterfaceSpec = {
 
 FORTE_F_TIME_IN_S_TO_UDINT::FORTE_F_TIME_IN_S_TO_UDINT(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CSimpleFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, nullptr),
-    conn_CNF(this, 0),
+    conn_CNF(*this, 0),
     conn_IN(nullptr),
-    conn_OUT(this, 0, var_OUT) {
+    conn_OUT(*this, 0, var_OUT) {
 }
 
 void FORTE_F_TIME_IN_S_TO_UDINT::setInitialValues() {

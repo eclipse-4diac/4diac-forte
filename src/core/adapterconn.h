@@ -22,13 +22,13 @@ class CAdapter;
  */
 class CAdapterConnection : public CConnection{
   public:
-    CAdapterConnection(CFunctionBlock *paSrcFB, TPortId paSrcPortId, CAdapter &paPlug);
+    CAdapterConnection(CFunctionBlock &paSrcFB, const TPortId paSrcPortId, CAdapter &paPlug);
     ~CAdapterConnection() override;
 
-    EMGMResponse connect(CFunctionBlock *paDstFB, CStringDictionary::TStringId paDstPortNameId) override;
-    EMGMResponse connectToCFBInterface(CFunctionBlock *paDstFB, CStringDictionary::TStringId paDstPortNameId) override;
+    EMGMResponse connect(CFunctionBlock &paDstFB, CStringDictionary::TStringId paDstPortNameId) override;
+    EMGMResponse connectToCFBInterface(CFunctionBlock &paDstFB, CStringDictionary::TStringId paDstPortNameId) override;
 
-    EMGMResponse disconnect(CFunctionBlock *paDstFB, CStringDictionary::TStringId paDstPortNameId) override;
+    EMGMResponse disconnect(CFunctionBlock &paDstFB, CStringDictionary::TStringId paDstPortNameId) override;
 
     bool isConnected() const override{
       return mSocket != nullptr;

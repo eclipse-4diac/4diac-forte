@@ -111,8 +111,8 @@ FORTE_PLCnextAXLSEDI16::FORTE_PLCnextAXLSEDI16(const CStringDictionary::TStringI
     var_STATUS(u""_WSTRING),
     var_BusAdapterIn(STRID(BusAdapterIn), *this, false),
     var_BusAdapterOut(STRID(BusAdapterOut), *this, true),
-    conn_INITO(this, 0),
-    conn_IND(this, 1),
+    conn_INITO(*this, 0),
+    conn_IND(*this, 1),
     conn_QI(nullptr),
     conn_DI_1(nullptr),
     conn_DI_2(nullptr),
@@ -130,8 +130,8 @@ FORTE_PLCnextAXLSEDI16::FORTE_PLCnextAXLSEDI16(const CStringDictionary::TStringI
     conn_DI_14(nullptr),
     conn_DI_15(nullptr),
     conn_DI_16(nullptr),
-    conn_QO(this, 0, var_QO),
-    conn_STATUS(this, 1, var_STATUS) {
+    conn_QO(*this, 0, var_QO),
+    conn_STATUS(*this, 1, var_STATUS) {
 };
 
 bool FORTE_PLCnextAXLSEDI16::initialize() {

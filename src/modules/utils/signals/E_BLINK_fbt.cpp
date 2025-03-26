@@ -73,12 +73,12 @@ FORTE_E_BLINK::FORTE_E_BLINK(const CStringDictionary::TStringId paInstanceNameId
     fb_E_TP(STRID(E_TP), *this),
     fb_E_CYCLE(STRID(E_CYCLE), *this),
     fb_ADD_2(STRID(ADD_2), "ADD_2", *this),
-    conn_CNF(this, 0),
+    conn_CNF(*this, 0),
     conn_TIMELOW(nullptr),
     conn_TIMEHIGH(nullptr),
-    conn_OUT(this, 0, 0_BOOL),
-    conn_if2in_TIMELOW(this, 0, 0_TIME),
-    conn_if2in_TIMEHIGH(this, 1, 0_TIME) {
+    conn_OUT(*this, 0, 0_BOOL),
+    conn_if2in_TIMELOW(*this, 0, 0_TIME),
+    conn_if2in_TIMEHIGH(*this, 1, 0_TIME) {
 };
 
 void FORTE_E_BLINK::setInitialValues() {

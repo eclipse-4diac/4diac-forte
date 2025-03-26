@@ -67,10 +67,10 @@ const SInternalVarsInformation FORTE_E_STOPWATCH::scmInternalVars = {1, scmInter
 
 FORTE_E_STOPWATCH::FORTE_E_STOPWATCH(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CBasicFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, &scmInternalVars),
-    conn_EO(this, 0),
-    conn_ETO(this, 1),
-    conn_RESETO(this, 2),
-    conn_TD(this, 0, var_TD) {
+    conn_EO(*this, 0),
+    conn_ETO(*this, 1),
+    conn_RESETO(*this, 2),
+    conn_TD(*this, 0, var_TD) {
 }
 
 void FORTE_E_STOPWATCH::setInitialValues() {

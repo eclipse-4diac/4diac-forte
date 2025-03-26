@@ -66,7 +66,7 @@ const SFBInterfaceSpec FORTE_signalprocessing__SCALE_LIM::scmFBInterfaceSpec = {
 
 FORTE_signalprocessing__SCALE_LIM::FORTE_signalprocessing__SCALE_LIM(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId),
-    conn_CNF(this, 0),
+    conn_CNF(*this, 0),
     conn_IN(nullptr),
     conn_MAX_IN(nullptr),
     conn_MIN_IN(nullptr),
@@ -76,7 +76,7 @@ FORTE_signalprocessing__SCALE_LIM::FORTE_signalprocessing__SCALE_LIM(const CStri
     conn_MIN_OUT(nullptr),
     conn_MAX_OUT_FIX(nullptr),
     conn_MIN_OUT_FIX(nullptr),
-    conn_(this, 0, var_) {
+    conn_(*this, 0, var_) {
 }
 
 void FORTE_signalprocessing__SCALE_LIM::setInitialValues() {

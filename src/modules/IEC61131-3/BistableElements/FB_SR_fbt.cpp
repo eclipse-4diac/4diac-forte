@@ -69,10 +69,10 @@ FORTE_FB_SR::FORTE_FB_SR(CStringDictionary::TStringId paInstanceNameId, forte::c
     var_S1(CIEC_BOOL(0)),
     var_R(CIEC_BOOL(0)),
     var_Q1(CIEC_BOOL(0)),
-    conn_CNF(this, 0),
+    conn_CNF(*this, 0),
     conn_S1(nullptr),
     conn_R(nullptr),
-    conn_Q1(this, 0, var_Q1) {
+    conn_Q1(*this, 0, var_Q1) {
 }
 
 void FORTE_FB_SR::alg_REQ(void) {

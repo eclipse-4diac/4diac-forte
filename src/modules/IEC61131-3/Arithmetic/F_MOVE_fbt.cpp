@@ -62,9 +62,9 @@ FORTE_F_MOVE::FORTE_F_MOVE(const CStringDictionary::TStringId paInstanceNameId, 
     CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId),
     var_IN(CIEC_ANY_VARIANT()),
     var_OUT(CIEC_ANY_VARIANT()),
-    conn_CNF(this, 0),
+    conn_CNF(*this, 0),
     conn_IN(nullptr),
-    conn_OUT(this, 0, var_OUT) {
+    conn_OUT(*this, 0, var_OUT) {
 };
 
 void FORTE_F_MOVE::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {

@@ -66,12 +66,12 @@ FORTE_E_TABLE::FORTE_E_TABLE(const CStringDictionary::TStringId paInstanceNameId
     CCompositeFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, scmFBNData),
     fb_E_TABLE_CTRL(STRID(E_TABLE_CTRL), *this),
     fb_E_DELAY(STRID(E_DELAY), *this),
-    conn_EO(this, 0),
+    conn_EO(*this, 0),
     conn_DT(nullptr),
     conn_N(nullptr),
-    conn_CV(this, 0, 0_UINT),
-    conn_if2in_DT(this, 0, CIEC_ARRAY_FIXED<CIEC_TIME, 0, 3>{}),
-    conn_if2in_N(this, 0, 0_UINT) {
+    conn_CV(*this, 0, 0_UINT),
+    conn_if2in_DT(*this, 0, CIEC_ARRAY_FIXED<CIEC_TIME, 0, 3>{}),
+    conn_if2in_N(*this, 0, 0_UINT) {
 };
 
 void FORTE_E_TABLE::setInitialValues() {

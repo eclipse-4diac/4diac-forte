@@ -78,12 +78,12 @@ FORTE_E_TRAIN::FORTE_E_TRAIN(const CStringDictionary::TStringId paInstanceNameId
     fb_CTR(STRID(CTR), *this),
     fb_GATE(STRID(GATE), *this),
     fb_DLY(STRID(DLY), *this),
-    conn_EO(this, 0),
+    conn_EO(*this, 0),
     conn_DT(nullptr),
     conn_N(nullptr),
-    conn_CV(this, 0, 0_UINT),
-    conn_if2in_DT(this, 0, 0_TIME),
-    conn_if2in_N(this, 1, 0_UINT) {
+    conn_CV(*this, 0, 0_UINT),
+    conn_if2in_DT(*this, 0, 0_TIME),
+    conn_if2in_N(*this, 1, 0_UINT) {
 };
 
 void FORTE_E_TRAIN::setInitialValues() {

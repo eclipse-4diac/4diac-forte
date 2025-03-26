@@ -67,9 +67,9 @@ FORTE_SINT2SINT::FORTE_SINT2SINT(CStringDictionary::TStringId paInstanceNameId, 
     CSimpleFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, nullptr),
     var_IN(CIEC_SINT(0)),
     var_OUT(CIEC_SINT(0)),
-    conn_CNF(this, 0),
+    conn_CNF(*this, 0),
     conn_IN(nullptr),
-    conn_OUT(this, 0, var_OUT) {
+    conn_OUT(*this, 0, var_OUT) {
 }
 
 void FORTE_SINT2SINT::alg_REQ(void) {

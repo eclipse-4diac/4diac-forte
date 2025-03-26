@@ -69,9 +69,9 @@ FORTE_F_WORD_TO_SINT::FORTE_F_WORD_TO_SINT(CStringDictionary::TStringId paInstan
     CSimpleFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, nullptr),
     var_IN(CIEC_WORD(0)),
     var_OUT(CIEC_SINT(0)),
-    conn_CNF(this, 0),
+    conn_CNF(*this, 0),
     conn_IN(nullptr),
-    conn_OUT(this, 0, var_OUT) {
+    conn_OUT(*this, 0, var_OUT) {
 }
 
 void FORTE_F_WORD_TO_SINT::alg_REQ(void) {

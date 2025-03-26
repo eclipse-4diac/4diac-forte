@@ -33,7 +33,7 @@ const SFBInterfaceSpec RMT_DEV::scmFBInterfaceSpec = {
 
 RMT_DEV::RMT_DEV(const std::string &paMGR_ID) :
         CDevice(scmFBInterfaceSpec, CStringDictionary::scmInvalidStringId),
-        conn_MGR_ID_int(this, 0, u""_WSTRING),
+        conn_MGR_ID_int(*this, 0, u""_WSTRING),
         conn_MGR_ID(nullptr),
         MGR(STRID(MGR), *this) {
   setMGR_ID(paMGR_ID);
@@ -49,7 +49,7 @@ bool RMT_DEV::initialize() {
   }
 
   //we need to manually create this connection as the MGR is not managed by device
-  conn_MGR_ID_int.connect(&MGR, STRID(MGR_ID));
+  conn_MGR_ID_int.connect(MGR, STRID(MGR_ID));
   return true;
 }
 

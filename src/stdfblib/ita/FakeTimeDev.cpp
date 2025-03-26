@@ -40,8 +40,8 @@ const SFBInterfaceSpec FakeTimeDev::scmFBInterfaceSpec = {
 
 FakeTimeDev::FakeTimeDev(const std::string &paMGR_ID) :
   CDevice(scmFBInterfaceSpec, initializeTimer()),
-      conn_MGR_ID(this, 0, u""_WSTRING),
-      conn_FakeTime(this, 0, 0_TIME),
+      conn_MGR_ID(*this, 0, u""_WSTRING),
+      conn_FakeTime(*this, 0, 0_TIME),
       MGR(STRID(MGR), *this){
   conn_MGR_ID.getValue().fromString(paMGR_ID.c_str());
 }
@@ -56,7 +56,7 @@ bool FakeTimeDev::initialize() {
   }
 
   //we need to manually crate this connection as the MGR is not managed by device
-  conn_MGR_ID.connect(&MGR, STRID(MGR_ID));
+  conn_MGR_ID.connect(MGR, STRID(MGR_ID));
   return true;
 }
 

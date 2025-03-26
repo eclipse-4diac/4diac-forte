@@ -73,9 +73,9 @@ FORTE_FB_R_TRIG::FORTE_FB_R_TRIG(CStringDictionary::TStringId paInstanceNameId, 
     var_MEM(CIEC_BOOL(0)),
     var_CLK(CIEC_BOOL(0)),
     var_Q(CIEC_BOOL(0)),
-    conn_CNF(this, 0),
+    conn_CNF(*this, 0),
     conn_CLK(nullptr),
-    conn_Q(this, 0, var_Q) {
+    conn_Q(*this, 0, var_Q) {
 }
 
 void FORTE_FB_R_TRIG::alg_REQ(void) {

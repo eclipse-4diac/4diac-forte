@@ -68,14 +68,14 @@ FORTE_IB::FORTE_IB(const CStringDictionary::TStringId paInstanceNameId, forte::c
     var_QO(0_BOOL),
     var_STATUS(""_STRING),
     var_IN(0_BYTE),
-    conn_INITO(this, 0),
-    conn_CNF(this, 1),
-    conn_IND(this, 2),
+    conn_INITO(*this, 0),
+    conn_CNF(*this, 1),
+    conn_IND(*this, 2),
     conn_QI(nullptr),
     conn_PARAMS(nullptr),
-    conn_QO(this, 0, var_QO),
-    conn_STATUS(this, 1, var_STATUS),
-    conn_IN(this, 2, var_IN) {
+    conn_QO(*this, 0, var_QO),
+    conn_STATUS(*this, 1, var_STATUS),
+    conn_IN(*this, 2, var_IN) {
 };
 
 void FORTE_IB::setInitialValues() {

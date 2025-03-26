@@ -64,10 +64,10 @@ const SFBInterfaceSpec FORTE_signalprocessing__FIELDBUS_WORD_TO_PERCENT::scmFBIn
 
 FORTE_signalprocessing__FIELDBUS_WORD_TO_PERCENT::FORTE_signalprocessing__FIELDBUS_WORD_TO_PERCENT(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId),
-    conn_CNF(this, 0),
+    conn_CNF(*this, 0),
     conn_WI(nullptr),
-    conn_(this, 0, var_),
-    conn_WO(this, 1, var_WO) {
+    conn_(*this, 0, var_),
+    conn_WO(*this, 1, var_WO) {
 }
 
 void FORTE_signalprocessing__FIELDBUS_WORD_TO_PERCENT::setInitialValues() {

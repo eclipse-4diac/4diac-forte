@@ -75,12 +75,12 @@ FORTE_FB_CTD_ULINT::FORTE_FB_CTD_ULINT(CStringDictionary::TStringId paInstanceNa
     var_PV(CIEC_ULINT(0)),
     var_Q(CIEC_BOOL(0)),
     var_CV(CIEC_ULINT(0)),
-    conn_CNF(this, 0),
+    conn_CNF(*this, 0),
     conn_CD(nullptr),
     conn_LD(nullptr),
     conn_PV(nullptr),
-    conn_Q(this, 0, var_Q),
-    conn_CV(this, 1, var_CV) {
+    conn_Q(*this, 0, var_Q),
+    conn_CV(*this, 1, var_CV) {
 }
 
 void FORTE_FB_CTD_ULINT::alg_REQ(void) {

@@ -74,16 +74,16 @@ const SFBInterfaceSpec FORTE_SPLIT_WORD_INTO_QUARTERS::scmFBInterfaceSpec = {
 
 FORTE_SPLIT_WORD_INTO_QUARTERS::FORTE_SPLIT_WORD_INTO_QUARTERS(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId),
-    conn_CNF(this, 0),
+    conn_CNF(*this, 0),
     conn_IN(nullptr),
-    conn_QUARTER_BYTE_00(this, 0, var_QUARTER_BYTE_00),
-    conn_QUARTER_BYTE_01(this, 1, var_QUARTER_BYTE_01),
-    conn_QUARTER_BYTE_02(this, 2, var_QUARTER_BYTE_02),
-    conn_QUARTER_BYTE_03(this, 3, var_QUARTER_BYTE_03),
-    conn_QUARTER_BYTE_04(this, 4, var_QUARTER_BYTE_04),
-    conn_QUARTER_BYTE_05(this, 5, var_QUARTER_BYTE_05),
-    conn_QUARTER_BYTE_06(this, 6, var_QUARTER_BYTE_06),
-    conn_QUARTER_BYTE_07(this, 7, var_QUARTER_BYTE_07) {
+    conn_QUARTER_BYTE_00(*this, 0, var_QUARTER_BYTE_00),
+    conn_QUARTER_BYTE_01(*this, 1, var_QUARTER_BYTE_01),
+    conn_QUARTER_BYTE_02(*this, 2, var_QUARTER_BYTE_02),
+    conn_QUARTER_BYTE_03(*this, 3, var_QUARTER_BYTE_03),
+    conn_QUARTER_BYTE_04(*this, 4, var_QUARTER_BYTE_04),
+    conn_QUARTER_BYTE_05(*this, 5, var_QUARTER_BYTE_05),
+    conn_QUARTER_BYTE_06(*this, 6, var_QUARTER_BYTE_06),
+    conn_QUARTER_BYTE_07(*this, 7, var_QUARTER_BYTE_07) {
 }
 
 void FORTE_SPLIT_WORD_INTO_QUARTERS::setInitialValues() {

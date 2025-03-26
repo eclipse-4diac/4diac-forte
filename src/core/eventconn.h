@@ -23,15 +23,15 @@ class CEventChainExecutionThread;
  */
 class CEventConnection : public CConnection{
   public:
-    CEventConnection(CFunctionBlock *paSrcFB, TPortId paSrcPortId);
+    CEventConnection(CFunctionBlock &paSrcFB, const TPortId paSrcPortId);
 
     ~CEventConnection() override;
 
-    EMGMResponse connect(CFunctionBlock *paDstFB, CStringDictionary::TStringId paDstPortNameId) override;
+    EMGMResponse connect(CFunctionBlock &paDstFB, CStringDictionary::TStringId paDstPortNameId) override;
 
-    EMGMResponse connectToCFBInterface(CFunctionBlock *paDstFB, CStringDictionary::TStringId paDstPortNameId) override;
+    EMGMResponse connectToCFBInterface(CFunctionBlock &paDstFB, CStringDictionary::TStringId paDstPortNameId) override;
 
-    EMGMResponse disconnect(CFunctionBlock *paDstFB, CStringDictionary::TStringId paDstPortNameId) override;
+    EMGMResponse disconnect(CFunctionBlock &paDstFB, CStringDictionary::TStringId paDstPortNameId) override;
 
     /*! \brief Triggers the event connection and all destinations are notified.
      *

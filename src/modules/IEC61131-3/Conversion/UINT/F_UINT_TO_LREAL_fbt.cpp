@@ -69,9 +69,9 @@ FORTE_F_UINT_TO_LREAL::FORTE_F_UINT_TO_LREAL(CStringDictionary::TStringId paInst
     CSimpleFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, nullptr),
     var_IN(CIEC_UINT(0)),
     var_OUT(CIEC_LREAL(0)),
-    conn_CNF(this, 0),
+    conn_CNF(*this, 0),
     conn_IN(nullptr),
-    conn_OUT(this, 0, var_OUT) {
+    conn_OUT(*this, 0, var_OUT) {
 }
 
 void FORTE_F_UINT_TO_LREAL::alg_REQ(void) {

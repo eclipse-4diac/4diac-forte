@@ -67,11 +67,11 @@ const SFBInterfaceSpec FORTE_RT_E_DEMUX::scmFBInterfaceSpec = {
 
 FORTE_RT_E_DEMUX::FORTE_RT_E_DEMUX(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId),
-    conn_INITO(this, 0),
-    conn_EO0(this, 1),
-    conn_EO1(this, 2),
-    conn_EO2(this, 3),
-    conn_EO3(this, 4),
+    conn_INITO(*this, 0),
+    conn_EO0(*this, 1),
+    conn_EO1(*this, 2),
+    conn_EO2(*this, 3),
+    conn_EO3(*this, 4),
     conn_QI(nullptr),
     conn_K(nullptr),
     conn_Tmin(nullptr),
@@ -83,7 +83,7 @@ FORTE_RT_E_DEMUX::FORTE_RT_E_DEMUX(const CStringDictionary::TStringId paInstance
     conn_WCET2(nullptr),
     conn_Deadline3(nullptr),
     conn_WCET3(nullptr),
-    conn_QO(this, 0, var_QO) {
+    conn_QO(*this, 0, var_QO) {
 };
 
 void FORTE_RT_E_DEMUX::setInitialValues() {

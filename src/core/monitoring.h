@@ -116,10 +116,6 @@ namespace forte {
 
         //!List storing all FBs which are currently monitored
         TFBMonitoringList mFBMonitoringList;
-
-        //!Event entry for triggering input events
-        TEventEntry mTriggerEvent;
-
         CResource &mResource; //!< The resource this monitoring handler manages
 
       public:

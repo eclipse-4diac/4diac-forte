@@ -52,7 +52,7 @@ const SFBInterfaceSpec FORTE_E_PERMIT::scmFBInterfaceSpec = {
 
 FORTE_E_PERMIT::FORTE_E_PERMIT(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CBasicFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, nullptr),
-    conn_EO(this, 0),
+    conn_EO(*this, 0),
     conn_PERMIT(nullptr) {
 }
 

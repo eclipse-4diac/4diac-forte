@@ -71,16 +71,16 @@ const SFBInterfaceSpec FORTE_SPLIT_BYTE_INTO_BOOLS::scmFBInterfaceSpec = {
 
 FORTE_SPLIT_BYTE_INTO_BOOLS::FORTE_SPLIT_BYTE_INTO_BOOLS(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId),
-    conn_CNF(this, 0),
+    conn_CNF(*this, 0),
     conn_IN(nullptr),
-    conn_BIT_00(this, 0, var_BIT_00),
-    conn_BIT_01(this, 1, var_BIT_01),
-    conn_BIT_02(this, 2, var_BIT_02),
-    conn_BIT_03(this, 3, var_BIT_03),
-    conn_BIT_04(this, 4, var_BIT_04),
-    conn_BIT_05(this, 5, var_BIT_05),
-    conn_BIT_06(this, 6, var_BIT_06),
-    conn_BIT_07(this, 7, var_BIT_07) {
+    conn_BIT_00(*this, 0, var_BIT_00),
+    conn_BIT_01(*this, 1, var_BIT_01),
+    conn_BIT_02(*this, 2, var_BIT_02),
+    conn_BIT_03(*this, 3, var_BIT_03),
+    conn_BIT_04(*this, 4, var_BIT_04),
+    conn_BIT_05(*this, 5, var_BIT_05),
+    conn_BIT_06(*this, 6, var_BIT_06),
+    conn_BIT_07(*this, 7, var_BIT_07) {
 }
 
 void FORTE_SPLIT_BYTE_INTO_BOOLS::setInitialValues() {

@@ -79,24 +79,24 @@ const SFBInterfaceSpec FORTE_SPLIT_WORD_INTO_BOOLS::scmFBInterfaceSpec = {
 
 FORTE_SPLIT_WORD_INTO_BOOLS::FORTE_SPLIT_WORD_INTO_BOOLS(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId),
-    conn_CNF(this, 0),
+    conn_CNF(*this, 0),
     conn_IN(nullptr),
-    conn_BIT_00(this, 0, var_BIT_00),
-    conn_BIT_01(this, 1, var_BIT_01),
-    conn_BIT_02(this, 2, var_BIT_02),
-    conn_BIT_03(this, 3, var_BIT_03),
-    conn_BIT_04(this, 4, var_BIT_04),
-    conn_BIT_05(this, 5, var_BIT_05),
-    conn_BIT_06(this, 6, var_BIT_06),
-    conn_BIT_07(this, 7, var_BIT_07),
-    conn_BIT_08(this, 8, var_BIT_08),
-    conn_BIT_09(this, 9, var_BIT_09),
-    conn_BIT_10(this, 10, var_BIT_10),
-    conn_BIT_11(this, 11, var_BIT_11),
-    conn_BIT_12(this, 12, var_BIT_12),
-    conn_BIT_13(this, 13, var_BIT_13),
-    conn_BIT_14(this, 14, var_BIT_14),
-    conn_BIT_15(this, 15, var_BIT_15) {
+    conn_BIT_00(*this, 0, var_BIT_00),
+    conn_BIT_01(*this, 1, var_BIT_01),
+    conn_BIT_02(*this, 2, var_BIT_02),
+    conn_BIT_03(*this, 3, var_BIT_03),
+    conn_BIT_04(*this, 4, var_BIT_04),
+    conn_BIT_05(*this, 5, var_BIT_05),
+    conn_BIT_06(*this, 6, var_BIT_06),
+    conn_BIT_07(*this, 7, var_BIT_07),
+    conn_BIT_08(*this, 8, var_BIT_08),
+    conn_BIT_09(*this, 9, var_BIT_09),
+    conn_BIT_10(*this, 10, var_BIT_10),
+    conn_BIT_11(*this, 11, var_BIT_11),
+    conn_BIT_12(*this, 12, var_BIT_12),
+    conn_BIT_13(*this, 13, var_BIT_13),
+    conn_BIT_14(*this, 14, var_BIT_14),
+    conn_BIT_15(*this, 15, var_BIT_15) {
 }
 
 void FORTE_SPLIT_WORD_INTO_BOOLS::setInitialValues() {

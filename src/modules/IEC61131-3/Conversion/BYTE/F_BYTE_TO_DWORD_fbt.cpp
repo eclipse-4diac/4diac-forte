@@ -69,9 +69,9 @@ FORTE_F_BYTE_TO_DWORD::FORTE_F_BYTE_TO_DWORD(CStringDictionary::TStringId paInst
     CSimpleFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, nullptr),
     var_IN(CIEC_BYTE(0)),
     var_OUT(CIEC_DWORD(0)),
-    conn_CNF(this, 0),
+    conn_CNF(*this, 0),
     conn_IN(nullptr),
-    conn_OUT(this, 0, var_OUT) {
+    conn_OUT(*this, 0, var_OUT) {
 }
 
 void FORTE_F_BYTE_TO_DWORD::alg_REQ(void) {

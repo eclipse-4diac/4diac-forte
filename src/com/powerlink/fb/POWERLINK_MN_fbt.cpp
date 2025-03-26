@@ -56,13 +56,13 @@ const SFBInterfaceSpec FORTE_POWERLINK_MN::scmFBInterfaceSpec = {
 
 FORTE_POWERLINK_MN::FORTE_POWERLINK_MN(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
   CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId),
-  conn_INITO(this, 0),
+  conn_INITO(*this, 0),
   conn_QI(nullptr),
   conn_CDC_CFG(nullptr),
   conn_APP_CFG(nullptr),
   conn_DEV_NAME(nullptr),
-  conn_QO(this, 0, var_QO),
-  conn_STATUS(this, 1, var_STATUS) {
+  conn_QO(*this, 0, var_QO),
+  conn_STATUS(*this, 1, var_STATUS) {
 };
 
 void FORTE_POWERLINK_MN::setInitialValues() {

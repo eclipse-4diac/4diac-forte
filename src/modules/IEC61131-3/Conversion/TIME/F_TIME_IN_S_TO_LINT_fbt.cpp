@@ -69,9 +69,9 @@ FORTE_F_TIME_IN_S_TO_LINT::FORTE_F_TIME_IN_S_TO_LINT(CStringDictionary::TStringI
     CSimpleFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, nullptr),
     var_IN(CIEC_TIME(0)),
     var_OUT(CIEC_LINT(0)),
-    conn_CNF(this, 0),
+    conn_CNF(*this, 0),
     conn_IN(nullptr),
-    conn_OUT(this, 0, var_OUT) {
+    conn_OUT(*this, 0, var_OUT) {
 }
 
 void FORTE_F_TIME_IN_S_TO_LINT::alg_REQ(void) {

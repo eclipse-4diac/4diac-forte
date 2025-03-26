@@ -44,8 +44,8 @@ namespace forte::core::io {
       CInputFB(forte::core::CFBContainer &paContainer, const CStringDictionary::TStringId paInstanceNameId) :
           CProcessInterfaceFB(paContainer, scmFBInterfaceSpec, paInstanceNameId),
           var_IN(),
-          conn_IND(this, 2),
-          conn_IN(this, 2, var_IN) {
+          conn_IND(*this, 2),
+          conn_IN(*this, 2, var_IN) {
        }
 
       CIEC_ANY* getDO(size_t paIndex) final override {
