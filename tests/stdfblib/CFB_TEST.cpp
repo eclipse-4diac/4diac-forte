@@ -77,11 +77,11 @@ FORTE_CFB_TEST::FORTE_CFB_TEST(const CStringDictionary::TStringId paInstanceName
     fb_E_DEMUX_2(STRID(E_DEMUX_2), "E_DEMUX_2", *this),
     fb_E_MUX_2(STRID(E_MUX_2), "E_MUX_2", *this),
     fb_RESET_CHANGED(STRID(RESET_CHANGED), *this),
-    conn_CNF(this, 0),
-    conn_CHANGED(this, 1),
+    conn_CNF(*this, 0),
+    conn_CHANGED(*this, 1),
     conn_QI(nullptr),
-    conn_QO(this, 0, 0_BOOL),
-    conn_if2in_QI(this, 0, 0_BOOL) {
+    conn_QO(*this, 0, 0_BOOL),
+    conn_if2in_QI(*this, 0, 0_BOOL) {
 };
 
 void FORTE_CFB_TEST::setInitialValues() {

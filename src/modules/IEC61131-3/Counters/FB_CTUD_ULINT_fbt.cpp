@@ -81,15 +81,15 @@ FORTE_FB_CTUD_ULINT::FORTE_FB_CTUD_ULINT(CStringDictionary::TStringId paInstance
     var_QU(CIEC_BOOL(0)),
     var_QD(CIEC_BOOL(0)),
     var_CV(CIEC_ULINT(0)),
-    conn_CNF(this, 0),
+    conn_CNF(*this, 0),
     conn_CU(nullptr),
     conn_CD(nullptr),
     conn_R(nullptr),
     conn_LD(nullptr),
     conn_PV(nullptr),
-    conn_QU(this, 0, var_QU),
-    conn_QD(this, 1, var_QD),
-    conn_CV(this, 2, var_CV) {
+    conn_QU(*this, 0, var_QU),
+    conn_QD(*this, 1, var_QD),
+    conn_CV(*this, 2, var_CV) {
 }
 
 void FORTE_FB_CTUD_ULINT::alg_REQ(void) {

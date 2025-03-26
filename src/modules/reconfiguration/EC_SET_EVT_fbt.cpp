@@ -56,13 +56,13 @@ const SFBInterfaceSpec FORTE_EC_SET_EVT::scmFBInterfaceSpec = {
 
 FORTE_EC_SET_EVT::FORTE_EC_SET_EVT(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId),
-    conn_CNF(this, 0),
+    conn_CNF(*this, 0),
     conn_QI(nullptr),
     conn_FB_NAME(nullptr),
     conn_FB_EVENT_IO(nullptr),
     conn_DST(nullptr),
-    conn_QO(this, 0, var_QO),
-    conn_STATUS(this, 1, var_STATUS) {
+    conn_QO(*this, 0, var_QO),
+    conn_STATUS(*this, 1, var_STATUS) {
 };
 
 void FORTE_EC_SET_EVT::setInitialValues() {

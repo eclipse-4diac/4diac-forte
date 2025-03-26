@@ -67,9 +67,9 @@ FORTE_WSTRING2WSTRING::FORTE_WSTRING2WSTRING(CStringDictionary::TStringId paInst
     CSimpleFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, nullptr),
     var_IN(CIEC_WSTRING("")),
     var_OUT(CIEC_WSTRING("")),
-    conn_CNF(this, 0),
+    conn_CNF(*this, 0),
     conn_IN(nullptr),
-    conn_OUT(this, 0, var_OUT) {
+    conn_OUT(*this, 0, var_OUT) {
 }
 
 void FORTE_WSTRING2WSTRING::alg_REQ(void) {

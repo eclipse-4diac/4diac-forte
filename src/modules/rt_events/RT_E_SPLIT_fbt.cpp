@@ -59,16 +59,16 @@ const SFBInterfaceSpec FORTE_RT_E_SPLIT::scmFBInterfaceSpec = {
 
 FORTE_RT_E_SPLIT::FORTE_RT_E_SPLIT(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId),
-    conn_INITO(this, 0),
-    conn_EO1(this, 1),
-    conn_EO2(this, 2),
+    conn_INITO(*this, 0),
+    conn_EO1(*this, 1),
+    conn_EO2(*this, 2),
     conn_QI(nullptr),
     conn_Tmin(nullptr),
     conn_Deadline_EO1(nullptr),
     conn_WCET_EO1(nullptr),
     conn_Deadline_EO2(nullptr),
     conn_WCET_EO2(nullptr),
-    conn_QO(this, 0, var_QO) {
+    conn_QO(*this, 0, var_QO) {
 };
 
 void FORTE_RT_E_SPLIT::setInitialValues() {

@@ -31,7 +31,7 @@ public:
                  CStringDictionary::TStringId paInstanceNameId) :
           CFunctionBlock(paContainer, paInterfaceSpec, paInstanceNameId),
           mEventChainExecutor(nullptr),
-          mEventSourceEventEntry(this, cgExternalEventID) {
+          mEventSourceEventEntry(*this, cgExternalEventID) {
   }
 
   ~CEventSourceFB() override = default;

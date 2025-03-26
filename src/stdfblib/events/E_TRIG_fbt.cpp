@@ -47,7 +47,7 @@ const SFBInterfaceSpec FORTE_E_TRIG::scmFBInterfaceSpec = {
 FORTE_E_TRIG::FORTE_E_TRIG(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId),
     var_EVENTTYPE(""_STRING),
-    conn_CNF(this, 0),
+    conn_CNF(*this, 0),
     conn_EVENTTYPE(nullptr) {
 };
 
@@ -131,7 +131,7 @@ void FORTE_E_TRIG::triggerEventsOfType(TEventTypeID paEventTypeId, CFunctionBloc
   }
   for (TEventID eventId = 0; eventId < paFb->getFBInterfaceSpec().mNumEIs; eventId++) {
     if (paFb->getEIType(eventId) == paEventTypeId && !paFb->isInputEventConnected(eventId)) {
-      paECET->addEventEntry(CConnectionPoint(paFb,eventId));
+      paECET->addEventEntry(TEventEntry(*paFb,eventId));
     }
   }
 }

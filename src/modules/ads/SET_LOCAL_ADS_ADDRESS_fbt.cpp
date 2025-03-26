@@ -71,12 +71,12 @@ FORTE_SET_LOCAL_ADS_ADDRESS::FORTE_SET_LOCAL_ADS_ADDRESS(const CStringDictionary
     var_QO(0_BOOL),
     var_STATUS(u""_WSTRING),
     var_LOCAL_ADS_ADDRESS(""_STRING),
-    conn_INITO(this, 0),
+    conn_INITO(*this, 0),
     conn_QI(nullptr),
     conn_PARAMS(nullptr),
-    conn_QO(this, 0, var_QO),
-    conn_STATUS(this, 1, var_STATUS),
-    conn_LOCAL_ADS_ADDRESS(this, 2, var_LOCAL_ADS_ADDRESS) {
+    conn_QO(*this, 0, var_QO),
+    conn_STATUS(*this, 1, var_STATUS),
+    conn_LOCAL_ADS_ADDRESS(*this, 2, var_LOCAL_ADS_ADDRESS) {
 };
 
 void FORTE_SET_LOCAL_ADS_ADDRESS::setInitialValues() {

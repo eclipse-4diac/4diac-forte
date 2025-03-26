@@ -73,14 +73,14 @@ FORTE_E_N_TABLE::FORTE_E_N_TABLE(const CStringDictionary::TStringId paInstanceNa
     fb_E_TABLE(STRID(E_TABLE), *this),
     fb_E_DEMUX(STRID(E_DEMUX), *this),
     fb_F_SUB(STRID(F_SUB), *this),
-    conn_EO0(this, 0),
-    conn_EO1(this, 1),
-    conn_EO2(this, 2),
-    conn_EO3(this, 3),
+    conn_EO0(*this, 0),
+    conn_EO1(*this, 1),
+    conn_EO2(*this, 2),
+    conn_EO3(*this, 3),
     conn_DT(nullptr),
     conn_N(nullptr),
-    conn_if2in_DT(this, 0, CIEC_ARRAY_FIXED<CIEC_TIME, 0, 3>{}),
-    conn_if2in_N(this, 0, 0_UINT) {
+    conn_if2in_DT(*this, 0, CIEC_ARRAY_FIXED<CIEC_TIME, 0, 3>{}),
+    conn_if2in_N(*this, 0, 0_UINT) {
 };
 
 void FORTE_E_N_TABLE::setInitialValues() {

@@ -70,16 +70,16 @@ FORTE_EBMaster::FORTE_EBMaster(const CStringDictionary::TStringId paInstanceName
     var_BusInitSpeed(300000_UDINT),
     var_BusLoopSpeed(700000_UDINT),
     var_SlaveUpdateInterval(25_UINT),
-    conn_INITO(this, 0),
-    conn_IND(this, 1),
+    conn_INITO(*this, 0),
+    conn_IND(*this, 1),
     conn_QI(nullptr),
     conn_BusInterface(nullptr),
     conn_BusSelectPin(nullptr),
     conn_BusInitSpeed(nullptr),
     conn_BusLoopSpeed(nullptr),
     conn_SlaveUpdateInterval(nullptr),
-    conn_QO(this, 0, var_QO),
-    conn_STATUS(this, 1, var_STATUS) {
+    conn_QO(*this, 0, var_QO),
+    conn_STATUS(*this, 1, var_STATUS) {
 };
 
 void FORTE_EBMaster::setInitialValues() {

@@ -69,9 +69,9 @@ FORTE_F_WORD_AS_WSTRING::FORTE_F_WORD_AS_WSTRING(CStringDictionary::TStringId pa
     CSimpleFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, nullptr),
     var_IN(CIEC_WORD(0)),
     var_OUT(CIEC_WSTRING("")),
-    conn_CNF(this, 0),
+    conn_CNF(*this, 0),
     conn_IN(nullptr),
-    conn_OUT(this, 0, var_OUT) {
+    conn_OUT(*this, 0, var_OUT) {
 }
 
 void FORTE_F_WORD_AS_WSTRING::alg_REQ(void) {

@@ -39,12 +39,12 @@ CProcessInterfaceFB::CProcessInterfaceFB(forte::core::CFBContainer &paContainer,
     var_PARAMS(""_STRING),
     var_QO(0_BOOL),
     var_STATUS(""_STRING),
-    conn_INITO(this, 0),
-    conn_CNF(this, 1),
+    conn_INITO(*this, 0),
+    conn_CNF(*this, 1),
     conn_QI(nullptr),
     conn_PARAMS(nullptr),
-    conn_QO(this, 0, var_QO),
-    conn_STATUS(this, 1, var_STATUS) {
+    conn_QO(*this, 0, var_QO),
+    conn_STATUS(*this, 1, var_STATUS) {
   mIsListening = false;
   mIsReady = false;
 }

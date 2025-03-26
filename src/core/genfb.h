@@ -355,7 +355,7 @@ void CGenFunctionBlock<T>::setupFBInterface() {
 
     for (i = 0; i < T::getFBInterfaceSpec().mNumEOs; ++i) {
       //create an event connection for each event output and initialize its source port
-      new(connData)CEventConnection(this, i);
+      new(connData)CEventConnection(*this, i);
       connData += sizeof(CEventConnection);
     }
   } else {
@@ -392,7 +392,7 @@ void CGenFunctionBlock<T>::setupFBInterface() {
       mDOs[i] = T::createDataPoint(pnDataIds, varsData);
       CIEC_ANY* connVar = mDOs[i]->clone(varsData);
       varsData += connVar->getSizeof();
-      new(connData)CGenDataConnection(this, i, connVar);
+      new(connData)CGenDataConnection(*this, i, *connVar);
       connData += sizeof(CGenDataConnection);
     }
   } else {

@@ -82,7 +82,7 @@ FORTE_EliteBoard::FORTE_EliteBoard(const CStringDictionary::TStringId paInstance
     var_PortI(STRID(PortI), *this, true),
     var_PortJ(STRID(PortJ), *this, true),
     var_PortK(STRID(PortK), *this, true),
-    conn_MAPO(this, 0) {
+    conn_MAPO(*this, 0) {
 };
 
 bool FORTE_EliteBoard::initialize() {

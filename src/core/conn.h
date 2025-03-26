@@ -27,11 +27,8 @@ class CFunctionBlock;
 
 class CConnectionPoint {
   public:
-    CFunctionBlock *mFB;
-    TPortId mPortId;
-
-    CConnectionPoint(CFunctionBlock *paFB, TPortId paPortId) :
-      mFB(paFB), mPortId(paPortId) {
+    CConnectionPoint(CFunctionBlock &paFB, const TPortId paPortId) :
+      mFB(&paFB), mPortId(paPortId) {
     }
 
     CConnectionPoint() = default;
@@ -43,6 +40,22 @@ class CConnectionPoint {
     bool operator!=(const CConnectionPoint & paRight) const {
       return !(*this == paRight);
     }
+    
+    CFunctionBlock &getFB() {
+      return *mFB;
+    }
+    
+    const CFunctionBlock &getFB() const {
+      return *mFB;
+    }
+    
+    TPortId getPortId() const {
+      return mPortId;
+    }
+    
+  private:    
+    CFunctionBlock *mFB;
+    TPortId mPortId;
 };
 static_assert(std::is_trivial_v<CConnectionPoint>);
 
@@ -54,7 +67,7 @@ class CConnection{
 
     using TDestinationIdList = std::vector<CConnectionPoint>;
 
-    CConnection(CFunctionBlock *paSrcFB, TPortId paSrcPortId);
+    CConnection(CFunctionBlock &paSrcFB, const TPortId paSrcPortId);
 
     virtual ~CConnection() = default;
 
@@ -73,13 +86,13 @@ class CConnection{
      *     - NoSuchObject... The destination is not a valid input.
      *     - InvalidState... The specified connection already exists.
      */
-    virtual EMGMResponse connect(CFunctionBlock *paDstFB,
+    virtual EMGMResponse connect(CFunctionBlock &paDstFB,
         CStringDictionary::TStringId paDstPortNameId) = 0;
 
     /*!\brief establish an event connection of a CFB to an event output of the CFB.
      *
      */
-    virtual EMGMResponse connectToCFBInterface(CFunctionBlock *paDstFB,
+    virtual EMGMResponse connectToCFBInterface(CFunctionBlock &paDstFB,
         CStringDictionary::TStringId paDstPortNameId) = 0;
 
     /*! \brief Disconnects the connection.
@@ -97,7 +110,7 @@ class CConnection{
      *     - NoSuchObject... The destination is not a valid input.
      *     - InvalidState... this connection is not connected to the destination
      */
-    virtual EMGMResponse disconnect(CFunctionBlock *paDstFB,
+    virtual EMGMResponse disconnect(CFunctionBlock &paDstFB,
         CStringDictionary::TStringId paDstPortNameId) = 0;
 
     /*! \brief Check if there are destinations added to this connection
@@ -127,8 +140,6 @@ class CConnection{
   protected:
     EMGMResponse addDestination(const CConnectionPoint &paDestPoint);
     EMGMResponse removeDestination(const CConnectionPoint &paDestPoint);
-
-    void setSource(CFunctionBlock *paSrcFB, TPortId paSrcPortId);
 
     //!Non const version
     CConnectionPoint& getSourceId(){

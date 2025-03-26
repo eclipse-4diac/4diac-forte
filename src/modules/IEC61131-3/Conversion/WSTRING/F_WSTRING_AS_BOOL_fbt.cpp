@@ -69,9 +69,9 @@ FORTE_F_WSTRING_AS_BOOL::FORTE_F_WSTRING_AS_BOOL(CStringDictionary::TStringId pa
     CSimpleFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, nullptr),
     var_IN(CIEC_WSTRING("")),
     var_OUT(CIEC_BOOL(0)),
-    conn_CNF(this, 0),
+    conn_CNF(*this, 0),
     conn_IN(nullptr),
-    conn_OUT(this, 0, var_OUT) {
+    conn_OUT(*this, 0, var_OUT) {
 }
 
 void FORTE_F_WSTRING_AS_BOOL::alg_REQ(void) {

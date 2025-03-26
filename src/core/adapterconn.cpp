@@ -19,7 +19,7 @@ USE_STRING_ID(ANY_ADAPTER);
 #include "adapter.h"
 #include "anyadapter.h"
 
-CAdapterConnection::CAdapterConnection(CFunctionBlock *paSrcFB, TPortId paSrcPortId, CAdapter &paPlug) :
+CAdapterConnection::CAdapterConnection(CFunctionBlock &paSrcFB, const TPortId paSrcPortId, CAdapter &paPlug) :
     CConnection(paSrcFB, paSrcPortId), mPlug(paPlug), mSocket(nullptr){
 }
 
@@ -37,13 +37,13 @@ void CAdapterConnection::typifyAnyAdapter(CAdapter *paSocket){
   }
 }
 
-EMGMResponse CAdapterConnection::connect(CFunctionBlock *paDstFB, CStringDictionary::TStringId paDstPortNameId){
+EMGMResponse CAdapterConnection::connect(CFunctionBlock &paDstFB, CStringDictionary::TStringId paDstPortNameId){
   EMGMResponse retVal = EMGMResponse::NoSuchObject;
 
-  TPortId portId = paDstFB->getAdapterPortId(paDstPortNameId);
+  const TPortId portId = paDstFB.getAdapterPortId(paDstPortNameId);
   if(cgInvalidPortId != portId){
     if(!isConnected()){
-      CAdapter *socket = paDstFB->getAdapter(paDstPortNameId);
+      CAdapter *socket = paDstFB.getAdapter(paDstPortNameId);
       typifyAnyAdapter(socket);
 
       if((socket->isSocket()) && (socket->isCompatible(mPlug))){
@@ -68,15 +68,15 @@ EMGMResponse CAdapterConnection::connect(CFunctionBlock *paDstFB, CStringDiction
   return retVal;
 }
 
-EMGMResponse CAdapterConnection::connectToCFBInterface(CFunctionBlock *, CStringDictionary::TStringId){
+EMGMResponse CAdapterConnection::connectToCFBInterface(CFunctionBlock &, CStringDictionary::TStringId){
   return EMGMResponse::InvalidOperation; //currently we are not supporting adapter connections accross interface boundaries
 }
 
-EMGMResponse CAdapterConnection::disconnect(CFunctionBlock *paDstFB, CStringDictionary::TStringId paDstPortNameId){
+EMGMResponse CAdapterConnection::disconnect(CFunctionBlock &paDstFB, CStringDictionary::TStringId paDstPortNameId){
   EMGMResponse retVal = EMGMResponse::NoSuchObject;
 
   if(isConnected()) {
-    CAdapter *socket = paDstFB->getAdapter(paDstPortNameId);
+    CAdapter *socket = paDstFB.getAdapter(paDstPortNameId);
     if(socket == mSocket) {
       performDisconnect();
       retVal = EMGMResponse::Ready;

@@ -70,12 +70,12 @@ FORTE_E_TP::FORTE_E_TP(const CStringDictionary::TStringId paInstanceNameId, fort
     fb_E_DELAY(STRID(E_DELAY), *this),
     fb_E_RS(STRID(E_RS), *this),
     fb_E_PERMIT(STRID(E_PERMIT), *this),
-    conn_CNF(this, 0),
+    conn_CNF(*this, 0),
     conn_IN(nullptr),
     conn_PT(nullptr),
-    conn_Q(this, 0, 0_BOOL),
-    conn_if2in_IN(this, 0, 0_BOOL),
-    conn_if2in_PT(this, 1, 0_TIME) {
+    conn_Q(*this, 0, 0_BOOL),
+    conn_if2in_IN(*this, 0, 0_BOOL),
+    conn_if2in_PT(*this, 1, 0_TIME) {
 };
 
 void FORTE_E_TP::setInitialValues() {

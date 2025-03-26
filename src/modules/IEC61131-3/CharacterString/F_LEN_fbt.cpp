@@ -63,9 +63,9 @@ FORTE_F_LEN::FORTE_F_LEN(const CStringDictionary::TStringId paInstanceNameId, fo
     CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId),
     var_IN(CIEC_ANY_STRING_VARIANT()),
     var_OUT(CIEC_ANY_INT_VARIANT()),
-    conn_CNF(this, 0),
+    conn_CNF(*this, 0),
     conn_IN(nullptr),
-    conn_OUT(this, 0, var_OUT) {
+    conn_OUT(*this, 0, var_OUT) {
 };
 
 void FORTE_F_LEN::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {

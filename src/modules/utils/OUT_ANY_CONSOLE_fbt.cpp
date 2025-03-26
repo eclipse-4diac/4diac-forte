@@ -68,11 +68,11 @@ FORTE_OUT_ANY_CONSOLE::FORTE_OUT_ANY_CONSOLE(const CStringDictionary::TStringId 
     var_LABEL(CIEC_STRING("", 0)),
     var_IN(CIEC_ANY_VARIANT()),
     var_QO(CIEC_BOOL(0)),
-    conn_CNF(this, 0),
+    conn_CNF(*this, 0),
     conn_QI(nullptr),
     conn_LABEL(nullptr),
     conn_IN(nullptr),
-    conn_QO(this, 0, var_QO) {
+    conn_QO(*this, 0, var_QO) {
 };
 
 void FORTE_OUT_ANY_CONSOLE::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {

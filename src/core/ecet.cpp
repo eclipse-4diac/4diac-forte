@@ -51,7 +51,7 @@ void CEventChainExecutionThread::mainRun(){
     mProcessingEvents = true; //set this flag here to true as well in case the suspend just went through and processing was not finished
   }
   else{
-    event->mFB->receiveInputEvent(event->mPortId, this);
+    event->getFB().receiveInputEvent(event->getPortId(), this);
   }
 }
 

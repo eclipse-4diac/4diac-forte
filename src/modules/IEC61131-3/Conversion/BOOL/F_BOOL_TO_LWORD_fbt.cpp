@@ -69,9 +69,9 @@ FORTE_F_BOOL_TO_LWORD::FORTE_F_BOOL_TO_LWORD(CStringDictionary::TStringId paInst
     CSimpleFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, nullptr),
     var_IN(CIEC_BOOL(0)),
     var_OUT(CIEC_LWORD(0)),
-    conn_CNF(this, 0),
+    conn_CNF(*this, 0),
     conn_IN(nullptr),
-    conn_OUT(this, 0, var_OUT) {
+    conn_OUT(*this, 0, var_OUT) {
 }
 
 void FORTE_F_BOOL_TO_LWORD::alg_REQ(void) {

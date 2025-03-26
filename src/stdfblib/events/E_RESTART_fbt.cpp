@@ -38,9 +38,9 @@ const SFBInterfaceSpec FORTE_E_RESTART::scmFBInterfaceSpec = {
 FORTE_E_RESTART::FORTE_E_RESTART(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
         CEventSourceFB(paContainer, scmFBInterfaceSpec, paInstanceNameId),
         mEventToSend(cgInvalidEventID),
-        conn_COLD(this, 0),
-        conn_WARM(this, 1),
-        conn_STOP(this, 2) {
+        conn_COLD(*this, 0),
+        conn_WARM(*this, 1),
+        conn_STOP(*this, 2) {
   setEventChainExecutor(getResource()->getResourceEventExecution());
 };
 

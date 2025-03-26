@@ -65,10 +65,10 @@ FORTE_F_FIND::FORTE_F_FIND(const CStringDictionary::TStringId paInstanceNameId, 
     var_IN1(CIEC_ANY_STRING_VARIANT()),
     var_IN2(CIEC_ANY_STRING_VARIANT()),
     var_OUT(CIEC_ANY_INT_VARIANT()),
-    conn_CNF(this, 0),
+    conn_CNF(*this, 0),
     conn_IN1(nullptr),
     conn_IN2(nullptr),
-    conn_OUT(this, 0, var_OUT) {
+    conn_OUT(*this, 0, var_OUT) {
 };
 
 void FORTE_F_FIND::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {

@@ -69,11 +69,11 @@ FORTE_E_TABLE_CTRL::FORTE_E_TABLE_CTRL(const CStringDictionary::TStringId paInst
     var_N(0_UINT),
     var_DTO(0_TIME),
     var_CV(0_UINT),
-    conn_CLKO(this, 0),
+    conn_CLKO(*this, 0),
     conn_DT(nullptr),
     conn_N(nullptr),
-    conn_DTO(this, 0, var_DTO),
-    conn_CV(this, 1, var_CV) {
+    conn_DTO(*this, 0, var_DTO),
+    conn_CV(*this, 1, var_CV) {
 }
 
 void FORTE_E_TABLE_CTRL::setInitialValues() {
