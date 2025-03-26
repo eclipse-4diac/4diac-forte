@@ -1,0 +1,119 @@
+---
+# https://clang.llvm.org/docs/ClangFormatStyleOptions.html#language
+Language: Cpp
+
+# https://clang.llvm.org/docs/ClangFormatStyleOptions.html#basedonstyle
+BasedOnStyle: LLVM
+
+# https://clang.llvm.org/docs/ClangFormatStyleOptions.html#alignconsecutiveassignments
+AlignConsecutiveAssignments: false
+
+# https://clang.llvm.org/docs/ClangFormatStyleOptions.html#alignconsecutivedeclarations
+AlignConsecutiveDeclarations: false
+
+# https://clang.llvm.org/docs/ClangFormatStyleOptions.html#alignoperands
+AlignOperands: true
+
+# https://clang.llvm.org/docs/ClangFormatStyleOptions.html#aligntrailingcomments
+AlignTrailingComments: false
+
+# https://clang.llvm.org/docs/ClangFormatStyleOptions.html#allowshortblocksonasingleline
+AllowShortBlocksOnASingleLine: false
+
+# https://clang.llvm.org/docs/ClangFormatStyleOptions.html#allowshortfunctionsonasingleline
+AllowShortFunctionsOnASingleLine: None
+
+# https://clang.llvm.org/docs/ClangFormatStyleOptions.html#alwaysbreaktemplatedeclarations
+AlwaysBreakTemplateDeclarations: Yes
+
+# https://clang.llvm.org/docs/ClangFormatStyleOptions.html#binpackparameters
+BinPackParameters: false
+
+# https://clang.llvm.org/docs/ClangFormatStyleOptions.html#bracewrapping
+BraceWrapping: 
+  AfterCaseLabel: false
+  AfterClass: false
+  AfterControlStatement: false
+  AfterEnum: false
+  AfterFunction: false
+  AfterNamespace: false
+  AfterStruct: false
+  AfterUnion: false
+  AfterExternBlock: false
+  BeforeCatch: false
+  BeforeElse: false
+  BeforeLambdaBody: false
+  BeforeWhile: false
+  SplitEmptyFunction: true
+  SplitEmptyRecord: true
+  SplitEmptyNamespace: true
+
+# https://clang.llvm.org/docs/ClangFormatStyleOptions.html#breakbeforebraces
+BreakBeforeBraces: Custom
+
+# https://clang.llvm.org/docs/ClangFormatStyleOptions.html#breakconstructorinitializers
+BreakConstructorInitializers: AfterColon
+
+# https://clang.llvm.org/docs/ClangFormatStyleOptions.html#breakconstructorinitializersbeforecomma
+BreakConstructorInitializersBeforeComma: false
+
+# https://clang.llvm.org/docs/ClangFormatStyleOptions.html#columnlimit
+ColumnLimit: 120
+
+# https://clang.llvm.org/docs/ClangFormatStyleOptions.html#constructorinitializerallononelineoroneperline
+ConstructorInitializerAllOnOneLineOrOnePerLine: false
+
+# https://clang.llvm.org/docs/ClangFormatStyleOptions.html#includecategories
+IncludeCategories: 
+  - Regex: '^<.*'
+    Priority: 1
+  - Regex: '^".*'
+    Priority: 2
+  - Regex: '.*'
+    Priority: 3
+
+# https://clang.llvm.org/docs/ClangFormatStyleOptions.html#includeismainregex
+IncludeIsMainRegex: '([-_](test|unittest))?$'
+
+# https://clang.llvm.org/docs/ClangFormatStyleOptions.html#indentaccessmodifiers
+IndentAccessModifiers: True
+
+# https://clang.llvm.org/docs/ClangFormatStyleOptions.html#indentcaselabels
+IndentCaseLabels: true
+
+# https://clang.llvm.org/docs/ClangFormatStyleOptions.html#insertnewlineateof
+InsertNewlineAtEOF: true
+
+# https://clang.llvm.org/docs/ClangFormatStyleOptions.html#macroblockbegin
+MacroBlockBegin: ''
+
+# https://clang.llvm.org/docs/ClangFormatStyleOptions.html#macroblockend
+MacroBlockEnd: ''
+
+# https://clang.llvm.org/docs/ClangFormatStyleOptions.html#namespaceindentation
+NamespaceIndentation: All
+
+# https://clang.llvm.org/docs/ClangFormatStyleOptions.html#spaceaftercstylecast
+SpaceAfterCStyleCast: true
+
+# https://clang.llvm.org/docs/ClangFormatStyleOptions.html#spaceaftertemplatekeyword
+SpaceAfterTemplateKeyword: false
+
+# https://clang.llvm.org/docs/ClangFormatStyleOptions.html#spaceinemptyparentheses
+SpaceInEmptyParentheses: false
+
+# https://clang.llvm.org/docs/ClangFormatStyleOptions.html#spacesinangles
+SpacesInAngles: false
+
+# https://clang.llvm.org/docs/ClangFormatStyleOptions.html#spacesinconditionalstatement
+SpacesInConditionalStatement: false
+
+# https://clang.llvm.org/docs/ClangFormatStyleOptions.html#spacesincstylecastparentheses
+SpacesInCStyleCastParentheses: false
+
+# https://clang.llvm.org/docs/ClangFormatStyleOptions.html#spacesinparentheses
+SpacesInParentheses: false
+
+# https://clang.llvm.org/docs/ClangFormatStyleOptions.html#tabwidth
+TabWidth: 2
+...
