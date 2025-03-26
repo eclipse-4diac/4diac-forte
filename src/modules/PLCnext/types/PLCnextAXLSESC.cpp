@@ -78,11 +78,11 @@ FORTE_PLCnextAXLSESC::FORTE_PLCnextAXLSESC(const CStringDictionary::TStringId pa
     var_STATUS(u""_WSTRING),
     var_BusAdapterIn(STRID(BusAdapterIn), *this, false),
     var_BusAdapterOut(STRID(BusAdapterOut), *this, true),
-    conn_INITO(this, 0),
-    conn_IND(this, 1),
+    conn_INITO(*this, 0),
+    conn_IND(*this, 1),
     conn_QI(nullptr),
-    conn_QO(this, 0, var_QO),
-    conn_STATUS(this, 1, var_STATUS) {
+    conn_QO(*this, 0, var_QO),
+    conn_STATUS(*this, 1, var_STATUS) {
 };
 
 bool FORTE_PLCnextAXLSESC::initialize() {

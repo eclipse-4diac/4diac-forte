@@ -79,12 +79,12 @@ FORTE_PLCnextMaster::FORTE_PLCnextMaster(const CStringDictionary::TStringId paIn
     var_QO(0_BOOL),
     var_STATUS(u""_WSTRING),
     var_BusAdapterOut(STRID(BusAdapterOut), *this, true),
-    conn_INITO(this, 0),
-    conn_IND(this, 1),
+    conn_INITO(*this, 0),
+    conn_IND(*this, 1),
     conn_QI(nullptr),
     conn_SlaveUpdateInterval(nullptr),
-    conn_QO(this, 0, var_QO),
-    conn_STATUS(this, 1, var_STATUS) {
+    conn_QO(*this, 0, var_QO),
+    conn_STATUS(*this, 1, var_STATUS) {
 };
 
 bool FORTE_PLCnextMaster::initialize() {

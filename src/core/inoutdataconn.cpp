@@ -16,7 +16,7 @@
 
 #include "funcbloc.h"
 
-EMGMResponse CInOutDataConnection::connect(CFunctionBlock *paDstFB,
+EMGMResponse CInOutDataConnection::connect(CFunctionBlock &paDstFB,
     CStringDictionary::TStringId paDstPortNameId){
   //Check if the superclass connect is working (connection with plain IN)
   EMGMResponse retVal = CDataConnection::connect(paDstFB, paDstPortNameId);
@@ -25,22 +25,22 @@ EMGMResponse CInOutDataConnection::connect(CFunctionBlock *paDstFB,
     return retVal; // we already have a connection
   }
 
-  TPortId dstPortId = paDstFB->getDIOID(paDstPortNameId);
+  const TPortId dstPortId = paDstFB.getDIOID(paDstPortNameId);
   if(cgInvalidPortId != dstPortId){
-    CIEC_ANY *dstDataPoint = paDstFB->getDIOFromPortId(dstPortId);
+    CIEC_ANY *dstDataPoint = paDstFB.getDIOFromPortId(dstPortId);
     retVal = establishDataConnection(paDstFB, dstPortId, *dstDataPoint);
   }
   
   return retVal;
 }
 
-EMGMResponse CInOutDataConnection::disconnect(CFunctionBlock *paDstFB, CStringDictionary::TStringId paDstPortNameId) {
+EMGMResponse CInOutDataConnection::disconnect(CFunctionBlock &paDstFB, CStringDictionary::TStringId paDstPortNameId) {
   EMGMResponse retVal = CDataConnection::disconnect(paDstFB, paDstPortNameId);
   if (retVal != EMGMResponse::NoSuchObject) {
     return retVal; // we already have a connection
   }
 
-  TPortId dstPortId = paDstFB->getDIOID(paDstPortNameId);
+  const TPortId dstPortId = paDstFB.getDIOID(paDstPortNameId);
   if (cgInvalidPortId == dstPortId) {
     return EMGMResponse::NoSuchObject;
   }
@@ -50,19 +50,19 @@ EMGMResponse CInOutDataConnection::disconnect(CFunctionBlock *paDstFB, CStringDi
     return EMGMResponse::NoSuchObject;
   }
   mInOutDestinationIds.erase(it, mInOutDestinationIds.end());
-  paDstFB->connectDIO(dstPortId, nullptr);
+  paDstFB.connectDIO(dstPortId, nullptr);
   return EMGMResponse::Ready;
 }
 
 void CInOutDataConnection::setValue(CIEC_ANY *paValue) {
   mValue = paValue;
   for (auto connectionPoint : mInOutDestinationIds) {
-    connectionPoint.mFB->connectDIO(connectionPoint.mPortId, this);
+    connectionPoint.getFB().connectDIO(connectionPoint.getPortId(), this);
   }
 }
 
-EMGMResponse CInOutDataConnection::establishDataConnection(CFunctionBlock *paDstFB,
-                                                           TPortId paDstPortId,
+EMGMResponse CInOutDataConnection::establishDataConnection(CFunctionBlock &paDstFB,
+                                                           const TPortId paDstPortId,
                                                            const CIEC_ANY &paDstDataPoint) {
   if (getValue().getDataTypeID() == CIEC_ANY::e_ANY) {
     handleAnySrcPortConnection(paDstDataPoint);
@@ -74,7 +74,7 @@ EMGMResponse CInOutDataConnection::establishDataConnection(CFunctionBlock *paDst
   if (std::find(mInOutDestinationIds.begin(), mInOutDestinationIds.end(), dstPoint) != mInOutDestinationIds.end()) {
     return EMGMResponse::InvalidState;
   }
-  if (!paDstFB->connectDIO(paDstPortId, this)) {
+  if (!paDstFB.connectDIO(paDstPortId, this)) {
     return EMGMResponse::InvalidState;
   }
   mInOutDestinationIds.push_back(dstPoint);

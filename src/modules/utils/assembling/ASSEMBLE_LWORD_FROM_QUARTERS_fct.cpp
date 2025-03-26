@@ -99,7 +99,7 @@ const SFBInterfaceSpec FORTE_ASSEMBLE_LWORD_FROM_QUARTERS::scmFBInterfaceSpec = 
 
 FORTE_ASSEMBLE_LWORD_FROM_QUARTERS::FORTE_ASSEMBLE_LWORD_FROM_QUARTERS(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId),
-    conn_CNF(this, 0),
+    conn_CNF(*this, 0),
     conn_QUARTER_BYTE_00(nullptr),
     conn_QUARTER_BYTE_01(nullptr),
     conn_QUARTER_BYTE_02(nullptr),
@@ -132,7 +132,7 @@ FORTE_ASSEMBLE_LWORD_FROM_QUARTERS::FORTE_ASSEMBLE_LWORD_FROM_QUARTERS(const CSt
     conn_QUARTER_BYTE_29(nullptr),
     conn_QUARTER_BYTE_30(nullptr),
     conn_QUARTER_BYTE_31(nullptr),
-    conn_(this, 0, var_) {
+    conn_(*this, 0, var_) {
 }
 
 void FORTE_ASSEMBLE_LWORD_FROM_QUARTERS::setInitialValues() {

@@ -56,9 +56,9 @@ FORTE_LocalizedText2LocalizedText::FORTE_LocalizedText2LocalizedText(CStringDict
     CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId),
     var_IN(CIEC_LocalizedText()),
     var_OUT(CIEC_LocalizedText()),
-    conn_CNF(this, 0),
+    conn_CNF(*this, 0),
     conn_IN(nullptr),
-    conn_OUT(this, 0, var_OUT) {
+    conn_OUT(*this, 0, var_OUT) {
 }
 
 void FORTE_LocalizedText2LocalizedText::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {

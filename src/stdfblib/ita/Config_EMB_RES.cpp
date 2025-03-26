@@ -37,7 +37,7 @@ Config_EMB_RES::Config_EMB_RES(CStringDictionary::TStringId paInstanceNameId, fo
     CResource(paDevice, scmFBInterfaceSpec, paInstanceNameId),
     fb_START(STRID(START), *this),
     conn_opcua_namespace(nullptr),
-    conn_opcua_namespace_int(this, 0, u""_WSTRING) {
+    conn_opcua_namespace_int(*this, 0, u""_WSTRING) {
 }
 
 Config_EMB_RES::~Config_EMB_RES() = default;

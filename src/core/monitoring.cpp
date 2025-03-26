@@ -19,7 +19,6 @@
 #include "resource.h"
 #include "device.h"
 #include "ecet.h"
-#include "core/util/criticalregion.h"
 #include "core/util/string_utils.h"
 
 using namespace std::string_literals;
@@ -29,8 +28,7 @@ const std::string cgClosingXMLTag = "\">"s;
 
 
 CMonitoringHandler::CMonitoringHandler(CResource &paResource) :
-    mTriggerEvent(nullptr, 0),
-        mResource(paResource){
+    mResource(paResource){
 }
 
 EMGMResponse CMonitoringHandler::executeMonitoringCommand(SManagementCMD &paCommand){
@@ -184,9 +182,7 @@ EMGMResponse CMonitoringHandler::triggerEvent(forte::core::TNameIdentifier &paNa
     if(cgInvalidEventID != eventId){
       //only a single event can be triggered simultaneously (until it is executed by ecet!)
       //otherwise the triggerEvent structure needs to be moved to another place!
-      mTriggerEvent.mFB = fB;
-      mTriggerEvent.mPortId = eventId;
-      mResource.getResourceEventExecution()->startEventChain(mTriggerEvent);
+      mResource.getResourceEventExecution()->startEventChain(TEventEntry(*fB, eventId));
       eRetVal = EMGMResponse::Ready;
     }
     else{

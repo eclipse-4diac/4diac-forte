@@ -91,8 +91,8 @@ FORTE_Wago636::FORTE_Wago636 (const CStringDictionary::TStringId paInstanceNameI
     var_QuitErrors(""_STRING),
     var_QO(0_BOOL),
     var_STATUS(u""_WSTRING),
-    conn_MAPO(this, 0),
-    conn_IND(this, 1),
+    conn_MAPO(*this, 0),
+    conn_IND(*this, 1),
     conn_QI(nullptr),
     conn_Busy(nullptr),
     conn_LimitSwitchN(nullptr),
@@ -108,8 +108,8 @@ FORTE_Wago636::FORTE_Wago636 (const CStringDictionary::TStringId paInstanceNameI
     conn_Positioning(nullptr),
     conn_Preset(nullptr),
     conn_QuitErrors(nullptr),
-    conn_QO(this, 0, var_QO),
-    conn_STATUS(this, 1, var_STATUS) {
+    conn_QO(*this, 0, var_QO),
+    conn_STATUS(*this, 1, var_STATUS) {
 };
 
 void FORTE_Wago636::setInitialValues () {

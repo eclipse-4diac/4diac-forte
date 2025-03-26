@@ -67,9 +67,9 @@ FORTE_BYTE2BYTE::FORTE_BYTE2BYTE(CStringDictionary::TStringId paInstanceNameId, 
     CSimpleFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, nullptr),
     var_IN(CIEC_BYTE(0)),
     var_OUT(CIEC_BYTE(0)),
-    conn_CNF(this, 0),
+    conn_CNF(*this, 0),
     conn_IN(nullptr),
-    conn_OUT(this, 0, var_OUT) {
+    conn_OUT(*this, 0, var_OUT) {
 }
 
 void FORTE_BYTE2BYTE::alg_REQ(void) {

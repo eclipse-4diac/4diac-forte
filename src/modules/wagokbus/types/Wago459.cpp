@@ -65,15 +65,15 @@ FORTE_Wago459::FORTE_Wago459(const CStringDictionary::TStringId paInstanceNameId
     var_AnalogInput_4(""_STRING),
     var_QO(0_BOOL),
     var_STATUS(u""_WSTRING),
-    conn_MAPO(this, 0),
-    conn_IND(this, 1),
+    conn_MAPO(*this, 0),
+    conn_IND(*this, 1),
     conn_QI(nullptr),
     conn_AnalogInput_1(nullptr),
     conn_AnalogInput_2(nullptr),
     conn_AnalogInput_3(nullptr),
     conn_AnalogInput_4(nullptr),
-    conn_QO(this, 0, var_QO),
-    conn_STATUS(this, 1, var_STATUS) {
+    conn_QO(*this, 0, var_QO),
+    conn_STATUS(*this, 1, var_STATUS) {
 };
 
 void FORTE_Wago459::setInitialValues() {

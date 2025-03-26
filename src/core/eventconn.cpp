@@ -15,26 +15,26 @@
 #include "ecet.h"
 #include "funcbloc.h"
 
-CEventConnection::CEventConnection(CFunctionBlock *paSrcFB, TPortId paSrcPortId) :
+CEventConnection::CEventConnection(CFunctionBlock &paSrcFB, const TPortId paSrcPortId) :
     CConnection(paSrcFB, paSrcPortId){
 }
 
 CEventConnection::~CEventConnection() = default;
 
-EMGMResponse CEventConnection::connect(CFunctionBlock *paDstFB, CStringDictionary::TStringId paDstPortNameId){
+EMGMResponse CEventConnection::connect(CFunctionBlock &paDstFB, CStringDictionary::TStringId paDstPortNameId){
   EMGMResponse retval = EMGMResponse::NoSuchObject;
-  TPortId nEIID = paDstFB->getEIID(paDstPortNameId);
+  const TPortId nEIID = paDstFB.getEIID(paDstPortNameId);
 
   if(cgInvalidEventID != nEIID){
     retval = CConnection::addDestination(CConnectionPoint(paDstFB, nEIID));
-    paDstFB->addInputEventConnection(nEIID);
+    paDstFB.addInputEventConnection(nEIID);
   }
   return retval;
 }
 
-EMGMResponse CEventConnection::connectToCFBInterface(CFunctionBlock *paDstFB, CStringDictionary::TStringId paDstPortNameId){
+EMGMResponse CEventConnection::connectToCFBInterface(CFunctionBlock &paDstFB, CStringDictionary::TStringId paDstPortNameId){
   EMGMResponse retval = EMGMResponse::NoSuchObject;
-  TPortId nEOID = paDstFB->getEOID(paDstPortNameId);
+  TPortId nEOID = paDstFB.getEOID(paDstPortNameId);
 
   if(cgInvalidEventID != nEOID){
     nEOID |= cgInternal2InterfaceMarker;
@@ -43,13 +43,13 @@ EMGMResponse CEventConnection::connectToCFBInterface(CFunctionBlock *paDstFB, CS
   return retval;
 }
 
-EMGMResponse CEventConnection::disconnect(CFunctionBlock *paDstFB, CStringDictionary::TStringId paDstPortNameId){
+EMGMResponse CEventConnection::disconnect(CFunctionBlock &paDstFB, CStringDictionary::TStringId paDstPortNameId){
   EMGMResponse retval = EMGMResponse::NoSuchObject;
-  TEventID nEIID = paDstFB->getEIID(paDstPortNameId);
+  const TEventID nEIID = paDstFB.getEIID(paDstPortNameId);
 
   if(cgInvalidEventID != nEIID){
     retval = CConnection::removeDestination(CConnectionPoint(paDstFB, nEIID));
-    paDstFB->removeInputEventConnection(nEIID);
+    paDstFB.removeInputEventConnection(nEIID);
   }
   return retval;
 }

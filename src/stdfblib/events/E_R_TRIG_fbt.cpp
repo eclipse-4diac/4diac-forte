@@ -55,9 +55,9 @@ FORTE_E_R_TRIG::FORTE_E_R_TRIG(const CStringDictionary::TStringId paInstanceName
     CCompositeFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, scmFBNData),
     fb_E_D_FF(STRID(E_D_FF), *this),
     fb_E_SWITCH(STRID(E_SWITCH), *this),
-    conn_EO(this, 0),
+    conn_EO(*this, 0),
     conn_QI(nullptr),
-    conn_if2in_QI(this, 0, 0_BOOL) {
+    conn_if2in_QI(*this, 0, 0_BOOL) {
 };
 
 void FORTE_E_R_TRIG::setInitialValues() {

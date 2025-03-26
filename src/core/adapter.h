@@ -14,8 +14,7 @@
  *    Martin Melik-Merkumians - fixes connect, prepares for working AnyAdapter
  *    Martin Jobst - account for data type size in FB initialization
  *******************************************************************************/
-#ifndef _ADAPTER_H_
-#define _ADAPTER_H_
+#pragma once
 
 #include "genfb.h"
 
@@ -111,13 +110,9 @@ class CAdapter : public CGenFunctionBlock<CFunctionBlock> {
     }
 
   protected:
-    /**!
-     *  @brief fills the event entry list of an adapter
-     *
-     *  @param paParentFB The FB which shall be entered into the event entry list
-     */
-    void fillEventEntryList(CFunctionBlock* paParentFB);
+    void fillEventEntryList();
 
+    std::vector<TEventID> mOutputEventIds;
     TForteUInt16 mParentAdapterListEventID;
 
   private:
@@ -128,7 +123,5 @@ class CAdapter : public CGenFunctionBlock<CFunctionBlock> {
     CAdapter *mPeer;
     CIEC_ANY **mLocalDIs;
     CAdapterConnection *mAdapterConn;
-    TEventEntry *mEventEntry; //! the event entry list to start the event chain
+    CFunctionBlock *mParentFB;
 };
-
-#endif /*_ADAPTER_H_*/

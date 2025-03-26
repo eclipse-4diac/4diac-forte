@@ -21,19 +21,20 @@ USE_STRING_ID(ANY_ADAPTER);
 #include "ecet.h"
 
 CAdapter::CAdapter(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec& paInterfaceSpecSocket, const CStringDictionary::TStringId paInstanceNameId, const SFBInterfaceSpec& paInterfaceSpecPlug, bool paIsPlug) :
-  CGenFunctionBlock<CFunctionBlock>(paContainer, (paIsPlug) ? paInterfaceSpecPlug : paInterfaceSpecSocket, paInstanceNameId),
-  mParentAdapterListEventID(0),
-  mIsPlug(paIsPlug),
-  mPeer(nullptr),
-  mLocalDIs(mDIs),
-  mAdapterConn(nullptr){
+    CGenFunctionBlock<CFunctionBlock>(paContainer, paIsPlug ? paInterfaceSpecPlug : paInterfaceSpecSocket, paInstanceNameId),
+    mOutputEventIds(getFBInterfaceSpec().mNumEOs, cgInvalidEventID),
+    mParentAdapterListEventID(0),
+    mIsPlug(paIsPlug),
+    mPeer(nullptr),
+    mLocalDIs(mDIs),
+    mAdapterConn(nullptr),
+    mParentFB(nullptr) {
 }
 
 bool CAdapter::initialize() {
   if(!CGenFunctionBlock<CFunctionBlock>::initialize()) {
     return false;
   }
-  setupEventEntryList();
   mLocalDIs = mDIs;
   return true;
 }
@@ -49,28 +50,27 @@ CAdapter::~CAdapter(){
       mAdapterConn->setSocket(nullptr);
     }
   }
-  delete[] mEventEntry;
 }
 
 bool CAdapter::createInterfaceSpec(const char *, SFBInterfaceSpec &) {
   return true;
 }
 
-void CAdapter::fillEventEntryList(CFunctionBlock* paParentFB){
+void CAdapter::fillEventEntryList(){
   for (TEventID i = 0; i < getFBInterfaceSpec().mNumEOs; ++i) {
-    mEventEntry[i].mFB = paParentFB;
-    mEventEntry[i].mPortId = static_cast<TPortId>(mParentAdapterListEventID + i);
+    mOutputEventIds[i] = static_cast<TPortId>(mParentAdapterListEventID + i);
   }
 }
 
 void CAdapter::setParentFB(CFunctionBlock *paParentFB, TForteUInt8 paParentAdapterlistID){
   mParentAdapterListEventID = static_cast<TForteUInt16>((paParentAdapterlistID + 1) << 8);
 
-  fillEventEntryList(paParentFB);
+  mParentFB = paParentFB;
+  fillEventEntryList();
 
   if (isPlug()) {
     //the plug is in charge of managing the adapter connection
-    mAdapterConn = new CAdapterConnection(paParentFB, paParentAdapterlistID, *this);
+    mAdapterConn = new CAdapterConnection(*paParentFB, paParentAdapterlistID, *this);
   }
 }
 
@@ -106,15 +106,12 @@ bool CAdapter::isCompatible(const CAdapter &paPeer) const {
 }
 
 void CAdapter::executeEvent(TEventID paEIID, CEventChainExecutionThread * const paECET){
-  if (nullptr != mPeer) {
-    if (nullptr != mPeer->mEventEntry[paEIID].mFB) {
-      paECET->addEventEntry(mPeer->mEventEntry[paEIID]);
+  if (mPeer != nullptr) {
+    if (mPeer->mParentFB != nullptr) {
+      paECET->addEventEntry(TEventEntry(*mPeer->mParentFB, mPeer->mOutputEventIds[paEIID]));
     } else {
       mPeer->sendOutputEvent(paEIID, paECET);
     }
   }
 }
 
-void CAdapter::setupEventEntryList(){
-  mEventEntry = new TEventEntry[getFBInterfaceSpec().mNumEOs];
-}

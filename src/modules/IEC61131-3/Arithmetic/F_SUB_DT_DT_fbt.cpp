@@ -65,10 +65,10 @@ FORTE_F_SUB_DT_DT::FORTE_F_SUB_DT_DT(const CStringDictionary::TStringId paInstan
     var_IN1(CIEC_DATE_AND_TIME(0)),
     var_IN2(CIEC_DATE_AND_TIME(0)),
     var_OUT(CIEC_TIME(0)),
-    conn_CNF(this, 0),
+    conn_CNF(*this, 0),
     conn_IN1(nullptr),
     conn_IN2(nullptr),
-    conn_OUT(this, 0, var_OUT) {
+    conn_OUT(*this, 0, var_OUT) {
 };
 
 void FORTE_F_SUB_DT_DT::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {

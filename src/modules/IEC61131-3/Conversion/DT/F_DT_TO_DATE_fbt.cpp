@@ -69,9 +69,9 @@ FORTE_F_DT_TO_DATE::FORTE_F_DT_TO_DATE(CStringDictionary::TStringId paInstanceNa
     CSimpleFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, nullptr),
     var_IN(CIEC_DATE_AND_TIME(0)),
     var_OUT(CIEC_DATE(0)),
-    conn_CNF(this, 0),
+    conn_CNF(*this, 0),
     conn_IN(nullptr),
-    conn_OUT(this, 0, var_OUT) {
+    conn_OUT(*this, 0, var_OUT) {
 }
 
 void FORTE_F_DT_TO_DATE::alg_REQ(void) {

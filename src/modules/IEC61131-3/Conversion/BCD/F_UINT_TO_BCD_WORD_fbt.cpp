@@ -69,9 +69,9 @@ FORTE_F_UINT_TO_BCD_WORD::FORTE_F_UINT_TO_BCD_WORD(CStringDictionary::TStringId 
     CSimpleFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, nullptr),
     var_IN(CIEC_UINT(0)),
     var_OUT(CIEC_WORD(0)),
-    conn_CNF(this, 0),
+    conn_CNF(*this, 0),
     conn_IN(nullptr),
-    conn_OUT(this, 0, var_OUT) {
+    conn_OUT(*this, 0, var_OUT) {
 }
 
 void FORTE_F_UINT_TO_BCD_WORD::alg_REQ(void) {

@@ -71,16 +71,16 @@ FORTE_RT_E_TRAIN::FORTE_RT_E_TRAIN(const CStringDictionary::TStringId paInstance
     fb_RT_E_CYCLE(STRID(RT_E_CYCLE), *this),
     fb_E_CTU(STRID(E_CTU), *this),
     fb_E_SWITCH(STRID(E_SWITCH), *this),
-    conn_EO(this, 0),
+    conn_EO(*this, 0),
     conn_DT(nullptr),
     conn_N(nullptr),
     conn_Deadline(nullptr),
     conn_WCET(nullptr),
-    conn_CV(this, 0, 0_UINT),
-    conn_if2in_DT(this, 0, 0_TIME),
-    conn_if2in_N(this, 1, 0_UINT),
-    conn_if2in_Deadline(this, 2, 0_TIME),
-    conn_if2in_WCET(this, 3, 0_TIME) {
+    conn_CV(*this, 0, 0_UINT),
+    conn_if2in_DT(*this, 0, 0_TIME),
+    conn_if2in_N(*this, 1, 0_UINT),
+    conn_if2in_Deadline(*this, 2, 0_TIME),
+    conn_if2in_WCET(*this, 3, 0_TIME) {
 };
 
 void FORTE_RT_E_TRAIN::setInitialValues() {

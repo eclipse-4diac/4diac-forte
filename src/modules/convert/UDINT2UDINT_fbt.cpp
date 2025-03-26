@@ -67,9 +67,9 @@ FORTE_UDINT2UDINT::FORTE_UDINT2UDINT(CStringDictionary::TStringId paInstanceName
     CSimpleFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, nullptr),
     var_IN(CIEC_UDINT(0)),
     var_OUT(CIEC_UDINT(0)),
-    conn_CNF(this, 0),
+    conn_CNF(*this, 0),
     conn_IN(nullptr),
-    conn_OUT(this, 0, var_OUT) {
+    conn_OUT(*this, 0, var_OUT) {
 }
 
 void FORTE_UDINT2UDINT::alg_REQ(void) {

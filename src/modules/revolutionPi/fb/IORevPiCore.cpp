@@ -61,12 +61,12 @@ const SFBInterfaceSpec FORTE_IORevPiCore::scmFBInterfaceSpec = {
 FORTE_IORevPiCore::FORTE_IORevPiCore(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
   forte::core::io::IOConfigFBMultiMaster(paContainer, scmFBInterfaceSpec, paInstanceNameId),
      var_UpdateInterval(25_UINT),
-     conn_INITO(this, 0),
-     conn_IND(this, 1),
+     conn_INITO(*this, 0),
+     conn_IND(*this, 1),
      conn_QI(nullptr),
      conn_UpdateInterval(nullptr),
-     conn_QO(this, 0, var_QO),
-     conn_STATUS(this, 1, var_STATUS) {
+     conn_QO(*this, 0, var_QO),
+     conn_STATUS(*this, 1, var_STATUS) {
 
 }
 

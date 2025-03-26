@@ -21,13 +21,13 @@
 
 class CInOutDataConnection : public CDataConnection {
   public:
-    CInOutDataConnection(CFunctionBlock *paSrcFB, TPortId paSrcPortId, CIEC_ANY *paValue)
+    CInOutDataConnection(CFunctionBlock &paSrcFB, const TPortId paSrcPortId, CIEC_ANY *paValue)
       : CDataConnection(paSrcFB, paSrcPortId), mValue(paValue) {
     }
 
-    EMGMResponse connect(CFunctionBlock *paDstFB, CStringDictionary::TStringId paDstPortNameId) override;
+    EMGMResponse connect(CFunctionBlock &paDstFB, CStringDictionary::TStringId paDstPortNameId) override;
 
-    EMGMResponse disconnect(CFunctionBlock *paDstFB, CStringDictionary::TStringId paDstPortNameId) override;
+    EMGMResponse disconnect(CFunctionBlock &paDstFB, CStringDictionary::TStringId paDstPortNameId) override;
 
     void writeData(const CIEC_ANY &paValue) override {
       if (mValue) {
@@ -49,11 +49,10 @@ class CInOutDataConnection : public CDataConnection {
 
     bool isConnected() const override {
       return true;
-    };
+    }
 
   protected:
-    EMGMResponse
-    establishDataConnection(CFunctionBlock *paDstFB, TPortId paDstPortId, const CIEC_ANY &paDstDataPoint) override;
+    EMGMResponse establishDataConnection(CFunctionBlock &paDstFB, const TPortId paDstPortId, const CIEC_ANY &paDstDataPoint) override;
 
   private:
     CIEC_ANY *mValue;

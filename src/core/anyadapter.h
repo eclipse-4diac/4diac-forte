@@ -31,8 +31,6 @@ class CAnyAdapter : public CAdapter{
 
     void typifyAnyAdapter(const CAdapter &paPeer);
 
-    void setParentFB(CFunctionBlock *paParentFB, TForteUInt8 paParentAdapterlistID) override;
-
     bool disconnect(CAdapterConnection *paAdConn) override;
 
     //! Helper functions allowing to retrieve interface information from any_adpaters TODO look for Doxygen grouping syntax
@@ -85,9 +83,6 @@ class CAnyAdapter : public CAdapter{
 
   private:
     static const SFBInterfaceSpec scmFBInterfaceSpec; //! interface spec for the empty interface of an any adapter will be used for plug and socket
-
-    CFunctionBlock *m_ParentFB; //!< Pointer to the parent FB
-    TForteUInt8 mParentAdapterlistID; //!< Adapter list ID in respect to the parent FB
 };
 
 #endif /* ANYADAPTER_H_ */

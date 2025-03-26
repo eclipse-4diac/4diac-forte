@@ -67,11 +67,11 @@ FORTE_SET_STRUCT_VALUE::FORTE_SET_STRUCT_VALUE(const CStringDictionary::TStringI
     var_member(CIEC_STRING("", 0)),
     var_element_value(CIEC_ANY_VARIANT()),
     var_out_struct(CIEC_ANY_VARIANT()),
-    conn_CNF(this, 0),
+    conn_CNF(*this, 0),
     conn_in_struct(nullptr),
     conn_member(nullptr),
     conn_element_value(nullptr),
-    conn_out_struct(this, 0, var_out_struct) {
+    conn_out_struct(*this, 0, var_out_struct) {
 };
 
 CIEC_ANY *FORTE_SET_STRUCT_VALUE::lookForMember(CIEC_STRUCT &paWhereToLook, char *paMemberName) {

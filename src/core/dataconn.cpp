@@ -17,29 +17,29 @@
 #include "dataconn.h"
 #include "funcbloc.h"
 
-CDataConnection::CDataConnection(CFunctionBlock *paSrcFB, TPortId paSrcPortId)
+CDataConnection::CDataConnection(CFunctionBlock &paSrcFB, const TPortId paSrcPortId)
         : CConnection(paSrcFB, paSrcPortId) {
 }
 
-EMGMResponse CDataConnection::connect(CFunctionBlock *paDstFB,
+EMGMResponse CDataConnection::connect(CFunctionBlock &paDstFB,
     CStringDictionary::TStringId paDstPortNameId){
   EMGMResponse retVal = EMGMResponse::NoSuchObject;
 
-  TPortId dstPortId = paDstFB->getDIID(paDstPortNameId);
+  const TPortId dstPortId = paDstFB.getDIID(paDstPortNameId);
   if(cgInvalidPortId != dstPortId){
-    CIEC_ANY *dstDataPoint = paDstFB->getDIFromPortId(dstPortId);
+    CIEC_ANY *dstDataPoint = paDstFB.getDIFromPortId(dstPortId);
     retVal = CDataConnection::establishDataConnection(paDstFB, dstPortId, *dstDataPoint);
   }
   return retVal;
 }
 
-EMGMResponse CDataConnection::connectToCFBInterface(CFunctionBlock *paDstFB,
+EMGMResponse CDataConnection::connectToCFBInterface(CFunctionBlock &paDstFB,
     CStringDictionary::TStringId paDstPortNameId){
   EMGMResponse retVal = EMGMResponse::NoSuchObject;
-  TPortId nDOID = paDstFB->getDOID(paDstPortNameId);
+  TPortId nDOID = paDstFB.getDOID(paDstPortNameId);
 
   if(cgInvalidEventID != nDOID){
-    CIEC_ANY *dstDataPoint = paDstFB->getDataOutput(paDstPortNameId);
+    CIEC_ANY *dstDataPoint = paDstFB.getDataOutput(paDstPortNameId);
     nDOID |= cgInternal2InterfaceMarker;
     retVal = establishDataConnection(paDstFB, nDOID, *dstDataPoint);
   }
@@ -50,26 +50,26 @@ EMGMResponse CDataConnection::connectToCFBInterface(CFunctionBlock *paDstFB,
 void CDataConnection::handleAnySrcPortConnection(const CIEC_ANY &paDstDataPoint){
   if(CIEC_ANY::e_ANY != paDstDataPoint.getDataTypeID()){
     getValue().setValue(paDstDataPoint);
-    getSourceId().mFB->configureGenericDO(getSourceId().mPortId, paDstDataPoint);
+    getSourceId().getFB().configureGenericDO(getSourceId().getPortId(), paDstDataPoint);
     if(isConnected()){
       //We already have some connection also set their correct type
-      for(const auto& it : mDestinationIds){
-        it.mFB->connectDI(it.mPortId, this);
+      for(auto& it : mDestinationIds){
+        it.getFB().connectDI(it.getPortId(), this);
       }
     }
   }
 }
 
 EMGMResponse
-CDataConnection::disconnect(CFunctionBlock *paDstFB, CStringDictionary::TStringId paDstPortNameId){
+CDataConnection::disconnect(CFunctionBlock &paDstFB, CStringDictionary::TStringId paDstPortNameId){
   EMGMResponse retval = EMGMResponse::NoSuchObject;
-  TPortId dstPortId = paDstFB->getDIID(paDstPortNameId);
+  const TPortId dstPortId = paDstFB.getDIID(paDstPortNameId);
 
   if(cgInvalidPortId != dstPortId){
     retval = CConnection::removeDestination(CConnectionPoint(paDstFB, dstPortId));
     if(EMGMResponse::Ready == retval){
       // the CConnection class didn't respond an error
-      paDstFB->connectDI(dstPortId, nullptr);
+      paDstFB.connectDI(dstPortId, nullptr);
     }
   }
   return retval;
@@ -95,7 +95,7 @@ bool CDataConnection::canBeConnected(const CIEC_ANY &paSrcDataPoint,
   return bCanConnect;
 }
 
-EMGMResponse CDataConnection::establishDataConnection(CFunctionBlock *paDstFB, TPortId paDstPortId,
+EMGMResponse CDataConnection::establishDataConnection(CFunctionBlock &paDstFB, const TPortId paDstPortId,
     const CIEC_ANY &paDstDataPoint){
   EMGMResponse retVal = EMGMResponse::InvalidOperation;
 
@@ -110,7 +110,7 @@ EMGMResponse CDataConnection::establishDataConnection(CFunctionBlock *paDstFB, T
 
   if(EMGMResponse::Ready == retVal){
     retVal = CConnection::addDestination(CConnectionPoint(paDstFB, paDstPortId));
-    if(EMGMResponse::Ready == retVal && !paDstFB->connectDI(paDstPortId, this)) {
+    if(EMGMResponse::Ready == retVal && !paDstFB.connectDI(paDstPortId, this)) {
       retVal = EMGMResponse::InvalidState;
       mDestinationIds.pop_back(); //remove the newly created connection from the list
     }

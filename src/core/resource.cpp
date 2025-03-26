@@ -26,7 +26,6 @@ USE_STRING_ID(START);
 #include "device.h"
 #include "adapter.h"
 #include "adapterconn.h"
-#include "util/criticalregion.h"
 #include "core/ecetFactory.h"
 
 #ifdef FORTE_DYNAMIC_TYPE_LOAD
@@ -209,7 +208,7 @@ EMGMResponse CResource::createConnection(forte::core::TNameIdentifier &paSrcName
     auto runner = paDstNameList.cbegin();
     CFunctionBlock *dstFB = getFB(runner, paDstNameList.cend());
     if ((nullptr != dstFB) && (runner+1 == paDstNameList.cend())) {
-      retVal = con->connect(dstFB, portName);
+      retVal = con->connect(*dstFB, portName);
     }
   }
 
@@ -226,7 +225,7 @@ EMGMResponse CResource::deleteConnection(forte::core::TNameIdentifier &paSrcName
     auto runner = paDstNameList.cbegin();
     CFunctionBlock *dstFB = getFB(runner, paDstNameList.cend());
     if ((nullptr != dstFB) && (runner+1 == paDstNameList.cend())) {
-      retVal = con->disconnect(dstFB, portName);
+      retVal = con->disconnect(*dstFB, portName);
     }
   }
 
@@ -388,7 +387,7 @@ void CResource::createEOConnectionResponse(const CFunctionBlock &paFb, std::stri
   for(size_t i = 0; i < spec.mNumEOs; i++) {
     const CEventConnection *eConn = paFb.getEOConnection(spec.mEONames[i]);
     for(const auto &it : eConn->getDestinationList()) {
-      createConnectionResponseMessage(paFb, spec.mEONames[i], *it.mFB, it.mFB->getFBInterfaceSpec().mEINames[it.mPortId],  paReqResult);
+      createConnectionResponseMessage(paFb, spec.mEONames[i], it.getFB(), it.getFB().getFBInterfaceSpec().mEINames[it.getPortId()],  paReqResult);
     }
   }
 }
@@ -399,7 +398,7 @@ void CResource::createDOConnectionResponse(const CFunctionBlock& paFb, std::stri
     const CDataConnection *const dConn = paFb.getDIConnection(spec.mDINames[i]);
     if(dConn != nullptr) {
       const CConnectionPoint srcConnPoint = dConn->getSourceId();
-      createConnectionResponseMessage(*srcConnPoint.mFB, srcConnPoint.mFB->getFBInterfaceSpec().mDONames[srcConnPoint.mPortId],
+      createConnectionResponseMessage(srcConnPoint.getFB(), srcConnPoint.getFB().getFBInterfaceSpec().mDONames[srcConnPoint.getPortId()],
           paFb, spec.mDINames[i], paReqResult);
     }
   }
@@ -414,7 +413,7 @@ void CResource::createAOConnectionResponse(const CFunctionBlock& paFb, std::stri
       if(!aConn->isEmpty()) {
         const auto &dest = aConn->getDestinationList().front();
         createConnectionResponseMessage(paFb, spec.mAdapterInstanceDefinition[i].mAdapterNameID,
-            *dest.mFB, dest.mFB->getFBInterfaceSpec().mAdapterInstanceDefinition[dest.mPortId].mAdapterNameID, paReqResult);
+            dest.getFB(), dest.getFB().getFBInterfaceSpec().mAdapterInstanceDefinition[dest.getPortId()].mAdapterNameID, paReqResult);
       }
     }
   }

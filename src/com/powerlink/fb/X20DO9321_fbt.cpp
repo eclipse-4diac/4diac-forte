@@ -72,8 +72,8 @@ const SFBInterfaceSpec FORTE_X20DO9321::scmFBInterfaceSpec = {
 
 FORTE_X20DO9321::FORTE_X20DO9321(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
   PowerlinkFunctionBlockDO(paContainer, scmFBInterfaceSpec, paInstanceNameId),
-  conn_INITO(this, 0),
-  conn_CNF(this, 1),
+  conn_INITO(*this, 0),
+  conn_CNF(*this, 1),
   conn_QI(nullptr),
   conn_CNID(nullptr),
   conn_MODID(nullptr),
@@ -89,9 +89,9 @@ FORTE_X20DO9321::FORTE_X20DO9321(const CStringDictionary::TStringId paInstanceNa
   conn_DO10(nullptr),
   conn_DO11(nullptr),
   conn_DO12(nullptr),
-  conn_QO(this, 0, var_QO),
-  conn_CNIDO(this, 1, var_CNIDO),
-  conn_STATUS(this, 2, var_STATUS) {
+  conn_QO(*this, 0, var_QO),
+  conn_CNIDO(*this, 1, var_CNIDO),
+  conn_STATUS(*this, 2, var_STATUS) {
 };
 
 void FORTE_X20DO9321::setInitialValues() {

@@ -74,14 +74,14 @@ FORTE_ADS_SERVER_CONFIG::FORTE_ADS_SERVER_CONFIG(const CStringDictionary::TStrin
     var_SERVER_IPV4_OR_HOSTNAME(u""_WSTRING),
     var_QO(0_BOOL),
     var_STATUS(u""_WSTRING),
-    conn_INITO(this, 0),
+    conn_INITO(*this, 0),
     conn_QI(nullptr),
     conn_FRIENDLY_NAME(nullptr),
     conn_SERVER_ADS_ADDRESS(nullptr),
     conn_ADS_PORT(nullptr),
     conn_SERVER_IPV4_OR_HOSTNAME(nullptr),
-    conn_QO(this, 0, var_QO),
-    conn_STATUS(this, 1, var_STATUS) {
+    conn_QO(*this, 0, var_QO),
+    conn_STATUS(*this, 1, var_STATUS) {
 };
 
 void FORTE_ADS_SERVER_CONFIG::setInitialValues() {

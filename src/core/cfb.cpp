@@ -116,7 +116,7 @@ void CCompositeFB::createEventConnections() {
       CEventConnection *evConn = (this == srcFB) ?
           mInterface2InternalEventCons[getEIID(currentConn->mSrcId)].get() :
           srcFB->getEOConnection(currentConn->mSrcId);
-      establishConnection(evConn, dstFB, currentConn->mDstId);
+      establishConnection(evConn, *dstFB, currentConn->mDstId);
     } else {
       //FIXME implement way to inform FB creator that creation failed
       DEVLOG_ERROR("Could not create event connection in CFB");
@@ -127,13 +127,13 @@ void CCompositeFB::createEventConnections() {
 void CCompositeFB::prepareIf2InEventCons(){
   mInterface2InternalEventCons.reserve(getFBInterfaceSpec().mNumEIs);
   for(TPortId i = 0; i < getFBInterfaceSpec().mNumEIs; i++){
-    mInterface2InternalEventCons.emplace_back(std::make_unique<CEventConnection>(this, i));
+    mInterface2InternalEventCons.emplace_back(std::make_unique<CEventConnection>(*this, i));
   }
 }
 
-void CCompositeFB::establishConnection(CConnection *paCon, CFunctionBlock *paDstFb,
+void CCompositeFB::establishConnection(CConnection *paCon, CFunctionBlock &paDstFb,
     CStringDictionary::TStringId paDstNameId) {
-  if(this == paDstFb){
+  if(this == &paDstFb){
     paCon->connectToCFBInterface(paDstFb, paDstNameId);
   }
   else{
@@ -149,7 +149,7 @@ void CCompositeFB::createDataConnections(){
     CFunctionBlock *dstFB = getFunctionBlock(currentConn.mDstFBNum);
 
     if((srcFB != nullptr) && (dstFB != nullptr)) {
-      establishConnection(getDataConn(srcFB, currentConn.mSrcId), dstFB, currentConn.mDstId);
+      establishConnection(getDataConn(srcFB, currentConn.mSrcId), *dstFB, currentConn.mDstId);
     } else {
       DEVLOG_ERROR("Could not create data connection in CFB");
     }
@@ -185,7 +185,7 @@ void CCompositeFB::createAdapterConnections(){
       const CAdapter *const adp = srcFB->getAdapter(currentConn.mSrcId);
       if((nullptr != adp) && (adp->isPlug())){
         //only plugs hold the connection object
-        adp->getAdapterConnection()->connect(dstFB, currentConn.mDstId);
+        adp->getAdapterConnection()->connect(*dstFB, currentConn.mDstId);
       } else{
         DEVLOG_ERROR("[CFB Creation] Adapter source is not a plug!");
       }

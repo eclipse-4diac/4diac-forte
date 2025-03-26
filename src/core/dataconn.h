@@ -25,13 +25,13 @@
  */
 class CDataConnection : public CConnection {
   public:
-    CDataConnection(CFunctionBlock *paSrcFB, TPortId paSrcPortId);
+    CDataConnection(CFunctionBlock &paSrcFB, const TPortId paSrcPortId);
 
-    EMGMResponse connect(CFunctionBlock *paDstFB, CStringDictionary::TStringId paDstPortNameId) override;
+    EMGMResponse connect(CFunctionBlock &paDstFB, CStringDictionary::TStringId paDstPortNameId) override;
 
-    EMGMResponse connectToCFBInterface(CFunctionBlock *paDstFB, CStringDictionary::TStringId paDstPortNameId) override;
+    EMGMResponse connectToCFBInterface(CFunctionBlock &paDstFB, CStringDictionary::TStringId paDstPortNameId) override;
 
-    EMGMResponse disconnect(CFunctionBlock *paDstFB, CStringDictionary::TStringId paDstPortNameId) override;
+    EMGMResponse disconnect(CFunctionBlock &paDstFB, CStringDictionary::TStringId paDstPortNameId) override;
 
     void handleAnySrcPortConnection(const CIEC_ANY &paDstDataPoint);
 
@@ -68,14 +68,14 @@ class CDataConnection : public CConnection {
      */
     static bool canBeConnected(const CIEC_ANY &paSrcDataPoint, const CIEC_ANY &paDstDataPoint);
 
-    virtual EMGMResponse establishDataConnection(CFunctionBlock *paDstFB, TPortId paDstPortId,
+    virtual EMGMResponse establishDataConnection(CFunctionBlock &paDstFB, const TPortId paDstPortId,
                                                  const CIEC_ANY &paDstDataPoint);
 };
 
 template<typename T>
 class COutDataConnection final : public CDataConnection {
   public:
-    COutDataConnection(CFunctionBlock *paSrcFB, TPortId paSrcPortId, const T &paValue)
+    COutDataConnection(CFunctionBlock &paSrcFB, const TPortId paSrcPortId, const T &paValue)
       : CDataConnection(paSrcFB, paSrcPortId), mValue(paValue) {
     }
 
@@ -101,24 +101,24 @@ class COutDataConnection final : public CDataConnection {
 
 class CGenDataConnection final : public CDataConnection {
   public:
-    CGenDataConnection(CFunctionBlock *paSrcFB, TPortId paSrcPortId, CIEC_ANY *paValue)
+    CGenDataConnection(CFunctionBlock &paSrcFB, const TPortId paSrcPortId, CIEC_ANY &paValue)
       : CDataConnection(paSrcFB, paSrcPortId), mValue(paValue) {
     }
 
     void writeData(const CIEC_ANY &paValue) override {
-      mValue->setValue(paValue.unwrap());
+      mValue.setValue(paValue.unwrap());
     }
 
     void readData(CIEC_ANY &paValue) const override {
-      paValue.setValue(mValue->unwrap());
+      paValue.setValue(mValue.unwrap());
     }
 
     CIEC_ANY &getValue() override {
-      return *mValue;
+      return mValue;
     }
 
   private:
-    CIEC_ANY *mValue;
+    CIEC_ANY &mValue;
 };
 
 #endif /*_DATACONN_H_*/

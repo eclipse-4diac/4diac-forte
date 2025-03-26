@@ -69,9 +69,9 @@ FORTE_F_INT_TO_DINT::FORTE_F_INT_TO_DINT(CStringDictionary::TStringId paInstance
     CSimpleFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, nullptr),
     var_IN(CIEC_INT(0)),
     var_OUT(CIEC_DINT(0)),
-    conn_CNF(this, 0),
+    conn_CNF(*this, 0),
     conn_IN(nullptr),
-    conn_OUT(this, 0, var_OUT) {
+    conn_OUT(*this, 0, var_OUT) {
 }
 
 void FORTE_F_INT_TO_DINT::alg_REQ(void) {

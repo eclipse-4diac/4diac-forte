@@ -43,8 +43,8 @@ const CStringDictionary::TStringId GEN_E_MUX::scmEventOutputNames[] = { STRID(EO
 GEN_E_MUX::GEN_E_MUX(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CGenFunctionBlock<CFunctionBlock>(paContainer, paInstanceNameId),
     var_K(0_UINT),
-    conn_EO(this, 0),
-    conn_K(this, 0, var_K) {
+    conn_EO(*this, 0),
+    conn_K(*this, 0, var_K) {
 };
 
 void GEN_E_MUX::setInitialValues() {

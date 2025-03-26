@@ -69,9 +69,9 @@ FORTE_F_STRING_AS_TIME::FORTE_F_STRING_AS_TIME(CStringDictionary::TStringId paIn
     CSimpleFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, nullptr),
     var_IN(CIEC_STRING("", 0)),
     var_OUT(CIEC_TIME(0)),
-    conn_CNF(this, 0),
+    conn_CNF(*this, 0),
     conn_IN(nullptr),
-    conn_OUT(this, 0, var_OUT) {
+    conn_OUT(*this, 0, var_OUT) {
 }
 
 void FORTE_F_STRING_AS_TIME::alg_REQ(void) {

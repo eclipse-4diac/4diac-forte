@@ -62,9 +62,9 @@ FORTE_F_LN::FORTE_F_LN(const CStringDictionary::TStringId paInstanceNameId, fort
     CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId),
     var_IN(CIEC_ANY_REAL_VARIANT()),
     var_OUT(CIEC_ANY_REAL_VARIANT()),
-    conn_CNF(this, 0),
+    conn_CNF(*this, 0),
     conn_IN(nullptr),
-    conn_OUT(this, 0, var_OUT) {
+    conn_OUT(*this, 0, var_OUT) {
 };
 
 void FORTE_F_LN::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
