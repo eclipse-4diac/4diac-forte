@@ -36,27 +36,27 @@ class CDataConnection : public CConnection {
     void handleAnySrcPortConnection(const CIEC_ANY &paDstDataPoint);
 
     /*! \brief Write connection data value.
-    *
-    *   Write data value from FB data output to connection data variable.
-    *   \param paValue pointer to FB data output
-    *   \return Can be the following response:
-    *     - TRUE ... write successful
-    *     - FALSE ... no such data connection exists
-    */
-    virtual void writeData(const CIEC_ANY& paValue) = 0;
+     *
+     *   Write data value from FB data output to connection data variable.
+     *   \param paValue pointer to FB data output
+     *   \return Can be the following response:
+     *     - TRUE ... write successful
+     *     - FALSE ... no such data connection exists
+     */
+    virtual void writeData(const CIEC_ANY &paValue) = 0;
 
     /*! \brief Read connection data value.
-    *
-    *   Read data value from connection data variable to FB data input.
-    *   \param paValue pointer to FB data input
-    */
+     *
+     *   Read data value from connection data variable to FB data input.
+     *   \param paValue pointer to FB data input
+     */
     virtual void readData(CIEC_ANY &paValue) const = 0;
 
     /*! \brief Get class member variable mValue.
-    *
-    *   Get class member variable mValue.
-    *   \return pointer to class member variable mValue
-    */
+     *
+     *   Get class member variable mValue.
+     *   \return pointer to class member variable mValue
+     */
     virtual CIEC_ANY &getValue() = 0;
 
   protected:
@@ -68,15 +68,15 @@ class CDataConnection : public CConnection {
      */
     static bool canBeConnected(const CIEC_ANY &paSrcDataPoint, const CIEC_ANY &paDstDataPoint);
 
-    virtual EMGMResponse establishDataConnection(CFunctionBlock &paDstFB, const TPortId paDstPortId,
-                                                 const CIEC_ANY &paDstDataPoint);
+    virtual EMGMResponse
+    establishDataConnection(CFunctionBlock &paDstFB, const TPortId paDstPortId, const CIEC_ANY &paDstDataPoint);
 };
 
 template<typename T>
 class COutDataConnection final : public CDataConnection {
   public:
-    COutDataConnection(CFunctionBlock &paSrcFB, const TPortId paSrcPortId, const T &paValue)
-      : CDataConnection(paSrcFB, paSrcPortId), mValue(paValue) {
+    COutDataConnection(CFunctionBlock &paSrcFB, const TPortId paSrcPortId, const T &paValue) :
+        CDataConnection(paSrcFB, paSrcPortId), mValue(paValue) {
     }
 
     void writeData(const T &paValue) {
@@ -101,8 +101,8 @@ class COutDataConnection final : public CDataConnection {
 
 class CGenDataConnection final : public CDataConnection {
   public:
-    CGenDataConnection(CFunctionBlock &paSrcFB, const TPortId paSrcPortId, CIEC_ANY &paValue)
-      : CDataConnection(paSrcFB, paSrcPortId), mValue(paValue) {
+    CGenDataConnection(CFunctionBlock &paSrcFB, const TPortId paSrcPortId, CIEC_ANY &paValue) :
+        CDataConnection(paSrcFB, paSrcPortId), mValue(paValue) {
     }
 
     void writeData(const CIEC_ANY &paValue) override {

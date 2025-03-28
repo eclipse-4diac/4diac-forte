@@ -27,6 +27,7 @@ USE_STRING_ID(START);
 #include "adapter.h"
 #include "adapterconn.h"
 #include "core/ecetFactory.h"
+#include "negdataconn.h"
 
 #ifdef FORTE_DYNAMIC_TYPE_LOAD
 #include "lua/luaengine.h"

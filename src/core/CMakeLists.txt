@@ -36,6 +36,8 @@ forte_add_sourcefile_hcpp(resource stringdict typelib ecet)
 forte_add_sourcefile_hcpp(adapterconn adapter anyadapter iec61131_functions)
 forte_add_sourcefile_h(forte_st_iterator.h)
 forte_add_sourcefile_h(forte_st_util.h)
+forte_add_sourcefile_h(delegdataconn.h)
+forte_add_sourcefile_h(negdataconn.h)
 
 forte_add_ecet(CEventChainExecutionThread ecet "standard")
 

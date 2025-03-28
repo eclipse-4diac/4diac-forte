@@ -17,43 +17,42 @@
 
 #include <type_traits>
 
+#include <vector>
 #include "fortelist.h"
 #include "mgmcmd.h"
 #include "stringdict.h"
-#include <vector>
 
-//forward declaration of a few classes to reduce include file dependencies
+// forward declaration of a few classes to reduce include file dependencies
 class CFunctionBlock;
 
 class CConnectionPoint {
   public:
-    CConnectionPoint(CFunctionBlock &paFB, const TPortId paPortId) :
-      mFB(&paFB), mPortId(paPortId) {
+    CConnectionPoint(CFunctionBlock &paFB, const TPortId paPortId) : mFB(&paFB), mPortId(paPortId) {
     }
 
     CConnectionPoint() = default;
 
-    bool operator==(const CConnectionPoint & paRight) const {
+    bool operator==(const CConnectionPoint &paRight) const {
       return ((mFB == paRight.mFB) && (mPortId == paRight.mPortId));
     }
 
-    bool operator!=(const CConnectionPoint & paRight) const {
+    bool operator!=(const CConnectionPoint &paRight) const {
       return !(*this == paRight);
     }
-    
+
     CFunctionBlock &getFB() {
       return *mFB;
     }
-    
+
     const CFunctionBlock &getFB() const {
       return *mFB;
     }
-    
+
     TPortId getPortId() const {
       return mPortId;
     }
-    
-  private:    
+
+  private:
     CFunctionBlock *mFB;
     TPortId mPortId;
 };
@@ -62,11 +61,9 @@ static_assert(std::is_trivial_v<CConnectionPoint>);
 /*!\ingroup CORE \brief Base class for handling a connection.
  */
 
-class CConnection{
+class CConnection {
   public:
-
-    CConnection(CFunctionBlock &paSrcFB, const TPortId paSrcPortId) :
-      mSourceId(paSrcFB, paSrcPortId) {
+    CConnection(CFunctionBlock &paSrcFB, const TPortId paSrcPortId) : mSourceId(paSrcFB, paSrcPortId) {
     }
 
     virtual ~CConnection() = default;
@@ -86,14 +83,13 @@ class CConnection{
      *     - NoSuchObject... The destination is not a valid input.
      *     - InvalidState... The specified connection already exists.
      */
-    virtual EMGMResponse connect(CFunctionBlock &paDstFB,
-        CStringDictionary::TStringId paDstPortNameId) = 0;
+    virtual EMGMResponse connect(CFunctionBlock &paDstFB, CStringDictionary::TStringId paDstPortNameId) = 0;
 
     /*!\brief establish an event connection of a CFB to an event output of the CFB.
      *
      */
     virtual EMGMResponse connectToCFBInterface(CFunctionBlock &paDstFB,
-        CStringDictionary::TStringId paDstPortNameId) = 0;
+                                               CStringDictionary::TStringId paDstPortNameId) = 0;
 
     /*! \brief Disconnects the connection.
      *
@@ -110,19 +106,21 @@ class CConnection{
      *     - NoSuchObject... The destination is not a valid input.
      *     - InvalidState... this connection is not connected to the destination
      */
-    virtual EMGMResponse disconnect(CFunctionBlock &paDstFB,
-        CStringDictionary::TStringId paDstPortNameId) = 0;
+    virtual EMGMResponse disconnect(CFunctionBlock &paDstFB, CStringDictionary::TStringId paDstPortNameId) = 0;
 
     /*! \brief Get the source string of the connection
      */
-    const CConnectionPoint& getSourceId() const{
+    const CConnectionPoint &getSourceId() const {
       return mSourceId;
     }
 
-  protected:
+    virtual bool isDelegating() const {
+      return false;
+    }
 
-    //!Non const version
-    CConnectionPoint& getSourceId(){
+  protected:
+    //! Non const version
+    CConnectionPoint &getSourceId() {
       return mSourceId;
     }
 
