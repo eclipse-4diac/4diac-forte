@@ -409,12 +409,9 @@ void CResource::createAOConnectionResponse(const CFunctionBlock& paFb, std::stri
   for(size_t i = 0; i < spec.mNumAdapters; i++) {
     const CAdapter *const adapter = paFb.getAdapter(spec.mAdapterInstanceDefinition[i].mAdapterNameID);
     const CAdapterConnection *aConn = adapter->getAdapterConnection();
-    if(spec.mAdapterInstanceDefinition[i].mIsPlug && nullptr != aConn) {
-      if(!aConn->isEmpty()) {
-        const auto &dest = aConn->getDestinationList().front();
-        createConnectionResponseMessage(paFb, spec.mAdapterInstanceDefinition[i].mAdapterNameID,
-            dest.getFB(), dest.getFB().getFBInterfaceSpec().mAdapterInstanceDefinition[dest.getPortId()].mAdapterNameID, paReqResult);
-      }
+    if(!spec.mAdapterInstanceDefinition[i].mIsPlug && aConn != nullptr && aConn->isConnected()) {
+      createConnectionResponseMessage(aConn->getSourceId().getFB(), aConn->getPlug().getInstanceNameId(), 
+          paFb, adapter->getInstanceNameId(), paReqResult);
     }
   }
 }
