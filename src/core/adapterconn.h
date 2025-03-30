@@ -37,6 +37,10 @@ class CAdapterConnection : public CConnection{
     CAdapter &getPlug(){
       return mPlug;
     }
+    
+    const CAdapter &getPlug() const {
+      return mPlug;
+    }
 
     void setSocket(CAdapter *paSocket){
       mSocket = paSocket;
