@@ -18,52 +18,61 @@
  *    Martin Jobst - add CTF tracing integration
  *    Fabio Gandolfi - send also subapps on requested resources
  *******************************************************************************/
-#include "fortenew.h"
 #include "resource.h"
+#include "conn.h"
+#include "fortenew.h"
+#include "funcbloc.h"
+#include "mgmcmd.h"
 
 USE_STRING_ID(START);
 
-#include "device.h"
 #include "adapter.h"
 #include "adapterconn.h"
 #include "core/ecetFactory.h"
+#include "device.h"
 #include "negdataconn.h"
 
 #ifdef FORTE_DYNAMIC_TYPE_LOAD
-#include "lua/luaengine.h"
-#include "lua/luacfbtypeentry.h"
-#include "lua/luabfbtypeentry.h"
 #include "lua/luaadaptertypeentry.h"
+#include "lua/luabfbtypeentry.h"
+#include "lua/luacfbtypeentry.h"
+#include "lua/luaengine.h"
 #endif
 
 #include <string>
 
 using namespace std::string_literals;
 
-CResource::CResource(forte::core::CFBContainer &paDevice, const SFBInterfaceSpec& paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId) :
-    CFunctionBlock(paDevice, paInterfaceSpec, paInstanceNameId),
-    mResourceEventExecution(EcetFactory::createEcet())
+CResource::CResource(forte::core::CFBContainer &paDevice,
+                     const SFBInterfaceSpec &paInterfaceSpec,
+                     const CStringDictionary::TStringId paInstanceNameId) :
+    CFunctionBlock(paDevice, paInterfaceSpec, paInstanceNameId), mResourceEventExecution(EcetFactory::createEcet())
 #ifdef FORTE_SUPPORT_MONITORING
-, mMonitoringHandler(*this)
+    ,
+    mMonitoringHandler(*this)
 #endif
 #ifdef FORTE_TRACE_CTF
-, mTracer(paInstanceNameId, FORTE_TRACE_CTF_BUFFER_SIZE)
+    ,
+    mTracer(paInstanceNameId, FORTE_TRACE_CTF_BUFFER_SIZE)
 #endif
-{}
+{
+}
 
-CResource::CResource(const SFBInterfaceSpec& paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId) :
-    CFunctionBlock(*this, paInterfaceSpec, paInstanceNameId),
-    mResourceEventExecution(nullptr)
+CResource::CResource(const SFBInterfaceSpec &paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId) :
+    CFunctionBlock(*this, paInterfaceSpec, paInstanceNameId), mResourceEventExecution(nullptr)
 #ifdef FORTE_SUPPORT_MONITORING
-, mMonitoringHandler(*this)
+    ,
+    mMonitoringHandler(*this)
 #endif
 #ifdef FORTE_TRACE_CTF
-, mTracer(paInstanceNameId, FORTE_TRACE_CTF_BUFFER_SIZE)
+    ,
+    mTracer(paInstanceNameId, FORTE_TRACE_CTF_BUFFER_SIZE)
 #endif
-{}
+{
+}
 
 bool CResource::initialize() {
-  if(!CFunctionBlock::initialize()) {
+  if (!CFunctionBlock::initialize()) {
     return false;
   }
 #ifdef FORTE_DYNAMIC_TYPE_LOAD
@@ -72,23 +81,22 @@ bool CResource::initialize() {
   return true;
 }
 
-CResource::~CResource(){
+CResource::~CResource() {
 #ifdef FORTE_DYNAMIC_TYPE_LOAD
   delete luaEngine;
 #endif
   delete mResourceEventExecution;
 }
 
-EMGMResponse CResource::executeMGMCommand(forte::core::SManagementCMD &paCommand){
+EMGMResponse CResource::executeMGMCommand(forte::core::SManagementCMD &paCommand) {
   EMGMResponse retVal = EMGMResponse::InvalidDst;
 
-  if(CStringDictionary::scmInvalidStringId == paCommand.mDestination){
-    switch (paCommand.mCMD){
+  if (CStringDictionary::scmInvalidStringId == paCommand.mDestination) {
+    switch (paCommand.mCMD) {
       case EMGMCommandType::CreateFBInstance: {
         auto itRunner = paCommand.mFirstParam.cbegin();
         retVal = createFB(itRunner, paCommand.mFirstParam.cend(), paCommand.mSecondParam.front());
-      }
-        break;
+      } break;
       case EMGMCommandType::CreateFBType:
 #ifdef FORTE_DYNAMIC_TYPE_LOAD
         retVal = createFBTypeFromLua(paCommand.mFirstParam.front(), paCommand.mAdditionalParams);
@@ -106,8 +114,7 @@ EMGMResponse CResource::executeMGMCommand(forte::core::SManagementCMD &paCommand
       case EMGMCommandType::DeleteFBInstance: {
         auto itRunner = paCommand.mFirstParam.cbegin();
         retVal = deleteFB(itRunner, paCommand.mFirstParam.cend());
-      }
-        break;
+      } break;
       case EMGMCommandType::CreateConnection:
         retVal = createConnection(paCommand.mFirstParam, paCommand.mSecondParam);
         break;
@@ -127,25 +134,25 @@ EMGMResponse CResource::executeMGMCommand(forte::core::SManagementCMD &paCommand
         retVal = handleExecutionStateCmd(paCommand.mCMD, paCommand.mFirstParam);
         break;
 #ifdef FORTE_SUPPORT_QUERY_CMD
-        case EMGMCommandType::QueryFBTypes:
+      case EMGMCommandType::QueryFBTypes:
         retVal = queryAllFBTypes(paCommand.mAdditionalParams);
         break;
-        case EMGMCommandType::QueryAdapterTypes:
+      case EMGMCommandType::QueryAdapterTypes:
         retVal = queryAllAdapterTypes(paCommand.mAdditionalParams);
         break;
-        case EMGMCommandType::QueryFB:
+      case EMGMCommandType::QueryFB:
         retVal = queryFBs(paCommand.mAdditionalParams, *this, "");
         break;
-        case EMGMCommandType::QueryFBType:
+      case EMGMCommandType::QueryFBType:
         retVal = createFBTypeResponseMessage(paCommand.mFirstParam.front(), paCommand.mAdditionalParams);
         break;
-        case EMGMCommandType::QueryAdapterType:
+      case EMGMCommandType::QueryAdapterType:
         retVal = createAdapterTypeResponseMessage(paCommand.mFirstParam.front(), paCommand.mAdditionalParams);
         break;
-        case EMGMCommandType::QueryConnection:
+      case EMGMCommandType::QueryConnection:
         retVal = queryConnections(paCommand.mAdditionalParams, *this);
         break;
-#endif //FORTE_SUPPORT_QUERY_CMD
+#endif // FORTE_SUPPORT_QUERY_CMD
       default:
 #ifdef FORTE_SUPPORT_MONITORING
         retVal = mMonitoringHandler.executeMonitoringCommand(paCommand);
@@ -161,18 +168,18 @@ EMGMResponse CResource::executeMGMCommand(forte::core::SManagementCMD &paCommand
 EMGMResponse CResource::changeExecutionState(EMGMCommandType paCommand) {
   EMGMResponse retVal = CFunctionBlock::changeExecutionState(paCommand);
 
-  if(retVal == EMGMResponse::Ready) {
-    if(paCommand == EMGMCommandType::Start) { //on start, sample inputs
-      for(TPortId i = 0; i < getFBInterfaceSpec().mNumDIs; ++i) {
+  if (retVal == EMGMResponse::Ready) {
+    if (paCommand == EMGMCommandType::Start) { // on start, sample inputs
+      for (TPortId i = 0; i < getFBInterfaceSpec().mNumDIs; ++i) {
         CDataConnection *conn = *getDIConUnchecked(i);
-        if(conn != nullptr) {
+        if (conn != nullptr) {
           conn->readData(*getDI(i));
         }
       }
-    } else if(paCommand == EMGMCommandType::Reset) {
+    } else if (paCommand == EMGMCommandType::Reset) {
       setInitialValues();
     }
-    if(mResourceEventExecution != nullptr) {
+    if (mResourceEventExecution != nullptr) {
       // if we have a mResourceEventExecution handle it
       mResourceEventExecution->changeExecutionState(paCommand);
     }
@@ -180,7 +187,7 @@ EMGMResponse CResource::changeExecutionState(EMGMCommandType paCommand) {
   return retVal;
 }
 
-EMGMResponse CResource::handleExecutionStateCmd(EMGMCommandType paCMD, forte::core::TNameIdentifier &paTarget){
+EMGMResponse CResource::handleExecutionStateCmd(EMGMCommandType paCMD, forte::core::TNameIdentifier &paTarget) {
   EMGMResponse retVal = EMGMResponse::NoSuchObject;
   CFunctionBlock *fb = this;
 
@@ -189,26 +196,27 @@ EMGMResponse CResource::handleExecutionStateCmd(EMGMCommandType paCMD, forte::co
     fb = getFB(itRunner, paTarget.cend());
   }
 
-  if(nullptr != fb){
+  if (nullptr != fb) {
     retVal = fb->changeExecutionState(paCMD);
   }
   return retVal;
 }
 
-EMGMResponse CResource::createConnection(forte::core::SManagementCMD &paCommand){
+EMGMResponse CResource::createConnection(forte::core::SManagementCMD &paCommand) {
   return createConnection(paCommand.mFirstParam, paCommand.mSecondParam);
 }
 
-EMGMResponse CResource::createConnection(forte::core::TNameIdentifier &paSrcNameList, forte::core::TNameIdentifier &paDstNameList){
+EMGMResponse CResource::createConnection(forte::core::TNameIdentifier &paSrcNameList,
+                                         forte::core::TNameIdentifier &paDstNameList) {
   EMGMResponse retVal = EMGMResponse::NoSuchObject;
 
   CConnection *const con = getConnection(paSrcNameList);
-  if(nullptr != con){
+  if (nullptr != con) {
     CStringDictionary::TStringId portName = paDstNameList.back();
     paDstNameList.pop_back();
     auto runner = paDstNameList.cbegin();
     CFunctionBlock *dstFB = getFB(runner, paDstNameList.cend());
-    if ((nullptr != dstFB) && (runner+1 == paDstNameList.cend())) {
+    if ((nullptr != dstFB) && (runner == paDstNameList.cend())) {
       retVal = con->connect(*dstFB, portName);
     }
   }
@@ -216,24 +224,50 @@ EMGMResponse CResource::createConnection(forte::core::TNameIdentifier &paSrcName
   return retVal;
 }
 
-EMGMResponse CResource::deleteConnection(forte::core::TNameIdentifier &paSrcNameList, forte::core::TNameIdentifier &paDstNameList){
-  EMGMResponse retVal = EMGMResponse::NoSuchObject;
+namespace {
+  bool isConnPort(CFunctionBlock *const paFB,
+                  forte::core::TNameIdentifier::const_iterator paNameListIt,
+                  forte::core::TNameIdentifier::const_iterator paNameListEnd) {
+    return paFB != nullptr && paNameListIt + 1 == paNameListEnd;
+  }
+} // namespace
 
-  CConnection *const con = getConnection(paSrcNameList);
-  if(nullptr != con){
-    CStringDictionary::TStringId portName = paDstNameList.back();
-    paDstNameList.pop_back();
-    auto runner = paDstNameList.cbegin();
-    CFunctionBlock *dstFB = getFB(runner, paDstNameList.cend());
-    if ((nullptr != dstFB) && (runner+1 == paDstNameList.cend())) {
-      retVal = con->disconnect(*dstFB, portName);
-    }
+EMGMResponse CResource::deleteConnection(forte::core::TNameIdentifier &paSrcNameList,
+                                         forte::core::TNameIdentifier &paDstNameList) {
+
+  auto srcIt = paSrcNameList.cbegin();
+  CFunctionBlock *srcFB = getFB(srcIt, paSrcNameList.cend());
+
+  auto dstIt = paDstNameList.cbegin();
+  CFunctionBlock *dstFB = getFB(dstIt, paDstNameList.cend());
+
+  if (!isConnPort(srcFB, srcIt, paSrcNameList.cend()) || !isConnPort(dstFB, dstIt, paDstNameList.cend())) {
+    return EMGMResponse::NoSuchObject;
   }
 
-  return retVal;
+  CStringDictionary::TStringId dstPortName = *dstIt;
+  // first check if the dstFB has a data conneciton with given name:
+  CConnection * con = dstFB->getDIConnection(dstPortName);
+  if (con != nullptr) {
+    if (CConnectionPoint(*srcFB, *srcIt) != const_cast<const CConnection *>(con)->getSourceId()) {
+      return EMGMResponse::NoSuchObject;
+    }
+  } else {
+    con = getConnection(paSrcNameList);
+  }
+
+  if (con != nullptr) {
+    EMGMResponse retVal = con->disconnect(*dstFB, dstPortName);
+    if (retVal == EMGMResponse::Ready && con->isDelegating()) {
+      delete con;
+    }
+    return retVal;
+  }
+
+  return EMGMResponse::NoSuchObject;
 }
 
-EMGMResponse CResource::writeValue(forte::core::TNameIdentifier &paNameList, const std::string & paValue, bool paForce){
+EMGMResponse CResource::writeValue(forte::core::TNameIdentifier &paNameList, const std::string &paValue, bool paForce) {
   EMGMResponse retVal = EMGMResponse::NoSuchObject;
 
   CStringDictionary::TStringId portName = paNameList.back();
@@ -241,33 +275,33 @@ EMGMResponse CResource::writeValue(forte::core::TNameIdentifier &paNameList, con
   auto runner = paNameList.cbegin();
 
   CFunctionBlock *fb = this;
-  if(paNameList.size() >= 1){
-    //this is not an identifier for the resource interface
+  if (paNameList.size() >= 1) {
+    // this is not an identifier for the resource interface
     fb = getFB(runner, paNameList.cend());
-    if (runner+1 != paNameList.cend()) {
+    if (runner != paNameList.cend()) {
       // currently we can not write values of FBs inside of FBs
       return EMGMResponse::NoSuchObject;
     }
   }
 
-  if(fb != nullptr){
+  if (fb != nullptr) {
     CIEC_ANY *const var = fb->getVar(&portName, 1);
-    if(var != nullptr){
+    if (var != nullptr) {
       // 0 is not supported in the fromString method
-      if((paValue.length() > 0) && (static_cast<int>(paValue.length()) == var->fromString(paValue.c_str()))){
-        //if we cannot parse the full value the value is not valid
-        if(paForce){
+      if ((paValue.length() > 0) && (static_cast<int>(paValue.length()) == var->fromString(paValue.c_str()))) {
+        // if we cannot parse the full value the value is not valid
+        if (paForce) {
           var->setForced(true);
           CDataConnection *con = fb->getDOConnection(portName);
-          if(nullptr != con){
-            //if we have got a connection it was a DO mirror the forced value there
+          if (nullptr != con) {
+            // if we have got a connection it was a DO mirror the forced value there
             con->writeData(*var);
           }
-        }else{
+        } else {
           mInitialValues.emplace_back(*var, paValue);
         }
         retVal = EMGMResponse::Ready;
-      }else{
+      } else {
         retVal = EMGMResponse::BadParams;
       }
     }
@@ -277,38 +311,43 @@ EMGMResponse CResource::writeValue(forte::core::TNameIdentifier &paNameList, con
 
 void CResource::setInitialValues() {
   CFunctionBlock::setInitialValues();
-  for(auto it : mInitialValues){
+  for (auto it : mInitialValues) {
     it.getIECVariable().fromString(it.getInitString().c_str());
   }
 }
 
-EMGMResponse CResource::readValue(forte::core::TNameIdentifier &paNameList, std::string & paValue){
+EMGMResponse CResource::readValue(forte::core::TNameIdentifier &paNameList, std::string &paValue) {
   EMGMResponse retVal = EMGMResponse::NoSuchObject;
   CIEC_ANY *const var = getVariable(paNameList);
-  if(var != nullptr){
+  if (var != nullptr) {
     char *buffer = nullptr;
     int nUsedChars = -1;
-    switch (var->getDataTypeID()){
+    switch (var->getDataTypeID()) {
       case CIEC_ANY::e_WSTRING: {
-        const size_t bufferSize = var->getToStringBufferSize() + forte::core::util::getExtraSizeForXMLEscapedChars(static_cast<CIEC_WSTRING&>(*var).getValue());
+        const size_t bufferSize = var->getToStringBufferSize() + forte::core::util::getExtraSizeForXMLEscapedChars(
+                                                                     static_cast<CIEC_WSTRING &>(*var).getValue());
         buffer = new char[bufferSize]();
         nUsedChars = static_cast<CIEC_WSTRING &>(*var).toUTF8(buffer, bufferSize, false);
-        if(bufferSize != var->getToStringBufferSize() && 0 < nUsedChars) { //avoid re-running on strings which were already proven not to have any special character
+        if (bufferSize != var->getToStringBufferSize() &&
+            0 < nUsedChars) { // avoid re-running on strings which were already proven not to have any special character
           nUsedChars += static_cast<int>(forte::core::util::transformNonEscapedToEscapedXMLText(buffer));
         }
-        if(0 < nUsedChars){
+        if (0 < nUsedChars) {
           paValue += buffer;
         }
         break;
       }
       case CIEC_ANY::e_STRING: {
-        const size_t bufferSize = var->getToStringBufferSize() + forte::core::util::getExtraSizeForXMLEscapedChars(static_cast<CIEC_STRING&>(*var).getStorage().c_str());
+        const size_t bufferSize =
+            var->getToStringBufferSize() +
+            forte::core::util::getExtraSizeForXMLEscapedChars(static_cast<CIEC_STRING &>(*var).getStorage().c_str());
         buffer = new char[bufferSize]();
         nUsedChars = static_cast<CIEC_STRING &>(*var).toUTF8(buffer, bufferSize, false);
-        if(bufferSize != var->getToStringBufferSize() && 0 < nUsedChars) { //avoid re-running on strings which were already proven not to have any special character
+        if (bufferSize != var->getToStringBufferSize() &&
+            0 < nUsedChars) { // avoid re-running on strings which were already proven not to have any special character
           nUsedChars += static_cast<int>(forte::core::util::transformNonEscapedToEscapedXMLText(buffer));
         }
-        if(0 < nUsedChars){
+        if (0 < nUsedChars) {
           paValue += buffer;
         }
         break;
@@ -317,17 +356,16 @@ EMGMResponse CResource::readValue(forte::core::TNameIdentifier &paNameList, std:
         const size_t bufferSize = var->getToStringBufferSize();
         buffer = new char[bufferSize]();
         nUsedChars = var->toString(buffer, sizeof(buffer));
-        if(0 < nUsedChars){
+        if (0 < nUsedChars) {
           paValue += buffer;
         }
         break;
     }
 
     delete[] (buffer);
-    if(-1 != nUsedChars){
+    if (-1 != nUsedChars) {
       retVal = EMGMResponse::Ready;
-    }
-    else{
+    } else {
       retVal = EMGMResponse::InvalidObject;
     }
   }
@@ -336,21 +374,21 @@ EMGMResponse CResource::readValue(forte::core::TNameIdentifier &paNameList, std:
 
 #ifdef FORTE_SUPPORT_QUERY_CMD
 
-EMGMResponse CResource::queryAllFBTypes(std::string & paValue){
+EMGMResponse CResource::queryAllFBTypes(std::string &paValue) {
   appendTypeNameList(paValue, CTypeLib::getFBLibStart());
   return EMGMResponse::Ready;
 }
 
-EMGMResponse CResource::queryAllAdapterTypes(std::string & paValue){
+EMGMResponse CResource::queryAllAdapterTypes(std::string &paValue) {
   appendTypeNameList(paValue, CTypeLib::getAdapterLibStart());
   return EMGMResponse::Ready;
 }
 
-void CResource::appendTypeNameList(std::string & paValue, CTypeLib::CTypeEntry *paTypeListStart) {
-  if(paTypeListStart != nullptr) {
-    for(; paTypeListStart != nullptr; paTypeListStart = paTypeListStart->mNext) {
+void CResource::appendTypeNameList(std::string &paValue, CTypeLib::CTypeEntry *paTypeListStart) {
+  if (paTypeListStart != nullptr) {
+    for (; paTypeListStart != nullptr; paTypeListStart = paTypeListStart->mNext) {
       paValue += paTypeListStart->getTypeName();
-      if(paTypeListStart->mNext != nullptr) {
+      if (paTypeListStart->mNext != nullptr) {
         paValue += ", ";
       }
     }
@@ -358,7 +396,7 @@ void CResource::appendTypeNameList(std::string & paValue, CTypeLib::CTypeEntry *
 }
 
 EMGMResponse CResource::queryFBs(std::string &paValue, const CFBContainer &container, const std::string prefix) {
-  for (auto itRunner: container.getChildren()) {
+  for (auto itRunner : container.getChildren()) {
     if (itRunner->isFB()) {
       const CFunctionBlock &fb = static_cast<const CFunctionBlock &>(*itRunner);
       createFBResponseMessage(fb, prefix + fb.getInstanceName(), paValue);
@@ -369,7 +407,7 @@ EMGMResponse CResource::queryFBs(std::string &paValue, const CFBContainer &conta
   return EMGMResponse::Ready;
 }
 
-EMGMResponse CResource::queryConnections(std::string & paReqResult, const CFBContainer& container){
+EMGMResponse CResource::queryConnections(std::string &paReqResult, const CFBContainer &container) {
   for (auto itRunner : container.getChildren()) {
     if (itRunner->isFB()) {
       const CFunctionBlock &fb = static_cast<const CFunctionBlock &>(*itRunner);
@@ -385,29 +423,31 @@ EMGMResponse CResource::queryConnections(std::string & paReqResult, const CFBCon
 
 void CResource::createEOConnectionResponse(const CFunctionBlock &paFb, std::string &paReqResult) {
   const SFBInterfaceSpec &spec(paFb.getFBInterfaceSpec());
-  for(size_t i = 0; i < spec.mNumEOs; i++) {
+  for (size_t i = 0; i < spec.mNumEOs; i++) {
     const CEventConnection *eConn = paFb.getEOConnection(spec.mEONames[i]);
-    for(const auto &it : eConn->getDestinationList()) {
-      createConnectionResponseMessage(paFb, spec.mEONames[i], it.getFB(), it.getFB().getFBInterfaceSpec().mEINames[it.getPortId()],  paReqResult);
+    for (const auto &it : eConn->getDestinationList()) {
+      createConnectionResponseMessage(paFb, spec.mEONames[i], it.getFB(),
+                                      it.getFB().getFBInterfaceSpec().mEINames[it.getPortId()], paReqResult);
     }
   }
 }
 
-void CResource::createDOConnectionResponse(const CFunctionBlock& paFb, std::string& paReqResult){
+void CResource::createDOConnectionResponse(const CFunctionBlock &paFb, std::string &paReqResult) {
   const SFBInterfaceSpec &spec(paFb.getFBInterfaceSpec());
-  for(size_t i = 0; i < spec.mNumDIs; i++) {
+  for (size_t i = 0; i < spec.mNumDIs; i++) {
     const CDataConnection *const dConn = paFb.getDIConnection(spec.mDINames[i]);
-    if(dConn != nullptr) {
+    if (dConn != nullptr) {
       const CConnectionPoint srcConnPoint = dConn->getSourceId();
-      createConnectionResponseMessage(srcConnPoint.getFB(), srcConnPoint.getFB().getFBInterfaceSpec().mDONames[srcConnPoint.getPortId()],
-          paFb, spec.mDINames[i], paReqResult);
+      createConnectionResponseMessage(srcConnPoint.getFB(),
+                                      srcConnPoint.getFB().getFBInterfaceSpec().mDONames[srcConnPoint.getPortId()],
+                                      paFb, spec.mDINames[i], paReqResult);
     }
   }
 }
 
-void CResource::createAOConnectionResponse(const CFunctionBlock& paFb, std::string& paReqResult){
-  const SFBInterfaceSpec& spec(paFb.getFBInterfaceSpec());
-  for(size_t i = 0; i < spec.mNumAdapters; i++) {
+void CResource::createAOConnectionResponse(const CFunctionBlock &paFb, std::string &paReqResult) {
+  const SFBInterfaceSpec &spec(paFb.getFBInterfaceSpec());
+  for (size_t i = 0; i < spec.mNumAdapters; i++) {
     const CAdapter *const adapter = paFb.getAdapter(spec.mAdapterInstanceDefinition[i].mAdapterNameID);
     const CAdapterConnection *aConn = adapter->getAdapterConnection();
     if(!spec.mAdapterInstanceDefinition[i].mIsPlug && aConn != nullptr && aConn->isConnected()) {
@@ -425,8 +465,11 @@ void CResource::createFBResponseMessage(const CFunctionBlock &paFb, const std::s
   paValue += "\"/>\n"s;
 }
 
-void CResource::createConnectionResponseMessage(const CFunctionBlock& paSrcFb, const CStringDictionary::TStringId paSrcId,
-    const CFunctionBlock& paDstFb, const CStringDictionary::TStringId paDstId, std::string& paReqResult) {
+void CResource::createConnectionResponseMessage(const CFunctionBlock &paSrcFb,
+                                                const CStringDictionary::TStringId paSrcId,
+                                                const CFunctionBlock &paDstFb,
+                                                const CStringDictionary::TStringId paDstId,
+                                                std::string &paReqResult) {
   paReqResult += "<Connection Source=\""s;
 
   paReqResult += paSrcFb.getFullQualifiedApplicationInstanceName('.');
@@ -442,27 +485,34 @@ void CResource::createConnectionResponseMessage(const CFunctionBlock& paSrcFb, c
   paReqResult.append("\"/>\n"s);
 }
 
-EMGMResponse CResource::createFBTypeResponseMessage(const CStringDictionary::TStringId paValue, std::string & paReqResult){
+EMGMResponse CResource::createFBTypeResponseMessage(const CStringDictionary::TStringId paValue,
+                                                    std::string &paReqResult) {
   EMGMResponse retVal = EMGMResponse::UnsupportedType;
-  CTypeLib::CFBTypeEntry* fbType = static_cast<CTypeLib::CFBTypeEntry *>(CTypeLib::findType(paValue, CTypeLib::getFBLibStart()));
-  if(nullptr != fbType){
+  CTypeLib::CFBTypeEntry *fbType =
+      static_cast<CTypeLib::CFBTypeEntry *>(CTypeLib::findType(paValue, CTypeLib::getFBLibStart()));
+  if (nullptr != fbType) {
     retVal = createXTypeResponseMessage(fbType, paValue, retVal, paReqResult);
   }
   return retVal;
 }
 
-EMGMResponse CResource::createAdapterTypeResponseMessage(const CStringDictionary::TStringId paValue, std::string & paReqResult){
+EMGMResponse CResource::createAdapterTypeResponseMessage(const CStringDictionary::TStringId paValue,
+                                                         std::string &paReqResult) {
   EMGMResponse retVal = EMGMResponse::UnsupportedType;
-  CTypeLib::CAdapterTypeEntry* adapterType = static_cast<CTypeLib::CAdapterTypeEntry *>(CTypeLib::findType(paValue, CTypeLib::getAdapterLibStart()));
-  if(nullptr != adapterType){
+  CTypeLib::CAdapterTypeEntry *adapterType =
+      static_cast<CTypeLib::CAdapterTypeEntry *>(CTypeLib::findType(paValue, CTypeLib::getAdapterLibStart()));
+  if (nullptr != adapterType) {
     retVal = createXTypeResponseMessage(adapterType, paValue, retVal, paReqResult);
   }
   return retVal;
 }
 
-EMGMResponse  CResource::createXTypeResponseMessage(const CTypeLib::CSpecTypeEntry* paTypeEntry, const CStringDictionary::TStringId paValue, EMGMResponse retVal, std::string& paReqResult){
-  const SFBInterfaceSpec* paInterfaceSpec = paTypeEntry->getInterfaceSpec();
-  if(nullptr != paInterfaceSpec){
+EMGMResponse CResource::createXTypeResponseMessage(const CTypeLib::CSpecTypeEntry *paTypeEntry,
+                                                   const CStringDictionary::TStringId paValue,
+                                                   EMGMResponse retVal,
+                                                   std::string &paReqResult) {
+  const SFBInterfaceSpec *paInterfaceSpec = paTypeEntry->getInterfaceSpec();
+  if (nullptr != paInterfaceSpec) {
     paReqResult.append("Name=\"");
     paReqResult.append(CStringDictionary::get(paValue));
     paReqResult.append("\">\n    <InterfaceList>\n      ");
@@ -475,54 +525,62 @@ EMGMResponse  CResource::createXTypeResponseMessage(const CTypeLib::CSpecTypeEnt
   return retVal;
 }
 
-void CResource::createEventInterfaceResponseMessage(const SFBInterfaceSpec* paInterfaceSpec, std::string& paReqResult){
-  if(paInterfaceSpec->mNumEIs > 0){
+void CResource::createEventInterfaceResponseMessage(const SFBInterfaceSpec *paInterfaceSpec, std::string &paReqResult) {
+  if (paInterfaceSpec->mNumEIs > 0) {
     paReqResult.append("<EventInputs>\n         ");
-    createInterfaceResponseMessages(paReqResult, "Event", paInterfaceSpec->mEINames, nullptr, paInterfaceSpec->mNumEIs, paInterfaceSpec->mEIWith, paInterfaceSpec->mEIWithIndexes, paInterfaceSpec->mDINames);
+    createInterfaceResponseMessages(paReqResult, "Event", paInterfaceSpec->mEINames, nullptr, paInterfaceSpec->mNumEIs,
+                                    paInterfaceSpec->mEIWith, paInterfaceSpec->mEIWithIndexes,
+                                    paInterfaceSpec->mDINames);
     paReqResult.append("</EventInputs>\n   ");
   }
-  if(paInterfaceSpec->mNumEOs > 0){
+  if (paInterfaceSpec->mNumEOs > 0) {
     paReqResult.append("<EventOutputs>\n         ");
-    createInterfaceResponseMessages(paReqResult, "Event", paInterfaceSpec->mEONames, nullptr, paInterfaceSpec->mNumEOs, paInterfaceSpec->mEOWith, paInterfaceSpec->mEOWithIndexes, paInterfaceSpec->mDONames);
+    createInterfaceResponseMessages(paReqResult, "Event", paInterfaceSpec->mEONames, nullptr, paInterfaceSpec->mNumEOs,
+                                    paInterfaceSpec->mEOWith, paInterfaceSpec->mEOWithIndexes,
+                                    paInterfaceSpec->mDONames);
     paReqResult.append("</EventOutputs>\n   ");
   }
 }
 
-void CResource::createDataInterfaceResponseMessage(const SFBInterfaceSpec* paInterfaceSpec, std::string& paReqResult){
-  if(paInterfaceSpec->mNumDIs > 0){
+void CResource::createDataInterfaceResponseMessage(const SFBInterfaceSpec *paInterfaceSpec, std::string &paReqResult) {
+  if (paInterfaceSpec->mNumDIs > 0) {
     paReqResult.append("<InputVars>\n         ");
-    createInterfaceResponseMessages(paReqResult, "VarDeclaration", paInterfaceSpec->mDINames, paInterfaceSpec->mDIDataTypeNames, paInterfaceSpec->mNumDIs);
+    createInterfaceResponseMessages(paReqResult, "VarDeclaration", paInterfaceSpec->mDINames,
+                                    paInterfaceSpec->mDIDataTypeNames, paInterfaceSpec->mNumDIs);
     paReqResult.append("</InputVars>\n   ");
   }
-  if(paInterfaceSpec->mNumDOs > 0){
+  if (paInterfaceSpec->mNumDOs > 0) {
     paReqResult.append("<OutputVars>\n         ");
-    createInterfaceResponseMessages(paReqResult, "VarDeclaration", paInterfaceSpec->mDONames, paInterfaceSpec->mDODataTypeNames, paInterfaceSpec->mNumDOs);
+    createInterfaceResponseMessages(paReqResult, "VarDeclaration", paInterfaceSpec->mDONames,
+                                    paInterfaceSpec->mDODataTypeNames, paInterfaceSpec->mNumDOs);
     paReqResult.append("</OutputVars>\n   ");
   }
 }
 
-void CResource::createAdapterInterfaceResponseMessage(const SFBInterfaceSpec* paInterfaceSpec, std::string& paReqResult){
-  if(paInterfaceSpec->mNumAdapters > 0){
+void CResource::createAdapterInterfaceResponseMessage(const SFBInterfaceSpec *paInterfaceSpec,
+                                                      std::string &paReqResult) {
+  if (paInterfaceSpec->mNumAdapters > 0) {
     std::string sockets;
     std::string plugs;
-    for(TPortId i = 0; i < paInterfaceSpec->mNumAdapters; i++){
-      if(paInterfaceSpec->mAdapterInstanceDefinition[i].mIsPlug){
+    for (TPortId i = 0; i < paInterfaceSpec->mNumAdapters; i++) {
+      if (paInterfaceSpec->mAdapterInstanceDefinition[i].mIsPlug) {
         const char *adapterName = CStringDictionary::get(paInterfaceSpec->mAdapterInstanceDefinition[i].mAdapterNameID);
-        const char *adapterTypeName = CStringDictionary::get(paInterfaceSpec->mAdapterInstanceDefinition[i].mAdapterTypeNameID);
+        const char *adapterTypeName =
+            CStringDictionary::get(paInterfaceSpec->mAdapterInstanceDefinition[i].mAdapterTypeNameID);
         createInterfaceResponseMessage(plugs, "AdapterDeclaration", adapterName, adapterTypeName);
-      }
-      else{
+      } else {
         const char *adapterName = CStringDictionary::get(paInterfaceSpec->mAdapterInstanceDefinition[i].mAdapterNameID);
-        const char *adapterTypeName = CStringDictionary::get(paInterfaceSpec->mAdapterInstanceDefinition[i].mAdapterTypeNameID);
+        const char *adapterTypeName =
+            CStringDictionary::get(paInterfaceSpec->mAdapterInstanceDefinition[i].mAdapterTypeNameID);
         createInterfaceResponseMessage(sockets, "AdapterDeclaration", adapterName, adapterTypeName);
       }
     }
-    if(!plugs.empty()){
+    if (!plugs.empty()) {
       paReqResult.append("<Plugs>\n         ");
       paReqResult.append(plugs);
       paReqResult.append("</Plugs>\n   ");
     }
-    if(!sockets.empty()){
+    if (!sockets.empty()) {
       paReqResult.append("<Sockets>\n         ");
       paReqResult.append(sockets);
       paReqResult.append("</Sockets>\n   ");
@@ -530,16 +588,20 @@ void CResource::createAdapterInterfaceResponseMessage(const SFBInterfaceSpec* pa
   }
 }
 
-void CResource::createInterfaceResponseMessages(std::string &paReqResult, const char *paCommand,
-    const CStringDictionary::TStringId* paNameList, const CStringDictionary::TStringId* paTypeList,
-    const TEventID paNumberOfElements, const TDataIOID* paEWith, const TForteInt16* paEWithIndexes, const CStringDictionary::TStringId* paDNameList){
-  for(TEventID nIndex = 0; nIndex < paNumberOfElements; nIndex++){
-    if(nullptr != paTypeList){
+void CResource::createInterfaceResponseMessages(std::string &paReqResult,
+                                                const char *paCommand,
+                                                const CStringDictionary::TStringId *paNameList,
+                                                const CStringDictionary::TStringId *paTypeList,
+                                                const TEventID paNumberOfElements,
+                                                const TDataIOID *paEWith,
+                                                const TForteInt16 *paEWithIndexes,
+                                                const CStringDictionary::TStringId *paDNameList) {
+  for (TEventID nIndex = 0; nIndex < paNumberOfElements; nIndex++) {
+    if (nullptr != paTypeList) {
       const char *name = CStringDictionary::get(paNameList[nIndex]);
       const char *type = CStringDictionary::get(paTypeList[nIndex]);
       createInterfaceResponseMessage(paReqResult, paCommand, name, type);
-    }
-    else{
+    } else {
       const char *name = CStringDictionary::get(paNameList[nIndex]);
       constexpr char event[] = "Event";
       createInterfaceResponseMessage(paReqResult, paCommand, name, event, paEWith, paEWithIndexes, nIndex, paDNameList);
@@ -547,46 +609,49 @@ void CResource::createInterfaceResponseMessages(std::string &paReqResult, const 
   }
 }
 
-void CResource::createInterfaceResponseMessage(std::string& paReqResult, const char* paCommand, const std::string& paName, const std::string& paType,
-    const TDataIOID* paEWith, const TForteInt16* paEWithIndexes, const TEventID paIndex, const CStringDictionary::TStringId* paENameList) const {
+void CResource::createInterfaceResponseMessage(std::string &paReqResult,
+                                               const char *paCommand,
+                                               const std::string &paName,
+                                               const std::string &paType,
+                                               const TDataIOID *paEWith,
+                                               const TForteInt16 *paEWithIndexes,
+                                               const TEventID paIndex,
+                                               const CStringDictionary::TStringId *paENameList) const {
   paReqResult.append("<");
   paReqResult.append(paCommand);
   paReqResult.append(" Name=\"");
   paReqResult.append(paName);
   paReqResult.append("\" Type=\"");
   paReqResult.append(paType);
-  if(nullptr != paEWithIndexes && -1 != paEWithIndexes[paIndex]){
+  if (nullptr != paEWithIndexes && -1 != paEWithIndexes[paIndex]) {
     paReqResult.append("\">\n         ");
-    for(int nRunIndex = paEWithIndexes[paIndex]; scmWithListDelimiter != paEWith[nRunIndex]; nRunIndex++){
+    for (int nRunIndex = paEWithIndexes[paIndex]; scmWithListDelimiter != paEWith[nRunIndex]; nRunIndex++) {
       paReqResult.append("<With Var=\"");
       paReqResult.append(CStringDictionary::get(paENameList[paEWith[nRunIndex]]));
       paReqResult.append("\"/>\n      ");
     }
     paReqResult.append("</Event>\n      ");
-  }
-  else{
+  } else {
     paReqResult.append("\"/>\n");
   }
 }
-#endif //FORTE_SUPPORT_QUERY_CMD
+#endif // FORTE_SUPPORT_QUERY_CMD
 
 #ifdef FORTE_DYNAMIC_TYPE_LOAD
 EMGMResponse CResource::createFBTypeFromLua(CStringDictionary::TStringId typeNameId,
-    const std::string& paLuaScriptAsString){
+                                            const std::string &paLuaScriptAsString) {
   EMGMResponse retVal = EMGMResponse::UnsupportedType;
 
-  if(paLuaScriptAsString.find("internalFBs") !=std::string::npos){ // CFBType
-    if(CLuaCFBTypeEntry::createLuaFBTypeEntry(typeNameId, paLuaScriptAsString) != nullptr){
+  if (paLuaScriptAsString.find("internalFBs") != std::string::npos) { // CFBType
+    if (CLuaCFBTypeEntry::createLuaFBTypeEntry(typeNameId, paLuaScriptAsString) != nullptr) {
       retVal = EMGMResponse::Ready;
-    }
-    else{
+    } else {
       retVal = EMGMResponse::InvalidOperation;
     }
-  }
-  else{ // BFBType
-    if(CLuaBFBTypeEntry::createLuaFBTypeEntry(typeNameId, paLuaScriptAsString) != nullptr){
+  } else { // BFBType
+    if (CLuaBFBTypeEntry::createLuaFBTypeEntry(typeNameId, paLuaScriptAsString) != nullptr) {
       retVal = EMGMResponse::Ready;
-    }else{
+    } else {
       retVal = EMGMResponse::InvalidOperation;
     }
   }
@@ -594,62 +659,61 @@ EMGMResponse CResource::createFBTypeFromLua(CStringDictionary::TStringId typeNam
 }
 
 EMGMResponse CResource::createAdapterTypeFromLua(CStringDictionary::TStringId typeNameId,
-    const std::string& paLuaScriptAsString){
+                                                 const std::string &paLuaScriptAsString) {
   EMGMResponse retVal = EMGMResponse::UnsupportedType;
-  if(CLuaAdapterTypeEntry::createLuaAdapterTypeEntry(typeNameId, paLuaScriptAsString) != nullptr){
-     retVal = EMGMResponse::Ready;
-  }else{
-   retVal = EMGMResponse::InvalidOperation;
+  if (CLuaAdapterTypeEntry::createLuaAdapterTypeEntry(typeNameId, paLuaScriptAsString) != nullptr) {
+    retVal = EMGMResponse::Ready;
+  } else {
+    retVal = EMGMResponse::InvalidOperation;
   }
   return retVal;
 }
 
-#endif //FORTE_DYNAMIC_TYPE_LOAD
+#endif // FORTE_DYNAMIC_TYPE_LOAD
 
-CIEC_ANY *CResource::getVariable(forte::core::TNameIdentifier &paNameList){
+CIEC_ANY *CResource::getVariable(forte::core::TNameIdentifier &paNameList) {
   CStringDictionary::TStringId portName = paNameList.back();
   paNameList.pop_back();
   auto runner = paNameList.cbegin();
 
   CFunctionBlock *fb = this;
-  if(paNameList.size() >= 1){
-    //this is not an identifier for the resource interface
+  if (paNameList.size() >= 1) {
+    // this is not an identifier for the resource interface
     fb = getFB(runner, paNameList.cend()); // the last entry is the input name therefore reduce list here by one
   }
 
   CIEC_ANY *var = nullptr;
-  if ((nullptr != fb) && (runner+1 == paNameList.cend())) {
+  if ((nullptr != fb) && (runner == paNameList.cend())) {
     var = fb->getVar(&portName, 1);
   }
   return var;
 }
 
-CConnection *CResource::getConnection(forte::core::TNameIdentifier &paSrcNameList){
+CConnection *CResource::getConnection(forte::core::TNameIdentifier &paSrcNameList) {
   CConnection *con = nullptr;
-  if(1 == paSrcNameList.size()){
+  if (1 == paSrcNameList.size()) {
     con = getResIf2InConnection(paSrcNameList[0]);
-  }
-  else if(paSrcNameList.size() > 1){
+  } else if (paSrcNameList.size() > 1) {
     CStringDictionary::TStringId portName = paSrcNameList.back();
     paSrcNameList.pop_back();
     auto runner = paSrcNameList.cbegin();
 
     CFunctionBlock *srcFB = getFB(runner, paSrcNameList.cend());
-    if((nullptr != srcFB) && (runner+1 == paSrcNameList.cend())) {
-      //only use the found result if we have really the last result in the list
+    if ((nullptr != srcFB) && (runner == paSrcNameList.cend())) {
+      // only use the found result if we have really the last result in the list
       con = srcFB->getEOConnection(portName);
-      if(nullptr == con) {
-        //it is not an event connection try inout data connection next
+      if (nullptr == con) {
+        // it is not an event connection try inout data connection next
         con = srcFB->getDIOOutConnection(portName);
-        if(nullptr == con) {
-          //it is not an inout connection try data connection next
+        if (nullptr == con) {
+          // it is not an inout connection try data connection next
           con = srcFB->getDOConnection(portName);
-          if(nullptr == con) {
-            //it is not an data connection try data connection next
-            //TODO think if it would be better to move this to CFunctionBlock
+          if (nullptr == con) {
+            // it is not an data connection try data connection next
+            // TODO think if it would be better to move this to CFunctionBlock
             CAdapter *adp = srcFB->getAdapter(portName);
-            if((nullptr != adp) && (adp->isPlug())){
-              //only plugs hold the connection object
+            if ((nullptr != adp) && (adp->isPlug())) {
+              // only plugs hold the connection object
               con = adp->getAdapterConnection();
             }
           }
@@ -662,5 +726,5 @@ CConnection *CResource::getConnection(forte::core::TNameIdentifier &paSrcNameLis
 
 CConnection *CResource::getResIf2InConnection(CStringDictionary::TStringId paResInput) {
   TPortId inPortId = getDIID(paResInput);
-  return (inPortId != cgInvalidPortId )  ? getResIf2InConnectionUnchecked(inPortId) : nullptr;
+  return (inPortId != cgInvalidPortId) ? getResIf2InConnectionUnchecked(inPortId) : nullptr;
 }
