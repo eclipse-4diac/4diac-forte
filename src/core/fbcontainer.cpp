@@ -148,18 +148,15 @@ CFunctionBlock *CFBContainer::getFB(CStringDictionary::TStringId paFBName) {
   return nullptr;
 }
 
-
-CFunctionBlock* CFBContainer::getFB(NameIterator &paNameListIt, NameIterator paNameListEnd)  {
-  if (paNameListIt+1 != paNameListEnd) {
-    //we have more than one name in the fb name list. Find or create the container and hand the create command to this container.
-    CFBContainer *childCont = getChild(*paNameListIt);
-    if(childCont != nullptr){
-      //remove the container from the name list
-      ++paNameListIt;
-      return childCont->getFB(paNameListIt, paNameListEnd);
-    }
+CFunctionBlock *CFBContainer::getFB(NameIterator &paNameListIt, NameIterator paNameListEnd) {
+  CFBContainer *childCont = getChild(*paNameListIt);
+  if (childCont != nullptr) {
+    // remove the container from the name list
+    ++paNameListIt;
+    return childCont->getFB(paNameListIt, paNameListEnd);
   }
-  return getFB(*paNameListIt);
+  // we are the last FB in the name list
+  return isFB() ? static_cast<CFunctionBlock *>(this) : nullptr;
 }
 
 CFBContainer* CFBContainer::getChild(CStringDictionary::TStringId paName)  {
