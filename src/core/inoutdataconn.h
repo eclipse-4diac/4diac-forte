@@ -62,7 +62,7 @@ class CInOutDataConnection : public CDataConnection {
 template<typename T>
 class COutInOutDataConnection final : public CInOutDataConnection {
   public:
-    COutInOutDataConnection(CFunctionBlock *paSrcFB, TPortId paSrcPortId, const T &paValue)
+    COutInOutDataConnection(CFunctionBlock &paSrcFB, TPortId paSrcPortId, const T &paValue)
       : CInOutDataConnection(paSrcFB, paSrcPortId, &mValue), mValue(paValue) {
     }
 
