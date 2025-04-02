@@ -65,9 +65,9 @@ static_assert(std::is_trivial_v<CConnectionPoint>);
 class CConnection{
   public:
 
-    using TDestinationIdList = std::vector<CConnectionPoint>;
-
-    CConnection(CFunctionBlock &paSrcFB, const TPortId paSrcPortId);
+    CConnection(CFunctionBlock &paSrcFB, const TPortId paSrcPortId) :
+      mSourceId(paSrcFB, paSrcPortId) {
+    }
 
     virtual ~CConnection() = default;
 
@@ -113,56 +113,24 @@ class CConnection{
     virtual EMGMResponse disconnect(CFunctionBlock &paDstFB,
         CStringDictionary::TStringId paDstPortNameId) = 0;
 
-    /*! \brief Check if there are destinations added to this connection
-     *
-     * \return TRUE if there is no destination in the connection.
-     */
-    bool isEmpty() const{
-      return mDestinationIds.empty();
-    }
-
-    virtual bool isConnected() const{
-      return !isEmpty();
-    }
-
     /*! \brief Get the source string of the connection
      */
     const CConnectionPoint& getSourceId() const{
       return mSourceId;
     }
 
-    /*! \brief Get list of destinations of the connection
-     */
-    const TDestinationIdList& getDestinationList() const {
-        return mDestinationIds;
-    }
-
   protected:
-    EMGMResponse addDestination(const CConnectionPoint &paDestPoint);
-    EMGMResponse removeDestination(const CConnectionPoint &paDestPoint);
 
     //!Non const version
     CConnectionPoint& getSourceId(){
       return mSourceId;
     }
 
-    /*!\brief a list of destinations the connection is connected to.
-     *
-     * By storing a list of destinations an implicit support for fan-out is given.
-     * The destination is represented as string id the same way as the sourceId
-     */
-    TDestinationIdList mDestinationIds;
-
     /*!\brief An identifier for the source of this connection
      *
      * The source is identified by a FB pointer and the port ID
      */
     CConnectionPoint mSourceId;
-
-  private:
-
-    //! Check if there is already a connection within this connection with the same dst.
-    bool dstExists(const CConnectionPoint& paDestPoint) const;
 };
 
 #endif /*_CONN_H_*/

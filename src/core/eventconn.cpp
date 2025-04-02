@@ -26,7 +26,7 @@ EMGMResponse CEventConnection::connect(CFunctionBlock &paDstFB, CStringDictionar
   const TPortId nEIID = paDstFB.getEIID(paDstPortNameId);
 
   if(cgInvalidEventID != nEIID){
-    retval = CConnection::addDestination(CConnectionPoint(paDstFB, nEIID));
+    retval = addDestination(CConnectionPoint(paDstFB, nEIID));
     paDstFB.addInputEventConnection(nEIID);
   }
   return retval;
@@ -38,7 +38,7 @@ EMGMResponse CEventConnection::connectToCFBInterface(CFunctionBlock &paDstFB, CS
 
   if(cgInvalidEventID != nEOID){
     nEOID |= cgInternal2InterfaceMarker;
-    retval = CConnection::addDestination(CConnectionPoint(paDstFB, nEOID));
+    retval = addDestination(CConnectionPoint(paDstFB, nEOID));
   }
   return retval;
 }
@@ -48,7 +48,7 @@ EMGMResponse CEventConnection::disconnect(CFunctionBlock &paDstFB, CStringDictio
   const TEventID nEIID = paDstFB.getEIID(paDstPortNameId);
 
   if(cgInvalidEventID != nEIID){
-    retval = CConnection::removeDestination(CConnectionPoint(paDstFB, nEIID));
+    retval = removeDestination(CConnectionPoint(paDstFB, nEIID));
     paDstFB.removeInputEventConnection(nEIID);
   }
   return retval;
@@ -62,4 +62,20 @@ void CEventConnection::triggerEvent(CEventChainExecutionThread *paExecEnv) const
   }
 }
 
+EMGMResponse CEventConnection::addDestination(const CConnectionPoint &paDestPoint) {
+  if (std::find(mDestinationIds.begin(), mDestinationIds.end(), paDestPoint) != mDestinationIds.end()) {
+    return EMGMResponse::InvalidState;
+  }
+  mDestinationIds.push_back(paDestPoint);
+  return EMGMResponse::Ready;
+}
+
+EMGMResponse CEventConnection::removeDestination(const CConnectionPoint &paDestPoint) {
+  auto it = std::remove(mDestinationIds.begin(), mDestinationIds.end(), paDestPoint);
+  if (it == mDestinationIds.end()) {
+    return EMGMResponse::InvalidState;
+  }
+  mDestinationIds.erase(it, mDestinationIds.end());
+  return EMGMResponse::Ready;
+}
 

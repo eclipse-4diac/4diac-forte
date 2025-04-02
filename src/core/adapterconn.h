@@ -30,7 +30,7 @@ class CAdapterConnection : public CConnection{
 
     EMGMResponse disconnect(CFunctionBlock &paDstFB, CStringDictionary::TStringId paDstPortNameId) override;
 
-    bool isConnected() const override{
+    bool isConnected() const {
       return mSocket != nullptr;
     }
 

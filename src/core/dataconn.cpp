@@ -51,28 +51,20 @@ void CDataConnection::handleAnySrcPortConnection(const CIEC_ANY &paDstDataPoint)
   if(CIEC_ANY::e_ANY != paDstDataPoint.getDataTypeID()){
     getValue().setValue(paDstDataPoint);
     getSourceId().getFB().configureGenericDO(getSourceId().getPortId(), paDstDataPoint);
-    if(isConnected()){
-      //We already have some connection also set their correct type
-      for(auto& it : mDestinationIds){
-        it.getFB().connectDI(it.getPortId(), this);
-      }
-    }
   }
 }
 
-EMGMResponse
-CDataConnection::disconnect(CFunctionBlock &paDstFB, CStringDictionary::TStringId paDstPortNameId){
-  EMGMResponse retval = EMGMResponse::NoSuchObject;
-  const TPortId dstPortId = paDstFB.getDIID(paDstPortNameId);
-
-  if(cgInvalidPortId != dstPortId){
-    retval = CConnection::removeDestination(CConnectionPoint(paDstFB, dstPortId));
-    if(EMGMResponse::Ready == retval){
-      // the CConnection class didn't respond an error
-      paDstFB.connectDI(dstPortId, nullptr);
-    }
+EMGMResponse CDataConnection::disconnect(CFunctionBlock &paDstFB, CStringDictionary::TStringId paDstPortNameId) {
+  if (paDstFB.getDIConnection(paDstPortNameId) != this) {
+    return EMGMResponse::NoSuchObject;
   }
-  return retval;
+
+  const TPortId dstPortId = paDstFB.getDIID(paDstPortNameId);
+  if (cgInvalidPortId == dstPortId) {
+    return EMGMResponse::NoSuchObject;
+  }
+  paDstFB.connectDI(dstPortId, nullptr);
+  return EMGMResponse::Ready;
 }
 
 bool CDataConnection::canBeConnected(const CIEC_ANY &paSrcDataPoint,
@@ -95,25 +87,17 @@ bool CDataConnection::canBeConnected(const CIEC_ANY &paSrcDataPoint,
   return bCanConnect;
 }
 
-EMGMResponse CDataConnection::establishDataConnection(CFunctionBlock &paDstFB, const TPortId paDstPortId,
-    const CIEC_ANY &paDstDataPoint){
-  EMGMResponse retVal = EMGMResponse::InvalidOperation;
-
+EMGMResponse CDataConnection::establishDataConnection(CFunctionBlock &paDstFB,
+                                                      const TPortId paDstPortId,
+                                                      const CIEC_ANY &paDstDataPoint) {
   if (getValue().getDataTypeID() == CIEC_ANY::e_ANY) {
     handleAnySrcPortConnection(paDstDataPoint);
-    retVal = EMGMResponse::Ready;
-  } else {
-    if (canBeConnected(getValue(), paDstDataPoint)) {
-      retVal = EMGMResponse::Ready;
-    }
+  } else if (!canBeConnected(getValue(), paDstDataPoint)) {
+    return EMGMResponse::InvalidOperation;
   }
 
-  if(EMGMResponse::Ready == retVal){
-    retVal = CConnection::addDestination(CConnectionPoint(paDstFB, paDstPortId));
-    if(EMGMResponse::Ready == retVal && !paDstFB.connectDI(paDstPortId, this)) {
-      retVal = EMGMResponse::InvalidState;
-      mDestinationIds.pop_back(); //remove the newly created connection from the list
-    }
+  if (!paDstFB.connectDI(paDstPortId, this)) {
+    return EMGMResponse::InvalidState;
   }
-  return retVal;
+  return EMGMResponse::Ready;
 }

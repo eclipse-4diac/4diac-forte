@@ -47,10 +47,6 @@ class CInOutDataConnection : public CDataConnection {
       return *mValue;
     }
 
-    bool isConnected() const override {
-      return true;
-    }
-
   protected:
     EMGMResponse establishDataConnection(CFunctionBlock &paDstFB, const TPortId paDstPortId, const CIEC_ANY &paDstDataPoint) override;
 
