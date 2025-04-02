@@ -21,7 +21,7 @@ class CEventChainExecutionThread;
 /*!\ingroup CORE \brief Class for handling an event connection.
  *
  */
-class CEventConnection : public CConnection{
+class CEventConnection : public CConnection {
   public:
     CEventConnection(CFunctionBlock &paSrcFB, const TPortId paSrcPortId);
 
@@ -40,6 +40,32 @@ class CEventConnection : public CConnection{
      */
     void triggerEvent(CEventChainExecutionThread *paExecEnv) const;
 
+    /*! \brief Check if there are destinations added to this connection
+     *
+     * \return true if there are destinations
+     */
+    bool isConnected() const {
+      return !mDestinationIds.empty();
+    }
+
+    /*! \brief Get list of destinations of the connection
+     */
+    const std::vector<CConnectionPoint> &getDestinationList() const {
+      return mDestinationIds;
+    }
+
+  protected:
+    EMGMResponse addDestination(const CConnectionPoint &paDestPoint);
+
+    EMGMResponse removeDestination(const CConnectionPoint &paDestPoint);
+
+  private:
+    /*!\brief a list of destinations the connection is connected to.
+     *
+     * By storing a list of destinations an implicit support for fan-out is given.
+     * The destination is represented as string id the same way as the sourceId
+     */
+    std::vector<CConnectionPoint> mDestinationIds;
 };
 
 typedef CEventConnection *TEventConnectionPtr;

@@ -26,7 +26,8 @@ forte_add_subdirectory(util)
 forte_add_subdirectory(io)
 forte_add_subdirectory(fmi)
 
-forte_add_sourcefile_hcpp(conn dataconn inoutdataconn eventconn)
+forte_add_sourcefile_h(conn.h)
+forte_add_sourcefile_hcpp(dataconn inoutdataconn eventconn)
 
 forte_add_sourcefile_h(esfb.h event.h fortenode.h fortelist.h genfb.h simplefb.h)
 forte_add_sourcefile_hcpp(basicfb cfb device devexec forteinstance mgmcmd)
