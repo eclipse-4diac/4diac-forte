@@ -102,6 +102,8 @@ class CCompositeFB: public CFunctionBlock {
      */
     bool connectDI(TPortId paDIPortId, CDataConnection *paDataCon) override;
 
+    bool configureGenericDI(TPortId paDIPortId, const CIEC_ANY &paRefValue) override;
+    bool configureGenericDIO(TPortId paDIOPortId, const CIEC_ANY &paRefValue) override;
     bool configureGenericDO(TPortId paDOPortId, const CIEC_ANY &paRefValue) override;
     //! implement improved version of get Var for CFBs, allowing to read and write to internal elements
     CIEC_ANY* getVar(CStringDictionary::TStringId *paNameList,
