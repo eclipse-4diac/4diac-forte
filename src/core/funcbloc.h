@@ -258,7 +258,17 @@ class CFunctionBlock : public forte::core::CFBContainer {
 
     const CInOutDataConnection *getDIOOutConnection(CStringDictionary::TStringId paDIONameId) const;
 
-    /*!\brief if the data output is of generic type (i.e, ANY) this function allows an data connection to configure
+    /*! \brief if the data input is of generic type (i.e, ANY) this function allows a data connection to configure
+     * the DI with the specific type coming from the other end of the connection
+     */
+    virtual bool configureGenericDI(TPortId paDIPortId, const CIEC_ANY &paRefValue);
+
+    /*! \brief if the data in/out is of generic type (i.e, ANY) this function allows a data connection to configure
+     * the DIO with the specific type coming from the other end of the connection
+     */
+    virtual bool configureGenericDIO(TPortId paDIOPortId, const CIEC_ANY &paRefValue);
+
+    /*! \brief if the data output is of generic type (i.e, ANY) this function allows a data connection to configure
      * the DO with the specific type coming from the other end of the connection
      */
     virtual bool configureGenericDO(TPortId paDOPortId, const CIEC_ANY &paRefValue);
@@ -664,9 +674,6 @@ class CFunctionBlock : public forte::core::CFBContainer {
     constexpr static char csmToStringSeparator[] = ", ";
 
   private:
-    void configureGenericDI(TPortId paDIPortId, const CIEC_ANY &paRefValue);
-    void configureGenericDIO(TPortId paDIOPortId, const CIEC_ANY &paRefValue);
-
 #ifdef FORTE_SUPPORT_MONITORING
     TForteUInt32 *mEOMonitorCount;
     TForteUInt32 *mEIMonitorCount;

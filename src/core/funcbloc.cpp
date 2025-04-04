@@ -96,75 +96,59 @@ const CEventConnection *CFunctionBlock::getEOConnection(CStringDictionary::TStri
   return retVal;
 }
 
-bool CFunctionBlock::connectDI(TPortId paDIPortId, CDataConnection *paDataCon){
-  bool bRetVal = false;
-
-  if(getFBInterfaceSpec().mNumDIs > paDIPortId) { //catch invalid ID
-    if(nullptr == paDataCon){
-      *getDIConUnchecked(paDIPortId) = nullptr;
-      bRetVal = true;
-    } else {
-      //only perform connection checks if it is not a disconnection request.
-      CDataConnection *conn = *getDIConUnchecked(paDIPortId);
-      if(nullptr != conn) {
-        if(conn == paDataCon) {
-          //we have a reconfiguration attempt
-          configureGenericDI(paDIPortId, paDataCon->getValue());
-          bRetVal = true;
-        } else {
-          DEVLOG_ERROR("%s cannot connect input data %s to more sources, using the latest connection attempt\n", getInstanceName(), CStringDictionary::get(getFBInterfaceSpec().mDINames[paDIPortId]));
-        }
-      } else {
-        *getDIConUnchecked(paDIPortId) = paDataCon;
-        configureGenericDI(paDIPortId, paDataCon->getValue());
-        bRetVal = true;
-      }
-    }
+bool CFunctionBlock::connectDI(TPortId paDIPortId, CDataConnection *paDataCon) {
+  if (paDIPortId >= getFBInterfaceSpec().mNumDIs) { // catch invalid ID
+    return false;
   }
-  return bRetVal;
+
+  CDataConnection **conn = getDIConUnchecked(paDIPortId);
+  if (!paDataCon) { // disconnect?
+    *conn = nullptr;
+    return true;
+  }
+  if (*conn && paDataCon != *conn) { // already connected to different connection?
+    DEVLOG_ERROR("%s cannot connect input data %s to more sources, using the latest connection attempt\n",
+                 getInstanceName(), CStringDictionary::get(getFBInterfaceSpec().mDINames[paDIPortId]));
+    return false;
+  }
+  *conn = paDataCon;
+  return configureGenericDI(paDIPortId, paDataCon->getValue());
 }
 
-void CFunctionBlock::configureGenericDI(TPortId paDIPortId, const CIEC_ANY& paRefValue) {
+bool CFunctionBlock::configureGenericDI(TPortId paDIPortId, const CIEC_ANY& paRefValue) {
   CIEC_ANY *di = getDI(paDIPortId);
   if(di->getDataTypeID() == CIEC_ANY::e_ANY) {
     di->setValue(paRefValue.unwrap());
   }
+  return true;
 }
 
-bool CFunctionBlock::connectDIO(TPortId paDIOPortId, CInOutDataConnection *paDataCon){
-  if(getFBInterfaceSpec().mNumDIOs > paDIOPortId) { //catch invalid ID
-    if(nullptr == paDataCon){
-      *getDIOInConUnchecked(paDIOPortId) = nullptr;
-      return true;
-    }
-    else {
-      //only perform connection checks if it is not a disconnection request.
-      CDataConnection *conn = *getDIOInConUnchecked(paDIOPortId);
-      if(nullptr != conn) {
-        if(conn == paDataCon) {
-          //we have a reconfiguration attempt
-          configureGenericDIO(paDIOPortId, paDataCon->getValue());
-          getDIOOutConUnchecked(paDIOPortId)->setValue(&paDataCon->getValue());
-          return true;
-        } else {
-          DEVLOG_ERROR("%s cannot connect InOut data %s to more sources, using the latest connection attempt\n", getInstanceName(), CStringDictionary::get(getFBInterfaceSpec().mDIONames[paDIOPortId]));
-        }
-      } else {
-        *getDIOInConUnchecked(paDIOPortId) = paDataCon;
-        configureGenericDIO(paDIOPortId, paDataCon->getValue());
-        getDIOOutConUnchecked(paDIOPortId)->setValue(&paDataCon->getValue());
-        return true;
-      }
-    }
+bool CFunctionBlock::connectDIO(TPortId paDIOPortId, CInOutDataConnection *paDataCon) {
+  if (paDIOPortId >= getFBInterfaceSpec().mNumDIOs) { // catch invalid ID
+    return false;
   }
-  return false;
+
+  CInOutDataConnection **conn = getDIOInConUnchecked(paDIOPortId);
+  if (!paDataCon) { // disconnect?
+    *conn = nullptr;
+    return true;
+  }
+  if (*conn && paDataCon != *conn) { // already connected to different connection?
+    DEVLOG_ERROR("%s cannot connect InOut data %s to more sources, using the latest connection attempt\n",
+                 getInstanceName(), CStringDictionary::get(getFBInterfaceSpec().mDIONames[paDIOPortId]));
+    return false;
+  }
+  *conn = paDataCon;
+  getDIOOutConUnchecked(paDIOPortId)->setValue(&paDataCon->getValue());
+  return configureGenericDIO(paDIOPortId, paDataCon->getValue());
 }
 
-void CFunctionBlock::configureGenericDIO(TPortId paDIOPortId, const CIEC_ANY& paRefValue) {
+bool CFunctionBlock::configureGenericDIO(TPortId paDIOPortId, const CIEC_ANY& paRefValue) {
   CIEC_ANY *dio = getDIO(paDIOPortId);
   if(dio->getDataTypeID() == CIEC_ANY::e_ANY) {
     dio->setValue(paRefValue.unwrap());
   }
+  return true;
 }
 
 CDataConnection *CFunctionBlock::getDIConnection(CStringDictionary::TStringId paDINameId) {
@@ -239,17 +223,15 @@ const CInOutDataConnection *CFunctionBlock::getDIOOutConnection(CStringDictionar
   return retVal;
 }
 
-bool CFunctionBlock::configureGenericDO(TPortId paDOPortId, const CIEC_ANY &paRefValue){
-  bool retVal = false;
-
-  if(getFBInterfaceSpec().mNumDOs > paDOPortId){
-    CIEC_ANY *dataOutput = getDO(paDOPortId);
-    if(dataOutput->getDataTypeID() == CIEC_ANY::e_ANY){
-      dataOutput->setValue(paRefValue);
-      retVal = true;
-    }
+bool CFunctionBlock::configureGenericDO(TPortId paDOPortId, const CIEC_ANY &paRefValue) {
+  if (paDOPortId >= getFBInterfaceSpec().mNumDOs) {
+    return false;
   }
-  return retVal;
+  CIEC_ANY *dataOutput = getDO(paDOPortId);
+  if (dataOutput->getDataTypeID() == CIEC_ANY::e_ANY) {
+    dataOutput->setValue(paRefValue.unwrap());
+  }
+  return true;
 }
 
 CIEC_ANY *CFunctionBlock::getDataOutput(CStringDictionary::TStringId paDONameId) {
