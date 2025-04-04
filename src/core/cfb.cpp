@@ -23,6 +23,35 @@
 #include "core/util/criticalregion.h"
 #include "adapterconn.h"
 
+namespace {
+  bool forwardGenericDI(CFunctionBlock &dstFB, const CStringDictionary::TStringId dstId, const CIEC_ANY &paRefValue) {
+    const TPortId dstDIPortId = dstFB.getDIID(dstId);
+    if (dstDIPortId == cgInvalidPortId) {
+      return false;
+    }
+    dstFB.configureGenericDI(dstDIPortId, paRefValue);
+    return true;
+  }
+
+  bool forwardGenericDIO(CFunctionBlock &dstFB, const CStringDictionary::TStringId dstId, const CIEC_ANY &paRefValue) {
+    const TPortId dstDIOPortId = dstFB.getDIOID(dstId);
+    if (dstDIOPortId == cgInvalidPortId) {
+      return false;
+    }
+    dstFB.configureGenericDIO(dstDIOPortId, paRefValue);
+    return true;
+  }
+
+  bool forwardGenericDO(CFunctionBlock &srcFB, const CStringDictionary::TStringId srcId, const CIEC_ANY &paRefValue) {
+    const TPortId dstDOPortId = srcFB.getDOID(srcId);
+    if (dstDOPortId == cgInvalidPortId) {
+      return false;
+    }
+    srcFB.configureGenericDO(dstDOPortId, paRefValue);
+    return true;
+  }
+}
+
 CCompositeFB::CCompositeFB(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec& paInterfaceSpec,
                            CStringDictionary::TStringId paInstanceNameId, const SCFB_FBNData & paFBNData) :
         CFunctionBlock(paContainer, paInterfaceSpec, paInstanceNameId),
@@ -38,6 +67,7 @@ bool CCompositeFB::initialize() {
     return false;
   }
 
+  setInitialValues();
   createEventConnections();
   createDataConnections();
   createAdapterConnections();
@@ -52,17 +82,49 @@ bool CCompositeFB::initialize() {
   return true;
 }
 
-bool CCompositeFB::connectDI(TPortId paDIPortId, CDataConnection *paDataCon){
-  // TODO remove?
-  if(cgInternal2InterfaceMarker & paDIPortId){
-    paDIPortId = static_cast<TPortId>(paDIPortId & cgInternal2InterfaceRemovalMask);
-    return paDIPortId < getFBInterfaceSpec().mNumDOs;
+bool CCompositeFB::connectDI(TPortId paDIPortId, CDataConnection *paDataCon) {
+  if (cgInternal2InterfaceMarker & paDIPortId) { // internal-to-interface connection?
+    return (paDIPortId & cgInternal2InterfaceRemovalMask) < getFBInterfaceSpec().mNumDOs;
   }
   return CFunctionBlock::connectDI(paDIPortId, paDataCon);
 }
 
-bool CCompositeFB::configureGenericDO(TPortId paDOPortId, const CIEC_ANY &paRefValue){
-  // TODO remove?
+bool CCompositeFB::configureGenericDI(const TPortId paDIPortId, const CIEC_ANY& paRefValue) {
+  const CStringDictionary::TStringId ifSrcId = getFBInterfaceSpec().mDINames[paDIPortId];
+  for (unsigned int index = 0; index < cmFBNData.mNumDataConnections; index++) {
+    if (auto [srcId, srcFBNum, dstId, dstFBNum] = cmFBNData.mDataConnections[index]; srcFBNum == -1 && srcId == ifSrcId) {
+      CFunctionBlock *dstFB = getFunctionBlock(dstFBNum);
+      if (!dstFB || !forwardGenericDI(*dstFB, dstId, paRefValue)) {
+        return false;
+      };
+    }
+  }
+  return CFunctionBlock::configureGenericDI(paDIPortId, paRefValue);
+}
+
+bool CCompositeFB::configureGenericDIO(const TPortId paDIOPortId, const CIEC_ANY& paRefValue) {
+  const CStringDictionary::TStringId ifSrcId = getFBInterfaceSpec().mDIONames[paDIOPortId];
+  for (unsigned int index = 0; index < cmFBNData.mNumDataConnections; index++) {
+    if (auto [srcId, srcFBNum, dstId, dstFBNum] = cmFBNData.mDataConnections[index]; srcFBNum == -1 && srcId == ifSrcId) {
+      CFunctionBlock *dstFB = getFunctionBlock(dstFBNum);
+      if (!dstFB || (!forwardGenericDI(*dstFB, dstId, paRefValue) && !forwardGenericDIO(*dstFB, dstId, paRefValue))) {
+        return false;
+      };
+    }
+  }
+  return CFunctionBlock::configureGenericDIO(paDIOPortId, paRefValue);
+}
+
+bool CCompositeFB::configureGenericDO(const TPortId paDOPortId, const CIEC_ANY &paRefValue) {
+  const CStringDictionary::TStringId ifDstId = getFBInterfaceSpec().mDONames[paDOPortId];
+  for (unsigned int index = 0; index < cmFBNData.mNumDataConnections; index++) {
+    if (auto [srcId, srcFBNum, dstId, dstFBNum] = cmFBNData.mDataConnections[index]; dstFBNum == -1 && dstId == ifDstId) {
+      CFunctionBlock *srcFB = getFunctionBlock(srcFBNum);
+      if (!srcFB || !forwardGenericDO(*srcFB, srcId, paRefValue)) {
+        return false;
+      };
+    }
+  }
   return CFunctionBlock::configureGenericDO(paDOPortId, paRefValue);
 }
 

@@ -48,8 +48,8 @@ EMGMResponse CDataConnection::connectToCFBInterface(CFunctionBlock &paDstFB,
 }
 
 void CDataConnection::handleAnySrcPortConnection(const CIEC_ANY &paDstDataPoint){
-  if(CIEC_ANY::e_ANY != paDstDataPoint.getDataTypeID()){
-    getValue().setValue(paDstDataPoint);
+  if(CIEC_ANY::e_ANY != paDstDataPoint.unwrap().getDataTypeID()){
+    getValue().setValue(paDstDataPoint.unwrap());
     getSourceId().getFB().configureGenericDO(getSourceId().getPortId(), paDstDataPoint);
   }
 }
