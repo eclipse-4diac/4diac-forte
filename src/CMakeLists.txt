@@ -362,14 +362,15 @@ set_property(CACHE FORTE_ARCHITECTURE PROPERTY STRINGS None ${architectures})
 #######################################################################################
 
 # setting the C++ version has to be done directly before defining the targets only then modules can override this setting 
-if(NOT DEFINED CMAKE_CXX_STANDARD)
-    set(CMAKE_CXX_STANDARD 17)
-elseif(CMAKE_CXX_STANDARD LESS 17)
-  set(CMAKE_CXX_STANDARD 17)
-endif()
-if(NOT DEFINED CMAKE_CXX_STANDARD_REQUIRED)
-    set(CMAKE_CXX_STANDARD_REQUIRED ON)
-endif()
+if (NOT DEFINED CMAKE_CXX_STANDARD)
+  set(CMAKE_CXX_STANDARD 20)
+elseif (CMAKE_CXX_STANDARD LESS 20)
+  message(NOTICE "C++ standard changed to minimum requirement of 20, was set to ${CMAKE_CXX_STANDARD} originally")
+  set(CMAKE_CXX_STANDARD 20)
+endif ()
+if (NOT DEFINED CMAKE_CXX_STANDARD_REQUIRED)
+  set(CMAKE_CXX_STANDARD_REQUIRED ON)
+endif ()
 
 #######################################################################################
 # Create an object library with all configurations needed which 

@@ -113,6 +113,7 @@ FILE(WRITE ${CMAKE_BINARY_DIR}/file_test_list.txt "${WRITE_FILE}")
 
 ADD_EXECUTABLE(forte_test ${SOURCE_H} ${SOURCE_CPP})
 target_link_libraries(forte_test FORTE_LITE)
+target_compile_features(forte_test PUBLIC cxx_std_20)
 
 #######################################################################################
 # Add definitions
