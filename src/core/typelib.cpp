@@ -1,6 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2005 - 2015 ACIN, Profactor GmbH, fortiss GmbH
- *               2023 Martin Erich Jobst
+ * Copyright (c) 2005, 2025 ACIN, Profactor GmbH, fortiss GmbH,
+ *                          Martin Erich Jobst
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -17,10 +17,7 @@
  *******************************************************************************/
 #include "./datatypes/forte_any.h"
 #include "typelib.h"
-#include "eventconn.h"
-#include "dataconn.h"
 #include "adapterconn.h"
-#include "resource.h"
 #include "adapter.h"
 #include <stddef.h>
 
@@ -127,7 +124,7 @@ CFunctionBlock *CTypeLib::createFB(CStringDictionary::TStringId paInstanceNameId
   }
 
   if(nullptr != newFB && !newFB->initialize()) {
-    deleteFB(newFB);
+    delete newFB;
     newFB = nullptr;
   }
 
@@ -162,7 +159,7 @@ CFunctionBlock *CTypeLib::createGenericFB(CStringDictionary::TStringId paInstanc
     mLastErrorMSG = EMGMResponse::Overflow;
   } else { // we got a configurable block
     if(!newFB->configureFB(typeBuf)) {
-      deleteFB (newFB);
+      delete newFB;
       return nullptr;
     }
   }
@@ -171,6 +168,7 @@ CFunctionBlock *CTypeLib::createGenericFB(CStringDictionary::TStringId paInstanc
 }
 
 bool CTypeLib::deleteFB(CFunctionBlock *paFBToDelete) {
+  paFBToDelete->deinitialize();
   delete paFBToDelete;
   return true;
 }

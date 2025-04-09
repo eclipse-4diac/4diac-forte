@@ -53,6 +53,12 @@ bool CFBContainer::initialize() {
   return true;
 }
 
+void CFBContainer::deinitialize() {
+  for (auto it : getChildren()) {
+    it->deinitialize();
+  }
+}
+
 CFBContainer::~CFBContainer() {
   for (TFBContainerList::iterator itRunner(mChildren.begin()); itRunner != mChildren.end(); ++itRunner) {
     delete (*itRunner);
