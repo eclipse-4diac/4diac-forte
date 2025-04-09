@@ -19,6 +19,8 @@
  *                 - account for data type size in FB initialization
  *******************************************************************************/
 #include "funcbloc.h"
+#include "dataconn.h"
+#include "eventconn.h"
 
 USE_STRING_ID(ARRAY);
 USE_STRING_ID(Event);
@@ -27,7 +29,7 @@ USE_STRING_ID(Event);
 #include <string.h>
 #include "../arch/timerha.h"
 #include "adapter.h"
-#include "core/util/criticalregion.h"
+#include "adapterconn.h"
 #include "device.h"
 
 #include "forte_array_dynamic.h"
@@ -58,6 +60,45 @@ CFunctionBlock::~CFunctionBlock() {
 #ifdef FORTE_SUPPORT_MONITORING
   freeEventMonitoringData();
 #endif // FORTE_SUPPORT_MONITORING
+}
+
+void CFunctionBlock::deinitialize() {
+  CFBContainer::deinitialize();
+  
+  //disconnect all event connections
+  for(TPortId eoId = 0; eoId < getFBInterfaceSpec().mNumEOs; eoId++) {
+    CEventConnection *eoConn = getEOConUnchecked(eoId); 
+    for(auto connPoint : eoConn->getDestinationList()) {
+      eoConn->disconnect(connPoint.getFB(), connPoint.getPortId());
+    }
+  }
+  
+  //disconnect all data input connections
+  for(TPortId diId = 0; diId < getFBInterfaceSpec().mNumDIs; diId++) {
+    CDataConnection *diConn = *getDIConUnchecked(diId);
+    if(diConn != nullptr) {
+      diConn->disconnect(*this, getFBInterfaceSpec().mDINames[diId]);
+      if(diConn->isDelegating()){
+        delete diConn;
+      }
+    }
+  }
+
+  //disconnect all adapter input connections
+  for(TPortId aiId = 0; aiId < getFBInterfaceSpec().mNumAdapters; aiId++) {
+    CAdapter *adp = getAdapterUnchecked(aiId);
+    if(adp->isSocket() && adp->getAdapterConnection() != nullptr) {
+      adp->getAdapterConnection()->disconnect(*this, getFBInterfaceSpec().mAdapterInstanceDefinition[aiId].mAdapterNameID);
+    }
+  }
+  
+  //disconnect all dio input connections  
+  for(TPortId dioId = 0; dioId < getFBInterfaceSpec().mNumDIOs; dioId++) {
+    CDataConnection *dioConn = *getDIOInConUnchecked(dioId);
+    if(dioConn != nullptr){
+       dioConn->disconnect(*this, getFBInterfaceSpec().mDIONames[dioId]);
+    }
+  }
 }
 
 CTimerHandler &CFunctionBlock::getTimer() {

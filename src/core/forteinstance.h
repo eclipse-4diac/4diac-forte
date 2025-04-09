@@ -1,5 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2024 Primetals Technologies Austria GmbH, Martin Erich Jobst
+ * Copyright (c) 2024, 2025 Primetals Technologies Austria GmbH, 
+ *                          Martin Erich Jobst
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -16,6 +17,8 @@
 class C4diacFORTEInstance {
   public:
     C4diacFORTEInstance() = default;
+    
+    ~C4diacFORTEInstance();
 
     bool startupNewDevice(const std::string &paMGRID);
 

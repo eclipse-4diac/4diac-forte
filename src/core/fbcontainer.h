@@ -40,6 +40,7 @@ namespace forte {
         CFBContainer(CStringDictionary::TStringId paContInstanceName, CFBContainer &paParent);
 
         virtual bool initialize();
+        virtual void deinitialize();
 
         virtual ~CFBContainer();
 
