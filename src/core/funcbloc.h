@@ -133,8 +133,9 @@ class CFunctionBlock : public forte::core::CFBContainer {
                   "scmMaxInterfaceEvents must be a valid bitmask");
 
     bool initialize() override;
+    void deinitialize() override;
 
-    virtual ~CFunctionBlock();
+    ~CFunctionBlock() override;
 
     /*!\brief Get the timer of the device where the FB is contained.
      */

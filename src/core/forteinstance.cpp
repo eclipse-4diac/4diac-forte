@@ -1,5 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2024 Primetals Technologies Austria GmbH, Martin Erich Jobst
+ * Copyright (c) 2024, 2025 Primetals Technologies Austria GmbH, 
+ *                          Martin Erich Jobst
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -16,6 +17,12 @@
 #include "deviceFactory.h"
 
 
+C4diacFORTEInstance::~C4diacFORTEInstance() {
+  if(mActiveDevice){
+    mActiveDevice->deinitialize();
+  }
+}
+
 std::unique_ptr<CDevice> C4diacFORTEInstance::createDev(const std::string &paMGRID) {
   auto dev = DeviceFactory::createDevice(paMGRID);
   dev->initialize();
@@ -27,6 +34,7 @@ bool C4diacFORTEInstance::startupNewDevice(const std::string &paMGRID){
     //we have a current active device stop it
     triggerDeviceShutdown();
     awaitDeviceShutdown();
+    mActiveDevice->deinitialize();
   }
   mActiveDevice = createDev(paMGRID);
   if(mActiveDevice){
