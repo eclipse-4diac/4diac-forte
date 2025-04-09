@@ -20,6 +20,9 @@ AlignTrailingComments: false
 # https://clang.llvm.org/docs/ClangFormatStyleOptions.html#allowshortblocksonasingleline
 AllowShortBlocksOnASingleLine: false
 
+# https://clang.llvm.org/docs/ClangFormatStyleOptions.html#allowshortcaselabelsonasingleline
+AllowShortCaseLabelsOnASingleLine: true
+
 # https://clang.llvm.org/docs/ClangFormatStyleOptions.html#allowshortfunctionsonasingleline
 AllowShortFunctionsOnASingleLine: None
 
