@@ -42,16 +42,16 @@ namespace forte {
 
     enum EComResponse{
       e_Nothing = 0,
-      e_InitOk = e_InitPositive | e_Ok,
-      e_ProcessDataOk = e_ProcessDataPositive | e_Ok,
-      e_InitInvalidId = e_InitNegative | e_InvalidId,
-      e_InitTerminated = e_InitNegative | e_Terminated,
-      e_ProcessDataInvalidObject = e_ProcessDataNegative | e_InvalidObject,
-      e_ProcessDataDataTypeError = e_ProcessDataNegative | e_DataTypeError,
-      e_ProcessDataInhibited = e_ProcessDataNegative | e_Inhibited,
-      e_ProcessDataNoSocket = e_ProcessDataNegative | e_NoSocket,
-      e_ProcessDataSendFailed = e_ProcessDataNegative | e_SendFailed,
-      e_ProcessDataRecvFaild = e_ProcessDataNegative | e_RecvFailed
+      e_InitOk = +e_InitPositive | +e_Ok,
+      e_ProcessDataOk = +e_ProcessDataPositive | +e_Ok,
+      e_InitInvalidId = +e_InitNegative | +e_InvalidId,
+      e_InitTerminated = +e_InitNegative | +e_Terminated,
+      e_ProcessDataInvalidObject = +e_ProcessDataNegative | +e_InvalidObject,
+      e_ProcessDataDataTypeError = +e_ProcessDataNegative | +e_DataTypeError,
+      e_ProcessDataInhibited = +e_ProcessDataNegative | +e_Inhibited,
+      e_ProcessDataNoSocket = +e_ProcessDataNegative | +e_NoSocket,
+      e_ProcessDataSendFailed = +e_ProcessDataNegative | +e_SendFailed,
+      e_ProcessDataRecvFaild = +e_ProcessDataNegative | +e_RecvFailed
    };
 
   /*!\brief Enum for different Communication FB types
@@ -66,10 +66,10 @@ namespace forte {
   };
 
   enum EComServiceType{
-    e_Publisher = e_Requester | e_DataInputs, //!< e_Publisher
-    e_Subscriber = e_Responder | e_DataOutputs, //!< e_Subscriber
-    e_Server = e_Responder | e_DataInputs | e_DataOutputs, //!< e_Server
-    e_Client = e_Requester | e_DataInputs | e_DataOutputs
+    e_Publisher = +e_Requester | +e_DataInputs, //!< e_Publisher
+    e_Subscriber = +e_Responder | +e_DataOutputs, //!< e_Subscriber
+    e_Server = +e_Responder | +e_DataInputs | +e_DataOutputs, //!< e_Server
+    e_Client = +e_Requester | +e_DataInputs | +e_DataOutputs
     //!< e_Client
   };
 

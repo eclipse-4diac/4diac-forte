@@ -92,7 +92,7 @@ void CCommFB::executeEvent(TEventID paEIID, CEventChainExecutionThread *const pa
     break;
   }
 
-  if(resp & e_Terminated) {
+  if(resp & +e_Terminated) {
     if(mCommServiceType == e_Server && scmEventINITID != paEIID) { //if e_Terminated happened in INIT event, server shouldn't be silent
       //servers will not send information on client termination and should silently start to listen again
       resp = e_Nothing;
@@ -210,12 +210,12 @@ bool CCommFB::createInterfaceSpec(const char* paConfigString, SFBInterfaceSpec& 
   configureDIs(sParamA, paInterfaceSpec);
   configureDOs(sParamB, paInterfaceSpec);
 
-  if (forte::com_infra::e_Requester == (forte::com_infra::e_Requester & mCommServiceType)) {
+  if (e_Requester == (+e_Requester & mCommServiceType)) {
     paInterfaceSpec.mEINames = scmRequesterEventInputNameIds;
     paInterfaceSpec.mEONames = scmRequesterEventOutputNameIds;
   }
   else {
-    if (forte::com_infra::e_Responder == (forte::com_infra::e_Responder & mCommServiceType)) {
+    if (e_Responder == (+e_Responder & mCommServiceType)) {
       paInterfaceSpec.mEINames = scmResponderEventInputNameIds;
       paInterfaceSpec.mEONames = scmResponderEventOutputNameIds;
     }
@@ -229,7 +229,7 @@ bool CCommFB::createInterfaceSpec(const char* paConfigString, SFBInterfaceSpec& 
 void CCommFB::configureDIs(const char* paDIConfigString, SFBInterfaceSpec& paInterfaceSpec) {
   paInterfaceSpec.mNumDIs = 2;
 
-  if (forte::com_infra::e_DataInputs == (forte::com_infra::e_DataInputs & mCommServiceType)) {
+  if (e_DataInputs == (+e_DataInputs & mCommServiceType)) {
       //TODO: Check range of sParamA
       paInterfaceSpec.mNumDIs = paInterfaceSpec.mNumDIs +
                                   static_cast<TPortId>(forte::core::util::strtol(paDIConfigString, nullptr, 10));
@@ -258,7 +258,7 @@ void CCommFB::configureDIs(const char* paDIConfigString, SFBInterfaceSpec& paInt
 void CCommFB::configureDOs(const char* paDOConfigString, SFBInterfaceSpec& paInterfaceSpec) {
   paInterfaceSpec.mNumDOs = 2;
 
-  if(forte::com_infra::e_DataOutputs == (forte::com_infra::e_DataOutputs & mCommServiceType)){
+  if(+e_DataOutputs == (+e_DataOutputs & mCommServiceType)){
     //TODO: Check range of sParamA
     paInterfaceSpec.mNumDOs = paInterfaceSpec.mNumDOs +
                                 static_cast<TPortId>(forte::core::util::strtol(paDOConfigString, nullptr, 10));

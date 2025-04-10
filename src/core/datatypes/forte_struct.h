@@ -46,7 +46,7 @@ class CIEC_STRUCT : public CIEC_ANY_DERIVED{
      *   \return - the type-ID of the struct.
      */
     virtual TForteUInt8 getASN1StructType() const {
-      return e_APPLICATION + e_CONSTRUCTED + 1;
+      return +e_APPLICATION + +e_CONSTRUCTED + 1;
     }
 
     /*! \brief Get the Struct's size
