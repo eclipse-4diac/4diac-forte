@@ -62,7 +62,7 @@ BOOST_AUTO_TEST_SUITE(CIEC_ANY_CHARS_VARIANT_function_test)
 
       // assign dynamic value
       test2.setValue(CIEC_WCHAR('a'));
-      BOOST_TEST('a' == static_cast<CIEC_WCHAR::TValueType>(std::get<CIEC_WCHAR>(test2)));
+      BOOST_TEST('a' == static_cast<uint16_t>(static_cast<CIEC_WCHAR::TValueType>(std::get<CIEC_WCHAR>(test2))));
     }
 
     void checkStringConversion(CIEC_ANY_CHARS_VARIANT &paValue, const char *paString, CIEC_ANY::EDataTypeID paDataTypeId) {

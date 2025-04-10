@@ -31,13 +31,13 @@ BOOST_AUTO_TEST_CASE(Type_test)
 BOOST_AUTO_TEST_CASE(Literal_test)
 {
   CIEC_WCHAR test1 = u'a'_WCHAR;
-  BOOST_TEST(static_cast<CIEC_WCHAR::TValueType>(test1) == u'a');
+  BOOST_TEST(static_cast<uint16_t>(static_cast<CIEC_WCHAR::TValueType>(test1)) == 'a');
 
   CIEC_WCHAR test2 = u'\0'_WCHAR;
-  BOOST_TEST(static_cast<CIEC_WCHAR::TValueType>(test2) == u'\0');
+  BOOST_TEST(static_cast<uint16_t>(static_cast<CIEC_WCHAR::TValueType>(test2)) == '\0');
 
   CIEC_WCHAR test3 = 0x30_WCHAR;
-  BOOST_TEST(static_cast<CIEC_WCHAR::TValueType>(test3) == 0x30);
+  BOOST_TEST(static_cast<uint16_t>(static_cast<CIEC_WCHAR::TValueType>(test3)) == 0x30);
 }
 
 BOOST_AUTO_TEST_CASE(Assignment_test)
@@ -46,27 +46,27 @@ BOOST_AUTO_TEST_CASE(Assignment_test)
   CIEC_WCHAR test2;
 
   //initial value must be 0
-  BOOST_CHECK_EQUAL(static_cast<CIEC_WCHAR::TValueType>(test1), 0);
+  BOOST_CHECK_EQUAL(static_cast<uint16_t>(static_cast<CIEC_WCHAR::TValueType>(test1)), 0);
 
   test1 = CIEC_WCHAR(0);
   test2 = test1;
-  BOOST_CHECK_EQUAL(static_cast<CIEC_WCHAR::TValueType>(test1), 0);
-  BOOST_CHECK_EQUAL(static_cast<CIEC_WCHAR::TValueType>(test2), 0);
+  BOOST_CHECK_EQUAL(static_cast<uint16_t>(static_cast<CIEC_WCHAR::TValueType>(test1)), 0);
+  BOOST_CHECK_EQUAL(static_cast<uint16_t>(static_cast<CIEC_WCHAR::TValueType>(test2)), 0);
 
   test1 = CIEC_WCHAR(12);
   test2 = test1;
-  BOOST_CHECK_EQUAL(static_cast<CIEC_WCHAR::TValueType>(test1), 12);
-  BOOST_CHECK_EQUAL(static_cast<CIEC_WCHAR::TValueType>(test2), 12);
+  BOOST_CHECK_EQUAL(static_cast<uint16_t>(static_cast<CIEC_WCHAR::TValueType>(test1)), 12);
+  BOOST_CHECK_EQUAL(static_cast<uint16_t>(static_cast<CIEC_WCHAR::TValueType>(test2)), 12);
 
   test1 = CIEC_WCHAR(255);
   test2 = test1;
-  BOOST_CHECK_EQUAL(static_cast<CIEC_WCHAR::TValueType>(test1), 255);
-  BOOST_CHECK_EQUAL(static_cast<CIEC_WCHAR::TValueType>(test2), 255);
+  BOOST_CHECK_EQUAL(static_cast<uint16_t>(static_cast<CIEC_WCHAR::TValueType>(test1)), 255);
+  BOOST_CHECK_EQUAL(static_cast<uint16_t>(static_cast<CIEC_WCHAR::TValueType>(test2)), 255);
 
   //check that assignment operator does not intertwine objects
   test2 = CIEC_WCHAR(128);
-  BOOST_CHECK_EQUAL(static_cast<CIEC_WCHAR::TValueType>(test1), 255);
-  BOOST_CHECK_EQUAL(static_cast<CIEC_WCHAR::TValueType>(test2), 128);
+  BOOST_CHECK_EQUAL(static_cast<uint16_t>(static_cast<CIEC_WCHAR::TValueType>(test1)), 255);
+  BOOST_CHECK_EQUAL(static_cast<uint16_t>(static_cast<CIEC_WCHAR::TValueType>(test2)), 128);
 
 }
 
