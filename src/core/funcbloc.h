@@ -416,6 +416,20 @@ class CFunctionBlock : public forte::core::CFBContainer {
      */
     CFunctionBlock *getFB(NameIterator &paNameListIt, NameIterator paNameListEnd) override;
 
+    /*!\brief get the connection object for the given destination identifier
+     *
+     * @param paDstNameList array of the name hierarchy the requested connection destination
+     * @return pointer to the requested connection, returns nullptr if there is no such destination
+     */
+    CConnection *getInputConnection(forte::core::TNameIdentifier &paDstNameList) override;
+
+    /*!\brief get the connection object for the given source identifier
+       *
+       * @param paSrcNameList array of the name hierarchy the requested connection source
+       * @return pointer to the requested connection, returns nullptr if there is no such source
+       */
+    CConnection *getOutputConnection(forte::core::TNameIdentifier &paSrcNameList) override;
+
 #ifdef FORTE_SUPPORT_MONITORING
     TForteUInt32 &getEIMonitorData(TEventID paEIID);
 

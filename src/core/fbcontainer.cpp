@@ -210,3 +210,27 @@ EMGMResponse CFBContainer::changeExecutionState(EMGMCommandType paCommand){
   }
   return retVal;
 }
+
+CConnection *CFBContainer::getInputConnection(TNameIdentifier &paDstNameList) {
+  if (paDstNameList.empty()) {
+    return nullptr;
+  }
+  CStringDictionary::TStringId name = paDstNameList.front();
+  if (const auto child = getChild(name); child) {
+    paDstNameList.erase(paDstNameList.begin());
+    return child->getInputConnection(paDstNameList);
+  }
+  return nullptr;
+}
+
+CConnection *CFBContainer::getOutputConnection(TNameIdentifier &paSrcNameList) {
+  if (paSrcNameList.empty()) {
+    return nullptr;
+  }
+  CStringDictionary::TStringId name = paSrcNameList.front();
+  if (const auto child = getChild(name); child) {
+    paSrcNameList.erase(paSrcNameList.begin());
+    return child->getOutputConnection(paSrcNameList);
+  }
+  return nullptr;
+}

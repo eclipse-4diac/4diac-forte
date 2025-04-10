@@ -123,6 +123,8 @@ class CResource : public CFunctionBlock{
       return true;
     }
 
+    CConnection *getOutputConnection(forte::core::TNameIdentifier &paSrcNameList) override;
+
   protected:
     CResource(const SFBInterfaceSpec& paInterfaceSpec, CStringDictionary::TStringId paInstanceNameId);
 
@@ -282,13 +284,6 @@ class CResource : public CFunctionBlock{
      * @return the pointer to the variable or 0 if the variable with the given identifier name list does not exist
      */
     CIEC_ANY *getVariable(forte::core::TNameIdentifier &paNameList);
-
-    /*!\brief get the connection object for the given source identifier
-     *
-     * @param paSrcNameList array of the name hierarchy the requested connection source
-     * @return pointer to the requested connection, returns 0 if there is no such source
-     */
-    CConnection *getConnection(forte::core::TNameIdentifier &paSrcNameList);
 
     CConnection *getResIf2InConnection(CStringDictionary::TStringId paResInput);
 
