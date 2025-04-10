@@ -25,7 +25,7 @@ BOOST_AUTO_TEST_SUITE (forte_stringFunctions_test)
     // Set the new and save the previous locale
     // BUG: trigger std::runtime_error: locale::facet::_S_create_c_locale name not valid with musl
     std::locale prev_loc = std::locale::global(std::locale("C.UTF-8"));
-    const std::string testString = u8"4diac 4 は今まで！"; // make sure to use UTF-8 text editor with Unicode support
+    const std::string testString = "4diac 4 は今まで！"; // make sure to use UTF-8 text editor with Unicode support
     const std::wstring resultString = L"4diac 4 は今まで！";
 #endif
 
@@ -48,7 +48,7 @@ BOOST_AUTO_TEST_SUITE (forte_stringFunctions_test)
     // BUG: trigger std::runtime_error: locale::facet::_S_create_c_locale name not valid with musl
     std::locale prev_loc = std::locale::global(std::locale("C.UTF-8"));
     const std::wstring testString = L"4diac 4 永远！"; // make sure to use UTF-8 text editor with Unicode support
-    const std::string resultString = u8"4diac 4 永远！";
+    const std::string resultString = "4diac 4 永远！";
 #endif
 
     BOOST_TEST(wcslen(testString.c_str()) == wcslen(forte_stringToWstring(resultString).c_str()));
