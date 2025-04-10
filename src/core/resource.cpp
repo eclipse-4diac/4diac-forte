@@ -208,20 +208,19 @@ EMGMResponse CResource::createConnection(forte::core::SManagementCMD &paCommand)
 
 EMGMResponse CResource::createConnection(forte::core::TNameIdentifier &paSrcNameList,
                                          forte::core::TNameIdentifier &paDstNameList) {
-  EMGMResponse retVal = EMGMResponse::NoSuchObject;
-
-  CConnection *const con = getConnection(paSrcNameList);
-  if (nullptr != con) {
-    CStringDictionary::TStringId portName = paDstNameList.back();
-    paDstNameList.pop_back();
-    auto runner = paDstNameList.cbegin();
-    CFunctionBlock *dstFB = getFB(runner, paDstNameList.cend());
-    if ((nullptr != dstFB) && (runner == paDstNameList.cend())) {
-      retVal = con->connect(*dstFB, portName);
-    }
+  CConnection *const con = getOutputConnection(paSrcNameList);
+  if (!con) {
+    return EMGMResponse::NoSuchObject;
   }
 
-  return retVal;
+  CStringDictionary::TStringId portName = paDstNameList.back();
+  paDstNameList.pop_back();
+  auto runner = paDstNameList.cbegin();
+  CFunctionBlock *dstFB = getFB(runner, paDstNameList.cend());
+  if (!dstFB || (runner != paDstNameList.cend())) {
+    return EMGMResponse::NoSuchObject;
+  }
+  return con->connect(*dstFB, portName);
 }
 
 namespace {
@@ -246,14 +245,14 @@ EMGMResponse CResource::deleteConnection(forte::core::TNameIdentifier &paSrcName
   }
 
   CStringDictionary::TStringId dstPortName = *dstIt;
-  // first check if the dstFB has a data conneciton with given name:
-  CConnection * con = dstFB->getDIConnection(dstPortName);
+  // first check if the destination has an input connection with the given name
+  CConnection * con = getInputConnection(paDstNameList);
   if (con != nullptr) {
-    if (CConnectionPoint(*srcFB, *srcIt) != const_cast<const CConnection *>(con)->getSourceId()) {
+    if (CConnectionPoint(*srcFB, *srcIt) != con->getSourceId()) {
       return EMGMResponse::NoSuchObject;
     }
   } else {
-    con = getConnection(paSrcNameList);
+    con = getOutputConnection(paSrcNameList);
   }
 
   if (con != nullptr) {
@@ -451,7 +450,7 @@ void CResource::createAOConnectionResponse(const CFunctionBlock &paFb, std::stri
     const CAdapter *const adapter = paFb.getAdapter(spec.mAdapterInstanceDefinition[i].mAdapterNameID);
     const CAdapterConnection *aConn = adapter->getAdapterConnection();
     if(!spec.mAdapterInstanceDefinition[i].mIsPlug && aConn != nullptr && aConn->isConnected()) {
-      createConnectionResponseMessage(aConn->getSourceId().getFB(), aConn->getPlug().getInstanceNameId(), 
+      createConnectionResponseMessage(aConn->getSourceId().getFB(), aConn->getPlug().getInstanceNameId(),
           paFb, adapter->getInstanceNameId(), paReqResult);
     }
   }
@@ -689,39 +688,15 @@ CIEC_ANY *CResource::getVariable(forte::core::TNameIdentifier &paNameList) {
   return var;
 }
 
-CConnection *CResource::getConnection(forte::core::TNameIdentifier &paSrcNameList) {
-  CConnection *con = nullptr;
-  if (1 == paSrcNameList.size()) {
-    con = getResIf2InConnection(paSrcNameList[0]);
-  } else if (paSrcNameList.size() > 1) {
-    CStringDictionary::TStringId portName = paSrcNameList.back();
-    paSrcNameList.pop_back();
-    auto runner = paSrcNameList.cbegin();
-
-    CFunctionBlock *srcFB = getFB(runner, paSrcNameList.cend());
-    if ((nullptr != srcFB) && (runner == paSrcNameList.cend())) {
-      // only use the found result if we have really the last result in the list
-      con = srcFB->getEOConnection(portName);
-      if (nullptr == con) {
-        // it is not an event connection try inout data connection next
-        con = srcFB->getDIOOutConnection(portName);
-        if (nullptr == con) {
-          // it is not an inout connection try data connection next
-          con = srcFB->getDOConnection(portName);
-          if (nullptr == con) {
-            // it is not an data connection try data connection next
-            // TODO think if it would be better to move this to CFunctionBlock
-            CAdapter *adp = srcFB->getAdapter(portName);
-            if ((nullptr != adp) && (adp->isPlug())) {
-              // only plugs hold the connection object
-              con = adp->getAdapterConnection();
-            }
-          }
-        }
-      }
-    }
+CConnection *CResource::getOutputConnection(forte::core::TNameIdentifier &paSrcNameList) {
+  if (paSrcNameList.empty()) {
+    return nullptr;
   }
-  return con;
+  CStringDictionary::TStringId name = paSrcNameList.front();
+  if (const auto conn = getResIf2InConnection(name); conn) {
+    return conn;
+  }
+  return CFunctionBlock::getOutputConnection(paSrcNameList);
 }
 
 CConnection *CResource::getResIf2InConnection(CStringDictionary::TStringId paResInput) {

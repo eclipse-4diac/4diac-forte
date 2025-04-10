@@ -25,6 +25,7 @@
 class CFunctionBlock;
 class CDevice;
 class CResource;
+class CConnection;
 
 namespace forte {
   namespace core {
@@ -113,6 +114,20 @@ namespace forte {
         virtual bool isDynamicContainer() {
           return true;
         }
+
+        /*!\brief get the connection object for the given destination identifier
+         *
+         * @param paDstNameList array of the name hierarchy the requested connection destination
+         * @return pointer to the requested connection, returns nullptr if there is no such destination
+         */
+        virtual CConnection *getInputConnection(TNameIdentifier &paDstNameList);
+
+        /*!\brief get the connection object for the given source identifier
+         *
+         * @param paSrcNameList array of the name hierarchy the requested connection source
+         * @return pointer to the requested connection, returns nullptr if there is no such source
+         */
+        virtual CConnection *getOutputConnection(TNameIdentifier &paSrcNameList);
 
       protected:
         /*!\brief Create a new FB instance of given type and name

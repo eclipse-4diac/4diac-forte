@@ -40,11 +40,7 @@ class CConnectionPoint {
       return !(*this == paRight);
     }
 
-    CFunctionBlock &getFB() {
-      return *mFB;
-    }
-
-    const CFunctionBlock &getFB() const {
+    CFunctionBlock &getFB() const {
       return *mFB;
     }
 
@@ -119,11 +115,6 @@ class CConnection {
     }
 
   protected:
-    //! Non const version
-    CConnectionPoint &getSourceId() {
-      return mSourceId;
-    }
-
     /*!\brief An identifier for the source of this connection
      *
      * The source is identified by a FB pointer and the port ID

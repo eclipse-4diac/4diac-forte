@@ -501,6 +501,43 @@ TPortId CFunctionBlock::getPortId(CStringDictionary::TStringId paPortNameId,
   return cgInvalidPortId;
 }
 
+CConnection *CFunctionBlock::getInputConnection(forte::core::TNameIdentifier &paDstNameList) {
+  if (paDstNameList.empty()) {
+    return nullptr;
+  }
+  CStringDictionary::TStringId name = paDstNameList.front();
+  if (const auto conn = getDIConnection(name); conn) {
+    return conn;
+  };
+  if (const auto conn = getDIOInConnection(name); conn) {
+    return conn;
+  };
+  if (const auto adapter = getAdapter(name); adapter) {
+    return adapter->getAdapterConnection();
+  };
+  return CFBContainer::getInputConnection(paDstNameList);
+}
+
+CConnection *CFunctionBlock::getOutputConnection(forte::core::TNameIdentifier &paSrcNameList) {
+  if (paSrcNameList.empty()) {
+    return nullptr;
+  }
+  CStringDictionary::TStringId name = paSrcNameList.front();
+  if (const auto conn = getEOConnection(name); conn) {
+    return conn;
+  };
+  if (const auto conn = getDOConnection(name); conn) {
+    return conn;
+  };
+  if (const auto conn = getDIOOutConnection(name); conn) {
+    return conn;
+  };
+  if (const auto adapter = getAdapter(name); adapter) {
+    return adapter->getAdapterConnection();
+  };
+  return CFBContainer::getOutputConnection(paSrcNameList);
+}
+
 //********************************** below here are monitoring specific functions
 //**********************************************************
 #ifdef FORTE_SUPPORT_MONITORING
