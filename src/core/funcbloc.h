@@ -298,8 +298,9 @@ class CFunctionBlock : public forte::core::CFBContainer {
     void receiveInputEvent(TEventID paEIID, CEventChainExecutionThread *paExecEnv) {
       FORTE_TRACE("InputEvent: Function Block (%s) got event: %d (maxid: %d)\n", CStringDictionary::get(getInstanceNameId()), paEIID, getFBInterfaceSpec().mNumEIs - 1);
 
-
-
+      #ifdef FORTE_TRACE_CTF
+          traceInputEvent(paEIID);
+      #endif // FORTE_TRACE_CTF
       if(E_FBStates::Running == getState()){
         if(paEIID < getFBInterfaceSpec().mNumEIs) {
           readInputData(paEIID);
@@ -307,10 +308,6 @@ class CFunctionBlock : public forte::core::CFBContainer {
                 // Count Event for monitoring
                 mEIMonitorCount[paEIID]++;
           #endif //FORTE_SUPPORT_MONITORING
-
-#ifdef FORTE_TRACE_CTF
-          traceInputEvent(paEIID);
-#endif // FORTE_TRACE_CTF
         }
         executeEvent(paEIID, paExecEnv);
       }
@@ -469,12 +466,12 @@ class CFunctionBlock : public forte::core::CFBContainer {
      */
     void sendOutputEvent(TEventID paEO, CEventChainExecutionThread * const paECET){
       FORTE_TRACE("OutputEvent: Function Block sending event: %d (maxid: %d)\n", paEO, getFBInterfaceSpec().mNumEOs - 1);
-
+      
+      #ifdef FORTE_TRACE_CTF
+        traceOutputEvent(paEO, paECET);
+      #endif // FORTE_TRACE_CTF
       if(paEO < getFBInterfaceSpec().mNumEOs) {
         writeOutputData(paEO);
-#ifdef FORTE_TRACE_CTF
-        traceOutputEvent(paEO, paECET);
-#endif // FORTE_TRACE_CTF
         getEOConUnchecked(static_cast<TPortId>(paEO))->triggerEvent(paECET);
 
         #ifdef FORTE_SUPPORT_MONITORING

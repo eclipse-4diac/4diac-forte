@@ -89,9 +89,8 @@ BOOST_AUTO_TEST_CASE(sequential_events_test) {
 
   std::unordered_map<std::string, std::vector<EventMessage>> expectedMessages;
 
-  auto addInitialEvents = [](std::vector<EventMessage>& paMessages){
-    paMessages.emplace_back("sendOutputEvent", std::make_unique<FBOutputEventPayload>("E_RESTART", "START", 0, 0, std::vector<std::string>{}),0);
-
+  auto addInitiaOrFinalEvent = [](std::vector<EventMessage>& paMessages){
+     paMessages.emplace_back("receiveInputEvent", std::make_unique<FBInputEventPayload>("E_RESTART", "START", 65534), 0);
   };
 
   // device resource has no events
@@ -100,32 +99,44 @@ BOOST_AUTO_TEST_CASE(sequential_events_test) {
   // default resource in the test device
   expectedMessages[CStringDictionary::get(STRID(EMB_RES))] = {}; 
 
+  auto& embResMessages = expectedMessages[CStringDictionary::get(STRID(EMB_RES))];
+  addInitiaOrFinalEvent(embResMessages);
+  addInitiaOrFinalEvent(embResMessages);
+
   // resource with example FBs
   expectedMessages[CStringDictionary::get(resourceName)] = {};
 
   auto& resourceMessages = expectedMessages[CStringDictionary::get(resourceName)];
-  addInitialEvents(resourceMessages);
 
   auto eventCounter = 0;
 
   // timestamp cannot properly be tested, so setting everythin to zero
+  addInitiaOrFinalEvent(resourceMessages);
+  resourceMessages.emplace_back("sendOutputEvent", std::make_unique<FBOutputEventPayload>("E_RESTART", "START", 0, eventCounter, std::vector<std::string>{}), 0);
+  eventCounter++;
 
   resourceMessages.emplace_back("receiveInputEvent", std::make_unique<FBInputEventPayload>("E_CTU", "Counter", 0),0);
-  eventCounter++;
   resourceMessages.emplace_back("instanceData", std::make_unique<FBInstanceDataPayload>("E_CTU", "Counter", std::vector<std::string>{"1"}, std::vector<std::string>{"FALSE", "0"}, std::vector<std::string>{}, std::vector<std::string>{}), 0);
+
+  resourceMessages.emplace_back("sendOutputEvent", std::make_unique<FBOutputEventPayload>("E_CTU", "Counter", 0, eventCounter, std::vector<std::string>{"TRUE", "1"}),0);
   resourceMessages.emplace_back("outputData", std::make_unique<FBDataPayload>("E_CTU", "Counter", 0, "TRUE"), 0);
   resourceMessages.emplace_back("outputData", std::make_unique<FBDataPayload>("E_CTU", "Counter", 1, "1"), 0);
-  resourceMessages.emplace_back("sendOutputEvent", std::make_unique<FBOutputEventPayload>("E_CTU", "Counter", 0, eventCounter, std::vector<std::string>{"TRUE", "1"}),0);
-  resourceMessages.emplace_back("inputData", std::make_unique<FBDataPayload>("E_SWITCH", "Switch", 0, "TRUE"), 0);
+  eventCounter++;
+
   resourceMessages.emplace_back("receiveInputEvent", std::make_unique<FBInputEventPayload>("E_SWITCH", "Switch", 0),0);
-  resourceMessages.emplace_back("instanceData", std::make_unique<FBInstanceDataPayload>("E_SWITCH", "Switch", std::vector<std::string>{"TRUE"}, std::vector<std::string>{}, std::vector<std::string>{}, std::vector<std::string>{}), 0);
-  eventCounter++;
+  resourceMessages.emplace_back("instanceData", std::make_unique<FBInstanceDataPayload>("E_SWITCH", "Switch", std::vector<std::string>{"FALSE"}, std::vector<std::string>{}, std::vector<std::string>{}, std::vector<std::string>{}), 0);
+  resourceMessages.emplace_back("inputData", std::make_unique<FBDataPayload>("E_SWITCH", "Switch", 0, "TRUE"), 0);
+
+
   resourceMessages.emplace_back("sendOutputEvent", std::make_unique<FBOutputEventPayload>("E_SWITCH", "Switch", 1, eventCounter, std::vector<std::string>{}),0);
-  resourceMessages.emplace_back("receiveInputEvent", std::make_unique<FBInputEventPayload>("E_CTU", "Counter", 1),0);
   eventCounter++;
+
+  resourceMessages.emplace_back("receiveInputEvent", std::make_unique<FBInputEventPayload>("E_CTU", "Counter", 1),0);
   resourceMessages.emplace_back("instanceData", std::make_unique<FBInstanceDataPayload>("E_CTU", "Counter", std::vector<std::string>{"1"}, std::vector<std::string>{"TRUE", "1"}, std::vector<std::string>{}, std::vector<std::string>{}),0);
   resourceMessages.emplace_back("outputData", std::make_unique<FBDataPayload>("E_CTU", "Counter", 0, "FALSE"), 0);
   resourceMessages.emplace_back("outputData", std::make_unique<FBDataPayload>("E_CTU", "Counter", 1, "0"), 0);
+  
+  addInitiaOrFinalEvent(resourceMessages);
 
   auto ctfMessages = forte::ita::replay::utils::getEventMessages(CTF_OUTPUT_DIR).value();
 
