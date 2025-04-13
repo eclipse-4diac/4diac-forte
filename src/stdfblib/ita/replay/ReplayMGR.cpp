@@ -14,7 +14,7 @@
 #include "ReplayMGR.h"
 
 #include "core/ecetFake.h"
-#include "stdfblib/ita/replay/utils.h"
+#include "trace/reader/utils.h"
 #include "stdfblib/ita/replay/ReplayDevice.h"
 
 ReplayMGR::ReplayMGR(ReplayDevice& paDevice, OPCUA_MGR& paOpcuaMgr) : 
@@ -85,12 +85,12 @@ UA_StatusCode ReplayMGR::onReadTraces(UA_Server*,
   auto uaStringInput = static_cast<UA_String*>(input[0].data);
   auto path = std::string((const char*)uaStringInput->data, uaStringInput->length);
 
-  auto events = forte::ita::replay::utils::getEventMessages(path);
+  auto events = forte::trace::reader::utils::getEventMessages(path);
   if(!events.has_value()){
     return UA_STATUSCODE_BADINVALIDARGUMENT;
   }
 
-  auto replayAlgorithmEvents = forte::ita::replay::utils::filterEventsForReplayDevice(events.value(), replayMgr->mDevice);
+  auto replayAlgorithmEvents = forte::trace::reader::utils::filterEventsForReplayDevice(events.value(), replayMgr->mDevice);
 
   replayMgr->mDeviceReplayer = std::make_unique<CDeviceReplayer>(replayMgr->mDevice, std::move(replayAlgorithmEvents));
 

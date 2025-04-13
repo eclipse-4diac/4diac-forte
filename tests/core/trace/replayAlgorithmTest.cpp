@@ -19,11 +19,11 @@
 #include "common.h"
 #include "device.h"
 #include "ecet.h"
-#include "EventMessage.h"
+#include "core/trace/internal/EventMessage.h"
 #include "trace/barectf_platform_forte.h"
 #include "../fbtests/fbtesterglobalfixture.h"
 #include "stdfblib/ita/replay/deviceReplayer.h"
-#include "stdfblib/ita/replay/utils.h"
+#include "core/trace/reader/utils.h"
 #include "ForteBootFileLoader.h"
 #include "CommandParser.h"
 
@@ -146,7 +146,7 @@ std::unique_ptr<CDevice> createNonDeterministicExample(CStringDictionary::TStrin
   
   // resource 1
   {
-    auto resource = dynamic_cast<CResource*>(forte::ita::replay::utils::getFB(device.get(), paResourceName1));
+    auto resource = dynamic_cast<CResource*>(forte::trace::reader::utils::getFB(device.get(), paResourceName1));
 
     auto cycleName = STRID(E_CYCLE);
     auto ctuName = STRID(E_CTU);
@@ -249,7 +249,7 @@ std::unique_ptr<CDevice> createNonDeterministicExample(CStringDictionary::TStrin
 
   // resource 2
   {
-    auto resource = dynamic_cast<CResource*>(forte::ita::replay::utils::getFB(device.get(), paResourceName2));
+    auto resource = dynamic_cast<CResource*>(forte::trace::reader::utils::getFB(device.get(), paResourceName2));
 
     auto cycleName = STRID(E_CYCLE);
     auto ctuName = STRID(E_CTU);
@@ -484,7 +484,7 @@ std::unique_ptr<CDevice> createDeviceFromFile(CStringDictionary::TStringId paDev
 void testAlgorithm(std::function<std::unique_ptr<CDevice>(void)> paCreateDevice, const std::size_t milliSeconds) {
   forte::tests::traces::prepareTraceTest("metadata");
 
-  forte::ita::replay::utils::setFactoriesSettings({});
+  forte::trace::reader::utils::setFactoriesSettings({});
 
   auto killDevice = [](CDevice& paDevice, std::size_t paMillisecondsToSleepBeforeKilling = 1000){
     // wait for all events to be triggered
@@ -503,9 +503,9 @@ void testAlgorithm(std::function<std::unique_ptr<CDevice>(void)> paCreateDevice,
   // disable logging 
   BarectfPlatformFORTE::setup("");
 
-  auto allTracedEvents = forte::ita::replay::utils::getEventMessages(CTF_OUTPUT_DIR).value();
+  auto allTracedEvents = forte::trace::reader::utils::getEventMessages(CTF_OUTPUT_DIR).value();
 
-  forte::ita::replay::utils::setFactoriesSettings(
+  forte::trace::reader::utils::setFactoriesSettings(
       {EcetFactory::AvailableEcets::fake,
       TimerHandlerFactory::AvailableTimers::fakeTimer,
       CFlexibleTracer::AvailableTracers::Internal});
@@ -514,7 +514,7 @@ void testAlgorithm(std::function<std::unique_ptr<CDevice>(void)> paCreateDevice,
   {
     auto device = paCreateDevice(); 
 
-    auto allTracedExternalEvents = forte::ita::replay::utils::filterEventsForReplayDevice(allTracedEvents, *device);
+    auto allTracedExternalEvents = forte::trace::reader::utils::filterEventsForReplayDevice(allTracedEvents, *device);
 
     std::unordered_map<std::string, std::vector<EventMessage>> reproducedEvents;
 
@@ -534,7 +534,7 @@ void testAlgorithm(std::function<std::unique_ptr<CDevice>(void)> paCreateDevice,
   {
     auto device = paCreateDevice(); 
 
-    auto allTracedExternalEvents = forte::ita::replay::utils::filterEventsForReplayDevice(allTracedEvents, *device);
+    auto allTracedExternalEvents = forte::trace::reader::utils::filterEventsForReplayDevice(allTracedEvents, *device);
 
     auto deviceReplayer = CDeviceReplayer(*device, allTracedExternalEvents);
 
@@ -562,11 +562,11 @@ void testTraces(CDevice& paDevice, std::unordered_map<std::string, std::vector<E
     return messageType == "sendOutputEvent";
   };
 
-  auto allInterestingEvents = forte::ita::replay::utils::filterEvents(paAllTracedEvents, isInteretingType);
+  auto allInterestingEvents = forte::trace::reader::utils::filterEvents(paAllTracedEvents, isInteretingType);
 
   allInterestingEvents.erase(paDevice.getInstanceName());
 
-  auto interestingGeneratedMessages = forte::ita::replay::utils::filterEvents(paAllGeneratedEvents, isInteretingType);
+  auto interestingGeneratedMessages = forte::trace::reader::utils::filterEvents(paAllGeneratedEvents, isInteretingType);
 
   forte::tests::traces::checkMessages(allInterestingEvents, interestingGeneratedMessages);
 }

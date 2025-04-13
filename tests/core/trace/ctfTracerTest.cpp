@@ -18,10 +18,10 @@
 
 #include "config.h"
 #include "common.h"
-#include "stdfblib/ita/replay/utils.h"
+#include "core/trace/reader/utils.h"
 #include "device.h"
 #include "ecet.h"
-#include "EventMessage.h"
+#include "core/trace/internal/EventMessage.h"
 #include "trace/barectf_platform_forte.h"
 #include "../fbtests/fbtesterglobalfixture.h"
 
@@ -73,7 +73,7 @@ BOOST_AUTO_TEST_CASE(sequential_events_test) {
   {
     auto device = createExampleDevice(resourceName, deviceName);
 
-    auto resource = dynamic_cast<CResource*>(forte::ita::replay::utils::getFB(device.get(), resourceName));
+    auto resource = dynamic_cast<CResource*>(forte::trace::reader::utils::getFB(device.get(), resourceName));
 
     device->startDevice();
     // wait for all events to be triggered
@@ -112,13 +112,21 @@ BOOST_AUTO_TEST_CASE(sequential_events_test) {
 
   // timestamp cannot properly be tested, so setting everythin to zero
   addInitiaOrFinalEvent(resourceMessages);
-  resourceMessages.emplace_back("sendOutputEvent", std::make_unique<FBOutputEventPayload>("E_RESTART", "START", 0, eventCounter, std::vector<std::string>{}), 0);
+  resourceMessages.emplace_back("sendOutputEvent", std::make_unique<FBOutputEventPayload>("E_RESTART", "START", 0
+#ifdef FORTE_TRACE_CTF_REPLAY_DEBUGGING
+  , eventCounter, std::vector<std::string>{}), 0
+#endif // FORTE_TRACE_CTF_REPLAY_DEBUGGING
+  );
   eventCounter++;
 
   resourceMessages.emplace_back("receiveInputEvent", std::make_unique<FBInputEventPayload>("E_CTU", "Counter", 0),0);
   resourceMessages.emplace_back("instanceData", std::make_unique<FBInstanceDataPayload>("E_CTU", "Counter", std::vector<std::string>{"1"}, std::vector<std::string>{"FALSE", "0"}, std::vector<std::string>{}, std::vector<std::string>{}), 0);
 
-  resourceMessages.emplace_back("sendOutputEvent", std::make_unique<FBOutputEventPayload>("E_CTU", "Counter", 0, eventCounter, std::vector<std::string>{"TRUE", "1"}),0);
+  resourceMessages.emplace_back("sendOutputEvent", std::make_unique<FBOutputEventPayload>("E_CTU", "Counter", 0
+#ifdef FORTE_TRACE_CTF_REPLAY_DEBUGGING
+  , eventCounter, std::vector<std::string>{"TRUE", "1"}),0
+#endif // FORTE_TRACE_CTF_REPLAY_DEBUGGING
+  );
   resourceMessages.emplace_back("outputData", std::make_unique<FBDataPayload>("E_CTU", "Counter", 0, "TRUE"), 0);
   resourceMessages.emplace_back("outputData", std::make_unique<FBDataPayload>("E_CTU", "Counter", 1, "1"), 0);
   eventCounter++;
@@ -128,7 +136,11 @@ BOOST_AUTO_TEST_CASE(sequential_events_test) {
   resourceMessages.emplace_back("inputData", std::make_unique<FBDataPayload>("E_SWITCH", "Switch", 0, "TRUE"), 0);
 
 
-  resourceMessages.emplace_back("sendOutputEvent", std::make_unique<FBOutputEventPayload>("E_SWITCH", "Switch", 1, eventCounter, std::vector<std::string>{}),0);
+  resourceMessages.emplace_back("sendOutputEvent", std::make_unique<FBOutputEventPayload>("E_SWITCH", "Switch", 1
+#ifdef FORTE_TRACE_CTF_REPLAY_DEBUGGING
+  , eventCounter, std::vector<std::string>{}),0
+#endif // FORTE_TRACE_CTF_REPLAY_DEBUGGING
+  );  
   eventCounter++;
 
   resourceMessages.emplace_back("receiveInputEvent", std::make_unique<FBInputEventPayload>("E_CTU", "Counter", 1),0);
@@ -138,7 +150,7 @@ BOOST_AUTO_TEST_CASE(sequential_events_test) {
   
   addInitiaOrFinalEvent(resourceMessages);
 
-  auto ctfMessages = forte::ita::replay::utils::getEventMessages(CTF_OUTPUT_DIR).value();
+  auto ctfMessages = forte::trace::reader::utils::getEventMessages(CTF_OUTPUT_DIR).value();
 
   forte::tests::traces::checkMessages(expectedMessages, ctfMessages);
 }
@@ -160,7 +172,7 @@ std::unique_ptr<CDevice> createExampleDevice(CStringDictionary::TStringId paReso
   BOOST_TEST_INFO("Start Device");
   BOOST_CHECK(device->initialize());
   
-  auto resource = dynamic_cast<CResource*>(forte::ita::replay::utils::getFB(device.get(), paResourceName));
+  auto resource = dynamic_cast<CResource*>(forte::trace::reader::utils::getFB(device.get(), paResourceName));
 
   auto startInstanceName = STRID(START);
   auto counterInstanceName = STRID(Counter);

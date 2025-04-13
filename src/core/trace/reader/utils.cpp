@@ -23,7 +23,7 @@
 #include <functional>
 #include <iostream>
 
-namespace forte::ita::replay::utils {
+namespace forte::trace::reader::utils {
 
 CFunctionBlock* getFB(forte::core::CFBContainer* paContainer, const std::string& paFunctionBlockName) {
   if(paContainer == nullptr){

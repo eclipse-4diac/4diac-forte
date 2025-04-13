@@ -13,7 +13,7 @@
 #include "resourceReplayer.h"
 
 #include "core/resource.h"
-#include "utils.h"
+#include "core/trace/reader/utils.h"
 #include "core/ecetFake.h"
 
 #include <iostream>
@@ -29,7 +29,7 @@ CResourceReplayer::CResourceReplayer(CResource& paResource, std::vector<EventMes
   // Otherwise, we read the inputs and trace the event, but don't trigger the event itself, meaning
   // that we absorv the event
   // capturing "this" into the lambda created some issues for some reason
-  auto processOneEvent = [ validTypes = forte::ita::replay::utils::getServiceFunctionBlockTypes(mResource), 
+  auto processOneEvent = [ validTypes = forte::trace::reader::utils::getServiceFunctionBlockTypes(mResource), 
       &ecet = this->mEcet](TEventEntry paEvent){
 
     // pass through non interesting events
@@ -99,7 +99,7 @@ std::optional<TEventEntry> CResourceReplayer::reproduceNextEvent(){
       return toReturn;
     }
 
-    auto functionBlock = forte::ita::replay::utils::getFB(&mResource, payload->getInstanceName()); 
+    auto functionBlock = forte::trace::reader::utils::getFB(&mResource, payload->getInstanceName()); 
 
     if(functionBlock == nullptr){
       std::cout << "Could not find the FB " << payload->getInstanceName() << " -> aborting..." << std::endl;

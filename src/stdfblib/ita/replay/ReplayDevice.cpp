@@ -15,7 +15,7 @@
 
 #include "arch/timerHandlerFactory.h"
 #include "core/ecetFactory.h"
-#include "core/trace/flexibleTracer.h"
+#include "core/trace/internal/flexibleTracer.h"
 
 ReplayDevice::ReplayDevice(const std::string &paMGRID) : 
   RMT_DEV(setInitialState(paMGRID)), mOpcuaMgr(*this), mReplayMgr(*this, mOpcuaMgr) {

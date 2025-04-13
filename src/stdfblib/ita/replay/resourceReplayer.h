@@ -20,7 +20,7 @@
 #include <optional>
 #include <functional>
 
-#include "EventMessage.h"
+#include "core/trace/internal/EventMessage.h"
 #include "core/stringdict.h"
 #include "core/event.h"
 

@@ -18,7 +18,7 @@
 
 #include "core/ecetFactory.h"
 #include "arch/timerHandlerFactory.h"
-#include "core/trace/flexibleTracer.h"
+#include "core/trace/internal/flexibleTracer.h"
 
 #include <string>
 #include <set>
@@ -34,7 +34,7 @@ namespace forte::core {
   class CFBContainer;
 }
 
-namespace forte::ita::replay::utils {
+namespace forte::trace::reader::utils {
 
  /**
    * @brief  get the function block instance out of the container. This is just a shorthand for creating the needed parameters for the CFBContainer::getFB

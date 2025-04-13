@@ -17,9 +17,9 @@
 
 #include <babeltrace2/babeltrace.h>
 
-#include "trace/EventMessage.h"
+#include "trace/internal/EventMessage.h"
 
-namespace forte::ita::replay {
+namespace forte::trace::reader {
   /**
    * Used with the babeltrace2 library to read event messages from it and transform them 
    * into EventMessage objects
@@ -44,4 +44,4 @@ namespace forte::ita::replay {
 
     bt_message_iterator *mMessageIterator{nullptr};
   };  
-} // namespace forte::ita::replay
+} // namespace forte::trace::reader

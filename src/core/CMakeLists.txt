@@ -58,8 +58,6 @@ if(FORTE_SUPPORT_MONITORING)
   forte_add_sourcefile_hcpp(monitoring)
 endif(FORTE_SUPPORT_MONITORING)
 
-if(FORTE_TRACE_CTF)
-  forte_add_subdirectory(trace)
-endif(FORTE_TRACE_CTF)
+forte_add_subdirectory(trace)
 
 

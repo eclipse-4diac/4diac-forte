@@ -17,7 +17,7 @@
 #include <unordered_map>
 #include <vector>
 
-#include "EventMessage.h"
+#include "core/trace/internal/EventMessage.h"
 
 namespace forte::tests::traces {
 

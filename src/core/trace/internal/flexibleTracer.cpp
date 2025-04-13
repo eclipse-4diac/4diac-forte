@@ -65,13 +65,20 @@ void CFlexibleTracer::traceReceiveInputEvent(const char * const paTypeName, cons
   );
 }
 
-
-void CFlexibleTracer::traceSendOutputEvent(const char * const paTypeName, const char * const paInstanceName, const uint64_t paEventId, const uint64_t paEventCounter, const uint32_t paOutputsLength, const char * const * const paOutputs) {
+void CFlexibleTracer::traceSendOutputEvent(const char * const paTypeName, const char * const paInstanceName, const uint64_t paEventId
+#ifdef FORTE_TRACE_CTF_REPLAY_DEBUGGING
+, const uint64_t paEventCounter, const uint32_t paOutputsLength, const char * const * const paOutputs
+#endif // FORTE_TRACE_CTF_REPLAY_DEBUGGING
+) {
     std::visit(
       [&](auto &&paTracer){
         using T = std::decay_t<decltype(paTracer)>;
         if constexpr (std::is_same_v<T, std::monostate> == false) {
-          paTracer.traceSendOutputEvent(paTypeName, paInstanceName, paEventId, paEventCounter, paOutputsLength, paOutputs);
+          paTracer.traceSendOutputEvent(paTypeName, paInstanceName, paEventId
+#ifdef FORTE_TRACE_CTF_REPLAY_DEBUGGING
+          , paEventCounter, paOutputsLength, paOutputs
+#endif // FORTE_TRACE_CTF_REPLAY_DEBUGGING
+          );
         }
       },
       mTracer

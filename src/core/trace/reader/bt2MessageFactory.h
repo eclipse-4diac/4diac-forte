@@ -12,11 +12,11 @@
 
 #pragma once 
 
-#include "trace/EventMessage.h"
+#include "trace/internal/EventMessage.h"
 
 class bt_message;
 
-namespace forte::ita::replay::Bt2MessageFactory {
+namespace forte::trace::reader::Bt2MessageFactory {
     /**
      * @brief babeltrace2 message factory
      * 

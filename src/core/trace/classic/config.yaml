@@ -1,0 +1,110 @@
+#############################################################################
+# Copyright (c) 2022 Martin Erich Jobst
+#
+# This program and the accompanying materials are made available under the
+# terms of the Eclipse Public License 2.0 which is available at
+# http://www.eclipse.org/legal/epl-2.0.
+#
+# SPDX-License-Identifier: EPL-2.0
+#
+# Contributors:
+#    Martin Jobst
+#      - initial API and implementation and/or initial documentation
+#############################################################################
+
+--- !<tag:barectf.org,2020/3/config>
+
+# Configuration's trace
+trace:
+  # Type of the trace
+  type:
+    # Add standard field type aliases
+    $include:
+      - stdint.yaml
+      - stdmisc.yaml
+
+    # Native byte order is little-endian
+    native-byte-order: little-endian
+
+    # One clock type
+    clock-types:
+      # The Linux FS platform requires a clock type named `default`
+      # which has a 1-GHz frequency and the `uint64_t` C type.
+      default:
+        frequency: 1000000000
+        $c-type: uint64_t
+
+    # One data stream type
+    data-stream-types:
+      # Stream type named `default`
+      default:
+        # Default data stream type
+        $is-default: true
+
+        # Default clock type: `default`
+        $default-clock-type-name: default
+
+        # Event record types
+        event-record-types:
+          # receiveInputEvent()
+          receiveInputEvent:
+            payload-field-type:
+              class: structure
+              members:
+                - typeName: string # FB type name
+                - instanceName: string # FB instance name
+                - eventId: uint64 # Event id
+          # sendOutputEvent()
+          sendOutputEvent:
+            payload-field-type:
+              class: structure
+              members:
+                - typeName: string # FB type name
+                - instanceName: string # FB instance name
+                - eventId: uint64 # Event id
+          # inputData
+          inputData:
+            payload-field-type:
+              class: structure
+              members:
+                - typeName: string # FB type name
+                - instanceName: string # FB instance name
+                - dataId: uint64 # Data id
+                - value: string # Data value
+          # outputData
+          outputData:
+            payload-field-type:
+              class: structure
+              members:
+                - typeName: string # FB type name
+                - instanceName: string # FB instance name
+                - dataId: uint64 # Data id
+                - value: string # Data value
+          # instanceData
+          instanceData:
+            payload-field-type:
+              class: structure
+              members:
+                - typeName: string # FB type name
+                - instanceName: string # FB instance name
+                - inputs: # Data values
+                    field-type:
+                      class: dynamic-array
+                      element-field-type:
+                        class: string
+                - outputs: # Data values
+                    field-type:
+                      class: dynamic-array
+                      element-field-type:
+                        class: string
+                - internal: # Data values
+                    field-type:
+                      class: dynamic-array
+                      element-field-type:
+                        class: string
+                - internalFB: # Internal FB 
+                    field-type:
+                      class: dynamic-array
+                      element-field-type:
+                        class: string
+                      

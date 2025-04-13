@@ -13,7 +13,9 @@
  *******************************************************************************/
 
 #include "internalTracer.h"
+
 #include "forte_architecture_time.h"
+
 
 CInternalTracer::CInternalTracer(CStringDictionary::TStringId, size_t) {
 }
@@ -41,12 +43,21 @@ void CInternalTracer::traceReceiveInputEvent(const char *const paTypeName, const
   mEvents.emplace_back("receiveInputEvent", std::make_unique<FBInputEventPayload>(paTypeName, paInstanceName, paEventId), getNanoSecondsMonotonic());
 }
 
-void CInternalTracer::traceSendOutputEvent(const char *const paTypeName, const char *const paInstanceName, const uint64_t paEventId, const uint64_t paEventCounter, const uint32_t paOutputsLength, const char * const * const paOutputs)
+void CInternalTracer::traceSendOutputEvent(const char *const paTypeName, const char *const paInstanceName, const uint64_t paEventId
+#ifdef FORTE_TRACE_CTF_REPLAY_DEBUGGING
+, const uint64_t paEventCounter, const uint32_t paOutputsLength, const char * const * const paOutputs
+#endif
+)
 {
+#ifdef FORTE_TRACE_CTF_REPLAY_DEBUGGING
+
   std::vector<std::string> outputs(paOutputsLength);
   fillStringsVector(paOutputs, paOutputsLength, outputs);
 
   mEvents.emplace_back("sendOutputEvent", std::make_unique<FBOutputEventPayload>(paTypeName, paInstanceName, paEventId, paEventCounter, outputs), getNanoSecondsMonotonic());
+#else // FORTE_TRACE_CTF_REPLAY_DEBUGGING
+  mEvents.emplace_back("sendOutputEvent", std::make_unique<FBOutputEventPayload>(paTypeName, paInstanceName, paEventId), getNanoSecondsMonotonic());
+#endif // FORTE_TRACE_CTF_REPLAY_DEBUGGING
 }
 
 void CInternalTracer::traceInputData(const char *const paTypeName, const char *const paInstanceName,

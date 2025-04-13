@@ -211,10 +211,11 @@ endif(NOT ("${FORTE_USE_LUATYPES}" STREQUAL "None"))
 #######################################################################################
 SET(FORTE_TRACE_CTF OFF CACHE BOOL "FORTE Common Trace Format (CTF) tracing")
 SET(FORTE_TRACE_CTF_BUFFER_SIZE 4096 CACHE STRING "FORTE Common Trace Format (CTF) trace buffer size")
-if(FORTE_TRACE_CTF)
-  forte_add_custom_configuration("#define FORTE_TRACE_CTF")
-  forte_add_custom_configuration("#define FORTE_TRACE_CTF_BUFFER_SIZE ${FORTE_TRACE_CTF_BUFFER_SIZE}")
-endif(FORTE_TRACE_CTF)
+SET(FORTE_TRACE_CTF_REPLAY_DEBUGGING OFF CACHE BOOL "FORTE Common Trace Format (CTF) tracing for replay debugging. FORTE_TRACE_CTF needs to be enabled too")
+
+if(FORTE_TRACE_CTF_REPLAY_DEBUGGING AND NOT FORTE_TRACE_CTF)
+  message(FATAL_ERROR "If FORTE_TRACE_CTF_REPLAY_DEBUGGING is enabled, FORTE_TRACE_CTF must also be enabled")
+endif()
 
 #######################################################################################
 # stacktrace

@@ -19,7 +19,7 @@
 
 #include "bt2MessageFactory.h"
 
-namespace forte::ita::replay {
+namespace forte::trace::reader {
   
 // initialize the sink instance
 EventsReader::EventsReader(bt_self_component_sink *self_component_sink,
@@ -97,7 +97,7 @@ bt_component_class_sink_consume_method_status EventsReader::consume()
   return BT_COMPONENT_CLASS_SINK_CONSUME_METHOD_STATUS_OK;
 }
 
-} // namespace forte::ita::replay
+} // namespace forte::trace::reader
 
 // ************************** //
 // C-Style functions needed   // 
@@ -120,17 +120,17 @@ static bt_component_class_initialize_method_status forte_events_reader_initializ
 
   // the allocated pointer is stored inside the class when "this" is passed to the
   // the user data of self_component_sink, which is deleted later in "finalize" 
-  new forte::ita::replay::EventsReader(
+  new forte::trace::reader::EventsReader(
       self_component_sink, 
       params, 
-      *static_cast<forte::ita::replay::EventsReader::MessageStorage*>(initialize_method_data));
+      *static_cast<forte::trace::reader::EventsReader::MessageStorage*>(initialize_method_data));
   return BT_COMPONENT_CLASS_INITIALIZE_METHOD_STATUS_OK;
 }
 
 // finalze
 static void forte_events_reader_finalize(bt_self_component_sink *self_component_sink)
 {
-  forte::ita::replay::EventsReader* instance = static_cast<forte::ita::replay::EventsReader*>(bt_self_component_get_data(
+  forte::trace::reader::EventsReader* instance = static_cast<forte::trace::reader::EventsReader*>(bt_self_component_get_data(
       bt_self_component_sink_as_self_component(self_component_sink)));
 
   delete instance;
@@ -139,7 +139,7 @@ static void forte_events_reader_finalize(bt_self_component_sink *self_component_
 static bt_component_class_sink_graph_is_configured_method_status
 forte_events_reader_graph_is_configured(bt_self_component_sink *self_component_sink)
 {
-  auto instance = static_cast<forte::ita::replay::EventsReader *>(bt_self_component_get_data(
+  auto instance = static_cast<forte::trace::reader::EventsReader *>(bt_self_component_get_data(
     bt_self_component_sink_as_self_component(self_component_sink)));
  
   return instance->graphIsConfigured();
@@ -148,7 +148,7 @@ forte_events_reader_graph_is_configured(bt_self_component_sink *self_component_s
 static bt_component_class_sink_consume_method_status forte_events_reader_consume(
         bt_self_component_sink *self_component_sink)
 {
-  auto instance = static_cast<forte::ita::replay::EventsReader *>(bt_self_component_get_data(
+  auto instance = static_cast<forte::trace::reader::EventsReader *>(bt_self_component_get_data(
       bt_self_component_sink_as_self_component(self_component_sink)));
 
   return instance->consume();

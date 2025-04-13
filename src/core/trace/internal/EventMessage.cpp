@@ -141,9 +141,17 @@ bool FBInputEventPayload::specificPayloadEqual(const AbstractPayload& paOther) c
 // ******************* //
 // FBOutputEventPayload //
 // ******************* //
-FBOutputEventPayload::FBOutputEventPayload(std::string paTypeName, std::string paInstanceName, const uint64_t paEventId, uint64_t paEventCounter, const std::vector<std::string>& paOutputs) : 
+FBOutputEventPayload::FBOutputEventPayload(std::string paTypeName, std::string paInstanceName, const uint64_t paEventId
+#ifdef FORTE_TRACE_CTF_REPLAY_DEBUGGING
+, uint64_t paEventCounter, const std::vector<std::string>& paOutputs
+#endif // FORTE_TRACE_CTF_REPLAY_DEBUGGING
+) : 
   AbstractPayload(std::move(paTypeName), std::move(paInstanceName)),
-   mEventId(paEventId), mEventCounter(paEventCounter), mOutputs(paOutputs) {
+   mEventId(paEventId)
+#ifdef FORTE_TRACE_CTF_REPLAY_DEBUGGING
+   , mEventCounter(paEventCounter), mOutputs(paOutputs)
+#endif // FORTE_TRACE_CTF_REPLAY_DEBUGGING
+{
 }
 
 std::unique_ptr<AbstractPayload> FBOutputEventPayload::clone() const {
@@ -151,14 +159,23 @@ std::unique_ptr<AbstractPayload> FBOutputEventPayload::clone() const {
 }
 
 std::string FBOutputEventPayload::specificPayloadString() const {
-  return ", eventId = " + std::to_string(mEventId) + " eventCounter = " + std::to_string(mEventCounter) + 
-    ", _outputs_len = " + std::to_string(mOutputs.size()) + ", outputs = " + createStringFromVector(mOutputs);
+  return ", eventId = " + std::to_string(mEventId)
+#ifdef FORTE_TRACE_CTF_REPLAY_DEBUGGING
+   + " eventCounter = " + std::to_string(mEventCounter) + 
+    ", _outputs_len = " + std::to_string(mOutputs.size()) + ", outputs = " + createStringFromVector(mOutputs)
+#endif // FORTE_TRACE_CTF_REPLAY_DEBUGGING
+
+    ;
 }
 
 bool FBOutputEventPayload::specificPayloadEqual(const AbstractPayload& paOther) const {
   if(const auto childInstance = dynamic_cast<const FBOutputEventPayload*>(&paOther); childInstance != nullptr){
-      return mEventId == childInstance->mEventId && mEventCounter == childInstance->mEventCounter 
-        && mOutputs == childInstance->mOutputs; 
+      return mEventId == childInstance->mEventId
+#ifdef FORTE_TRACE_CTF_REPLAY_DEBUGGING
+       && mEventCounter == childInstance->mEventCounter 
+        && mOutputs == childInstance->mOutputs
+#endif // FORTE_TRACE_CTF_REPLAY_DEBUGGING
+      ; 
   }
   return false;
 }

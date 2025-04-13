@@ -12,43 +12,51 @@
 #      - initial API and implementation and/or initial documentation
 #############################################################################
 
-find_package(barectf REQUIRED)
 
-add_custom_command(
-    OUTPUT barectf.h barectf.c barectf-bitfield.h metadata
-    COMMAND barectf ${CMAKE_CURRENT_SOURCE_DIR}/config.yaml
-    MAIN_DEPENDENCY config.yaml
-    DEPENDS barectf
-    COMMENT "Generating tracer for Common Trace Format (CTF) with barectf"
-)
+if(FORTE_TRACE_CTF)
+  forte_add_custom_configuration("#define FORTE_TRACE_CTF")
+  forte_add_custom_configuration("#define FORTE_TRACE_CTF_BUFFER_SIZE ${FORTE_TRACE_CTF_BUFFER_SIZE}")
 
-add_library(forte_trace STATIC
-        ${CMAKE_CURRENT_BINARY_DIR}/barectf.h
-        ${CMAKE_CURRENT_BINARY_DIR}/barectf.c
-        ${CMAKE_CURRENT_BINARY_DIR}/barectf-bitfield.h
-)
-target_include_directories(forte_trace
-    PUBLIC
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
-)
+  if(FORTE_TRACE_CTF_REPLAY_DEBUGGING)
+    forte_add_definition("-DFORTE_TRACE_CTF_REPLAY_DEBUGGING")
+    set(FORTE_TRACE_CONFIG_FILE ${CMAKE_CURRENT_SOURCE_DIR}/replay_debugging/config.yaml)
+    forte_add_sourcefile_cpp(replay_debugging/trace_event_output.cpp)
+  else()
+    set(FORTE_TRACE_CONFIG_FILE ${CMAKE_CURRENT_SOURCE_DIR}/classic/config.yaml)
+    forte_add_sourcefile_cpp(classic/trace_event_output.cpp)
+  endif()
 
-forte_add_link_library(forte_trace)
-forte_add_include_directories(${CMAKE_CURRENT_BINARY_DIR})
-forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+  find_package(barectf REQUIRED)
 
-forte_add_sourcefile_hcpp(barectf_platform_forte)
+  add_custom_command(
+      OUTPUT barectf.h barectf.c barectf-bitfield.h metadata
+      COMMAND barectf ${FORTE_TRACE_CONFIG_FILE}
+      MAIN_DEPENDENCY ${FORTE_TRACE_CONFIG_FILE}
+      DEPENDS barectf
+      COMMENT "Generating tracer for Common Trace Format (CTF) with barectf"
+  )
 
-if(FORTE_TRACE_CTF_TEST)
-  forte_add_sourcefile_hcpp(EventMessage)
-  forte_add_sourcefile_hcpp(internalTracer)
-  forte_add_sourcefile_hcpp(flexibleTracer)
+  add_library(forte_trace STATIC
+          ${CMAKE_CURRENT_BINARY_DIR}/barectf.h
+          ${CMAKE_CURRENT_BINARY_DIR}/barectf.c
+          ${CMAKE_CURRENT_BINARY_DIR}/barectf-bitfield.h
+  )
+  target_include_directories(forte_trace
+      PUBLIC
+          $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
+  )
 
-  set(FORTE_TRACER_INCLUDE flexibleTracer.h)
-  set(FORTE_TRACER CFlexibleTracer)
+  forte_add_link_library(forte_trace)
+  forte_add_include_directories(${CMAKE_CURRENT_BINARY_DIR})
+  forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
-else(FORTE_TRACE_CTF_TEST)
+  forte_add_sourcefile_hcpp(barectf_platform_forte)
+
   set(FORTE_TRACER_INCLUDE barectf_platform_forte.h)
   set(FORTE_TRACER BarectfPlatformFORTE)
-endif(FORTE_TRACE_CTF_TEST)
 
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/tracerConfig.h.in ${CMAKE_BINARY_DIR}/tracerConfig.h)
+  add_subdirectory(reader)
+  add_subdirectory(internal)
+
+  configure_file(${CMAKE_CURRENT_SOURCE_DIR}/tracerConfig.h.in ${CMAKE_BINARY_DIR}/tracerConfig.h)
+endif()

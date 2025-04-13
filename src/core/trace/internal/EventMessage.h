@@ -194,7 +194,11 @@ private:
  */
 class FBOutputEventPayload : public AbstractPayload {
 public:
-  FBOutputEventPayload(std::string paTypeName, std::string paInstanceName, const uint64_t paEventId, uint64_t paEventCounter, const std::vector<std::string>& paOutputs);
+  FBOutputEventPayload(std::string paTypeName, std::string paInstanceName, const uint64_t paEventId
+#ifdef FORTE_TRACE_CTF_REPLAY_DEBUGGING
+  , uint64_t paEventCounter, const std::vector<std::string>& paOutputs
+#endif // FORTE_TRACE_CTF_REPLAY_DEBUGGING
+  );
 
   std::unique_ptr<AbstractPayload> clone() const override;
 
@@ -203,8 +207,11 @@ public:
   bool specificPayloadEqual(const AbstractPayload& paOther) const override;
  
   uint64_t mEventId;
+#ifdef FORTE_TRACE_CTF_REPLAY_DEBUGGING
   uint64_t mEventCounter;
   std::vector<std::string> mOutputs;
+#endif // FORTE_TRACE_CTF_REPLAY_DEBUGGING
+
 };
 
 /**

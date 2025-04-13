@@ -63,14 +63,22 @@ public:
                       paEventId);  
     }
 
-    void traceSendOutputEvent(const char * const paTypeName, const char * const paInstanceName, const uint64_t paEventId, const uint64_t paEventCounter, const uint32_t paOutputsLength, const char * const * const paOutputs) {
+    void traceSendOutputEvent(const char * const paTypeName, const char * const paInstanceName, const uint64_t paEventId
+#ifdef FORTE_TRACE_CTF_REPLAY_DEBUGGING
+    , const uint64_t paEventCounter, const uint32_t paOutputsLength, const char * const * const paOutputs
+#endif // FORTE_TRACE_CTF_REPLAY_DEBUGGING
+    ) {
       barectf_default_trace_sendOutputEvent(&context,
                           paTypeName,
                           paInstanceName,
-                          paEventId,
+                          paEventId
+#ifdef FORTE_TRACE_CTF_REPLAY_DEBUGGING
+                          ,
                           paEventCounter,
                           paOutputsLength, 
-                          paOutputs);
+                          paOutputs
+#endif // FORTE_TRACE_CTF_REPLAY_DEBUGGING
+                          );
     }
 
     void traceInputData( const char * const paTypeName, const char * const paInstanceName,

@@ -12,7 +12,7 @@
 
 #pragma once
 
-#include "EventMessage.h"
+#include "core/trace/internal/EventMessage.h"
 #include "core/stringdict.h"
 #include "resourceReplayer.h"
 

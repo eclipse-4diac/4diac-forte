@@ -10,11 +10,19 @@
 #    Jose Cabral  - initial API and implementation and/or initial documentation
 # *******************************************************************************/
 
-
-if(FORTE_TRACE_CTF)
+# an extra CMake variable is added since test tracing requires extra libraries which
+# need to be compiled and might be too cumbersome
+SET(FORTE_TRACE_CTF_TEST OFF CACHE BOOL "Include CTF trace tests")
+mark_as_advanced(FORTE_TRACE_CTF_TEST)
+if(FORTE_TRACE_CTF_TEST)
   SET(SOURCE_GROUP ${SOURCE_GROUP}\\trace)
 
-  forte_test_add_sourcefile_cpp(ctfTracerTest.cpp common.cpp replayAlgorithmTest.cpp)
+  forte_test_add_sourcefile_cpp(ctfTracerTest.cpp common.cpp)
+
+
+  if(FORTE_TRACE_CTF_REPLAY_DEBUGGING)
+    forte_test_add_sourcefile_cpp(replayAlgorithmTest.cpp)
+  endif()
 
   SET(CTF_OUTPUT_DIR ${CMAKE_BINARY_DIR}/ctfOutput)
   SET(METADATA_FILE ${CMAKE_BINARY_DIR}/src/core/trace/metadata)
@@ -29,4 +37,4 @@ if(FORTE_TRACE_CTF)
     forte_add_definition("-DFORTE_REPLAY_ALGORITHM_REFERENCE_TESTS")
   endif(FORTE_REPLAY_ALGORITHM_REFERENCE_TESTS)
 
-endif(FORTE_TRACE_CTF)
+endif(FORTE_TRACE_CTF_TEST)

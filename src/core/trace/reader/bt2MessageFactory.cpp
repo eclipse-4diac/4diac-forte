@@ -163,9 +163,12 @@ namespace {
       readDynamicArrayField(paField, "outputs", outputs);
 
       result.reset(new FBOutputEventPayload(typeName, instanceName, 
-          readUint64Field(paField, "eventId"), 
-          readUint64Field(paField, "eventCounter"), 
-          outputs));
+          readUint64Field(paField, "eventId") 
+#ifdef FORTE_TRACE_CTF_REPLAY_DEBUGGING
+          ,readUint64Field(paField, "eventCounter"), 
+          outputs
+#endif // FORTE_TRACE_CTF_REPLAY_DEBUGGING
+      ));
     } 
     else if(paEventType == "inputData" || paEventType == "outputData") {
       result.reset(new FBDataPayload(typeName, instanceName, getDataId(paField), getValue(paField)));
@@ -186,7 +189,7 @@ namespace {
   }
 }
 
-EventMessage forte::ita::replay::Bt2MessageFactory::createMessage(const bt_message* paMessage){
+EventMessage forte::trace::reader::Bt2MessageFactory::createMessage(const bt_message* paMessage){
   // Borrow the event message's event and its class
   const bt_event *event =
     bt_message_event_borrow_event_const(paMessage);
