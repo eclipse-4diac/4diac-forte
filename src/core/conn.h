@@ -21,6 +21,7 @@
 #include <vector>
 #include "fortelist.h"
 #include "mgmcmd.h"
+#include "mgmcmdstruct.h"
 #include "stringdict.h"
 
 // forward declaration of a few classes to reduce include file dependencies
@@ -119,6 +120,19 @@ class CConnection {
      *     - InvalidState... this connection is not connected to the destination
      */
     virtual EMGMResponse disconnect(CFunctionBlock &paDstFB, CStringDictionary::TStringId paDstPortNameId) = 0;
+
+    /*!
+     * \brief Get a delegating connection for the given name
+     * @param paSrcNameList The name
+     * @return a delegating connection for the name, an empty wrapper if there is no such delegating connection,
+     *          or this if the name list was empty
+     */
+    virtual Wrapper getDelegatingConnection(forte::core::TNameIdentifier &paSrcNameList) {
+      if (paSrcNameList.empty()) {
+        return Wrapper(this);
+      }
+      return Wrapper();
+    }
 
     /*! \brief Get the source string of the connection
      */
