@@ -223,14 +223,14 @@ CConnection *CFBContainer::getInputConnection(TNameIdentifier &paDstNameList) {
   return nullptr;
 }
 
-CConnection *CFBContainer::getOutputConnection(TNameIdentifier &paSrcNameList) {
+CConnection::Wrapper CFBContainer::getOutputConnection(TNameIdentifier &paSrcNameList) {
   if (paSrcNameList.empty()) {
-    return nullptr;
+    return CConnection::Wrapper();
   }
   CStringDictionary::TStringId name = paSrcNameList.front();
   if (const auto child = getChild(name); child) {
     paSrcNameList.erase(paSrcNameList.begin());
     return child->getOutputConnection(paSrcNameList);
   }
-  return nullptr;
+  return CConnection::Wrapper();
 }
