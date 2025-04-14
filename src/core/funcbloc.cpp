@@ -524,16 +524,20 @@ CConnection::Wrapper CFunctionBlock::getOutputConnection(forte::core::TNameIdent
   }
   CStringDictionary::TStringId name = paSrcNameList.front();
   if (const auto conn = getEOConnection(name); conn) {
-    return CConnection::Wrapper(conn);
+    paSrcNameList.erase(paSrcNameList.cbegin());
+    return conn->getDelegatingConnection(paSrcNameList);
   };
   if (const auto conn = getDOConnection(name); conn) {
-    return CConnection::Wrapper(conn);
+    paSrcNameList.erase(paSrcNameList.cbegin());
+    return conn->getDelegatingConnection(paSrcNameList);
   };
   if (const auto conn = getDIOOutConnection(name); conn) {
-    return CConnection::Wrapper(conn);
+    paSrcNameList.erase(paSrcNameList.cbegin());
+    return conn->getDelegatingConnection(paSrcNameList);
   };
   if (const auto adapter = getAdapter(name); adapter) {
-    return CConnection::Wrapper(adapter->getAdapterConnection());
+    paSrcNameList.erase(paSrcNameList.cbegin());
+    return adapter->getAdapterConnection()->getDelegatingConnection(paSrcNameList);
   };
   return CFBContainer::getOutputConnection(paSrcNameList);
 }

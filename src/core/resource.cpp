@@ -697,7 +697,8 @@ CConnection::Wrapper CResource::getOutputConnection(forte::core::TNameIdentifier
   }
   CStringDictionary::TStringId name = paSrcNameList.front();
   if (const auto conn = getResIf2InConnection(name); conn) {
-    return CConnection::Wrapper(conn);
+    paSrcNameList.erase(paSrcNameList.cbegin());
+    return conn->getDelegatingConnection(paSrcNameList);
   }
   return CFunctionBlock::getOutputConnection(paSrcNameList);
 }
