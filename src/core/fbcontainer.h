@@ -16,6 +16,7 @@
 #ifndef _FBCONTAINER_H_
 #define _FBCONTAINER_H_
 
+#include "conn.h"
 #include "fortelist.h"
 #include "stringdict.h"
 #include "mgmcmdstruct.h"
@@ -25,7 +26,6 @@
 class CFunctionBlock;
 class CDevice;
 class CResource;
-class CConnection;
 
 namespace forte {
   namespace core {
@@ -127,7 +127,7 @@ namespace forte {
          * @param paSrcNameList array of the name hierarchy the requested connection source
          * @return pointer to the requested connection, returns nullptr if there is no such source
          */
-        virtual CConnection *getOutputConnection(TNameIdentifier &paSrcNameList);
+        virtual CConnection::Wrapper getOutputConnection(TNameIdentifier &paSrcNameList);
 
       protected:
         /*!\brief Create a new FB instance of given type and name

@@ -428,7 +428,7 @@ class CFunctionBlock : public forte::core::CFBContainer {
        * @param paSrcNameList array of the name hierarchy the requested connection source
        * @return pointer to the requested connection, returns nullptr if there is no such source
        */
-    CConnection *getOutputConnection(forte::core::TNameIdentifier &paSrcNameList) override;
+    CConnection::Wrapper getOutputConnection(forte::core::TNameIdentifier &paSrcNameList) override;
 
 #ifdef FORTE_SUPPORT_MONITORING
     TForteUInt32 &getEIMonitorData(TEventID paEIID);

@@ -15,6 +15,7 @@
 #ifndef _CONN_H_
 #define _CONN_H_
 
+#include <memory>
 #include <type_traits>
 
 #include <vector>
@@ -59,6 +60,21 @@ static_assert(std::is_trivial_v<CConnectionPoint>);
 
 class CConnection {
   public:
+    struct DelegatingDeleter final {
+      void operator()(const CConnection *paConnection) const {
+        if (paConnection->isDelegating()) {
+          delete paConnection;
+        }
+      }
+    };
+
+    using Wrapper = std::unique_ptr<CConnection, DelegatingDeleter>;
+
+    template<typename T, typename... Args>
+    Wrapper make_delegating(Args &&... paArgs) {
+      return Wrapper(new T(std::forward<Args>(paArgs)...));
+    }
+
     CConnection(CFunctionBlock &paSrcFB, const TPortId paSrcPortId) : mSourceId(paSrcFB, paSrcPortId) {
     }
 
