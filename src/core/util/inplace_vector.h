@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 fortiss GmbH, 2025 Jörg Walter
+ * Copyright (c) 2015, 2025 fortiss GmbH, Jörg Walter, Martin Jobst
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -11,6 +11,8 @@
  *    - initial API and implementation and/or initial documentation
  *   Jörg Walter
  *    - change to make API more like std::inplace_vector (C++26)
+ *   Martin Jobst
+ *    - add erase functions
  *******************************************************************************/
 #pragma once
 
@@ -133,6 +135,32 @@ public:
 
     const_iterator cend() const {
         return mDataStorage.data()+mNumElements;
+    }
+
+    iterator erase(const_iterator position) {
+        return erase(begin() + (position - cbegin()));
+    }
+
+    iterator erase(iterator position) {
+        if (position + 1 != end()) {
+            std::move(position + 1, end(), position);
+        }
+        --mNumElements;
+        return position;
+    }
+
+    iterator erase(const_iterator first, const_iterator last) {
+        return erase(begin() + (first - cbegin()), begin() + (last - cbegin()));
+    }
+
+    iterator erase(iterator first, iterator last) {
+        if (first != last) {
+            if (last != end()) {
+                std::move(last, end(), first);
+            }
+            mNumElements -= last - first;
+        }
+        return first;
     }
 
 private:
