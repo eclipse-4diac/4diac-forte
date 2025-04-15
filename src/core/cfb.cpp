@@ -212,6 +212,11 @@ void CCompositeFB::createDataConnections(){
 
     if((srcFB != nullptr) && (dstFB != nullptr)) {
       establishConnection(getDataConn(srcFB, currentConn.mSrcId), *dstFB, currentConn.mDstId);
+      if(srcFB == this){
+        // Data connections track on the source side the number of destinations. For interface to internals we don't
+        // want that. Therefore, we have to revert that ref count change.
+        decConnRefCount();
+      }
     } else {
       DEVLOG_ERROR("Could not create data connection in CFB");
     }

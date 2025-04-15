@@ -37,53 +37,49 @@ void CAdapterConnection::typifyAnyAdapter(CAdapter *paSocket){
   }
 }
 
-EMGMResponse CAdapterConnection::connect(CFunctionBlock &paDstFB, CStringDictionary::TStringId paDstPortNameId){
-  EMGMResponse retVal = EMGMResponse::NoSuchObject;
-
+EMGMResponse CAdapterConnection::connect(CFunctionBlock &paDstFB, CStringDictionary::TStringId paDstPortNameId) {
   const TPortId portId = paDstFB.getAdapterPortId(paDstPortNameId);
-  if(cgInvalidPortId != portId){
-    if(!isConnected()){
-      CAdapter *socket = paDstFB.getAdapter(paDstPortNameId);
-      typifyAnyAdapter(socket);
-
-      if((socket->isSocket()) && (socket->isCompatible(mPlug))){
-        if(mPlug.connect(socket, this) && socket->connect(&mPlug, this)) {
-          mSocket = socket;
-          retVal = EMGMResponse::Ready;
-        }
-        else{
-          mPlug.disconnect();
-          socket->disconnect();
-          retVal = EMGMResponse::InvalidObject;
-        }
-      }
-      else{
-        retVal = EMGMResponse::InvalidObject;
-      }
-    }
-    else{
-      retVal = EMGMResponse::InvalidState;
-    }
+  if (portId == cgInvalidPortId) {
+    return EMGMResponse::NoSuchObject;
   }
-  return retVal;
+
+  if (isConnected()) {
+    return EMGMResponse::InvalidState;
+  }
+
+  CAdapter *socket = paDstFB.getAdapter(paDstPortNameId);
+  typifyAnyAdapter(socket);
+
+  if (!socket->isSocket() || !socket->isCompatible(mPlug)) {
+    return EMGMResponse::InvalidObject;
+  }
+
+  if (mPlug.connect(socket, this) && socket->connect(&mPlug, this)) {
+    mSocket = socket;
+    paDstFB.incConnRefCount();
+    getSourceId().getFB().incConnRefCount();
+    return EMGMResponse::Ready;
+  }
+  mPlug.disconnect();
+  socket->disconnect();
+  return EMGMResponse::InvalidObject;
 }
 
 EMGMResponse CAdapterConnection::connectToCFBInterface(CFunctionBlock &, CStringDictionary::TStringId){
   return EMGMResponse::InvalidOperation; //currently we are not supporting adapter connections accross interface boundaries
 }
 
-EMGMResponse CAdapterConnection::disconnect(CFunctionBlock &paDstFB, CStringDictionary::TStringId paDstPortNameId){
-  EMGMResponse retVal = EMGMResponse::NoSuchObject;
-
-  if(isConnected()) {
+EMGMResponse CAdapterConnection::disconnect(CFunctionBlock &paDstFB, CStringDictionary::TStringId paDstPortNameId) {
+  if (isConnected()) {
     CAdapter *socket = paDstFB.getAdapter(paDstPortNameId);
-    if(socket == mSocket) {
+    if (socket == mSocket) {
       performDisconnect();
-      retVal = EMGMResponse::Ready;
+      paDstFB.decConnRefCount();
+      getSourceId().getFB().decConnRefCount();
+      return EMGMResponse::Ready;
     }
   }
-
-  return retVal;
+  return EMGMResponse::NoSuchObject;
 }
 
 void CAdapterConnection::performDisconnect(){
