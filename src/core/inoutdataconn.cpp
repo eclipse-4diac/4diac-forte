@@ -29,6 +29,10 @@ EMGMResponse CInOutDataConnection::connect(CFunctionBlock &paDstFB,
   if(cgInvalidPortId != dstPortId){
     CIEC_ANY *dstDataPoint = paDstFB.getDIOFromPortId(dstPortId);
     retVal = establishDataConnection(paDstFB, dstPortId, *dstDataPoint);
+    if(retVal == EMGMResponse::Ready) {
+      paDstFB.incConnRefCount();
+      getSourceId().getFB().incConnRefCount();
+    }
   }
   
   return retVal;
@@ -51,6 +55,8 @@ EMGMResponse CInOutDataConnection::disconnect(CFunctionBlock &paDstFB, CStringDi
   }
   mInOutDestinationIds.erase(it, mInOutDestinationIds.end());
   paDstFB.connectDIO(dstPortId, nullptr);
+  paDstFB.decConnRefCount();
+  getSourceId().getFB().decConnRefCount();
   return EMGMResponse::Ready;
 }
 
