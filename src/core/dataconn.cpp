@@ -17,6 +17,9 @@
 #include "dataconn.h"
 #include "funcbloc.h"
 #include "mgmcmd.h"
+#include "negdataconn.h"
+
+USE_STRING_ID(NOT)
 
 CDataConnection::CDataConnection(CFunctionBlock &paSrcFB, const TPortId paSrcPortId)
         : CConnection(paSrcFB, paSrcPortId) {
@@ -105,4 +108,17 @@ EMGMResponse CDataConnection::establishDataConnection(CFunctionBlock &paDstFB,
     return EMGMResponse::InvalidState;
   }
   return EMGMResponse::Ready;
+}
+
+CConnection::Wrapper CDataConnection::getDelegatingConnection(forte::core::TNameIdentifier &paSrcNameList) {
+  switch (getValue().getDataTypeID()) {
+    case CIEC_ANY::e_BOOL:
+      if (paSrcNameList.size() == 1 && paSrcNameList.front() == STRID(NOT)) {
+        return make_delegating<forte::core::internal::CNegatingDataConnection>(
+          getSourceId().getFB(), getSourceId().getPortId(),
+          static_cast<CIEC_BOOL &>(getValue()));
+      }
+    default: break;
+  }
+  return CConnection::getDelegatingConnection(paSrcNameList);
 }
