@@ -33,6 +33,8 @@ class CDataConnection : public CConnection {
 
     EMGMResponse disconnect(CFunctionBlock &paDstFB, CStringDictionary::TStringId paDstPortNameId) override;
 
+    Wrapper getDelegatingConnection(forte::core::TNameIdentifier &paSrcNameList) override;
+
     void handleAnySrcPortConnection(const CIEC_ANY &paDstDataPoint);
 
     /*! \brief Write connection data value.
