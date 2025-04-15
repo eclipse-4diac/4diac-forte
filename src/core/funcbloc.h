@@ -20,6 +20,7 @@
 #ifndef _FUNCBLOC_H_
 #define _FUNCBLOC_H_
 
+#include <cstddef>
 #include <forte_config.h>
 #include "fbcontainer.h"
 #include "mgmcmd.h"
@@ -355,11 +356,13 @@ class CFunctionBlock : public forte::core::CFBContainer {
     /*!\brief Return if the runable object is allowed to be deleted now.
      *
      * This is more complex then the simple deleteable flag as the current state has to be incorporated.
-     * According to IEC 61499-1 Figure 24 an FB is deleteable if it is not in the Running state
+     * According to IEC 61499-1 Figure 24 an FB is deleteable if it is not in the Running state.
+     * Furthermore all connection references to this FB have to be removed.
+     *
      * \return true if currently all conditions are met to be deleteable
      */
     bool isCurrentlyDeleteable() const {
-      return ((mDeletable) && (mFBState != E_FBStates::Running));
+      return ((mDeletable) && (mFBState != E_FBStates::Running) && mConnRefCount == 0);
     }
 
     /*!\brief return the current execution state of the managed object
@@ -431,19 +434,29 @@ class CFunctionBlock : public forte::core::CFBContainer {
       if (getFBInterfaceSpec().mEITypeNames != nullptr) {
         mInputEventConnectionCount[paEIID]++;
       }
+      incConnRefCount();
     }
 
     void removeInputEventConnection(TEventID paEIID) {
       if (mInputEventConnectionCount != nullptr && mInputEventConnectionCount[paEIID] > 0) {
         mInputEventConnectionCount[paEIID]--;
       }
+      decConnRefCount();
     }
 
     /* !\brief checks if an input event pin is connected
- *
- */
+     *
+     */
     [[nodiscard]] bool isInputEventConnected(TEventID paEIID) const {
       return mInputEventConnectionCount != nullptr && mInputEventConnectionCount[paEIID] > 0;
+    }
+
+    void incConnRefCount() {
+      mConnRefCount++;
+    }
+
+    void decConnRefCount() {
+      mConnRefCount--;
     }
 
   protected:
@@ -692,16 +705,20 @@ class CFunctionBlock : public forte::core::CFBContainer {
      */
     E_FBStates mFBState;
 
+    /*!\brief Stores the number of input connections for each event pin
+     */
+    std::unique_ptr<size_t[]> mInputEventConnectionCount;
+
+    /*!\brief Stores the total number of connections that reference this FB
+     */
+    size_t mConnRefCount;
+
     /*!\brief Attribute defines if runnable object can be deleted by a management command.
      *
      * Default value is set to true.
      * If the runnable object is declared in a device or resource specification it must be set to false.
      */
     bool mDeletable;
-
-    /*!\brief Stores the number of input connections for each event pin
-    */
-    std::unique_ptr<size_t[]> mInputEventConnectionCount;
 
 #ifdef FORTE_SUPPORT_MONITORING
     friend class forte::core::CMonitoringHandler;

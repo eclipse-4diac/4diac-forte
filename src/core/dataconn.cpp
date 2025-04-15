@@ -16,6 +16,7 @@
  *******************************************************************************/
 #include "dataconn.h"
 #include "funcbloc.h"
+#include "mgmcmd.h"
 
 CDataConnection::CDataConnection(CFunctionBlock &paSrcFB, const TPortId paSrcPortId)
         : CConnection(paSrcFB, paSrcPortId) {
@@ -29,6 +30,9 @@ EMGMResponse CDataConnection::connect(CFunctionBlock &paDstFB,
   if(cgInvalidPortId != dstPortId){
     CIEC_ANY *dstDataPoint = paDstFB.getDIFromPortId(dstPortId);
     retVal = CDataConnection::establishDataConnection(paDstFB, dstPortId, *dstDataPoint);
+    if(retVal == EMGMResponse::Ready) {
+      getSourceId().getFB().incConnRefCount();
+    }
   }
   return retVal;
 }
@@ -64,6 +68,7 @@ EMGMResponse CDataConnection::disconnect(CFunctionBlock &paDstFB, CStringDiction
     return EMGMResponse::NoSuchObject;
   }
   paDstFB.connectDI(dstPortId, nullptr);
+  getSourceId().getFB().decConnRefCount();
   return EMGMResponse::Ready;
 }
 

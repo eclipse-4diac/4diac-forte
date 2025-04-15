@@ -42,6 +42,7 @@ CFunctionBlock::CFunctionBlock(forte::core::CFBContainer &paContainer,
     mEOMonitorCount(nullptr), mEIMonitorCount(nullptr),
 #endif
     mFBState(E_FBStates::Idle), // put the FB in the idle state to avoid a useless reset after creation
+    mConnRefCount(0),
     mDeletable(true) {
 }
 
