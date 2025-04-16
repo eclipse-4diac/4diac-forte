@@ -23,6 +23,7 @@
 
 #include "../../core/cominfra/comlayer.h"
 #include "opcua_helper.h"
+#include <cstddef>
 #include <memory>
 
 class COPC_UA_HandlerAbstract;
@@ -117,7 +118,7 @@ class COPC_UA_Layer : public forte::com_infra::CComLayer {
      * @param paIsSD True if the port to get is an SD, false othewise
      * @return True if no error ocurred while looking for the type, false otherwise
      */
-    bool checkPortConnectionInfo(unsigned int paPortIndex, bool paIsSD) const;
+    bool checkPortType(size_t paPortIndex, bool paIsSD) const;
 
     /**
      * The following functions and variables are used because if many subscription are present in one FB, and all of them are updated,
@@ -135,20 +136,12 @@ class COPC_UA_Layer : public forte::com_infra::CComLayer {
     std::unique_ptr<COPC_UA_ObjectStruct_Helper> mStructObjectHelper;
 
     /**
-     * Get the port connection pointer for a connected data port
-     * @param paPortIndex The Index of the data port
-     * @param paIsSD True if the port to get is an SD, false othewise
-     * @return The pointer to the local port connection
-    */
-    const CDataConnection* getLocalPortConnection(int paPortIndex, bool paIsSD) const;
-
-    /**
      * Get the id of the specified local data port name
      * @param paPortIndex The Index of the data port
      * @param paIsSD True if the port to get is an SD, false othewise
      * @return The pointer to the local port connection
     */
-    CStringDictionary::TStringId getLocalPortNameId(int paPortIndex, bool paIsSD) const;
+    CStringDictionary::TStringId getLocalPortNameId(size_t paPortIndex, bool paIsSD) const;
 
     /**
      * List of ANY pointers used as buffer to store the received data

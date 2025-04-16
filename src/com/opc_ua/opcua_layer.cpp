@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015-2023 Florian Froschermeier <florian.froschermeier@tum.de>,
+ * Copyright (c) 2015, 2025 Florian Froschermeier <florian.froschermeier@tum.de>,
  *               fortiss GmbH, Primetals Technologies Austria GmbH
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -23,11 +23,11 @@
 #include "opcua_local_handler.h"
 #include "../../core/cominfra/basecommfb.h"
 #include "../../arch/devlog.h"
+#include <cstddef>
 #include <forte_string.h>
 #include <criticalregion.h>
 #include "opcua_action_info.h"
 #include "opcua_remote_handler.h"
-#include "struct_action_info.h"
 #include "opcua_objectstruct_helper.h"
 
 using namespace forte::com_infra;
@@ -176,40 +176,28 @@ void COPC_UA_Layer::triggerNewEvent() {
 }
 
 bool COPC_UA_Layer::checkTypesFromInterface() const {
-  bool somethingFailed = false;
-  for(unsigned int i = 0; i < getCommFB()->getNumSD(); i++) {
-    if(!checkPortConnectionInfo(i + 2, true)) {
-      somethingFailed = true;
-      break;
+  for (size_t i = 0; i < getCommFB()->getNumSD(); i++) {
+    if (!checkPortType(i + 2, true)) {
+      return false;
     }
   }
-  if(!somethingFailed) {
-    for(unsigned int i = 0; i < getCommFB()->getNumRD(); i++) {
-      if(!checkPortConnectionInfo(i + 2, false)) {
-        somethingFailed = true;
-        break;
-      }
+  for (size_t i = 0; i < getCommFB()->getNumRD(); i++) {
+    if (!checkPortType(i + 2, false)) {
+      return false;
     }
   }
-
-  return !somethingFailed;
+  return true;
 }
 
-bool COPC_UA_Layer::checkPortConnectionInfo(unsigned int paPortIndex, bool paIsSD) const {
-  const CStringDictionary::TStringId localPortNameId = getLocalPortNameId(paPortIndex, paIsSD);
-  const CDataConnection *localPortConnection = getLocalPortConnection(paPortIndex, paIsSD);
-  if(!localPortConnection) {
-    DEVLOG_ERROR("[OPC UA LAYER]: Got invalid port connection on FB %s at port %s. It must be connected to another FB.\n", getCommFB()->getInstanceName(),
-      CStringDictionary::get(localPortNameId));
-    return false;
-  }
+bool COPC_UA_Layer::checkPortType(size_t paPortIndex, bool paIsSD) const {
+  CIEC_ANY &pin = (paIsSD) ? getCommFB()->getDI(paPortIndex)->unwrap() : getCommFB()->getDO(paPortIndex)->unwrap();
 
-  CIEC_ANY &remoteType = (paIsSD) ? getCommFB()->getDI(paPortIndex)->unwrap() : getCommFB()->getDO(paPortIndex)->unwrap();
-
-  if(!COPC_UA_Helper::getOPCUATypeFromAny(remoteType)) {
-    if(!COPC_UA_ObjectStruct_Helper::isStructType(*this, paIsSD)) {
-      DEVLOG_ERROR("[OPC UA LAYER]: Invalid  type %d in FB %s at connection %s\n", remoteType.getDataTypeID(), getCommFB()->getInstanceName(),
-      CStringDictionary::get(localPortNameId));
+  if (!COPC_UA_Helper::getOPCUATypeFromAny(pin)) {
+    if (!COPC_UA_ObjectStruct_Helper::isStructType(*this, paIsSD)) {
+      DEVLOG_ERROR("[OPC UA LAYER]: Invalid  type %s in FB %s at pin %s\n",
+             CStringDictionary::get(pin.getTypeNameID()),
+             getCommFB()->getInstanceName(),
+             CStringDictionary::get(getLocalPortNameId(paPortIndex, paIsSD)));
     }
     return false;
   }
@@ -225,13 +213,7 @@ void COPC_UA_Layer::setDataAlreadyPresentRead(bool paDataRead) {
   mDataAlreadyPresent = paDataRead;
 }
 
-const CDataConnection* COPC_UA_Layer::getLocalPortConnection(int paPortIndex, bool paIsSD) const {
-  const CStringDictionary::TStringId localPortNameId = getLocalPortNameId(paPortIndex, paIsSD);
-  const CDataConnection *localPortConnection = paIsSD ? getCommFB()->getDIConnection(localPortNameId) : getCommFB()->getDOConnection(localPortNameId);
-  return localPortConnection;
-}
-
-CStringDictionary::TStringId COPC_UA_Layer::getLocalPortNameId(int paPortIndex, bool paIsSD) const {
+CStringDictionary::TStringId COPC_UA_Layer::getLocalPortNameId(size_t paPortIndex, bool paIsSD) const {
   const SFBInterfaceSpec& localInterfaceSpec(getCommFB()->getFBInterfaceSpec());
   return paIsSD ? localInterfaceSpec.mDINames[paPortIndex] : localInterfaceSpec.mDONames[paPortIndex];
 }
