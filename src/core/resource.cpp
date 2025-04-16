@@ -238,20 +238,20 @@ namespace {
 EMGMResponse CResource::deleteConnection(forte::core::TNameIdentifier &paSrcNameList,
                                          forte::core::TNameIdentifier &paDstNameList) {
 
-  auto srcIt = paSrcNameList.cbegin();
-  CFunctionBlock *srcFB = getFB(srcIt, paSrcNameList.cend());
-
   auto dstIt = paDstNameList.cbegin();
   CFunctionBlock *dstFB = getFB(dstIt, paDstNameList.cend());
 
-  if (!isConnPort(srcFB, srcIt, paSrcNameList.cend()) || !isConnPort(dstFB, dstIt, paDstNameList.cend())) {
+  if (!isConnPort(dstFB, dstIt, paDstNameList.cend())) {
     return EMGMResponse::NoSuchObject;
   }
 
   CStringDictionary::TStringId dstPortName = *dstIt;
   // first check if the destination has an input connection with the given name
   if (CConnection *dstCon = getInputConnection(paDstNameList)) {
-    if (CConnectionPoint(*srcFB, *srcIt) != dstCon->getSourceId()) {
+    forte::core::TNameIdentifier dstConSourceNameList;
+    dstCon->getSourceId().getFB().getFullQualifiedApplicationInstanceName(dstConSourceNameList);
+    dstCon->getSourcePortName(dstConSourceNameList);
+    if (dstConSourceNameList != paSrcNameList) {
       return EMGMResponse::NoSuchObject;
     }
     const EMGMResponse retVal = dstCon->disconnect(*dstFB, dstPortName);
