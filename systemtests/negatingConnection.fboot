@@ -10,5 +10,7 @@ EMB_RES;<Request ID="9" Action="CREATE"><Connection Source="START.WARM" Destinat
 EMB_RES;<Request ID="10" Action="CREATE"><Connection Source="negatingConnectionApp.BOOL2BOOL_1.CNF" Destination="negatingConnectionApp.TEST_CONDITION.REQ" /></Request>
 EMB_RES;<Request ID="11" Action="CREATE"><Connection Source="negatingConnectionApp.TEST_CONDITION.CNF" Destination="negatingConnectionApp.STEST_END.REQ" /></Request>
 EMB_RES;<Request ID="12" Action="CREATE"><Connection Source="negatingConnectionApp.BOOL2BOOL.OUT.NOT" Destination="negatingConnectionApp.BOOL2BOOL_1.IN" /></Request>
-EMB_RES;<Request ID="13" Action="CREATE"><Connection Source="negatingConnectionApp.BOOL2BOOL_1.OUT" Destination="negatingConnectionApp.TEST_CONDITION.check" /></Request>
-EMB_RES;<Request ID="14" Action="START"/>
+EMB_RES;<Request ID="13" Action="DELETE"><Connection Source="negatingConnectionApp.BOOL2BOOL.OUT.NOT" Destination="negatingConnectionApp.BOOL2BOOL_1.IN" /></Request>
+EMB_RES;<Request ID="14" Action="CREATE"><Connection Source="negatingConnectionApp.BOOL2BOOL.OUT.NOT" Destination="negatingConnectionApp.BOOL2BOOL_1.IN" /></Request>
+EMB_RES;<Request ID="15" Action="CREATE"><Connection Source="negatingConnectionApp.BOOL2BOOL_1.OUT" Destination="negatingConnectionApp.TEST_CONDITION.check" /></Request>
+EMB_RES;<Request ID="16" Action="START"/>
