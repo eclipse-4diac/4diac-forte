@@ -33,6 +33,8 @@ class CEventConnection : public CConnection {
 
     EMGMResponse disconnect(CFunctionBlock &paDstFB, CStringDictionary::TStringId paDstPortNameId) override;
 
+    void getSourcePortName(forte::core::TNameIdentifier &paResult) const override;
+
     /*! \brief Triggers the event connection and all destinations are notified.
      *
      *

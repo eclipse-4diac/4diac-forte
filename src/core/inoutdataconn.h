@@ -29,6 +29,8 @@ class CInOutDataConnection : public CDataConnection {
 
     EMGMResponse disconnect(CFunctionBlock &paDstFB, CStringDictionary::TStringId paDstPortNameId) override;
 
+    void getSourcePortName(forte::core::TNameIdentifier &paResult) const override;
+
     void writeData(const CIEC_ANY &paValue) override {
       if (mValue) {
         mValue->setValue(paValue.unwrap());

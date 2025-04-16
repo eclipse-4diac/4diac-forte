@@ -87,6 +87,10 @@ class CResource : public CFunctionBlock{
       return std::string();
     }
 
+    void getFullQualifiedApplicationInstanceName(forte::core::TNameIdentifier &) const override {
+      // we don't want to add anything here as the resource name should be excluded
+    }
+
     CEventChainExecutionThread *getResourceEventExecution() const{
       return mResourceEventExecution;
     };

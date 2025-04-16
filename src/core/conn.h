@@ -140,6 +140,12 @@ class CConnection {
       return mSourceId;
     }
 
+    /*!
+     * \brief Get the full-qualified source port name
+     * @param paResult The result to append the source port name into
+     */
+    virtual void getSourcePortName(forte::core::TNameIdentifier &paResult) const = 0;
+
     virtual bool isDelegating() const {
       return false;
     }

@@ -122,3 +122,7 @@ CConnection::Wrapper CDataConnection::getDelegatingConnection(forte::core::TName
   }
   return CConnection::getDelegatingConnection(paSrcNameList);
 }
+
+void CDataConnection::getSourcePortName(forte::core::TNameIdentifier &paResult) const {
+  paResult.push_back(getSourceId().getFB().getFBInterfaceSpec().mDONames[getSourceId().getPortId()]);
+}

@@ -90,3 +90,8 @@ void CAdapterConnection::performDisconnect(){
     mSocket = nullptr;
   }
 }
+
+void CAdapterConnection::getSourcePortName(forte::core::TNameIdentifier &paResult) const {
+  paResult.push_back(getSourceId().getFB().getFBInterfaceSpec().mAdapterInstanceDefinition[getSourceId().getPortId()].
+    mAdapterNameID);
+}

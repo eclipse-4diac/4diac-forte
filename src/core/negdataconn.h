@@ -28,5 +28,7 @@ namespace forte::core::internal {
       void readData(CIEC_ANY &paValue) const override {
         static_cast<CIEC_BOOL &>(paValue) = func_NOT(getValue());
       }
+
+      void getSourcePortName(TNameIdentifier &paResult) const override;
   };
 } // namespace forte::core::internal

@@ -30,6 +30,8 @@ class CAdapterConnection : public CConnection{
 
     EMGMResponse disconnect(CFunctionBlock &paDstFB, CStringDictionary::TStringId paDstPortNameId) override;
 
+    void getSourcePortName(forte::core::TNameIdentifier &paResult) const override;
+
     bool isConnected() const {
       return mSocket != nullptr;
     }
