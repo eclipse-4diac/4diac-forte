@@ -427,9 +427,11 @@ void CResource::createEOConnectionResponse(const CFunctionBlock &paFb, std::stri
   const SFBInterfaceSpec &spec(paFb.getFBInterfaceSpec());
   for (size_t i = 0; i < spec.mNumEOs; i++) {
     const CEventConnection *eConn = paFb.getEOConnection(spec.mEONames[i]);
-    for (const auto &it : eConn->getDestinationList()) {
-      createConnectionResponseMessage(paFb, spec.mEONames[i], it.getFB(),
-                                      it.getFB().getFBInterfaceSpec().mEINames[it.getPortId()], paReqResult);
+    if (eConn) {
+      for (const auto &it : eConn->getDestinationList()) {
+        createConnectionResponseMessage(*eConn, it.getFB(), it.getFB().getFBInterfaceSpec().mEINames[it.getPortId()],
+                                        paReqResult);
+      }
     }
   }
 }
@@ -439,10 +441,7 @@ void CResource::createDOConnectionResponse(const CFunctionBlock &paFb, std::stri
   for (size_t i = 0; i < spec.mNumDIs; i++) {
     const CDataConnection *const dConn = paFb.getDIConnection(spec.mDINames[i]);
     if (dConn != nullptr) {
-      const CConnectionPoint srcConnPoint = dConn->getSourceId();
-      createConnectionResponseMessage(srcConnPoint.getFB(),
-                                      srcConnPoint.getFB().getFBInterfaceSpec().mDONames[srcConnPoint.getPortId()],
-                                      paFb, spec.mDINames[i], paReqResult);
+      createConnectionResponseMessage(*dConn, paFb, spec.mDINames[i], paReqResult);
     }
   }
 }
@@ -453,8 +452,7 @@ void CResource::createAOConnectionResponse(const CFunctionBlock &paFb, std::stri
     const CAdapter *const adapter = paFb.getAdapter(spec.mAdapterInstanceDefinition[i].mAdapterNameID);
     const CAdapterConnection *aConn = adapter->getAdapterConnection();
     if(!spec.mAdapterInstanceDefinition[i].mIsPlug && aConn != nullptr && aConn->isConnected()) {
-      createConnectionResponseMessage(aConn->getSourceId().getFB(), aConn->getPlug().getInstanceNameId(),
-          paFb, adapter->getInstanceNameId(), paReqResult);
+      createConnectionResponseMessage(*aConn, paFb, adapter->getInstanceNameId(), paReqResult);
     }
   }
 }
@@ -467,16 +465,16 @@ void CResource::createFBResponseMessage(const CFunctionBlock &paFb, const std::s
   paValue += "\"/>\n"s;
 }
 
-void CResource::createConnectionResponseMessage(const CFunctionBlock &paSrcFb,
-                                                const CStringDictionary::TStringId paSrcId,
+void CResource::createConnectionResponseMessage(const CConnection &paConn,
                                                 const CFunctionBlock &paDstFb,
                                                 const CStringDictionary::TStringId paDstId,
                                                 std::string &paReqResult) {
   paReqResult += "<Connection Source=\""s;
 
-  paReqResult += paSrcFb.getFullQualifiedApplicationInstanceName('.');
-  paReqResult += "."s;
-  paReqResult += CStringDictionary::get(paSrcId);
+  forte::core::TNameIdentifier srcNameList;
+  paConn.getSourceId().getFB().getFullQualifiedApplicationInstanceName(srcNameList);
+  paConn.getSourcePortName(srcNameList);
+  forte::core::util::join(srcNameList.cbegin(), srcNameList.cend(), CStringDictionary::get, '.', paReqResult);
 
   paReqResult.append("\" Destination=\""s);
 

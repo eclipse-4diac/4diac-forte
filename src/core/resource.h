@@ -253,8 +253,8 @@ class CResource : public CFunctionBlock{
     static void createEOConnectionResponse(const CFunctionBlock& paFb, std::string& paReqResult);
     static void createDOConnectionResponse(const CFunctionBlock& paFb, std::string& paReqResult);
     static void createAOConnectionResponse(const CFunctionBlock& paFb, std::string& paReqResult);
-    static void createConnectionResponseMessage(const CFunctionBlock& paSrcFb, const CStringDictionary::TStringId paSrcId,
-        const CFunctionBlock& paDstFb, const CStringDictionary::TStringId paDstId, std::string& paReqResult);
+    static void createConnectionResponseMessage(const CConnection &paConn, const CFunctionBlock& paDstFb,
+      CStringDictionary::TStringId paDstId, std::string& paReqResult);
 
     EMGMResponse createFBTypeResponseMessage(const CStringDictionary::TStringId paValue, std::string & paReqResult);
     EMGMResponse createAdapterTypeResponseMessage(const CStringDictionary::TStringId paValue, std::string & paReqResult);
