@@ -13,6 +13,7 @@
  *    - change to make API more like std::inplace_vector (C++26)
  *   Martin Jobst
  *    - add erase functions
+ *    - add equality operators
  *******************************************************************************/
 #pragma once
 
@@ -168,4 +169,15 @@ private:
     size_type mNumElements;
 };
 
+template<typename T, std::size_t U, std::size_t V>
+[[nodiscard]]
+bool operator==(const inplace_vector<T, U> &paFirst, const inplace_vector<T, V> &paSecond) {
+    return paFirst.size() == paSecond.size() && std::equal(paFirst.cbegin(), paFirst.cend(), paSecond.cbegin());
+}
+
+template<typename T, std::size_t U, std::size_t V>
+[[nodiscard]]
+bool operator!=(const inplace_vector<T, U> &paFirst, const inplace_vector<T, V> &paSecond) {
+    return !(paFirst == paSecond);
+}
 }
