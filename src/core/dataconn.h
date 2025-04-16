@@ -37,6 +37,8 @@ class CDataConnection : public CConnection {
 
     void handleAnySrcPortConnection(const CIEC_ANY &paDstDataPoint);
 
+    void getSourcePortName(forte::core::TNameIdentifier &paResult) const override;
+
     /*! \brief Write connection data value.
      *
      *   Write data value from FB data output to connection data variable.

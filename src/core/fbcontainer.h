@@ -104,6 +104,11 @@ namespace forte {
          */
         virtual std::string getFullQualifiedApplicationInstanceName(const char sepChar) const;
 
+        /*! \brief Get the full hierarchical name of this FB in its application
+         * \param paResult The result to append the name into
+         */
+        virtual void getFullQualifiedApplicationInstanceName(TNameIdentifier &paResult) const;
+
         //! Change the execution state of all contained FBs and also recursively in all contained containers
         virtual EMGMResponse changeExecutionState(EMGMCommandType paCommand);
 

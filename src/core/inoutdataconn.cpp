@@ -86,3 +86,7 @@ EMGMResponse CInOutDataConnection::establishDataConnection(CFunctionBlock &paDst
   mInOutDestinationIds.push_back(dstPoint);
   return EMGMResponse::Ready;
 }
+
+void CInOutDataConnection::getSourcePortName(forte::core::TNameIdentifier &paResult) const {
+  paResult.push_back(getSourceId().getFB().getFBInterfaceSpec().mDIONames[getSourceId().getPortId()]);
+}

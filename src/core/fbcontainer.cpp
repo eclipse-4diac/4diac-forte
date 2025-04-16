@@ -83,6 +83,11 @@ std::string CFBContainer::getFullQualifiedApplicationInstanceName(const char sep
   return result;
 }
 
+void CFBContainer::getFullQualifiedApplicationInstanceName(TNameIdentifier &paResult) const {
+  mParent.getFullQualifiedApplicationInstanceName(paResult);
+  paResult.push_back(getInstanceNameId());
+}
+
 EMGMResponse CFBContainer::createFB(NameIterator &paNameListIt, NameIterator paNameListEnd, CStringDictionary::TStringId paTypeName){
   if (paNameListIt+1 == paNameListEnd) {
     return createFB(*paNameListIt, paTypeName);

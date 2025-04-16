@@ -79,3 +79,6 @@ EMGMResponse CEventConnection::removeDestination(const CConnectionPoint &paDestP
   return EMGMResponse::Ready;
 }
 
+void CEventConnection::getSourcePortName(forte::core::TNameIdentifier &paResult) const {
+  paResult.push_back(getSourceId().getFB().getFBInterfaceSpec().mEONames[getSourceId().getPortId()]);
+}
