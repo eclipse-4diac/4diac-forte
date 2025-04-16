@@ -204,12 +204,6 @@ bool COPC_UA_Layer::checkPortConnectionInfo(unsigned int paPortIndex, bool paIsS
     return false;
   }
 
-  if(!localPortConnection->isConnected()) {
-    DEVLOG_ERROR("[OPC UA LAYER]: Connection %s of FB %s is not connected to anything.\n", CStringDictionary::get(localPortNameId),
-      getCommFB()->getInstanceName());
-    return false;
-  }
-
   CIEC_ANY &remoteType = (paIsSD) ? getCommFB()->getDI(paPortIndex)->unwrap() : getCommFB()->getDO(paPortIndex)->unwrap();
 
   if(!COPC_UA_Helper::getOPCUATypeFromAny(remoteType)) {
