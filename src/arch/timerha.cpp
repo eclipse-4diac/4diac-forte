@@ -103,7 +103,7 @@ void CTimerHandler::triggerTimedFB(STimedFBListEntry paTimerListEntry) {
 void CTimerHandler::processAddList() {
   CCriticalRegion criticalRegion(mAddListSync);
   for (auto entry : mAddFBList) {
-    if (entry.mTimeOut < mForteTime) {
+    if (entry.mTimeOut <= mForteTime) {
       triggerTimedFB(entry);
     } else {
       addTimedFBEntry(entry);
