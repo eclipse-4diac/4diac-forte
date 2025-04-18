@@ -17,11 +17,13 @@ mark_as_advanced(FORTE_TRACE_CTF_TEST)
 if(FORTE_TRACE_CTF_TEST)
   SET(SOURCE_GROUP ${SOURCE_GROUP}\\trace)
 
-  forte_test_add_sourcefile_cpp(ctfTracerTest.cpp common.cpp)
-
+  forte_test_add_sourcefile_cpp(common.cpp)
 
   if(FORTE_TRACE_CTF_REPLAY_DEBUGGING)
     forte_test_add_sourcefile_cpp(replayAlgorithmTest.cpp)
+  else()
+    # currently the replay debugging traces a little bit differently from the classic one so the test does not apply
+    forte_test_add_sourcefile_cpp(ctfTracerTest.cpp) 
   endif()
 
   SET(CTF_OUTPUT_DIR ${CMAKE_BINARY_DIR}/ctfOutput)
