@@ -1,2 +1,3 @@
 Checks: modernize-use-nullptr,modernize-use-bool-literals,modernize-redundant-void-arg,modernize-use-equals-default,modernize-use-equals-delete,modernize-use-transparent-functors,modernize-use-override,-clang-diagnostic-*,-clang-analyzer-*
+FormatStyle: 'file'
 HeaderFilterRegex: .*
