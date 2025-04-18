@@ -14,22 +14,19 @@
 #include "../../core/fbtests/fbtestfixture.h"
 #include <forte_bool.h>
 
-
 USE_STRING_ID(E_SELECT);
-
 
 struct E_SELECT_TestFixture : public CFBTestFixtureBase {
 
-    E_SELECT_TestFixture() :
-        CFBTestFixtureBase(STRID(E_SELECT)) {
+    E_SELECT_TestFixture() : CFBTestFixtureBase(STRID(E_SELECT)) {
       setInputData({&mInG});
       CFBTestFixtureBase::setup();
     }
 
-    CIEC_BOOL mInG; //DATA INPUT
+    CIEC_BOOL mInG; // DATA INPUT
 };
 
-BOOST_FIXTURE_TEST_SUITE( SelectTests, E_SELECT_TestFixture)
+BOOST_FIXTURE_TEST_SUITE(SelectTests, E_SELECT_TestFixture)
 
 BOOST_AUTO_TEST_CASE(SelectEI0) {
   mInG = CIEC_BOOL(false);
@@ -44,15 +41,16 @@ BOOST_AUTO_TEST_CASE(SelectEI1) {
   triggerEvent(1);
   BOOST_CHECK(checkForSingleOutputEventOccurence(0));
   triggerEvent(0);
-  BOOST_CHECK (eventChainEmpty());}
+  BOOST_CHECK(eventChainEmpty());
+}
 
 BOOST_AUTO_TEST_CASE(MultipleSelectEI0) {
   mInG = CIEC_BOOL(false);
-  for(unsigned int i = 0; i < 1000; i++) {
+  for (unsigned int i = 0; i < 1000; i++) {
     triggerEvent(0);
     BOOST_CHECK(checkForSingleOutputEventOccurence(0));
   }
-  for(unsigned int i = 0; i < 1000; i++) {
+  for (unsigned int i = 0; i < 1000; i++) {
     triggerEvent(0);
     BOOST_CHECK(checkForSingleOutputEventOccurence(0));
     triggerEvent(1);
@@ -62,11 +60,11 @@ BOOST_AUTO_TEST_CASE(MultipleSelectEI0) {
 
 BOOST_AUTO_TEST_CASE(MultipleSelectEI1) {
   mInG = CIEC_BOOL(true);
-  for(unsigned int i = 0; i < 1000; i++) {
+  for (unsigned int i = 0; i < 1000; i++) {
     triggerEvent(1);
     BOOST_CHECK(checkForSingleOutputEventOccurence(0));
   }
-  for(unsigned int i = 0; i < 1000; i++) {
+  for (unsigned int i = 0; i < 1000; i++) {
     triggerEvent(1);
     BOOST_CHECK(checkForSingleOutputEventOccurence(0));
     triggerEvent(0);
@@ -75,12 +73,12 @@ BOOST_AUTO_TEST_CASE(MultipleSelectEI1) {
 }
 
 BOOST_AUTO_TEST_CASE(Alternate) {
-  for(unsigned int i = 0; i < 1000; ++i) {
+  for (unsigned int i = 0; i < 1000; ++i) {
     mInG = func_NOT(mInG);
     triggerEvent((mInG) ? 1 : 0);
     BOOST_CHECK(checkForSingleOutputEventOccurence(0));
   }
-  for(unsigned int i = 0; i < 1000; i++) {
+  for (unsigned int i = 0; i < 1000; i++) {
     triggerEvent((mInG) ? 1 : 0);
     BOOST_CHECK(checkForSingleOutputEventOccurence(0));
     triggerEvent((mInG) ? 0 : 1);

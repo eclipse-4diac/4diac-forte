@@ -29,7 +29,7 @@
 #include "forte_array_variable.h"
 
 class FORTE_ASSEMBLE_DWORD_FROM_BYTES final : public CFunctionBlock {
-  DECLARE_FIRMWARE_FB(FORTE_ASSEMBLE_DWORD_FROM_BYTES)
+    DECLARE_FIRMWARE_FB(FORTE_ASSEMBLE_DWORD_FROM_BYTES)
 
   private:
     static const CStringDictionary::TStringId scmDataInputNames[];
@@ -56,7 +56,8 @@ class FORTE_ASSEMBLE_DWORD_FROM_BYTES final : public CFunctionBlock {
     void setInitialValues() override;
 
   public:
-    FORTE_ASSEMBLE_DWORD_FROM_BYTES(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_ASSEMBLE_DWORD_FROM_BYTES(CStringDictionary::TStringId paInstanceNameId,
+                                    forte::core::CFBContainer &paContainer);
 
     CIEC_BYTE var_BYTE_00;
     CIEC_BYTE var_BYTE_01;
@@ -80,7 +81,11 @@ class FORTE_ASSEMBLE_DWORD_FROM_BYTES final : public CFunctionBlock {
     CDataConnection **getDIConUnchecked(TPortId) override;
     CDataConnection *getDOConUnchecked(TPortId) override;
 
-    void evt_REQ(const CIEC_BYTE &paBYTE_00, const CIEC_BYTE &paBYTE_01, const CIEC_BYTE &paBYTE_02, const CIEC_BYTE &paBYTE_03, CIEC_DWORD &pa) {
+    void evt_REQ(const CIEC_BYTE &paBYTE_00,
+                 const CIEC_BYTE &paBYTE_01,
+                 const CIEC_BYTE &paBYTE_02,
+                 const CIEC_BYTE &paBYTE_03,
+                 CIEC_DWORD &pa) {
       var_BYTE_00 = paBYTE_00;
       var_BYTE_01 = paBYTE_01;
       var_BYTE_02 = paBYTE_02;
@@ -89,11 +94,16 @@ class FORTE_ASSEMBLE_DWORD_FROM_BYTES final : public CFunctionBlock {
       pa = var_;
     }
 
-    void operator()(const CIEC_BYTE &paBYTE_00, const CIEC_BYTE &paBYTE_01, const CIEC_BYTE &paBYTE_02, const CIEC_BYTE &paBYTE_03, CIEC_DWORD &pa) {
+    void operator()(const CIEC_BYTE &paBYTE_00,
+                    const CIEC_BYTE &paBYTE_01,
+                    const CIEC_BYTE &paBYTE_02,
+                    const CIEC_BYTE &paBYTE_03,
+                    CIEC_DWORD &pa) {
       evt_REQ(paBYTE_00, paBYTE_01, paBYTE_02, paBYTE_03, pa);
     }
 };
 
-CIEC_DWORD func_ASSEMBLE_DWORD_FROM_BYTES(CIEC_BYTE st_lv_BYTE_00, CIEC_BYTE st_lv_BYTE_01, CIEC_BYTE st_lv_BYTE_02, CIEC_BYTE st_lv_BYTE_03);
-
-
+CIEC_DWORD func_ASSEMBLE_DWORD_FROM_BYTES(CIEC_BYTE st_lv_BYTE_00,
+                                          CIEC_BYTE st_lv_BYTE_01,
+                                          CIEC_BYTE st_lv_BYTE_02,
+                                          CIEC_BYTE st_lv_BYTE_03);

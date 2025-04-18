@@ -16,17 +16,17 @@
 #include <errno.h>
 #include <string.h>
 
-CMacOsSyncObject::CMacOsSyncObject(){
+CMacOsSyncObject::CMacOsSyncObject() {
   pthread_mutexattr_t attr;
   pthread_mutexattr_init(&attr);
 
   pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE);
   pthread_mutex_init(&mMutexHandle, &attr);
-  //TODO handle return value
+  // TODO handle return value
   pthread_mutexattr_destroy(&attr);
 }
 
-CMacOsSyncObject::~CMacOsSyncObject(){
+CMacOsSyncObject::~CMacOsSyncObject() {
   pthread_mutex_destroy(&mMutexHandle);
-  //TODO handle return value
+  // TODO handle return value
 }

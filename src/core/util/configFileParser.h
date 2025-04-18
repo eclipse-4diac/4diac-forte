@@ -24,7 +24,6 @@
  */
 class CConfigFileParser {
   public:
-
     /**
      * Possible results that can be returned when parsing a line
      */
@@ -61,12 +60,15 @@ class CConfigFileParser {
      * @param paKey Key to look for in the file
      * @param paValue Value to look for
      * @param paFound True if the key/value was found, false otherwise
-     * @return True if no error occurred, false otherwise. If the key is found but no the value, it's still a valid result and paFound is false
+     * @return True if no error occurred, false otherwise. If the key is found but no the value, it's still a valid
+     * result and paFound is false
      */
-    static bool lookForKeyValueInFile(CConfigFileParser &paFileParse, const std::string &paKey, const std::string &paValue, bool &paFound);
+    static bool lookForKeyValueInFile(CConfigFileParser &paFileParse,
+                                      const std::string &paKey,
+                                      const std::string &paValue,
+                                      bool &paFound);
 
   private:
-
     /**
      * File to be parsed
      */
@@ -75,7 +77,6 @@ class CConfigFileParser {
     static const size_t scmLineBuffer = 256;
     static const char scmSeparator = '=';
     static const size_t scmNumberOfElementsInLine = 2;
-
 };
 
 #endif /* SRC_CORE_UTILS_CONFIGFILEPARSER_H_ */

@@ -22,5 +22,5 @@ using namespace forte::core::io;
 DEFINE_FIRMWARE_FB(FORTE_QB, STRID(QB))
 
 FORTE_QB::FORTE_QB(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
-    COutputFB<CIEC_BYTE>(paContainer, paInstanceNameId){
+    COutputFB<CIEC_BYTE>(paContainer, paInstanceNameId) {
 }

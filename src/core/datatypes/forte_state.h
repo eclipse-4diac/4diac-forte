@@ -19,7 +19,7 @@
 /*!\ingroup COREDTS CIEC_EVENT represents the STATE data type according to IEC 61131.
  */
 class CIEC_STATE final : public CIEC_ANY_INT {
-  DECLARE_FIRMWARE_DATATYPE(STATE)
+    DECLARE_FIRMWARE_DATATYPE(STATE)
 
   public:
     typedef TForteUInt16 TValueType;
@@ -29,8 +29,7 @@ class CIEC_STATE final : public CIEC_ANY_INT {
 
     CIEC_STATE() = default;
 
-    CIEC_STATE(const CIEC_STATE& paValue) :
-        CIEC_ANY_INT(){
+    CIEC_STATE(const CIEC_STATE &paValue) : CIEC_ANY_INT() {
       setValueSimple(paValue);
     }
 
@@ -40,13 +39,13 @@ class CIEC_STATE final : public CIEC_ANY_INT {
 
     ~CIEC_STATE() override = default;
 
-    CIEC_STATE& operator =(const CIEC_STATE &paValue){
+    CIEC_STATE &operator=(const CIEC_STATE &paValue) {
       // Simple value assignment - no self assignment check needed
       setValueSimple(paValue);
       return *this;
     }
 
-    CIEC_STATE& operator =(const TForteUInt16 paValue){
+    CIEC_STATE &operator=(const TForteUInt16 paValue) {
       // Simple value assignment - no self assignment check needed
       setTUINT16(paValue);
       return *this;
@@ -56,7 +55,7 @@ class CIEC_STATE final : public CIEC_ANY_INT {
      *
      *   Conversion operator for converting CIEC_UDINT to elementary unsigned 16 bit integer
      */
-    operator TForteUInt16() const{
+    operator TForteUInt16() const {
       return getTUINT16();
     }
 

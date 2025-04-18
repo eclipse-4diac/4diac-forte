@@ -1,10 +1,10 @@
-/*************************************************************************  
+/*************************************************************************
  *** Copyright (c) 2024 HR Agrartechnik GmbH
- *** This program and the accompanying materials are made available under the  
- *** terms of the Eclipse Public License 2.0 which is available at  
- *** http://www.eclipse.org/legal/epl-2.0.  
- ***  
- *** SPDX-License-Identifier: EPL-2.0  
+ *** This program and the accompanying materials are made available under the
+ *** terms of the Eclipse Public License 2.0 which is available at
+ *** http://www.eclipse.org/legal/epl-2.0.
+ ***
+ *** SPDX-License-Identifier: EPL-2.0
  ***
  *** This file was generated using the 4DIAC FORTE Export Filter V1.0.x NG!
  ***
@@ -32,7 +32,6 @@ USE_STRING_ID(REAL);
 USE_STRING_ID(REQ);
 USE_STRING_ID(signalprocessing__SCALE_LIM);
 
-
 #include "forte_real.h"
 #include "iec61131_functions.h"
 #include "forte_array_common.h"
@@ -43,8 +42,12 @@ USE_STRING_ID(signalprocessing__SCALE_LIM);
 
 DEFINE_FIRMWARE_FB(FORTE_signalprocessing__SCALE_LIM, STRID(signalprocessing__SCALE_LIM))
 
-const CStringDictionary::TStringId FORTE_signalprocessing__SCALE_LIM::scmDataInputNames[] = {STRID(IN), STRID(MAX_IN), STRID(MIN_IN), STRID(MAX_IN_LIM), STRID(MIN_IN_LIM), STRID(MAX_OUT), STRID(MIN_OUT), STRID(MAX_OUT_FIX), STRID(MIN_OUT_FIX)};
-const CStringDictionary::TStringId FORTE_signalprocessing__SCALE_LIM::scmDataInputTypeIds[] = {STRID(REAL), STRID(REAL), STRID(REAL), STRID(REAL), STRID(REAL), STRID(REAL), STRID(REAL), STRID(REAL), STRID(REAL)};
+const CStringDictionary::TStringId FORTE_signalprocessing__SCALE_LIM::scmDataInputNames[] = {
+    STRID(IN),      STRID(MAX_IN),  STRID(MIN_IN),      STRID(MAX_IN_LIM), STRID(MIN_IN_LIM),
+    STRID(MAX_OUT), STRID(MIN_OUT), STRID(MAX_OUT_FIX), STRID(MIN_OUT_FIX)};
+const CStringDictionary::TStringId FORTE_signalprocessing__SCALE_LIM::scmDataInputTypeIds[] = {
+    STRID(REAL), STRID(REAL), STRID(REAL), STRID(REAL), STRID(REAL),
+    STRID(REAL), STRID(REAL), STRID(REAL), STRID(REAL)};
 const CStringDictionary::TStringId FORTE_signalprocessing__SCALE_LIM::scmDataOutputNames[] = {STRID()};
 const CStringDictionary::TStringId FORTE_signalprocessing__SCALE_LIM::scmDataOutputTypeIds[] = {STRID(REAL)};
 const TDataIOID FORTE_signalprocessing__SCALE_LIM::scmEIWith[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, scmWithListDelimiter};
@@ -55,16 +58,29 @@ const TDataIOID FORTE_signalprocessing__SCALE_LIM::scmEOWith[] = {0, scmWithList
 const TForteInt16 FORTE_signalprocessing__SCALE_LIM::scmEOWithIndexes[] = {0};
 const CStringDictionary::TStringId FORTE_signalprocessing__SCALE_LIM::scmEventOutputNames[] = {STRID(CNF)};
 const CStringDictionary::TStringId FORTE_signalprocessing__SCALE_LIM::scmEventOutputTypeIds[] = {STRID(Event)};
-const SFBInterfaceSpec FORTE_signalprocessing__SCALE_LIM::scmFBInterfaceSpec = {
-  1, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,
-  1, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes,
-  9, scmDataInputNames, scmDataInputTypeIds,
-  1, scmDataOutputNames, scmDataOutputTypeIds,
-  0, nullptr,
-  0, nullptr
-};
+const SFBInterfaceSpec FORTE_signalprocessing__SCALE_LIM::scmFBInterfaceSpec = {1,
+                                                                                scmEventInputNames,
+                                                                                scmEventInputTypeIds,
+                                                                                scmEIWith,
+                                                                                scmEIWithIndexes,
+                                                                                1,
+                                                                                scmEventOutputNames,
+                                                                                scmEventOutputTypeIds,
+                                                                                scmEOWith,
+                                                                                scmEOWithIndexes,
+                                                                                9,
+                                                                                scmDataInputNames,
+                                                                                scmDataInputTypeIds,
+                                                                                1,
+                                                                                scmDataOutputNames,
+                                                                                scmDataOutputTypeIds,
+                                                                                0,
+                                                                                nullptr,
+                                                                                0,
+                                                                                nullptr};
 
-FORTE_signalprocessing__SCALE_LIM::FORTE_signalprocessing__SCALE_LIM(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_signalprocessing__SCALE_LIM::FORTE_signalprocessing__SCALE_LIM(
+    const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId),
     conn_CNF(*this, 0),
     conn_IN(nullptr),
@@ -93,7 +109,7 @@ void FORTE_signalprocessing__SCALE_LIM::setInitialValues() {
 }
 
 void FORTE_signalprocessing__SCALE_LIM::readInputData(const TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventREQID: {
       readData(0, var_IN, conn_IN);
       readData(1, var_MAX_IN, conn_MAX_IN);
@@ -106,24 +122,22 @@ void FORTE_signalprocessing__SCALE_LIM::readInputData(const TEventID paEIID) {
       readData(8, var_MIN_OUT_FIX, conn_MIN_OUT_FIX);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 void FORTE_signalprocessing__SCALE_LIM::writeOutputData(const TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventCNFID: {
       writeData(0, var_, conn_);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 CIEC_ANY *FORTE_signalprocessing__SCALE_LIM::getDI(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_IN;
     case 1: return &var_MAX_IN;
     case 2: return &var_MIN_IN;
@@ -138,21 +152,21 @@ CIEC_ANY *FORTE_signalprocessing__SCALE_LIM::getDI(const size_t paIndex) {
 }
 
 CIEC_ANY *FORTE_signalprocessing__SCALE_LIM::getDO(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_;
   }
   return nullptr;
 }
 
 CEventConnection *FORTE_signalprocessing__SCALE_LIM::getEOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_CNF;
   }
   return nullptr;
 }
 
 CDataConnection **FORTE_signalprocessing__SCALE_LIM::getDIConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_IN;
     case 1: return &conn_MAX_IN;
     case 2: return &conn_MIN_IN;
@@ -167,32 +181,43 @@ CDataConnection **FORTE_signalprocessing__SCALE_LIM::getDIConUnchecked(const TPo
 }
 
 CDataConnection *FORTE_signalprocessing__SCALE_LIM::getDOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_;
   }
   return nullptr;
 }
 
 void FORTE_signalprocessing__SCALE_LIM::executeEvent(const TEventID, CEventChainExecutionThread *const paECET) {
-  var_ = func_SCALE_LIM(var_IN, var_MAX_IN, var_MIN_IN, var_MAX_IN_LIM, var_MIN_IN_LIM, var_MAX_OUT, var_MIN_OUT, var_MAX_OUT_FIX, var_MIN_OUT_FIX);
+  var_ = func_SCALE_LIM(var_IN, var_MAX_IN, var_MIN_IN, var_MAX_IN_LIM, var_MIN_IN_LIM, var_MAX_OUT, var_MIN_OUT,
+                        var_MAX_OUT_FIX, var_MIN_OUT_FIX);
   sendOutputEvent(scmEventCNFID, paECET);
 }
 
-CIEC_REAL func_SCALE_LIM(CIEC_REAL st_lv_IN, CIEC_REAL st_lv_MAX_IN, CIEC_REAL st_lv_MIN_IN, CIEC_REAL st_lv_MAX_IN_LIM, CIEC_REAL st_lv_MIN_IN_LIM, CIEC_REAL st_lv_MAX_OUT, CIEC_REAL st_lv_MIN_OUT, CIEC_REAL st_lv_MAX_OUT_FIX, CIEC_REAL st_lv_MIN_OUT_FIX) {
+CIEC_REAL func_SCALE_LIM(CIEC_REAL st_lv_IN,
+                         CIEC_REAL st_lv_MAX_IN,
+                         CIEC_REAL st_lv_MIN_IN,
+                         CIEC_REAL st_lv_MAX_IN_LIM,
+                         CIEC_REAL st_lv_MIN_IN_LIM,
+                         CIEC_REAL st_lv_MAX_OUT,
+                         CIEC_REAL st_lv_MIN_OUT,
+                         CIEC_REAL st_lv_MAX_OUT_FIX,
+                         CIEC_REAL st_lv_MIN_OUT_FIX) {
   CIEC_REAL st_ret_val = 0_REAL;
 
-  #line 17 "SCALE_LIM.fct"
+#line 17 "SCALE_LIM.fct"
   if (func_LT(st_lv_IN, st_lv_MIN_IN_LIM)) {
-    #line 18 "SCALE_LIM.fct"
+#line 18 "SCALE_LIM.fct"
     st_ret_val = st_lv_MIN_OUT_FIX;
-  }
-  else if (func_GT(st_lv_IN, st_lv_MAX_IN_LIM)) {
-    #line 20 "SCALE_LIM.fct"
+  } else if (func_GT(st_lv_IN, st_lv_MAX_IN_LIM)) {
+#line 20 "SCALE_LIM.fct"
     st_ret_val = st_lv_MAX_OUT_FIX;
-  }
-  else {
-    #line 22 "SCALE_LIM.fct"
-    st_ret_val = func_ADD<CIEC_REAL>(func_DIV<CIEC_REAL>(func_MUL<CIEC_REAL>(func_SUB<CIEC_REAL>(st_lv_IN, st_lv_MIN_IN), func_SUB<CIEC_REAL>(st_lv_MAX_OUT, st_lv_MIN_OUT)), func_SUB<CIEC_REAL>(st_lv_MAX_IN, st_lv_MIN_IN)), st_lv_MIN_OUT);
+  } else {
+#line 22 "SCALE_LIM.fct"
+    st_ret_val =
+        func_ADD<CIEC_REAL>(func_DIV<CIEC_REAL>(func_MUL<CIEC_REAL>(func_SUB<CIEC_REAL>(st_lv_IN, st_lv_MIN_IN),
+                                                                    func_SUB<CIEC_REAL>(st_lv_MAX_OUT, st_lv_MIN_OUT)),
+                                                func_SUB<CIEC_REAL>(st_lv_MAX_IN, st_lv_MIN_IN)),
+                            st_lv_MIN_OUT);
   }
 
   return st_ret_val;

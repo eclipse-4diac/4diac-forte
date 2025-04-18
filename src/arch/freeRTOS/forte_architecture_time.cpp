@@ -19,11 +19,12 @@
 #include "forte_constants.h"
 
 uint_fast64_t getNanoSecondsMonotonicArch() {
-  return (static_cast<uint_fast64_t>(xTaskGetTickCount()) * (forte::core::constants::cNanosecondsPerSecond / static_cast<uint_fast64_t>(configTICK_RATE_HZ)));
+  return (static_cast<uint_fast64_t>(xTaskGetTickCount()) *
+          (forte::core::constants::cNanosecondsPerSecond / static_cast<uint_fast64_t>(configTICK_RATE_HZ)));
 }
 
 uint_fast64_t getNanoSecondsRealtimeArch() {
-  return static_cast<uint_fast64_t>(forte_time())*1000000000LL;
+  return static_cast<uint_fast64_t>(forte_time()) * 1000000000LL;
 }
 
 time_t forte_timegm(struct tm *pa_tm) {
@@ -31,10 +32,10 @@ time_t forte_timegm(struct tm *pa_tm) {
   return mktime(gmtime(&tm));
 }
 
-struct tm* forte_localtime(const time_t* paTime, struct tm* const paResult) {
+struct tm *forte_localtime(const time_t *paTime, struct tm *const paResult) {
   return localtime_r(paTime, paResult);
 }
 
-struct tm* forte_gmtime(const time_t* const paTime, struct tm* const paResult){
+struct tm *forte_gmtime(const time_t *const paTime, struct tm *const paResult) {
   return gmtime_r(paTime, paResult);
 }

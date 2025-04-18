@@ -14,24 +14,25 @@
 #include "comlayer.h"
 #include "commfb.h"
 
-
 using namespace forte::com_infra;
 
-CComLayer::CComLayer(CComLayer* paUpperLayer, CBaseCommFB * paComFB) :
-  mConnectionState(forte::com_infra::e_Disconnected), mTopLayer(paUpperLayer), mBottomLayer(nullptr), mFb(paComFB){
-  if(nullptr != mTopLayer){
+CComLayer::CComLayer(CComLayer *paUpperLayer, CBaseCommFB *paComFB) :
+    mConnectionState(forte::com_infra::e_Disconnected),
+    mTopLayer(paUpperLayer),
+    mBottomLayer(nullptr),
+    mFb(paComFB) {
+  if (nullptr != mTopLayer) {
     mTopLayer->setBottomLayer(this);
   }
 }
 
-CComLayer::~CComLayer(){
-  if(mBottomLayer != nullptr){
+CComLayer::~CComLayer() {
+  if (mBottomLayer != nullptr) {
     mBottomLayer->closeConnection();
     delete mBottomLayer;
   }
 }
 
-EComResponse CComLayer::processInterrupt(){
+EComResponse CComLayer::processInterrupt() {
   return e_Nothing;
 }
-

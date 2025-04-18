@@ -24,7 +24,6 @@ USE_STRING_ID(REQ);
 USE_STRING_ID(STATUS);
 USE_STRING_ID(WSTRING);
 
-
 #include "criticalregion.h"
 #include "resource.h"
 
@@ -33,8 +32,10 @@ USE_STRING_ID(WSTRING);
 
 DEFINE_FIRMWARE_FB(FORTE_EC_SET_EVT, STRID(EC_SET_EVT))
 
-const CStringDictionary::TStringId FORTE_EC_SET_EVT::scmDataInputNames[] = {STRID(QI), STRID(FB_NAME), STRID(FB_EVENT_IO), STRID(DST)};
-const CStringDictionary::TStringId FORTE_EC_SET_EVT::scmDataInputTypeIds[] = {STRID(BOOL), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING)};
+const CStringDictionary::TStringId FORTE_EC_SET_EVT::scmDataInputNames[] = {STRID(QI), STRID(FB_NAME),
+                                                                            STRID(FB_EVENT_IO), STRID(DST)};
+const CStringDictionary::TStringId FORTE_EC_SET_EVT::scmDataInputTypeIds[] = {STRID(BOOL), STRID(WSTRING),
+                                                                              STRID(WSTRING), STRID(WSTRING)};
 const CStringDictionary::TStringId FORTE_EC_SET_EVT::scmDataOutputNames[] = {STRID(QO), STRID(STATUS)};
 const CStringDictionary::TStringId FORTE_EC_SET_EVT::scmDataOutputTypeIds[] = {STRID(BOOL), STRID(WSTRING)};
 const TDataIOID FORTE_EC_SET_EVT::scmEIWith[] = {0, 3, 1, 2, scmWithListDelimiter};
@@ -45,16 +46,29 @@ const TDataIOID FORTE_EC_SET_EVT::scmEOWith[] = {0, 1, scmWithListDelimiter};
 const TForteInt16 FORTE_EC_SET_EVT::scmEOWithIndexes[] = {0};
 const CStringDictionary::TStringId FORTE_EC_SET_EVT::scmEventOutputNames[] = {STRID(CNF)};
 const CStringDictionary::TStringId FORTE_EC_SET_EVT::scmEventOutputTypeIds[] = {STRID(Event)};
-const SFBInterfaceSpec FORTE_EC_SET_EVT::scmFBInterfaceSpec = {
-  1, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,
-  1, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes,
-  4, scmDataInputNames, scmDataInputTypeIds,
-  2, scmDataOutputNames, scmDataOutputTypeIds,
-  0, nullptr,
-  0, nullptr
-};
+const SFBInterfaceSpec FORTE_EC_SET_EVT::scmFBInterfaceSpec = {1,
+                                                               scmEventInputNames,
+                                                               scmEventInputTypeIds,
+                                                               scmEIWith,
+                                                               scmEIWithIndexes,
+                                                               1,
+                                                               scmEventOutputNames,
+                                                               scmEventOutputTypeIds,
+                                                               scmEOWith,
+                                                               scmEOWithIndexes,
+                                                               4,
+                                                               scmDataInputNames,
+                                                               scmDataInputTypeIds,
+                                                               2,
+                                                               scmDataOutputNames,
+                                                               scmDataOutputTypeIds,
+                                                               0,
+                                                               nullptr,
+                                                               0,
+                                                               nullptr};
 
-FORTE_EC_SET_EVT::FORTE_EC_SET_EVT(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_EC_SET_EVT::FORTE_EC_SET_EVT(const CStringDictionary::TStringId paInstanceNameId,
+                                   forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId),
     conn_CNF(*this, 0),
     conn_QI(nullptr),
@@ -62,8 +76,7 @@ FORTE_EC_SET_EVT::FORTE_EC_SET_EVT(const CStringDictionary::TStringId paInstance
     conn_FB_EVENT_IO(nullptr),
     conn_DST(nullptr),
     conn_QO(*this, 0, var_QO),
-    conn_STATUS(*this, 1, var_STATUS) {
-};
+    conn_STATUS(*this, 1, var_STATUS) {};
 
 void FORTE_EC_SET_EVT::setInitialValues() {
   var_QI = 0_BOOL;
@@ -75,10 +88,10 @@ void FORTE_EC_SET_EVT::setInitialValues() {
 }
 
 void FORTE_EC_SET_EVT::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventREQID:
       var_QO = var_QI;
-      if(var_QI) {
+      if (var_QI) {
         executeRQST();
       } else {
         var_STATUS = u"Not Ready"_WSTRING;
@@ -88,7 +101,7 @@ void FORTE_EC_SET_EVT::executeEvent(TEventID paEIID, CEventChainExecutionThread 
   }
 }
 
-void FORTE_EC_SET_EVT::executeRQST(){
+void FORTE_EC_SET_EVT::executeRQST() {
   forte::core::SManagementCMD theCommand;
   theCommand.mDestination = CStringDictionary::getId(var_DST.getValue());
   theCommand.mFirstParam.push_back(CStringDictionary::getId(var_FB_NAME.getValue()));
@@ -97,7 +110,7 @@ void FORTE_EC_SET_EVT::executeRQST(){
 
   EMGMResponse resp = getDevice()->executeMGMCommand(theCommand);
 
-  //calculate return value
+  // calculate return value
   var_QO = CIEC_BOOL(resp == EMGMResponse::Ready);
   const std::string retVal(forte::mgm_cmd::getResponseText(resp));
   DEVLOG_DEBUG("%s\n", retVal.c_str());
@@ -105,7 +118,7 @@ void FORTE_EC_SET_EVT::executeRQST(){
 }
 
 void FORTE_EC_SET_EVT::readInputData(TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventREQID: {
       readData(0, var_QI, conn_QI);
       readData(3, var_DST, conn_DST);
@@ -113,25 +126,23 @@ void FORTE_EC_SET_EVT::readInputData(TEventID paEIID) {
       readData(2, var_FB_EVENT_IO, conn_FB_EVENT_IO);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 void FORTE_EC_SET_EVT::writeOutputData(TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventCNFID: {
       writeData(0, var_QO, conn_QO);
       writeData(1, var_STATUS, conn_STATUS);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 CIEC_ANY *FORTE_EC_SET_EVT::getDI(size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_QI;
     case 1: return &var_FB_NAME;
     case 2: return &var_FB_EVENT_IO;
@@ -141,23 +152,22 @@ CIEC_ANY *FORTE_EC_SET_EVT::getDI(size_t paIndex) {
 }
 
 CIEC_ANY *FORTE_EC_SET_EVT::getDO(size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_QO;
     case 1: return &var_STATUS;
   }
   return nullptr;
 }
 
-
 CEventConnection *FORTE_EC_SET_EVT::getEOConUnchecked(TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_CNF;
   }
   return nullptr;
 }
 
 CDataConnection **FORTE_EC_SET_EVT::getDIConUnchecked(TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_QI;
     case 1: return &conn_FB_NAME;
     case 2: return &conn_FB_EVENT_IO;
@@ -167,10 +177,9 @@ CDataConnection **FORTE_EC_SET_EVT::getDIConUnchecked(TPortId paIndex) {
 }
 
 CDataConnection *FORTE_EC_SET_EVT::getDOConUnchecked(TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_QO;
     case 1: return &conn_STATUS;
   }
   return nullptr;
 }
-

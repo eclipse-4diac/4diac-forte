@@ -15,7 +15,6 @@
 
 #include "datatype.h"
 
-TForteFloat forte_stringToFloat(const char* paStr, char** paEndPtr);
-
+TForteFloat forte_stringToFloat(const char *paStr, char **paEndPtr);
 
 #endif /* SRC_ARCH_FORTE_REALFUNCTIONS_H_ */

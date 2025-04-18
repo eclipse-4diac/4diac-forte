@@ -19,18 +19,15 @@
 #include "../../../src/core/datatypes/forte_sint.h"
 
 BOOST_AUTO_TEST_SUITE(CIEC_SINT_function_test)
-BOOST_AUTO_TEST_CASE(Type_test)
-{
+BOOST_AUTO_TEST_CASE(Type_test) {
   CIEC_SINT nTest;
-  //check type information
+  // check type information
   BOOST_CHECK_EQUAL(nTest.getDataTypeID(), CIEC_ANY::e_SINT);
-  //check operator bool data type size
+  // check operator bool data type size
   BOOST_CHECK_EQUAL(sizeof(nTest.operator TForteInt8()), sizeof(TForteInt8));
-
 }
 
-BOOST_AUTO_TEST_CASE(Literal_test)
-{
+BOOST_AUTO_TEST_CASE(Literal_test) {
   CIEC_SINT test1 = 0_SINT;
   BOOST_TEST(static_cast<CIEC_SINT::TValueType>(test1) == 0);
 
@@ -41,12 +38,11 @@ BOOST_AUTO_TEST_CASE(Literal_test)
   BOOST_TEST(static_cast<CIEC_SINT::TValueType>(test3) == std::numeric_limits<CIEC_SINT::TValueType>::min());
 }
 
-BOOST_AUTO_TEST_CASE(Assignment_test)
-{
+BOOST_AUTO_TEST_CASE(Assignment_test) {
   CIEC_SINT nTest1;
   CIEC_SINT nTest2;
 
-  //initial value must be 0
+  // initial value must be 0
   BOOST_TEST(0 == static_cast<CIEC_SINT::TValueType>(nTest1));
 
   nTest1 = CIEC_SINT(-128);
@@ -69,20 +65,19 @@ BOOST_AUTO_TEST_CASE(Assignment_test)
   BOOST_TEST(127 == static_cast<CIEC_SINT::TValueType>(nTest1));
   BOOST_TEST(127 == static_cast<CIEC_SINT::TValueType>(nTest2));
 
-  //check that assignment operator does not intertwine objects
+  // check that assignment operator does not intertwine objects
   nTest2 = CIEC_SINT(-74);
   BOOST_TEST(127 == static_cast<CIEC_SINT::TValueType>(nTest1));
   BOOST_TEST(-74 == static_cast<CIEC_SINT::TValueType>(nTest2));
 }
 
-BOOST_AUTO_TEST_CASE(Conversion_test)
-{
+BOOST_AUTO_TEST_CASE(Conversion_test) {
   CIEC_SINT nTest;
 
   char cBuffer[5];
   char cBufferFail[2];
 
-  //check cast operator
+  // check cast operator
   nTest = CIEC_SINT(0);
 
   BOOST_CHECK_EQUAL(nTest.operator TForteInt8(), 0);
@@ -96,7 +91,7 @@ BOOST_AUTO_TEST_CASE(Conversion_test)
   nTest = CIEC_SINT(127);
   BOOST_CHECK_EQUAL(nTest.operator TForteInt8(), 127);
 
-  //check toString and fromString
+  // check toString and fromString
   strcpy(cBuffer, "");
 
   BOOST_CHECK_EQUAL(nTest.fromString("-128"), 4);
@@ -130,7 +125,6 @@ BOOST_AUTO_TEST_CASE(Conversion_test)
   BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
   strcpy(cBuffer, "");
   nTest = CIEC_SINT(0);
-
 
   BOOST_CHECK_EQUAL(nTest.fromString("0"), 1);
   BOOST_CHECK_EQUAL(static_cast<CIEC_SINT::TValueType>(nTest), 0);
@@ -232,7 +226,7 @@ BOOST_AUTO_TEST_CASE(Conversion_test)
   BOOST_CHECK_EQUAL(nTest.fromString("16#12C"), -1);
   BOOST_CHECK_EQUAL(nTest.fromString("-130"), -1);
 
-  //check invalid fromString string
+  // check invalid fromString string
   BOOST_CHECK_EQUAL(nTest.fromString("NOT A VALID STRING"), -1);
 }
 BOOST_AUTO_TEST_SUITE_END()

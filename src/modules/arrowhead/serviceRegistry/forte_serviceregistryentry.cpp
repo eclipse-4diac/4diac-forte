@@ -26,14 +26,15 @@ USE_STRING_ID(udp);
 USE_STRING_ID(version);
 USE_STRING_ID(WSTRING);
 
-
 DEFINE_FIRMWARE_DATATYPE(ServiceRegistryEntry, STRID(ServiceRegistryEntry));
 
 CIEC_ServiceRegistryEntry::CIEC_ServiceRegistryEntry() :
     CIEC_STRUCT(STRID(ServiceRegistryEntry), 7, scmElementTypes, scmElementNames, e_APPLICATION + e_CONSTRUCTED + 1) {
 }
 
-const CStringDictionary::TStringId CIEC_ServiceRegistryEntry::scmElementTypes[] = { STRID(ArrowheadService), STRID(ArrowheadSystem), STRID(WSTRING),
-  STRID(DINT), STRID(BOOL), STRID(DINT), STRID(WSTRING) };
-const CStringDictionary::TStringId CIEC_ServiceRegistryEntry::scmElementNames[] = { STRID(providedService), STRID(provider), STRID(serviceURI),
-  STRID(version), STRID(udp), STRID(ttl), STRID(metadata) };
+const CStringDictionary::TStringId CIEC_ServiceRegistryEntry::scmElementTypes[] = {
+    STRID(ArrowheadService), STRID(ArrowheadSystem), STRID(WSTRING), STRID(DINT), STRID(BOOL), STRID(DINT),
+    STRID(WSTRING)};
+const CStringDictionary::TStringId CIEC_ServiceRegistryEntry::scmElementNames[] = {
+    STRID(providedService), STRID(provider), STRID(serviceURI), STRID(version), STRID(udp), STRID(ttl),
+    STRID(metadata)};

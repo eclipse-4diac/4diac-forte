@@ -28,11 +28,11 @@ class CGenBitBase : public CGenFunctionBlock<CFunctionBlock> {
     CGenBitBase(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
     ~CGenBitBase() override = default;
 
-    CIEC_ANY_BIT_VARIANT& var_IN(size_t paIndex) {
+    CIEC_ANY_BIT_VARIANT &var_IN(size_t paIndex) {
       return *static_cast<CIEC_ANY_BIT_VARIANT *>(getDI(paIndex));
     }
 
-    CIEC_ANY_BIT_VARIANT &var_OUT(){
+    CIEC_ANY_BIT_VARIANT &var_OUT() {
       return *static_cast<CIEC_ANY_BIT_VARIANT *>(getDO(0));
     }
 

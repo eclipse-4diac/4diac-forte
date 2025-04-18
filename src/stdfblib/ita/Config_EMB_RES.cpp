@@ -18,20 +18,31 @@ USE_STRING_ID(OPCUA_Namespace);
 USE_STRING_ID(START);
 USE_STRING_ID(WSTRING);
 
-
 DEFINE_FIRMWARE_FB(Config_EMB_RES, STRID(Config_EMB_RES));
 
 const CStringDictionary::TStringId Config_EMB_RES::scmVarInputNameIds[] = {STRID(OPCUA_Namespace)};
 const CStringDictionary::TStringId Config_EMB_RES::scmDIDataTypeIds[] = {STRID(WSTRING)};
 
-const SFBInterfaceSpec Config_EMB_RES::scmFBInterfaceSpec = {
-  0, nullptr, nullptr, nullptr, nullptr,
-  0, nullptr, nullptr, nullptr, nullptr,
-  1, scmVarInputNameIds, scmDIDataTypeIds,
-  0, nullptr, nullptr,
-  0, nullptr,
-  0, nullptr
-};
+const SFBInterfaceSpec Config_EMB_RES::scmFBInterfaceSpec = {0,
+                                                             nullptr,
+                                                             nullptr,
+                                                             nullptr,
+                                                             nullptr,
+                                                             0,
+                                                             nullptr,
+                                                             nullptr,
+                                                             nullptr,
+                                                             nullptr,
+                                                             1,
+                                                             scmVarInputNameIds,
+                                                             scmDIDataTypeIds,
+                                                             0,
+                                                             nullptr,
+                                                             nullptr,
+                                                             0,
+                                                             nullptr,
+                                                             0,
+                                                             nullptr};
 
 Config_EMB_RES::Config_EMB_RES(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paDevice) :
     CResource(paDevice, scmFBInterfaceSpec, paInstanceNameId),
@@ -43,28 +54,28 @@ Config_EMB_RES::Config_EMB_RES(CStringDictionary::TStringId paInstanceNameId, fo
 Config_EMB_RES::~Config_EMB_RES() = default;
 
 bool Config_EMB_RES::initialize() {
-  if(!CResource::initialize()) {
+  if (!CResource::initialize()) {
     return false;
   }
   return true;
 }
 
 CIEC_ANY *Config_EMB_RES::getDI(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_opcua_namespace_int.getValue();
   }
   return nullptr;
 }
 
 CDataConnection **Config_EMB_RES::getDIConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_opcua_namespace;
   }
   return nullptr;
 }
 
 CConnection *Config_EMB_RES::getResIf2InConnectionUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_opcua_namespace_int;
   }
   return nullptr;

@@ -24,22 +24,26 @@
 
 class EmbrickSlave : public forte::core::io::IOConfigFBMultiSlave, public EmbrickSlaveHandler::Delegate {
   public:
-    EmbrickSlave(const TForteUInt8* const paSlaveConfigurationIO, const TForteUInt8 paSlaveConfigurationIO_num, int paType, forte::core::CFBContainer &paContainer,
-        const SFBInterfaceSpec& paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId);
+    EmbrickSlave(const TForteUInt8 *const paSlaveConfigurationIO,
+                 const TForteUInt8 paSlaveConfigurationIO_num,
+                 int paType,
+                 forte::core::CFBContainer &paContainer,
+                 const SFBInterfaceSpec &paInterfaceSpec,
+                 const CStringDictionary::TStringId paInstanceNameId);
     ~EmbrickSlave() override;
 
   protected:
     virtual CIEC_UINT &UpdateInterval() {
       // TODO Remove
-      return *static_cast<CIEC_UINT*>(getDI(0));
+      return *static_cast<CIEC_UINT *>(getDI(0));
     }
 
-    FORTE_EBBusAdapter& BusAdapterOut() {
-      return (*static_cast<FORTE_EBBusAdapter*>(mAdapters[0]));
+    FORTE_EBBusAdapter &BusAdapterOut() {
+      return (*static_cast<FORTE_EBBusAdapter *>(mAdapters[0]));
     }
 
-    FORTE_EBBusAdapter& BusAdapterIn() {
-      return (*static_cast<FORTE_EBBusAdapter*>(mAdapters[1]));
+    FORTE_EBBusAdapter &BusAdapterIn() {
+      return (*static_cast<FORTE_EBBusAdapter *>(mAdapters[1]));
     }
 
     CSyncObject mSlaveMutex;
@@ -50,7 +54,7 @@ class EmbrickSlave : public forte::core::io::IOConfigFBMultiSlave, public Embric
     void onSlaveDestroy();
 
   private:
-    const char* init();
+    const char *init();
     void deInit();
 
     static const CIEC_WSTRING scmSlow;

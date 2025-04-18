@@ -20,68 +20,69 @@
 #include <forte_wstring.h>
 #include <forte_array.h>
 
-class FORTE_QueryServicesAdp: public CAdapter{
-  DECLARE_ADAPTER_TYPE(FORTE_QueryServicesAdp)
+class FORTE_QueryServicesAdp : public CAdapter {
+    DECLARE_ADAPTER_TYPE(FORTE_QueryServicesAdp)
 
-private:
- private:
-  static const CStringDictionary::TStringId scmDataInputNames[];
-  static const CStringDictionary::TStringId scmDataInputTypeIds[];
- public:
-  CIEC_ServiceRegistryEntry *serviceEntries() {
-    return (CIEC_ServiceRegistryEntry*)(*static_cast<CIEC_ARRAY<> *>((isSocket()) ? getDI(0) : getDO(0)))[0]; //the first element marks the start of the array
-  };
+  private:
+  private:
+    static const CStringDictionary::TStringId scmDataInputNames[];
+    static const CStringDictionary::TStringId scmDataInputTypeIds[];
 
-  CIEC_ARRAY<> &serviceEntries_Array() {
-    return *static_cast<CIEC_ARRAY<>*>((isSocket()) ? getDI(0) : getDO(0));
-  };
+  public:
+    CIEC_ServiceRegistryEntry *serviceEntries() {
+      return (CIEC_ServiceRegistryEntry *) (*static_cast<CIEC_ARRAY<> *>(
+          (isSocket()) ? getDI(0) : getDO(0)))[0]; // the first element marks the start of the array
+    };
 
- private:
-  static const CStringDictionary::TStringId scmDataOutputNames[];
-  static const CStringDictionary::TStringId scmDataOutputTypeIds[];
- public:
-  CIEC_ServiceQueryForm &serviceQueryForm() {
-    return *static_cast<CIEC_ServiceQueryForm*>((isSocket()) ? getDO(0) : getDI(0));
-  };
+    CIEC_ARRAY<> &serviceEntries_Array() {
+      return *static_cast<CIEC_ARRAY<> *>((isSocket()) ? getDI(0) : getDO(0));
+    };
 
-  CIEC_WSTRING &endpoint() {
-    return *static_cast<CIEC_WSTRING*>((isSocket()) ? getDO(1) : getDI(1));
-  };
+  private:
+    static const CStringDictionary::TStringId scmDataOutputNames[];
+    static const CStringDictionary::TStringId scmDataOutputTypeIds[];
 
- public:
-  static const TEventID scmEventqueriedID = 0;
-  TEventID queried() {
-    return mParentAdapterListEventID + scmEventqueriedID;
-  }
- private:
-  static const TForteInt16 scmEIWithIndexes[];
-  static const TDataIOID scmEIWith[];
-  static const CStringDictionary::TStringId scmEventInputNames[];
-  static const CStringDictionary::TStringId scmEventInputTypeIds[];
+  public:
+    CIEC_ServiceQueryForm &serviceQueryForm() {
+      return *static_cast<CIEC_ServiceQueryForm *>((isSocket()) ? getDO(0) : getDI(0));
+    };
 
- public:
-  static const TEventID scmEventqueryID = 0;
-  TEventID query() {
-    return mParentAdapterListEventID + scmEventqueryID;
-  }
- private:
-  static const TForteInt16 scmEOWithIndexes[];
-  static const TDataIOID scmEOWith[];
-  static const CStringDictionary::TStringId scmEventOutputNames[];
-  static const CStringDictionary::TStringId scmEventOutputTypeIds[];
+    CIEC_WSTRING &endpoint() {
+      return *static_cast<CIEC_WSTRING *>((isSocket()) ? getDO(1) : getDI(1));
+    };
 
-  static const SFBInterfaceSpec scmFBInterfaceSpecSocket;
+  public:
+    static const TEventID scmEventqueriedID = 0;
+    TEventID queried() {
+      return mParentAdapterListEventID + scmEventqueriedID;
+    }
 
-  static const SFBInterfaceSpec scmFBInterfaceSpecPlug;
+  private:
+    static const TForteInt16 scmEIWithIndexes[];
+    static const TDataIOID scmEIWith[];
+    static const CStringDictionary::TStringId scmEventInputNames[];
+    static const CStringDictionary::TStringId scmEventInputTypeIds[];
 
+  public:
+    static const TEventID scmEventqueryID = 0;
+    TEventID query() {
+      return mParentAdapterListEventID + scmEventqueryID;
+    }
 
-public:
-  ADAPTER_CTOR(FORTE_QueryServicesAdp){
-  };
+  private:
+    static const TForteInt16 scmEOWithIndexes[];
+    static const TDataIOID scmEOWith[];
+    static const CStringDictionary::TStringId scmEventOutputNames[];
+    static const CStringDictionary::TStringId scmEventOutputTypeIds[];
 
-  ~FORTE_QueryServicesAdp() override = default;
+    static const SFBInterfaceSpec scmFBInterfaceSpecSocket;
 
+    static const SFBInterfaceSpec scmFBInterfaceSpecPlug;
+
+  public:
+    ADAPTER_CTOR(FORTE_QueryServicesAdp) {};
+
+    ~FORTE_QueryServicesAdp() override = default;
 };
 
-#endif //close the ifdef sequence from the beginning of the file
-
+#endif // close the ifdef sequence from the beginning of the file

@@ -25,10 +25,10 @@
 
 #include <string>
 
-class CROSLayer : public forte::com_infra::CComLayer{
+class CROSLayer : public forte::com_infra::CComLayer {
 
   public:
-    CROSLayer(forte::com_infra::CComLayer* paUpperLayer, forte::com_infra::CBaseCommFB* paComFB);
+    CROSLayer(forte::com_infra::CComLayer *paUpperLayer, forte::com_infra::CBaseCommFB *paComFB);
     ~CROSLayer() override;
 
     void closeConnection() override;
@@ -52,7 +52,7 @@ class CROSLayer : public forte::com_infra::CComLayer{
     int m_NumRDs;
     int m_NumSDs;
 
-    void handleReceivedValue(const boost::shared_ptr<const topic_tools::ShapeShifter>& pa_message);
+    void handleReceivedValue(const boost::shared_ptr<const topic_tools::ShapeShifter> &pa_message);
 };
 
 #endif //_CROSLAYER_H_

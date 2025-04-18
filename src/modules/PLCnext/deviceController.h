@@ -26,14 +26,14 @@ class PLCnextSlaveHandler;
 
 class PLCnextDeviceController : public forte::core::io::IODeviceMultiController {
   public:
-
     enum HandleType {
-        Bit = 1,             // Digital
-        BitString16 = 16     // Analog
+      Bit = 1, // Digital
+      BitString16 = 16 // Analog
     };
 
-    PLCnextDeviceController(CDeviceExecution& paDeviceExecution) : forte::core::io::IODeviceMultiController(paDeviceExecution) {
-        mConfig.updateInterval = 25;  // set default
+    PLCnextDeviceController(CDeviceExecution &paDeviceExecution) :
+        forte::core::io::IODeviceMultiController(paDeviceExecution) {
+      mConfig.updateInterval = 25; // set default
     };
 
     ~PLCnextDeviceController();
@@ -43,35 +43,43 @@ class PLCnextDeviceController : public forte::core::io::IODeviceMultiController 
     };
 
     class HandleDescriptor : public forte::core::io::IODeviceMultiController::HandleDescriptor {
-        public:
-            HandleType mType;
-            uint16_t mPosition;
+      public:
+        HandleType mType;
+        uint16_t mPosition;
 
-            HandleDescriptor(CIEC_WSTRING const& paId, forte::core::io::IOMapper::Direction paDirection, int paSlaveIndex, uint16_t position, HandleType paType) :
-                forte::core::io::IODeviceMultiController::HandleDescriptor(paId, paDirection, paSlaveIndex), mPosition(position), mType(paType) {
-            }
+        HandleDescriptor(CIEC_WSTRING const &paId,
+                         forte::core::io::IOMapper::Direction paDirection,
+                         int paSlaveIndex,
+                         uint16_t position,
+                         HandleType paType) :
+            forte::core::io::IODeviceMultiController::HandleDescriptor(paId, paDirection, paSlaveIndex),
+            mPosition(position),
+            mType(paType) {
+        }
     };
 
-    void setConfig(struct forte::core::io::IODeviceController::Config* paConfig) override;
-    void registerSlaveHandler(PLCnextSlaveHandler* slave);
+    void setConfig(struct forte::core::io::IODeviceController::Config *paConfig) override;
+    void registerSlaveHandler(PLCnextSlaveHandler *slave);
 
-    PLCnextSlaveHandler* getSlave(int paIndex);
-    void addSlaveHandle(int index, forte::core::io::IOHandle* paHandle) override;
+    PLCnextSlaveHandler *getSlave(int paIndex);
+    void addSlaveHandle(int index, forte::core::io::IOHandle *paHandle) override;
     void dropSlaveHandles(int paIndex) override;
-    
-  protected:
-    const char* init() override;
 
-    forte::core::io::IOHandle* createIOHandle(forte::core::io::IODeviceController::HandleDescriptor &paHandleDescriptor) override;
+  protected:
+    const char *init() override;
+
+    forte::core::io::IOHandle *
+    createIOHandle(forte::core::io::IODeviceController::HandleDescriptor &paHandleDescriptor) override;
 
     void deInit() override;
     void runLoop() override;
-    
-    typedef CSinglyLinkedList<PLCnextSlaveHandler*> TSlaveList;
-    TSlaveList* mSlaves = new TSlaveList();;
+
+    typedef CSinglyLinkedList<PLCnextSlaveHandler *> TSlaveList;
+    TSlaveList *mSlaves = new TSlaveList();
+    ;
 
     PLCnextConfig mConfig;
-    
+
   private:
     bool isSlaveAvailable(int paIndex) override;
     bool checkSlaveType(int paIndex, int paType) override;

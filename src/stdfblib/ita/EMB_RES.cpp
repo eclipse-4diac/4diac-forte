@@ -16,18 +16,11 @@
 USE_STRING_ID(EMB_RES);
 USE_STRING_ID(START);
 
-
-
 DEFINE_FIRMWARE_FB(EMB_RES, STRID(EMB_RES));
 
-const SFBInterfaceSpec EMB_RES::scmFBInterfaceSpec = {
-  0, nullptr, nullptr, nullptr, nullptr,
-  0, nullptr, nullptr, nullptr, nullptr,
-  0, nullptr, nullptr,
-  0, nullptr, nullptr,
-  0, nullptr,
-  0, nullptr
-};
+const SFBInterfaceSpec EMB_RES::scmFBInterfaceSpec = {0,       nullptr, nullptr, nullptr, nullptr, 0,       nullptr,
+                                                      nullptr, nullptr, nullptr, 0,       nullptr, nullptr, 0,
+                                                      nullptr, nullptr, 0,       nullptr, 0,       nullptr};
 
 EMB_RES::EMB_RES(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paDevice) :
     CResource(paDevice, scmFBInterfaceSpec, paInstanceNameId),
@@ -43,4 +36,3 @@ CIEC_ANY *EMB_RES::getDI(const size_t) {
 CDataConnection **EMB_RES::getDIConUnchecked(const TPortId) {
   return nullptr;
 }
-

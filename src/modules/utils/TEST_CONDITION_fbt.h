@@ -19,9 +19,8 @@
 #include "forte_bool.h"
 #include "forte_sync.h"
 
-
 class FORTE_TEST_CONDITION final : public CFunctionBlock {
-  DECLARE_FIRMWARE_FB(FORTE_TEST_CONDITION)
+    DECLARE_FIRMWARE_FB(FORTE_TEST_CONDITION)
 
   private:
     static const CStringDictionary::TStringId scmDataInputNames[];
@@ -42,8 +41,6 @@ class FORTE_TEST_CONDITION final : public CFunctionBlock {
     static unsigned int smFailedTests;
 
     static bool smfinalReportPrinted;
-
-
 
     void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
@@ -78,5 +75,3 @@ class FORTE_TEST_CONDITION final : public CFunctionBlock {
       evt_REQ(pacheck);
     }
 };
-
-

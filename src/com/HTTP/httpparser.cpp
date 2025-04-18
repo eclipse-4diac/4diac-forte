@@ -24,13 +24,18 @@
 using namespace forte::com_infra;
 using namespace std::string_literals;
 
-void CHttpParser::createGetRequest (std::string &paDest, const std::string &paHost, const TForteUInt16 paPort, const std::string &paPath, const std::string &paAuth, const std::string &paParams) {
+void CHttpParser::createGetRequest(std::string &paDest,
+                                   const std::string &paHost,
+                                   const TForteUInt16 paPort,
+                                   const std::string &paPath,
+                                   const std::string &paAuth,
+                                   const std::string &paParams) {
   addCommonHeader(paDest, paHost, paPort, paPath, paAuth, paParams, CHttpComLayer::e_GET);
   addHeaderEnding(paDest);
 }
 
-void CHttpParser::addBodyToRequest (const std::string &paBody, const std::string &paContentType, std::string &paDest) {
-  if(!paContentType.empty()){
+void CHttpParser::addBodyToRequest(const std::string &paBody, const std::string &paContentType, std::string &paDest) {
+  if (!paContentType.empty()) {
     paDest += "\r\nContent-Type: "s;
     paDest += paContentType;
     paDest += "\r\nContent-Length: "s;
@@ -42,16 +47,23 @@ void CHttpParser::addBodyToRequest (const std::string &paBody, const std::string
   }
 }
 
-void CHttpParser::createPutPostRequest (std::string &paDest, const std::string &paHost, const TForteUInt16 paPort, const std::string &paPath, const std::string &paAuth, const std::string &paParams, const std::string &paBody,
-    const std::string& paContentType, CHttpComLayer::ERequestType paType) {
+void CHttpParser::createPutPostRequest(std::string &paDest,
+                                       const std::string &paHost,
+                                       const TForteUInt16 paPort,
+                                       const std::string &paPath,
+                                       const std::string &paAuth,
+                                       const std::string &paParams,
+                                       const std::string &paBody,
+                                       const std::string &paContentType,
+                                       CHttpComLayer::ERequestType paType) {
   addCommonHeader(paDest, paHost, paPort, paPath, paAuth, paParams, paType);
   addBodyToRequest(paBody, paContentType, paDest);
 }
 
-bool CHttpParser::parseResponse(std::string& paBody, std::string& paResponseCode, char* paSrc) {
-  if(getHttpResponseCode(paResponseCode, paSrc)) {
-    char* helperChar = strstr(paSrc, "\r\n\r\n"); // Extract data from HTTP response char
-    if(nullptr != helperChar) {
+bool CHttpParser::parseResponse(std::string &paBody, std::string &paResponseCode, char *paSrc) {
+  if (getHttpResponseCode(paResponseCode, paSrc)) {
+    char *helperChar = strstr(paSrc, "\r\n\r\n"); // Extract data from HTTP response char
+    if (nullptr != helperChar) {
       helperChar += sizeof("\r\n\r\n") - 1;
       paBody = std::string(helperChar);
     } else { // Empty response received
@@ -63,16 +75,18 @@ bool CHttpParser::parseResponse(std::string& paBody, std::string& paResponseCode
   return false;
 }
 
-bool forte::com_infra::CHttpParser::parseGetRequest(std::string& paPath, CSinglyLinkedList<std::string>& paParameterNames,
-    CSinglyLinkedList<std::string>& paParameterValues, char* paData) {
-  if(0 == strncmp(paData, "GET ", 4)) {
+bool forte::com_infra::CHttpParser::parseGetRequest(std::string &paPath,
+                                                    CSinglyLinkedList<std::string> &paParameterNames,
+                                                    CSinglyLinkedList<std::string> &paParameterValues,
+                                                    char *paData) {
+  if (0 == strncmp(paData, "GET ", 4)) {
     paData = paData + 4;
 
-    char* endOfPath = strstr(paData, " ");
-    if(endOfPath != nullptr) {
+    char *endOfPath = strstr(paData, " ");
+    if (endOfPath != nullptr) {
       *endOfPath = '\0';
-      char* startOfParameters = strstr(paData + 1, "?");
-      if(startOfParameters != nullptr) {
+      char *startOfParameters = strstr(paData + 1, "?");
+      if (startOfParameters != nullptr) {
         *startOfParameters = '\0';
         startOfParameters++;
         parseGETParameters(startOfParameters, paParameterNames, paParameterValues);
@@ -90,22 +104,22 @@ bool forte::com_infra::CHttpParser::parseGetRequest(std::string& paPath, CSingly
   return true;
 }
 
-bool forte::com_infra::CHttpParser::parsePutPostRequest(std::string& paPath, std::string &paContent, char* paData) {
-  if(0 == strncmp(paData, "PUT ", 4)) {
+bool forte::com_infra::CHttpParser::parsePutPostRequest(std::string &paPath, std::string &paContent, char *paData) {
+  if (0 == strncmp(paData, "PUT ", 4)) {
     paData += sizeof("PUT ") - 1;
-  } else if(0 == strncmp(paData, "POST ", 5)) {
+  } else if (0 == strncmp(paData, "POST ", 5)) {
     paData += sizeof("POST ") - 1;
   } else {
     DEVLOG_ERROR("[HTTP Parser] Invalid HTTP PUT/POST request. No PUT/POST string found\n");
     return false;
   }
 
-  char* endOfPath = strstr(paData, " ");
-  if(endOfPath != nullptr) {
+  char *endOfPath = strstr(paData, " ");
+  if (endOfPath != nullptr) {
     *endOfPath = '\0';
     paPath = std::string(paData);
     paData = strstr(endOfPath + 1, "\r\n\r\n");
-    if(paData != nullptr) {
+    if (paData != nullptr) {
       paData += sizeof("\r\n\r\n") - 1;
       paContent = std::string(paData);
     } else {
@@ -120,13 +134,12 @@ bool forte::com_infra::CHttpParser::parsePutPostRequest(std::string& paPath, std
   return true;
 }
 
-
-CHttpComLayer::ERequestType forte::com_infra::CHttpParser::getTypeOfRequest(const char* paRequest) {
-  if(0 == strncmp(paRequest, "GET ", 4)) {
+CHttpComLayer::ERequestType forte::com_infra::CHttpParser::getTypeOfRequest(const char *paRequest) {
+  if (0 == strncmp(paRequest, "GET ", 4)) {
     return CHttpComLayer::e_GET;
-  } else if(0 == strncmp(paRequest, "PUT ", 4)) {
+  } else if (0 == strncmp(paRequest, "PUT ", 4)) {
     return CHttpComLayer::e_PUT;
-  } else if(0 == strncmp(paRequest, "POST ", 5)) {
+  } else if (0 == strncmp(paRequest, "POST ", 5)) {
     return CHttpComLayer::e_POST;
   } else {
     DEVLOG_ERROR("[HTTP Parser] Invalid HTTP request\n");
@@ -134,29 +147,29 @@ CHttpComLayer::ERequestType forte::com_infra::CHttpParser::getTypeOfRequest(cons
   }
 }
 
-void forte::com_infra::CHttpParser::createResponse(std::string& paDest, const std::string& paResult, const std::string& paContentType,
-    const std::string& paBody) {
+void forte::com_infra::CHttpParser::createResponse(std::string &paDest,
+                                                   const std::string &paResult,
+                                                   const std::string &paContentType,
+                                                   const std::string &paBody) {
   paDest = paResult;
   addBodyToRequest(paBody, paContentType, paDest);
 }
 
-void CHttpParser::addCommonHeader (std::string &paDest, const std::string &paHost, const TForteUInt16 paPort, const std::string &paPath, const std::string &paAuth, const std::string &paParams, CHttpComLayer::ERequestType paType) {
-  switch(paType){
-    case CHttpComLayer::e_GET:
-      paDest = "GET "s;
-      break;
-    case CHttpComLayer::e_PUT:
-      paDest = "PUT "s;
-      break;
-    case CHttpComLayer::e_POST:
-      paDest = "POST "s;
-      break;
-    default:
-      DEVLOG_ERROR("[HTTP Parser] Unexpected HTTP Type when adding header\n");
-      break;
+void CHttpParser::addCommonHeader(std::string &paDest,
+                                  const std::string &paHost,
+                                  const TForteUInt16 paPort,
+                                  const std::string &paPath,
+                                  const std::string &paAuth,
+                                  const std::string &paParams,
+                                  CHttpComLayer::ERequestType paType) {
+  switch (paType) {
+    case CHttpComLayer::e_GET: paDest = "GET "s; break;
+    case CHttpComLayer::e_PUT: paDest = "PUT "s; break;
+    case CHttpComLayer::e_POST: paDest = "POST "s; break;
+    default: DEVLOG_ERROR("[HTTP Parser] Unexpected HTTP Type when adding header\n"); break;
   }
   paDest += paPath;
-  if(!paParams.empty()){
+  if (!paParams.empty()) {
     paDest += "?"s;
     paDest += paParams;
   }
@@ -165,23 +178,23 @@ void CHttpParser::addCommonHeader (std::string &paDest, const std::string &paHos
   paDest += paHost;
   paDest += ":"s;
   paDest += std::to_string(paPort);
-  if(!paAuth.empty()){
+  if (!paAuth.empty()) {
     paDest += "\r\nAuthorization: "s;
     paDest += paAuth;
   }
 }
 
-void CHttpParser::addHeaderEnding(std::string& paDest) {
+void CHttpParser::addHeaderEnding(std::string &paDest) {
   paDest += "\r\n\r\n"s;
 }
 
-bool CHttpParser::getHttpResponseCode(std::string& paDest, char* paSrc) {
-  //HTTP-Version SP Status-Code SP Reason-Phrase CRLF (SP = space)
-  char* helperChar = strstr(paSrc, "\r\n");
-  if(helperChar != nullptr) {
+bool CHttpParser::getHttpResponseCode(std::string &paDest, char *paSrc) {
+  // HTTP-Version SP Status-Code SP Reason-Phrase CRLF (SP = space)
+  char *helperChar = strstr(paSrc, "\r\n");
+  if (helperChar != nullptr) {
     *helperChar = '\0';
     CParameterParser parser(paSrc, ' ');
-    if(3 <= parser.parseParameters()) { //Reason-Phrase can contain spaces in it
+    if (3 <= parser.parseParameters()) { // Reason-Phrase can contain spaces in it
       paDest = std::string(parser[1]);
     } else {
       DEVLOG_ERROR("[HTTP Parser] Invalid HTTP response. The status line is not well defined\n");
@@ -195,18 +208,19 @@ bool CHttpParser::getHttpResponseCode(std::string& paDest, char* paSrc) {
   }
 }
 
-unsigned int forte::com_infra::CHttpParser::parseGETParameters(char* paParameters, CSinglyLinkedList<std::string>& paParameterNames,
-    CSinglyLinkedList<std::string>& paParameterValues) {
+unsigned int forte::com_infra::CHttpParser::parseGETParameters(char *paParameters,
+                                                               CSinglyLinkedList<std::string> &paParameterNames,
+                                                               CSinglyLinkedList<std::string> &paParameterValues) {
   paParameterNames.clearAll();
   paParameterValues.clearAll();
 
   unsigned int retVal = 0;
 
-  char* startOfName = paParameters;
+  char *startOfName = paParameters;
   bool endOfParameters = false;
-  while('\0' != *startOfName && !endOfParameters) {
-    char* startOfValue = strstr(startOfName, "=");
-    if(nullptr != startOfValue) {
+  while ('\0' != *startOfName && !endOfParameters) {
+    char *startOfValue = strstr(startOfName, "=");
+    if (nullptr != startOfValue) {
       *startOfValue = '\0';
       startOfValue++;
     } else {
@@ -215,9 +229,9 @@ unsigned int forte::com_infra::CHttpParser::parseGETParameters(char* paParameter
       retVal = 0;
       break;
     }
-    char* nextName = strstr(startOfValue, "&");
+    char *nextName = strstr(startOfValue, "&");
     endOfParameters = false;
-    if(nullptr != nextName) {
+    if (nullptr != nextName) {
       *nextName = '\0';
     } else {
       endOfParameters = true;
@@ -225,7 +239,7 @@ unsigned int forte::com_infra::CHttpParser::parseGETParameters(char* paParameter
     paParameterNames.pushBack(std::string(startOfName));
     paParameterValues.pushBack(std::string(startOfValue));
     retVal++;
-    if(!endOfParameters) {
+    if (!endOfParameters) {
       startOfName = ++nextName;
     }
   }

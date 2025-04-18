@@ -22,7 +22,6 @@ USE_STRING_ID(REAL);
 USE_STRING_ID(REAL2REAL);
 USE_STRING_ID(REQ);
 
-
 #include "criticalregion.h"
 #include "resource.h"
 #include "forte_real.h"
@@ -52,18 +51,29 @@ const TForteInt16 FORTE_REAL2REAL::scmEOWithIndexes[] = {0};
 const CStringDictionary::TStringId FORTE_REAL2REAL::scmEventOutputNames[] = {STRID(CNF)};
 const CStringDictionary::TStringId FORTE_REAL2REAL::scmEventOutputTypeIds[] = {STRID(Event)};
 
+const SFBInterfaceSpec FORTE_REAL2REAL::scmFBInterfaceSpec = {1,
+                                                              scmEventInputNames,
+                                                              scmEventInputTypeIds,
+                                                              scmEIWith,
+                                                              scmEIWithIndexes,
+                                                              1,
+                                                              scmEventOutputNames,
+                                                              scmEventOutputTypeIds,
+                                                              scmEOWith,
+                                                              scmEOWithIndexes,
+                                                              1,
+                                                              scmDataInputNames,
+                                                              scmDataInputTypeIds,
+                                                              1,
+                                                              scmDataOutputNames,
+                                                              scmDataOutputTypeIds,
+                                                              0,
+                                                              nullptr,
+                                                              0,
+                                                              nullptr};
 
-const SFBInterfaceSpec FORTE_REAL2REAL::scmFBInterfaceSpec = {
-  1, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,
-  1, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes,
-  1, scmDataInputNames, scmDataInputTypeIds,
-  1, scmDataOutputNames, scmDataOutputTypeIds,
-  0, nullptr,
-  0, nullptr
-};
-
-
-FORTE_REAL2REAL::FORTE_REAL2REAL(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_REAL2REAL::FORTE_REAL2REAL(CStringDictionary::TStringId paInstanceNameId,
+                                 forte::core::CFBContainer &paContainer) :
     CSimpleFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, nullptr),
     var_IN(CIEC_REAL(0)),
     var_OUT(CIEC_REAL(0)),
@@ -73,74 +83,68 @@ FORTE_REAL2REAL::FORTE_REAL2REAL(CStringDictionary::TStringId paInstanceNameId, 
 }
 
 void FORTE_REAL2REAL::alg_REQ(void) {
-  
+
   var_OUT = var_IN;
 }
 
-
 void FORTE_REAL2REAL::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
-  switch(paEIID) {
-    case scmEventREQID:
-      alg_REQ();
-      break;
-    default:
-      break;
+  switch (paEIID) {
+    case scmEventREQID: alg_REQ(); break;
+    default: break;
   }
   sendOutputEvent(scmEventCNFID, paECET);
 }
 
 void FORTE_REAL2REAL::readInputData(TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventREQID: {
       readData(0, var_IN, conn_IN);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 void FORTE_REAL2REAL::writeOutputData(TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventCNFID: {
       writeData(0, var_OUT, conn_OUT);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 CIEC_ANY *FORTE_REAL2REAL::getDI(size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_IN;
   }
   return nullptr;
 }
 
 CIEC_ANY *FORTE_REAL2REAL::getDO(size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_OUT;
   }
   return nullptr;
 }
 
 CEventConnection *FORTE_REAL2REAL::getEOConUnchecked(TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_CNF;
   }
   return nullptr;
 }
 
 CDataConnection **FORTE_REAL2REAL::getDIConUnchecked(TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_IN;
   }
   return nullptr;
 }
 
 CDataConnection *FORTE_REAL2REAL::getDOConUnchecked(TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_OUT;
   }
   return nullptr;
@@ -149,5 +153,3 @@ CDataConnection *FORTE_REAL2REAL::getDOConUnchecked(TPortId paIndex) {
 CIEC_ANY *FORTE_REAL2REAL::getVarInternal(size_t) {
   return nullptr;
 }
-
-

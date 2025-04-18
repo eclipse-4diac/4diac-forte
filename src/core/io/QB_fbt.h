@@ -19,10 +19,8 @@
 #include "forte_byte.h"
 
 class FORTE_QB final : public forte::core::io::COutputFB<CIEC_BYTE> {
-  DECLARE_FIRMWARE_FB(FORTE_QB)
+    DECLARE_FIRMWARE_FB(FORTE_QB)
 
   public:
     FORTE_QB(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
-
 };
-

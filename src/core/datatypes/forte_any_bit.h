@@ -15,7 +15,7 @@
  *    Ernst Blecha - add multibit partial access
  *    Martin Melik Merkumians - changes multibit access index from template
  *      parameter to call argument
-  *******************************************************************************/
+ *******************************************************************************/
 #ifndef _ANY_BIT_H_
 #define _ANY_BIT_H_
 
@@ -24,7 +24,7 @@
 
 /*!\ingroup COREDTS IIEC_ANY_BIT represents any bit data types according to IEC 61131.
  */
-class CIEC_ANY_BIT : public CIEC_ANY_ELEMENTARY{
+class CIEC_ANY_BIT : public CIEC_ANY_ELEMENTARY {
   public:
     ~CIEC_ANY_BIT() override = default;
 

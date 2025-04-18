@@ -28,43 +28,57 @@ USE_STRING_ID(TIME);
 USE_STRING_ID(Tmin);
 USE_STRING_ID(WCET);
 
-
 #include "criticalregion.h"
 #include "resource.h"
 
 DEFINE_FIRMWARE_FB(FORTE_RT_E_MERGE, STRID(RT_E_MERGE))
 
-const CStringDictionary::TStringId FORTE_RT_E_MERGE::scmDataInputNames[] = {STRID(QI), STRID(Tmin), STRID(Deadline), STRID(WCET)};
-const CStringDictionary::TStringId FORTE_RT_E_MERGE::scmDataInputTypeIds[] = {STRID(BOOL), STRID(TIME), STRID(TIME), STRID(TIME)};
+const CStringDictionary::TStringId FORTE_RT_E_MERGE::scmDataInputNames[] = {STRID(QI), STRID(Tmin), STRID(Deadline),
+                                                                            STRID(WCET)};
+const CStringDictionary::TStringId FORTE_RT_E_MERGE::scmDataInputTypeIds[] = {STRID(BOOL), STRID(TIME), STRID(TIME),
+                                                                              STRID(TIME)};
 const CStringDictionary::TStringId FORTE_RT_E_MERGE::scmDataOutputNames[] = {STRID(QO)};
 const CStringDictionary::TStringId FORTE_RT_E_MERGE::scmDataOutputTypeIds[] = {STRID(BOOL)};
 const TDataIOID FORTE_RT_E_MERGE::scmEIWith[] = {0, 1, 2, 3, scmWithListDelimiter};
 const TForteInt16 FORTE_RT_E_MERGE::scmEIWithIndexes[] = {0, -1, -1};
 const CStringDictionary::TStringId FORTE_RT_E_MERGE::scmEventInputNames[] = {STRID(INIT), STRID(EI1), STRID(EI2)};
-const CStringDictionary::TStringId FORTE_RT_E_MERGE::scmEventInputTypeIds[] = {STRID(EInit), STRID(Event), STRID(Event)};
+const CStringDictionary::TStringId FORTE_RT_E_MERGE::scmEventInputTypeIds[] = {STRID(EInit), STRID(Event),
+                                                                               STRID(Event)};
 const TDataIOID FORTE_RT_E_MERGE::scmEOWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_RT_E_MERGE::scmEOWithIndexes[] = {0, -1};
 const CStringDictionary::TStringId FORTE_RT_E_MERGE::scmEventOutputNames[] = {STRID(INITO), STRID(EO)};
 const CStringDictionary::TStringId FORTE_RT_E_MERGE::scmEventOutputTypeIds[] = {STRID(Event), STRID(Event)};
-const SFBInterfaceSpec FORTE_RT_E_MERGE::scmFBInterfaceSpec = {
-  3, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,
-  2, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes,
-  4, scmDataInputNames, scmDataInputTypeIds,
-  1, scmDataOutputNames, scmDataOutputTypeIds,
-  0, nullptr,
-  0, nullptr
-};
+const SFBInterfaceSpec FORTE_RT_E_MERGE::scmFBInterfaceSpec = {3,
+                                                               scmEventInputNames,
+                                                               scmEventInputTypeIds,
+                                                               scmEIWith,
+                                                               scmEIWithIndexes,
+                                                               2,
+                                                               scmEventOutputNames,
+                                                               scmEventOutputTypeIds,
+                                                               scmEOWith,
+                                                               scmEOWithIndexes,
+                                                               4,
+                                                               scmDataInputNames,
+                                                               scmDataInputTypeIds,
+                                                               1,
+                                                               scmDataOutputNames,
+                                                               scmDataOutputTypeIds,
+                                                               0,
+                                                               nullptr,
+                                                               0,
+                                                               nullptr};
 
-FORTE_RT_E_MERGE::FORTE_RT_E_MERGE(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
-        CRTEventSingle(paContainer, scmFBInterfaceSpec, paInstanceNameId),
+FORTE_RT_E_MERGE::FORTE_RT_E_MERGE(const CStringDictionary::TStringId paInstanceNameId,
+                                   forte::core::CFBContainer &paContainer) :
+    CRTEventSingle(paContainer, scmFBInterfaceSpec, paInstanceNameId),
     conn_INITO(*this, 0),
     conn_EO(*this, 1),
     conn_QI(nullptr),
     conn_Tmin(nullptr),
     conn_Deadline(nullptr),
     conn_WCET(nullptr),
-    conn_QO(*this, 0, var_QO) {
-};
+    conn_QO(*this, 0, var_QO) {};
 
 void FORTE_RT_E_MERGE::setInitialValues() {
   var_QI = 0_BOOL;
@@ -75,7 +89,7 @@ void FORTE_RT_E_MERGE::setInitialValues() {
 }
 
 void FORTE_RT_E_MERGE::readInputData(TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventINITID: {
       readData(0, var_QI, conn_QI);
       readData(1, var_Tmin, conn_Tmin);
@@ -89,13 +103,12 @@ void FORTE_RT_E_MERGE::readInputData(TEventID paEIID) {
     case scmEventEI2ID: {
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 void FORTE_RT_E_MERGE::writeOutputData(TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventINITOID: {
       writeData(0, var_QO, conn_QO);
       break;
@@ -103,13 +116,12 @@ void FORTE_RT_E_MERGE::writeOutputData(TEventID paEIID) {
     case scmEventEOID: {
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 CIEC_ANY *FORTE_RT_E_MERGE::getDI(size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_QI;
     case 1: return &var_Tmin;
     case 2: return &var_Deadline;
@@ -119,14 +131,14 @@ CIEC_ANY *FORTE_RT_E_MERGE::getDI(size_t paIndex) {
 }
 
 CIEC_ANY *FORTE_RT_E_MERGE::getDO(size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_QO;
   }
   return nullptr;
 }
 
 CEventConnection *FORTE_RT_E_MERGE::getEOConUnchecked(TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_INITO;
     case 1: return &conn_EO;
   }
@@ -134,7 +146,7 @@ CEventConnection *FORTE_RT_E_MERGE::getEOConUnchecked(TPortId paIndex) {
 }
 
 CDataConnection **FORTE_RT_E_MERGE::getDIConUnchecked(TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_QI;
     case 1: return &conn_Tmin;
     case 2: return &conn_Deadline;
@@ -144,9 +156,8 @@ CDataConnection **FORTE_RT_E_MERGE::getDIConUnchecked(TPortId paIndex) {
 }
 
 CDataConnection *FORTE_RT_E_MERGE::getDOConUnchecked(TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_QO;
   }
   return nullptr;
 }
-

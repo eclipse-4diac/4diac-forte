@@ -19,7 +19,6 @@ USE_STRING_ID(MAP);
 USE_STRING_ID(MAPO);
 USE_STRING_ID(PortAdapter);
 
-
 #include "iec61131_functions.h"
 #include "forte_array_common.h"
 #include "forte_array.h"
@@ -39,48 +38,70 @@ const CStringDictionary::TStringId FORTE_PortAdapter::scmEventOutputNames[] = {S
 const CStringDictionary::TStringId FORTE_PortAdapter::scmEventInputTypeIds[] = {STRID(Event)};
 const CStringDictionary::TStringId FORTE_PortAdapter::scmEventOutputTypeIds[] = {STRID(Event)};
 
-const SFBInterfaceSpec FORTE_PortAdapter::scmFBInterfaceSpecSocket = {
-  1, scmEventInputNames, scmEventInputTypeIds, nullptr, scmEIWithIndexes,
-  1, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes,
-  0, nullptr, nullptr,
-  1, scmDataOutputNames, scmDataOutputTypeIds,
-  0, nullptr,
-  0, nullptr
-};
+const SFBInterfaceSpec FORTE_PortAdapter::scmFBInterfaceSpecSocket = {1,
+                                                                      scmEventInputNames,
+                                                                      scmEventInputTypeIds,
+                                                                      nullptr,
+                                                                      scmEIWithIndexes,
+                                                                      1,
+                                                                      scmEventOutputNames,
+                                                                      scmEventOutputTypeIds,
+                                                                      scmEOWith,
+                                                                      scmEOWithIndexes,
+                                                                      0,
+                                                                      nullptr,
+                                                                      nullptr,
+                                                                      1,
+                                                                      scmDataOutputNames,
+                                                                      scmDataOutputTypeIds,
+                                                                      0,
+                                                                      nullptr,
+                                                                      0,
+                                                                      nullptr};
 
-const SFBInterfaceSpec FORTE_PortAdapter::scmFBInterfaceSpecPlug = {
-  1, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes,
-  1, scmEventInputNames, scmEventInputTypeIds, nullptr, scmEIWithIndexes,
-  1, scmDataOutputNames, scmDataOutputTypeIds,
-  0, nullptr, nullptr,
-  0, nullptr,
-  0, nullptr
-};
+const SFBInterfaceSpec FORTE_PortAdapter::scmFBInterfaceSpecPlug = {1,
+                                                                    scmEventOutputNames,
+                                                                    scmEventOutputTypeIds,
+                                                                    scmEOWith,
+                                                                    scmEOWithIndexes,
+                                                                    1,
+                                                                    scmEventInputNames,
+                                                                    scmEventInputTypeIds,
+                                                                    nullptr,
+                                                                    scmEIWithIndexes,
+                                                                    1,
+                                                                    scmDataOutputNames,
+                                                                    scmDataOutputTypeIds,
+                                                                    0,
+                                                                    nullptr,
+                                                                    nullptr,
+                                                                    0,
+                                                                    nullptr,
+                                                                    0,
+                                                                    nullptr};
 
 void FORTE_PortAdapter::readInputData(const TEventID paEIID) {
-  if(isSocket()) {
+  if (isSocket()) {
     // nothing to do
   } else {
-    switch(paEIID) {
+    switch (paEIID) {
       case scmEventMAPID: {
         readData(0, *mDIs[0], mDIConns[0]);
         break;
       }
-      default:
-        break;
+      default: break;
     }
   }
 }
 
 void FORTE_PortAdapter::writeOutputData(const TEventID paEIID) {
-  if(isSocket()) {
-    switch(paEIID) {
+  if (isSocket()) {
+    switch (paEIID) {
       case scmEventMAPID: {
         writeData(0, *mDOs[0], mDOConns[0]);
         break;
       }
-      default:
-        break;
+      default: break;
     }
   } else {
     // nothing to do

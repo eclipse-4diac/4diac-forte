@@ -39,20 +39,20 @@
  *  "typedef std::basic_string<wchar_t> TWSTRING; didn't work well"
  */
 class CIEC_WSTRING final : public CIEC_ANY_STRING {
-  DECLARE_FIRMWARE_DATATYPE(WSTRING)
+    DECLARE_FIRMWARE_DATATYPE(WSTRING)
 
   public:
     using TValueType = std::wstring;
     using TSymbolType = TForteWChar;
     CIEC_WSTRING() = default;
 
-    CIEC_WSTRING(const CIEC_WSTRING& paValue) = default;
+    CIEC_WSTRING(const CIEC_WSTRING &paValue) = default;
 
     CIEC_WSTRING(const CIEC_WCHAR &paValue) {
       TForteWChar value = static_cast<TForteWChar>(paValue);
       auto &converter = std::use_facet<std::codecvt<char16_t, char, std::mbstate_t>>(std::locale());
       std::mbstate_t mb{};
-      char* buf = new char[converter.max_length()];
+      char *buf = new char[converter.max_length()];
       if (buf) {
         const char16_t *from_next;
         char *to_next;
@@ -64,19 +64,19 @@ class CIEC_WSTRING final : public CIEC_ANY_STRING {
       }
     }
 
-    explicit CIEC_WSTRING(const char* paValue) {
+    explicit CIEC_WSTRING(const char *paValue) {
       fromCharString(paValue);
     }
 
     CIEC_WSTRING(const char16_t *paValue, size_t paLength) {
       auto &converter = std::use_facet<std::codecvt<char16_t, char, std::mbstate_t>>(std::locale());
       std::mbstate_t mb{};
-      char *buf = new char[paLength * converter.max_length()];  //arrays with not constant size not supported
+      char *buf = new char[paLength * converter.max_length()]; // arrays with not constant size not supported
       if (buf) {
         const char16_t *from_next;
         char *to_next;
-        converter.out(mb, paValue, paValue + paLength, from_next,
-                      buf, buf + paLength * static_cast<size_t>(converter.max_length()), to_next);
+        converter.out(mb, paValue, paValue + paLength, from_next, buf,
+                      buf + paLength * static_cast<size_t>(converter.max_length()), to_next);
         // error checking skipped for brevity
         std::size_t size = static_cast<size_t>(to_next - buf);
         assign(buf, static_cast<TForteUInt16>(size));
@@ -86,8 +86,8 @@ class CIEC_WSTRING final : public CIEC_ANY_STRING {
 
     ~CIEC_WSTRING() override = default;
 
-    CIEC_WSTRING &operator =(const CIEC_WSTRING &paValue) = default;
-    
+    CIEC_WSTRING &operator=(const CIEC_WSTRING &paValue) = default;
+
     CIEC_WSTRING &operator=(const CIEC_WCHAR &paValue) {
       *this = CIEC_WSTRING(paValue);
       return *this;
@@ -116,7 +116,7 @@ class CIEC_WSTRING final : public CIEC_ANY_STRING {
      *   \return number of bytes used in the buffer
      *           -1 on error
      */
-    int toUTF8(char* paBuffer, size_t paBufferSize, bool paEscape) const override;
+    int toUTF8(char *paBuffer, size_t paBufferSize, bool paEscape) const override;
 
     /*! \brief Converts a UTF-16 encoded string to a WSTRING (UTF-8 internally)
      *
@@ -145,22 +145,22 @@ class CIEC_WSTRING final : public CIEC_ANY_STRING {
     bool fromUTF16(const TForteWChar *paBuffer, unsigned int paBufferLen);
 
     /*! \brief Converts the WSTRING to a UTF-16 representation
-      *
-      *   This command implements a conversion function from a WSTRING
-      *   to a big-endian UTF-16 encoding, usable e.g. for the serialization.
-      *   \param paBuffer  Reference to the output buffer. If 0, only the needed size will be computed.
-      *   \param paBufferSize  Size of the provided buffer.
-      *   \return number of bytes used in the buffer
-      *           -1 on error
-      */
+     *
+     *   This command implements a conversion function from a WSTRING
+     *   to a big-endian UTF-16 encoding, usable e.g. for the serialization.
+     *   \param paBuffer  Reference to the output buffer. If 0, only the needed size will be computed.
+     *   \param paBufferSize  Size of the provided buffer.
+     *   \return number of bytes used in the buffer
+     *           -1 on error
+     */
     int toUTF16(TForteByte *paBuffer, unsigned int paBufferSize) const;
 
     EDataTypeID getDataTypeID() const override {
       return CIEC_ANY::e_WSTRING;
     }
 
-    void setValue(const CIEC_ANY& paValue) override {
-      if(paValue.getDataTypeID() == CIEC_ANY::e_WSTRING){
+    void setValue(const CIEC_ANY &paValue) override {
+      if (paValue.getDataTypeID() == CIEC_ANY::e_WSTRING) {
         const CIEC_WSTRING &roSrc(static_cast<const CIEC_WSTRING &>(paValue));
         this->assign(roSrc.getValue(), roSrc.length());
       }
@@ -189,11 +189,11 @@ class CIEC_WSTRING final : public CIEC_ANY_STRING {
      *   \return number of bytes used in the buffer without trailing 0x00
      *           -1 on error
      */
-    int toString(char* paValue, size_t paBufferSize) const override;
+    int toString(char *paValue, size_t paBufferSize) const override;
 
     [[nodiscard]] bool equals(const CIEC_ANY &paOther) const override {
-      if(paOther.getDataTypeID() == CIEC_ANY::e_WSTRING) {
-        return 0 == strcmp(getValue(), static_cast<const CIEC_WSTRING&>(paOther).getValue());
+      if (paOther.getDataTypeID() == CIEC_ANY::e_WSTRING) {
+        return 0 == strcmp(getValue(), static_cast<const CIEC_WSTRING &>(paOther).getValue());
       }
       return false;
     }
@@ -215,47 +215,41 @@ class CIEC_WSTRING final : public CIEC_ANY_STRING {
   private:
 };
 
-inline
-bool operator ==(const CIEC_WSTRING &paLeft, const CIEC_WSTRING &paRight) {
+inline bool operator==(const CIEC_WSTRING &paLeft, const CIEC_WSTRING &paRight) {
   return (0 == strcmp(paLeft.getValue(), paRight.getValue()));
 }
 
-inline
-bool operator !=(const CIEC_WSTRING &paLeft, const CIEC_WSTRING &paRight) {
+inline bool operator!=(const CIEC_WSTRING &paLeft, const CIEC_WSTRING &paRight) {
   return !(paLeft == paRight);
 }
 
-inline
-bool operator >(const CIEC_WSTRING &paLeft, const CIEC_WSTRING &paRight){
+inline bool operator>(const CIEC_WSTRING &paLeft, const CIEC_WSTRING &paRight) {
   return (0 < strcmp(paLeft.getValue(), paRight.getValue()));
 }
 
-inline
-bool operator <(const CIEC_WSTRING &paLeft, const CIEC_WSTRING &paRight){
+inline bool operator<(const CIEC_WSTRING &paLeft, const CIEC_WSTRING &paRight) {
   return (0 > strcmp(paLeft.getValue(), paRight.getValue()));
 }
 
-inline
-bool operator >=(const CIEC_WSTRING &paLeft, const CIEC_WSTRING &paRight){
+inline bool operator>=(const CIEC_WSTRING &paLeft, const CIEC_WSTRING &paRight) {
   return (0 <= strcmp(paLeft.getValue(), paRight.getValue()));
 }
 
-inline
-bool operator <=(const CIEC_WSTRING &paLeft, const CIEC_WSTRING &paRight){
+inline bool operator<=(const CIEC_WSTRING &paLeft, const CIEC_WSTRING &paRight) {
   return (0 >= strcmp(paLeft.getValue(), paRight.getValue()));
 }
 
-inline CIEC_WSTRING operator ""_WSTRING(const char16_t *paValue, size_t paLength) {
+inline CIEC_WSTRING operator""_WSTRING(const char16_t *paValue, size_t paLength) {
   return CIEC_WSTRING(paValue, paLength);
 }
 
 namespace forte {
-  template <>
+  template<>
   struct CDataTypeTrait<CIEC_WSTRING> {
       static constexpr CIEC_ANY::EDataTypeID scmDataTypeId = CIEC_ANY::e_WSTRING;
       static const CStringDictionary::TStringId scmDataTypeName;
   };
-}
+} // namespace forte
 
 #endif
 

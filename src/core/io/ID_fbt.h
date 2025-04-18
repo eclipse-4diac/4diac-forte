@@ -19,14 +19,11 @@
 #include "inputfb.h"
 #include "forte_dword.h"
 
-
 /*! /brief generic class for IW function blocks providing access to one word physical input
  */
 class FORTE_ID final : public forte::core::io::CInputFB<CIEC_DWORD> {
-  DECLARE_FIRMWARE_FB(FORTE_ID)
+    DECLARE_FIRMWARE_FB(FORTE_ID)
 
   public:
     FORTE_ID(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
-
 };
-

@@ -17,14 +17,12 @@
 #include "../arch/datatype.h"
 #include "conn.h"
 
-
 /*! \ingroup CORE\brief Datatype for holding the IDs of event inputs.
  *
  *  With the current implementation at max 255 event inputs per FB are possible.
  *  That should be enough.
  */
 typedef size_t TEventID;
-
 
 //!\ingroup CORE Constant for the invalid event input id
 const TEventID cgInvalidEventID = cgInvalidPortId;
@@ -41,7 +39,7 @@ static_assert((cgInternal2InterfaceRemovalMask & (cgInternal2InterfaceRemovalMas
               "cgInternal2InterfaceRemovalMask must be a valid bitmask");
 
 /*!\ingroup CORE \brief Structure to hold the information needed for delivering input events to FBs.
-*/
+ */
 typedef CConnectionPoint TEventEntry;
 
 typedef TEventEntry *TEventEntryPtr;

@@ -19,14 +19,13 @@ USE_STRING_ID(serviceDefinition);
 USE_STRING_ID(serviceMetadata);
 USE_STRING_ID(WSTRING);
 
-
 DEFINE_FIRMWARE_DATATYPE(ArrowheadService, STRID(ArrowheadService));
 
 CIEC_ArrowheadService::CIEC_ArrowheadService() :
     CIEC_STRUCT(STRID(ArrowheadService), 3, scmElementTypes, scmElementNames, e_APPLICATION + e_CONSTRUCTED + 1) {
 }
 
-const CStringDictionary::TStringId CIEC_ArrowheadService::scmElementTypes[] = { STRID(WSTRING), STRID(ARRAY), 10, STRID(WSTRING), STRID(ARRAY),
-  10, STRID(WSTRING) };
-const CStringDictionary::TStringId CIEC_ArrowheadService::scmElementNames[] =
-  { STRID(serviceDefinition), STRID(interfaces), STRID(serviceMetadata) };
+const CStringDictionary::TStringId CIEC_ArrowheadService::scmElementTypes[] = {
+    STRID(WSTRING), STRID(ARRAY), 10, STRID(WSTRING), STRID(ARRAY), 10, STRID(WSTRING)};
+const CStringDictionary::TStringId CIEC_ArrowheadService::scmElementNames[] = {
+    STRID(serviceDefinition), STRID(interfaces), STRID(serviceMetadata)};

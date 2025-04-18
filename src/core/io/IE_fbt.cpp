@@ -15,7 +15,7 @@
  *   Alois Zoitl      - copied to core/io and adjusted to core/io process
  *                      interface needs
  *******************************************************************************/
- 
+
 #include "IE_fbt.h"
 
 USE_STRING_ID(BOOL);
@@ -45,41 +45,49 @@ const TDataIOID FORTE_IE::scmEIWith[] = {0, 1, scmWithListDelimiter, 0, scmWithL
 const TForteInt16 FORTE_IE::scmEIWithIndexes[] = {0, 3};
 const CStringDictionary::TStringId FORTE_IE::scmEventInputNames[] = {STRID(INIT), STRID(REQ)};
 const CStringDictionary::TStringId FORTE_IE::scmEventInputTypeIds[] = {STRID(EInit), STRID(Event)};
-const TDataIOID FORTE_IE::scmEOWith[] = {0, 1, scmWithListDelimiter, 0, 1, scmWithListDelimiter, 0, 1, scmWithListDelimiter};
+const TDataIOID FORTE_IE::scmEOWith[] = {0, 1, scmWithListDelimiter, 0, 1, scmWithListDelimiter,
+                                         0, 1, scmWithListDelimiter};
 const TForteInt16 FORTE_IE::scmEOWithIndexes[] = {0, 3, 6};
 const CStringDictionary::TStringId FORTE_IE::scmEventOutputNames[] = {STRID(INITO), STRID(CNF), STRID(IND)};
 const CStringDictionary::TStringId FORTE_IE::scmEventOutputTypeIds[] = {STRID(EInit), STRID(Event), STRID(Event)};
-const SFBInterfaceSpec FORTE_IE::scmFBInterfaceSpec = {
-  2, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,
-  3, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes,
-  2, scmDataInputNames, scmDataInputTypeIds,
-  2, scmDataOutputNames, scmDataOutputTypeIds,
-  0, nullptr,
-  0, nullptr
-};
+const SFBInterfaceSpec FORTE_IE::scmFBInterfaceSpec = {2,
+                                                       scmEventInputNames,
+                                                       scmEventInputTypeIds,
+                                                       scmEIWith,
+                                                       scmEIWithIndexes,
+                                                       3,
+                                                       scmEventOutputNames,
+                                                       scmEventOutputTypeIds,
+                                                       scmEOWith,
+                                                       scmEOWithIndexes,
+                                                       2,
+                                                       scmDataInputNames,
+                                                       scmDataInputTypeIds,
+                                                       2,
+                                                       scmDataOutputNames,
+                                                       scmDataOutputTypeIds,
+                                                       0,
+                                                       nullptr,
+                                                       0,
+                                                       nullptr};
 
 FORTE_IE::FORTE_IE(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CProcessInterfaceFB(paContainer, scmFBInterfaceSpec, paInstanceNameId),
-    conn_IND(*this, 2){
-};
+    conn_IND(*this, 2) {};
 
 void FORTE_IE::executeEvent(const TEventID paEIID, CEventChainExecutionThread *const paECET) {
-  switch(paEIID) {
-    case cgExternalEventID:
-      sendOutputEvent(scmEventINDID, paECET);
-      break;
+  switch (paEIID) {
+    case cgExternalEventID: sendOutputEvent(scmEventINDID, paECET); break;
     case scmEventREQID:
       var_QO = var_QI;
       sendOutputEvent(scmEventCNFID, paECET);
       break;
-   default:
-      CProcessInterfaceFB::executeEvent(paEIID, paECET);
-      break;
+    default: CProcessInterfaceFB::executeEvent(paEIID, paECET); break;
   }
 }
 
 void FORTE_IE::writeOutputData(const TEventID paEIID) {
-  if(paEIID == scmEventINDID) {
+  if (paEIID == scmEventINDID) {
     writeData(0, var_QO, conn_QO);
     writeData(1, var_STATUS, conn_STATUS);
   } else {
@@ -88,7 +96,7 @@ void FORTE_IE::writeOutputData(const TEventID paEIID) {
 }
 
 CEventConnection *FORTE_IE::getEOConUnchecked(const TPortId paIndex) {
-  if(paIndex == 2) {
+  if (paIndex == 2) {
     return &conn_IND;
   }
   return CProcessInterfaceFB::getEOConUnchecked(paIndex);

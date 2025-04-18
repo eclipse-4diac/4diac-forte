@@ -13,7 +13,6 @@
 
 USE_STRING_ID(GEN_CSV_WRITER);
 
-
 #include <cstdio>
 #include <fstream>
 
@@ -25,8 +24,9 @@ template<typename T1, typename T2>
 class GEN_CSV_WRITER_TestFixture : public CFBTestFixtureBase {
   public:
     GEN_CSV_WRITER_TestFixture(T1 v1 = T1(), T2 v2 = T2()) :
-            CFBTestFixtureBase(STRID(GEN_CSV_WRITER)),
-            mSD_1(v1), mSD_2(v2) {
+        CFBTestFixtureBase(STRID(GEN_CSV_WRITER)),
+        mSD_1(v1),
+        mSD_2(v2) {
       setInputData({&mQI, &mFILE_NAME, &mSD_1, &mSD_2});
       setOutputData({&mQO, &mSTATUS});
       CFBTestFixtureBase::setup("CSV_WRITER_2");
@@ -56,15 +56,9 @@ class GEN_CSV_WRITER_TestFixture : public CFBTestFixtureBase {
     CIEC_BOOL mQO;
     CIEC_STRING mSTATUS;
 
-    enum InputEvents {
-      InputEventINIT,
-      InputEventREQ
-    };
+    enum InputEvents { InputEventINIT, InputEventREQ };
 
-    enum OutputEvents {
-      OutputEventINITO,
-      OutputEventCNF
-    };
+    enum OutputEvents { OutputEventINITO, OutputEventCNF };
 
     void closeFile() {
       mQI = CIEC_BOOL(false);
@@ -91,70 +85,68 @@ class GEN_CSV_WRITER_TestFixture : public CFBTestFixtureBase {
     bool mIsOpen;
 };
 
-struct GEN_CSV_WRITER_TestFixtureIntString :
-        public GEN_CSV_WRITER_TestFixture<CIEC_INT, CIEC_STRING> {
-};
+struct GEN_CSV_WRITER_TestFixtureIntString : public GEN_CSV_WRITER_TestFixture<CIEC_INT, CIEC_STRING> {};
 
-struct GEN_CSV_WRITER_TestFixtureArrayArray :
-        public GEN_CSV_WRITER_TestFixture<CIEC_ARRAY_FIXED<CIEC_INT, 0, 2>, CIEC_ARRAY_FIXED<CIEC_STRING, 0, 2>> {
-  GEN_CSV_WRITER_TestFixtureArrayArray() :
-          GEN_CSV_WRITER_TestFixture<CIEC_ARRAY_FIXED<CIEC_INT, 0, 2>, CIEC_ARRAY_FIXED<CIEC_STRING, 0, 2>>(
-                  CIEC_ARRAY_FIXED<CIEC_INT, 0, 2>(),
-                  CIEC_ARRAY_FIXED<CIEC_INT, 0, 2>()) {}
+struct GEN_CSV_WRITER_TestFixtureArrayArray
+    : public GEN_CSV_WRITER_TestFixture<CIEC_ARRAY_FIXED<CIEC_INT, 0, 2>, CIEC_ARRAY_FIXED<CIEC_STRING, 0, 2>> {
+    GEN_CSV_WRITER_TestFixtureArrayArray() :
+        GEN_CSV_WRITER_TestFixture<CIEC_ARRAY_FIXED<CIEC_INT, 0, 2>, CIEC_ARRAY_FIXED<CIEC_STRING, 0, 2>>(
+            CIEC_ARRAY_FIXED<CIEC_INT, 0, 2>(), CIEC_ARRAY_FIXED<CIEC_INT, 0, 2>()) {
+    }
 };
 
 BOOST_AUTO_TEST_SUITE(GEN_CSV_WRITER_Tests)
 
-  BOOST_FIXTURE_TEST_CASE(blockedWrite, GEN_CSV_WRITER_TestFixtureIntString) {
-    mQI = CIEC_BOOL(false);
+BOOST_FIXTURE_TEST_CASE(blockedWrite, GEN_CSV_WRITER_TestFixtureIntString) {
+  mQI = CIEC_BOOL(false);
 
-    triggerEvent(InputEventREQ);
+  triggerEvent(InputEventREQ);
 
-    BOOST_CHECK(checkForSingleOutputEventOccurence(OutputEventCNF));
-    BOOST_CHECK(!mQO);
+  BOOST_CHECK(checkForSingleOutputEventOccurence(OutputEventCNF));
+  BOOST_CHECK(!mQO);
 
-    closeFile();
-    BOOST_TEST(getFileContent() == "");
-  }
+  closeFile();
+  BOOST_TEST(getFileContent() == "");
+}
 
-  BOOST_FIXTURE_TEST_CASE(validWrite, GEN_CSV_WRITER_TestFixtureIntString) {
-    mQI = CIEC_BOOL(true);
-    mSD_1 = CIEC_INT(1);
-    mSD_2 = "Test"_STRING;
+BOOST_FIXTURE_TEST_CASE(validWrite, GEN_CSV_WRITER_TestFixtureIntString) {
+  mQI = CIEC_BOOL(true);
+  mSD_1 = CIEC_INT(1);
+  mSD_2 = "Test"_STRING;
 
-    triggerEvent(InputEventREQ);
+  triggerEvent(InputEventREQ);
 
-    BOOST_CHECK(checkForSingleOutputEventOccurence(OutputEventCNF));
-    BOOST_CHECK(mQO);
+  BOOST_CHECK(checkForSingleOutputEventOccurence(OutputEventCNF));
+  BOOST_CHECK(mQO);
 
-    mQI = CIEC_BOOL(true);
-    mSD_1 = CIEC_INT(20);
-    mSD_2 = "Test2"_STRING;
+  mQI = CIEC_BOOL(true);
+  mSD_1 = CIEC_INT(20);
+  mSD_2 = "Test2"_STRING;
 
-    triggerEvent(InputEventREQ);
+  triggerEvent(InputEventREQ);
 
-    BOOST_CHECK(checkForSingleOutputEventOccurence(OutputEventCNF));
-    BOOST_CHECK(mQO);
+  BOOST_CHECK(checkForSingleOutputEventOccurence(OutputEventCNF));
+  BOOST_CHECK(mQO);
 
-    closeFile();
-    BOOST_TEST(getFileContent() == "1; 'Test'; \n20; 'Test2'; \n");
-  }
+  closeFile();
+  BOOST_TEST(getFileContent() == "1; 'Test'; \n20; 'Test2'; \n");
+}
 
-  BOOST_FIXTURE_TEST_CASE(arrayWrite, GEN_CSV_WRITER_TestFixtureArrayArray) {
-    mQI = CIEC_BOOL(true);
-    mSD_1[0].setValue(CIEC_INT(1));
-    mSD_1[1].setValue(CIEC_INT(2));
-    mSD_1[2].setValue(CIEC_INT(3));
-    mSD_2[0].setValue(CIEC_STRING("A"s));
-    mSD_2[1].setValue(CIEC_STRING("B"s));
-    mSD_2[2].setValue(CIEC_STRING("C"s));
+BOOST_FIXTURE_TEST_CASE(arrayWrite, GEN_CSV_WRITER_TestFixtureArrayArray) {
+  mQI = CIEC_BOOL(true);
+  mSD_1[0].setValue(CIEC_INT(1));
+  mSD_1[1].setValue(CIEC_INT(2));
+  mSD_1[2].setValue(CIEC_INT(3));
+  mSD_2[0].setValue(CIEC_STRING("A"s));
+  mSD_2[1].setValue(CIEC_STRING("B"s));
+  mSD_2[2].setValue(CIEC_STRING("C"s));
 
-    triggerEvent(InputEventREQ);
-    BOOST_CHECK(checkForSingleOutputEventOccurence(OutputEventCNF));
-    BOOST_CHECK(mQO);
+  triggerEvent(InputEventREQ);
+  BOOST_CHECK(checkForSingleOutputEventOccurence(OutputEventCNF));
+  BOOST_CHECK(mQO);
 
-    closeFile();
-    BOOST_CHECK_EQUAL(getFileContent(), "1; 'A'; \n2; 'B'; \n3; 'C'; \n");
-  }
+  closeFile();
+  BOOST_CHECK_EQUAL(getFileContent(), "1; 'A'; \n2; 'B'; \n3; 'C'; \n");
+}
 
 BOOST_AUTO_TEST_SUITE_END()

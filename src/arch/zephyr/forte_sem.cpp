@@ -5,7 +5,7 @@
  http://www.eclipse.org/legal/epl-2.0.
 
  SPDX-License-Identifier: EPL-2.0
- 
+
  Contributors:
   Dirk Kaar - initial API and implementation and/or initial documentation
  ************************************************************************************/
@@ -17,7 +17,7 @@ namespace forte {
   namespace arch {
 
     CZephyrSemaphore::CZephyrSemaphore(unsigned int paInitialValue) {
-      sema = static_cast<struct k_sem*>(k_malloc(sizeof(struct k_sem)));
+      sema = static_cast<struct k_sem *>(k_malloc(sizeof(struct k_sem)));
       k_sem_init(sema, paInitialValue, 1);
     }
 

@@ -29,7 +29,7 @@
 
 // cppcheck-suppress noConstructor
 class CHTTP_Handler : public CExternalEventHandler, public CThread, public forte::com_infra::CComCallback {
-  DECLARE_HANDLER(CHTTP_Handler)
+    DECLARE_HANDLER(CHTTP_Handler)
 
   public:
     /* functions needed for the external event handler interface */
@@ -53,12 +53,11 @@ class CHTTP_Handler : public CExternalEventHandler, public CThread, public forte
 
     void sendServerAnswerFromRecv(forte::com_infra::CHttpComLayer *paLayer, const std::string &paAnswer);
 
-    void forceClose(forte::com_infra::CHttpComLayer* paLayer);
+    void forceClose(forte::com_infra::CHttpComLayer *paLayer);
 
-    void forceCloseFromRecv(forte::com_infra::CHttpComLayer* paLayer);
+    void forceCloseFromRecv(forte::com_infra::CHttpComLayer *paLayer);
 
   private:
-
     /**
      * Overridden run() from CThread which loops the UA Server.
      */
@@ -86,7 +85,7 @@ class CHTTP_Handler : public CExternalEventHandler, public CThread, public forte
 
     void sendServerAnswerHelper(forte::com_infra::CHttpComLayer *paLayer, const std::string &paAnswer, bool paFromRecv);
 
-    void forceCloseHelper(forte::com_infra::CHttpComLayer* paLayer, bool paFromRecv);
+    void forceCloseHelper(forte::com_infra::CHttpComLayer *paLayer, bool paFromRecv);
 
     bool recvClients(const CIPComSocketHandler::TSocketDescriptor paSocket, const int paRecvLength);
 
@@ -103,13 +102,14 @@ class CHTTP_Handler : public CExternalEventHandler, public CThread, public forte
     void clearAcceptedSockets();
 
     struct HTTPServerWaiting {
-        forte::com_infra::CHttpComLayer* mLayer;
+        forte::com_infra::CHttpComLayer *mLayer;
         std::string mPath;
-        CSinglyLinkedList<CIPComSocketHandler::TSocketDescriptor> mSockets; //to handle many connections to the same path
+        CSinglyLinkedList<CIPComSocketHandler::TSocketDescriptor>
+            mSockets; // to handle many connections to the same path
     };
 
     struct HTTPClientWaiting {
-        forte::com_infra::CHttpComLayer* mLayer;
+        forte::com_infra::CHttpComLayer *mLayer;
         CIPComSocketHandler::TSocketDescriptor mSocket;
         CIEC_TIME mStartTime;
     };
@@ -119,13 +119,13 @@ class CHTTP_Handler : public CExternalEventHandler, public CThread, public forte
         CIEC_TIME mStartTime;
     };
 
-    CSinglyLinkedList<HTTPServerWaiting*> mServerLayers;
+    CSinglyLinkedList<HTTPServerWaiting *> mServerLayers;
     CSyncObject mServerMutex;
 
-    CSinglyLinkedList<HTTPClientWaiting*> mClientLayers;
+    CSinglyLinkedList<HTTPClientWaiting *> mClientLayers;
     CSyncObject mClientMutex;
 
-    CSinglyLinkedList<HTTPAcceptedSockets*> mAcceptedSockets;
+    CSinglyLinkedList<HTTPAcceptedSockets *> mAcceptedSockets;
     CSyncObject mAcceptedMutex;
 
     CSemaphore mSuspendSemaphore;

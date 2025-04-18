@@ -45,7 +45,6 @@ USE_STRING_ID(STOP);
 USE_STRING_ID(TIME);
 USE_STRING_ID(UINT);
 
-
 #include "iec61131_functions.h"
 #include "forte_array_common.h"
 #include "forte_array.h"
@@ -64,16 +63,29 @@ const CStringDictionary::TStringId FORTE_E_TRAIN::scmEventInputNames[] = {STRID(
 const TDataIOID FORTE_E_TRAIN::scmEOWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_E_TRAIN::scmEOWithIndexes[] = {0};
 const CStringDictionary::TStringId FORTE_E_TRAIN::scmEventOutputNames[] = {STRID(EO)};
-const SFBInterfaceSpec FORTE_E_TRAIN::scmFBInterfaceSpec = {
-  2, scmEventInputNames, nullptr, scmEIWith, scmEIWithIndexes,
-  1, scmEventOutputNames, nullptr, scmEOWith, scmEOWithIndexes,
-  2, scmDataInputNames, scmDataInputTypeIds,
-  1, scmDataOutputNames, scmDataOutputTypeIds,
-  0, nullptr,
-  0, nullptr
-};
+const SFBInterfaceSpec FORTE_E_TRAIN::scmFBInterfaceSpec = {2,
+                                                            scmEventInputNames,
+                                                            nullptr,
+                                                            scmEIWith,
+                                                            scmEIWithIndexes,
+                                                            1,
+                                                            scmEventOutputNames,
+                                                            nullptr,
+                                                            scmEOWith,
+                                                            scmEOWithIndexes,
+                                                            2,
+                                                            scmDataInputNames,
+                                                            scmDataInputTypeIds,
+                                                            1,
+                                                            scmDataOutputNames,
+                                                            scmDataOutputTypeIds,
+                                                            0,
+                                                            nullptr,
+                                                            0,
+                                                            nullptr};
 
-FORTE_E_TRAIN::FORTE_E_TRAIN(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_E_TRAIN::FORTE_E_TRAIN(const CStringDictionary::TStringId paInstanceNameId,
+                             forte::core::CFBContainer &paContainer) :
     CCompositeFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, scmFBNData),
     fb_CTR(STRID(CTR), *this),
     fb_GATE(STRID(GATE), *this),
@@ -83,8 +95,7 @@ FORTE_E_TRAIN::FORTE_E_TRAIN(const CStringDictionary::TStringId paInstanceNameId
     conn_N(nullptr),
     conn_CV(*this, 0, 0_UINT),
     conn_if2in_DT(*this, 0, 0_TIME),
-    conn_if2in_N(*this, 1, 0_UINT) {
-};
+    conn_if2in_N(*this, 1, 0_UINT) {};
 
 void FORTE_E_TRAIN::setInitialValues() {
   conn_if2in_DT.getValue() = 0_TIME;
@@ -93,61 +104,56 @@ void FORTE_E_TRAIN::setInitialValues() {
 }
 
 const SCFB_FBInstanceData FORTE_E_TRAIN::scmInternalFBs[] = {
-  {STRID(CTR), STRID(E_CTU)},
-  {STRID(GATE), STRID(E_SWITCH)},
-  {STRID(DLY), STRID(E_DELAY)}
-};
+    {STRID(CTR), STRID(E_CTU)}, {STRID(GATE), STRID(E_SWITCH)}, {STRID(DLY), STRID(E_DELAY)}};
 
 const SCFB_FBConnectionData FORTE_E_TRAIN::scmEventConnections[] = {
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(CTR), STRID(CUO)), 0, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(GATE), STRID(EI)), 1},
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(CTR), STRID(RO)), 0, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(GATE), STRID(EI)), 1},
-  {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(START)), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(CTR), STRID(R)), 0},
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(GATE), STRID(EO0)), 1, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(DLY), STRID(START)), 2},
-  {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(STOP)), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(DLY), STRID(STOP)), 2},
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(DLY), STRID(EO)), 2, GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(EO)), -1},
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(DLY), STRID(EO)), 2, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(CTR), STRID(CU)), 0}
-};
+    {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(CTR), STRID(CUO)), 0,
+     GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(GATE), STRID(EI)), 1},
+    {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(CTR), STRID(RO)), 0,
+     GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(GATE), STRID(EI)), 1},
+    {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(START)), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(CTR), STRID(R)), 0},
+    {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(GATE), STRID(EO0)), 1,
+     GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(DLY), STRID(START)), 2},
+    {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(STOP)), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(DLY), STRID(STOP)), 2},
+    {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(DLY), STRID(EO)), 2, GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(EO)), -1},
+    {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(DLY), STRID(EO)), 2,
+     GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(CTR), STRID(CU)), 0}};
 
 const SCFB_FBConnectionData FORTE_E_TRAIN::scmDataConnections[] = {
-  {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(N)), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(CTR), STRID(PV)), 0},
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(CTR), STRID(CV)), 0, GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(CV)), -1},
-  {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(DT)), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(DLY), STRID(DT)), 2},
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(CTR), STRID(Q)), 0, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(GATE), STRID(G)), 1},
+    {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(N)), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(CTR), STRID(PV)), 0},
+    {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(CTR), STRID(CV)), 0, GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(CV)), -1},
+    {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(DT)), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(DLY), STRID(DT)), 2},
+    {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(CTR), STRID(Q)), 0,
+     GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(GATE), STRID(G)), 1},
 };
 
 const SCFB_FBNData FORTE_E_TRAIN::scmFBNData = {
-  3, scmInternalFBs,
-  7, scmEventConnections,
-  4, scmDataConnections,
-  0, nullptr,
-  0, nullptr,
+    3, scmInternalFBs, 7, scmEventConnections, 4, scmDataConnections, 0, nullptr, 0, nullptr,
 };
 
 void FORTE_E_TRAIN::readInputData(const TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventSTARTID: {
       readData(0, conn_if2in_DT.getValue(), conn_DT);
       readData(1, conn_if2in_N.getValue(), conn_N);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 void FORTE_E_TRAIN::writeOutputData(const TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventEOID: {
       writeData(0, fb_CTR->conn_CV.getValue(), conn_CV);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 CIEC_ANY *FORTE_E_TRAIN::getDI(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_if2in_DT.getValue();
     case 1: return &conn_if2in_N.getValue();
   }
@@ -155,21 +161,21 @@ CIEC_ANY *FORTE_E_TRAIN::getDI(const size_t paIndex) {
 }
 
 CIEC_ANY *FORTE_E_TRAIN::getDO(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &fb_CTR->conn_CV.getValue();
   }
   return nullptr;
 }
 
 CEventConnection *FORTE_E_TRAIN::getEOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_EO;
   }
   return nullptr;
 }
 
 CDataConnection **FORTE_E_TRAIN::getDIConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_DT;
     case 1: return &conn_N;
   }
@@ -177,14 +183,14 @@ CDataConnection **FORTE_E_TRAIN::getDIConUnchecked(const TPortId paIndex) {
 }
 
 CDataConnection *FORTE_E_TRAIN::getDOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_CV;
   }
   return nullptr;
 }
 
 CDataConnection *FORTE_E_TRAIN::getIf2InConUnchecked(TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_if2in_DT;
     case 1: return &conn_if2in_N;
   }

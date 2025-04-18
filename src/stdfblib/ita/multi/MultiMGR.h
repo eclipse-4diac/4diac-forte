@@ -27,41 +27,48 @@ class OPCUA_MGR;
  * - Set default device to create: set the default device to create
  */
 class MultiMGR {
-public:
+  public:
+    MultiMGR(MultiDevice &paDevice, OPCUA_MGR &paOpcuaMgr);
+    ~MultiMGR() = default;
 
-  MultiMGR(MultiDevice& paDevice, OPCUA_MGR& paOpcuaMgr);
-  ~MultiMGR() = default;
+    bool initialize();
 
-  bool initialize();
+  private:
+    MultiDevice &mDevice;
 
-private:
+    OPCUA_MGR &mOpcuaMgr;
 
-  MultiDevice& mDevice;
+    // the arguments strings are passed by pointer and not stored, so they should leave until
+    // the methods are created
+    std::vector<std::string> mArgumentsInformation;
 
-  OPCUA_MGR& mOpcuaMgr;
+    std::string &getArgumentString(std::string paString);
 
-  // the arguments strings are passed by pointer and not stored, so they should leave until
-  // the methods are created
-  std::vector<std::string> mArgumentsInformation;
+    void addRestartDeviceMethod();
 
-  std::string& getArgumentString(std::string paString);
+    void addSetDefaultDeviceMethod();
 
-  void addRestartDeviceMethod();
+    static UA_StatusCode onRestartDevice(UA_Server *,
+                                         const UA_NodeId *,
+                                         void *,
+                                         const UA_NodeId *,
+                                         void *methodContext,
+                                         const UA_NodeId *,
+                                         void *,
+                                         size_t,
+                                         const UA_Variant *,
+                                         size_t,
+                                         UA_Variant *);
 
-  void addSetDefaultDeviceMethod();
-
-  static UA_StatusCode onRestartDevice(UA_Server*,
-    const UA_NodeId*, void*,
-    const UA_NodeId*, void* methodContext,
-    const UA_NodeId*, void*,
-    size_t, const UA_Variant*,
-    size_t, UA_Variant*);
-
-  static UA_StatusCode onSetDefaultDevice(UA_Server*,
-    const UA_NodeId*, void*,
-    const UA_NodeId*, void*,
-    const UA_NodeId*, void*,
-    size_t, const UA_Variant* input,
-    size_t, UA_Variant*);
-
+    static UA_StatusCode onSetDefaultDevice(UA_Server *,
+                                            const UA_NodeId *,
+                                            void *,
+                                            const UA_NodeId *,
+                                            void *,
+                                            const UA_NodeId *,
+                                            void *,
+                                            size_t,
+                                            const UA_Variant *input,
+                                            size_t,
+                                            UA_Variant *);
 };

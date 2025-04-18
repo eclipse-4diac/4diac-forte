@@ -29,7 +29,7 @@
 #include "forte_array_variable.h"
 
 class FORTE_ASSEMBLE_DWORD_FROM_QUARTERS final : public CFunctionBlock {
-  DECLARE_FIRMWARE_FB(FORTE_ASSEMBLE_DWORD_FROM_QUARTERS)
+    DECLARE_FIRMWARE_FB(FORTE_ASSEMBLE_DWORD_FROM_QUARTERS)
 
   private:
     static const CStringDictionary::TStringId scmDataInputNames[];
@@ -56,7 +56,8 @@ class FORTE_ASSEMBLE_DWORD_FROM_QUARTERS final : public CFunctionBlock {
     void setInitialValues() override;
 
   public:
-    FORTE_ASSEMBLE_DWORD_FROM_QUARTERS(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_ASSEMBLE_DWORD_FROM_QUARTERS(CStringDictionary::TStringId paInstanceNameId,
+                                       forte::core::CFBContainer &paContainer);
 
     CIEC_BYTE var_QUARTER_BYTE_00;
     CIEC_BYTE var_QUARTER_BYTE_01;
@@ -104,7 +105,23 @@ class FORTE_ASSEMBLE_DWORD_FROM_QUARTERS final : public CFunctionBlock {
     CDataConnection **getDIConUnchecked(TPortId) override;
     CDataConnection *getDOConUnchecked(TPortId) override;
 
-    void evt_REQ(const CIEC_BYTE &paQUARTER_BYTE_00, const CIEC_BYTE &paQUARTER_BYTE_01, const CIEC_BYTE &paQUARTER_BYTE_02, const CIEC_BYTE &paQUARTER_BYTE_03, const CIEC_BYTE &paQUARTER_BYTE_04, const CIEC_BYTE &paQUARTER_BYTE_05, const CIEC_BYTE &paQUARTER_BYTE_06, const CIEC_BYTE &paQUARTER_BYTE_07, const CIEC_BYTE &paQUARTER_BYTE_08, const CIEC_BYTE &paQUARTER_BYTE_09, const CIEC_BYTE &paQUARTER_BYTE_10, const CIEC_BYTE &paQUARTER_BYTE_11, const CIEC_BYTE &paQUARTER_BYTE_12, const CIEC_BYTE &paQUARTER_BYTE_13, const CIEC_BYTE &paQUARTER_BYTE_14, const CIEC_BYTE &paQUARTER_BYTE_15, CIEC_DWORD &pa) {
+    void evt_REQ(const CIEC_BYTE &paQUARTER_BYTE_00,
+                 const CIEC_BYTE &paQUARTER_BYTE_01,
+                 const CIEC_BYTE &paQUARTER_BYTE_02,
+                 const CIEC_BYTE &paQUARTER_BYTE_03,
+                 const CIEC_BYTE &paQUARTER_BYTE_04,
+                 const CIEC_BYTE &paQUARTER_BYTE_05,
+                 const CIEC_BYTE &paQUARTER_BYTE_06,
+                 const CIEC_BYTE &paQUARTER_BYTE_07,
+                 const CIEC_BYTE &paQUARTER_BYTE_08,
+                 const CIEC_BYTE &paQUARTER_BYTE_09,
+                 const CIEC_BYTE &paQUARTER_BYTE_10,
+                 const CIEC_BYTE &paQUARTER_BYTE_11,
+                 const CIEC_BYTE &paQUARTER_BYTE_12,
+                 const CIEC_BYTE &paQUARTER_BYTE_13,
+                 const CIEC_BYTE &paQUARTER_BYTE_14,
+                 const CIEC_BYTE &paQUARTER_BYTE_15,
+                 CIEC_DWORD &pa) {
       var_QUARTER_BYTE_00 = paQUARTER_BYTE_00;
       var_QUARTER_BYTE_01 = paQUARTER_BYTE_01;
       var_QUARTER_BYTE_02 = paQUARTER_BYTE_02;
@@ -125,11 +142,43 @@ class FORTE_ASSEMBLE_DWORD_FROM_QUARTERS final : public CFunctionBlock {
       pa = var_;
     }
 
-    void operator()(const CIEC_BYTE &paQUARTER_BYTE_00, const CIEC_BYTE &paQUARTER_BYTE_01, const CIEC_BYTE &paQUARTER_BYTE_02, const CIEC_BYTE &paQUARTER_BYTE_03, const CIEC_BYTE &paQUARTER_BYTE_04, const CIEC_BYTE &paQUARTER_BYTE_05, const CIEC_BYTE &paQUARTER_BYTE_06, const CIEC_BYTE &paQUARTER_BYTE_07, const CIEC_BYTE &paQUARTER_BYTE_08, const CIEC_BYTE &paQUARTER_BYTE_09, const CIEC_BYTE &paQUARTER_BYTE_10, const CIEC_BYTE &paQUARTER_BYTE_11, const CIEC_BYTE &paQUARTER_BYTE_12, const CIEC_BYTE &paQUARTER_BYTE_13, const CIEC_BYTE &paQUARTER_BYTE_14, const CIEC_BYTE &paQUARTER_BYTE_15, CIEC_DWORD &pa) {
-      evt_REQ(paQUARTER_BYTE_00, paQUARTER_BYTE_01, paQUARTER_BYTE_02, paQUARTER_BYTE_03, paQUARTER_BYTE_04, paQUARTER_BYTE_05, paQUARTER_BYTE_06, paQUARTER_BYTE_07, paQUARTER_BYTE_08, paQUARTER_BYTE_09, paQUARTER_BYTE_10, paQUARTER_BYTE_11, paQUARTER_BYTE_12, paQUARTER_BYTE_13, paQUARTER_BYTE_14, paQUARTER_BYTE_15, pa);
+    void operator()(const CIEC_BYTE &paQUARTER_BYTE_00,
+                    const CIEC_BYTE &paQUARTER_BYTE_01,
+                    const CIEC_BYTE &paQUARTER_BYTE_02,
+                    const CIEC_BYTE &paQUARTER_BYTE_03,
+                    const CIEC_BYTE &paQUARTER_BYTE_04,
+                    const CIEC_BYTE &paQUARTER_BYTE_05,
+                    const CIEC_BYTE &paQUARTER_BYTE_06,
+                    const CIEC_BYTE &paQUARTER_BYTE_07,
+                    const CIEC_BYTE &paQUARTER_BYTE_08,
+                    const CIEC_BYTE &paQUARTER_BYTE_09,
+                    const CIEC_BYTE &paQUARTER_BYTE_10,
+                    const CIEC_BYTE &paQUARTER_BYTE_11,
+                    const CIEC_BYTE &paQUARTER_BYTE_12,
+                    const CIEC_BYTE &paQUARTER_BYTE_13,
+                    const CIEC_BYTE &paQUARTER_BYTE_14,
+                    const CIEC_BYTE &paQUARTER_BYTE_15,
+                    CIEC_DWORD &pa) {
+      evt_REQ(paQUARTER_BYTE_00, paQUARTER_BYTE_01, paQUARTER_BYTE_02, paQUARTER_BYTE_03, paQUARTER_BYTE_04,
+              paQUARTER_BYTE_05, paQUARTER_BYTE_06, paQUARTER_BYTE_07, paQUARTER_BYTE_08, paQUARTER_BYTE_09,
+              paQUARTER_BYTE_10, paQUARTER_BYTE_11, paQUARTER_BYTE_12, paQUARTER_BYTE_13, paQUARTER_BYTE_14,
+              paQUARTER_BYTE_15, pa);
     }
 };
 
-CIEC_DWORD func_ASSEMBLE_DWORD_FROM_QUARTERS(CIEC_BYTE st_lv_QUARTER_BYTE_00, CIEC_BYTE st_lv_QUARTER_BYTE_01, CIEC_BYTE st_lv_QUARTER_BYTE_02, CIEC_BYTE st_lv_QUARTER_BYTE_03, CIEC_BYTE st_lv_QUARTER_BYTE_04, CIEC_BYTE st_lv_QUARTER_BYTE_05, CIEC_BYTE st_lv_QUARTER_BYTE_06, CIEC_BYTE st_lv_QUARTER_BYTE_07, CIEC_BYTE st_lv_QUARTER_BYTE_08, CIEC_BYTE st_lv_QUARTER_BYTE_09, CIEC_BYTE st_lv_QUARTER_BYTE_10, CIEC_BYTE st_lv_QUARTER_BYTE_11, CIEC_BYTE st_lv_QUARTER_BYTE_12, CIEC_BYTE st_lv_QUARTER_BYTE_13, CIEC_BYTE st_lv_QUARTER_BYTE_14, CIEC_BYTE st_lv_QUARTER_BYTE_15);
-
-
+CIEC_DWORD func_ASSEMBLE_DWORD_FROM_QUARTERS(CIEC_BYTE st_lv_QUARTER_BYTE_00,
+                                             CIEC_BYTE st_lv_QUARTER_BYTE_01,
+                                             CIEC_BYTE st_lv_QUARTER_BYTE_02,
+                                             CIEC_BYTE st_lv_QUARTER_BYTE_03,
+                                             CIEC_BYTE st_lv_QUARTER_BYTE_04,
+                                             CIEC_BYTE st_lv_QUARTER_BYTE_05,
+                                             CIEC_BYTE st_lv_QUARTER_BYTE_06,
+                                             CIEC_BYTE st_lv_QUARTER_BYTE_07,
+                                             CIEC_BYTE st_lv_QUARTER_BYTE_08,
+                                             CIEC_BYTE st_lv_QUARTER_BYTE_09,
+                                             CIEC_BYTE st_lv_QUARTER_BYTE_10,
+                                             CIEC_BYTE st_lv_QUARTER_BYTE_11,
+                                             CIEC_BYTE st_lv_QUARTER_BYTE_12,
+                                             CIEC_BYTE st_lv_QUARTER_BYTE_13,
+                                             CIEC_BYTE st_lv_QUARTER_BYTE_14,
+                                             CIEC_BYTE st_lv_QUARTER_BYTE_15);

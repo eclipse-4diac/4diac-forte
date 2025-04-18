@@ -30,17 +30,12 @@
 class PLCnextSlaveHandler : public forte::core::io::IOConfigFBMultiSlave {
 
   public:
-    enum SlaveType {
-        UnknownSlave = -1,
-        NoUsage = 0,
-        Input = 1,
-        Output = 2
-    };
+    enum SlaveType { UnknownSlave = -1, NoUsage = 0, Input = 1, Output = 2 };
 
     int update();
 
-    PLCnextSlaveHandle* getHandle(int paIndex);
-    void addHandle(PLCnextSlaveHandle* paHandle);
+    PLCnextSlaveHandle *getHandle(int paIndex);
+    void addHandle(PLCnextSlaveHandle *paHandle);
     void dropHandles();
     void initBufferImage(size_t imageSize);
 
@@ -48,12 +43,14 @@ class PLCnextSlaveHandler : public forte::core::io::IOConfigFBMultiSlave {
 
     size_t imageSize = 0;
     size_t imageOffset = 0;
-    char* imageBuffer;
+    char *imageBuffer;
 
     CSyncObject handleMutex;
 
-    PLCnextSlaveHandler(int paType, forte::core::CFBContainer &paContainer, const SFBInterfaceSpec* paInterfaceSpec,
-        const CStringDictionary::TStringId paInstanceNameId);
+    PLCnextSlaveHandler(int paType,
+                        forte::core::CFBContainer &paContainer,
+                        const SFBInterfaceSpec *paInterfaceSpec,
+                        const CStringDictionary::TStringId paInstanceNameId);
 
     ~PLCnextSlaveHandler();
 
@@ -61,9 +58,9 @@ class PLCnextSlaveHandler : public forte::core::io::IOConfigFBMultiSlave {
     PLCnextDeviceInterface plcNextDevice;
 
     virtual void initHandles() = 0;
-    virtual const char* init() = 0;
+    virtual const char *init() = 0;
 
-    typedef CSinglyLinkedList<PLCnextSlaveHandle*> TSlaveHandleList;
+    typedef CSinglyLinkedList<PLCnextSlaveHandle *> TSlaveHandleList;
     TSlaveHandleList *slaveHandles = new TSlaveHandleList();
 
     static const TForteUInt8 scmSlaveConfigurationIO[];

@@ -17,17 +17,17 @@
 using namespace Arp;
 using namespace Arp::Plc::Esm;
 
-namespace ForteLibrary{
+namespace ForteLibrary {
 
   class ForteComponentProgramProvider : public IProgramProvider {
     public:
       ForteComponentProgramProvider() = default;
-      ForteComponentProgramProvider(const ForteComponentProgramProvider& paArg) = delete;
+      ForteComponentProgramProvider(const ForteComponentProgramProvider &paArg) = delete;
       ~ForteComponentProgramProvider() = default;
 
-      ForteComponentProgramProvider& operator= (const ForteComponentProgramProvider& paArg) = delete;
+      ForteComponentProgramProvider &operator=(const ForteComponentProgramProvider &paArg) = delete;
 
-      IProgram* CreateProgram(const String& paProgramName, const String& paProgramType) override;
-   };
+      IProgram *CreateProgram(const String &paProgramName, const String &paProgramType) override;
+  };
 
 } // end of namespace ForteLibrary

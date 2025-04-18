@@ -20,22 +20,24 @@
 #include "forte_time.h"
 
 using TIecAnyDurationVariantType = std::variant<
-// ANY_ELEMENTARY
-//  ANY_MAGNITUDE
-//   ANY_DURATION
-        CIEC_TIME,
-        CIEC_LTIME
-// end
->;
+    // ANY_ELEMENTARY
+    //  ANY_MAGNITUDE
+    //   ANY_DURATION
+    CIEC_TIME,
+    CIEC_LTIME
+    // end
+    >;
 
 class CIEC_ANY_DURATION_VARIANT : public CIEC_ANY_DURATION, public TIecAnyDurationVariantType {
-DECLARE_FIRMWARE_DATATYPE(ANY_DURATION_VARIANT)
-public:
+    DECLARE_FIRMWARE_DATATYPE(ANY_DURATION_VARIANT)
+  public:
     using TIecAnyDurationVariantType::variant;
     using TIecAnyDurationVariantType::operator=;
-    template<class> static inline constexpr bool always_false_v = false;
+    template<class>
+    static inline constexpr bool always_false_v = false;
 
-    CIEC_ANY_DURATION_VARIANT(const CIEC_ANY_DURATION_VARIANT &paVal) : CIEC_ANY_DURATION(), variant(paVal) {}
+    CIEC_ANY_DURATION_VARIANT(const CIEC_ANY_DURATION_VARIANT &paVal) : CIEC_ANY_DURATION(), variant(paVal) {
+    }
 
     CIEC_ANY_DURATION_VARIANT(const CIEC_ANY_DURATION &paVal) {
       setValue(paVal.unwrap());
@@ -61,7 +63,7 @@ public:
 
     int fromString(const char *paValue) override;
 
-    int toString(char* paValue, size_t paBufferSize) const override;
+    int toString(char *paValue, size_t paBufferSize) const override;
 
     size_t getToStringBufferSize() const override;
 
@@ -76,4 +78,3 @@ static_assert(std::is_constructible_v<CIEC_ANY_DURATION_VARIANT, const CIEC_ANY_
 static_assert(std::is_copy_assignable_v<CIEC_ANY_DURATION_VARIANT>);
 static_assert(std::is_assignable_v<CIEC_ANY_DURATION_VARIANT, const CIEC_ANY_DURATION &>);
 static_assert(std::is_destructible_v<CIEC_ANY_DURATION_VARIANT>);
-

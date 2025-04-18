@@ -1,10 +1,10 @@
 /*************************************************************************
- *** Copyright (c) 2023 HR Agrartechnik GmbH  
- *** This program and the accompanying materials are made available under the  
- *** terms of the Eclipse Public License 2.0 which is available at  
- *** http://www.eclipse.org/legal/epl-2.0.  
- ***  
- *** SPDX-License-Identifier: EPL-2.0  
+ *** Copyright (c) 2023 HR Agrartechnik GmbH
+ *** This program and the accompanying materials are made available under the
+ *** terms of the Eclipse Public License 2.0 which is available at
+ *** http://www.eclipse.org/legal/epl-2.0.
+ ***
+ *** SPDX-License-Identifier: EPL-2.0
  *** FORTE Library Element
  ***
  *** This file was generated using the 4DIAC FORTE Export Filter V1.0.x NG!
@@ -27,7 +27,7 @@
 #include "forte_array_variable.h"
 
 class FORTE_signalprocessing__DualHysteresis final : public CBasicFB {
-  DECLARE_FIRMWARE_FB(FORTE_signalprocessing__DualHysteresis)
+    DECLARE_FIRMWARE_FB(FORTE_signalprocessing__DualHysteresis)
 
   private:
     static const CStringDictionary::TStringId scmDataInputNames[];
@@ -78,7 +78,8 @@ class FORTE_signalprocessing__DualHysteresis final : public CBasicFB {
     void setInitialValues() override;
 
   public:
-    FORTE_signalprocessing__DualHysteresis(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_signalprocessing__DualHysteresis(CStringDictionary::TStringId paInstanceNameId,
+                                           forte::core::CFBContainer &paContainer);
 
     CIEC_BOOL var_QI;
     CIEC_REAL var_MI;
@@ -109,7 +110,14 @@ class FORTE_signalprocessing__DualHysteresis final : public CBasicFB {
     CDataConnection **getDIConUnchecked(TPortId) override;
     CDataConnection *getDOConUnchecked(TPortId) override;
 
-    void evt_INIT(const CIEC_BOOL &paQI, const CIEC_REAL &paMI, const CIEC_REAL &paDEAD, const CIEC_REAL &paHYSTERESIS, const CIEC_REAL &paINPUT, CIEC_BOOL &paQO, CIEC_BOOL &paDO_UP, CIEC_BOOL &paDO_DOWN) {
+    void evt_INIT(const CIEC_BOOL &paQI,
+                  const CIEC_REAL &paMI,
+                  const CIEC_REAL &paDEAD,
+                  const CIEC_REAL &paHYSTERESIS,
+                  const CIEC_REAL &paINPUT,
+                  CIEC_BOOL &paQO,
+                  CIEC_BOOL &paDO_UP,
+                  CIEC_BOOL &paDO_DOWN) {
       var_QI = paQI;
       var_MI = paMI;
       var_DEAD = paDEAD;
@@ -121,7 +129,14 @@ class FORTE_signalprocessing__DualHysteresis final : public CBasicFB {
       paDO_DOWN = var_DO_DOWN;
     }
 
-    void evt_REQ(const CIEC_BOOL &paQI, const CIEC_REAL &paMI, const CIEC_REAL &paDEAD, const CIEC_REAL &paHYSTERESIS, const CIEC_REAL &paINPUT, CIEC_BOOL &paQO, CIEC_BOOL &paDO_UP, CIEC_BOOL &paDO_DOWN) {
+    void evt_REQ(const CIEC_BOOL &paQI,
+                 const CIEC_REAL &paMI,
+                 const CIEC_REAL &paDEAD,
+                 const CIEC_REAL &paHYSTERESIS,
+                 const CIEC_REAL &paINPUT,
+                 CIEC_BOOL &paQO,
+                 CIEC_BOOL &paDO_UP,
+                 CIEC_BOOL &paDO_DOWN) {
       var_QI = paQI;
       var_MI = paMI;
       var_DEAD = paDEAD;
@@ -133,8 +148,14 @@ class FORTE_signalprocessing__DualHysteresis final : public CBasicFB {
       paDO_DOWN = var_DO_DOWN;
     }
 
-    void operator()(const CIEC_BOOL &paQI, const CIEC_REAL &paMI, const CIEC_REAL &paDEAD, const CIEC_REAL &paHYSTERESIS, const CIEC_REAL &paINPUT, CIEC_BOOL &paQO, CIEC_BOOL &paDO_UP, CIEC_BOOL &paDO_DOWN) {
+    void operator()(const CIEC_BOOL &paQI,
+                    const CIEC_REAL &paMI,
+                    const CIEC_REAL &paDEAD,
+                    const CIEC_REAL &paHYSTERESIS,
+                    const CIEC_REAL &paINPUT,
+                    CIEC_BOOL &paQO,
+                    CIEC_BOOL &paDO_UP,
+                    CIEC_BOOL &paDO_DOWN) {
       evt_INIT(paQI, paMI, paDEAD, paHYSTERESIS, paINPUT, paQO, paDO_UP, paDO_DOWN);
     }
 };
-

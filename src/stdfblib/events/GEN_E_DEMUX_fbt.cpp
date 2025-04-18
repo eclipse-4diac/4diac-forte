@@ -30,19 +30,21 @@ USE_STRING_ID(UINT);
 
 DEFINE_GENERIC_FIRMWARE_FB(GEN_E_DEMUX, STRID(GEN_E_DEMUX))
 
-const CStringDictionary::TStringId GEN_E_DEMUX::scmDataInputNames[] = { STRID(K) };
-const CStringDictionary::TStringId GEN_E_DEMUX::scmDIDataTypeIds[] = { STRID(UINT) };
+const CStringDictionary::TStringId GEN_E_DEMUX::scmDataInputNames[] = {STRID(K)};
+const CStringDictionary::TStringId GEN_E_DEMUX::scmDIDataTypeIds[] = {STRID(UINT)};
 
-const CStringDictionary::TStringId GEN_E_DEMUX::scmEventInputNames[] = { STRID(EI) };
-const CStringDictionary::TStringId GEN_E_DEMUX::scmEventInputTypeIds[] = { STRID(Event) };
+const CStringDictionary::TStringId GEN_E_DEMUX::scmEventInputNames[] = {STRID(EI)};
+const CStringDictionary::TStringId GEN_E_DEMUX::scmEventInputTypeIds[] = {STRID(Event)};
 
 GEN_E_DEMUX::GEN_E_DEMUX(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
-    CGenFunctionBlock<CFunctionBlock>(paContainer, paInstanceNameId), mEventOutputNames(nullptr){
+    CGenFunctionBlock<CFunctionBlock>(paContainer, paInstanceNameId),
+    mEventOutputNames(nullptr) {
 }
 
 void GEN_E_DEMUX::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
-  if(scmEventEIID == paEIID && static_cast<CIEC_UINT::TValueType>(K()) < getFBInterfaceSpec().mNumEOs) {
-    sendOutputEvent(static_cast<CIEC_UINT::TValueType>(K()), paECET); // the value of K corresponds to the output event ID;
+  if (scmEventEIID == paEIID && static_cast<CIEC_UINT::TValueType>(K()) < getFBInterfaceSpec().mNumEOs) {
+    sendOutputEvent(static_cast<CIEC_UINT::TValueType>(K()),
+                    paECET); // the value of K corresponds to the output event ID;
   }
 }
 
@@ -53,18 +55,18 @@ void GEN_E_DEMUX::readInputData(TEventID) {
 void GEN_E_DEMUX::writeOutputData(TEventID) {
 }
 
-bool GEN_E_DEMUX::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec){
+bool GEN_E_DEMUX::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) {
   const char *acPos = strrchr(paConfigString, '_');
 
-  if(nullptr != acPos){
+  if (nullptr != acPos) {
     ++acPos;
-    if('D' != *acPos){
-      //we have an underscore and it is not the first underscore after E
+    if ('D' != *acPos) {
+      // we have an underscore and it is not the first underscore after E
       paInterfaceSpec.mNumEOs = static_cast<TEventID>(forte::core::util::strtoul(acPos, nullptr, 10));
 
-      if(paInterfaceSpec.mNumEOs < CFunctionBlock::scmMaxInterfaceEvents){
+      if (paInterfaceSpec.mNumEOs < CFunctionBlock::scmMaxInterfaceEvents) {
         mEventOutputNames = std::make_unique<CStringDictionary::TStringId[]>(paInterfaceSpec.mNumEOs);
-        
+
         generateGenericInterfacePointNameArray("EO", mEventOutputNames.get(), paInterfaceSpec.mNumEOs);
 
         paInterfaceSpec.mNumEIs = 1;

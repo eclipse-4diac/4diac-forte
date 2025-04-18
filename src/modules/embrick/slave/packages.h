@@ -32,7 +32,7 @@ struct EmbrickSlaveInitPackage {
     uint8_t mDataSendLength; // Amount of bytes that the slave expects from the master
     uint8_t mDataReceiveLength; // Amount of bytes that the master expects from the slave
 
-    static EmbrickSlaveInitPackage fromBuffer(unsigned char* paBuffer) {
+    static EmbrickSlaveInitPackage fromBuffer(unsigned char *paBuffer) {
       EmbrickSlaveInitPackage pkg;
       memcpy(&pkg, paBuffer, sizeof(EmbrickSlaveInitPackage));
 
@@ -51,12 +51,12 @@ struct EmbrickMasterInitPackage {
     uint16_t mSyncGapMultiplicator;
     uint8_t padding[6];
 
-    void toBuffer(unsigned char* paBuffer) {
+    void toBuffer(unsigned char *paBuffer) {
       paBuffer[0] = mSlaveAddress;
 
       uint16_t syncGapFactor = htons(this->mSyncGapMultiplicator);
       memcpy(paBuffer + 1, &syncGapFactor, 2);
-      memset(paBuffer+3, 0, sizeof(padding));
+      memset(paBuffer + 3, 0, sizeof(padding));
     }
 };
 

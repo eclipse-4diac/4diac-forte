@@ -15,77 +15,74 @@
 #include <forte_uint.h>
 #include <forte_bool.h>
 
-
 USE_STRING_ID(E_CTU);
-
 
 struct E_CTU_TestFixture : public CFBTestFixtureBase {
 
-    E_CTU_TestFixture() :
-        CFBTestFixtureBase(STRID(E_CTU)) {
+    E_CTU_TestFixture() : CFBTestFixtureBase(STRID(E_CTU)) {
       setInputData({&mInPV});
       setOutputData({&mOutQ, &mOutCV});
       CFBTestFixtureBase::setup();
     }
 
-    CIEC_UINT mInPV; //Preset value
-    CIEC_BOOL mOutQ; //CV >= PV
-    CIEC_UINT mOutCV; //count value
+    CIEC_UINT mInPV; // Preset value
+    CIEC_BOOL mOutQ; // CV >= PV
+    CIEC_UINT mOutCV; // count value
 
     bool checkCU(TForteUInt16 paPrevCV) {
-      if(paPrevCV < std::numeric_limits<CIEC_UINT::TValueType>::max()) {
-        if(func_NE(CIEC_UINT(paPrevCV + 1), mOutCV)) {
+      if (paPrevCV < std::numeric_limits<CIEC_UINT::TValueType>::max()) {
+        if (func_NE(CIEC_UINT(paPrevCV + 1), mOutCV)) {
           return false;
-        } else if(!checkForSingleOutputEventOccurence(0)) {
+        } else if (!checkForSingleOutputEventOccurence(0)) {
           return false;
         }
       } else {
-        if(func_AND(func_NE(std::numeric_limits<CIEC_UINT>::max(), mOutCV), func_NOT(CIEC_BOOL(eventChainEmpty())))) {
+        if (func_AND(func_NE(std::numeric_limits<CIEC_UINT>::max(), mOutCV), func_NOT(CIEC_BOOL(eventChainEmpty())))) {
           return false;
         }
       }
-      if(func_NE(mOutQ, func_GE(mOutCV, mInPV))) {
+      if (func_NE(mOutQ, func_GE(mOutCV, mInPV))) {
         return false;
       }
       return true;
     }
 
     bool checkR() {
-      if(func_OR(func_NE(CIEC_UINT(0), mOutCV), mOutQ)) {
+      if (func_OR(func_NE(CIEC_UINT(0), mOutCV), mOutQ)) {
         return false;
       }
-      if(!checkForSingleOutputEventOccurence(1)) {
+      if (!checkForSingleOutputEventOccurence(1)) {
         return false;
       }
       return true;
     }
 };
 
-BOOST_FIXTURE_TEST_SUITE( CTUTests, E_CTU_TestFixture)
+BOOST_FIXTURE_TEST_SUITE(CTUTests, E_CTU_TestFixture)
 
 BOOST_AUTO_TEST_CASE(EventCU) {
   TForteUInt16 prevCV = 0;
   TForteUInt16 valuesToTest[] = {10, 1, 0, 65534, 65535};
   size_t numberOfValues = static_cast<size_t>(sizeof(valuesToTest) / sizeof(TForteUInt16));
-  for(size_t j = 0; j < numberOfValues; j++) {
+  for (size_t j = 0; j < numberOfValues; j++) {
     triggerEvent(1);
     BOOST_CHECK(checkR());
     mInPV = CIEC_UINT(valuesToTest[j]);
     for (unsigned int k = 0U; k < static_cast<CIEC_UINT::TValueType>(mInPV) + 3U; k++) {
-        prevCV = static_cast<CIEC_UINT::TValueType>(mOutCV);
-        // Send event
-        triggerEvent(0);
-        BOOST_CHECK(checkCU(prevCV));
+      prevCV = static_cast<CIEC_UINT::TValueType>(mOutCV);
+      // Send event
+      triggerEvent(0);
+      BOOST_CHECK(checkCU(prevCV));
     }
   }
 }
 
 BOOST_AUTO_TEST_CASE(EventR) {
   size_t numberOfTries = 100;
-  TForteUInt16 valuesToTest[] = { 10, 1, 0, 65534, 65535 };
+  TForteUInt16 valuesToTest[] = {10, 1, 0, 65534, 65535};
   size_t numberOfValues = static_cast<size_t>(sizeof(valuesToTest) / sizeof(TForteUInt16));
-  for(size_t i = 0; i < numberOfTries; i++) {
-    for(size_t j = 0; j < numberOfValues; j++) {
+  for (size_t i = 0; i < numberOfTries; i++) {
+    for (size_t j = 0; j < numberOfValues; j++) {
       mInPV = CIEC_UINT(valuesToTest[j]);
       triggerEvent(1);
       BOOST_CHECK(checkR());
@@ -96,46 +93,47 @@ BOOST_AUTO_TEST_CASE(EventR) {
 BOOST_AUTO_TEST_CASE(Mix) {
   mInPV = CIEC_UINT(0);
   triggerEvent(1);
-  BOOST_CHECK (checkR());
+  BOOST_CHECK(checkR());
 
-triggerEvent(0);
-BOOST_CHECK(checkCU(0));
-
-mInPV = CIEC_UINT(1);
-triggerEvent(0);
-BOOST_CHECK(checkCU(1));
-
-triggerEvent(1);
-BOOST_CHECK (checkR());
-
-triggerEvent(0);
-BOOST_CHECK(checkCU(0));
-triggerEvent(0);
-BOOST_CHECK(checkCU(1));
-
-triggerEvent(0);
-BOOST_CHECK(checkCU(2));
-
-triggerEvent(1);
-BOOST_CHECK (checkR());
-
-mInPV = CIEC_UINT(65533);
-for(TForteUInt16 i = 0; i < std::numeric_limits<CIEC_UINT::TValueType>::max(); i++) {
-  //Send event
   triggerEvent(0);
-  BOOST_CHECK(checkCU(i));
+  BOOST_CHECK(checkCU(0));
+
+  mInPV = CIEC_UINT(1);
+  triggerEvent(0);
+  BOOST_CHECK(checkCU(1));
+
+  triggerEvent(1);
+  BOOST_CHECK(checkR());
+
+  triggerEvent(0);
+  BOOST_CHECK(checkCU(0));
+  triggerEvent(0);
+  BOOST_CHECK(checkCU(1));
+
+  triggerEvent(0);
+  BOOST_CHECK(checkCU(2));
+
+  triggerEvent(1);
+  BOOST_CHECK(checkR());
+
+  mInPV = CIEC_UINT(65533);
+  for (TForteUInt16 i = 0; i < std::numeric_limits<CIEC_UINT::TValueType>::max(); i++) {
+    // Send event
+    triggerEvent(0);
+    BOOST_CHECK(checkCU(i));
+  }
+
+  triggerEvent(0);
+  BOOST_CHECK(checkCU(std::numeric_limits<CIEC_UINT::TValueType>::max()));
+
+  triggerEvent(0);
+  BOOST_CHECK(checkCU(std::numeric_limits<CIEC_UINT::TValueType>::max()));
+
+  triggerEvent(0);
+  BOOST_CHECK(checkCU(std::numeric_limits<CIEC_UINT::TValueType>::max()));
+
+  triggerEvent(1);
+  BOOST_CHECK(checkR());
 }
-
-triggerEvent(0);
-BOOST_CHECK (checkCU(std::numeric_limits<CIEC_UINT::TValueType>::max()));
-
-triggerEvent(0);
-BOOST_CHECK (checkCU(std::numeric_limits<CIEC_UINT::TValueType>::max()));
-
-triggerEvent(0);
-BOOST_CHECK (checkCU(std::numeric_limits<CIEC_UINT::TValueType>::max()));
-
-triggerEvent(1);
-BOOST_CHECK (checkR());}
 
 BOOST_AUTO_TEST_SUITE_END()

@@ -16,38 +16,38 @@
 #include "comtypes.h"
 
 namespace forte {
-  namespace com_infra{
+  namespace com_infra {
 
-class CBaseCommFB;
+    class CBaseCommFB;
 
-class CComCallback {
+    class CComCallback {
 
-  public:
+      public:
+        virtual ~CComCallback() = default;
 
-    virtual ~CComCallback() = default;
+        /*!\brief Take the given data and perform the necessary process for receiving data
+         *
+         * This function is called for processing the received data from bottom to top. Therefore
+         * if necessary invoke the top layer's receiveData function to hand on the processed data.
+         *
+         * @param paData pointer to the data received
+         * @param paSize size of the data received
+         * @return status of the receiving process depends on if the layer is the bottom most layer:
+         *    - Normal Layer:
+         *        - e_ProcessDataOk ... if receiving process was successful
+         *    - Bottom most layer
+         *        - e_Nothing ...  if the processing of the data does not require to send an external event to the FB
+         *        - any other value requires that the ComFB is informed with an external event to further handle the
+         * received message
+         */
+        virtual EComResponse recvData(const void *paData, unsigned int paSize) = 0;
 
-    /*!\brief Take the given data and perform the necessary process for receiving data
-     *
-     * This function is called for processing the received data from bottom to top. Therefore
-     * if necessary invoke the top layer's receiveData function to hand on the processed data.
-     *
-     * @param paData pointer to the data received
-     * @param paSize size of the data received
-     * @return status of the receiving process depends on if the layer is the bottom most layer:
-     *    - Normal Layer:
-     *        - e_ProcessDataOk ... if receiving process was successful
-     *    - Bottom most layer
-     *        - e_Nothing ...  if the processing of the data does not require to send an external event to the FB
-     *        - any other value requires that the ComFB is informed with an external event to further handle the received message
-     */
-    virtual EComResponse recvData(const void *paData, unsigned int paSize) = 0;
+        virtual CBaseCommFB *getCommFB() const {
+          return nullptr;
+        }
+    };
 
-    virtual CBaseCommFB *getCommFB() const{
-      return nullptr;
-    }
-};
-
-  } //namespace com_infra
-} //namespace forte
+  } // namespace com_infra
+} // namespace forte
 
 #endif /* SRC_CORE_COMINFRA_COMCALLBACK_H_ */

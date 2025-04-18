@@ -20,8 +20,8 @@
 
 class CWin32SerComLayer;
 
-class CWin32SerComHandler : public CExternalEventHandler, public CThread{
-  DECLARE_HANDLER(CWin32SerComHandler)
+class CWin32SerComHandler : public CExternalEventHandler, public CThread {
+    DECLARE_HANDLER(CWin32SerComHandler)
   public:
     void registerSerComLayer(CWin32SerComLayer *paComLayer);
     void unregisterSerComLayer(CWin32SerComLayer *paComLayer);
@@ -38,24 +38,24 @@ class CWin32SerComHandler : public CExternalEventHandler, public CThread{
     }
 
     void setPriority(int) override {
-      //currently we are doing nothing here.
-      //TODO We should adjust the thread priority.
+      // currently we are doing nothing here.
+      // TODO We should adjust the thread priority.
     }
 
     int getPriority() const override {
-      //the same as for setPriority
+      // the same as for setPriority
       return 0;
     }
 
   private:
     void run();
 
-    typedef CSinglyLinkedList<CWin32SerComLayer*> TCWin32SerComLayerContainer;
+    typedef CSinglyLinkedList<CWin32SerComLayer *> TCWin32SerComLayerContainer;
 
     TCWin32SerComLayerContainer mComLayerList;
     CSyncObject mSync;
 
-    //!Sempahore for implementing a suspend feature similar to what we are doing in CEventChainExecutionThread
+    //! Sempahore for implementing a suspend feature similar to what we are doing in CEventChainExecutionThread
     forte::arch::CSemaphore mSem;
 };
 

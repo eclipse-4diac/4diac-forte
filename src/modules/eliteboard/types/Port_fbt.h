@@ -24,7 +24,7 @@
 #include "funcbloc.h"
 
 class FORTE_Port final : public CFunctionBlock {
-  DECLARE_FIRMWARE_FB(FORTE_Port)
+    DECLARE_FIRMWARE_FB(FORTE_Port)
 
   private:
     static const CStringDictionary::TStringId scmDataInputNames[];
@@ -94,4 +94,3 @@ class FORTE_Port final : public CFunctionBlock {
     CDataConnection **getDIConUnchecked(TPortId) override;
     CDataConnection *getDOConUnchecked(TPortId) override;
 };
-

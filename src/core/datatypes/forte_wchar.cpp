@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2022 Primetals Technologies Austria GmbH
- *               
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -15,7 +15,6 @@
 
 USE_STRING_ID(WCHAR);
 
-
 #include "unicode_utils.h"
 
 #include <limits>
@@ -26,9 +25,9 @@ DEFINE_FIRMWARE_DATATYPE(WCHAR, STRID(WCHAR))
 int CIEC_WCHAR::toString(char *paValue, size_t paBufferSize) const {
   const char longestStringSerialization[] = "WCHAR#\"$0000\"";
   const size_t longestStringSize = sizeof(longestStringSerialization);
-  if(paBufferSize >= longestStringSize) { //sizeof is char string + \0
-  const TForteWChar symbol = this->operator TForteWChar();
-    switch(symbol) {
+  if (paBufferSize >= longestStringSize) { // sizeof is char string + \0
+    const TForteWChar symbol = this->operator TForteWChar();
+    switch (symbol) {
       case '\0': return snprintf(paValue, longestStringSize, "WCHAR#\"\"");
       case '$': return snprintf(paValue, longestStringSize, "WCHAR#\"$$\"");
       case '"': return snprintf(paValue, longestStringSize, "WCHAR#\"$\"\"");
@@ -37,8 +36,8 @@ int CIEC_WCHAR::toString(char *paValue, size_t paBufferSize) const {
       case '\r': return snprintf(paValue, longestStringSize, "WCHAR#\"$R\"");
       case '\t': return snprintf(paValue, longestStringSize, "WCHAR#\"$T\"");
       default: {
-        if(symbol < 256) {
-            return snprintf(paValue, longestStringSize, "WCHAR#\"%c\"", symbol);
+        if (symbol < 256) {
+          return snprintf(paValue, longestStringSize, "WCHAR#\"%c\"", symbol);
         }
         return snprintf(paValue, longestStringSize, "WCHAR#\"$%X\"", symbol);
       }
@@ -48,34 +47,35 @@ int CIEC_WCHAR::toString(char *paValue, size_t paBufferSize) const {
 }
 
 int CIEC_WCHAR::fromString(const char *paValue) {
-  int bufferCount;    
+  int bufferCount;
   if ('"' != paValue[0] && 'W' != paValue[0]) { // Not a valid literal start
     return -1;
   }
 
-  if('W' == paValue[0] && 'C' == paValue[1] && 'H' == paValue[2] && 'A' == paValue[3]
-       && 'R' == paValue[4] && '#' == paValue[5] && '"' == paValue[6]) { // qualifier start
+  if ('W' == paValue[0] && 'C' == paValue[1] && 'H' == paValue[2] && 'A' == paValue[3] && 'R' == paValue[4] &&
+      '#' == paValue[5] && '"' == paValue[6]) { // qualifier start
     bufferCount = 7; // Start of char with paValue
   } else if ('"' == paValue[0]) {
-    bufferCount = 1 ; // Start of char without qualifier
+    bufferCount = 1; // Start of char without qualifier
   } else {
     return -1; // Type qualifier was wrong
   }
 
-  if('"' == paValue[bufferCount]) { // Char is immediatly closed
+  if ('"' == paValue[bufferCount]) { // Char is immediatly closed
     *this = CIEC_WCHAR('\0');
     return bufferCount + 1; // closing '
   }
 
-  if('$' != paValue[bufferCount] && '"' == paValue[bufferCount + 1]) { // No escape sequence, next symbol is the char
+  if ('$' != paValue[bufferCount] && '"' == paValue[bufferCount + 1]) { // No escape sequence, next symbol is the char
     *this = CIEC_WCHAR(paValue[bufferCount]);
-    return bufferCount + 2; //including consumed symbol and closing '
+    return bufferCount + 2; // including consumed symbol and closing '
   }
 
-  if('$' == paValue[bufferCount]) { // Escape sequence, so the next symbol must either be a hex number or a special symbol
-    if('"' == paValue[bufferCount + 2]) { // if there is only one symbol it will get considered as special symbol
+  if ('$' ==
+      paValue[bufferCount]) { // Escape sequence, so the next symbol must either be a hex number or a special symbol
+    if ('"' == paValue[bufferCount + 2]) { // if there is only one symbol it will get considered as special symbol
       const char controlSymbol = static_cast<char>(toupper(static_cast<unsigned char>(paValue[bufferCount + 1])));
-      switch(controlSymbol) {
+      switch (controlSymbol) {
         case '$': *this = CIEC_WCHAR('$'); break;
         case '"': *this = CIEC_WCHAR('"'); break;
         case 'L': *this = CIEC_WCHAR('\n'); break;
@@ -88,20 +88,22 @@ int CIEC_WCHAR::fromString(const char *paValue) {
       return bufferCount + 3; // $ + control symbol + '
     }
 
-    if(forte::core::util::isHexDigit(paValue[bufferCount + 1]) && forte::core::util::isHexDigit(paValue[bufferCount + 2]) 
-      && forte::core::util::isHexDigit(paValue[bufferCount + 3]) && forte::core::util::isHexDigit(paValue[bufferCount + 4])
-      && '"' == paValue[bufferCount + 5]) { // if there are two symbols it is a hex code
-      TForteWChar codePoint = static_cast<TForteWChar>(
-              (forte::core::util::charHexDigitToInt(paValue[bufferCount + 1]) << 12) +
-              (forte::core::util::charHexDigitToInt(paValue[bufferCount + 2]) << 8) +
-              (forte::core::util::charHexDigitToInt(paValue[bufferCount + 3]) << 4) +
-              (forte::core::util::charHexDigitToInt(paValue[bufferCount + 4])));
+    if (forte::core::util::isHexDigit(paValue[bufferCount + 1]) &&
+        forte::core::util::isHexDigit(paValue[bufferCount + 2]) &&
+        forte::core::util::isHexDigit(paValue[bufferCount + 3]) &&
+        forte::core::util::isHexDigit(paValue[bufferCount + 4]) &&
+        '"' == paValue[bufferCount + 5]) { // if there are two symbols it is a hex code
+      TForteWChar codePoint =
+          static_cast<TForteWChar>((forte::core::util::charHexDigitToInt(paValue[bufferCount + 1]) << 12) +
+                                   (forte::core::util::charHexDigitToInt(paValue[bufferCount + 2]) << 8) +
+                                   (forte::core::util::charHexDigitToInt(paValue[bufferCount + 3]) << 4) +
+                                   (forte::core::util::charHexDigitToInt(paValue[bufferCount + 4])));
       *this = CIEC_WCHAR(codePoint);
       return bufferCount + 6; // Three symbols for code point and closing '
     }
   }
 
-  return -1; //no match so something must be wrong
+  return -1; // no match so something must be wrong
 }
 
 const CStringDictionary::TStringId forte::CDataTypeTrait<CIEC_WCHAR>::scmDataTypeName = STRID(WCHAR);

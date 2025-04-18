@@ -32,7 +32,7 @@
  *
  * TODO implement priority assignment for realtime event chains.
  */
-class CBEThread : public forte::arch::CThreadBase<int, 0, CBEThread>, private BETask{
+class CBEThread : public forte::arch::CThreadBase<int, 0, CBEThread>, private BETask {
 
   public:
     /*! \brief Constructor of the Thread class
@@ -59,10 +59,8 @@ class CBEThread : public forte::arch::CThreadBase<int, 0, CBEThread>, private BE
 
   private:
     virtual TThreadHandleType createThread(long paStackSize);
-
 };
 
-typedef CBEThread CThread; //allows that doxygen can generate better documentation
+typedef CBEThread CThread; // allows that doxygen can generate better documentation
 
 #endif /*FORTE_THREAD_H_*/
-

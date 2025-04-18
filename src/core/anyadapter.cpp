@@ -17,25 +17,21 @@
 
 USE_STRING_ID(ANY_ADAPTER);
 
-
 DEFINE_GENERIC_ADAPTER_TYPE(CAnyAdapter, STRID(ANY_ADAPTER))
 
-const SFBInterfaceSpec CAnyAdapter::scmFBInterfaceSpec = {
-  0, nullptr, nullptr, nullptr, nullptr,
-  0, nullptr, nullptr, nullptr, nullptr,
-  0, nullptr, nullptr,
-  0, nullptr, nullptr,
-  0, nullptr,
-  0, nullptr
-};
+const SFBInterfaceSpec CAnyAdapter::scmFBInterfaceSpec = {0,       nullptr, nullptr, nullptr, nullptr, 0,       nullptr,
+                                                          nullptr, nullptr, nullptr, 0,       nullptr, nullptr, 0,
+                                                          nullptr, nullptr, 0,       nullptr, 0,       nullptr};
 
-CAnyAdapter::CAnyAdapter(CStringDictionary::TStringId paAdapterInstanceName, forte::core::CFBContainer &paContainer, bool paIsPlug) :
+CAnyAdapter::CAnyAdapter(CStringDictionary::TStringId paAdapterInstanceName,
+                         forte::core::CFBContainer &paContainer,
+                         bool paIsPlug) :
     CAdapter(paContainer, scmFBInterfaceSpec, paAdapterInstanceName, scmFBInterfaceSpec, paIsPlug) {
 }
 
 CAnyAdapter::~CAnyAdapter() = default;
 
-void CAnyAdapter::typifyAnyAdapter(const CAdapter &paPeer){
+void CAnyAdapter::typifyAnyAdapter(const CAdapter &paPeer) {
   getGenInterfaceSpec().mNumEIs = paPeer.getFBInterfaceSpec().mNumEOs;
   getGenInterfaceSpec().mEINames = paPeer.getFBInterfaceSpec().mEONames;
   getGenInterfaceSpec().mEIWith = paPeer.getFBInterfaceSpec().mEOWith;
@@ -58,13 +54,12 @@ void CAnyAdapter::typifyAnyAdapter(const CAdapter &paPeer){
   fillEventEntryList();
 }
 
-bool CAnyAdapter::disconnect(CAdapterConnection *paAdConn){
+bool CAnyAdapter::disconnect(CAdapterConnection *paAdConn) {
   bool bRetVal = CAdapter::disconnect(paAdConn);
 
-  //clean interface data and reset to empty interface
+  // clean interface data and reset to empty interface
   getGenInterfaceSpec() = scmFBInterfaceSpec;
   setupFBInterface();
 
   return bRetVal;
 }
-

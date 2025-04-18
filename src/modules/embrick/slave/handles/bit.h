@@ -19,13 +19,16 @@
 
 class EmbrickBitSlaveHandle : public EmbrickSlaveHandle {
   public:
-    EmbrickBitSlaveHandle(forte::core::io::IODeviceController *paController, forte::core::io::IOMapper::Direction paDirection, uint8_t paOffset,
-        uint8_t paPosition, EmbrickSlaveHandler *paSlave);
+    EmbrickBitSlaveHandle(forte::core::io::IODeviceController *paController,
+                          forte::core::io::IOMapper::Direction paDirection,
+                          uint8_t paOffset,
+                          uint8_t paPosition,
+                          EmbrickSlaveHandler *paSlave);
 
     virtual void set(const CIEC_ANY &);
     void get(CIEC_ANY &);
 
-    bool equal(unsigned char* mOldBuffer);
+    bool equal(unsigned char *mOldBuffer);
 
   protected:
     virtual void reset() {

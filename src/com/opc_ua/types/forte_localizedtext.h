@@ -18,7 +18,7 @@
 #include "forte_string.h"
 
 class CIEC_LocalizedText : public CIEC_STRUCT {
-  DECLARE_FIRMWARE_DATATYPE(LocalizedText)
+    DECLARE_FIRMWARE_DATATYPE(LocalizedText)
 
   public:
     CIEC_LocalizedText();
@@ -30,7 +30,7 @@ class CIEC_LocalizedText : public CIEC_STRUCT {
       return 2;
     }
 
-    const CStringDictionary::TStringId* elementNames() const override {
+    const CStringDictionary::TStringId *elementNames() const override {
       return scmElementNames;
     }
 

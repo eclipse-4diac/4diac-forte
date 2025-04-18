@@ -22,7 +22,6 @@ USE_STRING_ID(Event);
 USE_STRING_ID(REQ);
 USE_STRING_ID(TEST_CONDITION);
 
-
 #include "devlog.h"
 #include "resource.h"
 #include "criticalregion.h"
@@ -43,20 +42,32 @@ const CStringDictionary::TStringId FORTE_TEST_CONDITION::scmEventInputTypeIds[] 
 const TForteInt16 FORTE_TEST_CONDITION::scmEOWithIndexes[] = {-1};
 const CStringDictionary::TStringId FORTE_TEST_CONDITION::scmEventOutputNames[] = {STRID(CNF)};
 const CStringDictionary::TStringId FORTE_TEST_CONDITION::scmEventOutputTypeIds[] = {STRID(Event)};
-const SFBInterfaceSpec FORTE_TEST_CONDITION::scmFBInterfaceSpec = {
-  1, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,
-  1, scmEventOutputNames, scmEventOutputTypeIds, nullptr, scmEOWithIndexes,
-  1, scmDataInputNames, scmDataInputTypeIds,
-  0, nullptr, nullptr,
-  0, nullptr,
-  0, nullptr
-};
+const SFBInterfaceSpec FORTE_TEST_CONDITION::scmFBInterfaceSpec = {1,
+                                                                   scmEventInputNames,
+                                                                   scmEventInputTypeIds,
+                                                                   scmEIWith,
+                                                                   scmEIWithIndexes,
+                                                                   1,
+                                                                   scmEventOutputNames,
+                                                                   scmEventOutputTypeIds,
+                                                                   nullptr,
+                                                                   scmEOWithIndexes,
+                                                                   1,
+                                                                   scmDataInputNames,
+                                                                   scmDataInputTypeIds,
+                                                                   0,
+                                                                   nullptr,
+                                                                   nullptr,
+                                                                   0,
+                                                                   nullptr,
+                                                                   0,
+                                                                   nullptr};
 
-FORTE_TEST_CONDITION::FORTE_TEST_CONDITION(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
-        CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId),
-        conn_CNF(*this, 0),
-        conn_check(nullptr) {
-};
+FORTE_TEST_CONDITION::FORTE_TEST_CONDITION(const CStringDictionary::TStringId paInstanceNameId,
+                                           forte::core::CFBContainer &paContainer) :
+    CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId),
+    conn_CNF(*this, 0),
+    conn_check(nullptr) {};
 
 void FORTE_TEST_CONDITION::setInitialValues() {
   var_check = 0_BOOL;
@@ -64,28 +75,31 @@ void FORTE_TEST_CONDITION::setInitialValues() {
 
 FORTE_TEST_CONDITION::~FORTE_TEST_CONDITION() {
   CCriticalRegion finalReportRegion(mFinalReportMutex);
-  if(!smfinalReportPrinted) {
+  if (!smfinalReportPrinted) {
     smfinalReportPrinted = true;
     DEVLOG_INFO(" ------------------------------------------------------------------------------\n");
     DEVLOG_INFO(" ------------------------ [TEST_CONDITION FINAL REPORT] -----------------------\n");
-    if(smFailedTests) {
-      DEVLOG_ERROR(" ------------------------ %u tests executed, %u failed -----------------------\n", smExecutedTests, smFailedTests);
+    if (smFailedTests) {
+      DEVLOG_ERROR(" ------------------------ %u tests executed, %u failed -----------------------\n", smExecutedTests,
+                   smFailedTests);
     } else {
-      DEVLOG_INFO(" ------------------------ %u tests executed, %u failed -----------------------\n", smExecutedTests, smFailedTests);
+      DEVLOG_INFO(" ------------------------ %u tests executed, %u failed -----------------------\n", smExecutedTests,
+                  smFailedTests);
     }
     DEVLOG_INFO(" ------------------------------------------------------------------------------\n");
   }
 }
 
-
 void FORTE_TEST_CONDITION::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
-  if(scmEventREQID == paEIID) {
+  if (scmEventREQID == paEIID) {
     smExecutedTests++;
-    if(var_check) {
-      DEVLOG_INFO(" ------------------------------ [TEST_CONDITION_PASSED] %s.%s passed\n", getResource()->getInstanceName(), getInstanceName());
+    if (var_check) {
+      DEVLOG_INFO(" ------------------------------ [TEST_CONDITION_PASSED] %s.%s passed\n",
+                  getResource()->getInstanceName(), getInstanceName());
     } else {
-      DEVLOG_ERROR("------------------------------ [TEST_CONDITION_FAILED] %s.%s failed ------------------------------\n", getResource()->getInstanceName(),
-        getInstanceName());
+      DEVLOG_ERROR(
+          "------------------------------ [TEST_CONDITION_FAILED] %s.%s failed ------------------------------\n",
+          getResource()->getInstanceName(), getInstanceName());
       smFailedTests++;
     }
     sendOutputEvent(scmEventCNFID, paECET);
@@ -93,13 +107,12 @@ void FORTE_TEST_CONDITION::executeEvent(TEventID paEIID, CEventChainExecutionThr
 }
 
 void FORTE_TEST_CONDITION::readInputData(const TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventREQID: {
       readData(0, var_check, conn_check);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
@@ -108,7 +121,7 @@ void FORTE_TEST_CONDITION::writeOutputData(TEventID) {
 }
 
 CIEC_ANY *FORTE_TEST_CONDITION::getDI(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_check;
   }
   return nullptr;
@@ -119,14 +132,14 @@ CIEC_ANY *FORTE_TEST_CONDITION::getDO(size_t) {
 }
 
 CEventConnection *FORTE_TEST_CONDITION::getEOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_CNF;
   }
   return nullptr;
 }
 
 CDataConnection **FORTE_TEST_CONDITION::getDIConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_check;
   }
   return nullptr;
@@ -135,4 +148,3 @@ CDataConnection **FORTE_TEST_CONDITION::getDIConUnchecked(const TPortId paIndex)
 CDataConnection *FORTE_TEST_CONDITION::getDOConUnchecked(TPortId) {
   return nullptr;
 }
-

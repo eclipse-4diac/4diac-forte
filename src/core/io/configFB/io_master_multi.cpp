@@ -15,30 +15,33 @@
 
 using namespace forte::core::io;
 
-const char * const IOConfigFBMultiMaster::scmFailedToInitSlaves = "Failed to initialize slaves. Check if the configuration matches the hardware setup.";
+const char *const IOConfigFBMultiMaster::scmFailedToInitSlaves =
+    "Failed to initialize slaves. Check if the configuration matches the hardware setup.";
 
 TMasterList IOConfigFBMultiMaster::mInstances;
 TForteUInt16 IOConfigFBMultiMaster::mInstancesIncrement = 0;
 
-IOConfigFBMultiMaster::IOConfigFBMultiMaster(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec& paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId) :
+IOConfigFBMultiMaster::IOConfigFBMultiMaster(forte::core::CFBContainer &paContainer,
+                                             const SFBInterfaceSpec &paInterfaceSpec,
+                                             const CStringDictionary::TStringId paInstanceNameId) :
     IOConfigFBController(paContainer, paInterfaceSpec, paInstanceNameId) {
   mId = mInstancesIncrement++;
   mInstances.pushBack(this);
 }
 
-IOConfigFBMultiMaster* IOConfigFBMultiMaster::getMasterById(TForteUInt16 paId) {
+IOConfigFBMultiMaster *IOConfigFBMultiMaster::getMasterById(TForteUInt16 paId) {
   TMasterList::Iterator itEnd = mInstances.end();
   int i = 0;
-  for(TMasterList::Iterator it = mInstances.begin(); it != itEnd; ++it, i++) {
-    if(paId == i && *it != nullptr) {
+  for (TMasterList::Iterator it = mInstances.begin(); it != itEnd; ++it, i++) {
+    if (paId == i && *it != nullptr) {
       return *it;
     }
   }
   return nullptr;
 }
 
-void IOConfigFBMultiMaster::onStartup(CEventChainExecutionThread * const paECET) {
-  if(nullptr == BusAdapterOut().getPeer()) {
+void IOConfigFBMultiMaster::onStartup(CEventChainExecutionThread *const paECET) {
+  if (nullptr == BusAdapterOut().getPeer()) {
     return IOConfigFBController::onStartup(paECET);
   }
 
@@ -48,8 +51,8 @@ void IOConfigFBMultiMaster::onStartup(CEventChainExecutionThread * const paECET)
   sendAdapterEvent(scmBusAdapterAdpNum, IOConfigFBMultiAdapter::scmEventINITID, paECET);
 }
 
-void IOConfigFBMultiMaster::onStop(CEventChainExecutionThread * const paECET) {
-  if(nullptr == BusAdapterOut().getPeer()) {
+void IOConfigFBMultiMaster::onStop(CEventChainExecutionThread *const paECET) {
+  if (nullptr == BusAdapterOut().getPeer()) {
     return IOConfigFBController::onStop(paECET);
   }
 
@@ -57,14 +60,14 @@ void IOConfigFBMultiMaster::onStop(CEventChainExecutionThread * const paECET) {
   sendAdapterEvent(scmBusAdapterAdpNum, IOConfigFBMultiAdapter::scmEventINITID, paECET);
 }
 
-void IOConfigFBMultiMaster::executeEvent(TEventID paEIID, CEventChainExecutionThread * const paECET) {
+void IOConfigFBMultiMaster::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   IOConfigFBController::executeEvent(paEIID, paECET);
 
-  if(BusAdapterOut().INITO() == paEIID) {
+  if (BusAdapterOut().INITO() == paEIID) {
     QO() = BusAdapterOut().QO();
 
-    if(BusAdapterOut().QI() == true) {
-      if(BusAdapterOut().QO() == true) {
+    if (BusAdapterOut().QI() == true) {
+      if (BusAdapterOut().QO() == true) {
         IOConfigFBController::onStartup(paECET);
       } else {
         started(paECET, scmFailedToInitSlaves);
@@ -74,4 +77,3 @@ void IOConfigFBMultiMaster::executeEvent(TEventID paEIID, CEventChainExecutionTh
     }
   }
 }
-

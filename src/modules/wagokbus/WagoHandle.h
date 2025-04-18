@@ -20,8 +20,14 @@
 
 class WagoHandle : public forte::core::io::IOHandle {
   public:
-    WagoHandle(WagoDeviceController *paController, CIEC_ANY::EDataTypeID paType, forte::core::io::IOMapper::Direction paDirection,
-        tApplicationDeviceInterface * paAppDevInterface, uint32_t paTaskId, tDeviceId paKBusDeviceId, TForteUInt32 paOutputOffset, TForteUInt32 paInputOffset);
+    WagoHandle(WagoDeviceController *paController,
+               CIEC_ANY::EDataTypeID paType,
+               forte::core::io::IOMapper::Direction paDirection,
+               tApplicationDeviceInterface *paAppDevInterface,
+               uint32_t paTaskId,
+               tDeviceId paKBusDeviceId,
+               TForteUInt32 paOutputOffset,
+               TForteUInt32 paInputOffset);
 
     ~WagoHandle() override;
 
@@ -32,7 +38,6 @@ class WagoHandle : public forte::core::io::IOHandle {
     bool check();
 
   private:
-
     void getBoolean(CIEC_BOOL &paState);
     void setBoolean(const CIEC_BOOL &paState);
 
@@ -42,14 +47,15 @@ class WagoHandle : public forte::core::io::IOHandle {
     void getDWord(CIEC_DWORD &paState);
     void setDWord(const CIEC_DWORD &paState);
 
-    template<typename T> bool checkValue();
+    template<typename T>
+    bool checkValue();
 
     tApplicationDeviceInterface *mAppDevInterface;
     uint32_t mTaskId;
     tDeviceId mKBusDeviceId;
     TForteUInt32 mOutputOffset;
     TForteUInt32 mInputOffset;
-    CIEC_ANY* mLastValue;
+    CIEC_ANY *mLastValue;
 
     virtual void dropObserver() override;
 };

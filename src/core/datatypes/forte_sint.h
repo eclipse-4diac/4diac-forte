@@ -27,7 +27,7 @@
 /*!\ingroup COREDTS CIEC_SINT represents the SINT data type according to IEC 61131.
  */
 class CIEC_SINT final : public CIEC_ANY_SIGNED {
-  DECLARE_FIRMWARE_DATATYPE(SINT)
+    DECLARE_FIRMWARE_DATATYPE(SINT)
 
   public:
     using TValueType = TForteInt8;
@@ -40,13 +40,11 @@ class CIEC_SINT final : public CIEC_ANY_SIGNED {
 
     CIEC_SINT() = default;
 
-    CIEC_SINT(const CIEC_SINT& paValue) :
-            CIEC_ANY_SIGNED(){
+    CIEC_SINT(const CIEC_SINT &paValue) : CIEC_ANY_SIGNED() {
       setValueSimple(paValue);
     }
 
-    explicit CIEC_SINT(const CIEC_ANY_INT& paValue) :
-            CIEC_ANY_SIGNED() {
+    explicit CIEC_SINT(const CIEC_ANY_INT &paValue) : CIEC_ANY_SIGNED() {
       setValueSimple(paValue);
     }
 
@@ -56,13 +54,15 @@ class CIEC_SINT final : public CIEC_ANY_SIGNED {
 
     ~CIEC_SINT() override = default;
 
-    CIEC_SINT& operator =(const CIEC_SINT &paValue){
+    CIEC_SINT &operator=(const CIEC_SINT &paValue) {
       // Simple value assignment - no self assignment check needed
       setValueSimple(paValue);
       return *this;
     }
 
-    template <typename T, std::enable_if_t<std::is_same_v<typename forte::core::mpl::implicit_cast_t<T, CIEC_SINT>, CIEC_SINT>, int> = 0>
+    template<
+        typename T,
+        std::enable_if_t<std::is_same_v<typename forte::core::mpl::implicit_cast_t<T, CIEC_SINT>, CIEC_SINT>, int> = 0>
     CIEC_SINT &operator=(const T &paValue) {
       setValueSimple(paValue);
       return *this;
@@ -76,7 +76,7 @@ class CIEC_SINT final : public CIEC_ANY_SIGNED {
      *
      *   Conversion operator for converting CIEC_SINT to elementary 8 bit integer
      */
-    explicit operator TForteInt8() const{
+    explicit operator TForteInt8() const {
       return getTINT8();
     }
 
@@ -91,23 +91,23 @@ class CIEC_SINT final : public CIEC_ANY_SIGNED {
     }
 };
 
-inline CIEC_SINT operator ""_SINT(unsigned long long int paValue) {
+inline CIEC_SINT operator""_SINT(unsigned long long int paValue) {
   return CIEC_SINT(static_cast<CIEC_SINT::TValueType>(paValue));
 }
 
 namespace std {
-  template <>
+  template<>
   struct numeric_limits<CIEC_SINT> : public forte::templates::numeric_limits<CIEC_SINT> {
-    static constexpr size_t bitLength = 8U;
+      static constexpr size_t bitLength = 8U;
   };
-}
+} // namespace std
 
 namespace forte {
-  template <>
+  template<>
   struct CDataTypeTrait<CIEC_SINT> {
       static constexpr CIEC_ANY::EDataTypeID scmDataTypeId = CIEC_ANY::e_SINT;
       static const CStringDictionary::TStringId scmDataTypeName;
   };
-}
+} // namespace forte
 
 #endif /*_FORTE_SINT_H_*/

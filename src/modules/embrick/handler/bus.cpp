@@ -23,11 +23,17 @@
 #include "core/util/criticalregion.h"
 #include "arch/utils/timespec_utils.h"
 
-const char * const EmbrickBusHandler::scmSlaveUpdateFailed = "Update of slave failed.";
-const char * const EmbrickBusHandler::scmNoSlavesFound = "No slave modules found.";
+const char *const EmbrickBusHandler::scmSlaveUpdateFailed = "Update of slave failed.";
+const char *const EmbrickBusHandler::scmNoSlavesFound = "No slave modules found.";
 
-EmbrickBusHandler::EmbrickBusHandler(CDeviceExecution& paDeviceExecution) : forte::core::io::IODeviceMultiController(paDeviceExecution),
-    mSpi(0), mSlaveSelect(0), mSlaves(0), mSlaveCount(0), mLoopActive(false), mSList(0) {
+EmbrickBusHandler::EmbrickBusHandler(CDeviceExecution &paDeviceExecution) :
+    forte::core::io::IODeviceMultiController(paDeviceExecution),
+    mSpi(0),
+    mSlaveSelect(0),
+    mSlaves(0),
+    mSlaveCount(0),
+    mLoopActive(false),
+    mSList(0) {
   // Set init time
   struct timespec ts;
   // TODO Check compile error. Had to to add rt libary to c++ make flags
@@ -43,18 +49,17 @@ EmbrickBusHandler::EmbrickBusHandler(CDeviceExecution& paDeviceExecution) : fort
   mConfig.mBusLoopSpeed = EmbrickSPIHandler::scmMaxSpiSpeed;
 }
 
-void EmbrickBusHandler::setConfig(struct forte::core::io::IODeviceController::Config* paConfig) {
+void EmbrickBusHandler::setConfig(struct forte::core::io::IODeviceController::Config *paConfig) {
   // Check if BusHandler is active -> configuration changes are not allowed
   if (isAlive()) {
-    DEVLOG_ERROR(
-        "emBrick[BusHandler]: Cannot change configuration while running.\n");
+    DEVLOG_ERROR("emBrick[BusHandler]: Cannot change configuration while running.\n");
     return;
   }
 
-  this->mConfig = *static_cast<Config*>(paConfig);
+  this->mConfig = *static_cast<Config *>(paConfig);
 }
 
-const char* EmbrickBusHandler::init() {
+const char *EmbrickBusHandler::init() {
   // Start handlers
   mSpi = new EmbrickSPIHandler(mConfig.mBusInterface);
   mSlaveSelect = new EmbrickPinHandler(mConfig.mBusSelectPin);
@@ -116,7 +121,7 @@ const char* EmbrickBusHandler::init() {
 void EmbrickBusHandler::deInit() {
   // Free memory -> delete all slave instances and hardware handlers
   TSlaveList::Iterator itEnd(mSlaves->end());
-  for(TSlaveList::Iterator it = mSlaves->begin(); it != itEnd; ++it) {
+  for (TSlaveList::Iterator it = mSlaves->begin(); it != itEnd; ++it) {
     delete *it;
   }
   delete mSlaves;
@@ -126,23 +131,19 @@ void EmbrickBusHandler::deInit() {
   delete mSlaveSelect;
 }
 
-forte::core::io::IOHandle* EmbrickBusHandler::createIOHandle(
-    forte::core::io::IODeviceController::HandleDescriptor &paHandleDescriptor) {
-  HandleDescriptor &desc = static_cast<HandleDescriptor&>(paHandleDescriptor);
+forte::core::io::IOHandle *
+EmbrickBusHandler::createIOHandle(forte::core::io::IODeviceController::HandleDescriptor &paHandleDescriptor) {
+  HandleDescriptor &desc = static_cast<HandleDescriptor &>(paHandleDescriptor);
 
   EmbrickSlaveHandler *slave = getSlave(desc.mSlaveIndex);
-  if(slave == 0) {
+  if (slave == 0) {
     return 0;
   }
 
   switch (desc.mType) {
-  case Bit:
-      return new EmbrickBitSlaveHandle(this, desc.mDirection, desc.mOffset, desc.mPosition,
-        slave);
-  case Analog:
-      return new EmbrickAnalogSlaveHandle(this, desc.mDirection, desc.mOffset, slave);
-  case Analog10:
-      return new EmbrickAnalog10SlaveHandle(this, desc.mDirection, desc.mOffset, slave);
+    case Bit: return new EmbrickBitSlaveHandle(this, desc.mDirection, desc.mOffset, desc.mPosition, slave);
+    case Analog: return new EmbrickAnalogSlaveHandle(this, desc.mDirection, desc.mOffset, slave);
+    case Analog10: return new EmbrickAnalog10SlaveHandle(this, desc.mDirection, desc.mOffset, slave);
   }
 
   return 0;
@@ -156,9 +157,9 @@ void EmbrickBusHandler::prepareLoop() {
   // TODO Combine slaves list and scheduling information
   // DISCUSS Speed of array and forte_list?
   TSlaveList::Iterator it = mSlaves->begin();
-  mSList = (struct SEntry**) forte_malloc(sizeof(struct SEntry*) * mSlaveCount);
+  mSList = (struct SEntry **) forte_malloc(sizeof(struct SEntry *) * mSlaveCount);
   for (int i = 0; i < mSlaveCount; i++) {
-    mSList[i] = (struct SEntry*) forte_malloc(sizeof(struct SEntry));
+    mSList[i] = (struct SEntry *) forte_malloc(sizeof(struct SEntry));
     mSList[i]->mSlave = *it;
     mSList[i]->mNextDeadline = mNextLoop;
     mSList[i]->mLastDuration = 0;
@@ -183,7 +184,7 @@ void EmbrickBusHandler::runLoop() {
     struct timespec now;
     clock_gettime(CLOCK_MONOTONIC, &now);
 
-    if(timespecLessThan(&now, &mSNext->mNextDeadline)){ //only wait if the deadline is in the future
+    if (timespecLessThan(&now, &mSNext->mNextDeadline)) { // only wait if the deadline is in the future
       struct timespec timeToSleep;
       timespecSub(&mSNext->mNextDeadline, &now, &timeToSleep);
       mForceLoop.timedWait(timeToSleep.tv_sec * 1000000000ULL + timeToSleep.tv_nsec);
@@ -210,7 +211,7 @@ void EmbrickBusHandler::runLoop() {
     if (-1 == sCur->mSlave->update()) {
       mError = scmSlaveUpdateFailed;
       // Check for critical bus errors
-      if(checkHandlerError() || hasError()) {
+      if (checkHandlerError() || hasError()) {
         break;
       }
     }
@@ -223,7 +224,7 @@ void EmbrickBusHandler::runLoop() {
     sCur->mLastDuration = (uint16_t) (micros() - ms);
 
     // If current slave is forced again -> add update duration to deadline
-    if(sCur->mForced) {
+    if (sCur->mForced) {
       addTime(sCur->mNextDeadline, sCur->mLastDuration);
     }
 
@@ -240,7 +241,7 @@ void EmbrickBusHandler::runLoop() {
 
 void EmbrickBusHandler::cleanLoop() {
   // Free memory of list
-  for(int i = 0; i < mSlaveCount; i++) {
+  for (int i = 0; i < mSlaveCount; i++) {
     forte_free(mSList[i]);
   }
   forte_free(mSList);
@@ -261,14 +262,14 @@ bool EmbrickBusHandler::checkHandlerError() {
   return false;
 }
 
-EmbrickSlaveHandler* EmbrickBusHandler::getSlave(int paIndex) {
+EmbrickSlaveHandler *EmbrickBusHandler::getSlave(int paIndex) {
   if (mSlaves == 0) {
     return 0;
   }
 
   TSlaveList::Iterator itEnd = mSlaves->end();
   int i = 0;
-  for(TSlaveList::Iterator it = mSlaves->begin(); it != itEnd; ++it, i++) {
+  for (TSlaveList::Iterator it = mSlaves->begin(); it != itEnd; ++it, i++) {
     if (paIndex == i) {
       return *it;
     }
@@ -290,11 +291,11 @@ void EmbrickBusHandler::forceUpdate(int paIndex) {
   e->mForced = true;
   clock_gettime(CLOCK_MONOTONIC, &e->mNextDeadline);
   if (!mLoopActive) {
-    if(!mSNext->mDelayed && !mSNext->mForced) {
+    if (!mSNext->mDelayed && !mSNext->mForced) {
       struct timespec ts = e->mNextDeadline;
       addTime(ts, e->mLastDuration * 2);
 
-      if(!timespecLessThan(&ts, &mSNext->mNextDeadline)) {
+      if (!timespecLessThan(&ts, &mSNext->mNextDeadline)) {
         mSNext->mDelayed = true;
       }
 
@@ -307,18 +308,18 @@ void EmbrickBusHandler::forceUpdate(int paIndex) {
   mSyncObject.unlock();
 }
 
-void EmbrickBusHandler::addSlaveHandle(int paIndex, forte::core::io::IOHandle* paHandle) {
-  EmbrickSlaveHandler* slave = getSlave(paIndex);
-  if(slave == 0) {
+void EmbrickBusHandler::addSlaveHandle(int paIndex, forte::core::io::IOHandle *paHandle) {
+  EmbrickSlaveHandler *slave = getSlave(paIndex);
+  if (slave == 0) {
     return;
   }
 
-  slave->addHandle((EmbrickSlaveHandle*) paHandle);
+  slave->addHandle((EmbrickSlaveHandle *) paHandle);
 }
 
 void EmbrickBusHandler::dropSlaveHandles(int paIndex) {
-  EmbrickSlaveHandler* slave = getSlave(paIndex);
-  if(slave == 0) {
+  EmbrickSlaveHandler *slave = getSlave(paIndex);
+  if (slave == 0) {
     return;
   }
 
@@ -330,17 +331,22 @@ bool EmbrickBusHandler::isSlaveAvailable(int paIndex) {
 }
 
 bool EmbrickBusHandler::checkSlaveType(int paIndex, int paType) {
-  EmbrickSlaveHandler* slave = getSlave(paIndex);
-  if(slave == 0) {
+  EmbrickSlaveHandler *slave = getSlave(paIndex);
+  if (slave == 0) {
     return false;
   }
 
   return slave->mType == paType;
 }
 
-bool EmbrickBusHandler::transfer(unsigned int paTarget, Command paCmd,
-    unsigned char* paDataSend, int paDataSendLength, unsigned char* paDataReceive,
-    int paDataReceiveLength, EmbrickSlaveHandler::SlaveStatus* paStatus, CSyncObject *paSyncMutex) {
+bool EmbrickBusHandler::transfer(unsigned int paTarget,
+                                 Command paCmd,
+                                 unsigned char *paDataSend,
+                                 int paDataSendLength,
+                                 unsigned char *paDataReceive,
+                                 int paDataReceiveLength,
+                                 EmbrickSlaveHandler::SlaveStatus *paStatus,
+                                 CSyncObject *paSyncMutex) {
   unsigned int dataLength = std::max(paDataSendLength, paDataReceiveLength + 1); // + 1 status byte
 
   unsigned int bufferLength = sizeof(EmbrickHeaderPackage) + dataLength + 1; // + 1 checksum byte
@@ -353,24 +359,24 @@ bool EmbrickBusHandler::transfer(unsigned int paTarget, Command paCmd,
   memset(mRecvBuffer, 0, bufferLength);
 
   // Prepare header
-  EmbrickHeaderPackage* header = (EmbrickHeaderPackage*) mSendBuffer;
+  EmbrickHeaderPackage *header = (EmbrickHeaderPackage *) mSendBuffer;
 
   header->mAddress = (char) paTarget;
   header->mCommand = paCmd;
-  header->mChecksum = calcChecksum((unsigned char*) header, 2);
+  header->mChecksum = calcChecksum((unsigned char *) header, 2);
 
-  if(paSyncMutex) {
+  if (paSyncMutex) {
     paSyncMutex->lock();
   }
   memcpy(mSendBuffer + sizeof(EmbrickHeaderPackage), paDataSend, paDataSendLength);
-  if(paSyncMutex) {
-   paSyncMutex->unlock();
+  if (paSyncMutex) {
+    paSyncMutex->unlock();
   }
-  mSendBuffer[sizeof(EmbrickHeaderPackage) + paDataSendLength] = calcChecksum(
-      mSendBuffer + sizeof(EmbrickHeaderPackage), paDataSendLength);
+  mSendBuffer[sizeof(EmbrickHeaderPackage) + paDataSendLength] =
+      calcChecksum(mSendBuffer + sizeof(EmbrickHeaderPackage), paDataSendLength);
 
   // Invert data of master
-  for(unsigned int i = 0; i < bufferLength; i++) {
+  for (unsigned int i = 0; i < bufferLength; i++) {
     mSendBuffer[i] = (unsigned char) ~mSendBuffer[i];
   }
 
@@ -381,7 +387,7 @@ bool EmbrickBusHandler::transfer(unsigned int paTarget, Command paCmd,
   do {
     // Wait required microseconds between messages
     uint64_t microTime = micros();
-    if(mLastTransfer + SyncGapDuration > microTime) {
+    if (mLastTransfer + SyncGapDuration > microTime) {
       microsleep(mLastTransfer + (uint64_t) SyncGapDuration - microTime);
     }
 
@@ -389,19 +395,18 @@ bool EmbrickBusHandler::transfer(unsigned int paTarget, Command paCmd,
     mLastTransfer = micros();
 
     // Critical error of bus -> break immediately
-    if(!ok) {
+    if (!ok) {
       DEVLOG_DEBUG("emBrick[BusHandler]: Transfer error\n");
       break;
     }
 
     // Validate checksum
-    ok = calcChecksum(mRecvBuffer + sizeof(EmbrickHeaderPackage),
-        bufferLength - sizeof(EmbrickHeaderPackage)) == 0;
+    ok = calcChecksum(mRecvBuffer + sizeof(EmbrickHeaderPackage), bufferLength - sizeof(EmbrickHeaderPackage)) == 0;
     if (!ok) {
       // Don't print message when the slave just didn't answer
       for (auto i = 0u; i < bufferLength; i++) {
         if (mRecvBuffer[i] != 0) {
-      DEVLOG_DEBUG("emBrick[BusHandler]: Transfer - Invalid checksum\n");
+          DEVLOG_DEBUG("emBrick[BusHandler]: Transfer - Invalid checksum\n");
           break;
         }
       }
@@ -411,34 +416,31 @@ bool EmbrickBusHandler::transfer(unsigned int paTarget, Command paCmd,
   // Check if command was transmitted successfully
   if (!ok) {
     if (paTarget != 0 && paCmd != Data) {
-      DEVLOG_DEBUG(
-          "emBrick[BusHandler]: Failed to send command %d to slave %d.\n", paCmd,
-          paTarget);
+      DEVLOG_DEBUG("emBrick[BusHandler]: Failed to send command %d to slave %d.\n", paCmd, paTarget);
     }
     return false;
   }
 
   // Copy result
-  if(paSyncMutex) {
+  if (paSyncMutex) {
     paSyncMutex->lock();
   }
 
-  if(paStatus) {
+  if (paStatus) {
     *paStatus = (EmbrickSlaveHandler::SlaveStatus) mRecvBuffer[sizeof(EmbrickHeaderPackage)];
   }
 
-  memcpy(paDataReceive, mRecvBuffer + sizeof(EmbrickHeaderPackage) + 1,
-         (size_t)paDataReceiveLength);
-  if(paSyncMutex) {
+  memcpy(paDataReceive, mRecvBuffer + sizeof(EmbrickHeaderPackage) + 1, (size_t) paDataReceiveLength);
+  if (paSyncMutex) {
     paSyncMutex->unlock();
   }
 
   return true;
 }
 
-unsigned char EmbrickBusHandler::calcChecksum(unsigned char * paData, int paDataLen) {
+unsigned char EmbrickBusHandler::calcChecksum(unsigned char *paData, int paDataLen) {
   unsigned char c = 0;
-  for(int i = 0; i < paDataLen; i++) {
+  for (int i = 0; i < paDataLen; i++) {
     c = static_cast<unsigned char>(c + paData[i]);
   }
 
@@ -449,7 +451,7 @@ uint64_t EmbrickBusHandler::micros() {
   struct timespec ts;
   clock_gettime(CLOCK_MONOTONIC, &ts);
 
-  return (unsigned long)(ts.tv_nsec / 1'000LL) + (unsigned long)(ts.tv_sec - mInitTime) * 1'000'000ULL;
+  return (unsigned long) (ts.tv_nsec / 1'000LL) + (unsigned long) (ts.tv_sec - mInitTime) * 1'000'000ULL;
 }
 
 unsigned long EmbrickBusHandler::millis() {
@@ -457,20 +459,20 @@ unsigned long EmbrickBusHandler::millis() {
   struct timespec ts;
   clock_gettime(CLOCK_MONOTONIC, &ts);
 
-  return (unsigned long)(ts.tv_nsec / 1'000'000LL) + (unsigned long)(ts.tv_sec - mInitTime) * 1'000UL;
+  return (unsigned long) (ts.tv_nsec / 1'000'000LL) + (unsigned long) (ts.tv_sec - mInitTime) * 1'000UL;
 }
 
 void EmbrickBusHandler::microsleep(uint64_t paMicroseconds) {
   struct timespec ts;
-  ts.tv_sec = (time_t)(paMicroseconds / 1'000'000UL);
-  ts.tv_nsec = (long)(paMicroseconds - (unsigned long)ts.tv_sec * 1'000'000UL) * 1'000;
+  ts.tv_sec = (time_t) (paMicroseconds / 1'000'000UL);
+  ts.tv_nsec = (long) (paMicroseconds - (unsigned long) ts.tv_sec * 1'000'000UL) * 1'000;
   nanosleep(&ts, 0);
 }
 
-void EmbrickBusHandler::addTime(struct timespec& paTs, unsigned long paMicroseconds) {
+void EmbrickBusHandler::addTime(struct timespec &paTs, unsigned long paMicroseconds) {
   unsigned long sec = paMicroseconds / 1'000'000UL;
   paTs.tv_sec += sec;
-  paTs.tv_nsec += (long)(paMicroseconds - (unsigned long)sec * 1'000'000UL) * 1'000;
+  paTs.tv_nsec += (long) (paMicroseconds - (unsigned long) sec * 1'000'000UL) * 1'000;
   if (paTs.tv_nsec >= 1'000'000'000) {
     paTs.tv_nsec -= 1'000'000'000;
     paTs.tv_sec++;

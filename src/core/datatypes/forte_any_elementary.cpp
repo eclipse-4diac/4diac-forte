@@ -100,7 +100,7 @@ const std::map<CStringDictionary::TStringId, CIEC_ANY::EDataTypeID> CIEC_ANY_ELE
     {STRID(STRING), CIEC_ANY::e_STRING},
     {STRID(WSTRING), CIEC_ANY::e_WSTRING}};
 
-int CIEC_ANY_ELEMENTARY::toString(char* paValue, size_t paBufferSize) const {
+int CIEC_ANY_ELEMENTARY::toString(char *paValue, size_t paBufferSize) const {
   int nRetVal = 0;
 
   TLargestUIntValueType nDivisor = 0;
@@ -109,7 +109,7 @@ int CIEC_ANY_ELEMENTARY::toString(char* paValue, size_t paBufferSize) const {
 
   bool bSigned = true;
 
-  switch (getDataTypeID()){
+  switch (getDataTypeID()) {
     case e_SINT:
       nSBuffer = getTINT8();
       nDivisor = 100;
@@ -140,24 +140,22 @@ int CIEC_ANY_ELEMENTARY::toString(char* paValue, size_t paBufferSize) const {
       nDivisor = 1000000000L;
       bSigned = false;
       break;
-      case e_LINT:
+    case e_LINT:
       nSBuffer = getTINT64();
       nDivisor = 1000000000000000000LL;
       break;
     case e_ULINT:
-      case e_LWORD:
+    case e_LWORD:
       nUBuffer = getTUINT64();
       nDivisor = 10000000000000000000ULL;
       bSigned = false;
       break;
-    default:
-      DEVLOG_ERROR("Attempt to call CIEC_ANY::toString in CIEC_ANY_ELEMENTARY\n");
-      return -1;
+    default: DEVLOG_ERROR("Attempt to call CIEC_ANY::toString in CIEC_ANY_ELEMENTARY\n"); return -1;
   }
 
-  if(true == bSigned){
-    if(nSBuffer < 0){
-      if(nRetVal >= static_cast<int>(paBufferSize)) {
+  if (true == bSigned) {
+    if (nSBuffer < 0) {
+      if (nRetVal >= static_cast<int>(paBufferSize)) {
         return -1;
       }
       paValue[nRetVal] = '-';
@@ -168,15 +166,14 @@ int CIEC_ANY_ELEMENTARY::toString(char* paValue, size_t paBufferSize) const {
   }
 
   bool bLeadingZeros = true;
-  do{
-    if((0 == nUBuffer / nDivisor) && (true == bLeadingZeros)){
+  do {
+    if ((0 == nUBuffer / nDivisor) && (true == bLeadingZeros)) {
       nDivisor /= 10;
       continue;
-    }
-    else{
+    } else {
       bLeadingZeros = false;
     }
-    if(nRetVal >= static_cast<int>(paBufferSize)) {
+    if (nRetVal >= static_cast<int>(paBufferSize)) {
       return -1;
     }
 
@@ -184,15 +181,15 @@ int CIEC_ANY_ELEMENTARY::toString(char* paValue, size_t paBufferSize) const {
     nUBuffer = nUBuffer - (paValue[nRetVal] - '0') * nDivisor;
     nDivisor /= 10;
     nRetVal++;
-  } while(nDivisor > 1);
+  } while (nDivisor > 1);
 
-  if(nRetVal >= static_cast<int>(paBufferSize)) {
+  if (nRetVal >= static_cast<int>(paBufferSize)) {
     return -1;
   }
   paValue[nRetVal] = static_cast<char>(static_cast<char>(nUBuffer / nDivisor) + '0');
   nRetVal++;
 
-  if(nRetVal >= static_cast<int>(paBufferSize)) {
+  if (nRetVal >= static_cast<int>(paBufferSize)) {
     return -1;
   }
   paValue[nRetVal] = '\0';
@@ -200,29 +197,28 @@ int CIEC_ANY_ELEMENTARY::toString(char* paValue, size_t paBufferSize) const {
   return nRetVal;
 }
 
-int CIEC_ANY_ELEMENTARY::fromString(const char *paValue){
+int CIEC_ANY_ELEMENTARY::fromString(const char *paValue) {
   int nRetVal = -1;
   const char *pacRunner = paValue;
 
-  if((nullptr == paValue) || ('\0' == *paValue)){
+  if ((nullptr == paValue) || ('\0' == *paValue)) {
     return -1;
   }
 
-  if(e_ANY == getDataTypeID()){
+  if (e_ANY == getDataTypeID()) {
     DEVLOG_ERROR("Attempt to call CIEC_ANY::fromString in CIEC_ANY_ELEMENTARY\n");
     return -1;
-    //TODO think of a check if it is really an any elementary that has been created
-  }
-  else{
+    // TODO think of a check if it is really an any elementary that has been created
+  } else {
     const char *acHashPos = strchr(paValue, '#');
     int nMultiplier = 10;
     bool bSigned = true;
-    if((nullptr != acHashPos) && (!forte::core::util::isDigit(*paValue))){
-      //if we have a hash and the first character is not a digit it has to be a type identifier
-      if(!isTypeSpecifier(paValue, acHashPos)){
+    if ((nullptr != acHashPos) && (!forte::core::util::isDigit(*paValue))) {
+      // if we have a hash and the first character is not a digit it has to be a type identifier
+      if (!isTypeSpecifier(paValue, acHashPos)) {
         return -1;
       }
-      pacRunner = acHashPos + 1; //put the runner one after the hash
+      pacRunner = acHashPos + 1; // put the runner one after the hash
       nRetVal = -1;
     }
 
@@ -230,27 +226,19 @@ int CIEC_ANY_ELEMENTARY::fromString(const char *paValue){
     TLargestIntValueType nSUpperBound = 0;
     TLargestIntValueType nSLowerBound = 0;
 
-    if('#' == pacRunner[1]){
-      switch (pacRunner[0]){
-        case '2':
-          nMultiplier = 2;
-          break;
-        case '8':
-          nMultiplier = 8;
-          break;
-        default:
-          return -1;
-          break;
+    if ('#' == pacRunner[1]) {
+      switch (pacRunner[0]) {
+        case '2': nMultiplier = 2; break;
+        case '8': nMultiplier = 8; break;
+        default: return -1; break;
       }
       pacRunner = pacRunner + 2;
-    }
-    else if('\0' != pacRunner[1] && '#' == pacRunner[2]){
-      if('1' == pacRunner[0]){
-        if('6' == pacRunner[1]){
+    } else if ('\0' != pacRunner[1] && '#' == pacRunner[2]) {
+      if ('1' == pacRunner[0]) {
+        if ('6' == pacRunner[1]) {
           nMultiplier = 16;
-        }
-        else{
-          if('0' != pacRunner[1]){
+        } else {
+          if ('0' != pacRunner[1]) {
             return -1;
           }
         }
@@ -261,7 +249,7 @@ int CIEC_ANY_ELEMENTARY::fromString(const char *paValue){
     }
 
     EDataTypeID eID = getDataTypeID();
-    switch (eID){
+    switch (eID) {
       case e_SINT:
         nSUpperBound = std::numeric_limits<CIEC_SINT::TValueType>::max();
         nSLowerBound = std::numeric_limits<CIEC_SINT::TValueType>::min();
@@ -274,7 +262,7 @@ int CIEC_ANY_ELEMENTARY::fromString(const char *paValue){
         nSUpperBound = std::numeric_limits<CIEC_DINT::TValueType>::max();
         nSLowerBound = std::numeric_limits<CIEC_DINT::TValueType>::min();
         break;
-        case e_LINT:
+      case e_LINT:
         nSUpperBound = std::numeric_limits<CIEC_LINT::TValueType>::max();
         nSLowerBound = std::numeric_limits<CIEC_LINT::TValueType>::min();
         break;
@@ -298,38 +286,35 @@ int CIEC_ANY_ELEMENTARY::fromString(const char *paValue){
         nUUpperBound = std::numeric_limits<CIEC_ULINT::TValueType>::max();
         bSigned = false;
         break;
-      default:
-        return false;
+      default: return false;
     }
 
-    if((bSigned) && (10 != nMultiplier)){
-      //only decimal numbers have a sign
+    if ((bSigned) && (10 != nMultiplier)) {
+      // only decimal numbers have a sign
       bSigned = false;
       nUUpperBound = 2 * nSUpperBound + 1;
     }
 
     char *pacEndPtr;
-    errno = 0; //erno is not cleared by the strto* functions
+    errno = 0; // erno is not cleared by the strto* functions
 
-    if(true == bSigned){
+    if (true == bSigned) {
       TForteInt64 nValue = forte::core::util::strtoll(pacRunner, &pacEndPtr, nMultiplier);
-      if((ERANGE != errno)&& (nValue <= nSUpperBound) && (nValue
-          >= nSLowerBound)){
-      setLargestInt(nValue);
-      nRetVal = static_cast<int>(pacEndPtr - paValue);
-    }
-  }
-  else{
-    if ('-' != *pacRunner){
-      //The strtou* functions will correctly parse also negative numbers and provide their two complement as value
-          TForteUInt64 nValue = forte::core::util::strtoull(pacRunner, &pacEndPtr, nMultiplier);
-          if ((ERANGE != errno) && (nValue <= nUUpperBound)){
-            setLargestUInt(nValue);
-            nRetVal = static_cast<int>(pacEndPtr - paValue);
-          }
+      if ((ERANGE != errno) && (nValue <= nSUpperBound) && (nValue >= nSLowerBound)) {
+        setLargestInt(nValue);
+        nRetVal = static_cast<int>(pacEndPtr - paValue);
+      }
+    } else {
+      if ('-' != *pacRunner) {
+        // The strtou* functions will correctly parse also negative numbers and provide their two complement as value
+        TForteUInt64 nValue = forte::core::util::strtoull(pacRunner, &pacEndPtr, nMultiplier);
+        if ((ERANGE != errno) && (nValue <= nUUpperBound)) {
+          setLargestUInt(nValue);
+          nRetVal = static_cast<int>(pacEndPtr - paValue);
         }
       }
-    if(0 == nRetVal){
+    }
+    if (0 == nRetVal) {
       // at this point a length of zero means broken string so return -1
       nRetVal = -1;
     }
@@ -337,11 +322,11 @@ int CIEC_ANY_ELEMENTARY::fromString(const char *paValue){
   return nRetVal;
 }
 
-bool CIEC_ANY_ELEMENTARY::isTypeSpecifier(const char* paValue, const char* paHashPosition) const {
+bool CIEC_ANY_ELEMENTARY::isTypeSpecifier(const char *paValue, const char *paHashPosition) const {
   CStringDictionary::TStringId nTypeNameId = parseTypeName(paValue, paHashPosition);
 
-  if ((CStringDictionary::scmInvalidStringId != nTypeNameId) && ((scm_StringToTypeId.find(nTypeNameId) != scm_StringToTypeId.end()) || (isCastable(nTypeNameId))))
-  {
+  if ((CStringDictionary::scmInvalidStringId != nTypeNameId) &&
+      ((scm_StringToTypeId.find(nTypeNameId) != scm_StringToTypeId.end()) || (isCastable(nTypeNameId)))) {
     return true;
   }
   return false;
@@ -354,10 +339,9 @@ bool CIEC_ANY_ELEMENTARY::isCastable(CStringDictionary::TStringId paTypeNameId) 
   return CIEC_ANY::isCastable(literalID, getDataTypeID(), upCast, downCast) && upCast;
 }
 
-
-CIEC_ANY::EDataTypeID CIEC_ANY_ELEMENTARY::getElementaryDataTypeId(const CStringDictionary::TStringId paTypeNameId){
-    if(scm_StringToTypeId.find(paTypeNameId) != scm_StringToTypeId.end()){
-      return scm_StringToTypeId.at(paTypeNameId);
-    }
+CIEC_ANY::EDataTypeID CIEC_ANY_ELEMENTARY::getElementaryDataTypeId(const CStringDictionary::TStringId paTypeNameId) {
+  if (scm_StringToTypeId.find(paTypeNameId) != scm_StringToTypeId.end()) {
+    return scm_StringToTypeId.at(paTypeNameId);
+  }
   return CIEC_ANY::e_ANY;
 }

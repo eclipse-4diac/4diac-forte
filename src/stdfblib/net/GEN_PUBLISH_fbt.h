@@ -23,33 +23,31 @@
  */
 
 class GEN_PUBLISH : public forte::com_infra::CCommFB {
-  DECLARE_GENERIC_FIRMWARE_FB(GEN_PUBLISH)
+    DECLARE_GENERIC_FIRMWARE_FB(GEN_PUBLISH)
 
   public:
     GEN_PUBLISH(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     ~GEN_PUBLISH() override = default;
 
-    template<typename ...Args>
-    void evt_INIT(Args&& ...paArgs) {
+    template<typename... Args>
+    void evt_INIT(Args &&...paArgs) {
       writeInputArguments(std::forward<Args>(paArgs)...);
       receiveInputEvent(scmEventINITID, nullptr);
       readOutputArguments(std::forward<Args>(paArgs)...);
     }
 
-    template<typename ...Args>
-    void evt_REQ(Args&& ...paArgs) {
+    template<typename... Args>
+    void evt_REQ(Args &&...paArgs) {
       writeInputArguments(std::forward<Args>(paArgs)...);
       receiveInputEvent(scmSendNotificationEventID, nullptr);
       readOutputArguments(std::forward<Args>(paArgs)...);
     }
 
-    template<typename ...Args>
-    void operator()(Args&& ...paArgs) {
+    template<typename... Args>
+    void operator()(Args &&...paArgs) {
       evt_INIT(std::forward<Args>(paArgs)...);
     }
 };
 
 #endif //_GEN_PUBLISH_H_
-
-

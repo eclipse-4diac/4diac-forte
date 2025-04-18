@@ -33,7 +33,7 @@ class CIEC_DATE_AND_TIME final : public CIEC_ANY_DATE {
 
     CIEC_DATE_AND_TIME() = default;
 
-    CIEC_DATE_AND_TIME(const CIEC_DATE_AND_TIME& paValue) : CIEC_ANY_DATE() {
+    CIEC_DATE_AND_TIME(const CIEC_DATE_AND_TIME &paValue) : CIEC_ANY_DATE() {
       setValueSimple(paValue);
     }
 
@@ -43,16 +43,16 @@ class CIEC_DATE_AND_TIME final : public CIEC_ANY_DATE {
 
     ~CIEC_DATE_AND_TIME() override = default;
 
-    CIEC_DATE_AND_TIME& operator = (const CIEC_DATE_AND_TIME &paValue){
+    CIEC_DATE_AND_TIME &operator=(const CIEC_DATE_AND_TIME &paValue) {
       // Simple value assignment - no self assignment check needed
       setValueSimple(paValue);
       return *this;
     }
 
-  /*! \brief Converts CIEC_TIME to unsigned 64 bit integer
-   *
-   *   Conversion operator for converting CIEC_TIME to unsigned 64 bit integer
-   */
+    /*! \brief Converts CIEC_TIME to unsigned 64 bit integer
+     *
+     *   Conversion operator for converting CIEC_TIME to unsigned 64 bit integer
+     */
     operator TForteUInt64() const {
       return getTUINT64();
     }
@@ -61,36 +61,36 @@ class CIEC_DATE_AND_TIME final : public CIEC_ANY_DATE {
       return CIEC_ANY::e_DATE_AND_TIME;
     }
 
-  /*! \brief Converts string value to data type value
-   *
-   *   This command implements a conversion function from IEC 61131
-   *   data type (string format) to a C++ conform type.
-   *   This function is necessary for communication with a proper engineering system.
-   *   \param paValue  Pointer to the given String
-   *   \return Can be the following response:
-   *   \return number of bytes taken used from the buffer
-   *        -1 on on error
-   */
+    /*! \brief Converts string value to data type value
+     *
+     *   This command implements a conversion function from IEC 61131
+     *   data type (string format) to a C++ conform type.
+     *   This function is necessary for communication with a proper engineering system.
+     *   \param paValue  Pointer to the given String
+     *   \return Can be the following response:
+     *   \return number of bytes taken used from the buffer
+     *        -1 on on error
+     */
     int fromString(const char *paValue) override;
-      /*! \brief Converts data type value to string - use local time
-       *
-       *   This command implements a conversion function from C++ data type
-       *   to IEC 61131 conform data type (string format).
-       *   This function is necessary for communication with a proper engineering system.
-       *   \param paValue Pointer to the provided buffer
-       *   \param paBufferSize Size of the provided buffer
-       *   \return number of bytes used in the buffer without trailing 0x00
-       *           -1 on error
-       */
-    int toString(char* paValue, size_t paBufferSize) const override;
+    /*! \brief Converts data type value to string - use local time
+     *
+     *   This command implements a conversion function from C++ data type
+     *   to IEC 61131 conform data type (string format).
+     *   This function is necessary for communication with a proper engineering system.
+     *   \param paValue Pointer to the provided buffer
+     *   \param paBufferSize Size of the provided buffer
+     *   \return number of bytes used in the buffer without trailing 0x00
+     *           -1 on error
+     */
+    int toString(char *paValue, size_t paBufferSize) const override;
 
-      /*! \brief Converts data type value to string - use GMT time
-       *   \param paValue Pointer to the provided buffer
-       *   \param paBufferSize Size of the provided buffer
-       *   \return number of bytes used in the buffer without trailing 0x00
-       *           -1 on error
-       */
-    int toGMTString(char* paValue, unsigned int paBufferSize) const;
+    /*! \brief Converts data type value to string - use GMT time
+     *   \param paValue Pointer to the provided buffer
+     *   \param paBufferSize Size of the provided buffer
+     *   \return number of bytes used in the buffer without trailing 0x00
+     *           -1 on error
+     */
+    int toGMTString(char *paValue, unsigned int paBufferSize) const;
 
     /*! \brief calculates buffer size needed for toString conversion
      */
@@ -107,23 +107,23 @@ inline bool operator!=(const CIEC_DATE_AND_TIME left, const CIEC_DATE_AND_TIME &
   return !(left == right);
 }
 
-inline CIEC_DATE_AND_TIME operator ""_DATE_AND_TIME(unsigned long long int paValue) {
+inline CIEC_DATE_AND_TIME operator""_DATE_AND_TIME(unsigned long long int paValue) {
   return CIEC_DATE_AND_TIME(static_cast<CIEC_DATE_AND_TIME::TValueType>(paValue));
 }
 
 namespace std {
-  template <>
+  template<>
   struct numeric_limits<CIEC_DATE_AND_TIME> : public forte::templates::numeric_limits<CIEC_DATE_AND_TIME> {
-    static constexpr size_t bitLength = 64U;
+      static constexpr size_t bitLength = 64U;
   };
-}
+} // namespace std
 
 namespace forte {
-  template <>
+  template<>
   struct CDataTypeTrait<CIEC_DATE_AND_TIME> {
       static constexpr CIEC_ANY::EDataTypeID scmDataTypeId = CIEC_ANY::e_DATE_AND_TIME;
       static const CStringDictionary::TStringId scmDataTypeName;
   };
-}
+} // namespace forte
 
 #endif /*_FORTE_DATE_AND_TIME_H_*/

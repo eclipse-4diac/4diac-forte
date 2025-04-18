@@ -27,12 +27,15 @@ using namespace std::string_literals;
 const CIEC_STRING CProcessInterfaceFB::scmOK("OK"_STRING);
 const CIEC_STRING CProcessInterfaceFB::scmWaitingForHandle("Waiting for handle.."_STRING);
 const CIEC_STRING CProcessInterfaceFB::scmFailedToRegister("Failed to register observer."_STRING);
-const CIEC_STRING CProcessInterfaceFB::scmMappedWrongDirectionOutput("Mapped invalid direction. A Q block requires an output handle."_STRING);
-const CIEC_STRING CProcessInterfaceFB::scmMappedWrongDirectionInput("Mapped invalid direction. An I block requires an input handle."_STRING);
+const CIEC_STRING CProcessInterfaceFB::scmMappedWrongDirectionOutput(
+    "Mapped invalid direction. A Q block requires an output handle."_STRING);
+const CIEC_STRING CProcessInterfaceFB::scmMappedWrongDirectionInput(
+    "Mapped invalid direction. An I block requires an input handle."_STRING);
 const CIEC_STRING CProcessInterfaceFB::scmMappedWrongDataType("Mapped invalid data type."_STRING);
 
-
-CProcessInterfaceFB::CProcessInterfaceFB(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec& paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId) :
+CProcessInterfaceFB::CProcessInterfaceFB(forte::core::CFBContainer &paContainer,
+                                         const SFBInterfaceSpec &paInterfaceSpec,
+                                         const CStringDictionary::TStringId paInstanceNameId) :
     CEventSourceFB(paContainer, paInterfaceSpec, paInstanceNameId),
     IOObserver(),
     var_QI(0_BOOL),
@@ -57,7 +60,7 @@ void CProcessInterfaceFB::setInitialValues() {
 }
 
 void CProcessInterfaceFB::readInputData(const TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventINITID: {
       readData(0, var_QI, conn_QI);
       readData(1, var_PARAMS, conn_PARAMS);
@@ -67,13 +70,12 @@ void CProcessInterfaceFB::readInputData(const TEventID paEIID) {
       readData(0, var_QI, conn_QI);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 void CProcessInterfaceFB::writeOutputData(const TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventINITOID: {
       writeData(0, var_QO, conn_QO);
       writeData(1, var_STATUS, conn_STATUS);
@@ -84,8 +86,7 @@ void CProcessInterfaceFB::writeOutputData(const TEventID paEIID) {
       writeData(1, var_STATUS, conn_STATUS);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
@@ -94,7 +95,7 @@ CProcessInterfaceFB::~CProcessInterfaceFB() {
 }
 
 void CProcessInterfaceFB::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
-  if(paEIID == scmEventINITID) {
+  if (paEIID == scmEventINITID) {
     if (var_QI) {
       var_QO = CProcessInterfaceFB::initialise(paECET);
     } else {
@@ -104,7 +105,6 @@ void CProcessInterfaceFB::executeEvent(TEventID paEIID, CEventChainExecutionThre
   }
 }
 
-
 CIEC_BOOL CProcessInterfaceFB::initialise(CEventChainExecutionThread *const paECET) {
   mIsReady = false;
   var_STATUS = scmWaitingForHandle;
@@ -113,12 +113,12 @@ CIEC_BOOL CProcessInterfaceFB::initialise(CEventChainExecutionThread *const paEC
   deinitialise();
 
   // Register interface
-  if(!(mIsListening = IOMapper::getInstance().registerObserver(getId(), this))) {
+  if (!(mIsListening = IOMapper::getInstance().registerObserver(getId(), this))) {
     var_STATUS = scmFailedToRegister;
     return false_BOOL;
   }
 
-  if(getDirection() == IOMapper::In) {
+  if (getDirection() == IOMapper::In) {
     setEventChainExecutor(paECET);
   }
 
@@ -127,39 +127,38 @@ CIEC_BOOL CProcessInterfaceFB::initialise(CEventChainExecutionThread *const paEC
 
 // If PARAMS is not empty use the string specified here "as is" for the IO mapping to the configuration.
 // Otherwise use the full qualified instance name of our FB.
-std::string CProcessInterfaceFB::getId()  const {
+std::string CProcessInterfaceFB::getId() const {
   if (!var_PARAMS.empty()) {
     return static_cast<std::string>(var_PARAMS);
-  }
-  else {
+  } else {
     return getFullQualifiedApplicationInstanceName('.');
   }
 }
 
 CIEC_BOOL CProcessInterfaceFB::deinitialise() {
   // Deregister interface
-  if(mIsListening) {
+  if (mIsListening) {
     IOMapper::getInstance().deregisterObserver(this);
-    mIsListening = false; // we are deregistered ! 
+    mIsListening = false; // we are deregistered !
   }
 
   return mIsReady ? true_BOOL : false_BOOL;
 }
 
 bool CProcessInterfaceFB::onChange() {
-  //per default we do not need to do anything
+  // per default we do not need to do anything
   return true;
 }
 
-void CProcessInterfaceFB::onHandle(IOHandle* const  paHandle) {
+void CProcessInterfaceFB::onHandle(IOHandle *const paHandle) {
   IOObserver::onHandle(paHandle);
 
-  if(paHandle->getIOHandleDataType() != getIOObserverDataType()) {
+  if (paHandle->getIOHandleDataType() != getIOObserverDataType()) {
     var_STATUS = scmMappedWrongDataType;
     return;
   }
 
-  if(paHandle->getDirection() != getDirection()) {
+  if (paHandle->getDirection() != getDirection()) {
     var_STATUS = getDirection() == IOMapper::In ? scmMappedWrongDirectionInput : scmMappedWrongDirectionOutput;
     return;
   }
@@ -170,14 +169,14 @@ void CProcessInterfaceFB::onHandle(IOHandle* const  paHandle) {
 
 EMGMResponse CProcessInterfaceFB::changeExecutionState(EMGMCommandType paCommand) {
   EMGMResponse response = CFunctionBlock::changeExecutionState(paCommand);
-  if(response == EMGMResponse::Ready && (paCommand == EMGMCommandType::Kill || paCommand == EMGMCommandType::Reset)) {
+  if (response == EMGMResponse::Ready && (paCommand == EMGMCommandType::Kill || paCommand == EMGMCommandType::Reset)) {
     deinitialise();
   }
   return response;
 }
 
 CIEC_ANY *CProcessInterfaceFB::getDI(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_QI;
     case 1: return &var_PARAMS;
   }
@@ -185,7 +184,7 @@ CIEC_ANY *CProcessInterfaceFB::getDI(const size_t paIndex) {
 }
 
 CIEC_ANY *CProcessInterfaceFB::getDO(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_QO;
     case 1: return &var_STATUS;
   }
@@ -193,7 +192,7 @@ CIEC_ANY *CProcessInterfaceFB::getDO(const size_t paIndex) {
 }
 
 CEventConnection *CProcessInterfaceFB::getEOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_INITO;
     case 1: return &conn_CNF;
   }
@@ -201,7 +200,7 @@ CEventConnection *CProcessInterfaceFB::getEOConUnchecked(const TPortId paIndex) 
 }
 
 CDataConnection **CProcessInterfaceFB::getDIConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_QI;
     case 1: return &conn_PARAMS;
   }
@@ -209,7 +208,7 @@ CDataConnection **CProcessInterfaceFB::getDIConUnchecked(const TPortId paIndex) 
 }
 
 CDataConnection *CProcessInterfaceFB::getDOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_QO;
     case 1: return &conn_STATUS;
   }
@@ -222,4 +221,3 @@ void CProcessInterfaceFB::dropHandle() {
   var_STATUS = scmWaitingForHandle;
   mIsReady = false;
 }
-

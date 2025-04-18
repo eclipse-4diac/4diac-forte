@@ -22,7 +22,7 @@
 #include "genbitbase_fbt.h"
 
 class GEN_AND : public CGenBitBase {
-  DECLARE_GENERIC_FIRMWARE_FB(GEN_AND)
+    DECLARE_GENERIC_FIRMWARE_FB(GEN_AND)
 
   private:
     void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
@@ -33,4 +33,3 @@ class GEN_AND : public CGenBitBase {
 };
 
 #endif //_GEN_AND_H_
-

@@ -17,29 +17,28 @@
 
 class TiXmlNode;
 
-class CEplXmlReader{
+class CEplXmlReader {
   public:
-    CEplXmlReader(CProcessImageMatrix* paIn, CProcessImageMatrix* paOut);
+    CEplXmlReader(CProcessImageMatrix *paIn, CProcessImageMatrix *paOut);
     ~CEplXmlReader();
 
-    void setProcessImageIn(CProcessImageMatrix* paIn);
-    void setProcessImageOut(CProcessImageMatrix* paOut);
+    void setProcessImageIn(CProcessImageMatrix *paIn);
+    void setProcessImageOut(CProcessImageMatrix *paOut);
 
-    void readXmlFile(const char* paFileName);
+    void readXmlFile(const char *paFileName);
 
     int getProcessImageIn();
 
   private:
     CModuleList mModuleListOut;
     CModuleList mModuleListIn;
-    CProcessImageMatrix* mProcImageOut;
-    CProcessImageMatrix* mProcImageIn;
+    CProcessImageMatrix *mProcImageOut;
+    CProcessImageMatrix *mProcImageIn;
 
-    void createProcImageOut(TiXmlNode* paProcessImage);
-    void createProcImageIn(TiXmlNode* paProcessImage);
+    void createProcImageOut(TiXmlNode *paProcessImage);
+    void createProcImageIn(TiXmlNode *paProcessImage);
 
-    int getModuleNr(const char* paIoId);
-
+    int getModuleNr(const char *paIoId);
 };
 
 #endif

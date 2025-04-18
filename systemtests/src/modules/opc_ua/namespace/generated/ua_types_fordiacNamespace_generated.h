@@ -13,10 +13,7 @@
 
 #endif
 
-
-
 _UA_BEGIN_DECLS
-
 
 /**
  * Every type is assigned an index in an array containing the type descriptions.
@@ -36,7 +33,6 @@ typedef struct {
 } UA_DatatypeTest;
 
 #define UA_UA_TYPES_FORDIACNAMESPACE_DATATYPETEST 0
-
 
 _UA_END_DECLS
 

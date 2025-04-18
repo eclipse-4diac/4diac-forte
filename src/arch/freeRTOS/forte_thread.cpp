@@ -20,8 +20,7 @@
  */
 const int CFreeRTOSThread::scmForteTaskPriority = tskIDLE_PRIORITY + 4;
 
-CFreeRTOSThread::CFreeRTOSThread(long paStackSize) :
-    CThreadBase(paStackSize) {
+CFreeRTOSThread::CFreeRTOSThread(long paStackSize) : CThreadBase(paStackSize) {
   mStack = new char[paStackSize];
 }
 
@@ -36,10 +35,11 @@ void CFreeRTOSThread::threadFunction(void *paData) {
   vTaskDelete(nullptr);
 }
 
-forte::arch::CThreadBase<TaskHandle_t, TaskHandle_t(0), CFreeRTOSThread>::TThreadHandleType CFreeRTOSThread::createThread(long paStackSize) {
+forte::arch::CThreadBase<TaskHandle_t, TaskHandle_t(0), CFreeRTOSThread>::TThreadHandleType
+CFreeRTOSThread::createThread(long paStackSize) {
   TaskHandle_t handle = 0;
 
-  if(pdPASS != xTaskCreate(threadFunction, "FORTE", paStackSize, this, scmForteTaskPriority, &handle)) {
+  if (pdPASS != xTaskCreate(threadFunction, "FORTE", paStackSize, this, scmForteTaskPriority, &handle)) {
     DEVLOG_ERROR("Error: Could not create FreeRTOS Task thread!");
   }
 

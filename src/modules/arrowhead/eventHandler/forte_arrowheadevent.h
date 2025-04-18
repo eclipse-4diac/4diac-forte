@@ -19,7 +19,7 @@
 #include "forte_date_and_time.h"
 
 class CIEC_ArrowheadEvent : public CIEC_STRUCT {
-  DECLARE_FIRMWARE_DATATYPE(ArrowheadEvent)
+    DECLARE_FIRMWARE_DATATYPE(ArrowheadEvent)
 
   public:
     CIEC_ArrowheadEvent();
@@ -27,23 +27,24 @@ class CIEC_ArrowheadEvent : public CIEC_STRUCT {
     ~CIEC_ArrowheadEvent() override = default;
 
     CIEC_WSTRING &type() {
-      return *static_cast<CIEC_WSTRING*>(&getMembers()[0]);
+      return *static_cast<CIEC_WSTRING *>(&getMembers()[0]);
     }
 
     CIEC_WSTRING &payload() {
-      return *static_cast<CIEC_WSTRING*>(&getMembers()[1]);
+      return *static_cast<CIEC_WSTRING *>(&getMembers()[1]);
     }
 
     CIEC_DATE_AND_TIME &timestamp() {
-      return *static_cast<CIEC_DATE_AND_TIME*>(&getMembers()[2]);
+      return *static_cast<CIEC_DATE_AND_TIME *>(&getMembers()[2]);
     }
 
     CIEC_ARRAY<> *eventMetadata_array() {
-      return static_cast<CIEC_ARRAY<> *>(&getMembers()[3]); //the first element marks the start of the array
+      return static_cast<CIEC_ARRAY<> *>(&getMembers()[3]); // the first element marks the start of the array
     }
 
     CIEC_WSTRING *eventMetadata() {
-      return static_cast<CIEC_WSTRING*>((*static_cast<CIEC_ARRAY<> *>(&getMembers()[3]))[0]); //the first element marks the start of the array
+      return static_cast<CIEC_WSTRING *>(
+          (*static_cast<CIEC_ARRAY<> *>(&getMembers()[3]))[0]); // the first element marks the start of the array
     }
 
   private:

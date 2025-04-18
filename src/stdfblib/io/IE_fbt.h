@@ -25,7 +25,7 @@
 #include "processinterface.h"
 
 class FORTE_IE final : public CProcessInterface {
-  DECLARE_FIRMWARE_FB(FORTE_IE)
+    DECLARE_FIRMWARE_FB(FORTE_IE)
 
   private:
     static const CStringDictionary::TStringId scmDataInputNames[];
@@ -99,4 +99,3 @@ class FORTE_IE final : public CProcessInterface {
       evt_INIT(paQI, paPARAMS, paQO, paSTATUS);
     }
 };
-

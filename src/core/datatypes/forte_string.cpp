@@ -30,10 +30,11 @@ using namespace std::string_literals;
 
 DEFINE_FIRMWARE_DATATYPE(STRING, STRID(STRING));
 
-CIEC_STRING::CIEC_STRING(const char* paValue) : mValue(paValue, forte_strnlen_s(paValue, scmMaxStringLen)) {
+CIEC_STRING::CIEC_STRING(const char *paValue) : mValue(paValue, forte_strnlen_s(paValue, scmMaxStringLen)) {
 }
 
-CIEC_STRING::CIEC_STRING(const char* paValue, const size_t paLength) : mValue(paValue, std::min(paLength, scmMaxStringLen)) {
+CIEC_STRING::CIEC_STRING(const char *paValue, const size_t paLength) :
+    mValue(paValue, std::min(paLength, scmMaxStringLen)) {
 }
 
 CIEC_STRING::storage_type &CIEC_STRING::getStorageMutable() {
@@ -47,7 +48,8 @@ int CIEC_STRING::fromString(const char *paValue) {
 
   size_t stringStart = 0;
 
-  if(inputString.length() > typePrefixLength && inputString.substr(0, typePrefixLength) == typePrefix) { // There is a type prefix at the begin and not in string
+  if (inputString.length() > typePrefixLength &&
+      inputString.substr(0, typePrefixLength) == typePrefix) { // There is a type prefix at the begin and not in string
     stringStart += typePrefixLength;
   }
 
@@ -57,12 +59,12 @@ int CIEC_STRING::fromString(const char *paValue) {
   std::string unescapedString;
   unescapedString.reserve(inputString.length() - stringStart);
 
-  for(size_t i = openingQuote + 1; i < inputString.length(); ++i) {
+  for (size_t i = openingQuote + 1; i < inputString.length(); ++i) {
     if (inputString[i] == '$') {
-      if(forte::core::util::isHexDigit(inputString[i + 1]) && forte::core::util::isHexDigit(inputString[i + 2])) {
+      if (forte::core::util::isHexDigit(inputString[i + 1]) && forte::core::util::isHexDigit(inputString[i + 2])) {
         uint8_t hexNumber;
         auto result = std::from_chars(inputString.data() + (i + 1), inputString.data() + (i + 3), hexNumber, 16);
-        if(result.ec == std::errc()) {
+        if (result.ec == std::errc()) {
           unescapedString += hexNumber; // append hex code char
         }
         i += 2;
@@ -70,48 +72,32 @@ int CIEC_STRING::fromString(const char *paValue) {
       } else {
         char specialSymbol = 0;
         switch (inputString[i + 1]) {
-          case '\'':
-            specialSymbol = '\'';
-            break;
+          case '\'': specialSymbol = '\''; break;
           case 'L':
-          case 'l':
-            specialSymbol = '\x10';
-            break;
+          case 'l': specialSymbol = '\x10'; break;
           case 'N':
-          case 'n':
-            specialSymbol = '\n';
-            break;
+          case 'n': specialSymbol = '\n'; break;
           case 'P':
-          case 'p':
-            specialSymbol = '\f';
-            break;
+          case 'p': specialSymbol = '\f'; break;
           case 'R':
-          case 'r':
-            specialSymbol = '\r';
-            break;
+          case 'r': specialSymbol = '\r'; break;
           case 'T':
-          case 't':
-            specialSymbol = '\t';
-            break;
-          case '$':
-            specialSymbol = '$';
-            break;
-          default:
-            DEVLOG_ERROR("Unknown escape symbol %c encountered", inputString[i + 1]);
+          case 't': specialSymbol = '\t'; break;
+          case '$': specialSymbol = '$'; break;
+          default: DEVLOG_ERROR("Unknown escape symbol %c encountered", inputString[i + 1]);
         }
         unescapedString += specialSymbol; // append escaped char
         i += 1;
         continue;
       }
-    }
-    else if (inputString[i] == '\'') { // In case of an escaped \' we would have passed it above
+    } else if (inputString[i] == '\'') { // In case of an escaped \' we would have passed it above
       closingQuote = i;
       break;
     }
     unescapedString += (inputString[i]); // append simple char
   }
 
-  if(closingQuote != std::string::npos) {
+  if (closingQuote != std::string::npos) {
     mValue = unescapedString;
     return static_cast<int>(closingQuote + 1);
   }
@@ -135,7 +121,7 @@ void CIEC_STRING::append(const char *paData, const TForteUInt16 paLen) {
 /*! Append data, cannot contain '0x00' as this is used to identify the end of the cstring
  */
 void CIEC_STRING::append(const char *paData) {
-  this->append(paData, static_cast < TForteUInt16>(strlen(paData)));
+  this->append(paData, static_cast<TForteUInt16>(strlen(paData)));
 }
 
 void CIEC_STRING::append(const CIEC_STRING &paValue) {
@@ -146,21 +132,21 @@ void CIEC_STRING::append(const std::string &paValue) {
   mValue.append(paValue);
 }
 
-int CIEC_STRING::compare(const CIEC_STRING& paValue) const {
+int CIEC_STRING::compare(const CIEC_STRING &paValue) const {
   return mValue.compare(paValue.getStorage());
 }
 
 int CIEC_STRING::determineEscapedStringLength(const char *paValue, char paDelimiter, const size_t paLength) {
-  if (*paValue != paDelimiter){
+  if (*paValue != paDelimiter) {
     return static_cast<unsigned int>(paLength);
   }
 
   const char *pacRunner = paValue + 1;
   for (size_t i = 0; i < paLength; ++i, ++pacRunner) {
-    if('$' == *pacRunner){
+    if ('$' == *pacRunner) {
       TForteUInt16 nDummy;
       ++pacRunner;
-      if(!handleDollarEscapedChar(&pacRunner, (paDelimiter == '"'), nDummy)){
+      if (!handleDollarEscapedChar(&pacRunner, (paDelimiter == '"'), nDummy)) {
         continue; // It is invalid but we need the real end
       }
     }
@@ -169,24 +155,24 @@ int CIEC_STRING::determineEscapedStringLength(const char *paValue, char paDelimi
   return (paDelimiter == *pacRunner) ? static_cast<unsigned int>(pacRunner + 1 - paValue) : -1;
 }
 
-int CIEC_STRING::toString(char* paValue, size_t paBufferSize) const {
+int CIEC_STRING::toString(char *paValue, size_t paBufferSize) const {
   int nRetVal = -1;
-  if(nullptr != paValue && getToStringBufferSize() <= paBufferSize){
+  if (nullptr != paValue && getToStringBufferSize() <= paBufferSize) {
     *paValue = '\'';
     paValue++;
     TForteUInt16 nLen = length();
     size_t nUsedBytes = 0;
     paBufferSize -= 2;
-    if(0 < nLen){
-      const char * acValue = getStorage().c_str();
-      for(unsigned int i = 0; i < nLen; ++i){
-        if(nUsedBytes >= paBufferSize) {
+    if (0 < nLen) {
+      const char *acValue = getStorage().c_str();
+      for (unsigned int i = 0; i < nLen; ++i) {
+        if (nUsedBytes >= paBufferSize) {
           return -1;
         }
-        nUsedBytes += dollarEscapeChar(paValue+nUsedBytes, acValue[i], 3, getDataTypeID());
+        nUsedBytes += dollarEscapeChar(paValue + nUsedBytes, acValue[i], 3, getDataTypeID());
       }
 
-    } else{
+    } else {
       *paValue = '\0';
     }
     nRetVal = static_cast<int>(nUsedBytes);
@@ -199,23 +185,19 @@ int CIEC_STRING::toString(char* paValue, size_t paBufferSize) const {
 
 size_t CIEC_STRING::getToStringBufferSize() const {
   size_t neededBufferSize = 0;
-  for(auto iter = mValue.begin(); iter != mValue.end(); ++iter){
-    if(isprint(static_cast<unsigned char>(*iter)) && '$' != *iter && '\'' != *iter){
+  for (auto iter = mValue.begin(); iter != mValue.end(); ++iter) {
+    if (isprint(static_cast<unsigned char>(*iter)) && '$' != *iter && '\'' != *iter) {
       ++neededBufferSize;
     } else {
-      switch (*iter){
+      switch (*iter) {
         case '$':
         case '\'':
         case 0x10: // line feed
         case '\n':
         case '\f':
         case '\r':
-        case '\t':
-          neededBufferSize += 2;
-          break;
-        default:
-          neededBufferSize += 3;
-          break;
+        case '\t': neededBufferSize += 2; break;
+        default: neededBufferSize += 3; break;
       }
     }
   }
@@ -223,7 +205,7 @@ size_t CIEC_STRING::getToStringBufferSize() const {
 }
 
 #ifdef FORTE_UNICODE_SUPPORT
-int CIEC_STRING::toUTF8(char* paBuffer, size_t paBufferSize, bool paEscape) const {
+int CIEC_STRING::toUTF8(char *paBuffer, size_t paBufferSize, bool paEscape) const {
   // Count the needed space
   size_t nNeededLength = paEscape ? 2 : 0; // Leading and trailing delimiter
   int nRes;
@@ -241,28 +223,29 @@ int CIEC_STRING::toUTF8(char* paBuffer, size_t paBufferSize, bool paEscape) cons
     ++pRunner;
   }
 
-  if(nullptr == paBuffer) {
+  if (nullptr == paBuffer) {
     return static_cast<int>(nNeededLength);
   }
 
-  if(nNeededLength + 1 > paBufferSize) {
+  if (nNeededLength + 1 > paBufferSize) {
     return -1;
   }
 
   char *pEncRunner = paBuffer;
   char *pDataEnd = paBuffer + nNeededLength;
 
-  if(paEscape) {
+  if (paEscape) {
     *pEncRunner++ = '\'';
   }
 
   pRunner = reinterpret_cast<const unsigned char *>(getStorage().c_str());
   while (*pRunner) {
-    nRes = CUnicodeUtilities::encodeUTF8Codepoint((TForteByte *) pEncRunner, static_cast<unsigned int>(pDataEnd - pEncRunner), (TForteUInt32) *pRunner);
-    if(nRes == 1 && paEscape) {
+    nRes = CUnicodeUtilities::encodeUTF8Codepoint(
+        (TForteByte *) pEncRunner, static_cast<unsigned int>(pDataEnd - pEncRunner), (TForteUInt32) *pRunner);
+    if (nRes == 1 && paEscape) {
       nRes = dollarEscapeChar(pEncRunner, *pRunner, static_cast<unsigned int>(pDataEnd - pEncRunner), getDataTypeID());
     }
-    if(nRes < 0) {
+    if (nRes < 0) {
       return -1;
     }
 
@@ -270,7 +253,7 @@ int CIEC_STRING::toUTF8(char* paBuffer, size_t paBufferSize, bool paEscape) cons
     ++pRunner;
   }
 
-  if(paEscape) {
+  if (paEscape) {
     *pEncRunner++ = '\'';
   }
   *pEncRunner = '\0';
@@ -281,4 +264,3 @@ int CIEC_STRING::toUTF8(char* paBuffer, size_t paBufferSize, bool paEscape) cons
 const CStringDictionary::TStringId forte::CDataTypeTrait<CIEC_STRING>::scmDataTypeName = STRID(STRING);
 
 #endif
-

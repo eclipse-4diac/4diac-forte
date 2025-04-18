@@ -18,14 +18,9 @@ USE_STRING_ID(DataTypeTest);
 USE_STRING_ID(IsRegistered);
 USE_STRING_ID(Name);
 
-
 DEFINE_FIRMWARE_DATATYPE(DataTypeTest, STRID(DataTypeTest));
 
-CIEC_DataTypeTest::CIEC_DataTypeTest() :
-    CIEC_STRUCT(),
-    var_Name(""),
-    var_Age(0),
-    var_IsRegistered(false) {
+CIEC_DataTypeTest::CIEC_DataTypeTest() : CIEC_STRUCT(), var_Name(""), var_Age(0), var_IsRegistered(false) {
 }
 
 CStringDictionary::TStringId CIEC_DataTypeTest::getStructTypeNameID() const {
@@ -50,4 +45,5 @@ const CIEC_ANY *CIEC_DataTypeTest::getMember(size_t paMemberIndex) const {
   return nullptr;
 }
 
-const CStringDictionary::TStringId CIEC_DataTypeTest::scmElementNames[] = { STRID(Name), STRID(Age), STRID(IsRegistered) };
+const CStringDictionary::TStringId CIEC_DataTypeTest::scmElementNames[] = {STRID(Name), STRID(Age),
+                                                                           STRID(IsRegistered)};

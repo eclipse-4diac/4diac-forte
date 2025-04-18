@@ -22,10 +22,13 @@
 #include "basicfb.h"
 
 class CSimpleFB : public CBasicFB {
-public:
-    CSimpleFB(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec& paInterfaceSpec, CStringDictionary::TStringId paInstanceNameId,
-        const SInternalVarsInformation *paVarInternals) :
-          CBasicFB(paContainer, paInterfaceSpec, paInstanceNameId, paVarInternals) {}
+  public:
+    CSimpleFB(forte::core::CFBContainer &paContainer,
+              const SFBInterfaceSpec &paInterfaceSpec,
+              CStringDictionary::TStringId paInstanceNameId,
+              const SInternalVarsInformation *paVarInternals) :
+        CBasicFB(paContainer, paInterfaceSpec, paInstanceNameId, paVarInternals) {
+    }
 };
 
 #endif /* SRC_CORE_SIMPLEFB_H_ */

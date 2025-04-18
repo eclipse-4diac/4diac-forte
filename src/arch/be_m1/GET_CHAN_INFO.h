@@ -17,56 +17,53 @@
 #include <forte_int.h>
 #include <forte_string.h>
 
-class FORTE_GET_CHAN_INFO: public CFunctionBlock{
-  DECLARE_FIRMWARE_FB(FORTE_GET_CHAN_INFO)
+class FORTE_GET_CHAN_INFO : public CFunctionBlock {
+    DECLARE_FIRMWARE_FB(FORTE_GET_CHAN_INFO)
 
-private:
-  static const CStringDictionary::TStringId scmDataInputNames[];
-  static const CStringDictionary::TStringId scmDataInputTypeIds[];
-  CIEC_STRING &SYMB_NAME() {
-    return *static_cast<CIEC_STRING*>(getDI(0));
-  };
+  private:
+    static const CStringDictionary::TStringId scmDataInputNames[];
+    static const CStringDictionary::TStringId scmDataInputTypeIds[];
+    CIEC_STRING &SYMB_NAME() {
+      return *static_cast<CIEC_STRING *>(getDI(0));
+    };
 
-  static const CStringDictionary::TStringId scmDataOutputNames[];
-  static const CStringDictionary::TStringId scmDataOutputTypeIds[];
-  CIEC_INT &RET_CODE() {
-    return *static_cast<CIEC_INT*>(getDO(0));
-  };
+    static const CStringDictionary::TStringId scmDataOutputNames[];
+    static const CStringDictionary::TStringId scmDataOutputTypeIds[];
+    CIEC_INT &RET_CODE() {
+      return *static_cast<CIEC_INT *>(getDO(0));
+    };
 
-  CIEC_INT &MOD_NB() {
-    return *static_cast<CIEC_INT*>(getDO(1));
-  };
+    CIEC_INT &MOD_NB() {
+      return *static_cast<CIEC_INT *>(getDO(1));
+    };
 
-  CIEC_INT &CHAN_NB() {
-    return *static_cast<CIEC_INT*>(getDO(2));
-  };
+    CIEC_INT &CHAN_NB() {
+      return *static_cast<CIEC_INT *>(getDO(2));
+    };
 
-  static const TEventID scmEventINITID = 0;
-  static const TForteInt16 scmEIWithIndexes[];
-  static const TDataIOID scmEIWith[];
-  static const CStringDictionary::TStringId scmEventInputNames[];
-  static const CStringDictionary::TStringId scmEventInputTypeIds[];
+    static const TEventID scmEventINITID = 0;
+    static const TForteInt16 scmEIWithIndexes[];
+    static const TDataIOID scmEIWith[];
+    static const CStringDictionary::TStringId scmEventInputNames[];
+    static const CStringDictionary::TStringId scmEventInputTypeIds[];
 
-  static const TEventID scmEventINITOID = 0;
-  static const TForteInt16 scmEOWithIndexes[];
-  static const TDataIOID scmEOWith[];
-  static const CStringDictionary::TStringId scmEventOutputNames[];
-  static const CStringDictionary::TStringId scmEventOutputTypeIds[];
+    static const TEventID scmEventINITOID = 0;
+    static const TForteInt16 scmEOWithIndexes[];
+    static const TDataIOID scmEOWith[];
+    static const CStringDictionary::TStringId scmEventOutputNames[];
+    static const CStringDictionary::TStringId scmEventOutputTypeIds[];
 
-  static const SFBInterfaceSpec scmFBInterfaceSpec;
+    static const SFBInterfaceSpec scmFBInterfaceSpec;
 
+    void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
-  void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
+    bool init();
+    SINT32 getChannelInfo();
 
-  bool init();
-  SINT32 getChannelInfo();
+  public:
+    FUNCTION_BLOCK_CTOR(FORTE_GET_CHAN_INFO) {};
 
-public:
-  FUNCTION_BLOCK_CTOR(FORTE_GET_CHAN_INFO){
-  };
-
-  ~FORTE_GET_CHAN_INFO() override = default;
+    ~FORTE_GET_CHAN_INFO() override = default;
 };
 
-#endif //close the ifdef sequence from the beginning of the file
-
+#endif // close the ifdef sequence from the beginning of the file

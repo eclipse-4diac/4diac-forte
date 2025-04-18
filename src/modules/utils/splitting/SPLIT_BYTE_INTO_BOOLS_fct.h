@@ -29,7 +29,7 @@
 #include "forte_array_variable.h"
 
 class FORTE_SPLIT_BYTE_INTO_BOOLS final : public CFunctionBlock {
-  DECLARE_FIRMWARE_FB(FORTE_SPLIT_BYTE_INTO_BOOLS)
+    DECLARE_FIRMWARE_FB(FORTE_SPLIT_BYTE_INTO_BOOLS)
 
   private:
     static const CStringDictionary::TStringId scmDataInputNames[];
@@ -88,7 +88,15 @@ class FORTE_SPLIT_BYTE_INTO_BOOLS final : public CFunctionBlock {
     CDataConnection **getDIConUnchecked(TPortId) override;
     CDataConnection *getDOConUnchecked(TPortId) override;
 
-    void evt_REQ(const CIEC_BYTE &paIN, CIEC_BOOL &paBIT_00, CIEC_BOOL &paBIT_01, CIEC_BOOL &paBIT_02, CIEC_BOOL &paBIT_03, CIEC_BOOL &paBIT_04, CIEC_BOOL &paBIT_05, CIEC_BOOL &paBIT_06, CIEC_BOOL &paBIT_07) {
+    void evt_REQ(const CIEC_BYTE &paIN,
+                 CIEC_BOOL &paBIT_00,
+                 CIEC_BOOL &paBIT_01,
+                 CIEC_BOOL &paBIT_02,
+                 CIEC_BOOL &paBIT_03,
+                 CIEC_BOOL &paBIT_04,
+                 CIEC_BOOL &paBIT_05,
+                 CIEC_BOOL &paBIT_06,
+                 CIEC_BOOL &paBIT_07) {
       var_IN = paIN;
       executeEvent(scmEventREQID, nullptr);
       paBIT_00 = var_BIT_00;
@@ -101,11 +109,25 @@ class FORTE_SPLIT_BYTE_INTO_BOOLS final : public CFunctionBlock {
       paBIT_07 = var_BIT_07;
     }
 
-    void operator()(const CIEC_BYTE &paIN, CIEC_BOOL &paBIT_00, CIEC_BOOL &paBIT_01, CIEC_BOOL &paBIT_02, CIEC_BOOL &paBIT_03, CIEC_BOOL &paBIT_04, CIEC_BOOL &paBIT_05, CIEC_BOOL &paBIT_06, CIEC_BOOL &paBIT_07) {
+    void operator()(const CIEC_BYTE &paIN,
+                    CIEC_BOOL &paBIT_00,
+                    CIEC_BOOL &paBIT_01,
+                    CIEC_BOOL &paBIT_02,
+                    CIEC_BOOL &paBIT_03,
+                    CIEC_BOOL &paBIT_04,
+                    CIEC_BOOL &paBIT_05,
+                    CIEC_BOOL &paBIT_06,
+                    CIEC_BOOL &paBIT_07) {
       evt_REQ(paIN, paBIT_00, paBIT_01, paBIT_02, paBIT_03, paBIT_04, paBIT_05, paBIT_06, paBIT_07);
     }
 };
 
-void func_SPLIT_BYTE_INTO_BOOLS(CIEC_BYTE st_lv_IN, CIEC_BOOL &st_lv_BIT_00, CIEC_BOOL &st_lv_BIT_01, CIEC_BOOL &st_lv_BIT_02, CIEC_BOOL &st_lv_BIT_03, CIEC_BOOL &st_lv_BIT_04, CIEC_BOOL &st_lv_BIT_05, CIEC_BOOL &st_lv_BIT_06, CIEC_BOOL &st_lv_BIT_07);
-
-
+void func_SPLIT_BYTE_INTO_BOOLS(CIEC_BYTE st_lv_IN,
+                                CIEC_BOOL &st_lv_BIT_00,
+                                CIEC_BOOL &st_lv_BIT_01,
+                                CIEC_BOOL &st_lv_BIT_02,
+                                CIEC_BOOL &st_lv_BIT_03,
+                                CIEC_BOOL &st_lv_BIT_04,
+                                CIEC_BOOL &st_lv_BIT_05,
+                                CIEC_BOOL &st_lv_BIT_06,
+                                CIEC_BOOL &st_lv_BIT_07);

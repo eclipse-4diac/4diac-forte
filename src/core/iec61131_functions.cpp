@@ -10,7 +10,7 @@
  * Contributors:
  *    Alois Zoitl, Monika Wenger
  *      - initial implementation and rework communication infrastructure
- *    Martin Melik Merkumians - adds NOW and NOW_MONOTONIC functions, 
+ *    Martin Melik Merkumians - adds NOW and NOW_MONOTONIC functions,
  *        changes for removed implicit constructor for primitive types
  *******************************************************************************/
 #include "iec61131_functions.h"
@@ -150,42 +150,44 @@ CIEC_TIME func_ADD_TIME(const CIEC_TIME &paIN1, const CIEC_TIME &paIN2) {
   return func_ADD(paIN1, paIN2);
 }
 
-CIEC_TIME_OF_DAY func_ADD_TOD_TIME(const CIEC_TIME_OF_DAY& paIN1, const CIEC_TIME& paIN2){
+CIEC_TIME_OF_DAY func_ADD_TOD_TIME(const CIEC_TIME_OF_DAY &paIN1, const CIEC_TIME &paIN2) {
   return CIEC_TIME_OF_DAY(static_cast<CIEC_TIME_OF_DAY::TValueType>(paIN1) + static_cast<CIEC_TIME::TValueType>(paIN2));
 }
 
-CIEC_DATE_AND_TIME func_ADD_DT_TIME(const CIEC_DATE_AND_TIME& paIN1, const CIEC_TIME& paIN2){
-  return CIEC_DATE_AND_TIME(static_cast<CIEC_DATE_AND_TIME::TValueType>(paIN1) + static_cast<CIEC_TIME::TValueType>(paIN2));
+CIEC_DATE_AND_TIME func_ADD_DT_TIME(const CIEC_DATE_AND_TIME &paIN1, const CIEC_TIME &paIN2) {
+  return CIEC_DATE_AND_TIME(static_cast<CIEC_DATE_AND_TIME::TValueType>(paIN1) +
+                            static_cast<CIEC_TIME::TValueType>(paIN2));
 }
 
 CIEC_TIME func_SUB_TIME(const CIEC_TIME &paIN1, const CIEC_TIME &paIN2) {
   return func_SUB(paIN1, paIN2);
 }
 
-CIEC_TIME_OF_DAY func_SUB_TOD_TIME(const CIEC_TIME_OF_DAY& paIN1, const CIEC_TIME& paIN2){
+CIEC_TIME_OF_DAY func_SUB_TOD_TIME(const CIEC_TIME_OF_DAY &paIN1, const CIEC_TIME &paIN2) {
   return CIEC_TIME_OF_DAY(static_cast<CIEC_TIME_OF_DAY::TValueType>(paIN1) - static_cast<CIEC_TIME::TValueType>(paIN2));
 }
 
-CIEC_DATE_AND_TIME func_SUB_DT_TIME(const CIEC_DATE_AND_TIME& paIN1, const CIEC_TIME& paIN2){
-  return CIEC_DATE_AND_TIME(static_cast<CIEC_DATE_AND_TIME::TValueType>(paIN1) - static_cast<CIEC_TIME::TValueType>(paIN2));
+CIEC_DATE_AND_TIME func_SUB_DT_TIME(const CIEC_DATE_AND_TIME &paIN1, const CIEC_TIME &paIN2) {
+  return CIEC_DATE_AND_TIME(static_cast<CIEC_DATE_AND_TIME::TValueType>(paIN1) -
+                            static_cast<CIEC_TIME::TValueType>(paIN2));
 }
 
-CIEC_TIME func_SUB_DT_DT(const CIEC_DATE_AND_TIME& paIN1, const CIEC_DATE_AND_TIME& paIN2){
+CIEC_TIME func_SUB_DT_DT(const CIEC_DATE_AND_TIME &paIN1, const CIEC_DATE_AND_TIME &paIN2) {
   return CIEC_TIME(static_cast<CIEC_DATE_AND_TIME::TValueType>(paIN1) - static_cast<TForteUInt64>(paIN2));
 }
 
-CIEC_TIME func_SUB_TOD_TOD(const CIEC_TIME_OF_DAY &paIN1, const CIEC_TIME_OF_DAY &paIN2){
+CIEC_TIME func_SUB_TOD_TOD(const CIEC_TIME_OF_DAY &paIN1, const CIEC_TIME_OF_DAY &paIN2) {
   return CIEC_TIME(static_cast<CIEC_TIME_OF_DAY::TValueType>(paIN1) - static_cast<CIEC_TIME_OF_DAY::TValueType>(paIN2));
 }
 
-CIEC_TIME func_SUB_DATE_DATE(const CIEC_DATE &paIN1, const CIEC_DATE &paIN2){
+CIEC_TIME func_SUB_DATE_DATE(const CIEC_DATE &paIN1, const CIEC_DATE &paIN2) {
   return CIEC_TIME(static_cast<CIEC_DATE::TValueType>(paIN1) - static_cast<CIEC_DATE::TValueType>(paIN2));
 }
 
-CIEC_DATE_AND_TIME func_CONCAT_DATE_TOD(const CIEC_DATE& paIN1, const CIEC_TIME_OF_DAY& paIN2){
+CIEC_DATE_AND_TIME func_CONCAT_DATE_TOD(const CIEC_DATE &paIN1, const CIEC_TIME_OF_DAY &paIN2) {
   CIEC_DATE_AND_TIME retVal;
 
-  struct tm pstTime; 
+  struct tm pstTime;
   paIN1.getTimeStruct(&pstTime);
 
   time_t t = static_cast<time_t>(static_cast<TForteUInt64>(paIN2) / 1000ULL);
@@ -197,9 +199,15 @@ CIEC_DATE_AND_TIME func_CONCAT_DATE_TOD(const CIEC_DATE& paIN1, const CIEC_TIME_
   return retVal;
 }
 
-CIEC_DATE_AND_TIME func_CONCAT_DT(const CIEC_ANY_INT &YEAR, const CIEC_ANY_INT &MONTH, const CIEC_ANY_INT &DAY, const CIEC_ANY_INT &HOUR, const CIEC_ANY_INT &MINUTE, const CIEC_ANY_INT &SECOND, const CIEC_ANY_INT &MILLISECOND) {
-  struct tm concatTime {};
-  if(YEAR.isSigned()) {
+CIEC_DATE_AND_TIME func_CONCAT_DT(const CIEC_ANY_INT &YEAR,
+                                  const CIEC_ANY_INT &MONTH,
+                                  const CIEC_ANY_INT &DAY,
+                                  const CIEC_ANY_INT &HOUR,
+                                  const CIEC_ANY_INT &MINUTE,
+                                  const CIEC_ANY_INT &SECOND,
+                                  const CIEC_ANY_INT &MILLISECOND) {
+  struct tm concatTime{};
+  if (YEAR.isSigned()) {
     concatTime.tm_year = static_cast<int>(YEAR.getSignedValue() - 1900);
   } else {
     concatTime.tm_year = static_cast<int>(YEAR.getUnsignedValue() - 1900);
@@ -246,8 +254,12 @@ CIEC_DATE_AND_TIME func_CONCAT_DT(const CIEC_ANY_INT &YEAR, const CIEC_ANY_INT &
   return retVal;
 }
 
-CIEC_TIME_OF_DAY func_CONCAT_TOD(const CIEC_ANY_INT &HOUR, const CIEC_ANY_INT &MINUTE, const CIEC_ANY_INT &SECOND, const CIEC_ANY_INT &MILLISECOND) {
-  // Only unsigned representations need to be checked, as negative signed number will be large positive unsigned numbers, outside the allowed range
+CIEC_TIME_OF_DAY func_CONCAT_TOD(const CIEC_ANY_INT &HOUR,
+                                 const CIEC_ANY_INT &MINUTE,
+                                 const CIEC_ANY_INT &SECOND,
+                                 const CIEC_ANY_INT &MILLISECOND) {
+  // Only unsigned representations need to be checked, as negative signed number will be large positive unsigned
+  // numbers, outside the allowed range
   if (HOUR.getUnsignedValue() > 23) {
     DEVLOG_ERROR("CONCAT_TOD HOUR outside of valid range");
     return CIEC_TIME_OF_DAY(0);
@@ -279,11 +291,11 @@ CIEC_LTIME func_ADD_LTIME(const CIEC_LTIME &paIN1, const CIEC_LTIME &paIN2) {
   return func_ADD(paIN1, paIN2);
 }
 
-CIEC_LTIME_OF_DAY func_ADD_LTOD_LTIME(const CIEC_LTIME_OF_DAY& paIN1, const CIEC_LTIME& paIN2){
+CIEC_LTIME_OF_DAY func_ADD_LTOD_LTIME(const CIEC_LTIME_OF_DAY &paIN1, const CIEC_LTIME &paIN2) {
   return CIEC_LTIME_OF_DAY(static_cast<TForteUInt64>(paIN1) + static_cast<TForteUInt64>(paIN2));
 }
 
-CIEC_LDATE_AND_TIME func_ADD_LDT_LTIME(const CIEC_LDATE_AND_TIME& paIN1, const CIEC_LTIME& paIN2){
+CIEC_LDATE_AND_TIME func_ADD_LDT_LTIME(const CIEC_LDATE_AND_TIME &paIN1, const CIEC_LTIME &paIN2) {
   return CIEC_LDATE_AND_TIME(static_cast<TForteUInt64>(paIN1) + static_cast<TForteUInt64>(paIN2));
 }
 
@@ -291,33 +303,33 @@ CIEC_LTIME func_SUB_LTIME(const CIEC_LTIME &paIN1, const CIEC_LTIME &paIN2) {
   return func_SUB(paIN1, paIN2);
 }
 
-CIEC_LTIME_OF_DAY func_SUB_LTOD_LTIME(const CIEC_LTIME_OF_DAY& paIN1, const CIEC_LTIME& paIN2){
+CIEC_LTIME_OF_DAY func_SUB_LTOD_LTIME(const CIEC_LTIME_OF_DAY &paIN1, const CIEC_LTIME &paIN2) {
   return CIEC_LTIME_OF_DAY(static_cast<TForteUInt64>(paIN1) - static_cast<TForteUInt64>(paIN2));
 }
 
-CIEC_LDATE_AND_TIME func_SUB_LDT_LTIME(const CIEC_LDATE_AND_TIME& paIN1, const CIEC_LTIME& paIN2){
+CIEC_LDATE_AND_TIME func_SUB_LDT_LTIME(const CIEC_LDATE_AND_TIME &paIN1, const CIEC_LTIME &paIN2) {
   return CIEC_LDATE_AND_TIME(static_cast<TForteUInt64>(paIN1) - static_cast<TForteUInt64>(paIN2));
 }
 
-CIEC_LTIME func_SUB_LDT_LDT(const CIEC_LDATE_AND_TIME& paIN1, const CIEC_LDATE_AND_TIME& paIN2){
+CIEC_LTIME func_SUB_LDT_LDT(const CIEC_LDATE_AND_TIME &paIN1, const CIEC_LDATE_AND_TIME &paIN2) {
   return CIEC_LTIME(static_cast<TForteUInt64>(paIN1) - static_cast<TForteUInt64>(paIN2));
 }
 
-CIEC_LTIME func_SUB_LTOD_LTOD(const CIEC_LTIME_OF_DAY &paIN1, const CIEC_LTIME_OF_DAY &paIN2){
+CIEC_LTIME func_SUB_LTOD_LTOD(const CIEC_LTIME_OF_DAY &paIN1, const CIEC_LTIME_OF_DAY &paIN2) {
   return CIEC_LTIME(static_cast<TForteUInt64>(paIN1) - static_cast<TForteUInt64>(paIN2));
 }
 
-CIEC_LTIME func_SUB_LDATE_LDATE(const CIEC_LDATE &paIN1, const CIEC_LDATE &paIN2){
+CIEC_LTIME func_SUB_LDATE_LDATE(const CIEC_LDATE &paIN1, const CIEC_LDATE &paIN2) {
   return CIEC_LTIME(static_cast<TForteUInt64>(paIN1) - static_cast<TForteUInt64>(paIN2));
 }
 
-CIEC_LDATE_AND_TIME func_CONCAT_LDATE_LTOD(const CIEC_LDATE& paIN1, const CIEC_LTIME_OF_DAY& paIN2){
+CIEC_LDATE_AND_TIME func_CONCAT_LDATE_LTOD(const CIEC_LDATE &paIN1, const CIEC_LTIME_OF_DAY &paIN2) {
   CIEC_LDATE_AND_TIME retVal;
 
   struct tm pstTime;
   paIN1.getTimeStruct(&pstTime);
 
-  time_t t = static_cast<time_t>( paIN2 / 1000ULL);
+  time_t t = static_cast<time_t>(paIN2 / 1000ULL);
   pstTime.tm_hour = static_cast<int>(t / 3600);
   pstTime.tm_min = static_cast<int>((t % 3600) / 60);
   pstTime.tm_sec = static_cast<int>(t % 60);
@@ -326,10 +338,16 @@ CIEC_LDATE_AND_TIME func_CONCAT_LDATE_LTOD(const CIEC_LDATE& paIN1, const CIEC_L
   return retVal;
 }
 
-CIEC_LDATE_AND_TIME func_CONCAT_LDT(const CIEC_ANY_INT &YEAR, const CIEC_ANY_INT &MONTH, const CIEC_ANY_INT &DAY, const CIEC_ANY_INT &HOUR, const CIEC_ANY_INT &MINUTE, const CIEC_ANY_INT &SECOND, const CIEC_ANY_INT &MILLISECOND) {
+CIEC_LDATE_AND_TIME func_CONCAT_LDT(const CIEC_ANY_INT &YEAR,
+                                    const CIEC_ANY_INT &MONTH,
+                                    const CIEC_ANY_INT &DAY,
+                                    const CIEC_ANY_INT &HOUR,
+                                    const CIEC_ANY_INT &MINUTE,
+                                    const CIEC_ANY_INT &SECOND,
+                                    const CIEC_ANY_INT &MILLISECOND) {
   struct tm concatTime{};
 
-  if(YEAR.isSigned()) {
+  if (YEAR.isSigned()) {
     concatTime.tm_year = static_cast<int>(YEAR.getSignedValue() - 1900);
   } else {
     concatTime.tm_year = static_cast<int>(YEAR.getUnsignedValue() - 1900);
@@ -380,8 +398,12 @@ CIEC_LDATE func_CONCAT_LDATE(const CIEC_ANY_INT &YEAR, const CIEC_ANY_INT &MONTH
   return func_LDT_TO_LDATE(func_CONCAT_DT(YEAR, MONTH, DAY, CIEC_LINT(0), CIEC_LINT(0), CIEC_LINT(0), CIEC_LINT(0)));
 }
 
-CIEC_LTIME_OF_DAY func_CONCAT_LTOD(const CIEC_ANY_INT &HOUR, const CIEC_ANY_INT &MINUTE, const CIEC_ANY_INT &SECOND, const CIEC_ANY_INT &MILLISECOND) {
-  // Only unsigned representations need to be checked, as negative signed number will be large positive unsigned numbers, outside the allowed range
+CIEC_LTIME_OF_DAY func_CONCAT_LTOD(const CIEC_ANY_INT &HOUR,
+                                   const CIEC_ANY_INT &MINUTE,
+                                   const CIEC_ANY_INT &SECOND,
+                                   const CIEC_ANY_INT &MILLISECOND) {
+  // Only unsigned representations need to be checked, as negative signed number will be large positive unsigned
+  // numbers, outside the allowed range
   if (HOUR.getUnsignedValue() > 23) {
     DEVLOG_ERROR("CONCAT_TOD HOUR outside of valid range");
     return CIEC_TIME_OF_DAY(0);
@@ -425,11 +447,19 @@ void func_SPLIT_LDATE(const CIEC_LDATE &paValue, CIEC_ANY_INT &YEAR, CIEC_ANY_IN
   DAY.setUnsignedValue(timeStruct.tm_mday);
 }
 
-void func_SPLIT_TOD(const CIEC_TIME_OF_DAY &paValue, CIEC_ANY_INT &HOUR, CIEC_ANY_INT &MINUTE, CIEC_ANY_INT &SECOND, CIEC_ANY_INT &MILLISECOND) {
+void func_SPLIT_TOD(const CIEC_TIME_OF_DAY &paValue,
+                    CIEC_ANY_INT &HOUR,
+                    CIEC_ANY_INT &MINUTE,
+                    CIEC_ANY_INT &SECOND,
+                    CIEC_ANY_INT &MILLISECOND) {
   func_SPLIT_LTOD(paValue, HOUR, MINUTE, SECOND, MILLISECOND);
 }
 
-void func_SPLIT_LTOD(const CIEC_LTIME_OF_DAY &paValue, CIEC_ANY_INT &HOUR, CIEC_ANY_INT &MINUTE, CIEC_ANY_INT &SECOND, CIEC_ANY_INT &MILLISECOND) {
+void func_SPLIT_LTOD(const CIEC_LTIME_OF_DAY &paValue,
+                     CIEC_ANY_INT &HOUR,
+                     CIEC_ANY_INT &MINUTE,
+                     CIEC_ANY_INT &SECOND,
+                     CIEC_ANY_INT &MILLISECOND) {
   CIEC_LTIME_OF_DAY::TValueType nanoSeconds = static_cast<CIEC_LTIME_OF_DAY::TValueType>(paValue);
   CIEC_LTIME_OF_DAY::TValueType hours = nanoSeconds / (3600ULL * CIEC_ANY_DURATION::csmForteTimeBaseUnitsPerSecond);
   HOUR.setUnsignedValue(hours);
@@ -443,15 +473,30 @@ void func_SPLIT_LTOD(const CIEC_LTIME_OF_DAY &paValue, CIEC_ANY_INT &HOUR, CIEC_
   SECOND.setUnsignedValue(seconds);
 
   nanoSeconds = nanoSeconds - seconds * CIEC_ANY_DURATION::csmForteTimeBaseUnitsPerSecond;
-  CIEC_LTIME_OF_DAY::TValueType milliSeconds = nanoSeconds / (CIEC_ANY_DURATION::csmForteTimeBaseUnitsPerSecond / 1000ULL);
+  CIEC_LTIME_OF_DAY::TValueType milliSeconds =
+      nanoSeconds / (CIEC_ANY_DURATION::csmForteTimeBaseUnitsPerSecond / 1000ULL);
   MILLISECOND.setUnsignedValue(milliSeconds);
 }
 
-void func_SPLIT_DT(const CIEC_DATE_AND_TIME &paValue, CIEC_ANY_INT &YEAR, CIEC_ANY_INT &MONTH, CIEC_ANY_INT &DAY, CIEC_ANY_INT &HOUR, CIEC_ANY_INT &MINUTE, CIEC_ANY_INT &SECOND, CIEC_ANY_INT &MILLISECOND) {
+void func_SPLIT_DT(const CIEC_DATE_AND_TIME &paValue,
+                   CIEC_ANY_INT &YEAR,
+                   CIEC_ANY_INT &MONTH,
+                   CIEC_ANY_INT &DAY,
+                   CIEC_ANY_INT &HOUR,
+                   CIEC_ANY_INT &MINUTE,
+                   CIEC_ANY_INT &SECOND,
+                   CIEC_ANY_INT &MILLISECOND) {
   func_SPLIT_LDT(paValue, YEAR, MONTH, DAY, HOUR, MINUTE, SECOND, MILLISECOND);
 }
 
-void func_SPLIT_LDT(const CIEC_LDATE_AND_TIME &paValue, CIEC_ANY_INT &YEAR, CIEC_ANY_INT &MONTH, CIEC_ANY_INT &DAY, CIEC_ANY_INT &HOUR, CIEC_ANY_INT &MINUTE, CIEC_ANY_INT &SECOND, CIEC_ANY_INT &MILLISECOND) {
+void func_SPLIT_LDT(const CIEC_LDATE_AND_TIME &paValue,
+                    CIEC_ANY_INT &YEAR,
+                    CIEC_ANY_INT &MONTH,
+                    CIEC_ANY_INT &DAY,
+                    CIEC_ANY_INT &HOUR,
+                    CIEC_ANY_INT &MINUTE,
+                    CIEC_ANY_INT &SECOND,
+                    CIEC_ANY_INT &MILLISECOND) {
   struct tm timeStruct;
   paValue.getTimeStruct(&timeStruct);
 
@@ -465,98 +510,47 @@ void func_SPLIT_LDT(const CIEC_LDATE_AND_TIME &paValue, CIEC_ANY_INT &YEAR, CIEC
 }
 
 void swapEndianessInplace(CIEC_ARRAY &paValue) {
-  for(intmax_t i = paValue.getLowerBound(); i <= paValue.getUpperBound(); i++) {
+  for (intmax_t i = paValue.getLowerBound(); i <= paValue.getUpperBound(); i++) {
     CIEC_ANY &element = paValue[i];
     switch (element.getDataTypeID()) {
-    case CIEC_ANY::e_BOOL:
-      element.setValue(swapEndianess(reinterpret_cast<const CIEC_BOOL &>(element)));
-      break;
-    case CIEC_ANY::e_SINT:
-      element.setValue(swapEndianess(reinterpret_cast<const CIEC_SINT &>(element)));
-      break;
-    case CIEC_ANY::e_INT:
-      element.setValue(swapEndianess(reinterpret_cast<const CIEC_INT &>(element)));
-      break;
-    case CIEC_ANY::e_DINT:
-      element.setValue(swapEndianess(reinterpret_cast<const CIEC_DINT &>(element)));
-      break;
-    case CIEC_ANY::e_LINT:
-      element.setValue(swapEndianess(reinterpret_cast<const CIEC_LINT &>(element)));
-      break;
-    case CIEC_ANY::e_USINT:
-      element.setValue(swapEndianess(reinterpret_cast<const CIEC_USINT &>(element)));
-      break;
-    case CIEC_ANY::e_UINT:
-      element.setValue(swapEndianess(reinterpret_cast<const CIEC_UINT &>(element)));
-      break;
-    case CIEC_ANY::e_UDINT:
-      element.setValue(swapEndianess(reinterpret_cast<const CIEC_UDINT &>(element)));
-      break;
-    case CIEC_ANY::e_ULINT:
-      element.setValue(swapEndianess(reinterpret_cast<const CIEC_ULINT &>(element)));
-      break;
-    case CIEC_ANY::e_BYTE:
-      element.setValue(swapEndianess(reinterpret_cast<const CIEC_BYTE &>(element)));
-      break;
-    case CIEC_ANY::e_WORD:
-      element.setValue(swapEndianess(reinterpret_cast<const CIEC_WORD &>(element)));
-      break;
-    case CIEC_ANY::e_DWORD:
-      element.setValue(swapEndianess(reinterpret_cast<const CIEC_DWORD &>(element)));
-      break;
-    case CIEC_ANY::e_LWORD:
-      element.setValue(swapEndianess(reinterpret_cast<const CIEC_LWORD &>(element)));
-      break;
-    case CIEC_ANY::e_DATE:
-      element.setValue(swapEndianess(reinterpret_cast<const CIEC_DATE &>(element)));
-      break;
-    case CIEC_ANY::e_TIME_OF_DAY:
-      element.setValue(swapEndianess(reinterpret_cast<const CIEC_TIME_OF_DAY &>(element)));
-      break;
-    case CIEC_ANY::e_DATE_AND_TIME:
-      element.setValue(swapEndianess(reinterpret_cast<const CIEC_DATE_AND_TIME &>(element)));
-      break;
-    case CIEC_ANY::e_TIME:
-      element.setValue(swapEndianess(reinterpret_cast<const CIEC_TIME &>(element)));
-      break;
-    case CIEC_ANY::e_CHAR:
-      element.setValue(swapEndianess(reinterpret_cast<const CIEC_CHAR &>(element)));
-      break;
-    case CIEC_ANY::e_WCHAR:
-      element.setValue(swapEndianess(reinterpret_cast<const CIEC_WCHAR &>(element)));
-      break;
-    case CIEC_ANY::e_LDATE:
-      element.setValue(swapEndianess(reinterpret_cast<const CIEC_LDATE &>(element)));
-      break;
-    case CIEC_ANY::e_LTIME_OF_DAY:
-      element.setValue(swapEndianess(reinterpret_cast<const CIEC_LTIME_OF_DAY &>(element)));
-      break;
-    case CIEC_ANY::e_LDATE_AND_TIME:
-      element.setValue(swapEndianess(reinterpret_cast<const CIEC_LDATE_AND_TIME &>(element)));
-      break;
-    case CIEC_ANY::e_LTIME:
-      element.setValue(swapEndianess(reinterpret_cast<const CIEC_LDATE &>(element)));
-      break;
-    case CIEC_ANY::e_REAL:
-      element.setValue(swapEndianess(reinterpret_cast<const CIEC_REAL &>(element)));
-      break;
-    case CIEC_ANY::e_LREAL:
-      element.setValue(swapEndianess(reinterpret_cast<const CIEC_LREAL &>(element)));
-      break;
-    case CIEC_ANY::e_STRING:
-      element.setValue(swapEndianess(reinterpret_cast<const CIEC_STRING &>(element)));
-      break;
-    case CIEC_ANY::e_WSTRING:
-      element.setValue(swapEndianess(reinterpret_cast<const CIEC_WSTRING &>(element)));
-      break;
-    case CIEC_ANY::e_ARRAY:
-      swapEndianessInplace(reinterpret_cast<CIEC_ARRAY &>(element));
-      break;
-    case CIEC_ANY::e_STRUCT:
-      swapEndianessInplace(reinterpret_cast<CIEC_STRUCT &>(element));
-      break;
-    default:
-      break; // do nothing
+      case CIEC_ANY::e_BOOL: element.setValue(swapEndianess(reinterpret_cast<const CIEC_BOOL &>(element))); break;
+      case CIEC_ANY::e_SINT: element.setValue(swapEndianess(reinterpret_cast<const CIEC_SINT &>(element))); break;
+      case CIEC_ANY::e_INT: element.setValue(swapEndianess(reinterpret_cast<const CIEC_INT &>(element))); break;
+      case CIEC_ANY::e_DINT: element.setValue(swapEndianess(reinterpret_cast<const CIEC_DINT &>(element))); break;
+      case CIEC_ANY::e_LINT: element.setValue(swapEndianess(reinterpret_cast<const CIEC_LINT &>(element))); break;
+      case CIEC_ANY::e_USINT: element.setValue(swapEndianess(reinterpret_cast<const CIEC_USINT &>(element))); break;
+      case CIEC_ANY::e_UINT: element.setValue(swapEndianess(reinterpret_cast<const CIEC_UINT &>(element))); break;
+      case CIEC_ANY::e_UDINT: element.setValue(swapEndianess(reinterpret_cast<const CIEC_UDINT &>(element))); break;
+      case CIEC_ANY::e_ULINT: element.setValue(swapEndianess(reinterpret_cast<const CIEC_ULINT &>(element))); break;
+      case CIEC_ANY::e_BYTE: element.setValue(swapEndianess(reinterpret_cast<const CIEC_BYTE &>(element))); break;
+      case CIEC_ANY::e_WORD: element.setValue(swapEndianess(reinterpret_cast<const CIEC_WORD &>(element))); break;
+      case CIEC_ANY::e_DWORD: element.setValue(swapEndianess(reinterpret_cast<const CIEC_DWORD &>(element))); break;
+      case CIEC_ANY::e_LWORD: element.setValue(swapEndianess(reinterpret_cast<const CIEC_LWORD &>(element))); break;
+      case CIEC_ANY::e_DATE: element.setValue(swapEndianess(reinterpret_cast<const CIEC_DATE &>(element))); break;
+      case CIEC_ANY::e_TIME_OF_DAY:
+        element.setValue(swapEndianess(reinterpret_cast<const CIEC_TIME_OF_DAY &>(element)));
+        break;
+      case CIEC_ANY::e_DATE_AND_TIME:
+        element.setValue(swapEndianess(reinterpret_cast<const CIEC_DATE_AND_TIME &>(element)));
+        break;
+      case CIEC_ANY::e_TIME: element.setValue(swapEndianess(reinterpret_cast<const CIEC_TIME &>(element))); break;
+      case CIEC_ANY::e_CHAR: element.setValue(swapEndianess(reinterpret_cast<const CIEC_CHAR &>(element))); break;
+      case CIEC_ANY::e_WCHAR: element.setValue(swapEndianess(reinterpret_cast<const CIEC_WCHAR &>(element))); break;
+      case CIEC_ANY::e_LDATE: element.setValue(swapEndianess(reinterpret_cast<const CIEC_LDATE &>(element))); break;
+      case CIEC_ANY::e_LTIME_OF_DAY:
+        element.setValue(swapEndianess(reinterpret_cast<const CIEC_LTIME_OF_DAY &>(element)));
+        break;
+      case CIEC_ANY::e_LDATE_AND_TIME:
+        element.setValue(swapEndianess(reinterpret_cast<const CIEC_LDATE_AND_TIME &>(element)));
+        break;
+      case CIEC_ANY::e_LTIME: element.setValue(swapEndianess(reinterpret_cast<const CIEC_LDATE &>(element))); break;
+      case CIEC_ANY::e_REAL: element.setValue(swapEndianess(reinterpret_cast<const CIEC_REAL &>(element))); break;
+      case CIEC_ANY::e_LREAL: element.setValue(swapEndianess(reinterpret_cast<const CIEC_LREAL &>(element))); break;
+      case CIEC_ANY::e_STRING: element.setValue(swapEndianess(reinterpret_cast<const CIEC_STRING &>(element))); break;
+      case CIEC_ANY::e_WSTRING: element.setValue(swapEndianess(reinterpret_cast<const CIEC_WSTRING &>(element))); break;
+      case CIEC_ANY::e_ARRAY: swapEndianessInplace(reinterpret_cast<CIEC_ARRAY &>(element)); break;
+      case CIEC_ANY::e_STRUCT: swapEndianessInplace(reinterpret_cast<CIEC_STRUCT &>(element)); break;
+      default: break; // do nothing
     }
   }
 }
@@ -565,95 +559,38 @@ void swapEndianessInplace(CIEC_STRUCT &paValue) {
   for (size_t i = 0; i < paValue.getStructSize(); ++i) {
     CIEC_ANY &member = *paValue.getMember(i);
     switch (member.getDataTypeID()) {
-      case CIEC_ANY::e_BOOL:
-        member.setValue(swapEndianess(static_cast<CIEC_BOOL &>(member)));
-        break;
-      case CIEC_ANY::e_SINT:
-        member.setValue(swapEndianess(static_cast<CIEC_SINT &>(member)));
-        break;
-      case CIEC_ANY::e_INT:
-        member.setValue(swapEndianess(static_cast<CIEC_INT &>(member)));
-        break;
-      case CIEC_ANY::e_DINT:
-        member.setValue(swapEndianess(static_cast<CIEC_DINT &>(member)));
-        break;
-      case CIEC_ANY::e_LINT:
-        member.setValue(swapEndianess(static_cast<CIEC_LINT &>(member)));
-        break;
-      case CIEC_ANY::e_USINT:
-        member.setValue(swapEndianess(static_cast<CIEC_USINT &>(member)));
-        break;
-      case CIEC_ANY::e_UINT:
-        member.setValue(swapEndianess(static_cast<CIEC_UINT &>(member)));
-        break;
-      case CIEC_ANY::e_UDINT:
-        member.setValue(swapEndianess(static_cast<CIEC_UDINT &>(member)));
-        break;
-      case CIEC_ANY::e_ULINT:
-        member.setValue(swapEndianess(static_cast<CIEC_ULINT &>(member)));
-        break;
-      case CIEC_ANY::e_BYTE:
-        member.setValue(swapEndianess(static_cast<CIEC_BYTE &>(member)));
-        break;
-      case CIEC_ANY::e_WORD:
-        member.setValue(swapEndianess(static_cast<CIEC_WORD &>(member)));
-        break;
-      case CIEC_ANY::e_DWORD:
-        member.setValue(swapEndianess(static_cast<CIEC_DWORD &>(member)));
-        break;
-      case CIEC_ANY::e_LWORD:
-        member.setValue(swapEndianess(static_cast<CIEC_LWORD &>(member)));
-        break;
-      case CIEC_ANY::e_DATE:
-        member.setValue(swapEndianess(static_cast<CIEC_DATE &>(member)));
-        break;
-      case CIEC_ANY::e_TIME_OF_DAY:
-        member.setValue(swapEndianess(static_cast<CIEC_TIME_OF_DAY &>(member)));
-        break;
-      case CIEC_ANY::e_DATE_AND_TIME:
-        member.setValue(swapEndianess(static_cast<CIEC_DATE_AND_TIME &>(member)));
-        break;
-      case CIEC_ANY::e_TIME:
-        member.setValue(swapEndianess(static_cast<CIEC_TIME &>(member)));
-        break;
-      case CIEC_ANY::e_CHAR:
-        member.setValue(swapEndianess(static_cast<CIEC_CHAR &>(member)));
-        break;
-      case CIEC_ANY::e_WCHAR:
-        member.setValue(swapEndianess(static_cast<CIEC_WCHAR &>(member)));
-        break;
-      case CIEC_ANY::e_LDATE:
-        member.setValue(swapEndianess(static_cast<CIEC_LDATE &>(member)));
-        break;
-      case CIEC_ANY::e_LTIME_OF_DAY:
-        member.setValue(swapEndianess(static_cast<CIEC_LTIME_OF_DAY &>(member)));
-        break;
+      case CIEC_ANY::e_BOOL: member.setValue(swapEndianess(static_cast<CIEC_BOOL &>(member))); break;
+      case CIEC_ANY::e_SINT: member.setValue(swapEndianess(static_cast<CIEC_SINT &>(member))); break;
+      case CIEC_ANY::e_INT: member.setValue(swapEndianess(static_cast<CIEC_INT &>(member))); break;
+      case CIEC_ANY::e_DINT: member.setValue(swapEndianess(static_cast<CIEC_DINT &>(member))); break;
+      case CIEC_ANY::e_LINT: member.setValue(swapEndianess(static_cast<CIEC_LINT &>(member))); break;
+      case CIEC_ANY::e_USINT: member.setValue(swapEndianess(static_cast<CIEC_USINT &>(member))); break;
+      case CIEC_ANY::e_UINT: member.setValue(swapEndianess(static_cast<CIEC_UINT &>(member))); break;
+      case CIEC_ANY::e_UDINT: member.setValue(swapEndianess(static_cast<CIEC_UDINT &>(member))); break;
+      case CIEC_ANY::e_ULINT: member.setValue(swapEndianess(static_cast<CIEC_ULINT &>(member))); break;
+      case CIEC_ANY::e_BYTE: member.setValue(swapEndianess(static_cast<CIEC_BYTE &>(member))); break;
+      case CIEC_ANY::e_WORD: member.setValue(swapEndianess(static_cast<CIEC_WORD &>(member))); break;
+      case CIEC_ANY::e_DWORD: member.setValue(swapEndianess(static_cast<CIEC_DWORD &>(member))); break;
+      case CIEC_ANY::e_LWORD: member.setValue(swapEndianess(static_cast<CIEC_LWORD &>(member))); break;
+      case CIEC_ANY::e_DATE: member.setValue(swapEndianess(static_cast<CIEC_DATE &>(member))); break;
+      case CIEC_ANY::e_TIME_OF_DAY: member.setValue(swapEndianess(static_cast<CIEC_TIME_OF_DAY &>(member))); break;
+      case CIEC_ANY::e_DATE_AND_TIME: member.setValue(swapEndianess(static_cast<CIEC_DATE_AND_TIME &>(member))); break;
+      case CIEC_ANY::e_TIME: member.setValue(swapEndianess(static_cast<CIEC_TIME &>(member))); break;
+      case CIEC_ANY::e_CHAR: member.setValue(swapEndianess(static_cast<CIEC_CHAR &>(member))); break;
+      case CIEC_ANY::e_WCHAR: member.setValue(swapEndianess(static_cast<CIEC_WCHAR &>(member))); break;
+      case CIEC_ANY::e_LDATE: member.setValue(swapEndianess(static_cast<CIEC_LDATE &>(member))); break;
+      case CIEC_ANY::e_LTIME_OF_DAY: member.setValue(swapEndianess(static_cast<CIEC_LTIME_OF_DAY &>(member))); break;
       case CIEC_ANY::e_LDATE_AND_TIME:
         member.setValue(swapEndianess(static_cast<CIEC_LDATE_AND_TIME &>(member)));
         break;
-      case CIEC_ANY::e_LTIME:
-        member.setValue(swapEndianess(static_cast<CIEC_LDATE &>(member)));
-        break;
-      case CIEC_ANY::e_REAL:
-        member.setValue(swapEndianess(static_cast<CIEC_REAL &>(member)));
-        break;
-      case CIEC_ANY::e_LREAL:
-        member.setValue(swapEndianess(static_cast<CIEC_LREAL &>(member)));
-        break;
-      case CIEC_ANY::e_STRING:
-        member.setValue(swapEndianess(static_cast<CIEC_STRING &>(member)));
-        break;
-      case CIEC_ANY::e_WSTRING:
-        member.setValue(swapEndianess(static_cast<CIEC_WSTRING &>(member)));
-        break;
-      case CIEC_ANY::e_ARRAY:
-        swapEndianessInplace(static_cast<CIEC_ARRAY &>(member));
-        break;
-      case CIEC_ANY::e_STRUCT:
-        swapEndianessInplace(static_cast<CIEC_STRUCT &>(member));
-        break;
-      default:
-        break; //do nothing
+      case CIEC_ANY::e_LTIME: member.setValue(swapEndianess(static_cast<CIEC_LDATE &>(member))); break;
+      case CIEC_ANY::e_REAL: member.setValue(swapEndianess(static_cast<CIEC_REAL &>(member))); break;
+      case CIEC_ANY::e_LREAL: member.setValue(swapEndianess(static_cast<CIEC_LREAL &>(member))); break;
+      case CIEC_ANY::e_STRING: member.setValue(swapEndianess(static_cast<CIEC_STRING &>(member))); break;
+      case CIEC_ANY::e_WSTRING: member.setValue(swapEndianess(static_cast<CIEC_WSTRING &>(member))); break;
+      case CIEC_ANY::e_ARRAY: swapEndianessInplace(static_cast<CIEC_ARRAY &>(member)); break;
+      case CIEC_ANY::e_STRUCT: swapEndianessInplace(static_cast<CIEC_STRUCT &>(member)); break;
+      default: break; // do nothing
     }
   }
 }

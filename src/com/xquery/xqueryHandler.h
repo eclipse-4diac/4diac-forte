@@ -1,12 +1,12 @@
 /*********************************************************************
-* Copyright (c) 2017 fortiss GmbH
-*
-* This program and the accompanying materials are made
-* available under the terms of the Eclipse Public License 2.0
-* which is available at https://www.eclipse.org/legal/epl-2.0/
-*
-* SPDX-License-Identifier: EPL-2.0
-**********************************************************************/
+ * Copyright (c) 2017 fortiss GmbH
+ *
+ * This program and the accompanying materials are made
+ * available under the terms of the Eclipse Public License 2.0
+ * which is available at https://www.eclipse.org/legal/epl-2.0/
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ **********************************************************************/
 
 #ifndef XQUERY_XQUERYHANDLER_H_
 #define XQUERY_XQUERYHANDLER_H_
@@ -19,8 +19,8 @@
 #include <forte_sem.h>
 
 // cppcheck-suppress noConstructor
-class CXqueryHandler : public CExternalEventHandler, private CThread{
-  DECLARE_HANDLER(CXqueryHandler)
+class CXqueryHandler : public CExternalEventHandler, private CThread {
+    DECLARE_HANDLER(CXqueryHandler)
 
   private:
     typedef CSinglyLinkedList<CXqueryClientLayer *> TXqueryFBContainer;
@@ -40,11 +40,10 @@ class CXqueryHandler : public CExternalEventHandler, private CThread{
     void setPriority(int pa_prio) override;
     int getPriority() const override;
 
-    int registerLayer(CXqueryClientLayer* paLayer);
+    int registerLayer(CXqueryClientLayer *paLayer);
 
   protected:
     void run() override;
-
 };
 
 #endif /* XQUERY_XQUERYHANDLER_H_ */

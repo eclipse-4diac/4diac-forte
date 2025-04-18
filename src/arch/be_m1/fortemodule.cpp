@@ -21,14 +21,14 @@
 #include "BE_RMT_DEV.h"
 #include <forteinit.h>
 
-#define MIO_VERS_LEN                       24
-#define FORTE_DELAY         25            // Access cycle time in ms
-#define FORTE_C_PARMS       "OwnParms"        // Group in mconfig.ini
-#define FORTE_C_DELAY       "DelayTime"       // Keyword in mconfig.ini
+#define MIO_VERS_LEN 24
+#define FORTE_DELAY 25 // Access cycle time in ms
+#define FORTE_C_PARMS "OwnParms" // Group in mconfig.ini
+#define FORTE_C_DELAY "DelayTime" // Keyword in mconfig.ini
 
 MLOCAL CHAR FORTE_Version[MIO_VERS_LEN] =
 #include "forte.ver"
-;
+    ;
 
 extern UINT32 FORTE_MemPart;
 
@@ -40,7 +40,7 @@ MLOCAL VOID PanicHandler(UINT32 PanicMode);
 class CFORTEModule;
 
 //--- globals
-CFORTEModule* gMainModule;
+CFORTEModule *gMainModule;
 
 //--- SW-Module memory partition, needed for new operator
 UINT32 FORTE_MemPart = 0;
@@ -60,7 +60,7 @@ UINT32 FORTE_MemPart = 0;
  * Ret:  >0      Task-Id, module initialized correctly.
  *       <0      Error during initialization.
  *-------------------------------------------------------------------------*/
-extern "C" SINT32 forte_Init(MOD_CONF *pConf, MOD_LOAD *pLoad){
+extern "C" SINT32 forte_Init(MOD_CONF *pConf, MOD_LOAD *pLoad) {
   //--- store memory partition, needed for new operator
   FORTE_MemPart = pConf->MemPart;
 
@@ -68,14 +68,15 @@ extern "C" SINT32 forte_Init(MOD_CONF *pConf, MOD_LOAD *pLoad){
   gMainModule = new CFORTEModule();
 
   //--- Close application if an error is occurred.
-  if(gMainModule == nullptr)
+  if (gMainModule == nullptr)
     return ERROR;
 
   //--- Initialize software module.
-  SINT32 TaskId = gMainModule->Init(pConf, pLoad, CFORTEModule::MINVERS, CFORTEModule::MAXVERS, 10000, FORTE_Version, "FORTE", (VOIDFUNCPTR) PanicHandler, (VOIDFUNCPTR) ExcHandler);
+  SINT32 TaskId = gMainModule->Init(pConf, pLoad, CFORTEModule::MINVERS, CFORTEModule::MAXVERS, 10000, FORTE_Version,
+                                    "FORTE", (VOIDFUNCPTR) PanicHandler, (VOIDFUNCPTR) ExcHandler);
 
   //--- Close application if an error is occurred.
-  if(TaskId == ERROR)
+  if (TaskId == ERROR)
     SAFE_DELETE(gMainModule);
 
   return TaskId;
@@ -89,7 +90,7 @@ extern "C" SINT32 forte_Init(MOD_CONF *pConf, MOD_LOAD *pLoad){
  *
  * Ret:
  *-------------------------------------------------------------------------*/
-MLOCAL VOID ExcHandler(SINT32 Signal){
+MLOCAL VOID ExcHandler(SINT32 Signal) {
   DEVLOG_INFO("%s: Signal %d received by task %x.", gMainModule->GetAppName(), Signal, taskIdSelf());
 
   //--- Deinit application task and resources.
@@ -104,7 +105,7 @@ MLOCAL VOID ExcHandler(SINT32 Signal){
  *
  * Ret:
  *-------------------------------------------------------------------------*/
-MLOCAL VOID PanicHandler(UINT32 PanicMode){
+MLOCAL VOID PanicHandler(UINT32 PanicMode) {
   // Bring critical parts to a predefined state. For example save
   // data to NV-RAM or close open files.
   //
@@ -123,8 +124,7 @@ MLOCAL VOID PanicHandler(UINT32 PanicMode){
  *
  * Ret:
  *-------------------------------------------------------------------------*/
-CFORTEModule::CFORTEModule() :
-    mDev(nullptr){
+CFORTEModule::CFORTEModule() : mDev(nullptr) {
   forteInit::initForte();
 }
 
@@ -136,8 +136,8 @@ CFORTEModule::CFORTEModule() :
  *
  * Ret:
  *-------------------------------------------------------------------------*/
-CFORTEModule::~CFORTEModule(){
-  if(GetDebugLevel() & APP_DBG_INFO1)
+CFORTEModule::~CFORTEModule() {
+  if (GetDebugLevel() & APP_DBG_INFO1)
     DEVLOG_INFO("FORTE_mod: Destruct done.");
 }
 
@@ -151,7 +151,7 @@ CFORTEModule::~CFORTEModule(){
  * Ret:  0   Everything is Ok
  *      <0   Error occurred
  *-------------------------------------------------------------------------*/
-SINT32 CFORTEModule::AppEarlyInit(VOID){
+SINT32 CFORTEModule::AppEarlyInit(VOID) {
   return (0);
 }
 
@@ -165,15 +165,15 @@ SINT32 CFORTEModule::AppEarlyInit(VOID){
  * Ret:  0   Everything is Ok
  *      <0   Error occurred
  *-------------------------------------------------------------------------*/
-SINT32 CFORTEModule::AppInit(VOID){
+SINT32 CFORTEModule::AppInit(VOID) {
   mFORTEstartOK = 1;
   //--- Add global variables for values that have to be exported via SVI.
-  if(GetSVIHandler().AddGlobVar("FORTEstart", SVI_F_INOUT | SVI_F_UINT32, 4, &(mFORTEstartOK), 0, 0) != OK){
+  if (GetSVIHandler().AddGlobVar("FORTEstart", SVI_F_INOUT | SVI_F_UINT32, 4, &(mFORTEstartOK), 0, 0) != OK) {
     DEVLOG_ERROR("FORTE_mod::APPINIT: Can't add SVI variable 'FORTEstart'!");
   }
 
   DEVLOG_INFO("appInit of forte\n");
-  if(0 == mDev){
+  if (0 == mDev) {
     mDev = new BE_RMT_DEV(*this);
     DEVLOG_INFO("appInit after new BE_RMT_DEV");
   }
@@ -193,7 +193,7 @@ SINT32 CFORTEModule::AppInit(VOID){
  * Ret:  0   Everything ok
  *      <0   Error occurred
  *-------------------------------------------------------------------------*/
-SINT32 CFORTEModule::AppDeInit(VOID){
+SINT32 CFORTEModule::AppDeInit(VOID) {
   //--- Delete walking light class
   SAFE_DELETE(mDev);
   return (0);
@@ -209,7 +209,7 @@ SINT32 CFORTEModule::AppDeInit(VOID){
  * Ret:  0   Everything ok
  *      <0   Error occurred
  *-------------------------------------------------------------------------*/
-SINT32 CFORTEModule::AppLateDeInit(VOID){
+SINT32 CFORTEModule::AppLateDeInit(VOID) {
   return (0);
 }
 
@@ -223,12 +223,11 @@ SINT32 CFORTEModule::AppLateDeInit(VOID){
  * Ret:  0   Everything ok
  *      <0   Error occurred
  *-------------------------------------------------------------------------*/
-SINT32 CFORTEModule::AppEOI(VOID){
-  if(0 != mDev){
+SINT32 CFORTEModule::AppEOI(VOID) {
+  if (0 != mDev) {
     mDev->startDevice();
     DEVLOG_INFO("mDev started\n");
-  }
-  else{
+  } else {
     DEVLOG_ERROR("no mDev preset\n");
   }
 
@@ -245,8 +244,8 @@ SINT32 CFORTEModule::AppEOI(VOID){
  * Ret:      OK      Everything ok
  *           ERROR   An error occurred
  *-------------------------------------------------------------------------*/
-SINT32 CFORTEModule::AppStop(VOID){
-  if(0 != mDev){
+SINT32 CFORTEModule::AppStop(VOID) {
+  if (0 != mDev) {
     mDev->changeExecutionState(EMGMCommandType::Stop);
   }
 
@@ -263,7 +262,7 @@ SINT32 CFORTEModule::AppStop(VOID){
  * Ret:      OK      Everything ok
  *           ERROR   An error occurred
  *-------------------------------------------------------------------------*/
-SINT32 CFORTEModule::AppRun(VOID){
+SINT32 CFORTEModule::AppRun(VOID) {
 
   return OK;
 }
@@ -278,7 +277,7 @@ SINT32 CFORTEModule::AppRun(VOID){
  * Ret:  0   Everything ok
  *      <0   Error occurred
  *-------------------------------------------------------------------------*/
-VOID CFORTEModule::AppPanicHandler(UINT32 PanicMode){
+VOID CFORTEModule::AppPanicHandler(UINT32 PanicMode) {
   sys_Printf("%s AppPanicHandler", GetAppName());
 }
 
@@ -290,16 +289,15 @@ VOID CFORTEModule::AppPanicHandler(UINT32 PanicMode){
  * Throws:
  * Ret:
  *-------------------------------------------------------------------------*/
-VOID CFORTEModule::RpcNewCfg(SMI_MSG *pMsg){
+VOID CFORTEModule::RpcNewCfg(SMI_MSG *pMsg) {
   SMI_NEWCFG_R Reply;
 
-  if(GetModState() == RES_S_STOP || GetModState() == RES_S_RUN){
+  if (GetModState() == RES_S_STOP || GetModState() == RES_S_RUN) {
     //--- Read configuration file
     CfgRead();
 
     Reply.RetCode = SMI_E_OK;
-  }
-  else
+  } else
     Reply.RetCode = SMI_E_FAILED;
 
   smi_FreeData(pMsg);
@@ -314,8 +312,8 @@ VOID CFORTEModule::RpcNewCfg(SMI_MSG *pMsg){
  * OutP:
  * Ret:
  *--------------------------------------------------------------------------*/
-VOID CFORTEModule::CfgRead(VOID){
+VOID CFORTEModule::CfgRead(VOID) {
   //--- Get the delay time for my application.
-  pf_GetInt(GetAppName(), FORTE_C_PARMS, FORTE_C_DELAY, FORTE_DELAY, (SINT32 *) &mFORTEstartOK, GetCfgLine(), GetProfileName());
+  pf_GetInt(GetAppName(), FORTE_C_PARMS, FORTE_C_DELAY, FORTE_DELAY, (SINT32 *) &mFORTEstartOK, GetCfgLine(),
+            GetProfileName());
 }
-

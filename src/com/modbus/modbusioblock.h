@@ -19,33 +19,45 @@ namespace forte {
   namespace com_infra {
     class CModbusComLayer;
   }
-}
+} // namespace forte
 
 class CModbusIOBlock {
   public:
     struct SModbusRange {
-      EModbusFunction mFunction;
-      unsigned int mStartAddress;
-      unsigned int mNrAddresses;
+        EModbusFunction mFunction;
+        unsigned int mStartAddress;
+        unsigned int mNrAddresses;
     };
     typedef std::vector<SModbusRange> TModbusRangeList;
 
-    CModbusIOBlock(forte::com_infra::CModbusComLayer* paParent);
+    CModbusIOBlock(forte::com_infra::CModbusComLayer *paParent);
     ~CModbusIOBlock();
 
-    forte::com_infra::CModbusComLayer* getParent() const { return mParent; }
+    forte::com_infra::CModbusComLayer *getParent() const {
+      return mParent;
+    }
 
     void addNewRead(EModbusFunction paFunction, unsigned int paStartAddress, unsigned int paNrAddresses);
     void addNewSend(EModbusFunction paFunction, unsigned int paStartAddress, unsigned int paNrAddresses);
 
     void allocCache();
-    void* getCache() { return mCache; }
+    void *getCache() {
+      return mCache;
+    }
 
-    const TModbusRangeList& getReads() const { return mReads; }
-    const TModbusRangeList& getSends() const { return mSends; }
+    const TModbusRangeList &getReads() const {
+      return mReads;
+    }
+    const TModbusRangeList &getSends() const {
+      return mSends;
+    }
 
-    unsigned int getReadSize() const { return mReadSize; }
-    unsigned int getSendSize() const { return mSendSize; }
+    unsigned int getReadSize() const {
+      return mReadSize;
+    }
+    unsigned int getSendSize() const {
+      return mSendSize;
+    }
     static unsigned int getRegisterSize(EModbusFunction paFunction);
 
   private:

@@ -13,7 +13,6 @@
 #ifndef BSDSOCKETINTERF_H_
 #define BSDSOCKETINTERF_H_
 
-
 class CWin32SocketInterface {
   public:
     typedef SOCKET TSocketDescriptor;
@@ -24,16 +23,20 @@ class CWin32SocketInterface {
     static TSocketDescriptor openTCPServerConnection(char *paIPAddr, unsigned short paPort);
     static TSocketDescriptor openTCPClientConnection(char *paIPAddr, unsigned short paPort);
     static TSocketDescriptor acceptTCPConnection(TSocketDescriptor paListeningSockD);
-    static int sendDataOnTCP(TSocketDescriptor paSockD, const char* paData, unsigned int paSize);
-    static int receiveDataFromTCP(TSocketDescriptor paSockD, char* paData, unsigned int paBufSize);
+    static int sendDataOnTCP(TSocketDescriptor paSockD, const char *paData, unsigned int paSize);
+    static int receiveDataFromTCP(TSocketDescriptor paSockD, char *paData, unsigned int paBufSize);
 
-    static TSocketDescriptor openUDPSendPort(char *paIPAddr, unsigned short paPort, TUDPDestAddr *mDestAddr, const char *acMCInterface = nullptr);
-    static TSocketDescriptor openUDPReceivePort(char *paIPAddr, unsigned short paPort, const char *paMCInterface = scmAllInterfaces);
-    static int sendDataOnUDP(TSocketDescriptor paSockD, TUDPDestAddr *paDestAddr, char* paData, unsigned int paSize);
-    static int receiveDataFromUDP(TSocketDescriptor paSockD, char* paData, unsigned int paBufSize);
+    static TSocketDescriptor openUDPSendPort(char *paIPAddr,
+                                             unsigned short paPort,
+                                             TUDPDestAddr *mDestAddr,
+                                             const char *acMCInterface = nullptr);
+    static TSocketDescriptor
+    openUDPReceivePort(char *paIPAddr, unsigned short paPort, const char *paMCInterface = scmAllInterfaces);
+    static int sendDataOnUDP(TSocketDescriptor paSockD, TUDPDestAddr *paDestAddr, char *paData, unsigned int paSize);
+    static int receiveDataFromUDP(TSocketDescriptor paSockD, char *paData, unsigned int paBufSize);
 
   private:
-    CWin32SocketInterface(); //this function is not implemented as we don't want instances of this class
+    CWin32SocketInterface(); // this function is not implemented as we don't want instances of this class
 
     static LPSTR getErrorMessage(int paErrorNumber);
 };

@@ -26,7 +26,6 @@ USE_STRING_ID(PV);
 USE_STRING_ID(Q);
 USE_STRING_ID(REQ);
 
-
 #include "criticalregion.h"
 #include "resource.h"
 #include "forte_bool.h"
@@ -57,18 +56,29 @@ const TForteInt16 FORTE_FB_CTD_DINT::scmEOWithIndexes[] = {0};
 const CStringDictionary::TStringId FORTE_FB_CTD_DINT::scmEventOutputNames[] = {STRID(CNF)};
 const CStringDictionary::TStringId FORTE_FB_CTD_DINT::scmEventOutputTypeIds[] = {STRID(Event)};
 
+const SFBInterfaceSpec FORTE_FB_CTD_DINT::scmFBInterfaceSpec = {1,
+                                                                scmEventInputNames,
+                                                                scmEventInputTypeIds,
+                                                                scmEIWith,
+                                                                scmEIWithIndexes,
+                                                                1,
+                                                                scmEventOutputNames,
+                                                                scmEventOutputTypeIds,
+                                                                scmEOWith,
+                                                                scmEOWithIndexes,
+                                                                3,
+                                                                scmDataInputNames,
+                                                                scmDataInputTypeIds,
+                                                                2,
+                                                                scmDataOutputNames,
+                                                                scmDataOutputTypeIds,
+                                                                0,
+                                                                nullptr,
+                                                                0,
+                                                                nullptr};
 
-const SFBInterfaceSpec FORTE_FB_CTD_DINT::scmFBInterfaceSpec = {
-  1, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,
-  1, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes,
-  3, scmDataInputNames, scmDataInputTypeIds,
-  2, scmDataOutputNames, scmDataOutputTypeIds,
-  0, nullptr,
-  0, nullptr
-};
-
-
-FORTE_FB_CTD_DINT::FORTE_FB_CTD_DINT(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_FB_CTD_DINT::FORTE_FB_CTD_DINT(CStringDictionary::TStringId paInstanceNameId,
+                                     forte::core::CFBContainer &paContainer) :
     CSimpleFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, nullptr),
     var_CD(CIEC_BOOL(0)),
     var_LD(CIEC_BOOL(0)),
@@ -84,55 +94,49 @@ FORTE_FB_CTD_DINT::FORTE_FB_CTD_DINT(CStringDictionary::TStringId paInstanceName
 }
 
 void FORTE_FB_CTD_DINT::alg_REQ(void) {
-  
+
   if (var_LD) {
     var_CV = var_PV;
-  }
-  else if (func_AND<CIEC_BOOL>(var_CD, func_GT(var_CV, CIEC_DINT(std::numeric_limits<CIEC_DINT::TValueType>::min())))) {
+  } else if (func_AND<CIEC_BOOL>(var_CD,
+                                 func_GT(var_CV, CIEC_DINT(std::numeric_limits<CIEC_DINT::TValueType>::min())))) {
     var_CV = func_SUB<CIEC_DINT>(var_CV, CIEC_DINT(1));
   }
   var_Q = func_LE(var_CV, CIEC_DINT(0));
 }
 
-
 void FORTE_FB_CTD_DINT::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
-  switch(paEIID) {
-    case scmEventREQID:
-      alg_REQ();
-      break;
-    default:
-      break;
+  switch (paEIID) {
+    case scmEventREQID: alg_REQ(); break;
+    default: break;
   }
   sendOutputEvent(scmEventCNFID, paECET);
 }
 
 void FORTE_FB_CTD_DINT::readInputData(TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventREQID: {
       readData(0, var_CD, conn_CD);
       readData(2, var_PV, conn_PV);
       readData(1, var_LD, conn_LD);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 void FORTE_FB_CTD_DINT::writeOutputData(TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventCNFID: {
       writeData(0, var_Q, conn_Q);
       writeData(1, var_CV, conn_CV);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 CIEC_ANY *FORTE_FB_CTD_DINT::getDI(size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_CD;
     case 1: return &var_LD;
     case 2: return &var_PV;
@@ -141,7 +145,7 @@ CIEC_ANY *FORTE_FB_CTD_DINT::getDI(size_t paIndex) {
 }
 
 CIEC_ANY *FORTE_FB_CTD_DINT::getDO(size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_Q;
     case 1: return &var_CV;
   }
@@ -149,14 +153,14 @@ CIEC_ANY *FORTE_FB_CTD_DINT::getDO(size_t paIndex) {
 }
 
 CEventConnection *FORTE_FB_CTD_DINT::getEOConUnchecked(TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_CNF;
   }
   return nullptr;
 }
 
 CDataConnection **FORTE_FB_CTD_DINT::getDIConUnchecked(TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_CD;
     case 1: return &conn_LD;
     case 2: return &conn_PV;
@@ -165,7 +169,7 @@ CDataConnection **FORTE_FB_CTD_DINT::getDIConUnchecked(TPortId paIndex) {
 }
 
 CDataConnection *FORTE_FB_CTD_DINT::getDOConUnchecked(TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_Q;
     case 1: return &conn_CV;
   }
@@ -175,5 +179,3 @@ CDataConnection *FORTE_FB_CTD_DINT::getDOConUnchecked(TPortId paIndex) {
 CIEC_ANY *FORTE_FB_CTD_DINT::getVarInternal(size_t) {
   return nullptr;
 }
-
-

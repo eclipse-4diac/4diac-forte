@@ -29,11 +29,18 @@
 
 using namespace forte::com_infra;
 
-const char * const CBaseCommFB::scmResponseTexts[] = { "OK", "INVALID_ID", "TERMINATED", "INVALID_OBJECT", "DATA_TYPE_ERROR", "INHIBITED", "NO_SOCKET", "SEND_FAILED", "RECV_FAILED" };
+const char *const CBaseCommFB::scmResponseTexts[] = {
+    "OK",        "INVALID_ID", "TERMINATED",  "INVALID_OBJECT", "DATA_TYPE_ERROR",
+    "INHIBITED", "NO_SOCKET",  "SEND_FAILED", "RECV_FAILED"};
 
-CBaseCommFB::CBaseCommFB(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer, forte::com_infra::EComServiceType paCommServiceType) :
-    CGenFunctionBlock<CEventSourceFB>(paContainer, paInstanceNameId), mCommServiceType(paCommServiceType), mTopOfComStack(nullptr) {
-  memset(mInterruptQueue, 0, sizeof(mInterruptQueue)); //TODO change this to  mInterruptQueue{0} in the extended list when fully switching to C++11
+CBaseCommFB::CBaseCommFB(const CStringDictionary::TStringId paInstanceNameId,
+                         forte::core::CFBContainer &paContainer,
+                         forte::com_infra::EComServiceType paCommServiceType) :
+    CGenFunctionBlock<CEventSourceFB>(paContainer, paInstanceNameId),
+    mCommServiceType(paCommServiceType),
+    mTopOfComStack(nullptr) {
+  memset(mInterruptQueue, 0, sizeof(mInterruptQueue)); // TODO change this to  mInterruptQueue{0} in the extended list
+                                                       // when fully switching to C++11
   setEventChainExecutor(getResource()->getResourceEventExecution());
   mComInterruptQueueCount = 0;
 }
@@ -45,7 +52,7 @@ CBaseCommFB::~CBaseCommFB() {
 EMGMResponse CBaseCommFB::changeExecutionState(EMGMCommandType paCommand) {
   EMGMResponse retVal = CEventSourceFB::changeExecutionState(paCommand);
   if ((EMGMResponse::Ready == retVal) && (EMGMCommandType::Kill == paCommand)) {
-    //when we are killed we'll close the connection so that it can safely be opened again after an reset
+    // when we are killed we'll close the connection so that it can safely be opened again after an reset
     closeConnection();
   }
   return retVal;
@@ -58,8 +65,7 @@ EComResponse CBaseCommFB::openConnection() {
     char *commID;
     if (nullptr == strchr(ID().getValue(), ']')) {
       commID = getDefaultIDString(ID().getValue());
-    }
-    else {
+    } else {
       size_t commIdLength = strlen(ID().getValue()) + 1;
       commID = new char[commIdLength];
       memcpy(commID, ID().getValue(), commIdLength);
@@ -69,8 +75,7 @@ EComResponse CBaseCommFB::openConnection() {
     // If the ID is empty return an error
     if ('\0' == *commID) {
       retVal = e_InitInvalidId;
-    }
-    else {
+    } else {
       retVal = createComstack(commID);
       // If any error is going to be returned, delete the layers that were created
       if (e_InitOk != retVal) {
@@ -78,8 +83,7 @@ EComResponse CBaseCommFB::openConnection() {
       }
     }
     delete[] commID;
-  }
-  else {
+  } else {
     // If the connection was already opened return ok
     retVal = e_InitOk;
   }
@@ -91,15 +95,15 @@ EComResponse CBaseCommFB::createComstack(char *commID) {
   CComLayer *newLayer = nullptr;
   CComLayer *previousLayer = nullptr; // Reference to the previous layer as it needs to set the bottom layer
   char *layerParams = nullptr;
-  while('\0' != *commID) { // Loop until reaching the end of the ID
+  while ('\0' != *commID) { // Loop until reaching the end of the ID
     retVal = e_InitInvalidId;
-    char * layerID = extractLayerIdAndParams(&commID, &layerParams); // Get the next layer's ID and parameters
+    char *layerID = extractLayerIdAndParams(&commID, &layerParams); // Get the next layer's ID and parameters
 
-    if(nullptr != layerID && '\0' != *layerID) { // If well formated ID, keep going
-    // Create the new layer
+    if (nullptr != layerID && '\0' != *layerID) { // If well formated ID, keep going
+      // Create the new layer
       newLayer = CComLayersManager::createCommunicationLayer(layerID, previousLayer, this);
-      if(nullptr != newLayer) { // If the layer could be created, keep going
-        if(nullptr == mTopOfComStack) {
+      if (nullptr != newLayer) { // If the layer could be created, keep going
+        if (nullptr == mTopOfComStack) {
           mTopOfComStack = newLayer; // Assign the newly created layer to the FB
         }
 
@@ -108,13 +112,12 @@ EComResponse CBaseCommFB::createComstack(char *commID) {
       }
     }
 
-    if(e_InitOk != retVal) {  // If it was not opened correctly return the error
+    if (e_InitOk != retVal) { // If it was not opened correctly return the error
       break;
     }
   }
   return retVal;
 }
-
 
 void CBaseCommFB::closeConnection() {
   if (mTopOfComStack != nullptr) {
@@ -128,9 +131,8 @@ void CBaseCommFB::interruptCommFB(CComLayer *paComLayer) {
   if (cgCommunicationInterruptQueueSize > mComInterruptQueueCount) {
     mInterruptQueue[mComInterruptQueueCount] = paComLayer;
     mComInterruptQueueCount++;
-  }
-  else {
-    //TODO to many interrupts received issue error msg
+  } else {
+    // TODO to many interrupts received issue error msg
   }
 }
 
@@ -140,7 +142,7 @@ char *CBaseCommFB::extractLayerIdAndParams(char **paRemainingID, char **paLayerP
     *paRemainingID = strchr(*paRemainingID, '[');
     if (nullptr != *paRemainingID) {
       int bracketCount = 0;
-      char * const paramsStart = *paRemainingID;
+      char *const paramsStart = *paRemainingID;
       char *currentChar = *paRemainingID;
       while ('\0' != *currentChar) {
         if (*currentChar == '[') {
@@ -149,15 +151,15 @@ char *CBaseCommFB::extractLayerIdAndParams(char **paRemainingID, char **paLayerP
         if (*currentChar == ']') {
           bracketCount--;
 
-          if (bracketCount == 0){
+          if (bracketCount == 0) {
             *paramsStart = '\0';
             *currentChar = '\0';
-            *paRemainingID = currentChar + 1;  //let the paRemainingID point to the char after the closing bracket
-            *paLayerParams = paramsStart + 1;  //let the paLayerParams point to the char after the opening bracket
+            *paRemainingID = currentChar + 1; // let the paRemainingID point to the char after the closing bracket
+            *paLayerParams = paramsStart + 1; // let the paLayerParams point to the char after the opening bracket
 
-            if('\0' != **paRemainingID) {
+            if ('\0' != **paRemainingID) {
               ++(*paRemainingID);
-             }
+            }
             return layerID;
           }
         }

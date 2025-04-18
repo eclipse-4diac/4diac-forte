@@ -29,7 +29,7 @@
 #include "forte_array_variable.h"
 
 class FORTE_ASSEMBLE_WORD_FROM_BOOLS final : public CFunctionBlock {
-  DECLARE_FIRMWARE_FB(FORTE_ASSEMBLE_WORD_FROM_BOOLS)
+    DECLARE_FIRMWARE_FB(FORTE_ASSEMBLE_WORD_FROM_BOOLS)
 
   private:
     static const CStringDictionary::TStringId scmDataInputNames[];
@@ -56,7 +56,8 @@ class FORTE_ASSEMBLE_WORD_FROM_BOOLS final : public CFunctionBlock {
     void setInitialValues() override;
 
   public:
-    FORTE_ASSEMBLE_WORD_FROM_BOOLS(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_ASSEMBLE_WORD_FROM_BOOLS(CStringDictionary::TStringId paInstanceNameId,
+                                   forte::core::CFBContainer &paContainer);
 
     CIEC_BOOL var_BIT_00;
     CIEC_BOOL var_BIT_01;
@@ -104,7 +105,23 @@ class FORTE_ASSEMBLE_WORD_FROM_BOOLS final : public CFunctionBlock {
     CDataConnection **getDIConUnchecked(TPortId) override;
     CDataConnection *getDOConUnchecked(TPortId) override;
 
-    void evt_REQ(const CIEC_BOOL &paBIT_00, const CIEC_BOOL &paBIT_01, const CIEC_BOOL &paBIT_02, const CIEC_BOOL &paBIT_03, const CIEC_BOOL &paBIT_04, const CIEC_BOOL &paBIT_05, const CIEC_BOOL &paBIT_06, const CIEC_BOOL &paBIT_07, const CIEC_BOOL &paBIT_08, const CIEC_BOOL &paBIT_09, const CIEC_BOOL &paBIT_10, const CIEC_BOOL &paBIT_11, const CIEC_BOOL &paBIT_12, const CIEC_BOOL &paBIT_13, const CIEC_BOOL &paBIT_14, const CIEC_BOOL &paBIT_15, CIEC_WORD &pa) {
+    void evt_REQ(const CIEC_BOOL &paBIT_00,
+                 const CIEC_BOOL &paBIT_01,
+                 const CIEC_BOOL &paBIT_02,
+                 const CIEC_BOOL &paBIT_03,
+                 const CIEC_BOOL &paBIT_04,
+                 const CIEC_BOOL &paBIT_05,
+                 const CIEC_BOOL &paBIT_06,
+                 const CIEC_BOOL &paBIT_07,
+                 const CIEC_BOOL &paBIT_08,
+                 const CIEC_BOOL &paBIT_09,
+                 const CIEC_BOOL &paBIT_10,
+                 const CIEC_BOOL &paBIT_11,
+                 const CIEC_BOOL &paBIT_12,
+                 const CIEC_BOOL &paBIT_13,
+                 const CIEC_BOOL &paBIT_14,
+                 const CIEC_BOOL &paBIT_15,
+                 CIEC_WORD &pa) {
       var_BIT_00 = paBIT_00;
       var_BIT_01 = paBIT_01;
       var_BIT_02 = paBIT_02;
@@ -125,11 +142,41 @@ class FORTE_ASSEMBLE_WORD_FROM_BOOLS final : public CFunctionBlock {
       pa = var_;
     }
 
-    void operator()(const CIEC_BOOL &paBIT_00, const CIEC_BOOL &paBIT_01, const CIEC_BOOL &paBIT_02, const CIEC_BOOL &paBIT_03, const CIEC_BOOL &paBIT_04, const CIEC_BOOL &paBIT_05, const CIEC_BOOL &paBIT_06, const CIEC_BOOL &paBIT_07, const CIEC_BOOL &paBIT_08, const CIEC_BOOL &paBIT_09, const CIEC_BOOL &paBIT_10, const CIEC_BOOL &paBIT_11, const CIEC_BOOL &paBIT_12, const CIEC_BOOL &paBIT_13, const CIEC_BOOL &paBIT_14, const CIEC_BOOL &paBIT_15, CIEC_WORD &pa) {
-      evt_REQ(paBIT_00, paBIT_01, paBIT_02, paBIT_03, paBIT_04, paBIT_05, paBIT_06, paBIT_07, paBIT_08, paBIT_09, paBIT_10, paBIT_11, paBIT_12, paBIT_13, paBIT_14, paBIT_15, pa);
+    void operator()(const CIEC_BOOL &paBIT_00,
+                    const CIEC_BOOL &paBIT_01,
+                    const CIEC_BOOL &paBIT_02,
+                    const CIEC_BOOL &paBIT_03,
+                    const CIEC_BOOL &paBIT_04,
+                    const CIEC_BOOL &paBIT_05,
+                    const CIEC_BOOL &paBIT_06,
+                    const CIEC_BOOL &paBIT_07,
+                    const CIEC_BOOL &paBIT_08,
+                    const CIEC_BOOL &paBIT_09,
+                    const CIEC_BOOL &paBIT_10,
+                    const CIEC_BOOL &paBIT_11,
+                    const CIEC_BOOL &paBIT_12,
+                    const CIEC_BOOL &paBIT_13,
+                    const CIEC_BOOL &paBIT_14,
+                    const CIEC_BOOL &paBIT_15,
+                    CIEC_WORD &pa) {
+      evt_REQ(paBIT_00, paBIT_01, paBIT_02, paBIT_03, paBIT_04, paBIT_05, paBIT_06, paBIT_07, paBIT_08, paBIT_09,
+              paBIT_10, paBIT_11, paBIT_12, paBIT_13, paBIT_14, paBIT_15, pa);
     }
 };
 
-CIEC_WORD func_ASSEMBLE_WORD_FROM_BOOLS(CIEC_BOOL st_lv_BIT_00, CIEC_BOOL st_lv_BIT_01, CIEC_BOOL st_lv_BIT_02, CIEC_BOOL st_lv_BIT_03, CIEC_BOOL st_lv_BIT_04, CIEC_BOOL st_lv_BIT_05, CIEC_BOOL st_lv_BIT_06, CIEC_BOOL st_lv_BIT_07, CIEC_BOOL st_lv_BIT_08, CIEC_BOOL st_lv_BIT_09, CIEC_BOOL st_lv_BIT_10, CIEC_BOOL st_lv_BIT_11, CIEC_BOOL st_lv_BIT_12, CIEC_BOOL st_lv_BIT_13, CIEC_BOOL st_lv_BIT_14, CIEC_BOOL st_lv_BIT_15);
-
-
+CIEC_WORD func_ASSEMBLE_WORD_FROM_BOOLS(CIEC_BOOL st_lv_BIT_00,
+                                        CIEC_BOOL st_lv_BIT_01,
+                                        CIEC_BOOL st_lv_BIT_02,
+                                        CIEC_BOOL st_lv_BIT_03,
+                                        CIEC_BOOL st_lv_BIT_04,
+                                        CIEC_BOOL st_lv_BIT_05,
+                                        CIEC_BOOL st_lv_BIT_06,
+                                        CIEC_BOOL st_lv_BIT_07,
+                                        CIEC_BOOL st_lv_BIT_08,
+                                        CIEC_BOOL st_lv_BIT_09,
+                                        CIEC_BOOL st_lv_BIT_10,
+                                        CIEC_BOOL st_lv_BIT_11,
+                                        CIEC_BOOL st_lv_BIT_12,
+                                        CIEC_BOOL st_lv_BIT_13,
+                                        CIEC_BOOL st_lv_BIT_14,
+                                        CIEC_BOOL st_lv_BIT_15);

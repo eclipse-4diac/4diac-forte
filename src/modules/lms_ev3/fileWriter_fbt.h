@@ -9,47 +9,47 @@
  * Contributors:
  *    Jose Cabral - initial API and implementation and/or initial documentation
  *******************************************************************************/
- 
+
 #ifndef _FILEWRITER_H_
 #define _FILEWRITER_H_
 
 #include <funcbloc.h>
 #include <fstream>
 
-class fileWriter: public CFunctionBlock{
+class fileWriter : public CFunctionBlock {
     DECLARE_FIRMWARE_FB(fileWriter)
 
   private:
     static const CStringDictionary::TStringId scmDataInputNames[];
     static const CStringDictionary::TStringId scmDataInputTypeIds[];
     CIEC_BOOL &QI() {
-      return *static_cast<CIEC_BOOL*>(getDI(0));
+      return *static_cast<CIEC_BOOL *>(getDI(0));
     };
 
     CIEC_STRING &FILE_NAME() {
-      return *static_cast<CIEC_STRING*>(getDI(1));
+      return *static_cast<CIEC_STRING *>(getDI(1));
     };
 
     CIEC_STRING &S1() {
-      return *static_cast<CIEC_STRING*>(getDI(2));
+      return *static_cast<CIEC_STRING *>(getDI(2));
     };
 
     CIEC_BOOL &APPEND() {
-      return *static_cast<CIEC_BOOL*>(getDI(3));
+      return *static_cast<CIEC_BOOL *>(getDI(3));
     };
 
     CIEC_STRING &APPCHAR() {
-      return *static_cast<CIEC_STRING*>(getDI(4));
+      return *static_cast<CIEC_STRING *>(getDI(4));
     };
 
     static const CStringDictionary::TStringId scmDataOutputNames[];
     static const CStringDictionary::TStringId scmDataOutputTypeIds[];
     CIEC_BOOL &QO() {
-      return *static_cast<CIEC_BOOL*>(getDO(0));
+      return *static_cast<CIEC_BOOL *>(getDO(0));
     };
 
     CIEC_WSTRING &STATUS() {
-      return *static_cast<CIEC_WSTRING*>(getDO(1));
+      return *static_cast<CIEC_WSTRING *>(getDO(1));
     };
 
     static const TEventID scmEventINITID = 0;
@@ -68,9 +68,9 @@ class fileWriter: public CFunctionBlock{
 
     static const SFBInterfaceSpec scmFBInterfaceSpec;
 
-    static const char * const scmOK;
-    static const char * const scmNotInitialised;
-    static const char * const scmCouldNotWrite;
+    static const char *const scmOK;
+    static const char *const scmNotInitialised;
+    static const char *const scmCouldNotWrite;
 
     void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
@@ -84,8 +84,6 @@ class fileWriter: public CFunctionBlock{
     bool writeFile();
 
     std::fstream mFile;
-
-
 };
 
-#endif //close the ifdef sequence from the beginning of the file
+#endif // close the ifdef sequence from the beginning of the file

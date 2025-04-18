@@ -24,51 +24,47 @@
 #include "E_SWITCH_fbt.h"
 #include "E_D_FF_fbt.h"
 
+class FORTE_E_R_TRIG : public CCompositeFB {
+    DECLARE_FIRMWARE_FB(FORTE_E_R_TRIG)
 
-class FORTE_E_R_TRIG: public CCompositeFB {
-  DECLARE_FIRMWARE_FB(FORTE_E_R_TRIG)
+  private:
+    static const CStringDictionary::TStringId scmDataInputNames[];
+    static const CStringDictionary::TStringId scmDataInputTypeIds[];
+    static const TEventID scmEventEIID = 0;
+    static const TDataIOID scmEIWith[];
+    static const TForteInt16 scmEIWithIndexes[];
+    static const CStringDictionary::TStringId scmEventInputNames[];
+    static const CStringDictionary::TStringId scmEventInputTypeIds[];
+    static const TEventID scmEventEOID = 0;
+    static const TForteInt16 scmEOWithIndexes[];
+    static const CStringDictionary::TStringId scmEventOutputNames[];
+    static const CStringDictionary::TStringId scmEventOutputTypeIds[];
 
-private:
-  static const CStringDictionary::TStringId scmDataInputNames[];
-  static const CStringDictionary::TStringId scmDataInputTypeIds[];
-  static const TEventID scmEventEIID = 0;
-  static const TDataIOID scmEIWith[];
-  static const TForteInt16 scmEIWithIndexes[];
-  static const CStringDictionary::TStringId scmEventInputNames[];
-  static const CStringDictionary::TStringId scmEventInputTypeIds[];
-  static const TEventID scmEventEOID = 0;
-  static const TForteInt16 scmEOWithIndexes[];
-  static const CStringDictionary::TStringId scmEventOutputNames[];
-  static const CStringDictionary::TStringId scmEventOutputTypeIds[];
+    static const SFBInterfaceSpec scmFBInterfaceSpec;
 
-  static const SFBInterfaceSpec scmFBInterfaceSpec;
+    static const SCFB_FBInstanceData scmInternalFBs[];
+    static const SCFB_FBParameter scmParamters[];
+    static const SCFB_FBConnectionData scmEventConnections[];
+    static const SCFB_FBConnectionData scmDataConnections[];
+    static const SCFB_FBNData scmFBNData;
 
-  static const SCFB_FBInstanceData scmInternalFBs[];
-  static const SCFB_FBParameter scmParamters[];
-  static const SCFB_FBConnectionData scmEventConnections[];
-  static const SCFB_FBConnectionData scmDataConnections[];
-  static const SCFB_FBNData scmFBNData;
+    forte::core::CInternalFB<FORTE_E_D_FF> fb_E_D_FF;
+    forte::core::CInternalFB<FORTE_E_SWITCH> fb_E_SWITCH;
 
-  forte::core::CInternalFB<FORTE_E_D_FF> fb_E_D_FF;
-  forte::core::CInternalFB<FORTE_E_SWITCH> fb_E_SWITCH;
+    void readInputData(TEventID paEIID) override;
+    void writeOutputData(TEventID paEIID) override;
+    void setInitialValues() override;
+    CDataConnection *getIf2InConUnchecked(TPortId paDIID) override;
 
-  void readInputData(TEventID paEIID) override;
-  void writeOutputData(TEventID paEIID) override;
-  void setInitialValues() override;
-  CDataConnection *getIf2InConUnchecked(TPortId paDIID) override;
+  public:
+    FORTE_E_R_TRIG(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
-public:
-  FORTE_E_R_TRIG(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
-
-  CEventConnection conn_EO;
-  CDataConnection *conn_QI;
-  COutDataConnection<CIEC_BOOL> conn_if2in_QI;
-  CIEC_ANY *getDI(size_t) override;
-  CIEC_ANY *getDO(size_t) override;
-  CEventConnection *getEOConUnchecked(TPortId) override;
-  CDataConnection **getDIConUnchecked(TPortId) override;
-  CDataConnection *getDOConUnchecked(TPortId) override;
+    CEventConnection conn_EO;
+    CDataConnection *conn_QI;
+    COutDataConnection<CIEC_BOOL> conn_if2in_QI;
+    CIEC_ANY *getDI(size_t) override;
+    CIEC_ANY *getDO(size_t) override;
+    CEventConnection *getEOConUnchecked(TPortId) override;
+    CDataConnection **getDIConUnchecked(TPortId) override;
+    CDataConnection *getDOConUnchecked(TPortId) override;
 };
-
-
-

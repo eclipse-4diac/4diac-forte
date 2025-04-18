@@ -38,34 +38,53 @@ USE_STRING_ID(WCET1);
 USE_STRING_ID(WCET2);
 USE_STRING_ID(WCET3);
 
-
 #include "criticalregion.h"
 #include "resource.h"
 
 DEFINE_FIRMWARE_FB(FORTE_RT_E_DEMUX, STRID(RT_E_DEMUX))
 
-const CStringDictionary::TStringId FORTE_RT_E_DEMUX::scmDataInputNames[] = {STRID(QI), STRID(K), STRID(Tmin), STRID(Deadline0), STRID(WCET0), STRID(Deadline1), STRID(WCET1), STRID(Deadline2), STRID(WCET2), STRID(Deadline3), STRID(WCET3)};
-const CStringDictionary::TStringId FORTE_RT_E_DEMUX::scmDataInputTypeIds[] = {STRID(BOOL), STRID(UINT), STRID(TIME), STRID(TIME), STRID(TIME), STRID(TIME), STRID(TIME), STRID(TIME), STRID(TIME), STRID(TIME), STRID(TIME)};
+const CStringDictionary::TStringId FORTE_RT_E_DEMUX::scmDataInputNames[] = {
+    STRID(QI),    STRID(K),         STRID(Tmin),  STRID(Deadline0), STRID(WCET0), STRID(Deadline1),
+    STRID(WCET1), STRID(Deadline2), STRID(WCET2), STRID(Deadline3), STRID(WCET3)};
+const CStringDictionary::TStringId FORTE_RT_E_DEMUX::scmDataInputTypeIds[] = {
+    STRID(BOOL), STRID(UINT), STRID(TIME), STRID(TIME), STRID(TIME), STRID(TIME),
+    STRID(TIME), STRID(TIME), STRID(TIME), STRID(TIME), STRID(TIME)};
 const CStringDictionary::TStringId FORTE_RT_E_DEMUX::scmDataOutputNames[] = {STRID(QO)};
 const CStringDictionary::TStringId FORTE_RT_E_DEMUX::scmDataOutputTypeIds[] = {STRID(BOOL)};
-const TDataIOID FORTE_RT_E_DEMUX::scmEIWith[] = {0, 2, 3, 4, 5, 6, 7, 8, 9, 10, scmWithListDelimiter, 1, scmWithListDelimiter};
+const TDataIOID FORTE_RT_E_DEMUX::scmEIWith[] = {
+    0, 2, 3, 4, 5, 6, 7, 8, 9, 10, scmWithListDelimiter, 1, scmWithListDelimiter};
 const TForteInt16 FORTE_RT_E_DEMUX::scmEIWithIndexes[] = {0, 11};
 const CStringDictionary::TStringId FORTE_RT_E_DEMUX::scmEventInputNames[] = {STRID(INIT), STRID(EI)};
 const CStringDictionary::TStringId FORTE_RT_E_DEMUX::scmEventInputTypeIds[] = {STRID(EInit), STRID(Event)};
 const TDataIOID FORTE_RT_E_DEMUX::scmEOWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_RT_E_DEMUX::scmEOWithIndexes[] = {0, -1, -1, -1, -1};
-const CStringDictionary::TStringId FORTE_RT_E_DEMUX::scmEventOutputNames[] = {STRID(INITO), STRID(EO0), STRID(EO1), STRID(EO2), STRID(EO3)};
-const CStringDictionary::TStringId FORTE_RT_E_DEMUX::scmEventOutputTypeIds[] = {STRID(Event), STRID(Event), STRID(Event), STRID(Event), STRID(Event)};
-const SFBInterfaceSpec FORTE_RT_E_DEMUX::scmFBInterfaceSpec = {
-  2, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,
-  5, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes,
-  11, scmDataInputNames, scmDataInputTypeIds,
-  1, scmDataOutputNames, scmDataOutputTypeIds,
-  0, nullptr,
-  0, nullptr
-};
+const CStringDictionary::TStringId FORTE_RT_E_DEMUX::scmEventOutputNames[] = {STRID(INITO), STRID(EO0), STRID(EO1),
+                                                                              STRID(EO2), STRID(EO3)};
+const CStringDictionary::TStringId FORTE_RT_E_DEMUX::scmEventOutputTypeIds[] = {
+    STRID(Event), STRID(Event), STRID(Event), STRID(Event), STRID(Event)};
+const SFBInterfaceSpec FORTE_RT_E_DEMUX::scmFBInterfaceSpec = {2,
+                                                               scmEventInputNames,
+                                                               scmEventInputTypeIds,
+                                                               scmEIWith,
+                                                               scmEIWithIndexes,
+                                                               5,
+                                                               scmEventOutputNames,
+                                                               scmEventOutputTypeIds,
+                                                               scmEOWith,
+                                                               scmEOWithIndexes,
+                                                               11,
+                                                               scmDataInputNames,
+                                                               scmDataInputTypeIds,
+                                                               1,
+                                                               scmDataOutputNames,
+                                                               scmDataOutputTypeIds,
+                                                               0,
+                                                               nullptr,
+                                                               0,
+                                                               nullptr};
 
-FORTE_RT_E_DEMUX::FORTE_RT_E_DEMUX(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_RT_E_DEMUX::FORTE_RT_E_DEMUX(const CStringDictionary::TStringId paInstanceNameId,
+                                   forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId),
     conn_INITO(*this, 0),
     conn_EO0(*this, 1),
@@ -83,8 +102,7 @@ FORTE_RT_E_DEMUX::FORTE_RT_E_DEMUX(const CStringDictionary::TStringId paInstance
     conn_WCET2(nullptr),
     conn_Deadline3(nullptr),
     conn_WCET3(nullptr),
-    conn_QO(*this, 0, var_QO) {
-};
+    conn_QO(*this, 0, var_QO) {};
 
 void FORTE_RT_E_DEMUX::setInitialValues() {
   var_QI = 0_BOOL;
@@ -102,47 +120,46 @@ void FORTE_RT_E_DEMUX::setInitialValues() {
 }
 
 void FORTE_RT_E_DEMUX::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventEIID:
-      if(mInitialized){
+      if (mInitialized) {
         CEventConnection *eoCon;
-        switch(static_cast<CIEC_UINT::TValueType>(var_K)){
+        switch (static_cast<CIEC_UINT::TValueType>(var_K)) {
           case 0:
             eoCon = getEOConUnchecked(scmEventEO0ID);
-            if(eoCon->isConnected()){
+            if (eoCon->isConnected()) {
               eoCon->triggerEvent(&mECEO0);
               mECEO0.resumeSelfSuspend();
             }
             break;
           case 1:
             eoCon = getEOConUnchecked(scmEventEO1ID);
-            if(eoCon->isConnected()){
+            if (eoCon->isConnected()) {
               eoCon->triggerEvent(&mECEO1);
               mECEO1.resumeSelfSuspend();
             }
             break;
           case 2:
             eoCon = getEOConUnchecked(scmEventEO2ID);
-            if(eoCon->isConnected()){
+            if (eoCon->isConnected()) {
               eoCon->triggerEvent(&mECEO2);
               mECEO2.resumeSelfSuspend();
             }
             break;
           case 3:
             eoCon = getEOConUnchecked(scmEventEO3ID);
-            if(eoCon->isConnected()){
+            if (eoCon->isConnected()) {
               eoCon->triggerEvent(&mECEO3);
               mECEO3.resumeSelfSuspend();
             }
             break;
-          default:
-            break;
+          default: break;
         }
       }
       break;
     case scmEventINITID:
-      if(var_QI){
-        if(!mInitialized){
+      if (var_QI) {
+        if (!mInitialized) {
           mECEO0.changeExecutionState(EMGMCommandType::Start);
           mECEO1.changeExecutionState(EMGMCommandType::Start);
           mECEO2.changeExecutionState(EMGMCommandType::Start);
@@ -153,8 +170,7 @@ void FORTE_RT_E_DEMUX::executeEvent(TEventID paEIID, CEventChainExecutionThread 
         mECEO1.setDeadline(var_Deadline1);
         mECEO2.setDeadline(var_Deadline2);
         mECEO3.setDeadline(var_Deadline3);
-      }
-      else{
+      } else {
         mECEO0.changeExecutionState(EMGMCommandType::Stop);
         mECEO1.changeExecutionState(EMGMCommandType::Stop);
         mECEO2.changeExecutionState(EMGMCommandType::Stop);
@@ -168,7 +184,7 @@ void FORTE_RT_E_DEMUX::executeEvent(TEventID paEIID, CEventChainExecutionThread 
 }
 
 void FORTE_RT_E_DEMUX::readInputData(TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventINITID: {
       readData(0, var_QI, conn_QI);
       readData(2, var_Tmin, conn_Tmin);
@@ -186,13 +202,12 @@ void FORTE_RT_E_DEMUX::readInputData(TEventID paEIID) {
       readData(1, var_K, conn_K);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 void FORTE_RT_E_DEMUX::writeOutputData(TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventINITOID: {
       writeData(0, var_QO, conn_QO);
       break;
@@ -209,13 +224,12 @@ void FORTE_RT_E_DEMUX::writeOutputData(TEventID paEIID) {
     case scmEventEO3ID: {
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 CIEC_ANY *FORTE_RT_E_DEMUX::getDI(size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_QI;
     case 1: return &var_K;
     case 2: return &var_Tmin;
@@ -232,14 +246,14 @@ CIEC_ANY *FORTE_RT_E_DEMUX::getDI(size_t paIndex) {
 }
 
 CIEC_ANY *FORTE_RT_E_DEMUX::getDO(size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_QO;
   }
   return nullptr;
 }
 
 CEventConnection *FORTE_RT_E_DEMUX::getEOConUnchecked(TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_INITO;
     case 1: return &conn_EO0;
     case 2: return &conn_EO1;
@@ -250,7 +264,7 @@ CEventConnection *FORTE_RT_E_DEMUX::getEOConUnchecked(TPortId paIndex) {
 }
 
 CDataConnection **FORTE_RT_E_DEMUX::getDIConUnchecked(TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_QI;
     case 1: return &conn_K;
     case 2: return &conn_Tmin;
@@ -267,10 +281,8 @@ CDataConnection **FORTE_RT_E_DEMUX::getDIConUnchecked(TPortId paIndex) {
 }
 
 CDataConnection *FORTE_RT_E_DEMUX::getDOConUnchecked(TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_QO;
   }
   return nullptr;
 }
-
-

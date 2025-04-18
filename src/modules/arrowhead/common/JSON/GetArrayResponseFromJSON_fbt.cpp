@@ -21,7 +21,6 @@ USE_STRING_ID(REQ);
 USE_STRING_ID(response);
 USE_STRING_ID(STRING);
 
-
 #include "ArrowheadJSONHelper.h"
 
 DEFINE_FIRMWARE_FB(FORTE_GetArrayResponseFromJSON, STRID(GetArrayResponseFromJSON))
@@ -44,17 +43,28 @@ const TForteInt16 FORTE_GetArrayResponseFromJSON::scmEOWithIndexes[] = {0, -1};
 const CStringDictionary::TStringId FORTE_GetArrayResponseFromJSON::scmEventOutputNames[] = {STRID(CNF)};
 const CStringDictionary::TStringId FORTE_GetArrayResponseFromJSON::scmEventOutputTypeIds[] = {STRID(Event)};
 
-const SFBInterfaceSpec FORTE_GetArrayResponseFromJSON::scmFBInterfaceSpec = {
-  1,  scmEventInputNames, scmEventInputTypeIds,  scmEIWith,  scmEIWithIndexes,
-  1,  scmEventOutputNames, scmEventOutputTypeIds,  scmEOWith, scmEOWithIndexes,  1,  scmDataInputNames, scmDataInputTypeIds,
-  1,  scmDataOutputNames, scmDataOutputTypeIds,
-  0, 0
-};
+const SFBInterfaceSpec FORTE_GetArrayResponseFromJSON::scmFBInterfaceSpec = {1,
+                                                                             scmEventInputNames,
+                                                                             scmEventInputTypeIds,
+                                                                             scmEIWith,
+                                                                             scmEIWithIndexes,
+                                                                             1,
+                                                                             scmEventOutputNames,
+                                                                             scmEventOutputTypeIds,
+                                                                             scmEOWith,
+                                                                             scmEOWithIndexes,
+                                                                             1,
+                                                                             scmDataInputNames,
+                                                                             scmDataInputTypeIds,
+                                                                             1,
+                                                                             scmDataOutputNames,
+                                                                             scmDataOutputTypeIds,
+                                                                             0,
+                                                                             0};
 
-
-bool FORTE_GetArrayResponseFromJSON::isResponseEmpty(char* paText) {
-  while(']' != *paText) {
-    if(' ' != *paText) {
+bool FORTE_GetArrayResponseFromJSON::isResponseEmpty(char *paText) {
+  while (']' != *paText) {
+    if (' ' != *paText) {
       return false;
     }
     paText++;
@@ -63,32 +73,31 @@ bool FORTE_GetArrayResponseFromJSON::isResponseEmpty(char* paText) {
 }
 
 void FORTE_GetArrayResponseFromJSON::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
-  if(scmEventREQID == paEIID && CIEC_ANY::e_ARRAY == output().getDataTypeID() && CIEC_ANY::e_STRUCT == output_Array()[0]->getDataTypeID()) {
-    //clean the output first
-    output_Array().setup(output_Array().size(), static_cast<CIEC_STRUCT*>(output_Array()[0])->getStructTypeNameID());
+  if (scmEventREQID == paEIID && CIEC_ANY::e_ARRAY == output().getDataTypeID() &&
+      CIEC_ANY::e_STRUCT == output_Array()[0]->getDataTypeID()) {
+    // clean the output first
+    output_Array().setup(output_Array().size(), static_cast<CIEC_STRUCT *>(output_Array()[0])->getStructTypeNameID());
 
     DEVLOG_DEBUG("[Arrowhead GetArrayResponseFromJSON]: Response received: %s\n", response().getValue());
-    char* helper = strrchr(response().getValue(), ']');
-    if(0 != helper) {
+    char *helper = strrchr(response().getValue(), ']');
+    if (0 != helper) {
 
       *(helper + 1) = '\0';
 
       helper = strchr(response().getValue(), '[');
-      if(0 != helper) {
-        if(!isResponseEmpty(helper + 1)) {
+      if (0 != helper) {
+        if (!isResponseEmpty(helper + 1)) {
           ArrowheadJSONHelper::transformJSONToStruct(helper);
           output().fromString(helper);
-        } //if response is empty, don't do anything.
+        } // if response is empty, don't do anything.
       } else {
-        DEVLOG_ERROR("[Arrowhead GetArrayResponseFromJSON]: Invalid response, ] was found but not [: \n", response().getValue());
+        DEVLOG_ERROR("[Arrowhead GetArrayResponseFromJSON]: Invalid response, ] was found but not [: \n",
+                     response().getValue());
       }
     } else {
-      DEVLOG_ERROR("[Arrowhead GetArrayResponseFromJSON]: Invalid response, no ] was found: %s\n", response().getValue());
+      DEVLOG_ERROR("[Arrowhead GetArrayResponseFromJSON]: Invalid response, no ] was found: %s\n",
+                   response().getValue());
     }
     sendOutputEvent(scmEventCNFID, paECET);
   }
 }
-
-
-
-

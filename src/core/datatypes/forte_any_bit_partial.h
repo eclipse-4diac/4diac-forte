@@ -30,16 +30,16 @@ class CIEC_ANY_BIT_PARTIAL final : public PartialType {
   public:
     using PartialType::operator=;
 
-    CIEC_ANY_BIT_PARTIAL(SourceType &paValue, const size_t paIndex) : mOriginalValue(paValue), mIndex(paIndex)  {
+    CIEC_ANY_BIT_PARTIAL(SourceType &paValue, const size_t paIndex) : mOriginalValue(paValue), mIndex(paIndex) {
       *this = partialValue(paValue, paIndex);
     }
 
     static PartialType partialValue(const SourceType &paValue, const size_t paIndex) {
       PartialValueType partialValue = 0;
-      if(paIndex <= scmMaxIndex) {
+      if (paIndex <= scmMaxIndex) {
         const auto shiftIndex = paIndex * scmPartialDigits;
         const SourceValueType sourceValue = static_cast<SourceValueType>(paValue);
-        if constexpr(std::is_same_v<CIEC_BOOL, PartialType>) {
+        if constexpr (std::is_same_v<CIEC_BOOL, PartialType>) {
           partialValue = static_cast<PartialValueType>((sourceValue >> shiftIndex) & 0x1);
         } else {
           partialValue = static_cast<PartialValueType>(sourceValue >> shiftIndex);
@@ -50,18 +50,18 @@ class CIEC_ANY_BIT_PARTIAL final : public PartialType {
       return PartialType(partialValue);
     }
 
-    CIEC_ANY_BIT_PARTIAL& operator=(const CIEC_ANY_BIT_PARTIAL &paValue) {
+    CIEC_ANY_BIT_PARTIAL &operator=(const CIEC_ANY_BIT_PARTIAL &paValue) {
       *this = PartialType(paValue);
       return *this;
     }
 
     ~CIEC_ANY_BIT_PARTIAL() override {
-      if(mIndex <= scmMaxIndex) {
+      if (mIndex <= scmMaxIndex) {
         constexpr SourceValueType maskTemplate = std::numeric_limits<PartialValueType>::max();
         const auto shiftIndex = mIndex * scmPartialDigits;
         const SourceValueType mask = static_cast<SourceValueType>(maskTemplate << shiftIndex);
         const SourceValueType partialPartValue = static_cast<SourceValueType>(
-                static_cast<SourceValueType>(static_cast<PartialValueType>(*this)) << shiftIndex);
+            static_cast<SourceValueType>(static_cast<PartialValueType>(*this)) << shiftIndex);
         const SourceValueType sourceValue = static_cast<SourceValueType>(mOriginalValue);
         SourceValueType mergedValue = sourceValue ^ ((sourceValue ^ partialPartValue) & mask);
         mOriginalValue = SourceType(mergedValue);

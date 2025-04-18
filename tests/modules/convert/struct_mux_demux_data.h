@@ -19,9 +19,8 @@
 #include "forte_string.h"
 #include "forte_array_fixed.h"
 
-
 class CIEC_Struct_Muxer_Test_Struct_1 : public CIEC_STRUCT {
-  DECLARE_FIRMWARE_DATATYPE(Struct_Muxer_Test_Struct_1)
+    DECLARE_FIRMWARE_DATATYPE(Struct_Muxer_Test_Struct_1)
 
   public:
     CIEC_INT Var1;
@@ -34,14 +33,14 @@ class CIEC_Struct_Muxer_Test_Struct_1 : public CIEC_STRUCT {
       return 3;
     }
 
-    const CStringDictionary::TStringId* elementNames() const override {
+    const CStringDictionary::TStringId *elementNames() const override {
       return scmElementNames;
     }
 
     CStringDictionary::TStringId getStructTypeNameID() const override;
 
     CIEC_ANY *getMember(size_t paMemberIndex) override {
-      switch(paMemberIndex) {
+      switch (paMemberIndex) {
         case 0: return &Var1;
         case 1: return &Var2;
         case 2: return &Var3;
@@ -50,19 +49,20 @@ class CIEC_Struct_Muxer_Test_Struct_1 : public CIEC_STRUCT {
     }
 
     const CIEC_ANY *getMember(size_t paMemberIndex) const override {
-      switch(paMemberIndex) {
+      switch (paMemberIndex) {
         case 0: return &Var1;
         case 1: return &Var2;
         case 2: return &Var3;
       }
       return nullptr;
     }
-private:
+
+  private:
     static const CStringDictionary::TStringId scmElementNames[];
 };
 
 class CIEC_Struct_Muxer_Test_Struct_2 : public CIEC_STRUCT {
-  DECLARE_FIRMWARE_DATATYPE(Struct_Muxer_Test_Struct_2)
+    DECLARE_FIRMWARE_DATATYPE(Struct_Muxer_Test_Struct_2)
 
   public:
     CIEC_INT Var1;
@@ -75,14 +75,14 @@ class CIEC_Struct_Muxer_Test_Struct_2 : public CIEC_STRUCT {
       return 3;
     }
 
-    const CStringDictionary::TStringId* elementNames() const override {
+    const CStringDictionary::TStringId *elementNames() const override {
       return scmElementNames;
     }
 
     CStringDictionary::TStringId getStructTypeNameID() const override;
 
     CIEC_ANY *getMember(size_t paMemberIndex) override {
-      switch(paMemberIndex) {
+      switch (paMemberIndex) {
         case 0: return &Var1;
         case 1: return &Var2;
         case 2: return &Var3;
@@ -91,19 +91,20 @@ class CIEC_Struct_Muxer_Test_Struct_2 : public CIEC_STRUCT {
     }
 
     const CIEC_ANY *getMember(size_t paMemberIndex) const override {
-      switch(paMemberIndex) {
+      switch (paMemberIndex) {
         case 0: return &Var1;
         case 1: return &Var2;
         case 2: return &Var3;
       }
       return nullptr;
     }
+
   private:
     static const CStringDictionary::TStringId scmElementNames[];
 };
 
 class CIEC_Struct_Muxer_Test_Struct_3 : public CIEC_STRUCT {
-  DECLARE_FIRMWARE_DATATYPE(Struct_Muxer_Test_Struct_3)
+    DECLARE_FIRMWARE_DATATYPE(Struct_Muxer_Test_Struct_3)
 
   public:
     CIEC_Struct_Muxer_Test_Struct_3() = default;
@@ -112,7 +113,7 @@ class CIEC_Struct_Muxer_Test_Struct_3 : public CIEC_STRUCT {
       return 0;
     }
 
-    const CStringDictionary::TStringId* elementNames() const override {
+    const CStringDictionary::TStringId *elementNames() const override {
       return scmElementNames;
     }
 
@@ -125,12 +126,13 @@ class CIEC_Struct_Muxer_Test_Struct_3 : public CIEC_STRUCT {
     const CIEC_ANY *getMember(size_t) const override {
       return nullptr;
     }
+
   private:
     static const CStringDictionary::TStringId scmElementNames[];
 };
 
 class CIEC_Struct_Muxer_Test_Struct_4 : public CIEC_STRUCT {
-  DECLARE_FIRMWARE_DATATYPE(Struct_Muxer_Test_Struct_4)
+    DECLARE_FIRMWARE_DATATYPE(Struct_Muxer_Test_Struct_4)
 
   public:
     CIEC_INT data[256];
@@ -141,69 +143,70 @@ class CIEC_Struct_Muxer_Test_Struct_4 : public CIEC_STRUCT {
       return 256;
     }
 
-    const CStringDictionary::TStringId* elementNames() const override {
+    const CStringDictionary::TStringId *elementNames() const override {
       return scmElementNames;
     }
 
     CStringDictionary::TStringId getStructTypeNameID() const override;
 
     CIEC_ANY *getMember(size_t paMemberIndex) override {
-      if(paMemberIndex < 256) {
+      if (paMemberIndex < 256) {
         return &data[paMemberIndex];
       }
       return nullptr;
     }
 
     const CIEC_ANY *getMember(size_t paMemberIndex) const override {
-      if(paMemberIndex < 256) {
+      if (paMemberIndex < 256) {
         return &data[paMemberIndex];
       }
       return nullptr;
     }
+
   private:
     static const CStringDictionary::TStringId scmElementNames[];
 };
 
 class CIEC_Struct_Muxer_Test_Struct_5 : public CIEC_STRUCT {
-DECLARE_FIRMWARE_DATATYPE(Struct_Muxer_Test_Struct_5)
+    DECLARE_FIRMWARE_DATATYPE(Struct_Muxer_Test_Struct_5)
 
-public:
-  CIEC_INT Var1;
-  CIEC_ARRAY_FIXED<CIEC_INT, 0, 3> Var2;
-  CIEC_ARRAY_FIXED<CIEC_ARRAY_FIXED<CIEC_INT, 0, 3>, 0, 1> Var3;
+  public:
+    CIEC_INT Var1;
+    CIEC_ARRAY_FIXED<CIEC_INT, 0, 3> Var2;
+    CIEC_ARRAY_FIXED<CIEC_ARRAY_FIXED<CIEC_INT, 0, 3>, 0, 1> Var3;
 
-  CIEC_Struct_Muxer_Test_Struct_5() = default;
+    CIEC_Struct_Muxer_Test_Struct_5() = default;
 
-  size_t getStructSize() const override {
-    return 3;
-  }
-
-  const CStringDictionary::TStringId* elementNames() const override {
-    return scmElementNames;
-  }
-
-  CStringDictionary::TStringId getStructTypeNameID() const override;
-
-  CIEC_ANY *getMember(size_t paMemberIndex) override {
-    switch(paMemberIndex) {
-      case 0: return &Var1;
-      case 1: return &Var2;
-      case 2: return &Var3;
+    size_t getStructSize() const override {
+      return 3;
     }
-    return nullptr;
-  }
 
-  const CIEC_ANY *getMember(size_t paMemberIndex) const override {
-    switch(paMemberIndex) {
-      case 0: return &Var1;
-      case 1: return &Var2;
-      case 2: return &Var3;
+    const CStringDictionary::TStringId *elementNames() const override {
+      return scmElementNames;
     }
-    return nullptr;
-  }
-private:
-  static const CStringDictionary::TStringId scmElementNames[];
+
+    CStringDictionary::TStringId getStructTypeNameID() const override;
+
+    CIEC_ANY *getMember(size_t paMemberIndex) override {
+      switch (paMemberIndex) {
+        case 0: return &Var1;
+        case 1: return &Var2;
+        case 2: return &Var3;
+      }
+      return nullptr;
+    }
+
+    const CIEC_ANY *getMember(size_t paMemberIndex) const override {
+      switch (paMemberIndex) {
+        case 0: return &Var1;
+        case 1: return &Var2;
+        case 2: return &Var3;
+      }
+      return nullptr;
+    }
+
+  private:
+    static const CStringDictionary::TStringId scmElementNames[];
 };
-
 
 #endif /* TESTS_MODULES_CONVERT_STRUCT_MUX_DEMUX_DATA_H_ */

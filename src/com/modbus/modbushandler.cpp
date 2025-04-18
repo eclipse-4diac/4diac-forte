@@ -19,14 +19,13 @@
 
 DEFINE_HANDLER(CModbusHandler);
 
-
-CModbusHandler::CModbusHandler(CDeviceExecution& paDeviceExecution) : CExternalEventHandler(paDeviceExecution)  {
+CModbusHandler::CModbusHandler(CDeviceExecution &paDeviceExecution) : CExternalEventHandler(paDeviceExecution) {
 }
 
 CModbusHandler::~CModbusHandler() = default;
 
-void CModbusHandler::executeComCallback(forte::com_infra::CModbusComLayer* paComCallback){
-  if(forte::com_infra::e_Nothing != paComCallback->recvData(0,0)){
+void CModbusHandler::executeComCallback(forte::com_infra::CModbusComLayer *paComCallback) {
+  if (forte::com_infra::e_Nothing != paComCallback->recvData(0, 0)) {
     startNewEventChain(paComCallback->getCommFB());
   }
 }

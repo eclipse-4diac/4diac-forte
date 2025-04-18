@@ -22,84 +22,83 @@ extern "C" {
 #include <MQTTAsync.h>
 }
 
-
 class CMQTTClient {
-public:
-  enum MQTTStates {
-    NOT_CONNECTED,
-    CONNECTION_ASKED,
-    SUBSCRIBING,
-    ALL_SUBSCRIBED,
-  };
+  public:
+    enum MQTTStates {
+      NOT_CONNECTED,
+      CONNECTION_ASKED,
+      SUBSCRIBING,
+      ALL_SUBSCRIBED,
+    };
 
-  CMQTTClient(const std::string& paAddress, const std::string& paClientId, MQTTHandler& paHandler);
+    CMQTTClient(const std::string &paAddress, const std::string &paClientId, MQTTHandler &paHandler);
 
-  ~CMQTTClient();
+    ~CMQTTClient();
 
-  int initClient();
+    int initClient();
 
-  bool runClient();
+    bool runClient();
 
-  void reconnect();
+    void reconnect();
 
-  const std::string& getClientId() const {
-    return mClientId;
-  }
+    const std::string &getClientId() const {
+      return mClientId;
+    }
 
-  const std::string& getAddress() const {
-    return mAddress;
-  }
+    const std::string &getAddress() const {
+      return mAddress;
+    }
 
-  MQTTStates getMQTTState() const {
-    return mMQTT_STATE;
-  }
+    MQTTStates getMQTTState() const {
+      return mMQTT_STATE;
+    }
 
-  void addLayer(MQTTComLayer* paLayer);
+    void addLayer(MQTTComLayer *paLayer);
 
-  void removeLayer(MQTTComLayer* paLayer);
+    void removeLayer(MQTTComLayer *paLayer);
 
-  int sendData(void *paData, unsigned int paSize, const std::string& paTopicName);
+    int sendData(void *paData, unsigned int paSize, const std::string &paTopicName);
 
-  int mqttSubscribe(const MQTTComLayer* paLayer);
-  int mqttConnect();
+    int mqttSubscribe(const MQTTComLayer *paLayer);
+    int mqttConnect();
 
-  static void onMqttConnectionLost(void* paContext, char* paCause);
-  static int onMqttMessageArrived(void* paContext, char* paTopicName, int paTopicLen, MQTTAsync_message* paMessage);
+    static void onMqttConnectionLost(void *paContext, char *paCause);
+    static int onMqttMessageArrived(void *paContext, char *paTopicName, int paTopicLen, MQTTAsync_message *paMessage);
 
-  static void onMqttConnectionSucceed(void* paContext, MQTTAsync_successData* paResponse);
-  static void onMqttConnectionFailed(void* paContext, MQTTAsync_failureData* paResponse);
+    static void onMqttConnectionSucceed(void *paContext, MQTTAsync_successData *paResponse);
+    static void onMqttConnectionFailed(void *paContext, MQTTAsync_failureData *paResponse);
 
-  static std::shared_ptr<CMQTTClient> getNewClient(const std::string&  paAddress, const std::string&  paClientId, MQTTHandler& paHandler);
+    static std::shared_ptr<CMQTTClient>
+    getNewClient(const std::string &paAddress, const std::string &paClientId, MQTTHandler &paHandler);
 
-private:
+  private:
+    static void onSubscribeSucceed(void *paContext, MQTTAsync_successData *paResponse);
+    static void onSubscribeFailed(void *paContext, MQTTAsync_failureData *paResponse);
 
-  static void onSubscribeSucceed(void* paContext, MQTTAsync_successData* paResponse);
-  static void onSubscribeFailed(void* paContext, MQTTAsync_failureData* paResponse);
+    void removeLayerHelper(MQTTComLayer *paLayer, std::vector<MQTTComLayer *> &paLayerList);
 
-  void removeLayerHelper(MQTTComLayer* paLayer, std::vector<MQTTComLayer*>& paLayerList);
+    void removeToResubscribe(MQTTComLayer *paLayer);
 
-  void removeToResubscribe(MQTTComLayer* paLayer);
+    void clearToResubscribe() {
+      mToResubscribe.clear();
+    }
 
-  void clearToResubscribe() {
-    mToResubscribe.clear();
-  }
+    static const int smKeepAliveInterval = 20;
+    static const int smCleanSession = 1;
 
-  static const int smKeepAliveInterval = 20;
-  static const int smCleanSession = 1;
+    static const int smTimeout = 10000;
 
-  static const int smTimeout = 10000;
+    std::string mAddress;
+    std::string mClientId;
 
-  std::string mAddress;
-  std::string mClientId;
+    MQTTAsync mAsClient;
+    MQTTAsync_connectOptions mClientConnectionOptions;
+    MQTTStates mMQTT_STATE;
+    CSyncObject mMQTTMutex;
 
-  MQTTAsync mAsClient;
-  MQTTAsync_connectOptions mClientConnectionOptions;
-  MQTTStates mMQTT_STATE;
-  CSyncObject mMQTTMutex;
-
-  MQTTHandler& mHandler;
-  std::vector<MQTTComLayer*> mLayers;
-  std::vector<MQTTComLayer*> mToResubscribe;
+    MQTTHandler &mHandler;
+    std::vector<MQTTComLayer *> mLayers;
+    std::vector<MQTTComLayer *> mToResubscribe;
 };
 
 #endif /*CMQTTCLIENT_H*/

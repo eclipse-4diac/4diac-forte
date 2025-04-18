@@ -19,11 +19,10 @@
 
 USE_STRING_ID(ANY);
 
-
 using namespace forte::core::util;
 
-
-void CStringIdListSpecBuilder::setStaticList(const CStringDictionary::TStringId *paStaticList, std::size_t paItemsCount) {
+void CStringIdListSpecBuilder::setStaticList(const CStringDictionary::TStringId *paStaticList,
+                                             std::size_t paItemsCount) {
   mDynamicList.clear();
   cmStaticList = paStaticList;
   mStaticListSize = paItemsCount;
@@ -39,7 +38,7 @@ int CStringIdListSpecBuilder::addString(CStringDictionary::TStringId paString) {
   cmStaticList = nullptr;
   mStaticListSize = 0;
   mDynamicList.push_back(paString);
-  return (int)mDynamicList.size() - 1;
+  return (int) mDynamicList.size() - 1;
 }
 
 int CStringIdListSpecBuilder::addString(const char *paString) {
@@ -60,12 +59,12 @@ int CStringIdListSpecBuilder::findString(CStringDictionary::TStringId paStringId
     const auto end = cmStaticList + mStaticListSize;
     auto pos = std::find(cmStaticList, end, paStringId);
     if (pos != end) {
-      retVal = (int)(pos - cmStaticList);
+      retVal = (int) (pos - cmStaticList);
     }
   } else {
     auto pos = std::find(mDynamicList.begin(), mDynamicList.end(), paStringId);
     if (pos != mDynamicList.end()) {
-      retVal = (int)(pos - mDynamicList.begin());
+      retVal = (int) (pos - mDynamicList.begin());
     }
   }
   return retVal;
@@ -75,7 +74,6 @@ std::size_t CStringIdListSpecBuilder::calcStorageSize() const {
   return cmStaticList ? 0 : mDynamicList.size() * sizeof(CStringDictionary::TStringId);
 }
 
-
 static bool makeName(char *paName, const char *paPrefix, int paNumber) {
   const int retVal = forte_snprintf(paName, sizeof(TIdentifier), "%s%d", paPrefix, paNumber);
   return (retVal < static_cast<int>(sizeof(TIdentifier)) && retVal > 0);
@@ -83,7 +81,7 @@ static bool makeName(char *paName, const char *paPrefix, int paNumber) {
 
 std::pair<int, int> CEventSpecBuilderBase::addEventRange(const char *paPrefix, int paRangeSize) {
   TIdentifier name;
-  int firstId = (int)mNamesListBuilder.getNumStrings();
+  int firstId = (int) mNamesListBuilder.getNumStrings();
   int lastId = firstId;
   for (int i = 0; i < paRangeSize; ++i) {
     if (!makeName(name, paPrefix, i + 1)) {
@@ -103,9 +101,10 @@ std::pair<int, int> CDataSpecBuilderBase::addDataRange(const char *paPrefix, int
   return addDataRange(paPrefix, paRangeSize, CStringDictionary::insert(paTypeName));
 }
 
-std::pair<int, int> CDataSpecBuilderBase::addDataRange(const char *paPrefix, int paRangeSize, CStringDictionary::TStringId paTypeName) {
+std::pair<int, int>
+CDataSpecBuilderBase::addDataRange(const char *paPrefix, int paRangeSize, CStringDictionary::TStringId paTypeName) {
   TIdentifier name;
-  int firstId = (int)mNamesListBuilder.getNumStrings();
+  int firstId = (int) mNamesListBuilder.getNumStrings();
   int lastId = firstId;
   for (int i = 0; i < paRangeSize; ++i) {
     if (!makeName(name, paPrefix, i + 1)) {
@@ -117,13 +116,12 @@ std::pair<int, int> CDataSpecBuilderBase::addDataRange(const char *paPrefix, int
   return {firstId, lastId};
 }
 
-std::tuple<const CStringDictionary::TStringId*, const CStringDictionary::TStringId*, TPortId>
+std::tuple<const CStringDictionary::TStringId *, const CStringDictionary::TStringId *, TPortId>
 CDataSpecBuilderBase::build(CMixedStorage &paStorage) const {
   auto nameData = mNamesListBuilder.build<TPortId>(paStorage);
   auto typeData = mTypesListBuilder.build<TPortId>(paStorage);
-  return {std::get<0>(nameData), std::get<0>(typeData), std::get<1>(nameData) };
+  return {std::get<0>(nameData), std::get<0>(typeData), std::get<1>(nameData)};
 }
-
 
 void CWithSpecBuilderBase::grow(std::size_t paNumEvents) {
   if (paNumEvents > mDynamicList.size()) {
@@ -131,7 +129,9 @@ void CWithSpecBuilderBase::grow(std::size_t paNumEvents) {
   }
 }
 
-void CWithSpecBuilderBase::setStaticBindings(const TDataIOID *paStaticBindings, const TForteInt16 *paStaticIndexes, std::size_t paNumEvents) {
+void CWithSpecBuilderBase::setStaticBindings(const TDataIOID *paStaticBindings,
+                                             const TForteInt16 *paStaticIndexes,
+                                             std::size_t paNumEvents) {
   mDynamicList.clear();
   mStaticBindings = paStaticBindings;
   mStaticIndexes = paStaticIndexes;
@@ -168,7 +168,8 @@ std::size_t CWithSpecBuilderBase::calcStorageSize(std::size_t paNumEvents) const
   return sumSize;
 }
 
-std::tuple<const TDataIOID*, const TForteInt16*> CWithSpecBuilderBase::build(CMixedStorage &paStorage, std::size_t paNumEvents) {
+std::tuple<const TDataIOID *, const TForteInt16 *> CWithSpecBuilderBase::build(CMixedStorage &paStorage,
+                                                                               std::size_t paNumEvents) {
   // special case for building with static data
   if (mStaticBindings) {
     check(mNumStaticEvents == paNumEvents);
@@ -192,7 +193,7 @@ std::tuple<const TDataIOID*, const TForteInt16*> CWithSpecBuilderBase::build(CMi
       paStorage.write<TForteInt16>(-1);
     } else {
       paStorage.write(idx);
-      idx += (TForteInt16)(lst.size() + 1);
+      idx += (TForteInt16) (lst.size() + 1);
     }
   }
   // handle unspecified events
@@ -204,14 +205,15 @@ std::tuple<const TDataIOID*, const TForteInt16*> CWithSpecBuilderBase::build(CMi
   return {pWiths, pIndexes};
 }
 
-
 void CAdapterSpecBuilder::setStaticAdapters(const SAdapterInstanceDef *paStaticAdapters, std::size_t paAdaptersCount) {
   mDynamicList.clear();
   mStaticAdapters = paStaticAdapters;
   mStaticAdaptersCount = paAdaptersCount;
 }
 
-void CAdapterSpecBuilder::addAdapter(const CStringDictionary::TStringId paName, const CStringDictionary::TStringId paType, bool paIsPlug) {
+void CAdapterSpecBuilder::addAdapter(const CStringDictionary::TStringId paName,
+                                     const CStringDictionary::TStringId paType,
+                                     bool paIsPlug) {
   if (mStaticAdapters) {
     mDynamicList.insert(mDynamicList.end(), mStaticAdapters, mStaticAdapters + mStaticAdaptersCount);
   }
@@ -221,18 +223,14 @@ void CAdapterSpecBuilder::addAdapter(const CStringDictionary::TStringId paName, 
 }
 
 void CAdapterSpecBuilder::addAdapter(const char *paName, const char *paType, bool paIsPlug) {
-  addAdapter(
-      CStringDictionary::insert(paName),
-      CStringDictionary::insert(paType),
-      paIsPlug
-  );
+  addAdapter(CStringDictionary::insert(paName), CStringDictionary::insert(paType), paIsPlug);
 }
 
 std::size_t CAdapterSpecBuilder::calcStorageSize() const {
   return mStaticAdapters ? 0 : mDynamicList.size() * sizeof(SAdapterInstanceDef);
 }
 
-std::tuple<const SAdapterInstanceDef*, TPortId> CAdapterSpecBuilder::build(CMixedStorage &paStorage) {
+std::tuple<const SAdapterInstanceDef *, TPortId> CAdapterSpecBuilder::build(CMixedStorage &paStorage) {
   if (mStaticAdapters) {
     return {mStaticAdapters, mStaticAdaptersCount};
   }
@@ -240,31 +238,22 @@ std::tuple<const SAdapterInstanceDef*, TPortId> CAdapterSpecBuilder::build(CMixe
   return {aidefPtr, mDynamicList.size()};
 }
 
-
 bool CIfSpecBuilder::build(CMixedStorage &paStorage, SFBInterfaceSpec &paInterfaceSpec) {
   if (!isGood()) {
     return false;
   }
 
-  std::size_t storageSize =
-    mEI.calcStorageSize() + mEO.calcStorageSize() +
-    mEITypes.calcStorageSize() + mEOTypes.calcStorageSize() +
-    mDI.calcStorageSize() + mDO.calcStorageSize() +
-    mIWith.calcStorageSize(mEI.getNumEvents()) + mOWith.calcStorageSize(mEO.getNumEvents()) +
-    mAdapter.calcStorageSize();
+  std::size_t storageSize = mEI.calcStorageSize() + mEO.calcStorageSize() + mEITypes.calcStorageSize() +
+                            mEOTypes.calcStorageSize() + mDI.calcStorageSize() + mDO.calcStorageSize() +
+                            mIWith.calcStorageSize(mEI.getNumEvents()) + mOWith.calcStorageSize(mEO.getNumEvents()) +
+                            mAdapter.calcStorageSize();
   paStorage.reserve(storageSize);
   std::tie(paInterfaceSpec.mEINames, paInterfaceSpec.mNumEIs) = mEI.build(paStorage);
   std::tie(paInterfaceSpec.mEONames, paInterfaceSpec.mNumEOs) = mEO.build(paStorage);
   std::tie(paInterfaceSpec.mEITypeNames, paInterfaceSpec.mNumEIs) = mEITypes.build(paStorage);
   std::tie(paInterfaceSpec.mEOTypeNames, paInterfaceSpec.mNumEOs) = mEOTypes.build(paStorage);
-  std::tie(
-    paInterfaceSpec.mDINames, paInterfaceSpec.mDIDataTypeNames,
-    paInterfaceSpec.mNumDIs
-  ) = mDI.build(paStorage);
-  std::tie(
-    paInterfaceSpec.mDONames, paInterfaceSpec.mDODataTypeNames,
-    paInterfaceSpec.mNumDOs
-  ) = mDO.build(paStorage);
+  std::tie(paInterfaceSpec.mDINames, paInterfaceSpec.mDIDataTypeNames, paInterfaceSpec.mNumDIs) = mDI.build(paStorage);
+  std::tie(paInterfaceSpec.mDONames, paInterfaceSpec.mDODataTypeNames, paInterfaceSpec.mNumDOs) = mDO.build(paStorage);
   std::tie(paInterfaceSpec.mEIWith, paInterfaceSpec.mEIWithIndexes) = mIWith.build(paStorage, mEI.getNumEvents());
   std::tie(paInterfaceSpec.mEOWith, paInterfaceSpec.mEOWithIndexes) = mOWith.build(paStorage, mEO.getNumEvents());
   std::tie(paInterfaceSpec.mAdapterInstanceDefinition, paInterfaceSpec.mNumAdapters) = mAdapter.build(paStorage);
@@ -274,5 +263,6 @@ bool CIfSpecBuilder::build(CMixedStorage &paStorage, SFBInterfaceSpec &paInterfa
 }
 
 bool CIfSpecBuilder::isGood() const {
-  return mEI.isGood() && mEO.isGood() && mDI.isGood() && mDO.isGood() && mIWith.isGood() && mOWith.isGood() && mEOTypes.isGood() && mEITypes.isGood() && mIsGood;
+  return mEI.isGood() && mEO.isGood() && mDI.isGood() && mDO.isGood() && mIWith.isGood() && mOWith.isGood() &&
+         mEOTypes.isGood() && mEITypes.isGood() && mIsGood;
 }

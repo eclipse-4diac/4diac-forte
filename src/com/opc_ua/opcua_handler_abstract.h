@@ -18,11 +18,11 @@
 #include <opcua_action_info.h>
 
 /**
- * Base class for the local and remote handler. It defines the three major function to be executed in an action (initialize, execute, uninitialize)
+ * Base class for the local and remote handler. It defines the three major function to be executed in an action
+ * (initialize, execute, uninitialize)
  */
 class COPC_UA_HandlerAbstract : public CExternalEventHandler {
   public:
-
     /**
      * Constructor of the class
      */
@@ -77,10 +77,9 @@ class COPC_UA_HandlerAbstract : public CExternalEventHandler {
     static UA_Logger &getLogger();
 
   private:
-
     static UA_Logger UA_Forte_logger;
 
-    static void UA_Log_Forte(void*, UA_LogLevel paLevel, UA_LogCategory paCategory, const char *paMsg, va_list paArgs);
+    static void UA_Log_Forte(void *, UA_LogLevel paLevel, UA_LogCategory paCategory, const char *paMsg, va_list paArgs);
     static void UA_Log_Forte_clear(UA_Logger *paLogger);
 
     /**

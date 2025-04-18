@@ -11,7 +11,7 @@
  *    Thomas Strasser, Alois Zoitl, Monika Wenger,
  *    Martin Melik Merkumians
  *      - initial implementation and rework communication infrastructure
-  *******************************************************************************/
+ *******************************************************************************/
 #ifndef _ANY_NUM_H_
 #define _ANY_NUM_H_
 
@@ -27,10 +27,9 @@ class CIEC_ANY_NUM : public CIEC_ANY_MAGNITUDE {
     EDataTypeID getDataTypeID() const override {
       return CIEC_ANY::e_ANY;
     }
-    
+
   protected:
     CIEC_ANY_NUM() = default;
-
 };
 
 #endif /*_MANY_NUM_H_*/

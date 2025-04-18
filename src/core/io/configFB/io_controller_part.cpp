@@ -15,18 +15,21 @@
 
 using namespace forte::core::io;
 
-IOConfigFBPartController::IOConfigFBPartController(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec &paInterfaceSpec,
-    const CStringDictionary::TStringId paInstanceNameId) :
-    IOConfigFBBase(paContainer, paInterfaceSpec, paInstanceNameId), mMaster(nullptr) {
+IOConfigFBPartController::IOConfigFBPartController(forte::core::CFBContainer &paContainer,
+                                                   const SFBInterfaceSpec &paInterfaceSpec,
+                                                   const CStringDictionary::TStringId paInstanceNameId) :
+    IOConfigFBBase(paContainer, paInterfaceSpec, paInstanceNameId),
+    mMaster(nullptr) {
 }
 
-void IOConfigFBPartController::executeEvent(TEventID paEIID, CEventChainExecutionThread * const paECET) {
-  if(IOConfigFBMultiAdapter().INIT() == paEIID) {
-    if(IOConfigFBMultiAdapter().QI() == true) {
+void IOConfigFBPartController::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
+  if (IOConfigFBMultiAdapter().INIT() == paEIID) {
+    if (IOConfigFBMultiAdapter().QI() == true) {
       // Get master by id
-      mMaster = IOConfigFBSplitController::getControllerById(static_cast<CIEC_UINT::TValueType>(IOConfigFBMultiAdapter().MasterId()));
+      mMaster = IOConfigFBSplitController::getControllerById(
+          static_cast<CIEC_UINT::TValueType>(IOConfigFBMultiAdapter().MasterId()));
 
-      if(nullptr == mMaster) {
+      if (nullptr == mMaster) {
         QO() = CIEC_BOOL(false);
       } else {
         // Initialize handles

@@ -30,52 +30,53 @@ class CUnicodeUtilities {
     static const TForteUInt32 scmBOMMarkerSwapped;
 
     /*! \brief Parse a UTF-8 codepoint
-    *
-    *   \param paCodepoint  Codepoint to parse
-    *   \param paValue  Parsed value
-    *   \return Number of bytes consumed or -1 for error
-    */
+     *
+     *   \param paCodepoint  Codepoint to parse
+     *   \param paValue  Parsed value
+     *   \return Number of bytes consumed or -1 for error
+     */
     static int parseUTF8Codepoint(const TForteByte *paCodepoint, TForteUInt32 &paValue);
 
     /*! \brief Encode a UTF-8 codepoint
-    *
-    *   \param paCodepoint  Pointer to the codepoint (0 for no output)
-    *   \param paBufferSize  Size of the provided buffer.
-    *   \param paValue  Input value
-    *   \return Number of bytes produced or -1 for error
-    */
+     *
+     *   \param paCodepoint  Pointer to the codepoint (0 for no output)
+     *   \param paBufferSize  Size of the provided buffer.
+     *   \param paValue  Input value
+     *   \return Number of bytes produced or -1 for error
+     */
     static int encodeUTF8Codepoint(TForteByte *paCodepoint, unsigned int paBufferSize, TForteUInt32 paValue);
 
     /*! \brief Parse a UTF-16 codepoint
-    *
-    *   \param paCodepoint  Codepoint to parse
-    *   \param paValue  Parsed value
-    *   \param paLittleEndian  Endianess to use
-    *   \return Number of bytes consumed or -1 for error
-    */
+     *
+     *   \param paCodepoint  Codepoint to parse
+     *   \param paValue  Parsed value
+     *   \param paLittleEndian  Endianess to use
+     *   \return Number of bytes consumed or -1 for error
+     */
     static int parseUTF16Codepoint(const TForteByte *paCodepoint, TForteUInt32 &paValue, bool paLittleEndian);
 
     /*! \brief Encode a UTF-16 codepoint
-    *
-    *   \param paCodepoint  Pointer to the codepoint (0 for no output)
-    *   \param paBufferSize  Size of the provided buffer.
-    *   \param paValue  Input value
-    *   \param paLittleEndian  Endianess to use
-    *   \return Number of bytes produced or -1 for error
-    */
-    static int encodeUTF16Codepoint(TForteByte *paCodepoint, unsigned int paBufferSize, TForteUInt32 paValue, bool paLittleEndian);
+     *
+     *   \param paCodepoint  Pointer to the codepoint (0 for no output)
+     *   \param paBufferSize  Size of the provided buffer.
+     *   \param paValue  Input value
+     *   \param paLittleEndian  Endianess to use
+     *   \return Number of bytes produced or -1 for error
+     */
+    static int
+    encodeUTF16Codepoint(TForteByte *paCodepoint, unsigned int paBufferSize, TForteUInt32 paValue, bool paLittleEndian);
 
     /*! \brief Check whether a given string is a valid UTF-8 string
-    *
-    *   \param paString  String to check
-    *   \param paLength  Length of the string to check (use -1 for null-terminated strings)
-    *   \param paMaxWidth Returns the max. width of the codepoint (BOM is not considered).
-    *           7 ... IRV (ASCII)
-    *           8 ... Row 00 only
-    *          16 ... Basic Multilingual Plane only (UCS-2)
-    *          21 ... Rest of UTF-8 (and UTF-16) representable codepoints
-    *   \return Number of codepoints in string or -1 for invalid input
-    */
+     *
+     *   \param paString  String to check
+     *   \param paLength  Length of the string to check (use -1 for null-terminated strings)
+     *   \param paMaxWidth Returns the max. width of the codepoint (BOM is not considered).
+     *           7 ... IRV (ASCII)
+     *           8 ... Row 00 only
+     *          16 ... Basic Multilingual Plane only (UCS-2)
+     *          21 ... Rest of UTF-8 (and UTF-16) representable codepoints
+     *   \return Number of codepoints in string or -1 for invalid input
+     */
     static int checkUTF8(const char *paValue, int paLength, unsigned int &paMaxWidth);
 };
 

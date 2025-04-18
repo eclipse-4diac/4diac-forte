@@ -7,8 +7,8 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *   Martin Melik Merkumians, Ingo Hegny, Alois Zoitl, Stanislav Meduna - initial API and implementation and/or initial documentation
- *   Martin Melik Merkumians - Adds cast template tests
+ *   Martin Melik Merkumians, Ingo Hegny, Alois Zoitl, Stanislav Meduna - initial API and implementation and/or initial
+ *documentation Martin Melik Merkumians - Adds cast template tests
  *******************************************************************************/
 #include <boost/test/unit_test.hpp>
 #include "forte_boost_output_support.h"
@@ -16,31 +16,29 @@
 #include <boost/test/tools/floating_point_comparison.hpp>
 #include "../../../src/core/datatypes/forte_real.h"
 
-
-//BOOLEAN
+// BOOLEAN
 #include "../../../src/core/datatypes/forte_bool.h"
-//BIT-Datatypes
+// BIT-Datatypes
 #include "../../../src/core/datatypes/forte_byte.h"
 #include "../../../src/core/datatypes/forte_word.h"
 #include "../../../src/core/datatypes/forte_dword.h"
-//INT-Datatypes
+// INT-Datatypes
 #include "../../../src/core/datatypes/forte_sint.h"
 #include "../../../src/core/datatypes/forte_usint.h"
 #include "../../../src/core/datatypes/forte_int.h"
 #include "../../../src/core/datatypes/forte_uint.h"
 #include "../../../src/core/datatypes/forte_dint.h"
 #include "../../../src/core/datatypes/forte_udint.h"
-//STRING-Datatypes
+// STRING-Datatypes
 #include "../../../src/core/datatypes/forte_string.h"
 #include "../../../src/core/datatypes/forte_wstring.h"
-//TIME
+// TIME
 #include "../../../src/core/datatypes/forte_time.h"
 
 #include "../../../src/core/datatypes/forte_lword.h"
 #include "../../../src/core/datatypes/forte_lint.h"
 #include "../../../src/core/datatypes/forte_ulint.h"
 #include "../../../src/core/datatypes/forte_lreal.h"
-
 
 using namespace boost::unit_test;
 
@@ -54,7 +52,7 @@ BOOST_AUTO_TEST_CASE(CASTS_INT_to_BOOL) {
 
   CIEC_BOOL bTestBool;
 
-//check initial values
+  // check initial values
   BOOST_TEST(0 == static_cast<CIEC_INT::TValueType>(nTestInt0));
   BOOST_TEST(0 == static_cast<CIEC_INT::TValueType>(nTestInt1));
   BOOST_TEST(0 == static_cast<CIEC_INT::TValueType>(nTestInt256));
@@ -70,7 +68,7 @@ BOOST_AUTO_TEST_CASE(CASTS_INT_to_BOOL) {
   BOOST_TEST(256 == static_cast<CIEC_INT::TValueType>(nTestInt256));
   BOOST_TEST(32767 == static_cast<CIEC_INT::TValueType>(nTestInt32767));
 
-//checks
+  // checks
   bTestBool.setValue(nTestInt0);
   BOOST_CHECK_EQUAL(false, bTestBool);
   bTestBool.setValue(nTestInt1);
@@ -92,7 +90,7 @@ BOOST_AUTO_TEST_CASE(CASTS_INT_to_BITDTs) {
   CIEC_DWORD nTestDWord;
   CIEC_LWORD nTestLWord;
 
-//check initial values
+  // check initial values
   BOOST_TEST(0 == static_cast<CIEC_INT::TValueType>(nTestInt0));
   BOOST_TEST(0 == static_cast<CIEC_INT::TValueType>(nTestInt1));
   BOOST_TEST(0 == static_cast<CIEC_INT::TValueType>(nTestInt256));
@@ -118,7 +116,7 @@ BOOST_AUTO_TEST_CASE(CASTS_INT_to_BITDTs) {
   nTestByte.setValue(nTestInt32767);
   BOOST_CHECK_EQUAL(nTestByte, 255U);
 
-//toWord
+  // toWord
   nTestWord.setValue(nTestInt0);
   BOOST_CHECK_EQUAL(nTestWord, 0U);
   nTestWord.setValue(nTestInt1);
@@ -128,7 +126,7 @@ BOOST_AUTO_TEST_CASE(CASTS_INT_to_BITDTs) {
   nTestWord.setValue(nTestInt32767);
   BOOST_CHECK_EQUAL(nTestWord, 32767U);
 
-//toDWord
+  // toDWord
   nTestDWord.setValue(nTestInt0);
   BOOST_CHECK_EQUAL(nTestDWord, 0UL);
   nTestDWord.setValue(nTestInt1);
@@ -138,7 +136,7 @@ BOOST_AUTO_TEST_CASE(CASTS_INT_to_BITDTs) {
   nTestDWord.setValue(nTestInt32767);
   BOOST_CHECK_EQUAL(nTestDWord, 32767UL);
 
-//toLWord
+  // toLWord
   nTestLWord.setValue(nTestInt0);
   BOOST_CHECK_EQUAL(nTestLWord, 0ULL);
   nTestLWord.setValue(nTestInt1);
@@ -164,7 +162,7 @@ BOOST_AUTO_TEST_CASE(CASTS_INT_to_INTS) {
   CIEC_LINT nTestLInt;
   CIEC_ULINT nTestULInt;
 
-  //check initial values
+  // check initial values
   BOOST_TEST(0 == static_cast<CIEC_INT::TValueType>(nTestInt0));
   BOOST_TEST(0 == static_cast<CIEC_INT::TValueType>(nTestInt1));
   BOOST_TEST(0 == static_cast<CIEC_INT::TValueType>(nTestInt256));
@@ -195,7 +193,7 @@ BOOST_AUTO_TEST_CASE(CASTS_INT_to_INTS) {
   nTestUSInt.setValue(nTestInt_1);
   BOOST_CHECK_EQUAL(static_cast<CIEC_USINT::TValueType>(nTestUSInt), 255U);
 
-//toSINT
+  // toSINT
   nTestSInt.setValue(nTestInt0);
   BOOST_TEST(0 == static_cast<CIEC_SINT::TValueType>(nTestSInt));
   nTestSInt.setValue(nTestInt1);
@@ -205,7 +203,7 @@ BOOST_AUTO_TEST_CASE(CASTS_INT_to_INTS) {
   nTestSInt.setValue(nTestInt32767);
   BOOST_TEST(-1 == static_cast<CIEC_SINT::TValueType>(nTestSInt));
 
-//toUINT
+  // toUINT
   nTestUInt.setValue(nTestInt0);
   BOOST_CHECK_EQUAL(static_cast<CIEC_UINT::TValueType>(nTestUInt), 0U);
   nTestUInt.setValue(nTestInt1);
@@ -217,7 +215,7 @@ BOOST_AUTO_TEST_CASE(CASTS_INT_to_INTS) {
   nTestUInt.setValue(nTestInt_1);
   BOOST_CHECK_EQUAL(static_cast<CIEC_UINT::TValueType>(nTestUInt), 65535U);
 
-//toDINT
+  // toDINT
   nTestDInt.setValue(nTestInt0);
   BOOST_CHECK_EQUAL(static_cast<CIEC_DINT::TValueType>(nTestDInt), 0);
   nTestDInt.setValue(nTestInt1);
@@ -229,7 +227,7 @@ BOOST_AUTO_TEST_CASE(CASTS_INT_to_INTS) {
   nTestDInt.setValue(nTestInt_1);
   BOOST_CHECK_EQUAL(static_cast<CIEC_DINT::TValueType>(nTestDInt), -1);
 
-//toUDINT
+  // toUDINT
   nTestUDInt.setValue(nTestInt0);
   BOOST_CHECK_EQUAL(static_cast<CIEC_UDINT::TValueType>(nTestUDInt), 0UL);
   nTestUDInt.setValue(nTestInt1);
@@ -239,7 +237,7 @@ BOOST_AUTO_TEST_CASE(CASTS_INT_to_INTS) {
   nTestUDInt.setValue(nTestInt32767);
   BOOST_CHECK_EQUAL(static_cast<CIEC_UDINT::TValueType>(nTestUDInt), 32767UL);
 
-//toLINT
+  // toLINT
   nTestLInt.setValue(nTestInt0);
   BOOST_CHECK_EQUAL(static_cast<CIEC_LINT::TValueType>(nTestLInt), 0LL);
   nTestLInt.setValue(nTestInt1);
@@ -270,7 +268,7 @@ BOOST_AUTO_TEST_CASE(CASTS_INT_to_REAL) {
 
   CIEC_REAL nTestReal;
 
-//check initial values
+  // check initial values
   BOOST_TEST(0 == static_cast<CIEC_INT::TValueType>(nTestInt0));
   BOOST_TEST(0 == static_cast<CIEC_INT::TValueType>(nTestInt1));
   BOOST_TEST(0 == static_cast<CIEC_INT::TValueType>(nTestInt256));
@@ -290,15 +288,15 @@ BOOST_AUTO_TEST_CASE(CASTS_INT_to_REAL) {
   nTestReal.setValue(nTestInt0);
   BOOST_CHECK_EQUAL(0.0f, nTestReal);
   nTestReal.setValue(nTestInt1);
-  BOOST_CHECK_EQUAL(1.0f, nTestReal); 
+  BOOST_CHECK_EQUAL(1.0f, nTestReal);
   nTestReal.setValue(nTestInt256);
-  BOOST_CHECK_EQUAL(256.0f, nTestReal); 
+  BOOST_CHECK_EQUAL(256.0f, nTestReal);
   nTestReal.setValue(nTestInt32767);
-  BOOST_CHECK_EQUAL(32767.0f, nTestReal); 
+  BOOST_CHECK_EQUAL(32767.0f, nTestReal);
 
   CIEC_LREAL nTestLReal;
 
-//toLREAL
+  // toLREAL
   nTestLReal.setValue(nTestInt0);
   BOOST_TEST(0.0 == static_cast<CIEC_LREAL::TValueType>(nTestLReal));
   nTestLReal.setValue(nTestInt1);
@@ -312,33 +310,75 @@ BOOST_AUTO_TEST_CASE(CASTS_INT_to_REAL) {
 BOOST_AUTO_TEST_CASE(INT_Castable_test) {
   bool bUp, bDown;
 
-  BOOST_CHECK(CIEC_ANY::isCastable(CIEC_ANY::e_INT, CIEC_ANY::e_BOOL, bUp, bDown)); BOOST_CHECK(! bUp); BOOST_CHECK(bDown);
+  BOOST_CHECK(CIEC_ANY::isCastable(CIEC_ANY::e_INT, CIEC_ANY::e_BOOL, bUp, bDown));
+  BOOST_CHECK(!bUp);
+  BOOST_CHECK(bDown);
 
-  BOOST_CHECK(CIEC_ANY::isCastable(CIEC_ANY::e_INT, CIEC_ANY::e_SINT, bUp, bDown)); BOOST_CHECK(! bUp); BOOST_CHECK(bDown);
-  BOOST_CHECK(CIEC_ANY::isCastable(CIEC_ANY::e_INT, CIEC_ANY::e_INT, bUp, bDown)); BOOST_CHECK(bUp); BOOST_CHECK(! bDown);
-  BOOST_CHECK(CIEC_ANY::isCastable(CIEC_ANY::e_INT, CIEC_ANY::e_DINT, bUp, bDown)); BOOST_CHECK(bUp); BOOST_CHECK(! bDown);
-  BOOST_CHECK(CIEC_ANY::isCastable(CIEC_ANY::e_INT, CIEC_ANY::e_LINT, bUp, bDown)); BOOST_CHECK(bUp); BOOST_CHECK(! bDown);
+  BOOST_CHECK(CIEC_ANY::isCastable(CIEC_ANY::e_INT, CIEC_ANY::e_SINT, bUp, bDown));
+  BOOST_CHECK(!bUp);
+  BOOST_CHECK(bDown);
+  BOOST_CHECK(CIEC_ANY::isCastable(CIEC_ANY::e_INT, CIEC_ANY::e_INT, bUp, bDown));
+  BOOST_CHECK(bUp);
+  BOOST_CHECK(!bDown);
+  BOOST_CHECK(CIEC_ANY::isCastable(CIEC_ANY::e_INT, CIEC_ANY::e_DINT, bUp, bDown));
+  BOOST_CHECK(bUp);
+  BOOST_CHECK(!bDown);
+  BOOST_CHECK(CIEC_ANY::isCastable(CIEC_ANY::e_INT, CIEC_ANY::e_LINT, bUp, bDown));
+  BOOST_CHECK(bUp);
+  BOOST_CHECK(!bDown);
 
-  BOOST_CHECK(CIEC_ANY::isCastable(CIEC_ANY::e_INT, CIEC_ANY::e_USINT, bUp, bDown)); BOOST_CHECK(! bUp); BOOST_CHECK(bDown);
-  BOOST_CHECK(CIEC_ANY::isCastable(CIEC_ANY::e_INT, CIEC_ANY::e_UINT, bUp, bDown)); BOOST_CHECK(! bUp); BOOST_CHECK(bDown);
-  BOOST_CHECK(CIEC_ANY::isCastable(CIEC_ANY::e_INT, CIEC_ANY::e_UDINT, bUp, bDown)); BOOST_CHECK(! bUp); BOOST_CHECK(bDown);
-  BOOST_CHECK(CIEC_ANY::isCastable(CIEC_ANY::e_INT, CIEC_ANY::e_ULINT, bUp, bDown)); BOOST_CHECK(! bUp); BOOST_CHECK(bDown);
+  BOOST_CHECK(CIEC_ANY::isCastable(CIEC_ANY::e_INT, CIEC_ANY::e_USINT, bUp, bDown));
+  BOOST_CHECK(!bUp);
+  BOOST_CHECK(bDown);
+  BOOST_CHECK(CIEC_ANY::isCastable(CIEC_ANY::e_INT, CIEC_ANY::e_UINT, bUp, bDown));
+  BOOST_CHECK(!bUp);
+  BOOST_CHECK(bDown);
+  BOOST_CHECK(CIEC_ANY::isCastable(CIEC_ANY::e_INT, CIEC_ANY::e_UDINT, bUp, bDown));
+  BOOST_CHECK(!bUp);
+  BOOST_CHECK(bDown);
+  BOOST_CHECK(CIEC_ANY::isCastable(CIEC_ANY::e_INT, CIEC_ANY::e_ULINT, bUp, bDown));
+  BOOST_CHECK(!bUp);
+  BOOST_CHECK(bDown);
 
-  BOOST_CHECK(CIEC_ANY::isCastable(CIEC_ANY::e_INT, CIEC_ANY::e_BYTE, bUp, bDown)); BOOST_CHECK(! bUp); BOOST_CHECK(bDown);
-  BOOST_CHECK(CIEC_ANY::isCastable(CIEC_ANY::e_INT, CIEC_ANY::e_WORD, bUp, bDown)); BOOST_CHECK(bUp); BOOST_CHECK(! bDown);
-  BOOST_CHECK(CIEC_ANY::isCastable(CIEC_ANY::e_INT, CIEC_ANY::e_DWORD, bUp, bDown)); BOOST_CHECK(bUp); BOOST_CHECK(! bDown);
-  BOOST_CHECK(CIEC_ANY::isCastable(CIEC_ANY::e_INT, CIEC_ANY::e_LWORD, bUp, bDown)); BOOST_CHECK(bUp); BOOST_CHECK(! bDown);
+  BOOST_CHECK(CIEC_ANY::isCastable(CIEC_ANY::e_INT, CIEC_ANY::e_BYTE, bUp, bDown));
+  BOOST_CHECK(!bUp);
+  BOOST_CHECK(bDown);
+  BOOST_CHECK(CIEC_ANY::isCastable(CIEC_ANY::e_INT, CIEC_ANY::e_WORD, bUp, bDown));
+  BOOST_CHECK(bUp);
+  BOOST_CHECK(!bDown);
+  BOOST_CHECK(CIEC_ANY::isCastable(CIEC_ANY::e_INT, CIEC_ANY::e_DWORD, bUp, bDown));
+  BOOST_CHECK(bUp);
+  BOOST_CHECK(!bDown);
+  BOOST_CHECK(CIEC_ANY::isCastable(CIEC_ANY::e_INT, CIEC_ANY::e_LWORD, bUp, bDown));
+  BOOST_CHECK(bUp);
+  BOOST_CHECK(!bDown);
 
-  BOOST_CHECK(!CIEC_ANY::isCastable(CIEC_ANY::e_INT, CIEC_ANY::e_DATE, bUp, bDown)); BOOST_CHECK(! bUp); BOOST_CHECK(! bDown);
-  BOOST_CHECK(!CIEC_ANY::isCastable(CIEC_ANY::e_INT, CIEC_ANY::e_TIME_OF_DAY, bUp, bDown)); BOOST_CHECK(! bUp); BOOST_CHECK(! bDown);
-  BOOST_CHECK(!CIEC_ANY::isCastable(CIEC_ANY::e_INT, CIEC_ANY::e_DATE_AND_TIME, bUp, bDown)); BOOST_CHECK(! bUp); BOOST_CHECK(! bDown);
-  BOOST_CHECK(!CIEC_ANY::isCastable(CIEC_ANY::e_INT, CIEC_ANY::e_TIME, bUp, bDown)); BOOST_CHECK(! bUp); BOOST_CHECK(! bDown);
+  BOOST_CHECK(!CIEC_ANY::isCastable(CIEC_ANY::e_INT, CIEC_ANY::e_DATE, bUp, bDown));
+  BOOST_CHECK(!bUp);
+  BOOST_CHECK(!bDown);
+  BOOST_CHECK(!CIEC_ANY::isCastable(CIEC_ANY::e_INT, CIEC_ANY::e_TIME_OF_DAY, bUp, bDown));
+  BOOST_CHECK(!bUp);
+  BOOST_CHECK(!bDown);
+  BOOST_CHECK(!CIEC_ANY::isCastable(CIEC_ANY::e_INT, CIEC_ANY::e_DATE_AND_TIME, bUp, bDown));
+  BOOST_CHECK(!bUp);
+  BOOST_CHECK(!bDown);
+  BOOST_CHECK(!CIEC_ANY::isCastable(CIEC_ANY::e_INT, CIEC_ANY::e_TIME, bUp, bDown));
+  BOOST_CHECK(!bUp);
+  BOOST_CHECK(!bDown);
 
-  BOOST_CHECK(CIEC_ANY::isCastable(CIEC_ANY::e_INT, CIEC_ANY::e_REAL, bUp, bDown)); BOOST_CHECK(bUp); BOOST_CHECK(! bDown);
-  BOOST_CHECK(CIEC_ANY::isCastable(CIEC_ANY::e_INT, CIEC_ANY::e_LREAL, bUp, bDown)); BOOST_CHECK(bUp); BOOST_CHECK(! bDown);
+  BOOST_CHECK(CIEC_ANY::isCastable(CIEC_ANY::e_INT, CIEC_ANY::e_REAL, bUp, bDown));
+  BOOST_CHECK(bUp);
+  BOOST_CHECK(!bDown);
+  BOOST_CHECK(CIEC_ANY::isCastable(CIEC_ANY::e_INT, CIEC_ANY::e_LREAL, bUp, bDown));
+  BOOST_CHECK(bUp);
+  BOOST_CHECK(!bDown);
 
-  BOOST_CHECK(!CIEC_ANY::isCastable(CIEC_ANY::e_INT, CIEC_ANY::e_STRING, bUp, bDown)); BOOST_CHECK(! bUp); BOOST_CHECK(! bDown);
-  BOOST_CHECK(!CIEC_ANY::isCastable(CIEC_ANY::e_INT, CIEC_ANY::e_WSTRING, bUp, bDown)); BOOST_CHECK(! bUp); BOOST_CHECK(! bDown);
+  BOOST_CHECK(!CIEC_ANY::isCastable(CIEC_ANY::e_INT, CIEC_ANY::e_STRING, bUp, bDown));
+  BOOST_CHECK(!bUp);
+  BOOST_CHECK(!bDown);
+  BOOST_CHECK(!CIEC_ANY::isCastable(CIEC_ANY::e_INT, CIEC_ANY::e_WSTRING, bUp, bDown));
+  BOOST_CHECK(!bUp);
+  BOOST_CHECK(!bDown);
 }
 
 BOOST_AUTO_TEST_CASE(Explict_cast_operator_to_INT) {

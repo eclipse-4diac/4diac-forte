@@ -15,34 +15,35 @@
 
 #include <threadx/tx_api.h>
 
-#define CSyncObject CTXSyncObject //allows that doxygen can generate better documenation
+#define CSyncObject CTXSyncObject // allows that doxygen can generate better documenation
 
-/*! \ingroup tnetos_hal 
+/*! \ingroup tnetos_hal
  * \brief The sync object implementation for NET+OS.
  *
  * In the NET+OS version a mutex is used for the sync object.
- * 
+ *
  * @author AZ
  */
-class CTXSyncObject{
+class CTXSyncObject {
   private:
   protected:
     TX_MUTEX mMutex;
+
   public:
     CTXSyncObject();
     ~CTXSyncObject();
-  /*!\brief Lock the resource coming after the lock command  
-   * 
-   * This function blocks until it will get the lock for the coming critical section.
-   */  
-    void lock(){
+    /*!\brief Lock the resource coming after the lock command
+     *
+     * This function blocks until it will get the lock for the coming critical section.
+     */
+    void lock() {
       tx_mutex_get(&mMutex, TX_WAIT_FOREVER);
-      //TODO handle return value
+      // TODO handle return value
     };
-  //!Freee the resource coming after the lock command  
-    void unlock(){
+    //! Freee the resource coming after the lock command
+    void unlock() {
       tx_mutex_put(&mMutex);
-      //TODO handle return value
+      // TODO handle return value
     };
 };
 

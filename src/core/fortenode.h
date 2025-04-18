@@ -18,42 +18,42 @@
 /*! \ingroup CORE\brief FORTE implementation of a Singly Linked List Node
  */
 
-
-  /*!\brief container element of the singly linked list
-   *
-   * This class is the container element of the singly linked list.
-   * It's nested in the singly linked list class for reuse in the template class
-   */
+/*!\brief container element of the singly linked list
+ *
+ * This class is the container element of the singly linked list.
+ * It's nested in the singly linked list class for reuse in the template class
+ */
 
 template<typename T>
 class CSinglyLinkedListNode {
-private:
-  /*!\brief contained object of the node element
-   */
-  T mNodeElement;
-  /*!\brief pointer to the next node element
-   */
-  CSinglyLinkedListNode* mNextNode;
-public:
-  CSinglyLinkedListNode() = delete;
-  CSinglyLinkedListNode(T paNodeElement, CSinglyLinkedListNode* paNextNode = nullptr) : mNodeElement(paNodeElement), mNextNode(paNextNode) {
+  private:
+    /*!\brief contained object of the node element
+     */
+    T mNodeElement;
+    /*!\brief pointer to the next node element
+     */
+    CSinglyLinkedListNode *mNextNode;
 
-  }
+  public:
+    CSinglyLinkedListNode() = delete;
+    CSinglyLinkedListNode(T paNodeElement, CSinglyLinkedListNode *paNextNode = nullptr) :
+        mNodeElement(paNodeElement),
+        mNextNode(paNextNode) {
+    }
 
-  ~CSinglyLinkedListNode() = default;
+    ~CSinglyLinkedListNode() = default;
 
-  T& getData() {
-    return mNodeElement;
-  }
+    T &getData() {
+      return mNodeElement;
+    }
 
-  CSinglyLinkedListNode* getNext() const  {
-    return mNextNode;
-  }
+    CSinglyLinkedListNode *getNext() const {
+      return mNextNode;
+    }
 
-  void setNext(CSinglyLinkedListNode* paNextNode)  {
-    mNextNode = paNextNode;
-  }
-
+    void setNext(CSinglyLinkedListNode *paNextNode) {
+      mNextNode = paNextNode;
+    }
 };
 
 #endif /* FORTENODE_H_ */

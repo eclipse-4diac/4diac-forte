@@ -30,7 +30,6 @@ USE_STRING_ID(STOP);
 USE_STRING_ID(WARM);
 USE_STRING_ID(WSTRING);
 
-
 #include "../../core/ecet.h"
 
 DEFINE_FIRMWARE_FB(RMT_RES, STRID(RMT_RES));
@@ -38,28 +37,38 @@ DEFINE_FIRMWARE_FB(RMT_RES, STRID(RMT_RES));
 const CStringDictionary::TStringId RMT_RES::scmVarInputNameIds[] = {STRID(MGR_ID)};
 const CStringDictionary::TStringId RMT_RES::scmDIDataTypeIds[] = {STRID(WSTRING)};
 
+const SFBInterfaceSpec RMT_RES::scmFBInterfaceSpec = {0,
+                                                      nullptr,
+                                                      nullptr,
+                                                      nullptr,
+                                                      nullptr,
+                                                      0,
+                                                      nullptr,
+                                                      nullptr,
+                                                      nullptr,
+                                                      nullptr,
+                                                      1,
+                                                      scmVarInputNameIds,
+                                                      scmDIDataTypeIds,
+                                                      0,
+                                                      nullptr,
+                                                      nullptr,
+                                                      0,
+                                                      nullptr,
+                                                      0,
+                                                      nullptr};
 
-const SFBInterfaceSpec RMT_RES::scmFBInterfaceSpec = {
-  0, nullptr, nullptr, nullptr, nullptr,
-  0, nullptr, nullptr, nullptr, nullptr,
-  1, scmVarInputNameIds, scmDIDataTypeIds,
-  0, nullptr, nullptr,
-  0, nullptr,
-  0, nullptr
-};
-
-
-RMT_RES::RMT_RES(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paDevice):
-       CResource(paDevice, scmFBInterfaceSpec, paInstanceNameId),
-       conn_MGR_ID(nullptr),
-       conn_MGR_ID_int(*this, 0, u""_WSTRING),
-       fb_START(STRID(START), *this),
-       fb_MGR_FF(STRID(MGR_FF), *this),
-       fb_MGR(STRID(MGR), *this) {
+RMT_RES::RMT_RES(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paDevice) :
+    CResource(paDevice, scmFBInterfaceSpec, paInstanceNameId),
+    conn_MGR_ID(nullptr),
+    conn_MGR_ID_int(*this, 0, u""_WSTRING),
+    fb_START(STRID(START), *this),
+    fb_MGR_FF(STRID(MGR_FF), *this),
+    fb_MGR(STRID(MGR), *this) {
 }
 
 bool RMT_RES::initialize() {
-  if(!CResource::initialize()) {
+  if (!CResource::initialize()) {
     return false;
   }
 
@@ -119,23 +128,22 @@ void RMT_RES::joinResourceThread() const {
 }
 
 CIEC_ANY *RMT_RES::getDI(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_MGR_ID_int.getValue();
   }
   return nullptr;
 }
 
 CDataConnection **RMT_RES::getDIConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_MGR_ID;
   }
   return nullptr;
 }
 
 CConnection *RMT_RES::getResIf2InConnectionUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_MGR_ID_int;
   }
   return nullptr;
 }
-

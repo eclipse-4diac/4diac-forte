@@ -14,70 +14,66 @@
 #include "deviceController.h"
 #include <io/mapper/io_mapper.h>
 
-const TForteUInt8 PLCnextSlaveHandler::scmSlaveConfigurationIO[] = { };
+const TForteUInt8 PLCnextSlaveHandler::scmSlaveConfigurationIO[] = {};
 const TForteUInt8 PLCnextSlaveHandler::scmSlaveConfigurationIONum = 0;
 
-PLCnextSlaveHandler::PLCnextSlaveHandler(int paType, forte::core::CFBContainer &paContainer, const SFBInterfaceSpec* paInterfaceSpec,
-    const CStringDictionary::TStringId paInstanceNameId) :
+PLCnextSlaveHandler::PLCnextSlaveHandler(int paType,
+                                         forte::core::CFBContainer &paContainer,
+                                         const SFBInterfaceSpec *paInterfaceSpec,
+                                         const CStringDictionary::TStringId paInstanceNameId) :
     IOConfigFBMultiSlave(scmSlaveConfigurationIO, scmSlaveConfigurationIONum, paType, paContainer, paInterfaceSpec),
     slaveType(SlaveType(paType)) {
 }
 
-
 PLCnextSlaveHandler::~PLCnextSlaveHandler() {
-    delete imageBuffer;
+  delete imageBuffer;
 }
 
 int PLCnextSlaveHandler::update() {
-    if (slaveType == SlaveType::Input) {
-        plcNextDevice.read(this->imageBuffer, this->imageSize);
-    }
-    else if (slaveType == SlaveType::Output) {
-        plcNextDevice.write(this->imageBuffer, this->imageSize);
-    }
-    else if (slaveType == SlaveType::NoUsage) {
-        // PLCnext contains a "placeholder" module
-        // for this module, nothing should happen
-    }
-    else {
-        DEVLOG_ERROR("[PLCnextSlaveHandler] SlaveHander not correct initialized.\n");
-    }
+  if (slaveType == SlaveType::Input) {
+    plcNextDevice.read(this->imageBuffer, this->imageSize);
+  } else if (slaveType == SlaveType::Output) {
+    plcNextDevice.write(this->imageBuffer, this->imageSize);
+  } else if (slaveType == SlaveType::NoUsage) {
+    // PLCnext contains a "placeholder" module
+    // for this module, nothing should happen
+  } else {
+    DEVLOG_ERROR("[PLCnextSlaveHandler] SlaveHander not correct initialized.\n");
+  }
 }
 
 void PLCnextSlaveHandler::dropHandles() {
-    CCriticalRegion criticalRegion(handleMutex);
+  CCriticalRegion criticalRegion(handleMutex);
 
-    forte::core::io::IOMapper& mapper = forte::core::io::IOMapper::getInstance();
+  forte::core::io::IOMapper &mapper = forte::core::io::IOMapper::getInstance();
 
-    TSlaveHandleList::Iterator itEnd = slaveHandles->end();
-    for(TSlaveHandleList::Iterator it = slaveHandles->begin(); it != itEnd; ++it) {
-        mapper.deregisterHandle(*it);
-        delete *it;
+  TSlaveHandleList::Iterator itEnd = slaveHandles->end();
+  for (TSlaveHandleList::Iterator it = slaveHandles->begin(); it != itEnd; ++it) {
+    mapper.deregisterHandle(*it);
+    delete *it;
+  }
+}
+
+void PLCnextSlaveHandler::initBufferImage(size_t size) {
+  this->imageSize = size;
+  this->imageBuffer = new char[imageSize];
+
+  memset(this->imageBuffer, 0, size);
+}
+
+void PLCnextSlaveHandler::addHandle(PLCnextSlaveHandle *paHandle) {
+  CCriticalRegion criticalRegion(handleMutex);
+  slaveHandles->pushBack(paHandle);
+}
+
+PLCnextSlaveHandle *PLCnextSlaveHandler::getHandle(int paIndex) {
+  TSlaveHandleList::Iterator itEnd = slaveHandles->end();
+
+  int i = 0;
+  for (TSlaveHandleList::Iterator it = slaveHandles->begin(); it != itEnd; ++it, i++) {
+    if (paIndex == i) {
+      return *it;
     }
+  }
+  return NULL;
 }
-
-void PLCnextSlaveHandler::initBufferImage(size_t size)
-{
-    this->imageSize = size;
-    this->imageBuffer = new char[imageSize];
-
-    memset(this->imageBuffer, 0, size);
-}
-
-void PLCnextSlaveHandler::addHandle(PLCnextSlaveHandle* paHandle) {
-    CCriticalRegion criticalRegion(handleMutex);
-    slaveHandles->pushBack(paHandle);
-}
-
-PLCnextSlaveHandle* PLCnextSlaveHandler::getHandle(int paIndex) {
-    TSlaveHandleList::Iterator itEnd = slaveHandles->end();
-    
-    int i = 0;
-    for(TSlaveHandleList::Iterator it = slaveHandles->begin(); it != itEnd; ++it, i++) {
-        if(paIndex == i) {
-            return *it;
-        }
-    }
-    return NULL;
-}
-

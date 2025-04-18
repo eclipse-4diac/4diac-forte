@@ -20,7 +20,7 @@
 /*!\ingroup COREDTS CIEC_ANY_INT represents all integer data types according to IEC 61131.
 
  */
-class CIEC_ANY_INT : public CIEC_ANY_NUM{
+class CIEC_ANY_INT : public CIEC_ANY_NUM {
   public:
     explicit CIEC_ANY_INT(TLargestIntValueType paVal) {
       setSignedValue(paVal);
@@ -40,13 +40,13 @@ class CIEC_ANY_INT : public CIEC_ANY_NUM{
       return getLargestInt();
     }
 
-     void setSignedValue(TLargestIntValueType mVal) {
-       setLargestInt(mVal);
-     }
+    void setSignedValue(TLargestIntValueType mVal) {
+      setLargestInt(mVal);
+    }
 
-     void setUnsignedValue(TLargestIntValueType mVal) {
-       setLargestInt(mVal);
-     }
+    void setUnsignedValue(TLargestIntValueType mVal) {
+      setLargestInt(mVal);
+    }
 
     CIEC_ANY_INT() = default;
 };

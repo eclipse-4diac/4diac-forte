@@ -13,20 +13,19 @@
 #include "PinHandle.h"
 #include <forte_bool.h>
 
-IOHandleGPIO::IOHandleGPIO(EliteBoardDeviceController *paDeviceCtrl,
-                           GPIO_TypeDef *paGPIO_Port, uint16_t paGPIO_Pin)
-    : IOHandle(static_cast<forte::core::io::IODeviceController*>(paDeviceCtrl), IOMapper::UnknownDirection, CIEC_ANY::e_BOOL),
-      mGPIO_Port(paGPIO_Port), mGPIO_Pin(paGPIO_Pin) {
-      }
+IOHandleGPIO::IOHandleGPIO(EliteBoardDeviceController *paDeviceCtrl, GPIO_TypeDef *paGPIO_Port, uint16_t paGPIO_Pin) :
+    IOHandle(
+        static_cast<forte::core::io::IODeviceController *>(paDeviceCtrl), IOMapper::UnknownDirection, CIEC_ANY::e_BOOL),
+    mGPIO_Port(paGPIO_Port),
+    mGPIO_Pin(paGPIO_Pin) {
+}
 
 void IOHandleGPIO::onObserver(IOObserver *paObserver) {
   IOHandle::onObserver(paObserver);
   mDirection = paObserver->getDirection();
 
   GPIO_InitTypeDef initParams{.Pin = mGPIO_Pin,
-                              .Mode = (mDirection == IOMapper::In)
-                                          ? GPIO_MODE_INPUT
-                                          : GPIO_MODE_OUTPUT_PP,
+                              .Mode = (mDirection == IOMapper::In) ? GPIO_MODE_INPUT : GPIO_MODE_OUTPUT_PP,
                               .Pull = GPIO_NOPULL,
                               .Speed = GPIO_SPEED_FREQ_LOW};
   HAL_GPIO_Init(mGPIO_Port, &initParams);
@@ -39,13 +38,10 @@ void IOHandleGPIO::dropObserver() {
 }
 
 void IOHandleGPIO::get(CIEC_ANY &paState) {
-  static_cast<CIEC_BOOL &>(paState) =
-      HAL_GPIO_ReadPin(mGPIO_Port, mGPIO_Pin) ? true_BOOL : false_BOOL;
+  static_cast<CIEC_BOOL &>(paState) = HAL_GPIO_ReadPin(mGPIO_Port, mGPIO_Pin) ? true_BOOL : false_BOOL;
 }
 
 void IOHandleGPIO::set(const CIEC_ANY &paState) {
-  auto targetState = (true == static_cast<const CIEC_BOOL &>(paState))
-                         ? GPIO_PIN_SET
-                         : GPIO_PIN_RESET;
+  auto targetState = (true == static_cast<const CIEC_BOOL &>(paState)) ? GPIO_PIN_SET : GPIO_PIN_RESET;
   HAL_GPIO_WritePin(mGPIO_Port, mGPIO_Pin, targetState);
 }

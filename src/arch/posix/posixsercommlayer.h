@@ -16,9 +16,9 @@
 #include "../../core/cominfra/serialcomlayerbase.h"
 #include "../gensockhand.h"
 
-class CPosixSerCommLayer : public CSerialComLayerBase<FORTE_SOCKET_TYPE, FORTE_INVALID_SOCKET>{
+class CPosixSerCommLayer : public CSerialComLayerBase<FORTE_SOCKET_TYPE, FORTE_INVALID_SOCKET> {
   public:
-    CPosixSerCommLayer(forte::com_infra::CComLayer* paUpperLayer, forte::com_infra::CBaseCommFB * paFB);
+    CPosixSerCommLayer(forte::com_infra::CComLayer *paUpperLayer, forte::com_infra::CBaseCommFB *paFB);
     ~CPosixSerCommLayer() override;
 
     forte::com_infra::EComResponse sendData(void *paData, unsigned int paSize) override;
@@ -26,10 +26,12 @@ class CPosixSerCommLayer : public CSerialComLayerBase<FORTE_SOCKET_TYPE, FORTE_I
 
   protected:
   private:
-    forte::com_infra::EComResponse openSerialConnection(const SSerialParameters& paSerialParameters, CSerialComLayerBase<FORTE_SOCKET_TYPE, FORTE_INVALID_SOCKET>::TSerialHandleType* paHandleResult) override;
+    forte::com_infra::EComResponse openSerialConnection(
+        const SSerialParameters &paSerialParameters,
+        CSerialComLayerBase<FORTE_SOCKET_TYPE, FORTE_INVALID_SOCKET>::TSerialHandleType *paHandleResult) override;
     void closeConnection() override;
 
-    struct termios mOldTIO;    //!< buffer for the existing sercom settings
+    struct termios mOldTIO; //!< buffer for the existing sercom settings
 };
 
 #endif /* CSERCOMMLAYER_H_ */

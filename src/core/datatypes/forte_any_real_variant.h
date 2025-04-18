@@ -20,23 +20,25 @@
 #include "forte_real.h"
 
 using TIecAnyRealVariantType = std::variant<
-// ANY_ELEMENTARY
-//  ANY_MAGNITUDE
-//   ANY_NUM
-//    ANY_REAL
-        CIEC_REAL,
-        CIEC_LREAL
-// end
->;
+    // ANY_ELEMENTARY
+    //  ANY_MAGNITUDE
+    //   ANY_NUM
+    //    ANY_REAL
+    CIEC_REAL,
+    CIEC_LREAL
+    // end
+    >;
 
 class CIEC_ANY_REAL_VARIANT : public CIEC_ANY_REAL, public TIecAnyRealVariantType {
-DECLARE_FIRMWARE_DATATYPE(ANY_REAL_VARIANT)
-public:
+    DECLARE_FIRMWARE_DATATYPE(ANY_REAL_VARIANT)
+  public:
     using TIecAnyRealVariantType::variant;
     using TIecAnyRealVariantType::operator=;
-    template<class> static inline constexpr bool always_false_v = false;
+    template<class>
+    static inline constexpr bool always_false_v = false;
 
-    CIEC_ANY_REAL_VARIANT(const CIEC_ANY_REAL_VARIANT &paVal) : CIEC_ANY_REAL(), variant(paVal) {}
+    CIEC_ANY_REAL_VARIANT(const CIEC_ANY_REAL_VARIANT &paVal) : CIEC_ANY_REAL(), variant(paVal) {
+    }
 
     CIEC_ANY_REAL_VARIANT(const CIEC_ANY_REAL &paVal) {
       setValue(paVal.unwrap());
@@ -62,7 +64,7 @@ public:
 
     int fromString(const char *paValue) override;
 
-    int toString(char* paValue, size_t paBufferSize) const override;
+    int toString(char *paValue, size_t paBufferSize) const override;
 
     size_t getToStringBufferSize() const override;
 
@@ -77,4 +79,3 @@ static_assert(std::is_constructible_v<CIEC_ANY_REAL_VARIANT, const CIEC_ANY_REAL
 static_assert(std::is_copy_assignable_v<CIEC_ANY_REAL_VARIANT>);
 static_assert(std::is_assignable_v<CIEC_ANY_REAL_VARIANT, const CIEC_ANY_REAL &>);
 static_assert(std::is_destructible_v<CIEC_ANY_REAL_VARIANT>);
-

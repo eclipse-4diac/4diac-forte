@@ -27,9 +27,9 @@ extern "C" {
 #include <lua.h>
 #include <lauxlib.h>
 
-  int CLuaFB_index(lua_State *luaState);
-  int CLuaFB_newindex(lua_State *luaState);
-  int CLuaFB_call(lua_State *luaState);
+int CLuaFB_index(lua_State *luaState);
+int CLuaFB_newindex(lua_State *luaState);
+int CLuaFB_call(lua_State *luaState);
 }
 
 class CLuaBFB : public CGenFunctionBlock<CBasicFB> {
@@ -43,10 +43,10 @@ class CLuaBFB : public CGenFunctionBlock<CBasicFB> {
     static constexpr TForteUInt32 scmLuaFBAdpFlag = 1 << 27;
     static constexpr TForteUInt32 scmLuaFBInFlag = 1 << 28;
 
-    const CLuaBFBTypeEntry* mTypeEntry;
+    const CLuaBFBTypeEntry *mTypeEntry;
     CEventChainExecutionThread *mInvokingExecEnv = nullptr;
 
-    CIEC_ANY* getVariable(TForteUInt32 paId);
+    CIEC_ANY *getVariable(TForteUInt32 paId);
 
     TEventID recalculateID(TEventID paEIID) {
       return CLuaBFB::scmLuaFBAdpFlag | ((((paEIID >> 8) - 1) << 16) & 0xFF0000) | (paEIID & 0x00FF);
@@ -56,7 +56,9 @@ class CLuaBFB : public CGenFunctionBlock<CBasicFB> {
     static const char LUA_NAME[];
     static const luaL_Reg LUA_FUNCS[];
 
-    CLuaBFB(CStringDictionary::TStringId paInstanceNameId, const CLuaBFBTypeEntry* paTypeEntry, forte::core::CFBContainer &paContainer);
+    CLuaBFB(CStringDictionary::TStringId paInstanceNameId,
+            const CLuaBFBTypeEntry *paTypeEntry,
+            forte::core::CFBContainer &paContainer);
     ~CLuaBFB() override;
 
     bool initialize() override;
@@ -83,7 +85,7 @@ class CLuaBFB : public CGenFunctionBlock<CBasicFB> {
 
     static size_t calculateInternalVarsDataSize(const SInternalVarsInformation &paVarInternals);
 
-    CIEC_ANY* getVarInternal(size_t paVarIntNum) override {
+    CIEC_ANY *getVarInternal(size_t paVarIntNum) override {
       return mInternals[paVarIntNum];
     }
 

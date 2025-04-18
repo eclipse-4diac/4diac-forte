@@ -28,7 +28,7 @@
 #include "forte_array_variable.h"
 
 class FORTE_E_TABLE_CTRL final : public CBasicFB {
-  DECLARE_FIRMWARE_FB(FORTE_E_TABLE_CTRL)
+    DECLARE_FIRMWARE_FB(FORTE_E_TABLE_CTRL)
 
   private:
     static const CStringDictionary::TStringId scmDataInputNames[];
@@ -111,4 +111,3 @@ class FORTE_E_TABLE_CTRL final : public CBasicFB {
       evt_START(paDT, paN, paDTO, paCV);
     }
 };
-

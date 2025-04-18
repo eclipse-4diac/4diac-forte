@@ -16,31 +16,31 @@
 #include "fmuInstance.h"
 #include <assert.h>
 
-
 CFMUEventChainExecutionThread::CFMUEventChainExecutionThread() :
-    CEventChainExecutionThread(), mAllowedToRun(0), mStepSemaphore(0), mWaitingStep(true){
+    CEventChainExecutionThread(),
+    mAllowedToRun(0),
+    mStepSemaphore(0),
+    mWaitingStep(true) {
   fmuInstance::sFmuInstance->registerEcet(this);
-
 }
 
-CFMUEventChainExecutionThread::~CFMUEventChainExecutionThread(){
+CFMUEventChainExecutionThread::~CFMUEventChainExecutionThread() {
 }
 
-void CFMUEventChainExecutionThread::run(){
+void CFMUEventChainExecutionThread::run() {
   assert(mAllowedToRun);
   assert(mStepSemaphore);
-  bool runOnce = true; //don't allow the first time to run
-  while(isAlive()){ //thread is allowed to execute
-    if(*mAllowedToRun || !runOnce){
+  bool runOnce = true; // don't allow the first time to run
+  while (isAlive()) { // thread is allowed to execute
+    if (*mAllowedToRun || !runOnce) {
       runOnce = true;
       CEventChainExecutionThread::mainRun();
-    }else{
+    } else {
       mWaitingStep = true;
       mStepSemaphore->waitIndefinitely();
       mWaitingStep = false;
-      runOnce = false; //this allows the ecet to run at least once, for example if mAllowedToRun is set to false quickly enough after this leaves the StepSuspend state
+      runOnce = false; // this allows the ecet to run at least once, for example if mAllowedToRun is set to false
+                       // quickly enough after this leaves the StepSuspend state
     }
   }
 }
-
-

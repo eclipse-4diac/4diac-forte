@@ -14,18 +14,15 @@
 
 #include <rX_Includes.h>
 
-inline
-void forte_free(void *paData){
+inline void forte_free(void *paData) {
   rX_MemFreeMemory(paData);
 }
 
-inline
-void *forte_malloc(size_t paSize){
+inline void *forte_malloc(size_t paSize) {
   void *memory;
   rX_MemAllocateMemory(&memory, paSize);
-  //TODO add error handling for the return value
+  // TODO add error handling for the return value
   return memory;
 }
-
 
 #endif /* FORTEALLOC_H_ */

@@ -17,48 +17,48 @@
 
 /*! \ingroup win32_hal
  *\ingroup EXTEVHAND
- *\brief the timer handler for the pc architecture. 
-*/
-class CPCTimerHandler : public CTimerHandler, public CThread{
+ *\brief the timer handler for the pc architecture.
+ */
+class CPCTimerHandler : public CTimerHandler, public CThread {
   private:
-  /*!\brief default time base of the used timer. in useconds.
-   */
+    /*!\brief default time base of the used timer. in useconds.
+     */
     static const TForteInt32 csmTicksPerSecond;
-  /*!\brief callback function for the system timer
-   */  
+    /*!\brief callback function for the system timer
+     */
 
   public:
-    explicit CPCTimerHandler(CDeviceExecution& paDeviceExecution);
-      
+    explicit CPCTimerHandler(CDeviceExecution &paDeviceExecution);
+
     ~CPCTimerHandler() override;
-    
+
     void run() override;
-  
-  /*!\brief Enables this event source
-   * 
-   */
+
+    /*!\brief Enables this event source
+     *
+     */
     void enableHandler() override;
-  /*!\brief Disable this event source
-   */  
+    /*!\brief Disable this event source
+     */
     void disableHandler() override;
-  /*!\brief Sets the priority of the event source  
-   * 
-   * \param paPriority new priority of the event source
-   */
+    /*!\brief Sets the priority of the event source
+     *
+     * \param paPriority new priority of the event source
+     */
     void setPriority(int paPriority) override;
-  /*!\brief Get the current priority of the event source
-   * 
-   * \return current priority
-   */  
+    /*!\brief Get the current priority of the event source
+     *
+     * \return current priority
+     */
     int getPriority() const override;
-    
-  /*! \brief Get the time base of the runtime
-   * 
-   * \return internal runtime ticks per millisecond
-   */ 
-    virtual TForteUInt32 getTicksPerSecond(){ return csmTicksPerSecond; };
-    
-    
+
+    /*! \brief Get the time base of the runtime
+     *
+     * \return internal runtime ticks per millisecond
+     */
+    virtual TForteUInt32 getTicksPerSecond() {
+      return csmTicksPerSecond;
+    };
 };
 
 #endif /*PCTIMEHA_H_*/

@@ -1,12 +1,12 @@
-/************************************************************************* 
- *** Copyright (c) 2018 TU Vienna/ACIN  
- ***  
- *** This program and the accompanying materials are made  
- *** available under the terms of the Eclipse Public License 2.0  
- *** which is available at https://www.eclipse.org/legal/epl-2.0/  
- ***  
- *** SPDX-License-Identifier: EPL-2.0  
- *** 
+/*************************************************************************
+ *** Copyright (c) 2018 TU Vienna/ACIN
+ ***
+ *** This program and the accompanying materials are made
+ *** available under the terms of the Eclipse Public License 2.0
+ *** which is available at https://www.eclipse.org/legal/epl-2.0/
+ ***
+ *** SPDX-License-Identifier: EPL-2.0
+ ***
  *** FORTE Library Element
  ***
  *** This file was generated using the 4DIAC FORTE Export Filter V1.0.x NG!
@@ -30,37 +30,32 @@
 #include "forte_array_variable.h"
 
 class FORTE_SET_LOCAL_ADS_ADDRESS final : public CFunctionBlock {
-  DECLARE_FIRMWARE_FB(FORTE_SET_LOCAL_ADS_ADDRESS)
+    DECLARE_FIRMWARE_FB(FORTE_SET_LOCAL_ADS_ADDRESS)
 
   private:
     static const CStringDictionary::TStringId scmDataInputNames[];
     static const CStringDictionary::TStringId scmDataInputTypeIds[];
-    CIEC_BOOL &QI(){
-      return *static_cast<CIEC_BOOL*>(getDI(0));
-    }
-    ;
+    CIEC_BOOL &QI() {
+      return *static_cast<CIEC_BOOL *>(getDI(0));
+    };
 
-    CIEC_STRING &PARAMS(){
-      return *static_cast<CIEC_STRING*>(getDI(1));
-    }
-    ;
+    CIEC_STRING &PARAMS() {
+      return *static_cast<CIEC_STRING *>(getDI(1));
+    };
 
     static const CStringDictionary::TStringId scmDataOutputNames[];
     static const CStringDictionary::TStringId scmDataOutputTypeIds[];
-    CIEC_BOOL &QO(){
-      return *static_cast<CIEC_BOOL*>(getDO(0));
-    }
-    ;
+    CIEC_BOOL &QO() {
+      return *static_cast<CIEC_BOOL *>(getDO(0));
+    };
 
-    CIEC_WSTRING &STATUS(){
-      return *static_cast<CIEC_WSTRING*>(getDO(1));
-    }
-    ;
+    CIEC_WSTRING &STATUS() {
+      return *static_cast<CIEC_WSTRING *>(getDO(1));
+    };
 
-    CIEC_STRING &LOCAL_ADS_ADDRESS(){
-      return *static_cast<CIEC_STRING*>(getDO(2));
-    }
-    ;
+    CIEC_STRING &LOCAL_ADS_ADDRESS() {
+      return *static_cast<CIEC_STRING *>(getDO(2));
+    };
 
     static const TEventID scmEventINITID = 0;
     static const TDataIOID scmEIWith[];
@@ -82,9 +77,9 @@ class FORTE_SET_LOCAL_ADS_ADDRESS final : public CFunctionBlock {
     void setInitialValues() override;
 
   public:
-    FUNCTION_BLOCK_CTOR (FORTE_SET_LOCAL_ADS_ADDRESS) { };
+    FUNCTION_BLOCK_CTOR(FORTE_SET_LOCAL_ADS_ADDRESS) {};
     ~FORTE_SET_LOCAL_ADS_ADDRESS() override = default;
-    
+
     FORTE_SET_LOCAL_ADS_ADDRESS(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     CIEC_BOOL var_QI;
@@ -109,7 +104,11 @@ class FORTE_SET_LOCAL_ADS_ADDRESS final : public CFunctionBlock {
     CDataConnection **getDIConUnchecked(TPortId) override;
     CDataConnection *getDOConUnchecked(TPortId) override;
 
-    void evt_INIT(const CIEC_BOOL &paQI, const CIEC_STRING &paPARAMS, CIEC_BOOL &paQO, CIEC_WSTRING &paSTATUS, CIEC_STRING &paLOCAL_ADS_ADDRESS) {
+    void evt_INIT(const CIEC_BOOL &paQI,
+                  const CIEC_STRING &paPARAMS,
+                  CIEC_BOOL &paQO,
+                  CIEC_WSTRING &paSTATUS,
+                  CIEC_STRING &paLOCAL_ADS_ADDRESS) {
       var_QI = paQI;
       var_PARAMS = paPARAMS;
       executeEvent(scmEventINITID, nullptr);
@@ -118,8 +117,11 @@ class FORTE_SET_LOCAL_ADS_ADDRESS final : public CFunctionBlock {
       paLOCAL_ADS_ADDRESS = var_LOCAL_ADS_ADDRESS;
     }
 
-    void operator()(const CIEC_BOOL &paQI, const CIEC_STRING &paPARAMS, CIEC_BOOL &paQO, CIEC_WSTRING &paSTATUS, CIEC_STRING &paLOCAL_ADS_ADDRESS) {
+    void operator()(const CIEC_BOOL &paQI,
+                    const CIEC_STRING &paPARAMS,
+                    CIEC_BOOL &paQO,
+                    CIEC_WSTRING &paSTATUS,
+                    CIEC_STRING &paLOCAL_ADS_ADDRESS) {
       evt_INIT(paQI, paPARAMS, paQO, paSTATUS, paLOCAL_ADS_ADDRESS);
     }
 };
-

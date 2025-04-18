@@ -14,27 +14,30 @@
 
 #include "iec61131_functions.h"
 
-WagoHandle::WagoHandle(WagoDeviceController *paController, CIEC_ANY::EDataTypeID paType, forte::core::io::IOMapper::Direction paDirection,
-    tApplicationDeviceInterface * paAppDevInterface, uint32_t paTaskId, tDeviceId paKBusDeviceId, TForteUInt32 paOutputOffset, TForteUInt32 paInputOffset) :
-    forte::core::io::IOHandle(paController, paDirection, paType), mAppDevInterface(paAppDevInterface), mTaskId(paTaskId), mKBusDeviceId(paKBusDeviceId),
-        mOutputOffset(paOutputOffset), mInputOffset(paInputOffset) {
-  switch(mType){
-    case CIEC_ANY::e_BOOL:
-      mLastValue = new CIEC_BOOL;
-      break;
-    case CIEC_ANY::e_WORD:
-      mLastValue = new CIEC_WORD;
-      break;
-    case CIEC_ANY::e_DWORD:
-      mLastValue = new CIEC_DWORD;
-      break;
-    default:
-      mLastValue = 0;
+WagoHandle::WagoHandle(WagoDeviceController *paController,
+                       CIEC_ANY::EDataTypeID paType,
+                       forte::core::io::IOMapper::Direction paDirection,
+                       tApplicationDeviceInterface *paAppDevInterface,
+                       uint32_t paTaskId,
+                       tDeviceId paKBusDeviceId,
+                       TForteUInt32 paOutputOffset,
+                       TForteUInt32 paInputOffset) :
+    forte::core::io::IOHandle(paController, paDirection, paType),
+    mAppDevInterface(paAppDevInterface),
+    mTaskId(paTaskId),
+    mKBusDeviceId(paKBusDeviceId),
+    mOutputOffset(paOutputOffset),
+    mInputOffset(paInputOffset) {
+  switch (mType) {
+    case CIEC_ANY::e_BOOL: mLastValue = new CIEC_BOOL; break;
+    case CIEC_ANY::e_WORD: mLastValue = new CIEC_WORD; break;
+    case CIEC_ANY::e_DWORD: mLastValue = new CIEC_DWORD; break;
+    default: mLastValue = 0;
   }
 }
 
 WagoHandle::~WagoHandle() {
-  if(0 != mLastValue) {
+  if (0 != mLastValue) {
     delete mLastValue;
   }
 }
@@ -42,18 +45,11 @@ WagoHandle::~WagoHandle() {
 void WagoHandle::set(const CIEC_ANY &paState) {
   mAppDevInterface->WriteStart(mKBusDeviceId, mTaskId);
 
-  switch(mType){
-    case CIEC_ANY::e_BOOL:
-      setBoolean(static_cast<const CIEC_BOOL&>(paState));
-      break;
-    case CIEC_ANY::e_WORD:
-      setWord(static_cast<const CIEC_WORD&>(paState));
-      break;
-    case CIEC_ANY::e_DWORD:
-      setDWord(static_cast<const CIEC_DWORD&>(paState));
-      break;
-    default:
-      break;
+  switch (mType) {
+    case CIEC_ANY::e_BOOL: setBoolean(static_cast<const CIEC_BOOL &>(paState)); break;
+    case CIEC_ANY::e_WORD: setWord(static_cast<const CIEC_WORD &>(paState)); break;
+    case CIEC_ANY::e_DWORD: setDWord(static_cast<const CIEC_DWORD &>(paState)); break;
+    default: break;
   }
 
   mAppDevInterface->WriteEnd(mKBusDeviceId, mTaskId);
@@ -62,18 +58,11 @@ void WagoHandle::set(const CIEC_ANY &paState) {
 void WagoHandle::get(CIEC_ANY &paState) {
   mAppDevInterface->ReadStart(mKBusDeviceId, mTaskId);
 
-  switch(mType){
-    case CIEC_ANY::e_BOOL:
-      getBoolean(static_cast<CIEC_BOOL&>(paState));
-      break;
-    case CIEC_ANY::e_WORD:
-      getWord(static_cast<CIEC_WORD&>(paState));
-      break;
-    case CIEC_ANY::e_DWORD:
-      getDWord(static_cast<CIEC_DWORD&>(paState));
-      break;
-    default:
-      break;
+  switch (mType) {
+    case CIEC_ANY::e_BOOL: getBoolean(static_cast<CIEC_BOOL &>(paState)); break;
+    case CIEC_ANY::e_WORD: getWord(static_cast<CIEC_WORD &>(paState)); break;
+    case CIEC_ANY::e_DWORD: getDWord(static_cast<CIEC_DWORD &>(paState)); break;
+    default: break;
   }
 
   mAppDevInterface->ReadEnd(mKBusDeviceId, mTaskId);
@@ -81,18 +70,11 @@ void WagoHandle::get(CIEC_ANY &paState) {
 
 bool WagoHandle::check() {
   bool changed = false;
-  switch(mType){
-    case CIEC_ANY::e_BOOL:
-      changed = checkValue<CIEC_BOOL>();
-      break;
-    case CIEC_ANY::e_WORD:
-      changed = checkValue<CIEC_WORD>();
-      break;
-    case CIEC_ANY::e_DWORD:
-      changed = checkValue<CIEC_DWORD>();
-      break;
-    default:
-      break;
+  switch (mType) {
+    case CIEC_ANY::e_BOOL: changed = checkValue<CIEC_BOOL>(); break;
+    case CIEC_ANY::e_WORD: changed = checkValue<CIEC_WORD>(); break;
+    case CIEC_ANY::e_DWORD: changed = checkValue<CIEC_DWORD>(); break;
+    default: break;
   }
   return changed;
 }
@@ -117,7 +99,7 @@ void WagoHandle::getWord(CIEC_WORD &paState) {
 void WagoHandle::getDWord(CIEC_DWORD &paState) {
   TForteByte inDataDWord[4];
   mAppDevInterface->ReadBytes(mKBusDeviceId, mTaskId, mInputOffset, 4, inDataDWord);
-  paState = CIEC_DWORD( (inDataDWord[3] << 24) & (inDataDWord[2] << 16) & (inDataDWord[1] << 8) & inDataDWord[0] );
+  paState = CIEC_DWORD((inDataDWord[3] << 24) & (inDataDWord[2] << 16) & (inDataDWord[1] << 8) & inDataDWord[0]);
 }
 
 void WagoHandle::setBoolean(const CIEC_BOOL &paState) {
@@ -143,11 +125,12 @@ void WagoHandle::setDWord(const CIEC_DWORD &paState) {
   mAppDevInterface->WriteBytes(mKBusDeviceId, mTaskId, mOutputOffset, 4, outData);
 }
 
-template<typename T> bool WagoHandle::checkValue() {
+template<typename T>
+bool WagoHandle::checkValue() {
   bool retVal;
   T value;
   get(value);
-  retVal = func_NOT( func_EQ( value, static_cast<T&>(*mLastValue)) );
+  retVal = func_NOT(func_EQ(value, static_cast<T &>(*mLastValue)));
   mLastValue->setValue(value);
   return retVal;
 }

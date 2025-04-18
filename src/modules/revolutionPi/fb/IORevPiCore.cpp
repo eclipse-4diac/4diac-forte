@@ -29,7 +29,6 @@ USE_STRING_ID(UINT);
 USE_STRING_ID(UpdateInterval);
 USE_STRING_ID(WSTRING);
 
-
 #include "../RevPiController.h"
 
 DEFINE_FIRMWARE_FB(FORTE_IORevPiCore, STRID(IORevPiCore))
@@ -47,27 +46,38 @@ const TForteInt16 FORTE_IORevPiCore::scmEOWithIndexes[] = {0, 3};
 const CStringDictionary::TStringId FORTE_IORevPiCore::scmEventOutputNames[] = {STRID(INITO), STRID(IND)};
 const CStringDictionary::TStringId FORTE_IORevPiCore::scmEventOutputTypeIds[] = {STRID(Event), STRID(Event)};
 const SAdapterInstanceDef FORTE_IORevPiCore::scmAdapterInstances[] = {
-  {STRID(IORevPiBusAdapter), STRID(BusAdapterOut), true}
-};
-const SFBInterfaceSpec FORTE_IORevPiCore::scmFBInterfaceSpec = {
-  1, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,
-  2, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes,
-  2, scmDataInputNames, scmDataInputTypeIds,
-  2, scmDataOutputNames, scmDataOutputTypeIds,
-  0, nullptr,
-  1, scmAdapterInstances
-};
+    {STRID(IORevPiBusAdapter), STRID(BusAdapterOut), true}};
+const SFBInterfaceSpec FORTE_IORevPiCore::scmFBInterfaceSpec = {1,
+                                                                scmEventInputNames,
+                                                                scmEventInputTypeIds,
+                                                                scmEIWith,
+                                                                scmEIWithIndexes,
+                                                                2,
+                                                                scmEventOutputNames,
+                                                                scmEventOutputTypeIds,
+                                                                scmEOWith,
+                                                                scmEOWithIndexes,
+                                                                2,
+                                                                scmDataInputNames,
+                                                                scmDataInputTypeIds,
+                                                                2,
+                                                                scmDataOutputNames,
+                                                                scmDataOutputTypeIds,
+                                                                0,
+                                                                nullptr,
+                                                                1,
+                                                                scmAdapterInstances};
 
-FORTE_IORevPiCore::FORTE_IORevPiCore(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
-  forte::core::io::IOConfigFBMultiMaster(paContainer, scmFBInterfaceSpec, paInstanceNameId),
-     var_UpdateInterval(25_UINT),
-     conn_INITO(*this, 0),
-     conn_IND(*this, 1),
-     conn_QI(nullptr),
-     conn_UpdateInterval(nullptr),
-     conn_QO(*this, 0, var_QO),
-     conn_STATUS(*this, 1, var_STATUS) {
-
+FORTE_IORevPiCore::FORTE_IORevPiCore(const CStringDictionary::TStringId paInstanceNameId,
+                                     forte::core::CFBContainer &paContainer) :
+    forte::core::io::IOConfigFBMultiMaster(paContainer, scmFBInterfaceSpec, paInstanceNameId),
+    var_UpdateInterval(25_UINT),
+    conn_INITO(*this, 0),
+    conn_IND(*this, 1),
+    conn_QI(nullptr),
+    conn_UpdateInterval(nullptr),
+    conn_QO(*this, 0, var_QO),
+    conn_STATUS(*this, 1, var_STATUS) {
 }
 
 void FORTE_IORevPiCore::setInitialValues() {
@@ -83,24 +93,23 @@ void FORTE_IORevPiCore::setConfig() {
   getDeviceController()->setConfig(&config);
 }
 
-forte::core::io::IODeviceController* FORTE_IORevPiCore::createDeviceController(CDeviceExecution& paDeviceExecution) {
+forte::core::io::IODeviceController *FORTE_IORevPiCore::createDeviceController(CDeviceExecution &paDeviceExecution) {
   return new RevPiController(paDeviceExecution);
 }
 
 void FORTE_IORevPiCore::readInputData(const TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventINITID: {
       readData(0, var_QI, conn_QI);
       readData(1, var_UpdateInterval, conn_UpdateInterval);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 void FORTE_IORevPiCore::writeOutputData(const TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventINITOID: {
       writeData(0, var_QO, conn_QO);
       writeData(1, var_STATUS, conn_STATUS);
@@ -111,13 +120,12 @@ void FORTE_IORevPiCore::writeOutputData(const TEventID paEIID) {
       writeData(1, var_STATUS, conn_STATUS);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 CIEC_ANY *FORTE_IORevPiCore::getDI(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_QI;
     case 1: return &var_UpdateInterval;
   }
@@ -125,7 +133,7 @@ CIEC_ANY *FORTE_IORevPiCore::getDI(const size_t paIndex) {
 }
 
 CIEC_ANY *FORTE_IORevPiCore::getDO(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_QO;
     case 1: return &var_STATUS;
   }
@@ -133,7 +141,7 @@ CIEC_ANY *FORTE_IORevPiCore::getDO(const size_t paIndex) {
 }
 
 CEventConnection *FORTE_IORevPiCore::getEOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_INITO;
     case 1: return &conn_IND;
   }
@@ -141,7 +149,7 @@ CEventConnection *FORTE_IORevPiCore::getEOConUnchecked(const TPortId paIndex) {
 }
 
 CDataConnection **FORTE_IORevPiCore::getDIConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_QI;
     case 1: return &conn_UpdateInterval;
   }
@@ -149,7 +157,7 @@ CDataConnection **FORTE_IORevPiCore::getDIConUnchecked(const TPortId paIndex) {
 }
 
 CDataConnection *FORTE_IORevPiCore::getDOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_QO;
     case 1: return &conn_STATUS;
   }

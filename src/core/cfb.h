@@ -32,23 +32,23 @@ struct SCFB_FBConnectionData {
 struct SCFB_FBParameter {
     unsigned int mFBNum;
     CStringDictionary::TStringId mDINameID; //!< the data input id of the input param to set
-    const char * mParamValue;
+    const char *mParamValue;
 };
 
 struct SCFB_FBNData {
     unsigned int mNumFBs;
-    const SCFB_FBInstanceData * mFBInstances;
+    const SCFB_FBInstanceData *mFBInstances;
     unsigned int mNumEventConnections;
-    const SCFB_FBConnectionData * mEventConnections;
+    const SCFB_FBConnectionData *mEventConnections;
     unsigned int mNumDataConnections;
-    const SCFB_FBConnectionData * mDataConnections;
+    const SCFB_FBConnectionData *mDataConnections;
     unsigned int mNumAdapterConnections;
-    const SCFB_FBConnectionData * mAdapterConnections;
+    const SCFB_FBConnectionData *mAdapterConnections;
     unsigned int mNumParams;
-    const SCFB_FBParameter * mParams;
+    const SCFB_FBParameter *mParams;
 };
 
-//These two defines are here for legacy reasons. They allow that old CFBs can still be complied
+// These two defines are here for legacy reasons. They allow that old CFBs can still be complied
 /*! Generate a connection port id for a given fb-nameid / port-nameid combination
  *  This template will generate a constant and will therefore be very efficient
  */
@@ -57,13 +57,13 @@ struct SCFB_FBNData {
 /*! Generate a connection port id for a connection with a single source id e.g. interface connections
  *  This template will generate a constant and will therefore be very efficient
  */
-#define GENERATE_CONNECTION_PORT_ID_1_ARG(PortNameId)\
-GENERATE_CONNECTION_PORT_ID_2_ARG(CStringDictionary::scmInvalidStringId, PortNameId)
+#define GENERATE_CONNECTION_PORT_ID_1_ARG(PortNameId)                                                                  \
+  GENERATE_CONNECTION_PORT_ID_2_ARG(CStringDictionary::scmInvalidStringId, PortNameId)
 
 /*!\ingroup CORE
  * \brief Class for handling firmware composite function blocks.
  */
-class CCompositeFB: public CFunctionBlock {
+class CCompositeFB : public CFunctionBlock {
 
   public:
     /*! \brief Indicator that the given FB id is an adapter.
@@ -86,9 +86,10 @@ class CCompositeFB: public CFunctionBlock {
      * \param paInstanceNameId StringId of instance name
      * \param paFBNData        const pointer to description of internal structure of FB (FBs, Connections, ...)
      */
-    CCompositeFB(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec& paInterfaceSpec,
+    CCompositeFB(forte::core::CFBContainer &paContainer,
+                 const SFBInterfaceSpec &paInterfaceSpec,
                  CStringDictionary::TStringId paInstanceNameId,
-                 const SCFB_FBNData & paFBNData);
+                 const SCFB_FBNData &paFBNData);
 
     ~CCompositeFB() override = default;
 
@@ -106,8 +107,7 @@ class CCompositeFB: public CFunctionBlock {
     bool configureGenericDIO(TPortId paDIOPortId, const CIEC_ANY &paRefValue) override;
     bool configureGenericDO(TPortId paDOPortId, const CIEC_ANY &paRefValue) override;
     //! implement improved version of get Var for CFBs, allowing to read and write to internal elements
-    CIEC_ANY* getVar(CStringDictionary::TStringId *paNameList,
-        unsigned int paNameListSize) override;
+    CIEC_ANY *getVar(CStringDictionary::TStringId *paNameList, unsigned int paNameListSize) override;
 
     EMGMResponse changeExecutionState(EMGMCommandType paCommand) override;
 
@@ -116,10 +116,9 @@ class CCompositeFB: public CFunctionBlock {
       return cmFBNData;
     }
 
-    void executeEvent(TEventID paEIID, CEventChainExecutionThread * const paECET) override final;
+    void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override final;
 
   private:
-
     virtual bool createInternalFBs() {
       return true;
     }
@@ -128,11 +127,12 @@ class CCompositeFB: public CFunctionBlock {
     void prepareIf2InEventCons();
     void establishConnection(CConnection *paCon, CFunctionBlock &paDstFb, CStringDictionary::TStringId paDstNameId);
     void createDataConnections();
-    CDataConnection * getDataConn(CFunctionBlock *paSrcFB, CStringDictionary::TStringId paSrcNameId);
+    CDataConnection *getDataConn(CFunctionBlock *paSrcFB, CStringDictionary::TStringId paSrcNameId);
     void createAdapterConnections();
     virtual void setFBNetworkInitialValues();
 
-    //!Acquire the functionblock for a given function block number this may be a contained fb, an adapter, or the composite itself.
+    //! Acquire the functionblock for a given function block number this may be a contained fb, an adapter, or the
+    //! composite itself.
     CFunctionBlock *getFunctionBlock(int paFBNum);
 
     virtual CDataConnection *getIf2InConUnchecked(TPortId) = 0;
@@ -140,18 +140,18 @@ class CCompositeFB: public CFunctionBlock {
       return nullptr;
     }
 
-    const SCFB_FBNData & cmFBNData;
+    const SCFB_FBNData &cmFBNData;
 
-    //!The connections to be used in the execute event for triggering the internal FBs
+    //! The connections to be used in the execute event for triggering the internal FBs
     std::vector<std::unique_ptr<CEventConnection>> mInterface2InternalEventCons;
 
 #ifdef FORTE_FMU
     friend class fmuInstance;
-#endif //FORTE_FMU
+#endif // FORTE_FMU
 };
 
-#define COMPOSITE_FUNCTION_BLOCK_CTOR(fbclass) \
- fbclass(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) : \
- CCompositeFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, scmFBNData)
+#define COMPOSITE_FUNCTION_BLOCK_CTOR(fbclass)                                                                         \
+  fbclass(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :               \
+      CCompositeFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, scmFBNData)
 
 #endif /*_CFB_H_*/

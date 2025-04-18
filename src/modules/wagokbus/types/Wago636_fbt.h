@@ -17,7 +17,7 @@
 #include "WagoSlaveBase.h"
 
 class FORTE_Wago636 final : public WagoSlaveBase {
-  DECLARE_FIRMWARE_FB(FORTE_Wago636)
+    DECLARE_FIRMWARE_FB(FORTE_Wago636)
 
   private:
     static const CStringDictionary::TStringId scmDataInputNames[];
@@ -46,8 +46,11 @@ class FORTE_Wago636 final : public WagoSlaveBase {
     void setInitialValues() override;
 
   protected:
-      void initHandlesBase(size_t paNumberOfBoolInputs, size_t paNumberOfBoolOutputs, size_t paNumberOfAnalogInputs, size_t paNumberOfAnalogOutputs);
-      INIT_HANDLES(7, 5, 1, 1)
+    void initHandlesBase(size_t paNumberOfBoolInputs,
+                         size_t paNumberOfBoolOutputs,
+                         size_t paNumberOfAnalogInputs,
+                         size_t paNumberOfAnalogOutputs);
+    INIT_HANDLES(7, 5, 1, 1)
 
   public:
     FORTE_Wago636(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
@@ -97,17 +100,33 @@ class FORTE_Wago636 final : public WagoSlaveBase {
     CIEC_ANY *getDI(size_t) override;
     CIEC_ANY *getDO(size_t) override;
     FORTE_WagoBusAdapter &var_BusAdapterIn() {
-      return *static_cast<FORTE_WagoBusAdapter*>(mAdapters[0]);
+      return *static_cast<FORTE_WagoBusAdapter *>(mAdapters[0]);
     };
 
     FORTE_WagoBusAdapter &var_BusAdapterOut() {
-      return *static_cast<FORTE_WagoBusAdapter*>(mAdapters[1]);
+      return *static_cast<FORTE_WagoBusAdapter *>(mAdapters[1]);
     };
     CEventConnection *getEOConUnchecked(TPortId) override;
     CDataConnection **getDIConUnchecked(TPortId) override;
     CDataConnection *getDOConUnchecked(TPortId) override;
 
-    void evt_MAP(const CIEC_BOOL &paQI, const CIEC_STRING &paBusy, const CIEC_STRING &paLimitSwitchN, const CIEC_STRING &paLimitSwitchP, const CIEC_STRING &paPresetInputEnabled, const CIEC_STRING &paOptimizeOn, const CIEC_STRING &paExtendedInfoOn, const CIEC_STRING &paReferenceOk, const CIEC_STRING &paCurrentPosition, const CIEC_STRING &paTargetPosition, const CIEC_STRING &paMotorN, const CIEC_STRING &paMotorP, const CIEC_STRING &paPositioning, const CIEC_STRING &paPreset, const CIEC_STRING &paQuitErrors, CIEC_BOOL &paQO, CIEC_WSTRING &paSTATUS) {
+    void evt_MAP(const CIEC_BOOL &paQI,
+                 const CIEC_STRING &paBusy,
+                 const CIEC_STRING &paLimitSwitchN,
+                 const CIEC_STRING &paLimitSwitchP,
+                 const CIEC_STRING &paPresetInputEnabled,
+                 const CIEC_STRING &paOptimizeOn,
+                 const CIEC_STRING &paExtendedInfoOn,
+                 const CIEC_STRING &paReferenceOk,
+                 const CIEC_STRING &paCurrentPosition,
+                 const CIEC_STRING &paTargetPosition,
+                 const CIEC_STRING &paMotorN,
+                 const CIEC_STRING &paMotorP,
+                 const CIEC_STRING &paPositioning,
+                 const CIEC_STRING &paPreset,
+                 const CIEC_STRING &paQuitErrors,
+                 CIEC_BOOL &paQO,
+                 CIEC_WSTRING &paSTATUS) {
       var_QI = paQI;
       var_Busy = paBusy;
       var_LimitSwitchN = paLimitSwitchN;
@@ -128,8 +147,25 @@ class FORTE_Wago636 final : public WagoSlaveBase {
       paSTATUS = var_STATUS;
     }
 
-    void operator()(const CIEC_BOOL &paQI, const CIEC_STRING &paBusy, const CIEC_STRING &paLimitSwitchN, const CIEC_STRING &paLimitSwitchP, const CIEC_STRING &paPresetInputEnabled, const CIEC_STRING &paOptimizeOn, const CIEC_STRING &paExtendedInfoOn, const CIEC_STRING &paReferenceOk, const CIEC_STRING &paCurrentPosition, const CIEC_STRING &paTargetPosition, const CIEC_STRING &paMotorN, const CIEC_STRING &paMotorP, const CIEC_STRING &paPositioning, const CIEC_STRING &paPreset, const CIEC_STRING &paQuitErrors, CIEC_BOOL &paQO, CIEC_WSTRING &paSTATUS) {
-      evt_MAP(paQI, paBusy, paLimitSwitchN, paLimitSwitchP, paPresetInputEnabled, paOptimizeOn, paExtendedInfoOn, paReferenceOk, paCurrentPosition, paTargetPosition, paMotorN, paMotorP, paPositioning, paPreset, paQuitErrors, paQO, paSTATUS);
+    void operator()(const CIEC_BOOL &paQI,
+                    const CIEC_STRING &paBusy,
+                    const CIEC_STRING &paLimitSwitchN,
+                    const CIEC_STRING &paLimitSwitchP,
+                    const CIEC_STRING &paPresetInputEnabled,
+                    const CIEC_STRING &paOptimizeOn,
+                    const CIEC_STRING &paExtendedInfoOn,
+                    const CIEC_STRING &paReferenceOk,
+                    const CIEC_STRING &paCurrentPosition,
+                    const CIEC_STRING &paTargetPosition,
+                    const CIEC_STRING &paMotorN,
+                    const CIEC_STRING &paMotorP,
+                    const CIEC_STRING &paPositioning,
+                    const CIEC_STRING &paPreset,
+                    const CIEC_STRING &paQuitErrors,
+                    CIEC_BOOL &paQO,
+                    CIEC_WSTRING &paSTATUS) {
+      evt_MAP(paQI, paBusy, paLimitSwitchN, paLimitSwitchP, paPresetInputEnabled, paOptimizeOn, paExtendedInfoOn,
+              paReferenceOk, paCurrentPosition, paTargetPosition, paMotorN, paMotorP, paPositioning, paPreset,
+              paQuitErrors, paQO, paSTATUS);
     }
 };
-

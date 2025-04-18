@@ -17,29 +17,26 @@ USE_STRING_ID(E_RDELAY);
 
 DEFINE_FIRMWARE_FB(FORTE_E_RDELAY, STRID(E_RDELAY))
 
-FORTE_E_RDELAY::FORTE_E_RDELAY(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer):
-    CTimedFB(paInstanceNameId, paContainer){
+FORTE_E_RDELAY::FORTE_E_RDELAY(const CStringDictionary::TStringId paInstanceNameId,
+                               forte::core::CFBContainer &paContainer) :
+    CTimedFB(paInstanceNameId, paContainer) {
 }
 
-void FORTE_E_RDELAY::executeEvent(TEventID paEIID, CEventChainExecutionThread * const paECET){
-  switch(paEIID){
+void FORTE_E_RDELAY::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
+  switch (paEIID) {
     case cgExternalEventID:
       sendOutputEvent(csmEOID, paECET);
       mActive = false;
       break;
     case csmEventSTARTID:
-      if(mActive){
-        //remove from the list as we want to be added with a new delay
+      if (mActive) {
+        // remove from the list as we want to be added with a new delay
         getTimer().unregisterTimedFB(this);
       }
-      setEventChainExecutor(paECET);  // E_RDELAY will execute in the same thread on as from where it has been triggered.
+      setEventChainExecutor(paECET); // E_RDELAY will execute in the same thread on as from where it has been triggered.
       getTimer().registerOneShotTimedFB(this, var_DT);
       mActive = true;
       break;
-    default:
-      CTimedFB::executeEvent(paEIID, paECET);
-      break;
+    default: CTimedFB::executeEvent(paEIID, paECET); break;
   }
 }
-
-

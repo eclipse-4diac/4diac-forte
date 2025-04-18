@@ -5,7 +5,7 @@
  http://www.eclipse.org/legal/epl-2.0.
 
  SPDX-License-Identifier: EPL-2.0
- 
+
  Contributors:
   Dirk Kaar - initial API and implementation and/or initial documentation
  ************************************************************************************/
@@ -23,8 +23,7 @@
  */
 class CZephyrTimerHandler : public CTimerHandler {
   public:
-
-    explicit CZephyrTimerHandler(CDeviceExecution& paDeviceExecution);
+    explicit CZephyrTimerHandler(CDeviceExecution &paDeviceExecution);
 
     ~CZephyrTimerHandler() override;
 
@@ -47,11 +46,10 @@ class CZephyrTimerHandler : public CTimerHandler {
     int getPriority() const override;
 
   private:
-
     struct k_timer timer;
-    k_thread_stack_t* stack{ 0 };
-    struct k_thread* thread{ 0 };
-    static void thread_fn(void* arg1, void* arg2, void* arg3);
+    k_thread_stack_t *stack{0};
+    struct k_thread *thread{0};
+    static void thread_fn(void *arg1, void *arg2, void *arg3);
     k_tid_t thread_id;
 };
 

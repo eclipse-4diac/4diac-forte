@@ -24,7 +24,6 @@ USE_STRING_ID(Unsubscribe);
 USE_STRING_ID(Unsubscribed);
 USE_STRING_ID(WSTRING);
 
-
 DEFINE_FIRMWARE_FB(FORTE_SubscribeEvent, STRID(SubscribeEvent))
 
 const CStringDictionary::TStringId FORTE_SubscribeEvent::scmDataInputNames[] = {STRID(eventFilter), STRID(endpoint)};
@@ -37,39 +36,51 @@ const CStringDictionary::TStringId FORTE_SubscribeEvent::scmEventInputNames[] = 
 const CStringDictionary::TStringId FORTE_SubscribeEvent::scmEventInputTypeIds[] = {STRID(Event), STRID(Event)};
 
 const TForteInt16 FORTE_SubscribeEvent::scmEOWithIndexes[] = {-1, -1, -1};
-const CStringDictionary::TStringId FORTE_SubscribeEvent::scmEventOutputNames[] = {STRID(Subscribed), STRID(Unsubscribed)};
+const CStringDictionary::TStringId FORTE_SubscribeEvent::scmEventOutputNames[] = {STRID(Subscribed),
+                                                                                  STRID(Unsubscribed)};
 const CStringDictionary::TStringId FORTE_SubscribeEvent::scmEventOutputTypeIds[] = {STRID(Event), STRID(Event)};
 
 const SAdapterInstanceDef FORTE_SubscribeEvent::scmAdapterInstances[] = {
-{STRID(SubscribeEventAdp), STRID(SubscribeEventAdp), true }};
+    {STRID(SubscribeEventAdp), STRID(SubscribeEventAdp), true}};
 
-const SFBInterfaceSpec FORTE_SubscribeEvent::scmFBInterfaceSpec = {
-  2,  scmEventInputNames, scmEventInputTypeIds,  scmEIWith,  scmEIWithIndexes,
-  2,  scmEventOutputNames, scmEventOutputTypeIds,  0, 0,  2,  scmDataInputNames, scmDataInputTypeIds,
-  0,  0, 0,
-  1,scmAdapterInstances};
-
+const SFBInterfaceSpec FORTE_SubscribeEvent::scmFBInterfaceSpec = {2,
+                                                                   scmEventInputNames,
+                                                                   scmEventInputTypeIds,
+                                                                   scmEIWith,
+                                                                   scmEIWithIndexes,
+                                                                   2,
+                                                                   scmEventOutputNames,
+                                                                   scmEventOutputTypeIds,
+                                                                   0,
+                                                                   0,
+                                                                   2,
+                                                                   scmDataInputNames,
+                                                                   scmDataInputTypeIds,
+                                                                   0,
+                                                                   0,
+                                                                   0,
+                                                                   1,
+                                                                   scmAdapterInstances};
 
 const SCFB_FBConnectionData FORTE_SubscribeEvent::scmEventConnections[] = {
-  {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(Unsubscribe)), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(SubscribeEventAdp), STRID(Unsubscribe)), CCompositeFB::scmAdapterMarker |0},
-  {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(Subscribe)), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(SubscribeEventAdp), STRID(Subscribe)), CCompositeFB::scmAdapterMarker |0},
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(SubscribeEventAdp), STRID(Subscribed)), CCompositeFB::scmAdapterMarker |0, GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(Subscribed)), -1},
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(SubscribeEventAdp), STRID(Unsubscribed)), CCompositeFB::scmAdapterMarker |0, GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(Unsubscribed)), -1},
+    {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(Unsubscribe)), -1,
+     GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(SubscribeEventAdp), STRID(Unsubscribe)),
+     CCompositeFB::scmAdapterMarker | 0},
+    {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(Subscribe)), -1,
+     GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(SubscribeEventAdp), STRID(Subscribe)), CCompositeFB::scmAdapterMarker | 0},
+    {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(SubscribeEventAdp), STRID(Subscribed)), CCompositeFB::scmAdapterMarker | 0,
+     GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(Subscribed)), -1},
+    {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(SubscribeEventAdp), STRID(Unsubscribed)),
+     CCompositeFB::scmAdapterMarker | 0, GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(Unsubscribed)), -1},
 };
 
 const SCFB_FBConnectionData FORTE_SubscribeEvent::scmDataConnections[] = {
-  {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(eventFilter)), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(SubscribeEventAdp), STRID(eventFilter)), CCompositeFB::scmAdapterMarker |0},
-  {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(endpoint)), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(SubscribeEventAdp), STRID(endpoint)), CCompositeFB::scmAdapterMarker |0},
+    {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(eventFilter)), -1,
+     GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(SubscribeEventAdp), STRID(eventFilter)),
+     CCompositeFB::scmAdapterMarker | 0},
+    {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(endpoint)), -1,
+     GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(SubscribeEventAdp), STRID(endpoint)), CCompositeFB::scmAdapterMarker | 0},
 };
 
 const SCFB_FBNData FORTE_SubscribeEvent::scmFBNData = {
-  0, 0,
-  4, scmEventConnections,
-  0, 0,
-  2, scmDataConnections,
-  0, 0,
-  0, nullptr,
-  0, 0
-};
-
-
+    0, 0, 4, scmEventConnections, 0, 0, 2, scmDataConnections, 0, 0, 0, nullptr, 0, 0};

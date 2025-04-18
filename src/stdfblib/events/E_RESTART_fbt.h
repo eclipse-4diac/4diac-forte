@@ -19,7 +19,7 @@
 #include "forte_sem.h"
 
 class FORTE_E_RESTART final : public CEventSourceFB {
-  DECLARE_FIRMWARE_FB(FORTE_E_RESTART)
+    DECLARE_FIRMWARE_FB(FORTE_E_RESTART)
 
   private:
     static const TEventID scmEventCOLDID = 0;
@@ -41,7 +41,7 @@ class FORTE_E_RESTART final : public CEventSourceFB {
     void readInputData(TEventID paEIID) override;
     void writeOutputData(TEventID paEIID) override;
 
-public:
+  public:
     FORTE_E_RESTART(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     CEventConnection conn_COLD;
@@ -56,4 +56,3 @@ public:
 
     EMGMResponse changeExecutionState(EMGMCommandType paCommand) override;
 };
-

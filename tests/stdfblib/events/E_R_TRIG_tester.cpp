@@ -13,54 +13,51 @@
  *******************************************************************************/
 #include "../../core/fbtests/fbtestfixture.h"
 
-
 USE_STRING_ID(E_R_TRIG);
 
+struct E_R_TRIG_TestFixture : public CFBTestFixtureBase {
 
-struct E_R_TRIG_TestFixture : public CFBTestFixtureBase{
-
-    E_R_TRIG_TestFixture() : CFBTestFixtureBase(STRID(E_R_TRIG)){
+    E_R_TRIG_TestFixture() : CFBTestFixtureBase(STRID(E_R_TRIG)) {
       setInputData({&mInQI});
       CFBTestFixtureBase::setup();
     }
 
-    CIEC_BOOL mInQI; //DATA INPUT
+    CIEC_BOOL mInQI; // DATA INPUT
 };
 
+BOOST_FIXTURE_TEST_SUITE(RTrigTests, E_R_TRIG_TestFixture)
 
-BOOST_FIXTURE_TEST_SUITE( RTrigTests, E_R_TRIG_TestFixture)
+BOOST_AUTO_TEST_CASE(RaisingEdge) {
+  mInQI = CIEC_BOOL(true);
+  triggerEvent(0);
+  BOOST_CHECK(checkForSingleOutputEventOccurence(0));
+}
 
-  BOOST_AUTO_TEST_CASE(RaisingEdge){
-    mInQI = CIEC_BOOL(true);
-    triggerEvent(0);
-    BOOST_CHECK(checkForSingleOutputEventOccurence(0));
-  }
+BOOST_AUTO_TEST_CASE(FallingEdge) {
+  mInQI = CIEC_BOOL(true);
+  triggerEvent(0);
+  clearEventChain();
+  mInQI = CIEC_BOOL(false);
+  triggerEvent(0);
+  BOOST_CHECK(eventChainEmpty());
+}
 
-  BOOST_AUTO_TEST_CASE(FallingEdge){
-    mInQI = CIEC_BOOL(true);
-    triggerEvent(0);
-    clearEventChain();
-    mInQI = CIEC_BOOL(false);
+BOOST_AUTO_TEST_CASE(StableHigh) {
+  mInQI = CIEC_BOOL(true);
+  triggerEvent(0);
+  pullFirstChainEventID();
+  for (unsigned int i = 0; i < 1000; i++) {
     triggerEvent(0);
     BOOST_CHECK(eventChainEmpty());
   }
+}
 
-  BOOST_AUTO_TEST_CASE(StableHigh){
-    mInQI = CIEC_BOOL(true);
+BOOST_AUTO_TEST_CASE(StableLow) {
+  mInQI = CIEC_BOOL(false);
+  for (unsigned int i = 0; i < 1000; i++) {
     triggerEvent(0);
-    pullFirstChainEventID();
-    for(unsigned int i = 0; i < 1000; i++){
-      triggerEvent(0);
-      BOOST_CHECK(eventChainEmpty());
-    }
+    BOOST_CHECK(eventChainEmpty());
   }
-
-  BOOST_AUTO_TEST_CASE(StableLow){
-    mInQI = CIEC_BOOL(false);
-    for(unsigned int i = 0; i < 1000; i++){
-      triggerEvent(0);
-      BOOST_CHECK(eventChainEmpty());
-    }
-  }
+}
 
 BOOST_AUTO_TEST_SUITE_END()

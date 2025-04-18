@@ -15,13 +15,12 @@
 
 USE_STRING_ID(ULINT);
 
-
 DEFINE_FIRMWARE_DATATYPE(ULINT, STRID(ULINT))
 
-template CIEC_ULINT &CIEC_ULINT::operator=<>(const CIEC_USINT &paValue);
+template CIEC_ULINT &CIEC_ULINT::operator= <>(const CIEC_USINT &paValue);
 
-template CIEC_ULINT &CIEC_ULINT::operator=<>(const CIEC_UINT &paValue);
+template CIEC_ULINT &CIEC_ULINT::operator= <>(const CIEC_UINT &paValue);
 
-template CIEC_ULINT &CIEC_ULINT::operator=<>(const CIEC_UDINT &paValue);
+template CIEC_ULINT &CIEC_ULINT::operator= <>(const CIEC_UDINT &paValue);
 
 const CStringDictionary::TStringId forte::CDataTypeTrait<CIEC_ULINT>::scmDataTypeName = STRID(ULINT);

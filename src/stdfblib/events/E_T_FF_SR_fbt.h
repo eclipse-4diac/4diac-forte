@@ -28,7 +28,7 @@
 #include "forte_array_variable.h"
 
 class FORTE_E_T_FF_SR final : public CBasicFB {
-  DECLARE_FIRMWARE_FB(FORTE_E_T_FF_SR)
+    DECLARE_FIRMWARE_FB(FORTE_E_T_FF_SR)
 
   private:
     static const CStringDictionary::TStringId scmDataOutputNames[];
@@ -98,4 +98,3 @@ class FORTE_E_T_FF_SR final : public CBasicFB {
       evt_S(paQ);
     }
 };
-

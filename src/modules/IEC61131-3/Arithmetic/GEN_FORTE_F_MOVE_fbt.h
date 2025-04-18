@@ -23,53 +23,48 @@
 
 #include <array>
 
-class GEN_FORTE_F_MOVE : public CGenFunctionBlock<CFunctionBlock>  {
+class GEN_FORTE_F_MOVE : public CGenFunctionBlock<CFunctionBlock> {
     DECLARE_GENERIC_FIRMWARE_FB(GEN_FORTE_F_MOVE)
 
-private:
-  static const CStringDictionary::TStringId scmDataInputNames[];
-  std::array<CStringDictionary::TStringId,1> mDiDataTypeNames;
-  
-  static const CStringDictionary::TStringId scmDataOutputNames[];
-  std::array<CStringDictionary::TStringId,1> mDoDataTypeNames;
+  private:
+    static const CStringDictionary::TStringId scmDataInputNames[];
+    std::array<CStringDictionary::TStringId, 1> mDiDataTypeNames;
 
-  static const TEventID scmEventREQID = 0;
-  
-  static const TDataIOID scmEIWith[];
-  static const TForteInt16 scmEIWithIndexes[];
-  static const CStringDictionary::TStringId scmEventInputNames[];
-  static const CStringDictionary::TStringId scmEventInputTypeIds[];
-  
-  static const TEventID scmEventCNFID = 0;
-  
-  static const TDataIOID scmEOWith[]; 
-  static const TForteInt16 scmEOWithIndexes[];
-  static const CStringDictionary::TStringId scmEventOutputNames[];
-  static const CStringDictionary::TStringId scmEventOutputTypeIds[];
-  
+    static const CStringDictionary::TStringId scmDataOutputNames[];
+    std::array<CStringDictionary::TStringId, 1> mDoDataTypeNames;
 
-  bool createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) override;
+    static const TEventID scmEventREQID = 0;
 
-  void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
+    static const TDataIOID scmEIWith[];
+    static const TForteInt16 scmEIWithIndexes[];
+    static const CStringDictionary::TStringId scmEventInputNames[];
+    static const CStringDictionary::TStringId scmEventInputTypeIds[];
 
-  void readInputData(TEventID paEIID) override;
-  void writeOutputData(TEventID paEIID) override;
+    static const TEventID scmEventCNFID = 0;
 
-  static CStringDictionary::TStringId getDataTypeNameId(const char *paConfigString);
+    static const TDataIOID scmEOWith[];
+    static const TForteInt16 scmEOWithIndexes[];
+    static const CStringDictionary::TStringId scmEventOutputNames[];
+    static const CStringDictionary::TStringId scmEventOutputTypeIds[];
 
-public:
-  GEN_FORTE_F_MOVE(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
-  ~GEN_FORTE_F_MOVE() override = default;
+    bool createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) override;
 
-  CIEC_ANY& var_IN() {
-    return *static_cast<CIEC_ANY*>(getDI(0));
-  }
+    void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
-  CIEC_ANY& var_OUT() {
-    return *static_cast<CIEC_ANY*>(getDO(0));
-  }
+    void readInputData(TEventID paEIID) override;
+    void writeOutputData(TEventID paEIID) override;
 
+    static CStringDictionary::TStringId getDataTypeNameId(const char *paConfigString);
+
+  public:
+    GEN_FORTE_F_MOVE(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    ~GEN_FORTE_F_MOVE() override = default;
+
+    CIEC_ANY &var_IN() {
+      return *static_cast<CIEC_ANY *>(getDI(0));
+    }
+
+    CIEC_ANY &var_OUT() {
+      return *static_cast<CIEC_ANY *>(getDO(0));
+    }
 };
-
-
-

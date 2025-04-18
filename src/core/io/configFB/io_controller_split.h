@@ -21,33 +21,36 @@ namespace forte {
   namespace core {
     namespace io {
 
-#define FUNCTION_BLOCK_CTOR_FOR_IO_SPLIT_CONTROLLER(fbclass) \
- fbclass(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) : \
- IOConfigFBSplitController( (const TForteUInt8* const) &scmSplitAdapter, scmSplitAdapterNum, paContainer, scmFBInterfaceSpec, paInstanceNameId)
+#define FUNCTION_BLOCK_CTOR_FOR_IO_SPLIT_CONTROLLER(fbclass)                                                           \
+  fbclass(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :               \
+      IOConfigFBSplitController((const TForteUInt8 *const) &scmSplitAdapter, scmSplitAdapterNum, paContainer,          \
+                                scmFBInterfaceSpec, paInstanceNameId)
 
       class IOConfigFBSplitController;
 
-      typedef CSinglyLinkedList<IOConfigFBSplitController*> TControllerList;
+      typedef CSinglyLinkedList<IOConfigFBSplitController *> TControllerList;
 
       class IOConfigFBSplitController : public IOConfigFBController {
         public:
-          IOConfigFBSplitController(const TForteUInt8* const paSplitAdapter, const TForteUInt8 paSplitAdapterNum, forte::core::CFBContainer &paContainer,
-              const SFBInterfaceSpec& paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId);
+          IOConfigFBSplitController(const TForteUInt8 *const paSplitAdapter,
+                                    const TForteUInt8 paSplitAdapterNum,
+                                    forte::core::CFBContainer &paContainer,
+                                    const SFBInterfaceSpec &paInterfaceSpec,
+                                    const CStringDictionary::TStringId paInstanceNameId);
 
-          static IOConfigFBSplitController* getControllerById(TForteUInt16 paId);
+          static IOConfigFBSplitController *getControllerById(TForteUInt16 paId);
 
           using IOConfigFBController::initHandle;
 
         protected:
+          void onStartup(CEventChainExecutionThread *const paECET) override;
 
-          void onStartup(CEventChainExecutionThread * const paECET) override;
+          void onStop(CEventChainExecutionThread *const paECET) override;
 
-          void onStop(CEventChainExecutionThread * const paECET) override;
-
-          void executeEvent(TEventID paEIID, CEventChainExecutionThread * const paECET) override;
+          void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
         private:
-          const TForteUInt8* scmSplitAdapter;
+          const TForteUInt8 *scmSplitAdapter;
           const TForteUInt8 scmSplitAdapterNum;
 
           TForteUInt8 mSplitIterator;
@@ -58,11 +61,11 @@ namespace forte {
 
           TForteUInt16 mId;
 
-          static const char * const scmFailedToInitParts;
+          static const char *const scmFailedToInitParts;
       };
 
-    } //namespace IO
-  } //namepsace core
-} //namespace forte
+    } // namespace io
+  } // namespace core
+} // namespace forte
 
 #endif /* SRC_CORE_IO_CONFIGFB_IO_CONTROLLER_SPLIT_H_ */

@@ -12,74 +12,56 @@
  *******************************************************************************/
 #include "forte_any_chars_variant.h"
 
-
 USE_STRING_ID(ANY_CHARS);
-
 
 DEFINE_FIRMWARE_DATATYPE(ANY_CHARS_VARIANT, STRID(ANY_CHARS))
 
 void CIEC_ANY_CHARS_VARIANT::setValue(const CIEC_ANY &paValue) {
   switch (paValue.getDataTypeID()) {
-    case e_ANY:
-      CIEC_ANY_CHARS_VARIANT::setValue(paValue.unwrap());
-      break;
-    case e_CHAR:
-      operator=(static_cast<const CIEC_CHAR &>(paValue));
-      break;
-    case e_WCHAR:
-      operator=(static_cast<const CIEC_WCHAR &>(paValue));
-      break;
-    case e_STRING:
-      operator=(static_cast<const CIEC_STRING &>(paValue));
-      break;
-    case e_WSTRING:
-      operator=(static_cast<const CIEC_WSTRING &>(paValue));
-      break;
-    default:
-      break;
+    case e_ANY: CIEC_ANY_CHARS_VARIANT::setValue(paValue.unwrap()); break;
+    case e_CHAR: operator=(static_cast<const CIEC_CHAR &>(paValue)); break;
+    case e_WCHAR: operator=(static_cast<const CIEC_WCHAR &>(paValue)); break;
+    case e_STRING: operator=(static_cast<const CIEC_STRING &>(paValue)); break;
+    case e_WSTRING: operator=(static_cast<const CIEC_WSTRING &>(paValue)); break;
+    default: break;
   }
 }
 
 bool CIEC_ANY_CHARS_VARIANT::setDefaultValue(CIEC_ANY::EDataTypeID paDataTypeId) {
   switch (paDataTypeId) {
-    case e_CHAR:
-      operator=(CIEC_CHAR(0));
-      return true;
-    case e_WCHAR:
-      operator=(CIEC_WCHAR(0));
-      return true;
-    case e_STRING:
-      operator=(CIEC_STRING("", 0));
-      return true;
-    case e_WSTRING:
-      operator=(CIEC_WSTRING(""));
-      return true;
-    default:
-      break;
+    case e_CHAR: operator=(CIEC_CHAR(0)); return true;
+    case e_WCHAR: operator=(CIEC_WCHAR(0)); return true;
+    case e_STRING: operator=(CIEC_STRING("", 0)); return true;
+    case e_WSTRING: operator=(CIEC_WSTRING("")); return true;
+    default: break;
   }
   return false;
 }
 
 CIEC_ANY_CHARS &CIEC_ANY_CHARS_VARIANT::unwrap() {
-  return std::visit([](auto &&value) -> CIEC_ANY_CHARS & {
-      using T = std::decay_t<decltype(value)>;
-      if constexpr (std::is_base_of_v<CIEC_ANY_CHARS, T>) {
-        return value;
-      } else {
-        static_assert(always_false_v < T > , "non-exhaustive visitor");
-      }
-  }, static_cast<CIEC_ANY_CHARS_VARIANT::variant&>(*this));
+  return std::visit(
+      [](auto &&value) -> CIEC_ANY_CHARS & {
+        using T = std::decay_t<decltype(value)>;
+        if constexpr (std::is_base_of_v<CIEC_ANY_CHARS, T>) {
+          return value;
+        } else {
+          static_assert(always_false_v<T>, "non-exhaustive visitor");
+        }
+      },
+      static_cast<CIEC_ANY_CHARS_VARIANT::variant &>(*this));
 }
 
 const CIEC_ANY_CHARS &CIEC_ANY_CHARS_VARIANT::unwrap() const {
-  return std::visit([](auto &&value) -> const CIEC_ANY_CHARS & {
-      using T = std::decay_t<decltype(value)>;
-      if constexpr (std::is_base_of_v<CIEC_ANY_CHARS, T>) {
-        return value;
-      } else {
-        static_assert(always_false_v < T > , "non-exhaustive visitor");
-      }
-  }, static_cast<const CIEC_ANY_CHARS_VARIANT::variant&>(*this));
+  return std::visit(
+      [](auto &&value) -> const CIEC_ANY_CHARS & {
+        using T = std::decay_t<decltype(value)>;
+        if constexpr (std::is_base_of_v<CIEC_ANY_CHARS, T>) {
+          return value;
+        } else {
+          static_assert(always_false_v<T>, "non-exhaustive visitor");
+        }
+      },
+      static_cast<const CIEC_ANY_CHARS_VARIANT::variant &>(*this));
 }
 
 int CIEC_ANY_CHARS_VARIANT::fromString(const char *paValue) {
@@ -99,7 +81,7 @@ int CIEC_ANY_CHARS_VARIANT::fromString(const char *paValue) {
 int CIEC_ANY_CHARS_VARIANT::toString(char *paValue, size_t paBufferSize) const {
   int result = -1;
   const CIEC_ANY &value = unwrap();
-  switch(value.getDataTypeID()) {
+  switch (value.getDataTypeID()) {
     case e_CHAR:
     case e_WCHAR: // prefix already included
       result = value.toString(paValue, paBufferSize);
@@ -121,7 +103,7 @@ int CIEC_ANY_CHARS_VARIANT::toString(char *paValue, size_t paBufferSize) const {
 size_t CIEC_ANY_CHARS_VARIANT::getToStringBufferSize() const {
   size_t result = 0;
   const CIEC_ANY &value = unwrap();
-  switch(value.getDataTypeID()) {
+  switch (value.getDataTypeID()) {
     case e_CHAR:
     case e_WCHAR: // prefix already included
       result = value.getToStringBufferSize();
@@ -134,4 +116,3 @@ size_t CIEC_ANY_CHARS_VARIANT::getToStringBufferSize() const {
   }
   return result;
 }
-

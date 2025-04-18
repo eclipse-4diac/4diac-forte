@@ -17,15 +17,20 @@
 #include "opcprocessvar.h"
 #include "opcconnectionimpl.h"
 
-CCmd_SetProcessVarValue::CCmd_SetProcessVarValue(COpcConnectionImpl *paConnection, const std::string &paGroupName,
-      const std::string &paItemName, Variant paVar) :
-    mConnection(paConnection), mVar(paVar), mGroupName(paGroupName), mItemName(paItemName) {
+CCmd_SetProcessVarValue::CCmd_SetProcessVarValue(COpcConnectionImpl *paConnection,
+                                                 const std::string &paGroupName,
+                                                 const std::string &paItemName,
+                                                 Variant paVar) :
+    mConnection(paConnection),
+    mVar(paVar),
+    mGroupName(paGroupName),
+    mItemName(paItemName) {
 }
 
 void CCmd_SetProcessVarValue::runCommand() {
   mConnection->sendItemData(mGroupName, mItemName, mVar);
 }
 
-const char* CCmd_SetProcessVarValue::getCommandName() const {
+const char *CCmd_SetProcessVarValue::getCommandName() const {
   return "Cmd_SetProcessVarValue";
 }

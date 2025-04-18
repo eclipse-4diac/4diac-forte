@@ -40,45 +40,67 @@ USE_STRING_ID(RESULT);
 USE_STRING_ID(STATE);
 USE_STRING_ID(STRING);
 
-
 DEFINE_FIRMWARE_FB(FORTE_EXECUTE_ACTION_CLIENT, STRID(EXECUTE_ACTION_CLIENT))
 
-const CStringDictionary::TStringId FORTE_EXECUTE_ACTION_CLIENT::scmDataInputNames[] = { STRID(QI), STRID(ACTIONNAMESPACE), STRID(ACTIONMSGNAME), STRID(COMMAND), STRID(ID1), STRID(ID2) };
+const CStringDictionary::TStringId FORTE_EXECUTE_ACTION_CLIENT::scmDataInputNames[] = {
+    STRID(QI), STRID(ACTIONNAMESPACE), STRID(ACTIONMSGNAME), STRID(COMMAND), STRID(ID1), STRID(ID2)};
 
-const CStringDictionary::TStringId FORTE_EXECUTE_ACTION_CLIENT::scmDataInputTypeIds[] = { STRID(BOOL), STRID(STRING), STRID(STRING), STRID(STRING), STRID(DINT), STRID(DINT) };
+const CStringDictionary::TStringId FORTE_EXECUTE_ACTION_CLIENT::scmDataInputTypeIds[] = {
+    STRID(BOOL), STRID(STRING), STRID(STRING), STRID(STRING), STRID(DINT), STRID(DINT)};
 
-const CStringDictionary::TStringId FORTE_EXECUTE_ACTION_CLIENT::scmDataOutputNames[] = { STRID(QO), STRID(FBSTATUS), STRID(ACTIONSTATUS), STRID(RESULT), STRID(ID), STRID(STATE) };
+const CStringDictionary::TStringId FORTE_EXECUTE_ACTION_CLIENT::scmDataOutputNames[] = {
+    STRID(QO), STRID(FBSTATUS), STRID(ACTIONSTATUS), STRID(RESULT), STRID(ID), STRID(STATE)};
 
-const CStringDictionary::TStringId FORTE_EXECUTE_ACTION_CLIENT::scmDataOutputTypeIds[] = { STRID(BOOL), STRID(STRING), STRID(STRING), STRID(STRING), STRID(DINT), STRID(STRING) };
+const CStringDictionary::TStringId FORTE_EXECUTE_ACTION_CLIENT::scmDataOutputTypeIds[] = {
+    STRID(BOOL), STRID(STRING), STRID(STRING), STRID(STRING), STRID(DINT), STRID(STRING)};
 
-const TForteInt16 FORTE_EXECUTE_ACTION_CLIENT::scmEIWithIndexes[] = { 0, 4 };
-const TDataIOID FORTE_EXECUTE_ACTION_CLIENT::scmEIWith[] = { 0, 1, 2, scmWithListDelimiter, 0, 3, 4, 5, scmWithListDelimiter };
-const CStringDictionary::TStringId FORTE_EXECUTE_ACTION_CLIENT::scmEventInputNames[] = { STRID(INIT), STRID(REQ) };
+const TForteInt16 FORTE_EXECUTE_ACTION_CLIENT::scmEIWithIndexes[] = {0, 4};
+const TDataIOID FORTE_EXECUTE_ACTION_CLIENT::scmEIWith[] = {0, 1, 2, scmWithListDelimiter, 0,
+                                                            3, 4, 5, scmWithListDelimiter};
+const CStringDictionary::TStringId FORTE_EXECUTE_ACTION_CLIENT::scmEventInputNames[] = {STRID(INIT), STRID(REQ)};
 const CStringDictionary::TStringId FORTE_EXECUTE_ACTION_CLIENT::scmEventInputTypeIds[] = {STRID(EInit), STRID(Event)};
 
-const TDataIOID FORTE_EXECUTE_ACTION_CLIENT::scmEOWith[] = { 0, 1, scmWithListDelimiter, 0, 1, 2, 4, 3, scmWithListDelimiter, 5, scmWithListDelimiter };
-const TForteInt16 FORTE_EXECUTE_ACTION_CLIENT::scmEOWithIndexes[] = { 0, 3, 9 };
-const CStringDictionary::TStringId FORTE_EXECUTE_ACTION_CLIENT::scmEventOutputNames[] = { STRID(INITO), STRID(CNF) };
+const TDataIOID FORTE_EXECUTE_ACTION_CLIENT::scmEOWith[] = {
+    0, 1, scmWithListDelimiter, 0, 1, 2, 4, 3, scmWithListDelimiter, 5, scmWithListDelimiter};
+const TForteInt16 FORTE_EXECUTE_ACTION_CLIENT::scmEOWithIndexes[] = {0, 3, 9};
+const CStringDictionary::TStringId FORTE_EXECUTE_ACTION_CLIENT::scmEventOutputNames[] = {STRID(INITO), STRID(CNF)};
 const CStringDictionary::TStringId FORTE_EXECUTE_ACTION_CLIENT::scmEventOutputTypeIds[] = {STRID(Event), STRID(Event)};
 
-const SFBInterfaceSpec FORTE_EXECUTE_ACTION_CLIENT::scmFBInterfaceSpec = { 2, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes, 2, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes, 6, scmDataInputNames, scmDataInputTypeIds, 6, scmDataOutputNames, scmDataOutputTypeIds, 0, 0 };
+const SFBInterfaceSpec FORTE_EXECUTE_ACTION_CLIENT::scmFBInterfaceSpec = {2,
+                                                                          scmEventInputNames,
+                                                                          scmEventInputTypeIds,
+                                                                          scmEIWith,
+                                                                          scmEIWithIndexes,
+                                                                          2,
+                                                                          scmEventOutputNames,
+                                                                          scmEventOutputTypeIds,
+                                                                          scmEOWith,
+                                                                          scmEOWithIndexes,
+                                                                          6,
+                                                                          scmDataInputNames,
+                                                                          scmDataInputTypeIds,
+                                                                          6,
+                                                                          scmDataOutputNames,
+                                                                          scmDataOutputTypeIds,
+                                                                          0,
+                                                                          0};
 
 void FORTE_EXECUTE_ACTION_CLIENT::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
-  switch (paEIID){
+  switch (paEIID) {
     case scmEventINITID:
-      //initialize FB
-      if(!m_Initiated){
+      // initialize FB
+      if (!m_Initiated) {
 
         connectToActionServer();
         QO() = true;
       }
-      //already initialized
-      else if(QI() && m_Initiated){
+      // already initialized
+      else if (QI() && m_Initiated) {
         FBSTATUS() = "Already initiated";
         QO() = true;
       }
-      //termintate FB
-      else if(!QI() && m_Initiated){
+      // termintate FB
+      else if (!QI() && m_Initiated) {
         m_ActionClient->cancelAllGoals();
         ros::shutdown();
         m_Initiated = false;
@@ -89,34 +111,35 @@ void FORTE_EXECUTE_ACTION_CLIENT::executeEvent(TEventID paEIID, CEventChainExecu
       break;
 
     case scmEventREQID:
-      //send new goal to the action server
-      if(m_Initiated){
-        //send new goal
-        if(QI() && !m_GoalActive){
-          if(m_ActionClient->isServerConnected()){
-            //register the external eventchain on the thread of the Request event
+      // send new goal to the action server
+      if (m_Initiated) {
+        // send new goal
+        if (QI() && !m_GoalActive) {
+          if (m_ActionClient->isServerConnected()) {
+            // register the external eventchain on the thread of the Request event
             setEventChainExecutor(paECET);
             reapp_msgs::ExecuteGoal goal;
             goal.id1 = ID1();
             goal.id2 = ID2();
             goal.command = getExtEvHandler<CROSManager>(*this).ciecStringToStdString(COMMAND());
 
-            m_ActionClient->sendGoal(goal, boost::bind(&FORTE_EXECUTE_ACTION_CLIENT::doneCallback, this, _1, _2), boost::bind(&FORTE_EXECUTE_ACTION_CLIENT::activeCallback, this), boost::bind(&FORTE_EXECUTE_ACTION_CLIENT::feedbackCallback, this, _1));
+            m_ActionClient->sendGoal(goal, boost::bind(&FORTE_EXECUTE_ACTION_CLIENT::doneCallback, this, _1, _2),
+                                     boost::bind(&FORTE_EXECUTE_ACTION_CLIENT::activeCallback, this),
+                                     boost::bind(&FORTE_EXECUTE_ACTION_CLIENT::feedbackCallback, this, _1));
 
             FBSTATUS() = "New action goal sent";
             QO() = true;
-          }
-          else{ //not connected
+          } else { // not connected
             FBSTATUS() = "Sending goal not possible. Server not Connected";
             QO() = false;
           }
         }
-        //ignore goals that are sent while another goal is active
-        else if(!QI() && !m_GoalActive){
+        // ignore goals that are sent while another goal is active
+        else if (!QI() && !m_GoalActive) {
           FBSTATUS() = "Goal not sent, server busy";
         }
-        //cancel the goal at the action server that was sent by the client
-        else if(!QI() && m_GoalActive){
+        // cancel the goal at the action server that was sent by the client
+        else if (!QI() && m_GoalActive) {
           FBSTATUS() = "Canceling goals";
           m_ActionClient->cancelAllGoals();
           FBSTATUS() = "Goals canceled";
@@ -125,24 +148,24 @@ void FORTE_EXECUTE_ACTION_CLIENT::executeEvent(TEventID paEIID, CEventChainExecu
         }
       }
 
-      //FB is not initiated at all/correctly
-      else{
+      // FB is not initiated at all/correctly
+      else {
         FBSTATUS() = "FB not initiated";
         QO() = false;
       }
       break;
 
     case cgExternalEventID:
-      //we received feedback (QO=false)
-      if(false == QO()){
+      // we received feedback (QO=false)
+      if (false == QO()) {
 
         const std::string callbackFeedback = m_ExecuteFeedbackConstPtr->state;
 
         STATE() = callbackFeedback.c_str();
         FBSTATUS() = "Feedback received";
       }
-      //we received a result (QO=true)
-      else{
+      // we received a result (QO=true)
+      else {
         const std::string callbackResultResult = m_ExecuteResultConstPtr->result;
         const int callbackResultID = m_ExecuteResultConstPtr->id;
         ID() = callbackResultID;
@@ -156,7 +179,8 @@ void FORTE_EXECUTE_ACTION_CLIENT::executeEvent(TEventID paEIID, CEventChainExecu
   }
 }
 
-void FORTE_EXECUTE_ACTION_CLIENT::doneCallback(const actionlib::SimpleClientGoalState&, const ExecuteResultConstPtr& pa_result){
+void FORTE_EXECUTE_ACTION_CLIENT::doneCallback(const actionlib::SimpleClientGoalState &,
+                                               const ExecuteResultConstPtr &pa_result) {
   m_ExecuteResultConstPtr = pa_result;
 
   ACTIONSTATUS() = getCurrentActionState().c_str();
@@ -165,12 +189,12 @@ void FORTE_EXECUTE_ACTION_CLIENT::doneCallback(const actionlib::SimpleClientGoal
   getExtEvHandler<CROSManager>(*this).startChain(this);
 }
 
-void FORTE_EXECUTE_ACTION_CLIENT::activeCallback(){
+void FORTE_EXECUTE_ACTION_CLIENT::activeCallback() {
   ACTIONSTATUS() = getCurrentActionState().c_str();
   m_GoalActive = true;
 }
 
-void FORTE_EXECUTE_ACTION_CLIENT::feedbackCallback(const ExecuteFeedbackConstPtr &pa_feedback){
+void FORTE_EXECUTE_ACTION_CLIENT::feedbackCallback(const ExecuteFeedbackConstPtr &pa_feedback) {
   m_ExecuteFeedbackConstPtr = pa_feedback;
 
   ACTIONSTATUS() = getCurrentActionState().c_str();
@@ -178,38 +202,24 @@ void FORTE_EXECUTE_ACTION_CLIENT::feedbackCallback(const ExecuteFeedbackConstPtr
   getExtEvHandler<CROSManager>(*this).startChain(this);
 }
 
-std::string FORTE_EXECUTE_ACTION_CLIENT::getCurrentActionState(){
+std::string FORTE_EXECUTE_ACTION_CLIENT::getCurrentActionState() {
   std::string retVal = "UNKNOWN";
 
   int i = m_ActionClient->getState().state_;
-  switch (i){
-    case actionlib::SimpleClientGoalState::PENDING:
-      retVal = "PENDING";
-      break;
-    case actionlib::SimpleClientGoalState::ACTIVE:
-      retVal = "ACTIVE";
-      break;
-    case actionlib::SimpleClientGoalState::PREEMPTED:
-      retVal = "PREEMPTED";
-      break;
-    case actionlib::SimpleClientGoalState::SUCCEEDED:
-      retVal = "SUCCEEDED";
-      break;
+  switch (i) {
+    case actionlib::SimpleClientGoalState::PENDING: retVal = "PENDING"; break;
+    case actionlib::SimpleClientGoalState::ACTIVE: retVal = "ACTIVE"; break;
+    case actionlib::SimpleClientGoalState::PREEMPTED: retVal = "PREEMPTED"; break;
+    case actionlib::SimpleClientGoalState::SUCCEEDED: retVal = "SUCCEEDED"; break;
     case actionlib::SimpleClientGoalState::ABORTED:
-    case actionlib::SimpleClientGoalState::REJECTED:
-      retVal = "ABORTED";
-      break;
-    case actionlib::SimpleClientGoalState::RECALLED:
-      retVal = "RECALLED";
-      break;
-    case actionlib::SimpleClientGoalState::LOST:
-      retVal = "LOST";
-      break;
+    case actionlib::SimpleClientGoalState::REJECTED: retVal = "ABORTED"; break;
+    case actionlib::SimpleClientGoalState::RECALLED: retVal = "RECALLED"; break;
+    case actionlib::SimpleClientGoalState::LOST: retVal = "LOST"; break;
   }
   return retVal;
 }
 
-void FORTE_EXECUTE_ACTION_CLIENT::connectToActionServer(){
+void FORTE_EXECUTE_ACTION_CLIENT::connectToActionServer() {
   m_RosNamespace = getExtEvHandler<CROSManager>(*this).ciecStringToStdString(ACTIONNAMESPACE());
   m_RosMsgName = getExtEvHandler<CROSManager>(*this).ciecStringToStdString(ACTIONMSGNAME());
   DEVLOG_DEBUG("[EXEC_CLIENT] Namespace: %s \nMessage name : %s \n", m_RosNamespace.c_str(), m_RosMsgName.c_str());

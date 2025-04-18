@@ -123,7 +123,7 @@ class CIEC_ARRAY : public CIEC_ANY_DERIVED {
 
     ~CIEC_ARRAY() override = default;
 
-protected:
+  protected:
     CIEC_ARRAY() = default;
 
     static void findNextNonBlankSpace(const char **paRunner) {
@@ -134,15 +134,15 @@ protected:
 
     static const intmax_t cmCollapseMaxSize = 100;
 
-private:
+  private:
     [[nodiscard]] int toCollapsedString(char *paValue, size_t paBufferSize) const;
 
-    [[nodiscard]] int toCollapsedElementString(const CIEC_ANY &paElement, size_t paCount, bool paComma, char *paValue,
-                                               size_t paBufferSize) const;
+    [[nodiscard]] int toCollapsedElementString(
+        const CIEC_ANY &paElement, size_t paCount, bool paComma, char *paValue, size_t paBufferSize) const;
 
     template<typename U>
     inline void assignDynamic(const U &paArray, intmax_t sourceLowerBound, intmax_t sourceUpperBound) {
-      if(size() && paArray.size()) { // check if initialized
+      if (size() && paArray.size()) { // check if initialized
         intmax_t begin = std::max(getLowerBound(), sourceLowerBound);
         intmax_t end = std::min(getUpperBound(), sourceUpperBound);
         for (intmax_t i = begin; i <= end; ++i) {
@@ -156,10 +156,9 @@ static_assert(std::is_copy_assignable_v<CIEC_ARRAY>);
 static_assert(std::is_destructible_v<CIEC_ARRAY>);
 
 namespace forte {
-  template <>
+  template<>
   struct CDataTypeTrait<CIEC_ARRAY> {
       static constexpr CIEC_ANY::EDataTypeID scmDataTypeId = CIEC_ANY::e_ARRAY;
       static constexpr CStringDictionary::TStringId scmDataTypeName = CStringDictionary::scmInvalidStringId;
   };
-}
-
+} // namespace forte

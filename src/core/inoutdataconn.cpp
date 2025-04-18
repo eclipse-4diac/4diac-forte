@@ -16,25 +16,24 @@
 
 #include "funcbloc.h"
 
-EMGMResponse CInOutDataConnection::connect(CFunctionBlock &paDstFB,
-    CStringDictionary::TStringId paDstPortNameId){
-  //Check if the superclass connect is working (connection with plain IN)
+EMGMResponse CInOutDataConnection::connect(CFunctionBlock &paDstFB, CStringDictionary::TStringId paDstPortNameId) {
+  // Check if the superclass connect is working (connection with plain IN)
   EMGMResponse retVal = CDataConnection::connect(paDstFB, paDstPortNameId);
 
-  if(retVal != EMGMResponse::NoSuchObject) {
+  if (retVal != EMGMResponse::NoSuchObject) {
     return retVal; // we already have a connection
   }
 
   const TPortId dstPortId = paDstFB.getDIOID(paDstPortNameId);
-  if(cgInvalidPortId != dstPortId){
+  if (cgInvalidPortId != dstPortId) {
     CIEC_ANY *dstDataPoint = paDstFB.getDIOFromPortId(dstPortId);
     retVal = establishDataConnection(paDstFB, dstPortId, *dstDataPoint);
-    if(retVal == EMGMResponse::Ready) {
+    if (retVal == EMGMResponse::Ready) {
       paDstFB.incConnRefCount();
       getSourceId().getFB().incConnRefCount();
     }
   }
-  
+
   return retVal;
 }
 

@@ -21,8 +21,9 @@
 
 class CInOutDataConnection : public CDataConnection {
   public:
-    CInOutDataConnection(CFunctionBlock &paSrcFB, const TPortId paSrcPortId, CIEC_ANY *paValue)
-      : CDataConnection(paSrcFB, paSrcPortId), mValue(paValue) {
+    CInOutDataConnection(CFunctionBlock &paSrcFB, const TPortId paSrcPortId, CIEC_ANY *paValue) :
+        CDataConnection(paSrcFB, paSrcPortId),
+        mValue(paValue) {
     }
 
     EMGMResponse connect(CFunctionBlock &paDstFB, CStringDictionary::TStringId paDstPortNameId) override;
@@ -50,7 +51,9 @@ class CInOutDataConnection : public CDataConnection {
     }
 
   protected:
-    EMGMResponse establishDataConnection(CFunctionBlock &paDstFB, const TPortId paDstPortId, const CIEC_ANY &paDstDataPoint) override;
+    EMGMResponse establishDataConnection(CFunctionBlock &paDstFB,
+                                         const TPortId paDstPortId,
+                                         const CIEC_ANY &paDstDataPoint) override;
 
   private:
     CIEC_ANY *mValue;
@@ -60,8 +63,9 @@ class CInOutDataConnection : public CDataConnection {
 template<typename T>
 class COutInOutDataConnection final : public CInOutDataConnection {
   public:
-    COutInOutDataConnection(CFunctionBlock &paSrcFB, TPortId paSrcPortId, const T &paValue)
-      : CInOutDataConnection(paSrcFB, paSrcPortId, &mValue), mValue(paValue) {
+    COutInOutDataConnection(CFunctionBlock &paSrcFB, TPortId paSrcPortId, const T &paValue) :
+        CInOutDataConnection(paSrcFB, paSrcPortId, &mValue),
+        mValue(paValue) {
     }
 
   private:

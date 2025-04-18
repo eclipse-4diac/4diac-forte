@@ -16,82 +16,78 @@
 
 USE_STRING_ID(E_DELAY);
 
-
 #ifdef WIN32
-  #include <windows.h>
-  #define usleep(x) Sleep((x)/1000)
+#include <windows.h>
+#define usleep(x) Sleep((x) / 1000)
 #else
-  #include <unistd.h>
+#include <unistd.h>
 #endif
 
 /***********************************************************************************/
 /***********************************************************************************/
 
-class E_DELAY_tester  : public CFBTester{
+class E_DELAY_tester : public CFBTester {
     DECLARE_FB_TESTER(E_DELAY_tester);
 
   public:
-    E_DELAY_tester(CResource* mTestResource) :
-        CFBTester(mTestResource){
+    E_DELAY_tester(CResource *mTestResource) : CFBTester(mTestResource) {
       setInputData({&mDT});
     }
 
     virtual ~E_DELAY_tester() {
-
     }
 
   private:
-    virtual void executeAllTests(){
+    virtual void executeAllTests() {
       evaluateTestResult(testCase_NormalDelay(), "Normal Delay");
       evaluateTestResult(testCase_AbortedDelay(), "Aborted Delay");
       evaluateTestResult(testCase_MultipleStarts(), "Multiple Starts");
     }
 
-    bool testCase_NormalDelay(){
+    bool testCase_NormalDelay() {
       mDT.setFromMilliSeconds(500);
       triggerEvent(0);
       usleep(500000);
       return checkForSingleOutputEventOccurence(0);
     }
-    bool testCase_AbortedDelay(){
+    bool testCase_AbortedDelay() {
       bool retVal = true;
       mDT.setFromMilliSeconds(1000);
       triggerEvent(0);
-      if(!eventChainEmpty()){
+      if (!eventChainEmpty()) {
         retVal = CIEC_BOOL(false);
       }
       triggerEvent(1);
-      if(!eventChainEmpty()){
+      if (!eventChainEmpty()) {
         retVal = CIEC_BOOL(false);
       }
       usleep(1000000);
-      if(!eventChainEmpty()){
+      if (!eventChainEmpty()) {
         retVal = CIEC_BOOL(false);
       }
       return retVal;
     }
-    bool testCase_MultipleStarts(){
+    bool testCase_MultipleStarts() {
       bool retVal = true;
       mDT.setFromMilliSeconds(200);
       triggerEvent(0);
       usleep(50000);
-      if(!eventChainEmpty()){
+      if (!eventChainEmpty()) {
         retVal = CIEC_BOOL(false);
       }
       triggerEvent(0);
       usleep(150000);
-      if(!checkForSingleOutputEventOccurence(0)){
+      if (!checkForSingleOutputEventOccurence(0)) {
         retVal = CIEC_BOOL(false);
       }
       usleep(50000);
-      if(!eventChainEmpty()){
+      if (!eventChainEmpty()) {
         retVal = CIEC_BOOL(false);
       }
       return retVal;
     }
 
-
-    CIEC_TIME mDT; //DT data input
+    CIEC_TIME mDT; // DT data input
 };
 
 /***********************************************************************************/

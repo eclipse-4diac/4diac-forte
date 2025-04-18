@@ -22,7 +22,6 @@ USE_STRING_ID(REQ);
 USE_STRING_ID(SINT);
 USE_STRING_ID(SINT2SINT);
 
-
 #include "criticalregion.h"
 #include "resource.h"
 #include "forte_sint.h"
@@ -52,18 +51,29 @@ const TForteInt16 FORTE_SINT2SINT::scmEOWithIndexes[] = {0};
 const CStringDictionary::TStringId FORTE_SINT2SINT::scmEventOutputNames[] = {STRID(CNF)};
 const CStringDictionary::TStringId FORTE_SINT2SINT::scmEventOutputTypeIds[] = {STRID(Event)};
 
+const SFBInterfaceSpec FORTE_SINT2SINT::scmFBInterfaceSpec = {1,
+                                                              scmEventInputNames,
+                                                              scmEventInputTypeIds,
+                                                              scmEIWith,
+                                                              scmEIWithIndexes,
+                                                              1,
+                                                              scmEventOutputNames,
+                                                              scmEventOutputTypeIds,
+                                                              scmEOWith,
+                                                              scmEOWithIndexes,
+                                                              1,
+                                                              scmDataInputNames,
+                                                              scmDataInputTypeIds,
+                                                              1,
+                                                              scmDataOutputNames,
+                                                              scmDataOutputTypeIds,
+                                                              0,
+                                                              nullptr,
+                                                              0,
+                                                              nullptr};
 
-const SFBInterfaceSpec FORTE_SINT2SINT::scmFBInterfaceSpec = {
-  1, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,
-  1, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes,
-  1, scmDataInputNames, scmDataInputTypeIds,
-  1, scmDataOutputNames, scmDataOutputTypeIds,
-  0, nullptr,
-  0, nullptr
-};
-
-
-FORTE_SINT2SINT::FORTE_SINT2SINT(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_SINT2SINT::FORTE_SINT2SINT(CStringDictionary::TStringId paInstanceNameId,
+                                 forte::core::CFBContainer &paContainer) :
     CSimpleFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, nullptr),
     var_IN(CIEC_SINT(0)),
     var_OUT(CIEC_SINT(0)),
@@ -73,74 +83,68 @@ FORTE_SINT2SINT::FORTE_SINT2SINT(CStringDictionary::TStringId paInstanceNameId, 
 }
 
 void FORTE_SINT2SINT::alg_REQ(void) {
-  
+
   var_OUT = var_IN;
 }
 
-
 void FORTE_SINT2SINT::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
-  switch(paEIID) {
-    case scmEventREQID:
-      alg_REQ();
-      break;
-    default:
-      break;
+  switch (paEIID) {
+    case scmEventREQID: alg_REQ(); break;
+    default: break;
   }
   sendOutputEvent(scmEventCNFID, paECET);
 }
 
 void FORTE_SINT2SINT::readInputData(TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventREQID: {
       readData(0, var_IN, conn_IN);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 void FORTE_SINT2SINT::writeOutputData(TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventCNFID: {
-       writeData(0, var_OUT, conn_OUT);
+      writeData(0, var_OUT, conn_OUT);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 CIEC_ANY *FORTE_SINT2SINT::getDI(size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_IN;
   }
   return nullptr;
 }
 
 CIEC_ANY *FORTE_SINT2SINT::getDO(size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_OUT;
   }
   return nullptr;
 }
 
 CEventConnection *FORTE_SINT2SINT::getEOConUnchecked(TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_CNF;
   }
   return nullptr;
 }
 
 CDataConnection **FORTE_SINT2SINT::getDIConUnchecked(TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_IN;
   }
   return nullptr;
 }
 
 CDataConnection *FORTE_SINT2SINT::getDOConUnchecked(TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_OUT;
   }
   return nullptr;
@@ -149,5 +153,3 @@ CDataConnection *FORTE_SINT2SINT::getDOConUnchecked(TPortId paIndex) {
 CIEC_ANY *FORTE_SINT2SINT::getVarInternal(size_t) {
   return nullptr;
 }
-
-

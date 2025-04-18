@@ -23,10 +23,10 @@
 #include <memory>
 
 class GEN_F_MUX : public CGenFunctionBlock<CFunctionBlock> {
-  DECLARE_GENERIC_FIRMWARE_FB(GEN_F_MUX)
+    DECLARE_GENERIC_FIRMWARE_FB(GEN_F_MUX)
 
   private:
-    //we know for sure that there is one output event
+    // we know for sure that there is one output event
     static const CStringDictionary::TStringId scmEventOutputNames[];
     static const CStringDictionary::TStringId scmEventOutputTypeIds[];
 
@@ -38,7 +38,7 @@ class GEN_F_MUX : public CGenFunctionBlock<CFunctionBlock> {
     std::unique_ptr<CStringDictionary::TStringId[]> mDataOutputTypeIds;
     std::unique_ptr<CStringDictionary::TStringId[]> mDataInputTypeIds;
 
-    //self-defined members
+    // self-defined members
     size_t mEInputs{0};
     size_t mEOutputs{0};
     size_t mDInputs{0};

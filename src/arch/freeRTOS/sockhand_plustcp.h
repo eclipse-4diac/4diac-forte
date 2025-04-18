@@ -59,38 +59,31 @@
 //
 // The socket file handle in the BSD API is cast from/to a FreeRTOS Socket_t,
 // which happens to be the same size as an intptr_t
-static inline BaseType_t setsockopt(intptr_t xSocket,
-                                    int32_t lLevel,
-                                    int32_t lOptionName,
-                                    const void * pvOptionValue,
-                                    size_t uxOptionLength ) {
-  if (lOptionName == -1) return 0;
+static inline BaseType_t
+setsockopt(intptr_t xSocket, int32_t lLevel, int32_t lOptionName, const void *pvOptionValue, size_t uxOptionLength) {
+  if (lOptionName == -1)
+    return 0;
   return FreeRTOS_setsockopt(reinterpret_cast<Socket_t>(xSocket), lLevel, lOptionName, pvOptionValue, uxOptionLength);
 }
 
-static inline BaseType_t connect(intptr_t xClientSocket,
-                                 struct freertos_sockaddr * pxAddress,
-                                 socklen_t xAddressLength ) {
+static inline BaseType_t
+connect(intptr_t xClientSocket, struct freertos_sockaddr *pxAddress, socklen_t xAddressLength) {
   return FreeRTOS_connect(reinterpret_cast<Socket_t>(xClientSocket), pxAddress, xAddressLength);
 }
 
-static inline BaseType_t bind(intptr_t xClientSocket,
-                              struct freertos_sockaddr * pxAddress,
-                              socklen_t xAddressLength ) {
+static inline BaseType_t bind(intptr_t xClientSocket, struct freertos_sockaddr *pxAddress, socklen_t xAddressLength) {
   return FreeRTOS_bind(reinterpret_cast<Socket_t>(xClientSocket), pxAddress, xAddressLength);
 }
 
-
-
 #define htons(x) FreeRTOS_htons(x)
 #define htonl(x) FreeRTOS_htonl(x)
-#define socket(a,b,c) reinterpret_cast<intptr_t>(FreeRTOS_socket((a),(b),(c)))
-#define listen(a,b) FreeRTOS_listen(reinterpret_cast<Socket_t>(a),(b))
-#define accept(a,b,c) reinterpret_cast<intptr_t>(FreeRTOS_accept(reinterpret_cast<Socket_t>(a),(b),(c)))
-#define recv(a,b,c,d) FreeRTOS_recv(reinterpret_cast<Socket_t>(a),(b),(c),(d))
-#define recvfrom(a,b,c,d,e,f) FreeRTOS_recvfrom(reinterpret_cast<Socket_t>(a),(b),(c),(d),(e),(f))
-#define send(a,b,c,d) FreeRTOS_send(reinterpret_cast<Socket_t>(a),(b),(c),(d))
-#define sendto(a,b,c,d,e,f) FreeRTOS_sendto(reinterpret_cast<Socket_t>(a),(b),(c),(d),(e),(f))
+#define socket(a, b, c) reinterpret_cast<intptr_t>(FreeRTOS_socket((a), (b), (c)))
+#define listen(a, b) FreeRTOS_listen(reinterpret_cast<Socket_t>(a), (b))
+#define accept(a, b, c) reinterpret_cast<intptr_t>(FreeRTOS_accept(reinterpret_cast<Socket_t>(a), (b), (c)))
+#define recv(a, b, c, d) FreeRTOS_recv(reinterpret_cast<Socket_t>(a), (b), (c), (d))
+#define recvfrom(a, b, c, d, e, f) FreeRTOS_recvfrom(reinterpret_cast<Socket_t>(a), (b), (c), (d), (e), (f))
+#define send(a, b, c, d) FreeRTOS_send(reinterpret_cast<Socket_t>(a), (b), (c), (d))
+#define sendto(a, b, c, d, e, f) FreeRTOS_sendto(reinterpret_cast<Socket_t>(a), (b), (c), (d), (e), (f))
 #define close(x) FreeRTOS_closesocket(reinterpret_cast<Socket_t>(x))
 #define inet_addr FreeRTOS_inet_addr
 
@@ -99,20 +92,21 @@ static inline BaseType_t bind(intptr_t xClientSocket,
 #define sockaddr freertos_sockaddr
 
 struct sockaddr_in {
-  uint8_t sin_len;
-  uint8_t sin_family;
-  uint16_t sin_port;
-  struct {
-    uint32_t s_addr;
-  } sin_addr;
-  uint8_t sin_zero[0];
+    uint8_t sin_len;
+    uint8_t sin_family;
+    uint16_t sin_port;
+    struct {
+        uint32_t s_addr;
+    } sin_addr;
+    uint8_t sin_zero[0];
 };
 
 struct ip_mreq {
-  struct {
-    uint32_t s_addr;
-  } imr_multiaddr, imr_interface;
-; };
+    struct {
+        uint32_t s_addr;
+    } imr_multiaddr, imr_interface;
+    ;
+};
 
 //////////////////////////////////////////////////////////////////////////////////////
 // emulation of select() and fd_set
@@ -124,9 +118,15 @@ using fd_set = std::unordered_set<Socket_t>;
 
 static inline int select(intptr_t, fd_set *in, fd_set *out, fd_set *exc, timeval *timeout) {
   auto set = FreeRTOS_CreateSocketSet();
-  if (in) for (auto rsock : *in) FreeRTOS_FD_SET(rsock, set, eSELECT_READ);
-  if (out) for (auto rsock : *out) FreeRTOS_FD_SET(rsock, set, eSELECT_WRITE);
-  if (exc) for (auto rsock : *exc) FreeRTOS_FD_SET(rsock, set, eSELECT_EXCEPT);
+  if (in)
+    for (auto rsock : *in)
+      FreeRTOS_FD_SET(rsock, set, eSELECT_READ);
+  if (out)
+    for (auto rsock : *out)
+      FreeRTOS_FD_SET(rsock, set, eSELECT_WRITE);
+  if (exc)
+    for (auto rsock : *exc)
+      FreeRTOS_FD_SET(rsock, set, eSELECT_EXCEPT);
 
   TickType_t to = 0;
   if (timeout) {
@@ -141,21 +141,24 @@ static inline int select(intptr_t, fd_set *in, fd_set *out, fd_set *exc, timeval
     bool active = (eventsock && FD_ISSET(eventsock, in));
     ret += active;
     FD_ZERO(in);
-    if (active) FD_SET(eventsock, in);
+    if (active)
+      FD_SET(eventsock, in);
   }
 
   if (out) {
     bool active = (eventsock && FD_ISSET(eventsock, out));
     ret += active;
     FD_ZERO(out);
-    if (active) FD_SET(eventsock, out);
+    if (active)
+      FD_SET(eventsock, out);
   }
 
   if (exc) {
     bool active = (eventsock && FD_ISSET(eventsock, exc));
     ret += active;
     FD_ZERO(exc);
-    if (active) FD_SET(eventsock, exc);
+    if (active)
+      FD_SET(eventsock, exc);
   }
 
   FreeRTOS_DeleteSocketSet(set);

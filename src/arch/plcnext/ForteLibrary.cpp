@@ -16,26 +16,26 @@
 #include "Arp/System/Core/TypeName.hxx"
 #include "ForteComponent.h"
 
-namespace ForteLibrary{
+namespace ForteLibrary {
 
-ForteLibrary::ForteLibrary(AppDomain& paAppDomain) : LibraryBase(paAppDomain) {
+  ForteLibrary::ForteLibrary(AppDomain &paAppDomain) : LibraryBase(paAppDomain) {
     componentFactory.AddFactoryMethod("ForteComponent", &ForteComponent::Create);
-}
+  }
 
-void ForteLibrary::Main(AppDomain& paAppDomain){
+  void ForteLibrary::Main(AppDomain &paAppDomain) {
     TSingletonBase::CreateInstance(paAppDomain);
-}
+  }
 
-ILibrary* ForteLibrary::GetInstance(){
+  ILibrary *ForteLibrary::GetInstance() {
     return &TSingletonBase::GetInstance();
-}
+  }
 
-extern "C" ARP_CXX_SYMBOL_EXPORT void DynamicLibrary_Main(AppDomain& appDomain){
+  extern "C" ARP_CXX_SYMBOL_EXPORT void DynamicLibrary_Main(AppDomain &appDomain) {
     ForteLibrary::Main(appDomain);
-}
+  }
 
-extern "C" ARP_CXX_SYMBOL_EXPORT ILibrary* DynamicLibrary_GetInstance(){
+  extern "C" ARP_CXX_SYMBOL_EXPORT ILibrary *DynamicLibrary_GetInstance() {
     return ForteLibrary::GetInstance();
-}
+  }
 
 } // end of namespace ForteLibrary

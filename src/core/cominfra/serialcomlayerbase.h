@@ -17,23 +17,22 @@
 #include "core/util/parameterParser.h"
 #include <criticalregion.h>
 
-template <typename TSerialHandle, TSerialHandle nullHandle = static_cast<TSerialHandle>(0) >
-class CSerialComLayerBase : public forte::com_infra::CComLayer{
+template<typename TSerialHandle, TSerialHandle nullHandle = static_cast<TSerialHandle>(0)>
+class CSerialComLayerBase : public forte::com_infra::CComLayer {
   public:
-
     typedef TSerialHandle TSerialHandleType;
 
-    CSerialComLayerBase(forte::com_infra::CComLayer* paUpperLayer, forte::com_infra::CBaseCommFB * paFB);
+    CSerialComLayerBase(forte::com_infra::CComLayer *paUpperLayer, forte::com_infra::CBaseCommFB *paFB);
     ~CSerialComLayerBase() override;
 
     forte::com_infra::EComResponse processInterrupt() override;
 
     /*! \brief Perform send to serial interface
-    *   \param paData Sendable payload
-    *   \param paSize Payload size in bytes
-    *
-    *   \return ComLayer response
-    */
+     *   \param paData Sendable payload
+     *   \param paSize Payload size in bytes
+     *
+     *   \return ComLayer response
+     */
     forte::com_infra::EComResponse sendData(void *paData, unsigned int paSize) override = 0;
 
     /*! \brief Perform reading from serial interface
@@ -45,12 +44,11 @@ class CSerialComLayerBase : public forte::com_infra::CComLayer{
     void closeConnection() override = 0;
 
   protected:
-
-    enum EForteSerialBaudRate{
+    enum EForteSerialBaudRate {
       e50 = 50,
       e75 = 75,
       e110 = 100,
-      e134C5 = 134, //134.5
+      e134C5 = 134, // 134.5
       e150 = 150,
       e200 = 200,
       e300 = 300,
@@ -70,7 +68,7 @@ class CSerialComLayerBase : public forte::com_infra::CComLayer{
       e1000000 = 1000000,
     };
 
-    enum EForteSerialByteSize{
+    enum EForteSerialByteSize {
       e5 = 5,
       e6 = 6,
       e7 = 7,
@@ -78,31 +76,22 @@ class CSerialComLayerBase : public forte::com_infra::CComLayer{
       e9 = 9,
     };
 
-    enum EForteSerialStopBits {
-      eOneBit = 1,
-      eTwoBits = 2,
-      eOne5Bits
-    };
+    enum EForteSerialStopBits { eOneBit = 1, eTwoBits = 2, eOne5Bits };
 
-    enum EForteSerialParity {
-      eNoParity = 0,
-      eODD = 1,
-      eEven = 2,
-      eMark,
-      eSpace
-    };
+    enum EForteSerialParity { eNoParity = 0, eODD = 1, eEven = 2, eMark, eSpace };
 
-    struct SSerialParameters{
-      CIEC_STRING interfaceName;
-      EForteSerialBaudRate baudRate;
-      EForteSerialByteSize byteSize;
-      EForteSerialStopBits stopBits;
-      EForteSerialParity parity;
-    } ;
+    struct SSerialParameters {
+        CIEC_STRING interfaceName;
+        EForteSerialBaudRate baudRate;
+        EForteSerialByteSize byteSize;
+        EForteSerialStopBits stopBits;
+        EForteSerialParity parity;
+    };
 
     char mTerminationSymbol[3]; //**< Space for CR, LF, or CR/LF + Terminating \0
     forte::com_infra::EComResponse openConnection(char *paLayerParameter) override;
-    virtual forte::com_infra::EComResponse openSerialConnection(const SSerialParameters& paSerialParameters, TSerialHandle* paHandleResult) = 0;
+    virtual forte::com_infra::EComResponse openSerialConnection(const SSerialParameters &paSerialParameters,
+                                                                TSerialHandle *paHandleResult) = 0;
     static const unsigned int mMaxRecvBuffer = 1000;
 
     forte::com_infra::EComResponse mInterruptResp;
@@ -111,13 +100,12 @@ class CSerialComLayerBase : public forte::com_infra::CComLayer{
     CSyncObject mRecvLock;
 
     TSerialHandle mSerialHandle;
-    TSerialHandle getSerialHandler(){
+    TSerialHandle getSerialHandler() {
       return mSerialHandle;
     }
 
   private:
-
-    enum EForteSerialCommunicationParameter{
+    enum EForteSerialCommunicationParameter {
       eInterface = 0,
       eBaudrate,
       eByteSize,
@@ -128,28 +116,31 @@ class CSerialComLayerBase : public forte::com_infra::CComLayer{
     };
 
     static const unsigned int mNoOfParameters = eSerComParamterAmount;
-
 };
 
-
-template <typename TThreadHandle, TThreadHandle nullHandle>
-CSerialComLayerBase<TThreadHandle, nullHandle>::CSerialComLayerBase(forte::com_infra::CComLayer* paUpperLayer,
-    forte::com_infra::CBaseCommFB * paFB) :
-    forte::com_infra::CComLayer(paUpperLayer, paFB), mInterruptResp(forte::com_infra::e_Nothing), mBufFillSize(0), mSerialHandle(nullHandle) {
-  memset(mRecvBuffer, 0, sizeof(mRecvBuffer)); //TODO change this to  mRecvBuffer{0} in the extended list when fully switching to C++11
-  memset(mTerminationSymbol, 0, sizeof(mTerminationSymbol)); //TODO change this to  mTerminationSymbol{0} in the extended list when fully switching to C++11
+template<typename TThreadHandle, TThreadHandle nullHandle>
+CSerialComLayerBase<TThreadHandle, nullHandle>::CSerialComLayerBase(forte::com_infra::CComLayer *paUpperLayer,
+                                                                    forte::com_infra::CBaseCommFB *paFB) :
+    forte::com_infra::CComLayer(paUpperLayer, paFB),
+    mInterruptResp(forte::com_infra::e_Nothing),
+    mBufFillSize(0),
+    mSerialHandle(nullHandle) {
+  memset(mRecvBuffer, 0,
+         sizeof(mRecvBuffer)); // TODO change this to  mRecvBuffer{0} in the extended list when fully switching to C++11
+  memset(mTerminationSymbol, 0, sizeof(mTerminationSymbol)); // TODO change this to  mTerminationSymbol{0} in the
+                                                             // extended list when fully switching to C++11
 }
 
-template <typename TThreadHandle, TThreadHandle nullHandle>
+template<typename TThreadHandle, TThreadHandle nullHandle>
 CSerialComLayerBase<TThreadHandle, nullHandle>::~CSerialComLayerBase() = default;
 
-template <typename TThreadHandle, TThreadHandle nullHandle>
-forte::com_infra::EComResponse CSerialComLayerBase<TThreadHandle, nullHandle>::processInterrupt(){
-  if(forte::com_infra::e_ProcessDataOk == mInterruptResp){
+template<typename TThreadHandle, TThreadHandle nullHandle>
+forte::com_infra::EComResponse CSerialComLayerBase<TThreadHandle, nullHandle>::processInterrupt() {
+  if (forte::com_infra::e_ProcessDataOk == mInterruptResp) {
     CCriticalRegion lock(mRecvLock);
-    switch (mConnectionState){
+    switch (mConnectionState) {
       case forte::com_infra::e_Connected:
-        if(nullptr != mTopLayer){
+        if (nullptr != mTopLayer) {
           mInterruptResp = mTopLayer->recvData(mRecvBuffer, mBufFillSize);
           mBufFillSize = 0;
         }
@@ -157,28 +148,28 @@ forte::com_infra::EComResponse CSerialComLayerBase<TThreadHandle, nullHandle>::p
       case forte::com_infra::e_Disconnected:
       case forte::com_infra::e_Listening:
       case forte::com_infra::e_ConnectedAndListening:
-      default:
-        break;
+      default: break;
     }
   }
   return mInterruptResp;
 }
 
-template <typename TThreadHandle, TThreadHandle nullHandle>
-forte::com_infra::EComResponse CSerialComLayerBase<TThreadHandle, nullHandle>::openConnection(char *paLayerParameter)  {
-  //Create Serial Com Handle
+template<typename TThreadHandle, TThreadHandle nullHandle>
+forte::com_infra::EComResponse CSerialComLayerBase<TThreadHandle, nullHandle>::openConnection(char *paLayerParameter) {
+  // Create Serial Com Handle
   CParameterParser parser(paLayerParameter, ',', mNoOfParameters);
-  if(mNoOfParameters != parser.parseParameters()){
+  if (mNoOfParameters != parser.parseParameters()) {
     return forte::com_infra::e_InitInvalidId;
   }
 
   SSerialParameters parsedParameters;
-  parsedParameters.interfaceName = CIEC_STRING(parser[CSerialComLayerBase::eInterface], strlen(parser[CSerialComLayerBase::eInterface]));
+  parsedParameters.interfaceName =
+      CIEC_STRING(parser[CSerialComLayerBase::eInterface], strlen(parser[CSerialComLayerBase::eInterface]));
 
-  //Check baud rate setting
+  // Check baud rate setting
   parsedParameters.baudRate = static_cast<EForteSerialBaudRate>(atoi(parser[CSerialComLayerBase::eBaudrate]));
   switch (parsedParameters.baudRate) {
-  //These are ok baud rates
+      // These are ok baud rates
     case e50: break;
     case e75: break;
     case e110: break;
@@ -200,65 +191,54 @@ forte::com_infra::EComResponse CSerialComLayerBase<TThreadHandle, nullHandle>::o
     case e128000: break;
     case e256000: break;
     case e1000000: break;
-    //all other numbers are invalid!
+    // all other numbers are invalid!
     default: return forte::com_infra::e_InitInvalidId; break;
   }
 
-  //Check byte size setting
+  // Check byte size setting
   parsedParameters.byteSize = static_cast<EForteSerialByteSize>(atoi(parser[CSerialComLayerBase::eByteSize]));
-  if(4 > parsedParameters.byteSize || 8 < parsedParameters.byteSize){
+  if (4 > parsedParameters.byteSize || 8 < parsedParameters.byteSize) {
     return forte::com_infra::e_InitInvalidId;
   }
 
-  //Check stopbits setting
-  if(0 == strcmp(parser[CSerialComLayerBase::eStopBits], "1")){
+  // Check stopbits setting
+  if (0 == strcmp(parser[CSerialComLayerBase::eStopBits], "1")) {
     parsedParameters.stopBits = eOneBit;
-  }
-  else if(0 == strcmp(parser[CSerialComLayerBase::eStopBits], "1.5")){
+  } else if (0 == strcmp(parser[CSerialComLayerBase::eStopBits], "1.5")) {
     parsedParameters.stopBits = eOne5Bits;
-  }
-  else if(0 == strcmp(parser[CSerialComLayerBase::eStopBits], "2")){
+  } else if (0 == strcmp(parser[CSerialComLayerBase::eStopBits], "2")) {
     parsedParameters.stopBits = eTwoBits;
-  }
-  else{
+  } else {
     return forte::com_infra::e_InitInvalidId;
   }
 
-  //Check parity setting
-  if(0 == strcmp(parser[CSerialComLayerBase::eParity], "NONE")){
+  // Check parity setting
+  if (0 == strcmp(parser[CSerialComLayerBase::eParity], "NONE")) {
     parsedParameters.parity = eNoParity;
-  }
-  else if(0 == strcmp(parser[CSerialComLayerBase::eParity], "ODD")){
+  } else if (0 == strcmp(parser[CSerialComLayerBase::eParity], "ODD")) {
     parsedParameters.parity = eODD;
-  }
-  else if(0 == strcmp(parser[CSerialComLayerBase::eParity], "EVEN")){
+  } else if (0 == strcmp(parser[CSerialComLayerBase::eParity], "EVEN")) {
     parsedParameters.parity = eEven;
-  }
-  else if(0 == strcmp(parser[CSerialComLayerBase::eParity], "MARK")){
+  } else if (0 == strcmp(parser[CSerialComLayerBase::eParity], "MARK")) {
     parsedParameters.parity = eMark;
-  }
-  else if(0 == strcmp(parser[CSerialComLayerBase::eParity], "SPACE")){
+  } else if (0 == strcmp(parser[CSerialComLayerBase::eParity], "SPACE")) {
     parsedParameters.parity = eSpace;
-  }
-  else{
+  } else {
     return forte::com_infra::e_InitInvalidId;
   }
 
-  if(0 == strcmp("$n", parser[eTerminationSymbol])){
+  if (0 == strcmp("$n", parser[eTerminationSymbol])) {
     strcpy(mTerminationSymbol, "\n");
-  }
-  else if(0 == strcmp("$r", parser[CSerialComLayerBase::eTerminationSymbol])){
+  } else if (0 == strcmp("$r", parser[CSerialComLayerBase::eTerminationSymbol])) {
     strcpy(mTerminationSymbol, "\r");
-  }
-  else if(0 == strcmp("$r$n", parser[CSerialComLayerBase::eTerminationSymbol])){
+  } else if (0 == strcmp("$r$n", parser[CSerialComLayerBase::eTerminationSymbol])) {
     strcpy(mTerminationSymbol, "\r\n");
-  }
-  else{
+  } else {
     return forte::com_infra::e_InitInvalidId;
   }
 
   forte::com_infra::EComResponse resp = openSerialConnection(parsedParameters, &mSerialHandle);
-  if(forte::com_infra::e_InitOk == resp){
+  if (forte::com_infra::e_InitOk == resp) {
     mConnectionState = forte::com_infra::e_Connected;
   }
   return resp;

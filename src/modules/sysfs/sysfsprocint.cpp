@@ -25,15 +25,16 @@ const CIEC_STRING CSysFsProcessInterface::scmError("Error"_STRING);
 const CIEC_STRING CSysFsProcessInterface::scmCouldNotRead("Could not read"_STRING);
 const CIEC_STRING CSysFsProcessInterface::scmCouldNotWrite("Could not write"_STRING);
 
-CSysFsProcessInterface::CSysFsProcessInterface(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec& paInterfaceSpec,
-    const CStringDictionary::TStringId paInstanceNameId) :
+CSysFsProcessInterface::CSysFsProcessInterface(forte::core::CFBContainer &paContainer,
+                                               const SFBInterfaceSpec &paInterfaceSpec,
+                                               const CStringDictionary::TStringId paInstanceNameId) :
     CProcessInterfaceBase(paContainer, paInterfaceSpec, paInstanceNameId) {
-  mFile.rdbuf()->pubsetbuf(nullptr, 0); //disable buffer to avoid latency
+  mFile.rdbuf()->pubsetbuf(nullptr, 0); // disable buffer to avoid latency
   STATUS() = scmNotInitialised;
 }
 
 CSysFsProcessInterface::~CSysFsProcessInterface() {
-  unexportIO(); //Will unexport everything, so next time FORTE starts it won't fail to initialize.
+  unexportIO(); // Will unexport everything, so next time FORTE starts it won't fail to initialize.
 }
 
 bool CSysFsProcessInterface::setDirection(bool paIsInput) {
@@ -41,15 +42,15 @@ bool CSysFsProcessInterface::setDirection(bool paIsInput) {
   std::string fileName = "/sys/class/gpio/gpio"s + static_cast<std::string>(PARAMS()) + "/direction"s;
   std::ofstream mDirectionFile;
   mDirectionFile.open(fileName.c_str());
-  if(mDirectionFile.is_open()) {
-    if(paIsInput) {
+  if (mDirectionFile.is_open()) {
+    if (paIsInput) {
       mDirectionFile << "in";
     } else {
       mDirectionFile << "out";
     }
-    if(!mDirectionFile.fail()){
+    if (!mDirectionFile.fail()) {
       retVal = true;
-    } else{
+    } else {
       DEVLOG_ERROR("[CSysFsProcessInterface::setDirection] Error writing to file %s.\n", fileName.c_str());
     }
   } else {
@@ -64,9 +65,9 @@ bool CSysFsProcessInterface::exportGPIO() {
   std::string fileName = "/sys/class/gpio/export";
   std::ofstream mExportFile;
   mExportFile.open(fileName.c_str());
-  if(mExportFile.is_open()) {
+  if (mExportFile.is_open()) {
     mExportFile << PARAMS().c_str();
-    if(!mExportFile.fail()) {
+    if (!mExportFile.fail()) {
       retVal = true;
     } else {
       DEVLOG_ERROR("[CSysFsProcessInterface::exportGPIO] Error writing to file %s.\n", fileName.c_str());
@@ -83,15 +84,15 @@ bool CSysFsProcessInterface::exportGPIO() {
 bool CSysFsProcessInterface::valueGPIO(bool paIsInput) {
   bool retVal = false;
   std::string fileName = "/sys/class/gpio/gpio"s + static_cast<std::string>(PARAMS()) + "/value"s;
-  if(paIsInput) {
+  if (paIsInput) {
     mFile.open(fileName.c_str(), std::fstream::in);
   } else {
     mFile.open(fileName.c_str(), std::fstream::out);
   }
 
-  if(mFile.is_open()){
+  if (mFile.is_open()) {
     retVal = true;
-  }else{
+  } else {
     DEVLOG_ERROR("[CSysFsProcessInterface::valueGPIO] Opening file %s failed.\n", fileName.c_str());
   }
   return retVal;
@@ -99,18 +100,19 @@ bool CSysFsProcessInterface::valueGPIO(bool paIsInput) {
 
 bool CSysFsProcessInterface::initialise(bool paIsInput, CEventChainExecutionThread *const) {
   bool retVal = false;
-  if(CSysFsProcessInterface::exportGPIO()) {
+  if (CSysFsProcessInterface::exportGPIO()) {
     CThread::sleepThread(250);
-    if(CSysFsProcessInterface::setDirection(paIsInput)) {
+    if (CSysFsProcessInterface::setDirection(paIsInput)) {
       CThread::sleepThread(250);
-      if(CSysFsProcessInterface::valueGPIO(paIsInput)) {
-        if(paIsInput) {
+      if (CSysFsProcessInterface::valueGPIO(paIsInput)) {
+        if (paIsInput) {
           getExtEvHandler<CSysFsProcessInterface::CIOHandler>(*this).registerIXFB(this);
-          if(!getExtEvHandler<CSysFsProcessInterface::CIOHandler>(*this).isAlive()) {
+          if (!getExtEvHandler<CSysFsProcessInterface::CIOHandler>(*this).isAlive()) {
             getExtEvHandler<CSysFsProcessInterface::CIOHandler>(*this).start();
           }
         }
-        DEVLOG_DEBUG("[CSysFsProcessInterface::initialise] Pin with PARAM() %s was properly initialized.\n", PARAMS().getValue());
+        DEVLOG_DEBUG("[CSysFsProcessInterface::initialise] Pin with PARAM() %s was properly initialized.\n",
+                     PARAMS().getValue());
         STATUS() = scmOK;
         retVal = true;
       }
@@ -127,9 +129,9 @@ bool CSysFsProcessInterface::unexportIO() {
 
   mFile.close();
   mUnExport.open(fileName.c_str(), std::fstream::out);
-  if(mUnExport.is_open()) {
+  if (mUnExport.is_open()) {
     mUnExport << PARAMS().c_str();
-    if(!mUnExport.fail()) {
+    if (!mUnExport.fail()) {
       retVal = true;
       STATUS() = scmOK;
     } else {
@@ -154,16 +156,16 @@ bool CSysFsProcessInterface::readPin() {
 
 bool CSysFsProcessInterface::checkInputData() {
   bool retVal = false;
-  if(mFile.is_open()) {
+  if (mFile.is_open()) {
     char binData = 0;
     mFile.clear();
     mFile.seekg(0, std::ios::beg);
     mFile.read(&binData, 1);
-    if(mFile.fail()) {
+    if (mFile.fail()) {
       STATUS() = scmCouldNotRead;
     } else {
       bool newData = '0' != binData;
-      if(newData != IN_X()) {
+      if (newData != IN_X()) {
         IN_X() = CIEC_BOOL(newData);
         retVal = true;
       }
@@ -177,12 +179,12 @@ bool CSysFsProcessInterface::checkInputData() {
 
 bool CSysFsProcessInterface::writePin() {
   bool retVal = false;
-  if(mFile.is_open()) {
+  if (mFile.is_open()) {
     mFile.clear();
     mFile.seekp(0, std::ios::beg);
-    unsigned int val = (false != OUT_X()) ? 1 : 0; //if true set the led to full glowing
+    unsigned int val = (false != OUT_X()) ? 1 : 0; // if true set the led to full glowing
     mFile << val;
-    if(!mFile.fail()) {
+    if (!mFile.fail()) {
       STATUS() = scmOK;
       retVal = true;
     } else {
@@ -190,7 +192,8 @@ bool CSysFsProcessInterface::writePin() {
       STATUS() = scmCouldNotWrite;
     }
   } else {
-    DEVLOG_ERROR("[CSysFsProcessInterface::writePin] Cannot write to output since the FB was not properly initialized\n");
+    DEVLOG_ERROR(
+        "[CSysFsProcessInterface::writePin] Cannot write to output since the FB was not properly initialized\n");
     STATUS() = scmNotInitialised;
   }
 
@@ -199,7 +202,7 @@ bool CSysFsProcessInterface::writePin() {
 
 DEFINE_HANDLER(CSysFsProcessInterface::CIOHandler);
 
-CSysFsProcessInterface::CIOHandler::CIOHandler(CDeviceExecution& paDeviceExecution) :
+CSysFsProcessInterface::CIOHandler::CIOHandler(CDeviceExecution &paDeviceExecution) :
     CExternalEventHandler(paDeviceExecution) {
 }
 
@@ -219,9 +222,9 @@ void CSysFsProcessInterface::CIOHandler::unregisterIXFB(CSysFsProcessInterface *
   TReadFBContainer::Iterator itRunner(mReadFBList.begin());
   TReadFBContainer::Iterator itRefNode(mReadFBList.end());
   TReadFBContainer::Iterator itEnd(mReadFBList.end());
-  while(itRunner != itEnd) {
-    if(*itRunner == paFB) {
-      if(itRefNode == itEnd) {
+  while (itRunner != itEnd) {
+    if (*itRunner == paFB) {
+      if (itRefNode == itEnd) {
         mReadFBList.popFront();
       } else {
         mReadFBList.eraseAfter(itRefNode);
@@ -234,7 +237,7 @@ void CSysFsProcessInterface::CIOHandler::unregisterIXFB(CSysFsProcessInterface *
 }
 
 void CSysFsProcessInterface::CIOHandler::run() {
-  while(isAlive()) {
+  while (isAlive()) {
     CThread::sleepThread(10);
     updateReadData();
   }
@@ -243,15 +246,15 @@ void CSysFsProcessInterface::CIOHandler::run() {
 void CSysFsProcessInterface::CIOHandler::updateReadData() {
   CCriticalRegion readList(mReadFBListSync);
   TReadFBContainer::Iterator itEnd(mReadFBList.end());
-  for(TReadFBContainer::Iterator itRunner = mReadFBList.begin(); itRunner != itEnd; ++itRunner) {
-    if((*itRunner)->checkInputData()) {
+  for (TReadFBContainer::Iterator itRunner = mReadFBList.begin(); itRunner != itEnd; ++itRunner) {
+    if ((*itRunner)->checkInputData()) {
       startNewEventChain(*itRunner);
     }
   }
 }
 
 void CSysFsProcessInterface::CIOHandler::enableHandler() {
-  //do nothing
+  // do nothing
 }
 
 void CSysFsProcessInterface::CIOHandler::disableHandler() {
@@ -259,10 +262,9 @@ void CSysFsProcessInterface::CIOHandler::disableHandler() {
 }
 
 void CSysFsProcessInterface::CIOHandler::setPriority(int) {
-  //do nothing
+  // do nothing
 }
 
 int CSysFsProcessInterface::CIOHandler::getPriority() const {
   return 0;
 }
-

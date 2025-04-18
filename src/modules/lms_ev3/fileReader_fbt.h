@@ -9,39 +9,39 @@
  * Contributors:
  *    Jose Cabral - initial API and implementation and/or initial documentation
  *******************************************************************************/
- 
+
 #ifndef _FILEREADER_H_
 #define _FILEREADER_H_
 
 #include <funcbloc.h>
 #include <fstream>
 
-class fileReader: public CFunctionBlock{
+class fileReader : public CFunctionBlock {
     DECLARE_FIRMWARE_FB(fileReader)
 
   private:
     static const CStringDictionary::TStringId scmDataInputNames[];
     static const CStringDictionary::TStringId scmDataInputTypeIds[];
     CIEC_BOOL &QI() {
-      return *static_cast<CIEC_BOOL*>(getDI(0));
+      return *static_cast<CIEC_BOOL *>(getDI(0));
     };
 
     CIEC_STRING &FILE_NAME() {
-      return *static_cast<CIEC_STRING*>(getDI(1));
+      return *static_cast<CIEC_STRING *>(getDI(1));
     };
 
     static const CStringDictionary::TStringId scmDataOutputNames[];
     static const CStringDictionary::TStringId scmDataOutputTypeIds[];
     CIEC_BOOL &QO() {
-      return *static_cast<CIEC_BOOL*>(getDO(0));
+      return *static_cast<CIEC_BOOL *>(getDO(0));
     };
 
     CIEC_WSTRING &STATUS() {
-      return *static_cast<CIEC_WSTRING*>(getDO(1));
+      return *static_cast<CIEC_WSTRING *>(getDO(1));
     };
 
     CIEC_STRING &S1() {
-      return *static_cast<CIEC_STRING*>(getDO(2));
+      return *static_cast<CIEC_STRING *>(getDO(2));
     };
 
     static const TEventID scmEventINITID = 0;
@@ -60,9 +60,9 @@ class fileReader: public CFunctionBlock{
 
     static const SFBInterfaceSpec scmFBInterfaceSpec;
 
-    static const char * const scmOK;
-    static const char * const scmNotInitialised;
-    static const char * const scmCouldNotRead;
+    static const char *const scmOK;
+    static const char *const scmNotInitialised;
+    static const char *const scmCouldNotRead;
 
     void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
@@ -76,8 +76,6 @@ class fileReader: public CFunctionBlock{
 
     bool readFile();
     std::fstream mFile;
-
-
 };
 
-#endif //close the ifdef sequence from the beginning of the file
+#endif // close the ifdef sequence from the beginning of the file

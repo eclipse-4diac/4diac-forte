@@ -42,30 +42,31 @@ static inline void print_line_info(int fd, int line) {
     DEVLOG_ERROR("[GPIOChipController] Could not get line info\n");
     return;
   }
-  DEVLOG_INFO("[GPIOChipController] Line %d name: %s, consumer %s. flags %s %s %s %s %s\n",
-                 line,
-                 line_info.name,
-                 line_info.consumer,
-                 (line_info.flags & GPIOLINE_FLAG_IS_OUT) ? "OUTPUT" : "INPUT",
-                 (line_info.flags & GPIOLINE_FLAG_ACTIVE_LOW) ? "ACTIVE_LOW" : "ACTIVE_HIGH",
-                 (line_info.flags & GPIOLINE_FLAG_OPEN_DRAIN) ? "OPEN_DRAIN" : "",
-                 (line_info.flags & GPIOLINE_FLAG_OPEN_SOURCE) ? "OPEN_SOURCE" : "",
-                 (line_info.flags & GPIOLINE_FLAG_KERNEL) ? "KERNEL" : "");
+  DEVLOG_INFO("[GPIOChipController] Line %d name: %s, consumer %s. flags %s %s %s %s %s\n", line, line_info.name,
+              line_info.consumer, (line_info.flags & GPIOLINE_FLAG_IS_OUT) ? "OUTPUT" : "INPUT",
+              (line_info.flags & GPIOLINE_FLAG_ACTIVE_LOW) ? "ACTIVE_LOW" : "ACTIVE_HIGH",
+              (line_info.flags & GPIOLINE_FLAG_OPEN_DRAIN) ? "OPEN_DRAIN" : "",
+              (line_info.flags & GPIOLINE_FLAG_OPEN_SOURCE) ? "OPEN_SOURCE" : "",
+              (line_info.flags & GPIOLINE_FLAG_KERNEL) ? "KERNEL" : "");
 }
 
-const char* GPIOChipController::init() {
+const char *GPIOChipController::init() {
   auto devname = "/dev/gpiochip" + std::to_string(mConfig.mChipNumber);
   auto fd = open(devname.c_str(), O_RDONLY);
   if (fd < 0) {
-    DEVLOG_ERROR("[GPIOChipController::init] Could not access GPIO chip %i: %s\n", mConfig.mChipNumber, strerror(errno));
+    DEVLOG_ERROR("[GPIOChipController::init] Could not access GPIO chip %i: %s\n", mConfig.mChipNumber,
+                 strerror(errno));
     return scmFailedToAccessChip;
   }
 
   print_line_info(fd, mConfig.mLineNumber);
 
-  static const unsigned mode[] = { GPIOHANDLE_REQUEST_INPUT, GPIOHANDLE_REQUEST_OUTPUT, GPIOHANDLE_REQUEST_OUTPUT|GPIOHANDLE_REQUEST_OPEN_DRAIN, GPIOHANDLE_REQUEST_OUTPUT|GPIOHANDLE_REQUEST_OPEN_SOURCE };
-  static const unsigned pull[] = { 0, GPIOHANDLE_REQUEST_BIAS_DISABLE, GPIOHANDLE_REQUEST_BIAS_PULL_UP, GPIOHANDLE_REQUEST_BIAS_PULL_DOWN };
-  static const unsigned active[] = { 0, GPIOHANDLE_REQUEST_ACTIVE_LOW };
+  static const unsigned mode[] = {GPIOHANDLE_REQUEST_INPUT, GPIOHANDLE_REQUEST_OUTPUT,
+                                  GPIOHANDLE_REQUEST_OUTPUT | GPIOHANDLE_REQUEST_OPEN_DRAIN,
+                                  GPIOHANDLE_REQUEST_OUTPUT | GPIOHANDLE_REQUEST_OPEN_SOURCE};
+  static const unsigned pull[] = {0, GPIOHANDLE_REQUEST_BIAS_DISABLE, GPIOHANDLE_REQUEST_BIAS_PULL_UP,
+                                  GPIOHANDLE_REQUEST_BIAS_PULL_DOWN};
+  static const unsigned active[] = {0, GPIOHANDLE_REQUEST_ACTIVE_LOW};
   auto flags = mode[mConfig.mReadWriteMode] | pull[mConfig.mBiasMode] | active[mConfig.mActiveLow];
 
   if (mConfig.mReadWriteMode == Config::Input) {
@@ -76,7 +77,9 @@ const char* GPIOChipController::init() {
 
     if (ioctl(fd, GPIO_GET_LINEEVENT_IOCTL, &erq) == -1) {
       close(fd);
-      DEVLOG_ERROR("[GPIOChipController::init] Could not acquire input events from GPIO chip %i line %i flags 0x%x: %s\n", mConfig.mChipNumber, mConfig.mLineNumber, erq.handleflags, strerror(errno));
+      DEVLOG_ERROR(
+          "[GPIOChipController::init] Could not acquire input events from GPIO chip %i line %i flags 0x%x: %s\n",
+          mConfig.mChipNumber, mConfig.mLineNumber, erq.handleflags, strerror(errno));
       return scmFailedToAcquireLine;
     }
     mFd = erq.fd;
@@ -88,14 +91,16 @@ const char* GPIOChipController::init() {
     hrq.flags = flags;
     if (ioctl(fd, GPIO_GET_LINEHANDLE_IOCTL, &hrq) == -1) {
       close(fd);
-      DEVLOG_ERROR("[GPIOChipController::init] Could not acquire GPIO chip %i line %i flags 0x%x: %s\n", mConfig.mChipNumber, mConfig.mLineNumber, hrq.flags, strerror(errno));
+      DEVLOG_ERROR("[GPIOChipController::init] Could not acquire GPIO chip %i line %i flags 0x%x: %s\n",
+                   mConfig.mChipNumber, mConfig.mLineNumber, hrq.flags, strerror(errno));
       return scmFailedToAcquireLine;
     }
     mFd = hrq.fd;
   }
   close(fd);
 
-  DEVLOG_INFO("[GPIOChipController::init] GPIO chip %i line %i flags 0x%x ready\n", mConfig.mChipNumber, mConfig.mLineNumber, flags);
+  DEVLOG_INFO("[GPIOChipController::init] GPIO chip %i line %i flags 0x%x ready\n", mConfig.mChipNumber,
+              mConfig.mLineNumber, flags);
   return nullptr;
 }
 
@@ -111,7 +116,7 @@ void GPIOChipController::deInit() {
 void GPIOChipController::runLoop() {
   if (mConfig.mReadWriteMode != Config::Input) {
     // output does not need any loop logic, values are written directly from the handle
-    while(isAlive() && !hasError()) {
+    while (isAlive() && !hasError()) {
       CThread::sleepThread(100);
     }
     return;
@@ -119,12 +124,14 @@ void GPIOChipController::runLoop() {
 
   struct gpiohandle_data data{};
   if (ioctl(mFd, GPIOHANDLE_GET_LINE_VALUES_IOCTL, &data) == -1) {
-    DEVLOG_ERROR("[GPIOChipController::runLoop] Could not read initial value of GPIO chip %i line %i: %s\n", mConfig.mChipNumber, mConfig.mLineNumber, strerror(errno));
+    DEVLOG_ERROR("[GPIOChipController::runLoop] Could not read initial value of GPIO chip %i line %i: %s\n",
+                 mConfig.mChipNumber, mConfig.mLineNumber, strerror(errno));
     mError = scmFailedToReadLine;
     return;
   }
   mValue = data.values[0];
-  DEVLOG_DEBUG("[GPIOChipController::runLoop] GPIO Chip %i line %i initial value %i\n", mConfig.mChipNumber, mConfig.mLineNumber, mValue);
+  DEVLOG_DEBUG("[GPIOChipController::runLoop] GPIO Chip %i line %i initial value %i\n", mConfig.mChipNumber,
+               mConfig.mLineNumber, mValue);
   if (mValue) {
     checkForInputChanges();
   }
@@ -135,7 +142,8 @@ void GPIOChipController::runLoop() {
     pfd.events = POLLIN;
 
     if (poll(&pfd, 1, 100) == -1) {
-      DEVLOG_ERROR("[GPIOChipController::runLoop] Could not wait for input events from GPIO chip %i line %i: %s\n", mConfig.mChipNumber, mConfig.mLineNumber, strerror(errno));
+      DEVLOG_ERROR("[GPIOChipController::runLoop] Could not wait for input events from GPIO chip %i line %i: %s\n",
+                   mConfig.mChipNumber, mConfig.mLineNumber, strerror(errno));
       mError = scmFailedToWatchLine;
       return;
     } else if (!(pfd.revents & POLLIN)) {
@@ -144,26 +152,30 @@ void GPIOChipController::runLoop() {
 
     struct gpioevent_data event{};
     if (read(mFd, &event, sizeof(event)) != sizeof(event)) {
-      DEVLOG_ERROR("[GPIOChipController::runLoop] Could not read event from GPIO chip %i line %i: %s\n", mConfig.mChipNumber, mConfig.mLineNumber, strerror(errno));
+      DEVLOG_ERROR("[GPIOChipController::runLoop] Could not read event from GPIO chip %i line %i: %s\n",
+                   mConfig.mChipNumber, mConfig.mLineNumber, strerror(errno));
       mError = scmFailedToReadLine;
       return;
     }
 
     mValue = (event.id == GPIOEVENT_EVENT_RISING_EDGE);
-    DEVLOG_DEBUG("[GPIOChipController::runLoop] GPIO Chip %i line %i value %i\n", mConfig.mChipNumber, mConfig.mLineNumber, mValue);
+    DEVLOG_DEBUG("[GPIOChipController::runLoop] GPIO Chip %i line %i value %i\n", mConfig.mChipNumber,
+                 mConfig.mLineNumber, mValue);
     checkForInputChanges();
   }
 }
 
 void GPIOChipController::handleChangeEvent(forte::core::io::IOHandle *) {
-    struct gpiohandle_data data{};
-    data.values[0] = mValue;
-    if (ioctl(mFd, GPIOHANDLE_SET_LINE_VALUES_IOCTL, &data) == -1) {
-      DEVLOG_ERROR("[GPIOChipController::runLoop] Could not write output data to GPIO chip %i line %i\n", mConfig.mChipNumber, mConfig.mLineNumber);
-      mError = scmFailedToWriteLine;
-    }
+  struct gpiohandle_data data{};
+  data.values[0] = mValue;
+  if (ioctl(mFd, GPIOHANDLE_SET_LINE_VALUES_IOCTL, &data) == -1) {
+    DEVLOG_ERROR("[GPIOChipController::runLoop] Could not write output data to GPIO chip %i line %i\n",
+                 mConfig.mChipNumber, mConfig.mLineNumber);
+    mError = scmFailedToWriteLine;
+  }
 }
 
-forte::core::io::IOHandle* GPIOChipController::initHandle(forte::core::io::IODeviceController::HandleDescriptor *paHandleDescriptor) {
+forte::core::io::IOHandle *
+GPIOChipController::initHandle(forte::core::io::IODeviceController::HandleDescriptor *paHandleDescriptor) {
   return new forte::core::io::IOHandleBit(this, paHandleDescriptor->mDirection, 0, 0, &mValue);
 }

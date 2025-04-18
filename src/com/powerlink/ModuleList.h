@@ -14,41 +14,41 @@
 
 #include <fortelist.h>
 
-class CModuleList{
+class CModuleList {
   public:
     CModuleList();
     ~CModuleList();
 
-    void addEntry(const char* paName, unsigned int paPiOffset, unsigned int paBitOffset, unsigned int paModuleNr);
+    void addEntry(const char *paName, unsigned int paPiOffset, unsigned int paBitOffset, unsigned int paModuleNr);
 
-    int getModuleNr(const char* paName, unsigned int paPiOffset, unsigned int paBitOffset);
+    int getModuleNr(const char *paName, unsigned int paPiOffset, unsigned int paBitOffset);
 
-    int getModuleNr(const char* paName, unsigned int paOccurence);
+    int getModuleNr(const char *paName, unsigned int paOccurence);
 
-    int getNrOfModules(const char* paName);
+    int getNrOfModules(const char *paName);
 
-    bool moduleNameExist(const char* paName);
+    bool moduleNameExist(const char *paName);
 
   private:
-    class IoModule{
+    class IoModule {
       public:
-        IoModule(const char* paName, unsigned int paPiOffset, unsigned int paBitOffset, unsigned int paModuleNr);
+        IoModule(const char *paName, unsigned int paPiOffset, unsigned int paBitOffset, unsigned int paModuleNr);
         ~IoModule();
 
-        char* mName;
+        char *mName;
         unsigned int mPiOffset;
         unsigned int mBitOffset;
 
         unsigned int mModuleNr;
 
       private:
-        IoModule(const IoModule& paObj);
-        IoModule& operator=(const IoModule& paObj);
+        IoModule(const IoModule &paObj);
+        IoModule &operator=(const IoModule &paObj);
     };
 
-    //std::vector<IoModule*> mModules;
+    // std::vector<IoModule*> mModules;
 
-    typedef CSinglyLinkedList<IoModule*> TModuleList;
+    typedef CSinglyLinkedList<IoModule *> TModuleList;
     TModuleList mModules;
 
     unsigned int mNumberOfModules;

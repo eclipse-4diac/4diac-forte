@@ -47,10 +47,12 @@ enum ETypeOfIO {
   MOTOR_ROT,
 };
 
-class CLMSEV3ProcessInterface : public CProcessInterfaceBase{
+class CLMSEV3ProcessInterface : public CProcessInterfaceBase {
 
   public:
-    CLMSEV3ProcessInterface(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec& paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId);
+    CLMSEV3ProcessInterface(forte::core::CFBContainer &paContainer,
+                            const SFBInterfaceSpec &paInterfaceSpec,
+                            const CStringDictionary::TStringId paInstanceNameId);
     ~CLMSEV3ProcessInterface() override;
 
   protected:
@@ -64,7 +66,6 @@ class CLMSEV3ProcessInterface : public CProcessInterfaceBase{
     bool writeDWord();
 
   private:
-
     static const std::string scmLEDID;
     static const std::string scmSensorID;
     static const std::string scmSensorWID;
@@ -88,11 +89,10 @@ class CLMSEV3ProcessInterface : public CProcessInterfaceBase{
     static const std::string scmPositionID;
     static const std::string scmRotID;
 
-    static const char * const scmOK;
-    static const char * const scmNotInitialised;
-    static const char * const scmCouldNotRead;
-    static const char * const scmCouldNotWrite;
-
+    static const char *const scmOK;
+    static const char *const scmNotInitialised;
+    static const char *const scmCouldNotRead;
+    static const char *const scmCouldNotWrite;
 
     bool setupLED(const std::vector<std::string> &paParamList, bool paIsInput);
     bool setupSensor(const std::vector<std::string> &paParamList, bool paIsInput);
@@ -103,11 +103,10 @@ class CLMSEV3ProcessInterface : public CProcessInterfaceBase{
     /**
      * return: 0 if no error, 1 if it is not initialized, 2 if it couldn't read
      */
-    int readNumberFromFile(TForteInt32* paResult);
+    int readNumberFromFile(TForteInt32 *paResult);
 
     bool setupSensorMode(const std::vector<std::string> &paParamList, bool paIsInput);
     bool setupSensorValue(const std::vector<std::string> &paParamList);
-
 
     std::vector<std::string> generateParameterList();
     static int findNumberFromPort(const std::string &paBasePath, const std::string &paEv3Port);
@@ -115,11 +114,11 @@ class CLMSEV3ProcessInterface : public CProcessInterfaceBase{
     std::fstream mFile; //!< the file to be used for this process interface instance
     int mnTypeOfIO;
     int mnNoOfBits;
-    struct st_ButtonVariables* mstButtonVariables;
+    struct st_ButtonVariables *mstButtonVariables;
     std::vector<std::string> mModes;
 };
 
-//tell the IX and QX FB that this is the process interface to be used
+// tell the IX and QX FB that this is the process interface to be used
 typedef CLMSEV3ProcessInterface CProcessInterface;
 
 #endif /* PROCESSINTERFACE_H_ */

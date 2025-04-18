@@ -26,7 +26,6 @@ USE_STRING_ID(Q);
 USE_STRING_ID(REQ);
 USE_STRING_ID(TIME);
 
-
 #include "criticalregion.h"
 #include "resource.h"
 
@@ -44,23 +43,35 @@ const TDataIOID FORTE_FB_TON::scmEOWith[] = {0, 1, scmWithListDelimiter};
 const TForteInt16 FORTE_FB_TON::scmEOWithIndexes[] = {0};
 const CStringDictionary::TStringId FORTE_FB_TON::scmEventOutputNames[] = {STRID(CNF)};
 const CStringDictionary::TStringId FORTE_FB_TON::scmEventOutputTypeIds[] = {STRID(Event)};
-const SFBInterfaceSpec FORTE_FB_TON::scmFBInterfaceSpec = {
-  1, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,
-  1, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes,
-  2, scmDataInputNames, scmDataInputTypeIds,
-  2, scmDataOutputNames, scmDataOutputTypeIds,
-  0, nullptr,
-  0, nullptr
-};
+const SFBInterfaceSpec FORTE_FB_TON::scmFBInterfaceSpec = {1,
+                                                           scmEventInputNames,
+                                                           scmEventInputTypeIds,
+                                                           scmEIWith,
+                                                           scmEIWithIndexes,
+                                                           1,
+                                                           scmEventOutputNames,
+                                                           scmEventOutputTypeIds,
+                                                           scmEOWith,
+                                                           scmEOWithIndexes,
+                                                           2,
+                                                           scmDataInputNames,
+                                                           scmDataInputTypeIds,
+                                                           2,
+                                                           scmDataOutputNames,
+                                                           scmDataOutputTypeIds,
+                                                           0,
+                                                           nullptr,
+                                                           0,
+                                                           nullptr};
 
-FORTE_FB_TON::FORTE_FB_TON(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_FB_TON::FORTE_FB_TON(const CStringDictionary::TStringId paInstanceNameId,
+                           forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId),
     conn_CNF(*this, 0),
     conn_IN(nullptr),
     conn_PT(nullptr),
     conn_Q(*this, 0, var_Q),
-    conn_ET(*this, 1, var_ET) {
-};
+    conn_ET(*this, 1, var_ET) {};
 
 void FORTE_FB_TON::setInitialValues() {
   var_IN = 0_BOOL;
@@ -70,20 +81,20 @@ void FORTE_FB_TON::setInitialValues() {
 }
 
 void FORTE_FB_TON::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventREQID:
-      if(!var_IN) {
+      if (!var_IN) {
         var_Q = false_BOOL;
         var_ET = 0_TIME;
         risingEdge = false;
         start = 0_TIME;
       } else {
-        if(!risingEdge) {
+        if (!risingEdge) {
           risingEdge = true;
           start = func_NOW_MONOTONIC();
         } else {
           count = func_SUB(func_NOW_MONOTONIC(), start);
-          if(func_LE(var_PT, count)) {
+          if (func_LE(var_PT, count)) {
             var_Q = true_BOOL;
             var_ET = var_PT;
           } else {
@@ -97,31 +108,29 @@ void FORTE_FB_TON::executeEvent(TEventID paEIID, CEventChainExecutionThread *con
 }
 
 void FORTE_FB_TON::readInputData(TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventREQID: {
       readData(0, var_IN, conn_IN);
       readData(1, var_PT, conn_PT);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 void FORTE_FB_TON::writeOutputData(TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventCNFID: {
       writeData(0, var_Q, conn_Q);
       writeData(1, var_ET, conn_ET);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 CIEC_ANY *FORTE_FB_TON::getDI(size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_IN;
     case 1: return &var_PT;
   }
@@ -129,7 +138,7 @@ CIEC_ANY *FORTE_FB_TON::getDI(size_t paIndex) {
 }
 
 CIEC_ANY *FORTE_FB_TON::getDO(size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_Q;
     case 1: return &var_ET;
   }
@@ -137,14 +146,14 @@ CIEC_ANY *FORTE_FB_TON::getDO(size_t paIndex) {
 }
 
 CEventConnection *FORTE_FB_TON::getEOConUnchecked(TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_CNF;
   }
   return nullptr;
 }
 
 CDataConnection **FORTE_FB_TON::getDIConUnchecked(TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_IN;
     case 1: return &conn_PT;
   }
@@ -152,7 +161,7 @@ CDataConnection **FORTE_FB_TON::getDIConUnchecked(TPortId paIndex) {
 }
 
 CDataConnection *FORTE_FB_TON::getDOConUnchecked(TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_Q;
     case 1: return &conn_ET;
   }

@@ -27,7 +27,6 @@
  */
 class CUA_ClientInformation {
   public:
-
     /**
      * Constructor of the class
      * @param paEndpoint Endpoint of the remote
@@ -90,7 +89,7 @@ class CUA_ClientInformation {
      * Getter of the endpoint
      * @return Endpoint of the clinet
      */
-    const std::string& getEndpoint() const {
+    const std::string &getEndpoint() const {
       return mEndpointUrl;
     }
 
@@ -98,7 +97,7 @@ class CUA_ClientInformation {
      * Getter of the mutex of the client
      * @return Mutex of the clinet
      */
-    inline CSyncObject& getMutex() {
+    inline CSyncObject &getMutex() {
       return mClientMutex;
     }
 
@@ -115,33 +114,33 @@ class CUA_ClientInformation {
      * @param paActionInfo Action to be performed
      * @return UA_STATUSCODE_GOOD is no problem occurred, other value otherwise
      */
-    UA_StatusCode executeRead(CActionInfo& paActionInfo);
+    UA_StatusCode executeRead(CActionInfo &paActionInfo);
 
     /**
      * Place the request to the OPC UA API for an asynchronous write of a remote variable
      * @param paActionInfo Action to be performed
      * @return UA_STATUSCODE_GOOD is no problem occurred, other value otherwise
      */
-    UA_StatusCode executeWrite(CActionInfo& paActionInfo);
+    UA_StatusCode executeWrite(CActionInfo &paActionInfo);
 
     /**
      * Place the request to the OPC UA API for an asynchronous method call of a remote variable
      * @param paActionInfo Action to be performed
      * @return UA_STATUSCODE_GOOD is no problem occurred, other value otherwise
      */
-    UA_StatusCode executeCallMethod(CActionInfo& paActionInfo);
+    UA_StatusCode executeCallMethod(CActionInfo &paActionInfo);
 
     /**
      * Add an action to the client
      * @param paActionInfo Action to be added
      */
-    void addAction(CActionInfo& paActionInfo);
+    void addAction(CActionInfo &paActionInfo);
 
     /**
      * Remove an action from the client
      * @param paActionInfo Action to be removed
      */
-    void removeAction(CActionInfo& paActionInfo);
+    void removeAction(CActionInfo &paActionInfo);
 
     /**
      * Check if an action was already initialized in the client
@@ -155,32 +154,39 @@ class CUA_ClientInformation {
      */
     class CUA_RemoteCallbackFunctions {
       public:
-
         /**
          * Async callback for read action
          */
-        static void readAsyncCallback(UA_Client *paClient, void *paUserdata, UA_UInt32 paRequestId, UA_ReadResponse *paResponse);
+        static void
+        readAsyncCallback(UA_Client *paClient, void *paUserdata, UA_UInt32 paRequestId, UA_ReadResponse *paResponse);
 
         /**
          * Async callback for write action
          */
-        static void writeAsyncCallback(UA_Client *paClient, void *paUserdata, UA_UInt32 paRequestId, UA_WriteResponse *paResponse);
+        static void
+        writeAsyncCallback(UA_Client *paClient, void *paUserdata, UA_UInt32 paRequestId, UA_WriteResponse *paResponse);
 
         /**
          * Async callback for method call action
          */
-        static void callMethodAsyncCallback(UA_Client *paClient, void *paUserdata, UA_UInt32 paRequestId, void *paResponse);
+        static void
+        callMethodAsyncCallback(UA_Client *paClient, void *paUserdata, UA_UInt32 paRequestId, void *paResponse);
 
         /**
          * Async callback for subscription action
          */
-        static void subscriptionValueChangedCallback(UA_Client *paClient, UA_UInt32 paSubId, void *paSubContext, UA_UInt32 paMonId, void *paMonContext,
-            UA_DataValue *paValue);
+        static void subscriptionValueChangedCallback(UA_Client *paClient,
+                                                     UA_UInt32 paSubId,
+                                                     void *paSubContext,
+                                                     UA_UInt32 paMonId,
+                                                     void *paMonContext,
+                                                     UA_DataValue *paValue);
 
         /**
          * Callback when the subscription (one for all monitored items) is deleted
          */
-        static void deleteSubscriptionCallback(UA_Client *paClient, UA_UInt32 paSubscriptionId, void *paSubscriptionContext);
+        static void
+        deleteSubscriptionCallback(UA_Client *paClient, UA_UInt32 paSubscriptionId, void *paSubscriptionContext);
 
         /**
          * Function called when the state of the client changed
@@ -192,23 +198,23 @@ class CUA_ClientInformation {
     };
 
   private:
-
     /**
-     *  this is the same structure as UA_VariableContext_Handle in localhandler, but couldn't find where to put without copying
-     *  since there's always some include issue
+     *  this is the same structure as UA_VariableContext_Handle in localhandler, but couldn't find where to put without
+     * copying since there's always some include issue
      */
     struct UA_SubscribeContext_Handle {
-        UA_SubscribeContext_Handle(CActionInfo& paActionInfo, size_t paPortIndex) :
-            mActionInfo(paActionInfo), mPortIndex(paPortIndex) {
+        UA_SubscribeContext_Handle(CActionInfo &paActionInfo, size_t paPortIndex) :
+            mActionInfo(paActionInfo),
+            mPortIndex(paPortIndex) {
         }
 
-        //default copy constructor should be enough
+        // default copy constructor should be enough
 
-        bool operator==(UA_SubscribeContext_Handle const& paRightObject) const {
+        bool operator==(UA_SubscribeContext_Handle const &paRightObject) const {
           return (&mActionInfo == &paRightObject.mActionInfo && mPortIndex == paRightObject.mPortIndex);
         }
 
-        CActionInfo& mActionInfo;
+        CActionInfo &mActionInfo;
         size_t mPortIndex;
     };
 
@@ -216,13 +222,14 @@ class CUA_ClientInformation {
      * Encapsulation of the information needed for a monitoring item (a variable subsription)
      */
     struct UA_MonitoringItemInfo {
-        UA_MonitoringItemInfo(const UA_SubscribeContext_Handle& paVariableInfo, UA_UInt32 paMonitoringItemId = 0) :
-            mVariableInfo(paVariableInfo), mMonitoringItemId(paMonitoringItemId) {
+        UA_MonitoringItemInfo(const UA_SubscribeContext_Handle &paVariableInfo, UA_UInt32 paMonitoringItemId = 0) :
+            mVariableInfo(paVariableInfo),
+            mMonitoringItemId(paMonitoringItemId) {
         }
 
-        //default copy constructor should be enough
+        // default copy constructor should be enough
 
-        bool operator==(UA_MonitoringItemInfo const& paRightObject) const {
+        bool operator==(UA_MonitoringItemInfo const &paRightObject) const {
           return (mVariableInfo == paRightObject.mVariableInfo && mMonitoringItemId == paRightObject.mMonitoringItemId);
         }
 
@@ -231,12 +238,11 @@ class CUA_ClientInformation {
     };
 
     /**
-     * Encapsulation of the information needed the subscription. In a subscription you can have many monitored items. We have only one sunscription,
-     * and put all monitored items in it
+     * Encapsulation of the information needed the subscription. In a subscription you can have many monitored items. We
+     * have only one sunscription, and put all monitored items in it
      */
     struct UA_subscriptionInfo {
-        UA_subscriptionInfo() :
-            mSubscriptionId(0) {
+        UA_subscriptionInfo() : mSubscriptionId(0) {
         }
 
         UA_UInt32 mSubscriptionId;
@@ -248,16 +254,17 @@ class CUA_ClientInformation {
      */
     class UA_RemoteCallHandle {
       public:
-        UA_RemoteCallHandle(CActionInfo& paActionInfo, CUA_ClientInformation& paClientInformation) :
-            mActionInfo(paActionInfo), mClientInformation(paClientInformation) {
+        UA_RemoteCallHandle(CActionInfo &paActionInfo, CUA_ClientInformation &paClientInformation) :
+            mActionInfo(paActionInfo),
+            mClientInformation(paClientInformation) {
         }
         ~UA_RemoteCallHandle() = default;
 
-        CActionInfo& mActionInfo;
-        CUA_ClientInformation& mClientInformation;
+        CActionInfo &mActionInfo;
+        CUA_ClientInformation &mClientInformation;
 
         UA_RemoteCallHandle(const UA_RemoteCallHandle &paObj) = delete;
-        UA_RemoteCallHandle& operator=(const UA_RemoteCallHandle& other) = delete;
+        UA_RemoteCallHandle &operator=(const UA_RemoteCallHandle &other) = delete;
     };
 
     /**
@@ -284,21 +291,21 @@ class CUA_ClientInformation {
      * @param paActionInfo Action to be initialized
      * @return True if no error occurred, false otherwise
      */
-    bool initializeAction(CActionInfo& paActionInfo);
+    bool initializeAction(CActionInfo &paActionInfo);
 
     /**
      * A method call method needs special care. This function takes care of it
      * @param paActionInfo Method call action to be initialized
      * @return True if no error occurred, false otherwise
      */
-    bool initializeCallMethod(CActionInfo& paActionInfo);
+    bool initializeCallMethod(CActionInfo &paActionInfo);
 
     /**
      * A subscription needs special care. This function takes care of it
      * @param paActionInfo Subscribe action to be initialized
      * @return True if no error occurred, false otherwise
      */
-    bool initializeSubscription(CActionInfo& paActionInfo);
+    bool initializeSubscription(CActionInfo &paActionInfo);
 
     /**
      * Create the subscription in the OPC UA stack
@@ -315,7 +322,8 @@ class CUA_ClientInformation {
     bool addMonitoringItem(UA_MonitoringItemInfo &paMonitoringInfo, const UA_NodeId &paNodeId);
 
     /**
-     * Increments the amount of missing async calls to be performed. A subscription keeps always the missing calls at least at
+     * Increments the amount of missing async calls to be performed. A subscription keeps always the missing calls at
+     * least at
      */
     void addAsyncCall();
 
@@ -328,7 +336,7 @@ class CUA_ClientInformation {
      * Uninitialze an action
      * @param paActionInfo Action to be uninitialized
      */
-    void uninitializeAction(CActionInfo& paActionInfo);
+    void uninitializeAction(CActionInfo &paActionInfo);
 
     /**
      * Uninitialze a subscription action
@@ -344,10 +352,9 @@ class CUA_ClientInformation {
 
   public:
     CUA_ClientInformation(const CUA_ClientInformation &paObj) = delete;
-    CUA_ClientInformation& operator=(const CUA_ClientInformation& other) = delete;
+    CUA_ClientInformation &operator=(const CUA_ClientInformation &other) = delete;
 
   private:
-
     /**
      * Endpoint of the remote
      */
@@ -379,8 +386,9 @@ class CUA_ClientInformation {
     UA_subscriptionInfo mSubscriptionInfo;
 
     /**
-     * Amount of missing async calls to be performed. Read, write and method call add one when they are called, and reduced in the callbacks
-     * Subscription increases one when created, and only reduced when no more subscription are present
+     * Amount of missing async calls to be performed. Read, write and method call add one when they are called, and
+     * reduced in the callbacks Subscription increases one when created, and only reduced when no more subscription are
+     * present
      */
     size_t mMissingAsyncCalls{0};
 
@@ -395,26 +403,31 @@ class CUA_ClientInformation {
     CSinglyLinkedList<CActionInfo *> mActionsToBeInitialized;
 
     /**
-     * Indicates if the client should wait scmConnectionRetryTimeoutNano before trying to reconnect. This is true when an action fails to connect once
+     * Indicates if the client should wait scmConnectionRetryTimeoutNano before trying to reconnect. This is true when
+     * an action fails to connect once
      */
     bool mNeedsReconnection{false};
 
     /**
-     * Indicates if the client should wait scmInitializeActionRetryNano before trying to initialize the actions. This is true when an action fails, so
-     * it doesn't fail too often. If an action is added after another fail, this becomes false, so the new action can be initialized and doesn't have to wait
+     * Indicates if the client should wait scmInitializeActionRetryNano before trying to initialize the actions. This is
+     * true when an action fails, so it doesn't fail too often. If an action is added after another fail, this becomes
+     * false, so the new action can be initialized and doesn't have to wait
      */
     bool mWaitToInitializeActions{false};
 
     /**
      * Indicate the client is about to be deleted, so it's not added to new lists.
-     * The reason behind this variable, is because the following race condition happened in COPC_UA_Remote_Handler::removeClientFromAllLists
+     * The reason behind this variable, is because the following race condition happened in
+     * COPC_UA_Remote_Handler::removeClientFromAllLists
      *  - The client is removed from the connection list
-     *  - Before removing from the normal handler list, the async call fails and the client is reconfigured and re-added to the connection handler
+     *  - Before removing from the normal handler list, the async call fails and the client is reconfigured and re-added
+     * to the connection handler
      *  - The Client is deleted from allClients lists
      *  - The Client is deleted (C++ wise)
      *  - Since the connectionHandler has still the client, it tries to use it and crash
      *
-     *  So this variable prevents the re-adding to any iteration list if it was set already to invalid, when is about to be deleted
+     *  So this variable prevents the re-adding to any iteration list if it was set already to invalid, when is about to
+     * be deleted
      */
     bool mIsClientValid{true};
 
@@ -436,18 +449,17 @@ class CUA_ClientInformation {
     /**
      * Time in nanoseconds that the client should wait before another reconnection try
      */
-    static const uint_fast64_t scmConnectionRetryTimeoutNano = static_cast<uint_fast64_t>(8E9); //8s
+    static const uint_fast64_t scmConnectionRetryTimeoutNano = static_cast<uint_fast64_t>(8E9); // 8s
 
     /**
      * Time in nanoseconds that the client should wait before try to initialize the actions
      */
-    static const uint_fast64_t scmInitializeActionRetryNano = static_cast<uint_fast64_t>(3E9); //3s
+    static const uint_fast64_t scmInitializeActionRetryNano = static_cast<uint_fast64_t>(3E9); // 3s
 
     /**
      * Time in milliseconds for connection timeout configured in the OPC UA stack client
      */
-    static const UA_UInt32 scmClientTimeoutInMilli = static_cast<UA_UInt32>(5E3); //5s
-
+    static const UA_UInt32 scmClientTimeoutInMilli = static_cast<UA_UInt32>(5E3); // 5s
 };
 
 #endif /* SRC_MODULES_OPC_UA_OPCUA_CLIENT_INFORMATION_H_ */

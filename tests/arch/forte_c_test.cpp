@@ -17,14 +17,13 @@
 #include <chrono>
 #include <thread>
 
-BOOST_AUTO_TEST_CASE(forte_c_interface)
-{
+BOOST_AUTO_TEST_CASE(forte_c_interface) {
   TForteInstance instance{nullptr};
 
   // forteStartInstance
   // invalid instance result
   BOOST_TEST(forteStartInstance(61499, nullptr) == FORTE_WRONG_PARAMETERS);
-  
+
   // invalid port number, greater than maximum 65535
   BOOST_TEST(forteStartInstance(65536, &instance) == FORTE_WRONG_PARAMETERS);
 
@@ -32,17 +31,17 @@ BOOST_AUTO_TEST_CASE(forte_c_interface)
   char ipPortFlag[] = "-c";
 
   int validArgc = 1;
-  char* validArgV[] = {executable};
+  char *validArgV[] = {executable};
 
   // invalid ipPort address and parameter
   {
     int argc = 3;
     char invalidAddress[] = "localhost";
-    char* argv[] = {executable, ipPortFlag, invalidAddress};
+    char *argv[] = {executable, ipPortFlag, invalidAddress};
     BOOST_TEST(forteStartInstanceGeneric(argc, argv, nullptr) == FORTE_WRONG_PARAMETERS);
 
     char nonExistingParameter[] = "--unknown";
-    char* argv2[] = {executable, nonExistingParameter};
+    char *argv2[] = {executable, nonExistingParameter};
     BOOST_TEST(forteStartInstanceGeneric(argc, argv2, nullptr) == FORTE_WRONG_PARAMETERS);
   }
 
@@ -70,7 +69,7 @@ BOOST_AUTO_TEST_CASE(forte_c_interface)
     forteRequestStopInstance(instance2);
     forteWaitForInstanceToStop(instance2);
 
-    // let it sleep for some time to since if too fast, the stopping signal 
+    // let it sleep for some time to since if too fast, the stopping signal
     // comes too early
     std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 
@@ -84,4 +83,3 @@ BOOST_AUTO_TEST_CASE(forte_c_interface)
     BOOST_TEST(forteGlobalDeinitialize() == 0);
   }
 }
-

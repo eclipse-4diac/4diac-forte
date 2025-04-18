@@ -19,7 +19,7 @@
 #include "forte_arrowheadevent.h"
 
 class CIEC_PublishEvent : public CIEC_STRUCT {
-  DECLARE_FIRMWARE_DATATYPE(PublishEvent)
+    DECLARE_FIRMWARE_DATATYPE(PublishEvent)
 
   public:
     CIEC_PublishEvent();
@@ -27,15 +27,15 @@ class CIEC_PublishEvent : public CIEC_STRUCT {
     ~CIEC_PublishEvent() override = default;
 
     CIEC_ArrowheadSystem &source() {
-      return *static_cast<CIEC_ArrowheadSystem*>(&getMembers()[0]);
+      return *static_cast<CIEC_ArrowheadSystem *>(&getMembers()[0]);
     }
 
     CIEC_ArrowheadEvent &event() {
-      return *static_cast<CIEC_ArrowheadEvent*>(&getMembers()[1]);
+      return *static_cast<CIEC_ArrowheadEvent *>(&getMembers()[1]);
     }
 
     CIEC_WSTRING &deliveryCompleteUri() {
-      return *static_cast<CIEC_WSTRING*>(&getMembers()[2]);
+      return *static_cast<CIEC_WSTRING *>(&getMembers()[2]);
     }
 
   private:

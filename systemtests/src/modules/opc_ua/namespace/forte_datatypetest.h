@@ -20,7 +20,7 @@
 #include "forte_bool.h"
 
 class CIEC_DataTypeTest : public CIEC_STRUCT {
-  DECLARE_FIRMWARE_DATATYPE(DataTypeTest)
+    DECLARE_FIRMWARE_DATATYPE(DataTypeTest)
 
   public:
     CIEC_DataTypeTest();
@@ -33,7 +33,7 @@ class CIEC_DataTypeTest : public CIEC_STRUCT {
       return 3;
     }
 
-    const CStringDictionary::TStringId* elementNames() const override {
+    const CStringDictionary::TStringId *elementNames() const override {
       return scmElementNames;
     }
 

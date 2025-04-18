@@ -17,14 +17,18 @@
 #include <sstream>
 #include "i2cprocessinterface.h"
 
-const char * const CI2CProcessInterface::scmOK = "OK";
-const char * const CI2CProcessInterface::scmNotInitialised = "Not initialised";
-const char * const CI2CProcessInterface::scmInvalidParam = "Invalid parameter";
-const char * const CI2CProcessInterface::scmCouldNotRead = "Could not read value";
-const char * const CI2CProcessInterface::scmCouldNotWrite = "Could not write value";
+const char *const CI2CProcessInterface::scmOK = "OK";
+const char *const CI2CProcessInterface::scmNotInitialised = "Not initialised";
+const char *const CI2CProcessInterface::scmInvalidParam = "Invalid parameter";
+const char *const CI2CProcessInterface::scmCouldNotRead = "Could not read value";
+const char *const CI2CProcessInterface::scmCouldNotWrite = "Could not write value";
 
-CI2CProcessInterface::CI2CProcessInterface(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec& paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId) :
-    CProcessInterfaceBase(paContainer, paInterfaceSpec, paInstanceNameId), mFd(-1), mValueAddress(-1){
+CI2CProcessInterface::CI2CProcessInterface(forte::core::CFBContainer &paContainer,
+                                           const SFBInterfaceSpec &paInterfaceSpec,
+                                           const CStringDictionary::TStringId paInstanceNameId) :
+    CProcessInterfaceBase(paContainer, paInterfaceSpec, paInstanceNameId),
+    mFd(-1),
+    mValueAddress(-1) {
 }
 
 CI2CProcessInterface::~CI2CProcessInterface() = default;
@@ -34,11 +38,11 @@ bool CI2CProcessInterface::initialise(bool paIsInput, CEventChainExecutionThread
   STATUS() = scmNotInitialised;
   std::vector<std::string> paramsList(generateParameterList());
 
-  if(3 == paramsList.size()){
+  if (3 == paramsList.size()) {
     CIEC_INT param;
-    param.fromString(paramsList[1].c_str()); //TODO check return value
+    param.fromString(paramsList[1].c_str()); // TODO check return value
     int deviceAddress = param;
-    param.fromString(paramsList[2].c_str()); //TODO check return value
+    param.fromString(paramsList[2].c_str()); // TODO check return value
     mValueAddress = param;
 
     std::string devPath("/dev/i2c-");
@@ -47,8 +51,8 @@ bool CI2CProcessInterface::initialise(bool paIsInput, CEventChainExecutionThread
     STATUS() = scmNotInitialised;
 
     mFd = open(devPath.c_str(), O_RDWR);
-    if(0 <= mFd){
-      if(0 <= ioctl(mFd, scmSetSlaveId, deviceAddress)){
+    if (0 <= mFd) {
+      if (0 <= ioctl(mFd, scmSetSlaveId, deviceAddress)) {
         STATUS() = scmOK;
         retVal = true;
       }
@@ -57,60 +61,59 @@ bool CI2CProcessInterface::initialise(bool paIsInput, CEventChainExecutionThread
   return retVal;
 }
 
-bool CI2CProcessInterface::deinitialise(){
+bool CI2CProcessInterface::deinitialise() {
   close(mFd);
   STATUS() = scmOK;
   return true;
 }
 
-bool CI2CProcessInterface::readPin(){
+bool CI2CProcessInterface::readPin() {
   bool retVal = false;
   TForteByte res;
 
-  if(1 == read(mFd, &res, 1)){
+  if (1 == read(mFd, &res, 1)) {
     IN_X() = (res & (1 << mValueAddress)) ? true : false;
     retVal = true;
     STATUS() = scmOK;
-  }
-  else{
+  } else {
     STATUS() = scmCouldNotRead;
   }
 
   return retVal;
 }
 
-bool CI2CProcessInterface::writePin(){
+bool CI2CProcessInterface::writePin() {
   bool retVal = false;
   TForteByte byteValue;
 
-  if(1 == read(mFd, &byteValue, 1)){
-    if(OUT_X()){
+  if (1 == read(mFd, &byteValue, 1)) {
+    if (OUT_X()) {
       byteValue = static_cast<TForteByte>(byteValue | static_cast<TForteByte>(1 << mValueAddress));
-    }
-    else{
+    } else {
       byteValue = byteValue & static_cast<TForteByte>(~(1 << mValueAddress));
     }
-    if(1 == write(mFd, &byteValue, 1)){
+    if (1 == write(mFd, &byteValue, 1)) {
       retVal = true;
       STATUS() = scmOK;
-    }else{
+    } else {
       STATUS() = scmCouldNotWrite;
     }
-  }else{
+  } else {
     STATUS() = scmCouldNotWrite;
   }
   return retVal;
 }
 
-bool CI2CProcessInterface::readWord(){
+bool CI2CProcessInterface::readWord() {
   bool retVal = true;
   TForteByte readValue[2];
   STATUS() = scmOK;
 
-  //assume in the simple case that a simple read of 2 bytes is sufficient.
-  if(2 == read(mFd, readValue, 2)){
-    IN_W() = static_cast<TForteWord>(static_cast<TForteWord>(readValue[0]) + (static_cast<TForteWord>(readValue[1]) << 8));
-  }else{
+  // assume in the simple case that a simple read of 2 bytes is sufficient.
+  if (2 == read(mFd, readValue, 2)) {
+    IN_W() =
+        static_cast<TForteWord>(static_cast<TForteWord>(readValue[0]) + (static_cast<TForteWord>(readValue[1]) << 8));
+  } else {
     STATUS() = scmCouldNotRead;
     retVal = false;
   }
@@ -118,15 +121,15 @@ bool CI2CProcessInterface::readWord(){
   return retVal;
 }
 
-bool CI2CProcessInterface::writeWord(){
+bool CI2CProcessInterface::writeWord() {
   bool retVal = true;
-  TForteByte writeValue[3] = { mValueAddress };
+  TForteByte writeValue[3] = {mValueAddress};
   STATUS() = scmOK;
 
   writeValue[1] = static_cast<TForteByte>(OUT_W().operator unsigned short int());
   writeValue[2] = static_cast<TForteByte>(OUT_W().operator unsigned short int() >> 8);
 
-  if(3 != write(mFd, writeValue, 3)){
+  if (3 != write(mFd, writeValue, 3)) {
     STATUS() = scmCouldNotWrite;
     retVal = false;
   }
@@ -134,13 +137,13 @@ bool CI2CProcessInterface::writeWord(){
   return retVal;
 }
 
-//TODO this is duplicated code from LMS EV3 process interface
-std::vector<std::string> CI2CProcessInterface::generateParameterList(){
+// TODO this is duplicated code from LMS EV3 process interface
+std::vector<std::string> CI2CProcessInterface::generateParameterList() {
   std::stringstream streamBuf(std::string(PARAMS().getValue()));
   std::string segment;
   std::vector<std::string> retVal;
 
-  while(std::getline(streamBuf, segment, '.')){ //Separate the PARAMS input by '.' for easier processing
+  while (std::getline(streamBuf, segment, '.')) { // Separate the PARAMS input by '.' for easier processing
     retVal.push_back(segment);
   }
   return retVal;

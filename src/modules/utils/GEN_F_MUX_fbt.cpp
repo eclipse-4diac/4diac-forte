@@ -24,7 +24,6 @@ USE_STRING_ID(Event);
 USE_STRING_ID(GEN_F_MUX);
 USE_STRING_ID(WSTRING);
 
-
 #include <ctype.h>
 #include <stdio.h>
 
@@ -34,42 +33,42 @@ USE_STRING_ID(WSTRING);
 
 DEFINE_GENERIC_FIRMWARE_FB(GEN_F_MUX, STRID(GEN_F_MUX));
 
-const CStringDictionary::TStringId GEN_F_MUX::scmEventOutputNames[] = { STRID(EO) };
+const CStringDictionary::TStringId GEN_F_MUX::scmEventOutputNames[] = {STRID(EO)};
 const CStringDictionary::TStringId GEN_F_MUX::scmEventOutputTypeIds[] = {STRID(Event)};
 
 GEN_F_MUX::GEN_F_MUX(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
-    CGenFunctionBlock<CFunctionBlock>(paContainer, paInstanceNameId){
+    CGenFunctionBlock<CFunctionBlock>(paContainer, paInstanceNameId) {
 }
 
 void GEN_F_MUX::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
 
-  if(static_cast<size_t>(paEIID) < mEInputs) {
+  if (static_cast<size_t>(paEIID) < mEInputs) {
 
     size_t startIndex = paEIID * mDOutputs;
     bool status = true;
 
-    for(size_t input_index = startIndex, output_index = 2; input_index < startIndex + mDOutputs; input_index++, output_index++) {
+    for (size_t input_index = startIndex, output_index = 2; input_index < startIndex + mDOutputs;
+         input_index++, output_index++) {
 
       CIEC_ANY *p_dataInput = getDI(static_cast<unsigned int>(input_index));
       CIEC_ANY *p_dataOutput = getDO(static_cast<unsigned int>(output_index));
 
       // check whether datatypes match
-      if(p_dataInput != nullptr && p_dataOutput != nullptr && p_dataInput->getDataTypeID() == p_dataOutput->getDataTypeID()){
+      if (p_dataInput != nullptr && p_dataOutput != nullptr &&
+          p_dataInput->getDataTypeID() == p_dataOutput->getDataTypeID()) {
 
         p_dataOutput->setValue(*p_dataInput);
         status = true && status;
-      }
-      else{
+      } else {
         status = false;
       }
     }
 
-    if(status == true){
-      *static_cast<CIEC_BOOL*>(getDO(0)) = CIEC_BOOL(true);
+    if (status == true) {
+      *static_cast<CIEC_BOOL *>(getDO(0)) = CIEC_BOOL(true);
       *static_cast<CIEC_WSTRING *>(getDO(1)) = CIEC_WSTRING("OK");
-    }
-    else{
-      *static_cast<CIEC_BOOL*>(getDO(0)) = CIEC_BOOL(false);
+    } else {
+      *static_cast<CIEC_BOOL *>(getDO(0)) = CIEC_BOOL(false);
       *static_cast<CIEC_WSTRING *>(getDO(1)) = CIEC_WSTRING("Datatype ERROR");
     }
 
@@ -78,14 +77,14 @@ void GEN_F_MUX::executeEvent(TEventID paEIID, CEventChainExecutionThread *const 
 }
 
 void GEN_F_MUX::readInputData(TEventID paEI) {
-  for(TPortId i = 0; i < mDOutputs; ++i) {
+  for (TPortId i = 0; i < mDOutputs; ++i) {
     TPortId index = paEI * mDOutputs + i;
     readData(index, *mDIs[index], mDIConns[index]);
   }
 }
 
 void GEN_F_MUX::writeOutputData(TEventID) {
-  for(TPortId i = 0; i < getFBInterfaceSpec().mNumDOs; ++i) {
+  for (TPortId i = 0; i < getFBInterfaceSpec().mNumDOs; ++i) {
     writeData(i, *mDOs[i], mDOConns[i]);
   }
 }
@@ -98,27 +97,28 @@ bool GEN_F_MUX::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec
 
   TIdentifier typeIdString;
 
-  memcpy(typeIdString, paConfigString, (strlen(paConfigString) > cgIdentifierLength) ? cgIdentifierLength : strlen(paConfigString) + 1); //plus 1 for the null character
+  memcpy(typeIdString, paConfigString,
+         (strlen(paConfigString) > cgIdentifierLength) ? cgIdentifierLength
+                                                       : strlen(paConfigString) + 1); // plus 1 for the null character
   typeIdString[cgIdentifierLength] = '\0';
 
   size_t inlength = strlen(typeIdString);
 
-  for(index = 0; index < (int) inlength - 1; index++){
+  for (index = 0; index < (int) inlength - 1; index++) {
 
-    if(typeIdString[index] == '_'){
+    if (typeIdString[index] == '_') {
 
-      //make sure that there is no invalid index
-      if(index - 1 >= 0){
+      // make sure that there is no invalid index
+      if (index - 1 >= 0) {
         memcpy(&baseName[0], &typeIdString[index - 1], 5); // F_MUX ... prefix has 5 characters
         baseName[5] = '\0';
 
-        //check if the prefix F_MUX exists; in this case, the next "_" separates the parameters
-        if(strcmp(baseName, "F_MUX") == 0){
+        // check if the prefix F_MUX exists; in this case, the next "_" separates the parameters
+        if (strcmp(baseName, "F_MUX") == 0) {
           continue;
         }
-      }
-      else{
-        //error on creating the FB; this would mean that the Typename starts with "_"
+      } else {
+        // error on creating the FB; this would mean that the Typename starts with "_"
         return false;
       }
 
@@ -126,11 +126,11 @@ bool GEN_F_MUX::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec
       break;
     }
   }
-  if(paramDO != nullptr){
+  if (paramDO != nullptr) {
 
-    for(index = index + 1; index < (int) inlength - 1; index++){
+    for (index = index + 1; index < (int) inlength - 1; index++) {
 
-      if(typeIdString[index] == '_'){
+      if (typeIdString[index] == '_') {
 
         typeIdString[index] = '\0';
         paramDO = &(typeIdString[index + 1]);
@@ -139,11 +139,10 @@ bool GEN_F_MUX::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec
     }
   }
 
-  if(paramDO == nullptr){
+  if (paramDO == nullptr) {
     return false;
-  }
-  else{
-    //set the data and event port numbers
+  } else {
+    // set the data and event port numbers
     mEInputs = static_cast<size_t>(forte::core::util::strtoul(paramEI, nullptr, 10));
     mDOutputs = static_cast<size_t>(forte::core::util::strtoul(paramDO, nullptr, 10));
     mEOutputs = 1;
@@ -151,29 +150,29 @@ bool GEN_F_MUX::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec
 
     DEVLOG_DEBUG("EIs: %d; DIs: %d; EOs: %d; DOs: %d \n", mEInputs, mDInputs, mEOutputs, mDOutputs);
 
-    //return with error if there are not enough event inputs (use common merge FB instead!!)
-    if(mEInputs < 2){
+    // return with error if there are not enough event inputs (use common merge FB instead!!)
+    if (mEInputs < 2) {
       DEVLOG_ERROR("At least 2 Event Inputs need to be set\n");
       return false;
     }
   }
 
-  //now the number of needed eventInputs and dataOutputs are available in the integer array
-  //create the eventInputs
-  if(mEInputs < CFunctionBlock::scmMaxInterfaceEvents && mDInputs < CFunctionBlock::scmMaxInterfaceEvents){
-    //create the eventInputs
+  // now the number of needed eventInputs and dataOutputs are available in the integer array
+  // create the eventInputs
+  if (mEInputs < CFunctionBlock::scmMaxInterfaceEvents && mDInputs < CFunctionBlock::scmMaxInterfaceEvents) {
+    // create the eventInputs
     mEventInputNames = std::make_unique<CStringDictionary::TStringId[]>(mEInputs);
 
-    generateGenericInterfacePointNameArray("EI", mEventInputNames.get(),  mEInputs);
+    generateGenericInterfacePointNameArray("EI", mEventInputNames.get(), mEInputs);
 
-    //create the data inputs
+    // create the data inputs
     mDataInputNames = std::make_unique<CStringDictionary::TStringId[]>(mDInputs);
     mDataInputTypeIds = std::make_unique<CStringDictionary::TStringId[]>(mDInputs);
-    char diNames[cgIdentifierLength] = { "IN_" };
+    char diNames[cgIdentifierLength] = {"IN_"};
     size_t di_posIndex = 0;
-    for(size_t ei = 0; ei < mEInputs; ei++) {
+    for (size_t ei = 0; ei < mEInputs; ei++) {
 
-      for(size_t di = 0; di < mDOutputs; di++) {
+      for (size_t di = 0; di < mDOutputs; di++) {
         forte_snprintf(&(diNames[3]), 11 - 3, "%u_%u", ei + 1, di + 1);
         di_posIndex = ei * mDOutputs + di;
         mDataInputNames[di_posIndex] = CStringDictionary::insert(diNames);
@@ -181,11 +180,11 @@ bool GEN_F_MUX::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec
       }
     }
 
-    //create the data outputs
+    // create the data outputs
     mDataOutputNames = std::make_unique<CStringDictionary::TStringId[]>(mDOutputs + 2);
     mDataOutputTypeIds = std::make_unique<CStringDictionary::TStringId[]>(mDOutputs + 2);
 
-    //data outputs for status and QO
+    // data outputs for status and QO
     mDataOutputNames[0] = CStringDictionary::insert("QO");
     mDataOutputTypeIds[0] = STRID(BOOL);
     mDataOutputNames[1] = CStringDictionary::insert("STATUS");
@@ -193,7 +192,7 @@ bool GEN_F_MUX::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec
 
     generateGenericDataPointArrays("OUT_", &(mDataOutputTypeIds[2]), &(mDataOutputNames[2]), mDOutputs);
 
-    //create the interface Specification
+    // create the interface Specification
     paInterfaceSpec.mNumEIs = mEInputs;
     paInterfaceSpec.mEINames = mEventInputNames.get();
     paInterfaceSpec.mNumEOs = mEOutputs;

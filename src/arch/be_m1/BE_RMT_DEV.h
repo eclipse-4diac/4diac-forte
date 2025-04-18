@@ -15,18 +15,19 @@
 #include "../../../stdfblib/ita/RMT_DEV.h"
 #include <arch/be_m1/fortemodule.h>
 
-class BE_RMT_DEV : public RMT_DEV{
+class BE_RMT_DEV : public RMT_DEV {
   public:
     explicit BE_RMT_DEV(CFORTEModule &paModule);
 
     ~BE_RMT_DEV() override;
 
-    CFORTEModule & getModule() const{
+    CFORTEModule &getModule() const {
       return mModule;
     }
+
   protected:
   private:
-    CFORTEModule & mModule;
+    CFORTEModule &mModule;
 };
 
 #endif /* BE_RMT_DEV_H_ */

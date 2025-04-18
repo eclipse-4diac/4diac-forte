@@ -31,19 +31,23 @@ bool CUMICProcessInterface::smDIOInitialized = false;
 uint8_t CUMICProcessInterface::smIODirections = 0;
 CSyncObject CUMICProcessInterface::directionsMutex = CSyncObject();
 
-const char * const CUMICProcessInterface::scmOK = "OK";
-const char * const CUMICProcessInterface::scmPinInUse = "Pin already in use by other FB";
-const char * const CUMICProcessInterface::scmNotInitialised = "FB not initialized";
-const char * const CUMICProcessInterface::scmError = "Error";
-const char * const CUMICProcessInterface::scmCouldNotRead = "Could not read";
-const char * const CUMICProcessInterface::scmCouldNotWrite = "Could not write";
+const char *const CUMICProcessInterface::scmOK = "OK";
+const char *const CUMICProcessInterface::scmPinInUse = "Pin already in use by other FB";
+const char *const CUMICProcessInterface::scmNotInitialised = "FB not initialized";
+const char *const CUMICProcessInterface::scmError = "Error";
+const char *const CUMICProcessInterface::scmCouldNotRead = "Could not read";
+const char *const CUMICProcessInterface::scmCouldNotWrite = "Could not write";
 
-CUMICProcessInterface::CUMICProcessInterface(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec& paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId) :
-    CProcessInterfaceBase(paContainer, paInterfaceSpec, paInstanceNameId), mIOType(UNDEFINED), mNumber(0){
+CUMICProcessInterface::CUMICProcessInterface(forte::core::CFBContainer &paContainer,
+                                             const SFBInterfaceSpec &paInterfaceSpec,
+                                             const CStringDictionary::TStringId paInstanceNameId) :
+    CProcessInterfaceBase(paContainer, paInterfaceSpec, paInstanceNameId),
+    mIOType(UNDEFINED),
+    mNumber(0) {
 }
 
-CUMICProcessInterface::~CUMICProcessInterface(){
-    deinitialise();
+CUMICProcessInterface::~CUMICProcessInterface() {
+  deinitialise();
 }
 
 bool CUMICProcessInterface::initialise(bool paIsInput, CEventChainExecutionThread *const paECET) {
@@ -54,43 +58,40 @@ bool CUMICProcessInterface::initialise(bool paIsInput, CEventChainExecutionThrea
   std::vector<std::string> paramsList;
   unsigned int number;
 
-  while(std::getline(streamBuf, segment, '.')){ //separate the PARAMS input by '.' for easier processing
+  while (std::getline(streamBuf, segment, '.')) { // separate the PARAMS input by '.' for easier processing
     paramsList.pushBack(segment);
   }
 
   STATUS() = scmNotInitialised;
 
-  if(2 == paramsList.size()){ //TYPE.NUMBER
+  if (2 == paramsList.size()) { // TYPE.NUMBER
     std::string ioType = paramsList[0];
 
     std::stringstream ss(paramsList[1]);
     ss >> number;
 
-    if(scmDIOID == ioType){
+    if (scmDIOID == ioType) {
       bool statusCorrect = true;
-      if(!CUMICProcessInterface::smDIOInitialized){
+      if (!CUMICProcessInterface::smDIOInitialized) {
         DEVLOG_INFO("Global Initializing Digital I/O\n");
-        if(0 > umic_dio_init()){
+        if (0 > umic_dio_init()) {
           statusCorrect = false;
           DEVLOG_ERROR("Global Initialization of Digital I/O FAILED!\n");
-        }
-        else{
+        } else {
           DEVLOG_INFO("Global Initialization of Digital I/O SUCCEED!\n");
         }
       }
-      if(statusCorrect && 8 >= number && 0 != number){
+      if (statusCorrect && 8 >= number && 0 != number) {
         CCriticalRegion(CUMICProcessInterface::directionsMutex);
         uint8_t currentDirection;
-        if(paIsInput){ // 0 for input
+        if (paIsInput) { // 0 for input
           currentDirection = static_cast<uint8_t>(CUMICProcessInterface::smIODirections & ~(1 << (number - 1)));
-        }
-        else{ //1 for output
+        } else { // 1 for output
           currentDirection = static_cast<uint8_t>(CUMICProcessInterface::smIODirections | (1 << (number - 1)));
         }
-        if(0 > umic_dio_set_direction(0, currentDirection)){
+        if (0 > umic_dio_set_direction(0, currentDirection)) {
           DEVLOG_ERROR("Initializing Digital I/O FAILED!");
-        }
-        else{
+        } else {
           CUMICProcessInterface::smIODirections = currentDirection;
           mIOType = DIO;
           retVal = true;
@@ -98,16 +99,16 @@ bool CUMICProcessInterface::initialise(bool paIsInput, CEventChainExecutionThrea
       }
     }
 #if UMIC_LED_ENABLED
-    else  if(scmLEDID == ioType && !paIsInput){
-      if(7 >= number){
+    else if (scmLEDID == ioType && !paIsInput) {
+      if (7 >= number) {
         retVal = true;
         mIOType = LED;
       }
     }
 #endif
 #if UMIC_RELAY_ENABLED
-    else if(scmRELAYID == ioType && !paIsInput){
-      if(2 >= number && 0 != number){
+    else if (scmRELAYID == ioType && !paIsInput) {
+      if (2 >= number && 0 != number) {
         retVal = true;
         mIOType = RELAY;
       }
@@ -115,106 +116,98 @@ bool CUMICProcessInterface::initialise(bool paIsInput, CEventChainExecutionThrea
 #endif
   }
 
-  if(true == retVal){
+  if (true == retVal) {
     STATUS() = scmOK;
     mNumber = static_cast<uint8_t>(number);
-  }
-  else{
-    DEVLOG_ERROR("The FB with PARAMS() = '%s' couldn't be initialized. PARAMS is not well defined.\n", PARAMS().getValue());
+  } else {
+    DEVLOG_ERROR("The FB with PARAMS() = '%s' couldn't be initialized. PARAMS is not well defined.\n",
+                 PARAMS().getValue());
   }
   return retVal;
 }
 
-bool CUMICProcessInterface::deinitialise(){
-  //TODO: The global initialization umic_dio_init doesn't have its counterpart umic_dio_release
+bool CUMICProcessInterface::deinitialise() {
+  // TODO: The global initialization umic_dio_init doesn't have its counterpart umic_dio_release
   mNumber = 0;
   return true;
 }
 
-bool CUMICProcessInterface::readPin(){
+bool CUMICProcessInterface::readPin() {
   bool retVal = false;
-  if(DIO == mIOType){
+  if (DIO == mIOType) {
     int32_t currentValue = umic_dio_get_input(0);
-    if (0 > currentValue){
+    if (0 > currentValue) {
       DEVLOG_ERROR("Error reading PIN %d\n", mNumber);
       STATUS() = scmCouldNotRead;
-    }else{
-      IN_X() = ( (currentValue) & (1 << (mNumber - 1)) ) ? true : false;
+    } else {
+      IN_X() = ((currentValue) & (1 << (mNumber - 1))) ? true : false;
       STATUS() = scmOK;
       retVal = true;
     }
-  }else{
+  } else {
     STATUS() = scmNotInitialised;
   }
   return retVal;
 }
 
-bool CUMICProcessInterface::writePin(){
+bool CUMICProcessInterface::writePin() {
   bool retVal = false;
-  if(UNDEFINED != mIOType){
-    if(DIO == mIOType){
+  if (UNDEFINED != mIOType) {
+    if (DIO == mIOType) {
       int32_t currentValue = umic_dio_get_input(0);
-      if(0 > currentValue){
+      if (0 > currentValue) {
         DEVLOG_ERROR("Error reading PIN to later write on it%d\n", mNumber);
         STATUS() = scmCouldNotRead;
-      }
-      else{
-        if(false != OUT_X()){
-          currentValue |= 1 << (mNumber - 1); //set bit
+      } else {
+        if (false != OUT_X()) {
+          currentValue |= 1 << (mNumber - 1); // set bit
+        } else {
+          currentValue &= ~(1 << (mNumber - 1)); // clear bit
         }
-        else{
-          currentValue &= ~(1 << (mNumber - 1)); //clear bit
-        }
-        if(0 > umic_dio_set_output(0, static_cast<uint8_t>(currentValue))){
+        if (0 > umic_dio_set_output(0, static_cast<uint8_t>(currentValue))) {
           DEVLOG_ERROR("Error writing IO%d\n", mNumber);
           STATUS() = scmCouldNotWrite;
-        }
-        else{
+        } else {
           STATUS() = scmOK;
           retVal = true;
         }
       }
     }
 #if UMIC_LED_ENABLED
-    else if(LED == mIOType){
+    else if (LED == mIOType) {
       int32_t res;
-      if(false != OUT_X()){
+      if (false != OUT_X()) {
         res = umic_led_set(mNumber);
-      }
-      else{
+      } else {
         res = umic_led_clr(mNumber);
       }
-      if(0 > res){
+      if (0 > res) {
         DEVLOG_ERROR("Error writing LED%d\n", mNumber);
         STATUS() = scmCouldNotWrite;
-      }
-      else{
+      } else {
         STATUS() = scmOK;
         retVal = true;
       }
     }
 #endif
 #if UMIC_LED_ENABLED
-    else if(RELAY == mIOType){
+    else if (RELAY == mIOType) {
       int32_t res;
-      if(false != OUT_X()){
+      if (false != OUT_X()) {
         res = umic_relay_on(static_cast<uint8_t>(mNumber - 1));
-      }
-      else{
+      } else {
         res = umic_relay_off(static_cast<uint8_t>(mNumber - 1));
       }
-      if(0 > res){
+      if (0 > res) {
         DEVLOG_ERROR("Error writing RELAY%d\n", mNumber);
         STATUS() = scmCouldNotWrite;
-      }
-      else{
+      } else {
         STATUS() = scmOK;
         retVal = true;
       }
     }
 #endif
-  }
-  else{
+  } else {
     STATUS() = scmNotInitialised;
   }
   return retVal;

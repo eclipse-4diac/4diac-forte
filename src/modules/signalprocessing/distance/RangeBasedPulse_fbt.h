@@ -1,10 +1,10 @@
 /*************************************************************************
- *** Copyright (c) 2024 HR Agrartechnik GmbH  
- *** This program and the accompanying materials are made available under the  
- *** terms of the Eclipse Public License 2.0 which is available at  
- *** http://www.eclipse.org/legal/epl-2.0.  
- ***  
- *** SPDX-License-Identifier: EPL-2.0  
+ *** Copyright (c) 2024 HR Agrartechnik GmbH
+ *** This program and the accompanying materials are made available under the
+ *** terms of the Eclipse Public License 2.0 which is available at
+ *** http://www.eclipse.org/legal/epl-2.0.
+ ***
+ *** SPDX-License-Identifier: EPL-2.0
  ***
  *** This file was generated using the 4DIAC FORTE Export Filter V1.0.x NG!
  ***
@@ -27,7 +27,7 @@
 #include "forte_array_variable.h"
 
 class FORTE_signalprocessing__distance__RangeBasedPulse final : public CSimpleFB {
-  DECLARE_FIRMWARE_FB(FORTE_signalprocessing__distance__RangeBasedPulse)
+    DECLARE_FIRMWARE_FB(FORTE_signalprocessing__distance__RangeBasedPulse)
 
   private:
     static const CStringDictionary::TStringId scmDataInputNames[];
@@ -64,7 +64,8 @@ class FORTE_signalprocessing__distance__RangeBasedPulse final : public CSimpleFB
     void setInitialValues() override;
 
   public:
-    FORTE_signalprocessing__distance__RangeBasedPulse(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_signalprocessing__distance__RangeBasedPulse(CStringDictionary::TStringId paInstanceNameId,
+                                                      forte::core::CFBContainer &paContainer);
 
     CIEC_UDINT var_DIST_IN;
     CIEC_UDINT var_DIST_OFF;
@@ -88,7 +89,11 @@ class FORTE_signalprocessing__distance__RangeBasedPulse final : public CSimpleFB
     CDataConnection **getDIConUnchecked(TPortId) override;
     CDataConnection *getDOConUnchecked(TPortId) override;
 
-    void evt_REQ(const CIEC_UDINT &paDIST_IN, const CIEC_UDINT &paDIST_OFF, const CIEC_UDINT &paDIST_HIGH, const CIEC_UDINT &paDIST_LOW, CIEC_BOOL &paQ) {
+    void evt_REQ(const CIEC_UDINT &paDIST_IN,
+                 const CIEC_UDINT &paDIST_OFF,
+                 const CIEC_UDINT &paDIST_HIGH,
+                 const CIEC_UDINT &paDIST_LOW,
+                 CIEC_BOOL &paQ) {
       var_DIST_IN = paDIST_IN;
       var_DIST_OFF = paDIST_OFF;
       var_DIST_HIGH = paDIST_HIGH;
@@ -97,8 +102,11 @@ class FORTE_signalprocessing__distance__RangeBasedPulse final : public CSimpleFB
       paQ = var_Q;
     }
 
-    void operator()(const CIEC_UDINT &paDIST_IN, const CIEC_UDINT &paDIST_OFF, const CIEC_UDINT &paDIST_HIGH, const CIEC_UDINT &paDIST_LOW, CIEC_BOOL &paQ) {
+    void operator()(const CIEC_UDINT &paDIST_IN,
+                    const CIEC_UDINT &paDIST_OFF,
+                    const CIEC_UDINT &paDIST_HIGH,
+                    const CIEC_UDINT &paDIST_LOW,
+                    CIEC_BOOL &paQ) {
       evt_REQ(paDIST_IN, paDIST_OFF, paDIST_HIGH, paDIST_LOW, paQ);
     }
 };
-

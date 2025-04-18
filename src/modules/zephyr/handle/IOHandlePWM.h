@@ -5,7 +5,7 @@
  http://www.eclipse.org/legal/epl-2.0.
 
  SPDX-License-Identifier: EPL-2.0
- 
+
  Contributors:
   Dirk Kaar - initial API and implementation and/or initial documentation
  ************************************************************************************/
@@ -22,33 +22,34 @@
 class IODeviceController;
 
 class IOHandlePWM : public forte::core::io::IOHandle {
-  using IOObserver = forte::core::io::IOObserver;
-  using IOHandle = forte::core::io::IOHandle;
-  using IOMapper = forte::core::io::IOMapper;
+    using IOObserver = forte::core::io::IOObserver;
+    using IOHandle = forte::core::io::IOHandle;
+    using IOMapper = forte::core::io::IOMapper;
 
-public:
-  IOHandlePWM(IODeviceController* paDeviceCtrl, std::string const& paId, const pwm_dt_spec* paPWMSpec);
+  public:
+    IOHandlePWM(IODeviceController *paDeviceCtrl, std::string const &paId, const pwm_dt_spec *paPWMSpec);
 
-  ~IOHandlePWM() override;
+    ~IOHandlePWM() override;
 
-  void get(CIEC_ANY& paState) override;
-  void set(const CIEC_ANY& paState) override;
+    void get(CIEC_ANY &paState) override;
+    void set(const CIEC_ANY &paState) override;
 
-  void reload();
+    void reload();
 
-protected:
-  void onObserver(IOObserver *paObserver) override;
+  protected:
+    void onObserver(IOObserver *paObserver) override;
 
-  void dropObserver() override;
+    void dropObserver() override;
 
-  const pwm_dt_spec* getPWMSpec() const { return mPWMSpec; }
+    const pwm_dt_spec *getPWMSpec() const {
+      return mPWMSpec;
+    }
 
-private:
-  const pwm_dt_spec* mPWMSpec;
-  std::string mPwmPeriodId;
-  IOHandle* mPwmPeriodHandle{ nullptr };
-  CIEC_DWORD mValue{ 0 };
+  private:
+    const pwm_dt_spec *mPWMSpec;
+    std::string mPwmPeriodId;
+    IOHandle *mPwmPeriodHandle{nullptr};
+    CIEC_DWORD mValue{0};
 };
 
 #endif // IOHANDLEPWM_H
-

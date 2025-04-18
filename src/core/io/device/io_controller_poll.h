@@ -29,16 +29,16 @@ namespace forte {
        */
       class IODevicePollController : public IODeviceController {
         public:
-
           void handleChangeEvent(IOHandle *paHandle) override;
 
         protected:
           /*! @brief Constructor
            *
            * @param paDeviceExecution Device execution where the controller runs
-           * @param paPollInterval Default poll routines per seconds (Hz). Must be greater than 0. Call #setPollInterval in the #setConfig method.
+           * @param paPollInterval Default poll routines per seconds (Hz). Must be greater than 0. Call #setPollInterval
+           * in the #setConfig method.
            */
-          IODevicePollController(CDeviceExecution& paDeviceExecution, float paPollInterval);
+          IODevicePollController(CDeviceExecution &paDeviceExecution, float paPollInterval);
 
           /*! @brief Poll routine which updates the IO state of the device
            *
@@ -51,13 +51,15 @@ namespace forte {
 
           /*! @brief Forces an execution of the #poll routine
            *
-           * Should be called by the corresponding device #IOHandle implementation after setting/changing an output handle.
+           * Should be called by the corresponding device #IOHandle implementation after setting/changing an output
+           * handle.
            */
           void forcePoll();
 
           /*! @brief Sets the polling interval in Hz (poll routines per second)
            *
-           * The poll interval should not be set to high as the poll operations may consume too much processing power and consequently block other control operations.
+           * The poll interval should not be set to high as the poll operations may consume too much processing power
+           * and consequently block other control operations.
            *
            * @param paPollInterval Poll routines per seconds (Hz). Must be greater than 0.
            */
@@ -71,8 +73,8 @@ namespace forte {
           CSemaphore mForceLoop;
       };
 
-    } //namespace IO
-  } //namepsace core
-} //namespace forte
+    } // namespace io
+  } // namespace core
+} // namespace forte
 
 #endif /* SRC_CORE_IO_DEVICE_IO_CONTROLLER_POLL_H_ */

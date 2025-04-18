@@ -29,7 +29,6 @@ USE_STRING_ID(WORD);
 USE_STRING_ID(WORD_00);
 USE_STRING_ID(WORD_01);
 
-
 #include "criticalregion.h"
 #include "resource.h"
 #include "forte_dword.h"
@@ -44,7 +43,8 @@ DEFINE_FIRMWARE_FB(FORTE_SPLIT_DWORD_INTO_WORDS, STRID(SPLIT_DWORD_INTO_WORDS))
 
 const CStringDictionary::TStringId FORTE_SPLIT_DWORD_INTO_WORDS::scmDataInputNames[] = {STRID(IN)};
 const CStringDictionary::TStringId FORTE_SPLIT_DWORD_INTO_WORDS::scmDataInputTypeIds[] = {STRID(DWORD)};
-const CStringDictionary::TStringId FORTE_SPLIT_DWORD_INTO_WORDS::scmDataOutputNames[] = {STRID(WORD_00), STRID(WORD_01)};
+const CStringDictionary::TStringId FORTE_SPLIT_DWORD_INTO_WORDS::scmDataOutputNames[] = {STRID(WORD_00),
+                                                                                         STRID(WORD_01)};
 const CStringDictionary::TStringId FORTE_SPLIT_DWORD_INTO_WORDS::scmDataOutputTypeIds[] = {STRID(WORD), STRID(WORD)};
 const TDataIOID FORTE_SPLIT_DWORD_INTO_WORDS::scmEIWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_SPLIT_DWORD_INTO_WORDS::scmEIWithIndexes[] = {0};
@@ -54,16 +54,29 @@ const TDataIOID FORTE_SPLIT_DWORD_INTO_WORDS::scmEOWith[] = {0, 1, scmWithListDe
 const TForteInt16 FORTE_SPLIT_DWORD_INTO_WORDS::scmEOWithIndexes[] = {0};
 const CStringDictionary::TStringId FORTE_SPLIT_DWORD_INTO_WORDS::scmEventOutputNames[] = {STRID(CNF)};
 const CStringDictionary::TStringId FORTE_SPLIT_DWORD_INTO_WORDS::scmEventOutputTypeIds[] = {STRID(Event)};
-const SFBInterfaceSpec FORTE_SPLIT_DWORD_INTO_WORDS::scmFBInterfaceSpec = {
-  1, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,
-  1, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes,
-  1, scmDataInputNames, scmDataInputTypeIds,
-  2, scmDataOutputNames, scmDataOutputTypeIds,
-  0, nullptr,
-  0, nullptr
-};
+const SFBInterfaceSpec FORTE_SPLIT_DWORD_INTO_WORDS::scmFBInterfaceSpec = {1,
+                                                                           scmEventInputNames,
+                                                                           scmEventInputTypeIds,
+                                                                           scmEIWith,
+                                                                           scmEIWithIndexes,
+                                                                           1,
+                                                                           scmEventOutputNames,
+                                                                           scmEventOutputTypeIds,
+                                                                           scmEOWith,
+                                                                           scmEOWithIndexes,
+                                                                           1,
+                                                                           scmDataInputNames,
+                                                                           scmDataInputTypeIds,
+                                                                           2,
+                                                                           scmDataOutputNames,
+                                                                           scmDataOutputTypeIds,
+                                                                           0,
+                                                                           nullptr,
+                                                                           0,
+                                                                           nullptr};
 
-FORTE_SPLIT_DWORD_INTO_WORDS::FORTE_SPLIT_DWORD_INTO_WORDS(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_SPLIT_DWORD_INTO_WORDS::FORTE_SPLIT_DWORD_INTO_WORDS(const CStringDictionary::TStringId paInstanceNameId,
+                                                           forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId),
     conn_CNF(*this, 0),
     conn_IN(nullptr),
@@ -78,37 +91,35 @@ void FORTE_SPLIT_DWORD_INTO_WORDS::setInitialValues() {
 }
 
 void FORTE_SPLIT_DWORD_INTO_WORDS::readInputData(const TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventREQID: {
       readData(0, var_IN, conn_IN);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 void FORTE_SPLIT_DWORD_INTO_WORDS::writeOutputData(const TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventCNFID: {
       writeData(0, var_WORD_00, conn_WORD_00);
       writeData(1, var_WORD_01, conn_WORD_01);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 CIEC_ANY *FORTE_SPLIT_DWORD_INTO_WORDS::getDI(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_IN;
   }
   return nullptr;
 }
 
 CIEC_ANY *FORTE_SPLIT_DWORD_INTO_WORDS::getDO(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_WORD_00;
     case 1: return &var_WORD_01;
   }
@@ -116,21 +127,21 @@ CIEC_ANY *FORTE_SPLIT_DWORD_INTO_WORDS::getDO(const size_t paIndex) {
 }
 
 CEventConnection *FORTE_SPLIT_DWORD_INTO_WORDS::getEOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_CNF;
   }
   return nullptr;
 }
 
 CDataConnection **FORTE_SPLIT_DWORD_INTO_WORDS::getDIConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_IN;
   }
   return nullptr;
 }
 
 CDataConnection *FORTE_SPLIT_DWORD_INTO_WORDS::getDOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_WORD_00;
     case 1: return &conn_WORD_01;
   }
@@ -146,10 +157,8 @@ void func_SPLIT_DWORD_INTO_WORDS(CIEC_DWORD st_lv_IN, CIEC_WORD &st_lv_WORD_00, 
   st_lv_WORD_00 = 0_WORD;
   st_lv_WORD_01 = 0_WORD;
 
-  #line 13 "SPLIT_DWORD_INTO_WORDS.fct"
+#line 13 "SPLIT_DWORD_INTO_WORDS.fct"
   st_lv_WORD_00 = st_lv_IN.cpartial<CIEC_WORD>(0);
-  #line 14 "SPLIT_DWORD_INTO_WORDS.fct"
+#line 14 "SPLIT_DWORD_INTO_WORDS.fct"
   st_lv_WORD_01 = st_lv_IN.cpartial<CIEC_BOOL>(1);
-
 }
-

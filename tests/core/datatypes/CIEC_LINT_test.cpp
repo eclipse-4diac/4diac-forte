@@ -19,18 +19,15 @@
 #include "../../../src/core/datatypes/forte_lint.h"
 
 BOOST_AUTO_TEST_SUITE(CIEC_LINT_function_test)
-BOOST_AUTO_TEST_CASE(Type_test)
-{
+BOOST_AUTO_TEST_CASE(Type_test) {
   CIEC_LINT nTest;
-  //check type information
+  // check type information
   BOOST_CHECK_EQUAL(nTest.getDataTypeID(), CIEC_ANY::e_LINT);
-  //check operator bool data type size
+  // check operator bool data type size
   BOOST_CHECK_EQUAL(sizeof(nTest.operator TForteInt64()), sizeof(TForteInt64));
-
 }
 
-BOOST_AUTO_TEST_CASE(Literal_test)
-{
+BOOST_AUTO_TEST_CASE(Literal_test) {
   CIEC_LINT test1 = 0_LINT;
   BOOST_TEST(static_cast<CIEC_LINT::TValueType>(test1) == 0);
 
@@ -41,12 +38,11 @@ BOOST_AUTO_TEST_CASE(Literal_test)
   BOOST_TEST(static_cast<CIEC_LINT::TValueType>(test3) == std::numeric_limits<CIEC_LINT::TValueType>::min());
 }
 
-BOOST_AUTO_TEST_CASE(Assignment_test)
-{
+BOOST_AUTO_TEST_CASE(Assignment_test) {
   CIEC_LINT nTest1;
   CIEC_LINT nTest2;
 
-  //initial value must be 0
+  // initial value must be 0
   BOOST_CHECK_EQUAL(static_cast<CIEC_LINT::TValueType>(nTest1), 0);
 
   nTest1 = std::numeric_limits<CIEC_LINT>::min();
@@ -74,14 +70,13 @@ BOOST_AUTO_TEST_CASE(Assignment_test)
   BOOST_CHECK_EQUAL(static_cast<CIEC_LINT::TValueType>(nTest2), -6548432101LL);
 }
 
-BOOST_AUTO_TEST_CASE(Conversion_test)
-{
+BOOST_AUTO_TEST_CASE(Conversion_test) {
   CIEC_LINT nTest;
 
   char cBuffer[21];
   char cBufferFail[2];
 
-  //check cast operator
+  // check cast operator
   nTest = CIEC_LINT(0);
 
   BOOST_CHECK_EQUAL(nTest.operator TForteInt64(), 0);
@@ -98,7 +93,7 @@ BOOST_AUTO_TEST_CASE(Conversion_test)
   nTest = CIEC_LINT(9223372036854775807LL);
   BOOST_CHECK_EQUAL(nTest.operator TForteInt64(), 9223372036854775807LL);
 
-  //check toString and fromString
+  // check toString and fromString
   strcpy(cBuffer, "");
 
   BOOST_CHECK_EQUAL(nTest.fromString("-9223372036854775808"), 20);
@@ -132,7 +127,6 @@ BOOST_AUTO_TEST_CASE(Conversion_test)
   BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
   strcpy(cBuffer, "");
   nTest = CIEC_LINT(0);
-
 
   BOOST_CHECK_EQUAL(nTest.fromString("0"), 1);
   BOOST_CHECK_EQUAL(static_cast<CIEC_LINT::TValueType>(nTest), 0);
@@ -260,7 +254,7 @@ BOOST_AUTO_TEST_CASE(Conversion_test)
   BOOST_CHECK_EQUAL(nTest.fromString("-9223372036854775806"), 20);
   BOOST_CHECK_EQUAL(static_cast<CIEC_LINT::TValueType>(nTest), -9223372036854775806LL);
 
-  //check invalid fromString string
+  // check invalid fromString string
   BOOST_CHECK_EQUAL(nTest.fromString("NOT A VALID STRING"), -1);
 }
 

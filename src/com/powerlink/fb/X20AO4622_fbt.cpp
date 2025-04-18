@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2012 - 2024 AIT
+ * Copyright (c) 2012 - 2024 AIT
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -36,14 +36,15 @@ USE_STRING_ID(UINT);
 USE_STRING_ID(USINT);
 USE_STRING_ID(X20AO4622);
 
-
 #include "criticalregion.h"
 #include "resource.h"
 
 DEFINE_FIRMWARE_FB(FORTE_X20AO4622, STRID(X20AO4622))
 
-const CStringDictionary::TStringId FORTE_X20AO4622::scmDataInputNames[] = {STRID(QI), STRID(CNID), STRID(MODID), STRID(AO01), STRID(AO02), STRID(AO03), STRID(AO04)};
-const CStringDictionary::TStringId FORTE_X20AO4622::scmDataInputTypeIds[] = {STRID(BOOL), STRID(USINT), STRID(UINT), STRID(INT), STRID(INT), STRID(INT), STRID(INT)};
+const CStringDictionary::TStringId FORTE_X20AO4622::scmDataInputNames[] = {
+    STRID(QI), STRID(CNID), STRID(MODID), STRID(AO01), STRID(AO02), STRID(AO03), STRID(AO04)};
+const CStringDictionary::TStringId FORTE_X20AO4622::scmDataInputTypeIds[] = {
+    STRID(BOOL), STRID(USINT), STRID(UINT), STRID(INT), STRID(INT), STRID(INT), STRID(INT)};
 const CStringDictionary::TStringId FORTE_X20AO4622::scmDataOutputNames[] = {STRID(QO), STRID(CNIDO), STRID(STATUS)};
 const CStringDictionary::TStringId FORTE_X20AO4622::scmDataOutputTypeIds[] = {STRID(BOOL), STRID(USINT), STRID(STRING)};
 const TDataIOID FORTE_X20AO4622::scmEIWith[] = {0, 1, 2, scmWithListDelimiter, 3, 4, 5, 6, 0, scmWithListDelimiter};
@@ -54,30 +55,42 @@ const TDataIOID FORTE_X20AO4622::scmEOWith[] = {0, 1, 2, scmWithListDelimiter, 2
 const TForteInt16 FORTE_X20AO4622::scmEOWithIndexes[] = {0, 4};
 const CStringDictionary::TStringId FORTE_X20AO4622::scmEventOutputNames[] = {STRID(INITO), STRID(CNF)};
 const CStringDictionary::TStringId FORTE_X20AO4622::scmEventOutputTypeIds[] = {STRID(Event), STRID(Event)};
-const SFBInterfaceSpec FORTE_X20AO4622::scmFBInterfaceSpec = {
-  2, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,
-  2, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes,
-  7, scmDataInputNames, scmDataInputTypeIds,
-  3, scmDataOutputNames, scmDataOutputTypeIds,
-  0, nullptr,
-  0, nullptr
-};
+const SFBInterfaceSpec FORTE_X20AO4622::scmFBInterfaceSpec = {2,
+                                                              scmEventInputNames,
+                                                              scmEventInputTypeIds,
+                                                              scmEIWith,
+                                                              scmEIWithIndexes,
+                                                              2,
+                                                              scmEventOutputNames,
+                                                              scmEventOutputTypeIds,
+                                                              scmEOWith,
+                                                              scmEOWithIndexes,
+                                                              7,
+                                                              scmDataInputNames,
+                                                              scmDataInputTypeIds,
+                                                              3,
+                                                              scmDataOutputNames,
+                                                              scmDataOutputTypeIds,
+                                                              0,
+                                                              nullptr,
+                                                              0,
+                                                              nullptr};
 
-FORTE_X20AO4622::FORTE_X20AO4622(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
-  PowerlinkFunctionBlockAO(paContainer, scmFBInterfaceSpec, paInstanceNameId),
-  conn_INITO(*this, 0),
-  conn_CNF(*this, 1),
-  conn_QI(nullptr),
-  conn_CNID(nullptr),
-  conn_MODID(nullptr),
-  conn_AO01(nullptr),
-  conn_AO02(nullptr),
-  conn_AO03(nullptr),
-  conn_AO04(nullptr),
-  conn_QO(*this, 0, var_QO),
-  conn_CNIDO(*this, 1, var_CNIDO),
-  conn_STATUS(*this, 2, var_STATUS) {
-};
+FORTE_X20AO4622::FORTE_X20AO4622(const CStringDictionary::TStringId paInstanceNameId,
+                                 forte::core::CFBContainer &paContainer) :
+    PowerlinkFunctionBlockAO(paContainer, scmFBInterfaceSpec, paInstanceNameId),
+    conn_INITO(*this, 0),
+    conn_CNF(*this, 1),
+    conn_QI(nullptr),
+    conn_CNID(nullptr),
+    conn_MODID(nullptr),
+    conn_AO01(nullptr),
+    conn_AO02(nullptr),
+    conn_AO03(nullptr),
+    conn_AO04(nullptr),
+    conn_QO(*this, 0, var_QO),
+    conn_CNIDO(*this, 1, var_CNIDO),
+    conn_STATUS(*this, 2, var_STATUS) {};
 
 void FORTE_X20AO4622::setInitialValues() {
   var_QI = 0_BOOL;
@@ -93,20 +106,12 @@ void FORTE_X20AO4622::setInitialValues() {
 }
 
 void FORTE_X20AO4622::executeEvent(const TEventID paEIID, CEventChainExecutionThread *const paECET) {
-  executePowerlinkEvent(paEIID,
-                        paECET,
-                        scmEventINITID,
-                        scmEventREQID,
-                        scmEventINITOID,
-                        scmEventCNFID,
-                        var_QI,
-                        var_QO,
-                        var_CNID,
-                        var_MODID);
+  executePowerlinkEvent(paEIID, paECET, scmEventINITID, scmEventREQID, scmEventINITOID, scmEventCNFID, var_QI, var_QO,
+                        var_CNID, var_MODID);
 }
 
 void FORTE_X20AO4622::readInputData(const TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventINITID: {
       readData(0, var_QI, conn_QI);
       readData(1, var_CNID, conn_CNID);
@@ -121,13 +126,12 @@ void FORTE_X20AO4622::readInputData(const TEventID paEIID) {
       readData(0, var_QI, conn_QI);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 void FORTE_X20AO4622::writeOutputData(const TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventINITOID: {
       writeData(0, var_QO, conn_QO);
       writeData(1, var_CNIDO, conn_CNIDO);
@@ -139,13 +143,12 @@ void FORTE_X20AO4622::writeOutputData(const TEventID paEIID) {
       writeData(0, var_QO, conn_QO);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 CIEC_ANY *FORTE_X20AO4622::getDI(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_QI;
     case 1: return &var_CNID;
     case 2: return &var_MODID;
@@ -158,7 +161,7 @@ CIEC_ANY *FORTE_X20AO4622::getDI(const size_t paIndex) {
 }
 
 CIEC_ANY *FORTE_X20AO4622::getDO(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_QO;
     case 1: return &var_CNIDO;
     case 2: return &var_STATUS;
@@ -167,7 +170,7 @@ CIEC_ANY *FORTE_X20AO4622::getDO(const size_t paIndex) {
 }
 
 CEventConnection *FORTE_X20AO4622::getEOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_INITO;
     case 1: return &conn_CNF;
   }
@@ -175,7 +178,7 @@ CEventConnection *FORTE_X20AO4622::getEOConUnchecked(const TPortId paIndex) {
 }
 
 CDataConnection **FORTE_X20AO4622::getDIConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_QI;
     case 1: return &conn_CNID;
     case 2: return &conn_MODID;
@@ -188,11 +191,10 @@ CDataConnection **FORTE_X20AO4622::getDIConUnchecked(const TPortId paIndex) {
 }
 
 CDataConnection *FORTE_X20AO4622::getDOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_QO;
     case 1: return &conn_CNIDO;
     case 2: return &conn_STATUS;
   }
   return nullptr;
 }
-

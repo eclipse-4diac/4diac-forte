@@ -15,7 +15,7 @@
 
 cyg_sem_t CECOSTimerHandler::mSemaphore;
 
-CECOSTimerHandler::CECOSTimerHandler(CDeviceExecution& paDeviceExecution) : CTimerHandler(paDeviceExecution)  {
+CECOSTimerHandler::CECOSTimerHandler(CDeviceExecution &paDeviceExecution) : CTimerHandler(paDeviceExecution) {
   cyg_semaphore_init(&mSemaphore, 0);
 
   mSystemclockHandle = cyg_real_time_clock();
@@ -25,32 +25,30 @@ CECOSTimerHandler::CECOSTimerHandler(CDeviceExecution& paDeviceExecution) : CTim
   start();
 }
 
-CECOSTimerHandler::~CECOSTimerHandler(){
+CECOSTimerHandler::~CECOSTimerHandler() {
   cyg_semaphore_destroy(&mSemaphore);
 }
 
-void CECOSTimerHandler::enableHandler(){
+void CECOSTimerHandler::enableHandler() {
   cyg_alarm_initialize(mAlarmHandle, cyg_current_time() + 1, 1);
 }
 
-void CECOSTimerHandler::disableHandler(){
+void CECOSTimerHandler::disableHandler() {
   cyg_alarm_disable(mAlarmHandle);
 }
 
-void CECOSTimerHandler::setPriority(int ){
-
+void CECOSTimerHandler::setPriority(int) {
 }
 
-int CECOSTimerHandler::getPriority() const{
+int CECOSTimerHandler::getPriority() const {
   return 0;
 }
 
-void CECOSTimerHandler::run(){
-  CECOSThread::setPriority(0); //we want to be a very important thread
-  while(isAlive()){
+void CECOSTimerHandler::run() {
+  CECOSThread::setPriority(0); // we want to be a very important thread
+  while (isAlive()) {
     cyg_semaphore_wait(&mSemaphore);
-    //FIXME add compensation code for timer activation jitter similar to the code in the posix architecture
+    // FIXME add compensation code for timer activation jitter similar to the code in the posix architecture
     nextTick();
   }
 }
-

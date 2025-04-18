@@ -25,17 +25,17 @@
 #include <forte_any_magnitude_variant.h>
 
 class GEN_ADD : public CGenFunctionBlock<CFunctionBlock> {
-  DECLARE_GENERIC_FIRMWARE_FB(GEN_ADD)
+    DECLARE_GENERIC_FIRMWARE_FB(GEN_ADD)
 
   private:
     forte::core::util::CMixedStorage mIfSpecStorage;
 
-    CIEC_ANY_MAGNITUDE_VARIANT& var_IN(size_t paIndex) {
-      return *static_cast<CIEC_ANY_MAGNITUDE_VARIANT*>(getDI(paIndex));
+    CIEC_ANY_MAGNITUDE_VARIANT &var_IN(size_t paIndex) {
+      return *static_cast<CIEC_ANY_MAGNITUDE_VARIANT *>(getDI(paIndex));
     }
 
-    CIEC_ANY_MAGNITUDE_VARIANT& var_OUT() {
-      return *static_cast<CIEC_ANY_MAGNITUDE_VARIANT*>(getDO(0));
+    CIEC_ANY_MAGNITUDE_VARIANT &var_OUT() {
+      return *static_cast<CIEC_ANY_MAGNITUDE_VARIANT *>(getDO(0));
     }
 
     static const TEventID scmEventREQID = 0;
@@ -46,7 +46,7 @@ class GEN_ADD : public CGenFunctionBlock<CFunctionBlock> {
     static const CStringDictionary::TStringId scmEventOutputNames[];
     static const CStringDictionary::TStringId scmEventOutputTypeIds[];
 
-    //self-defined members
+    // self-defined members
     unsigned int mDInputs;
 
     void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
@@ -62,4 +62,3 @@ class GEN_ADD : public CGenFunctionBlock<CFunctionBlock> {
 };
 
 #endif // _GEN_ADD_H_
-

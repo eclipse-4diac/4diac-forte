@@ -23,54 +23,46 @@
 class CServiceCallManager;
 
 // cppcheck-suppress noConstructor
-class FORTE_TRIGGER_SERVICE_CLIENT : public CEventSourceFB{
-  DECLARE_FIRMWARE_FB(FORTE_TRIGGER_SERVICE_CLIENT)
+class FORTE_TRIGGER_SERVICE_CLIENT : public CEventSourceFB {
+    DECLARE_FIRMWARE_FB(FORTE_TRIGGER_SERVICE_CLIENT)
 
   private:
-
     bool m_Initiated;
-    ros::NodeHandle* m_nh;
+    ros::NodeHandle *m_nh;
     std::string m_RosNamespace;
     std::string m_RosMsgName;
 
     static const CStringDictionary::TStringId scmDataInputNames[];
     static const CStringDictionary::TStringId scmDataInputTypeIds[];
-    CIEC_BOOL &QI(){
-      return *static_cast<CIEC_BOOL*>(getDI(0));
-    }
-    ;
+    CIEC_BOOL &QI() {
+      return *static_cast<CIEC_BOOL *>(getDI(0));
+    };
 
-    CIEC_STRING &NAMESPACE(){
-      return *static_cast<CIEC_STRING*>(getDI(1));
-    }
-    ;
+    CIEC_STRING &NAMESPACE() {
+      return *static_cast<CIEC_STRING *>(getDI(1));
+    };
 
-    CIEC_STRING &SRVNAME(){
-      return *static_cast<CIEC_STRING*>(getDI(2));
-    }
-    ;
+    CIEC_STRING &SRVNAME() {
+      return *static_cast<CIEC_STRING *>(getDI(2));
+    };
 
     static const CStringDictionary::TStringId scmDataOutputNames[];
     static const CStringDictionary::TStringId scmDataOutputTypeIds[];
-    CIEC_BOOL &QO(){
-      return *static_cast<CIEC_BOOL*>(getDO(0));
-    }
-    ;
+    CIEC_BOOL &QO() {
+      return *static_cast<CIEC_BOOL *>(getDO(0));
+    };
 
-    CIEC_STRING &STATUS(){
-      return *static_cast<CIEC_STRING*>(getDO(1));
-    }
-    ;
+    CIEC_STRING &STATUS() {
+      return *static_cast<CIEC_STRING *>(getDO(1));
+    };
 
-    CIEC_BOOL &SUCCESS(){
-      return *static_cast<CIEC_BOOL*>(getDO(2));
-    }
-    ;
+    CIEC_BOOL &SUCCESS() {
+      return *static_cast<CIEC_BOOL *>(getDO(2));
+    };
 
-    CIEC_STRING &MESSAGE(){
-      return *static_cast<CIEC_STRING*>(getDO(3));
-    }
-    ;
+    CIEC_STRING &MESSAGE() {
+      return *static_cast<CIEC_STRING *>(getDO(3));
+    };
 
     static const TEventID scmEventINITID = 0;
     static const TEventID scmEventREQID = 1;
@@ -88,7 +80,6 @@ class FORTE_TRIGGER_SERVICE_CLIENT : public CEventSourceFB{
 
     static const SFBInterfaceSpec scmFBInterfaceSpec;
 
-
     void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
   public:
@@ -99,11 +90,10 @@ class FORTE_TRIGGER_SERVICE_CLIENT : public CEventSourceFB{
     void waitForServer();
 
     // cppcheck-suppress noConstructor
-    EVENT_SOURCE_FUNCTION_BLOCK_CTOR(FORTE_TRIGGER_SERVICE_CLIENT), m_Initiated(false) , m_RosNamespace(""), m_RosMsgName(""){
-    };
+    EVENT_SOURCE_FUNCTION_BLOCK_CTOR(FORTE_TRIGGER_SERVICE_CLIENT), m_Initiated(false), m_RosNamespace(""),
+        m_RosMsgName("") {};
 
     ~FORTE_TRIGGER_SERVICE_CLIENT() override = default;
+};
 
-  };
-
-#endif //close the ifdef sequence from the beginning of the file
+#endif // close the ifdef sequence from the beginning of the file

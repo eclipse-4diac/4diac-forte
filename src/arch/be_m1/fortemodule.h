@@ -16,10 +16,9 @@
 #include <mtypes.h>
 #include <BEModule.hpp>
 
-
 class BE_RMT_DEV;
 
-class CFORTEModule : public BEModule{
+class CFORTEModule : public BEModule {
   public:
     CFORTEModule();
     virtual ~CFORTEModule();
@@ -45,5 +44,4 @@ class CFORTEModule : public BEModule{
     UINT32 mFORTEstartOK;
 };
 
-
-#endif  // __FORTE_MODULE_H__
+#endif // __FORTE_MODULE_H__

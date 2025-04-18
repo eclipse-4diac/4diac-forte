@@ -11,13 +11,15 @@
  *******************************************************************************/
 #include <cyg/kernel/kapi.h>
 
-//Workaround for an ecos problem
-extern "C" void
-__cxa_pure_virtual(void) {
-  //TODO maybe add some exception handling reporting here
+// Workaround for an ecos problem
+extern "C" void __cxa_pure_virtual(void) {
+  // TODO maybe add some exception handling reporting here
 }
 
-extern "C" void abort(int ) { while(1) ; }
+extern "C" void abort(int) {
+  while (1)
+    ;
+}
 
 void *__dso_handle = 0;
 
@@ -25,4 +27,7 @@ extern "C" int _getpid(void) {
   return 1;
 }
 
-extern "C" void _kill(int ) { while(1) ; }
+extern "C" void _kill(int) {
+  while (1)
+    ;
+}

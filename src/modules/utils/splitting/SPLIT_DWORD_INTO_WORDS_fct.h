@@ -29,7 +29,7 @@
 #include "forte_array_variable.h"
 
 class FORTE_SPLIT_DWORD_INTO_WORDS final : public CFunctionBlock {
-  DECLARE_FIRMWARE_FB(FORTE_SPLIT_DWORD_INTO_WORDS)
+    DECLARE_FIRMWARE_FB(FORTE_SPLIT_DWORD_INTO_WORDS)
 
   private:
     static const CStringDictionary::TStringId scmDataInputNames[];
@@ -89,5 +89,3 @@ class FORTE_SPLIT_DWORD_INTO_WORDS final : public CFunctionBlock {
 };
 
 void func_SPLIT_DWORD_INTO_WORDS(CIEC_DWORD st_lv_IN, CIEC_WORD &st_lv_WORD_00, CIEC_WORD &st_lv_WORD_01);
-
-

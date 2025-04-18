@@ -17,29 +17,33 @@
 #include "opcconnection.h"
 #include "opcprocessvar.h"
 
-CCmd_AddConnection::CCmd_AddConnection(COpcConnectionImpl *paConnectionimpl, const std::string& paGroupName,
-      unsigned long paReqUpdateRate, float paDeadBand, std::vector<COpcProcessVar*> paNewItems) :
-      mConnection(paConnectionimpl), mGroupName(paGroupName), mReqUpdateRate(paReqUpdateRate), mDeadBand(paDeadBand) {
-  for(auto opcVar : paNewItems){
-    if(COpcProcessVar::e_FBInput == opcVar->getItemFunction()){
+CCmd_AddConnection::CCmd_AddConnection(COpcConnectionImpl *paConnectionimpl,
+                                       const std::string &paGroupName,
+                                       unsigned long paReqUpdateRate,
+                                       float paDeadBand,
+                                       std::vector<COpcProcessVar *> paNewItems) :
+    mConnection(paConnectionimpl),
+    mGroupName(paGroupName),
+    mReqUpdateRate(paReqUpdateRate),
+    mDeadBand(paDeadBand) {
+  for (auto opcVar : paNewItems) {
+    if (COpcProcessVar::e_FBInput == opcVar->getItemFunction()) {
       mWriteItems.push_back(opcVar->getItemName());
-    }
-    else if(COpcProcessVar::e_FBOutput == opcVar->getItemFunction()){
+    } else if (COpcProcessVar::e_FBOutput == opcVar->getItemFunction()) {
       mReadItems.push_back(opcVar->getItemName());
-    }
-    else{
+    } else {
       DEVLOG_ERROR("COpcProcessVar::getItemFunction() returned unknown value\n");
     }
   }
 }
 
-void CCmd_AddConnection::runCommand(){
-  if(mConnection->connect(mGroupName)){
-    if(mConnection->addGroup(mGroupName,mReqUpdateRate,mDeadBand)){
-      mConnection->addItemList(mGroupName,mReadItems, mWriteItems);
+void CCmd_AddConnection::runCommand() {
+  if (mConnection->connect(mGroupName)) {
+    if (mConnection->addGroup(mGroupName, mReqUpdateRate, mDeadBand)) {
+      mConnection->addItemList(mGroupName, mReadItems, mWriteItems);
     }
   }
 }
-const char* CCmd_AddConnection::getCommandName() const{
+const char *CCmd_AddConnection::getCommandName() const {
   return "Cmd_AddConnection";
 }

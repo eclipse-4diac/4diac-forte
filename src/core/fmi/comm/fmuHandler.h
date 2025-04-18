@@ -10,7 +10,6 @@
  * Jose Cabral - initial API and implementation and/or initial documentation
  *******************************************************************************/
 
-
 #ifndef FMUHANDLER_H_
 #define FMUHANDLER_H_
 
@@ -25,13 +24,11 @@
 
 class fmuHandler : public CExternalEventHandler {
     DECLARE_HANDLER(fmuHandler)
-public:
-    enum RegisterLayerReturnCodes{
-      eRegisterLayerSucceeded, eWrongLayer
-    };
-    int registerLayer(fmuComLayer* paLayer);
+  public:
+    enum RegisterLayerReturnCodes { eRegisterLayerSucceeded, eWrongLayer };
+    int registerLayer(fmuComLayer *paLayer);
 
-    void unregisterLayer(fmuComLayer* paLayer);
+    void unregisterLayer(fmuComLayer *paLayer);
 
     void fmuMessageProcessed();
 
@@ -51,21 +48,18 @@ public:
     int getPriority() const override;
     static void fmuMessageArrived(void *pa_value);
 
-    std::map<CFunctionBlock*, std::vector<fmuValueContainer*>*>* getOutputMap(){
+    std::map<CFunctionBlock *, std::vector<fmuValueContainer *> *> *getOutputMap() {
       return &outputMap;
     }
 
-    std::map<CFunctionBlock*, std::vector<fmuValueContainer*>*>* getInputMap(){
+    std::map<CFunctionBlock *, std::vector<fmuValueContainer *> *> *getInputMap() {
       return &inputMap;
     }
 
   private:
-
-    static CSinglyLinkedList<fmuComLayer*> mlayers;
-    std::map<CFunctionBlock*, std::vector<fmuValueContainer*>*> outputMap;
-    std::map<CFunctionBlock*, std::vector<fmuValueContainer*>*> inputMap;
-
+    static CSinglyLinkedList<fmuComLayer *> mlayers;
+    std::map<CFunctionBlock *, std::vector<fmuValueContainer *> *> outputMap;
+    std::map<CFunctionBlock *, std::vector<fmuValueContainer *> *> inputMap;
 };
 
 #endif /* fmuHANDLER_H_ */
-

@@ -18,12 +18,13 @@ USE_STRING_ID(PreferredProvider);
 USE_STRING_ID(providerCloud);
 USE_STRING_ID(providerSystem);
 
-
 DEFINE_FIRMWARE_DATATYPE(PreferredProvider, STRID(PreferredProvider));
 
 CIEC_PreferredProvider::CIEC_PreferredProvider() :
     CIEC_STRUCT(STRID(PreferredProvider), 2, scmElementTypes, scmElementNames, e_APPLICATION + e_CONSTRUCTED + 1) {
 }
 
-const CStringDictionary::TStringId CIEC_PreferredProvider::scmElementTypes[] = { STRID(ArrowheadSystem), STRID(ArrowheadCloud) };
-const CStringDictionary::TStringId CIEC_PreferredProvider::scmElementNames[] = { STRID(providerSystem), STRID(providerCloud) };
+const CStringDictionary::TStringId CIEC_PreferredProvider::scmElementTypes[] = {STRID(ArrowheadSystem),
+                                                                                STRID(ArrowheadCloud)};
+const CStringDictionary::TStringId CIEC_PreferredProvider::scmElementNames[] = {STRID(providerSystem),
+                                                                                STRID(providerCloud)};

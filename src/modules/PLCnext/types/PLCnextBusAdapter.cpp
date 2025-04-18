@@ -31,7 +31,6 @@ USE_STRING_ID(QO);
 USE_STRING_ID(UINT);
 USE_STRING_ID(UpdateInterval);
 
-
 #include "iec61131_functions.h"
 #include "forte_array_common.h"
 #include "forte_array.h"
@@ -44,8 +43,10 @@ DEFINE_ADAPTER_TYPE(FORTE_PLCnextBusAdapter, STRID(PLCnextBusAdapter))
 
 const CStringDictionary::TStringId FORTE_PLCnextBusAdapter::scmDataInputNames[] = {STRID(QO)};
 const CStringDictionary::TStringId FORTE_PLCnextBusAdapter::scmDataInputTypeIds[] = {STRID(BOOL)};
-const CStringDictionary::TStringId FORTE_PLCnextBusAdapter::scmDataOutputNames[] = {STRID(QI), STRID(MasterId), STRID(Index), STRID(UpdateInterval)};
-const CStringDictionary::TStringId FORTE_PLCnextBusAdapter::scmDataOutputTypeIds[] = {STRID(BOOL), STRID(UINT), STRID(UINT), STRID(UINT)};
+const CStringDictionary::TStringId FORTE_PLCnextBusAdapter::scmDataOutputNames[] = {
+    STRID(QI), STRID(MasterId), STRID(Index), STRID(UpdateInterval)};
+const CStringDictionary::TStringId FORTE_PLCnextBusAdapter::scmDataOutputTypeIds[] = {STRID(BOOL), STRID(UINT),
+                                                                                      STRID(UINT), STRID(UINT)};
 const TDataIOID FORTE_PLCnextBusAdapter::scmEIWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_PLCnextBusAdapter::scmEIWithIndexes[] = {0};
 const CStringDictionary::TStringId FORTE_PLCnextBusAdapter::scmEventInputNames[] = {STRID(INITO)};
@@ -55,70 +56,90 @@ const TForteInt16 FORTE_PLCnextBusAdapter::scmEOWithIndexes[] = {0};
 const CStringDictionary::TStringId FORTE_PLCnextBusAdapter::scmEventOutputNames[] = {STRID(INIT)};
 const CStringDictionary::TStringId FORTE_PLCnextBusAdapter::scmEventOutputTypeIds[] = {STRID(EInit)};
 
-const SFBInterfaceSpec FORTE_PLCnextBusAdapter::scmFBInterfaceSpecSocket = {
-  1, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,
-  1, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes,
-  1, scmDataInputNames, scmDataInputTypeIds,
-  4, scmDataOutputNames, scmDataOutputTypeIds,
-  0, nullptr,
-  0, nullptr
-};
+const SFBInterfaceSpec FORTE_PLCnextBusAdapter::scmFBInterfaceSpecSocket = {1,
+                                                                            scmEventInputNames,
+                                                                            scmEventInputTypeIds,
+                                                                            scmEIWith,
+                                                                            scmEIWithIndexes,
+                                                                            1,
+                                                                            scmEventOutputNames,
+                                                                            scmEventOutputTypeIds,
+                                                                            scmEOWith,
+                                                                            scmEOWithIndexes,
+                                                                            1,
+                                                                            scmDataInputNames,
+                                                                            scmDataInputTypeIds,
+                                                                            4,
+                                                                            scmDataOutputNames,
+                                                                            scmDataOutputTypeIds,
+                                                                            0,
+                                                                            nullptr,
+                                                                            0,
+                                                                            nullptr};
 
-const SFBInterfaceSpec FORTE_PLCnextBusAdapter::scmFBInterfaceSpecPlug = {
-  1, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes,
-  1, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,
-  4, scmDataOutputNames, scmDataOutputTypeIds,
-  1, scmDataInputNames, scmDataInputTypeIds,
-  0, nullptr,
-  0, nullptr
-};
+const SFBInterfaceSpec FORTE_PLCnextBusAdapter::scmFBInterfaceSpecPlug = {1,
+                                                                          scmEventOutputNames,
+                                                                          scmEventOutputTypeIds,
+                                                                          scmEOWith,
+                                                                          scmEOWithIndexes,
+                                                                          1,
+                                                                          scmEventInputNames,
+                                                                          scmEventInputTypeIds,
+                                                                          scmEIWith,
+                                                                          scmEIWithIndexes,
+                                                                          4,
+                                                                          scmDataOutputNames,
+                                                                          scmDataOutputTypeIds,
+                                                                          1,
+                                                                          scmDataInputNames,
+                                                                          scmDataInputTypeIds,
+                                                                          0,
+                                                                          nullptr,
+                                                                          0,
+                                                                          nullptr};
 
 void FORTE_PLCnextBusAdapter::readInputData(const TEventID paEIID) {
-  if(isSocket()) {
-    switch(paEIID) {
+  if (isSocket()) {
+    switch (paEIID) {
       case scmEventINITOID: {
-          readData(0, *mDIs[0], mDIConns[0]);
+        readData(0, *mDIs[0], mDIConns[0]);
         break;
       }
-      default:
-        break;
+      default: break;
     }
   } else {
-    switch(paEIID) {
+    switch (paEIID) {
       case scmEventINITID: {
-          readData(2, *mDIs[2], mDIConns[2]);
+        readData(2, *mDIs[2], mDIConns[2]);
         readData(3, *mDIs[3], mDIConns[3]);
         readData(1, *mDIs[1], mDIConns[1]);
         readData(0, *mDIs[0], mDIConns[0]);
         break;
       }
-      default:
-        break;
+      default: break;
     }
   }
 }
 
 void FORTE_PLCnextBusAdapter::writeOutputData(const TEventID paEIID) {
-  if(isSocket()) {
-    switch(paEIID) {
+  if (isSocket()) {
+    switch (paEIID) {
       case scmEventINITID: {
-          writeData(2, *mDOs[2], mDOConns[2]);
+        writeData(2, *mDOs[2], mDOConns[2]);
         writeData(3, *mDOs[3], mDOConns[3]);
         writeData(1, *mDOs[1], mDOConns[1]);
         writeData(0, *mDOs[0], mDOConns[0]);
         break;
       }
-      default:
-        break;
+      default: break;
     }
   } else {
-    switch(paEIID) {
+    switch (paEIID) {
       case scmEventINITOID: {
-          writeData(0, *mDOs[0], mDOConns[0]);
+        writeData(0, *mDOs[0], mDOConns[0]);
         break;
       }
-      default:
-        break;
+      default: break;
     }
   }
 }

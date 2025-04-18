@@ -22,9 +22,7 @@
 #include "../../../src/core/datatypes/forte_dint.h"
 #include "../../../src/core/typelib.h"
 
-
 USE_STRING_ID(INT);
-
 
 BOOST_AUTO_TEST_SUITE(CIEC_ARRAY_TEMPLATE_function_test)
 
@@ -58,9 +56,9 @@ BOOST_AUTO_TEST_CASE(InstantiateTemplateWithLimitsArray) {
 }
 
 BOOST_AUTO_TEST_CASE(InitializerListStaticArray) {
-  CIEC_ARRAY_FIXED<CIEC_INT, 0, 10> intArray = {CIEC_INT(1), CIEC_INT(2), CIEC_INT(3), CIEC_INT(4),
-                                                    CIEC_INT(5), CIEC_INT(6), CIEC_INT(7), CIEC_INT(8),
-                                                    CIEC_INT(9), CIEC_INT(10), CIEC_INT(11)};
+  CIEC_ARRAY_FIXED<CIEC_INT, 0, 10> intArray = {CIEC_INT(1), CIEC_INT(2),  CIEC_INT(3), CIEC_INT(4),
+                                                CIEC_INT(5), CIEC_INT(6),  CIEC_INT(7), CIEC_INT(8),
+                                                CIEC_INT(9), CIEC_INT(10), CIEC_INT(11)};
 
   BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(intArray[0]), 1);
   BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(intArray[1]), 2);
@@ -76,9 +74,9 @@ BOOST_AUTO_TEST_CASE(InitializerListStaticArray) {
 }
 
 BOOST_AUTO_TEST_CASE(InitializeNegativeRangesStaticArray) {
-  CIEC_ARRAY_FIXED<CIEC_INT, -10, 0> intArray = {CIEC_INT(1), CIEC_INT(2), CIEC_INT(3), CIEC_INT(4),
-                                                    CIEC_INT(5), CIEC_INT(6), CIEC_INT(7), CIEC_INT(8),
-                                                    CIEC_INT(9), CIEC_INT(10), CIEC_INT(11)};
+  CIEC_ARRAY_FIXED<CIEC_INT, -10, 0> intArray = {CIEC_INT(1), CIEC_INT(2),  CIEC_INT(3), CIEC_INT(4),
+                                                 CIEC_INT(5), CIEC_INT(6),  CIEC_INT(7), CIEC_INT(8),
+                                                 CIEC_INT(9), CIEC_INT(10), CIEC_INT(11)};
 
   BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(intArray[-10]), 1);
   BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(intArray[-9]), 2);
@@ -94,8 +92,8 @@ BOOST_AUTO_TEST_CASE(InitializeNegativeRangesStaticArray) {
 }
 
 BOOST_AUTO_TEST_CASE(StaticArrayIndexAccesWithIECTypes) {
-  CIEC_ARRAY_FIXED<CIEC_INT, -10, 0> intArray = {CIEC_INT(1), CIEC_INT(2), CIEC_INT(3), CIEC_INT(4),
-                                                 CIEC_INT(5), CIEC_INT(6), CIEC_INT(7), CIEC_INT(8),
+  CIEC_ARRAY_FIXED<CIEC_INT, -10, 0> intArray = {CIEC_INT(1), CIEC_INT(2),  CIEC_INT(3), CIEC_INT(4),
+                                                 CIEC_INT(5), CIEC_INT(6),  CIEC_INT(7), CIEC_INT(8),
                                                  CIEC_INT(9), CIEC_INT(10), CIEC_INT(11)};
 
   BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(intArray[CIEC_INT(-10)]), 1);
@@ -139,8 +137,7 @@ BOOST_AUTO_TEST_CASE(WriteElementsStaticArray) {
   BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(intArray[10]), 11);
 }
 
-BOOST_AUTO_TEST_CASE(WriteElementsStaticArrayWithIECTypeIndices)
-{
+BOOST_AUTO_TEST_CASE(WriteElementsStaticArrayWithIECTypeIndices) {
   CIEC_ARRAY_FIXED<CIEC_INT, 0, 10> intArray;
 
   intArray[CIEC_UINT(0)] = CIEC_INT(1);
@@ -168,11 +165,10 @@ BOOST_AUTO_TEST_CASE(WriteElementsStaticArrayWithIECTypeIndices)
   BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(intArray[10]), 11);
 }
 
-BOOST_AUTO_TEST_CASE(StaticToStaticCopyConstructor)
-{
-  CIEC_ARRAY_FIXED<CIEC_INT, 0, 10> intArraySource = {CIEC_INT(1), CIEC_INT(2), CIEC_INT(3), CIEC_INT(4),
-                                                   CIEC_INT(5), CIEC_INT(6), CIEC_INT(7), CIEC_INT(8),
-                                                   CIEC_INT(9), CIEC_INT(10), CIEC_INT(11)};
+BOOST_AUTO_TEST_CASE(StaticToStaticCopyConstructor) {
+  CIEC_ARRAY_FIXED<CIEC_INT, 0, 10> intArraySource = {CIEC_INT(1), CIEC_INT(2),  CIEC_INT(3), CIEC_INT(4),
+                                                      CIEC_INT(5), CIEC_INT(6),  CIEC_INT(7), CIEC_INT(8),
+                                                      CIEC_INT(9), CIEC_INT(10), CIEC_INT(11)};
 
   CIEC_ARRAY_FIXED<CIEC_INT, 0, 10> intArray(intArraySource);
 
@@ -189,11 +185,10 @@ BOOST_AUTO_TEST_CASE(StaticToStaticCopyConstructor)
   BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(intArray[10]), 11);
 }
 
-BOOST_AUTO_TEST_CASE(StaticToStaticDifferentTypeSameSizeCopyConstructor)
-{
-  CIEC_ARRAY_FIXED<CIEC_INT, 0, 10> intArraySource = {CIEC_INT(1), CIEC_INT(2), CIEC_INT(3), CIEC_INT(4),
-                                                         CIEC_INT(5), CIEC_INT(6), CIEC_INT(7), CIEC_INT(8),
-                                                         CIEC_INT(9), CIEC_INT(10), CIEC_INT(11)};
+BOOST_AUTO_TEST_CASE(StaticToStaticDifferentTypeSameSizeCopyConstructor) {
+  CIEC_ARRAY_FIXED<CIEC_INT, 0, 10> intArraySource = {CIEC_INT(1), CIEC_INT(2),  CIEC_INT(3), CIEC_INT(4),
+                                                      CIEC_INT(5), CIEC_INT(6),  CIEC_INT(7), CIEC_INT(8),
+                                                      CIEC_INT(9), CIEC_INT(10), CIEC_INT(11)};
 
   CIEC_ARRAY_FIXED<CIEC_DINT, 0, 10> intArray(intArraySource);
 
@@ -210,11 +205,10 @@ BOOST_AUTO_TEST_CASE(StaticToStaticDifferentTypeSameSizeCopyConstructor)
   BOOST_CHECK_EQUAL(static_cast<CIEC_DINT::TValueType>(intArray[10]), 11);
 }
 
-BOOST_AUTO_TEST_CASE(StaticToStaticDifferentTypeDifferentSizeWindowCopyConstructor)
-{
-  CIEC_ARRAY_FIXED<CIEC_INT, 0, 10> intArraySource = {CIEC_INT(1), CIEC_INT(2), CIEC_INT(3), CIEC_INT(4),
-                                                         CIEC_INT(5), CIEC_INT(6), CIEC_INT(7), CIEC_INT(8),
-                                                         CIEC_INT(9), CIEC_INT(10), CIEC_INT(11)};
+BOOST_AUTO_TEST_CASE(StaticToStaticDifferentTypeDifferentSizeWindowCopyConstructor) {
+  CIEC_ARRAY_FIXED<CIEC_INT, 0, 10> intArraySource = {CIEC_INT(1), CIEC_INT(2),  CIEC_INT(3), CIEC_INT(4),
+                                                      CIEC_INT(5), CIEC_INT(6),  CIEC_INT(7), CIEC_INT(8),
+                                                      CIEC_INT(9), CIEC_INT(10), CIEC_INT(11)};
 
   CIEC_ARRAY_FIXED<CIEC_DINT, 3, 5> intArray(intArraySource);
 
@@ -223,11 +217,10 @@ BOOST_AUTO_TEST_CASE(StaticToStaticDifferentTypeDifferentSizeWindowCopyConstruct
   BOOST_CHECK_EQUAL(static_cast<CIEC_DINT::TValueType>(intArray[5]), 6);
 }
 
-BOOST_AUTO_TEST_CASE(StaticToStaticDifferentTypeMovedSizeWindowCopyConstructor)
-{
-  CIEC_ARRAY_FIXED<CIEC_INT, 0, 10> intArraySource = {CIEC_INT(1), CIEC_INT(2), CIEC_INT(3), CIEC_INT(4),
-                                                         CIEC_INT(5), CIEC_INT(6), CIEC_INT(7), CIEC_INT(8),
-                                                         CIEC_INT(9), CIEC_INT(10), CIEC_INT(11)};
+BOOST_AUTO_TEST_CASE(StaticToStaticDifferentTypeMovedSizeWindowCopyConstructor) {
+  CIEC_ARRAY_FIXED<CIEC_INT, 0, 10> intArraySource = {CIEC_INT(1), CIEC_INT(2),  CIEC_INT(3), CIEC_INT(4),
+                                                      CIEC_INT(5), CIEC_INT(6),  CIEC_INT(7), CIEC_INT(8),
+                                                      CIEC_INT(9), CIEC_INT(10), CIEC_INT(11)};
 
   CIEC_ARRAY_FIXED<CIEC_DINT, 3, 12> dintArray(intArraySource);
 
@@ -245,8 +238,7 @@ BOOST_AUTO_TEST_CASE(StaticToStaticDifferentTypeMovedSizeWindowCopyConstructor)
 
 /* Variable length tests */
 
-BOOST_AUTO_TEST_CASE(InstantiateSizeOnlyVariableArray)
-{
+BOOST_AUTO_TEST_CASE(InstantiateSizeOnlyVariableArray) {
   CIEC_ARRAY_VARIABLE<CIEC_BOOL> boolArray(0, 10);
   BOOST_CHECK_EQUAL(boolArray.size(), 11);
   BOOST_CHECK_EQUAL(boolArray.getLowerBound(), 0);
@@ -260,8 +252,7 @@ BOOST_AUTO_TEST_CASE(InstantiateSizeOnlyVariableArray)
   BOOST_CHECK_EQUAL(boolArray.getElementDataTypeID(), CIEC_ANY::e_BOOL);
 }
 
-BOOST_AUTO_TEST_CASE(InstantiateVariableArrayFromInitList)
-{
+BOOST_AUTO_TEST_CASE(InstantiateVariableArrayFromInitList) {
   CIEC_ARRAY_VARIABLE<CIEC_BOOL> boolArray = {CIEC_BOOL(true), CIEC_BOOL(false), CIEC_BOOL(false), CIEC_BOOL(true)};
   BOOST_CHECK_EQUAL(boolArray.size(), 4);
   BOOST_CHECK_EQUAL(boolArray.getLowerBound(), 0);
@@ -294,9 +285,9 @@ BOOST_AUTO_TEST_CASE(VariableArrayAccessIECTypes) {
 /* copy tests */
 
 BOOST_AUTO_TEST_CASE(CopyFromStaticToVariableArray) {
-  CIEC_ARRAY_FIXED<CIEC_INT, 0, 10> intArraySource = {CIEC_INT(1), CIEC_INT(2), CIEC_INT(3), CIEC_INT(4),
-                                                         CIEC_INT(5), CIEC_INT(6), CIEC_INT(7), CIEC_INT(8),
-                                                         CIEC_INT(9), CIEC_INT(10), CIEC_INT(11)};
+  CIEC_ARRAY_FIXED<CIEC_INT, 0, 10> intArraySource = {CIEC_INT(1), CIEC_INT(2),  CIEC_INT(3), CIEC_INT(4),
+                                                      CIEC_INT(5), CIEC_INT(6),  CIEC_INT(7), CIEC_INT(8),
+                                                      CIEC_INT(9), CIEC_INT(10), CIEC_INT(11)};
 
   CIEC_ARRAY_VARIABLE<CIEC_INT> intArray(intArraySource);
 
@@ -313,9 +304,9 @@ BOOST_AUTO_TEST_CASE(CopyFromStaticToVariableArray) {
   BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(intArray[10]), 11);
 }
 
-BOOST_AUTO_TEST_CASE(CopyFromVariableToStaticArray)
-{
-  CIEC_ARRAY_VARIABLE<CIEC_BOOL> boolArraySource = {CIEC_BOOL(true), CIEC_BOOL(false), CIEC_BOOL(false), CIEC_BOOL(true)};
+BOOST_AUTO_TEST_CASE(CopyFromVariableToStaticArray) {
+  CIEC_ARRAY_VARIABLE<CIEC_BOOL> boolArraySource = {CIEC_BOOL(true), CIEC_BOOL(false), CIEC_BOOL(false),
+                                                    CIEC_BOOL(true)};
   CIEC_ARRAY_FIXED<CIEC_BOOL, 0, 3> boolArray(boolArraySource);
 
   BOOST_CHECK_EQUAL(boolArray[0], CIEC_BOOL(true));

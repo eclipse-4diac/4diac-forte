@@ -1,17 +1,18 @@
-/*************************************************************************  
- *** Copyright (c) 2017, 2024 fortiss GmbH, JKU, HR Agrartechnik GmbH  
- *** This program and the accompanying materials are made available under the  
- *** terms of the Eclipse Public License 2.0 which is available at  
- *** http://www.eclipse.org/legal/epl-2.0.  
- ***  
- *** SPDX-License-Identifier: EPL-2.0  
+/*************************************************************************
+ *** Copyright (c) 2017, 2024 fortiss GmbH, JKU, HR Agrartechnik GmbH
+ *** This program and the accompanying materials are made available under the
+ *** terms of the Eclipse Public License 2.0 which is available at
+ *** http://www.eclipse.org/legal/epl-2.0.
+ ***
+ *** SPDX-License-Identifier: EPL-2.0
  ***
  *** This file was generated using the 4DIAC FORTE Export Filter V1.0.x NG!
  ***
  *** Name: E_CTUD_UDINT
  *** Description: Event-Driven Up-Down Counter
  *** Version:
- ***     1.0: 2017-09-22/Alois Zoitl - fortiss GmbH - initial API and implementation and/or initial documentation (E_CTUD)
+ ***     1.0: 2017-09-22/Alois Zoitl - fortiss GmbH - initial API and implementation and/or initial documentation
+ *(E_CTUD)
  ***     1.1: 2019-07-09/Alois Zoitl - JKU - fixed bug in down counting (E_CTUD)
  ***     1.2: 2024-02-10/Franz Hoepfinger - HR Agrartechnik GmbH - Copy over E_CTUD to E_CTUD_UDINT
  *************************************************************************/
@@ -27,9 +28,8 @@
 #include "forte_array_fixed.h"
 #include "forte_array_variable.h"
 
-
 class FORTE_E_CTUD_UDINT final : public CBasicFB {
-  DECLARE_FIRMWARE_FB(FORTE_E_CTUD_UDINT)
+    DECLARE_FIRMWARE_FB(FORTE_E_CTUD_UDINT)
 
   private:
     static const CStringDictionary::TStringId scmDataInputNames[];
@@ -141,5 +141,3 @@ class FORTE_E_CTUD_UDINT final : public CBasicFB {
       evt_CU(paPV, paQU, paQD, paCV);
     }
 };
-
-

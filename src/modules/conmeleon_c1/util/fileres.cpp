@@ -15,11 +15,10 @@
 #include <cstdlib>
 #include <cstdarg>
 
-
-CFileResource::CFileResource(const char* pszFileName, const char* pszOpenMode /*= "a+"*/) : mFileHandle(forte_fopen(pszFileName, pszOpenMode)) {
+CFileResource::CFileResource(const char *pszFileName, const char *pszOpenMode /*= "a+"*/) :
+    mFileHandle(forte_fopen(pszFileName, pszOpenMode)) {
 
   m_ReadOnly = checkModeReadOnly(pszOpenMode);
-
 }
 
 CFileResource::~CFileResource() {
@@ -29,7 +28,7 @@ CFileResource::~CFileResource() {
   }
 }
 
-void CFileResource::writeLine(const char* pszData) const {
+void CFileResource::writeLine(const char *pszData) const {
 
   if (pszData == nullptr) {
     return; // bad parameter, just return and do nothing
@@ -46,18 +45,18 @@ void CFileResource::writeLine(const char* pszData) const {
   }
 }
 
-void CFileResource::writeFormattedLine(const char* pszFormat, ...) const {
+void CFileResource::writeFormattedLine(const char *pszFormat, ...) const {
 
   if (pszFormat == nullptr) {
     return; // bad parameter, just return and do nothing
   }
   if (!m_ReadOnly && (mFileHandle != nullptr)) {
-    char     buffer[256]; // buffer to hold formatted string including the arguments
-    va_list   args;
+    char buffer[256]; // buffer to hold formatted string including the arguments
+    va_list args;
 
     // start to deal with the arguments
-    va_start (args, pszFormat);
-    if (vsprintf (buffer,pszFormat, args) > 0) {
+    va_start(args, pszFormat);
+    if (vsprintf(buffer, pszFormat, args) > 0) {
       // formatted string was assembled properly
       std::fputs(buffer, mFileHandle);
 
@@ -72,7 +71,7 @@ void CFileResource::writeFormattedLine(const char* pszFormat, ...) const {
   }
 }
 
-void CFileResource::readLine(char* pszData, std::size_t nLength) const {
+void CFileResource::readLine(char *pszData, std::size_t nLength) const {
 
   if ((pszData == nullptr) || (nLength < 1)) {
     return; // bad parameters, just return and do nothing
@@ -89,8 +88,7 @@ void CFileResource::readLine(char* pszData, std::size_t nLength) const {
     nNrCharsRead = getline(&pszLine, &nLen, mFileHandle);
     if (nNrCharsRead != -1) {
       strncpy(pszData, pszLine, nLength);
-    }
-    else {
+    } else {
       // TODO: add logging or trace function like "Error during write to file operation! Check file permissions!";
     }
 
@@ -99,9 +97,9 @@ void CFileResource::readLine(char* pszData, std::size_t nLength) const {
   }
 }
 
-bool checkModeReadOnly (const char* pszMode) {
+bool checkModeReadOnly(const char *pszMode) {
 
-  bool    bIsReadOnly;
+  bool bIsReadOnly;
 
   if (pszMode == nullptr) {
     return false;
@@ -112,6 +110,4 @@ bool checkModeReadOnly (const char* pszMode) {
 
   // and we don't want to have a "+"
   return (bIsReadOnly && (strstr(pszMode, "+") == nullptr));
-
 }
-

@@ -14,9 +14,11 @@
 
 #include "../sysfs/sysfsprocint.h"
 
-class COdroidProcessInterface : public CSysFsProcessInterface{
+class COdroidProcessInterface : public CSysFsProcessInterface {
   public:
-    COdroidProcessInterface(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec& paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId);
+    COdroidProcessInterface(forte::core::CFBContainer &paContainer,
+                            const SFBInterfaceSpec &paInterfaceSpec,
+                            const CStringDictionary::TStringId paInstanceNameId);
     ~COdroidProcessInterface() override;
 
   protected:
@@ -25,10 +27,9 @@ class COdroidProcessInterface : public CSysFsProcessInterface{
     bool readWord();
 
   private:
-
 };
 
-//tell the IX and QX FB that this is the process interface to be used
+// tell the IX and QX FB that this is the process interface to be used
 typedef COdroidProcessInterface CProcessInterface;
 
 #endif

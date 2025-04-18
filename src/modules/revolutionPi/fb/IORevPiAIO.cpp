@@ -36,15 +36,18 @@ USE_STRING_ID(STATUS);
 USE_STRING_ID(STRING);
 USE_STRING_ID(WSTRING);
 
-
 #include "../RevPiController.h"
 
 using namespace forte::core::io;
 
 DEFINE_FIRMWARE_FB(FORTE_IORevPiAIO, STRID(IORevPiAIO))
 
-const CStringDictionary::TStringId FORTE_IORevPiAIO::scmDataInputNames[] = {STRID(QI), STRID(AnalogInput_1), STRID(AnalogInput_2), STRID(AnalogInput_3), STRID(AnalogInput_4), STRID(RTD_1), STRID(RTD_2), STRID(AnalogOutput_1), STRID(AnalogOutput_2)};
-const CStringDictionary::TStringId FORTE_IORevPiAIO::scmDataInputTypeIds[] = {STRID(BOOL), STRID(STRING), STRID(STRING), STRID(STRING), STRID(STRING), STRID(STRING), STRID(STRING), STRID(STRING), STRID(STRING)};
+const CStringDictionary::TStringId FORTE_IORevPiAIO::scmDataInputNames[] = {
+    STRID(QI),    STRID(AnalogInput_1), STRID(AnalogInput_2),  STRID(AnalogInput_3), STRID(AnalogInput_4),
+    STRID(RTD_1), STRID(RTD_2),         STRID(AnalogOutput_1), STRID(AnalogOutput_2)};
+const CStringDictionary::TStringId FORTE_IORevPiAIO::scmDataInputTypeIds[] = {
+    STRID(BOOL),   STRID(STRING), STRID(STRING), STRID(STRING), STRID(STRING),
+    STRID(STRING), STRID(STRING), STRID(STRING), STRID(STRING)};
 const CStringDictionary::TStringId FORTE_IORevPiAIO::scmDataOutputNames[] = {STRID(QO), STRID(STATUS)};
 const CStringDictionary::TStringId FORTE_IORevPiAIO::scmDataOutputTypeIds[] = {STRID(BOOL), STRID(WSTRING)};
 const TDataIOID FORTE_IORevPiAIO::scmEIWith[] = {1, 2, 5, 3, 4, 6, 7, 8, 0, scmWithListDelimiter};
@@ -56,23 +59,35 @@ const TForteInt16 FORTE_IORevPiAIO::scmEOWithIndexes[] = {0, 2};
 const CStringDictionary::TStringId FORTE_IORevPiAIO::scmEventOutputNames[] = {STRID(MAPO), STRID(IND)};
 const CStringDictionary::TStringId FORTE_IORevPiAIO::scmEventOutputTypeIds[] = {STRID(Event), STRID(Event)};
 const SAdapterInstanceDef FORTE_IORevPiAIO::scmAdapterInstances[] = {
-  {STRID(IORevPiBusAdapter), STRID(BusAdapterOut), true},
-  {STRID(IORevPiBusAdapter), STRID(BusAdapterIn), false}
-};
-const SFBInterfaceSpec FORTE_IORevPiAIO::scmFBInterfaceSpec = {
-  1, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,
-  2, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes,
-  9, scmDataInputNames, scmDataInputTypeIds,
-  2, scmDataOutputNames, scmDataOutputTypeIds,
-  0, nullptr,
-  2, scmAdapterInstances
-};
+    {STRID(IORevPiBusAdapter), STRID(BusAdapterOut), true}, {STRID(IORevPiBusAdapter), STRID(BusAdapterIn), false}};
+const SFBInterfaceSpec FORTE_IORevPiAIO::scmFBInterfaceSpec = {1,
+                                                               scmEventInputNames,
+                                                               scmEventInputTypeIds,
+                                                               scmEIWith,
+                                                               scmEIWithIndexes,
+                                                               2,
+                                                               scmEventOutputNames,
+                                                               scmEventOutputTypeIds,
+                                                               scmEOWith,
+                                                               scmEOWithIndexes,
+                                                               9,
+                                                               scmDataInputNames,
+                                                               scmDataInputTypeIds,
+                                                               2,
+                                                               scmDataOutputNames,
+                                                               scmDataOutputTypeIds,
+                                                               0,
+                                                               nullptr,
+                                                               2,
+                                                               scmAdapterInstances};
 
-const TForteUInt8 FORTE_IORevPiAIO::scmSlaveConfigurationIO[] = { };
+const TForteUInt8 FORTE_IORevPiAIO::scmSlaveConfigurationIO[] = {};
 const TForteUInt8 FORTE_IORevPiAIO::scmSlaveConfigurationIONum = 0;
 
-FORTE_IORevPiAIO::FORTE_IORevPiAIO(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
-    IOConfigFBMultiSlave(scmSlaveConfigurationIO, scmSlaveConfigurationIONum, 103, paContainer, scmFBInterfaceSpec, paInstanceNameId),
+FORTE_IORevPiAIO::FORTE_IORevPiAIO(const CStringDictionary::TStringId paInstanceNameId,
+                                   forte::core::CFBContainer &paContainer) :
+    IOConfigFBMultiSlave(
+        scmSlaveConfigurationIO, scmSlaveConfigurationIONum, 103, paContainer, scmFBInterfaceSpec, paInstanceNameId),
     conn_MAPO(*this, 0),
     conn_IND(*this, 1),
     conn_QI(nullptr),
@@ -85,19 +100,19 @@ FORTE_IORevPiAIO::FORTE_IORevPiAIO(const CStringDictionary::TStringId paInstance
     conn_AnalogOutput_1(nullptr),
     conn_AnalogOutput_2(nullptr),
     conn_QO(*this, 0, var_QO),
-    conn_STATUS(*this, 1, var_STATUS){
+    conn_STATUS(*this, 1, var_STATUS) {
 
-};
-
+    };
 
 void FORTE_IORevPiAIO::initHandles() {
   uint8_t inputOffset = 0;
   uint8_t outputOffset = 0;
 
   for (int i = 1; i < 9; i++) {
-    uint8_t* currentOffset = (i < 7) ? &inputOffset : &outputOffset;
-    RevPiController::HandleDescriptor desc(static_cast<CIEC_STRING*>(getDI(i))->getStorage(),
-        (i < 7) ? IOMapper::In : IOMapper::Out, mIndex, CIEC_ANY::e_WORD, *currentOffset, 0);
+    uint8_t *currentOffset = (i < 7) ? &inputOffset : &outputOffset;
+    RevPiController::HandleDescriptor desc(static_cast<CIEC_STRING *>(getDI(i))->getStorage(),
+                                           (i < 7) ? IOMapper::In : IOMapper::Out, mIndex, CIEC_ANY::e_WORD,
+                                           *currentOffset, 0);
     initHandle(desc);
     *currentOffset = static_cast<uint8_t>(*currentOffset + 2);
   }
@@ -118,7 +133,7 @@ void FORTE_IORevPiAIO::setInitialValues() {
 }
 
 void FORTE_IORevPiAIO::readInputData(const TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventMAPID: {
       readData(1, var_AnalogInput_1, conn_AnalogInput_1);
       readData(2, var_AnalogInput_2, conn_AnalogInput_2);
@@ -131,13 +146,12 @@ void FORTE_IORevPiAIO::readInputData(const TEventID paEIID) {
       readData(0, var_QI, conn_QI);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 void FORTE_IORevPiAIO::writeOutputData(const TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventMAPOID: {
       writeData(0, var_QO, conn_QO);
       break;
@@ -147,13 +161,12 @@ void FORTE_IORevPiAIO::writeOutputData(const TEventID paEIID) {
       writeData(1, var_STATUS, conn_STATUS);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 CIEC_ANY *FORTE_IORevPiAIO::getDI(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_QI;
     case 1: return &var_AnalogInput_1;
     case 2: return &var_AnalogInput_2;
@@ -168,7 +181,7 @@ CIEC_ANY *FORTE_IORevPiAIO::getDI(const size_t paIndex) {
 }
 
 CIEC_ANY *FORTE_IORevPiAIO::getDO(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_QO;
     case 1: return &var_STATUS;
   }
@@ -176,7 +189,7 @@ CIEC_ANY *FORTE_IORevPiAIO::getDO(const size_t paIndex) {
 }
 
 CEventConnection *FORTE_IORevPiAIO::getEOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_MAPO;
     case 1: return &conn_IND;
   }
@@ -184,7 +197,7 @@ CEventConnection *FORTE_IORevPiAIO::getEOConUnchecked(const TPortId paIndex) {
 }
 
 CDataConnection **FORTE_IORevPiAIO::getDIConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_QI;
     case 1: return &conn_AnalogInput_1;
     case 2: return &conn_AnalogInput_2;
@@ -199,7 +212,7 @@ CDataConnection **FORTE_IORevPiAIO::getDIConUnchecked(const TPortId paIndex) {
 }
 
 CDataConnection *FORTE_IORevPiAIO::getDOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_QO;
     case 1: return &conn_STATUS;
   }

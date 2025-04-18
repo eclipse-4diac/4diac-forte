@@ -20,15 +20,14 @@ unsigned long const EmbrickSPIHandler::scmMaxSpiSpeed = 700000;
 char const EmbrickSPIHandler::mSpiMode = SPI_CPHA;
 char const EmbrickSPIHandler::mSpiBitOrder = 0; // MSB first
 
-const char * const EmbrickSPIHandler::scmFailedToInitHandler = "Failed to init spidev handler. Check if spi is enabled.";
-const char * const EmbrickSPIHandler::scmFailedToConfigMode = "Failed to config spi write mode.";
-const char * const EmbrickSPIHandler::scmFailedToConfigBitOrder = "Failed to config spi bit order.";
-const char * const EmbrickSPIHandler::scmFailedToConfigSpeed = "Failed to config spi speed.";
-const char * const EmbrickSPIHandler::scmFailedToTestBus = "Failed to send test byte to spi.";
-const char * const EmbrickSPIHandler::scmFailedToTransferBuffer = "Failed to transfer buffer via spi.";
+const char *const EmbrickSPIHandler::scmFailedToInitHandler = "Failed to init spidev handler. Check if spi is enabled.";
+const char *const EmbrickSPIHandler::scmFailedToConfigMode = "Failed to config spi write mode.";
+const char *const EmbrickSPIHandler::scmFailedToConfigBitOrder = "Failed to config spi bit order.";
+const char *const EmbrickSPIHandler::scmFailedToConfigSpeed = "Failed to config spi speed.";
+const char *const EmbrickSPIHandler::scmFailedToTestBus = "Failed to send test byte to spi.";
+const char *const EmbrickSPIHandler::scmFailedToTransferBuffer = "Failed to transfer buffer via spi.";
 
-EmbrickSPIHandler::EmbrickSPIHandler(unsigned int paInterface) :
-    mError(0) {
+EmbrickSPIHandler::EmbrickSPIHandler(unsigned int paInterface) : mError(0) {
   // Convert int to string
   std::ostringstream interfaceStream;
   interfaceStream << paInterface;
@@ -42,31 +41,31 @@ EmbrickSPIHandler::~EmbrickSPIHandler() {
   deInit();
 }
 
-void EmbrickSPIHandler::init(const char* paSpidev) {
+void EmbrickSPIHandler::init(const char *paSpidev) {
   // Init spidev
   DEVLOG_DEBUG("emBrick[SPIHandler]: Open spidev '%s'\n", paSpidev);
   mFd = open(paSpidev, O_RDWR);
 
-  if(mFd < 0) {
+  if (mFd < 0) {
     return fail(scmFailedToInitHandler);
   }
   // Set mode to SPI_CPOL and SPI_CPHA
-  if(!config(SPI_IOC_WR_MODE, SPI_IOC_RD_MODE, mSpiMode)) {
+  if (!config(SPI_IOC_WR_MODE, SPI_IOC_RD_MODE, mSpiMode)) {
     return fail(scmFailedToConfigMode);
   }
   // Set MSB (Most Significant Bit First)
-  if(!config(SPI_IOC_WR_LSB_FIRST, SPI_IOC_RD_LSB_FIRST, mSpiBitOrder)) {
+  if (!config(SPI_IOC_WR_LSB_FIRST, SPI_IOC_RD_LSB_FIRST, mSpiBitOrder)) {
     return fail(scmFailedToConfigBitOrder);
   }
   // Set speed
-  if(!config(SPI_IOC_WR_MAX_SPEED_HZ, SPI_IOC_RD_MAX_SPEED_HZ, scmMaxSpiSpeed)) {
+  if (!config(SPI_IOC_WR_MAX_SPEED_HZ, SPI_IOC_RD_MAX_SPEED_HZ, scmMaxSpiSpeed)) {
     return fail(scmFailedToConfigSpeed);
   }
   mSpiSpeed = scmDefaultSpiSpeed;
 
   // Test
-  unsigned char testByte[1] = { 0 };
-  if(!transfer(testByte, testByte, 1)) {
+  unsigned char testByte[1] = {0};
+  if (!transfer(testByte, testByte, 1)) {
     return fail(scmFailedToTestBus);
   }
   DEVLOG_INFO("emBrick[SPIHandler]: Ready.\n");
@@ -74,34 +73,35 @@ void EmbrickSPIHandler::init(const char* paSpidev) {
 
 void EmbrickSPIHandler::deInit() {
   // Close handler if open
-  if(mFd >= 0) {
+  if (mFd >= 0) {
     close(mFd);
   }
 }
 
-template<typename T> bool EmbrickSPIHandler::config(unsigned int paConfig, unsigned int paConfigVerify, T paValue) {
+template<typename T>
+bool EmbrickSPIHandler::config(unsigned int paConfig, unsigned int paConfigVerify, T paValue) {
   int status;
 
   // Set config via ioctl
   status = ioctl(mFd, paConfig, &paValue);
-  if(status < 0) {
+  if (status < 0) {
     return false;
   }
   // Verify config
   T valueCheck;
   status = ioctl(mFd, paConfigVerify, &valueCheck);
-  if(status < 0) {
+  if (status < 0) {
     return false;
   }
   return valueCheck == paValue;
 }
 
-void EmbrickSPIHandler::fail(const char* paReason) {
+void EmbrickSPIHandler::fail(const char *paReason) {
   mError = paReason;
   DEVLOG_ERROR("emBrick[SPIHandler]: %s\n", mError);
 }
 
-bool EmbrickSPIHandler::transfer(unsigned char* paSendBuffer, unsigned char* paReceiveBuffer, int paLength) {
+bool EmbrickSPIHandler::transfer(unsigned char *paSendBuffer, unsigned char *paReceiveBuffer, int paLength) {
 
   struct spi_ioc_transfer msg{};
 
@@ -116,7 +116,7 @@ bool EmbrickSPIHandler::transfer(unsigned char* paSendBuffer, unsigned char* paR
 
   // Send data to spi bus
   int status = ioctl(mFd, SPI_IOC_MESSAGE(1), &msg);
-  if(status < 0) {
+  if (status < 0) {
     fail(scmFailedToTransferBuffer);
     return false;
   }
@@ -127,4 +127,3 @@ bool EmbrickSPIHandler::transfer(unsigned char* paSendBuffer, unsigned char* paR
 void EmbrickSPIHandler::setSpeed(const unsigned long paSpeed) {
   mSpiSpeed = paSpeed;
 }
-

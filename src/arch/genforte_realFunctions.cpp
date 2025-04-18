@@ -13,7 +13,7 @@
 #include <stdlib.h>
 #include "forte_realFunctions.h"
 
-TForteFloat forte_stringToFloat(const char* paStr, char** paEndPtr) {
+TForteFloat forte_stringToFloat(const char *paStr, char **paEndPtr) {
 #if defined(WIN32) || defined(__ECOS) || defined(VXWORKS)
   return static_cast<TForteFloat>(strtod(paStr, paEndPtr));
 #else

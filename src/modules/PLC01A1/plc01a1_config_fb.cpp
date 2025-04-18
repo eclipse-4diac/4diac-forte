@@ -42,7 +42,6 @@ USE_STRING_ID(UINT);
 USE_STRING_ID(UpdateInterval);
 USE_STRING_ID(WSTRING);
 
-
 #include "forte_uint.h"
 #include "iec61131_functions.h"
 #include "forte_array_common.h"
@@ -53,36 +52,54 @@ USE_STRING_ID(WSTRING);
 
 DEFINE_FIRMWARE_FB(PLC01A1ConfigFB, STRID(PLC01A1))
 
+const CStringDictionary::TStringId PLC01A1ConfigFB::scmDataInputNames[] = {
+    STRID(QI),   STRID(IN1),  STRID(IN2),  STRID(IN3),  STRID(IN4),  STRID(IN5),
+    STRID(IN6),  STRID(IN7),  STRID(IN8),  STRID(OUT1), STRID(OUT2), STRID(OUT3),
+    STRID(OUT4), STRID(OUT5), STRID(OUT6), STRID(OUT7), STRID(OUT8), STRID(UpdateInterval)};
 
-const CStringDictionary::TStringId PLC01A1ConfigFB::scmDataInputNames[] = { STRID(QI), STRID(IN1), STRID(IN2), STRID(IN3), STRID(IN4),
-  STRID(IN5), STRID(IN6), STRID(IN7), STRID(IN8), STRID(OUT1), STRID(OUT2), STRID(OUT3), STRID(OUT4), STRID(OUT5),
-  STRID(OUT6), STRID(OUT7), STRID(OUT8), STRID(UpdateInterval) };
+const CStringDictionary::TStringId PLC01A1ConfigFB::scmDataInputTypeIds[] = {
+    STRID(BOOL),    STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING),
+    STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING),
+    STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(UINT)};
 
-const CStringDictionary::TStringId PLC01A1ConfigFB::scmDataInputTypeIds[] = { STRID(BOOL), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING),
-  STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING),
-  STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(UINT) };
-
-const CStringDictionary::TStringId PLC01A1ConfigFB::scmDataOutputNames[] = { STRID(QO), STRID(STATUS) };
-const CStringDictionary::TStringId PLC01A1ConfigFB::scmDataOutputTypeIds[] = { STRID(BOOL), STRID(WSTRING) };
-const TForteInt16 PLC01A1ConfigFB::scmEIWithIndexes[] = { 0 };
-const TDataIOID PLC01A1ConfigFB::scmEIWith[] = { 0, 17, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, scmWithListDelimiter };
+const CStringDictionary::TStringId PLC01A1ConfigFB::scmDataOutputNames[] = {STRID(QO), STRID(STATUS)};
+const CStringDictionary::TStringId PLC01A1ConfigFB::scmDataOutputTypeIds[] = {STRID(BOOL), STRID(WSTRING)};
 const TForteInt16 PLC01A1ConfigFB::scmEIWithIndexes[] = {0};
-const CStringDictionary::TStringId PLC01A1ConfigFB::scmEventInputNames[] = { STRID(INIT) };
+const TDataIOID PLC01A1ConfigFB::scmEIWith[] = {
+    0, 17, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, scmWithListDelimiter};
+const TForteInt16 PLC01A1ConfigFB::scmEIWithIndexes[] = {0};
+const CStringDictionary::TStringId PLC01A1ConfigFB::scmEventInputNames[] = {STRID(INIT)};
 const CStringDictionary::TStringId PLC01A1ConfigFB::scmEventInputTypeIds[] = {STRID(EInit)};
-const TDataIOID PLC01A1ConfigFB::scmEOWith[] = { 0, 1, scmWithListDelimiter, 0, 1, scmWithListDelimiter };
-const TForteInt16 PLC01A1ConfigFB::scmEOWithIndexes[] = { 0, 3, -1 };
-const CStringDictionary::TStringId PLC01A1ConfigFB::scmEventOutputNames[] = { STRID(INITO), STRID(IND) };
+const TDataIOID PLC01A1ConfigFB::scmEOWith[] = {0, 1, scmWithListDelimiter, 0, 1, scmWithListDelimiter};
+const TForteInt16 PLC01A1ConfigFB::scmEOWithIndexes[] = {0, 3, -1};
+const CStringDictionary::TStringId PLC01A1ConfigFB::scmEventOutputNames[] = {STRID(INITO), STRID(IND)};
 const CStringDictionary::TStringId PLC01A1ConfigFB::scmEventOutputTypeIds[] = {STRID(Event), STRID(Event)};
-const SFBInterfaceSpec PLC01A1ConfigFB::scmFBInterfaceSpec = {
-  1,  scmEventInputNames, scmEventInputTypeIds,  scmEIWith,  scmEIWithIndexes,
-  2,  scmEventOutputNames, scmEventOutputTypeIds,  scmEOWith, scmEOWithIndexes,  18,  scmDataInputNames, scmDataInputTypeIds,
-  18, scmDataInputNames, scmDataInputTypeIds,
-  2, scmDataOutputNames, scmDataOutputTypeIds,
-  0, nullptr,
-  0, nullptr
-};
+const SFBInterfaceSpec PLC01A1ConfigFB::scmFBInterfaceSpec = {1,
+                                                              scmEventInputNames,
+                                                              scmEventInputTypeIds,
+                                                              scmEIWith,
+                                                              scmEIWithIndexes,
+                                                              2,
+                                                              scmEventOutputNames,
+                                                              scmEventOutputTypeIds,
+                                                              scmEOWith,
+                                                              scmEOWithIndexes,
+                                                              18,
+                                                              scmDataInputNames,
+                                                              scmDataInputTypeIds,
+                                                              18,
+                                                              scmDataInputNames,
+                                                              scmDataInputTypeIds,
+                                                              2,
+                                                              scmDataOutputNames,
+                                                              scmDataOutputTypeIds,
+                                                              0,
+                                                              nullptr,
+                                                              0,
+                                                              nullptr};
 
-PLC01A1ConfigFB::PLC01A1ConfigFB(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+PLC01A1ConfigFB::PLC01A1ConfigFB(const CStringDictionary::TStringId paInstanceNameId,
+                                 forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId),
     var_QI(0_BOOL),
     var_IN1(u""_WSTRING),
@@ -125,8 +142,7 @@ PLC01A1ConfigFB::PLC01A1ConfigFB(const CStringDictionary::TStringId paInstanceNa
     conn_OUT8(nullptr),
     conn_UpdateInterval(nullptr),
     conn_QO(*this, 0, var_QO),
-    conn_STATUS(*this, 1, var_STATUS) {
-};
+    conn_STATUS(*this, 1, var_STATUS) {};
 
 void PLC01A1ConfigFB::setInitialValues() {
   var_QI = 0_BOOL;
@@ -152,15 +168,15 @@ void PLC01A1ConfigFB::setInitialValues() {
 }
 
 void PLC01A1ConfigFB::executeEvent(const TEventID paEIID, CEventChainExecutionThread *const paECET) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventINITID:
-      #error add code for INIT event!
-          sendOutputEvent(scmEventCNFID, paECET);
+#error add code for INIT event!
+      sendOutputEvent(scmEventCNFID, paECET);
       break;
   }
 }
 
-forte::core::io::IODeviceController* PLC01A1ConfigFB::createDeviceController(CDeviceExecution &paDeviceExecution) {
+forte::core::io::IODeviceController *PLC01A1ConfigFB::createDeviceController(CDeviceExecution &paDeviceExecution) {
   return new PLC01A1Controller(paDeviceExecution);
 }
 
@@ -176,18 +192,17 @@ void PLC01A1ConfigFB::onStartup() {
   size_t numberOfInputs = 8;
   size_t numberOfOutputs = 8;
 
-  for(size_t i = 0; i < numberOfInputs; i++) {
-    PLC01A1Controller::HandleDescriptor desc = PLC01A1Controller::HandleDescriptor(*static_cast<CIEC_WSTRING*>(getDI(initialDIOffset + i)),
-      forte::core::io::IOMapper::In,
-      0 /*offset is always 0 */,
-      static_cast<uint8_t>(i));
+  for (size_t i = 0; i < numberOfInputs; i++) {
+    PLC01A1Controller::HandleDescriptor desc = PLC01A1Controller::HandleDescriptor(
+        *static_cast<CIEC_WSTRING *>(getDI(initialDIOffset + i)), forte::core::io::IOMapper::In,
+        0 /*offset is always 0 */, static_cast<uint8_t>(i));
     initHandle(desc);
   }
 
-  for(size_t i = 0; i < numberOfOutputs; i++) {
-    PLC01A1Controller::HandleDescriptor
-    desc = PLC01A1Controller::HandleDescriptor(*static_cast<CIEC_WSTRING*>(getDI(initialDIOffset + numberOfInputs + i)),
-      forte::core::io::IOMapper::Out, 0 /*offset is always 0 */, static_cast<uint8_t>(numberOfOutputs - i - 1));
+  for (size_t i = 0; i < numberOfOutputs; i++) {
+    PLC01A1Controller::HandleDescriptor desc = PLC01A1Controller::HandleDescriptor(
+        *static_cast<CIEC_WSTRING *>(getDI(initialDIOffset + numberOfInputs + i)), forte::core::io::IOMapper::Out,
+        0 /*offset is always 0 */, static_cast<uint8_t>(numberOfOutputs - i - 1));
     initHandle(desc);
   }
 
@@ -195,7 +210,7 @@ void PLC01A1ConfigFB::onStartup() {
 }
 
 void PLC01A1ConfigFB::readInputData(const TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventINITID: {
       readData(0, var_QI, conn_QI);
       readData(17, var_UpdateInterval, conn_UpdateInterval);
@@ -217,13 +232,12 @@ void PLC01A1ConfigFB::readInputData(const TEventID paEIID) {
       readData(16, var_OUT8, conn_OUT8);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 void PLC01A1ConfigFB::writeOutputData(const TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventINITOID: {
       writeData(0, var_QO, conn_QO);
       writeData(1, var_STATUS, conn_STATUS);
@@ -234,13 +248,12 @@ void PLC01A1ConfigFB::writeOutputData(const TEventID paEIID) {
       writeData(1, var_STATUS, conn_STATUS);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 CIEC_ANY *PLC01A1ConfigFB::getDI(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_QI;
     case 1: return &var_IN1;
     case 2: return &var_IN2;
@@ -264,7 +277,7 @@ CIEC_ANY *PLC01A1ConfigFB::getDI(const size_t paIndex) {
 }
 
 CIEC_ANY *PLC01A1ConfigFB::getDO(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_QO;
     case 1: return &var_STATUS;
   }
@@ -272,7 +285,7 @@ CIEC_ANY *PLC01A1ConfigFB::getDO(const size_t paIndex) {
 }
 
 CEventConnection *PLC01A1ConfigFB::getEOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_INITO;
     case 1: return &conn_IND;
   }
@@ -280,7 +293,7 @@ CEventConnection *PLC01A1ConfigFB::getEOConUnchecked(const TPortId paIndex) {
 }
 
 CDataConnection **PLC01A1ConfigFB::getDIConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_QI;
     case 1: return &conn_IN1;
     case 2: return &conn_IN2;
@@ -304,7 +317,7 @@ CDataConnection **PLC01A1ConfigFB::getDIConUnchecked(const TPortId paIndex) {
 }
 
 CDataConnection *PLC01A1ConfigFB::getDOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_QO;
     case 1: return &conn_STATUS;
   }

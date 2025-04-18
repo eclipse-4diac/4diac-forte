@@ -19,10 +19,10 @@
 
 /*!\ingroup COREDTS IIEC_ANY_DATE represents any date data types according to IEC 61131.
  */
-class CIEC_ANY_DATE : public CIEC_ANY_ELEMENTARY{
+class CIEC_ANY_DATE : public CIEC_ANY_ELEMENTARY {
   public:
     typedef TForteUInt64 TValueType;
-    
+
     ~CIEC_ANY_DATE() override = default;
 
     /*! Retrieve the current timezone
@@ -46,33 +46,33 @@ class CIEC_ANY_DATE : public CIEC_ANY_ELEMENTARY{
      */
     unsigned int getMilliSeconds() const;
 
-    template <typename T, std::enable_if_t<std::is_base_of_v<CIEC_ANY_DATE, T>, int> = 0>
-    friend bool operator==(const T& paLeft, const T& paRight) {
+    template<typename T, std::enable_if_t<std::is_base_of_v<CIEC_ANY_DATE, T>, int> = 0>
+    friend bool operator==(const T &paLeft, const T &paRight) {
       return static_cast<typename T::TValueType>(paLeft) == static_cast<typename T::TValueType>(paRight);
     }
 
-    template <typename T, std::enable_if_t<std::is_base_of_v<CIEC_ANY_DATE, T>, int> = 0>
-    friend bool operator!=(const T& paLeft, const T& paRight) {
+    template<typename T, std::enable_if_t<std::is_base_of_v<CIEC_ANY_DATE, T>, int> = 0>
+    friend bool operator!=(const T &paLeft, const T &paRight) {
       return !(paLeft == paRight);
     }
 
-    template <typename T, std::enable_if_t<std::is_base_of_v<CIEC_ANY_DATE, T>, int> = 0>
-    friend bool operator<(const T& paLeft, const T& paRight) {
+    template<typename T, std::enable_if_t<std::is_base_of_v<CIEC_ANY_DATE, T>, int> = 0>
+    friend bool operator<(const T &paLeft, const T &paRight) {
       return static_cast<typename T::TValueType>(paLeft) < static_cast<typename T::TValueType>(paRight);
     }
 
-    template <typename T, std::enable_if_t<std::is_base_of_v<CIEC_ANY_DATE, T>, int> = 0>
-    friend bool operator>(const T& paLeft, const T& paRight) {
+    template<typename T, std::enable_if_t<std::is_base_of_v<CIEC_ANY_DATE, T>, int> = 0>
+    friend bool operator>(const T &paLeft, const T &paRight) {
       return static_cast<typename T::TValueType>(paLeft) > static_cast<typename T::TValueType>(paRight);
     }
 
-    template <typename T, std::enable_if_t<std::is_base_of_v<CIEC_ANY_DATE, T>, int> = 0>
-    friend bool operator<=(const T& paLeft, const T& paRight) {
+    template<typename T, std::enable_if_t<std::is_base_of_v<CIEC_ANY_DATE, T>, int> = 0>
+    friend bool operator<=(const T &paLeft, const T &paRight) {
       return paLeft == paRight || paLeft < paRight;
     }
 
-    template <typename T, std::enable_if_t<std::is_base_of_v<CIEC_ANY_DATE, T>, int> = 0>
-    friend bool operator>=(const T& paLeft, const T& paRight) {
+    template<typename T, std::enable_if_t<std::is_base_of_v<CIEC_ANY_DATE, T>, int> = 0>
+    friend bool operator>=(const T &paLeft, const T &paRight) {
       return paLeft == paRight || paLeft > paRight;
     }
 

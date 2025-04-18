@@ -29,40 +29,43 @@ using namespace modbus_connection_event;
  * CModbusClientConnection class
  *************************************/
 
-CModbusClientConnection::CModbusClientConnection(CModbusHandler* pa_modbusHandler) :
-    CModbusConnection(pa_modbusHandler), mModbusConnEvent(nullptr), mSlaveId(0xFF){
+CModbusClientConnection::CModbusClientConnection(CModbusHandler *pa_modbusHandler) :
+    CModbusConnection(pa_modbusHandler),
+    mModbusConnEvent(nullptr),
+    mSlaveId(0xFF) {
 }
 
 CModbusClientConnection::~CModbusClientConnection() {
-  if (mConnected){
+  if (mConnected) {
     disconnect();
   }
   for (auto itRunner : mPollList) {
     delete itRunner;
   }
-  if (mModbusConnEvent != nullptr){
+  if (mModbusConnEvent != nullptr) {
     delete mModbusConnEvent;
   }
 }
 
-int CModbusClientConnection::readData(CModbusIOBlock* paIOBlock, void* paData, unsigned int paMaxDataSize){
+int CModbusClientConnection::readData(CModbusIOBlock *paIOBlock, void *paData, unsigned int paMaxDataSize) {
   const unsigned int size = std::min(paMaxDataSize, paIOBlock->getReadSize());
   memcpy(paData, paIOBlock->getCache(), size);
-  return (int)size;
+  return (int) size;
 }
 
-void CModbusClientConnection::writeDataRange(EModbusFunction paFunction, unsigned int paStartAddress, unsigned int paNrAddresses, const void *paData){
+void CModbusClientConnection::writeDataRange(EModbusFunction paFunction,
+                                             unsigned int paStartAddress,
+                                             unsigned int paNrAddresses,
+                                             const void *paData) {
   CCriticalRegion criticalRegion(mModbusLock);
   if (!mConnected) {
     // TODO: error
     return;
   }
   switch (paFunction) {
-    case eCoil:
-      modbus_write_bits(mModbusConn, paStartAddress, paNrAddresses, (const uint8_t*)paData);
-      break;
+    case eCoil: modbus_write_bits(mModbusConn, paStartAddress, paNrAddresses, (const uint8_t *) paData); break;
     case eHoldingRegister:
-      modbus_write_registers(mModbusConn, paStartAddress, paNrAddresses, (const uint16_t*)paData);
+      modbus_write_registers(mModbusConn, paStartAddress, paNrAddresses, (const uint16_t *) paData);
       break;
     default:
       // TODO: error
@@ -70,10 +73,10 @@ void CModbusClientConnection::writeDataRange(EModbusFunction paFunction, unsigne
   }
 }
 
-int CModbusClientConnection::connect(){
+int CModbusClientConnection::connect() {
   CModbusConnection::connect();
 
-  if(mSlaveId != 0xFF){
+  if (mSlaveId != 0xFF) {
     modbus_set_slave(mModbusConn, mSlaveId);
   }
 
@@ -85,25 +88,25 @@ int CModbusClientConnection::connect(){
   return 0;
 }
 
-void CModbusClientConnection::disconnect(){
+void CModbusClientConnection::disconnect() {
   this->end();
-  if (mConnected){
+  if (mConnected) {
     modbus_close(mModbusConn);
     mConnected = false;
   }
   CModbusConnection::disconnect();
 }
 
-void CModbusClientConnection::addNewPoll(long paPollInterval, CModbusIOBlock* paIOBlock){
+void CModbusClientConnection::addNewPoll(long paPollInterval, CModbusIOBlock *paIOBlock) {
   CModbusPoll *newPoll = nullptr;
 
   for (auto it : mPollList) {
-    if(it->getUpdateInterval() == paPollInterval){
+    if (it->getUpdateInterval() == paPollInterval) {
       newPoll = it;
       break;
     }
   }
-  if(newPoll == nullptr){
+  if (newPoll == nullptr) {
     newPoll = new CModbusPoll(mModbusHandler, paPollInterval);
     mPollList.push_back(newPoll);
   }
@@ -111,17 +114,16 @@ void CModbusClientConnection::addNewPoll(long paPollInterval, CModbusIOBlock* pa
   newPoll->addPollBlock(paIOBlock);
 }
 
-void CModbusClientConnection::setSlaveId(unsigned int paSlaveId){
+void CModbusClientConnection::setSlaveId(unsigned int paSlaveId) {
   mSlaveId = paSlaveId;
 }
 
-void CModbusClientConnection::run(){
+void CModbusClientConnection::run() {
 
-  while(isAlive()){
-    if(mConnected){
+  while (isAlive()) {
+    if (mConnected) {
       tryPolling();
-    }
-    else{
+    } else {
       tryConnect();
     }
 
@@ -129,18 +131,18 @@ void CModbusClientConnection::run(){
   }
 }
 
-void CModbusClientConnection::tryPolling(){
+void CModbusClientConnection::tryPolling() {
   unsigned int nrErrors = 0, nrPolls = 0;
 
   for (size_t index = 0; index < mPollList.size(); ++index) {
     auto itPoll = mPollList[index];
 
-    if(itPoll->readyToExecute()){
+    if (itPoll->readyToExecute()) {
       CCriticalRegion criticalRegion(mModbusLock);
 
       int nrVals = itPoll->executeEvent(mModbusConn, 0);
 
-      if(nrVals < 0){
+      if (nrVals < 0) {
         DEVLOG_ERROR("Error reading input status :: %s\n", modbus_strerror(errno));
         itPoll->deactivate();
 
@@ -150,7 +152,7 @@ void CModbusClientConnection::tryPolling(){
     }
   }
 
-  if((nrErrors == nrPolls) && nrPolls && !mPollList.empty()){
+  if ((nrErrors == nrPolls) && nrPolls && !mPollList.empty()) {
     DEVLOG_WARNING("Too many errors on Modbus, reconnecting\n");
     CCriticalRegion criticalRegion(mModbusLock);
     modbus_close(mModbusConn); // in any case it is worth trying to close the socket
@@ -160,11 +162,11 @@ void CModbusClientConnection::tryPolling(){
   }
 }
 
-void CModbusClientConnection::tryConnect(){
-  if(mModbusConnEvent != nullptr){
-    if(mModbusConnEvent->readyToExecute()){
+void CModbusClientConnection::tryConnect() {
+  if (mModbusConnEvent != nullptr) {
+    if (mModbusConnEvent->readyToExecute()) {
       CCriticalRegion criticalRegion(mModbusLock);
-      if(mModbusConnEvent->executeEvent(mModbusConn, nullptr) < 0) {
+      if (mModbusConnEvent->executeEvent(mModbusConn, nullptr) < 0) {
         DEVLOG_ERROR("Connection to Modbus server failed: %s\n", modbus_strerror(errno));
       } else {
         DEVLOG_INFO("Connection to Modbus server succeded\n");
@@ -186,13 +188,16 @@ void CModbusClientConnection::tryConnect(){
 /*************************************
  * CModbusConnectionEvent class
  *************************************/
-CModbusConnectionEvent::CModbusConnectionEvent(long paReconnectInterval, EModbusFlowControl paFlowControl, const char *paDevice) :
-    CModbusTimedEvent((TForteUInt32)paReconnectInterval), mFlowControl(paFlowControl){
+CModbusConnectionEvent::CModbusConnectionEvent(long paReconnectInterval,
+                                               EModbusFlowControl paFlowControl,
+                                               const char *paDevice) :
+    CModbusTimedEvent((TForteUInt32) paReconnectInterval),
+    mFlowControl(paFlowControl) {
   strcpy(mDevice, paDevice);
 }
 
-int CModbusConnectionEvent::executeEvent(modbus_t *paModbusConn, void *paRetVal){
-  (void)paRetVal; // avoid warning
+int CModbusConnectionEvent::executeEvent(modbus_t *paModbusConn, void *paRetVal) {
+  (void) paRetVal; // avoid warning
 
   restartTimer();
 
@@ -234,9 +239,7 @@ int CModbusConnectionEvent::executeEvent(modbus_t *paModbusConn, void *paRetVal)
       case eFlowLongDelay:
         CThread::sleepThread(3);
         // fall through
-      case eFlowDelay:
-        CThread::sleepThread(2);
-        break;
+      case eFlowDelay: CThread::sleepThread(2); break;
       default:
         // ignore
         break;
@@ -245,4 +248,3 @@ int CModbusConnectionEvent::executeEvent(modbus_t *paModbusConn, void *paRetVal)
 
   return retVal;
 }
-

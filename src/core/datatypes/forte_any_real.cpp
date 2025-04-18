@@ -25,7 +25,7 @@ int CIEC_ANY_REAL::normalizeToStringRepresentation(char *paValue, size_t paBuffe
       break;
     }
   }
-    // Found none, check if it can be added
+  // Found none, check if it can be added
   if (paUsedBytes + 2 >= static_cast<int>(paBufferSize)) {
     return -1;
   } else {

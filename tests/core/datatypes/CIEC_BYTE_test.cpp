@@ -19,18 +19,15 @@
 
 BOOST_AUTO_TEST_SUITE(CIEC_BYTE_function_test)
 
-BOOST_AUTO_TEST_CASE(Type_test)
-{
+BOOST_AUTO_TEST_CASE(Type_test) {
   CIEC_BYTE nTest;
-  //check type information
+  // check type information
   BOOST_CHECK_EQUAL(nTest.getDataTypeID(), CIEC_ANY::e_BYTE);
-  //check operator bool data type size
+  // check operator bool data type size
   BOOST_CHECK_EQUAL(sizeof(nTest.operator TForteByte()), sizeof(TForteByte));
-
 }
 
-BOOST_AUTO_TEST_CASE(Literal_test)
-{
+BOOST_AUTO_TEST_CASE(Literal_test) {
   CIEC_BYTE test1 = 0x0_BYTE;
   BOOST_TEST(static_cast<CIEC_BYTE::TValueType>(test1) == 0);
 
@@ -38,12 +35,11 @@ BOOST_AUTO_TEST_CASE(Literal_test)
   BOOST_TEST(static_cast<CIEC_BYTE::TValueType>(test2) == std::numeric_limits<CIEC_BYTE::TValueType>::max());
 }
 
-BOOST_AUTO_TEST_CASE(Assignment_test)
-{
+BOOST_AUTO_TEST_CASE(Assignment_test) {
   CIEC_BYTE nTest1;
   CIEC_BYTE nTest2;
 
-  //initial value must be 0
+  // initial value must be 0
   BOOST_CHECK_EQUAL(nTest1, 0);
 
   nTest1 = CIEC_BYTE(0);
@@ -61,21 +57,19 @@ BOOST_AUTO_TEST_CASE(Assignment_test)
   BOOST_CHECK_EQUAL(nTest1, 255);
   BOOST_CHECK_EQUAL(nTest2, 255);
 
-  //check that assignment operator does not intertwine objects
+  // check that assignment operator does not intertwine objects
   nTest2 = CIEC_BYTE(128);
   BOOST_CHECK_EQUAL(nTest1, 255);
   BOOST_CHECK_EQUAL(nTest2, 128);
-
 }
 
-BOOST_AUTO_TEST_CASE(Conversion_test)
-{
+BOOST_AUTO_TEST_CASE(Conversion_test) {
   CIEC_BYTE nTest;
 
   char cBuffer[4];
   char cBufferFail[2];
 
-  //check cast operator
+  // check cast operator
   nTest = CIEC_BYTE(0);
   strcpy(cBuffer, "");
 
@@ -87,7 +81,7 @@ BOOST_AUTO_TEST_CASE(Conversion_test)
   nTest = CIEC_BYTE(255);
   BOOST_CHECK_EQUAL(nTest.operator TForteByte(), 255);
 
-  //check toString and fromString
+  // check toString and fromString
   BOOST_CHECK_EQUAL(nTest.fromString("0"), 1);
   BOOST_CHECK_EQUAL(nTest, 0);
   BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 4), 1);
@@ -204,7 +198,7 @@ BOOST_AUTO_TEST_CASE(Conversion_test)
   strcpy(cBuffer, "");
   nTest = CIEC_BYTE(0);
 
-  //testing values outside of allowed range
+  // testing values outside of allowed range
   BOOST_CHECK_EQUAL(nTest.fromString("300"), -1);
   BOOST_CHECK_EQUAL(nTest.fromString("2#100101100"), -1);
   BOOST_CHECK_EQUAL(nTest.fromString("8#454"), -1);
@@ -212,7 +206,7 @@ BOOST_AUTO_TEST_CASE(Conversion_test)
   BOOST_CHECK_EQUAL(nTest.fromString("16#12C"), -1);
   BOOST_CHECK_EQUAL(nTest.fromString("-130"), -1);
 
-  //check invalid fromString string
+  // check invalid fromString string
   BOOST_CHECK_EQUAL(nTest.fromString("NOT A VALID STRING"), -1);
 }
 

@@ -29,9 +29,9 @@ namespace forte {
 
   namespace com_infra {
 
-    class COpcComLayer : public CComLayer{
+    class COpcComLayer : public CComLayer {
       public:
-        COpcComLayer(CComLayer* paUpperLayer, CBaseCommFB* paComFB);
+        COpcComLayer(CComLayer *paUpperLayer, CBaseCommFB *paComFB);
         ~COpcComLayer() override;
 
         EComResponse sendData(void *paData, unsigned int paSize) override; // top interface, called from top
@@ -42,13 +42,13 @@ namespace forte {
         EComResponse openConnection(char *paLayerParameter) override;
         void closeConnection() override;
         void setOutputValue(CIEC_ANY *paDataOut, Variant *paValue);
-        void processClientParams(char* paLayerParams);
+        void processClientParams(char *paLayerParams);
         void convertInputData(void *paData, unsigned int paSize);
 
-        unsigned int getInputValueSize(CIEC_ANY* paData, Variant * paNewValue);
+        unsigned int getInputValueSize(CIEC_ANY *paData, Variant *paNewValue);
 
         template<typename T>
-        void getInputValue(void * paData, Variant * paNewValue);
+        void getInputValue(void *paData, Variant *paNewValue);
 
         std::string mHost;
         std::string mServerName;
@@ -60,7 +60,7 @@ namespace forte {
 
         COpcConnection *mOpcConnection;
 
-        typedef std::vector<COpcProcessVar*> TOpcProcessVarList;
+        typedef std::vector<COpcProcessVar *> TOpcProcessVarList;
         TOpcProcessVarList mFBOutputVars;
         TOpcProcessVarList mFBInputVars;
 
@@ -70,19 +70,11 @@ namespace forte {
 
         CSyncObject mSync;
 
-        enum Parameters {
-          Host,
-          ServerName,
-          UpdateRate,
-          DeadBand,
-          FbInputItems,
-          FbOutputItems,
-          ParameterAmount
-        };
+        enum Parameters { Host, ServerName, UpdateRate, DeadBand, FbInputItems, FbOutputItems, ParameterAmount };
     };
 
-  }
+  } // namespace com_infra
 
-}
+} // namespace forte
 
 #endif /* OPCCOMLAYER_H_ */

@@ -18,31 +18,37 @@
 
 /*!\ingroup CORE\brief Base-Class for all event sources.
  */
-class CEventSourceFB : public CFunctionBlock{
-private:
+class CEventSourceFB : public CFunctionBlock {
+  private:
+    /* \brief the event chain executor used by this ES.
+     */
+    CEventChainExecutionThread *mEventChainExecutor;
+    TEventEntry mEventSourceEventEntry; //! the event entry to start the event chain
 
-/* \brief the event chain executor used by this ES.
- */
-  CEventChainExecutionThread *mEventChainExecutor;
-  TEventEntry mEventSourceEventEntry; //! the event entry to start the event chain
+  public:
+    CEventSourceFB(forte::core::CFBContainer &paContainer,
+                   const SFBInterfaceSpec &paInterfaceSpec,
+                   CStringDictionary::TStringId paInstanceNameId) :
+        CFunctionBlock(paContainer, paInterfaceSpec, paInstanceNameId),
+        mEventChainExecutor(nullptr),
+        mEventSourceEventEntry(*this, cgExternalEventID) {
+    }
 
-public:
-  CEventSourceFB(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec& paInterfaceSpec,
-                 CStringDictionary::TStringId paInstanceNameId) :
-          CFunctionBlock(paContainer, paInterfaceSpec, paInstanceNameId),
-          mEventChainExecutor(nullptr),
-          mEventSourceEventEntry(*this, cgExternalEventID) {
-  }
+    ~CEventSourceFB() override = default;
+    void setEventChainExecutor(CEventChainExecutionThread *paEventChainExecutor) {
+      mEventChainExecutor = paEventChainExecutor;
+    };
+    CEventChainExecutionThread *getEventChainExecutor() {
+      return mEventChainExecutor;
+    };
 
-  ~CEventSourceFB() override = default;
-  void setEventChainExecutor(CEventChainExecutionThread *paEventChainExecutor) { mEventChainExecutor = paEventChainExecutor; };
-  CEventChainExecutionThread * getEventChainExecutor() { return mEventChainExecutor; };
-
-  TEventEntry *getEventSourceEventEntry() { return &mEventSourceEventEntry; };
+    TEventEntry *getEventSourceEventEntry() {
+      return &mEventSourceEventEntry;
+    };
 };
 
-#define EVENT_SOURCE_FUNCTION_BLOCK_CTOR(fbclass) \
- fbclass(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) : \
- CEventSourceFB(paContainer, scmFBInterfaceSpec, paInstanceNameId)
+#define EVENT_SOURCE_FUNCTION_BLOCK_CTOR(fbclass)                                                                      \
+  fbclass(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :               \
+      CEventSourceFB(paContainer, scmFBInterfaceSpec, paInstanceNameId)
 
 #endif /*_ESFB_H_*/

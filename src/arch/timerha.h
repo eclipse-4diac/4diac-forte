@@ -29,11 +29,10 @@ class CIEC_TIME;
 /*! \brief External event handler for the Timer.
  *  \ingroup EXTEVHAND
  */
-class CTimerHandler : public CExternalEventHandler{
-  DECLARE_HANDLER(CTimerHandler)
-    ;
+class CTimerHandler : public CExternalEventHandler {
+    DECLARE_HANDLER(CTimerHandler);
+
   public:
-    
     /*!\brief Sets the priority of the event source
      *
      * \param paPriority new priority of the event source
@@ -48,7 +47,7 @@ class CTimerHandler : public CExternalEventHandler{
      *
      * \return internal runtime ticks per second
      */
-    static TForteUInt32 getTicksPerSecond(){
+    static TForteUInt32 getTicksPerSecond() {
       return cgForteTicksPerSecond;
     }
 
@@ -76,59 +75,62 @@ class CTimerHandler : public CExternalEventHandler{
     void nextTick();
 
     //! returns the time since startup of FORTE
-    uint_fast64_t getForteTime() const{
+    uint_fast64_t getForteTime() const {
       return mForteTime;
     }
 
   private:
     //! Data stored for each FB that is registered to the timer handler
-    struct STimedFBListEntry{
+    struct STimedFBListEntry {
         CEventSourceFB *mTimedFB; //!< Function block to be triggered
         uint_fast64_t mTimeOut; //!< Absolute time when the next trigger of the FB should occure
-        TForteUInt32 mInterval; //!< relative time between FB trigger points (mainly needed for the different periodic timed FBs), 0 means one shot activation
+        TForteUInt32 mInterval; //!< relative time between FB trigger points (mainly needed for the different periodic
+                                //!< timed FBs), 0 means one shot activation
 
         STimedFBListEntry(CEventSourceFB *paTimedFB, uint_fast64_t paTimeOut, TForteUInt32 paInterval) :
-            mTimedFB(paTimedFB), mTimeOut(paTimeOut), mInterval(paInterval){
+            mTimedFB(paTimedFB),
+            mTimeOut(paTimeOut),
+            mInterval(paInterval) {
         }
 
         STimedFBListEntry() = default;
 
-        bool operator<(const STimedFBListEntry& paRHS) const {
+        bool operator<(const STimedFBListEntry &paRHS) const {
           return mTimeOut < paRHS.mTimeOut;
         }
 
-        bool operator<(uint_fast64_t paRHS)  const {
+        bool operator<(uint_fast64_t paRHS) const {
           return mTimeOut < paRHS;
         }
 
-        friend bool operator<(uint_fast64_t paLHS, const STimedFBListEntry& paRHS) {
+        friend bool operator<(uint_fast64_t paLHS, const STimedFBListEntry &paRHS) {
           return paLHS < paRHS.mTimeOut;
         }
-
     };
 
     static constexpr TForteUInt32 scmOneShotIndicator = 0;
 
     static_assert(CIEC_ANY_DURATION::csmForteTimeBaseUnitsPerSecond > cgForteTicksPerSecond);
-    static constexpr CIEC_TIME::TValueType scmTimeToTimerUnit = CIEC_ANY_DURATION::csmForteTimeBaseUnitsPerSecond / cgForteTicksPerSecond;
+    static constexpr CIEC_TIME::TValueType scmTimeToTimerUnit =
+        CIEC_ANY_DURATION::csmForteTimeBaseUnitsPerSecond / cgForteTicksPerSecond;
 
     void addToAddFBList(const STimedFBListEntry &paTimerListEntry);
     TForteUInt32 convertIntervalToTimerHandlerUnits(const CIEC_TIME &paTimeInterval);
 
-    //!Add an entry to the timed list.
-    void addTimedFBEntry(const STimedFBListEntry & paTimerListEntry);
+    //! Add an entry to the timed list.
+    void addTimedFBEntry(const STimedFBListEntry &paTimerListEntry);
 
     void processTimedFBList();
     void processAddList();
     void processRemoveList();
 
-    //!Remove an entry from the timed list.
+    //! Remove an entry from the timed list.
     void removeTimedFB(CEventSourceFB *paTimedFB);
 
     //! process one timed FB entry, trigger the external event and if needed readd into the list.
     void triggerTimedFB(STimedFBListEntry paTimerListEntry);
 
-    //!The runtime time in ticks till the start of FORTE.
+    //! The runtime time in ticks till the start of FORTE.
     uint_fast64_t mForteTime;
 
     //! List of function blocks currently registered to the timer handler
@@ -141,7 +143,6 @@ class CTimerHandler : public CExternalEventHandler{
     //! List of function blocks to be removed from the timer handler
     std::vector<CEventSourceFB *> mRemoveFBList;
     CSyncObject mRemoveListSync;
-
 };
 
 #endif /*TIMERHA_H_*/

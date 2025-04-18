@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2016 - 2022 Johannes Messmer (admin@jomess.com), fortiss GmbH, 
+ * Copyright (c) 2016 - 2022 Johannes Messmer (admin@jomess.com), fortiss GmbH,
  *                           Jonathan Lainer
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -25,7 +25,7 @@ IOObserver::~IOObserver() {
   IOMapper::getInstance().deregisterObserver(this);
 }
 
-void IOObserver::onHandle(IOHandle* const paHandle) {
+void IOObserver::onHandle(IOHandle *const paHandle) {
   this->mHandle = paHandle;
 }
 

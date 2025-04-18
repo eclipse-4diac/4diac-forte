@@ -21,27 +21,25 @@ USE_STRING_ID(CNF);
 USE_STRING_ID(OUT);
 USE_STRING_ID(REQ);
 
-
 #include <ctype.h>
 #include <stdio.h>
 #include "forte_printer.h"
 #include "resource.h"
 #include "criticalregion.h"
 
+const CStringDictionary::TStringId CGenBitBase::scmDataOutputNames[] = {STRID(OUT)};
+const CStringDictionary::TStringId CGenBitBase::scmDataOutputTypeIds[] = {STRID(ANY_BIT)};
 
-const CStringDictionary::TStringId CGenBitBase::scmDataOutputNames[] = { STRID(OUT) };
-const CStringDictionary::TStringId CGenBitBase::scmDataOutputTypeIds[] = {STRID(ANY_BIT) };
+const CStringDictionary::TStringId CGenBitBase::scmEventInputNames[] = {STRID(REQ)};
 
-const CStringDictionary::TStringId CGenBitBase::scmEventInputNames[] = {STRID(REQ) };
-
-const CStringDictionary::TStringId CGenBitBase::scmEventOutputNames[] = { STRID(CNF) };
+const CStringDictionary::TStringId CGenBitBase::scmEventOutputNames[] = {STRID(CNF)};
 
 CGenBitBase::CGenBitBase(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CGenFunctionBlock<CFunctionBlock>(paContainer, paInstanceNameId) {
 }
 
 void CGenBitBase::readInputData(TEventID) {
-  for(TPortId i = 0; i < getFBInterfaceSpec().mNumDIs; ++i) {
+  for (TPortId i = 0; i < getFBInterfaceSpec().mNumDIs; ++i) {
     readData(i, *mDIs[i], mDIConns[i]);
   }
 }
@@ -55,7 +53,7 @@ bool CGenBitBase::createInterfaceSpec(const char *paConfigString, SFBInterfaceSp
 
   if (nullptr != pcPos) {
     pcPos++;
-    //we have an underscore and it is the first underscore after AND
+    // we have an underscore and it is the first underscore after AND
     paInterfaceSpec.mNumDIs = static_cast<TPortId>(forte::core::util::strtoul(pcPos, nullptr, 10));
     DEVLOG_DEBUG("DIs: %d;\n", paInterfaceSpec.mNumDIs);
   } else {
@@ -66,15 +64,15 @@ bool CGenBitBase::createInterfaceSpec(const char *paConfigString, SFBInterfaceSp
     return false;
   }
 
-  //now the number of needed eventInputs and dataOutputs are available in the integer array
-  //create the eventInputs
+  // now the number of needed eventInputs and dataOutputs are available in the integer array
+  // create the eventInputs
   if (paInterfaceSpec.mNumDIs < CFunctionBlock::scmMaxInterfaceEvents) {
 
-    //create the data inputs
+    // create the data inputs
     mDataInputNames = std::make_unique<CStringDictionary::TStringId[]>(paInterfaceSpec.mNumDIs);
     mDataInputTypeIds = std::make_unique<CStringDictionary::TStringId[]>(paInterfaceSpec.mNumDIs);
 
-    char diNames[cgIdentifierLength] = { "IN" };
+    char diNames[cgIdentifierLength] = {"IN"};
 
     for (size_t di = 0; di < paInterfaceSpec.mNumDIs; ++di) {
       forte_snprintf(&(diNames[2]), 5 - 2, "%i", di + 1);
@@ -82,7 +80,7 @@ bool CGenBitBase::createInterfaceSpec(const char *paConfigString, SFBInterfaceSp
       mDataInputTypeIds[di] = STRID(ANY_BIT);
     }
 
-    //setup the interface Specification
+    // setup the interface Specification
     paInterfaceSpec.mNumEIs = 1;
     paInterfaceSpec.mEINames = scmEventInputNames;
     paInterfaceSpec.mNumEOs = 1;

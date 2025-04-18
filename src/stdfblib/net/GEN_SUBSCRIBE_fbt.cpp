@@ -17,7 +17,7 @@ USE_STRING_ID(GEN_SUBSCRIBE)
 
 DEFINE_GENERIC_FIRMWARE_FB(GEN_SUBSCRIBE, STRID(GEN_SUBSCRIBE))
 
-GEN_SUBSCRIBE::GEN_SUBSCRIBE(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer):
-               forte::com_infra::CCommFB( paInstanceNameId, paContainer, forte::com_infra::e_Subscriber){
+GEN_SUBSCRIBE::GEN_SUBSCRIBE(const CStringDictionary::TStringId paInstanceNameId,
+                             forte::core::CFBContainer &paContainer) :
+    forte::com_infra::CCommFB(paInstanceNameId, paContainer, forte::com_infra::e_Subscriber) {
 }
-

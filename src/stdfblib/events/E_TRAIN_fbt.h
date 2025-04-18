@@ -35,7 +35,7 @@
 #include "E_SWITCH_fbt.h"
 
 class FORTE_E_TRAIN final : public CCompositeFB {
-  DECLARE_FIRMWARE_FB(FORTE_E_TRAIN)
+    DECLARE_FIRMWARE_FB(FORTE_E_TRAIN)
 
   private:
     static const CStringDictionary::TStringId scmDataInputNames[];
@@ -87,4 +87,3 @@ class FORTE_E_TRAIN final : public CCompositeFB {
     CDataConnection **getDIConUnchecked(TPortId) override;
     CDataConnection *getDOConUnchecked(TPortId) override;
 };
-

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2024, 2025 Primetals Technologies Austria GmbH, 
+ * Copyright (c) 2024, 2025 Primetals Technologies Austria GmbH,
  *                          Martin Erich Jobst
  *
  * This program and the accompanying materials are made available under the
@@ -16,9 +16,8 @@
 #include "forteinstance.h"
 #include "deviceFactory.h"
 
-
 C4diacFORTEInstance::~C4diacFORTEInstance() {
-  if(mActiveDevice){
+  if (mActiveDevice) {
     mActiveDevice->deinitialize();
   }
 }
@@ -29,31 +28,28 @@ std::unique_ptr<CDevice> C4diacFORTEInstance::createDev(const std::string &paMGR
   return dev;
 }
 
-bool C4diacFORTEInstance::startupNewDevice(const std::string &paMGRID){
-  if(mActiveDevice){
-    //we have a current active device stop it
+bool C4diacFORTEInstance::startupNewDevice(const std::string &paMGRID) {
+  if (mActiveDevice) {
+    // we have a current active device stop it
     triggerDeviceShutdown();
     awaitDeviceShutdown();
     mActiveDevice->deinitialize();
   }
   mActiveDevice = createDev(paMGRID);
-  if(mActiveDevice){
+  if (mActiveDevice) {
     mActiveDevice->startDevice();
   }
   return mActiveDevice.operator bool();
 }
 
 void C4diacFORTEInstance::triggerDeviceShutdown() {
-  if(mActiveDevice) {
+  if (mActiveDevice) {
     mActiveDevice->changeExecutionState(EMGMCommandType::Kill);
   }
 }
 
 void C4diacFORTEInstance::awaitDeviceShutdown() {
-  if(mActiveDevice) {
+  if (mActiveDevice) {
     mActiveDevice->awaitShutdown();
   }
 }
-
-
-

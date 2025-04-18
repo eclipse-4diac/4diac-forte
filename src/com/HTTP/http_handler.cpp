@@ -31,7 +31,8 @@ using namespace std::string_literals;
 
 TForteUInt16 gHTTPServerPort = FORTE_COM_HTTP_LISTENING_PORT;
 
-CIPComSocketHandler::TSocketDescriptor CHTTP_Handler::smServerListeningSocket = CIPComSocketHandler::scmInvalidSocketDescriptor;
+CIPComSocketHandler::TSocketDescriptor CHTTP_Handler::smServerListeningSocket =
+    CIPComSocketHandler::scmInvalidSocketDescriptor;
 
 char CHTTP_Handler::sRecvBuffer[];
 unsigned int CHTTP_Handler::sBufFillSize = 0;
@@ -40,8 +41,7 @@ const unsigned int CHTTP_Handler::scmAcceptedTimeout = 5;
 
 DEFINE_HANDLER(CHTTP_Handler);
 
-CHTTP_Handler::CHTTP_Handler(CDeviceExecution &paDeviceExecution) :
-    CExternalEventHandler(paDeviceExecution) {
+CHTTP_Handler::CHTTP_Handler(CDeviceExecution &paDeviceExecution) : CExternalEventHandler(paDeviceExecution) {
   memset(sRecvBuffer, 0, cgIPLayerRecvBufferSize);
 }
 
@@ -63,8 +63,10 @@ void CHTTP_Handler::disableHandler() {
 
 void CHTTP_Handler::clearServerLayers() {
   CCriticalRegion criticalRegion(mServerMutex);
-  for(CSinglyLinkedList<HTTPServerWaiting*>::Iterator iter = mServerLayers.begin(); iter != mServerLayers.end(); ++iter) {
-    for(CSinglyLinkedList<CIPComSocketHandler::TSocketDescriptor>::Iterator iter1 = (*iter)->mSockets.begin(); iter1 != (*iter)->mSockets.end(); ++iter1) {
+  for (CSinglyLinkedList<HTTPServerWaiting *>::Iterator iter = mServerLayers.begin(); iter != mServerLayers.end();
+       ++iter) {
+    for (CSinglyLinkedList<CIPComSocketHandler::TSocketDescriptor>::Iterator iter1 = (*iter)->mSockets.begin();
+         iter1 != (*iter)->mSockets.end(); ++iter1) {
       removeAndCloseSocket(*iter1);
     }
     (*iter)->mSockets.clearAll();
@@ -75,7 +77,8 @@ void CHTTP_Handler::clearServerLayers() {
 
 void CHTTP_Handler::clearClientLayers() {
   CCriticalRegion criticalRegion(mClientMutex);
-  for(CSinglyLinkedList<HTTPClientWaiting*>::Iterator iter = mClientLayers.begin(); iter != mClientLayers.end(); ++iter) {
+  for (CSinglyLinkedList<HTTPClientWaiting *>::Iterator iter = mClientLayers.begin(); iter != mClientLayers.end();
+       ++iter) {
     removeAndCloseSocket((*iter)->mSocket);
     delete (*iter);
   }
@@ -84,7 +87,8 @@ void CHTTP_Handler::clearClientLayers() {
 
 void CHTTP_Handler::clearAcceptedSockets() {
   CCriticalRegion criticalRegion(mAcceptedMutex);
-  for(CSinglyLinkedList<HTTPAcceptedSockets*>::Iterator iter = mAcceptedSockets.begin(); iter != mAcceptedSockets.end(); ++iter) {
+  for (CSinglyLinkedList<HTTPAcceptedSockets *>::Iterator iter = mAcceptedSockets.begin();
+       iter != mAcceptedSockets.end(); ++iter) {
     removeAndCloseSocket((*iter)->mSocket);
     delete (*iter);
   }
@@ -92,20 +96,23 @@ void CHTTP_Handler::clearAcceptedSockets() {
 }
 
 void CHTTP_Handler::setPriority(int) {
-  //currently we are doing nothing here.
+  // currently we are doing nothing here.
 }
 
 int CHTTP_Handler::getPriority() const {
-  //the same as for setPriority
+  // the same as for setPriority
   return 0;
 }
 
-forte::com_infra::EComResponse CHTTP_Handler::recvData(const void *paData, unsigned int) { //TODO: do something with the size parameter of the received data?
-  CIPComSocketHandler::TSocketDescriptor socket = *(static_cast<const CIPComSocketHandler::TSocketDescriptor*>(paData));
+forte::com_infra::EComResponse
+CHTTP_Handler::recvData(const void *paData,
+                        unsigned int) { // TODO: do something with the size parameter of the received data?
+  CIPComSocketHandler::TSocketDescriptor socket =
+      *(static_cast<const CIPComSocketHandler::TSocketDescriptor *>(paData));
 
-  if(socket == smServerListeningSocket) {
+  if (socket == smServerListeningSocket) {
     CIPComSocketHandler::TSocketDescriptor newConnection = CIPComSocketHandler::acceptTCPConnection(socket);
-    if(CIPComSocketHandler::scmInvalidSocketDescriptor != newConnection) {
+    if (CIPComSocketHandler::scmInvalidSocketDescriptor != newConnection) {
       CCriticalRegion criticalRegion(mAcceptedMutex);
       HTTPAcceptedSockets *accepted = new HTTPAcceptedSockets();
       accepted->mSocket = newConnection;
@@ -117,16 +124,17 @@ forte::com_infra::EComResponse CHTTP_Handler::recvData(const void *paData, unsig
       DEVLOG_ERROR("[HTTP Handler] Couldn't accept new HTTP connection\n");
     }
   } else {
-    int recvLen = CIPComSocketHandler::receiveDataFromTCP(socket, &sRecvBuffer[sBufFillSize], cgIPLayerRecvBufferSize - sBufFillSize);
-    if(0 == recvLen) {
+    int recvLen = CIPComSocketHandler::receiveDataFromTCP(socket, &sRecvBuffer[sBufFillSize],
+                                                          cgIPLayerRecvBufferSize - sBufFillSize);
+    if (0 == recvLen) {
       removeAndCloseSocket(socket);
       removeHTTPLayerFromClientList(socket);
-    } else if(-1 == recvLen) {
+    } else if (-1 == recvLen) {
       removeAndCloseSocket(socket);
       removeHTTPLayerFromClientList(socket);
       DEVLOG_ERROR("[HTTP handler] Error receiving packet\n");
     } else {
-      if(!recvClients(socket, recvLen) && !recvServers(socket)) {
+      if (!recvClients(socket, recvLen) && !recvServers(socket)) {
         DEVLOG_WARNING("[HTTP Handler]: A packet arrived to the wrong place\n");
       }
     }
@@ -135,11 +143,13 @@ forte::com_infra::EComResponse CHTTP_Handler::recvData(const void *paData, unsig
   return e_Nothing;
 }
 
-bool CHTTP_Handler::recvClients(const CIPComSocketHandler::TSocketDescriptor paSocket, const int paRecvLength) { //check clients
+bool CHTTP_Handler::recvClients(const CIPComSocketHandler::TSocketDescriptor paSocket,
+                                const int paRecvLength) { // check clients
   CCriticalRegion criticalRegion(mClientMutex);
-  for(CSinglyLinkedList<HTTPClientWaiting*>::Iterator iter = mClientLayers.begin(); iter != mClientLayers.end(); ++iter) {
-    if((*iter)->mSocket == paSocket) {
-      if(e_ProcessDataOk == (*iter)->mLayer->recvData(sRecvBuffer, static_cast<unsigned int>(paRecvLength))) {
+  for (CSinglyLinkedList<HTTPClientWaiting *>::Iterator iter = mClientLayers.begin(); iter != mClientLayers.end();
+       ++iter) {
+    if ((*iter)->mSocket == paSocket) {
+      if (e_ProcessDataOk == (*iter)->mLayer->recvData(sRecvBuffer, static_cast<unsigned int>(paRecvLength))) {
         startNewEventChain((*iter)->mLayer->getCommFB());
       }
       removeAndCloseSocket(paSocket);
@@ -155,9 +165,10 @@ bool CHTTP_Handler::recvClients(const CIPComSocketHandler::TSocketDescriptor paS
 
 bool CHTTP_Handler::removeHTTPLayerFromClientList(const CIPComSocketHandler::TSocketDescriptor paSocket) {
   CCriticalRegion criticalRegion(mClientMutex);
-  for(CSinglyLinkedList<HTTPClientWaiting*>::Iterator iter = mClientLayers.begin(); iter != mClientLayers.end(); ++iter) {
-    if((*iter)->mSocket == paSocket) {
-      //removeAndCloseSocket(paSocket);
+  for (CSinglyLinkedList<HTTPClientWaiting *>::Iterator iter = mClientLayers.begin(); iter != mClientLayers.end();
+       ++iter) {
+    if ((*iter)->mSocket == paSocket) {
+      // removeAndCloseSocket(paSocket);
       HTTPClientWaiting *toDelete = *iter;
       mClientLayers.erase(toDelete);
       delete toDelete;
@@ -173,12 +184,12 @@ bool CHTTP_Handler::recvServers(const CIPComSocketHandler::TSocketDescriptor paS
   removeSocketFromAccepted(paSocket);
 
   bool found = false;
-  if(!mServerLayers.isEmpty()) {
+  if (!mServerLayers.isEmpty()) {
     std::string path;
     CSinglyLinkedList<std::string> parameterNames;
     CSinglyLinkedList<std::string> parameterValues;
     bool noParsingError = false;
-    switch(CHttpParser::getTypeOfRequest(sRecvBuffer)){
+    switch (CHttpParser::getTypeOfRequest(sRecvBuffer)) {
       case CHttpComLayer::e_GET:
         noParsingError = CHttpParser::parseGetRequest(path, parameterNames, parameterValues, sRecvBuffer);
         break;
@@ -189,15 +200,15 @@ bool CHTTP_Handler::recvServers(const CIPComSocketHandler::TSocketDescriptor paS
         parameterValues.pushBack(content);
         break;
       }
-      default:
-        break;
+      default: break;
     }
 
-    if(noParsingError) {
-      for(CSinglyLinkedList<HTTPServerWaiting*>::Iterator iter = mServerLayers.begin(); iter != mServerLayers.end(); ++iter) {
-        if((*iter)->mPath == path) {
+    if (noParsingError) {
+      for (CSinglyLinkedList<HTTPServerWaiting *>::Iterator iter = mServerLayers.begin(); iter != mServerLayers.end();
+           ++iter) {
+        if ((*iter)->mPath == path) {
           (*iter)->mSockets.pushBack(paSocket);
-          if(e_ProcessDataOk == (*iter)->mLayer->recvServerData(parameterNames, parameterValues)) {
+          if (e_ProcessDataOk == (*iter)->mLayer->recvServerData(parameterNames, parameterValues)) {
             startNewEventChain((*iter)->mLayer->getCommFB());
           }
           found = true;
@@ -208,7 +219,7 @@ bool CHTTP_Handler::recvServers(const CIPComSocketHandler::TSocketDescriptor paS
       DEVLOG_ERROR("[HTTP Handler] Wrong HTTP request\n");
     }
 
-    if(!found) {
+    if (!found) {
       handlerReceivedWrongPath(paSocket, path);
     }
   }
@@ -218,8 +229,9 @@ bool CHTTP_Handler::recvServers(const CIPComSocketHandler::TSocketDescriptor paS
 
 void CHTTP_Handler::removeSocketFromAccepted(const CIPComSocketHandler::TSocketDescriptor paSocket) {
   CCriticalRegion criticalRegion(mAcceptedMutex);
-  for(CSinglyLinkedList<HTTPAcceptedSockets*>::Iterator iter = mAcceptedSockets.begin(); iter != mAcceptedSockets.end(); ++iter) {
-    if((*iter)->mSocket == paSocket) {
+  for (CSinglyLinkedList<HTTPAcceptedSockets *>::Iterator iter = mAcceptedSockets.begin();
+       iter != mAcceptedSockets.end(); ++iter) {
+    if ((*iter)->mSocket == paSocket) {
       HTTPAcceptedSockets *toDelete = *iter;
       mAcceptedSockets.erase(toDelete);
       delete toDelete;
@@ -228,7 +240,8 @@ void CHTTP_Handler::removeSocketFromAccepted(const CIPComSocketHandler::TSocketD
   }
 }
 
-void CHTTP_Handler::handlerReceivedWrongPath(const CIPComSocketHandler::TSocketDescriptor paSocket, const std::string &paPath) {
+void CHTTP_Handler::handlerReceivedWrongPath(const CIPComSocketHandler::TSocketDescriptor paSocket,
+                                             const std::string &paPath) {
   DEVLOG_ERROR("[HTTP Handler] Path %s has no FB registered\n", paPath.c_str());
 
   std::string toSend;
@@ -236,16 +249,19 @@ void CHTTP_Handler::handlerReceivedWrongPath(const CIPComSocketHandler::TSocketD
   std::string mContentType("text/html"s);
   std::string mReqData;
   CHttpParser::createResponse(toSend, result, mContentType, mReqData);
-  if(static_cast<int>(toSend.length()) != CIPComSocketHandler::sendDataOnTCP(paSocket, toSend.c_str(), static_cast<unsigned int>(toSend.length()))) {
+  if (static_cast<int>(toSend.length()) !=
+      CIPComSocketHandler::sendDataOnTCP(paSocket, toSend.c_str(), static_cast<unsigned int>(toSend.length()))) {
     DEVLOG_ERROR("[HTTP Handler]: Error sending back the answer %s \n", toSend.c_str());
   }
   removeAndCloseSocket(paSocket);
 }
 
 bool CHTTP_Handler::sendClientData(forte::com_infra::CHttpComLayer *paLayer, const std::string &paToSend) {
-  CIPComSocketHandler::TSocketDescriptor newSocket = CIPComSocketHandler::openTCPClientConnection(paLayer->getHost().data(), paLayer->getPort());
-  if(CIPComSocketHandler::scmInvalidSocketDescriptor != newSocket) {
-    if(static_cast<int>(paToSend.length()) == CIPComSocketHandler::sendDataOnTCP(newSocket, paToSend.c_str(), static_cast<unsigned int>(paToSend.length()))) {
+  CIPComSocketHandler::TSocketDescriptor newSocket =
+      CIPComSocketHandler::openTCPClientConnection(paLayer->getHost().data(), paLayer->getPort());
+  if (CIPComSocketHandler::scmInvalidSocketDescriptor != newSocket) {
+    if (static_cast<int>(paToSend.length()) ==
+        CIPComSocketHandler::sendDataOnTCP(newSocket, paToSend.c_str(), static_cast<unsigned int>(paToSend.length()))) {
       CCriticalRegion criticalRegion(mClientMutex);
       HTTPClientWaiting *toAdd = new HTTPClientWaiting();
       toAdd->mLayer = paLayer;
@@ -257,11 +273,13 @@ bool CHTTP_Handler::sendClientData(forte::com_infra::CHttpComLayer *paLayer, con
       resumeSelfsuspend();
       return true;
     } else {
-      DEVLOG_ERROR("[HTTP Handler]: Couldn't send data to client %s:%u\n", paLayer->getHost().c_str(), paLayer->getPort());
+      DEVLOG_ERROR("[HTTP Handler]: Couldn't send data to client %s:%u\n", paLayer->getHost().c_str(),
+                   paLayer->getPort());
       removeAndCloseSocket(newSocket);
     }
   } else {
-    DEVLOG_ERROR("[HTTP Handler]: Couldn't open client connection for %s:%u\n", paLayer->getHost().c_str(), paLayer->getPort());
+    DEVLOG_ERROR("[HTTP Handler]: Couldn't open client connection for %s:%u\n", paLayer->getHost().c_str(),
+                 paLayer->getPort());
   }
   return false;
 }
@@ -269,9 +287,12 @@ bool CHTTP_Handler::sendClientData(forte::com_infra::CHttpComLayer *paLayer, con
 bool CHTTP_Handler::addServerPath(forte::com_infra::CHttpComLayer *paLayer, const std::string &paPath) {
   CCriticalRegion criticalRegion(mServerMutex);
 
-  for(CSinglyLinkedList<HTTPServerWaiting*>::Iterator iter = mServerLayers.begin(); iter != mServerLayers.end(); ++iter) {
-    if((*iter)->mPath == paPath) {
-      DEVLOG_ERROR("[HTTP Handler]: The listening path \"%s\" was already added to the http server. Cannot add it again\n", paPath.c_str());
+  for (CSinglyLinkedList<HTTPServerWaiting *>::Iterator iter = mServerLayers.begin(); iter != mServerLayers.end();
+       ++iter) {
+    if ((*iter)->mPath == paPath) {
+      DEVLOG_ERROR(
+          "[HTTP Handler]: The listening path \"%s\" was already added to the http server. Cannot add it again\n",
+          paPath.c_str());
       return false;
     }
   }
@@ -288,9 +309,11 @@ bool CHTTP_Handler::addServerPath(forte::com_infra::CHttpComLayer *paLayer, cons
 void CHTTP_Handler::removeServerPath(const std::string &paPath) {
   CCriticalRegion criticalRegion(mServerMutex);
 
-  for(CSinglyLinkedList<HTTPServerWaiting*>::Iterator iter = mServerLayers.begin(); iter != mServerLayers.end(); ++iter) {
-    if((*iter)->mPath == paPath) {
-      for(CSinglyLinkedList<CIPComSocketHandler::TSocketDescriptor>::Iterator iter_ = (*iter)->mSockets.begin(); iter_ != (*iter)->mSockets.end(); ++iter_) {
+  for (CSinglyLinkedList<HTTPServerWaiting *>::Iterator iter = mServerLayers.begin(); iter != mServerLayers.end();
+       ++iter) {
+    if ((*iter)->mPath == paPath) {
+      for (CSinglyLinkedList<CIPComSocketHandler::TSocketDescriptor>::Iterator iter_ = (*iter)->mSockets.begin();
+           iter_ != (*iter)->mSockets.end(); ++iter_) {
         removeAndCloseSocket(*iter_);
       }
       HTTPServerWaiting *toDelete = *iter;
@@ -300,7 +323,7 @@ void CHTTP_Handler::removeServerPath(const std::string &paPath) {
     }
   }
 
-  if(mServerLayers.isEmpty()) {
+  if (mServerLayers.isEmpty()) {
     closeHTTPServer();
   }
 }
@@ -325,37 +348,40 @@ void CHTTP_Handler::run() {
   DEVLOG_INFO("[HTTP Handler]: Starting HTTP timeout thread\n");
 
   mThreadStarted.inc();
-  while(isAlive()) {
-    if(mClientLayers.isEmpty() && mAcceptedSockets.isEmpty()) {
+  while (isAlive()) {
+    if (mClientLayers.isEmpty() && mAcceptedSockets.isEmpty()) {
       selfSuspend();
     }
-    if(!isAlive()) {
+    if (!isAlive()) {
       break;
     }
 
     checkClientLayers();
     checkAcceptedSockets();
     sleepThread(100);
-
   }
 }
 
 void CHTTP_Handler::checkClientLayers() {
   CCriticalRegion criticalRegion(mClientMutex);
-  if(!mClientLayers.isEmpty()) {
-    CSinglyLinkedList<HTTPClientWaiting*> clientsToDelete;
-    for(CSinglyLinkedList<HTTPClientWaiting*>::Iterator iter = mClientLayers.begin(); iter != mClientLayers.end(); ++iter) {
+  if (!mClientLayers.isEmpty()) {
+    CSinglyLinkedList<HTTPClientWaiting *> clientsToDelete;
+    for (CSinglyLinkedList<HTTPClientWaiting *>::Iterator iter = mClientLayers.begin(); iter != mClientLayers.end();
+         ++iter) {
       // wait until result is ready
-      if(func_NOW_MONOTONIC().getInMilliSeconds() > (*iter)->mStartTime.getInMilliSeconds() + scmSendTimeout * 1000) {
-        DEVLOG_ERROR("[HTTP Handler]: Timeout at client %s:%u \n", (*iter)->mLayer->getHost().c_str(), (*iter)->mLayer->getPort());
+      if (func_NOW_MONOTONIC().getInMilliSeconds() > (*iter)->mStartTime.getInMilliSeconds() + scmSendTimeout * 1000) {
+        DEVLOG_ERROR("[HTTP Handler]: Timeout at client %s:%u \n", (*iter)->mLayer->getHost().c_str(),
+                     (*iter)->mLayer->getPort());
         removeAndCloseSocket((*iter)->mSocket);
         clientsToDelete.pushBack(*iter);
-        (*iter)->mLayer->recvData(nullptr, 0); //indicates timeout
+        (*iter)->mLayer->recvData(nullptr, 0); // indicates timeout
       }
     }
-    for(CSinglyLinkedList<HTTPClientWaiting*>::Iterator iter = clientsToDelete.begin(); iter != clientsToDelete.end(); ++iter) {
-      for(CSinglyLinkedList<HTTPClientWaiting*>::Iterator iter_ = mClientLayers.begin(); iter_ != mClientLayers.end(); ++iter_) {
-        if(*iter_ == *iter) {
+    for (CSinglyLinkedList<HTTPClientWaiting *>::Iterator iter = clientsToDelete.begin(); iter != clientsToDelete.end();
+         ++iter) {
+      for (CSinglyLinkedList<HTTPClientWaiting *>::Iterator iter_ = mClientLayers.begin(); iter_ != mClientLayers.end();
+           ++iter_) {
+        if (*iter_ == *iter) {
           mClientLayers.erase(*iter_);
           delete (*iter);
           break;
@@ -367,20 +393,24 @@ void CHTTP_Handler::checkClientLayers() {
 
 void CHTTP_Handler::checkAcceptedSockets() {
   CCriticalRegion criticalRegion(mAcceptedMutex);
-  if(!mAcceptedSockets.isEmpty()) {
-    CSinglyLinkedList<HTTPAcceptedSockets*> acceptedToDelete;
-    for(CSinglyLinkedList<HTTPAcceptedSockets*>::Iterator iter = mAcceptedSockets.begin(); iter != mAcceptedSockets.end(); ++iter) {
+  if (!mAcceptedSockets.isEmpty()) {
+    CSinglyLinkedList<HTTPAcceptedSockets *> acceptedToDelete;
+    for (CSinglyLinkedList<HTTPAcceptedSockets *>::Iterator iter = mAcceptedSockets.begin();
+         iter != mAcceptedSockets.end(); ++iter) {
       // wait until result is ready
-      if(func_NOW_MONOTONIC().getInMilliSeconds() > (*iter)->mStartTime.getInMilliSeconds() + scmAcceptedTimeout * 1000) {
+      if (func_NOW_MONOTONIC().getInMilliSeconds() >
+          (*iter)->mStartTime.getInMilliSeconds() + scmAcceptedTimeout * 1000) {
         DEVLOG_ERROR("[HTTP Handler]: Timeout at accepted socket\n");
         removeAndCloseSocket((*iter)->mSocket);
         acceptedToDelete.pushBack(*iter);
       }
     }
 
-    for(CSinglyLinkedList<HTTPAcceptedSockets*>::Iterator iter = acceptedToDelete.begin(); iter != acceptedToDelete.end(); ++iter) {
-      for(CSinglyLinkedList<HTTPAcceptedSockets*>::Iterator iter_ = mAcceptedSockets.begin(); iter_ != mAcceptedSockets.end(); ++iter_) {
-        if(*iter_ == *iter) {
+    for (CSinglyLinkedList<HTTPAcceptedSockets *>::Iterator iter = acceptedToDelete.begin();
+         iter != acceptedToDelete.end(); ++iter) {
+      for (CSinglyLinkedList<HTTPAcceptedSockets *>::Iterator iter_ = mAcceptedSockets.begin();
+           iter_ != mAcceptedSockets.end(); ++iter_) {
+        if (*iter_ == *iter) {
           mAcceptedSockets.erase(*iter_);
           delete (*iter);
           break;
@@ -391,7 +421,7 @@ void CHTTP_Handler::checkAcceptedSockets() {
 }
 
 void CHTTP_Handler::startTimeoutThread() {
-  if(!isAlive()) {
+  if (!isAlive()) {
     start();
     mThreadStarted.waitIndefinitely();
     mThreadStarted.inc();
@@ -405,10 +435,10 @@ void CHTTP_Handler::stopTimeoutThread() {
 }
 
 void CHTTP_Handler::openHTTPServer() {
-  if(CIPComSocketHandler::scmInvalidSocketDescriptor == smServerListeningSocket) {
+  if (CIPComSocketHandler::scmInvalidSocketDescriptor == smServerListeningSocket) {
     char address[] = "127.0.0.1";
     smServerListeningSocket = CIPComSocketHandler::openTCPServerConnection(address, gHTTPServerPort);
-    if(CIPComSocketHandler::scmInvalidSocketDescriptor != smServerListeningSocket) {
+    if (CIPComSocketHandler::scmInvalidSocketDescriptor != smServerListeningSocket) {
       getExtEvHandler<CIPComSocketHandler>().addComCallback(smServerListeningSocket, this);
       DEVLOG_INFO("[HTTP Handler] HTTP server listening on port %u\n", gHTTPServerPort);
     } else {
@@ -418,15 +448,15 @@ void CHTTP_Handler::openHTTPServer() {
 }
 
 void CHTTP_Handler::closeHTTPServer() {
-  if(CIPComSocketHandler::scmInvalidSocketDescriptor != smServerListeningSocket) {
+  if (CIPComSocketHandler::scmInvalidSocketDescriptor != smServerListeningSocket) {
     removeAndCloseSocket(smServerListeningSocket);
     smServerListeningSocket = CIPComSocketHandler::scmInvalidSocketDescriptor;
   }
 }
 
 void CHTTP_Handler::removeAndCloseSocket(const CIPComSocketHandler::TSocketDescriptor paSocket) {
-  //normally, when the device is being killed the CIPComSocketHandler is already dead, so calls to it must be avoided.
-  if(mDeviceExecution.isExtEvHandlerValid(CIPComSocketHandler::mHandlerIdentifier)) {
+  // normally, when the device is being killed the CIPComSocketHandler is already dead, so calls to it must be avoided.
+  if (mDeviceExecution.isExtEvHandlerValid(CIPComSocketHandler::mHandlerIdentifier)) {
     getExtEvHandler<CIPComSocketHandler>().removeComCallback(paSocket);
     getExtEvHandler<CIPComSocketHandler>().closeSocket(paSocket);
   }
@@ -440,15 +470,20 @@ void CHTTP_Handler::selfSuspend() {
   mSuspendSemaphore.waitIndefinitely();
 }
 
-void CHTTP_Handler::sendServerAnswerHelper(forte::com_infra::CHttpComLayer *paLayer, const std::string &paAnswer, bool paFromRecv) {
-  if(!paFromRecv) {
+void CHTTP_Handler::sendServerAnswerHelper(forte::com_infra::CHttpComLayer *paLayer,
+                                           const std::string &paAnswer,
+                                           bool paFromRecv) {
+  if (!paFromRecv) {
     mServerMutex.lock();
   }
 
-  for(CSinglyLinkedList<HTTPServerWaiting*>::Iterator iter = mServerLayers.begin(); iter != mServerLayers.end(); ++iter) {
-    if((*iter)->mLayer == paLayer) {
+  for (CSinglyLinkedList<HTTPServerWaiting *>::Iterator iter = mServerLayers.begin(); iter != mServerLayers.end();
+       ++iter) {
+    if ((*iter)->mLayer == paLayer) {
       CSinglyLinkedList<CIPComSocketHandler::TSocketDescriptor>::Iterator iterSocket = (*iter)->mSockets.begin();
-      if(static_cast<int>(paAnswer.length()) != CIPComSocketHandler::sendDataOnTCP(*iterSocket, paAnswer.c_str(), static_cast<unsigned int>(paAnswer.length()))) {
+      if (static_cast<int>(paAnswer.length()) !=
+          CIPComSocketHandler::sendDataOnTCP(*iterSocket, paAnswer.c_str(),
+                                             static_cast<unsigned int>(paAnswer.length()))) {
         DEVLOG_ERROR("[HTTP Handler]: Error sending back the answer %s \n", paAnswer.c_str());
       }
       removeAndCloseSocket(*iterSocket);
@@ -457,21 +492,22 @@ void CHTTP_Handler::sendServerAnswerHelper(forte::com_infra::CHttpComLayer *paLa
     }
   }
 
-  if(!paFromRecv) {
+  if (!paFromRecv) {
     mServerMutex.unlock();
   }
 }
 
 void CHTTP_Handler::forceCloseHelper(forte::com_infra::CHttpComLayer *paLayer, bool paFromRecv) {
-  if(!paFromRecv) {
+  if (!paFromRecv) {
     mServerMutex.lock();
   }
 
   bool found = false;
 
-  for(CSinglyLinkedList<HTTPServerWaiting*>::Iterator iter = mServerLayers.begin(); iter != mServerLayers.end(); ++iter) {
-    if((*iter)->mLayer == paLayer) {
-      if(!(*iter)->mSockets.isEmpty()) {
+  for (CSinglyLinkedList<HTTPServerWaiting *>::Iterator iter = mServerLayers.begin(); iter != mServerLayers.end();
+       ++iter) {
+    if ((*iter)->mLayer == paLayer) {
+      if (!(*iter)->mSockets.isEmpty()) {
         CSinglyLinkedList<CIPComSocketHandler::TSocketDescriptor>::Iterator itSocket = (*iter)->mSockets.begin();
         removeAndCloseSocket(*itSocket);
         (*iter)->mSockets.popFront();
@@ -481,20 +517,21 @@ void CHTTP_Handler::forceCloseHelper(forte::com_infra::CHttpComLayer *paLayer, b
     }
   }
 
-  if(!paFromRecv) {
+  if (!paFromRecv) {
     mServerMutex.unlock();
     mClientMutex.lock();
   }
 
-  if(!found && !mClientLayers.isEmpty()) {
-    for(CSinglyLinkedList<HTTPClientWaiting*>::Iterator iter = mClientLayers.begin(); iter != mClientLayers.end(); ++iter) {
-      if((*iter)->mLayer == paLayer) {
+  if (!found && !mClientLayers.isEmpty()) {
+    for (CSinglyLinkedList<HTTPClientWaiting *>::Iterator iter = mClientLayers.begin(); iter != mClientLayers.end();
+         ++iter) {
+      if ((*iter)->mLayer == paLayer) {
         removeAndCloseSocket((*iter)->mSocket);
       }
     }
   }
 
-  if(!paFromRecv) {
+  if (!paFromRecv) {
     mClientMutex.unlock();
   }
 }

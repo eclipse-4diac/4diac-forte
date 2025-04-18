@@ -12,14 +12,12 @@
 #ifndef _EPLCNCALLBACK_H_
 #define _EPLCNCALLBACK_H_
 
-class IEplCNCallback{
+class IEplCNCallback {
   public:
-
     virtual void cnSynchCallback() = 0;
 
   protected:
     virtual ~IEplCNCallback() = default;
-
 };
 
 #endif //_EPLCNCALLBACK_H_

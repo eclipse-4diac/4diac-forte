@@ -9,8 +9,8 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *   Martin Melik Merkumians, Ingo Hegny, Alois Zoitl, Stanislav Meduna - initial API and implementation and/or initial documentation
- *   Martin Jobst - add user-defined literal tests
+ *   Martin Melik Merkumians, Ingo Hegny, Alois Zoitl, Stanislav Meduna - initial API and implementation and/or initial
+ *documentation Martin Jobst - add user-defined literal tests
  *******************************************************************************/
 #include <boost/test/unit_test.hpp>
 #include "forte_boost_output_support.h"
@@ -19,18 +19,15 @@
 #include "../../../src/core/datatypes/forte_int.h"
 
 BOOST_AUTO_TEST_SUITE(CIEC_INT_function_test)
-BOOST_AUTO_TEST_CASE(Type_test)
-{
+BOOST_AUTO_TEST_CASE(Type_test) {
   CIEC_INT nTest;
-  //check type information
+  // check type information
   BOOST_CHECK_EQUAL(nTest.getDataTypeID(), CIEC_ANY::e_INT);
-  //check operator bool data type size
+  // check operator bool data type size
   BOOST_CHECK_EQUAL(sizeof(nTest.operator TForteInt16()), sizeof(TForteInt16));
-
 }
 
-BOOST_AUTO_TEST_CASE(Literal_test)
-{
+BOOST_AUTO_TEST_CASE(Literal_test) {
   CIEC_INT test1 = 0_INT;
   BOOST_TEST(static_cast<CIEC_INT::TValueType>(test1) == 0);
 
@@ -41,12 +38,11 @@ BOOST_AUTO_TEST_CASE(Literal_test)
   BOOST_TEST(static_cast<CIEC_INT::TValueType>(test3) == std::numeric_limits<CIEC_INT::TValueType>::min());
 }
 
-BOOST_AUTO_TEST_CASE(Assignment_test)
-{
+BOOST_AUTO_TEST_CASE(Assignment_test) {
   CIEC_INT nTest1;
   CIEC_INT nTest2;
 
-  //initial value must be 0
+  // initial value must be 0
   BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(nTest1), 0);
 
   nTest1 = CIEC_INT(-32768);
@@ -69,21 +65,19 @@ BOOST_AUTO_TEST_CASE(Assignment_test)
   BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(nTest1), 32767);
   BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(nTest2), 32767);
 
-  //check that assignment operator does not intertwine objects
+  // check that assignment operator does not intertwine objects
   nTest2 = CIEC_INT(-36);
   BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(nTest1), 32767);
   BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(nTest2), -36);
-
 }
 
-BOOST_AUTO_TEST_CASE(Conversion_test)
-{
+BOOST_AUTO_TEST_CASE(Conversion_test) {
   CIEC_INT nTest;
 
   char cBuffer[7];
   char cBufferFail[2];
 
-  //check cast operator
+  // check cast operator
   nTest = CIEC_INT(0);
 
   BOOST_CHECK_EQUAL(nTest.operator TForteInt16(), 0);
@@ -97,7 +91,7 @@ BOOST_AUTO_TEST_CASE(Conversion_test)
   nTest = CIEC_INT(32767);
   BOOST_CHECK_EQUAL(nTest.operator TForteInt16(), 32767);
 
-  //check toString and fromString
+  // check toString and fromString
   strcpy(cBuffer, "");
 
   BOOST_CHECK_EQUAL(nTest.fromString("-32768"), 6);
@@ -110,43 +104,43 @@ BOOST_AUTO_TEST_CASE(Conversion_test)
   strcpy(cBuffer, "");
   nTest = CIEC_INT(0);
 
-    BOOST_CHECK_EQUAL(nTest.fromString("2#1000000000000000"), 18);
-    BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(nTest), -32768);
-    BOOST_CHECK_EQUAL(nTest.fromString("INT#2#1000000000000000"), 22);
-    BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(nTest), -32768);
-    BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 7), 6);
-    BOOST_CHECK_EQUAL(strcmp(cBuffer, "-32768"), 0);
+  BOOST_CHECK_EQUAL(nTest.fromString("2#1000000000000000"), 18);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(nTest), -32768);
+  BOOST_CHECK_EQUAL(nTest.fromString("INT#2#1000000000000000"), 22);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(nTest), -32768);
+  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 7), 6);
+  BOOST_CHECK_EQUAL(strcmp(cBuffer, "-32768"), 0);
 
-    BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
+  BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
 
-    strcpy(cBuffer, "");
-    nTest = CIEC_INT(0);
+  strcpy(cBuffer, "");
+  nTest = CIEC_INT(0);
 
-    BOOST_CHECK_EQUAL(nTest.fromString("8#100000"), 8);
-    BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(nTest), -32768);
-    BOOST_CHECK_EQUAL(nTest.fromString("INT#8#100000"), 12);
-    BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(nTest), -32768);
-    BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 7), 6);
-    BOOST_CHECK_EQUAL(strcmp(cBuffer, "-32768"), 0);
+  BOOST_CHECK_EQUAL(nTest.fromString("8#100000"), 8);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(nTest), -32768);
+  BOOST_CHECK_EQUAL(nTest.fromString("INT#8#100000"), 12);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(nTest), -32768);
+  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 7), 6);
+  BOOST_CHECK_EQUAL(strcmp(cBuffer, "-32768"), 0);
 
-    BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
+  BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
 
-    strcpy(cBuffer, "");
-    nTest = CIEC_INT(0);
+  strcpy(cBuffer, "");
+  nTest = CIEC_INT(0);
 
-    BOOST_CHECK_EQUAL(nTest.fromString("16#8000"), 7);
-    BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(nTest), -32768);
-    BOOST_CHECK_EQUAL(nTest.fromString("INT#16#8000"), 11);
-    BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(nTest), -32768);
-    BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 7), 6);
-    BOOST_CHECK_EQUAL(strcmp(cBuffer, "-32768"), 0);
+  BOOST_CHECK_EQUAL(nTest.fromString("16#8000"), 7);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(nTest), -32768);
+  BOOST_CHECK_EQUAL(nTest.fromString("INT#16#8000"), 11);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(nTest), -32768);
+  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 7), 6);
+  BOOST_CHECK_EQUAL(strcmp(cBuffer, "-32768"), 0);
 
-    BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
+  BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
 
-    BOOST_CHECK_EQUAL(nTest.fromString("16#ffff"), 7);
-    BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(nTest), -1);
+  BOOST_CHECK_EQUAL(nTest.fromString("16#ffff"), 7);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(nTest), -1);
 
-    strcpy(cBuffer, "");
+  strcpy(cBuffer, "");
 
   BOOST_CHECK_EQUAL(nTest.fromString("0"), 1);
   BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(nTest), 0);
@@ -282,7 +276,7 @@ BOOST_AUTO_TEST_CASE(Conversion_test)
   BOOST_CHECK_EQUAL(nTest.fromString("16#FFFF0"), -1);
   BOOST_CHECK_EQUAL(nTest.fromString("-40000"), -1);
 
-  //check invalid fromString string
+  // check invalid fromString string
   BOOST_CHECK_EQUAL(nTest.fromString("NOT A VALID STRING"), -1);
 }
 BOOST_AUTO_TEST_SUITE_END()

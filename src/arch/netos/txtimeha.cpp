@@ -14,39 +14,39 @@
 #include "txtimeha.h"
 #include "../../core/devexec.h"
 
-CTXTimerHandler::CTXTimerHandler(CDeviceExecution& paDeviceExecution) : CTimerHandler(paDeviceExecution)  {
-// setup the handler for recieving the timer calls  
-  //TODO handle ticks per second correctly here
+CTXTimerHandler::CTXTimerHandler(CDeviceExecution &paDeviceExecution) : CTimerHandler(paDeviceExecution) {
+  // setup the handler for recieving the timer calls
+  // TODO handle ticks per second correctly here
   UINT status = tx_timer_create(&mTimer, "FORTE timer", &timerHandlerFunc, (ULONG) this, 1, 1, TX_NO_ACTIVATE);
   if (status == TX_SUCCESS)
     DEVLOG_DEBUG("Timer created\n");
   else
     DEVLOG_DEBUG("Error creating timer\n");
-  
-  //TODO handle retval
+
+  // TODO handle retval
 }
 
-CTXTimerHandler::~CTXTimerHandler(){
+CTXTimerHandler::~CTXTimerHandler() {
   disableHandler();
   tx_timer_delete(&mTimer);
 }
 
-void CTXTimerHandler::enableHandler(){
+void CTXTimerHandler::enableHandler() {
   UINT status = tx_timer_activate(&mTimer);
   if (status == TX_SUCCESS)
     DEVLOG_DEBUG("Timer activated\n");
   else
     DEVLOG_DEBUG("Error activating timer\n");
-  
-  //TODO handle retval
+
+  // TODO handle retval
 }
 
-void CTXTimerHandler::disableHandler(){
+void CTXTimerHandler::disableHandler() {
   tx_timer_deactivate(&mTimer);
-  //TODO handle retval
+  // TODO handle retval
 }
 
-void CTXTimerHandler::setPriority(int paPriority){
+void CTXTimerHandler::setPriority(int paPriority) {
 }
 
 int CTXTimerHandler::getPriority() const {

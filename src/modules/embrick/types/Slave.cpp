@@ -19,19 +19,25 @@ const CIEC_WSTRING EmbrickSlave::scmInterrupted("Interrupted");
 const CIEC_WSTRING EmbrickSlave::scmError("Error");
 const CIEC_WSTRING EmbrickSlave::scmUnknown("Invalid status code");
 
-EmbrickSlave::EmbrickSlave(const TForteUInt8* const paSlaveConfigurationIO, const TForteUInt8 paSlaveConfigurationIO_num, int paType, forte::core::CFBContainer &paContainer,
-    const SFBInterfaceSpec& paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId) :
-        forte::core::io::IOConfigFBMultiSlave(paSlaveConfigurationIO, paSlaveConfigurationIO_num, paType, paContainer, paInterfaceSpec, paInstanceNameId), mSlave(0) {
+EmbrickSlave::EmbrickSlave(const TForteUInt8 *const paSlaveConfigurationIO,
+                           const TForteUInt8 paSlaveConfigurationIO_num,
+                           int paType,
+                           forte::core::CFBContainer &paContainer,
+                           const SFBInterfaceSpec &paInterfaceSpec,
+                           const CStringDictionary::TStringId paInstanceNameId) :
+    forte::core::io::IOConfigFBMultiSlave(
+        paSlaveConfigurationIO, paSlaveConfigurationIO_num, paType, paContainer, paInterfaceSpec, paInstanceNameId),
+    mSlave(0) {
 }
 
 EmbrickSlave::~EmbrickSlave() {
   deInit();
 }
 
-const char* EmbrickSlave::init() {
+const char *EmbrickSlave::init() {
   CCriticalRegion criticalRegion(mSlaveMutex);
 
-  EmbrickBusHandler &bus = *static_cast<EmbrickBusHandler*>(&getController());
+  EmbrickBusHandler &bus = *static_cast<EmbrickBusHandler *>(&getController());
 
   mSlave = bus.getSlave(mIndex);
   mSlave->mDelegate = this;
@@ -46,30 +52,19 @@ const char* EmbrickSlave::init() {
 void EmbrickSlave::deInit() {
   CCriticalRegion criticalRegion(mSlaveMutex);
 
-  if(mSlave != 0) {
+  if (mSlave != 0) {
     mSlave->mDelegate = 0;
     mSlave = 0;
   }
-
 }
 
 void EmbrickSlave::onSlaveStatus(EmbrickSlaveHandler::SlaveStatus paStatus, EmbrickSlaveHandler::SlaveStatus) {
-  switch(paStatus){
-    case EmbrickSlaveHandler::OK:
-      STATUS() = scmOK;
-      break;
-    case EmbrickSlaveHandler::Slow:
-      STATUS() = scmSlow;
-      break;
-    case EmbrickSlaveHandler::Interrupted:
-      STATUS() = scmInterrupted;
-      break;
-    case EmbrickSlaveHandler::Error:
-      STATUS() = scmError;
-      break;
-    default:
-      STATUS() = scmUnknown;
-      break;
+  switch (paStatus) {
+    case EmbrickSlaveHandler::OK: STATUS() = scmOK; break;
+    case EmbrickSlaveHandler::Slow: STATUS() = scmSlow; break;
+    case EmbrickSlaveHandler::Interrupted: STATUS() = scmInterrupted; break;
+    case EmbrickSlaveHandler::Error: STATUS() = scmError; break;
+    default: STATUS() = scmUnknown; break;
   }
 
   sendOutputEvent(scmEventINDID, getEventChainExecutor());
@@ -80,6 +75,4 @@ void EmbrickSlave::onSlaveDestroy() {
 
   QO() = false_BOOL;
   STATUS() = scmError;
-
 }
-

@@ -33,7 +33,6 @@ USE_STRING_ID(PortAdapter);
 USE_STRING_ID(PortInAdapter);
 USE_STRING_ID(WSTRING);
 
-
 #include "PortAdapter_adp.h"
 #include "iec61131_functions.h"
 #include "forte_array_common.h"
@@ -50,19 +49,34 @@ using namespace forte::core::io;
 
 DEFINE_FIRMWARE_FB(FORTE_Port, STRID(Port))
 
-const CStringDictionary::TStringId FORTE_Port::scmDataInputNames[] = {STRID(Pin0), STRID(Pin1), STRID(Pin2), STRID(Pin3), STRID(Pin4), STRID(Pin5), STRID(Pin6), STRID(Pin7), STRID(Pin8), STRID(Pin9), STRID(Pin10), STRID(Pin11), STRID(Pin12), STRID(Pin13), STRID(Pin14), STRID(Pin15)};
-const CStringDictionary::TStringId FORTE_Port::scmDataInputTypeIds[] = {STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING)};
-const SAdapterInstanceDef FORTE_Port::scmAdapterInstances[] = {
-  {STRID(PortAdapter), STRID(PortInAdapter), false}
-};
-const SFBInterfaceSpec FORTE_Port::scmFBInterfaceSpec = {
-  0, nullptr, nullptr, nullptr, nullptr,
-  0, nullptr, nullptr, nullptr, nullptr,
-  16, scmDataInputNames, scmDataInputTypeIds,
-  0, nullptr, nullptr,
-  0, nullptr,
-  1, scmAdapterInstances
-};
+const CStringDictionary::TStringId FORTE_Port::scmDataInputNames[] = {
+    STRID(Pin0), STRID(Pin1), STRID(Pin2),  STRID(Pin3),  STRID(Pin4),  STRID(Pin5),  STRID(Pin6),  STRID(Pin7),
+    STRID(Pin8), STRID(Pin9), STRID(Pin10), STRID(Pin11), STRID(Pin12), STRID(Pin13), STRID(Pin14), STRID(Pin15)};
+const CStringDictionary::TStringId FORTE_Port::scmDataInputTypeIds[] = {
+    STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING),
+    STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING),
+    STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING)};
+const SAdapterInstanceDef FORTE_Port::scmAdapterInstances[] = {{STRID(PortAdapter), STRID(PortInAdapter), false}};
+const SFBInterfaceSpec FORTE_Port::scmFBInterfaceSpec = {0,
+                                                         nullptr,
+                                                         nullptr,
+                                                         nullptr,
+                                                         nullptr,
+                                                         0,
+                                                         nullptr,
+                                                         nullptr,
+                                                         nullptr,
+                                                         nullptr,
+                                                         16,
+                                                         scmDataInputNames,
+                                                         scmDataInputTypeIds,
+                                                         0,
+                                                         nullptr,
+                                                         nullptr,
+                                                         0,
+                                                         nullptr,
+                                                         1,
+                                                         scmAdapterInstances};
 
 FORTE_Port::FORTE_Port(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId),
@@ -98,11 +112,12 @@ FORTE_Port::FORTE_Port(const CStringDictionary::TStringId paInstanceNameId, fort
     conn_Pin12(nullptr),
     conn_Pin13(nullptr),
     conn_Pin14(nullptr),
-    conn_Pin15(nullptr) {
-};
+    conn_Pin15(nullptr) {};
 
 bool FORTE_Port::initialize() {
-  if(!var_PortInAdapter.initialize()) { return false; }
+  if (!var_PortInAdapter.initialize()) {
+    return false;
+  }
   var_PortInAdapter.setParentFB(this, 0);
   for (int i = 0; i < pin_cnt; i++)
     mRegistered[i] = nullptr;
@@ -146,7 +161,7 @@ void FORTE_Port::writeOutputData(TEventID) {
 }
 
 CIEC_ANY *FORTE_Port::getDI(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_Pin0;
     case 1: return &var_Pin1;
     case 2: return &var_Pin2;
@@ -172,7 +187,7 @@ CIEC_ANY *FORTE_Port::getDO(size_t) {
 }
 
 CAdapter *FORTE_Port::getAdapterUnchecked(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_PortInAdapter;
   }
   return nullptr;
@@ -183,7 +198,7 @@ CEventConnection *FORTE_Port::getEOConUnchecked(TPortId) {
 }
 
 CDataConnection **FORTE_Port::getDIConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_Pin0;
     case 1: return &conn_Pin1;
     case 2: return &conn_Pin2;
@@ -231,7 +246,8 @@ void FORTE_Port::register_handles() {
 
     // Create a GPIO pin handle using the port struct to identify the MMIO port and
     // a bit mask to identify the pin.
-    EliteBoardDeviceController::EliteBoardHandleDescriptor descr(*id, IOMapper::UnknownDirection, port, uint16_t(1 << i));
+    EliteBoardDeviceController::EliteBoardHandleDescriptor descr(*id, IOMapper::UnknownDirection, port,
+                                                                 uint16_t(1 << i));
     EliteBoardDeviceController &ctrl = getExtEvHandler<EliteBoardDeviceController>(*this);
 
     IOMapper::getInstance().registerHandle(std::string(*id), ctrl.createIOHandle(descr));

@@ -86,7 +86,7 @@ class CIEC_ARRAY_COMMON : public CIEC_ARRAY {
     }
 
     CIEC_ARRAY_COMMON &operator=(std::initializer_list<T> paSource) {
-      if(size()) { // check if initialized
+      if (size()) { // check if initialized
         intmax_t begin = getLowerBound();
         intmax_t end = std::min(getUpperBound(), getLowerBound() + paSource.size() - 1);
         for (intmax_t i = begin; i <= end; ++i) {
@@ -98,10 +98,9 @@ class CIEC_ARRAY_COMMON : public CIEC_ARRAY {
 
     ~CIEC_ARRAY_COMMON() override = default;
 
-protected:
+  protected:
     CIEC_ARRAY_COMMON() = default;
 };
 
 static_assert(std::is_copy_assignable_v<CIEC_ARRAY_COMMON<CIEC_ANY>>);
 static_assert(std::is_destructible_v<CIEC_ARRAY_COMMON<CIEC_ANY>>);
-

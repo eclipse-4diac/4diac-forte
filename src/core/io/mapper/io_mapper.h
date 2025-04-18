@@ -30,35 +30,30 @@ namespace forte {
       class IOObserver;
 
       class IOMapper {
-        DECLARE_SINGLETON (IOMapper)
+          DECLARE_SINGLETON(IOMapper)
 
         public:
-          enum Direction {
-            UnknownDirection,
-            In,
-            Out,
-            InOut
-          };
+          enum Direction { UnknownDirection, In, Out, InOut };
 
-          bool registerHandle(std::string const &paId, IOHandle* paHandle);
-          void deregisterHandle(IOHandle* paHandle);
+          bool registerHandle(std::string const &paId, IOHandle *paHandle);
+          void deregisterHandle(IOHandle *paHandle);
           void deregisterHandle(std::string const &paId);
 
-          bool registerObserver(std::string const &paId, IOObserver* paObserver);
-          void deregisterObserver(IOObserver* paObserver);
+          bool registerObserver(std::string const &paId, IOObserver *paObserver);
+          void deregisterObserver(IOObserver *paObserver);
 
         private:
-          typedef std::map<std::string, IOHandle*> THandleMap;
+          typedef std::map<std::string, IOHandle *> THandleMap;
           THandleMap mHandles;
 
-          typedef std::map<std::string, IOObserver*> TObserverMap;
+          typedef std::map<std::string, IOObserver *> TObserverMap;
           TObserverMap mObservers;
 
           CSyncObject mSyncMutex;
       };
 
-    } //namespace IO
-  } //namepsace core
-} //namespace forte
+    } // namespace io
+  } // namespace core
+} // namespace forte
 
 #endif /* SRC_CORE_IO_MAPPER_MAPPER_H_ */

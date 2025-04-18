@@ -12,7 +12,7 @@
 #ifndef _MACOS_SOCKHAND_H_
 #define _MACOS_SOCKHAND_H_
 
-//just pull_in the posix socket handler
+// just pull_in the posix socket handler
 #include "../posix/sockhand.h"
 
 #endif

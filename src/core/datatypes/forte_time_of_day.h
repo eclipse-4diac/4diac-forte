@@ -14,7 +14,7 @@
  *    Monika Wenger
  *      - initial implementation and rework communication infrastructure
  *    Martin Melik Merkumians - make TForteUInt64 constructor explicit,
- *      removed built-in type operator=, removed operator++, update timebase to 
+ *      removed built-in type operator=, removed operator++, update timebase to
  *      nanoseconds
  *    Martin Jobst - add user-defined literal
  *******************************************************************************/
@@ -27,8 +27,8 @@
 /*!\ingroup COREDTS CIEC_TIME_OF_DAY represents the time data types according to IEC 61131.
  */
 
-class CIEC_TIME_OF_DAY final : public CIEC_ANY_DATE{
-  DECLARE_FIRMWARE_DATATYPE(TIME_OF_DAY)
+class CIEC_TIME_OF_DAY final : public CIEC_ANY_DATE {
+    DECLARE_FIRMWARE_DATATYPE(TIME_OF_DAY)
   public:
     [[deprecated("Please use the corresponding numeric_limits template")]]
     constexpr static size_t scmBitLength = 64U;
@@ -36,11 +36,10 @@ class CIEC_TIME_OF_DAY final : public CIEC_ANY_DATE{
     static constexpr TValueType scmMinVal = std::numeric_limits<TValueType>::min();
     [[deprecated("Please use the corresponding numeric_limits template")]]
     static constexpr TValueType scmMaxVal = std::numeric_limits<TValueType>::max();
-    
+
     CIEC_TIME_OF_DAY() = default;
 
-    CIEC_TIME_OF_DAY(const CIEC_TIME_OF_DAY& paValue) :
-        CIEC_ANY_DATE(){
+    CIEC_TIME_OF_DAY(const CIEC_TIME_OF_DAY &paValue) : CIEC_ANY_DATE() {
       setValueSimple(paValue);
     }
 
@@ -50,7 +49,7 @@ class CIEC_TIME_OF_DAY final : public CIEC_ANY_DATE{
 
     ~CIEC_TIME_OF_DAY() override = default;
 
-    CIEC_TIME_OF_DAY& operator =(const CIEC_TIME_OF_DAY &paValue){
+    CIEC_TIME_OF_DAY &operator=(const CIEC_TIME_OF_DAY &paValue) {
       // Simple value assignment - no self assignment check needed
       setValueSimple(paValue);
       return *this;
@@ -60,7 +59,7 @@ class CIEC_TIME_OF_DAY final : public CIEC_ANY_DATE{
      *
      *   Conversion operator for converting CIEC_TIME_OF_DAY to elementary 64 bit unsigned integer
      */
-    explicit operator TForteUInt64() const{
+    explicit operator TForteUInt64() const {
       return getTUINT64();
     }
 
@@ -95,26 +94,26 @@ class CIEC_TIME_OF_DAY final : public CIEC_ANY_DATE{
      *   \return number of bytes used in the buffer without trailing 0x00
      *           -1 on error
      */
-    int toString(char* paValue, size_t paBufferSize) const override;
+    int toString(char *paValue, size_t paBufferSize) const override;
 };
 
-inline CIEC_TIME_OF_DAY operator ""_TIME_OF_DAY(unsigned long long int paValue) {
+inline CIEC_TIME_OF_DAY operator""_TIME_OF_DAY(unsigned long long int paValue) {
   return CIEC_TIME_OF_DAY(static_cast<CIEC_TIME_OF_DAY::TValueType>(paValue));
 }
 
 namespace std {
-  template <>
+  template<>
   struct numeric_limits<CIEC_TIME_OF_DAY> : public forte::templates::numeric_limits<CIEC_TIME_OF_DAY> {
-    static constexpr size_t bitLength = 64U;
+      static constexpr size_t bitLength = 64U;
   };
-}
+} // namespace std
 
 namespace forte {
-  template <>
+  template<>
   struct CDataTypeTrait<CIEC_TIME_OF_DAY> {
       static constexpr CIEC_ANY::EDataTypeID scmDataTypeId = CIEC_ANY::e_TIME_OF_DAY;
       static const CStringDictionary::TStringId scmDataTypeName;
   };
-}
+} // namespace forte
 
 #endif /*_FORTE_TOD_H_*/

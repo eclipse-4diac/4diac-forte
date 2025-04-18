@@ -23,7 +23,7 @@ USE_STRING_ID(ANY);
 #include "forte_lreal.h"
 #include <devlog.h>
 
-int CIEC_ANY::dummyInit(){
+int CIEC_ANY::dummyInit() {
   return 0;
 }
 
@@ -35,7 +35,7 @@ CStringDictionary::TStringId CIEC_ANY::parseTypeName(const char *paValue, const 
   return CStringDictionary::getId(paValue, static_cast<size_t>(paHashPos - paValue));
 }
 
-bool CIEC_ANY::isCastable(EDataTypeID paSource, EDataTypeID paDestination, bool &paUpCast, bool &paDownCast){
+bool CIEC_ANY::isCastable(EDataTypeID paSource, EDataTypeID paDestination, bool &paUpCast, bool &paDownCast) {
 
   paUpCast = paDownCast = false;
 
@@ -71,12 +71,12 @@ bool CIEC_ANY::isCastable(EDataTypeID paSource, EDataTypeID paDestination, bool 
 
       {0b00000000, 0b00000000, 0b00001000, 0b00000000}, // e_LTIME_OF_DAY
       {0b00000000, 0b00000000, 0b00000100, 0b00000000}, // e_LDATE_AND_TIME
-      {0b00000000, 0b00000000, 0b00000010, 0b00000000},  // e_LTIME
+      {0b00000000, 0b00000000, 0b00000010, 0b00000000}, // e_LTIME
       {0b00000000, 0b00011000, 0b00000001, 0b10000000}, // e_REAL
 
       {0b00000000, 0b00001000, 0b00000000, 0b10000000}, // e_LREAL
       {0b00000000, 0b00000000, 0b00000000, 0b01000000}, // e_STRING
-      {0b00000000, 0b00000000, 0b00000000, 0b00100000}  // e_WSTRING
+      {0b00000000, 0b00000000, 0b00000000, 0b00100000} // e_WSTRING
   };
 
   // Downcast: information may get lost (eventually catastrophically)
@@ -108,7 +108,7 @@ bool CIEC_ANY::isCastable(EDataTypeID paSource, EDataTypeID paDestination, bool 
 
       {0b00000000, 0b00000000, 0b00000000, 0b00000000}, // e_LTIME_OF_DAY
       {0b00000000, 0b00000000, 0b00000000, 0b00000000}, // e_LDATE_AND_TIME
-      {0b00000000, 0b00000000, 0b00000000, 0b00000000},  // e_LTIME
+      {0b00000000, 0b00000000, 0b00000000, 0b00000000}, // e_LTIME
       {0b11111111, 0b11100000, 0b00000000, 0b00000000}, // e_REAL
 
       {0b11111111, 0b11110000, 0b00000001, 0b00000000}, // e_LREAL
@@ -116,29 +116,26 @@ bool CIEC_ANY::isCastable(EDataTypeID paSource, EDataTypeID paDestination, bool 
       {0b00000000, 0b00000000, 0b00000000, 0b00000000} // e_WSTRING
   };
 
-  if((paSource < e_BOOL) || (paSource > e_WSTRING) || (paDestination < e_BOOL) || (paDestination > e_WSTRING)){
+  if ((paSource < e_BOOL) || (paSource > e_WSTRING) || (paDestination < e_BOOL) || (paDestination > e_WSTRING)) {
     return false;
   }
 
-  paUpCast = (UpCast[paSource - e_BOOL][(paDestination - e_BOOL) >> 3] & (0x80 >> ((paDestination - e_BOOL) & 0x07))) != 0;
-  paDownCast = (DownCast[paSource - e_BOOL][(paDestination - e_BOOL) >> 3] & (0x80 >> ((paDestination - e_BOOL) & 0x07))) != 0;
+  paUpCast =
+      (UpCast[paSource - e_BOOL][(paDestination - e_BOOL) >> 3] & (0x80 >> ((paDestination - e_BOOL) & 0x07))) != 0;
+  paDownCast =
+      (DownCast[paSource - e_BOOL][(paDestination - e_BOOL) >> 3] & (0x80 >> ((paDestination - e_BOOL) & 0x07))) != 0;
 
   return (paUpCast | paDownCast);
 }
 
-void CIEC_ANY::specialCast(const CIEC_ANY &paSrcValue, CIEC_ANY &paDstValue){
-  switch (paSrcValue.getDataTypeID()){
-    case CIEC_ANY::e_REAL:
-      CIEC_REAL::castRealData(static_cast<const CIEC_REAL &>(paSrcValue), paDstValue);
-      break;
-    case CIEC_ANY::e_LREAL:
-      CIEC_LREAL::castLRealData(static_cast<const CIEC_LREAL &>(paSrcValue), paDstValue);
-      break;
+void CIEC_ANY::specialCast(const CIEC_ANY &paSrcValue, CIEC_ANY &paDstValue) {
+  switch (paSrcValue.getDataTypeID()) {
+    case CIEC_ANY::e_REAL: CIEC_REAL::castRealData(static_cast<const CIEC_REAL &>(paSrcValue), paDstValue); break;
+    case CIEC_ANY::e_LREAL: CIEC_LREAL::castLRealData(static_cast<const CIEC_LREAL &>(paSrcValue), paDstValue); break;
     default:
-      (void)paDstValue; //to avoid warnings of unused parameter when real types aren't used
-      //we should not be here log error
+      (void) paDstValue; // to avoid warnings of unused parameter when real types aren't used
+      // we should not be here log error
       DEVLOG_ERROR("CIEC_ANY::specialCast: special cast for unsupported source data type requested!\n");
       break;
   }
 }
-

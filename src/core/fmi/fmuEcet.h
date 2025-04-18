@@ -15,33 +15,32 @@
 
 #include "../ecet.h"
 
-class CFMUEventChainExecutionThread : public CEventChainExecutionThread{
+class CFMUEventChainExecutionThread : public CEventChainExecutionThread {
   public:
     CFMUEventChainExecutionThread();
     ~CFMUEventChainExecutionThread() override;
 
-    void setAllowedToRun(bool* paAllowedToRun){
+    void setAllowedToRun(bool *paAllowedToRun) {
       mAllowedToRun = paAllowedToRun;
     }
 
-    void setStepSemaphore(forte::arch::CSemaphore* paStepSemaphore){
+    void setStepSemaphore(forte::arch::CSemaphore *paStepSemaphore) {
       mStepSemaphore = paStepSemaphore;
     }
 
-    bool hasMoreEvents(){
+    bool hasMoreEvents() {
       return !mEventList.isEmpty();
     }
 
-    bool isInWaitingStepState(){
+    bool isInWaitingStepState() {
       return mWaitingStep;
     }
 
-private:
+  private:
     virtual void run();
-    bool* mAllowedToRun;
-    forte::arch::CSemaphore* mStepSemaphore;
+    bool *mAllowedToRun;
+    forte::arch::CSemaphore *mStepSemaphore;
     bool mWaitingStep;
-
 };
 
 #endif /*_FMUECET_H_*/

@@ -15,17 +15,24 @@
 
 using namespace forte::core::io;
 
-IOHandleBit::IOHandleBit(IODeviceController *paController, IOMapper::Direction paDirection, uint8_t paOffset, uint8_t paPosition, uint8_t* paImage) :
-    IOHandle(paController, paDirection, CIEC_ANY::e_BOOL), mOffset(paOffset), mMask((uint8_t) (1 << paPosition)), mImage(paImage) {
+IOHandleBit::IOHandleBit(IODeviceController *paController,
+                         IOMapper::Direction paDirection,
+                         uint8_t paOffset,
+                         uint8_t paPosition,
+                         uint8_t *paImage) :
+    IOHandle(paController, paDirection, CIEC_ANY::e_BOOL),
+    mOffset(paOffset),
+    mMask((uint8_t) (1 << paPosition)),
+    mImage(paImage) {
 }
 
 void IOHandleBit::onObserver(IOObserver *paObserver) {
   IOHandle::onObserver(paObserver);
 
-  if(mDirection == IOMapper::In) {
+  if (mDirection == IOMapper::In) {
     CIEC_BOOL state;
     get(state);
-    if(state) {
+    if (state) {
       mController->fireIndicationEvent(paObserver);
     }
   }
@@ -37,7 +44,7 @@ void IOHandleBit::dropObserver() {
 }
 
 void IOHandleBit::set(const CIEC_ANY &paState) {
-  if(static_cast<const CIEC_BOOL&>(paState)) {
+  if (static_cast<const CIEC_BOOL &>(paState)) {
     *(mImage + mOffset) = (uint8_t) (*(mImage + mOffset) | mMask);
   } else {
     *(mImage + mOffset) = (uint8_t) (*(mImage + mOffset) & ~mMask);
@@ -47,10 +54,9 @@ void IOHandleBit::set(const CIEC_ANY &paState) {
 }
 
 void IOHandleBit::get(CIEC_ANY &paState) {
-  static_cast<CIEC_BOOL&>(paState) = CIEC_BOOL((*(mImage + mOffset) & mMask) != 0);
+  static_cast<CIEC_BOOL &>(paState) = CIEC_BOOL((*(mImage + mOffset) & mMask) != 0);
 }
 
-bool IOHandleBit::equal(uint8_t* paOldImage) const {
+bool IOHandleBit::equal(uint8_t *paOldImage) const {
   return (*(mImage + mOffset) & mMask) == (*(paOldImage + mOffset) & mMask);
 }
-

@@ -19,9 +19,8 @@
 #include "funcbloc.h"
 #include "mgmcmdstruct.h"
 
-
 class FORTE_STEST_END final : public CFunctionBlock {
-  DECLARE_FIRMWARE_FB(FORTE_STEST_END)
+    DECLARE_FIRMWARE_FB(FORTE_STEST_END)
 
   private:
     static const TEventID scmEventREQID = 0;
@@ -53,5 +52,3 @@ class FORTE_STEST_END final : public CFunctionBlock {
       evt_REQ();
     }
 };
-
-

@@ -26,43 +26,45 @@
 namespace forte {
   namespace arch {
 
-    CPThreadSemaphore::CPThreadSemaphore(unsigned int paInitialValue){
-      if(-1 == sem_init(&mSemaphore, 0, paInitialValue)){
+    CPThreadSemaphore::CPThreadSemaphore(unsigned int paInitialValue) {
+      if (-1 == sem_init(&mSemaphore, 0, paInitialValue)) {
         DEVLOG_ERROR("Could not initialize suspend sempaphore: %s\n", strerror(errno));
       }
     }
 
-    CPThreadSemaphore::~CPThreadSemaphore(){
+    CPThreadSemaphore::~CPThreadSemaphore() {
       sem_destroy(&mSemaphore);
     }
 
-    void CPThreadSemaphore::inc(){
+    void CPThreadSemaphore::inc() {
       sem_post(&mSemaphore);
     }
 
-    void CPThreadSemaphore::waitIndefinitely(){
-      while((-1 == sem_wait(&mSemaphore)) && (errno == EINTR)); //handle interrupts from signals
+    void CPThreadSemaphore::waitIndefinitely() {
+      while ((-1 == sem_wait(&mSemaphore)) && (errno == EINTR))
+        ; // handle interrupts from signals
     }
 
-    bool CPThreadSemaphore::timedWait(const TForteUInt64 paRelativeTimeout){
-      timespec timeoutSpec = { static_cast<time_t>(paRelativeTimeout / scmSecondInNanoSeconds), static_cast<time_t>(paRelativeTimeout % scmSecondInNanoSeconds) };
-      timespec currentTime = { 0, 0 };
+    bool CPThreadSemaphore::timedWait(const TForteUInt64 paRelativeTimeout) {
+      timespec timeoutSpec = {static_cast<time_t>(paRelativeTimeout / scmSecondInNanoSeconds),
+                              static_cast<time_t>(paRelativeTimeout % scmSecondInNanoSeconds)};
+      timespec currentTime = {0, 0};
       clock_gettime(CLOCK_REALTIME, &currentTime);
 
       timespec expectedAbsoluteTimeoutTime = {0, 0};
       timespecAdd(&currentTime, &timeoutSpec, &expectedAbsoluteTimeoutTime);
 
-      do{
-        if(0 == sem_trywait(&mSemaphore)){
+      do {
+        if (0 == sem_trywait(&mSemaphore)) {
           return true;
         }
         clock_gettime(CLOCK_REALTIME, &currentTime);
 
-      } while(timespecLessThan(&currentTime, &expectedAbsoluteTimeoutTime));
+      } while (timespecLessThan(&currentTime, &expectedAbsoluteTimeoutTime));
       return false;
     }
 
-    bool CPThreadSemaphore::tryNoWait(){
+    bool CPThreadSemaphore::tryNoWait() {
       return (0 == sem_trywait(&mSemaphore));
     }
   } /* namespace arch */

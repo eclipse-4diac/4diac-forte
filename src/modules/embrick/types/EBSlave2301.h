@@ -25,100 +25,115 @@
 #include "EBBusAdapter.h"
 #include "Slave.h"
 
-
 class FORTE_EBSlave2301 final : public EmbrickSlave {
-  DECLARE_FIRMWARE_FB(FORTE_EBSlave2301)
+    DECLARE_FIRMWARE_FB(FORTE_EBSlave2301)
 
-private:
-  static const CStringDictionary::TStringId scmDataInputNames[];
-  static const CStringDictionary::TStringId scmDataInputTypeIds[];
-  static const CStringDictionary::TStringId scmDataOutputNames[];
-  static const CStringDictionary::TStringId scmDataOutputTypeIds[];
-  static const TEventID scmEventMAPID = 0;
-  static const TDataIOID scmEIWith[];
-  static const TForteInt16 scmEIWithIndexes[];
-  static const CStringDictionary::TStringId scmEventInputNames[];
-  static const TEventID scmEventMAPOID = 0;
-  static const TEventID scmEventINDID = 1;
-  static const TDataIOID scmEOWith[];
-  static const TForteInt16 scmEOWithIndexes[];
-  static const CStringDictionary::TStringId scmEventOutputNames[];
-  static const int scmBusAdapterInAdpNum = 0;
-  static const int scmBusAdapterOutAdpNum = 1;
-  static const SAdapterInstanceDef scmAdapterInstances[];
+  private:
+    static const CStringDictionary::TStringId scmDataInputNames[];
+    static const CStringDictionary::TStringId scmDataInputTypeIds[];
+    static const CStringDictionary::TStringId scmDataOutputNames[];
+    static const CStringDictionary::TStringId scmDataOutputTypeIds[];
+    static const TEventID scmEventMAPID = 0;
+    static const TDataIOID scmEIWith[];
+    static const TForteInt16 scmEIWithIndexes[];
+    static const CStringDictionary::TStringId scmEventInputNames[];
+    static const TEventID scmEventMAPOID = 0;
+    static const TEventID scmEventINDID = 1;
+    static const TDataIOID scmEOWith[];
+    static const TForteInt16 scmEOWithIndexes[];
+    static const CStringDictionary::TStringId scmEventOutputNames[];
+    static const int scmBusAdapterInAdpNum = 0;
+    static const int scmBusAdapterOutAdpNum = 1;
+    static const SAdapterInstanceDef scmAdapterInstances[];
 
-  static const SFBInterfaceSpec scmFBInterfaceSpec;
+    static const SFBInterfaceSpec scmFBInterfaceSpec;
 
-  void readInputData(TEventID paEIID) override;
-  void writeOutputData(TEventID paEIID) override;
-  void setInitialValues() override;
-  
-  static const TForteUInt8 scmSlaveConfigurationIO[];
-  static const TForteUInt8 scmSlaveConfigurationIONum;
-  
-  virtual void initHandles() override;
+    void readInputData(TEventID paEIID) override;
+    void writeOutputData(TEventID paEIID) override;
+    void setInitialValues() override;
 
-public:
-  FORTE_EBSlave2301(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    static const TForteUInt8 scmSlaveConfigurationIO[];
+    static const TForteUInt8 scmSlaveConfigurationIONum;
 
-  CIEC_BOOL var_QI;
-  CIEC_WSTRING var_Relay_1;
-  CIEC_WSTRING var_Relay_2;
-  CIEC_WSTRING var_Relay_3;
-  CIEC_WSTRING var_Relay_4;
-  CIEC_WSTRING var_Relay_5;
-  CIEC_WSTRING var_Relay_6;
-  CIEC_UINT var_UpdateInterval;
+    virtual void initHandles() override;
 
-  CIEC_BOOL var_QO;
-  CIEC_WSTRING var_STATUS;
+  public:
+    FORTE_EBSlave2301(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
-  CEventConnection conn_MAPO;
-  CEventConnection conn_IND;
+    CIEC_BOOL var_QI;
+    CIEC_WSTRING var_Relay_1;
+    CIEC_WSTRING var_Relay_2;
+    CIEC_WSTRING var_Relay_3;
+    CIEC_WSTRING var_Relay_4;
+    CIEC_WSTRING var_Relay_5;
+    CIEC_WSTRING var_Relay_6;
+    CIEC_UINT var_UpdateInterval;
 
-  CDataConnection *conn_QI;
-  CDataConnection *conn_Relay_1;
-  CDataConnection *conn_Relay_2;
-  CDataConnection *conn_Relay_3;
-  CDataConnection *conn_Relay_4;
-  CDataConnection *conn_Relay_5;
-  CDataConnection *conn_Relay_6;
-  CDataConnection *conn_UpdateInterval;
+    CIEC_BOOL var_QO;
+    CIEC_WSTRING var_STATUS;
 
-  COutDataConnection<CIEC_BOOL> conn_QO;
-  COutDataConnection<CIEC_WSTRING> conn_STATUS;
+    CEventConnection conn_MAPO;
+    CEventConnection conn_IND;
 
-  CIEC_ANY *getDI(size_t) override;
-  CIEC_ANY *getDO(size_t) override;
-  FORTE_EBBusAdapter &var_BusAdapterIn() {
-    return *static_cast<FORTE_EBBusAdapter*>(mAdapters[0]);
-  };
+    CDataConnection *conn_QI;
+    CDataConnection *conn_Relay_1;
+    CDataConnection *conn_Relay_2;
+    CDataConnection *conn_Relay_3;
+    CDataConnection *conn_Relay_4;
+    CDataConnection *conn_Relay_5;
+    CDataConnection *conn_Relay_6;
+    CDataConnection *conn_UpdateInterval;
 
-  FORTE_EBBusAdapter &var_BusAdapterOut() {
-    return *static_cast<FORTE_EBBusAdapter*>(mAdapters[1]);
-  };
+    COutDataConnection<CIEC_BOOL> conn_QO;
+    COutDataConnection<CIEC_WSTRING> conn_STATUS;
 
-  CEventConnection *getEOConUnchecked(TPortId) override;
-  CDataConnection **getDIConUnchecked(TPortId) override;
-  CDataConnection *getDOConUnchecked(TPortId) override;
+    CIEC_ANY *getDI(size_t) override;
+    CIEC_ANY *getDO(size_t) override;
+    FORTE_EBBusAdapter &var_BusAdapterIn() {
+      return *static_cast<FORTE_EBBusAdapter *>(mAdapters[0]);
+    };
 
-  void evt_MAP(const CIEC_BOOL &paQI, const CIEC_WSTRING &paRelay_1, const CIEC_WSTRING &paRelay_2, const CIEC_WSTRING &paRelay_3, const CIEC_WSTRING &paRelay_4, const CIEC_WSTRING &paRelay_5, const CIEC_WSTRING &paRelay_6, const CIEC_UINT &paUpdateInterval, CIEC_BOOL &paQO, CIEC_WSTRING &paSTATUS) {
-    var_QI = paQI;
-    var_Relay_1 = paRelay_1;
-    var_Relay_2 = paRelay_2;
-    var_Relay_3 = paRelay_3;
-    var_Relay_4 = paRelay_4;
-    var_Relay_5 = paRelay_5;
-    var_Relay_6 = paRelay_6;
-    var_UpdateInterval = paUpdateInterval;
-    receiveInputEvent(scmEventMAPID, nullptr);
-    paQO = var_QO;
-    paSTATUS = var_STATUS;
-  }
+    FORTE_EBBusAdapter &var_BusAdapterOut() {
+      return *static_cast<FORTE_EBBusAdapter *>(mAdapters[1]);
+    };
 
-  void operator()(const CIEC_BOOL &paQI, const CIEC_WSTRING &paRelay_1, const CIEC_WSTRING &paRelay_2, const CIEC_WSTRING &paRelay_3, const CIEC_WSTRING &paRelay_4, const CIEC_WSTRING &paRelay_5, const CIEC_WSTRING &paRelay_6, const CIEC_UINT &paUpdateInterval, CIEC_BOOL &paQO, CIEC_WSTRING &paSTATUS) {
-    evt_MAP(paQI, paRelay_1, paRelay_2, paRelay_3, paRelay_4, paRelay_5, paRelay_6, paUpdateInterval, paQO, paSTATUS);
-  }
+    CEventConnection *getEOConUnchecked(TPortId) override;
+    CDataConnection **getDIConUnchecked(TPortId) override;
+    CDataConnection *getDOConUnchecked(TPortId) override;
+
+    void evt_MAP(const CIEC_BOOL &paQI,
+                 const CIEC_WSTRING &paRelay_1,
+                 const CIEC_WSTRING &paRelay_2,
+                 const CIEC_WSTRING &paRelay_3,
+                 const CIEC_WSTRING &paRelay_4,
+                 const CIEC_WSTRING &paRelay_5,
+                 const CIEC_WSTRING &paRelay_6,
+                 const CIEC_UINT &paUpdateInterval,
+                 CIEC_BOOL &paQO,
+                 CIEC_WSTRING &paSTATUS) {
+      var_QI = paQI;
+      var_Relay_1 = paRelay_1;
+      var_Relay_2 = paRelay_2;
+      var_Relay_3 = paRelay_3;
+      var_Relay_4 = paRelay_4;
+      var_Relay_5 = paRelay_5;
+      var_Relay_6 = paRelay_6;
+      var_UpdateInterval = paUpdateInterval;
+      receiveInputEvent(scmEventMAPID, nullptr);
+      paQO = var_QO;
+      paSTATUS = var_STATUS;
+    }
+
+    void operator()(const CIEC_BOOL &paQI,
+                    const CIEC_WSTRING &paRelay_1,
+                    const CIEC_WSTRING &paRelay_2,
+                    const CIEC_WSTRING &paRelay_3,
+                    const CIEC_WSTRING &paRelay_4,
+                    const CIEC_WSTRING &paRelay_5,
+                    const CIEC_WSTRING &paRelay_6,
+                    const CIEC_UINT &paUpdateInterval,
+                    CIEC_BOOL &paQO,
+                    CIEC_WSTRING &paSTATUS) {
+      evt_MAP(paQI, paRelay_1, paRelay_2, paRelay_3, paRelay_4, paRelay_5, paRelay_6, paUpdateInterval, paQO, paSTATUS);
+    }
 };
-
-

@@ -1,12 +1,12 @@
-/************************************************************************* 
- *** Copyright (c) 2018 TU Vienna/ACIN  
- ***  
- *** This program and the accompanying materials are made  
- *** available under the terms of the Eclipse Public License 2.0  
- *** which is available at https://www.eclipse.org/legal/epl-2.0/  
- ***  
- *** SPDX-License-Identifier: EPL-2.0  
- *** 
+/*************************************************************************
+ *** Copyright (c) 2018 TU Vienna/ACIN
+ ***
+ *** This program and the accompanying materials are made
+ *** available under the terms of the Eclipse Public License 2.0
+ *** which is available at https://www.eclipse.org/legal/epl-2.0/
+ ***
+ *** SPDX-License-Identifier: EPL-2.0
+ ***
  *** FORTE Library Element
  ***
  *** This file was generated using the 4DIAC FORTE Export Filter V1.0.x NG!
@@ -30,39 +30,39 @@
 #include "forte_array_variable.h"
 
 class FORTE_ADS_SERVER_CONFIG final : public CFunctionBlock {
-  DECLARE_FIRMWARE_FB(FORTE_ADS_SERVER_CONFIG)
+    DECLARE_FIRMWARE_FB(FORTE_ADS_SERVER_CONFIG)
 
   private:
     static const CStringDictionary::TStringId scmDataInputNames[];
     static const CStringDictionary::TStringId scmDataInputTypeIds[];
-    CIEC_BOOL &QI(){
-      return *static_cast<CIEC_BOOL*>(getDI(0));
+    CIEC_BOOL &QI() {
+      return *static_cast<CIEC_BOOL *>(getDI(0));
     };
 
-    CIEC_STRING &FRIENDLY_NAME(){
-      return *static_cast<CIEC_STRING*>(getDI(1));
+    CIEC_STRING &FRIENDLY_NAME() {
+      return *static_cast<CIEC_STRING *>(getDI(1));
     };
 
-    CIEC_STRING &SERVER_ADS_ADDRESS(){
-      return *static_cast<CIEC_STRING*>(getDI(2));
+    CIEC_STRING &SERVER_ADS_ADDRESS() {
+      return *static_cast<CIEC_STRING *>(getDI(2));
     };
 
-    CIEC_UINT &ADS_PORT(){
-      return *static_cast<CIEC_UINT*>(getDI(3));
+    CIEC_UINT &ADS_PORT() {
+      return *static_cast<CIEC_UINT *>(getDI(3));
     };
 
-    CIEC_STRING &SERVER_IPV4_OR_HOSTNAME(){
-      return *static_cast<CIEC_STRING*>(getDI(4));
+    CIEC_STRING &SERVER_IPV4_OR_HOSTNAME() {
+      return *static_cast<CIEC_STRING *>(getDI(4));
     };
 
     static const CStringDictionary::TStringId scmDataOutputNames[];
     static const CStringDictionary::TStringId scmDataOutputTypeIds[];
-    CIEC_BOOL &QO(){
-      return *static_cast<CIEC_BOOL*>(getDO(0));
+    CIEC_BOOL &QO() {
+      return *static_cast<CIEC_BOOL *>(getDO(0));
     };
 
-    CIEC_WSTRING &STATUS(){
-      return *static_cast<CIEC_WSTRING*>(getDO(1));
+    CIEC_WSTRING &STATUS() {
+      return *static_cast<CIEC_WSTRING *>(getDO(1));
     };
 
     static const TEventID scmEventINITID = 0;
@@ -85,7 +85,7 @@ class FORTE_ADS_SERVER_CONFIG final : public CFunctionBlock {
     void setInitialValues() override;
 
   public:
-    FUNCTION_BLOCK_CTOR (FORTE_ADS_SERVER_CONFIG) { };
+    FUNCTION_BLOCK_CTOR(FORTE_ADS_SERVER_CONFIG) {};
     ~FORTE_ADS_SERVER_CONFIG() override = default;
 
     FORTE_ADS_SERVER_CONFIG(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
@@ -116,7 +116,13 @@ class FORTE_ADS_SERVER_CONFIG final : public CFunctionBlock {
     CDataConnection **getDIConUnchecked(TPortId) override;
     CDataConnection *getDOConUnchecked(TPortId) override;
 
-    void evt_INIT(const CIEC_BOOL &paQI, const CIEC_WSTRING &paFRIENDLY_NAME, const CIEC_WSTRING &paSERVER_ADS_ADDRESS, const CIEC_UINT &paADS_PORT, const CIEC_WSTRING &paSERVER_IPV4_OR_HOSTNAME, CIEC_BOOL &paQO, CIEC_WSTRING &paSTATUS) {
+    void evt_INIT(const CIEC_BOOL &paQI,
+                  const CIEC_WSTRING &paFRIENDLY_NAME,
+                  const CIEC_WSTRING &paSERVER_ADS_ADDRESS,
+                  const CIEC_UINT &paADS_PORT,
+                  const CIEC_WSTRING &paSERVER_IPV4_OR_HOSTNAME,
+                  CIEC_BOOL &paQO,
+                  CIEC_WSTRING &paSTATUS) {
       var_QI = paQI;
       var_FRIENDLY_NAME = paFRIENDLY_NAME;
       var_SERVER_ADS_ADDRESS = paSERVER_ADS_ADDRESS;
@@ -127,8 +133,13 @@ class FORTE_ADS_SERVER_CONFIG final : public CFunctionBlock {
       paSTATUS = var_STATUS;
     }
 
-    void operator()(const CIEC_BOOL &paQI, const CIEC_WSTRING &paFRIENDLY_NAME, const CIEC_WSTRING &paSERVER_ADS_ADDRESS, const CIEC_UINT &paADS_PORT, const CIEC_WSTRING &paSERVER_IPV4_OR_HOSTNAME, CIEC_BOOL &paQO, CIEC_WSTRING &paSTATUS) {
+    void operator()(const CIEC_BOOL &paQI,
+                    const CIEC_WSTRING &paFRIENDLY_NAME,
+                    const CIEC_WSTRING &paSERVER_ADS_ADDRESS,
+                    const CIEC_UINT &paADS_PORT,
+                    const CIEC_WSTRING &paSERVER_IPV4_OR_HOSTNAME,
+                    CIEC_BOOL &paQO,
+                    CIEC_WSTRING &paSTATUS) {
       evt_INIT(paQI, paFRIENDLY_NAME, paSERVER_ADS_ADDRESS, paADS_PORT, paSERVER_IPV4_OR_HOSTNAME, paQO, paSTATUS);
     }
 };
-

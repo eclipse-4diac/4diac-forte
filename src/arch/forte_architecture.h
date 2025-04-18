@@ -15,14 +15,13 @@
 #ifndef SRC_ARCH_FORTE_ARCHITECTURE_H_
 #define SRC_ARCH_FORTE_ARCHITECTURE_H_
 
-class CForteGeneralArchitecture{
+class CForteGeneralArchitecture {
 
   public:
-    
     /**
      * @brief Initalize everything needed for forte once and calls the specific initialization of each architecture.
-     * This is called only once before any forte instances is started. 
-     * 
+     * This is called only once before any forte instances is started.
+     *
      * @param argc Number of arguments passed, same as in the main function
      * @param argv Arguments passed, same as in the main function
      * @return 0 if no error happenned, another value specificied by the specific architecture otherwise
@@ -30,22 +29,22 @@ class CForteGeneralArchitecture{
     static int initialize(int argc, char *argv[]);
 
     /**
-     * @brief Uninitialize everything that was done in `initialize` and calls the specific uninitialization of each architecture
-     * This is called only once after all forte instances were used.
-     *  
+     * @brief Uninitialize everything that was done in `initialize` and calls the specific uninitialization of each
+     * architecture This is called only once after all forte instances were used.
+     *
      * @return 0 if no error happenned, another value specificied by the specific architecture otherwise
-    */
+     */
     static int deinitialize();
 
     /**
      * @brief Checks if the lower layers were already initialized
-     * 
+     *
      * @return true if the lower layers were already initialized, false otherwise.
-    */
+     */
     static bool isInitialized();
 
   private:
-    static bool mInitialized; 
+    static bool mInitialized;
 };
 
 using CForteArchitecture = CForteGeneralArchitecture;

@@ -9,7 +9,7 @@
  * Contributors:
  *    Ben Schneider - Initial contribution; vlan and prio configuration to support tsn for pub/sub
  *******************************************************************************/
-  
+
 #ifndef TSN_LAYER_H_
 #define TSN_LAYER_H_
 
@@ -19,13 +19,12 @@ namespace forte {
 
   namespace com_infra {
 
-    class CTSNLayer : public CIPComLayer{
+    class CTSNLayer : public CIPComLayer {
       public:
-        CTSNLayer(CComLayer* paUpperLayer, CBaseCommFB* paBaseCommFB);
+        CTSNLayer(CComLayer *paUpperLayer, CBaseCommFB *paBaseCommFB);
         ~CTSNLayer() override;
 
       protected:
-
       private:
         /*!\brief Configure the current layer and perform necessary means to setup the connection
          *
@@ -37,7 +36,6 @@ namespace forte {
          *      - e_InitInvalidId if the opening process was not successful
          */
         EComResponse openConnection(char *paLayerParameter) override;
-
 
         /*!\brief Set the VLAN priority (VLAN PCP) for the socket
          *
@@ -60,14 +58,14 @@ namespace forte {
          *      - e_InitOk if setting the VLAN id was successful
          *      - e_InitInvalidId if setting the VLAN id was not successful
          */
-        EComResponse setVLANIDForSocket(const char* paId);
+        EComResponse setVLANIDForSocket(const char *paId);
 
         static const unsigned int scmNumParameters = 4;
         static const unsigned int scmMinVLANID = 1;
         static const unsigned int scmMaxVLANID = 4095;
         static const unsigned int scmMaxVLANPrio = 7;
     };
-  }
-}
+  } // namespace com_infra
+} // namespace forte
 
 #endif /* TSN_LAYER_H_ */

@@ -5,7 +5,7 @@
  http://www.eclipse.org/legal/epl-2.0.
 
  SPDX-License-Identifier: EPL-2.0
- 
+
  Contributors:
   Dirk Kaar - initial API and implementation and/or initial documentation
  ************************************************************************************/
@@ -18,18 +18,19 @@
 #include "extevhan.h"
 
 class IOHandleDescriptor : public forte::core::io::IODeviceController::HandleDescriptor {
-public:
-  enum HandleType {
-    Gpio,
-    Adc,
-    Pwm,
-  };
+  public:
+    enum HandleType {
+      Gpio,
+      Adc,
+      Pwm,
+    };
 
-  HandleType mType;
+    HandleType mType;
 
-  IOHandleDescriptor(std::string const &paId,
-    forte::core::io::IOMapper::Direction paDirection, HandleType paType)
-    : HandleDescriptor(paId, paDirection), mType(paType) {}
+    IOHandleDescriptor(std::string const &paId, forte::core::io::IOMapper::Direction paDirection, HandleType paType) :
+        HandleDescriptor(paId, paDirection),
+        mType(paType) {
+    }
 };
 
 #endif /* ZEPHYRIO_HANDLEDESCRIPTOR_H */

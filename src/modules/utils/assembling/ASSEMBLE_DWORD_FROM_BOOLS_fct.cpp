@@ -59,7 +59,6 @@ USE_STRING_ID(DWORD);
 USE_STRING_ID(Event);
 USE_STRING_ID(REQ);
 
-
 #include "criticalregion.h"
 #include "resource.h"
 #include "forte_dword.h"
@@ -73,11 +72,23 @@ USE_STRING_ID(REQ);
 
 DEFINE_FIRMWARE_FB(FORTE_ASSEMBLE_DWORD_FROM_BOOLS, STRID(ASSEMBLE_DWORD_FROM_BOOLS))
 
-const CStringDictionary::TStringId FORTE_ASSEMBLE_DWORD_FROM_BOOLS::scmDataInputNames[] = {STRID(BIT_00), STRID(BIT_01), STRID(BIT_02), STRID(BIT_03), STRID(BIT_04), STRID(BIT_05), STRID(BIT_06), STRID(BIT_07), STRID(BIT_08), STRID(BIT_09), STRID(BIT_10), STRID(BIT_11), STRID(BIT_12), STRID(BIT_13), STRID(BIT_14), STRID(BIT_15), STRID(BIT_16), STRID(BIT_17), STRID(BIT_18), STRID(BIT_19), STRID(BIT_20), STRID(BIT_21), STRID(BIT_22), STRID(BIT_23), STRID(BIT_24), STRID(BIT_25), STRID(BIT_26), STRID(BIT_27), STRID(BIT_28), STRID(BIT_29), STRID(BIT_30), STRID(BIT_31)};
-const CStringDictionary::TStringId FORTE_ASSEMBLE_DWORD_FROM_BOOLS::scmDataInputTypeIds[] = {STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL)};
+const CStringDictionary::TStringId FORTE_ASSEMBLE_DWORD_FROM_BOOLS::scmDataInputNames[] = {
+    STRID(BIT_00), STRID(BIT_01), STRID(BIT_02), STRID(BIT_03), STRID(BIT_04), STRID(BIT_05), STRID(BIT_06),
+    STRID(BIT_07), STRID(BIT_08), STRID(BIT_09), STRID(BIT_10), STRID(BIT_11), STRID(BIT_12), STRID(BIT_13),
+    STRID(BIT_14), STRID(BIT_15), STRID(BIT_16), STRID(BIT_17), STRID(BIT_18), STRID(BIT_19), STRID(BIT_20),
+    STRID(BIT_21), STRID(BIT_22), STRID(BIT_23), STRID(BIT_24), STRID(BIT_25), STRID(BIT_26), STRID(BIT_27),
+    STRID(BIT_28), STRID(BIT_29), STRID(BIT_30), STRID(BIT_31)};
+const CStringDictionary::TStringId FORTE_ASSEMBLE_DWORD_FROM_BOOLS::scmDataInputTypeIds[] = {
+    STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL),
+    STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL),
+    STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL),
+    STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL)};
 const CStringDictionary::TStringId FORTE_ASSEMBLE_DWORD_FROM_BOOLS::scmDataOutputNames[] = {STRID()};
 const CStringDictionary::TStringId FORTE_ASSEMBLE_DWORD_FROM_BOOLS::scmDataOutputTypeIds[] = {STRID(DWORD)};
-const TDataIOID FORTE_ASSEMBLE_DWORD_FROM_BOOLS::scmEIWith[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, scmWithListDelimiter};
+const TDataIOID FORTE_ASSEMBLE_DWORD_FROM_BOOLS::scmEIWith[] = {
+    0,  1,  2,  3,  4,  5,  6,  7,  8,  9,  10,
+    11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,
+    22, 23, 24, 25, 26, 27, 28, 29, 30, 31, scmWithListDelimiter};
 const TForteInt16 FORTE_ASSEMBLE_DWORD_FROM_BOOLS::scmEIWithIndexes[] = {0};
 const CStringDictionary::TStringId FORTE_ASSEMBLE_DWORD_FROM_BOOLS::scmEventInputNames[] = {STRID(REQ)};
 const CStringDictionary::TStringId FORTE_ASSEMBLE_DWORD_FROM_BOOLS::scmEventInputTypeIds[] = {STRID(Event)};
@@ -85,16 +96,29 @@ const TDataIOID FORTE_ASSEMBLE_DWORD_FROM_BOOLS::scmEOWith[] = {0, scmWithListDe
 const TForteInt16 FORTE_ASSEMBLE_DWORD_FROM_BOOLS::scmEOWithIndexes[] = {0};
 const CStringDictionary::TStringId FORTE_ASSEMBLE_DWORD_FROM_BOOLS::scmEventOutputNames[] = {STRID(CNF)};
 const CStringDictionary::TStringId FORTE_ASSEMBLE_DWORD_FROM_BOOLS::scmEventOutputTypeIds[] = {STRID(Event)};
-const SFBInterfaceSpec FORTE_ASSEMBLE_DWORD_FROM_BOOLS::scmFBInterfaceSpec = {
-  1, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,
-  1, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes,
-  32, scmDataInputNames, scmDataInputTypeIds,
-  1, scmDataOutputNames, scmDataOutputTypeIds,
-  0, nullptr,
-  0, nullptr
-};
+const SFBInterfaceSpec FORTE_ASSEMBLE_DWORD_FROM_BOOLS::scmFBInterfaceSpec = {1,
+                                                                              scmEventInputNames,
+                                                                              scmEventInputTypeIds,
+                                                                              scmEIWith,
+                                                                              scmEIWithIndexes,
+                                                                              1,
+                                                                              scmEventOutputNames,
+                                                                              scmEventOutputTypeIds,
+                                                                              scmEOWith,
+                                                                              scmEOWithIndexes,
+                                                                              32,
+                                                                              scmDataInputNames,
+                                                                              scmDataInputTypeIds,
+                                                                              1,
+                                                                              scmDataOutputNames,
+                                                                              scmDataOutputTypeIds,
+                                                                              0,
+                                                                              nullptr,
+                                                                              0,
+                                                                              nullptr};
 
-FORTE_ASSEMBLE_DWORD_FROM_BOOLS::FORTE_ASSEMBLE_DWORD_FROM_BOOLS(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_ASSEMBLE_DWORD_FROM_BOOLS::FORTE_ASSEMBLE_DWORD_FROM_BOOLS(const CStringDictionary::TStringId paInstanceNameId,
+                                                                 forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId),
     conn_CNF(*this, 0),
     conn_BIT_00(nullptr),
@@ -169,7 +193,7 @@ void FORTE_ASSEMBLE_DWORD_FROM_BOOLS::setInitialValues() {
 }
 
 void FORTE_ASSEMBLE_DWORD_FROM_BOOLS::readInputData(const TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventREQID: {
       readData(0, var_BIT_00, conn_BIT_00);
       readData(1, var_BIT_01, conn_BIT_01);
@@ -205,24 +229,22 @@ void FORTE_ASSEMBLE_DWORD_FROM_BOOLS::readInputData(const TEventID paEIID) {
       readData(31, var_BIT_31, conn_BIT_31);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 void FORTE_ASSEMBLE_DWORD_FROM_BOOLS::writeOutputData(const TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventCNFID: {
       writeData(0, var_, conn_);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 CIEC_ANY *FORTE_ASSEMBLE_DWORD_FROM_BOOLS::getDI(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_BIT_00;
     case 1: return &var_BIT_01;
     case 2: return &var_BIT_02;
@@ -260,21 +282,21 @@ CIEC_ANY *FORTE_ASSEMBLE_DWORD_FROM_BOOLS::getDI(const size_t paIndex) {
 }
 
 CIEC_ANY *FORTE_ASSEMBLE_DWORD_FROM_BOOLS::getDO(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_;
   }
   return nullptr;
 }
 
 CEventConnection *FORTE_ASSEMBLE_DWORD_FROM_BOOLS::getEOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_CNF;
   }
   return nullptr;
 }
 
 CDataConnection **FORTE_ASSEMBLE_DWORD_FROM_BOOLS::getDIConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_BIT_00;
     case 1: return &conn_BIT_01;
     case 2: return &conn_BIT_02;
@@ -312,85 +334,119 @@ CDataConnection **FORTE_ASSEMBLE_DWORD_FROM_BOOLS::getDIConUnchecked(const TPort
 }
 
 CDataConnection *FORTE_ASSEMBLE_DWORD_FROM_BOOLS::getDOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_;
   }
   return nullptr;
 }
 
 void FORTE_ASSEMBLE_DWORD_FROM_BOOLS::executeEvent(const TEventID, CEventChainExecutionThread *const paECET) {
-  var_ = func_ASSEMBLE_DWORD_FROM_BOOLS(var_BIT_00, var_BIT_01, var_BIT_02, var_BIT_03, var_BIT_04, var_BIT_05, var_BIT_06, var_BIT_07, var_BIT_08, var_BIT_09, var_BIT_10, var_BIT_11, var_BIT_12, var_BIT_13, var_BIT_14, var_BIT_15, var_BIT_16, var_BIT_17, var_BIT_18, var_BIT_19, var_BIT_20, var_BIT_21, var_BIT_22, var_BIT_23, var_BIT_24, var_BIT_25, var_BIT_26, var_BIT_27, var_BIT_28, var_BIT_29, var_BIT_30, var_BIT_31);
+  var_ = func_ASSEMBLE_DWORD_FROM_BOOLS(
+      var_BIT_00, var_BIT_01, var_BIT_02, var_BIT_03, var_BIT_04, var_BIT_05, var_BIT_06, var_BIT_07, var_BIT_08,
+      var_BIT_09, var_BIT_10, var_BIT_11, var_BIT_12, var_BIT_13, var_BIT_14, var_BIT_15, var_BIT_16, var_BIT_17,
+      var_BIT_18, var_BIT_19, var_BIT_20, var_BIT_21, var_BIT_22, var_BIT_23, var_BIT_24, var_BIT_25, var_BIT_26,
+      var_BIT_27, var_BIT_28, var_BIT_29, var_BIT_30, var_BIT_31);
   sendOutputEvent(scmEventCNFID, paECET);
 }
 
-CIEC_DWORD func_ASSEMBLE_DWORD_FROM_BOOLS(CIEC_BOOL st_lv_BIT_00, CIEC_BOOL st_lv_BIT_01, CIEC_BOOL st_lv_BIT_02, CIEC_BOOL st_lv_BIT_03, CIEC_BOOL st_lv_BIT_04, CIEC_BOOL st_lv_BIT_05, CIEC_BOOL st_lv_BIT_06, CIEC_BOOL st_lv_BIT_07, CIEC_BOOL st_lv_BIT_08, CIEC_BOOL st_lv_BIT_09, CIEC_BOOL st_lv_BIT_10, CIEC_BOOL st_lv_BIT_11, CIEC_BOOL st_lv_BIT_12, CIEC_BOOL st_lv_BIT_13, CIEC_BOOL st_lv_BIT_14, CIEC_BOOL st_lv_BIT_15, CIEC_BOOL st_lv_BIT_16, CIEC_BOOL st_lv_BIT_17, CIEC_BOOL st_lv_BIT_18, CIEC_BOOL st_lv_BIT_19, CIEC_BOOL st_lv_BIT_20, CIEC_BOOL st_lv_BIT_21, CIEC_BOOL st_lv_BIT_22, CIEC_BOOL st_lv_BIT_23, CIEC_BOOL st_lv_BIT_24, CIEC_BOOL st_lv_BIT_25, CIEC_BOOL st_lv_BIT_26, CIEC_BOOL st_lv_BIT_27, CIEC_BOOL st_lv_BIT_28, CIEC_BOOL st_lv_BIT_29, CIEC_BOOL st_lv_BIT_30, CIEC_BOOL st_lv_BIT_31) {
+CIEC_DWORD func_ASSEMBLE_DWORD_FROM_BOOLS(CIEC_BOOL st_lv_BIT_00,
+                                          CIEC_BOOL st_lv_BIT_01,
+                                          CIEC_BOOL st_lv_BIT_02,
+                                          CIEC_BOOL st_lv_BIT_03,
+                                          CIEC_BOOL st_lv_BIT_04,
+                                          CIEC_BOOL st_lv_BIT_05,
+                                          CIEC_BOOL st_lv_BIT_06,
+                                          CIEC_BOOL st_lv_BIT_07,
+                                          CIEC_BOOL st_lv_BIT_08,
+                                          CIEC_BOOL st_lv_BIT_09,
+                                          CIEC_BOOL st_lv_BIT_10,
+                                          CIEC_BOOL st_lv_BIT_11,
+                                          CIEC_BOOL st_lv_BIT_12,
+                                          CIEC_BOOL st_lv_BIT_13,
+                                          CIEC_BOOL st_lv_BIT_14,
+                                          CIEC_BOOL st_lv_BIT_15,
+                                          CIEC_BOOL st_lv_BIT_16,
+                                          CIEC_BOOL st_lv_BIT_17,
+                                          CIEC_BOOL st_lv_BIT_18,
+                                          CIEC_BOOL st_lv_BIT_19,
+                                          CIEC_BOOL st_lv_BIT_20,
+                                          CIEC_BOOL st_lv_BIT_21,
+                                          CIEC_BOOL st_lv_BIT_22,
+                                          CIEC_BOOL st_lv_BIT_23,
+                                          CIEC_BOOL st_lv_BIT_24,
+                                          CIEC_BOOL st_lv_BIT_25,
+                                          CIEC_BOOL st_lv_BIT_26,
+                                          CIEC_BOOL st_lv_BIT_27,
+                                          CIEC_BOOL st_lv_BIT_28,
+                                          CIEC_BOOL st_lv_BIT_29,
+                                          CIEC_BOOL st_lv_BIT_30,
+                                          CIEC_BOOL st_lv_BIT_31) {
   CIEC_DWORD st_ret_val = 0_DWORD;
 
-  #line 39 "ASSEMBLE_DWORD_FROM_BOOLS.fct"
+#line 39 "ASSEMBLE_DWORD_FROM_BOOLS.fct"
   st_ret_val.partial<CIEC_BOOL>(0) = st_lv_BIT_00;
-  #line 40 "ASSEMBLE_DWORD_FROM_BOOLS.fct"
+#line 40 "ASSEMBLE_DWORD_FROM_BOOLS.fct"
   st_ret_val.partial<CIEC_BOOL>(1) = st_lv_BIT_01;
-  #line 41 "ASSEMBLE_DWORD_FROM_BOOLS.fct"
+#line 41 "ASSEMBLE_DWORD_FROM_BOOLS.fct"
   st_ret_val.partial<CIEC_BOOL>(2) = st_lv_BIT_02;
-  #line 42 "ASSEMBLE_DWORD_FROM_BOOLS.fct"
+#line 42 "ASSEMBLE_DWORD_FROM_BOOLS.fct"
   st_ret_val.partial<CIEC_BOOL>(3) = st_lv_BIT_03;
-  #line 43 "ASSEMBLE_DWORD_FROM_BOOLS.fct"
+#line 43 "ASSEMBLE_DWORD_FROM_BOOLS.fct"
   st_ret_val.partial<CIEC_BOOL>(4) = st_lv_BIT_04;
-  #line 44 "ASSEMBLE_DWORD_FROM_BOOLS.fct"
+#line 44 "ASSEMBLE_DWORD_FROM_BOOLS.fct"
   st_ret_val.partial<CIEC_BOOL>(5) = st_lv_BIT_05;
-  #line 45 "ASSEMBLE_DWORD_FROM_BOOLS.fct"
+#line 45 "ASSEMBLE_DWORD_FROM_BOOLS.fct"
   st_ret_val.partial<CIEC_BOOL>(6) = st_lv_BIT_06;
-  #line 46 "ASSEMBLE_DWORD_FROM_BOOLS.fct"
+#line 46 "ASSEMBLE_DWORD_FROM_BOOLS.fct"
   st_ret_val.partial<CIEC_BOOL>(7) = st_lv_BIT_07;
-  #line 47 "ASSEMBLE_DWORD_FROM_BOOLS.fct"
+#line 47 "ASSEMBLE_DWORD_FROM_BOOLS.fct"
   st_ret_val.partial<CIEC_BOOL>(8) = st_lv_BIT_08;
-  #line 48 "ASSEMBLE_DWORD_FROM_BOOLS.fct"
+#line 48 "ASSEMBLE_DWORD_FROM_BOOLS.fct"
   st_ret_val.partial<CIEC_BOOL>(9) = st_lv_BIT_09;
-  #line 49 "ASSEMBLE_DWORD_FROM_BOOLS.fct"
+#line 49 "ASSEMBLE_DWORD_FROM_BOOLS.fct"
   st_ret_val.partial<CIEC_BOOL>(10) = st_lv_BIT_10;
-  #line 50 "ASSEMBLE_DWORD_FROM_BOOLS.fct"
+#line 50 "ASSEMBLE_DWORD_FROM_BOOLS.fct"
   st_ret_val.partial<CIEC_BOOL>(11) = st_lv_BIT_11;
-  #line 51 "ASSEMBLE_DWORD_FROM_BOOLS.fct"
+#line 51 "ASSEMBLE_DWORD_FROM_BOOLS.fct"
   st_ret_val.partial<CIEC_BOOL>(12) = st_lv_BIT_12;
-  #line 52 "ASSEMBLE_DWORD_FROM_BOOLS.fct"
+#line 52 "ASSEMBLE_DWORD_FROM_BOOLS.fct"
   st_ret_val.partial<CIEC_BOOL>(13) = st_lv_BIT_13;
-  #line 53 "ASSEMBLE_DWORD_FROM_BOOLS.fct"
+#line 53 "ASSEMBLE_DWORD_FROM_BOOLS.fct"
   st_ret_val.partial<CIEC_BOOL>(14) = st_lv_BIT_14;
-  #line 54 "ASSEMBLE_DWORD_FROM_BOOLS.fct"
+#line 54 "ASSEMBLE_DWORD_FROM_BOOLS.fct"
   st_ret_val.partial<CIEC_BOOL>(15) = st_lv_BIT_15;
-  #line 55 "ASSEMBLE_DWORD_FROM_BOOLS.fct"
+#line 55 "ASSEMBLE_DWORD_FROM_BOOLS.fct"
   st_ret_val.partial<CIEC_BOOL>(16) = st_lv_BIT_16;
-  #line 56 "ASSEMBLE_DWORD_FROM_BOOLS.fct"
+#line 56 "ASSEMBLE_DWORD_FROM_BOOLS.fct"
   st_ret_val.partial<CIEC_BOOL>(17) = st_lv_BIT_17;
-  #line 57 "ASSEMBLE_DWORD_FROM_BOOLS.fct"
+#line 57 "ASSEMBLE_DWORD_FROM_BOOLS.fct"
   st_ret_val.partial<CIEC_BOOL>(18) = st_lv_BIT_18;
-  #line 58 "ASSEMBLE_DWORD_FROM_BOOLS.fct"
+#line 58 "ASSEMBLE_DWORD_FROM_BOOLS.fct"
   st_ret_val.partial<CIEC_BOOL>(19) = st_lv_BIT_19;
-  #line 59 "ASSEMBLE_DWORD_FROM_BOOLS.fct"
+#line 59 "ASSEMBLE_DWORD_FROM_BOOLS.fct"
   st_ret_val.partial<CIEC_BOOL>(20) = st_lv_BIT_20;
-  #line 60 "ASSEMBLE_DWORD_FROM_BOOLS.fct"
+#line 60 "ASSEMBLE_DWORD_FROM_BOOLS.fct"
   st_ret_val.partial<CIEC_BOOL>(21) = st_lv_BIT_21;
-  #line 61 "ASSEMBLE_DWORD_FROM_BOOLS.fct"
+#line 61 "ASSEMBLE_DWORD_FROM_BOOLS.fct"
   st_ret_val.partial<CIEC_BOOL>(22) = st_lv_BIT_22;
-  #line 62 "ASSEMBLE_DWORD_FROM_BOOLS.fct"
+#line 62 "ASSEMBLE_DWORD_FROM_BOOLS.fct"
   st_ret_val.partial<CIEC_BOOL>(23) = st_lv_BIT_23;
-  #line 63 "ASSEMBLE_DWORD_FROM_BOOLS.fct"
+#line 63 "ASSEMBLE_DWORD_FROM_BOOLS.fct"
   st_ret_val.partial<CIEC_BOOL>(24) = st_lv_BIT_24;
-  #line 64 "ASSEMBLE_DWORD_FROM_BOOLS.fct"
+#line 64 "ASSEMBLE_DWORD_FROM_BOOLS.fct"
   st_ret_val.partial<CIEC_BOOL>(25) = st_lv_BIT_25;
-  #line 65 "ASSEMBLE_DWORD_FROM_BOOLS.fct"
+#line 65 "ASSEMBLE_DWORD_FROM_BOOLS.fct"
   st_ret_val.partial<CIEC_BOOL>(26) = st_lv_BIT_26;
-  #line 66 "ASSEMBLE_DWORD_FROM_BOOLS.fct"
+#line 66 "ASSEMBLE_DWORD_FROM_BOOLS.fct"
   st_ret_val.partial<CIEC_BOOL>(27) = st_lv_BIT_27;
-  #line 67 "ASSEMBLE_DWORD_FROM_BOOLS.fct"
+#line 67 "ASSEMBLE_DWORD_FROM_BOOLS.fct"
   st_ret_val.partial<CIEC_BOOL>(28) = st_lv_BIT_28;
-  #line 68 "ASSEMBLE_DWORD_FROM_BOOLS.fct"
+#line 68 "ASSEMBLE_DWORD_FROM_BOOLS.fct"
   st_ret_val.partial<CIEC_BOOL>(29) = st_lv_BIT_29;
-  #line 69 "ASSEMBLE_DWORD_FROM_BOOLS.fct"
+#line 69 "ASSEMBLE_DWORD_FROM_BOOLS.fct"
   st_ret_val.partial<CIEC_BOOL>(30) = st_lv_BIT_30;
-  #line 70 "ASSEMBLE_DWORD_FROM_BOOLS.fct"
+#line 70 "ASSEMBLE_DWORD_FROM_BOOLS.fct"
   st_ret_val.partial<CIEC_BOOL>(31) = st_lv_BIT_31;
 
   return st_ret_val;
 }
-

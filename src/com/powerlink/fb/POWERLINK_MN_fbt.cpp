@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2012 - 2024 AIT
+ * Copyright (c) 2012 - 2024 AIT
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -27,14 +27,15 @@ USE_STRING_ID(QO);
 USE_STRING_ID(STATUS);
 USE_STRING_ID(STRING);
 
-
 #include "criticalregion.h"
 #include "resource.h"
 
 DEFINE_FIRMWARE_FB(FORTE_POWERLINK_MN, STRID(POWERLINK_MN))
 
-const CStringDictionary::TStringId FORTE_POWERLINK_MN::scmDataInputNames[] = {STRID(QI), STRID(CDC_CFG), STRID(APP_CFG), STRID(DEV_NAME)};
-const CStringDictionary::TStringId FORTE_POWERLINK_MN::scmDataInputTypeIds[] = {STRID(BOOL), STRID(STRING), STRID(STRING), STRID(STRING)};
+const CStringDictionary::TStringId FORTE_POWERLINK_MN::scmDataInputNames[] = {STRID(QI), STRID(CDC_CFG), STRID(APP_CFG),
+                                                                              STRID(DEV_NAME)};
+const CStringDictionary::TStringId FORTE_POWERLINK_MN::scmDataInputTypeIds[] = {STRID(BOOL), STRID(STRING),
+                                                                                STRID(STRING), STRID(STRING)};
 const CStringDictionary::TStringId FORTE_POWERLINK_MN::scmDataOutputNames[] = {STRID(QO), STRID(STATUS)};
 const CStringDictionary::TStringId FORTE_POWERLINK_MN::scmDataOutputTypeIds[] = {STRID(BOOL), STRID(STRING)};
 const TDataIOID FORTE_POWERLINK_MN::scmEIWith[] = {0, 1, 2, 3, scmWithListDelimiter};
@@ -45,25 +46,37 @@ const TDataIOID FORTE_POWERLINK_MN::scmEOWith[] = {0, 1, scmWithListDelimiter};
 const TForteInt16 FORTE_POWERLINK_MN::scmEOWithIndexes[] = {0};
 const CStringDictionary::TStringId FORTE_POWERLINK_MN::scmEventOutputNames[] = {STRID(INITO)};
 const CStringDictionary::TStringId FORTE_POWERLINK_MN::scmEventOutputTypeIds[] = {STRID(Event)};
-const SFBInterfaceSpec FORTE_POWERLINK_MN::scmFBInterfaceSpec = {
-  1, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,
-  1, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes,
-  4, scmDataInputNames, scmDataInputTypeIds,
-  2, scmDataOutputNames, scmDataOutputTypeIds,
-  0, nullptr,
-  0, nullptr
-};
+const SFBInterfaceSpec FORTE_POWERLINK_MN::scmFBInterfaceSpec = {1,
+                                                                 scmEventInputNames,
+                                                                 scmEventInputTypeIds,
+                                                                 scmEIWith,
+                                                                 scmEIWithIndexes,
+                                                                 1,
+                                                                 scmEventOutputNames,
+                                                                 scmEventOutputTypeIds,
+                                                                 scmEOWith,
+                                                                 scmEOWithIndexes,
+                                                                 4,
+                                                                 scmDataInputNames,
+                                                                 scmDataInputTypeIds,
+                                                                 2,
+                                                                 scmDataOutputNames,
+                                                                 scmDataOutputTypeIds,
+                                                                 0,
+                                                                 nullptr,
+                                                                 0,
+                                                                 nullptr};
 
-FORTE_POWERLINK_MN::FORTE_POWERLINK_MN(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
-  CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId),
-  conn_INITO(*this, 0),
-  conn_QI(nullptr),
-  conn_CDC_CFG(nullptr),
-  conn_APP_CFG(nullptr),
-  conn_DEV_NAME(nullptr),
-  conn_QO(*this, 0, var_QO),
-  conn_STATUS(*this, 1, var_STATUS) {
-};
+FORTE_POWERLINK_MN::FORTE_POWERLINK_MN(const CStringDictionary::TStringId paInstanceNameId,
+                                       forte::core::CFBContainer &paContainer) :
+    CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId),
+    conn_INITO(*this, 0),
+    conn_QI(nullptr),
+    conn_CDC_CFG(nullptr),
+    conn_APP_CFG(nullptr),
+    conn_DEV_NAME(nullptr),
+    conn_QO(*this, 0, var_QO),
+    conn_STATUS(*this, 1, var_STATUS) {};
 
 void FORTE_POWERLINK_MN::setInitialValues() {
   var_QI = 0_BOOL;
@@ -75,15 +88,13 @@ void FORTE_POWERLINK_MN::setInitialValues() {
 }
 
 void FORTE_POWERLINK_MN::executeEvent(const TEventID paEIID, CEventChainExecutionThread *const paECET) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventINITID:
 
-      CEplStackWrapper* eplStack = &CEplStackWrapper::getInstance();
+      CEplStackWrapper *eplStack = &CEplStackWrapper::getInstance();
 
       eplStack->waitUntilOperational(false);
-      eplStack->eplStackInit(var_APP_CFG.c_str(),
-        var_CDC_CFG.c_str(),
-        var_DEV_NAME.c_str());
+      eplStack->eplStackInit(var_APP_CFG.c_str(), var_CDC_CFG.c_str(), var_DEV_NAME.c_str());
 
       // TODO check if error occured during initialization
 
@@ -94,7 +105,7 @@ void FORTE_POWERLINK_MN::executeEvent(const TEventID paEIID, CEventChainExecutio
 }
 
 void FORTE_POWERLINK_MN::readInputData(const TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventINITID: {
       readData(0, var_QI, conn_QI);
       readData(1, var_CDC_CFG, conn_CDC_CFG);
@@ -102,25 +113,23 @@ void FORTE_POWERLINK_MN::readInputData(const TEventID paEIID) {
       readData(3, var_DEV_NAME, conn_DEV_NAME);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 void FORTE_POWERLINK_MN::writeOutputData(const TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventINITOID: {
       writeData(0, var_QO, conn_QO);
       writeData(1, var_STATUS, conn_STATUS);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 CIEC_ANY *FORTE_POWERLINK_MN::getDI(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_QI;
     case 1: return &var_CDC_CFG;
     case 2: return &var_APP_CFG;
@@ -130,7 +139,7 @@ CIEC_ANY *FORTE_POWERLINK_MN::getDI(const size_t paIndex) {
 }
 
 CIEC_ANY *FORTE_POWERLINK_MN::getDO(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_QO;
     case 1: return &var_STATUS;
   }
@@ -138,14 +147,14 @@ CIEC_ANY *FORTE_POWERLINK_MN::getDO(const size_t paIndex) {
 }
 
 CEventConnection *FORTE_POWERLINK_MN::getEOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_INITO;
   }
   return nullptr;
 }
 
 CDataConnection **FORTE_POWERLINK_MN::getDIConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_QI;
     case 1: return &conn_CDC_CFG;
     case 2: return &conn_APP_CFG;
@@ -155,10 +164,9 @@ CDataConnection **FORTE_POWERLINK_MN::getDIConUnchecked(const TPortId paIndex) {
 }
 
 CDataConnection *FORTE_POWERLINK_MN::getDOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_QO;
     case 1: return &conn_STATUS;
   }
   return nullptr;
 }
-

@@ -22,20 +22,23 @@ namespace forte {
 
       class IOConfigFBSplitAdapter : public CAdapter {
         public:
-          IOConfigFBSplitAdapter(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec& patInterfaceSpecSocket, const CStringDictionary::TStringId paInstanceNameId,
-              const SFBInterfaceSpec& paInterfaceSpecPlug, bool paIsPlug);
+          IOConfigFBSplitAdapter(forte::core::CFBContainer &paContainer,
+                                 const SFBInterfaceSpec &patInterfaceSpecSocket,
+                                 const CStringDictionary::TStringId paInstanceNameId,
+                                 const SFBInterfaceSpec &paInterfaceSpecPlug,
+                                 bool paIsPlug);
           ~IOConfigFBSplitAdapter() override;
 
           CIEC_BOOL &QO() {
-            return *static_cast<CIEC_BOOL*>((isSocket()) ? getDI(0) : getDO(0));
+            return *static_cast<CIEC_BOOL *>((isSocket()) ? getDI(0) : getDO(0));
           }
 
           CIEC_BOOL &QI() {
-            return *static_cast<CIEC_BOOL*>((isSocket()) ? getDO(0) : getDI(0));
+            return *static_cast<CIEC_BOOL *>((isSocket()) ? getDO(0) : getDI(0));
           }
 
           CIEC_UINT &MasterId() {
-            return *static_cast<CIEC_UINT*>((isSocket()) ? getDO(1) : getDI(1));
+            return *static_cast<CIEC_UINT *>((isSocket()) ? getDO(1) : getDI(1));
           }
 
           static const TEventID scmEventINITID = 0;
@@ -49,8 +52,8 @@ namespace forte {
           }
       };
 
-    } //namespace IO
-  } //namepsace core
-} //namespace forte
+    } // namespace io
+  } // namespace core
+} // namespace forte
 
 #endif /* SRC_CORE_IO_CONFIGFB_ADAPTER_SPLIT_H_ */

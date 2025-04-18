@@ -12,12 +12,12 @@
  *******************************************************************************/
 #include "forte_sync.h"
 
-CTXSyncObject::CTXSyncObject(){ 
+CTXSyncObject::CTXSyncObject() {
   tx_mutex_create(&mMutex, "Test Mutex", TX_INHERIT);
-  //TODO handle return value
+  // TODO handle return value
 }
 
-CTXSyncObject::~CTXSyncObject(){
+CTXSyncObject::~CTXSyncObject() {
   tx_mutex_delete(&mMutex);
-  //TODO handle return value
+  // TODO handle return value
 }

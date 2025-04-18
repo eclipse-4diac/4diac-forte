@@ -17,7 +17,6 @@ USE_STRING_ID(Event);
 USE_STRING_ID(REQ);
 USE_STRING_ID(STEST_END);
 
-
 #include "../../stdfblib/ita/RMT_DEV.h"
 #include "forte_thread.h"
 
@@ -26,22 +25,35 @@ DEFINE_FIRMWARE_FB(FORTE_STEST_END, STRID(STEST_END))
 const TForteInt16 FORTE_STEST_END::scmEIWithIndexes[] = {-1};
 const CStringDictionary::TStringId FORTE_STEST_END::scmEventInputNames[] = {STRID(REQ)};
 const CStringDictionary::TStringId FORTE_STEST_END::scmEventInputTypeIds[] = {STRID(Event)};
-const SFBInterfaceSpec FORTE_STEST_END::scmFBInterfaceSpec = {
-  1, scmEventInputNames, scmEventInputTypeIds, nullptr, scmEIWithIndexes,
-  0, nullptr, nullptr, nullptr, nullptr,
-  0, nullptr, nullptr,
-  0, nullptr, nullptr,
-  0, nullptr,
-  0, nullptr
-};
+const SFBInterfaceSpec FORTE_STEST_END::scmFBInterfaceSpec = {1,
+                                                              scmEventInputNames,
+                                                              scmEventInputTypeIds,
+                                                              nullptr,
+                                                              scmEIWithIndexes,
+                                                              0,
+                                                              nullptr,
+                                                              nullptr,
+                                                              nullptr,
+                                                              nullptr,
+                                                              0,
+                                                              nullptr,
+                                                              nullptr,
+                                                              0,
+                                                              nullptr,
+                                                              nullptr,
+                                                              0,
+                                                              nullptr,
+                                                              0,
+                                                              nullptr};
 
-FORTE_STEST_END::FORTE_STEST_END(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
-    CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId) {
-};
+FORTE_STEST_END::FORTE_STEST_END(const CStringDictionary::TStringId paInstanceNameId,
+                                 forte::core::CFBContainer &paContainer) :
+    CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId) {};
 
 void FORTE_STEST_END::executeEvent(TEventID paEIID, CEventChainExecutionThread *const) {
-  if(scmEventREQID == paEIID){
-    CThread::sleepThread(250); //avoid killing the device before it was properly started (DEV_MGR still was initializing the ipCommlayer when it was killed)
+  if (scmEventREQID == paEIID) {
+    CThread::sleepThread(250); // avoid killing the device before it was properly started (DEV_MGR still was
+                               // initializing the ipCommlayer when it was killed)
     getDevice()->changeExecutionState(EMGMCommandType::Kill);
   }
 }
@@ -73,4 +85,3 @@ CDataConnection **FORTE_STEST_END::getDIConUnchecked(TPortId) {
 CDataConnection *FORTE_STEST_END::getDOConUnchecked(TPortId) {
   return nullptr;
 }
-

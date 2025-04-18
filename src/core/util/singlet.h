@@ -23,19 +23,20 @@
  * As the macro already defines a default constructor you have to implement it
  * in the cpp file.
  */
-#define DECLARE_SINGLETON(TypeName)                                   \
-  public:                                                             \
-    static TypeName &getInstance();                                   \
-  private:                                                            \
-    TypeName();                                                       \
-    TypeName(const TypeName&);                                         \
-    TypeName& operator = (const TypeName &);                          \
-    ~TypeName();
+#define DECLARE_SINGLETON(TypeName)                                                                                    \
+public:                                                                                                                \
+  static TypeName &getInstance();                                                                                      \
+                                                                                                                       \
+private:                                                                                                               \
+  TypeName();                                                                                                          \
+  TypeName(const TypeName &);                                                                                          \
+  TypeName &operator=(const TypeName &);                                                                               \
+  ~TypeName();
 
-#define DEFINE_SINGLETON(TypeName)                                    \
- TypeName& TypeName::getInstance(){                                   \
-   static TypeName oInstance;                                         \
-   return oInstance;                                                  \
- };
+#define DEFINE_SINGLETON(TypeName)                                                                                     \
+  TypeName &TypeName::getInstance() {                                                                                  \
+    static TypeName oInstance;                                                                                         \
+    return oInstance;                                                                                                  \
+  };
 
 #endif /*SINGLET_H_*/

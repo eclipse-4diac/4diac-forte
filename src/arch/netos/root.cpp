@@ -52,12 +52,10 @@ int APP_BURN_IN_TEST = 0;
  *
  *      none
  */
-extern "C"
-void applicationTcpDown() {
+extern "C" void applicationTcpDown() {
   static int ticksPassed = 0;
   ticksPassed++;
 }
-
 
 /*
  *  Function: void applicationStart (void)
@@ -82,8 +80,7 @@ void applicationTcpDown() {
  *      none
  */
 
-extern "C"
-void applicationStart(void) {
+extern "C" void applicationStart(void) {
   DEVLOG_INFO("\n\nStarting FTP-Server\n\n");
   naFtpDlInit(NA_FTP_DEF_USERS);
 
@@ -95,8 +92,3 @@ void applicationStart(void) {
   dev.awaitShutdown();
   tx_thread_suspend(tx_thread_identify());
 }
-
-
-
-
-

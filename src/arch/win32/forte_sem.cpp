@@ -20,30 +20,30 @@
 namespace forte {
   namespace arch {
 
-    CWin32Semaphore::CWin32Semaphore(unsigned int paInitialValue){
+    CWin32Semaphore::CWin32Semaphore(unsigned int paInitialValue) {
       mSemaphore = CreateSemaphore(nullptr, (paInitialValue > 1 ? 1 : 0), 1, nullptr);
-      if(0 == mSemaphore){
+      if (0 == mSemaphore) {
         DEVLOG_ERROR("Could not initialize suspend semaphore: %d\n", GetLastError());
       }
     }
 
-    CWin32Semaphore::~CWin32Semaphore(){
+    CWin32Semaphore::~CWin32Semaphore() {
       CloseHandle(mSemaphore);
     }
 
-    void CWin32Semaphore::inc(){
+    void CWin32Semaphore::inc() {
       ReleaseSemaphore(mSemaphore, 1, 0);
     }
 
-    void CWin32Semaphore::waitIndefinitely(){
+    void CWin32Semaphore::waitIndefinitely() {
       WaitForSingleObject(mSemaphore, INFINITE);
     }
 
-    bool CWin32Semaphore::timedWait(TForteUInt64 paRelativeTimeout){
+    bool CWin32Semaphore::timedWait(TForteUInt64 paRelativeTimeout) {
       return (0 == WaitForSingleObject(mSemaphore, static_cast<DWORD>(paRelativeTimeout / 1000000 /* 1E6*/)));
     }
 
-    bool CWin32Semaphore::tryNoWait(){
+    bool CWin32Semaphore::tryNoWait() {
       return (0 == WaitForSingleObject(mSemaphore, 0));
     }
 

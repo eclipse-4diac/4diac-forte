@@ -14,35 +14,35 @@
 
 namespace ForteLibrary {
 
-  void ForteComponent::Initialize(){
+  void ForteComponent::Initialize() {
   }
 
-  void ForteComponent::LoadSettings(const String& /*paSettingsPath*/){
+  void ForteComponent::LoadSettings(const String & /*paSettingsPath*/) {
   }
 
-  void ForteComponent::SetupSettings(){
+  void ForteComponent::SetupSettings() {
   }
 
-  void ForteComponent::SubscribeServices(){
+  void ForteComponent::SubscribeServices() {
   }
 
-  void ForteComponent::LoadConfig(){
+  void ForteComponent::LoadConfig() {
   }
 
-  void ForteComponent::SetupConfig(){
+  void ForteComponent::SetupConfig() {
     m4diacForteInstance.startupNewDevice(pIpPort);
   }
 
-  void ForteComponent::ResetConfig(){
+  void ForteComponent::ResetConfig() {
   }
 
-  void ForteComponent::PublishServices(){
+  void ForteComponent::PublishServices() {
   }
 
-  void ForteComponent::Dispose(){
+  void ForteComponent::Dispose() {
   }
 
-  void ForteComponent::PowerDown(){
+  void ForteComponent::PowerDown() {
     m4diacForteInstance.triggerDeviceShutdown();
   }
 

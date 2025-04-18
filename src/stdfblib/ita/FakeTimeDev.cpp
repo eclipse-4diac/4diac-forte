@@ -26,43 +26,38 @@ USE_STRING_ID(WSTRING);
 
 #include "arch/timerHandlerFactory.h"
 
-const CStringDictionary::TStringId FakeTimeDev::scmDINameIds[] = { STRID(MGR_ID), STRID(FakeTime)};
+const CStringDictionary::TStringId FakeTimeDev::scmDINameIds[] = {STRID(MGR_ID), STRID(FakeTime)};
 const CStringDictionary::TStringId FakeTimeDev::scmDIDataTypeIds[] = {STRID(WSTRING), STRID(TIME)};
 
 const SFBInterfaceSpec FakeTimeDev::scmFBInterfaceSpec = {
-  0, nullptr, nullptr, nullptr, nullptr,
-  0, nullptr, nullptr, nullptr, nullptr,
-  2, scmDINameIds, scmDIDataTypeIds,
-  0, nullptr, nullptr,
-  0, nullptr,
-  0, nullptr
-};
+    0, nullptr,      nullptr,          nullptr, nullptr, 0,       nullptr, nullptr, nullptr, nullptr,
+    2, scmDINameIds, scmDIDataTypeIds, 0,       nullptr, nullptr, 0,       nullptr, 0,       nullptr};
 
 FakeTimeDev::FakeTimeDev(const std::string &paMGR_ID) :
-  CDevice(scmFBInterfaceSpec, initializeTimer()),
-      conn_MGR_ID(*this, 0, u""_WSTRING),
-      conn_FakeTime(*this, 0, 0_TIME),
-      MGR(STRID(MGR), *this){
+    CDevice(scmFBInterfaceSpec, initializeTimer()),
+    conn_MGR_ID(*this, 0, u""_WSTRING),
+    conn_FakeTime(*this, 0, 0_TIME),
+    MGR(STRID(MGR), *this) {
   conn_MGR_ID.getValue().fromString(paMGR_ID.c_str());
 }
 
 bool FakeTimeDev::initialize() {
-  if(!CDevice::initialize()) {
+  if (!CDevice::initialize()) {
     return false;
   }
 
-  if(!MGR.initialize()) {
+  if (!MGR.initialize()) {
     return false;
   }
 
-  //we need to manually crate this connection as the MGR is not managed by device
+  // we need to manually crate this connection as the MGR is not managed by device
   conn_MGR_ID.connect(MGR, STRID(MGR_ID));
   return true;
 }
 
 FakeTimeDev::~FakeTimeDev() = default;
 
-int FakeTimeDev::startDevice(){
+int FakeTimeDev::startDevice() {
   CDevice::startDevice();
   MGR.changeExecutionState(EMGMCommandType::Start);
   return 0;
@@ -72,16 +67,16 @@ void FakeTimeDev::awaitShutdown() {
   MGR.joinResourceThread();
 }
 
-EMGMResponse FakeTimeDev::changeExecutionState(EMGMCommandType paCommand){
+EMGMResponse FakeTimeDev::changeExecutionState(EMGMCommandType paCommand) {
   EMGMResponse eRetVal = CDevice::changeExecutionState(paCommand);
-  if((EMGMResponse::Ready == eRetVal) && (EMGMCommandType::Kill == paCommand)){
+  if ((EMGMResponse::Ready == eRetVal) && (EMGMCommandType::Kill == paCommand)) {
     MGR.changeExecutionState(EMGMCommandType::Kill);
   }
   return eRetVal;
 }
 
 CIEC_ANY *FakeTimeDev::getDI(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_MGR_ID.getValue();
     case 1: return &conn_FakeTime.getValue();
   }
@@ -89,26 +84,26 @@ CIEC_ANY *FakeTimeDev::getDI(const size_t paIndex) {
 }
 
 CConnection *FakeTimeDev::getResIf2InConnectionUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_MGR_ID;
     case 1: return &conn_FakeTime;
   }
   return nullptr;
 }
 
-EMGMResponse FakeTimeDev::writeValue(forte::core::TNameIdentifier &paNameList, const std::string & paValue, bool paForce) {
+EMGMResponse
+FakeTimeDev::writeValue(forte::core::TNameIdentifier &paNameList, const std::string &paValue, bool paForce) {
   // parent writeValue is modifying the name list so we need to get the name as backup here
   CStringDictionary::TStringId portName = paNameList.back();
   EMGMResponse eRetVal = CDevice::writeValue(paNameList, paValue, paForce);
-  if((EMGMResponse::Ready == eRetVal) && (STRID(FakeTime) == portName)){
-    //fake time was written, update CFakeTimerHandler
-    static_cast<CFakeTimerHandler&>(getTimer()).sleepToTime(conn_FakeTime.getValue());
+  if ((EMGMResponse::Ready == eRetVal) && (STRID(FakeTime) == portName)) {
+    // fake time was written, update CFakeTimerHandler
+    static_cast<CFakeTimerHandler &>(getTimer()).sleepToTime(conn_FakeTime.getValue());
   }
   return eRetVal;
 }
 
-CStringDictionary::TStringId FakeTimeDev::initializeTimer(){
+CStringDictionary::TStringId FakeTimeDev::initializeTimer() {
   TimerHandlerFactory::setTimeHandlerNameToCreate(TimerHandlerFactory::AvailableTimers::fakeTimer);
   return CStringDictionary::scmInvalidStringId;
 }
-

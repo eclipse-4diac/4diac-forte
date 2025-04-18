@@ -19,14 +19,15 @@
 #include <forte_thread.h>
 #include "../conmeleon_c1/spi/spidevice.h"
 
-class CPiFaceProcessInterface : public CProcessInterfaceBase{
+class CPiFaceProcessInterface : public CProcessInterfaceBase {
   public:
-    CPiFaceProcessInterface(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec& paInterfaceSpec,
-        const CStringDictionary::TStringId paInstanceNameId);
+    CPiFaceProcessInterface(forte::core::CFBContainer &paContainer,
+                            const SFBInterfaceSpec &paInterfaceSpec,
+                            const CStringDictionary::TStringId paInstanceNameId);
 
     ~CPiFaceProcessInterface() override;
 
-  friend class CDeviceExecution;
+    friend class CDeviceExecution;
 
   protected:
     bool initialise(bool paInput, CEventChainExecutionThread *const paECET);
@@ -40,7 +41,7 @@ class CPiFaceProcessInterface : public CProcessInterfaceBase{
     bool checkInputData(long paValue);
     bool getValue(long paValue);
 
-    class CPiFaceIOHandler : public CExternalEventHandler, public CThread{
+    class CPiFaceIOHandler : public CExternalEventHandler, public CThread {
         DECLARE_HANDLER(CPiFaceIOHandler)
 
       public:
@@ -62,10 +63,10 @@ class CPiFaceProcessInterface : public CProcessInterfaceBase{
         static const int scmPiFaceWrite = 0x40;
         static const int scmPiFaceRead = 0x41;
 
-        enum EPiFaceRegister{
+        enum EPiFaceRegister {
           eIODirectionPortA = 0x00,
           eIODirectionPortB = 0x01,
-          eIOConfiguration =  0x0A,
+          eIOConfiguration = 0x0A,
           eGPIOPortA = 0x12,
           eGPIOPortB = 0x13,
           eGPIOPullupResistorsPortA = 0x0C,
@@ -81,12 +82,10 @@ class CPiFaceProcessInterface : public CProcessInterfaceBase{
         static void setupPiFaceIOChip(CONMELEON::CSpiDevice &paDev);
         static TForteByte readInputs(CONMELEON::CSpiDevice &paDev);
         static void writePiFaceRegister(CONMELEON::CSpiDevice &paDev, EPiFaceRegister paRegister, TForteByte paValue);
-
     };
-
 };
 
-//tell the IX and QX FB that this is the process interface to be used
+// tell the IX and QX FB that this is the process interface to be used
 typedef CPiFaceProcessInterface CProcessInterface;
 
 #endif /* PROCESSINTERFACE_H_ */

@@ -17,12 +17,11 @@
 #include "OPCUA_MGR.h"
 
 class OPCUA_DEV : public RMT_DEV {
-public:
+  public:
+    OPCUA_MGR mOPCUAMgr;
 
-  OPCUA_MGR mOPCUAMgr;
+    OPCUA_DEV(const std::string &paMGRID = "localhost:61499");
+    virtual ~OPCUA_DEV();
 
-  OPCUA_DEV(const std::string &paMGRID = "localhost:61499");
-  virtual ~OPCUA_DEV();
-
-  virtual int startDevice(void);
+    virtual int startDevice(void);
 };

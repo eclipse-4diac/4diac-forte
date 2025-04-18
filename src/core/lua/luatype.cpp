@@ -15,27 +15,25 @@
 #include "luaengine.h"
 
 namespace luatype {
-  bool getAdapterInstanceDefinition(SAdapterInstanceDef& def, CLuaEngine* luaEngine, int index) {
-    def.mAdapterNameID = luaEngine->getField<CStringDictionary::TStringId, &CLuaEngine::getStringId>(index, "adapterNameID");
-    def.mAdapterTypeNameID = luaEngine->getField<CStringDictionary::TStringId, &CLuaEngine::getStringId>(index, "adapterTypeNameID");
+  bool getAdapterInstanceDefinition(SAdapterInstanceDef &def, CLuaEngine *luaEngine, int index) {
+    def.mAdapterNameID =
+        luaEngine->getField<CStringDictionary::TStringId, &CLuaEngine::getStringId>(index, "adapterNameID");
+    def.mAdapterTypeNameID =
+        luaEngine->getField<CStringDictionary::TStringId, &CLuaEngine::getStringId>(index, "adapterTypeNameID");
     def.mIsPlug = luaEngine->getField<bool, &CLuaEngine::getBoolean>(index, "isPlug");
-    if (def.mAdapterNameID == CStringDictionary::scmInvalidStringId || def.mAdapterTypeNameID == CStringDictionary::scmInvalidStringId) {
+    if (def.mAdapterNameID == CStringDictionary::scmInvalidStringId ||
+        def.mAdapterTypeNameID == CStringDictionary::scmInvalidStringId) {
       return false;
     }
     return true;
   }
 
-  bool getTypeNameId(CStringDictionary::TStringId& id, CLuaEngine* luaEngine, int index) {
+  bool getTypeNameId(CStringDictionary::TStringId &id, CLuaEngine *luaEngine, int index) {
     switch (luaEngine->type(index)) {
-      case CLuaEngine::TNUMBER:
-        id = luaEngine->getInteger<CStringDictionary::TStringId>(index);
-        break;
-      case CLuaEngine::TSTRING:
-        id = luaEngine->getStringId(index);
-        break;
-      default:
-        return false;
+      case CLuaEngine::TNUMBER: id = luaEngine->getInteger<CStringDictionary::TStringId>(index); break;
+      case CLuaEngine::TSTRING: id = luaEngine->getStringId(index); break;
+      default: return false;
     }
     return true;
   }
-}
+} // namespace luatype

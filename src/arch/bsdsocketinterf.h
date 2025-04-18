@@ -15,7 +15,7 @@
 
 #include <sockhand.h>
 
-class CBSDSocketInterface{
+class CBSDSocketInterface {
   public:
     using TSocketDescriptor = FORTE_SOCKET_TYPE;
     using TUDPDestAddr = struct sockaddr_in;
@@ -26,17 +26,21 @@ class CBSDSocketInterface{
     static TSocketDescriptor openTCPClientConnection(char *paIPAddr, unsigned short paPort);
     static TSocketDescriptor acceptTCPConnection(TSocketDescriptor paListeningSockD);
     static int sendDataOnTCP(TSocketDescriptor paSockD, const char *paData, unsigned int paSize);
-    static int receiveDataFromTCP(TSocketDescriptor paSockD, char* paData, unsigned int paBufSize);
+    static int receiveDataFromTCP(TSocketDescriptor paSockD, char *paData, unsigned int paBufSize);
 
-    static TSocketDescriptor openUDPSendPort(char *paIPAddr, unsigned short paPort, TUDPDestAddr *mtDestAddr, const char *paMCInterface = nullptr);
-    static TSocketDescriptor openUDPReceivePort(char *paIPAddr, unsigned short paPort, const char *paMCInterface = scmAllInterfaces);
-    static int sendDataOnUDP(TSocketDescriptor paSockD, TUDPDestAddr *paDestAddr, char* paData, unsigned int paSize);
-    static int receiveDataFromUDP(TSocketDescriptor paSockD, char* paData, unsigned int paBufSize);
+    static TSocketDescriptor openUDPSendPort(char *paIPAddr,
+                                             unsigned short paPort,
+                                             TUDPDestAddr *mtDestAddr,
+                                             const char *paMCInterface = nullptr);
+    static TSocketDescriptor
+    openUDPReceivePort(char *paIPAddr, unsigned short paPort, const char *paMCInterface = scmAllInterfaces);
+    static int sendDataOnUDP(TSocketDescriptor paSockD, TUDPDestAddr *paDestAddr, char *paData, unsigned int paSize);
+    static int receiveDataFromUDP(TSocketDescriptor paSockD, char *paData, unsigned int paBufSize);
 
     CBSDSocketInterface() = delete;
 
   private:
-    static int handleError(int nRetVal, const char* msg);
+    static int handleError(int nRetVal, const char *msg);
 };
 
 #endif /* BSDSOCKETINTERF_H_ */

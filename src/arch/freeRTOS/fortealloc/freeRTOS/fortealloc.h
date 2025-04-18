@@ -12,19 +12,17 @@
 #ifndef FREERTOS_FORTEALLOC_H_
 #define FREERTOS_FORTEALLOC_H_
 
-//If generic malloc and free are to be used set the cmake Param FORTE_FREERTOS_ALLOC to GENFORTEALLOC
+// If generic malloc and free are to be used set the cmake Param FORTE_FREERTOS_ALLOC to GENFORTEALLOC
 #include <FreeRTOS.h>
 
 #include "datatype.h"
 #include <stdlib.h>
 
-inline
-void forte_free(void *paData) {
+inline void forte_free(void *paData) {
   vPortFree(paData);
 }
 
-inline
-void *forte_malloc(size_t paSize) {
+inline void *forte_malloc(size_t paSize) {
   return pvPortMalloc(paSize);
 }
 

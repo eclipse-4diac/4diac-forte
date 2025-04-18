@@ -21,33 +21,38 @@
 class CResource;
 class CLuaEngine;
 
-class CLuaCFBTypeEntry: public CTypeLib::CFBTypeEntry {
-private:
-  const std::string cmLuaScriptAsString;
-  SFBInterfaceSpec m_interfaceSpec;
-  SCFB_FBNData mSpec;
+class CLuaCFBTypeEntry : public CTypeLib::CFBTypeEntry {
+  private:
+    const std::string cmLuaScriptAsString;
+    SFBInterfaceSpec m_interfaceSpec;
+    SCFB_FBNData mSpec;
 
-  CLuaCFBTypeEntry(CStringDictionary::TStringId typeNameId, const std::string & paLuaScriptAsString,  SFBInterfaceSpec& interfaceSpec, SCFB_FBNData& fbnSpec);
+    CLuaCFBTypeEntry(CStringDictionary::TStringId typeNameId,
+                     const std::string &paLuaScriptAsString,
+                     SFBInterfaceSpec &interfaceSpec,
+                     SCFB_FBNData &fbnSpec);
 
-  ~CLuaCFBTypeEntry() override;
+    ~CLuaCFBTypeEntry() override;
 
-  static bool initInterfaceSpec(SFBInterfaceSpec& interfaceSpec, CLuaEngine* luaEngine, int index);
-  static void deleteInterfaceSpec(SFBInterfaceSpec& interfaceSpec);
-  static bool initFbnSpec(SCFB_FBNData& fbnSpec, CLuaEngine* luaEngine, int index);
-  static void deleteFbnSpec(SCFB_FBNData& fbnSpec);
+    static bool initInterfaceSpec(SFBInterfaceSpec &interfaceSpec, CLuaEngine *luaEngine, int index);
+    static void deleteInterfaceSpec(SFBInterfaceSpec &interfaceSpec);
+    static bool initFbnSpec(SCFB_FBNData &fbnSpec, CLuaEngine *luaEngine, int index);
+    static void deleteFbnSpec(SCFB_FBNData &fbnSpec);
 
-public:
-  static CLuaCFBTypeEntry* createLuaFBTypeEntry(CStringDictionary::TStringId typeNameId, const std::string& paLuaScriptAsString);
+  public:
+    static CLuaCFBTypeEntry *createLuaFBTypeEntry(CStringDictionary::TStringId typeNameId,
+                                                  const std::string &paLuaScriptAsString);
 
-  CFunctionBlock* createFBInstance(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) override;
+    CFunctionBlock *createFBInstance(CStringDictionary::TStringId paInstanceNameId,
+                                     forte::core::CFBContainer &paContainer) override;
 
-  const SFBInterfaceSpec& getInterfaceSpec() const {
-    return m_interfaceSpec;
-  }
+    const SFBInterfaceSpec &getInterfaceSpec() const {
+      return m_interfaceSpec;
+    }
 
-  SCFB_FBNData& getFbnSpec(){
-    return mSpec;
-  }
+    SCFB_FBNData &getFbnSpec() {
+      return mSpec;
+    }
 };
 
 #endif /* SRC_CORE_LUACFBTYPEENTRY_H_ */

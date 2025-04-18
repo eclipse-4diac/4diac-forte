@@ -19,17 +19,17 @@
 #include "../devlog.h"
 
 class CECOSThread;
-typedef CECOSThread CThread;  //allows that doxygen can generate better documentation
+typedef CECOSThread CThread; // allows that doxygen can generate better documentation
 typedef CECOSThread *TCECOSThreadPtr;
 
 /**  \defgroup ECOS-HAL eCos FORTE Hardware Abstraction Layer
  *\ingroup FORTE-HAL
  * \brief The FORTE-HAL implementation for the eCos operating system.
  *
- * 
+ *
  */
 /*! \ingroup ECOS-HAL
- * \brief This class is a wrapper class the eCos multitasking support 
+ * \brief This class is a wrapper class the eCos multitasking support
  */
 class CECOSThread : public forte::arch::CThreadBase<cyg_handle_t, 0, CECOSThread> {
   public:
@@ -39,7 +39,7 @@ class CECOSThread : public forte::arch::CThreadBase<cyg_handle_t, 0, CECOSThread
      *  @param paStackSize the Size of the stack the thread is allowed to use. this class will
      *         allocate the stack size in bytes from the heap
      */
-    explicit CECOSThread(long paStackSize = CYGNUM_HAL_STACK_SIZE_TYPICAL);  // may need adjustment for small platforms
+    explicit CECOSThread(long paStackSize = CYGNUM_HAL_STACK_SIZE_TYPICAL); // may need adjustment for small platforms
 
     /*! \brief Stops and destroys thread.
      *
@@ -47,7 +47,7 @@ class CECOSThread : public forte::arch::CThreadBase<cyg_handle_t, 0, CECOSThread
      */
     ~CECOSThread() override;
 
-    //!Set the deadline of the thread.
+    //! Set the deadline of the thread.
     void setDeadline(const CIEC_TIME &paVal) override final;
 
     /*! \brief Sleep the calling thread

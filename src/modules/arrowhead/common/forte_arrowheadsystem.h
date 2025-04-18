@@ -18,7 +18,7 @@
 #include "forte_dint.h"
 
 class CIEC_ArrowheadSystem : public CIEC_STRUCT {
-  DECLARE_FIRMWARE_DATATYPE(ArrowheadSystem)
+    DECLARE_FIRMWARE_DATATYPE(ArrowheadSystem)
 
   public:
     CIEC_ArrowheadSystem();
@@ -26,19 +26,19 @@ class CIEC_ArrowheadSystem : public CIEC_STRUCT {
     ~CIEC_ArrowheadSystem() override = default;
 
     CIEC_WSTRING &systemName() {
-      return *static_cast<CIEC_WSTRING*>(&getMembers()[0]);
+      return *static_cast<CIEC_WSTRING *>(&getMembers()[0]);
     }
 
     CIEC_WSTRING &address() {
-      return *static_cast<CIEC_WSTRING*>(&getMembers()[1]);
+      return *static_cast<CIEC_WSTRING *>(&getMembers()[1]);
     }
 
     CIEC_DINT &port() {
-      return *static_cast<CIEC_DINT*>(&getMembers()[2]);
+      return *static_cast<CIEC_DINT *>(&getMembers()[2]);
     }
 
     CIEC_WSTRING &authenticationInfo() {
-      return *static_cast<CIEC_WSTRING*>(&getMembers()[3]);
+      return *static_cast<CIEC_WSTRING *>(&getMembers()[3]);
     }
 
   private:

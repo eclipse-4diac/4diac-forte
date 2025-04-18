@@ -13,25 +13,24 @@
  *      - initial implementation and rework communication infrastructure
  *    Martin Jobst
  *      - refactored array type structure
-  *******************************************************************************/
+ *******************************************************************************/
 #include "forte_array_dynamic.h"
 
 USE_STRING_ID(ARRAY);
-
 
 #include "forte_ulint.h"
 
 DEFINE_FIRMWARE_DATATYPE(ARRAY_DYNAMIC, STRID(ARRAY))
 
-//!Function to configure the array if it is created via the typelib
+//! Function to configure the array if it is created via the typelib
 void CIEC_ARRAY_DYNAMIC::setup(TForteUInt16 paLength, CStringDictionary::TStringId paArrayType) {
   clear();
   if (paLength) {
     mLowerBound = 0;
     mUpperBound = paLength - 1;
 
-    mElementDataTypeEntry = static_cast<CTypeLib::CDataTypeEntry *>(CTypeLib::findType(paArrayType,
-                                                                                       CTypeLib::getDTLibStart()));
+    mElementDataTypeEntry =
+        static_cast<CTypeLib::CDataTypeEntry *>(CTypeLib::findType(paArrayType, CTypeLib::getDTLibStart()));
     if (mElementDataTypeEntry) {
       mElementSize = mElementDataTypeEntry->getSize();
       mData = operator new(paLength * mElementSize);
@@ -44,14 +43,14 @@ void CIEC_ARRAY_DYNAMIC::setup(TForteUInt16 paLength, CStringDictionary::TString
   }
 }
 
-//!Function to configure the array if it is created via the typelib
+//! Function to configure the array if it is created via the typelib
 void CIEC_ARRAY_DYNAMIC::setup(intmax_t paLowerBound, intmax_t paUpperBound, CStringDictionary::TStringId paArrayType) {
   clear();
   mLowerBound = paLowerBound;
   mUpperBound = paUpperBound;
 
-  mElementDataTypeEntry = static_cast<CTypeLib::CDataTypeEntry *>(CTypeLib::findType(paArrayType,
-                                                                                     CTypeLib::getDTLibStart()));
+  mElementDataTypeEntry =
+      static_cast<CTypeLib::CDataTypeEntry *>(CTypeLib::findType(paArrayType, CTypeLib::getDTLibStart()));
   if (mElementDataTypeEntry) {
     auto size = static_cast<size_t>(paUpperBound - paLowerBound + 1);
     mElementSize = mElementDataTypeEntry->getSize();
@@ -70,8 +69,8 @@ void CIEC_ARRAY_DYNAMIC::setup(const CStringDictionary::TStringId *paParameters)
   mUpperBound = static_cast<intmax_t>(paParameters[1]);
   CStringDictionary::TStringId elementType = paParameters[2];
 
-  mElementDataTypeEntry = static_cast<CTypeLib::CDataTypeEntry *>(CTypeLib::findType(elementType,
-                                                                                     CTypeLib::getDTLibStart()));
+  mElementDataTypeEntry =
+      static_cast<CTypeLib::CDataTypeEntry *>(CTypeLib::findType(elementType, CTypeLib::getDTLibStart()));
   if (mElementDataTypeEntry) {
     auto size = static_cast<size_t>(mUpperBound - mLowerBound + 1);
     mElementSize = mElementDataTypeEntry->getSize();
@@ -79,7 +78,7 @@ void CIEC_ARRAY_DYNAMIC::setup(const CStringDictionary::TStringId *paParameters)
     auto *dest = static_cast<TForteByte *>(mData);
     for (; mSize < size; ++mSize) { // increment size one-by-one to track allocated elements for destruction
       CIEC_ANY *element = mElementDataTypeEntry->createDataTypeInstance(dest);
-      if(elementType == STRID(ARRAY)) {
+      if (elementType == STRID(ARRAY)) {
         static_cast<CIEC_ARRAY_DYNAMIC *>(element)->setup(paParameters + 3);
       }
       dest += mElementSize;
@@ -109,14 +108,14 @@ int CIEC_ARRAY_DYNAMIC::fromString(const char *paValue) {
       if (',' == *pcRunner) {
         pcRunner++;
       } else {
-//we have an error or the end bracket
+        // we have an error or the end bracket
         break;
       }
     }
     if (*pcRunner == ']') {
-//arrays have to and on a closing bracket
+      // arrays have to and on a closing bracket
       nRetVal = static_cast<int>(pcRunner - paValue + 1); //+1 from the closing bracket
-// For the rest of the array size copy the default element
+      // For the rest of the array size copy the default element
       std::destroy(iter, end());
       size_t size = mSize;
       mSize = static_cast<size_t>(iter - begin());
@@ -155,14 +154,13 @@ int CIEC_ARRAY_DYNAMIC::initializeFromString(iterator &paPosition, const char *p
         if (',' == *pcRunner) {
           pcRunner++;
         } else {
-          //we have an error or the end parentheses
+          // we have an error or the end parentheses
           break;
         }
       }
-      if (*pcRunner == ')') { //repeat syntax elements have to and on a closing parentheses
+      if (*pcRunner == ')') { // repeat syntax elements have to and on a closing parentheses
         intmax_t repeatSequenceLength = paPosition - initialPosition;
-        for (size_t rep = 1;
-             rep < repeat.getUnsignedValue() && paPosition != end(); ++rep) { // once added already
+        for (size_t rep = 1; rep < repeat.getUnsignedValue() && paPosition != end(); ++rep) { // once added already
           for (intmax_t seqIndex = 0; seqIndex < repeatSequenceLength && paPosition != end(); ++seqIndex) {
             (paPosition++)->setValue(*(initialPosition + seqIndex));
           }
@@ -185,4 +183,3 @@ int CIEC_ARRAY_DYNAMIC::initializeSimpleFromString(iterator &paPosition, const c
     return (*paBufVal)->fromString(paSrcString);
   }
 }
-

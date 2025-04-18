@@ -9,7 +9,7 @@
  * Contributors:
  *    Jose Cabral - initial API and implementation and/or initial documentation
  *******************************************************************************/
- 
+
 #include "fileReader_fbt.h"
 
 USE_STRING_ID(BOOL);
@@ -27,7 +27,6 @@ USE_STRING_ID(S1);
 USE_STRING_ID(STATUS);
 USE_STRING_ID(STRING);
 USE_STRING_ID(WSTRING);
-
 
 #include <sstream>
 #include <ostream>
@@ -53,36 +52,47 @@ const TForteInt16 fileReader::scmEOWithIndexes[] = {0, 4, -1};
 const CStringDictionary::TStringId fileReader::scmEventOutputNames[] = {STRID(INITO), STRID(CNF)};
 const CStringDictionary::TStringId fileReader::scmEventOutputTypeIds[] = {STRID(Event), STRID(Event)};
 
-const SFBInterfaceSpec fileReader::scmFBInterfaceSpec = {
-  2,  scmEventInputNames, scmEventInputTypeIds,  scmEIWith,  scmEIWithIndexes,
-  2,  scmEventOutputNames, scmEventOutputTypeIds,  scmEOWith, scmEOWithIndexes,
-  2,  scmDataInputNames, scmDataInputTypeIds,
-  3,  scmDataOutputNames, scmDataOutputTypeIds,
-  0, 0
-};
+const SFBInterfaceSpec fileReader::scmFBInterfaceSpec = {2,
+                                                         scmEventInputNames,
+                                                         scmEventInputTypeIds,
+                                                         scmEIWith,
+                                                         scmEIWithIndexes,
+                                                         2,
+                                                         scmEventOutputNames,
+                                                         scmEventOutputTypeIds,
+                                                         scmEOWith,
+                                                         scmEOWithIndexes,
+                                                         2,
+                                                         scmDataInputNames,
+                                                         scmDataInputTypeIds,
+                                                         3,
+                                                         scmDataOutputNames,
+                                                         scmDataOutputTypeIds,
+                                                         0,
+                                                         0};
 
-const char * const fileReader::scmOK = "OK";
-const char * const fileReader::scmNotInitialised = "Not initialized";
-const char * const fileReader::scmCouldNotRead = "Could not read";
+const char *const fileReader::scmOK = "OK";
+const char *const fileReader::scmNotInitialised = "Not initialized";
+const char *const fileReader::scmCouldNotRead = "Could not read";
 
-void fileReader::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) { //TODO: manage output and status
-  switch (paEIID){
+void fileReader::executeEvent(TEventID paEIID,
+                              CEventChainExecutionThread *const paECET) { // TODO: manage output and status
+  switch (paEIID) {
     case scmEventINITID:
-      if(true == QI()){
+      if (true == QI()) {
         QO() = openFile();
-      }
-      else{
+      } else {
         closeFile();
       }
       sendOutputEvent(scmEventINITOID, paECET);
       break;
     case scmEventREQID:
       QO() = QI();
-      if(true == QI()){
+      if (true == QI()) {
         QO() = readFile();
       }
       sendOutputEvent(scmEventCNFID, paECET);
-      if (false == QO()){
+      if (false == QO()) {
         std::cout << "----------ERROR\n";
       }
       break;
@@ -90,49 +100,48 @@ void fileReader::executeEvent(TEventID paEIID, CEventChainExecutionThread *const
 }
 
 fileReader::fileReader(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
-    CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId){
-  mFile.rdbuf()->pubsetbuf(nullptr, 0); //disable buffer to avoid latency
+    CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId) {
+  mFile.rdbuf()->pubsetbuf(nullptr, 0); // disable buffer to avoid latency
 }
 
-bool fileReader::openFile(){
+bool fileReader::openFile() {
   int retVal = false;
   std::string sysFileName(FILE_NAME().getValue());
-  if(sysFileName.size()){
-    mFile.open(sysFileName.c_str(), std::fstream::in); //TODO change this when fully switching to C++11 for LMS EV3
-    if(mFile.is_open()){
+  if (sysFileName.size()) {
+    mFile.open(sysFileName.c_str(), std::fstream::in); // TODO change this when fully switching to C++11 for LMS EV3
+    if (mFile.is_open()) {
       retVal = true;
-    }else{
+    } else {
       STATUS() = scmNotInitialised;
     }
-  }else{
+  } else {
     STATUS() = scmNotInitialised;
   }
   return retVal;
 }
 
-void fileReader::closeFile(){
-  if(mFile.is_open()){
+void fileReader::closeFile() {
+  if (mFile.is_open()) {
     mFile.close();
   }
 }
 
-bool fileReader::readFile(){
+bool fileReader::readFile() {
   bool retVal = false;
-  if(mFile.is_open()){
+  if (mFile.is_open()) {
     std::string read = "";
     mFile.clear();
     mFile.seekg(0, std::ios::beg);
     mFile >> read;
-    if (mFile.fail()){
+    if (mFile.fail()) {
       STATUS() = scmCouldNotRead;
-    }else{
+    } else {
       S1() = read.c_str();
       STATUS() = scmOK;
       retVal = true;
     }
-  }else{
+  } else {
     STATUS() = scmNotInitialised;
   }
   return retVal;
 }
-

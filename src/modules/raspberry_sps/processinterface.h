@@ -18,11 +18,12 @@
 #include "../i2c_dev/i2cprocessinterface.h"
 #include <funcbloc.h>
 
-class CProcessInterface : public CI2CProcessInterface{
+class CProcessInterface : public CI2CProcessInterface {
 
   public:
-    CProcessInterface(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec& paInterfaceSpec,
-        const CStringDictionary::TStringId paInstanceNameId);
+    CProcessInterface(forte::core::CFBContainer &paContainer,
+                      const SFBInterfaceSpec &paInterfaceSpec,
+                      const CStringDictionary::TStringId paInstanceNameId);
     ~CProcessInterface() override;
 
   protected:

@@ -20,14 +20,14 @@
 #include <deque>
 #include "forte_sync.h"
 
-class COpcProcessVar{
+class COpcProcessVar {
   public:
-    enum EOpcProcessVarFunctions{
-      e_FBInput, e_FBOutput
-    };
+    enum EOpcProcessVarFunctions { e_FBInput, e_FBOutput };
 
-    COpcProcessVar(const std::string& paItemGroupName, const std::string& paItemName, EOpcProcessVarFunctions paFunction);
-    ~COpcProcessVar(){
+    COpcProcessVar(const std::string &paItemGroupName,
+                   const std::string &paItemName,
+                   EOpcProcessVarFunctions paFunction);
+    ~COpcProcessVar() {
     }
 
     const std::string getItemName() const {

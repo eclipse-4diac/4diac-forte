@@ -26,429 +26,418 @@
 /*! \ingroup CORE\brief FORTE implementation of a Singly Linked List
  */
 
-template <typename T, typename Container = CSinglyLinkedListNode<T> >
+template<typename T, typename Container = CSinglyLinkedListNode<T>>
 class CSinglyLinkedList {
-private:
+  private:
+    friend class CIterator<T, Container>;
 
-  friend class CIterator<T,Container>;
+    /*!\brief First element of the singly linked list
+     */
+    Container *mFirstNode;
 
-  /*!\brief First element of the singly linked list
-   */
-  Container* mFirstNode;
+    /*!\brief Last element of the singly linked list
+     */
+    Container *mLastNode;
 
-  /*!\brief Last element of the singly linked list
-   */
-  Container* mLastNode;
+  public:
+    CSinglyLinkedList();
+    ~CSinglyLinkedList();
 
-public:
-  CSinglyLinkedList();
-  ~CSinglyLinkedList();
+    /*!\brief Typedef for getting the right iterator for the list
+     * */
+    typedef CIterator<T, Container> Iterator;
 
-  /*!\brief Typedef for getting the right iterator for the list
-   * */
-  typedef CIterator<T,Container> Iterator;
+    /*!\brief Add's the given object at the start of the singly linked list
+     *
+     * \param paElement the reference to the object to be added
+     */
+    void pushFront(T const &paElement);
 
-  /*!\brief Add's the given object at the start of the singly linked list
-   *
-   * \param paElement the reference to the object to be added
-   */
-  void pushFront(T const& paElement);
+    /*!\brief Add's the given object at the end of the singly linked list
+     *
+     * \param paElement the reference to the object to be added
+     */
+    void pushBack(T const &paElement);
 
-  /*!\brief Add's the given object at the end of the singly linked list
-   *
-   * \param paElement the reference to the object to be added
-   */
-  void pushBack(T const& paElement);
+    /*!\brief Deletes the first object of the singly linked list
+     *
+     */
+    void popFront();
 
-  /*!\brief Deletes the first object of the singly linked list
-   *
-   */
-  void popFront();
+    /*!\brief Deletes all objects in the singly linked list
+     */
+    void clearAll();
 
-  /*!\brief Deletes all objects in the singly linked list
-   */
-  void clearAll();
+    /*!\brief checks if the singly linked list is empty or not
+     *
+     * \return true if the list is empty, false if not
+     */
+    bool isEmpty() const {
+      return (nullptr == mFirstNode);
+    }
 
-  /*!\brief checks if the singly linked list is empty or not
-   *
-   * \return true if the list is empty, false if not
-   */
-  bool isEmpty() const {
-    return (nullptr == mFirstNode);
-  }
+    /*!\brief returns an iterator with it's current position set to the start of the singly linked list
+     *
+     * \return iterator on position FirstNode
+     */
+    const Iterator begin() const {
+      return Iterator(mFirstNode);
+    }
 
-  /*!\brief returns an iterator with it's current position set to the start of the singly linked list
-   *
-   * \return iterator on position FirstNode
-   */
-  const Iterator begin() const {
-    return Iterator(mFirstNode);
-  }
+    /*!\brief returns an iterator with it's current position set to 0
+     *
+     * \return iterator with current position 0
+     */
+    const Iterator end() const {
+      return Iterator(nullptr);
+    }
 
-  /*!\brief returns an iterator with it's current position set to 0
-   *
-   * \return iterator with current position 0
-   */
-  const Iterator end() const {
-    return Iterator(nullptr);
-  }
+    const Iterator back() const {
+      return Iterator(mLastNode);
+    }
 
-  const Iterator back() const {
-    return Iterator(mLastNode);
-  }
+    /*!\brief erases the next node element after the position of the iterator
+     *
+     * \param it  iterator set on the element before the element to delete
+     * \return Iterator set on the new next node element
+     */
+    const Iterator eraseAfter(Iterator &it);
 
-  /*!\brief erases the next node element after the position of the iterator
-   *
-   * \param it  iterator set on the element before the element to delete
-   * \return Iterator set on the new next node element
-   */
-  const Iterator eraseAfter(Iterator& it);
-
-  /*! \brief erases the element according to the passed pointer
-   *
-   * @param paToDelete pointer to the element to be deleted
-   */
-  void erase(T const& paToDelete);
-
+    /*! \brief erases the element according to the passed pointer
+     *
+     * @param paToDelete pointer to the element to be deleted
+     */
+    void erase(T const &paToDelete);
 };
 
-template <typename T, typename Container>
-inline CSinglyLinkedList<T,Container>::CSinglyLinkedList() : mFirstNode(nullptr), mLastNode(nullptr) {
+template<typename T, typename Container>
+inline CSinglyLinkedList<T, Container>::CSinglyLinkedList() : mFirstNode(nullptr), mLastNode(nullptr) {
 }
 
-template <typename T, typename Container>
-inline CSinglyLinkedList<T,Container>::~CSinglyLinkedList() {
+template<typename T, typename Container>
+inline CSinglyLinkedList<T, Container>::~CSinglyLinkedList() {
   clearAll();
 }
 
-template <typename T, typename Container>
-void CSinglyLinkedList<T,Container>::pushFront(T const& paElement) {
-  Container* poNewNode = new Container(paElement, mFirstNode);
+template<typename T, typename Container>
+void CSinglyLinkedList<T, Container>::pushFront(T const &paElement) {
+  Container *poNewNode = new Container(paElement, mFirstNode);
   mFirstNode = poNewNode;
-  if(nullptr == mLastNode){
+  if (nullptr == mLastNode) {
     mLastNode = poNewNode;
   }
 }
 
-template <typename T, typename Container>
-void CSinglyLinkedList<T,Container>::pushBack(T const& paElement)  {
-  Container* poNewNode = new Container(paElement);
+template<typename T, typename Container>
+void CSinglyLinkedList<T, Container>::pushBack(T const &paElement) {
+  Container *poNewNode = new Container(paElement);
 
-  if(nullptr != mLastNode){
+  if (nullptr != mLastNode) {
     mLastNode->setNext(poNewNode);
-  }
-  else{
+  } else {
     mFirstNode = poNewNode;
   }
   mLastNode = poNewNode;
 }
 
-template <typename T, typename Container>
-void CSinglyLinkedList<T,Container>::popFront() {
-  Container* pNodeToDelete = mFirstNode;
+template<typename T, typename Container>
+void CSinglyLinkedList<T, Container>::popFront() {
+  Container *pNodeToDelete = mFirstNode;
   mFirstNode = mFirstNode->getNext();
-  if(nullptr == mFirstNode) {
+  if (nullptr == mFirstNode) {
     mLastNode = nullptr;
   }
   delete pNodeToDelete;
 }
 
-template <typename T, typename Container>
-inline void CSinglyLinkedList<T,Container>::clearAll() {
-  while(mFirstNode != nullptr)  {
+template<typename T, typename Container>
+inline void CSinglyLinkedList<T, Container>::clearAll() {
+  while (mFirstNode != nullptr) {
     popFront();
   }
 }
 
-template <typename T, typename Container>
-const CIterator<T,Container> CSinglyLinkedList<T,Container>::eraseAfter(Iterator& it) {
-  Container* pNodeToDelete = (it.getPosition())->getNext();
+template<typename T, typename Container>
+const CIterator<T, Container> CSinglyLinkedList<T, Container>::eraseAfter(Iterator &it) {
+  Container *pNodeToDelete = (it.getPosition())->getNext();
   it.getPosition()->setNext(pNodeToDelete->getNext());
-  if(nullptr == it.getPosition()->getNext()) {
+  if (nullptr == it.getPosition()->getNext()) {
     mLastNode = it.getPosition();
   }
   delete pNodeToDelete;
   return Iterator((it.getPosition())->getNext());
 }
 
-template <typename T, typename Container>
-void CSinglyLinkedList<T,Container>::erase(T const& paToDelete){
+template<typename T, typename Container>
+void CSinglyLinkedList<T, Container>::erase(T const &paToDelete) {
 
-    Iterator itRunner = begin();
-    Iterator itRefNode = end();
-    Iterator itEnd = end();
+  Iterator itRunner = begin();
+  Iterator itRefNode = end();
+  Iterator itEnd = end();
 
-    while(itRunner != itEnd){
-      if(*itRunner == paToDelete){
-        if(itRefNode == itEnd){
-          popFront();
-        }
-        else{
-          eraseAfter(itRefNode);
-        }
-        break;
+  while (itRunner != itEnd) {
+    if (*itRunner == paToDelete) {
+      if (itRefNode == itEnd) {
+        popFront();
+      } else {
+        eraseAfter(itRefNode);
       }
-
-      itRefNode = itRunner;
-      ++itRunner;
+      break;
     }
+
+    itRefNode = itRunner;
+    ++itRunner;
   }
+}
 
 /*!\brief explicit specialization for a void* list
  *
  */
 
 template<>
-class CSinglyLinkedList<void*, CSinglyLinkedListNode<void*> >  {
-private:
+class CSinglyLinkedList<void *, CSinglyLinkedListNode<void *>> {
+  private:
+    friend class CIterator<void *, CSinglyLinkedListNode<void *>>;
 
-  friend class CIterator<void*,CSinglyLinkedListNode<void*> >;
+    /*!\brief First element of the singly linked list
+     */
+    CSinglyLinkedListNode<void *> *mFirstNode;
 
-  /*!\brief First element of the singly linked list
-   */
-  CSinglyLinkedListNode<void*>* mFirstNode;
+    /*!\brief Last element of the singly linked list
+     */
+    CSinglyLinkedListNode<void *> *mLastNode;
 
-  /*!\brief Last element of the singly linked list
-   */
-  CSinglyLinkedListNode<void*>* mLastNode;
+  public:
+    CSinglyLinkedList() : mFirstNode(nullptr), mLastNode(nullptr) {
+    }
+    ~CSinglyLinkedList() {
+      clearAll();
+    }
 
-public:
-  CSinglyLinkedList() : mFirstNode(nullptr), mLastNode(nullptr) {
+    /*!\brief Typedef for getting the right iterator for the list
+     * */
+    typedef CIterator<void *, CSinglyLinkedListNode<void *>> Iterator;
 
-  }
-  ~CSinglyLinkedList()  {
-    clearAll();
-  }
+    /*!\brief Add's the given object at the start of the singly linked list
+     *
+     * \param paElement the reference to the object to be added
+     */
+    void pushFront(const void *paElement) {
+      CSinglyLinkedListNode<void *> *poNewNode = new CSinglyLinkedListNode<void *>((void *) paElement, mFirstNode);
+      mFirstNode = poNewNode;
+      if (nullptr == mLastNode) {
+        mLastNode = poNewNode;
+      }
+    }
 
-  /*!\brief Typedef for getting the right iterator for the list
-   * */
-  typedef CIterator<void*,CSinglyLinkedListNode<void*> > Iterator;
+    /*!\brief Add's the given object at the end of the singly linked list
+     *
+     * \param paElement the reference to the object to be added
+     */
+    void pushBack(void *const paElement) {
+      CSinglyLinkedListNode<void *> *poNewNode = new CSinglyLinkedListNode<void *>(paElement);
 
-  /*!\brief Add's the given object at the start of the singly linked list
-   *
-   * \param paElement the reference to the object to be added
-   */
-  void pushFront(const void* paElement)  {
-    CSinglyLinkedListNode<void*>* poNewNode = new CSinglyLinkedListNode<void*>((void *)paElement, mFirstNode);
-    mFirstNode = poNewNode;
-    if(nullptr == mLastNode){
+      if (nullptr != mLastNode) {
+        mLastNode->setNext(poNewNode);
+      } else {
+        mFirstNode = poNewNode;
+      }
       mLastNode = poNewNode;
     }
-  }
 
-  /*!\brief Add's the given object at the end of the singly linked list
-   *
-   * \param paElement the reference to the object to be added
-   */
-  void pushBack(void* const paElement) {
-    CSinglyLinkedListNode<void*>* poNewNode = new CSinglyLinkedListNode<void*>(paElement);
-
-    if(nullptr != mLastNode){
-      mLastNode->setNext(poNewNode);
-    }
-    else{
-      mFirstNode = poNewNode;
-    }
-    mLastNode = poNewNode;
-  }
-
-  /*!\brief Returns the element at first position without deleting it
-   *
-   */
-  inline const void* peekFront() const {
+    /*!\brief Returns the element at first position without deleting it
+     *
+     */
+    inline const void *peekFront() const {
       return (mFirstNode != nullptr) ? mFirstNode->getData() : 0;
-  }
-
-  /*!\brief Deletes the first object of the singly linked list
-   *
-   */
-  inline void popFront()  {
-    CSinglyLinkedListNode<void*>* pNodeToDelete = mFirstNode;
-    mFirstNode = mFirstNode->getNext();
-    if(nullptr == mFirstNode) {
-      mLastNode = nullptr;
     }
-    delete pNodeToDelete;
-  }
 
-  /*!\brief Deletes all objects in the singly linked list
-   */
-  inline void clearAll() {
-    while(nullptr != mFirstNode)  {
-      popFront();
-    }
-  }
-
-  /*!\brief checks if the singly linked list is empty or not
-   *
-   * \return true if the list is empty, false if not
-   */
-  inline bool isEmpty() const {
-    return (nullptr == mFirstNode);
-  }
-
-  /*!\brief returns an iterator with it's current position set to the start of the singly linked list
-   *
-   * \return iterator on position FirstNode
-   */
-  inline const Iterator begin() const {
-    return Iterator(mFirstNode);
-  }
-
-  /*!\brief returns an iterator with it's current position set to 0
-   *
-   * \return iterator with current position 0
-   */
-  inline const Iterator end() const {
-    return Iterator(nullptr);
-  }
-
-  inline const Iterator back() const{
-    return Iterator(mLastNode);
-  }
-
-  /*!\brief erases the next node element after the position of the iterator
-   *
-   * \param it  an iterator set on the element before the element to delete
-   * \return Iterator set on the new next node element
-   */
-  const Iterator eraseAfter(Iterator& it) {
-    CSinglyLinkedListNode<void*>* pNodeToDelete = (it.getPosition())->getNext();
-    it.getPosition()->setNext(pNodeToDelete->getNext());
-    if(nullptr == it.getPosition()->getNext()) {
-      mLastNode = it.getPosition();
-    }
-    delete pNodeToDelete;
-    return Iterator((it.getPosition())->getNext());
-  }
-
-  /*! \brief erases the element according to the passed pointer
-   *
-   * @param paToDelete pointer to the element to be deleted
-   */
-  void erase(void* paToDelete){
-
-    Iterator itRunner = begin();
-    Iterator itRefNode = end();
-    Iterator itEnd = end();
-
-    while(itRunner != itEnd){
-      if(*itRunner == paToDelete){
-        if(itRefNode == itEnd){
-          popFront();
-        }
-        else{
-          eraseAfter(itRefNode);
-        }
-        break;
+    /*!\brief Deletes the first object of the singly linked list
+     *
+     */
+    inline void popFront() {
+      CSinglyLinkedListNode<void *> *pNodeToDelete = mFirstNode;
+      mFirstNode = mFirstNode->getNext();
+      if (nullptr == mFirstNode) {
+        mLastNode = nullptr;
       }
-
-      itRefNode = itRunner;
-      ++itRunner;
+      delete pNodeToDelete;
     }
-  }
 
+    /*!\brief Deletes all objects in the singly linked list
+     */
+    inline void clearAll() {
+      while (nullptr != mFirstNode) {
+        popFront();
+      }
+    }
+
+    /*!\brief checks if the singly linked list is empty or not
+     *
+     * \return true if the list is empty, false if not
+     */
+    inline bool isEmpty() const {
+      return (nullptr == mFirstNode);
+    }
+
+    /*!\brief returns an iterator with it's current position set to the start of the singly linked list
+     *
+     * \return iterator on position FirstNode
+     */
+    inline const Iterator begin() const {
+      return Iterator(mFirstNode);
+    }
+
+    /*!\brief returns an iterator with it's current position set to 0
+     *
+     * \return iterator with current position 0
+     */
+    inline const Iterator end() const {
+      return Iterator(nullptr);
+    }
+
+    inline const Iterator back() const {
+      return Iterator(mLastNode);
+    }
+
+    /*!\brief erases the next node element after the position of the iterator
+     *
+     * \param it  an iterator set on the element before the element to delete
+     * \return Iterator set on the new next node element
+     */
+    const Iterator eraseAfter(Iterator &it) {
+      CSinglyLinkedListNode<void *> *pNodeToDelete = (it.getPosition())->getNext();
+      it.getPosition()->setNext(pNodeToDelete->getNext());
+      if (nullptr == it.getPosition()->getNext()) {
+        mLastNode = it.getPosition();
+      }
+      delete pNodeToDelete;
+      return Iterator((it.getPosition())->getNext());
+    }
+
+    /*! \brief erases the element according to the passed pointer
+     *
+     * @param paToDelete pointer to the element to be deleted
+     */
+    void erase(void *paToDelete) {
+
+      Iterator itRunner = begin();
+      Iterator itRefNode = end();
+      Iterator itEnd = end();
+
+      while (itRunner != itEnd) {
+        if (*itRunner == paToDelete) {
+          if (itRefNode == itEnd) {
+            popFront();
+          } else {
+            eraseAfter(itRefNode);
+          }
+          break;
+        }
+
+        itRefNode = itRunner;
+        ++itRunner;
+      }
+    }
 };
 
 /*!\brief partial specialization for pointer lists
  */
 
-template <typename T>
-class CSinglyLinkedList<T*> {
-private:
-  friend class CIterator<T*,CSinglyLinkedListNode<void*> >;
-  CSinglyLinkedList<void*> mList;
+template<typename T>
+class CSinglyLinkedList<T *> {
+  private:
+    friend class CIterator<T *, CSinglyLinkedListNode<void *>>;
+    CSinglyLinkedList<void *> mList;
 
-public:
-  CSinglyLinkedList() = default;
+  public:
+    CSinglyLinkedList() = default;
 
-  ~CSinglyLinkedList()  {
-    clearAll();
-  }
+    ~CSinglyLinkedList() {
+      clearAll();
+    }
 
-  /*!\brief Typedef for getting the right iterator for the list
-   * */
-  typedef CIterator<T*,CSinglyLinkedListNode<void*> > Iterator;
+    /*!\brief Typedef for getting the right iterator for the list
+     * */
+    typedef CIterator<T *, CSinglyLinkedListNode<void *>> Iterator;
 
-  /*!\brief Add's the given object at the start of the singly linked list
-   *
-   * \param paElement the reference to the object to be added
-   */
-  inline void pushFront(T* const paElement)  {
-    mList.pushFront(paElement);
-  }
+    /*!\brief Add's the given object at the start of the singly linked list
+     *
+     * \param paElement the reference to the object to be added
+     */
+    inline void pushFront(T *const paElement) {
+      mList.pushFront(paElement);
+    }
 
-  /*!\brief Add's the given object at the end of the singly linked list
-   *
-   * \param paElement the reference to the object to be added
-   */
-  inline void pushBack(T* const paElement) {
-    mList.pushBack(paElement);
-  }
+    /*!\brief Add's the given object at the end of the singly linked list
+     *
+     * \param paElement the reference to the object to be added
+     */
+    inline void pushBack(T *const paElement) {
+      mList.pushBack(paElement);
+    }
 
-  /*!\brief Returns the element at first position without deleting it
-   *
-   */
-  inline const T* peekFront() const {
-    return (const T*) mList.peekFront();
-  }
+    /*!\brief Returns the element at first position without deleting it
+     *
+     */
+    inline const T *peekFront() const {
+      return (const T *) mList.peekFront();
+    }
 
-  /*!\brief Deletes the first object of the singly linked list
-   *
-   */
-  inline void popFront()  {
-    mList.popFront();
-  }
+    /*!\brief Deletes the first object of the singly linked list
+     *
+     */
+    inline void popFront() {
+      mList.popFront();
+    }
 
-  /*!\brief Deletes all objects in the singly linked list
-   */
-  inline void clearAll() {
-    mList.clearAll();
-  }
+    /*!\brief Deletes all objects in the singly linked list
+     */
+    inline void clearAll() {
+      mList.clearAll();
+    }
 
-  /*!\brief checks if the singly linked list is empty or not
-   *
-   * \return true if the list is empty, false if not
-   */
-  inline bool isEmpty() const {
-    return mList.isEmpty();
-  }
+    /*!\brief checks if the singly linked list is empty or not
+     *
+     * \return true if the list is empty, false if not
+     */
+    inline bool isEmpty() const {
+      return mList.isEmpty();
+    }
 
-  /*!\brief returns an iterator with it's current position set to the start of the singly linked list
-   *
-   * \return iterator on position FirstNode
-   */
-  inline const Iterator begin() const  {
-    return Iterator((mList.begin()).getPosition());
-  }
+    /*!\brief returns an iterator with it's current position set to the start of the singly linked list
+     *
+     * \return iterator on position FirstNode
+     */
+    inline const Iterator begin() const {
+      return Iterator((mList.begin()).getPosition());
+    }
 
-  /*!\brief returns an iterator with it's current position set to 0
-   *
-   * \return iterator with current position 0
-   */
-  inline const Iterator end() const {
-    return Iterator((mList.end()).getPosition());
-  }
+    /*!\brief returns an iterator with it's current position set to 0
+     *
+     * \return iterator with current position 0
+     */
+    inline const Iterator end() const {
+      return Iterator((mList.end()).getPosition());
+    }
 
-  inline const Iterator back() const {
-    return Iterator(mList.back().getPosition());
-  }
+    inline const Iterator back() const {
+      return Iterator(mList.back().getPosition());
+    }
 
-  /*!\brief erases the next node element after the position of the iterator
-   *
-   * \param it  an iterator set on the element before the element to delete
-   * \return Iterator set on the new next node element
-   */
-  const Iterator eraseAfter(Iterator& it) {
-    CSinglyLinkedList<void*>::Iterator itBuff(it.getPosition());
-    return Iterator((mList.eraseAfter(itBuff)).getPosition());
-  }
+    /*!\brief erases the next node element after the position of the iterator
+     *
+     * \param it  an iterator set on the element before the element to delete
+     * \return Iterator set on the new next node element
+     */
+    const Iterator eraseAfter(Iterator &it) {
+      CSinglyLinkedList<void *>::Iterator itBuff(it.getPosition());
+      return Iterator((mList.eraseAfter(itBuff)).getPosition());
+    }
 
-  void erase(T* paToDelete){
-    mList.erase(paToDelete);
-  }
-
+    void erase(T *paToDelete) {
+      mList.erase(paToDelete);
+    }
 };
-
 
 #endif /* CSINGLYLINKEDLIST_H_ */

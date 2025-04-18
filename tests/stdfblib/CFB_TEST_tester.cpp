@@ -13,13 +13,11 @@
  *******************************************************************************/
 #include "../../core/fbtests/fbtestfixture.h"
 
-
 USE_STRING_ID(CFB_TEST);
 
+struct CFB_TEST_TestFixture : public CFBTestFixtureBase {
 
-struct CFB_TEST_TestFixture : public CFBTestFixtureBase{
-
-    CFB_TEST_TestFixture() : CFBTestFixtureBase(STRID(CFB_TEST)){
+    CFB_TEST_TestFixture() : CFBTestFixtureBase(STRID(CFB_TEST)) {
       setInputData({&mInQI});
       setOutputData({&mOutSR});
       CFBTestFixtureBase::setup();
@@ -28,73 +26,71 @@ struct CFB_TEST_TestFixture : public CFBTestFixtureBase{
     CIEC_BOOL mInQI;
     CIEC_BOOL mOutSR;
 
-    bool checkBothOutputEvents(){
+    bool checkBothOutputEvents() {
       bool bResult = true;
-      if(0 != pullFirstChainEventID()){
+      if (0 != pullFirstChainEventID()) {
         bResult = false;
       }
-      if(1 != pullFirstChainEventID()){
+      if (1 != pullFirstChainEventID()) {
         bResult = false;
       }
-      if(!eventChainEmpty()){
+      if (!eventChainEmpty()) {
         bResult = false;
       }
       return bResult;
     }
-
 };
 
+BOOST_FIXTURE_TEST_SUITE(PermitTests, CFB_TEST_TestFixture)
 
-BOOST_FIXTURE_TEST_SUITE( PermitTests, CFB_TEST_TestFixture)
+BOOST_AUTO_TEST_CASE(inhibitTest) {
+  mInQI = CIEC_BOOL(false);
+  for (unsigned int i = 0; i < 100; ++i) {
+    triggerEvent(0);
+    BOOST_CHECK(eventChainEmpty());
+    BOOST_CHECK_EQUAL(false, mOutSR);
+    triggerEvent(1);
+    BOOST_CHECK(eventChainEmpty());
+    BOOST_CHECK_EQUAL(false, mOutSR);
+  }
+}
 
-  BOOST_AUTO_TEST_CASE(inhibitTest){
-      mInQI = CIEC_BOOL(false);
-      for(unsigned int i = 0; i < 100; ++i){
-        triggerEvent(0);
-        BOOST_CHECK(eventChainEmpty());
-        BOOST_CHECK_EQUAL(false, mOutSR);
-        triggerEvent(1);
-        BOOST_CHECK(eventChainEmpty());
-        BOOST_CHECK_EQUAL(false, mOutSR);
-      }
-    }
+BOOST_AUTO_TEST_CASE(setTest) {
+  mInQI = CIEC_BOOL(true);
+  triggerEvent(0);
+  BOOST_CHECK(checkBothOutputEvents());
+  BOOST_CHECK_EQUAL(true, mOutSR);
+  for (unsigned int i = 0; i < 100; ++i) {
+    triggerEvent(0);
+    BOOST_CHECK(checkForSingleOutputEventOccurence(0));
+    BOOST_CHECK_EQUAL(true, mOutSR);
+  }
+}
 
-  BOOST_AUTO_TEST_CASE(setTest){
-      mInQI = CIEC_BOOL(true);
-      triggerEvent(0);
-      BOOST_CHECK(checkBothOutputEvents());
-      BOOST_CHECK_EQUAL(true, mOutSR);
-      for(unsigned int i = 0; i < 100; ++i){
-        triggerEvent(0);
-        BOOST_CHECK(checkForSingleOutputEventOccurence(0));
-        BOOST_CHECK_EQUAL(true, mOutSR);
-      }
-    }
+BOOST_AUTO_TEST_CASE(resetTest) {
+  mInQI = CIEC_BOOL(true);
+  triggerEvent(0);
+  clearEventChain();
+  triggerEvent(1);
+  BOOST_CHECK(checkBothOutputEvents());
+  BOOST_CHECK_EQUAL(false, mOutSR);
+  for (unsigned int i = 0; i < 100; ++i) {
+    triggerEvent(1);
+    BOOST_CHECK(checkForSingleOutputEventOccurence(0));
+    BOOST_CHECK_EQUAL(false, mOutSR);
+  }
+}
 
-  BOOST_AUTO_TEST_CASE(resetTest){
-      mInQI = CIEC_BOOL(true);
-      triggerEvent(0);
-      clearEventChain();
-      triggerEvent(1);
-      BOOST_CHECK(checkBothOutputEvents());
-      BOOST_CHECK_EQUAL(false, mOutSR);
-      for(unsigned int i = 0; i < 100; ++i){
-        triggerEvent(1);
-        BOOST_CHECK(checkForSingleOutputEventOccurence(0));
-        BOOST_CHECK_EQUAL(false, mOutSR);
-      }
-    }
-
-  BOOST_AUTO_TEST_CASE(toggleTest){
-      mInQI = CIEC_BOOL(true);
-      for(int i = 0; i < 1000; ++i){
-        triggerEvent(0);
-        BOOST_CHECK(checkBothOutputEvents());
-        BOOST_CHECK_EQUAL(true, mOutSR);
-        triggerEvent(1);
-        BOOST_CHECK(checkBothOutputEvents());
-        BOOST_CHECK_EQUAL(false, mOutSR);
-      }
-    }
+BOOST_AUTO_TEST_CASE(toggleTest) {
+  mInQI = CIEC_BOOL(true);
+  for (int i = 0; i < 1000; ++i) {
+    triggerEvent(0);
+    BOOST_CHECK(checkBothOutputEvents());
+    BOOST_CHECK_EQUAL(true, mOutSR);
+    triggerEvent(1);
+    BOOST_CHECK(checkBothOutputEvents());
+    BOOST_CHECK_EQUAL(false, mOutSR);
+  }
+}
 
 BOOST_AUTO_TEST_SUITE_END()

@@ -17,11 +17,11 @@
 
 class CrcXThread : public forte::arch::CThreadBase<RX_HANDLE, 0, CrcXThread> {
   public:
-
     /*! \brief Constructor of the Thread class
      *
      *  Does all the necessary steps in order to get the thread running with the start()-method
-     *  @param paStackSize the Size in bytes of the stack the thread is allowed to use. 128 elements is the minimum, and each element has 4 bytes. A 0 sets the size to the minimum
+     *  @param paStackSize the Size in bytes of the stack the thread is allowed to use. 128 elements is the minimum, and
+     * each element has 4 bytes. A 0 sets the size to the minimum
      */
     explicit CrcXThread(long paStackSize = (300 * 4));
 
@@ -42,7 +42,6 @@ class CrcXThread : public forte::arch::CThreadBase<RX_HANDLE, 0, CrcXThread> {
     static void deleteThread(RX_HANDLE paThreadHandle);
 
   private:
-
     /*! \brief Instance defined for the task
      *
      *  Increment task number to identify the different tasks.
@@ -62,11 +61,8 @@ class CrcXThread : public forte::arch::CThreadBase<RX_HANDLE, 0, CrcXThread> {
     static void threadFunction(void *paArguments);
 
     virtual TThreadHandleType createThread(long paStackSize);
-
 };
 
-
-typedef CrcXThread CThread;  //allows that doxygen can generate better documentation
+typedef CrcXThread CThread; // allows that doxygen can generate better documentation
 
 #endif /*FORTE_THREAD_H_*/
-

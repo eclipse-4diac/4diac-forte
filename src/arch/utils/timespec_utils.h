@@ -14,11 +14,12 @@
 #ifndef SRC_ARCH_UTILS_TIMESPEC_UTILS_H_
 #define SRC_ARCH_UTILS_TIMESPEC_UTILS_H_
 
-void timespecSub(const struct timespec *const minuend, const struct timespec *const subtrahend, struct timespec *const result);
+void timespecSub(const struct timespec *const minuend,
+                 const struct timespec *const subtrahend,
+                 struct timespec *const result);
 
 void timespecAdd(const struct timespec *const start, const struct timespec *const end, struct timespec *const result);
 
 bool timespecLessThan(const struct timespec *const start, const struct timespec *const end);
-
 
 #endif /* SRC_ARCH_UTILS_TIMESPEC_UTILS_H_ */

@@ -12,8 +12,7 @@
 #ifndef GENFORTEALLOC_FORTEALLOC_H_
 #define GENFORTEALLOC_FORTEALLOC_H_
 
-//If generic malloc and free are to be used
+// If generic malloc and free are to be used
 #include "../../../genfortealloc.h"
-
 
 #endif /* GENFORTEALLOC_FORTEALLOC_H_ */

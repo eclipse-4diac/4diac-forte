@@ -35,7 +35,6 @@ USE_STRING_ID(STATUS);
 USE_STRING_ID(UINT);
 USE_STRING_ID(WSTRING);
 
-
 #include "PLCnextBusAdapter.h"
 #include "forte_uint.h"
 #include "iec61131_functions.h"
@@ -61,18 +60,30 @@ const TForteInt16 FORTE_PLCnextMaster::scmEOWithIndexes[] = {0, 3};
 const CStringDictionary::TStringId FORTE_PLCnextMaster::scmEventOutputNames[] = {STRID(INITO), STRID(IND)};
 const CStringDictionary::TStringId FORTE_PLCnextMaster::scmEventOutputTypeIds[] = {STRID(EInit), STRID(Event)};
 const SAdapterInstanceDef FORTE_PLCnextMaster::scmAdapterInstances[] = {
-  {STRID(PLCnextBusAdapter), STRID(BusAdapterOut), true}
-};
-const SFBInterfaceSpec FORTE_PLCnextMaster::scmFBInterfaceSpec = {
-  1, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,
-  2, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes,
-  2, scmDataInputNames, scmDataInputTypeIds,
-  2, scmDataOutputNames, scmDataOutputTypeIds,
-  0, nullptr,
-  1, scmAdapterInstances
-};
+    {STRID(PLCnextBusAdapter), STRID(BusAdapterOut), true}};
+const SFBInterfaceSpec FORTE_PLCnextMaster::scmFBInterfaceSpec = {1,
+                                                                  scmEventInputNames,
+                                                                  scmEventInputTypeIds,
+                                                                  scmEIWith,
+                                                                  scmEIWithIndexes,
+                                                                  2,
+                                                                  scmEventOutputNames,
+                                                                  scmEventOutputTypeIds,
+                                                                  scmEOWith,
+                                                                  scmEOWithIndexes,
+                                                                  2,
+                                                                  scmDataInputNames,
+                                                                  scmDataInputTypeIds,
+                                                                  2,
+                                                                  scmDataOutputNames,
+                                                                  scmDataOutputTypeIds,
+                                                                  0,
+                                                                  nullptr,
+                                                                  1,
+                                                                  scmAdapterInstances};
 
-FORTE_PLCnextMaster::FORTE_PLCnextMaster(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_PLCnextMaster::FORTE_PLCnextMaster(const CStringDictionary::TStringId paInstanceNameId,
+                                         forte::core::CFBContainer &paContainer) :
     forte::core::io::IOConfigFBMultiMaster(paContainer, scmFBInterfaceSpec, paInstanceNameId),
     var_QI(0_BOOL),
     var_SlaveUpdateInterval(25_UINT),
@@ -84,11 +95,12 @@ FORTE_PLCnextMaster::FORTE_PLCnextMaster(const CStringDictionary::TStringId paIn
     conn_QI(nullptr),
     conn_SlaveUpdateInterval(nullptr),
     conn_QO(*this, 0, var_QO),
-    conn_STATUS(*this, 1, var_STATUS) {
-};
+    conn_STATUS(*this, 1, var_STATUS) {};
 
 bool FORTE_PLCnextMaster::initialize() {
-  if(!var_BusAdapterOut.initialize()) { return false; }
+  if (!var_BusAdapterOut.initialize()) {
+    return false;
+  }
   var_BusAdapterOut.setParentFB(this, 0);
   return CFunctionBlock::initialize();
 }
@@ -101,19 +113,18 @@ void FORTE_PLCnextMaster::setInitialValues() {
 }
 
 void FORTE_PLCnextMaster::readInputData(const TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventINITID: {
       readData(0, var_QI, conn_QI);
       readData(1, var_SlaveUpdateInterval, conn_SlaveUpdateInterval);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 void FORTE_PLCnextMaster::writeOutputData(const TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventINITOID: {
       writeData(0, var_QO, conn_QO);
       writeData(1, var_STATUS, conn_STATUS);
@@ -124,13 +135,12 @@ void FORTE_PLCnextMaster::writeOutputData(const TEventID paEIID) {
       writeData(1, var_STATUS, conn_STATUS);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 CIEC_ANY *FORTE_PLCnextMaster::getDI(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_QI;
     case 1: return &var_SlaveUpdateInterval;
   }
@@ -138,7 +148,7 @@ CIEC_ANY *FORTE_PLCnextMaster::getDI(const size_t paIndex) {
 }
 
 CIEC_ANY *FORTE_PLCnextMaster::getDO(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_QO;
     case 1: return &var_STATUS;
   }
@@ -146,14 +156,14 @@ CIEC_ANY *FORTE_PLCnextMaster::getDO(const size_t paIndex) {
 }
 
 CAdapter *FORTE_PLCnextMaster::getAdapterUnchecked(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_BusAdapterOut;
   }
   return nullptr;
 }
 
 CEventConnection *FORTE_PLCnextMaster::getEOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_INITO;
     case 1: return &conn_IND;
   }
@@ -161,7 +171,7 @@ CEventConnection *FORTE_PLCnextMaster::getEOConUnchecked(const TPortId paIndex) 
 }
 
 CDataConnection **FORTE_PLCnextMaster::getDIConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_QI;
     case 1: return &conn_SlaveUpdateInterval;
   }
@@ -169,19 +179,19 @@ CDataConnection **FORTE_PLCnextMaster::getDIConUnchecked(const TPortId paIndex) 
 }
 
 CDataConnection *FORTE_PLCnextMaster::getDOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_QO;
     case 1: return &conn_STATUS;
   }
   return nullptr;
 }
 
-forte::core::io::IODeviceController* FORTE_PLCnextMaster::createDeviceController(CDeviceExecution& paDeviceExecution) {
-    return new PLCnextDeviceController(paDeviceExecution);
+forte::core::io::IODeviceController *FORTE_PLCnextMaster::createDeviceController(CDeviceExecution &paDeviceExecution) {
+  return new PLCnextDeviceController(paDeviceExecution);
 }
 
 void FORTE_PLCnextMaster::setConfig() {
-    PLCnextDeviceController::PLCnextConfig config;
-    config.updateInterval = st_SlaveUpdateInterval();
-    getDeviceController()->setConfig(&config);
+  PLCnextDeviceController::PLCnextConfig config;
+  config.updateInterval = st_SlaveUpdateInterval();
+  getDeviceController()->setConfig(&config);
 }

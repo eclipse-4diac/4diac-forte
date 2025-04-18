@@ -11,11 +11,10 @@
  *    Thomas Strasser, Ingomar Müller, Alois Zoitl,
  *    Ingo Hegny, Monika Wenger
  *      - initial implementation and rework communication infrastructure
-  *******************************************************************************/
+ *******************************************************************************/
 #include "forte_dword.h"
 
 USE_STRING_ID(DWORD);
-
 
 DEFINE_FIRMWARE_DATATYPE(DWORD, STRID(DWORD))
 

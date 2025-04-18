@@ -16,16 +16,12 @@
 #include "esp_heap_caps.h"
 #include "datatype.h"
 
-inline
-void forte_free(void *paData) {
+inline void forte_free(void *paData) {
   free(paData);
-
 }
 
-inline
-void *forte_malloc(size_t paSize) {
+inline void *forte_malloc(size_t paSize) {
   return heap_caps_malloc(paSize, MALLOC_CAP_INTERNAL);
-
 }
 
 #endif /* ESP32_RAM_FORTEALLOC_H_ */

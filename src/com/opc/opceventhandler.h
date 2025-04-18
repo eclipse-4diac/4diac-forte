@@ -24,14 +24,14 @@
 
 #include "ICmd.h"
 
-class COpcEventHandler : public CExternalEventHandler, private CThread{
+class COpcEventHandler : public CExternalEventHandler, private CThread {
     DECLARE_HANDLER(COpcEventHandler)
   public:
     typedef int TCallbackDescriptor;
 
     void sendCommand(ICmd *paCmd);
 
-    TCallbackDescriptor addComCallback(forte::com_infra::CComLayer* paComCallback);
+    TCallbackDescriptor addComCallback(forte::com_infra::CComLayer *paComCallback);
     void removeComCallback(TCallbackDescriptor paCallbackDesc);
 
     void executeComCallback(TCallbackDescriptor paCallbackDesc);
@@ -53,7 +53,7 @@ class COpcEventHandler : public CExternalEventHandler, private CThread{
 
       if (!mCommandQueue.isEmpty()) {
         DEVLOG_INFO("COpcEventHandler: command queue not empty\n");
-        resumeSelfSuspend(); //wake-up, execute all commands in queue and continue
+        resumeSelfSuspend(); // wake-up, execute all commands in queue and continue
       }
 
       mStateSemaphore.timedWait(100000000); // wait 100ms to back wake-up
@@ -66,12 +66,12 @@ class COpcEventHandler : public CExternalEventHandler, private CThread{
     }
 
     void setPriority(int) override {
-      //currently we are doing nothing here.
-      //TODO We should adjust the thread priority.
+      // currently we are doing nothing here.
+      // TODO We should adjust the thread priority.
     }
 
     int getPriority() const override {
-      //the same as for setPriority
+      // the same as for setPriority
       return 0;
     }
 
@@ -83,13 +83,13 @@ class COpcEventHandler : public CExternalEventHandler, private CThread{
     void run() override;
 
   private:
-    ICmd* getNextCommand();
+    ICmd *getNextCommand();
     void clearCommandQueue();
     void executeCommandQueue();
 
-    struct TComContainer{
+    struct TComContainer {
         TCallbackDescriptor mCallbackDesc;
-        forte::com_infra::CComLayer* mCallback;
+        forte::com_infra::CComLayer *mCallback;
     };
 
     typedef std::vector<TComContainer> TCallbackList;
@@ -101,7 +101,7 @@ class COpcEventHandler : public CExternalEventHandler, private CThread{
     static forte::arch::CSemaphore mStateSemaphore;
     static bool mIsSemaphoreEmpty;
 
-    typedef CSinglyLinkedList<ICmd*> TCommandQueue;
+    typedef CSinglyLinkedList<ICmd *> TCommandQueue;
     TCommandQueue mCommandQueue;
 };
 

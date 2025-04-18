@@ -1,12 +1,12 @@
-/************************************************************************* 
- *** Copyright (c) 2018 TU Vienna/ACIN  
- ***  
- *** This program and the accompanying materials are made  
- *** available under the terms of the Eclipse Public License 2.0  
- *** which is available at https://www.eclipse.org/legal/epl-2.0/  
- ***  
- *** SPDX-License-Identifier: EPL-2.0  
- *** 
+/*************************************************************************
+ *** Copyright (c) 2018 TU Vienna/ACIN
+ ***
+ *** This program and the accompanying materials are made
+ *** available under the terms of the Eclipse Public License 2.0
+ *** which is available at https://www.eclipse.org/legal/epl-2.0/
+ ***
+ *** SPDX-License-Identifier: EPL-2.0
+ ***
  *** FORTE Library Element
  ***
  *** This file was generated using the 4DIAC FORTE Export Filter V1.0.x NG!
@@ -32,7 +32,6 @@ USE_STRING_ID(STATUS);
 USE_STRING_ID(STRING);
 USE_STRING_ID(WSTRING);
 
-
 #include "iec61131_functions.h"
 #include "forte_array_common.h"
 #include "forte_array.h"
@@ -45,26 +44,41 @@ DEFINE_FIRMWARE_FB(FORTE_SET_LOCAL_ADS_ADDRESS, STRID(SET_LOCAL_ADS_ADDRESS))
 
 const CStringDictionary::TStringId FORTE_SET_LOCAL_ADS_ADDRESS::scmDataInputNames[] = {STRID(QI), STRID(PARAMS)};
 const CStringDictionary::TStringId FORTE_SET_LOCAL_ADS_ADDRESS::scmDataInputTypeIds[] = {STRID(BOOL), STRID(STRING)};
-const CStringDictionary::TStringId FORTE_SET_LOCAL_ADS_ADDRESS::scmDataOutputNames[] = {STRID(QO), STRID(STATUS), STRID(LOCAL_ADS_ADDRESS)};
-const CStringDictionary::TStringId FORTE_SET_LOCAL_ADS_ADDRESS::scmDataOutputTypeIds[] = {STRID(BOOL), STRID(WSTRING), STRID(STRING)};
+const CStringDictionary::TStringId FORTE_SET_LOCAL_ADS_ADDRESS::scmDataOutputNames[] = {STRID(QO), STRID(STATUS),
+                                                                                        STRID(LOCAL_ADS_ADDRESS)};
+const CStringDictionary::TStringId FORTE_SET_LOCAL_ADS_ADDRESS::scmDataOutputTypeIds[] = {STRID(BOOL), STRID(WSTRING),
+                                                                                          STRID(STRING)};
 const TDataIOID FORTE_SET_LOCAL_ADS_ADDRESS::scmEIWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_SET_LOCAL_ADS_ADDRESS::scmEIWithIndexes[] = {0};
 const CStringDictionary::TStringId FORTE_SET_LOCAL_ADS_ADDRESS::scmEventInputNames[] = {STRID(INIT)};
 const CStringDictionary::TStringId FORTE_SET_LOCAL_ADS_ADDRESS::scmEventInputTypeIds[] = {STRID(EInit)};
 const TDataIOID FORTE_SET_LOCAL_ADS_ADDRESS::scmEOWith[] = {0, 1, 2, scmWithListDelimiter};
-const TForteInt16 FORTE_SET_LOCAL_ADS_ADDRESS::scmEOWithIndexes[] = { 0, -1 };
+const TForteInt16 FORTE_SET_LOCAL_ADS_ADDRESS::scmEOWithIndexes[] = {0, -1};
 const CStringDictionary::TStringId FORTE_SET_LOCAL_ADS_ADDRESS::scmEventOutputNames[] = {STRID(INITO)};
 const CStringDictionary::TStringId FORTE_SET_LOCAL_ADS_ADDRESS::scmEventOutputTypeIds[] = {STRID(EInit)};
-const SFBInterfaceSpec FORTE_SET_LOCAL_ADS_ADDRESS::scmFBInterfaceSpec = {
-  1, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,
-  1, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes,
-  2, scmDataInputNames, scmDataInputTypeIds,
-  3, scmDataOutputNames, scmDataOutputTypeIds,
-  0, nullptr,
-  0, nullptr
-};
+const SFBInterfaceSpec FORTE_SET_LOCAL_ADS_ADDRESS::scmFBInterfaceSpec = {1,
+                                                                          scmEventInputNames,
+                                                                          scmEventInputTypeIds,
+                                                                          scmEIWith,
+                                                                          scmEIWithIndexes,
+                                                                          1,
+                                                                          scmEventOutputNames,
+                                                                          scmEventOutputTypeIds,
+                                                                          scmEOWith,
+                                                                          scmEOWithIndexes,
+                                                                          2,
+                                                                          scmDataInputNames,
+                                                                          scmDataInputTypeIds,
+                                                                          3,
+                                                                          scmDataOutputNames,
+                                                                          scmDataOutputTypeIds,
+                                                                          0,
+                                                                          nullptr,
+                                                                          0,
+                                                                          nullptr};
 
-FORTE_SET_LOCAL_ADS_ADDRESS::FORTE_SET_LOCAL_ADS_ADDRESS(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_SET_LOCAL_ADS_ADDRESS::FORTE_SET_LOCAL_ADS_ADDRESS(const CStringDictionary::TStringId paInstanceNameId,
+                                                         forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId),
     var_QI(0_BOOL),
     var_PARAMS(""_STRING),
@@ -76,8 +90,7 @@ FORTE_SET_LOCAL_ADS_ADDRESS::FORTE_SET_LOCAL_ADS_ADDRESS(const CStringDictionary
     conn_PARAMS(nullptr),
     conn_QO(*this, 0, var_QO),
     conn_STATUS(*this, 1, var_STATUS),
-    conn_LOCAL_ADS_ADDRESS(*this, 2, var_LOCAL_ADS_ADDRESS) {
-};
+    conn_LOCAL_ADS_ADDRESS(*this, 2, var_LOCAL_ADS_ADDRESS) {};
 
 void FORTE_SET_LOCAL_ADS_ADDRESS::setInitialValues() {
   var_QI = 0_BOOL;
@@ -88,27 +101,27 @@ void FORTE_SET_LOCAL_ADS_ADDRESS::setInitialValues() {
 }
 
 void FORTE_SET_LOCAL_ADS_ADDRESS::executeEvent(const TEventID paEIID, CEventChainExecutionThread *const paECET) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventINITID:
       AmsNetId desiredAddress(std::string(PARAMS().getStorage().c_str()));
-      if(QI()){
+      if (QI()) {
         AdsSetLocalAddress(desiredAddress);
-        AmsAddr actualAddress = { 0 };
+        AmsAddr actualAddress = {0};
         long port = AdsPortOpenEx();
         AdsGetLocalAddressEx(port, &actualAddress);
-        if(actualAddress.netId == desiredAddress){
+        if (actualAddress.netId == desiredAddress) {
           STATUS() = CIEC_WSTRING("OK");
           QO() = CIEC_BOOL(true);
           std::stringstream amsNetId;
-          amsNetId << std::to_string(actualAddress.netId.b[0]) << "." + std::to_string(actualAddress.netId.b[1]) << "." << std::to_string(actualAddress.netId.b[2]) << "." << std::to_string(actualAddress.netId.b[3]) << "." << std::to_string(actualAddress.netId.b[4]) << "." << std::to_string(actualAddress.netId.b[5]);
+          amsNetId << std::to_string(actualAddress.netId.b[0]) << "." + std::to_string(actualAddress.netId.b[1]) << "."
+                   << std::to_string(actualAddress.netId.b[2]) << "." << std::to_string(actualAddress.netId.b[3]) << "."
+                   << std::to_string(actualAddress.netId.b[4]) << "." << std::to_string(actualAddress.netId.b[5]);
           LOCAL_ADS_ADDRESS() = CIEC_STRING(amsNetId.str().c_str());
-        }
-        else{
+        } else {
           STATUS() = CIEC_WSTRING("NOT OK");
           QO() = CIEC_BOOL(false);
         }
-      }
-      else{
+      } else {
         QO() = CIEC_BOOL(false);
       }
 
@@ -118,31 +131,29 @@ void FORTE_SET_LOCAL_ADS_ADDRESS::executeEvent(const TEventID paEIID, CEventChai
 }
 
 void FORTE_SET_LOCAL_ADS_ADDRESS::readInputData(const TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventINITID: {
       readData(0, var_QI, conn_QI);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 void FORTE_SET_LOCAL_ADS_ADDRESS::writeOutputData(const TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventINITOID: {
       writeData(0, var_QO, conn_QO);
       writeData(1, var_STATUS, conn_STATUS);
       writeData(2, var_LOCAL_ADS_ADDRESS, conn_LOCAL_ADS_ADDRESS);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 CIEC_ANY *FORTE_SET_LOCAL_ADS_ADDRESS::getDI(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_QI;
     case 1: return &var_PARAMS;
   }
@@ -150,7 +161,7 @@ CIEC_ANY *FORTE_SET_LOCAL_ADS_ADDRESS::getDI(const size_t paIndex) {
 }
 
 CIEC_ANY *FORTE_SET_LOCAL_ADS_ADDRESS::getDO(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_QO;
     case 1: return &var_STATUS;
     case 2: return &var_LOCAL_ADS_ADDRESS;
@@ -159,14 +170,14 @@ CIEC_ANY *FORTE_SET_LOCAL_ADS_ADDRESS::getDO(const size_t paIndex) {
 }
 
 CEventConnection *FORTE_SET_LOCAL_ADS_ADDRESS::getEOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_INITO;
   }
   return nullptr;
 }
 
 CDataConnection **FORTE_SET_LOCAL_ADS_ADDRESS::getDIConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_QI;
     case 1: return &conn_PARAMS;
   }
@@ -174,7 +185,7 @@ CDataConnection **FORTE_SET_LOCAL_ADS_ADDRESS::getDIConUnchecked(const TPortId p
 }
 
 CDataConnection *FORTE_SET_LOCAL_ADS_ADDRESS::getDOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_QO;
     case 1: return &conn_STATUS;
     case 2: return &conn_LOCAL_ADS_ADDRESS;

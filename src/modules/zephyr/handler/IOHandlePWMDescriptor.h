@@ -5,7 +5,7 @@
  http://www.eclipse.org/legal/epl-2.0.
 
  SPDX-License-Identifier: EPL-2.0
- 
+
  Contributors:
   Dirk Kaar - initial API and implementation and/or initial documentation
  ************************************************************************************/
@@ -17,16 +17,18 @@
 #include <zephyr/drivers/pwm.h>
 
 class IOHandlePWMDescriptor : public IOHandleDescriptor {
-public:
-  IOHandlePWMDescriptor(std::string const &paId, const pwm_dt_spec* paPwmSpec) :
-    IOHandleDescriptor(paId, forte::core::io::IOMapper::In, Pwm), mPwmSpec(paPwmSpec) {}
+  public:
+    IOHandlePWMDescriptor(std::string const &paId, const pwm_dt_spec *paPwmSpec) :
+        IOHandleDescriptor(paId, forte::core::io::IOMapper::In, Pwm),
+        mPwmSpec(paPwmSpec) {
+    }
 
-  const pwm_dt_spec* getPwmSpec() const {
-    return mPwmSpec;
-  }
+    const pwm_dt_spec *getPwmSpec() const {
+      return mPwmSpec;
+    }
 
-protected:
-  const pwm_dt_spec* mPwmSpec;
+  protected:
+    const pwm_dt_spec *mPwmSpec;
 };
 
 #endif // IOHANDLEPWMDESCRIPTOR_H

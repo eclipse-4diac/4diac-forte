@@ -5,26 +5,27 @@
  http://www.eclipse.org/legal/epl-2.0.
 
  SPDX-License-Identifier: EPL-2.0
- 
+
  Contributors:
   Dirk Kaar - initial API and implementation and/or initial documentation
  ************************************************************************************/
 
 #include "IOHandleADC.h"
 #include <forte_dword.h>
- 
-IOHandleADC::IOHandleADC(IODeviceController *paDeviceCtrl, const adc_dt_spec* paADCSpec) :
-  IOHandle(paDeviceCtrl, IOMapper::In, CIEC_ANY::e_DWORD), mADCSpec(paADCSpec) {
+
+IOHandleADC::IOHandleADC(IODeviceController *paDeviceCtrl, const adc_dt_spec *paADCSpec) :
+    IOHandle(paDeviceCtrl, IOMapper::In, CIEC_ANY::e_DWORD),
+    mADCSpec(paADCSpec) {
   int ret = adc_channel_setup_dt(getADCSpec());
   if (ret < 0) {
-    DEVLOG_ERROR("IOHandleADC::IOHandleADC: error %d, failed to configure %s channel %d\n",
-      ret, getADCSpec()->dev->name, getADCSpec()->channel_id);
+    DEVLOG_ERROR("IOHandleADC::IOHandleADC: error %d, failed to configure %s channel %d\n", ret,
+                 getADCSpec()->dev->name, getADCSpec()->channel_id);
     return;
   }
   ret = adc_sequence_init_dt(getADCSpec(), &mSequence);
   if (ret < 0) {
-    DEVLOG_ERROR("IOHandleADC::get: error %d, failed to initialize sequence %s channel %d\n",
-      ret, getADCSpec()->dev->name, getADCSpec()->channel_id);
+    DEVLOG_ERROR("IOHandleADC::get: error %d, failed to initialize sequence %s channel %d\n", ret,
+                 getADCSpec()->dev->name, getADCSpec()->channel_id);
     return;
   }
 #ifdef CONFIG_ADC_ASYNC
@@ -39,9 +40,7 @@ IOHandleADC::~IOHandleADC() {
 #ifdef CONFIG_ADC_ASYNC
   if (mState == SAMPLING || mState == NEWDATA) {
     struct k_poll_event events[1] = {
-      K_POLL_EVENT_INITIALIZER(K_POLL_TYPE_SIGNAL,
-      K_POLL_MODE_NOTIFY_ONLY,
-      &mSamplingSignal),
+        K_POLL_EVENT_INITIALIZER(K_POLL_TYPE_SIGNAL, K_POLL_MODE_NOTIFY_ONLY, &mSamplingSignal),
     };
     k_poll(events, 1, K_FOREVER);
   }
@@ -87,7 +86,7 @@ void IOHandleADC::get(CIEC_ANY &paState) {
 }
 
 void IOHandleADC::set(const CIEC_ANY &paState) {
-  (void)paState;
+  (void) paState;
   DEVLOG_ERROR("IOHandleADC::set\n");
 }
 
@@ -107,8 +106,8 @@ bool IOHandleADC::equal() {
     if (ret == 0) {
       mState = SAMPLING;
     } else {
-      DEVLOG_ERROR("IOHandleADC::get: error %d, failed to async read %s channel %d\n",
-        ret, getADCSpec()->dev->name, getADCSpec()->channel_id);
+      DEVLOG_ERROR("IOHandleADC::get: error %d, failed to async read %s channel %d\n", ret, getADCSpec()->dev->name,
+                   getADCSpec()->channel_id);
       // to definitely repeat next try
       k_poll_signal_reset(&mSamplingSignal);
     }
@@ -117,8 +116,8 @@ bool IOHandleADC::equal() {
 #else // CONFIG_ADC_ASYNC
   int ret = adc_read_dt(getADCSpec(), &mSequence);
   if (ret < 0) {
-    DEVLOG_ERROR("IOHandleADC::get: error %d, failed to read %s channel %d\n",
-      ret, getADCSpec()->dev->name, getADCSpec()->channel_id);
+    DEVLOG_ERROR("IOHandleADC::get: error %d, failed to read %s channel %d\n", ret, getADCSpec()->dev->name,
+                 getADCSpec()->channel_id);
     return true;
   } else {
     mState = NEWDATA;
@@ -129,21 +128,20 @@ bool IOHandleADC::equal() {
 
 #ifdef CONFIG_ADC_ASYNC
 adc_action IOHandleADC::sampling_callback(const struct device *paDev,
-  const struct adc_sequence *paSequence, uint16_t paSamplingIndex) {
-  if (paSamplingIndex == OversamplingCount - 1)
-  {
-    auto self = static_cast<IOHandleADC*>(paSequence->options->user_data);
+                                          const struct adc_sequence *paSequence,
+                                          uint16_t paSamplingIndex) {
+  if (paSamplingIndex == OversamplingCount - 1) {
+    auto self = static_cast<IOHandleADC *>(paSequence->options->user_data);
     k_work_submit(&self->mADCWorkCtx.work);
   }
   return ADC_ACTION_CONTINUE;
 }
 
-void IOHandleADC::work_callback(struct k_work* item) {
+void IOHandleADC::work_callback(struct k_work *item) {
   DEVLOG_DEBUG("IOHandleADC::work_callback\n");
-  adc_work_context_t* ctx = CONTAINER_OF(item, adc_work_context_t, work);
+  adc_work_context_t *ctx = CONTAINER_OF(item, adc_work_context_t, work);
   // Use this to notify IOHandle of asynchronous value changes, i.e. IRQs
   ctx->self->mState = NEWDATA;
   ctx->self->onChange();
 }
 #endif // CONFIG_ADC_ASYNC
-

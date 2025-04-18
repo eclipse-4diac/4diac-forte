@@ -23,7 +23,6 @@
 #include "Arp/System/Rsc/ServiceManager.hpp"
 #include "Arp/Device/Interface/Services/IDeviceStatusService.hpp"
 
-
 using namespace Arp;
 using namespace Arp::System::Rsc;
 using namespace Arp::Device::Interface::Services;
@@ -31,7 +30,6 @@ using namespace Arp::System::Commons::Diagnostics::Logging;
 
 class DeviceStatus {
   public:
-
     /*
      * PLCnext DeviceStatus:
      * started: if PLC is able to handle a connection
@@ -40,12 +38,13 @@ class DeviceStatus {
     static volatile bool started;
     static volatile bool ready;
 
-    static bool startup(int, char*);
+    static bool startup(int, char *);
     static bool isReady();
     static void plcCallbackOperationHandler(enum PlcOperation operation);
 
   private:
-    DeviceStatus() {}
+    DeviceStatus() {
+    }
 };
 
 #endif /* SRC_MODULES_PLCNEXT_DEVICESTATUS_H_ */

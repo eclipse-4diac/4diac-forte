@@ -17,8 +17,10 @@
 #include "core/ecetFactory.h"
 #include "core/trace/internal/flexibleTracer.h"
 
-ReplayDevice::ReplayDevice(const std::string &paMGRID) : 
-  RMT_DEV(setInitialState(paMGRID)), mOpcuaMgr(*this), mReplayMgr(*this, mOpcuaMgr) {
+ReplayDevice::ReplayDevice(const std::string &paMGRID) :
+    RMT_DEV(setInitialState(paMGRID)),
+    mOpcuaMgr(*this),
+    mReplayMgr(*this, mOpcuaMgr) {
 }
 
 int ReplayDevice::startDevice() {
@@ -27,13 +29,13 @@ int ReplayDevice::startDevice() {
     return -1;
   }
 
-  if(mOpcuaMgr.initialize() != EMGMResponse::Ready){
+  if (mOpcuaMgr.initialize() != EMGMResponse::Ready) {
     return -2;
   }
   return 0;
 }
 
-void ReplayDevice::startControlling(){
+void ReplayDevice::startControlling() {
   mAlreadyControlled = true;
 }
 
@@ -42,13 +44,13 @@ EMGMResponse ReplayDevice::executeMGMCommand(forte::core::SManagementCMD &paComm
   // the replay algorithm starts controlling the device
   // this is meant to not receive the Start command from the IDE which should be
   // handle only after the deviceReplayer was created
-  if(paCommand.mCMD == EMGMCommandType::Start && !mAlreadyControlled){
+  if (paCommand.mCMD == EMGMCommandType::Start && !mAlreadyControlled) {
     return EMGMResponse::Ready;
   }
   return CDevice::executeMGMCommand(paCommand);
 }
 
-const std::string& ReplayDevice::setInitialState(const std::string& paMGRID) {
+const std::string &ReplayDevice::setInitialState(const std::string &paMGRID) {
   TimerHandlerFactory::setTimeHandlerNameToCreate(TimerHandlerFactory::AvailableTimers::fakeTimer);
   EcetFactory::setEcetToCreate(EcetFactory::AvailableEcets::fake);
   CFlexibleTracer::setTracer(CFlexibleTracer::AvailableTracers::Internal);

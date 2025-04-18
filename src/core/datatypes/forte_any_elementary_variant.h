@@ -48,57 +48,59 @@
 #include "forte_wstring.h"
 
 using TIecAnyElementaryVariantType = std::variant<
-// ANY_ELEMENTARY
-//  ANY_MAGNITUDE
-//   ANY_NUM
-//    ANY_INTEGER
-//     ANY_SIGNED
-        CIEC_SINT,
-        CIEC_INT,
-        CIEC_DINT,
-        CIEC_LINT,
-//     ANY_UNSINED
-        CIEC_USINT,
-        CIEC_UINT,
-        CIEC_UDINT,
-        CIEC_ULINT,
-//    ANY_REAL
-        CIEC_REAL,
-        CIEC_LREAL,
-//   ANY_DURATION
-        CIEC_TIME,
-        CIEC_LTIME,
-//  ANY_BIT
-        CIEC_BOOL,
-        CIEC_BYTE,
-        CIEC_WORD,
-        CIEC_DWORD,
-        CIEC_LWORD,
-//  ANY_CHARS
-//   ANY_CHAR
-        CIEC_CHAR,
-        CIEC_WCHAR,
-//   ANY_STRING
-        CIEC_STRING,
-        CIEC_WSTRING,
-//  ANY_DATE
-        CIEC_DATE,
-        CIEC_LDATE,
-        CIEC_DATE_AND_TIME,
-        CIEC_LDATE_AND_TIME,
-        CIEC_TIME_OF_DAY,
-        CIEC_LTIME_OF_DAY
-// end
->;
+    // ANY_ELEMENTARY
+    //  ANY_MAGNITUDE
+    //   ANY_NUM
+    //    ANY_INTEGER
+    //     ANY_SIGNED
+    CIEC_SINT,
+    CIEC_INT,
+    CIEC_DINT,
+    CIEC_LINT,
+    //     ANY_UNSINED
+    CIEC_USINT,
+    CIEC_UINT,
+    CIEC_UDINT,
+    CIEC_ULINT,
+    //    ANY_REAL
+    CIEC_REAL,
+    CIEC_LREAL,
+    //   ANY_DURATION
+    CIEC_TIME,
+    CIEC_LTIME,
+    //  ANY_BIT
+    CIEC_BOOL,
+    CIEC_BYTE,
+    CIEC_WORD,
+    CIEC_DWORD,
+    CIEC_LWORD,
+    //  ANY_CHARS
+    //   ANY_CHAR
+    CIEC_CHAR,
+    CIEC_WCHAR,
+    //   ANY_STRING
+    CIEC_STRING,
+    CIEC_WSTRING,
+    //  ANY_DATE
+    CIEC_DATE,
+    CIEC_LDATE,
+    CIEC_DATE_AND_TIME,
+    CIEC_LDATE_AND_TIME,
+    CIEC_TIME_OF_DAY,
+    CIEC_LTIME_OF_DAY
+    // end
+    >;
 
 class CIEC_ANY_ELEMENTARY_VARIANT : public CIEC_ANY_ELEMENTARY, public TIecAnyElementaryVariantType {
-DECLARE_FIRMWARE_DATATYPE(ANY_ELEMENTARY_VARIANT)
-public:
+    DECLARE_FIRMWARE_DATATYPE(ANY_ELEMENTARY_VARIANT)
+  public:
     using TIecAnyElementaryVariantType::variant;
     using TIecAnyElementaryVariantType::operator=;
-    template<class...> static inline constexpr bool always_false_v = false;
+    template<class...>
+    static inline constexpr bool always_false_v = false;
 
-    CIEC_ANY_ELEMENTARY_VARIANT(const CIEC_ANY_ELEMENTARY_VARIANT &paVal) : CIEC_ANY_ELEMENTARY(), variant(paVal) {}
+    CIEC_ANY_ELEMENTARY_VARIANT(const CIEC_ANY_ELEMENTARY_VARIANT &paVal) : CIEC_ANY_ELEMENTARY(), variant(paVal) {
+    }
 
     CIEC_ANY_ELEMENTARY_VARIANT(const CIEC_ANY_ELEMENTARY &paVal) {
       setValue(paVal.unwrap());
@@ -124,7 +126,7 @@ public:
 
     int fromString(const char *paValue) override;
 
-    int toString(char* paValue, size_t paBufferSize) const override;
+    int toString(char *paValue, size_t paBufferSize) const override;
 
     size_t getToStringBufferSize() const override;
 
@@ -166,4 +168,3 @@ static_assert(std::is_constructible_v<CIEC_ANY_ELEMENTARY_VARIANT, const CIEC_AN
 static_assert(std::is_copy_assignable_v<CIEC_ANY_ELEMENTARY_VARIANT>);
 static_assert(std::is_assignable_v<CIEC_ANY_ELEMENTARY_VARIANT, const CIEC_ANY_ELEMENTARY &>);
 static_assert(std::is_destructible_v<CIEC_ANY_ELEMENTARY_VARIANT>);
-

@@ -25,7 +25,7 @@ extern "C" {
 
 class WagoDeviceController : public forte::core::io::IODeviceMultiController {
   public:
-    explicit WagoDeviceController(CDeviceExecution& paDeviceExecution);
+    explicit WagoDeviceController(CDeviceExecution &paDeviceExecution);
 
     ~WagoDeviceController() override;
 
@@ -38,21 +38,28 @@ class WagoDeviceController : public forte::core::io::IODeviceMultiController {
         CIEC_ANY::EDataTypeID mType;
         TForteUInt32 mChannel;
 
-        WagoHandleDescriptor(std::string const &paId, forte::core::io::IOMapper::Direction paDirection, int paSlaveIndex, CIEC_ANY::EDataTypeID paType,
-            TForteUInt32 paChannel) :
-            forte::core::io::IODeviceMultiController::HandleDescriptor(paId, paDirection, paSlaveIndex), mType(paType), mChannel(paChannel) {
+        WagoHandleDescriptor(std::string const &paId,
+                             forte::core::io::IOMapper::Direction paDirection,
+                             int paSlaveIndex,
+                             CIEC_ANY::EDataTypeID paType,
+                             TForteUInt32 paChannel) :
+            forte::core::io::IODeviceMultiController::HandleDescriptor(paId, paDirection, paSlaveIndex),
+            mType(paType),
+            mChannel(paChannel) {
         }
     };
 
-    void setConfig(struct forte::core::io::IODeviceController::Config* paConfig) override;
+    void setConfig(struct forte::core::io::IODeviceController::Config *paConfig) override;
 
-    void addSlaveHandle(int index, forte::core::io::IOHandle* paHandle) override;
+    void addSlaveHandle(int index, forte::core::io::IOHandle *paHandle) override;
 
     void dropSlaveHandles(int paIndex) override;
-  protected:
-    const char* init();
 
-    forte::core::io::IOHandle* createIOHandle(forte::core::io::IODeviceController::HandleDescriptor &paHandleDescriptor) override;
+  protected:
+    const char *init();
+
+    forte::core::io::IOHandle *
+    createIOHandle(forte::core::io::IODeviceController::HandleDescriptor &paHandleDescriptor) override;
 
     void deInit() override;
 
@@ -74,7 +81,7 @@ class WagoDeviceController : public forte::core::io::IODeviceMultiController {
      * @param handle Handle which should be compared to the previous IO state
      * @return True if the current state is equal to the previous IO state. In case it has changed, return false.
      */
-    virtual bool isHandleValueEqual(forte::core::io::IOHandle* paHandle) override;
+    virtual bool isHandleValueEqual(forte::core::io::IOHandle *paHandle) override;
 
   private:
     /*! @brief Checks if a slave exists at the given index
@@ -92,25 +99,24 @@ class WagoDeviceController : public forte::core::io::IODeviceMultiController {
      */
     bool checkSlaveType(int paIndex, int paType);
 
-    const char* loadTerminalInformation();
+    const char *loadTerminalInformation();
 
     bool triggerKBusCycle();
 
     static const tDeviceId scmInvalidDeviceId = -1;
     static const size_t scmNumberOfDevicesToScan = 10;
 
-    static const char * const scmKBusDeviceName;
+    static const char *const scmKBusDeviceName;
 
-    static const char * const scmFailedToGetApplicationInterface;
-    static const char * const scmFailedToInitializeKBus;
-    static const char * const scmFailedToScanDevices;
-    static const char * const scmFailedToOpenKBusDevice;
-    static const char * const scmFailedToGetDeviceList;
+    static const char *const scmFailedToGetApplicationInterface;
+    static const char *const scmFailedToInitializeKBus;
+    static const char *const scmFailedToScanDevices;
+    static const char *const scmFailedToOpenKBusDevice;
+    static const char *const scmFailedToGetDeviceList;
 
-    static const char * const scmFailedToCreateKBusInfo;
-    static const char * const scmFailedGetTerminalInfo;
-    static const char * const scmFailedGetTerminalList;
-
+    static const char *const scmFailedToCreateKBusInfo;
+    static const char *const scmFailedGetTerminalInfo;
+    static const char *const scmFailedGetTerminalList;
 };
 
 #endif /* SRC_MODULES_WAGOKBUS_MODULAR_WAGODEVICECONTROLLER_H_ */

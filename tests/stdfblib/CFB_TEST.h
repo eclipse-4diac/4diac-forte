@@ -21,9 +21,8 @@
 #include "GEN_E_DEMUX_fbt.h"
 #include "GEN_E_MUX_fbt.h"
 
-
 class FORTE_CFB_TEST final : public CCompositeFB {
-  DECLARE_FIRMWARE_FB(FORTE_CFB_TEST)
+    DECLARE_FIRMWARE_FB(FORTE_CFB_TEST)
 
   private:
     static const CStringDictionary::TStringId scmDataInputNames[];
@@ -44,7 +43,6 @@ class FORTE_CFB_TEST final : public CCompositeFB {
     static const CStringDictionary::TStringId scmEventOutputTypeIds[];
 
     static const SFBInterfaceSpec scmFBInterfaceSpec;
-
 
     static const SCFB_FBInstanceData scmInternalFBs[];
     static const SCFB_FBConnectionData scmEventConnections[];
@@ -81,5 +79,3 @@ class FORTE_CFB_TEST final : public CCompositeFB {
     CDataConnection **getDIConUnchecked(TPortId) override;
     CDataConnection *getDOConUnchecked(TPortId) override;
 };
-
-

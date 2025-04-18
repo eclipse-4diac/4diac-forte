@@ -31,19 +31,30 @@ const TForteInt16 FORTE_SVIsend_1::scmEOWithIndexes[] = {0, 2, -1};
 const CStringDictionary::TStringId FORTE_SVIsend_1::scmEventOutputNames[] = {STRID(INITO), STRID(CNF)};
 const CStringDictionary::TStringId FORTE_SVIsend_1::scmEventOutputTypeIds[] = {STRID(Event), STRID(Event)};
 
-const SFBInterfaceSpec FORTE_SVIsend_1::scmFBInterfaceSpec = {
-  2,  scmEventInputNames, scmEventInputTypeIds,  scmEIWith,  scmEIWithIndexes,
-  2,  scmEventOutputNames, scmEventOutputTypeIds,  scmEOWith, scmEOWithIndexes,  3,  scmDataInputNames, scmDataInputTypeIds,
-  1,  scmDataOutputNames, scmDataOutputTypeIds,
-  0, 0
-};
-
+const SFBInterfaceSpec FORTE_SVIsend_1::scmFBInterfaceSpec = {2,
+                                                              scmEventInputNames,
+                                                              scmEventInputTypeIds,
+                                                              scmEIWith,
+                                                              scmEIWithIndexes,
+                                                              2,
+                                                              scmEventOutputNames,
+                                                              scmEventOutputTypeIds,
+                                                              scmEOWith,
+                                                              scmEOWithIndexes,
+                                                              3,
+                                                              scmDataInputNames,
+                                                              scmDataInputTypeIds,
+                                                              1,
+                                                              scmDataOutputNames,
+                                                              scmDataOutputTypeIds,
+                                                              0,
+                                                              0};
 
 void FORTE_SVIsend_1::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
-  switch(paEIID){
+  switch (paEIID) {
     case scmEventINITID:
-      if(true == QI()){
-        QO() = registerSVIvar(ID(),SD_1(),SVI_F_OUT);
+      if (true == QI()) {
+        QO() = registerSVIvar(ID(), SD_1(), SVI_F_OUT);
       }
       sendOutputEvent(scmEventINITOID, paECET);
       if (true == QO()) {
@@ -53,13 +64,7 @@ void FORTE_SVIsend_1::executeEvent(TEventID paEIID, CEventChainExecutionThread *
       }
       break;
 
-    case scmEventREQID:
-      sendOutputEvent(scmEventCNFID, paECET);
-      break;
-    default:
-      break;
+    case scmEventREQID: sendOutputEvent(scmEventCNFID, paECET); break;
+    default: break;
   }
 }
-
-
-

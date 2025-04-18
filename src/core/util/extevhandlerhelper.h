@@ -19,15 +19,12 @@
 #include "../devexec.h"
 #include "../extevhan.h"
 
-
 /*!\brief Get an external event handler by finding the device a FB is contained in
  *
  */
 template<typename T>
-T& getExtEvHandler(CFunctionBlock& paFB){
+T &getExtEvHandler(CFunctionBlock &paFB) {
   return paFB.getDevice()->getDeviceExecution().getExtEvHandler<T>();
 }
-
-
 
 #endif /* SRC_CORE_UTILS_EXTEVHANDLERHELPER_H_ */

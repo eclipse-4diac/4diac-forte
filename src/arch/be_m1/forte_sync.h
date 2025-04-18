@@ -12,7 +12,7 @@
 #ifndef _FORTE_SYNC_H_
 #define _FORTE_SYNC_H_
 
-//just pull_in the vxworks sync
+// just pull_in the vxworks sync
 #include "../vxworks/forte_sync.h"
 
 #endif /*FORTE_SYNC_H_*/

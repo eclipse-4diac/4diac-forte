@@ -24,5 +24,4 @@ void listHelp();
  */
 const char *parseCommandLineArguments(int argc, char *arg[]);
 
-
 #endif /* SRC_ARCH_UTILS_MAINPARAM_UTILS_H_ */

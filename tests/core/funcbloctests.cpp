@@ -24,104 +24,99 @@ USE_STRING_ID(UINT);
 
 #include "fbcontainermock.h"
 
-
 BOOST_AUTO_TEST_SUITE(FUNCBLOC)
 
-BOOST_AUTO_TEST_CASE(FB_TO_STRING_TEST){
-    FORTE_E_CTUD testFb(0, CFBContainerMock::smDefaultFBContMock); // Dummy FB, do not use for anything else than testing toString
-    constexpr char result[] = "(PV:=0, QU:=FALSE, QD:=FALSE, CV:=0)";
-    char buffer[50];
-    BOOST_TEST(testFb.toString(buffer, sizeof(buffer)) == strlen(result));
-    BOOST_TEST(buffer == result);
+BOOST_AUTO_TEST_CASE(FB_TO_STRING_TEST) {
+  FORTE_E_CTUD testFb(
+      0, CFBContainerMock::smDefaultFBContMock); // Dummy FB, do not use for anything else than testing toString
+  constexpr char result[] = "(PV:=0, QU:=FALSE, QD:=FALSE, CV:=0)";
+  char buffer[50];
+  BOOST_TEST(testFb.toString(buffer, sizeof(buffer)) == strlen(result));
+  BOOST_TEST(buffer == result);
 }
 
-BOOST_AUTO_TEST_CASE(FB_TO_STRING_BUFFER_SIZE_TEST_WITH_INRENAL_VAR){
+BOOST_AUTO_TEST_CASE(FB_TO_STRING_BUFFER_SIZE_TEST_WITH_INRENAL_VAR) {
 
-    // Test for FB with internal vars
+  // Test for FB with internal vars
 
-    class CInternalVarTestFB : public CBasicFB {
-        const SFBInterfaceSpec gcEmptyInterface = {
-            0, nullptr, nullptr, nullptr, nullptr,
-            0, nullptr, nullptr, nullptr, nullptr,
-            0, nullptr, nullptr,
-            0, nullptr, nullptr,
-            0, nullptr,
-            0, nullptr
-        };
+  class CInternalVarTestFB : public CBasicFB {
+      const SFBInterfaceSpec gcEmptyInterface = {0,       nullptr, nullptr, nullptr, nullptr, 0,       nullptr,
+                                                 nullptr, nullptr, nullptr, 0,       nullptr, nullptr, 0,
+                                                 nullptr, nullptr, 0,       nullptr, 0,       nullptr};
 
     public:
-        CInternalVarTestFB(const SInternalVarsInformation *paVarInternals) : CBasicFB(CFBContainerMock::smDefaultFBContMock, gcEmptyInterface, CStringDictionary::scmInvalidStringId, paVarInternals) {
+      CInternalVarTestFB(const SInternalVarsInformation *paVarInternals) :
+          CBasicFB(CFBContainerMock::smDefaultFBContMock,
+                   gcEmptyInterface,
+                   CStringDictionary::scmInvalidStringId,
+                   paVarInternals) {
+      }
+
+      CIEC_ANY *getVarInternal(size_t paVarIntNum) override {
+        switch (paVarIntNum) {
+          case 0: return &var_QU;
+          case 1: return &var_QD;
+          case 2: return &var_CV;
         }
+        return nullptr;
+      }
 
-        CIEC_ANY *getVarInternal(size_t paVarIntNum) override {
-          switch (paVarIntNum) {
-            case 0:
-              return &var_QU;
-            case 1:
-              return &var_QD;
-            case 2:
-              return &var_CV;
-          }
-          return nullptr;
-        }
+      CStringDictionary::TStringId getFBTypeId() const override {
+        return CStringDictionary::scmInvalidStringId;
+      }
 
-        CStringDictionary::TStringId getFBTypeId() const override {
-            return CStringDictionary::scmInvalidStringId;
-        }
+      void executeEvent(TEventID, CEventChainExecutionThread *const) override {
+        // nothiing to do here
+      }
 
-        void executeEvent(TEventID, CEventChainExecutionThread * const) override {
-            // nothiing to do here
-        }
+      void readInputData(TEventID) override {
+      }
 
-        void readInputData(TEventID) override {
-        }
+      void writeOutputData(TEventID) override {
+      }
 
-        void writeOutputData(TEventID) override {
-        }
+      CIEC_ANY *getDI(size_t) override {
+        return nullptr;
+      }
 
-        CIEC_ANY *getDI(size_t) override {
-                return nullptr;
-        }
+      CIEC_ANY *getDO(size_t) override {
+        return nullptr;
+      }
 
-        CIEC_ANY *getDO(size_t) override {
-                return nullptr;
-        }
+      CEventConnection *getEOConUnchecked(TPortId) override {
+        return nullptr;
+      }
 
-        CEventConnection *getEOConUnchecked(TPortId) override {
-                return nullptr;
-        }
+      CDataConnection **getDIConUnchecked(TPortId) override {
+        return nullptr;
+      }
 
-        CDataConnection **getDIConUnchecked(TPortId) override {
-                return nullptr;
-        }
+      CDataConnection *getDOConUnchecked(TPortId) override {
+        return nullptr;
+      }
 
-        CDataConnection *getDOConUnchecked(TPortId) override {
-                return nullptr;
-        }
+    private:
+      CIEC_BOOL var_QU;
+      CIEC_BOOL var_QD;
+      CIEC_UINT var_CV;
+  };
 
-      private:
-        CIEC_BOOL var_QU;
-        CIEC_BOOL var_QD;
-        CIEC_UINT var_CV;
-};
-
-    CStringDictionary::TStringId varInternalNames[] = {STRID(QU), STRID(QD), STRID(CV)};
-    CStringDictionary::TStringId varInternalTypeIds[] = {STRID(BOOL), STRID(BOOL), STRID(UINT)};
-    SInternalVarsInformation varData{3, varInternalNames, varInternalTypeIds};
-    CInternalVarTestFB testFb(&varData);
-    BOOST_ASSERT(testFb.initialize());
-    size_t size = testFb.getToStringBufferSize();
-    BOOST_CHECK_EQUAL(size , 39);
+  CStringDictionary::TStringId varInternalNames[] = {STRID(QU), STRID(QD), STRID(CV)};
+  CStringDictionary::TStringId varInternalTypeIds[] = {STRID(BOOL), STRID(BOOL), STRID(UINT)};
+  SInternalVarsInformation varData{3, varInternalNames, varInternalTypeIds};
+  CInternalVarTestFB testFb(&varData);
+  BOOST_ASSERT(testFb.initialize());
+  size_t size = testFb.getToStringBufferSize();
+  BOOST_CHECK_EQUAL(size, 39);
 }
 
-BOOST_AUTO_TEST_CASE(FB_TO_STRING_BUFFER_SIZE_TEST_WITHOUT_INRENAL_VAR){
+BOOST_AUTO_TEST_CASE(FB_TO_STRING_BUFFER_SIZE_TEST_WITHOUT_INRENAL_VAR) {
 
-    // Test for FB with inputs and outputs
-    FORTE_E_CTUD testFb(0, CFBContainerMock::smDefaultFBContMock); // Dummy FB, do not use for anything else than testing getToStringBufferSize
-    size_t size = testFb.getToStringBufferSize();
-    BOOST_CHECK_EQUAL(size , 51);
+  // Test for FB with inputs and outputs
+  FORTE_E_CTUD testFb(0, CFBContainerMock::smDefaultFBContMock); // Dummy FB, do not use for anything else than testing
+                                                                 // getToStringBufferSize
+  size_t size = testFb.getToStringBufferSize();
+  BOOST_CHECK_EQUAL(size, 51);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
-
-

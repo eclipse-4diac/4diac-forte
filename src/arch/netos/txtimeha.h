@@ -17,14 +17,14 @@
 #include "../timerha.h"
 #include "../devlog.h"
 
-/*! \ingroup netos_hal 
+/*! \ingroup netos_hal
  * \ingroup EXTEVHAND
- * \brief Timerhandler for NET+OS. 
- *  
+ * \brief Timerhandler for NET+OS.
+ *
  */
-class CTXTimerHandler : public CTimerHandler{
+class CTXTimerHandler : public CTimerHandler {
   public:
-    explicit CTXTimerHandler(CDeviceExecution& paDeviceExecution);
+    explicit CTXTimerHandler(CDeviceExecution &paDeviceExecution);
 
     ~CTXTimerHandler() override;
 
@@ -45,15 +45,16 @@ class CTXTimerHandler : public CTimerHandler{
      * \return current priority
      */
     int getPriority() const override;
+
   private:
     /*!\brief callback function for the system timer
      */
-    static void timerHandlerFunc(ULONG data){
-      if(data){
-        static_cast<CTXTimerHandler*>(data)->nextTick();
+    static void timerHandlerFunc(ULONG data) {
+      if (data) {
+        static_cast<CTXTimerHandler *>(data)->nextTick();
       }
     }
-    
+
     TX_TIMER mTimer;
 };
 

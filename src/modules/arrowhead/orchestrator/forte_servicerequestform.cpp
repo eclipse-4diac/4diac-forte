@@ -26,15 +26,24 @@ USE_STRING_ID(requesterSystem);
 USE_STRING_ID(ServiceRequestForm);
 USE_STRING_ID(WSTRING);
 
-
 DEFINE_FIRMWARE_DATATYPE(ServiceRequestForm, STRID(ServiceRequestForm));
 
 CIEC_ServiceRequestForm::CIEC_ServiceRequestForm() :
     CIEC_STRUCT(STRID(ServiceRequestForm), 6, scmElementTypes, scmElementNames, e_APPLICATION + e_CONSTRUCTED + 1) {
 }
 
-const CStringDictionary::TStringId CIEC_ServiceRequestForm::scmElementTypes[] = { STRID(ArrowheadSystem), STRID(ArrowheadCloud),
-  STRID(ArrowheadService), STRID(ARRAY), 10, STRID(WSTRING), STRID(ARRAY), 10, STRID(PreferredProvider), STRID(ARRAY), 10,
-  STRID(WSTRING) };
-const CStringDictionary::TStringId CIEC_ServiceRequestForm::scmElementNames[] = { STRID(requesterSystem), STRID(requesterCloud),
-  STRID(requestedService), STRID(orchestrationFlags), STRID(preferredProviders), STRID(requestedQoS) };
+const CStringDictionary::TStringId CIEC_ServiceRequestForm::scmElementTypes[] = {STRID(ArrowheadSystem),
+                                                                                 STRID(ArrowheadCloud),
+                                                                                 STRID(ArrowheadService),
+                                                                                 STRID(ARRAY),
+                                                                                 10,
+                                                                                 STRID(WSTRING),
+                                                                                 STRID(ARRAY),
+                                                                                 10,
+                                                                                 STRID(PreferredProvider),
+                                                                                 STRID(ARRAY),
+                                                                                 10,
+                                                                                 STRID(WSTRING)};
+const CStringDictionary::TStringId CIEC_ServiceRequestForm::scmElementNames[] = {
+    STRID(requesterSystem),    STRID(requesterCloud),     STRID(requestedService),
+    STRID(orchestrationFlags), STRID(preferredProviders), STRID(requestedQoS)};

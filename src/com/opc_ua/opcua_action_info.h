@@ -20,13 +20,12 @@
 #include <string>
 
 /**
- * Each Communication FB (PUBLISH, SUBSCRIBE, CLIENT, SERVER) is considered an action to be executed in the OPC UA library, either locally or remotely.
- * This class encapsulates all information needed to perform the action. It has a factory to create a new action from the parameters set in the ID
- * of the FB
+ * Each Communication FB (PUBLISH, SUBSCRIBE, CLIENT, SERVER) is considered an action to be executed in the OPC UA
+ * library, either locally or remotely. This class encapsulates all information needed to perform the action. It has a
+ * factory to create a new action from the parameters set in the ID of the FB
  */
 class CActionInfo {
   public:
-
     /**
      * Allowed type of actions. If a new action is to be added, it should go before eActionUnknown
      */
@@ -40,7 +39,8 @@ class CActionInfo {
       eCreateVariable, //!< eCreateObject Create a variable
       eDeleteObject, //!< eDeleteObject Delete an object
       eDeleteVariable, //!< eDeleteObject Delete a variable
-      eActionUnknown, //!< eActionUnknown The provided action is unknown. This is used also to set the length of known actions
+      eActionUnknown, //!< eActionUnknown The provided action is unknown. This is used also to set the length of known
+                      //!< actions
     };
 
     /**
@@ -49,18 +49,19 @@ class CActionInfo {
     class CNodePairInfo {
       public:
         CNodePairInfo(UA_NodeId *paNodeId, const std::string &paBrowsePath) :
-            mNodeId(paNodeId, UA_NodeId_delete), mBrowsePath(paBrowsePath) {
+            mNodeId(paNodeId, UA_NodeId_delete),
+            mBrowsePath(paBrowsePath) {
         }
 
         UA_NodeId *getNodeId() const {
           return mNodeId.get();
         }
 
-        void setNodeId(UA_NodeId *paNodeId){
+        void setNodeId(UA_NodeId *paNodeId) {
           mNodeId.reset(paNodeId);
         }
 
-        const std::string& getBrowsePath() const {
+        const std::string &getBrowsePath() const {
           return mBrowsePath;
         }
 
@@ -73,7 +74,8 @@ class CActionInfo {
      * Constructor of the class.
      * @param paLayer The layer that creates and executes the action
      * @param paAction The action to be executed
-     * @param paEndpoint The endpoint of a remote OPC UA in case the action is to be executed remotely. An empty endpoint means that the action is to be executed locally
+     * @param paEndpoint The endpoint of a remote OPC UA in case the action is to be executed remotely. An empty
+     * endpoint means that the action is to be executed locally
      */
     explicit CActionInfo(COPC_UA_Layer &paLayer, UA_ActionType paAction, const std::string &paEndpoint);
 
@@ -94,7 +96,7 @@ class CActionInfo {
      * Getter of the layer
      * @return Layer
      */
-    COPC_UA_Layer& getLayer() const {
+    COPC_UA_Layer &getLayer() const {
       return mLayer;
     }
 
@@ -110,7 +112,7 @@ class CActionInfo {
      * Getter of the list of node pair information
      * @return List of node pair information
      */
-    std::vector<CNodePairInfo>& getNodePairInfo() {
+    std::vector<CNodePairInfo> &getNodePairInfo() {
       return mNodePair;
     }
 
@@ -123,13 +125,15 @@ class CActionInfo {
     }
 
     /**
-     * Indicates if the action is to be executed locally or remotely. This function is used by the layer to decide which handler to use (local or remote)
+     * Indicates if the action is to be executed locally or remotely. This function is used by the layer to decide which
+     * handler to use (local or remote)
      * @return True if the action is to be executed remotely, false otherwise
      */
     bool isRemote() const;
 
     /**
-     * Factory to retrieve an action type from the parameters defined in the ID data input of the FB. The ID has the format ACTION;[ENDPOINT#];BROWSENAME,NODEID;[BROSWENAME,NODEID];...
+     * Factory to retrieve an action type from the parameters defined in the ID data input of the FB. The ID has the
+     * format ACTION;[ENDPOINT#];BROWSENAME,NODEID;[BROSWENAME,NODEID];...
      * @param paParams Parameters set in the ID of the FB (string contained in the square brackets of opc_ua[...])
      * @param paLayer The layer that creates and executes the action
      * @param paTypes A list of type converters of the connections of the FB of the action (SDs/RDs)
@@ -167,12 +171,12 @@ class CActionInfo {
     static const char *const mActionNames[eActionUnknown];
 
     CActionInfo(const CActionInfo &paObj) = delete;
-    CActionInfo& operator=(const CActionInfo &paOther) = delete;
+    CActionInfo &operator=(const CActionInfo &paOther) = delete;
 
   private:
-
     /**
-     * Checks if the action is valid regarding requirements for the amount of node pairs, endpoint value and the type of action
+     * Checks if the action is valid regarding requirements for the amount of node pairs, endpoint value and the type of
+     * action
      * @return True if the action is valid, false otherwise
      */
     bool checkAction() const;
@@ -208,7 +212,8 @@ class CActionInfo {
      * @param paNoOfSDs Number of SDs present in the FB
      * @return True if the create method action is valid, false otherwise
      */
-    bool checkCreateMethodAction(forte::com_infra::EComServiceType paFbType, TPortId paNoOfRDs, TPortId paNoOfSDs) const;
+    bool
+    checkCreateMethodAction(forte::com_infra::EComServiceType paFbType, TPortId paNoOfRDs, TPortId paNoOfSDs) const;
 
     /**
      * Specific check for call method action
@@ -235,7 +240,8 @@ class CActionInfo {
      * @param paNoOfSDs Number of SDs present in the FB
      * @return True if the create object action is valid, false otherwise
      */
-    bool checkCreateObjectAction(forte::com_infra::EComServiceType paFbType, TPortId paNoOfRDs, TPortId paNoOfSDs) const;
+    bool
+    checkCreateObjectAction(forte::com_infra::EComServiceType paFbType, TPortId paNoOfRDs, TPortId paNoOfSDs) const;
 
     /**
      * Specific check for create variable action
@@ -244,7 +250,8 @@ class CActionInfo {
      * @param paNoOfSDs Number of SDs present in the FB
      * @return True if the create variable action is valid, false otherwise
      */
-    bool checkCreateVariableAction(forte::com_infra::EComServiceType paFbType, TPortId paNoOfRDs, TPortId paNoOfSDs) const;
+    bool
+    checkCreateVariableAction(forte::com_infra::EComServiceType paFbType, TPortId paNoOfRDs, TPortId paNoOfSDs) const;
 
     /**
      * Specific check for delete node action
@@ -275,24 +282,20 @@ class CActionInfo {
      */
     std::vector<CNodePairInfo> mNodePair;
 
-    static const size_t scmMinimumAmounOfParameters = 2; //at least two are needed
+    static const size_t scmMinimumAmounOfParameters = 2; // at least two are needed
 
     /**
      * Internal class to parse the parameters that are passed to the factory
      */
     class CActionParser {
       public:
-
-        enum IDPositions {
-          eActionType = 0,
-          eEndpoint,
-          eNodePairs
-        };
+        enum IDPositions { eActionType = 0, eEndpoint, eNodePairs };
 
         /**
          * Retrieves the action type from a string defined in mActionNames
          * @param paParams The string source
-         * @return Type according to the string parameter. eActionUnknown is returned if paParams doesn't match any value in mActionNames
+         * @return Type according to the string parameter. eActionUnknown is returned if paParams doesn't match any
+         * value in mActionNames
          */
         static UA_ActionType getActionEnum(const char *paParams);
 
@@ -305,7 +308,8 @@ class CActionInfo {
         static bool getEndpoint(const char *paEndpoint, std::string &paResult);
 
         /**
-         * Checks if a pair in a string form is valid and stores it in the result list. The node pair has format BROWSENAME,NODEID where BROWSENAME is a path string. @see parseNodeId for the format of NODEID
+         * Checks if a pair in a string form is valid and stores it in the result list. The node pair has format
+         * BROWSENAME,NODEID where BROWSENAME is a path string. @see parseNodeId for the format of NODEID
          * @param paPair Source string containing the node pair information
          * @param paResult Place to store a new allocated node pair info if the source was valid
          * @return True if paPair contained a valid node pair information, false otherwise
@@ -313,13 +317,15 @@ class CActionInfo {
         static bool handlePair(const char *paPair, std::vector<CNodePairInfo> &paResult);
 
       private:
-
         /**
-         * Parse a node ID in a string format and returns a new allocated UA_NodeId pointer. The format of the node ID is as follow: <namespaceIndex>:<identifiertype>=<identifier> where namespaceIndex is a number, identifier depends on identifiertype. @see parseIdentifier for the format of identifiertype
+         * Parse a node ID in a string format and returns a new allocated UA_NodeId pointer. The format of the node ID
+         * is as follow: <namespaceIndex>:<identifiertype>=<identifier> where namespaceIndex is a number, identifier
+         * depends on identifiertype. @see parseIdentifier for the format of identifiertype
          * @param paNodeIdString The string source of the node ID
-         * @return 0 if the source string is invalid, a new allocated UA_NodeId with the information from the source otherwise
+         * @return 0 if the source string is invalid, a new allocated UA_NodeId with the information from the source
+         * otherwise
          */
-        static UA_NodeId* parseNodeId(const char *paNodeIdString);
+        static UA_NodeId *parseNodeId(const char *paNodeIdString);
 
         /**
          * Parse the namespace of the node ID from the string source
@@ -330,30 +336,19 @@ class CActionInfo {
         static bool parseNamespace(const char *paNamespace, UA_NodeId &paResult);
 
         /**
-         * Parse the identifier of the node ID from the string source. Allowed values for identifier are [i, s, g] (numeric, string and bytestring node ID type respectively). GUID type is not supported
+         * Parse the identifier of the node ID from the string source. Allowed values for identifier are [i, s, g]
+         * (numeric, string and bytestring node ID type respectively). GUID type is not supported
          * @param paIdentifier Source string containing the identifier
          * @param paResult Place to store the result
          * @return True if the source string has a valid identifier, false otherwise
          */
         static bool parseIdentifier(const char *paIdentifier, UA_NodeId &paResult);
 
-        enum NodePairPositions {
-          eBrowseName = 0,
-          eNodeId,
-          eMaxNumberOfPositions
-        };
+        enum NodePairPositions { eBrowseName = 0, eNodeId, eMaxNumberOfPositions };
 
-        enum NodeIdPositions {
-          eNamespace = 0,
-          eIdenfier,
-          eMaxNumberOfNodeIdPositions
-        };
+        enum NodeIdPositions { eNamespace = 0, eIdenfier, eMaxNumberOfNodeIdPositions };
 
-        enum NodeIdItenfierPositions {
-          eIdenfierType = 0,
-          eIdenfierValue,
-          eMaxNumberOfNodeIdIdenfiertPositions
-        };
+        enum NodeIdItenfierPositions { eIdenfierType = 0, eIdenfierValue, eMaxNumberOfNodeIdIdenfiertPositions };
     };
 };
 
@@ -362,11 +357,11 @@ class CActionInfo {
  */
 class CLocalMethodInfo : public CActionInfo {
   public:
-
     /**
      * Constructor of the class
      * @param paLayer The layer that creates and executes the action
-     * @param paEndpoint The endpoint of a remote OPC UA in case the action is to be executed remotely. An empty endpoint means that the action is to be executed locally
+     * @param paEndpoint The endpoint of a remote OPC UA in case the action is to be executed remotely. An empty
+     * endpoint means that the action is to be executed locally
      * @param paTypes A list of type converters of the connections of the FB of the action (SDs/RDs)
      */
     explicit CLocalMethodInfo(COPC_UA_Layer &paLayer, const std::string &paEndpoint);
@@ -380,15 +375,15 @@ class CLocalMethodInfo : public CActionInfo {
      * Getter for the semaphore of the action
      * @return the semaphore of the action
      */
-    forte::arch::CSemaphore& getResultReady();
+    forte::arch::CSemaphore &getResultReady();
 
     CLocalMethodInfo(const CLocalMethodInfo &paObj) = delete;
-    CLocalMethodInfo& operator=(const CLocalMethodInfo &other) = delete;
+    CLocalMethodInfo &operator=(const CLocalMethodInfo &other) = delete;
 
   private:
-
     /**
-     * When a method is called, it waits with this semaphore until the response comes back to the FB, when this semaphore is increased indicating the method has finished
+     * When a method is called, it waits with this semaphore until the response comes back to the FB, when this
+     * semaphore is increased indicating the method has finished
      */
     forte::arch::CSemaphore mResultIsReady;
 };

@@ -21,63 +21,60 @@
 #include <forte_array.h>
 #include "OrchestratorRequestAdp_adp.h"
 
-class FORTE_RequestOrchestrationForm: public CCompositeFB{
-  DECLARE_FIRMWARE_FB(FORTE_RequestOrchestrationForm)
+class FORTE_RequestOrchestrationForm : public CCompositeFB {
+    DECLARE_FIRMWARE_FB(FORTE_RequestOrchestrationForm)
 
-private:
-  static const CStringDictionary::TStringId scmDataInputNames[];
-  static const CStringDictionary::TStringId scmDataInputTypeIds[];
-  CIEC_ServiceRequestForm &serviceRequestForm() {
-    return *static_cast<CIEC_ServiceRequestForm*>(getDI(0));
-  };
+  private:
+    static const CStringDictionary::TStringId scmDataInputNames[];
+    static const CStringDictionary::TStringId scmDataInputTypeIds[];
+    CIEC_ServiceRequestForm &serviceRequestForm() {
+      return *static_cast<CIEC_ServiceRequestForm *>(getDI(0));
+    };
 
-  CIEC_WSTRING &endpoint() {
-    return *static_cast<CIEC_WSTRING*>(getDI(1));
-  };
+    CIEC_WSTRING &endpoint() {
+      return *static_cast<CIEC_WSTRING *>(getDI(1));
+    };
 
-  static const CStringDictionary::TStringId scmDataOutputNames[];
-  static const CStringDictionary::TStringId scmDataOutputTypeIds[];
-  CIEC_OrchestrationForm *orchestrationResponse() {
-    return (CIEC_OrchestrationForm*)(*static_cast<CIEC_ARRAY<> *>(getDO(0)))[0]; //the first element marks the start of the array
-  };
+    static const CStringDictionary::TStringId scmDataOutputNames[];
+    static const CStringDictionary::TStringId scmDataOutputTypeIds[];
+    CIEC_OrchestrationForm *orchestrationResponse() {
+      return (CIEC_OrchestrationForm *) (*static_cast<CIEC_ARRAY<> *>(
+          getDO(0)))[0]; // the first element marks the start of the array
+    };
 
-  CIEC_ARRAY<> &orchestrationResponse_Array() {
-    return *static_cast<CIEC_ARRAY<>*>(getDO(0));
-  };
+    CIEC_ARRAY<> &orchestrationResponse_Array() {
+      return *static_cast<CIEC_ARRAY<> *>(getDO(0));
+    };
 
-  static const TEventID scmEventrequestOrchestatorID = 0;
-  static const TForteInt16 scmEIWithIndexes[];
-  static const TDataIOID scmEIWith[];
-  static const CStringDictionary::TStringId scmEventInputNames[];
-  static const CStringDictionary::TStringId scmEventInputTypeIds[];
+    static const TEventID scmEventrequestOrchestatorID = 0;
+    static const TForteInt16 scmEIWithIndexes[];
+    static const TDataIOID scmEIWith[];
+    static const CStringDictionary::TStringId scmEventInputNames[];
+    static const CStringDictionary::TStringId scmEventInputTypeIds[];
 
-  static const TEventID scmEventresponseReceivedID = 0;
-  static const TForteInt16 scmEOWithIndexes[];
-  static const TDataIOID scmEOWith[];
-  static const CStringDictionary::TStringId scmEventOutputNames[];
-  static const CStringDictionary::TStringId scmEventOutputTypeIds[];
+    static const TEventID scmEventresponseReceivedID = 0;
+    static const TForteInt16 scmEOWithIndexes[];
+    static const TDataIOID scmEOWith[];
+    static const CStringDictionary::TStringId scmEventOutputNames[];
+    static const CStringDictionary::TStringId scmEventOutputTypeIds[];
 
-  static const SAdapterInstanceDef scmAdapterInstances[];
+    static const SAdapterInstanceDef scmAdapterInstances[];
 
-  FORTE_OrchestratorRequestAdp& requestOrchestration() {
-    return (*static_cast<FORTE_OrchestratorRequestAdp*>(mAdapters[0]));
-  };
-  static const int scm_nrequestOrchestrationAdpNum = 0;
-  static const SFBInterfaceSpec scmFBInterfaceSpec;
+    FORTE_OrchestratorRequestAdp &requestOrchestration() {
+      return (*static_cast<FORTE_OrchestratorRequestAdp *>(mAdapters[0]));
+    };
+    static const int scm_nrequestOrchestrationAdpNum = 0;
+    static const SFBInterfaceSpec scmFBInterfaceSpec;
 
+    static const SCFB_FBConnectionData scmEventConnections[];
 
-  static const SCFB_FBConnectionData scmEventConnections[];
+    static const SCFB_FBConnectionData scmDataConnections[];
+    static const SCFB_FBNData scmFBNData;
 
-  static const SCFB_FBConnectionData scmDataConnections[];
-  static const SCFB_FBNData scmFBNData;
+  public:
+    COMPOSITE_FUNCTION_BLOCK_CTOR(FORTE_RequestOrchestrationForm) {};
 
-public:
-  COMPOSITE_FUNCTION_BLOCK_CTOR(FORTE_RequestOrchestrationForm){
-  };
-
-  ~FORTE_RequestOrchestrationForm() override = default;
-
+    ~FORTE_RequestOrchestrationForm() override = default;
 };
 
-#endif //close the ifdef sequence from the beginning of the file
-
+#endif // close the ifdef sequence from the beginning of the file

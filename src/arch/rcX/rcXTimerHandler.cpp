@@ -14,46 +14,48 @@
 #include "rcXTimerHandler.h"
 #include "../devlog.h"
 
-
-CrcXTimerHandler::CrcXTimerHandler(CDeviceExecution& paDeviceExecution) : CTimerHandler(paDeviceExecution),
-  mTimer(0), mFirstTime(true){
+CrcXTimerHandler::CrcXTimerHandler(CDeviceExecution &paDeviceExecution) :
+    CTimerHandler(paDeviceExecution),
+    mTimer(0),
+    mFirstTime(true) {
   mTimer = forte_malloc(RX_TIMER_SIZE);
-  if(0 == mTimer){
+  if (0 == mTimer) {
     DEVLOG_ERROR("Not enough memory to allocate %l bytes for creating a new timer\n", RX_TIMER_SIZE);
   }
 }
 
-CrcXTimerHandler::~CrcXTimerHandler(){
+CrcXTimerHandler::~CrcXTimerHandler() {
   rX_TimStopTimer(mTimer);
   rX_TimDeleteTimer(mTimer);
   forte_free(mTimer);
 }
 
-void CrcXTimerHandler::timerCallback(void* arguments){
-  if(arguments){
-    static_cast<CTimerHandler*>(arguments)->nextTick();
+void CrcXTimerHandler::timerCallback(void *arguments) {
+  if (arguments) {
+    static_cast<CTimerHandler *>(arguments)->nextTick();
   }
 }
 
-void CrcXTimerHandler::enableHandler(){
-  if (mFirstTime){
-    rX_TimCreateTimer(mTimer, timerCallback, (void*) this, RX_TIM_AUTO_RELOAD, (1000000 / rX_SysGetSystemCycletime()) / getTicksPerSecond(),
-            (1000000 / rX_SysGetSystemCycletime()) / getTicksPerSecond());
+void CrcXTimerHandler::enableHandler() {
+  if (mFirstTime) {
+    rX_TimCreateTimer(mTimer, timerCallback, (void *) this, RX_TIM_AUTO_RELOAD,
+                      (1000000 / rX_SysGetSystemCycletime()) / getTicksPerSecond(),
+                      (1000000 / rX_SysGetSystemCycletime()) / getTicksPerSecond());
     mFirstTime = false;
-  }else{
+  } else {
     rX_TimResetTimer(mTimer);
   }
 }
 
-void CrcXTimerHandler::disableHandler(){
+void CrcXTimerHandler::disableHandler() {
   rX_TimStopTimer(mTimer);
 }
 
-void CrcXTimerHandler::setPriority(int ){
-  //TODO think on how to handle this.
+void CrcXTimerHandler::setPriority(int) {
+  // TODO think on how to handle this.
 }
 
 int CrcXTimerHandler::getPriority() const {
-  //TODO think on how to handle this.
+  // TODO think on how to handle this.
   return 1;
 }

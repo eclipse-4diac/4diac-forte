@@ -14,24 +14,24 @@
 
 #ifndef NOLOG
 
-# include <forte_config.h>
-# include "timerha.h"
-# include "forte_printer.h"
-# include "core/util/criticalregion.h"
-# include "forte_architecture_time.h"
-# include <cstdlib>
-# include <cstdarg>
+#include <forte_config.h>
+#include "timerha.h"
+#include "forte_printer.h"
+#include "core/util/criticalregion.h"
+#include "forte_architecture_time.h"
+#include <cstdlib>
+#include <cstdarg>
 
-# if __cplusplus < 201103L // < stdc11
-#  ifndef VXWORKS //inttypes.h is not present for VXWORKS_KERNEL compilation type. PRIuFAST64 is defined in forte_config
-#   ifndef __STDC_FORMAT_MACROS
-#    define __STDC_FORMAT_MACROS
-#   endif //__STDC_FORMAT_MACROS
-#   include <inttypes.h>
-#  endif //VXWORKS
-# else //< stdc11
-#  include <cinttypes>
-# endif //< stdc11
+#if __cplusplus < 201103L // < stdc11
+#ifndef VXWORKS // inttypes.h is not present for VXWORKS_KERNEL compilation type. PRIuFAST64 is defined in forte_config
+#ifndef __STDC_FORMAT_MACROS
+#define __STDC_FORMAT_MACROS
+#endif //__STDC_FORMAT_MACROS
+#include <inttypes.h>
+#endif // VXWORKS
+#else //< stdc11
+#include <cinttypes>
+#endif //< stdc11
 
 #include <iostream>
 
@@ -47,10 +47,10 @@
 
 std::string getRealtimeString();
 
-static const char* scLogLevel[] = { "INFO", "WARNING", "ERROR", "DEBUG", "TRACE" };
+static const char *scLogLevel[] = {"INFO", "WARNING", "ERROR", "DEBUG", "TRACE"};
 
-//this define allows to provide an own log handler (see LMS for an example of this)
-# ifndef FORTE_EXTERNAL_LOG_HANDLER
+// this define allows to provide an own log handler (see LMS for an example of this)
+#ifndef FORTE_EXTERNAL_LOG_HANDLER
 
 /*! \brief print the given log message with the error level and a time stamp
  *
@@ -60,7 +60,7 @@ static const char* scLogLevel[] = { "INFO", "WARNING", "ERROR", "DEBUG", "TRACE"
 void printLogMessage(E_MsgLevel paLevel, const char *paMessage);
 
 static const int scMsgBufSize = FORTE_LOGGER_BUFFER_SIZE;
-static char sMsgBuf[scMsgBufSize]; //!<Buffer for the messages created by the variable addMsg function
+static char sMsgBuf[scMsgBufSize]; //!< Buffer for the messages created by the variable addMsg function
 
 static CSyncObject sMessageLock;
 
@@ -87,19 +87,20 @@ void logMessage(E_MsgLevel paLevel, const char *paMessage, ...) {
   printLogMessage(paLevel, sMsgBuf);
 
 #ifdef FORTE_STACKTRACE
-  if(paLevel == E_MsgLevel::Error) {
+  if (paLevel == E_MsgLevel::Error) {
     printStacktrace();
   }
 #endif // FORTE_STACKTRACE
 }
 
 void printLogMessage(E_MsgLevel paLevel, const char *paMessage) {
-  (paLevel == E_MsgLevel::Error ? std::cerr : std::cout) << scLogLevel[static_cast<int>(paLevel)] << ": " << getRealtimeString() << ": " << paMessage;
-  #ifdef WIN32
+  (paLevel == E_MsgLevel::Error ? std::cerr : std::cout)
+      << scLogLevel[static_cast<int>(paLevel)] << ": " << getRealtimeString() << ": " << paMessage;
+#ifdef WIN32
   (paLevel == E_MsgLevel::Error ? std::cerr : std::cout) << std::flush;
-  #endif
+#endif
 }
 
-# endif  /* FORTE_EXTERNAL_LOG_HANDLER */
+#endif /* FORTE_EXTERNAL_LOG_HANDLER */
 
-#endif  /* NOLOG */
+#endif /* NOLOG */

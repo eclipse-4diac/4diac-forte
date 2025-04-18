@@ -29,20 +29,18 @@
  */
 
 class CIEC_LTIME_OF_DAY final : public CIEC_ANY_DATE {
-  DECLARE_FIRMWARE_DATATYPE(LTIME_OF_DAY)
+    DECLARE_FIRMWARE_DATATYPE(LTIME_OF_DAY)
   public:
     [[deprecated("Please use the corresponding numeric_limits template")]]
     constexpr static size_t scmBitLength = 64U;
 
     CIEC_LTIME_OF_DAY() = default;
 
-    CIEC_LTIME_OF_DAY(const CIEC_LTIME_OF_DAY& paValue) :
-        CIEC_ANY_DATE(){
+    CIEC_LTIME_OF_DAY(const CIEC_LTIME_OF_DAY &paValue) : CIEC_ANY_DATE() {
       setValueSimple(paValue);
     }
 
-    CIEC_LTIME_OF_DAY(const CIEC_TIME_OF_DAY& paValue) :
-        CIEC_ANY_DATE(){
+    CIEC_LTIME_OF_DAY(const CIEC_TIME_OF_DAY &paValue) : CIEC_ANY_DATE() {
       setValue(paValue);
     }
 
@@ -52,13 +50,13 @@ class CIEC_LTIME_OF_DAY final : public CIEC_ANY_DATE {
 
     ~CIEC_LTIME_OF_DAY() override = default;
 
-    CIEC_LTIME_OF_DAY& operator =(const CIEC_LTIME_OF_DAY &paValue){
+    CIEC_LTIME_OF_DAY &operator=(const CIEC_LTIME_OF_DAY &paValue) {
       // Simple value assignment - no self assignment check needed
       setValueSimple(paValue);
       return *this;
     }
 
-    CIEC_LTIME_OF_DAY& operator =(const CIEC_TIME_OF_DAY &paValue){
+    CIEC_LTIME_OF_DAY &operator=(const CIEC_TIME_OF_DAY &paValue) {
       // Simple value assignment - no self assignment check needed
       setValue(paValue);
       return *this;
@@ -68,7 +66,7 @@ class CIEC_LTIME_OF_DAY final : public CIEC_ANY_DATE {
      *
      *   Conversion operator for converting CIEC_SINT to elementary 32 bit integer
      */
-    operator TForteUInt64() const{
+    operator TForteUInt64() const {
       return getTUINT64();
     }
 
@@ -97,7 +95,7 @@ class CIEC_LTIME_OF_DAY final : public CIEC_ANY_DATE {
      *   \return number of bytes used in the buffer without trailing 0x00
      *           -1 on error
      */
-    int toString(char* paValue, size_t paBufferSize) const override;
+    int toString(char *paValue, size_t paBufferSize) const override;
 
     /*! \brief calculates buffer size needed for toString conversion
      */
@@ -106,23 +104,23 @@ class CIEC_LTIME_OF_DAY final : public CIEC_ANY_DATE {
     }
 };
 
-inline CIEC_LTIME_OF_DAY operator ""_LTIME_OF_DAY(unsigned long long int paValue) {
+inline CIEC_LTIME_OF_DAY operator""_LTIME_OF_DAY(unsigned long long int paValue) {
   return CIEC_LTIME_OF_DAY(static_cast<CIEC_LTIME_OF_DAY::TValueType>(paValue));
 }
 
 namespace std {
-  template <>
+  template<>
   struct numeric_limits<CIEC_LTIME_OF_DAY> : public forte::templates::numeric_limits<CIEC_LTIME_OF_DAY> {
-    static constexpr size_t bitLength = 64U;
+      static constexpr size_t bitLength = 64U;
   };
-}
+} // namespace std
 
 namespace forte {
-  template <>
+  template<>
   struct CDataTypeTrait<CIEC_LTIME_OF_DAY> {
       static constexpr CIEC_ANY::EDataTypeID scmDataTypeId = CIEC_ANY::e_LTIME_OF_DAY;
       static const CStringDictionary::TStringId scmDataTypeName;
   };
-}
+} // namespace forte
 
 #endif /*_FORTE_LTOD_H_*/

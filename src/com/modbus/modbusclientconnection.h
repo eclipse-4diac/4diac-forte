@@ -20,9 +20,11 @@
 class CModbusPoll;
 
 namespace modbus_connection_event {
-  class CModbusConnectionEvent : public CModbusTimedEvent{
+  class CModbusConnectionEvent : public CModbusTimedEvent {
     public:
-      explicit CModbusConnectionEvent(long paReconnectInterval, EModbusFlowControl paFlowControl, const char *paDevice); //ReconnectInterval = 0 => only one connection try
+      explicit CModbusConnectionEvent(long paReconnectInterval,
+                                      EModbusFlowControl paFlowControl,
+                                      const char *paDevice); // ReconnectInterval = 0 => only one connection try
       ~CModbusConnectionEvent() override = default;
 
       int executeEvent(modbus_t *paModbusConn, void *paRetVal) override;
@@ -31,19 +33,22 @@ namespace modbus_connection_event {
       EModbusFlowControl mFlowControl;
       char mDevice[256];
   };
-}
+} // namespace modbus_connection_event
 
-class CModbusClientConnection : public CModbusConnection{
+class CModbusClientConnection : public CModbusConnection {
   public:
-    explicit CModbusClientConnection(CModbusHandler* pa_modbusHandler);
+    explicit CModbusClientConnection(CModbusHandler *pa_modbusHandler);
     ~CModbusClientConnection() override;
 
-    int readData(CModbusIOBlock* paIOBlock, void* paData, unsigned int paMaxDataSize) override;
-    void writeDataRange(EModbusFunction paFunction, unsigned int paStartAddress, unsigned int paNrAddresses, const void *paData);
+    int readData(CModbusIOBlock *paIOBlock, void *paData, unsigned int paMaxDataSize) override;
+    void writeDataRange(EModbusFunction paFunction,
+                        unsigned int paStartAddress,
+                        unsigned int paNrAddresses,
+                        const void *paData);
     int connect() override;
     void disconnect() override;
 
-    void addNewPoll(long paPollInterval, CModbusIOBlock* paIOBlock);
+    void addNewPoll(long paPollInterval, CModbusIOBlock *paIOBlock);
 
     void setSlaveId(unsigned int paSlaveId);
 
@@ -56,7 +61,7 @@ class CModbusClientConnection : public CModbusConnection{
 
     modbus_connection_event::CModbusConnectionEvent *mModbusConnEvent;
 
-    typedef std::vector<CModbusPoll*> TModbusPollList;
+    typedef std::vector<CModbusPoll *> TModbusPollList;
     TModbusPollList mPollList;
 
     unsigned int mSlaveId;

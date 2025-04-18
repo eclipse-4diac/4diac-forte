@@ -24,19 +24,19 @@
  *   username (string)
  *   password (string)
  *
- *   The parser looks for an endpoint, and only after it matches the one passed as argument, it starts storing the following information, and
- *   it will keep reading after another endpoint other the end of file is found
+ *   The parser looks for an endpoint, and only after it matches the one passed as argument, it starts storing the
+ * following information, and it will keep reading after another endpoint other the end of file is found
  */
 class CMQTTClientConfigFileParser {
   public:
-
     /**
      * Encapsulation for the result used by the class when parsing the configuration file
      */
     class MQTTConfigFromFile {
       public:
         MQTTConfigFromFile(std::string &paUsername, std::string &paPassword) :
-            mUsername(paUsername), mPassword(paPassword) {
+            mUsername(paUsername),
+            mPassword(paPassword) {
         }
         std::string &mUsername;
         std::string &mPassword;
@@ -49,7 +49,8 @@ class CMQTTClientConfigFileParser {
      * @param paResult Place to store the results
      * @return True if no error occurred, false otherwise
      */
-    static bool loadConfig(const std::string &paFileLocation, const std::string &paEndpoint, MQTTConfigFromFile &paResult);
+    static bool
+    loadConfig(const std::string &paFileLocation, const std::string &paEndpoint, MQTTConfigFromFile &paResult);
 
     explicit CMQTTClientConfigFileParser() = delete;
     virtual ~CMQTTClientConfigFileParser() = delete;
@@ -60,8 +61,8 @@ class CMQTTClientConfigFileParser {
      */
     enum MQTTConfigKeys {
       eEndoint, /**< eEndoint */
-      eUsername,/**< eUsername */
-      ePassword,/**< ePassword */
+      eUsername, /**< eUsername */
+      ePassword, /**< ePassword */
       eUnknown /**< eUnknown */
     };
 
@@ -69,7 +70,6 @@ class CMQTTClientConfigFileParser {
      * Strings for the allowed keys in the configuration file for the mqtt clients
      */
     static const char *const mConfigKeysNames[eUnknown];
-
 };
 
 #endif /* SRC_MODULES_OPC_UA_OPCUA_CLIENT_CONFIG_PARSER_H_ */

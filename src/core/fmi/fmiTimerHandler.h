@@ -20,10 +20,9 @@
 /*!\brief Timer handler for FMI/FMU
  *
  */
-class fmiTimerHandler : public CTimerHandler{
+class fmiTimerHandler : public CTimerHandler {
   public:
-
-    explicit fmiTimerHandler(CDeviceExecution& paDeviceExecution);
+    explicit fmiTimerHandler(CDeviceExecution &paDeviceExecution);
 
     ~fmiTimerHandler() override;
 
@@ -47,32 +46,32 @@ class fmiTimerHandler : public CTimerHandler{
 
     /*!\brief Advance the ticks according of the time
      */
-    bool advanceTicks(CIEC_LREAL& time, bool* paAllowToRun, forte::arch::CSemaphore* paEcetSemaphore);
+    bool advanceTicks(CIEC_LREAL &time, bool *paAllowToRun, forte::arch::CSemaphore *paEcetSemaphore);
 
-    void addExecutionThread(CFMUEventChainExecutionThread* paExecutionThread){
+    void addExecutionThread(CFMUEventChainExecutionThread *paExecutionThread) {
       eventChainExecutions.push_back(paExecutionThread);
     }
 
-    void removeExecutionThread(CEventChainExecutionThread* paExecutionThread){
-      std::vector<CFMUEventChainExecutionThread*>::iterator toDelete = eventChainExecutions.end();
-      for(std::vector<CFMUEventChainExecutionThread*>::iterator it = eventChainExecutions.begin(); it != eventChainExecutions.end(); ++it){
-        if(paExecutionThread == (*it)){
+    void removeExecutionThread(CEventChainExecutionThread *paExecutionThread) {
+      std::vector<CFMUEventChainExecutionThread *>::iterator toDelete = eventChainExecutions.end();
+      for (std::vector<CFMUEventChainExecutionThread *>::iterator it = eventChainExecutions.begin();
+           it != eventChainExecutions.end(); ++it) {
+        if (paExecutionThread == (*it)) {
           toDelete = it;
           break;
         }
-       }
-      if(eventChainExecutions.end() != toDelete){
+      }
+      if (eventChainExecutions.end() != toDelete) {
         eventChainExecutions.erase(toDelete);
       }
     }
 
   private:
-    std::vector<CFMUEventChainExecutionThread*> eventChainExecutions;
+    std::vector<CFMUEventChainExecutionThread *> eventChainExecutions;
 
     bool stillSomeEvents();
 
-    void putAllEcetInWaitingStepState(bool* paAllowToRun, forte::arch::CSemaphore* paEcetSemaphore);
-
+    void putAllEcetInWaitingStepState(bool *paAllowToRun, forte::arch::CSemaphore *paEcetSemaphore);
 };
 
 #endif /* _FMITIMERHANDLER_H_ */

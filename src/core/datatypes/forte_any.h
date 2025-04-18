@@ -27,7 +27,7 @@
 #include "iec61131_cast_helper.h"
 
 #if (!defined FORTE_LITTLE_ENDIAN) && (!defined FORTE_BIG_ENDIAN)
-#  error "Endianess is not defined!"
+#error "Endianess is not defined!"
 #endif
 
 /*!\ingroup COREDTS  CIEC_ANY represents the IEC_ANY data type according to IEC 61131.
@@ -48,9 +48,30 @@ class CIEC_ANY {
      *  Transfer syntaxes (page 89).
      */
     enum EDataTypeID {
-      e_ANY, e_BOOL, e_SINT, e_INT, e_DINT, e_LINT, e_USINT, e_UINT, e_UDINT, e_ULINT, e_BYTE, e_WORD, e_DWORD, e_LWORD, e_DATE, e_TIME_OF_DAY, e_DATE_AND_TIME, e_TIME,
-      e_CHAR, e_WCHAR,
-      e_LDATE, e_LTIME_OF_DAY, e_LDATE_AND_TIME, e_LTIME, //until here mem-copiable data types
+      e_ANY,
+      e_BOOL,
+      e_SINT,
+      e_INT,
+      e_DINT,
+      e_LINT,
+      e_USINT,
+      e_UINT,
+      e_UDINT,
+      e_ULINT,
+      e_BYTE,
+      e_WORD,
+      e_DWORD,
+      e_LWORD,
+      e_DATE,
+      e_TIME_OF_DAY,
+      e_DATE_AND_TIME,
+      e_TIME,
+      e_CHAR,
+      e_WCHAR,
+      e_LDATE,
+      e_LTIME_OF_DAY,
+      e_LDATE_AND_TIME,
+      e_LTIME, // until here mem-copiable data types
       e_REAL,
       e_LREAL,
       e_STRING,
@@ -59,7 +80,7 @@ class CIEC_ANY {
       e_DirectlyDerivedData,
       e_EnumeratedData,
       e_SubrangeData,
-      e_ARRAY, //according to the compliance profile
+      e_ARRAY, // according to the compliance profile
       e_STRUCT,
       e_External = 256, // Base for CIEC_ANY based types outside of the forte base
       e_Max = 65535 // Guarantees at least 16 bits - otherwise gcc will optimizes on some platforms
@@ -78,16 +99,18 @@ class CIEC_ANY {
         oToCast.setValueSimple(U(static_cast<typename U::TValueType>(static_cast<typename T::TValueType>(paFromCast))));
       } else if constexpr (std::is_base_of_v<CIEC_ANY_INT, T> && std::is_base_of_v<CIEC_ANY_BIT, U>) {
         typename T::TValueType fromValue = static_cast<typename T::TValueType>(paFromCast);
-        typename std::make_unsigned_t<typename T::TValueType> fromValueUnsigned = static_cast<std::make_unsigned_t<typename T::TValueType>>(fromValue);
+        typename std::make_unsigned_t<typename T::TValueType> fromValueUnsigned =
+            static_cast<std::make_unsigned_t<typename T::TValueType>>(fromValue);
         typename U::TValueType toValue = static_cast<typename U::TValueType>(fromValueUnsigned);
         oToCast.setValueSimple(U(toValue));
-      } else if constexpr (std::is_base_of_v<CIEC_ANY_BIT, T> && //special cast binary to bool
-          std::is_base_of_v<CIEC_ANY_BIT, U>) {
-          if constexpr (std::is_base_of_v<CIEC_BOOL, U>) { // reinterpret C/C++ bool to binary transfer
-            oToCast.setValueSimple(U(static_cast<typename T::TValueType>(paFromCast) % 2 == 1 ? true : false));
-          } else {
-            oToCast.setValueSimple(U(static_cast<typename U::TValueType>(static_cast<typename T::TValueType>(paFromCast))));
-          }
+      } else if constexpr (std::is_base_of_v<CIEC_ANY_BIT, T> && // special cast binary to bool
+                           std::is_base_of_v<CIEC_ANY_BIT, U>) {
+        if constexpr (std::is_base_of_v<CIEC_BOOL, U>) { // reinterpret C/C++ bool to binary transfer
+          oToCast.setValueSimple(U(static_cast<typename T::TValueType>(paFromCast) % 2 == 1 ? true : false));
+        } else {
+          oToCast.setValueSimple(
+              U(static_cast<typename U::TValueType>(static_cast<typename T::TValueType>(paFromCast))));
+        }
       } else if constexpr (std::is_base_of_v<CIEC_ANY_REAL, T>) {
         specialCast(paFromCast, oToCast);
       } else if constexpr (std::is_base_of_v<CIEC_ANY_REAL, U>) {
@@ -98,8 +121,7 @@ class CIEC_ANY {
       return oToCast;
     }
 
-    CIEC_ANY() :
-        mForced(false){
+    CIEC_ANY() : mForced(false) {
       setLargestUInt(0);
     }
 
@@ -140,7 +162,7 @@ class CIEC_ANY {
      *   This clone object is necessary for establishing data-connections.
      *   Pure virtual function implementation.
      */
-    virtual CIEC_ANY* clone(TForteByte *paDataBuf) const = 0;
+    virtual CIEC_ANY *clone(TForteByte *paDataBuf) const = 0;
 
     /*! \brief Get data type id method
      *
@@ -159,7 +181,7 @@ class CIEC_ANY {
      *  \return Returns TForteByte*
      */
 
-    TForteByte* getDataPtr() {
+    TForteByte *getDataPtr() {
       return mAnyData.mData;
     }
 
@@ -168,7 +190,7 @@ class CIEC_ANY {
      *  \return Returns const TForteByte*
      */
 
-    const TForteByte* getConstDataPtr() const {
+    const TForteByte *getConstDataPtr() const {
       return mAnyData.mData;
     }
 
@@ -195,7 +217,7 @@ class CIEC_ANY {
      *   \return number of bytes used in the buffer without trailing 0x00
      *           -1 on error
      */
-    virtual int toString(char* paValue, size_t paBufferSize) const = 0;
+    virtual int toString(char *paValue, size_t paBufferSize) const = 0;
 
     /*! \brief Compare for equality
      *
@@ -205,7 +227,7 @@ class CIEC_ANY {
      *       (e.g., <code>CIEC_INT(0).equals(CIEC_SINT(0))</code> yields <code>false</code>).
      */
     [[nodiscard]] virtual bool equals(const CIEC_ANY &paOther) const {
-      if(getDataTypeID() == paOther.getDataTypeID()) {
+      if (getDataTypeID() == paOther.getDataTypeID()) {
         return mAnyData.mLargestUInt == paOther.mAnyData.mLargestUInt;
       }
       return false;
@@ -224,7 +246,7 @@ class CIEC_ANY {
     static void specialCast(const CIEC_ANY &paSrcValue, CIEC_ANY &paDstValue);
 
     /*! \brief calculates buffer size needed for toString conversion
-         */
+     */
     virtual size_t getToStringBufferSize() const = 0;
 
     virtual size_t getIECMemorySize() const {
@@ -233,32 +255,33 @@ class CIEC_ANY {
     }
 
 #ifdef FORTE_SUPPORT_CUSTOM_SERIALIZABLE_DATATYPES
-    /*! \brief the following methods have to be implemented if a custom datatype is added to the forte which is not supported by the default seralize mechanism. */
+    /*! \brief the following methods have to be implemented if a custom datatype is added to the forte which is not
+     * supported by the default seralize mechanism. */
     /*! \brief returns the required size for serialization */
     virtual unsigned int getRequiredSerializationSize() const {
       return 0;
     }
-    
+
     /*! \brief returns the tag of the datatype for serialization */
-    virtual TForteByte getTag() const{
+    virtual TForteByte getTag() const {
       return 0xFF;
     }
-    
+
     /*! \brief serialize the custom type */
-    virtual int serializeCustomType(TForteByte*, int) const {
+    virtual int serializeCustomType(TForteByte *, int) const {
       return -1;
     }
-    
+
     /*! \brief deserialize the tag */
     virtual bool deserializeTag(const TForteByte) {
       return false;
     }
-    
+
     /*! \brief deserialize the custom type*/
-    virtual int deserializeCustomType(const TForteByte*, int) {
+    virtual int deserializeCustomType(const TForteByte *, int) {
       return -1;
     }
-    
+
 #endif
 
     bool isForced() const {
@@ -275,8 +298,7 @@ class CIEC_ANY {
      * To be used for efficiently implementing assignment operators where it is
      * known that this can be done safely.
      */
-    inline
-    void setValueSimple(const CIEC_ANY &paValue) {
+    inline void setValueSimple(const CIEC_ANY &paValue) {
       mAnyData = paValue.mAnyData;
     }
 
@@ -288,15 +310,15 @@ class CIEC_ANY {
       mAnyData.mLargestUInt = TLargestUIntValueType(src);
     }
 
-    void setTUINT32(TForteUInt32 src) { //also used for TForteDWord
+    void setTUINT32(TForteUInt32 src) { // also used for TForteDWord
       mAnyData.mLargestUInt = TLargestUIntValueType(src);
     }
 
-    void setTUINT16(TForteUInt16 src) { //also used for TForteWord
+    void setTUINT16(TForteUInt16 src) { // also used for TForteWord
       mAnyData.mLargestUInt = TLargestUIntValueType(src);
     }
 
-    void setTUINT8(TForteUInt8 src) { //also used for TForteByte
+    void setTUINT8(TForteUInt8 src) { // also used for TForteByte
       mAnyData.mLargestUInt = TLargestUIntValueType(src);
     }
 
@@ -312,11 +334,11 @@ class CIEC_ANY {
       mAnyData.mLargestInt = TLargestIntValueType(src);
     }
 
-    void setChar(TForteChar src) { 
+    void setChar(TForteChar src) {
       mAnyData.mLargestUInt = TLargestUIntValueType(src);
     }
 
-    void setChar16(TForteWChar src) { 
+    void setChar16(TForteWChar src) {
       mAnyData.mLargestUInt = TLargestUIntValueType(src);
     }
 
@@ -328,7 +350,7 @@ class CIEC_ANY {
       mAnyData.mDFloat = TForteDFloat(src);
     }
 
-    void setTUINT64(TForteUInt64 src) { //also used for LWORD
+    void setTUINT64(TForteUInt64 src) { // also used for LWORD
       mAnyData.mLargestUInt = TLargestUIntValueType(src);
     }
 
@@ -336,18 +358,18 @@ class CIEC_ANY {
       mAnyData.mLargestInt = TLargestIntValueType(src);
     }
 #ifdef FORTE_BIG_ENDIAN
-    bool getTBOOL8() const{
+    bool getTBOOL8() const {
       return (mAnyData.mLargestUInt != 0);
     }
-    TForteUInt32 getTUINT32() const { //also used for TForteDWord
+    TForteUInt32 getTUINT32() const { // also used for TForteDWord
       return static_cast<TForteUInt32>(mAnyData.mLargestUInt);
     }
 
-    TForteUInt16 getTUINT16() cons t{ //also used for TForteWord
+    TForteUInt16 getTUINT16() cons t { // also used for TForteWord
       return static_cast<TForteUInt16>(mAnyData.mLargestUInt);
     }
 
-    TForteUInt8 getTUINT8() const { //also used for TForteByte
+    TForteUInt8 getTUINT8() const { // also used for TForteByte
       return static_cast<TForteUInt8>(mAnyData.mLargestUInt);
     }
 
@@ -371,7 +393,7 @@ class CIEC_ANY {
       return static_cast<TForteWChar>(mAnyData.mLargestInt);
     }
 
-    TForteUInt64 getTUINT64() const { //also used for LWORD
+    TForteUInt64 getTUINT64() const { // also used for LWORD
       return static_cast<TForteUInt64>(mAnyData.mLargestUInt);
     }
 
@@ -380,19 +402,19 @@ class CIEC_ANY {
     }
 #else
 #ifdef FORTE_LITTLE_ENDIAN
-    bool getTBOOL8() const{
+    bool getTBOOL8() const {
       return mAnyData.mBool;
     }
 
-    TForteUInt32 getTUINT32() const { //also used for TForteDWord
+    TForteUInt32 getTUINT32() const { // also used for TForteDWord
       return mAnyData.mUInt32;
     }
 
-    TForteUInt16 getTUINT16() const { //also used for TForteWord
+    TForteUInt16 getTUINT16() const { // also used for TForteWord
       return mAnyData.mUInt16;
     }
 
-    TForteUInt8 getTUINT8() const { //also used for TForteByte
+    TForteUInt8 getTUINT8() const { // also used for TForteByte
       return mAnyData.mUInt8;
     }
 
@@ -416,18 +438,18 @@ class CIEC_ANY {
       return mAnyData.mWChar16;
     }
 
-    TForteUInt64 getTUINT64() const { //also used for LWORD
+    TForteUInt64 getTUINT64() const { // also used for LWORD
       return mAnyData.mUInt64;
     }
-    
+
     TForteInt64 getTINT64() const {
       return mAnyData.mInt64;
     }
 #else
 #error Endianess not defined!
-#endif //#ifdef FORTE_BIG_ENDIAN
-#endif //#ifdef FORTE_LITTLE_ENDIAN
-//!< get-Methods are Big/Little Endian independent
+#endif // #ifdef FORTE_BIG_ENDIAN
+#endif // #ifdef FORTE_LITTLE_ENDIAN
+    //!< get-Methods are Big/Little Endian independent
     TForteFloat getTFLOAT() const {
       return (TForteFloat) mAnyData.mFloat;
     }
@@ -467,122 +489,133 @@ class CIEC_ANY {
     static CStringDictionary::TStringId parseTypeName(const char *paValue, const char *paHashPos);
 
   public:
-    CIEC_ANY(const CIEC_ANY&) = delete;
-    CIEC_ANY& operator =(const CIEC_ANY& paValue) = delete;
+    CIEC_ANY(const CIEC_ANY &) = delete;
+    CIEC_ANY &operator=(const CIEC_ANY &paValue) = delete;
 
   private:
     bool mForced;
 
-    //Anonymous union holding the data value of our IEC data type
-    union UAnyData{
-      bool mBool;
+    // Anonymous union holding the data value of our IEC data type
+    union UAnyData {
+        bool mBool;
 
-      TForteByte mByte;
-      TForteWord mWord;
-      TForteDWord mDWord;
+        TForteByte mByte;
+        TForteWord mWord;
+        TForteDWord mDWord;
 
-      TForteInt8 mInt8;
-      TForteInt16 mInt16;
-      TForteInt32 mInt32;
+        TForteInt8 mInt8;
+        TForteInt16 mInt16;
+        TForteInt32 mInt32;
 
-      TForteUInt8 mUInt8;
-      TForteUInt16 mUInt16;
-      TForteUInt32 mUInt32;
+        TForteUInt8 mUInt8;
+        TForteUInt16 mUInt16;
+        TForteUInt32 mUInt32;
 
-      TForteChar mChar8;
-      TForteWChar mWChar16;
+        TForteChar mChar8;
+        TForteWChar mWChar16;
 
-      TForteFloat mFloat;
-      TForteDFloat mDFloat;
+        TForteFloat mFloat;
+        TForteDFloat mDFloat;
 
-      TForteInt64 mInt64;
-      TForteUInt64 mUInt64;
-      TForteByte mData[sizeof(TForteUInt64)]; //!< For data extraction in big endian machines
-      TLargestUIntValueType mLargestUInt;
-      TLargestIntValueType mLargestInt;
-      /*! \brief A pointer to general data that can be used for data types needing other data than that contained in the union
-        *
-        * This is needed as the current design does not allow that the size of data types when created is different from
-        * the size of the CIEC_ANY class. This data value will be used for example by string or array.
-        */
-      TForteByte *mGenData;
+        TForteInt64 mInt64;
+        TForteUInt64 mUInt64;
+        TForteByte mData[sizeof(TForteUInt64)]; //!< For data extraction in big endian machines
+        TLargestUIntValueType mLargestUInt;
+        TLargestIntValueType mLargestInt;
+        /*! \brief A pointer to general data that can be used for data types needing other data than that contained in
+         * the union
+         *
+         * This is needed as the current design does not allow that the size of data types when created is different
+         * from the size of the CIEC_ANY class. This data value will be used for example by string or array.
+         */
+        TForteByte *mGenData;
     };
 
     UAnyData mAnyData;
 
-    constexpr static size_t csmDataLengthLookup[] = {0, 1, 1, 2, 4, 8, 1, 2, 4, 8, 1, 2, 4, 8, 8, 8, 8, 8, 8, 8, 8, 8, 1, 2, 4, 8, 0, 0, 0};
+    constexpr static size_t csmDataLengthLookup[] = {0, 1, 1, 2, 4, 8, 1, 2, 4, 8, 1, 2, 4, 8, 8,
+                                                     8, 8, 8, 8, 8, 8, 8, 1, 2, 4, 8, 0, 0, 0};
 };
 
 namespace forte {
   namespace templates {
-    template <typename T, typename = typename std::enable_if_t<std::is_base_of_v<CIEC_ANY, T>>>
+    template<typename T, typename = typename std::enable_if_t<std::is_base_of_v<CIEC_ANY, T>>>
     struct numeric_limits {
-      static constexpr bool is_specialized = true;
+        static constexpr bool is_specialized = true;
 
-      static T
-      min() noexcept { return T(std::numeric_limits<typename T::TValueType>::min()); }
+        static T min() noexcept {
+          return T(std::numeric_limits<typename T::TValueType>::min());
+        }
 
-      static T
-      max() noexcept { return T(std::numeric_limits<typename T::TValueType>::max()); }
+        static T max() noexcept {
+          return T(std::numeric_limits<typename T::TValueType>::max());
+        }
 
-      static T
-      lowest() noexcept { return min(); }
+        static T lowest() noexcept {
+          return min();
+        }
 
-      static constexpr int digits = std::numeric_limits<typename T::TValueType>::digits;
-      static constexpr int digits10 = std::numeric_limits<typename T::TValueType>::digits10;
-      static constexpr int max_digits10 = std::numeric_limits<typename T::TValueType>::max_digits10;
+        static constexpr int digits = std::numeric_limits<typename T::TValueType>::digits;
+        static constexpr int digits10 = std::numeric_limits<typename T::TValueType>::digits10;
+        static constexpr int max_digits10 = std::numeric_limits<typename T::TValueType>::max_digits10;
 
-      static constexpr bool is_signed = std::numeric_limits<typename T::TValueType>::is_signed;
-      static constexpr bool is_integer = std::numeric_limits<typename T::TValueType>::is_integer;
-      static constexpr bool is_exact = std::numeric_limits<typename T::TValueType>::is_exact;
-      static constexpr int radix = std::numeric_limits<typename T::TValueType>::radix;
+        static constexpr bool is_signed = std::numeric_limits<typename T::TValueType>::is_signed;
+        static constexpr bool is_integer = std::numeric_limits<typename T::TValueType>::is_integer;
+        static constexpr bool is_exact = std::numeric_limits<typename T::TValueType>::is_exact;
+        static constexpr int radix = std::numeric_limits<typename T::TValueType>::radix;
 
-      static T
-      epsilon() noexcept { return T(std::numeric_limits<typename T::TValueType>::epsilon()); }
+        static T epsilon() noexcept {
+          return T(std::numeric_limits<typename T::TValueType>::epsilon());
+        }
 
-      static T
-      round_error() noexcept { return T(std::numeric_limits<typename T::TValueType>::round_error()); }
+        static T round_error() noexcept {
+          return T(std::numeric_limits<typename T::TValueType>::round_error());
+        }
 
-      static constexpr int min_exponent = std::numeric_limits<typename T::TValueType>::min_exponent;
-      static constexpr int min_exponent10 = std::numeric_limits<typename T::TValueType>::min_exponent;
-      static constexpr int max_exponent = std::numeric_limits<typename T::TValueType>::max_exponent;
-      static constexpr int max_exponent10 = std::numeric_limits<typename T::TValueType>::max_exponent10;
+        static constexpr int min_exponent = std::numeric_limits<typename T::TValueType>::min_exponent;
+        static constexpr int min_exponent10 = std::numeric_limits<typename T::TValueType>::min_exponent;
+        static constexpr int max_exponent = std::numeric_limits<typename T::TValueType>::max_exponent;
+        static constexpr int max_exponent10 = std::numeric_limits<typename T::TValueType>::max_exponent10;
 
-      static constexpr bool has_infinity = std::numeric_limits<typename T::TValueType>::has_infinity;
-      static constexpr bool has_quiet_NaN = std::numeric_limits<typename T::TValueType>::has_quiet_NaN;
-      static constexpr bool has_signaling_NaN = std::numeric_limits<typename T::TValueType>::has_signaling_NaN;
-      static constexpr std::float_denorm_style has_denorm = std::numeric_limits<typename T::TValueType>::has_denorm;
-      static constexpr bool has_denorm_loss = std::numeric_limits<typename T::TValueType>::has_denorm_loss;
+        static constexpr bool has_infinity = std::numeric_limits<typename T::TValueType>::has_infinity;
+        static constexpr bool has_quiet_NaN = std::numeric_limits<typename T::TValueType>::has_quiet_NaN;
+        static constexpr bool has_signaling_NaN = std::numeric_limits<typename T::TValueType>::has_signaling_NaN;
+        static constexpr std::float_denorm_style has_denorm = std::numeric_limits<typename T::TValueType>::has_denorm;
+        static constexpr bool has_denorm_loss = std::numeric_limits<typename T::TValueType>::has_denorm_loss;
 
-      static T
-      infinity() noexcept { return T(std::numeric_limits<typename T::TValueType>::infinity()); }
+        static T infinity() noexcept {
+          return T(std::numeric_limits<typename T::TValueType>::infinity());
+        }
 
-      static T
-      quiet_NaN() noexcept { return T(std::numeric_limits<typename T::TValueType>::quiet_NaN()); }
+        static T quiet_NaN() noexcept {
+          return T(std::numeric_limits<typename T::TValueType>::quiet_NaN());
+        }
 
-      static T
-      signaling_NaN() noexcept { return T(std::numeric_limits<typename T::TValueType>::signaling_NaN()); }
+        static T signaling_NaN() noexcept {
+          return T(std::numeric_limits<typename T::TValueType>::signaling_NaN());
+        }
 
-      static T
-      denorm_min() noexcept { return T(std::numeric_limits<typename T::TValueType>::denorm_min()); }
+        static T denorm_min() noexcept {
+          return T(std::numeric_limits<typename T::TValueType>::denorm_min());
+        }
 
-      static constexpr bool is_iec559 = std::numeric_limits<typename T::TValueType>::is_iec559;
-      static constexpr bool is_bounded = std::numeric_limits<typename T::TValueType>::is_bounded;
-      static constexpr bool is_modulo = std::numeric_limits<typename T::TValueType>::is_modulo;
+        static constexpr bool is_iec559 = std::numeric_limits<typename T::TValueType>::is_iec559;
+        static constexpr bool is_bounded = std::numeric_limits<typename T::TValueType>::is_bounded;
+        static constexpr bool is_modulo = std::numeric_limits<typename T::TValueType>::is_modulo;
 
-      static constexpr bool traps = std::numeric_limits<typename T::TValueType>::traps;
-      static constexpr bool tinyness_before = std::numeric_limits<typename T::TValueType>::tinyness_before;
-      static constexpr std::float_round_style round_style = std::numeric_limits<typename T::TValueType>::round_style;
+        static constexpr bool traps = std::numeric_limits<typename T::TValueType>::traps;
+        static constexpr bool tinyness_before = std::numeric_limits<typename T::TValueType>::tinyness_before;
+        static constexpr std::float_round_style round_style = std::numeric_limits<typename T::TValueType>::round_style;
     };
 
-  }
+  } // namespace templates
 
-  template <typename T, typename = typename std::enable_if_t<std::is_base_of_v<CIEC_ANY, T>>>
+  template<typename T, typename = typename std::enable_if_t<std::is_base_of_v<CIEC_ANY, T>>>
   struct CDataTypeTrait {
       static constexpr CIEC_ANY::EDataTypeID scmDataTypeId = CIEC_ANY::e_Max;
       static constexpr CStringDictionary::TStringId scmDataTypeName = CStringDictionary::scmInvalidStringId;
   };
 
-}
+} // namespace forte
 
 #endif /*_MANY_H_*/

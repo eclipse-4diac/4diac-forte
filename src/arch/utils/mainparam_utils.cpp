@@ -27,7 +27,7 @@
 /*!\brief Lists the help for FORTE
  *
  */
-void listHelp(){
+void listHelp() {
   printf("Usage: forte [options]\n");
   printf("Options:\n");
   printf("%-20s Display this information\n", "  -h");
@@ -41,36 +41,37 @@ void listHelp(){
 #ifdef FORTE_COM_OPC_UA
   printf("%-20s Set the listening port for the OPC UA connection\n", "  -op <port>");
   printf("%-20s Set the configuration file for the OPC UA clients\n", "  -oc <file>");
-#endif //FORTE_COM_OPC_UA
+#endif // FORTE_COM_OPC_UA
 #ifdef FORTE_COM_PAHOMQTT
   printf("%-20s Set the configuration file for the MQTT clients\n", "  -mc <file>");
-#endif //FORTE_COM_PAHOMQTT
+#endif // FORTE_COM_PAHOMQTT
 #ifdef FORTE_COM_HTTP
   printf("%-20s Set the listening port for the HTTP server\n", "  -Hp <port>");
-#endif //FORTE_COM_HTTP
+#endif // FORTE_COM_HTTP
 #ifdef FORTE_TRACE_CTF
   printf("%-20s Set the output directory for TRACE_CTF\n", "  -t <directory>");
-#endif //FORTE_TRACE_CTF
+#endif // FORTE_TRACE_CTF
 }
 
 /*!\brief Parses the command line arguments passed to the main function
  *
  */
-const char *parseCommandLineArguments(int argc, char *arg[]){
+const char *parseCommandLineArguments(int argc, char *arg[]) {
 
   const char *pIpPort = "localhost:61499"; //! Default Value (localhost:61499)
 
-  if(argc > 1) {
-    for(size_t i = 1; i < static_cast<size_t>(argc); i += 2) {
-      if('-' == arg[i][0]) {
-        switch(arg[i][1]){
+  if (argc > 1) {
+    for (size_t i = 1; i < static_cast<size_t>(argc); i += 2) {
+      if ('-' == arg[i][0]) {
+        switch (arg[i][1]) {
           case 'c': //! sets the destination for the connection
             pIpPort = arg[i + 1];
             break;
 #ifdef FORTE_MULTIPLE_DEVICES
           case 'd': //! sets the device to be used
-            if(!DeviceFactory::setDeviceToCreate(arg[i + 1])){
-              printf("The selected device '%s' is not valid. Select one of the following: %s\n", arg[i + 1], DeviceFactory::getAvailableDevices().c_str());
+            if (!DeviceFactory::setDeviceToCreate(arg[i + 1])) {
+              printf("The selected device '%s' is not valid. Select one of the following: %s\n", arg[i + 1],
+                     DeviceFactory::getAvailableDevices().c_str());
               return nullptr;
             }
             break;
@@ -79,36 +80,37 @@ const char *parseCommandLineArguments(int argc, char *arg[]){
           case 'f': //! sets the boot-file to be used
             gCommandLineBootFile = arg[i + 1];
             break;
-#endif //FORTE_SUPPORT_BOOT_FILE
+#endif // FORTE_SUPPORT_BOOT_FILE
 #ifdef FORTE_COM_OPC_UA
           case 'o':
-            if('p' == arg[i][2]) { //! Retrieves OPCUA server port number entered from the command line
+            if ('p' == arg[i][2]) { //! Retrieves OPCUA server port number entered from the command line
               gOpcuaServerPort = static_cast<TForteUInt16>(atoi(arg[i + 1]));
-            } else if('c' == arg[i][2]) { //! Retrieves OPCUA configuration file for clients entered from the command line
+            } else if ('c' ==
+                       arg[i][2]) { //! Retrieves OPCUA configuration file for clients entered from the command line
               gOpcuaClientConfigFile = arg[i + 1];
             }
             break;
-#endif //FORTE_COM_OPC_UA
+#endif // FORTE_COM_OPC_UA
 #ifdef FORTE_COM_PAHOMQTT
           case 'm':
-            if('c' == arg[i][2]) { //! Retrieves MQTT configuration file for clients entered from the command line
+            if ('c' == arg[i][2]) { //! Retrieves MQTT configuration file for clients entered from the command line
               gMqttClientConfigFile = arg[i + 1];
             }
             break;
-#endif //FORTE_COM_PAHOMQTT
+#endif // FORTE_COM_PAHOMQTT
 #ifdef FORTE_COM_HTTP
           case 'H':
-            if('p' == arg[i][2]) { //! Retrieves HTTP server port number entered from the command line
+            if ('p' == arg[i][2]) { //! Retrieves HTTP server port number entered from the command line
               gHTTPServerPort = static_cast<TForteUInt16>(atoi(arg[i + 1]));
             }
             break;
-#endif //FORTE_COM_HTTP
+#endif // FORTE_COM_HTTP
 #ifdef FORTE_TRACE_CTF
           case 't':
             void barectfSetup(std::string directory);
             barectfSetup(arg[i + 1] ?: "");
             break;
-#endif //FORTE_TRACE_CTF
+#endif // FORTE_TRACE_CTF
           default: //! Unknown parameter or -h -> Lists the help for FORTE
             return "";
         }

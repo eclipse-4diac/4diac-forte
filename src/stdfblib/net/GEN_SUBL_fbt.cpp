@@ -18,22 +18,20 @@ USE_STRING_ID(GEN_SUBL)
 
 DEFINE_GENERIC_FIRMWARE_FB(GEN_SUBL, STRID(GEN_SUBL))
 
+const char *const GEN_SUBL::scmLocalIDPrefix = "loc[";
+const char *const GEN_SUBL::scmLocalIDSuffix = "]";
 
-const char * const GEN_SUBL::scmLocalIDPrefix = "loc[";
-const char * const GEN_SUBL::scmLocalIDSuffix = "]";
-
-GEN_SUBL::GEN_SUBL(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer):
-          GEN_SUBSCRIBE( paInstanceNameId, paContainer){
+GEN_SUBL::GEN_SUBL(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+    GEN_SUBSCRIBE(paInstanceNameId, paContainer) {
 }
 
-bool GEN_SUBL::configureFB(const char *paConfigString){
+bool GEN_SUBL::configureFB(const char *paConfigString) {
   bool bRetVal = GEN_SUBSCRIBE::configureFB(paConfigString);
-  //subls normally don't show the QI in the tool
+  // subls normally don't show the QI in the tool
   QI() = CIEC_BOOL(true);
   return bRetVal;
 }
 
-char * GEN_SUBL::getDefaultIDString(const char *paID){
+char *GEN_SUBL::getDefaultIDString(const char *paID) {
   return buildIDString(scmLocalIDPrefix, paID, scmLocalIDSuffix);
 }
-

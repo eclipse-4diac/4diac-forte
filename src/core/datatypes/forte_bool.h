@@ -24,15 +24,15 @@
 
 /*!\ingroup COREDTS CIEC_BOOL represents the bool data type according to IEC 61131.
  */
-class CIEC_BOOL : public CIEC_ANY_BIT{
-  DECLARE_FIRMWARE_DATATYPE(BOOL)
+class CIEC_BOOL : public CIEC_ANY_BIT {
+    DECLARE_FIRMWARE_DATATYPE(BOOL)
 
   public:
     using TValueType = bool;
     [[deprecated("Please use the corresponding numeric_limits template")]]
     constexpr static size_t scmBitLength = 1U;
 
-    [[deprecated("Please use the corresponding numeric_limits template")]] 
+    [[deprecated("Please use the corresponding numeric_limits template")]]
     static constexpr TValueType scmMinVal = std::numeric_limits<TValueType>::min();
     [[deprecated("Please use the corresponding numeric_limits template")]]
     static constexpr TValueType scmMaxVal = std::numeric_limits<TValueType>::max();
@@ -41,8 +41,7 @@ class CIEC_BOOL : public CIEC_ANY_BIT{
       setTBOOL8(false);
     }
 
-    CIEC_BOOL(const CIEC_BOOL& paValue) :
-        CIEC_ANY_BIT() {
+    CIEC_BOOL(const CIEC_BOOL &paValue) : CIEC_ANY_BIT() {
       *this = paValue;
     }
 
@@ -52,7 +51,7 @@ class CIEC_BOOL : public CIEC_ANY_BIT{
 
     ~CIEC_BOOL() override = default;
 
-    CIEC_BOOL& operator =(const CIEC_BOOL &paValue) {
+    CIEC_BOOL &operator=(const CIEC_BOOL &paValue) {
       // Simple value assignment - no self assignment check needed
       setValueSimple(paValue);
       return *this;
@@ -90,7 +89,7 @@ class CIEC_BOOL : public CIEC_ANY_BIT{
      *   \return number of bytes used in the buffer without trailing 0x00
      *           -1 on error
      */
-    int toString(char* paValue, size_t paBufferSize) const override;
+    int toString(char *paValue, size_t paBufferSize) const override;
 
     /*! \brief calculates buffer size needed for toString conversion
      */
@@ -104,23 +103,23 @@ class CIEC_BOOL : public CIEC_ANY_BIT{
 const CIEC_BOOL true_BOOL = CIEC_BOOL(true);
 const CIEC_BOOL false_BOOL = CIEC_BOOL(false);
 
-inline CIEC_BOOL operator ""_BOOL(unsigned long long int paValue) {
+inline CIEC_BOOL operator""_BOOL(unsigned long long int paValue) {
   return CIEC_BOOL(paValue);
 }
 
 namespace std {
-  template <>
+  template<>
   struct numeric_limits<CIEC_BOOL> : public forte::templates::numeric_limits<CIEC_BOOL> {
-    static constexpr size_t bitLength = 1U;
+      static constexpr size_t bitLength = 1U;
   };
-}
+} // namespace std
 
 namespace forte {
-  template <>
+  template<>
   struct CDataTypeTrait<CIEC_BOOL> {
       static constexpr CIEC_ANY::EDataTypeID scmDataTypeId = CIEC_ANY::e_BOOL;
       static const CStringDictionary::TStringId scmDataTypeName;
   };
-}
+} // namespace forte
 
 #endif /*_FORTE_BOOL_H_*/

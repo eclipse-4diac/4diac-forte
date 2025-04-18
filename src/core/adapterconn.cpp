@@ -20,20 +20,22 @@ USE_STRING_ID(ANY_ADAPTER);
 #include "anyadapter.h"
 
 CAdapterConnection::CAdapterConnection(CFunctionBlock &paSrcFB, const TPortId paSrcPortId, CAdapter &paPlug) :
-    CConnection(paSrcFB, paSrcPortId), mPlug(paPlug), mSocket(nullptr){
+    CConnection(paSrcFB, paSrcPortId),
+    mPlug(paPlug),
+    mSocket(nullptr) {
 }
 
-CAdapterConnection::~CAdapterConnection(){
+CAdapterConnection::~CAdapterConnection() {
   performDisconnect();
 }
 
-void CAdapterConnection::typifyAnyAdapter(CAdapter *paSocket){
-  if(STRID(ANY_ADAPTER) == paSocket->getFBTypeId()){
-    static_cast<CAnyAdapter*>(paSocket)->typifyAnyAdapter(mPlug);
+void CAdapterConnection::typifyAnyAdapter(CAdapter *paSocket) {
+  if (STRID(ANY_ADAPTER) == paSocket->getFBTypeId()) {
+    static_cast<CAnyAdapter *>(paSocket)->typifyAnyAdapter(mPlug);
   }
 
-  if(STRID(ANY_ADAPTER) == mPlug.getFBTypeId()){
-    static_cast<CAnyAdapter&>(mPlug).typifyAnyAdapter(*paSocket);
+  if (STRID(ANY_ADAPTER) == mPlug.getFBTypeId()) {
+    static_cast<CAnyAdapter &>(mPlug).typifyAnyAdapter(*paSocket);
   }
 }
 
@@ -65,8 +67,9 @@ EMGMResponse CAdapterConnection::connect(CFunctionBlock &paDstFB, CStringDiction
   return EMGMResponse::InvalidObject;
 }
 
-EMGMResponse CAdapterConnection::connectToCFBInterface(CFunctionBlock &, CStringDictionary::TStringId){
-  return EMGMResponse::InvalidOperation; //currently we are not supporting adapter connections accross interface boundaries
+EMGMResponse CAdapterConnection::connectToCFBInterface(CFunctionBlock &, CStringDictionary::TStringId) {
+  return EMGMResponse::InvalidOperation; // currently we are not supporting adapter connections accross interface
+                                         // boundaries
 }
 
 EMGMResponse CAdapterConnection::disconnect(CFunctionBlock &paDstFB, CStringDictionary::TStringId paDstPortNameId) {
@@ -82,16 +85,16 @@ EMGMResponse CAdapterConnection::disconnect(CFunctionBlock &paDstFB, CStringDict
   return EMGMResponse::NoSuchObject;
 }
 
-void CAdapterConnection::performDisconnect(){
+void CAdapterConnection::performDisconnect() {
   mPlug.disconnect(this);
 
-  if(mSocket != nullptr){
+  if (mSocket != nullptr) {
     mSocket->disconnect(this);
     mSocket = nullptr;
   }
 }
 
 void CAdapterConnection::getSourcePortName(forte::core::TNameIdentifier &paResult) const {
-  paResult.push_back(getSourceId().getFB().getFBInterfaceSpec().mAdapterInstanceDefinition[getSourceId().getPortId()].
-    mAdapterNameID);
+  paResult.push_back(
+      getSourceId().getFB().getFBInterfaceSpec().mAdapterInstanceDefinition[getSourceId().getPortId()].mAdapterNameID);
 }

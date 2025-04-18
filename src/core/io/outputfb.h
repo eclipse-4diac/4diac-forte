@@ -48,7 +48,7 @@ namespace forte::core::io {
       CDataConnection *conn_OUT;
 
       CIEC_ANY *getDI(size_t paIndex) override final {
-        if(paIndex == 2) {
+        if (paIndex == 2) {
           return &var_OUT;
         }
         return CProcessInterfaceFB::getDI(paIndex);
@@ -62,7 +62,11 @@ namespace forte::core::io {
         return IOMapper::Out;
       }
 
-      void evt_REQ(const CIEC_BOOL &paQI, const CIEC_STRING &paPARAMS, const CIEC_BYTE &paOUT, CIEC_BOOL &paQO, CIEC_STRING &paSTATUS) {
+      void evt_REQ(const CIEC_BOOL &paQI,
+                   const CIEC_STRING &paPARAMS,
+                   const CIEC_BYTE &paOUT,
+                   CIEC_BOOL &paQO,
+                   CIEC_STRING &paSTATUS) {
         var_QI = paQI;
         var_PARAMS = paPARAMS;
         var_OUT = paOUT;
@@ -76,13 +80,13 @@ namespace forte::core::io {
 
       void onHandle(IOHandle *const paHandle) final override {
         CProcessInterfaceFB::onHandle(paHandle);
-        if(isReady()) {
+        if (isReady()) {
           var_QO = write();
         }
       }
 
       CDataConnection **getDIConUnchecked(TPortId paIndex) override final {
-        if(paIndex == 2) {
+        if (paIndex == 2) {
           return &conn_OUT;
         }
         return CProcessInterfaceFB::getDIConUnchecked(paIndex);
@@ -103,8 +107,8 @@ namespace forte::core::io {
       static const CStringDictionary::TStringId scmEventOutputTypeIds[];
 
       void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) final override {
-        if(paEIID == scmEventREQID) {
-          if(var_QI) {
+        if (paEIID == scmEventREQID) {
+          if (var_QI) {
             var_QO = write();
           } else {
             var_QO = false_BOOL;
@@ -116,15 +120,13 @@ namespace forte::core::io {
       }
 
       void readInputData(TEventID paEIID) final override {
-        switch(paEIID){
+        switch (paEIID) {
           case scmEventREQID: {
             readData(0, var_QI, conn_QI);
             readData(2, var_OUT, conn_OUT);
             break;
           }
-          default:
-            CProcessInterfaceFB::readInputData(paEIID);
-            break;
+          default: CProcessInterfaceFB::readInputData(paEIID); break;
         }
       }
 
@@ -135,7 +137,7 @@ namespace forte::core::io {
 
       CIEC_BOOL write() {
         auto curHandle = getHandle();
-        if(!isReady() || curHandle == nullptr) {
+        if (!isReady() || curHandle == nullptr) {
           return false_BOOL;
         }
 
@@ -143,13 +145,13 @@ namespace forte::core::io {
 
         return true_BOOL;
       }
-
   };
 
   template<class T>
   const CStringDictionary::TStringId COutputFB<T>::scmDataInputNames[] = {STRID(QI), STRID(PARAMS), STRID(OUT)};
   template<class T>
-  const CStringDictionary::TStringId COutputFB<T>::scmDataInputTypeIds[] = {STRID(BOOL), STRID(STRING), forte::CDataTypeTrait<T>::scmDataTypeName};
+  const CStringDictionary::TStringId COutputFB<T>::scmDataInputTypeIds[] = {STRID(BOOL), STRID(STRING),
+                                                                            forte::CDataTypeTrait<T>::scmDataTypeName};
   template<class T>
   const CStringDictionary::TStringId COutputFB<T>::scmDataOutputNames[] = {STRID(QO), STRID(STATUS)};
   template<class T>
@@ -171,13 +173,25 @@ namespace forte::core::io {
   template<class T>
   const CStringDictionary::TStringId COutputFB<T>::scmEventOutputTypeIds[] = {STRID(EInit), STRID(Event)};
   template<class T>
-  const SFBInterfaceSpec COutputFB<T>::scmFBInterfaceSpec = {
-    2, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,
-    2, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes,
-    3, scmDataInputNames, scmDataInputTypeIds,
-    2, scmDataOutputNames, scmDataOutputTypeIds,
-    0, nullptr,
-    0, nullptr
-  };
+  const SFBInterfaceSpec COutputFB<T>::scmFBInterfaceSpec = {2,
+                                                             scmEventInputNames,
+                                                             scmEventInputTypeIds,
+                                                             scmEIWith,
+                                                             scmEIWithIndexes,
+                                                             2,
+                                                             scmEventOutputNames,
+                                                             scmEventOutputTypeIds,
+                                                             scmEOWith,
+                                                             scmEOWithIndexes,
+                                                             3,
+                                                             scmDataInputNames,
+                                                             scmDataInputTypeIds,
+                                                             2,
+                                                             scmDataOutputNames,
+                                                             scmDataOutputTypeIds,
+                                                             0,
+                                                             nullptr,
+                                                             0,
+                                                             nullptr};
 
-}
+} // namespace forte::core::io

@@ -15,16 +15,19 @@
 #include "Cmd_RemoveConnection.h"
 #include "opcconnectionimpl.h"
 
-CCmd_RemoveConnection::CCmd_RemoveConnection(COpcConnectionImpl &paConnectionimpl, const std::string& paGroupName, bool paIfDisconnect) :
-      mConnection(paConnectionimpl), mGroupName(paGroupName), mDisconnect(paIfDisconnect){
+CCmd_RemoveConnection::CCmd_RemoveConnection(COpcConnectionImpl &paConnectionimpl,
+                                             const std::string &paGroupName,
+                                             bool paIfDisconnect) :
+    mConnection(paConnectionimpl),
+    mGroupName(paGroupName),
+    mDisconnect(paIfDisconnect) {
 }
 
-void CCmd_RemoveConnection::runCommand(){
+void CCmd_RemoveConnection::runCommand() {
   if (mDisconnect) {
     mConnection.removeGroup(mGroupName); // the last FB group
     mConnection.disconnect();
-  }
-  else {
+  } else {
     mConnection.removeGroup(mGroupName);
   }
 }

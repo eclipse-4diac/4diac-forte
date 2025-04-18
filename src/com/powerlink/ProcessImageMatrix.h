@@ -12,31 +12,36 @@
 #ifndef _PROCIMAGEMATRIX_H_
 #define _PROCIMAGEMATRIX_H_
 
-//#include <vector>
+// #include <vector>
 #include <fortelist.h>
 
-class CProcessImageMatrix{
+class CProcessImageMatrix {
   public:
     CProcessImageMatrix();
     ~CProcessImageMatrix();
 
-    void addEntry(unsigned int paCN, unsigned int paModule, unsigned int paIoId, unsigned int paDataSize, unsigned int paPiOffset, unsigned int paBitOffset);
+    void addEntry(unsigned int paCN,
+                  unsigned int paModule,
+                  unsigned int paIoId,
+                  unsigned int paDataSize,
+                  unsigned int paPiOffset,
+                  unsigned int paBitOffset);
 
     // getEntry: Returns an array with [dataSize, PIOffset, BitOffset]
-    unsigned int* getEntry(unsigned int paCN, unsigned int paModule, unsigned int paIoId);
-    unsigned int* getEntry(unsigned int paIndex);
+    unsigned int *getEntry(unsigned int paCN, unsigned int paModule, unsigned int paIoId);
+    unsigned int *getEntry(unsigned int paIndex);
 
     unsigned int getNrOfEntries() const;
 
-    //ProcessImageMatrix* is owned by caller
-    CProcessImageMatrix* getModuleEntries(unsigned int paCN, unsigned int paModule);
+    // ProcessImageMatrix* is owned by caller
+    CProcessImageMatrix *getModuleEntries(unsigned int paCN, unsigned int paModule);
 
-    unsigned long getProcessImageSize() const ;
+    unsigned long getProcessImageSize() const;
 
     void clearAll();
 
   private:
-    struct SChannelEntry{
+    struct SChannelEntry {
         unsigned int mCN;
         unsigned int mModuleId;
         unsigned int mIOid;
@@ -44,14 +49,21 @@ class CProcessImageMatrix{
         unsigned int mPIOffset;
         unsigned int mBitOffset;
 
-        SChannelEntry(unsigned int paCN, unsigned int paModuleId, unsigned int paIOid, unsigned int paDataSize, unsigned int paPIOffset, unsigned int paBitOffset) :
-            mCN(paCN), mModuleId(paModuleId), mIOid(paIOid), mDataSize(paDataSize), mPIOffset(paPIOffset), mBitOffset(paBitOffset){
-        }
-        ;
-
+        SChannelEntry(unsigned int paCN,
+                      unsigned int paModuleId,
+                      unsigned int paIOid,
+                      unsigned int paDataSize,
+                      unsigned int paPIOffset,
+                      unsigned int paBitOffset) :
+            mCN(paCN),
+            mModuleId(paModuleId),
+            mIOid(paIOid),
+            mDataSize(paDataSize),
+            mPIOffset(paPIOffset),
+            mBitOffset(paBitOffset) {};
     };
 
-    typedef CSinglyLinkedList<SChannelEntry*> TChannelList;
+    typedef CSinglyLinkedList<SChannelEntry *> TChannelList;
     TChannelList mMatrix;
 
     unsigned long mBitSize;

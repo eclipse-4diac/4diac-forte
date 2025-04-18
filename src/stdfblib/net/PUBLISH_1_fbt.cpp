@@ -15,11 +15,10 @@
 
 USE_STRING_ID(PUBLISH_1);
 
-
 DEFINE_GENERIC_FIRMWARE_FB(FORTE_PUBLISH_1, STRID(PUBLISH_1))
 
-FORTE_PUBLISH_1::FORTE_PUBLISH_1(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
-                 GEN_PUBLISH(paInstanceNameId, paContainer) {
+FORTE_PUBLISH_1::FORTE_PUBLISH_1(const CStringDictionary::TStringId paInstanceNameId,
+                                 forte::core::CFBContainer &paContainer) :
+    GEN_PUBLISH(paInstanceNameId, paContainer) {
   configureFB("PUBLISH_1");
 }
-

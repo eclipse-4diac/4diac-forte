@@ -20,7 +20,7 @@
 /*!\ingroup COREDTS CIEC_ANY_REAL represents any real data types according to IEC 61131.
 
  */
-class CIEC_ANY_REAL : public CIEC_ANY_NUM{
+class CIEC_ANY_REAL : public CIEC_ANY_NUM {
   public:
     ~CIEC_ANY_REAL() override = default;
 

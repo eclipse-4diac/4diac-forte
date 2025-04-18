@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2012 - 2024 AIT
+ * Copyright (c) 2012 - 2024 AIT
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -25,8 +25,8 @@
 #include "forte_array_variable.h"
 #include "PowerlinkFunctionBlockDO.h"
 
-class FORTE_X20DO9322 final : public PowerlinkFunctionBlockDO  {
-  DECLARE_FIRMWARE_FB(FORTE_X20DO9322)
+class FORTE_X20DO9322 final : public PowerlinkFunctionBlockDO {
+    DECLARE_FIRMWARE_FB(FORTE_X20DO9322)
 
   private:
     static const CStringDictionary::TStringId scmDataInputNames[];
@@ -106,7 +106,24 @@ class FORTE_X20DO9322 final : public PowerlinkFunctionBlockDO  {
     CDataConnection **getDIConUnchecked(TPortId) override;
     CDataConnection *getDOConUnchecked(TPortId) override;
 
-    void evt_INIT(const CIEC_BOOL &paQI, const CIEC_USINT &paCNID, const CIEC_UINT &paMODID, const CIEC_BOOL &paDO01, const CIEC_BOOL &paDO02, const CIEC_BOOL &paDO03, const CIEC_BOOL &paDO04, const CIEC_BOOL &paDO05, const CIEC_BOOL &paDO06, const CIEC_BOOL &paDO07, const CIEC_BOOL &paDO08, const CIEC_BOOL &paDO09, const CIEC_BOOL &paDO10, const CIEC_BOOL &paDO11, const CIEC_BOOL &paDO12, CIEC_BOOL &paQO, CIEC_USINT &paCNIDO, CIEC_STRING &paSTATUS) {
+    void evt_INIT(const CIEC_BOOL &paQI,
+                  const CIEC_USINT &paCNID,
+                  const CIEC_UINT &paMODID,
+                  const CIEC_BOOL &paDO01,
+                  const CIEC_BOOL &paDO02,
+                  const CIEC_BOOL &paDO03,
+                  const CIEC_BOOL &paDO04,
+                  const CIEC_BOOL &paDO05,
+                  const CIEC_BOOL &paDO06,
+                  const CIEC_BOOL &paDO07,
+                  const CIEC_BOOL &paDO08,
+                  const CIEC_BOOL &paDO09,
+                  const CIEC_BOOL &paDO10,
+                  const CIEC_BOOL &paDO11,
+                  const CIEC_BOOL &paDO12,
+                  CIEC_BOOL &paQO,
+                  CIEC_USINT &paCNIDO,
+                  CIEC_STRING &paSTATUS) {
       var_QI = paQI;
       var_CNID = paCNID;
       var_MODID = paMODID;
@@ -128,7 +145,24 @@ class FORTE_X20DO9322 final : public PowerlinkFunctionBlockDO  {
       paSTATUS = var_STATUS;
     }
 
-    void evt_REQ(const CIEC_BOOL &paQI, const CIEC_USINT &paCNID, const CIEC_UINT &paMODID, const CIEC_BOOL &paDO01, const CIEC_BOOL &paDO02, const CIEC_BOOL &paDO03, const CIEC_BOOL &paDO04, const CIEC_BOOL &paDO05, const CIEC_BOOL &paDO06, const CIEC_BOOL &paDO07, const CIEC_BOOL &paDO08, const CIEC_BOOL &paDO09, const CIEC_BOOL &paDO10, const CIEC_BOOL &paDO11, const CIEC_BOOL &paDO12, CIEC_BOOL &paQO, CIEC_USINT &paCNIDO, CIEC_STRING &paSTATUS) {
+    void evt_REQ(const CIEC_BOOL &paQI,
+                 const CIEC_USINT &paCNID,
+                 const CIEC_UINT &paMODID,
+                 const CIEC_BOOL &paDO01,
+                 const CIEC_BOOL &paDO02,
+                 const CIEC_BOOL &paDO03,
+                 const CIEC_BOOL &paDO04,
+                 const CIEC_BOOL &paDO05,
+                 const CIEC_BOOL &paDO06,
+                 const CIEC_BOOL &paDO07,
+                 const CIEC_BOOL &paDO08,
+                 const CIEC_BOOL &paDO09,
+                 const CIEC_BOOL &paDO10,
+                 const CIEC_BOOL &paDO11,
+                 const CIEC_BOOL &paDO12,
+                 CIEC_BOOL &paQO,
+                 CIEC_USINT &paCNIDO,
+                 CIEC_STRING &paSTATUS) {
       var_QI = paQI;
       var_CNID = paCNID;
       var_MODID = paMODID;
@@ -150,9 +184,25 @@ class FORTE_X20DO9322 final : public PowerlinkFunctionBlockDO  {
       paSTATUS = var_STATUS;
     }
 
-    void operator()(const CIEC_BOOL &paQI, const CIEC_USINT &paCNID, const CIEC_UINT &paMODID, const CIEC_BOOL &paDO01, const CIEC_BOOL &paDO02, const CIEC_BOOL &paDO03, const CIEC_BOOL &paDO04, const CIEC_BOOL &paDO05, const CIEC_BOOL &paDO06, const CIEC_BOOL &paDO07, const CIEC_BOOL &paDO08, const CIEC_BOOL &paDO09, const CIEC_BOOL &paDO10, const CIEC_BOOL &paDO11, const CIEC_BOOL &paDO12, CIEC_BOOL &paQO, CIEC_USINT &paCNIDO, CIEC_STRING &paSTATUS) {
-      evt_INIT(paQI, paCNID, paMODID, paDO01, paDO02, paDO03, paDO04, paDO05, paDO06, paDO07, paDO08, paDO09, paDO10, paDO11, paDO12, paQO, paCNIDO, paSTATUS);
+    void operator()(const CIEC_BOOL &paQI,
+                    const CIEC_USINT &paCNID,
+                    const CIEC_UINT &paMODID,
+                    const CIEC_BOOL &paDO01,
+                    const CIEC_BOOL &paDO02,
+                    const CIEC_BOOL &paDO03,
+                    const CIEC_BOOL &paDO04,
+                    const CIEC_BOOL &paDO05,
+                    const CIEC_BOOL &paDO06,
+                    const CIEC_BOOL &paDO07,
+                    const CIEC_BOOL &paDO08,
+                    const CIEC_BOOL &paDO09,
+                    const CIEC_BOOL &paDO10,
+                    const CIEC_BOOL &paDO11,
+                    const CIEC_BOOL &paDO12,
+                    CIEC_BOOL &paQO,
+                    CIEC_USINT &paCNIDO,
+                    CIEC_STRING &paSTATUS) {
+      evt_INIT(paQI, paCNID, paMODID, paDO01, paDO02, paDO03, paDO04, paDO05, paDO06, paDO07, paDO08, paDO09, paDO10,
+               paDO11, paDO12, paQO, paCNIDO, paSTATUS);
     }
 };
-
-

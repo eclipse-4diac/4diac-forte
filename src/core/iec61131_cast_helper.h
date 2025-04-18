@@ -69,23 +69,25 @@ class CIEC_ANY_STRING;
 class CIEC_STRING;
 class CIEC_WSTRING;
 
-#define ALLOW_IMPLICIT_CAST(from, to) \
-template<> struct implicit_cast<from, to>{ \
-    typedef to type; \
-    implicit_cast() = delete; \
-};
+#define ALLOW_IMPLICIT_CAST(from, to)                                                                                  \
+  template<>                                                                                                           \
+  struct implicit_cast<from, to> {                                                                                     \
+      typedef to type;                                                                                                 \
+      implicit_cast() = delete;                                                                                        \
+  };
 
-#define ALLOW_EXPLICIT_CAST(from, to) \
-template<> struct explicit_cast<from, to>{ \
-    typedef to type; \
-    explicit_cast() = delete; \
-};
+#define ALLOW_EXPLICIT_CAST(from, to)                                                                                  \
+  template<>                                                                                                           \
+  struct explicit_cast<from, to> {                                                                                     \
+      typedef to type;                                                                                                 \
+      explicit_cast() = delete;                                                                                        \
+  };
 
 namespace forte {
   namespace core {
     namespace mpl {
 
-      struct NullType{
+      struct NullType {
           NullType() = delete;
       };
 
@@ -97,43 +99,57 @@ namespace forte {
        * @return NullType if not known, default CIEC class otherwise
        */
       template<typename CommonSubtype, typename T, typename U>
-      constexpr auto are_of_subtype_v = std::conjunction_v<std::is_base_of<CommonSubtype, T>, std::is_base_of<CommonSubtype, U>>;;
+      constexpr auto are_of_subtype_v =
+          std::conjunction_v<std::is_base_of<CommonSubtype, T>, std::is_base_of<CommonSubtype, U>>;
+      ;
 
       /** @brief What is the CIEC class of a CIEC class or specialist subtype?
-       * 
+       *
        * For PARTIAL classes, which derive from their base CIEC class, which can be used to identify the CIEC class
        *
        * @param T type to be checked
        * @return NullType if not known, default CIEC class otherwise
        */
       template<typename T>
-      using get_equivalent_CIEC_class_t =
-        std::conditional_t<std::is_base_of_v<CIEC_BOOL, T>, CIEC_BOOL, typename std::conditional_t<std::is_base_of_v<CIEC_BYTE, T>, CIEC_BYTE, typename std::conditional_t<std::is_base_of_v<CIEC_WORD, T>, CIEC_WORD, typename std::conditional_t<std::is_base_of_v<CIEC_DWORD, T>, CIEC_DWORD, typename std::conditional_t<std::is_base_of_v<CIEC_LWORD, T>, CIEC_LWORD, NullType>>>>>;
+      using get_equivalent_CIEC_class_t = std::conditional_t<
+          std::is_base_of_v<CIEC_BOOL, T>,
+          CIEC_BOOL,
+          typename std::conditional_t<
+              std::is_base_of_v<CIEC_BYTE, T>,
+              CIEC_BYTE,
+              typename std::conditional_t<
+                  std::is_base_of_v<CIEC_WORD, T>,
+                  CIEC_WORD,
+                  typename std::conditional_t<
+                      std::is_base_of_v<CIEC_DWORD, T>,
+                      CIEC_DWORD,
+                      typename std::conditional_t<std::is_base_of_v<CIEC_LWORD, T>, CIEC_LWORD, NullType>>>>>;
 
       /* invalid implicit casts */
-      template<typename T, typename U> struct implicit_cast {
-        typedef NullType type;
-        implicit_cast() = delete;
+      template<typename T, typename U>
+      struct implicit_cast {
+          typedef NullType type;
+          implicit_cast() = delete;
       };
 
       /* Self-casts */
-      template <typename T>
+      template<typename T>
       struct implicit_cast<T, T> {
-        typedef T type;
-        implicit_cast() = delete;
+          typedef T type;
+          implicit_cast() = delete;
       };
 
       /** @brief is T implicitly castable to U?
-       * 
+       *
        * @tparam T type to be cast
        * @tparam U goal type of the cast
        * @return NullType if not castable, type U if castable
-      */
-      template <typename T, typename U>
+       */
+      template<typename T, typename U>
       using implicit_cast_t = typename implicit_cast<T, U>::type;
 
       template<typename T, typename U>
-      constexpr auto is_implicitly_castable_v = std::is_same_v<implicit_cast_t<T,U>, U>;
+      constexpr auto is_implicitly_castable_v = std::is_same_v<implicit_cast_t<T, U>, U>;
 
       /* BOOL casts */
       ALLOW_IMPLICIT_CAST(CIEC_BOOL, CIEC_BYTE)
@@ -193,7 +209,7 @@ namespace forte {
       ALLOW_IMPLICIT_CAST(CIEC_DINT, CIEC_LINT)
       ALLOW_IMPLICIT_CAST(CIEC_DINT, CIEC_LREAL)
 
-// REAL implicit casts
+      // REAL implicit casts
       ALLOW_IMPLICIT_CAST(CIEC_REAL, CIEC_LREAL)
 
       /* TIME casts */
@@ -208,26 +224,27 @@ namespace forte {
       /* TIME_OF_DAY casts */
       ALLOW_IMPLICIT_CAST(CIEC_TIME_OF_DAY, CIEC_LTIME_OF_DAY)
 
-// Explicit casts
+      // Explicit casts
       /* invalid explicit casts */
-      template<typename T, typename U> struct explicit_cast{
+      template<typename T, typename U>
+      struct explicit_cast {
           typedef NullType type;
           explicit_cast() = delete;
       };
 
       /** @brief is T explicitly castable to U?
-       * 
+       *
        * @tparam T type to be cast
        * @tparam U goal type of the cast
        * @return NullType if not castable, type U if castable
-      */
-      template <typename T, typename U>
+       */
+      template<typename T, typename U>
       using explicit_cast_t = typename explicit_cast<T, U>::type;
 
       template<typename T, typename U>
-      constexpr auto is_explicitly_castable_v = std::is_same_v<explicit_cast_t<T,U>, U>;
+      constexpr auto is_explicitly_castable_v = std::is_same_v<explicit_cast_t<T, U>, U>;
 
-// BOOL explicit casts
+      // BOOL explicit casts
       ALLOW_EXPLICIT_CAST(CIEC_BOOL, CIEC_USINT)
       ALLOW_EXPLICIT_CAST(CIEC_BOOL, CIEC_UINT)
       ALLOW_EXPLICIT_CAST(CIEC_BOOL, CIEC_UDINT)
@@ -237,7 +254,7 @@ namespace forte {
       ALLOW_EXPLICIT_CAST(CIEC_BOOL, CIEC_DINT)
       ALLOW_EXPLICIT_CAST(CIEC_BOOL, CIEC_LINT)
 
-// BYTE explicit casts
+      // BYTE explicit casts
       ALLOW_EXPLICIT_CAST(CIEC_BYTE, CIEC_BOOL)
       ALLOW_EXPLICIT_CAST(CIEC_BYTE, CIEC_USINT)
       ALLOW_EXPLICIT_CAST(CIEC_BYTE, CIEC_UINT)
@@ -276,7 +293,7 @@ namespace forte {
       ALLOW_EXPLICIT_CAST(CIEC_DWORD, CIEC_LINT)
       ALLOW_EXPLICIT_CAST(CIEC_DWORD, CIEC_REAL)
 
-    // LWORD explicit casts
+      // LWORD explicit casts
       ALLOW_EXPLICIT_CAST(CIEC_LWORD, CIEC_BOOL)
       ALLOW_EXPLICIT_CAST(CIEC_LWORD, CIEC_BYTE)
       ALLOW_EXPLICIT_CAST(CIEC_LWORD, CIEC_WORD)
@@ -291,14 +308,14 @@ namespace forte {
       ALLOW_EXPLICIT_CAST(CIEC_LWORD, CIEC_LINT)
       ALLOW_EXPLICIT_CAST(CIEC_LWORD, CIEC_LREAL)
 
-// USINT explicit casts
+      // USINT explicit casts
       ALLOW_EXPLICIT_CAST(CIEC_USINT, CIEC_SINT)
       ALLOW_EXPLICIT_CAST(CIEC_USINT, CIEC_BYTE)
       ALLOW_EXPLICIT_CAST(CIEC_USINT, CIEC_WORD)
       ALLOW_EXPLICIT_CAST(CIEC_USINT, CIEC_DWORD)
       ALLOW_EXPLICIT_CAST(CIEC_USINT, CIEC_LWORD)
 
-// UINT explicit casts
+      // UINT explicit casts
       ALLOW_EXPLICIT_CAST(CIEC_UINT, CIEC_USINT)
       ALLOW_EXPLICIT_CAST(CIEC_UINT, CIEC_SINT)
       ALLOW_EXPLICIT_CAST(CIEC_UINT, CIEC_INT)
@@ -307,7 +324,7 @@ namespace forte {
       ALLOW_EXPLICIT_CAST(CIEC_UINT, CIEC_DWORD)
       ALLOW_EXPLICIT_CAST(CIEC_UINT, CIEC_LWORD)
 
-// UDINT explicit casts
+      // UDINT explicit casts
       ALLOW_EXPLICIT_CAST(CIEC_UDINT, CIEC_USINT)
       ALLOW_EXPLICIT_CAST(CIEC_UDINT, CIEC_UINT)
       ALLOW_EXPLICIT_CAST(CIEC_UDINT, CIEC_SINT)
@@ -319,7 +336,7 @@ namespace forte {
       ALLOW_EXPLICIT_CAST(CIEC_UDINT, CIEC_LWORD)
       ALLOW_EXPLICIT_CAST(CIEC_UDINT, CIEC_REAL)
 
-// ULINT explicit casts
+      // ULINT explicit casts
       ALLOW_EXPLICIT_CAST(CIEC_ULINT, CIEC_USINT)
       ALLOW_EXPLICIT_CAST(CIEC_ULINT, CIEC_UINT)
       ALLOW_EXPLICIT_CAST(CIEC_ULINT, CIEC_UDINT)
@@ -334,7 +351,7 @@ namespace forte {
       ALLOW_EXPLICIT_CAST(CIEC_ULINT, CIEC_REAL)
       ALLOW_EXPLICIT_CAST(CIEC_ULINT, CIEC_LREAL)
 
-// SINT explicit casts
+      // SINT explicit casts
       ALLOW_EXPLICIT_CAST(CIEC_SINT, CIEC_USINT)
       ALLOW_EXPLICIT_CAST(CIEC_SINT, CIEC_UINT)
       ALLOW_EXPLICIT_CAST(CIEC_SINT, CIEC_UDINT)
@@ -344,7 +361,7 @@ namespace forte {
       ALLOW_EXPLICIT_CAST(CIEC_SINT, CIEC_DWORD)
       ALLOW_EXPLICIT_CAST(CIEC_SINT, CIEC_LWORD)
 
-// INT explicit casts
+      // INT explicit casts
       ALLOW_EXPLICIT_CAST(CIEC_INT, CIEC_SINT)
       ALLOW_EXPLICIT_CAST(CIEC_INT, CIEC_USINT)
       ALLOW_EXPLICIT_CAST(CIEC_INT, CIEC_UINT)
@@ -355,7 +372,7 @@ namespace forte {
       ALLOW_EXPLICIT_CAST(CIEC_INT, CIEC_DWORD)
       ALLOW_EXPLICIT_CAST(CIEC_INT, CIEC_LWORD)
 
-// DINT explicit casts
+      // DINT explicit casts
       ALLOW_EXPLICIT_CAST(CIEC_DINT, CIEC_SINT)
       ALLOW_EXPLICIT_CAST(CIEC_DINT, CIEC_INT)
       ALLOW_EXPLICIT_CAST(CIEC_DINT, CIEC_USINT)
@@ -368,7 +385,7 @@ namespace forte {
       ALLOW_EXPLICIT_CAST(CIEC_DINT, CIEC_LWORD)
       ALLOW_EXPLICIT_CAST(CIEC_DINT, CIEC_REAL)
 
-// LINT explicit casts
+      // LINT explicit casts
       ALLOW_EXPLICIT_CAST(CIEC_LINT, CIEC_SINT)
       ALLOW_EXPLICIT_CAST(CIEC_LINT, CIEC_INT)
       ALLOW_EXPLICIT_CAST(CIEC_LINT, CIEC_DINT)
@@ -383,7 +400,7 @@ namespace forte {
       ALLOW_EXPLICIT_CAST(CIEC_LINT, CIEC_REAL)
       ALLOW_EXPLICIT_CAST(CIEC_LINT, CIEC_LREAL)
 
-// REAL explicit casts
+      // REAL explicit casts
       ALLOW_EXPLICIT_CAST(CIEC_REAL, CIEC_SINT)
       ALLOW_EXPLICIT_CAST(CIEC_REAL, CIEC_INT)
       ALLOW_EXPLICIT_CAST(CIEC_REAL, CIEC_DINT)
@@ -394,7 +411,7 @@ namespace forte {
       ALLOW_EXPLICIT_CAST(CIEC_REAL, CIEC_ULINT)
       ALLOW_EXPLICIT_CAST(CIEC_REAL, CIEC_DWORD)
 
-// LREAL explicit casts
+      // LREAL explicit casts
       ALLOW_EXPLICIT_CAST(CIEC_LREAL, CIEC_REAL)
       ALLOW_EXPLICIT_CAST(CIEC_LREAL, CIEC_SINT)
       ALLOW_EXPLICIT_CAST(CIEC_LREAL, CIEC_INT)
@@ -431,9 +448,12 @@ namespace forte {
       ALLOW_EXPLICIT_CAST(CIEC_WSTRING, CIEC_WCHAR)
       ALLOW_EXPLICIT_CAST(CIEC_WSTRING, CIEC_STRING)
 
-      template<typename T, typename U> struct get_castable_type{
-        typedef typename std::conditional<std::is_same<NullType, typename implicit_cast<T, U>::type>::value, typename implicit_cast<U, T>::type, typename implicit_cast<T, U>::type>::type type;
-        get_castable_type() = delete;
+      template<typename T, typename U>
+      struct get_castable_type {
+          typedef typename std::conditional<std::is_same<NullType, typename implicit_cast<T, U>::type>::value,
+                                            typename implicit_cast<U, T>::type,
+                                            typename implicit_cast<T, U>::type>::type type;
+          get_castable_type() = delete;
       };
 
       /** @brief Return the implicitly castable type of T and U
@@ -441,398 +461,407 @@ namespace forte {
        * @tparam U type 2
        * @return A common type or NullType if none exists
        */
-      template <class T, class U>
+      template<class T, class U>
       using get_castable_type_t = typename get_castable_type<T, U>::type;
 
-      template<typename T, typename U> struct implicit_or_explicit_cast {
-        typedef typename std::conditional<std::is_same<NullType, typename explicit_cast<T, U>::type>::value, typename implicit_cast<T, U>::type, typename explicit_cast<T, U>::type>::type type;
-        implicit_or_explicit_cast() = delete;
+      template<typename T, typename U>
+      struct implicit_or_explicit_cast {
+          typedef typename std::conditional<std::is_same<NullType, typename explicit_cast<T, U>::type>::value,
+                                            typename implicit_cast<T, U>::type,
+                                            typename explicit_cast<T, U>::type>::type type;
+          implicit_or_explicit_cast() = delete;
       };
 
       /** @brief Return the implicitly or explicitly castable type of T and U
        * @tparam T type 1
        * @tparam U type 2
        * @return A common type or NullType if none exists
-      */
+       */
       template<typename T, typename U>
       using implicit_or_explicit_cast_t = typename implicit_or_explicit_cast<T, U>::type;
 
-      template <typename T, typename U>
-      constexpr auto is_implicit_or_explicit_castable_v = (is_implicitly_castable_v<T, U> || is_explicitly_castable_v<T, U>);
+      template<typename T, typename U>
+      constexpr auto is_implicit_or_explicit_castable_v =
+          (is_implicitly_castable_v<T, U> || is_explicitly_castable_v<T, U>);
 
-      template <typename T, typename U>
+      template<typename T, typename U>
       struct get_div_operator_result_type {
-        typedef typename get_castable_type<T, U>::type type;
-        get_div_operator_result_type() = delete;
+          typedef typename get_castable_type<T, U>::type type;
+          get_div_operator_result_type() = delete;
       };
 
-      template <typename U>
+      template<typename U>
       struct get_div_operator_result_type<CIEC_TIME, U> {
-        typedef typename std::conditional<std::is_base_of<CIEC_ANY_NUM, U>::value, CIEC_TIME, NullType>::type type;
-        get_div_operator_result_type() = delete;
+          typedef typename std::conditional<std::is_base_of<CIEC_ANY_NUM, U>::value, CIEC_TIME, NullType>::type type;
+          get_div_operator_result_type() = delete;
       };
 
-      template <typename U>
+      template<typename U>
       struct get_div_operator_result_type<CIEC_LTIME, U> {
-        typedef typename std::conditional<std::is_base_of<CIEC_ANY_NUM, U>::value, CIEC_LTIME, NullType>::type type;
-        get_div_operator_result_type() = delete;
+          typedef typename std::conditional<std::is_base_of<CIEC_ANY_NUM, U>::value, CIEC_LTIME, NullType>::type type;
+          get_div_operator_result_type() = delete;
       };
 
-      template <typename T, typename U>
+      template<typename T, typename U>
       using get_div_operator_result_type_t = typename get_div_operator_result_type<T, U>::type;
 
-      template <typename T, typename U>
+      template<typename T, typename U>
       struct get_mul_operator_result_type {
-        typedef typename get_castable_type<T, U>::type type;
-        get_mul_operator_result_type() = delete;
+          typedef typename get_castable_type<T, U>::type type;
+          get_mul_operator_result_type() = delete;
       };
 
-      template <typename U>
+      template<typename U>
       struct get_mul_operator_result_type<CIEC_TIME, U> {
-        typedef typename std::conditional<std::is_base_of<CIEC_ANY_NUM, U>::value, CIEC_TIME, NullType>::type type;
-        get_mul_operator_result_type() = delete;
+          typedef typename std::conditional<std::is_base_of<CIEC_ANY_NUM, U>::value, CIEC_TIME, NullType>::type type;
+          get_mul_operator_result_type() = delete;
       };
 
-      template <typename U>
+      template<typename U>
       struct get_mul_operator_result_type<CIEC_LTIME, U> {
-        typedef typename std::conditional<std::is_base_of<CIEC_ANY_NUM, U>::value, CIEC_LTIME, NullType>::type type;
-        get_mul_operator_result_type() = delete;
+          typedef typename std::conditional<std::is_base_of<CIEC_ANY_NUM, U>::value, CIEC_LTIME, NullType>::type type;
+          get_mul_operator_result_type() = delete;
       };
 
-      template <typename T, typename U>
+      template<typename T, typename U>
       using get_mul_operator_result_type_t = typename get_mul_operator_result_type<T, U>::type;
 
-      template <typename T, typename U>
+      template<typename T, typename U>
       struct get_add_operator_result_type {
-        typedef typename get_castable_type<T, U>::type type;
-        get_add_operator_result_type() = delete;
+          typedef typename get_castable_type<T, U>::type type;
+          get_add_operator_result_type() = delete;
       };
 
-      template <>
+      template<>
       struct get_add_operator_result_type<CIEC_TIME, CIEC_TIME> {
-        typedef CIEC_TIME type;
-        get_add_operator_result_type() = delete;
+          typedef CIEC_TIME type;
+          get_add_operator_result_type() = delete;
       };
 
-      template <>
+      template<>
       struct get_add_operator_result_type<CIEC_TIME_OF_DAY, CIEC_TIME> {
-        typedef CIEC_TIME_OF_DAY type;
-        get_add_operator_result_type() = delete;
+          typedef CIEC_TIME_OF_DAY type;
+          get_add_operator_result_type() = delete;
       };
 
-      template <>
+      template<>
       struct get_add_operator_result_type<CIEC_DATE_AND_TIME, CIEC_TIME> {
-        typedef CIEC_DATE_AND_TIME type;
-        get_add_operator_result_type() = delete;
+          typedef CIEC_DATE_AND_TIME type;
+          get_add_operator_result_type() = delete;
       };
 
-      template <>
+      template<>
       struct get_add_operator_result_type<CIEC_LTIME, CIEC_LTIME> {
-        typedef CIEC_LTIME type;
-        get_add_operator_result_type() = delete;
+          typedef CIEC_LTIME type;
+          get_add_operator_result_type() = delete;
       };
 
-      template <>
+      template<>
       struct get_add_operator_result_type<CIEC_LTIME_OF_DAY, CIEC_LTIME> {
-        typedef CIEC_LTIME_OF_DAY type;
-        get_add_operator_result_type() = delete;
+          typedef CIEC_LTIME_OF_DAY type;
+          get_add_operator_result_type() = delete;
       };
 
-      template <>
+      template<>
       struct get_add_operator_result_type<CIEC_TIME_OF_DAY, CIEC_LTIME> {
-        typedef CIEC_LTIME_OF_DAY type;
-        get_add_operator_result_type() = delete;
+          typedef CIEC_LTIME_OF_DAY type;
+          get_add_operator_result_type() = delete;
       };
 
-      template <>
+      template<>
       struct get_add_operator_result_type<CIEC_LTIME_OF_DAY, CIEC_TIME> {
-        typedef CIEC_LTIME_OF_DAY type;
-        get_add_operator_result_type() = delete;
+          typedef CIEC_LTIME_OF_DAY type;
+          get_add_operator_result_type() = delete;
       };
 
-      template <>
+      template<>
       struct get_add_operator_result_type<CIEC_LDATE_AND_TIME, CIEC_LTIME> {
-        typedef CIEC_LDATE_AND_TIME type;
-        get_add_operator_result_type() = delete;
+          typedef CIEC_LDATE_AND_TIME type;
+          get_add_operator_result_type() = delete;
       };
 
-      template <>
+      template<>
       struct get_add_operator_result_type<CIEC_DATE_AND_TIME, CIEC_LTIME> {
-        typedef CIEC_LDATE_AND_TIME type;
-        get_add_operator_result_type() = delete;
+          typedef CIEC_LDATE_AND_TIME type;
+          get_add_operator_result_type() = delete;
       };
 
-      template <>
+      template<>
       struct get_add_operator_result_type<CIEC_LDATE_AND_TIME, CIEC_TIME> {
-        typedef CIEC_LDATE_AND_TIME type;
-        get_add_operator_result_type() = delete;
+          typedef CIEC_LDATE_AND_TIME type;
+          get_add_operator_result_type() = delete;
       };
 
-      template <typename T, typename U>
+      template<typename T, typename U>
       using get_add_operator_result_type_t = typename get_add_operator_result_type<T, U>::type;
 
-      template <typename T, typename U>
+      template<typename T, typename U>
       struct get_sub_operator_result_type {
-        typedef typename get_castable_type<T, U>::type type;
-        get_sub_operator_result_type() = delete;
+          typedef typename get_castable_type<T, U>::type type;
+          get_sub_operator_result_type() = delete;
       };
 
-      template <>
+      template<>
       struct get_sub_operator_result_type<CIEC_TIME, CIEC_TIME> {
-        typedef CIEC_TIME type;
-        get_sub_operator_result_type() = delete;
+          typedef CIEC_TIME type;
+          get_sub_operator_result_type() = delete;
       };
 
-      template <>
+      template<>
       struct get_sub_operator_result_type<CIEC_DATE, CIEC_DATE> {
-        typedef CIEC_TIME type;
-        get_sub_operator_result_type() = delete;
+          typedef CIEC_TIME type;
+          get_sub_operator_result_type() = delete;
       };
 
-      template <>
+      template<>
       struct get_sub_operator_result_type<CIEC_TIME_OF_DAY, CIEC_TIME> {
-        typedef CIEC_TIME_OF_DAY type;
-        get_sub_operator_result_type() = delete;
+          typedef CIEC_TIME_OF_DAY type;
+          get_sub_operator_result_type() = delete;
       };
 
-      template <>
+      template<>
       struct get_sub_operator_result_type<CIEC_TIME_OF_DAY, CIEC_TIME_OF_DAY> {
-        typedef CIEC_TIME type;
-        get_sub_operator_result_type() = delete;
+          typedef CIEC_TIME type;
+          get_sub_operator_result_type() = delete;
       };
 
-      template <>
+      template<>
       struct get_sub_operator_result_type<CIEC_DATE_AND_TIME, CIEC_TIME> {
-        typedef CIEC_DATE_AND_TIME type;
-        get_sub_operator_result_type() = delete;
+          typedef CIEC_DATE_AND_TIME type;
+          get_sub_operator_result_type() = delete;
       };
 
-      template <>
+      template<>
       struct get_sub_operator_result_type<CIEC_DATE_AND_TIME, CIEC_DATE_AND_TIME> {
-        typedef CIEC_TIME type;
-        get_sub_operator_result_type() = delete;
+          typedef CIEC_TIME type;
+          get_sub_operator_result_type() = delete;
       };
 
-      template <>
+      template<>
       struct get_sub_operator_result_type<CIEC_LTIME, CIEC_LTIME> {
-        typedef CIEC_LTIME type;
-        get_sub_operator_result_type() = delete;
+          typedef CIEC_LTIME type;
+          get_sub_operator_result_type() = delete;
       };
 
-      template <>
+      template<>
       struct get_sub_operator_result_type<CIEC_LDATE, CIEC_LDATE> {
-        typedef CIEC_LTIME type;
-        get_sub_operator_result_type() = delete;
+          typedef CIEC_LTIME type;
+          get_sub_operator_result_type() = delete;
       };
 
-      template <>
+      template<>
       struct get_sub_operator_result_type<CIEC_DATE, CIEC_LDATE> {
-        typedef CIEC_LTIME type;
-        get_sub_operator_result_type() = delete;
+          typedef CIEC_LTIME type;
+          get_sub_operator_result_type() = delete;
       };
 
-      template <>
+      template<>
       struct get_sub_operator_result_type<CIEC_LDATE, CIEC_DATE> {
-        typedef CIEC_LTIME type;
-        get_sub_operator_result_type() = delete;
+          typedef CIEC_LTIME type;
+          get_sub_operator_result_type() = delete;
       };
 
-      template <>
+      template<>
       struct get_sub_operator_result_type<CIEC_LTIME_OF_DAY, CIEC_LTIME> {
-        typedef CIEC_LTIME_OF_DAY type;
-        get_sub_operator_result_type() = delete;
+          typedef CIEC_LTIME_OF_DAY type;
+          get_sub_operator_result_type() = delete;
       };
 
-      template <>
+      template<>
       struct get_sub_operator_result_type<CIEC_TIME_OF_DAY, CIEC_LTIME> {
-        typedef CIEC_LTIME_OF_DAY type;
-        get_sub_operator_result_type() = delete;
+          typedef CIEC_LTIME_OF_DAY type;
+          get_sub_operator_result_type() = delete;
       };
 
-      template <>
+      template<>
       struct get_sub_operator_result_type<CIEC_LTIME_OF_DAY, CIEC_TIME> {
-        typedef CIEC_LTIME_OF_DAY type;
-        get_sub_operator_result_type() = delete;
+          typedef CIEC_LTIME_OF_DAY type;
+          get_sub_operator_result_type() = delete;
       };
 
-      template <>
+      template<>
       struct get_sub_operator_result_type<CIEC_LTIME_OF_DAY, CIEC_LTIME_OF_DAY> {
-        typedef CIEC_LTIME type;
-        get_sub_operator_result_type() = delete;
+          typedef CIEC_LTIME type;
+          get_sub_operator_result_type() = delete;
       };
 
-      template <>
+      template<>
       struct get_sub_operator_result_type<CIEC_TIME_OF_DAY, CIEC_LTIME_OF_DAY> {
-        typedef CIEC_LTIME type;
-        get_sub_operator_result_type() = delete;
+          typedef CIEC_LTIME type;
+          get_sub_operator_result_type() = delete;
       };
 
-      template <>
+      template<>
       struct get_sub_operator_result_type<CIEC_LTIME_OF_DAY, CIEC_TIME_OF_DAY> {
-        typedef CIEC_LTIME type;
-        get_sub_operator_result_type() = delete;
+          typedef CIEC_LTIME type;
+          get_sub_operator_result_type() = delete;
       };
 
-      template <>
+      template<>
       struct get_sub_operator_result_type<CIEC_LDATE_AND_TIME, CIEC_LTIME> {
-        typedef CIEC_LDATE_AND_TIME type;
-        get_sub_operator_result_type() = delete;
+          typedef CIEC_LDATE_AND_TIME type;
+          get_sub_operator_result_type() = delete;
       };
 
-      template <>
+      template<>
       struct get_sub_operator_result_type<CIEC_DATE_AND_TIME, CIEC_LTIME> {
-        typedef CIEC_LDATE_AND_TIME type;
-        get_sub_operator_result_type() = delete;
+          typedef CIEC_LDATE_AND_TIME type;
+          get_sub_operator_result_type() = delete;
       };
 
-      template <>
+      template<>
       struct get_sub_operator_result_type<CIEC_LDATE_AND_TIME, CIEC_TIME> {
-        typedef CIEC_LDATE_AND_TIME type;
-        get_sub_operator_result_type() = delete;
+          typedef CIEC_LDATE_AND_TIME type;
+          get_sub_operator_result_type() = delete;
       };
 
-      template <>
+      template<>
       struct get_sub_operator_result_type<CIEC_LDATE_AND_TIME, CIEC_LDATE_AND_TIME> {
-        typedef CIEC_LTIME type;
-        get_sub_operator_result_type() = delete;
+          typedef CIEC_LTIME type;
+          get_sub_operator_result_type() = delete;
       };
 
-      template <>
+      template<>
       struct get_sub_operator_result_type<CIEC_DATE_AND_TIME, CIEC_LDATE_AND_TIME> {
-        typedef CIEC_LTIME type;
-        get_sub_operator_result_type() = delete;
+          typedef CIEC_LTIME type;
+          get_sub_operator_result_type() = delete;
       };
 
-      template <>
+      template<>
       struct get_sub_operator_result_type<CIEC_LDATE_AND_TIME, CIEC_DATE_AND_TIME> {
-        typedef CIEC_LTIME type;
-        get_sub_operator_result_type() = delete;
+          typedef CIEC_LTIME type;
+          get_sub_operator_result_type() = delete;
       };
 
-      template <typename T, typename U>
+      template<typename T, typename U>
       using get_sub_operator_result_type_t = typename get_sub_operator_result_type<T, U>::type;
 
       template<typename T>
       struct get_any_chars_base_type {
-        typedef std::conditional_t<std::is_base_of_v<CIEC_ANY_CHARS,T>, std::conditional_t<std::is_base_of_v<CIEC_STRING, T>, CIEC_STRING, std::conditional_t<std::is_base_of_v<CIEC_WSTRING, T>, CIEC_WSTRING, T> >, NullType> type;
-        get_any_chars_base_type() = delete;
+          typedef std::conditional_t<
+              std::is_base_of_v<CIEC_ANY_CHARS, T>,
+              std::conditional_t<std::is_base_of_v<CIEC_STRING, T>,
+                                 CIEC_STRING,
+                                 std::conditional_t<std::is_base_of_v<CIEC_WSTRING, T>, CIEC_WSTRING, T>>,
+              NullType>
+              type;
+          get_any_chars_base_type() = delete;
       };
 
-      template <typename T>
+      template<typename T>
       using get_any_chars_base_type_t = typename get_any_chars_base_type<T>::type;
 
-      template <typename T, typename U>
+      template<typename T, typename U>
       struct get_concat_result_type_helper {
-        typedef NullType type;
-        get_concat_result_type_helper() = delete;
+          typedef NullType type;
+          get_concat_result_type_helper() = delete;
       };
 
-      template <>
+      template<>
       struct get_concat_result_type_helper<CIEC_STRING, CIEC_STRING> {
-        typedef CIEC_STRING type;
-        get_concat_result_type_helper() = delete;
+          typedef CIEC_STRING type;
+          get_concat_result_type_helper() = delete;
       };
 
-      template <>
+      template<>
       struct get_concat_result_type_helper<CIEC_STRING, CIEC_CHAR> {
-        typedef CIEC_STRING type;
-        get_concat_result_type_helper() = delete;
+          typedef CIEC_STRING type;
+          get_concat_result_type_helper() = delete;
       };
 
-      template <>
+      template<>
       struct get_concat_result_type_helper<CIEC_CHAR, CIEC_STRING> {
-        typedef CIEC_STRING type;
-        get_concat_result_type_helper() = delete;
+          typedef CIEC_STRING type;
+          get_concat_result_type_helper() = delete;
       };
 
-      template <>
+      template<>
       struct get_concat_result_type_helper<CIEC_CHAR, CIEC_CHAR> {
-        typedef CIEC_STRING type;
-        get_concat_result_type_helper() = delete;
+          typedef CIEC_STRING type;
+          get_concat_result_type_helper() = delete;
       };
 
-      template <>
+      template<>
       struct get_concat_result_type_helper<CIEC_WSTRING, CIEC_WSTRING> {
-        typedef CIEC_WSTRING type;
-        get_concat_result_type_helper() = delete;
+          typedef CIEC_WSTRING type;
+          get_concat_result_type_helper() = delete;
       };
 
-      template <>
+      template<>
       struct get_concat_result_type_helper<CIEC_WCHAR, CIEC_WSTRING> {
-        typedef CIEC_WSTRING type;
-        get_concat_result_type_helper() = delete;
+          typedef CIEC_WSTRING type;
+          get_concat_result_type_helper() = delete;
       };
 
-      template <>
+      template<>
       struct get_concat_result_type_helper<CIEC_WSTRING, CIEC_WCHAR> {
-        typedef CIEC_WSTRING type;
-        get_concat_result_type_helper() = delete;
+          typedef CIEC_WSTRING type;
+          get_concat_result_type_helper() = delete;
       };
 
-      template <>
+      template<>
       struct get_concat_result_type_helper<CIEC_WCHAR, CIEC_WCHAR> {
-        typedef CIEC_WSTRING type;
-        get_concat_result_type_helper() = delete;
+          typedef CIEC_WSTRING type;
+          get_concat_result_type_helper() = delete;
       };
 
-      template <typename T, typename U>
+      template<typename T, typename U>
       using get_concat_result_type_helper_t = typename get_concat_result_type_helper<T, U>::type;
 
-      template <typename T, typename U>
+      template<typename T, typename U>
       struct get_concat_result_type {
-        using tBaseType = get_any_chars_base_type_t<T>;
-        using uBaseType = get_any_chars_base_type_t<U>;
-        typedef get_concat_result_type_helper_t<tBaseType, uBaseType> type;
-        get_concat_result_type() = delete;
+          using tBaseType = get_any_chars_base_type_t<T>;
+          using uBaseType = get_any_chars_base_type_t<U>;
+          typedef get_concat_result_type_helper_t<tBaseType, uBaseType> type;
+          get_concat_result_type() = delete;
       };
 
-      template <typename T, typename U>
+      template<typename T, typename U>
       using get_concat_result_type_t = typename get_concat_result_type<T, U>::type;
 
-      template <class T, class R, class... Args>
+      template<class T, class R, class... Args>
       std::is_convertible<std::invoke_result_t<T, Args...>, R> is_invokable_test(int);
 
-      template <class T, class R, class... Args>
+      template<class T, class R, class... Args>
       std::false_type is_invokable_test(...);
 
-      template <class T, class R, class... Args>
+      template<class T, class R, class... Args>
       using is_invokable = decltype(is_invokable_test<T, R, Args...>(0));
 
-      template <class T, class R, class... Args>
+      template<class T, class R, class... Args>
       constexpr auto is_invokable_v = is_invokable<T, R, Args...>::value;
 
-      template <class L, class R = L>
+      template<class L, class R = L>
       using has_equality = is_invokable<std::equal_to<>, bool, L, R>;
-      template <class L, class R = L>
+      template<class L, class R = L>
       constexpr auto has_equality_v = has_equality<L, R>::value;
 
-      template <class L, class R = L>
+      template<class L, class R = L>
       using has_inequality = is_invokable<std::not_equal_to<>, bool, L, R>;
-      template <class L, class R = L>
+      template<class L, class R = L>
       constexpr auto has_inequality_v = has_inequality<L, R>::value;
 
-      template <class L, class R = L>
+      template<class L, class R = L>
       using has_greater = is_invokable<std::greater<>, bool, L, R>;
-      template <class L, class R = L>
+      template<class L, class R = L>
       constexpr auto has_greater_v = has_greater<L, R>::value;
 
-      template <class L, class R = L>
+      template<class L, class R = L>
       using has_less = is_invokable<std::less<>, bool, L, R>;
-      template <class L, class R = L>
+      template<class L, class R = L>
       constexpr auto has_less_v = has_less<L, R>::value;
 
-      template <class L, class R = L>
+      template<class L, class R = L>
       using has_greater_equal = is_invokable<std::greater_equal<>, bool, L, R>;
-      template <class L, class R = L>
+      template<class L, class R = L>
       constexpr auto has_greater_equal_v = has_greater_equal<L, R>::value;
 
-      template <class L, class R = L>
+      template<class L, class R = L>
       using has_less_equal = is_invokable<std::less_equal<>, bool, L, R>;
-      template <class L, class R = L>
+      template<class L, class R = L>
       constexpr auto has_less_equal_v = has_less_equal<L, R>::value;
-    }
-  }
-}
+    } // namespace mpl
+  } // namespace core
+} // namespace forte
 
 #endif /* SRC_CORE_IEC61131_CAST_HELPER_CPP_ */
-

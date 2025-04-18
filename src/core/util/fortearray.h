@@ -20,16 +20,15 @@ namespace forte {
   namespace core {
     namespace util {
 
-
       /*!\brief Simple array class allowing to implement more save arrays.
        *
        * This class is aligned to the std::array.
        * Consider to use std:array when stl support gets better on all supported platforms.
        */
       template<typename T, size_t Capacity>
-      class CArray{
+      class CArray {
         public:
-          T& operator [](size_t paIndex){
+          T &operator[](size_t paIndex) {
             assert(paIndex < Capacity);
             return mData[paIndex];
           }
@@ -44,6 +43,6 @@ namespace forte {
 
     } // namespace util
   } // namespace core
-}  // namespace forte
+} // namespace forte
 
 #endif /* FORTEARRAY_H_ */

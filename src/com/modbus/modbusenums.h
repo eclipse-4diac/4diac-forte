@@ -12,12 +12,7 @@
 #ifndef _MODBUSENUMS_H_
 #define _MODBUSENUMS_H_
 
-enum EModbusFunction {
-  eDiscreteInput = 0,
-  eCoil,
-  eInputRegister,
-  eHoldingRegister
-};
+enum EModbusFunction { eDiscreteInput = 0, eCoil, eInputRegister, eHoldingRegister };
 
 enum EModbusFlowControl {
   eFlowNone = 0,

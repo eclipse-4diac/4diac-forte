@@ -22,27 +22,28 @@
 namespace forte::tests::traces {
 
   /**
-   * @brief Cleanup the output directory of traces, copy the metadata file to it and setups the bareCTF tracer to it 
-   * 
+   * @brief Cleanup the output directory of traces, copy the metadata file to it and setups the bareCTF tracer to it
+   *
    * @param paDestMetadata metada destination file inside the CTF_OUTPUT_DIR
    */
   void prepareTraceTest(std::string paDestMetadata);
 
   /**
    * @brief Compares two maps of expected messages from resources to the actual ones
-   * 
+   *
    * @param paExpected expected messages
    * @param paActual actual messages
    */
-  void checkMessages(std::unordered_map<std::string, std::vector<EventMessage>>& paExpected, std::unordered_map<std::string, std::vector<EventMessage>>& paActual);
+  void checkMessages(std::unordered_map<std::string, std::vector<EventMessage>> &paExpected,
+                     std::unordered_map<std::string, std::vector<EventMessage>> &paActual);
 
-} // namespace forte::tests::traces 
+} // namespace forte::tests::traces
 
 /**
- * @brief Helper operator for BOOST_TEST to print 
- * 
+ * @brief Helper operator for BOOST_TEST to print
+ *
  * @param paOs Stream to print to
  * @param paEventMessage Message to print
  * @return std::ostream& stream with the printed message
  */
-std::ostream& operator<<(std::ostream &paOs, const EventMessage &paEventMessage);
+std::ostream &operator<<(std::ostream &paOs, const EventMessage &paEventMessage);

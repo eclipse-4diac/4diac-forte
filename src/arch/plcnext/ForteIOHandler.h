@@ -21,16 +21,15 @@ namespace ForteLibrary {
     using namespace Arp;
     using namespace Arp::Plc::Esm;
 
-    class ForteIOHandler : public ProgramBase, private Loggable<ForteIOHandler>{
+    class ForteIOHandler : public ProgramBase, private Loggable<ForteIOHandler> {
       public:
-        explicit ForteIOHandler(const String& paName);
-        ForteIOHandler(const ForteIOHandler& paArg) = delete;
+        explicit ForteIOHandler(const String &paName);
+        ForteIOHandler(const ForteIOHandler &paArg) = delete;
         virtual ~ForteIOHandler() = default;
 
-        ForteIOHandler& operator=(const ForteIOHandler& paArg) = delete;
+        ForteIOHandler &operator=(const ForteIOHandler &paArg) = delete;
 
         void Execute() override;
-
     };
   } // end of namespace ForteComponent
 } // end of namespace ForteLibrary

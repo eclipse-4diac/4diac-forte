@@ -21,25 +21,25 @@ class CDevice;
 
 namespace forte::ita::multi::utils {
 
-/**
- * @brief Get the OpcuaMgr of the device if it has any 
- * 
- * @param paDevice the device were to look for the opcua mgr. The lookup is based on the current default device
- * value set in the device factory
- * @return a pointer to the opcua mgr of the device, nullptr if the device does not have a opcua mgr
- */
-OPCUA_MGR* getOpcuaMgr(CDevice& paDevice);
+  /**
+   * @brief Get the OpcuaMgr of the device if it has any
+   *
+   * @param paDevice the device were to look for the opcua mgr. The lookup is based on the current default device
+   * value set in the device factory
+   * @return a pointer to the opcua mgr of the device, nullptr if the device does not have a opcua mgr
+   */
+  OPCUA_MGR *getOpcuaMgr(CDevice &paDevice);
 
-struct FactoriesSettings {
-  EcetFactory::AvailableEcets mEcet{EcetFactory::AvailableEcets::standard};
-  TimerHandlerFactory::AvailableTimers mTimer{TimerHandlerFactory::AvailableTimers::standard};
-};
+  struct FactoriesSettings {
+      EcetFactory::AvailableEcets mEcet{EcetFactory::AvailableEcets::standard};
+      TimerHandlerFactory::AvailableTimers mTimer{TimerHandlerFactory::AvailableTimers::standard};
+  };
 
-/**
- * @brief Set the desired factories settings
- * 
- * @param paFactoriesSettings settings to be set
- */
-void setFactoriesSettings(FactoriesSettings paFactoriesSettings);
+  /**
+   * @brief Set the desired factories settings
+   *
+   * @param paFactoriesSettings settings to be set
+   */
+  void setFactoriesSettings(FactoriesSettings paFactoriesSettings);
 
-}
+} // namespace forte::ita::multi::utils

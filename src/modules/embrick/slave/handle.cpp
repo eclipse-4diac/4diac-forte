@@ -17,12 +17,18 @@
 #include <io/mapper/io_mapper.h>
 #include <devlog.h>
 
-EmbrickSlaveHandle::EmbrickSlaveHandle(forte::core::io::IODeviceController *paController, forte::core::io::IOMapper::Direction paDirection,
-    CIEC_ANY::EDataTypeID paType, uint8_t paOffset, EmbrickSlaveHandler *paSlave) :
-    forte::core::io::IOHandle(paController, paDirection, paType), mOffset(paOffset), mSlave(paSlave), mUpdateMutex(&mSlave->mUpdateMutex) {
-  if(paDirection == forte::core::io::IOMapper::In) {
+EmbrickSlaveHandle::EmbrickSlaveHandle(forte::core::io::IODeviceController *paController,
+                                       forte::core::io::IOMapper::Direction paDirection,
+                                       CIEC_ANY::EDataTypeID paType,
+                                       uint8_t paOffset,
+                                       EmbrickSlaveHandler *paSlave) :
+    forte::core::io::IOHandle(paController, paDirection, paType),
+    mOffset(paOffset),
+    mSlave(paSlave),
+    mUpdateMutex(&mSlave->mUpdateMutex) {
+  if (paDirection == forte::core::io::IOMapper::In) {
     mBuffer = mSlave->mUpdateReceiveImage;
-  } else if(paDirection == forte::core::io::IOMapper::Out) {
+  } else if (paDirection == forte::core::io::IOMapper::Out) {
     mBuffer = mSlave->mUpdateSendImage;
   }
 }
@@ -45,4 +51,3 @@ void EmbrickSlaveHandle::dropObserver() {
 
   reset();
 }
-

@@ -18,23 +18,20 @@ USE_STRING_ID(GEN_PUBL)
 
 DEFINE_GENERIC_FIRMWARE_FB(GEN_PUBL, STRID(GEN_PUBL))
 
+const char *const GEN_PUBL::scmLocalIDPrefix = "loc[";
+const char *const GEN_PUBL::scmLocalIDSuffix = "]";
 
-const char * const GEN_PUBL::scmLocalIDPrefix = "loc[";
-const char * const GEN_PUBL::scmLocalIDSuffix = "]";
-
-GEN_PUBL::GEN_PUBL(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer):
-          GEN_PUBLISH( paInstanceNameId, paContainer) {
+GEN_PUBL::GEN_PUBL(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+    GEN_PUBLISH(paInstanceNameId, paContainer) {
 }
 
-bool GEN_PUBL::configureFB(const char *paConfigString){
+bool GEN_PUBL::configureFB(const char *paConfigString) {
   bool bRetVal = GEN_PUBLISH::configureFB(paConfigString);
-  //publs normally don't show the QI in the tool
+  // publs normally don't show the QI in the tool
   QI() = CIEC_BOOL(true);
   return bRetVal;
 }
 
-char * GEN_PUBL::getDefaultIDString(const char *paID){
+char *GEN_PUBL::getDefaultIDString(const char *paID) {
   return buildIDString(scmLocalIDPrefix, paID, scmLocalIDSuffix);
 }
-
-

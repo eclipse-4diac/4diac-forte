@@ -21,8 +21,8 @@
 #include <memory>
 #include <array>
 
-class GEN_VALUES2ARRAY : public CGenFunctionBlock<CFunctionBlock>{
-  DECLARE_GENERIC_FIRMWARE_FB(GEN_VALUES2ARRAY)
+class GEN_VALUES2ARRAY : public CGenFunctionBlock<CFunctionBlock> {
+    DECLARE_GENERIC_FIRMWARE_FB(GEN_VALUES2ARRAY)
 
   private:
     std::unique_ptr<CStringDictionary::TStringId[]> mDataInputNames;
@@ -31,7 +31,7 @@ class GEN_VALUES2ARRAY : public CGenFunctionBlock<CFunctionBlock>{
     static const CStringDictionary::TStringId scmDataOutputNames[];
     std::array<CStringDictionary::TStringId, 3> mDataOutputTypeIds;
 
-    CIEC_ARRAY &OUT_Array(){
+    CIEC_ARRAY &OUT_Array() {
       return *static_cast<CIEC_ARRAY *>(getDO(0));
     }
 
@@ -43,7 +43,7 @@ class GEN_VALUES2ARRAY : public CGenFunctionBlock<CFunctionBlock>{
     static const CStringDictionary::TStringId scmEventOutputNames[];
     static const CStringDictionary::TStringId scmEventOutputTypeIds[];
 
-    //self-defined members
+    // self-defined members
     unsigned int mDInputs;
     CStringDictionary::TStringId m_ValueTypeID;
 
@@ -57,8 +57,6 @@ class GEN_VALUES2ARRAY : public CGenFunctionBlock<CFunctionBlock>{
   public:
     GEN_VALUES2ARRAY(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
     ~GEN_VALUES2ARRAY() override = default;
-
 };
 
 #endif //_GEN_VALUES2ARRAY_H_
-

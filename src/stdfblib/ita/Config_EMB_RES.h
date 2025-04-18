@@ -15,7 +15,7 @@
 #include "EMB_RES.h"
 
 class Config_EMB_RES final : public CResource {
-  DECLARE_FIRMWARE_FB(Config_EMB_RES);
+    DECLARE_FIRMWARE_FB(Config_EMB_RES);
 
   public:
     Config_EMB_RES(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paDevice);
@@ -28,7 +28,7 @@ class Config_EMB_RES final : public CResource {
   private:
     CDataConnection **getDIConUnchecked(TPortId) override;
 
-    CConnection *getResIf2InConnectionUnchecked(TPortId ) override;
+    CConnection *getResIf2InConnectionUnchecked(TPortId) override;
 
     forte::core::CInternalFB<FORTE_E_RESTART> fb_START;
 

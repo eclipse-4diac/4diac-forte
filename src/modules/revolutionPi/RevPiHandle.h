@@ -16,21 +16,24 @@
 #include <io/mapper/io_handle.h>
 #include "RevPiController.h"
 
-class RevPiHandle: public forte::core::io::IOHandle {
-public:
-  RevPiHandle(RevPiController *controller, CIEC_ANY::EDataTypeID type, forte::core::io::IOMapper::Direction direction,
-      uint16_t offset, uint8_t position);
+class RevPiHandle : public forte::core::io::IOHandle {
+  public:
+    RevPiHandle(RevPiController *controller,
+                CIEC_ANY::EDataTypeID type,
+                forte::core::io::IOMapper::Direction direction,
+                uint16_t offset,
+                uint8_t position);
 
-  ~RevPiHandle();
+    ~RevPiHandle();
 
-  virtual void set(const CIEC_ANY &);
-  void get(CIEC_ANY &);
+    virtual void set(const CIEC_ANY &);
+    void get(CIEC_ANY &);
 
-  bool check();
+    bool check();
 
-protected:
-  SPIValueStr control;
-  CIEC_ANY* valueLastCheck;
+  protected:
+    SPIValueStr control;
+    CIEC_ANY *valueLastCheck;
 
-  virtual void dropObserver();
+    virtual void dropObserver();
 };

@@ -20,13 +20,13 @@
 
 class CAdapterConnection;
 
-#define ADAPTER_CTOR(fbclass) \
- fbclass(CStringDictionary::TStringId paAdapterInstanceName, forte::core::CFBContainer &paContainer, bool paIsPlug) : \
- CAdapter(paContainer, &scmFBInterfaceSpecSocket, paAdapterInstanceName, &scmFBInterfaceSpecPlug, paIsPlug)
+#define ADAPTER_CTOR(fbclass)                                                                                          \
+  fbclass(CStringDictionary::TStringId paAdapterInstanceName, forte::core::CFBContainer &paContainer, bool paIsPlug) : \
+      CAdapter(paContainer, &scmFBInterfaceSpecSocket, paAdapterInstanceName, &scmFBInterfaceSpecPlug, paIsPlug)
 
-#define ADAPTER_CTOR_WITH_BASE_CLASS(fbclass, fbBaseClass) \
- fbclass(CStringDictionary::TStringId paAdapterInstanceName, forte::core::CFBContainer &paContainer, bool paIsPlug) : \
- fbBaseClass(paContainer, &scmFBInterfaceSpecSocket, paAdapterInstanceName, &scmFBInterfaceSpecPlug, paIsPlug)
+#define ADAPTER_CTOR_WITH_BASE_CLASS(fbclass, fbBaseClass)                                                             \
+  fbclass(CStringDictionary::TStringId paAdapterInstanceName, forte::core::CFBContainer &paContainer, bool paIsPlug) : \
+      fbBaseClass(paContainer, &scmFBInterfaceSpecSocket, paAdapterInstanceName, &scmFBInterfaceSpecPlug, paIsPlug)
 
 /*!\ingroup CORE\brief Class for handling adapters.
  *
@@ -35,8 +35,12 @@ class CAdapter : public CGenFunctionBlock<CFunctionBlock> {
   public:
     /*!\brief The main constructor for an adapter instance.
      */
-    //TODO: think on interface
-    CAdapter(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec& paInterfaceSpecSocket, const CStringDictionary::TStringId paInstanceNameId, const SFBInterfaceSpec& paInterfaceSpecPlug, bool paIsPlug);
+    // TODO: think on interface
+    CAdapter(forte::core::CFBContainer &paContainer,
+             const SFBInterfaceSpec &paInterfaceSpecSocket,
+             const CStringDictionary::TStringId paInstanceNameId,
+             const SFBInterfaceSpec &paInterfaceSpecPlug,
+             bool paIsPlug);
     ~CAdapter() override;
 
     bool initialize() override;
@@ -45,13 +49,13 @@ class CAdapter : public CGenFunctionBlock<CFunctionBlock> {
 
     /*!\brief Returns if Adapter instance is a Plug
      */
-    bool isPlug() const{
+    bool isPlug() const {
       return mIsPlug;
     }
 
     /*!\brief Returns if Adapter instance is a Socket
      */
-    bool isSocket() const{
+    bool isSocket() const {
       return !mIsPlug;
     }
 
@@ -85,27 +89,27 @@ class CAdapter : public CGenFunctionBlock<CFunctionBlock> {
      */
     bool isCompatible(const CAdapter &paPeer) const;
 
-    const TForteInt16 *getEventInputWithIndices() const{
+    const TForteInt16 *getEventInputWithIndices() const {
       return getFBInterfaceSpec().mEIWithIndexes;
     }
 
-    const TForteInt16 *getEventOutputWithIndices() const{
+    const TForteInt16 *getEventOutputWithIndices() const {
       return getFBInterfaceSpec().mEOWithIndexes;
     }
 
-    const TDataIOID *getEventInputWith() const{
+    const TDataIOID *getEventInputWith() const {
       return getFBInterfaceSpec().mEIWith;
     }
 
-    const TDataIOID *getEventOutputWith() const{
+    const TDataIOID *getEventOutputWith() const {
       return getFBInterfaceSpec().mEOWith;
     }
 
-    CAdapter *getPeer(){
+    CAdapter *getPeer() {
       return mPeer;
     }
 
-    CAdapterConnection *getAdapterConnection() const{
+    CAdapterConnection *getAdapterConnection() const {
       return mAdapterConn;
     }
 
@@ -116,7 +120,7 @@ class CAdapter : public CGenFunctionBlock<CFunctionBlock> {
     TForteUInt16 mParentAdapterListEventID;
 
   private:
-    void executeEvent(TEventID paEIID, CEventChainExecutionThread * const paECET) override;
+    void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
     void setupEventEntryList();
 
     const bool mIsPlug;

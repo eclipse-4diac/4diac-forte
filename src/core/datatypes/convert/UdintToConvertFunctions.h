@@ -34,19 +34,19 @@ inline const CIEC_INT func_UDINT_TO_INT(const CIEC_UDINT &paVal) {
   return CIEC_ANY::cast<CIEC_INT>(paVal);
 }
 
-inline const CIEC_LINT func_UDINT_TO_LINT(const CIEC_UDINT &paVal){
+inline const CIEC_LINT func_UDINT_TO_LINT(const CIEC_UDINT &paVal) {
   return CIEC_ANY::cast<CIEC_LINT>(paVal);
 }
 
-inline const CIEC_LREAL func_UDINT_TO_LREAL(const CIEC_UDINT &paVal){
+inline const CIEC_LREAL func_UDINT_TO_LREAL(const CIEC_UDINT &paVal) {
   return CIEC_ANY::cast<CIEC_LREAL>(paVal);
 }
 
-inline const CIEC_LWORD func_UDINT_TO_LWORD(const CIEC_UDINT &paVal){
+inline const CIEC_LWORD func_UDINT_TO_LWORD(const CIEC_UDINT &paVal) {
   return CIEC_ANY::cast<CIEC_LWORD>(paVal);
 }
 
-inline const CIEC_REAL func_UDINT_TO_REAL(const CIEC_UDINT &paVal){
+inline const CIEC_REAL func_UDINT_TO_REAL(const CIEC_UDINT &paVal) {
   return CIEC_ANY::cast<CIEC_REAL>(paVal);
 }
 
@@ -62,7 +62,7 @@ inline const CIEC_UINT func_UDINT_TO_UINT(const CIEC_UDINT &paVal) {
   return CIEC_ANY::cast<CIEC_UINT>(paVal);
 }
 
-inline const CIEC_ULINT func_UDINT_TO_ULINT(const CIEC_UDINT &paVal){
+inline const CIEC_ULINT func_UDINT_TO_ULINT(const CIEC_UDINT &paVal) {
   return CIEC_ANY::cast<CIEC_ULINT>(paVal);
 }
 
@@ -81,7 +81,7 @@ inline const CIEC_STRING func_UDINT_AS_STRING(const CIEC_UDINT &paVal) {
 }
 
 #ifdef FORTE_USE_WSTRING_DATATYPE
-inline const CIEC_WSTRING func_UDINT_AS_WSTRING(const CIEC_UDINT &paVal){
+inline const CIEC_WSTRING func_UDINT_AS_WSTRING(const CIEC_UDINT &paVal) {
   CIEC_WSTRING string;
   stringConverter(string, paVal);
   return string;

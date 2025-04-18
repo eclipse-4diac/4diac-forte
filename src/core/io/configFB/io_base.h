@@ -23,13 +23,15 @@ namespace forte {
 
       class IOConfigFBBase : public CGenFunctionBlock<CEventSourceFB> {
         public:
-          IOConfigFBBase(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec &paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId);
+          IOConfigFBBase(forte::core::CFBContainer &paContainer,
+                         const SFBInterfaceSpec &paInterfaceSpec,
+                         const CStringDictionary::TStringId paInstanceNameId);
           ~IOConfigFBBase() override;
           bool createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) override;
       };
 
-    } //namespace IO
-  } //namepsace core
-} //namespace forte
+    } // namespace io
+  } // namespace core
+} // namespace forte
 
 #endif /* SRC_CORE_IO_CONFIGFB_BASE_H_ */

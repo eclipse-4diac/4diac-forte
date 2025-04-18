@@ -22,31 +22,31 @@
  *
  * In the Mac OS version a mutex is used for the sync object.
  */
- 
-class CMacOsSyncObject{
+
+class CMacOsSyncObject {
   private:
   protected:
-  //! The posix thread mutex handle of the operating system.
+    //! The posix thread mutex handle of the operating system.
     pthread_mutex_t mMutexHandle;
+
   public:
     CMacOsSyncObject();
     ~CMacOsSyncObject();
-  /*!\brief Lock the resource coming after the lock command  
-   * 
-   * This function blocks until it will get the lock for the coming critical section.
-   */  
-    void lock(){
+    /*!\brief Lock the resource coming after the lock command
+     *
+     * This function blocks until it will get the lock for the coming critical section.
+     */
+    void lock() {
       pthread_mutex_lock(&mMutexHandle);
-      //TODO handle return value
+      // TODO handle return value
     };
-  //!Freee the resource coming after the lock command  
-    void unlock(){
+    //! Freee the resource coming after the lock command
+    void unlock() {
       pthread_mutex_unlock(&mMutexHandle);
-      //TODO handle return value
+      // TODO handle return value
     };
 };
 
-typedef CMacOsSyncObject CSyncObject;  //allows that doxygen can generate better documenation
-
+typedef CMacOsSyncObject CSyncObject; // allows that doxygen can generate better documenation
 
 #endif /*FORTE_SYNC_H_*/

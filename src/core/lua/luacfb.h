@@ -23,7 +23,10 @@
 
 class CLuaCFB : public CGenFunctionBlock<CCompositeFB> {
   public:
-    CLuaCFB(CStringDictionary::TStringId paInstanceNameId, const CLuaCFBTypeEntry* paTypeEntry, SCFB_FBNData &paFbnData, forte::core::CFBContainer &paContainer);
+    CLuaCFB(CStringDictionary::TStringId paInstanceNameId,
+            const CLuaCFBTypeEntry *paTypeEntry,
+            SCFB_FBNData &paFbnData,
+            forte::core::CFBContainer &paContainer);
     ~CLuaCFB() override;
 
     CStringDictionary::TStringId getFBTypeId() const override {
@@ -43,7 +46,7 @@ class CLuaCFB : public CGenFunctionBlock<CCompositeFB> {
 
     bool createInternalFBs() override;
 
-    const CLuaCFBTypeEntry* mTypeEntry;
+    const CLuaCFBTypeEntry *mTypeEntry;
 };
 
 #endif /* SRC_CORE_LUACFB_H_ */

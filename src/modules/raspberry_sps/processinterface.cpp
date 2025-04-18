@@ -15,49 +15,48 @@
 #include "processinterface.h"
 #include <unistd.h>
 
-CProcessInterface::CProcessInterface(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec& paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId) :
-    CI2CProcessInterface(paContainer, paInterfaceSpec, paInstanceNameId){
+CProcessInterface::CProcessInterface(forte::core::CFBContainer &paContainer,
+                                     const SFBInterfaceSpec &paInterfaceSpec,
+                                     const CStringDictionary::TStringId paInstanceNameId) :
+    CI2CProcessInterface(paContainer, paInterfaceSpec, paInstanceNameId) {
 }
 
-CProcessInterface::~CProcessInterface(){
+CProcessInterface::~CProcessInterface() {
 }
 
-bool CProcessInterface::readPin(){
+bool CProcessInterface::readPin() {
   bool retVal = CI2CProcessInterface::readPin();
-  if(retVal){
-    //Raspberry PI SPS has inverted inputs so we need to re-invert here
+  if (retVal) {
+    // Raspberry PI SPS has inverted inputs so we need to re-invert here
     IN_X() = !(IN_X().operator bool());
   }
   return retVal;
 }
 
-bool CProcessInterface::writePin(){
+bool CProcessInterface::writePin() {
 
-  //Raspberry PI SPS has inverted inputs so we need to re-invert here
+  // Raspberry PI SPS has inverted inputs so we need to re-invert here
   OUT_X() = !(OUT_X().operator bool());
   bool retVal = CI2CProcessInterface::writePin();
-  //Put the value back to the original one
+  // Put the value back to the original one
   OUT_X() = !(OUT_X().operator bool());
   return retVal;
 }
 
-bool CProcessInterface::readWord(){
+bool CProcessInterface::readWord() {
   bool retVal = false;
 
-  //set the register to read the analog value from
-  if(1 == write(mFd, &mValueAddress, 1)){
+  // set the register to read the analog value from
+  if (1 == write(mFd, &mValueAddress, 1)) {
     TForteByte buffer[3];
-    if(3 == read(mFd, buffer, 3)){
-      IN_W() = static_cast<TForteWord>(((static_cast<TForteWord>(buffer[2]) << 8) & 0xFF00) | 
-                 buffer[1]);
+    if (3 == read(mFd, buffer, 3)) {
+      IN_W() = static_cast<TForteWord>(((static_cast<TForteWord>(buffer[2]) << 8) & 0xFF00) | buffer[1]);
       STATUS() = scmOK;
       retVal = true;
-    }
-    else{
+    } else {
       STATUS() = scmCouldNotRead;
     }
-  }
-  else{
+  } else {
     STATUS() = scmCouldNotRead;
   }
   return retVal;

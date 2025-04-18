@@ -29,33 +29,36 @@ class PLC01A1Controller : public forte::core::io::IODevicePollController {
         uint8_t mOffset;
         uint8_t mPosition;
 
-        HandleDescriptor(CIEC_WSTRING const &paId, forte::core::io::IOMapper::Direction paDirection, uint8_t paOffset, uint8_t paPosition) :
-            forte::core::io::IODeviceController::HandleDescriptor(paId, paDirection), mOffset(paOffset), mPosition(paPosition) {
-
+        HandleDescriptor(CIEC_WSTRING const &paId,
+                         forte::core::io::IOMapper::Direction paDirection,
+                         uint8_t paOffset,
+                         uint8_t paPosition) :
+            forte::core::io::IODeviceController::HandleDescriptor(paId, paDirection),
+            mOffset(paOffset),
+            mPosition(paPosition) {
         }
     };
 
-    void setConfig(struct forte::core::io::IODeviceController::Config* paConfig);
+    void setConfig(struct forte::core::io::IODeviceController::Config *paConfig);
 
-    virtual bool isHandleValueEqual(forte::core::io::IOHandle* paHandle);
+    virtual bool isHandleValueEqual(forte::core::io::IOHandle *paHandle);
 
-    forte::core::io::IOHandle* initHandle(forte::core::io::IODeviceController::HandleDescriptor &paHandleDescriptor);
+    forte::core::io::IOHandle *initHandle(forte::core::io::IODeviceController::HandleDescriptor &paHandleDescriptor);
 
   protected:
-    const char* init();
+    const char *init();
     void deInit();
 
     void poll();
 
   private:
-
     static const char *const scmSPIInputDevice;
     static const char *const scmSPIOutputDevice;
 
     int mSPIInputFd;
     int mSPIOutputFd;
 
-    static const char * const scmFailedToOpenInputControlFile;
+    static const char *const scmFailedToOpenInputControlFile;
     static const char *const scmFailedToOpenOutputControlFile;
 
     static const uint32_t scmSPIMode;

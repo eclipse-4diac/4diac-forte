@@ -12,13 +12,13 @@
 #ifndef ICMD_H_
 #define ICMD_H_
 
-class ICmd{
+class ICmd {
   public:
     ICmd() = default;
     virtual ~ICmd() = default;
 
     virtual void runCommand() = 0;
-    virtual const char* getCommandName() const = 0;
+    virtual const char *getCommandName() const = 0;
 };
 
-#endif //ICMD_H_
+#endif // ICMD_H_

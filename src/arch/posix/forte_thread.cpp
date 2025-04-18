@@ -21,63 +21,64 @@
 #include <unistd.h>
 #include <criticalregion.h>
 
-forte::arch::CThreadBase<pthread_t>::TThreadHandleType CPosixThread::createThread(long paStackSize){
+forte::arch::CThreadBase<pthread_t>::TThreadHandleType CPosixThread::createThread(long paStackSize) {
   TThreadHandleType retVal = 0;
 
-  if(paStackSize){
+  if (paStackSize) {
     pthread_attr_t stAttr;
 
-    if(pthread_attr_init(&stAttr)){
+    if (pthread_attr_init(&stAttr)) {
       DEVLOG_ERROR("Error could not get the default thread attributes! %s\n", strerror(errno));
       return 0;
     }
 #ifdef __CYGWIN__
-    if (pthread_attr_setstacksize (&stAttr, paStackSize)){
+    if (pthread_attr_setstacksize(&stAttr, paStackSize)) {
       DEVLOG_ERROR("Error could not set the stacksize for the thread! %s\n", strerror(errno));
       return 0;
     }
 #else //__CYGWIN__
-    if(pthread_attr_setstack(&stAttr, mStack, paStackSize)){
+    if (pthread_attr_setstack(&stAttr, mStack, paStackSize)) {
       DEVLOG_ERROR("Error could not set the stacksize for the thread! %s\n", strerror(errno));
       return 0;
     }
 #endif //__CYGWIN__
-    if(pthread_create(&retVal, &stAttr, threadFunction, this)){
+    if (pthread_create(&retVal, &stAttr, threadFunction, this)) {
       DEVLOG_ERROR("Error could not create the thread! %s\n", strerror(errno));
       return 0;
     }
-    if(pthread_attr_destroy(&stAttr)){
+    if (pthread_attr_destroy(&stAttr)) {
       DEVLOG_ERROR("Error could not free the thread attributes! %s\n", strerror(errno));
       return 0;
     }
-  }
-  else{
-    if(pthread_create(&retVal, nullptr, threadFunction, this)){
+  } else {
+    if (pthread_create(&retVal, nullptr, threadFunction, this)) {
       DEVLOG_ERROR("Error could not create the thread! %s\n", strerror(errno));
       return 0;
     }
   }
-  // Detach because we don't care about the thread anymore/don't need to join. To cleanup either call pthread_detach or pthread_join
+  // Detach because we don't care about the thread anymore/don't need to join. To cleanup either call pthread_detach or
+  // pthread_join
   pthread_detach(retVal);
 
   return retVal;
 }
 
-void * CPosixThread::threadFunction(void *paArguments){
+void *CPosixThread::threadFunction(void *paArguments) {
   // Get pointer to CThread object out of void pointer
   CThreadBase<pthread_t>::runThread(static_cast<CPosixThread *>(paArguments));
   return nullptr;
 }
 
-CPosixThread::CPosixThread(long paStackSize) : CThreadBase<pthread_t>(paStackSize){
-  if(0 != paStackSize){
+CPosixThread::CPosixThread(long paStackSize) : CThreadBase<pthread_t>(paStackSize) {
+  if (0 != paStackSize) {
     mStack = new char[paStackSize];
   }
 }
 
 CPosixThread::~CPosixThread() = default;
 
-void CPosixThread::sleepThread(unsigned int paMilliSeconds){
-  struct timespec stReq = { static_cast<time_t>(paMilliSeconds / 1000), static_cast<long>(1000000 * (paMilliSeconds % 1000)) };
+void CPosixThread::sleepThread(unsigned int paMilliSeconds) {
+  struct timespec stReq = {static_cast<time_t>(paMilliSeconds / 1000),
+                           static_cast<long>(1000000 * (paMilliSeconds % 1000))};
   nanosleep(&stReq, nullptr);
 }

@@ -14,7 +14,7 @@
 template<typename T>
 class CIEC_ANY_BIT_NOT : public T {
   public:
-    CIEC_ANY_BIT_NOT(T& paValue) : T(paValue), wrapped(paValue) {
+    CIEC_ANY_BIT_NOT(T &paValue) : T(paValue), wrapped(paValue) {
     }
 
     ~CIEC_ANY_BIT_NOT() {
@@ -28,5 +28,5 @@ class CIEC_ANY_BIT_NOT : public T {
     }
 
   private:
-    T& wrapped;
+    T &wrapped;
 };

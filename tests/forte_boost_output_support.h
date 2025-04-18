@@ -35,123 +35,107 @@
 #include "funcbloc.h"
 #include "mgmcmd.h"
 
-inline
-std::ostream& boost_test_print_type(std::ostream &out, const CIEC_LREAL &variable) {
+inline std::ostream &boost_test_print_type(std::ostream &out, const CIEC_LREAL &variable) {
   std::vector<char> outputString(variable.getToStringBufferSize());
   variable.toString(outputString.data(), outputString.size());
   out << outputString.data();
   return out;
 }
 
-inline
-std::ostream& boost_test_print_type(std::ostream &out, const CIEC_TIME &variable) {
+inline std::ostream &boost_test_print_type(std::ostream &out, const CIEC_TIME &variable) {
   std::vector<char> outputString(variable.getToStringBufferSize());
   variable.toString(outputString.data(), outputString.size());
   out << outputString.data();
   return out;
 }
 
-inline
-std::ostream& boost_test_print_type(std::ostream &out, const CIEC_TIME_OF_DAY &variable) {
+inline std::ostream &boost_test_print_type(std::ostream &out, const CIEC_TIME_OF_DAY &variable) {
   std::vector<char> outputString(variable.getToStringBufferSize());
   variable.toString(outputString.data(), outputString.size());
   out << outputString.data();
   return out;
 }
 
-inline
-std::ostream& boost_test_print_type(std::ostream &out, const CIEC_DATE &variable) {
+inline std::ostream &boost_test_print_type(std::ostream &out, const CIEC_DATE &variable) {
   std::vector<char> outputString(variable.getToStringBufferSize());
   variable.toString(outputString.data(), outputString.size());
   out << outputString.data();
   return out;
 }
 
-inline
-std::ostream& boost_test_print_type(std::ostream &out, const CIEC_DATE_AND_TIME &variable) {
+inline std::ostream &boost_test_print_type(std::ostream &out, const CIEC_DATE_AND_TIME &variable) {
   std::vector<char> outputString(variable.getToStringBufferSize());
   variable.toString(outputString.data(), outputString.size());
   out << outputString.data();
   return out;
 }
 
-inline
-std::ostream& boost_test_print_type(std::ostream &out, const CIEC_LTIME &variable) {
+inline std::ostream &boost_test_print_type(std::ostream &out, const CIEC_LTIME &variable) {
   std::vector<char> outputString(variable.getToStringBufferSize());
   variable.toString(outputString.data(), outputString.size());
   out << outputString.data();
   return out;
 }
 
-inline
-std::ostream& boost_test_print_type(std::ostream &out, const CIEC_LTIME_OF_DAY &variable) {
+inline std::ostream &boost_test_print_type(std::ostream &out, const CIEC_LTIME_OF_DAY &variable) {
   std::vector<char> outputString(variable.getToStringBufferSize());
   variable.toString(outputString.data(), outputString.size());
   out << outputString.data();
   return out;
 }
 
-inline
-std::ostream& boost_test_print_type(std::ostream &out, const CIEC_LDATE &variable) {
+inline std::ostream &boost_test_print_type(std::ostream &out, const CIEC_LDATE &variable) {
   std::vector<char> outputString(variable.getToStringBufferSize());
   variable.toString(outputString.data(), outputString.size());
   out << outputString.data();
   return out;
 }
 
-inline
-std::ostream& boost_test_print_type(std::ostream &out, const CIEC_LDATE_AND_TIME &variable) {
+inline std::ostream &boost_test_print_type(std::ostream &out, const CIEC_LDATE_AND_TIME &variable) {
   std::vector<char> outputString(variable.getToStringBufferSize());
   variable.toString(outputString.data(), outputString.size());
   out << outputString.data();
   return out;
 }
 
-inline
-std::ostream& boost_test_print_type(std::ostream &out, const CIEC_CHAR &variable) {
+inline std::ostream &boost_test_print_type(std::ostream &out, const CIEC_CHAR &variable) {
   std::vector<char> outputString(variable.getToStringBufferSize());
   variable.toString(outputString.data(), outputString.size());
   out << outputString.data();
   return out;
 }
 
-inline
-std::ostream& boost_test_print_type(std::ostream &out, const CIEC_WCHAR &variable) {
+inline std::ostream &boost_test_print_type(std::ostream &out, const CIEC_WCHAR &variable) {
   std::vector<char> outputString(variable.getToStringBufferSize());
   variable.toString(outputString.data(), outputString.size());
   out << outputString.data();
   return out;
 }
 
-inline
-std::ostream& boost_test_print_type(std::ostream &out, const CIEC_STRING &variable) {
+inline std::ostream &boost_test_print_type(std::ostream &out, const CIEC_STRING &variable) {
   out << variable.getStorage();
   return out;
 }
 
 template<size_t maxLength>
-inline
-std::ostream& boost_test_print_type(std::ostream &out, const CIEC_STRING_FIXED<maxLength> &variable) {
+inline std::ostream &boost_test_print_type(std::ostream &out, const CIEC_STRING_FIXED<maxLength> &variable) {
   out << variable.getStorage();
   return out;
 }
 
-inline
-std::ostream& boost_test_print_type(std::ostream &out, const CIEC_WSTRING &variable) {
+inline std::ostream &boost_test_print_type(std::ostream &out, const CIEC_WSTRING &variable) {
   std::vector<char> outputString(variable.getToStringBufferSize());
   variable.toString(outputString.data(), outputString.size());
   out << outputString.data();
   return out;
 }
 
-inline
-std::ostream& boost_test_print_type(std::ostream &out, const EMGMResponse &variable) {
+inline std::ostream &boost_test_print_type(std::ostream &out, const EMGMResponse &variable) {
   out << static_cast<std::underlying_type_t<EMGMResponse>>(variable);
   return out;
 }
 
-inline
-std::ostream& boost_test_print_type(std::ostream &out, const CFunctionBlock::E_FBStates &variable) {
+inline std::ostream &boost_test_print_type(std::ostream &out, const CFunctionBlock::E_FBStates &variable) {
   out << static_cast<std::underlying_type_t<CFunctionBlock::E_FBStates>>(variable);
   return out;
 }

@@ -5,7 +5,7 @@
  http://www.eclipse.org/legal/epl-2.0.
 
  SPDX-License-Identifier: EPL-2.0
- 
+
  Contributors:
   Dirk Kaar - initial API and implementation and/or initial documentation
  ************************************************************************************/
@@ -15,7 +15,7 @@
 
 #include <zephyr/kernel.h>
 
-#define CSyncObject CZephyrSyncObject //allows that doxygen can generate better documenation
+#define CSyncObject CZephyrSyncObject // allows that doxygen can generate better documenation
 
 /*! \ingroup ZEPHYR-HAL
  * \brief The sync object implementation for Zephyr.
@@ -34,13 +34,13 @@ class CZephyrSyncObject {
       k_mutex_lock(mutex, K_FOREVER);
     }
 
-    //!Free the resource coming after the lock command
+    //! Free the resource coming after the lock command
     void unlock() {
       k_mutex_unlock(mutex);
     }
 
   private:
-    struct k_mutex* mutex{ 0 };
+    struct k_mutex *mutex{0};
 };
 
 #endif /*SYNC_H_*/

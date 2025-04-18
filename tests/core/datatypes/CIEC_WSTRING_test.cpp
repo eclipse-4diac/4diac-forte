@@ -24,14 +24,12 @@
 #include "../../../src/core/datatypes/forte_wchar.h"
 
 BOOST_AUTO_TEST_SUITE(CIEC_WSTRING_function_test)
-BOOST_AUTO_TEST_CASE(Type_test)
-{
+BOOST_AUTO_TEST_CASE(Type_test) {
   CIEC_WSTRING sTest;
-  //check type information
+  // check type information
   BOOST_CHECK_EQUAL(sTest.getDataTypeID(), CIEC_ANY::e_WSTRING);
-  //check operator const char* data type size
-  BOOST_CHECK_EQUAL(sizeof(sTest.getValue()), sizeof(char*));
-
+  // check operator const char* data type size
+  BOOST_CHECK_EQUAL(sizeof(sTest.getValue()), sizeof(char *));
 }
 
 BOOST_AUTO_TEST_CASE(Literal_test) {
@@ -45,24 +43,21 @@ BOOST_AUTO_TEST_CASE(Literal_test) {
   BOOST_REQUIRE_EQUAL(test3.getValue(), "test\xe2\x82\xac");
 }
 
-BOOST_AUTO_TEST_CASE(String_manilulation_interface)
-{
+BOOST_AUTO_TEST_CASE(String_manilulation_interface) {
   CIEC_WSTRING sTest;
-  char cWStringTest[] = "This is a test string!"; //length 22 without trailing \0
+  char cWStringTest[] = "This is a test string!"; // length 22 without trailing \0
   BOOST_CHECK_EQUAL(sTest.length(), 0);
   sTest = CIEC_WSTRING(cWStringTest);
   BOOST_CHECK_EQUAL(sTest.length(), 22);
   BOOST_CHECK_EQUAL(strcmp(sTest.getValue(), cWStringTest), 0);
 
-  CIEC_WSTRING* psTest = new CIEC_WSTRING(cWStringTest);
+  CIEC_WSTRING *psTest = new CIEC_WSTRING(cWStringTest);
   BOOST_CHECK_EQUAL(psTest->length(), 22);
   BOOST_CHECK_EQUAL(strcmp(psTest->getValue(), cWStringTest), 0);
   delete psTest;
-
 }
 
-BOOST_AUTO_TEST_CASE(String_assignment)
-{
+BOOST_AUTO_TEST_CASE(String_assignment) {
   CIEC_WSTRING sTest1;
   CIEC_WSTRING sTest2;
   char cWStringTest1[] = "This is another test string!";
@@ -78,8 +73,7 @@ BOOST_AUTO_TEST_CASE(String_assignment)
   BOOST_CHECK_EQUAL(strcmp(cWStringTest2, sTest2.getValue()), 0);
 }
 
-BOOST_AUTO_TEST_CASE(String_compare)
-{
+BOOST_AUTO_TEST_CASE(String_compare) {
   CIEC_WSTRING sTest1;
   CIEC_WSTRING sTest2;
   CIEC_WSTRING sTest3;
@@ -94,19 +88,18 @@ BOOST_AUTO_TEST_CASE(String_compare)
   BOOST_CHECK(sTest1 == sTest2);
   BOOST_CHECK_EQUAL(strcmp(sTest1.getValue(), cWStringTest1), 0);
   BOOST_CHECK_EQUAL(strcmp(sTest2.getValue(), cWStringTest2), 0);
-  
+
   BOOST_CHECK(!(sTest1 == sTest3));
   BOOST_CHECK_EQUAL(strcmp(sTest1.getValue(), cWStringTest1), 0);
   BOOST_CHECK_EQUAL(strcmp(sTest3.getValue(), cWStringTest3), 0);
-  
+
   BOOST_CHECK(sTest2 != sTest3);
   BOOST_CHECK_EQUAL(strcmp(sTest2.getValue(), cWStringTest2), 0);
   BOOST_CHECK_EQUAL(strcmp(sTest3.getValue(), cWStringTest3), 0);
-  
+
   BOOST_CHECK(!(sTest2 != sTest1));
   BOOST_CHECK_EQUAL(strcmp(sTest2.getValue(), cWStringTest2), 0);
   BOOST_CHECK_EQUAL(strcmp(sTest1.getValue(), cWStringTest1), 0);
-
 
   BOOST_CHECK(sTest1 == CIEC_WSTRING(cWStringTest2));
   BOOST_CHECK_EQUAL(strcmp(sTest1.getValue(), cWStringTest1), 0);
@@ -133,8 +126,7 @@ BOOST_AUTO_TEST_CASE(String_compare)
   BOOST_CHECK_EQUAL(strcmp(sTest2.getValue(), cWStringTest2), 0);
 }
 
-BOOST_AUTO_TEST_CASE(String_equals)
-{
+BOOST_AUTO_TEST_CASE(String_equals) {
   CIEC_WSTRING sTest1;
   CIEC_WSTRING sTest2;
   CIEC_WSTRING sTest3;
@@ -152,8 +144,7 @@ BOOST_AUTO_TEST_CASE(String_equals)
   BOOST_CHECK(!sTest2.equals(sTest3));
 }
 
-BOOST_AUTO_TEST_CASE(Memory_Allocation)
-{
+BOOST_AUTO_TEST_CASE(Memory_Allocation) {
   CIEC_WSTRING sTest;
   sTest.reserve(10);
   BOOST_CHECK_EQUAL(sTest.length(), 0);
@@ -163,22 +154,21 @@ BOOST_AUTO_TEST_CASE(Memory_Allocation)
   BOOST_CHECK_EQUAL(sTest.length(), 34);
 }
 
-BOOST_AUTO_TEST_CASE(WString_fromUTF16)
-{
-  const TForteByte cBOMBE[] = { 0xFE, 0xFF };
-  const TForteByte cBOMLE[] = { 0xFF, 0xFE };
+BOOST_AUTO_TEST_CASE(WString_fromUTF16) {
+  const TForteByte cBOMBE[] = {0xFE, 0xFF};
+  const TForteByte cBOMLE[] = {0xFF, 0xFE};
 
-  const TForteByte cWStringTest1Default[] = { 0x00, 0x7a };
-  const TForteByte cWStringTest1BE[] = { 0xFE, 0xFF, 0x00, 0x7a };
-  const TForteByte cWStringTest1LE[] = { 0xFF, 0xFE, 0x7a, 0x00 };
+  const TForteByte cWStringTest1Default[] = {0x00, 0x7a};
+  const TForteByte cWStringTest1BE[] = {0xFE, 0xFF, 0x00, 0x7a};
+  const TForteByte cWStringTest1LE[] = {0xFF, 0xFE, 0x7a, 0x00};
 
   // Japanese "nihongo", meaning "the Japanese language"
-  const TForteByte cWStringTest2[] = { 0xFE, 0xFF, 0x65, 0xe5, 0x67, 0x2c, 0x8a, 0x9e };
-  const TForteByte cWStringTest2Result[] = { 0xE6, 0x97, 0xA5, 0xE6, 0x9C, 0xAC, 0xE8, 0xAA, 0x9E, 0 };
+  const TForteByte cWStringTest2[] = {0xFE, 0xFF, 0x65, 0xe5, 0x67, 0x2c, 0x8a, 0x9e};
+  const TForteByte cWStringTest2Result[] = {0xE6, 0x97, 0xA5, 0xE6, 0x9C, 0xAC, 0xE8, 0xAA, 0x9E, 0};
 
   // a Chinese character meaning 'stump of tree'
-  const TForteByte cWStringTest3[] = { 0xFE, 0xFF, 0xd8, 0x4c, 0xdf, 0xb4 };
-  const TForteByte cWStringTest3Result[] = { 0xF0, 0xA3, 0x8E, 0xB4, 0 };
+  const TForteByte cWStringTest3[] = {0xFE, 0xFF, 0xd8, 0x4c, 0xdf, 0xb4};
+  const TForteByte cWStringTest3Result[] = {0xF0, 0xA3, 0x8E, 0xB4, 0};
 
   bool nRes;
   CIEC_WSTRING sTest;
@@ -219,20 +209,19 @@ BOOST_AUTO_TEST_CASE(WString_fromUTF16)
   BOOST_CHECK_EQUAL(sTest.length(), 0);
 
   nRes = sTest.fromUTF16(cWStringTest3, 3);
-  BOOST_CHECK(! nRes);
+  BOOST_CHECK(!nRes);
 }
 
-BOOST_AUTO_TEST_CASE(WString_toUTF16)
-{
-  const TForteByte cWStringTest1Result[] = { 0x00, 0x7a };
+BOOST_AUTO_TEST_CASE(WString_toUTF16) {
+  const TForteByte cWStringTest1Result[] = {0x00, 0x7a};
 
   // Japanese "nihongo", meaning "the Japanese language"
-  const TForteByte cWStringTest2[] = { 0xE6, 0x97, 0xA5, 0xE6, 0x9C, 0xAC, 0xE8, 0xAA, 0x9E, 0 };
-  const TForteByte cWStringTest2Result[] = { 0x65, 0xe5, 0x67, 0x2c, 0x8a, 0x9e };
+  const TForteByte cWStringTest2[] = {0xE6, 0x97, 0xA5, 0xE6, 0x9C, 0xAC, 0xE8, 0xAA, 0x9E, 0};
+  const TForteByte cWStringTest2Result[] = {0x65, 0xe5, 0x67, 0x2c, 0x8a, 0x9e};
 
   // a Chinese character meaning 'stump of tree'
-  const TForteByte cWStringTest3[] = { 0xF0, 0xA3, 0x8E, 0xB4, 0 };
-  const TForteByte cWStringTest3Result[] = { 0xd8, 0x4c, 0xdf, 0xb4 };
+  const TForteByte cWStringTest3[] = {0xF0, 0xA3, 0x8E, 0xB4, 0};
+  const TForteByte cWStringTest3Result[] = {0xd8, 0x4c, 0xdf, 0xb4};
 
   TForteByte cBuffer[32];
 
@@ -245,64 +234,63 @@ BOOST_AUTO_TEST_CASE(WString_toUTF16)
   sTest = CIEC_WSTRING("z");
   nRes = sTest.toUTF16(cBuffer, sizeof(cWStringTest1Result));
   BOOST_CHECK_EQUAL(nRes, 2);
-  BOOST_CHECK(! memcmp(cBuffer, cWStringTest1Result, 2));
+  BOOST_CHECK(!memcmp(cBuffer, cWStringTest1Result, 2));
 
   sTest = CIEC_WSTRING((const char *) cWStringTest2);
   nRes = sTest.toUTF16(cBuffer, sizeof(cWStringTest2Result));
   BOOST_CHECK_EQUAL(nRes, 6);
-  BOOST_CHECK(! memcmp(cBuffer, cWStringTest2Result, 6));
+  BOOST_CHECK(!memcmp(cBuffer, cWStringTest2Result, 6));
 
   sTest = CIEC_WSTRING((const char *) cWStringTest3);
   nRes = sTest.toUTF16(cBuffer, sizeof(cWStringTest3Result));
   BOOST_CHECK_EQUAL(nRes, 4);
-  BOOST_CHECK(! memcmp(cBuffer, cWStringTest3Result, 4));
+  BOOST_CHECK(!memcmp(cBuffer, cWStringTest3Result, 4));
 
-  nRes = sTest.toUTF16(cBuffer, static_cast<unsigned int>(sizeof(cWStringTest3Result)-1));
+  nRes = sTest.toUTF16(cBuffer, static_cast<unsigned int>(sizeof(cWStringTest3Result) - 1));
   BOOST_CHECK_EQUAL(nRes, -1);
 }
 
-BOOST_AUTO_TEST_CASE(WString_fromUTF8)
-{
-  const TForteByte cASCII1[] = { 0 };
-  const TForteByte cASCII2[] = { 'A', 0 };
-  const TForteByte cASCII3[] = { 0x7f, 0 };
-  const TForteByte cUpper1[] = { 'A', 0xc2, 0xa2, 'A', 0 };
-  const TForteByte cUpper2[]= { 'A', 0xe2, 0x82, 0xac, 'B', 0 };
-  const TForteByte cUpper2Capped[] = { 'A', 0xe2, 0x82, 0xac, 0 };
-  const TForteByte cUpper3[] = { 0xf0, 0xa4, 0xad, 0xa2, 0 };
-  const TForteByte cInvalid1[] = { 0x80, 0 };
-  const TForteByte cInvalid2[] = { 0xfe, 0x80, 0x80, 0x80, 0x80, 0x80, 0 };
+BOOST_AUTO_TEST_CASE(WString_fromUTF8) {
+  const TForteByte cASCII1[] = {0};
+  const TForteByte cASCII2[] = {'A', 0};
+  const TForteByte cASCII3[] = {0x7f, 0};
+  const TForteByte cUpper1[] = {'A', 0xc2, 0xa2, 'A', 0};
+  const TForteByte cUpper2[] = {'A', 0xe2, 0x82, 0xac, 'B', 0};
+  const TForteByte cUpper2Capped[] = {'A', 0xe2, 0x82, 0xac, 0};
+  const TForteByte cUpper3[] = {0xf0, 0xa4, 0xad, 0xa2, 0};
+  const TForteByte cInvalid1[] = {0x80, 0};
+  const TForteByte cInvalid2[] = {0xfe, 0x80, 0x80, 0x80, 0x80, 0x80, 0};
 
   int bRes;
   CIEC_WSTRING sTest;
 
   bRes = sTest.fromUTF8((const char *) cASCII1, -1, false);
-  BOOST_CHECK_EQUAL(strlen((const char *)cASCII1), bRes);
+  BOOST_CHECK_EQUAL(strlen((const char *) cASCII1), bRes);
   BOOST_CHECK_EQUAL(sTest.length(), 0);
 
   bRes = sTest.fromUTF8((const char *) cASCII2, -1, false);
-  BOOST_CHECK_EQUAL(strlen((const char *)cASCII2), bRes);
-  BOOST_CHECK(! strcmp("A", sTest.getValue()));
+  BOOST_CHECK_EQUAL(strlen((const char *) cASCII2), bRes);
+  BOOST_CHECK(!strcmp("A", sTest.getValue()));
 
   bRes = sTest.fromUTF8((const char *) cASCII3, -1, false);
-  BOOST_CHECK_EQUAL(strlen((const char *)cASCII3), bRes);
-  BOOST_CHECK(! strcmp("\x7f", sTest.getValue()));
+  BOOST_CHECK_EQUAL(strlen((const char *) cASCII3), bRes);
+  BOOST_CHECK(!strcmp("\x7f", sTest.getValue()));
 
   bRes = sTest.fromUTF8((const char *) cUpper1, -1, false);
-  BOOST_CHECK_EQUAL(strlen((const char *)cUpper1), bRes);
-  BOOST_CHECK(! strcmp((const char *) cUpper1, sTest.getValue()));
+  BOOST_CHECK_EQUAL(strlen((const char *) cUpper1), bRes);
+  BOOST_CHECK(!strcmp((const char *) cUpper1, sTest.getValue()));
 
   bRes = sTest.fromUTF8((const char *) cUpper2, -1, false);
-  BOOST_CHECK_EQUAL(strlen((const char *)cUpper2), bRes);
-  BOOST_CHECK(! strcmp((const char *) cUpper2, sTest.getValue()));
+  BOOST_CHECK_EQUAL(strlen((const char *) cUpper2), bRes);
+  BOOST_CHECK(!strcmp((const char *) cUpper2, sTest.getValue()));
 
   bRes = sTest.fromUTF8((const char *) cUpper2, 4, false);
-  BOOST_CHECK_EQUAL(4, bRes);  //as we cap to 4 we expect the number of taken bytes to be 4
-  BOOST_CHECK(! strcmp((const char *) cUpper2Capped, sTest.getValue()));
+  BOOST_CHECK_EQUAL(4, bRes); // as we cap to 4 we expect the number of taken bytes to be 4
+  BOOST_CHECK(!strcmp((const char *) cUpper2Capped, sTest.getValue()));
 
   bRes = sTest.fromUTF8((const char *) cUpper3, -1, false);
   BOOST_CHECK_EQUAL(strlen((const char *) cUpper3), bRes);
-  BOOST_CHECK(! strcmp("?", sTest.getValue()));
+  BOOST_CHECK(!strcmp("?", sTest.getValue()));
 
   bRes = sTest.fromUTF8((const char *) cInvalid1, -1, false);
   BOOST_CHECK_EQUAL(-1, bRes);
@@ -311,15 +299,14 @@ BOOST_AUTO_TEST_CASE(WString_fromUTF8)
   BOOST_CHECK_EQUAL(-1, bRes);
 }
 
-BOOST_AUTO_TEST_CASE(WString_toUTF8)
-{
-  const TForteByte cASCII1[] = { 0 };
-  const TForteByte cASCII2[] = { 'A', 0 };
-  const TForteByte cASCII3[] = { 0x7f, 0 };
-  const TForteByte cUpper1[] = { 'A', 0xc2, 0xa2, 'A', 0 };
-  const TForteByte cUpper2[] = { 'A', 0xe2, 0x82, 0xac, 'B', 0 };
-  const TForteByte cUpper3[] = { 'A', 0xe2, 0x82, 0xac, '$', 'B', 0 };
-  const TForteByte cUpper3Escaped[] = { '"', 'A', 0xe2, 0x82, 0xac, '$', '$', 'B', '"', 0 };
+BOOST_AUTO_TEST_CASE(WString_toUTF8) {
+  const TForteByte cASCII1[] = {0};
+  const TForteByte cASCII2[] = {'A', 0};
+  const TForteByte cASCII3[] = {0x7f, 0};
+  const TForteByte cUpper1[] = {'A', 0xc2, 0xa2, 'A', 0};
+  const TForteByte cUpper2[] = {'A', 0xe2, 0x82, 0xac, 'B', 0};
+  const TForteByte cUpper3[] = {'A', 0xe2, 0x82, 0xac, '$', 'B', 0};
+  const TForteByte cUpper3Escaped[] = {'"', 'A', 0xe2, 0x82, 0xac, '$', '$', 'B', '"', 0};
 
   int nRes;
   CIEC_WSTRING sTest;
@@ -329,19 +316,19 @@ BOOST_AUTO_TEST_CASE(WString_toUTF8)
   sResult[0] = '\0';
   nRes = sTest.toUTF8(sResult, sizeof(sResult), false);
   BOOST_CHECK_EQUAL(nRes, 0);
-  BOOST_CHECK(! memcmp(sResult, cASCII1, sizeof(cASCII1)));
+  BOOST_CHECK(!memcmp(sResult, cASCII1, sizeof(cASCII1)));
 
   sTest = CIEC_WSTRING("A");
   sResult[0] = '\0';
   nRes = sTest.toUTF8(sResult, sizeof(sResult), false);
   BOOST_CHECK_EQUAL(nRes, 1);
-  BOOST_CHECK(! memcmp(sResult, cASCII2, sizeof(cASCII2)));
+  BOOST_CHECK(!memcmp(sResult, cASCII2, sizeof(cASCII2)));
 
   sTest = CIEC_WSTRING("\x7f");
   sResult[0] = '\0';
   nRes = sTest.toUTF8(sResult, sizeof(sResult), false);
   BOOST_CHECK_EQUAL(nRes, 1);
-  BOOST_CHECK(! memcmp(sResult, cASCII3, sizeof(cASCII3)));
+  BOOST_CHECK(!memcmp(sResult, cASCII3, sizeof(cASCII3)));
   nRes = sTest.toUTF8((char *) sResult, 1, false);
   BOOST_CHECK_EQUAL(nRes, -1);
   nRes = sTest.toUTF8((char *) sResult, 2, false);
@@ -351,7 +338,7 @@ BOOST_AUTO_TEST_CASE(WString_toUTF8)
   sResult[0] = '\0';
   nRes = sTest.toUTF8(sResult, sizeof(sResult), false);
   BOOST_CHECK_EQUAL(nRes, 4);
-  BOOST_CHECK(! memcmp(sResult, cUpper1, sizeof(cUpper1)));
+  BOOST_CHECK(!memcmp(sResult, cUpper1, sizeof(cUpper1)));
   nRes = sTest.toUTF8(sResult, 4, false);
   BOOST_CHECK_EQUAL(nRes, -1);
   nRes = sTest.toUTF8(sResult, 5, false);
@@ -361,13 +348,13 @@ BOOST_AUTO_TEST_CASE(WString_toUTF8)
   sResult[0] = '\0';
   nRes = sTest.toUTF8(sResult, sizeof(sResult), false);
   BOOST_CHECK_EQUAL(nRes, 5);
-  BOOST_CHECK(! memcmp(sResult, cUpper2, sizeof(cUpper2)));
-  
+  BOOST_CHECK(!memcmp(sResult, cUpper2, sizeof(cUpper2)));
+
   sTest = CIEC_WSTRING((const char *) cUpper3);
   sResult[0] = '\0';
   nRes = sTest.toUTF8(sResult, sizeof(sResult), true);
   BOOST_CHECK_EQUAL(nRes, 9);
-  BOOST_CHECK(! memcmp(sResult, cUpper3Escaped, sizeof(cUpper3Escaped)));
+  BOOST_CHECK(!memcmp(sResult, cUpper3Escaped, sizeof(cUpper3Escaped)));
 }
 
 const char cWStringTestLiteral1[] = "Test String";
@@ -375,7 +362,7 @@ const char cWStringTestResult1[] = "Test String";
 const char cWStringTestToStringResult1[] = "\"Test String\"";
 const char cWStringTestLiteral2[] = "\"This is another test string!\"";
 const char cWStringTestResult2[] = "This is another test string!";
-const char cWStringTestDollarLiteral[] ="\"$$\"";
+const char cWStringTestDollarLiteral[] = "\"$$\"";
 const char cWStringTestDollarResult[] = "$";
 const char cWStringTestDollarToStringResult[] = "\"$$\"";
 const char cWStringTestLineFeedLiteral[] = "\"$L$l\"";
@@ -406,9 +393,7 @@ const char cWStringTestEscapedWCharacterLiteral[] = "\"$01a0\"";
 const char cWStringTestEscapedWCharacterResult[] = "\xc6\xa0";
 const char cWStringTestEscapedWCharacterToStringResult[] = "\"xc6\xa0\"";
 
-
-BOOST_AUTO_TEST_CASE(WString_fromString)
-{
+BOOST_AUTO_TEST_CASE(WString_fromString) {
   CIEC_WSTRING sTestee;
 
   BOOST_CHECK_EQUAL(strlen(cWStringTestLiteral1), sTestee.fromString(cWStringTestLiteral1));
@@ -451,31 +436,31 @@ BOOST_AUTO_TEST_CASE(WString_fromString)
   BOOST_CHECK_EQUAL(sTestee.length(), strlen(cWStringTestDoubleQuoteResult));
   BOOST_CHECK_EQUAL(0, strcmp(sTestee.getValue(), cWStringTestDoubleQuoteResult));
 
-  BOOST_CHECK_EQUAL(strlen(cWStringTestEscapedCharacterLiteral), sTestee.fromString(cWStringTestEscapedCharacterLiteral));
+  BOOST_CHECK_EQUAL(strlen(cWStringTestEscapedCharacterLiteral),
+                    sTestee.fromString(cWStringTestEscapedCharacterLiteral));
   BOOST_CHECK_EQUAL(sTestee.length(), strlen(cWStringTestEscapedCharacterResult));
   BOOST_CHECK_EQUAL(0, strcmp(sTestee.getValue(), cWStringTestEscapedCharacterResult));
 
-  BOOST_CHECK_EQUAL(strlen(cWStringTestEscapedWCharacterLiteral), sTestee.fromString(cWStringTestEscapedWCharacterLiteral));
+  BOOST_CHECK_EQUAL(strlen(cWStringTestEscapedWCharacterLiteral),
+                    sTestee.fromString(cWStringTestEscapedWCharacterLiteral));
   BOOST_CHECK_EQUAL(sTestee.length(), strlen(cWStringTestEscapedWCharacterResult));
   BOOST_CHECK_EQUAL(0, strcmp(sTestee.getValue(), cWStringTestEscapedWCharacterResult));
 }
 
-void wStringTypedFromString(const std::string &paSrc, const char* paResult){
+void wStringTypedFromString(const std::string &paSrc, const char *paResult) {
   CIEC_WSTRING sTestee;
   BOOST_CHECK_EQUAL(paSrc.length(), sTestee.fromString(paSrc.c_str()));
   BOOST_CHECK_EQUAL(sTestee.length(), strlen(paResult));
   BOOST_CHECK_EQUAL(0, strcmp(sTestee.getValue(), paResult));
 }
 
-BOOST_AUTO_TEST_CASE(WString_fromString_typed)
-{
+BOOST_AUTO_TEST_CASE(WString_fromString_typed) {
   wStringTypedFromString(std::string("WSTRING#") + cWStringTestLiteral1, cWStringTestResult1);
   wStringTypedFromString(std::string("WSTRING#") + cWStringTestLiteral2, cWStringTestResult2);
   wStringTypedFromString(std::string("WSTRING#") + cWStringTestDollarLiteral, cWStringTestDollarResult);
 }
 
-BOOST_AUTO_TEST_CASE(WString_toString)
-{
+BOOST_AUTO_TEST_CASE(WString_toString) {
   CIEC_WSTRING sTestee;
   char acBuffer[200];
 
@@ -493,7 +478,8 @@ BOOST_AUTO_TEST_CASE(WString_toString)
 
   sTestee = CIEC_WSTRING(cWStringTestLineFeedResult);
   BOOST_CHECK_EQUAL(sTestee.toString(acBuffer, 200), strlen(cWStringTestLineFeedToStringResult));
-  BOOST_CHECK_EQUAL(0, strncmp(cWStringTestLineFeedToStringResult, acBuffer, strlen(cWStringTestLineFeedToStringResult)));
+  BOOST_CHECK_EQUAL(0,
+                    strncmp(cWStringTestLineFeedToStringResult, acBuffer, strlen(cWStringTestLineFeedToStringResult)));
 
   sTestee = CIEC_WSTRING(cWStringTestNewLineResult);
   BOOST_CHECK_EQUAL(sTestee.toString(acBuffer, 200), strlen(cWStringTestNewLineToStringResult));
@@ -501,11 +487,13 @@ BOOST_AUTO_TEST_CASE(WString_toString)
 
   sTestee = CIEC_WSTRING(cWStringTestFormFeedResult);
   BOOST_CHECK_EQUAL(sTestee.toString(acBuffer, 200), strlen(cWStringTestFormFeedToStringResult));
-  BOOST_CHECK_EQUAL(0, strncmp(cWStringTestFormFeedToStringResult, acBuffer, strlen(cWStringTestFormFeedToStringResult)));
+  BOOST_CHECK_EQUAL(0,
+                    strncmp(cWStringTestFormFeedToStringResult, acBuffer, strlen(cWStringTestFormFeedToStringResult)));
 
   sTestee = CIEC_WSTRING(cWStringTestCarriageReturnResult);
   BOOST_CHECK_EQUAL(sTestee.toString(acBuffer, 200), strlen(cWStringTestCarriageReturnToStringResult));
-  BOOST_CHECK_EQUAL(0, strncmp(cWStringTestCarriageReturnToStringResult, acBuffer, strlen(cWStringTestCarriageReturnToStringResult)));
+  BOOST_CHECK_EQUAL(
+      0, strncmp(cWStringTestCarriageReturnToStringResult, acBuffer, strlen(cWStringTestCarriageReturnToStringResult)));
 
   sTestee = CIEC_WSTRING(cWStringTestTabResult);
   BOOST_CHECK_EQUAL(sTestee.toString(acBuffer, 200), strlen(cWStringTestTabToStringResult));
@@ -513,114 +501,105 @@ BOOST_AUTO_TEST_CASE(WString_toString)
 
   sTestee = CIEC_WSTRING(cWStringTestSingleQuoteResult);
   BOOST_CHECK_EQUAL(sTestee.toString(acBuffer, 200), strlen(cWStringTestSingleQuoteToStringResult));
-  BOOST_CHECK_EQUAL(0, strncmp(cWStringTestSingleQuoteToStringResult, acBuffer, strlen(cWStringTestSingleQuoteToStringResult)));
+  BOOST_CHECK_EQUAL(
+      0, strncmp(cWStringTestSingleQuoteToStringResult, acBuffer, strlen(cWStringTestSingleQuoteToStringResult)));
 
   sTestee = CIEC_WSTRING(cWStringTestDoubleQuoteResult);
   BOOST_CHECK_EQUAL(sTestee.toString(acBuffer, 200), strlen(cWStringTestDoubleQuoteToStringResult));
-  BOOST_CHECK_EQUAL(0, strncmp(cWStringTestDoubleQuoteToStringResult, acBuffer, strlen(cWStringTestDoubleQuoteToStringResult)));
+  BOOST_CHECK_EQUAL(
+      0, strncmp(cWStringTestDoubleQuoteToStringResult, acBuffer, strlen(cWStringTestDoubleQuoteToStringResult)));
 
   sTestee = CIEC_WSTRING(cWStringTestEscapedCharacterResult);
   BOOST_CHECK_EQUAL(sTestee.toString(acBuffer, 200), strlen(cWStringTestEscapedCharacterToStringResult));
-  BOOST_CHECK_EQUAL(0, strncmp(cWStringTestEscapedCharacterToStringResult, acBuffer, strlen(cWStringTestEscapedCharacterToStringResult)));
+  BOOST_CHECK_EQUAL(0, strncmp(cWStringTestEscapedCharacterToStringResult, acBuffer,
+                               strlen(cWStringTestEscapedCharacterToStringResult)));
 }
 
-BOOST_AUTO_TEST_CASE(WString_getToStringBufferSize_NoSpecialSymbols)
-{
+BOOST_AUTO_TEST_CASE(WString_getToStringBufferSize_NoSpecialSymbols) {
   CIEC_WSTRING testString("4diac 4 ever!");
 
   size_t bufferSize = testString.getToStringBufferSize();
   BOOST_CHECK_EQUAL(13 + 2 + 1, bufferSize);
 }
 
-BOOST_AUTO_TEST_CASE(WString_getToStringBufferSize_Dollar)
-{
+BOOST_AUTO_TEST_CASE(WString_getToStringBufferSize_Dollar) {
   CIEC_WSTRING testString("$");
 
   size_t bufferSize = testString.getToStringBufferSize();
   BOOST_CHECK_EQUAL(2 + 2 + 1, bufferSize); // "$$"\0
 }
 
-BOOST_AUTO_TEST_CASE(WString_getToStringBufferSize_SingleQuote)
-{
+BOOST_AUTO_TEST_CASE(WString_getToStringBufferSize_SingleQuote) {
   CIEC_WSTRING testString("\'");
 
   size_t bufferSize = testString.getToStringBufferSize();
   BOOST_CHECK_EQUAL(1 + 2 + 1, bufferSize); // "'"\0
 }
 
-BOOST_AUTO_TEST_CASE(WString_getToStringBufferSize_DoubleQuote)
-{
+BOOST_AUTO_TEST_CASE(WString_getToStringBufferSize_DoubleQuote) {
   CIEC_WSTRING testString("\"");
 
   size_t bufferSize = testString.getToStringBufferSize();
   BOOST_CHECK_EQUAL(2 + 2 + 1, bufferSize); // "$""\0
 }
 
-BOOST_AUTO_TEST_CASE(WString_getToStringBufferSize_LineFeed)
-{
+BOOST_AUTO_TEST_CASE(WString_getToStringBufferSize_LineFeed) {
   CIEC_WSTRING testString("\x10");
 
   size_t bufferSize = testString.getToStringBufferSize();
   BOOST_CHECK_EQUAL(2 + 2 + 1, bufferSize); // "$L"\0
 }
 
-BOOST_AUTO_TEST_CASE(WString_getToStringBufferSize_NewLine)
-{
+BOOST_AUTO_TEST_CASE(WString_getToStringBufferSize_NewLine) {
   CIEC_WSTRING testString("\n");
 
   size_t bufferSize = testString.getToStringBufferSize();
   BOOST_CHECK_EQUAL(2 + 2 + 1, bufferSize); // "$N"\0
 }
 
-BOOST_AUTO_TEST_CASE(WString_getToStringBufferSize_FormFeed)
-{
+BOOST_AUTO_TEST_CASE(WString_getToStringBufferSize_FormFeed) {
   CIEC_WSTRING testString("\f");
 
   size_t bufferSize = testString.getToStringBufferSize();
   BOOST_CHECK_EQUAL(2 + 2 + 1, bufferSize); // "$P"\0
 }
 
-BOOST_AUTO_TEST_CASE(WString_getToStringBufferSize_CarriageReturn)
-{
+BOOST_AUTO_TEST_CASE(WString_getToStringBufferSize_CarriageReturn) {
   CIEC_WSTRING testString("\r");
 
   size_t bufferSize = testString.getToStringBufferSize();
   BOOST_CHECK_EQUAL(2 + 2 + 1, bufferSize); // "$R"\0
 }
 
-BOOST_AUTO_TEST_CASE(WString_getToStringBufferSize_Tab)
-{
+BOOST_AUTO_TEST_CASE(WString_getToStringBufferSize_Tab) {
   CIEC_WSTRING testString("\t");
 
   size_t bufferSize = testString.getToStringBufferSize();
   BOOST_CHECK_EQUAL(2 + 2 + 1, bufferSize); // "$T"\0
 }
 
-BOOST_AUTO_TEST_CASE(WString_getToStringBufferSize_NonCommonSymbol_1ByteUsed)
-{
+BOOST_AUTO_TEST_CASE(WString_getToStringBufferSize_NonCommonSymbol_1ByteUsed) {
   CIEC_WSTRING testString("\x8A");
 
   size_t bufferSize = testString.getToStringBufferSize();
   BOOST_CHECK_EQUAL(5 + 2 + 1, bufferSize); // "$008A"\0
 }
 
-BOOST_AUTO_TEST_CASE(WString_getToStringBufferSize_NonCommonSymbol_2BytesUsed)
-{
+BOOST_AUTO_TEST_CASE(WString_getToStringBufferSize_NonCommonSymbol_2BytesUsed) {
   CIEC_WSTRING testString("\xDA\x8A");
 
   size_t bufferSize = testString.getToStringBufferSize();
   BOOST_CHECK_EQUAL(5 + 2 + 1, bufferSize); // "$008A"\0
 }
 
-BOOST_AUTO_TEST_CASE(WString_getToStringBufferSize_NonCommonSymbol_Two_OneBytesUsed)
-{
+BOOST_AUTO_TEST_CASE(WString_getToStringBufferSize_NonCommonSymbol_Two_OneBytesUsed) {
   CIEC_WSTRING testString("\x8B\x8A");
 
   size_t bufferSize = testString.getToStringBufferSize();
   BOOST_CHECK_EQUAL(5 + 5 + 2 + 1, bufferSize); // "$008A"\0
 }
 
-BOOST_AUTO_TEST_CASE(Implicit_cast_from_WCHAR){
+BOOST_AUTO_TEST_CASE(Implicit_cast_from_WCHAR) {
   CIEC_WCHAR testChar(u'\u00df');
   CIEC_WSTRING resultString(testChar);
 
@@ -630,8 +609,7 @@ BOOST_AUTO_TEST_CASE(Implicit_cast_from_WCHAR){
   BOOST_TEST(CIEC_WSTRING("ß") == resultString);
 }
 
-BOOST_AUTO_TEST_CASE(Assignment_from_WCHAR)
-{
+BOOST_AUTO_TEST_CASE(Assignment_from_WCHAR) {
   CIEC_WCHAR testChar(u'\u00df');
   CIEC_WSTRING resultString;
 

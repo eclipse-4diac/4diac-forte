@@ -21,7 +21,7 @@
  */
 class CPCTimerHandler : public CTimerHandler, private CThread {
   public:
-    explicit CPCTimerHandler(CDeviceExecution& paDeviceExecution);
+    explicit CPCTimerHandler(CDeviceExecution &paDeviceExecution);
 
     ~CPCTimerHandler() override;
 

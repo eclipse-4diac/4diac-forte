@@ -16,11 +16,9 @@
 #include "localcomlayer.h"
 #include <vector>
 
-
 namespace forte {
 
   namespace com_infra {
-
 
     /*! A local communication layer that allows to write to a single struct member of a local group.
      *
@@ -49,7 +47,7 @@ namespace forte {
      *  - structmembername: the name of a struct member of the above struct type. This is the struct
      *                      member this layer will write to.
      */
-    class CStructMemberLocalComLayer : public CLocalComLayer{
+    class CStructMemberLocalComLayer : public CLocalComLayer {
 
       public:
         CStructMemberLocalComLayer(CComLayer *paUpperLayer, CBaseCommFB *paFB);
@@ -63,16 +61,12 @@ namespace forte {
         TTargetStructIndexList mIndexList;
 
         EComResponse openConnection(char *paLayerParameter) override;
-        CIEC_ANY* getTargetByIndex(CIEC_STRUCT* paRoot, TTargetStructIndexList &paIndexList);
+        CIEC_ANY *getTargetByIndex(CIEC_STRUCT *paRoot, TTargetStructIndexList &paIndexList);
 
-        TTargetStructIndexList buildIndexList(CIEC_ANY* paRoot, const char *paNestedStructString);
-        bool parseArrayIndexFromString(const char *paNestedStructString, CIEC_INT& targetIndex);
+        TTargetStructIndexList buildIndexList(CIEC_ANY *paRoot, const char *paNestedStructString);
+        bool parseArrayIndexFromString(const char *paNestedStructString, CIEC_INT &targetIndex);
 
-        enum EComStringIndex {
-          e_LOCALGROUPNAME,
-          e_STRUCTTYPE,
-          e_STRUCTMEMBERNAME
-        };
+        enum EComStringIndex { e_LOCALGROUPNAME, e_STRUCTTYPE, e_STRUCTMEMBERNAME };
     };
-  }
-}
+  } // namespace com_infra
+} // namespace forte

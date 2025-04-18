@@ -7,25 +7,24 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *  Alois Zoitl, Gerhard Ebenhofer, Martin Melik-Merkumians - initial API and implementation and/or initial documentation
- *  Jörg Walter - Windows XP compatibility
+ *  Alois Zoitl, Gerhard Ebenhofer, Martin Melik-Merkumians - initial API and implementation and/or initial
+ *documentation Jörg Walter - Windows XP compatibility
  *******************************************************************************/
 #ifndef _FORTE_SYNC_H_
 #define _FORTE_SYNC_H_
 
 #include <windows.h>
 
-#define CSyncObject CPCSyncObject //allows that doxygen can generate better documenation
-
+#define CSyncObject CPCSyncObject // allows that doxygen can generate better documenation
 
 /*! \ingroup win32_hal
  * \brief The sync object implementation for the win32 thread interface.
  *
  * In the win32 version a CRITICAL_SECTION is used for the sync object.
- * 
+ *
  */
- 
-class CPCSyncObject{
+
+class CPCSyncObject {
   public:
     CPCSyncObject();
     ~CPCSyncObject();
@@ -36,7 +35,7 @@ class CPCSyncObject{
      */
     void lock();
 
-    //!Free the resource coming after the lock command
+    //! Free the resource coming after the lock command
     void unlock();
 
     CPCSyncObject(const CPCSyncObject &) = delete;

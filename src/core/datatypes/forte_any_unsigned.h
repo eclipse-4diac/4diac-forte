@@ -32,4 +32,3 @@ class CIEC_ANY_UNSIGNED : public CIEC_ANY_INT {
 
     ~CIEC_ANY_UNSIGNED() override = default;
 };
-

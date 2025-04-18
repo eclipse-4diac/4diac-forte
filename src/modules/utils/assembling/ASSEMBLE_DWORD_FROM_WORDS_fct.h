@@ -29,7 +29,7 @@
 #include "forte_array_variable.h"
 
 class FORTE_ASSEMBLE_DWORD_FROM_WORDS final : public CFunctionBlock {
-  DECLARE_FIRMWARE_FB(FORTE_ASSEMBLE_DWORD_FROM_WORDS)
+    DECLARE_FIRMWARE_FB(FORTE_ASSEMBLE_DWORD_FROM_WORDS)
 
   private:
     static const CStringDictionary::TStringId scmDataInputNames[];
@@ -56,7 +56,8 @@ class FORTE_ASSEMBLE_DWORD_FROM_WORDS final : public CFunctionBlock {
     void setInitialValues() override;
 
   public:
-    FORTE_ASSEMBLE_DWORD_FROM_WORDS(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_ASSEMBLE_DWORD_FROM_WORDS(CStringDictionary::TStringId paInstanceNameId,
+                                    forte::core::CFBContainer &paContainer);
 
     CIEC_WORD var_WORD_00;
     CIEC_WORD var_WORD_01;
@@ -89,5 +90,3 @@ class FORTE_ASSEMBLE_DWORD_FROM_WORDS final : public CFunctionBlock {
 };
 
 CIEC_DWORD func_ASSEMBLE_DWORD_FROM_WORDS(CIEC_WORD st_lv_WORD_00, CIEC_WORD st_lv_WORD_01);
-
-

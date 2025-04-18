@@ -13,7 +13,7 @@
 #ifndef _ARCH_PLCNEXT_FORTEALLOC_H_
 #define _ARCH_PLCNEXT_FORTEALLOC_H_
 
-//on posix environments we are typically happy with the generic alloc implementation based on malloc and free
+// on posix environments we are typically happy with the generic alloc implementation based on malloc and free
 #include "../genfortealloc.h"
 
 #endif /* _ARCH_PLCNEXT_FORTEALLOC_H_ */

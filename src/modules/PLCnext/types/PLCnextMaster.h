@@ -33,80 +33,81 @@
 #include "PLCnextBusAdapter.h"
 
 class FORTE_PLCnextMaster final : public forte::core::io::IOConfigFBMultiMaster {
-  DECLARE_FIRMWARE_FB(FORTE_PLCnextMaster)
+    DECLARE_FIRMWARE_FB(FORTE_PLCnextMaster)
 
-private:
-  static const CStringDictionary::TStringId scmDataInputNames[];
-  static const CStringDictionary::TStringId scmDataInputTypeIds[];
-  static const CStringDictionary::TStringId scmDataOutputNames[];
-  static const CStringDictionary::TStringId scmDataOutputTypeIds[];
-  static const TEventID scmEventINITID = 0;
-  static const TDataIOID scmEIWith[];
-  static const TForteInt16 scmEIWithIndexes[];
-  static const CStringDictionary::TStringId scmEventInputNames[];
-  static const CStringDictionary::TStringId scmEventInputTypeIds[];
-  static const TEventID scmEventINITOID = 0;
-  static const TEventID scmEventINDID = 1;
-  static const TDataIOID scmEOWith[];
-  static const TForteInt16 scmEOWithIndexes[];
-  static const CStringDictionary::TStringId scmEventOutputNames[];
-  static const CStringDictionary::TStringId scmEventOutputTypeIds[];
-  static const int scmBusAdapterOutAdpNum = 0;
-  static const SAdapterInstanceDef scmAdapterInstances[];
+  private:
+    static const CStringDictionary::TStringId scmDataInputNames[];
+    static const CStringDictionary::TStringId scmDataInputTypeIds[];
+    static const CStringDictionary::TStringId scmDataOutputNames[];
+    static const CStringDictionary::TStringId scmDataOutputTypeIds[];
+    static const TEventID scmEventINITID = 0;
+    static const TDataIOID scmEIWith[];
+    static const TForteInt16 scmEIWithIndexes[];
+    static const CStringDictionary::TStringId scmEventInputNames[];
+    static const CStringDictionary::TStringId scmEventInputTypeIds[];
+    static const TEventID scmEventINITOID = 0;
+    static const TEventID scmEventINDID = 1;
+    static const TDataIOID scmEOWith[];
+    static const TForteInt16 scmEOWithIndexes[];
+    static const CStringDictionary::TStringId scmEventOutputNames[];
+    static const CStringDictionary::TStringId scmEventOutputTypeIds[];
+    static const int scmBusAdapterOutAdpNum = 0;
+    static const SAdapterInstanceDef scmAdapterInstances[];
 
-  static const SFBInterfaceSpec scmFBInterfaceSpec;
+    static const SFBInterfaceSpec scmFBInterfaceSpec;
 
-  void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
+    void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
-  void readInputData(TEventID paEIID) override;
-  void writeOutputData(TEventID paEIID) override;
-  void setInitialValues() override;
-  
-  forte::core::io::IODeviceController* createDeviceController(CDeviceExecution& paDeviceExecution);
-  void setConfig();
+    void readInputData(TEventID paEIID) override;
+    void writeOutputData(TEventID paEIID) override;
+    void setInitialValues() override;
 
-public:
-  FORTE_PLCnextMaster(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
-  bool initialize() override;
+    forte::core::io::IODeviceController *createDeviceController(CDeviceExecution &paDeviceExecution);
+    void setConfig();
 
-  CIEC_BOOL var_QI;
-  CIEC_UINT var_SlaveUpdateInterval;
+  public:
+    FORTE_PLCnextMaster(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    bool initialize() override;
 
-  CIEC_BOOL var_QO;
-  CIEC_WSTRING var_STATUS;
+    CIEC_BOOL var_QI;
+    CIEC_UINT var_SlaveUpdateInterval;
 
-  FORTE_PLCnextBusAdapter var_BusAdapterOut;
+    CIEC_BOOL var_QO;
+    CIEC_WSTRING var_STATUS;
 
-  CEventConnection conn_INITO;
-  CEventConnection conn_IND;
+    FORTE_PLCnextBusAdapter var_BusAdapterOut;
 
-  CDataConnection *conn_QI;
-  CDataConnection *conn_SlaveUpdateInterval;
+    CEventConnection conn_INITO;
+    CEventConnection conn_IND;
 
-  COutDataConnection<CIEC_BOOL> conn_QO;
-  COutDataConnection<CIEC_WSTRING> conn_STATUS;
+    CDataConnection *conn_QI;
+    CDataConnection *conn_SlaveUpdateInterval;
 
-  CIEC_ANY *getDI(size_t) override;
-  CIEC_ANY *getDO(size_t) override;
-  CAdapter *getAdapterUnchecked(size_t) override;
-  FORTE_PLCnextBusAdapter &var_BusAdapterOut() {
-    return *static_cast<FORTE_PLCnextBusAdapter*>(mAdapters[0]);
-  };
+    COutDataConnection<CIEC_BOOL> conn_QO;
+    COutDataConnection<CIEC_WSTRING> conn_STATUS;
 
-  CEventConnection *getEOConUnchecked(TPortId) override;
-  CDataConnection **getDIConUnchecked(TPortId) override;
-  CDataConnection *getDOConUnchecked(TPortId) override;
+    CIEC_ANY *getDI(size_t) override;
+    CIEC_ANY *getDO(size_t) override;
+    CAdapter *getAdapterUnchecked(size_t) override;
+    FORTE_PLCnextBusAdapter &var_BusAdapterOut() {
+      return *static_cast<FORTE_PLCnextBusAdapter *>(mAdapters[0]);
+    };
 
-  void evt_INIT(const CIEC_BOOL &paQI, const CIEC_UINT &paSlaveUpdateInterval, CIEC_BOOL &paQO, CIEC_WSTRING &paSTATUS) {
-    var_QI = paQI;
-    var_SlaveUpdateInterval = paSlaveUpdateInterval;
-    receiveInputEvent(scmEventINITID, nullptr);
-    paQO = var_QO;
-    paSTATUS = var_STATUS;
-  }
+    CEventConnection *getEOConUnchecked(TPortId) override;
+    CDataConnection **getDIConUnchecked(TPortId) override;
+    CDataConnection *getDOConUnchecked(TPortId) override;
 
-  void operator()(const CIEC_BOOL &paQI, const CIEC_UINT &paSlaveUpdateInterval, CIEC_BOOL &paQO, CIEC_WSTRING &paSTATUS) {
-    evt_INIT(paQI, paSlaveUpdateInterval, paQO, paSTATUS);
-  }
+    void
+    evt_INIT(const CIEC_BOOL &paQI, const CIEC_UINT &paSlaveUpdateInterval, CIEC_BOOL &paQO, CIEC_WSTRING &paSTATUS) {
+      var_QI = paQI;
+      var_SlaveUpdateInterval = paSlaveUpdateInterval;
+      receiveInputEvent(scmEventINITID, nullptr);
+      paQO = var_QO;
+      paSTATUS = var_STATUS;
+    }
+
+    void
+    operator()(const CIEC_BOOL &paQI, const CIEC_UINT &paSlaveUpdateInterval, CIEC_BOOL &paQO, CIEC_WSTRING &paSTATUS) {
+      evt_INIT(paQI, paSlaveUpdateInterval, paQO, paSTATUS);
+    }
 };
-

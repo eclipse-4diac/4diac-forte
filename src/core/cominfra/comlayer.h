@@ -25,7 +25,7 @@ namespace forte {
 
     class CBaseCommFB;
 
-    class CComLayer : public CComCallback{
+    class CComLayer : public CComCallback {
       public:
         ~CComLayer() override;
 
@@ -57,7 +57,8 @@ namespace forte {
          */
         virtual EComResponse sendData(void *paData, unsigned int paSize) = 0;
 
-        /*!\brief Finish to process the data received in a context outside the communication interrupt i.e. within the event chain of the ComFB.
+        /*!\brief Finish to process the data received in a context outside the communication interrupt i.e. within the
+         * event chain of the ComFB.
          *
          * This function shall be used for finishing the data reception.
          */
@@ -81,7 +82,6 @@ namespace forte {
           mBottomLayer = layer;
         }
 
-
         /*!\brief get the FB of this layer
          */
         CBaseCommFB *getCommFB() const override {
@@ -89,10 +89,10 @@ namespace forte {
         }
 
       protected:
-        CComLayer(CComLayer* paUpperLayer, CBaseCommFB* paComFB);
+        CComLayer(CComLayer *paUpperLayer, CBaseCommFB *paComFB);
 
         template<typename T>
-        T& getExtEvHandler(){
+        T &getExtEvHandler() {
           return ::getExtEvHandler<T>(*mFb);
         }
 
@@ -105,7 +105,7 @@ namespace forte {
       private:
     };
 
-  }
-}
+  } // namespace com_infra
+} // namespace forte
 
 #endif

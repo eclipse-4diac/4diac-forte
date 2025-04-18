@@ -58,8 +58,8 @@ class CDevice : public CResource {
 
     /*!\brief Execute the given management command
      *
-     * Evaluates the mDestination parameter of the command if empty this class tries to execute the management command if not
-     * the referenced resource is called for handling the command.
+     * Evaluates the mDestination parameter of the command if empty this class tries to execute the management command
+     * if not the referenced resource is called for handling the command.
      * \param paCommand FORTE internal representation of the management command
      * \return response of the MGMCommand execution as defined in IEC 61499
      */
@@ -72,15 +72,15 @@ class CDevice : public CResource {
       return mDeviceExecution;
     }
 
-    CTimerHandler& getTimer() const {
+    CTimerHandler &getTimer() const {
       return mDeviceExecution.getTimer();
     }
 
-    CDevice* getDevice() override {
+    CDevice *getDevice() override {
       return this;
     }
 
-    const CDevice* getDevice() const override {
+    const CDevice *getDevice() const override {
       return this;
     }
 
@@ -88,16 +88,16 @@ class CDevice : public CResource {
     /*! \brief Sets up all the necessary data and classes necessary for execution.
      *
      */
-    CDevice(const SFBInterfaceSpec& paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId) :
-        CResource(paInterfaceSpec, paInstanceNameId), mDeviceExecution(*this) {
+    CDevice(const SFBInterfaceSpec &paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId) :
+        CResource(paInterfaceSpec, paInstanceNameId),
+        mDeviceExecution(*this) {
     }
 
   private:
-     /*! \brief
+    /*! \brief
      *
      */
     CDeviceExecution mDeviceExecution;
-
 };
 
 #endif

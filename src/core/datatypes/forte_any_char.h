@@ -10,7 +10,7 @@
  * Contributors:
  *    Martin Melik Merkumians
  *      - initial implementation and rework communication infrastructure
-  *******************************************************************************/
+ *******************************************************************************/
 #ifndef _ANY_CHAR_H_
 #define _ANY_CHAR_H_
 
@@ -23,8 +23,7 @@
  */
 class CIEC_ANY_CHAR : public CIEC_ANY_CHARS {
   public:
-    CIEC_ANY_CHAR(const CIEC_ANY_CHAR &paVal) :
-        CIEC_ANY_CHARS() {
+    CIEC_ANY_CHAR(const CIEC_ANY_CHAR &paVal) : CIEC_ANY_CHARS() {
       setLargestUInt(paVal.getLargestUInt());
     }
 
@@ -39,7 +38,6 @@ class CIEC_ANY_CHAR : public CIEC_ANY_CHARS {
 
   protected:
     CIEC_ANY_CHAR() = default;
-
 };
 
 #endif /*_ANY_CHAR_H_*/

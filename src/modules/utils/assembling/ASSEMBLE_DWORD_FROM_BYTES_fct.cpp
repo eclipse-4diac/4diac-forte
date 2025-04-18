@@ -31,7 +31,6 @@ USE_STRING_ID(DWORD);
 USE_STRING_ID(Event);
 USE_STRING_ID(REQ);
 
-
 #include "criticalregion.h"
 #include "resource.h"
 #include "forte_dword.h"
@@ -45,8 +44,10 @@ USE_STRING_ID(REQ);
 
 DEFINE_FIRMWARE_FB(FORTE_ASSEMBLE_DWORD_FROM_BYTES, STRID(ASSEMBLE_DWORD_FROM_BYTES))
 
-const CStringDictionary::TStringId FORTE_ASSEMBLE_DWORD_FROM_BYTES::scmDataInputNames[] = {STRID(BYTE_00), STRID(BYTE_01), STRID(BYTE_02), STRID(BYTE_03)};
-const CStringDictionary::TStringId FORTE_ASSEMBLE_DWORD_FROM_BYTES::scmDataInputTypeIds[] = {STRID(BYTE), STRID(BYTE), STRID(BYTE), STRID(BYTE)};
+const CStringDictionary::TStringId FORTE_ASSEMBLE_DWORD_FROM_BYTES::scmDataInputNames[] = {
+    STRID(BYTE_00), STRID(BYTE_01), STRID(BYTE_02), STRID(BYTE_03)};
+const CStringDictionary::TStringId FORTE_ASSEMBLE_DWORD_FROM_BYTES::scmDataInputTypeIds[] = {STRID(BYTE), STRID(BYTE),
+                                                                                             STRID(BYTE), STRID(BYTE)};
 const CStringDictionary::TStringId FORTE_ASSEMBLE_DWORD_FROM_BYTES::scmDataOutputNames[] = {STRID()};
 const CStringDictionary::TStringId FORTE_ASSEMBLE_DWORD_FROM_BYTES::scmDataOutputTypeIds[] = {STRID(DWORD)};
 const TDataIOID FORTE_ASSEMBLE_DWORD_FROM_BYTES::scmEIWith[] = {0, 1, 2, 3, scmWithListDelimiter};
@@ -57,16 +58,29 @@ const TDataIOID FORTE_ASSEMBLE_DWORD_FROM_BYTES::scmEOWith[] = {0, scmWithListDe
 const TForteInt16 FORTE_ASSEMBLE_DWORD_FROM_BYTES::scmEOWithIndexes[] = {0};
 const CStringDictionary::TStringId FORTE_ASSEMBLE_DWORD_FROM_BYTES::scmEventOutputNames[] = {STRID(CNF)};
 const CStringDictionary::TStringId FORTE_ASSEMBLE_DWORD_FROM_BYTES::scmEventOutputTypeIds[] = {STRID(Event)};
-const SFBInterfaceSpec FORTE_ASSEMBLE_DWORD_FROM_BYTES::scmFBInterfaceSpec = {
-  1, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,
-  1, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes,
-  4, scmDataInputNames, scmDataInputTypeIds,
-  1, scmDataOutputNames, scmDataOutputTypeIds,
-  0, nullptr,
-  0, nullptr
-};
+const SFBInterfaceSpec FORTE_ASSEMBLE_DWORD_FROM_BYTES::scmFBInterfaceSpec = {1,
+                                                                              scmEventInputNames,
+                                                                              scmEventInputTypeIds,
+                                                                              scmEIWith,
+                                                                              scmEIWithIndexes,
+                                                                              1,
+                                                                              scmEventOutputNames,
+                                                                              scmEventOutputTypeIds,
+                                                                              scmEOWith,
+                                                                              scmEOWithIndexes,
+                                                                              4,
+                                                                              scmDataInputNames,
+                                                                              scmDataInputTypeIds,
+                                                                              1,
+                                                                              scmDataOutputNames,
+                                                                              scmDataOutputTypeIds,
+                                                                              0,
+                                                                              nullptr,
+                                                                              0,
+                                                                              nullptr};
 
-FORTE_ASSEMBLE_DWORD_FROM_BYTES::FORTE_ASSEMBLE_DWORD_FROM_BYTES(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_ASSEMBLE_DWORD_FROM_BYTES::FORTE_ASSEMBLE_DWORD_FROM_BYTES(const CStringDictionary::TStringId paInstanceNameId,
+                                                                 forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId),
     conn_CNF(*this, 0),
     conn_BYTE_00(nullptr),
@@ -85,7 +99,7 @@ void FORTE_ASSEMBLE_DWORD_FROM_BYTES::setInitialValues() {
 }
 
 void FORTE_ASSEMBLE_DWORD_FROM_BYTES::readInputData(const TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventREQID: {
       readData(0, var_BYTE_00, conn_BYTE_00);
       readData(1, var_BYTE_01, conn_BYTE_01);
@@ -93,24 +107,22 @@ void FORTE_ASSEMBLE_DWORD_FROM_BYTES::readInputData(const TEventID paEIID) {
       readData(3, var_BYTE_03, conn_BYTE_03);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 void FORTE_ASSEMBLE_DWORD_FROM_BYTES::writeOutputData(const TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventCNFID: {
       writeData(0, var_, conn_);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 CIEC_ANY *FORTE_ASSEMBLE_DWORD_FROM_BYTES::getDI(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_BYTE_00;
     case 1: return &var_BYTE_01;
     case 2: return &var_BYTE_02;
@@ -120,21 +132,21 @@ CIEC_ANY *FORTE_ASSEMBLE_DWORD_FROM_BYTES::getDI(const size_t paIndex) {
 }
 
 CIEC_ANY *FORTE_ASSEMBLE_DWORD_FROM_BYTES::getDO(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_;
   }
   return nullptr;
 }
 
 CEventConnection *FORTE_ASSEMBLE_DWORD_FROM_BYTES::getEOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_CNF;
   }
   return nullptr;
 }
 
 CDataConnection **FORTE_ASSEMBLE_DWORD_FROM_BYTES::getDIConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_BYTE_00;
     case 1: return &conn_BYTE_01;
     case 2: return &conn_BYTE_02;
@@ -144,7 +156,7 @@ CDataConnection **FORTE_ASSEMBLE_DWORD_FROM_BYTES::getDIConUnchecked(const TPort
 }
 
 CDataConnection *FORTE_ASSEMBLE_DWORD_FROM_BYTES::getDOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_;
   }
   return nullptr;
@@ -155,18 +167,20 @@ void FORTE_ASSEMBLE_DWORD_FROM_BYTES::executeEvent(const TEventID, CEventChainEx
   sendOutputEvent(scmEventCNFID, paECET);
 }
 
-CIEC_DWORD func_ASSEMBLE_DWORD_FROM_BYTES(CIEC_BYTE st_lv_BYTE_00, CIEC_BYTE st_lv_BYTE_01, CIEC_BYTE st_lv_BYTE_02, CIEC_BYTE st_lv_BYTE_03) {
+CIEC_DWORD func_ASSEMBLE_DWORD_FROM_BYTES(CIEC_BYTE st_lv_BYTE_00,
+                                          CIEC_BYTE st_lv_BYTE_01,
+                                          CIEC_BYTE st_lv_BYTE_02,
+                                          CIEC_BYTE st_lv_BYTE_03) {
   CIEC_DWORD st_ret_val = 0_DWORD;
 
-  #line 11 "ASSEMBLE_DWORD_FROM_BYTES.fct"
+#line 11 "ASSEMBLE_DWORD_FROM_BYTES.fct"
   st_ret_val.partial<CIEC_BYTE>(0) = st_lv_BYTE_00;
-  #line 12 "ASSEMBLE_DWORD_FROM_BYTES.fct"
+#line 12 "ASSEMBLE_DWORD_FROM_BYTES.fct"
   st_ret_val.partial<CIEC_BYTE>(1) = st_lv_BYTE_01;
-  #line 13 "ASSEMBLE_DWORD_FROM_BYTES.fct"
+#line 13 "ASSEMBLE_DWORD_FROM_BYTES.fct"
   st_ret_val.partial<CIEC_BYTE>(2) = st_lv_BYTE_02;
-  #line 14 "ASSEMBLE_DWORD_FROM_BYTES.fct"
+#line 14 "ASSEMBLE_DWORD_FROM_BYTES.fct"
   st_ret_val.partial<CIEC_BYTE>(3) = st_lv_BYTE_03;
 
   return st_ret_val;
 }
-

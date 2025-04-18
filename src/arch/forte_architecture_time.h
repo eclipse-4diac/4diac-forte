@@ -27,59 +27,53 @@ uint_fast64_t getNanoSecondsRealtimeArch();
 
 #ifdef FORTE_FAKE_TIME
 
-  time_t forte_time_fake();
-  uint_fast64_t getNanoSecondsMonotonicFake();
-  uint_fast64_t getNanoSecondsRealtimeFake();
+time_t forte_time_fake();
+uint_fast64_t getNanoSecondsMonotonicFake();
+uint_fast64_t getNanoSecondsRealtimeFake();
 
-  constexpr auto forte_time = forte_time_fake;
-  constexpr auto getNanoSecondsMonotonic = getNanoSecondsMonotonicFake;
-  constexpr auto  getNanoSecondsRealtime = getNanoSecondsRealtimeFake;
+constexpr auto forte_time = forte_time_fake;
+constexpr auto getNanoSecondsMonotonic = getNanoSecondsMonotonicFake;
+constexpr auto getNanoSecondsRealtime = getNanoSecondsRealtimeFake;
 
 #else // FORTE_FAKE_TIME
 
-  constexpr auto forte_time = forte_time_arch;
-  constexpr auto getNanoSecondsMonotonic = getNanoSecondsMonotonicArch;
-  constexpr auto  getNanoSecondsRealtime = getNanoSecondsRealtimeArch;
+constexpr auto forte_time = forte_time_arch;
+constexpr auto getNanoSecondsMonotonic = getNanoSecondsMonotonicArch;
+constexpr auto getNanoSecondsRealtime = getNanoSecondsRealtimeArch;
 #endif // FORTE_FAKE_TIME
 
 #if defined(WINCE)
 #include <wce_time.h>
 
-inline
-struct tm* forte_localtime(const time_t* pa_time){
+inline struct tm *forte_localtime(const time_t *pa_time) {
   return wceex_localtime(pa_time);
 }
 
-inline
-time_t forte_mktime(struct tm* pa_tm){
+inline time_t forte_mktime(struct tm *pa_tm) {
   return wceex_mktime(pa_tm);
 }
 
-inline
-struct tm* forte_gmtime(const time_t* pa_time){
+inline struct tm *forte_gmtime(const time_t *pa_time) {
   return wceex_gmtime(pa_time);
 }
 
-inline
-time_t forte_time_arch(){
+inline time_t forte_time_arch() {
   return wceex_time(0);
 }
 
 #else // defined(WINCE)
 
-struct tm* forte_localtime(const time_t* paTime, struct tm* const paResult);
+struct tm *forte_localtime(const time_t *paTime, struct tm *const paResult);
 
-inline
-time_t forte_mktime(struct tm* pa_tm){
+inline time_t forte_mktime(struct tm *pa_tm) {
   return mktime(pa_tm);
 }
 
-time_t forte_timegm(struct tm* pa_tm);
+time_t forte_timegm(struct tm *pa_tm);
 
-struct tm* forte_gmtime(const time_t* const paTime, struct tm* const paResult);
+struct tm *forte_gmtime(const time_t *const paTime, struct tm *const paResult);
 
-inline
-time_t forte_time_arch(){
+inline time_t forte_time_arch() {
   return time(nullptr);
 }
 

@@ -23,16 +23,18 @@ USE_STRING_ID(ServiceQueryForm);
 USE_STRING_ID(ServiceRegistryEntry);
 USE_STRING_ID(WSTRING);
 
-
 DEFINE_ADAPTER_TYPE(FORTE_QueryServicesAdp, STRID(QueryServicesAdp))
 
 const CStringDictionary::TStringId FORTE_QueryServicesAdp::scmDataInputNames[] = {STRID(serviceEntries)};
 
-const CStringDictionary::TStringId FORTE_QueryServicesAdp::scmDataInputTypeIds[] = {STRID(ARRAY), 10, STRID(ServiceRegistryEntry)};
+const CStringDictionary::TStringId FORTE_QueryServicesAdp::scmDataInputTypeIds[] = {STRID(ARRAY), 10,
+                                                                                    STRID(ServiceRegistryEntry)};
 
-const CStringDictionary::TStringId FORTE_QueryServicesAdp::scmDataOutputNames[] = {STRID(serviceQueryForm), STRID(endpoint)};
+const CStringDictionary::TStringId FORTE_QueryServicesAdp::scmDataOutputNames[] = {STRID(serviceQueryForm),
+                                                                                   STRID(endpoint)};
 
-const CStringDictionary::TStringId FORTE_QueryServicesAdp::scmDataOutputTypeIds[] = {STRID(ServiceQueryForm), STRID(WSTRING)};
+const CStringDictionary::TStringId FORTE_QueryServicesAdp::scmDataOutputTypeIds[] = {STRID(ServiceQueryForm),
+                                                                                     STRID(WSTRING)};
 
 const TDataIOID FORTE_QueryServicesAdp::scmEIWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_QueryServicesAdp::scmEIWithIndexes[] = {0, -1};
@@ -42,19 +44,36 @@ const TDataIOID FORTE_QueryServicesAdp::scmEOWith[] = {0, 1, scmWithListDelimite
 const TForteInt16 FORTE_QueryServicesAdp::scmEOWithIndexes[] = {0, -1};
 const CStringDictionary::TStringId FORTE_QueryServicesAdp::scmEventOutputNames[] = {STRID(query)};
 
-const SFBInterfaceSpec FORTE_QueryServicesAdp::scmFBInterfaceSpecSocket = {
-  1,  scmEventInputNames,  scmEIWith,  scmEIWithIndexes,
-  1,  scmEventOutputNames,  scmEOWith, scmEOWithIndexes,  1,  scmDataInputNames, scmDataInputTypeIds,
-  2,  scmDataOutputNames, scmDataOutputTypeIds,
-  0, 0
-};
+const SFBInterfaceSpec FORTE_QueryServicesAdp::scmFBInterfaceSpecSocket = {1,
+                                                                           scmEventInputNames,
+                                                                           scmEIWith,
+                                                                           scmEIWithIndexes,
+                                                                           1,
+                                                                           scmEventOutputNames,
+                                                                           scmEOWith,
+                                                                           scmEOWithIndexes,
+                                                                           1,
+                                                                           scmDataInputNames,
+                                                                           scmDataInputTypeIds,
+                                                                           2,
+                                                                           scmDataOutputNames,
+                                                                           scmDataOutputTypeIds,
+                                                                           0,
+                                                                           0};
 
-const SFBInterfaceSpec FORTE_QueryServicesAdp::scmFBInterfaceSpecPlug = {
-  1,  scmEventOutputNames,  scmEOWith,  scmEOWithIndexes,
-  1,  scmEventInputNames,  scmEIWith, scmEIWithIndexes,  2,  scmDataOutputNames, scmDataOutputTypeIds,
-  1,  scmDataInputNames, scmDataInputTypeIds,
-  0, 0
-};
-
-
-
+const SFBInterfaceSpec FORTE_QueryServicesAdp::scmFBInterfaceSpecPlug = {1,
+                                                                         scmEventOutputNames,
+                                                                         scmEOWith,
+                                                                         scmEOWithIndexes,
+                                                                         1,
+                                                                         scmEventInputNames,
+                                                                         scmEIWith,
+                                                                         scmEIWithIndexes,
+                                                                         2,
+                                                                         scmDataOutputNames,
+                                                                         scmDataOutputTypeIds,
+                                                                         1,
+                                                                         scmDataInputNames,
+                                                                         scmDataInputTypeIds,
+                                                                         0,
+                                                                         0};

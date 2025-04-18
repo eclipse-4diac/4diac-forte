@@ -26,7 +26,7 @@
 #include "forte_array_variable.h"
 
 class FORTE_utils__timing__F_NOW final : public CFunctionBlock {
-  DECLARE_FIRMWARE_FB(FORTE_utils__timing__F_NOW)
+    DECLARE_FIRMWARE_FB(FORTE_utils__timing__F_NOW)
 
   private:
     static const CStringDictionary::TStringId scmDataOutputNames[];
@@ -75,4 +75,3 @@ class FORTE_utils__timing__F_NOW final : public CFunctionBlock {
 };
 
 CIEC_DATE_AND_TIME func_F_NOW();
-

@@ -27,21 +27,23 @@
  *   certificate (path to file, only if encryption is enabled)
  *   privateKey (path to file, only if encryption is enabled)
  *   securityMode (integer, only if encryption is enabled. 1: None; 2:Sign; 3: Sign and encrypt)
- *   securityPolicy (string URI, for example http://opcfoundation.org/UA/SecurityPolicy#Basic256, only if encryption is enabled)
+ *   securityPolicy (string URI, for example http://opcfoundation.org/UA/SecurityPolicy#Basic256, only if encryption is
+ * enabled)
  *
- *   The parser looks for an endpoint, and only after it matches the one passed as argument, it starts storing the following information, and
- *   it will keep reading after another endpoint other the end of file is found
+ *   The parser looks for an endpoint, and only after it matches the one passed as argument, it starts storing the
+ * following information, and it will keep reading after another endpoint other the end of file is found
  */
 class CUA_ClientConfigFileParser {
   public:
-
     /**
      * Encapsulation for the result used by the class when parsing the configuration file
      */
     class UA_ConfigFromFile {
       public:
         UA_ConfigFromFile(UA_ClientConfig &paClientConfig, std::string &paUsername, std::string &paPassword) :
-            mClientConfig(paClientConfig), mUsername(paUsername), mPassword(paPassword) {
+            mClientConfig(paClientConfig),
+            mUsername(paUsername),
+            mPassword(paPassword) {
         }
         UA_ClientConfig &mClientConfig;
         std::string &mUsername;
@@ -55,7 +57,8 @@ class CUA_ClientConfigFileParser {
      * @param paResult Place to store the results
      * @return True if no error occurred, false otherwise
      */
-    static bool loadConfig(const std::string &paFileLocation, const std::string &paEndpoint, UA_ConfigFromFile &paResult);
+    static bool
+    loadConfig(const std::string &paFileLocation, const std::string &paEndpoint, UA_ConfigFromFile &paResult);
 
     explicit CUA_ClientConfigFileParser() = delete;
     virtual ~CUA_ClientConfigFileParser() = delete;
@@ -73,7 +76,7 @@ class CUA_ClientConfigFileParser {
       ePrivateKey,
       eSecurityMode,
       eSecurityPolicy,
-#endif //UA_ENABLE_ENCRYPTION
+#endif // UA_ENABLE_ENCRYPTION
       eKeyUnknown,
     };
 
@@ -90,7 +93,7 @@ class CUA_ClientConfigFileParser {
      * @return True if no error occurred, false otherwise
      */
     static bool loadFileIntoBytestring(const std::string &paFileLocation, UA_ByteString &paResult);
-#endif //UA_ENABLE_ENCRYPTION
+#endif // UA_ENABLE_ENCRYPTION
 };
 
 #endif /* SRC_MODULES_OPC_UA_OPCUA_CLIENT_CONFIG_PARSER_H_ */

@@ -12,62 +12,52 @@
  *******************************************************************************/
 #include "forte_any_real_variant.h"
 
-
 USE_STRING_ID(ANY_REAL);
-
 
 DEFINE_FIRMWARE_DATATYPE(ANY_REAL_VARIANT, STRID(ANY_REAL))
 
 void CIEC_ANY_REAL_VARIANT::setValue(const CIEC_ANY &paValue) {
   switch (paValue.getDataTypeID()) {
-    case e_ANY:
-      CIEC_ANY_REAL_VARIANT::setValue(paValue.unwrap());
-      break;
-    case e_REAL:
-      operator=(static_cast<const CIEC_REAL &>(paValue));
-      break;
-    case e_LREAL:
-      operator=(static_cast<const CIEC_LREAL &>(paValue));
-      break;
-    default:
-      break;
+    case e_ANY: CIEC_ANY_REAL_VARIANT::setValue(paValue.unwrap()); break;
+    case e_REAL: operator=(static_cast<const CIEC_REAL &>(paValue)); break;
+    case e_LREAL: operator=(static_cast<const CIEC_LREAL &>(paValue)); break;
+    default: break;
   }
 }
 
 bool CIEC_ANY_REAL_VARIANT::setDefaultValue(CIEC_ANY::EDataTypeID paDataTypeId) {
   switch (paDataTypeId) {
-    case e_REAL:
-      operator=(CIEC_REAL(0.0f));
-      return true;
-    case e_LREAL:
-      operator=(CIEC_LREAL(0.0));
-      return true;
-    default:
-      break;
+    case e_REAL: operator=(CIEC_REAL(0.0f)); return true;
+    case e_LREAL: operator=(CIEC_LREAL(0.0)); return true;
+    default: break;
   }
   return false;
 }
 
 CIEC_ANY_REAL &CIEC_ANY_REAL_VARIANT::unwrap() {
-  return std::visit([](auto &&value) -> CIEC_ANY_REAL & {
-      using T = std::decay_t<decltype(value)>;
-      if constexpr (std::is_base_of_v<CIEC_ANY_REAL, T>) {
-        return value;
-      } else {
-        static_assert(always_false_v < T > , "non-exhaustive visitor");
-      }
-  }, static_cast<CIEC_ANY_REAL_VARIANT::variant&>(*this));
+  return std::visit(
+      [](auto &&value) -> CIEC_ANY_REAL & {
+        using T = std::decay_t<decltype(value)>;
+        if constexpr (std::is_base_of_v<CIEC_ANY_REAL, T>) {
+          return value;
+        } else {
+          static_assert(always_false_v<T>, "non-exhaustive visitor");
+        }
+      },
+      static_cast<CIEC_ANY_REAL_VARIANT::variant &>(*this));
 }
 
 const CIEC_ANY_REAL &CIEC_ANY_REAL_VARIANT::unwrap() const {
-  return std::visit([](auto &&value) -> const CIEC_ANY_REAL & {
-      using T = std::decay_t<decltype(value)>;
-      if constexpr (std::is_base_of_v<CIEC_ANY_REAL, T>) {
-        return value;
-      } else {
-        static_assert(always_false_v < T > , "non-exhaustive visitor");
-      }
-  }, static_cast<const CIEC_ANY_REAL_VARIANT::variant&>(*this));
+  return std::visit(
+      [](auto &&value) -> const CIEC_ANY_REAL & {
+        using T = std::decay_t<decltype(value)>;
+        if constexpr (std::is_base_of_v<CIEC_ANY_REAL, T>) {
+          return value;
+        } else {
+          static_assert(always_false_v<T>, "non-exhaustive visitor");
+        }
+      },
+      static_cast<const CIEC_ANY_REAL_VARIANT::variant &>(*this));
 }
 
 int CIEC_ANY_REAL_VARIANT::fromString(const char *paValue) {
@@ -104,4 +94,3 @@ size_t CIEC_ANY_REAL_VARIANT::getToStringBufferSize() const {
   size_t typeNameLength = strlen(typeName);
   return typeNameLength + 1 + value.getToStringBufferSize();
 }
-

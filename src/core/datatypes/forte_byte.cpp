@@ -16,7 +16,6 @@
 
 USE_STRING_ID(BYTE);
 
-
 DEFINE_FIRMWARE_DATATYPE(BYTE, STRID(BYTE))
 
 const CStringDictionary::TStringId forte::CDataTypeTrait<CIEC_BYTE>::scmDataTypeName = STRID(BYTE);

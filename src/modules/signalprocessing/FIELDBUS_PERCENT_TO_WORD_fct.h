@@ -1,10 +1,10 @@
-/*************************************************************************  
- *** Copyright (c) 2023 HR Agrartechnik GmbH  
- *** This program and the accompanying materials are made available under the  
- *** terms of the Eclipse Public License 2.0 which is available at  
- *** http://www.eclipse.org/legal/epl-2.0.  
- ***  
- *** SPDX-License-Identifier: EPL-2.0  
+/*************************************************************************
+ *** Copyright (c) 2023 HR Agrartechnik GmbH
+ *** This program and the accompanying materials are made available under the
+ *** terms of the Eclipse Public License 2.0 which is available at
+ *** http://www.eclipse.org/legal/epl-2.0.
+ ***
+ *** SPDX-License-Identifier: EPL-2.0
  ***
  *** This file was generated using the 4DIAC FORTE Export Filter V1.0.x NG!
  ***
@@ -27,7 +27,7 @@
 #include "forte_array_variable.h"
 
 class FORTE_signalprocessing__FIELDBUS_PERCENT_TO_WORD final : public CFunctionBlock {
-  DECLARE_FIRMWARE_FB(FORTE_signalprocessing__FIELDBUS_PERCENT_TO_WORD)
+    DECLARE_FIRMWARE_FB(FORTE_signalprocessing__FIELDBUS_PERCENT_TO_WORD)
 
   private:
     static const CStringDictionary::TStringId scmDataInputNames[];
@@ -54,7 +54,8 @@ class FORTE_signalprocessing__FIELDBUS_PERCENT_TO_WORD final : public CFunctionB
     void setInitialValues() override;
 
   public:
-    FORTE_signalprocessing__FIELDBUS_PERCENT_TO_WORD(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_signalprocessing__FIELDBUS_PERCENT_TO_WORD(CStringDictionary::TStringId paInstanceNameId,
+                                                     forte::core::CFBContainer &paContainer);
 
     CIEC_REAL var_RI;
 
@@ -84,4 +85,3 @@ class FORTE_signalprocessing__FIELDBUS_PERCENT_TO_WORD final : public CFunctionB
 };
 
 CIEC_WORD func_FIELDBUS_PERCENT_TO_WORD(CIEC_REAL st_lv_RI);
-

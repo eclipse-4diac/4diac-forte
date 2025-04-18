@@ -12,62 +12,52 @@
  *******************************************************************************/
 #include "forte_any_duration_variant.h"
 
-
 USE_STRING_ID(ANY_DURATION);
-
 
 DEFINE_FIRMWARE_DATATYPE(ANY_DURATION_VARIANT, STRID(ANY_DURATION))
 
 void CIEC_ANY_DURATION_VARIANT::setValue(const CIEC_ANY &paValue) {
   switch (paValue.getDataTypeID()) {
-    case e_ANY:
-      CIEC_ANY_DURATION_VARIANT::setValue(paValue.unwrap());
-      break;
-    case e_TIME:
-      operator=(static_cast<const CIEC_TIME &>(paValue));
-      break;
-    case e_LTIME:
-      operator=(static_cast<const CIEC_LTIME &>(paValue));
-      break;
-    default:
-      break;
+    case e_ANY: CIEC_ANY_DURATION_VARIANT::setValue(paValue.unwrap()); break;
+    case e_TIME: operator=(static_cast<const CIEC_TIME &>(paValue)); break;
+    case e_LTIME: operator=(static_cast<const CIEC_LTIME &>(paValue)); break;
+    default: break;
   }
 }
 
 bool CIEC_ANY_DURATION_VARIANT::setDefaultValue(CIEC_ANY::EDataTypeID paDataTypeId) {
   switch (paDataTypeId) {
-    case e_TIME:
-      operator=(CIEC_TIME(0));
-      return true;
-    case e_LTIME:
-      operator=(CIEC_LTIME(0));
-      return true;
-    default:
-      break;
+    case e_TIME: operator=(CIEC_TIME(0)); return true;
+    case e_LTIME: operator=(CIEC_LTIME(0)); return true;
+    default: break;
   }
   return false;
 }
 
 CIEC_ANY_DURATION &CIEC_ANY_DURATION_VARIANT::unwrap() {
-  return std::visit([](auto &&value) -> CIEC_ANY_DURATION & {
-      using T = std::decay_t<decltype(value)>;
-      if constexpr (std::is_base_of_v<CIEC_ANY_DURATION, T>) {
-        return value;
-      } else {
-        static_assert(always_false_v < T > , "non-exhaustive visitor");
-      }
-  }, static_cast<CIEC_ANY_DURATION_VARIANT::variant&>(*this));
+  return std::visit(
+      [](auto &&value) -> CIEC_ANY_DURATION & {
+        using T = std::decay_t<decltype(value)>;
+        if constexpr (std::is_base_of_v<CIEC_ANY_DURATION, T>) {
+          return value;
+        } else {
+          static_assert(always_false_v<T>, "non-exhaustive visitor");
+        }
+      },
+      static_cast<CIEC_ANY_DURATION_VARIANT::variant &>(*this));
 }
 
 const CIEC_ANY_DURATION &CIEC_ANY_DURATION_VARIANT::unwrap() const {
-  return std::visit([](auto &&value) -> const CIEC_ANY_DURATION & {
-      using T = std::decay_t<decltype(value)>;
-      if constexpr (std::is_base_of_v<CIEC_ANY_DURATION, T>) {
-        return value;
-      } else {
-        static_assert(always_false_v < T > , "non-exhaustive visitor");
-      }
-  }, static_cast<const CIEC_ANY_DURATION_VARIANT::variant&>(*this));
+  return std::visit(
+      [](auto &&value) -> const CIEC_ANY_DURATION & {
+        using T = std::decay_t<decltype(value)>;
+        if constexpr (std::is_base_of_v<CIEC_ANY_DURATION, T>) {
+          return value;
+        } else {
+          static_assert(always_false_v<T>, "non-exhaustive visitor");
+        }
+      },
+      static_cast<const CIEC_ANY_DURATION_VARIANT::variant &>(*this));
 }
 
 int CIEC_ANY_DURATION_VARIANT::fromString(const char *paValue) {
@@ -93,4 +83,3 @@ size_t CIEC_ANY_DURATION_VARIANT::getToStringBufferSize() const {
   const CIEC_ANY &value = unwrap();
   return value.getToStringBufferSize();
 }
-

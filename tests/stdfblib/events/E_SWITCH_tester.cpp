@@ -14,22 +14,19 @@
 #include "../../core/fbtests/fbtestfixture.h"
 #include <forte_bool.h>
 
-
 USE_STRING_ID(E_SWITCH);
-
 
 struct E_SWITCH_TestFixture : public CFBTestFixtureBase {
 
-    E_SWITCH_TestFixture() :
-        CFBTestFixtureBase(STRID(E_SWITCH)) {
+    E_SWITCH_TestFixture() : CFBTestFixtureBase(STRID(E_SWITCH)) {
       setInputData({&mInG});
       CFBTestFixtureBase::setup();
     }
 
-    CIEC_BOOL mInG; //DATA INPUT
+    CIEC_BOOL mInG; // DATA INPUT
 };
 
-BOOST_FIXTURE_TEST_SUITE( SwitchTests, E_SWITCH_TestFixture)
+BOOST_FIXTURE_TEST_SUITE(SwitchTests, E_SWITCH_TestFixture)
 
 BOOST_AUTO_TEST_CASE(singleE0) {
   mInG = CIEC_BOOL(false);
@@ -45,7 +42,7 @@ BOOST_AUTO_TEST_CASE(SingleE1) {
 
 BOOST_AUTO_TEST_CASE(MultipleE0) {
   mInG = CIEC_BOOL(false);
-  for(unsigned int i = 0; i < 1000; ++i) {
+  for (unsigned int i = 0; i < 1000; ++i) {
     triggerEvent(0);
     BOOST_CHECK(checkForSingleOutputEventOccurence(0));
   }
@@ -53,14 +50,14 @@ BOOST_AUTO_TEST_CASE(MultipleE0) {
 
 BOOST_AUTO_TEST_CASE(MultipleE1) {
   mInG = CIEC_BOOL(true);
-  for(unsigned int i = 0; i < 1000; ++i) {
+  for (unsigned int i = 0; i < 1000; ++i) {
     triggerEvent(0);
     BOOST_CHECK(checkForSingleOutputEventOccurence(1));
   }
 }
 
 BOOST_AUTO_TEST_CASE(Alternate) {
-  for(unsigned int i = 0; i < 1000; ++i) {
+  for (unsigned int i = 0; i < 1000; ++i) {
     mInG = func_NOT(mInG);
     triggerEvent(0);
     BOOST_CHECK(checkForSingleOutputEventOccurence((mInG) ? 1 : 0));

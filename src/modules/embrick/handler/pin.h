@@ -39,20 +39,20 @@ class EmbrickPinHandler {
     bool hasError() {
       return mError != 0;
     }
-    const char* mError;
+    const char *mError;
 
   private:
     unsigned int mPinNumber = 0;
     int mPinFd = -1;
     bool didExport = false;
 
-    void fail(const char* paReason);
+    void fail(const char *paReason);
 
-    static const char * const scmFailedToExportPin;
-    static const char * const scmFailedToSetDirection;
-    static const char * const scmFailedToOpenFile;
-    static const char * const scmFailedToWriteFile;
-    static const char * const scmNotInitialised;
+    static const char *const scmFailedToExportPin;
+    static const char *const scmFailedToSetDirection;
+    static const char *const scmFailedToOpenFile;
+    static const char *const scmFailedToWriteFile;
+    static const char *const scmNotInitialised;
 };
 
 #endif /* SRC_MODULES_EMBRICK_HANDLER_PIN_H_ */

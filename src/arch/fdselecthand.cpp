@@ -10,7 +10,7 @@
  *   Alois Zoitl, Gerhard Ebenhofer, Ingo Hegny
  *    - initial API and implementation and/or initial documentation
  *******************************************************************************/
-#include <sockhand.h>      //needs to be first pulls in the platform specific includes
+#include <sockhand.h> //needs to be first pulls in the platform specific includes
 #include "fdselecthand.h"
 #include "devlog.h"
 #include "core/devexec.h"
@@ -19,16 +19,16 @@
 #include "core/util/criticalregion.h"
 
 DEFINE_HANDLER(CFDSelectHandler)
-CFDSelectHandler::CFDSelectHandler(CDeviceExecution& paDeviceExecution) : CExternalEventHandler(paDeviceExecution)  {
+CFDSelectHandler::CFDSelectHandler(CDeviceExecution &paDeviceExecution) : CExternalEventHandler(paDeviceExecution) {
   mConnectionListChanged = false;
 }
 
-CFDSelectHandler::~CFDSelectHandler(){
+CFDSelectHandler::~CFDSelectHandler() {
   this->end();
 }
 
 // single-threaded-network-code
-void CFDSelectHandler::run(){
+void CFDSelectHandler::run() {
 
   struct timeval tv;
   fd_set anFDSet;
@@ -39,50 +39,49 @@ void CFDSelectHandler::run(){
 
   FD_ZERO(&anFDSetMaster);
 
-  while(isAlive()){
+  while (isAlive()) {
     // TODO: create method to prevent 100ms timeout on reconnection
     mSync.lock();
-    if(true == mConnectionListChanged){
+    if (true == mConnectionListChanged) {
       nHighestFDID = createFDSet(&anFDSetMaster);
     }
     anFDSet = anFDSetMaster;
     mSync.unlock();
 
-    tv.tv_sec = 1; //TODO : To be set!
+    tv.tv_sec = 1; // TODO : To be set!
     tv.tv_usec = 0;
 
-    if(scmInvalidFileDescriptor != nHighestFDID){
+    if (scmInvalidFileDescriptor != nHighestFDID) {
       retval = select(static_cast<int>(nHighestFDID + 1), &anFDSet, nullptr, nullptr, &tv);
-      if(!isAlive()){
-        //the thread has been closed in the meantime do not process any messages anymore
+      if (!isAlive()) {
+        // the thread has been closed in the meantime do not process any messages anymore
         return;
       }
-    }
-    else{
+    } else {
       retval = 0;
     }
 
-    if(retval > 0){
+    if (retval > 0) {
       mSync.lock();
       TConnectionContainer::Iterator itEnd(mConnectionsList.end());
-      for(TConnectionContainer::Iterator itRunner = mConnectionsList.begin(); itRunner != itEnd;){
-        // need to retrieve the callee as the iterator may get invalid in the recvDat function below in case of connection closing
+      for (TConnectionContainer::Iterator itRunner = mConnectionsList.begin(); itRunner != itEnd;) {
+        // need to retrieve the callee as the iterator may get invalid in the recvDat function below in case of
+        // connection closing
         forte::com_infra::CComCallback *callee = itRunner->mCallee;
         TFileDescriptor sockDes = itRunner->mSockDes;
         ++itRunner;
 
-        if((0 != FD_ISSET(sockDes, &anFDSet)) && (nullptr != callee)){
+        if ((0 != FD_ISSET(sockDes, &anFDSet)) && (nullptr != callee)) {
           mSync.unlock();
-          if(forte::com_infra::e_Nothing != callee->recvData(&sockDes,0)){
+          if (forte::com_infra::e_Nothing != callee->recvData(&sockDes, 0)) {
             startNewEventChain(callee->getCommFB());
           }
           mSync.lock();
         }
       }
       mSync.unlock();
-    }
-    else{
-      if(retval != 0) {
+    } else {
+      if (retval != 0) {
 #ifdef WIN32
         DEVLOG_ERROR("Select failed: %d", WSAGetLastError());
 #else
@@ -93,31 +92,30 @@ void CFDSelectHandler::run(){
   }
 }
 
-void CFDSelectHandler::addComCallback(TFileDescriptor paFD, forte::com_infra::CComCallback *paComCallback){
+void CFDSelectHandler::addComCallback(TFileDescriptor paFD, forte::com_infra::CComCallback *paComCallback) {
   {
     CCriticalRegion criticalRegion(mSync);
-    TConnContType stNewNode = { paFD, paComCallback };
+    TConnContType stNewNode = {paFD, paComCallback};
     mConnectionsList.pushBack(stNewNode);
     mConnectionListChanged = true;
   }
-  if(!isAlive()){
+  if (!isAlive()) {
     this->start();
   }
 }
 
-void CFDSelectHandler::removeComCallback(TFileDescriptor paFD){
+void CFDSelectHandler::removeComCallback(TFileDescriptor paFD) {
   CCriticalRegion criticalRegion(mSync);
 
   TConnectionContainer::Iterator itRunner(mConnectionsList.begin());
   TConnectionContainer::Iterator itRefNode(mConnectionsList.end());
   TConnectionContainer::Iterator itEnd(mConnectionsList.end());
 
-  while(itRunner != itEnd){
-    if(itRunner->mSockDes == paFD){
-      if(itRefNode ==itEnd){
+  while (itRunner != itEnd) {
+    if (itRunner->mSockDes == paFD) {
+      if (itRefNode == itEnd) {
         mConnectionsList.popFront();
-      }
-      else{
+      } else {
         mConnectionsList.eraseAfter(itRefNode);
       }
       break;
@@ -130,13 +128,13 @@ void CFDSelectHandler::removeComCallback(TFileDescriptor paFD){
   mConnectionListChanged = true;
 }
 
-CFDSelectHandler::TFileDescriptor CFDSelectHandler::createFDSet(fd_set *mFDSet){
+CFDSelectHandler::TFileDescriptor CFDSelectHandler::createFDSet(fd_set *mFDSet) {
   TFileDescriptor nRetVal = scmInvalidFileDescriptor;
   FD_ZERO(mFDSet);
   TConnectionContainer::Iterator itEnd(mConnectionsList.end());
-  for(TConnectionContainer::Iterator itRunner = mConnectionsList.begin(); itRunner != itEnd; ++itRunner){
+  for (TConnectionContainer::Iterator itRunner = mConnectionsList.begin(); itRunner != itEnd; ++itRunner) {
     FD_SET(itRunner->mSockDes, mFDSet);
-    if(itRunner->mSockDes > nRetVal || scmInvalidFileDescriptor == nRetVal){
+    if (itRunner->mSockDes > nRetVal || scmInvalidFileDescriptor == nRetVal) {
       nRetVal = itRunner->mSockDes;
     }
   }

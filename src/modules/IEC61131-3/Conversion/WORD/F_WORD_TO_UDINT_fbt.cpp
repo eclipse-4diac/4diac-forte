@@ -23,7 +23,6 @@ USE_STRING_ID(REQ);
 USE_STRING_ID(UDINT);
 USE_STRING_ID(WORD);
 
-
 #include "criticalregion.h"
 #include "resource.h"
 #include "forte_udint.h"
@@ -54,18 +53,29 @@ const TForteInt16 FORTE_F_WORD_TO_UDINT::scmEOWithIndexes[] = {0};
 const CStringDictionary::TStringId FORTE_F_WORD_TO_UDINT::scmEventOutputNames[] = {STRID(CNF)};
 const CStringDictionary::TStringId FORTE_F_WORD_TO_UDINT::scmEventOutputTypeIds[] = {STRID(Event)};
 
+const SFBInterfaceSpec FORTE_F_WORD_TO_UDINT::scmFBInterfaceSpec = {1,
+                                                                    scmEventInputNames,
+                                                                    scmEventInputTypeIds,
+                                                                    scmEIWith,
+                                                                    scmEIWithIndexes,
+                                                                    1,
+                                                                    scmEventOutputNames,
+                                                                    scmEventOutputTypeIds,
+                                                                    scmEOWith,
+                                                                    scmEOWithIndexes,
+                                                                    1,
+                                                                    scmDataInputNames,
+                                                                    scmDataInputTypeIds,
+                                                                    1,
+                                                                    scmDataOutputNames,
+                                                                    scmDataOutputTypeIds,
+                                                                    0,
+                                                                    nullptr,
+                                                                    0,
+                                                                    nullptr};
 
-const SFBInterfaceSpec FORTE_F_WORD_TO_UDINT::scmFBInterfaceSpec = {
-  1, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,
-  1, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes,
-  1, scmDataInputNames, scmDataInputTypeIds,
-  1, scmDataOutputNames, scmDataOutputTypeIds,
-  0, nullptr,
-  0, nullptr
-};
-
-
-FORTE_F_WORD_TO_UDINT::FORTE_F_WORD_TO_UDINT(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_F_WORD_TO_UDINT::FORTE_F_WORD_TO_UDINT(CStringDictionary::TStringId paInstanceNameId,
+                                             forte::core::CFBContainer &paContainer) :
     CSimpleFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, nullptr),
     var_IN(CIEC_WORD(0)),
     var_OUT(CIEC_UDINT(0)),
@@ -75,74 +85,68 @@ FORTE_F_WORD_TO_UDINT::FORTE_F_WORD_TO_UDINT(CStringDictionary::TStringId paInst
 }
 
 void FORTE_F_WORD_TO_UDINT::alg_REQ(void) {
-  
+
   var_OUT = func_WORD_TO_UDINT(var_IN);
 }
 
-
 void FORTE_F_WORD_TO_UDINT::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
-  switch(paEIID) {
-    case scmEventREQID:
-      alg_REQ();
-      break;
-    default:
-      break;
+  switch (paEIID) {
+    case scmEventREQID: alg_REQ(); break;
+    default: break;
   }
   sendOutputEvent(scmEventCNFID, paECET);
 }
 
 void FORTE_F_WORD_TO_UDINT::readInputData(TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventREQID: {
       readData(0, var_IN, conn_IN);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 void FORTE_F_WORD_TO_UDINT::writeOutputData(TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventCNFID: {
       writeData(0, var_OUT, conn_OUT);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 CIEC_ANY *FORTE_F_WORD_TO_UDINT::getDI(size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_IN;
   }
   return nullptr;
 }
 
 CIEC_ANY *FORTE_F_WORD_TO_UDINT::getDO(size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_OUT;
   }
   return nullptr;
 }
 
 CEventConnection *FORTE_F_WORD_TO_UDINT::getEOConUnchecked(TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_CNF;
   }
   return nullptr;
 }
 
 CDataConnection **FORTE_F_WORD_TO_UDINT::getDIConUnchecked(TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_IN;
   }
   return nullptr;
 }
 
 CDataConnection *FORTE_F_WORD_TO_UDINT::getDOConUnchecked(TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_OUT;
   }
   return nullptr;
@@ -151,5 +155,3 @@ CDataConnection *FORTE_F_WORD_TO_UDINT::getDOConUnchecked(TPortId paIndex) {
 CIEC_ANY *FORTE_F_WORD_TO_UDINT::getVarInternal(size_t) {
   return nullptr;
 }
-
-

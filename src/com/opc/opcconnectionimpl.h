@@ -25,36 +25,36 @@
 
 class COpcConnection;
 
-class COpcConnectionImpl : public IAsyncDataCallback{
+class COpcConnectionImpl : public IAsyncDataCallback {
   public:
-    COpcConnectionImpl(const std::string& paHost, const std::string& paServerName, COpcConnection* paOpcConn);
+    COpcConnectionImpl(const std::string &paHost, const std::string &paServerName, COpcConnection *paOpcConn);
     ~COpcConnectionImpl();
 
-    bool connect(const std::string& paGroupName);
+    bool connect(const std::string &paGroupName);
     void disconnect();
-    void addItemList(const std::string& paGroupName, std::vector<std::string>& paReadItems, std::vector<std::string>& paWriteItems);
-    bool addGroup(const std::string& paGroupName, unsigned long paReqUpdateRate, float paDeadBand);
-    void removeGroup(const std::string& paGroupName);
-    void removeItems(const std::string& paGroupName);
+    void addItemList(const std::string &paGroupName,
+                     std::vector<std::string> &paReadItems,
+                     std::vector<std::string> &paWriteItems);
+    bool addGroup(const std::string &paGroupName, unsigned long paReqUpdateRate, float paDeadBand);
+    void removeGroup(const std::string &paGroupName);
+    void removeItems(const std::string &paGroupName);
 
-
-    int sendItemData(const std::string& paGroupName, const std::string& paItemName, Variant paVar);
+    int sendItemData(const std::string &paGroupName, const std::string &paItemName, Variant paVar);
 
     bool isConnected();
 
     virtual void COpcConnectionImpl::OnDataChange(COPCGroup &paGroup, COPCItemDataMap &paChanges);
 
   private:
-
-    COPCGroup* getOpcGroup(const std::string& paGroupName, bool paIfRead);
+    COPCGroup *getOpcGroup(const std::string &paGroupName, bool paIfRead);
     void clearGroup();
 
-    typedef std::map<std::string, std::vector<COPCItem*>>::iterator TOpcItemsIt;
-    std::map<std::string, std::vector<COPCItem*>> mOpcItems;
+    typedef std::map<std::string, std::vector<COPCItem *>>::iterator TOpcItemsIt;
+    std::map<std::string, std::vector<COPCItem *>> mOpcItems;
 
-    struct SOpcGroupSettings{
-        COPCGroup* mOpcGroupRead;
-        COPCGroup* mOpcGroupWrite;
+    struct SOpcGroupSettings {
+        COPCGroup *mOpcGroupRead;
+        COPCGroup *mOpcGroupWrite;
         const std::string mGroupName;
         unsigned long mReqUpdateRate;
         unsigned long mRevisedUpdateRate;
@@ -62,18 +62,24 @@ class COpcConnectionImpl : public IAsyncDataCallback{
         bool mReadGroupAdded;
         bool mWriteGroupAdded;
 
-        SOpcGroupSettings(const std::string& paGroupName, unsigned long paReqUpdateRate, float paDeadBand) :
-          mOpcGroupRead(0), mOpcGroupWrite(0), mGroupName(paGroupName), mReqUpdateRate(paReqUpdateRate), mRevisedUpdateRate(0),
-          mDeadBand(paDeadBand), mReadGroupAdded(false), mWriteGroupAdded(false) {
+        SOpcGroupSettings(const std::string &paGroupName, unsigned long paReqUpdateRate, float paDeadBand) :
+            mOpcGroupRead(0),
+            mOpcGroupWrite(0),
+            mGroupName(paGroupName),
+            mReqUpdateRate(paReqUpdateRate),
+            mRevisedUpdateRate(0),
+            mDeadBand(paDeadBand),
+            mReadGroupAdded(false),
+            mWriteGroupAdded(false) {
         }
     };
 
-    typedef std::vector<SOpcGroupSettings*> TOpcGroupSettingsList;
+    typedef std::vector<SOpcGroupSettings *> TOpcGroupSettingsList;
     TOpcGroupSettingsList mOpcGroupSettingsList;
 
-    COpcConnection* mOpcConn;
+    COpcConnection *mOpcConn;
 
-    COPCHost* mOpcHost;
+    COPCHost *mOpcHost;
     COPCServer *mOpcServer;
 
     const std::string mHost;

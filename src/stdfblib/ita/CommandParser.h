@@ -26,122 +26,117 @@ namespace forte::ita {
 
   class CommandParser {
 
-  public:
+    public:
+      CommandParser(CDevice &paDevice);
 
-    CommandParser(CDevice& paDevice);
+      /**
+       * @brief Parse and executes a command on a destination in a device
+       *
+       * @param paDest destination where to executed the command
+       * @param paCommand the command to be executed
+       * @param paDevice device where to execute the command
+       * @return EMGMResponse response of the execution of the command
+       */
+      EMGMResponse parseAndExecuteMGMCommand(const char *const paDest, char *paCommand);
 
-    /**
-     * @brief Parse and executes a command on a destination in a device
-     * 
-     * @param paDest destination where to executed the command
-     * @param paCommand the command to be executed
-     * @param paDevice device where to execute the command
-     * @return EMGMResponse response of the execution of the command
-     */
-    EMGMResponse parseAndExecuteMGMCommand(const char *const paDest, char *paCommand);
+      /*! \brief Generate a response string according to the previous executed command
+       *
+       * @param paResponse generated response, the given string is used to reduce memory load on the system
+       */
+      void generateResponse(CIEC_STRING &aResponse);
 
-    /*! \brief Generate a response string according to the previous executed command
-     *
-     * @param paResponse generated response, the given string is used to reduce memory load on the system
-     */
-    void generateResponse(CIEC_STRING &aResponse);
+    private:
+      forte::core::SManagementCMD mCommand;
 
-  private:
+      EMGMResponse mLastResponse{EMGMResponse::InvalidObject};
 
-    forte::core::SManagementCMD mCommand;
+      CDevice &mDevice;
 
-    EMGMResponse mLastResponse{EMGMResponse::InvalidObject};
+      /*! \brief Parse the given request header to determine the ID and the requested command
+       *
+       * \param paRequestString data of the request
+       * \param paCommand the command structure for holding command information
+       * \return pointer to the next part of the command zero on error
+       */
+      char *parseRequest(char *paRequestString);
 
-    CDevice& mDevice;
-
-    /*! \brief Parse the given request header to determine the ID and the requested command
-      *
-      * \param paRequestString data of the request
-      * \param paCommand the command structure for holding command information
-      * \return pointer to the next part of the command zero on error
-      */
-    char* parseRequest(char *paRequestString);
-
-    /*! \brief Parse the given request that is left after parsing the header to parse FB data
-      *
-      * \param paRequestPartLeft  data of the request that has been left after parsing the header
-      * \param paCommand the command structure for holding command information
-      * \return true if the FB data could be parsed
-      */
-    bool parseFBData(char *paRequestPartLeft);
+      /*! \brief Parse the given request that is left after parsing the header to parse FB data
+       *
+       * \param paRequestPartLeft  data of the request that has been left after parsing the header
+       * \param paCommand the command structure for holding command information
+       * \return true if the FB data could be parsed
+       */
+      bool parseFBData(char *paRequestPartLeft);
 
 #ifdef FORTE_DYNAMIC_TYPE_LOAD
 
-    /*! \brief Parse the given request that is left after parsing the header to parse FB or Adapter type
-      *
-      * \param paRequestPartLeft  data of the request that has been left after parsing the header
-      * \param paCommand the command structure for holding command information
-      * \param pa_requestType the type that should be searched
-      * \return true if the FB type could be parsed
-      */
-    bool parseXType(char *paRequestPartLeft, const char *paRequestType);
+      /*! \brief Parse the given request that is left after parsing the header to parse FB or Adapter type
+       *
+       * \param paRequestPartLeft  data of the request that has been left after parsing the header
+       * \param paCommand the command structure for holding command information
+       * \param pa_requestType the type that should be searched
+       * \return true if the FB type could be parsed
+       */
+      bool parseXType(char *paRequestPartLeft, const char *paRequestType);
 #endif // FORTE_DYNAMIC_TYPE_LOAD
 
-    /*! \brief Parse the given request that is left after parsing the header to parse connection data
-      *
-      * \param paRequestPartLeft   data of the request that has been left after parsing the header
-      * \param paCommand the command structure for holding command information
-      * \return true if the connection data could be parsed
-      */
-    bool parseConnectionData(char *paRequestPartLeft);
-    bool parseWriteConnectionData(char *paRequestPartLeft);
+      /*! \brief Parse the given request that is left after parsing the header to parse connection data
+       *
+       * \param paRequestPartLeft   data of the request that has been left after parsing the header
+       * \param paCommand the command structure for holding command information
+       * \return true if the connection data could be parsed
+       */
+      bool parseConnectionData(char *paRequestPartLeft);
+      bool parseWriteConnectionData(char *paRequestPartLeft);
 
+      void parseCreateData(char *paRequestPartLeft);
+      void parseDeleteData(char *paRequestPartLeft);
+      //! Check if an FB is given for a state change command (i.e., START, STOP, KILL, RESET)
+      void parseAdditionalStateCommandData(char *paRequestPartLeft);
+      void parseReadData(char *paRequestPartLeft);
+      void parseWriteData(char *paRequestPartLeft);
 
-    void parseCreateData(char *paRequestPartLeft);
-    void parseDeleteData(char *paRequestPartLeft);
-    //! Check if an FB is given for a state change command (i.e., START, STOP, KILL, RESET)
-    void parseAdditionalStateCommandData(char *paRequestPartLeft);
-    void parseReadData(char *paRequestPartLeft);
-    void parseWriteData(char *paRequestPartLeft);
+#ifdef FORTE_SUPPORT_QUERY_CMD
+      void parseQueryData(char *paRequestPartLeft);
+      bool parseTypeListData(char *paRequestPartLeft);
+#endif
 
-  #ifdef FORTE_SUPPORT_QUERY_CMD
-    void parseQueryData(char *paRequestPartLeft);
-    bool parseTypeListData(char *paRequestPartLeft);
-  #endif
+      /*! \brief parse a hierarchical identifier list
+       *
+       * The identifiers are separated  by '.' and the end character for the list is '\"'
+       *
+       * @param paIdentifierStart pointer to the start of the identifier that will be parsed
+       * @param paIdentifier identifier vector where to write the parsed identifiers to
+       * @return number of bytes used from the character array or -1 if the identifier could not be parsed
+       */
+      int parseIdentifier(char *paIdentifierStart, forte::core::TNameIdentifier &paIdentifier);
 
+      /*! \brief Parse the name of the type
+       *
+       * @param paTypeName string containing the type name that will be parsed
+       * @param paIdentifier identifier vector where to write the parsed identifiers to
+       * @return number of bytes used from the character array or -1 if the identifier could not be parsed
+       */
+      int parseTypeName(const std::string_view paTypeName, forte::core::TNameIdentifier &paIdentifier);
 
-    /*! \brief parse a hierarchical identifier list
-      *
-      * The identifiers are separated  by '.' and the end character for the list is '\"'
-      *
-      * @param paIdentifierStart pointer to the start of the identifier that will be parsed
-      * @param paIdentifier identifier vector where to write the parsed identifiers to
-      * @return number of bytes used from the character array or -1 if the identifier could not be parsed
-      */
-    int parseIdentifier(char *paIdentifierStart, forte::core::TNameIdentifier &paIdentifier);
+#ifdef FORTE_SUPPORT_MONITORING
+      bool parseMonitoringData(char *paRequestPartLeft);
+      void generateMonitorResponse(CIEC_STRING &paResponse);
+#endif // FORTE_SUPPORT_MONITORING
 
-    /*! \brief Parse the name of the type
-      *
-      * @param paTypeName string containing the type name that will be parsed
-      * @param paIdentifier identifier vector where to write the parsed identifiers to
-      * @return number of bytes used from the character array or -1 if the identifier could not be parsed
-      */
-    int parseTypeName(const std::string_view paTypeName, forte::core::TNameIdentifier &paIdentifier);
+      /*! \brief Generate a short response string according to the previous executed command
+       *
+       * @param paResponse generated response, the given string is used to reduce memory load on the system
+       */
+      void generateShortResponse(CIEC_STRING &paResponse);
 
-  #ifdef FORTE_SUPPORT_MONITORING
-    bool parseMonitoringData(char *paRequestPartLeft);
-    void generateMonitorResponse(CIEC_STRING &paResponse);
-  #endif //FORTE_SUPPORT_MONITORING
+      /*! \brief Generate a response string according to the previous executed command
+       *
+       * @param paResponse generated response, the given string is used to reduce memory load on the system
+       */
+      void generateLongResponse(CIEC_STRING &paResponse);
 
-    /*! \brief Generate a short response string according to the previous executed command
-      *
-      * @param paResponse generated response, the given string is used to reduce memory load on the system
-      */
-    void generateShortResponse(CIEC_STRING &paResponse);
-
-    /*! \brief Generate a response string according to the previous executed command
-      *
-      * @param paResponse generated response, the given string is used to reduce memory load on the system
-      */
-    void generateLongResponse(CIEC_STRING &paResponse);
-
-    void appendIdentifierName(CIEC_STRING &paDest, forte::core::TNameIdentifier& paIdentifier);
-
+      void appendIdentifierName(CIEC_STRING &paDest, forte::core::TNameIdentifier &paIdentifier);
   };
 
 } // namespace forte::ita

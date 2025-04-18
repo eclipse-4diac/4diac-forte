@@ -19,7 +19,7 @@
 #include <lwip/sockets.h>
 #endif
 
-int CForteSpecificArchitecture::initialize(int , char** ){
+int CForteSpecificArchitecture::initialize(int, char **) {
 #ifdef POSIX_LWIP
   /* Initialize the lwIP stack. */
   if (auto result = _lwip_init(); result != 0) {

@@ -34,7 +34,6 @@ USE_STRING_ID(QO);
 USE_STRING_ID(STATUS);
 USE_STRING_ID(WSTRING);
 
-
 #include "PLCnextBusAdapter.h"
 #include "iec61131_functions.h"
 #include "forte_array_common.h"
@@ -59,20 +58,36 @@ const TForteInt16 FORTE_PLCnextAXLSESC::scmEOWithIndexes[] = {0, 3};
 const CStringDictionary::TStringId FORTE_PLCnextAXLSESC::scmEventOutputNames[] = {STRID(INITO), STRID(IND)};
 const CStringDictionary::TStringId FORTE_PLCnextAXLSESC::scmEventOutputTypeIds[] = {STRID(EInit), STRID(Event)};
 const SAdapterInstanceDef FORTE_PLCnextAXLSESC::scmAdapterInstances[] = {
-  {STRID(PLCnextBusAdapter), STRID(BusAdapterIn), false},
-  {STRID(PLCnextBusAdapter), STRID(BusAdapterOut), true}
-};
-const SFBInterfaceSpec FORTE_PLCnextAXLSESC::scmFBInterfaceSpec = {
-  1, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,
-  2, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes,
-  1, scmDataInputNames, scmDataInputTypeIds,
-  2, scmDataOutputNames, scmDataOutputTypeIds,
-  0, nullptr,
-  2, scmAdapterInstances
-};
+    {STRID(PLCnextBusAdapter), STRID(BusAdapterIn), false}, {STRID(PLCnextBusAdapter), STRID(BusAdapterOut), true}};
+const SFBInterfaceSpec FORTE_PLCnextAXLSESC::scmFBInterfaceSpec = {1,
+                                                                   scmEventInputNames,
+                                                                   scmEventInputTypeIds,
+                                                                   scmEIWith,
+                                                                   scmEIWithIndexes,
+                                                                   2,
+                                                                   scmEventOutputNames,
+                                                                   scmEventOutputTypeIds,
+                                                                   scmEOWith,
+                                                                   scmEOWithIndexes,
+                                                                   1,
+                                                                   scmDataInputNames,
+                                                                   scmDataInputTypeIds,
+                                                                   2,
+                                                                   scmDataOutputNames,
+                                                                   scmDataOutputTypeIds,
+                                                                   0,
+                                                                   nullptr,
+                                                                   2,
+                                                                   scmAdapterInstances};
 
-FORTE_PLCnextAXLSESC::FORTE_PLCnextAXLSESC(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
-    PLCnextSlaveHandler (PLCnextSlaveHandler::NoUsage, pa_poSrcRes, &scm_stFBInterfaceSpec, pa_nInstanceNameId, m_anFBConnData, m_anFBVarsData),
+FORTE_PLCnextAXLSESC::FORTE_PLCnextAXLSESC(const CStringDictionary::TStringId paInstanceNameId,
+                                           forte::core::CFBContainer &paContainer) :
+    PLCnextSlaveHandler(PLCnextSlaveHandler::NoUsage,
+                        pa_poSrcRes,
+                        &scm_stFBInterfaceSpec,
+                        pa_nInstanceNameId,
+                        m_anFBConnData,
+                        m_anFBVarsData),
     var_QI(0_BOOL),
     var_QO(0_BOOL),
     var_STATUS(u""_WSTRING),
@@ -82,12 +97,15 @@ FORTE_PLCnextAXLSESC::FORTE_PLCnextAXLSESC(const CStringDictionary::TStringId pa
     conn_IND(*this, 1),
     conn_QI(nullptr),
     conn_QO(*this, 0, var_QO),
-    conn_STATUS(*this, 1, var_STATUS) {
-};
+    conn_STATUS(*this, 1, var_STATUS) {};
 
 bool FORTE_PLCnextAXLSESC::initialize() {
-  if(!var_BusAdapterIn.initialize()) { return false; }
-  if(!var_BusAdapterOut.initialize()) { return false; }
+  if (!var_BusAdapterIn.initialize()) {
+    return false;
+  }
+  if (!var_BusAdapterOut.initialize()) {
+    return false;
+  }
   var_BusAdapterIn.setParentFB(this, 0);
   var_BusAdapterOut.setParentFB(this, 1);
   return CFunctionBlock::initialize();
@@ -100,18 +118,17 @@ void FORTE_PLCnextAXLSESC::setInitialValues() {
 }
 
 void FORTE_PLCnextAXLSESC::readInputData(const TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventINITID: {
       readData(0, var_QI, conn_QI);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 void FORTE_PLCnextAXLSESC::writeOutputData(const TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventINITOID: {
       writeData(0, var_QO, conn_QO);
       writeData(1, var_STATUS, conn_STATUS);
@@ -122,20 +139,19 @@ void FORTE_PLCnextAXLSESC::writeOutputData(const TEventID paEIID) {
       writeData(1, var_STATUS, conn_STATUS);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 CIEC_ANY *FORTE_PLCnextAXLSESC::getDI(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_QI;
   }
   return nullptr;
 }
 
 CIEC_ANY *FORTE_PLCnextAXLSESC::getDO(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_QO;
     case 1: return &var_STATUS;
   }
@@ -143,7 +159,7 @@ CIEC_ANY *FORTE_PLCnextAXLSESC::getDO(const size_t paIndex) {
 }
 
 CAdapter *FORTE_PLCnextAXLSESC::getAdapterUnchecked(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_BusAdapterIn;
     case 1: return &var_BusAdapterOut;
   }
@@ -151,7 +167,7 @@ CAdapter *FORTE_PLCnextAXLSESC::getAdapterUnchecked(const size_t paIndex) {
 }
 
 CEventConnection *FORTE_PLCnextAXLSESC::getEOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_INITO;
     case 1: return &conn_IND;
   }
@@ -159,14 +175,14 @@ CEventConnection *FORTE_PLCnextAXLSESC::getEOConUnchecked(const TPortId paIndex)
 }
 
 CDataConnection **FORTE_PLCnextAXLSESC::getDIConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_QI;
   }
   return nullptr;
 }
 
 CDataConnection *FORTE_PLCnextAXLSESC::getDOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_QO;
     case 1: return &conn_STATUS;
   }
@@ -174,11 +190,10 @@ CDataConnection *FORTE_PLCnextAXLSESC::getDOConUnchecked(const TPortId paIndex) 
 }
 
 void FORTE_PLCnextAXLSESC::initHandles() {
-
 }
 
-const char* FORTE_PLCnextAXLSESC::init(){
-    PLCnextDeviceController &controller = *static_cast<PLCnextDeviceController*>(&getController());
-    controller.registerSlaveHandler(this);
-    return 0;
+const char *FORTE_PLCnextAXLSESC::init() {
+  PLCnextDeviceController &controller = *static_cast<PLCnextDeviceController *>(&getController());
+  controller.registerSlaveHandler(this);
+  return 0;
 }

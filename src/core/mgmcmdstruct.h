@@ -26,8 +26,7 @@ namespace forte {
      */
     /*@{*/
 
-    typedef util::inplace_vector<CStringDictionary::TStringId,
-        FORTE_MGM_MAX_SUPPORTED_NAME_HIERARCHY> TNameIdentifier;
+    typedef util::inplace_vector<CStringDictionary::TStringId, FORTE_MGM_MAX_SUPPORTED_NAME_HIERARCHY> TNameIdentifier;
 
     /*!\brief All the data necessary for processing a management command.
      *
@@ -39,7 +38,7 @@ namespace forte {
      *    - mSecondParam = "E_RESTART"
      *    - mAdditionalParams = ""
      */
-    struct SManagementCMD{
+    struct SManagementCMD {
         /*!\brief An identification number for the requested command based on the definitons in the standard.
          *
          * See the constants in devadmin.h for the available commands
@@ -57,15 +56,15 @@ namespace forte {
 
         /*!\brief The first parameter of the command e.g. the FB name to create or the src of an connection.
          *
-         * The data is stored as an array TStringIds for the hierarchical FB name identifier (e.g., SubApp1.FB, CFB.FB, FB.Port)
-         * Each level is stored as one entry in the vector. Top hierarchy is the first entry.
+         * The data is stored as an array TStringIds for the hierarchical FB name identifier (e.g., SubApp1.FB, CFB.FB,
+         * FB.Port) Each level is stored as one entry in the vector. Top hierarchy is the first entry.
          */
         TNameIdentifier mFirstParam;
 
         /*!\brief The second parameter of the command e.g. the FB name to create or the src of an connection.
          *
-         * The data is stored as an array TStringIds for the hierarchical FB name identifier (e.g., SubApp1.FB, CFB.FB, FB.Port)
-         * Each level is stored as one entry in the vector. Top hierarchy is the first entry.
+         * The data is stored as an array TStringIds for the hierarchical FB name identifier (e.g., SubApp1.FB, CFB.FB,
+         * FB.Port) Each level is stored as one entry in the vector. Top hierarchy is the first entry.
          */
         TNameIdentifier mSecondParam;
 
@@ -80,7 +79,6 @@ namespace forte {
         /*\brief pointer to the response to generate the correct response */
         std::string mMonitorResponse;
 #endif
-
     };
 
   } // namespace core

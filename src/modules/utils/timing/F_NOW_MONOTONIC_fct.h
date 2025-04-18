@@ -26,7 +26,7 @@
 #include "forte_array_variable.h"
 
 class FORTE_utils__timing__F_NOW_MONOTONIC final : public CFunctionBlock {
-  DECLARE_FIRMWARE_FB(FORTE_utils__timing__F_NOW_MONOTONIC)
+    DECLARE_FIRMWARE_FB(FORTE_utils__timing__F_NOW_MONOTONIC)
 
   private:
     static const CStringDictionary::TStringId scmDataOutputNames[];
@@ -50,7 +50,8 @@ class FORTE_utils__timing__F_NOW_MONOTONIC final : public CFunctionBlock {
     void setInitialValues() override;
 
   public:
-    FORTE_utils__timing__F_NOW_MONOTONIC(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_utils__timing__F_NOW_MONOTONIC(CStringDictionary::TStringId paInstanceNameId,
+                                         forte::core::CFBContainer &paContainer);
 
     CIEC_TIME var_;
 
@@ -75,4 +76,3 @@ class FORTE_utils__timing__F_NOW_MONOTONIC final : public CFunctionBlock {
 };
 
 CIEC_TIME func_F_NOW_MONOTONIC();
-

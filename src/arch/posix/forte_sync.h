@@ -17,20 +17,19 @@
 
 namespace forte {
   namespace arch {
-    //forward declaration of CPThreadSemaphore so that we can use it in friend
+    // forward declaration of CPThreadSemaphore so that we can use it in friend
     class CPThreadSemaphore;
-  }
-}
-
+  } // namespace arch
+} // namespace forte
 
 /*! \ingroup posix_hal
  * \brief The sync object implementation for the posix thread interface.
  *
  * In the posix version a mutex is used for the sync object.
- * 
+ *
  */
- 
-class CPThreadSyncObject{
+
+class CPThreadSyncObject {
   public:
     CPThreadSyncObject();
     ~CPThreadSyncObject();
@@ -39,21 +38,20 @@ class CPThreadSyncObject{
      *
      * This function blocks until it will get the lock for the coming critical section.
      */
-    void lock(){
+    void lock() {
       pthread_mutex_lock(&mMutex);
-      //TODO handle return value
+      // TODO handle return value
     }
 
-    //!Free the resource coming after the lock command
-    void unlock(){
+    //! Free the resource coming after the lock command
+    void unlock() {
       pthread_mutex_unlock(&mMutex);
-      //TODO handle return value
+      // TODO handle return value
     }
-
 
   private:
     //! Accessor method to the mutex allowing platform specific code to use this sync object class.
-    pthread_mutex_t *getPosixMutex(){
+    pthread_mutex_t *getPosixMutex() {
       return &mMutex;
     }
 
@@ -69,6 +67,6 @@ class CPThreadSyncObject{
     friend class forte::arch::CPThreadSemaphore;
 };
 
-typedef CPThreadSyncObject CSyncObject; //allows that doxygen can generate better documenation
+typedef CPThreadSyncObject CSyncObject; // allows that doxygen can generate better documenation
 
 #endif /*FORTE_SYNC_H_*/

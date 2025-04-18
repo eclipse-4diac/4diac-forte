@@ -34,8 +34,8 @@ enum class EMGMCommandType : uint8_t {
   CreateGroup = 0x00, //!< Identifier for all create commands
 
   CreateDataType = 0x10, //!< Create a new data type definition in the FORTE.
-  CreateFBType = 0x20,   //!< Create a new FB type definition in the FORTE.
-  CreateAdapterType = 0x50,   //!< Create a new Adapter type definition in the FORTE.
+  CreateFBType = 0x20, //!< Create a new FB type definition in the FORTE.
+  CreateAdapterType = 0x50, //!< Create a new Adapter type definition in the FORTE.
 
   /*! \brief Create a new FB or resource instance.
    *
@@ -57,7 +57,7 @@ enum class EMGMCommandType : uint8_t {
    */
   CreateConnection = 0x40,
 
-  DeleteGroup = 0x01,   //!<Identifier for all delete commands
+  DeleteGroup = 0x01, //!< Identifier for all delete commands
   DeleteDataType = 0x11,
   DeleteFBType = 0x21,
 
@@ -95,7 +95,8 @@ enum class EMGMCommandType : uint8_t {
    *
    * When starting a FB, resource or the device the parameters of the SManagementCMD are defined as:
    *    - mDestination = "" for starting within the device or "resname" for starting within a resource
-   *    - mFirstParam = target to be started can be empty for starting the whole device or resource, or contain a name for the resource or FB to start.
+   *    - mFirstParam = target to be started can be empty for starting the whole device or resource, or contain a name
+   * for the resource or FB to start.
    *    - mSecondParam = not used
    *    - mAdditionalParams not used
    */
@@ -105,7 +106,8 @@ enum class EMGMCommandType : uint8_t {
    *
    * When stopping a FB, resource or the device the parameters of the SManagementCMD are defined as:
    *    - mDestination = "" for stopping within the device or "resname" for stopping within a resource
-   *    - mFirstParam = target to be stopped can be empty for starting the whole device or resource, or contain a name for the resource or FB to stop.
+   *    - mFirstParam = target to be stopped can be empty for starting the whole device or resource, or contain a name
+   * for the resource or FB to stop.
    *    - mSecondParam = not used
    *    - mAdditionalParams not used
    */
@@ -115,7 +117,8 @@ enum class EMGMCommandType : uint8_t {
    *
    * When reading a parameter value the parameters of the SManagementCMD are defined as:
    *    - mDestination = "" for creating within the device or "resname" for creating within a resource
-   *    - mFistParam = Source qualifier for reading an FB's variable ("fbname.var") variable identifier may be input, output, or internal var
+   *    - mFistParam = Source qualifier for reading an FB's variable ("fbname.var") variable identifier may be input,
+   * output, or internal var
    *    - mSecondParam = CStringDictionary::scmInvalidStringId
    *    - mAdditionalParams the read value is stored here
    */
@@ -125,7 +128,8 @@ enum class EMGMCommandType : uint8_t {
    *
    * When writing a parameter value the parameters of the SManagementCMD are defined as:
    *    - mDestination = "" for creating within the device or "resname" for creating within a resource
-   *    - mFistParam = Destination qualifier for writing on an FB's variable ("fbname.var") variable identifier may be input, output, or internal var
+   *    - mFistParam = Destination qualifier for writing on an FB's variable ("fbname.var") variable identifier may be
+   * input, output, or internal var
    *    - mSecondParam = CStringDictionary::scmInvalidStringId
    *    - mAdditionalParams = the string converted value to be set
    */
@@ -135,14 +139,15 @@ enum class EMGMCommandType : uint8_t {
    *
    * When killing a FB, resource or the device the parameters of the SManagementCMD are defined as:
    *    - mDestination = "" for killing within the device or "resname" for stopping within a resource
-   *    - mFistParam = target to be killed can be empty for starting the whole device or resource, or contain a name for the resource or FB to stop.
+   *    - mFistParam = target to be killed can be empty for starting the whole device or resource, or contain a name for
+   * the resource or FB to stop.
    *    - mSecondParam = not used
    *    - mAdditionalParams not used
    */
   Kill = 0x06,
 
 #ifdef FORTE_SUPPORT_QUERY_CMD
-  QueryGroup = 0x07,   //!< Identifier for all query commands
+  QueryGroup = 0x07, //!< Identifier for all query commands
 
   /*! \brief query FBs
    *
@@ -160,7 +165,8 @@ enum class EMGMCommandType : uint8_t {
    *    - mDestination = "" to query within the device or "resname" for fetching within a resource
    *    - mFirstParam = CStringDictionary::scmInvalidStringId
    *    - mSecondParam = CStringDictionary::scmInvalidStringId
-   *    - mAdditionalParams  the response value of the query - a list of event and data connections (comma separated list of end points to end points)
+   *    - mAdditionalParams  the response value of the query - a list of event and data connections (comma separated
+   * list of end points to end points)
    */
   QueryConnection = 0x27,
 
@@ -222,13 +228,12 @@ enum class EMGMCommandType : uint8_t {
    *
    * When reseting a FB, resource or the device the parameters of the SManagementCMD are defined as:
    *    - mDestination = "" for reseting within the device or "resname" for reseting within a resource
-   *    - mFistParam = target to be reset can be empty for reseting the whole device or resource, or contain a name for the resource or FB to reset.
+   *    - mFistParam = target to be reset can be empty for reseting the whole device or resource, or contain a name for
+   * the resource or FB to reset.
    *    - mSecondParam = not used
    *    - mAdditionalParams not used
    */
   Reset = 0x08,
-
-
 
 #ifdef FORTE_SUPPORT_MONITORING
   MonitoringGroup = 0x0A,
@@ -241,36 +246,34 @@ enum class EMGMCommandType : uint8_t {
   MonitoringResetEventCount = 0x8A,
 #endif // FORTE_SUPPORT_MONITORING
 
-
   /*! \brief invalid command: some of the data could not be parsed
-     */
+   */
   INVALID = 0xFF
 };
-
 
 /*!\brief Type for the response of MGM commands
  *
  * TODO fully define all responses as defined in IEC 61499 inc. numbers.
  */
 enum class EMGMResponse {
-    Ready,
-    BadParams,
-    LocalTermination,
-    SystemTermination,
-    NotReady,
-    UnsupportedCmd,
-    UnsupportedType,
-    NoSuchObject,
-    InvalidObject,
-    InvalidOperation,
-    InvalidState,
-    Overflow,
-    InvalidDst
+  Ready,
+  BadParams,
+  LocalTermination,
+  SystemTermination,
+  NotReady,
+  UnsupportedCmd,
+  UnsupportedType,
+  NoSuchObject,
+  InvalidObject,
+  InvalidOperation,
+  InvalidState,
+  Overflow,
+  InvalidDst
 };
 
 namespace forte::mgm_cmd {
 
-  const std::string& getResponseText(EMGMResponse paResp);
+  const std::string &getResponseText(EMGMResponse paResp);
 
 } // namespace forte::mgm_cmd
 

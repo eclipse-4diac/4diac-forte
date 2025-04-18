@@ -13,7 +13,7 @@
  *    Thomas Strasser, Ingomar Müller, Alois Zoitl,
  *    Ingo Hegny, Monika Wenger, Martin Melik Merkumians
  *      - initial implementation and rework communication infrastructure
- *    Martin Melik Merkumians - make TForteDFloat constructor explicit, 
+ *    Martin Melik Merkumians - make TForteDFloat constructor explicit,
  *      adds implicit cast constructor and operator=, removed built-in type operator=,
  *      added castable CIEC types operator=
  *    Martin Jobst - add equals function
@@ -35,8 +35,8 @@
 
 /*!\ingroup COREDTS CIEC_LREAL represents the lreal data type according to IEC 61131.
  */
-class CIEC_LREAL final : public CIEC_ANY_REAL{
-  DECLARE_FIRMWARE_DATATYPE(LREAL)
+class CIEC_LREAL final : public CIEC_ANY_REAL {
+    DECLARE_FIRMWARE_DATATYPE(LREAL)
 
   public:
     using TValueType = TForteDFloat;
@@ -49,43 +49,35 @@ class CIEC_LREAL final : public CIEC_ANY_REAL{
 
     CIEC_LREAL() = default;
 
-    CIEC_LREAL(const CIEC_LREAL& paValue) :
-        CIEC_ANY_REAL() {
+    CIEC_LREAL(const CIEC_LREAL &paValue) : CIEC_ANY_REAL() {
       setValueSimple(paValue);
     }
 
-    CIEC_LREAL(const CIEC_REAL& paValue) :
-        CIEC_ANY_REAL() {
+    CIEC_LREAL(const CIEC_REAL &paValue) : CIEC_ANY_REAL() {
       setTDFLOAT(static_cast<TForteFloat>(static_cast<const CIEC_REAL &>(paValue)));
     }
 
-    CIEC_LREAL(const CIEC_DINT& paValue) :
-        CIEC_ANY_REAL() {
+    CIEC_LREAL(const CIEC_DINT &paValue) : CIEC_ANY_REAL() {
       setValue(paValue);
     }
 
-    CIEC_LREAL(const CIEC_INT& paValue) :
-        CIEC_ANY_REAL() {
+    CIEC_LREAL(const CIEC_INT &paValue) : CIEC_ANY_REAL() {
       setValue(paValue);
     }
 
-    CIEC_LREAL(const CIEC_SINT& paValue) :
-        CIEC_ANY_REAL() {
+    CIEC_LREAL(const CIEC_SINT &paValue) : CIEC_ANY_REAL() {
       setValue(paValue);
     }
 
-    CIEC_LREAL(const CIEC_UDINT& paValue) :
-        CIEC_ANY_REAL() {
+    CIEC_LREAL(const CIEC_UDINT &paValue) : CIEC_ANY_REAL() {
       setValue(paValue);
     }
 
-    CIEC_LREAL(const CIEC_UINT& paValue) :
-        CIEC_ANY_REAL() {
+    CIEC_LREAL(const CIEC_UINT &paValue) : CIEC_ANY_REAL() {
       setValue(paValue);
     }
 
-    CIEC_LREAL(const CIEC_USINT& paValue) :
-        CIEC_ANY_REAL() {
+    CIEC_LREAL(const CIEC_USINT &paValue) : CIEC_ANY_REAL() {
       setValue(paValue);
     }
 
@@ -95,43 +87,43 @@ class CIEC_LREAL final : public CIEC_ANY_REAL{
 
     ~CIEC_LREAL() override = default;
 
-    CIEC_LREAL& operator =(const CIEC_LREAL &paValue){
+    CIEC_LREAL &operator=(const CIEC_LREAL &paValue) {
       // Simple value assignment - no self assignment check needed
       setValueSimple(paValue);
       return *this;
     }
 
-    CIEC_LREAL& operator =(const CIEC_REAL &paValue){
+    CIEC_LREAL &operator=(const CIEC_REAL &paValue) {
       setValue(paValue);
       return *this;
     }
 
-    CIEC_LREAL& operator =(const CIEC_DINT &paValue){
+    CIEC_LREAL &operator=(const CIEC_DINT &paValue) {
       setValue(paValue);
       return *this;
     }
 
-    CIEC_LREAL& operator =(const CIEC_INT &paValue){
+    CIEC_LREAL &operator=(const CIEC_INT &paValue) {
       setValue(paValue);
       return *this;
     }
 
-    CIEC_LREAL& operator =(const CIEC_SINT &paValue){
+    CIEC_LREAL &operator=(const CIEC_SINT &paValue) {
       setValue(paValue);
       return *this;
     }
 
-    CIEC_LREAL& operator =(const CIEC_UDINT &paValue){
+    CIEC_LREAL &operator=(const CIEC_UDINT &paValue) {
       setValue(paValue);
       return *this;
     }
 
-    CIEC_LREAL& operator =(const CIEC_UINT &paValue){
+    CIEC_LREAL &operator=(const CIEC_UINT &paValue) {
       setValue(paValue);
       return *this;
     }
 
-    CIEC_LREAL& operator =(const CIEC_USINT &paValue){
+    CIEC_LREAL &operator=(const CIEC_USINT &paValue) {
       setValue(paValue);
       return *this;
     }
@@ -159,7 +151,7 @@ class CIEC_LREAL final : public CIEC_ANY_REAL{
       return CIEC_ANY::e_LREAL;
     }
 
-    void setValue(const CIEC_ANY& paValue) override;
+    void setValue(const CIEC_ANY &paValue) override;
 
     /*! \brief Converts string value to data type value
      *
@@ -182,11 +174,11 @@ class CIEC_LREAL final : public CIEC_ANY_REAL{
      *   \return number of bytes used in the buffer without trailing 0x00
      *           -1 on error
      */
-    int toString(char* paValue, size_t paBufferSize) const override;
+    int toString(char *paValue, size_t paBufferSize) const override;
 
     [[nodiscard]] bool equals(const CIEC_ANY &paOther) const override {
-      if(paOther.getDataTypeID() == CIEC_ANY::e_LREAL) {
-        return getTDFLOAT() == static_cast<const CIEC_LREAL&>(paOther).getTDFLOAT();
+      if (paOther.getDataTypeID() == CIEC_ANY::e_LREAL) {
+        return getTDFLOAT() == static_cast<const CIEC_LREAL &>(paOther).getTDFLOAT();
       }
       return false;
     }
@@ -198,27 +190,27 @@ class CIEC_LREAL final : public CIEC_ANY_REAL{
     static void castLRealData(const CIEC_LREAL &paSrcValue, CIEC_ANY &paDestValue);
 };
 
-inline CIEC_LREAL operator ""_LREAL(unsigned long long int paValue) {
+inline CIEC_LREAL operator""_LREAL(unsigned long long int paValue) {
   return CIEC_LREAL(static_cast<CIEC_LREAL::TValueType>(paValue));
 }
 
-inline CIEC_LREAL operator ""_LREAL(long double paValue) {
+inline CIEC_LREAL operator""_LREAL(long double paValue) {
   return CIEC_LREAL(static_cast<CIEC_LREAL::TValueType>(paValue));
 }
 
 namespace std {
-  template <>
+  template<>
   struct numeric_limits<CIEC_LREAL> : public forte::templates::numeric_limits<CIEC_LREAL> {
-    static constexpr size_t bitLength = 64U;
+      static constexpr size_t bitLength = 64U;
   };
-}
+} // namespace std
 
 namespace forte {
-  template <>
+  template<>
   struct CDataTypeTrait<CIEC_LREAL> {
       static constexpr CIEC_ANY::EDataTypeID scmDataTypeId = CIEC_ANY::e_LREAL;
       static const CStringDictionary::TStringId scmDataTypeName;
   };
-}
+} // namespace forte
 
 #endif /*_FORTE_LREAL_H_*/

@@ -30,7 +30,6 @@ USE_STRING_ID(START);
 USE_STRING_ID(TIME);
 USE_STRING_ID(UINT);
 
-
 #include "forte_any_elementary_variant.h"
 #include "forte_bool.h"
 #include "forte_sint.h"
@@ -45,7 +44,9 @@ USE_STRING_ID(UINT);
 DEFINE_FIRMWARE_FB(FORTE_E_TABLE_CTRL, STRID(E_TABLE_CTRL))
 
 const CStringDictionary::TStringId FORTE_E_TABLE_CTRL::scmDataInputNames[] = {STRID(DT), STRID(N)};
-const CStringDictionary::TStringId FORTE_E_TABLE_CTRL::scmDataInputTypeIds[] = {STRID(ARRAY), static_cast<CStringDictionary::TStringId>(0), static_cast<CStringDictionary::TStringId>(3), STRID(TIME), STRID(UINT)};
+const CStringDictionary::TStringId FORTE_E_TABLE_CTRL::scmDataInputTypeIds[] = {
+    STRID(ARRAY), static_cast<CStringDictionary::TStringId>(0), static_cast<CStringDictionary::TStringId>(3),
+    STRID(TIME), STRID(UINT)};
 const CStringDictionary::TStringId FORTE_E_TABLE_CTRL::scmDataOutputNames[] = {STRID(DTO), STRID(CV)};
 const CStringDictionary::TStringId FORTE_E_TABLE_CTRL::scmDataOutputTypeIds[] = {STRID(TIME), STRID(UINT)};
 const TDataIOID FORTE_E_TABLE_CTRL::scmEIWith[] = {0, 1, scmWithListDelimiter};
@@ -54,16 +55,29 @@ const CStringDictionary::TStringId FORTE_E_TABLE_CTRL::scmEventInputNames[] = {S
 const TDataIOID FORTE_E_TABLE_CTRL::scmEOWith[] = {0, 1, scmWithListDelimiter};
 const TForteInt16 FORTE_E_TABLE_CTRL::scmEOWithIndexes[] = {0};
 const CStringDictionary::TStringId FORTE_E_TABLE_CTRL::scmEventOutputNames[] = {STRID(CLKO)};
-const SFBInterfaceSpec FORTE_E_TABLE_CTRL::scmFBInterfaceSpec = {
-  2, scmEventInputNames, nullptr, scmEIWith, scmEIWithIndexes,
-  1, scmEventOutputNames, nullptr, scmEOWith, scmEOWithIndexes,
-  2, scmDataInputNames, scmDataInputTypeIds,
-  2, scmDataOutputNames, scmDataOutputTypeIds,
-  0, nullptr,
-  0, nullptr
-};
+const SFBInterfaceSpec FORTE_E_TABLE_CTRL::scmFBInterfaceSpec = {2,
+                                                                 scmEventInputNames,
+                                                                 nullptr,
+                                                                 scmEIWith,
+                                                                 scmEIWithIndexes,
+                                                                 1,
+                                                                 scmEventOutputNames,
+                                                                 nullptr,
+                                                                 scmEOWith,
+                                                                 scmEOWithIndexes,
+                                                                 2,
+                                                                 scmDataInputNames,
+                                                                 scmDataInputTypeIds,
+                                                                 2,
+                                                                 scmDataOutputNames,
+                                                                 scmDataOutputTypeIds,
+                                                                 0,
+                                                                 nullptr,
+                                                                 0,
+                                                                 nullptr};
 
-FORTE_E_TABLE_CTRL::FORTE_E_TABLE_CTRL(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_E_TABLE_CTRL::FORTE_E_TABLE_CTRL(const CStringDictionary::TStringId paInstanceNameId,
+                                       forte::core::CFBContainer &paContainer) :
     CBasicFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, nullptr),
     var_DT(CIEC_ARRAY_FIXED<CIEC_TIME, 0, 3>{}),
     var_N(0_UINT),
@@ -85,34 +99,43 @@ void FORTE_E_TABLE_CTRL::setInitialValues() {
 
 void FORTE_E_TABLE_CTRL::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   do {
-    switch(mECCState) {
+    switch (mECCState) {
       case scmStateSTART:
-        if(scmEventSTARTID == paEIID) enterStateINIT(paECET);
+        if (scmEventSTARTID == paEIID)
+          enterStateINIT(paECET);
+        else if ((scmEventCLKID == paEIID) && (func_LT(var_CV, func_MIN(3_UINT, func_SUB<CIEC_UINT>(var_N, 1_UINT)))))
+          enterStateNEXT_STEP(paECET);
         else
-        if((scmEventCLKID == paEIID) && (func_LT(var_CV, func_MIN(3_UINT, func_SUB<CIEC_UINT>(var_N, 1_UINT))))) enterStateNEXT_STEP(paECET);
-        else return; //no transition cleared
+          return; // no transition cleared
         break;
       case scmStateINIT:
-        if(func_EQ(var_N, 0_UINT)) enterStateSTART(paECET);
+        if (func_EQ(var_N, 0_UINT))
+          enterStateSTART(paECET);
+        else if (func_GT(var_N, 0_UINT))
+          enterStateINIT1(paECET);
         else
-        if(func_GT(var_N, 0_UINT)) enterStateINIT1(paECET);
-        else return; //no transition cleared
+          return; // no transition cleared
         break;
       case scmStateINIT1:
-        if(1) enterStateSTART(paECET);
-        else return; //no transition cleared
+        if (1)
+          enterStateSTART(paECET);
+        else
+          return; // no transition cleared
         break;
       case scmStateNEXT_STEP:
-        if(1) enterStateSTART(paECET);
-        else return; //no transition cleared
+        if (1)
+          enterStateSTART(paECET);
+        else
+          return; // no transition cleared
         break;
       default:
-        DEVLOG_ERROR("The state is not in the valid range! The state value is: %d. The max value can be: 4.", mECCState.operator TForteUInt16 ());
+        DEVLOG_ERROR("The state is not in the valid range! The state value is: %d. The max value can be: 4.",
+                     mECCState.operator TForteUInt16());
         mECCState = 0; // 0 is always the initial state
         return;
     }
     paEIID = cgInvalidEventID; // we have to clear the event after the first check in order to ensure correct behavior
-  } while(true);
+  } while (true);
 }
 
 void FORTE_E_TABLE_CTRL::enterStateSTART(CEventChainExecutionThread *const) {
@@ -136,31 +159,29 @@ void FORTE_E_TABLE_CTRL::enterStateNEXT_STEP(CEventChainExecutionThread *const p
 }
 
 void FORTE_E_TABLE_CTRL::readInputData(const TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventSTARTID: {
       readData(0, var_DT, conn_DT);
       readData(1, var_N, conn_N);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 void FORTE_E_TABLE_CTRL::writeOutputData(const TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventCLKOID: {
       writeData(0, var_DTO, conn_DTO);
       writeData(1, var_CV, conn_CV);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 CIEC_ANY *FORTE_E_TABLE_CTRL::getDI(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_DT;
     case 1: return &var_N;
   }
@@ -168,7 +189,7 @@ CIEC_ANY *FORTE_E_TABLE_CTRL::getDI(const size_t paIndex) {
 }
 
 CIEC_ANY *FORTE_E_TABLE_CTRL::getDO(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_DTO;
     case 1: return &var_CV;
   }
@@ -176,14 +197,14 @@ CIEC_ANY *FORTE_E_TABLE_CTRL::getDO(const size_t paIndex) {
 }
 
 CEventConnection *FORTE_E_TABLE_CTRL::getEOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_CLKO;
   }
   return nullptr;
 }
 
 CDataConnection **FORTE_E_TABLE_CTRL::getDIConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_DT;
     case 1: return &conn_N;
   }
@@ -191,7 +212,7 @@ CDataConnection **FORTE_E_TABLE_CTRL::getDIConUnchecked(const TPortId paIndex) {
 }
 
 CDataConnection *FORTE_E_TABLE_CTRL::getDOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_DTO;
     case 1: return &conn_CV;
   }
@@ -204,16 +225,16 @@ CIEC_ANY *FORTE_E_TABLE_CTRL::getVarInternal(size_t) {
 
 void FORTE_E_TABLE_CTRL::alg_INIT(void) {
 
-  #line 2 "E_TABLE_CTRL.fbt"
+#line 2 "E_TABLE_CTRL.fbt"
   var_CV = 0_UINT;
-  #line 3 "E_TABLE_CTRL.fbt"
+#line 3 "E_TABLE_CTRL.fbt"
   var_DTO = var_DT[0_SINT];
 }
 
 void FORTE_E_TABLE_CTRL::alg_NEXT_STEP(void) {
 
-  #line 7 "E_TABLE_CTRL.fbt"
+#line 7 "E_TABLE_CTRL.fbt"
   var_CV = func_ADD<CIEC_UINT>(var_CV, 1_UINT);
-  #line 8 "E_TABLE_CTRL.fbt"
+#line 8 "E_TABLE_CTRL.fbt"
   var_DTO = var_DT[var_CV];
 }

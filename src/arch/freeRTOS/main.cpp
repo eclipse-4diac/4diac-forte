@@ -19,17 +19,16 @@ namespace {
   const unsigned forteTaskPriority = tskIDLE_PRIORITY + 1;
   const unsigned int desiredFortePort = 61499;
   const configSTACK_DEPTH_TYPE stackDepth = 2000;
-}
+} // namespace
 
-
-void vForteTask(void* ) {
+void vForteTask(void *) {
   TForteInstance forteInstance;
 
-  if(auto result = CForteArchitecture::initialize(0, NULL); result != 0){
+  if (auto result = CForteArchitecture::initialize(0, NULL); result != 0) {
     vTaskDelete(nullptr);
   }
 
-  if(auto result = forteStartInstance(desiredFortePort, &forteInstance); result != FORTE_OK){
+  if (auto result = forteStartInstance(desiredFortePort, &forteInstance); result != FORTE_OK) {
     vTaskDelete(nullptr);
   }
 
@@ -40,7 +39,7 @@ void vForteTask(void* ) {
 
 int main() {
 
-  if(auto result = forteGlobalInitialize(0, nullptr); result != FORTE_OK){
+  if (auto result = forteGlobalInitialize(0, nullptr); result != FORTE_OK) {
     return result;
   }
 
@@ -50,4 +49,3 @@ int main() {
 
   // Will not get here unless there is insufficient RAM.
 }
-

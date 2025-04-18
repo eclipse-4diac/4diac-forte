@@ -16,7 +16,7 @@
  *    Martin Melik-Merkumians - fixes DT_TO_TOD
  *    Martin Melik-Merkumians - removes invalid casts, update implementation
  *     to use new cast function
- *    Zhao Xin -fixes string conversion 
+ *    Zhao Xin -fixes string conversion
  *    Monika Wenger - func_ANY_AS_STRING
  *******************************************************************************/
 #ifndef SRC_CORE_DATATYPES_CONVERT_CONVERT_FUNCTIONS_H_
@@ -52,11 +52,11 @@
 #include "forte_array.h"
 #include <math.h>
 
-//some compilers don't have this definition or is behind __STDC_CONSTANT_MACROS.
-//since this definition is only used here, we define it instead of enabling __STDC_CONSTANT_MACROS globally,
-//because it's not easy to detect which compilers will or not have this definition
+// some compilers don't have this definition or is behind __STDC_CONSTANT_MACROS.
+// since this definition is only used here, we define it instead of enabling __STDC_CONSTANT_MACROS globally,
+// because it's not easy to detect which compilers will or not have this definition
 #ifndef UINT64_C
-# define UINT64_C(x)   (x##ULL)
+#define UINT64_C(x) (x##ULL)
 #endif
 
 /*! \file
@@ -64,21 +64,21 @@
  */
 
 inline void stringConverter(CIEC_WSTRING &paString, const CIEC_ANY &paVal) {
-    size_t bufferSize = paVal.getToStringBufferSize();
+  size_t bufferSize = paVal.getToStringBufferSize();
 
-    paString.reserve(static_cast<TForteUInt16>(bufferSize));
-    char *pacBuffer = paString.getValue();
-    int nWrittenBytes = paVal.toString(pacBuffer, bufferSize);
-    nWrittenBytes = nWrittenBytes > -1 ? nWrittenBytes : 0;
-    paString.assign(pacBuffer, static_cast<TForteUInt16>(nWrittenBytes));
+  paString.reserve(static_cast<TForteUInt16>(bufferSize));
+  char *pacBuffer = paString.getValue();
+  int nWrittenBytes = paVal.toString(pacBuffer, bufferSize);
+  nWrittenBytes = nWrittenBytes > -1 ? nWrittenBytes : 0;
+  paString.assign(pacBuffer, static_cast<TForteUInt16>(nWrittenBytes));
 }
 
 inline void stringConverter(CIEC_STRING &paString, const CIEC_ANY &paVal) {
-    size_t bufferSize = paVal.getToStringBufferSize();
-    char *const buffer = new char[bufferSize]();
-    paVal.toString(buffer, bufferSize);
-    paString.assign(buffer, static_cast<TForteUInt16>(strlen(buffer))); // max length 65534, cast to silence to compiler
-    delete[](buffer);
+  size_t bufferSize = paVal.getToStringBufferSize();
+  char *const buffer = new char[bufferSize]();
+  paVal.toString(buffer, bufferSize);
+  paString.assign(buffer, static_cast<TForteUInt16>(strlen(buffer))); // max length 65534, cast to silence to compiler
+  delete[] (buffer);
 }
 
 inline const CIEC_STRING func_ANY_AS_STRING(const CIEC_ANY &paVal) {

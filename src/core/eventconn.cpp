@@ -16,38 +16,39 @@
 #include "funcbloc.h"
 
 CEventConnection::CEventConnection(CFunctionBlock &paSrcFB, const TPortId paSrcPortId) :
-    CConnection(paSrcFB, paSrcPortId){
+    CConnection(paSrcFB, paSrcPortId) {
 }
 
 CEventConnection::~CEventConnection() = default;
 
-EMGMResponse CEventConnection::connect(CFunctionBlock &paDstFB, CStringDictionary::TStringId paDstPortNameId){
+EMGMResponse CEventConnection::connect(CFunctionBlock &paDstFB, CStringDictionary::TStringId paDstPortNameId) {
   EMGMResponse retval = EMGMResponse::NoSuchObject;
   const TPortId nEIID = paDstFB.getEIID(paDstPortNameId);
 
-  if(cgInvalidEventID != nEIID){
+  if (cgInvalidEventID != nEIID) {
     retval = addDestination(CConnectionPoint(paDstFB, nEIID));
     paDstFB.addInputEventConnection(nEIID);
   }
   return retval;
 }
 
-EMGMResponse CEventConnection::connectToCFBInterface(CFunctionBlock &paDstFB, CStringDictionary::TStringId paDstPortNameId){
+EMGMResponse CEventConnection::connectToCFBInterface(CFunctionBlock &paDstFB,
+                                                     CStringDictionary::TStringId paDstPortNameId) {
   EMGMResponse retval = EMGMResponse::NoSuchObject;
   TPortId nEOID = paDstFB.getEOID(paDstPortNameId);
 
-  if(cgInvalidEventID != nEOID){
+  if (cgInvalidEventID != nEOID) {
     nEOID |= cgInternal2InterfaceMarker;
     retval = addDestination(CConnectionPoint(paDstFB, nEOID));
   }
   return retval;
 }
 
-EMGMResponse CEventConnection::disconnect(CFunctionBlock &paDstFB, CStringDictionary::TStringId paDstPortNameId){
+EMGMResponse CEventConnection::disconnect(CFunctionBlock &paDstFB, CStringDictionary::TStringId paDstPortNameId) {
   EMGMResponse retval = EMGMResponse::NoSuchObject;
   const TEventID nEIID = paDstFB.getEIID(paDstPortNameId);
 
-  if(cgInvalidEventID != nEIID){
+  if (cgInvalidEventID != nEIID) {
     retval = removeDestination(CConnectionPoint(paDstFB, nEIID));
     paDstFB.removeInputEventConnection(nEIID);
   }
@@ -55,8 +56,8 @@ EMGMResponse CEventConnection::disconnect(CFunctionBlock &paDstFB, CStringDictio
 }
 
 void CEventConnection::triggerEvent(CEventChainExecutionThread *paExecEnv) const {
-  if(paExecEnv != nullptr){
-    for(const auto& runner : mDestinationIds){
+  if (paExecEnv != nullptr) {
+    for (const auto &runner : mDestinationIds) {
       paExecEnv->addEventEntry(runner);
     }
   }

@@ -18,7 +18,7 @@
 #include "forte_arrowheadcloud.h"
 
 class CIEC_PreferredProvider : public CIEC_STRUCT {
-  DECLARE_FIRMWARE_DATATYPE(PreferredProvider)
+    DECLARE_FIRMWARE_DATATYPE(PreferredProvider)
 
   public:
     CIEC_PreferredProvider();
@@ -26,11 +26,11 @@ class CIEC_PreferredProvider : public CIEC_STRUCT {
     ~CIEC_PreferredProvider() override = default;
 
     CIEC_ArrowheadSystem &providerSystem() {
-      return *static_cast<CIEC_ArrowheadSystem*>(&getMembers()[0]);
+      return *static_cast<CIEC_ArrowheadSystem *>(&getMembers()[0]);
     }
 
     CIEC_ArrowheadCloud &providerCloud() {
-      return *static_cast<CIEC_ArrowheadCloud*>(&getMembers()[1]);
+      return *static_cast<CIEC_ArrowheadCloud *>(&getMembers()[1]);
     }
 
   private:

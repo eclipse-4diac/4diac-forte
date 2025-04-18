@@ -28,8 +28,8 @@
  */
 
 class CIEC_LTIME final : public CIEC_ANY_DURATION {
-  DECLARE_FIRMWARE_DATATYPE(LTIME)
- 
+    DECLARE_FIRMWARE_DATATYPE(LTIME)
+
   private:
     static constexpr char csmMinLTimeValue[] = "LT#-106751d23h47m16s854ms775us808ns";
     static constexpr char csmZeroNanoSecondLTimeValue[] = "LT#0ns";
@@ -39,7 +39,7 @@ class CIEC_LTIME final : public CIEC_ANY_DURATION {
     constexpr static size_t scmBitLength = 64U;
     [[deprecated("Please use the corresponding numeric_limits template")]]
     static constexpr TValueType scmMinVal = std::numeric_limits<TValueType>::min();
-    [[deprecated("Please use the corresponding numeric_limits template")]]  
+    [[deprecated("Please use the corresponding numeric_limits template")]]
     static constexpr TValueType scmMaxVal = std::numeric_limits<TValueType>::max();
 
     CIEC_LTIME() = default;
@@ -52,13 +52,13 @@ class CIEC_LTIME final : public CIEC_ANY_DURATION {
       setValue(paValue);
     }
 
-    explicit CIEC_LTIME(const TValueType paValue){
+    explicit CIEC_LTIME(const TValueType paValue) {
       setLargestInt(paValue);
     }
 
     ~CIEC_LTIME() override = default;
 
-    CIEC_LTIME& operator =(const CIEC_LTIME &paValue){
+    CIEC_LTIME &operator=(const CIEC_LTIME &paValue) {
       // Simple value assignment - no self assignment check needed
       setValueSimple(paValue);
       return *this;
@@ -92,7 +92,7 @@ class CIEC_LTIME final : public CIEC_ANY_DURATION {
      *        -1 on on error
      */
     int fromString(const char *paValue) override;
-    
+
     /*! \brief Converts data type value to string
      *
      *   This command implements a conversion function from C++ data type
@@ -103,7 +103,7 @@ class CIEC_LTIME final : public CIEC_ANY_DURATION {
      *   \return number of bytes used in the buffer without trailing 0x00
      *           -1 on error
      */
-    int toString(char* paValue, size_t paBufferSize) const override;
+    int toString(char *paValue, size_t paBufferSize) const override;
 
     /*! \brief calculates buffer size needed for toString conversion
      */
@@ -125,24 +125,23 @@ class CIEC_LTIME final : public CIEC_ANY_DURATION {
     void setFromNanoSeconds(TValueType paValue);
 };
 
-inline CIEC_LTIME operator ""_LTIME(unsigned long long int paValue) {
+inline CIEC_LTIME operator""_LTIME(unsigned long long int paValue) {
   return CIEC_LTIME(static_cast<CIEC_LTIME::TValueType>(paValue));
 }
 
 namespace std {
-  template <>
+  template<>
   struct numeric_limits<CIEC_LTIME> : public forte::templates::numeric_limits<CIEC_LTIME> {
-    static constexpr size_t bitLength = 64U;
+      static constexpr size_t bitLength = 64U;
   };
-}
+} // namespace std
 
 namespace forte {
-  template <>
+  template<>
   struct CDataTypeTrait<CIEC_LTIME> {
       static constexpr CIEC_ANY::EDataTypeID scmDataTypeId = CIEC_ANY::e_LTIME;
       static const CStringDictionary::TStringId scmDataTypeName;
   };
-}
-
+} // namespace forte
 
 #endif /*_FORTE_LTIME_H_*/

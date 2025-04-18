@@ -17,22 +17,21 @@
 #include "stdfblib/ita/OPCUA_MGR.h"
 #include "deviceFactory.h"
 
-MultiMGR::MultiMGR(MultiDevice& paDevice, OPCUA_MGR& paOpcuaMgr) : 
-  mDevice(paDevice), mOpcuaMgr(paOpcuaMgr) {
+MultiMGR::MultiMGR(MultiDevice &paDevice, OPCUA_MGR &paOpcuaMgr) : mDevice(paDevice), mOpcuaMgr(paOpcuaMgr) {
 }
 
-bool MultiMGR::initialize(){
+bool MultiMGR::initialize() {
   addRestartDeviceMethod();
   addSetDefaultDeviceMethod();
-  
+
   return true;
 }
 
-std::string& MultiMGR::getArgumentString(std::string paString) {
+std::string &MultiMGR::getArgumentString(std::string paString) {
   return mArgumentsInformation.emplace_back(std::move(paString));
 }
 
-void MultiMGR::addRestartDeviceMethod(){
+void MultiMGR::addRestartDeviceMethod() {
   OPCUA_MGR::MethodInformation newMethod;
 
   newMethod.mMethodName = "Restart Device";
@@ -40,11 +39,11 @@ void MultiMGR::addRestartDeviceMethod(){
   newMethod.mDescription = "Reset the device";
   newMethod.mCallback = &MultiMGR::onRestartDevice;
   newMethod.mNodeContext = this;
-  
+
   mOpcuaMgr.addExtraMgmMethod(newMethod);
 }
 
-void MultiMGR::addSetDefaultDeviceMethod(){
+void MultiMGR::addSetDefaultDeviceMethod() {
   OPCUA_MGR::MethodInformation newMethod;
 
   newMethod.mMethodName = "Set Default Device";
@@ -61,46 +60,53 @@ void MultiMGR::addSetDefaultDeviceMethod(){
   auto startPositionToRemove = listOfDevices.find(MultiDevice::scmMultiDeviceName);
   listOfDevices.erase(startPositionToRemove, MultiDevice::scmMultiDeviceName.length());
   startPositionToRemove = listOfDevices.find(";;"); // in case MultiMGR was in the middle of the list
-  if(startPositionToRemove != std::string::npos){
+  if (startPositionToRemove != std::string::npos) {
     listOfDevices.erase(startPositionToRemove, 1);
   }
 
-  OPCUA_MGR::initArgument(
-    newMethod.mInArguments[0], 
-    UA_TYPES_STRING, 
-    getArgumentString("Device Name").data(), 
-    getArgumentString("Device name to use. Posible values: " + listOfDevices).data());
-  
+  OPCUA_MGR::initArgument(newMethod.mInArguments[0], UA_TYPES_STRING, getArgumentString("Device Name").data(),
+                          getArgumentString("Device name to use. Posible values: " + listOfDevices).data());
+
   mOpcuaMgr.addExtraMgmMethod(newMethod);
 }
 
-UA_StatusCode MultiMGR::onRestartDevice(UA_Server*,
-  const UA_NodeId*, void*,
-  const UA_NodeId*, void* methodContext,
-  const UA_NodeId*, void*,
-  size_t, const UA_Variant*,
-  size_t, UA_Variant* ) {
+UA_StatusCode MultiMGR::onRestartDevice(UA_Server *,
+                                        const UA_NodeId *,
+                                        void *,
+                                        const UA_NodeId *,
+                                        void *methodContext,
+                                        const UA_NodeId *,
+                                        void *,
+                                        size_t,
+                                        const UA_Variant *,
+                                        size_t,
+                                        UA_Variant *) {
 
-  auto multiMgr = static_cast<MultiMGR*>(methodContext);
+  auto multiMgr = static_cast<MultiMGR *>(methodContext);
   // restart the controlled device asynchronously
   multiMgr->mDevice.requestResetControlledDevice();
 
   return UA_STATUSCODE_GOOD;
 }
 
-UA_StatusCode MultiMGR::onSetDefaultDevice(UA_Server*,
-  const UA_NodeId*, void*,
-  const UA_NodeId*, void*,
-  const UA_NodeId*, void*,
-  size_t, const UA_Variant* input,
-  size_t, UA_Variant*) {
+UA_StatusCode MultiMGR::onSetDefaultDevice(UA_Server *,
+                                           const UA_NodeId *,
+                                           void *,
+                                           const UA_NodeId *,
+                                           void *,
+                                           const UA_NodeId *,
+                                           void *,
+                                           size_t,
+                                           const UA_Variant *input,
+                                           size_t,
+                                           UA_Variant *) {
 
-  auto uaStringInput = static_cast<UA_String*>(input[0].data);
-  const auto newDefaultDevice = std::string((const char*)uaStringInput->data, uaStringInput->length);
-  if(newDefaultDevice == MultiDevice::scmMultiDeviceName){
+  auto uaStringInput = static_cast<UA_String *>(input[0].data);
+  const auto newDefaultDevice = std::string((const char *) uaStringInput->data, uaStringInput->length);
+  if (newDefaultDevice == MultiDevice::scmMultiDeviceName) {
     return UA_STATUSCODE_BADNOTSUPPORTED;
   }
-  if(!DeviceFactory::setDeviceToCreate(newDefaultDevice)){
+  if (!DeviceFactory::setDeviceToCreate(newDefaultDevice)) {
     return UA_STATUSCODE_BADINVALIDARGUMENT;
   }
   return UA_STATUSCODE_GOOD;

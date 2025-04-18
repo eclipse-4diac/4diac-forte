@@ -19,9 +19,12 @@
 
 class CStructMemberActionInfo : public CActionInfo {
   public:
-
-    explicit CStructMemberActionInfo(COPC_UA_ObjectStruct_Helper &paStructHelper, COPC_UA_Layer &paLayer, UA_ActionType paAction, const std::string &paEndpoint):
-        CActionInfo(paLayer, paAction, paEndpoint), mStructHelper(paStructHelper){
+    explicit CStructMemberActionInfo(COPC_UA_ObjectStruct_Helper &paStructHelper,
+                                     COPC_UA_Layer &paLayer,
+                                     UA_ActionType paAction,
+                                     const std::string &paEndpoint) :
+        CActionInfo(paLayer, paAction, paEndpoint),
+        mStructHelper(paStructHelper) {
     }
 
     const CIEC_ANY *const *getDataToSend() override {
@@ -30,7 +33,7 @@ class CStructMemberActionInfo : public CActionInfo {
     }
 
   private:
-    CIEC_ANY const* mMemberArr[1];
+    CIEC_ANY const *mMemberArr[1];
 
     COPC_UA_ObjectStruct_Helper &mStructHelper;
 };

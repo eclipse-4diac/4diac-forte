@@ -19,47 +19,47 @@
 
 DEFINE_HANDLER(CROSManager);
 
-CROSManager::CROSManager(CDeviceExecution& paDeviceExecution) : CExternalEventHandler(paDeviceExecution),
-    CThread(/* long stacksize , 3500*/){
+CROSManager::CROSManager(CDeviceExecution &paDeviceExecution) :
+    CExternalEventHandler(paDeviceExecution),
+    CThread(/* long stacksize , 3500*/) {
   start();
 }
 
-CROSManager::~CROSManager(){
+CROSManager::~CROSManager() {
   end();
 }
 
-void CROSManager::enableHandler(){
-
+void CROSManager::enableHandler() {
 }
 
-void CROSManager::disableHandler(){
+void CROSManager::disableHandler() {
   ros::shutdown();
 }
 
-void CROSManager::setPriority(int){
-//FIXME adjust thread priority correctly
+void CROSManager::setPriority(int) {
+  // FIXME adjust thread priority correctly
 }
 
-int CROSManager::getPriority() const{
+int CROSManager::getPriority() const {
   return 0;
 }
 
-void CROSManager::startChain(CEventSourceFB *paECStartF){
-  if(0 != paECStartF){
+void CROSManager::startChain(CEventSourceFB *paECStartF) {
+  if (0 != paECStartF) {
     startNewEventChain(paECStartF);
   }
 }
 
-void CROSManager::run(){
-  while(isAlive() && ros::ok()){
+void CROSManager::run() {
+  while (isAlive() && ros::ok()) {
     ros::spinOnce();
   }
 }
 
-std::string CROSManager::ciecStringToStdString(const CIEC_STRING &pa_DataInput){
+std::string CROSManager::ciecStringToStdString(const CIEC_STRING &pa_DataInput) {
   return std::string(pa_DataInput.getValue());
 }
 
-CIEC_STRING CROSManager::stdStringToCiecString(const std::string &pa_inputString){
+CIEC_STRING CROSManager::stdStringToCiecString(const std::string &pa_inputString) {
   return CIEC_STRING(pa_inputString.c_str());
 }

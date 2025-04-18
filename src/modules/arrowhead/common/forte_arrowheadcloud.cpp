@@ -24,15 +24,14 @@ USE_STRING_ID(port);
 USE_STRING_ID(secure);
 USE_STRING_ID(WSTRING);
 
-
 DEFINE_FIRMWARE_DATATYPE(ArrowheadCloud, STRID(ArrowheadCloud));
 
 CIEC_ArrowheadCloud::CIEC_ArrowheadCloud() :
     CIEC_STRUCT(STRID(ArrowheadCloud), 7, scmElementTypes, scmElementNames, e_APPLICATION + e_CONSTRUCTED + 1) {
 }
 
-const CStringDictionary::TStringId CIEC_ArrowheadCloud::scmElementTypes[] = { STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(DINT),
-  STRID(WSTRING), STRID(WSTRING), STRID(BOOL) };
-const CStringDictionary::TStringId CIEC_ArrowheadCloud::scmElementNames[] =
-  { STRID(operator), STRID(cloudName), STRID(address), STRID(port),
-  STRID(gatekeeperServiceURI), STRID(authenticationInfo), STRID(secure) };
+const CStringDictionary::TStringId CIEC_ArrowheadCloud::scmElementTypes[] = {
+    STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(DINT), STRID(WSTRING), STRID(WSTRING), STRID(BOOL)};
+const CStringDictionary::TStringId CIEC_ArrowheadCloud::scmElementNames[] = {
+    STRID(operator),           STRID(cloudName), STRID(address), STRID(port), STRID(gatekeeperServiceURI),
+    STRID(authenticationInfo), STRID(secure)};

@@ -25,27 +25,29 @@ namespace forte {
 
       class IOConfigFBMultiMaster;
 
-      typedef CSinglyLinkedList<IOConfigFBMultiMaster*> TMasterList;
+      typedef CSinglyLinkedList<IOConfigFBMultiMaster *> TMasterList;
 
       class IOConfigFBMultiMaster : public IOConfigFBController {
         public:
-          IOConfigFBMultiMaster(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec& paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId);
+          IOConfigFBMultiMaster(forte::core::CFBContainer &paContainer,
+                                const SFBInterfaceSpec &paInterfaceSpec,
+                                const CStringDictionary::TStringId paInstanceNameId);
 
-          static IOConfigFBMultiMaster* getMasterById(TForteUInt16 paId);
+          static IOConfigFBMultiMaster *getMasterById(TForteUInt16 paId);
 
           using IOConfigFBController::initHandle;
 
         protected:
-          IOConfigFBMultiAdapter& BusAdapterOut() {
-            return (*static_cast<IOConfigFBMultiAdapter*>(mAdapters[0]));
+          IOConfigFBMultiAdapter &BusAdapterOut() {
+            return (*static_cast<IOConfigFBMultiAdapter *>(mAdapters[0]));
           }
           static const int scmBusAdapterAdpNum = 0;
 
-          void onStartup(CEventChainExecutionThread * const paECET) override;
+          void onStartup(CEventChainExecutionThread *const paECET) override;
 
-          void onStop(CEventChainExecutionThread * const paECET) override;
+          void onStop(CEventChainExecutionThread *const paECET) override;
 
-          void executeEvent(TEventID paEIID, CEventChainExecutionThread * const paECET) override;
+          void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
         private:
           static TMasterList mInstances;
@@ -54,11 +56,11 @@ namespace forte {
 
           TForteUInt16 mId;
 
-          static const char * const scmFailedToInitSlaves;
+          static const char *const scmFailedToInitSlaves;
       };
 
-    } //namespace IO
-  } //namepsace core
-} //namespace forte
+    } // namespace io
+  } // namespace core
+} // namespace forte
 
 #endif /* SRC_CORE_IO_CONFIGFB_MASTER_MULTI_H_ */

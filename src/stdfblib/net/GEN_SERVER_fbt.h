@@ -24,27 +24,27 @@
  */
 
 class GEN_SERVER : public forte::com_infra::CCommFB {
-  DECLARE_GENERIC_FIRMWARE_FB(GEN_SERVER)
+    DECLARE_GENERIC_FIRMWARE_FB(GEN_SERVER)
   public:
     GEN_SERVER(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     ~GEN_SERVER() override = default;
 
-    template<typename ...Args>
+    template<typename... Args>
     void evt_INIT(Args &&...paArgs) {
       writeArguments(std::forward<Args>(paArgs)...); // write all arguments to get type information
       receiveInputEvent(scmEventINITID, nullptr);
       readOutputArguments(std::forward<Args>(paArgs)...);
     }
 
-    template<typename ...Args>
+    template<typename... Args>
     void evt_RSP(Args &&...paArgs) {
       writeInputArguments(std::forward<Args>(paArgs)...);
       receiveInputEvent(scmSendNotificationEventID, nullptr);
       readOutputArguments(std::forward<Args>(paArgs)...);
     }
 
-    template<typename ...Args>
+    template<typename... Args>
     void operator()(Args &&...paArgs) {
       evt_INIT(std::forward<Args>(paArgs)...);
     }

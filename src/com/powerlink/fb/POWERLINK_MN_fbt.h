@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2012 - 2024 AIT
+ * Copyright (c) 2012 - 2024 AIT
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -24,9 +24,8 @@
 #include "forte_array_fixed.h"
 #include "forte_array_variable.h"
 
-
 class FORTE_POWERLINK_MN final : public CFunctionBlock {
-  DECLARE_FIRMWARE_FB(FORTE_POWERLINK_MN)
+    DECLARE_FIRMWARE_FB(FORTE_POWERLINK_MN)
 
   private:
     static const CStringDictionary::TStringId scmDataInputNames[];
@@ -79,7 +78,12 @@ class FORTE_POWERLINK_MN final : public CFunctionBlock {
     CDataConnection **getDIConUnchecked(TPortId) override;
     CDataConnection *getDOConUnchecked(TPortId) override;
 
-    void evt_INIT(const CIEC_BOOL &paQI, const CIEC_STRING &paCDC_CFG, const CIEC_STRING &paAPP_CFG, const CIEC_STRING &paDEV_NAME, CIEC_BOOL &paQO, CIEC_STRING &paSTATUS) {
+    void evt_INIT(const CIEC_BOOL &paQI,
+                  const CIEC_STRING &paCDC_CFG,
+                  const CIEC_STRING &paAPP_CFG,
+                  const CIEC_STRING &paDEV_NAME,
+                  CIEC_BOOL &paQO,
+                  CIEC_STRING &paSTATUS) {
       var_QI = paQI;
       var_CDC_CFG = paCDC_CFG;
       var_APP_CFG = paAPP_CFG;
@@ -89,9 +93,12 @@ class FORTE_POWERLINK_MN final : public CFunctionBlock {
       paSTATUS = var_STATUS;
     }
 
-    void operator()(const CIEC_BOOL &paQI, const CIEC_STRING &paCDC_CFG, const CIEC_STRING &paAPP_CFG, const CIEC_STRING &paDEV_NAME, CIEC_BOOL &paQO, CIEC_STRING &paSTATUS) {
+    void operator()(const CIEC_BOOL &paQI,
+                    const CIEC_STRING &paCDC_CFG,
+                    const CIEC_STRING &paAPP_CFG,
+                    const CIEC_STRING &paDEV_NAME,
+                    CIEC_BOOL &paQO,
+                    CIEC_STRING &paSTATUS) {
       evt_INIT(paQI, paCDC_CFG, paAPP_CFG, paDEV_NAME, paQO, paSTATUS);
     }
 };
-
-

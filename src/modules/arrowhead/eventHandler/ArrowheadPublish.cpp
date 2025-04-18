@@ -22,12 +22,12 @@ USE_STRING_ID(publishEvent);
 USE_STRING_ID(PublishEvent);
 USE_STRING_ID(WSTRING);
 
-
 DEFINE_FIRMWARE_FB(FORTE_ArrowheadPublish, STRID(ArrowheadPublish))
 
 const CStringDictionary::TStringId FORTE_ArrowheadPublish::scmDataInputNames[] = {STRID(publishEvent), STRID(endpoint)};
 
-const CStringDictionary::TStringId FORTE_ArrowheadPublish::scmDataInputTypeIds[] = {STRID(PublishEvent), STRID(WSTRING)};
+const CStringDictionary::TStringId FORTE_ArrowheadPublish::scmDataInputTypeIds[] = {STRID(PublishEvent),
+                                                                                    STRID(WSTRING)};
 
 const TForteInt16 FORTE_ArrowheadPublish::scmEIWithIndexes[] = {0};
 const TDataIOID FORTE_ArrowheadPublish::scmEIWith[] = {0, 1, scmWithListDelimiter};
@@ -39,33 +39,42 @@ const CStringDictionary::TStringId FORTE_ArrowheadPublish::scmEventOutputNames[]
 const CStringDictionary::TStringId FORTE_ArrowheadPublish::scmEventOutputTypeIds[] = {STRID(Event)};
 
 const SAdapterInstanceDef FORTE_ArrowheadPublish::scmAdapterInstances[] = {
-{STRID(ArrowheadPublishAdp), STRID(ArrowheadPublishAdp), true }};
+    {STRID(ArrowheadPublishAdp), STRID(ArrowheadPublishAdp), true}};
 
-const SFBInterfaceSpec FORTE_ArrowheadPublish::scmFBInterfaceSpec = {
-  1,  scmEventInputNames, scmEventInputTypeIds,  scmEIWith,  scmEIWithIndexes,
-  1,  scmEventOutputNames, scmEventOutputTypeIds,  0, 0,  2,  scmDataInputNames, scmDataInputTypeIds,
-  0,  0, 0,
-  1,scmAdapterInstances};
-
+const SFBInterfaceSpec FORTE_ArrowheadPublish::scmFBInterfaceSpec = {1,
+                                                                     scmEventInputNames,
+                                                                     scmEventInputTypeIds,
+                                                                     scmEIWith,
+                                                                     scmEIWithIndexes,
+                                                                     1,
+                                                                     scmEventOutputNames,
+                                                                     scmEventOutputTypeIds,
+                                                                     0,
+                                                                     0,
+                                                                     2,
+                                                                     scmDataInputNames,
+                                                                     scmDataInputTypeIds,
+                                                                     0,
+                                                                     0,
+                                                                     0,
+                                                                     1,
+                                                                     scmAdapterInstances};
 
 const SCFB_FBConnectionData FORTE_ArrowheadPublish::scmEventConnections[] = {
-  {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(publish)), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(ArrowheadPublishAdp), STRID(publish)), CCompositeFB::scmAdapterMarker |0},
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(ArrowheadPublishAdp), STRID(published)), CCompositeFB::scmAdapterMarker |0, GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(published)), -1},
+    {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(publish)), -1,
+     GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(ArrowheadPublishAdp), STRID(publish)), CCompositeFB::scmAdapterMarker | 0},
+    {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(ArrowheadPublishAdp), STRID(published)),
+     CCompositeFB::scmAdapterMarker | 0, GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(published)), -1},
 };
 
 const SCFB_FBConnectionData FORTE_ArrowheadPublish::scmDataConnections[] = {
-  {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(publishEvent)), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(ArrowheadPublishAdp), STRID(publishEvent)), CCompositeFB::scmAdapterMarker |0},
-  {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(endpoint)), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(ArrowheadPublishAdp), STRID(endpoint)), CCompositeFB::scmAdapterMarker |0},
+    {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(publishEvent)), -1,
+     GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(ArrowheadPublishAdp), STRID(publishEvent)),
+     CCompositeFB::scmAdapterMarker | 0},
+    {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(endpoint)), -1,
+     GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(ArrowheadPublishAdp), STRID(endpoint)),
+     CCompositeFB::scmAdapterMarker | 0},
 };
 
 const SCFB_FBNData FORTE_ArrowheadPublish::scmFBNData = {
-  0, 0,
-  2, scmEventConnections,
-  0, 0,
-  2, scmDataConnections,
-  0, 0,
-  0, nullptr,
-  0, 0
-};
-
-
+    0, 0, 2, scmEventConnections, 0, 0, 2, scmDataConnections, 0, 0, 0, nullptr, 0, 0};

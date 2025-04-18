@@ -14,54 +14,56 @@
 
 #include "timerha.h"
 
-/*! \ingroup pc_hal 
+/*! \ingroup pc_hal
  *\ingroup EXTEVHAND
- *\brief the timer handler for the pc architecture. 
-*/
-class CExternTimerHandler : public CTimerHandler{
+ *\brief the timer handler for the pc architecture.
+ */
+class CExternTimerHandler : public CTimerHandler {
   public:
     static void externNextTick();
-    static TForteUInt32 getExternTicksPerSecond(){ return csmTicksPerSecond; };
-    explicit CExternTimerHandler(CDeviceExecution& paDeviceExecution);
-      
+    static TForteUInt32 getExternTicksPerSecond() {
+      return csmTicksPerSecond;
+    };
+    explicit CExternTimerHandler(CDeviceExecution &paDeviceExecution);
+
     ~CExternTimerHandler() override;
 
     /*!\brief Pointer to a general timer used for code outside FBs, like devlog, TIME() and so on
      */
     static CExternTimerHandler *smFORTEExtTimer;
-    
-  
-  /*!\brief Enables this event source
-   * 
-   */
+
+    /*!\brief Enables this event source
+     *
+     */
     void enableHandler() override;
-  /*!\brief Disable this event source
-   */  
+    /*!\brief Disable this event source
+     */
     void disableHandler() override;
-  /*!\brief Sets the priority of the event source  
-   * 
-   * \param paPriority new priority of the event source
-   */
+    /*!\brief Sets the priority of the event source
+     *
+     * \param paPriority new priority of the event source
+     */
     void setPriority(int paPriority) override;
-  /*!\brief Get the current priority of the event source
-   * 
-   * \return current priority
-   */  
+    /*!\brief Get the current priority of the event source
+     *
+     * \return current priority
+     */
     int getPriority() const override;
-    
-  /*! \brief Get the time base of the runtime
-   * 
-   * \return internal runtime ticks per millisecond
-   */ 
-    virtual TForteUInt32 getTicksPerSecond(){ return csmTicksPerSecond; };
+
+    /*! \brief Get the time base of the runtime
+     *
+     * \return internal runtime ticks per millisecond
+     */
+    virtual TForteUInt32 getTicksPerSecond() {
+      return csmTicksPerSecond;
+    };
 
   private:
-  /*!\brief default time base of the used timer. in useconds.
-   */
+    /*!\brief default time base of the used timer. in useconds.
+     */
     static const TForteInt32 csmTicksPerSecond;
-  /*!\brief callback function for the system timer
-   */
-    
+    /*!\brief callback function for the system timer
+     */
 };
 
 #endif /*PCTIMEHA_H_*/

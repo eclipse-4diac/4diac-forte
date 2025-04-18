@@ -20,22 +20,24 @@
 #include "forte_wstring.h"
 
 using TIecAnyStringVariantType = std::variant<
-// ANY_ELEMENTARY
-//  ANY_CHARS
-//   ANY_STRING
-        CIEC_STRING,
-        CIEC_WSTRING
-// end
->;
+    // ANY_ELEMENTARY
+    //  ANY_CHARS
+    //   ANY_STRING
+    CIEC_STRING,
+    CIEC_WSTRING
+    // end
+    >;
 
 class CIEC_ANY_STRING_VARIANT : public CIEC_ANY_STRING, public TIecAnyStringVariantType {
-DECLARE_FIRMWARE_DATATYPE(ANY_STRING_VARIANT)
-public:
+    DECLARE_FIRMWARE_DATATYPE(ANY_STRING_VARIANT)
+  public:
     using TIecAnyStringVariantType::variant;
     using TIecAnyStringVariantType::operator=;
-    template<class> static inline constexpr bool always_false_v = false;
+    template<class>
+    static inline constexpr bool always_false_v = false;
 
-    CIEC_ANY_STRING_VARIANT(const CIEC_ANY_STRING_VARIANT &paVal) : CIEC_ANY_STRING(), variant(paVal) {}
+    CIEC_ANY_STRING_VARIANT(const CIEC_ANY_STRING_VARIANT &paVal) : CIEC_ANY_STRING(), variant(paVal) {
+    }
 
     CIEC_ANY_STRING_VARIANT(const CIEC_ANY_STRING &paVal) {
       setValue(paVal.unwrap());
@@ -61,7 +63,7 @@ public:
 
     int fromString(const char *paValue) override;
 
-    int toString(char* paValue, size_t paBufferSize) const override;
+    int toString(char *paValue, size_t paBufferSize) const override;
 
     size_t getToStringBufferSize() const override;
 
@@ -76,4 +78,3 @@ static_assert(std::is_constructible_v<CIEC_ANY_STRING_VARIANT, const CIEC_ANY_ST
 static_assert(std::is_copy_assignable_v<CIEC_ANY_STRING_VARIANT>);
 static_assert(std::is_assignable_v<CIEC_ANY_STRING_VARIANT, const CIEC_ANY_STRING &>);
 static_assert(std::is_destructible_v<CIEC_ANY_STRING_VARIANT>);
-

@@ -19,16 +19,18 @@
 
 class EmbrickAnalog10SlaveHandle : public EmbrickSlaveHandle {
   public:
-    EmbrickAnalog10SlaveHandle(forte::core::io::IODeviceController *paController, forte::core::io::IOMapper::Direction paDirection, uint8_t paOffset,
-        EmbrickSlaveHandler *paSlave);
+    EmbrickAnalog10SlaveHandle(forte::core::io::IODeviceController *paController,
+                               forte::core::io::IOMapper::Direction paDirection,
+                               uint8_t paOffset,
+                               EmbrickSlaveHandler *paSlave);
 
     virtual void set(const CIEC_ANY &);
     void get(CIEC_ANY &);
 
-    bool equal(unsigned char* paOldBuffer);
+    bool equal(unsigned char *paOldBuffer);
 
   protected:
-    const CIEC_DWORD getValue(const unsigned char* paBuffer);
+    const CIEC_DWORD getValue(const unsigned char *paBuffer);
 };
 
 #endif /* SRC_MODULES_EMBRICK_SLAVE_HANDLES_ANALOG10_H_ */

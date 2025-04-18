@@ -22,50 +22,48 @@
 
 #include <array>
 
-class GEN_ARRAY2ARRAY: public CGenFunctionBlock<CFunctionBlock> {
-  DECLARE_GENERIC_FIRMWARE_FB(GEN_ARRAY2ARRAY)
+class GEN_ARRAY2ARRAY : public CGenFunctionBlock<CFunctionBlock> {
+    DECLARE_GENERIC_FIRMWARE_FB(GEN_ARRAY2ARRAY)
 
-private:
-  static const CStringDictionary::TStringId scmDataInputNames[];
-  std::array<CStringDictionary::TStringId, 3> mDataInputTypeIds;
+  private:
+    static const CStringDictionary::TStringId scmDataInputNames[];
+    std::array<CStringDictionary::TStringId, 3> mDataInputTypeIds;
 
-  CIEC_ARRAY &IN_Array() {
-    return *static_cast<CIEC_ARRAY*>(getDI(0));
-  };
+    CIEC_ARRAY &IN_Array() {
+      return *static_cast<CIEC_ARRAY *>(getDI(0));
+    };
 
-  static const CStringDictionary::TStringId scmDataOutputNames[];
-  std::array<CStringDictionary::TStringId, 3> mDataOutputTypeIds;
+    static const CStringDictionary::TStringId scmDataOutputNames[];
+    std::array<CStringDictionary::TStringId, 3> mDataOutputTypeIds;
 
-  CIEC_ARRAY &OUT_Array() {
-    return *static_cast<CIEC_ARRAY*>(getDO(0));
-  };
+    CIEC_ARRAY &OUT_Array() {
+      return *static_cast<CIEC_ARRAY *>(getDO(0));
+    };
 
-  static const TEventID scmEventREQID = 0;
-  static const CStringDictionary::TStringId scmEventInputNames[];
-  static const CStringDictionary::TStringId scmEventInputTypeIds[];
+    static const TEventID scmEventREQID = 0;
+    static const CStringDictionary::TStringId scmEventInputNames[];
+    static const CStringDictionary::TStringId scmEventInputTypeIds[];
 
-  static const TEventID scmEventCNFID = 0;
-  static const CStringDictionary::TStringId scmEventOutputNames[];
-  static const CStringDictionary::TStringId scmEventOutputTypeIds[];
+    static const TEventID scmEventCNFID = 0;
+    static const CStringDictionary::TStringId scmEventOutputNames[];
+    static const CStringDictionary::TStringId scmEventOutputTypeIds[];
 
-  static const SFBInterfaceSpec scmFBInterfaceSpec;
+    static const SFBInterfaceSpec scmFBInterfaceSpec;
 
-  //self-defined members
-  CStringDictionary::TStringId m_ValueTypeID{CStringDictionary::scmInvalidStringId};
-  unsigned int mArrayLength{0};
+    // self-defined members
+    CStringDictionary::TStringId m_ValueTypeID{CStringDictionary::scmInvalidStringId};
+    unsigned int mArrayLength{0};
 
-  void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
+    void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
-  void readInputData(TEventID paEI) override;
-  void writeOutputData(TEventID paEO) override;
+    void readInputData(TEventID paEI) override;
+    void writeOutputData(TEventID paEO) override;
 
-  bool createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) override;
+    bool createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) override;
 
-public:
-  GEN_ARRAY2ARRAY(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
-  ~GEN_ARRAY2ARRAY() override = default;
-
+  public:
+    GEN_ARRAY2ARRAY(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    ~GEN_ARRAY2ARRAY() override = default;
 };
 
 #endif //_GEN_ARRAY2ARRAY_H_
-

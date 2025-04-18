@@ -25,7 +25,6 @@ USE_STRING_ID(R);
 USE_STRING_ID(RO);
 USE_STRING_ID(UINT);
 
-
 #include "criticalregion.h"
 #include "resource.h"
 #include "forte_uint.h"
@@ -50,14 +49,26 @@ const TDataIOID FORTE_E_CTU::scmEOWith[] = {0, 1, scmWithListDelimiter, 0, 1, sc
 const TForteInt16 FORTE_E_CTU::scmEOWithIndexes[] = {0, 3};
 const CStringDictionary::TStringId FORTE_E_CTU::scmEventOutputNames[] = {STRID(CUO), STRID(RO)};
 const CStringDictionary::TStringId FORTE_E_CTU::scmEventOutputTypeIds[] = {STRID(Event), STRID(Event)};
-const SFBInterfaceSpec FORTE_E_CTU::scmFBInterfaceSpec = {
-  2, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,
-  2, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes,
-  1, scmDataInputNames, scmDataInputTypeIds,
-  2, scmDataOutputNames, scmDataOutputTypeIds,
-  0, nullptr,
-  0, nullptr
-};
+const SFBInterfaceSpec FORTE_E_CTU::scmFBInterfaceSpec = {2,
+                                                          scmEventInputNames,
+                                                          scmEventInputTypeIds,
+                                                          scmEIWith,
+                                                          scmEIWithIndexes,
+                                                          2,
+                                                          scmEventOutputNames,
+                                                          scmEventOutputTypeIds,
+                                                          scmEOWith,
+                                                          scmEOWithIndexes,
+                                                          1,
+                                                          scmDataInputNames,
+                                                          scmDataInputTypeIds,
+                                                          2,
+                                                          scmDataOutputNames,
+                                                          scmDataOutputTypeIds,
+                                                          0,
+                                                          nullptr,
+                                                          0,
+                                                          nullptr};
 
 FORTE_E_CTU::FORTE_E_CTU(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CBasicFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, nullptr),
@@ -76,28 +87,35 @@ void FORTE_E_CTU::setInitialValues() {
 
 void FORTE_E_CTU::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   do {
-    switch(mECCState) {
+    switch (mECCState) {
       case scmStateSTART:
-        if((scmEventCUID == paEIID) && (func_LT(var_CV, 65535_UINT))) enterStateCU(paECET);
+        if ((scmEventCUID == paEIID) && (func_LT(var_CV, 65535_UINT)))
+          enterStateCU(paECET);
+        else if (scmEventRID == paEIID)
+          enterStateR(paECET);
         else
-        if(scmEventRID == paEIID) enterStateR(paECET);
-        else return; //no transition cleared
+          return; // no transition cleared
         break;
       case scmStateCU:
-        if(1) enterStateSTART(paECET);
-        else return; //no transition cleared
+        if (1)
+          enterStateSTART(paECET);
+        else
+          return; // no transition cleared
         break;
       case scmStateR:
-        if(1) enterStateSTART(paECET);
-        else return; //no transition cleared
+        if (1)
+          enterStateSTART(paECET);
+        else
+          return; // no transition cleared
         break;
       default:
-        DEVLOG_ERROR("The state is not in the valid range! The state value is: %d. The max value can be: 3.", mECCState.operator TForteUInt16 ());
+        DEVLOG_ERROR("The state is not in the valid range! The state value is: %d. The max value can be: 3.",
+                     mECCState.operator TForteUInt16());
         mECCState = 0; // 0 is always the initial state
         return;
     }
     paEIID = cgInvalidEventID; // we have to clear the event after the first check in order to ensure correct behavior
-  } while(true);
+  } while (true);
 }
 
 void FORTE_E_CTU::enterStateSTART(CEventChainExecutionThread *const) {
@@ -117,18 +135,17 @@ void FORTE_E_CTU::enterStateR(CEventChainExecutionThread *const paECET) {
 }
 
 void FORTE_E_CTU::readInputData(const TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventCUID: {
       readData(0, var_PV, conn_PV);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 void FORTE_E_CTU::writeOutputData(const TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventCUOID: {
       writeData(0, var_Q, conn_Q);
       writeData(1, var_CV, conn_CV);
@@ -139,20 +156,19 @@ void FORTE_E_CTU::writeOutputData(const TEventID paEIID) {
       writeData(1, var_CV, conn_CV);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 CIEC_ANY *FORTE_E_CTU::getDI(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_PV;
   }
   return nullptr;
 }
 
 CIEC_ANY *FORTE_E_CTU::getDO(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_Q;
     case 1: return &var_CV;
   }
@@ -160,7 +176,7 @@ CIEC_ANY *FORTE_E_CTU::getDO(const size_t paIndex) {
 }
 
 CEventConnection *FORTE_E_CTU::getEOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_CUO;
     case 1: return &conn_RO;
   }
@@ -168,14 +184,14 @@ CEventConnection *FORTE_E_CTU::getEOConUnchecked(const TPortId paIndex) {
 }
 
 CDataConnection **FORTE_E_CTU::getDIConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_PV;
   }
   return nullptr;
 }
 
 CDataConnection *FORTE_E_CTU::getDOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_Q;
     case 1: return &conn_CV;
   }
@@ -188,17 +204,16 @@ CIEC_ANY *FORTE_E_CTU::getVarInternal(size_t) {
 
 void FORTE_E_CTU::alg_R(void) {
 
-  #line 2 "E_CTU.fbt"
+#line 2 "E_CTU.fbt"
   var_CV = 0_UINT;
-  #line 3 "E_CTU.fbt"
+#line 3 "E_CTU.fbt"
   var_Q = false_BOOL;
 }
 
 void FORTE_E_CTU::alg_CU(void) {
 
-  #line 7 "E_CTU.fbt"
+#line 7 "E_CTU.fbt"
   var_CV = func_ADD<CIEC_UINT>(var_CV, 1_UINT);
-  #line 8 "E_CTU.fbt"
+#line 8 "E_CTU.fbt"
   var_Q = func_GE(var_CV, var_PV);
 }
-

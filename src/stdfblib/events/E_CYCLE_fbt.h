@@ -19,11 +19,11 @@
 
 /*! \brief Implementation of the E_CYCLE FB.
  */
-class FORTE_E_CYCLE : public CTimedFB{
+class FORTE_E_CYCLE : public CTimedFB {
     DECLARE_FIRMWARE_FB(FORTE_E_CYCLE)
   public:
     FORTE_E_CYCLE(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
-        CTimedFB( paInstanceNameId, paContainer){
+        CTimedFB(paInstanceNameId, paContainer) {
     }
 
     ~FORTE_E_CYCLE() override = default;

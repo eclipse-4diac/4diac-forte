@@ -13,7 +13,7 @@
 #ifndef SRC_ARCH_BE_M1_FORTE_SEM_H_
 #define SRC_ARCH_BE_M1_FORTE_SEM_H_
 
-//just pull_in the vxworks semaphore
+// just pull_in the vxworks semaphore
 #include "../vxworks/forte_sem.h"
 
 #endif /* SRC_ARCH_BE_M1_FORTE_SEM_H_ */

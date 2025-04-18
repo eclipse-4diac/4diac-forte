@@ -16,11 +16,10 @@
 
 USE_STRING_ID(UDINT);
 
-
 DEFINE_FIRMWARE_DATATYPE(UDINT, STRID(UDINT))
 
-template CIEC_UDINT &CIEC_UDINT::operator=<>(const CIEC_USINT &paValue);
+template CIEC_UDINT &CIEC_UDINT::operator= <>(const CIEC_USINT &paValue);
 
-template CIEC_UDINT &CIEC_UDINT::operator=<>(const CIEC_UINT &paValue);
+template CIEC_UDINT &CIEC_UDINT::operator= <>(const CIEC_UINT &paValue);
 
 const CStringDictionary::TStringId forte::CDataTypeTrait<CIEC_UDINT>::scmDataTypeName = STRID(UDINT);

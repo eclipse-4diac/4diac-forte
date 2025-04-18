@@ -20,23 +20,23 @@
 using namespace Arp;
 using namespace Arp::System::Acf;
 
-namespace ForteLibrary{
+namespace ForteLibrary {
 
-class ForteLibrary : public LibraryBase, public Singleton<ForteLibrary> {
-  public:
-    typedef Singleton<ForteLibrary> TSingletonBase;
+  class ForteLibrary : public LibraryBase, public Singleton<ForteLibrary> {
+    public:
+      typedef Singleton<ForteLibrary> TSingletonBase;
 
-    explicit ForteLibrary(AppDomain& appDomain);
-    virtual ~ForteLibrary() = default;
+      explicit ForteLibrary(AppDomain &appDomain);
+      virtual ~ForteLibrary() = default;
 
-    static void Main(AppDomain& appDomain);
-    static ILibrary* GetInstance();
+      static void Main(AppDomain &appDomain);
+      static ILibrary *GetInstance();
 
-    ForteLibrary(const ForteLibrary& arg) = delete;
-    ForteLibrary& operator= (const ForteLibrary& arg) = delete;
-};
+      ForteLibrary(const ForteLibrary &arg) = delete;
+      ForteLibrary &operator=(const ForteLibrary &arg) = delete;
+  };
 
-extern "C" ARP_CXX_SYMBOL_EXPORT void DynamicLibrary_Main(AppDomain& appDomain);
-extern "C" ARP_CXX_SYMBOL_EXPORT ILibrary* DynamicLibrary_GetInstance(void);
+  extern "C" ARP_CXX_SYMBOL_EXPORT void DynamicLibrary_Main(AppDomain &appDomain);
+  extern "C" ARP_CXX_SYMBOL_EXPORT ILibrary *DynamicLibrary_GetInstance(void);
 
 } // end of namespace ForteLibrary

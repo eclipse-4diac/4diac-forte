@@ -20,8 +20,8 @@
 #include <forte_string.h>
 #include <string>
 
-class CROSManager : public CExternalEventHandler, private CThread{
-  DECLARE_HANDLER(CROSManager)
+class CROSManager : public CExternalEventHandler, private CThread {
+    DECLARE_HANDLER(CROSManager)
 
   public:
     void enableHandler() override;
@@ -35,7 +35,6 @@ class CROSManager : public CExternalEventHandler, private CThread{
 
   protected:
     void run() override;
-
 };
 
 #endif /* CROSMANAGER_H_ */

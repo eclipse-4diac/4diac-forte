@@ -20,9 +20,11 @@
 namespace forte {
   namespace ads {
 
-    class CAdsProcessInterface : public CProcessInterfaceBase{
+    class CAdsProcessInterface : public CProcessInterfaceBase {
       public:
-        CAdsProcessInterface(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec& paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId);
+        CAdsProcessInterface(forte::core::CFBContainer &paContainer,
+                             const SFBInterfaceSpec &paInterfaceSpec,
+                             const CStringDictionary::TStringId paInstanceNameId);
         ~CAdsProcessInterface() override;
 
       protected:
@@ -44,6 +46,6 @@ namespace forte {
         std::string mAdsVariableName;
         uint32_t mAdsHandle;
     };
-  }
-}
+  } // namespace ads
+} // namespace forte
 #endif /* SRC_MODULES_ADS_CADSPROCESSINTERFACE_H_ */

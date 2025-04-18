@@ -23,7 +23,7 @@
 //   BYTE_TO_*  functions
 //********************************************************************************************
 
-inline const CIEC_LWORD func_BYTE_TO_LWORD(const CIEC_BYTE &paVal){
+inline const CIEC_LWORD func_BYTE_TO_LWORD(const CIEC_BYTE &paVal) {
   return CIEC_ANY::cast<CIEC_LWORD>(paVal);
 }
 
@@ -39,7 +39,7 @@ inline const CIEC_BOOL func_BYTE_TO_BOOL(const CIEC_BYTE &paVal) {
   return CIEC_ANY::cast<CIEC_BOOL>(paVal);
 }
 
-inline const CIEC_LINT func_BYTE_TO_LINT(const CIEC_BYTE &paVal){
+inline const CIEC_LINT func_BYTE_TO_LINT(const CIEC_BYTE &paVal) {
   return CIEC_ANY::cast<CIEC_LINT>(paVal);
 }
 
@@ -55,7 +55,7 @@ inline const CIEC_SINT func_BYTE_TO_SINT(const CIEC_BYTE &paVal) {
   return CIEC_ANY::cast<CIEC_SINT>(paVal);
 }
 
-inline const CIEC_ULINT func_BYTE_TO_ULINT(const CIEC_BYTE &paVal){
+inline const CIEC_ULINT func_BYTE_TO_ULINT(const CIEC_BYTE &paVal) {
   return CIEC_ANY::cast<CIEC_ULINT>(paVal);
 }
 
@@ -82,13 +82,11 @@ inline const CIEC_STRING func_BYTE_AS_STRING(const CIEC_BYTE &paVal) {
 }
 
 #ifdef FORTE_USE_WSTRING_DATATYPE
-inline const CIEC_WSTRING func_BYTE_AS_WSTRING(const CIEC_BYTE &paVal){
+inline const CIEC_WSTRING func_BYTE_AS_WSTRING(const CIEC_BYTE &paVal) {
   CIEC_WSTRING string;
   stringConverter(string, paVal);
   return string;
 }
 #endif
-
-
 
 #endif /* SRC_CORE_DATATYPES_CONVERT_BYTETOCONVERTFUNCTIONS_H_ */

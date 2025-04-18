@@ -23,12 +23,12 @@
 #include "../threadbase.h"
 #include "forte_sync.h"
 
-//Allow to set a special stack size for forte threads
+// Allow to set a special stack size for forte threads
 #ifndef configMINIMAL_STACK_SIZE_FORTE
-# define configMINIMAL_STACK_SIZE_FORTE configMINIMAL_STACK_SIZE
+#define configMINIMAL_STACK_SIZE_FORTE configMINIMAL_STACK_SIZE
 #endif
 
-#define CThread     CFreeRTOSThread  //allows that doxygen can generate better documenation
+#define CThread CFreeRTOSThread // allows that doxygen can generate better documenation
 class CFreeRTOSThread;
 
 typedef CFreeRTOSThread *TFreeRTOSThreadPtr;
@@ -67,7 +67,6 @@ class CFreeRTOSThread : public forte::arch::CThreadBase<TaskHandle_t> {
     static void sleepThread(unsigned int paMilliSeconds);
 
   protected:
-
     void setPriority(int paPriority) {
       DEVLOG_DEBUG(">>>>Thread: Set Priority: %d\n", paPriority);
       vTaskPrioritySet(getThreadHandle(), paPriority);
@@ -89,7 +88,6 @@ class CFreeRTOSThread : public forte::arch::CThreadBase<TaskHandle_t> {
     virtual TThreadHandleType createThread(long paStackSize);
 
     static const int scmForteTaskPriority;
-
 };
 
 #endif /* SRC_ARCH_FREERTOS_THREAD_H_ */

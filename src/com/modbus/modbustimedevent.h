@@ -15,13 +15,13 @@
 #include "timerha.h"
 #include <modbus.h>
 
-class CModbusTimedEvent{
+class CModbusTimedEvent {
   public:
     explicit CModbusTimedEvent(TForteUInt32 paUpdateInterval); // UpdateInterval = 0 => single shot event
     virtual ~CModbusTimedEvent() = default;
 
     void setUpdateInterval(TForteUInt32 paUpdateInterval);
-    TForteUInt32 getUpdateInterval() const{
+    TForteUInt32 getUpdateInterval() const {
       return mUpdateInterval;
     }
 
@@ -35,7 +35,7 @@ class CModbusTimedEvent{
     bool readyToExecute() const;
 
     // Classes impementing this should call restartTimer in executeEvent
-    virtual int executeEvent(modbus_t* paModbusConn, void* paRetVal) = 0;
+    virtual int executeEvent(modbus_t *paModbusConn, void *paRetVal) = 0;
 
   protected:
     void restartTimer();

@@ -23,16 +23,14 @@
 #include <errno.h>
 #include <string.h>
 
-//needs a specific defintion here for vxWorks
+// needs a specific defintion here for vxWorks
 #undef FD_ZERO
-#define FD_ZERO(p)    memset((char *)(p), 0, sizeof(*(p)))
+#define FD_ZERO(p) memset((char *) (p), 0, sizeof(*(p)))
 
-
-//these include needs to be last
+// these include needs to be last
 #include "../gensockhand.h"
 #include "../fdselecthand.h"
 #include "../bsdsocketinterf.h"
-
 
 typedef CGenericIPComSocketHandler<CFDSelectHandler, CBSDSocketInterface> CIPComSocketHandler;
 

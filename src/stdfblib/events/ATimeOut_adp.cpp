@@ -20,7 +20,6 @@ USE_STRING_ID(STOP);
 USE_STRING_ID(TIME);
 USE_STRING_ID(TimeOut);
 
-
 #include "criticalregion.h"
 #include "resource.h"
 
@@ -36,48 +35,70 @@ const TForteInt16 FORTE_ATimeOut::scmEOWithIndexes[] = {0, -1};
 const CStringDictionary::TStringId FORTE_ATimeOut::scmEventOutputNames[] = {STRID(START), STRID(STOP)};
 const CStringDictionary::TStringId FORTE_ATimeOut::scmEventOutputTypeIds[] = {STRID(Event), STRID(Event)};
 
-const SFBInterfaceSpec FORTE_ATimeOut::scmFBInterfaceSpecSocket = {
-  1, scmEventInputNames,scmEventInputTypeIds,nullptr, scmEIWithIndexes,
-  2, scmEventOutputNames, scmEventOutputTypeIds,scmEOWith, scmEOWithIndexes,
-  0, nullptr, nullptr,
-  1, scmDataOutputNames, scmDataOutputTypeIds,
-  0, nullptr,
-  0, nullptr
-};
+const SFBInterfaceSpec FORTE_ATimeOut::scmFBInterfaceSpecSocket = {1,
+                                                                   scmEventInputNames,
+                                                                   scmEventInputTypeIds,
+                                                                   nullptr,
+                                                                   scmEIWithIndexes,
+                                                                   2,
+                                                                   scmEventOutputNames,
+                                                                   scmEventOutputTypeIds,
+                                                                   scmEOWith,
+                                                                   scmEOWithIndexes,
+                                                                   0,
+                                                                   nullptr,
+                                                                   nullptr,
+                                                                   1,
+                                                                   scmDataOutputNames,
+                                                                   scmDataOutputTypeIds,
+                                                                   0,
+                                                                   nullptr,
+                                                                   0,
+                                                                   nullptr};
 
-const SFBInterfaceSpec FORTE_ATimeOut::scmFBInterfaceSpecPlug = {
-  2, scmEventOutputNames, scmEventOutputTypeIds,scmEOWith, scmEOWithIndexes,
-  1, scmEventInputNames, scmEventInputTypeIds,nullptr, scmEIWithIndexes,
-  1, scmDataOutputNames, scmDataOutputTypeIds,
-  0, nullptr, nullptr,
-  0, nullptr,
-  0, nullptr
-};
+const SFBInterfaceSpec FORTE_ATimeOut::scmFBInterfaceSpecPlug = {2,
+                                                                 scmEventOutputNames,
+                                                                 scmEventOutputTypeIds,
+                                                                 scmEOWith,
+                                                                 scmEOWithIndexes,
+                                                                 1,
+                                                                 scmEventInputNames,
+                                                                 scmEventInputTypeIds,
+                                                                 nullptr,
+                                                                 scmEIWithIndexes,
+                                                                 1,
+                                                                 scmDataOutputNames,
+                                                                 scmDataOutputTypeIds,
+                                                                 0,
+                                                                 nullptr,
+                                                                 nullptr,
+                                                                 0,
+                                                                 nullptr,
+                                                                 0,
+                                                                 nullptr};
 
 void FORTE_ATimeOut::readInputData(const TEventID paEIID) {
-  if(isSocket()) {
+  if (isSocket()) {
     // nothing to do
   } else {
-    switch(paEIID) {
+    switch (paEIID) {
       case scmEventSTARTID: {
-          readData(0, *mDIs[0], mDIConns[0]);
+        readData(0, *mDIs[0], mDIConns[0]);
         break;
       }
-      default:
-        break;
+      default: break;
     }
   }
 }
 
 void FORTE_ATimeOut::writeOutputData(const TEventID paEIID) {
-  if(isSocket()) {
-    switch(paEIID) {
+  if (isSocket()) {
+    switch (paEIID) {
       case scmEventSTARTID: {
-          writeData(0, *mDOs[0], mDOConns[0]);
+        writeData(0, *mDOs[0], mDOConns[0]);
         break;
       }
-      default:
-        break;
+      default: break;
     }
   } else {
     // nothing to do

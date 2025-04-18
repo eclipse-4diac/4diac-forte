@@ -18,7 +18,6 @@
 #include "../threadbase.h"
 #include <threadx/tx_api.h>
 
-
 /**  \ingroup FORTE-HAL
  * \defgroup netos_hal NET+OS Hardware Abstraction Layer
  *
@@ -26,7 +25,7 @@
  */
 
 class CTXThread;
-typedef CTXThread CThread; //allows that doxygen can generate better documenation
+typedef CTXThread CThread; // allows that doxygen can generate better documenation
 typedef CTXThread *TCTXThreadPtr;
 
 /*! \ingroup netos_hal
@@ -41,7 +40,7 @@ class CTXThread : public forte::arch::CThreadBase<ULONG> {
      *  @param paStackSize    the Size of the stack the thread is allowed to use. 0 means use system default stack size.
      *  @param paThreadName  the name of the thread
      */
-    CTXThread(long paStackSize = 32384, char* paThreadName = "Event Execution Thread");
+    CTXThread(long paStackSize = 32384, char *paThreadName = "Event Execution Thread");
 
     /*! \brief Stops and destroys thread.
      *
@@ -49,7 +48,7 @@ class CTXThread : public forte::arch::CThreadBase<ULONG> {
      */
     ~CTXThread() override;
 
-    //!Set the deadline of the thread.
+    //! Set the deadline of the thread.
     void setDeadline(const CIEC_TIME &paVal) override final;
 
     /*! \brief Sleep the calling thread
@@ -57,6 +56,7 @@ class CTXThread : public forte::arch::CThreadBase<ULONG> {
      * @param paMilliSeconds The milliseconds for the thread to sleep
      */
     static void sleepThread(unsigned int paMilliSeconds);
+
   private:
     /*!\brief Function that is given to the system thread support that should be called for the thread.
      *
@@ -77,7 +77,6 @@ class CTXThread : public forte::arch::CThreadBase<ULONG> {
 
     static const int scmThreadListSize;
     static TCTXThreadPtr smThreadList[27];
-
 };
 
 #endif /*FORTE_THREAD_H_*/

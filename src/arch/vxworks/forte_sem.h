@@ -23,9 +23,9 @@
 namespace forte {
   namespace arch {
 
-    class CVxWorksSemaphore{
+    class CVxWorksSemaphore {
       public:
-        explicit CVxWorksSemaphore(unsigned int paInitialValue  = 0);
+        explicit CVxWorksSemaphore(unsigned int paInitialValue = 0);
         ~CVxWorksSemaphore();
 
         /** @brief Unlocks (increments) the semaphore
@@ -40,7 +40,8 @@ namespace forte {
         /** @brief Checks if the semaphore is locked, and waits the specified amount of time if it is locked
          *
          * @param paRelativeTimeout - The relative time span to wait in nanoseconds
-         * @return true - semaphore has become available before the timeout, false - semaphore was not available before timeout
+         * @return true - semaphore has become available before the timeout, false - semaphore was not available before
+         * timeout
          */
         bool timedWait(const TForteUInt64 paRelativeTimeout);
 
@@ -53,7 +54,6 @@ namespace forte {
       private:
         SEM_ID mSemaphore;
     };
-
 
     typedef CVxWorksSemaphore CSemaphore;
 

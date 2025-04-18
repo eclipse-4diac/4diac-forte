@@ -19,9 +19,15 @@
 
 const int EmbrickSlaveHandler::scmMaxUpdateErrors = 50;
 
-EmbrickSlaveHandler::EmbrickSlaveHandler(EmbrickBusHandler* paBus, int paAddress, EmbrickSlaveInitPackage paInit) :
-    mDelegate(0), mAddress(paAddress), mType((SlaveType) paInit.mDeviceId), mBus(paBus), mDataSendLength(paInit.mDataSendLength),
-        mDataReceiveLength(paInit.mDataReceiveLength), mStatus(NotInitialized), mOldStatus(NotInitialized) {
+EmbrickSlaveHandler::EmbrickSlaveHandler(EmbrickBusHandler *paBus, int paAddress, EmbrickSlaveInitPackage paInit) :
+    mDelegate(0),
+    mAddress(paAddress),
+    mType((SlaveType) paInit.mDeviceId),
+    mBus(paBus),
+    mDataSendLength(paInit.mDataSendLength),
+    mDataReceiveLength(paInit.mDataReceiveLength),
+    mStatus(NotInitialized),
+    mOldStatus(NotInitialized) {
   mUpdateSendImage = new unsigned char[mDataSendLength];
   mUpdateReceiveImage = new unsigned char[mDataReceiveLength];
   mUpdateReceiveImageOld = new unsigned char[mDataReceiveLength];
@@ -43,13 +49,13 @@ EmbrickSlaveHandler::~EmbrickSlaveHandler() {
   delete mUpdateReceiveImage;
   delete mUpdateReceiveImageOld;
 
-  if(mDelegate != 0) {
+  if (mDelegate != 0) {
     mDelegate->onSlaveDestroy();
   }
 }
 
 void EmbrickSlaveHandler::setConfig(Config paConfig) {
-  if(paConfig.mUpdateInterval < 20) {
+  if (paConfig.mUpdateInterval < 20) {
     DEVLOG_WARNING("embrick[EmbrickSlaveHandler]: Configured UpdateInterval not in range (>= 20). Set to 25.\n");
     paConfig.mUpdateInterval = 25;
   }
@@ -57,7 +63,7 @@ void EmbrickSlaveHandler::setConfig(Config paConfig) {
   this->mConfig = paConfig;
 }
 
-EmbrickSlaveHandler* EmbrickSlaveHandler::sendInit(EmbrickBusHandler* paBus, int paAddress) {
+EmbrickSlaveHandler *EmbrickSlaveHandler::sendInit(EmbrickBusHandler *paBus, int paAddress) {
   EmbrickMasterInitPackage masterInit;
   masterInit.mSlaveAddress = (unsigned char) paAddress;
   masterInit.mSyncGapMultiplicator = SyncGapMultiplicator;
@@ -68,7 +74,8 @@ EmbrickSlaveHandler* EmbrickSlaveHandler::sendInit(EmbrickBusHandler* paBus, int
   masterInit.toBuffer(sendBuffer);
 
   // Send init via broadcast. Due to the sequential slave select activation, only one slave will respond.
-  if(!paBus->broadcast(EmbrickBusHandler::Init, sendBuffer, sizeof(EmbrickMasterInitPackage), receiveBuffer, sizeof(EmbrickSlaveInitPackage))) {
+  if (!paBus->broadcast(EmbrickBusHandler::Init, sendBuffer, sizeof(EmbrickMasterInitPackage), receiveBuffer,
+                        sizeof(EmbrickSlaveInitPackage))) {
     return 0;
   }
 
@@ -77,8 +84,9 @@ EmbrickSlaveHandler* EmbrickSlaveHandler::sendInit(EmbrickBusHandler* paBus, int
   // Alter the value of data receive length -> the status byte is handled in the BusHandler
   initPackage.mDataReceiveLength--;
 
-  DEVLOG_INFO("emBrick[EmbrickSlaveHandler]: ID - %d, ReceiveLength - %d, SendLength - %d, Producer - %d \n", initPackage.mDeviceId,
-    initPackage.mDataReceiveLength, initPackage.mDataSendLength, initPackage.mProducerId);
+  DEVLOG_INFO("emBrick[EmbrickSlaveHandler]: ID - %d, ReceiveLength - %d, SendLength - %d, Producer - %d \n",
+              initPackage.mDeviceId, initPackage.mDataReceiveLength, initPackage.mDataSendLength,
+              initPackage.mProducerId);
 
   // Return slave instance
   return new EmbrickSlaveHandler(paBus, paAddress, initPackage);
@@ -86,11 +94,12 @@ EmbrickSlaveHandler* EmbrickSlaveHandler::sendInit(EmbrickBusHandler* paBus, int
 
 int EmbrickSlaveHandler::update() {
   // Send update request to bus
-  if(!mBus->transfer(mAddress, EmbrickBusHandler::Data, mUpdateSendImage, mDataSendLength, mUpdateReceiveImage, mDataReceiveLength, &mStatus, &mUpdateMutex)) {
+  if (!mBus->transfer(mAddress, EmbrickBusHandler::Data, mUpdateSendImage, mDataSendLength, mUpdateReceiveImage,
+                      mDataReceiveLength, &mStatus, &mUpdateMutex)) {
     mUpdateErrorCounter++;
-    if(mUpdateErrorCounter % 10 == 0) {
-      DEVLOG_WARNING("emBrick[EmbrickSlaveHandler]: Slave %d reached transfer error threshold - %d out of %d\n", mAddress, mUpdateErrorCounter,
-        scmMaxUpdateErrors);
+    if (mUpdateErrorCounter % 10 == 0) {
+      DEVLOG_WARNING("emBrick[EmbrickSlaveHandler]: Slave %d reached transfer error threshold - %d out of %d\n",
+                     mAddress, mUpdateErrorCounter, scmMaxUpdateErrors);
     }
     return mUpdateErrorCounter <= scmMaxUpdateErrors ? 0 : -1;
   }
@@ -99,8 +108,8 @@ int EmbrickSlaveHandler::update() {
   {
     CCriticalRegion criticalRegion(mHandleMutex);
     TSlaveHandleList::Iterator itEnd = mInputs.end();
-    for(TSlaveHandleList::Iterator it = mInputs.begin(); it != itEnd; ++it) {
-      if((*it)->hasObserver() && !(*it)->equal(mUpdateReceiveImageOld)) {
+    for (TSlaveHandleList::Iterator it = mInputs.begin(); it != itEnd; ++it) {
+      if ((*it)->hasObserver() && !(*it)->equal(mUpdateReceiveImageOld)) {
         // Inform Process Interface about change
         (*it)->onChange();
       }
@@ -111,12 +120,12 @@ int EmbrickSlaveHandler::update() {
   memcpy(mUpdateReceiveImageOld, mUpdateReceiveImage, mDataReceiveLength);
 
   // Reset error counter
-  if(mUpdateErrorCounter > 0) {
+  if (mUpdateErrorCounter > 0) {
     mUpdateErrorCounter = 0;
   }
 
   // Check status
-  if(mDelegate != 0 && mOldStatus != mStatus) {
+  if (mDelegate != 0 && mOldStatus != mStatus) {
     mDelegate->onSlaveStatus(mStatus, mOldStatus);
     mOldStatus = mStatus;
   }
@@ -131,39 +140,37 @@ void EmbrickSlaveHandler::forceUpdate() {
 void EmbrickSlaveHandler::dropHandles() {
   CCriticalRegion criticalRegion(mHandleMutex);
 
-  forte::core::io::IOMapper& mapper = forte::core::io::IOMapper::getInstance();
+  forte::core::io::IOMapper &mapper = forte::core::io::IOMapper::getInstance();
 
   TSlaveHandleList::Iterator itEnd = mInputs.end();
-  for(TSlaveHandleList::Iterator it = mInputs.begin(); it != itEnd; ++it) {
+  for (TSlaveHandleList::Iterator it = mInputs.begin(); it != itEnd; ++it) {
     mapper.deregisterHandle(*it);
     delete *it;
   }
   itEnd = mOutputs.end();
-  for(TSlaveHandleList::Iterator it = mOutputs.begin(); it != itEnd; ++it) {
+  for (TSlaveHandleList::Iterator it = mOutputs.begin(); it != itEnd; ++it) {
     mapper.deregisterHandle(*it);
     delete *it;
   }
 
   mInputs.clearAll();
   mOutputs.clearAll();
-
 }
 
-void EmbrickSlaveHandler::addHandle(TSlaveHandleList* paList, EmbrickSlaveHandle* paHandle) {
+void EmbrickSlaveHandler::addHandle(TSlaveHandleList *paList, EmbrickSlaveHandle *paHandle) {
   CCriticalRegion criticalRegion(mHandleMutex);
   paList->pushBack(paHandle);
 
   // TODO Maybe send indication event after connecting
 }
 
-EmbrickSlaveHandle* EmbrickSlaveHandler::getHandle(TSlaveHandleList* paList, int paIndex) {
+EmbrickSlaveHandle *EmbrickSlaveHandler::getHandle(TSlaveHandleList *paList, int paIndex) {
   TSlaveHandleList::Iterator itEnd = paList->end();
   int i = 0;
-  for(TSlaveHandleList::Iterator it = paList->begin(); it != itEnd; ++it, i++) {
-    if(paIndex == i) {
+  for (TSlaveHandleList::Iterator it = paList->begin(); it != itEnd; ++it, i++) {
+    if (paIndex == i) {
       return *it;
     }
   }
   return nullptr;
 }
-

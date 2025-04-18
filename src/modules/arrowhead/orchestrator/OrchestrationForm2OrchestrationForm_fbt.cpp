@@ -20,16 +20,17 @@ USE_STRING_ID(OrchestrationForm2OrchestrationForm);
 USE_STRING_ID(OUT);
 USE_STRING_ID(REQ);
 
-
 DEFINE_FIRMWARE_FB(FORTE_OrchestrationForm2OrchestrationForm, STRID(OrchestrationForm2OrchestrationForm))
 
 const CStringDictionary::TStringId FORTE_OrchestrationForm2OrchestrationForm::scmDataInputNames[] = {STRID(IN)};
 
-const CStringDictionary::TStringId FORTE_OrchestrationForm2OrchestrationForm::scmDataInputTypeIds[] = {STRID(OrchestrationForm)};
+const CStringDictionary::TStringId FORTE_OrchestrationForm2OrchestrationForm::scmDataInputTypeIds[] = {
+    STRID(OrchestrationForm)};
 
 const CStringDictionary::TStringId FORTE_OrchestrationForm2OrchestrationForm::scmDataOutputNames[] = {STRID(OUT)};
 
-const CStringDictionary::TStringId FORTE_OrchestrationForm2OrchestrationForm::scmDataOutputTypeIds[] = {STRID(OrchestrationForm)};
+const CStringDictionary::TStringId FORTE_OrchestrationForm2OrchestrationForm::scmDataOutputTypeIds[] = {
+    STRID(OrchestrationForm)};
 
 const TForteInt16 FORTE_OrchestrationForm2OrchestrationForm::scmEIWithIndexes[] = {0};
 const TDataIOID FORTE_OrchestrationForm2OrchestrationForm::scmEIWith[] = {0, scmWithListDelimiter};
@@ -41,20 +42,29 @@ const TForteInt16 FORTE_OrchestrationForm2OrchestrationForm::scmEOWithIndexes[] 
 const CStringDictionary::TStringId FORTE_OrchestrationForm2OrchestrationForm::scmEventOutputNames[] = {STRID(CNF)};
 const CStringDictionary::TStringId FORTE_OrchestrationForm2OrchestrationForm::scmEventOutputTypeIds[] = {STRID(Event)};
 
-const SFBInterfaceSpec FORTE_OrchestrationForm2OrchestrationForm::scmFBInterfaceSpec = {
-  1,  scmEventInputNames, scmEventInputTypeIds,  scmEIWith,  scmEIWithIndexes,
-  1,  scmEventOutputNames, scmEventOutputTypeIds,  scmEOWith, scmEOWithIndexes,  1,  scmDataInputNames, scmDataInputTypeIds,
-  1,  scmDataOutputNames, scmDataOutputTypeIds,
-  0, 0
-};
+const SFBInterfaceSpec FORTE_OrchestrationForm2OrchestrationForm::scmFBInterfaceSpec = {1,
+                                                                                        scmEventInputNames,
+                                                                                        scmEventInputTypeIds,
+                                                                                        scmEIWith,
+                                                                                        scmEIWithIndexes,
+                                                                                        1,
+                                                                                        scmEventOutputNames,
+                                                                                        scmEventOutputTypeIds,
+                                                                                        scmEOWith,
+                                                                                        scmEOWithIndexes,
+                                                                                        1,
+                                                                                        scmDataInputNames,
+                                                                                        scmDataInputTypeIds,
+                                                                                        1,
+                                                                                        scmDataOutputNames,
+                                                                                        scmDataOutputTypeIds,
+                                                                                        0,
+                                                                                        0};
 
-
-void FORTE_OrchestrationForm2OrchestrationForm::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
-  if(scmEventREQID == paEIID) {
+void FORTE_OrchestrationForm2OrchestrationForm::executeEvent(TEventID paEIID,
+                                                             CEventChainExecutionThread *const paECET) {
+  if (scmEventREQID == paEIID) {
     st_OUT() = st_IN();
     sendOutputEvent(scmEventCNFID, paECET);
   }
 }
-
-
-

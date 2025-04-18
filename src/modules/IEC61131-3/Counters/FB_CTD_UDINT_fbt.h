@@ -23,78 +23,73 @@
 #include "forte_array_fixed.h"
 #include "forte_array_variable.h"
 
+class FORTE_FB_CTD_UDINT : public CSimpleFB {
+    DECLARE_FIRMWARE_FB(FORTE_FB_CTD_UDINT)
 
-class FORTE_FB_CTD_UDINT: public CSimpleFB {
-  DECLARE_FIRMWARE_FB(FORTE_FB_CTD_UDINT)
+  private:
+    static const CStringDictionary::TStringId scmDataInputNames[];
+    static const CStringDictionary::TStringId scmDataInputTypeIds[];
 
-private:
-  static const CStringDictionary::TStringId scmDataInputNames[];
-  static const CStringDictionary::TStringId scmDataInputTypeIds[];
-  
-  static const CStringDictionary::TStringId scmDataOutputNames[];
-  static const CStringDictionary::TStringId scmDataOutputTypeIds[];
-  
-  static const TEventID scmEventREQID = 0;
-  
-  static const TDataIOID scmEIWith[];
-  static const TForteInt16 scmEIWithIndexes[];
-  static const CStringDictionary::TStringId scmEventInputNames[];
-  static const CStringDictionary::TStringId scmEventInputTypeIds[];
-  
-  static const TEventID scmEventCNFID = 0;
-  
-  static const TDataIOID scmEOWith[]; 
-  static const TForteInt16 scmEOWithIndexes[];
-  static const CStringDictionary::TStringId scmEventOutputNames[];
-  static const CStringDictionary::TStringId scmEventOutputTypeIds[];
-  
+    static const CStringDictionary::TStringId scmDataOutputNames[];
+    static const CStringDictionary::TStringId scmDataOutputTypeIds[];
 
-  static const SFBInterfaceSpec scmFBInterfaceSpec;
-  CIEC_ANY *getVarInternal(size_t) override;
-  void alg_REQ(void);
+    static const TEventID scmEventREQID = 0;
 
-  void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
+    static const TDataIOID scmEIWith[];
+    static const TForteInt16 scmEIWithIndexes[];
+    static const CStringDictionary::TStringId scmEventInputNames[];
+    static const CStringDictionary::TStringId scmEventInputTypeIds[];
 
-  void readInputData(TEventID paEIID) override;
-  void writeOutputData(TEventID paEIID) override;
+    static const TEventID scmEventCNFID = 0;
 
-public:
-  FORTE_FB_CTD_UDINT(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    static const TDataIOID scmEOWith[];
+    static const TForteInt16 scmEOWithIndexes[];
+    static const CStringDictionary::TStringId scmEventOutputNames[];
+    static const CStringDictionary::TStringId scmEventOutputTypeIds[];
 
+    static const SFBInterfaceSpec scmFBInterfaceSpec;
+    CIEC_ANY *getVarInternal(size_t) override;
+    void alg_REQ(void);
 
-  CIEC_BOOL var_CD;
-  CIEC_BOOL var_LD;
-  CIEC_UDINT var_PV;
-  CIEC_BOOL var_Q;
-  CIEC_UDINT var_CV;
-  
-  CEventConnection conn_CNF;
-  CDataConnection *conn_CD;
-  CDataConnection *conn_LD;
-  CDataConnection *conn_PV;
-  COutDataConnection<CIEC_BOOL> conn_Q;
-  COutDataConnection<CIEC_UDINT> conn_CV;
-  
-  CIEC_ANY *getDI(size_t) override;
-  CIEC_ANY *getDO(size_t) override;
-  CEventConnection *getEOConUnchecked(TPortId) override;
-  CDataConnection **getDIConUnchecked(TPortId) override;
-  CDataConnection *getDOConUnchecked(TPortId) override;
-  
-  void evt_REQ(const CIEC_BOOL &pa_CD, const CIEC_BOOL &pa_LD, const CIEC_UDINT &pa_PV, CIEC_BOOL &pa_Q, CIEC_UDINT &pa_CV) {
-    var_CD = pa_CD;
-    var_LD = pa_LD;
-    var_PV = pa_PV;
-    receiveInputEvent(scmEventREQID, nullptr);
-    pa_Q = var_Q;
-    pa_CV = var_CV;
-  }
-  
-  void operator()(const CIEC_BOOL &pa_CD, const CIEC_BOOL &pa_LD, const CIEC_UDINT &pa_PV, CIEC_BOOL &pa_Q, CIEC_UDINT &pa_CV) {
-    evt_REQ(pa_CD, pa_LD, pa_PV, pa_Q, pa_CV);
-  }
-  
+    void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
+
+    void readInputData(TEventID paEIID) override;
+    void writeOutputData(TEventID paEIID) override;
+
+  public:
+    FORTE_FB_CTD_UDINT(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+
+    CIEC_BOOL var_CD;
+    CIEC_BOOL var_LD;
+    CIEC_UDINT var_PV;
+    CIEC_BOOL var_Q;
+    CIEC_UDINT var_CV;
+
+    CEventConnection conn_CNF;
+    CDataConnection *conn_CD;
+    CDataConnection *conn_LD;
+    CDataConnection *conn_PV;
+    COutDataConnection<CIEC_BOOL> conn_Q;
+    COutDataConnection<CIEC_UDINT> conn_CV;
+
+    CIEC_ANY *getDI(size_t) override;
+    CIEC_ANY *getDO(size_t) override;
+    CEventConnection *getEOConUnchecked(TPortId) override;
+    CDataConnection **getDIConUnchecked(TPortId) override;
+    CDataConnection *getDOConUnchecked(TPortId) override;
+
+    void evt_REQ(
+        const CIEC_BOOL &pa_CD, const CIEC_BOOL &pa_LD, const CIEC_UDINT &pa_PV, CIEC_BOOL &pa_Q, CIEC_UDINT &pa_CV) {
+      var_CD = pa_CD;
+      var_LD = pa_LD;
+      var_PV = pa_PV;
+      receiveInputEvent(scmEventREQID, nullptr);
+      pa_Q = var_Q;
+      pa_CV = var_CV;
+    }
+
+    void operator()(
+        const CIEC_BOOL &pa_CD, const CIEC_BOOL &pa_LD, const CIEC_UDINT &pa_PV, CIEC_BOOL &pa_Q, CIEC_UDINT &pa_CV) {
+      evt_REQ(pa_CD, pa_LD, pa_PV, pa_Q, pa_CV);
+    }
 };
-
-
-

@@ -13,7 +13,8 @@
  *** Description: FB for stopping time between events
  *** Version:
  ***     1.0: 2018-08-29/Ben Schneider - fortiss GmbH - initial API and implementation and/or initial documentation
- ***     1.1: 2020-05-24/alois Zoitl - Johannes Kepler University Linz - Changed to a full basic FB implementation utilizing the new NOW_MONOTONIC function
+ ***     1.1: 2020-05-24/alois Zoitl - Johannes Kepler University Linz - Changed to a full basic FB implementation
+ utilizing the new NOW_MONOTONIC function
  ***     1.2: 2024-09-19/Franz Höpfinger - HR Agrartechnik GmbH - Added additional Events
  *************************************************************************/
 
@@ -28,7 +29,7 @@
 #include "forte_array_variable.h"
 
 class FORTE_E_STOPWATCH final : public CBasicFB {
-  DECLARE_FIRMWARE_FB(FORTE_E_STOPWATCH)
+    DECLARE_FIRMWARE_FB(FORTE_E_STOPWATCH)
 
   private:
     static const CStringDictionary::TStringId scmDataOutputNames[];
@@ -121,4 +122,3 @@ class FORTE_E_STOPWATCH final : public CBasicFB {
       evt_START(paTD);
     }
 };
-

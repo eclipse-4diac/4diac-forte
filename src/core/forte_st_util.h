@@ -16,7 +16,7 @@
 #define FORTE_FORTE_ST_UTIL_H
 
 template<typename T>
-T& ST_IGNORE_OUT_PARAM(T&& value) {
+T &ST_IGNORE_OUT_PARAM(T &&value) {
   return value;
 }
 
@@ -33,4 +33,4 @@ template<typename T>
 T &ST_EXTEND_LIFETIME(T &&value) {
   return value;
 }
-#endif //FORTE_FORTE_ST_UTIL_H
+#endif // FORTE_FORTE_ST_UTIL_H

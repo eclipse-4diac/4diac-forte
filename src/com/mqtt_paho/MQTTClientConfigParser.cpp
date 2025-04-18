@@ -15,44 +15,41 @@
 
 #include "arch/devlog.h"
 
-const char *const CMQTTClientConfigFileParser::mConfigKeysNames[] = {
-  "endpoint",
-  "username",
-  "password" };
+const char *const CMQTTClientConfigFileParser::mConfigKeysNames[] = {"endpoint", "username", "password"};
 
-bool CMQTTClientConfigFileParser::loadConfig(const std::string &paFileLocation, const std::string &paEndpoint, MQTTConfigFromFile &paResult) {
+bool CMQTTClientConfigFileParser::loadConfig(const std::string &paFileLocation,
+                                             const std::string &paEndpoint,
+                                             MQTTConfigFromFile &paResult) {
   bool retVal = true;
 
   CConfigFileParser configFileParser(paFileLocation);
   bool endpointFound = false;
   std::string endpointKey = mConfigKeysNames[eEndoint];
 
-  if(CConfigFileParser::lookForKeyValueInFile(configFileParser, endpointKey, paEndpoint, endpointFound)) {
-    if(endpointFound) {
+  if (CConfigFileParser::lookForKeyValueInFile(configFileParser, endpointKey, paEndpoint, endpointFound)) {
+    if (endpointFound) {
 
       bool moreLinesToRead = true;
-      while(moreLinesToRead) {
+      while (moreLinesToRead) {
         std::pair<std::string, std::string> resultPair;
 
-        switch(configFileParser.parseNextLine(resultPair)){
+        switch (configFileParser.parseNextLine(resultPair)) {
           case CConfigFileParser::eOk:
-            if(0 == resultPair.first.compare(mConfigKeysNames[eEndoint])) {
+            if (0 == resultPair.first.compare(mConfigKeysNames[eEndoint])) {
               moreLinesToRead = false;
-            } else if(0 == resultPair.first.compare(mConfigKeysNames[eUsername])) {
+            } else if (0 == resultPair.first.compare(mConfigKeysNames[eUsername])) {
               paResult.mUsername = resultPair.second;
-            } else if(0 == resultPair.first.compare(mConfigKeysNames[ePassword])) {
+            } else if (0 == resultPair.first.compare(mConfigKeysNames[ePassword])) {
               paResult.mPassword = resultPair.second;
-            }
-            else {
-              DEVLOG_WARNING("[CMQTTClientConfigFileParser]: They %s was not recognized so it will be omitted\n", resultPair.first.c_str());
+            } else {
+              DEVLOG_WARNING("[CMQTTClientConfigFileParser]: They %s was not recognized so it will be omitted\n",
+                             resultPair.first.c_str());
             }
             break;
           case CConfigFileParser::eEmptyLine:
-            //do nothing, keep reading
+            // do nothing, keep reading
             break;
-          case CConfigFileParser::eEndOfFile:
-            moreLinesToRead = false;
-            break;
+          case CConfigFileParser::eEndOfFile: moreLinesToRead = false; break;
           case CConfigFileParser::eWrongLine:
           case CConfigFileParser::eFileNotOpened:
           case CConfigFileParser::eInternalError:
@@ -62,13 +59,13 @@ bool CMQTTClientConfigFileParser::loadConfig(const std::string &paFileLocation, 
             break;
         }
       }
-    } else { //if the endpoint is not found, configuration is initialize as default
-      DEVLOG_INFO("[CMQTTClientConfigFileParser]: No entry for endpoint %s was found in file %s\n", paEndpoint.c_str(), paFileLocation.c_str());
+    } else { // if the endpoint is not found, configuration is initialize as default
+      DEVLOG_INFO("[CMQTTClientConfigFileParser]: No entry for endpoint %s was found in file %s\n", paEndpoint.c_str(),
+                  paFileLocation.c_str());
     }
-  } else { //if lookForEndpointInFile fails, the errors was already logged
+  } else { // if lookForEndpointInFile fails, the errors was already logged
     retVal = false;
   }
 
   return retVal;
 }
-

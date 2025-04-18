@@ -23,36 +23,46 @@
 #include <string>
 
 class EliteBoardDeviceController : public forte::core::io::IODeviceController {
-public:
-  using HandleDescriptor = forte::core::io::IODeviceController::HandleDescriptor;
-  using IOMapper = forte::core::io::IOMapper;
-  using IOHandle = forte::core::io::IOHandle;
-
-  DECLARE_HANDLER(EliteBoardDeviceController);
-
-  class EliteBoardHandleDescriptor
-    : public forte::core::io::IODeviceController::HandleDescriptor {
   public:
-    GPIO_TypeDef *mGPIO_Port;
-    uint16_t mPin;
+    using HandleDescriptor = forte::core::io::IODeviceController::HandleDescriptor;
+    using IOMapper = forte::core::io::IOMapper;
+    using IOHandle = forte::core::io::IOHandle;
 
-    EliteBoardHandleDescriptor(CIEC_STRING const &paId, forte::core::io::IOMapper::Direction paDirection, GPIO_TypeDef* paGPIO_Port, uint16_t paPin)
-      : HandleDescriptor(std::string(paId), IOMapper::UnknownDirection), mGPIO_Port(paGPIO_Port), mPin(paPin){}
+    DECLARE_HANDLER(EliteBoardDeviceController);
 
-    EliteBoardHandleDescriptor(CIEC_STRING const &paId, GPIO_TypeDef* paGPIO_Port, uint16_t paPin)
-      : HandleDescriptor(std::string(paId), IOMapper::UnknownDirection), mGPIO_Port(paGPIO_Port), mPin(paPin){}
-  };
+    class EliteBoardHandleDescriptor : public forte::core::io::IODeviceController::HandleDescriptor {
+      public:
+        GPIO_TypeDef *mGPIO_Port;
+        uint16_t mPin;
 
+        EliteBoardHandleDescriptor(CIEC_STRING const &paId,
+                                   forte::core::io::IOMapper::Direction paDirection,
+                                   GPIO_TypeDef *paGPIO_Port,
+                                   uint16_t paPin) :
+            HandleDescriptor(std::string(paId), IOMapper::UnknownDirection),
+            mGPIO_Port(paGPIO_Port),
+            mPin(paPin) {
+        }
 
-  IOHandle* createIOHandle(HandleDescriptor& paHandleDescriptor);
+        EliteBoardHandleDescriptor(CIEC_STRING const &paId, GPIO_TypeDef *paGPIO_Port, uint16_t paPin) :
+            HandleDescriptor(std::string(paId), IOMapper::UnknownDirection),
+            mGPIO_Port(paGPIO_Port),
+            mPin(paPin) {
+        }
+    };
 
-  void setConfig(Config *paConfig) {}
-  const char *init() {
-    const char *x = "";
-    return x;
-  }
-  void runLoop() {}
-  void deInit() {}
+    IOHandle *createIOHandle(HandleDescriptor &paHandleDescriptor);
+
+    void setConfig(Config *paConfig) {
+    }
+    const char *init() {
+      const char *x = "";
+      return x;
+    }
+    void runLoop() {
+    }
+    void deInit() {
+    }
 };
 
 #endif /* ifndef ELITEBOARD_DEVICE_CONTROLLER_H */

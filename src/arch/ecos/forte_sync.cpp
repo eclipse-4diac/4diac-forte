@@ -11,11 +11,11 @@
  *******************************************************************************/
 #include "forte_sync.h"
 
-CECOSSyncObject::CECOSSyncObject(){
+CECOSSyncObject::CECOSSyncObject() {
   cyg_mutex_init(&mMutexHandle);
   cyg_mutex_set_protocol(&mMutexHandle, CYG_MUTEX_NONE);
 }
 
-CECOSSyncObject::~CECOSSyncObject(){
+CECOSSyncObject::~CECOSSyncObject() {
   cyg_mutex_destroy(&mMutexHandle);
 }

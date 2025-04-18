@@ -24,7 +24,7 @@
 /*! \ingroup CORE\brief Class for executing one event chain.
  *
  */
-class CEventChainExecutionThread : public CThread{
+class CEventChainExecutionThread : public CThread {
   public:
     CEventChainExecutionThread();
     ~CEventChainExecutionThread() override;
@@ -40,13 +40,13 @@ class CEventChainExecutionThread : public CThread{
      *
      * \param paEventToAdd new event entry
      */
-    void addEventEntry(TEventEntry paEventToAdd){
-      if(!mEventList.push(paEventToAdd)){
+    void addEventEntry(TEventEntry paEventToAdd) {
+      if (!mEventList.push(paEventToAdd)) {
         DEVLOG_ERROR("Event queue is full, event dropped!\n");
       }
 #ifdef FORTE_TRACE_CTF
-      else if(paEventToAdd.mPortId != cgExternalEventID){
-        mEventCounter++; 
+      else if (paEventToAdd.mPortId != cgExternalEventID) {
+        mEventCounter++;
       }
 #endif // FORTE_TRACE_CTF
     }
@@ -57,7 +57,7 @@ class CEventChainExecutionThread : public CThread{
      */
     void changeExecutionState(EMGMCommandType paCommand);
 
-    void joinEventChainExecutionThread(){
+    void joinEventChainExecutionThread() {
       CThread::join();
     }
 
@@ -65,11 +65,11 @@ class CEventChainExecutionThread : public CThread{
       return mProcessingEvents;
     }
 
-    void resumeSelfSuspend(){
+    void resumeSelfSuspend() {
       mSuspendSemaphore.inc();
     }
 #ifdef FORTE_TRACE_CTF
-    uint64_t mEventCounter{0}; 
+    uint64_t mEventCounter{0};
 #endif // FORTE_TRACE_CTF
   protected:
     /*! \brief List of input events to deliver.
@@ -78,7 +78,7 @@ class CEventChainExecutionThread : public CThread{
      */
     forte::core::util::CRingBuffer<TEventEntry, cgEventChainEventListSize> mEventList;
 
-    void selfSuspend(){
+    void selfSuspend() {
       mSuspendSemaphore.waitIndefinitely();
     }
 

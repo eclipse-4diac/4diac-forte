@@ -29,30 +29,30 @@
 
 namespace forte::ita::multi::utils {
 
-OPCUA_MGR* getOpcuaMgr(CDevice& paDevice){
-  auto currentDevice = DeviceFactory::getCurrentDeviceToCreate();
+  OPCUA_MGR *getOpcuaMgr(CDevice &paDevice) {
+    auto currentDevice = DeviceFactory::getCurrentDeviceToCreate();
 #ifdef FORTE_DEBUG_DEVICE
-  if(currentDevice == "DebugDevice"){
-    return &static_cast<DebugDevice*>(&paDevice)->mOpcuaMgr;
-  }
+    if (currentDevice == "DebugDevice") {
+      return &static_cast<DebugDevice *>(&paDevice)->mOpcuaMgr;
+    }
 #endif // FORTE_DEBUG_DEVICE
 #ifdef FORTE_OPCUA_DEVICE
-  if (currentDevice == "OPCUA_DEV"){
-    return &static_cast<OPCUA_DEV*>(&paDevice)->mOPCUAMgr;
-  } 
+    if (currentDevice == "OPCUA_DEV") {
+      return &static_cast<OPCUA_DEV *>(&paDevice)->mOPCUAMgr;
+    }
 #endif // FORTE_OPCUA_DEVICE
 
 #ifdef FORTE_REPLAY_DEVICE
-  if (currentDevice == "ReplayDevice"){
-    return &static_cast<ReplayDevice*>(&paDevice)->mOpcuaMgr;
+    if (currentDevice == "ReplayDevice") {
+      return &static_cast<ReplayDevice *>(&paDevice)->mOpcuaMgr;
+    }
+#endif
+    return nullptr;
   }
-#endif 
-  return nullptr;
-}
 
-void setFactoriesSettings(FactoriesSettings paFactoriesSettings){
-  EcetFactory::setEcetToCreate(paFactoriesSettings.mEcet);
-  TimerHandlerFactory::setTimeHandlerNameToCreate(paFactoriesSettings.mTimer);
-}
+  void setFactoriesSettings(FactoriesSettings paFactoriesSettings) {
+    EcetFactory::setEcetToCreate(paFactoriesSettings.mEcet);
+    TimerHandlerFactory::setTimeHandlerNameToCreate(paFactoriesSettings.mTimer);
+  }
 
-}
+} // namespace forte::ita::multi::utils

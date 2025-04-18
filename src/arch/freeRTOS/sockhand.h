@@ -24,7 +24,7 @@
 #include "sockhand_lwip.h"
 #endif
 
-//these include needs to be last
+// these include needs to be last
 #include "../gensockhand.h"
 #include "../fdselecthand.h"
 #include "../bsdsocketinterf.h"
@@ -32,4 +32,3 @@
 typedef CGenericIPComSocketHandler<CFDSelectHandler, CBSDSocketInterface> CIPComSocketHandler;
 
 #endif /* SRC_ARCH_FREERTOS_SOCKHAND_H_ */
-

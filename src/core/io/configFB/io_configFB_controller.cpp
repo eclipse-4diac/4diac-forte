@@ -20,27 +20,34 @@ using namespace forte::core::io;
 int IOConfigFBController::smMaxErrors = 5;
 
 const CIEC_WSTRING IOConfigFBController::scmOK("OK");
-const CIEC_WSTRING  IOConfigFBController::scmInitializing("Waiting for initialization..");
-const CIEC_WSTRING  IOConfigFBController::scmFailedToInit("Failed to initialize controller.");
-const CIEC_WSTRING  IOConfigFBController::scmStopped("Stopped");
+const CIEC_WSTRING IOConfigFBController::scmInitializing("Waiting for initialization..");
+const CIEC_WSTRING IOConfigFBController::scmFailedToInit("Failed to initialize controller.");
+const CIEC_WSTRING IOConfigFBController::scmStopped("Stopped");
 
-IOConfigFBController::IOConfigFBController(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec &paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId) :
-    IOConfigFBBase(paContainer, paInterfaceSpec, paInstanceNameId), mStarting(false), mErrorCounter(0), mController(nullptr),
-        mPerformRestart(false) {
+IOConfigFBController::IOConfigFBController(forte::core::CFBContainer &paContainer,
+                                           const SFBInterfaceSpec &paInterfaceSpec,
+                                           const CStringDictionary::TStringId paInstanceNameId) :
+    IOConfigFBBase(paContainer, paInterfaceSpec, paInstanceNameId),
+    mStarting(false),
+    mErrorCounter(0),
+    mController(nullptr),
+    mPerformRestart(false) {
 }
 
 IOConfigFBController::~IOConfigFBController() {
   deInit(nullptr, true);
 }
 
-void IOConfigFBController::executeEvent(TEventID paEIID, CEventChainExecutionThread * const paECET) {
-  if(cgExternalEventID == paEIID) {
-    if(!(mController->mNotificationHandled = handleNotification(mController->mNotificationType, mController->mNotificationAttachment, paECET))) {
-      DEVLOG_ERROR("[IOConfigFBController] Notification of type %d has not been handled.\n", static_cast<int>(mController->mNotificationType));
+void IOConfigFBController::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
+  if (cgExternalEventID == paEIID) {
+    if (!(mController->mNotificationHandled =
+              handleNotification(mController->mNotificationType, mController->mNotificationAttachment, paECET))) {
+      DEVLOG_ERROR("[IOConfigFBController] Notification of type %d has not been handled.\n",
+                   static_cast<int>(mController->mNotificationType));
     }
-  } else if(scmEventINITID == paEIID) {
-    if(true == QI()) {
-      if(!init(paECET)) {
+  } else if (scmEventINITID == paEIID) {
+    if (true == QI()) {
+      if (!init(paECET)) {
         QO() = CIEC_BOOL(false);
         sendOutputEvent(scmEventINITOID, paECET);
       }
@@ -51,48 +58,49 @@ void IOConfigFBController::executeEvent(TEventID paEIID, CEventChainExecutionThr
   }
 }
 
-bool IOConfigFBController::handleNotification(IODeviceController::NotificationType paType, const void* paAttachment, CEventChainExecutionThread * const paECET) {
-  switch(paType){
+bool IOConfigFBController::handleNotification(IODeviceController::NotificationType paType,
+                                              const void *paAttachment,
+                                              CEventChainExecutionThread *const paECET) {
+  switch (paType) {
     case IODeviceController::NotificationType::Error:
       onError(paECET);
-      if(mStarting) {
-        if(nullptr == paAttachment) {
+      if (mStarting) {
+        if (nullptr == paAttachment) {
           STATUS() = scmFailedToInit;
         } else {
-          STATUS() = CIEC_WSTRING((const char*) paAttachment);
+          STATUS() = CIEC_WSTRING((const char *) paAttachment);
         }
 
         DEVLOG_ERROR("[IOConfigFBController] Failed to initialize controller. Reason: %s\n", STATUS().getValue());
       } else {
-        STATUS() = CIEC_WSTRING((const char*) paAttachment);
+        STATUS() = CIEC_WSTRING((const char *) paAttachment);
 
         DEVLOG_ERROR("[IOConfigFBController] Runtime error. Reason: %s\n", STATUS().getValue());
       }
       return true;
     case IODeviceController::NotificationType::Success:
-      if(mStarting) {
+      if (mStarting) {
         onStartup(paECET);
         return true;
       }
       return false;
-    default:
-      return false;
+    default: return false;
   }
 }
 
-void IOConfigFBController::onError(CEventChainExecutionThread * const paECET, bool paIsFatal) {
+void IOConfigFBController::onError(CEventChainExecutionThread *const paECET, bool paIsFatal) {
   mErrorCounter++;
   mPerformRestart = mErrorCounter < smMaxErrors;
 
   // ReInit IOConfigFBController
-  if(mPerformRestart) {
+  if (mPerformRestart) {
     deInit(paECET);
   } else {
     mStarting = false;
     QO() = CIEC_BOOL(false);
     sendOutputEvent(scmEventINITOID, paECET);
 
-    if(paIsFatal) {
+    if (paIsFatal) {
       deInit(paECET);
     } else {
       // Reset error counter if it was not a fatal error
@@ -101,14 +109,14 @@ void IOConfigFBController::onError(CEventChainExecutionThread * const paECET, bo
   }
 }
 
-bool IOConfigFBController::init(CEventChainExecutionThread * const paECET, int paDelay) {
-  if(mController != nullptr) {
+bool IOConfigFBController::init(CEventChainExecutionThread *const paECET, int paDelay) {
+  if (mController != nullptr) {
     DEVLOG_ERROR("[IOConfigFBController] IOConfigFBController has already been initialized.\n");
     return false;
   }
 
   mController = createDeviceController(getDevice()->getDeviceExecution());
-  if(mController == nullptr) {
+  if (mController == nullptr) {
     DEVLOG_ERROR("[IOConfigFBController] Failed to create controller.\n");
     return false;
   }
@@ -129,19 +137,19 @@ bool IOConfigFBController::init(CEventChainExecutionThread * const paECET, int p
 
 void IOConfigFBController::initHandle(IODeviceController::HandleDescriptor &paHandleDescriptor) {
 
-  if(paHandleDescriptor.mId.empty()) {
+  if (paHandleDescriptor.mId.empty()) {
     return;
   }
 
   mController->addHandle(paHandleDescriptor);
 }
 
-void IOConfigFBController::onStartup(CEventChainExecutionThread * const paECET) {
+void IOConfigFBController::onStartup(CEventChainExecutionThread *const paECET) {
   started(paECET);
 }
 
-void IOConfigFBController::started(CEventChainExecutionThread * const paECET, const char* paError) {
-  if(paError != nullptr) {
+void IOConfigFBController::started(CEventChainExecutionThread *const paECET, const char *paError) {
+  if (paError != nullptr) {
     STATUS() = CIEC_WSTRING(paError);
     DEVLOG_ERROR("[IOConfigFBController] Failed to start. Reason: %s\n", STATUS().getValue());
     return onError(paECET, false);
@@ -155,17 +163,17 @@ void IOConfigFBController::started(CEventChainExecutionThread * const paECET, co
   sendOutputEvent(scmEventINITOID, paECET);
 }
 
-void IOConfigFBController::onStop(CEventChainExecutionThread * const paECET) {
+void IOConfigFBController::onStop(CEventChainExecutionThread *const paECET) {
   stopped(paECET);
 }
 
-bool IOConfigFBController::deInit(CEventChainExecutionThread * const paECET, bool paIsDestructing) {
-  if(nullptr == mController) {
+bool IOConfigFBController::deInit(CEventChainExecutionThread *const paECET, bool paIsDestructing) {
+  if (nullptr == mController) {
     DEVLOG_ERROR("[IOConfigFBController] IOConfigFBController has already been stopped.\n");
     return false;
   }
 
-  if(paIsDestructing) {
+  if (paIsDestructing) {
     mPerformRestart = false;
     stopped(paECET);
   } else {
@@ -175,9 +183,9 @@ bool IOConfigFBController::deInit(CEventChainExecutionThread * const paECET, boo
   return false;
 }
 
-void IOConfigFBController::stopped(CEventChainExecutionThread * const paECET) {
+void IOConfigFBController::stopped(CEventChainExecutionThread *const paECET) {
   mController->mDelegate = nullptr;
-  if(mController->isAlive()) {
+  if (mController->isAlive()) {
     mController->end();
   }
 
@@ -187,9 +195,8 @@ void IOConfigFBController::stopped(CEventChainExecutionThread * const paECET) {
 
   STATUS() = scmStopped;
 
-  if(mPerformRestart) {
+  if (mPerformRestart) {
     mPerformRestart = false;
     init(paECET, mErrorCounter);
   }
 }
-

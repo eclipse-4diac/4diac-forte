@@ -22,29 +22,28 @@
 #include "forte_array_variable.h"
 
 class FORTE_PortAdapter final : public CAdapter {
-  DECLARE_ADAPTER_TYPE(FORTE_PortAdapter)
+    DECLARE_ADAPTER_TYPE(FORTE_PortAdapter)
 
   private:
     static const CStringDictionary::TStringId scmDataOutputNames[];
     static const CStringDictionary::TStringId scmDataOutputTypeIds[];
-    public:
-      static const TEventID scmEventMAPOID = 0;
 
-    private:
+  public:
+    static const TEventID scmEventMAPOID = 0;
+
+  private:
     static const TForteInt16 scmEIWithIndexes[];
     static const CStringDictionary::TStringId scmEventInputNames[];
     static const CStringDictionary::TStringId scmEventInputTypeIds[];
 
+  public:
+    static const TEventID scmEventMAPID = 0;
 
-    public:
-      static const TEventID scmEventMAPID = 0;
-
-    private:
+  private:
     static const TDataIOID scmEOWith[];
     static const TForteInt16 scmEOWithIndexes[];
     static const CStringDictionary::TStringId scmEventOutputNames[];
     static const CStringDictionary::TStringId scmEventOutputTypeIds[];
-
 
     static const SFBInterfaceSpec scmFBInterfaceSpecSocket;
 
@@ -52,9 +51,10 @@ class FORTE_PortAdapter final : public CAdapter {
 
     void readInputData(TEventID paEIID) override;
     void writeOutputData(TEventID paEIID) override;
+
   public:
     CIEC_DWORD &var_GPIO_Port_Addr() {
-      return *static_cast<CIEC_DWORD*>((isSocket()) ? getDO(0) : getDI(0));
+      return *static_cast<CIEC_DWORD *>((isSocket()) ? getDO(0) : getDI(0));
     }
 
     TEventID evt_MAPO() {
@@ -65,10 +65,10 @@ class FORTE_PortAdapter final : public CAdapter {
       return mParentAdapterListEventID + scmEventMAPID;
     }
 
-    FORTE_PortAdapter(CStringDictionary::TStringId paAdapterInstanceName, forte::core::CFBContainer &paContainer, bool paIsPlug) :
-        CAdapter(paContainer, scmFBInterfaceSpecSocket, paAdapterInstanceName, scmFBInterfaceSpecPlug, paIsPlug) {
-    };
+    FORTE_PortAdapter(CStringDictionary::TStringId paAdapterInstanceName,
+                      forte::core::CFBContainer &paContainer,
+                      bool paIsPlug) :
+        CAdapter(paContainer, scmFBInterfaceSpecSocket, paAdapterInstanceName, scmFBInterfaceSpecPlug, paIsPlug) {};
 
     virtual ~FORTE_PortAdapter() = default;
 };
-

@@ -39,7 +39,7 @@ class CFBTestFixtureBase : public CGenFunctionBlock<CFunctionBlock> {
   protected:
     explicit CFBTestFixtureBase(CStringDictionary::TStringId paTypeId);
 
-    void setup(const char* paConfigString = nullptr);
+    void setup(const char *paConfigString = nullptr);
 
     bool createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) override;
 
@@ -65,8 +65,8 @@ class CFBTestFixtureBase : public CGenFunctionBlock<CFunctionBlock> {
      */
     bool checkForSingleOutputEventOccurence(TEventID paExpectedEOId);
 
-    void setInputData(std::initializer_list<CIEC_ANY*> paInputData);
-    void setOutputData(std::initializer_list<CIEC_ANY*> paOutputData);
+    void setInputData(std::initializer_list<CIEC_ANY *> paInputData);
+    void setOutputData(std::initializer_list<CIEC_ANY *> paOutputData);
 
   private:
     void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
@@ -106,7 +106,5 @@ class CFBTestFixtureBase : public CGenFunctionBlock<CFunctionBlock> {
     std::vector<CIEC_ANY *> mInputDataBuffers;
     std::vector<CIEC_ANY *> mOutputDataBuffers;
 };
-
-
 
 #endif /* TESTS_CORE_FBTESTS_FBTESTFIXTURE_H_ */

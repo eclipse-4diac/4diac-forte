@@ -18,12 +18,13 @@
 
 template<typename T>
 class CIEC_ANY_UNIQUE_PTR : public std::unique_ptr<T> {
-public:
+  public:
     using std::unique_ptr<T>::unique_ptr;
     using std::unique_ptr<T>::operator=;
 
     CIEC_ANY_UNIQUE_PTR(const CIEC_ANY_UNIQUE_PTR &paOther) :
-            std::unique_ptr<T>(static_cast<T *>(paOther->clone(nullptr))) {}
+        std::unique_ptr<T>(static_cast<T *>(paOther->clone(nullptr))) {
+    }
 
     CIEC_ANY_UNIQUE_PTR &operator=(const CIEC_ANY_UNIQUE_PTR &paOther) {
       std::unique_ptr<T>::operator=(std::unique_ptr<T>(static_cast<T *>(paOther->clone(nullptr))));
@@ -37,4 +38,3 @@ static_assert(std::is_copy_constructible_v<CIEC_ANY_UNIQUE_PTR<CIEC_ANY>>);
 static_assert(std::is_move_constructible_v<CIEC_ANY_UNIQUE_PTR<CIEC_ANY>>);
 static_assert(std::is_copy_assignable_v<CIEC_ANY_UNIQUE_PTR<CIEC_ANY>>);
 static_assert(std::is_move_assignable_v<CIEC_ANY_UNIQUE_PTR<CIEC_ANY>>);
-

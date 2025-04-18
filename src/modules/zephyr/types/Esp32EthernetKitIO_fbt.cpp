@@ -1,12 +1,12 @@
-/************************************************************************* 
- *** Copyright (c) 2024 KT Elektronik GmbH 
- ***  
- *** This program and the accompanying materials are made  
- *** available under the terms of the Eclipse Public License 2.0  
- *** which is available at https://www.eclipse.org/legal/epl-2.0/  
- ***  
- *** SPDX-License-Identifier: EPL-2.0   
- *** 
+/*************************************************************************
+ *** Copyright (c) 2024 KT Elektronik GmbH
+ ***
+ *** This program and the accompanying materials are made
+ *** available under the terms of the Eclipse Public License 2.0
+ *** which is available at https://www.eclipse.org/legal/epl-2.0/
+ ***
+ *** SPDX-License-Identifier: EPL-2.0
+ ***
  *** FORTE Library Element
  ***
  *** This file was generated using the 4DIAC FORTE Export Filter V1.0.x NG!
@@ -35,7 +35,6 @@ USE_STRING_ID(SW0);
 USE_STRING_ID(TIME);
 USE_STRING_ID(UpdateInterval);
 
-
 #include "forte_time.h"
 #include "iec61131_functions.h"
 #include "forte_array_common.h"
@@ -51,8 +50,10 @@ USE_STRING_ID(UpdateInterval);
 
 DEFINE_FIRMWARE_FB(FORTE_Esp32EthernetKitIO, STRID(Esp32EthernetKitIO))
 
-const CStringDictionary::TStringId FORTE_Esp32EthernetKitIO::scmDataInputNames[] = {STRID(QI), STRID(LED0), STRID(SW0), STRID(ADC_CH_0), STRID(PWM), STRID(UpdateInterval)};
-const CStringDictionary::TStringId FORTE_Esp32EthernetKitIO::scmDataInputTypeIds[] = {STRID(BOOL), STRID(STRING), STRID(STRING), STRID(STRING), STRID(STRING), STRID(TIME)};
+const CStringDictionary::TStringId FORTE_Esp32EthernetKitIO::scmDataInputNames[] = {
+    STRID(QI), STRID(LED0), STRID(SW0), STRID(ADC_CH_0), STRID(PWM), STRID(UpdateInterval)};
+const CStringDictionary::TStringId FORTE_Esp32EthernetKitIO::scmDataInputTypeIds[] = {
+    STRID(BOOL), STRID(STRING), STRID(STRING), STRID(STRING), STRID(STRING), STRID(TIME)};
 const CStringDictionary::TStringId FORTE_Esp32EthernetKitIO::scmDataOutputNames[] = {STRID(QO), STRID(STATUS)};
 const CStringDictionary::TStringId FORTE_Esp32EthernetKitIO::scmDataOutputTypeIds[] = {STRID(BOOL), STRID(STRING)};
 const TDataIOID FORTE_Esp32EthernetKitIO::scmEIWith[] = {0, 5, 1, 2, 3, 4, scmWithListDelimiter};
@@ -63,16 +64,29 @@ const TDataIOID FORTE_Esp32EthernetKitIO::scmEOWith[] = {0, 1, scmWithListDelimi
 const TForteInt16 FORTE_Esp32EthernetKitIO::scmEOWithIndexes[] = {0};
 const CStringDictionary::TStringId FORTE_Esp32EthernetKitIO::scmEventOutputNames[] = {STRID(INITO)};
 const CStringDictionary::TStringId FORTE_Esp32EthernetKitIO::scmEventOutputTypeIds[] = {STRID(EInit)};
-const SFBInterfaceSpec FORTE_Esp32EthernetKitIO::scmFBInterfaceSpec = {
-  1, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,
-  1, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes,
-  6, scmDataInputNames, scmDataInputTypeIds,
-  2, scmDataOutputNames, scmDataOutputTypeIds,
-  0, nullptr,
-  0, nullptr
-};
+const SFBInterfaceSpec FORTE_Esp32EthernetKitIO::scmFBInterfaceSpec = {1,
+                                                                       scmEventInputNames,
+                                                                       scmEventInputTypeIds,
+                                                                       scmEIWith,
+                                                                       scmEIWithIndexes,
+                                                                       1,
+                                                                       scmEventOutputNames,
+                                                                       scmEventOutputTypeIds,
+                                                                       scmEOWith,
+                                                                       scmEOWithIndexes,
+                                                                       6,
+                                                                       scmDataInputNames,
+                                                                       scmDataInputTypeIds,
+                                                                       2,
+                                                                       scmDataOutputNames,
+                                                                       scmDataOutputTypeIds,
+                                                                       0,
+                                                                       nullptr,
+                                                                       0,
+                                                                       nullptr};
 
-FORTE_Esp32EthernetKitIO::FORTE_Esp32EthernetKitIO(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_Esp32EthernetKitIO::FORTE_Esp32EthernetKitIO(const CStringDictionary::TStringId paInstanceNameId,
+                                                   forte::core::CFBContainer &paContainer) :
 #pragma region base class spec
     FORTE_ZephyrIOBase(paContainer, scmFBInterfaceSpec, paInstanceNameId),
 #pragma endregion base class spec
@@ -92,8 +106,7 @@ FORTE_Esp32EthernetKitIO::FORTE_Esp32EthernetKitIO(const CStringDictionary::TStr
     conn_PWM(nullptr),
     conn_UpdateInterval(nullptr),
     conn_QO(*this, 0, var_QO),
-    conn_STATUS(*this, 1, var_STATUS) {
-};
+    conn_STATUS(*this, 1, var_STATUS) {};
 
 void FORTE_Esp32EthernetKitIO::setInitialValues() {
   var_QI = 0_BOOL;
@@ -111,7 +124,7 @@ void FORTE_Esp32EthernetKitIO::setInitialValues() {
 #pragma endregion remove executeEvent()
 
 void FORTE_Esp32EthernetKitIO::readInputData(const TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventINITID: {
       readData(0, var_QI, conn_QI);
       readData(5, var_UpdateInterval, conn_UpdateInterval);
@@ -121,25 +134,23 @@ void FORTE_Esp32EthernetKitIO::readInputData(const TEventID paEIID) {
       readData(4, var_PWM, conn_PWM);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 void FORTE_Esp32EthernetKitIO::writeOutputData(const TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventINITOID: {
       writeData(0, var_QO, conn_QO);
       writeData(1, var_STATUS, conn_STATUS);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 CIEC_ANY *FORTE_Esp32EthernetKitIO::getDI(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_QI;
     case 1: return &var_LED0;
     case 2: return &var_SW0;
@@ -151,7 +162,7 @@ CIEC_ANY *FORTE_Esp32EthernetKitIO::getDI(const size_t paIndex) {
 }
 
 CIEC_ANY *FORTE_Esp32EthernetKitIO::getDO(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_QO;
     case 1: return &var_STATUS;
   }
@@ -159,14 +170,14 @@ CIEC_ANY *FORTE_Esp32EthernetKitIO::getDO(const size_t paIndex) {
 }
 
 CEventConnection *FORTE_Esp32EthernetKitIO::getEOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_INITO;
   }
   return nullptr;
 }
 
 CDataConnection **FORTE_Esp32EthernetKitIO::getDIConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_QI;
     case 1: return &conn_LED0;
     case 2: return &conn_SW0;
@@ -178,7 +189,7 @@ CDataConnection **FORTE_Esp32EthernetKitIO::getDIConUnchecked(const TPortId paIn
 }
 
 CDataConnection *FORTE_Esp32EthernetKitIO::getDOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_QO;
     case 1: return &conn_STATUS;
   }
@@ -190,89 +201,76 @@ namespace {
   struct gpio_dt_spec led0 = GPIO_DT_SPEC_GET(DT_ALIAS(led0), gpios);
   struct gpio_dt_spec sw0 = GPIO_DT_SPEC_GET(DT_ALIAS(sw0), gpios);
   struct gpio_spec_mod {
-    const gpio_dt_spec* spec;
-    gpio_flags_t flags;
+      const gpio_dt_spec *spec;
+      gpio_flags_t flags;
   };
   const gpio_spec_mod gpio_spec_mods[] = {
-    { &led0, GPIO_OUTPUT },
-    { &sw0, GPIO_INPUT | GPIO_INT_EDGE_BOTH },
+      {&led0, GPIO_OUTPUT},
+      {&sw0, GPIO_INPUT | GPIO_INT_EDGE_BOTH},
   };
 
-#if !DT_NODE_EXISTS(DT_PATH(zephyr_user)) || \
-  !DT_NODE_HAS_PROP(DT_PATH(zephyr_user), io_channels)
+#if !DT_NODE_EXISTS(DT_PATH(zephyr_user)) || !DT_NODE_HAS_PROP(DT_PATH(zephyr_user), io_channels)
 #error "No suitable devicetree overlay specified"
 #endif
 
-#define DT_SPEC_AND_COMMA(node_id, prop, idx) \
-  ADC_DT_SPEC_GET_BY_IDX(node_id, idx),
+#define DT_SPEC_AND_COMMA(node_id, prop, idx) ADC_DT_SPEC_GET_BY_IDX(node_id, idx),
 
-/* Data of ADC io-channels specified in devicetree. */
+  /* Data of ADC io-channels specified in devicetree. */
   const struct adc_dt_spec adc_channels[] = {
-    DT_FOREACH_PROP_ELEM(DT_PATH(zephyr_user), io_channels,
-    DT_SPEC_AND_COMMA)
-  };
+      DT_FOREACH_PROP_ELEM(DT_PATH(zephyr_user), io_channels, DT_SPEC_AND_COMMA)};
 
   struct pwm_dt_spec pwm0 = PWM_DT_SPEC_GET(DT_ALIAS(pwm0));
-  pwm_dt_spec* pwm_specs[] = {
-    &pwm0,
+  pwm_dt_spec *pwm_specs[] = {
+      &pwm0,
   };
-};
+}; // namespace
 
 void FORTE_Esp32EthernetKitIO::setConfig() {
   IODeviceController::Config config;
-  config.updateInterval = static_cast<CIEC_TIME*>(getDI(
-    FORTE_ZephyrIOBase::initialDIOffset +
-    FORTE_Esp32EthernetKitIO::numberOfGPIOs +
-    FORTE_Esp32EthernetKitIO::numberOfADCChannels +
-    FORTE_Esp32EthernetKitIO::numberOfPWMs
-    ))->getInMilliSeconds();
+  config.updateInterval =
+      static_cast<CIEC_TIME *>(getDI(FORTE_ZephyrIOBase::initialDIOffset + FORTE_Esp32EthernetKitIO::numberOfGPIOs +
+                                     FORTE_Esp32EthernetKitIO::numberOfADCChannels +
+                                     FORTE_Esp32EthernetKitIO::numberOfPWMs))
+          ->getInMilliSeconds();
   getDeviceController()->setConfig(&config);
 }
 
-void FORTE_Esp32EthernetKitIO::onStartup(CEventChainExecutionThread * const paECET) {
+void FORTE_Esp32EthernetKitIO::onStartup(CEventChainExecutionThread *const paECET) {
   // Initialize handles
   for (size_t i = 0; i < FORTE_Esp32EthernetKitIO::numberOfGPIOs; i++) {
-    const auto id = std::string(*static_cast<CIEC_STRING*>(
-      getDI(FORTE_ZephyrIOBase::initialDIOffset + i)));
+    const auto id = std::string(*static_cast<CIEC_STRING *>(getDI(FORTE_ZephyrIOBase::initialDIOffset + i)));
     if (!gpio_spec_mods[i].spec) {
       DEVLOG_ERROR("FORTE_Esp32EthernetKitIO::onStartup: id %s, device spec is null\n", id.c_str());
       continue;
     }
-    IOHandleGPIODescriptor descr(
-      id,
-      (gpio_spec_mods[i].flags & GPIO_OUTPUT) ? IOMapper::Out : IOMapper::In,
-      gpio_spec_mods[i].spec,
-      gpio_spec_mods[i].flags);
+    IOHandleGPIODescriptor descr(id, (gpio_spec_mods[i].flags & GPIO_OUTPUT) ? IOMapper::Out : IOMapper::In,
+                                 gpio_spec_mods[i].spec, gpio_spec_mods[i].flags);
     initHandle(descr);
   }
   if (FORTE_Esp32EthernetKitIO::numberOfADCChannels != ARRAY_SIZE(adc_channels)) {
     DEVLOG_ERROR("FORTE_Esp32EthernetKitIO::onStartup: ADC channel count configuration mismatch\n");
-  } else for (size_t i = 0; i < FORTE_Esp32EthernetKitIO::numberOfADCChannels; i++) {
-    const auto id = std::string(*static_cast<CIEC_STRING*>(
-      getDI(FORTE_ZephyrIOBase::initialDIOffset + FORTE_Esp32EthernetKitIO::numberOfGPIOs + i)));
-    if (!adc_is_ready_dt(&adc_channels[i])) {
-      DEVLOG_ERROR("FORTE_Esp32EthernetKitIO::onStartup: id %s ADC controller device %s not ready\n",
-        id.c_str(), adc_channels[i].dev->name);
-      continue;
+  } else
+    for (size_t i = 0; i < FORTE_Esp32EthernetKitIO::numberOfADCChannels; i++) {
+      const auto id = std::string(*static_cast<CIEC_STRING *>(
+          getDI(FORTE_ZephyrIOBase::initialDIOffset + FORTE_Esp32EthernetKitIO::numberOfGPIOs + i)));
+      if (!adc_is_ready_dt(&adc_channels[i])) {
+        DEVLOG_ERROR("FORTE_Esp32EthernetKitIO::onStartup: id %s ADC controller device %s not ready\n", id.c_str(),
+                     adc_channels[i].dev->name);
+        continue;
+      }
+      IOHandleADCDescriptor descr(id, &adc_channels[i]);
+      initHandle(descr);
     }
-    IOHandleADCDescriptor descr(
-      id,
-      &adc_channels[i]);
-    initHandle(descr);
-  }
   for (size_t i = 0; i < FORTE_Esp32EthernetKitIO::numberOfPWMs; i++) {
-    const auto id = std::string(*static_cast<CIEC_STRING*>(getDI(
-      FORTE_ZephyrIOBase::initialDIOffset +
-      FORTE_Esp32EthernetKitIO::numberOfGPIOs +
-      FORTE_Esp32EthernetKitIO::numberOfADCChannels + i)));
+    const auto id = std::string(*static_cast<CIEC_STRING *>(getDI(FORTE_ZephyrIOBase::initialDIOffset +
+                                                                  FORTE_Esp32EthernetKitIO::numberOfGPIOs +
+                                                                  FORTE_Esp32EthernetKitIO::numberOfADCChannels + i)));
     if (!pwm_is_ready_dt(pwm_specs[i])) {
-      DEVLOG_ERROR("FORTE_Esp32EthernetKitIO::onStartup: id %s, PWM device %s not ready\n",
-        id.c_str(), pwm_specs[i]->dev->name);
+      DEVLOG_ERROR("FORTE_Esp32EthernetKitIO::onStartup: id %s, PWM device %s not ready\n", id.c_str(),
+                   pwm_specs[i]->dev->name);
       continue;
     }
-    IOHandlePWMDescriptor descr(
-      id,
-      pwm_specs[i]);
+    IOHandlePWMDescriptor descr(id, pwm_specs[i]);
     initHandle(descr);
   }
 

@@ -5,7 +5,7 @@
  http://www.eclipse.org/legal/epl-2.0.
 
  SPDX-License-Identifier: EPL-2.0
- 
+
  Contributors:
   Dirk Kaar - initial API and implementation and/or initial documentation
  ************************************************************************************/
@@ -17,16 +17,18 @@
 #include <zephyr/drivers/adc.h>
 
 class IOHandleADCDescriptor : public IOHandleDescriptor {
-public:
-  IOHandleADCDescriptor(std::string const &paId, const adc_dt_spec* paAdcSpec) :
-    IOHandleDescriptor(paId, forte::core::io::IOMapper::In, Adc), mAdcSpec(paAdcSpec) {}
+  public:
+    IOHandleADCDescriptor(std::string const &paId, const adc_dt_spec *paAdcSpec) :
+        IOHandleDescriptor(paId, forte::core::io::IOMapper::In, Adc),
+        mAdcSpec(paAdcSpec) {
+    }
 
-  const adc_dt_spec* getAdcSpec() const {
-    return mAdcSpec;
-  }
+    const adc_dt_spec *getAdcSpec() const {
+      return mAdcSpec;
+    }
 
-protected:
-  const adc_dt_spec* mAdcSpec;
+  protected:
+    const adc_dt_spec *mAdcSpec;
 };
 
 #endif // IOHANDLEADCDESCRIPTOR_H

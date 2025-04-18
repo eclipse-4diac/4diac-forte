@@ -12,13 +12,16 @@
 #include "modbusioblock.h"
 #include "modbusconnection.h"
 
-
-CModbusIOBlock::CModbusIOBlock(forte::com_infra::CModbusComLayer* paParent)
-  : mParent(paParent),mCache(0),mReadSize(0),mSendSize(0){
+CModbusIOBlock::CModbusIOBlock(forte::com_infra::CModbusComLayer *paParent) :
+    mParent(paParent),
+    mCache(0),
+    mReadSize(0),
+    mSendSize(0) {
 }
 
-CModbusIOBlock::~CModbusIOBlock(){
-  if (mCache) delete [] (uint8_t*)mCache;
+CModbusIOBlock::~CModbusIOBlock() {
+  if (mCache)
+    delete[] (uint8_t *) mCache;
 }
 
 void CModbusIOBlock::allocCache() {
@@ -34,7 +37,7 @@ void CModbusIOBlock::addNewRead(EModbusFunction paFunction, unsigned int paStart
 
   mReadSize += getRegisterSize(paFunction) * paNrAddresses;
   if (mCache) {
-    delete [] (uint8_t*)mCache;
+    delete[] (uint8_t *) mCache;
     allocCache();
   }
 }
@@ -52,12 +55,9 @@ void CModbusIOBlock::addNewSend(EModbusFunction paFunction, unsigned int paStart
 unsigned int CModbusIOBlock::getRegisterSize(EModbusFunction paFunction) {
   switch (paFunction) {
     case eDiscreteInput:
-    case eCoil:
-        return sizeof(uint8_t);
+    case eCoil: return sizeof(uint8_t);
     case eInputRegister:
-    case eHoldingRegister:
-        return sizeof(uint16_t);
-    default:
-        return 0;
+    case eHoldingRegister: return sizeof(uint16_t);
+    default: return 0;
   }
 }

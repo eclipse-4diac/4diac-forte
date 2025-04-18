@@ -18,13 +18,14 @@
 
 class CVxWorksThread : public forte::arch::CThreadBase<TASK_ID, TASK_ID_ERROR> {
   public:
-
     /*! \brief Constructor of the Thread class
      *
      *  Does all the necessary steps in order to get the thread running with the start()-method
-     *  @param paStackSize the Size in bytes of the stack the thread is allowed to use. 128 elements is the minimum, and each element has 4 bytes. A 0 sets the size to the minimum
+     *  @param paStackSize the Size in bytes of the stack the thread is allowed to use. 128 elements is the minimum, and
+     * each element has 4 bytes. A 0 sets the size to the minimum
      */
-    explicit CVxWorksThread(long paStackSize = 20000); //TODO: Check default value. Calling the mlpi connect makes the stack go up to 15796
+    explicit CVxWorksThread(
+        long paStackSize = 20000); // TODO: Check default value. Calling the mlpi connect makes the stack go up to 15796
 
     /*! \brief Stops and destroys thread.
      *
@@ -40,7 +41,6 @@ class CVxWorksThread : public forte::arch::CThreadBase<TASK_ID, TASK_ID_ERROR> {
     static void sleepThread(unsigned int paMilliSeconds);
 
   protected:
-
   private:
     static const int scmInitialTaskPriority = 25;
 
@@ -51,10 +51,8 @@ class CVxWorksThread : public forte::arch::CThreadBase<TASK_ID, TASK_ID_ERROR> {
      * this function will call the run method of the thread instance.
      */
     static void threadFunction(void *paArguments);
-
 };
 
-
-typedef CVxWorksThread CThread;  //allows that doxygen can generate better documentation
+typedef CVxWorksThread CThread; // allows that doxygen can generate better documentation
 
 #endif /*FORTE_THREAD_H_*/

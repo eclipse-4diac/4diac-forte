@@ -1,12 +1,12 @@
-/************************************************************************* 
+/*************************************************************************
  *** Copyright (c) 2012, 2015 Profactor GmbH, fortiss GmbH
- ***  
+ ***
  *** This program and the accompanying materials are made
  *** available under the terms of the Eclipse Public License 2.0
  *** which is available at https://www.eclipse.org/legal/epl-2.0/
- *** 
- *** SPDX-License-Identifier: EPL-2.0  
- *** 
+ ***
+ *** SPDX-License-Identifier: EPL-2.0
+ ***
  *** FORTE Library Element
  ***
  *** This file was generated using the 4DIAC FORTE Export Filter V1.0.x NG!
@@ -14,7 +14,8 @@
  *** Name: FB_RANDOM
  *** Description: Generate a REAL Randomly
  *** Version:
- ***     1.0: 2012-05-31/Gerhard Ebenhofer - Profactor GmbH - initial API and implementation and/or initial documentation
+ ***     1.0: 2012-05-31/Gerhard Ebenhofer - Profactor GmbH - initial API and implementation and/or initial
+ *documentation
  ***     1.1: 2015-01-01/Alois Zoitl - fortiss GmbH -
  *************************************************************************/
 
@@ -30,9 +31,8 @@
 #include "forte_array_variable.h"
 #include <random>
 
-
 class FORTE_FB_RANDOM final : public CBasicFB {
-  DECLARE_FIRMWARE_FB(FORTE_FB_RANDOM)
+    DECLARE_FIRMWARE_FB(FORTE_FB_RANDOM)
 
   private:
     static const CStringDictionary::TStringId scmDataInputNames[];
@@ -73,12 +73,12 @@ class FORTE_FB_RANDOM final : public CBasicFB {
     void writeOutputData(TEventID paEIID) override;
     void setInitialValues() override;
 
-  std::random_device mRandomDevice;  // Will be used to obtain a seed for the random number engine
-  std::mt19937 mRandomGenerator; // Standard mersenne_twister_engine 
-  std::uniform_real_distribution<float> mDistribution;
+    std::random_device mRandomDevice; // Will be used to obtain a seed for the random number engine
+    std::mt19937 mRandomGenerator; // Standard mersenne_twister_engine
+    std::uniform_real_distribution<float> mDistribution;
 
-public:
-  FORTE_FB_RANDOM(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+  public:
+    FORTE_FB_RANDOM(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     CIEC_UINT var_SEED;
 
@@ -99,13 +99,13 @@ public:
 
     void evt_INIT(const CIEC_UINT &paSEED, CIEC_REAL &paVAL) {
       var_SEED = paSEED;
-    receiveInputEvent(scmEventINITID, nullptr);
+      receiveInputEvent(scmEventINITID, nullptr);
       paVAL = var_VAL;
     }
 
     void evt_REQ(const CIEC_UINT &paSEED, CIEC_REAL &paVAL) {
       var_SEED = paSEED;
-    receiveInputEvent(scmEventREQID, nullptr);
+      receiveInputEvent(scmEventREQID, nullptr);
       paVAL = var_VAL;
     }
 
@@ -113,4 +113,3 @@ public:
       evt_INIT(paSEED, paVAL);
     }
 };
-

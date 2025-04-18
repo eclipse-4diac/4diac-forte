@@ -34,7 +34,6 @@ USE_STRING_ID(STOP);
 USE_STRING_ID(TIME);
 USE_STRING_ID(UINT);
 
-
 #include "iec61131_functions.h"
 #include "forte_array_common.h"
 #include "forte_array.h"
@@ -44,7 +43,9 @@ USE_STRING_ID(UINT);
 DEFINE_FIRMWARE_FB(FORTE_E_TABLE, STRID(E_TABLE))
 
 const CStringDictionary::TStringId FORTE_E_TABLE::scmDataInputNames[] = {STRID(DT), STRID(N)};
-const CStringDictionary::TStringId FORTE_E_TABLE::scmDataInputTypeIds[] = {STRID(ARRAY), static_cast<CStringDictionary::TStringId>(0), static_cast<CStringDictionary::TStringId>(3), STRID(TIME), STRID(UINT)};
+const CStringDictionary::TStringId FORTE_E_TABLE::scmDataInputTypeIds[] = {
+    STRID(ARRAY), static_cast<CStringDictionary::TStringId>(0), static_cast<CStringDictionary::TStringId>(3),
+    STRID(TIME), STRID(UINT)};
 const CStringDictionary::TStringId FORTE_E_TABLE::scmDataOutputNames[] = {STRID(CV)};
 const CStringDictionary::TStringId FORTE_E_TABLE::scmDataOutputTypeIds[] = {STRID(UINT)};
 const TDataIOID FORTE_E_TABLE::scmEIWith[] = {0, 1, scmWithListDelimiter};
@@ -53,16 +54,29 @@ const CStringDictionary::TStringId FORTE_E_TABLE::scmEventInputNames[] = {STRID(
 const TDataIOID FORTE_E_TABLE::scmEOWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_E_TABLE::scmEOWithIndexes[] = {0};
 const CStringDictionary::TStringId FORTE_E_TABLE::scmEventOutputNames[] = {STRID(EO)};
-const SFBInterfaceSpec FORTE_E_TABLE::scmFBInterfaceSpec = {
-  2, scmEventInputNames, nullptr, scmEIWith, scmEIWithIndexes,
-  1, scmEventOutputNames, nullptr, scmEOWith, scmEOWithIndexes,
-  2, scmDataInputNames, scmDataInputTypeIds,
-  1, scmDataOutputNames, scmDataOutputTypeIds,
-  0, nullptr,
-  0, nullptr
-};
+const SFBInterfaceSpec FORTE_E_TABLE::scmFBInterfaceSpec = {2,
+                                                            scmEventInputNames,
+                                                            nullptr,
+                                                            scmEIWith,
+                                                            scmEIWithIndexes,
+                                                            1,
+                                                            scmEventOutputNames,
+                                                            nullptr,
+                                                            scmEOWith,
+                                                            scmEOWithIndexes,
+                                                            2,
+                                                            scmDataInputNames,
+                                                            scmDataInputTypeIds,
+                                                            1,
+                                                            scmDataOutputNames,
+                                                            scmDataOutputTypeIds,
+                                                            0,
+                                                            nullptr,
+                                                            0,
+                                                            nullptr};
 
-FORTE_E_TABLE::FORTE_E_TABLE(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_E_TABLE::FORTE_E_TABLE(const CStringDictionary::TStringId paInstanceNameId,
+                             forte::core::CFBContainer &paContainer) :
     CCompositeFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, scmFBNData),
     fb_E_TABLE_CTRL(STRID(E_TABLE_CTRL), *this),
     fb_E_DELAY(STRID(E_DELAY), *this),
@@ -71,8 +85,7 @@ FORTE_E_TABLE::FORTE_E_TABLE(const CStringDictionary::TStringId paInstanceNameId
     conn_N(nullptr),
     conn_CV(*this, 0, 0_UINT),
     conn_if2in_DT(*this, 0, CIEC_ARRAY_FIXED<CIEC_TIME, 0, 3>{}),
-    conn_if2in_N(*this, 0, 0_UINT) {
-};
+    conn_if2in_N(*this, 0, 0_UINT) {};
 
 void FORTE_E_TABLE::setInitialValues() {
   conn_if2in_DT.getValue() = CIEC_ARRAY_FIXED<CIEC_TIME, 0, 3>{};
@@ -80,59 +93,58 @@ void FORTE_E_TABLE::setInitialValues() {
   fb_E_TABLE_CTRL->conn_CV.getValue() = 0_UINT;
 }
 
-const SCFB_FBInstanceData FORTE_E_TABLE::scmInternalFBs[] = {
-  {STRID(E_TABLE_CTRL), STRID(E_TABLE_CTRL)},
-  {STRID(E_DELAY), STRID(E_DELAY)}
-};
+const SCFB_FBInstanceData FORTE_E_TABLE::scmInternalFBs[] = {{STRID(E_TABLE_CTRL), STRID(E_TABLE_CTRL)},
+                                                             {STRID(E_DELAY), STRID(E_DELAY)}};
 
 const SCFB_FBConnectionData FORTE_E_TABLE::scmEventConnections[] = {
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_TABLE_CTRL), STRID(CLKO)), 0, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_DELAY), STRID(START)), 1},
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_DELAY), STRID(EO)), 1, GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(EO)), -1},
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_DELAY), STRID(EO)), 1, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_TABLE_CTRL), STRID(CLK)), 0},
-  {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(START)), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_TABLE_CTRL), STRID(START)), 0},
-  {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(STOP)), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_DELAY), STRID(STOP)), 1},
+    {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_TABLE_CTRL), STRID(CLKO)), 0,
+     GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_DELAY), STRID(START)), 1},
+    {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_DELAY), STRID(EO)), 1, GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(EO)), -1},
+    {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_DELAY), STRID(EO)), 1,
+     GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_TABLE_CTRL), STRID(CLK)), 0},
+    {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(START)), -1,
+     GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_TABLE_CTRL), STRID(START)), 0},
+    {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(STOP)), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_DELAY), STRID(STOP)),
+     1},
 };
 
 const SCFB_FBConnectionData FORTE_E_TABLE::scmDataConnections[] = {
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_TABLE_CTRL), STRID(DTO)), 0, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_DELAY), STRID(DT)), 1},
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_TABLE_CTRL), STRID(CV)), 0, GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(CV)), -1},
-  {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(DT)), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_TABLE_CTRL), STRID(DT)), 0},
-  {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(N)), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_TABLE_CTRL), STRID(N)), 0},
+    {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_TABLE_CTRL), STRID(DTO)), 0,
+     GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_DELAY), STRID(DT)), 1},
+    {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_TABLE_CTRL), STRID(CV)), 0, GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(CV)),
+     -1},
+    {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(DT)), -1,
+     GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_TABLE_CTRL), STRID(DT)), 0},
+    {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(N)), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_TABLE_CTRL), STRID(N)),
+     0},
 };
 
 const SCFB_FBNData FORTE_E_TABLE::scmFBNData = {
-  2, scmInternalFBs,
-  5, scmEventConnections,
-  4, scmDataConnections,
-  0, nullptr,
-  0, nullptr
-};
+    2, scmInternalFBs, 5, scmEventConnections, 4, scmDataConnections, 0, nullptr, 0, nullptr};
 
 void FORTE_E_TABLE::readInputData(const TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventSTARTID: {
       readData(0, conn_if2in_DT.getValue(), conn_DT);
       readData(1, conn_if2in_N.getValue(), conn_N);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 void FORTE_E_TABLE::writeOutputData(const TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventEOID: {
       writeData(0, fb_E_TABLE_CTRL->conn_CV.getValue(), conn_CV);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 CIEC_ANY *FORTE_E_TABLE::getDI(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_if2in_DT.getValue();
     case 1: return &conn_if2in_N.getValue();
   }
@@ -140,21 +152,21 @@ CIEC_ANY *FORTE_E_TABLE::getDI(const size_t paIndex) {
 }
 
 CIEC_ANY *FORTE_E_TABLE::getDO(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &fb_E_TABLE_CTRL->conn_CV.getValue();
   }
   return nullptr;
 }
 
 CEventConnection *FORTE_E_TABLE::getEOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_EO;
   }
   return nullptr;
 }
 
 CDataConnection **FORTE_E_TABLE::getDIConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_DT;
     case 1: return &conn_N;
   }
@@ -162,14 +174,14 @@ CDataConnection **FORTE_E_TABLE::getDIConUnchecked(const TPortId paIndex) {
 }
 
 CDataConnection *FORTE_E_TABLE::getDOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_CV;
   }
   return nullptr;
 }
 
 CDataConnection *FORTE_E_TABLE::getIf2InConUnchecked(TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_if2in_DT;
     case 1: return &conn_if2in_N;
   }

@@ -78,7 +78,7 @@ BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_STRING_WRITE_AT_INDEX_0) {
   BOOST_TEST("Primxtals"_STRING == testString);
 }
 
-/* These tests need also to be checked in the log, as both exhibit the 
+/* These tests need also to be checked in the log, as both exhibit the
  * same result, but the latter two emit an error at the devlog console */
 BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_STRING_READ_AT_INDEX_END) {
   CIEC_STRING stringValue("Primetals"_STRING);

@@ -20,7 +20,7 @@ class CAdapter;
 
 /*! \ingroup CORE\brief Class for handling a adapter connection.
  */
-class CAdapterConnection : public CConnection{
+class CAdapterConnection : public CConnection {
   public:
     CAdapterConnection(CFunctionBlock &paSrcFB, const TPortId paSrcPortId, CAdapter &paPlug);
     ~CAdapterConnection() override;
@@ -36,30 +36,28 @@ class CAdapterConnection : public CConnection{
       return mSocket != nullptr;
     }
 
-    CAdapter &getPlug(){
+    CAdapter &getPlug() {
       return mPlug;
     }
-    
+
     const CAdapter &getPlug() const {
       return mPlug;
     }
 
-    void setSocket(CAdapter *paSocket){
+    void setSocket(CAdapter *paSocket) {
       mSocket = paSocket;
     }
 
-    CAdapter *getSocket(){
+    CAdapter *getSocket() {
       return mSocket;
     }
 
   private:
-
     void typifyAnyAdapter(CAdapter *paSocket);
     void performDisconnect();
 
     CAdapter &mPlug;
     CAdapter *mSocket;
-
 };
 
 typedef CAdapterConnection *TAdapterConnectionPtr;

@@ -20,25 +20,24 @@
 /*! \brief Implementation of the RMT_DEV.
  */
 
-
- class RMT_DEV : public CDevice{
+class RMT_DEV : public CDevice {
   public:
     RMT_DEV(const std::string &paMGR_ID = "localhost:61499");
     ~RMT_DEV() override;
 
     bool initialize() override;
 
-  /*! \brief Adds additional functionality to the originals execute func of the device.
-  *
-  * This is that it waits till the thread of the MGR resource has anded
-  */
+    /*! \brief Adds additional functionality to the originals execute func of the device.
+     *
+     * This is that it waits till the thread of the MGR resource has anded
+     */
     int startDevice() override;
 
     void awaitShutdown() override;
 
     EMGMResponse changeExecutionState(EMGMCommandType paCommand) override;
 
-    void setMGR_ID(const std::string& paVal);
+    void setMGR_ID(const std::string &paVal);
 
   private:
     static const SFBInterfaceSpec scmFBInterfaceSpec;
@@ -48,7 +47,7 @@
 
     CIEC_ANY *getDI(size_t) override;
     CDataConnection **getDIConUnchecked(TPortId) override;
-    CConnection *getResIf2InConnectionUnchecked(TPortId ) override;
+    CConnection *getResIf2InConnectionUnchecked(TPortId) override;
 
     COutDataConnection<CIEC_WSTRING> conn_MGR_ID_int;
     CDataConnection *conn_MGR_ID;

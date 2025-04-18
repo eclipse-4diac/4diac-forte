@@ -23,7 +23,7 @@
 //   BOOL_TO_*  functions
 //********************************************************************************************
 
-inline const CIEC_LWORD func_BOOL_TO_LWORD(const CIEC_BOOL &paVal){
+inline const CIEC_LWORD func_BOOL_TO_LWORD(const CIEC_BOOL &paVal) {
   return CIEC_ANY::cast<CIEC_LWORD>(paVal);
 }
 
@@ -39,7 +39,7 @@ inline const CIEC_BYTE func_BOOL_TO_BYTE(const CIEC_BOOL &paVal) {
   return CIEC_ANY::cast<CIEC_BYTE>(paVal);
 }
 
-inline const CIEC_LINT func_BOOL_TO_LINT(const CIEC_BOOL &paVal){
+inline const CIEC_LINT func_BOOL_TO_LINT(const CIEC_BOOL &paVal) {
   return CIEC_ANY::cast<CIEC_LINT>(paVal);
 }
 
@@ -55,7 +55,7 @@ inline const CIEC_SINT func_BOOL_TO_SINT(const CIEC_BOOL &paVal) {
   return CIEC_ANY::cast<CIEC_SINT>(paVal);
 }
 
-inline const CIEC_ULINT func_BOOL_TO_ULINT(const CIEC_BOOL &paVal){
+inline const CIEC_ULINT func_BOOL_TO_ULINT(const CIEC_BOOL &paVal) {
   return CIEC_ANY::cast<CIEC_ULINT>(paVal);
 }
 
@@ -78,7 +78,7 @@ inline const CIEC_STRING func_BOOL_AS_STRING(const CIEC_BOOL &paVal) {
 }
 
 #ifdef FORTE_USE_WSTRING_DATATYPE
-inline const CIEC_WSTRING func_BOOL_AS_WSTRING(const CIEC_BOOL &paVal){
+inline const CIEC_WSTRING func_BOOL_AS_WSTRING(const CIEC_BOOL &paVal) {
   CIEC_WSTRING string;
   stringConverter(string, paVal);
   return string;

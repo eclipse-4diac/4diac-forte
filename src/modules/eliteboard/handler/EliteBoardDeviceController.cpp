@@ -16,11 +16,12 @@
 
 DEFINE_HANDLER(EliteBoardDeviceController);
 
-EliteBoardDeviceController::EliteBoardDeviceController(CDeviceExecution& paDeviceExecution)
-    : forte::core::io::IODeviceController(paDeviceExecution){
+EliteBoardDeviceController::EliteBoardDeviceController(CDeviceExecution &paDeviceExecution) :
+    forte::core::io::IODeviceController(paDeviceExecution) {
 }
 
-EliteBoardDeviceController::~EliteBoardDeviceController() {}
+EliteBoardDeviceController::~EliteBoardDeviceController() {
+}
 
 EliteBoardDeviceController::IOHandle *EliteBoardDeviceController::createIOHandle(HandleDescriptor &paHandleDescriptor) {
   auto desc = static_cast<EliteBoardHandleDescriptor &>(paHandleDescriptor);

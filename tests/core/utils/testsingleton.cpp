@@ -15,10 +15,9 @@ DEFINE_SINGLETON(TestSingleton);
 
 unsigned int TestSingleton::smInstanceCount = 0;
 
-TestSingleton::TestSingleton(){
+TestSingleton::TestSingleton() {
   smInstanceCount++;
   mSingletonID = smInstanceCount;
 }
 
 TestSingleton::~TestSingleton() = default;
-

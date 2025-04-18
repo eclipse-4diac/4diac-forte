@@ -18,22 +18,22 @@
 #include <sys/time.h>
 #include "arch/utils/timespec_utils.h"
 
-CTimerHandler* CTimerHandler::createTimerHandler(CDeviceExecution& paDeviceExecution){
+CTimerHandler *CTimerHandler::createTimerHandler(CDeviceExecution &paDeviceExecution) {
   return new CPCTimerHandler(paDeviceExecution);
 }
 
-CPCTimerHandler::CPCTimerHandler(CDeviceExecution& paDeviceExecution) : CTimerHandler(paDeviceExecution)  {
+CPCTimerHandler::CPCTimerHandler(CDeviceExecution &paDeviceExecution) : CTimerHandler(paDeviceExecution) {
 }
 
-CPCTimerHandler::~CPCTimerHandler(){
+CPCTimerHandler::~CPCTimerHandler() {
   disableHandler();
 }
 
-void CPCTimerHandler::run(){
+void CPCTimerHandler::run() {
   struct timespec stReq;
   stReq.tv_sec = 0;
   stReq.tv_nsec = (1000000 / getTicksPerSecond()) * 1000;
-  
+
   struct timespec stOldTime;
   struct timespec stNewTime;
   struct timespec stReqTime;
@@ -41,10 +41,11 @@ void CPCTimerHandler::run(){
   stReqTime.tv_sec = 0;
   stReqTime.tv_nsec = (1000000 / getTicksPerSecond()) * 1000;
   struct timespec stDiffTime;
-  struct timespec stRemainingTime = { 0, 0 };
+  struct timespec stRemainingTime = {0, 0};
 
-  clock_gettime(CLOCK_REALTIME, &stOldTime); // in PikeOS time cannot be changed at run-time. So it's equivalent to CLOCK_MONOTONIC
-  while(isAlive()){
+  clock_gettime(CLOCK_REALTIME,
+                &stOldTime); // in PikeOS time cannot be changed at run-time. So it's equivalent to CLOCK_MONOTONIC
+  while (isAlive()) {
 
     nanosleep(&stReq, nullptr);
 
@@ -54,27 +55,27 @@ void CPCTimerHandler::run(){
 
     timespecAdd(&stRemainingTime, &stDiffTime, &stRemainingTime);
 
-    while(!timespecLessThan(&stRemainingTime, &stReqTime)){
+    while (!timespecLessThan(&stRemainingTime, &stReqTime)) {
       nextTick();
       timespecSub(&stRemainingTime, &stReqTime, &stRemainingTime);
     }
-    stOldTime = stNewTime;  // in c++ this should work fine
-  } 
+    stOldTime = stNewTime; // in c++ this should work fine
+  }
 }
 
-void CPCTimerHandler::enableHandler(){
+void CPCTimerHandler::enableHandler() {
   start();
 }
 
-void CPCTimerHandler::disableHandler(){
-  end(); 
+void CPCTimerHandler::disableHandler() {
+  end();
 }
 
-void CPCTimerHandler::setPriority(int ){
-  //TODO think on hwo to handle this.
+void CPCTimerHandler::setPriority(int) {
+  // TODO think on hwo to handle this.
 }
 
 int CPCTimerHandler::getPriority() const {
-  //TODO think on hwo to handle this.
+  // TODO think on hwo to handle this.
   return 1;
 }

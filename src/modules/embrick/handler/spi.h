@@ -32,16 +32,17 @@ class EmbrickSPIHandler {
     explicit EmbrickSPIHandler(unsigned int paInterface);
     virtual ~EmbrickSPIHandler();
 
-    bool transfer(unsigned char* paSendBuffer, unsigned char* paRreceiveBuffer, int paLength);
+    bool transfer(unsigned char *paSendBuffer, unsigned char *paRreceiveBuffer, int paLength);
 
-    void init(const char* paSpidev);
+    void init(const char *paSpidev);
     void deInit();
-    template<typename T> bool config(unsigned int paConfig, unsigned int paConfigVerify, T paValue);
+    template<typename T>
+    bool config(unsigned int paConfig, unsigned int paConfigVerify, T paValue);
 
     bool hasError() {
       return mError != 0;
     }
-    const char* mError;
+    const char *mError;
 
     static unsigned long const scmDefaultSpiSpeed;
     static unsigned long const scmMaxSpiSpeed;
@@ -54,14 +55,14 @@ class EmbrickSPIHandler {
     static char const mSpiMode;
     static char const mSpiBitOrder;
 
-    void fail(const char* paReason);
+    void fail(const char *paReason);
 
-    static const char * const scmFailedToInitHandler;
-    static const char * const scmFailedToConfigMode;
-    static const char * const scmFailedToConfigBitOrder;
-    static const char * const scmFailedToConfigSpeed;
-    static const char * const scmFailedToTestBus;
-    static const char * const scmFailedToTransferBuffer;
+    static const char *const scmFailedToInitHandler;
+    static const char *const scmFailedToConfigMode;
+    static const char *const scmFailedToConfigBitOrder;
+    static const char *const scmFailedToConfigSpeed;
+    static const char *const scmFailedToTestBus;
+    static const char *const scmFailedToTransferBuffer;
 };
 
 #endif /* SRC_MODULES_EMBRICK_HANDLER_SPI_H_ */

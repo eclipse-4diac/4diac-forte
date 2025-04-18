@@ -12,7 +12,8 @@
 #include "BE_SVIFB.h"
 #include "BE_RMT_DEV.h"
 
-const TForteUInt32 BE_SVIFB::scmBE_SVI_Types[] = { SVI_F_UNKNOWN, // e_ANY,
+const TForteUInt32 BE_SVIFB::scmBE_SVI_Types[] = {
+    SVI_F_UNKNOWN, // e_ANY,
     SVI_F_BOOL8, // e_BOOL,
     SVI_F_SINT8, //  e_SINT,
     SVI_F_SINT16, //  e_INT,
@@ -42,9 +43,10 @@ const TForteUInt32 BE_SVIFB::scmBE_SVI_Types[] = { SVI_F_UNKNOWN, // e_ANY,
     SVI_F_UNKNOWN //  e_STRUCT,
     //     e_External = 256, // Base for CIEC_ANY based types outside of the forte base
     //     e_Max = 65535     // Guarantees at least 16 bits - otherwise gcc will optimizes on some platforms
-    };
+};
 
-const TForteUInt32 BE_SVIFB::scmBE_SVI_VarSizes[] = { 0, // e_ANY,
+const TForteUInt32 BE_SVIFB::scmBE_SVI_VarSizes[] = {
+    0, // e_ANY,
     1, // e_BOOL,
     1, //  e_SINT,
     2, //  e_INT,
@@ -74,12 +76,14 @@ const TForteUInt32 BE_SVIFB::scmBE_SVI_VarSizes[] = { 0, // e_ANY,
     0 //  e_STRUCT,
     //     e_External = 256, // Base for CIEC_ANY based types outside of the forte base
     //     e_Max = 65535     // Guarantees at least 16 bits - otherwise gcc will optimizes on some platforms
-    };
+};
 
-bool BE_SVIFB::registerSVIvar(const CIEC_STRING& paID, CIEC_ANY& paValue, const TForteUInt32 paMode){
-  BE_RMT_DEV& roDev(static_cast<BE_RMT_DEV&>(*getDevice()));
+bool BE_SVIFB::registerSVIvar(const CIEC_STRING &paID, CIEC_ANY &paValue, const TForteUInt32 paMode) {
+  BE_RMT_DEV &roDev(static_cast<BE_RMT_DEV &>(*getDevice()));
 
-  bool bRetVal = (OK == roDev.getModule().GetSVIHandler().AddGlobVar(((CHAR *) paID.getValue()), paMode | scmBE_SVI_Types[paValue.getDataTypeID()], scmBE_SVI_VarSizes[paValue.getDataTypeID()], (UINT32*) (paValue.getDataPtr()), 0, 0));
+  bool bRetVal = (OK == roDev.getModule().GetSVIHandler().AddGlobVar(
+                            ((CHAR *) paID.getValue()), paMode | scmBE_SVI_Types[paValue.getDataTypeID()],
+                            scmBE_SVI_VarSizes[paValue.getDataTypeID()], (UINT32 *) (paValue.getDataPtr()), 0, 0));
   roDev.getModule().CfgRead();
   return bRetVal;
 }

@@ -16,12 +16,11 @@
 #include "core/datatypes/forte_uint.h"
 
 class FORTE_WagoBusAdapter : public forte::core::io::IOConfigFBMultiAdapter {
-  DECLARE_ADAPTER_TYPE(FORTE_WagoBusAdapter)
+    DECLARE_ADAPTER_TYPE(FORTE_WagoBusAdapter)
 
   public:
-    ADAPTER_CTOR_FOR_IO_MULTI (FORTE_WagoBusAdapter){
-    };
-    virtual ~FORTE_WagoBusAdapter(){};
+    ADAPTER_CTOR_FOR_IO_MULTI(FORTE_WagoBusAdapter) {};
+    virtual ~FORTE_WagoBusAdapter() {};
 
     static const TForteUInt8 scmSlaveConfigurationIO[];
     static const TForteUInt8 scmSlaveConfigurationIONum;
@@ -30,19 +29,19 @@ class FORTE_WagoBusAdapter : public forte::core::io::IOConfigFBMultiAdapter {
     static const TEventID scmEventINITID = 0;
 
     CIEC_BOOL &var_QO() {
-      return *static_cast<CIEC_BOOL*>((isSocket()) ? getDI(0) : getDO(0));
+      return *static_cast<CIEC_BOOL *>((isSocket()) ? getDI(0) : getDO(0));
     }
 
     CIEC_BOOL &var_QI() {
-      return *static_cast<CIEC_BOOL*>((isSocket()) ? getDO(0) : getDI(0));
+      return *static_cast<CIEC_BOOL *>((isSocket()) ? getDO(0) : getDI(0));
     }
 
     CIEC_UINT &var_MasterId() {
-      return *static_cast<CIEC_UINT*>((isSocket()) ? getDO(1) : getDI(1));
+      return *static_cast<CIEC_UINT *>((isSocket()) ? getDO(1) : getDI(1));
     }
 
     CIEC_UINT &var_Index() {
-      return *static_cast<CIEC_UINT*>((isSocket()) ? getDO(2) : getDI(2));
+      return *static_cast<CIEC_UINT *>((isSocket()) ? getDO(2) : getDI(2));
     }
 
     TEventID evt_INITO() {

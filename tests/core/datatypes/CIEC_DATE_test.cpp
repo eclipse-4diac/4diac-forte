@@ -9,8 +9,8 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *   Martin Melik Merkumians, Ingo Hegny, Alois Zoitl, Stanislav Meduna - initial API and implementation and/or initial documentation
- *   Martin Jobst - add user-defined literal tests
+ *   Martin Melik Merkumians, Ingo Hegny, Alois Zoitl, Stanislav Meduna - initial API and implementation and/or initial
+ *documentation Martin Jobst - add user-defined literal tests
  *******************************************************************************/
 #include <boost/test/unit_test.hpp>
 #include "forte_boost_output_support.h"
@@ -18,18 +18,15 @@
 #include "../../../src/core/datatypes/forte_date.h"
 
 BOOST_AUTO_TEST_SUITE(CIEC_DATE_function_test)
-BOOST_AUTO_TEST_CASE(Type_test)
-{
+BOOST_AUTO_TEST_CASE(Type_test) {
   CIEC_DATE nTest;
-  //check type information
+  // check type information
   BOOST_CHECK_EQUAL(nTest.getDataTypeID(), CIEC_ANY::e_DATE);
-  //check operator book data type size
+  // check operator book data type size
   BOOST_CHECK_EQUAL(sizeof(nTest.operator TForteUInt64()), sizeof(TForteUInt64));
-
 }
 
-BOOST_AUTO_TEST_CASE(Literal_test)
-{
+BOOST_AUTO_TEST_CASE(Literal_test) {
   CIEC_DATE test1 = 0_DATE;
   BOOST_TEST(static_cast<CIEC_DATE::TValueType>(test1) == 0);
 
@@ -37,13 +34,12 @@ BOOST_AUTO_TEST_CASE(Literal_test)
   BOOST_TEST(static_cast<CIEC_DATE::TValueType>(test2) == std::numeric_limits<TForteUInt64>::max());
 }
 
-BOOST_AUTO_TEST_CASE(Operator_test)
-{
+BOOST_AUTO_TEST_CASE(Operator_test) {
   CIEC_DATE nTest1;
   CIEC_DATE nTest2;
 
-  //check if data type is initialized with value of zero
-  BOOST_CHECK_EQUAL(nTest1,0ULL);
+  // check if data type is initialized with value of zero
+  BOOST_CHECK_EQUAL(nTest1, 0ULL);
 
   nTest1 = CIEC_DATE(std::numeric_limits<TForteUInt64>::min());
   nTest2 = nTest1;
@@ -65,14 +61,13 @@ BOOST_AUTO_TEST_CASE(Operator_test)
   BOOST_CHECK_EQUAL(nTest2, 564874642ULL);
 }
 
-BOOST_AUTO_TEST_CASE(Conversion_test)
-{
+BOOST_AUTO_TEST_CASE(Conversion_test) {
   CIEC_DATE nTest;
 
   char cBuffer[13];
   char cBufferFail[2];
 
-  //check cast operator
+  // check cast operator
   nTest = CIEC_DATE(0);
 
   BOOST_CHECK_EQUAL(nTest.operator TForteUInt64(), 0ULL);
@@ -86,10 +81,10 @@ BOOST_AUTO_TEST_CASE(Conversion_test)
   nTest = CIEC_DATE(std::numeric_limits<TForteUInt64>::max());
   BOOST_CHECK_EQUAL(nTest.operator TForteUInt64(), std::numeric_limits<TForteUInt64>::max());
 
-  //check toString and fromString
+  // check toString and fromString
   strcpy(cBuffer, "");
 
-  //TODO: Check if this is really a legal literal
+  // TODO: Check if this is really a legal literal
   BOOST_CHECK_EQUAL(nTest.fromString("1994-06-22"), 10);
   BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 13), 12);
   BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
@@ -125,7 +120,7 @@ BOOST_AUTO_TEST_CASE(Conversion_test)
   strcpy(cBuffer, "");
   nTest = CIEC_DATE(0);
 
-  //TODO: Check if this is really a legal literal
+  // TODO: Check if this is really a legal literal
   BOOST_CHECK_EQUAL(nTest.fromString("2008-04-03"), 10);
   BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 13), 12);
   BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);

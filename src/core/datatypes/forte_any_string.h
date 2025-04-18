@@ -22,17 +22,17 @@
  */
 class CIEC_ANY_STRING : public CIEC_ANY_CHARS {
   public:
-    static constexpr size_t scmMaxStringLen = 65534; //STRING: 0 is reserved, so 65534 is max / WSTRING: save one for the \0 needed for allocated length
+    static constexpr size_t scmMaxStringLen =
+        65534; // STRING: 0 is reserved, so 65534 is max / WSTRING: save one for the \0 needed for allocated length
 
     ~CIEC_ANY_STRING() override;
 
-    CIEC_ANY_STRING(const CIEC_ANY_STRING& paValue) :
-        CIEC_ANY_CHARS(){
+    CIEC_ANY_STRING(const CIEC_ANY_STRING &paValue) : CIEC_ANY_CHARS() {
       this->assign(paValue.getValue(), paValue.length());
     }
 
-    CIEC_ANY_STRING &operator=(const CIEC_ANY_STRING& paValue){
-      if(this != &paValue){
+    CIEC_ANY_STRING &operator=(const CIEC_ANY_STRING &paValue) {
+      if (this != &paValue) {
         this->assign(paValue.getValue(), paValue.length());
       }
       return *this;
@@ -46,12 +46,13 @@ class CIEC_ANY_STRING : public CIEC_ANY_CHARS {
      *     - Actual value of the object.
      */
 
-    virtual char* getValue() {
-      return ((char *) ((nullptr != getGenData()) ? reinterpret_cast<char*>(getGenData() + 4) : smNullString));
+    virtual char *getValue() {
+      return ((char *) ((nullptr != getGenData()) ? reinterpret_cast<char *>(getGenData() + 4) : smNullString));
     }
 
     virtual const char *getValue() const {
-      return (const char *) ((nullptr != getGenData()) ? reinterpret_cast<const char*>(getGenData() + 4) : smNullString);
+      return (const char *) ((nullptr != getGenData()) ? reinterpret_cast<const char *>(getGenData() + 4)
+                                                       : smNullString);
     }
 
     virtual TForteUInt16 length() const {
@@ -62,7 +63,7 @@ class CIEC_ANY_STRING : public CIEC_ANY_CHARS {
       assign("", 0);
     }
 
-    virtual bool empty() const{
+    virtual bool empty() const {
       return length() == 0;
     }
 
@@ -88,7 +89,7 @@ class CIEC_ANY_STRING : public CIEC_ANY_CHARS {
      * @return number of bytes that this string has allocated for use
      */
     virtual TForteUInt16 getCapacity() const {
-      return (nullptr != getGenData()) ? (*((TForteUInt16 *)(getGenData() + 2))) : static_cast<TForteUInt16>(0);
+      return (nullptr != getGenData()) ? (*((TForteUInt16 *) (getGenData() + 2))) : static_cast<TForteUInt16>(0);
     }
 
 #ifdef FORTE_UNICODE_SUPPORT
@@ -102,7 +103,7 @@ class CIEC_ANY_STRING : public CIEC_ANY_CHARS {
      *   \return number of bytes used in the buffer
      *           -1 on error
      */
-    virtual int toUTF8(char*, size_t, bool) const {
+    virtual int toUTF8(char *, size_t, bool) const {
       return 0;
     }
 #endif
@@ -140,16 +141,16 @@ class CIEC_ANY_STRING : public CIEC_ANY_CHARS {
      */
     int unescapeFromString(const char *paValue, char paDelimiter);
 
-    void setLength(TForteUInt16 paVal){
+    void setLength(TForteUInt16 paVal) {
       TForteByte *pBuf = getGenData();
-      if(nullptr != pBuf){
+      if (nullptr != pBuf) {
         *((TForteUInt16 *) (pBuf)) = paVal;
       }
     }
 
-    void setAllocatedLength(TForteUInt16 paVal){
+    void setAllocatedLength(TForteUInt16 paVal) {
       TForteByte *pBuf = getGenData();
-      if(nullptr != pBuf){
+      if (nullptr != pBuf) {
         *((TForteUInt16 *) (pBuf + 2)) = paVal;
       }
     }

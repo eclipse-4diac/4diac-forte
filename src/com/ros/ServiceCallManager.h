@@ -22,12 +22,12 @@
 
 class FORTE_TRIGGER_SERVICE_CLIENT;
 
-class CServiceCallManager : public CExternalEventHandler, private CThread{
-  DECLARE_HANDLER(CServiceCallManager)
+class CServiceCallManager : public CExternalEventHandler, private CThread {
+    DECLARE_HANDLER(CServiceCallManager)
 
   private:
-    std::vector<FORTE_TRIGGER_SERVICE_CLIENT*> m_callerVector;
-    std::vector<FORTE_TRIGGER_SERVICE_CLIENT*> m_connectVector;
+    std::vector<FORTE_TRIGGER_SERVICE_CLIENT *> m_callerVector;
+    std::vector<FORTE_TRIGGER_SERVICE_CLIENT *> m_connectVector;
 
   public:
     void enableHandler() override;
@@ -35,13 +35,12 @@ class CServiceCallManager : public CExternalEventHandler, private CThread{
     void setPriority(int pa_prio) override;
     int getPriority() const override;
 
-    void startChain(CEventSourceFB* paECStartF);
-    void queueServiceCall(FORTE_TRIGGER_SERVICE_CLIENT* pa_serviceClientPtr);
-    void queueConnectWait(FORTE_TRIGGER_SERVICE_CLIENT* pa_serviceClientPtr);
+    void startChain(CEventSourceFB *paECStartF);
+    void queueServiceCall(FORTE_TRIGGER_SERVICE_CLIENT *pa_serviceClientPtr);
+    void queueConnectWait(FORTE_TRIGGER_SERVICE_CLIENT *pa_serviceClientPtr);
 
   protected:
     void run() override;
-
 };
 
 #endif

@@ -16,47 +16,50 @@
 namespace forte {
   namespace ads {
 
-    CAdsConnection::CAdsConnection(const std::string& paAddr, const std::string& paRemoteIpOrHostName) :
-        mRemoteIpV4OrHostName(paRemoteIpOrHostName), mPort(0){
+    CAdsConnection::CAdsConnection(const std::string &paAddr, const std::string &paRemoteIpOrHostName) :
+        mRemoteIpV4OrHostName(paRemoteIpOrHostName),
+        mPort(0) {
       mRemoteDevice.netId = AmsNetId(paAddr);
       mRemoteDevice.port = AMSPORT_R0_PLC_TC3;
     }
 
-    CAdsConnection::CAdsConnection(const std::string& paAddr, uint16_t paPort, const std::string& paRemoteIpOrHostName) :
-        mRemoteIpV4OrHostName(paRemoteIpOrHostName), mPort(0){
+    CAdsConnection::CAdsConnection(const std::string &paAddr,
+                                   uint16_t paPort,
+                                   const std::string &paRemoteIpOrHostName) :
+        mRemoteIpV4OrHostName(paRemoteIpOrHostName),
+        mPort(0) {
       mRemoteDevice.netId = AmsNetId(paAddr);
       mRemoteDevice.port = paPort;
     }
 
-    CAdsConnection::~CAdsConnection(){
+    CAdsConnection::~CAdsConnection() {
       const long closeStatus = AdsPortCloseEx(mRemoteDevice.port);
-      if(0 != closeStatus){
+      if (0 != closeStatus) {
         DEVLOG_ERROR("Close ADS port failed with: %d\n", closeStatus);
       }
     }
 
-    bool CAdsConnection::connect(){
+    bool CAdsConnection::connect() {
       long status = AdsAddRoute(mRemoteDevice.netId, mRemoteIpV4OrHostName.c_str());
-      if(!status){
+      if (!status) {
         mPort = static_cast<uint16_t>(AdsPortOpenEx());
-      }
-      else{
+      } else {
         DEVLOG_ERROR("ADS connection could not be opened! Code: %d\n", status);
         return false;
       }
-      if(0 == mPort){
+      if (0 == mPort) {
         DEVLOG_ERROR("ADS port could not be opened!\n");
         return false;
       }
       return true;
     }
 
-    uint16_t CAdsConnection::getPort() const{
+    uint16_t CAdsConnection::getPort() const {
       return mPort;
     }
 
-    AmsAddr* CAdsConnection::getRemoteDevice() const{
-      return const_cast<AmsAddr*>(&mRemoteDevice);
+    AmsAddr *CAdsConnection::getRemoteDevice() const {
+      return const_cast<AmsAddr *>(&mRemoteDevice);
     }
 
   } /* namespace ads */

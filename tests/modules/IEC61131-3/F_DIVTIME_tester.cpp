@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2022 Primetals Technologies Austria GmbH
- *               
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -12,22 +12,20 @@
  *******************************************************************************/
 #include "../../core/fbtests/fbtestfixture.h"
 
-
 USE_STRING_ID(F_DIVTIME);
 
+struct F_DIVTIME_TestFixture : public CFBTestFixtureBase {
 
-struct F_DIVTIME_TestFixture : public CFBTestFixtureBase{
+    F_DIVTIME_TestFixture() : CFBTestFixtureBase(STRID(F_DIVTIME)) {
+      setInputData({&mIn_TIME_DIVTIME, &mIn_REAL_DIVTIME});
+      setOutputData({&mOut_TIME_DIVTIME});
+      CFBTestFixtureBase::setup();
+    }
 
-  F_DIVTIME_TestFixture() : CFBTestFixtureBase(STRID(F_DIVTIME)) {
-    setInputData({&mIn_TIME_DIVTIME, &mIn_REAL_DIVTIME});
-    setOutputData({&mOut_TIME_DIVTIME});
-    CFBTestFixtureBase::setup();
-  }
+    CIEC_TIME mIn_TIME_DIVTIME; // DATA INPUT
+    CIEC_REAL mIn_REAL_DIVTIME; // DATA INPUT
 
-  CIEC_TIME mIn_TIME_DIVTIME; // DATA INPUT
-  CIEC_REAL mIn_REAL_DIVTIME; // DATA INPUT
-
-  CIEC_TIME mOut_TIME_DIVTIME;
+    CIEC_TIME mOut_TIME_DIVTIME;
 };
 
 BOOST_FIXTURE_TEST_SUITE(F_DIVTIME_Tests, F_DIVTIME_TestFixture)

@@ -27,7 +27,6 @@ USE_STRING_ID(Q);
 USE_STRING_ID(R);
 USE_STRING_ID(S);
 
-
 #include "forte_bool.h"
 #include "iec61131_functions.h"
 #include "forte_array_common.h"
@@ -44,16 +43,29 @@ const CStringDictionary::TStringId FORTE_E_T_FF_SR::scmEventInputNames[] = {STRI
 const TDataIOID FORTE_E_T_FF_SR::scmEOWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_E_T_FF_SR::scmEOWithIndexes[] = {0};
 const CStringDictionary::TStringId FORTE_E_T_FF_SR::scmEventOutputNames[] = {STRID(EO)};
-const SFBInterfaceSpec FORTE_E_T_FF_SR::scmFBInterfaceSpec = {
-  3, scmEventInputNames, nullptr, nullptr, scmEIWithIndexes,
-  1, scmEventOutputNames, nullptr, scmEOWith, scmEOWithIndexes,
-  0, nullptr, nullptr,
-  1, scmDataOutputNames, scmDataOutputTypeIds,
-  0, nullptr,
-  0, nullptr
-};
+const SFBInterfaceSpec FORTE_E_T_FF_SR::scmFBInterfaceSpec = {3,
+                                                              scmEventInputNames,
+                                                              nullptr,
+                                                              nullptr,
+                                                              scmEIWithIndexes,
+                                                              1,
+                                                              scmEventOutputNames,
+                                                              nullptr,
+                                                              scmEOWith,
+                                                              scmEOWithIndexes,
+                                                              0,
+                                                              nullptr,
+                                                              nullptr,
+                                                              1,
+                                                              scmDataOutputNames,
+                                                              scmDataOutputTypeIds,
+                                                              0,
+                                                              nullptr,
+                                                              0,
+                                                              nullptr};
 
-FORTE_E_T_FF_SR::FORTE_E_T_FF_SR(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_E_T_FF_SR::FORTE_E_T_FF_SR(const CStringDictionary::TStringId paInstanceNameId,
+                                 forte::core::CFBContainer &paContainer) :
     CBasicFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, nullptr),
     var_Q(0_BOOL),
     conn_EO(*this, 0),
@@ -66,32 +78,39 @@ void FORTE_E_T_FF_SR::setInitialValues() {
 
 void FORTE_E_T_FF_SR::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   do {
-    switch(mECCState) {
+    switch (mECCState) {
       case scmStateSTART:
-        if(scmEventSID == paEIID) enterStateSET(paECET);
+        if (scmEventSID == paEIID)
+          enterStateSET(paECET);
+        else if (scmEventCLKID == paEIID)
+          enterStateSET(paECET);
         else
-        if(scmEventCLKID == paEIID) enterStateSET(paECET);
-        else return; //no transition cleared
+          return; // no transition cleared
         break;
       case scmStateSET:
-        if(scmEventRID == paEIID) enterStateRESET(paECET);
+        if (scmEventRID == paEIID)
+          enterStateRESET(paECET);
+        else if (scmEventCLKID == paEIID)
+          enterStateRESET(paECET);
         else
-        if(scmEventCLKID == paEIID) enterStateRESET(paECET);
-        else return; //no transition cleared
+          return; // no transition cleared
         break;
       case scmStateRESET:
-        if(scmEventSID == paEIID) enterStateSET(paECET);
+        if (scmEventSID == paEIID)
+          enterStateSET(paECET);
+        else if (scmEventCLKID == paEIID)
+          enterStateSET(paECET);
         else
-        if(scmEventCLKID == paEIID) enterStateSET(paECET);
-        else return; //no transition cleared
+          return; // no transition cleared
         break;
       default:
-        DEVLOG_ERROR("The state is not in the valid range! The state value is: %d. The max value can be: 3.", mECCState.operator TForteUInt16 ());
+        DEVLOG_ERROR("The state is not in the valid range! The state value is: %d. The max value can be: 3.",
+                     mECCState.operator TForteUInt16());
         mECCState = 0; // 0 is always the initial state
         return;
     }
     paEIID = cgInvalidEventID; // we have to clear the event after the first check in order to ensure correct behavior
-  } while(true);
+  } while (true);
 }
 
 void FORTE_E_T_FF_SR::enterStateSTART(CEventChainExecutionThread *const) {
@@ -115,13 +134,12 @@ void FORTE_E_T_FF_SR::readInputData(TEventID) {
 }
 
 void FORTE_E_T_FF_SR::writeOutputData(const TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventEOID: {
       writeData(0, var_Q, conn_Q);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
@@ -130,14 +148,14 @@ CIEC_ANY *FORTE_E_T_FF_SR::getDI(size_t) {
 }
 
 CIEC_ANY *FORTE_E_T_FF_SR::getDO(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_Q;
   }
   return nullptr;
 }
 
 CEventConnection *FORTE_E_T_FF_SR::getEOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_EO;
   }
   return nullptr;
@@ -148,7 +166,7 @@ CDataConnection **FORTE_E_T_FF_SR::getDIConUnchecked(TPortId) {
 }
 
 CDataConnection *FORTE_E_T_FF_SR::getDOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_Q;
   }
   return nullptr;
@@ -160,12 +178,12 @@ CIEC_ANY *FORTE_E_T_FF_SR::getVarInternal(size_t) {
 
 void FORTE_E_T_FF_SR::alg_SET(void) {
 
-  #line 2 "E_T_FF_SR.fbt"
+#line 2 "E_T_FF_SR.fbt"
   var_Q = true_BOOL;
 }
 
 void FORTE_E_T_FF_SR::alg_RESET(void) {
 
-  #line 6 "E_T_FF_SR.fbt"
+#line 6 "E_T_FF_SR.fbt"
   var_Q = false_BOOL;
 }

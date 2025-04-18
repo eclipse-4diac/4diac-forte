@@ -25,14 +25,16 @@ USE_STRING_ID(signature);
 USE_STRING_ID(warnings);
 USE_STRING_ID(WSTRING);
 
-
 DEFINE_FIRMWARE_DATATYPE(OrchestrationForm, STRID(OrchestrationForm));
 
 CIEC_OrchestrationForm::CIEC_OrchestrationForm() :
     CIEC_STRUCT(STRID(OrchestrationForm), 7, scmElementTypes, scmElementNames, e_APPLICATION + e_CONSTRUCTED + 1) {
 }
 
-const CStringDictionary::TStringId CIEC_OrchestrationForm::scmElementTypes[] = { STRID(ArrowheadService), STRID(ArrowheadSystem), STRID(WSTRING),
-  STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(ARRAY), 10, STRID(WSTRING) };
-const CStringDictionary::TStringId CIEC_OrchestrationForm::scmElementNames[] = { STRID(service), STRID(provider), STRID(serviceURI),
-  STRID(instruction), STRID(authorizationToken), STRID(signature), STRID(warnings) };
+const CStringDictionary::TStringId CIEC_OrchestrationForm::scmElementTypes[] = {
+    STRID(ArrowheadService), STRID(ArrowheadSystem), STRID(WSTRING), STRID(WSTRING),
+    STRID(WSTRING),          STRID(WSTRING),         STRID(ARRAY),   10,
+    STRID(WSTRING)};
+const CStringDictionary::TStringId CIEC_OrchestrationForm::scmElementNames[] = {
+    STRID(service),   STRID(provider), STRID(serviceURI), STRID(instruction), STRID(authorizationToken),
+    STRID(signature), STRID(warnings)};

@@ -13,70 +13,64 @@
 #include "processinterface.h"
 
 COdroidProcessInterface::COdroidProcessInterface(forte::core::CFBContainer &paContainer,
-    const SFBInterfaceSpec& paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId) :
-    CSysFsProcessInterface(paContainer, paInterfaceSpec, paInstanceNameId){
-
+                                                 const SFBInterfaceSpec &paInterfaceSpec,
+                                                 const CStringDictionary::TStringId paInstanceNameId) :
+    CSysFsProcessInterface(paContainer, paInterfaceSpec, paInstanceNameId) {
 }
 
-COdroidProcessInterface::~COdroidProcessInterface(){
-
+COdroidProcessInterface::~COdroidProcessInterface() {
 }
 
 bool COdroidProcessInterface::initialise(bool paIsInput, CEventChainExecutionThread *const paECET) {
   bool retVal = true;
-  if((paIsInput) && (getDO(2)->getDataTypeID() == CIEC_ANY::e_WORD)){
+  if ((paIsInput) && (getDO(2)->getDataTypeID() == CIEC_ANY::e_WORD)) {
     std::string fileName("/sys/class/saradc/ch");
     fileName += PARAMS().getValue();
     mFile.open(fileName.c_str(), std::fstream::in);
 
-    if(mFile.is_open()){
+    if (mFile.is_open()) {
       STATUS() = scmOK;
-    }
-    else{
+    } else {
       STATUS() = scmNotInitialised;
       DEVLOG_ERROR("Opening file %s failed.\n", fileName.c_str());
       retVal = false;
     }
-  }
-  else{
+  } else {
     retVal = CSysFsProcessInterface::initialise(paIsInput, paECET);
   }
   return retVal;
 }
 
-bool COdroidProcessInterface::deinitialise(){
+bool COdroidProcessInterface::deinitialise() {
   bool retVal = true;
   STATUS() = scmOK;
-  if(getDO(2)->getDataTypeID() == CIEC_ANY::e_WORD){
+  if (getDO(2)->getDataTypeID() == CIEC_ANY::e_WORD) {
     mFile.close();
-  }
-  else{
+  } else {
     retVal = CSysFsProcessInterface::deinitialise();
   }
   return retVal;
 }
 
-bool COdroidProcessInterface::readWord(){
+bool COdroidProcessInterface::readWord() {
   bool retVal = false;
-  if(mFile.is_open()){
+  if (mFile.is_open()) {
     std::string binData;
 
     mFile.clear();
     mFile.seekg(0, std::ios::beg);
     std::getline(mFile, binData);
-    if(mFile.fail()){
+    if (mFile.fail()) {
       STATUS() = scmCouldNotRead;
-    }
-    else{
-      if(-1 != IN_W().fromString(binData.c_str())){
+    } else {
+      if (-1 != IN_W().fromString(binData.c_str())) {
         STATUS() = scmOK;
         retVal = true;
       } else {
         STATUS() = scmError;
       }
     }
-  }
-  else{
+  } else {
     STATUS() = scmNotInitialised;
   }
 

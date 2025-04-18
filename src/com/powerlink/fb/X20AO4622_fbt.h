@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2012 - 2024 AIT
+ * Copyright (c) 2012 - 2024 AIT
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -26,9 +26,8 @@
 #include "forte_array_fixed.h"
 #include "forte_array_variable.h"
 
-
 class FORTE_X20AO4622 final : public PowerlinkFunctionBlockAO {
-  DECLARE_FIRMWARE_FB(FORTE_X20AO4622)
+    DECLARE_FIRMWARE_FB(FORTE_X20AO4622)
 
   private:
     static const CStringDictionary::TStringId scmDataInputNames[];
@@ -92,7 +91,16 @@ class FORTE_X20AO4622 final : public PowerlinkFunctionBlockAO {
     CDataConnection **getDIConUnchecked(TPortId) override;
     CDataConnection *getDOConUnchecked(TPortId) override;
 
-    void evt_INIT(const CIEC_BOOL &paQI, const CIEC_USINT &paCNID, const CIEC_UINT &paMODID, const CIEC_INT &paAO01, const CIEC_INT &paAO02, const CIEC_INT &paAO03, const CIEC_INT &paAO04, CIEC_BOOL &paQO, CIEC_USINT &paCNIDO, CIEC_STRING &paSTATUS) {
+    void evt_INIT(const CIEC_BOOL &paQI,
+                  const CIEC_USINT &paCNID,
+                  const CIEC_UINT &paMODID,
+                  const CIEC_INT &paAO01,
+                  const CIEC_INT &paAO02,
+                  const CIEC_INT &paAO03,
+                  const CIEC_INT &paAO04,
+                  CIEC_BOOL &paQO,
+                  CIEC_USINT &paCNIDO,
+                  CIEC_STRING &paSTATUS) {
       var_QI = paQI;
       var_CNID = paCNID;
       var_MODID = paMODID;
@@ -106,7 +114,16 @@ class FORTE_X20AO4622 final : public PowerlinkFunctionBlockAO {
       paSTATUS = var_STATUS;
     }
 
-    void evt_REQ(const CIEC_BOOL &paQI, const CIEC_USINT &paCNID, const CIEC_UINT &paMODID, const CIEC_INT &paAO01, const CIEC_INT &paAO02, const CIEC_INT &paAO03, const CIEC_INT &paAO04, CIEC_BOOL &paQO, CIEC_USINT &paCNIDO, CIEC_STRING &paSTATUS) {
+    void evt_REQ(const CIEC_BOOL &paQI,
+                 const CIEC_USINT &paCNID,
+                 const CIEC_UINT &paMODID,
+                 const CIEC_INT &paAO01,
+                 const CIEC_INT &paAO02,
+                 const CIEC_INT &paAO03,
+                 const CIEC_INT &paAO04,
+                 CIEC_BOOL &paQO,
+                 CIEC_USINT &paCNIDO,
+                 CIEC_STRING &paSTATUS) {
       var_QI = paQI;
       var_CNID = paCNID;
       var_MODID = paMODID;
@@ -120,9 +137,16 @@ class FORTE_X20AO4622 final : public PowerlinkFunctionBlockAO {
       paSTATUS = var_STATUS;
     }
 
-    void operator()(const CIEC_BOOL &paQI, const CIEC_USINT &paCNID, const CIEC_UINT &paMODID, const CIEC_INT &paAO01, const CIEC_INT &paAO02, const CIEC_INT &paAO03, const CIEC_INT &paAO04, CIEC_BOOL &paQO, CIEC_USINT &paCNIDO, CIEC_STRING &paSTATUS) {
+    void operator()(const CIEC_BOOL &paQI,
+                    const CIEC_USINT &paCNID,
+                    const CIEC_UINT &paMODID,
+                    const CIEC_INT &paAO01,
+                    const CIEC_INT &paAO02,
+                    const CIEC_INT &paAO03,
+                    const CIEC_INT &paAO04,
+                    CIEC_BOOL &paQO,
+                    CIEC_USINT &paCNIDO,
+                    CIEC_STRING &paSTATUS) {
       evt_INIT(paQI, paCNID, paMODID, paAO01, paAO02, paAO03, paAO04, paQO, paCNIDO, paSTATUS);
     }
 };
-
-

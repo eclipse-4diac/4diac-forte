@@ -14,22 +14,27 @@
 
 namespace forte {
   namespace ads {
-    DEFINE_SINGLETON (CAdsConnectionManager)
+    DEFINE_SINGLETON(CAdsConnectionManager)
 
-    CAdsConnectionManager::CAdsConnectionManager(){
+    CAdsConnectionManager::CAdsConnectionManager() {
     }
 
-    CAdsConnectionManager::~CAdsConnectionManager(){
+    CAdsConnectionManager::~CAdsConnectionManager() {
       // TODO Auto-generated destructor stub
     }
 
-    bool CAdsConnectionManager::addConnection(const std::string& paFriendlyServerName, const std::string& paAddr, const std::string& paRemoteIpOrHostName){
+    bool CAdsConnectionManager::addConnection(const std::string &paFriendlyServerName,
+                                              const std::string &paAddr,
+                                              const std::string &paRemoteIpOrHostName) {
       return addConnection(paFriendlyServerName, paAddr, AMSPORT_R0_PLC_TC3, paRemoteIpOrHostName);
     }
 
-    bool CAdsConnectionManager::addConnection(const std::string& paFriendlyServerName, const std::string& paAddr, uint16_t paPort, const std::string& paRemoteIpOrHostName){
+    bool CAdsConnectionManager::addConnection(const std::string &paFriendlyServerName,
+                                              const std::string &paAddr,
+                                              uint16_t paPort,
+                                              const std::string &paRemoteIpOrHostName) {
       CAdsConnection *connection = new CAdsConnection(paAddr, paPort, paRemoteIpOrHostName);
-      if(connection->connect()){
+      if (connection->connect()) {
         mConnectionRegistry[paFriendlyServerName] = connection;
         return true;
       }
@@ -37,15 +42,14 @@ namespace forte {
       return false;
     }
 
-    void CAdsConnectionManager::removeConnection(const std::string& paFriendlyServerName){
+    void CAdsConnectionManager::removeConnection(const std::string &paFriendlyServerName) {
       CAdsConnection *connection = mConnectionRegistry[paFriendlyServerName];
       delete connection;
       mConnectionRegistry.erase(paFriendlyServerName);
     }
 
-    CAdsConnection* CAdsConnectionManager::getConnection(const std::string& paFriendlyServerName){
+    CAdsConnection *CAdsConnectionManager::getConnection(const std::string &paFriendlyServerName) {
       return mConnectionRegistry[paFriendlyServerName];
     }
-  }
-}
-
+  } // namespace ads
+} // namespace forte

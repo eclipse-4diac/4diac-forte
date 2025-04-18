@@ -15,7 +15,7 @@
  *     - initial API and implementation and/or initial documentation
  *    Alois Zoitl - introduced new CGenFB class for better handling generic FBs
  *    Martin Jobst - add generic readInputData and writeOutputData
- *....Franz Höpfinger - Update it to represent latest Generation Format from 4diac IDE. no Functional Changes. 
+ *....Franz Höpfinger - Update it to represent latest Generation Format from 4diac IDE. no Functional Changes.
  *******************************************************************************/
 #include "GEN_E_MUX_fbt.h"
 
@@ -35,24 +35,23 @@ USE_STRING_ID(UINT);
 
 DEFINE_GENERIC_FIRMWARE_FB(GEN_E_MUX, STRID(GEN_E_MUX));
 
-const CStringDictionary::TStringId GEN_E_MUX::scmDataOutputNames[] = { STRID(K) };
-const CStringDictionary::TStringId GEN_E_MUX::scmDataOutputTypeIds[] = { STRID(UINT) };
+const CStringDictionary::TStringId GEN_E_MUX::scmDataOutputNames[] = {STRID(K)};
+const CStringDictionary::TStringId GEN_E_MUX::scmDataOutputTypeIds[] = {STRID(UINT)};
 
-const CStringDictionary::TStringId GEN_E_MUX::scmEventOutputNames[] = { STRID(EO) };
+const CStringDictionary::TStringId GEN_E_MUX::scmEventOutputNames[] = {STRID(EO)};
 
 GEN_E_MUX::GEN_E_MUX(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CGenFunctionBlock<CFunctionBlock>(paContainer, paInstanceNameId),
     var_K(0_UINT),
     conn_EO(*this, 0),
-    conn_K(*this, 0, var_K) {
-};
+    conn_K(*this, 0, var_K) {};
 
 void GEN_E_MUX::setInitialValues() {
   var_K = 0_UINT;
 }
 
 void GEN_E_MUX::executeEvent(const TEventID paEIID, CEventChainExecutionThread *const paECET) {
-  if(paEIID < getFBInterfaceSpec().mNumEIs){
+  if (paEIID < getFBInterfaceSpec().mNumEIs) {
     var_K = CIEC_UINT(static_cast<TForteUInt16>(paEIID));
     sendOutputEvent(scmEventEOID, paECET);
   }
@@ -63,26 +62,25 @@ void GEN_E_MUX::readInputData(TEventID) {
 }
 
 void GEN_E_MUX::writeOutputData(const TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventEOID: {
       writeData(0, var_K, conn_K);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
-bool GEN_E_MUX::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec){
+bool GEN_E_MUX::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) {
   const char *acPos = strrchr(paConfigString, '_');
 
-  if(nullptr != acPos){
+  if (nullptr != acPos) {
     ++acPos;
-    if('M' != *acPos){
-      //we have an underscore and it is not the first underscore after E
+    if ('M' != *acPos) {
+      // we have an underscore and it is not the first underscore after E
       paInterfaceSpec.mNumEIs = static_cast<TEventID>(forte::core::util::strtoul(acPos, nullptr, 10));
 
-      if(paInterfaceSpec.mNumEIs < CFunctionBlock::scmMaxInterfaceEvents && paInterfaceSpec.mNumEIs >= 2){
+      if (paInterfaceSpec.mNumEIs < CFunctionBlock::scmMaxInterfaceEvents && paInterfaceSpec.mNumEIs >= 2) {
         scmEventInputNames = std::make_unique<CStringDictionary::TStringId[]>(paInterfaceSpec.mNumEIs);
 
         generateGenericInterfacePointNameArray("EI", scmEventInputNames.get(), paInterfaceSpec.mNumEIs);
@@ -99,13 +97,13 @@ bool GEN_E_MUX::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec
         paInterfaceSpec.mDONames = scmDataOutputNames;
         paInterfaceSpec.mDODataTypeNames = scmDataOutputTypeIds;
         return true;
-      }
-      else{
-        if(paInterfaceSpec.mNumEIs >= CFunctionBlock::scmMaxInterfaceEvents){
-          DEVLOG_ERROR("Cannot configure FB-Instance E_MUX_%d. Number of event inputs exceeds maximum of %d.\n", paInterfaceSpec.mNumEIs, CFunctionBlock::scmMaxInterfaceEvents);
-        }
-        else{
-          DEVLOG_ERROR("Cannot configure FB-Instance E_MUX_%d. Number of event inputs smaller than minimum of 2.\n", paInterfaceSpec.mNumEIs);
+      } else {
+        if (paInterfaceSpec.mNumEIs >= CFunctionBlock::scmMaxInterfaceEvents) {
+          DEVLOG_ERROR("Cannot configure FB-Instance E_MUX_%d. Number of event inputs exceeds maximum of %d.\n",
+                       paInterfaceSpec.mNumEIs, CFunctionBlock::scmMaxInterfaceEvents);
+        } else {
+          DEVLOG_ERROR("Cannot configure FB-Instance E_MUX_%d. Number of event inputs smaller than minimum of 2.\n",
+                       paInterfaceSpec.mNumEIs);
         }
       }
     }
@@ -118,14 +116,14 @@ CIEC_ANY *GEN_E_MUX::getDI(size_t) {
 }
 
 CIEC_ANY *GEN_E_MUX::getDO(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_K;
   }
   return nullptr;
 }
 
 CEventConnection *GEN_E_MUX::getEOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_EO;
   }
   return nullptr;
@@ -136,7 +134,7 @@ CDataConnection **GEN_E_MUX::getDIConUnchecked(TPortId) {
 }
 
 CDataConnection *GEN_E_MUX::getDOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_K;
   }
   return nullptr;

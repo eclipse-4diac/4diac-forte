@@ -18,41 +18,40 @@ USE_STRING_ID(IN1);
 USE_STRING_ID(IN2);
 USE_STRING_ID(OUT);
 
-
 DEFINE_FB_TESTER(F_GT_TIME_tester, STRID(F_GT))
 
 F_GT_TIME_tester::F_GT_TIME_tester(CResource *mTestResource) :
     CFBTester(mTestee, mTestResource),
-        mTestee(0, mTestResource),
-        mOut_EO_Conn(mTestee, STRID(CNF)),
-        mIn_IN1_Conn(mTestee, STRID(IN1), &mIN1),
-        mIn_IN2_Conn(mTestee, STRID(IN2), &mIN2),
-        mOut_OUT_Conn(mTestee, STRID(OUT), &mOut_OUT){
+    mTestee(0, mTestResource),
+    mOut_EO_Conn(mTestee, STRID(CNF)),
+    mIn_IN1_Conn(mTestee, STRID(IN1), &mIN1),
+    mIn_IN2_Conn(mTestee, STRID(IN2), &mIN2),
+    mOut_OUT_Conn(mTestee, STRID(OUT), &mOut_OUT) {
   mTestee.changeExecutionState(EMGMCommandType::Start);
 }
 
-void F_GT_TIME_tester::executeAllTests(){
+void F_GT_TIME_tester::executeAllTests() {
   evaluateTestResult(testCase_GTual(), "Equal");
   evaluateTestResult(testCase_Larger(), "Larger");
   evaluateTestResult(testCase_Smaller(), "Smaller");
 }
 
-bool F_GT_TIME_tester::testCase_GTual(){
+bool F_GT_TIME_tester::testCase_GTual() {
   bool bResult = true;
 
-  //Send event
+  // Send event
   triggerEvent(0);
 
-  //Test correct order of outgoing events
-  if(pullFirstChainEventID() != 0) {
+  // Test correct order of outgoing events
+  if (pullFirstChainEventID() != 0) {
     bResult = false;
   }
-  //Test if event chain is empty
-  if(!eventChainEmpty()) {
+  // Test if event chain is empty
+  if (!eventChainEmpty()) {
     bResult = false;
   }
-  //verify data output as both are zero the value value should be true
-  if(mOut_OUT != false) {
+  // verify data output as both are zero the value value should be true
+  if (mOut_OUT != false) {
     bResult = false;
   }
   mIN1.fromString("T#500ms");
@@ -60,13 +59,13 @@ bool F_GT_TIME_tester::testCase_GTual(){
 
   triggerEvent(0);
 
-  if(mOut_OUT != false) {
+  if (mOut_OUT != false) {
     bResult = false;
   }
   return bResult;
 }
 
-bool F_GT_TIME_tester::testCase_Larger(){
+bool F_GT_TIME_tester::testCase_Larger() {
   bool bResult = true;
 
   mIN1.fromString("T#800ms");
@@ -74,13 +73,13 @@ bool F_GT_TIME_tester::testCase_Larger(){
 
   triggerEvent(0);
 
-  if(mOut_OUT != true) {
+  if (mOut_OUT != true) {
     bResult = false;
   }
   return bResult;
 }
 
-bool F_GT_TIME_tester::testCase_Smaller(){
+bool F_GT_TIME_tester::testCase_Smaller() {
   bool bResult = true;
 
   mIN1.fromString("T#150ms");
@@ -88,7 +87,7 @@ bool F_GT_TIME_tester::testCase_Smaller(){
 
   triggerEvent(0);
 
-  if(mOut_OUT != false) {
+  if (mOut_OUT != false) {
     bResult = false;
   }
   return bResult;

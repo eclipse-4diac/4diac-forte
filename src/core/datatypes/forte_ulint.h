@@ -25,12 +25,11 @@
 #include "forte_usint.h"
 #include <limits>
 
-
 /*!\ingroup COREDTS CIEC_ULINT represents the ulint data type according to IEC 61131.
  *  @author mw & az
  */
 class CIEC_ULINT final : public CIEC_ANY_UNSIGNED {
-  DECLARE_FIRMWARE_DATATYPE(ULINT)
+    DECLARE_FIRMWARE_DATATYPE(ULINT)
 
   public:
     using TValueType = TForteUInt64;
@@ -43,40 +42,41 @@ class CIEC_ULINT final : public CIEC_ANY_UNSIGNED {
 
     CIEC_ULINT() = default;
 
-    CIEC_ULINT(const CIEC_ULINT& paValue) : CIEC_ANY_UNSIGNED() {
+    CIEC_ULINT(const CIEC_ULINT &paValue) : CIEC_ANY_UNSIGNED() {
       setValueSimple(paValue);
     }
 
-    CIEC_ULINT(const CIEC_UDINT& paValue) : CIEC_ANY_UNSIGNED() {
+    CIEC_ULINT(const CIEC_UDINT &paValue) : CIEC_ANY_UNSIGNED() {
       setValueSimple(paValue);
     }
 
-    CIEC_ULINT(const CIEC_UINT& paValue) : CIEC_ANY_UNSIGNED() {
+    CIEC_ULINT(const CIEC_UINT &paValue) : CIEC_ANY_UNSIGNED() {
       setValueSimple(paValue);
     }
 
-    CIEC_ULINT(const CIEC_USINT& paValue) : CIEC_ANY_UNSIGNED() {
+    CIEC_ULINT(const CIEC_USINT &paValue) : CIEC_ANY_UNSIGNED() {
       setValueSimple(paValue);
     }
 
-    explicit CIEC_ULINT(const CIEC_ANY_INT& paValue) :
-            CIEC_ANY_UNSIGNED() {
+    explicit CIEC_ULINT(const CIEC_ANY_INT &paValue) : CIEC_ANY_UNSIGNED() {
       setValueSimple(paValue);
     }
 
-   explicit CIEC_ULINT(const TValueType paValue) {
+    explicit CIEC_ULINT(const TValueType paValue) {
       setTUINT64(paValue);
     }
 
     ~CIEC_ULINT() override = default;
 
-    CIEC_ULINT& operator =(const CIEC_ULINT &paValue) {
+    CIEC_ULINT &operator=(const CIEC_ULINT &paValue) {
       // Simple value assignment - no self assignment check needed
       setValueSimple(paValue);
       return *this;
     }
 
-    template <typename T, std::enable_if_t<std::is_same_v<typename forte::core::mpl::implicit_cast_t<T, CIEC_ULINT>, CIEC_ULINT>, int> = 0>
+    template<typename T,
+             std::enable_if_t<std::is_same_v<typename forte::core::mpl::implicit_cast_t<T, CIEC_ULINT>, CIEC_ULINT>,
+                              int> = 0>
     CIEC_ULINT &operator=(const T &paValue) {
       setValueSimple(paValue);
       return *this;
@@ -101,23 +101,23 @@ class CIEC_ULINT final : public CIEC_ANY_UNSIGNED {
     }
 };
 
-inline CIEC_ULINT operator ""_ULINT(unsigned long long int paValue) {
+inline CIEC_ULINT operator""_ULINT(unsigned long long int paValue) {
   return CIEC_ULINT(static_cast<CIEC_ULINT::TValueType>(paValue));
 }
 
 namespace std {
-  template <>
+  template<>
   struct numeric_limits<CIEC_ULINT> : public forte::templates::numeric_limits<CIEC_ULINT> {
-    static constexpr size_t bitLength = 64U;
+      static constexpr size_t bitLength = 64U;
   };
-}
+} // namespace std
 
 namespace forte {
-  template <>
+  template<>
   struct CDataTypeTrait<CIEC_ULINT> {
       static constexpr CIEC_ANY::EDataTypeID scmDataTypeId = CIEC_ANY::e_ULINT;
       static const CStringDictionary::TStringId scmDataTypeName;
   };
-}
+} // namespace forte
 
 #endif /*_FORTE_ULINT_H_*/

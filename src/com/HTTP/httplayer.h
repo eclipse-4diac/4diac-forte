@@ -30,17 +30,18 @@ namespace forte {
 
     class CHttpComLayer : public CComLayer {
       public:
-        CHttpComLayer(CComLayer* paUpperLayer, CBaseCommFB* paComFB);
+        CHttpComLayer(CComLayer *paUpperLayer, CBaseCommFB *paComFB);
         ~CHttpComLayer() override;
 
         EComResponse sendData(void *paData, unsigned int paSize) override; // top interface, called from top
         EComResponse recvData(const void *paData, unsigned int paSize) override;
 
-        EComResponse recvServerData(CSinglyLinkedList<std::string> &paParameterNames, CSinglyLinkedList<std::string> &paParameterValues);
+        EComResponse recvServerData(CSinglyLinkedList<std::string> &paParameterNames,
+                                    CSinglyLinkedList<std::string> &paParameterValues);
 
-        EComResponse openConnection(char* paLayerParameter) override;
+        EComResponse openConnection(char *paLayerParameter) override;
 
-        EComResponse startServer(char* paLayerParameter);
+        EComResponse startServer(char *paLayerParameter);
 
         void closeConnection() override;
 
@@ -63,7 +64,6 @@ namespace forte {
         TForteUInt16 getPort() const;
 
       private:
-
         /**
          * Parse the HTTP response and checks the returned code
          * @param paData buffer with the HTTP response
@@ -72,26 +72,26 @@ namespace forte {
         EComResponse handleHTTPResponse(char *paData);
 
         /** Serializes the data to a char* */
-        void serializeData(const CIEC_ANY& paSDx, std::string& paMember);
+        void serializeData(const CIEC_ANY &paSDx, std::string &paMember);
 
         void sendDataAsServer(void *paData);
 
         void sendDataAsClient(void *paData);
 
-        const CIEC_ANY& getSDx(void *paData, int paSdNum);
+        const CIEC_ANY &getSDx(void *paData, int paSdNum);
 
-        EComResponse openClientConnection(char* paLayerParameter);
+        EComResponse openClientConnection(char *paLayerParameter);
 
         bool checkSDsAndRDsType() const;
 
-        bool handleAddress(const char* paAddress);
+        bool handleAddress(const char *paAddress);
 
         bool handleContentAndRequestType(CParameterParser &paParser, size_t paNoOfParameters);
 
-        bool storeRequestType(const char* paType);
+        bool storeRequestType(const char *paType);
 
         void createRequest();
-      EComResponse startServer (EComResponse eRetVal, char *paLayerParameter);
+        EComResponse startServer(EComResponse eRetVal, char *paLayerParameter);
 
         EComResponse mInterruptResp;
 
@@ -120,7 +120,7 @@ namespace forte {
         bool mCorrectlyInitialized;
     };
 
-  }
-}
+  } // namespace com_infra
+} // namespace forte
 
 #endif /* _HTTPCOMLAYER_H_ */

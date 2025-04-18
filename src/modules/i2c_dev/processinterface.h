@@ -17,6 +17,4 @@
 // make the I2C process interface available as Process interface for the IO FBs
 typedef CI2CProcessInterface CProcessInterface;
 
-
 #endif
-

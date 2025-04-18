@@ -19,22 +19,24 @@
 #include <vector>
 #include <string>
 
-
 class COpcProcessVar;
 class COpcConnectionImpl;
 class COpcConnection;
 
-class CCmd_AddConnection : public ICmd{
+class CCmd_AddConnection : public ICmd {
   public:
-    explicit CCmd_AddConnection(COpcConnectionImpl *paConnection, const std::string& paGroupName, unsigned long paReqUpdateRate, float paDeadBand,
-        std::vector<COpcProcessVar*> paNewItems) ;
+    explicit CCmd_AddConnection(COpcConnectionImpl *paConnection,
+                                const std::string &paGroupName,
+                                unsigned long paReqUpdateRate,
+                                float paDeadBand,
+                                std::vector<COpcProcessVar *> paNewItems);
     ~CCmd_AddConnection() = default;
 
     void runCommand() override;
-    const char* getCommandName() const override;
+    const char *getCommandName() const override;
 
   private:
-    COpcConnectionImpl* mConnection;
+    COpcConnectionImpl *mConnection;
     const std::string mGroupName;
     unsigned long mReqUpdateRate;
     float mDeadBand;

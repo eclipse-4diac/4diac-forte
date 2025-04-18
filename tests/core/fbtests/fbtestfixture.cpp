@@ -21,7 +21,7 @@
 #include <ecet.h>
 
 #ifdef WIN32
-# define usleep(x) Sleep((x)/1000)
+#define usleep(x) Sleep((x) / 1000)
 #endif
 
 //! Helper class allowing to access the can be connected function from the FBTester
@@ -30,15 +30,17 @@ class CFBTestConn final : public CDataConnection {
     static bool canBeConnected(const CIEC_ANY &paSrcDataPoint, const CIEC_ANY &paDstDataPoint) {
       return CDataConnection::canBeConnected(paSrcDataPoint, paDstDataPoint);
     }
+
   private:
-    //you are not allowed to create this class therefor constructor and destructor are private
+    // you are not allowed to create this class therefor constructor and destructor are private
     CFBTestConn();
     virtual ~CFBTestConn();
 };
 
 class CFBTestInputDataConn final : public CDataConnection {
   public:
-    CFBTestInputDataConn(CFunctionBlock &paSrcFB, CIEC_ANY &paValue) : CDataConnection(paSrcFB, CStringDictionary::scmInvalidStringId),
+    CFBTestInputDataConn(CFunctionBlock &paSrcFB, CIEC_ANY &paValue) :
+        CDataConnection(paSrcFB, CStringDictionary::scmInvalidStringId),
         mValue(paValue) {
     }
 
@@ -50,7 +52,7 @@ class CFBTestInputDataConn final : public CDataConnection {
       paValue.setValue(mValue.unwrap());
     }
 
-    CIEC_ANY& getValue() override {
+    CIEC_ANY &getValue() override {
       return mValue;
     }
 
@@ -59,50 +61,51 @@ class CFBTestInputDataConn final : public CDataConnection {
 };
 
 CFBTestFixtureBase::CFBTestFixtureBase(CStringDictionary::TStringId paTypeId) :
-        CGenFunctionBlock<CFunctionBlock>(CFBTestDataGlobalFixture::getResource(), 0), mTypeId(paTypeId),
-        mFBUnderTest(CTypeLib::createFB(paTypeId, paTypeId, CFBTestDataGlobalFixture::getResource())) {
+    CGenFunctionBlock<CFunctionBlock>(CFBTestDataGlobalFixture::getResource(), 0),
+    mTypeId(paTypeId),
+    mFBUnderTest(CTypeLib::createFB(paTypeId, paTypeId, CFBTestDataGlobalFixture::getResource())) {
 }
 
 bool CFBTestFixtureBase::initialize() {
-  if(!CFunctionBlock::initialize()) {
+  if (!CFunctionBlock::initialize()) {
     return false;
   }
   changeExecutionState(EMGMCommandType::Reset);
   changeExecutionState(EMGMCommandType::Start);
-  //assure that we are in running state
+  // assure that we are in running state
   BOOST_REQUIRE_EQUAL(CFunctionBlock::E_FBStates::Running, getState());
   BOOST_REQUIRE(nullptr != mFBUnderTest);
   return true;
 }
 
-CFBTestFixtureBase::~CFBTestFixtureBase(){
-  const SFBInterfaceSpec& interfaceSpec(mFBUnderTest->getFBInterfaceSpec());
+CFBTestFixtureBase::~CFBTestFixtureBase() {
+  const SFBInterfaceSpec &interfaceSpec(mFBUnderTest->getFBInterfaceSpec());
 
   performFBResetTests();
 
-  for(size_t i = 0; i < interfaceSpec.mNumEOs; i++) {
-   CEventConnection *eventCon = mFBUnderTest->getEOConnection(interfaceSpec.mEONames[i]);
-   BOOST_CHECK_EQUAL(EMGMResponse::Ready, eventCon->disconnect(*this, interfaceSpec.mEONames[i]));
+  for (size_t i = 0; i < interfaceSpec.mNumEOs; i++) {
+    CEventConnection *eventCon = mFBUnderTest->getEOConnection(interfaceSpec.mEONames[i]);
+    BOOST_CHECK_EQUAL(EMGMResponse::Ready, eventCon->disconnect(*this, interfaceSpec.mEONames[i]));
   }
 
-  for(size_t i = 0; i < interfaceSpec.mNumDOs; ++i) {
-   CDataConnection *dataCon = mFBUnderTest->getDOConnection(interfaceSpec.mDONames[i]);
+  for (size_t i = 0; i < interfaceSpec.mNumDOs; ++i) {
+    CDataConnection *dataCon = mFBUnderTest->getDOConnection(interfaceSpec.mDONames[i]);
 
-   BOOST_CHECK_EQUAL(EMGMResponse::Ready, dataCon->disconnect(*this, interfaceSpec.mDONames[i]));
+    BOOST_CHECK_EQUAL(EMGMResponse::Ready, dataCon->disconnect(*this, interfaceSpec.mDONames[i]));
   }
 
-  for(size_t i = 0; i < interfaceSpec.mNumDIs; ++i) {
-   BOOST_CHECK_EQUAL(EMGMResponse::Ready, mDIConnections[i]->disconnect(*mFBUnderTest, interfaceSpec.mDINames[i]));
+  for (size_t i = 0; i < interfaceSpec.mNumDIs; ++i) {
+    BOOST_CHECK_EQUAL(EMGMResponse::Ready, mDIConnections[i]->disconnect(*mFBUnderTest, interfaceSpec.mDINames[i]));
   }
 
   performFBDeleteTests();
 
-  freeFBInterfaceData();  //clean the interface and connections first.
+  freeFBInterfaceData(); // clean the interface and connections first.
   getGenInterfaceSpec() = {};
 }
 
 void CFBTestFixtureBase::performFBResetTests() {
-  const SFBInterfaceSpec& interfaceSpec(mFBUnderTest->getFBInterfaceSpec());
+  const SFBInterfaceSpec &interfaceSpec(mFBUnderTest->getFBInterfaceSpec());
 
   BOOST_CHECK_EQUAL(EMGMResponse::Ready, mFBUnderTest->changeExecutionState(EMGMCommandType::Stop));
   BOOST_CHECK_EQUAL(EMGMResponse::Ready, mFBUnderTest->changeExecutionState(EMGMCommandType::Reset));
@@ -110,14 +113,14 @@ void CFBTestFixtureBase::performFBResetTests() {
   CFunctionBlock *freshInstance = CTypeLib::createFB(mTypeId, mTypeId, *getResource());
   BOOST_REQUIRE(freshInstance != nullptr);
 
-  if(!mConfigString.empty()) {
+  if (!mConfigString.empty()) {
     freshInstance->configureFB(mConfigString.c_str());
   }
 
-  for(size_t i = 0; i < interfaceSpec.mNumDIs; ++i) {
+  for (size_t i = 0; i < interfaceSpec.mNumDIs; ++i) {
     BOOST_TEST(mFBUnderTest->getDI(i)->equals(*freshInstance->getDI(i)));
   }
-  for(size_t i = 0; i < interfaceSpec.mNumDOs; ++i) {
+  for (size_t i = 0; i < interfaceSpec.mNumDOs; ++i) {
     BOOST_TEST(mFBUnderTest->getDO(i)->equals(*freshInstance->getDO(i)));
   }
 
@@ -137,8 +140,8 @@ void CFBTestFixtureBase::performFBDeleteTests() {
   mFBUnderTest = nullptr;
 }
 
-void CFBTestFixtureBase::setup(const char* paConfigString){
-  if(paConfigString != nullptr) {
+void CFBTestFixtureBase::setup(const char *paConfigString) {
+  if (paConfigString != nullptr) {
     mConfigString = paConfigString;
     mFBUnderTest->configureFB(paConfigString);
   }
@@ -168,14 +171,14 @@ void CFBTestFixtureBase::triggerEvent(TPortId paEIId) {
 
   execThread->startEventChain(TEventEntry(*mFBUnderTest, paEIId));
 
-  //Wait till event execution for this input event has finished
+  // Wait till event execution for this input event has finished
   do {
     usleep(1);
-  } while(execThread->isProcessingEvents());
+  } while (execThread->isProcessingEvents());
 
   for (TPortId index = 0; index < mOutputDataBuffers.size(); ++index) {
     mOutputDataBuffers[index]->setValue(
-      mFBUnderTest->getDOConnection(mFBUnderTest->getFBInterfaceSpec().mDONames[index])->getValue().unwrap());
+        mFBUnderTest->getDOConnection(mFBUnderTest->getFBInterfaceSpec().mDONames[index])->getValue().unwrap());
   }
 }
 
@@ -196,25 +199,25 @@ void CFBTestFixtureBase::clearEventChain() {
 }
 
 bool CFBTestFixtureBase::checkForSingleOutputEventOccurence(TEventID paExpectedEOId) {
-  //Test if event chain is not empty, that the first entry is the expected one and that no furhter events are there
+  // Test if event chain is not empty, that the first entry is the expected one and that no furhter events are there
   return (!eventChainEmpty() && (pullFirstChainEventID() == paExpectedEOId) && eventChainEmpty());
 }
 
-void CFBTestFixtureBase::setInputData(std::initializer_list<CIEC_ANY*> paInputData){
+void CFBTestFixtureBase::setInputData(std::initializer_list<CIEC_ANY *> paInputData) {
   mInputDataBuffers.assign(paInputData);
 }
 
-void CFBTestFixtureBase::setOutputData(std::initializer_list<CIEC_ANY*> paOutputData){
+void CFBTestFixtureBase::setOutputData(std::initializer_list<CIEC_ANY *> paOutputData) {
   mOutputDataBuffers.assign(paOutputData);
 }
 
-void CFBTestFixtureBase::setupTestInterface(){
+void CFBTestFixtureBase::setupTestInterface() {
   BOOST_CHECK_EQUAL(CFunctionBlock::E_FBStates::Idle, mFBUnderTest->getState());
   BOOST_CHECK_EQUAL(getFBTypeId(), mFBUnderTest->getInstanceNameId());
 
-  const SFBInterfaceSpec& interfaceSpec(mFBUnderTest->getFBInterfaceSpec());
+  const SFBInterfaceSpec &interfaceSpec(mFBUnderTest->getFBInterfaceSpec());
 
-  SFBInterfaceSpec& testerInterfaceSpec(getGenInterfaceSpec());
+  SFBInterfaceSpec &testerInterfaceSpec(getGenInterfaceSpec());
   testerInterfaceSpec.mNumEIs = interfaceSpec.mNumEOs;
   testerInterfaceSpec.mEINames = interfaceSpec.mEONames;
   testerInterfaceSpec.mEIWith = nullptr;
@@ -238,18 +241,19 @@ void CFBTestFixtureBase::setupTestInterface(){
 }
 
 void CFBTestFixtureBase::performDataInterfaceTests() {
-  const SFBInterfaceSpec& interfaceSpec(mFBUnderTest->getFBInterfaceSpec());
+  const SFBInterfaceSpec &interfaceSpec(mFBUnderTest->getFBInterfaceSpec());
 
   BOOST_REQUIRE_EQUAL(interfaceSpec.mNumDIs, mInputDataBuffers.size());
 
   BOOST_CHECK(nullptr == mFBUnderTest->getDataInput(CStringDictionary::scmInvalidStringId));
   BOOST_CHECK_EQUAL(cgInvalidPortId, mFBUnderTest->getDIID(CStringDictionary::scmInvalidStringId));
 
-  for(TPortId i = 0; i < interfaceSpec.mNumDIs; ++i) {
+  for (TPortId i = 0; i < interfaceSpec.mNumDIs; ++i) {
     CIEC_ANY *val = mFBUnderTest->getDataInput(interfaceSpec.mDINames[i]);
     BOOST_REQUIRE(nullptr != val);
-    //either we have the same datatypeid or the input is any
-    BOOST_REQUIRE((mInputDataBuffers[i]->getDataTypeID() == val->getDataTypeID()) || (CIEC_ANY::e_ANY == val->getDataTypeID()));
+    // either we have the same datatypeid or the input is any
+    BOOST_REQUIRE((mInputDataBuffers[i]->getDataTypeID() == val->getDataTypeID()) ||
+                  (CIEC_ANY::e_ANY == val->getDataTypeID()));
 
     BOOST_CHECK_EQUAL(val, mFBUnderTest->getDIFromPortId(i));
     CStringDictionary::TStringId stringIdBuf = interfaceSpec.mDINames[i];
@@ -257,12 +261,12 @@ void CFBTestFixtureBase::performDataInterfaceTests() {
 
     BOOST_CHECK_EQUAL(i, mFBUnderTest->getDIID(interfaceSpec.mDINames[i]));
 
-    //we should not be able to get a data output with a data input name
+    // we should not be able to get a data output with a data input name
     BOOST_CHECK(nullptr == mFBUnderTest->getDataOutput(interfaceSpec.mDINames[i]));
     BOOST_CHECK_EQUAL(cgInvalidPortId, mFBUnderTest->getDOID(interfaceSpec.mDINames[i]));
   }
 
-  for(TPortId i = interfaceSpec.mNumDIs; i <= cgInvalidPortId; ++i) {
+  for (TPortId i = interfaceSpec.mNumDIs; i <= cgInvalidPortId; ++i) {
     BOOST_CHECK(nullptr == mFBUnderTest->getDIFromPortId(i));
   }
 
@@ -271,47 +275,48 @@ void CFBTestFixtureBase::performDataInterfaceTests() {
   BOOST_CHECK(nullptr == mFBUnderTest->getDataOutput(CStringDictionary::scmInvalidStringId));
   BOOST_CHECK_EQUAL(cgInvalidPortId, mFBUnderTest->getDOID(CStringDictionary::scmInvalidStringId));
 
-  for(TPortId i = 0; i < interfaceSpec.mNumDOs; ++i) {
+  for (TPortId i = 0; i < interfaceSpec.mNumDOs; ++i) {
     CIEC_ANY *val = mFBUnderTest->getDataOutput(interfaceSpec.mDONames[i]);
     BOOST_REQUIRE(nullptr != val);
-    //either we have the same datatypeid or the input is any
-    BOOST_REQUIRE((mOutputDataBuffers[i]->getDataTypeID() == val->getDataTypeID()) || (CIEC_ANY::e_ANY == val->getDataTypeID()));
+    // either we have the same datatypeid or the input is any
+    BOOST_REQUIRE((mOutputDataBuffers[i]->getDataTypeID() == val->getDataTypeID()) ||
+                  (CIEC_ANY::e_ANY == val->getDataTypeID()));
 
     CStringDictionary::TStringId stringIdBuf = interfaceSpec.mDONames[i];
     BOOST_CHECK_EQUAL(val, mFBUnderTest->getVar(&stringIdBuf, 1));
 
     BOOST_CHECK_EQUAL(i, mFBUnderTest->getDOID(interfaceSpec.mDONames[i]));
 
-    //we should not be able to get a data out with a data output name
+    // we should not be able to get a data out with a data output name
     BOOST_CHECK(nullptr == mFBUnderTest->getDataInput(interfaceSpec.mDONames[i]));
     BOOST_CHECK_EQUAL(cgInvalidPortId, mFBUnderTest->getDIID(interfaceSpec.mDONames[i]));
   }
 }
 
 void CFBTestFixtureBase::createEventOutputConnections() {
-  const SFBInterfaceSpec& interfaceSpec(mFBUnderTest->getFBInterfaceSpec());
+  const SFBInterfaceSpec &interfaceSpec(mFBUnderTest->getFBInterfaceSpec());
 
-  for(TPortId i = 0; i < interfaceSpec.mNumEOs; i++) {
+  for (TPortId i = 0; i < interfaceSpec.mNumEOs; i++) {
     CEventConnection *eventCon = mFBUnderTest->getEOConnection(interfaceSpec.mEONames[i]);
     BOOST_REQUIRE_EQUAL(EMGMResponse::Ready, eventCon->connect(*this, interfaceSpec.mEONames[i]));
   }
 }
 
 void CFBTestFixtureBase::createDataInputConnections() {
-  const SFBInterfaceSpec& interfaceSpec(mFBUnderTest->getFBInterfaceSpec());
+  const SFBInterfaceSpec &interfaceSpec(mFBUnderTest->getFBInterfaceSpec());
   mDIConnections.reserve(interfaceSpec.mNumDIs);
 
-  for(size_t i = 0; i < interfaceSpec.mNumDIs; ++i) {
-    auto& con = mDIConnections.emplace_back(std::make_unique<CFBTestInputDataConn>(*this, *mInputDataBuffers[i]));
+  for (size_t i = 0; i < interfaceSpec.mNumDIs; ++i) {
+    auto &con = mDIConnections.emplace_back(std::make_unique<CFBTestInputDataConn>(*this, *mInputDataBuffers[i]));
     BOOST_REQUIRE_EQUAL(EMGMResponse::Ready, con->connect(*mFBUnderTest, interfaceSpec.mDINames[i]));
   }
 }
 
 void CFBTestFixtureBase::createDataOutputConnections() {
-  const SFBInterfaceSpec& interfaceSpec(mFBUnderTest->getFBInterfaceSpec());
+  const SFBInterfaceSpec &interfaceSpec(mFBUnderTest->getFBInterfaceSpec());
 
-  for(size_t i = 0; i < interfaceSpec.mNumDOs; ++i) {
-    if(CFBTestConn::canBeConnected(*mOutputDataBuffers[i], *mFBUnderTest->getDataOutput(interfaceSpec.mDONames[i]))) {
+  for (size_t i = 0; i < interfaceSpec.mNumDOs; ++i) {
+    if (CFBTestConn::canBeConnected(*mOutputDataBuffers[i], *mFBUnderTest->getDataOutput(interfaceSpec.mDONames[i]))) {
       CDataConnection *dataCon = mFBUnderTest->getDOConnection(interfaceSpec.mDONames[i]);
       BOOST_REQUIRE_EQUAL(EMGMResponse::Ready, dataCon->connect(*this, interfaceSpec.mDONames[i]));
     }

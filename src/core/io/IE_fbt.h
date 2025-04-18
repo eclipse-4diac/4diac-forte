@@ -21,7 +21,7 @@
 #include "processinterfacefb.h"
 
 class FORTE_IE final : public forte::core::io::CProcessInterfaceFB {
-  DECLARE_FIRMWARE_FB(FORTE_IE)
+    DECLARE_FIRMWARE_FB(FORTE_IE)
 
   private:
     static const CStringDictionary::TStringId scmDataInputNames[];
@@ -66,6 +66,4 @@ class FORTE_IE final : public forte::core::io::CProcessInterfaceFB {
       paQO = var_QO;
       paSTATUS = var_STATUS;
     }
-
 };
-

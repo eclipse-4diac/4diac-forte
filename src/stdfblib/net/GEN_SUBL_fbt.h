@@ -20,7 +20,7 @@
  *
  */
 
-class GEN_SUBL : public GEN_SUBSCRIBE{
+class GEN_SUBL : public GEN_SUBSCRIBE {
     DECLARE_GENERIC_FIRMWARE_FB(GEN_SUBL)
   public:
     GEN_SUBL(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
@@ -28,11 +28,11 @@ class GEN_SUBL : public GEN_SUBSCRIBE{
     bool configureFB(const char *paConfigString) override;
 
   protected:
-    static const char * const scmLocalIDPrefix;
-    static const char * const scmLocalIDSuffix;
+    static const char *const scmLocalIDPrefix;
+    static const char *const scmLocalIDSuffix;
 
   private:
-    char * getDefaultIDString(const char *paID) override;
+    char *getDefaultIDString(const char *paID) override;
 };
 
 #endif /*GEN_SUBL_H_*/

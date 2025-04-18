@@ -18,9 +18,9 @@
 
 namespace forte {
   namespace com_infra {
-    class CRawDataComLayer : public CComLayer{
+    class CRawDataComLayer : public CComLayer {
       public:
-        CRawDataComLayer(CComLayer* paUpperLayer, CBaseCommFB * paFB);
+        CRawDataComLayer(CComLayer *paUpperLayer, CBaseCommFB *paFB);
         ~CRawDataComLayer() override;
         EComResponse sendData(void *paData, unsigned int paSize) override;
         EComResponse recvData(const void *paData, unsigned int paSize) override;

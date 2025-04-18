@@ -39,14 +39,15 @@ USE_STRING_ID(TIME);
 USE_STRING_ID(UINT);
 USE_STRING_ID(WCET);
 
-
 #include "criticalregion.h"
 #include "resource.h"
 
 DEFINE_FIRMWARE_FB(FORTE_RT_E_TRAIN, STRID(RT_E_TRAIN))
 
-const CStringDictionary::TStringId FORTE_RT_E_TRAIN::scmDataInputNames[] = {STRID(DT), STRID(N), STRID(Deadline), STRID(WCET)};
-const CStringDictionary::TStringId FORTE_RT_E_TRAIN::scmDataInputTypeIds[] = {STRID(TIME), STRID(UINT), STRID(TIME), STRID(TIME)};
+const CStringDictionary::TStringId FORTE_RT_E_TRAIN::scmDataInputNames[] = {STRID(DT), STRID(N), STRID(Deadline),
+                                                                            STRID(WCET)};
+const CStringDictionary::TStringId FORTE_RT_E_TRAIN::scmDataInputTypeIds[] = {STRID(TIME), STRID(UINT), STRID(TIME),
+                                                                              STRID(TIME)};
 const CStringDictionary::TStringId FORTE_RT_E_TRAIN::scmDataOutputNames[] = {STRID(CV)};
 const CStringDictionary::TStringId FORTE_RT_E_TRAIN::scmDataOutputTypeIds[] = {STRID(UINT)};
 const TDataIOID FORTE_RT_E_TRAIN::scmEIWith[] = {0, 1, 2, 3, scmWithListDelimiter};
@@ -57,16 +58,29 @@ const TDataIOID FORTE_RT_E_TRAIN::scmEOWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_RT_E_TRAIN::scmEOWithIndexes[] = {0};
 const CStringDictionary::TStringId FORTE_RT_E_TRAIN::scmEventOutputNames[] = {STRID(EO)};
 const CStringDictionary::TStringId FORTE_RT_E_TRAIN::scmEventOutputTypeIds[] = {STRID(Event)};
-const SFBInterfaceSpec FORTE_RT_E_TRAIN::scmFBInterfaceSpec = {
-  2, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,
-  1, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes,
-  4, scmDataInputNames, scmDataInputTypeIds,
-  1, scmDataOutputNames, scmDataOutputTypeIds,
-  0, nullptr,
-  0, nullptr
-};
+const SFBInterfaceSpec FORTE_RT_E_TRAIN::scmFBInterfaceSpec = {2,
+                                                               scmEventInputNames,
+                                                               scmEventInputTypeIds,
+                                                               scmEIWith,
+                                                               scmEIWithIndexes,
+                                                               1,
+                                                               scmEventOutputNames,
+                                                               scmEventOutputTypeIds,
+                                                               scmEOWith,
+                                                               scmEOWithIndexes,
+                                                               4,
+                                                               scmDataInputNames,
+                                                               scmDataInputTypeIds,
+                                                               1,
+                                                               scmDataOutputNames,
+                                                               scmDataOutputTypeIds,
+                                                               0,
+                                                               nullptr,
+                                                               0,
+                                                               nullptr};
 
-FORTE_RT_E_TRAIN::FORTE_RT_E_TRAIN(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_RT_E_TRAIN::FORTE_RT_E_TRAIN(const CStringDictionary::TStringId paInstanceNameId,
+                                   forte::core::CFBContainer &paContainer) :
     CCompositeFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, scmFBNData),
     fb_RT_E_CYCLE(STRID(RT_E_CYCLE), *this),
     fb_E_CTU(STRID(E_CTU), *this),
@@ -80,8 +94,7 @@ FORTE_RT_E_TRAIN::FORTE_RT_E_TRAIN(const CStringDictionary::TStringId paInstance
     conn_if2in_DT(*this, 0, 0_TIME),
     conn_if2in_N(*this, 1, 0_UINT),
     conn_if2in_Deadline(*this, 2, 0_TIME),
-    conn_if2in_WCET(*this, 3, 0_TIME) {
-};
+    conn_if2in_WCET(*this, 3, 0_TIME) {};
 
 void FORTE_RT_E_TRAIN::setInitialValues() {
   conn_if2in_DT.getValue() = 0_TIME;
@@ -92,42 +105,42 @@ void FORTE_RT_E_TRAIN::setInitialValues() {
 }
 
 const SCFB_FBInstanceData FORTE_RT_E_TRAIN::scmInternalFBs[] = {
-  {STRID(RT_E_CYCLE), STRID(RT_E_CYCLE)},
-  {STRID(E_CTU), STRID(E_CTU)},
-  {STRID(E_SWITCH), STRID(E_SWITCH)}
-};
-
+    {STRID(RT_E_CYCLE), STRID(RT_E_CYCLE)}, {STRID(E_CTU), STRID(E_CTU)}, {STRID(E_SWITCH), STRID(E_SWITCH)}};
 
 const SCFB_FBConnectionData FORTE_RT_E_TRAIN::scmEventConnections[] = {
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(RT_E_CYCLE), STRID(EO)), 0, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_CTU), STRID(CU)), 1},
-  {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(START)), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_CTU), STRID(R)), 1},
-  {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(STOP)), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(RT_E_CYCLE), STRID(STOP)), 0},
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_CTU), STRID(RO)), 1, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(RT_E_CYCLE), STRID(START)), 0},
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_CTU), STRID(CUO)), 1, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_SWITCH), STRID(EI)), 2},
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_SWITCH), STRID(EO0)), 2, GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(EO)), -1},
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_SWITCH), STRID(EO1)), 2, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(RT_E_CYCLE), STRID(STOP)), 0},
+    {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(RT_E_CYCLE), STRID(EO)), 0,
+     GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_CTU), STRID(CU)), 1},
+    {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(START)), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_CTU), STRID(R)), 1},
+    {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(STOP)), -1,
+     GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(RT_E_CYCLE), STRID(STOP)), 0},
+    {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_CTU), STRID(RO)), 1,
+     GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(RT_E_CYCLE), STRID(START)), 0},
+    {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_CTU), STRID(CUO)), 1,
+     GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_SWITCH), STRID(EI)), 2},
+    {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_SWITCH), STRID(EO0)), 2, GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(EO)),
+     -1},
+    {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_SWITCH), STRID(EO1)), 2,
+     GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(RT_E_CYCLE), STRID(STOP)), 0},
 };
 
 const SCFB_FBConnectionData FORTE_RT_E_TRAIN::scmDataConnections[] = {
-  {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(DT)), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(RT_E_CYCLE), STRID(DT)), 0},
-  {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(Deadline)), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(RT_E_CYCLE), STRID(Deadline)), 0},
-  {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(WCET)), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(RT_E_CYCLE), STRID(WCET)), 0},
-  {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(N)), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_CTU), STRID(PV)), 1},
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_CTU), STRID(CV)), 1, GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(CV)), -1},
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_CTU), STRID(Q)), 1, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_SWITCH), STRID(G)), 2},
+    {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(DT)), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(RT_E_CYCLE), STRID(DT)),
+     0},
+    {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(Deadline)), -1,
+     GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(RT_E_CYCLE), STRID(Deadline)), 0},
+    {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(WCET)), -1,
+     GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(RT_E_CYCLE), STRID(WCET)), 0},
+    {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(N)), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_CTU), STRID(PV)), 1},
+    {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_CTU), STRID(CV)), 1, GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(CV)), -1},
+    {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_CTU), STRID(Q)), 1,
+     GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_SWITCH), STRID(G)), 2},
 };
 
 const SCFB_FBNData FORTE_RT_E_TRAIN::scmFBNData = {
-  3, scmInternalFBs,
-  7, scmEventConnections,
-  6, scmDataConnections,
-  0, nullptr,
-  0, nullptr
-};
-
+    3, scmInternalFBs, 7, scmEventConnections, 6, scmDataConnections, 0, nullptr, 0, nullptr};
 
 void FORTE_RT_E_TRAIN::readInputData(TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventSTARTID: {
       readData(0, conn_if2in_DT.getValue(), conn_DT);
       readData(1, conn_if2in_N.getValue(), conn_N);
@@ -138,24 +151,22 @@ void FORTE_RT_E_TRAIN::readInputData(TEventID paEIID) {
     case scmEventSTOPID: {
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 void FORTE_RT_E_TRAIN::writeOutputData(TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventEOID: {
       writeData(0, fb_E_CTU->conn_CV.getValue(), conn_CV);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 CIEC_ANY *FORTE_RT_E_TRAIN::getDI(size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_if2in_DT.getValue();
     case 1: return &conn_if2in_N.getValue();
     case 2: return &conn_if2in_Deadline.getValue();
@@ -165,21 +176,21 @@ CIEC_ANY *FORTE_RT_E_TRAIN::getDI(size_t paIndex) {
 }
 
 CIEC_ANY *FORTE_RT_E_TRAIN::getDO(size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &fb_E_CTU->conn_CV.getValue();
   }
   return nullptr;
 }
 
 CEventConnection *FORTE_RT_E_TRAIN::getEOConUnchecked(TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_EO;
   }
   return nullptr;
 }
 
 CDataConnection **FORTE_RT_E_TRAIN::getDIConUnchecked(TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_DT;
     case 1: return &conn_N;
     case 2: return &conn_Deadline;
@@ -189,14 +200,14 @@ CDataConnection **FORTE_RT_E_TRAIN::getDIConUnchecked(TPortId paIndex) {
 }
 
 CDataConnection *FORTE_RT_E_TRAIN::getDOConUnchecked(TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_CV;
   }
   return nullptr;
 }
 
 CDataConnection *FORTE_RT_E_TRAIN::getIf2InConUnchecked(TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_if2in_DT;
     case 1: return &conn_if2in_N;
     case 2: return &conn_if2in_Deadline;
@@ -204,4 +215,3 @@ CDataConnection *FORTE_RT_E_TRAIN::getIf2InConUnchecked(TPortId paIndex) {
   }
   return nullptr;
 }
-

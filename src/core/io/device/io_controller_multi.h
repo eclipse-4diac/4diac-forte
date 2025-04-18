@@ -33,25 +33,26 @@ namespace forte {
           friend class IOConfigFBMultiSlave;
 
         public:
-
           class HandleDescriptor : public IODeviceController::HandleDescriptor {
             public:
               int mSlaveIndex;
 
               HandleDescriptor(std::string const &paId, IOMapper::Direction paDirection, int paSlaveIndex) :
-                  IODeviceController::HandleDescriptor(paId, paDirection), mSlaveIndex(paSlaveIndex) {
+                  IODeviceController::HandleDescriptor(paId, paDirection),
+                  mSlaveIndex(paSlaveIndex) {
               }
           };
 
           /*! @brief Adds a handle for a slave
            *
            * The controller should read and write the given handle.
-           * It should keep a list of handles and delete the provided handle in case the #dropSlaveHandles method is called.
+           * It should keep a list of handles and delete the provided handle in case the #dropSlaveHandles method is
+           * called.
            *
            * @param paIndex Index/Position of the modular slave
            * @param paHandle IOHandle object which should be updated by the controller.
            */
-          virtual void addSlaveHandle(int paIndex, IOHandle* paHandle) = 0;
+          virtual void addSlaveHandle(int paIndex, IOHandle *paHandle) = 0;
 
           /*! @brief Drop all handles of a specific slave
            *
@@ -63,14 +64,13 @@ namespace forte {
           virtual void dropSlaveHandles(int paIndex) = 0;
 
         protected:
-          explicit IODeviceMultiController(CDeviceExecution& paDeviceExecution);
+          explicit IODeviceMultiController(CDeviceExecution &paDeviceExecution);
 
           void addHandle(IODeviceController::HandleDescriptor &paHandleDescriptor) override;
 
-          IOHandle* createIOHandle(IODeviceController::HandleDescriptor &paHandleDescriptor) override = 0;
+          IOHandle *createIOHandle(IODeviceController::HandleDescriptor &paHandleDescriptor) override = 0;
 
         private:
-
           /*! @brief Checks if a slave exists at the given index
            *
            * @param paIndex Index/Position of the modular slave
@@ -85,11 +85,10 @@ namespace forte {
            * @return True in case the slave at the index has the given type
            */
           virtual bool checkSlaveType(int paIndex, int paType) = 0;
-
       };
 
-    } //namespace IO
-  } //namepsace core
-} //namespace forte
+    } // namespace io
+  } // namespace core
+} // namespace forte
 
 #endif /* SRC_CORE_IO_DEVICE_IO_CONTROLLER_MULTI_H_ */

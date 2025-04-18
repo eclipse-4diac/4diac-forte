@@ -16,12 +16,13 @@
 #include <boost/test/included/unit_test.hpp>
 #include "core/fbtests/fbtesterglobalfixture.h"
 
-#if defined(BOOST_NO_EXCEPTIONS) && BOOST_VERSION < 106500 // At least Boost v1.65 provides a simple NO_EXCEPTION version of throw_exception
-void boost::throw_exception(std::exception const&) {
-  //dummy
+#if defined(BOOST_NO_EXCEPTIONS) &&                                                                                    \
+    BOOST_VERSION < 106500 // At least Boost v1.65 provides a simple NO_EXCEPTION version of throw_exception
+void boost::throw_exception(std::exception const &) {
+  // dummy
 }
 #endif
 
-//BOOST_TEST_GLOBAL_FIXTURE(MyGlobalFixture)();
-//fix for a problem in BOOST_TEST_GLOBAL_FIXTURE, revert when fixed, issue seams to be in BOOST_JOIN
+// BOOST_TEST_GLOBAL_FIXTURE(MyGlobalFixture)();
+// fix for a problem in BOOST_TEST_GLOBAL_FIXTURE, revert when fixed, issue seams to be in BOOST_JOIN
 static boost::unit_test::ut_detail::global_fixture_impl<CFBTestDataGlobalFixture> gfCFBTestDataGlobalFixture;

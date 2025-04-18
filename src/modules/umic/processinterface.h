@@ -17,11 +17,10 @@
 #include <forte_sync.h>
 #include <string>
 
-
 #define UMIC_LED_ENABLED 1
 #define UMIC_RELAY_ENABLED 1
 
-enum UMIC_IO_TYPE{
+enum UMIC_IO_TYPE {
   UNDEFINED,
   DIO,
 #if UMIC_LED_ENABLED
@@ -32,10 +31,12 @@ enum UMIC_IO_TYPE{
 #endif
 };
 
-class CUMICProcessInterface : public CProcessInterfaceBase{
+class CUMICProcessInterface : public CProcessInterfaceBase {
 
   public:
-    CUMICProcessInterface(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec& paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId);
+    CUMICProcessInterface(forte::core::CFBContainer &paContainer,
+                          const SFBInterfaceSpec &paInterfaceSpec,
+                          const CStringDictionary::TStringId paInstanceNameId);
     ~CUMICProcessInterface() override;
 
   protected:
@@ -59,18 +60,14 @@ class CUMICProcessInterface : public CProcessInterfaceBase{
 #endif
     static CSyncObject directionsMutex;
 
-    static const char * const scmOK;
-    static const char * const scmPinInUse;
-    static const char * const scmNotInitialised;
-    static const char * const scmError;
-    static const char * const scmCouldNotRead;
-    static const char * const scmCouldNotWrite;
-
+    static const char *const scmOK;
+    static const char *const scmPinInUse;
+    static const char *const scmNotInitialised;
+    static const char *const scmError;
+    static const char *const scmCouldNotRead;
+    static const char *const scmCouldNotWrite;
 };
 
 typedef CUMICProcessInterface CProcessInterface;
 
 #endif /* PROCESSINTERFACE_H_ */
-
-
-

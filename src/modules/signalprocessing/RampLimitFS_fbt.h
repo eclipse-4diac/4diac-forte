@@ -1,10 +1,10 @@
-/*************************************************************************  
- *** Copyright (c) 2024 HR Agrartechnik GmbH  
- *** This program and the accompanying materials are made available under the  
- *** terms of the Eclipse Public License 2.0 which is available at  
- *** http://www.eclipse.org/legal/epl-2.0.  
- ***  
- *** SPDX-License-Identifier: EPL-2.0  
+/*************************************************************************
+ *** Copyright (c) 2024 HR Agrartechnik GmbH
+ *** This program and the accompanying materials are made available under the
+ *** terms of the Eclipse Public License 2.0 which is available at
+ *** http://www.eclipse.org/legal/epl-2.0.
+ ***
+ *** SPDX-License-Identifier: EPL-2.0
  ***
  *** This file was generated using the 4DIAC FORTE Export Filter V1.0.x NG!
  ***
@@ -26,7 +26,7 @@
 #include "forte_array_variable.h"
 
 class FORTE_signalprocessing__RampLimitFS final : public CSimpleFB {
-  DECLARE_FIRMWARE_FB(FORTE_signalprocessing__RampLimitFS)
+    DECLARE_FIRMWARE_FB(FORTE_signalprocessing__RampLimitFS)
 
   private:
     static const CStringDictionary::TStringId scmDataInputNames[];
@@ -69,7 +69,8 @@ class FORTE_signalprocessing__RampLimitFS final : public CSimpleFB {
     void setInitialValues() override;
 
   public:
-    FORTE_signalprocessing__RampLimitFS(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_signalprocessing__RampLimitFS(CStringDictionary::TStringId paInstanceNameId,
+                                        forte::core::CFBContainer &paContainer);
 
     CIEC_DINT var_PV;
     CIEC_DINT var_VAL_ZERO;
@@ -95,7 +96,12 @@ class FORTE_signalprocessing__RampLimitFS final : public CSimpleFB {
     CDataConnection **getDIConUnchecked(TPortId) override;
     CDataConnection *getDOConUnchecked(TPortId) override;
 
-    void evt_ZERO(const CIEC_DINT &paPV, const CIEC_DINT &paVAL_ZERO, const CIEC_DINT &paSLOW, const CIEC_DINT &paFAST, const CIEC_DINT &paVAL_FULL, CIEC_DINT &paOUT) {
+    void evt_ZERO(const CIEC_DINT &paPV,
+                  const CIEC_DINT &paVAL_ZERO,
+                  const CIEC_DINT &paSLOW,
+                  const CIEC_DINT &paFAST,
+                  const CIEC_DINT &paVAL_FULL,
+                  CIEC_DINT &paOUT) {
       var_PV = paPV;
       var_VAL_ZERO = paVAL_ZERO;
       var_SLOW = paSLOW;
@@ -105,7 +111,12 @@ class FORTE_signalprocessing__RampLimitFS final : public CSimpleFB {
       paOUT = var_OUT;
     }
 
-    void evt_UP_SLOW(const CIEC_DINT &paPV, const CIEC_DINT &paVAL_ZERO, const CIEC_DINT &paSLOW, const CIEC_DINT &paFAST, const CIEC_DINT &paVAL_FULL, CIEC_DINT &paOUT) {
+    void evt_UP_SLOW(const CIEC_DINT &paPV,
+                     const CIEC_DINT &paVAL_ZERO,
+                     const CIEC_DINT &paSLOW,
+                     const CIEC_DINT &paFAST,
+                     const CIEC_DINT &paVAL_FULL,
+                     CIEC_DINT &paOUT) {
       var_PV = paPV;
       var_VAL_ZERO = paVAL_ZERO;
       var_SLOW = paSLOW;
@@ -115,7 +126,12 @@ class FORTE_signalprocessing__RampLimitFS final : public CSimpleFB {
       paOUT = var_OUT;
     }
 
-    void evt_UP_FAST(const CIEC_DINT &paPV, const CIEC_DINT &paVAL_ZERO, const CIEC_DINT &paSLOW, const CIEC_DINT &paFAST, const CIEC_DINT &paVAL_FULL, CIEC_DINT &paOUT) {
+    void evt_UP_FAST(const CIEC_DINT &paPV,
+                     const CIEC_DINT &paVAL_ZERO,
+                     const CIEC_DINT &paSLOW,
+                     const CIEC_DINT &paFAST,
+                     const CIEC_DINT &paVAL_FULL,
+                     CIEC_DINT &paOUT) {
       var_PV = paPV;
       var_VAL_ZERO = paVAL_ZERO;
       var_SLOW = paSLOW;
@@ -125,7 +141,12 @@ class FORTE_signalprocessing__RampLimitFS final : public CSimpleFB {
       paOUT = var_OUT;
     }
 
-    void evt_DOWN_SLOW(const CIEC_DINT &paPV, const CIEC_DINT &paVAL_ZERO, const CIEC_DINT &paSLOW, const CIEC_DINT &paFAST, const CIEC_DINT &paVAL_FULL, CIEC_DINT &paOUT) {
+    void evt_DOWN_SLOW(const CIEC_DINT &paPV,
+                       const CIEC_DINT &paVAL_ZERO,
+                       const CIEC_DINT &paSLOW,
+                       const CIEC_DINT &paFAST,
+                       const CIEC_DINT &paVAL_FULL,
+                       CIEC_DINT &paOUT) {
       var_PV = paPV;
       var_VAL_ZERO = paVAL_ZERO;
       var_SLOW = paSLOW;
@@ -135,7 +156,12 @@ class FORTE_signalprocessing__RampLimitFS final : public CSimpleFB {
       paOUT = var_OUT;
     }
 
-    void evt_DOWN_FAST(const CIEC_DINT &paPV, const CIEC_DINT &paVAL_ZERO, const CIEC_DINT &paSLOW, const CIEC_DINT &paFAST, const CIEC_DINT &paVAL_FULL, CIEC_DINT &paOUT) {
+    void evt_DOWN_FAST(const CIEC_DINT &paPV,
+                       const CIEC_DINT &paVAL_ZERO,
+                       const CIEC_DINT &paSLOW,
+                       const CIEC_DINT &paFAST,
+                       const CIEC_DINT &paVAL_FULL,
+                       CIEC_DINT &paOUT) {
       var_PV = paPV;
       var_VAL_ZERO = paVAL_ZERO;
       var_SLOW = paSLOW;
@@ -145,7 +171,12 @@ class FORTE_signalprocessing__RampLimitFS final : public CSimpleFB {
       paOUT = var_OUT;
     }
 
-    void evt_FULL(const CIEC_DINT &paPV, const CIEC_DINT &paVAL_ZERO, const CIEC_DINT &paSLOW, const CIEC_DINT &paFAST, const CIEC_DINT &paVAL_FULL, CIEC_DINT &paOUT) {
+    void evt_FULL(const CIEC_DINT &paPV,
+                  const CIEC_DINT &paVAL_ZERO,
+                  const CIEC_DINT &paSLOW,
+                  const CIEC_DINT &paFAST,
+                  const CIEC_DINT &paVAL_FULL,
+                  CIEC_DINT &paOUT) {
       var_PV = paPV;
       var_VAL_ZERO = paVAL_ZERO;
       var_SLOW = paSLOW;
@@ -155,7 +186,12 @@ class FORTE_signalprocessing__RampLimitFS final : public CSimpleFB {
       paOUT = var_OUT;
     }
 
-    void evt_LOAD(const CIEC_DINT &paPV, const CIEC_DINT &paVAL_ZERO, const CIEC_DINT &paSLOW, const CIEC_DINT &paFAST, const CIEC_DINT &paVAL_FULL, CIEC_DINT &paOUT) {
+    void evt_LOAD(const CIEC_DINT &paPV,
+                  const CIEC_DINT &paVAL_ZERO,
+                  const CIEC_DINT &paSLOW,
+                  const CIEC_DINT &paFAST,
+                  const CIEC_DINT &paVAL_FULL,
+                  CIEC_DINT &paOUT) {
       var_PV = paPV;
       var_VAL_ZERO = paVAL_ZERO;
       var_SLOW = paSLOW;
@@ -165,8 +201,12 @@ class FORTE_signalprocessing__RampLimitFS final : public CSimpleFB {
       paOUT = var_OUT;
     }
 
-    void operator()(const CIEC_DINT &paPV, const CIEC_DINT &paVAL_ZERO, const CIEC_DINT &paSLOW, const CIEC_DINT &paFAST, const CIEC_DINT &paVAL_FULL, CIEC_DINT &paOUT) {
+    void operator()(const CIEC_DINT &paPV,
+                    const CIEC_DINT &paVAL_ZERO,
+                    const CIEC_DINT &paSLOW,
+                    const CIEC_DINT &paFAST,
+                    const CIEC_DINT &paVAL_FULL,
+                    CIEC_DINT &paOUT) {
       evt_ZERO(paPV, paVAL_ZERO, paSLOW, paFAST, paVAL_FULL, paOUT);
     }
 };
-

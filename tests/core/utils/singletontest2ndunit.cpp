@@ -14,8 +14,8 @@
 
 BOOST_AUTO_TEST_SUITE(Singleton_2ndCompilationUnitTest)
 
-  BOOST_AUTO_TEST_CASE(singleton_2ndCompilationSingleInstanceTest){
-    BOOST_CHECK_EQUAL(1, TestSingleton::getInstance().getSingletonID());
-  }
+BOOST_AUTO_TEST_CASE(singleton_2ndCompilationSingleInstanceTest) {
+  BOOST_CHECK_EQUAL(1, TestSingleton::getInstance().getSingletonID());
+}
 
 BOOST_AUTO_TEST_SUITE_END()

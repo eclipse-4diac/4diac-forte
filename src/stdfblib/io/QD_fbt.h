@@ -47,7 +47,7 @@
  *   currently it is very hard to templatize a function block class.
  */
 class FORTE_QD final : public CProcessInterface {
-  DECLARE_FIRMWARE_FB(FORTE_QD)
+    DECLARE_FIRMWARE_FB(FORTE_QD)
 
   private:
     static const CStringDictionary::TStringId scmDataInputNames[];
@@ -101,7 +101,11 @@ class FORTE_QD final : public CProcessInterface {
     CDataConnection **getDIConUnchecked(TPortId) override;
     CDataConnection *getDOConUnchecked(TPortId) override;
 
-    void evt_INIT(const CIEC_BOOL &paQI, const CIEC_STRING &paPARAMS, const CIEC_DWORD &paOUT, CIEC_BOOL &paQO, CIEC_STRING &paSTATUS) {
+    void evt_INIT(const CIEC_BOOL &paQI,
+                  const CIEC_STRING &paPARAMS,
+                  const CIEC_DWORD &paOUT,
+                  CIEC_BOOL &paQO,
+                  CIEC_STRING &paSTATUS) {
       var_QI = paQI;
       var_PARAMS = paPARAMS;
       var_OUT = paOUT;
@@ -110,7 +114,11 @@ class FORTE_QD final : public CProcessInterface {
       paSTATUS = var_STATUS;
     }
 
-    void evt_REQ(const CIEC_BOOL &paQI, const CIEC_STRING &paPARAMS, const CIEC_DWORD &paOUT, CIEC_BOOL &paQO, CIEC_STRING &paSTATUS) {
+    void evt_REQ(const CIEC_BOOL &paQI,
+                 const CIEC_STRING &paPARAMS,
+                 const CIEC_DWORD &paOUT,
+                 CIEC_BOOL &paQO,
+                 CIEC_STRING &paSTATUS) {
       var_QI = paQI;
       var_PARAMS = paPARAMS;
       var_OUT = paOUT;
@@ -119,8 +127,11 @@ class FORTE_QD final : public CProcessInterface {
       paSTATUS = var_STATUS;
     }
 
-    void operator()(const CIEC_BOOL &paQI, const CIEC_STRING &paPARAMS, const CIEC_DWORD &paOUT, CIEC_BOOL &paQO, CIEC_STRING &paSTATUS) {
+    void operator()(const CIEC_BOOL &paQI,
+                    const CIEC_STRING &paPARAMS,
+                    const CIEC_DWORD &paOUT,
+                    CIEC_BOOL &paQO,
+                    CIEC_STRING &paSTATUS) {
       evt_INIT(paQI, paPARAMS, paOUT, paQO, paSTATUS);
     }
 };
-

@@ -22,61 +22,58 @@
 #include <variant>
 
 /**
- * @brief Encapsulates a device so that the device can be remotely restarted. 
+ * @brief Encapsulates a device so that the device can be remotely restarted.
  * This wrapper device itself does not offer any capability apart from the extra methods offered the MultMGE
  * and is actually killing itself on initialization in order to disable all handlers.
  */
 class MultiDevice : public CDevice {
-public:
+  public:
+    MultiDevice(const std::string &paMGRID = "localhost:61499");
+    ~MultiDevice() override = default;
 
-  MultiDevice(const std::string &paMGRID = "localhost:61499");
-  ~MultiDevice() override = default;
+    int startDevice() override;
 
-  int startDevice() override;
+    /**
+     * @brief request a reset of the controlled device. This function returns immediately
+     * and resetting occurs asynchronoysly
+     */
+    void requestResetControlledDevice();
 
-  /**
-   * @brief request a reset of the controlled device. This function returns immediately 
-   * and resetting occurs asynchronoysly
-   */
-  void requestResetControlledDevice();
+    static inline const std::string scmMultiDeviceName{"MultiDevice"};
 
-  static inline const std::string scmMultiDeviceName{"MultiDevice"};
+  private:
+    int resetControlledDevice();
 
-private:
+    std::unique_ptr<CDevice> mControlledDevice;
 
-  int resetControlledDevice();
+    std::unique_ptr<MultiMGR> mMultiMgr;
 
-  std::unique_ptr<CDevice> mControlledDevice;
+    std::variant<OPCUA_MGR *, std::unique_ptr<OPCUA_MGR>> mOpcuaMgr;
 
-  std::unique_ptr<MultiMGR> mMultiMgr;
+    // the kill signal sent by main is handle by this promise
+    // which is used just as a inter-thread communication
+    // to avoid condition variables and such
+    std::promise<void> mKillSignal;
 
-  std::variant<OPCUA_MGR*, std::unique_ptr<OPCUA_MGR>> mOpcuaMgr;
+    std::string mMGRID;
 
-  // the kill signal sent by main is handle by this promise
-  // which is used just as a inter-thread communication
-  // to avoid condition variables and such
-  std::promise<void> mKillSignal;
+    static const SFBInterfaceSpec scmFBInterfaceSpec;
 
-  std::string mMGRID;
+    static const inline std::string scmDefaultDeviceToCreate{"RMT_DEV"};
 
-  static const SFBInterfaceSpec scmFBInterfaceSpec;
+    // resetinng the controlled device must be done asynchronously
+    // since otherwise the opc ua handler will block for request coming from it,
+    // as when the device is reset, the opcua handler is disabled, and the current
+    // callbacks need to return
+    std::future<void> mRestartSignalHandler;
 
-  static const inline std::string scmDefaultDeviceToCreate{"RMT_DEV"};
+    EMGMResponse changeExecutionState(EMGMCommandType paCommand) override;
 
-  // resetinng the controlled device must be done asynchronously
-  // since otherwise the opc ua handler will block for request coming from it, 
-  // as when the device is reset, the opcua handler is disabled, and the current
-  // callbacks need to return
-  std::future<void> mRestartSignalHandler;
+    void awaitShutdown() override;
 
-  EMGMResponse changeExecutionState(EMGMCommandType paCommand) override;
-  
-  void awaitShutdown() override;
+    void killControlledDevice();
 
-  void killControlledDevice();
-
-  // needed as these are abstract in the parent
-  CIEC_ANY *getDI(size_t) override;
-  CDataConnection **getDIConUnchecked(TPortId) override;
-
+    // needed as these are abstract in the parent
+    CIEC_ANY *getDI(size_t) override;
+    CDataConnection **getDIConUnchecked(TPortId) override;
 };

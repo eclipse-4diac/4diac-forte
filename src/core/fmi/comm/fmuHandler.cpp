@@ -10,7 +10,6 @@
  * Jose Cabral - initial API and implementation and/or initial documentation
  *******************************************************************************/
 
-
 #include <string.h>
 #include <criticalregion.h>
 #include <commfb.h>
@@ -19,56 +18,55 @@
 
 DEFINE_HANDLER(fmuHandler);
 
-CSinglyLinkedList<fmuComLayer*> fmuHandler::mlayers;
+CSinglyLinkedList<fmuComLayer *> fmuHandler::mlayers;
 
-
-fmuHandler::fmuHandler(CDeviceExecution& paDeviceExecution) : CExternalEventHandler(paDeviceExecution)  {
+fmuHandler::fmuHandler(CDeviceExecution &paDeviceExecution) : CExternalEventHandler(paDeviceExecution) {
 }
 
-fmuHandler::~fmuHandler(){
+fmuHandler::~fmuHandler() {
 }
 
-void fmuHandler::fmuMessageArrived(void *pa_value){
+void fmuHandler::fmuMessageArrived(void *pa_value) {
 
-  if(0 != pa_value){
-    for(CSinglyLinkedList<fmuComLayer*>::Iterator it = mlayers.begin(); it != mlayers.end(); ++it){
+  if (0 != pa_value) {
+    for (CSinglyLinkedList<fmuComLayer *>::Iterator it = mlayers.begin(); it != mlayers.end(); ++it) {
       bool found = false;
-      for(std::vector<fmuValueContainer*>::iterator itInputs = (*(*it)->getOutputs()).begin(); itInputs != (*(*it)->getOutputs()).end(); ++itInputs){
-        if(pa_value == (*itInputs)){
+      for (std::vector<fmuValueContainer *>::iterator itInputs = (*(*it)->getOutputs()).begin();
+           itInputs != (*(*it)->getOutputs()).end(); ++itInputs) {
+        if (pa_value == (*itInputs)) {
           found = true;
-          if(forte::com_infra::e_Nothing != (*it)->recvData(pa_value, 0)){
+          if (forte::com_infra::e_Nothing != (*it)->recvData(pa_value, 0)) {
             ::getExtEvHandler<fmuHandler>(*(*it)->getCommFB()).startNewEventChain((*it)->getCommFB());
           }
           break;
         }
       }
-      if(found){
+      if (found) {
         break;
       }
     }
   }
 }
 
-int fmuHandler::registerLayer(fmuComLayer* paLayer){
-  if(paLayer != 0){
+int fmuHandler::registerLayer(fmuComLayer *paLayer) {
+  if (paLayer != 0) {
     mlayers.pushBack(paLayer);
     return eRegisterLayerSucceeded;
   }
   return eWrongLayer;
 }
 
-void fmuHandler::unregisterLayer(fmuComLayer* paLayer){
+void fmuHandler::unregisterLayer(fmuComLayer *paLayer) {
 
-  CSinglyLinkedList<fmuComLayer*>::Iterator itRunner(mlayers.begin());
-  CSinglyLinkedList<fmuComLayer*>::Iterator itRefNode(mlayers.end());
-  CSinglyLinkedList<fmuComLayer*>::Iterator itEnd(mlayers.end());
+  CSinglyLinkedList<fmuComLayer *>::Iterator itRunner(mlayers.begin());
+  CSinglyLinkedList<fmuComLayer *>::Iterator itRefNode(mlayers.end());
+  CSinglyLinkedList<fmuComLayer *>::Iterator itEnd(mlayers.end());
 
-  while(itRunner != itEnd){
-    if(*itRunner == paLayer){
-      if(itRefNode == itEnd){
+  while (itRunner != itEnd) {
+    if (*itRunner == paLayer) {
+      if (itRefNode == itEnd) {
         mlayers.popFront();
-      }
-      else{
+      } else {
         mlayers.eraseAfter(itRefNode);
       }
       break;
@@ -79,18 +77,18 @@ void fmuHandler::unregisterLayer(fmuComLayer* paLayer){
   }
 }
 
-void fmuHandler::enableHandler(){
-  //TODO: Should also work empty
+void fmuHandler::enableHandler() {
+  // TODO: Should also work empty
 }
 
-void fmuHandler::disableHandler(){
-  //TODO: Should also work empty
+void fmuHandler::disableHandler() {
+  // TODO: Should also work empty
 }
 
-void fmuHandler::setPriority(int ){
-  //TODO: Should also work empty
+void fmuHandler::setPriority(int) {
+  // TODO: Should also work empty
 }
 
-int fmuHandler::getPriority() const{
+int fmuHandler::getPriority() const {
   return 0;
 }

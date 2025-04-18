@@ -11,7 +11,6 @@
  *   Ernst Blecha - initial API and implementation and/or initial documentation
  *******************************************************************************/
 
-
 #include "GetInstancePathAndName_fbt.h"
 
 USE_STRING_ID(CHAR);
@@ -23,7 +22,6 @@ USE_STRING_ID(Path);
 USE_STRING_ID(REQ);
 USE_STRING_ID(Sep);
 USE_STRING_ID(STRING);
-
 
 #include "criticalregion.h"
 #include "resource.h"
@@ -39,7 +37,8 @@ DEFINE_FIRMWARE_FB(FORTE_GetInstancePathAndName, STRID(GetInstancePathAndName))
 const CStringDictionary::TStringId FORTE_GetInstancePathAndName::scmDataInputNames[] = {STRID(Sep)};
 const CStringDictionary::TStringId FORTE_GetInstancePathAndName::scmDataInputTypeIds[] = {STRID(CHAR)};
 const CStringDictionary::TStringId FORTE_GetInstancePathAndName::scmDataOutputNames[] = {STRID(Path), STRID(Name)};
-const CStringDictionary::TStringId FORTE_GetInstancePathAndName::scmDataOutputTypeIds[] = {STRID(STRING), STRID(STRING)};
+const CStringDictionary::TStringId FORTE_GetInstancePathAndName::scmDataOutputTypeIds[] = {STRID(STRING),
+                                                                                           STRID(STRING)};
 const TDataIOID FORTE_GetInstancePathAndName::scmEIWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_GetInstancePathAndName::scmEIWithIndexes[] = {0};
 const CStringDictionary::TStringId FORTE_GetInstancePathAndName::scmEventInputNames[] = {STRID(REQ)};
@@ -48,16 +47,29 @@ const TDataIOID FORTE_GetInstancePathAndName::scmEOWith[] = {0, 1, scmWithListDe
 const TForteInt16 FORTE_GetInstancePathAndName::scmEOWithIndexes[] = {0};
 const CStringDictionary::TStringId FORTE_GetInstancePathAndName::scmEventOutputNames[] = {STRID(CNF)};
 const CStringDictionary::TStringId FORTE_GetInstancePathAndName::scmEventOutputTypeIds[] = {STRID(Event)};
-const SFBInterfaceSpec FORTE_GetInstancePathAndName::scmFBInterfaceSpec = {
-  1, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,
-  1, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes,
-  1, scmDataInputNames, scmDataInputTypeIds,
-  2, scmDataOutputNames, scmDataOutputTypeIds,
-  0, nullptr,
-  0, nullptr
-};
+const SFBInterfaceSpec FORTE_GetInstancePathAndName::scmFBInterfaceSpec = {1,
+                                                                           scmEventInputNames,
+                                                                           scmEventInputTypeIds,
+                                                                           scmEIWith,
+                                                                           scmEIWithIndexes,
+                                                                           1,
+                                                                           scmEventOutputNames,
+                                                                           scmEventOutputTypeIds,
+                                                                           scmEOWith,
+                                                                           scmEOWithIndexes,
+                                                                           1,
+                                                                           scmDataInputNames,
+                                                                           scmDataInputTypeIds,
+                                                                           2,
+                                                                           scmDataOutputNames,
+                                                                           scmDataOutputTypeIds,
+                                                                           0,
+                                                                           nullptr,
+                                                                           0,
+                                                                           nullptr};
 
-FORTE_GetInstancePathAndName::FORTE_GetInstancePathAndName(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_GetInstancePathAndName::FORTE_GetInstancePathAndName(const CStringDictionary::TStringId paInstanceNameId,
+                                                           forte::core::CFBContainer &paContainer) :
     CSimpleFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, nullptr),
     var_Sep(0x2f_CHAR),
     conn_CNF(*this, 0),
@@ -73,48 +85,43 @@ void FORTE_GetInstancePathAndName::setInitialValues() {
 }
 
 void FORTE_GetInstancePathAndName::executeEvent(const TEventID paEIID, CEventChainExecutionThread *const paECET) {
-  switch(paEIID) {
-    case scmEventREQID:
-      alg_REQ();
-      break;
-    default:
-      break;
+  switch (paEIID) {
+    case scmEventREQID: alg_REQ(); break;
+    default: break;
   }
   sendOutputEvent(scmEventCNFID, paECET);
 }
 
 void FORTE_GetInstancePathAndName::readInputData(const TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventREQID: {
       readData(0, var_Sep, conn_Sep);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 void FORTE_GetInstancePathAndName::writeOutputData(const TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventCNFID: {
       writeData(0, var_Path, conn_Path);
       writeData(1, var_Name, conn_Name);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 CIEC_ANY *FORTE_GetInstancePathAndName::getDI(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_Sep;
   }
   return nullptr;
 }
 
 CIEC_ANY *FORTE_GetInstancePathAndName::getDO(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_Path;
     case 1: return &var_Name;
   }
@@ -122,21 +129,21 @@ CIEC_ANY *FORTE_GetInstancePathAndName::getDO(const size_t paIndex) {
 }
 
 CEventConnection *FORTE_GetInstancePathAndName::getEOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_CNF;
   }
   return nullptr;
 }
 
 CDataConnection **FORTE_GetInstancePathAndName::getDIConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_Sep;
   }
   return nullptr;
 }
 
 CDataConnection *FORTE_GetInstancePathAndName::getDOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_Path;
     case 1: return &conn_Name;
   }
@@ -151,4 +158,3 @@ void FORTE_GetInstancePathAndName::alg_REQ(void) {
   var_Path = CIEC_STRING(getParent().getFullQualifiedApplicationInstanceName(var_Sep.operator TForteChar()));
   var_Name = CIEC_STRING(getInstanceName(), strlen(getInstanceName()));
 }
-

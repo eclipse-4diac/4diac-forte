@@ -1,12 +1,12 @@
-/************************************************************************* 
- *** Copyright (c) 2018 TU Vienna/ACIN  
- ***  
- *** This program and the accompanying materials are made  
- *** available under the terms of the Eclipse Public License 2.0  
- *** which is available at https://www.eclipse.org/legal/epl-2.0/  
- ***  
- *** SPDX-License-Identifier: EPL-2.0  
- *** 
+/*************************************************************************
+ *** Copyright (c) 2018 TU Vienna/ACIN
+ ***
+ *** This program and the accompanying materials are made
+ *** available under the terms of the Eclipse Public License 2.0
+ *** which is available at https://www.eclipse.org/legal/epl-2.0/
+ ***
+ *** SPDX-License-Identifier: EPL-2.0
+ ***
  *** FORTE Library Element
  ***
  *** This file was generated using the 4DIAC FORTE Export Filter V1.0.x NG!
@@ -34,7 +34,6 @@ USE_STRING_ID(STATUS);
 USE_STRING_ID(UINT);
 USE_STRING_ID(WSTRING);
 
-
 #include "iec61131_functions.h"
 #include "forte_array_common.h"
 #include "forte_array.h"
@@ -44,8 +43,10 @@ USE_STRING_ID(WSTRING);
 
 DEFINE_FIRMWARE_FB(FORTE_ADS_SERVER_CONFIG, STRID(ADS_SERVER_CONFIG))
 
-const CStringDictionary::TStringId FORTE_ADS_SERVER_CONFIG::scmDataInputNames[] = {STRID(QI), STRID(FRIENDLY_NAME), STRID(SERVER_ADS_ADDRESS), STRID(ADS_PORT), STRID(SERVER_IPV4_OR_HOSTNAME)};
-const CStringDictionary::TStringId FORTE_ADS_SERVER_CONFIG::scmDataInputTypeIds[] = {STRID(BOOL), STRID(WSTRING), STRID(WSTRING), STRID(UINT), STRID(WSTRING)};
+const CStringDictionary::TStringId FORTE_ADS_SERVER_CONFIG::scmDataInputNames[] = {
+    STRID(QI), STRID(FRIENDLY_NAME), STRID(SERVER_ADS_ADDRESS), STRID(ADS_PORT), STRID(SERVER_IPV4_OR_HOSTNAME)};
+const CStringDictionary::TStringId FORTE_ADS_SERVER_CONFIG::scmDataInputTypeIds[] = {
+    STRID(BOOL), STRID(WSTRING), STRID(WSTRING), STRID(UINT), STRID(WSTRING)};
 const CStringDictionary::TStringId FORTE_ADS_SERVER_CONFIG::scmDataOutputNames[] = {STRID(QO), STRID(STATUS)};
 const CStringDictionary::TStringId FORTE_ADS_SERVER_CONFIG::scmDataOutputTypeIds[] = {STRID(BOOL), STRID(WSTRING)};
 const TDataIOID FORTE_ADS_SERVER_CONFIG::scmEIWith[] = {0, scmWithListDelimiter};
@@ -56,16 +57,29 @@ const TDataIOID FORTE_ADS_SERVER_CONFIG::scmEOWith[] = {0, 1, scmWithListDelimit
 const TForteInt16 FORTE_ADS_SERVER_CONFIG::scmEOWithIndexes[] = {0, -1};
 const CStringDictionary::TStringId FORTE_ADS_SERVER_CONFIG::scmEventOutputNames[] = {STRID(INITO)};
 const CStringDictionary::TStringId FORTE_ADS_SERVER_CONFIG::scmEventOutputTypeIds[] = {STRID(EInit)};
-const SFBInterfaceSpec FORTE_ADS_SERVER_CONFIG::scmFBInterfaceSpec = {
-  1, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,
-  1, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes,
-  5, scmDataInputNames, scmDataInputTypeIds,
-  2, scmDataOutputNames, scmDataOutputTypeIds,
-  0, nullptr,
-  0, nullptr
-};
+const SFBInterfaceSpec FORTE_ADS_SERVER_CONFIG::scmFBInterfaceSpec = {1,
+                                                                      scmEventInputNames,
+                                                                      scmEventInputTypeIds,
+                                                                      scmEIWith,
+                                                                      scmEIWithIndexes,
+                                                                      1,
+                                                                      scmEventOutputNames,
+                                                                      scmEventOutputTypeIds,
+                                                                      scmEOWith,
+                                                                      scmEOWithIndexes,
+                                                                      5,
+                                                                      scmDataInputNames,
+                                                                      scmDataInputTypeIds,
+                                                                      2,
+                                                                      scmDataOutputNames,
+                                                                      scmDataOutputTypeIds,
+                                                                      0,
+                                                                      nullptr,
+                                                                      0,
+                                                                      nullptr};
 
-FORTE_ADS_SERVER_CONFIG::FORTE_ADS_SERVER_CONFIG(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_ADS_SERVER_CONFIG::FORTE_ADS_SERVER_CONFIG(const CStringDictionary::TStringId paInstanceNameId,
+                                                 forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId),
     var_QI(0_BOOL),
     var_FRIENDLY_NAME(u""_WSTRING),
@@ -81,8 +95,7 @@ FORTE_ADS_SERVER_CONFIG::FORTE_ADS_SERVER_CONFIG(const CStringDictionary::TStrin
     conn_ADS_PORT(nullptr),
     conn_SERVER_IPV4_OR_HOSTNAME(nullptr),
     conn_QO(*this, 0, var_QO),
-    conn_STATUS(*this, 1, var_STATUS) {
-};
+    conn_STATUS(*this, 1, var_STATUS) {};
 
 void FORTE_ADS_SERVER_CONFIG::setInitialValues() {
   var_QI = 0_BOOL;
@@ -95,10 +108,12 @@ void FORTE_ADS_SERVER_CONFIG::setInitialValues() {
 }
 
 void FORTE_ADS_SERVER_CONFIG::executeEvent(const TEventID paEIID, CEventChainExecutionThread *const paECET) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventINITID:
-      if(QI()) {
-        QO() = CIEC_BOOL(forte::ads::CAdsConnectionManager::getInstance().addConnection(FRIENDLY_NAME().getStorage().c_str(), SERVER_ADS_ADDRESS().getStorage().c_str(), static_cast<CIEC_UDINT::TValueType>(ADS_PORT()), SERVER_IPV4_OR_HOSTNAME().getStorage().c_str()));
+      if (QI()) {
+        QO() = CIEC_BOOL(forte::ads::CAdsConnectionManager::getInstance().addConnection(
+            FRIENDLY_NAME().getStorage().c_str(), SERVER_ADS_ADDRESS().getStorage().c_str(),
+            static_cast<CIEC_UDINT::TValueType>(ADS_PORT()), SERVER_IPV4_OR_HOSTNAME().getStorage().c_str()));
       } else {
         forte::ads::CAdsConnectionManager::getInstance().removeConnection(FRIENDLY_NAME().getStorage().c_str());
         QO() = CIEC_BOOL(false);
@@ -109,19 +124,18 @@ void FORTE_ADS_SERVER_CONFIG::executeEvent(const TEventID paEIID, CEventChainExe
 }
 
 void FORTE_ADS_SERVER_CONFIG::writeOutputData(const TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventINITOID: {
       writeData(0, var_QO, conn_QO);
       writeData(1, var_STATUS, conn_STATUS);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 CIEC_ANY *FORTE_ADS_SERVER_CONFIG::getDI(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_QI;
     case 1: return &var_FRIENDLY_NAME;
     case 2: return &var_SERVER_ADS_ADDRESS;
@@ -132,7 +146,7 @@ CIEC_ANY *FORTE_ADS_SERVER_CONFIG::getDI(const size_t paIndex) {
 }
 
 CIEC_ANY *FORTE_ADS_SERVER_CONFIG::getDO(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_QO;
     case 1: return &var_STATUS;
   }
@@ -140,14 +154,14 @@ CIEC_ANY *FORTE_ADS_SERVER_CONFIG::getDO(const size_t paIndex) {
 }
 
 CEventConnection *FORTE_ADS_SERVER_CONFIG::getEOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_INITO;
   }
   return nullptr;
 }
 
 CDataConnection **FORTE_ADS_SERVER_CONFIG::getDIConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_QI;
     case 1: return &conn_FRIENDLY_NAME;
     case 2: return &conn_SERVER_ADS_ADDRESS;
@@ -158,7 +172,7 @@ CDataConnection **FORTE_ADS_SERVER_CONFIG::getDIConUnchecked(const TPortId paInd
 }
 
 CDataConnection *FORTE_ADS_SERVER_CONFIG::getDOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_QO;
     case 1: return &conn_STATUS;
   }

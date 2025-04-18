@@ -20,8 +20,8 @@ class SAdapterInstanceDef;
 class CLuaEngine;
 
 namespace luatype {
-  bool getAdapterInstanceDefinition(SAdapterInstanceDef& def, CLuaEngine* luaEngine, int index);
-  bool getTypeNameId(CStringDictionary::TStringId& id, CLuaEngine* luaEngine, int index);
-}
+  bool getAdapterInstanceDefinition(SAdapterInstanceDef &def, CLuaEngine *luaEngine, int index);
+  bool getTypeNameId(CStringDictionary::TStringId &id, CLuaEngine *luaEngine, int index);
+} // namespace luatype
 
 #endif /* SRC_CORE_LUA_LUATYPE_H_ */

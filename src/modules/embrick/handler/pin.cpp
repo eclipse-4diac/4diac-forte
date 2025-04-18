@@ -17,14 +17,13 @@
 #include <unistd.h>
 #include <fcntl.h>
 
-const char * const EmbrickPinHandler::scmFailedToExportPin = "Failed to export GPIO pin.";
-const char * const EmbrickPinHandler::scmFailedToSetDirection = "Failed to set GPIO direction.";
-const char * const EmbrickPinHandler::scmFailedToOpenFile = "Failed to open sysfs file.";
-const char * const EmbrickPinHandler::scmFailedToWriteFile = "Failed to write sysfs file.";
-const char * const EmbrickPinHandler::scmNotInitialised = "Failed to write to not initialised sysfs stream.";
+const char *const EmbrickPinHandler::scmFailedToExportPin = "Failed to export GPIO pin.";
+const char *const EmbrickPinHandler::scmFailedToSetDirection = "Failed to set GPIO direction.";
+const char *const EmbrickPinHandler::scmFailedToOpenFile = "Failed to open sysfs file.";
+const char *const EmbrickPinHandler::scmFailedToWriteFile = "Failed to write sysfs file.";
+const char *const EmbrickPinHandler::scmNotInitialised = "Failed to write to not initialised sysfs stream.";
 
-EmbrickPinHandler::EmbrickPinHandler(unsigned int paPin) :
-  mError(0), mPinNumber(paPin) {
+EmbrickPinHandler::EmbrickPinHandler(unsigned int paPin) : mError(0), mPinNumber(paPin) {
 
   // Init pin
   init();
@@ -36,9 +35,8 @@ EmbrickPinHandler::~EmbrickPinHandler() {
 
 static bool writeFile(const std::string &fn, const std::string &val) {
   int fd = open(fn.c_str(), O_WRONLY);
-  if (fd < 0 || write(fd, val.data(), val.size()) != (ssize_t)val.size()) {
-    DEVLOG_DEBUG("emBrick[PinHandler]: writing %s to %s failed: %s\n",
-                 fn.c_str(), val.c_str(), strerror(errno));
+  if (fd < 0 || write(fd, val.data(), val.size()) != (ssize_t) val.size()) {
+    DEVLOG_DEBUG("emBrick[PinHandler]: writing %s to %s failed: %s\n", fn.c_str(), val.c_str(), strerror(errno));
     close(fd);
     return false;
   }
@@ -53,7 +51,7 @@ void EmbrickPinHandler::init() {
   if (!writeFile("/sys/class/gpio/gpio" + pinStr + "/direction", "out")) {
     if (!writeFile("/sys/class/gpio/export", std::to_string(mPinNumber))) {
       return fail(scmFailedToExportPin);
-  }
+    }
 
     didExport = true;
 
@@ -96,7 +94,7 @@ bool EmbrickPinHandler::set(bool paState) {
   }
 
   lseek(mPinFd, 0, SEEK_SET);
-  if (write(mPinFd, paState?"1":"0", 1) != 1) {
+  if (write(mPinFd, paState ? "1" : "0", 1) != 1) {
     fail(scmFailedToWriteFile);
     return false;
   }
@@ -104,7 +102,7 @@ bool EmbrickPinHandler::set(bool paState) {
   return true;
 }
 
-void EmbrickPinHandler::fail(const char* paReason) {
+void EmbrickPinHandler::fail(const char *paReason) {
   mError = paReason;
   DEVLOG_ERROR("emBrick[PinHandler]: %s\n", paReason);
 }

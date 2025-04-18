@@ -20,31 +20,27 @@ namespace forte {
   namespace com_infra {
     class CModbusComLayer;
   }
-}
+} // namespace forte
 
-class CModbusHandler : public CExternalEventHandler{
+class CModbusHandler : public CExternalEventHandler {
     DECLARE_HANDLER(CModbusHandler)
   public:
     typedef int TCallbackDescriptor;
 
-    void enableHandler() override {
-    }
-    ;
-    void disableHandler() override {
-    }
-    ;
+    void enableHandler() override {};
+    void disableHandler() override {};
 
     void setPriority(int) override {
-      //currently we are doing nothing here.
-      //TODO We should adjust the thread priority.
+      // currently we are doing nothing here.
+      // TODO We should adjust the thread priority.
     }
 
     int getPriority() const override {
-      //the same as for setPriority
+      // the same as for setPriority
       return 0;
     }
 
-    void executeComCallback(forte::com_infra::CModbusComLayer* paComCallback);
+    void executeComCallback(forte::com_infra::CModbusComLayer *paComCallback);
 };
 
 #endif // _MODBUSHANDLER_H_

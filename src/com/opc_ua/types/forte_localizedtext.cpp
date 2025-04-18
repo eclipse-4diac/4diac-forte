@@ -17,15 +17,11 @@ USE_STRING_ID(locale);
 USE_STRING_ID(LocalizedText);
 USE_STRING_ID(text);
 
-
 using namespace std::string_literals;
 
 DEFINE_FIRMWARE_DATATYPE(LocalizedText, STRID(LocalizedText));
 
-CIEC_LocalizedText::CIEC_LocalizedText() :
-    CIEC_STRUCT(),
-    var_locale(""s),
-    var_text(""s) {
+CIEC_LocalizedText::CIEC_LocalizedText() : CIEC_STRUCT(), var_locale(""s), var_text(""s) {
 }
 
 CStringDictionary::TStringId CIEC_LocalizedText::getStructTypeNameID() const {
@@ -48,4 +44,4 @@ const CIEC_ANY *CIEC_LocalizedText::getMember(size_t paMemberIndex) const {
   return nullptr;
 }
 
-const CStringDictionary::TStringId CIEC_LocalizedText::scmElementNames[] = { STRID(locale), STRID(text) };
+const CStringDictionary::TStringId CIEC_LocalizedText::scmElementNames[] = {STRID(locale), STRID(text)};

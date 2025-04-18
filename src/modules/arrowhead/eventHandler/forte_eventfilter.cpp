@@ -27,15 +27,24 @@ USE_STRING_ID(sources);
 USE_STRING_ID(startDate);
 USE_STRING_ID(WSTRING);
 
-
 DEFINE_FIRMWARE_DATATYPE(EventFilter, STRID(EventFilter));
 
 CIEC_EventFilter::CIEC_EventFilter() :
     CIEC_STRUCT(STRID(EventFilter), 8, scmElementTypes, scmElementNames, e_APPLICATION + e_CONSTRUCTED + 1) {
 }
 
-const CStringDictionary::TStringId CIEC_EventFilter::scmElementTypes[] =
-  { STRID(WSTRING), STRID(ArrowheadSystem), STRID(ARRAY), 10, STRID(ArrowheadSystem), STRID(DATE_AND_TIME), STRID(DATE_AND_TIME),
-    STRID(ARRAY), 10, STRID(WSTRING), STRID(WSTRING), STRID(BOOL) };
-const CStringDictionary::TStringId CIEC_EventFilter::scmElementNames[] = { STRID(eventType), STRID(consumer), STRID(sources), STRID(startDate),
-  STRID(endDate), STRID(filterMetada), STRID(notifyUri), STRID(matchMetada) };
+const CStringDictionary::TStringId CIEC_EventFilter::scmElementTypes[] = {STRID(WSTRING),
+                                                                          STRID(ArrowheadSystem),
+                                                                          STRID(ARRAY),
+                                                                          10,
+                                                                          STRID(ArrowheadSystem),
+                                                                          STRID(DATE_AND_TIME),
+                                                                          STRID(DATE_AND_TIME),
+                                                                          STRID(ARRAY),
+                                                                          10,
+                                                                          STRID(WSTRING),
+                                                                          STRID(WSTRING),
+                                                                          STRID(BOOL)};
+const CStringDictionary::TStringId CIEC_EventFilter::scmElementNames[] = {
+    STRID(eventType), STRID(consumer),     STRID(sources),   STRID(startDate),
+    STRID(endDate),   STRID(filterMetada), STRID(notifyUri), STRID(matchMetada)};

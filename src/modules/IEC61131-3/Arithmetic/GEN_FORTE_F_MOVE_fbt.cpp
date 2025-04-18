@@ -20,7 +20,6 @@ USE_STRING_ID(IN);
 USE_STRING_ID(OUT);
 USE_STRING_ID(REQ);
 
-
 #include "criticalregion.h"
 #include "resource.h"
 
@@ -40,13 +39,13 @@ const TForteInt16 GEN_FORTE_F_MOVE::scmEOWithIndexes[] = {0};
 const CStringDictionary::TStringId GEN_FORTE_F_MOVE::scmEventOutputNames[] = {STRID(CNF)};
 const CStringDictionary::TStringId GEN_FORTE_F_MOVE::scmEventOutputTypeIds[] = {STRID(Event)};
 
-
-GEN_FORTE_F_MOVE::GEN_FORTE_F_MOVE(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+GEN_FORTE_F_MOVE::GEN_FORTE_F_MOVE(const CStringDictionary::TStringId paInstanceNameId,
+                                   forte::core::CFBContainer &paContainer) :
     CGenFunctionBlock<CFunctionBlock>(paContainer, paInstanceNameId) {
 }
 
 void GEN_FORTE_F_MOVE::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventREQID:
       var_OUT().setValue(var_IN());
       sendOutputEvent(scmEventCNFID, paECET);
@@ -55,20 +54,20 @@ void GEN_FORTE_F_MOVE::executeEvent(TEventID paEIID, CEventChainExecutionThread 
 }
 
 void GEN_FORTE_F_MOVE::readInputData(TEventID paEIID) {
-  if(paEIID == scmEventREQID) {
+  if (paEIID == scmEventREQID) {
     readData(0, *mDIs[0], mDIConns[0]);
   }
 }
 
 void GEN_FORTE_F_MOVE::writeOutputData(TEventID paEOID) {
-  if(paEOID == scmEventCNFID){
+  if (paEOID == scmEventCNFID) {
     writeData(0, *mDOs[0], mDOConns[0]);
   }
 }
 
 bool GEN_FORTE_F_MOVE::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) {
   const CTypeLib::CTypeEntry *poToCreate;
-  if(strcmp(paConfigString, "F_MOVE") == 0) {
+  if (strcmp(paConfigString, "F_MOVE") == 0) {
     poToCreate = &CIEC_ANY_VARIANT::csmFirmwareDataTypeEntry_ANY_VARIANT;
   } else {
     poToCreate = CTypeLib::findType(getDataTypeNameId(paConfigString), CTypeLib::getDTLibStart());
@@ -100,14 +99,13 @@ bool GEN_FORTE_F_MOVE::createInterfaceSpec(const char *paConfigString, SFBInterf
 
 CStringDictionary::TStringId GEN_FORTE_F_MOVE::getDataTypeNameId(const char *paConfigString) {
   const char *acPos = strchr(paConfigString, '_');
-  if(nullptr != acPos){
+  if (nullptr != acPos) {
     acPos++;
     acPos = strchr(acPos, '_');
-    if(nullptr != acPos){
-      acPos += 2;  //put the position one after the separating number
+    if (nullptr != acPos) {
+      acPos += 2; // put the position one after the separating number
       return CStringDictionary::getId(acPos);
     }
   }
   return CStringDictionary::scmInvalidStringId;
 }
-

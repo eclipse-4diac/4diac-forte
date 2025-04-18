@@ -18,35 +18,30 @@
 #include "deviceFactory.h"
 #include "devlog.h"
 
-const SFBInterfaceSpec MultiDevice::scmFBInterfaceSpec = {
-  0, nullptr, nullptr, nullptr, nullptr,
-  0, nullptr, nullptr, nullptr, nullptr,
-  0, nullptr, nullptr,
-  0, nullptr, nullptr,
-  0, nullptr,
-  0, nullptr
-};
+const SFBInterfaceSpec MultiDevice::scmFBInterfaceSpec = {0,       nullptr, nullptr, nullptr, nullptr, 0,       nullptr,
+                                                          nullptr, nullptr, nullptr, 0,       nullptr, nullptr, 0,
+                                                          nullptr, nullptr, 0,       nullptr, 0,       nullptr};
 
-MultiDevice::MultiDevice(const std::string &paMGRID) : 
-  CDevice(scmFBInterfaceSpec, CStringDictionary::scmInvalidStringId), 
-  mMGRID(paMGRID) {
-  
+MultiDevice::MultiDevice(const std::string &paMGRID) :
+    CDevice(scmFBInterfaceSpec, CStringDictionary::scmInvalidStringId),
+    mMGRID(paMGRID) {
+
   // avoid creating another MultiDevice in case it was set to it in cmake
-  if(DeviceFactory::getCurrentDeviceToCreate() == scmMultiDeviceName){
+  if (DeviceFactory::getCurrentDeviceToCreate() == scmMultiDeviceName) {
     DeviceFactory::setDeviceToCreate(scmDefaultDeviceToCreate);
   }
 
   DEVLOG_INFO("Starting a %s device\n", scmMultiDeviceName.c_str());
 }
 
-void MultiDevice::awaitShutdown(){
+void MultiDevice::awaitShutdown() {
   // wait for the kill signal from main to arrive
   mKillSignal.get_future().wait();
 }
 
 EMGMResponse MultiDevice::changeExecutionState(EMGMCommandType paCommand) {
   // handle the actual kill signal coming from main, ignore the rest
-  if(EMGMCommandType::Kill == paCommand){
+  if (EMGMCommandType::Kill == paCommand) {
     killControlledDevice();
     mKillSignal.set_value();
   }
@@ -60,20 +55,18 @@ int MultiDevice::startDevice() {
   return resetControlledDevice();
 }
 
-void MultiDevice::killControlledDevice(){
-  if(mControlledDevice != nullptr){
+void MultiDevice::killControlledDevice() {
+  if (mControlledDevice != nullptr) {
     mControlledDevice->changeExecutionState(EMGMCommandType::Kill);
     mControlledDevice->awaitShutdown();
   }
 }
 
-void MultiDevice::requestResetControlledDevice(){
-  mRestartSignalHandler = std::async(std::launch::async, [this](){
-   resetControlledDevice();
-  });
+void MultiDevice::requestResetControlledDevice() {
+  mRestartSignalHandler = std::async(std::launch::async, [this]() { resetControlledDevice(); });
 }
 
-int MultiDevice::resetControlledDevice(){
+int MultiDevice::resetControlledDevice() {
   killControlledDevice();
 
   // reset all factories to the standard options
@@ -85,46 +78,49 @@ int MultiDevice::resetControlledDevice(){
   mControlledDevice = DeviceFactory::createDevice(mMGRID);
 
   // destroy before creating a new one
-  mOpcuaMgr = nullptr; 
+  mOpcuaMgr = nullptr;
   mMultiMgr = nullptr;
 
   // if the controlled device has already an opcuaMgr we used that, otherwise
   // we create and own one
-  if(auto opcuaMgr = forte::ita::multi::utils::getOpcuaMgr(*mControlledDevice); opcuaMgr != nullptr){
+  if (auto opcuaMgr = forte::ita::multi::utils::getOpcuaMgr(*mControlledDevice); opcuaMgr != nullptr) {
     mOpcuaMgr = opcuaMgr;
   } else {
     mOpcuaMgr = std::make_unique<OPCUA_MGR>(*mControlledDevice);
   }
 
   // initialize the opcua methods
-  auto result = std::visit([this](auto&& paOpcuaMgr) -> int {
-    // initialize the multi mgr commands and pass the opcua mgr object we have stored (own or borrowed from the device)
-    mMultiMgr = std::make_unique<MultiMGR>(*this, *paOpcuaMgr);
-    if(!mMultiMgr->initialize()){
-      return -1;
-    }
+  auto result = std::visit(
+      [this](auto &&paOpcuaMgr) -> int {
+        // initialize the multi mgr commands and pass the opcua mgr object we have stored (own or borrowed from the
+        // device)
+        mMultiMgr = std::make_unique<MultiMGR>(*this, *paOpcuaMgr);
+        if (!mMultiMgr->initialize()) {
+          return -1;
+        }
 
-    using T = std::decay_t<decltype(paOpcuaMgr)>;
-    if constexpr (std::is_same_v<T, std::unique_ptr<OPCUA_MGR>>) {
-      // opcuaMgr belong to us, we need to initialize it
-      if (paOpcuaMgr->initialize() != EMGMResponse::Ready) {
-        return -1;
-      }
-    }
-    return 0;
-  }, mOpcuaMgr);
+        using T = std::decay_t<decltype(paOpcuaMgr)>;
+        if constexpr (std::is_same_v<T, std::unique_ptr<OPCUA_MGR>>) {
+          // opcuaMgr belong to us, we need to initialize it
+          if (paOpcuaMgr->initialize() != EMGMResponse::Ready) {
+            return -1;
+          }
+        }
+        return 0;
+      },
+      mOpcuaMgr);
 
-  if(result != 0){
+  if (result != 0) {
     return -1;
   }
   mControlledDevice->initialize();
   return mControlledDevice->startDevice();
 }
 
-CIEC_ANY* MultiDevice::getDI(size_t) {
+CIEC_ANY *MultiDevice::getDI(size_t) {
   return nullptr;
 }
 
-CDataConnection** MultiDevice::getDIConUnchecked(TPortId) {
+CDataConnection **MultiDevice::getDIConUnchecked(TPortId) {
   return nullptr;
 }

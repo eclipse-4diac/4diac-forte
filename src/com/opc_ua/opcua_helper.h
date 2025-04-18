@@ -26,13 +26,12 @@ class CIEC_STRUCT;
 
 class COPC_UA_Helper {
   public:
-
     /**
      * Returns the OPC UA data type that correspond to the IEC 61131-3 type
      * @param paAnyType IEC 61131-3 type
      * @return The OPC UA type pointer, or 0 if not found
      */
-    static const UA_DataType *getOPCUATypeFromAny(const CIEC_ANY& paAnyType);
+    static const UA_DataType *getOPCUATypeFromAny(const CIEC_ANY &paAnyType);
 
     /**
      * Converts any IEC 61131-3 type to its OPC UA Type
@@ -40,7 +39,7 @@ class COPC_UA_Helper {
      * @param paDest Already allocated memory where to store
      * @return The size in the destination it was used
      */
-    static size_t convertToOPCUAType(const CIEC_ANY& paSrcAny, void* paDest);
+    static size_t convertToOPCUAType(const CIEC_ANY &paSrcAny, void *paDest);
 
     /**
      * Converts an OPC UA Type into its IEC 61131-3 type
@@ -48,7 +47,7 @@ class COPC_UA_Helper {
      * @param paDestAny Place to store
      * @return The size of the source that was used
      */
-    static size_t convertFromOPCUAType(void const * const paSrc, CIEC_ANY &paDestAny);
+    static size_t convertFromOPCUAType(void const *const paSrc, CIEC_ANY &paDestAny);
 
     /**
      * Fills a variant using the information from a CIEC_ANY type
@@ -73,8 +72,7 @@ class COPC_UA_Helper {
         size_t mOffset{0};
 
         UA_Variables_handle(const UA_Variables_handle &paObj) = delete;
-        UA_Variables_handle& operator=(const UA_Variables_handle& other) = delete;
-
+        UA_Variables_handle &operator=(const UA_Variables_handle &other) = delete;
     };
 
     /**
@@ -84,11 +82,11 @@ class COPC_UA_Helper {
       public:
         UA_RecvVariable_handle() = default;
 
-        std::vector<const UA_Variant*> mData;
+        std::vector<const UA_Variant *> mData;
         const UA_NodeId *mNodeId{nullptr};
 
         UA_RecvVariable_handle(const UA_RecvVariable_handle &paObj) = delete;
-        UA_RecvVariable_handle& operator=(const UA_RecvVariable_handle& other) = delete;
+        UA_RecvVariable_handle &operator=(const UA_RecvVariable_handle &other) = delete;
     };
 
     /**
@@ -98,12 +96,11 @@ class COPC_UA_Helper {
       public:
         UA_SendVariable_handle() = default;
 
-        std::vector<UA_Variant*> mData;
+        std::vector<UA_Variant *> mData;
 
         UA_SendVariable_handle(const UA_SendVariable_handle &paObj) = delete;
-        UA_SendVariable_handle& operator=(const UA_SendVariable_handle& other) = delete;
+        UA_SendVariable_handle &operator=(const UA_SendVariable_handle &other) = delete;
     };
-
 
     /**
      * Check if a browsepath is valid
@@ -120,7 +117,10 @@ class COPC_UA_Helper {
      * @param paFoundNodeId Place to store the node ID of the requested node
      * @return UA_STATUSCODE_GOOD is no problem occurred, other value otherwise
      */
-    static UA_StatusCode getRemoteNodeForPath(UA_Client &paClient, const char *paNodePathConst, UA_NodeId **paParentNodeId, UA_NodeId **paFoundNodeId);
+    static UA_StatusCode getRemoteNodeForPath(UA_Client &paClient,
+                                              const char *paNodePathConst,
+                                              UA_NodeId **paParentNodeId,
+                                              UA_NodeId **paFoundNodeId);
 
     /**
      * Prepare the browse request from a browsepath
@@ -129,10 +129,12 @@ class COPC_UA_Helper {
      * @param paFolderCount Place to store the amount of folders in the browse request
      * @return UA_STATUSCODE_GOOD is no problem occurred, other value otherwise
      */
-    static UA_StatusCode prepareBrowseArgument(const char *paNodePathConst, UA_BrowsePath **paBrowsePaths, size_t *paFolderCount);
+    static UA_StatusCode
+    prepareBrowseArgument(const char *paNodePathConst, UA_BrowsePath **paBrowsePaths, size_t *paFolderCount);
 
     /**
-     * Release all memory alloacted in prepareBrowseArgument. It should be called when paBrowsePaths in prepareBrowseArgument is not used anymore
+     * Release all memory alloacted in prepareBrowseArgument. It should be called when paBrowsePaths in
+     * prepareBrowseArgument is not used anymore
      * @param paBrowsePaths Browse request returned by prepareBrowseArgument
      * @param paPathLength Amount of folders returned by prepareBrowseArgument
      * @return UA_STATUSCODE_GOOD is no problem occurred, other value otherwise
@@ -140,14 +142,15 @@ class COPC_UA_Helper {
     static UA_StatusCode releaseBrowseArgument(UA_BrowsePath &paBrowsePaths, size_t paPathLength);
 
     /**
-     * Allocated a UA_QualifiedName from a nodename which can have a semicolon to define the namespace. If no semicolon is found
-     * the passed deafult namespace is used
+     * Allocated a UA_QualifiedName from a nodename which can have a semicolon to define the namespace. If no semicolon
+     * is found the passed deafult namespace is used
      * @param paNodeName String containing the nodename
      * @param paBrowseName Place to store the qualified name
      * @param paDefaultNamespace Default namespace to be used if not present in paNodeName
      * @return True if no error occurred, false otherwise
      */
-    static bool getBrowsenameFromNodeName(const char *paNodeName, UA_UInt16 paDefaultNamespace, UA_QualifiedName &paBrowseName);
+    static bool
+    getBrowsenameFromNodeName(const char *paNodeName, UA_UInt16 paDefaultNamespace, UA_QualifiedName &paBrowseName);
 
     /**
      * Maximum number of parameters in a browsename separated by a semicolon
@@ -155,7 +158,6 @@ class COPC_UA_Helper {
     static const size_t scmMaxNoOfParametersInBrowseName = 2;
 
   private:
-
     /**
      * Function pointer definition to convert a IEC 61131-3 type to an OPC UA Type
      */
@@ -172,7 +174,9 @@ class COPC_UA_Helper {
     class UA_TypeConvert {
       public:
         UA_TypeConvert(const UA_DataType *paType, convertFromIECToOPCUA paToOPCUA, convertFromOPCUAToIEC paFromOPCUA) :
-            mType(paType), mToOPCUA(paToOPCUA), mFromOPCUA(paFromOPCUA) {
+            mType(paType),
+            mToOPCUA(paToOPCUA),
+            mFromOPCUA(paFromOPCUA) {
         }
         const UA_DataType *mType;
         convertFromIECToOPCUA mToOPCUA;
@@ -181,7 +185,8 @@ class COPC_UA_Helper {
     class UA_TypeConvert_external {
       public:
         UA_TypeConvert_external(const UA_DataType *paType, const CStringDictionary::TStringId paStringId) :
-            mType(paType), mStringId(paStringId) {
+            mType(paType),
+            mStringId(paStringId) {
         }
         const UA_DataType *mType;
         const CStringDictionary::TStringId mStringId;
@@ -202,7 +207,7 @@ class COPC_UA_Helper {
      * @param paAnyType IEC 61131-3 container which is used to look for the corresponding OPC UA type
      * @return The OPC UA type pointer, or 0 if not found
      */
-    static const UA_DataType *getExternalOPCUATypeFromAny(const CIEC_ANY& paAnyType);
+    static const UA_DataType *getExternalOPCUATypeFromAny(const CIEC_ANY &paAnyType);
 
     /**
      * Look for the first occurrence of an existing node from a browse path result
@@ -220,11 +225,14 @@ class COPC_UA_Helper {
      * @param paParentNodeId Place to store the parent node ID
      * @param paFolderCnt Size of the browse result
      */
-    static void copyNodeIds(const UA_BrowsePathResult *paBrowsePathsResults, size_t paFolderCnt, int paFoundFolderOffset, UA_NodeId **paParentNodeId,
-        UA_NodeId **paFoundNodeId);
+    static void copyNodeIds(const UA_BrowsePathResult *paBrowsePathsResults,
+                            size_t paFolderCnt,
+                            int paFoundFolderOffset,
+                            UA_NodeId **paParentNodeId,
+                            UA_NodeId **paFoundNodeId);
 
     static size_t convertStructToOPCUAType(const CIEC_STRUCT &paSrcStruct, void *paDest);
-    static size_t convertStructFromOPCUAType(void const * const paSrc, CIEC_STRUCT &paDestStruct);
+    static size_t convertStructFromOPCUAType(void const *const paSrc, CIEC_STRUCT &paDestStruct);
 };
 
-#endif //FORTE_OPCUA_HELPER_H
+#endif // FORTE_OPCUA_HELPER_H

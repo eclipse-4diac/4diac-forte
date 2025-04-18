@@ -16,28 +16,28 @@
 #include <BEModule.hpp>
 #include <unistd.h>
 
-void CBEThread::Main(VOID){
-  CThreadBase::runThread(this);  //this is a little bit an overkill but better complies to our overall rules
+void CBEThread::Main(VOID) {
+  CThreadBase::runThread(this); // this is a little bit an overkill but better complies to our overall rules
 }
 
-CBEThread::CBEThread() : CThreadBase(0){
+CBEThread::CBEThread() : CThreadBase(0) {
 }
 
-CBEThread::~CBEThread(){
+CBEThread::~CBEThread() {
 }
 
-forte::arch::CThreadBase<int>::TThreadHandleType CBEThread::createThread(long ){
+forte::arch::CThreadBase<int>::TThreadHandleType CBEThread::createThread(long) {
   int retVal = 1;
-  if(Spawn(0, 0, 130, VX_FP_TASK, APP_TSK_STACK) == ERROR){
+  if (Spawn(0, 0, 130, VX_FP_TASK, APP_TSK_STACK) == ERROR) {
     retVal = 0;
   }
   return retVal;
 }
 
-void CBEThread::sleepThread(unsigned int paMilliSeconds){
+void CBEThread::sleepThread(unsigned int paMilliSeconds) {
   usleep(1000 * paMilliSeconds);
 }
 
-void CBEThread::deleteThread(int){
+void CBEThread::deleteThread(int) {
   Delete();
 }

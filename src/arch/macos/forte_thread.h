@@ -12,7 +12,7 @@
 #ifndef _MACOS_FORTE_THREAD_H_
 #define _MACOS_FORTE_THREAD_H_
 
-//just pull_in the posix thread
+// just pull_in the posix thread
 #include "../posix/forte_thread.h"
 
 #endif

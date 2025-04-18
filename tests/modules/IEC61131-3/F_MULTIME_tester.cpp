@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2022 Primetals Technologies Austria GmbH
- *               
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -12,23 +12,20 @@
  *******************************************************************************/
 #include "../../core/fbtests/fbtestfixture.h"
 
-
 USE_STRING_ID(F_MULTIME);
 
+struct F_MULTIME_TestFixture : public CFBTestFixtureBase {
 
-struct F_MULTIME_TestFixture : public CFBTestFixtureBase{
+    F_MULTIME_TestFixture() : CFBTestFixtureBase(STRID(F_MULTIME)) {
+      setInputData({&mIn_TIME_MULTIME, &mIn_REAL_MULTIME});
+      setOutputData({&mOut_TIME_MULTIME});
+      CFBTestFixtureBase::setup();
+    }
 
-  F_MULTIME_TestFixture() : CFBTestFixtureBase(STRID(F_MULTIME))
-  {
-    setInputData({&mIn_TIME_MULTIME, &mIn_REAL_MULTIME});
-    setOutputData({&mOut_TIME_MULTIME});
-    CFBTestFixtureBase::setup();
-  }
+    CIEC_TIME mIn_TIME_MULTIME; // DATA INPUT
+    CIEC_REAL mIn_REAL_MULTIME; // DATA INPUT
 
-  CIEC_TIME mIn_TIME_MULTIME; // DATA INPUT
-  CIEC_REAL mIn_REAL_MULTIME; // DATA INPUT
-
-  CIEC_TIME mOut_TIME_MULTIME;
+    CIEC_TIME mOut_TIME_MULTIME;
 };
 
 BOOST_FIXTURE_TEST_SUITE(F_MULTIME_Tests, F_MULTIME_TestFixture)
@@ -42,22 +39,22 @@ BOOST_AUTO_TEST_CASE(mulWithRealWithOne) {
   BOOST_CHECK_EQUAL(CIEC_TIME(30000000), mOut_TIME_MULTIME);
 }
 
-  BOOST_AUTO_TEST_CASE(mulWithRealWithDecimal) {
-    mIn_TIME_MULTIME = CIEC_TIME(30000000);
-    mIn_REAL_MULTIME = CIEC_REAL(0.5);
-    /* trigger the inputevent */
-    triggerEvent(0);
-    BOOST_CHECK(checkForSingleOutputEventOccurence(0));
-    BOOST_CHECK_EQUAL(CIEC_TIME(15000000), mOut_TIME_MULTIME);
-  }
+BOOST_AUTO_TEST_CASE(mulWithRealWithDecimal) {
+  mIn_TIME_MULTIME = CIEC_TIME(30000000);
+  mIn_REAL_MULTIME = CIEC_REAL(0.5);
+  /* trigger the inputevent */
+  triggerEvent(0);
+  BOOST_CHECK(checkForSingleOutputEventOccurence(0));
+  BOOST_CHECK_EQUAL(CIEC_TIME(15000000), mOut_TIME_MULTIME);
+}
 
-  BOOST_AUTO_TEST_CASE(mulWithRealWitGreaterThanOne) {
-    mIn_TIME_MULTIME = CIEC_TIME(30000000);
-    mIn_REAL_MULTIME = CIEC_REAL(2.0);
-    /* trigger the inputevent */
-    triggerEvent(0);
-    BOOST_CHECK(checkForSingleOutputEventOccurence(0));
-    BOOST_CHECK_EQUAL(CIEC_TIME(60000000), mOut_TIME_MULTIME);
-  }
+BOOST_AUTO_TEST_CASE(mulWithRealWitGreaterThanOne) {
+  mIn_TIME_MULTIME = CIEC_TIME(30000000);
+  mIn_REAL_MULTIME = CIEC_REAL(2.0);
+  /* trigger the inputevent */
+  triggerEvent(0);
+  BOOST_CHECK(checkForSingleOutputEventOccurence(0));
+  BOOST_CHECK_EQUAL(CIEC_TIME(60000000), mOut_TIME_MULTIME);
+}
 
 BOOST_AUTO_TEST_SUITE_END()

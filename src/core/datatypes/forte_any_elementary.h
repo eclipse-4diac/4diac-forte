@@ -11,7 +11,7 @@
  *    Thomas Strasser, Ingomar Müller, Martin Melik Merkumians, Alois Zoitl,
  *    Monika Wenger, Stansilav Meduna
  *      - initial implementation and rework communication infrastructure
-  *******************************************************************************/
+ *******************************************************************************/
 #ifndef _ANY_ELE_H_
 #define _ANY_ELE_H_
 
@@ -25,9 +25,7 @@
  */
 class CIEC_ANY_ELEMENTARY : public CIEC_ANY {
   public:
-
-    CIEC_ANY_ELEMENTARY(const CIEC_ANY_ELEMENTARY &paVal) :
-        CIEC_ANY() {
+    CIEC_ANY_ELEMENTARY(const CIEC_ANY_ELEMENTARY &paVal) : CIEC_ANY() {
       setLargestUInt(paVal.getLargestUInt());
     }
 
@@ -37,7 +35,7 @@ class CIEC_ANY_ELEMENTARY : public CIEC_ANY {
       return CIEC_ANY::e_ANY;
     }
 
-    int toString(char* paValue, size_t paBufferSize) const override;
+    int toString(char *paValue, size_t paBufferSize) const override;
     int fromString(const char *paValue) override;
 
     static EDataTypeID getElementaryDataTypeId(CStringDictionary::TStringId paTypeNameId);
@@ -46,14 +44,12 @@ class CIEC_ANY_ELEMENTARY : public CIEC_ANY {
     CIEC_ANY_ELEMENTARY() = default;
 
   private:
-
-    bool isTypeSpecifier(const char* paValue, const char* paHashPosition) const;
+    bool isTypeSpecifier(const char *paValue, const char *paHashPosition) const;
     bool isCastable(CStringDictionary::TStringId paTypeNameId) const;
 
     const static std::map<CStringDictionary::TStringId, CIEC_ANY::EDataTypeID> scm_StringToTypeId;
 
     const static int scmMaxTypeNameLength = 13;
-
 };
 
 #endif /*_MANY_ELE_H_*/

@@ -51,7 +51,6 @@ USE_STRING_ID(STATUS);
 USE_STRING_ID(STRING);
 USE_STRING_ID(WSTRING);
 
-
 #include "PLCnextBusAdapter.h"
 #include "forte_string.h"
 #include "iec61131_functions.h"
@@ -64,11 +63,18 @@ USE_STRING_ID(WSTRING);
 
 DEFINE_FIRMWARE_FB(FORTE_PLCnextAXLSEDO16, STRID(PLCnextAXLSEDO16))
 
-const CStringDictionary::TStringId FORTE_PLCnextAXLSEDO16::scmDataInputNames[] = {STRID(QI), STRID(DO_1), STRID(DO_2), STRID(DO_3), STRID(DO_4), STRID(DO_5), STRID(DO_6), STRID(DO_7), STRID(DO_8), STRID(DO_9), STRID(DO_10), STRID(DO_11), STRID(DO_12), STRID(DO_13), STRID(DO_14), STRID(DO_15), STRID(DO_16)};
-const CStringDictionary::TStringId FORTE_PLCnextAXLSEDO16::scmDataInputTypeIds[] = {STRID(BOOL), STRID(STRING), STRID(STRING), STRID(STRING), STRID(STRING), STRID(STRING), STRID(STRING), STRID(STRING), STRID(STRING), STRID(STRING), STRID(STRING), STRID(STRING), STRID(STRING), STRID(STRING), STRID(STRING), STRID(STRING), STRID(STRING)};
+const CStringDictionary::TStringId FORTE_PLCnextAXLSEDO16::scmDataInputNames[] = {
+    STRID(QI),    STRID(DO_1),  STRID(DO_2),  STRID(DO_3),  STRID(DO_4),  STRID(DO_5),
+    STRID(DO_6),  STRID(DO_7),  STRID(DO_8),  STRID(DO_9),  STRID(DO_10), STRID(DO_11),
+    STRID(DO_12), STRID(DO_13), STRID(DO_14), STRID(DO_15), STRID(DO_16)};
+const CStringDictionary::TStringId FORTE_PLCnextAXLSEDO16::scmDataInputTypeIds[] = {
+    STRID(BOOL),   STRID(STRING), STRID(STRING), STRID(STRING), STRID(STRING), STRID(STRING),
+    STRID(STRING), STRID(STRING), STRID(STRING), STRID(STRING), STRID(STRING), STRID(STRING),
+    STRID(STRING), STRID(STRING), STRID(STRING), STRID(STRING), STRID(STRING)};
 const CStringDictionary::TStringId FORTE_PLCnextAXLSEDO16::scmDataOutputNames[] = {STRID(QO), STRID(STATUS)};
 const CStringDictionary::TStringId FORTE_PLCnextAXLSEDO16::scmDataOutputTypeIds[] = {STRID(BOOL), STRID(WSTRING)};
-const TDataIOID FORTE_PLCnextAXLSEDO16::scmEIWith[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, scmWithListDelimiter};
+const TDataIOID FORTE_PLCnextAXLSEDO16::scmEIWith[] = {0, 1,  2,  3,  4,  5,  6,  7,  8,
+                                                       9, 10, 11, 12, 13, 14, 15, 16, scmWithListDelimiter};
 const TForteInt16 FORTE_PLCnextAXLSEDO16::scmEIWithIndexes[] = {0};
 const CStringDictionary::TStringId FORTE_PLCnextAXLSEDO16::scmEventInputNames[] = {STRID(INIT)};
 const CStringDictionary::TStringId FORTE_PLCnextAXLSEDO16::scmEventInputTypeIds[] = {STRID(EInit)};
@@ -77,20 +83,36 @@ const TForteInt16 FORTE_PLCnextAXLSEDO16::scmEOWithIndexes[] = {0, 3};
 const CStringDictionary::TStringId FORTE_PLCnextAXLSEDO16::scmEventOutputNames[] = {STRID(INITO), STRID(IND)};
 const CStringDictionary::TStringId FORTE_PLCnextAXLSEDO16::scmEventOutputTypeIds[] = {STRID(EInit), STRID(Event)};
 const SAdapterInstanceDef FORTE_PLCnextAXLSEDO16::scmAdapterInstances[] = {
-  {STRID(PLCnextBusAdapter), STRID(BusAdapterIn), false},
-  {STRID(PLCnextBusAdapter), STRID(BusAdapterOut), true}
-};
-const SFBInterfaceSpec FORTE_PLCnextAXLSEDO16::scmFBInterfaceSpec = {
-  1, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,
-  2, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes,
-  17, scmDataInputNames, scmDataInputTypeIds,
-  2, scmDataOutputNames, scmDataOutputTypeIds,
-  0, nullptr,
-  2, scmAdapterInstances
-};
+    {STRID(PLCnextBusAdapter), STRID(BusAdapterIn), false}, {STRID(PLCnextBusAdapter), STRID(BusAdapterOut), true}};
+const SFBInterfaceSpec FORTE_PLCnextAXLSEDO16::scmFBInterfaceSpec = {1,
+                                                                     scmEventInputNames,
+                                                                     scmEventInputTypeIds,
+                                                                     scmEIWith,
+                                                                     scmEIWithIndexes,
+                                                                     2,
+                                                                     scmEventOutputNames,
+                                                                     scmEventOutputTypeIds,
+                                                                     scmEOWith,
+                                                                     scmEOWithIndexes,
+                                                                     17,
+                                                                     scmDataInputNames,
+                                                                     scmDataInputTypeIds,
+                                                                     2,
+                                                                     scmDataOutputNames,
+                                                                     scmDataOutputTypeIds,
+                                                                     0,
+                                                                     nullptr,
+                                                                     2,
+                                                                     scmAdapterInstances};
 
-FORTE_PLCnextAXLSEDO16::FORTE_PLCnextAXLSEDO16(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
-   PLCnextSlaveHandler (PLCnextSlaveHandler::Output, pa_poSrcRes, &scm_stFBInterfaceSpec, pa_nInstanceNameId, m_anFBConnData, m_anFBVarsData),
+FORTE_PLCnextAXLSEDO16::FORTE_PLCnextAXLSEDO16(const CStringDictionary::TStringId paInstanceNameId,
+                                               forte::core::CFBContainer &paContainer) :
+    PLCnextSlaveHandler(PLCnextSlaveHandler::Output,
+                        pa_poSrcRes,
+                        &scm_stFBInterfaceSpec,
+                        pa_nInstanceNameId,
+                        m_anFBConnData,
+                        m_anFBVarsData),
     var_QI(0_BOOL),
     var_DO_1(""_STRING),
     var_DO_2(""_STRING),
@@ -132,12 +154,15 @@ FORTE_PLCnextAXLSEDO16::FORTE_PLCnextAXLSEDO16(const CStringDictionary::TStringI
     conn_DO_15(nullptr),
     conn_DO_16(nullptr),
     conn_QO(*this, 0, var_QO),
-    conn_STATUS(*this, 1, var_STATUS) {
-};
+    conn_STATUS(*this, 1, var_STATUS) {};
 
 bool FORTE_PLCnextAXLSEDO16::initialize() {
-  if(!var_BusAdapterIn.initialize()) { return false; }
-  if(!var_BusAdapterOut.initialize()) { return false; }
+  if (!var_BusAdapterIn.initialize()) {
+    return false;
+  }
+  if (!var_BusAdapterOut.initialize()) {
+    return false;
+  }
   var_BusAdapterIn.setParentFB(this, 0);
   var_BusAdapterOut.setParentFB(this, 1);
   return CFunctionBlock::initialize();
@@ -166,7 +191,7 @@ void FORTE_PLCnextAXLSEDO16::setInitialValues() {
 }
 
 void FORTE_PLCnextAXLSEDO16::readInputData(const TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventINITID: {
       readData(0, var_QI, conn_QI);
       readData(1, var_DO_1, conn_DO_1);
@@ -187,13 +212,12 @@ void FORTE_PLCnextAXLSEDO16::readInputData(const TEventID paEIID) {
       readData(16, var_DO_16, conn_DO_16);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 void FORTE_PLCnextAXLSEDO16::writeOutputData(const TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventINITOID: {
       writeData(0, var_QO, conn_QO);
       writeData(1, var_STATUS, conn_STATUS);
@@ -204,13 +228,12 @@ void FORTE_PLCnextAXLSEDO16::writeOutputData(const TEventID paEIID) {
       writeData(1, var_STATUS, conn_STATUS);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 CIEC_ANY *FORTE_PLCnextAXLSEDO16::getDI(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_QI;
     case 1: return &var_DO_1;
     case 2: return &var_DO_2;
@@ -233,7 +256,7 @@ CIEC_ANY *FORTE_PLCnextAXLSEDO16::getDI(const size_t paIndex) {
 }
 
 CIEC_ANY *FORTE_PLCnextAXLSEDO16::getDO(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_QO;
     case 1: return &var_STATUS;
   }
@@ -241,7 +264,7 @@ CIEC_ANY *FORTE_PLCnextAXLSEDO16::getDO(const size_t paIndex) {
 }
 
 CAdapter *FORTE_PLCnextAXLSEDO16::getAdapterUnchecked(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_BusAdapterIn;
     case 1: return &var_BusAdapterOut;
   }
@@ -249,7 +272,7 @@ CAdapter *FORTE_PLCnextAXLSEDO16::getAdapterUnchecked(const size_t paIndex) {
 }
 
 CEventConnection *FORTE_PLCnextAXLSEDO16::getEOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_INITO;
     case 1: return &conn_IND;
   }
@@ -257,7 +280,7 @@ CEventConnection *FORTE_PLCnextAXLSEDO16::getEOConUnchecked(const TPortId paInde
 }
 
 CDataConnection **FORTE_PLCnextAXLSEDO16::getDIConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_QI;
     case 1: return &conn_DO_1;
     case 2: return &conn_DO_2;
@@ -280,7 +303,7 @@ CDataConnection **FORTE_PLCnextAXLSEDO16::getDIConUnchecked(const TPortId paInde
 }
 
 CDataConnection *FORTE_PLCnextAXLSEDO16::getDOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_QO;
     case 1: return &conn_STATUS;
   }
@@ -288,25 +311,22 @@ CDataConnection *FORTE_PLCnextAXLSEDO16::getDOConUnchecked(const TPortId paIndex
 }
 
 void FORTE_PLCnextAXLSEDO16::initHandles() {
-    // Initialize handles
-    for (int i = 0; i < 16; i++) {
-        PLCnextDeviceController::HandleDescriptor desc = PLCnextDeviceController::HandleDescriptor(
-            *static_cast<CIEC_WSTRING*>(getDI(i+1)),
-            forte::core::io::IOMapper::Out,
-            mIndex,
-            (uint16_t) i,
-            PLCnextDeviceController::Bit);
+  // Initialize handles
+  for (int i = 0; i < 16; i++) {
+    PLCnextDeviceController::HandleDescriptor desc = PLCnextDeviceController::HandleDescriptor(
+        *static_cast<CIEC_WSTRING *>(getDI(i + 1)), forte::core::io::IOMapper::Out, mIndex, (uint16_t) i,
+        PLCnextDeviceController::Bit);
 
-        initHandle(desc);
-    }
+    initHandle(desc);
+  }
 }
 
-const char* FORTE_PLCnextAXLSEDO16::init() {
-    PLCnextDeviceController &controller = *static_cast<PLCnextDeviceController*>(&getController());
+const char *FORTE_PLCnextAXLSEDO16::init() {
+  PLCnextDeviceController &controller = *static_cast<PLCnextDeviceController *>(&getController());
 
-    // initialize buffer with correct size
-    initBufferImage(16);
-    controller.registerSlaveHandler(this);
+  // initialize buffer with correct size
+  initBufferImage(16);
+  controller.registerSlaveHandler(this);
 
-    return plcNextDevice.init(mIndex, "OUT01");
+  return plcNextDevice.init(mIndex, "OUT01");
 }

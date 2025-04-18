@@ -5,7 +5,7 @@
  http://www.eclipse.org/legal/epl-2.0.
 
  SPDX-License-Identifier: EPL-2.0
- 
+
  Contributors:
   Dirk Kaar - initial API and implementation and/or initial documentation
  ************************************************************************************/
@@ -21,12 +21,12 @@
 
 #include <zephyr/kernel.h>
 
-//Allow to set a special stack size for forte threads
+// Allow to set a special stack size for forte threads
 #ifndef configMINIMAL_STACK_SIZE_FORTE
-  #define configMINIMAL_STACK_SIZE_FORTE 2048
+#define configMINIMAL_STACK_SIZE_FORTE 2048
 #endif
 
-#define CThread     CZephyrThread  //allows that doxygen can generate better documenation
+#define CThread CZephyrThread // allows that doxygen can generate better documenation
 class CZephyrThread;
 
 typedef CZephyrThread *TZephyrThreadPtr;
@@ -57,7 +57,7 @@ class CZephyrThread : public forte::arch::CThreadBase<k_tid_t> {
      */
     ~CZephyrThread() override;
 
-    //!Set the deadline of the thread.
+    //! Set the deadline of the thread.
     void setDeadline(const CIEC_TIME &paVal) override final;
 
     /*! \brief Sleep the calling thread
@@ -68,7 +68,6 @@ class CZephyrThread : public forte::arch::CThreadBase<k_tid_t> {
     static void sleepThread(unsigned int paMilliSeconds);
 
   protected:
-
     void setPriority(int paPriority) {
       k_thread_priority_set(thread, paPriority);
     }
@@ -79,7 +78,7 @@ class CZephyrThread : public forte::arch::CThreadBase<k_tid_t> {
      * this function will call the run method of the thread instance.
      * Zephyr requirement that this has to static function! or it has to static_casted
      */
-    static void threadFunction(void* arg1, void* arg2, void* arg3);
+    static void threadFunction(void *arg1, void *arg2, void *arg3);
 
     /*! \brief Creates a new thread.
      *
@@ -88,8 +87,8 @@ class CZephyrThread : public forte::arch::CThreadBase<k_tid_t> {
      */
     virtual TThreadHandleType createThread(long paStackSize);
 
-    k_thread_stack_t* stack{ 0 };
-    struct k_thread* thread{ 0 };
+    k_thread_stack_t *stack{0};
+    struct k_thread *thread{0};
 };
 
 #endif /* SRC_ARCH_ZEPHYR_THREAD_H_ */

@@ -15,19 +15,18 @@
 
 USE_STRING_ID(LINT);
 
-
 DEFINE_FIRMWARE_DATATYPE(LINT, STRID(LINT));
 
-template CIEC_LINT &CIEC_LINT::operator=<>(const CIEC_SINT &paValue);
+template CIEC_LINT &CIEC_LINT::operator= <>(const CIEC_SINT &paValue);
 
-template CIEC_LINT &CIEC_LINT::operator=<>(const CIEC_INT &paValue);
+template CIEC_LINT &CIEC_LINT::operator= <>(const CIEC_INT &paValue);
 
-template CIEC_LINT &CIEC_LINT::operator=<>(const CIEC_DINT &paValue);
+template CIEC_LINT &CIEC_LINT::operator= <>(const CIEC_DINT &paValue);
 
-template CIEC_LINT &CIEC_LINT::operator=<>(const CIEC_USINT &paValue);
+template CIEC_LINT &CIEC_LINT::operator= <>(const CIEC_USINT &paValue);
 
-template CIEC_LINT &CIEC_LINT::operator=<>(const CIEC_UINT &paValue);
+template CIEC_LINT &CIEC_LINT::operator= <>(const CIEC_UINT &paValue);
 
-template CIEC_LINT &CIEC_LINT::operator=<>(const CIEC_UDINT &paValue);
+template CIEC_LINT &CIEC_LINT::operator= <>(const CIEC_UDINT &paValue);
 
 const CStringDictionary::TStringId forte::CDataTypeTrait<CIEC_LINT>::scmDataTypeName = STRID(LINT);

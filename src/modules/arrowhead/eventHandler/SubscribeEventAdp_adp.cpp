@@ -22,33 +22,57 @@ USE_STRING_ID(Unsubscribe);
 USE_STRING_ID(Unsubscribed);
 USE_STRING_ID(WSTRING);
 
-
 DEFINE_ADAPTER_TYPE(FORTE_SubscribeEventAdp, STRID(SubscribeEventAdp))
 
-const CStringDictionary::TStringId FORTE_SubscribeEventAdp::scmDataOutputNames[] = {STRID(eventFilter), STRID(endpoint)};
+const CStringDictionary::TStringId FORTE_SubscribeEventAdp::scmDataOutputNames[] = {STRID(eventFilter),
+                                                                                    STRID(endpoint)};
 
-const CStringDictionary::TStringId FORTE_SubscribeEventAdp::scmDataOutputTypeIds[] = {STRID(EventFilter), STRID(WSTRING)};
+const CStringDictionary::TStringId FORTE_SubscribeEventAdp::scmDataOutputTypeIds[] = {STRID(EventFilter),
+                                                                                      STRID(WSTRING)};
 
 const TForteInt16 FORTE_SubscribeEventAdp::scmEIWithIndexes[] = {-1, -1, -1};
-const CStringDictionary::TStringId FORTE_SubscribeEventAdp::scmEventInputNames[] = {STRID(Subscribed), STRID(Unsubscribed)};
+const CStringDictionary::TStringId FORTE_SubscribeEventAdp::scmEventInputNames[] = {STRID(Subscribed),
+                                                                                    STRID(Unsubscribed)};
 
 const TDataIOID FORTE_SubscribeEventAdp::scmEOWith[] = {0, 1, scmWithListDelimiter, 1, 0, scmWithListDelimiter};
 const TForteInt16 FORTE_SubscribeEventAdp::scmEOWithIndexes[] = {0, 3, -1};
-const CStringDictionary::TStringId FORTE_SubscribeEventAdp::scmEventOutputNames[] = {STRID(Subscribe), STRID(Unsubscribe)};
+const CStringDictionary::TStringId FORTE_SubscribeEventAdp::scmEventOutputNames[] = {STRID(Subscribe),
+                                                                                     STRID(Unsubscribe)};
 
-const SFBInterfaceSpec FORTE_SubscribeEventAdp::scmFBInterfaceSpecSocket = {
-  2,  scmEventInputNames, scmEventInputTypeIds, 0,  scmEIWithIndexes,
-  2,  scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes,  0,  0, 0,
-  2,  scmDataOutputNames, scmDataOutputTypeIds,
-  0, 0
-};
+const SFBInterfaceSpec FORTE_SubscribeEventAdp::scmFBInterfaceSpecSocket = {2,
+                                                                            scmEventInputNames,
+                                                                            scmEventInputTypeIds,
+                                                                            0,
+                                                                            scmEIWithIndexes,
+                                                                            2,
+                                                                            scmEventOutputNames,
+                                                                            scmEventOutputTypeIds,
+                                                                            scmEOWith,
+                                                                            scmEOWithIndexes,
+                                                                            0,
+                                                                            0,
+                                                                            0,
+                                                                            2,
+                                                                            scmDataOutputNames,
+                                                                            scmDataOutputTypeIds,
+                                                                            0,
+                                                                            0};
 
-const SFBInterfaceSpec FORTE_SubscribeEventAdp::scmFBInterfaceSpecPlug = {
-  2,  scmEventOutputNames,  scmEventOutputTypeIds,  scmEOWith,  scmEOWithIndexes,
-  2,  scmEventInputNames,  scmEventInputTypeIds,  0, 0,  2,  scmDataOutputNames, scmDataOutputTypeIds,
-  0,  0, 0,
-  0, 0
-};
-
-
-
+const SFBInterfaceSpec FORTE_SubscribeEventAdp::scmFBInterfaceSpecPlug = {2,
+                                                                          scmEventOutputNames,
+                                                                          scmEventOutputTypeIds,
+                                                                          scmEOWith,
+                                                                          scmEOWithIndexes,
+                                                                          2,
+                                                                          scmEventInputNames,
+                                                                          scmEventInputTypeIds,
+                                                                          0,
+                                                                          0,
+                                                                          2,
+                                                                          scmDataOutputNames,
+                                                                          scmDataOutputTypeIds,
+                                                                          0,
+                                                                          0,
+                                                                          0,
+                                                                          0,
+                                                                          0};

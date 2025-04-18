@@ -16,8 +16,8 @@
 #include "resource.h"
 #include "E_RESTART_fbt.h"
 
-class EMB_RES : public CResource{
-  DECLARE_FIRMWARE_FB(EMB_RES);
+class EMB_RES : public CResource {
+    DECLARE_FIRMWARE_FB(EMB_RES);
 
   public:
     EMB_RES(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paDevice);
@@ -31,5 +31,4 @@ class EMB_RES : public CResource{
     static const SFBInterfaceSpec scmFBInterfaceSpec;
 };
 
-#endif //close the ifdef sequence from the beginning of the file
-
+#endif // close the ifdef sequence from the beginning of the file

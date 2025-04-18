@@ -7,9 +7,9 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *  Alois Zoitl, Rene Smodic, Ingo Hegny, Martin Melik Merkiumians - initial API and implementation and/or initial documentation
- *  Alois Zoitl - extracted common functions to new base class CThreadBase
- *  Agostino Mascitti - Adaption to PikeOS 4.2
+ *  Alois Zoitl, Rene Smodic, Ingo Hegny, Martin Melik Merkiumians - initial API and implementation and/or initial
+ *documentation Alois Zoitl - extracted common functions to new base class CThreadBase Agostino Mascitti - Adaption to
+ *PikeOS 4.2
  *******************************************************************************/
 #ifndef _PIKEOS_FORTE_THREAD_H_
 #define _PIKEOS_FORTE_THREAD_H_
@@ -18,4 +18,3 @@
 #include "../posix/forte_thread.h"
 
 #endif /*_PIKEOS_FORTE_THREAD_H_*/
-

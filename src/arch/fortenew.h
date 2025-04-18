@@ -18,11 +18,10 @@
 #include <fortealloc.h>
 #include <new>
 
-
 #ifndef FORTE_USE_DEFAULT_NEW_AND_DELETE
-//With this define platforms can use the default new and delete operators provided by the standard library
-//It should be set in the fortealloc.h file
-//By default, forte is built using these implementations. See https://bugs.eclipse.org/bugs/show_bug.cgi?id=544048
+// With this define platforms can use the default new and delete operators provided by the standard library
+// It should be set in the fortealloc.h file
+// By default, forte is built using these implementations. See https://bugs.eclipse.org/bugs/show_bug.cgi?id=544048
 
 /*!Collection of new and delete operators used by forte for dynamically allocating memory.
  *
@@ -32,80 +31,65 @@
  * TODO try std new with nothrow.
  */
 
-#if __cplusplus >= 201103L || _MSVC_LANG >= 201103L //stdc11
-inline
-void* operator new(size_t paSize) {
+#if __cplusplus >= 201103L || _MSVC_LANG >= 201103L // stdc11
+inline void *operator new(size_t paSize) {
   return forte_malloc(paSize);
 }
 
-inline
-void* operator new[](size_t paSize) {
+inline void *operator new[](size_t paSize) {
   return forte_malloc(paSize ? paSize : 1);
 }
 
-inline
-void operator delete(void* paData) noexcept{
+inline void operator delete(void *paData) noexcept {
   if (paData) {
     forte_free(paData);
   }
 }
 
-inline
-void operator delete[](void* paData) noexcept{
+inline void operator delete[](void *paData) noexcept {
   if (paData) {
     forte_free(paData);
   }
 }
 
-# if __cplusplus >= 201402L || _MSVC_LANG >= 201402L //stdc14
-inline
-void operator delete(void* paData, std::size_t) noexcept{
-  if (paData){
-    forte_free(paData);
-  }
-}
-
-
-inline
-void operator delete[](void* paData, std::size_t) noexcept{
+#if __cplusplus >= 201402L || _MSVC_LANG >= 201402L // stdc14
+inline void operator delete(void *paData, std::size_t) noexcept {
   if (paData) {
     forte_free(paData);
   }
 }
-# endif // __cplusplus >= 201402L //stdc14
 
+inline void operator delete[](void *paData, std::size_t) noexcept {
+  if (paData) {
+    forte_free(paData);
+  }
+}
+#endif // __cplusplus >= 201402L //stdc14
 
-#else  //__cplusplus >= 201103L //stdc11
+#else //__cplusplus >= 201103L //stdc11
 
-inline
-void* operator new(size_t paSize) throw (std::bad_alloc){
+inline void *operator new(size_t paSize) throw(std::bad_alloc) {
   return forte_malloc(paSize);
 }
 
-inline
-void* operator new[](size_t paSize) throw (std::bad_alloc){
+inline void *operator new[](size_t paSize) throw(std::bad_alloc) {
   return forte_malloc(paSize ? paSize : 1);
 }
 
-
-inline
-void operator delete(void* paData) throw(){
+inline void operator delete(void *paData) throw() {
   if (paData) {
     forte_free(paData);
   }
 }
 
-inline
-void operator delete[](void* paData) throw(){
+inline void operator delete[](void *paData) throw() {
   if (paData) {
     forte_free(paData);
   }
 }
-
 
 #endif
 
-
-#endif //FORTE_USE_DEFAULT_NEW_AND_DELETE
+#endif // FORTE_USE_DEFAULT_NEW_AND_DELETE
 
 #endif /* SRC_ARCH_FORTENEW_H_ */

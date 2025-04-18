@@ -47,18 +47,18 @@ namespace forte {
         public:
           /*! @brief Abstract configuration struct.
            *
-           * The child controller should implement an own configuration struct, which inherits from this struct and is initialized with default parameters.
-           * The controller configuration fb uses the #setConfig method to set the runtime configuration.
+           * The child controller should implement an own configuration struct, which inherits from this struct and is
+           * initialized with default parameters. The controller configuration fb uses the #setConfig method to set the
+           * runtime configuration.
            */
-          struct Config {
-
-          };
+          struct Config {};
 
           /*! @brief Abstract descriptor of device handles.
            *
-           * Used to exchange information about handles between the device controller and the corresponding configuration fb.
-           * The device implementation should extend the struct with properties, which uniquely identify the handle.
-           * The #initHandle method then creates an #IOHandle instance based on the handle descriptor.
+           * Used to exchange information about handles between the device controller and the corresponding
+           * configuration fb. The device implementation should extend the struct with properties, which uniquely
+           * identify the handle. The #initHandle method then creates an #IOHandle instance based on the handle
+           * descriptor.
            */
           class HandleDescriptor {
             public:
@@ -66,8 +66,8 @@ namespace forte {
               IOMapper::Direction mDirection;
 
               HandleDescriptor(std::string const &paId, IOMapper::Direction paDirection) :
-                  mId(paId), mDirection(paDirection) {
-
+                  mId(paId),
+                  mDirection(paDirection) {
               }
           };
 
@@ -75,32 +75,36 @@ namespace forte {
             UnknownNotificationType,
             //! Notifies the configuration fb about a successful operation e.g. a successful startup.
             Success,
-            //! Notifies the configuration about an error. It should be emitted during the init method or the runLoop method.
+            //! Notifies the configuration about an error. It should be emitted during the init method or the runLoop
+            //! method.
             Error,
-            //! Placeholder for custom hardware specific communication between the device and configuration fb controller.
+            //! Placeholder for custom hardware specific communication between the device and configuration fb
+            //! controller.
             Custom
           };
           NotificationType mNotificationType;
-          const void* mNotificationAttachment;
+          const void *mNotificationAttachment;
           bool mNotificationHandled;
 
           /*! @brief Sets the configuration of the controller
            *
-           * @param paConfig Pointer to the configuration struct provided by the corresponding controller configuration fb. Use *static_cast<CustomConfig*>(config) to retrieve the struct instance.
+           * @param paConfig Pointer to the configuration struct provided by the corresponding controller configuration
+           * fb. Use *static_cast<CustomConfig*>(config) to retrieve the struct instance.
            */
-          virtual void setConfig(Config* paConfig) = 0;
+          virtual void setConfig(Config *paConfig) = 0;
 
           void fireIndicationEvent(IOObserver *paObserver);
 
           virtual void handleChangeEvent(IOHandle *paHandle);
 
-          //TODO: adapt this properly to the new handler model. This mockup is just to avoid the classes below to be abstract
+          // TODO: adapt this properly to the new handler model. This mockup is just to avoid the classes below to be
+          // abstract
           size_t getIdentifier() const override {
             return 0;
           }
 
         protected:
-          explicit IODeviceController(CDeviceExecution& paDeviceExecution);
+          explicit IODeviceController(CDeviceExecution &paDeviceExecution);
 
           /*! @brief Initializes the controller.
            *
@@ -111,7 +115,7 @@ namespace forte {
            *
            * @return nullptr if the initialization was successful. Otherwise return an error description.
            */
-          virtual const char* init() = 0;
+          virtual const char *init() = 0;
 
           /*! @brief Contains the blocking run sequence.
            *
@@ -120,7 +124,8 @@ namespace forte {
            * It should always check if the controller is still active (#isAlive method).
            * If the controller got inactive or an error occurred, the method should return.
            *
-           * @attention Never use While(true) loops without any sleep methods. They would consume all processing power and slow down FORTE.
+           * @attention Never use While(true) loops without any sleep methods. They would consume all processing power
+           * and slow down FORTE.
            */
           virtual void runLoop() = 0;
 
@@ -132,7 +137,7 @@ namespace forte {
           virtual void deInit() = 0;
 
           bool hasError() const;
-          const char* mError;
+          const char *mError;
 
           /*! @brief Notifies the corresponding configuration fb about a startup or runtime event.
            *
@@ -140,9 +145,10 @@ namespace forte {
            * You should avoid multiple messages in a short time period, as notifications are not yet queued but dropped.
            *
            * @param paType Type of notification
-           * @param paAttachment Attachment of notification. E.g. a const* char pointer should be attached to an Error notification.
+           * @param paAttachment Attachment of notification. E.g. a const* char pointer should be attached to an Error
+           * notification.
            */
-          void notifyConfigFB(NotificationType paType, const void* paAttachment = nullptr);
+          void notifyConfigFB(NotificationType paType, const void *paAttachment = nullptr);
 
           typedef CSinglyLinkedList<IOHandle *> THandleList;
 
@@ -163,7 +169,7 @@ namespace forte {
            *
            * @param paHandleDescriptor Descriptor of the handle
            */
-          virtual IOHandle* createIOHandle(HandleDescriptor &paHandleDescriptor) = 0;
+          virtual IOHandle *createIOHandle(HandleDescriptor &paHandleDescriptor) = 0;
 
           /*! @brief Iterates over all input handles and fires an indication event in case of a change.
            *
@@ -179,9 +185,10 @@ namespace forte {
            * @param paHandle IOHandle which should be compared to the previous IO state
            * @return True if the current state is equal to the previous IO state. In case it has changed, return false.
            */
-          virtual bool isHandleValueEqual(IOHandle* paHandle);
+          virtual bool isHandleValueEqual(IOHandle *paHandle);
 
-          /*! @brief Synchronizes the access to the #inputHandles and #outputHandles. Use it for iterations over the lists. */
+          /*! @brief Synchronizes the access to the #inputHandles and #outputHandles. Use it for iterations over the
+           * lists. */
           CSyncObject mHandleMutex;
 
           /*! @brief All input handles of the main controller
@@ -199,12 +206,12 @@ namespace forte {
           THandleList mOutputHandles;
 
         private:
-
           IOConfigFBController *mDelegate;
 
           /*! @brief Drops all handle instances which were previously added by the #addHandle method
            *
-           * The method is automatically called during the deinitialization of the corresponding configuration function block.
+           * The method is automatically called during the deinitialization of the corresponding configuration function
+           * block.
            */
           void dropHandles();
 
@@ -214,25 +221,25 @@ namespace forte {
 
           int mInitDelay;
 
-          void addHandle(THandleList* paList, std::string const &paId, IOHandle* paHandle);
+          void addHandle(THandleList *paList, std::string const &paId, IOHandle *paHandle);
 
           // Functions needed for the external event handler interface
           void enableHandler() override {
-            //do nothing
+            // do nothing
           }
           void disableHandler() override {
-            //do nothing
+            // do nothing
           }
           void setPriority(int) override {
-            //do nothing
+            // do nothing
           }
           int getPriority() const override {
             return 0;
           }
       };
 
-    } //namespace IO
-  } //namepsace core
-} //namespace forte
+    } // namespace io
+  } // namespace core
+} // namespace forte
 
 #endif /* SRC_CORE_IO_DEVICE_CONTROLLER_H_ */

@@ -17,7 +17,6 @@ USE_STRING_ID(EVENTTYPE);
 USE_STRING_ID(REQ);
 USE_STRING_ID(STRING);
 
-
 #include "iec61131_functions.h"
 #include "forte_array_common.h"
 #include "forte_array.h"
@@ -35,28 +34,40 @@ const TForteInt16 FORTE_E_TRIG::scmEIWithIndexes[] = {0};
 const CStringDictionary::TStringId FORTE_E_TRIG::scmEventInputNames[] = {STRID(REQ)};
 const TForteInt16 FORTE_E_TRIG::scmEOWithIndexes[] = {-1};
 const CStringDictionary::TStringId FORTE_E_TRIG::scmEventOutputNames[] = {STRID(CNF)};
-const SFBInterfaceSpec FORTE_E_TRIG::scmFBInterfaceSpec = {
-  1, scmEventInputNames, nullptr, scmEIWith, scmEIWithIndexes,
-  1, scmEventOutputNames, nullptr, nullptr, scmEOWithIndexes,
-  1, scmDataInputNames, scmDataInputTypeIds,
-  0, nullptr, nullptr,
-  0, nullptr,
-  0, nullptr
-};
+const SFBInterfaceSpec FORTE_E_TRIG::scmFBInterfaceSpec = {1,
+                                                           scmEventInputNames,
+                                                           nullptr,
+                                                           scmEIWith,
+                                                           scmEIWithIndexes,
+                                                           1,
+                                                           scmEventOutputNames,
+                                                           nullptr,
+                                                           nullptr,
+                                                           scmEOWithIndexes,
+                                                           1,
+                                                           scmDataInputNames,
+                                                           scmDataInputTypeIds,
+                                                           0,
+                                                           nullptr,
+                                                           nullptr,
+                                                           0,
+                                                           nullptr,
+                                                           0,
+                                                           nullptr};
 
-FORTE_E_TRIG::FORTE_E_TRIG(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_E_TRIG::FORTE_E_TRIG(const CStringDictionary::TStringId paInstanceNameId,
+                           forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId),
     var_EVENTTYPE(""_STRING),
     conn_CNF(*this, 0),
-    conn_EVENTTYPE(nullptr) {
-};
+    conn_EVENTTYPE(nullptr) {};
 
 void FORTE_E_TRIG::setInitialValues() {
   var_EVENTTYPE = ""_STRING;
 }
 
 void FORTE_E_TRIG::executeEvent(const TEventID paEIID, CEventChainExecutionThread *const paECET) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventREQID:
       const TEventTypeID eventTypeId = CStringDictionary::getId(var_EVENTTYPE.c_str());
       if (eventTypeId != CStringDictionary::scmInvalidStringId) {
@@ -68,13 +79,12 @@ void FORTE_E_TRIG::executeEvent(const TEventID paEIID, CEventChainExecutionThrea
 }
 
 void FORTE_E_TRIG::readInputData(const TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventREQID: {
       readData(0, var_EVENTTYPE, conn_EVENTTYPE);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
@@ -83,7 +93,7 @@ void FORTE_E_TRIG::writeOutputData(TEventID) {
 }
 
 CIEC_ANY *FORTE_E_TRIG::getDI(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_EVENTTYPE;
   }
   return nullptr;
@@ -94,14 +104,14 @@ CIEC_ANY *FORTE_E_TRIG::getDO(size_t) {
 }
 
 CEventConnection *FORTE_E_TRIG::getEOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_CNF;
   }
   return nullptr;
 }
 
 CDataConnection **FORTE_E_TRIG::getDIConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_EVENTTYPE;
   }
   return nullptr;
@@ -111,27 +121,31 @@ CDataConnection *FORTE_E_TRIG::getDOConUnchecked(TPortId) {
   return nullptr;
 }
 
-void FORTE_E_TRIG::triggerEventsInResource(forte::core::CFBContainer* paContainer, const TEventTypeID paEventType, CEventChainExecutionThread *const paECET) {
+void FORTE_E_TRIG::triggerEventsInResource(forte::core::CFBContainer *paContainer,
+                                           const TEventTypeID paEventType,
+                                           CEventChainExecutionThread *const paECET) {
   if (paContainer != nullptr) {
     if (paContainer->isFB()) {
-      triggerEventsOfType(paEventType, static_cast<CFunctionBlock*>(paContainer), paECET);
+      triggerEventsOfType(paEventType, static_cast<CFunctionBlock *>(paContainer), paECET);
     }
     if (paContainer->isDynamicContainer()) {
-      for (auto child: paContainer->getChildren()) {
+      for (auto child : paContainer->getChildren()) {
         triggerEventsInResource(child, paEventType, paECET);
       }
     }
   }
 }
 
-void FORTE_E_TRIG::triggerEventsOfType(TEventTypeID paEventTypeId, CFunctionBlock* paFb, CEventChainExecutionThread *const paECET) {
-  //most of the FBs will only have the basic event type -> mEITypes == nullptr
+void FORTE_E_TRIG::triggerEventsOfType(TEventTypeID paEventTypeId,
+                                       CFunctionBlock *paFb,
+                                       CEventChainExecutionThread *const paECET) {
+  // most of the FBs will only have the basic event type -> mEITypes == nullptr
   if (paFb->getFBInterfaceSpec().mEITypeNames == nullptr) {
     return;
   }
   for (TEventID eventId = 0; eventId < paFb->getFBInterfaceSpec().mNumEIs; eventId++) {
     if (paFb->getEIType(eventId) == paEventTypeId && !paFb->isInputEventConnected(eventId)) {
-      paECET->addEventEntry(TEventEntry(*paFb,eventId));
+      paECET->addEventEntry(TEventEntry(*paFb, eventId));
     }
   }
 }

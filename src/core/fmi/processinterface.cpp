@@ -14,49 +14,57 @@
 #include <iostream>
 #include "fmuInstance.h"
 
-const char * const CFMUProcessInterface::scmOK = "OK";
-const char * const CFMUProcessInterface::scmNOTINITIALIZED = "Not initialized";
-const char * const CFMUProcessInterface::scmINTERNALERROR = "Internal Error";
+const char *const CFMUProcessInterface::scmOK = "OK";
+const char *const CFMUProcessInterface::scmNOTINITIALIZED = "Not initialized";
+const char *const CFMUProcessInterface::scmINTERNALERROR = "Internal Error";
 
-CFMUProcessInterface::CFMUProcessInterface(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec& paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId) :
-    CProcessInterfaceBase(paContainer, paInterfaceSpec, paInstanceNameId), mInitialized(false), mValue(0){
+CFMUProcessInterface::CFMUProcessInterface(forte::core::CFBContainer &paContainer,
+                                           const SFBInterfaceSpec &paInterfaceSpec,
+                                           const CStringDictionary::TStringId paInstanceNameId) :
+    CProcessInterfaceBase(paContainer, paInterfaceSpec, paInstanceNameId),
+    mInitialized(false),
+    mValue(0) {
 }
 
-CFMUProcessInterface::CFMUProcessInterface(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
-    CProcessInterfaceBase(paContainer, 0, paInstanceNameId, 0, 0), mInitialized(false), mValue(0) {
-  FMU_DEBUG_LOG(GET_FMU_INSTANCE_FROM_FB(this), "Someone called the wrong constructor.\n") //Why do I need this constructor?
+CFMUProcessInterface::CFMUProcessInterface(const CStringDictionary::TStringId paInstanceNameId,
+                                           forte::core::CFBContainer &paContainer) :
+    CProcessInterfaceBase(paContainer, 0, paInstanceNameId, 0, 0),
+    mInitialized(false),
+    mValue(0){
+        FMU_DEBUG_LOG(GET_FMU_INSTANCE_FROM_FB(this),
+                      "Someone called the wrong constructor.\n") // Why do I need this constructor?
+    }
+
+    CFMUProcessInterface::~CFMUProcessInterface() {
 }
 
-CFMUProcessInterface::~CFMUProcessInterface(){
-}
-
-void CFMUProcessInterface::setValueContainer(fmuValueContainer* paValueContainer){
+void CFMUProcessInterface::setValueContainer(fmuValueContainer *paValueContainer) {
   mValue = paValueContainer;
 }
 
 bool CFMUProcessInterface::initialise(bool paIsInput, CEventChainExecutionThread *const paECET) {
   NOT_USED(paIsInput)
-  if(0 != mValue){
+  if (0 != mValue) {
     STATUS() = scmOK;
     mInitialized = true;
     FMU_DEBUG_LOG(GET_FMU_INSTANCE_FROM_FB(this), "Input/Output Initialize\n")
-  }
-  else{
+  } else {
     STATUS() = scmINTERNALERROR;
-    FMU_DEBUG_LOG(GET_FMU_INSTANCE_FROM_FB(this), "ERROR: Input/Output not initialized. You should set a pointer to the fmuContainer for this IO\n")
-    mInitialized =  false;
+    FMU_DEBUG_LOG(GET_FMU_INSTANCE_FROM_FB(this),
+                  "ERROR: Input/Output not initialized. You should set a pointer to the fmuContainer for this IO\n")
+    mInitialized = false;
   }
   return mInitialized;
 }
 
-bool CFMUProcessInterface::deinitialise(){
+bool CFMUProcessInterface::deinitialise() {
   STATUS() = scmOK;
   mInitialized = false;
   return true;
 }
 
-bool CFMUProcessInterface::readPin(){
-  if(true == mInitialized){
+bool CFMUProcessInterface::readPin() {
+  if (true == mInitialized) {
     IN_X() = *mValue->getValueAsBool();
     STATUS() = scmOK;
     return true;
@@ -65,8 +73,8 @@ bool CFMUProcessInterface::readPin(){
   return false;
 }
 
-bool CFMUProcessInterface::writePin(){
-  if(true == mInitialized){
+bool CFMUProcessInterface::writePin() {
+  if (true == mInitialized) {
     mValue->setValue(OUT_X());
     STATUS() = scmOK;
     return true;
@@ -75,8 +83,8 @@ bool CFMUProcessInterface::writePin(){
   return false;
 }
 
-bool CFMUProcessInterface::readWord(){
-  if(true == mInitialized){
+bool CFMUProcessInterface::readWord() {
+  if (true == mInitialized) {
     IN_W() = static_cast<TForteWord>(*mValue->getValueAsInt());
     STATUS() = scmOK;
     return true;
@@ -85,8 +93,8 @@ bool CFMUProcessInterface::readWord(){
   return false;
 }
 
-bool CFMUProcessInterface::writeWord(){
-  if(true == mInitialized){
+bool CFMUProcessInterface::writeWord() {
+  if (true == mInitialized) {
     mValue->setValue(OUT_W());
     STATUS() = scmOK;
     return true;
@@ -94,4 +102,3 @@ bool CFMUProcessInterface::writeWord(){
   STATUS() = scmNOTINITIALIZED;
   return false;
 }
-

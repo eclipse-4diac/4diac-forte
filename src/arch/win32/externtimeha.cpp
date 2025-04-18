@@ -17,46 +17,44 @@ CExternTimerHandler *CExternTimerHandler::smFORTEExtTimer = nullptr;
 
 const TForteInt32 CExternTimerHandler::csmTicksPerSecond = 1000;
 
-extern "C" __declspec(dllexport) 
-void __stdcall nextTick(void){
+extern "C" __declspec(dllexport) void __stdcall nextTick(void) {
   CExternTimerHandler::externNextTick();
 }
 
-extern "C" __declspec(dllexport) 
-unsigned int __stdcall getTicksPerSecond(){
+extern "C" __declspec(dllexport) unsigned int __stdcall getTicksPerSecond() {
   return CExternTimerHandler::getExternTicksPerSecond();
 }
 
-CExternTimerHandler::CExternTimerHandler(CDeviceExecution& paDeviceExecution) : CTimerHandler(paDeviceExecution)  {
-  if(CExternTimerHandler::smFORTEExtTimer != nullptr){ //creating two timers is not possible
+CExternTimerHandler::CExternTimerHandler(CDeviceExecution &paDeviceExecution) : CTimerHandler(paDeviceExecution) {
+  if (CExternTimerHandler::smFORTEExtTimer != nullptr) { // creating two timers is not possible
     CExternTimerHandler::smFORTEExtTimer = this;
   }
 }
 
-CExternTimerHandler::~CExternTimerHandler(){
+CExternTimerHandler::~CExternTimerHandler() {
   disableHandler();
   CExternTimerHandler::smFORTEExtTimer = nullptr;
 }
 
-void CExternTimerHandler::externNextTick(){
-  if(CExternTimerHandler::smFORTEExtTimer){
+void CExternTimerHandler::externNextTick() {
+  if (CExternTimerHandler::smFORTEExtTimer) {
     CExternTimerHandler::smFORTEExtTimer->nextTick();
   }
 }
 
-void CExternTimerHandler::enableHandler(){
-  //TODO think on hwo to handle this.
+void CExternTimerHandler::enableHandler() {
+  // TODO think on hwo to handle this.
 }
 
-void CExternTimerHandler::disableHandler(){
-  //TODO think on hwo to handle this.
+void CExternTimerHandler::disableHandler() {
+  // TODO think on hwo to handle this.
 }
 
-void CExternTimerHandler::setPriority(int paPriority){
-  //TODO think on hwo to handle this.
+void CExternTimerHandler::setPriority(int paPriority) {
+  // TODO think on hwo to handle this.
 }
 
-int CExternTimerHandler::getPriority() const{
-  //TODO think on hwo to handle this.
+int CExternTimerHandler::getPriority() const {
+  // TODO think on hwo to handle this.
   return 1;
 }

@@ -13,9 +13,9 @@
 #include "fortenew.h"
 #include "freertostiha.h"
 
-CFreeRTOSTimerHandler::CFreeRTOSTimerHandler(CDeviceExecution& paDeviceExecution) :
-    CTimerHandler(paDeviceExecution) {
-  mTimer = xTimerCreate("FORTETimer", pdMS_TO_TICKS(1000 / getTicksPerSecond()), pdTRUE, (void *) this, vCallbackFunction);
+CFreeRTOSTimerHandler::CFreeRTOSTimerHandler(CDeviceExecution &paDeviceExecution) : CTimerHandler(paDeviceExecution) {
+  mTimer =
+      xTimerCreate("FORTETimer", pdMS_TO_TICKS(1000 / getTicksPerSecond()), pdTRUE, (void *) this, vCallbackFunction);
 }
 
 CFreeRTOSTimerHandler::~CFreeRTOSTimerHandler() {
@@ -32,7 +32,6 @@ void CFreeRTOSTimerHandler::disableHandler() {
 }
 
 void CFreeRTOSTimerHandler::setPriority(int) {
-
 }
 
 int CFreeRTOSTimerHandler::getPriority() const {
@@ -40,6 +39,5 @@ int CFreeRTOSTimerHandler::getPriority() const {
 }
 
 void CFreeRTOSTimerHandler::vCallbackFunction(TimerHandle_t paTimer) {
-  static_cast<CFreeRTOSTimerHandler*>(pvTimerGetTimerID(paTimer))->nextTick();
+  static_cast<CFreeRTOSTimerHandler *>(pvTimerGetTimerID(paTimer))->nextTick();
 }
-

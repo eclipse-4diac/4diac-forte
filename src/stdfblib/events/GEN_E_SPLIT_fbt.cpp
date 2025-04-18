@@ -17,7 +17,6 @@
 USE_STRING_ID(EI);
 USE_STRING_ID(GEN_E_SPLIT);
 
-
 #include "iec61131_functions.h"
 #include "forte_array_common.h"
 #include "forte_array.h"
@@ -28,13 +27,11 @@ DEFINE_GENERIC_FIRMWARE_FB(GEN_E_SPLIT, STRID(GEN_E_SPLIT))
 
 const CStringDictionary::TStringId GEN_E_SPLIT::scmEventInputNames[] = {STRID(EI)};
 
-
 GEN_E_SPLIT::GEN_E_SPLIT(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
-    CGenFunctionBlock<CFunctionBlock>(paContainer, paInstanceNameId) {
-};
+    CGenFunctionBlock<CFunctionBlock>(paContainer, paInstanceNameId) {};
 
 void GEN_E_SPLIT::executeEvent(const TEventID paEIID, CEventChainExecutionThread *const paECET) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventEIID:
       for (TEventID i = 0; i < getFBInterfaceSpec().mNumEOs; ++i) {
         sendOutputEvent(i, paECET);
@@ -51,15 +48,15 @@ void GEN_E_SPLIT::writeOutputData(TEventID) {
   // nothing to do
 }
 
-bool GEN_E_SPLIT::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec){
+bool GEN_E_SPLIT::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) {
   const char *acPos = strrchr(paConfigString, '_');
 
-  if(nullptr != acPos){
-    ++acPos;  // move after underscore
-    //we have an underscore
+  if (nullptr != acPos) {
+    ++acPos; // move after underscore
+    // we have an underscore
     paInterfaceSpec.mNumEOs = static_cast<TEventID>(forte::core::util::strtoul(acPos, nullptr, 10));
 
-    if(paInterfaceSpec.mNumEOs < CFunctionBlock::scmMaxInterfaceEvents && paInterfaceSpec.mNumEOs >= 2){
+    if (paInterfaceSpec.mNumEOs < CFunctionBlock::scmMaxInterfaceEvents && paInterfaceSpec.mNumEOs >= 2) {
       scmEventOutputNames = std::make_unique<CStringDictionary::TStringId[]>(paInterfaceSpec.mNumEOs);
 
       generateGenericInterfacePointNameArray("EO", scmEventOutputNames.get(), paInterfaceSpec.mNumEOs);
@@ -76,13 +73,13 @@ bool GEN_E_SPLIT::createInterfaceSpec(const char *paConfigString, SFBInterfaceSp
       paInterfaceSpec.mDONames = nullptr;
       paInterfaceSpec.mDODataTypeNames = nullptr;
       return true;
-    }
-    else{
-      if(paInterfaceSpec.mNumEOs >= CFunctionBlock::scmMaxInterfaceEvents){
-        DEVLOG_ERROR("Cannot configure FB-Instance E_SPLIT_%d. Number of event outputs exceeds maximum of %d.\n", paInterfaceSpec.mNumEOs, CFunctionBlock::scmMaxInterfaceEvents);
-      }
-      else{
-        DEVLOG_ERROR("Cannot configure FB-Instance E_SPLIT_%d. Number of event outputs smaller than minimum of 2.\n", paInterfaceSpec.mNumEOs);
+    } else {
+      if (paInterfaceSpec.mNumEOs >= CFunctionBlock::scmMaxInterfaceEvents) {
+        DEVLOG_ERROR("Cannot configure FB-Instance E_SPLIT_%d. Number of event outputs exceeds maximum of %d.\n",
+                     paInterfaceSpec.mNumEOs, CFunctionBlock::scmMaxInterfaceEvents);
+      } else {
+        DEVLOG_ERROR("Cannot configure FB-Instance E_SPLIT_%d. Number of event outputs smaller than minimum of 2.\n",
+                     paInterfaceSpec.mNumEOs);
       }
     }
   }
@@ -96,7 +93,6 @@ CIEC_ANY *GEN_E_SPLIT::getDI(size_t) {
 CIEC_ANY *GEN_E_SPLIT::getDO(size_t) {
   return nullptr;
 }
-
 
 CDataConnection **GEN_E_SPLIT::getDIConUnchecked(TPortId) {
   return nullptr;

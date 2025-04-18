@@ -14,17 +14,27 @@
 #include "modbuslayer.h"
 #include "../../core/cominfra/basecommfb.h"
 
-CModbusConnection::CModbusConnection(CModbusHandler* pa_modbusHandler) : mModbusConn(nullptr), mModbusHandler(pa_modbusHandler),
-  mConnected(false), mIPAddress(nullptr), mPort(0),
-  mDevice{0}, mBaud(0), mParity(0), mDataBit(0),
-  mStopBit(0), mFlowControl(eFlowNone), mResponseTimeout(0), mByteTimeout(0){
+CModbusConnection::CModbusConnection(CModbusHandler *pa_modbusHandler) :
+    mModbusConn(nullptr),
+    mModbusHandler(pa_modbusHandler),
+    mConnected(false),
+    mIPAddress(nullptr),
+    mPort(0),
+    mDevice{0},
+    mBaud(0),
+    mParity(0),
+    mDataBit(0),
+    mStopBit(0),
+    mFlowControl(eFlowNone),
+    mResponseTimeout(0),
+    mByteTimeout(0) {
 }
-    
-CModbusConnection::~CModbusConnection(){
+
+CModbusConnection::~CModbusConnection() {
   modbus_free(mModbusConn);
 }
 
-int CModbusConnection::connect(){
+int CModbusConnection::connect() {
   if (mIPAddress != nullptr) {
     mModbusConn = modbus_new_tcp(mIPAddress, mPort);
   } else {
@@ -49,19 +59,18 @@ int CModbusConnection::connect(){
   return 0;
 }
 
-void CModbusConnection::disconnect(){
-
+void CModbusConnection::disconnect() {
 }
 
-void CModbusConnection::setIPAddress(const char* paIPAddress){
+void CModbusConnection::setIPAddress(const char *paIPAddress) {
   mIPAddress = paIPAddress;
 }
 
-void CModbusConnection::setPort(unsigned int paPort){
+void CModbusConnection::setPort(unsigned int paPort) {
   mPort = paPort;
 }
 
-void CModbusConnection::setDevice(const char* paDevice) {
+void CModbusConnection::setDevice(const char *paDevice) {
   strcpy(mDevice, paDevice);
 }
 
@@ -81,31 +90,32 @@ void CModbusConnection::setStopBit(int paStopBit) {
   mStopBit = paStopBit;
 }
 
-void CModbusConnection::setFlowControl(EModbusFlowControl paFlowControl){
+void CModbusConnection::setFlowControl(EModbusFlowControl paFlowControl) {
   mFlowControl = paFlowControl;
 }
 
-void CModbusConnection::setResponseTimeout(unsigned int paResponseTimeout){
+void CModbusConnection::setResponseTimeout(unsigned int paResponseTimeout) {
   mResponseTimeout = paResponseTimeout;
 }
 
-void CModbusConnection::setByteTimeout(unsigned int paByteTimeout){
+void CModbusConnection::setByteTimeout(unsigned int paByteTimeout) {
   mByteTimeout = paByteTimeout;
 }
 
-int CModbusConnection::writeData(CModbusIOBlock* paIOBlock, const void* paData, unsigned int paDataSize){
+int CModbusConnection::writeData(CModbusIOBlock *paIOBlock, const void *paData, unsigned int paDataSize) {
   unsigned int dataIndex = 0;
   const CModbusIOBlock::TModbusRangeList &lSends = paIOBlock->getSends();
   for (auto &it : lSends) {
     const unsigned int nextDataIndex = dataIndex + it.mNrAddresses * CModbusIOBlock::getRegisterSize(it.mFunction);
     if (nextDataIndex > paDataSize) {
       const unsigned int maxNrAddresses = (paDataSize - dataIndex) / CModbusIOBlock::getRegisterSize(it.mFunction);
-      DEVLOG_WARNING("Modbus writing %u instead of %u registers from address %u\n", maxNrAddresses, it.mNrAddresses, it.mStartAddress);
-      writeDataRange(it.mFunction, it.mStartAddress, maxNrAddresses, (const uint8_t*)paData + dataIndex);
+      DEVLOG_WARNING("Modbus writing %u instead of %u registers from address %u\n", maxNrAddresses, it.mNrAddresses,
+                     it.mStartAddress);
+      writeDataRange(it.mFunction, it.mStartAddress, maxNrAddresses, (const uint8_t *) paData + dataIndex);
       break;
     }
-    writeDataRange(it.mFunction, it.mStartAddress, it.mNrAddresses, (const uint8_t*)paData + dataIndex);
+    writeDataRange(it.mFunction, it.mStartAddress, it.mNrAddresses, (const uint8_t *) paData + dataIndex);
     dataIndex = nextDataIndex;
   }
-  return (int)dataIndex;
+  return (int) dataIndex;
 }

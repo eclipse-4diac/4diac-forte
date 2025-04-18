@@ -25,15 +25,14 @@
  */
 
 class CIEC_DATE final : public CIEC_ANY_DATE {
-  DECLARE_FIRMWARE_DATATYPE(DATE)
+    DECLARE_FIRMWARE_DATATYPE(DATE)
   public:
     [[deprecated("Please use the corresponding numeric_limits template")]]
     constexpr static size_t scmBitLength = 64U;
 
     CIEC_DATE() = default;
 
-    CIEC_DATE(const CIEC_DATE& paValue) :
-        CIEC_ANY_DATE() {
+    CIEC_DATE(const CIEC_DATE &paValue) : CIEC_ANY_DATE() {
       setValueSimple(paValue);
     }
 
@@ -43,7 +42,7 @@ class CIEC_DATE final : public CIEC_ANY_DATE {
 
     ~CIEC_DATE() override = default;
 
-    CIEC_DATE& operator =(const CIEC_DATE &paValue) {
+    CIEC_DATE &operator=(const CIEC_DATE &paValue) {
       // Simple value assignment - no self assignment check needed
       setValueSimple(paValue);
       return *this;
@@ -82,7 +81,7 @@ class CIEC_DATE final : public CIEC_ANY_DATE {
      *   \return number of bytes used in the buffer without trailing 0x00
      *           -1 on error
      */
-    int toString(char* paValue, size_t paBufferSize) const override;
+    int toString(char *paValue, size_t paBufferSize) const override;
 
     /*! \brief calculates buffer size needed for toString conversion
      */
@@ -99,23 +98,23 @@ inline bool operator!=(const CIEC_DATE left, const CIEC_DATE &right) {
   return !(left == right);
 }
 
-inline CIEC_DATE operator ""_DATE(unsigned long long int paValue) {
+inline CIEC_DATE operator""_DATE(unsigned long long int paValue) {
   return CIEC_DATE(static_cast<CIEC_DATE::TValueType>(paValue));
 }
 
 namespace std {
-  template <>
+  template<>
   struct numeric_limits<CIEC_DATE> : public forte::templates::numeric_limits<CIEC_DATE> {
-    static constexpr size_t bitLength = 64U;
+      static constexpr size_t bitLength = 64U;
   };
-}
+} // namespace std
 
 namespace forte {
-  template <>
+  template<>
   struct CDataTypeTrait<CIEC_DATE> {
       static constexpr CIEC_ANY::EDataTypeID scmDataTypeId = CIEC_ANY::e_DATE;
       static const CStringDictionary::TStringId scmDataTypeName;
   };
-}
+} // namespace forte
 
 #endif /*_FORTE_DATE_H_*/

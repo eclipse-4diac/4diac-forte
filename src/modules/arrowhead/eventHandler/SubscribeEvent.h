@@ -19,54 +19,50 @@
 #include <forte_wstring.h>
 #include "SubscribeEventAdp_adp.h"
 
-class FORTE_SubscribeEvent: public CCompositeFB{
-  DECLARE_FIRMWARE_FB(FORTE_SubscribeEvent)
+class FORTE_SubscribeEvent : public CCompositeFB {
+    DECLARE_FIRMWARE_FB(FORTE_SubscribeEvent)
 
-private:
-  static const CStringDictionary::TStringId scmDataInputNames[];
-  static const CStringDictionary::TStringId scmDataInputTypeIds[];
-  CIEC_EventFilter &eventFilter() {
-    return *static_cast<CIEC_EventFilter*>(getDI(0));
-  };
+  private:
+    static const CStringDictionary::TStringId scmDataInputNames[];
+    static const CStringDictionary::TStringId scmDataInputTypeIds[];
+    CIEC_EventFilter &eventFilter() {
+      return *static_cast<CIEC_EventFilter *>(getDI(0));
+    };
 
-  CIEC_WSTRING &endpoint() {
-    return *static_cast<CIEC_WSTRING*>(getDI(1));
-  };
+    CIEC_WSTRING &endpoint() {
+      return *static_cast<CIEC_WSTRING *>(getDI(1));
+    };
 
-  static const TEventID scmEventSubscribeID = 0;
-  static const TEventID scmEventUnsubscribeID = 1;
-  static const TForteInt16 scmEIWithIndexes[];
-  static const TDataIOID scmEIWith[];
-  static const CStringDictionary::TStringId scmEventInputNames[];
-  static const CStringDictionary::TStringId scmEventInputTypeIds[];
+    static const TEventID scmEventSubscribeID = 0;
+    static const TEventID scmEventUnsubscribeID = 1;
+    static const TForteInt16 scmEIWithIndexes[];
+    static const TDataIOID scmEIWith[];
+    static const CStringDictionary::TStringId scmEventInputNames[];
+    static const CStringDictionary::TStringId scmEventInputTypeIds[];
 
-  static const TEventID scmEventSubscribedID = 0;
-  static const TEventID scmEventUnsubscribedID = 1;
-  static const TForteInt16 scmEOWithIndexes[];
-  static const CStringDictionary::TStringId scmEventOutputNames[];
-  static const CStringDictionary::TStringId scmEventOutputTypeIds[];
+    static const TEventID scmEventSubscribedID = 0;
+    static const TEventID scmEventUnsubscribedID = 1;
+    static const TForteInt16 scmEOWithIndexes[];
+    static const CStringDictionary::TStringId scmEventOutputNames[];
+    static const CStringDictionary::TStringId scmEventOutputTypeIds[];
 
-  static const SAdapterInstanceDef scmAdapterInstances[];
+    static const SAdapterInstanceDef scmAdapterInstances[];
 
-  FORTE_SubscribeEventAdp& SubscribeEventAdp() {
-    return (*static_cast<FORTE_SubscribeEventAdp*>(mAdapters[0]));
-  };
-  static const int scmSubscribeEventAdpAdpNum = 0;
-  static const SFBInterfaceSpec scmFBInterfaceSpec;
+    FORTE_SubscribeEventAdp &SubscribeEventAdp() {
+      return (*static_cast<FORTE_SubscribeEventAdp *>(mAdapters[0]));
+    };
+    static const int scmSubscribeEventAdpAdpNum = 0;
+    static const SFBInterfaceSpec scmFBInterfaceSpec;
 
+    static const SCFB_FBConnectionData scmEventConnections[];
 
-  static const SCFB_FBConnectionData scmEventConnections[];
+    static const SCFB_FBConnectionData scmDataConnections[];
+    static const SCFB_FBNData scmFBNData;
 
-  static const SCFB_FBConnectionData scmDataConnections[];
-  static const SCFB_FBNData scmFBNData;
+  public:
+    COMPOSITE_FUNCTION_BLOCK_CTOR(FORTE_SubscribeEvent) {};
 
-public:
-  COMPOSITE_FUNCTION_BLOCK_CTOR(FORTE_SubscribeEvent){
-  };
-
-  ~FORTE_SubscribeEvent() override = default;
-
+    ~FORTE_SubscribeEvent() override = default;
 };
 
-#endif //close the ifdef sequence from the beginning of the file
-
+#endif // close the ifdef sequence from the beginning of the file

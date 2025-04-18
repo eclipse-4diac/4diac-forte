@@ -25,7 +25,6 @@ class GEN_STRUCT_MUX : public CGenFunctionBlock<CFunctionBlock> {
     DECLARE_GENERIC_FIRMWARE_FB(GEN_STRUCT_MUX)
 
   private:
-
     std::unique_ptr<CStringDictionary::TStringId[]> mDiDataTypeNames;
     std::unique_ptr<CStringDictionary::TStringId[]> mDiNames;
 
@@ -47,16 +46,15 @@ class GEN_STRUCT_MUX : public CGenFunctionBlock<CFunctionBlock> {
 
     bool createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) override;
 
-    CIEC_STRUCT& st_OUT() {
-       return *static_cast<CIEC_STRUCT*>(getDO(0));
-     }
+    CIEC_STRUCT &st_OUT() {
+      return *static_cast<CIEC_STRUCT *>(getDO(0));
+    }
 
     bool initialize() override;
     void setInitialValues() override;
     void copyStructValuesToInputs();
 
   public:
-
     GEN_STRUCT_MUX(const GEN_STRUCT_MUX &paOther) = delete;
     GEN_STRUCT_MUX(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
     ~GEN_STRUCT_MUX() override = default;
@@ -64,7 +62,6 @@ class GEN_STRUCT_MUX : public CGenFunctionBlock<CFunctionBlock> {
     static CStringDictionary::TStringId getStructNameId(std::string_view paConfigString);
 
     static size_t calcStructTypeNameSize(CIEC_STRUCT &paStruct);
-
 };
 
 #endif //_GEN_STRUCT_MUX_H_

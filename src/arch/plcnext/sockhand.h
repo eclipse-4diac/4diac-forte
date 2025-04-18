@@ -22,7 +22,7 @@
 #include <errno.h>
 #include <string.h>
 
-//these include needs to be last
+// these include needs to be last
 #include "../gensockhand.h"
 #include "../fdselecthand.h"
 #include "../bsdsocketinterf.h"

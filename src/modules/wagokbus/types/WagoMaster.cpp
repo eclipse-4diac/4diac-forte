@@ -25,7 +25,6 @@ USE_STRING_ID(WagoBusAdapter);
 USE_STRING_ID(WagoMaster);
 USE_STRING_ID(WSTRING);
 
-
 #include "../WagoDeviceController.h"
 
 using namespace forte::core::io;
@@ -45,18 +44,30 @@ const TForteInt16 FORTE_WagoMaster::scmEOWithIndexes[] = {0, 3};
 const CStringDictionary::TStringId FORTE_WagoMaster::scmEventOutputNames[] = {STRID(INITO), STRID(IND)};
 const CStringDictionary::TStringId FORTE_WagoMaster::scmEventOutputTypeIds[] = {STRID(EInit), STRID(Event)};
 const SAdapterInstanceDef FORTE_WagoMaster::scmAdapterInstances[] = {
-  {STRID(WagoBusAdapter), STRID(BusAdapterOut), true}
-};
-const SFBInterfaceSpec FORTE_WagoMaster::scmFBInterfaceSpec = {
-  1, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,
-  2, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes,
-  2, scmDataInputNames, scmDataInputTypeIds,
-  2, scmDataOutputNames, scmDataOutputTypeIds,
-  0, nullptr,
-  1, scmAdapterInstances
-};
+    {STRID(WagoBusAdapter), STRID(BusAdapterOut), true}};
+const SFBInterfaceSpec FORTE_WagoMaster::scmFBInterfaceSpec = {1,
+                                                               scmEventInputNames,
+                                                               scmEventInputTypeIds,
+                                                               scmEIWith,
+                                                               scmEIWithIndexes,
+                                                               2,
+                                                               scmEventOutputNames,
+                                                               scmEventOutputTypeIds,
+                                                               scmEOWith,
+                                                               scmEOWithIndexes,
+                                                               2,
+                                                               scmDataInputNames,
+                                                               scmDataInputTypeIds,
+                                                               2,
+                                                               scmDataOutputNames,
+                                                               scmDataOutputTypeIds,
+                                                               0,
+                                                               nullptr,
+                                                               1,
+                                                               scmAdapterInstances};
 
-FORTE_WagoMaster::FORTE_WagoMaster(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_WagoMaster::FORTE_WagoMaster(const CStringDictionary::TStringId paInstanceNameId,
+                                   forte::core::CFBContainer &paContainer) :
     IOConfigFBMultiMaster(paContainer, scmFBInterfaceSpec, paInstanceNameId),
     var_QI(0_BOOL),
     var_UpdateInterval(25_UINT),
@@ -67,8 +78,7 @@ FORTE_WagoMaster::FORTE_WagoMaster(const CStringDictionary::TStringId paInstance
     conn_QI(nullptr),
     conn_UpdateInterval(nullptr),
     conn_QO(*this, 0, var_QO),
-    conn_STATUS(*this, 1, var_STATUS) {
-};
+    conn_STATUS(*this, 1, var_STATUS) {};
 
 void FORTE_WagoMaster::setInitialValues() {
   var_QI = 0_BOOL;
@@ -83,24 +93,23 @@ void FORTE_WagoMaster::setConfig() {
   getDeviceController()->setConfig(&config);
 }
 
-forte::core::io::IODeviceController* FORTE_WagoMaster::createDeviceController(CDeviceExecution& paDeviceExecution) {
+forte::core::io::IODeviceController *FORTE_WagoMaster::createDeviceController(CDeviceExecution &paDeviceExecution) {
   return new WagoDeviceController(paDeviceExecution);
 }
 
 void FORTE_WagoMaster::readInputData(const TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventINITID: {
       readData(0, var_QI, conn_QI);
       readData(1, var_UpdateInterval, conn_UpdateInterval);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 void FORTE_WagoMaster::writeOutputData(const TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventINITOID: {
       writeData(0, var_QO, conn_QO);
       writeData(1, var_STATUS, conn_STATUS);
@@ -111,13 +120,12 @@ void FORTE_WagoMaster::writeOutputData(const TEventID paEIID) {
       writeData(0, var_QO, conn_QO);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 CIEC_ANY *FORTE_WagoMaster::getDI(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_QI;
     case 1: return &var_UpdateInterval;
   }
@@ -125,7 +133,7 @@ CIEC_ANY *FORTE_WagoMaster::getDI(const size_t paIndex) {
 }
 
 CIEC_ANY *FORTE_WagoMaster::getDO(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_QO;
     case 1: return &var_STATUS;
   }
@@ -133,7 +141,7 @@ CIEC_ANY *FORTE_WagoMaster::getDO(const size_t paIndex) {
 }
 
 CEventConnection *FORTE_WagoMaster::getEOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_INITO;
     case 1: return &conn_IND;
   }
@@ -141,7 +149,7 @@ CEventConnection *FORTE_WagoMaster::getEOConUnchecked(const TPortId paIndex) {
 }
 
 CDataConnection **FORTE_WagoMaster::getDIConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_QI;
     case 1: return &conn_UpdateInterval;
   }
@@ -149,7 +157,7 @@ CDataConnection **FORTE_WagoMaster::getDIConUnchecked(const TPortId paIndex) {
 }
 
 CDataConnection *FORTE_WagoMaster::getDOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_QO;
     case 1: return &conn_STATUS;
   }

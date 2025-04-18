@@ -20,27 +20,27 @@
 
 using namespace forte::com_infra;
 
-CStructMemberLocalComLayer::CStructMemberLocalComLayer(CComLayer* paUpperLayer, CBaseCommFB * paFB) :
-    CLocalComLayer(paUpperLayer, paFB){
+CStructMemberLocalComLayer::CStructMemberLocalComLayer(CComLayer *paUpperLayer, CBaseCommFB *paFB) :
+    CLocalComLayer(paUpperLayer, paFB) {
 }
 
-void CStructMemberLocalComLayer::setRDs(forte::com_infra::CBaseCommFB &paSubl, CIEC_ANY **paSDs, TPortId ){
-  CIEC_ANY* target = getTargetByIndex(static_cast<CIEC_STRUCT*>(&(paSubl.getRDs()[0]->unwrap())), mIndexList);
+void CStructMemberLocalComLayer::setRDs(forte::com_infra::CBaseCommFB &paSubl, CIEC_ANY **paSDs, TPortId) {
+  CIEC_ANY *target = getTargetByIndex(static_cast<CIEC_STRUCT *>(&(paSubl.getRDs()[0]->unwrap())), mIndexList);
   if (nullptr != target)
     target->setValue(paSDs[0]->unwrap());
 }
 
-CIEC_ANY* CStructMemberLocalComLayer::getTargetByIndex(CIEC_STRUCT* paRoot, TTargetStructIndexList &paIndexList){
+CIEC_ANY *CStructMemberLocalComLayer::getTargetByIndex(CIEC_STRUCT *paRoot, TTargetStructIndexList &paIndexList) {
   if (paIndexList.empty()) {
     return nullptr;
   }
-  CIEC_ANY* target = paRoot;
+  CIEC_ANY *target = paRoot;
   for (auto index : paIndexList) {
     int targetDataTypeID = target->unwrap().getDataTypeID();
     if (targetDataTypeID == CIEC_ANY::e_STRUCT) {
-      target = static_cast<CIEC_STRUCT*>(target)->getMember(index);
-    } else if(targetDataTypeID == CIEC_ANY::e_ARRAY) {
-      target = &static_cast<CIEC_ARRAY*>(&(target->unwrap()))->at(CIEC_INT(index));
+      target = static_cast<CIEC_STRUCT *>(target)->getMember(index);
+    } else if (targetDataTypeID == CIEC_ANY::e_ARRAY) {
+      target = &static_cast<CIEC_ARRAY *>(&(target->unwrap()))->at(CIEC_INT(index));
     } else {
       return nullptr;
     }
@@ -48,7 +48,7 @@ CIEC_ANY* CStructMemberLocalComLayer::getTargetByIndex(CIEC_STRUCT* paRoot, TTar
   return target;
 }
 
-bool CStructMemberLocalComLayer::parseArrayIndexFromString(const char* paNestedStructString, CIEC_INT& targetIndex) {
+bool CStructMemberLocalComLayer::parseArrayIndexFromString(const char *paNestedStructString, CIEC_INT &targetIndex) {
   std::string str(paNestedStructString);
 
   const size_t startIndex = (str.find('[') != std::string::npos) ? str.find('[') + 1 : std::string::npos;
@@ -58,7 +58,7 @@ bool CStructMemberLocalComLayer::parseArrayIndexFromString(const char* paNestedS
     return false;
   }
 
-  const char* indexString = str.substr(startIndex, stopIndex - startIndex).data();
+  const char *indexString = str.substr(startIndex, stopIndex - startIndex).data();
   TForteInt16 index = static_cast<TForteInt16>(forte::core::util::strtol(indexString, nullptr, 10));
 
   if (errno == ERANGE) {
@@ -69,7 +69,8 @@ bool CStructMemberLocalComLayer::parseArrayIndexFromString(const char* paNestedS
   return true;
 }
 
-CStructMemberLocalComLayer::TTargetStructIndexList CStructMemberLocalComLayer::buildIndexList(CIEC_ANY* paRoot, const char *paNestedStructString) {
+CStructMemberLocalComLayer::TTargetStructIndexList
+CStructMemberLocalComLayer::buildIndexList(CIEC_ANY *paRoot, const char *paNestedStructString) {
   CParameterParser parser(paNestedStructString, '.');
   const size_t numNestedStructs = parser.parseParameters();
   TTargetStructIndexList resultList;
@@ -87,18 +88,18 @@ CStructMemberLocalComLayer::TTargetStructIndexList CStructMemberLocalComLayer::b
       id = CStringDictionary::insert(sub.data());
     }
 
-    size_t memberIndex = static_cast<CIEC_STRUCT*>(paRoot)->getMemberIndex(id);
+    size_t memberIndex = static_cast<CIEC_STRUCT *>(paRoot)->getMemberIndex(id);
 
     if (memberIndex == CIEC_STRUCT::csmNIndex) {
-      resultList.clear(); //on error return empty resultList
+      resultList.clear(); // on error return empty resultList
       return resultList;
     }
 
     resultList.push_back(static_cast<TForteInt16>(memberIndex));
-    CIEC_ANY *member = static_cast<CIEC_STRUCT*>(paRoot)->getMember(memberIndex);
+    CIEC_ANY *member = static_cast<CIEC_STRUCT *>(paRoot)->getMember(memberIndex);
 
     if (CIEC_ANY::e_ARRAY == member->unwrap().getDataTypeID() && containsIndex) {
-      CIEC_ARRAY* array = static_cast<CIEC_ARRAY*>(member);
+      CIEC_ARRAY *array = static_cast<CIEC_ARRAY *>(member);
 
       if (!array->isIndexInRange(arrayIndex)) {
         DEVLOG_ERROR("[StructMemberLayer] Specified array index %d is out of bounds!\r\n", TForteInt16(arrayIndex));
@@ -113,17 +114,17 @@ CStructMemberLocalComLayer::TTargetStructIndexList CStructMemberLocalComLayer::b
     if (CIEC_ANY::e_STRUCT == member->unwrap().getDataTypeID()) {
       paRoot = member;
     }
-
   }
   return resultList;
 }
 
-EComResponse CStructMemberLocalComLayer::openConnection(char *paLayerParameter){
-  //structmemb[localgroupname;structtype;structmembername.structchildmembername]
+EComResponse CStructMemberLocalComLayer::openConnection(char *paLayerParameter) {
+  // structmemb[localgroupname;structtype;structmembername.structchildmembername]
   CParameterParser parser(paLayerParameter, ';', scmNumLayerParameters);
 
   if (parser.parseParameters() != scmNumLayerParameters) {
-    DEVLOG_ERROR("[StructMemberLayer] The initialization string might be wrong! Usage: structmemb[<localGroupName>;<StructDataTypeName>;<StructMemberName>.<StructChildMembername>]");
+    DEVLOG_ERROR("[StructMemberLayer] The initialization string might be wrong! Usage: "
+                 "structmemb[<localGroupName>;<StructDataTypeName>;<StructMemberName>.<StructChildMembername>]");
     return e_InitInvalidId;
   }
 
@@ -132,36 +133,36 @@ EComResponse CStructMemberLocalComLayer::openConnection(char *paLayerParameter){
     return e_InitInvalidId;
   }
 
-  CStringDictionary::TStringId groupNameID = mGroupID = CStringDictionary::insert(parser[EComStringIndex::e_LOCALGROUPNAME]);
+  CStringDictionary::TStringId groupNameID = mGroupID =
+      CStringDictionary::insert(parser[EComStringIndex::e_LOCALGROUPNAME]);
   CStringDictionary::TStringId dataTypeNameID = CStringDictionary::insert(parser[EComStringIndex::e_STRUCTTYPE]);
 
-  CIEC_STRUCT *const dummy = static_cast<CIEC_STRUCT* >(CTypeLib::createDataTypeInstance(dataTypeNameID, nullptr));
+  CIEC_STRUCT *const dummy = static_cast<CIEC_STRUCT *>(CTypeLib::createDataTypeInstance(dataTypeNameID, nullptr));
 
-  if(nullptr == dummy){
-    DEVLOG_ERROR("[StructMemberLayer] The struct is not available in the data type lib: %s!\r\n", parser[EComStringIndex::e_STRUCTTYPE]);
+  if (nullptr == dummy) {
+    DEVLOG_ERROR("[StructMemberLayer] The struct is not available in the data type lib: %s!\r\n",
+                 parser[EComStringIndex::e_STRUCTTYPE]);
     return e_InitInvalidId;
   }
 
   mIndexList = buildIndexList(dummy, parser[EComStringIndex::e_STRUCTMEMBERNAME]);
 
   if (mIndexList.empty()) {
-    DEVLOG_ERROR("[StructMemberLayer] The specified struct has no member \"%s\"!\r\n", parser[EComStringIndex::e_STRUCTMEMBERNAME]);
+    DEVLOG_ERROR("[StructMemberLayer] The specified struct has no member \"%s\"!\r\n",
+                 parser[EComStringIndex::e_STRUCTMEMBERNAME]);
     return e_InitInvalidId;
   }
 
-  switch(mFb->getComServiceType()){
+  switch (mFb->getComServiceType()) {
     case e_Server:
-    case e_Client:
-      break;
+    case e_Client: break;
     case e_Publisher: {
-      CIEC_ANY *dummySDs[] = { dummy };
-      if(!getLocalCommGroupsManager().registerPubl(groupNameID, this, dummySDs, 1)) {
+      CIEC_ANY *dummySDs[] = {dummy};
+      if (!getLocalCommGroupsManager().registerPubl(groupNameID, this, dummySDs, 1)) {
         return e_InitInvalidId;
       }
-    }
-      break;
-    case e_Subscriber:
-      break;
+    } break;
+    case e_Subscriber: break;
   }
   return e_InitOk;
 }

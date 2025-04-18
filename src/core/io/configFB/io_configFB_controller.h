@@ -27,39 +27,41 @@ namespace forte {
        * All master or board IO configuration fb should inherit from this class or from its subclasses.
        *
        * Features:
-       * - handles the basic events of a controller configuration fb (INIT, INITO with the corresponding data outputs QI, QO, and STATUS)
+       * - handles the basic events of a controller configuration fb (INIT, INITO with the corresponding data outputs
+       * QI, QO, and STATUS)
        * - thread safe communication with corresponding device controller (see #handleNotification)
        * - automatic error handling and restart of the Device Controller (see #IODeviceController)
        */
       class IOConfigFBController : public IOConfigFBBase {
         public:
-          IOConfigFBController(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec &paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId);
+          IOConfigFBController(forte::core::CFBContainer &paContainer,
+                               const SFBInterfaceSpec &paInterfaceSpec,
+                               const CStringDictionary::TStringId paInstanceNameId);
           ~IOConfigFBController() override;
 
-          IODeviceController* getDeviceController() {
+          IODeviceController *getDeviceController() {
             return mController;
           }
 
         protected:
-
           static const TEventID scmEventINITID = 0;
 
           CIEC_BOOL &QI() {
-            return *static_cast<CIEC_BOOL*>(getDI(0));
+            return *static_cast<CIEC_BOOL *>(getDI(0));
           }
 
           static const TEventID scmEventINITOID = 0;
           static const TEventID scmEventINDID = 1;
 
           CIEC_BOOL &QO() {
-            return *static_cast<CIEC_BOOL*>(getDO(0));
+            return *static_cast<CIEC_BOOL *>(getDO(0));
           }
 
           CIEC_WSTRING &STATUS() {
-            return *static_cast<CIEC_WSTRING*>(getDO(1));
+            return *static_cast<CIEC_WSTRING *>(getDO(1));
           }
 
-          void executeEvent(TEventID paEIID, CEventChainExecutionThread * const paECET) override;
+          void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
           /*! @brief Creates an instance of the corresponding Device Controller
            *
@@ -69,26 +71,31 @@ namespace forte {
            * @param paDeviceExecution Device execution needed for the external handler
            * @return Instance of the corresponding Device Controller
            */
-          virtual IODeviceController* createDeviceController(CDeviceExecution& paDeviceExecution) = 0;
+          virtual IODeviceController *createDeviceController(CDeviceExecution &paDeviceExecution) = 0;
 
           /*! @brief Sets the configuration of the Device Controller
            *
-           * The method should create a local struct of the Device Controller Config and assign the corresponding global data inputs to it.
-           * It should call the #IODeviceController::setConfig with a reference to the created config struct.
+           * The method should create a local struct of the Device Controller Config and assign the corresponding global
+           * data inputs to it. It should call the #IODeviceController::setConfig with a reference to the created config
+           * struct.
            */
           virtual void setConfig() = 0;
 
           /*! @brief Handles the notifications of the Device Controller
            *
-           * The method can be overwritten to handle custom notifications between the configuration fb and the Device Controller.
-           * @attention Notifications should not be used for time critical operations, such as a write operation of an output fb.
+           * The method can be overwritten to handle custom notifications between the configuration fb and the Device
+           * Controller.
+           * @attention Notifications should not be used for time critical operations, such as a write operation of an
+           * output fb.
            *
            * @param paType Type of the notification
            * @param paAttachment Reference to the attachment (e.g. a string of an error message)
            * @param paECET event chain execution thread to be used for handling the notification
            * @return True if the notification has been handled. In case it is not handled, a warning message is logged.
            */
-          virtual bool handleNotification(IODeviceController::NotificationType paType, const void* paAttachment, CEventChainExecutionThread * const paECET);
+          virtual bool handleNotification(IODeviceController::NotificationType paType,
+                                          const void *paAttachment,
+                                          CEventChainExecutionThread *const paECET);
 
           /*! @brief Initializes the configuration fb
            *
@@ -99,13 +106,14 @@ namespace forte {
            * @param paDelay Delay the initialization in seconds
            * @return True if the initialization was successful
            */
-          bool init(CEventChainExecutionThread * const paECET, int paDelay = 0);
+          bool init(CEventChainExecutionThread *const paECET, int paDelay = 0);
 
           /*! @brief Initializes an IO handle
            *
            * This method is used to forward handle descriptors to the device controller.
-           * The #IODeviceController::addHandle method is called and in case the #IODeviceController::HandleDescriptor::id
-           * is not empty, the handle is initialized with the #IODeviceController::initHandle method.
+           * The #IODeviceController::addHandle method is called and in case the
+           * #IODeviceController::HandleDescriptor::id is not empty, the handle is initialized with the
+           * #IODeviceController::initHandle method.
            *
            * @param paHandleDescriptor Descriptor of the handle
            */
@@ -119,7 +127,7 @@ namespace forte {
            * @param paIsDestructing True if the deInit is called inside the destructor
            * @return True if the deinitialization was successful
            */
-          bool deInit(CEventChainExecutionThread * const paECET, bool paIsDestructing = false);
+          bool deInit(CEventChainExecutionThread *const paECET, bool paIsDestructing = false);
 
           /*! @brief Used for asynchronous initialization operations
            *
@@ -130,14 +138,14 @@ namespace forte {
            *
            * @param paECET event chain execution thread for sending any events
            */
-          virtual void onStartup(CEventChainExecutionThread * const paECET);
+          virtual void onStartup(CEventChainExecutionThread *const paECET);
 
           /*! @brief Confirmation method of the #onStartup method
            *
            * @param paECET event chain execution thread for sending any events
            * @param paError Forward error message in case the startup was not successful. Leads to a re-initialization.
            */
-          void started(CEventChainExecutionThread * const paECET, const char* paError = nullptr);
+          void started(CEventChainExecutionThread *const paECET, const char *paError = nullptr);
 
           /*! @brief Used for asynchronous deinitialization operations
            *
@@ -148,16 +156,15 @@ namespace forte {
            *
            * @param paECET event chain execution thread for sending any events
            */
-          virtual void onStop(CEventChainExecutionThread * const paECET);
+          virtual void onStop(CEventChainExecutionThread *const paECET);
 
           /*! @brief Confirmation method of the #onStop method
            *
            * @param paECET event chain execution thread for sending any events
            */
-          void stopped(CEventChainExecutionThread * const paECET);
+          void stopped(CEventChainExecutionThread *const paECET);
 
         private:
-
           //! Describes the current state of the initialization. Use to detect startup or runtime errors.
           bool mStarting;
 
@@ -170,7 +177,7 @@ namespace forte {
           //! Instance of the corresponding Device Controller
           IODeviceController *mController;
 
-          void onError(CEventChainExecutionThread * const paECET, bool paIsFatal = true);
+          void onError(CEventChainExecutionThread *const paECET, bool paIsFatal = true);
 
           bool mPerformRestart;
 
@@ -180,8 +187,8 @@ namespace forte {
           static const CIEC_WSTRING scmStopped;
       };
 
-    } //namespace IO
-  } //namepsace core
-} //namespace forte
+    } // namespace io
+  } // namespace core
+} // namespace forte
 
 #endif /* SRC_CORE_IO_CONFIGFB_CONTROLLER_H_ */

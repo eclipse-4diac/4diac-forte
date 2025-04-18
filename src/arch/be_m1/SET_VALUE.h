@@ -12,40 +12,36 @@
 #ifndef _SET_VALUE_H_
 #define _SET_VALUE_H_
 
-#include <mtypes.h>                     /* M1 include files    */
+#include <mtypes.h> /* M1 include files    */
 #include <funcbloc.h>
 #include <forte_int.h>
 #include <forte_sint.h>
 #include <forte_array.h>
 
 // cppcheck-suppress noConstructor
-class FORTE_SET_VALUE : public CFunctionBlock{
-  DECLARE_FIRMWARE_FB(FORTE_SET_VALUE)
+class FORTE_SET_VALUE : public CFunctionBlock {
+    DECLARE_FIRMWARE_FB(FORTE_SET_VALUE)
 
   private:
     static const CStringDictionary::TStringId scmDataInputNames[];
     static const CStringDictionary::TStringId scmDataInputTypeIds[];
-    CIEC_INT &MOD_NB(){
-      return *static_cast<CIEC_INT*>(getDI(0));
-    }
-    ;
+    CIEC_INT &MOD_NB() {
+      return *static_cast<CIEC_INT *>(getDI(0));
+    };
 
-    CIEC_INT &CHAN_NB(){
-      return *static_cast<CIEC_INT*>(getDI(1));
-    }
-    ;
+    CIEC_INT &CHAN_NB() {
+      return *static_cast<CIEC_INT *>(getDI(1));
+    };
 
-    CIEC_SINT &VALUE(){
-      return *static_cast<CIEC_SINT*>(getDI(2));
-    }
-    ;
+    CIEC_SINT &VALUE() {
+      return *static_cast<CIEC_SINT *>(getDI(2));
+    };
 
     static const CStringDictionary::TStringId scmDataOutputNames[];
     static const CStringDictionary::TStringId scmDataOutputTypeIds[];
-    CIEC_INT &RET_CODE(){
-      return *static_cast<CIEC_INT*>(getDO(0));
-    }
-    ;
+    CIEC_INT &RET_CODE() {
+      return *static_cast<CIEC_INT *>(getDO(0));
+    };
 
     static const TEventID scmEventINITID = 0;
     static const TEventID scmEventREQID = 1;
@@ -63,7 +59,6 @@ class FORTE_SET_VALUE : public CFunctionBlock{
 
     static const SFBInterfaceSpec scmFBInterfaceSpec;
 
-
     void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
     void *driverId;
@@ -72,11 +67,9 @@ class FORTE_SET_VALUE : public CFunctionBlock{
     SINT32 write();
 
   public:
-    FUNCTION_BLOCK_CTOR(FORTE_SET_VALUE){
-  };
+    FUNCTION_BLOCK_CTOR(FORTE_SET_VALUE) {};
 
-  ~FORTE_SET_VALUE() override = default;
-
+    ~FORTE_SET_VALUE() override = default;
 };
 
-#endif //close the ifdef sequence from the beginning of the file
+#endif // close the ifdef sequence from the beginning of the file

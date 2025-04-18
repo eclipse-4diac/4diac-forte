@@ -11,31 +11,29 @@
  *******************************************************************************/
 #include "../../core/fbtests/fbtestfixture.h"
 
-
 USE_STRING_ID(F_TIME_IN_MS_TO_ULINT);
-
 
 struct F_TIME_IN_MS_TO_ULINT_TestFixture : public CFBTestFixtureBase {
 
-    F_TIME_IN_MS_TO_ULINT_TestFixture() :
-        CFBTestFixtureBase(STRID(F_TIME_IN_MS_TO_ULINT)) {
+    F_TIME_IN_MS_TO_ULINT_TestFixture() : CFBTestFixtureBase(STRID(F_TIME_IN_MS_TO_ULINT)) {
       setInputData({&mIn_F_TIME_IN_MS_TO_ULINT});
       setOutputData({&mOut_F_TIME_IN_MS_TO_ULINT});
       CFBTestFixtureBase::setup();
     }
 
-    CIEC_TIME mIn_F_TIME_IN_MS_TO_ULINT; //DATA INPUT
-    CIEC_ULINT mOut_F_TIME_IN_MS_TO_ULINT; //DATA OUTPUT
+    CIEC_TIME mIn_F_TIME_IN_MS_TO_ULINT; // DATA INPUT
+    CIEC_ULINT mOut_F_TIME_IN_MS_TO_ULINT; // DATA OUTPUT
 };
 
-BOOST_FIXTURE_TEST_SUITE( F_TIME_IN_MS_TO_ULINT_Tests, F_TIME_IN_MS_TO_ULINT_TestFixture)
+BOOST_FIXTURE_TEST_SUITE(F_TIME_IN_MS_TO_ULINT_Tests, F_TIME_IN_MS_TO_ULINT_TestFixture)
 
-  BOOST_AUTO_TEST_CASE(timeConversion) {
-    mIn_F_TIME_IN_MS_TO_ULINT.fromString("T#2d5h43m12s44ms");
-    /* trigger the inputevent */
-    triggerEvent(0);
-    BOOST_CHECK(checkForSingleOutputEventOccurence(0));
-    BOOST_CHECK_EQUAL(UINT64_C(172800000) + UINT64_C(18000000) + UINT64_C(2580000) + UINT64_C(12000) + UINT64_C(44), static_cast<CIEC_ULINT::TValueType>(mOut_F_TIME_IN_MS_TO_ULINT));
-  }
+BOOST_AUTO_TEST_CASE(timeConversion) {
+  mIn_F_TIME_IN_MS_TO_ULINT.fromString("T#2d5h43m12s44ms");
+  /* trigger the inputevent */
+  triggerEvent(0);
+  BOOST_CHECK(checkForSingleOutputEventOccurence(0));
+  BOOST_CHECK_EQUAL(UINT64_C(172800000) + UINT64_C(18000000) + UINT64_C(2580000) + UINT64_C(12000) + UINT64_C(44),
+                    static_cast<CIEC_ULINT::TValueType>(mOut_F_TIME_IN_MS_TO_ULINT));
+}
 
-  BOOST_AUTO_TEST_SUITE_END()
+BOOST_AUTO_TEST_SUITE_END()

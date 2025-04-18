@@ -36,13 +36,14 @@ class CBasicFB : public CFunctionBlock {
   public:
     /*!\brief The main constructur for a basic function block.
      */
-    CBasicFB(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec& paInterfaceSpec,
+    CBasicFB(forte::core::CFBContainer &paContainer,
+             const SFBInterfaceSpec &paInterfaceSpec,
              CStringDictionary::TStringId paInstanceNameId,
              const SInternalVarsInformation *paVarInternals);
 
     ~CBasicFB() override = default;
 
-    CIEC_ANY* getVar(CStringDictionary::TStringId *paNameList, unsigned int paNameListSize) override;
+    CIEC_ANY *getVar(CStringDictionary::TStringId *paNameList, unsigned int paNameListSize) override;
 
     int toString(char *paValue, size_t paBufferSize) const override;
 
@@ -59,9 +60,9 @@ class CBasicFB : public CFunctionBlock {
      * @param paVarIntNum number of the internal variable starting with 0
      * @return pointer to the internal variable
      */
-    virtual CIEC_ANY* getVarInternal(size_t paVarIntNum) = 0;
+    virtual CIEC_ANY *getVarInternal(size_t paVarIntNum) = 0;
 
-    const CIEC_ANY* getVarInternal(size_t paVarIntNum) const {
+    const CIEC_ANY *getVarInternal(size_t paVarIntNum) const {
       return const_cast<CBasicFB *>(this)->getVarInternal(paVarIntNum);
     }
 
@@ -73,13 +74,13 @@ class CBasicFB : public CFunctionBlock {
      * \param paInternalName StringId of the internal variable name.
      * \return Pointer to the internal variable or 0.
      */
-    CIEC_ANY* getInternalVar(CStringDictionary::TStringId paInternalName);
+    CIEC_ANY *getInternalVar(CStringDictionary::TStringId paInternalName);
 
     void setInitialValues() override;
 
 #ifdef FORTE_FMU
-        friend class fmuInstance;
-#endif //FORTE_FMU
+    friend class fmuInstance;
+#endif // FORTE_FMU
 };
 
 #endif /*_BASICFB_H_*/

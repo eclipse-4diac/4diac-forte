@@ -11,32 +11,30 @@
  *******************************************************************************/
 #include "../../core/fbtests/fbtestfixture.h"
 
-
 USE_STRING_ID(F_TIME_IN_US_TO_LINT);
-
 
 struct F_TIME_IN_US_TO_LINT_TestFixture : public CFBTestFixtureBase {
 
-    F_TIME_IN_US_TO_LINT_TestFixture() :
-        CFBTestFixtureBase(STRID(F_TIME_IN_US_TO_LINT)) {
+    F_TIME_IN_US_TO_LINT_TestFixture() : CFBTestFixtureBase(STRID(F_TIME_IN_US_TO_LINT)) {
       setInputData({&mIn_F_TIME_IN_US_TO_LINT});
       setOutputData({&mOut_F_TIME_IN_US_TO_LINT});
       CFBTestFixtureBase::setup();
     }
 
-    CIEC_TIME mIn_F_TIME_IN_US_TO_LINT; //DATA INPUT
-    CIEC_LINT mOut_F_TIME_IN_US_TO_LINT; //DATA OUTPUT
+    CIEC_TIME mIn_F_TIME_IN_US_TO_LINT; // DATA INPUT
+    CIEC_LINT mOut_F_TIME_IN_US_TO_LINT; // DATA OUTPUT
 };
 
-BOOST_FIXTURE_TEST_SUITE( F_TIME_IN_US_TO_LINT_Tests, F_TIME_IN_US_TO_LINT_TestFixture)
+BOOST_FIXTURE_TEST_SUITE(F_TIME_IN_US_TO_LINT_Tests, F_TIME_IN_US_TO_LINT_TestFixture)
 
-  BOOST_AUTO_TEST_CASE(timeConversion) {
-    mIn_F_TIME_IN_US_TO_LINT.fromString("T#2d5h43m12s44ms27us");
-    /* trigger the inputevent */
-    triggerEvent(0);
-    BOOST_CHECK(checkForSingleOutputEventOccurence(0));
-    BOOST_CHECK_EQUAL(INT64_C(172800000000) + INT64_C(18000000000) + INT64_C(2580000000) + INT64_C(12000000) + INT64_C(44000) + INT64_C(27),
-      static_cast<CIEC_LINT::TValueType>(mOut_F_TIME_IN_US_TO_LINT));
-  }
+BOOST_AUTO_TEST_CASE(timeConversion) {
+  mIn_F_TIME_IN_US_TO_LINT.fromString("T#2d5h43m12s44ms27us");
+  /* trigger the inputevent */
+  triggerEvent(0);
+  BOOST_CHECK(checkForSingleOutputEventOccurence(0));
+  BOOST_CHECK_EQUAL(INT64_C(172800000000) + INT64_C(18000000000) + INT64_C(2580000000) + INT64_C(12000000) +
+                        INT64_C(44000) + INT64_C(27),
+                    static_cast<CIEC_LINT::TValueType>(mOut_F_TIME_IN_US_TO_LINT));
+}
 
-  BOOST_AUTO_TEST_SUITE_END()
+BOOST_AUTO_TEST_SUITE_END()

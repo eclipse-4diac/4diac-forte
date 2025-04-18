@@ -22,7 +22,6 @@ USE_STRING_ID(START);
 USE_STRING_ID(STOP);
 USE_STRING_ID(TIME);
 
-
 #include "resource.h"
 #include "criticalregion.h"
 
@@ -34,37 +33,46 @@ const CStringDictionary::TStringId CTimedFB::scmEventOutputTypeIds[] = {STRID(Ev
 const CStringDictionary::TStringId CTimedFB::scmDINameIds[] = {STRID(DT)};
 const CStringDictionary::TStringId CTimedFB::scmDIDataTypeNameIds[] = {STRID(TIME)};
 
-const SFBInterfaceSpec CTimedFB::scmFBInterfaceSpec = {
-  2, scmEINameIds, scmEventInputTypeIds,nullptr, nullptr,
-  1, scmEONameIds, scmEventOutputTypeIds,nullptr, nullptr,
-  1, scmDINameIds, scmDIDataTypeNameIds,
-  0, nullptr, nullptr,
-  0, nullptr,
-  0, nullptr
-};
+const SFBInterfaceSpec CTimedFB::scmFBInterfaceSpec = {2,
+                                                       scmEINameIds,
+                                                       scmEventInputTypeIds,
+                                                       nullptr,
+                                                       nullptr,
+                                                       1,
+                                                       scmEONameIds,
+                                                       scmEventOutputTypeIds,
+                                                       nullptr,
+                                                       nullptr,
+                                                       1,
+                                                       scmDINameIds,
+                                                       scmDIDataTypeNameIds,
+                                                       0,
+                                                       nullptr,
+                                                       nullptr,
+                                                       0,
+                                                       nullptr,
+                                                       0,
+                                                       nullptr};
 
 CTimedFB::CTimedFB(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
-      CEventSourceFB(paContainer, scmFBInterfaceSpec, paInstanceNameId),
-      var_DT(0_TIME),
-      conn_DT(nullptr),
-      conn_EO(*this, 0) {
+    CEventSourceFB(paContainer, scmFBInterfaceSpec, paInstanceNameId),
+    var_DT(0_TIME),
+    conn_DT(nullptr),
+    conn_EO(*this, 0) {
   setEventChainExecutor(getResource()->getResourceEventExecution());
   mActive = false;
 }
 
-void CTimedFB::executeEvent(TEventID paEIID, CEventChainExecutionThread * const paECET){
-  switch(paEIID){
-    case cgExternalEventID:
-      sendOutputEvent(csmEOID, paECET);
-      break;
+void CTimedFB::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
+  switch (paEIID) {
+    case cgExternalEventID: sendOutputEvent(csmEOID, paECET); break;
     case csmEventSTOPID:
-      if(mActive){
+      if (mActive) {
         getTimer().unregisterTimedFB(this);
         mActive = false;
       }
       break;
-    default:
-      break;
+    default: break;
   }
 }
 
@@ -76,7 +84,7 @@ void CTimedFB::writeOutputData(TEventID) {
 }
 
 CIEC_ANY *CTimedFB::getDI(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_DT;
   }
   return nullptr;
@@ -87,14 +95,14 @@ CIEC_ANY *CTimedFB::getDO(const size_t) {
 }
 
 CEventConnection *CTimedFB::getEOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_EO;
   }
   return nullptr;
 }
 
 CDataConnection **CTimedFB::getDIConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_DT;
   }
   return nullptr;
@@ -104,9 +112,10 @@ CDataConnection *CTimedFB::getDOConUnchecked(const TPortId) {
   return nullptr;
 }
 
-EMGMResponse CTimedFB::changeExecutionState(EMGMCommandType paCommand){
+EMGMResponse CTimedFB::changeExecutionState(EMGMCommandType paCommand) {
   EMGMResponse eRetVal = CFunctionBlock::changeExecutionState(paCommand);
-  if((EMGMResponse::Ready == eRetVal) && ((EMGMCommandType::Stop == paCommand) || (EMGMCommandType::Kill == paCommand)) && mActive) {
+  if ((EMGMResponse::Ready == eRetVal) &&
+      ((EMGMCommandType::Stop == paCommand) || (EMGMCommandType::Kill == paCommand)) && mActive) {
     getTimer().unregisterTimedFB(this);
     mActive = false;
   }

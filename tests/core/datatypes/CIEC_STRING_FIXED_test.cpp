@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2023 Primetals Technologies Austria GmbH
- *               
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -20,7 +20,7 @@ using namespace std::string_literals;
 BOOST_AUTO_TEST_SUITE(CIEC_STRING_FIXED_function_test)
 BOOST_AUTO_TEST_CASE(Type_test) {
   CIEC_STRING_FIXED<5> sTest;
-  //check type information
+  // check type information
   BOOST_REQUIRE(sTest.getDataTypeID() == CIEC_ANY::e_STRING);
 }
 
@@ -147,7 +147,7 @@ BOOST_AUTO_TEST_CASE(append_fromString_exceeding_max_length) {
 BOOST_AUTO_TEST_CASE(read_partial) {
   CIEC_STRING_FIXED<5> fixed5("12345"_STRING);
   CIEC_CHAR symbol = fixed5[3];
-  BOOST_TEST(symbol =='3'_CHAR);
+  BOOST_TEST(symbol == '3'_CHAR);
 }
 
 BOOST_AUTO_TEST_CASE(write_partial) {
@@ -183,6 +183,5 @@ BOOST_AUTO_TEST_CASE(assign_operator_fixed9_to_fixed5) {
   fixed5 = fixed9;
   BOOST_TEST(fixed5 == "12345"_STRING);
 }
-
 
 BOOST_AUTO_TEST_SUITE_END()

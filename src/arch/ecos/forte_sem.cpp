@@ -21,31 +21,32 @@
 namespace forte {
   namespace arch {
 
-    CEcosSemaphore::CEcosSemaphore(unsigned int paInitialValue) : mSemaphore(paInitialValue > 0){
+    CEcosSemaphore::CEcosSemaphore(unsigned int paInitialValue) : mSemaphore(paInitialValue > 0) {
     }
 
-    CEcosSemaphore::~CEcosSemaphore(){
+    CEcosSemaphore::~CEcosSemaphore() {
     }
 
-    void CEcosSemaphore::inc(){
+    void CEcosSemaphore::inc() {
       mSemaphore.post();
     }
 
-    void CEcosSemaphore::waitIndefinitely(){
+    void CEcosSemaphore::waitIndefinitely() {
       mSemaphore.wait();
     }
 
-    bool CEcosSemaphore::timedWait(TForteUInt64 paRelativeTimeout){
-      cyg_tick_count_t absWaitTime = cyg_current_time() + paRelativeTimeout * CYGNUM_HAL_RTC_NUMERATOR / CYGNUM_HAL_RTC_DENOMINATOR;
-      do{
-        if(true == mSemaphore.trywait()){
+    bool CEcosSemaphore::timedWait(TForteUInt64 paRelativeTimeout) {
+      cyg_tick_count_t absWaitTime =
+          cyg_current_time() + paRelativeTimeout * CYGNUM_HAL_RTC_NUMERATOR / CYGNUM_HAL_RTC_DENOMINATOR;
+      do {
+        if (true == mSemaphore.trywait()) {
           return true;
         }
-      } while(cyg_current_time() < absWaitTime);
+      } while (cyg_current_time() < absWaitTime);
       return false;
     }
 
-    bool CEcosSemaphore::tryNoWait(){
+    bool CEcosSemaphore::tryNoWait() {
       return (0 != mSemaphore.trywait());
     }
 

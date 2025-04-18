@@ -20,19 +20,24 @@
 
 namespace forte {
   namespace ads {
-    class CAdsConnectionManager{
-        DECLARE_SINGLETON (CAdsConnectionManager)
+    class CAdsConnectionManager {
+        DECLARE_SINGLETON(CAdsConnectionManager)
 
       public:
-        bool addConnection(const std::string& paFriendlyServerName, const std::string& paAddr, const std::string& paRemoteIpOrHostName);
-        bool addConnection(const std::string& paFriendlyServerName, const std::string& paAddr, uint16_t paPort, const std::string& paRemoteIpOrHostName);
-        void removeConnection(const std::string& paFriendlyServerName);
-        CAdsConnection *getConnection(const std::string& paFriendlyServerName);
+        bool addConnection(const std::string &paFriendlyServerName,
+                           const std::string &paAddr,
+                           const std::string &paRemoteIpOrHostName);
+        bool addConnection(const std::string &paFriendlyServerName,
+                           const std::string &paAddr,
+                           uint16_t paPort,
+                           const std::string &paRemoteIpOrHostName);
+        void removeConnection(const std::string &paFriendlyServerName);
+        CAdsConnection *getConnection(const std::string &paFriendlyServerName);
 
       private:
-        std::map<std::string, CAdsConnection*> mConnectionRegistry;
+        std::map<std::string, CAdsConnection *> mConnectionRegistry;
     };
-  }
-}
+  } // namespace ads
+} // namespace forte
 
 #endif /* SRC_MODULES_ADS_CADSCONNECTIONMANAGER_H_ */

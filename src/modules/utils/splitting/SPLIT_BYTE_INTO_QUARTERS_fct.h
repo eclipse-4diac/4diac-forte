@@ -28,7 +28,7 @@
 #include "forte_array_variable.h"
 
 class FORTE_SPLIT_BYTE_INTO_QUARTERS final : public CFunctionBlock {
-  DECLARE_FIRMWARE_FB(FORTE_SPLIT_BYTE_INTO_QUARTERS)
+    DECLARE_FIRMWARE_FB(FORTE_SPLIT_BYTE_INTO_QUARTERS)
 
   private:
     static const CStringDictionary::TStringId scmDataInputNames[];
@@ -55,7 +55,8 @@ class FORTE_SPLIT_BYTE_INTO_QUARTERS final : public CFunctionBlock {
     void setInitialValues() override;
 
   public:
-    FORTE_SPLIT_BYTE_INTO_QUARTERS(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_SPLIT_BYTE_INTO_QUARTERS(CStringDictionary::TStringId paInstanceNameId,
+                                   forte::core::CFBContainer &paContainer);
 
     CIEC_BYTE var_IN;
 
@@ -79,7 +80,11 @@ class FORTE_SPLIT_BYTE_INTO_QUARTERS final : public CFunctionBlock {
     CDataConnection **getDIConUnchecked(TPortId) override;
     CDataConnection *getDOConUnchecked(TPortId) override;
 
-    void evt_REQ(const CIEC_BYTE &paIN, CIEC_BYTE &paQUARTER_BYTE_00, CIEC_BYTE &paQUARTER_BYTE_01, CIEC_BYTE &paQUARTER_BYTE_02, CIEC_BYTE &paQUARTER_BYTE_03) {
+    void evt_REQ(const CIEC_BYTE &paIN,
+                 CIEC_BYTE &paQUARTER_BYTE_00,
+                 CIEC_BYTE &paQUARTER_BYTE_01,
+                 CIEC_BYTE &paQUARTER_BYTE_02,
+                 CIEC_BYTE &paQUARTER_BYTE_03) {
       var_IN = paIN;
       executeEvent(scmEventREQID, nullptr);
       paQUARTER_BYTE_00 = var_QUARTER_BYTE_00;
@@ -88,11 +93,17 @@ class FORTE_SPLIT_BYTE_INTO_QUARTERS final : public CFunctionBlock {
       paQUARTER_BYTE_03 = var_QUARTER_BYTE_03;
     }
 
-    void operator()(const CIEC_BYTE &paIN, CIEC_BYTE &paQUARTER_BYTE_00, CIEC_BYTE &paQUARTER_BYTE_01, CIEC_BYTE &paQUARTER_BYTE_02, CIEC_BYTE &paQUARTER_BYTE_03) {
+    void operator()(const CIEC_BYTE &paIN,
+                    CIEC_BYTE &paQUARTER_BYTE_00,
+                    CIEC_BYTE &paQUARTER_BYTE_01,
+                    CIEC_BYTE &paQUARTER_BYTE_02,
+                    CIEC_BYTE &paQUARTER_BYTE_03) {
       evt_REQ(paIN, paQUARTER_BYTE_00, paQUARTER_BYTE_01, paQUARTER_BYTE_02, paQUARTER_BYTE_03);
     }
 };
 
-void func_SPLIT_BYTE_INTO_QUARTERS(CIEC_BYTE st_lv_IN, CIEC_BYTE &st_lv_QUARTER_BYTE_00, CIEC_BYTE &st_lv_QUARTER_BYTE_01, CIEC_BYTE &st_lv_QUARTER_BYTE_02, CIEC_BYTE &st_lv_QUARTER_BYTE_03);
-
-
+void func_SPLIT_BYTE_INTO_QUARTERS(CIEC_BYTE st_lv_IN,
+                                   CIEC_BYTE &st_lv_QUARTER_BYTE_00,
+                                   CIEC_BYTE &st_lv_QUARTER_BYTE_01,
+                                   CIEC_BYTE &st_lv_QUARTER_BYTE_02,
+                                   CIEC_BYTE &st_lv_QUARTER_BYTE_03);

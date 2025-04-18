@@ -13,7 +13,8 @@
  *** Name: E_BLINK_TRAIN
  *** Description: Simulates a blinking signal (turning on and off for specific durations), with a limited N
  *** Version:
- ***     1.0: 2025-02-15/Franz Höpfinger - HR Agrartechnik GmbH   - initial API and implementation and/or initial documentation
+ ***     1.0: 2025-02-15/Franz Höpfinger - HR Agrartechnik GmbH   - initial API and implementation and/or initial
+ *documentation
  *************************************************************************/
 
 #include "E_BLINK_TRAIN_fbt.h"
@@ -42,7 +43,6 @@ USE_STRING_ID(TIMEHIGH);
 USE_STRING_ID(TIMELOW);
 USE_STRING_ID(UINT);
 
-
 #include "iec61131_functions.h"
 #include "forte_array_common.h"
 #include "forte_array.h"
@@ -51,7 +51,8 @@ USE_STRING_ID(UINT);
 
 DEFINE_FIRMWARE_FB(FORTE_E_BLINK_TRAIN, STRID(E_BLINK_TRAIN))
 
-const CStringDictionary::TStringId FORTE_E_BLINK_TRAIN::scmDataInputNames[] = {STRID(TIMELOW), STRID(TIMEHIGH), STRID(N)};
+const CStringDictionary::TStringId FORTE_E_BLINK_TRAIN::scmDataInputNames[] = {STRID(TIMELOW), STRID(TIMEHIGH),
+                                                                               STRID(N)};
 const CStringDictionary::TStringId FORTE_E_BLINK_TRAIN::scmDataInputTypeIds[] = {STRID(TIME), STRID(TIME), STRID(UINT)};
 const CStringDictionary::TStringId FORTE_E_BLINK_TRAIN::scmDataOutputNames[] = {STRID(OUT)};
 const CStringDictionary::TStringId FORTE_E_BLINK_TRAIN::scmDataOutputTypeIds[] = {STRID(BOOL)};
@@ -61,16 +62,29 @@ const CStringDictionary::TStringId FORTE_E_BLINK_TRAIN::scmEventInputNames[] = {
 const TDataIOID FORTE_E_BLINK_TRAIN::scmEOWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_E_BLINK_TRAIN::scmEOWithIndexes[] = {0};
 const CStringDictionary::TStringId FORTE_E_BLINK_TRAIN::scmEventOutputNames[] = {STRID(CNF)};
-const SFBInterfaceSpec FORTE_E_BLINK_TRAIN::scmFBInterfaceSpec = {
-  2, scmEventInputNames, nullptr, scmEIWith, scmEIWithIndexes,
-  1, scmEventOutputNames, nullptr, scmEOWith, scmEOWithIndexes,
-  3, scmDataInputNames, scmDataInputTypeIds,
-  1, scmDataOutputNames, scmDataOutputTypeIds,
-  0, nullptr,
-  0, nullptr
-};
+const SFBInterfaceSpec FORTE_E_BLINK_TRAIN::scmFBInterfaceSpec = {2,
+                                                                  scmEventInputNames,
+                                                                  nullptr,
+                                                                  scmEIWith,
+                                                                  scmEIWithIndexes,
+                                                                  1,
+                                                                  scmEventOutputNames,
+                                                                  nullptr,
+                                                                  scmEOWith,
+                                                                  scmEOWithIndexes,
+                                                                  3,
+                                                                  scmDataInputNames,
+                                                                  scmDataInputTypeIds,
+                                                                  1,
+                                                                  scmDataOutputNames,
+                                                                  scmDataOutputTypeIds,
+                                                                  0,
+                                                                  nullptr,
+                                                                  0,
+                                                                  nullptr};
 
-FORTE_E_BLINK_TRAIN::FORTE_E_BLINK_TRAIN(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_E_BLINK_TRAIN::FORTE_E_BLINK_TRAIN(const CStringDictionary::TStringId paInstanceNameId,
+                                         forte::core::CFBContainer &paContainer) :
     CCompositeFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, scmFBNData),
     fb_E_TP(STRID(E_TP), *this),
     fb_E_TRAIN(STRID(E_TRAIN), *this),
@@ -82,8 +96,7 @@ FORTE_E_BLINK_TRAIN::FORTE_E_BLINK_TRAIN(const CStringDictionary::TStringId paIn
     conn_OUT(*this, 0, 0_BOOL),
     conn_if2in_TIMELOW(*this, 0, 0_TIME),
     conn_if2in_TIMEHIGH(*this, 1, 0_TIME),
-    conn_if2in_N(*this, 2, 0_UINT) {
-};
+    conn_if2in_N(*this, 2, 0_UINT) {};
 
 void FORTE_E_BLINK_TRAIN::setInitialValues() {
   conn_if2in_TIMELOW.getValue() = 0_TIME;
@@ -93,63 +106,61 @@ void FORTE_E_BLINK_TRAIN::setInitialValues() {
 }
 
 const SCFB_FBInstanceData FORTE_E_BLINK_TRAIN::scmInternalFBs[] = {
-  {STRID(E_TP), STRID(E_PULSE)},
-  {STRID(E_TRAIN), STRID(E_TRAIN)},
-  {STRID(ADD_2), STRID(ADD_2)}
-};
+    {STRID(E_TP), STRID(E_PULSE)}, {STRID(E_TRAIN), STRID(E_TRAIN)}, {STRID(ADD_2), STRID(ADD_2)}};
 
 const SCFB_FBConnectionData FORTE_E_BLINK_TRAIN::scmEventConnections[] = {
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_TRAIN), STRID(EO)), 1, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_TP), STRID(REQ)), 0},
-  {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(START)), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(ADD_2), STRID(REQ)), 2},
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(ADD_2), STRID(CNF)), 2, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_TRAIN), STRID(START)), 1},
-  {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(STOP)), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_TRAIN), STRID(STOP)), 1},
-  {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(STOP)), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_TP), STRID(R)), 0},
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_TP), STRID(CNF)), 0, GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(CNF)), -1},
+    {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_TRAIN), STRID(EO)), 1,
+     GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_TP), STRID(REQ)), 0},
+    {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(START)), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(ADD_2), STRID(REQ)),
+     2},
+    {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(ADD_2), STRID(CNF)), 2,
+     GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_TRAIN), STRID(START)), 1},
+    {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(STOP)), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_TRAIN), STRID(STOP)),
+     1},
+    {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(STOP)), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_TP), STRID(R)), 0},
+    {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_TP), STRID(CNF)), 0, GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(CNF)), -1},
 };
 
 const SCFB_FBConnectionData FORTE_E_BLINK_TRAIN::scmDataConnections[] = {
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(ADD_2), STRID(OUT)), 2, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_TRAIN), STRID(DT)), 1},
-  {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(TIMELOW)), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(ADD_2), STRID(IN1)), 2},
-  {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(TIMEHIGH)), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(ADD_2), STRID(IN2)), 2},
-  {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(TIMEHIGH)), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_TP), STRID(PT)), 0},
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_TP), STRID(Q)), 0, GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(OUT)), -1},
-  {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(N)), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_TRAIN), STRID(N)), 1},
+    {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(ADD_2), STRID(OUT)), 2,
+     GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_TRAIN), STRID(DT)), 1},
+    {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(TIMELOW)), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(ADD_2), STRID(IN1)),
+     2},
+    {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(TIMEHIGH)), -1,
+     GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(ADD_2), STRID(IN2)), 2},
+    {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(TIMEHIGH)), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_TP), STRID(PT)),
+     0},
+    {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_TP), STRID(Q)), 0, GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(OUT)), -1},
+    {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(N)), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_TRAIN), STRID(N)), 1},
 };
 
 const SCFB_FBNData FORTE_E_BLINK_TRAIN::scmFBNData = {
-  3, scmInternalFBs,
-  6, scmEventConnections,
-  5, scmDataConnections,
-  0, nullptr,
-  0, nullptr
-};
+    3, scmInternalFBs, 6, scmEventConnections, 5, scmDataConnections, 0, nullptr, 0, nullptr};
 
 void FORTE_E_BLINK_TRAIN::readInputData(const TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventSTARTID: {
       readData(0, conn_if2in_TIMELOW.getValue(), conn_TIMELOW);
       readData(1, conn_if2in_TIMEHIGH.getValue(), conn_TIMEHIGH);
       readData(2, conn_if2in_N.getValue(), conn_N);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 void FORTE_E_BLINK_TRAIN::writeOutputData(const TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventCNFID: {
       writeData(0, fb_E_TP->conn_Q.getValue(), conn_OUT);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 CIEC_ANY *FORTE_E_BLINK_TRAIN::getDI(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_if2in_TIMELOW.getValue();
     case 1: return &conn_if2in_TIMEHIGH.getValue();
     case 2: return &conn_if2in_N.getValue();
@@ -158,21 +169,21 @@ CIEC_ANY *FORTE_E_BLINK_TRAIN::getDI(const size_t paIndex) {
 }
 
 CIEC_ANY *FORTE_E_BLINK_TRAIN::getDO(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &fb_E_TP->conn_Q.getValue();
   }
   return nullptr;
 }
 
 CEventConnection *FORTE_E_BLINK_TRAIN::getEOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_CNF;
   }
   return nullptr;
 }
 
 CDataConnection **FORTE_E_BLINK_TRAIN::getDIConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_TIMELOW;
     case 1: return &conn_TIMEHIGH;
     case 2: return &conn_N;
@@ -181,14 +192,14 @@ CDataConnection **FORTE_E_BLINK_TRAIN::getDIConUnchecked(const TPortId paIndex) 
 }
 
 CDataConnection *FORTE_E_BLINK_TRAIN::getDOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_OUT;
   }
   return nullptr;
 }
 
 CDataConnection *FORTE_E_BLINK_TRAIN::getIf2InConUnchecked(TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_if2in_TIMELOW;
     case 1: return &conn_if2in_TIMEHIGH;
     case 2: return &conn_if2in_N;

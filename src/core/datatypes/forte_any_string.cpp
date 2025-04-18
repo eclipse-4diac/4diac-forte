@@ -24,85 +24,89 @@
 
 char CIEC_ANY_STRING::smNullString[1] = {'\0'};
 
-CIEC_ANY_STRING::~CIEC_ANY_STRING(){
-  if(getGenData()){
+CIEC_ANY_STRING::~CIEC_ANY_STRING() {
+  if (getGenData()) {
     forte_free(getGenData());
   }
 }
 
 void CIEC_ANY_STRING::assign(const char *paData, TForteUInt16 paLen) {
-  if (nullptr != paData){
-    if(0 != paLen && paData != getValue()) {
+  if (nullptr != paData) {
+    if (0 != paLen && paData != getValue()) {
       reserve(paLen);
       memcpy(getValue(), paData, paLen);
     }
-    if(nullptr != getValue()){
+    if (nullptr != getValue()) {
       setLength(paLen);
-      getValue()[paLen] = '\0'; //not really necessary, but is a stop if someone forgets that this is not a textual string
+      getValue()[paLen] =
+          '\0'; // not really necessary, but is a stop if someone forgets that this is not a textual string
     }
   }
 }
 
 void CIEC_ANY_STRING::append(const char *paData) {
-  if (nullptr != paData){
+  if (nullptr != paData) {
     append(paData, static_cast<TForteUInt16>(strlen(paData)));
   }
 }
 
 void CIEC_ANY_STRING::append(const char *paData, TForteUInt16 paLen) {
-  if (nullptr != paData){
+  if (nullptr != paData) {
     TForteUInt16 nLen = length();
-    if(0 != paLen){
-      if((getCapacity() - nLen) < paLen){
+    if (0 != paLen) {
+      if ((getCapacity() - nLen) < paLen) {
         reserve(static_cast<TForteUInt16>(nLen + paLen));
       }
-      if(nullptr != getValue()){
+      if (nullptr != getValue()) {
         memcpy(getValue() + nLen, paData, paLen);
         setLength(static_cast<TForteUInt16>(nLen + paLen));
-        getValue()[nLen + paLen] = '\0'; //not really necessary, but is a stop if someone forgets that this is not a textual string
+        getValue()[nLen + paLen] =
+            '\0'; // not really necessary, but is a stop if someone forgets that this is not a textual string
       }
     }
   }
 }
 
-void CIEC_ANY_STRING::reserve(const TForteUInt16 paRequestedSize){
-  if(getCapacity() < paRequestedSize + 1){
+void CIEC_ANY_STRING::reserve(const TForteUInt16 paRequestedSize) {
+  if (getCapacity() < paRequestedSize + 1) {
     bool firstAlloc = (getGenData() == nullptr);
     TForteUInt16 nLength = length();
     TForteUInt16 nNewLength = static_cast<TForteUInt16>((getCapacity() * 3) >> 1);
-    if(nNewLength < paRequestedSize){
+    if (nNewLength < paRequestedSize) {
       nNewLength = paRequestedSize;
     }
 
-    TForteByte *newMemory = (TForteByte *) forte_malloc(nNewLength + 5);  // the plus five are 2 bytes for length, 2 bytes for capacity and one for a backup \0
+    TForteByte *newMemory = (TForteByte *) forte_malloc(
+        nNewLength + 5); // the plus five are 2 bytes for length, 2 bytes for capacity and one for a backup \0
     TForteByte *oldMemory = getGenData();
-    if(nullptr != oldMemory){
+    if (nullptr != oldMemory) {
       memcpy(newMemory, oldMemory, getCapacity() + 5);
       forte_free(oldMemory);
     }
     setGenData(newMemory);
-    setAllocatedLength(static_cast<TForteUInt16>(nNewLength));  //only newLength is useable for strings and should be considered in the size checks
+    setAllocatedLength(static_cast<TForteUInt16>(
+        nNewLength)); // only newLength is useable for strings and should be considered in the size checks
     if (firstAlloc) {
-      setLength(nLength);  //necessary to initialize the length if this is the first reserve call
+      setLength(nLength); // necessary to initialize the length if this is the first reserve call
       getValue()[nLength] = '\0';
     }
   }
 }
 
-int CIEC_ANY_STRING::determineEscapedStringLength(const char *paValue, char paDelimiter){
-  if (*paValue != paDelimiter){
+int CIEC_ANY_STRING::determineEscapedStringLength(const char *paValue, char paDelimiter) {
+  if (*paValue != paDelimiter) {
     return static_cast<unsigned int>(strlen(paValue));
   }
 
   const char *pacRunner;
-  for (pacRunner = paValue+1; *pacRunner != paDelimiter && *pacRunner; ++pacRunner) {
-    if('$' == *pacRunner){
+  for (pacRunner = paValue + 1; *pacRunner != paDelimiter && *pacRunner; ++pacRunner) {
+    if ('$' == *pacRunner) {
       TForteUInt16 nDummy;
       ++pacRunner;
-      if(*pacRunner == '\0') {
+      if (*pacRunner == '\0') {
         break;
       }
-      if(!handleDollarEscapedChar(&pacRunner, (paDelimiter == '"'), nDummy)){
+      if (!handleDollarEscapedChar(&pacRunner, (paDelimiter == '"'), nDummy)) {
         continue; // It is invalid but we need the real end
       }
     }
@@ -113,56 +117,45 @@ int CIEC_ANY_STRING::determineEscapedStringLength(const char *paValue, char paDe
 
 bool CIEC_ANY_STRING::handleDollarEscapedChar(const char **paSymbol, bool paWide, TForteUInt16 &paValue) {
   bool bRetVal = true;
-  switch((*paSymbol)[0]){
+  switch ((*paSymbol)[0]) {
     case '\'':
-    case '\"':
-      paValue = (*paSymbol)[0];
-      break;
+    case '\"': paValue = (*paSymbol)[0]; break;
     case 'L':
     case 'l':
-      paValue = 0x10;   //ASCI 0x10 is the line feed character
+      paValue = 0x10; // ASCI 0x10 is the line feed character
       break;
     case 'N':
-    case 'n':
-      paValue ='\n';
-      break;
+    case 'n': paValue = '\n'; break;
     case 'P':
-    case 'p':
-      paValue = '\f';
-      break;
+    case 'p': paValue = '\f'; break;
     case 'R':
-    case 'r':
-      paValue = '\r';
-      break;
+    case 'r': paValue = '\r'; break;
     case 'T':
-    case 't':
-      paValue = '\t';
-      break;
-    case '$':
-      paValue = '$';
-      break;
-    default:
-      bRetVal = parseEscapedHexNum(paSymbol, paWide, paValue);
-      break;
+    case 't': paValue = '\t'; break;
+    case '$': paValue = '$'; break;
+    default: bRetVal = parseEscapedHexNum(paSymbol, paWide, paValue); break;
   }
   return bRetVal;
 }
 
-int CIEC_ANY_STRING::dollarEscapeChar(char *paValue, char paSymbol, unsigned int paBufferSize, const EDataTypeID paTypeID) {
+int CIEC_ANY_STRING::dollarEscapeChar(char *paValue,
+                                      char paSymbol,
+                                      unsigned int paBufferSize,
+                                      const EDataTypeID paTypeID) {
   unsigned int nUsedBytes = 1;
   char cVal = paSymbol;
-  switch(paSymbol){
+  switch (paSymbol) {
     case '$':
       ++nUsedBytes;
       cVal = '$';
       break;
     case '\'':
-      if(paTypeID == CIEC_ANY::e_STRING) {
+      if (paTypeID == CIEC_ANY::e_STRING) {
         ++nUsedBytes;
         cVal = '\'';
       }
       break;
-    case 0x10:   // line feed
+    case 0x10: // line feed
       ++nUsedBytes;
       cVal = 'l';
       break;
@@ -183,13 +176,13 @@ int CIEC_ANY_STRING::dollarEscapeChar(char *paValue, char paSymbol, unsigned int
       cVal = 't';
       break;
     case '\"':
-      if(paTypeID == CIEC_ANY::e_WSTRING) {
+      if (paTypeID == CIEC_ANY::e_WSTRING) {
         ++nUsedBytes;
         cVal = '\"';
       }
       break;
     default:
-      if(!isprint(static_cast<unsigned char>(paSymbol)) && paTypeID == CIEC_ANY::e_STRING) {
+      if (!isprint(static_cast<unsigned char>(paSymbol)) && paTypeID == CIEC_ANY::e_STRING) {
         nUsedBytes += 2; // '$xx'
       }
       break;
@@ -203,7 +196,7 @@ int CIEC_ANY_STRING::dollarEscapeChar(char *paValue, char paSymbol, unsigned int
     return -1;
   }
 
-  if(nUsedBytes == 3) {
+  if (nUsedBytes == 3) {
     *paValue = '$';
     char hex[3];
     std::snprintf(hex, sizeof(hex), "%02X", paSymbol);
@@ -219,24 +212,25 @@ int CIEC_ANY_STRING::dollarEscapeChar(char *paValue, char paSymbol, unsigned int
   return nUsedBytes;
 }
 
-bool CIEC_ANY_STRING::parseEscapedHexNum(const char **paSymbol, bool paWide, TForteUInt16 &paValue){
+bool CIEC_ANY_STRING::parseEscapedHexNum(const char **paSymbol, bool paWide, TForteUInt16 &paValue) {
   bool bRetVal = false;
 
   paValue = 0;
-  if (forte::core::util::isHexDigit((*paSymbol)[0])){
+  if (forte::core::util::isHexDigit((*paSymbol)[0])) {
     paValue = static_cast<TForteUInt16>(forte::core::util::charHexDigitToInt((*paSymbol)[0]) << 4);
-    if (forte::core::util::isHexDigit((*paSymbol)[1])){
-      paValue = TForteUInt16(paValue | forte::core::util::charHexDigitToInt((*paSymbol)[1])); //operator | promotes operator uint16_t to int.
+    if (forte::core::util::isHexDigit((*paSymbol)[1])) {
+      paValue = TForteUInt16(paValue | forte::core::util::charHexDigitToInt(
+                                           (*paSymbol)[1])); // operator | promotes operator uint16_t to int.
 
       if (paWide) {
         paValue = TForteUInt16(paValue << 8);
 
-        if(forte::core::util::isHexDigit((*paSymbol)[2])) {
+        if (forte::core::util::isHexDigit((*paSymbol)[2])) {
           paValue = TForteUInt16(paValue | forte::core::util::charHexDigitToInt((*paSymbol)[2]) << 4);
         } else {
           return false;
         }
-        if(forte::core::util::isHexDigit((*paSymbol)[3])) {
+        if (forte::core::util::isHexDigit((*paSymbol)[3])) {
           paValue = TForteUInt16(paValue | forte::core::util::charHexDigitToInt((*paSymbol)[3]));
         } else {
           return false;
@@ -257,23 +251,23 @@ int CIEC_ANY_STRING::unescapeFromString(const char *paValue, char paDelimiter) {
   TForteUInt16 nValue;
   bool bWide = (paDelimiter == '"');
 
-  if(*runner == paDelimiter) {
-    //remove leading string delimiter char
+  if (*runner == paDelimiter) {
+    // remove leading string delimiter char
     ++runner;
   }
 
   char *value = getValue();
-  while((*runner != '\0') && (nLen != scmMaxStringLen)){
-    if('$' == *runner){
+  while ((*runner != '\0') && (nLen != scmMaxStringLen)) {
+    if ('$' == *runner) {
       ++runner;
-      if(*runner == '\0') {
+      if (*runner == '\0') {
         break;
       }
-      if(!handleDollarEscapedChar(&runner, bWide, nValue)){
+      if (!handleDollarEscapedChar(&runner, bWide, nValue)) {
         return -1;
       }
 
-      if (! bWide) {
+      if (!bWide) {
         value[nLen] = (char) nValue;
       } else {
         int nEncLen = CUnicodeUtilities::encodeUTF8Codepoint(reinterpret_cast<TForteByte *>(value + nLen), 3, nValue);
@@ -282,14 +276,12 @@ int CIEC_ANY_STRING::unescapeFromString(const char *paValue, char paDelimiter) {
         }
         nLen = static_cast<TForteUInt16>(nLen + nEncLen - 1);
       }
-    }
-    else{
-      if(paDelimiter == *runner){
-        //we are at the end of the string
+    } else {
+      if (paDelimiter == *runner) {
+        // we are at the end of the string
         ++runner;
         break;
-      }
-      else{
+      } else {
         value[nLen] = *runner;
       }
     }

@@ -15,7 +15,7 @@
 #include <funcbloc.h>
 #include <forte_localizedtext.h>
 
-class FORTE_LocalizedText2LocalizedText: public CFunctionBlock{
+class FORTE_LocalizedText2LocalizedText : public CFunctionBlock {
     DECLARE_FIRMWARE_FB(FORTE_LocalizedText2LocalizedText)
 
   private:
@@ -37,14 +37,14 @@ class FORTE_LocalizedText2LocalizedText: public CFunctionBlock{
 
     static const SFBInterfaceSpec scmFBInterfaceSpec;
 
-
     void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
     void readInputData(TEventID paEIID) override;
     void writeOutputData(TEventID paEIID) override;
 
   public:
-    FORTE_LocalizedText2LocalizedText(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_LocalizedText2LocalizedText(CStringDictionary::TStringId paInstanceNameId,
+                                      forte::core::CFBContainer &paContainer);
 
     CIEC_LocalizedText var_IN;
     CIEC_LocalizedText var_OUT;
@@ -69,4 +69,3 @@ class FORTE_LocalizedText2LocalizedText: public CFunctionBlock{
       evt_REQ(pa_IN, pa_OUT);
     }
 };
-

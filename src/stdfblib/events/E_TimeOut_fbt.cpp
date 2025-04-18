@@ -16,50 +16,43 @@ USE_STRING_ID(ATimeOut);
 USE_STRING_ID(E_TimeOut);
 USE_STRING_ID(TimeOutSocket);
 
-
 #include "criticalregion.h"
 #include "resource.h"
 
 DEFINE_FIRMWARE_FB(FORTE_E_TimeOut, STRID(E_TimeOut))
 
-const SAdapterInstanceDef FORTE_E_TimeOut::scmAdapterInstances[] = {
-  {STRID(ATimeOut), STRID(TimeOutSocket), false}
-};
+const SAdapterInstanceDef FORTE_E_TimeOut::scmAdapterInstances[] = {{STRID(ATimeOut), STRID(TimeOutSocket), false}};
 const SFBInterfaceSpec FORTE_E_TimeOut::scmFBInterfaceSpec = {
-  0, nullptr, nullptr, nullptr, nullptr,
-  0, nullptr, nullptr, nullptr, nullptr,
-  0, nullptr, nullptr,
-  0, nullptr, nullptr,
-  0, nullptr,
-  1, scmAdapterInstances
-};
+    0, nullptr, nullptr, nullptr, nullptr, 0,       nullptr, nullptr, nullptr, nullptr,
+    0, nullptr, nullptr, 0,       nullptr, nullptr, 0,       nullptr, 1,       scmAdapterInstances};
 
-FORTE_E_TimeOut::FORTE_E_TimeOut(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_E_TimeOut::FORTE_E_TimeOut(const CStringDictionary::TStringId paInstanceNameId,
+                                 forte::core::CFBContainer &paContainer) :
     CEventSourceFB(paContainer, scmFBInterfaceSpec, paInstanceNameId),
     mActive(false),
-    var_TimeOutSocket(STRID(TimeOutSocket), *this, false) {
-};
+    var_TimeOutSocket(STRID(TimeOutSocket), *this, false) {};
 
 bool FORTE_E_TimeOut::initialize() {
-  if(!var_TimeOutSocket.initialize()) { return false; }
+  if (!var_TimeOutSocket.initialize()) {
+    return false;
+  }
   var_TimeOutSocket.setParentFB(this, 0);
   return CEventSourceFB::initialize();
 }
 
-void FORTE_E_TimeOut::executeEvent(TEventID paEIID, CEventChainExecutionThread * const paECET){
-  if(cgExternalEventID == paEIID){
+void FORTE_E_TimeOut::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
+  if (cgExternalEventID == paEIID) {
     mActive = false;
     sendAdapterEvent(scmTimeOutSocketAdpNum, FORTE_ATimeOut::scmEventTimeOutID, paECET);
-  }
-  else if(var_TimeOutSocket.evt_START() == paEIID){
-    if(!mActive){
-      setEventChainExecutor(paECET);  // delay notification should be execute in the same thread on as from where it has been triggered.
+  } else if (var_TimeOutSocket.evt_START() == paEIID) {
+    if (!mActive) {
+      setEventChainExecutor(
+          paECET); // delay notification should be execute in the same thread on as from where it has been triggered.
       getTimer().registerOneShotTimedFB(this, var_TimeOutSocket.var_DT());
       mActive = true;
     }
-  }
-  else if(var_TimeOutSocket.evt_STOP() == paEIID){
-    if(mActive){
+  } else if (var_TimeOutSocket.evt_STOP() == paEIID) {
+    if (mActive) {
       getTimer().unregisterTimedFB(this);
       mActive = false;
     }
@@ -83,7 +76,7 @@ CIEC_ANY *FORTE_E_TimeOut::getDO(size_t) {
 }
 
 CAdapter *FORTE_E_TimeOut::getAdapterUnchecked(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_TimeOutSocket;
   }
   return nullptr;
@@ -101,10 +94,11 @@ CDataConnection *FORTE_E_TimeOut::getDOConUnchecked(TPortId) {
   return nullptr;
 }
 
-EMGMResponse FORTE_E_TimeOut::changeExecutionState(EMGMCommandType paCommand){
+EMGMResponse FORTE_E_TimeOut::changeExecutionState(EMGMCommandType paCommand) {
   EMGMResponse eRetVal = CFunctionBlock::changeExecutionState(paCommand);
-  if((EMGMResponse::Ready == eRetVal) && ((EMGMCommandType::Stop == paCommand) || (EMGMCommandType::Kill == paCommand))){
-    if(mActive){
+  if ((EMGMResponse::Ready == eRetVal) &&
+      ((EMGMCommandType::Stop == paCommand) || (EMGMCommandType::Kill == paCommand))) {
+    if (mActive) {
       getTimer().unregisterTimedFB(this);
       mActive = false;
     }

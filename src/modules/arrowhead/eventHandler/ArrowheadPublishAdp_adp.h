@@ -18,55 +18,54 @@
 #include <forte_publishevent.h>
 #include <forte_wstring.h>
 
-class FORTE_ArrowheadPublishAdp: public CAdapter{
-  DECLARE_ADAPTER_TYPE(FORTE_ArrowheadPublishAdp)
+class FORTE_ArrowheadPublishAdp : public CAdapter {
+    DECLARE_ADAPTER_TYPE(FORTE_ArrowheadPublishAdp)
 
-private:
- private:
-  static const CStringDictionary::TStringId scmDataOutputNames[];
-  static const CStringDictionary::TStringId scmDataOutputTypeIds[];
- public:
-  CIEC_PublishEvent &publishEvent() {
-    return *static_cast<CIEC_PublishEvent*>((isSocket()) ? getDO(0) : getDI(0));
-  };
+  private:
+  private:
+    static const CStringDictionary::TStringId scmDataOutputNames[];
+    static const CStringDictionary::TStringId scmDataOutputTypeIds[];
 
-  CIEC_WSTRING &endpoint() {
-    return *static_cast<CIEC_WSTRING*>((isSocket()) ? getDO(1) : getDI(1));
-  };
+  public:
+    CIEC_PublishEvent &publishEvent() {
+      return *static_cast<CIEC_PublishEvent *>((isSocket()) ? getDO(0) : getDI(0));
+    };
 
- public:
-  static const TEventID scmEventpublishedID = 0;
-  int published() {
-    return mParentAdapterListEventID + scmEventpublishedID;
-  }
- private:
-  static const TForteInt16 scmEIWithIndexes[];
-  static const CStringDictionary::TStringId scmEventInputNames[];
-  static const CStringDictionary::TStringId scmEventInputTypeIds[];
+    CIEC_WSTRING &endpoint() {
+      return *static_cast<CIEC_WSTRING *>((isSocket()) ? getDO(1) : getDI(1));
+    };
 
- public:
-  static const TEventID scmEventpublishID = 0;
-  int publish() {
-    return mParentAdapterListEventID + scmEventpublishID;
-  }
- private:
-  static const TForteInt16 scmEOWithIndexes[];
-  static const TDataIOID scmEOWith[];
-  static const CStringDictionary::TStringId scmEventOutputNames[];
-  static const CStringDictionary::TStringId scmEventOutputTypeIds[];
+  public:
+    static const TEventID scmEventpublishedID = 0;
+    int published() {
+      return mParentAdapterListEventID + scmEventpublishedID;
+    }
 
-  static const SFBInterfaceSpec scmFBInterfaceSpecSocket;
+  private:
+    static const TForteInt16 scmEIWithIndexes[];
+    static const CStringDictionary::TStringId scmEventInputNames[];
+    static const CStringDictionary::TStringId scmEventInputTypeIds[];
 
-  static const SFBInterfaceSpec scmFBInterfaceSpecPlug;
+  public:
+    static const TEventID scmEventpublishID = 0;
+    int publish() {
+      return mParentAdapterListEventID + scmEventpublishID;
+    }
 
+  private:
+    static const TForteInt16 scmEOWithIndexes[];
+    static const TDataIOID scmEOWith[];
+    static const CStringDictionary::TStringId scmEventOutputNames[];
+    static const CStringDictionary::TStringId scmEventOutputTypeIds[];
 
-public:
-  ADAPTER_CTOR(FORTE_ArrowheadPublishAdp){
-  };
+    static const SFBInterfaceSpec scmFBInterfaceSpecSocket;
 
-  ~FORTE_ArrowheadPublishAdp() override = default;
+    static const SFBInterfaceSpec scmFBInterfaceSpecPlug;
 
+  public:
+    ADAPTER_CTOR(FORTE_ArrowheadPublishAdp) {};
+
+    ~FORTE_ArrowheadPublishAdp() override = default;
 };
 
-#endif //close the ifdef sequence from the beginning of the file
-
+#endif // close the ifdef sequence from the beginning of the file

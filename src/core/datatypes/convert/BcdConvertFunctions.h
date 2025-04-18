@@ -13,7 +13,7 @@
  *    Matthias Plasch,
  *      - initial implementation and rework communication infrastructure
  *    Martin Melik-Merkumians - fixes DT_TO_TOD, removes invalid casts,
- *        update implementation to use new cast function, changes for removed 
+ *        update implementation to use new cast function, changes for removed
  *        implicit constructor for primitve types
  *      - adds more *_BCD_TO_** functions
  *******************************************************************************/
@@ -26,7 +26,7 @@
 //********************************************************************************************
 
 template<typename U, typename T>
-const U func_BCD_TO(const T& paVal) {
+const U func_BCD_TO(const T &paVal) {
   static_assert(std::is_base_of_v<CIEC_ANY_BIT, T>);
   static_assert(std::is_base_of_v<CIEC_ANY_INT, U>);
   using SourcePrimitive = typename T::TValueType;
@@ -35,7 +35,7 @@ const U func_BCD_TO(const T& paVal) {
   const SourcePrimitive sourceValue = static_cast<SourcePrimitive>(paVal);
   TargetPrimitive targetValue = 0;
   TargetPrimitive multiplicator = 1;
-  for(size_t i = 0; i < sourceWidth; ++i) {
+  for (size_t i = 0; i < sourceWidth; ++i) {
     targetValue += static_cast<TargetPrimitive>(((sourceValue >> (i * 8)) & 0x0F) * multiplicator);
     multiplicator *= 10;
     targetValue += static_cast<TargetPrimitive>(((sourceValue >> (i * 8 + 4)) & 0x0F) * multiplicator);
@@ -138,7 +138,7 @@ inline const CIEC_ULINT func_LWORD_BCD_TO_ULINT(const CIEC_LWORD &paVal) {
 //********************************************************************************************
 
 template<typename U, typename T>
-const U func_TO_BCD(const T& paVal) {
+const U func_TO_BCD(const T &paVal) {
   static_assert(std::is_base_of_v<CIEC_ANY_BIT, U>);
   static_assert(std::is_base_of_v<CIEC_ANY_INT, T>);
   using SourcePrimitive = typename T::TValueType;
@@ -149,7 +149,7 @@ const U func_TO_BCD(const T& paVal) {
   SourcePrimitive divisor = 10;
 
   TargetPrimitive bcdValue = 0;
-  for(size_t i = 0; i < targetWidth; ++i) {
+  for (size_t i = 0; i < targetWidth; ++i) {
     bcdValue += static_cast<TargetPrimitive>((sourceValue % divisor) << (i * 8));
     sourceValue /= divisor;
     bcdValue += static_cast<TargetPrimitive>((sourceValue % divisor) << (i * 8 + 4));

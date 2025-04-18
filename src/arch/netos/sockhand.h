@@ -15,13 +15,11 @@
 #include <sockapi.h>
 #include <errno.h>
 #include <string.h>
-//these include needs to be last
+// these include needs to be last
 #include "../gensockhand.h"
 #include "../fdselecthand.h"
 #include "../bsdsocketinterf.h"
 
-
 typedef CGenericIPComSocketHandler<CFDSelectHandler, CBSDSocketInterface> CIPComSocketHandler;
-
 
 #endif /* SOCKHAND_H_ */

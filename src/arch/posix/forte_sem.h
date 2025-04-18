@@ -30,9 +30,8 @@ namespace forte {
      *
      * The semaphore is initialized with the value given.
      */
-    class CPThreadSemaphore{
+    class CPThreadSemaphore {
       public:
-
         explicit CPThreadSemaphore(bool paInitialValue = false);
         ~CPThreadSemaphore();
 
@@ -49,7 +48,8 @@ namespace forte {
         /** @brief Checks if the semaphore is locked, and waits the specified amount of time if it is locked
          *
          * @param paRelativeTimeout - The relative time span to wait in nanoseconds
-         * @return true - semaphore has become available before the timeout, false - semaphore was not available before timeout
+         * @return true - semaphore has become available before the timeout, false - semaphore was not available before
+         * timeout
          */
         bool timedWait(const TForteUInt64 paRelativeTimeout);
 
@@ -71,7 +71,6 @@ namespace forte {
         pthread_cond_t mCond;
 
         bool mPosted;
-
     };
 
     typedef CPThreadSemaphore CSemaphore;

@@ -24,23 +24,22 @@
 class EliteBoardDeviceController;
 
 class IOHandleGPIO : public forte::core::io::IOHandle {
-  using IOObserver = forte::core::io::IOObserver;
-  using IOHandle = forte::core::io::IOHandle;
-  using IOMapper = forte::core::io::IOMapper;
+    using IOObserver = forte::core::io::IOObserver;
+    using IOHandle = forte::core::io::IOHandle;
+    using IOMapper = forte::core::io::IOMapper;
 
-public:
-  IOHandleGPIO(EliteBoardDeviceController *paDeviceCtrl,
-               GPIO_TypeDef *paGPIO_Port, uint16_t paGPIO_Pin);
-  void get(CIEC_ANY &) override;
-  void set(const CIEC_ANY &) override;
+  public:
+    IOHandleGPIO(EliteBoardDeviceController *paDeviceCtrl, GPIO_TypeDef *paGPIO_Port, uint16_t paGPIO_Pin);
+    void get(CIEC_ANY &) override;
+    void set(const CIEC_ANY &) override;
 
-protected:
-  void onObserver(IOObserver *paObserver) override;
-  void dropObserver() override;
+  protected:
+    void onObserver(IOObserver *paObserver) override;
+    void dropObserver() override;
 
-private:
-  GPIO_TypeDef *mGPIO_Port;
-  uint16_t mGPIO_Pin;
+  private:
+    GPIO_TypeDef *mGPIO_Port;
+    uint16_t mGPIO_Pin;
 };
 
 #endif

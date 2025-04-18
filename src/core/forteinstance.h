@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2024, 2025 Primetals Technologies Austria GmbH, 
+ * Copyright (c) 2024, 2025 Primetals Technologies Austria GmbH,
  *                          Martin Erich Jobst
  *
  * This program and the accompanying materials are made available under the
@@ -17,7 +17,7 @@
 class C4diacFORTEInstance {
   public:
     C4diacFORTEInstance() = default;
-    
+
     ~C4diacFORTEInstance();
 
     bool startupNewDevice(const std::string &paMGRID);
@@ -36,9 +36,7 @@ class C4diacFORTEInstance {
      * \return pointer to the newly created device, nullptr if it could not be created.
      *
      */
-    static std::unique_ptr<CDevice>  createDev(const std::string &paMGRID);
+    static std::unique_ptr<CDevice> createDev(const std::string &paMGRID);
 
     std::unique_ptr<CDevice> mActiveDevice;
-
 };
-

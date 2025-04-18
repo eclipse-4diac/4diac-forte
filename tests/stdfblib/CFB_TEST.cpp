@@ -42,7 +42,6 @@ USE_STRING_ID(S);
 USE_STRING_ID(SET);
 USE_STRING_ID(SET_CHANGED);
 
-
 #include "resource.h"
 #include "criticalregion.h"
 
@@ -60,16 +59,29 @@ const TDataIOID FORTE_CFB_TEST::scmEOWith[] = {0, scmWithListDelimiter, 0, scmWi
 const TForteInt16 FORTE_CFB_TEST::scmEOWithIndexes[] = {0, 2};
 const CStringDictionary::TStringId FORTE_CFB_TEST::scmEventOutputNames[] = {STRID(CNF), STRID(CHANGED)};
 const CStringDictionary::TStringId FORTE_CFB_TEST::scmEventOutputTypeIds[] = {STRID(Event), STRID(Event)};
-const SFBInterfaceSpec FORTE_CFB_TEST::scmFBInterfaceSpec = {
-  2, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,
-  2, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes,
-  1, scmDataInputNames, scmDataInputTypeIds,
-  1, scmDataOutputNames, scmDataOutputTypeIds,
-  0, nullptr,
-  0, nullptr
-};
+const SFBInterfaceSpec FORTE_CFB_TEST::scmFBInterfaceSpec = {2,
+                                                             scmEventInputNames,
+                                                             scmEventInputTypeIds,
+                                                             scmEIWith,
+                                                             scmEIWithIndexes,
+                                                             2,
+                                                             scmEventOutputNames,
+                                                             scmEventOutputTypeIds,
+                                                             scmEOWith,
+                                                             scmEOWithIndexes,
+                                                             1,
+                                                             scmDataInputNames,
+                                                             scmDataInputTypeIds,
+                                                             1,
+                                                             scmDataOutputNames,
+                                                             scmDataOutputTypeIds,
+                                                             0,
+                                                             nullptr,
+                                                             0,
+                                                             nullptr};
 
-FORTE_CFB_TEST::FORTE_CFB_TEST(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_CFB_TEST::FORTE_CFB_TEST(const CStringDictionary::TStringId paInstanceNameId,
+                               forte::core::CFBContainer &paContainer) :
     CCompositeFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, scmFBNData),
     fb_PERMIT_OP(STRID(PERMIT_OP), *this),
     fb_E_SR(STRID(E_SR), *this),
@@ -81,56 +93,61 @@ FORTE_CFB_TEST::FORTE_CFB_TEST(const CStringDictionary::TStringId paInstanceName
     conn_CHANGED(*this, 1),
     conn_QI(nullptr),
     conn_QO(*this, 0, 0_BOOL),
-    conn_if2in_QI(*this, 0, 0_BOOL) {
-};
+    conn_if2in_QI(*this, 0, 0_BOOL) {};
 
 void FORTE_CFB_TEST::setInitialValues() {
-    conn_if2in_QI.getValue() = 0_BOOL;
-    fb_E_SR->conn_Q.getValue() = 0_BOOL;
+  conn_if2in_QI.getValue() = 0_BOOL;
+  fb_E_SR->conn_Q.getValue() = 0_BOOL;
 }
 
 const SCFB_FBInstanceData FORTE_CFB_TEST::scmInternalFBs[] = {
-  {STRID(PERMIT_OP), STRID(E_PERMIT)},
-  {STRID(E_SR), STRID(E_SR)},
-  {STRID(SET_CHANGED), STRID(E_SWITCH)},
-  {STRID(E_DEMUX_2), STRID(E_DEMUX_2)},
-  {STRID(E_MUX_2), STRID(E_MUX_2)},
-  {STRID(RESET_CHANGED), STRID(E_SWITCH)},
+    {STRID(PERMIT_OP), STRID(E_PERMIT)},  {STRID(E_SR), STRID(E_SR)},       {STRID(SET_CHANGED), STRID(E_SWITCH)},
+    {STRID(E_DEMUX_2), STRID(E_DEMUX_2)}, {STRID(E_MUX_2), STRID(E_MUX_2)}, {STRID(RESET_CHANGED), STRID(E_SWITCH)},
 };
 
 const SCFB_FBConnectionData FORTE_CFB_TEST::scmEventConnections[] = {
-  {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(SET)), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_MUX_2), STRID(EI1)), 4},
-  {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(RESET)), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_MUX_2), STRID(EI2)), 4},
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_MUX_2), STRID(EO)), 4, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(PERMIT_OP), STRID(EI)), 0},
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(SET_CHANGED), STRID(EO1)), 2, GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(CNF)), -1},
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(SET_CHANGED), STRID(EO0)), 2, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_SR), STRID(S)), 1},
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(RESET_CHANGED), STRID(EO0)), 5, GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(CNF)), -1},
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(RESET_CHANGED), STRID(EO1)), 5, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_SR), STRID(R)), 1},
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(PERMIT_OP), STRID(EO)), 0, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_DEMUX_2), STRID(EI)), 3},
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_DEMUX_2), STRID(EO1)), 3, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(SET_CHANGED), STRID(EI)), 2},
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_DEMUX_2), STRID(EO2)), 3, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(RESET_CHANGED), STRID(EI)), 5},
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_SR), STRID(EO)), 1, GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(CNF)), -1},
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_SR), STRID(EO)), 1, GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(CHANGED)), -1},
+    {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(SET)), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_MUX_2), STRID(EI1)),
+     4},
+    {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(RESET)), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_MUX_2), STRID(EI2)),
+     4},
+    {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_MUX_2), STRID(EO)), 4,
+     GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(PERMIT_OP), STRID(EI)), 0},
+    {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(SET_CHANGED), STRID(EO1)), 2,
+     GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(CNF)), -1},
+    {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(SET_CHANGED), STRID(EO0)), 2,
+     GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_SR), STRID(S)), 1},
+    {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(RESET_CHANGED), STRID(EO0)), 5,
+     GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(CNF)), -1},
+    {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(RESET_CHANGED), STRID(EO1)), 5,
+     GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_SR), STRID(R)), 1},
+    {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(PERMIT_OP), STRID(EO)), 0,
+     GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_DEMUX_2), STRID(EI)), 3},
+    {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_DEMUX_2), STRID(EO1)), 3,
+     GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(SET_CHANGED), STRID(EI)), 2},
+    {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_DEMUX_2), STRID(EO2)), 3,
+     GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(RESET_CHANGED), STRID(EI)), 5},
+    {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_SR), STRID(EO)), 1, GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(CNF)), -1},
+    {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_SR), STRID(EO)), 1, GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(CHANGED)),
+     -1},
 };
 
 const SCFB_FBConnectionData FORTE_CFB_TEST::scmDataConnections[] = {
-  {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(QI)), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(PERMIT_OP), STRID(PERMIT)), 0},
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_SR), STRID(Q)), 1, GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(QO)), -1},
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_SR), STRID(Q)), 1, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(SET_CHANGED), STRID(G)), 2},
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_SR), STRID(Q)), 1, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(RESET_CHANGED), STRID(G)), 5},
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_MUX_2), STRID(K)), 4, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_DEMUX_2), STRID(K)), 3},
+    {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(QI)), -1,
+     GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(PERMIT_OP), STRID(PERMIT)), 0},
+    {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_SR), STRID(Q)), 1, GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(QO)), -1},
+    {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_SR), STRID(Q)), 1,
+     GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(SET_CHANGED), STRID(G)), 2},
+    {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_SR), STRID(Q)), 1,
+     GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(RESET_CHANGED), STRID(G)), 5},
+    {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_MUX_2), STRID(K)), 4,
+     GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_DEMUX_2), STRID(K)), 3},
 };
 
 const SCFB_FBNData FORTE_CFB_TEST::scmFBNData = {
-  6, scmInternalFBs,
-  12, scmEventConnections,
-  5, scmDataConnections,
-  0, nullptr,
-  0, nullptr
-};
+    6, scmInternalFBs, 12, scmEventConnections, 5, scmDataConnections, 0, nullptr, 0, nullptr};
 
 void FORTE_CFB_TEST::readInputData(const TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventSETID: {
       readData(0, conn_if2in_QI.getValue(), conn_QI);
       break;
@@ -139,13 +156,12 @@ void FORTE_CFB_TEST::readInputData(const TEventID paEIID) {
       readData(0, conn_if2in_QI.getValue(), conn_QI);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 void FORTE_CFB_TEST::writeOutputData(const TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventCNFID: {
       writeData(0, fb_E_SR->conn_Q.getValue(), conn_QO);
       break;
@@ -154,27 +170,26 @@ void FORTE_CFB_TEST::writeOutputData(const TEventID paEIID) {
       writeData(0, fb_E_SR->conn_Q.getValue(), conn_QO);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 CIEC_ANY *FORTE_CFB_TEST::getDI(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_if2in_QI.getValue();
   }
   return nullptr;
 }
 
 CIEC_ANY *FORTE_CFB_TEST::getDO(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &fb_E_SR->conn_Q.getValue();
   }
   return nullptr;
 }
 
 CEventConnection *FORTE_CFB_TEST::getEOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_CNF;
     case 1: return &conn_CHANGED;
   }
@@ -182,23 +197,22 @@ CEventConnection *FORTE_CFB_TEST::getEOConUnchecked(const TPortId paIndex) {
 }
 
 CDataConnection **FORTE_CFB_TEST::getDIConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_QI;
   }
   return nullptr;
 }
 
 CDataConnection *FORTE_CFB_TEST::getDOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_QO;
   }
   return nullptr;
 }
 
 CDataConnection *FORTE_CFB_TEST::getIf2InConUnchecked(TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_if2in_QI;
   }
   return nullptr;
 }
-

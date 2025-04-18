@@ -16,61 +16,62 @@
 #include <ros/ros.h>
 #include <std_srvs/Trigger.h>
 
-//TODO add locking for the vector..
+// TODO add locking for the vector..
 
 DEFINE_HANDLER(CServiceCallManager);
 
-CServiceCallManager::CServiceCallManager(CDeviceExecution& paDeviceExecution) : CExternalEventHandler(paDeviceExecution),
-    CThread(/* long stacksize , 3500*/){
+CServiceCallManager::CServiceCallManager(CDeviceExecution &paDeviceExecution) :
+    CExternalEventHandler(paDeviceExecution),
+    CThread(/* long stacksize , 3500*/) {
   start();
 }
 
-CServiceCallManager::~CServiceCallManager(){
+CServiceCallManager::~CServiceCallManager() {
   end();
 }
 
-void CServiceCallManager::enableHandler(){
+void CServiceCallManager::enableHandler() {
 }
 
-void CServiceCallManager::disableHandler(){
+void CServiceCallManager::disableHandler() {
   ros::shutdown();
 }
 
-void CServiceCallManager::setPriority(int){
+void CServiceCallManager::setPriority(int) {
 }
 
-int CServiceCallManager::getPriority() const{
+int CServiceCallManager::getPriority() const {
   return 0;
 }
 
-void CServiceCallManager::startChain(CEventSourceFB *paECStartF){
-  if(0 != paECStartF){
+void CServiceCallManager::startChain(CEventSourceFB *paECStartF) {
+  if (0 != paECStartF) {
     startNewEventChain(paECStartF);
   }
 }
 
-void CServiceCallManager::queueServiceCall(FORTE_TRIGGER_SERVICE_CLIENT* pa_serviceClientPtr){
+void CServiceCallManager::queueServiceCall(FORTE_TRIGGER_SERVICE_CLIENT *pa_serviceClientPtr) {
   m_callerVector.push_back(pa_serviceClientPtr);
 }
 
-void CServiceCallManager::queueConnectWait(FORTE_TRIGGER_SERVICE_CLIENT* pa_serviceClientPtr){
+void CServiceCallManager::queueConnectWait(FORTE_TRIGGER_SERVICE_CLIENT *pa_serviceClientPtr) {
   m_connectVector.push_back(pa_serviceClientPtr);
 }
 
-void CServiceCallManager::run(){
-  while(isAlive() && ros::ok()){
+void CServiceCallManager::run() {
+  while (isAlive() && ros::ok()) {
 
-    if(!m_connectVector.empty()){
+    if (!m_connectVector.empty()) {
       m_connectVector.front()->waitForServer();
       m_connectVector.erase(m_connectVector.begin());
     }
 
-    if(!m_callerVector.empty()){
+    if (!m_callerVector.empty()) {
       m_callerVector.front()->callService();
       m_callerVector.erase(m_callerVector.begin());
     }
-    //TODO maybe sleep for a small amount of time?
-    //this.waitfor(std::chrono::milliseconds(1));
-    //this.sleepfor();
+    // TODO maybe sleep for a small amount of time?
+    // this.waitfor(std::chrono::milliseconds(1));
+    // this.sleepfor();
   }
 }

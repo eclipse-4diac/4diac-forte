@@ -22,7 +22,7 @@
 #include "forte_array_variable.h"
 
 class GEN_E_SPLIT final : public CGenFunctionBlock<CFunctionBlock> {
-  DECLARE_GENERIC_FIRMWARE_FB(GEN_E_SPLIT)
+    DECLARE_GENERIC_FIRMWARE_FB(GEN_E_SPLIT)
 
   private:
     static const TEventID scmEventEIID = 0;
@@ -30,7 +30,6 @@ class GEN_E_SPLIT final : public CGenFunctionBlock<CFunctionBlock> {
     static const CStringDictionary::TStringId scmEventInputNames[];
     static const TForteInt16 scmEOWithIndexes[];
     std::unique_ptr<CStringDictionary::TStringId[]> scmEventOutputNames;
-
 
     void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
@@ -42,12 +41,8 @@ class GEN_E_SPLIT final : public CGenFunctionBlock<CFunctionBlock> {
   public:
     GEN_E_SPLIT(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
-
-
     CIEC_ANY *getDI(size_t) override;
     CIEC_ANY *getDO(size_t) override;
     CDataConnection **getDIConUnchecked(TPortId) override;
     CDataConnection *getDOConUnchecked(TPortId) override;
-
 };
-

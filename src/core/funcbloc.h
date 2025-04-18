@@ -36,7 +36,6 @@
 #include "forte_st_iterator.h"
 #include "forte_st_util.h"
 
-
 class CEventChainExecutionThread;
 class CAdapter;
 class CTimerHandler;
@@ -46,7 +45,7 @@ namespace forte {
   namespace core {
     class CFBContainer;
   }
-}
+} // namespace forte
 
 #ifdef FORTE_SUPPORT_MONITORING
 #include "mgmcmdstruct.h"
@@ -54,9 +53,8 @@ namespace forte {
   namespace core {
     class CMonitoringHandler;
   }
-}
-#endif //FORTE_SUPPORT_MONITORING
-
+} // namespace forte
+#endif // FORTE_SUPPORT_MONITORING
 
 typedef CAdapter *TAdapterPtr;
 
@@ -86,21 +84,36 @@ struct SFBInterfaceSpec {
     TEventID mNumEIs; //!< Number of event inputs
     const CStringDictionary::TStringId *mEINames; //!< List of the event input names
     const CStringDictionary::TStringId *mEITypeNames; //!< List of the event input types
-    const TDataIOID *mEIWith; //!< Input WITH reference list. This list contains an array of input data ids. For each input event the associated data inputs are listed. The start for each input event is specified in the mEIWithIndexes field. The end is defined by the value scmWithListDelimiter.
-    const TForteInt16 *mEIWithIndexes; //!< Index list for each input event. This list gives for each input event an entry in the mEIWith. Input events are numbered starting from 0. if the input event has no assciated data inputs -1 is the entry at this event inputs postion.
+    const TDataIOID
+        *mEIWith; //!< Input WITH reference list. This list contains an array of input data ids. For each input event
+                  //!< the associated data inputs are listed. The start for each input event is specified in the
+                  //!< mEIWithIndexes field. The end is defined by the value scmWithListDelimiter.
+    const TForteInt16
+        *mEIWithIndexes; //!< Index list for each input event. This list gives for each input event an entry in the
+                         //!< mEIWith. Input events are numbered starting from 0. if the input event has no assciated
+                         //!< data inputs -1 is the entry at this event inputs postion.
     TEventID mNumEOs; //!< Number of event outputs
     const CStringDictionary::TStringId *mEONames; //!< List of the event output names
     const CStringDictionary::TStringId *mEOTypeNames; //!< List of the event output types
-    const TDataIOID *mEOWith; //!< Output WITH reference list. This list contains an array of output data ids. For each output event the associated data outputs are listed. The start for each output event is specified in the mEOWithIndexes field. The end is defined by the value scmWithListDelimiter.
-    const TForteInt16 *mEOWithIndexes; //!< Index list for each output event. This list gives for each output event an entry in the mEOWith. Output events are numbered starting from 0. If the output event has no assciated data outputs -1 is the entry at this event outputs postion. Additionally at the postion mNumEOs in this list an index to an own list in the mEOWith list is stored specifying all output data port that are not associated with any output event. That values will be updated on every FB invocation.
+    const TDataIOID
+        *mEOWith; //!< Output WITH reference list. This list contains an array of output data ids. For each output event
+                  //!< the associated data outputs are listed. The start for each output event is specified in the
+                  //!< mEOWithIndexes field. The end is defined by the value scmWithListDelimiter.
+    const TForteInt16
+        *mEOWithIndexes; //!< Index list for each output event. This list gives for each output event an entry in the
+                         //!< mEOWith. Output events are numbered starting from 0. If the output event has no assciated
+                         //!< data outputs -1 is the entry at this event outputs postion. Additionally at the postion
+                         //!< mNumEOs in this list an index to an own list in the mEOWith list is stored specifying all
+                         //!< output data port that are not associated with any output event. That values will be
+                         //!< updated on every FB invocation.
     TPortId mNumDIs; //!< Number of data inputs
     const CStringDictionary::TStringId *mDINames; //!< List of the data input names
     const CStringDictionary::TStringId *mDIDataTypeNames; //!< List of the data type names for the data inputs
     TPortId mNumDOs; //!< Number of data outputs
     const CStringDictionary::TStringId *mDONames; //!< List of the data output names
     const CStringDictionary::TStringId *mDODataTypeNames; //!< List of the data type names for the data outputs
-    TPortId mNumDIOs;  //!< Number of data inouts
-    const CStringDictionary::TStringId *mDIONames;         //!< List of the data inout names
+    TPortId mNumDIOs; //!< Number of data inouts
+    const CStringDictionary::TStringId *mDIONames; //!< List of the data inout names
     TPortId mNumAdapters; //!< Number of Adapters
     const SAdapterInstanceDef *mAdapterInstanceDefinition; //!< List of adapter instances
 };
@@ -113,13 +126,15 @@ class CFunctionBlock : public forte::core::CFBContainer {
 
   public:
     constexpr static TDataIOID scmWithListDelimiter = cgInvalidPortId; //!< value identifying the end of a with list
-    constexpr static TForteInt16 scmNoDataAssociated = static_cast<TForteInt16>(cgInvalidPortId); //!< value identifying the end of a with list
+    constexpr static TForteInt16 scmNoDataAssociated =
+        static_cast<TForteInt16>(cgInvalidPortId); //!< value identifying the end of a with list
 
     /*!\brief Possible states of a runable object.
      *
      */
     enum class E_FBStates {
-      Running = 0, // in the most critical execution path of FORTE we are checking for this enum value it is faster if this is the zero entry
+      Running = 0, // in the most critical execution path of FORTE we are checking for this enum value it is faster if
+                   // this is the zero entry
       Idle,
       Stopped,
       Killed
@@ -140,16 +155,15 @@ class CFunctionBlock : public forte::core::CFBContainer {
 
     /*!\brief Get the timer of the device where the FB is contained.
      */
-    CTimerHandler& getTimer();
+    CTimerHandler &getTimer();
 
     /*!\brief Returns the stringId for type name of this FB instance
      */
     virtual CStringDictionary::TStringId getFBTypeId() const = 0;
 
-
     /*!\brief Returns the type name of this FB instance
      */
-    const char * getFBTypeName() const {
+    const char *getFBTypeName() const {
       return CStringDictionary::get(getFBTypeId());
     }
 
@@ -180,19 +194,19 @@ class CFunctionBlock : public forte::core::CFBContainer {
     /*! \brief Gets the EventTypeID of a specific output event
      * \param paEOID  StringId of the event name.
      * \return Returns the EventTypeID of a specific output event
-    */
+     */
     CStringDictionary::TStringId getEOType(TEventID paEOID) const;
 
-    CEventConnection* getEOConnection(CStringDictionary::TStringId paEONameId);
+    CEventConnection *getEOConnection(CStringDictionary::TStringId paEONameId);
 
-    const CEventConnection* getEOConnection(CStringDictionary::TStringId paEONameId) const;
+    const CEventConnection *getEOConnection(CStringDictionary::TStringId paEONameId) const;
 
     /*!\brief Connects specific data input of a FB with a specific data connection.
      *
      * If the connection pointer is 0 then it is equal to a disconnect. Furthermore, if their is already a connection
      * to the given data port the connection attempt will be rejected. However if the further connection attempt
-     * is done with the same connection object then it is a reconfiguration attempt for any data inputs. This is necessary
-     * when during the first connection the data type of the connection was not clear.
+     * is done with the same connection object then it is a reconfiguration attempt for any data inputs. This is
+     * necessary when during the first connection the data type of the connection was not clear.
      *
      * \param paDINameId StringID of the data input name.
      * \param paDataCon Pointer to the data connection the FB should be connected to.
@@ -216,11 +230,11 @@ class CFunctionBlock : public forte::core::CFBContainer {
      * \param paDINameId ID of the data input name.
      * \return Pointer to the data input or 0. If 0 is returned DataInput is ANY
      */
-    CIEC_ANY* getDataInput(CStringDictionary::TStringId paDINameId);
+    CIEC_ANY *getDataInput(CStringDictionary::TStringId paDINameId);
 
     /*!\brief get the pointer to a data input using the portId as identifier
      */
-    CIEC_ANY* getDIFromPortId(TPortId paDIPortId);
+    CIEC_ANY *getDIFromPortId(TPortId paDIPortId);
 
     /*! \brief Gets the index of the mDONames array of a specific data output of a FB
      * \param paDONameId  StringId of the data input name.
@@ -240,17 +254,17 @@ class CFunctionBlock : public forte::core::CFBContainer {
 
     /*!\brief get the pointer to a data output using the portId as identifier
      */
-    CIEC_ANY* getDOFromPortId(TPortId paDOPortId);
+    CIEC_ANY *getDOFromPortId(TPortId paDOPortId);
 
-    CIEC_ANY* getDIOFromPortId(TPortId paDIPortId);
+    CIEC_ANY *getDIOFromPortId(TPortId paDIPortId);
 
-    CDataConnection* getDIConnection(CStringDictionary::TStringId paDINameId);
+    CDataConnection *getDIConnection(CStringDictionary::TStringId paDINameId);
 
-    const CDataConnection* getDIConnection(CStringDictionary::TStringId paDINameId) const;
+    const CDataConnection *getDIConnection(CStringDictionary::TStringId paDINameId) const;
 
-    CDataConnection* getDOConnection(CStringDictionary::TStringId paDONameId);
+    CDataConnection *getDOConnection(CStringDictionary::TStringId paDONameId);
 
-    const CDataConnection* getDOConnection(CStringDictionary::TStringId paDONameId) const;
+    const CDataConnection *getDOConnection(CStringDictionary::TStringId paDONameId) const;
 
     CInOutDataConnection *getDIOInConnection(CStringDictionary::TStringId paDIONameId);
 
@@ -280,7 +294,7 @@ class CFunctionBlock : public forte::core::CFBContainer {
      * \param paDONameId StringID of the data output name.
      * \return Pointer to the data output or 0. If 0 is returned DataOutput is ANY
      */
-    CIEC_ANY* getDataOutput(CStringDictionary::TStringId paDONameId);
+    CIEC_ANY *getDataOutput(CStringDictionary::TStringId paDONameId);
 
     /*!\brief Get the pointer to a variable of the FB.
      *
@@ -289,16 +303,16 @@ class CFunctionBlock : public forte::core::CFBContainer {
      * \return Pointer to the variable or 0.
      *  The variable may be input, output or in the case of a BFB an internal var.
      */
-    virtual CIEC_ANY* getVar(CStringDictionary::TStringId *paNameList, unsigned int paNameListSize);
+    virtual CIEC_ANY *getVar(CStringDictionary::TStringId *paNameList, unsigned int paNameListSize);
 
     /*!\brief Get the pointer to the adapter instance of the FB.
      *
      * \param paAdapterNameId  StringId of the adapter name.
      * \return Pointer to the adapter or nullptr.
      */
-    CAdapter* getAdapter(CStringDictionary::TStringId paAdapterNameId);
+    CAdapter *getAdapter(CStringDictionary::TStringId paAdapterNameId);
 
-    const CAdapter* getAdapter(CStringDictionary::TStringId paAdapterNameId) const;
+    const CAdapter *getAdapter(CStringDictionary::TStringId paAdapterNameId) const;
 
     TPortId getAdapterPortId(CStringDictionary::TStringId paAdapterNameId) const;
 
@@ -308,18 +322,19 @@ class CFunctionBlock : public forte::core::CFBContainer {
      * \param paExecEnv Event chain execution environment the FB will be executed in (used for adding output events).
      */
     void receiveInputEvent(TEventID paEIID, CEventChainExecutionThread *paExecEnv) {
-      FORTE_TRACE("InputEvent: Function Block (%s) got event: %d (maxid: %d)\n", CStringDictionary::get(getInstanceNameId()), paEIID, getFBInterfaceSpec().mNumEIs - 1);
+      FORTE_TRACE("InputEvent: Function Block (%s) got event: %d (maxid: %d)\n",
+                  CStringDictionary::get(getInstanceNameId()), paEIID, getFBInterfaceSpec().mNumEIs - 1);
 
-      #ifdef FORTE_TRACE_CTF
-          traceInputEvent(paEIID);
-      #endif // FORTE_TRACE_CTF
-      if(E_FBStates::Running == getState()){
-        if(paEIID < getFBInterfaceSpec().mNumEIs) {
+#ifdef FORTE_TRACE_CTF
+      traceInputEvent(paEIID);
+#endif // FORTE_TRACE_CTF
+      if (E_FBStates::Running == getState()) {
+        if (paEIID < getFBInterfaceSpec().mNumEIs) {
           readInputData(paEIID);
-          #ifdef FORTE_SUPPORT_MONITORING
-                // Count Event for monitoring
-                mEIMonitorCount[paEIID]++;
-          #endif //FORTE_SUPPORT_MONITORING
+#ifdef FORTE_SUPPORT_MONITORING
+          // Count Event for monitoring
+          mEIMonitorCount[paEIID]++;
+#endif // FORTE_SUPPORT_MONITORING
         }
         executeEvent(paEIID, paExecEnv);
       }
@@ -333,7 +348,7 @@ class CFunctionBlock : public forte::core::CFBContainer {
      */
     virtual bool configureFB(const char *paConfigString);
 
-    const SFBInterfaceSpec& getFBInterfaceSpec() const {
+    const SFBInterfaceSpec &getFBInterfaceSpec() const {
       return mInterfaceSpec;
     }
 
@@ -377,10 +392,10 @@ class CFunctionBlock : public forte::core::CFBContainer {
      * @param paDINum number of the data input starting with 0
      * @return pointer to the data input
      */
-    virtual CIEC_ANY* getDI(TPortId paDINum) = 0;
+    virtual CIEC_ANY *getDI(TPortId paDINum) = 0;
 
-    const CIEC_ANY* getDI(TPortId paDINum) const {
-      return const_cast<CFunctionBlock*>(this)->getDI(paDINum);
+    const CIEC_ANY *getDI(TPortId paDINum) const {
+      return const_cast<CFunctionBlock *>(this)->getDI(paDINum);
     }
 
     /*! \brief Get the data output with given number
@@ -389,9 +404,9 @@ class CFunctionBlock : public forte::core::CFBContainer {
      * @param paDONum number of the data output starting with 0
      * @return pointer to the data output
      */
-    virtual CIEC_ANY* getDO(TPortId paDONum) = 0;
+    virtual CIEC_ANY *getDO(TPortId paDONum) = 0;
 
-    const CIEC_ANY* getDO(TPortId paDONum) const {
+    const CIEC_ANY *getDO(TPortId paDONum) const {
       return const_cast<CFunctionBlock *>(this)->getDO(paDONum);
     }
 
@@ -401,12 +416,12 @@ class CFunctionBlock : public forte::core::CFBContainer {
      * @param paDONum number of the data output starting with 0
      * @return pointer to the data output
      */
-    virtual CIEC_ANY* getDIO(TPortId paDIONum) {
-      (void)paDIONum; // indicate to the compiler that the param is unused
+    virtual CIEC_ANY *getDIO(TPortId paDIONum) {
+      (void) paDIONum; // indicate to the compiler that the param is unused
       return nullptr;
     }
 
-    const CIEC_ANY* getDIO(TPortId paDIONum) const {
+    const CIEC_ANY *getDIO(TPortId paDIONum) const {
       return const_cast<CFunctionBlock *>(this)->getDIO(paDIONum);
     }
 
@@ -424,25 +439,26 @@ class CFunctionBlock : public forte::core::CFBContainer {
     CConnection *getInputConnection(forte::core::TNameIdentifier &paDstNameList) override;
 
     /*!\brief get the connection object for the given source identifier
-       *
-       * @param paSrcNameList array of the name hierarchy the requested connection source
-       * @return pointer to the requested connection, returns nullptr if there is no such source
-       */
+     *
+     * @param paSrcNameList array of the name hierarchy the requested connection source
+     * @return pointer to the requested connection, returns nullptr if there is no such source
+     */
     CConnection::Wrapper getOutputConnection(forte::core::TNameIdentifier &paSrcNameList) override;
 
 #ifdef FORTE_SUPPORT_MONITORING
     TForteUInt32 &getEIMonitorData(TEventID paEIID);
 
     TForteUInt32 &getEOMonitorData(TEventID paEOID);
-#endif //FORTE_SUPPORT_MONITORING
-    
-    virtual int toString(char* paValue, size_t paBufferSize) const;
+#endif // FORTE_SUPPORT_MONITORING
+
+    virtual int toString(char *paValue, size_t paBufferSize) const;
 
     virtual size_t getToStringBufferSize() const;
 
 #ifdef FORTE_TRACE_CTF
-    virtual void traceInstanceData() {}
-#endif //FORTE_TRACE_CTF
+    virtual void traceInstanceData() {
+    }
+#endif // FORTE_TRACE_CTF
 
     void addInputEventConnection(TEventID paEIID) {
       if (getFBInterfaceSpec().mEITypeNames != nullptr) {
@@ -474,17 +490,20 @@ class CFunctionBlock : public forte::core::CFBContainer {
     }
 
   protected:
-
     /*!\brief The main constructor for a function block.
      *
-     * \param paContainer      FB container this function block is contained in (mainly necessary for management functions and service interfaces)
+     * \param paContainer      FB container this function block is contained in (mainly necessary for management
+     * functions and service interfaces)
      * \param paInterfaceSpec  const pointer to the interface spec
      * \param paInstanceNameId string id
      */
-    CFunctionBlock(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec& paInterfaceSpec, CStringDictionary::TStringId paInstanceNameId);
+    CFunctionBlock(forte::core::CFBContainer &paContainer,
+                   const SFBInterfaceSpec &paInterfaceSpec,
+                   CStringDictionary::TStringId paInstanceNameId);
 
-    static TPortId getPortId(CStringDictionary::TStringId paPortNameId, TPortId paMaxPortNames, const CStringDictionary::TStringId *paPortNames);
-
+    static TPortId getPortId(CStringDictionary::TStringId paPortNameId,
+                             TPortId paMaxPortNames,
+                             const CStringDictionary::TStringId *paPortNames);
 
     /*!\brief Function to send an output event of the FB.
      *
@@ -492,20 +511,21 @@ class CFunctionBlock : public forte::core::CFBContainer {
      * \param paEO Event output ID where event should be fired.
      * \param paExecEnv Event chain execution environment where the event will be sent to.
      */
-    void sendOutputEvent(TEventID paEO, CEventChainExecutionThread * const paECET){
-      FORTE_TRACE("OutputEvent: Function Block sending event: %d (maxid: %d)\n", paEO, getFBInterfaceSpec().mNumEOs - 1);
-      
-      #ifdef FORTE_TRACE_CTF
-        traceOutputEvent(paEO, paECET);
-      #endif // FORTE_TRACE_CTF
-      if(paEO < getFBInterfaceSpec().mNumEOs) {
+    void sendOutputEvent(TEventID paEO, CEventChainExecutionThread *const paECET) {
+      FORTE_TRACE("OutputEvent: Function Block sending event: %d (maxid: %d)\n", paEO,
+                  getFBInterfaceSpec().mNumEOs - 1);
+
+#ifdef FORTE_TRACE_CTF
+      traceOutputEvent(paEO, paECET);
+#endif // FORTE_TRACE_CTF
+      if (paEO < getFBInterfaceSpec().mNumEOs) {
         writeOutputData(paEO);
         getEOConUnchecked(static_cast<TPortId>(paEO))->triggerEvent(paECET);
 
-        #ifdef FORTE_SUPPORT_MONITORING
-            // Count Event for monitoring
-            mEOMonitorCount[paEO]++;
-        #endif //FORTE_SUPPORT_MONITORING
+#ifdef FORTE_SUPPORT_MONITORING
+        // Count Event for monitoring
+        mEOMonitorCount[paEO]++;
+#endif // FORTE_SUPPORT_MONITORING
       }
     }
 
@@ -516,19 +536,19 @@ class CFunctionBlock : public forte::core::CFBContainer {
      * \param paConn Connection to read from.
      */
     void readData([[maybe_unused]] TPortId paDINum, CIEC_ANY &paValue, const CDataConnection *const paConn) {
-      if(!paConn) {
+      if (!paConn) {
         return;
       }
 #ifdef FORTE_SUPPORT_MONITORING
-      if(!paValue.isForced()) {
-#endif //FORTE_SUPPORT_MONITORING
+      if (!paValue.isForced()) {
+#endif // FORTE_SUPPORT_MONITORING
         paConn->readData(paValue);
 #ifdef FORTE_SUPPORT_MONITORING
       }
-#endif //FORTE_SUPPORT_MONITORING
+#endif // FORTE_SUPPORT_MONITORING
 #ifdef FORTE_TRACE_CTF
       traceReadData(paDINum, paValue);
-#endif //FORTE_TRACE_CTF
+#endif // FORTE_TRACE_CTF
     }
 
     /*!\brief Function to write data to an output connection from a variable of the FB.
@@ -538,20 +558,20 @@ class CFunctionBlock : public forte::core::CFBContainer {
      * \param paConn Connection to write into.
      */
     template<typename T, typename U>
-    void writeData([[maybe_unused]] TPortId paDONum, T& paValue, U& paConn) {
+    void writeData([[maybe_unused]] TPortId paDONum, T &paValue, U &paConn) {
 #ifdef FORTE_SUPPORT_MONITORING
-      if(!paValue.isForced()) {
-#endif //FORTE_SUPPORT_MONITORING
+      if (!paValue.isForced()) {
+#endif // FORTE_SUPPORT_MONITORING
         paConn.writeData(paValue);
 #ifdef FORTE_SUPPORT_MONITORING
       } else {
-        //when forcing we write back the value from the connection to keep the forced value on the output
+        // when forcing we write back the value from the connection to keep the forced value on the output
         paConn.readData(paValue);
       }
-#endif //FORTE_SUPPORT_MONITORING
+#endif // FORTE_SUPPORT_MONITORING
 #ifdef FORTE_TRACE_CTF
       traceWriteData(paDONum, paValue);
-#endif //FORTE_TRACE_CTF
+#endif // FORTE_TRACE_CTF
     }
 
     /*!\brief Set the initial values of data inputs, outputs, and internal vars.
@@ -570,7 +590,7 @@ class CFunctionBlock : public forte::core::CFBContainer {
      * \param paEID Event ID where event should be fired.
      * \param paExecEnv Event chain execution environment where the event will be sent to.
      */
-    void sendAdapterEvent(TPortId paAdapterID, TEventID paEID, CEventChainExecutionThread * const paECET);
+    void sendAdapterEvent(TPortId paAdapterID, TEventID paEID, CEventChainExecutionThread *const paECET);
 
     virtual CEventConnection *getEOConUnchecked(TPortId paEONum) = 0;
 
@@ -597,7 +617,7 @@ class CFunctionBlock : public forte::core::CFBContainer {
      * @return pointer to the data inout connection
      */
     virtual CInOutDataConnection **getDIOInConUnchecked(TPortId paDIONum) {
-      (void)paDIONum; // indicate to the compiler that the param is unused
+      (void) paDIONum; // indicate to the compiler that the param is unused
       return nullptr;
     }
 
@@ -629,7 +649,7 @@ class CFunctionBlock : public forte::core::CFBContainer {
      * @return on success... pointer to the datatype instance
      *         on error... 0
      */
-    static CIEC_ANY* createDataPoint(const CStringDictionary::TStringId *&paDataTypeIds, TForteByte *&paDataBuf);
+    static CIEC_ANY *createDataPoint(const CStringDictionary::TStringId *&paDataTypeIds, TForteByte *&paDataBuf);
 
     /*!\brief Function to skip to the next data point
      *
@@ -652,7 +672,7 @@ class CFunctionBlock : public forte::core::CFBContainer {
     const SFBInterfaceSpec &mInterfaceSpec; //!< Pointer to the interface specification
 
     /*!\brief initialize the data structure which holds connection counts per pin
-    */
+     */
     void setupInputConnectionTrackingData() {
       if (getFBInterfaceSpec().mEITypeNames != nullptr) {
         mInputEventConnectionCount = std::make_unique<size_t[]>(getFBInterfaceSpec().mNumEIs);
@@ -665,7 +685,7 @@ class CFunctionBlock : public forte::core::CFBContainer {
 #endif
   private:
     bool isFB() override {
-       return true;
+      return true;
     }
 
     bool isDynamicContainer() override {
@@ -680,7 +700,7 @@ class CFunctionBlock : public forte::core::CFBContainer {
      *
      *
      */
-    virtual void executeEvent(TEventID paEIID, CEventChainExecutionThread * const paECET) = 0;
+    virtual void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) = 0;
 
     /*!\brief Function reading the values from input connections of the FB.
      *
@@ -695,10 +715,13 @@ class CFunctionBlock : public forte::core::CFBContainer {
     virtual void writeOutputData(TEventID paEO) = 0;
 
   public:
-    CFunctionBlock(const CFunctionBlock&) = delete;
+    CFunctionBlock(const CFunctionBlock &) = delete;
 
   protected:
-    int writeToStringNameValuePair(char *paValue, size_t paBufferSize, const CStringDictionary::TStringId variableNameId, const CIEC_ANY *const variable) const;
+    int writeToStringNameValuePair(char *paValue,
+                                   size_t paBufferSize,
+                                   const CStringDictionary::TStringId variableNameId,
+                                   const CIEC_ANY *const variable) const;
     constexpr static char csmToStringSeparator[] = ", ";
 
   private:
@@ -709,9 +732,9 @@ class CFunctionBlock : public forte::core::CFBContainer {
 
 #ifdef FORTE_TRACE_CTF
     void traceInputEvent(TEventID paEIID);
-    void traceOutputEvent(TEventID paEOID, CEventChainExecutionThread * const paECET);
-    void traceReadData(TPortId paDINum, CIEC_ANY& paValue);
-    void traceWriteData(TPortId paDONum, CIEC_ANY& paValue);
+    void traceOutputEvent(TEventID paEOID, CEventChainExecutionThread *const paECET);
+    void traceReadData(TPortId paDINum, CIEC_ANY &paValue);
+    void traceWriteData(TPortId paDONum, CIEC_ANY &paValue);
 #endif
 
     /*!\brief Current state of the runnable object.
@@ -736,25 +759,24 @@ class CFunctionBlock : public forte::core::CFBContainer {
 
 #ifdef FORTE_SUPPORT_MONITORING
     friend class forte::core::CMonitoringHandler;
-#endif //FORTE_SUPPORT_MONITORING
+#endif // FORTE_SUPPORT_MONITORING
 
 #ifdef FORTE_FMU
     friend class fmuInstance;
-#endif //FORTE_FMU
+#endif // FORTE_FMU
 
 #ifdef FORTE_REPLAY_DEVICE
     friend class CResourceReplayer;
 #endif // FORTE_REPLAY_DEVICE
 };
 
-#define FUNCTION_BLOCK_CTOR(fbclass) \
- fbclass(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) : \
- CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId)
+#define FUNCTION_BLOCK_CTOR(fbclass)                                                                                   \
+  fbclass(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :               \
+      CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId)
 
-#define FUNCTION_BLOCK_CTOR_WITH_BASE_CLASS(fbclass, fbBaseClass) \
- fbclass(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) : \
- fbBaseClass(paContainer, scmFBInterfaceSpec, paInstanceNameId)
-
+#define FUNCTION_BLOCK_CTOR_WITH_BASE_CLASS(fbclass, fbBaseClass)                                                      \
+  fbclass(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :               \
+      fbBaseClass(paContainer, scmFBInterfaceSpec, paInstanceNameId)
 
 #ifdef OPTIONAL
 #undef OPTIONAL

@@ -1,10 +1,10 @@
-/*************************************************************************  
+/*************************************************************************
  *** Copyright (c) 2024 HR Agrartechnik GmbH
- *** This program and the accompanying materials are made available under the  
- *** terms of the Eclipse Public License 2.0 which is available at  
- *** http://www.eclipse.org/legal/epl-2.0.  
- ***  
- *** SPDX-License-Identifier: EPL-2.0  
+ *** This program and the accompanying materials are made available under the
+ *** terms of the Eclipse Public License 2.0 which is available at
+ *** http://www.eclipse.org/legal/epl-2.0.
+ ***
+ *** SPDX-License-Identifier: EPL-2.0
  ***
  *** This file was generated using the 4DIAC FORTE Export Filter V1.0.x NG!
  ***
@@ -25,7 +25,7 @@
 #include "forte_array_variable.h"
 
 class FORTE_signalprocessing__SCALE final : public CFunctionBlock {
-  DECLARE_FIRMWARE_FB(FORTE_signalprocessing__SCALE)
+    DECLARE_FIRMWARE_FB(FORTE_signalprocessing__SCALE)
 
   private:
     static const CStringDictionary::TStringId scmDataInputNames[];
@@ -52,7 +52,8 @@ class FORTE_signalprocessing__SCALE final : public CFunctionBlock {
     void setInitialValues() override;
 
   public:
-    FORTE_signalprocessing__SCALE(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_signalprocessing__SCALE(CStringDictionary::TStringId paInstanceNameId,
+                                  forte::core::CFBContainer &paContainer);
 
     CIEC_REAL var_IN;
     CIEC_REAL var_MAX_IN;
@@ -78,7 +79,12 @@ class FORTE_signalprocessing__SCALE final : public CFunctionBlock {
     CDataConnection **getDIConUnchecked(TPortId) override;
     CDataConnection *getDOConUnchecked(TPortId) override;
 
-    void evt_REQ(const CIEC_REAL &paIN, const CIEC_REAL &paMAX_IN, const CIEC_REAL &paMIN_IN, const CIEC_REAL &paMAX_OUT, const CIEC_REAL &paMIN_OUT, CIEC_REAL &pa) {
+    void evt_REQ(const CIEC_REAL &paIN,
+                 const CIEC_REAL &paMAX_IN,
+                 const CIEC_REAL &paMIN_IN,
+                 const CIEC_REAL &paMAX_OUT,
+                 const CIEC_REAL &paMIN_OUT,
+                 CIEC_REAL &pa) {
       var_IN = paIN;
       var_MAX_IN = paMAX_IN;
       var_MIN_IN = paMIN_IN;
@@ -88,10 +94,18 @@ class FORTE_signalprocessing__SCALE final : public CFunctionBlock {
       pa = var_;
     }
 
-    void operator()(const CIEC_REAL &paIN, const CIEC_REAL &paMAX_IN, const CIEC_REAL &paMIN_IN, const CIEC_REAL &paMAX_OUT, const CIEC_REAL &paMIN_OUT, CIEC_REAL &pa) {
+    void operator()(const CIEC_REAL &paIN,
+                    const CIEC_REAL &paMAX_IN,
+                    const CIEC_REAL &paMIN_IN,
+                    const CIEC_REAL &paMAX_OUT,
+                    const CIEC_REAL &paMIN_OUT,
+                    CIEC_REAL &pa) {
       evt_REQ(paIN, paMAX_IN, paMIN_IN, paMAX_OUT, paMIN_OUT, pa);
     }
 };
 
-CIEC_REAL func_SCALE(CIEC_REAL st_lv_IN, CIEC_REAL st_lv_MAX_IN, CIEC_REAL st_lv_MIN_IN, CIEC_REAL st_lv_MAX_OUT, CIEC_REAL st_lv_MIN_OUT);
-
+CIEC_REAL func_SCALE(CIEC_REAL st_lv_IN,
+                     CIEC_REAL st_lv_MAX_IN,
+                     CIEC_REAL st_lv_MIN_IN,
+                     CIEC_REAL st_lv_MAX_OUT,
+                     CIEC_REAL st_lv_MIN_OUT);

@@ -14,30 +14,31 @@
 
 #include <cyg/kernel/kapi.h>
 
-#define CSyncObject CECOSSyncObject //allows that doxygen can generate better documenation
+#define CSyncObject CECOSSyncObject // allows that doxygen can generate better documenation
 
 /*! \ingroup ECOS-HAL
  * \brief The sync object implementation for eCos.
  *
  * In the eCos version a mutex is used for the sync object.
  */
-class CECOSSyncObject{
+class CECOSSyncObject {
   private:
   protected:
-  //! The posix thread mutex handle of the operating system.
+    //! The posix thread mutex handle of the operating system.
     cyg_mutex_t mMutexHandle;
+
   public:
     CECOSSyncObject();
     ~CECOSSyncObject();
-  /*!\brief Lock the resource coming after the lock command  
-   * 
-   * This function blocks until it will get the lock for the coming critical section.
-   */  
-    void lock(){
+    /*!\brief Lock the resource coming after the lock command
+     *
+     * This function blocks until it will get the lock for the coming critical section.
+     */
+    void lock() {
       cyg_mutex_lock(&mMutexHandle);
     };
-  //!Freee the resource coming after the lock command  
-    void unlock(){
+    //! Freee the resource coming after the lock command
+    void unlock() {
       cyg_mutex_unlock(&mMutexHandle);
     };
 };

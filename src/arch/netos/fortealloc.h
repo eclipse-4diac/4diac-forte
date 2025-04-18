@@ -12,7 +12,7 @@
 #ifndef FORTEALLOC_H_
 #define FORTEALLOC_H_
 
-//on threadx environments we are typically happy with the generic alloc implementation based on malloc and free
+// on threadx environments we are typically happy with the generic alloc implementation based on malloc and free
 #include "../genfortealloc.h"
 
 #endif /* FORTEALLOC_H_ */

@@ -19,7 +19,7 @@
 #include "forte_dint.h"
 
 class CIEC_ServiceQueryForm : public CIEC_STRUCT {
-  DECLARE_FIRMWARE_DATATYPE(ServiceQueryForm)
+    DECLARE_FIRMWARE_DATATYPE(ServiceQueryForm)
 
   public:
     CIEC_ServiceQueryForm();
@@ -27,20 +27,19 @@ class CIEC_ServiceQueryForm : public CIEC_STRUCT {
     ~CIEC_ServiceQueryForm() override = default;
 
     CIEC_ArrowheadService &service() {
-      return *static_cast<CIEC_ArrowheadService*>(&getMembers()[0]);
+      return *static_cast<CIEC_ArrowheadService *>(&getMembers()[0]);
     }
 
     CIEC_BOOL &metadataSearch() {
-      return *static_cast<CIEC_BOOL*>(&getMembers()[1]);
+      return *static_cast<CIEC_BOOL *>(&getMembers()[1]);
     }
 
-
     CIEC_BOOL &pingProviders() {
-      return *static_cast<CIEC_BOOL*>(&getMembers()[2]);
+      return *static_cast<CIEC_BOOL *>(&getMembers()[2]);
     }
 
     CIEC_DINT &version() {
-      return *static_cast<CIEC_DINT*>(&getMembers()[3]);
+      return *static_cast<CIEC_DINT *>(&getMembers()[3]);
     }
 
   private:

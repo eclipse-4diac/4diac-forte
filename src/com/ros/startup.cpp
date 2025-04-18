@@ -12,10 +12,10 @@
 #include <ros/ros.h>
 #include <develog.h>
 
-void rosStartupHook(int argc, char *arg[]){
-  if(argc <= 1){ //! Default Value (localhost:61499)
+void rosStartupHook(int argc, char *arg[]) {
+  if (argc <= 1) { //! Default Value (localhost:61499)
     std::string rosdistro = "indigo";
-    if (rosdistro == (std::string)std::getenv("ROS_DISTRO")){
+    if (rosdistro == (std::string) std::getenv("ROS_DISTRO")) {
       DEVLOG_INFO("path to forte.exe: %s \n", arg[0]);
       ros::init(argc, arg, "ros_Functionblocks_in_FORTE");
     }

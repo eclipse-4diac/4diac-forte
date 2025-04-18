@@ -26,60 +26,58 @@ USE_STRING_ID(LDATE);
 
 DEFINE_FIRMWARE_DATATYPE(LDATE, STRID(LDATE))
 
-int CIEC_LDATE::fromString(const char *paValue){
+int CIEC_LDATE::fromString(const char *paValue) {
   // 2007-12-21
   struct tm tm;
-  char *acBuffer = const_cast<char*>(paValue);
+  char *acBuffer = const_cast<char *>(paValue);
 
   memset(&tm, 0, sizeof(tm));
 
-  if('l' == tolower(acBuffer[0]) && 'd' == tolower(acBuffer[1]) ){
+  if ('l' == tolower(acBuffer[0]) && 'd' == tolower(acBuffer[1])) {
     acBuffer += 2;
-    if(('a' == tolower(acBuffer[0])) && ('t' == tolower(acBuffer[1])) && ('e' == tolower(acBuffer[2]))){
+    if (('a' == tolower(acBuffer[0])) && ('t' == tolower(acBuffer[1])) && ('e' == tolower(acBuffer[2]))) {
       acBuffer += 3;
     }
-    if('#' != *acBuffer){
+    if ('#' != *acBuffer) {
       return -1;
     }
     acBuffer++;
   }
 
-  if('\0' != *acBuffer){
-    //TODO think of using any elementary fromString function instead of strtoul
+  if ('\0' != *acBuffer) {
+    // TODO think of using any elementary fromString function instead of strtoul
     tm.tm_year = static_cast<int>(::strtoul(acBuffer, &acBuffer, 10) - 1900);
-    if('-' == *acBuffer){
+    if ('-' == *acBuffer) {
       ++acBuffer;
       tm.tm_mon = static_cast<int>(::strtoul(acBuffer, &acBuffer, 10) - 1);
-      if('-' == *acBuffer){
+      if ('-' == *acBuffer) {
         ++acBuffer;
         tm.tm_mday = static_cast<int>(::strtoul(acBuffer, &acBuffer, 10));
+      } else {
+        return -1;
       }
-      else{
-         return -1;
-       }
+    } else {
+      return -1;
     }
-    else{
-       return -1;
-     }
-  }
-  else{
+  } else {
     return -1;
   }
 
-  if(!setDateAndTime(tm, 0)){
+  if (!setDateAndTime(tm, 0)) {
     return -1;
   }
 
   return static_cast<unsigned int>(acBuffer - paValue);
 }
 
-int CIEC_LDATE::toString(char* paValue, size_t paBufferSize) const {
+int CIEC_LDATE::toString(char *paValue, size_t paBufferSize) const {
   int nRetVal = -1;
   struct tm ptm;
 
   if (nullptr != getTimeStruct(&ptm)) {
-    nRetVal = forte_snprintf(paValue, paBufferSize, "LD#%04d-%02d-%02d", 1900 + ptm.tm_year, ptm.tm_mon + 1, ptm.tm_mday);
-    if((nRetVal < -1) || (nRetVal >= static_cast<int>(paBufferSize))) {
+    nRetVal =
+        forte_snprintf(paValue, paBufferSize, "LD#%04d-%02d-%02d", 1900 + ptm.tm_year, ptm.tm_mon + 1, ptm.tm_mday);
+    if ((nRetVal < -1) || (nRetVal >= static_cast<int>(paBufferSize))) {
       nRetVal = -1;
     }
   }

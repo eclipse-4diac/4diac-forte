@@ -35,7 +35,6 @@ USE_STRING_ID(REQ);
 USE_STRING_ID(SPLIT_WORD_INTO_QUARTERS);
 USE_STRING_ID(WORD);
 
-
 #include "criticalregion.h"
 #include "resource.h"
 #include "forte_byte.h"
@@ -53,8 +52,11 @@ DEFINE_FIRMWARE_FB(FORTE_SPLIT_WORD_INTO_QUARTERS, STRID(SPLIT_WORD_INTO_QUARTER
 
 const CStringDictionary::TStringId FORTE_SPLIT_WORD_INTO_QUARTERS::scmDataInputNames[] = {STRID(IN)};
 const CStringDictionary::TStringId FORTE_SPLIT_WORD_INTO_QUARTERS::scmDataInputTypeIds[] = {STRID(WORD)};
-const CStringDictionary::TStringId FORTE_SPLIT_WORD_INTO_QUARTERS::scmDataOutputNames[] = {STRID(QUARTER_BYTE_00), STRID(QUARTER_BYTE_01), STRID(QUARTER_BYTE_02), STRID(QUARTER_BYTE_03), STRID(QUARTER_BYTE_04), STRID(QUARTER_BYTE_05), STRID(QUARTER_BYTE_06), STRID(QUARTER_BYTE_07)};
-const CStringDictionary::TStringId FORTE_SPLIT_WORD_INTO_QUARTERS::scmDataOutputTypeIds[] = {STRID(BYTE), STRID(BYTE), STRID(BYTE), STRID(BYTE), STRID(BYTE), STRID(BYTE), STRID(BYTE), STRID(BYTE)};
+const CStringDictionary::TStringId FORTE_SPLIT_WORD_INTO_QUARTERS::scmDataOutputNames[] = {
+    STRID(QUARTER_BYTE_00), STRID(QUARTER_BYTE_01), STRID(QUARTER_BYTE_02), STRID(QUARTER_BYTE_03),
+    STRID(QUARTER_BYTE_04), STRID(QUARTER_BYTE_05), STRID(QUARTER_BYTE_06), STRID(QUARTER_BYTE_07)};
+const CStringDictionary::TStringId FORTE_SPLIT_WORD_INTO_QUARTERS::scmDataOutputTypeIds[] = {
+    STRID(BYTE), STRID(BYTE), STRID(BYTE), STRID(BYTE), STRID(BYTE), STRID(BYTE), STRID(BYTE), STRID(BYTE)};
 const TDataIOID FORTE_SPLIT_WORD_INTO_QUARTERS::scmEIWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_SPLIT_WORD_INTO_QUARTERS::scmEIWithIndexes[] = {0};
 const CStringDictionary::TStringId FORTE_SPLIT_WORD_INTO_QUARTERS::scmEventInputNames[] = {STRID(REQ)};
@@ -63,16 +65,29 @@ const TDataIOID FORTE_SPLIT_WORD_INTO_QUARTERS::scmEOWith[] = {0, 1, 2, 3, 4, 5,
 const TForteInt16 FORTE_SPLIT_WORD_INTO_QUARTERS::scmEOWithIndexes[] = {0};
 const CStringDictionary::TStringId FORTE_SPLIT_WORD_INTO_QUARTERS::scmEventOutputNames[] = {STRID(CNF)};
 const CStringDictionary::TStringId FORTE_SPLIT_WORD_INTO_QUARTERS::scmEventOutputTypeIds[] = {STRID(Event)};
-const SFBInterfaceSpec FORTE_SPLIT_WORD_INTO_QUARTERS::scmFBInterfaceSpec = {
-  1, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,
-  1, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes,
-  1, scmDataInputNames, scmDataInputTypeIds,
-  8, scmDataOutputNames, scmDataOutputTypeIds,
-  0, nullptr,
-  0, nullptr
-};
+const SFBInterfaceSpec FORTE_SPLIT_WORD_INTO_QUARTERS::scmFBInterfaceSpec = {1,
+                                                                             scmEventInputNames,
+                                                                             scmEventInputTypeIds,
+                                                                             scmEIWith,
+                                                                             scmEIWithIndexes,
+                                                                             1,
+                                                                             scmEventOutputNames,
+                                                                             scmEventOutputTypeIds,
+                                                                             scmEOWith,
+                                                                             scmEOWithIndexes,
+                                                                             1,
+                                                                             scmDataInputNames,
+                                                                             scmDataInputTypeIds,
+                                                                             8,
+                                                                             scmDataOutputNames,
+                                                                             scmDataOutputTypeIds,
+                                                                             0,
+                                                                             nullptr,
+                                                                             0,
+                                                                             nullptr};
 
-FORTE_SPLIT_WORD_INTO_QUARTERS::FORTE_SPLIT_WORD_INTO_QUARTERS(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_SPLIT_WORD_INTO_QUARTERS::FORTE_SPLIT_WORD_INTO_QUARTERS(const CStringDictionary::TStringId paInstanceNameId,
+                                                               forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId),
     conn_CNF(*this, 0),
     conn_IN(nullptr),
@@ -99,18 +114,17 @@ void FORTE_SPLIT_WORD_INTO_QUARTERS::setInitialValues() {
 }
 
 void FORTE_SPLIT_WORD_INTO_QUARTERS::readInputData(const TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventREQID: {
       readData(0, var_IN, conn_IN);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 void FORTE_SPLIT_WORD_INTO_QUARTERS::writeOutputData(const TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventCNFID: {
       writeData(0, var_QUARTER_BYTE_00, conn_QUARTER_BYTE_00);
       writeData(1, var_QUARTER_BYTE_01, conn_QUARTER_BYTE_01);
@@ -122,20 +136,19 @@ void FORTE_SPLIT_WORD_INTO_QUARTERS::writeOutputData(const TEventID paEIID) {
       writeData(7, var_QUARTER_BYTE_07, conn_QUARTER_BYTE_07);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 CIEC_ANY *FORTE_SPLIT_WORD_INTO_QUARTERS::getDI(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_IN;
   }
   return nullptr;
 }
 
 CIEC_ANY *FORTE_SPLIT_WORD_INTO_QUARTERS::getDO(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_QUARTER_BYTE_00;
     case 1: return &var_QUARTER_BYTE_01;
     case 2: return &var_QUARTER_BYTE_02;
@@ -149,21 +162,21 @@ CIEC_ANY *FORTE_SPLIT_WORD_INTO_QUARTERS::getDO(const size_t paIndex) {
 }
 
 CEventConnection *FORTE_SPLIT_WORD_INTO_QUARTERS::getEOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_CNF;
   }
   return nullptr;
 }
 
 CDataConnection **FORTE_SPLIT_WORD_INTO_QUARTERS::getDIConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_IN;
   }
   return nullptr;
 }
 
 CDataConnection *FORTE_SPLIT_WORD_INTO_QUARTERS::getDOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_QUARTER_BYTE_00;
     case 1: return &conn_QUARTER_BYTE_01;
     case 2: return &conn_QUARTER_BYTE_02;
@@ -177,11 +190,21 @@ CDataConnection *FORTE_SPLIT_WORD_INTO_QUARTERS::getDOConUnchecked(const TPortId
 }
 
 void FORTE_SPLIT_WORD_INTO_QUARTERS::executeEvent(const TEventID, CEventChainExecutionThread *const paECET) {
-  func_SPLIT_WORD_INTO_QUARTERS(var_IN, var_QUARTER_BYTE_00, var_QUARTER_BYTE_01, var_QUARTER_BYTE_02, var_QUARTER_BYTE_03, var_QUARTER_BYTE_04, var_QUARTER_BYTE_05, var_QUARTER_BYTE_06, var_QUARTER_BYTE_07);
+  func_SPLIT_WORD_INTO_QUARTERS(var_IN, var_QUARTER_BYTE_00, var_QUARTER_BYTE_01, var_QUARTER_BYTE_02,
+                                var_QUARTER_BYTE_03, var_QUARTER_BYTE_04, var_QUARTER_BYTE_05, var_QUARTER_BYTE_06,
+                                var_QUARTER_BYTE_07);
   sendOutputEvent(scmEventCNFID, paECET);
 }
 
-void func_SPLIT_WORD_INTO_QUARTERS(CIEC_WORD st_lv_IN, CIEC_BYTE &st_lv_QUARTER_BYTE_00, CIEC_BYTE &st_lv_QUARTER_BYTE_01, CIEC_BYTE &st_lv_QUARTER_BYTE_02, CIEC_BYTE &st_lv_QUARTER_BYTE_03, CIEC_BYTE &st_lv_QUARTER_BYTE_04, CIEC_BYTE &st_lv_QUARTER_BYTE_05, CIEC_BYTE &st_lv_QUARTER_BYTE_06, CIEC_BYTE &st_lv_QUARTER_BYTE_07) {
+void func_SPLIT_WORD_INTO_QUARTERS(CIEC_WORD st_lv_IN,
+                                   CIEC_BYTE &st_lv_QUARTER_BYTE_00,
+                                   CIEC_BYTE &st_lv_QUARTER_BYTE_01,
+                                   CIEC_BYTE &st_lv_QUARTER_BYTE_02,
+                                   CIEC_BYTE &st_lv_QUARTER_BYTE_03,
+                                   CIEC_BYTE &st_lv_QUARTER_BYTE_04,
+                                   CIEC_BYTE &st_lv_QUARTER_BYTE_05,
+                                   CIEC_BYTE &st_lv_QUARTER_BYTE_06,
+                                   CIEC_BYTE &st_lv_QUARTER_BYTE_07) {
   st_lv_QUARTER_BYTE_00 = 0_BYTE;
   st_lv_QUARTER_BYTE_01 = 0_BYTE;
   st_lv_QUARTER_BYTE_02 = 0_BYTE;
@@ -191,22 +214,28 @@ void func_SPLIT_WORD_INTO_QUARTERS(CIEC_WORD st_lv_IN, CIEC_BYTE &st_lv_QUARTER_
   st_lv_QUARTER_BYTE_06 = 0_BYTE;
   st_lv_QUARTER_BYTE_07 = 0_BYTE;
 
-  #line 19 "SPLIT_WORD_INTO_QUARTERS.fct"
-  st_lv_QUARTER_BYTE_00 = func_WORD_TO_BYTE(func_SHR(func_AND<CIEC_WORD>(st_lv_IN, st_global_WORD_QUARTER_00), st_global_SHIFT_QUARTER_00));
-  #line 20 "SPLIT_WORD_INTO_QUARTERS.fct"
-  st_lv_QUARTER_BYTE_01 = func_WORD_TO_BYTE(func_SHR(func_AND<CIEC_WORD>(st_lv_IN, st_global_WORD_QUARTER_01), st_global_SHIFT_QUARTER_01));
-  #line 21 "SPLIT_WORD_INTO_QUARTERS.fct"
-  st_lv_QUARTER_BYTE_02 = func_WORD_TO_BYTE(func_SHR(func_AND<CIEC_WORD>(st_lv_IN, st_global_WORD_QUARTER_02), st_global_SHIFT_QUARTER_02));
-  #line 22 "SPLIT_WORD_INTO_QUARTERS.fct"
-  st_lv_QUARTER_BYTE_03 = func_WORD_TO_BYTE(func_SHR(func_AND<CIEC_WORD>(st_lv_IN, st_global_WORD_QUARTER_03), st_global_SHIFT_QUARTER_03));
-  #line 23 "SPLIT_WORD_INTO_QUARTERS.fct"
-  st_lv_QUARTER_BYTE_04 = func_WORD_TO_BYTE(func_SHR(func_AND<CIEC_WORD>(st_lv_IN, st_global_WORD_QUARTER_04), st_global_SHIFT_QUARTER_04));
-  #line 24 "SPLIT_WORD_INTO_QUARTERS.fct"
-  st_lv_QUARTER_BYTE_05 = func_WORD_TO_BYTE(func_SHR(func_AND<CIEC_WORD>(st_lv_IN, st_global_WORD_QUARTER_05), st_global_SHIFT_QUARTER_05));
-  #line 25 "SPLIT_WORD_INTO_QUARTERS.fct"
-  st_lv_QUARTER_BYTE_06 = func_WORD_TO_BYTE(func_SHR(func_AND<CIEC_WORD>(st_lv_IN, st_global_WORD_QUARTER_06), st_global_SHIFT_QUARTER_06));
-  #line 26 "SPLIT_WORD_INTO_QUARTERS.fct"
-  st_lv_QUARTER_BYTE_07 = func_WORD_TO_BYTE(func_SHR(func_AND<CIEC_WORD>(st_lv_IN, st_global_WORD_QUARTER_07), st_global_SHIFT_QUARTER_07));
-
+#line 19 "SPLIT_WORD_INTO_QUARTERS.fct"
+  st_lv_QUARTER_BYTE_00 =
+      func_WORD_TO_BYTE(func_SHR(func_AND<CIEC_WORD>(st_lv_IN, st_global_WORD_QUARTER_00), st_global_SHIFT_QUARTER_00));
+#line 20 "SPLIT_WORD_INTO_QUARTERS.fct"
+  st_lv_QUARTER_BYTE_01 =
+      func_WORD_TO_BYTE(func_SHR(func_AND<CIEC_WORD>(st_lv_IN, st_global_WORD_QUARTER_01), st_global_SHIFT_QUARTER_01));
+#line 21 "SPLIT_WORD_INTO_QUARTERS.fct"
+  st_lv_QUARTER_BYTE_02 =
+      func_WORD_TO_BYTE(func_SHR(func_AND<CIEC_WORD>(st_lv_IN, st_global_WORD_QUARTER_02), st_global_SHIFT_QUARTER_02));
+#line 22 "SPLIT_WORD_INTO_QUARTERS.fct"
+  st_lv_QUARTER_BYTE_03 =
+      func_WORD_TO_BYTE(func_SHR(func_AND<CIEC_WORD>(st_lv_IN, st_global_WORD_QUARTER_03), st_global_SHIFT_QUARTER_03));
+#line 23 "SPLIT_WORD_INTO_QUARTERS.fct"
+  st_lv_QUARTER_BYTE_04 =
+      func_WORD_TO_BYTE(func_SHR(func_AND<CIEC_WORD>(st_lv_IN, st_global_WORD_QUARTER_04), st_global_SHIFT_QUARTER_04));
+#line 24 "SPLIT_WORD_INTO_QUARTERS.fct"
+  st_lv_QUARTER_BYTE_05 =
+      func_WORD_TO_BYTE(func_SHR(func_AND<CIEC_WORD>(st_lv_IN, st_global_WORD_QUARTER_05), st_global_SHIFT_QUARTER_05));
+#line 25 "SPLIT_WORD_INTO_QUARTERS.fct"
+  st_lv_QUARTER_BYTE_06 =
+      func_WORD_TO_BYTE(func_SHR(func_AND<CIEC_WORD>(st_lv_IN, st_global_WORD_QUARTER_06), st_global_SHIFT_QUARTER_06));
+#line 26 "SPLIT_WORD_INTO_QUARTERS.fct"
+  st_lv_QUARTER_BYTE_07 =
+      func_WORD_TO_BYTE(func_SHR(func_AND<CIEC_WORD>(st_lv_IN, st_global_WORD_QUARTER_07), st_global_SHIFT_QUARTER_07));
 }
-

@@ -18,14 +18,13 @@
 #include <forte_config.h>
 #include "comlayer.h"
 
-
 namespace forte {
 
   namespace com_infra {
 
-    class CIPComLayer : public CComLayer{
+    class CIPComLayer : public CComLayer {
       public:
-        CIPComLayer(CComLayer* paUpperLayer, CBaseCommFB* paComFB);
+        CIPComLayer(CComLayer *paUpperLayer, CBaseCommFB *paComFB);
         ~CIPComLayer() override;
 
         EComResponse sendData(void *paData, unsigned int paSize) override; // top interface, called from top
@@ -45,14 +44,15 @@ namespace forte {
         void handledConnectedDataRecv();
         void handleConnectionAttemptInConnected() const;
 
-        CIPComSocketHandler::TSocketDescriptor mListeningID; //!> to be used by server type connections. there the mSocketID will be used for the accepted connection.
+        CIPComSocketHandler::TSocketDescriptor mListeningID; //!> to be used by server type connections. there the
+                                                             //!mSocketID will be used for the accepted connection.
         EComResponse mInterruptResp;
         char mRecvBuffer[cgIPLayerRecvBufferSize];
         unsigned int mBufFillSize;
     };
 
-  }
+  } // namespace com_infra
 
-}
+} // namespace forte
 
 #endif /* IPCOMLAYER_H_ */

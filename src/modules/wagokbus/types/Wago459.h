@@ -16,8 +16,8 @@
 #include "WagoBusAdapter.h"
 #include "WagoSlaveBase.h"
 
-class FORTE_Wago459: public WagoSlaveBase{
-  DECLARE_FIRMWARE_FB(FORTE_Wago459)
+class FORTE_Wago459 : public WagoSlaveBase {
+    DECLARE_FIRMWARE_FB(FORTE_Wago459)
 
   public:
     FORTE_Wago459(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
@@ -47,18 +47,24 @@ class FORTE_Wago459: public WagoSlaveBase{
     CIEC_ANY *getDI(size_t) override;
     CIEC_ANY *getDO(size_t) override;
     FORTE_WagoBusAdapter &var_BusAdapterIn() {
-      return *static_cast<FORTE_WagoBusAdapter*>(mAdapters[0]);
+      return *static_cast<FORTE_WagoBusAdapter *>(mAdapters[0]);
     };
 
     FORTE_WagoBusAdapter &var_BusAdapterOut() {
-      return *static_cast<FORTE_WagoBusAdapter*>(mAdapters[1]);
+      return *static_cast<FORTE_WagoBusAdapter *>(mAdapters[1]);
     };
 
     CEventConnection *getEOConUnchecked(TPortId) override;
     CDataConnection **getDIConUnchecked(TPortId) override;
     CDataConnection *getDOConUnchecked(TPortId) override;
 
-    void evt_MAP(const CIEC_BOOL &paQI, const CIEC_STRING &paAnalogInput_1, const CIEC_STRING &paAnalogInput_2, const CIEC_STRING &paAnalogInput_3, const CIEC_STRING &paAnalogInput_4, CIEC_BOOL &paQO, CIEC_WSTRING &paSTATUS) {
+    void evt_MAP(const CIEC_BOOL &paQI,
+                 const CIEC_STRING &paAnalogInput_1,
+                 const CIEC_STRING &paAnalogInput_2,
+                 const CIEC_STRING &paAnalogInput_3,
+                 const CIEC_STRING &paAnalogInput_4,
+                 CIEC_BOOL &paQO,
+                 CIEC_WSTRING &paSTATUS) {
       var_QI = paQI;
       var_AnalogInput_1 = paAnalogInput_1;
       var_AnalogInput_2 = paAnalogInput_2;
@@ -69,12 +75,17 @@ class FORTE_Wago459: public WagoSlaveBase{
       paSTATUS = var_STATUS;
     }
 
-    void operator()(const CIEC_BOOL &paQI, const CIEC_STRING &paAnalogInput_1, const CIEC_STRING &paAnalogInput_2, const CIEC_STRING &paAnalogInput_3, const CIEC_STRING &paAnalogInput_4, CIEC_BOOL &paQO, CIEC_WSTRING &paSTATUS) {
+    void operator()(const CIEC_BOOL &paQI,
+                    const CIEC_STRING &paAnalogInput_1,
+                    const CIEC_STRING &paAnalogInput_2,
+                    const CIEC_STRING &paAnalogInput_3,
+                    const CIEC_STRING &paAnalogInput_4,
+                    CIEC_BOOL &paQO,
+                    CIEC_WSTRING &paSTATUS) {
       evt_MAP(paQI, paAnalogInput_1, paAnalogInput_2, paAnalogInput_3, paAnalogInput_4, paQO, paSTATUS);
     }
 
   protected:
-
     INIT_HANDLES(0, 0, 4, 0)
 
   private:

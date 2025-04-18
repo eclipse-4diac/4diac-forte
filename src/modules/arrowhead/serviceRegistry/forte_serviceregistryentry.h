@@ -21,7 +21,7 @@
 #include "forte_bool.h"
 
 class CIEC_ServiceRegistryEntry : public CIEC_STRUCT {
-  DECLARE_FIRMWARE_DATATYPE(ServiceRegistryEntry)
+    DECLARE_FIRMWARE_DATATYPE(ServiceRegistryEntry)
 
   public:
     CIEC_ServiceRegistryEntry();
@@ -29,30 +29,30 @@ class CIEC_ServiceRegistryEntry : public CIEC_STRUCT {
     ~CIEC_ServiceRegistryEntry() override = default;
 
     CIEC_ArrowheadService &providedService() {
-      return *static_cast<CIEC_ArrowheadService*>(&getMembers()[0]);
+      return *static_cast<CIEC_ArrowheadService *>(&getMembers()[0]);
     }
 
     CIEC_ArrowheadSystem &provider() {
-      return *static_cast<CIEC_ArrowheadSystem*>(&getMembers()[1]);
+      return *static_cast<CIEC_ArrowheadSystem *>(&getMembers()[1]);
     }
 
     CIEC_WSTRING &serviceURI() {
-      return *static_cast<CIEC_WSTRING*>(&getMembers()[2]);
+      return *static_cast<CIEC_WSTRING *>(&getMembers()[2]);
     }
 
     CIEC_DINT &version() {
-      return *static_cast<CIEC_DINT*>(&getMembers()[3]);
+      return *static_cast<CIEC_DINT *>(&getMembers()[3]);
     }
 
     CIEC_BOOL &udp() {
-      return *static_cast<CIEC_BOOL*>(&getMembers()[4]);
+      return *static_cast<CIEC_BOOL *>(&getMembers()[4]);
     }
     CIEC_DINT &ttl() {
-      return *static_cast<CIEC_DINT*>(&getMembers()[5]);
+      return *static_cast<CIEC_DINT *>(&getMembers()[5]);
     }
 
     CIEC_WSTRING &metadata() {
-      return *static_cast<CIEC_WSTRING*>(&getMembers()[6]);
+      return *static_cast<CIEC_WSTRING *>(&getMembers()[6]);
     }
 
   private:

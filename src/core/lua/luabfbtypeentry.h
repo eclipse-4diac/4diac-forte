@@ -19,34 +19,39 @@
 
 class CLuaEngine;
 
-class CLuaBFBTypeEntry: public CTypeLib::CFBTypeEntry {
-private:
+class CLuaBFBTypeEntry : public CTypeLib::CFBTypeEntry {
+  private:
+    const std::string cmLuaScriptAsString;
+    SFBInterfaceSpec m_interfaceSpec;
+    SInternalVarsInformation m_internalVarsInformation;
 
-  const std::string cmLuaScriptAsString;
-  SFBInterfaceSpec m_interfaceSpec;
-  SInternalVarsInformation m_internalVarsInformation;
+    CLuaBFBTypeEntry(CStringDictionary::TStringId typeNameId,
+                     const std::string &paLuaScriptAsString,
+                     SFBInterfaceSpec &interfaceSpec,
+                     SInternalVarsInformation &internalVarsInformation);
 
-  CLuaBFBTypeEntry(CStringDictionary::TStringId typeNameId, const std::string& paLuaScriptAsString, SFBInterfaceSpec& interfaceSpec,
-      SInternalVarsInformation& internalVarsInformation);
+    ~CLuaBFBTypeEntry() override;
 
-  ~CLuaBFBTypeEntry() override;
+    static bool initInterfaceSpec(SFBInterfaceSpec &interfaceSpec, CLuaEngine *luaEngine, int index);
+    static void deleteInterfaceSpec(SFBInterfaceSpec &interfaceSpec);
+    static bool
+    initInternalVarsInformation(SInternalVarsInformation &internalVarsInformation, CLuaEngine *luaEngine, int index);
+    static void deleteInternalVarsInformation(SInternalVarsInformation &internalVarsInformation);
 
-  static bool initInterfaceSpec(SFBInterfaceSpec& interfaceSpec, CLuaEngine* luaEngine, int index);
-  static void deleteInterfaceSpec(SFBInterfaceSpec& interfaceSpec);
-  static bool initInternalVarsInformation(SInternalVarsInformation& internalVarsInformation, CLuaEngine* luaEngine, int index);
-  static void deleteInternalVarsInformation(SInternalVarsInformation& internalVarsInformation);
-public:
-  static CLuaBFBTypeEntry* createLuaFBTypeEntry(CStringDictionary::TStringId typeNameId, const std::string& paLuaScriptAsString);
+  public:
+    static CLuaBFBTypeEntry *createLuaFBTypeEntry(CStringDictionary::TStringId typeNameId,
+                                                  const std::string &paLuaScriptAsString);
 
-  CFunctionBlock* createFBInstance(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) override;
+    CFunctionBlock *createFBInstance(CStringDictionary::TStringId paInstanceNameId,
+                                     forte::core::CFBContainer &paContainer) override;
 
-  const SFBInterfaceSpec& getInterfaceSpec() const {
-    return m_interfaceSpec;
-  }
+    const SFBInterfaceSpec &getInterfaceSpec() const {
+      return m_interfaceSpec;
+    }
 
-  const SInternalVarsInformation* getInternalVarsInformation() const {
-    return &m_internalVarsInformation;
-  }
+    const SInternalVarsInformation *getInternalVarsInformation() const {
+      return &m_internalVarsInformation;
+    }
 };
 
 #endif /* SRC_CORE_LUABFBTYPEENTRY_H_ */

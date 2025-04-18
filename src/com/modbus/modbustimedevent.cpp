@@ -12,11 +12,10 @@
 #include "modbustimedevent.h"
 #include "../../core/iec61131_functions.h"
 
-CModbusTimedEvent::CModbusTimedEvent(TForteUInt32 paUpdateInterval) :
-    mIsStarted(false) {
+CModbusTimedEvent::CModbusTimedEvent(TForteUInt32 paUpdateInterval) : mIsStarted(false) {
   mUpdateInterval = paUpdateInterval;
 
-  if(paUpdateInterval == 0) {
+  if (paUpdateInterval == 0) {
     mSingleShotEvent = true;
 
     activate();
@@ -39,12 +38,12 @@ void CModbusTimedEvent::deactivate() {
 
 bool CModbusTimedEvent::readyToExecute() const {
   uint_fast64_t currentTime = func_NOW_MONOTONIC().getInMilliSeconds();
-  if(mUpdateInterval > currentTime) {
+  if (mUpdateInterval > currentTime) {
     return false;
   }
   currentTime -= mUpdateInterval;
 
-  if(isStarted() && (currentTime > mStartTime || currentTime == mStartTime)) {
+  if (isStarted() && (currentTime > mStartTime || currentTime == mStartTime)) {
     return true;
   }
 

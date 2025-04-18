@@ -27,57 +27,58 @@ namespace forte {
   namespace com_infra {
 
     class CCommFB : public CBaseCommFB {
-    public:
-      ~CCommFB() override;
+      public:
+        ~CCommFB() override;
 
-      EMGMResponse changeExecutionState(EMGMCommandType paCommand) override;
+        EMGMResponse changeExecutionState(EMGMCommandType paCommand) override;
 
-    protected:
-      CCommFB(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer, forte::com_infra::EComServiceType paCommServiceType);
+      protected:
+        CCommFB(const CStringDictionary::TStringId paInstanceNameId,
+                forte::core::CFBContainer &paContainer,
+                forte::com_infra::EComServiceType paCommServiceType);
 
-      void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
+        void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
-      void readInputData(TEventID paEI) override;
-      void writeOutputData(TEventID paEO) override;
+        void readInputData(TEventID paEI) override;
+        void writeOutputData(TEventID paEO) override;
 
-      static const TEventID scmEventINITID = 0;
-      static const TEventID scmEventINITOID = 0;
-      static const TEventID scmSendNotificationEventID = 1;
-      static const TEventID scmReceiveNotificationEventID = 1;
+        static const TEventID scmEventINITID = 0;
+        static const TEventID scmEventINITOID = 0;
+        static const TEventID scmSendNotificationEventID = 1;
+        static const TEventID scmReceiveNotificationEventID = 1;
 
-      static const char * const scmDefaultIDPrefix;
-      static const char * const scmDefaultIDSuffix;
+        static const char *const scmDefaultIDPrefix;
+        static const char *const scmDefaultIDSuffix;
 
-      static char *extractLayerIdAndParams(char **paRemainingID, char **paLayerParams);
+        static char *extractLayerIdAndParams(char **paRemainingID, char **paLayerParams);
 
-      char *getDefaultIDString(const char *paID) override;
+        char *getDefaultIDString(const char *paID) override;
 
-      EComResponse receiveData() override;
-      EComResponse sendData() override;
+        EComResponse receiveData() override;
+        EComResponse sendData() override;
 
-    private:
-      static const CStringDictionary::TStringId scmRequesterEventInputNameIds[];
-      static const CStringDictionary::TStringId scmRequesterEventOutputNameIds[];
+      private:
+        static const CStringDictionary::TStringId scmRequesterEventInputNameIds[];
+        static const CStringDictionary::TStringId scmRequesterEventOutputNameIds[];
 
-      static const CStringDictionary::TStringId scmResponderEventInputNameIds[];
-      static const CStringDictionary::TStringId scmResponderEventOutputNameIds[];
+        static const CStringDictionary::TStringId scmResponderEventInputNameIds[];
+        static const CStringDictionary::TStringId scmResponderEventOutputNameIds[];
 
-      static const CStringDictionary::TStringId scmEventInputTypeIds[];
-      static const CStringDictionary::TStringId scmEventOutputTypeIds[];
+        static const CStringDictionary::TStringId scmEventInputTypeIds[];
+        static const CStringDictionary::TStringId scmEventOutputTypeIds[];
 
-      std::unique_ptr<CStringDictionary::TStringId[]> mDiDataTypeNames;
-      std::unique_ptr<CStringDictionary::TStringId[]> mDiNames;
-      std::unique_ptr<CStringDictionary::TStringId[]> mDoDataTypeNames;
-      std::unique_ptr<CStringDictionary::TStringId[]> mDoNames;
-    
-      bool createInterfaceSpec(const char* paConfigString, SFBInterfaceSpec& paInterfaceSpec) override;
+        std::unique_ptr<CStringDictionary::TStringId[]> mDiDataTypeNames;
+        std::unique_ptr<CStringDictionary::TStringId[]> mDiNames;
+        std::unique_ptr<CStringDictionary::TStringId[]> mDoDataTypeNames;
+        std::unique_ptr<CStringDictionary::TStringId[]> mDoNames;
 
-      void configureDIs(const char* paDIConfigString, SFBInterfaceSpec& paInterfaceSpec);
-      void configureDOs(const char* paDOConfigString, SFBInterfaceSpec& paInterfaceSpec);
+        bool createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) override;
 
+        void configureDIs(const char *paDIConfigString, SFBInterfaceSpec &paInterfaceSpec);
+        void configureDOs(const char *paDOConfigString, SFBInterfaceSpec &paInterfaceSpec);
     };
 
-  }
-}
+  } // namespace com_infra
+} // namespace forte
 
 #endif //_COMMFB_H_

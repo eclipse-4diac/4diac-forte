@@ -26,20 +26,18 @@
  */
 
 class CIEC_LDATE final : public CIEC_ANY_DATE {
-  DECLARE_FIRMWARE_DATATYPE(LDATE)
+    DECLARE_FIRMWARE_DATATYPE(LDATE)
   public:
     [[deprecated("Please use the corresponding numeric_limits template")]]
     constexpr static size_t scmBitLength = 64U;
 
     CIEC_LDATE() = default;
 
-    CIEC_LDATE(const CIEC_LDATE& paValue) :
-        CIEC_ANY_DATE() {
+    CIEC_LDATE(const CIEC_LDATE &paValue) : CIEC_ANY_DATE() {
       setValueSimple(paValue);
     }
 
-    CIEC_LDATE(const CIEC_DATE& paValue) :
-        CIEC_ANY_DATE() {
+    CIEC_LDATE(const CIEC_DATE &paValue) : CIEC_ANY_DATE() {
       setValue(paValue);
     }
 
@@ -49,13 +47,13 @@ class CIEC_LDATE final : public CIEC_ANY_DATE {
 
     ~CIEC_LDATE() override = default;
 
-    CIEC_LDATE& operator =(const CIEC_LDATE &paValue) {
+    CIEC_LDATE &operator=(const CIEC_LDATE &paValue) {
       // Simple value assignment - no self assignment check needed
       setValueSimple(paValue);
       return *this;
     }
 
-    CIEC_LDATE& operator =(const CIEC_DATE &paValue) {
+    CIEC_LDATE &operator=(const CIEC_DATE &paValue) {
       setValue(paValue);
       return *this;
     }
@@ -99,26 +97,26 @@ class CIEC_LDATE final : public CIEC_ANY_DATE {
      *   \return number of bytes used in the buffer without trailing 0x00
      *           -1 on error
      */
-    int toString(char* paValue, size_t paBufferSize) const override;
+    int toString(char *paValue, size_t paBufferSize) const override;
 };
 
-inline CIEC_LDATE operator ""_LDATE(unsigned long long int paValue) {
+inline CIEC_LDATE operator""_LDATE(unsigned long long int paValue) {
   return CIEC_LDATE(static_cast<CIEC_LDATE::TValueType>(paValue));
 }
 
 namespace std {
-  template <>
+  template<>
   struct numeric_limits<CIEC_LDATE> : public forte::templates::numeric_limits<CIEC_LDATE> {
-    static constexpr size_t bitLength = 64U;
+      static constexpr size_t bitLength = 64U;
   };
-}
+} // namespace std
 
 namespace forte {
-  template <>
+  template<>
   struct CDataTypeTrait<CIEC_LDATE> {
       static constexpr CIEC_ANY::EDataTypeID scmDataTypeId = CIEC_ANY::e_LDATE;
       static const CStringDictionary::TStringId scmDataTypeName;
   };
-}
+} // namespace forte
 
 #endif /*_FORTE_LDATE_H_*/

@@ -25,19 +25,21 @@
 #include <unistd.h>
 #include <errno.h>
 
-class CMLPIFaceProcessInterface : public CProcessInterfaceBase{
+class CMLPIFaceProcessInterface : public CProcessInterfaceBase {
   public:
-    CMLPIFaceProcessInterface(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec& paInterfaceSpec,
-        const CStringDictionary::TStringId paInstanceNameId);
+    CMLPIFaceProcessInterface(forte::core::CFBContainer &paContainer,
+                              const SFBInterfaceSpec &paInterfaceSpec,
+                              const CStringDictionary::TStringId paInstanceNameId);
 
     ~CMLPIFaceProcessInterface() override;
 
-    class CIOHandler : public CExternalEventHandler, public CThread{
-      DECLARE_HANDLER(CIOHandler)
+    class CIOHandler : public CExternalEventHandler, public CThread {
+        DECLARE_HANDLER(CIOHandler)
       private:
         typedef CSinglyLinkedList<CMLPIFaceProcessInterface *> TReadFBContainer;
         TReadFBContainer mReadFBList;
         CSyncObject mReadFBListSync;
+
       public:
         void run() override;
         void updateReadData();
@@ -58,23 +60,21 @@ class CMLPIFaceProcessInterface : public CProcessInterfaceBase{
     bool checkInputData();
 
   private:
-
     bool connectToMLPI();
     void disconnectFromMLPI();
 
-    WCHAR16* mVariableName;
+    WCHAR16 *mVariableName;
 
-    static const char * const scmOK;
-    static const char * const scmCallToApiFailed;
-    static const char * const scmAPINotInitialised;
-    static const char * const scmFBNotInitialised;
+    static const char *const scmOK;
+    static const char *const scmCallToApiFailed;
+    static const char *const scmAPINotInitialised;
+    static const char *const scmFBNotInitialised;
     static MLPIHANDLE smConnection;
 
     static const unsigned int mMaxNumberOfTriesToReconnect = 10;
-
 };
 
-//tell the IX and QX FB that this is the process interface to be used
+// tell the IX and QX FB that this is the process interface to be used
 typedef CMLPIFaceProcessInterface CProcessInterface;
 
 #endif /* PROCESSINTERFACE_H_ */

@@ -25,7 +25,6 @@ USE_STRING_ID(startDate);
 USE_STRING_ID(TIMESTAMP_NS);
 USE_STRING_ID(ULINT);
 
-
 #include "forte_any_duration_variant.h"
 #include "forte_date_and_time.h"
 #include "forte_ulint.h"
@@ -50,16 +49,29 @@ const TDataIOID FORTE_TIMESTAMP_NS::scmEOWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_TIMESTAMP_NS::scmEOWithIndexes[] = {0};
 const CStringDictionary::TStringId FORTE_TIMESTAMP_NS::scmEventOutputNames[] = {STRID(CNF)};
 const CStringDictionary::TStringId FORTE_TIMESTAMP_NS::scmEventOutputTypeIds[] = {STRID(Event)};
-const SFBInterfaceSpec FORTE_TIMESTAMP_NS::scmFBInterfaceSpec = {
-  1, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,
-  1, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes,
-  1, scmDataInputNames, scmDataInputTypeIds,
-  1, scmDataOutputNames, scmDataOutputTypeIds,
-  0, nullptr,
-  0, nullptr
-};
+const SFBInterfaceSpec FORTE_TIMESTAMP_NS::scmFBInterfaceSpec = {1,
+                                                                 scmEventInputNames,
+                                                                 scmEventInputTypeIds,
+                                                                 scmEIWith,
+                                                                 scmEIWithIndexes,
+                                                                 1,
+                                                                 scmEventOutputNames,
+                                                                 scmEventOutputTypeIds,
+                                                                 scmEOWith,
+                                                                 scmEOWithIndexes,
+                                                                 1,
+                                                                 scmDataInputNames,
+                                                                 scmDataInputTypeIds,
+                                                                 1,
+                                                                 scmDataOutputNames,
+                                                                 scmDataOutputTypeIds,
+                                                                 0,
+                                                                 nullptr,
+                                                                 0,
+                                                                 nullptr};
 
-FORTE_TIMESTAMP_NS::FORTE_TIMESTAMP_NS(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_TIMESTAMP_NS::FORTE_TIMESTAMP_NS(const CStringDictionary::TStringId paInstanceNameId,
+                                       forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId),
     var_startDate(0_DATE_AND_TIME),
     conn_CNF(*this, 0),
@@ -73,57 +85,55 @@ void FORTE_TIMESTAMP_NS::setInitialValues() {
 }
 
 void FORTE_TIMESTAMP_NS::readInputData(const TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventREQID: {
       readData(0, var_startDate, conn_startDate);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 void FORTE_TIMESTAMP_NS::writeOutputData(const TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventCNFID: {
       writeData(0, var_, conn_);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 CIEC_ANY *FORTE_TIMESTAMP_NS::getDI(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_startDate;
   }
   return nullptr;
 }
 
 CIEC_ANY *FORTE_TIMESTAMP_NS::getDO(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_;
   }
   return nullptr;
 }
 
 CEventConnection *FORTE_TIMESTAMP_NS::getEOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_CNF;
   }
   return nullptr;
 }
 
 CDataConnection **FORTE_TIMESTAMP_NS::getDIConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_startDate;
   }
   return nullptr;
 }
 
 CDataConnection *FORTE_TIMESTAMP_NS::getDOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_;
   }
   return nullptr;
@@ -137,7 +147,7 @@ void FORTE_TIMESTAMP_NS::executeEvent(const TEventID, CEventChainExecutionThread
 CIEC_ULINT func_TIMESTAMP_NS(CIEC_DATE_AND_TIME st_lv_startDate) {
   CIEC_ULINT st_ret_val = 0_ULINT;
 
-  #line 5 "TIMESTAMP_NS.fct"
+#line 5 "TIMESTAMP_NS.fct"
   st_ret_val = func_TIME_IN_NS_TO_ULINT(func_SUB<CIEC_TIME>(func_NOW(), st_lv_startDate));
 
   return st_ret_val;

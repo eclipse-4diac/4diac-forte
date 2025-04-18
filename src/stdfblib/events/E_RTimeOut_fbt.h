@@ -22,9 +22,8 @@
 #include "ARTimeOut_adp.h"
 #include "E_RDELAY_fbt.h"
 
-
 class FORTE_E_RTimeOut final : public CCompositeFB {
-  DECLARE_FIRMWARE_FB(FORTE_E_RTimeOut)
+    DECLARE_FIRMWARE_FB(FORTE_E_RTimeOut)
 
   private:
     static const int scmTimeOutSocketAdpNum = 0;
@@ -57,6 +56,3 @@ class FORTE_E_RTimeOut final : public CCompositeFB {
     CDataConnection **getDIConUnchecked(TPortId) override;
     CDataConnection *getDOConUnchecked(TPortId) override;
 };
-
-
-

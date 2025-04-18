@@ -10,7 +10,7 @@
  * Contributors:
  *    Alois Zoitl
  *      - initial implementation and rework communication infrastructure
-  *******************************************************************************/
+ *******************************************************************************/
 #ifndef _EXTEVHAN_H_
 #define _EXTEVHAN_H_
 
@@ -18,15 +18,17 @@
 class CEventSourceFB;
 class CFunctionBlock;
 
-#define DECLARE_HANDLER(TypeName)                          \
-  public:                                                  \
-    static const size_t mHandlerIdentifier;                \
-    size_t getIdentifier() const override;                 \
-    explicit TypeName(CDeviceExecution& paDeviceExecution);\
-    ~TypeName();
+#define DECLARE_HANDLER(TypeName)                                                                                      \
+public:                                                                                                                \
+  static const size_t mHandlerIdentifier;                                                                              \
+  size_t getIdentifier() const override;                                                                               \
+  explicit TypeName(CDeviceExecution &paDeviceExecution);                                                              \
+  ~TypeName();
 
-#define DEFINE_HANDLER(TypeName)                            \
-    size_t TypeName::getIdentifier() const { return TypeName::mHandlerIdentifier;}
+#define DEFINE_HANDLER(TypeName)                                                                                       \
+  size_t TypeName::getIdentifier() const {                                                                             \
+    return TypeName::mHandlerIdentifier;                                                                               \
+  }
 
 /**  \defgroup FORTE_HAL FORTE Hardware Abstraction Layer - FORTE-HAL
  * \brief The FORTE-HAL is the abstraction of HW dependent features important
@@ -39,16 +41,16 @@ class CFunctionBlock;
 /*@{*/
 
 /*! \brief Baseclass for handling incoming interrupts and similar external events.
- * 
+ *
  * Implementations of such classes should provide the following functions for ES-FBs:
- *   - registerFB(CFunctionBlock *paESFB, ...) allows the ES-FB to register to this ExternalEventHandler for recieving external 
- *      events (e.g. INIT+). the specific parameters depend on the ExternalEventHandler.
+ *   - registerFB(CFunctionBlock *paESFB, ...) allows the ES-FB to register to this ExternalEventHandler for recieving
+ * external events (e.g. INIT+). the specific parameters depend on the ExternalEventHandler.
  *   - unregisterFB(CFunctionBlock *paESFB) the ES-FB doesn't want to receive any external events any more (e.g. INIT-).
  */
 
-class CExternalEventHandler{
+class CExternalEventHandler {
   public:
-    explicit CExternalEventHandler(CDeviceExecution& paDeviceExecution);
+    explicit CExternalEventHandler(CDeviceExecution &paDeviceExecution);
 
     virtual ~CExternalEventHandler() = default;
     /*!\brief Enables this event source
@@ -72,7 +74,6 @@ class CExternalEventHandler{
     virtual size_t getIdentifier() const = 0;
 
   protected:
-
     /*! \brief Check if the external event handler is allowed to start event chains
      *
      */
@@ -80,21 +81,21 @@ class CExternalEventHandler{
 
     /*!\brief register event source at device execution for starting a new event chain
      *
-     * this function checks if the external event handler is allowed to start new event chains and if yes performs the necessary actions.
+     * this function checks if the external event handler is allowed to start new event chains and if yes performs the
+     * necessary actions.
      *
      * @param paECStartFB the event source function block which starts the new event chain
      */
     void startNewEventChain(CEventSourceFB *paECStartFB);
 
     template<typename T>
-    T& getExtEvHandler(){
+    T &getExtEvHandler() {
       return mDeviceExecution.getExtEvHandler<T>();
     }
 
-    CDeviceExecution& mDeviceExecution;
+    CDeviceExecution &mDeviceExecution;
 
   private:
-
 };
 
 /*@}*/

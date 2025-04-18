@@ -22,7 +22,6 @@ USE_STRING_ID(REQ);
 USE_STRING_ID(Sep);
 USE_STRING_ID(STRING);
 
-
 #include "criticalregion.h"
 #include "resource.h"
 
@@ -40,22 +39,34 @@ const TDataIOID FORTE_GetInstancePath::scmEOWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_GetInstancePath::scmEOWithIndexes[] = {0};
 const CStringDictionary::TStringId FORTE_GetInstancePath::scmEventOutputNames[] = {STRID(CNF)};
 const CStringDictionary::TStringId FORTE_GetInstancePath::scmEventOutputTypeIds[] = {STRID(Event)};
-const SFBInterfaceSpec FORTE_GetInstancePath::scmFBInterfaceSpec = {
-  1, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,
-  1, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes,
-  1, scmDataInputNames, scmDataInputTypeIds,
-  1, scmDataOutputNames, scmDataOutputTypeIds,
-  0, nullptr,
-  0, nullptr
-};
+const SFBInterfaceSpec FORTE_GetInstancePath::scmFBInterfaceSpec = {1,
+                                                                    scmEventInputNames,
+                                                                    scmEventInputTypeIds,
+                                                                    scmEIWith,
+                                                                    scmEIWithIndexes,
+                                                                    1,
+                                                                    scmEventOutputNames,
+                                                                    scmEventOutputTypeIds,
+                                                                    scmEOWith,
+                                                                    scmEOWithIndexes,
+                                                                    1,
+                                                                    scmDataInputNames,
+                                                                    scmDataInputTypeIds,
+                                                                    1,
+                                                                    scmDataOutputNames,
+                                                                    scmDataOutputTypeIds,
+                                                                    0,
+                                                                    nullptr,
+                                                                    0,
+                                                                    nullptr};
 
-FORTE_GetInstancePath::FORTE_GetInstancePath(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_GetInstancePath::FORTE_GetInstancePath(const CStringDictionary::TStringId paInstanceNameId,
+                                             forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId),
     var_Sep(0x2f_CHAR),
     conn_CNF(*this, 0),
     conn_Sep(nullptr),
-    conn_Path(*this, 0, var_Path) {
-};
+    conn_Path(*this, 0, var_Path) {};
 
 void FORTE_GetInstancePath::setInitialValues() {
   var_Sep = 0x2f_CHAR;
@@ -63,66 +74,63 @@ void FORTE_GetInstancePath::setInitialValues() {
 }
 
 void FORTE_GetInstancePath::executeEvent(const TEventID paEIID, CEventChainExecutionThread *const paECET) {
-  if(paEIID == scmEventREQID){
+  if (paEIID == scmEventREQID) {
     var_Path = CIEC_STRING(getFullQualifiedApplicationInstanceName(var_Sep.operator TForteChar()));
     sendOutputEvent(scmEventCNFID, paECET);
   }
 }
 
 void FORTE_GetInstancePath::readInputData(const TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventREQID: {
       readData(0, var_Sep, conn_Sep);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 void FORTE_GetInstancePath::writeOutputData(const TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventCNFID: {
       writeData(0, var_Path, conn_Path);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 CIEC_ANY *FORTE_GetInstancePath::getDI(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_Sep;
   }
   return nullptr;
 }
 
 CIEC_ANY *FORTE_GetInstancePath::getDO(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_Path;
   }
   return nullptr;
 }
 
 CEventConnection *FORTE_GetInstancePath::getEOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_CNF;
   }
   return nullptr;
 }
 
 CDataConnection **FORTE_GetInstancePath::getDIConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_Sep;
   }
   return nullptr;
 }
 
 CDataConnection *FORTE_GetInstancePath::getDOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_Path;
   }
   return nullptr;
 }
-

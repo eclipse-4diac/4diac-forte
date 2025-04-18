@@ -21,7 +21,7 @@
 #include "forte_bool.h"
 
 class CIEC_EventFilter : public CIEC_STRUCT {
-  DECLARE_FIRMWARE_DATATYPE(EventFilter)
+    DECLARE_FIRMWARE_DATATYPE(EventFilter)
 
   public:
     CIEC_EventFilter();
@@ -29,41 +29,43 @@ class CIEC_EventFilter : public CIEC_STRUCT {
     ~CIEC_EventFilter() override = default;
 
     CIEC_WSTRING &eventType() {
-      return *static_cast<CIEC_WSTRING*>(&getMembers()[0]);
+      return *static_cast<CIEC_WSTRING *>(&getMembers()[0]);
     }
 
     CIEC_ArrowheadSystem &consumer() {
-      return *static_cast<CIEC_ArrowheadSystem*>(&getMembers()[1]);
+      return *static_cast<CIEC_ArrowheadSystem *>(&getMembers()[1]);
     }
 
     CIEC_ARRAY<> *sources_array() {
-      return static_cast<CIEC_ARRAY<> *>(&getMembers()[2]); //the first element marks the start of the array
+      return static_cast<CIEC_ARRAY<> *>(&getMembers()[2]); // the first element marks the start of the array
     }
 
     CIEC_ArrowheadSystem *sources() {
-      return static_cast<CIEC_ArrowheadSystem*>((*static_cast<CIEC_ARRAY<> *>(&getMembers()[2]))[0]); //the first element marks the start of the array
+      return static_cast<CIEC_ArrowheadSystem *>(
+          (*static_cast<CIEC_ARRAY<> *>(&getMembers()[2]))[0]); // the first element marks the start of the array
     }
 
     CIEC_DATE_AND_TIME &startDate() {
-      return *static_cast<CIEC_DATE_AND_TIME*>(&getMembers()[3]);
+      return *static_cast<CIEC_DATE_AND_TIME *>(&getMembers()[3]);
     }
     CIEC_DATE_AND_TIME &endDate() {
-      return *static_cast<CIEC_DATE_AND_TIME*>(&getMembers()[4]);
+      return *static_cast<CIEC_DATE_AND_TIME *>(&getMembers()[4]);
     }
 
     CIEC_ARRAY<> *filterMetadata_array() {
-      return static_cast<CIEC_ARRAY<> *>(&getMembers()[5]); //the first element marks the start of the array
+      return static_cast<CIEC_ARRAY<> *>(&getMembers()[5]); // the first element marks the start of the array
     }
 
     CIEC_WSTRING *filterMetadata() {
-      return static_cast<CIEC_WSTRING*>((*static_cast<CIEC_ARRAY<> *>(&getMembers()[5]))[0]); //the first element marks the start of the array
+      return static_cast<CIEC_WSTRING *>(
+          (*static_cast<CIEC_ARRAY<> *>(&getMembers()[5]))[0]); // the first element marks the start of the array
     }
 
     CIEC_WSTRING &notifyUri() {
-      return *static_cast<CIEC_WSTRING*>(&getMembers()[6]);
+      return *static_cast<CIEC_WSTRING *>(&getMembers()[6]);
     }
     CIEC_BOOL &matchMetadata() {
-      return *static_cast<CIEC_BOOL*>(&getMembers()[7]);
+      return *static_cast<CIEC_BOOL *>(&getMembers()[7]);
     }
 
   private:

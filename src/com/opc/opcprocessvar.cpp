@@ -18,26 +18,31 @@
 #include "../../arch/devlog.h"
 #include <criticalregion.h>
 
-COpcProcessVar::COpcProcessVar(const std::string& paItemGroupName, const std::string& paItemName, EOpcProcessVarFunctions paFunction) :
-  mItemGroupName(paItemGroupName), mItemName(paItemName), mActive(false), mFunction(paFunction){
+COpcProcessVar::COpcProcessVar(const std::string &paItemGroupName,
+                               const std::string &paItemName,
+                               EOpcProcessVarFunctions paFunction) :
+    mItemGroupName(paItemGroupName),
+    mItemName(paItemName),
+    mActive(false),
+    mFunction(paFunction) {
   mCurrentValue.set<SHORT>(0);
 }
 
-void COpcProcessVar::setNewValue(Variant paNewValue){
-  CCriticalRegion criticalRegion(mSync);  
-  try{
+void COpcProcessVar::setNewValue(Variant paNewValue) {
+  CCriticalRegion criticalRegion(mSync);
+  try {
     paNewValue.get<bool>();
-  }catch(...){
+  } catch (...) {
     return;
   }
   mNewValueQueue.push_back(paNewValue);
 }
 
-Variant COpcProcessVar::peekNewValue(){
+Variant COpcProcessVar::peekNewValue() {
   Variant retVal;
-  CCriticalRegion criticalRegion(mSync);  
+  CCriticalRegion criticalRegion(mSync);
   TVariantList::iterator itBegin = mNewValueQueue.begin();
-  if(itBegin != mNewValueQueue.end()){
+  if (itBegin != mNewValueQueue.end()) {
     retVal = (*itBegin);
   } else {
     retVal = mCurrentValue;
@@ -45,11 +50,11 @@ Variant COpcProcessVar::peekNewValue(){
   return retVal;
 }
 
-Variant COpcProcessVar::updateValue(){
+Variant COpcProcessVar::updateValue() {
   Variant retVal;
-  CCriticalRegion criticalRegion(mSync);  
+  CCriticalRegion criticalRegion(mSync);
   TVariantList::iterator itBegin = mNewValueQueue.begin();
-  if(itBegin != mNewValueQueue.end()){
+  if (itBegin != mNewValueQueue.end()) {
     mCurrentValue = retVal = (*itBegin);
     mNewValueQueue.pop_front();
   } else {

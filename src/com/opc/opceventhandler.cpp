@@ -28,36 +28,36 @@ bool COpcEventHandler::mIsSemaphoreEmpty = true;
 
 COpcEventHandler::TCallbackDescriptor COpcEventHandler::mCallbackDescCount = 0;
 
-COpcEventHandler::COpcEventHandler(CDeviceExecution& paDeviceExecution) : CExternalEventHandler(paDeviceExecution)  {
+COpcEventHandler::COpcEventHandler(CDeviceExecution &paDeviceExecution) : CExternalEventHandler(paDeviceExecution) {
 }
 
-COpcEventHandler::~COpcEventHandler(){
-  clearCommandQueue(); //check and delete all commands in queue if not empty
+COpcEventHandler::~COpcEventHandler() {
+  clearCommandQueue(); // check and delete all commands in queue if not empty
 }
 
-void COpcEventHandler::clearCommandQueue(){
-  while(!mCommandQueue.isEmpty()) {
+void COpcEventHandler::clearCommandQueue() {
+  while (!mCommandQueue.isEmpty()) {
     // should never have come in here
-    ICmd* nextCommand = getNextCommand();
-    if(nextCommand != nullptr) {
+    ICmd *nextCommand = getNextCommand();
+    if (nextCommand != nullptr) {
       DEVLOG_ERROR("erase from command queue[%s]\n", nextCommand->getCommandName());
       delete nextCommand;
     }
   }
   mCommandQueue.clearAll();
 
-  for(TCallbackList::iterator itRunner = mComCallbacks.begin(); itRunner != mComCallbacks.end(); ++itRunner){
+  for (TCallbackList::iterator itRunner = mComCallbacks.begin(); itRunner != mComCallbacks.end(); ++itRunner) {
     DEVLOG_ERROR("erase from command callback\n");
     mComCallbacks.erase(itRunner);
   }
-  //clear vector and remove it from memory
+  // clear vector and remove it from memory
   TCallbackList().swap(mComCallbacks);
 }
 
-void COpcEventHandler::executeCommandQueue(){
-  while(!mCommandQueue.isEmpty()) {
-    ICmd* nextCommand = getNextCommand();
-    if(nextCommand != nullptr) {
+void COpcEventHandler::executeCommandQueue() {
+  while (!mCommandQueue.isEmpty()) {
+    ICmd *nextCommand = getNextCommand();
+    if (nextCommand != nullptr) {
       nextCommand->runCommand();
       delete nextCommand;
       nextCommand = nullptr;
@@ -66,15 +66,15 @@ void COpcEventHandler::executeCommandQueue(){
   mCommandQueue.clearAll();
 }
 
-void COpcEventHandler::sendCommand(ICmd *paCmd){
+void COpcEventHandler::sendCommand(ICmd *paCmd) {
   mSync.lock();
   mCommandQueue.pushBack(paCmd);
   mSync.unlock();
   resumeSelfSuspend();
 }
 
-void COpcEventHandler::run(){
-  while(isAlive()){
+void COpcEventHandler::run() {
+  while (isAlive()) {
     executeCommandQueue();
     if (!isAlive()) {
       break;
@@ -84,41 +84,41 @@ void COpcEventHandler::run(){
   executeCommandQueue(); // immediately try to clear the command queue after a stop
 }
 
-COpcEventHandler::TCallbackDescriptor COpcEventHandler::addComCallback(forte::com_infra::CComLayer* paComCallback){
+COpcEventHandler::TCallbackDescriptor COpcEventHandler::addComCallback(forte::com_infra::CComLayer *paComCallback) {
   CCriticalRegion critcalRegion(mSync);
   mCallbackDescCount++;
-  DEVLOG_INFO("COpcEventHandler::addComCallback[%d]\n",mCallbackDescCount);
-  TComContainer stNewNode = { mCallbackDescCount, paComCallback };
+  DEVLOG_INFO("COpcEventHandler::addComCallback[%d]\n", mCallbackDescCount);
+  TComContainer stNewNode = {mCallbackDescCount, paComCallback};
   mComCallbacks.push_back(stNewNode);
 
   return mCallbackDescCount;
 }
 
-void COpcEventHandler::removeComCallback(COpcEventHandler::TCallbackDescriptor paCallbackDesc){
+void COpcEventHandler::removeComCallback(COpcEventHandler::TCallbackDescriptor paCallbackDesc) {
   CCriticalRegion critcalRegion(mSync);
-  for(TCallbackList::iterator itRunner = mComCallbacks.begin(); itRunner != mComCallbacks.end(); ++itRunner){
-    if(itRunner->mCallbackDesc == paCallbackDesc){
+  for (TCallbackList::iterator itRunner = mComCallbacks.begin(); itRunner != mComCallbacks.end(); ++itRunner) {
+    if (itRunner->mCallbackDesc == paCallbackDesc) {
       mComCallbacks.erase(itRunner);
-      break; 
+      break;
     }
   }
-  if(mComCallbacks.empty()){
-    //no content, remove vector from memory
+  if (mComCallbacks.empty()) {
+    // no content, remove vector from memory
     TCallbackList().swap(mComCallbacks);
   }
 }
 
-void COpcEventHandler::executeComCallback(COpcEventHandler::TCallbackDescriptor paCallbackDesc){
+void COpcEventHandler::executeComCallback(COpcEventHandler::TCallbackDescriptor paCallbackDesc) {
   CCriticalRegion critcalRegion(mSync);
-  if(mComCallbacks.empty()){
+  if (mComCallbacks.empty()) {
     return;
   }
-  for(TCallbackList::iterator itCallback = mComCallbacks.begin(); itCallback != mComCallbacks.end(); ++itCallback){
-    if(itCallback->mCallbackDesc == paCallbackDesc){
-      //FIX
+  for (TCallbackList::iterator itCallback = mComCallbacks.begin(); itCallback != mComCallbacks.end(); ++itCallback) {
+    if (itCallback->mCallbackDesc == paCallbackDesc) {
+      // FIX
       TComContainer comCon = (*itCallback);
       mSync.unlock();
-      if(forte::com_infra::e_Nothing != comCon.mCallback->recvData(0,0)){
+      if (forte::com_infra::e_Nothing != comCon.mCallback->recvData(0, 0)) {
         startNewEventChain(comCon.mCallback->getCommFB());
       }
       mSync.lock();
@@ -127,12 +127,12 @@ void COpcEventHandler::executeComCallback(COpcEventHandler::TCallbackDescriptor 
   }
 }
 
-ICmd* COpcEventHandler::getNextCommand(){
-  ICmd* command = nullptr;
+ICmd *COpcEventHandler::getNextCommand() {
+  ICmd *command = nullptr;
 
   CCriticalRegion critcalRegion(mSync);
   TCommandQueue::Iterator itBegin = mCommandQueue.begin();
-  if(itBegin != mCommandQueue.end()){
+  if (itBegin != mCommandQueue.end()) {
     command = (*itBegin);
     mCommandQueue.popFront();
   }
@@ -140,7 +140,7 @@ ICmd* COpcEventHandler::getNextCommand(){
 }
 
 void COpcEventHandler::resumeSelfSuspend() {
-  if (mIsSemaphoreEmpty) { //avoid incrementing many times
+  if (mIsSemaphoreEmpty) { // avoid incrementing many times
     {
       CCriticalRegion critcalRegion(mSync);
       mStateSemaphore.inc();

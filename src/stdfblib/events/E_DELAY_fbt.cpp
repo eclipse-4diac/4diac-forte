@@ -20,27 +20,25 @@ USE_STRING_ID(E_DELAY);
 
 DEFINE_FIRMWARE_FB(FORTE_E_DELAY, STRID(E_DELAY))
 
-FORTE_E_DELAY::FORTE_E_DELAY(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer):
-         CTimedFB( paInstanceNameId, paContainer){
+FORTE_E_DELAY::FORTE_E_DELAY(const CStringDictionary::TStringId paInstanceNameId,
+                             forte::core::CFBContainer &paContainer) :
+    CTimedFB(paInstanceNameId, paContainer) {
 }
 
-void FORTE_E_DELAY::executeEvent(TEventID paEIID, CEventChainExecutionThread * const paECET){
-  switch(paEIID){
+void FORTE_E_DELAY::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
+  switch (paEIID) {
     case cgExternalEventID:
       sendOutputEvent(csmEOID, paECET);
       mActive = false;
       break;
     case csmEventSTARTID:
-      if(!mActive){
-        setEventChainExecutor(paECET); // E_DELAY will execute in the same thread on as from where it has been triggered.
+      if (!mActive) {
+        setEventChainExecutor(
+            paECET); // E_DELAY will execute in the same thread on as from where it has been triggered.
         getTimer().registerOneShotTimedFB(this, var_DT);
         mActive = true;
       }
       break;
-    default:
-      CTimedFB::executeEvent(paEIID, paECET);
-      break;
+    default: CTimedFB::executeEvent(paEIID, paECET); break;
   }
 }
-
-

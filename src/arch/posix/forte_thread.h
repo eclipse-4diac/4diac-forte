@@ -7,8 +7,8 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *  Alois Zoitl, Rene Smodic, Ingo Hegny, Martin Melik Merkiumians - initial API and implementation and/or initial documentation
- *  Alois Zoitl - extracted common functions to new base class CThreadBase
+ *  Alois Zoitl, Rene Smodic, Ingo Hegny, Martin Melik Merkiumians - initial API and implementation and/or initial
+ *documentation Alois Zoitl - extracted common functions to new base class CThreadBase
  *******************************************************************************/
 #ifndef _FORTE_THREAD_H_
 #define _FORTE_THREAD_H_
@@ -17,7 +17,7 @@
 #include <forte_sync.h>
 #include <pthread.h>
 
-/**  \ingroup FORTE-HAL 
+/**  \ingroup FORTE-HAL
  * \defgroup posix_hal PC FORTE Hardware Abstraction Layer
  *
  * \brief The FORTE-HAL implementation for normal PCs
@@ -26,7 +26,7 @@
  */
 
 /*! \ingroup posix_hal
- * \brief The thread implementation for the posix thread interface. 
+ * \brief The thread implementation for the posix thread interface.
  */
 class CPosixThread : public forte::arch::CThreadBase<pthread_t> {
   public:
@@ -58,15 +58,13 @@ class CPosixThread : public forte::arch::CThreadBase<pthread_t> {
      *
      * this function will call the run method of the thread instance.
      */
-    static void * threadFunction(void *paArguments);
+    static void *threadFunction(void *paArguments);
 
   public:
-    CPosixThread(const CPosixThread&) = delete;
-    CPosixThread& operator = (const CPosixThread &) = delete;
+    CPosixThread(const CPosixThread &) = delete;
+    CPosixThread &operator=(const CPosixThread &) = delete;
 };
 
-
-typedef CPosixThread CThread;  //allows that doxygen can generate better documentation
+typedef CPosixThread CThread; // allows that doxygen can generate better documentation
 
 #endif /*FORTE_THREAD_H_*/
-

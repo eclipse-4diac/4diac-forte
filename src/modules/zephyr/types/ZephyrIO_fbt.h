@@ -1,12 +1,12 @@
-/************************************************************************* 
- *** Copyright (c) 2024 KT Elektronik GmbH 
- ***  
- *** This program and the accompanying materials are made  
- *** available under the terms of the Eclipse Public License 2.0  
- *** which is available at https://www.eclipse.org/legal/epl-2.0/  
- ***  
- *** SPDX-License-Identifier: EPL-2.0   
- *** 
+/*************************************************************************
+ *** Copyright (c) 2024 KT Elektronik GmbH
+ ***
+ *** This program and the accompanying materials are made
+ *** available under the terms of the Eclipse Public License 2.0
+ *** which is available at https://www.eclipse.org/legal/epl-2.0/
+ ***
+ *** SPDX-License-Identifier: EPL-2.0
+ ***
  *** FORTE Library Element
  ***
  *** This file was generated using the 4DIAC FORTE Export Filter V1.0.x NG!
@@ -35,7 +35,7 @@
 #pragma region base class spec
 class FORTE_ZephyrIO final : public FORTE_ZephyrIOBase {
 #pragma endregion base class spec
-  DECLARE_FIRMWARE_FB(FORTE_ZephyrIO)
+    DECLARE_FIRMWARE_FB(FORTE_ZephyrIO)
 
   private:
     static const CStringDictionary::TStringId scmDataInputNames[];
@@ -69,7 +69,7 @@ class FORTE_ZephyrIO final : public FORTE_ZephyrIOBase {
     void setConfig() override;
 
   protected:
-    void onStartup(CEventChainExecutionThread * const paECET) override;
+    void onStartup(CEventChainExecutionThread *const paECET) override;
 #pragma endregion define IOs
 
   public:
@@ -107,4 +107,3 @@ class FORTE_ZephyrIO final : public FORTE_ZephyrIOBase {
       evt_INIT(paQI, paUpdateInterval, paQO, paSTATUS);
     }
 };
-

@@ -24,7 +24,7 @@
 #include "../handler/EliteBoardDeviceController.h"
 
 class FORTE_EliteBoard final : public CFunctionBlock {
-  DECLARE_FIRMWARE_FB(FORTE_EliteBoard)
+    DECLARE_FIRMWARE_FB(FORTE_EliteBoard)
 
   private:
     static const TEventID scmEventMAPID = 0;
@@ -57,7 +57,7 @@ class FORTE_EliteBoard final : public CFunctionBlock {
     static const int mAdapterCount = scmPortKAdpNum + 1;
 
     FORTE_PortAdapter &getPortAdapterByIndex(int index);
-    bool configurePortFB(int index, CEventChainExecutionThread * const paECET);
+    bool configurePortFB(int index, CEventChainExecutionThread *const paECET);
     int configPorts(CEventChainExecutionThread *const paECET);
 
   public:
@@ -93,4 +93,3 @@ class FORTE_EliteBoard final : public CFunctionBlock {
       evt_MAP();
     }
 };
-

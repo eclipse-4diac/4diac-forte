@@ -19,11 +19,11 @@
 #include <forte_sync.h>
 #include <sockhand.h>
 
-namespace forte{
-  namespace com_infra{
+namespace forte {
+  namespace com_infra {
     class CComCallback;
   }
-}
+} // namespace forte
 
 /*!\brief An external event handler for file descriptor based external events.
  *
@@ -32,9 +32,10 @@ namespace forte{
  */
 
 class CFDSelectHandler : public CExternalEventHandler, private CThread {
-  DECLARE_HANDLER(CFDSelectHandler)
+    DECLARE_HANDLER(CFDSelectHandler)
   public:
-    typedef FORTE_SOCKET_TYPE TFileDescriptor; //!< General type definition for a file descriptor. To be used by the callback classes.
+    typedef FORTE_SOCKET_TYPE
+        TFileDescriptor; //!< General type definition for a file descriptor. To be used by the callback classes.
     static const TFileDescriptor scmInvalidFileDescriptor = FORTE_INVALID_SOCKET;
 
     void addComCallback(TFileDescriptor paFD, forte::com_infra::CComCallback *paComLayer);
@@ -50,12 +51,12 @@ class CFDSelectHandler : public CExternalEventHandler, private CThread {
     }
 
     void setPriority(int) override {
-      //currently we are doing nothing here.
-      //TODO We should adjust the thread priority.
+      // currently we are doing nothing here.
+      // TODO We should adjust the thread priority.
     }
 
     int getPriority() const override {
-      //the same as for setPriority
+      // the same as for setPriority
       return 0;
     }
 
@@ -63,9 +64,9 @@ class CFDSelectHandler : public CExternalEventHandler, private CThread {
     void run() override;
 
   private:
-    struct TConnContType{
+    struct TConnContType {
         TFileDescriptor mSockDes;
-        forte::com_infra::CComCallback * mCallee;
+        forte::com_infra::CComCallback *mCallee;
     };
 
     typedef CSinglyLinkedList<TConnContType> TConnectionContainer;

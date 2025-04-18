@@ -19,33 +19,29 @@
 #include <forte_array.h>
 
 // cppcheck-suppress noConstructor
-class FORTE_GET_VALUE : public CFunctionBlock{
-  DECLARE_FIRMWARE_FB(FORTE_GET_VALUE)
+class FORTE_GET_VALUE : public CFunctionBlock {
+    DECLARE_FIRMWARE_FB(FORTE_GET_VALUE)
 
   private:
     static const CStringDictionary::TStringId scmDataInputNames[];
     static const CStringDictionary::TStringId scmDataInputTypeIds[];
-    CIEC_INT &MOD_NB(){
-      return *static_cast<CIEC_INT*>(getDI(0));
-    }
-    ;
+    CIEC_INT &MOD_NB() {
+      return *static_cast<CIEC_INT *>(getDI(0));
+    };
 
-    CIEC_INT &CHAN_NB(){
-      return *static_cast<CIEC_INT*>(getDI(1));
-    }
-    ;
+    CIEC_INT &CHAN_NB() {
+      return *static_cast<CIEC_INT *>(getDI(1));
+    };
 
     static const CStringDictionary::TStringId scmDataOutputNames[];
     static const CStringDictionary::TStringId scmDataOutputTypeIds[];
-    CIEC_INT &RET_CODE(){
-      return *static_cast<CIEC_INT*>(getDO(0));
-    }
-    ;
+    CIEC_INT &RET_CODE() {
+      return *static_cast<CIEC_INT *>(getDO(0));
+    };
 
-    CIEC_SINT &VALUE(){
-      return *static_cast<CIEC_SINT*>(getDO(1));
-    }
-    ;
+    CIEC_SINT &VALUE() {
+      return *static_cast<CIEC_SINT *>(getDO(1));
+    };
 
     static const TEventID scmEventINITID = 0;
     static const TEventID scmEventREQID = 1;
@@ -63,7 +59,6 @@ class FORTE_GET_VALUE : public CFunctionBlock{
 
     static const SFBInterfaceSpec scmFBInterfaceSpec;
 
-
     void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
     void *driverId;
@@ -72,11 +67,9 @@ class FORTE_GET_VALUE : public CFunctionBlock{
     SINT32 read();
 
   public:
-    FUNCTION_BLOCK_CTOR(FORTE_GET_VALUE){
-  };
+    FUNCTION_BLOCK_CTOR(FORTE_GET_VALUE) {};
 
-  ~FORTE_GET_VALUE() override = default;
-
+    ~FORTE_GET_VALUE() override = default;
 };
 
-#endif //close the ifdef sequence from the beginning of the file
+#endif // close the ifdef sequence from the beginning of the file

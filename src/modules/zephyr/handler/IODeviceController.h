@@ -5,7 +5,7 @@
  http://www.eclipse.org/legal/epl-2.0.
 
  SPDX-License-Identifier: EPL-2.0
- 
+
  Contributors:
   Dirk Kaar - initial API and implementation and/or initial documentation
  ************************************************************************************/
@@ -20,41 +20,41 @@
 #include <handler/IOHandleDescriptor.h>
 
 class IODeviceController : public forte::core::io::IODeviceController {
-public:
-  using HandleDescriptor = forte::core::io::IODeviceController::HandleDescriptor;
-  using IOMapper = forte::core::io::IOMapper;
-  using IOHandle = forte::core::io::IOHandle;
+  public:
+    using HandleDescriptor = forte::core::io::IODeviceController::HandleDescriptor;
+    using IOMapper = forte::core::io::IOMapper;
+    using IOHandle = forte::core::io::IOHandle;
 
-  DECLARE_HANDLER(IODeviceController);
+    DECLARE_HANDLER(IODeviceController);
 
-  struct Config : forte::core::io::IODeviceController::Config {
-    unsigned int updateInterval = 0; // Sets the period for the data update cycle, default 0 means infinite.
-  };
+    struct Config : forte::core::io::IODeviceController::Config {
+        unsigned int updateInterval = 0; // Sets the period for the data update cycle, default 0 means infinite.
+    };
 
-  IOHandle* createIOHandle(HandleDescriptor& paHandleDescriptor) override;
+    IOHandle *createIOHandle(HandleDescriptor &paHandleDescriptor) override;
 
-  void setConfig(struct forte::core::io::IODeviceController::Config* paConfig) override;
+    void setConfig(struct forte::core::io::IODeviceController::Config *paConfig) override;
 
-  void handleChangeEvent(IOHandle *paHandle) override;
+    void handleChangeEvent(IOHandle *paHandle) override;
 
-protected:
-  void onAliveChanged(bool paNewValue) override {
-    mUpdateSema.inc();
-  }
-  const char *init() override {
-    DEVLOG_INFO("IODeviceController::init\n");
-    return nullptr;
-  }
-  void runLoop() override;
-  void deInit() override {
-    DEVLOG_INFO("IODeviceController::deInit\n");
-    mUpdateSema.inc();
-  }
+  protected:
+    void onAliveChanged(bool paNewValue) override {
+      mUpdateSema.inc();
+    }
+    const char *init() override {
+      DEVLOG_INFO("IODeviceController::init\n");
+      return nullptr;
+    }
+    void runLoop() override;
+    void deInit() override {
+      DEVLOG_INFO("IODeviceController::deInit\n");
+      mUpdateSema.inc();
+    }
 
-  bool isHandleValueEqual(IOHandle* paHandle) override;
+    bool isHandleValueEqual(IOHandle *paHandle) override;
 
-  struct Config mConfig;
-  CSemaphore mUpdateSema;
+    struct Config mConfig;
+    CSemaphore mUpdateSema;
 };
 
 #endif /* ifndef ZEPHYRIO_DEVICE_CONTROLLER_H */

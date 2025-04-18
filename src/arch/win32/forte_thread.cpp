@@ -13,27 +13,27 @@
 #include "forte_thread.h"
 #include "../devlog.h"
 
-DWORD WINAPI CWin32Thread::threadFunction(LPVOID arguments){
+DWORD WINAPI CWin32Thread::threadFunction(LPVOID arguments) {
   CThreadBase::runThread(static_cast<CWin32Thread *>(arguments));
   return 0;
 }
 
-CWin32Thread::CWin32Thread(long paStackSize) : CThreadBase(paStackSize){
+CWin32Thread::CWin32Thread(long paStackSize) : CThreadBase(paStackSize) {
 }
 
-CWin32Thread::~CWin32Thread(){
+CWin32Thread::~CWin32Thread() {
 }
 
-forte::arch::CThreadBase<HANDLE>::TThreadHandleType CWin32Thread::createThread(long paStackSize){
-    DWORD threadID;
-    return CreateThread(0, // default security attributes
-      paStackSize, // use default stack size
-      threadFunction, // thread function name
-      this, // argument to thread function
-      0, // use default creation flags
-      &threadID); // returns the thread identifier
+forte::arch::CThreadBase<HANDLE>::TThreadHandleType CWin32Thread::createThread(long paStackSize) {
+  DWORD threadID;
+  return CreateThread(0, // default security attributes
+                      paStackSize, // use default stack size
+                      threadFunction, // thread function name
+                      this, // argument to thread function
+                      0, // use default creation flags
+                      &threadID); // returns the thread identifier
 }
 
-void CWin32Thread::sleepThread(unsigned int paMilliSeconds){
+void CWin32Thread::sleepThread(unsigned int paMilliSeconds) {
   Sleep(paMilliSeconds);
 }

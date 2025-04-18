@@ -27,7 +27,6 @@
 
 USE_STRING_ID(ARRAY);
 
-
 #include "forte_ulint.h"
 
 CStringDictionary::TStringId CIEC_ARRAY::getTypeNameID() const {
@@ -52,7 +51,7 @@ int CIEC_ARRAY::toString(char *paValue, size_t paBufferSize) const {
     paValue++;
     paBufferSize--;
     nBytesUsed = 1;
-    if(size()) { // check if initialized
+    if (size()) { // check if initialized
       for (intmax_t i = getLowerBound(), end = getUpperBound(); i <= end; ++i) {
         int nUsedBytesByElement = operator[](i).toString(paValue, paBufferSize);
         if (-1 == nUsedBytesByElement) {
@@ -98,8 +97,7 @@ int CIEC_ARRAY::toCollapsedString(char *paValue, size_t paBufferSize) const {
     const CIEC_ANY *lastElement = nullptr;
     for (intmax_t i = getLowerBound(), end = getUpperBound(); i <= end; ++i) {
       if (lastElement != nullptr && !lastElement->equals(operator[](i))) {
-        int usedBytesByElement = toCollapsedElementString(*lastElement, count, nBytesUsed > 1, paValue,
-                                                          paBufferSize);
+        int usedBytesByElement = toCollapsedElementString(*lastElement, count, nBytesUsed > 1, paValue, paBufferSize);
         if (usedBytesByElement < 0) {
           return -1;
         }
@@ -112,8 +110,7 @@ int CIEC_ARRAY::toCollapsedString(char *paValue, size_t paBufferSize) const {
       count++;
     }
     if (lastElement) {
-      int usedBytesByElement = toCollapsedElementString(*lastElement, count, nBytesUsed > 1, paValue,
-                                                        paBufferSize);
+      int usedBytesByElement = toCollapsedElementString(*lastElement, count, nBytesUsed > 1, paValue, paBufferSize);
       if (usedBytesByElement < 0) {
         return -1;
       }
@@ -133,8 +130,8 @@ int CIEC_ARRAY::toCollapsedString(char *paValue, size_t paBufferSize) const {
   return nBytesUsed;
 }
 
-int CIEC_ARRAY::toCollapsedElementString(const CIEC_ANY &paElement, size_t paCount, bool paComma, char *paValue,
-                                         size_t paBufferSize) const {
+int CIEC_ARRAY::toCollapsedElementString(
+    const CIEC_ANY &paElement, size_t paCount, bool paComma, char *paValue, size_t paBufferSize) const {
   int nBytesUsed = 0;
 
   if (paComma) {
@@ -207,4 +204,3 @@ size_t CIEC_ARRAY::getToStringBufferSize() const {
 
   return retVal;
 }
-

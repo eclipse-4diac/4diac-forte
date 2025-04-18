@@ -12,6 +12,6 @@
 
 #pragma once
 
-extern const char* CTF_OUTPUT_DIR;
-extern const char* METADATA_FILE;
-extern const char* REFERENCE_SYSTEMS_FILE;
+extern const char *CTF_OUTPUT_DIR;
+extern const char *METADATA_FILE;
+extern const char *REFERENCE_SYSTEMS_FILE;

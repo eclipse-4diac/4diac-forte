@@ -29,7 +29,7 @@ class CIEC_ARRAY_VARIABLE;
 
 template<typename T, intmax_t lowerBound, intmax_t upperBound>
 class CIEC_ARRAY_FIXED : public CIEC_ARRAY_COMMON<T> {
-public:
+  public:
     constexpr static const size_t cmSize = upperBound - lowerBound + 1;
 
     using difference_type = std::ptrdiff_t;
@@ -62,13 +62,15 @@ public:
      * @brief Copy constructor
      * @param paSource The original array
      */
-    CIEC_ARRAY_FIXED(const CIEC_ARRAY_FIXED &paSource) : data(paSource.data) {}
+    CIEC_ARRAY_FIXED(const CIEC_ARRAY_FIXED &paSource) : data(paSource.data) {
+    }
 
     /**
      * @brief Move constructor
      * @param paSource The original array
      */
-    CIEC_ARRAY_FIXED(CIEC_ARRAY_FIXED &&paSource) : data(std::move(paSource.data)) {}
+    CIEC_ARRAY_FIXED(CIEC_ARRAY_FIXED &&paSource) : data(std::move(paSource.data)) {
+    }
 
     /**
      * Copy constructor from common array
@@ -106,8 +108,10 @@ public:
      * @tparam sourceUpperBound The original upper bound
      * @param paSource The original array
      */
-    template<typename U, intmax_t sourceLowerBound, intmax_t sourceUpperBound,
-            std::enable_if_t<std::is_assignable_v<T &, const U &>, bool> = true>
+    template<typename U,
+             intmax_t sourceLowerBound,
+             intmax_t sourceUpperBound,
+             std::enable_if_t<std::is_assignable_v<T &, const U &>, bool> = true>
     CIEC_ARRAY_FIXED(const CIEC_ARRAY_FIXED<U, sourceLowerBound, sourceUpperBound> &paSource) {
       assign(paSource, sourceLowerBound, sourceUpperBound);
     }
@@ -152,8 +156,10 @@ public:
      * @param paSource The original array
      * @return The assigned array
      */
-    template<typename U, intmax_t sourceLowerBound, intmax_t sourceUpperBound,
-            std::enable_if_t<std::is_assignable_v<T &, const U &>, bool> = true>
+    template<typename U,
+             intmax_t sourceLowerBound,
+             intmax_t sourceUpperBound,
+             std::enable_if_t<std::is_assignable_v<T &, const U &>, bool> = true>
     CIEC_ARRAY_FIXED &operator=(const CIEC_ARRAY_FIXED<U, sourceLowerBound, sourceUpperBound> &paSource) {
       assign(paSource, sourceLowerBound, sourceUpperBound);
       return *this;
@@ -164,7 +170,7 @@ public:
     }
 
     [[nodiscard]] CIEC_ANY *clone(TForteByte *paDataBuf) const override {
-      return (nullptr != paDataBuf) ? new(paDataBuf) CIEC_ARRAY_FIXED<T, lowerBound, upperBound>(*this)
+      return (nullptr != paDataBuf) ? new (paDataBuf) CIEC_ARRAY_FIXED<T, lowerBound, upperBound>(*this)
                                     : new CIEC_ARRAY_FIXED<T, lowerBound, upperBound>(*this);
     }
 
@@ -251,11 +257,11 @@ public:
           CIEC_ARRAY::findNextNonBlankSpace(&pcRunner);
           if (',' == *pcRunner) {
             pcRunner++;
-          } else { //we have an error or the end bracket
+          } else { // we have an error or the end bracket
             break;
           }
         }
-        if (*pcRunner == ']') { //arrays have to and on a closing bracket
+        if (*pcRunner == ']') { // arrays have to and on a closing bracket
           nRetVal = static_cast<int>(pcRunner - paValue + 1); //+1 from the closing bracket
           // For the rest of the array size copy the default element
           std::fill(iter, end(), T());
@@ -266,7 +272,7 @@ public:
 
     ~CIEC_ARRAY_FIXED() = default;
 
-private:
+  private:
     template<typename U>
     inline void assign(const U &paArray, intmax_t sourceLowerBound, intmax_t sourceUpperBound) {
       intmax_t begin = std::max(lowerBound, sourceLowerBound);
@@ -278,7 +284,7 @@ private:
 
     template<typename U>
     inline void assignDynamic(const U &paArray, intmax_t sourceLowerBound, intmax_t sourceUpperBound) {
-      if(paArray.size()) { // check if initialized
+      if (paArray.size()) { // check if initialized
         intmax_t begin = std::max(lowerBound, sourceLowerBound);
         intmax_t end = std::min(upperBound, sourceUpperBound);
         for (intmax_t i = begin; i <= end; ++i) {
@@ -315,14 +321,13 @@ private:
             if (',' == *pcRunner) {
               pcRunner++;
             } else {
-              //we have an error or the end parentheses
+              // we have an error or the end parentheses
               break;
             }
           }
-          if (*pcRunner == ')') { //repeat syntax elements have to and on a closing parentheses
+          if (*pcRunner == ')') { // repeat syntax elements have to and on a closing parentheses
             intmax_t repeatSequenceLength = paPosition - initialPosition;
-            for (size_t rep = 1;
-                 rep < repeat.getUnsignedValue() && paPosition != end(); ++rep) { // once added already
+            for (size_t rep = 1; rep < repeat.getUnsignedValue() && paPosition != end(); ++rep) { // once added already
               for (intmax_t seqIndex = 0; seqIndex < repeatSequenceLength && paPosition != end(); ++seqIndex) {
                 (paPosition++)->setValue(*(initialPosition + seqIndex));
               }
@@ -366,4 +371,3 @@ static_assert(std::is_constructible_v<CIEC_ARRAY_FIXED<CIEC_ULINT, 0, 0>, const 
 static_assert(std::is_assignable_v<CIEC_ARRAY_FIXED<CIEC_ULINT, 0, 0>, const CIEC_ARRAY &>);
 static_assert(std::is_assignable_v<CIEC_ARRAY_FIXED<CIEC_ULINT, 0, 0>, const CIEC_ARRAY_COMMON<CIEC_UINT> &>);
 static_assert(std::is_assignable_v<CIEC_ARRAY_FIXED<CIEC_ULINT, 0, 0>, const CIEC_ARRAY_VARIABLE<CIEC_UINT> &>);
-

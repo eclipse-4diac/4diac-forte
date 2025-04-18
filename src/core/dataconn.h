@@ -80,7 +80,8 @@ template<typename T>
 class COutDataConnection final : public CDataConnection {
   public:
     COutDataConnection(CFunctionBlock &paSrcFB, const TPortId paSrcPortId, const T &paValue) :
-        CDataConnection(paSrcFB, paSrcPortId), mValue(paValue) {
+        CDataConnection(paSrcFB, paSrcPortId),
+        mValue(paValue) {
     }
 
     void writeData(const T &paValue) {
@@ -106,7 +107,8 @@ class COutDataConnection final : public CDataConnection {
 class CGenDataConnection final : public CDataConnection {
   public:
     CGenDataConnection(CFunctionBlock &paSrcFB, const TPortId paSrcPortId, CIEC_ANY &paValue) :
-        CDataConnection(paSrcFB, paSrcPortId), mValue(paValue) {
+        CDataConnection(paSrcFB, paSrcPortId),
+        mValue(paValue) {
     }
 
     void writeData(const CIEC_ANY &paValue) override {

@@ -24,7 +24,7 @@
 #include "../arch/timerha.h"
 
 class FORTE_E_TimeOut final : public CEventSourceFB {
-  DECLARE_FIRMWARE_FB(FORTE_E_TimeOut)
+    DECLARE_FIRMWARE_FB(FORTE_E_TimeOut)
 
   private:
     static const int scmTimeOutSocketAdpNum = 0;
@@ -34,7 +34,7 @@ class FORTE_E_TimeOut final : public CEventSourceFB {
 
     bool mActive; //!> flag to indicate that the timed fb is currently active
 
-    void executeEvent(TEventID paEIID, CEventChainExecutionThread * const paECET) override;
+    void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
     void readInputData(TEventID paEIID) override;
     void writeOutputData(TEventID paEIID) override;
@@ -54,4 +54,3 @@ class FORTE_E_TimeOut final : public CEventSourceFB {
 
     EMGMResponse changeExecutionState(EMGMCommandType paCommand) override;
 };
-

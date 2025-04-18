@@ -18,12 +18,14 @@
 #include <string>
 #include <fstream>
 
-class CFMUProcessInterface : public CProcessInterfaceBase{
+class CFMUProcessInterface : public CProcessInterfaceBase {
   public:
-    CFMUProcessInterface(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec& paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId);
+    CFMUProcessInterface(forte::core::CFBContainer &paContainer,
+                         const SFBInterfaceSpec &paInterfaceSpec,
+                         const CStringDictionary::TStringId paInstanceNameId);
     CFMUProcessInterface(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
-    void setValueContainer(fmuValueContainer* paValueContainer);
+    void setValueContainer(fmuValueContainer *paValueContainer);
 
     ~CFMUProcessInterface() override;
 
@@ -38,23 +40,23 @@ class CFMUProcessInterface : public CProcessInterfaceBase{
     bool writeWord();
 
     bool readDWord() {
-      return false; //not implemented
+      return false; // not implemented
     }
     bool writeDWord() {
-      return false; //not implemented
+      return false; // not implemented
     }
 
   private:
-    static const char * const scmOK;
-    static const char * const scmNOTINITIALIZED;
-    static const char * const scmINTERNALERROR;
+    static const char *const scmOK;
+    static const char *const scmNOTINITIALIZED;
+    static const char *const scmINTERNALERROR;
 
     bool mInitialized;
 
-    fmuValueContainer* mValue;
+    fmuValueContainer *mValue;
 };
 
-//tell the IX and QX FB that this is the process interface to be used
+// tell the IX and QX FB that this is the process interface to be used
 typedef CFMUProcessInterface CProcessInterface;
 
 #endif /* _PROCESSINTERFACE_H_ */

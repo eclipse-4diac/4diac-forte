@@ -20,24 +20,24 @@
 namespace forte {
   namespace arch {
 
-    CNetOSSemaphore::CNetOSSemaphore(unsigned int paInitialValue){
+    CNetOSSemaphore::CNetOSSemaphore(unsigned int paInitialValue) {
       tx_semaphore_create(&mSemaphore, "hugo", paInitialValue);
     }
 
-    CNetOSSemaphore::~CNetOSSemaphore(){
+    CNetOSSemaphore::~CNetOSSemaphore() {
       tx_semaphore_delete(&mSemaphore);
     }
 
-    void CNetOSSemaphore::inc(){
+    void CNetOSSemaphore::inc() {
       tx_semaphore_put(&mSemaphore);
     }
 
-    void CNetOSSemaphore::waitIndefinitely(){
+    void CNetOSSemaphore::waitIndefinitely() {
       tx_semaphore_get(&mSemaphore, TX_WAIT_FOREVER);
     }
 
     bool CNetOSSemaphore::timedWait(TForteUInt64 paRelativeTimeout) {
-      //TODO: Handle ticks to nanoseconds
+      // TODO: Handle ticks to nanoseconds
       return (0 == tx_semaphore_get(&mSemaphore, paRelativeTimeout));
     }
 

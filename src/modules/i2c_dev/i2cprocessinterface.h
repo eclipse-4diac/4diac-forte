@@ -18,11 +18,12 @@
 #include <string>
 #include <vector>
 
-class CI2CProcessInterface : public CProcessInterfaceBase{
+class CI2CProcessInterface : public CProcessInterfaceBase {
 
   public:
-    CI2CProcessInterface(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec& paInterfaceSpec,
-        const CStringDictionary::TStringId paInstanceNameId);
+    CI2CProcessInterface(forte::core::CFBContainer &paContainer,
+                         const SFBInterfaceSpec &paInterfaceSpec,
+                         const CStringDictionary::TStringId paInstanceNameId);
     ~CI2CProcessInterface() override;
 
   protected:
@@ -39,11 +40,11 @@ class CI2CProcessInterface : public CProcessInterfaceBase{
     int mFd;
     TForteByte mValueAddress;
 
-    static const char * const scmOK;
-    static const char * const scmInvalidParam;
-    static const char * const scmNotInitialised;
-    static const char * const scmCouldNotRead;
-    static const char * const scmCouldNotWrite;
+    static const char *const scmOK;
+    static const char *const scmInvalidParam;
+    static const char *const scmNotInitialised;
+    static const char *const scmCouldNotRead;
+    static const char *const scmCouldNotWrite;
 
   private:
     //! ioctl command id for setting the slave id to be used for the next reads and writes

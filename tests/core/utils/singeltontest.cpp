@@ -14,20 +14,18 @@
 
 BOOST_AUTO_TEST_SUITE(Singleton_Test)
 
-  BOOST_AUTO_TEST_CASE(singleton_SingleInstanceTest){
+BOOST_AUTO_TEST_CASE(singleton_SingleInstanceTest) {
 
-    TestSingleton *pSingleton1 = &(TestSingleton::getInstance());
-    TestSingleton *pSingleton2 = &(TestSingleton::getInstance());
+  TestSingleton *pSingleton1 = &(TestSingleton::getInstance());
+  TestSingleton *pSingleton2 = &(TestSingleton::getInstance());
 
-    BOOST_CHECK_EQUAL(pSingleton1, pSingleton2);
+  BOOST_CHECK_EQUAL(pSingleton1, pSingleton2);
 
-    BOOST_CHECK_EQUAL(1, TestSingleton::getInstance().getSingletonID());
-  }
+  BOOST_CHECK_EQUAL(1, TestSingleton::getInstance().getSingletonID());
+}
 
-  BOOST_AUTO_TEST_CASE(singleton_DifferentFunctionTest){
-    BOOST_CHECK_EQUAL(1, TestSingleton::getInstance().getSingletonID());
-  }
-
+BOOST_AUTO_TEST_CASE(singleton_DifferentFunctionTest) {
+  BOOST_CHECK_EQUAL(1, TestSingleton::getInstance().getSingletonID());
+}
 
 BOOST_AUTO_TEST_SUITE_END()
-

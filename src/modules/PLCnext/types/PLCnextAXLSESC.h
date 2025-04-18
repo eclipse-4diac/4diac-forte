@@ -30,87 +30,84 @@
 #include "forte_array_variable.h"
 #include "PLCnextBusAdapter.h"
 
-
 class FORTE_PLCnextAXLSESC final : public PLCnextSlaveHandler {
-  DECLARE_FIRMWARE_FB(FORTE_PLCnextAXLSESC)
+    DECLARE_FIRMWARE_FB(FORTE_PLCnextAXLSESC)
 
-private:
-  static const CStringDictionary::TStringId scmDataInputNames[];
-  static const CStringDictionary::TStringId scmDataInputTypeIds[];
-  static const CStringDictionary::TStringId scmDataOutputNames[];
-  static const CStringDictionary::TStringId scmDataOutputTypeIds[];
-  static const TEventID scmEventINITID = 0;
-  static const TDataIOID scmEIWith[];
-  static const TForteInt16 scmEIWithIndexes[];
-  static const CStringDictionary::TStringId scmEventInputNames[];
-  static const CStringDictionary::TStringId scmEventInputTypeIds[];
-  static const TEventID scmEventINITOID = 0;
-  static const TEventID scmEventINDID = 1;
-  static const TDataIOID scmEOWith[];
-  static const TForteInt16 scmEOWithIndexes[];
-  static const CStringDictionary::TStringId scmEventOutputNames[];
-  static const CStringDictionary::TStringId scmEventOutputTypeIds[];
-  static const int scmBusAdapterInAdpNum = 0;
-  static const int scmBusAdapterOutAdpNum = 1;
-  static const SAdapterInstanceDef scmAdapterInstances[];
+  private:
+    static const CStringDictionary::TStringId scmDataInputNames[];
+    static const CStringDictionary::TStringId scmDataInputTypeIds[];
+    static const CStringDictionary::TStringId scmDataOutputNames[];
+    static const CStringDictionary::TStringId scmDataOutputTypeIds[];
+    static const TEventID scmEventINITID = 0;
+    static const TDataIOID scmEIWith[];
+    static const TForteInt16 scmEIWithIndexes[];
+    static const CStringDictionary::TStringId scmEventInputNames[];
+    static const CStringDictionary::TStringId scmEventInputTypeIds[];
+    static const TEventID scmEventINITOID = 0;
+    static const TEventID scmEventINDID = 1;
+    static const TDataIOID scmEOWith[];
+    static const TForteInt16 scmEOWithIndexes[];
+    static const CStringDictionary::TStringId scmEventOutputNames[];
+    static const CStringDictionary::TStringId scmEventOutputTypeIds[];
+    static const int scmBusAdapterInAdpNum = 0;
+    static const int scmBusAdapterOutAdpNum = 1;
+    static const SAdapterInstanceDef scmAdapterInstances[];
 
-  static const SFBInterfaceSpec scmFBInterfaceSpec;
+    static const SFBInterfaceSpec scmFBInterfaceSpec;
 
-  void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
+    void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
-  void readInputData(TEventID paEIID) override;
-  void writeOutputData(TEventID paEIID) override;
-  void setInitialValues() override;
-  
-  const char* init() override;
-  void initHandles() override;
+    void readInputData(TEventID paEIID) override;
+    void writeOutputData(TEventID paEIID) override;
+    void setInitialValues() override;
 
-public:
-  FORTE_PLCnextAXLSESC(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
-  bool initialize() override;
+    const char *init() override;
+    void initHandles() override;
 
-  CIEC_BOOL var_QI;
+  public:
+    FORTE_PLCnextAXLSESC(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    bool initialize() override;
 
-  CIEC_BOOL var_QO;
-  CIEC_WSTRING var_STATUS;
+    CIEC_BOOL var_QI;
 
-  FORTE_PLCnextBusAdapter var_BusAdapterIn;
+    CIEC_BOOL var_QO;
+    CIEC_WSTRING var_STATUS;
 
-  FORTE_PLCnextBusAdapter var_BusAdapterOut;
+    FORTE_PLCnextBusAdapter var_BusAdapterIn;
 
-  CEventConnection conn_INITO;
-  CEventConnection conn_IND;
+    FORTE_PLCnextBusAdapter var_BusAdapterOut;
 
-  CDataConnection *conn_QI;
+    CEventConnection conn_INITO;
+    CEventConnection conn_IND;
 
-  COutDataConnection<CIEC_BOOL> conn_QO;
-  COutDataConnection<CIEC_WSTRING> conn_STATUS;
+    CDataConnection *conn_QI;
 
-  CIEC_ANY *getDI(size_t) override;
-  CIEC_ANY *getDO(size_t) override;
-  CAdapter *getAdapterUnchecked(size_t) override;
-  FORTE_PLCnextBusAdapter &var_BusAdapterIn() {
-    return *static_cast<FORTE_PLCnextBusAdapter*>(mAdapters[0]);
-  };
+    COutDataConnection<CIEC_BOOL> conn_QO;
+    COutDataConnection<CIEC_WSTRING> conn_STATUS;
 
-  FORTE_PLCnextBusAdapter &var_BusAdapterOut() {
-    return *static_cast<FORTE_PLCnextBusAdapter*>(mAdapters[1]);
-  };
+    CIEC_ANY *getDI(size_t) override;
+    CIEC_ANY *getDO(size_t) override;
+    CAdapter *getAdapterUnchecked(size_t) override;
+    FORTE_PLCnextBusAdapter &var_BusAdapterIn() {
+      return *static_cast<FORTE_PLCnextBusAdapter *>(mAdapters[0]);
+    };
 
-  CEventConnection *getEOConUnchecked(TPortId) override;
-  CDataConnection **getDIConUnchecked(TPortId) override;
-  CDataConnection *getDOConUnchecked(TPortId) override;
+    FORTE_PLCnextBusAdapter &var_BusAdapterOut() {
+      return *static_cast<FORTE_PLCnextBusAdapter *>(mAdapters[1]);
+    };
 
-  void evt_INIT(const CIEC_BOOL &paQI, CIEC_BOOL &paQO, CIEC_WSTRING &paSTATUS) {
-    var_QI = paQI;
-    receiveInputEvent(scmEventINITID, nullptr);
-    paQO = var_QO;
-    paSTATUS = var_STATUS;
-  }
+    CEventConnection *getEOConUnchecked(TPortId) override;
+    CDataConnection **getDIConUnchecked(TPortId) override;
+    CDataConnection *getDOConUnchecked(TPortId) override;
 
-  void operator()(const CIEC_BOOL &paQI, CIEC_BOOL &paQO, CIEC_WSTRING &paSTATUS) {
-    evt_INIT(paQI, paQO, paSTATUS);
-  }
+    void evt_INIT(const CIEC_BOOL &paQI, CIEC_BOOL &paQO, CIEC_WSTRING &paSTATUS) {
+      var_QI = paQI;
+      receiveInputEvent(scmEventINITID, nullptr);
+      paQO = var_QO;
+      paSTATUS = var_STATUS;
+    }
+
+    void operator()(const CIEC_BOOL &paQI, CIEC_BOOL &paQO, CIEC_WSTRING &paSTATUS) {
+      evt_INIT(paQI, paQO, paSTATUS);
+    }
 };
-
-

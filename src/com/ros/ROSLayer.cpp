@@ -24,8 +24,7 @@
 using namespace forte::com_infra;
 using namespace std::string_literals;
 
-CROSLayer::CROSLayer(CComLayer* paUpperLayer, CBaseCommFB* paComFB) :
-    CComLayer(paUpperLayer, paComFB){
+CROSLayer::CROSLayer(CComLayer *paUpperLayer, CBaseCommFB *paComFB) : CComLayer(paUpperLayer, paComFB) {
 
   mInterruptResp = e_ProcessDataOk;
   m_TopicName = ""s;
@@ -37,7 +36,7 @@ CROSLayer::CROSLayer(CComLayer* paUpperLayer, CBaseCommFB* paComFB) :
 CROSLayer::~CROSLayer() = default;
 
 // initializes current layer
-EComResponse CROSLayer::openConnection(char *paLayerParameter){
+EComResponse CROSLayer::openConnection(char *paLayerParameter) {
 
   EComResponse retVal = e_InitOk;
   mCommServiceType = getCommFB()->getComServiceType();
@@ -49,102 +48,95 @@ EComResponse CROSLayer::openConnection(char *paLayerParameter){
   int doublePoint = static_cast<int>(layerParams.find_last_of(":"));
   m_TopicName = layerParams.substr(0, doublePoint);
 
-  if(e_Subscriber == mCommServiceType){
+  if (e_Subscriber == mCommServiceType) {
 
     m_NumRDs = getCommFB()->getNumRD();
 
-    if(0 == m_NumRDs || 1 == m_NumRDs){
-      m_Sub = m_Nh.subscribe < topic_tools::ShapeShifter > (m_TopicName, 100, &CROSLayer::handleReceivedValue, const_cast<CROSLayer*>(this));
-    }
-    else{
+    if (0 == m_NumRDs || 1 == m_NumRDs) {
+      m_Sub = m_Nh.subscribe<topic_tools::ShapeShifter>(m_TopicName, 100, &CROSLayer::handleReceivedValue,
+                                                        const_cast<CROSLayer *>(this));
+    } else {
       DEVLOG_ERROR("[ROSLAYER] Subscribers with more than 1 RD output are not supported at the moment");
     }
-  }
-  else if(e_Publisher == mCommServiceType){
+  } else if (e_Publisher == mCommServiceType) {
     m_NumSDs = getCommFB()->getNumSD();
 
-    if(0 == m_NumSDs){
-      m_Pub = m_Nh.advertise < std_msgs::Empty > (m_TopicName, 100);
-    }
-    else if(1 == m_NumSDs){
+    if (0 == m_NumSDs) {
+      m_Pub = m_Nh.advertise<std_msgs::Empty>(m_TopicName, 100);
+    } else if (1 == m_NumSDs) {
 
       m_TopicType = layerParams.substr(doublePoint + 1);
 
-      if("std_msgs/Float64"s == m_TopicType) {
-        m_Pub = m_Nh.advertise < std_msgs::Float64 > (m_TopicName, 100);
-      } else if("std_msgs/Int32"s == m_TopicType) {
-        m_Pub = m_Nh.advertise < std_msgs::Int32 > (m_TopicName, 100);
-      } else if("std_msgs/Bool"s == m_TopicType) {
-        m_Pub = m_Nh.advertise < std_msgs::Bool > (m_TopicName, 100);
-      } else if("std_msgs/String"s == m_TopicType) {
-        m_Pub = m_Nh.advertise < std_msgs::String > (m_TopicName, 100);
+      if ("std_msgs/Float64"s == m_TopicType) {
+        m_Pub = m_Nh.advertise<std_msgs::Float64>(m_TopicName, 100);
+      } else if ("std_msgs/Int32"s == m_TopicType) {
+        m_Pub = m_Nh.advertise<std_msgs::Int32>(m_TopicName, 100);
+      } else if ("std_msgs/Bool"s == m_TopicType) {
+        m_Pub = m_Nh.advertise<std_msgs::Bool>(m_TopicName, 100);
+      } else if ("std_msgs/String"s == m_TopicType) {
+        m_Pub = m_Nh.advertise<std_msgs::String>(m_TopicName, 100);
       } else {
         DEVLOG_ERROR("[ROSLAYER] Publisher could not be initialized: unknown topic type \n");
       }
-     //FIXME successful initialization message also on error..
-    }
-    else{
+      // FIXME successful initialization message also on error..
+    } else {
       retVal = e_InitInvalidId;
-      DEVLOG_ERROR("[ROSLAYER] Publishers with more than 1 SD intput are not supported at the moment. There are %d SD inputs configured", m_NumSDs);
+      DEVLOG_ERROR("[ROSLAYER] Publishers with more than 1 SD intput are not supported at the moment. There are %d SD "
+                   "inputs configured",
+                   m_NumSDs);
     }
   }
   // We are a Service
-  else if(e_Server == mCommServiceType){
-    //TODO implement this
-  }
-  else if(e_Client == mCommServiceType){
-    //TODO implement this
+  else if (e_Server == mCommServiceType) {
+    // TODO implement this
+  } else if (e_Client == mCommServiceType) {
+    // TODO implement this
   }
 
-  else{
+  else {
     retVal = e_InitInvalidId;
-    DEVLOG_ERROR("[ROSLAYER] SIFB could not be initialized with an appropriate ROS communication type: block type is neither Publisher nor Subscriber nor Server nor Client\n");
+    DEVLOG_ERROR("[ROSLAYER] SIFB could not be initialized with an appropriate ROS communication type: block type is "
+                 "neither Publisher nor Subscriber nor Server nor Client\n");
   }
 
   return retVal;
 }
 
 // callback for subscribers
-void CROSLayer::handleReceivedValue(const boost::shared_ptr<const topic_tools::ShapeShifter>& pa_Message){
+void CROSLayer::handleReceivedValue(const boost::shared_ptr<const topic_tools::ShapeShifter> &pa_Message) {
 
   // writing received values to RD output: getRDs() returns adress of Data from the RDs -> overwrite them
   CIEC_ANY *DataArray = getCommFB()->getRDs();
 
   m_TopicType = pa_Message->getDataType();
 
-  if(0 == m_NumRDs){
+  if (0 == m_NumRDs) {
 
-  }
-  else if(1 == m_NumRDs){
+  } else if (1 == m_NumRDs) {
 
-    if("std_msgs/Float64"s == m_TopicType){
-      boost::shared_ptr < std_msgs::Float64 > instantiated = pa_Message->instantiate<std_msgs::Float64>();
+    if ("std_msgs/Float64"s == m_TopicType) {
+      boost::shared_ptr<std_msgs::Float64> instantiated = pa_Message->instantiate<std_msgs::Float64>();
       double ROSValue = instantiated->data;
       *(CIEC_LREAL *) DataArray = ROSValue;
-    }
-    else if("std_msgs/Int32"s == m_TopicType){
-      boost::shared_ptr < std_msgs::Int32 > instantiated = pa_Message->instantiate<std_msgs::Int32>();
+    } else if ("std_msgs/Int32"s == m_TopicType) {
+      boost::shared_ptr<std_msgs::Int32> instantiated = pa_Message->instantiate<std_msgs::Int32>();
       int ROSValue = instantiated->data;
       *(CIEC_DINT *) DataArray = ROSValue;
-    }
-    else if("std_msgs/Bool"s == m_TopicType){
-      boost::shared_ptr < std_msgs::Bool > instantiated = pa_Message->instantiate<std_msgs::Bool>();
+    } else if ("std_msgs/Bool"s == m_TopicType) {
+      boost::shared_ptr<std_msgs::Bool> instantiated = pa_Message->instantiate<std_msgs::Bool>();
       bool ROSValue = instantiated->data;
       *(CIEC_BOOL *) DataArray = ROSValue;
-    }
-    else if("std_msgs/String"s == m_TopicType){
-      boost::shared_ptr < std_msgs::String > instantiated = pa_Message->instantiate<std_msgs::String>();
+    } else if ("std_msgs/String"s == m_TopicType) {
+      boost::shared_ptr<std_msgs::String> instantiated = pa_Message->instantiate<std_msgs::String>();
       std::string ROSValue = instantiated->data;
 
       CIEC_STRING tmpString(ROSValue.c_str());
 
       *(CIEC_STRING *) DataArray = tmpString;
-    }
-    else{
+    } else {
       DEVLOG_ERROR("[ROSLAYER] Subscriber received a message with unknown type: %s \n", m_TopicType.c_str());
     }
-  }
-  else{
+  } else {
     // TODO implement this:
     DEVLOG_ERROR("[ROSLAYER] More than 1 RD outputs are not supported at the Moment \n");
   }
@@ -154,32 +146,31 @@ void CROSLayer::handleReceivedValue(const boost::shared_ptr<const topic_tools::S
   getExtEvHandler<CROSManager>().startChain(this->getCommFB());
 }
 
-void CROSLayer::closeConnection(){
+void CROSLayer::closeConnection() {
   m_Nh.shutdown();
 }
 
-//TODO use sendData parameters instead of e.g., getCommFB()->getSDs()
-EComResponse CROSLayer::sendData(void *, unsigned int){
+// TODO use sendData parameters instead of e.g., getCommFB()->getSDs()
+EComResponse CROSLayer::sendData(void *, unsigned int) {
   EComResponse RetVal = e_ProcessDataOk;
 
   CIEC_ANY *DataArray = getCommFB()->getSDs();
 
   // process SD inputs
-  if(0 == m_NumSDs){ //Publish 0
+  if (0 == m_NumSDs) { // Publish 0
     std_msgs::Empty ROSValue;
     m_Pub.publish(ROSValue);
   }
   // Publish 1
-  else if(1 == m_NumSDs){
-    switch (DataArray->getDataTypeID()){
+  else if (1 == m_NumSDs) {
+    switch (DataArray->getDataTypeID()) {
       case CIEC_ANY::e_BOOL: {
         std_msgs::Bool ROSValue;
         bool FORTEValue = (*(CIEC_BOOL *) DataArray);
 
         ROSValue.data = FORTEValue;
         m_Pub.publish(ROSValue);
-      }
-        break;
+      } break;
       case CIEC_ANY::e_LREAL: {
         std_msgs::Float64 ROSValue;
 
@@ -187,8 +178,7 @@ EComResponse CROSLayer::sendData(void *, unsigned int){
         ROSValue.data = FORTEValue;
 
         m_Pub.publish(ROSValue);
-      }
-        break;
+      } break;
       case CIEC_ANY::e_DINT: {
         std_msgs::Int32 ROSValue;
 
@@ -196,8 +186,7 @@ EComResponse CROSLayer::sendData(void *, unsigned int){
         ROSValue.data = FORTEValue;
 
         m_Pub.publish(ROSValue);
-      }
-        break;
+      } break;
       case CIEC_ANY::e_STRING: {
         std_msgs::String ROSValue;
 
@@ -208,8 +197,7 @@ EComResponse CROSLayer::sendData(void *, unsigned int){
 
         ROSValue.data = tmpString;
         m_Pub.publish(ROSValue);
-      }
-        break;
+      } break;
       case CIEC_ANY::e_ANY:
       case CIEC_ANY::e_SINT:
       case CIEC_ANY::e_INT:
@@ -235,23 +223,21 @@ EComResponse CROSLayer::sendData(void *, unsigned int){
       case CIEC_ANY::e_ARRAY:
       case CIEC_ANY::e_STRUCT:
       case CIEC_ANY::e_External:
-      case CIEC_ANY::e_Max:
-        DEVLOG_ERROR("[ROSLAYER] Publisher with unsupported data type");
-        break;
+      case CIEC_ANY::e_Max: DEVLOG_ERROR("[ROSLAYER] Publisher with unsupported data type"); break;
     }
   }
   // Publish n for n > 1
-  else{
+  else {
     DEVLOG_ERROR("[ROSLAYER] Publisher with more than 1 SD input is not supported at the moment");
   }
   return RetVal;
 }
 
-EComResponse CROSLayer::recvData(const void *, unsigned int){
+EComResponse CROSLayer::recvData(const void *, unsigned int) {
   return e_ProcessDataOk;
 }
 
-EComResponse CROSLayer::processInterrupt(){
-  //we don't need to do anything here (only 1 layer)
+EComResponse CROSLayer::processInterrupt() {
+  // we don't need to do anything here (only 1 layer)
   return mInterruptResp;
 }

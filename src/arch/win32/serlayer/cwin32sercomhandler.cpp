@@ -14,40 +14,39 @@
 #include "core/util/criticalregion.h"
 #include "core/cominfra/basecommfb.h"
 
-
 DEFINE_HANDLER(CWin32SerComHandler)
 
-CWin32SerComHandler::CWin32SerComHandler(CDeviceExecution& paDeviceExecution) : CExternalEventHandler(paDeviceExecution)  {
+CWin32SerComHandler::CWin32SerComHandler(CDeviceExecution &paDeviceExecution) :
+    CExternalEventHandler(paDeviceExecution) {
 }
 
-CWin32SerComHandler::~CWin32SerComHandler(){
+CWin32SerComHandler::~CWin32SerComHandler() {
   this->end();
 }
 
-void CWin32SerComHandler::registerSerComLayer(CWin32SerComLayer *paComLayer){
+void CWin32SerComHandler::registerSerComLayer(CWin32SerComLayer *paComLayer) {
   {
     CCriticalRegion region(mSync);
     mComLayerList.pushBack(paComLayer);
   }
-  if(!isAlive()){
+  if (!isAlive()) {
     this->start();
   }
   mSem.inc();
 }
 
-void CWin32SerComHandler::unregisterSerComLayer(CWin32SerComLayer *paComLayer){
+void CWin32SerComHandler::unregisterSerComLayer(CWin32SerComLayer *paComLayer) {
   CCriticalRegion region(mSync);
 
   TCWin32SerComLayerContainer::Iterator itRunner(mComLayerList.begin());
   TCWin32SerComLayerContainer::Iterator itRefNode(mComLayerList.end());
   TCWin32SerComLayerContainer::Iterator itEnd(mComLayerList.end());
 
-  while(itRunner != itEnd){
-    if(*itRunner == paComLayer){
-      if(itRefNode == itEnd){
+  while (itRunner != itEnd) {
+    if (*itRunner == paComLayer) {
+      if (itRefNode == itEnd) {
         mComLayerList.popFront();
-      }
-      else{
+      } else {
         mComLayerList.eraseAfter(itRefNode);
       }
       break;
@@ -58,28 +57,28 @@ void CWin32SerComHandler::unregisterSerComLayer(CWin32SerComLayer *paComLayer){
   }
 }
 
-void CWin32SerComHandler::run(){
-  while(isAlive()){
+void CWin32SerComHandler::run() {
+  while (isAlive()) {
 
-    if(true == mComLayerList.isEmpty()){
+    if (true == mComLayerList.isEmpty()) {
       mSem.waitIndefinitely();
     }
-    if(!isAlive()){
+    if (!isAlive()) {
       break;
     }
 
     mSync.lock();
     TCWin32SerComLayerContainer::Iterator itEnd(mComLayerList.end());
-    for(TCWin32SerComLayerContainer::Iterator itRunner = mComLayerList.begin(), itCurrent = mComLayerList.begin(); itRunner != itEnd;){
+    for (TCWin32SerComLayerContainer::Iterator itRunner = mComLayerList.begin(), itCurrent = mComLayerList.begin();
+         itRunner != itEnd;) {
       itCurrent = itRunner;
       ++itRunner;
 
-      if(forte::com_infra::e_Nothing != (*itCurrent)->recvData(0,0)){
+      if (forte::com_infra::e_Nothing != (*itCurrent)->recvData(0, 0)) {
         startNewEventChain((*itCurrent)->getCommFB());
       }
     }
     mSync.unlock();
     Sleep(1000);
   }
-
 }

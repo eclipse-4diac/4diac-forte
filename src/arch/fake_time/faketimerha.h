@@ -47,20 +47,20 @@ class CFakeTimerHandler : public CTimerHandler, public CThread {
      */
     virtual int getPriority(void) const override;
 
-    void setSleepTime(const CIEC_TIME&, CFunctionBlock *fb);
-    void sleepToTime(const CIEC_TIME&);
+    void setSleepTime(const CIEC_TIME &, CFunctionBlock *fb);
+    void sleepToTime(const CIEC_TIME &);
 
   private:
     typedef TForteUInt64 TLargestUIntValueType;
 
     struct napinfo {
-      TLargestUIntValueType napDuration;
-      TLargestUIntValueType wakeupTime;
-      CFunctionBlock *fakeSleepFb;
+        TLargestUIntValueType napDuration;
+        TLargestUIntValueType wakeupTime;
+        CFunctionBlock *fakeSleepFb;
     };
 
     void startOutputEvent(CFunctionBlock *fb);
-    CEventChainExecutionThread* getExecThread(CFunctionBlock *fakeSleepFb);
+    CEventChainExecutionThread *getExecThread(CFunctionBlock *fakeSleepFb);
 
     std::queue<CFakeTimerHandler::napinfo> sleepTimes;
 };

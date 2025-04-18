@@ -39,8 +39,11 @@ USE_STRING_ID(WSTRING);
 
 DEFINE_FIRMWARE_FB(FORTE_EBMaster, STRID(EBMaster))
 
-const CStringDictionary::TStringId FORTE_EBMaster::scmDataInputNames[] = {STRID(QI), STRID(BusInterface), STRID(BusSelectPin), STRID(BusInitSpeed), STRID(BusLoopSpeed), STRID(SlaveUpdateInterval)};
-const CStringDictionary::TStringId FORTE_EBMaster::scmDataInputTypeIds[] = {STRID(BOOL), STRID(UINT), STRID(UINT), STRID(UDINT), STRID(UDINT), STRID(UINT)};
+const CStringDictionary::TStringId FORTE_EBMaster::scmDataInputNames[] = {
+    STRID(QI),           STRID(BusInterface), STRID(BusSelectPin),
+    STRID(BusInitSpeed), STRID(BusLoopSpeed), STRID(SlaveUpdateInterval)};
+const CStringDictionary::TStringId FORTE_EBMaster::scmDataInputTypeIds[] = {STRID(BOOL),  STRID(UINT),  STRID(UINT),
+                                                                            STRID(UDINT), STRID(UDINT), STRID(UINT)};
 const CStringDictionary::TStringId FORTE_EBMaster::scmDataOutputNames[] = {STRID(QO), STRID(STATUS)};
 const CStringDictionary::TStringId FORTE_EBMaster::scmDataOutputTypeIds[] = {STRID(BOOL), STRID(WSTRING)};
 const TDataIOID FORTE_EBMaster::scmEIWith[] = {0, 3, 5, 4, 1, 2, scmWithListDelimiter};
@@ -51,19 +54,30 @@ const TDataIOID FORTE_EBMaster::scmEOWith[] = {0, 1, scmWithListDelimiter, 0, 1,
 const TForteInt16 FORTE_EBMaster::scmEOWithIndexes[] = {0, 3};
 const CStringDictionary::TStringId FORTE_EBMaster::scmEventOutputNames[] = {STRID(INITO), STRID(IND)};
 const CStringDictionary::TStringId FORTE_EBMaster::scmEventOutputTypeIds[] = {STRID(EInit), STRID(Event)};
-const SAdapterInstanceDef FORTE_EBMaster::scmAdapterInstances[] = {
-  {STRID(EBBusAdapter), STRID(BusAdapterOut), true}
-};
-const SFBInterfaceSpec FORTE_EBMaster::scmFBInterfaceSpec = {
-  1, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,
-  2, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes,
-  6, scmDataInputNames, scmDataInputTypeIds,
-  2, scmDataOutputNames, scmDataOutputTypeIds,
-  0, nullptr,
-  1, scmAdapterInstances
-};
+const SAdapterInstanceDef FORTE_EBMaster::scmAdapterInstances[] = {{STRID(EBBusAdapter), STRID(BusAdapterOut), true}};
+const SFBInterfaceSpec FORTE_EBMaster::scmFBInterfaceSpec = {1,
+                                                             scmEventInputNames,
+                                                             scmEventInputTypeIds,
+                                                             scmEIWith,
+                                                             scmEIWithIndexes,
+                                                             2,
+                                                             scmEventOutputNames,
+                                                             scmEventOutputTypeIds,
+                                                             scmEOWith,
+                                                             scmEOWithIndexes,
+                                                             6,
+                                                             scmDataInputNames,
+                                                             scmDataInputTypeIds,
+                                                             2,
+                                                             scmDataOutputNames,
+                                                             scmDataOutputTypeIds,
+                                                             0,
+                                                             nullptr,
+                                                             1,
+                                                             scmAdapterInstances};
 
-FORTE_EBMaster::FORTE_EBMaster(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_EBMaster::FORTE_EBMaster(const CStringDictionary::TStringId paInstanceNameId,
+                               forte::core::CFBContainer &paContainer) :
     forte::core::io::IOConfigFBMultiMaster(paContainer, scmFBInterfaceSpec, paInstanceNameId),
     var_BusInterface(1_UINT),
     var_BusSelectPin(49_UINT),
@@ -79,8 +93,7 @@ FORTE_EBMaster::FORTE_EBMaster(const CStringDictionary::TStringId paInstanceName
     conn_BusLoopSpeed(nullptr),
     conn_SlaveUpdateInterval(nullptr),
     conn_QO(*this, 0, var_QO),
-    conn_STATUS(*this, 1, var_STATUS) {
-};
+    conn_STATUS(*this, 1, var_STATUS) {};
 
 void FORTE_EBMaster::setInitialValues() {
   var_QI = 0_BOOL;
@@ -94,9 +107,9 @@ void FORTE_EBMaster::setInitialValues() {
 }
 
 void FORTE_EBMaster::readInputData(const TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventINITID: {
-       readData(0, var_QI, conn_QI);
+      readData(0, var_QI, conn_QI);
       readData(3, var_BusInitSpeed, conn_BusInitSpeed);
       readData(5, var_SlaveUpdateInterval, conn_SlaveUpdateInterval);
       readData(4, var_BusLoopSpeed, conn_BusLoopSpeed);
@@ -104,13 +117,12 @@ void FORTE_EBMaster::readInputData(const TEventID paEIID) {
       readData(2, var_BusSelectPin, conn_BusSelectPin);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 void FORTE_EBMaster::writeOutputData(const TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventINITOID: {
       writeData(0, var_QO, conn_QO);
       writeData(1, var_STATUS, conn_STATUS);
@@ -121,13 +133,12 @@ void FORTE_EBMaster::writeOutputData(const TEventID paEIID) {
       writeData(1, var_STATUS, conn_STATUS);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 CIEC_ANY *FORTE_EBMaster::getDI(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_QI;
     case 1: return &var_BusInterface;
     case 2: return &var_BusSelectPin;
@@ -139,7 +150,7 @@ CIEC_ANY *FORTE_EBMaster::getDI(const size_t paIndex) {
 }
 
 CIEC_ANY *FORTE_EBMaster::getDO(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_QO;
     case 1: return &var_STATUS;
   }
@@ -147,7 +158,7 @@ CIEC_ANY *FORTE_EBMaster::getDO(const size_t paIndex) {
 }
 
 CEventConnection *FORTE_EBMaster::getEOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_INITO;
     case 1: return &conn_IND;
   }
@@ -155,7 +166,7 @@ CEventConnection *FORTE_EBMaster::getEOConUnchecked(const TPortId paIndex) {
 }
 
 CDataConnection **FORTE_EBMaster::getDIConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_QI;
     case 1: return &conn_BusInterface;
     case 2: return &conn_BusSelectPin;
@@ -167,14 +178,14 @@ CDataConnection **FORTE_EBMaster::getDIConUnchecked(const TPortId paIndex) {
 }
 
 CDataConnection *FORTE_EBMaster::getDOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_QO;
     case 1: return &conn_STATUS;
   }
   return nullptr;
 }
 
-forte::core::io::IODeviceController* FORTE_EBMaster::createDeviceController(CDeviceExecution& paDeviceExecution) {
+forte::core::io::IODeviceController *FORTE_EBMaster::createDeviceController(CDeviceExecution &paDeviceExecution) {
   return new EmbrickBusHandler(paDeviceExecution);
 }
 
@@ -187,7 +198,7 @@ void FORTE_EBMaster::setConfig() {
   getDeviceController()->setConfig(&config);
 }
 
-void FORTE_EBMaster::onStartup(CEventChainExecutionThread * const paECET) {
+void FORTE_EBMaster::onStartup(CEventChainExecutionThread *const paECET) {
   var_BusAdapterOut().var_UpdateInterval() = var_SlaveUpdateInterval;
 
   forte::core::io::IOConfigFBMultiMaster::onStartup(paECET);

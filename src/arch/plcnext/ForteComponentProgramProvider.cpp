@@ -16,11 +16,11 @@
 
 namespace ForteLibrary {
 
-  IProgram* ForteComponentProgramProvider::CreateProgram(const String& paProgramName, const String& paProgramType) {
-      if (paProgramType == "ForteIOHandler"){
-          return new ForteComponent::ForteIOHandler(paProgramName);
-      }
-      return nullptr;
+  IProgram *ForteComponentProgramProvider::CreateProgram(const String &paProgramName, const String &paProgramType) {
+    if (paProgramType == "ForteIOHandler") {
+      return new ForteComponent::ForteIOHandler(paProgramName);
+    }
+    return nullptr;
   }
 
 } // end of namespace ForteLibrary

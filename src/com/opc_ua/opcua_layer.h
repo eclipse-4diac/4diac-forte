@@ -37,7 +37,6 @@ class COPC_UA_ObjectStruct_Helper;
  */
 class COPC_UA_Layer : public forte::com_infra::CComLayer {
   public:
-
     /**
      * Class constructor
      * @param paUpperLayer
@@ -73,24 +72,26 @@ class COPC_UA_Layer : public forte::com_infra::CComLayer {
     forte::com_infra::EComResponse processInterrupt() override;
 
     /**
-     * Trigger a new incoming event. This is needed here because the CUA_ClientInformation needs to trigger, but it doesn't know the handler
+     * Trigger a new incoming event. This is needed here because the CUA_ClientInformation needs to trigger, but it
+     * doesn't know the handler
      */
     void triggerNewEvent();
 
   private:
-
     /**
      * Response for the processInterrupt() method
      */
     forte::com_infra::EComResponse mInterruptResp;
 
     /**
-     * Pointer to the base class of the OPC UA handlers. Depending on the action, the local or remote will be set, and later used to execute the action
+     * Pointer to the base class of the OPC UA handlers. Depending on the action, the local or remote will be set, and
+     * later used to execute the action
      */
     COPC_UA_HandlerAbstract *mHandler;
 
     /**
-     * Information about the action that's returned from the CActionInfo factory, and which is later passed to the handler when initializing, executing and uninitializing the action
+     * Information about the action that's returned from the CActionInfo factory, and which is later passed to the
+     * handler when initializing, executing and uninitializing the action
      */
     std::unique_ptr<CActionInfo> mActionInfo;
 
@@ -121,10 +122,11 @@ class COPC_UA_Layer : public forte::com_infra::CComLayer {
     bool checkPortType(size_t paPortIndex, bool paIsSD) const;
 
     /**
-     * The following functions and variables are used because if many subscription are present in one FB, and all of them are updated,
-     * we'll get one external event for each, when only one is needed.
-     * TODO: this is a quick fix. This is a problem for any FB which has many RDs, meaning that if any of the RDs changes, an IND is triggered. It's not wrong,
-     * but the tests lead to an overflow of external events, and this reduces a little.
+     * The following functions and variables are used because if many subscription are present in one FB, and all of
+     * them are updated, we'll get one external event for each, when only one is needed.
+     * TODO: this is a quick fix. This is a problem for any FB which has many RDs, meaning that if any of the RDs
+     * changes, an IND is triggered. It's not wrong, but the tests lead to an overflow of external events, and this
+     * reduces a little.
      */
     void setDataAlreadyPresentRead(bool paDataRead);
     bool getDataAlreadyPresentRead();
@@ -140,7 +142,7 @@ class COPC_UA_Layer : public forte::com_infra::CComLayer {
      * @param paPortIndex The Index of the data port
      * @param paIsSD True if the port to get is an SD, false othewise
      * @return The pointer to the local port connection
-    */
+     */
     CStringDictionary::TStringId getLocalPortNameId(size_t paPortIndex, bool paIsSD) const;
 
     /**
@@ -155,4 +157,3 @@ class COPC_UA_Layer : public forte::com_infra::CComLayer {
 };
 
 #endif /* SRC_MODULES_OPC_UA_OPCUA_LAYER_H_ */
-

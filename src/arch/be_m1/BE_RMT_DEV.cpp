@@ -11,12 +11,8 @@
  *******************************************************************************/
 #include "BE_RMT_DEV.h"
 
-BE_RMT_DEV::BE_RMT_DEV(CFORTEModule &paModule) :
-    RMT_DEV(), mModule(paModule){
-
+BE_RMT_DEV::BE_RMT_DEV(CFORTEModule &paModule) : RMT_DEV(), mModule(paModule) {
 }
 
-BE_RMT_DEV::~BE_RMT_DEV(){
-
+BE_RMT_DEV::~BE_RMT_DEV() {
 }
-

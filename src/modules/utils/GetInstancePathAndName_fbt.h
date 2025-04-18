@@ -22,9 +22,8 @@
 #include "forte_array_fixed.h"
 #include "forte_array_variable.h"
 
-
 class FORTE_GetInstancePathAndName final : public CSimpleFB {
-  DECLARE_FIRMWARE_FB(FORTE_GetInstancePathAndName)
+    DECLARE_FIRMWARE_FB(FORTE_GetInstancePathAndName)
 
   private:
     static const CStringDictionary::TStringId scmDataInputNames[];
@@ -86,5 +85,3 @@ class FORTE_GetInstancePathAndName final : public CSimpleFB {
       evt_REQ(paSep, paPath, paName);
     }
 };
-
-

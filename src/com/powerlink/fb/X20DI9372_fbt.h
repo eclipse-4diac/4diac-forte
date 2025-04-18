@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2012 - 2024 AIT
+ * Copyright (c) 2012 - 2024 AIT
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -25,9 +25,8 @@
 #include "forte_array_fixed.h"
 #include "forte_array_variable.h"
 
-
 class FORTE_X20DI9372 final : public PowerlinkFunctionBlockDI {
-  DECLARE_FIRMWARE_FB(FORTE_X20DI9372)
+    DECLARE_FIRMWARE_FB(FORTE_X20DI9372)
 
   private:
     static const CStringDictionary::TStringId scmDataInputNames[];
@@ -107,7 +106,24 @@ class FORTE_X20DI9372 final : public PowerlinkFunctionBlockDI {
     CDataConnection **getDIConUnchecked(TPortId) override;
     CDataConnection *getDOConUnchecked(TPortId) override;
 
-    void evt_INIT(const CIEC_BOOL &paQI, const CIEC_USINT &paCNID, const CIEC_UINT &paMODID, CIEC_BOOL &paQO, CIEC_USINT &paCNIDO, CIEC_STRING &paSTATUS, CIEC_BOOL &paDI01, CIEC_BOOL &paDI02, CIEC_BOOL &paDI03, CIEC_BOOL &paDI04, CIEC_BOOL &paDI05, CIEC_BOOL &paDI06, CIEC_BOOL &paDI07, CIEC_BOOL &paDI08, CIEC_BOOL &paDI09, CIEC_BOOL &paDI10, CIEC_BOOL &paDI11, CIEC_BOOL &paDI12) {
+    void evt_INIT(const CIEC_BOOL &paQI,
+                  const CIEC_USINT &paCNID,
+                  const CIEC_UINT &paMODID,
+                  CIEC_BOOL &paQO,
+                  CIEC_USINT &paCNIDO,
+                  CIEC_STRING &paSTATUS,
+                  CIEC_BOOL &paDI01,
+                  CIEC_BOOL &paDI02,
+                  CIEC_BOOL &paDI03,
+                  CIEC_BOOL &paDI04,
+                  CIEC_BOOL &paDI05,
+                  CIEC_BOOL &paDI06,
+                  CIEC_BOOL &paDI07,
+                  CIEC_BOOL &paDI08,
+                  CIEC_BOOL &paDI09,
+                  CIEC_BOOL &paDI10,
+                  CIEC_BOOL &paDI11,
+                  CIEC_BOOL &paDI12) {
       var_QI = paQI;
       var_CNID = paCNID;
       var_MODID = paMODID;
@@ -129,7 +145,24 @@ class FORTE_X20DI9372 final : public PowerlinkFunctionBlockDI {
       paDI12 = var_DI12;
     }
 
-    void evt_REQ(const CIEC_BOOL &paQI, const CIEC_USINT &paCNID, const CIEC_UINT &paMODID, CIEC_BOOL &paQO, CIEC_USINT &paCNIDO, CIEC_STRING &paSTATUS, CIEC_BOOL &paDI01, CIEC_BOOL &paDI02, CIEC_BOOL &paDI03, CIEC_BOOL &paDI04, CIEC_BOOL &paDI05, CIEC_BOOL &paDI06, CIEC_BOOL &paDI07, CIEC_BOOL &paDI08, CIEC_BOOL &paDI09, CIEC_BOOL &paDI10, CIEC_BOOL &paDI11, CIEC_BOOL &paDI12) {
+    void evt_REQ(const CIEC_BOOL &paQI,
+                 const CIEC_USINT &paCNID,
+                 const CIEC_UINT &paMODID,
+                 CIEC_BOOL &paQO,
+                 CIEC_USINT &paCNIDO,
+                 CIEC_STRING &paSTATUS,
+                 CIEC_BOOL &paDI01,
+                 CIEC_BOOL &paDI02,
+                 CIEC_BOOL &paDI03,
+                 CIEC_BOOL &paDI04,
+                 CIEC_BOOL &paDI05,
+                 CIEC_BOOL &paDI06,
+                 CIEC_BOOL &paDI07,
+                 CIEC_BOOL &paDI08,
+                 CIEC_BOOL &paDI09,
+                 CIEC_BOOL &paDI10,
+                 CIEC_BOOL &paDI11,
+                 CIEC_BOOL &paDI12) {
       var_QI = paQI;
       var_CNID = paCNID;
       var_MODID = paMODID;
@@ -151,9 +184,25 @@ class FORTE_X20DI9372 final : public PowerlinkFunctionBlockDI {
       paDI12 = var_DI12;
     }
 
-    void operator()(const CIEC_BOOL &paQI, const CIEC_USINT &paCNID, const CIEC_UINT &paMODID, CIEC_BOOL &paQO, CIEC_USINT &paCNIDO, CIEC_STRING &paSTATUS, CIEC_BOOL &paDI01, CIEC_BOOL &paDI02, CIEC_BOOL &paDI03, CIEC_BOOL &paDI04, CIEC_BOOL &paDI05, CIEC_BOOL &paDI06, CIEC_BOOL &paDI07, CIEC_BOOL &paDI08, CIEC_BOOL &paDI09, CIEC_BOOL &paDI10, CIEC_BOOL &paDI11, CIEC_BOOL &paDI12) {
-      evt_INIT(paQI, paCNID, paMODID, paQO, paCNIDO, paSTATUS, paDI01, paDI02, paDI03, paDI04, paDI05, paDI06, paDI07, paDI08, paDI09, paDI10, paDI11, paDI12);
+    void operator()(const CIEC_BOOL &paQI,
+                    const CIEC_USINT &paCNID,
+                    const CIEC_UINT &paMODID,
+                    CIEC_BOOL &paQO,
+                    CIEC_USINT &paCNIDO,
+                    CIEC_STRING &paSTATUS,
+                    CIEC_BOOL &paDI01,
+                    CIEC_BOOL &paDI02,
+                    CIEC_BOOL &paDI03,
+                    CIEC_BOOL &paDI04,
+                    CIEC_BOOL &paDI05,
+                    CIEC_BOOL &paDI06,
+                    CIEC_BOOL &paDI07,
+                    CIEC_BOOL &paDI08,
+                    CIEC_BOOL &paDI09,
+                    CIEC_BOOL &paDI10,
+                    CIEC_BOOL &paDI11,
+                    CIEC_BOOL &paDI12) {
+      evt_INIT(paQI, paCNID, paMODID, paQO, paCNIDO, paSTATUS, paDI01, paDI02, paDI03, paDI04, paDI05, paDI06, paDI07,
+               paDI08, paDI09, paDI10, paDI11, paDI12);
     }
 };
-
-

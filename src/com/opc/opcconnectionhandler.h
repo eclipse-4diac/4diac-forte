@@ -21,26 +21,28 @@
 
 class COpcConnection;
 
-class COpcConnectionHandler{
-  DECLARE_SINGLETON(COpcConnectionHandler)
-    ;
+class COpcConnectionHandler {
+    DECLARE_SINGLETON(COpcConnectionHandler);
+
   public:
     /*! \brief returns existing or creates new OpcConnection
      *
      *  If a connection to the specified server already exist a pointer to this is returned. Otherwise a
      *  new connection is created. The returned connection includes the group with the specified settings.
      */
-    COpcConnection* getOpcConnection(const std::string& paHost, const std::string& paServerName, forte::com_infra::CComLayer* paComCallback);
+    COpcConnection *getOpcConnection(const std::string &paHost,
+                                     const std::string &paServerName,
+                                     forte::com_infra::CComLayer *paComCallback);
 
-    void removeOpcConnection(const std::string& paHost, const std::string& paServerName, const std::string& paGroupName);
+    void
+    removeOpcConnection(const std::string &paHost, const std::string &paServerName, const std::string &paGroupName);
 
   private:
-    COpcConnection* findOpcConnection(const std::string& paHost, const std::string& paServerName);
-    void deleteOpcConnection(const std::string& paHost, const std::string& paServerName);
+    COpcConnection *findOpcConnection(const std::string &paHost, const std::string &paServerName);
+    void deleteOpcConnection(const std::string &paHost, const std::string &paServerName);
 
-    typedef CSinglyLinkedList<COpcConnection*> TOpcConnectionList;
+    typedef CSinglyLinkedList<COpcConnection *> TOpcConnectionList;
     TOpcConnectionList mOpcConnectionList;
-
 };
 
 #endif // OPCCONNECTIONHANDLER_H_

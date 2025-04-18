@@ -28,7 +28,6 @@ USE_STRING_ID(QO);
 USE_STRING_ID(REQ);
 USE_STRING_ID(STRING);
 
-
 #include "criticalregion.h"
 #include "resource.h"
 
@@ -36,7 +35,8 @@ DEFINE_FIRMWARE_FB(FORTE_OUT_ANY_CONSOLE, STRID(OUT_ANY_CONSOLE))
 
 const CStringDictionary::TStringId FORTE_OUT_ANY_CONSOLE::scmDataInputNames[] = {STRID(QI), STRID(LABEL), STRID(IN)};
 
-const CStringDictionary::TStringId FORTE_OUT_ANY_CONSOLE::scmDataInputTypeIds[] = {STRID(BOOL), STRID(STRING), STRID(ANY)};
+const CStringDictionary::TStringId FORTE_OUT_ANY_CONSOLE::scmDataInputTypeIds[] = {STRID(BOOL), STRID(STRING),
+                                                                                   STRID(ANY)};
 
 const CStringDictionary::TStringId FORTE_OUT_ANY_CONSOLE::scmDataOutputNames[] = {STRID(QO)};
 
@@ -52,17 +52,29 @@ const TForteInt16 FORTE_OUT_ANY_CONSOLE::scmEOWithIndexes[] = {0};
 const CStringDictionary::TStringId FORTE_OUT_ANY_CONSOLE::scmEventOutputNames[] = {STRID(CNF)};
 const CStringDictionary::TStringId FORTE_OUT_ANY_CONSOLE::scmEventOutputTypeIds[] = {STRID(Event)};
 
+const SFBInterfaceSpec FORTE_OUT_ANY_CONSOLE::scmFBInterfaceSpec = {1,
+                                                                    scmEventInputNames,
+                                                                    scmEventInputTypeIds,
+                                                                    scmEIWith,
+                                                                    scmEIWithIndexes,
+                                                                    1,
+                                                                    scmEventOutputNames,
+                                                                    scmEventOutputTypeIds,
+                                                                    scmEOWith,
+                                                                    scmEOWithIndexes,
+                                                                    3,
+                                                                    scmDataInputNames,
+                                                                    scmDataInputTypeIds,
+                                                                    1,
+                                                                    scmDataOutputNames,
+                                                                    scmDataOutputTypeIds,
+                                                                    0,
+                                                                    nullptr,
+                                                                    0,
+                                                                    nullptr};
 
-const SFBInterfaceSpec FORTE_OUT_ANY_CONSOLE::scmFBInterfaceSpec = {
-  1, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,
-  1, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes,
-  3, scmDataInputNames, scmDataInputTypeIds,
-  1, scmDataOutputNames, scmDataOutputTypeIds,
-  0, nullptr,
-  0, nullptr
-};
-
-FORTE_OUT_ANY_CONSOLE::FORTE_OUT_ANY_CONSOLE(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_OUT_ANY_CONSOLE::FORTE_OUT_ANY_CONSOLE(const CStringDictionary::TStringId paInstanceNameId,
+                                             forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId),
     var_QI(CIEC_BOOL(0)),
     var_LABEL(CIEC_STRING("", 0)),
@@ -72,11 +84,10 @@ FORTE_OUT_ANY_CONSOLE::FORTE_OUT_ANY_CONSOLE(const CStringDictionary::TStringId 
     conn_QI(nullptr),
     conn_LABEL(nullptr),
     conn_IN(nullptr),
-    conn_QO(*this, 0, var_QO) {
-};
+    conn_QO(*this, 0, var_QO) {};
 
 void FORTE_OUT_ANY_CONSOLE::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventREQID:
       var_QO = var_QI;
       if (var_QI) {
@@ -92,31 +103,29 @@ void FORTE_OUT_ANY_CONSOLE::executeEvent(TEventID paEIID, CEventChainExecutionTh
 }
 
 void FORTE_OUT_ANY_CONSOLE::readInputData(TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventREQID: {
       readData(0, var_QI, conn_QI);
       readData(2, var_IN, conn_IN);
       readData(1, var_LABEL, conn_LABEL);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 void FORTE_OUT_ANY_CONSOLE::writeOutputData(TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventCNFID: {
       writeData(0, var_QO, conn_QO);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 CIEC_ANY *FORTE_OUT_ANY_CONSOLE::getDI(size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_QI;
     case 1: return &var_LABEL;
     case 2: return &var_IN;
@@ -125,21 +134,21 @@ CIEC_ANY *FORTE_OUT_ANY_CONSOLE::getDI(size_t paIndex) {
 }
 
 CIEC_ANY *FORTE_OUT_ANY_CONSOLE::getDO(size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_QO;
   }
   return nullptr;
 }
 
 CEventConnection *FORTE_OUT_ANY_CONSOLE::getEOConUnchecked(TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_CNF;
   }
   return nullptr;
 }
 
 CDataConnection **FORTE_OUT_ANY_CONSOLE::getDIConUnchecked(TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_QI;
     case 1: return &conn_LABEL;
     case 2: return &conn_IN;
@@ -148,10 +157,8 @@ CDataConnection **FORTE_OUT_ANY_CONSOLE::getDIConUnchecked(TPortId paIndex) {
 }
 
 CDataConnection *FORTE_OUT_ANY_CONSOLE::getDOConUnchecked(TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_QO;
   }
   return nullptr;
 }
-
-

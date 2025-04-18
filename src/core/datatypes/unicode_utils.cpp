@@ -31,31 +31,23 @@ int CUnicodeUtilities::parseUTF8Codepoint(const TForteByte *paCodepoint, TForteU
     paValue = (paCodepoint[0] & 0x7f);
     return 1;
   } else if ((paCodepoint[0] & 0xe0) == 0xc0) {
-    if((paCodepoint[1] & 0xc0) != 0x80) {
+    if ((paCodepoint[1] & 0xc0) != 0x80) {
       return -1;
     }
-    paValue = ((paCodepoint[0] & 0x1f) << 6) |
-                (paCodepoint[1] & 0x3f);
+    paValue = ((paCodepoint[0] & 0x1f) << 6) | (paCodepoint[1] & 0x3f);
     return 2;
   } else if ((paCodepoint[0] & 0xf0) == 0xe0) {
-    if ((paCodepoint[1] & 0xc0) != 0x80 ||
-        (paCodepoint[2] & 0xc0) != 0x80) {
+    if ((paCodepoint[1] & 0xc0) != 0x80 || (paCodepoint[2] & 0xc0) != 0x80) {
       return -1;
     }
-    paValue = ((paCodepoint[0] & 0x0f) << 12) |
-                ((paCodepoint[1] & 0x3f) <<  6) |
-                (paCodepoint[2] & 0x3f);
+    paValue = ((paCodepoint[0] & 0x0f) << 12) | ((paCodepoint[1] & 0x3f) << 6) | (paCodepoint[2] & 0x3f);
     return 3;
   } else if ((paCodepoint[0] & 0xf8) == 0xf0) {
-    if ((paCodepoint[1] & 0xc0) != 0x80 ||
-        (paCodepoint[2] & 0xc0) != 0x80 ||
-        (paCodepoint[3] & 0xc0) != 0x80) {
+    if ((paCodepoint[1] & 0xc0) != 0x80 || (paCodepoint[2] & 0xc0) != 0x80 || (paCodepoint[3] & 0xc0) != 0x80) {
       return -1;
     }
-    paValue = ((paCodepoint[0] & 0x07) << 18) |
-                ((paCodepoint[1] & 0x3f) << 12) |
-                ((paCodepoint[2] & 0x3f) <<  6) |
-                (paCodepoint[3] & 0x3f);
+    paValue = ((paCodepoint[0] & 0x07) << 18) | ((paCodepoint[1] & 0x3f) << 12) | ((paCodepoint[2] & 0x3f) << 6) |
+              (paCodepoint[3] & 0x3f);
     return 4;
   }
 
@@ -66,7 +58,7 @@ int CUnicodeUtilities::parseUTF8Codepoint(const TForteByte *paCodepoint, TForteU
 int CUnicodeUtilities::encodeUTF8Codepoint(TForteByte *paCodepoint, unsigned int paBufferSize, TForteUInt32 paValue) {
   if (paValue < 0x80) {
     if (paCodepoint) {
-      if(paBufferSize < 1) {
+      if (paBufferSize < 1) {
         return -1;
       }
       paCodepoint[0] = (TForteByte) paValue;
@@ -74,32 +66,32 @@ int CUnicodeUtilities::encodeUTF8Codepoint(TForteByte *paCodepoint, unsigned int
     return 1;
   } else if (paValue < 0x800) {
     if (paCodepoint) {
-      if(paBufferSize < 2) {
+      if (paBufferSize < 2) {
         return -1;
       }
       paCodepoint[0] = (TForteByte) (0xc0 | ((paValue >> 6) & 0x1f));
-      paCodepoint[1] = (TForteByte) (0x80 | ((paValue     ) & 0x3f));
+      paCodepoint[1] = (TForteByte) (0x80 | ((paValue) & 0x3f));
     }
     return 2;
   } else if (paValue < 0x10000) {
     if (paCodepoint) {
-      if(paBufferSize < 3) {
+      if (paBufferSize < 3) {
         return -1;
       }
       paCodepoint[0] = (TForteByte) (0xe0 | ((paValue >> 12) & 0x1f));
-      paCodepoint[1] = (TForteByte) (0x80 | ((paValue >>  6) & 0x3f));
-      paCodepoint[2] = (TForteByte) (0x80 | ((paValue      ) & 0x3f));
+      paCodepoint[1] = (TForteByte) (0x80 | ((paValue >> 6) & 0x3f));
+      paCodepoint[2] = (TForteByte) (0x80 | ((paValue) & 0x3f));
     }
     return 3;
   } else if (paValue < 0x110000) {
     if (paCodepoint) {
-      if(paBufferSize < 4) {
+      if (paBufferSize < 4) {
         return -1;
       }
       paCodepoint[0] = (TForteByte) (0xf0 | ((paValue >> 18) & 0x1f));
       paCodepoint[1] = (TForteByte) (0x80 | ((paValue >> 12) & 0x3f));
-      paCodepoint[2] = (TForteByte) (0x80 | ((paValue >>  6) & 0x3f));
-      paCodepoint[3] = (TForteByte) (0x80 | ((paValue      ) & 0x3f));
+      paCodepoint[2] = (TForteByte) (0x80 | ((paValue >> 6) & 0x3f));
+      paCodepoint[3] = (TForteByte) (0x80 | ((paValue) & 0x3f));
     }
     return 4;
   }
@@ -115,18 +107,16 @@ int CUnicodeUtilities::encodeUTF8Codepoint(TForteByte *paCodepoint, unsigned int
  *   or high surrogate, which will be in the range 0xD800..0xDBFF.
  * The low ten bits (also in the range 0..0x3FF) are added to 0xDC00 to give the second
  *   code unit or low surrogate, which will be in the range 0xDC00..0xDFFF.
-*/
+ */
 int CUnicodeUtilities::parseUTF16Codepoint(const TForteByte *paCodepoint, TForteUInt32 &paValue, bool paLittleEndian) {
-  TForteUInt16 nFirstWord = static_cast<TForteUInt16>(paLittleEndian ?
-                                                        (paCodepoint[0] | (paCodepoint[1] << 8)) :
-                                                        ((paCodepoint[0] << 8) | paCodepoint[1]));
+  TForteUInt16 nFirstWord = static_cast<TForteUInt16>(paLittleEndian ? (paCodepoint[0] | (paCodepoint[1] << 8))
+                                                                     : ((paCodepoint[0] << 8) | paCodepoint[1]));
 
   if ((nFirstWord & 0xfc00) == 0xd800) {
-    TForteUInt16 nSecondWord = static_cast<TForteUInt16>(paLittleEndian ?
-      (paCodepoint[2] | (paCodepoint[3] << 8)) :
-      ((paCodepoint[2] << 8) | paCodepoint[3]));
+    TForteUInt16 nSecondWord = static_cast<TForteUInt16>(paLittleEndian ? (paCodepoint[2] | (paCodepoint[3] << 8))
+                                                                        : ((paCodepoint[2] << 8) | paCodepoint[3]));
 
-    if((nSecondWord & 0xfc00) != 0xdc00) {
+    if ((nSecondWord & 0xfc00) != 0xdc00) {
       return -1;
     }
 
@@ -140,23 +130,25 @@ int CUnicodeUtilities::parseUTF16Codepoint(const TForteByte *paCodepoint, TForte
   return 2;
 }
 
-
-int CUnicodeUtilities::encodeUTF16Codepoint(TForteByte *paCodepoint, unsigned int paBufferSize, TForteUInt32 paValue, bool paLittleEndian) {
-  if((paValue >= 0xd800 && paValue < 0xe000) || paValue >= 0x110000) {
+int CUnicodeUtilities::encodeUTF16Codepoint(TForteByte *paCodepoint,
+                                            unsigned int paBufferSize,
+                                            TForteUInt32 paValue,
+                                            bool paLittleEndian) {
+  if ((paValue >= 0xd800 && paValue < 0xe000) || paValue >= 0x110000) {
     return -1;
   }
 
   if (paValue < 0x10000) {
     if (paCodepoint) {
-      if(paBufferSize < 2) {
+      if (paBufferSize < 2) {
         return -1;
       }
       if (paLittleEndian) {
-        paCodepoint[0] = (TForteByte) ((paValue     ) & 0xff);
+        paCodepoint[0] = (TForteByte) ((paValue) & 0xff);
         paCodepoint[1] = (TForteByte) ((paValue >> 8) & 0xff);
       } else {
         paCodepoint[0] = (TForteByte) ((paValue >> 8) & 0xff);
-        paCodepoint[1] = (TForteByte) ((paValue     ) & 0xff);
+        paCodepoint[1] = (TForteByte) ((paValue) & 0xff);
       }
     }
     return 2;
@@ -164,22 +156,22 @@ int CUnicodeUtilities::encodeUTF16Codepoint(TForteByte *paCodepoint, unsigned in
     if (paCodepoint) {
       TForteUInt32 nVal = paValue - 0x10000;
       TForteUInt16 nHighSurrogate = static_cast<TForteUInt16>(0xd800 | ((nVal >> 10) & 0x3ff));
-      TForteUInt16 nLowSurrogate  = static_cast<TForteUInt16>(0xdc00 | ((nVal      ) & 0x3ff));
+      TForteUInt16 nLowSurrogate = static_cast<TForteUInt16>(0xdc00 | ((nVal) & 0x3ff));
 
-      if(paBufferSize < 4) {
+      if (paBufferSize < 4) {
         return -1;
       }
 
       if (paLittleEndian) {
-        paCodepoint[0] = (TForteByte) ((nHighSurrogate     ) & 0xff);
+        paCodepoint[0] = (TForteByte) ((nHighSurrogate) & 0xff);
         paCodepoint[1] = (TForteByte) ((nHighSurrogate >> 8) & 0xff);
-        paCodepoint[2] = (TForteByte) ((nLowSurrogate      ) & 0xff);
-        paCodepoint[3] = (TForteByte) ((nLowSurrogate  >> 8) & 0xff);
+        paCodepoint[2] = (TForteByte) ((nLowSurrogate) & 0xff);
+        paCodepoint[3] = (TForteByte) ((nLowSurrogate >> 8) & 0xff);
       } else {
         paCodepoint[0] = (TForteByte) ((nHighSurrogate >> 8) & 0xff);
-        paCodepoint[1] = (TForteByte) ((nHighSurrogate     ) & 0xff);
-        paCodepoint[2] = (TForteByte) ((nLowSurrogate  >> 8) & 0xff);
-        paCodepoint[3] = (TForteByte) ((nLowSurrogate      ) & 0xff);
+        paCodepoint[1] = (TForteByte) ((nHighSurrogate) & 0xff);
+        paCodepoint[2] = (TForteByte) ((nLowSurrogate >> 8) & 0xff);
+        paCodepoint[3] = (TForteByte) ((nLowSurrogate) & 0xff);
       }
     }
     return 4;
@@ -199,12 +191,12 @@ int CUnicodeUtilities::checkUTF8(const char *paValue, int paLength, unsigned int
     if (nRes < 0 || nRes + i > nRemLen) {
       return -1;
     }
-    if(nCodepoint != CUnicodeUtilities::scmBOMMarker) {
-      if(nCodepoint >= 0x10000) {
+    if (nCodepoint != CUnicodeUtilities::scmBOMMarker) {
+      if (nCodepoint >= 0x10000) {
         paMaxWidth = 21;
-      } else if(nCodepoint >= 0x100 && paMaxWidth < 16) {
+      } else if (nCodepoint >= 0x100 && paMaxWidth < 16) {
         paMaxWidth = 16;
-      } else if(nCodepoint >= 0x80 && paMaxWidth < 8) {
+      } else if (nCodepoint >= 0x80 && paMaxWidth < 8) {
         paMaxWidth = 8;
       }
     }

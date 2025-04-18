@@ -11,7 +11,7 @@
  *******************************************************************************/
 #include "GET_VALUE.h"
 
-#include <mtypes.h>                     /* M1 include files    */
+#include <mtypes.h> /* M1 include files    */
 #include <msys_e.h>
 #include <mio.h>
 #include <mio_e.h>
@@ -36,25 +36,36 @@ const TForteInt16 FORTE_GET_VALUE::scmEOWithIndexes[] = {0, 2, -1};
 const CStringDictionary::TStringId FORTE_GET_VALUE::scmEventOutputNames[] = {STRID(INITO), STRID(CNF)};
 const CStringDictionary::TStringId FORTE_GET_VALUE::scmEventOutputTypeIds[] = {STRID(Event), STRID(Event)};
 
-const SFBInterfaceSpec FORTE_GET_VALUE::scmFBInterfaceSpec = {
-  2,  scmEventInputNames, scmEventInputTypeIds,  scmEIWith,  scmEIWithIndexes,
-  2,  scmEventOutputNames, scmEventOutputTypeIds,  scmEOWith, scmEOWithIndexes,  2,  scmDataInputNames, scmDataInputTypeIds,
-  2,  scmDataOutputNames, scmDataOutputTypeIds,
-  0, 0
-};
-
+const SFBInterfaceSpec FORTE_GET_VALUE::scmFBInterfaceSpec = {2,
+                                                              scmEventInputNames,
+                                                              scmEventInputTypeIds,
+                                                              scmEIWith,
+                                                              scmEIWithIndexes,
+                                                              2,
+                                                              scmEventOutputNames,
+                                                              scmEventOutputTypeIds,
+                                                              scmEOWith,
+                                                              scmEOWithIndexes,
+                                                              2,
+                                                              scmDataInputNames,
+                                                              scmDataInputTypeIds,
+                                                              2,
+                                                              scmDataOutputNames,
+                                                              scmDataOutputTypeIds,
+                                                              0,
+                                                              0};
 
 void FORTE_GET_VALUE::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
-  switch(paEIID){
+  switch (paEIID) {
     case scmEventINITID:
-    if (init()) {
-      sendOutputEvent(scmEventINITOID, paECET);
-    }
-    break;
-  case scmEventREQID:
-    RET_CODE() = read();
-    sendOutputEvent(scmEventCNFID, paECET);
-    break;
+      if (init()) {
+        sendOutputEvent(scmEventINITOID, paECET);
+      }
+      break;
+    case scmEventREQID:
+      RET_CODE() = read();
+      sendOutputEvent(scmEventCNFID, paECET);
+      break;
   }
 }
 
@@ -69,5 +80,3 @@ SINT32 FORTE_GET_VALUE::read() {
   VALUE() = myValue;
   return retCode;
 }
-
-

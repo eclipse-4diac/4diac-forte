@@ -22,54 +22,54 @@
 //********************************************************************************************
 //   LREAL_TO_*  functions
 //********************************************************************************************
-inline const CIEC_LWORD func_LREAL_TO_LWORD(const CIEC_LREAL &paVal){
+inline const CIEC_LWORD func_LREAL_TO_LWORD(const CIEC_LREAL &paVal) {
   return CIEC_ANY::cast<CIEC_LWORD>(paVal);
 }
 
-inline const CIEC_REAL func_LREAL_TO_REAL(const CIEC_LREAL &paVal){
+inline const CIEC_REAL func_LREAL_TO_REAL(const CIEC_LREAL &paVal) {
   return CIEC_ANY::cast<CIEC_REAL>(paVal);
 }
 
-inline const CIEC_USINT func_LREAL_TO_USINT(const CIEC_LREAL &paVal){
+inline const CIEC_USINT func_LREAL_TO_USINT(const CIEC_LREAL &paVal) {
   return CIEC_ANY::cast<CIEC_USINT>(paVal);
 }
 
-inline const CIEC_UDINT func_LREAL_TO_UDINT(const CIEC_LREAL &paVal){
+inline const CIEC_UDINT func_LREAL_TO_UDINT(const CIEC_LREAL &paVal) {
   return CIEC_ANY::cast<CIEC_UDINT>(paVal);
 }
 
-inline const CIEC_UINT func_LREAL_TO_UINT(const CIEC_LREAL &paVal){
+inline const CIEC_UINT func_LREAL_TO_UINT(const CIEC_LREAL &paVal) {
   return CIEC_ANY::cast<CIEC_UINT>(paVal);
 }
 
-inline const CIEC_ULINT func_LREAL_TO_ULINT(const CIEC_LREAL &paVal){
+inline const CIEC_ULINT func_LREAL_TO_ULINT(const CIEC_LREAL &paVal) {
   return CIEC_ANY::cast<CIEC_ULINT>(paVal);
 }
 
-inline const CIEC_LINT func_LREAL_TO_LINT(const CIEC_LREAL &paVal){
+inline const CIEC_LINT func_LREAL_TO_LINT(const CIEC_LREAL &paVal) {
   return CIEC_ANY::cast<CIEC_LINT>(paVal);
 }
 
-inline const CIEC_DINT func_LREAL_TO_DINT(const CIEC_LREAL &paVal){
+inline const CIEC_DINT func_LREAL_TO_DINT(const CIEC_LREAL &paVal) {
   return CIEC_ANY::cast<CIEC_DINT>(paVal);
 }
 
-inline const CIEC_SINT func_LREAL_TO_SINT(const CIEC_LREAL &paVal){
+inline const CIEC_SINT func_LREAL_TO_SINT(const CIEC_LREAL &paVal) {
   return CIEC_ANY::cast<CIEC_SINT>(paVal);
 }
 
-inline const CIEC_INT func_LREAL_TO_INT(const CIEC_LREAL &paVal){
+inline const CIEC_INT func_LREAL_TO_INT(const CIEC_LREAL &paVal) {
   return CIEC_ANY::cast<CIEC_INT>(paVal);
 }
 
-inline const CIEC_STRING func_LREAL_AS_STRING(const CIEC_LREAL &paVal){
+inline const CIEC_STRING func_LREAL_AS_STRING(const CIEC_LREAL &paVal) {
   CIEC_STRING string;
   stringConverter(string, paVal);
   return string;
 }
 
 #ifdef FORTE_USE_WSTRING_DATATYPE
-inline const CIEC_WSTRING func_LREAL_AS_WSTRING(const CIEC_LREAL &paVal){
+inline const CIEC_WSTRING func_LREAL_AS_WSTRING(const CIEC_LREAL &paVal) {
   CIEC_WSTRING string;
   stringConverter(string, paVal);
   return string;

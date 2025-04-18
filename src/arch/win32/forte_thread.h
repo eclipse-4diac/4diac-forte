@@ -17,7 +17,7 @@
 #include "./threadbase.h"
 #include <windows.h>
 
-/**  \ingroup FORTE-HAL 
+/**  \ingroup FORTE-HAL
  * \defgroup win32_hal PC FORTE Hardware Abstraction Layer
  *
  * \brief The FORTE-HAL implementation for normal win32
@@ -26,9 +26,9 @@
 
 /*! \ingroup win32_hal
  * \brief The thread implementation for the win32 thread interface.
- *  
+ *
  */
-class CWin32Thread : public forte::arch::CThreadBase <HANDLE>{
+class CWin32Thread : public forte::arch::CThreadBase<HANDLE> {
   public:
     /*! \brief Constructor of the Thread class
      *
@@ -57,12 +57,10 @@ class CWin32Thread : public forte::arch::CThreadBase <HANDLE>{
      *
      * this function will call the run method of the thread instance.
      */
-    //static void * threadFunction(void *arguments); 
+    // static void * threadFunction(void *arguments);
     static DWORD WINAPI threadFunction(LPVOID paArguments);
-
 };
 
-typedef CWin32Thread CThread;  //allows that doxygen can generate better documentation
+typedef CWin32Thread CThread; // allows that doxygen can generate better documentation
 
 #endif /*FORTE_THREAD_H_*/
-

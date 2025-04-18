@@ -21,22 +21,20 @@
 
 /**
  * @brief Device that adds debug commands to the device. The commands are defined in DebugMGR
- * 
+ *
  */
 class DebugDevice : public CDevice {
-public:
+  public:
+    DebugDevice(const std::string &paMGRID = "localhost:61499");
+    ~DebugDevice() override = default;
 
-  DebugDevice(const std::string &paMGRID = "localhost:61499");
-  ~DebugDevice() override = default;
+    int startDevice() override;
 
-  int startDevice() override;
+    OPCUA_MGR mOpcuaMgr;
 
-  OPCUA_MGR mOpcuaMgr;
-
-  DebugMGR mDebugMgr;
+    DebugMGR mDebugMgr;
 
   private:
-
     // the kill signal sent by main is handled by this promise
     // which is used just as a inter-thread communication
     // to avoid condition variables and such

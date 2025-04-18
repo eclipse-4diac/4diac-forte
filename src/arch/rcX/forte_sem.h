@@ -25,9 +25,8 @@ namespace forte {
      *
      * The semaphore is initialized with the value given.
      */
-    class CrcXSemaphore{
+    class CrcXSemaphore {
       public:
-
         explicit CrcXSemaphore(unsigned int paInitialValue = 0);
         ~CrcXSemaphore();
 
@@ -43,7 +42,8 @@ namespace forte {
         /** @brief Checks if the semaphore is locked, and waits the specified amount of time if it is locked
          *
          * @param paRelativeTimeout - The relative time span to wait in nanoseconds
-         * @return true - semaphore has become available before the timeout, false - semaphore was not available before timeout
+         * @return true - semaphore has become available before the timeout, false - semaphore was not available before
+         * timeout
          */
         bool timedWait(const TForteUInt64 paRelativeTimeout);
 

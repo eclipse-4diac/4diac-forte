@@ -20,41 +20,33 @@ USE_STRING_ID(BOOL);
 
 DEFINE_FIRMWARE_DATATYPE(BOOL, STRID(BOOL))
 
-int CIEC_BOOL::fromString(const char *paValue){
+int CIEC_BOOL::fromString(const char *paValue) {
   int nRetVal = 0;
 
-  if(0 == strncmp(paValue, "BOOL#", 5)){
+  if (0 == strncmp(paValue, "BOOL#", 5)) {
     paValue += 5;
     nRetVal += 5;
   }
 
-  if(paValue[0] == '1'){
+  if (paValue[0] == '1') {
     setTBOOL8(true);
     nRetVal += 1;
-  }
-  else{
-    if(paValue[0] == '0'){
+  } else {
+    if (paValue[0] == '0') {
       setTBOOL8(false);
       nRetVal += 1;
-    }
-    else{
-      if(((paValue[0] == 'T') || (paValue[0] == 't')) &&
-         ((paValue[1] == 'R') || (paValue[1] == 'r')) &&
-         ((paValue[2] == 'U') || (paValue[2] == 'u')) &&
-         ((paValue[3] == 'E') || (paValue[3] == 'e'))){
+    } else {
+      if (((paValue[0] == 'T') || (paValue[0] == 't')) && ((paValue[1] == 'R') || (paValue[1] == 'r')) &&
+          ((paValue[2] == 'U') || (paValue[2] == 'u')) && ((paValue[3] == 'E') || (paValue[3] == 'e'))) {
         setTBOOL8(true);
         nRetVal += 4;
-      }
-      else{
-        if(((paValue[0] == 'F') || (paValue[0] == 'f')) &&
-           ((paValue[1] == 'A') || (paValue[1] == 'a')) &&
-           ((paValue[2] == 'L') || (paValue[2] == 'l')) &&
-           ((paValue[3] == 'S') || (paValue[3] == 's')) &&
-           ((paValue[4] == 'E') || (paValue[4] == 'e'))){
+      } else {
+        if (((paValue[0] == 'F') || (paValue[0] == 'f')) && ((paValue[1] == 'A') || (paValue[1] == 'a')) &&
+            ((paValue[2] == 'L') || (paValue[2] == 'l')) && ((paValue[3] == 'S') || (paValue[3] == 's')) &&
+            ((paValue[4] == 'E') || (paValue[4] == 'e'))) {
           setTBOOL8(false);
           nRetVal += 5;
-        }
-        else{
+        } else {
           nRetVal = -1;
         }
       }
@@ -63,14 +55,13 @@ int CIEC_BOOL::fromString(const char *paValue){
   return nRetVal;
 }
 
-int CIEC_BOOL::toString(char* paValue, size_t paBufferSize) const {
+int CIEC_BOOL::toString(char *paValue, size_t paBufferSize) const {
   int nRetval = -1;
-  if(paBufferSize >= getToStringBufferSize()){
-    if(getTBOOL8()){
+  if (paBufferSize >= getToStringBufferSize()) {
+    if (getTBOOL8()) {
       strncpy(paValue, "TRUE", paBufferSize);
       nRetval = 4;
-    }
-    else{
+    } else {
       strncpy(paValue, "FALSE", paBufferSize);
       nRetval = 5;
     }

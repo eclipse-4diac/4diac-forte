@@ -21,7 +21,6 @@ class CActionInfo;
 
 class COPC_UA_AC_Layer : public COPC_UA_Layer {
   public:
-
     COPC_UA_AC_Layer(forte::com_infra::CComLayer *paUpperLayer, forte::com_infra::CBaseCommFB *paComFB);
 
     ~COPC_UA_AC_Layer() override;
@@ -49,11 +48,7 @@ class COPC_UA_AC_Layer : public COPC_UA_Layer {
     forte::com_infra::EComResponse processInterrupt() override;
 
   private:
-
-    enum Parameters {
-      TypeName,
-      PathToInstance
-    };
+    enum Parameters { TypeName, PathToInstance };
 
     static const std::string scmAlarmTypeBrowsePath;
     static const std::string scmAlarmConditionName;
@@ -75,8 +70,8 @@ class COPC_UA_AC_Layer : public COPC_UA_Layer {
     UA_NodeId mTypeNodeId;
     UA_NodeId mConditionSourceId;
     UA_NodeId mConditionInstanceId;
-   
-    std::vector<char*> mNames;
+
+    std::vector<char *> mNames;
     std::vector<UA_NodeId> mTypePropertyNodes;
     std::unique_ptr<CActionInfo> mMemberActionInfo;
 
@@ -94,21 +89,31 @@ class COPC_UA_AC_Layer : public COPC_UA_Layer {
 
     UA_StatusCode triggerAlarm();
 
-    forte::com_infra::EComResponse initOPCUAType(UA_Server *paServer, const std::string &paTypeName, bool paIsPublisher);
+    forte::com_infra::EComResponse
+    initOPCUAType(UA_Server *paServer, const std::string &paTypeName, bool paIsPublisher);
 
-    forte::com_infra::EComResponse createOPCUAObject(UA_Server *paServer, const std::string &paPathToInstance, bool paIsPublisher);
+    forte::com_infra::EComResponse
+    createOPCUAObject(UA_Server *paServer, const std::string &paPathToInstance, bool paIsPublisher);
 
-    UA_StatusCode createOPCUAObjectNode(UA_Server *paServer, const std::string &paPathToInstance, std::string &paBrowsePath, bool paIsPublisher);
+    UA_StatusCode createOPCUAObjectNode(UA_Server *paServer,
+                                        const std::string &paPathToInstance,
+                                        std::string &paBrowsePath,
+                                        bool paIsPublisher);
 
-    UA_StatusCode addOPCUACondition(UA_Server *paServer, const std::string &paPathToInstance, std::string &paBrowsePath);
+    UA_StatusCode
+    addOPCUACondition(UA_Server *paServer, const std::string &paPathToInstance, std::string &paBrowsePath);
 
     forte::com_infra::EComResponse setConditionCallbacks(UA_Server *paServer);
 
     forte::com_infra::EComResponse createAlarmType(UA_Server *paServer, const std::string &paTypeName);
-    
-    forte::com_infra::EComResponse addOPCUATypeProperties(UA_Server *paServer, const std::string &paTypeName, bool paIsPublisher);
 
-    UA_StatusCode addVariableNode(UA_Server *paServer, const std::string &paParentTypeName, char *paVariableName, CIEC_ANY &paVariableType);
+    forte::com_infra::EComResponse
+    addOPCUATypeProperties(UA_Server *paServer, const std::string &paTypeName, bool paIsPublisher);
+
+    UA_StatusCode addVariableNode(UA_Server *paServer,
+                                  const std::string &paParentTypeName,
+                                  char *paVariableName,
+                                  CIEC_ANY &paVariableType);
 
     forte::com_infra::EComResponse initializeMemberActions(const std::string &paParentBrowsePath);
 

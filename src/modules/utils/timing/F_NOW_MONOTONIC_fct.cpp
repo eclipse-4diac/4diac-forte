@@ -24,7 +24,6 @@ USE_STRING_ID(REQ);
 USE_STRING_ID(TIME);
 USE_STRING_ID(utils__timing__F_NOW_MONOTONIC);
 
-
 #include "forte_time.h"
 #include "iec61131_functions.h"
 #include "forte_array_common.h"
@@ -44,16 +43,29 @@ const TDataIOID FORTE_utils__timing__F_NOW_MONOTONIC::scmEOWith[] = {0, scmWithL
 const TForteInt16 FORTE_utils__timing__F_NOW_MONOTONIC::scmEOWithIndexes[] = {0};
 const CStringDictionary::TStringId FORTE_utils__timing__F_NOW_MONOTONIC::scmEventOutputNames[] = {STRID(CNF)};
 const CStringDictionary::TStringId FORTE_utils__timing__F_NOW_MONOTONIC::scmEventOutputTypeIds[] = {STRID(Event)};
-const SFBInterfaceSpec FORTE_utils__timing__F_NOW_MONOTONIC::scmFBInterfaceSpec = {
-  1, scmEventInputNames, scmEventInputTypeIds, nullptr, scmEIWithIndexes,
-  1, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes,
-  0, nullptr, nullptr,
-  1, scmDataOutputNames, scmDataOutputTypeIds,
-  0, nullptr,
-  0, nullptr
-};
+const SFBInterfaceSpec FORTE_utils__timing__F_NOW_MONOTONIC::scmFBInterfaceSpec = {1,
+                                                                                   scmEventInputNames,
+                                                                                   scmEventInputTypeIds,
+                                                                                   nullptr,
+                                                                                   scmEIWithIndexes,
+                                                                                   1,
+                                                                                   scmEventOutputNames,
+                                                                                   scmEventOutputTypeIds,
+                                                                                   scmEOWith,
+                                                                                   scmEOWithIndexes,
+                                                                                   0,
+                                                                                   nullptr,
+                                                                                   nullptr,
+                                                                                   1,
+                                                                                   scmDataOutputNames,
+                                                                                   scmDataOutputTypeIds,
+                                                                                   0,
+                                                                                   nullptr,
+                                                                                   0,
+                                                                                   nullptr};
 
-FORTE_utils__timing__F_NOW_MONOTONIC::FORTE_utils__timing__F_NOW_MONOTONIC(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_utils__timing__F_NOW_MONOTONIC::FORTE_utils__timing__F_NOW_MONOTONIC(
+    const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId),
     conn_CNF(*this, 0),
     conn_(*this, 0, var_) {
@@ -68,13 +80,12 @@ void FORTE_utils__timing__F_NOW_MONOTONIC::readInputData(TEventID) {
 }
 
 void FORTE_utils__timing__F_NOW_MONOTONIC::writeOutputData(const TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventCNFID: {
       writeData(0, var_, conn_);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
@@ -83,14 +94,14 @@ CIEC_ANY *FORTE_utils__timing__F_NOW_MONOTONIC::getDI(size_t) {
 }
 
 CIEC_ANY *FORTE_utils__timing__F_NOW_MONOTONIC::getDO(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_;
   }
   return nullptr;
 }
 
 CEventConnection *FORTE_utils__timing__F_NOW_MONOTONIC::getEOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_CNF;
   }
   return nullptr;
@@ -101,7 +112,7 @@ CDataConnection **FORTE_utils__timing__F_NOW_MONOTONIC::getDIConUnchecked(TPortI
 }
 
 CDataConnection *FORTE_utils__timing__F_NOW_MONOTONIC::getDOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_;
   }
   return nullptr;
@@ -115,7 +126,7 @@ void FORTE_utils__timing__F_NOW_MONOTONIC::executeEvent(const TEventID, CEventCh
 CIEC_TIME func_F_NOW_MONOTONIC() {
   CIEC_TIME st_ret_val = 0_TIME;
 
-  #line 5 "F_NOW_MONOTONIC.fct"
+#line 5 "F_NOW_MONOTONIC.fct"
   st_ret_val = func_NOW_MONOTONIC();
 
   return st_ret_val;

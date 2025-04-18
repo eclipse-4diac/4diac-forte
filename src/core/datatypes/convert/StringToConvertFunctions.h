@@ -16,7 +16,6 @@
  *     to use new cast function
  *******************************************************************************/
 
-
 #ifndef SRC_CORE_DATATYPES_CONVERT_STRINGTOCONVERTFUNCTIONS_H_
 #define SRC_CORE_DATATYPES_CONVERT_STRINGTOCONVERTFUNCTIONS_H_
 
@@ -44,7 +43,7 @@ inline const CIEC_UDINT func_STRING_AS_UDINT(const CIEC_STRING &paVal) {
   return func_STRING_AS_X_helper<CIEC_UDINT>(paVal);
 }
 
-inline const CIEC_ULINT func_STRING_AS_ULINT(const CIEC_STRING &paVal){
+inline const CIEC_ULINT func_STRING_AS_ULINT(const CIEC_STRING &paVal) {
   return func_STRING_AS_X_helper<CIEC_ULINT>(paVal);
 }
 
@@ -60,7 +59,7 @@ inline const CIEC_DINT func_STRING_AS_DINT(const CIEC_STRING &paVal) {
   return func_STRING_AS_X_helper<CIEC_DINT>(paVal);
 }
 
-inline const CIEC_LINT func_STRING_AS_LINT(const CIEC_STRING &paVal){
+inline const CIEC_LINT func_STRING_AS_LINT(const CIEC_STRING &paVal) {
   return func_STRING_AS_X_helper<CIEC_LINT>(paVal);
 }
 
@@ -80,7 +79,7 @@ inline const CIEC_DWORD func_STRING_AS_DWORD(const CIEC_STRING &paVal) {
   return func_STRING_AS_X_helper<CIEC_DWORD>(paVal);
 }
 
-inline const CIEC_LWORD func_STRING_AS_LWORD(const CIEC_STRING &paVal){
+inline const CIEC_LWORD func_STRING_AS_LWORD(const CIEC_STRING &paVal) {
   return func_STRING_AS_X_helper<CIEC_LWORD>(paVal);
 }
 
@@ -88,20 +87,20 @@ inline const CIEC_TIME func_STRING_AS_TIME(const CIEC_STRING &paVal) {
   return func_STRING_AS_X_helper<CIEC_TIME>(paVal);
 }
 
-inline const CIEC_REAL func_STRING_AS_REAL(const CIEC_STRING &paVal){
+inline const CIEC_REAL func_STRING_AS_REAL(const CIEC_STRING &paVal) {
   return func_STRING_AS_X_helper<CIEC_REAL>(paVal);
 }
 
-inline const CIEC_LREAL func_STRING_AS_LREAL(const CIEC_STRING &paVal){
+inline const CIEC_LREAL func_STRING_AS_LREAL(const CIEC_STRING &paVal) {
   return func_STRING_AS_X_helper<CIEC_LREAL>(paVal);
 }
 
-inline const CIEC_CHAR func_STRING_TO_CHAR(const CIEC_STRING &paVal){
+inline const CIEC_CHAR func_STRING_TO_CHAR(const CIEC_STRING &paVal) {
   return paVal.length() > 0 ? paVal[1] : 0_CHAR;
 }
 
 #ifdef FORTE_USE_WSTRING_DATATYPE
-inline const CIEC_WSTRING func_STRING_TO_WSTRING(const CIEC_STRING &paVal){
+inline const CIEC_WSTRING func_STRING_TO_WSTRING(const CIEC_STRING &paVal) {
   return func_STRING_AS_X_helper<CIEC_WSTRING>(paVal);
 }
 #endif

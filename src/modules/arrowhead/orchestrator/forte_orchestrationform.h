@@ -20,7 +20,7 @@
 #include "forte_array.h"
 
 class CIEC_OrchestrationForm : public CIEC_STRUCT {
-  DECLARE_FIRMWARE_DATATYPE(OrchestrationForm)
+    DECLARE_FIRMWARE_DATATYPE(OrchestrationForm)
 
   public:
     CIEC_OrchestrationForm();
@@ -28,15 +28,15 @@ class CIEC_OrchestrationForm : public CIEC_STRUCT {
     ~CIEC_OrchestrationForm() override = default;
 
     CIEC_ArrowheadService &service() {
-      return *static_cast<CIEC_ArrowheadService*>(&getMembers()[0]);
+      return *static_cast<CIEC_ArrowheadService *>(&getMembers()[0]);
     }
 
     CIEC_ArrowheadSystem &provider() {
-      return *static_cast<CIEC_ArrowheadSystem*>(&getMembers()[1]);
+      return *static_cast<CIEC_ArrowheadSystem *>(&getMembers()[1]);
     }
 
     CIEC_WSTRING &serviceURI() {
-      return *static_cast<CIEC_WSTRING*>(&getMembers()[2]);
+      return *static_cast<CIEC_WSTRING *>(&getMembers()[2]);
     }
 
     CIEC_WSTRING &instruction() {
@@ -52,7 +52,8 @@ class CIEC_OrchestrationForm : public CIEC_STRUCT {
     }
 
     CIEC_WSTRING *warnings() {
-      return static_cast<CIEC_WSTRING*>((*static_cast<CIEC_ARRAY<> *>(&getMembers()[6]))[0]); //the first element marks the start of the array
+      return static_cast<CIEC_WSTRING *>(
+          (*static_cast<CIEC_ARRAY<> *>(&getMembers()[6]))[0]); // the first element marks the start of the array
     }
 
   private:
@@ -61,4 +62,3 @@ class CIEC_OrchestrationForm : public CIEC_STRUCT {
 };
 
 #endif //_FORTE_ORCHESTRATIONFORM_H_
-

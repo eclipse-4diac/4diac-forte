@@ -17,23 +17,21 @@
 #include "trace/reader/utils.h"
 #include "stdfblib/ita/replay/ReplayDevice.h"
 
-ReplayMGR::ReplayMGR(ReplayDevice& paDevice, OPCUA_MGR& paOpcuaMgr) : 
-  mDevice(paDevice), mOpcuaMgr(paOpcuaMgr) {
-
+ReplayMGR::ReplayMGR(ReplayDevice &paDevice, OPCUA_MGR &paOpcuaMgr) : mDevice(paDevice), mOpcuaMgr(paOpcuaMgr) {
 }
 
-bool ReplayMGR::initialize(){
+bool ReplayMGR::initialize() {
   addReadTracesMethod();
   addReplayNextEventMethod();
 
   return true;
 }
 
-std::string& ReplayMGR::getArgumentString(std::string paString) {
+std::string &ReplayMGR::getArgumentString(std::string paString) {
   return mArgumentsInformation.emplace_back(std::move(paString));
 }
 
-void ReplayMGR::addReadTracesMethod(){
+void ReplayMGR::addReadTracesMethod() {
   OPCUA_MGR::MethodInformation newMethod;
 
   newMethod.mMethodName = "Read Traces";
@@ -44,16 +42,13 @@ void ReplayMGR::addReadTracesMethod(){
 
   newMethod.mInArguments.push_back(UA_Argument());
 
-  OPCUA_MGR::initArgument(
-    newMethod.mInArguments[0], 
-    UA_TYPES_STRING, 
-    getArgumentString("Path to traces").data(), 
-    getArgumentString("Local path of the folder containing the traces").data());
+  OPCUA_MGR::initArgument(newMethod.mInArguments[0], UA_TYPES_STRING, getArgumentString("Path to traces").data(),
+                          getArgumentString("Local path of the folder containing the traces").data());
 
   mOpcuaMgr.addExtraMgmMethod(newMethod);
 }
 
-void ReplayMGR::addReplayNextEventMethod(){
+void ReplayMGR::addReplayNextEventMethod() {
   OPCUA_MGR::MethodInformation newMethod;
 
   newMethod.mMethodName = "Replay Next Event";
@@ -61,36 +56,39 @@ void ReplayMGR::addReplayNextEventMethod(){
   newMethod.mDescription = "Replay the next event in the resource";
   newMethod.mCallback = &ReplayMGR::onReplayNextEvent;
   newMethod.mNodeContext = this;
-  
+
   newMethod.mOutArguments.push_back(UA_Argument());
 
-  OPCUA_MGR::initArgument(
-    newMethod.mOutArguments[0], 
-    UA_TYPES_STRING, 
-    getArgumentString("The event that was executed").data(), 
-    getArgumentString("The event that was lastlty executed").data());
-
+  OPCUA_MGR::initArgument(newMethod.mOutArguments[0], UA_TYPES_STRING,
+                          getArgumentString("The event that was executed").data(),
+                          getArgumentString("The event that was lastlty executed").data());
 
   mOpcuaMgr.addExtraResourceMethod(newMethod);
 }
 
-UA_StatusCode ReplayMGR::onReadTraces(UA_Server*,
-  const UA_NodeId*, void*,
-  const UA_NodeId*, void* methodContext,
-  const UA_NodeId*, void*,
-  size_t, const UA_Variant* input,
-  size_t, UA_Variant* ) {
+UA_StatusCode ReplayMGR::onReadTraces(UA_Server *,
+                                      const UA_NodeId *,
+                                      void *,
+                                      const UA_NodeId *,
+                                      void *methodContext,
+                                      const UA_NodeId *,
+                                      void *,
+                                      size_t,
+                                      const UA_Variant *input,
+                                      size_t,
+                                      UA_Variant *) {
 
-  auto replayMgr = static_cast<ReplayMGR*>(methodContext);
-  auto uaStringInput = static_cast<UA_String*>(input[0].data);
-  auto path = std::string((const char*)uaStringInput->data, uaStringInput->length);
+  auto replayMgr = static_cast<ReplayMGR *>(methodContext);
+  auto uaStringInput = static_cast<UA_String *>(input[0].data);
+  auto path = std::string((const char *) uaStringInput->data, uaStringInput->length);
 
   auto events = forte::trace::reader::utils::getEventMessages(path);
-  if(!events.has_value()){
+  if (!events.has_value()) {
     return UA_STATUSCODE_BADINVALIDARGUMENT;
   }
 
-  auto replayAlgorithmEvents = forte::trace::reader::utils::filterEventsForReplayDevice(events.value(), replayMgr->mDevice);
+  auto replayAlgorithmEvents =
+      forte::trace::reader::utils::filterEventsForReplayDevice(events.value(), replayMgr->mDevice);
 
   replayMgr->mDeviceReplayer = std::make_unique<CDeviceReplayer>(replayMgr->mDevice, std::move(replayAlgorithmEvents));
 
@@ -105,7 +103,7 @@ UA_StatusCode ReplayMGR::onReadTraces(UA_Server*,
     // the application cannot be stopped in the iddle state
     // but we don't care about it, since the start command later
     // can still start everything, the device and the application
-    forte::core::SManagementCMD command; 
+    forte::core::SManagementCMD command;
     command.mCMD = EMGMCommandType::Stop;
     command.mDestination = CStringDictionary::scmInvalidStringId;
     replayMgr->mDevice.executeMGMCommand(command);
@@ -119,25 +117,30 @@ UA_StatusCode ReplayMGR::onReadTraces(UA_Server*,
   return UA_STATUSCODE_GOOD;
 }
 
-UA_StatusCode ReplayMGR::onReplayNextEvent(UA_Server*,
-  const UA_NodeId*, void*,
-  const UA_NodeId*, void* methodContext,
-  const UA_NodeId*, void* objectContext,
-  size_t, const UA_Variant*,
-  size_t, UA_Variant* output) {
+UA_StatusCode ReplayMGR::onReplayNextEvent(UA_Server *,
+                                           const UA_NodeId *,
+                                           void *,
+                                           const UA_NodeId *,
+                                           void *methodContext,
+                                           const UA_NodeId *,
+                                           void *objectContext,
+                                           size_t,
+                                           const UA_Variant *,
+                                           size_t,
+                                           UA_Variant *output) {
 
-  auto replayMgr = static_cast<ReplayMGR*>(methodContext);
+  auto replayMgr = static_cast<ReplayMGR *>(methodContext);
 
-  auto resourceName = static_cast<const char*>(objectContext);
+  auto resourceName = static_cast<const char *>(objectContext);
 
-  if(replayMgr->mDeviceReplayer == nullptr){
+  if (replayMgr->mDeviceReplayer == nullptr) {
     return UA_STATUSCODE_BADINVALIDSTATE;
   }
 
   auto nextEvent = replayMgr->mDeviceReplayer->reproduceNextEvent(resourceName);
 
   UA_String response;
-  if(nextEvent.has_value()){
+  if (nextEvent.has_value()) {
     auto event = nextEvent.value();
     auto functionBlockName = event.mFB->getFullQualifiedApplicationInstanceName('.');
     const auto interface = event.mFB->getFBInterfaceSpec();
@@ -152,4 +155,3 @@ UA_StatusCode ReplayMGR::onReplayNextEvent(UA_Server*,
 
   return status;
 }
-

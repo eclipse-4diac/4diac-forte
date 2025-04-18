@@ -17,17 +17,18 @@
 namespace forte::core::internal {
 
   template<typename T>
-  class CDelegatingDataConnection : public CDataConnection { 
+  class CDelegatingDataConnection : public CDataConnection {
     public:
-      CDelegatingDataConnection(CFunctionBlock &paSrcFB, const TPortId paSrcPortId, T &paValue) : 
-          CDataConnection(paSrcFB, paSrcPortId), mValue(paValue) {
+      CDelegatingDataConnection(CFunctionBlock &paSrcFB, const TPortId paSrcPortId, T &paValue) :
+          CDataConnection(paSrcFB, paSrcPortId),
+          mValue(paValue) {
       }
-    
-      void writeData(const CIEC_ANY &)  final {
+
+      void writeData(const CIEC_ANY &) final {
         // a delegating connection is only for reading from the value no writing permitted
         // writing is only done on the original connection
-      } 
-    
+      }
+
       T &getValue() override {
         return mValue;
       }
@@ -35,14 +36,13 @@ namespace forte::core::internal {
       const T &getValue() const {
         return mValue;
       }
-      
+
       bool isDelegating() const final {
         return true;
       }
-  
+
     private:
       T &mValue;
-    
   };
 
-}
+} // namespace forte::core::internal

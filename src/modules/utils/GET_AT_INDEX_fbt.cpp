@@ -28,7 +28,6 @@ USE_STRING_ID(QO);
 USE_STRING_ID(REQ);
 USE_STRING_ID(UINT);
 
-
 #include "criticalregion.h"
 #include "resource.h"
 
@@ -52,17 +51,29 @@ const TForteInt16 FORTE_GET_AT_INDEX::scmEOWithIndexes[] = {0};
 const CStringDictionary::TStringId FORTE_GET_AT_INDEX::scmEventOutputNames[] = {STRID(CNF)};
 const CStringDictionary::TStringId FORTE_GET_AT_INDEX::scmEventOutputTypeIds[] = {STRID(Event)};
 
+const SFBInterfaceSpec FORTE_GET_AT_INDEX::scmFBInterfaceSpec = {1,
+                                                                 scmEventInputNames,
+                                                                 scmEventInputTypeIds,
+                                                                 scmEIWith,
+                                                                 scmEIWithIndexes,
+                                                                 1,
+                                                                 scmEventOutputNames,
+                                                                 scmEventOutputTypeIds,
+                                                                 scmEOWith,
+                                                                 scmEOWithIndexes,
+                                                                 2,
+                                                                 scmDataInputNames,
+                                                                 scmDataInputTypeIds,
+                                                                 2,
+                                                                 scmDataOutputNames,
+                                                                 scmDataOutputTypeIds,
+                                                                 0,
+                                                                 nullptr,
+                                                                 0,
+                                                                 nullptr};
 
-const SFBInterfaceSpec FORTE_GET_AT_INDEX::scmFBInterfaceSpec = {
-  1, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,
-  1, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes,
-  2, scmDataInputNames, scmDataInputTypeIds,
-  2, scmDataOutputNames, scmDataOutputTypeIds,
-  0, nullptr,
-  0, nullptr
-};
-
-FORTE_GET_AT_INDEX::FORTE_GET_AT_INDEX(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_GET_AT_INDEX::FORTE_GET_AT_INDEX(const CStringDictionary::TStringId paInstanceNameId,
+                                       forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId),
     var_IN_ARRAY(CIEC_ANY_VARIANT()),
     var_INDEX(CIEC_UINT(0)),
@@ -72,17 +83,16 @@ FORTE_GET_AT_INDEX::FORTE_GET_AT_INDEX(const CStringDictionary::TStringId paInst
     conn_IN_ARRAY(nullptr),
     conn_INDEX(nullptr),
     conn_QO(*this, 0, var_QO),
-    conn_OUT(*this, 1, var_OUT) {
-};
+    conn_OUT(*this, 1, var_OUT) {};
 
 void FORTE_GET_AT_INDEX::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventREQID:
       if (std::holds_alternative<CIEC_ANY_UNIQUE_PTR<CIEC_ARRAY>>(var_IN_ARRAY)) {
         auto &inArray = std::get<CIEC_ANY_UNIQUE_PTR<CIEC_ARRAY>>(var_IN_ARRAY);
         // check if index is within bounds
-        if (static_cast<CIEC_UINT::TValueType>(var_INDEX) >= inArray->getLowerBound()
-            && static_cast<CIEC_UINT::TValueType>(var_INDEX) <= inArray->getUpperBound()) {
+        if (static_cast<CIEC_UINT::TValueType>(var_INDEX) >= inArray->getLowerBound() &&
+            static_cast<CIEC_UINT::TValueType>(var_INDEX) <= inArray->getUpperBound()) {
           var_OUT.setValue(inArray->at(var_INDEX));
           var_QO = CIEC_BOOL(true);
         } else {
@@ -97,31 +107,29 @@ void FORTE_GET_AT_INDEX::executeEvent(TEventID paEIID, CEventChainExecutionThrea
 }
 
 void FORTE_GET_AT_INDEX::readInputData(TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventREQID: {
       readData(0, var_IN_ARRAY, conn_IN_ARRAY);
       readData(1, var_INDEX, conn_INDEX);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 void FORTE_GET_AT_INDEX::writeOutputData(TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventCNFID: {
       writeData(0, var_QO, conn_QO);
       writeData(1, var_OUT, conn_OUT);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 CIEC_ANY *FORTE_GET_AT_INDEX::getDI(size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_IN_ARRAY;
     case 1: return &var_INDEX;
   }
@@ -129,7 +137,7 @@ CIEC_ANY *FORTE_GET_AT_INDEX::getDI(size_t paIndex) {
 }
 
 CIEC_ANY *FORTE_GET_AT_INDEX::getDO(size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_QO;
     case 1: return &var_OUT;
   }
@@ -137,14 +145,14 @@ CIEC_ANY *FORTE_GET_AT_INDEX::getDO(size_t paIndex) {
 }
 
 CEventConnection *FORTE_GET_AT_INDEX::getEOConUnchecked(TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_CNF;
   }
   return nullptr;
 }
 
 CDataConnection **FORTE_GET_AT_INDEX::getDIConUnchecked(TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_IN_ARRAY;
     case 1: return &conn_INDEX;
   }
@@ -152,11 +160,9 @@ CDataConnection **FORTE_GET_AT_INDEX::getDIConUnchecked(TPortId paIndex) {
 }
 
 CDataConnection *FORTE_GET_AT_INDEX::getDOConUnchecked(TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_QO;
     case 1: return &conn_OUT;
   }
   return nullptr;
 }
-
-

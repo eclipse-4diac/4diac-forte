@@ -21,17 +21,18 @@
 
 class COpcConnectionImpl;
 
-class CCmd_RemoveConnection : public ICmd{
+class CCmd_RemoveConnection : public ICmd {
   public:
-    explicit CCmd_RemoveConnection(COpcConnectionImpl &paConnection, const std::string& paGroupName, bool paIfDisconnect) ;
+    explicit CCmd_RemoveConnection(COpcConnectionImpl &paConnection,
+                                   const std::string &paGroupName,
+                                   bool paIfDisconnect);
     ~CCmd_RemoveConnection() = default;
 
     void runCommand() override;
-    const char* getCommandName() const override {
+    const char *getCommandName() const override {
       if (mDisconnect) {
         return "Cmd_RemoveConnection";
-      }
-      else {
+      } else {
         return "Cmd_RemoveGroup";
       }
     }

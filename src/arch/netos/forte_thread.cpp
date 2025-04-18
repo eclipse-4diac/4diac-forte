@@ -19,13 +19,14 @@
 #include <string.h>
 
 const int CTXThread::scmThreadListSize = 27;
-TCTXThreadPtr CTXThread::smThreadList[27] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+TCTXThreadPtr CTXThread::smThreadList[27] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
-forte::arch::CThreadBase<TX_THREAD>::TThreadHandleType CTXThread::createThread(long paStackSize){
+forte::arch::CThreadBase<TX_THREAD>::TThreadHandleType CTXThread::createThread(long paStackSize) {
   memset((void *) &mThreadData, 0, sizeof(mThreadData));
 
-  if (TX_SUCCESS == tx_thread_create(&mThreadData, mThreadName, threadFunction, (ULONG)(this), mStack, paStackSize, scmThreadListSize + 3, scmThreadListSize + 3, //disable preemption threshhold
-      TX_NO_TIME_SLICE, TX_AUTO_START)){
+  if (TX_SUCCESS == tx_thread_create(&mThreadData, mThreadName, threadFunction, (ULONG) (this), mStack, paStackSize,
+                                     scmThreadListSize + 3, scmThreadListSize + 3, // disable preemption threshhold
+                                     TX_NO_TIME_SLICE, TX_AUTO_START)) {
     return mThreadData.tx_thread_id;
   }
   return 0;
@@ -46,20 +47,19 @@ void CTXThread::setDeadline(const CIEC_TIME &paVal) {
   int i;
   int ii;
   CThreadBase<ULONG>::setDeadline(paVal);
-  //first of all check if this thread is already in the list and remove it from the list
+  // first of all check if this thread is already in the list and remove it from the list
   for (i = 0; i < scmThreadListSize; i++) {
     if (0 == smThreadList[i])
       break;
-    else
-      if (this == smThreadList[i]) {
-        for (ii = i; ii < scmThreadListSize - 1; ii++) {
-          if (0 == smThreadList[ii + 1])
-            break;
-          smThreadList[ii + 1]->setPriority(ii + 2);
-          smThreadList[ii] = smThreadList[ii + 1];
-        }
-        break;
+    else if (this == smThreadList[i]) {
+      for (ii = i; ii < scmThreadListSize - 1; ii++) {
+        if (0 == smThreadList[ii + 1])
+          break;
+        smThreadList[ii + 1]->setPriority(ii + 2);
+        smThreadList[ii] = smThreadList[ii + 1];
       }
+      break;
+    }
   }
 
   if (0 == getDeadline())
@@ -70,27 +70,24 @@ void CTXThread::setDeadline(const CIEC_TIME &paVal) {
         smThreadList[i] = this;
         setPriority(i + 2);
         break;
-      }
-      else
-        if (getDeadline() < smThreadList[i]->getDeadline()) {
-          CTXThread *poRBuf, *poSBuf = smThreadList[i];
-          smThreadList[i] = this;
-          setPriority(i + 2);
-          for (ii = i + 1; ii < scmThreadListSize; ii++) {
-            poSBuf->setPriority(ii + 2);
-            poRBuf = smThreadList[ii];
-            smThreadList[ii] = poSBuf;
-            if (0 == poRBuf)
-              break;
-            poSBuf = poRBuf;
-          }
-          break;
+      } else if (getDeadline() < smThreadList[i]->getDeadline()) {
+        CTXThread *poRBuf, *poSBuf = smThreadList[i];
+        smThreadList[i] = this;
+        setPriority(i + 2);
+        for (ii = i + 1; ii < scmThreadListSize; ii++) {
+          poSBuf->setPriority(ii + 2);
+          poRBuf = smThreadList[ii];
+          smThreadList[ii] = poSBuf;
+          if (0 == poRBuf)
+            break;
+          poSBuf = poRBuf;
         }
+        break;
+      }
     }
   }
 }
 
-void CTXThread::sleepThread(unsigned int paMilliSeconds){
+void CTXThread::sleepThread(unsigned int paMilliSeconds) {
   usleep(1000 * paMilliSeconds);
 }
-

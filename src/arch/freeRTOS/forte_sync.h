@@ -15,13 +15,13 @@
 #include <FreeRTOS.h>
 #include <semphr.h>
 
-#define CSyncObject CFreeRTOSSyncObject //allows that doxygen can generate better documenation
+#define CSyncObject CFreeRTOSSyncObject // allows that doxygen can generate better documenation
 
 /*! \ingroup FREERTOS-HAL
  * \brief The sync object implementation for FreeRTOS.
  *
  * In the FreeRTOS version we use a binary semaphore for the sync object
- * 
+ *
  * Note: For Mutex implementation,  uncomment the xSemaphoreCreateMutex() function in sync.cpp
  */
 
@@ -38,13 +38,12 @@ class CFreeRTOSSyncObject {
       xSemaphoreTake(mMutexHandle, portMAX_DELAY);
     }
 
-    //!Free the resource coming after the lock command
+    //! Free the resource coming after the lock command
     void unlock() {
       xSemaphoreGive(mMutexHandle);
     }
 
   private:
-
     //! The posix thread mutex handle of the operating system.
     SemaphoreHandle_t mMutexHandle;
 };

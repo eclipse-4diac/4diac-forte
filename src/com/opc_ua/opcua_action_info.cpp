@@ -16,11 +16,14 @@
 #include "core/util/parameterParser.h"
 #include "core/cominfra/basecommfb.h"
 
-const char *const CActionInfo::mActionNames[] = { "READ", "WRITE", "CREATE_METHOD", "CALL_METHOD", "SUBSCRIBE", "CREATE_OBJECT", "CREATE_VARIABLE",
-  "DELETE_OBJECT", "DELETE_VARIABLE" };
+const char *const CActionInfo::mActionNames[] = {"READ",           "WRITE",         "CREATE_METHOD",   "CALL_METHOD",
+                                                 "SUBSCRIBE",      "CREATE_OBJECT", "CREATE_VARIABLE", "DELETE_OBJECT",
+                                                 "DELETE_VARIABLE"};
 
 CActionInfo::CActionInfo(COPC_UA_Layer &paLayer, UA_ActionType paAction, const std::string &paEndpoint) :
-    mAction(paAction), mLayer(paLayer), mEndpoint(paEndpoint) {
+    mAction(paAction),
+    mLayer(paLayer),
+    mEndpoint(paEndpoint) {
 }
 
 bool CActionInfo::isRemote() const {
@@ -32,41 +35,42 @@ std::unique_ptr<CActionInfo> CActionInfo::getActionInfoFromParams(const char *pa
   CParameterParser mainParser(paParams, ';');
   size_t amountOfParameters = mainParser.parseParameters();
 
-  if(scmMinimumAmounOfParameters <= amountOfParameters) {
+  if (scmMinimumAmounOfParameters <= amountOfParameters) {
     CActionInfo::UA_ActionType action = CActionParser::getActionEnum(mainParser[CActionParser::eActionType]);
-    if(CActionInfo::eActionUnknown != action) {
+    if (CActionInfo::eActionUnknown != action) {
 
       std::string endpoint;
       size_t startOfNodePairs = CActionParser::eNodePairs;
 
-      if(!CActionParser::getEndpoint(mainParser[CActionParser::eEndpoint], endpoint)) {
+      if (!CActionParser::getEndpoint(mainParser[CActionParser::eEndpoint], endpoint)) {
         startOfNodePairs--;
       }
 
-      if(CActionInfo::eCreateMethod == action) {
+      if (CActionInfo::eCreateMethod == action) {
         retVal.reset(new CLocalMethodInfo(paLayer, endpoint));
       } else {
         retVal.reset(new CActionInfo(paLayer, action, endpoint));
       }
 
       bool somethingFailed = false;
-      for(size_t i = startOfNodePairs; i < amountOfParameters; i++) {
-        if(!CActionParser::handlePair(mainParser[i], retVal->getNodePairInfo())) {
+      for (size_t i = startOfNodePairs; i < amountOfParameters; i++) {
+        if (!CActionParser::handlePair(mainParser[i], retVal->getNodePairInfo())) {
           somethingFailed = true;
           break;
         }
       }
 
-      if(!somethingFailed) {
+      if (!somethingFailed) {
         somethingFailed = !retVal->checkAction();
       }
 
-      if(somethingFailed) {
+      if (somethingFailed) {
         retVal = nullptr;
       }
     }
   } else {
-    DEVLOG_ERROR("[OPC UA ACTION]: Parameters %s should have at least %d parts, separated by a semicolon\n", paParams, scmMinimumAmounOfParameters);
+    DEVLOG_ERROR("[OPC UA ACTION]: Parameters %s should have at least %d parts, separated by a semicolon\n", paParams,
+                 scmMinimumAmounOfParameters);
   }
 
   return retVal;
@@ -90,40 +94,23 @@ size_t CActionInfo::getReceiveSize() const {
 
 bool CActionInfo::checkAction() const {
   bool retVal = false;
-  if(checkNodePairInfo()) {
+  if (checkNodePairInfo()) {
 
     forte::com_infra::EComServiceType fbType = mLayer.getCommFB()->getComServiceType();
     TPortId noOfRDs = mLayer.getCommFB()->getNumRD();
     TPortId noOfSDs = mLayer.getCommFB()->getNumSD();
 
-    switch(mAction){
-      case eRead:
-        retVal = checkReadAction(fbType, noOfRDs, noOfSDs);
-        break;
-      case eWrite:
-        retVal = checkWriteAction(fbType, noOfRDs, noOfSDs);
-        break;
-      case eCreateMethod:
-        retVal = checkCreateMethodAction(fbType, noOfRDs, noOfSDs);
-        break;
-      case eCallMethod:
-        retVal = checkCallMethodAction(fbType, noOfRDs, noOfSDs);
-        break;
-      case eSubscribe:
-        retVal = checkSubscribeAction(fbType, noOfRDs, noOfSDs);
-        break;
-      case eCreateObject:
-        retVal = checkCreateObjectAction(fbType, noOfRDs, noOfSDs);
-        break;
-      case eCreateVariable:
-        retVal = checkCreateVariableAction(fbType, noOfRDs, noOfSDs);
-        break;
+    switch (mAction) {
+      case eRead: retVal = checkReadAction(fbType, noOfRDs, noOfSDs); break;
+      case eWrite: retVal = checkWriteAction(fbType, noOfRDs, noOfSDs); break;
+      case eCreateMethod: retVal = checkCreateMethodAction(fbType, noOfRDs, noOfSDs); break;
+      case eCallMethod: retVal = checkCallMethodAction(fbType, noOfRDs, noOfSDs); break;
+      case eSubscribe: retVal = checkSubscribeAction(fbType, noOfRDs, noOfSDs); break;
+      case eCreateObject: retVal = checkCreateObjectAction(fbType, noOfRDs, noOfSDs); break;
+      case eCreateVariable: retVal = checkCreateVariableAction(fbType, noOfRDs, noOfSDs); break;
       case eDeleteObject:
-      case eDeleteVariable:
-        retVal = checkDeleteNodeAction(fbType, noOfRDs, noOfSDs);
-        break;
-      default:
-        DEVLOG_ERROR("[OPC UA ACTION]: Unknown action %d\n", mAction);
+      case eDeleteVariable: retVal = checkDeleteNodeAction(fbType, noOfRDs, noOfSDs); break;
+      default: DEVLOG_ERROR("[OPC UA ACTION]: Unknown action %d\n", mAction);
     }
   }
 
@@ -132,9 +119,11 @@ bool CActionInfo::checkAction() const {
 
 bool CActionInfo::checkNodePairInfo() const {
   bool retVal = true;
-  for(auto it = mNodePair.begin(); it != mNodePair.end(); ++it) {
-    if(it->getBrowsePath().empty() && nullptr == it->getNodeId()) { //browsePath AND/OR NodeId must be given. If both are empty there's a problem
-      DEVLOG_ERROR("[OPC UA ACTION]: BrowsePath and NodeId are empty in FB %s\n", mLayer.getCommFB()->getInstanceName());
+  for (auto it = mNodePair.begin(); it != mNodePair.end(); ++it) {
+    if (it->getBrowsePath().empty() &&
+        nullptr == it->getNodeId()) { // browsePath AND/OR NodeId must be given. If both are empty there's a problem
+      DEVLOG_ERROR("[OPC UA ACTION]: BrowsePath and NodeId are empty in FB %s\n",
+                   mLayer.getCommFB()->getInstanceName());
       retVal = false;
       break;
     }
@@ -142,29 +131,30 @@ bool CActionInfo::checkNodePairInfo() const {
   return retVal;
 }
 
-bool CActionInfo::checkReadAction(forte::com_infra::EComServiceType paFbType, TPortId paNoOfRDs, TPortId paNoOfSDs) const {
+bool CActionInfo::checkReadAction(forte::com_infra::EComServiceType paFbType,
+                                  TPortId paNoOfRDs,
+                                  TPortId paNoOfSDs) const {
   bool retVal = false;
-  if(mEndpoint.empty()) {
-    if(forte::com_infra::e_Subscriber == paFbType && paNoOfRDs == getNoOfNodePairs()) {
+  if (mEndpoint.empty()) {
+    if (forte::com_infra::e_Subscriber == paFbType && paNoOfRDs == getNoOfNodePairs()) {
       retVal = true;
     } else {
-      DEVLOG_ERROR(
-        "[OPC UA ACTION]: In FB %s: Local %s action is only allowed using a Subscriber FB and the amount of BrowseName,NodeId pairs should match the number of RDs\n",
-        mLayer.getCommFB()->getInstanceName(), CActionInfo::mActionNames[eRead]);
+      DEVLOG_ERROR("[OPC UA ACTION]: In FB %s: Local %s action is only allowed using a Subscriber FB and the amount of "
+                   "BrowseName,NodeId pairs should match the number of RDs\n",
+                   mLayer.getCommFB()->getInstanceName(), CActionInfo::mActionNames[eRead]);
     }
   } else {
-    if(paFbType != forte::com_infra::e_Client) {
-      DEVLOG_ERROR(
-        "[OPC UA ACTION]: In FB %s: Remote %s action is only allowed using a Client FB\n",
-        mLayer.getCommFB()->getInstanceName(), CActionInfo::mActionNames[eRead]);
-    } else if(getNoOfNodePairs() != paNoOfRDs)  {
-      DEVLOG_ERROR(
-        "[OPC UA ACTION]: In FB %s: Remote %s action needs as many BrowseName,NodeId pairs as there are RDs. (have: %i, need: %i)\n",
-        mLayer.getCommFB()->getInstanceName(), CActionInfo::mActionNames[eRead], getNoOfNodePairs(), paNoOfRDs);
-    } else if(paNoOfSDs != 0) {
-      DEVLOG_ERROR(
-        "[OPC UA ACTION]: In FB %s: Remote %s action must have no SDs. (have: %i)\n",
-        mLayer.getCommFB()->getInstanceName(), CActionInfo::mActionNames[eRead], paNoOfSDs);
+    if (paFbType != forte::com_infra::e_Client) {
+      DEVLOG_ERROR("[OPC UA ACTION]: In FB %s: Remote %s action is only allowed using a Client FB\n",
+                   mLayer.getCommFB()->getInstanceName(), CActionInfo::mActionNames[eRead]);
+    } else if (getNoOfNodePairs() != paNoOfRDs) {
+      DEVLOG_ERROR("[OPC UA ACTION]: In FB %s: Remote %s action needs as many BrowseName,NodeId pairs as there are "
+                   "RDs. (have: %i, need: %i)\n",
+                   mLayer.getCommFB()->getInstanceName(), CActionInfo::mActionNames[eRead], getNoOfNodePairs(),
+                   paNoOfRDs);
+    } else if (paNoOfSDs != 0) {
+      DEVLOG_ERROR("[OPC UA ACTION]: In FB %s: Remote %s action must have no SDs. (have: %i)\n",
+                   mLayer.getCommFB()->getInstanceName(), CActionInfo::mActionNames[eRead], paNoOfSDs);
     } else {
       retVal = true;
     }
@@ -172,23 +162,25 @@ bool CActionInfo::checkReadAction(forte::com_infra::EComServiceType paFbType, TP
   return retVal;
 }
 
-bool CActionInfo::checkWriteAction(forte::com_infra::EComServiceType paFbType, TPortId paNoOfRDs, TPortId paNoOfSDs) const {
+bool CActionInfo::checkWriteAction(forte::com_infra::EComServiceType paFbType,
+                                   TPortId paNoOfRDs,
+                                   TPortId paNoOfSDs) const {
   bool retVal = false;
-  if(mEndpoint.empty()) {
-    if(forte::com_infra::e_Publisher == paFbType && paNoOfSDs == getNoOfNodePairs()) {
+  if (mEndpoint.empty()) {
+    if (forte::com_infra::e_Publisher == paFbType && paNoOfSDs == getNoOfNodePairs()) {
       retVal = true;
     } else {
-      DEVLOG_ERROR(
-        "[OPC UA ACTION]: In FB %s: Local action %s is only allowed using a Publisher FB and the amount of BrowseName,NodeId pairs should match the number of SDs\n",
-        mLayer.getCommFB()->getInstanceName(), CActionInfo::mActionNames[eWrite]);
+      DEVLOG_ERROR("[OPC UA ACTION]: In FB %s: Local action %s is only allowed using a Publisher FB and the amount of "
+                   "BrowseName,NodeId pairs should match the number of SDs\n",
+                   mLayer.getCommFB()->getInstanceName(), CActionInfo::mActionNames[eWrite]);
     }
   } else {
-    if(forte::com_infra::e_Client == paFbType && paNoOfSDs == getNoOfNodePairs() && 0 == paNoOfRDs) {
+    if (forte::com_infra::e_Client == paFbType && paNoOfSDs == getNoOfNodePairs() && 0 == paNoOfRDs) {
       retVal = true;
     } else {
-      DEVLOG_ERROR(
-        "[OPC UA ACTION]: In FB %s: Remote action %s is only allowed using a Client FB, the amount of BrowseName,NodeId pairs should match the number of SDs and must have no RDs\n",
-        mLayer.getCommFB()->getInstanceName(), CActionInfo::mActionNames[eWrite]);
+      DEVLOG_ERROR("[OPC UA ACTION]: In FB %s: Remote action %s is only allowed using a Client FB, the amount of "
+                   "BrowseName,NodeId pairs should match the number of SDs and must have no RDs\n",
+                   mLayer.getCommFB()->getInstanceName(), CActionInfo::mActionNames[eWrite]);
     }
   }
   return retVal;
@@ -196,11 +188,12 @@ bool CActionInfo::checkWriteAction(forte::com_infra::EComServiceType paFbType, T
 
 bool CActionInfo::checkCreateMethodAction(forte::com_infra::EComServiceType paFbType, TPortId, TPortId) const {
   bool retVal = false;
-  if(forte::com_infra::e_Server == paFbType && 1 == getNoOfNodePairs()) {
+  if (forte::com_infra::e_Server == paFbType && 1 == getNoOfNodePairs()) {
     retVal = true;
   } else {
-    DEVLOG_ERROR("[OPC UA ACTION]: In FB %s: %s action is only allowed using a Server FB, the amount of BrowseName,NodeId pairs should be 1\n",
-      mLayer.getCommFB()->getInstanceName(), CActionInfo::mActionNames[eCreateMethod]);
+    DEVLOG_ERROR("[OPC UA ACTION]: In FB %s: %s action is only allowed using a Server FB, the amount of "
+                 "BrowseName,NodeId pairs should be 1\n",
+                 mLayer.getCommFB()->getInstanceName(), CActionInfo::mActionNames[eCreateMethod]);
   }
   return retVal;
 }
@@ -208,17 +201,15 @@ bool CActionInfo::checkCreateMethodAction(forte::com_infra::EComServiceType paFb
 bool CActionInfo::checkCallMethodAction(forte::com_infra::EComServiceType paFbType, TPortId, TPortId) const {
   bool retVal = false;
   if (paFbType != forte::com_infra::e_Client) {
+    DEVLOG_ERROR("[OPC UA ACTION]: In FB %s: %s action is only allowed using a Client FB\n",
+                 mLayer.getCommFB()->getInstanceName(), CActionInfo::mActionNames[eCallMethod]);
+  } else if (getNoOfNodePairs() != 1) {
     DEVLOG_ERROR(
-      "[OPC UA ACTION]: In FB %s: %s action is only allowed using a Client FB\n",
-      mLayer.getCommFB()->getInstanceName(), CActionInfo::mActionNames[eCallMethod]);
-  } else if(getNoOfNodePairs() != 1) {
-    DEVLOG_ERROR(
-      "[OPC UA ACTION]: In FB %s: %s action is only allowed with a single BrowseName,NodeId pair. (have: %i)\n",
-      mLayer.getCommFB()->getInstanceName(), CActionInfo::mActionNames[eCallMethod], getNoOfNodePairs());
-  } else if(mNodePair.begin()->getBrowsePath().empty()) {
-    DEVLOG_ERROR(
-      "[OPC UA ACTION]: In FB %s: %s action is only allowed with a non-empty browsepath\n",
-      mLayer.getCommFB()->getInstanceName(), CActionInfo::mActionNames[eCallMethod]);
+        "[OPC UA ACTION]: In FB %s: %s action is only allowed with a single BrowseName,NodeId pair. (have: %i)\n",
+        mLayer.getCommFB()->getInstanceName(), CActionInfo::mActionNames[eCallMethod], getNoOfNodePairs());
+  } else if (mNodePair.begin()->getBrowsePath().empty()) {
+    DEVLOG_ERROR("[OPC UA ACTION]: In FB %s: %s action is only allowed with a non-empty browsepath\n",
+                 mLayer.getCommFB()->getInstanceName(), CActionInfo::mActionNames[eCallMethod]);
   } else {
     retVal = true;
   }
@@ -227,48 +218,52 @@ bool CActionInfo::checkCallMethodAction(forte::com_infra::EComServiceType paFbTy
 
 bool CActionInfo::checkSubscribeAction(forte::com_infra::EComServiceType paFbType, TPortId paNoOfRDs, TPortId) const {
   bool retVal = false;
-  if(forte::com_infra::e_Subscriber == paFbType && paNoOfRDs == getNoOfNodePairs()) {
+  if (forte::com_infra::e_Subscriber == paFbType && paNoOfRDs == getNoOfNodePairs()) {
     retVal = true;
   } else {
-    DEVLOG_ERROR(
-      "[OPC UA ACTION]: In FB %s: %s action is only allowed using a Subscribe FB, the amount of BrowseName,NodeId pairs should match the number of RDs\n",
-      mLayer.getCommFB()->getInstanceName(), CActionInfo::mActionNames[eSubscribe]);
+    DEVLOG_ERROR("[OPC UA ACTION]: In FB %s: %s action is only allowed using a Subscribe FB, the amount of "
+                 "BrowseName,NodeId pairs should match the number of RDs\n",
+                 mLayer.getCommFB()->getInstanceName(), CActionInfo::mActionNames[eSubscribe]);
   }
   return retVal;
 }
 
-bool CActionInfo::checkCreateObjectAction(forte::com_infra::EComServiceType paFbType, TPortId, TPortId paNoOfSDs) const {
+bool CActionInfo::checkCreateObjectAction(forte::com_infra::EComServiceType paFbType,
+                                          TPortId,
+                                          TPortId paNoOfSDs) const {
   bool retVal = false;
-  if(forte::com_infra::e_Publisher == paFbType && 2 == getNoOfNodePairs() && 0 == paNoOfSDs) {
+  if (forte::com_infra::e_Publisher == paFbType && 2 == getNoOfNodePairs() && 0 == paNoOfSDs) {
     retVal = true;
   } else {
-    DEVLOG_ERROR(
-      "[OPC UA ACTION]: In FB %s: %s action is only allowed using a Publish FB, the amount of BrowseName,NodeId pairs should be 2, and no SD must be provided\n",
-      mLayer.getCommFB()->getInstanceName(), CActionInfo::mActionNames[eCreateObject]);
+    DEVLOG_ERROR("[OPC UA ACTION]: In FB %s: %s action is only allowed using a Publish FB, the amount of "
+                 "BrowseName,NodeId pairs should be 2, and no SD must be provided\n",
+                 mLayer.getCommFB()->getInstanceName(), CActionInfo::mActionNames[eCreateObject]);
   }
   return retVal;
 }
 
-bool CActionInfo::checkCreateVariableAction(forte::com_infra::EComServiceType paFbType, TPortId, TPortId paNoOfSDs) const {
+bool CActionInfo::checkCreateVariableAction(forte::com_infra::EComServiceType paFbType,
+                                            TPortId,
+                                            TPortId paNoOfSDs) const {
   bool retVal = false;
-  if(forte::com_infra::e_Publisher == paFbType && 3 == getNoOfNodePairs() && 0 == paNoOfSDs) {
+  if (forte::com_infra::e_Publisher == paFbType && 3 == getNoOfNodePairs() && 0 == paNoOfSDs) {
     retVal = true;
   } else {
-    DEVLOG_ERROR(
-      "[OPC UA ACTION]: In FB %s: %s action is only allowed using a Publish FB, the amount of BrowseName,NodeId pairs should be 3, and no SD must be provided\n",
-      mLayer.getCommFB()->getInstanceName(), CActionInfo::mActionNames[eCreateVariable]);
+    DEVLOG_ERROR("[OPC UA ACTION]: In FB %s: %s action is only allowed using a Publish FB, the amount of "
+                 "BrowseName,NodeId pairs should be 3, and no SD must be provided\n",
+                 mLayer.getCommFB()->getInstanceName(), CActionInfo::mActionNames[eCreateVariable]);
   }
   return retVal;
 }
 
 bool CActionInfo::checkDeleteNodeAction(forte::com_infra::EComServiceType paFbType, TPortId, TPortId paNoOfSDs) const {
   bool retVal = false;
-  if(forte::com_infra::e_Publisher == paFbType && 1 == getNoOfNodePairs() && 0 == paNoOfSDs) {
+  if (forte::com_infra::e_Publisher == paFbType && 1 == getNoOfNodePairs() && 0 == paNoOfSDs) {
     retVal = true;
   } else {
-    DEVLOG_ERROR(
-      "[OPC UA ACTION]: In FB %s: %s action is only allowed using a Publish FB, the amount of BrowseName,NodeId pairs should be 1, and no SD must be provided\n",
-      mLayer.getCommFB()->getInstanceName(), CActionInfo::mActionNames[eDeleteObject]);
+    DEVLOG_ERROR("[OPC UA ACTION]: In FB %s: %s action is only allowed using a Publish FB, the amount of "
+                 "BrowseName,NodeId pairs should be 1, and no SD must be provided\n",
+                 mLayer.getCommFB()->getInstanceName(), CActionInfo::mActionNames[eDeleteObject]);
   }
   return retVal;
 }
@@ -277,14 +272,14 @@ bool CActionInfo::checkDeleteNodeAction(forte::com_infra::EComServiceType paFbTy
 
 CActionInfo::UA_ActionType CActionInfo::CActionParser::getActionEnum(const char *paActionString) {
   CActionInfo::UA_ActionType action = CActionInfo::eActionUnknown;
-  for(size_t i = 0; i < eActionUnknown; i++) {
-    if(0 == strcmp(paActionString, CActionInfo::mActionNames[i])) {
+  for (size_t i = 0; i < eActionUnknown; i++) {
+    if (0 == strcmp(paActionString, CActionInfo::mActionNames[i])) {
       action = static_cast<UA_ActionType>(i);
       break;
     }
   }
 
-  if(eActionUnknown == action) {
+  if (eActionUnknown == action) {
     DEVLOG_ERROR("[OPC UA ACTION]: The action %s is unrecognized\n", paActionString);
   }
   return action;
@@ -292,7 +287,7 @@ CActionInfo::UA_ActionType CActionInfo::CActionParser::getActionEnum(const char 
 
 bool CActionInfo::CActionParser::getEndpoint(const char *paEndpoint, std::string &paResult) {
   std::string endPoint = std::string(paEndpoint);
-  if(endPoint.back() == '#') {
+  if (endPoint.back() == '#') {
     endPoint.pop_back();
     paResult = endPoint;
     return true;
@@ -306,43 +301,45 @@ bool CActionInfo::CActionParser::handlePair(const char *paPair, std::vector<CNod
   std::string browsePathResult;
   UA_NodeId *nodeIdResult = nullptr;
   size_t noOfParameters = pairParser.parseParameters();
-  if(CActionParser::eMaxNumberOfPositions == noOfParameters) {
+  if (CActionParser::eMaxNumberOfPositions == noOfParameters) {
     browsePathResult = std::string(pairParser[CActionParser::eBrowseName]);
     nodeIdResult = parseNodeId(pairParser[CActionParser::eNodeId]);
     retVal = nodeIdResult;
-  } else if(CActionParser::eMaxNumberOfPositions - 1 == noOfParameters) { //no NodeId was provided
+  } else if (CActionParser::eMaxNumberOfPositions - 1 == noOfParameters) { // no NodeId was provided
     browsePathResult = std::string(pairParser[CActionParser::eBrowseName]);
     retVal = true;
   } else {
     DEVLOG_ERROR("[OPC UA ACTION]: The pair %s doesn't have the proper format BROWSENAME,NODEID\n", paPair);
   }
 
-  if(retVal) {
+  if (retVal) {
     paResult.emplace_back(nodeIdResult, browsePathResult);
   }
 
   return retVal;
 }
 
-UA_NodeId* CActionInfo::CActionParser::parseNodeId(const char *paNodeIdString) {
+UA_NodeId *CActionInfo::CActionParser::parseNodeId(const char *paNodeIdString) {
   bool somethingFailed = false;
   UA_NodeId *resultNodeId = UA_NodeId_new();
-  UA_NodeId_init(resultNodeId); //will set to default namespace 0. When the nodeId is later used, the default namespace should come from the browsename
+  UA_NodeId_init(resultNodeId); // will set to default namespace 0. When the nodeId is later used, the default namespace
+                                // should come from the browsename
   unsigned int identifierPosition = 0;
 
-  CParameterParser mainParser(paNodeIdString, ':'); //namespace and identifier should be divided by a colon. If first parameter is omitted, namespace 0 is assumed
+  CParameterParser mainParser(paNodeIdString, ':'); // namespace and identifier should be divided by a colon. If first
+                                                    // parameter is omitted, namespace 0 is assumed
   size_t numberOfParameters = mainParser.parseParameters();
 
-  switch(numberOfParameters){
-    case CActionParser::eMaxNumberOfNodeIdPositions: //Namespace is present
+  switch (numberOfParameters) {
+    case CActionParser::eMaxNumberOfNodeIdPositions: // Namespace is present
       identifierPosition++;
-      if(!parseNamespace(mainParser[0], *resultNodeId)) {
+      if (!parseNamespace(mainParser[0], *resultNodeId)) {
         somethingFailed = true;
         break;
       }
       // fall through
-    case CActionParser::eMaxNumberOfNodeIdPositions - 1: //NOSONAR
-      if(!parseIdentifier(mainParser[identifierPosition], *resultNodeId)) {
+    case CActionParser::eMaxNumberOfNodeIdPositions - 1: // NOSONAR
+      if (!parseIdentifier(mainParser[identifierPosition], *resultNodeId)) {
         somethingFailed = true;
       }
       break;
@@ -352,10 +349,11 @@ UA_NodeId* CActionInfo::CActionParser::parseNodeId(const char *paNodeIdString) {
       break;
   }
 
-  if(somethingFailed) {
-    DEVLOG_ERROR(
-      "[OPC UA ACTION]: Parsing the NodeId %s failed. The format should follow the notation '<namespaceIndex>:<identifiertype>=<identifier>'. if the part before the : is omitted, namespace 0 is assumed\n",
-      paNodeIdString);
+  if (somethingFailed) {
+    DEVLOG_ERROR("[OPC UA ACTION]: Parsing the NodeId %s failed. The format should follow the notation "
+                 "'<namespaceIndex>:<identifiertype>=<identifier>'. if the part before the : is omitted, namespace 0 "
+                 "is assumed\n",
+                 paNodeIdString);
     UA_NodeId_delete(resultNodeId);
     resultNodeId = nullptr;
   }
@@ -364,31 +362,37 @@ UA_NodeId* CActionInfo::CActionParser::parseNodeId(const char *paNodeIdString) {
 }
 
 bool CActionInfo::CActionParser::parseNamespace(const char *paNamespace, UA_NodeId &paResult) {
-  paResult.namespaceIndex = static_cast<UA_UInt16>(forte::core::util::strtoul(paNamespace, nullptr, 10)); //TODO: should we check for return value here?
+  paResult.namespaceIndex = static_cast<UA_UInt16>(
+      forte::core::util::strtoul(paNamespace, nullptr, 10)); // TODO: should we check for return value here?
   return true;
 }
 
 bool CActionInfo::CActionParser::parseIdentifier(const char *paIdentifier, UA_NodeId &paResult) {
   CParameterParser identifierParser(paIdentifier, '='); //<identifiertype>=<identifier>
-  if(CActionParser::eMaxNumberOfNodeIdIdenfiertPositions == identifierParser.parseParameters()) {
-    if(0 == strcmp(identifierParser[CActionParser::eIdenfierType], "i")) { //numeric
+  if (CActionParser::eMaxNumberOfNodeIdIdenfiertPositions == identifierParser.parseParameters()) {
+    if (0 == strcmp(identifierParser[CActionParser::eIdenfierType], "i")) { // numeric
       paResult.identifierType = UA_NODEIDTYPE_NUMERIC;
-      paResult.identifier.numeric = static_cast<UA_UInt32>(forte::core::util::strtoul(identifierParser[CActionParser::eIdenfierValue], nullptr, 10)); //TODO: should we check for return value here?
-    } else if(0 == strcmp(identifierParser[CActionParser::eIdenfierType], "s")) { //string
+      paResult.identifier.numeric =
+          static_cast<UA_UInt32>(forte::core::util::strtoul(identifierParser[CActionParser::eIdenfierValue], nullptr,
+                                                            10)); // TODO: should we check for return value here?
+    } else if (0 == strcmp(identifierParser[CActionParser::eIdenfierType], "s")) { // string
       paResult.identifierType = UA_NODEIDTYPE_STRING;
       paResult.identifier.string = UA_String_fromChars(identifierParser[CActionParser::eIdenfierValue]);
-    } else if(0 == strcmp(identifierParser[CActionParser::eIdenfierType], "g")) { //GUID
+    } else if (0 == strcmp(identifierParser[CActionParser::eIdenfierType], "g")) { // GUID
       DEVLOG_ERROR("[OPC UA ACTION]:GUID type is not yet implemented\n");
       return false;
-    } else if(0 == strcmp(identifierParser[CActionParser::eIdenfierType], "b")) { //byteString
+    } else if (0 == strcmp(identifierParser[CActionParser::eIdenfierType], "b")) { // byteString
       paResult.identifierType = UA_NODEIDTYPE_BYTESTRING;
       paResult.identifier.byteString = UA_BYTESTRING_ALLOC(identifierParser[CActionParser::eIdenfierValue]);
     } else {
-      DEVLOG_ERROR("[OPC UA ACTION]: The identifier type %s wasn't recognized among the possible values [i, s, b]\n", identifierParser[0]);
+      DEVLOG_ERROR("[OPC UA ACTION]: The identifier type %s wasn't recognized among the possible values [i, s, b]\n",
+                   identifierParser[0]);
       return false;
     }
   } else {
-    DEVLOG_ERROR("[OPC UA ACTION]: Parsing the identifier %s failed. The format should follow the notation '<identifiertype>=<identifier>'\n", paIdentifier);
+    DEVLOG_ERROR("[OPC UA ACTION]: Parsing the identifier %s failed. The format should follow the notation "
+                 "'<identifiertype>=<identifier>'\n",
+                 paIdentifier);
     return false;
   }
   return true;
@@ -402,6 +406,6 @@ CLocalMethodInfo::CLocalMethodInfo(COPC_UA_Layer &paLayer, const std::string &pa
 
 CLocalMethodInfo::~CLocalMethodInfo() = default;
 
-forte::arch::CSemaphore& CLocalMethodInfo::getResultReady() {
+forte::arch::CSemaphore &CLocalMethodInfo::getResultReady() {
   return mResultIsReady;
 }

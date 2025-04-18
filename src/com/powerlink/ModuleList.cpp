@@ -12,36 +12,43 @@
 #include "ModuleList.h"
 #include <cstring>
 
-CModuleList::IoModule::IoModule(const char* paName, unsigned int paPiOffset, unsigned int paBitOffset, unsigned int paModuleNr) :
-  mPiOffset(paPiOffset), mBitOffset(paBitOffset), mModuleNr(paModuleNr){
+CModuleList::IoModule::IoModule(const char *paName,
+                                unsigned int paPiOffset,
+                                unsigned int paBitOffset,
+                                unsigned int paModuleNr) :
+    mPiOffset(paPiOffset),
+    mBitOffset(paBitOffset),
+    mModuleNr(paModuleNr) {
 
   mName = new char[strlen(paName) + 1];
   strcpy(mName, paName);
 }
 
-CModuleList::IoModule::~IoModule(){
+CModuleList::IoModule::~IoModule() {
   delete[] mName;
 }
 
-CModuleList::CModuleList() :
-    mNumberOfModules(0){
+CModuleList::CModuleList() : mNumberOfModules(0) {
 }
 
-CModuleList::~CModuleList(){
+CModuleList::~CModuleList() {
   // Delete modules in list
   mModules.clearAll();
 }
 
-void CModuleList::addEntry(const char* paName, unsigned int paPiOffset, unsigned int paBitOffset, unsigned int paModuleNr){
+void CModuleList::addEntry(const char *paName,
+                           unsigned int paPiOffset,
+                           unsigned int paBitOffset,
+                           unsigned int paModuleNr) {
   mModules.pushBack(new IoModule(paName, paPiOffset, paBitOffset, paModuleNr));
 
   mNumberOfModules++;
 }
 
-int CModuleList::getModuleNr(const char* paName, unsigned int paPiOffset, unsigned int paBitOffset){
+int CModuleList::getModuleNr(const char *paName, unsigned int paPiOffset, unsigned int paBitOffset) {
   TModuleList::Iterator itEnd(mModules.end());
-  for(TModuleList::Iterator it(mModules.begin()); it != itEnd; ++it){
-    if(strcmp(it->mName, paName) == 0 && it->mPiOffset == paPiOffset && it->mBitOffset == paBitOffset){
+  for (TModuleList::Iterator it(mModules.begin()); it != itEnd; ++it) {
+    if (strcmp(it->mName, paName) == 0 && it->mPiOffset == paPiOffset && it->mBitOffset == paBitOffset) {
       return it->mModuleNr;
     }
   }
@@ -49,15 +56,15 @@ int CModuleList::getModuleNr(const char* paName, unsigned int paPiOffset, unsign
   return -1;
 }
 
-int CModuleList::getModuleNr(const char* paName, unsigned int paOccurence){
+int CModuleList::getModuleNr(const char *paName, unsigned int paOccurence) {
   unsigned int nrOcc = 0;
 
   TModuleList::Iterator itEnd(mModules.end());
-  for(TModuleList::Iterator it(mModules.begin()); it != itEnd; ++it){
-    char* pch = strstr(it->mName, paName);
-    if(pch != nullptr){
+  for (TModuleList::Iterator it(mModules.begin()); it != itEnd; ++it) {
+    char *pch = strstr(it->mName, paName);
+    if (pch != nullptr) {
       nrOcc++;
-      if(nrOcc == paOccurence){
+      if (nrOcc == paOccurence) {
         return it->mModuleNr;
       }
     }
@@ -66,13 +73,13 @@ int CModuleList::getModuleNr(const char* paName, unsigned int paOccurence){
   return -1;
 }
 
-int CModuleList::getNrOfModules(const char* paName){
+int CModuleList::getNrOfModules(const char *paName) {
   int nrMods = 0;
 
   TModuleList::Iterator itEnd(mModules.end());
-  for(TModuleList::Iterator it(mModules.begin()); it != itEnd; ++it){
-    char* pch = strstr(it->mName, paName);
-    if(pch != nullptr){
+  for (TModuleList::Iterator it(mModules.begin()); it != itEnd; ++it) {
+    char *pch = strstr(it->mName, paName);
+    if (pch != nullptr) {
       nrMods++;
     }
   }
@@ -80,11 +87,11 @@ int CModuleList::getNrOfModules(const char* paName){
   return nrMods;
 }
 
-bool CModuleList::moduleNameExist(const char* paName){
+bool CModuleList::moduleNameExist(const char *paName) {
 
   TModuleList::Iterator itEnd(mModules.end());
-  for(TModuleList::Iterator it(mModules.begin()); it != itEnd; ++it){
-    if(strcmp(it->mName, paName) == 0){
+  for (TModuleList::Iterator it(mModules.begin()); it != itEnd; ++it) {
+    if (strcmp(it->mName, paName) == 0) {
       return true;
     }
   }

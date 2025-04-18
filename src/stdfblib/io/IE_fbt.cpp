@@ -10,7 +10,7 @@
  *   Alois Zoitl, Waldemar Eisenmenger, Monika Wenger - initial API and implementation and/or initial documentation
  *   Franz Hoepfinger - copied over IX to IE, and removed the IN
  *******************************************************************************/
- 
+
 #include "IE_fbt.h"
 
 USE_STRING_ID(BOOL);
@@ -27,7 +27,6 @@ USE_STRING_ID(QO);
 USE_STRING_ID(REQ);
 USE_STRING_ID(STATUS);
 USE_STRING_ID(STRING);
-
 
 #include "iec61131_functions.h"
 #include "forte_array_common.h"
@@ -47,18 +46,31 @@ const TDataIOID FORTE_IE::scmEIWith[] = {0, 1, scmWithListDelimiter, 0, scmWithL
 const TForteInt16 FORTE_IE::scmEIWithIndexes[] = {0, 3};
 const CStringDictionary::TStringId FORTE_IE::scmEventInputNames[] = {STRID(INIT), STRID(REQ)};
 const CStringDictionary::TStringId FORTE_IE::scmEventInputTypeIds[] = {STRID(EInit), STRID(Event)};
-const TDataIOID FORTE_IE::scmEOWith[] = {0, 1, scmWithListDelimiter, 0, 1, scmWithListDelimiter, 0, 1, scmWithListDelimiter};
+const TDataIOID FORTE_IE::scmEOWith[] = {0, 1, scmWithListDelimiter, 0, 1, scmWithListDelimiter,
+                                         0, 1, scmWithListDelimiter};
 const TForteInt16 FORTE_IE::scmEOWithIndexes[] = {0, 3, 6};
 const CStringDictionary::TStringId FORTE_IE::scmEventOutputNames[] = {STRID(INITO), STRID(CNF), STRID(IND)};
 const CStringDictionary::TStringId FORTE_IE::scmEventOutputTypeIds[] = {STRID(EInit), STRID(Event), STRID(Event)};
-const SFBInterfaceSpec FORTE_IE::scmFBInterfaceSpec = {
-  2, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,
-  3, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes,
-  2, scmDataInputNames, scmDataInputTypeIds,
-  2, scmDataOutputNames, scmDataOutputTypeIds,
-  0, nullptr,
-  0, nullptr
-};
+const SFBInterfaceSpec FORTE_IE::scmFBInterfaceSpec = {2,
+                                                       scmEventInputNames,
+                                                       scmEventInputTypeIds,
+                                                       scmEIWith,
+                                                       scmEIWithIndexes,
+                                                       3,
+                                                       scmEventOutputNames,
+                                                       scmEventOutputTypeIds,
+                                                       scmEOWith,
+                                                       scmEOWithIndexes,
+                                                       2,
+                                                       scmDataInputNames,
+                                                       scmDataInputTypeIds,
+                                                       2,
+                                                       scmDataOutputNames,
+                                                       scmDataOutputTypeIds,
+                                                       0,
+                                                       nullptr,
+                                                       0,
+                                                       nullptr};
 
 FORTE_IE::FORTE_IE(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CProcessInterface(paContainer, scmFBInterfaceSpec, paInstanceNameId),
@@ -72,8 +84,7 @@ FORTE_IE::FORTE_IE(const CStringDictionary::TStringId paInstanceNameId, forte::c
     conn_QI(nullptr),
     conn_PARAMS(nullptr),
     conn_QO(*this, 0, var_QO),
-    conn_STATUS(*this, 1, var_STATUS) {
-};
+    conn_STATUS(*this, 1, var_STATUS) {};
 
 void FORTE_IE::setInitialValues() {
   var_QI = 0_BOOL;
@@ -83,13 +94,11 @@ void FORTE_IE::setInitialValues() {
 }
 
 void FORTE_IE::executeEvent(const TEventID paEIID, CEventChainExecutionThread *const paECET) {
-  switch(paEIID) {
-    case cgExternalEventID:
-      sendOutputEvent(scmEventINDID, paECET);
-      break;
+  switch (paEIID) {
+    case cgExternalEventID: sendOutputEvent(scmEventINDID, paECET); break;
     case scmEventINITID:
       if (var_QI) {
-        var_QO = CIEC_BOOL(CProcessInterface::initialise(true, paECET)); //initialise as input
+        var_QO = CIEC_BOOL(CProcessInterface::initialise(true, paECET)); // initialise as input
       } else {
         var_QO = CIEC_BOOL(CProcessInterface::deinitialise());
       }
@@ -107,7 +116,7 @@ void FORTE_IE::executeEvent(const TEventID paEIID, CEventChainExecutionThread *c
 }
 
 void FORTE_IE::readInputData(const TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventINITID: {
       readData(0, var_QI, conn_QI);
       readData(1, var_PARAMS, conn_PARAMS);
@@ -117,13 +126,12 @@ void FORTE_IE::readInputData(const TEventID paEIID) {
       readData(0, var_QI, conn_QI);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 void FORTE_IE::writeOutputData(const TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventINITOID: {
       writeData(0, var_QO, conn_QO);
       writeData(1, var_STATUS, conn_STATUS);
@@ -139,13 +147,12 @@ void FORTE_IE::writeOutputData(const TEventID paEIID) {
       writeData(1, var_STATUS, conn_STATUS);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 CIEC_ANY *FORTE_IE::getDI(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_QI;
     case 1: return &var_PARAMS;
   }
@@ -153,7 +160,7 @@ CIEC_ANY *FORTE_IE::getDI(const size_t paIndex) {
 }
 
 CIEC_ANY *FORTE_IE::getDO(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_QO;
     case 1: return &var_STATUS;
   }
@@ -161,7 +168,7 @@ CIEC_ANY *FORTE_IE::getDO(const size_t paIndex) {
 }
 
 CEventConnection *FORTE_IE::getEOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_INITO;
     case 1: return &conn_CNF;
     case 2: return &conn_IND;
@@ -170,7 +177,7 @@ CEventConnection *FORTE_IE::getEOConUnchecked(const TPortId paIndex) {
 }
 
 CDataConnection **FORTE_IE::getDIConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_QI;
     case 1: return &conn_PARAMS;
   }
@@ -178,7 +185,7 @@ CDataConnection **FORTE_IE::getDIConUnchecked(const TPortId paIndex) {
 }
 
 CDataConnection *FORTE_IE::getDOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_QO;
     case 1: return &conn_STATUS;
   }

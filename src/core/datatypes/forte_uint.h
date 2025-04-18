@@ -27,7 +27,7 @@
 /*!\ingroup COREDTS CIEC_UINT represents the uint data type according to IEC 61131.
  */
 class CIEC_UINT final : public CIEC_ANY_UNSIGNED {
-  DECLARE_FIRMWARE_DATATYPE(UINT)
+    DECLARE_FIRMWARE_DATATYPE(UINT)
 
   public:
     using TValueType = TForteUInt16;
@@ -40,19 +40,18 @@ class CIEC_UINT final : public CIEC_ANY_UNSIGNED {
 
     CIEC_UINT() = default;
 
-    CIEC_UINT(const CIEC_UINT& paValue) :
-            CIEC_ANY_UNSIGNED(){
+    CIEC_UINT(const CIEC_UINT &paValue) : CIEC_ANY_UNSIGNED() {
       setValueSimple(paValue);
     }
 
-    CIEC_UINT(const CIEC_USINT& paValue) :
-            CIEC_ANY_UNSIGNED(){
+    CIEC_UINT(const CIEC_USINT &paValue) : CIEC_ANY_UNSIGNED() {
       setValueSimple(paValue);
     }
 
-    template <typename T, std::enable_if_t<std::is_same_v<typename forte::core::mpl::implicit_cast_t<T, CIEC_UINT>, CIEC_UINT>, int> = 0>
-    explicit CIEC_UINT(const T& paValue) :
-            CIEC_ANY_UNSIGNED(){
+    template<
+        typename T,
+        std::enable_if_t<std::is_same_v<typename forte::core::mpl::implicit_cast_t<T, CIEC_UINT>, CIEC_UINT>, int> = 0>
+    explicit CIEC_UINT(const T &paValue) : CIEC_ANY_UNSIGNED() {
       setValueSimple(paValue);
     }
 
@@ -62,13 +61,15 @@ class CIEC_UINT final : public CIEC_ANY_UNSIGNED {
 
     ~CIEC_UINT() override = default;
 
-    CIEC_UINT& operator =(const CIEC_UINT &paValue){
+    CIEC_UINT &operator=(const CIEC_UINT &paValue) {
       // Simple value assignment - no self assignment check needed
       setValueSimple(paValue);
       return *this;
     }
 
-    template <typename T, std::enable_if_t<std::is_same_v<typename forte::core::mpl::implicit_cast_t<T, CIEC_UINT>, CIEC_UINT>, int> = 0>
+    template<
+        typename T,
+        std::enable_if_t<std::is_same_v<typename forte::core::mpl::implicit_cast_t<T, CIEC_UINT>, CIEC_UINT>, int> = 0>
     CIEC_UINT &operator=(const T &paValue) {
       setValueSimple(paValue);
       return *this;
@@ -78,7 +79,7 @@ class CIEC_UINT final : public CIEC_ANY_UNSIGNED {
      *
      *   Conversion operator for converting CIEC_UDINT to elementary unsigned 16 bit integer
      */
-    explicit operator TForteUInt16() const{
+    explicit operator TForteUInt16() const {
       return getTUINT16();
     }
 
@@ -93,23 +94,23 @@ class CIEC_UINT final : public CIEC_ANY_UNSIGNED {
     }
 };
 
-inline CIEC_UINT operator ""_UINT(unsigned long long int paValue) {
+inline CIEC_UINT operator""_UINT(unsigned long long int paValue) {
   return CIEC_UINT(static_cast<CIEC_UINT::TValueType>(paValue));
 }
 
 namespace std {
-  template <>
+  template<>
   struct numeric_limits<CIEC_UINT> : public forte::templates::numeric_limits<CIEC_UINT> {
-    static constexpr size_t bitLength = 16U;
+      static constexpr size_t bitLength = 16U;
   };
-}
+} // namespace std
 
 namespace forte {
-  template <>
+  template<>
   struct CDataTypeTrait<CIEC_UINT> {
       static constexpr CIEC_ANY::EDataTypeID scmDataTypeId = CIEC_ANY::e_UINT;
       static const CStringDictionary::TStringId scmDataTypeName;
   };
-}
+} // namespace forte
 
 #endif /*_FORTE_UINT_H_*/

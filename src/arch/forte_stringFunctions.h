@@ -21,8 +21,8 @@ inline std::wstring forte_stringToWstring(const std::string &paVal) {
   std::wstring dst(paVal.size(), '\0');
   const char *from_next;
   wchar_t *to_next;
-  converter.in(mb, paVal.data(), paVal.data() + paVal.length(), from_next,
-                    dst.data(), dst.data() + dst.length(), to_next);
+  converter.in(mb, paVal.data(), paVal.data() + paVal.length(), from_next, dst.data(), dst.data() + dst.length(),
+               to_next);
   // error checking skipped for brevity
   dst.resize(to_next - dst.data());
   return dst;
@@ -34,8 +34,8 @@ inline std::string forte_wstringToString(const std::wstring &paVal) {
   std::string dst(paVal.size() * converter.max_length(), '\0');
   const wchar_t *from_next;
   char *to_next;
-  converter.out(mb, paVal.data(), paVal.data() + paVal.length(), from_next,
-                    dst.data(), dst.data() + dst.length(), to_next);
+  converter.out(mb, paVal.data(), paVal.data() + paVal.length(), from_next, dst.data(), dst.data() + dst.length(),
+                to_next);
   // error checking skipped for brevity
   dst.resize(to_next - dst.data());
   return dst;

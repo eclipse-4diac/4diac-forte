@@ -18,19 +18,19 @@
 #ifndef CWIN32SERCOMLAYER_H_
 #define CWIN32SERCOMLAYER_H_
 
-class CWin32SerComLayer : public CSerialComLayerBase<HANDLE>{
+class CWin32SerComLayer : public CSerialComLayerBase<HANDLE> {
   public:
-    CWin32SerComLayer(forte::com_infra::CComLayer* paUpperLayer, forte::com_infra::CBaseCommFB * paFB);
+    CWin32SerComLayer(forte::com_infra::CComLayer *paUpperLayer, forte::com_infra::CBaseCommFB *paFB);
     ~CWin32SerComLayer() override;
 
     /*! \brief Perform send to serial interface
-    *   \param paData Sendable payload
-    *   \param paSize Payload size in bytes
-    *
-    *   \return ComLayer response
-    */
+     *   \param paData Sendable payload
+     *   \param paSize Payload size in bytes
+     *
+     *   \return ComLayer response
+     */
     forte::com_infra::EComResponse sendData(void *paData, unsigned int paSize) override;
-    
+
     /*! \brief Perform reading from serial interface
      *
      * @return if not e_Nothing something was read and the FB should get an external event
@@ -39,7 +39,9 @@ class CWin32SerComLayer : public CSerialComLayerBase<HANDLE>{
 
   protected:
   private:
-    forte::com_infra::EComResponse openSerialConnection(const SSerialParameters& paSerialParameters, CSerialComLayerBase<HANDLE>::TSerialHandleType* paHandleResult) override;
+    forte::com_infra::EComResponse
+    openSerialConnection(const SSerialParameters &paSerialParameters,
+                         CSerialComLayerBase<HANDLE>::TSerialHandleType *paHandleResult) override;
     void closeConnection() override;
 };
 

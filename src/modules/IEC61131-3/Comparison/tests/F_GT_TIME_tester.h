@@ -19,7 +19,7 @@
 /***********************************************************************************/
 /***********************************************************************************/
 
-class F_GT_TIME_tester  : public CFBTester{
+class F_GT_TIME_tester : public CFBTester {
     DECLARE_FB_TESTER(F_GT_TIME_tester);
 
   public:
@@ -40,12 +40,11 @@ class F_GT_TIME_tester  : public CFBTester{
     CFBTestDIConn mIn_IN1_Conn;
     CIEC_TIME mIN2;
     CFBTestDIConn mIn_IN2_Conn;
-    CIEC_BOOL mOut_OUT; //DATA OUTPUT
-    CFBTestDOConn mOut_OUT_Conn; //DATA OUTPUT
-
+    CIEC_BOOL mOut_OUT; // DATA OUTPUT
+    CFBTestDOConn mOut_OUT_Conn; // DATA OUTPUT
 };
 
 /***********************************************************************************/
 /***********************************************************************************/
 
-#endif /* _E_SR_TESTER_H_ */ 
+#endif /* _E_SR_TESTER_H_ */

@@ -25,7 +25,7 @@
 #include "processinterface.h"
 
 class FORTE_IB final : public CProcessInterface {
-  DECLARE_FIRMWARE_FB(FORTE_IB)
+    DECLARE_FIRMWARE_FB(FORTE_IB)
 
   private:
     static const CStringDictionary::TStringId scmDataInputNames[];
@@ -81,7 +81,8 @@ class FORTE_IB final : public CProcessInterface {
     CDataConnection **getDIConUnchecked(TPortId) override;
     CDataConnection *getDOConUnchecked(TPortId) override;
 
-    void evt_INIT(const CIEC_BOOL &paQI, const CIEC_STRING &paPARAMS, CIEC_BOOL &paQO, CIEC_STRING &paSTATUS, CIEC_BYTE &paIN) {
+    void evt_INIT(
+        const CIEC_BOOL &paQI, const CIEC_STRING &paPARAMS, CIEC_BOOL &paQO, CIEC_STRING &paSTATUS, CIEC_BYTE &paIN) {
       var_QI = paQI;
       var_PARAMS = paPARAMS;
       receiveInputEvent(scmEventINITID, nullptr);
@@ -90,7 +91,8 @@ class FORTE_IB final : public CProcessInterface {
       paIN = var_IN;
     }
 
-    void evt_REQ(const CIEC_BOOL &paQI, const CIEC_STRING &paPARAMS, CIEC_BOOL &paQO, CIEC_STRING &paSTATUS, CIEC_BYTE &paIN) {
+    void evt_REQ(
+        const CIEC_BOOL &paQI, const CIEC_STRING &paPARAMS, CIEC_BOOL &paQO, CIEC_STRING &paSTATUS, CIEC_BYTE &paIN) {
       var_QI = paQI;
       var_PARAMS = paPARAMS;
       receiveInputEvent(scmEventREQID, nullptr);
@@ -99,8 +101,8 @@ class FORTE_IB final : public CProcessInterface {
       paIN = var_IN;
     }
 
-    void operator()(const CIEC_BOOL &paQI, const CIEC_STRING &paPARAMS, CIEC_BOOL &paQO, CIEC_STRING &paSTATUS, CIEC_BYTE &paIN) {
+    void operator()(
+        const CIEC_BOOL &paQI, const CIEC_STRING &paPARAMS, CIEC_BOOL &paQO, CIEC_STRING &paSTATUS, CIEC_BYTE &paIN) {
       evt_INIT(paQI, paPARAMS, paQO, paSTATUS, paIN);
     }
 };
-

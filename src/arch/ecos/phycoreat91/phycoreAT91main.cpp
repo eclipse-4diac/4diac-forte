@@ -13,16 +13,15 @@
 #include "forteinstance.h"
 #include <cyg/kernel/kapi.h>
 #include <network.h>
-#include <cyg/hal/hal_io.h>             // IO macros
+#include <cyg/hal/hal_io.h> // IO macros
 
-externC void
-cyg_user_start( void );
+externC void cyg_user_start(void);
 
 C4diacFORTEInstance g4diacForteInstance;
 
-void cyg_user_start(){
+void cyg_user_start() {
   g4diacForteInstance.startupNewDevice("");
 }
 
-//get the stuff that fixes some ecos cpp problems which have to be near the main
+// get the stuff that fixes some ecos cpp problems which have to be near the main
 #include "../ecoscppinit.cpp"

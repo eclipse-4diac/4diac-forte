@@ -23,7 +23,7 @@
 #include "forte_preferredprovider.h"
 
 class CIEC_ServiceRequestForm : public CIEC_STRUCT {
-  DECLARE_FIRMWARE_DATATYPE(ServiceRequestForm)
+    DECLARE_FIRMWARE_DATATYPE(ServiceRequestForm)
 
   public:
     CIEC_ServiceRequestForm();
@@ -31,27 +31,30 @@ class CIEC_ServiceRequestForm : public CIEC_STRUCT {
     ~CIEC_ServiceRequestForm() override = default;
 
     CIEC_ArrowheadSystem &requesterSystem() {
-      return *static_cast<CIEC_ArrowheadSystem*>(&getMembers()[0]);
+      return *static_cast<CIEC_ArrowheadSystem *>(&getMembers()[0]);
     }
 
     CIEC_ArrowheadCloud &requesterCloud() {
-      return *static_cast<CIEC_ArrowheadCloud*>(&getMembers()[1]);
+      return *static_cast<CIEC_ArrowheadCloud *>(&getMembers()[1]);
     }
 
     CIEC_ArrowheadService &requestedService() {
-      return *static_cast<CIEC_ArrowheadService*>(&getMembers()[2]);
+      return *static_cast<CIEC_ArrowheadService *>(&getMembers()[2]);
     }
 
     CIEC_WSTRING *orchestrationFlags() {
-      return static_cast<CIEC_WSTRING*>((*static_cast<CIEC_ARRAY<> *>(&getMembers()[3]))[0]); //the first element marks the start of the array
+      return static_cast<CIEC_WSTRING *>(
+          (*static_cast<CIEC_ARRAY<> *>(&getMembers()[3]))[0]); // the first element marks the start of the array
     }
 
     CIEC_PreferredProvider *preferredProviders() {
-      return static_cast<CIEC_PreferredProvider*>((*static_cast<CIEC_ARRAY<> *>(&getMembers()[4]))[0]); //the first element marks the start of the array
+      return static_cast<CIEC_PreferredProvider *>(
+          (*static_cast<CIEC_ARRAY<> *>(&getMembers()[4]))[0]); // the first element marks the start of the array
     }
 
     CIEC_WSTRING *requestedQoS() {
-      return static_cast<CIEC_WSTRING*>((*static_cast<CIEC_ARRAY<> *>(&getMembers()[5]))[0]); //the first element marks the start of the array
+      return static_cast<CIEC_WSTRING *>(
+          (*static_cast<CIEC_ARRAY<> *>(&getMembers()[5]))[0]); // the first element marks the start of the array
     }
 
   private:
@@ -60,4 +63,3 @@ class CIEC_ServiceRequestForm : public CIEC_STRUCT {
 };
 
 #endif //_FORTE_SERVICEREQUESTFORM_H_
-

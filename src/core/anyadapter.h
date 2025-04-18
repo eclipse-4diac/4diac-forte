@@ -19,21 +19,25 @@
 
 /*! \brief A generic adapter that behaves similar to the ANY data type and allows all other adapters to be connected.
  *
- *  The main use of such an adapter is in service interfaces that provide generic services based on the adapter connected.
+ *  The main use of such an adapter is in service interfaces that provide generic services based on the adapter
+ * connected.
  */
 
-class CAnyAdapter : public CAdapter{
-  DECLARE_ADAPTER_TYPE(CAnyAdapter)
+class CAnyAdapter : public CAdapter {
+    DECLARE_ADAPTER_TYPE(CAnyAdapter)
 
   public:
-    CAnyAdapter(CStringDictionary::TStringId paAdapterInstanceName, forte::core::CFBContainer &paContainer, bool paIsPlug);
+    CAnyAdapter(CStringDictionary::TStringId paAdapterInstanceName,
+                forte::core::CFBContainer &paContainer,
+                bool paIsPlug);
     ~CAnyAdapter() override;
 
     void typifyAnyAdapter(const CAdapter &paPeer);
 
     bool disconnect(CAdapterConnection *paAdConn) override;
 
-    //! Helper functions allowing to retrieve interface information from any_adpaters TODO look for Doxygen grouping syntax
+    //! Helper functions allowing to retrieve interface information from any_adpaters TODO look for Doxygen grouping
+    //! syntax
     TEventID getNumEIs() const {
       return getFBInterfaceSpec().mNumEIs;
     }
@@ -42,11 +46,11 @@ class CAnyAdapter : public CAdapter{
       return getFBInterfaceSpec().mNumEOs;
     }
 
-    const TForteInt16* getEIWithIndexes() const {
+    const TForteInt16 *getEIWithIndexes() const {
       return getFBInterfaceSpec().mEIWithIndexes;
     }
 
-    const TDataIOID* getEIWiths() const {
+    const TDataIOID *getEIWiths() const {
       return getFBInterfaceSpec().mEIWith;
     }
 
@@ -54,11 +58,11 @@ class CAnyAdapter : public CAdapter{
       return getFBInterfaceSpec().mNumDIs;
     }
 
-    const CStringDictionary::TStringId* getDataInputNames() const {
+    const CStringDictionary::TStringId *getDataInputNames() const {
       return getFBInterfaceSpec().mDINames;
     }
 
-    CIEC_ANY* getDataInputs(){
+    CIEC_ANY *getDataInputs() {
       return getDI(0);
     }
 
@@ -66,11 +70,11 @@ class CAnyAdapter : public CAdapter{
       return getFBInterfaceSpec().mNumDOs;
     }
 
-    const CStringDictionary::TStringId* getDataOutputNames() const {
+    const CStringDictionary::TStringId *getDataOutputNames() const {
       return getFBInterfaceSpec().mDONames;
     }
 
-    CIEC_ANY* getDataOutputs(){
+    CIEC_ANY *getDataOutputs() {
       return getDO(0);
     }
 
@@ -82,7 +86,8 @@ class CAnyAdapter : public CAdapter{
     }
 
   private:
-    static const SFBInterfaceSpec scmFBInterfaceSpec; //! interface spec for the empty interface of an any adapter will be used for plug and socket
+    static const SFBInterfaceSpec scmFBInterfaceSpec; //! interface spec for the empty interface of an any adapter will
+                                                      //! be used for plug and socket
 };
 
 #endif /* ANYADAPTER_H_ */

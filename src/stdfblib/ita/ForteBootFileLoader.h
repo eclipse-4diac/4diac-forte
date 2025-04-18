@@ -33,9 +33,7 @@ enum LoadBootResult {
 
 class ForteBootFileLoader {
   public:
-
-  using BootFileCallback = std::function<bool(const char *, char *)>;
-
+    using BootFileCallback = std::function<bool(const char *, char *)>;
 
     /**
      * Constructor which uses the the default values for the boot file location
@@ -57,7 +55,7 @@ class ForteBootFileLoader {
 
   private:
     decltype(forte_fopen(nullptr, nullptr)) mBootfile{nullptr};
-    BootFileCallback mCallback; //for now with one callback is enough for all cases
+    BootFileCallback mCallback; // for now with one callback is enough for all cases
     bool mNeedsExit{false};
 
     bool openBootFile(std::optional<std::string> paPathToFile);

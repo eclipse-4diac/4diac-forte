@@ -20,18 +20,15 @@
 #include "../../../src/core/datatypes/forte_dint.h"
 
 BOOST_AUTO_TEST_SUITE(CIEC_DINT_function_test)
-BOOST_AUTO_TEST_CASE(Type_test)
-{
+BOOST_AUTO_TEST_CASE(Type_test) {
   CIEC_DINT nTest;
-  //check type information
+  // check type information
   BOOST_CHECK_EQUAL(nTest.getDataTypeID(), CIEC_ANY::e_DINT);
-  //check operator bool data type size
+  // check operator bool data type size
   BOOST_CHECK_EQUAL(sizeof(nTest.operator TForteInt32()), sizeof(TForteInt32));
-
 }
 
-BOOST_AUTO_TEST_CASE(Literal_test)
-{
+BOOST_AUTO_TEST_CASE(Literal_test) {
   CIEC_DINT test1 = 0_DINT;
   BOOST_TEST(static_cast<CIEC_DINT::TValueType>(test1) == 0);
 
@@ -42,12 +39,11 @@ BOOST_AUTO_TEST_CASE(Literal_test)
   BOOST_TEST(static_cast<CIEC_DINT::TValueType>(test3) == std::numeric_limits<CIEC_DINT::TValueType>::min());
 }
 
-BOOST_AUTO_TEST_CASE(Assignment_test)
-{
+BOOST_AUTO_TEST_CASE(Assignment_test) {
   CIEC_DINT nTest1;
   CIEC_DINT nTest2;
 
-  //initial value must be 0
+  // initial value must be 0
   BOOST_CHECK_EQUAL(static_cast<CIEC_DINT::TValueType>(nTest1), 0);
 
   nTest1 = CIEC_DINT(std::numeric_limits<TForteInt32>::min());
@@ -70,14 +66,13 @@ BOOST_AUTO_TEST_CASE(Assignment_test)
   BOOST_CHECK_EQUAL(static_cast<CIEC_DINT::TValueType>(nTest1), std::numeric_limits<TForteInt32>::max());
   BOOST_CHECK_EQUAL(static_cast<CIEC_DINT::TValueType>(nTest2), std::numeric_limits<TForteInt32>::max());
 
-  //check that assignment operator does not intertwine objects
+  // check that assignment operator does not intertwine objects
   nTest2 = CIEC_DINT(6874);
   BOOST_CHECK_EQUAL(static_cast<CIEC_DINT::TValueType>(nTest1), std::numeric_limits<TForteInt32>::max());
   BOOST_CHECK_EQUAL(static_cast<CIEC_DINT::TValueType>(nTest2), 6874);
 }
 
-BOOST_AUTO_TEST_CASE(Equality_test)
-{
+BOOST_AUTO_TEST_CASE(Equality_test) {
   CIEC_DINT nTest1;
   CIEC_DINT nTest2;
 
@@ -90,14 +85,13 @@ BOOST_AUTO_TEST_CASE(Equality_test)
   BOOST_CHECK(nTest1.equals(nTest2));
 }
 
-BOOST_AUTO_TEST_CASE(Conversion_test)
-{
+BOOST_AUTO_TEST_CASE(Conversion_test) {
   CIEC_DINT nTest;
 
   char cBuffer[12];
   char cBufferFail[2];
 
-  //check cast operator
+  // check cast operator
   nTest = CIEC_DINT(0);
 
   BOOST_CHECK_EQUAL(nTest.operator TForteInt32(), 0);
@@ -111,7 +105,7 @@ BOOST_AUTO_TEST_CASE(Conversion_test)
   nTest = CIEC_DINT(std::numeric_limits<TForteInt32>::max());
   BOOST_CHECK_EQUAL(nTest.operator TForteInt32(), std::numeric_limits<TForteInt32>::max());
 
-  //check toString and fromString
+  // check toString and fromString
   strcpy(cBuffer, "");
 
   BOOST_CHECK_EQUAL(nTest.fromString("-2147483648"), 11);
@@ -193,7 +187,7 @@ BOOST_AUTO_TEST_CASE(Conversion_test)
   BOOST_CHECK_EQUAL(strcmp(cBuffer, "368745"), 0);
   BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
   strcpy(cBuffer, "");
-  
+
   nTest = CIEC_DINT(0);
   BOOST_CHECK_EQUAL(nTest.fromString("16#5a069"), 8);
   BOOST_CHECK_EQUAL(static_cast<CIEC_DINT::TValueType>(nTest), 368745);
@@ -240,14 +234,14 @@ BOOST_AUTO_TEST_CASE(Conversion_test)
   BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 12), 3);
   BOOST_CHECK_EQUAL(strcmp(cBuffer, "300"), 0);
 
-  //testing values outside of allowed range
+  // testing values outside of allowed range
   BOOST_CHECK_EQUAL(nTest.fromString("21474836473"), -1);
   BOOST_CHECK_EQUAL(nTest.fromString("2#1011111111111111111111111111111110"), -1);
   BOOST_CHECK_EQUAL(nTest.fromString("8#177777777770"), -1);
   BOOST_CHECK_EQUAL(nTest.fromString("16#7FFFFFFF0"), -1);
   BOOST_CHECK_EQUAL(nTest.fromString("-21474836473"), -1);
 
-  //check invalid fromString string
+  // check invalid fromString string
   BOOST_CHECK_EQUAL(nTest.fromString("NOT A VALID STRING"), -1);
 }
 BOOST_AUTO_TEST_SUITE_END()

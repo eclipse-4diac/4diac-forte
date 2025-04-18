@@ -22,9 +22,8 @@
 #include "forte_array_fixed.h"
 #include "forte_array_variable.h"
 
-
 class FORTE_F_ANY_AS_STRING final : public CSimpleFB {
-  DECLARE_FIRMWARE_FB(FORTE_F_ANY_AS_STRING)
+    DECLARE_FIRMWARE_FB(FORTE_F_ANY_AS_STRING)
 
   private:
     static const CStringDictionary::TStringId scmDataInputNames[];
@@ -83,5 +82,3 @@ class FORTE_F_ANY_AS_STRING final : public CSimpleFB {
       evt_REQ(paIN, paOUT);
     }
 };
-
-

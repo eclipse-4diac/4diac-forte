@@ -19,7 +19,7 @@
 #include "forte_array.h"
 
 class CIEC_ArrowheadService : public CIEC_STRUCT {
-  DECLARE_FIRMWARE_DATATYPE(ArrowheadService)
+    DECLARE_FIRMWARE_DATATYPE(ArrowheadService)
 
   public:
     CIEC_ArrowheadService();
@@ -27,19 +27,21 @@ class CIEC_ArrowheadService : public CIEC_STRUCT {
     ~CIEC_ArrowheadService() override = default;
 
     CIEC_WSTRING &serviceDefinition() {
-      return *static_cast<CIEC_WSTRING*>(&getMembers()[0]);
+      return *static_cast<CIEC_WSTRING *>(&getMembers()[0]);
     }
 
     CIEC_ARRAY<> *interfaces_array() {
-      return static_cast<CIEC_ARRAY<> *>(&getMembers()[1]); //the first element marks the start of the array
+      return static_cast<CIEC_ARRAY<> *>(&getMembers()[1]); // the first element marks the start of the array
     }
 
     CIEC_WSTRING *interfaces() {
-      return static_cast<CIEC_WSTRING*>((*static_cast<CIEC_ARRAY<> *>(&getMembers()[1]))[0]); //the first element marks the start of the array
+      return static_cast<CIEC_WSTRING *>(
+          (*static_cast<CIEC_ARRAY<> *>(&getMembers()[1]))[0]); // the first element marks the start of the array
     }
 
     CIEC_WSTRING *serviceMetadata() {
-      return static_cast<CIEC_WSTRING*>((*static_cast<CIEC_ARRAY<> *>(&getMembers()[2]))[0]); //the first element marks the start of the array
+      return static_cast<CIEC_WSTRING *>(
+          (*static_cast<CIEC_ARRAY<> *>(&getMembers()[2]))[0]); // the first element marks the start of the array
     }
 
   private:

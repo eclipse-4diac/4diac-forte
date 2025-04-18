@@ -21,66 +21,63 @@
 #include "forte_array_fixed.h"
 #include "forte_array_variable.h"
 
-
 class FORTE_E_SWITCH final : public CBasicFB {
-  DECLARE_FIRMWARE_FB(FORTE_E_SWITCH)
+    DECLARE_FIRMWARE_FB(FORTE_E_SWITCH)
 
-private:
-  static const CStringDictionary::TStringId scmDataInputNames[];
-  static const CStringDictionary::TStringId scmDataInputTypeIds[];
-  static const TEventID scmEventEIID = 0;
-  static const TDataIOID scmEIWith[];
-  static const TForteInt16 scmEIWithIndexes[];
-  static const CStringDictionary::TStringId scmEventInputNames[];
-  static const CStringDictionary::TStringId scmEventInputTypeIds[];
-  static const TEventID scmEventEO0ID = 0;
-  static const TEventID scmEventEO1ID = 1;
-  static const TForteInt16 scmEOWithIndexes[];
-  static const CStringDictionary::TStringId scmEventOutputNames[];
-  static const CStringDictionary::TStringId scmEventOutputTypeIds[];
+  private:
+    static const CStringDictionary::TStringId scmDataInputNames[];
+    static const CStringDictionary::TStringId scmDataInputTypeIds[];
+    static const TEventID scmEventEIID = 0;
+    static const TDataIOID scmEIWith[];
+    static const TForteInt16 scmEIWithIndexes[];
+    static const CStringDictionary::TStringId scmEventInputNames[];
+    static const CStringDictionary::TStringId scmEventInputTypeIds[];
+    static const TEventID scmEventEO0ID = 0;
+    static const TEventID scmEventEO1ID = 1;
+    static const TForteInt16 scmEOWithIndexes[];
+    static const CStringDictionary::TStringId scmEventOutputNames[];
+    static const CStringDictionary::TStringId scmEventOutputTypeIds[];
 
-  static const SFBInterfaceSpec scmFBInterfaceSpec;
+    static const SFBInterfaceSpec scmFBInterfaceSpec;
 
-  CIEC_ANY *getVarInternal(size_t) override;
+    CIEC_ANY *getVarInternal(size_t) override;
 
-  static const TForteInt16 scmStateSTART = 0;
-  static const TForteInt16 scmStateG0 = 1;
-  static const TForteInt16 scmStateG1 = 2;
+    static const TForteInt16 scmStateSTART = 0;
+    static const TForteInt16 scmStateG0 = 1;
+    static const TForteInt16 scmStateG1 = 2;
 
-  void enterStateSTART(CEventChainExecutionThread *const paECET);
-  void enterStateG0(CEventChainExecutionThread *const paECET);
-  void enterStateG1(CEventChainExecutionThread *const paECET);
+    void enterStateSTART(CEventChainExecutionThread *const paECET);
+    void enterStateG0(CEventChainExecutionThread *const paECET);
+    void enterStateG1(CEventChainExecutionThread *const paECET);
 
-  void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
+    void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
-  void readInputData(TEventID paEIID) override;
-  void writeOutputData(TEventID paEIID) override;
-  void setInitialValues() override;
+    void readInputData(TEventID paEIID) override;
+    void writeOutputData(TEventID paEIID) override;
+    void setInitialValues() override;
 
-public:
-  FORTE_E_SWITCH(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+  public:
+    FORTE_E_SWITCH(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
-  CIEC_BOOL var_G;
+    CIEC_BOOL var_G;
 
-  CEventConnection conn_EO0;
-  CEventConnection conn_EO1;
+    CEventConnection conn_EO0;
+    CEventConnection conn_EO1;
 
-  CDataConnection *conn_G;
+    CDataConnection *conn_G;
 
-  CIEC_ANY *getDI(size_t) override;
-  CIEC_ANY *getDO(size_t) override;
-  CEventConnection *getEOConUnchecked(TPortId) override;
-  CDataConnection **getDIConUnchecked(TPortId) override;
-  CDataConnection *getDOConUnchecked(TPortId) override;
+    CIEC_ANY *getDI(size_t) override;
+    CIEC_ANY *getDO(size_t) override;
+    CEventConnection *getEOConUnchecked(TPortId) override;
+    CDataConnection **getDIConUnchecked(TPortId) override;
+    CDataConnection *getDOConUnchecked(TPortId) override;
 
-  void evt_EI(const CIEC_BOOL &paG) {
-    var_G = paG;
-    receiveInputEvent(scmEventEIID, nullptr);
-  }
+    void evt_EI(const CIEC_BOOL &paG) {
+      var_G = paG;
+      receiveInputEvent(scmEventEIID, nullptr);
+    }
 
-  void operator()(const CIEC_BOOL &paG) {
-    evt_EI(paG);
-  }
+    void operator()(const CIEC_BOOL &paG) {
+      evt_EI(paG);
+    }
 };
-
-

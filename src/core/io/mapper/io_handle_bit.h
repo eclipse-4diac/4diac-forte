@@ -23,12 +23,16 @@ namespace forte {
 
       class IOHandleBit : public IOHandle {
         public:
-          IOHandleBit(IODeviceController *paController, IOMapper::Direction paDirection, uint8_t paOffset, uint8_t paPosition, uint8_t* paImage);
+          IOHandleBit(IODeviceController *paController,
+                      IOMapper::Direction paDirection,
+                      uint8_t paOffset,
+                      uint8_t paPosition,
+                      uint8_t *paImage);
 
           void set(const CIEC_ANY &) override;
           void get(CIEC_ANY &) override;
 
-          bool equal(unsigned char* paOldImage) const;
+          bool equal(unsigned char *paOldImage) const;
 
         protected:
           void onObserver(IOObserver *paObserver) override;
@@ -43,11 +47,11 @@ namespace forte {
           const uint8_t mMask;
 
         private:
-          uint8_t* mImage;
+          uint8_t *mImage;
       };
 
-    } //namespace IO
-  } //namepsace core
-} //namespace forte
+    } // namespace io
+  } // namespace core
+} // namespace forte
 
 #endif /* SRC_CORE_IO_HANDLES_IO_HANDLE_BIT_H_ */

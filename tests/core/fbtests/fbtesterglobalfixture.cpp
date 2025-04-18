@@ -26,18 +26,17 @@ CTesterDevice::CTesterDevice(const CStringDictionary::TStringId paInstanceNameId
     mResource(STRID(EMB_RES), *this) {
 }
 
-CFBTestDataGlobalFixture::CFBTestDataGlobalFixture(){
-  //setup is done in the setup so that boost_test can throw exceptions
+CFBTestDataGlobalFixture::CFBTestDataGlobalFixture() {
+  // setup is done in the setup so that boost_test can throw exceptions
   smTestDev = std::make_unique<CTesterDevice>();
-  //mimick the behavior provided by typelib
+  // mimick the behavior provided by typelib
   smTestDev->initialize();
   smTestDev->changeExecutionState(EMGMCommandType::Reset);
   smTestDev->startDevice();
 }
 
-
-CFBTestDataGlobalFixture::~CFBTestDataGlobalFixture(){
+CFBTestDataGlobalFixture::~CFBTestDataGlobalFixture() {
   smTestDev->changeExecutionState(EMGMCommandType::Stop);
   smTestDev.reset();
-  //we don't need to delete the res here as the res is deletes in the destructor of the device
+  // we don't need to delete the res here as the res is deletes in the destructor of the device
 }

@@ -25,8 +25,8 @@
 #include "lwip/udp.h"
 #include "lwip/tcpip.h"
 
-#undef connect //gets confused with connect function of conn.h and childs
-#undef bind    //conflicts with a C++17 symbol used in FORTE
+#undef connect // gets confused with connect function of conn.h and childs
+#undef bind // conflicts with a C++17 symbol used in FORTE
 
 #if !defined(CONFIG_IDF_CMAKE)
 inline int connect(int s, const struct sockaddr *name, socklen_t namelen) {

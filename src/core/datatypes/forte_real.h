@@ -32,8 +32,8 @@
 
 /*!\ingroup COREDTS CIEC_REAL represents the real data type according to IEC 61131.
  */
-class CIEC_REAL final : public CIEC_ANY_REAL{
-  DECLARE_FIRMWARE_DATATYPE(REAL)
+class CIEC_REAL final : public CIEC_ANY_REAL {
+    DECLARE_FIRMWARE_DATATYPE(REAL)
 
   public:
     using TValueType = TForteFloat;
@@ -41,33 +41,28 @@ class CIEC_REAL final : public CIEC_ANY_REAL{
     constexpr static size_t scmBitLength = 32U;
     [[deprecated("Please use the corresponding numeric_limits template")]]
     static constexpr TValueType scmMinVal = std::numeric_limits<TValueType>::min();
-    [[deprecated("Please use the corresponding numeric_limits template")]]    
+    [[deprecated("Please use the corresponding numeric_limits template")]]
     static constexpr TValueType scmMaxVal = std::numeric_limits<TValueType>::max();
 
     CIEC_REAL() = default;
 
-    CIEC_REAL(const CIEC_REAL& paValue) :
-        CIEC_ANY_REAL() {
+    CIEC_REAL(const CIEC_REAL &paValue) : CIEC_ANY_REAL() {
       setValueSimple(paValue);
     }
 
-    CIEC_REAL(const CIEC_SINT& paValue) :
-        CIEC_ANY_REAL() {
+    CIEC_REAL(const CIEC_SINT &paValue) : CIEC_ANY_REAL() {
       setValue(paValue);
     }
 
-    CIEC_REAL(const CIEC_INT& paValue) :
-        CIEC_ANY_REAL() {
+    CIEC_REAL(const CIEC_INT &paValue) : CIEC_ANY_REAL() {
       setValue(paValue);
     }
 
-    CIEC_REAL(const CIEC_USINT& paValue) :
-        CIEC_ANY_REAL() {
+    CIEC_REAL(const CIEC_USINT &paValue) : CIEC_ANY_REAL() {
       setValue(paValue);
     }
 
-    CIEC_REAL(const CIEC_UINT& paValue) :
-        CIEC_ANY_REAL() {
+    CIEC_REAL(const CIEC_UINT &paValue) : CIEC_ANY_REAL() {
       setValue(paValue);
     }
 
@@ -77,28 +72,28 @@ class CIEC_REAL final : public CIEC_ANY_REAL{
 
     ~CIEC_REAL() override = default;
 
-    CIEC_REAL& operator =(const CIEC_REAL &paValue){
+    CIEC_REAL &operator=(const CIEC_REAL &paValue) {
       // Simple value assignment - no self assignment check needed
       setValueSimple(paValue);
       return *this;
     }
 
-    CIEC_REAL& operator =(const CIEC_INT &paValue){
+    CIEC_REAL &operator=(const CIEC_INT &paValue) {
       setValue(paValue);
       return *this;
     }
 
-    CIEC_REAL& operator =(const CIEC_UINT &paValue){
+    CIEC_REAL &operator=(const CIEC_UINT &paValue) {
       setValue(paValue);
       return *this;
     }
 
-    CIEC_REAL& operator =(const CIEC_SINT &paValue){
+    CIEC_REAL &operator=(const CIEC_SINT &paValue) {
       setValue(paValue);
       return *this;
     }
 
-    CIEC_REAL& operator =(const CIEC_USINT &paValue){
+    CIEC_REAL &operator=(const CIEC_USINT &paValue) {
       setValue(paValue);
       return *this;
     }
@@ -111,11 +106,11 @@ class CIEC_REAL final : public CIEC_ANY_REAL{
      *
      *   Conversion operator for converting CIEC_REAL to elementary 32 bit float
      */
-    operator TForteFloat() const{
+    operator TForteFloat() const {
       return getTFLOAT();
     }
 
-    void setValue(const CIEC_ANY& paValue) override;
+    void setValue(const CIEC_ANY &paValue) override;
 
     EDataTypeID getDataTypeID() const override {
       return CIEC_ANY::e_REAL;
@@ -141,7 +136,7 @@ class CIEC_REAL final : public CIEC_ANY_REAL{
      *   \return number of bytes used in the buffer without trailing 0x00
      *           -1 on error
      */
-    int toString(char* paValue, size_t paBufferSize) const override;
+    int toString(char *paValue, size_t paBufferSize) const override;
 
     /*! \brief calculates buffer size needed for toString conversion
      */
@@ -150,8 +145,8 @@ class CIEC_REAL final : public CIEC_ANY_REAL{
     }
 
     [[nodiscard]] bool equals(const CIEC_ANY &paOther) const override {
-      if(paOther.getDataTypeID() == CIEC_ANY::e_REAL) {
-        return getTFLOAT() == static_cast<const CIEC_REAL&>(paOther).getTFLOAT();
+      if (paOther.getDataTypeID() == CIEC_ANY::e_REAL) {
+        return getTFLOAT() == static_cast<const CIEC_REAL &>(paOther).getTFLOAT();
       }
       return false;
     }
@@ -163,27 +158,27 @@ class CIEC_REAL final : public CIEC_ANY_REAL{
     static void castRealData(const CIEC_REAL &paSrcValue, CIEC_ANY &paDestValue);
 };
 
-inline CIEC_REAL operator ""_REAL(unsigned long long int paValue) {
+inline CIEC_REAL operator""_REAL(unsigned long long int paValue) {
   return CIEC_REAL(static_cast<CIEC_REAL::TValueType>(paValue));
 }
 
-inline CIEC_REAL operator ""_REAL(long double paValue) {
+inline CIEC_REAL operator""_REAL(long double paValue) {
   return CIEC_REAL(static_cast<CIEC_REAL::TValueType>(paValue));
 }
 
 namespace std {
-  template <>
+  template<>
   struct numeric_limits<CIEC_REAL> : public forte::templates::numeric_limits<CIEC_REAL> {
-    static constexpr size_t bitLength = 32U;
+      static constexpr size_t bitLength = 32U;
   };
-}
+} // namespace std
 
 namespace forte {
-  template <>
+  template<>
   struct CDataTypeTrait<CIEC_REAL> {
       static constexpr CIEC_ANY::EDataTypeID scmDataTypeId = CIEC_ANY::e_REAL;
       static const CStringDictionary::TStringId scmDataTypeName;
   };
-}
+} // namespace forte
 
 #endif /*_FORTE_REAL_H_*/

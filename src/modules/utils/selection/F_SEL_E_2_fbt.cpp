@@ -1,10 +1,10 @@
-/************************************************************************* 
- *** Copyright (c) 2012, 2022 TU Wien ACIN, HR Agrartechnik GmbH 
- *** This program and the accompanying materials are made available under the 
- *** terms of the Eclipse Public License 2.0 which is available at 
- *** http://www.eclipse.org/legal/epl-2.0. 
- *** 
- *** SPDX-License-Identifier: EPL-2.0 
+/*************************************************************************
+ *** Copyright (c) 2012, 2022 TU Wien ACIN, HR Agrartechnik GmbH
+ *** This program and the accompanying materials are made available under the
+ *** terms of the Eclipse Public License 2.0 which is available at
+ *** http://www.eclipse.org/legal/epl-2.0.
+ ***
+ *** SPDX-License-Identifier: EPL-2.0
  ***
  *** This file was generated using the 4DIAC FORTE Export Filter V1.0.x NG!
  ***
@@ -27,7 +27,6 @@ USE_STRING_ID(OUT);
 USE_STRING_ID(REQ0);
 USE_STRING_ID(REQ1);
 
-
 #include "criticalregion.h"
 #include "resource.h"
 
@@ -45,22 +44,34 @@ const TDataIOID FORTE_F_SEL_E_2::scmEOWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_F_SEL_E_2::scmEOWithIndexes[] = {0};
 const CStringDictionary::TStringId FORTE_F_SEL_E_2::scmEventOutputNames[] = {STRID(CNF)};
 const CStringDictionary::TStringId FORTE_F_SEL_E_2::scmEventOutputTypeIds[] = {STRID(Event)};
-const SFBInterfaceSpec FORTE_F_SEL_E_2::scmFBInterfaceSpec = {
-  2, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,
-  1, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes,
-  2, scmDataInputNames, scmDataInputTypeIds,
-  1, scmDataOutputNames, scmDataOutputTypeIds,
-  0, nullptr,
-  0, nullptr
-};
+const SFBInterfaceSpec FORTE_F_SEL_E_2::scmFBInterfaceSpec = {2,
+                                                              scmEventInputNames,
+                                                              scmEventInputTypeIds,
+                                                              scmEIWith,
+                                                              scmEIWithIndexes,
+                                                              1,
+                                                              scmEventOutputNames,
+                                                              scmEventOutputTypeIds,
+                                                              scmEOWith,
+                                                              scmEOWithIndexes,
+                                                              2,
+                                                              scmDataInputNames,
+                                                              scmDataInputTypeIds,
+                                                              1,
+                                                              scmDataOutputNames,
+                                                              scmDataOutputTypeIds,
+                                                              0,
+                                                              nullptr,
+                                                              0,
+                                                              nullptr};
 
-FORTE_F_SEL_E_2::FORTE_F_SEL_E_2(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_F_SEL_E_2::FORTE_F_SEL_E_2(const CStringDictionary::TStringId paInstanceNameId,
+                                 forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId),
     conn_CNF(*this, 0),
     conn_IN0(nullptr),
     conn_IN1(nullptr),
-    conn_OUT(*this, 0, var_OUT) {
-};
+    conn_OUT(*this, 0, var_OUT) {};
 
 void FORTE_F_SEL_E_2::setInitialValues() {
   var_IN0 = CIEC_ANY_VARIANT();
@@ -69,7 +80,7 @@ void FORTE_F_SEL_E_2::setInitialValues() {
 }
 
 void FORTE_F_SEL_E_2::executeEvent(const TEventID paEIID, CEventChainExecutionThread *const paECET) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventREQ0ID:
       var_OUT = var_IN0;
       sendOutputEvent(scmEventCNFID, paECET);
@@ -82,36 +93,34 @@ void FORTE_F_SEL_E_2::executeEvent(const TEventID paEIID, CEventChainExecutionTh
 }
 
 void FORTE_F_SEL_E_2::readInputData(const TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventREQ0ID: {
-      
+
       readData(0, var_IN0, conn_IN0);
       break;
     }
     case scmEventREQ1ID: {
-      
+
       readData(1, var_IN1, conn_IN1);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 void FORTE_F_SEL_E_2::writeOutputData(const TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventCNFID: {
-      
+
       writeData(0, var_OUT, conn_OUT);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 CIEC_ANY *FORTE_F_SEL_E_2::getDI(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_IN0;
     case 1: return &var_IN1;
   }
@@ -119,7 +128,7 @@ CIEC_ANY *FORTE_F_SEL_E_2::getDI(const size_t paIndex) {
 }
 
 CIEC_ANY *FORTE_F_SEL_E_2::getDO(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_OUT;
   }
   return nullptr;
@@ -130,14 +139,14 @@ CIEC_ANY *FORTE_F_SEL_E_2::getDIO(size_t) {
 }
 
 CEventConnection *FORTE_F_SEL_E_2::getEOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_CNF;
   }
   return nullptr;
 }
 
 CDataConnection **FORTE_F_SEL_E_2::getDIConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_IN0;
     case 1: return &conn_IN1;
   }
@@ -145,7 +154,7 @@ CDataConnection **FORTE_F_SEL_E_2::getDIConUnchecked(const TPortId paIndex) {
 }
 
 CDataConnection *FORTE_F_SEL_E_2::getDOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_OUT;
   }
   return nullptr;
@@ -158,4 +167,3 @@ CInOutDataConnection **FORTE_F_SEL_E_2::getDIOInConUnchecked(TPortId) {
 CInOutDataConnection *FORTE_F_SEL_E_2::getDIOOutConUnchecked(TPortId) {
   return nullptr;
 }
-

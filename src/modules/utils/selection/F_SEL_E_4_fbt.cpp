@@ -1,12 +1,12 @@
-/*************************************************************************  
- *** Copyright (c) 2012, 2022 TU Wien ACIN, HR Agrartechnik GmbH  
- *** This program and the accompanying materials are made available under the  
- *** terms of the Eclipse Public License 2.0 which is available at  
- *** http://www.eclipse.org/legal/epl-2.0.  
- ***  
- *** SPDX-License-Identifier: EPL-2.0  
- *** 
- *** This file was generated using the 4DIAC FORTE Export Filter V1.0.x NG! 
+/*************************************************************************
+ *** Copyright (c) 2012, 2022 TU Wien ACIN, HR Agrartechnik GmbH
+ *** This program and the accompanying materials are made available under the
+ *** terms of the Eclipse Public License 2.0 which is available at
+ *** http://www.eclipse.org/legal/epl-2.0.
+ ***
+ *** SPDX-License-Identifier: EPL-2.0
+ ***
+ *** This file was generated using the 4DIAC FORTE Export Filter V1.0.x NG!
  ***
  *** Name: F_SEL_E_4
  *** Description: selection event-based selection)
@@ -31,42 +31,58 @@ USE_STRING_ID(REQ1);
 USE_STRING_ID(REQ2);
 USE_STRING_ID(REQ3);
 
-
 #include "criticalregion.h"
 #include "resource.h"
 
 DEFINE_FIRMWARE_FB(FORTE_F_SEL_E_4, STRID(F_SEL_E_4))
 
-const CStringDictionary::TStringId FORTE_F_SEL_E_4::scmDataInputNames[] = {STRID(IN0), STRID(IN1), STRID(IN2), STRID(IN3)};
-const CStringDictionary::TStringId FORTE_F_SEL_E_4::scmDataInputTypeIds[] = {STRID(ANY), STRID(ANY), STRID(ANY), STRID(ANY)};
+const CStringDictionary::TStringId FORTE_F_SEL_E_4::scmDataInputNames[] = {STRID(IN0), STRID(IN1), STRID(IN2),
+                                                                           STRID(IN3)};
+const CStringDictionary::TStringId FORTE_F_SEL_E_4::scmDataInputTypeIds[] = {STRID(ANY), STRID(ANY), STRID(ANY),
+                                                                             STRID(ANY)};
 const CStringDictionary::TStringId FORTE_F_SEL_E_4::scmDataOutputNames[] = {STRID(OUT)};
 const CStringDictionary::TStringId FORTE_F_SEL_E_4::scmDataOutputTypeIds[] = {STRID(ANY)};
-const TDataIOID FORTE_F_SEL_E_4::scmEIWith[] = {0, scmWithListDelimiter, 1, scmWithListDelimiter, 2, scmWithListDelimiter, 3, scmWithListDelimiter};
+const TDataIOID FORTE_F_SEL_E_4::scmEIWith[] = {0, scmWithListDelimiter, 1, scmWithListDelimiter,
+                                                2, scmWithListDelimiter, 3, scmWithListDelimiter};
 const TForteInt16 FORTE_F_SEL_E_4::scmEIWithIndexes[] = {0, 2, 4, 6};
-const CStringDictionary::TStringId FORTE_F_SEL_E_4::scmEventInputNames[] = {STRID(REQ0), STRID(REQ1), STRID(REQ2), STRID(REQ3)};
-const CStringDictionary::TStringId FORTE_F_SEL_E_4::scmEventInputTypeIds[] = {STRID(Event), STRID(Event), STRID(Event), STRID(Event)};
+const CStringDictionary::TStringId FORTE_F_SEL_E_4::scmEventInputNames[] = {STRID(REQ0), STRID(REQ1), STRID(REQ2),
+                                                                            STRID(REQ3)};
+const CStringDictionary::TStringId FORTE_F_SEL_E_4::scmEventInputTypeIds[] = {STRID(Event), STRID(Event), STRID(Event),
+                                                                              STRID(Event)};
 const TDataIOID FORTE_F_SEL_E_4::scmEOWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_F_SEL_E_4::scmEOWithIndexes[] = {0};
 const CStringDictionary::TStringId FORTE_F_SEL_E_4::scmEventOutputNames[] = {STRID(CNF)};
 const CStringDictionary::TStringId FORTE_F_SEL_E_4::scmEventOutputTypeIds[] = {STRID(Event)};
-const SFBInterfaceSpec FORTE_F_SEL_E_4::scmFBInterfaceSpec = {
-  4, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,
-  1, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes,
-  4, scmDataInputNames, scmDataInputTypeIds,
-  1, scmDataOutputNames, scmDataOutputTypeIds,
-  0, nullptr,
-  0, nullptr
-};
+const SFBInterfaceSpec FORTE_F_SEL_E_4::scmFBInterfaceSpec = {4,
+                                                              scmEventInputNames,
+                                                              scmEventInputTypeIds,
+                                                              scmEIWith,
+                                                              scmEIWithIndexes,
+                                                              1,
+                                                              scmEventOutputNames,
+                                                              scmEventOutputTypeIds,
+                                                              scmEOWith,
+                                                              scmEOWithIndexes,
+                                                              4,
+                                                              scmDataInputNames,
+                                                              scmDataInputTypeIds,
+                                                              1,
+                                                              scmDataOutputNames,
+                                                              scmDataOutputTypeIds,
+                                                              0,
+                                                              nullptr,
+                                                              0,
+                                                              nullptr};
 
-FORTE_F_SEL_E_4::FORTE_F_SEL_E_4(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_F_SEL_E_4::FORTE_F_SEL_E_4(const CStringDictionary::TStringId paInstanceNameId,
+                                 forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId),
     conn_CNF(*this, 0),
     conn_IN0(nullptr),
     conn_IN1(nullptr),
     conn_IN2(nullptr),
     conn_IN3(nullptr),
-    conn_OUT(*this, 0, var_OUT) {
-};
+    conn_OUT(*this, 0, var_OUT) {};
 
 void FORTE_F_SEL_E_4::setInitialValues() {
   var_IN0 = CIEC_ANY_VARIANT();
@@ -77,7 +93,7 @@ void FORTE_F_SEL_E_4::setInitialValues() {
 }
 
 void FORTE_F_SEL_E_4::executeEvent(const TEventID paEIID, CEventChainExecutionThread *const paECET) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventREQ0ID:
       var_OUT = var_IN0;
       sendOutputEvent(scmEventCNFID, paECET);
@@ -98,46 +114,44 @@ void FORTE_F_SEL_E_4::executeEvent(const TEventID paEIID, CEventChainExecutionTh
 }
 
 void FORTE_F_SEL_E_4::readInputData(const TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventREQ0ID: {
-      
+
       readData(0, var_IN0, conn_IN0);
       break;
     }
     case scmEventREQ1ID: {
-      
+
       readData(1, var_IN1, conn_IN1);
       break;
     }
     case scmEventREQ2ID: {
-      
+
       readData(2, var_IN2, conn_IN2);
       break;
     }
     case scmEventREQ3ID: {
-      
+
       readData(3, var_IN3, conn_IN3);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 void FORTE_F_SEL_E_4::writeOutputData(const TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventCNFID: {
-      
+
       writeData(0, var_OUT, conn_OUT);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 CIEC_ANY *FORTE_F_SEL_E_4::getDI(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_IN0;
     case 1: return &var_IN1;
     case 2: return &var_IN2;
@@ -147,7 +161,7 @@ CIEC_ANY *FORTE_F_SEL_E_4::getDI(const size_t paIndex) {
 }
 
 CIEC_ANY *FORTE_F_SEL_E_4::getDO(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_OUT;
   }
   return nullptr;
@@ -158,14 +172,14 @@ CIEC_ANY *FORTE_F_SEL_E_4::getDIO(size_t) {
 }
 
 CEventConnection *FORTE_F_SEL_E_4::getEOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_CNF;
   }
   return nullptr;
 }
 
 CDataConnection **FORTE_F_SEL_E_4::getDIConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_IN0;
     case 1: return &conn_IN1;
     case 2: return &conn_IN2;
@@ -175,7 +189,7 @@ CDataConnection **FORTE_F_SEL_E_4::getDIConUnchecked(const TPortId paIndex) {
 }
 
 CDataConnection *FORTE_F_SEL_E_4::getDOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_OUT;
   }
   return nullptr;
@@ -188,4 +202,3 @@ CInOutDataConnection **FORTE_F_SEL_E_4::getDIOInConUnchecked(TPortId) {
 CInOutDataConnection *FORTE_F_SEL_E_4::getDIOOutConUnchecked(TPortId) {
   return nullptr;
 }
-

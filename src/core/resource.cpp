@@ -46,7 +46,8 @@ using namespace std::string_literals;
 CResource::CResource(forte::core::CFBContainer &paDevice,
                      const SFBInterfaceSpec &paInterfaceSpec,
                      const CStringDictionary::TStringId paInstanceNameId) :
-    CFunctionBlock(paDevice, paInterfaceSpec, paInstanceNameId), mResourceEventExecution(EcetFactory::createEcet())
+    CFunctionBlock(paDevice, paInterfaceSpec, paInstanceNameId),
+    mResourceEventExecution(EcetFactory::createEcet())
 #ifdef FORTE_SUPPORT_MONITORING
     ,
     mMonitoringHandler(*this)
@@ -59,7 +60,8 @@ CResource::CResource(forte::core::CFBContainer &paDevice,
 }
 
 CResource::CResource(const SFBInterfaceSpec &paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId) :
-    CFunctionBlock(*this, paInterfaceSpec, paInstanceNameId), mResourceEventExecution(nullptr)
+    CFunctionBlock(*this, paInterfaceSpec, paInstanceNameId),
+    mResourceEventExecution(nullptr)
 #ifdef FORTE_SUPPORT_MONITORING
     ,
     mMonitoringHandler(*this)
@@ -121,37 +123,23 @@ EMGMResponse CResource::executeMGMCommand(forte::core::SManagementCMD &paCommand
       case EMGMCommandType::DeleteConnection:
         retVal = deleteConnection(paCommand.mFirstParam, paCommand.mSecondParam);
         break;
-      case EMGMCommandType::Read:
-        retVal = readValue(paCommand.mFirstParam, paCommand.mAdditionalParams);
-        break;
-      case EMGMCommandType::Write:
-        retVal = writeValue(paCommand.mFirstParam, paCommand.mAdditionalParams);
-        break;
+      case EMGMCommandType::Read: retVal = readValue(paCommand.mFirstParam, paCommand.mAdditionalParams); break;
+      case EMGMCommandType::Write: retVal = writeValue(paCommand.mFirstParam, paCommand.mAdditionalParams); break;
       case EMGMCommandType::Start:
       case EMGMCommandType::Stop:
       case EMGMCommandType::Kill:
-      case EMGMCommandType::Reset:
-        retVal = handleExecutionStateCmd(paCommand.mCMD, paCommand.mFirstParam);
-        break;
+      case EMGMCommandType::Reset: retVal = handleExecutionStateCmd(paCommand.mCMD, paCommand.mFirstParam); break;
 #ifdef FORTE_SUPPORT_QUERY_CMD
-      case EMGMCommandType::QueryFBTypes:
-        retVal = queryAllFBTypes(paCommand.mAdditionalParams);
-        break;
-      case EMGMCommandType::QueryAdapterTypes:
-        retVal = queryAllAdapterTypes(paCommand.mAdditionalParams);
-        break;
-      case EMGMCommandType::QueryFB:
-        retVal = queryFBs(paCommand.mAdditionalParams, *this, "");
-        break;
+      case EMGMCommandType::QueryFBTypes: retVal = queryAllFBTypes(paCommand.mAdditionalParams); break;
+      case EMGMCommandType::QueryAdapterTypes: retVal = queryAllAdapterTypes(paCommand.mAdditionalParams); break;
+      case EMGMCommandType::QueryFB: retVal = queryFBs(paCommand.mAdditionalParams, *this, ""); break;
       case EMGMCommandType::QueryFBType:
         retVal = createFBTypeResponseMessage(paCommand.mFirstParam.front(), paCommand.mAdditionalParams);
         break;
       case EMGMCommandType::QueryAdapterType:
         retVal = createAdapterTypeResponseMessage(paCommand.mFirstParam.front(), paCommand.mAdditionalParams);
         break;
-      case EMGMCommandType::QueryConnection:
-        retVal = queryConnections(paCommand.mAdditionalParams, *this);
-        break;
+      case EMGMCommandType::QueryConnection: retVal = queryConnections(paCommand.mAdditionalParams, *this); break;
 #endif // FORTE_SUPPORT_QUERY_CMD
       default:
 #ifdef FORTE_SUPPORT_MONITORING
@@ -451,7 +439,7 @@ void CResource::createAOConnectionResponse(const CFunctionBlock &paFb, std::stri
   for (size_t i = 0; i < spec.mNumAdapters; i++) {
     const CAdapter *const adapter = paFb.getAdapter(spec.mAdapterInstanceDefinition[i].mAdapterNameID);
     const CAdapterConnection *aConn = adapter->getAdapterConnection();
-    if(!spec.mAdapterInstanceDefinition[i].mIsPlug && aConn != nullptr && aConn->isConnected()) {
+    if (!spec.mAdapterInstanceDefinition[i].mIsPlug && aConn != nullptr && aConn->isConnected()) {
       createConnectionResponseMessage(*aConn, paFb, adapter->getInstanceNameId(), paReqResult);
     }
   }

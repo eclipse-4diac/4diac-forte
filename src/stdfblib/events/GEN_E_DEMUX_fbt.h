@@ -22,8 +22,8 @@
 
 #include <memory>
 
-class GEN_E_DEMUX : public CGenFunctionBlock<CFunctionBlock>{
-  DECLARE_GENERIC_FIRMWARE_FB(GEN_E_DEMUX)
+class GEN_E_DEMUX : public CGenFunctionBlock<CFunctionBlock> {
+    DECLARE_GENERIC_FIRMWARE_FB(GEN_E_DEMUX)
 
   private:
     static const CStringDictionary::TStringId scmDataInputNames[], scmDIDataTypeIds[];
@@ -41,13 +41,12 @@ class GEN_E_DEMUX : public CGenFunctionBlock<CFunctionBlock>{
 
     bool createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) override;
 
-    CIEC_UINT& K(){
-      return *static_cast<CIEC_UINT*>(getDI(0));
+    CIEC_UINT &K() {
+      return *static_cast<CIEC_UINT *>(getDI(0));
     }
 
   public:
     GEN_E_DEMUX(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
     ~GEN_E_DEMUX() override = default;
-
 };
 #endif //_GEN_E_DEMUX_H_

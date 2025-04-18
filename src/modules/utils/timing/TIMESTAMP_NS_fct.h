@@ -26,7 +26,7 @@
 #include "forte_array_variable.h"
 
 class FORTE_TIMESTAMP_NS final : public CFunctionBlock {
-  DECLARE_FIRMWARE_FB(FORTE_TIMESTAMP_NS)
+    DECLARE_FIRMWARE_FB(FORTE_TIMESTAMP_NS)
 
   private:
     static const CStringDictionary::TStringId scmDataInputNames[];
@@ -82,4 +82,3 @@ class FORTE_TIMESTAMP_NS final : public CFunctionBlock {
 };
 
 CIEC_ULINT func_TIMESTAMP_NS(CIEC_DATE_AND_TIME st_lv_startDate);
-

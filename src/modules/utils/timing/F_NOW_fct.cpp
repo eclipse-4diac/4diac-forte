@@ -24,7 +24,6 @@ USE_STRING_ID(Event);
 USE_STRING_ID(REQ);
 USE_STRING_ID(utils__timing__F_NOW);
 
-
 #include "forte_date_and_time.h"
 #include "iec61131_functions.h"
 #include "forte_array_common.h"
@@ -44,16 +43,29 @@ const TDataIOID FORTE_utils__timing__F_NOW::scmEOWith[] = {0, scmWithListDelimit
 const TForteInt16 FORTE_utils__timing__F_NOW::scmEOWithIndexes[] = {0};
 const CStringDictionary::TStringId FORTE_utils__timing__F_NOW::scmEventOutputNames[] = {STRID(CNF)};
 const CStringDictionary::TStringId FORTE_utils__timing__F_NOW::scmEventOutputTypeIds[] = {STRID(Event)};
-const SFBInterfaceSpec FORTE_utils__timing__F_NOW::scmFBInterfaceSpec = {
-  1, scmEventInputNames, scmEventInputTypeIds, nullptr, scmEIWithIndexes,
-  1, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes,
-  0, nullptr, nullptr,
-  1, scmDataOutputNames, scmDataOutputTypeIds,
-  0, nullptr,
-  0, nullptr
-};
+const SFBInterfaceSpec FORTE_utils__timing__F_NOW::scmFBInterfaceSpec = {1,
+                                                                         scmEventInputNames,
+                                                                         scmEventInputTypeIds,
+                                                                         nullptr,
+                                                                         scmEIWithIndexes,
+                                                                         1,
+                                                                         scmEventOutputNames,
+                                                                         scmEventOutputTypeIds,
+                                                                         scmEOWith,
+                                                                         scmEOWithIndexes,
+                                                                         0,
+                                                                         nullptr,
+                                                                         nullptr,
+                                                                         1,
+                                                                         scmDataOutputNames,
+                                                                         scmDataOutputTypeIds,
+                                                                         0,
+                                                                         nullptr,
+                                                                         0,
+                                                                         nullptr};
 
-FORTE_utils__timing__F_NOW::FORTE_utils__timing__F_NOW(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_utils__timing__F_NOW::FORTE_utils__timing__F_NOW(const CStringDictionary::TStringId paInstanceNameId,
+                                                       forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId),
     conn_CNF(*this, 0),
     conn_(*this, 0, var_) {
@@ -68,13 +80,12 @@ void FORTE_utils__timing__F_NOW::readInputData(TEventID) {
 }
 
 void FORTE_utils__timing__F_NOW::writeOutputData(const TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventCNFID: {
       writeData(0, var_, conn_);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
@@ -83,14 +94,14 @@ CIEC_ANY *FORTE_utils__timing__F_NOW::getDI(size_t) {
 }
 
 CIEC_ANY *FORTE_utils__timing__F_NOW::getDO(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_;
   }
   return nullptr;
 }
 
 CEventConnection *FORTE_utils__timing__F_NOW::getEOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_CNF;
   }
   return nullptr;
@@ -101,7 +112,7 @@ CDataConnection **FORTE_utils__timing__F_NOW::getDIConUnchecked(TPortId) {
 }
 
 CDataConnection *FORTE_utils__timing__F_NOW::getDOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_;
   }
   return nullptr;
@@ -115,7 +126,7 @@ void FORTE_utils__timing__F_NOW::executeEvent(const TEventID, CEventChainExecuti
 CIEC_DATE_AND_TIME func_F_NOW() {
   CIEC_DATE_AND_TIME st_ret_val = 0_DATE_AND_TIME;
 
-  #line 5 "F_NOW.fct"
+#line 5 "F_NOW.fct"
   st_ret_val = func_NOW();
 
   return st_ret_val;

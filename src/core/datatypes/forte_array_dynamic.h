@@ -43,8 +43,8 @@ class CIEC_ARRAY_VARIABLE;
 /*!\ingroup COREDTS CIEC_ARRAY_DYNAMIC represents the array data type according to IEC 61131.
  */
 class CIEC_ARRAY_DYNAMIC : public CIEC_ARRAY {
-DECLARE_FIRMWARE_DATATYPE(ARRAY_DYNAMIC)
-public:
+    DECLARE_FIRMWARE_DATATYPE(ARRAY_DYNAMIC)
+  public:
     using difference_type = std::ptrdiff_t;
     using value_type = typename CIEC_ARRAY::value_type;
     using pointer = typename CIEC_ARRAY::pointer;
@@ -57,14 +57,15 @@ public:
     using CIEC_ARRAY::operator=;
 
     class iterator {
-    public:
+      public:
         using difference_type = std::ptrdiff_t;
         using value_type = typename CIEC_ARRAY_DYNAMIC::value_type;
         using pointer = typename CIEC_ARRAY_DYNAMIC::pointer;
         using reference = typename CIEC_ARRAY_DYNAMIC::reference;
         using iterator_category = std::random_access_iterator_tag;
 
-        constexpr iterator(size_t paElementSize, void *paData) : mElementSize(paElementSize), mData(paData) {}
+        constexpr iterator(size_t paElementSize, void *paData) : mElementSize(paElementSize), mData(paData) {
+        }
 
         reference operator*() const {
           return *reinterpret_cast<pointer>(mData);
@@ -106,26 +107,23 @@ public:
         }
 
         iterator &operator-=(difference_type paValue) {
-          mData = reinterpret_cast<TForteByte *>(mData) - static_cast<difference_type >(mElementSize) * paValue;
+          mData = reinterpret_cast<TForteByte *>(mData) - static_cast<difference_type>(mElementSize) * paValue;
           return *this;
         }
 
         friend iterator operator+(const iterator &paIter, difference_type paValue) {
-          return iterator(paIter.mElementSize,
-                          reinterpret_cast<TForteByte *>(paIter.mData) +
-                          static_cast<difference_type>(paIter.mElementSize) * paValue);
+          return iterator(paIter.mElementSize, reinterpret_cast<TForteByte *>(paIter.mData) +
+                                                   static_cast<difference_type>(paIter.mElementSize) * paValue);
         }
 
         friend iterator operator+(difference_type paValue, const iterator &paIter) {
-          return iterator(paIter.mElementSize,
-                          reinterpret_cast<TForteByte *>(paIter.mData) +
-                          static_cast<difference_type>(paIter.mElementSize) * paValue);
+          return iterator(paIter.mElementSize, reinterpret_cast<TForteByte *>(paIter.mData) +
+                                                   static_cast<difference_type>(paIter.mElementSize) * paValue);
         }
 
         friend iterator operator-(const iterator &paIter, difference_type paValue) {
-          return iterator(paIter.mElementSize,
-                          reinterpret_cast<TForteByte *>(paIter.mData) -
-                          static_cast<difference_type>(paIter.mElementSize) * paValue);
+          return iterator(paIter.mElementSize, reinterpret_cast<TForteByte *>(paIter.mData) -
+                                                   static_cast<difference_type>(paIter.mElementSize) * paValue);
         }
 
         friend difference_type operator-(const iterator &paIter, const iterator &paOther) {
@@ -157,7 +155,7 @@ public:
           return paValue.mData >= paOther.mData;
         }
 
-    private:
+      private:
         size_t mElementSize;
         void *mData;
     };
@@ -171,14 +169,17 @@ public:
     static_assert(std::is_swappable_v<iterator>);
 
     class const_iterator {
-    public:
+      public:
         using difference_type = std::ptrdiff_t;
         using value_type = typename CIEC_ARRAY_DYNAMIC::value_type;
         using pointer = typename CIEC_ARRAY_DYNAMIC::const_pointer;
         using reference = typename CIEC_ARRAY_DYNAMIC::const_reference;
         using iterator_category = std::random_access_iterator_tag;
 
-        constexpr const_iterator(size_t paElementSize, const void *paData) : mElementSize(paElementSize), mData(paData) {}
+        constexpr const_iterator(size_t paElementSize, const void *paData) :
+            mElementSize(paElementSize),
+            mData(paData) {
+        }
 
         reference operator*() const {
           return *reinterpret_cast<pointer>(mData);
@@ -225,21 +226,18 @@ public:
         }
 
         friend const_iterator operator+(const const_iterator &paIter, difference_type paValue) {
-          return const_iterator(paIter.mElementSize,
-                                reinterpret_cast<const TForteByte *>(paIter.mData) +
-                                static_cast<difference_type>(paIter.mElementSize) * paValue);
+          return const_iterator(paIter.mElementSize, reinterpret_cast<const TForteByte *>(paIter.mData) +
+                                                         static_cast<difference_type>(paIter.mElementSize) * paValue);
         }
 
         friend const_iterator operator+(difference_type paValue, const const_iterator &paIter) {
-          return const_iterator(paIter.mElementSize,
-                                reinterpret_cast<const TForteByte *>(paIter.mData) +
-                                static_cast<difference_type>(paIter.mElementSize) * paValue);
+          return const_iterator(paIter.mElementSize, reinterpret_cast<const TForteByte *>(paIter.mData) +
+                                                         static_cast<difference_type>(paIter.mElementSize) * paValue);
         }
 
         friend const_iterator operator-(const const_iterator &paIter, difference_type paValue) {
-          return const_iterator(paIter.mElementSize,
-                                reinterpret_cast<const TForteByte *>(paIter.mData) -
-                                static_cast<difference_type>(paIter.mElementSize) * paValue);
+          return const_iterator(paIter.mElementSize, reinterpret_cast<const TForteByte *>(paIter.mData) -
+                                                         static_cast<difference_type>(paIter.mElementSize) * paValue);
         }
 
         friend difference_type operator-(const const_iterator &paIter, const const_iterator &paOther) {
@@ -272,7 +270,7 @@ public:
           return paValue.mData >= paOther.mData;
         }
 
-    private:
+      private:
         size_t mElementSize;
         const void *mData;
     };
@@ -290,9 +288,13 @@ public:
      * @param paLength The array length
      * @param paArrayType The element type
      */
-    CIEC_ARRAY_DYNAMIC(TForteUInt16 paLength, CStringDictionary::TStringId paArrayType)
-            : mSize(0), mElementSize(0), mLowerBound(0), mUpperBound(paLength - 1), mData(nullptr),
-              mElementDataTypeEntry(nullptr) {
+    CIEC_ARRAY_DYNAMIC(TForteUInt16 paLength, CStringDictionary::TStringId paArrayType) :
+        mSize(0),
+        mElementSize(0),
+        mLowerBound(0),
+        mUpperBound(paLength - 1),
+        mData(nullptr),
+        mElementDataTypeEntry(nullptr) {
       setup(paLength, paArrayType);
     }
 
@@ -302,9 +304,13 @@ public:
      * @param paUpperBound The upper bound
      * @param paArrayType The element type
      */
-    CIEC_ARRAY_DYNAMIC(intmax_t paLowerBound, intmax_t paUpperBound, CStringDictionary::TStringId paArrayType)
-            : mSize(0), mElementSize(0), mLowerBound(paLowerBound), mUpperBound(paUpperBound), mData(nullptr),
-              mElementDataTypeEntry(nullptr) {
+    CIEC_ARRAY_DYNAMIC(intmax_t paLowerBound, intmax_t paUpperBound, CStringDictionary::TStringId paArrayType) :
+        mSize(0),
+        mElementSize(0),
+        mLowerBound(paLowerBound),
+        mUpperBound(paUpperBound),
+        mData(nullptr),
+        mElementDataTypeEntry(nullptr) {
       setup(paLowerBound, paUpperBound, paArrayType);
     }
 
@@ -312,9 +318,13 @@ public:
      * @brief Copy constructor
      * @param paValue The original array
      */
-    CIEC_ARRAY_DYNAMIC(const CIEC_ARRAY_DYNAMIC &paValue)
-            : mSize(0), mElementSize(paValue.mElementSize), mLowerBound(paValue.mLowerBound),
-              mUpperBound(paValue.mUpperBound), mData(nullptr), mElementDataTypeEntry(paValue.mElementDataTypeEntry) {
+    CIEC_ARRAY_DYNAMIC(const CIEC_ARRAY_DYNAMIC &paValue) :
+        mSize(0),
+        mElementSize(paValue.mElementSize),
+        mLowerBound(paValue.mLowerBound),
+        mUpperBound(paValue.mUpperBound),
+        mData(nullptr),
+        mElementDataTypeEntry(paValue.mElementDataTypeEntry) {
       setup(paValue);
     }
 
@@ -322,10 +332,13 @@ public:
      * @brief Move constructor
      * @param paValue The original array
      */
-    CIEC_ARRAY_DYNAMIC(CIEC_ARRAY_DYNAMIC &&paValue)
-            : mSize(paValue.mSize), mElementSize(paValue.mElementSize), mLowerBound(paValue.mLowerBound),
-              mUpperBound(paValue.mUpperBound), mData(std::exchange(paValue.mData, nullptr)),
-              mElementDataTypeEntry(paValue.mElementDataTypeEntry) {
+    CIEC_ARRAY_DYNAMIC(CIEC_ARRAY_DYNAMIC &&paValue) :
+        mSize(paValue.mSize),
+        mElementSize(paValue.mElementSize),
+        mLowerBound(paValue.mLowerBound),
+        mUpperBound(paValue.mUpperBound),
+        mData(std::exchange(paValue.mData, nullptr)),
+        mElementDataTypeEntry(paValue.mElementDataTypeEntry) {
     }
 
     /**
@@ -334,27 +347,31 @@ public:
      * @param paValue The original array
      */
     template<typename U>
-    CIEC_ARRAY_DYNAMIC(const CIEC_ARRAY &paSource)
-            : mSize(0), mElementSize(paSource[paSource.getLowerBound()].getSizeof()),
-              mLowerBound(paSource.getLowerBound()), mUpperBound(paSource.getUpperBound()), mData(nullptr) {
-      mElementDataTypeEntry = static_cast<CTypeLib::CDataTypeEntry *>(CTypeLib::findType(
-              paSource.getElementTypeNameID(),
-              CTypeLib::getDTLibStart()));
+    CIEC_ARRAY_DYNAMIC(const CIEC_ARRAY &paSource) :
+        mSize(0),
+        mElementSize(paSource[paSource.getLowerBound()].getSizeof()),
+        mLowerBound(paSource.getLowerBound()),
+        mUpperBound(paSource.getUpperBound()),
+        mData(nullptr) {
+      mElementDataTypeEntry = static_cast<CTypeLib::CDataTypeEntry *>(
+          CTypeLib::findType(paSource.getElementTypeNameID(), CTypeLib::getDTLibStart()));
       setup(paSource);
     }
-    
+
     /**
      * @brief Copy constructor from common typed array
      * @tparam U The element type of the original array
      * @param paValue The original array
      */
     template<typename U>
-    CIEC_ARRAY_DYNAMIC(const CIEC_ARRAY_COMMON<U> &paSource)
-            : mSize(0), mElementSize(paSource[paSource.getLowerBound()].getSizeof()),
-              mLowerBound(paSource.getLowerBound()), mUpperBound(paSource.getUpperBound()), mData(nullptr) {
-      mElementDataTypeEntry = static_cast<CTypeLib::CDataTypeEntry *>(CTypeLib::findType(
-              paSource.getElementTypeNameID(),
-              CTypeLib::getDTLibStart()));
+    CIEC_ARRAY_DYNAMIC(const CIEC_ARRAY_COMMON<U> &paSource) :
+        mSize(0),
+        mElementSize(paSource[paSource.getLowerBound()].getSizeof()),
+        mLowerBound(paSource.getLowerBound()),
+        mUpperBound(paSource.getUpperBound()),
+        mData(nullptr) {
+      mElementDataTypeEntry = static_cast<CTypeLib::CDataTypeEntry *>(
+          CTypeLib::findType(paSource.getElementTypeNameID(), CTypeLib::getDTLibStart()));
       setup(paSource);
     }
 
@@ -364,12 +381,14 @@ public:
      * @param paValue The original array
      */
     template<typename U>
-    CIEC_ARRAY_DYNAMIC(const CIEC_ARRAY_VARIABLE<U> &paSource)
-            : mSize(0), mElementSize(paSource[paSource.getLowerBound()].getSizeof()),
-              mLowerBound(paSource.getLowerBound()), mUpperBound(paSource.getUpperBound()), mData(nullptr) {
-      mElementDataTypeEntry = static_cast<CTypeLib::CDataTypeEntry *>(CTypeLib::findType(
-              paSource.getElementTypeNameID(),
-              CTypeLib::getDTLibStart()));
+    CIEC_ARRAY_DYNAMIC(const CIEC_ARRAY_VARIABLE<U> &paSource) :
+        mSize(0),
+        mElementSize(paSource[paSource.getLowerBound()].getSizeof()),
+        mLowerBound(paSource.getLowerBound()),
+        mUpperBound(paSource.getUpperBound()),
+        mData(nullptr) {
+      mElementDataTypeEntry = static_cast<CTypeLib::CDataTypeEntry *>(
+          CTypeLib::findType(paSource.getElementTypeNameID(), CTypeLib::getDTLibStart()));
       setup(paSource);
     }
 
@@ -381,12 +400,14 @@ public:
      * @param paValue The original array
      */
     template<typename U, intmax_t lowerBound, intmax_t upperBound>
-    CIEC_ARRAY_DYNAMIC(const CIEC_ARRAY_FIXED<U, lowerBound, upperBound> &paSource)
-            : mSize(0), mElementSize(paSource[lowerBound].getSizeof()), mLowerBound(lowerBound),
-              mUpperBound(upperBound), mData(nullptr) {
-      mElementDataTypeEntry = static_cast<CTypeLib::CDataTypeEntry *>(CTypeLib::findType(
-              paSource.getElementTypeNameID(),
-              CTypeLib::getDTLibStart()));
+    CIEC_ARRAY_DYNAMIC(const CIEC_ARRAY_FIXED<U, lowerBound, upperBound> &paSource) :
+        mSize(0),
+        mElementSize(paSource[lowerBound].getSizeof()),
+        mLowerBound(lowerBound),
+        mUpperBound(upperBound),
+        mData(nullptr) {
+      mElementDataTypeEntry = static_cast<CTypeLib::CDataTypeEntry *>(
+          CTypeLib::findType(paSource.getElementTypeNameID(), CTypeLib::getDTLibStart()));
       setup(paSource);
     }
 
@@ -447,13 +468,13 @@ public:
       clear();
     }
 
-    //!Function to configure the array if it is created via the typelib
+    //! Function to configure the array if it is created via the typelib
     void setup(TForteUInt16 paLength, CStringDictionary::TStringId paArrayType);
 
-    //!Function to configure the array if it is created via the typelib
+    //! Function to configure the array if it is created via the typelib
     void setup(intmax_t paLowerBound, intmax_t paUpperBound, CStringDictionary::TStringId paArrayType);
 
-    //!Function to configure the array if it is created via the typelib
+    //! Function to configure the array if it is created via the typelib
     void setup(const CStringDictionary::TStringId *paParameters);
 
     [[nodiscard]] size_t size() const override {
@@ -495,7 +516,8 @@ public:
     [[nodiscard]] reference at(intmax_t paIndex) override {
       if (paIndex < mLowerBound || paIndex > mUpperBound || !mData) {
 #ifdef FORTE_RTTI_AND_EXCEPTIONS
-        throw std::out_of_range("array::at: Index: " + std::to_string(paIndex) + " >=  size: " + std::to_string(size()));
+        throw std::out_of_range("array::at: Index: " + std::to_string(paIndex) +
+                                " >=  size: " + std::to_string(size()));
 #else // FORTE_RTTI_AND_EXCEPTIONS
         std::abort();
 #endif // FORTE_RTTI_AND_EXCEPTIONS
@@ -507,7 +529,8 @@ public:
     [[nodiscard]] const_reference at(intmax_t paIndex) const override {
       if (paIndex < mLowerBound || paIndex > mUpperBound || !mData) {
 #ifdef FORTE_RTTI_AND_EXCEPTIONS
-        throw std::out_of_range("array::at: Index: " + std::to_string(paIndex) + " >=  size: " + std::to_string(size()));
+        throw std::out_of_range("array::at: Index: " + std::to_string(paIndex) +
+                                " >=  size: " + std::to_string(size()));
 #else // FORTE_RTTI_AND_EXCEPTIONS
         std::abort();
 #endif // FORTE_RTTI_AND_EXCEPTIONS
@@ -535,13 +558,17 @@ public:
 
     [[nodiscard]] int fromString(const char *paValue) override;
 
-protected:
+  protected:
     // This constructor is only to be used by the create instance method
-    CIEC_ARRAY_DYNAMIC() : mSize(0), mElementSize(0), mLowerBound(0), mUpperBound(0), mData(nullptr),
-                   mElementDataTypeEntry(nullptr) {
-    };
+    CIEC_ARRAY_DYNAMIC() :
+        mSize(0),
+        mElementSize(0),
+        mLowerBound(0),
+        mUpperBound(0),
+        mData(nullptr),
+        mElementDataTypeEntry(nullptr) {};
 
-private:
+  private:
     template<typename U>
     inline void setup(const U &paArray) {
       if (mElementSize && mElementDataTypeEntry) { // check if initialized
@@ -609,4 +636,3 @@ static_assert(std::is_assignable_v<CIEC_ARRAY_DYNAMIC, const CIEC_ARRAY_VARIABLE
 static_assert(std::is_assignable_v<CIEC_ARRAY_DYNAMIC, const CIEC_ARRAY_VARIABLE<CIEC_UINT> &>);
 static_assert(std::is_assignable_v<CIEC_ARRAY_DYNAMIC, const CIEC_ARRAY_FIXED<CIEC_UINT, 0, 0> &>);
 static_assert(std::is_assignable_v<CIEC_ARRAY_DYNAMIC, const CIEC_ARRAY_FIXED<CIEC_UINT, 0, 0> &>);
-

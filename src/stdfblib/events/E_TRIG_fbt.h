@@ -20,7 +20,7 @@
 #include "forte_array_variable.h"
 
 class FORTE_E_TRIG final : public CFunctionBlock {
-  DECLARE_FIRMWARE_FB(FORTE_E_TRIG)
+    DECLARE_FIRMWARE_FB(FORTE_E_TRIG)
 
   private:
     static const CStringDictionary::TStringId scmDataInputNames[];
@@ -35,7 +35,7 @@ class FORTE_E_TRIG final : public CFunctionBlock {
 
     static const SFBInterfaceSpec scmFBInterfaceSpec;
 
-    CEventChainExecutionThread* mEcet;
+    CEventChainExecutionThread *mEcet;
 
     void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
@@ -45,15 +45,18 @@ class FORTE_E_TRIG final : public CFunctionBlock {
 
     /*!\brief This function will trigger unconnected event ports of a certain EventType within a resource
      * \param paEventTypeId ID of event type to be triggered
-    */
-    void triggerEventsInResource(forte::core::CFBContainer* paContainer, const TEventTypeID paEventType, CEventChainExecutionThread *const paECET);
+     */
+    void triggerEventsInResource(forte::core::CFBContainer *paContainer,
+                                 const TEventTypeID paEventType,
+                                 CEventChainExecutionThread *const paECET);
 
     /*!\brief This function will trigger unconnected event ports of a certain EventType
-    * \param paEventTypeId ID of event type to be triggered
-    * \param paFb function block search for events to be triggerd
-    * \param paECET event chain execution thread to add the event
-    */
-    void triggerEventsOfType(TEventTypeID paEventTypeId, CFunctionBlock* paFb, CEventChainExecutionThread *const paECET);
+     * \param paEventTypeId ID of event type to be triggered
+     * \param paFb function block search for events to be triggerd
+     * \param paECET event chain execution thread to add the event
+     */
+    void
+    triggerEventsOfType(TEventTypeID paEventTypeId, CFunctionBlock *paFb, CEventChainExecutionThread *const paECET);
 
   public:
     FORTE_E_TRIG(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
@@ -79,4 +82,3 @@ class FORTE_E_TRIG final : public CFunctionBlock {
       evt_REQ(paEVENTTYPE);
     }
 };
-

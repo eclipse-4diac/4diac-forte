@@ -23,35 +23,36 @@
 namespace forte {
   namespace arch {
 
-    CPThreadSemaphore::CPThreadSemaphore(unsigned int paInitialValue){
-      mSemaphore = dispatch_semaphore_create(0); //Creates binary semaphore according to developer help
+    CPThreadSemaphore::CPThreadSemaphore(unsigned int paInitialValue) {
+      mSemaphore = dispatch_semaphore_create(0); // Creates binary semaphore according to developer help
 
-      if(0 == paInitialValue){ // If inital value is zero, semaphore will be claimed
+      if (0 == paInitialValue) { // If inital value is zero, semaphore will be claimed
         dispatch_semaphore_wait(mSemaphore, DISPATCH_TIME_NOW);
       }
 
-      if(0 == mSemaphore){
+      if (0 == mSemaphore) {
         DEVLOG_ERROR("Could not initialize suspend sempaphore: %s\n", strerror(errno));
       }
     }
 
-    CPThreadSemaphore::~CPThreadSemaphore(){
+    CPThreadSemaphore::~CPThreadSemaphore() {
       dispatch_release(mSemaphore);
     }
 
-    void CPThreadSemaphore::inc(){
+    void CPThreadSemaphore::inc() {
       dispatch_semaphore_signal(mSemaphore);
     }
 
-    void CPThreadSemaphore::waitIndefinitely(){
+    void CPThreadSemaphore::waitIndefinitely() {
       dispatch_semaphore_wait(mSemaphore, DISPATCH_TIME_FOREVER);
     }
 
-    bool CPThreadSemaphore::timedWait(const TForteUInt64 paRelativeTimeout){
-      return (0 == dispatch_semaphore_wait(mSemaphore, dispatch_time(DISPATCH_TIME_NOW, static_cast<int64_t>(paRelativeTimeout))));
+    bool CPThreadSemaphore::timedWait(const TForteUInt64 paRelativeTimeout) {
+      return (0 == dispatch_semaphore_wait(mSemaphore,
+                                           dispatch_time(DISPATCH_TIME_NOW, static_cast<int64_t>(paRelativeTimeout))));
     }
 
-    bool CPThreadSemaphore::tryNoWait(){
+    bool CPThreadSemaphore::tryNoWait() {
       return (0 == dispatch_semaphore_wait(mSemaphore, DISPATCH_TIME_NOW));
     }
 

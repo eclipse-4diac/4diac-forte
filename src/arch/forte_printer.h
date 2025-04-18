@@ -16,8 +16,8 @@
 #include <stddef.h>
 #include <stdarg.h>
 
-int forte_snprintf(char* pa_stream, size_t pa_size, const char* pa_format, ...);
+int forte_snprintf(char *pa_stream, size_t pa_size, const char *pa_format, ...);
 
-int forte_vsnprintf(char* pa_stream, size_t pa_size, const char* pa_format, va_list pa_local_argv);
+int forte_vsnprintf(char *pa_stream, size_t pa_size, const char *pa_format, va_list pa_local_argv);
 
 #endif /* SRC_ARCH_WIN32_FORTE_PRINTER_H_ */

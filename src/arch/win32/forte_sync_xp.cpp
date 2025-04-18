@@ -13,20 +13,19 @@
 
 #include "forte_sync.h"
 
-
-CPCSyncObject::CPCSyncObject(){
+CPCSyncObject::CPCSyncObject() {
   InitializeCriticalSection(&mLock);
 }
 
-CPCSyncObject::~CPCSyncObject(){
+CPCSyncObject::~CPCSyncObject() {
   DeleteCriticalSection(&mLock);
 }
 
-void CPCSyncObject::lock(){
+void CPCSyncObject::lock() {
   EnterCriticalSection(&mLock);
 }
 
-//!Free the resource coming after the lock command
-void CPCSyncObject::unlock(){
+//! Free the resource coming after the lock command
+void CPCSyncObject::unlock() {
   LeaveCriticalSection(&mLock);
 }

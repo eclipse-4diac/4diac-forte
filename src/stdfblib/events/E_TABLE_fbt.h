@@ -31,7 +31,7 @@
 #include "E_TABLE_CTRL_fbt.h"
 
 class FORTE_E_TABLE final : public CCompositeFB {
-  DECLARE_FIRMWARE_FB(FORTE_E_TABLE)
+    DECLARE_FIRMWARE_FB(FORTE_E_TABLE)
 
   private:
     static const CStringDictionary::TStringId scmDataInputNames[];
@@ -82,4 +82,3 @@ class FORTE_E_TABLE final : public CCompositeFB {
     CDataConnection **getDIConUnchecked(TPortId) override;
     CDataConnection *getDOConUnchecked(TPortId) override;
 };
-

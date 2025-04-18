@@ -99,6 +99,9 @@ NamespaceIndentation: All
 # https://clang.llvm.org/docs/ClangFormatStyleOptions.html#packconstructorinitializers
 PackConstructorInitializers: CurrentLine
 
+# https://clang.llvm.org/docs/ClangFormatStyleOptions.html#sortincludes
+SortIncludes: Never
+
 # https://clang.llvm.org/docs/ClangFormatStyleOptions.html#spaceaftercstylecast
 SpaceAfterCStyleCast: true
 

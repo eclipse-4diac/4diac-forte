@@ -35,7 +35,12 @@ namespace forte {
          * @param paPath path to look for
          * @param paParams parameters to consider for the request
          */
-        static void createGetRequest(std::string& paDest, const std::string& paHost, const TForteUInt16 paPort, const std::string& paPath, const std::string &paAuth, const std::string& paParams);
+        static void createGetRequest(std::string &paDest,
+                                     const std::string &paHost,
+                                     const TForteUInt16 paPort,
+                                     const std::string &paPath,
+                                     const std::string &paAuth,
+                                     const std::string &paParams);
 
         /**
          * Generates a HTTP PUT request. The request is written to paDest.
@@ -48,8 +53,15 @@ namespace forte {
          * @param paContentType content type of the request
          * @param paType PUT or POST
          */
-        static void createPutPostRequest(std::string& paDest, const std::string& paHost, const TForteUInt16 paPort, const std::string& paPath, const std::string &paAuth, const std::string& paParams, const std::string& paBody,
-            const std::string& paContentType, CHttpComLayer::ERequestType paType);
+        static void createPutPostRequest(std::string &paDest,
+                                         const std::string &paHost,
+                                         const TForteUInt16 paPort,
+                                         const std::string &paPath,
+                                         const std::string &paAuth,
+                                         const std::string &paParams,
+                                         const std::string &paBody,
+                                         const std::string &paContentType,
+                                         CHttpComLayer::ERequestType paType);
 
         /**
          * Adds a body to the request.
@@ -57,7 +69,7 @@ namespace forte {
          * @param paContentType type of the body
          * @param paBody body of the request
          */
-        static void addBodyToRequest (const std::string &paBody, const std::string &paContentType, std::string &paDest);
+        static void addBodyToRequest(const std::string &paBody, const std::string &paContentType, std::string &paDest);
 
         /**
          * Extracts data from a response to a HTTP request
@@ -66,7 +78,7 @@ namespace forte {
          * @param paSrc response received
          * @return true if no error happened, false otherwise
          */
-        static bool parseResponse(std::string& paBody, std::string& paResponseCode, char* paSrc);
+        static bool parseResponse(std::string &paBody, std::string &paResponseCode, char *paSrc);
 
         /**
          * Parse a GET request received as a server
@@ -76,8 +88,10 @@ namespace forte {
          * @param paData the received  GET request
          * @return true if no error happened, false otherwise
          */
-        static bool parseGetRequest(std::string& paPath, CSinglyLinkedList<std::string>& paParameterNames, CSinglyLinkedList<std::string>& paParameterValues,
-            char* paData);
+        static bool parseGetRequest(std::string &paPath,
+                                    CSinglyLinkedList<std::string> &paParameterNames,
+                                    CSinglyLinkedList<std::string> &paParameterValues,
+                                    char *paData);
 
         /**
          * Parse a PUT/POST request received as a server
@@ -86,7 +100,7 @@ namespace forte {
          * @param paData the received PUT/POST  request
          * @return true if no error happened, false otherwise
          */
-        static bool parsePutPostRequest(std::string& paPath, std::string &paContent, char* paData);
+        static bool parsePutPostRequest(std::string &paPath, std::string &paContent, char *paData);
 
         /**
          * Create a HTTP response
@@ -95,14 +109,17 @@ namespace forte {
          * @param paContentType the content type of the response
          * @param paData the body of the response
          */
-        static void createResponse(std::string& paDest, const std::string& paResult, const std::string& paContentType, const std::string& paData);
+        static void createResponse(std::string &paDest,
+                                   const std::string &paResult,
+                                   const std::string &paContentType,
+                                   const std::string &paData);
 
         /**
          * Look in the request for its type
          * @param paRequest request to look into
          * @return Type of request
          */
-        static CHttpComLayer::ERequestType getTypeOfRequest(const char* paRequest);
+        static CHttpComLayer::ERequestType getTypeOfRequest(const char *paRequest);
 
         CHttpParser() = delete;
         virtual ~CHttpParser() = delete;
@@ -117,13 +134,19 @@ namespace forte {
          * @param paParams parameters to consider for the request
          * @param paType the type of request to be written in the header
          */
-        static void addCommonHeader (std::string &paDest, const std::string &paHost, const TForteUInt16 paPort, const std::string &paPath, const std::string &paAuth, const std::string &paParams, CHttpComLayer::ERequestType paType);
+        static void addCommonHeader(std::string &paDest,
+                                    const std::string &paHost,
+                                    const TForteUInt16 paPort,
+                                    const std::string &paPath,
+                                    const std::string &paAuth,
+                                    const std::string &paParams,
+                                    CHttpComLayer::ERequestType paType);
 
         /**
          * Appends the ending "\r\n\r\n" to the HTTP request
          * @param paDest place to store the header
          */
-        static void addHeaderEnding(std::string& paDest);
+        static void addHeaderEnding(std::string &paDest);
 
         /**
          * Extracts the HTTP response
@@ -131,19 +154,21 @@ namespace forte {
          * @param paSrc source of the reponse
          * @return true if no error happened, false otherwise
          */
-        static bool getHttpResponseCode(std::string& paDest, char* paSrc);
+        static bool getHttpResponseCode(std::string &paDest, char *paSrc);
 
         /**
          * Parse parameter of GET request as a server
          * @param paParameters The string containing the parameters of the request
          * @param paParameterNames The result where the names of the parameters are stored
          * @param paParameterValues The result where the values of the parameters are stored
-         * @return The number of parameters found. If wrong parameters are found, the result is treated as no parameters, meaning it returns zero
+         * @return The number of parameters found. If wrong parameters are found, the result is treated as no
+         * parameters, meaning it returns zero
          */
-        static unsigned int parseGETParameters(char* paParameters, CSinglyLinkedList<std::string>& paParameterNames,
-            CSinglyLinkedList<std::string>& paParameterValues);
+        static unsigned int parseGETParameters(char *paParameters,
+                                               CSinglyLinkedList<std::string> &paParameterNames,
+                                               CSinglyLinkedList<std::string> &paParameterValues);
     };
-  }
-}
+  } // namespace com_infra
+} // namespace forte
 
 #endif /* _HTTPIPPARSER_H_ */

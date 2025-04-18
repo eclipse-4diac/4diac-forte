@@ -47,21 +47,20 @@ class PLCnextDeviceInterface {
     const std::string busIdentifier = "Arp.Io.AxlC";
     std::string pinName;
     int nodeId = -1;
-    std::string fqPinIdentifier;   //format <busIdentifier>/<nodeId>.<pinName>
+    std::string fqPinIdentifier; // format <busIdentifier>/<nodeId>.<pinName>
 
     // buffer
-    TGdsBuffer* gdsBuffer = NULL;
+    TGdsBuffer *gdsBuffer = NULL;
 
-    // offset 
+    // offset
     size_t offset = 0;
 
     PLCnextDeviceInterface() {};
     ~PLCnextDeviceInterface();
 
-
-    const char* init(int nodeId, const char* pinName);
-    void read(char* value, size_t valueSize);
-    void write(char* value, size_t valueSize);
+    const char *init(int nodeId, const char *pinName);
+    void read(char *value, size_t valueSize);
+    void write(char *value, size_t valueSize);
 };
 
 #endif /* SRC_MODULES_PLCNEXT_SWINTERFACE_H_ */

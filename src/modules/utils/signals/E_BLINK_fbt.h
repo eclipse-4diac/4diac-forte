@@ -13,7 +13,8 @@
  *** Name: E_BLINK
  *** Description: Simulates a blinking signal (turning on and off for specific durations)
  *** Version:
- ***     1.0: 2025-02-15/Franz Höpfinger - HR Agrartechnik GmbH   - initial API and implementation and/or initial documentation
+ ***     1.0: 2025-02-15/Franz Höpfinger - HR Agrartechnik GmbH   - initial API and implementation and/or initial
+ *documentation
  *************************************************************************/
 
 #pragma once
@@ -33,7 +34,7 @@
 #include "GEN_ADD_fbt.h"
 
 class FORTE_E_BLINK final : public CCompositeFB {
-  DECLARE_FIRMWARE_FB(FORTE_E_BLINK)
+    DECLARE_FIRMWARE_FB(FORTE_E_BLINK)
 
   private:
     static const CStringDictionary::TStringId scmDataInputNames[];
@@ -85,4 +86,3 @@ class FORTE_E_BLINK final : public CCompositeFB {
     CDataConnection **getDIConUnchecked(TPortId) override;
     CDataConnection *getDOConUnchecked(TPortId) override;
 };
-

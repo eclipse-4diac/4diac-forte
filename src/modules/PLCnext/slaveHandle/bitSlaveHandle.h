@@ -18,16 +18,19 @@
 
 class PLCnextBitSlaveHandle : public PLCnextSlaveHandle {
   public:
-    PLCnextBitSlaveHandle(forte::core::io::IODeviceController *paController, forte::core::io::IOMapper::Direction paDirection, uint16_t paPosition, PLCnextSlaveHandler *paSlave);
+    PLCnextBitSlaveHandle(forte::core::io::IODeviceController *paController,
+                          forte::core::io::IOMapper::Direction paDirection,
+                          uint16_t paPosition,
+                          PLCnextSlaveHandler *paSlave);
 
-    void set(const CIEC_ANY&) override;
-    void get(CIEC_ANY&) override;
+    void set(const CIEC_ANY &) override;
+    void get(CIEC_ANY &) override;
 
-    bool equal(unsigned char* mOldBuffer);
+    bool equal(unsigned char *mOldBuffer);
 
   protected:
     virtual void reset() {
-      set((CIEC_BOOL)false);
+      set((CIEC_BOOL) false);
     }
 
     const uint16_t mMask;

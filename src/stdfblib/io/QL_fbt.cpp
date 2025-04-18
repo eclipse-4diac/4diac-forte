@@ -28,7 +28,6 @@ USE_STRING_ID(REQ);
 USE_STRING_ID(STATUS);
 USE_STRING_ID(STRING);
 
-
 #include "iec61131_functions.h"
 #include "forte_array_common.h"
 #include "forte_array.h"
@@ -51,14 +50,26 @@ const TDataIOID FORTE_QL::scmEOWith[] = {0, 1, scmWithListDelimiter, 0, 1, scmWi
 const TForteInt16 FORTE_QL::scmEOWithIndexes[] = {0, 3};
 const CStringDictionary::TStringId FORTE_QL::scmEventOutputNames[] = {STRID(INITO), STRID(CNF)};
 const CStringDictionary::TStringId FORTE_QL::scmEventOutputTypeIds[] = {STRID(EInit), STRID(Event)};
-const SFBInterfaceSpec FORTE_QL::scmFBInterfaceSpec = {
-  2, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,
-  2, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes,
-  3, scmDataInputNames, scmDataInputTypeIds,
-  2, scmDataOutputNames, scmDataOutputTypeIds,
-  0, nullptr,
-  0, nullptr
-};
+const SFBInterfaceSpec FORTE_QL::scmFBInterfaceSpec = {2,
+                                                       scmEventInputNames,
+                                                       scmEventInputTypeIds,
+                                                       scmEIWith,
+                                                       scmEIWithIndexes,
+                                                       2,
+                                                       scmEventOutputNames,
+                                                       scmEventOutputTypeIds,
+                                                       scmEOWith,
+                                                       scmEOWithIndexes,
+                                                       3,
+                                                       scmDataInputNames,
+                                                       scmDataInputTypeIds,
+                                                       2,
+                                                       scmDataOutputNames,
+                                                       scmDataOutputTypeIds,
+                                                       0,
+                                                       nullptr,
+                                                       0,
+                                                       nullptr};
 
 FORTE_QL::FORTE_QL(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CProcessInterface(paContainer, scmFBInterfaceSpec, paInstanceNameId),
@@ -73,8 +84,7 @@ FORTE_QL::FORTE_QL(const CStringDictionary::TStringId paInstanceNameId, forte::c
     conn_PARAMS(nullptr),
     conn_OUT(nullptr),
     conn_QO(*this, 0, var_QO),
-    conn_STATUS(*this, 1, var_STATUS) {
-};
+    conn_STATUS(*this, 1, var_STATUS) {};
 
 void FORTE_QL::setInitialValues() {
   var_QI = 0_BOOL;
@@ -85,10 +95,10 @@ void FORTE_QL::setInitialValues() {
 }
 
 void FORTE_QL::executeEvent(const TEventID paEIID, CEventChainExecutionThread *const paECET) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventINITID:
       if (var_QI) {
-        var_QO = CIEC_BOOL(CProcessInterface::initialise(false, paECET)); //initialise as output
+        var_QO = CIEC_BOOL(CProcessInterface::initialise(false, paECET)); // initialise as output
       } else {
         var_QO = CIEC_BOOL(CProcessInterface::deinitialise());
       }
@@ -106,7 +116,7 @@ void FORTE_QL::executeEvent(const TEventID paEIID, CEventChainExecutionThread *c
 }
 
 void FORTE_QL::readInputData(const TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventINITID: {
       readData(0, var_QI, conn_QI);
       readData(1, var_PARAMS, conn_PARAMS);
@@ -117,13 +127,12 @@ void FORTE_QL::readInputData(const TEventID paEIID) {
       readData(2, var_OUT, conn_OUT);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 void FORTE_QL::writeOutputData(const TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventINITOID: {
       writeData(0, var_QO, conn_QO);
       writeData(1, var_STATUS, conn_STATUS);
@@ -134,13 +143,12 @@ void FORTE_QL::writeOutputData(const TEventID paEIID) {
       writeData(1, var_STATUS, conn_STATUS);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 CIEC_ANY *FORTE_QL::getDI(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_QI;
     case 1: return &var_PARAMS;
     case 2: return &var_OUT;
@@ -149,7 +157,7 @@ CIEC_ANY *FORTE_QL::getDI(const size_t paIndex) {
 }
 
 CIEC_ANY *FORTE_QL::getDO(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_QO;
     case 1: return &var_STATUS;
   }
@@ -157,7 +165,7 @@ CIEC_ANY *FORTE_QL::getDO(const size_t paIndex) {
 }
 
 CEventConnection *FORTE_QL::getEOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_INITO;
     case 1: return &conn_CNF;
   }
@@ -165,7 +173,7 @@ CEventConnection *FORTE_QL::getEOConUnchecked(const TPortId paIndex) {
 }
 
 CDataConnection **FORTE_QL::getDIConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_QI;
     case 1: return &conn_PARAMS;
     case 2: return &conn_OUT;
@@ -174,7 +182,7 @@ CDataConnection **FORTE_QL::getDIConUnchecked(const TPortId paIndex) {
 }
 
 CDataConnection *FORTE_QL::getDOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_QO;
     case 1: return &conn_STATUS;
   }

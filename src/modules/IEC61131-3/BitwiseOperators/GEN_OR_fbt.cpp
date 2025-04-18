@@ -20,23 +20,21 @@
 
 USE_STRING_ID(GEN_OR);
 
-
 DEFINE_GENERIC_FIRMWARE_FB(GEN_OR, STRID(GEN_OR))
 
 GEN_OR::GEN_OR(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
-    CGenBitBase(paInstanceNameId, paContainer){
+    CGenBitBase(paInstanceNameId, paContainer) {
 }
 
 void GEN_OR::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   switch (paEIID) {
     case scmEventREQID:
-      if(getFBInterfaceSpec().mNumDIs) {
+      if (getFBInterfaceSpec().mNumDIs) {
         var_OUT() = var_IN(0);
         for (size_t i = 1; i < getFBInterfaceSpec().mNumDIs; ++i) {
-          var_OUT() = std::visit([](auto &&paOUT, auto &&paIN) -> CIEC_ANY_BIT_VARIANT {
-              return func_OR(paOUT, paIN);
-          }, static_cast<CIEC_ANY_BIT_VARIANT::variant&>(var_OUT()),
-             static_cast<CIEC_ANY_BIT_VARIANT::variant&>(var_IN(i)));
+          var_OUT() = std::visit([](auto &&paOUT, auto &&paIN) -> CIEC_ANY_BIT_VARIANT { return func_OR(paOUT, paIN); },
+                                 static_cast<CIEC_ANY_BIT_VARIANT::variant &>(var_OUT()),
+                                 static_cast<CIEC_ANY_BIT_VARIANT::variant &>(var_IN(i)));
         }
       }
       sendOutputEvent(scmEventCNFID, paECET);

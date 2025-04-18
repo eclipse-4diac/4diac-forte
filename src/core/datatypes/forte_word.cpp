@@ -15,7 +15,6 @@
 
 USE_STRING_ID(WORD);
 
-
 DEFINE_FIRMWARE_DATATYPE(WORD, STRID(WORD))
 
 const CStringDictionary::TStringId forte::CDataTypeTrait<CIEC_WORD>::scmDataTypeName = STRID(WORD);

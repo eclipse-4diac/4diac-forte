@@ -14,4 +14,3 @@
 #include "fbcontainermock.h"
 
 CFBContainerMock CFBContainerMock::smDefaultFBContMock;
-

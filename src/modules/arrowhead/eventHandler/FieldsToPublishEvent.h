@@ -19,63 +19,58 @@
 #include <forte_arrowheadevent.h>
 #include <forte_wstring.h>
 
-class FORTE_FieldsToPublishEvent: public CBasicFB{
-  DECLARE_FIRMWARE_FB(FORTE_FieldsToPublishEvent)
+class FORTE_FieldsToPublishEvent : public CBasicFB {
+    DECLARE_FIRMWARE_FB(FORTE_FieldsToPublishEvent)
 
-private:
-  static const CStringDictionary::TStringId scmDataInputNames[];
-  static const CStringDictionary::TStringId scmDataInputTypeIds[];
-  CIEC_ArrowheadSystem &source() {
-    return *static_cast<CIEC_ArrowheadSystem*>(getDI(0));
-  };
+  private:
+    static const CStringDictionary::TStringId scmDataInputNames[];
+    static const CStringDictionary::TStringId scmDataInputTypeIds[];
+    CIEC_ArrowheadSystem &source() {
+      return *static_cast<CIEC_ArrowheadSystem *>(getDI(0));
+    };
 
-  CIEC_ArrowheadEvent &event() {
-    return *static_cast<CIEC_ArrowheadEvent*>(getDI(1));
-  };
+    CIEC_ArrowheadEvent &event() {
+      return *static_cast<CIEC_ArrowheadEvent *>(getDI(1));
+    };
 
-  CIEC_WSTRING &deliveryCompleteUri() {
-    return *static_cast<CIEC_WSTRING*>(getDI(2));
-  };
+    CIEC_WSTRING &deliveryCompleteUri() {
+      return *static_cast<CIEC_WSTRING *>(getDI(2));
+    };
 
-  static const CStringDictionary::TStringId scmDataOutputNames[];
-  static const CStringDictionary::TStringId scmDataOutputTypeIds[];
-  CIEC_PublishEvent &publishEvent() {
-    return *static_cast<CIEC_PublishEvent*>(getDO(0));
-  };
+    static const CStringDictionary::TStringId scmDataOutputNames[];
+    static const CStringDictionary::TStringId scmDataOutputTypeIds[];
+    CIEC_PublishEvent &publishEvent() {
+      return *static_cast<CIEC_PublishEvent *>(getDO(0));
+    };
 
-  static const TEventID scmEventREQID = 0;
-  static const TForteInt16 scmEIWithIndexes[];
-  static const TDataIOID scmEIWith[];
-  static const CStringDictionary::TStringId scmEventInputNames[];
-  static const CStringDictionary::TStringId scmEventInputTypeIds[];
+    static const TEventID scmEventREQID = 0;
+    static const TForteInt16 scmEIWithIndexes[];
+    static const TDataIOID scmEIWith[];
+    static const CStringDictionary::TStringId scmEventInputNames[];
+    static const CStringDictionary::TStringId scmEventInputTypeIds[];
 
-  static const TEventID scmEventCNFID = 0;
-  static const TForteInt16 scmEOWithIndexes[];
-  static const TDataIOID scmEOWith[];
-  static const CStringDictionary::TStringId scmEventOutputNames[];
-  static const CStringDictionary::TStringId scmEventOutputTypeIds[];
+    static const TEventID scmEventCNFID = 0;
+    static const TForteInt16 scmEOWithIndexes[];
+    static const TDataIOID scmEOWith[];
+    static const CStringDictionary::TStringId scmEventOutputNames[];
+    static const CStringDictionary::TStringId scmEventOutputTypeIds[];
 
-  static const SFBInterfaceSpec scmFBInterfaceSpec;
+    static const SFBInterfaceSpec scmFBInterfaceSpec;
 
+    void alg_REQ();
+    static const TForteInt16 scmStateSTART = 0;
+    static const TForteInt16 scmStateREQ = 1;
 
-  void alg_REQ();
-  static const TForteInt16 scmStateSTART = 0;
-  static const TForteInt16 scmStateREQ = 1;
+    void enterStateSTART(CEventChainExecutionThread *const paECET);
+    void enterStateREQ(CEventChainExecutionThread *const paECET);
 
-  void enterStateSTART(CEventChainExecutionThread *const paECET);
-  void enterStateREQ(CEventChainExecutionThread *const paECET);
+    virtual void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
-  virtual void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
+  public:
+    FORTE_FieldsToPublishEvent(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+        CBasicFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, 0) {};
 
-public:
-  FORTE_FieldsToPublishEvent(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) : 
-       CBasicFB(paContainer, scmFBInterfaceSpec, paInstanceNameId,
-              0){
-  };
-
-  ~FORTE_FieldsToPublishEvent() override = default;
-
+    ~FORTE_FieldsToPublishEvent() override = default;
 };
 
-#endif //close the ifdef sequence from the beginning of the file
-
+#endif // close the ifdef sequence from the beginning of the file

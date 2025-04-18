@@ -18,12 +18,11 @@
 
 /*! \brief External event handler for the eCos Timer.
  * \ingroup ECOS-HAL
- *  
+ *
  */
-class CECOSTimerHandler : public CTimerHandler, private CThread{
+class CECOSTimerHandler : public CTimerHandler, private CThread {
   public:
-
-    explicit CECOSTimerHandler(CDeviceExecution& paDeviceExecution);
+    explicit CECOSTimerHandler(CDeviceExecution &paDeviceExecution);
 
     ~CECOSTimerHandler() override;
 
@@ -46,12 +45,11 @@ class CECOSTimerHandler : public CTimerHandler, private CThread{
     int getPriority() const override;
 
   private:
-
     static cyg_sem_t mSemaphore;
 
     /*!\brief callback function for the system timer
      */
-    static void timerHandlerFunc(cyg_handle_t , cyg_addrword_t ){
+    static void timerHandlerFunc(cyg_handle_t, cyg_addrword_t) {
       cyg_semaphore_post(&mSemaphore);
     }
 

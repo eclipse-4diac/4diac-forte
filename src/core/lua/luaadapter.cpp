@@ -15,17 +15,25 @@
 #include "resource.h"
 #include "criticalregion.h"
 
-CLuaAdapter::CLuaAdapter(CStringDictionary::TStringId paInstanceNameId, const CLuaAdapterTypeEntry* paTypeEntry, bool paIsPlug, forte::core::CFBContainer &paContainer) :
-    CAdapter(paContainer, paTypeEntry->getSocketInterfaceSpec(), paInstanceNameId, paTypeEntry->getPlugInterfaceSpec(), paIsPlug),
-        mTypeEntry(paTypeEntry) {
+CLuaAdapter::CLuaAdapter(CStringDictionary::TStringId paInstanceNameId,
+                         const CLuaAdapterTypeEntry *paTypeEntry,
+                         bool paIsPlug,
+                         forte::core::CFBContainer &paContainer) :
+    CAdapter(paContainer,
+             paTypeEntry->getSocketInterfaceSpec(),
+             paInstanceNameId,
+             paTypeEntry->getPlugInterfaceSpec(),
+             paIsPlug),
+    mTypeEntry(paTypeEntry) {
 }
 
 CLuaAdapter::~CLuaAdapter() = default;
 
 void CLuaAdapter::readInputData(TEventID paEIID) {
-  if(nullptr != getFBInterfaceSpec().mEIWithIndexes && scmNoDataAssociated != getFBInterfaceSpec().mEIWithIndexes[paEIID]) {
+  if (nullptr != getFBInterfaceSpec().mEIWithIndexes &&
+      scmNoDataAssociated != getFBInterfaceSpec().mEIWithIndexes[paEIID]) {
     const TDataIOID *eiWithStart = &(getFBInterfaceSpec().mEIWith[getFBInterfaceSpec().mEIWithIndexes[paEIID]]);
-    for(size_t i = 0; eiWithStart[i] != scmWithListDelimiter; ++i) {
+    for (size_t i = 0; eiWithStart[i] != scmWithListDelimiter; ++i) {
       TDataIOID diNum = eiWithStart[i];
       readData(diNum, *getDI(diNum), *getDIConUnchecked(diNum));
     }

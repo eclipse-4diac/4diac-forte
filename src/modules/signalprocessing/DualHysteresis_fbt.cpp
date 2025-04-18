@@ -1,10 +1,10 @@
-/*************************************************************************  
- *** Copyright (c) 2023 HR Agrartechnik GmbH  
- *** This program and the accompanying materials are made available under the  
- *** terms of the Eclipse Public License 2.0 which is available at  
- *** http://www.eclipse.org/legal/epl-2.0.  
- ***  
- *** SPDX-License-Identifier: EPL-2.0 
+/*************************************************************************
+ *** Copyright (c) 2023 HR Agrartechnik GmbH
+ *** This program and the accompanying materials are made available under the
+ *** terms of the Eclipse Public License 2.0 which is available at
+ *** http://www.eclipse.org/legal/epl-2.0.
+ ***
+ *** SPDX-License-Identifier: EPL-2.0
  *** FORTE Library Element
  ***
  *** This file was generated using the 4DIAC FORTE Export Filter V1.0.x NG!
@@ -35,7 +35,6 @@ USE_STRING_ID(REAL);
 USE_STRING_ID(REQ);
 USE_STRING_ID(signalprocessing__DualHysteresis);
 
-
 #include "criticalregion.h"
 #include "resource.h"
 #include "forte_bool.h"
@@ -48,28 +47,51 @@ USE_STRING_ID(signalprocessing__DualHysteresis);
 
 DEFINE_FIRMWARE_FB(FORTE_signalprocessing__DualHysteresis, STRID(signalprocessing__DualHysteresis))
 
-const CStringDictionary::TStringId FORTE_signalprocessing__DualHysteresis::scmDataInputNames[] = {STRID(QI), STRID(MI), STRID(DEAD), STRID(HYSTERESIS), STRID(INPUT)};
-const CStringDictionary::TStringId FORTE_signalprocessing__DualHysteresis::scmDataInputTypeIds[] = {STRID(BOOL), STRID(REAL), STRID(REAL), STRID(REAL), STRID(REAL)};
-const CStringDictionary::TStringId FORTE_signalprocessing__DualHysteresis::scmDataOutputNames[] = {STRID(QO), STRID(DO_UP), STRID(DO_DOWN)};
-const CStringDictionary::TStringId FORTE_signalprocessing__DualHysteresis::scmDataOutputTypeIds[] = {STRID(BOOL), STRID(BOOL), STRID(BOOL)};
-const TDataIOID FORTE_signalprocessing__DualHysteresis::scmEIWith[] = {0, scmWithListDelimiter, 0, 1, 2, 4, 3, scmWithListDelimiter};
+const CStringDictionary::TStringId FORTE_signalprocessing__DualHysteresis::scmDataInputNames[] = {
+    STRID(QI), STRID(MI), STRID(DEAD), STRID(HYSTERESIS), STRID(INPUT)};
+const CStringDictionary::TStringId FORTE_signalprocessing__DualHysteresis::scmDataInputTypeIds[] = {
+    STRID(BOOL), STRID(REAL), STRID(REAL), STRID(REAL), STRID(REAL)};
+const CStringDictionary::TStringId FORTE_signalprocessing__DualHysteresis::scmDataOutputNames[] = {
+    STRID(QO), STRID(DO_UP), STRID(DO_DOWN)};
+const CStringDictionary::TStringId FORTE_signalprocessing__DualHysteresis::scmDataOutputTypeIds[] = {
+    STRID(BOOL), STRID(BOOL), STRID(BOOL)};
+const TDataIOID FORTE_signalprocessing__DualHysteresis::scmEIWith[] = {0, scmWithListDelimiter, 0, 1, 2, 4,
+                                                                       3, scmWithListDelimiter};
 const TForteInt16 FORTE_signalprocessing__DualHysteresis::scmEIWithIndexes[] = {0, 2};
-const CStringDictionary::TStringId FORTE_signalprocessing__DualHysteresis::scmEventInputNames[] = {STRID(INIT), STRID(REQ)};
-const CStringDictionary::TStringId FORTE_signalprocessing__DualHysteresis::scmEventInputTypeIds[] = {STRID(EInit), STRID(Event)};
-const TDataIOID FORTE_signalprocessing__DualHysteresis::scmEOWith[] = {0, scmWithListDelimiter, 1, 2, scmWithListDelimiter};
+const CStringDictionary::TStringId FORTE_signalprocessing__DualHysteresis::scmEventInputNames[] = {STRID(INIT),
+                                                                                                   STRID(REQ)};
+const CStringDictionary::TStringId FORTE_signalprocessing__DualHysteresis::scmEventInputTypeIds[] = {STRID(EInit),
+                                                                                                     STRID(Event)};
+const TDataIOID FORTE_signalprocessing__DualHysteresis::scmEOWith[] = {0, scmWithListDelimiter, 1, 2,
+                                                                       scmWithListDelimiter};
 const TForteInt16 FORTE_signalprocessing__DualHysteresis::scmEOWithIndexes[] = {0, 2};
-const CStringDictionary::TStringId FORTE_signalprocessing__DualHysteresis::scmEventOutputNames[] = {STRID(INITO), STRID(CNF)};
-const CStringDictionary::TStringId FORTE_signalprocessing__DualHysteresis::scmEventOutputTypeIds[] = {STRID(EInit), STRID(Event)};
-const SFBInterfaceSpec FORTE_signalprocessing__DualHysteresis::scmFBInterfaceSpec = {
-  2, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,
-  2, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes,
-  5, scmDataInputNames, scmDataInputTypeIds,
-  3, scmDataOutputNames, scmDataOutputTypeIds,
-  0, nullptr,
-  0, nullptr
-};
+const CStringDictionary::TStringId FORTE_signalprocessing__DualHysteresis::scmEventOutputNames[] = {STRID(INITO),
+                                                                                                    STRID(CNF)};
+const CStringDictionary::TStringId FORTE_signalprocessing__DualHysteresis::scmEventOutputTypeIds[] = {STRID(EInit),
+                                                                                                      STRID(Event)};
+const SFBInterfaceSpec FORTE_signalprocessing__DualHysteresis::scmFBInterfaceSpec = {2,
+                                                                                     scmEventInputNames,
+                                                                                     scmEventInputTypeIds,
+                                                                                     scmEIWith,
+                                                                                     scmEIWithIndexes,
+                                                                                     2,
+                                                                                     scmEventOutputNames,
+                                                                                     scmEventOutputTypeIds,
+                                                                                     scmEOWith,
+                                                                                     scmEOWithIndexes,
+                                                                                     5,
+                                                                                     scmDataInputNames,
+                                                                                     scmDataInputTypeIds,
+                                                                                     3,
+                                                                                     scmDataOutputNames,
+                                                                                     scmDataOutputTypeIds,
+                                                                                     0,
+                                                                                     nullptr,
+                                                                                     0,
+                                                                                     nullptr};
 
-FORTE_signalprocessing__DualHysteresis::FORTE_signalprocessing__DualHysteresis(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_signalprocessing__DualHysteresis::FORTE_signalprocessing__DualHysteresis(
+    const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CBasicFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, nullptr),
     var_QI(0_BOOL),
     var_MI(0.5_REAL),
@@ -104,42 +126,57 @@ void FORTE_signalprocessing__DualHysteresis::setInitialValues() {
 
 void FORTE_signalprocessing__DualHysteresis::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   do {
-    switch(mECCState) {
+    switch (mECCState) {
       case scmStateSTART:
-        if((scmEventINITID == paEIID) && (func_EQ(true_BOOL, var_QI))) enterStateInit(paECET);
-        else return; //no transition cleared
+        if ((scmEventINITID == paEIID) && (func_EQ(true_BOOL, var_QI)))
+          enterStateInit(paECET);
+        else
+          return; // no transition cleared
         break;
       case scmStateInit:
-        if(scmEventREQID == paEIID) enterStateNeutral(paECET);
-        else return; //no transition cleared
+        if (scmEventREQID == paEIID)
+          enterStateNeutral(paECET);
+        else
+          return; // no transition cleared
         break;
       case scmStateUP:
-        if((scmEventREQID == paEIID) && (func_LT(var_INPUT, func_ADD<CIEC_REAL>(var_MI, var_DEAD)))) enterStateNeutral(paECET);
-        else return; //no transition cleared
+        if ((scmEventREQID == paEIID) && (func_LT(var_INPUT, func_ADD<CIEC_REAL>(var_MI, var_DEAD))))
+          enterStateNeutral(paECET);
+        else
+          return; // no transition cleared
         break;
       case scmStateNeutral:
-        if((scmEventINITID == paEIID) && (func_EQ(false_BOOL, var_QI))) enterStateDeInit(paECET);
+        if ((scmEventINITID == paEIID) && (func_EQ(false_BOOL, var_QI)))
+          enterStateDeInit(paECET);
+        else if ((scmEventREQID == paEIID) &&
+                 (func_GE(var_INPUT, func_ADD<CIEC_REAL>(func_ADD<CIEC_REAL>(var_MI, var_DEAD), var_HYSTERESIS))))
+          enterStateUP(paECET);
+        else if ((scmEventREQID == paEIID) &&
+                 (func_LE(var_INPUT, func_SUB<CIEC_REAL>(func_SUB<CIEC_REAL>(var_MI, var_DEAD), var_HYSTERESIS))))
+          enterStateDOWN(paECET);
         else
-        if((scmEventREQID == paEIID) && (func_GE(var_INPUT, func_ADD<CIEC_REAL>(func_ADD<CIEC_REAL>(var_MI, var_DEAD), var_HYSTERESIS)))) enterStateUP(paECET);
-        else
-        if((scmEventREQID == paEIID) && (func_LE(var_INPUT, func_SUB<CIEC_REAL>(func_SUB<CIEC_REAL>(var_MI, var_DEAD), var_HYSTERESIS)))) enterStateDOWN(paECET);
-        else return; //no transition cleared
+          return; // no transition cleared
         break;
       case scmStateDeInit:
-        if(1) enterStateSTART(paECET);
-        else return; //no transition cleared
+        if (1)
+          enterStateSTART(paECET);
+        else
+          return; // no transition cleared
         break;
       case scmStateDOWN:
-        if((scmEventREQID == paEIID) && (func_GT(var_INPUT, func_SUB<CIEC_REAL>(var_MI, var_DEAD)))) enterStateNeutral(paECET);
-        else return; //no transition cleared
+        if ((scmEventREQID == paEIID) && (func_GT(var_INPUT, func_SUB<CIEC_REAL>(var_MI, var_DEAD))))
+          enterStateNeutral(paECET);
+        else
+          return; // no transition cleared
         break;
       default:
-        DEVLOG_ERROR("The state is not in the valid range! The state value is: %d. The max value can be: 6.", mECCState.operator TForteUInt16 ());
+        DEVLOG_ERROR("The state is not in the valid range! The state value is: %d. The max value can be: 6.",
+                     mECCState.operator TForteUInt16());
         mECCState = 0; // 0 is always the initial state
         return;
     }
     paEIID = cgInvalidEventID; // we have to clear the event after the first check in order to ensure correct behavior
-  } while(true);
+  } while (true);
 }
 
 void FORTE_signalprocessing__DualHysteresis::enterStateSTART(CEventChainExecutionThread *const) {
@@ -177,7 +214,7 @@ void FORTE_signalprocessing__DualHysteresis::enterStateDOWN(CEventChainExecution
 }
 
 void FORTE_signalprocessing__DualHysteresis::readInputData(const TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventINITID: {
       readData(0, var_QI, conn_QI);
       break;
@@ -190,13 +227,12 @@ void FORTE_signalprocessing__DualHysteresis::readInputData(const TEventID paEIID
       readData(3, var_HYSTERESIS, conn_HYSTERESIS);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 void FORTE_signalprocessing__DualHysteresis::writeOutputData(const TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventINITOID: {
       writeData(0, var_QO, conn_QO);
       break;
@@ -206,13 +242,12 @@ void FORTE_signalprocessing__DualHysteresis::writeOutputData(const TEventID paEI
       writeData(2, var_DO_DOWN, conn_DO_DOWN);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 CIEC_ANY *FORTE_signalprocessing__DualHysteresis::getDI(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_QI;
     case 1: return &var_MI;
     case 2: return &var_DEAD;
@@ -223,7 +258,7 @@ CIEC_ANY *FORTE_signalprocessing__DualHysteresis::getDI(const size_t paIndex) {
 }
 
 CIEC_ANY *FORTE_signalprocessing__DualHysteresis::getDO(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_QO;
     case 1: return &var_DO_UP;
     case 2: return &var_DO_DOWN;
@@ -232,7 +267,7 @@ CIEC_ANY *FORTE_signalprocessing__DualHysteresis::getDO(const size_t paIndex) {
 }
 
 CEventConnection *FORTE_signalprocessing__DualHysteresis::getEOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_INITO;
     case 1: return &conn_CNF;
   }
@@ -240,7 +275,7 @@ CEventConnection *FORTE_signalprocessing__DualHysteresis::getEOConUnchecked(cons
 }
 
 CDataConnection **FORTE_signalprocessing__DualHysteresis::getDIConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_QI;
     case 1: return &conn_MI;
     case 2: return &conn_DEAD;
@@ -251,7 +286,7 @@ CDataConnection **FORTE_signalprocessing__DualHysteresis::getDIConUnchecked(cons
 }
 
 CDataConnection *FORTE_signalprocessing__DualHysteresis::getDOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_QO;
     case 1: return &conn_DO_UP;
     case 2: return &conn_DO_DOWN;
@@ -265,56 +300,56 @@ CIEC_ANY *FORTE_signalprocessing__DualHysteresis::getVarInternal(size_t) {
 
 void FORTE_signalprocessing__DualHysteresis::alg_initialize(void) {
 
-  #line 3 "DualHysteresis.fbt"
+#line 3 "DualHysteresis.fbt"
   var_QO = var_QI;
-  #line 5 "DualHysteresis.fbt"
+#line 5 "DualHysteresis.fbt"
   var_DO_UP = false_BOOL;
-  #line 6 "DualHysteresis.fbt"
+#line 6 "DualHysteresis.fbt"
   var_DO_DOWN = false_BOOL;
 }
 
 void FORTE_signalprocessing__DualHysteresis::alg_deInitialize(void) {
 
-  #line 11 "DualHysteresis.fbt"
+#line 11 "DualHysteresis.fbt"
   var_QO = false_BOOL;
-  #line 13 "DualHysteresis.fbt"
+#line 13 "DualHysteresis.fbt"
   var_DO_UP = false_BOOL;
-  #line 14 "DualHysteresis.fbt"
+#line 14 "DualHysteresis.fbt"
   var_DO_DOWN = false_BOOL;
 }
 
 void FORTE_signalprocessing__DualHysteresis::alg_alNeutral(void) {
 
-  #line 18 "DualHysteresis.fbt"
+#line 18 "DualHysteresis.fbt"
   var_QO = var_QI;
-  #line 20 "DualHysteresis.fbt"
+#line 20 "DualHysteresis.fbt"
   var_DO_UP = false_BOOL;
-  #line 21 "DualHysteresis.fbt"
+#line 21 "DualHysteresis.fbt"
   var_DO_DOWN = false_BOOL;
 }
 
 void FORTE_signalprocessing__DualHysteresis::alg_alUp(void) {
 
-  #line 25 "DualHysteresis.fbt"
+#line 25 "DualHysteresis.fbt"
   var_QO = var_QI;
-  #line 26 "DualHysteresis.fbt"
+#line 26 "DualHysteresis.fbt"
   if (func_EQ(true_BOOL, var_QI)) {
-    #line 28 "DualHysteresis.fbt"
+#line 28 "DualHysteresis.fbt"
     var_DO_UP = true_BOOL;
-    #line 29 "DualHysteresis.fbt"
+#line 29 "DualHysteresis.fbt"
     var_DO_DOWN = false_BOOL;
   }
 }
 
 void FORTE_signalprocessing__DualHysteresis::alg_alDown(void) {
 
-  #line 34 "DualHysteresis.fbt"
+#line 34 "DualHysteresis.fbt"
   var_QO = var_QI;
-  #line 35 "DualHysteresis.fbt"
+#line 35 "DualHysteresis.fbt"
   if (func_EQ(true_BOOL, var_QI)) {
-    #line 37 "DualHysteresis.fbt"
+#line 37 "DualHysteresis.fbt"
     var_DO_UP = false_BOOL;
-    #line 38 "DualHysteresis.fbt"
+#line 38 "DualHysteresis.fbt"
     var_DO_DOWN = true_BOOL;
   }
 }

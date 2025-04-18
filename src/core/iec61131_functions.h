@@ -47,100 +47,104 @@
 #define sqrtf(x) static_cast<TForteFloat>(sqrt(x))
 #endif
 
-#define GENERATE_APPLY_FUNCTION(func)  template<typename T> struct func ##_Function { \
-  static T call(const T& paIN1, const T& paIN2){ \
-      return func(paIN1, paIN2); \
-    }; \
-};
+#define GENERATE_APPLY_FUNCTION(func)                                                                                  \
+  template<typename T>                                                                                                 \
+  struct func##_Function {                                                                                             \
+      static T call(const T &paIN1, const T &paIN2) {                                                                  \
+        return func(paIN1, paIN2);                                                                                     \
+      };                                                                                                               \
+  };
 
 template<typename T>
 T func_ABS(const T &paIN) {
   static_assert((std::is_base_of_v<CIEC_ANY_NUM, T>), "T not of ANY_NUM");
-  return (0 > static_cast<typename T::TValueType>(paIN)) ? T(static_cast<typename T::TValueType>(paIN) * static_cast<typename T::TValueType>(-1)) : paIN;
+  return (0 > static_cast<typename T::TValueType>(paIN))
+             ? T(static_cast<typename T::TValueType>(paIN) * static_cast<typename T::TValueType>(-1))
+             : paIN;
 }
 
-inline CIEC_REAL func_SQRT(const CIEC_REAL &paIN){
+inline CIEC_REAL func_SQRT(const CIEC_REAL &paIN) {
   return CIEC_REAL(sqrtf(static_cast<CIEC_REAL::TValueType>(paIN)));
 }
 
-inline CIEC_LREAL func_SQRT(const CIEC_LREAL &paIN){
+inline CIEC_LREAL func_SQRT(const CIEC_LREAL &paIN) {
   return CIEC_LREAL(sqrt(static_cast<CIEC_LREAL::TValueType>(paIN)));
 }
 
-inline CIEC_REAL func_LN(const CIEC_REAL &paIN){
+inline CIEC_REAL func_LN(const CIEC_REAL &paIN) {
   return CIEC_REAL(logf(static_cast<CIEC_REAL::TValueType>(paIN)));
 }
 
-inline CIEC_LREAL func_LN(const CIEC_LREAL &paIN){
+inline CIEC_LREAL func_LN(const CIEC_LREAL &paIN) {
   return CIEC_LREAL(log(static_cast<CIEC_LREAL::TValueType>(paIN)));
 }
 
-inline CIEC_REAL func_LOG(const CIEC_REAL &paIN){
+inline CIEC_REAL func_LOG(const CIEC_REAL &paIN) {
   return CIEC_REAL(log10f(static_cast<CIEC_REAL::TValueType>(paIN)));
 }
 
-inline CIEC_LREAL func_LOG(const CIEC_LREAL &paIN){
+inline CIEC_LREAL func_LOG(const CIEC_LREAL &paIN) {
   return CIEC_LREAL(log10(static_cast<CIEC_LREAL::TValueType>(paIN)));
 }
 
-inline CIEC_REAL func_SIN(const CIEC_REAL &paIN){
+inline CIEC_REAL func_SIN(const CIEC_REAL &paIN) {
   return CIEC_REAL(sinf(static_cast<CIEC_REAL::TValueType>(paIN)));
 }
 
-inline CIEC_LREAL func_SIN(const CIEC_LREAL &paIN){
+inline CIEC_LREAL func_SIN(const CIEC_LREAL &paIN) {
   return CIEC_LREAL(sin(static_cast<CIEC_LREAL::TValueType>(paIN)));
 }
 
-inline CIEC_REAL func_COS(const CIEC_REAL &paIN){
+inline CIEC_REAL func_COS(const CIEC_REAL &paIN) {
   return CIEC_REAL(cosf(static_cast<CIEC_REAL::TValueType>(paIN)));
 }
 
-inline CIEC_LREAL func_COS(const CIEC_LREAL &paIN){
+inline CIEC_LREAL func_COS(const CIEC_LREAL &paIN) {
   return CIEC_LREAL(cos(static_cast<CIEC_LREAL::TValueType>(paIN)));
 }
 
-inline CIEC_REAL func_TAN(const CIEC_REAL &paIN){
-    return CIEC_REAL(tanf(static_cast<CIEC_REAL::TValueType>(paIN)));
+inline CIEC_REAL func_TAN(const CIEC_REAL &paIN) {
+  return CIEC_REAL(tanf(static_cast<CIEC_REAL::TValueType>(paIN)));
 }
 
-inline CIEC_LREAL func_TAN(const CIEC_LREAL &paIN){
+inline CIEC_LREAL func_TAN(const CIEC_LREAL &paIN) {
   return CIEC_LREAL(tan(static_cast<CIEC_LREAL::TValueType>(paIN)));
 }
 
-inline CIEC_REAL func_ASIN(const CIEC_REAL &paIN){
+inline CIEC_REAL func_ASIN(const CIEC_REAL &paIN) {
   return CIEC_REAL(asinf(static_cast<CIEC_REAL::TValueType>(paIN)));
 }
 
-inline CIEC_LREAL func_ASIN(const CIEC_LREAL &paIN){
+inline CIEC_LREAL func_ASIN(const CIEC_LREAL &paIN) {
   return CIEC_LREAL(asin(static_cast<CIEC_LREAL::TValueType>(paIN)));
 }
 
-inline CIEC_REAL func_ACOS(const CIEC_REAL &paIN){
+inline CIEC_REAL func_ACOS(const CIEC_REAL &paIN) {
   return CIEC_REAL(acosf(static_cast<CIEC_REAL::TValueType>(paIN)));
 }
 
-inline CIEC_LREAL func_ACOS(const CIEC_LREAL &paIN){
+inline CIEC_LREAL func_ACOS(const CIEC_LREAL &paIN) {
   return CIEC_LREAL(acos(static_cast<CIEC_LREAL::TValueType>(paIN)));
 }
 
-inline CIEC_REAL func_ATAN(const CIEC_REAL &paIN){
-    return CIEC_REAL(atanf(static_cast<CIEC_REAL::TValueType>(paIN)));
+inline CIEC_REAL func_ATAN(const CIEC_REAL &paIN) {
+  return CIEC_REAL(atanf(static_cast<CIEC_REAL::TValueType>(paIN)));
 }
 
-inline CIEC_LREAL func_ATAN(const CIEC_LREAL &paIN){
+inline CIEC_LREAL func_ATAN(const CIEC_LREAL &paIN) {
   return CIEC_LREAL(atan(static_cast<CIEC_LREAL::TValueType>(paIN)));
 }
 
-inline CIEC_REAL func_EXP(const CIEC_REAL &paIN){
+inline CIEC_REAL func_EXP(const CIEC_REAL &paIN) {
   return CIEC_REAL(expf(static_cast<CIEC_REAL::TValueType>(paIN)));
 }
 
-inline CIEC_LREAL func_EXP(const CIEC_LREAL &paIN){
+inline CIEC_LREAL func_EXP(const CIEC_LREAL &paIN) {
   return CIEC_LREAL(exp(static_cast<CIEC_LREAL::TValueType>(paIN)));
 }
 
-template <typename T, typename U>
-inline auto func_ATAN2(const T& paY, const U& paX) -> typename forte::core::mpl::get_castable_type_t<T, U> {
+template<typename T, typename U>
+inline auto func_ATAN2(const T &paY, const U &paX) -> typename forte::core::mpl::get_castable_type_t<T, U> {
   static_assert(std::is_base_of_v<CIEC_ANY_REAL, T>, "T not of ANY_REAL");
   static_assert(std::is_base_of_v<CIEC_ANY_REAL, U>, "U not of ANY_REAL");
   using ReturnType = typename forte::core::mpl::get_castable_type_t<T, U>;
@@ -153,11 +157,13 @@ inline auto func_ATAN2(const T& paY, const U& paX) -> typename forte::core::mpl:
 }
 
 template<typename T>
-auto func_ROL(const T &paIn, const CIEC_ANY_INT &paN) -> typename forte::core::mpl::get_equivalent_CIEC_class_t<T>  {
+auto func_ROL(const T &paIn, const CIEC_ANY_INT &paN) -> typename forte::core::mpl::get_equivalent_CIEC_class_t<T> {
   static_assert((std::is_base_of_v<CIEC_ANY_BIT, T>), "T not of ANY_BIT");
   using returnType = typename forte::core::mpl::get_equivalent_CIEC_class_t<T>;
-  if((true == paN.isSigned() && 0 <= paN.getSignedValue()) || false == paN.isSigned()) {
-    return returnType(static_cast<typename returnType::TValueType>((paIn << paN.getUnsignedValue()) | (paIn >> (sizeof(typename returnType::TValueType) * 8 - paN.getUnsignedValue()))));
+  if ((true == paN.isSigned() && 0 <= paN.getSignedValue()) || false == paN.isSigned()) {
+    return returnType(static_cast<typename returnType::TValueType>(
+        (paIn << paN.getUnsignedValue()) |
+        (paIn >> (sizeof(typename returnType::TValueType) * 8 - paN.getUnsignedValue()))));
   } else {
     DEVLOG_ERROR("value of input N is less than zero\n");
     return returnType(static_cast<typename returnType::TValueType>(0));
@@ -168,15 +174,17 @@ template<typename T>
 auto func_ROR(const T &paIn, const CIEC_ANY_INT &paN) -> typename forte::core::mpl::get_equivalent_CIEC_class_t<T> {
   static_assert((std::is_base_of_v<CIEC_ANY_BIT, T>), "T not of ANY_BIT");
   using returnType = typename forte::core::mpl::get_equivalent_CIEC_class_t<T>;
-  if((true == paN.isSigned() && 0 <= paN.getSignedValue()) || false == paN.isSigned()) {
-    return returnType(static_cast<typename returnType::TValueType>((paIn >> paN.getUnsignedValue()) | (paIn << (sizeof(typename returnType::TValueType) * 8 - paN.getUnsignedValue()))));
+  if ((true == paN.isSigned() && 0 <= paN.getSignedValue()) || false == paN.isSigned()) {
+    return returnType(static_cast<typename returnType::TValueType>(
+        (paIn >> paN.getUnsignedValue()) |
+        (paIn << (sizeof(typename returnType::TValueType) * 8 - paN.getUnsignedValue()))));
   } else {
     DEVLOG_ERROR("value of input N is less than zero\n");
     return returnType(static_cast<typename returnType::TValueType>(0));
   }
 }
 
-template <typename T>
+template<typename T>
 auto func_SHL(const T &paIn, const CIEC_ANY_INT &paN) -> typename forte::core::mpl::get_equivalent_CIEC_class_t<T> {
   static_assert((std::is_base_of_v<CIEC_ANY_BIT, T>), "T not of ANY_BIT");
   using returnType = typename forte::core::mpl::get_equivalent_CIEC_class_t<T>;
@@ -192,7 +200,7 @@ template<typename T>
 auto func_SHR(const T &paIn, const CIEC_ANY_INT &paN) -> typename forte::core::mpl::get_equivalent_CIEC_class_t<T> {
   static_assert((std::is_base_of_v<CIEC_ANY_BIT, T>), "T not of ANY_BIT");
   using returnType = typename forte::core::mpl::get_equivalent_CIEC_class_t<T>;
-  if((true == paN.isSigned() && 0 <= paN.getSignedValue()) || false == paN.isSigned()) {
+  if ((true == paN.isSigned() && 0 <= paN.getSignedValue()) || false == paN.isSigned()) {
     return returnType(static_cast<typename returnType::TValueType>(paIn >> paN.getUnsignedValue()));
   } else {
     DEVLOG_ERROR("value of input N is less than zero\n");
@@ -200,30 +208,37 @@ auto func_SHR(const T &paIn, const CIEC_ANY_INT &paN) -> typename forte::core::m
   }
 }
 
-template<> auto func_ROL(const CIEC_BOOL &paIn, const CIEC_ANY_INT &paN) -> CIEC_BOOL;
+template<>
+auto func_ROL(const CIEC_BOOL &paIn, const CIEC_ANY_INT &paN) -> CIEC_BOOL;
 
-template<> auto func_ROR(const CIEC_BOOL &paIn, const CIEC_ANY_INT &paN) -> CIEC_BOOL;
+template<>
+auto func_ROR(const CIEC_BOOL &paIn, const CIEC_ANY_INT &paN) -> CIEC_BOOL;
 
-template<> auto func_SHL(const CIEC_BOOL &paIn, const CIEC_ANY_INT &paN) -> CIEC_BOOL;
+template<>
+auto func_SHL(const CIEC_BOOL &paIn, const CIEC_ANY_INT &paN) -> CIEC_BOOL;
 
-template<> auto func_SHR(const CIEC_BOOL &paIn, const CIEC_ANY_INT &paN) -> CIEC_BOOL;
+template<>
+auto func_SHR(const CIEC_BOOL &paIn, const CIEC_ANY_INT &paN) -> CIEC_BOOL;
 
 template<typename T, typename U, template<typename A> class F, typename C>
 auto APPLY(const T &paIN1, const U &paIN2) -> typename forte::core::mpl::get_castable_type_t<T, U> {
   static_assert(forte::core::mpl::are_of_subtype_v<C, T, U>, "Template instantiation with incompatible types");
   using tImplicitCastType = typename forte::core::mpl::get_castable_type_t<T, U>;
   static_assert(!(std::is_same_v<tImplicitCastType, forte::core::mpl::NullType>), "No implicit cast possible");
-  const tImplicitCastType Result(F<tImplicitCastType>::call(static_cast<tImplicitCastType>(paIN1), static_cast<tImplicitCastType>(paIN2)));
+  const tImplicitCastType Result(
+      F<tImplicitCastType>::call(static_cast<tImplicitCastType>(paIN1), static_cast<tImplicitCastType>(paIN2)));
   return Result;
 }
 
 template<class T, class U>
 class AndOperation {
     using resultType = typename forte::core::mpl::get_castable_type_t<T, U>;
+
   public:
     static resultType call(const T &paIN1, const U &paIN2) {
       return resultType(static_cast<resultType>(paIN1) & static_cast<resultType>(paIN2));
     }
+
   private:
     AndOperation() = default;
 };
@@ -231,10 +246,12 @@ class AndOperation {
 template<class T>
 class AndOperation<T, CIEC_BOOL> {
     using resultType = typename forte::core::mpl::get_castable_type_t<T, CIEC_BOOL>;
+
   public:
     static resultType call(const T &paIN1, const CIEC_BOOL &paIN2) {
       return resultType(paIN1 & (paIN2 ? 1 : 0));
     }
+
   private:
     AndOperation() = default;
 };
@@ -242,10 +259,12 @@ class AndOperation<T, CIEC_BOOL> {
 template<class T>
 class AndOperation<CIEC_BOOL, T> {
     using resultType = typename forte::core::mpl::get_castable_type_t<T, CIEC_BOOL>;
+
   public:
     static resultType call(const CIEC_BOOL &paIN1, const T &paIN2) {
       return resultType((paIN1 ? 1 : 0) & paIN2);
     }
+
   private:
     AndOperation() = default;
 };
@@ -256,27 +275,33 @@ class AndOperation<CIEC_BOOL, CIEC_BOOL> {
     static CIEC_BOOL call(const CIEC_BOOL &paIN1, const CIEC_BOOL &paIN2) {
       return CIEC_BOOL(paIN1 && paIN2);
     }
+
   private:
     AndOperation() = default;
 };
 
 template<typename T, typename U>
-auto func_AND(const T &paIN1, const U &paIN2) -> typename forte::core::mpl::get_castable_type_t<typename forte::core::mpl::get_equivalent_CIEC_class_t<T>, typename forte::core::mpl::get_equivalent_CIEC_class_t<U>> {
-    using tTClass = typename forte::core::mpl::get_equivalent_CIEC_class_t<T>;
-    using tUClass = typename forte::core::mpl::get_equivalent_CIEC_class_t<U>;
-    static_assert(forte::core::mpl::are_of_subtype_v<CIEC_ANY_BIT, tTClass, tUClass>, "Template instantiation with incompatible types");
-    using tImplicitCastType = typename forte::core::mpl::get_castable_type_t<tTClass, tUClass>;
-    static_assert(!(std::is_same_v<tImplicitCastType, forte::core::mpl::NullType>), "No implicit cast possible");
-    return AndOperation<tTClass, tUClass>::call(paIN1, paIN2);
+auto func_AND(const T &paIN1, const U &paIN2) ->
+    typename forte::core::mpl::get_castable_type_t<typename forte::core::mpl::get_equivalent_CIEC_class_t<T>,
+                                                   typename forte::core::mpl::get_equivalent_CIEC_class_t<U>> {
+  using tTClass = typename forte::core::mpl::get_equivalent_CIEC_class_t<T>;
+  using tUClass = typename forte::core::mpl::get_equivalent_CIEC_class_t<U>;
+  static_assert(forte::core::mpl::are_of_subtype_v<CIEC_ANY_BIT, tTClass, tUClass>,
+                "Template instantiation with incompatible types");
+  using tImplicitCastType = typename forte::core::mpl::get_castable_type_t<tTClass, tUClass>;
+  static_assert(!(std::is_same_v<tImplicitCastType, forte::core::mpl::NullType>), "No implicit cast possible");
+  return AndOperation<tTClass, tUClass>::call(paIN1, paIN2);
 }
 
 template<class T, class U>
 class OrOperation {
     using resultType = typename forte::core::mpl::get_castable_type_t<T, U>;
+
   public:
     static resultType call(const T &paIN1, const U &paIN2) {
       return resultType(static_cast<resultType>(paIN1) | static_cast<resultType>(paIN2));
     }
+
   private:
     OrOperation() = default;
 };
@@ -284,10 +309,12 @@ class OrOperation {
 template<class T>
 class OrOperation<T, CIEC_BOOL> {
     using resultType = typename forte::core::mpl::get_castable_type_t<T, CIEC_BOOL>;
+
   public:
     static resultType call(const T &paIN1, const CIEC_BOOL &paIN2) {
       return resultType(paIN1 | (paIN2 ? 1 : 0));
     }
+
   private:
     OrOperation() = default;
 };
@@ -295,10 +322,12 @@ class OrOperation<T, CIEC_BOOL> {
 template<class T>
 class OrOperation<CIEC_BOOL, T> {
     using resultType = typename forte::core::mpl::get_castable_type_t<T, CIEC_BOOL>;
+
   public:
     static resultType call(const CIEC_BOOL &paIN1, const T &paIN2) {
       return resultType((paIN1 ? 1 : 0) | paIN2);
     }
+
   private:
     OrOperation() = default;
 };
@@ -309,39 +338,45 @@ class OrOperation<CIEC_BOOL, CIEC_BOOL> {
     static CIEC_BOOL call(const CIEC_BOOL &paIN1, const CIEC_BOOL &paIN2) {
       return CIEC_BOOL(paIN1 || paIN2);
     }
+
   private:
     OrOperation() = default;
 };
 
-
 template<typename T, typename U>
-auto func_OR(const T &paIN1, const U &paIN2) -> typename forte::core::mpl::get_castable_type_t<typename forte::core::mpl::get_equivalent_CIEC_class_t<T>, typename forte::core::mpl::get_equivalent_CIEC_class_t<U>> {
+auto func_OR(const T &paIN1, const U &paIN2) ->
+    typename forte::core::mpl::get_castable_type_t<typename forte::core::mpl::get_equivalent_CIEC_class_t<T>,
+                                                   typename forte::core::mpl::get_equivalent_CIEC_class_t<U>> {
   using tTClass = typename forte::core::mpl::get_equivalent_CIEC_class_t<T>;
   using tUClass = typename forte::core::mpl::get_equivalent_CIEC_class_t<U>;
-  static_assert(forte::core::mpl::are_of_subtype_v<CIEC_ANY_BIT, tTClass, tUClass>, "Template instantiation with incompatible types");
+  static_assert(forte::core::mpl::are_of_subtype_v<CIEC_ANY_BIT, tTClass, tUClass>,
+                "Template instantiation with incompatible types");
   using tImplicitCastType = typename forte::core::mpl::get_castable_type_t<tTClass, tUClass>;
   static_assert(!(std::is_same_v<tImplicitCastType, forte::core::mpl::NullType>), "No implicit cast possible");
   return OrOperation<tTClass, tUClass>::call(paIN1, paIN2);
 }
 template<class T, class U>
 class XorOperation {
-  using resultType = typename forte::core::mpl::get_castable_type_t<T, U>;
-public:
-  static resultType call(const T &paIN1, const U &paIN2)
-  {
+    using resultType = typename forte::core::mpl::get_castable_type_t<T, U>;
+
+  public:
+    static resultType call(const T &paIN1, const U &paIN2) {
       return resultType(static_cast<resultType>(paIN1) ^ static_cast<resultType>(paIN2));
     }
+
   private:
     XorOperation() = default;
 };
 
 template<class T>
 class XorOperation<T, CIEC_BOOL> {
-  using resultType = typename forte::core::mpl::get_castable_type_t<T, CIEC_BOOL>;
+    using resultType = typename forte::core::mpl::get_castable_type_t<T, CIEC_BOOL>;
+
   public:
     static resultType call(const T &paIN1, const CIEC_BOOL &paIN2) {
       return resultType(paIN1 ^ (paIN2 ? 1 : 0));
     }
+
   private:
     XorOperation() = default;
 };
@@ -349,10 +384,12 @@ class XorOperation<T, CIEC_BOOL> {
 template<class T>
 class XorOperation<CIEC_BOOL, T> {
     using resultType = typename forte::core::mpl::get_castable_type_t<T, CIEC_BOOL>;
+
   public:
     static resultType call(const CIEC_BOOL &paIN1, const T &paIN2) {
       return resultType((paIN1 ? 1 : 0) ^ paIN2);
     }
+
   private:
     XorOperation() = default;
 };
@@ -363,22 +400,26 @@ class XorOperation<CIEC_BOOL, CIEC_BOOL> {
     static CIEC_BOOL call(const CIEC_BOOL &paIN1, const CIEC_BOOL &paIN2) {
       return CIEC_BOOL(paIN1.operator bool() != paIN2.operator bool());
     }
+
   private:
     XorOperation() = default;
 };
 
 template<typename T, typename U>
-auto func_XOR(const T &paIN1, const U &paIN2) -> typename forte::core::mpl::get_castable_type_t<typename forte::core::mpl::get_equivalent_CIEC_class_t<T>, typename forte::core::mpl::get_equivalent_CIEC_class_t<U>> {
-  using tTClass = typename forte::core::mpl::get_equivalent_CIEC_class_t<T> ;
+auto func_XOR(const T &paIN1, const U &paIN2) ->
+    typename forte::core::mpl::get_castable_type_t<typename forte::core::mpl::get_equivalent_CIEC_class_t<T>,
+                                                   typename forte::core::mpl::get_equivalent_CIEC_class_t<U>> {
+  using tTClass = typename forte::core::mpl::get_equivalent_CIEC_class_t<T>;
   using tUClass = typename forte::core::mpl::get_equivalent_CIEC_class_t<U>;
-  static_assert(forte::core::mpl::are_of_subtype_v<CIEC_ANY_BIT, tTClass, tUClass>, "Template instantiation with incompatible types");
+  static_assert(forte::core::mpl::are_of_subtype_v<CIEC_ANY_BIT, tTClass, tUClass>,
+                "Template instantiation with incompatible types");
   using tImplicitCastType = typename forte::core::mpl::get_castable_type_t<tTClass, tUClass>;
   static_assert(!(std::is_same_v<tImplicitCastType, forte::core::mpl::NullType>), "No implicit cast possible");
   return XorOperation<tTClass, tUClass>::call(paIN1, paIN2);
 }
 
-template <typename T>
-auto func_NOT(const T& paIN) -> typename forte::core::mpl::get_equivalent_CIEC_class_t<T> {
+template<typename T>
+auto func_NOT(const T &paIN) -> typename forte::core::mpl::get_equivalent_CIEC_class_t<T> {
   static_assert((std::is_base_of_v<CIEC_ANY_BIT, T>), "NOT function only for ANY_BIT");
   using tResultType = typename forte::core::mpl::get_equivalent_CIEC_class_t<T>;
   if constexpr (std::is_same_v<tResultType, CIEC_BOOL>) {
@@ -388,15 +429,16 @@ auto func_NOT(const T& paIN) -> typename forte::core::mpl::get_equivalent_CIEC_c
   }
 }
 
-template<typename T, typename U, typename ... Args>
-CIEC_BOOL func_GT(const T &paIn1, const U &paIn2, const Args& ... args) {
-  return CIEC_BOOL(func_GT(paIn1, paIn2) &&  func_GT(paIn2, args...));
+template<typename T, typename U, typename... Args>
+CIEC_BOOL func_GT(const T &paIn1, const U &paIn2, const Args &...args) {
+  return CIEC_BOOL(func_GT(paIn1, paIn2) && func_GT(paIn2, args...));
 }
 
 template<typename T, typename U>
 CIEC_BOOL func_GT(const T &paIN1, const U &paIN2) {
-  static_assert(forte::core::mpl::are_of_subtype_v<CIEC_ANY_ELEMENTARY, T, U>, "Template instantiation with incompatible types");
-  if constexpr (forte::core::mpl::are_of_subtype_v<CIEC_ANY_BIT, T, U>) { //ANY_BITs can be also partial accesses
+  static_assert(forte::core::mpl::are_of_subtype_v<CIEC_ANY_ELEMENTARY, T, U>,
+                "Template instantiation with incompatible types");
+  if constexpr (forte::core::mpl::are_of_subtype_v<CIEC_ANY_BIT, T, U>) { // ANY_BITs can be also partial accesses
     using tTClass = typename forte::core::mpl::get_equivalent_CIEC_class_t<T>;
     using tUClass = typename forte::core::mpl::get_equivalent_CIEC_class_t<U>;
     using tImplicitCastType = typename forte::core::mpl::get_castable_type_t<tTClass, tUClass>;
@@ -418,16 +460,17 @@ CIEC_BOOL func_GT(const T &paIN1, const T &paIN2) {
   }
 }
 
-template<typename T, typename U, typename ... Args>
-CIEC_BOOL func_EQ(const T &paIn1, const U &paIn2, const Args& ... args) {
-  return CIEC_BOOL(func_EQ(paIn1, paIn2) &&  func_EQ(paIn2, args...));
+template<typename T, typename U, typename... Args>
+CIEC_BOOL func_EQ(const T &paIn1, const U &paIn2, const Args &...args) {
+  return CIEC_BOOL(func_EQ(paIn1, paIn2) && func_EQ(paIn2, args...));
 }
 
 template<typename T, typename U>
 CIEC_BOOL func_EQ(const T &paIN1, const U &paIN2) {
   if constexpr (forte::core::mpl::has_equality_v<T, U>) {
     return CIEC_BOOL(paIN1 == paIN2);
-  } else if constexpr (forte::core::mpl::are_of_subtype_v<CIEC_ANY_BIT, T, U>) { //ANY_BITs can be also partial accesses
+  } else if constexpr (forte::core::mpl::are_of_subtype_v<CIEC_ANY_BIT, T, U>) { // ANY_BITs can be also partial
+                                                                                 // accesses
     using tTClass = typename forte::core::mpl::get_equivalent_CIEC_class_t<T>;
     using tUClass = typename forte::core::mpl::get_equivalent_CIEC_class_t<U>;
     using tImplicitCastType = typename forte::core::mpl::get_castable_type_t<tTClass, tUClass>;
@@ -449,15 +492,16 @@ CIEC_BOOL func_EQ(const T &paIN1, const T &paIN2) {
   }
 }
 
-template<typename T, typename U, typename ... Args>
-CIEC_BOOL func_GE(const T &paIn1, const U &paIn2, const Args& ... args) {
-  return CIEC_BOOL(func_GE(paIn1, paIn2) &&  func_GE(paIn2, args...));
+template<typename T, typename U, typename... Args>
+CIEC_BOOL func_GE(const T &paIn1, const U &paIn2, const Args &...args) {
+  return CIEC_BOOL(func_GE(paIn1, paIn2) && func_GE(paIn2, args...));
 }
 
 template<typename T, typename U>
 CIEC_BOOL func_GE(const T &paIN1, const U &paIN2) {
-  static_assert(forte::core::mpl::are_of_subtype_v<CIEC_ANY_ELEMENTARY, T, U>, "Template instantiation with incompatible types");
-  if constexpr (forte::core::mpl::are_of_subtype_v<CIEC_ANY_BIT, T, U>) { //ANY_BITs can be also partial accesses
+  static_assert(forte::core::mpl::are_of_subtype_v<CIEC_ANY_ELEMENTARY, T, U>,
+                "Template instantiation with incompatible types");
+  if constexpr (forte::core::mpl::are_of_subtype_v<CIEC_ANY_BIT, T, U>) { // ANY_BITs can be also partial accesses
     using tTClass = typename forte::core::mpl::get_equivalent_CIEC_class_t<T>;
     using tUClass = typename forte::core::mpl::get_equivalent_CIEC_class_t<U>;
     using tImplicitCastType = typename forte::core::mpl::get_castable_type_t<tTClass, tUClass>;
@@ -479,15 +523,16 @@ CIEC_BOOL func_GE(const T &paIN1, const T &paIN2) {
   }
 }
 
-template<typename T, typename U, typename ... Args>
-CIEC_BOOL func_LE(const T &paIn1, const U &paIn2, const Args& ... args) {
-  return CIEC_BOOL(func_LE(paIn1, paIn2) &&  func_LE(paIn2, args...));
+template<typename T, typename U, typename... Args>
+CIEC_BOOL func_LE(const T &paIn1, const U &paIn2, const Args &...args) {
+  return CIEC_BOOL(func_LE(paIn1, paIn2) && func_LE(paIn2, args...));
 }
 
 template<typename T, typename U>
 CIEC_BOOL func_LE(const T &paIN1, const U &paIN2) {
-  static_assert(forte::core::mpl::are_of_subtype_v<CIEC_ANY_ELEMENTARY, T, U>, "Template instantiation with incompatible types");
-  if constexpr (forte::core::mpl::are_of_subtype_v<CIEC_ANY_BIT, T, U>) { //ANY_BITs can be also partial accesses
+  static_assert(forte::core::mpl::are_of_subtype_v<CIEC_ANY_ELEMENTARY, T, U>,
+                "Template instantiation with incompatible types");
+  if constexpr (forte::core::mpl::are_of_subtype_v<CIEC_ANY_BIT, T, U>) { // ANY_BITs can be also partial accesses
     using tTClass = typename forte::core::mpl::get_equivalent_CIEC_class_t<T>;
     using tUClass = typename forte::core::mpl::get_equivalent_CIEC_class_t<U>;
     using tImplicitCastType = typename forte::core::mpl::get_castable_type_t<tTClass, tUClass>;
@@ -509,15 +554,16 @@ CIEC_BOOL func_LE(const T &paIN1, const T &paIN2) {
   }
 }
 
-template<typename T, typename U, typename ... Args>
-CIEC_BOOL func_LT(const T &paIn1, const U &paIn2, const Args& ... args) {
-  return CIEC_BOOL(func_LT(paIn1, paIn2) &&  func_LT(paIn2, args...));
+template<typename T, typename U, typename... Args>
+CIEC_BOOL func_LT(const T &paIn1, const U &paIn2, const Args &...args) {
+  return CIEC_BOOL(func_LT(paIn1, paIn2) && func_LT(paIn2, args...));
 }
 
 template<typename T, typename U>
 CIEC_BOOL func_LT(const T &paIN1, const U &paIN2) {
-  static_assert(forte::core::mpl::are_of_subtype_v<CIEC_ANY_ELEMENTARY, T, U>, "Template instantiation with incompatible types");
-  if constexpr (forte::core::mpl::are_of_subtype_v<CIEC_ANY_BIT, T, U>) { //ANY_BITs can be also partial accesses
+  static_assert(forte::core::mpl::are_of_subtype_v<CIEC_ANY_ELEMENTARY, T, U>,
+                "Template instantiation with incompatible types");
+  if constexpr (forte::core::mpl::are_of_subtype_v<CIEC_ANY_BIT, T, U>) { // ANY_BITs can be also partial accesses
     using tTClass = typename forte::core::mpl::get_equivalent_CIEC_class_t<T>;
     using tUClass = typename forte::core::mpl::get_equivalent_CIEC_class_t<U>;
     using tImplicitCastType = typename forte::core::mpl::get_castable_type_t<tTClass, tUClass>;
@@ -543,7 +589,8 @@ template<typename T, typename U>
 CIEC_BOOL func_NE(const T &paIN1, const U &paIN2) {
   if constexpr (forte::core::mpl::has_equality_v<T, U>) {
     return CIEC_BOOL(paIN1 != paIN2);
-  } else if constexpr (forte::core::mpl::are_of_subtype_v<CIEC_ANY_BIT, T, U>) { //ANY_BITs can be also partial accesses
+  } else if constexpr (forte::core::mpl::are_of_subtype_v<CIEC_ANY_BIT, T, U>) { // ANY_BITs can be also partial
+                                                                                 // accesses
     using tTClass = typename forte::core::mpl::get_equivalent_CIEC_class_t<T>;
     using tUClass = typename forte::core::mpl::get_equivalent_CIEC_class_t<U>;
     using tImplicitCastType = typename forte::core::mpl::get_castable_type_t<tTClass, tUClass>;
@@ -570,8 +617,8 @@ auto func_SEL(const CIEC_BOOL &G, const T &IN0, const U &IN1) -> typename forte:
   return (G.operator bool()) ? IN1 : IN0;
 }
 
-template<typename T, typename U,typename... Args>
-auto func_MAX(const T &paIN1, const U &paIN2, const Args& ...args) {
+template<typename T, typename U, typename... Args>
+auto func_MAX(const T &paIN1, const U &paIN2, const Args &...args) {
   return func_MAX(func_MAX(paIN1, paIN2), args...);
 }
 
@@ -583,7 +630,7 @@ auto func_MAX(const T &paIN1, const U &paIN2) -> typename forte::core::mpl::get_
 
 template<typename T>
 T func_MAX(const T &paIN1, const T &paIN2) {
-  if(static_cast<typename T::TValueType>(paIN1) > static_cast<typename T::TValueType>(paIN2)) {
+  if (static_cast<typename T::TValueType>(paIN1) > static_cast<typename T::TValueType>(paIN2)) {
     return paIN1;
   } else {
     return paIN2;
@@ -591,7 +638,7 @@ T func_MAX(const T &paIN1, const T &paIN2) {
 }
 
 template<typename T, typename U, typename... Args>
-auto func_MIN(const T &paIN1, const U &paIN2, const Args& ...args) {
+auto func_MIN(const T &paIN1, const U &paIN2, const Args &...args) {
   return func_MIN(func_MIN(paIN1, paIN2), args...);
 }
 
@@ -603,7 +650,7 @@ auto func_MIN(const T &paIN1, const U &paIN2) -> typename forte::core::mpl::get_
 
 template<typename T>
 T func_MIN(const T &paIN1, const T &paIN2) {
-  if(static_cast<typename T::TValueType>(paIN1) < static_cast<typename T::TValueType>(paIN2)) {
+  if (static_cast<typename T::TValueType>(paIN1) < static_cast<typename T::TValueType>(paIN2)) {
     return paIN1;
   } else {
     return paIN2;
@@ -611,9 +658,12 @@ T func_MIN(const T &paIN1, const T &paIN2) {
 }
 
 template<typename T, typename U, typename V>
-auto func_LIMIT(const T &paMN, const U &paIN, const V &paMX) -> typename forte::core::mpl::get_castable_type_t<typename forte::core::mpl::get_castable_type_t<T, U>, V> {
-  using tImplicitType = typename forte::core::mpl::get_castable_type_t<typename forte::core::mpl::get_castable_type_t<T, U>, V>;
-  return func_MIN(func_MAX(static_cast<tImplicitType>(paIN), static_cast<tImplicitType>(paMN)), static_cast<tImplicitType>(paMX));
+auto func_LIMIT(const T &paMN, const U &paIN, const V &paMX) ->
+    typename forte::core::mpl::get_castable_type_t<typename forte::core::mpl::get_castable_type_t<T, U>, V> {
+  using tImplicitType =
+      typename forte::core::mpl::get_castable_type_t<typename forte::core::mpl::get_castable_type_t<T, U>, V>;
+  return func_MIN(func_MAX(static_cast<tImplicitType>(paIN), static_cast<tImplicitType>(paMN)),
+                  static_cast<tImplicitType>(paMX));
 }
 
 GENERATE_APPLY_FUNCTION(func_MOD)
@@ -625,7 +675,7 @@ auto func_MOD(const T &paIN1, const U &paIN2) -> typename forte::core::mpl::get_
 template<typename T>
 T func_MOD(const T &paIN1, const T &paIN2) {
   using ValueType = typename T::TValueType;
-  if(0 == static_cast<typename T::TValueType>(paIN2)) {
+  if (0 == static_cast<typename T::TValueType>(paIN2)) {
     return T(0);
   }
   return T(static_cast<ValueType>(paIN1.getSignedValue()) % static_cast<ValueType>(paIN2.getSignedValue()));
@@ -640,7 +690,8 @@ template<typename T, typename U>
 T func_EXPT(const T &paIN1, const U &paIN2) {
   static_assert((std::is_base_of_v<CIEC_ANY_REAL, T>), "IN1 not of type ANY_REAL");
   static_assert((std::is_base_of_v<CIEC_ANY_NUM, U>), "IN2 not of type ANY_NUM");
-  return T(static_cast<typename T::TValueType>(pow(static_cast<typename T::TValueType>(paIN1), static_cast<typename U::TValueType>(paIN2))));
+  return T(static_cast<typename T::TValueType>(
+      pow(static_cast<typename T::TValueType>(paIN1), static_cast<typename U::TValueType>(paIN2))));
 }
 
 /*************** ADD ********************/
@@ -653,69 +704,69 @@ CIEC_LTIME func_ADD_LTIME(const CIEC_LTIME &paIN1, const CIEC_LTIME &paIN2);
 CIEC_LTIME_OF_DAY func_ADD_LTOD_LTIME(const CIEC_LTIME_OF_DAY &paIN1, const CIEC_LTIME &paIN2);
 CIEC_LDATE_AND_TIME func_ADD_LDT_LTIME(const CIEC_LDATE_AND_TIME &paIN1, const CIEC_LTIME &paIN2);
 
-template <class T, class U>
+template<class T, class U>
 class AddOperation {
-  using resultType = typename forte::core::mpl::get_add_operator_result_type_t<T, U>;
+    using resultType = typename forte::core::mpl::get_add_operator_result_type_t<T, U>;
 
-public:
-  static resultType call(const T &paIN1, const U &paIN2) {
-    return resultType(static_cast<typename T::TValueType>(paIN1) + static_cast<typename U::TValueType>(paIN2));
-  }
-  AddOperation() = delete;
+  public:
+    static resultType call(const T &paIN1, const U &paIN2) {
+      return resultType(static_cast<typename T::TValueType>(paIN1) + static_cast<typename U::TValueType>(paIN2));
+    }
+    AddOperation() = delete;
 };
 
-template <>
+template<>
 class AddOperation<CIEC_TIME_OF_DAY, CIEC_TIME> {
-  using resultType = typename forte::core::mpl::get_add_operator_result_type_t<CIEC_TIME_OF_DAY, CIEC_TIME>;
+    using resultType = typename forte::core::mpl::get_add_operator_result_type_t<CIEC_TIME_OF_DAY, CIEC_TIME>;
 
-public:
-  static resultType call(const CIEC_TIME_OF_DAY &paIN1, const CIEC_TIME &paIN2) {
-    return func_ADD_TOD_TIME(paIN1, paIN2);
-  }
-  AddOperation() = delete;
+  public:
+    static resultType call(const CIEC_TIME_OF_DAY &paIN1, const CIEC_TIME &paIN2) {
+      return func_ADD_TOD_TIME(paIN1, paIN2);
+    }
+    AddOperation() = delete;
 };
 
-template <>
+template<>
 class AddOperation<CIEC_DATE_AND_TIME, CIEC_TIME> {
-  using resultType = typename forte::core::mpl::get_add_operator_result_type_t<CIEC_DATE_AND_TIME, CIEC_TIME>;
+    using resultType = typename forte::core::mpl::get_add_operator_result_type_t<CIEC_DATE_AND_TIME, CIEC_TIME>;
 
-public:
-  static resultType call(const CIEC_DATE_AND_TIME &paIN1, const CIEC_TIME &paIN2) {
-    return func_ADD_DT_TIME(paIN1, paIN2);
-  }
-  AddOperation() = delete;
+  public:
+    static resultType call(const CIEC_DATE_AND_TIME &paIN1, const CIEC_TIME &paIN2) {
+      return func_ADD_DT_TIME(paIN1, paIN2);
+    }
+    AddOperation() = delete;
 };
 
-template <>
+template<>
 class AddOperation<CIEC_LTIME_OF_DAY, CIEC_LTIME> {
-  using resultType = typename forte::core::mpl::get_add_operator_result_type_t<CIEC_LTIME_OF_DAY, CIEC_LTIME>;
+    using resultType = typename forte::core::mpl::get_add_operator_result_type_t<CIEC_LTIME_OF_DAY, CIEC_LTIME>;
 
-public:
-  static resultType call(const CIEC_LTIME_OF_DAY &paIN1, const CIEC_LTIME &paIN2) {
-    return func_ADD_LTOD_LTIME(paIN1, paIN2);
-  }
-  AddOperation() = delete;
+  public:
+    static resultType call(const CIEC_LTIME_OF_DAY &paIN1, const CIEC_LTIME &paIN2) {
+      return func_ADD_LTOD_LTIME(paIN1, paIN2);
+    }
+    AddOperation() = delete;
 };
 
-template <>
+template<>
 class AddOperation<CIEC_LDATE_AND_TIME, CIEC_LTIME> {
-  using resultType = typename forte::core::mpl::get_add_operator_result_type_t<CIEC_LDATE_AND_TIME, CIEC_LTIME>;
+    using resultType = typename forte::core::mpl::get_add_operator_result_type_t<CIEC_LDATE_AND_TIME, CIEC_LTIME>;
 
-public:
-  static resultType call(const CIEC_LDATE_AND_TIME &paIN1, const CIEC_LTIME &paIN2) {
-    return func_ADD_LDT_LTIME(paIN1, paIN2);
-  }
-  AddOperation() = delete;
+  public:
+    static resultType call(const CIEC_LDATE_AND_TIME &paIN1, const CIEC_LTIME &paIN2) {
+      return func_ADD_LDT_LTIME(paIN1, paIN2);
+    }
+    AddOperation() = delete;
 };
 
-template <typename T, typename U, typename ...Args>
-auto func_ADD(const T &paIN1, const U &paIN2, const Args& ...args) {
+template<typename T, typename U, typename... Args>
+auto func_ADD(const T &paIN1, const U &paIN2, const Args &...args) {
   static_assert(std::is_base_of_v<CIEC_ANY_NUM, T>, "Variadic ADD only allowed with ANY_NUMs");
   static_assert(std::is_base_of_v<CIEC_ANY_NUM, U>, "Variadic ADD only allowed with ANY_NUMs");
   return func_ADD(func_ADD(paIN1, paIN2), args...);
 }
 
-template <typename R = forte::core::mpl::NullType, typename T, typename U>
+template<typename R = forte::core::mpl::NullType, typename T, typename U>
 auto func_ADD(const T &paIN1, const U &paIN2) -> typename forte::core::mpl::get_add_operator_result_type_t<T, U> {
   using deductedType = typename forte::core::mpl::get_add_operator_result_type_t<T, U>;
   if constexpr (!std::is_same_v<R, forte::core::mpl::NullType>) {
@@ -725,47 +776,47 @@ auto func_ADD(const T &paIN1, const U &paIN2) -> typename forte::core::mpl::get_
 }
 
 /*************** MUL ********************/
-template <class T, class U>
+template<class T, class U>
 class MulOperation {
-  using resultType = typename forte::core::mpl::get_mul_operator_result_type_t<T, U>;
+    using resultType = typename forte::core::mpl::get_mul_operator_result_type_t<T, U>;
 
-public:
-  static resultType call(const T &paIN1, const U &paIN2) {
-    return resultType(static_cast<typename T::TValueType>(paIN1) * static_cast<typename U::TValueType>(paIN2));
-  }
-  MulOperation() = delete;
+  public:
+    static resultType call(const T &paIN1, const U &paIN2) {
+      return resultType(static_cast<typename T::TValueType>(paIN1) * static_cast<typename U::TValueType>(paIN2));
+    }
+    MulOperation() = delete;
 };
 
-template <class U>
+template<class U>
 class MulOperation<CIEC_TIME, U> {
-  using resultType = typename forte::core::mpl::get_mul_operator_result_type_t<CIEC_TIME, U>;
+    using resultType = typename forte::core::mpl::get_mul_operator_result_type_t<CIEC_TIME, U>;
 
-public:
-  static resultType call(const CIEC_TIME &paIN1, const U &paIN2) {
-    return func_MUL_TIME(paIN1, paIN2);
-  }
-  MulOperation() = delete;
+  public:
+    static resultType call(const CIEC_TIME &paIN1, const U &paIN2) {
+      return func_MUL_TIME(paIN1, paIN2);
+    }
+    MulOperation() = delete;
 };
 
-template <class U>
+template<class U>
 class MulOperation<CIEC_LTIME, U> {
-  using resultType = typename forte::core::mpl::get_mul_operator_result_type_t<CIEC_LTIME, U>;
+    using resultType = typename forte::core::mpl::get_mul_operator_result_type_t<CIEC_LTIME, U>;
 
-public:
-  static resultType call(const CIEC_LTIME &paIN1, const U &paIN2) {
-    return func_MUL_LTIME(paIN1, paIN2);
-  }
-  MulOperation() = delete;
+  public:
+    static resultType call(const CIEC_LTIME &paIN1, const U &paIN2) {
+      return func_MUL_LTIME(paIN1, paIN2);
+    }
+    MulOperation() = delete;
 };
 
-template <typename T, typename U, typename ...Args>
-auto func_MUL(const T &paIN1, const U &paIN2, const Args& ...args) {
+template<typename T, typename U, typename... Args>
+auto func_MUL(const T &paIN1, const U &paIN2, const Args &...args) {
   static_assert(std::is_base_of_v<CIEC_ANY_NUM, T>, "Variadic MUL only allowed with ANY_NUMs");
   static_assert(std::is_base_of_v<CIEC_ANY_NUM, U>, "Variadic MUL only allowed with ANY_NUMs");
   return func_MUL(func_MUL(paIN1, paIN2), args...);
 }
 
-template <typename R = forte::core::mpl::NullType, typename T, typename U>
+template<typename R = forte::core::mpl::NullType, typename T, typename U>
 auto func_MUL(const T &paIN1, const U &paIN2) -> typename forte::core::mpl::get_mul_operator_result_type_t<T, U> {
   using deductedType = typename forte::core::mpl::get_mul_operator_result_type_t<T, U>;
   if constexpr (!std::is_same_v<R, forte::core::mpl::NullType>) {
@@ -789,128 +840,130 @@ CIEC_LTIME func_SUB_LDT_LDT(const CIEC_LDATE_AND_TIME &paIN1, const CIEC_LDATE_A
 CIEC_LTIME func_SUB_LTOD_LTOD(const CIEC_LTIME_OF_DAY &paIN1, const CIEC_LTIME_OF_DAY &paIN2);
 CIEC_LTIME func_SUB_LDATE_LDATE(const CIEC_LDATE &paIN1, const CIEC_LDATE &paIN2);
 
-template <class T, class U>
+template<class T, class U>
 class SubOperation {
-  using resultType = typename forte::core::mpl::get_sub_operator_result_type_t<T, U>;
+    using resultType = typename forte::core::mpl::get_sub_operator_result_type_t<T, U>;
 
-public:
-  static resultType call(const T &paIN1, const U &paIN2) {
-    return resultType(static_cast<typename T::TValueType>(paIN1) - static_cast<typename U::TValueType>(paIN2));
-  }
-  SubOperation() = delete;
+  public:
+    static resultType call(const T &paIN1, const U &paIN2) {
+      return resultType(static_cast<typename T::TValueType>(paIN1) - static_cast<typename U::TValueType>(paIN2));
+    }
+    SubOperation() = delete;
 };
 
-template <>
+template<>
 class SubOperation<CIEC_TIME_OF_DAY, CIEC_TIME> {
-  using resultType = typename forte::core::mpl::get_sub_operator_result_type_t<CIEC_TIME_OF_DAY, CIEC_TIME>;
+    using resultType = typename forte::core::mpl::get_sub_operator_result_type_t<CIEC_TIME_OF_DAY, CIEC_TIME>;
 
-public:
-  static resultType call(const CIEC_TIME_OF_DAY &paIN1, const CIEC_TIME &paIN2) {
-    return func_SUB_TOD_TIME(paIN1, paIN2);
-  }
-  SubOperation() = delete;
+  public:
+    static resultType call(const CIEC_TIME_OF_DAY &paIN1, const CIEC_TIME &paIN2) {
+      return func_SUB_TOD_TIME(paIN1, paIN2);
+    }
+    SubOperation() = delete;
 };
 
-template <>
+template<>
 class SubOperation<CIEC_DATE_AND_TIME, CIEC_TIME> {
-  using resultType = typename forte::core::mpl::get_sub_operator_result_type_t<CIEC_DATE_AND_TIME, CIEC_TIME>;
+    using resultType = typename forte::core::mpl::get_sub_operator_result_type_t<CIEC_DATE_AND_TIME, CIEC_TIME>;
 
-public:
-  static resultType call(const CIEC_DATE_AND_TIME &paIN1, const CIEC_TIME &paIN2) {
-    return func_SUB_DT_TIME(paIN1, paIN2);
-  }
-  SubOperation() = delete;
+  public:
+    static resultType call(const CIEC_DATE_AND_TIME &paIN1, const CIEC_TIME &paIN2) {
+      return func_SUB_DT_TIME(paIN1, paIN2);
+    }
+    SubOperation() = delete;
 };
 
-template <>
+template<>
 class SubOperation<CIEC_DATE_AND_TIME, CIEC_DATE_AND_TIME> {
-  using resultType = typename forte::core::mpl::get_sub_operator_result_type_t<CIEC_DATE_AND_TIME, CIEC_DATE_AND_TIME>;
+    using resultType =
+        typename forte::core::mpl::get_sub_operator_result_type_t<CIEC_DATE_AND_TIME, CIEC_DATE_AND_TIME>;
 
-public:
-  static resultType call(const CIEC_DATE_AND_TIME &paIN1, const CIEC_DATE_AND_TIME &paIN2) {
-    return func_SUB_DT_DT(paIN1, paIN2);
-  }
-  SubOperation() = delete;
+  public:
+    static resultType call(const CIEC_DATE_AND_TIME &paIN1, const CIEC_DATE_AND_TIME &paIN2) {
+      return func_SUB_DT_DT(paIN1, paIN2);
+    }
+    SubOperation() = delete;
 };
 
-template <>
+template<>
 class SubOperation<CIEC_TIME_OF_DAY, CIEC_TIME_OF_DAY> {
-  using resultType = typename forte::core::mpl::get_sub_operator_result_type_t<CIEC_TIME_OF_DAY, CIEC_TIME_OF_DAY>;
+    using resultType = typename forte::core::mpl::get_sub_operator_result_type_t<CIEC_TIME_OF_DAY, CIEC_TIME_OF_DAY>;
 
-public:
-  static resultType call(const CIEC_TIME_OF_DAY &paIN1, const CIEC_TIME_OF_DAY &paIN2) {
-    return func_SUB_TOD_TOD(paIN1, paIN2);
-  }
-  SubOperation() = delete;
+  public:
+    static resultType call(const CIEC_TIME_OF_DAY &paIN1, const CIEC_TIME_OF_DAY &paIN2) {
+      return func_SUB_TOD_TOD(paIN1, paIN2);
+    }
+    SubOperation() = delete;
 };
 
-template <>
+template<>
 class SubOperation<CIEC_DATE, CIEC_DATE> {
-  using resultType = typename forte::core::mpl::get_sub_operator_result_type_t<CIEC_DATE, CIEC_DATE>;
+    using resultType = typename forte::core::mpl::get_sub_operator_result_type_t<CIEC_DATE, CIEC_DATE>;
 
-public:
-  static resultType call(const CIEC_DATE &paIN1, const CIEC_DATE &paIN2) {
-    return func_SUB_DATE_DATE(paIN1, paIN2);
-  }
-  SubOperation() = delete;
+  public:
+    static resultType call(const CIEC_DATE &paIN1, const CIEC_DATE &paIN2) {
+      return func_SUB_DATE_DATE(paIN1, paIN2);
+    }
+    SubOperation() = delete;
 };
 
-template <>
+template<>
 class SubOperation<CIEC_LTIME_OF_DAY, CIEC_LTIME> {
-  using resultType = typename forte::core::mpl::get_sub_operator_result_type_t<CIEC_LTIME_OF_DAY, CIEC_LTIME>;
+    using resultType = typename forte::core::mpl::get_sub_operator_result_type_t<CIEC_LTIME_OF_DAY, CIEC_LTIME>;
 
-public:
-  static resultType call(const CIEC_LTIME_OF_DAY &paIN1, const CIEC_LTIME &paIN2) {
-    return func_SUB_LTOD_LTIME(paIN1, paIN2);
-  }
-  SubOperation() = delete;
+  public:
+    static resultType call(const CIEC_LTIME_OF_DAY &paIN1, const CIEC_LTIME &paIN2) {
+      return func_SUB_LTOD_LTIME(paIN1, paIN2);
+    }
+    SubOperation() = delete;
 };
 
-template <>
+template<>
 class SubOperation<CIEC_LDATE_AND_TIME, CIEC_LTIME> {
-  using resultType = typename forte::core::mpl::get_sub_operator_result_type_t<CIEC_LDATE_AND_TIME, CIEC_LTIME>;
+    using resultType = typename forte::core::mpl::get_sub_operator_result_type_t<CIEC_LDATE_AND_TIME, CIEC_LTIME>;
 
-public:
-  static resultType call(const CIEC_LDATE_AND_TIME &paIN1, const CIEC_LTIME &paIN2) {
-    return func_SUB_LDT_LTIME(paIN1, paIN2);
-  }
-  SubOperation() = delete;
+  public:
+    static resultType call(const CIEC_LDATE_AND_TIME &paIN1, const CIEC_LTIME &paIN2) {
+      return func_SUB_LDT_LTIME(paIN1, paIN2);
+    }
+    SubOperation() = delete;
 };
 
-template <>
+template<>
 class SubOperation<CIEC_LDATE_AND_TIME, CIEC_LDATE_AND_TIME> {
-  using resultType = typename forte::core::mpl::get_sub_operator_result_type_t<CIEC_LDATE_AND_TIME, CIEC_LDATE_AND_TIME>;
+    using resultType =
+        typename forte::core::mpl::get_sub_operator_result_type_t<CIEC_LDATE_AND_TIME, CIEC_LDATE_AND_TIME>;
 
-public:
-  static resultType call(const CIEC_LDATE_AND_TIME &paIN1, const CIEC_LDATE_AND_TIME &paIN2) {
-    return func_SUB_LDT_LDT(paIN1, paIN2);
-  }
-  SubOperation() = delete;
+  public:
+    static resultType call(const CIEC_LDATE_AND_TIME &paIN1, const CIEC_LDATE_AND_TIME &paIN2) {
+      return func_SUB_LDT_LDT(paIN1, paIN2);
+    }
+    SubOperation() = delete;
 };
 
-template <>
+template<>
 class SubOperation<CIEC_LTIME_OF_DAY, CIEC_LTIME_OF_DAY> {
-  using resultType = typename forte::core::mpl::get_sub_operator_result_type_t<CIEC_LTIME_OF_DAY, CIEC_LTIME_OF_DAY>;
+    using resultType = typename forte::core::mpl::get_sub_operator_result_type_t<CIEC_LTIME_OF_DAY, CIEC_LTIME_OF_DAY>;
 
-public:
-  static resultType call(const CIEC_LTIME_OF_DAY &paIN1, const CIEC_LTIME_OF_DAY &paIN2) {
-    return func_SUB_LTOD_LTOD(paIN1, paIN2);
-  }
-  SubOperation() = delete;
+  public:
+    static resultType call(const CIEC_LTIME_OF_DAY &paIN1, const CIEC_LTIME_OF_DAY &paIN2) {
+      return func_SUB_LTOD_LTOD(paIN1, paIN2);
+    }
+    SubOperation() = delete;
 };
 
-template <>
+template<>
 class SubOperation<CIEC_LDATE, CIEC_LDATE> {
-  using resultType = typename forte::core::mpl::get_sub_operator_result_type_t<CIEC_LDATE, CIEC_LDATE>;
+    using resultType = typename forte::core::mpl::get_sub_operator_result_type_t<CIEC_LDATE, CIEC_LDATE>;
 
-public:
-  static resultType call(const CIEC_LDATE &paIN1, const CIEC_LDATE &paIN2) {
-    return func_SUB_LDATE_LDATE(paIN1, paIN2);
-  }
-  SubOperation() = delete;
+  public:
+    static resultType call(const CIEC_LDATE &paIN1, const CIEC_LDATE &paIN2) {
+      return func_SUB_LDATE_LDATE(paIN1, paIN2);
+    }
+    SubOperation() = delete;
 };
 
-template <typename R = forte::core::mpl::NullType, typename T, typename U>
+template<typename R = forte::core::mpl::NullType, typename T, typename U>
 auto func_SUB(const T &paIN1, const U &paIN2) -> typename forte::core::mpl::get_sub_operator_result_type_t<T, U> {
   using deductedType = typename forte::core::mpl::get_sub_operator_result_type_t<T, U>;
   if constexpr (!std::is_same_v<R, forte::core::mpl::NullType>) {
@@ -919,46 +972,45 @@ auto func_SUB(const T &paIN1, const U &paIN2) -> typename forte::core::mpl::get_
   return SubOperation<T, U>::call(paIN1, paIN2);
 }
 
-template <class T, class U>
+template<class T, class U>
 class DivOperation {
-  using resultType = typename forte::core::mpl::get_castable_type_t<T, U>;
+    using resultType = typename forte::core::mpl::get_castable_type_t<T, U>;
 
-public:
-  static resultType call(const T &paIN1, const U &paIN2) {
-    if(0 != static_cast<typename U::TValueType>(paIN2)) {
-      return resultType(static_cast<typename T::TValueType>(paIN1) / static_cast<typename U::TValueType>(paIN2));
+  public:
+    static resultType call(const T &paIN1, const U &paIN2) {
+      if (0 != static_cast<typename U::TValueType>(paIN2)) {
+        return resultType(static_cast<typename T::TValueType>(paIN1) / static_cast<typename U::TValueType>(paIN2));
+      }
+      DEVLOG_ERROR("Division by zero!\n");
+      return resultType(0); // Divisor is 0
     }
-    DEVLOG_ERROR("Division by zero!\n");
-    return resultType(0); // Divisor is 0
-  }
-  DivOperation() = delete;
+    DivOperation() = delete;
 };
 
 // Time division only works with TIME as dividend
-template <class U>
+template<class U>
 class DivOperation<CIEC_TIME, U> {
-  using resultType = typename forte::core::mpl::get_div_operator_result_type_t<CIEC_TIME, U>;
+    using resultType = typename forte::core::mpl::get_div_operator_result_type_t<CIEC_TIME, U>;
 
-public:
-  static resultType call(const CIEC_TIME &paIN1, const U &paIN2) {
-    return func_DIV_TIME(paIN1, paIN2);
-  }
-  DivOperation() = delete;
+  public:
+    static resultType call(const CIEC_TIME &paIN1, const U &paIN2) {
+      return func_DIV_TIME(paIN1, paIN2);
+    }
+    DivOperation() = delete;
 };
 
-template <class U>
+template<class U>
 class DivOperation<CIEC_LTIME, U> {
-  using resultType =  typename forte::core::mpl::get_div_operator_result_type_t<CIEC_LTIME, U>;
+    using resultType = typename forte::core::mpl::get_div_operator_result_type_t<CIEC_LTIME, U>;
 
-public:
-  static resultType call(const CIEC_LTIME &paIN1, const U &paIN2) {
-    return func_DIV_LTIME(paIN1, paIN2);
-  }
-  DivOperation() = delete;
+  public:
+    static resultType call(const CIEC_LTIME &paIN1, const U &paIN2) {
+      return func_DIV_LTIME(paIN1, paIN2);
+    }
+    DivOperation() = delete;
 };
 
-
-template <typename R = forte::core::mpl::NullType, typename T, typename U>
+template<typename R = forte::core::mpl::NullType, typename T, typename U>
 auto func_DIV(const T &paIN1, const U &paIN2) -> typename forte::core::mpl::get_div_operator_result_type_t<T, U> {
   using deductedType = typename forte::core::mpl::get_div_operator_result_type_t<T, U>;
   if constexpr (!std::is_same_v<R, forte::core::mpl::NullType>) {
@@ -967,21 +1019,21 @@ auto func_DIV(const T &paIN1, const U &paIN2) -> typename forte::core::mpl::get_
   return DivOperation<T, U>::call(paIN1, paIN2);
 }
 
-template <typename T>
-T func_MINUS(const T& paIN) {
+template<typename T>
+T func_MINUS(const T &paIN) {
   return paIN.operator-();
 }
 
 /**
  * @brief Unary plus function, needed for exported code
- * 
+ *
  * @tparam T CIEC data type
  * @param paIN the value
- * @return constexpr T&& return the same object, as it hasn't been modified 
+ * @return constexpr T&& return the same object, as it hasn't been modified
  */
 template<typename T>
-constexpr T&& func_PLUS(T&& paIN) {
-  return static_cast<T&&>(paIN);
+constexpr T &&func_PLUS(T &&paIN) {
+  return static_cast<T &&>(paIN);
 }
 
 /**
@@ -992,7 +1044,7 @@ constexpr T&& func_PLUS(T&& paIN) {
  * @return constexpr T - a copy of paIN
  */
 template<typename T>
-constexpr T func_PLUS(const T& paIN) {
+constexpr T func_PLUS(const T &paIN) {
   return paIN;
 }
 
@@ -1014,9 +1066,11 @@ CIEC_UINT func_REAL_TRUNC_UINT(const CIEC_REAL &paIN);
 CIEC_UDINT func_REAL_TRUNC_UDINT(const CIEC_REAL &paIN);
 CIEC_ULINT func_REAL_TRUNC_ULINT(const CIEC_REAL &paIN);
 
-//[[deprecated ("Not desired anymore and possible target of removal in the future")]] - attribute cannot be added, so its a comment for now
-template <typename T, typename U>
-auto func_TRUNC(const U &paIN) -> typename std::enable_if_t<std::is_base_of_v<CIEC_ANY_INT, T> && std::is_base_of_v<CIEC_ANY_REAL, U>, T> {
+//[[deprecated ("Not desired anymore and possible target of removal in the future")]] - attribute cannot be added, so
+//its a comment for now
+template<typename T, typename U>
+auto func_TRUNC(const U &paIN) ->
+    typename std::enable_if_t<std::is_base_of_v<CIEC_ANY_INT, T> && std::is_base_of_v<CIEC_ANY_REAL, U>, T> {
   return T(static_cast<typename T::TValueType>(static_cast<typename U::TValueType>(paIN)));
 }
 
@@ -1039,12 +1093,13 @@ CIEC_UDINT func_LREAL_TRUNC_UDINT(const CIEC_LREAL &paIN);
 CIEC_ULINT func_LREAL_TRUNC_ULINT(const CIEC_LREAL &paIN);
 
 template<typename T>
-CIEC_TIME func_MUL_TIME(const CIEC_TIME& paIN1, const T& paIN2){
+CIEC_TIME func_MUL_TIME(const CIEC_TIME &paIN1, const T &paIN2) {
   using TimeValueType = CIEC_TIME::TValueType;
   using In2ValueType = typename T::TValueType;
   using MulValueType = std::conditional_t<std::is_floating_point_v<In2ValueType>, TForteDFloat, TimeValueType>;
 
-  return CIEC_TIME(static_cast<TimeValueType>(static_cast<MulValueType>(static_cast<TimeValueType>(paIN1)) * static_cast<In2ValueType>(paIN2)));
+  return CIEC_TIME(static_cast<TimeValueType>(static_cast<MulValueType>(static_cast<TimeValueType>(paIN1)) *
+                                              static_cast<In2ValueType>(paIN2)));
 }
 
 template<typename T>
@@ -1053,17 +1108,19 @@ CIEC_LTIME func_MUL_LTIME(const CIEC_LTIME &paIN1, const T &paIN2) {
   using In2ValueType = typename T::TValueType;
   using MulValueType = std::conditional_t<std::is_floating_point_v<In2ValueType>, TForteDFloat, LTimeValueType>;
 
-  return CIEC_LTIME(static_cast<LTimeValueType>(static_cast<MulValueType>(static_cast<LTimeValueType>(paIN1)) * static_cast<In2ValueType>(paIN2)));
+  return CIEC_LTIME(static_cast<LTimeValueType>(static_cast<MulValueType>(static_cast<LTimeValueType>(paIN1)) *
+                                                static_cast<In2ValueType>(paIN2)));
 }
 
 template<typename T>
-CIEC_TIME func_DIV_TIME(const CIEC_TIME& paIN1, const T& paIN2) {
+CIEC_TIME func_DIV_TIME(const CIEC_TIME &paIN1, const T &paIN2) {
   using TimeValueType = CIEC_TIME::TValueType;
   using In2ValueType = typename T::TValueType;
   using MulValueType = std::conditional_t<std::is_floating_point_v<In2ValueType>, TForteDFloat, TimeValueType>;
 
-  if(0 != static_cast<In2ValueType>(paIN2)) {
-    return CIEC_TIME(static_cast<TimeValueType>(static_cast<MulValueType>(static_cast<TimeValueType>(paIN1)) / static_cast<In2ValueType>(paIN2)));
+  if (0 != static_cast<In2ValueType>(paIN2)) {
+    return CIEC_TIME(static_cast<TimeValueType>(static_cast<MulValueType>(static_cast<TimeValueType>(paIN1)) /
+                                                static_cast<In2ValueType>(paIN2)));
   } else {
     DEVLOG_ERROR("Division by zero!\n");
     return CIEC_TIME(0);
@@ -1076,8 +1133,9 @@ CIEC_LTIME func_DIV_LTIME(const CIEC_LTIME &paIN1, const T &paIN2) {
   using In2ValueType = typename T::TValueType;
   using MulValueType = std::conditional_t<std::is_floating_point_v<In2ValueType>, TForteDFloat, LTimeValueType>;
 
-  if(0 != static_cast<In2ValueType>(paIN2)) {
-    return CIEC_LTIME(static_cast<LTimeValueType>(static_cast<MulValueType>(static_cast<LTimeValueType>(paIN1)) / static_cast<In2ValueType>(paIN2)));
+  if (0 != static_cast<In2ValueType>(paIN2)) {
+    return CIEC_LTIME(static_cast<LTimeValueType>(static_cast<MulValueType>(static_cast<LTimeValueType>(paIN1)) /
+                                                  static_cast<In2ValueType>(paIN2)));
   } else {
     DEVLOG_ERROR("Division by zero!\n");
     return CIEC_LTIME(0);
@@ -1085,7 +1143,7 @@ CIEC_LTIME func_DIV_LTIME(const CIEC_LTIME &paIN1, const T &paIN2) {
 }
 
 template<typename T, typename U>
-T func_LEN(const U& paVal){
+T func_LEN(const U &paVal) {
   static_assert(std::is_base_of_v<CIEC_ANY_INT, T>, "T not of ANY_INT");
   static_assert(std::is_base_of_v<CIEC_ANY_STRING, U>, "T not of ANY_STRING");
   return T(static_cast<typename T::TValueType>(paVal.length()));
@@ -1094,15 +1152,15 @@ T func_LEN(const U& paVal){
 template<typename T>
 T func_LEFT(const T &paIn, const CIEC_ANY_INT &paL) {
   static_assert(std::is_base_of_v<CIEC_ANY_STRING, T>, "T not of ANY_STRING");
-  if(true == paL.isSigned() && 0 > paL.getSignedValue()) {
+  if (true == paL.isSigned() && 0 > paL.getSignedValue()) {
     DEVLOG_ERROR("value of input L is less than zero\n");
     return paIn;
   } else {
-    if(paIn.length() < paL.getUnsignedValue()) {
+    if (paIn.length() < paL.getUnsignedValue()) {
       DEVLOG_ERROR("string shorter than input L\n");
       return paIn;
     } else {
-      if constexpr (std::is_same_v<CIEC_STRING,T>) {
+      if constexpr (std::is_same_v<CIEC_STRING, T>) {
         return CIEC_STRING(paIn.getStorage().substr(0, paL.getUnsignedValue()));
       } else {
         T temp;
@@ -1119,22 +1177,22 @@ T func_LEFT(const T &paIn, const CIEC_ANY_INT &paL) {
 template<typename T>
 T func_RIGHT(const T &paIn, const CIEC_ANY_INT &paL) {
   static_assert(std::is_base_of_v<CIEC_ANY_STRING, T>, "T not of ANY_STRING");
-  if(true == paL.isSigned() && 0 > paL.getSignedValue()) {
+  if (true == paL.isSigned() && 0 > paL.getSignedValue()) {
     DEVLOG_ERROR("value of input L is less than zero\n");
     return paIn;
   } else {
-    if(paIn.length() < paL.getUnsignedValue()) {
+    if (paIn.length() < paL.getUnsignedValue()) {
       DEVLOG_ERROR("string shorter than input L\n");
       return paIn;
     } else {
-      if constexpr (std::is_same_v<CIEC_STRING,T>) {
+      if constexpr (std::is_same_v<CIEC_STRING, T>) {
         const CIEC_STRING::storage_type &storage = paIn.getStorage();
         return CIEC_STRING(storage.substr(storage.length() - paL.getUnsignedValue()));
       } else {
         T temp;
         temp.reserve(static_cast<TForteUInt16>(paL.getUnsignedValue()));
         memcpy(temp.getValue(), paIn.getValue() + (paIn.length() - static_cast<TForteUInt16>(paL.getUnsignedValue())),
-          static_cast<TForteUInt16>(paL.getUnsignedValue()));
+               static_cast<TForteUInt16>(paL.getUnsignedValue()));
         temp.getValue()[paL.getUnsignedValue()] = '\0';
         temp.assign(temp.getValue(), static_cast<TForteUInt16>(paL.getUnsignedValue()));
         return temp;
@@ -1146,7 +1204,7 @@ T func_RIGHT(const T &paIn, const CIEC_ANY_INT &paL) {
 template<typename T>
 T func_MID(const T &paIn, const CIEC_ANY_INT &paL, const CIEC_ANY_INT &paP) {
   static_assert(std::is_base_of_v<CIEC_ANY_STRING, T>, "T not of ANY_STRING");
-  if(true == paP.isSigned() && 0 > paP.getSignedValue()) {
+  if (true == paP.isSigned() && 0 > paP.getSignedValue()) {
     DEVLOG_ERROR("value of input P is less than zero\n");
     return paIn;
   } else {
@@ -1173,26 +1231,29 @@ auto func_CONCAT(const T &paIn1, const U &paIn2) -> typename forte::core::mpl::g
   }
 }
 
-template<typename T, typename ... Args>
-auto func_CONCAT(const T &paIn1, const Args& ... args) {
+template<typename T, typename... Args>
+auto func_CONCAT(const T &paIn1, const Args &...args) {
   return func_CONCAT(paIn1, func_CONCAT(args...));
 }
 
 template<typename T>
 T func_INSERT(const T &paIn1, const T &paIn2, const CIEC_ANY_INT &paP) {
   static_assert(std::is_base_of_v<CIEC_ANY_STRING, T>);
-  if(std::numeric_limits<CIEC_UINT::TValueType>::max() < (paIn1.length() + paIn2.length())) {
+  if (std::numeric_limits<CIEC_UINT::TValueType>::max() < (paIn1.length() + paIn2.length())) {
     DEVLOG_ERROR("result would be longer than maximum allowed length\n");
     return paIn1;
   }
-  const CIEC_ANY::TLargestUIntValueType P = paP.isSigned() ? static_cast<CIEC_ANY::TLargestUIntValueType>(std::max(CIEC_ANY::TLargestIntValueType(0), paP.getSignedValue())) : paP.getUnsignedValue();
+  const CIEC_ANY::TLargestUIntValueType P = paP.isSigned()
+                                                ? static_cast<CIEC_ANY::TLargestUIntValueType>(
+                                                      std::max(CIEC_ANY::TLargestIntValueType(0), paP.getSignedValue()))
+                                                : paP.getUnsignedValue();
 
-  if(P == 0) {
+  if (P == 0) {
     DEVLOG_ERROR("INSERT called with P equal or lower than 0!\n");
     return paIn1;
   }
-  
-  if(P > paIn1.length()) {
+
+  if (P > paIn1.length()) {
     DEVLOG_ERROR("INSERT called with P exceeding input string length!\n");
     return paIn1;
   }
@@ -1203,21 +1264,27 @@ T func_INSERT(const T &paIn1, const T &paIn2, const CIEC_ANY_INT &paP) {
 template<typename T>
 T func_DELETE(const T &paIn, const CIEC_ANY_INT &paL, const CIEC_ANY_INT &paP) {
   static_assert(std::is_base_of_v<CIEC_ANY_STRING, T>);
-  const CIEC_ANY::TLargestUIntValueType L = paL.isSigned() ? static_cast<CIEC_ANY::TLargestUIntValueType>(std::max(CIEC_ANY::TLargestIntValueType(0), paL.getSignedValue())) : paL.getUnsignedValue();
+  const CIEC_ANY::TLargestUIntValueType L = paL.isSigned()
+                                                ? static_cast<CIEC_ANY::TLargestUIntValueType>(
+                                                      std::max(CIEC_ANY::TLargestIntValueType(0), paL.getSignedValue()))
+                                                : paL.getUnsignedValue();
 
-  const CIEC_ANY::TLargestUIntValueType P = paP.isSigned() ? static_cast<CIEC_ANY::TLargestUIntValueType>(std::max(CIEC_ANY::TLargestIntValueType(0), paP.getSignedValue())) : paP.getUnsignedValue();
+  const CIEC_ANY::TLargestUIntValueType P = paP.isSigned()
+                                                ? static_cast<CIEC_ANY::TLargestUIntValueType>(
+                                                      std::max(CIEC_ANY::TLargestIntValueType(0), paP.getSignedValue()))
+                                                : paP.getUnsignedValue();
 
-  if(L == 0) {
+  if (L == 0) {
     DEVLOG_ERROR("DELETE called with L equal or less than 0!\n");
     return paIn;
   }
 
-  if(P == 0) {
+  if (P == 0) {
     DEVLOG_ERROR("DELETE called with P equal or less than 0!\n");
     return paIn;
   }
 
-  if((P + L) > paIn.length()) {
+  if ((P + L) > paIn.length()) {
     DEVLOG_ERROR("DELETE called with delete length exceeding the length of string!\n");
     return paIn;
   }
@@ -1230,25 +1297,31 @@ T func_DELETE(const T &paIn, const CIEC_ANY_INT &paL, const CIEC_ANY_INT &paP) {
 template<typename T>
 T func_REPLACE(const T &paIn1, const T &paIn2, const CIEC_ANY_INT &paL, const CIEC_ANY_INT &paP) {
   static_assert(std::is_base_of_v<CIEC_ANY_STRING, T>);
-  const CIEC_ANY::TLargestUIntValueType L = paL.isSigned() ? static_cast<CIEC_ANY::TLargestUIntValueType>(std::max(CIEC_ANY::TLargestIntValueType(0), paL.getSignedValue())) : paL.getUnsignedValue();
-  const CIEC_ANY::TLargestUIntValueType P = paP.isSigned() ? static_cast<CIEC_ANY::TLargestUIntValueType>(std::max(CIEC_ANY::TLargestIntValueType(0), paP.getSignedValue())) : paP.getUnsignedValue();
+  const CIEC_ANY::TLargestUIntValueType L = paL.isSigned()
+                                                ? static_cast<CIEC_ANY::TLargestUIntValueType>(
+                                                      std::max(CIEC_ANY::TLargestIntValueType(0), paL.getSignedValue()))
+                                                : paL.getUnsignedValue();
+  const CIEC_ANY::TLargestUIntValueType P = paP.isSigned()
+                                                ? static_cast<CIEC_ANY::TLargestUIntValueType>(
+                                                      std::max(CIEC_ANY::TLargestIntValueType(0), paP.getSignedValue()))
+                                                : paP.getUnsignedValue();
 
-  if(L == 0) {
+  if (L == 0) {
     DEVLOG_ERROR("REPLACE called with L equal or less to 0!\n");
     return paIn1;
   }
 
-  if(P == 0) {
+  if (P == 0) {
     DEVLOG_ERROR("REPLACE called with P equal or less to 0!\n");
     return paIn1;
   }
 
-  if((P + L - 1) > paIn1.length()) { //STRINGs start at index 1, so we need to subtract 1
+  if ((P + L - 1) > paIn1.length()) { // STRINGs start at index 1, so we need to subtract 1
     DEVLOG_ERROR("REPLACE outside string boundaries!\n");
     return paIn1;
   }
 
-  if((P + L + paIn2.length()) > std::numeric_limits<CIEC_UINT::TValueType>::max()) {
+  if ((P + L + paIn2.length()) > std::numeric_limits<CIEC_UINT::TValueType>::max()) {
     DEVLOG_ERROR("REPLACE exceeds length of string!\n");
   }
 
@@ -1257,36 +1330,37 @@ T func_REPLACE(const T &paIn1, const T &paIn2, const CIEC_ANY_INT &paL, const CI
   return func_CONCAT(func_CONCAT(func_LEFT(paIn1, positionLeft), paIn2), func_RIGHT(paIn1, positionRight));
 }
 
-template <typename T, typename U, typename V>
+template<typename T, typename U, typename V>
 T func_FIND(const U &paIn1, const V &paIn2) {
   static_assert(std::is_base_of_v<CIEC_ANY_INT, T>, "result must be of type CIEC_ANY_INT");
   static_assert(std::is_base_of_v<CIEC_ANY_STRING, U>, "paIn1 must be of type CIEC_ANY_STRING");
   static_assert(std::is_base_of_v<CIEC_ANY_CHARS, V>, "paIn2 must be of type CIEC_ANY_CHARS");
-  if constexpr(std::is_base_of_v<U, CIEC_STRING>) {
-    static_assert(std::is_base_of_v<V, CIEC_STRING> || std::is_same_v<V, CIEC_CHAR>, "FIND in STRING only with STRING or CHAR");
-    if constexpr(std::is_base_of_v<V, CIEC_STRING>) {
+  if constexpr (std::is_base_of_v<U, CIEC_STRING>) {
+    static_assert(std::is_base_of_v<V, CIEC_STRING> || std::is_same_v<V, CIEC_CHAR>,
+                  "FIND in STRING only with STRING or CHAR");
+    if constexpr (std::is_base_of_v<V, CIEC_STRING>) {
       const auto findIndex = paIn1.getStorage().find(paIn2.getStorage());
       if (findIndex != std::string::npos) {
         return T(static_cast<typename T::TValueType>(findIndex + 1));
       }
-    }
-    else if constexpr (std::is_same_v<V, CIEC_CHAR>) {
+    } else if constexpr (std::is_same_v<V, CIEC_CHAR>) {
       const auto findIndex = paIn1.getStorage().find(static_cast<CIEC_CHAR::TValueType>(paIn2));
       if (findIndex != std::string::npos) {
         return T(static_cast<typename T::TValueType>(findIndex + 1));
-      }   
+      }
     }
     return T(0);
-  } else if constexpr(std::is_same_v<U, CIEC_WSTRING>) {
-    static_assert(std::is_same_v<V, CIEC_WSTRING> || std::is_same_v<V, CIEC_WCHAR>, "FIND in WSTRING only with WSTRING or WCHAR");
-    if constexpr(std::is_same_v<V, CIEC_WSTRING>) {
-      const char* pc_Find = strstr(paIn1.getValue(), paIn2.getValue());
-      if (nullptr != pc_Find){
+  } else if constexpr (std::is_same_v<U, CIEC_WSTRING>) {
+    static_assert(std::is_same_v<V, CIEC_WSTRING> || std::is_same_v<V, CIEC_WCHAR>,
+                  "FIND in WSTRING only with WSTRING or WCHAR");
+    if constexpr (std::is_same_v<V, CIEC_WSTRING>) {
+      const char *pc_Find = strstr(paIn1.getValue(), paIn2.getValue());
+      if (nullptr != pc_Find) {
         return T(static_cast<typename T::TValueType>(pc_Find - paIn1.getValue() + 1));
       }
-    } else if constexpr(std::is_same_v<V, CIEC_WCHAR>) {
-      const char* pc_Find = strstr(paIn1.getValue(), static_cast<CIEC_WCHAR::TValueType>(paIn2));
-      if (nullptr != pc_Find){
+    } else if constexpr (std::is_same_v<V, CIEC_WCHAR>) {
+      const char *pc_Find = strstr(paIn1.getValue(), static_cast<CIEC_WCHAR::TValueType>(paIn2));
+      if (nullptr != pc_Find) {
         return T(static_cast<typename T::TValueType>(pc_Find - paIn1.getValue() + 1));
       }
     }
@@ -1294,7 +1368,7 @@ T func_FIND(const U &paIn1, const V &paIn2) {
   }
 }
 
-template <typename T>
+template<typename T>
 T func_TOUPPER(const T &paIn) {
   static_assert(std::is_base_of_v<CIEC_ANY_STRING, T>, "Operand must be of type ANY_STRING!");
   if constexpr (std::is_base_of_v<CIEC_STRING, T>) {
@@ -1304,14 +1378,14 @@ T func_TOUPPER(const T &paIn) {
   } else {
     T temp(paIn);
     char *current = temp.getValue();
-    for(size_t i = 0; i <= paIn.length(); ++i) {
+    for (size_t i = 0; i <= paIn.length(); ++i) {
       current[i] = static_cast<char>(toupper(current[i]));
     }
     return temp;
   }
 }
 
-template <typename T>
+template<typename T>
 T func_TOLOWER(const T &paIn) {
   static_assert(std::is_base_of_v<CIEC_ANY_STRING, T>, "Operand must be of type ANY_STRING!");
   if constexpr (std::is_base_of_v<CIEC_STRING, T>) {
@@ -1321,7 +1395,7 @@ T func_TOLOWER(const T &paIn) {
   } else {
     T temp(paIn);
     char *current = temp.getValue();
-    for(size_t i = 0; i <= paIn.length(); ++i) {
+    for (size_t i = 0; i <= paIn.length(); ++i) {
       current[i] = static_cast<char>(tolower(current[i]));
     }
     return temp;
@@ -1332,32 +1406,72 @@ CIEC_DATE_AND_TIME func_CONCAT_DATE_TOD(const CIEC_DATE &paIN1, const CIEC_TIME_
 
 CIEC_DATE func_CONCAT_DATE(const CIEC_ANY_INT &YEAR, const CIEC_ANY_INT &MONTH, const CIEC_ANY_INT &DAY);
 
-CIEC_DATE_AND_TIME func_CONCAT_DT(const CIEC_ANY_INT &YEAR, const CIEC_ANY_INT &MONTH, const CIEC_ANY_INT &DAY, const CIEC_ANY_INT &HOUR, const CIEC_ANY_INT &MINUTE, const CIEC_ANY_INT &SECOND, const CIEC_ANY_INT &MILLISECOND);
+CIEC_DATE_AND_TIME func_CONCAT_DT(const CIEC_ANY_INT &YEAR,
+                                  const CIEC_ANY_INT &MONTH,
+                                  const CIEC_ANY_INT &DAY,
+                                  const CIEC_ANY_INT &HOUR,
+                                  const CIEC_ANY_INT &MINUTE,
+                                  const CIEC_ANY_INT &SECOND,
+                                  const CIEC_ANY_INT &MILLISECOND);
 
-CIEC_TIME_OF_DAY func_CONCAT_TOD(const CIEC_ANY_INT &HOUR, const CIEC_ANY_INT &MINUTE, const CIEC_ANY_INT &SECOND, const CIEC_ANY_INT &MILLISECOND);
+CIEC_TIME_OF_DAY func_CONCAT_TOD(const CIEC_ANY_INT &HOUR,
+                                 const CIEC_ANY_INT &MINUTE,
+                                 const CIEC_ANY_INT &SECOND,
+                                 const CIEC_ANY_INT &MILLISECOND);
 
 CIEC_LDATE_AND_TIME func_CONCAT_LDATE_LTOD(const CIEC_LDATE &paIN1, const CIEC_LTIME_OF_DAY &paIN2);
 
 CIEC_LDATE func_CONCAT_LDATE(const CIEC_ANY_INT &YEAR, const CIEC_ANY_INT &MONTH, const CIEC_ANY_INT &DAY);
 
-CIEC_LDATE_AND_TIME func_CONCAT_LDT(const CIEC_ANY_INT &YEAR, const CIEC_ANY_INT &MONTH, const CIEC_ANY_INT &DAY, const CIEC_ANY_INT &HOUR, const CIEC_ANY_INT &MINUTE, const CIEC_ANY_INT &SECOND, const CIEC_ANY_INT &MILLISECOND);
+CIEC_LDATE_AND_TIME func_CONCAT_LDT(const CIEC_ANY_INT &YEAR,
+                                    const CIEC_ANY_INT &MONTH,
+                                    const CIEC_ANY_INT &DAY,
+                                    const CIEC_ANY_INT &HOUR,
+                                    const CIEC_ANY_INT &MINUTE,
+                                    const CIEC_ANY_INT &SECOND,
+                                    const CIEC_ANY_INT &MILLISECOND);
 
-CIEC_LTIME_OF_DAY func_CONCAT_LTOD(const CIEC_ANY_INT &HOUR, const CIEC_ANY_INT &MINUTE, const CIEC_ANY_INT &SECOND, const CIEC_ANY_INT &MILLISECOND);
+CIEC_LTIME_OF_DAY func_CONCAT_LTOD(const CIEC_ANY_INT &HOUR,
+                                   const CIEC_ANY_INT &MINUTE,
+                                   const CIEC_ANY_INT &SECOND,
+                                   const CIEC_ANY_INT &MILLISECOND);
 
 void func_SPLIT_DATE(const CIEC_DATE &paValue, CIEC_ANY_INT &YEAR, CIEC_ANY_INT &MONTH, CIEC_ANY_INT &DAY);
 
 void func_SPLIT_LDATE(const CIEC_LDATE &paValue, CIEC_ANY_INT &YEAR, CIEC_ANY_INT &MONTH, CIEC_ANY_INT &DAY);
 
-void func_SPLIT_TOD(const CIEC_TIME_OF_DAY &paValue, CIEC_ANY_INT &HOUR, CIEC_ANY_INT &MINUTE, CIEC_ANY_INT &SECOND, CIEC_ANY_INT &MILLISECOND);
+void func_SPLIT_TOD(const CIEC_TIME_OF_DAY &paValue,
+                    CIEC_ANY_INT &HOUR,
+                    CIEC_ANY_INT &MINUTE,
+                    CIEC_ANY_INT &SECOND,
+                    CIEC_ANY_INT &MILLISECOND);
 
-void func_SPLIT_LTOD(const CIEC_LTIME_OF_DAY &paValue, CIEC_ANY_INT &HOUR, CIEC_ANY_INT &MINUTE, CIEC_ANY_INT &SECOND, CIEC_ANY_INT &MILLISECOND);
+void func_SPLIT_LTOD(const CIEC_LTIME_OF_DAY &paValue,
+                     CIEC_ANY_INT &HOUR,
+                     CIEC_ANY_INT &MINUTE,
+                     CIEC_ANY_INT &SECOND,
+                     CIEC_ANY_INT &MILLISECOND);
 
-void func_SPLIT_DT(const CIEC_DATE_AND_TIME &paValue, CIEC_ANY_INT &YEAR, CIEC_ANY_INT &MONTH, CIEC_ANY_INT &DAY, CIEC_ANY_INT &HOUR, CIEC_ANY_INT &MINUTE, CIEC_ANY_INT &SECOND, CIEC_ANY_INT &MILLISECOND);
+void func_SPLIT_DT(const CIEC_DATE_AND_TIME &paValue,
+                   CIEC_ANY_INT &YEAR,
+                   CIEC_ANY_INT &MONTH,
+                   CIEC_ANY_INT &DAY,
+                   CIEC_ANY_INT &HOUR,
+                   CIEC_ANY_INT &MINUTE,
+                   CIEC_ANY_INT &SECOND,
+                   CIEC_ANY_INT &MILLISECOND);
 
-void func_SPLIT_LDT(const CIEC_LDATE_AND_TIME &paValue, CIEC_ANY_INT &YEAR, CIEC_ANY_INT &MONTH, CIEC_ANY_INT &DAY, CIEC_ANY_INT &HOUR, CIEC_ANY_INT &MINUTE, CIEC_ANY_INT &SECOND, CIEC_ANY_INT &MILLISECOND);
+void func_SPLIT_LDT(const CIEC_LDATE_AND_TIME &paValue,
+                    CIEC_ANY_INT &YEAR,
+                    CIEC_ANY_INT &MONTH,
+                    CIEC_ANY_INT &DAY,
+                    CIEC_ANY_INT &HOUR,
+                    CIEC_ANY_INT &MINUTE,
+                    CIEC_ANY_INT &SECOND,
+                    CIEC_ANY_INT &MILLISECOND);
 
 /** @brief Get day of the week Sunday = 0, 1 = Monday, etc
- * 
+ *
  * This function differs from the standard in taking an LDATE, which can be implicitly cast from a DATE
  */
 template<typename T>
@@ -1384,13 +1498,13 @@ CIEC_DATE_AND_TIME func_NOW();
 
 /**
  * @brief Return if an ANY_REAL is a valid number
- * 
+ *
  * @tparam T Needs to be a subtype of CIEC_ANY_REAL
  * @param paValue The value to be checked
  * @return CIEC_BOOL false if inf or NaN, true otherwise
  */
-template <typename T>
-CIEC_BOOL func_IS_VALID(const T& paValue) {
+template<typename T>
+CIEC_BOOL func_IS_VALID(const T &paValue) {
   static_assert((std::is_base_of_v<CIEC_ANY_REAL, T>), "T not of ANY_REAL");
   const typename T::TValueType value = static_cast<typename T::TValueType>(paValue);
   return CIEC_BOOL(!(std::isnan(value) || std::isinf(value)));
@@ -1403,9 +1517,10 @@ CIEC_BOOL func_IS_VALID(const T& paValue) {
  * @param paValue The value to be checked
  * @return CIEC_BOOL false if not a valid BCD, true otherwise
  */
-template <typename T>
-CIEC_BOOL func_IS_VALID_BCD(const T& paValue) {
-  static_assert(std::is_base_of_v<CIEC_ANY_BIT, T>, "Operand must be of ANY_BIT (excluding BOOL)"); // any bit type is allowed
+template<typename T>
+CIEC_BOOL func_IS_VALID_BCD(const T &paValue) {
+  static_assert(std::is_base_of_v<CIEC_ANY_BIT, T>,
+                "Operand must be of ANY_BIT (excluding BOOL)"); // any bit type is allowed
   static_assert(!std::is_same_v<CIEC_BOOL, T>, "Operand must be of ANY_BIT, but not BOOL"); // but not BOOL
   using ValueType = typename T::TValueType;
   constexpr size_t valueTypeSize = sizeof(ValueType);
@@ -1421,24 +1536,24 @@ CIEC_BOOL func_IS_VALID_BCD(const T& paValue) {
   return CIEC_BOOL(true);
 }
 
-template <typename T>
+template<typename T>
 T swapSimpleDataHelper(const T data) {
   constexpr size_t dataSize = sizeof(T);
   const char *const dataBytes = reinterpret_cast<const char *>(&data);
   T swappedData;
-  char *const swappedDataBytes = reinterpret_cast<char*>(&swappedData);
+  char *const swappedDataBytes = reinterpret_cast<char *>(&swappedData);
 
   if constexpr (1 == dataSize) {
     return T(data);
-  } else if constexpr(2 == dataSize) {
+  } else if constexpr (2 == dataSize) {
     *(swappedDataBytes) = *(dataBytes + 1);
     *(swappedDataBytes + 1) = *(dataBytes);
-  } else if constexpr(4 == dataSize) {
+  } else if constexpr (4 == dataSize) {
     *(swappedDataBytes + 0) = *(dataBytes + 3);
     *(swappedDataBytes + 1) = *(dataBytes + 2);
     *(swappedDataBytes + 2) = *(dataBytes + 1);
     *(swappedDataBytes + 3) = *(dataBytes + 0);
-  } else if constexpr(8 == dataSize) {
+  } else if constexpr (8 == dataSize) {
     *(swappedDataBytes + 0) = *(dataBytes + 7);
     *(swappedDataBytes + 1) = *(dataBytes + 6);
     *(swappedDataBytes + 2) = *(dataBytes + 5);
@@ -1453,42 +1568,42 @@ T swapSimpleDataHelper(const T data) {
   return swappedData;
 }
 
-template <typename T>
+template<typename T>
 auto swapEndianess(const T &paValue) -> typename std::enable_if_t<std::is_base_of_v<CIEC_ANY_MAGNITUDE, T>, T> {
   const typename T::TValueType data = static_cast<typename T::TValueType>(paValue);
   typename T::TValueType swappedData = swapSimpleDataHelper(data);
   return T(swappedData);
 }
 
-template <typename T>
+template<typename T>
 auto swapEndianess(const T &paValue) -> typename std::enable_if_t<std::is_base_of_v<CIEC_ANY_BIT, T>, T> {
   const typename T::TValueType data = static_cast<typename T::TValueType>(paValue);
   typename T::TValueType swappedData = swapSimpleDataHelper(data);
   return T(swappedData);
 }
 
-template <typename T>
+template<typename T>
 auto swapEndianess(const T &paValue) -> typename std::enable_if_t<std::is_base_of_v<CIEC_ANY_CHAR, T>, T> {
   const typename T::TValueType data = static_cast<typename T::TValueType>(paValue);
   typename T::TValueType swappedData = swapSimpleDataHelper(data);
   return T(swappedData);
 }
 
-template <typename T>
+template<typename T>
 auto swapEndianess(const T &paValue) -> typename std::enable_if_t<std::is_base_of_v<CIEC_ANY_DATE, T>, T> {
   const typename T::TValueType data = static_cast<typename T::TValueType>(paValue);
   typename T::TValueType swappedData = swapSimpleDataHelper(data);
   return T(swappedData);
 }
 
-template <typename T>
+template<typename T>
 auto swapEndianess(const T &paValue) -> typename std::enable_if_t<std::is_base_of_v<CIEC_ANY_STRING, T>, T> {
   if constexpr (std::is_same_v<CIEC_STRING, T>) {
     return T(paValue);
   } else if constexpr (std::is_same_v<CIEC_WSTRING, T>) {
     T reversed(paValue);
     const TForteUInt16 length = reversed.length();
-    for(TForteUInt16 i = 0; i < length; i += sizeof(typename T::TSymbolType)) {
+    for (TForteUInt16 i = 0; i < length; i += sizeof(typename T::TSymbolType)) {
       *(reversed.getValue() + i) = *(paValue.getValue() + (i + 1));
       *(reversed.getValue() + (i + 1)) = *(paValue.getValue() + i);
     }
@@ -1502,15 +1617,17 @@ void swapEndianessInplace(CIEC_ARRAY &paValue);
 
 void swapEndianessInplace(CIEC_STRUCT &paValue);
 
-template <typename T>
+template<typename T>
 auto swapEndianess(const T &paValue) -> typename std::enable_if_t<std::is_base_of_v<CIEC_STRUCT, T>, T> {
   T reversed(paValue);
   swapEndianessInplace(reversed);
   return reversed;
 }
 
-template <template <typename, intmax_t, intmax_t> typename T, typename U, intmax_t lowerBound, intmax_t upperBound>
-auto swapEndianess(const T<U, lowerBound, upperBound> &paValue) -> typename std::enable_if_t<std::is_base_of_v<CIEC_ARRAY_FIXED<U, lowerBound, upperBound>, T<U, lowerBound, upperBound>>, T<U, lowerBound, upperBound>> {
+template<template<typename, intmax_t, intmax_t> typename T, typename U, intmax_t lowerBound, intmax_t upperBound>
+auto swapEndianess(const T<U, lowerBound, upperBound> &paValue) -> typename std::enable_if_t<
+    std::is_base_of_v<CIEC_ARRAY_FIXED<U, lowerBound, upperBound>, T<U, lowerBound, upperBound>>,
+    T<U, lowerBound, upperBound>> {
   T<U, lowerBound, upperBound> reversed(paValue);
   for (auto iter = reversed.begin(); iter != reversed.end(); iter++) {
     *iter = swapEndianess(*iter);
@@ -1518,8 +1635,9 @@ auto swapEndianess(const T<U, lowerBound, upperBound> &paValue) -> typename std:
   return reversed;
 }
 
-template <template <typename> typename T, typename U>
-auto swapEndianess(const T<U> &paValue) -> typename std::enable_if_t<std::is_base_of_v<CIEC_ARRAY_VARIABLE<U>, T<U>>, T<U>> {
+template<template<typename> typename T, typename U>
+auto swapEndianess(const T<U> &paValue) ->
+    typename std::enable_if_t<std::is_base_of_v<CIEC_ARRAY_VARIABLE<U>, T<U>>, T<U>> {
   T<U> reversed(paValue);
   for (auto iter = reversed.begin(); iter != reversed.end(); iter++) {
     *iter = swapEndianess(*iter);
@@ -1528,192 +1646,205 @@ auto swapEndianess(const T<U> &paValue) -> typename std::enable_if_t<std::is_bas
 }
 
 #ifdef FORTE_LITTLE_ENDIAN
-template <typename T>
+template<typename T>
 T func_TO_LITTLE_ENDIAN(const T &paValue) {
   return paValue;
 }
 
-template <typename T>
+template<typename T>
 T func_FROM_LITTLE_ENDIAN(const T &paValue) {
   return paValue;
 }
 
-template <typename T>
+template<typename T>
 auto func_TO_BIG_ENDIAN(const T &paValue) -> typename std::enable_if_t<std::is_base_of_v<CIEC_ANY_MAGNITUDE, T>, T> {
   return swapEndianess(paValue);
 }
 
-template <typename T>
+template<typename T>
 auto func_TO_BIG_ENDIAN(const T &paValue) -> typename std::enable_if_t<std::is_base_of_v<CIEC_ANY_BIT, T>, T> {
   return swapEndianess(paValue);
 }
 
-template <typename T>
+template<typename T>
 auto func_TO_BIG_ENDIAN(const T &paValue) -> typename std::enable_if_t<std::is_base_of_v<CIEC_ANY_CHAR, T>, T> {
   return swapEndianess(paValue);
 }
 
-template <typename T>
+template<typename T>
 auto func_TO_BIG_ENDIAN(const T &paValue) -> typename std::enable_if_t<std::is_base_of_v<CIEC_ANY_DATE, T>, T> {
   return swapEndianess(paValue);
 }
 
-template <typename T>
+template<typename T>
 auto func_TO_BIG_ENDIAN(const T &paValue) -> typename std::enable_if_t<std::is_base_of_v<CIEC_ANY_STRING, T>, T> {
   return swapEndianess(paValue);
 }
 
 CIEC_ARRAY_DYNAMIC func_TO_BIG_ENDIAN(const CIEC_ARRAY_DYNAMIC &paValue);
 
-template <typename T>
+template<typename T>
 auto func_TO_BIG_ENDIAN(const T &paValue) -> typename std::enable_if_t<std::is_base_of_v<CIEC_STRUCT, T>, T> {
   return swapEndianess(paValue);
 }
 
-template <template <typename, intmax_t, intmax_t> typename T, typename U, intmax_t lowerBound, intmax_t upperBound>
-auto func_TO_BIG_ENDIAN(const T<U, lowerBound, upperBound> &paValue) -> typename std::enable_if_t<std::is_base_of_v<CIEC_ARRAY_FIXED<U, lowerBound, upperBound>, T<U, lowerBound, upperBound>>, T<U, lowerBound, upperBound>> {
+template<template<typename, intmax_t, intmax_t> typename T, typename U, intmax_t lowerBound, intmax_t upperBound>
+auto func_TO_BIG_ENDIAN(const T<U, lowerBound, upperBound> &paValue) -> typename std::enable_if_t<
+    std::is_base_of_v<CIEC_ARRAY_FIXED<U, lowerBound, upperBound>, T<U, lowerBound, upperBound>>,
+    T<U, lowerBound, upperBound>> {
   return swapEndianess(paValue);
 }
 
-template <template <typename> typename T, typename U>
-auto func_TO_BIG_ENDIAN(const T<U> &paValue) -> typename std::enable_if_t<std::is_base_of_v<CIEC_ARRAY_VARIABLE<U>, T<U>>, T<U>> {
+template<template<typename> typename T, typename U>
+auto func_TO_BIG_ENDIAN(const T<U> &paValue) ->
+    typename std::enable_if_t<std::is_base_of_v<CIEC_ARRAY_VARIABLE<U>, T<U>>, T<U>> {
   return swapEndianess(paValue);
 }
 
-template <typename T>
+template<typename T>
 auto func_FROM_BIG_ENDIAN(const T &paValue) -> typename std::enable_if_t<std::is_base_of_v<CIEC_ANY_MAGNITUDE, T>, T> {
   return swapEndianess(paValue);
 }
 
-template <typename T>
+template<typename T>
 auto func_FROM_BIG_ENDIAN(const T &paValue) -> typename std::enable_if_t<std::is_base_of_v<CIEC_ANY_BIT, T>, T> {
   return swapEndianess(paValue);
 }
 
-template <typename T>
+template<typename T>
 auto func_FROM_BIG_ENDIAN(const T &paValue) -> typename std::enable_if_t<std::is_base_of_v<CIEC_ANY_CHAR, T>, T> {
   return swapEndianess(paValue);
 }
 
-template <typename T>
+template<typename T>
 auto func_FROM_BIG_ENDIAN(const T &paValue) -> typename std::enable_if_t<std::is_base_of_v<CIEC_ANY_DATE, T>, T> {
   return swapEndianess(paValue);
 }
 
-template <typename T>
+template<typename T>
 auto func_FROM_BIG_ENDIAN(const T &paValue) -> typename std::enable_if_t<std::is_base_of_v<CIEC_ANY_STRING, T>, T> {
   return swapEndianess(paValue);
 }
 
 CIEC_ARRAY_DYNAMIC func_FROM_BIG_ENDIAN(const CIEC_ARRAY_DYNAMIC &paValue);
 
-template <typename T>
+template<typename T>
 auto func_FROM_BIG_ENDIAN(const T &paValue) -> typename std::enable_if_t<std::is_base_of_v<CIEC_STRUCT, T>, T> {
   return swapEndianess(paValue);
 }
 
-template <template <typename, intmax_t, intmax_t> typename T, typename U, intmax_t lowerBound, intmax_t upperBound>
-auto func_FROM_BIG_ENDIAN(const T<U, lowerBound, upperBound> &paValue) -> typename std::enable_if_t<std::is_base_of_v<CIEC_ARRAY_FIXED<U, lowerBound, upperBound>, T<U, lowerBound, upperBound>>, T<U, lowerBound, upperBound>> {
+template<template<typename, intmax_t, intmax_t> typename T, typename U, intmax_t lowerBound, intmax_t upperBound>
+auto func_FROM_BIG_ENDIAN(const T<U, lowerBound, upperBound> &paValue) -> typename std::enable_if_t<
+    std::is_base_of_v<CIEC_ARRAY_FIXED<U, lowerBound, upperBound>, T<U, lowerBound, upperBound>>,
+    T<U, lowerBound, upperBound>> {
   return swapEndianess(paValue);
 }
 
-template <template <typename> typename T, typename U>
-auto func_FROM_BIG_ENDIAN(const T<U> &paValue) -> typename std::enable_if_t<std::is_base_of_v<CIEC_ARRAY_VARIABLE<U>, T<U>>, T<U>> {
+template<template<typename> typename T, typename U>
+auto func_FROM_BIG_ENDIAN(const T<U> &paValue) ->
+    typename std::enable_if_t<std::is_base_of_v<CIEC_ARRAY_VARIABLE<U>, T<U>>, T<U>> {
   return swapEndianess(paValue);
 }
 #endif
 
 #ifdef FORTE_BIG_ENDIAN
-template <typename T>
+template<typename T>
 auto func_TO_LITTLE_ENDIAN(const T &paValue) -> typename std::enable_if_t<std::is_base_of_v<CIEC_ANY_MAGNITUDE, T>, T> {
   return swapEndianess(paValue);
 }
 
-template <typename T>
+template<typename T>
 auto func_TO_LITTLE_ENDIAN(const T &paValue) -> typename std::enable_if_t<std::is_base_of_v<CIEC_ANY_BIT, T>, T> {
   return swapEndianess(paValue);
 }
 
-template <typename T>
+template<typename T>
 auto func_TO_LITTLE_ENDIAN(const T &paValue) -> typename std::enable_if_t<std::is_base_of_v<CIEC_ANY_CHAR, T>, T> {
   return swapEndianess(paValue);
 }
 
-template <typename T>
+template<typename T>
 auto func_TO_LITTLE_ENDIAN(const T &paValue) -> typename std::enable_if_t<std::is_base_of_v<CIEC_ANY_DATE, T>, T> {
   return swapEndianess(paValue);
 }
 
-template <typename T>
+template<typename T>
 auto func_TO_LITTLE_ENDIAN(const T &paValue) -> typename std::enable_if_t<std::is_base_of_v<CIEC_ANY_STRING, T>, T> {
   return swapEndianess(paValue);
 }
 
 CIEC_ARRAY_DYNAMIC func_TO_LITTLE_ENDIAN(const CIEC_ARRAY_DYNAMIC &paValue);
 
-template <typename T>
+template<typename T>
 auto func_TO_LITTLE_ENDIAN(const T &paValue) -> typename std::enable_if_t<std::is_base_of_v<CIEC_STRUCT, T>, T> {
   return swapEndianess(paValue);
 }
 
-template <template <typename, intmax_t, intmax_t> typename T, typename U, intmax_t lowerBound, intmax_t upperBound>
-auto func_TO_LITTLE_ENDIAN(const T<U, lowerBound, upperBound> &paValue) -> typename std::enable_if_t<std::is_base_of_v<CIEC_ARRAY_FIXED<U, lowerBound, upperBound>, T<U, lowerBound, upperBound>>, T<U, lowerBound, upperBound>> {
+template<template<typename, intmax_t, intmax_t> typename T, typename U, intmax_t lowerBound, intmax_t upperBound>
+auto func_TO_LITTLE_ENDIAN(const T<U, lowerBound, upperBound> &paValue) -> typename std::enable_if_t<
+    std::is_base_of_v<CIEC_ARRAY_FIXED<U, lowerBound, upperBound>, T<U, lowerBound, upperBound>>,
+    T<U, lowerBound, upperBound>> {
   return swapEndianess(paValue);
 }
 
-template <template <typename> typename T, typename U>
-auto func_TO_LITTLE_ENDIAN(const T<U> &paValue) -> typename std::enable_if_t<std::is_base_of_v<CIEC_ARRAY_VARIABLE<U>, T<U>>, T<U>> {
+template<template<typename> typename T, typename U>
+auto func_TO_LITTLE_ENDIAN(const T<U> &paValue) ->
+    typename std::enable_if_t<std::is_base_of_v<CIEC_ARRAY_VARIABLE<U>, T<U>>, T<U>> {
   return swapEndianess(paValue);
 }
 
-template <typename T>
-auto func_FROM_LITTLE_ENDIAN(const T &paValue) -> typename std::enable_if_t<std::is_base_of_v<CIEC_ANY_MAGNITUDE, T>, T> {
+template<typename T>
+auto func_FROM_LITTLE_ENDIAN(const T &paValue) ->
+    typename std::enable_if_t<std::is_base_of_v<CIEC_ANY_MAGNITUDE, T>, T> {
   return swapEndianess(paValue);
 }
 
-template <typename T>
+template<typename T>
 auto func_FROM_LITTLE_ENDIAN(const T &paValue) -> typename std::enable_if_t<std::is_base_of_v<CIEC_ANY_BIT, T>, T> {
   return swapEndianess(paValue);
 }
 
-template <typename T>
+template<typename T>
 auto func_FROM_LITTLE_ENDIAN(const T &paValue) -> typename std::enable_if_t<std::is_base_of_v<CIEC_ANY_CHAR, T>, T> {
   return swapEndianess(paValue);
 }
 
-template <typename T>
+template<typename T>
 auto func_FROM_LITTLE_ENDIAN(const T &paValue) -> typename std::enable_if_t<std::is_base_of_v<CIEC_ANY_DATE, T>, T> {
   return swapEndianess(paValue);
 }
 
-template <typename T>
+template<typename T>
 auto func_FROM_LITTLE_ENDIAN(const T &paValue) -> typename std::enable_if_t<std::is_base_of_v<CIEC_ANY_STRING, T>, T> {
   return swapEndianess(paValue);
 }
 
 CIEC_ARRAY_DYNAMIC func_FROM_LITTLE_ENDIAN(const CIEC_ARRAY_DYNAMIC &paValue);
 
-template <typename T>
+template<typename T>
 auto func_FROM_LITTLE_ENDIAN(const T &paValue) -> typename std::enable_if_t<std::is_base_of_v<CIEC_STRUCT, T>, T> {
   return swapEndianess(paValue);
 }
 
-template <template <typename, intmax_t, intmax_t> typename T, typename U, intmax_t lowerBound, intmax_t upperBound>
-auto func_FROM_LITTLE_ENDIAN(const T<U, lowerBound, upperBound> &paValue) -> typename std::enable_if_t<std::is_base_of_v<CIEC_ARRAY_FIXED<U, lowerBound, upperBound>, T<U, lowerBound, upperBound>>, T<U, lowerBound, upperBound>> {
+template<template<typename, intmax_t, intmax_t> typename T, typename U, intmax_t lowerBound, intmax_t upperBound>
+auto func_FROM_LITTLE_ENDIAN(const T<U, lowerBound, upperBound> &paValue) -> typename std::enable_if_t<
+    std::is_base_of_v<CIEC_ARRAY_FIXED<U, lowerBound, upperBound>, T<U, lowerBound, upperBound>>,
+    T<U, lowerBound, upperBound>> {
   return swapEndianess(paValue);
 }
 
-template <template <typename> typename T, typename U>
-auto func_FROM_LITTLE_ENDIAN(const T<U> &paValue) -> typename std::enable_if_t<std::is_base_of_v<CIEC_ARRAY_VARIABLE<U>, T<U>>, T<U>> {
+template<template<typename> typename T, typename U>
+auto func_FROM_LITTLE_ENDIAN(const T<U> &paValue) ->
+    typename std::enable_if_t<std::is_base_of_v<CIEC_ARRAY_VARIABLE<U>, T<U>>, T<U>> {
   return swapEndianess(paValue);
 }
 
-template <typename T>
+template<typename T>
 T func_TO_BIG_ENDIAN(const T &paValue) {
   return paValue;
 }
 
-template <typename T>
+template<typename T>
 T func_FROM_BIG_ENDIAN(const T &paValue) {
   return paValue;
 }

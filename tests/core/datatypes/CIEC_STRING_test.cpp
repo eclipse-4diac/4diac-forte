@@ -27,7 +27,7 @@ using namespace std::string_literals;
 BOOST_AUTO_TEST_SUITE(CIEC_STRING_function_test)
 BOOST_AUTO_TEST_CASE(Type_test) {
   CIEC_STRING sTest;
-  //check type information
+  // check type information
   BOOST_REQUIRE(sTest.getDataTypeID() == CIEC_ANY::e_STRING);
 }
 
@@ -57,7 +57,6 @@ BOOST_AUTO_TEST_CASE(String_length) {
 
   CIEC_STRING test5("123456789"_STRING);
   BOOST_CHECK_EQUAL(test5.length(), 9);
-
 }
 
 BOOST_AUTO_TEST_CASE(String_empty) {
@@ -70,12 +69,11 @@ BOOST_AUTO_TEST_CASE(String_empty) {
   CIEC_STRING test3(""_STRING);
   BOOST_CHECK(test3.empty());
 
-  CIEC_STRING test4("1\03"_STRING);  //{'1', '3', '\0'}
+  CIEC_STRING test4("1\03"_STRING); //{'1', '3', '\0'}
   BOOST_CHECK(!test4.empty());
 
   CIEC_STRING test5("12345789"_STRING);
   BOOST_CHECK(!test5.empty());
-
 }
 
 BOOST_AUTO_TEST_CASE(String_manipulation_interface) {
@@ -92,7 +90,6 @@ BOOST_AUTO_TEST_CASE(String_manipulation_interface) {
   BOOST_TEST(psTest->length() == 22);
   BOOST_TEST(*psTest == "This is a test string!"_STRING);
   delete psTest;
-
 }
 
 BOOST_AUTO_TEST_CASE(String_assignment) {
@@ -125,14 +122,13 @@ BOOST_AUTO_TEST_CASE(String_clear) {
   test3.clear();
   BOOST_CHECK_EQUAL(test3.length(), 0);
 
-  CIEC_STRING test4("1\03"_STRING);  //{'1', '3', '\0'}
+  CIEC_STRING test4("1\03"_STRING); //{'1', '3', '\0'}
   test4.clear();
   BOOST_CHECK_EQUAL(test4.length(), 0);
 
   CIEC_STRING test5("123456789"_STRING);
   test5.clear();
   BOOST_CHECK_EQUAL(test5.length(), 0);
-
 }
 
 BOOST_AUTO_TEST_CASE(String_re_assignment) {
@@ -148,23 +144,23 @@ BOOST_AUTO_TEST_CASE(String_re_assignment) {
   BOOST_TEST(test1 == "123456789"_STRING);
   BOOST_TEST(test1.length() == 9);
 
-  test1.assign("123456", 6); //smaller string
+  test1.assign("123456", 6); // smaller string
   BOOST_TEST(test1 == "123456"_STRING);
   BOOST_TEST(test1.length() == 6);
 
-  test1.assign("12345678", 8); //bigger string
+  test1.assign("12345678", 8); // bigger string
   BOOST_TEST(test1 == "12345678"_STRING);
   BOOST_TEST(test1.length() == 8);
 
-  test1.assign("1234567890", 9); //length to assign smaller than actual string coming from a smaller string
+  test1.assign("1234567890", 9); // length to assign smaller than actual string coming from a smaller string
   BOOST_TEST(test1 == "123456789"_STRING);
   BOOST_TEST(test1.length() == 9);
 
-  test1.assign("1234", 3);//length to assign smaller than actual string coming from a bigger string
+  test1.assign("1234", 3); // length to assign smaller than actual string coming from a bigger string
   BOOST_TEST(test1 == "123"_STRING);
   BOOST_TEST(test1.length() == 3);
 
-  test1.assign(nullptr, 0);//shouldn't do anything
+  test1.assign(nullptr, 0); // shouldn't do anything
   BOOST_TEST(test1 == ""_STRING);
   BOOST_TEST(test1.length() == 0);
 
@@ -199,29 +195,34 @@ BOOST_AUTO_TEST_CASE(String_append) {
 
   test1.append("123", 1);
   BOOST_CHECK_EQUAL(test1.length(), 12);
-  BOOST_TEST(test1 == "1234567890\0""1"_STRING);
+  BOOST_TEST(test1 == "1234567890\0"
+                      "1"_STRING);
 
   test1.append(""_STRING);
   BOOST_CHECK_EQUAL(test1.length(), 12);
-  BOOST_TEST(test1 == "1234567890\x00""1"_STRING);
+  BOOST_TEST(test1 == "1234567890\x00"
+                      "1"_STRING);
 
-  test1.append(nullptr, 0); //shouldn't do anything
+  test1.append(nullptr, 0); // shouldn't do anything
   BOOST_CHECK_EQUAL(test1.length(), 12);
-  BOOST_TEST(test1 == "1234567890\x00""1"_STRING);
+  BOOST_TEST(test1 == "1234567890\x00"
+                      "1"_STRING);
 
   test1.append("1\x03"_STRING);
   BOOST_CHECK_EQUAL(test1.length(), 14);
-  BOOST_TEST(test1 == "1234567890\x00""11\x03"_STRING);
+  BOOST_TEST(test1 == "1234567890\x00"
+                      "11\x03"_STRING);
 
-  test1.append(nullptr, 0);//shouldn't do anything
+  test1.append(nullptr, 0); // shouldn't do anything
   BOOST_CHECK_EQUAL(test1.length(), 14);
-  BOOST_TEST(test1 == "1234567890\x00""11\x03"_STRING);
+  BOOST_TEST(test1 == "1234567890\x00"
+                      "11\x03"_STRING);
 
   test1.clear();
   BOOST_CHECK_EQUAL(test1.length(), 0);
-  test1.append(""_STRING); //append to empty string
+  test1.append(""_STRING); // append to empty string
   BOOST_CHECK_EQUAL(test1.length(), 0);
-  test1.append("\x00"_STRING); //append to empty string
+  test1.append("\x00"_STRING); // append to empty string
   BOOST_CHECK_EQUAL(test1.length(), 1);
 }
 
@@ -249,7 +250,6 @@ BOOST_AUTO_TEST_CASE(String_compare) {
   BOOST_CHECK(!(sTest2 != sTest1));
   BOOST_TEST(sTest2 == "Check string!"_STRING);
   BOOST_TEST(sTest1 == "Check string!"_STRING);
-  
 
   BOOST_CHECK(sTest1 == "Check string!"_STRING);
   BOOST_TEST(sTest1 == "Check string!"_STRING);
@@ -293,9 +293,9 @@ BOOST_AUTO_TEST_CASE(String_equals) {
 BOOST_AUTO_TEST_CASE(String_binary_interface) {
   CIEC_STRING sTest1;
   CIEC_STRING sTest2;
-  char cTest[] = "This is a test\x00string!"; //embedded \0, length 22 without trailing \0
+  char cTest[] = "This is a test\x00string!"; // embedded \0, length 22 without trailing \0
   BOOST_CHECK_EQUAL(sTest1.length(), 0);
-  sTest1.assign(cTest, static_cast<TForteUInt16>(sizeof(cTest)-1));
+  sTest1.assign(cTest, static_cast<TForteUInt16>(sizeof(cTest) - 1));
   BOOST_CHECK_EQUAL(sTest1.length(), 22);
   BOOST_TEST(sTest1 == std::string(cTest, sizeof(cTest) - 1));
 
@@ -303,7 +303,7 @@ BOOST_AUTO_TEST_CASE(String_binary_interface) {
   BOOST_CHECK_EQUAL(sTest2.length(), 22);
   BOOST_TEST(sTest2 == std::string(cTest, sizeof(cTest) - 1));
 
-  CIEC_STRING* psTest = new CIEC_STRING(sTest1);
+  CIEC_STRING *psTest = new CIEC_STRING(sTest1);
   BOOST_CHECK_EQUAL(psTest->length(), 22);
   BOOST_TEST(*psTest == std::string(cTest, sizeof(cTest) - 1));
   delete psTest;
@@ -327,12 +327,11 @@ BOOST_AUTO_TEST_CASE(Memory_Allocation) {
   BOOST_TEST(sTest.length() == 0);
 }
 
-BOOST_AUTO_TEST_CASE(String_toUTF8)
-{
-  const TForteByte cASCII1[] = { 0 };
-  const TForteByte cASCII2[] = { 'A', 0 };
-  const TForteByte cASCII3[] = { 0x7f, 0 };
-  const TForteByte cUpper1[] = { 'A', 0xc2, 0xa2, 'A', 0 };
+BOOST_AUTO_TEST_CASE(String_toUTF8) {
+  const TForteByte cASCII1[] = {0};
+  const TForteByte cASCII2[] = {'A', 0};
+  const TForteByte cASCII3[] = {0x7f, 0};
+  const TForteByte cUpper1[] = {'A', 0xc2, 0xa2, 'A', 0};
 
   int nRes;
   CIEC_STRING sTest;
@@ -342,13 +341,13 @@ BOOST_AUTO_TEST_CASE(String_toUTF8)
   sResult[0] = '\0';
   nRes = sTest.toUTF8(sResult, sizeof(sResult), false);
   BOOST_CHECK_EQUAL(nRes, 0);
-  BOOST_CHECK(! memcmp(sResult, cASCII1, sizeof(cASCII1)));
+  BOOST_CHECK(!memcmp(sResult, cASCII1, sizeof(cASCII1)));
 
   sTest = "A"_STRING;
   sResult[0] = '\0';
   nRes = sTest.toUTF8(sResult, sizeof(sResult), false);
   BOOST_CHECK_EQUAL(nRes, 1);
-  BOOST_CHECK(! memcmp(sResult, cASCII2, sizeof(cASCII2)));
+  BOOST_CHECK(!memcmp(sResult, cASCII2, sizeof(cASCII2)));
   nRes = sTest.toUTF8(sResult, 1, false);
   BOOST_CHECK_EQUAL(nRes, -1);
 
@@ -356,17 +355,18 @@ BOOST_AUTO_TEST_CASE(String_toUTF8)
   sResult[0] = '\0';
   nRes = sTest.toUTF8(sResult, sizeof(sResult), false);
   BOOST_CHECK_EQUAL(nRes, 1);
-  BOOST_CHECK(! memcmp(sResult, cASCII3, sizeof(cASCII3)));
+  BOOST_CHECK(!memcmp(sResult, cASCII3, sizeof(cASCII3)));
   nRes = sTest.toUTF8(sResult, 1, false);
   BOOST_CHECK_EQUAL(nRes, -1);
   nRes = sTest.toUTF8(sResult, 2, false);
   BOOST_CHECK_EQUAL(nRes, 1);
 
-  sTest = "A\xa2""A"_STRING;
+  sTest = "A\xa2"
+          "A"_STRING;
   sResult[0] = '\0';
   nRes = sTest.toUTF8(sResult, sizeof(sResult), false);
   BOOST_CHECK_EQUAL(nRes, 4);
-  BOOST_CHECK(! memcmp(sResult, cUpper1, sizeof(cUpper1)));
+  BOOST_CHECK(!memcmp(sResult, cUpper1, sizeof(cUpper1)));
   nRes = sTest.toUTF8(sResult, 4, false);
   BOOST_CHECK_EQUAL(nRes, -1);
   nRes = sTest.toUTF8(sResult, 5, false);
@@ -378,7 +378,7 @@ const std::string cTestLiteral1 = "Test String"s;
 const std::string cTestLiteral2 = "\'This is another test string!\'"s;
 const CIEC_STRING cTestResult2 = "This is another test string!"_STRING;
 
-const std::string cTestDollarLiteral ="\'$$\'"s;
+const std::string cTestDollarLiteral = "\'$$\'"s;
 const CIEC_STRING cTestDollarResult = "$"_STRING;
 const std::string cTestDollarToStringResult = "\'$$\'"s;
 
@@ -407,8 +407,7 @@ const std::string cTestEscapedCharacterLiteral = "\'$30\'"s;
 const CIEC_STRING cTestEscapedCharacterResult = "0"_STRING;
 const CIEC_STRING cTestEscapedCharacterToStringResult = "\'0\'"_STRING;
 
-BOOST_AUTO_TEST_CASE(String_fromString)
-{
+BOOST_AUTO_TEST_CASE(String_fromString) {
   CIEC_STRING sTestee;
 
   BOOST_TEST(-1 == sTestee.fromString(cTestLiteral1.c_str()));
@@ -455,7 +454,7 @@ BOOST_AUTO_TEST_CASE(String_fromString)
   BOOST_TEST(sTestee == cTestEscapedCharacterResult);
 }
 
-void stringTypedFromString(const std::string &paSrc, const CIEC_STRING& paResult){
+void stringTypedFromString(const std::string &paSrc, const CIEC_STRING &paResult) {
   CIEC_STRING sTestee;
   BOOST_TEST(paSrc.length() == sTestee.fromString(paSrc.c_str()));
   BOOST_TEST(sTestee == paResult);
@@ -520,8 +519,7 @@ BOOST_AUTO_TEST_CASE(String_to_string_nonprintable_sybmol_nul) {
   BOOST_TEST("'$00'" == cStringBuffer);
 }
 
-BOOST_AUTO_TEST_CASE(String_to_string_nonprintable_sybmol_esc)
-{
+BOOST_AUTO_TEST_CASE(String_to_string_nonprintable_sybmol_esc) {
   CIEC_STRING testString("\x1b"_STRING);
   const size_t bufferSize = 6;
   char cStringBuffer[bufferSize];
@@ -549,10 +547,11 @@ BOOST_AUTO_TEST_CASE(String_toString_faultcase_buffer_not_enough_buffer_size) {
   const size_t bufferSize = "4diac 4 ever!"_STRING.length() + 1 + 2; // +1 for \0 and +2 for enclosing single quotes
   std::vector<char> cStringBuffer(bufferSize);
 
-  for(size_t i = 0; i < cStringBuffer.size(); ++i) {
+  for (size_t i = 0; i < cStringBuffer.size(); ++i) {
     BOOST_CHECK_EQUAL(-1, testString.toString(cStringBuffer.data(), i));
   }
-  BOOST_CHECK_EQUAL(cStringBuffer.size() - 1, testString.toString(cStringBuffer.data(), cStringBuffer.size())); // \0 is not counted
+  BOOST_CHECK_EQUAL(cStringBuffer.size() - 1,
+                    testString.toString(cStringBuffer.data(), cStringBuffer.size())); // \0 is not counted
 }
 
 BOOST_AUTO_TEST_CASE(String_getToStringBufferSize_NoSpecialSymbols) {

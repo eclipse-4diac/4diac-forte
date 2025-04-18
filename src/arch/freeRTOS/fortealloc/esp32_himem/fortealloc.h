@@ -17,13 +17,10 @@
 
 #error FORTE_ALLOC_HIMEM not available yet
 
-inline
-void forte_free(void *paData) {
-
+inline void forte_free(void *paData) {
 }
 
-inline
-void *forte_malloc(size_t paSize) {
+inline void *forte_malloc(size_t paSize) {
   return nullptr;
 }
 

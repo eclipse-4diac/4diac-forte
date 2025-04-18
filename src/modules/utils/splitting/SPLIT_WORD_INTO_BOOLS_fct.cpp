@@ -43,7 +43,6 @@ USE_STRING_ID(REQ);
 USE_STRING_ID(SPLIT_WORD_INTO_BOOLS);
 USE_STRING_ID(WORD);
 
-
 #include "criticalregion.h"
 #include "resource.h"
 #include "forte_bool.h"
@@ -58,26 +57,45 @@ DEFINE_FIRMWARE_FB(FORTE_SPLIT_WORD_INTO_BOOLS, STRID(SPLIT_WORD_INTO_BOOLS))
 
 const CStringDictionary::TStringId FORTE_SPLIT_WORD_INTO_BOOLS::scmDataInputNames[] = {STRID(IN)};
 const CStringDictionary::TStringId FORTE_SPLIT_WORD_INTO_BOOLS::scmDataInputTypeIds[] = {STRID(WORD)};
-const CStringDictionary::TStringId FORTE_SPLIT_WORD_INTO_BOOLS::scmDataOutputNames[] = {STRID(BIT_00), STRID(BIT_01), STRID(BIT_02), STRID(BIT_03), STRID(BIT_04), STRID(BIT_05), STRID(BIT_06), STRID(BIT_07), STRID(BIT_08), STRID(BIT_09), STRID(BIT_10), STRID(BIT_11), STRID(BIT_12), STRID(BIT_13), STRID(BIT_14), STRID(BIT_15)};
-const CStringDictionary::TStringId FORTE_SPLIT_WORD_INTO_BOOLS::scmDataOutputTypeIds[] = {STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL)};
+const CStringDictionary::TStringId FORTE_SPLIT_WORD_INTO_BOOLS::scmDataOutputNames[] = {
+    STRID(BIT_00), STRID(BIT_01), STRID(BIT_02), STRID(BIT_03), STRID(BIT_04), STRID(BIT_05),
+    STRID(BIT_06), STRID(BIT_07), STRID(BIT_08), STRID(BIT_09), STRID(BIT_10), STRID(BIT_11),
+    STRID(BIT_12), STRID(BIT_13), STRID(BIT_14), STRID(BIT_15)};
+const CStringDictionary::TStringId FORTE_SPLIT_WORD_INTO_BOOLS::scmDataOutputTypeIds[] = {
+    STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL),
+    STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL)};
 const TDataIOID FORTE_SPLIT_WORD_INTO_BOOLS::scmEIWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_SPLIT_WORD_INTO_BOOLS::scmEIWithIndexes[] = {0};
 const CStringDictionary::TStringId FORTE_SPLIT_WORD_INTO_BOOLS::scmEventInputNames[] = {STRID(REQ)};
 const CStringDictionary::TStringId FORTE_SPLIT_WORD_INTO_BOOLS::scmEventInputTypeIds[] = {STRID(Event)};
-const TDataIOID FORTE_SPLIT_WORD_INTO_BOOLS::scmEOWith[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, scmWithListDelimiter};
+const TDataIOID FORTE_SPLIT_WORD_INTO_BOOLS::scmEOWith[] = {
+    0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, scmWithListDelimiter};
 const TForteInt16 FORTE_SPLIT_WORD_INTO_BOOLS::scmEOWithIndexes[] = {0};
 const CStringDictionary::TStringId FORTE_SPLIT_WORD_INTO_BOOLS::scmEventOutputNames[] = {STRID(CNF)};
 const CStringDictionary::TStringId FORTE_SPLIT_WORD_INTO_BOOLS::scmEventOutputTypeIds[] = {STRID(Event)};
-const SFBInterfaceSpec FORTE_SPLIT_WORD_INTO_BOOLS::scmFBInterfaceSpec = {
-  1, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,
-  1, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes,
-  1, scmDataInputNames, scmDataInputTypeIds,
-  16, scmDataOutputNames, scmDataOutputTypeIds,
-  0, nullptr,
-  0, nullptr
-};
+const SFBInterfaceSpec FORTE_SPLIT_WORD_INTO_BOOLS::scmFBInterfaceSpec = {1,
+                                                                          scmEventInputNames,
+                                                                          scmEventInputTypeIds,
+                                                                          scmEIWith,
+                                                                          scmEIWithIndexes,
+                                                                          1,
+                                                                          scmEventOutputNames,
+                                                                          scmEventOutputTypeIds,
+                                                                          scmEOWith,
+                                                                          scmEOWithIndexes,
+                                                                          1,
+                                                                          scmDataInputNames,
+                                                                          scmDataInputTypeIds,
+                                                                          16,
+                                                                          scmDataOutputNames,
+                                                                          scmDataOutputTypeIds,
+                                                                          0,
+                                                                          nullptr,
+                                                                          0,
+                                                                          nullptr};
 
-FORTE_SPLIT_WORD_INTO_BOOLS::FORTE_SPLIT_WORD_INTO_BOOLS(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_SPLIT_WORD_INTO_BOOLS::FORTE_SPLIT_WORD_INTO_BOOLS(const CStringDictionary::TStringId paInstanceNameId,
+                                                         forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId),
     conn_CNF(*this, 0),
     conn_IN(nullptr),
@@ -120,18 +138,17 @@ void FORTE_SPLIT_WORD_INTO_BOOLS::setInitialValues() {
 }
 
 void FORTE_SPLIT_WORD_INTO_BOOLS::readInputData(const TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventREQID: {
       readData(0, var_IN, conn_IN);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 void FORTE_SPLIT_WORD_INTO_BOOLS::writeOutputData(const TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventCNFID: {
       writeData(0, var_BIT_00, conn_BIT_00);
       writeData(1, var_BIT_01, conn_BIT_01);
@@ -151,20 +168,19 @@ void FORTE_SPLIT_WORD_INTO_BOOLS::writeOutputData(const TEventID paEIID) {
       writeData(15, var_BIT_15, conn_BIT_15);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 CIEC_ANY *FORTE_SPLIT_WORD_INTO_BOOLS::getDI(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_IN;
   }
   return nullptr;
 }
 
 CIEC_ANY *FORTE_SPLIT_WORD_INTO_BOOLS::getDO(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_BIT_00;
     case 1: return &var_BIT_01;
     case 2: return &var_BIT_02;
@@ -186,21 +202,21 @@ CIEC_ANY *FORTE_SPLIT_WORD_INTO_BOOLS::getDO(const size_t paIndex) {
 }
 
 CEventConnection *FORTE_SPLIT_WORD_INTO_BOOLS::getEOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_CNF;
   }
   return nullptr;
 }
 
 CDataConnection **FORTE_SPLIT_WORD_INTO_BOOLS::getDIConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_IN;
   }
   return nullptr;
 }
 
 CDataConnection *FORTE_SPLIT_WORD_INTO_BOOLS::getDOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_BIT_00;
     case 1: return &conn_BIT_01;
     case 2: return &conn_BIT_02;
@@ -222,11 +238,29 @@ CDataConnection *FORTE_SPLIT_WORD_INTO_BOOLS::getDOConUnchecked(const TPortId pa
 }
 
 void FORTE_SPLIT_WORD_INTO_BOOLS::executeEvent(const TEventID, CEventChainExecutionThread *const paECET) {
-  func_SPLIT_WORD_INTO_BOOLS(var_IN, var_BIT_00, var_BIT_01, var_BIT_02, var_BIT_03, var_BIT_04, var_BIT_05, var_BIT_06, var_BIT_07, var_BIT_08, var_BIT_09, var_BIT_10, var_BIT_11, var_BIT_12, var_BIT_13, var_BIT_14, var_BIT_15);
+  func_SPLIT_WORD_INTO_BOOLS(var_IN, var_BIT_00, var_BIT_01, var_BIT_02, var_BIT_03, var_BIT_04, var_BIT_05, var_BIT_06,
+                             var_BIT_07, var_BIT_08, var_BIT_09, var_BIT_10, var_BIT_11, var_BIT_12, var_BIT_13,
+                             var_BIT_14, var_BIT_15);
   sendOutputEvent(scmEventCNFID, paECET);
 }
 
-void func_SPLIT_WORD_INTO_BOOLS(CIEC_WORD st_lv_IN, CIEC_BOOL &st_lv_BIT_00, CIEC_BOOL &st_lv_BIT_01, CIEC_BOOL &st_lv_BIT_02, CIEC_BOOL &st_lv_BIT_03, CIEC_BOOL &st_lv_BIT_04, CIEC_BOOL &st_lv_BIT_05, CIEC_BOOL &st_lv_BIT_06, CIEC_BOOL &st_lv_BIT_07, CIEC_BOOL &st_lv_BIT_08, CIEC_BOOL &st_lv_BIT_09, CIEC_BOOL &st_lv_BIT_10, CIEC_BOOL &st_lv_BIT_11, CIEC_BOOL &st_lv_BIT_12, CIEC_BOOL &st_lv_BIT_13, CIEC_BOOL &st_lv_BIT_14, CIEC_BOOL &st_lv_BIT_15) {
+void func_SPLIT_WORD_INTO_BOOLS(CIEC_WORD st_lv_IN,
+                                CIEC_BOOL &st_lv_BIT_00,
+                                CIEC_BOOL &st_lv_BIT_01,
+                                CIEC_BOOL &st_lv_BIT_02,
+                                CIEC_BOOL &st_lv_BIT_03,
+                                CIEC_BOOL &st_lv_BIT_04,
+                                CIEC_BOOL &st_lv_BIT_05,
+                                CIEC_BOOL &st_lv_BIT_06,
+                                CIEC_BOOL &st_lv_BIT_07,
+                                CIEC_BOOL &st_lv_BIT_08,
+                                CIEC_BOOL &st_lv_BIT_09,
+                                CIEC_BOOL &st_lv_BIT_10,
+                                CIEC_BOOL &st_lv_BIT_11,
+                                CIEC_BOOL &st_lv_BIT_12,
+                                CIEC_BOOL &st_lv_BIT_13,
+                                CIEC_BOOL &st_lv_BIT_14,
+                                CIEC_BOOL &st_lv_BIT_15) {
   st_lv_BIT_00 = 0_BOOL;
   st_lv_BIT_01 = 0_BOOL;
   st_lv_BIT_02 = 0_BOOL;
@@ -244,38 +278,36 @@ void func_SPLIT_WORD_INTO_BOOLS(CIEC_WORD st_lv_IN, CIEC_BOOL &st_lv_BIT_00, CIE
   st_lv_BIT_14 = 0_BOOL;
   st_lv_BIT_15 = 0_BOOL;
 
-  #line 27 "SPLIT_WORD_INTO_BOOLS.fct"
+#line 27 "SPLIT_WORD_INTO_BOOLS.fct"
   st_lv_BIT_00 = st_lv_IN.cpartial<CIEC_BOOL>(0);
-  #line 28 "SPLIT_WORD_INTO_BOOLS.fct"
+#line 28 "SPLIT_WORD_INTO_BOOLS.fct"
   st_lv_BIT_01 = st_lv_IN.cpartial<CIEC_BOOL>(1);
-  #line 29 "SPLIT_WORD_INTO_BOOLS.fct"
+#line 29 "SPLIT_WORD_INTO_BOOLS.fct"
   st_lv_BIT_02 = st_lv_IN.cpartial<CIEC_BOOL>(2);
-  #line 30 "SPLIT_WORD_INTO_BOOLS.fct"
+#line 30 "SPLIT_WORD_INTO_BOOLS.fct"
   st_lv_BIT_03 = st_lv_IN.cpartial<CIEC_BOOL>(3);
-  #line 31 "SPLIT_WORD_INTO_BOOLS.fct"
+#line 31 "SPLIT_WORD_INTO_BOOLS.fct"
   st_lv_BIT_04 = st_lv_IN.cpartial<CIEC_BOOL>(4);
-  #line 32 "SPLIT_WORD_INTO_BOOLS.fct"
+#line 32 "SPLIT_WORD_INTO_BOOLS.fct"
   st_lv_BIT_05 = st_lv_IN.cpartial<CIEC_BOOL>(5);
-  #line 33 "SPLIT_WORD_INTO_BOOLS.fct"
+#line 33 "SPLIT_WORD_INTO_BOOLS.fct"
   st_lv_BIT_06 = st_lv_IN.cpartial<CIEC_BOOL>(6);
-  #line 34 "SPLIT_WORD_INTO_BOOLS.fct"
+#line 34 "SPLIT_WORD_INTO_BOOLS.fct"
   st_lv_BIT_07 = st_lv_IN.cpartial<CIEC_BOOL>(7);
-  #line 35 "SPLIT_WORD_INTO_BOOLS.fct"
+#line 35 "SPLIT_WORD_INTO_BOOLS.fct"
   st_lv_BIT_08 = st_lv_IN.cpartial<CIEC_BOOL>(8);
-  #line 36 "SPLIT_WORD_INTO_BOOLS.fct"
+#line 36 "SPLIT_WORD_INTO_BOOLS.fct"
   st_lv_BIT_09 = st_lv_IN.cpartial<CIEC_BOOL>(9);
-  #line 37 "SPLIT_WORD_INTO_BOOLS.fct"
+#line 37 "SPLIT_WORD_INTO_BOOLS.fct"
   st_lv_BIT_10 = st_lv_IN.cpartial<CIEC_BOOL>(10);
-  #line 38 "SPLIT_WORD_INTO_BOOLS.fct"
+#line 38 "SPLIT_WORD_INTO_BOOLS.fct"
   st_lv_BIT_11 = st_lv_IN.cpartial<CIEC_BOOL>(11);
-  #line 39 "SPLIT_WORD_INTO_BOOLS.fct"
+#line 39 "SPLIT_WORD_INTO_BOOLS.fct"
   st_lv_BIT_12 = st_lv_IN.cpartial<CIEC_BOOL>(12);
-  #line 40 "SPLIT_WORD_INTO_BOOLS.fct"
+#line 40 "SPLIT_WORD_INTO_BOOLS.fct"
   st_lv_BIT_13 = st_lv_IN.cpartial<CIEC_BOOL>(13);
-  #line 41 "SPLIT_WORD_INTO_BOOLS.fct"
+#line 41 "SPLIT_WORD_INTO_BOOLS.fct"
   st_lv_BIT_14 = st_lv_IN.cpartial<CIEC_BOOL>(14);
-  #line 42 "SPLIT_WORD_INTO_BOOLS.fct"
+#line 42 "SPLIT_WORD_INTO_BOOLS.fct"
   st_lv_BIT_15 = st_lv_IN.cpartial<CIEC_BOOL>(15);
-
 }
-

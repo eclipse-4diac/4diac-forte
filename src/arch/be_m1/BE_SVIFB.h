@@ -15,19 +15,20 @@
 #include <arch/be_m1/fortemodule.h>
 #include "funcbloc.h"
 
-class BE_SVIFB : public CFunctionBlock{
+class BE_SVIFB : public CFunctionBlock {
   public:
-    BE_SVIFB(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec& paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId) :
-        CFunctionBlock(paContainer, paInterfaceSpec, paInstanceNameId){
+    BE_SVIFB(forte::core::CFBContainer &paContainer,
+             const SFBInterfaceSpec &paInterfaceSpec,
+             const CStringDictionary::TStringId paInstanceNameId) :
+        CFunctionBlock(paContainer, paInterfaceSpec, paInstanceNameId) {
     }
 
   protected:
-    bool registerSVIvar(const CIEC_STRING& paID, CIEC_ANY& paValue, const TForteUInt32 paMode);
+    bool registerSVIvar(const CIEC_STRING &paID, CIEC_ANY &paValue, const TForteUInt32 paMode);
 
   private:
     static const TForteUInt32 scmBE_SVI_Types[];
     static const TForteUInt32 scmBE_SVI_VarSizes[];
-
 };
 
 #endif /* BE_SVIFB_H_ */

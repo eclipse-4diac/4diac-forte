@@ -21,7 +21,6 @@ class COPC_UA_HandlerAbstract;
 
 class COPC_UA_Event_Layer : public forte::com_infra::CComLayer {
   public:
-
     COPC_UA_Event_Layer(forte::com_infra::CComLayer *paUpperLayer, forte::com_infra::CBaseCommFB *paComFB);
 
     ~COPC_UA_Event_Layer() override;
@@ -49,19 +48,18 @@ class COPC_UA_Event_Layer : public forte::com_infra::CComLayer {
     forte::com_infra::EComResponse processInterrupt() override;
 
   private:
-
     static const size_t scmNumberOfParameters = 1;
 
     static const UA_UInt16 scmServerNSIndex = 0;
 
     static char smEmptyString[];
-    
+
     static char smEventTimeProperty[];
 
     static char smEventSeverityProperty[];
-    
+
     static char smEventMessageProperty[];
-    
+
     static char smEventSourceProperty[];
 
     COPC_UA_HandlerAbstract *mHandler;
@@ -86,7 +84,10 @@ class COPC_UA_Event_Layer : public forte::com_infra::CComLayer {
 
     static UA_StatusCode addNewEventType(UA_Server *paServer, UA_NodeId &paEventType, std::string paEventTypeName);
 
-    static UA_StatusCode addNewEventInstance(UA_Server *paServer, UA_NodeId &paEventType, UA_NodeId &paNodeId, forte::com_infra::CBaseCommFB *paFb);
+    static UA_StatusCode addNewEventInstance(UA_Server *paServer,
+                                             UA_NodeId &paEventType,
+                                             UA_NodeId &paNodeId,
+                                             forte::com_infra::CBaseCommFB *paFb);
 
     static UA_StatusCode writeTimeAndSourceProperty(UA_Server *paServer, UA_NodeId &paNodeId);
 

@@ -15,21 +15,18 @@
 
 #include <forte_sync.h>
 
-class CCriticalRegion{
+class CCriticalRegion {
   public:
-    explicit CCriticalRegion(CSyncObject &paSyncObject) : mSyncObject(paSyncObject){
+    explicit CCriticalRegion(CSyncObject &paSyncObject) : mSyncObject(paSyncObject) {
       mSyncObject.lock();
     }
 
-    ~CCriticalRegion(){
+    ~CCriticalRegion() {
       mSyncObject.unlock();
     }
 
   private:
     CSyncObject &mSyncObject;
-
 };
-
-
 
 #endif /* CRITICALREGION_H_ */

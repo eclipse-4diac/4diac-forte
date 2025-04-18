@@ -23,12 +23,8 @@
  *
  */
 class FORTE_QX final : public forte::core::io::COutputFB<CIEC_BOOL> {
-  DECLARE_FIRMWARE_FB(FORTE_QX)
+    DECLARE_FIRMWARE_FB(FORTE_QX)
 
-public:
-  FORTE_QX(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
-
+  public:
+    FORTE_QX(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 };
-
-
-

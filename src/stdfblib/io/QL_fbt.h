@@ -25,7 +25,7 @@
 #include "processinterface.h"
 
 class FORTE_QL final : public CProcessInterface {
-  DECLARE_FIRMWARE_FB(FORTE_QL)
+    DECLARE_FIRMWARE_FB(FORTE_QL)
 
   private:
     static const CStringDictionary::TStringId scmDataInputNames[];
@@ -79,7 +79,11 @@ class FORTE_QL final : public CProcessInterface {
     CDataConnection **getDIConUnchecked(TPortId) override;
     CDataConnection *getDOConUnchecked(TPortId) override;
 
-    void evt_INIT(const CIEC_BOOL &paQI, const CIEC_STRING &paPARAMS, const CIEC_LWORD &paOUT, CIEC_BOOL &paQO, CIEC_STRING &paSTATUS) {
+    void evt_INIT(const CIEC_BOOL &paQI,
+                  const CIEC_STRING &paPARAMS,
+                  const CIEC_LWORD &paOUT,
+                  CIEC_BOOL &paQO,
+                  CIEC_STRING &paSTATUS) {
       var_QI = paQI;
       var_PARAMS = paPARAMS;
       var_OUT = paOUT;
@@ -88,7 +92,11 @@ class FORTE_QL final : public CProcessInterface {
       paSTATUS = var_STATUS;
     }
 
-    void evt_REQ(const CIEC_BOOL &paQI, const CIEC_STRING &paPARAMS, const CIEC_LWORD &paOUT, CIEC_BOOL &paQO, CIEC_STRING &paSTATUS) {
+    void evt_REQ(const CIEC_BOOL &paQI,
+                 const CIEC_STRING &paPARAMS,
+                 const CIEC_LWORD &paOUT,
+                 CIEC_BOOL &paQO,
+                 CIEC_STRING &paSTATUS) {
       var_QI = paQI;
       var_PARAMS = paPARAMS;
       var_OUT = paOUT;
@@ -97,8 +105,11 @@ class FORTE_QL final : public CProcessInterface {
       paSTATUS = var_STATUS;
     }
 
-    void operator()(const CIEC_BOOL &paQI, const CIEC_STRING &paPARAMS, const CIEC_LWORD &paOUT, CIEC_BOOL &paQO, CIEC_STRING &paSTATUS) {
+    void operator()(const CIEC_BOOL &paQI,
+                    const CIEC_STRING &paPARAMS,
+                    const CIEC_LWORD &paOUT,
+                    CIEC_BOOL &paQO,
+                    CIEC_STRING &paSTATUS) {
       evt_INIT(paQI, paPARAMS, paOUT, paQO, paSTATUS);
     }
 };
-

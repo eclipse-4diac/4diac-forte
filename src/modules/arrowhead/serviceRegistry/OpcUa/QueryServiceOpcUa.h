@@ -17,40 +17,36 @@
 #include <typelib.h>
 #include "QueryServicesAdp_adp.h"
 
-class FORTE_QueryServiceOpcUa: public CCompositeFB{
-  DECLARE_FIRMWARE_FB(FORTE_QueryServiceOpcUa)
+class FORTE_QueryServiceOpcUa : public CCompositeFB {
+    DECLARE_FIRMWARE_FB(FORTE_QueryServiceOpcUa)
 
-private:
-  static const TForteInt16 scmEOWithIndexes[];
-  static const SAdapterInstanceDef scmAdapterInstances[];
+  private:
+    static const TForteInt16 scmEOWithIndexes[];
+    static const SAdapterInstanceDef scmAdapterInstances[];
 
-  FORTE_QueryServicesAdp& queryServices() {
-    return (*static_cast<FORTE_QueryServicesAdp*>(mAdapters[0]));
-  };
-  static const int scm_nqueryServicesAdpNum = 0;
-  static const SFBInterfaceSpec scmFBInterfaceSpec;
+    FORTE_QueryServicesAdp &queryServices() {
+      return (*static_cast<FORTE_QueryServicesAdp *>(mAdapters[0]));
+    };
+    static const int scm_nqueryServicesAdpNum = 0;
+    static const SFBInterfaceSpec scmFBInterfaceSpec;
 
+    static const SCFB_FBInstanceData scmInternalFBs[];
 
-  static const SCFB_FBInstanceData scmInternalFBs[];
+    static const SCFB_FBParameter scmParamters[];
 
-  static const SCFB_FBParameter scmParamters[];
+    static const SCFB_FBConnectionData scmEventConnections[];
 
-  static const SCFB_FBConnectionData scmEventConnections[];
+    static const SCFB_FBFannedOutConnectionData scmFannedOutEventConnections[];
 
-  static const SCFB_FBFannedOutConnectionData scmFannedOutEventConnections[];
+    static const SCFB_FBConnectionData scmDataConnections[];
 
-  static const SCFB_FBConnectionData scmDataConnections[];
+    static const SCFB_FBFannedOutConnectionData scmFannedOutDataConnections[];
+    static const SCFB_FBNData scmFBNData;
 
-  static const SCFB_FBFannedOutConnectionData scmFannedOutDataConnections[];
-  static const SCFB_FBNData scmFBNData;
+  public:
+    COMPOSITE_FUNCTION_BLOCK_CTOR(FORTE_QueryServiceOpcUa) {};
 
-public:
-  COMPOSITE_FUNCTION_BLOCK_CTOR(FORTE_QueryServiceOpcUa){
-  };
-
-  ~FORTE_QueryServiceOpcUa() override = default;
-
+    ~FORTE_QueryServiceOpcUa() override = default;
 };
 
-#endif //close the ifdef sequence from the beginning of the file
-
+#endif // close the ifdef sequence from the beginning of the file

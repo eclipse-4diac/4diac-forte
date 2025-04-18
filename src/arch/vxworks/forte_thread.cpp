@@ -13,23 +13,23 @@
 #include "forte_thread.h"
 #include <time.h>
 
-forte::arch::CThreadBase<TASK_ID, TASK_ID_ERROR>::TThreadHandleType CVxWorksThread::createThread(long paStackSize){
-  //TODO: Check if guarding the stack is necessary
-  return taskSpawn(0, scmInitialTaskPriority, VX_FP_TASK /* Needed for C++*/, paStackSize,
-      (FUNCPTR)threadFunction, (_Vx_usr_arg_t) this, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+forte::arch::CThreadBase<TASK_ID, TASK_ID_ERROR>::TThreadHandleType CVxWorksThread::createThread(long paStackSize) {
+  // TODO: Check if guarding the stack is necessary
+  return taskSpawn(0, scmInitialTaskPriority, VX_FP_TASK /* Needed for C++*/, paStackSize, (FUNCPTR) threadFunction,
+                   (_Vx_usr_arg_t) this, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 }
 
-void CVxWorksThread::threadFunction(void *paArguments){
+void CVxWorksThread::threadFunction(void *paArguments) {
   forte::arch::CThreadBase<TASK_ID, TASK_ID_ERROR>::runThread(static_cast<CVxWorksThread *>(paArguments));
 }
 
-CVxWorksThread::CVxWorksThread(long paStackSize) : forte::arch::CThreadBase<TASK_ID, TASK_ID_ERROR>(paStackSize){
+CVxWorksThread::CVxWorksThread(long paStackSize) : forte::arch::CThreadBase<TASK_ID, TASK_ID_ERROR>(paStackSize) {
 }
 
-CVxWorksThread::~CVxWorksThread(){
+CVxWorksThread::~CVxWorksThread() {
 }
 
-void CVxWorksThread::sleepThread(unsigned int paMilliSeconds){
+void CVxWorksThread::sleepThread(unsigned int paMilliSeconds) {
   struct timespec stReq = {paMilliSeconds / 1000, 1000000 * (paMilliSeconds % 1000)};
   nanosleep(&stReq, nullptr);
 }

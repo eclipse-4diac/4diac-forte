@@ -8,7 +8,7 @@
  *
  * Contributors:
  *   Filip Andren, Alois Zoitl - initial API and implementation and/or initial documentation
- *   Tibalt Zhao - Guard the opc connection from requests from FBs,filter non-sense requests 
+ *   Tibalt Zhao - Guard the opc connection from requests from FBs,filter non-sense requests
  *   Ketut Kumajaya - switch to OPCClientToolKit with 64bit support
  *                  - Code refactoring from char* to std::string
  *******************************************************************************/
@@ -25,41 +25,42 @@ class COpcConnectionImpl;
 class COpcProcessVar;
 class COpcEventHandler;
 
-struct SOpcItemData{
+struct SOpcItemData {
     const std::string mItemName;
     Variant mItemData;
 
-    explicit SOpcItemData(const std::string& paItemName) :
-        mItemName(paItemName){
+    explicit SOpcItemData(const std::string &paItemName) : mItemName(paItemName) {
       mItemData.set<SHORT>(0);
     }
-    SOpcItemData(const std::string& paItemName, Variant paItemData) :
-        mItemName(paItemName), mItemData(paItemData){
+    SOpcItemData(const std::string &paItemName, Variant paItemData) : mItemName(paItemName), mItemData(paItemData) {
     }
 };
-typedef std::vector<SOpcItemData*> TItemDataList;
+typedef std::vector<SOpcItemData *> TItemDataList;
 
-
-class COpcConnection{
+class COpcConnection {
   public:
-
-    COpcConnection(const std::string& paHost, const std::string& paServerName, COpcEventHandler* paEventHandler);
+    COpcConnection(const std::string &paHost, const std::string &paServerName, COpcEventHandler *paEventHandler);
     ~COpcConnection();
 
     /*** Functions for OpcConnectionHandler ****************************************/
-    void addGroup(const std::string& paGroupName, unsigned long paReqUpdateRate, float paDeadBand, forte::com_infra::CComLayer* paComCallback);
-    void removeGroup(const std::string& paGroupName);
+    void addGroup(const std::string &paGroupName,
+                  unsigned long paReqUpdateRate,
+                  float paDeadBand,
+                  forte::com_infra::CComLayer *paComCallback);
+    void removeGroup(const std::string &paGroupName);
     /*** END ***********************************************************************/
 
-
     /*** Functions for OpcComLayer *************************************************/
-    typedef std::vector<COpcProcessVar*> TOpcProcessVarList;
-    int send_connect(const std::string& acGroupName, unsigned long nReqUpdateRate, float nDeadBand, forte::com_infra::CComLayer *paComCallback,
+    typedef std::vector<COpcProcessVar *> TOpcProcessVarList;
+    int send_connect(const std::string &acGroupName,
+                     unsigned long nReqUpdateRate,
+                     float nDeadBand,
+                     forte::com_infra::CComLayer *paComCallback,
                      TOpcProcessVarList paNewItems);
     int send_sendItemData(COpcProcessVar *paItem);
-    int send_disconnect(const std::string& paGroupName);
+    int send_disconnect(const std::string &paGroupName);
 
-    int receiveData(const std::string& paGroupName, TOpcProcessVarList * paOpcProcessVarList);
+    int receiveData(const std::string &paGroupName, TOpcProcessVarList *paOpcProcessVarList);
 
     bool isConnected() {
       return mConnected;
@@ -67,23 +68,19 @@ class COpcConnection{
     /*** END ***********************************************************************/
 
     /*** Functions for OpcConnectionImpl *******************************************/
-    void response_connect(bool paConnectionState, const std::string& paGroupName);
-    void response_dataReceived(const std::string& paGroupName, TItemDataList & paItemDataList);
-    void response_dataSent(const std::string& paGroupName,const std::string& paItemName, bool paSuccess);
+    void response_connect(bool paConnectionState, const std::string &paGroupName);
+    void response_dataReceived(const std::string &paGroupName, TItemDataList &paItemDataList);
+    void response_dataSent(const std::string &paGroupName, const std::string &paItemName, bool paSuccess);
     /*** END ***********************************************************************/
 
     /*** Common Functions **********************************************************/
-    enum EOpcConnectionEvents{
-      e_Idle, e_Disconnect, e_Connect, e_DataReceive, e_ItemSend
-    };
+    enum EOpcConnectionEvents { e_Idle, e_Disconnect, e_Connect, e_DataReceive, e_ItemSend };
 
-    enum EOpcConnectionState{
-      e_Connected, e_Disconnected, e_Connecting, e_Disconnecting
-    };
+    enum EOpcConnectionState { e_Connected, e_Disconnected, e_Connecting, e_Disconnecting };
 
-    struct SLastHappenedEvent{
-      EOpcConnectionEvents mLastHappenedEvent;
-      bool mSuccess;
+    struct SLastHappenedEvent {
+        EOpcConnectionEvents mLastHappenedEvent;
+        bool mSuccess;
     };
 
     const std::string getHost() const {
@@ -109,71 +106,67 @@ class COpcConnection{
     /*** END ***********************************************************************/
 
   private:
-    int maintainGroupMapInfo(COpcProcessVar* paNewItem);
+    int maintainGroupMapInfo(COpcProcessVar *paNewItem);
 
-    struct SOpcGroupMap{
+    struct SOpcGroupMap {
         const std::string mGroupName;
         int mCallbackDesc;
         TItemDataList mReadItemsList;
         TItemDataList mWriteItemsList;
 
-        SOpcGroupMap(const std::string& paGroupName, int paCallbackDesc) :
-            mGroupName(paGroupName), mCallbackDesc(paCallbackDesc){
+        SOpcGroupMap(const std::string &paGroupName, int paCallbackDesc) :
+            mGroupName(paGroupName),
+            mCallbackDesc(paCallbackDesc) {
         }
     };
 
-    int getGroupCallbackDesc(const std::string& paGroupName){
-      for(unsigned int i = 0; i < mOpcGroupMapList.size(); i++){
-        if(mOpcGroupMapList[i]->mGroupName == paGroupName){
+    int getGroupCallbackDesc(const std::string &paGroupName) {
+      for (unsigned int i = 0; i < mOpcGroupMapList.size(); i++) {
+        if (mOpcGroupMapList[i]->mGroupName == paGroupName) {
           return mOpcGroupMapList[i]->mCallbackDesc;
         }
       }
       return -1;
     }
 
-    int removeGroupCallbackDesc(const std::string& paGroupName);
-    //to see if could send command to opc event handler
-    void maintainStateinEventResponse(EOpcConnectionEvents paEvent, bool paSuccess){
-      //let's transfer ongoing state to steady state(such as connecting => connected)
-      if(e_Connect == paEvent){
+    int removeGroupCallbackDesc(const std::string &paGroupName);
+    // to see if could send command to opc event handler
+    void maintainStateinEventResponse(EOpcConnectionEvents paEvent, bool paSuccess) {
+      // let's transfer ongoing state to steady state(such as connecting => connected)
+      if (e_Connect == paEvent) {
         mLastEvent.mLastHappenedEvent = e_Connect;
         mLastEvent.mSuccess = paSuccess;
 
-        if(paSuccess){
+        if (paSuccess) {
           mConnectionState = e_Connected;
-        }
-        else{
+        } else {
           mConnectionState = e_Disconnected;
         }
 
-      }
-      else if(e_Disconnect == paEvent){
+      } else if (e_Disconnect == paEvent) {
         mLastEvent.mLastHappenedEvent = e_Disconnect;
         mLastEvent.mSuccess = paSuccess;
-        if(paSuccess){
+        if (paSuccess) {
           mConnectionState = e_Disconnected;
-        }
-        else{
+        } else {
           mConnectionState = e_Connected;
         }
-      }
-      else if(e_DataReceive == paEvent){
+      } else if (e_DataReceive == paEvent) {
         mLastEvent.mLastHappenedEvent = e_DataReceive;
         mLastEvent.mSuccess = paSuccess;
         mConnectionState = e_Connected;
-      }
-      else if(e_ItemSend == paEvent){
+      } else if (e_ItemSend == paEvent) {
         mLastEvent.mLastHappenedEvent = e_ItemSend;
         mLastEvent.mSuccess = paSuccess;
         mConnectionState = e_Connected;
       }
     }
 
-    bool ifInGroupList(const std::string& paGroupName);
+    bool ifInGroupList(const std::string &paGroupName);
 
-    bool ifLetEventPass(EOpcConnectionEvents paEvent, const std::string& paGroupName);
+    bool ifLetEventPass(EOpcConnectionEvents paEvent, const std::string &paGroupName);
 
-    typedef std::vector<SOpcGroupMap*> TOpcGroupMapList;
+    typedef std::vector<SOpcGroupMap *> TOpcGroupMapList;
     TOpcGroupMapList mOpcGroupMapList;
 
     unsigned int mGroupCount;
@@ -192,11 +185,11 @@ class COpcConnection{
 
     CSyncObject mSync;
 
-    COpcEventHandler* mEventHandler;
+    COpcEventHandler *mEventHandler;
 
-    //we don't want COpcConnection to be copy and assignable
-    COpcConnection(const COpcConnection&);
-    COpcConnection& operator = (const COpcConnection &);
+    // we don't want COpcConnection to be copy and assignable
+    COpcConnection(const COpcConnection &);
+    COpcConnection &operator=(const COpcConnection &);
 };
 
 #endif // OPCCONNECTION_H_

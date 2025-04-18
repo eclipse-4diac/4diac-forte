@@ -20,20 +20,23 @@
 #include "modbusenums.h"
 #include <errno.h>
 
-namespace forte{
-  namespace com_infra{
+namespace forte {
+  namespace com_infra {
     class CModbusComLayer;
   }
-}
+} // namespace forte
 
-class CModbusConnection : public CThread{
+class CModbusConnection : public CThread {
   public:
-    explicit CModbusConnection(CModbusHandler* pa_modbusHandler);
+    explicit CModbusConnection(CModbusHandler *pa_modbusHandler);
     ~CModbusConnection() override;
 
-    virtual int readData(CModbusIOBlock* paIOBlock, void* paData, unsigned int paMaxDataSize) = 0;
-    int writeData(CModbusIOBlock* paIOBlock, const void* paData, unsigned int paDataSize);
-    virtual void writeDataRange(EModbusFunction paFunction, unsigned int paStartAddress, unsigned int paNrAddresses, const void *paData) = 0;
+    virtual int readData(CModbusIOBlock *paIOBlock, void *paData, unsigned int paMaxDataSize) = 0;
+    int writeData(CModbusIOBlock *paIOBlock, const void *paData, unsigned int paDataSize);
+    virtual void writeDataRange(EModbusFunction paFunction,
+                                unsigned int paStartAddress,
+                                unsigned int paNrAddresses,
+                                const void *paData) = 0;
     void run() override = 0;
 
     /*! \brief Initializes Modbus connection
@@ -49,10 +52,10 @@ class CModbusConnection : public CThread{
      */
     virtual void disconnect();
 
-    void setIPAddress(const char* paIPAddress);
+    void setIPAddress(const char *paIPAddress);
     void setPort(unsigned int paPort);
 
-    void setDevice(const char* paDevice);
+    void setDevice(const char *paDevice);
     void setBaud(int paBaud);
     void setParity(char paParity);
     void setDataBit(int paDataBit);
@@ -62,16 +65,20 @@ class CModbusConnection : public CThread{
     void setByteTimeout(unsigned int paByteTimeout);
 
   protected:
-    modbus_t* mModbusConn;
-    CModbusHandler* mModbusHandler;
+    modbus_t *mModbusConn;
+    CModbusHandler *mModbusHandler;
 
     bool mConnected;
 
-    const char* getDevice() const { return mDevice; }
-    EModbusFlowControl getFlowControl() const { return mFlowControl; }
+    const char *getDevice() const {
+      return mDevice;
+    }
+    EModbusFlowControl getFlowControl() const {
+      return mFlowControl;
+    }
 
   private:
-    const char* mIPAddress;
+    const char *mIPAddress;
     unsigned int mPort;
 
     char mDevice[256];
@@ -85,4 +92,4 @@ class CModbusConnection : public CThread{
     unsigned int mByteTimeout;
 };
 
-#endif  // _MODBUSCONNECTION_H_
+#endif // _MODBUSCONNECTION_H_

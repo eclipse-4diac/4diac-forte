@@ -26,14 +26,14 @@ namespace forte {
 
   namespace com_infra {
 
-    class CLocalComLayer : public CComLayer{
+    class CLocalComLayer : public CComLayer {
 
       public:
-        CLocalComLayer(CComLayer* paUpperLayer, CBaseCommFB * paFB);
+        CLocalComLayer(CComLayer *paUpperLayer, CBaseCommFB *paFB);
         ~CLocalComLayer() override;
 
         EComResponse sendData(void *paData, unsigned int paSize) override;
-        EComResponse recvData(const void *, unsigned int ) override {
+        EComResponse recvData(const void *, unsigned int) override {
           return e_ProcessDataOk;
         }
 
@@ -42,8 +42,7 @@ namespace forte {
         }
 
       protected:
-        virtual void setRDs(forte::com_infra::CBaseCommFB& paSubl, CIEC_ANY **paSDs, TPortId paNumSDs);
-
+        virtual void setRDs(forte::com_infra::CBaseCommFB &paSubl, CIEC_ANY **paSDs, TPortId paNumSDs);
 
         class CLocalCommGroup {
           public:
@@ -51,14 +50,17 @@ namespace forte {
             using TLocalComDataTypeList = std::vector<CStringDictionary::TStringId>;
 
             explicit CLocalCommGroup(CStringDictionary::TStringId paGroupName, TLocalComDataTypeList paDataTypes) :
-                mGroupName(paGroupName), mPublList(), mSublList(), mDataTypes(paDataTypes){
+                mGroupName(paGroupName),
+                mPublList(),
+                mSublList(),
+                mDataTypes(paDataTypes) {
             }
 
-            CLocalCommGroup(const CLocalCommGroup& paLocalCommGroup) :
+            CLocalCommGroup(const CLocalCommGroup &paLocalCommGroup) :
                 mGroupName(paLocalCommGroup.mGroupName),
                 mPublList(paLocalCommGroup.mPublList),
                 mSublList(paLocalCommGroup.mSublList),
-                mDataTypes(paLocalCommGroup.mDataTypes){
+                mDataTypes(paLocalCommGroup.mDataTypes) {
             }
 
             ~CLocalCommGroup() = default;
@@ -69,18 +71,20 @@ namespace forte {
             TLocalComDataTypeList mDataTypes;
         };
 
-        class CLocalCommGroupsManager{
+        class CLocalCommGroupsManager {
 
           public:
-
             bool registerPubl(const CStringDictionary::TStringId paGroupID, CLocalComLayer *paLayer);
-            bool registerPubl(const CStringDictionary::TStringId paGroupID, CLocalComLayer *paLayer, CIEC_ANY **paDataPins, TPortId paNumDataPins);
+            bool registerPubl(const CStringDictionary::TStringId paGroupID,
+                              CLocalComLayer *paLayer,
+                              CIEC_ANY **paDataPins,
+                              TPortId paNumDataPins);
             void unregisterPubl(const CStringDictionary::TStringId paGroupID, CLocalComLayer *paLayer);
 
             bool registerSubl(const CStringDictionary::TStringId paGroupID, CLocalComLayer *paLayer);
             void unregisterSubl(const CStringDictionary::TStringId paGroupID, CLocalComLayer *paLayer);
 
-            CLocalCommGroup* getComGroup(const CStringDictionary::TStringId paGroupID);
+            CLocalCommGroup *getComGroup(const CStringDictionary::TStringId paGroupID);
 
           private:
             using TLocalCommGroupList = std::vector<CLocalCommGroup>;
@@ -89,22 +93,22 @@ namespace forte {
 
             TLocalCommGroupList::iterator getLocalCommGroupIterator(CStringDictionary::TStringId paID);
 
-            CLocalCommGroup* findOrCreateLocalCommGroup(CStringDictionary::TStringId paID, CIEC_ANY **paDataPins, TPortId paNumDataPins);
+            CLocalCommGroup *
+            findOrCreateLocalCommGroup(CStringDictionary::TStringId paID, CIEC_ANY **paDataPins, TPortId paNumDataPins);
             void checkForGroupRemoval(TLocalCommGroupList::iterator comGroupIt);
 
-            bool isGroupIteratorForGroup(TLocalCommGroupList::iterator iter, CStringDictionary::TStringId paID){
+            bool isGroupIteratorForGroup(TLocalCommGroupList::iterator iter, CStringDictionary::TStringId paID) {
               return (iter != mLocalCommGroups.end() && iter->mGroupName == paID);
             }
 
-            static void removeListEntry(CLocalCommGroup::TLocalComLayerList  &paComLayerList, CLocalComLayer *paLayer);
-            static CLocalCommGroup::TLocalComDataTypeList buildDataTypeList(CIEC_ANY **paDataPins, TPortId paNumDataPins);
-            static bool checkDataTypes(const CLocalCommGroup& group, CIEC_ANY **paDataPins, TPortId paNumDataPins);
-
+            static void removeListEntry(CLocalCommGroup::TLocalComLayerList &paComLayerList, CLocalComLayer *paLayer);
+            static CLocalCommGroup::TLocalComDataTypeList buildDataTypeList(CIEC_ANY **paDataPins,
+                                                                            TPortId paNumDataPins);
+            static bool checkDataTypes(const CLocalCommGroup &group, CIEC_ANY **paDataPins, TPortId paNumDataPins);
 
             /*!\brief The Sync object used locking the access to the internal used datastructures
              */
             CSyncObject mSync;
-
 
             TLocalCommGroupList mLocalCommGroups;
 
@@ -112,11 +116,10 @@ namespace forte {
 
           public:
             CLocalCommGroupsManager(const CLocalCommGroupsManager &) = delete;
-            CLocalCommGroupsManager &operator =(const CLocalCommGroupsManager&) = delete;
+            CLocalCommGroupsManager &operator=(const CLocalCommGroupsManager &) = delete;
         };
 
-
-        static CLocalCommGroupsManager& getLocalCommGroupsManager(){
+        static CLocalCommGroupsManager &getLocalCommGroupsManager() {
           return smLocalCommGroupsManager;
         }
 
@@ -128,8 +131,8 @@ namespace forte {
         EComResponse openConnection(char *const paLayerParameter) override;
         void closeConnection() override;
     };
-  }
+  } // namespace com_infra
 
-}
+} // namespace forte
 
 #endif /* LOCALCOMLAYER_H_ */

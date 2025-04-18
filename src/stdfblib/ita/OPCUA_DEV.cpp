@@ -13,8 +13,7 @@
 
 #include "OPCUA_DEV.h"
 
-OPCUA_DEV::OPCUA_DEV(const std::string &paMGRID) :
-  RMT_DEV(paMGRID), mOPCUAMgr(*this){
+OPCUA_DEV::OPCUA_DEV(const std::string &paMGRID) : RMT_DEV(paMGRID), mOPCUAMgr(*this) {
   changeExecutionState(EMGMCommandType::Reset);
 }
 

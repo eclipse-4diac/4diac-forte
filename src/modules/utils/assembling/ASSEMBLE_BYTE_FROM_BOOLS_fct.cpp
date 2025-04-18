@@ -35,7 +35,6 @@ USE_STRING_ID(CNF);
 USE_STRING_ID(Event);
 USE_STRING_ID(REQ);
 
-
 #include "criticalregion.h"
 #include "resource.h"
 #include "forte_byte.h"
@@ -49,8 +48,11 @@ USE_STRING_ID(REQ);
 
 DEFINE_FIRMWARE_FB(FORTE_ASSEMBLE_BYTE_FROM_BOOLS, STRID(ASSEMBLE_BYTE_FROM_BOOLS))
 
-const CStringDictionary::TStringId FORTE_ASSEMBLE_BYTE_FROM_BOOLS::scmDataInputNames[] = {STRID(BIT_00), STRID(BIT_01), STRID(BIT_02), STRID(BIT_03), STRID(BIT_04), STRID(BIT_05), STRID(BIT_06), STRID(BIT_07)};
-const CStringDictionary::TStringId FORTE_ASSEMBLE_BYTE_FROM_BOOLS::scmDataInputTypeIds[] = {STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL)};
+const CStringDictionary::TStringId FORTE_ASSEMBLE_BYTE_FROM_BOOLS::scmDataInputNames[] = {
+    STRID(BIT_00), STRID(BIT_01), STRID(BIT_02), STRID(BIT_03),
+    STRID(BIT_04), STRID(BIT_05), STRID(BIT_06), STRID(BIT_07)};
+const CStringDictionary::TStringId FORTE_ASSEMBLE_BYTE_FROM_BOOLS::scmDataInputTypeIds[] = {
+    STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL)};
 const CStringDictionary::TStringId FORTE_ASSEMBLE_BYTE_FROM_BOOLS::scmDataOutputNames[] = {STRID()};
 const CStringDictionary::TStringId FORTE_ASSEMBLE_BYTE_FROM_BOOLS::scmDataOutputTypeIds[] = {STRID(BYTE)};
 const TDataIOID FORTE_ASSEMBLE_BYTE_FROM_BOOLS::scmEIWith[] = {0, 1, 2, 3, 4, 5, 6, 7, scmWithListDelimiter};
@@ -61,16 +63,29 @@ const TDataIOID FORTE_ASSEMBLE_BYTE_FROM_BOOLS::scmEOWith[] = {0, scmWithListDel
 const TForteInt16 FORTE_ASSEMBLE_BYTE_FROM_BOOLS::scmEOWithIndexes[] = {0};
 const CStringDictionary::TStringId FORTE_ASSEMBLE_BYTE_FROM_BOOLS::scmEventOutputNames[] = {STRID(CNF)};
 const CStringDictionary::TStringId FORTE_ASSEMBLE_BYTE_FROM_BOOLS::scmEventOutputTypeIds[] = {STRID(Event)};
-const SFBInterfaceSpec FORTE_ASSEMBLE_BYTE_FROM_BOOLS::scmFBInterfaceSpec = {
-  1, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,
-  1, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes,
-  8, scmDataInputNames, scmDataInputTypeIds,
-  1, scmDataOutputNames, scmDataOutputTypeIds,
-  0, nullptr,
-  0, nullptr
-};
+const SFBInterfaceSpec FORTE_ASSEMBLE_BYTE_FROM_BOOLS::scmFBInterfaceSpec = {1,
+                                                                             scmEventInputNames,
+                                                                             scmEventInputTypeIds,
+                                                                             scmEIWith,
+                                                                             scmEIWithIndexes,
+                                                                             1,
+                                                                             scmEventOutputNames,
+                                                                             scmEventOutputTypeIds,
+                                                                             scmEOWith,
+                                                                             scmEOWithIndexes,
+                                                                             8,
+                                                                             scmDataInputNames,
+                                                                             scmDataInputTypeIds,
+                                                                             1,
+                                                                             scmDataOutputNames,
+                                                                             scmDataOutputTypeIds,
+                                                                             0,
+                                                                             nullptr,
+                                                                             0,
+                                                                             nullptr};
 
-FORTE_ASSEMBLE_BYTE_FROM_BOOLS::FORTE_ASSEMBLE_BYTE_FROM_BOOLS(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_ASSEMBLE_BYTE_FROM_BOOLS::FORTE_ASSEMBLE_BYTE_FROM_BOOLS(const CStringDictionary::TStringId paInstanceNameId,
+                                                               forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId),
     conn_CNF(*this, 0),
     conn_BIT_00(nullptr),
@@ -97,7 +112,7 @@ void FORTE_ASSEMBLE_BYTE_FROM_BOOLS::setInitialValues() {
 }
 
 void FORTE_ASSEMBLE_BYTE_FROM_BOOLS::readInputData(const TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventREQID: {
       readData(0, var_BIT_00, conn_BIT_00);
       readData(1, var_BIT_01, conn_BIT_01);
@@ -109,24 +124,22 @@ void FORTE_ASSEMBLE_BYTE_FROM_BOOLS::readInputData(const TEventID paEIID) {
       readData(7, var_BIT_07, conn_BIT_07);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 void FORTE_ASSEMBLE_BYTE_FROM_BOOLS::writeOutputData(const TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventCNFID: {
       writeData(0, var_, conn_);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 CIEC_ANY *FORTE_ASSEMBLE_BYTE_FROM_BOOLS::getDI(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_BIT_00;
     case 1: return &var_BIT_01;
     case 2: return &var_BIT_02;
@@ -140,21 +153,21 @@ CIEC_ANY *FORTE_ASSEMBLE_BYTE_FROM_BOOLS::getDI(const size_t paIndex) {
 }
 
 CIEC_ANY *FORTE_ASSEMBLE_BYTE_FROM_BOOLS::getDO(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_;
   }
   return nullptr;
 }
 
 CEventConnection *FORTE_ASSEMBLE_BYTE_FROM_BOOLS::getEOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_CNF;
   }
   return nullptr;
 }
 
 CDataConnection **FORTE_ASSEMBLE_BYTE_FROM_BOOLS::getDIConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_BIT_00;
     case 1: return &conn_BIT_01;
     case 2: return &conn_BIT_02;
@@ -168,37 +181,44 @@ CDataConnection **FORTE_ASSEMBLE_BYTE_FROM_BOOLS::getDIConUnchecked(const TPortI
 }
 
 CDataConnection *FORTE_ASSEMBLE_BYTE_FROM_BOOLS::getDOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_;
   }
   return nullptr;
 }
 
 void FORTE_ASSEMBLE_BYTE_FROM_BOOLS::executeEvent(const TEventID, CEventChainExecutionThread *const paECET) {
-  var_ = func_ASSEMBLE_BYTE_FROM_BOOLS(var_BIT_00, var_BIT_01, var_BIT_02, var_BIT_03, var_BIT_04, var_BIT_05, var_BIT_06, var_BIT_07);
+  var_ = func_ASSEMBLE_BYTE_FROM_BOOLS(var_BIT_00, var_BIT_01, var_BIT_02, var_BIT_03, var_BIT_04, var_BIT_05,
+                                       var_BIT_06, var_BIT_07);
   sendOutputEvent(scmEventCNFID, paECET);
 }
 
-CIEC_BYTE func_ASSEMBLE_BYTE_FROM_BOOLS(CIEC_BOOL st_lv_BIT_00, CIEC_BOOL st_lv_BIT_01, CIEC_BOOL st_lv_BIT_02, CIEC_BOOL st_lv_BIT_03, CIEC_BOOL st_lv_BIT_04, CIEC_BOOL st_lv_BIT_05, CIEC_BOOL st_lv_BIT_06, CIEC_BOOL st_lv_BIT_07) {
+CIEC_BYTE func_ASSEMBLE_BYTE_FROM_BOOLS(CIEC_BOOL st_lv_BIT_00,
+                                        CIEC_BOOL st_lv_BIT_01,
+                                        CIEC_BOOL st_lv_BIT_02,
+                                        CIEC_BOOL st_lv_BIT_03,
+                                        CIEC_BOOL st_lv_BIT_04,
+                                        CIEC_BOOL st_lv_BIT_05,
+                                        CIEC_BOOL st_lv_BIT_06,
+                                        CIEC_BOOL st_lv_BIT_07) {
   CIEC_BYTE st_ret_val = 0_BYTE;
 
-  #line 15 "ASSEMBLE_BYTE_FROM_BOOLS.fct"
+#line 15 "ASSEMBLE_BYTE_FROM_BOOLS.fct"
   st_ret_val.partial<CIEC_BOOL>(0) = st_lv_BIT_00;
-  #line 16 "ASSEMBLE_BYTE_FROM_BOOLS.fct"
+#line 16 "ASSEMBLE_BYTE_FROM_BOOLS.fct"
   st_ret_val.partial<CIEC_BOOL>(1) = st_lv_BIT_01;
-  #line 17 "ASSEMBLE_BYTE_FROM_BOOLS.fct"
+#line 17 "ASSEMBLE_BYTE_FROM_BOOLS.fct"
   st_ret_val.partial<CIEC_BOOL>(2) = st_lv_BIT_02;
-  #line 18 "ASSEMBLE_BYTE_FROM_BOOLS.fct"
+#line 18 "ASSEMBLE_BYTE_FROM_BOOLS.fct"
   st_ret_val.partial<CIEC_BOOL>(3) = st_lv_BIT_03;
-  #line 19 "ASSEMBLE_BYTE_FROM_BOOLS.fct"
+#line 19 "ASSEMBLE_BYTE_FROM_BOOLS.fct"
   st_ret_val.partial<CIEC_BOOL>(4) = st_lv_BIT_04;
-  #line 20 "ASSEMBLE_BYTE_FROM_BOOLS.fct"
+#line 20 "ASSEMBLE_BYTE_FROM_BOOLS.fct"
   st_ret_val.partial<CIEC_BOOL>(5) = st_lv_BIT_05;
-  #line 21 "ASSEMBLE_BYTE_FROM_BOOLS.fct"
+#line 21 "ASSEMBLE_BYTE_FROM_BOOLS.fct"
   st_ret_val.partial<CIEC_BOOL>(6) = st_lv_BIT_06;
-  #line 22 "ASSEMBLE_BYTE_FROM_BOOLS.fct"
+#line 22 "ASSEMBLE_BYTE_FROM_BOOLS.fct"
   st_ret_val.partial<CIEC_BOOL>(7) = st_lv_BIT_07;
 
   return st_ret_val;
 }
-

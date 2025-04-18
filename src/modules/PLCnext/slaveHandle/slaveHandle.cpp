@@ -15,21 +15,24 @@
 #include "../slaveHandler.h"
 #include <devlog.h>
 
-PLCnextSlaveHandle::PLCnextSlaveHandle(forte::core::io::IODeviceController* paController, forte::core::io::IOMapper::Direction paDirection,
-    CIEC_ANY::EDataTypeID paType, PLCnextSlaveHandler *paSlave) :
-    forte::core::io::IOHandle(paController, paDirection, paType), mSlave(paSlave),
+PLCnextSlaveHandle::PLCnextSlaveHandle(forte::core::io::IODeviceController *paController,
+                                       forte::core::io::IOMapper::Direction paDirection,
+                                       CIEC_ANY::EDataTypeID paType,
+                                       PLCnextSlaveHandler *paSlave) :
+    forte::core::io::IOHandle(paController, paDirection, paType),
+    mSlave(paSlave),
     mOffset(paSlave->imageOffset) {
-
 }
 
-PLCnextSlaveHandle::~PLCnextSlaveHandle() {}
+PLCnextSlaveHandle::~PLCnextSlaveHandle() {
+}
 
-void PLCnextSlaveHandle::onObserver(forte::core::io::IOObserver* paObserver) {
-    reset();
-    forte::core::io::IOHandle::onObserver(paObserver);
+void PLCnextSlaveHandle::onObserver(forte::core::io::IOObserver *paObserver) {
+  reset();
+  forte::core::io::IOHandle::onObserver(paObserver);
 }
 
 void PLCnextSlaveHandle::dropObserver() {
-    forte::core::io::IOHandle::dropObserver();
-    reset();
+  forte::core::io::IOHandle::dropObserver();
+  reset();
 }

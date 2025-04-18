@@ -16,12 +16,11 @@
 
 USE_STRING_ID(E_CYCLE);
 
-
 DEFINE_FIRMWARE_FB(FORTE_E_CYCLE, STRID(E_CYCLE))
 
 void FORTE_E_CYCLE::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
-  if(paEIID == csmEventSTARTID) {
-    if(!mActive){
+  if (paEIID == csmEventSTARTID) {
+    if (!mActive) {
       setEventChainExecutor(paECET);
       getTimer().registerPeriodicTimedFB(this, var_DT);
       mActive = true;

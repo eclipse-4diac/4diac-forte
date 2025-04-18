@@ -20,10 +20,11 @@
  *
  *  Gets a random string containing [a-zA-Z0-9]
  *
- *  @param pa_destString String where to store the result random string. It has to have space for pa_length plus 1 for the ending char.
+ *  @param pa_destString String where to store the result random string. It has to have space for pa_length plus 1 for
+ * the ending char.
  *  @param pa_length Length of the string without the ending char.
  *
  */
-void getRandomString(char* pa_destString, const TForteUInt32 pa_length);
+void getRandomString(char *pa_destString, const TForteUInt32 pa_length);
 
 #endif /* SRC_ARCH_RCX_RCXUTILITIES_H_ */

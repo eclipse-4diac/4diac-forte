@@ -23,8 +23,8 @@ class CDevice;
 
 /*! \brief Implementation of the DEV_MGR FB.
  */
-class DEV_MGR: public forte::com_infra::CCommFB {
-  DECLARE_FIRMWARE_FB(DEV_MGR)
+class DEV_MGR : public forte::com_infra::CCommFB {
+    DECLARE_FIRMWARE_FB(DEV_MGR)
 
   public:
     DEV_MGR(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
@@ -33,7 +33,6 @@ class DEV_MGR: public forte::com_infra::CCommFB {
     bool initialize() override;
 
   private:
-
     bool executeCommand(const char *const paDest, char *paCommand);
 
     EMGMResponse parseAndExecuteMGMCommand(const char *const paDest, char *paCommand);
@@ -69,33 +68,32 @@ class DEV_MGR: public forte::com_infra::CCommFB {
     void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
     CIEC_BOOL &QI() {
-      return *static_cast<CIEC_BOOL*>(getDI(0));
+      return *static_cast<CIEC_BOOL *>(getDI(0));
     };
 
     CIEC_STRING &ID() {
-      return *static_cast<CIEC_STRING*>(getDI(1));
+      return *static_cast<CIEC_STRING *>(getDI(1));
     };
 
     CIEC_STRING &RESP() {
-      return *static_cast<CIEC_STRING*>(getDI(2));
+      return *static_cast<CIEC_STRING *>(getDI(2));
     };
 
     CIEC_BOOL &QO() {
-      return *static_cast<CIEC_BOOL*>(getDO(0));
+      return *static_cast<CIEC_BOOL *>(getDO(0));
     };
 
     CIEC_STRING &STATUS() {
-      return *static_cast<CIEC_STRING*>(getDO(1));
+      return *static_cast<CIEC_STRING *>(getDO(1));
     };
 
     CIEC_STRING &DST() {
-      return *static_cast<CIEC_STRING*>(getDO(2));
+      return *static_cast<CIEC_STRING *>(getDO(2));
     };
 
     CIEC_STRING &RQST() {
-      return *static_cast<CIEC_STRING*>(getDO(3));
+      return *static_cast<CIEC_STRING *>(getDO(3));
     };
-
-  };
+};
 
 #endif /*DEV_MGR_H_*/

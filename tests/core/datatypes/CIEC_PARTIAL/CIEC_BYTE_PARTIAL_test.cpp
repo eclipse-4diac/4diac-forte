@@ -9,16 +9,15 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *   Martin Melik Merkumians, Ingo Hegny, Alois Zoitl, Stanislav Meduna - initial API and implementation and/or initial documentation
- *   Ernst Blecha - Adds partial access tests
- *   Martin Melik Merkumians - Updates test for changes in partial
+ *   Martin Melik Merkumians, Ingo Hegny, Alois Zoitl, Stanislav Meduna - initial API and implementation and/or initial
+ *documentation Ernst Blecha - Adds partial access tests Martin Melik Merkumians - Updates test for changes in partial
  *******************************************************************************/
 
 #include <boost/test/unit_test.hpp>
 
-//BOOLEAN
+// BOOLEAN
 #include "../../../src/core/datatypes/forte_bool.h"
-//BIT-Datatypes
+// BIT-Datatypes
 #include "../../../src/core/datatypes/forte_byte.h"
 
 #include "../../../src/core/datatypes/forte_sint.h"
@@ -33,15 +32,15 @@ BOOST_AUTO_TEST_SUITE(CIEC_ANY_BIT_PARTIAL_BYTE)
 BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_BYTE_INITVALUES) {
   CIEC_BYTE nTestByte;
 
-  test4X_0(nTestByte,4);
-  test4X_0(nTestByte,0);
+  test4X_0(nTestByte, 4);
+  test4X_0(nTestByte, 0);
 }
 
 BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_BYTE_INITVALUES_CONST) {
   const CIEC_BYTE nTestByte;
 
-  test4X_0(nTestByte,4);
-  test4X_0(nTestByte,0);
+  test4X_0(nTestByte, 4);
+  test4X_0(nTestByte, 0);
 }
 
 BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_BYTE_CONST_INIT) {
@@ -56,124 +55,108 @@ BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_BYTE_CONST_INIT) {
 BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_BYTE_VALUE1_CHECK_BYTE) {
   CIEC_BYTE nTestByte(0xBE);
   BOOST_CHECK_EQUAL(nTestByte, 0xBEU);
-
 }
 
 BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_BYTE_VALUE2_CHECK_BYTE) {
   CIEC_BYTE nTestByte(0xBA);
   BOOST_CHECK_EQUAL(nTestByte, 0xBAU);
-
 }
 
 BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_BYTE_VALUE1_CHECK_BIT) {
   CIEC_BYTE nTestByte(0xBE);
-  test4X_B(nTestByte,4);
-  test4X_E(nTestByte,0);
-
+  test4X_B(nTestByte, 4);
+  test4X_E(nTestByte, 0);
 }
 
 BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_BYTE_VALUE1_CHECK_BIT_CONST) {
   const CIEC_BYTE nTestByte(0xBE);
-  test4X_B(nTestByte,4);
-  test4X_E(nTestByte,0);
-
+  test4X_B(nTestByte, 4);
+  test4X_E(nTestByte, 0);
 }
 
 BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_BYTE_VALUE2_CHECK_BIT) {
   CIEC_BYTE nTestByte(0xBA);
-  test4X_B(nTestByte,4);
-  test4X_A(nTestByte,0);
-
+  test4X_B(nTestByte, 4);
+  test4X_A(nTestByte, 0);
 }
 
 BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_BYTE_VALUE2_CHECK_BIT_CONST) {
   const CIEC_BYTE nTestByte(0xBA);
-  test4X_B(nTestByte,4);
-  test4X_A(nTestByte,0);
-
+  test4X_B(nTestByte, 4);
+  test4X_A(nTestByte, 0);
 }
 
-BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_BYTE_VALUE_CHANGE_CHECK_BYTE)
-{
+BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_BYTE_VALUE_CHANGE_CHECK_BYTE) {
   CIEC_BYTE nTestByte(0xBE);
   nTestByte = CIEC_BYTE(0xBA);
   BOOST_CHECK_EQUAL(nTestByte, 0xBAU);
-
 }
 
-BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_BYTE_VALUE_CHANGE_CHECK_BIT)
-{
+BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_BYTE_VALUE_CHANGE_CHECK_BIT) {
   CIEC_BYTE nTestByte(0xBE);
   nTestByte = CIEC_BYTE(0xBA);
-  test4X_B(nTestByte,4);
-  test4X_A(nTestByte,0);
-
+  test4X_B(nTestByte, 4);
+  test4X_A(nTestByte, 0);
 }
 
-BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_BYTE_ASSIGN_BIT_CHANGE_BYTE_CHECK_BYTE_A)
-{
+BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_BYTE_ASSIGN_BIT_CHANGE_BYTE_CHECK_BYTE_A) {
   CIEC_BYTE nTestByte;
 
-  set4X_0(nTestByte,4);
-  set4X_D(nTestByte,0);
+  set4X_0(nTestByte, 4);
+  set4X_D(nTestByte, 0);
 
   nTestByte = CIEC_BYTE(0xFE);
 
   BOOST_CHECK_EQUAL(nTestByte, 0xFEU);
-
 }
 
 BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_BYTE_ASSIGN_BIT_CHANGE_BYTE_CHECK_BYTE_B) {
   CIEC_BYTE nTestByte;
 
-  set4X_0(nTestByte,4);
-  set4X_D(nTestByte,0);
+  set4X_0(nTestByte, 4);
+  set4X_D(nTestByte, 0);
 
   nTestByte = CIEC_BYTE(0xFE);
 
   nTestByte = CIEC_BYTE(0x22);
 
   BOOST_CHECK_EQUAL(nTestByte, 0x22U);
-
 }
 
 BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_BYTE_ASSIGN_BIT_CHECK_BIT) {
   CIEC_BYTE nTestByte;
 
-  set4X_0(nTestByte,4);
-  set4X_D(nTestByte,0);
+  set4X_0(nTestByte, 4);
+  set4X_D(nTestByte, 0);
 
-  test4X_0(nTestByte,4);
-  test4X_D(nTestByte,0);
-
+  test4X_0(nTestByte, 4);
+  test4X_D(nTestByte, 0);
 }
 
 BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_BYTE_ASSIGN_BIT_CHANGE_BYTE_CHECK_BIT_A) {
   CIEC_BYTE nTestByte;
 
-  set4X_0(nTestByte,4);
-  set4X_D(nTestByte,0);
+  set4X_0(nTestByte, 4);
+  set4X_D(nTestByte, 0);
 
   nTestByte = CIEC_BYTE(0xFE);
 
-  test4X_F(nTestByte,4);
-  test4X_E(nTestByte,0);
-
+  test4X_F(nTestByte, 4);
+  test4X_E(nTestByte, 0);
 }
 
 BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_BYTE_ASSIGN_BIT_CHANGE_BYTE_CHECK_BIT_B) {
   CIEC_BYTE nTestByte;
 
-  set4X_0(nTestByte,4);
-  set4X_D(nTestByte,0);
+  set4X_0(nTestByte, 4);
+  set4X_D(nTestByte, 0);
 
   nTestByte = CIEC_BYTE(0xFE);
 
   nTestByte = CIEC_BYTE(0x22);
 
-  test4X_2(nTestByte,4);
-  test4X_2(nTestByte,0);
-
+  test4X_2(nTestByte, 4);
+  test4X_2(nTestByte, 0);
 }
 
 BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_BYTE_ASSIGN_FROM_CONST) {

@@ -29,85 +29,72 @@ typedef boost::shared_ptr<reapp_msgs::ExecuteFeedback const> ExecuteFeedbackCons
 typedef actionlib::SimpleActionClient<reapp_msgs::ExecuteAction> actionClient;
 
 // cppcheck-suppress noConstructor
-class FORTE_EXECUTE_ACTION_CLIENT : public CEventSourceFB{
-  DECLARE_FIRMWARE_FB(FORTE_EXECUTE_ACTION_CLIENT)
+class FORTE_EXECUTE_ACTION_CLIENT : public CEventSourceFB {
+    DECLARE_FIRMWARE_FB(FORTE_EXECUTE_ACTION_CLIENT)
 
   private:
-
     bool m_Initiated;
     bool m_GoalActive;
-    actionClient* m_ActionClient;
+    actionClient *m_ActionClient;
     ExecuteResultConstPtr m_ExecuteResultConstPtr;
     ExecuteFeedbackConstPtr m_ExecuteFeedbackConstPtr;
     bool mResultReady;
 
-    ros::NodeHandle* nh;
+    ros::NodeHandle *nh;
     std::string m_RosNamespace;
     std::string m_RosMsgName;
 
     static const CStringDictionary::TStringId scmDataInputNames[];
     static const CStringDictionary::TStringId scmDataInputTypeIds[];
-    CIEC_BOOL &QI(){
-      return *static_cast<CIEC_BOOL*>(getDI(0));
-    }
-    ;
+    CIEC_BOOL &QI() {
+      return *static_cast<CIEC_BOOL *>(getDI(0));
+    };
 
-    CIEC_STRING &ACTIONNAMESPACE(){
-      return *static_cast<CIEC_STRING*>(getDI(1));
-    }
-    ;
+    CIEC_STRING &ACTIONNAMESPACE() {
+      return *static_cast<CIEC_STRING *>(getDI(1));
+    };
 
-    CIEC_STRING &ACTIONMSGNAME(){
-      return *static_cast<CIEC_STRING*>(getDI(2));
-    }
-    ;
+    CIEC_STRING &ACTIONMSGNAME() {
+      return *static_cast<CIEC_STRING *>(getDI(2));
+    };
 
-    CIEC_STRING &COMMAND(){
-      return *static_cast<CIEC_STRING*>(getDI(3));
-    }
-    ;
+    CIEC_STRING &COMMAND() {
+      return *static_cast<CIEC_STRING *>(getDI(3));
+    };
 
-    CIEC_DINT &ID1(){
-      return *static_cast<CIEC_DINT*>(getDI(4));
-    }
-    ;
+    CIEC_DINT &ID1() {
+      return *static_cast<CIEC_DINT *>(getDI(4));
+    };
 
-    CIEC_DINT &ID2(){
-      return *static_cast<CIEC_DINT*>(getDI(5));
-    }
-    ;
+    CIEC_DINT &ID2() {
+      return *static_cast<CIEC_DINT *>(getDI(5));
+    };
 
     static const CStringDictionary::TStringId scmDataOutputNames[];
     static const CStringDictionary::TStringId scmDataOutputTypeIds[];
-    CIEC_BOOL &QO(){
-      return *static_cast<CIEC_BOOL*>(getDO(0));
-    }
-    ;
+    CIEC_BOOL &QO() {
+      return *static_cast<CIEC_BOOL *>(getDO(0));
+    };
 
-    CIEC_STRING &FBSTATUS(){
-      return *static_cast<CIEC_STRING*>(getDO(1));
-    }
-    ;
+    CIEC_STRING &FBSTATUS() {
+      return *static_cast<CIEC_STRING *>(getDO(1));
+    };
 
-    CIEC_STRING &ACTIONSTATUS(){
-      return *static_cast<CIEC_STRING*>(getDO(2));
-    }
-    ;
+    CIEC_STRING &ACTIONSTATUS() {
+      return *static_cast<CIEC_STRING *>(getDO(2));
+    };
 
-    CIEC_STRING &RESULT(){
-      return *static_cast<CIEC_STRING*>(getDO(3));
-    }
-    ;
+    CIEC_STRING &RESULT() {
+      return *static_cast<CIEC_STRING *>(getDO(3));
+    };
 
-    CIEC_DINT &ID(){
-      return *static_cast<CIEC_DINT*>(getDO(4));
-    }
-    ;
+    CIEC_DINT &ID() {
+      return *static_cast<CIEC_DINT *>(getDO(4));
+    };
 
-    CIEC_STRING &STATE(){
-      return *static_cast<CIEC_STRING*>(getDO(5));
-    }
-    ;
+    CIEC_STRING &STATE() {
+      return *static_cast<CIEC_STRING *>(getDO(5));
+    };
 
     static const TEventID scmEventINITID = 0;
     static const TEventID scmEventREQID = 1;
@@ -125,10 +112,9 @@ class FORTE_EXECUTE_ACTION_CLIENT : public CEventSourceFB{
 
     static const SFBInterfaceSpec scmFBInterfaceSpec;
 
-
     void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
-    void doneCallback(const actionlib::SimpleClientGoalState& state, const ExecuteResultConstPtr& result);
+    void doneCallback(const actionlib::SimpleClientGoalState &state, const ExecuteResultConstPtr &result);
     void activeCallback();
     void feedbackCallback(const ExecuteFeedbackConstPtr &feedback);
 
@@ -137,11 +123,10 @@ class FORTE_EXECUTE_ACTION_CLIENT : public CEventSourceFB{
     void connectToActionServer();
 
   public:
-    EVENT_SOURCE_FUNCTION_BLOCK_CTOR(FORTE_EXECUTE_ACTION_CLIENT), m_Initiated(false), m_GoalActive(false), m_ActionClient(0), mResultReady(false), nh(0), m_RosNamespace(""), m_RosMsgName(""){
-    };
+    EVENT_SOURCE_FUNCTION_BLOCK_CTOR(FORTE_EXECUTE_ACTION_CLIENT), m_Initiated(false), m_GoalActive(false),
+        m_ActionClient(0), mResultReady(false), nh(0), m_RosNamespace(""), m_RosMsgName("") {};
 
     ~FORTE_EXECUTE_ACTION_CLIENT() override = default;
+};
 
-  };
-
-#endif //close the ifdef sequence from the beginning of the file
+#endif // close the ifdef sequence from the beginning of the file

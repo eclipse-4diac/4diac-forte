@@ -22,5 +22,3 @@ uint_fast64_t getNanoSecondsMonotonicArch() {
   clock_gettime(CLOCK_REALTIME, &now);
   return now.tv_nsec + now.tv_sec * forte::core::constants::cNanosecondsPerSecond;
 }
-
-

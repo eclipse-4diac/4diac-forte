@@ -37,33 +37,34 @@
 
 using namespace std::string_literals;
 
-
 USE_STRING_ID(EndianessTestStruct);
 USE_STRING_ID(LWORD);
 USE_STRING_ID(Val1);
 USE_STRING_ID(Val2);
 USE_STRING_ID(Val3);
 
-
 /*** STRUCT for tests *********/
 class CIEC_EndianessTestStruct : public CIEC_STRUCT {
-  DECLARE_FIRMWARE_DATATYPE(EndianessTestStruct);
+    DECLARE_FIRMWARE_DATATYPE(EndianessTestStruct);
 
-public:
+  public:
     CIEC_BOOL Var1;
     CIEC_DINT Var2;
     CIEC_LWORD Var3;
 
     CIEC_EndianessTestStruct() = default;
 
-    CIEC_EndianessTestStruct(CIEC_BOOL paVar1, CIEC_DINT paVar2, CIEC_LWORD paVar3)
-      : Var1(paVar1), Var2(paVar2), Var3(paVar3) {}
+    CIEC_EndianessTestStruct(CIEC_BOOL paVar1, CIEC_DINT paVar2, CIEC_LWORD paVar3) :
+        Var1(paVar1),
+        Var2(paVar2),
+        Var3(paVar3) {
+    }
 
     size_t getStructSize() const override {
       return 3;
     }
 
-    const CStringDictionary::TStringId* elementNames() const override {
+    const CStringDictionary::TStringId *elementNames() const override {
       return scmElementNames;
     }
 
@@ -72,7 +73,7 @@ public:
     }
 
     CIEC_ANY *getMember(size_t paMemberIndex) override {
-      switch(paMemberIndex) {
+      switch (paMemberIndex) {
         case 0: return &Var1;
         case 1: return &Var2;
         case 2: return &Var3;
@@ -81,18 +82,20 @@ public:
     }
 
     const CIEC_ANY *getMember(size_t paMemberIndex) const override {
-      switch(paMemberIndex) {
+      switch (paMemberIndex) {
         case 0: return &Var1;
         case 1: return &Var2;
         case 2: return &Var3;
       }
       return nullptr;
     }
-private:
-  static const CStringDictionary::TStringId scmElementNames[];
+
+  private:
+    static const CStringDictionary::TStringId scmElementNames[];
 };
 
-const CStringDictionary::TStringId CIEC_EndianessTestStruct::scmElementNames[] = {STRID(Val1), STRID(Val2), STRID(Val3)};
+const CStringDictionary::TStringId CIEC_EndianessTestStruct::scmElementNames[] = {STRID(Val1), STRID(Val2),
+                                                                                  STRID(Val3)};
 
 DEFINE_FIRMWARE_DATATYPE(EndianessTestStruct, STRID(EndianessTestStruct))
 
@@ -118,84 +121,72 @@ void testSTInIsOutLWordDummyFunction(CIEC_LWORD paIn, CIEC_LWORD &paOut) {
 
 BOOST_AUTO_TEST_SUITE(IEC61131_functions)
 
-BOOST_AUTO_TEST_CASE(abs)
-{
+BOOST_AUTO_TEST_CASE(abs) {
   CIEC_SINT nNumber(-13);
   BOOST_TEST(func_ABS(nNumber).getSignedValue() == 13);
 }
 
-BOOST_AUTO_TEST_CASE(sqrt)
-{
+BOOST_AUTO_TEST_CASE(sqrt) {
   CIEC_REAL nNumber(4);
   BOOST_TEST(static_cast<TForteFloat>(func_SQRT(nNumber)) == 2.0f);
 }
 
-BOOST_AUTO_TEST_CASE(to_upper)
-{
+BOOST_AUTO_TEST_CASE(to_upper) {
   CIEC_STRING sTestString("shall_be_to_upper"_STRING);
   CIEC_STRING sToUpperString(func_TOUPPER(sTestString));
   BOOST_TEST(sToUpperString == "SHALL_BE_TO_UPPER"_STRING);
 }
 
-BOOST_AUTO_TEST_CASE(to_lower)
-{
+BOOST_AUTO_TEST_CASE(to_lower) {
   CIEC_STRING sTestString("SHALL_BE_TO_LOWER"_STRING);
   CIEC_STRING sToLowerString(func_TOLOWER(sTestString));
   BOOST_TEST(sToLowerString == "shall_be_to_lower"_STRING);
 }
 
-BOOST_AUTO_TEST_CASE(standard_example_len)
-{
+BOOST_AUTO_TEST_CASE(standard_example_len) {
   CIEC_STRING sTestString("ASTRING"_STRING);
   CIEC_UINT nLength(func_LEN<CIEC_UINT>(sTestString));
   BOOST_TEST(static_cast<CIEC_UINT::TValueType>(nLength) == 7);
 }
 
-BOOST_AUTO_TEST_CASE(len)
-{
+BOOST_AUTO_TEST_CASE(len) {
   CIEC_STRING sTestString("Lorem ipsum dolor sit amet"_STRING);
   CIEC_UINT nLength;
   nLength = func_LEN<CIEC_UINT>(sTestString);
   BOOST_TEST(static_cast<CIEC_UINT::TValueType>(nLength) == 26);
 }
 
-BOOST_AUTO_TEST_CASE(standard_example_left)
-{
+BOOST_AUTO_TEST_CASE(standard_example_left) {
   CIEC_STRING sTestString("ASTR"_STRING);
   CIEC_STRING sLeftString(func_LEFT(sTestString, CIEC_INT(3)));
   BOOST_TEST(sLeftString == "AST"_STRING);
 }
 
-BOOST_AUTO_TEST_CASE(left)
-{
+BOOST_AUTO_TEST_CASE(left) {
   CIEC_STRING sTestString("SHALL_BE_CROPPED_HERE_THIS_SHOULD_NOT_BE_SEEN"_STRING);
   CIEC_STRING sLeftString(func_LEFT(sTestString, CIEC_INT(21)));
   BOOST_TEST(sLeftString == "SHALL_BE_CROPPED_HERE"_STRING);
 }
 
-BOOST_AUTO_TEST_CASE(standard_example_right)
-{
+BOOST_AUTO_TEST_CASE(standard_example_right) {
   CIEC_STRING sTestString("ASTR"_STRING);
   CIEC_STRING sRightString(func_RIGHT(sTestString, CIEC_INT(3)));
   BOOST_TEST(sRightString == "STR"_STRING);
 }
 
-BOOST_AUTO_TEST_CASE(right)
-{
+BOOST_AUTO_TEST_CASE(right) {
   CIEC_STRING sTestString("THIS_SHOULD_BE_CROPPED_THIS_SHOULD_BE_SEEN"_STRING);
   CIEC_STRING sRightString(func_RIGHT(sTestString, CIEC_INT(19)));
   BOOST_TEST(sRightString == "THIS_SHOULD_BE_SEEN"_STRING);
 }
 
-BOOST_AUTO_TEST_CASE(standard_example_mid)
-{
+BOOST_AUTO_TEST_CASE(standard_example_mid) {
   CIEC_STRING sTestString("ASTR"_STRING);
   CIEC_STRING sMidString(func_MID(sTestString, CIEC_INT(2), CIEC_INT(2)));
   BOOST_TEST(sMidString == "ST"_STRING);
 }
 
-BOOST_AUTO_TEST_CASE(mid)
-{
+BOOST_AUTO_TEST_CASE(mid) {
   CIEC_STRING sTestString("THIS_SHOULD_NOT_BE_SEEN_THIS_SHALL_BE_SEEN_THIS_SHOULD_NOT_BE_SEEN"_STRING);
   CIEC_STRING sMidString(func_MID(sTestString, CIEC_INT(18), CIEC_INT(25)));
   BOOST_TEST(sMidString == "THIS_SHALL_BE_SEEN"_STRING);
@@ -250,8 +241,7 @@ BOOST_AUTO_TEST_CASE(concat_char_and_char) {
   BOOST_TEST(sConcatString == "21"_STRING);
 }
 
-BOOST_AUTO_TEST_CASE(find_at_begin)
-{
+BOOST_AUTO_TEST_CASE(find_at_begin) {
   CIEC_STRING sBigString("Lorem ipsum dolor sit amet"_STRING);
   CIEC_STRING sSearchString("Lorem"_STRING);
   CIEC_UINT nIndex;
@@ -259,8 +249,7 @@ BOOST_AUTO_TEST_CASE(find_at_begin)
   BOOST_TEST(1 == static_cast<CIEC_UINT::TValueType>(nIndex));
 }
 
-BOOST_AUTO_TEST_CASE(find_in_between)
-{
+BOOST_AUTO_TEST_CASE(find_in_between) {
   CIEC_STRING sBigString("Lorem ipsum dolor sit amet"_STRING);
   CIEC_STRING sSearchString("dolor"_STRING);
   CIEC_UINT nIndex;
@@ -268,8 +257,7 @@ BOOST_AUTO_TEST_CASE(find_in_between)
   BOOST_TEST(13 == static_cast<CIEC_UINT::TValueType>(nIndex));
 }
 
-BOOST_AUTO_TEST_CASE(find_at_the_end)
-{
+BOOST_AUTO_TEST_CASE(find_at_the_end) {
   CIEC_STRING sBigString("Lorem ipsum dolor sit"_STRING);
   CIEC_STRING sSearchString("t"_STRING);
   CIEC_UINT nIndex;
@@ -277,8 +265,7 @@ BOOST_AUTO_TEST_CASE(find_at_the_end)
   BOOST_TEST(21 == static_cast<CIEC_UINT::TValueType>(nIndex));
 }
 
-BOOST_AUTO_TEST_CASE(find_not_found)
-{
+BOOST_AUTO_TEST_CASE(find_not_found) {
   CIEC_STRING sBigString("Lorem ipsum dolor sit"_STRING);
   CIEC_STRING sSearchString("Latin"_STRING);
   CIEC_UINT nIndex;
@@ -286,141 +273,122 @@ BOOST_AUTO_TEST_CASE(find_not_found)
   BOOST_TEST(0 == static_cast<CIEC_UINT::TValueType>(nIndex));
 }
 
-BOOST_AUTO_TEST_CASE(standard_example_replace)
-{
+BOOST_AUTO_TEST_CASE(standard_example_replace) {
   CIEC_STRING sIn1("ABCDE"_STRING);
   CIEC_STRING sIn2("X"_STRING);
   CIEC_STRING sResult(func_REPLACE(sIn1, sIn2, CIEC_INT(2), CIEC_INT(3)));
   BOOST_TEST(sResult == "ABXE"_STRING);
 }
 
-BOOST_AUTO_TEST_CASE(replace)
-{
+BOOST_AUTO_TEST_CASE(replace) {
   CIEC_STRING sIn1("Lorem ipsum dolor sit"_STRING);
   CIEC_STRING sIn2("muspi"_STRING);
   CIEC_STRING sResult(func_REPLACE(sIn1, sIn2, CIEC_INT(5), CIEC_INT(7)));
   BOOST_TEST(sResult == "Lorem muspi dolor sit"_STRING);
 }
 
-BOOST_AUTO_TEST_CASE(replace_P_signed_0)
-{
+BOOST_AUTO_TEST_CASE(replace_P_signed_0) {
   CIEC_STRING sIn1("Lorem ipsum dolor sit"_STRING);
   CIEC_STRING sIn2("muspi"_STRING);
   CIEC_STRING sResult(func_REPLACE(sIn1, sIn2, CIEC_INT(5), CIEC_INT(0)));
   BOOST_TEST(sResult == "Lorem ipsum dolor sit"_STRING);
 }
 
-BOOST_AUTO_TEST_CASE(replace_P_signed_negative_number)
-{
+BOOST_AUTO_TEST_CASE(replace_P_signed_negative_number) {
   CIEC_STRING sIn1("Lorem ipsum dolor sit"_STRING);
   CIEC_STRING sIn2("muspi"_STRING);
   CIEC_STRING sResult(func_REPLACE(sIn1, sIn2, CIEC_INT(5), CIEC_INT(-200)));
   BOOST_TEST(sResult == "Lorem ipsum dolor sit"_STRING);
 }
 
-BOOST_AUTO_TEST_CASE(replace_P_unsigned_0)
-{
+BOOST_AUTO_TEST_CASE(replace_P_unsigned_0) {
   CIEC_STRING sIn1("Lorem ipsum dolor sit"_STRING);
   CIEC_STRING sIn2("muspi"_STRING);
   CIEC_STRING sResult(func_REPLACE(sIn1, sIn2, CIEC_UINT(5), CIEC_UINT(0)));
   BOOST_TEST(sResult == "Lorem ipsum dolor sit"_STRING);
 }
 
-BOOST_AUTO_TEST_CASE(replace_P_plus_L_at_end)
-{
+BOOST_AUTO_TEST_CASE(replace_P_plus_L_at_end) {
   CIEC_STRING sIn1("123456789"_STRING);
   CIEC_STRING sIn2("aaa"_STRING);
   CIEC_STRING sResult(func_REPLACE(sIn1, sIn2, CIEC_UINT(7), CIEC_UINT(3)));
   BOOST_TEST(sResult == "12aaa"_STRING);
 }
 
-BOOST_AUTO_TEST_CASE(standard_example_delete)
-{
+BOOST_AUTO_TEST_CASE(standard_example_delete) {
   CIEC_STRING sIn1("ABXYC"_STRING);
   CIEC_STRING sResult(func_DELETE(sIn1, CIEC_INT(2), CIEC_INT(3)));
   BOOST_TEST(sResult == "ABC"_STRING);
 }
 
-BOOST_AUTO_TEST_CASE(delete_function)
-{
+BOOST_AUTO_TEST_CASE(delete_function) {
   CIEC_STRING sIn1("Lorem ipsum dolor sit"_STRING);
   CIEC_STRING sResult(func_DELETE(sIn1, CIEC_INT(6), CIEC_INT(12)));
   BOOST_TEST(sResult == "Lorem ipsum sit"_STRING);
 }
 
-BOOST_AUTO_TEST_CASE(delete_function_L_unsigned_0)
-{
+BOOST_AUTO_TEST_CASE(delete_function_L_unsigned_0) {
   CIEC_STRING sIn1("Lorem ipsum dolor sit"_STRING);
   CIEC_STRING sResult(func_DELETE(sIn1, CIEC_UINT(0), CIEC_INT(12)));
   BOOST_TEST(sResult == "Lorem ipsum dolor sit"_STRING);
 }
 
-BOOST_AUTO_TEST_CASE(delete_function_L_signed_0)
-{
+BOOST_AUTO_TEST_CASE(delete_function_L_signed_0) {
   CIEC_STRING sIn1("Lorem ipsum dolor sit"_STRING);
   CIEC_STRING sResult(func_DELETE(sIn1, CIEC_INT(0), CIEC_INT(12)));
   BOOST_TEST(sResult == "Lorem ipsum dolor sit"_STRING);
 }
 
-BOOST_AUTO_TEST_CASE(delete_function_L_signed_negative_number)
-{
+BOOST_AUTO_TEST_CASE(delete_function_L_signed_negative_number) {
   CIEC_STRING sIn1("Lorem ipsum dolor sit"_STRING);
   CIEC_STRING sResult(func_DELETE(sIn1, CIEC_INT(-4), CIEC_INT(12)));
   BOOST_TEST(sResult == "Lorem ipsum dolor sit"_STRING);
 }
 
-BOOST_AUTO_TEST_CASE(delete_function_P_unsigned_0)
-{
+BOOST_AUTO_TEST_CASE(delete_function_P_unsigned_0) {
   CIEC_STRING sIn1("Lorem ipsum dolor sit"_STRING);
   CIEC_STRING sResult(func_DELETE(sIn1, CIEC_INT(6), CIEC_UINT(0)));
   BOOST_TEST(sResult == "Lorem ipsum dolor sit"_STRING);
 }
 
-BOOST_AUTO_TEST_CASE(delete_function_P_signed_0)
-{
+BOOST_AUTO_TEST_CASE(delete_function_P_signed_0) {
   CIEC_STRING sIn1("Lorem ipsum dolor sit"_STRING);
   CIEC_STRING sResult(func_DELETE(sIn1, CIEC_INT(6), CIEC_INT(0)));
   BOOST_TEST(sResult == "Lorem ipsum dolor sit"_STRING);
 }
 
-BOOST_AUTO_TEST_CASE(delete_function_P_signed_negative_number)
-{
+BOOST_AUTO_TEST_CASE(delete_function_P_signed_negative_number) {
   CIEC_STRING sIn1("Lorem ipsum dolor sit"_STRING);
   CIEC_STRING sResult(func_DELETE(sIn1, CIEC_INT(6), CIEC_INT(-32370)));
   BOOST_TEST(sResult == "Lorem ipsum dolor sit"_STRING);
 }
 
-BOOST_AUTO_TEST_CASE(delete_function_length_exceeding_string)
-{
+BOOST_AUTO_TEST_CASE(delete_function_length_exceeding_string) {
   CIEC_STRING sIn1("Lorem ipsum dolor sit"_STRING);
   CIEC_STRING sResult(func_DELETE(sIn1, CIEC_INT(6), CIEC_INT(30)));
   BOOST_TEST(sResult == "Lorem ipsum dolor sit"_STRING);
 }
 
-BOOST_AUTO_TEST_CASE(eq_true)
-{
+BOOST_AUTO_TEST_CASE(eq_true) {
   CIEC_INT nInt1(10);
   CIEC_INT nInt2(10);
   BOOST_TEST(func_EQ(nInt1, nInt2) == true);
 }
 
-BOOST_AUTO_TEST_CASE(eq_false)
-{
+BOOST_AUTO_TEST_CASE(eq_false) {
   CIEC_INT nInt1(10);
   CIEC_INT nInt2(-10);
   BOOST_TEST(func_EQ(nInt1, nInt2) == false);
 }
 
-BOOST_AUTO_TEST_CASE(eq_true_variadic_3)
-{
+BOOST_AUTO_TEST_CASE(eq_true_variadic_3) {
   CIEC_SINT number1(10);
   CIEC_INT number2(10);
   CIEC_DINT number3(10);
   BOOST_TEST(func_EQ(number1, number2, number3) == true);
 }
 
-BOOST_AUTO_TEST_CASE(eq_true_variadic_4)
-{
+BOOST_AUTO_TEST_CASE(eq_true_variadic_4) {
   CIEC_SINT number1(10);
   CIEC_INT number2(10);
   CIEC_DINT number3(10);
@@ -428,16 +396,14 @@ BOOST_AUTO_TEST_CASE(eq_true_variadic_4)
   BOOST_TEST(func_EQ(number1, number2, number3, number4) == true);
 }
 
-BOOST_AUTO_TEST_CASE(eq_false_variadic_3)
-{
+BOOST_AUTO_TEST_CASE(eq_false_variadic_3) {
   CIEC_SINT number1(10);
   CIEC_INT number2(10);
   CIEC_DINT number3(-10);
   BOOST_TEST(func_EQ(number1, number2, number3) == false);
 }
 
-BOOST_AUTO_TEST_CASE(eq_false_variadic_4)
-{
+BOOST_AUTO_TEST_CASE(eq_false_variadic_4) {
   CIEC_SINT number1(10);
   CIEC_INT number2(10);
   CIEC_DINT number3(10);
@@ -445,8 +411,7 @@ BOOST_AUTO_TEST_CASE(eq_false_variadic_4)
   BOOST_TEST(func_EQ(number1, number2, number3, number4) == false);
 }
 
-BOOST_AUTO_TEST_CASE(eq_array_fixed)
-{
+BOOST_AUTO_TEST_CASE(eq_array_fixed) {
   CIEC_ARRAY_FIXED<CIEC_INT, 0, 1> array1 = {17_INT, 4_INT};
   CIEC_ARRAY_FIXED<CIEC_INT, 0, 1> array2 = {17_INT, 4_INT};
   CIEC_ARRAY_FIXED<CIEC_INT, 0, 1> array3 = {21_INT, 42_INT};
@@ -458,8 +423,7 @@ BOOST_AUTO_TEST_CASE(eq_array_fixed)
   BOOST_TEST(func_EQ(array1, array5) == false);
 }
 
-BOOST_AUTO_TEST_CASE(eq_struct)
-{
+BOOST_AUTO_TEST_CASE(eq_struct) {
   CIEC_EndianessTestStruct struct1(true_BOOL, 17_DINT, 4_LWORD);
   CIEC_EndianessTestStruct struct2(true_BOOL, 17_DINT, 4_LWORD);
   CIEC_EndianessTestStruct struct3(true_BOOL, 21_DINT, 42_LWORD);
@@ -567,50 +531,43 @@ BOOST_AUTO_TEST_CASE(le_false_variadic_4) {
   BOOST_TEST(func_LE(70_SINT, 100_INT, 80_DINT, 90_LINT) == false);
 }
 
-BOOST_AUTO_TEST_CASE(ne_true)
-{
+BOOST_AUTO_TEST_CASE(ne_true) {
   CIEC_INT nInt1(10);
   CIEC_INT nInt2(10);
   BOOST_TEST(func_NE(nInt1, nInt2) == false);
 }
 
-BOOST_AUTO_TEST_CASE(ne_false)
-{
+BOOST_AUTO_TEST_CASE(ne_false) {
   CIEC_INT nInt1(10);
   CIEC_INT nInt2(-10);
   BOOST_TEST(func_NE(nInt1, nInt2) == true);
 }
 
-BOOST_AUTO_TEST_CASE(eq_true_mixed_types)
-{
+BOOST_AUTO_TEST_CASE(eq_true_mixed_types) {
   CIEC_LINT nLint1(10);
   CIEC_INT nInt2(10);
   BOOST_TEST(func_EQ(nLint1, nInt2) == true);
 }
 
-BOOST_AUTO_TEST_CASE(eq_false_mixed_types)
-{
+BOOST_AUTO_TEST_CASE(eq_false_mixed_types) {
   CIEC_LINT nLint1(10);
   CIEC_INT nInt2(-10);
   BOOST_TEST(func_EQ(nLint1, nInt2) == false);
 }
 
-BOOST_AUTO_TEST_CASE(ne_true_mixed_types)
-{
+BOOST_AUTO_TEST_CASE(ne_true_mixed_types) {
   CIEC_LINT nLint1(10);
   CIEC_INT nInt2(10);
   BOOST_TEST(func_NE(nLint1, nInt2) == false);
 }
 
-BOOST_AUTO_TEST_CASE(ne_false_mixed_types)
-{
+BOOST_AUTO_TEST_CASE(ne_false_mixed_types) {
   CIEC_LINT nLint1(10);
   CIEC_INT nInt2(-10);
   BOOST_TEST(func_NE(nLint1, nInt2) == true);
 }
 
-BOOST_AUTO_TEST_CASE(ne_array_fixed)
-{
+BOOST_AUTO_TEST_CASE(ne_array_fixed) {
   CIEC_ARRAY_FIXED<CIEC_INT, 0, 1> array1 = {17_INT, 4_INT};
   CIEC_ARRAY_FIXED<CIEC_INT, 0, 1> array2 = {17_INT, 4_INT};
   CIEC_ARRAY_FIXED<CIEC_INT, 0, 1> array3 = {21_INT, 42_INT};
@@ -622,8 +579,7 @@ BOOST_AUTO_TEST_CASE(ne_array_fixed)
   BOOST_TEST(func_NE(array1, array5) == true);
 }
 
-BOOST_AUTO_TEST_CASE(ne_struct)
-{
+BOOST_AUTO_TEST_CASE(ne_struct) {
   CIEC_EndianessTestStruct struct1(true_BOOL, 17_DINT, 4_LWORD);
   CIEC_EndianessTestStruct struct2(true_BOOL, 17_DINT, 4_LWORD);
   CIEC_EndianessTestStruct struct3(true_BOOL, 21_DINT, 42_LWORD);
@@ -631,8 +587,7 @@ BOOST_AUTO_TEST_CASE(ne_struct)
   BOOST_TEST(func_NE(struct1, struct3) == true);
 }
 
-BOOST_AUTO_TEST_CASE(implicit_bool_casts)
-{
+BOOST_AUTO_TEST_CASE(implicit_bool_casts) {
   bool bSame = std::is_same<CIEC_BOOL, forte::core::mpl::implicit_cast<CIEC_BOOL, CIEC_BOOL>::type>::value;
   BOOST_TEST(bSame);
   bSame = std::is_same<CIEC_BYTE, forte::core::mpl::implicit_cast<CIEC_BOOL, CIEC_BYTE>::type>::value;
@@ -645,77 +600,69 @@ BOOST_AUTO_TEST_CASE(implicit_bool_casts)
   BOOST_TEST(bSame);
 }
 
-BOOST_AUTO_TEST_CASE(and_function_BYTE_DWORD)
-{
+BOOST_AUTO_TEST_CASE(and_function_BYTE_DWORD) {
   CIEC_BYTE nByte(10);
   CIEC_DWORD nDword(30010);
   CIEC_DWORD nResult(func_AND(nByte, nDword));
   BOOST_TEST(static_cast<TForteDWord>(nResult) == 10);
 }
 
-BOOST_AUTO_TEST_CASE(and_function_DWORD_BYTE)
-{
+BOOST_AUTO_TEST_CASE(and_function_DWORD_BYTE) {
   CIEC_BYTE nByte(10);
   CIEC_DWORD nDword(30010);
   CIEC_DWORD nResult(func_AND(nDword, nByte));
   BOOST_TEST(static_cast<TForteDWord>(nResult) == 10);
 }
 
-BOOST_AUTO_TEST_CASE(or_function_BYTE_DWORD)
-{
+BOOST_AUTO_TEST_CASE(or_function_BYTE_DWORD) {
   CIEC_BYTE nByte(10);
   CIEC_DWORD nDword(30100);
   CIEC_DWORD nResult(func_OR(nByte, nDword));
   BOOST_TEST(static_cast<TForteDWord>(nResult) == 30110);
 }
 
-BOOST_AUTO_TEST_CASE(or_function_DWORD_BYTE)
-{
+BOOST_AUTO_TEST_CASE(or_function_DWORD_BYTE) {
   CIEC_BYTE nByte(10);
   CIEC_DWORD nDword(30100);
   CIEC_DWORD nResult(func_OR(nDword, nByte));
   BOOST_TEST(static_cast<TForteDWord>(nResult) == 30110);
 }
 
-BOOST_AUTO_TEST_CASE(xor_function_BYTE_DWORD)
-{
+BOOST_AUTO_TEST_CASE(xor_function_BYTE_DWORD) {
   CIEC_BYTE nByte(10);
   CIEC_DWORD nDword(30100);
   CIEC_DWORD nResult(func_XOR(nByte, nDword));
   BOOST_TEST(static_cast<TForteDWord>(nResult) == 30110);
 }
 
-BOOST_AUTO_TEST_CASE(xor_function_DWORD_BYTE)
-{
+BOOST_AUTO_TEST_CASE(xor_function_DWORD_BYTE) {
   CIEC_BYTE nByte(10);
   CIEC_DWORD nDword(30100);
   CIEC_DWORD nResult(func_XOR(nDword, nByte));
   BOOST_TEST(static_cast<TForteDWord>(nResult) == 30110);
 }
 
-BOOST_AUTO_TEST_CASE(add_function_UDINT_USINT)
-{
+BOOST_AUTO_TEST_CASE(add_function_UDINT_USINT) {
   CIEC_USINT nUsint(10);
   CIEC_UDINT nUdint(30010);
   CIEC_UDINT nResult(func_ADD(nUdint, nUsint));
   BOOST_TEST(static_cast<TForteDWord>(nResult) == 30020);
 }
 
-BOOST_AUTO_TEST_CASE(add_function_LREAL_USINT)
-{
+BOOST_AUTO_TEST_CASE(add_function_LREAL_USINT) {
   CIEC_USINT nUsint(10);
   CIEC_LREAL nLreal(30010);
   CIEC_LREAL nResult(func_ADD(nLreal, nUsint));
   BOOST_TEST(static_cast<CIEC_LREAL::TValueType>(nResult) == 30020);
 }
 
-//BOOST_AUTO_TEST_CASE(add_function_LREAL_ULINT) //should fail, currently no way to automatically test this
+// BOOST_AUTO_TEST_CASE(add_function_LREAL_ULINT) //should fail, currently no way to automatically test this
 //{
-//  CIEC_ULINT nUsint(10);
-//  CIEC_LREAL nLreal(30010);
-//  CIEC_LREAL nResult(ADD(nLreal, nUsint));
-//  BOOST_TEST(static_cast<TForteDWord>(nResult) == 30020);
-//}
+//   CIEC_ULINT nUsint(10);
+//   CIEC_LREAL nLreal(30010);
+//   CIEC_LREAL nResult(ADD(nLreal, nUsint));
+//   BOOST_TEST(static_cast<TForteDWord>(nResult) == 30020);
+// }
 
 BOOST_AUTO_TEST_CASE(add_different_int_types_of_literals) {
   CIEC_LINT result;
@@ -728,8 +675,7 @@ BOOST_AUTO_TEST_CASE(add_variadic) {
   BOOST_TEST(static_cast<CIEC_LINT::TValueType>(func_ADD(1_SINT, 2_INT, 3_DINT, 4_LINT)) == 10);
 }
 
-BOOST_AUTO_TEST_CASE(concat3)
-{
+BOOST_AUTO_TEST_CASE(concat3) {
   CIEC_STRING sFristString("THIS_IS_THE_FIRST_STRING"_STRING);
   CIEC_STRING sSecondString("_THIS_IS_THE_SECOND_STRING"_STRING);
   CIEC_STRING sThirdString("_THIS_IS_THE_THIRD_STRING"_STRING);
@@ -737,68 +683,65 @@ BOOST_AUTO_TEST_CASE(concat3)
   BOOST_TEST(sConcatString == "THIS_IS_THE_FIRST_STRING_THIS_IS_THE_SECOND_STRING_THIS_IS_THE_THIRD_STRING"_STRING);
 }
 
-BOOST_AUTO_TEST_CASE(concat4)
-{
+BOOST_AUTO_TEST_CASE(concat4) {
   CIEC_STRING sFristString("THIS_IS_THE_FIRST_STRING"_STRING);
   CIEC_STRING sSecondString("_THIS_IS_THE_SECOND_STRING"_STRING);
   CIEC_STRING sThirdString("_THIS_IS_THE_THIRD_STRING"_STRING);
   CIEC_STRING sForthString("_THIS_IS_THE_FORTH_STRING"_STRING);
   CIEC_STRING sConcatString(func_CONCAT(sFristString, sSecondString, sThirdString, sForthString));
-  BOOST_TEST(sConcatString == "THIS_IS_THE_FIRST_STRING_THIS_IS_THE_SECOND_STRING_THIS_IS_THE_THIRD_STRING_THIS_IS_THE_FORTH_STRING"_STRING);
+  BOOST_TEST(
+      sConcatString ==
+      "THIS_IS_THE_FIRST_STRING_THIS_IS_THE_SECOND_STRING_THIS_IS_THE_THIRD_STRING_THIS_IS_THE_FORTH_STRING"_STRING);
 }
 
-BOOST_AUTO_TEST_CASE(concat4_mixed_types)
-{
+BOOST_AUTO_TEST_CASE(concat4_mixed_types) {
   CIEC_STRING sFristString("THIS_IS_THE_FIRST_STRING"_STRING);
   CIEC_STRING sSecondString("THIS_IS_THE_SECOND_STRING"_STRING);
   CIEC_STRING sThirdString("THIS_IS_THE_THIRD_STRING"_STRING);
   CIEC_STRING sForthString("THIS_IS_THE_FORTH_STRING"_STRING);
-  CIEC_STRING sConcatString(func_CONCAT('_'_CHAR, sFristString, '_'_CHAR, sSecondString, '_'_CHAR, sThirdString, '_'_CHAR, sForthString));
-  BOOST_TEST(sConcatString == "_THIS_IS_THE_FIRST_STRING_THIS_IS_THE_SECOND_STRING_THIS_IS_THE_THIRD_STRING_THIS_IS_THE_FORTH_STRING"_STRING);
+  CIEC_STRING sConcatString(
+      func_CONCAT('_'_CHAR, sFristString, '_'_CHAR, sSecondString, '_'_CHAR, sThirdString, '_'_CHAR, sForthString));
+  BOOST_TEST(
+      sConcatString ==
+      "_THIS_IS_THE_FIRST_STRING_THIS_IS_THE_SECOND_STRING_THIS_IS_THE_THIRD_STRING_THIS_IS_THE_FORTH_STRING"_STRING);
 }
 
-BOOST_AUTO_TEST_CASE(standard_example_insert)
-{
+BOOST_AUTO_TEST_CASE(standard_example_insert) {
   CIEC_STRING sIn1("ABC"_STRING);
   CIEC_STRING sIn2("XY"_STRING);
   CIEC_STRING sResult = func_INSERT(sIn1, sIn2, CIEC_UINT(2));
   BOOST_TEST(sResult == "ABXYC"_STRING);
 }
 
-BOOST_AUTO_TEST_CASE(insert)
-{
+BOOST_AUTO_TEST_CASE(insert) {
   CIEC_STRING sIn1("Lorem  sit"_STRING);
   CIEC_STRING sIn2("ipsum dolor"_STRING);
   CIEC_STRING sResult = func_INSERT(sIn1, sIn2, CIEC_UINT(6));
   BOOST_TEST(sResult == "Lorem ipsum dolor sit"_STRING);
 }
 
-BOOST_AUTO_TEST_CASE(insert_P_larger_than_input_string)
-{
+BOOST_AUTO_TEST_CASE(insert_P_larger_than_input_string) {
   CIEC_STRING sIn1("Lorem  sit"_STRING);
   CIEC_STRING sIn2("ipsum dolor"_STRING);
   CIEC_STRING sResult = func_INSERT(sIn1, sIn2, CIEC_UINT(11));
   BOOST_TEST(sResult == "Lorem  sit"_STRING);
 }
 
-BOOST_AUTO_TEST_CASE(insert_P_unsigned_0)
-{
+BOOST_AUTO_TEST_CASE(insert_P_unsigned_0) {
   CIEC_STRING sIn1("Lorem  sit"_STRING);
   CIEC_STRING sIn2("ipsum dolor"_STRING);
   CIEC_STRING sResult = func_INSERT(sIn1, sIn2, CIEC_UINT(0));
   BOOST_TEST(sResult == "Lorem  sit"_STRING);
 }
 
-BOOST_AUTO_TEST_CASE(insert_P_signed_0)
-{
+BOOST_AUTO_TEST_CASE(insert_P_signed_0) {
   CIEC_STRING sIn1("Lorem  sit"_STRING);
   CIEC_STRING sIn2("ipsum dolor"_STRING);
   CIEC_STRING sResult = func_INSERT(sIn1, sIn2, CIEC_INT(0));
   BOOST_TEST(sResult == "Lorem  sit"_STRING);
 }
 
-BOOST_AUTO_TEST_CASE(insert_P_signed_negative_number)
-{
+BOOST_AUTO_TEST_CASE(insert_P_signed_negative_number) {
   CIEC_STRING sIn1("Lorem  sit"_STRING);
   CIEC_STRING sIn2("ipsum dolor"_STRING);
   CIEC_STRING sResult = func_INSERT(sIn1, sIn2, CIEC_INT(-20));
@@ -1032,8 +975,7 @@ BOOST_AUTO_TEST_CASE(div_number_and_time_real_DIV_TIME) {
   BOOST_REQUIRE_EQUAL(CIEC_TIME(400000), result);
 }
 
-BOOST_AUTO_TEST_CASE(div_number_and_ltime)
-{
+BOOST_AUTO_TEST_CASE(div_number_and_ltime) {
   CIEC_USINT sint(5);
   CIEC_LTIME time(30);
   CIEC_LTIME result;
@@ -1078,8 +1020,7 @@ BOOST_AUTO_TEST_CASE(add_two_times_with_add) {
   BOOST_REQUIRE_EQUAL(CIEC_TIME(3000), result);
 }
 
-BOOST_AUTO_TEST_CASE(add_two_times_with_add_time)
-{
+BOOST_AUTO_TEST_CASE(add_two_times_with_add_time) {
   CIEC_TIME time1 = CIEC_TIME(1000);
   CIEC_TIME time2 = CIEC_TIME(2000);
   CIEC_TIME result;
@@ -1160,8 +1101,7 @@ BOOST_AUTO_TEST_CASE(add_ltime_and_ltod_with_add_ltod_ltime) {
   BOOST_REQUIRE_EQUAL(CIEC_LTIME_OF_DAY(1000000 + 2000000), result);
 }
 
-BOOST_AUTO_TEST_CASE(add_ldate_and_time_and_ltime_with_add)
-{
+BOOST_AUTO_TEST_CASE(add_ldate_and_time_and_ltime_with_add) {
   CIEC_LTIME time1 = CIEC_LTIME(1000000);
   CIEC_LDATE_AND_TIME date_and_time1 = CIEC_LDATE_AND_TIME(2000000);
   CIEC_LDATE_AND_TIME result;
@@ -1170,8 +1110,7 @@ BOOST_AUTO_TEST_CASE(add_ldate_and_time_and_ltime_with_add)
   BOOST_REQUIRE_EQUAL(CIEC_LDATE_AND_TIME(1000000 + 2000000), result);
 }
 
-BOOST_AUTO_TEST_CASE(add_ldate_and_time_and_ltime_with_add_ldt_ltime)
-{
+BOOST_AUTO_TEST_CASE(add_ldate_and_time_and_ltime_with_add_ldt_ltime) {
   CIEC_LTIME time1 = CIEC_LTIME(1000000);
   CIEC_LDATE_AND_TIME date_and_time1 = CIEC_LDATE_AND_TIME(2000000);
   CIEC_LDATE_AND_TIME result;
@@ -1411,8 +1350,7 @@ BOOST_AUTO_TEST_CASE(Partial_Bool_NOT_Operation) {
   BOOST_REQUIRE_EQUAL(result, CIEC_BOOL(true));
 }
 
-BOOST_AUTO_TEST_CASE(Partial_Byte_NOT_Operation)
-{
+BOOST_AUTO_TEST_CASE(Partial_Byte_NOT_Operation) {
   CIEC_LWORD lword(0xA5A5A5A5A5A5A5A5);
   CIEC_BYTE result;
 
@@ -1420,8 +1358,7 @@ BOOST_AUTO_TEST_CASE(Partial_Byte_NOT_Operation)
   BOOST_REQUIRE_EQUAL(result, CIEC_BYTE(static_cast<TForteByte>(~0xA5)));
 }
 
-BOOST_AUTO_TEST_CASE(Partial_DWord_NOT_Operation)
-{
+BOOST_AUTO_TEST_CASE(Partial_DWord_NOT_Operation) {
   CIEC_LWORD lword(0xA5A5A5A5A5A5A5A5);
   CIEC_DWORD result;
 
@@ -1429,8 +1366,7 @@ BOOST_AUTO_TEST_CASE(Partial_DWord_NOT_Operation)
   BOOST_REQUIRE_EQUAL(result, CIEC_DWORD(~0xA5A5A5A5));
 }
 
-BOOST_AUTO_TEST_CASE(Partial_Word_NOT_Operation)
-{
+BOOST_AUTO_TEST_CASE(Partial_Word_NOT_Operation) {
   CIEC_LWORD lword(0xA5A5A5A5A5A5A5A5);
   CIEC_WORD result;
 
@@ -1438,8 +1374,7 @@ BOOST_AUTO_TEST_CASE(Partial_Word_NOT_Operation)
   BOOST_REQUIRE_EQUAL(result, CIEC_WORD(static_cast<TForteWord>(~0xA5A5)));
 }
 
-BOOST_AUTO_TEST_CASE(Partial_LWord_EQ_Operation)
-{
+BOOST_AUTO_TEST_CASE(Partial_LWord_EQ_Operation) {
   CIEC_LWORD lword(0xA5A5A5A5A5A5A5A5);
   CIEC_DWORD dword(0xA5A5A5A5);
 
@@ -1447,8 +1382,7 @@ BOOST_AUTO_TEST_CASE(Partial_LWord_EQ_Operation)
   BOOST_REQUIRE_EQUAL(CIEC_BOOL(true), result);
 }
 
-BOOST_AUTO_TEST_CASE(Both_Partial_EQ_Operation)
-{
+BOOST_AUTO_TEST_CASE(Both_Partial_EQ_Operation) {
   CIEC_LWORD lword(0xA5A5A5A5A5A5A5A5);
   CIEC_DWORD dword(0xA5A5A5A5);
 
@@ -1456,8 +1390,7 @@ BOOST_AUTO_TEST_CASE(Both_Partial_EQ_Operation)
   BOOST_REQUIRE_EQUAL(CIEC_BOOL(true), result);
 }
 
-BOOST_AUTO_TEST_CASE(Partial_LWord_NE_Operation)
-{
+BOOST_AUTO_TEST_CASE(Partial_LWord_NE_Operation) {
   CIEC_LWORD lword(0xA5A5A5A5A5A5A5A5);
   CIEC_DWORD dword(0xFEFEFEFE);
 
@@ -1465,8 +1398,7 @@ BOOST_AUTO_TEST_CASE(Partial_LWord_NE_Operation)
   BOOST_REQUIRE_EQUAL(CIEC_BOOL(true), result);
 }
 
-BOOST_AUTO_TEST_CASE(Both_Partial_NE_Operation)
-{
+BOOST_AUTO_TEST_CASE(Both_Partial_NE_Operation) {
   CIEC_LWORD lword(0xA5A5A5A5A5A5A5A5);
   CIEC_DWORD dword(0xFEFEFEFE);
 
@@ -1474,40 +1406,35 @@ BOOST_AUTO_TEST_CASE(Both_Partial_NE_Operation)
   BOOST_REQUIRE_EQUAL(CIEC_BOOL(true), result);
 }
 
-BOOST_AUTO_TEST_CASE(Both_Partial_GT_Operation)
-{
+BOOST_AUTO_TEST_CASE(Both_Partial_GT_Operation) {
   CIEC_LWORD lword(0xA5A5A5A5A5A5A5A5);
   CIEC_DWORD dword(0xFEFEFEFE);
 
   BOOST_REQUIRE_EQUAL(CIEC_BOOL(false), func_GT(lword.partial<CIEC_BYTE>(0), dword.partial<CIEC_BYTE>(0)));
 }
 
-BOOST_AUTO_TEST_CASE(Both_Partial_GE_Operations)
-{
+BOOST_AUTO_TEST_CASE(Both_Partial_GE_Operations) {
   CIEC_LWORD lword(0xA5A5A5A5A5A5A5A5);
   CIEC_DWORD dword(0xFEFEFEFE);
 
   BOOST_REQUIRE_EQUAL(CIEC_BOOL(false), func_GE(lword.partial<CIEC_BYTE>(0), dword.partial<CIEC_BYTE>(0)));
 }
 
-BOOST_AUTO_TEST_CASE(Both_Partial_LT_Operations)
-{
+BOOST_AUTO_TEST_CASE(Both_Partial_LT_Operations) {
   CIEC_LWORD lword(0xA5A5A5A5A5A5A5A5);
   CIEC_DWORD dword(0xFEFEFEFE);
 
   BOOST_REQUIRE_EQUAL(CIEC_BOOL(true), func_LT(lword.partial<CIEC_BYTE>(0), dword.partial<CIEC_BYTE>(0)));
 }
 
-BOOST_AUTO_TEST_CASE(Both_Partial_LE_Operations)
-{
+BOOST_AUTO_TEST_CASE(Both_Partial_LE_Operations) {
   CIEC_LWORD lword(0xA5A5A5A5A5A5A5A5);
   CIEC_DWORD dword(0xFEFEFEFE);
 
   BOOST_REQUIRE_EQUAL(CIEC_BOOL(true), func_LE(lword.partial<CIEC_BYTE>(0), dword.partial<CIEC_BYTE>(0)));
 }
 
-BOOST_AUTO_TEST_CASE(func_minus)
-{
+BOOST_AUTO_TEST_CASE(func_minus) {
   CIEC_SINT sint(5);
   CIEC_INT integer(5);
   CIEC_DINT dint(5);
@@ -2124,12 +2051,15 @@ BOOST_AUTO_TEST_CASE(func_to_big_endian_array_typelib_copy_ctor) {
   originalArray[2].setValue(CIEC_LWORD(3));
 
   CIEC_ARRAY_DYNAMIC reversedArray(func_TO_BIG_ENDIAN(originalArray));
-  BOOST_TEST(static_cast<CIEC_LWORD::TValueType>(reinterpret_cast<CIEC_LWORD&>(reversedArray[0])) == 72057594037927936);
-  BOOST_TEST(static_cast<CIEC_LWORD::TValueType>(reinterpret_cast<CIEC_LWORD&>(reversedArray[1])) == 144115188075855872);
-  BOOST_TEST(static_cast<CIEC_LWORD::TValueType>(reinterpret_cast<CIEC_LWORD&>(reversedArray[2])) == 216172782113783808);
+  BOOST_TEST(static_cast<CIEC_LWORD::TValueType>(reinterpret_cast<CIEC_LWORD &>(reversedArray[0])) ==
+             72057594037927936);
+  BOOST_TEST(static_cast<CIEC_LWORD::TValueType>(reinterpret_cast<CIEC_LWORD &>(reversedArray[1])) ==
+             144115188075855872);
+  BOOST_TEST(static_cast<CIEC_LWORD::TValueType>(reinterpret_cast<CIEC_LWORD &>(reversedArray[2])) ==
+             216172782113783808);
 }
 
-BOOST_AUTO_TEST_CASE(func_to_big_endian_struct){
+BOOST_AUTO_TEST_CASE(func_to_big_endian_struct) {
   CIEC_EndianessTestStruct original;
 
   (*static_cast<CIEC_BOOL *>(original.getMemberNamed(STRID(Val1)))) = CIEC_BOOL(true);
@@ -2138,12 +2068,15 @@ BOOST_AUTO_TEST_CASE(func_to_big_endian_struct){
 
   CIEC_EndianessTestStruct reversed;
   reversed = func_TO_BIG_ENDIAN(original);
-  BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(*reinterpret_cast<CIEC_BOOL *>(reversed.getMemberNamed(STRID(Val1)))) == true);
-  BOOST_TEST(static_cast<CIEC_DINT::TValueType>(*reinterpret_cast<CIEC_DINT *>(reversed.getMemberNamed(STRID(Val2)))) == 922746880);
-  BOOST_TEST(static_cast<CIEC_LWORD::TValueType>(*reinterpret_cast<CIEC_LWORD *>(reversed.getMemberNamed(STRID(Val3)))) == 1099511627776);
+  BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(*reinterpret_cast<CIEC_BOOL *>(reversed.getMemberNamed(STRID(Val1)))) ==
+             true);
+  BOOST_TEST(static_cast<CIEC_DINT::TValueType>(*reinterpret_cast<CIEC_DINT *>(reversed.getMemberNamed(STRID(Val2)))) ==
+             922746880);
+  BOOST_TEST(static_cast<CIEC_LWORD::TValueType>(
+                 *reinterpret_cast<CIEC_LWORD *>(reversed.getMemberNamed(STRID(Val3)))) == 1099511627776);
 }
 
-BOOST_AUTO_TEST_CASE(output_negation_bool_test){
+BOOST_AUTO_TEST_CASE(output_negation_bool_test) {
   CIEC_BOOL inBool(false);
   CIEC_BOOL outBool(false);
   testSTInIsOutBoolDummyFunction(inBool, ST_EXTEND_LIFETIME(CIEC_ANY_BIT_NOT(outBool)));
@@ -2153,7 +2086,7 @@ BOOST_AUTO_TEST_CASE(output_negation_bool_test){
   BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(outBool) == false);
 }
 
-BOOST_AUTO_TEST_CASE(output_negation_lword_test){
+BOOST_AUTO_TEST_CASE(output_negation_lword_test) {
   CIEC_LWORD inLword(0xFEFEFEFEFEFEFEFE);
   CIEC_LWORD outLword(0);
   testSTInIsOutLWordDummyFunction(inLword, ST_EXTEND_LIFETIME(CIEC_ANY_BIT_NOT(outLword)));
@@ -2167,35 +2100,34 @@ BOOST_AUTO_TEST_CASE(output_partial_BOOL_assignment_test) {
   BOOST_TEST(static_cast<CIEC_LWORD::TValueType>(outLword) == 0x01);
 }
 
-BOOST_AUTO_TEST_CASE(output_partial_BYTE_assignment_test){
+BOOST_AUTO_TEST_CASE(output_partial_BYTE_assignment_test) {
   CIEC_BYTE inByte(0xFE);
   CIEC_LWORD outLword(0x00);
   testSTInIsOutByteDummyFunction(inByte, ST_EXTEND_LIFETIME(outLword.partial<CIEC_BYTE>(0)));
   BOOST_TEST(static_cast<CIEC_LWORD::TValueType>(outLword) == 0xFE);
 }
 
-BOOST_AUTO_TEST_CASE(output_partial_WORD_assignment_test){
+BOOST_AUTO_TEST_CASE(output_partial_WORD_assignment_test) {
   CIEC_WORD inWord(0xFEFE);
   CIEC_LWORD outLword(0x00);
   testSTInIsOutWordDummyFunction(inWord, ST_EXTEND_LIFETIME(outLword.partial<CIEC_WORD>(0)));
   BOOST_TEST(static_cast<CIEC_LWORD::TValueType>(outLword) == 0xFEFE);
 }
 
-BOOST_AUTO_TEST_CASE(output_partial_DWORD_assignment_test){
+BOOST_AUTO_TEST_CASE(output_partial_DWORD_assignment_test) {
   CIEC_DWORD inDword(0xFEFEFEFE);
   CIEC_LWORD outLword(0x00);
   testSTInIsOutDWordDummyFunction(inDword, ST_EXTEND_LIFETIME(outLword.partial<CIEC_DWORD>(0)));
   BOOST_TEST(static_cast<CIEC_LWORD::TValueType>(outLword) == 0xFEFEFEFE);
 }
 
-BOOST_AUTO_TEST_CASE(is_valid_REAL){
+BOOST_AUTO_TEST_CASE(is_valid_REAL) {
   CIEC_REAL valid0(0.0f);
   CIEC_REAL validMax(std::numeric_limits<float>::max());
   CIEC_REAL validMin(std::numeric_limits<float>::min());
   CIEC_REAL inValidInf(std::numeric_limits<float>::infinity());
   CIEC_REAL inValidNaN(NAN);
-  
-  
+
   BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID(valid0)) == true);
   BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID(validMax)) == true);
   BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID(validMin)) == true);
@@ -2203,8 +2135,7 @@ BOOST_AUTO_TEST_CASE(is_valid_REAL){
   BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID(inValidNaN)) == false);
 }
 
-BOOST_AUTO_TEST_CASE(is_valid_LREAL)
-{
+BOOST_AUTO_TEST_CASE(is_valid_LREAL) {
   CIEC_LREAL valid0(0.0);
   CIEC_LREAL validMax(std::numeric_limits<double>::max());
   CIEC_LREAL validMin(std::numeric_limits<double>::min());
@@ -2291,7 +2222,7 @@ BOOST_AUTO_TEST_CASE(is_valid_bcd_WORD) {
   using TestType = CIEC_WORD;
   constexpr size_t valueTypeSize = sizeof(TestType::TValueType);
   TestType test;
-  for(size_t i = 0; i < valueTypeSize; ++i) {
+  for (size_t i = 0; i < valueTypeSize; ++i) {
     const size_t bitShift = i * 8;
     test = TestType(0x00U << bitShift);
     BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == true);
@@ -2364,7 +2295,7 @@ BOOST_AUTO_TEST_CASE(is_valid_bcd_DWORD) {
   using TestType = CIEC_DWORD;
   constexpr size_t valueTypeSize = sizeof(TestType::TValueType);
   TestType test;
-  for(size_t i = 0; i < valueTypeSize; ++i) {
+  for (size_t i = 0; i < valueTypeSize; ++i) {
     const size_t bitShift = i * 8;
     test = TestType(0x00U << bitShift);
     BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == true);
@@ -2437,7 +2368,7 @@ BOOST_AUTO_TEST_CASE(is_valid_bcd_LWORD) {
   using TestType = CIEC_LWORD;
   constexpr size_t valueTypeSize = sizeof(TestType::TValueType);
   TestType test;
-  for(size_t i = 0; i < valueTypeSize; ++i) {
+  for (size_t i = 0; i < valueTypeSize; ++i) {
     const size_t bitShift = i * 8;
     test = TestType(0x00U << bitShift);
     BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == true);
@@ -2506,8 +2437,7 @@ BOOST_AUTO_TEST_CASE(is_valid_bcd_LWORD) {
   }
 }
 
-BOOST_AUTO_TEST_CASE(ATAN2_function_REALs, *boost::unit_test::tolerance(0.00001))
-{
+BOOST_AUTO_TEST_CASE(ATAN2_function_REALs, *boost::unit_test::tolerance(0.00001)) {
   CIEC_REAL result;
   CIEC_REAL paramX(5);
   CIEC_REAL paramY(10);
@@ -2525,8 +2455,7 @@ BOOST_AUTO_TEST_CASE(ATAN2_function_LREALs, *boost::unit_test::tolerance(0.00001
   BOOST_TEST(static_cast<CIEC_LREAL::TValueType>(result) == 1.1071487177940904);
 }
 
-BOOST_AUTO_TEST_CASE(ATAN2_function_REAL_LREAL_mixed, *boost::unit_test::tolerance(0.00001))
-{
+BOOST_AUTO_TEST_CASE(ATAN2_function_REAL_LREAL_mixed, *boost::unit_test::tolerance(0.00001)) {
   CIEC_LREAL result;
   CIEC_LREAL paramX(5);
   CIEC_REAL paramY(10);

@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2024 AIT
+ * Copyright (c) 2024 AIT
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -11,7 +11,6 @@
  *******************************************************************************/
 
 #include "PowerlinkFunctionBlockAO.h"
-
 
 void PowerlinkFunctionBlockAO::cnSynchCallback() {
   CEplStackWrapper &eplStack = CEplStackWrapper::getInstance();
@@ -34,15 +33,15 @@ void PowerlinkFunctionBlockAO::cnSynchCallback() {
 }
 
 void PowerlinkFunctionBlockAO::executePowerlinkEvent(const TEventID paEIID,
-                           CEventChainExecutionThread *const paECET,
-                           TEventID scmEventINITID,
-                           TEventID scmEventREQID,
-                           TEventID scmEventINITOID,
-                           TEventID scmEventCNFID,
-                           const CIEC_BOOL &var_QI,
-                           CIEC_BOOL &var_QO,
-                           const CIEC_USINT &var_CNID,
-                           const CIEC_UINT &var_MODID) {
+                                                     CEventChainExecutionThread *const paECET,
+                                                     TEventID scmEventINITID,
+                                                     TEventID scmEventREQID,
+                                                     TEventID scmEventINITOID,
+                                                     TEventID scmEventCNFID,
+                                                     const CIEC_BOOL &var_QI,
+                                                     CIEC_BOOL &var_QO,
+                                                     const CIEC_USINT &var_CNID,
+                                                     const CIEC_UINT &var_MODID) {
   if (paEIID == scmEventINITID) {
     if (var_QI == true) {
       initOk = false;
@@ -50,14 +49,14 @@ void PowerlinkFunctionBlockAO::executePowerlinkEvent(const TEventID paEIID,
       CEplStackWrapper &eplStack = CEplStackWrapper::getInstance();
 
       CProcessImageMatrix *moduleIOs = eplStack.getProcessImageMatrixIn()->getModuleEntries(
-        var_CNID.getUnsignedValue(), var_MODID.getUnsignedValue());
+          var_CNID.getUnsignedValue(), var_MODID.getUnsignedValue());
 
       if (moduleIOs) {
         // Outputs (process inputs) always start with i = 0
         // Check xap.xml if a BitUnused is present
         for (unsigned int i = 0; i < moduleIOs->getNrOfEntries() - 1; i++) {
           eplMapping.mCurrentValues.pushBack(new EplMapping::EplMappingValues(
-            moduleIOs->getEntry(i)[0], moduleIOs->getEntry(i)[1], moduleIOs->getEntry(i)[2]));
+              moduleIOs->getEntry(i)[0], moduleIOs->getEntry(i)[1], moduleIOs->getEntry(i)[2]));
         }
 
         delete moduleIOs;
@@ -77,7 +76,7 @@ void PowerlinkFunctionBlockAO::executePowerlinkEvent(const TEventID paEIID,
       EplMapping::TEplMappingList::Iterator it = eplMapping.mCurrentValues.begin();
       for (TPortId i = 3; i < getFBInterfaceSpec().mNumDIs && it != itEnd; i++, ++it) {
         short ioVal = static_cast<CIEC_INT *>(getDI(i))->getSignedValue();
-        *reinterpret_cast<short*>(it->mCurrentValue) = ioVal;
+        *reinterpret_cast<short *>(it->mCurrentValue) = ioVal;
       }
       sync.unlock();
     }

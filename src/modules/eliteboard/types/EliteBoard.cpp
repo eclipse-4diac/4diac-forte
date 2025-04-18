@@ -28,7 +28,6 @@ USE_STRING_ID(PortI);
 USE_STRING_ID(PortJ);
 USE_STRING_ID(PortK);
 
-
 #include "PortAdapter_adp.h"
 #include "iec61131_functions.h"
 #include "forte_array_common.h"
@@ -48,28 +47,35 @@ const CStringDictionary::TStringId FORTE_EliteBoard::scmEventInputNames[] = {STR
 const TForteInt16 FORTE_EliteBoard::scmEOWithIndexes[] = {-1};
 const CStringDictionary::TStringId FORTE_EliteBoard::scmEventOutputNames[] = {STRID(MAPO)};
 const SAdapterInstanceDef FORTE_EliteBoard::scmAdapterInstances[] = {
-  {STRID(PortAdapter), STRID(PortA), true},
-  {STRID(PortAdapter), STRID(PortB), true},
-  {STRID(PortAdapter), STRID(PortC), true},
-  {STRID(PortAdapter), STRID(PortD), true},
-  {STRID(PortAdapter), STRID(PortE), true},
-  {STRID(PortAdapter), STRID(PortF), true},
-  {STRID(PortAdapter), STRID(PortG), true},
-  {STRID(PortAdapter), STRID(PortH), true},
-  {STRID(PortAdapter), STRID(PortI), true},
-  {STRID(PortAdapter), STRID(PortJ), true},
-  {STRID(PortAdapter), STRID(PortK), true}
-};
-const SFBInterfaceSpec FORTE_EliteBoard::scmFBInterfaceSpec = {
-  1, scmEventInputNames, nullptr, nullptr, scmEIWithIndexes,
-  1, scmEventOutputNames, nullptr, nullptr, scmEOWithIndexes,
-  0, nullptr, nullptr,
-  0, nullptr, nullptr,
-  0, nullptr,
-  11, scmAdapterInstances
-};
+    {STRID(PortAdapter), STRID(PortA), true}, {STRID(PortAdapter), STRID(PortB), true},
+    {STRID(PortAdapter), STRID(PortC), true}, {STRID(PortAdapter), STRID(PortD), true},
+    {STRID(PortAdapter), STRID(PortE), true}, {STRID(PortAdapter), STRID(PortF), true},
+    {STRID(PortAdapter), STRID(PortG), true}, {STRID(PortAdapter), STRID(PortH), true},
+    {STRID(PortAdapter), STRID(PortI), true}, {STRID(PortAdapter), STRID(PortJ), true},
+    {STRID(PortAdapter), STRID(PortK), true}};
+const SFBInterfaceSpec FORTE_EliteBoard::scmFBInterfaceSpec = {1,
+                                                               scmEventInputNames,
+                                                               nullptr,
+                                                               nullptr,
+                                                               scmEIWithIndexes,
+                                                               1,
+                                                               scmEventOutputNames,
+                                                               nullptr,
+                                                               nullptr,
+                                                               scmEOWithIndexes,
+                                                               0,
+                                                               nullptr,
+                                                               nullptr,
+                                                               0,
+                                                               nullptr,
+                                                               nullptr,
+                                                               0,
+                                                               nullptr,
+                                                               11,
+                                                               scmAdapterInstances};
 
-FORTE_EliteBoard::FORTE_EliteBoard(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_EliteBoard::FORTE_EliteBoard(const CStringDictionary::TStringId paInstanceNameId,
+                                   forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId),
     var_PortA(STRID(PortA), *this, true),
     var_PortB(STRID(PortB), *this, true),
@@ -82,21 +88,42 @@ FORTE_EliteBoard::FORTE_EliteBoard(const CStringDictionary::TStringId paInstance
     var_PortI(STRID(PortI), *this, true),
     var_PortJ(STRID(PortJ), *this, true),
     var_PortK(STRID(PortK), *this, true),
-    conn_MAPO(*this, 0) {
-};
+    conn_MAPO(*this, 0) {};
 
 bool FORTE_EliteBoard::initialize() {
-  if(!var_PortA.initialize()) { return false; }
-  if(!var_PortB.initialize()) { return false; }
-  if(!var_PortC.initialize()) { return false; }
-  if(!var_PortD.initialize()) { return false; }
-  if(!var_PortE.initialize()) { return false; }
-  if(!var_PortF.initialize()) { return false; }
-  if(!var_PortG.initialize()) { return false; }
-  if(!var_PortH.initialize()) { return false; }
-  if(!var_PortI.initialize()) { return false; }
-  if(!var_PortJ.initialize()) { return false; }
-  if(!var_PortK.initialize()) { return false; }
+  if (!var_PortA.initialize()) {
+    return false;
+  }
+  if (!var_PortB.initialize()) {
+    return false;
+  }
+  if (!var_PortC.initialize()) {
+    return false;
+  }
+  if (!var_PortD.initialize()) {
+    return false;
+  }
+  if (!var_PortE.initialize()) {
+    return false;
+  }
+  if (!var_PortF.initialize()) {
+    return false;
+  }
+  if (!var_PortG.initialize()) {
+    return false;
+  }
+  if (!var_PortH.initialize()) {
+    return false;
+  }
+  if (!var_PortI.initialize()) {
+    return false;
+  }
+  if (!var_PortJ.initialize()) {
+    return false;
+  }
+  if (!var_PortK.initialize()) {
+    return false;
+  }
   var_PortA.setParentFB(this, 0);
   var_PortB.setParentFB(this, 1);
   var_PortC.setParentFB(this, 2);
@@ -111,19 +138,18 @@ bool FORTE_EliteBoard::initialize() {
   return CFunctionBlock::initialize();
 }
 
-
 void FORTE_EliteBoard::executeEvent(const TEventID paEIID, CEventChainExecutionThread *const paECET) {
   // start port configuration
   if (paEIID == scmEventMAPID) {
-      mCurrentAdapterIndex = 0;
-      configPorts(paECET);
-      return;
+    mCurrentAdapterIndex = 0;
+    configPorts(paECET);
+    return;
   }
   // continuing port configuration
-  if (paEIID == getPortAdapterByIndex(mCurrentAdapterIndex-1).evt_MAPO()) {
-      configPorts(paECET);
-      sendOutputEvent(scmEventMAPOID, paECET);
-      return;
+  if (paEIID == getPortAdapterByIndex(mCurrentAdapterIndex - 1).evt_MAPO()) {
+    configPorts(paECET);
+    sendOutputEvent(scmEventMAPOID, paECET);
+    return;
   }
 }
 
@@ -144,7 +170,7 @@ CIEC_ANY *FORTE_EliteBoard::getDO(size_t) {
 }
 
 CAdapter *FORTE_EliteBoard::getAdapterUnchecked(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_PortA;
     case 1: return &var_PortB;
     case 2: return &var_PortC;
@@ -161,7 +187,7 @@ CAdapter *FORTE_EliteBoard::getAdapterUnchecked(const size_t paIndex) {
 }
 
 CEventConnection *FORTE_EliteBoard::getEOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_MAPO;
   }
   // unknown paIndex
@@ -178,40 +204,29 @@ CDataConnection *FORTE_EliteBoard::getDOConUnchecked(TPortId) {
 
 // The base addresses of the MMIO GPIO ports. Provided by the vendor.
 constexpr uint32_t port_addresses[] = {
-  GPIOA_BASE, GPIOB_BASE, GPIOC_BASE, GPIOD_BASE, GPIOE_BASE, GPIOF_BASE,
-  GPIOG_BASE, GPIOH_BASE, GPIOI_BASE, GPIOJ_BASE, GPIOK_BASE,
+    GPIOA_BASE, GPIOB_BASE, GPIOC_BASE, GPIOD_BASE, GPIOE_BASE, GPIOF_BASE,
+    GPIOG_BASE, GPIOH_BASE, GPIOI_BASE, GPIOJ_BASE, GPIOK_BASE,
 };
 
 FORTE_PortAdapter &FORTE_EliteBoard::getPortAdapterByIndex(int index) {
   switch (index) {
-    case scmPortAAdpNum:
-      return var_PortA;
-    case scmPortBAdpNum:
-      return var_PortB;
-    case scmPortCAdpNum:
-      return var_PortC;
-    case scmPortDAdpNum:
-      return var_PortD;
-    case scmPortEAdpNum:
-      return var_PortE;
-    case scmPortFAdpNum:
-      return var_PortF;
-    case scmPortGAdpNum:
-      return var_PortG;
-    case scmPortHAdpNum:
-      return var_PortH;
-    case scmPortIAdpNum:
-      return var_PortI;
-    case scmPortJAdpNum:
-      return var_PortJ;
-    case scmPortKAdpNum:
-      return var_PortK;
+    case scmPortAAdpNum: return var_PortA;
+    case scmPortBAdpNum: return var_PortB;
+    case scmPortCAdpNum: return var_PortC;
+    case scmPortDAdpNum: return var_PortD;
+    case scmPortEAdpNum: return var_PortE;
+    case scmPortFAdpNum: return var_PortF;
+    case scmPortGAdpNum: return var_PortG;
+    case scmPortHAdpNum: return var_PortH;
+    case scmPortIAdpNum: return var_PortI;
+    case scmPortJAdpNum: return var_PortJ;
+    case scmPortKAdpNum: return var_PortK;
   }
 }
 
 int FORTE_EliteBoard::configPorts(CEventChainExecutionThread *const paECET) {
-  for (;mCurrentAdapterIndex < mAdapterCount; mCurrentAdapterIndex++) {
-    if(FORTE_EliteBoard::configurePortFB(mCurrentAdapterIndex, paECET)) {
+  for (; mCurrentAdapterIndex < mAdapterCount; mCurrentAdapterIndex++) {
+    if (FORTE_EliteBoard::configurePortFB(mCurrentAdapterIndex, paECET)) {
       mCurrentAdapterIndex++;
       return mCurrentAdapterIndex;
     }
@@ -219,7 +234,7 @@ int FORTE_EliteBoard::configPorts(CEventChainExecutionThread *const paECET) {
   return mCurrentAdapterIndex;
 }
 
-bool FORTE_EliteBoard::configurePortFB(int index, CEventChainExecutionThread * const paECET) {
+bool FORTE_EliteBoard::configurePortFB(int index, CEventChainExecutionThread *const paECET) {
   auto &adapter = getPortAdapterByIndex(index);
   if (adapter.getPeer() == nullptr) {
     // Adapter is not connected.

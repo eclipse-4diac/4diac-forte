@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2016 - 2022 Johannes Messmer (admin@jomess.com), fortiss GmbH, 
+ * Copyright (c) 2016 - 2022 Johannes Messmer (admin@jomess.com), fortiss GmbH,
  *                           Jonathan Lainer
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -32,17 +32,16 @@ namespace forte::core::io {
       virtual CIEC_ANY::EDataTypeID getIOObserverDataType() = 0;
       virtual IOMapper::Direction getDirection() = 0;
 
-      IOHandle* getHandle(){
+      IOHandle *getHandle() {
         return mHandle;
       }
 
+    protected:
+      virtual void onHandle(IOHandle *const paHandle);
+      virtual void dropHandle();
 
-        protected:
-          virtual void onHandle(IOHandle* const paHandle);
-          virtual void dropHandle();
     private:
-      IOHandle* mHandle;
-
+      IOHandle *mHandle;
   };
 
-}
+} // namespace forte::core::io

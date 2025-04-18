@@ -27,9 +27,9 @@ namespace forte {
 
   namespace com_infra {
 
-    class CModbusComLayer : public CComLayer{
+    class CModbusComLayer : public CComLayer {
       public:
-        CModbusComLayer(CComLayer* paUpperLayer, CBaseCommFB* paComFB);
+        CModbusComLayer(CComLayer *paUpperLayer, CBaseCommFB *paComFB);
         ~CModbusComLayer() override;
 
         EComResponse sendData(void *paData, unsigned int paSize) override; // top interface, called from top
@@ -39,36 +39,36 @@ namespace forte {
 
       private:
         struct STcpParams {
-          char mIp[16];
-          unsigned int mPort;
+            char mIp[16];
+            unsigned int mPort;
         };
         struct SRtuParams {
-          char mDevice[256];
-          int mBaud;
-          char mParity;
-          int mDataBit;
-          int mStopBit;
-          EModbusFlowControl mFlowControl;
+            char mDevice[256];
+            int mBaud;
+            char mParity;
+            int mDataBit;
+            int mStopBit;
+            EModbusFlowControl mFlowControl;
         };
         struct SAddrRange {
-          EModbusFunction mFunction;
-          unsigned int mStartAddress;
-          unsigned int mNrAddresses;
+            EModbusFunction mFunction;
+            unsigned int mStartAddress;
+            unsigned int mNrAddresses;
         };
         struct SCommonParams {
-          unsigned int mNrPolls;
-          unsigned int mNrSends;
-          long mPollFrequency;
-          unsigned int mSlaveId;
-          SAddrRange mRead[100];
-          SAddrRange mSend[100];
-          unsigned int mResponseTimeout;
-          unsigned int mByteTimeout;
+            unsigned int mNrPolls;
+            unsigned int mNrSends;
+            long mPollFrequency;
+            unsigned int mSlaveId;
+            SAddrRange mRead[100];
+            SAddrRange mSend[100];
+            unsigned int mResponseTimeout;
+            unsigned int mByteTimeout;
         };
         struct SConnection {
-          char mIdString[256];
-          unsigned int mUseCount;
-          CModbusConnection *mConnection;
+            char mIdString[256];
+            unsigned int mUseCount;
+            CModbusConnection *mConnection;
         };
 
         template<typename T>
@@ -79,13 +79,18 @@ namespace forte {
         EComResponse openConnection(char *paLayerParameter) override;
         void closeConnection() override;
 
-        EModbusFunction decodeFunction(const char* paParam, int *strIndex, EModbusFunction paDefaultFunction=eHoldingRegister);
-        int processClientParams(const char* paLayerParams, STcpParams* paTcpParams, SRtuParams* paRtuParams, SCommonParams* paCommonParams, char* paIdString);
-        int findNextStartAddress(const char* paString, int paStartIndex);
-        int findNextStopAddress(const char* paString, int paStartIndex);
-        bool isIp(const char* paIp);
+        EModbusFunction
+        decodeFunction(const char *paParam, int *strIndex, EModbusFunction paDefaultFunction = eHoldingRegister);
+        int processClientParams(const char *paLayerParams,
+                                STcpParams *paTcpParams,
+                                SRtuParams *paRtuParams,
+                                SCommonParams *paCommonParams,
+                                char *paIdString);
+        int findNextStartAddress(const char *paString, int paStartIndex);
+        int findNextStopAddress(const char *paString, int paStartIndex);
+        bool isIp(const char *paIp);
 
-        CModbusConnection* getClientConnection(const char* paIdString);
+        CModbusConnection *getClientConnection(const char *paIdString);
         void putConnection(CModbusConnection *paModbusConn);
 
         EComResponse mInterruptResp;
@@ -100,8 +105,8 @@ namespace forte {
         static std::vector<SConnection> smConnections;
     };
 
-  }
+  } // namespace com_infra
 
-}
+} // namespace forte
 
 #endif /* MODBUSCOMLAYER_H_ */

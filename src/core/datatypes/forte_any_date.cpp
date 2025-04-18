@@ -10,7 +10,7 @@
  * Contributors:
  *    Monika Wener, Alois Zoitl, Stansilav Meduna
  *      - initial implementation and rework communication infrastructure
-  *******************************************************************************/
+ *******************************************************************************/
 #include <stdlib.h>
 #include "forte_any_date.h"
 
@@ -18,13 +18,13 @@
 
 TForteInt32 CIEC_ANY_DATE::smTimeZoneOffset = -1;
 
-TForteInt32 CIEC_ANY_DATE::getTimeZoneOffset(){
-  if(smTimeZoneOffset == -1){
+TForteInt32 CIEC_ANY_DATE::getTimeZoneOffset() {
+  if (smTimeZoneOffset == -1) {
     time_t t = 24 * 60 * 60; // 2. 1. 1970 00:00:00 for UTC
 
     struct tm ptm;
     forte_localtime(&t, &ptm);
-    if(ptm.tm_mday < 2) {
+    if (ptm.tm_mday < 2) {
       smTimeZoneOffset = 60 * ptm.tm_hour + ptm.tm_min - 24 * 60;
     } else {
       smTimeZoneOffset = 60 * ptm.tm_hour + ptm.tm_min;
@@ -41,7 +41,7 @@ bool CIEC_ANY_DATE::setDateAndTime(struct tm &paTM, unsigned int paMilliSec) {
   time_t nTime;
   nTime = forte_timegm(&paTM);
 
-  if(nTime == (time_t) -1) {
+  if (nTime == (time_t) -1) {
     return false;
   }
 
@@ -56,6 +56,6 @@ struct tm *CIEC_ANY_DATE::getTimeStruct(struct tm *const paTimeStruct) const {
   return forte_gmtime(&nTime, paTimeStruct);
 }
 
-unsigned int CIEC_ANY_DATE::getMilliSeconds() const{
+unsigned int CIEC_ANY_DATE::getMilliSeconds() const {
   return static_cast<unsigned int>((getTUINT64() / 1000000ULL) % 1000ULL);
 }

@@ -24,13 +24,14 @@ USE_STRING_ID(QI);
 USE_STRING_ID(QO);
 USE_STRING_ID(UINT);
 
-
 DEFINE_ADAPTER_TYPE(FORTE_IORevPiBusAdapter, STRID(IORevPiBusAdapter))
 
 const CStringDictionary::TStringId FORTE_IORevPiBusAdapter::scmDataInputNames[] = {STRID(QO)};
 const CStringDictionary::TStringId FORTE_IORevPiBusAdapter::scmDataInputTypeIds[] = {STRID(BOOL)};
-const CStringDictionary::TStringId FORTE_IORevPiBusAdapter::scmDataOutputNames[] = {STRID(QI), STRID(MasterId), STRID(Index)};
-const CStringDictionary::TStringId FORTE_IORevPiBusAdapter::scmDataOutputTypeIds[] = {STRID(BOOL), STRID(UINT), STRID(UINT)};
+const CStringDictionary::TStringId FORTE_IORevPiBusAdapter::scmDataOutputNames[] = {STRID(QI), STRID(MasterId),
+                                                                                    STRID(Index)};
+const CStringDictionary::TStringId FORTE_IORevPiBusAdapter::scmDataOutputTypeIds[] = {STRID(BOOL), STRID(UINT),
+                                                                                      STRID(UINT)};
 const TDataIOID FORTE_IORevPiBusAdapter::scmEIWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_IORevPiBusAdapter::scmEIWithIndexes[] = {0};
 const CStringDictionary::TStringId FORTE_IORevPiBusAdapter::scmEventInputNames[] = {STRID(INITO)};
@@ -40,71 +41,91 @@ const TForteInt16 FORTE_IORevPiBusAdapter::scmEOWithIndexes[] = {0};
 const CStringDictionary::TStringId FORTE_IORevPiBusAdapter::scmEventOutputNames[] = {STRID(INIT)};
 const CStringDictionary::TStringId FORTE_IORevPiBusAdapter::scmEventOutputTypeIds[] = {STRID(Event), STRID(Event)};
 
-const SFBInterfaceSpec FORTE_IORevPiBusAdapter::scmFBInterfaceSpecSocket = {
-  1, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,
-  1, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes,
-  1, scmDataInputNames, scmDataInputTypeIds,
-  3, scmDataOutputNames, scmDataOutputTypeIds,
-  0, nullptr,
-  0, nullptr
-};
+const SFBInterfaceSpec FORTE_IORevPiBusAdapter::scmFBInterfaceSpecSocket = {1,
+                                                                            scmEventInputNames,
+                                                                            scmEventInputTypeIds,
+                                                                            scmEIWith,
+                                                                            scmEIWithIndexes,
+                                                                            1,
+                                                                            scmEventOutputNames,
+                                                                            scmEventOutputTypeIds,
+                                                                            scmEOWith,
+                                                                            scmEOWithIndexes,
+                                                                            1,
+                                                                            scmDataInputNames,
+                                                                            scmDataInputTypeIds,
+                                                                            3,
+                                                                            scmDataOutputNames,
+                                                                            scmDataOutputTypeIds,
+                                                                            0,
+                                                                            nullptr,
+                                                                            0,
+                                                                            nullptr};
 
-const SFBInterfaceSpec FORTE_IORevPiBusAdapter::scmFBInterfaceSpecPlug = {
-  1, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes,
-  1, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,
-  3, scmDataOutputNames, scmDataOutputTypeIds,
-  1, scmDataInputNames, scmDataInputTypeIds,
-  0, nullptr,
-  0, nullptr
-};
+const SFBInterfaceSpec FORTE_IORevPiBusAdapter::scmFBInterfaceSpecPlug = {1,
+                                                                          scmEventOutputNames,
+                                                                          scmEventOutputTypeIds,
+                                                                          scmEOWith,
+                                                                          scmEOWithIndexes,
+                                                                          1,
+                                                                          scmEventInputNames,
+                                                                          scmEventInputTypeIds,
+                                                                          scmEIWith,
+                                                                          scmEIWithIndexes,
+                                                                          3,
+                                                                          scmDataOutputNames,
+                                                                          scmDataOutputTypeIds,
+                                                                          1,
+                                                                          scmDataInputNames,
+                                                                          scmDataInputTypeIds,
+                                                                          0,
+                                                                          nullptr,
+                                                                          0,
+                                                                          nullptr};
 
 void FORTE_IORevPiBusAdapter::readInputData(const TEventID paEIID) {
-  if(isSocket()) {
-    switch(paEIID) {
+  if (isSocket()) {
+    switch (paEIID) {
       case scmEventINITOID: {
         readData(0, *mDIs[0], mDIConns[0]);
         break;
       }
-      default:
-        break;
+      default: break;
     }
   } else {
-    switch(paEIID) {
+    switch (paEIID) {
       case scmEventINITID: {
         readData(2, *mDIs[2], mDIConns[2]);
         readData(1, *mDIs[1], mDIConns[1]);
         readData(0, *mDIs[0], mDIConns[0]);
         break;
       }
-      default:
-        break;
+      default: break;
     }
   }
 }
 
 void FORTE_IORevPiBusAdapter::writeOutputData(const TEventID paEIID) {
-  if(isSocket()) {
-    switch(paEIID) {
+  if (isSocket()) {
+    switch (paEIID) {
       case scmEventINITID: {
         writeData(2, *mDOs[2], mDOConns[2]);
         writeData(1, *mDOs[1], mDOConns[1]);
         writeData(0, *mDOs[0], mDOConns[0]);
         break;
       }
-      default:
-        break;
+      default: break;
     }
   } else {
-    switch(paEIID) {
+    switch (paEIID) {
       case scmEventINITOID: {
         writeData(0, *mDOs[0], mDOConns[0]);
         break;
       }
-      default:
-        break;
+      default: break;
     }
   }
 }
 
-const TForteUInt8 FORTE_IORevPiBusAdapter::scmSlaveConfigurationIO[] = { };
+const TForteUInt8 FORTE_IORevPiBusAdapter::scmSlaveConfigurationIO[] = {};
 const TForteUInt8 FORTE_IORevPiBusAdapter::scmSlaveConfigurationIONum = 0;

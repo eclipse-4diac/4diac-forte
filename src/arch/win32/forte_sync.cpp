@@ -16,27 +16,25 @@
 #ifdef _WIN32_WINNT
 #undef _WIN32_WINNT
 #endif
-#define _WIN32_WINNT 0x0600  //windows vista version, which included AcquireSRWLockExclusive and ReleaseSRWLockExclusive
+#define _WIN32_WINNT 0x0600 // windows vista version, which included AcquireSRWLockExclusive and ReleaseSRWLockExclusive
 
 #endif //__MINGW32__
 #endif //__GNUC__
 
 #include "forte_sync.h"
 
-
-
-CPCSyncObject::CPCSyncObject() : mLock(SRWLOCK_INIT){
+CPCSyncObject::CPCSyncObject() : mLock(SRWLOCK_INIT) {
 }
 
-CPCSyncObject::~CPCSyncObject(){
-  //we don't need to do anything here
+CPCSyncObject::~CPCSyncObject() {
+  // we don't need to do anything here
 }
 
-void CPCSyncObject::lock(){
+void CPCSyncObject::lock() {
   AcquireSRWLockExclusive(&mLock);
 }
 
-//!Free the resource coming after the lock command
-void CPCSyncObject::unlock(){
+//! Free the resource coming after the lock command
+void CPCSyncObject::unlock() {
   ReleaseSRWLockExclusive(&mLock);
 }

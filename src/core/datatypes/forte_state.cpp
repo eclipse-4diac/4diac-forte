@@ -14,7 +14,6 @@
 
 USE_STRING_ID(STATE);
 
-
 DEFINE_FIRMWARE_DATATYPE(STATE, STRID(STATE))
 
 const CIEC_STATE::TValueType CIEC_STATE::scmMaxVal = std::numeric_limits<CIEC_STATE::TValueType>::max();

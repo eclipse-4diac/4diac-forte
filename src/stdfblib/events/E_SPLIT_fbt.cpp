@@ -19,7 +19,6 @@ USE_STRING_ID(EO2);
 USE_STRING_ID(E_SPLIT);
 USE_STRING_ID(Event);
 
-
 #include "criticalregion.h"
 #include "resource.h"
 #include "forte_bool.h"
@@ -37,16 +36,29 @@ const CStringDictionary::TStringId FORTE_E_SPLIT::scmEventInputTypeIds[] = {STRI
 const TForteInt16 FORTE_E_SPLIT::scmEOWithIndexes[] = {-1, -1};
 const CStringDictionary::TStringId FORTE_E_SPLIT::scmEventOutputNames[] = {STRID(EO1), STRID(EO2)};
 const CStringDictionary::TStringId FORTE_E_SPLIT::scmEventOutputTypeIds[] = {STRID(Event), STRID(Event)};
-const SFBInterfaceSpec FORTE_E_SPLIT::scmFBInterfaceSpec = {
-  1, scmEventInputNames, scmEventInputTypeIds, nullptr, scmEIWithIndexes,
-  2, scmEventOutputNames, scmEventOutputTypeIds, nullptr, scmEOWithIndexes,
-  0, nullptr, nullptr,
-  0, nullptr, nullptr,
-  0, nullptr,
-  0, nullptr
-};
+const SFBInterfaceSpec FORTE_E_SPLIT::scmFBInterfaceSpec = {1,
+                                                            scmEventInputNames,
+                                                            scmEventInputTypeIds,
+                                                            nullptr,
+                                                            scmEIWithIndexes,
+                                                            2,
+                                                            scmEventOutputNames,
+                                                            scmEventOutputTypeIds,
+                                                            nullptr,
+                                                            scmEOWithIndexes,
+                                                            0,
+                                                            nullptr,
+                                                            nullptr,
+                                                            0,
+                                                            nullptr,
+                                                            nullptr,
+                                                            0,
+                                                            nullptr,
+                                                            0,
+                                                            nullptr};
 
-FORTE_E_SPLIT::FORTE_E_SPLIT(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_E_SPLIT::FORTE_E_SPLIT(const CStringDictionary::TStringId paInstanceNameId,
+                             forte::core::CFBContainer &paContainer) :
     CBasicFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, nullptr),
     conn_EO1(*this, 0),
     conn_EO2(*this, 1) {
@@ -54,22 +66,27 @@ FORTE_E_SPLIT::FORTE_E_SPLIT(const CStringDictionary::TStringId paInstanceNameId
 
 void FORTE_E_SPLIT::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   do {
-    switch(mECCState) {
+    switch (mECCState) {
       case scmStateSTART:
-        if(scmEventEIID == paEIID) enterStateState(paECET);
-        else return; //no transition cleared
+        if (scmEventEIID == paEIID)
+          enterStateState(paECET);
+        else
+          return; // no transition cleared
         break;
       case scmStateState:
-        if(1) enterStateSTART(paECET);
-        else return; //no transition cleared
+        if (1)
+          enterStateSTART(paECET);
+        else
+          return; // no transition cleared
         break;
       default:
-        DEVLOG_ERROR("The state is not in the valid range! The state value is: %d. The max value can be: 2.", mECCState.operator TForteUInt16 ());
+        DEVLOG_ERROR("The state is not in the valid range! The state value is: %d. The max value can be: 2.",
+                     mECCState.operator TForteUInt16());
         mECCState = 0; // 0 is always the initial state
         return;
     }
     paEIID = cgInvalidEventID; // we have to clear the event after the first check in order to ensure correct behavior
-  } while(true);
+  } while (true);
 }
 
 void FORTE_E_SPLIT::enterStateSTART(CEventChainExecutionThread *const) {
@@ -99,7 +116,7 @@ CIEC_ANY *FORTE_E_SPLIT::getDO(size_t) {
 }
 
 CEventConnection *FORTE_E_SPLIT::getEOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_EO1;
     case 1: return &conn_EO2;
   }
@@ -117,4 +134,3 @@ CDataConnection *FORTE_E_SPLIT::getDOConUnchecked(TPortId) {
 CIEC_ANY *FORTE_E_SPLIT::getVarInternal(size_t) {
   return nullptr;
 }
-

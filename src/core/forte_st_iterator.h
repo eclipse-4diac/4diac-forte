@@ -21,25 +21,32 @@
 
 #include <cmath>
 
-/** @brief This iterator class is a generator/input iterator, producing a new value on each iteration, until the preset goal value is met
+/** @brief This iterator class is a generator/input iterator, producing a new value on each iteration, until the preset
+ * goal value is met
  *
  */
 template<typename E, typename B = E>
 class ST_FOR_ITER {
   public:
     ST_FOR_ITER(E &paCounter, const E paStart, const E paTo, const B paBy = B(1)) :
-        mCounter(paCounter), mInternalCounter(paStart), mTo(paTo), mBy(paBy) {
+        mCounter(paCounter),
+        mInternalCounter(paStart),
+        mTo(paTo),
+        mBy(paBy) {
       mCounter = mInternalCounter;
       const typename B::TValueType byValue = static_cast<typename B::TValueType>(mBy);
       const typename E::TValueType toValue = static_cast<typename E::TValueType>(mTo);
       if (byValue > 0) {
-        const typename E::TValueType limit = std::numeric_limits<typename E::TValueType>::max() - static_cast<typename E::TValueType>(byValue);
+        const typename E::TValueType limit =
+            std::numeric_limits<typename E::TValueType>::max() - static_cast<typename E::TValueType>(byValue);
         if (toValue > limit) {
           DEVLOG_ERROR("The given TO value would produce an overflow - TO changed to the highest achievable value\n");
           mTo = E(limit);
         }
       } else if (byValue < 0) {
-        const typename E::TValueType limit = std::numeric_limits<typename E::TValueType>::min() - static_cast<typename E::TValueType>(byValue); // byValue is negative, so its in fact an addition
+        const typename E::TValueType limit =
+            std::numeric_limits<typename E::TValueType>::min() -
+            static_cast<typename E::TValueType>(byValue); // byValue is negative, so its in fact an addition
         if (toValue < limit) {
           DEVLOG_ERROR("The given TO value would produce an underflow - TO changed to the lowest achievable value\n");
           mTo = E(limit);
@@ -68,7 +75,7 @@ class ST_FOR_ITER {
       return *this;
     }
 
-    E& operator*() {
+    E &operator*() {
       return mInternalCounter;
     }
 
@@ -87,10 +94,12 @@ class ST_FOR_ITER {
 
     bool isExpired() const {
       const typename B::TValueType byValue = static_cast<typename B::TValueType>(mBy);
-      if(byValue > 0) {
-        return static_cast<typename E::TValueType>(mInternalCounter) > static_cast<typename E::TValueType>(mTo) ? true : false;
+      if (byValue > 0) {
+        return static_cast<typename E::TValueType>(mInternalCounter) > static_cast<typename E::TValueType>(mTo) ? true
+                                                                                                                : false;
       }
-      return static_cast<typename E::TValueType>(mInternalCounter) < static_cast<typename E::TValueType>(mTo) ? true : false;
+      return static_cast<typename E::TValueType>(mInternalCounter) < static_cast<typename E::TValueType>(mTo) ? true
+                                                                                                              : false;
     }
 
     E &mCounter;

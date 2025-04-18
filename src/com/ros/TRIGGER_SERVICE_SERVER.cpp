@@ -34,50 +34,70 @@ USE_STRING_ID(STRING);
 USE_STRING_ID(SUCCESS);
 USE_STRING_ID(TRIGGER_SERVICE_SERVER);
 
-
 DEFINE_FIRMWARE_FB(FORTE_TRIGGER_SERVICE_SERVER, STRID(TRIGGER_SERVICE_SERVER))
 
-const CStringDictionary::TStringId FORTE_TRIGGER_SERVICE_SERVER::scmDataInputNames[] = { STRID(QI), STRID(NAMESPACE), STRID(SRVNAME), STRID(SUCCESS), STRID(MESSAGE) };
+const CStringDictionary::TStringId FORTE_TRIGGER_SERVICE_SERVER::scmDataInputNames[] = {
+    STRID(QI), STRID(NAMESPACE), STRID(SRVNAME), STRID(SUCCESS), STRID(MESSAGE)};
 
-const CStringDictionary::TStringId FORTE_TRIGGER_SERVICE_SERVER::scmDataInputTypeIds[] = { STRID(BOOL), STRID(STRING), STRID(STRING), STRID(BOOL), STRID(STRING) };
+const CStringDictionary::TStringId FORTE_TRIGGER_SERVICE_SERVER::scmDataInputTypeIds[] = {
+    STRID(BOOL), STRID(STRING), STRID(STRING), STRID(BOOL), STRID(STRING)};
 
-const CStringDictionary::TStringId FORTE_TRIGGER_SERVICE_SERVER::scmDataOutputNames[] = { STRID(QO), STRID(STATUS) };
+const CStringDictionary::TStringId FORTE_TRIGGER_SERVICE_SERVER::scmDataOutputNames[] = {STRID(QO), STRID(STATUS)};
 
-const CStringDictionary::TStringId FORTE_TRIGGER_SERVICE_SERVER::scmDataOutputTypeIds[] = { STRID(BOOL), STRID(STRING) };
+const CStringDictionary::TStringId FORTE_TRIGGER_SERVICE_SERVER::scmDataOutputTypeIds[] = {STRID(BOOL), STRID(STRING)};
 
-const TForteInt16 FORTE_TRIGGER_SERVICE_SERVER::scmEIWithIndexes[] = { 0, 4 };
-const TDataIOID FORTE_TRIGGER_SERVICE_SERVER::scmEIWith[] = { 0, 1, 2, scmWithListDelimiter, 0, 3, 4, scmWithListDelimiter };
-const CStringDictionary::TStringId FORTE_TRIGGER_SERVICE_SERVER::scmEventInputNames[] = { STRID(INIT), STRID(RSP) };
+const TForteInt16 FORTE_TRIGGER_SERVICE_SERVER::scmEIWithIndexes[] = {0, 4};
+const TDataIOID FORTE_TRIGGER_SERVICE_SERVER::scmEIWith[] = {0, 1, 2, scmWithListDelimiter,
+                                                             0, 3, 4, scmWithListDelimiter};
+const CStringDictionary::TStringId FORTE_TRIGGER_SERVICE_SERVER::scmEventInputNames[] = {STRID(INIT), STRID(RSP)};
 const CStringDictionary::TStringId FORTE_TRIGGER_SERVICE_SERVER::scmEventInputTypeIds[] = {STRID(EInit), STRID(Event)};
 
-const TDataIOID FORTE_TRIGGER_SERVICE_SERVER::scmEOWith[] = { 0, 1, scmWithListDelimiter, 0, 1, scmWithListDelimiter };
-const TForteInt16 FORTE_TRIGGER_SERVICE_SERVER::scmEOWithIndexes[] = { 0, 3, -1 };
-const CStringDictionary::TStringId FORTE_TRIGGER_SERVICE_SERVER::scmEventOutputNames[] = { STRID(INITO), STRID(IND) };
+const TDataIOID FORTE_TRIGGER_SERVICE_SERVER::scmEOWith[] = {0, 1, scmWithListDelimiter, 0, 1, scmWithListDelimiter};
+const TForteInt16 FORTE_TRIGGER_SERVICE_SERVER::scmEOWithIndexes[] = {0, 3, -1};
+const CStringDictionary::TStringId FORTE_TRIGGER_SERVICE_SERVER::scmEventOutputNames[] = {STRID(INITO), STRID(IND)};
 const CStringDictionary::TStringId FORTE_TRIGGER_SERVICE_SERVER::scmEventOutputTypeIds[] = {STRID(Event), STRID(Event)};
 
-const SFBInterfaceSpec FORTE_TRIGGER_SERVICE_SERVER::scmFBInterfaceSpec = { 2, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes, 2, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes, 5, scmDataInputNames, scmDataInputTypeIds, 2, scmDataOutputNames, scmDataOutputTypeIds, 0, 0 };
+const SFBInterfaceSpec FORTE_TRIGGER_SERVICE_SERVER::scmFBInterfaceSpec = {2,
+                                                                           scmEventInputNames,
+                                                                           scmEventInputTypeIds,
+                                                                           scmEIWith,
+                                                                           scmEIWithIndexes,
+                                                                           2,
+                                                                           scmEventOutputNames,
+                                                                           scmEventOutputTypeIds,
+                                                                           scmEOWith,
+                                                                           scmEOWithIndexes,
+                                                                           5,
+                                                                           scmDataInputNames,
+                                                                           scmDataInputTypeIds,
+                                                                           2,
+                                                                           scmDataOutputNames,
+                                                                           scmDataOutputTypeIds,
+                                                                           0,
+                                                                           0};
 
 void FORTE_TRIGGER_SERVICE_SERVER::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
-  switch (paEIID){
+  switch (paEIID) {
     case scmEventINITID:
-      //initiate
-      if(!m_Initiated && QI()){
+      // initiate
+      if (!m_Initiated && QI()) {
 
         m_RosNamespace = getExtEvHandler<CROSManager>(*this).ciecStringToStdString(NAMESPACE());
         m_RosMsgName = getExtEvHandler<CROSManager>(*this).ciecStringToStdString(SRVNAME());
         m_nh = new ros::NodeHandle(m_RosNamespace);
-        m_triggerServer = m_nh->advertiseService < FORTE_TRIGGER_SERVICE_SERVER > (m_RosMsgName, &FORTE_TRIGGER_SERVICE_SERVER::triggerCallback, const_cast<FORTE_TRIGGER_SERVICE_SERVER*>(this));
+        m_triggerServer = m_nh->advertiseService<FORTE_TRIGGER_SERVICE_SERVER>(
+            m_RosMsgName, &FORTE_TRIGGER_SERVICE_SERVER::triggerCallback,
+            const_cast<FORTE_TRIGGER_SERVICE_SERVER *>(this));
         m_Initiated = true;
         STATUS() = "Server initiated";
         QO() = true;
       }
-      //terminate
-      else if(m_Initiated && !QI()){
+      // terminate
+      else if (m_Initiated && !QI()) {
         m_nh->shutdown();
         STATUS() = "Server terminated";
         QO() = false;
-      }
-      else{
+      } else {
         STATUS() = "initiation or termination failed";
         QO() = false;
       }
@@ -96,18 +116,20 @@ void FORTE_TRIGGER_SERVICE_SERVER::executeEvent(TEventID paEIID, CEventChainExec
   }
 }
 
-//TODO use or delete first parameter
-bool FORTE_TRIGGER_SERVICE_SERVER::triggerCallback(std_srvs::Trigger::Request &, std_srvs::Trigger::Response &pa_resp, CEventChainExecutionThread *const paECET) {
+// TODO use or delete first parameter
+bool FORTE_TRIGGER_SERVICE_SERVER::triggerCallback(std_srvs::Trigger::Request &,
+                                                   std_srvs::Trigger::Response &pa_resp,
+                                                   CEventChainExecutionThread *const paECET) {
   setEventChainExecutor(paECET);
   getExtEvHandler<CROSManager>(*this).startChain(this);
 
   // is a response available
-  ros::Rate r(2); //1Hz
-  while(!m_ResponseAvailable){
+  ros::Rate r(2); // 1Hz
+  while (!m_ResponseAvailable) {
     r.sleep();
   }
 
-  //write response
+  // write response
   pa_resp.success = SUCCESS();
   pa_resp.message = getExtEvHandler<CROSManager>(*this).ciecStringToStdString(MESSAGE());
 

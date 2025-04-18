@@ -13,33 +13,30 @@
  *******************************************************************************/
 #include "../../core/fbtests/fbtestfixture.h"
 
-
 USE_STRING_ID(E_PERMIT);
 
+struct E_PERMIT_TestFixture : public CFBTestFixtureBase {
 
-struct E_PERMIT_TestFixture : public CFBTestFixtureBase{
-
-    E_PERMIT_TestFixture() : CFBTestFixtureBase(STRID(E_PERMIT)){
+    E_PERMIT_TestFixture() : CFBTestFixtureBase(STRID(E_PERMIT)) {
       setInputData({&mInPERMIT});
       CFBTestFixtureBase::setup();
     }
- 
-    CIEC_BOOL mInPERMIT; //DATA INPUT
+
+    CIEC_BOOL mInPERMIT; // DATA INPUT
 };
 
+BOOST_FIXTURE_TEST_SUITE(PermitTests, E_PERMIT_TestFixture)
 
-BOOST_FIXTURE_TEST_SUITE( PermitTests, E_PERMIT_TestFixture)
+BOOST_AUTO_TEST_CASE(permit) {
+  mInPERMIT = CIEC_BOOL(true);
+  triggerEvent(0);
+  BOOST_CHECK(checkForSingleOutputEventOccurence(0));
+}
 
-  BOOST_AUTO_TEST_CASE(permit){
-    mInPERMIT = CIEC_BOOL(true);
-    triggerEvent(0);
-    BOOST_CHECK(checkForSingleOutputEventOccurence(0));
-  }
-
-  BOOST_AUTO_TEST_CASE(dontPermit){
-    mInPERMIT = CIEC_BOOL(false);
-    triggerEvent(0);
-    BOOST_CHECK(eventChainEmpty());
-  }
+BOOST_AUTO_TEST_CASE(dontPermit) {
+  mInPERMIT = CIEC_BOOL(false);
+  triggerEvent(0);
+  BOOST_CHECK(eventChainEmpty());
+}
 
 BOOST_AUTO_TEST_SUITE_END()

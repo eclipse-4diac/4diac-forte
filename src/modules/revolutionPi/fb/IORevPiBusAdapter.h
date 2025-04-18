@@ -19,8 +19,8 @@
 #include "forte_bool.h"
 #include "forte_uint.h"
 
-class FORTE_IORevPiBusAdapter: public forte::core::io::IOConfigFBMultiAdapter {
-  DECLARE_ADAPTER_TYPE(FORTE_IORevPiBusAdapter)
+class FORTE_IORevPiBusAdapter : public forte::core::io::IOConfigFBMultiAdapter {
+    DECLARE_ADAPTER_TYPE(FORTE_IORevPiBusAdapter)
 
   private:
     static const CStringDictionary::TStringId scmDataInputNames[];
@@ -46,9 +46,8 @@ class FORTE_IORevPiBusAdapter: public forte::core::io::IOConfigFBMultiAdapter {
     void writeOutputData(TEventID paEIID) override;
 
   public:
-    ADAPTER_CTOR_FOR_IO_MULTI (FORTE_IORevPiBusAdapter) {
-    };
-    virtual ~FORTE_IORevPiBusAdapter(){};
+    ADAPTER_CTOR_FOR_IO_MULTI(FORTE_IORevPiBusAdapter) {};
+    virtual ~FORTE_IORevPiBusAdapter() {};
 
     static const TEventID scmEventINITOID = 0;
     static const TEventID scmEventINITID = 0;
@@ -57,19 +56,19 @@ class FORTE_IORevPiBusAdapter: public forte::core::io::IOConfigFBMultiAdapter {
     static const TForteUInt8 scmSlaveConfigurationIONum;
 
     CIEC_BOOL &var_QO() {
-      return *static_cast<CIEC_BOOL*>((isSocket()) ? getDI(0) : getDO(0));
+      return *static_cast<CIEC_BOOL *>((isSocket()) ? getDI(0) : getDO(0));
     }
 
     CIEC_BOOL &var_QI() {
-      return *static_cast<CIEC_BOOL*>((isSocket()) ? getDO(0) : getDI(0));
+      return *static_cast<CIEC_BOOL *>((isSocket()) ? getDO(0) : getDI(0));
     }
 
     CIEC_UINT &var_MasterId() {
-      return *static_cast<CIEC_UINT*>((isSocket()) ? getDO(1) : getDI(1));
+      return *static_cast<CIEC_UINT *>((isSocket()) ? getDO(1) : getDI(1));
     }
 
     CIEC_UINT &var_Index() {
-      return *static_cast<CIEC_UINT*>((isSocket()) ? getDO(2) : getDI(2));
+      return *static_cast<CIEC_UINT *>((isSocket()) ? getDO(2) : getDI(2));
     }
 
     TEventID evt_INITO() {

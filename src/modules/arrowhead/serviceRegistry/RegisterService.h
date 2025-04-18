@@ -19,54 +19,50 @@
 #include <forte_wstring.h>
 #include "RegisterServiceAdp_adp.h"
 
-class FORTE_RegisterService: public CCompositeFB{
-  DECLARE_FIRMWARE_FB(FORTE_RegisterService)
+class FORTE_RegisterService : public CCompositeFB {
+    DECLARE_FIRMWARE_FB(FORTE_RegisterService)
 
-private:
-  static const CStringDictionary::TStringId scmDataInputNames[];
-  static const CStringDictionary::TStringId scmDataInputTypeIds[];
-  CIEC_ServiceRegistryEntry &serviceRegistryEntry() {
-    return *static_cast<CIEC_ServiceRegistryEntry*>(getDI(0));
-  };
+  private:
+    static const CStringDictionary::TStringId scmDataInputNames[];
+    static const CStringDictionary::TStringId scmDataInputTypeIds[];
+    CIEC_ServiceRegistryEntry &serviceRegistryEntry() {
+      return *static_cast<CIEC_ServiceRegistryEntry *>(getDI(0));
+    };
 
-  CIEC_WSTRING &endpoint() {
-    return *static_cast<CIEC_WSTRING*>(getDI(1));
-  };
+    CIEC_WSTRING &endpoint() {
+      return *static_cast<CIEC_WSTRING *>(getDI(1));
+    };
 
-  static const TEventID scmEventregisterID = 0;
-  static const TEventID scmEventunregisterID = 1;
-  static const TForteInt16 scmEIWithIndexes[];
-  static const TDataIOID scmEIWith[];
-  static const CStringDictionary::TStringId scmEventInputNames[];
-  static const CStringDictionary::TStringId scmEventInputTypeIds[];
+    static const TEventID scmEventregisterID = 0;
+    static const TEventID scmEventunregisterID = 1;
+    static const TForteInt16 scmEIWithIndexes[];
+    static const TDataIOID scmEIWith[];
+    static const CStringDictionary::TStringId scmEventInputNames[];
+    static const CStringDictionary::TStringId scmEventInputTypeIds[];
 
-  static const TEventID scmEventdoneRegisterID = 0;
-  static const TEventID scmEventdoneUnregisterID = 1;
-  static const TForteInt16 scmEOWithIndexes[];
-  static const CStringDictionary::TStringId scmEventOutputNames[];
-  static const CStringDictionary::TStringId scmEventOutputTypeIds[];
+    static const TEventID scmEventdoneRegisterID = 0;
+    static const TEventID scmEventdoneUnregisterID = 1;
+    static const TForteInt16 scmEOWithIndexes[];
+    static const CStringDictionary::TStringId scmEventOutputNames[];
+    static const CStringDictionary::TStringId scmEventOutputTypeIds[];
 
-  static const SAdapterInstanceDef scmAdapterInstances[];
+    static const SAdapterInstanceDef scmAdapterInstances[];
 
-  FORTE_RegisterServiceAdp& registerService() {
-    return (*static_cast<FORTE_RegisterServiceAdp*>(mAdapters[0]));
-  };
-  static const int scm_nregisterServiceAdpNum = 0;
-  static const SFBInterfaceSpec scmFBInterfaceSpec;
+    FORTE_RegisterServiceAdp &registerService() {
+      return (*static_cast<FORTE_RegisterServiceAdp *>(mAdapters[0]));
+    };
+    static const int scm_nregisterServiceAdpNum = 0;
+    static const SFBInterfaceSpec scmFBInterfaceSpec;
 
+    static const SCFB_FBConnectionData scmEventConnections[];
 
-  static const SCFB_FBConnectionData scmEventConnections[];
+    static const SCFB_FBConnectionData scmDataConnections[];
+    static const SCFB_FBNData scmFBNData;
 
-  static const SCFB_FBConnectionData scmDataConnections[];
-  static const SCFB_FBNData scmFBNData;
+  public:
+    COMPOSITE_FUNCTION_BLOCK_CTOR(FORTE_RegisterService) {};
 
-public:
-  COMPOSITE_FUNCTION_BLOCK_CTOR(FORTE_RegisterService){
-  };
-
-  ~FORTE_RegisterService() override = default;
-
+    ~FORTE_RegisterService() override = default;
 };
 
-#endif //close the ifdef sequence from the beginning of the file
-
+#endif // close the ifdef sequence from the beginning of the file

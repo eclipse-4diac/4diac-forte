@@ -25,12 +25,13 @@ USE_STRING_ID(REQ);
 USE_STRING_ID(source);
 USE_STRING_ID(WSTRING);
 
-
 DEFINE_FIRMWARE_FB(FORTE_FieldsToPublishEvent, STRID(FieldsToPublishEvent))
 
-const CStringDictionary::TStringId FORTE_FieldsToPublishEvent::scmDataInputNames[] = {STRID(source), STRID(event), STRID(deliveryCompleteUri)};
+const CStringDictionary::TStringId FORTE_FieldsToPublishEvent::scmDataInputNames[] = {STRID(source), STRID(event),
+                                                                                      STRID(deliveryCompleteUri)};
 
-const CStringDictionary::TStringId FORTE_FieldsToPublishEvent::scmDataInputTypeIds[] = {STRID(ArrowheadSystem), STRID(ArrowheadEvent), STRID(WSTRING)};
+const CStringDictionary::TStringId FORTE_FieldsToPublishEvent::scmDataInputTypeIds[] = {
+    STRID(ArrowheadSystem), STRID(ArrowheadEvent), STRID(WSTRING)};
 
 const CStringDictionary::TStringId FORTE_FieldsToPublishEvent::scmDataOutputNames[] = {STRID(publishEvent)};
 
@@ -46,27 +47,36 @@ const TForteInt16 FORTE_FieldsToPublishEvent::scmEOWithIndexes[] = {0, -1};
 const CStringDictionary::TStringId FORTE_FieldsToPublishEvent::scmEventOutputNames[] = {STRID(CNF)};
 const CStringDictionary::TStringId FORTE_FieldsToPublishEvent::scmEventOutputTypeIds[] = {STRID(Event)};
 
-const SFBInterfaceSpec FORTE_FieldsToPublishEvent::scmFBInterfaceSpec = {
-  1,  scmEventInputNames, scmEventInputTypeIds,  scmEIWith,  scmEIWithIndexes,
-  1,  scmEventOutputNames, scmEventOutputTypeIds,  scmEOWith, scmEOWithIndexes,  3,  scmDataInputNames, scmDataInputTypeIds,
-  1,  scmDataOutputNames, scmDataOutputTypeIds,
-  0, 0
-};
+const SFBInterfaceSpec FORTE_FieldsToPublishEvent::scmFBInterfaceSpec = {1,
+                                                                         scmEventInputNames,
+                                                                         scmEventInputTypeIds,
+                                                                         scmEIWith,
+                                                                         scmEIWithIndexes,
+                                                                         1,
+                                                                         scmEventOutputNames,
+                                                                         scmEventOutputTypeIds,
+                                                                         scmEOWith,
+                                                                         scmEOWithIndexes,
+                                                                         3,
+                                                                         scmDataInputNames,
+                                                                         scmDataInputTypeIds,
+                                                                         1,
+                                                                         scmDataOutputNames,
+                                                                         scmDataOutputTypeIds,
+                                                                         0,
+                                                                         0};
 
-void FORTE_FieldsToPublishEvent::alg_REQ(){
-publishEvent().source() = source();
-publishEvent().event() = event();
-publishEvent().deliveryCompleteUri() = deliveryCompleteUri();
-
-
+void FORTE_FieldsToPublishEvent::alg_REQ() {
+  publishEvent().source() = source();
+  publishEvent().event() = event();
+  publishEvent().deliveryCompleteUri() = deliveryCompleteUri();
 }
 
-
-void FORTE_FieldsToPublishEvent::enterStateSTART(CEventChainExecutionThread *const paECET){
+void FORTE_FieldsToPublishEvent::enterStateSTART(CEventChainExecutionThread *const paECET) {
   mECCState = scmStateSTART;
 }
 
-void FORTE_FieldsToPublishEvent::enterStateREQ(CEventChainExecutionThread *const paECET){
+void FORTE_FieldsToPublishEvent::enterStateREQ(CEventChainExecutionThread *const paECET) {
   mECCState = scmStateREQ;
   alg_REQ();
   sendOutputEvent(scmEventCNFID, paECET);
@@ -74,28 +84,27 @@ void FORTE_FieldsToPublishEvent::enterStateREQ(CEventChainExecutionThread *const
 
 void FORTE_FieldsToPublishEvent::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   bool bTransitionCleared;
-  do{
+  do {
     bTransitionCleared = true;
-    switch(mECCState){
+    switch (mECCState) {
       case scmStateSTART:
-        if(scmEventREQID == paEIID)
+        if (scmEventREQID == paEIID)
           enterStateREQ(paECET);
         else
-          bTransitionCleared  = false; //no transition cleared
+          bTransitionCleared = false; // no transition cleared
         break;
       case scmStateREQ:
-        if((1))
+        if ((1))
           enterStateSTART(paECET);
         else
-          bTransitionCleared  = false; //no transition cleared
+          bTransitionCleared = false; // no transition cleared
         break;
       default:
-      DEVLOG_ERROR("The state is not in the valid range! The state value is: %d. The max value can be: 1.", mECCState.operator TForteUInt16 ());
-        mECCState = 0; //0 is always the initial state
+        DEVLOG_ERROR("The state is not in the valid range! The state value is: %d. The max value can be: 1.",
+                     mECCState.operator TForteUInt16());
+        mECCState = 0; // 0 is always the initial state
         break;
     }
-    paEIID = cgInvalidEventID;  // we have to clear the event after the first check in order to ensure correct behavior
-  }while(bTransitionCleared);
+    paEIID = cgInvalidEventID; // we have to clear the event after the first check in order to ensure correct behavior
+  } while (bTransitionCleared);
 }
-
-

@@ -18,13 +18,7 @@
  * They can be printed to a console or archived somewhere (This is implementation dependent).
  */
 
-enum class E_MsgLevel {
-  Info,
-  Warning,
-  Error,
-  Debug,
-  Trace
-};
+enum class E_MsgLevel { Info, Warning, Error, Debug, Trace };
 
 // possible loglevels: NOLOG, LOGERROR, LOGWARNING, LOGINFO, LOGDEBUG
 /* Meaning:
@@ -36,68 +30,68 @@ enum class E_MsgLevel {
  */
 
 #if !(defined(NOLOG) || defined(LOGERROR) || defined(LOGWARNING) || defined(LOGINFO) || defined(LOGDEBUG))
-# define LOGDEBUG  /* Set default loglevel */
+#define LOGDEBUG /* Set default loglevel */
 #endif
 
 #ifdef LOGDEBUG
-# define DEVLOG_ERROR(...) logMessage(E_MsgLevel::Error, __VA_ARGS__)
-# define DEVLOG_WARNING(...) logMessage(E_MsgLevel::Warning, __VA_ARGS__)
-# define DEVLOG_INFO(...) logMessage(E_MsgLevel::Info, __VA_ARGS__)
-# define DEVLOG_DEBUG(...) logMessage(E_MsgLevel::Debug, __VA_ARGS__)
-# define DEVLOG_ERROR_VAR(X) X
-# define DEVLOG_WARNING_VAR(X) X
-# define DEVLOG_INFO_VAR(X) X
-# define DEVLOG_DEBUG_VAR(X) X
+#define DEVLOG_ERROR(...) logMessage(E_MsgLevel::Error, __VA_ARGS__)
+#define DEVLOG_WARNING(...) logMessage(E_MsgLevel::Warning, __VA_ARGS__)
+#define DEVLOG_INFO(...) logMessage(E_MsgLevel::Info, __VA_ARGS__)
+#define DEVLOG_DEBUG(...) logMessage(E_MsgLevel::Debug, __VA_ARGS__)
+#define DEVLOG_ERROR_VAR(X) X
+#define DEVLOG_WARNING_VAR(X) X
+#define DEVLOG_INFO_VAR(X) X
+#define DEVLOG_DEBUG_VAR(X) X
 #endif
 
 #ifdef LOGERROR
-# define DEVLOG_ERROR(...) logMessage(E_MsgLevel::Error, __VA_ARGS__)
-# define DEVLOG_WARNING(...)
-# define DEVLOG_INFO(...)
-# define DEVLOG_DEBUG(...)
-# define DEVLOG_ERROR_VAR(X) X
-# define DEVLOG_WARNING_VAR(X)
-# define DEVLOG_INFO_VAR(X)
-# define DEVLOG_DEBUG_VAR(X)
+#define DEVLOG_ERROR(...) logMessage(E_MsgLevel::Error, __VA_ARGS__)
+#define DEVLOG_WARNING(...)
+#define DEVLOG_INFO(...)
+#define DEVLOG_DEBUG(...)
+#define DEVLOG_ERROR_VAR(X) X
+#define DEVLOG_WARNING_VAR(X)
+#define DEVLOG_INFO_VAR(X)
+#define DEVLOG_DEBUG_VAR(X)
 #endif
 
 #ifdef LOGWARNING
-# define DEVLOG_ERROR(...) logMessage(E_MsgLevel::Error, __VA_ARGS__)
-# define DEVLOG_WARNING(...) logMessage(E_MsgLevel::Warning, __VA_ARGS__)
-# define DEVLOG_INFO(...)
-# define DEVLOG_DEBUG(...)
-# define DEVLOG_ERROR_VAR(X) X
-# define DEVLOG_WARNING_VAR(X) X
-# define DEVLOG_INFO_VAR(X)
-# define DEVLOG_DEBUG_VAR(X)
+#define DEVLOG_ERROR(...) logMessage(E_MsgLevel::Error, __VA_ARGS__)
+#define DEVLOG_WARNING(...) logMessage(E_MsgLevel::Warning, __VA_ARGS__)
+#define DEVLOG_INFO(...)
+#define DEVLOG_DEBUG(...)
+#define DEVLOG_ERROR_VAR(X) X
+#define DEVLOG_WARNING_VAR(X) X
+#define DEVLOG_INFO_VAR(X)
+#define DEVLOG_DEBUG_VAR(X)
 #endif
 
 #ifdef LOGINFO
-# define DEVLOG_ERROR(...) logMessage(E_MsgLevel::Error, __VA_ARGS__)
-# define DEVLOG_WARNING(...) logMessage(E_MsgLevel::Warning, __VA_ARGS__)
-# define DEVLOG_INFO(...) logMessage(E_MsgLevel::Info, __VA_ARGS__)
-# define DEVLOG_DEBUG(...)
-# define DEVLOG_ERROR_VAR(X) X
-# define DEVLOG_WARNING_VAR(X) X
-# define DEVLOG_INFO_VAR(X) X
-# define DEVLOG_DEBUG_VAR(X)
+#define DEVLOG_ERROR(...) logMessage(E_MsgLevel::Error, __VA_ARGS__)
+#define DEVLOG_WARNING(...) logMessage(E_MsgLevel::Warning, __VA_ARGS__)
+#define DEVLOG_INFO(...) logMessage(E_MsgLevel::Info, __VA_ARGS__)
+#define DEVLOG_DEBUG(...)
+#define DEVLOG_ERROR_VAR(X) X
+#define DEVLOG_WARNING_VAR(X) X
+#define DEVLOG_INFO_VAR(X) X
+#define DEVLOG_DEBUG_VAR(X)
 #endif
 
 #ifdef NOLOG
-# define DEVLOG_INFO(...)
-# define DEVLOG_WARNING(...)
-# define DEVLOG_ERROR(...)
-# define DEVLOG_DEBUG(...)
-# define DEVLOG_ERROR_VAR(X)
-# define DEVLOG_WARNING_VAR(X)
-# define DEVLOG_INFO_VAR(X)
-# define DEVLOG_DEBUG_VAR(X)
+#define DEVLOG_INFO(...)
+#define DEVLOG_WARNING(...)
+#define DEVLOG_ERROR(...)
+#define DEVLOG_DEBUG(...)
+#define DEVLOG_ERROR_VAR(X)
+#define DEVLOG_WARNING_VAR(X)
+#define DEVLOG_INFO_VAR(X)
+#define DEVLOG_DEBUG_VAR(X)
 #endif
 
 #if (defined(FORTE_TRACE_EVENTS) && !defined(NOLOG))
-# define FORTE_TRACE(...) logMessage(E_MsgLevel::Trace,  __VA_ARGS__)
+#define FORTE_TRACE(...) logMessage(E_MsgLevel::Trace, __VA_ARGS__)
 #else
-# define FORTE_TRACE(...)
+#define FORTE_TRACE(...)
 #endif
 
 #ifndef NOLOG
@@ -107,6 +101,6 @@ enum class E_MsgLevel {
  */
 void logMessage(E_MsgLevel paLevel, const char *pacMessage, ...);
 
-#endif  //#ifndef NOLOG
+#endif // #ifndef NOLOG
 
 #endif //_DEVLOG_H_

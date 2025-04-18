@@ -18,5 +18,5 @@ USE_STRING_ID(GEN_SERVER)
 DEFINE_GENERIC_FIRMWARE_FB(GEN_SERVER, STRID(GEN_SERVER))
 
 GEN_SERVER::GEN_SERVER(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
-            forte::com_infra::CCommFB(paInstanceNameId, paContainer, forte::com_infra::e_Server){
+    forte::com_infra::CCommFB(paInstanceNameId, paContainer, forte::com_infra::e_Server) {
 }

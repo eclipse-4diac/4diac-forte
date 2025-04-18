@@ -19,7 +19,10 @@
 
 class CLuaAdapter : public CAdapter {
   public:
-    CLuaAdapter(CStringDictionary::TStringId paInstanceNameId, const CLuaAdapterTypeEntry* paTypeEntry, bool paIsPlug, forte::core::CFBContainer &paContainer);
+    CLuaAdapter(CStringDictionary::TStringId paInstanceNameId,
+                const CLuaAdapterTypeEntry *paTypeEntry,
+                bool paIsPlug,
+                forte::core::CFBContainer &paContainer);
     ~CLuaAdapter() override;
 
     CStringDictionary::TStringId getFBTypeId() const override {
@@ -30,7 +33,7 @@ class CLuaAdapter : public CAdapter {
     virtual void readInputData(TEventID paEIID);
     virtual void writeOutputData(TEventID paEO);
 
-    const CLuaAdapterTypeEntry* mTypeEntry;
+    const CLuaAdapterTypeEntry *mTypeEntry;
 };
 
 #endif /* SRC_CORE_LUAADAPTER_H_ */

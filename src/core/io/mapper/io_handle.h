@@ -36,7 +36,7 @@ namespace forte {
             return !!mObserver;
           }
 
-          IOObserver* getObserver() {
+          IOObserver *getObserver() {
             return mObserver;
           }
 
@@ -62,7 +62,6 @@ namespace forte {
           void onChange();
 
         protected:
-
           IODeviceController *mController;
           CIEC_ANY::EDataTypeID mType;
 
@@ -72,14 +71,11 @@ namespace forte {
           virtual void dropObserver();
 
         private:
-
           IOObserver *mObserver;
-
-
       };
 
-    } //namespace IO
-  } //namepsace core
-} //namespace forte
+    } // namespace io
+  } // namespace core
+} // namespace forte
 
 #endif /* SRC_CORE_IO_MAPPER_HANDLE_H_ */

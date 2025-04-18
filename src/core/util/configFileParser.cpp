@@ -17,7 +17,7 @@
 
 CConfigFileParser::CConfigFileParser(const std::string &paFileLocation) {
   mConfigFile = forte_fopen(paFileLocation.c_str(), "r");
-  if(nullptr != mConfigFile) {
+  if (nullptr != mConfigFile) {
     DEVLOG_INFO("[CConfigFileParser]: Configuration file %s opened\n", paFileLocation.c_str());
   } else {
     DEVLOG_ERROR("[CConfigFileParser]: Could not open configuration file %s\n", paFileLocation.c_str());
@@ -25,7 +25,7 @@ CConfigFileParser::CConfigFileParser(const std::string &paFileLocation) {
 }
 
 CConfigFileParser::~CConfigFileParser() {
-  if(nullptr != mConfigFile) {
+  if (nullptr != mConfigFile) {
     DEVLOG_INFO("[CConfigFileParser]: Closing configuration file\n");
     forte_fclose(mConfigFile);
   }
@@ -33,14 +33,14 @@ CConfigFileParser::~CConfigFileParser() {
 
 CConfigFileParser::ParseResult CConfigFileParser::parseNextLine(std::pair<std::string, std::string> &paResult) {
   ParseResult retVal = eFileNotOpened;
-  if(mConfigFile) {
+  if (mConfigFile) {
     char lineBuf[scmLineBuffer];
-    if(nullptr != forte_fgets(lineBuf, scmLineBuffer, mConfigFile)) {
-      if(0 == strcmp(lineBuf, "\n")) {
+    if (nullptr != forte_fgets(lineBuf, scmLineBuffer, mConfigFile)) {
+      if (0 == strcmp(lineBuf, "\n")) {
         retVal = eEmptyLine;
       } else {
         CParameterParser lineParser(lineBuf, scmSeparator, scmNumberOfElementsInLine);
-        if(scmNumberOfElementsInLine == lineParser.parseParameters()) {
+        if (scmNumberOfElementsInLine == lineParser.parseParameters()) {
           paResult.first = lineParser[0];
           paResult.second = lineParser[1];
           retVal = eOk;
@@ -50,7 +50,7 @@ CConfigFileParser::ParseResult CConfigFileParser::parseNextLine(std::pair<std::s
         }
       }
     } else {
-      if(forte_feof(mConfigFile)) {
+      if (forte_feof(mConfigFile)) {
         retVal = eEndOfFile;
       } else {
         retVal = eInternalError;
@@ -64,28 +64,29 @@ CConfigFileParser::ParseResult CConfigFileParser::parseNextLine(std::pair<std::s
   return retVal;
 }
 
-bool CConfigFileParser::lookForKeyValueInFile(CConfigFileParser &paFileParse, const std::string &paKey, const std::string &paValue, bool &paFound) {
+bool CConfigFileParser::lookForKeyValueInFile(CConfigFileParser &paFileParse,
+                                              const std::string &paKey,
+                                              const std::string &paValue,
+                                              bool &paFound) {
 
   bool retVal = true;
   bool moreLinesToRead = true;
   paFound = false;
 
-  while(moreLinesToRead) {
-    std::pair < std::string, std::string > resultPair;
+  while (moreLinesToRead) {
+    std::pair<std::string, std::string> resultPair;
 
-    switch(paFileParse.parseNextLine(resultPair)){
+    switch (paFileParse.parseNextLine(resultPair)) {
       case CConfigFileParser::eOk:
-        if(0 == resultPair.first.compare(paKey) && 0 == resultPair.second.compare(paValue)) {
+        if (0 == resultPair.first.compare(paKey) && 0 == resultPair.second.compare(paValue)) {
           paFound = true;
           moreLinesToRead = false;
         }
         break;
       case CConfigFileParser::eEmptyLine:
-        //do nothing, keep reading
+        // do nothing, keep reading
         break;
-      case CConfigFileParser::eEndOfFile:
-        moreLinesToRead = false;
-        break;
+      case CConfigFileParser::eEndOfFile: moreLinesToRead = false; break;
       default:
         // CConfigFileParser::eWrongLine
         // CConfigFileParser::eFileNotOpened

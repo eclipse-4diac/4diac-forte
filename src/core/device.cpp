@@ -16,15 +16,14 @@
 #include "ecet.h"
 #include <string.h>
 
-EMGMResponse CDevice::executeMGMCommand(forte::core::SManagementCMD &paCommand){
+EMGMResponse CDevice::executeMGMCommand(forte::core::SManagementCMD &paCommand) {
   EMGMResponse retval = EMGMResponse::InvalidDst;
 
-  if(CStringDictionary::scmInvalidStringId == paCommand.mDestination){
+  if (CStringDictionary::scmInvalidStringId == paCommand.mDestination) {
     retval = CResource::executeMGMCommand(paCommand);
-  }
-  else{
+  } else {
     CResource *res = static_cast<CResource *>(CFBContainer::getChild(paCommand.mDestination));
-    if(nullptr != res){
+    if (nullptr != res) {
       paCommand.mDestination = CStringDictionary::scmInvalidStringId;
       retval = res->executeMGMCommand(paCommand);
     }
@@ -32,8 +31,8 @@ EMGMResponse CDevice::executeMGMCommand(forte::core::SManagementCMD &paCommand){
   return retval;
 }
 
-EMGMResponse CDevice::changeExecutionState(EMGMCommandType paCommand){
-  if(EMGMCommandType::Kill == paCommand){
+EMGMResponse CDevice::changeExecutionState(EMGMCommandType paCommand) {
+  if (EMGMCommandType::Kill == paCommand) {
     mDeviceExecution.disableHandlers();
   }
   return CResource::changeExecutionState(paCommand);

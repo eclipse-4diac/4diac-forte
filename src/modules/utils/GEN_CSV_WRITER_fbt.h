@@ -28,25 +28,23 @@ class GEN_CSV_WRITER : public CGenFunctionBlock<CFunctionBlock> {
     DECLARE_GENERIC_FIRMWARE_FB(GEN_CSV_WRITER)
 
   protected:
-    CIEC_BOOL &QI(){
-      return *static_cast<CIEC_BOOL*>(getDI(0));
+    CIEC_BOOL &QI() {
+      return *static_cast<CIEC_BOOL *>(getDI(0));
     }
 
-    CIEC_STRING &FILE_NAME(){
-      return *static_cast<CIEC_STRING*>(getDI(1));
+    CIEC_STRING &FILE_NAME() {
+      return *static_cast<CIEC_STRING *>(getDI(1));
     }
 
     static const CStringDictionary::TStringId scmDataOutputNames[];
     static const CStringDictionary::TStringId scmDataOutputTypeIds[];
-    CIEC_BOOL &QO(){
-      return *static_cast<CIEC_BOOL*>(getDO(0));
-    }
-    ;
+    CIEC_BOOL &QO() {
+      return *static_cast<CIEC_BOOL *>(getDO(0));
+    };
 
-    CIEC_STRING &STATUS(){
-      return *static_cast<CIEC_STRING*>(getDO(1));
-    }
-    ;
+    CIEC_STRING &STATUS() {
+      return *static_cast<CIEC_STRING *>(getDO(1));
+    };
 
     TPortId getNumSD() const {
       return getFBInterfaceSpec().mNumDIs - 2;
@@ -78,11 +76,10 @@ class GEN_CSV_WRITER : public CGenFunctionBlock<CFunctionBlock> {
     ~GEN_CSV_WRITER() override;
 
   private:
-
     void openCSVFile();
     void closeCSVFile();
     void writeCSVFileLine();
-    bool areDIsSameArrayLength(size_t& commonArraySize);
+    bool areDIsSameArrayLength(size_t &commonArraySize);
 
     decltype(forte_fopen(nullptr, nullptr)) mCSVFile;
 
@@ -94,7 +91,6 @@ class GEN_CSV_WRITER : public CGenFunctionBlock<CFunctionBlock> {
     static const CIEC_STRING scmFileNotOpened;
 
     static const size_t scmWriteBufferSize = 100;
-
 };
 
 #endif //_GEN_CSV_WRITER_H_

@@ -17,7 +17,7 @@
  *      - make const char* constructor explicit, adds copy
  *      constructor, removed built-in type operator=
  *      - changes storage to std::string
- * 
+ *
  *    Martin Jobst
  *      - add compare operators
  *      - add equals function
@@ -38,96 +38,94 @@
 /*!\ingroup COREDTS CIEC_STRING represents the string data type according to IEC 61131.
  */
 class CIEC_STRING : public CIEC_ANY_STRING {
-  DECLARE_FIRMWARE_DATATYPE(STRING)
+    DECLARE_FIRMWARE_DATATYPE(STRING)
 
-  // CIEC_STRING to CIEC_STRING comparison operators
-  friend bool operator==(const CIEC_STRING &paLeft, const CIEC_STRING &paRight) {
-    return paLeft.getStorage() == paRight.getStorage();
-  }
+    // CIEC_STRING to CIEC_STRING comparison operators
+    friend bool operator==(const CIEC_STRING &paLeft, const CIEC_STRING &paRight) {
+      return paLeft.getStorage() == paRight.getStorage();
+    }
 
-  friend bool operator!=(const CIEC_STRING &paLeft, const CIEC_STRING &paRight) {
-    return !(paLeft == paRight);
-  }
+    friend bool operator!=(const CIEC_STRING &paLeft, const CIEC_STRING &paRight) {
+      return !(paLeft == paRight);
+    }
 
-  friend bool operator>(const CIEC_STRING &paLeft, const CIEC_STRING &paRight) {
-    return paLeft.getStorage() > paRight.getStorage();
-  }
+    friend bool operator>(const CIEC_STRING &paLeft, const CIEC_STRING &paRight) {
+      return paLeft.getStorage() > paRight.getStorage();
+    }
 
-  friend bool operator<(const CIEC_STRING &paLeft, const CIEC_STRING &paRight) {
-    return paLeft.getStorage() < paRight.getStorage();
-  }
+    friend bool operator<(const CIEC_STRING &paLeft, const CIEC_STRING &paRight) {
+      return paLeft.getStorage() < paRight.getStorage();
+    }
 
-  friend bool operator>=(const CIEC_STRING &paLeft, const CIEC_STRING &paRight) {
-    return paLeft.getStorage() >= paRight.getStorage();
-  }
+    friend bool operator>=(const CIEC_STRING &paLeft, const CIEC_STRING &paRight) {
+      return paLeft.getStorage() >= paRight.getStorage();
+    }
 
-  friend bool operator<=(const CIEC_STRING &paLeft, const CIEC_STRING &paRight) {
-    return paLeft.getStorage() <= paRight.getStorage();
-  }
+    friend bool operator<=(const CIEC_STRING &paLeft, const CIEC_STRING &paRight) {
+      return paLeft.getStorage() <= paRight.getStorage();
+    }
 
-  // CIEC_STRING to std::string and vice versa comparison operators
-  friend bool operator==(const std::string &paLeft, const CIEC_STRING &paRight) {
-    return paLeft == paRight.getStorage();
-  }
+    // CIEC_STRING to std::string and vice versa comparison operators
+    friend bool operator==(const std::string &paLeft, const CIEC_STRING &paRight) {
+      return paLeft == paRight.getStorage();
+    }
 
-  friend bool operator!=(const std::string &paLeft, const CIEC_STRING &paRight) {
-    return !(paLeft == paRight);
-  }
+    friend bool operator!=(const std::string &paLeft, const CIEC_STRING &paRight) {
+      return !(paLeft == paRight);
+    }
 
-  friend bool operator>(const std::string &paLeft, const CIEC_STRING &paRight) {
-    return paLeft > paRight.getStorage();
-  }
+    friend bool operator>(const std::string &paLeft, const CIEC_STRING &paRight) {
+      return paLeft > paRight.getStorage();
+    }
 
-  friend bool operator<(const std::string &paLeft, const CIEC_STRING &paRight) {
-    return paLeft < paRight.getStorage();
-  }
+    friend bool operator<(const std::string &paLeft, const CIEC_STRING &paRight) {
+      return paLeft < paRight.getStorage();
+    }
 
-  friend bool operator>=(const std::string &paLeft, const CIEC_STRING &paRight) {
-    return paLeft >= paRight.getStorage();
-  }
+    friend bool operator>=(const std::string &paLeft, const CIEC_STRING &paRight) {
+      return paLeft >= paRight.getStorage();
+    }
 
-  friend bool operator<=(const std::string &paLeft, const CIEC_STRING &paRight) {
-    return paLeft <= paRight.getStorage();
-  }
+    friend bool operator<=(const std::string &paLeft, const CIEC_STRING &paRight) {
+      return paLeft <= paRight.getStorage();
+    }
 
-  friend bool operator==(const CIEC_STRING &paLeft, const std::string &paRight) {
-    return paLeft.getStorage() == paRight;
-  }
+    friend bool operator==(const CIEC_STRING &paLeft, const std::string &paRight) {
+      return paLeft.getStorage() == paRight;
+    }
 
-  friend bool operator!=(const CIEC_STRING &paLeft, const std::string &paRight) {
-    return !(paLeft == paRight);
-  }
+    friend bool operator!=(const CIEC_STRING &paLeft, const std::string &paRight) {
+      return !(paLeft == paRight);
+    }
 
-  friend bool operator>(const CIEC_STRING &paLeft, const std::string &paRight) {
-    return paLeft.getStorage() > paRight;
-  }
+    friend bool operator>(const CIEC_STRING &paLeft, const std::string &paRight) {
+      return paLeft.getStorage() > paRight;
+    }
 
-  friend bool operator<(const CIEC_STRING &paLeft, const std::string &paRight) {
-    return paLeft.getStorage() < paRight;
-  }
+    friend bool operator<(const CIEC_STRING &paLeft, const std::string &paRight) {
+      return paLeft.getStorage() < paRight;
+    }
 
-  friend bool operator>=(const CIEC_STRING &paLeft, const std::string &paRight) {
-    return paLeft.getStorage() >= paRight;
-  }
+    friend bool operator>=(const CIEC_STRING &paLeft, const std::string &paRight) {
+      return paLeft.getStorage() >= paRight;
+    }
 
-  friend bool operator<=(const CIEC_STRING &paLeft, const std::string &paRight) {
-    return paLeft.getStorage() <= paRight;
-  }
+    friend bool operator<=(const CIEC_STRING &paLeft, const std::string &paRight) {
+      return paLeft.getStorage() <= paRight;
+    }
 
   public:
     using storage_type = std::string;
     using value_type = CIEC_CHAR;
     using reference = value_type &;
     using const_reference = const value_type &;
-    
+
     using TValueType = storage_type;
     using TSymbolType = TForteChar;
 
-    CIEC_STRING() {
-    };
+    CIEC_STRING() {};
 
-    CIEC_STRING(const CIEC_STRING& paValue) : CIEC_ANY_STRING(), mValue(paValue.getStorage()) {
-    };
+    CIEC_STRING(const CIEC_STRING &paValue) : CIEC_ANY_STRING(), mValue(paValue.getStorage()) {};
 
     CIEC_STRING(const CIEC_CHAR &paValue) : mValue(1, static_cast<char>(static_cast<CIEC_CHAR::TValueType>(paValue))) {
     }
@@ -135,15 +133,15 @@ class CIEC_STRING : public CIEC_ANY_STRING {
     CIEC_STRING(CIEC_STRING &&paValue) : mValue(std::move(paValue.mValue)) {};
 
     [[deprecated("Use ctor with explicit length parameter")]]
-    explicit CIEC_STRING(const char* paValue);
+    explicit CIEC_STRING(const char *paValue);
 
-    explicit CIEC_STRING(const char* paValue, const size_t paLength);
+    explicit CIEC_STRING(const char *paValue, const size_t paLength);
 
     explicit CIEC_STRING(std::string paValue) : mValue(std::move(paValue)) {};
 
     ~CIEC_STRING() override = default;
 
-    CIEC_STRING &operator =(const CIEC_STRING& paValue) {
+    CIEC_STRING &operator=(const CIEC_STRING &paValue) {
       mValue = paValue.getStorage();
       return *this;
     };
@@ -153,7 +151,7 @@ class CIEC_STRING : public CIEC_ANY_STRING {
       return *this;
     }
 
-    CIEC_STRING &operator =(const CIEC_CHAR& paValue) {
+    CIEC_STRING &operator=(const CIEC_CHAR &paValue) {
       mValue = storage_type(1, static_cast<char>(static_cast<CIEC_CHAR::TValueType>(paValue)));
       return *this;
     };
@@ -169,8 +167,8 @@ class CIEC_STRING : public CIEC_ANY_STRING {
     bool empty() const override {
       return mValue.empty();
     }
-    
-    const char* c_str() const {
+
+    const char *c_str() const {
       return getStorage().c_str();
     }
 
@@ -202,16 +200,16 @@ class CIEC_STRING : public CIEC_ANY_STRING {
 
     virtual void append(const std::string &paValue);
 
-    int compare(const CIEC_STRING& paValue) const;
+    int compare(const CIEC_STRING &paValue) const;
 
     [[deprecated("Don't use this anymore, use c_str() instead")]]
-    virtual char* getValue() override {
+    virtual char *getValue() override {
       DEVLOG_ERROR("Attempt to call getValue dummy function in CIEC_STRING\n");
       return nullptr;
     }
 
     [[deprecated("Don't use this anymore, use c_str() instead")]]
-    virtual const char* getValue() const override {
+    virtual const char *getValue() const override {
       DEVLOG_ERROR("Attempt to call const getValue dummy function in CIEC_STRING\n");
       return nullptr;
     }
@@ -221,13 +219,15 @@ class CIEC_STRING : public CIEC_ANY_STRING {
     }
 
     class PARTIAL_ACCESS_TYPE : public CIEC_CHAR {
-      using value_type = CIEC_CHAR::TValueType;
-      using pointer_type = CIEC_CHAR::TValueType*;
+        using value_type = CIEC_CHAR::TValueType;
+        using pointer_type = CIEC_CHAR::TValueType *;
 
       public:
         using CIEC_CHAR::operator=;
 
-        PARTIAL_ACCESS_TYPE(CIEC_STRING &paOriginalString, const size_t paIndex) : mOriginalString(paOriginalString), mIndex(paIndex) {
+        PARTIAL_ACCESS_TYPE(CIEC_STRING &paOriginalString, const size_t paIndex) :
+            mOriginalString(paOriginalString),
+            mIndex(paIndex) {
           if (mOriginalString.length() >= paIndex && paIndex > 0) {
             setChar(static_cast<TForteChar>(mOriginalString.getStorage()[paIndex - 1]));
           } else {
@@ -262,23 +262,23 @@ class CIEC_STRING : public CIEC_ANY_STRING {
     };
 
     [[nodiscard]] PARTIAL_ACCESS_TYPE at(const intmax_t paIndex) {
-      if(paIndex < 1) {
+      if (paIndex < 1) {
         DEVLOG_ERROR("String index start at 1!\n");
         return PARTIAL_ACCESS_TYPE(*this, 0);
       }
       const size_t index = static_cast<size_t>(paIndex);
-      if(index > getMaximumLength()) {
+      if (index > getMaximumLength()) {
         DEVLOG_ERROR("String index %zu outside of maximum length!\n", index);
       }
       return PARTIAL_ACCESS_TYPE(*this, index);
     }
 
     [[nodiscard]] value_type at(intmax_t paIndex) const {
-      if(paIndex < 1) {
+      if (paIndex < 1) {
         DEVLOG_ERROR("String index start at 1!\n");
         return CIEC_CHAR('\0');
       }
-      if(paIndex > length()) {
+      if (paIndex > length()) {
         DEVLOG_ERROR("String index %d outside of length!\n", paIndex);
         return CIEC_CHAR('\0');
       }
@@ -338,14 +338,14 @@ class CIEC_STRING : public CIEC_ANY_STRING {
      *   \return number of bytes used in the buffer without trailing 0x00
      *           -1 on error
      */
-    int toString(char* paValue, size_t paBufferSize) const override;
+    int toString(char *paValue, size_t paBufferSize) const override;
 
-    const storage_type& getStorage() const {
+    const storage_type &getStorage() const {
       return mValue;
     }
 
     [[nodiscard]] bool equals(const CIEC_ANY &paOther) const override {
-      if(paOther.getDataTypeID() == CIEC_ANY::e_STRING) {
+      if (paOther.getDataTypeID() == CIEC_ANY::e_STRING) {
         return *this == static_cast<const CIEC_STRING &>(paOther);
       }
       return false;
@@ -362,7 +362,7 @@ class CIEC_STRING : public CIEC_ANY_STRING {
      *           -1 on error
      */
 #ifdef FORTE_UNICODE_SUPPORT
-    int toUTF8(char* paBuffer, size_t paBufferSize, bool paEscape) const override;
+    int toUTF8(char *paBuffer, size_t paBufferSize, bool paEscape) const override;
 #endif
 
     /*! \brief Returns the amount of bytes needed to create the IEC 61131 literal string
@@ -377,29 +377,29 @@ class CIEC_STRING : public CIEC_ANY_STRING {
     size_t getToStringBufferSize() const override;
 
     void setValue(const CIEC_ANY &paValue) override {
-      if(paValue.getDataTypeID() == CIEC_ANY::e_STRING){
+      if (paValue.getDataTypeID() == CIEC_ANY::e_STRING) {
         *this = static_cast<const CIEC_STRING &>(paValue);
-      } else if(paValue.getDataTypeID() == CIEC_ANY::e_CHAR){
+      } else if (paValue.getDataTypeID() == CIEC_ANY::e_CHAR) {
         *this = static_cast<const CIEC_CHAR &>(paValue);
       }
     }
 
-    protected:
-      storage_type& getStorageMutable();
+  protected:
+    storage_type &getStorageMutable();
 
-      storage_type mValue;
+    storage_type mValue;
 };
 
-inline CIEC_STRING operator ""_STRING(const char* paValue, size_t paLength) {
+inline CIEC_STRING operator""_STRING(const char *paValue, size_t paLength) {
   return CIEC_STRING(paValue, paLength);
 }
 
 namespace forte {
-  template <>
+  template<>
   struct CDataTypeTrait<CIEC_STRING> {
       static constexpr CIEC_ANY::EDataTypeID scmDataTypeId = CIEC_ANY::e_STRING;
       static const CStringDictionary::TStringId scmDataTypeName;
   };
-}
+} // namespace forte
 
 #endif /*_FORTE_STRING_H_*/

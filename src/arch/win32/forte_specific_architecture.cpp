@@ -13,7 +13,7 @@
 #include "arch/forte_specific_architecture.h"
 #include <sockhand.h>
 
-int CForteSpecificArchitecture::initialize(int, char**) {
+int CForteSpecificArchitecture::initialize(int, char **) {
   // Windows Socket Startupcode
   WORD wVersionRequested;
   WSADATA wsaData;

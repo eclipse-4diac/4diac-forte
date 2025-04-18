@@ -18,33 +18,33 @@
 
 #include <iostream>
 
-CResourceReplayer::CResourceReplayer(CResource& paResource, std::vector<EventMessage> paExternalEvents) 
-  : mResource{paResource}, mEcet{*dynamic_cast<CFakeEventExecutionThread*>(mResource.getResourceEventExecution())}, mExternalEvents{std::move(paExternalEvents)} {
+CResourceReplayer::CResourceReplayer(CResource &paResource, std::vector<EventMessage> paExternalEvents) :
+    mResource{paResource},
+    mEcet{*dynamic_cast<CFakeEventExecutionThread *>(mResource.getResourceEventExecution())},
+    mExternalEvents{std::move(paExternalEvents)} {
 
   mEcet.takeExternalControl();
 
   // similar implentation as in CFunctionBlock::receiveInputEvent,
-  // If the FB type is one that does not interest us (i.e. not a Service Function Block), 
+  // If the FB type is one that does not interest us (i.e. not a Service Function Block),
   // we don't do anything and just pass through to the original CFunctionBlock::receiveInputEvent
   // Otherwise, we read the inputs and trace the event, but don't trigger the event itself, meaning
   // that we absorv the event
   // capturing "this" into the lambda created some issues for some reason
-  auto processOneEvent = [ validTypes = forte::trace::reader::utils::getServiceFunctionBlockTypes(mResource), 
-      &ecet = this->mEcet](TEventEntry paEvent){
-
+  auto processOneEvent = [validTypes = forte::trace::reader::utils::getServiceFunctionBlockTypes(mResource),
+                          &ecet = this->mEcet](TEventEntry paEvent) {
     // pass through non interesting events
-    if(auto type = CStringDictionary::getId(paEvent.mFB->getFBTypeName());
-        validTypes.find(type) == validTypes.end()){
-     
+    if (auto type = CStringDictionary::getId(paEvent.mFB->getFBTypeName()); validTypes.find(type) == validTypes.end()) {
+
       paEvent.mFB->receiveInputEvent(paEvent.mPortId, &ecet);
       return;
     }
 
-    if(CFunctionBlock::E_FBStates::Running != paEvent.mFB->getState()){
+    if (CFunctionBlock::E_FBStates::Running != paEvent.mFB->getState()) {
       return;
     }
 
-    if(paEvent.mPortId >= paEvent.mFB->getFBInterfaceSpec().mNumEIs) {
+    if (paEvent.mPortId >= paEvent.mFB->getFBInterfaceSpec().mNumEIs) {
       return;
     }
 
@@ -53,39 +53,43 @@ CResourceReplayer::CResourceReplayer(CResource& paResource, std::vector<EventMes
   };
 
   mEcet.setRemoteCallbackForEventTriggering(processOneEvent);
-  mReleaseEcet = [&ecet = mEcet](){
-    ecet.removeExternalControl();
-  };
+  mReleaseEcet = [&ecet = mEcet]() { ecet.removeExternalControl(); };
 }
 
 CResourceReplayer::~CResourceReplayer() {
-  if(mReleaseEcet){
+  if (mReleaseEcet) {
     mReleaseEcet();
   }
 }
 
-CResourceReplayer::CResourceReplayer(CResourceReplayer&& paOther) : mResource{paOther.mResource}, mEcet{paOther.mEcet}, mStepperIndex{paOther.mStepperIndex}, mExternalEvents{std::move(paOther.mExternalEvents)}, mReleaseEcet(std::move(paOther.mReleaseEcet)){
+CResourceReplayer::CResourceReplayer(CResourceReplayer &&paOther) :
+    mResource{paOther.mResource},
+    mEcet{paOther.mEcet},
+    mStepperIndex{paOther.mStepperIndex},
+    mExternalEvents{std::move(paOther.mExternalEvents)},
+    mReleaseEcet(std::move(paOther.mReleaseEcet)) {
   paOther.mReleaseEcet = nullptr;
 }
 
-std::vector<EventMessage> CResourceReplayer::reproduceAll(){
-  
-  while(reproduceNextEvent() != std::nullopt);
+std::vector<EventMessage> CResourceReplayer::reproduceAll() {
+
+  while (reproduceNextEvent() != std::nullopt)
+    ;
 
   return getGeneratedEvents();
 }
 
-std::optional<TEventEntry> CResourceReplayer::reproduceNextEvent(){
-  
-  // For each of the external events we received as input (with its event counter X), we will advance the ecet 
+std::optional<TEventEntry> CResourceReplayer::reproduceNextEvent() {
+
+  // For each of the external events we received as input (with its event counter X), we will advance the ecet
   // as long as the event counter is less than X, and then trigger the external event X
-  while(mStepperIndex < mExternalEvents.size()){
-  
+  while (mStepperIndex < mExternalEvents.size()) {
+
     auto payload = mExternalEvents[mStepperIndex].getPayload<FBOutputEventPayload>();
 
-    auto simulateExternalOutputEvent = [this] (TEventEntry paEvent, const std::vector<std::string>& paOutputs) {
-      // copy output data to FB 
-      for(size_t i = 0; i < paOutputs.size(); i++){
+    auto simulateExternalOutputEvent = [this](TEventEntry paEvent, const std::vector<std::string> &paOutputs) {
+      // copy output data to FB
+      for (size_t i = 0; i < paOutputs.size(); i++) {
         paEvent.mFB->getDO(i)->fromString(paOutputs[i].c_str());
       }
 
@@ -93,15 +97,15 @@ std::optional<TEventEntry> CResourceReplayer::reproduceNextEvent(){
       paEvent.mFB->sendOutputEvent(paEvent.mPortId, &mEcet);
     };
 
-    while(mEcet.getEventCounter() < payload->mEventCounter) {
+    while (mEcet.getEventCounter() < payload->mEventCounter) {
       auto toReturn = mEcet.getNextEvent();
       mEcet.triggerNextEvent();
       return toReturn;
     }
 
-    auto functionBlock = forte::trace::reader::utils::getFB(&mResource, payload->getInstanceName()); 
+    auto functionBlock = forte::trace::reader::utils::getFB(&mResource, payload->getInstanceName());
 
-    if(functionBlock == nullptr){
+    if (functionBlock == nullptr) {
       std::cout << "Could not find the FB " << payload->getInstanceName() << " -> aborting..." << std::endl;
       std::abort();
     }
@@ -112,7 +116,7 @@ std::optional<TEventEntry> CResourceReplayer::reproduceNextEvent(){
     // we exit the loop only after mEcet.triggerNextEvent() is executed
   }
 
-  while(mEcet.hasEvent()){
+  while (mEcet.hasEvent()) {
     auto toReturn = mEcet.getNextEvent();
     mEcet.triggerNextEvent();
     return toReturn;
@@ -122,17 +126,13 @@ std::optional<TEventEntry> CResourceReplayer::reproduceNextEvent(){
 }
 
 std::vector<EventMessage> CResourceReplayer::getGeneratedEvents() {
- return std::visit(
-    [this](auto&& paTracer) -> std::vector<EventMessage> {
-      using T = std::decay_t<decltype(paTracer)>;
-      if constexpr (std::is_same_v<T, CInternalTracer> == true) {
-        return paTracer.getEvents();
-      }
-      return {};
-    }, 
-    mResource.getTracer().getTracerVariant()
-  );
+  return std::visit(
+      [this](auto &&paTracer) -> std::vector<EventMessage> {
+        using T = std::decay_t<decltype(paTracer)>;
+        if constexpr (std::is_same_v<T, CInternalTracer> == true) {
+          return paTracer.getEvents();
+        }
+        return {};
+      },
+      mResource.getTracer().getTracerVariant());
 }
-
-
-

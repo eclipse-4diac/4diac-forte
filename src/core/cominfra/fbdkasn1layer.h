@@ -35,9 +35,9 @@ class CIEC_WSTRING;
 namespace forte {
   namespace com_infra {
 
-    class CFBDKASN1ComLayer : public CComLayer{
+    class CFBDKASN1ComLayer : public CComLayer {
       public:
-        CFBDKASN1ComLayer(CComLayer* paUpperLayer, CBaseCommFB * paFB);
+        CFBDKASN1ComLayer(CComLayer *paUpperLayer, CBaseCommFB *paFB);
         ~CFBDKASN1ComLayer() override;
 
         EComResponse sendData(void *paData, unsigned int paSize) override; // top interface, called from top
@@ -52,7 +52,10 @@ namespace forte {
          * @return on success the number of bytes written into the destination array,
          *         -1 on error.
          */
-        static int serializeDataPointArray(TForteByte *paBytes, const size_t paStreamSize, const CIEC_ANY **paData, size_t paDataNum);
+        static int serializeDataPointArray(TForteByte *paBytes,
+                                           const size_t paStreamSize,
+                                           const CIEC_ANY **paData,
+                                           size_t paDataNum);
         /*!\brief Serialize one IEC data point into a byte array
          *
          * @param paBytes destination array for the serialization
@@ -61,7 +64,7 @@ namespace forte {
          * @return on success the number of bytes written into the destination array,
          *         -1 on error.
          */
-        static int serializeDataPoint(TForteByte* paBytes, int paStreamSize, const CIEC_ANY &paCIECData);
+        static int serializeDataPoint(TForteByte *paBytes, int paStreamSize, const CIEC_ANY &paCIECData);
 
         /*! \brief Serialization of the data value according to IEC 61499 Compliance Profile for
          *   Feasibility Demonstrations based on ISO/IEC 8825 (ASN.1).
@@ -74,7 +77,7 @@ namespace forte {
          * @return on success the number of bytes written into the destination array,
          *         -1 on error.
          */
-        static int serializeValue(TForteByte* paBytes, int paStreamSize, const CIEC_ANY &paCIECData);
+        static int serializeValue(TForteByte *paBytes, int paStreamSize, const CIEC_ANY &paCIECData);
 
         /*!\brief Deserialize an array of IEC data points from a byte array
          *
@@ -84,7 +87,10 @@ namespace forte {
          * @param paDataNum length of the data point array
          * @return true on success
          */
-        static bool deserializeDataPointArray(const TForteByte *paBytes, unsigned int paStreamSize, CIEC_ANY **paData, size_t paDataNum);
+        static bool deserializeDataPointArray(const TForteByte *paBytes,
+                                              unsigned int paStreamSize,
+                                              CIEC_ANY **paData,
+                                              size_t paDataNum);
 
         /*!\brief Deserialize an array of IEC data points from a byte array
          *
@@ -94,7 +100,7 @@ namespace forte {
          * @return number of bytes used from the target array
          *         -1 on a general error, -2 if the tag does not fit
          */
-        static int deserializeDataPoint(const TForteByte* paBytes, int paStreamSize, CIEC_ANY &paCIECData);
+        static int deserializeDataPoint(const TForteByte *paBytes, int paStreamSize, CIEC_ANY &paCIECData);
 
         /*! \brief Deserialization of the data value according to IEC 61499 Compliance Profile for
          *   Feasibility Demonstrations based on ISO/IEC 8825 (ASN.1).
@@ -105,28 +111,53 @@ namespace forte {
          * @return number of bytes used from the target array
          *         -1 on a general error, -2 if the tag does not fit
          */
-        static int deserializeValue(const TForteByte* paBytes, int paStreamSize, CIEC_ANY &paCIECData);
+        static int deserializeValue(const TForteByte *paBytes, int paStreamSize, CIEC_ANY &paCIECData);
 
         enum EDataTypeTags {
-          e_ANY_TAG = 0, e_BOOL_TAG = 1, e_SINT_TAG = 2, e_INT_TAG = 3, e_DINT_TAG = 4, e_LINT_TAG = 5, e_USINT_TAG = 6, e_UINT_TAG = 7, e_UDINT_TAG = 8, e_ULINT_TAG = 9, e_REAL_TAG = 10, e_LREAL_TAG = 11, e_TIME_TAG = 12, e_DATE_TAG = 13, e_TIME_OF_DAY_TAG = 14, e_DATE_AND_TIME_TAG = 15, e_STRING_TAG = 16, e_BYTE_TAG = 17, e_WORD_TAG = 18, e_DWORD_TAG = 19, e_LWORD_TAG = 20, e_WSTRING_TAG = 21, e_DerivedData_TAG = 26, e_DirectlyDerivedData_TAG = 27, e_EnumeratedData_TAG = 28, e_SubrangeData_TAG = 29, e_ARRAY_TAG = 22, //according to the compliance profile
-          e_CHAR_TAG = 23, e_WCHAR_TAG = 24, e_LDATE_TAG = 25, e_LTIME_OF_DAY_TAG = 26, e_LDATE_AND_TIME_TAG = 27, e_LTIME_TAG = 28,
+          e_ANY_TAG = 0,
+          e_BOOL_TAG = 1,
+          e_SINT_TAG = 2,
+          e_INT_TAG = 3,
+          e_DINT_TAG = 4,
+          e_LINT_TAG = 5,
+          e_USINT_TAG = 6,
+          e_UINT_TAG = 7,
+          e_UDINT_TAG = 8,
+          e_ULINT_TAG = 9,
+          e_REAL_TAG = 10,
+          e_LREAL_TAG = 11,
+          e_TIME_TAG = 12,
+          e_DATE_TAG = 13,
+          e_TIME_OF_DAY_TAG = 14,
+          e_DATE_AND_TIME_TAG = 15,
+          e_STRING_TAG = 16,
+          e_BYTE_TAG = 17,
+          e_WORD_TAG = 18,
+          e_DWORD_TAG = 19,
+          e_LWORD_TAG = 20,
+          e_WSTRING_TAG = 21,
+          e_DerivedData_TAG = 26,
+          e_DirectlyDerivedData_TAG = 27,
+          e_EnumeratedData_TAG = 28,
+          e_SubrangeData_TAG = 29,
+          e_ARRAY_TAG = 22, // according to the compliance profile
+          e_CHAR_TAG = 23,
+          e_WCHAR_TAG = 24,
+          e_LDATE_TAG = 25,
+          e_LTIME_OF_DAY_TAG = 26,
+          e_LDATE_AND_TIME_TAG = 27,
+          e_LTIME_TAG = 28,
           e_STRUCT_TAG = 31
         };
         /*! \ingroup COREDTS\brief ASN.1 tag classes
          */
-        enum EASN1TagClass{
-          e_UNIVERSAL = 0, e_APPLICATION = 64, e_CONTEXT = 128, e_PRIVATE = 192
-        };
+        enum EASN1TagClass { e_UNIVERSAL = 0, e_APPLICATION = 64, e_CONTEXT = 128, e_PRIVATE = 192 };
         /*! \ingroup COREDTS\brief ASN.1 encoding types
          */
-        enum EASN1EncodingType{
-          e_PRIMITIVE = 0, e_CONSTRUCTED = 32
-        };
-
+        enum EASN1EncodingType { e_PRIMITIVE = 0, e_CONSTRUCTED = 32 };
 
       protected:
       private:
-
         static const TForteByte scmNull = 5;
         static const TForteByte csmDataTags[][2];
 
@@ -137,11 +168,11 @@ namespace forte {
          * This operation will always take one byte
          * @param paBytes destination array for the serialization
          */
-        static void serializeNull(TForteByte* paBytes){
+        static void serializeNull(TForteByte *paBytes) {
           *paBytes = scmNull;
         }
 
-        static bool isNull(const TForteByte* paBytes){
+        static bool isNull(const TForteByte *paBytes) {
           return *paBytes == scmNull;
         }
 
@@ -152,21 +183,19 @@ namespace forte {
          * @param paBytes destination array for the serialization
          * @param paCIECData IEC data point
          */
-        static void serializeTag(TForteByte* paBytes, const CIEC_ANY &paCIECData);
+        static void serializeTag(TForteByte *paBytes, const CIEC_ANY &paCIECData);
         /** Specialization of the serialization of the data value for different data types. The interface behaves as
          *  described for static int serializeValue(TForteByte* paBytes, int paStreamSize, const CIEC_ANY* paCIECData)
          * @{*/
-        static int serializeValueSimpleDataType(TForteByte* paBytes, int paStreamSize, const CIEC_ANY & paDataPoint);
-        static int serializeValueTime(TForteByte* paBytes, int paStreamSize, const CIEC_TIME & paTime);
-        static int serializeValueString(TForteByte* paBytes, int paStreamSize, const CIEC_STRING & paString);
+        static int serializeValueSimpleDataType(TForteByte *paBytes, int paStreamSize, const CIEC_ANY &paDataPoint);
+        static int serializeValueTime(TForteByte *paBytes, int paStreamSize, const CIEC_TIME &paTime);
+        static int serializeValueString(TForteByte *paBytes, int paStreamSize, const CIEC_STRING &paString);
 #ifdef FORTE_USE_WSTRING_DATATYPE
-        static int serializeValueWString(TForteByte* paBytes, int paStreamSize, const CIEC_WSTRING & paWString);
-#endif //FORTE_USE_WSTRING_DATATYPE
-        static int serializeValueStruct(TForteByte* paBytes, int paStreamSize, const CIEC_STRUCT & paWString);
+        static int serializeValueWString(TForteByte *paBytes, int paStreamSize, const CIEC_WSTRING &paWString);
+#endif // FORTE_USE_WSTRING_DATATYPE
+        static int serializeValueStruct(TForteByte *paBytes, int paStreamSize, const CIEC_STRUCT &paWString);
         static int serializeArray(TForteByte *paBytes, int paStreamSize, const CIEC_ARRAY &paArray);
         /**@}*/
-
-
 
         /*! \brief Deserialization of data tag  according to IEC 61499 Compliance Profile for
          *   Feasibility Demonstrations based on ISO/IEC 8825 (ASN.1).
@@ -176,19 +205,21 @@ namespace forte {
          */
         static bool deserializeTag(const TForteByte paByte, CIEC_ANY &paCIECData);
 
-
         /** Specialization of the deserialization of the data value for different data types. The interface behaves as
          *  described for static int deserializeValue(const TForteByte* paBytes, int paStreamSize, CIEC_ANY* paCIECData)
          * @{*/
-        static int deserializeValueSimpleDataType(const TForteByte* paBytes, int paStreamSize, CIEC_ANY &paIECData);
-        static int deserializeValueTime(const TForteByte* paBytes, int paStreamSize, CIEC_TIME &paIECData);
+        static int deserializeValueSimpleDataType(const TForteByte *paBytes, int paStreamSize, CIEC_ANY &paIECData);
+        static int deserializeValueTime(const TForteByte *paBytes, int paStreamSize, CIEC_TIME &paIECData);
 #ifdef FORTE_USE_WSTRING_DATATYPE
-        static int deserializeValueWString(const TForteByte* paBytes, int paStreamSize, CIEC_WSTRING &paIECData);
-#endif //FORTE_USE_WSTRING_DATATYPE
-        static int deserializeValueString(const TForteByte* paBytes, int paStreamSize, CIEC_STRING &paIECData);
+        static int deserializeValueWString(const TForteByte *paBytes, int paStreamSize, CIEC_WSTRING &paIECData);
+#endif // FORTE_USE_WSTRING_DATATYPE
+        static int deserializeValueString(const TForteByte *paBytes, int paStreamSize, CIEC_STRING &paIECData);
         static int deserializeArray(const TForteByte *paBytes, int paStreamSize, CIEC_ARRAY &paArray);
-        static int deserializeValueBoolArray(const TForteByte *paBytes, int paStreamSize, CIEC_ARRAY &paArray, TForteUInt16 paDecodedArraySize);
-        static int deserializeValueStruct(const TForteByte* paBytes, int paStreamSize, CIEC_STRUCT &paIECData);
+        static int deserializeValueBoolArray(const TForteByte *paBytes,
+                                             int paStreamSize,
+                                             CIEC_ARRAY &paArray,
+                                             TForteUInt16 paDecodedArraySize);
+        static int deserializeValueStruct(const TForteByte *paBytes, int paStreamSize, CIEC_STRUCT &paIECData);
         /**@}*/
 
         static size_t getRequiredSerializationSize(const CIEC_ANY &paCIECData);
@@ -196,7 +227,6 @@ namespace forte {
         EComResponse openConnection(char *paLayerParameter) override;
         void closeConnection() override;
         void resizeDeserBuffer(unsigned int pa_size);
-
 
         TForteByte *mStatSerBuf;
         TForteUInt32 mStatSerBufSize;
@@ -209,7 +239,7 @@ namespace forte {
         TPortId mDOPos;
     };
 
-  }
-}
+  } // namespace com_infra
+} // namespace forte
 
 #endif

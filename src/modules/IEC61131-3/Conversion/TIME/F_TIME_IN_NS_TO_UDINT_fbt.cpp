@@ -1,12 +1,12 @@
-/*************************************************************************   
- *** Copyright (c) 2023 Martin Jobst, HR Agrartechnik GmbH   
- *** This program and the accompanying materials are made available under the   
- *** terms of the Eclipse Public License 2.0 which is available at   
- *** http://www.eclipse.org/legal/epl-2.0.   
- ***   
- *** SPDX-License-Identifier: EPL-2.0   
- ***  
- *** This file was generated using the 4DIAC FORTE Export Filter V1.0.x NG! 
+/*************************************************************************
+ *** Copyright (c) 2023 Martin Jobst, HR Agrartechnik GmbH
+ *** This program and the accompanying materials are made available under the
+ *** terms of the Eclipse Public License 2.0 which is available at
+ *** http://www.eclipse.org/legal/epl-2.0.
+ ***
+ *** SPDX-License-Identifier: EPL-2.0
+ ***
+ *** This file was generated using the 4DIAC FORTE Export Filter V1.0.x NG!
  ***
  *** Name: F_TIME_IN_NS_TO_UDINT
  *** Description: Convert TIME in NS to UDINT
@@ -25,7 +25,6 @@ USE_STRING_ID(OUT);
 USE_STRING_ID(REQ);
 USE_STRING_ID(TIME);
 USE_STRING_ID(UDINT);
-
 
 #include "criticalregion.h"
 #include "resource.h"
@@ -53,16 +52,29 @@ const TDataIOID FORTE_F_TIME_IN_NS_TO_UDINT::scmEOWith[] = {0, scmWithListDelimi
 const TForteInt16 FORTE_F_TIME_IN_NS_TO_UDINT::scmEOWithIndexes[] = {0};
 const CStringDictionary::TStringId FORTE_F_TIME_IN_NS_TO_UDINT::scmEventOutputNames[] = {STRID(CNF)};
 const CStringDictionary::TStringId FORTE_F_TIME_IN_NS_TO_UDINT::scmEventOutputTypeIds[] = {STRID(Event)};
-const SFBInterfaceSpec FORTE_F_TIME_IN_NS_TO_UDINT::scmFBInterfaceSpec = {
-  1, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,
-  1, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes,
-  1, scmDataInputNames, scmDataInputTypeIds,
-  1, scmDataOutputNames, scmDataOutputTypeIds,
-  0, nullptr,
-  0, nullptr
-};
+const SFBInterfaceSpec FORTE_F_TIME_IN_NS_TO_UDINT::scmFBInterfaceSpec = {1,
+                                                                          scmEventInputNames,
+                                                                          scmEventInputTypeIds,
+                                                                          scmEIWith,
+                                                                          scmEIWithIndexes,
+                                                                          1,
+                                                                          scmEventOutputNames,
+                                                                          scmEventOutputTypeIds,
+                                                                          scmEOWith,
+                                                                          scmEOWithIndexes,
+                                                                          1,
+                                                                          scmDataInputNames,
+                                                                          scmDataInputTypeIds,
+                                                                          1,
+                                                                          scmDataOutputNames,
+                                                                          scmDataOutputTypeIds,
+                                                                          0,
+                                                                          nullptr,
+                                                                          0,
+                                                                          nullptr};
 
-FORTE_F_TIME_IN_NS_TO_UDINT::FORTE_F_TIME_IN_NS_TO_UDINT(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_F_TIME_IN_NS_TO_UDINT::FORTE_F_TIME_IN_NS_TO_UDINT(const CStringDictionary::TStringId paInstanceNameId,
+                                                         forte::core::CFBContainer &paContainer) :
     CSimpleFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, nullptr),
     conn_CNF(*this, 0),
     conn_IN(nullptr),
@@ -75,47 +87,42 @@ void FORTE_F_TIME_IN_NS_TO_UDINT::setInitialValues() {
 }
 
 void FORTE_F_TIME_IN_NS_TO_UDINT::executeEvent(const TEventID paEIID, CEventChainExecutionThread *const paECET) {
-  switch(paEIID) {
-    case scmEventREQID:
-      alg_REQ();
-      break;
-    default:
-      break;
+  switch (paEIID) {
+    case scmEventREQID: alg_REQ(); break;
+    default: break;
   }
   sendOutputEvent(scmEventCNFID, paECET);
 }
 
 void FORTE_F_TIME_IN_NS_TO_UDINT::readInputData(const TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventREQID: {
       readData(0, var_IN, conn_IN);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 void FORTE_F_TIME_IN_NS_TO_UDINT::writeOutputData(const TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventCNFID: {
       writeData(0, var_OUT, conn_OUT);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 CIEC_ANY *FORTE_F_TIME_IN_NS_TO_UDINT::getDI(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_IN;
   }
   return nullptr;
 }
 
 CIEC_ANY *FORTE_F_TIME_IN_NS_TO_UDINT::getDO(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_OUT;
   }
   return nullptr;
@@ -126,21 +133,21 @@ CIEC_ANY *FORTE_F_TIME_IN_NS_TO_UDINT::getDIO(size_t) {
 }
 
 CEventConnection *FORTE_F_TIME_IN_NS_TO_UDINT::getEOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_CNF;
   }
   return nullptr;
 }
 
 CDataConnection **FORTE_F_TIME_IN_NS_TO_UDINT::getDIConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_IN;
   }
   return nullptr;
 }
 
 CDataConnection *FORTE_F_TIME_IN_NS_TO_UDINT::getDOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_OUT;
   }
   return nullptr;
@@ -162,4 +169,3 @@ void FORTE_F_TIME_IN_NS_TO_UDINT::alg_REQ(void) {
 
   var_OUT = func_TIME_IN_NS_TO_UDINT(var_IN);
 }
-

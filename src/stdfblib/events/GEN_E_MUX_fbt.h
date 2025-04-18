@@ -15,7 +15,7 @@
  *     - initial API and implementation and/or initial documentation
  *    Alois Zoitl - introduced new CGenFB class for better handling generic FBs
  *    Martin Jobst - add generic readInputData and writeOutputData
- *....Franz Höpfinger - Update it to represent latest Generation Format from 4diac IDE. no Functional Changes. 
+ *....Franz Höpfinger - Update it to represent latest Generation Format from 4diac IDE. no Functional Changes.
  *******************************************************************************/
 
 #pragma once
@@ -29,7 +29,7 @@
 #include "forte_array_variable.h"
 
 class GEN_E_MUX final : public CGenFunctionBlock<CFunctionBlock> {
-  DECLARE_GENERIC_FIRMWARE_FB(GEN_E_MUX)
+    DECLARE_GENERIC_FIRMWARE_FB(GEN_E_MUX)
 
   private:
     static const CStringDictionary::TStringId scmDataOutputNames[];
@@ -38,8 +38,6 @@ class GEN_E_MUX final : public CGenFunctionBlock<CFunctionBlock> {
     std::unique_ptr<CStringDictionary::TStringId[]> scmEventInputNames;
     static const TEventID scmEventEOID = 0;
     static const CStringDictionary::TStringId scmEventOutputNames[];
-
-
 
     void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
@@ -63,6 +61,4 @@ class GEN_E_MUX final : public CGenFunctionBlock<CFunctionBlock> {
     CEventConnection *getEOConUnchecked(TPortId) override;
     CDataConnection **getDIConUnchecked(TPortId) override;
     CDataConnection *getDOConUnchecked(TPortId) override;
-
 };
-

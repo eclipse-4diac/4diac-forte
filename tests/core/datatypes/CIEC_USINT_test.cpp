@@ -20,18 +20,15 @@
 
 BOOST_AUTO_TEST_SUITE(CIEC_USINT_function_test)
 
-BOOST_AUTO_TEST_CASE(Type_test)
-{
+BOOST_AUTO_TEST_CASE(Type_test) {
   CIEC_USINT nTest;
-  //check type information
+  // check type information
   BOOST_CHECK_EQUAL(nTest.getDataTypeID(), CIEC_ANY::e_USINT);
-  //check operator bool data type size
+  // check operator bool data type size
   BOOST_CHECK_EQUAL(sizeof(nTest.operator TForteUInt8()), sizeof(TForteUInt8));
-
 }
 
-BOOST_AUTO_TEST_CASE(Literal_test)
-{
+BOOST_AUTO_TEST_CASE(Literal_test) {
   CIEC_USINT test1 = 0_USINT;
   BOOST_TEST(static_cast<CIEC_USINT::TValueType>(test1) == 0);
 
@@ -39,12 +36,11 @@ BOOST_AUTO_TEST_CASE(Literal_test)
   BOOST_TEST(static_cast<CIEC_USINT::TValueType>(test2) == std::numeric_limits<CIEC_USINT::TValueType>::max());
 }
 
-BOOST_AUTO_TEST_CASE(Assignment_test)
-{
+BOOST_AUTO_TEST_CASE(Assignment_test) {
   CIEC_USINT nTest1;
   CIEC_USINT nTest2;
 
-  //initial value must be 0
+  // initial value must be 0
   BOOST_CHECK_EQUAL(static_cast<CIEC_USINT::TValueType>(nTest1), 0U);
 
   nTest1 = CIEC_USINT(0U);
@@ -62,20 +58,19 @@ BOOST_AUTO_TEST_CASE(Assignment_test)
   BOOST_CHECK_EQUAL(static_cast<CIEC_USINT::TValueType>(nTest1), 255U);
   BOOST_CHECK_EQUAL(static_cast<CIEC_USINT::TValueType>(nTest2), 255U);
 
-  //check that assignment operator does not intertwine objects
+  // check that assignment operator does not intertwine objects
   nTest2 = CIEC_USINT(128U);
   BOOST_CHECK_EQUAL(static_cast<CIEC_USINT::TValueType>(nTest1), 255U);
   BOOST_CHECK_EQUAL(static_cast<CIEC_USINT::TValueType>(nTest2), 128U);
 }
 
-BOOST_AUTO_TEST_CASE(Conversion_test)
-{
+BOOST_AUTO_TEST_CASE(Conversion_test) {
   CIEC_USINT nTest;
 
   char cBuffer[4];
   char cBufferFail[2];
 
-  //check cast operator
+  // check cast operator
   nTest = CIEC_USINT(0);
 
   BOOST_CHECK_EQUAL(nTest.operator TForteUInt8(), 0U);
@@ -86,7 +81,7 @@ BOOST_AUTO_TEST_CASE(Conversion_test)
   nTest = CIEC_USINT(255U);
   BOOST_CHECK_EQUAL(nTest.operator TForteUInt8(), 255U);
 
-  //check toString and fromString
+  // check toString and fromString
   BOOST_CHECK_EQUAL(nTest.fromString("0"), 1);
   BOOST_CHECK_EQUAL(static_cast<CIEC_USINT::TValueType>(nTest), 0U);
   BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 4), 1);
@@ -208,7 +203,7 @@ BOOST_AUTO_TEST_CASE(Conversion_test)
   BOOST_CHECK_EQUAL(nTest.fromString("16#12C"), -1);
   BOOST_CHECK_EQUAL(nTest.fromString("-130"), -1);
 
-  //check invalid fromString string
+  // check invalid fromString string
   BOOST_CHECK_EQUAL(nTest.fromString("NOT A VALID STRING"), -1);
 }
 BOOST_AUTO_TEST_SUITE_END()

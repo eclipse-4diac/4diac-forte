@@ -18,12 +18,12 @@
 namespace ForteLibrary {
   namespace ForteComponent {
 
-    ForteIOHandler::ForteIOHandler(const String& paName) : ProgramBase(paName){
-       //TODO AddPortInfo
+    ForteIOHandler::ForteIOHandler(const String &paName) : ProgramBase(paName) {
+      // TODO AddPortInfo
     }
 
-    void ForteIOHandler::Execute(){
-       //TODO implement program
+    void ForteIOHandler::Execute() {
+      // TODO implement program
     }
 
   } // end of namespace ForteComponent

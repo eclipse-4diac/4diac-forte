@@ -35,9 +35,9 @@ template<typename T, typename U>
 inline const T func_TIME_IN_S_TO(const U &paValue) {
   static_assert((std::is_base_of_v<CIEC_ANY_NUM, T>), "T not of ANY_NUM");
   static_assert((std::is_base_of_v<CIEC_ANY_DURATION, U>), "U not of ANY_DURATION");
-  if(std::is_base_of_v<CIEC_ANY_REAL, T>) {
-    return T(
-      static_cast<typename T::TValueType>(paValue.getInNanoSeconds()) / static_cast<typename T::TValueType>(forte::core::constants::cNanosecondsPerSecond));
+  if (std::is_base_of_v<CIEC_ANY_REAL, T>) {
+    return T(static_cast<typename T::TValueType>(paValue.getInNanoSeconds()) /
+             static_cast<typename T::TValueType>(forte::core::constants::cNanosecondsPerSecond));
   } else {
     return T(static_cast<typename T::TValueType>(paValue.getInSeconds()));
   }
@@ -57,11 +57,10 @@ template<typename T, typename U>
 inline const T func_TIME_IN_MS_TO(const U &paValue) {
   static_assert((std::is_base_of_v<CIEC_ANY_NUM, T>), "T not of ANY_NUM");
   static_assert((std::is_base_of_v<CIEC_ANY_DURATION, U>), "U not of ANY_DURATION");
-  if(std::is_base_of_v<CIEC_ANY_REAL, T>) {
-    return T(
-      static_cast<typename T::TValueType>(paValue.getInNanoSeconds())
-        * (static_cast<typename T::TValueType>(forte::core::constants::cMillisecondsPerSecond)
-          / static_cast<typename T::TValueType>(forte::core::constants::cNanosecondsPerSecond)));
+  if (std::is_base_of_v<CIEC_ANY_REAL, T>) {
+    return T(static_cast<typename T::TValueType>(paValue.getInNanoSeconds()) *
+             (static_cast<typename T::TValueType>(forte::core::constants::cMillisecondsPerSecond) /
+              static_cast<typename T::TValueType>(forte::core::constants::cNanosecondsPerSecond)));
   } else {
     return T(static_cast<typename T::TValueType>(paValue.getInMilliSeconds()));
   }
@@ -81,11 +80,10 @@ template<typename T, typename U>
 inline const T func_TIME_IN_US_TO(const U &paValue) {
   static_assert((std::is_base_of_v<CIEC_ANY_NUM, T>), "T not of ANY_NUM");
   static_assert((std::is_base_of_v<CIEC_ANY_DURATION, U>), "U not of ANY_DURATION");
-  if(std::is_base_of_v<CIEC_ANY_REAL, T>) {
-    return T(
-      static_cast<typename T::TValueType>(paValue.getInNanoSeconds())
-        * (static_cast<typename T::TValueType>(forte::core::constants::cMicrosecondsPerSecond)
-          / static_cast<typename T::TValueType>(forte::core::constants::cNanosecondsPerSecond)));
+  if (std::is_base_of_v<CIEC_ANY_REAL, T>) {
+    return T(static_cast<typename T::TValueType>(paValue.getInNanoSeconds()) *
+             (static_cast<typename T::TValueType>(forte::core::constants::cMicrosecondsPerSecond) /
+              static_cast<typename T::TValueType>(forte::core::constants::cNanosecondsPerSecond)));
   } else {
     return T(static_cast<typename T::TValueType>(paValue.getInMicroSeconds()));
   }
@@ -205,7 +203,7 @@ inline const CIEC_ULINT func_TIME_IN_NS_TO_ULINT(const T &paValue) {
 }
 
 /********************************************************************
- *  TO_LREAL functions 
+ *  TO_LREAL functions
  ********************************************************************/
 
 /**
@@ -251,7 +249,6 @@ template<typename T>
 inline const CIEC_LREAL func_TIME_IN_NS_TO_LREAL(const T &paValue) {
   return func_TIME_IN_NS_TO<CIEC_LREAL>(paValue);
 }
-
 
 /********************************************************************
  *  TO_UDINT functions

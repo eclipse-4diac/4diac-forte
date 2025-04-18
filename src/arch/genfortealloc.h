@@ -18,14 +18,11 @@
 #include <stdlib.h>
 #include <cstdint>
 
-
-inline
-void forte_free(void *paData){
+inline void forte_free(void *paData) {
   free(paData);
 }
 
-inline
-void *forte_malloc(size_t paSize){
+inline void *forte_malloc(size_t paSize) {
 #if defined(__GNUC__) && !defined(__clang__)
   // BUG RESOLVED WONTFIX: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=85783
   if (paSize <= PTRDIFF_MAX) {

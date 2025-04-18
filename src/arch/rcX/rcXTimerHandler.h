@@ -18,15 +18,14 @@
 
 class CrcXTimerHandler : public CTimerHandler {
   public:
-
-    explicit CrcXTimerHandler(CDeviceExecution& paDeviceExecution);
+    explicit CrcXTimerHandler(CDeviceExecution &paDeviceExecution);
 
     ~CrcXTimerHandler() override;
 
     /*!\brief Callback function for the timer.
      *
      */
-    static void timerCallback(void* argument);
+    static void timerCallback(void *argument);
 
     /*!\brief Enables this event source
      *
@@ -45,12 +44,10 @@ class CrcXTimerHandler : public CTimerHandler {
      * \return current priority
      */
     int getPriority() const override;
-  private:
 
+  private:
     RX_HANDLE mTimer;
     bool mFirstTime;
 };
-
-
 
 #endif /* SRC_ARCH_RCX_RCXTIMERHANDLER_H_ */

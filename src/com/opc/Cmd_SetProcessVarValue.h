@@ -22,20 +22,23 @@
 class COpcProcessVar;
 class COpcConnectionImpl;
 
-class CCmd_SetProcessVarValue : public ICmd{
+class CCmd_SetProcessVarValue : public ICmd {
   public:
-    explicit CCmd_SetProcessVarValue(COpcConnectionImpl *paConnection, const std::string& paGroupName, const std::string& paItemName, Variant paVar);
+    explicit CCmd_SetProcessVarValue(COpcConnectionImpl *paConnection,
+                                     const std::string &paGroupName,
+                                     const std::string &paItemName,
+                                     Variant paVar);
     ~CCmd_SetProcessVarValue() = default;
 
     void runCommand() override;
-    const char* getCommandName() const override;
+    const char *getCommandName() const override;
 
   private:
-    COpcConnectionImpl* mConnection;
-    COpcProcessVar* mOpcVar;
+    COpcConnectionImpl *mConnection;
+    COpcProcessVar *mOpcVar;
     const std::string mGroupName;
     const std::string mItemName;
     Variant mVar;
 };
 
-#endif //CMDSETPROCESSVARVALUE_H_
+#endif // CMDSETPROCESSVARVALUE_H_

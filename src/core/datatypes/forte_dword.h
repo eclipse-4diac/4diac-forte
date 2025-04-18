@@ -37,7 +37,7 @@
 /*!\ingroup COREDTS CIEC_DWORD represents the dword data type according to IEC 61131.
  */
 class CIEC_DWORD : public CIEC_ANY_BIT {
-  DECLARE_FIRMWARE_DATATYPE(DWORD)
+    DECLARE_FIRMWARE_DATATYPE(DWORD)
 
   public:
     using TValueType = TForteDWord;
@@ -45,23 +45,20 @@ class CIEC_DWORD : public CIEC_ANY_BIT {
     constexpr static size_t scmBitLength = 32U;
     [[deprecated("Please use the corresponding numeric_limits template")]]
     static constexpr TValueType scmMinVal = std::numeric_limits<TValueType>::min();
-    [[deprecated("Please use the corresponding numeric_limits template")]]   
+    [[deprecated("Please use the corresponding numeric_limits template")]]
     static constexpr TValueType scmMaxVal = std::numeric_limits<TValueType>::max();
 
     CIEC_DWORD() = default;
 
-    CIEC_DWORD(const CIEC_DWORD& paValue) :
-        CIEC_ANY_BIT() {
+    CIEC_DWORD(const CIEC_DWORD &paValue) : CIEC_ANY_BIT() {
       setValueSimple(paValue);
     }
 
-    CIEC_DWORD(const CIEC_WORD& paValue) :
-        CIEC_ANY_BIT() {
+    CIEC_DWORD(const CIEC_WORD &paValue) : CIEC_ANY_BIT() {
       setValueSimple(paValue);
     }
 
-    CIEC_DWORD(const CIEC_BYTE& paValue) :
-        CIEC_ANY_BIT() {
+    CIEC_DWORD(const CIEC_BYTE &paValue) : CIEC_ANY_BIT() {
       setValueSimple(paValue);
     }
 
@@ -75,19 +72,19 @@ class CIEC_DWORD : public CIEC_ANY_BIT {
 
     ~CIEC_DWORD() override = default;
 
-    CIEC_DWORD& operator =(const CIEC_DWORD &paValue) {
+    CIEC_DWORD &operator=(const CIEC_DWORD &paValue) {
       // Simple value assignment - no self assignment check needed
       setValueSimple(paValue);
       return *this;
     }
 
-    CIEC_DWORD& operator =(const CIEC_WORD &paValue) {
+    CIEC_DWORD &operator=(const CIEC_WORD &paValue) {
       // Simple value assignment - no self assignment check needed
       setValueSimple(paValue);
       return *this;
     }
 
-    CIEC_DWORD& operator =(const CIEC_BYTE &paValue) {
+    CIEC_DWORD &operator=(const CIEC_BYTE &paValue) {
       // Simple value assignment - no self assignment check needed
       setValueSimple(paValue);
       return *this;
@@ -151,23 +148,23 @@ class CIEC_DWORD : public CIEC_ANY_BIT {
     }
 };
 
-inline CIEC_DWORD operator ""_DWORD(unsigned long long int paValue) {
+inline CIEC_DWORD operator""_DWORD(unsigned long long int paValue) {
   return CIEC_DWORD(static_cast<CIEC_DWORD::TValueType>(paValue));
 }
 
 namespace std {
-  template <>
+  template<>
   struct numeric_limits<CIEC_DWORD> : public forte::templates::numeric_limits<CIEC_DWORD> {
-    static constexpr size_t bitLength = 32U;
+      static constexpr size_t bitLength = 32U;
   };
-}
+} // namespace std
 
 namespace forte {
-  template <>
+  template<>
   struct CDataTypeTrait<CIEC_DWORD> {
       static constexpr CIEC_ANY::EDataTypeID scmDataTypeId = CIEC_ANY::e_DWORD;
       static const CStringDictionary::TStringId scmDataTypeName;
   };
-}
+} // namespace forte
 
 #endif /*_FORTE_DWORD_H_*/

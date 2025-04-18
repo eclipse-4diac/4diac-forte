@@ -24,40 +24,41 @@ namespace forte {
 
       class IOConfigFBPartController : public IOConfigFBBase {
         public:
-          IOConfigFBPartController(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec &paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId);
+          IOConfigFBPartController(forte::core::CFBContainer &paContainer,
+                                   const SFBInterfaceSpec &paInterfaceSpec,
+                                   const CStringDictionary::TStringId paInstanceNameId);
 
         protected:
           CIEC_BOOL &QI() {
-            return *static_cast<CIEC_BOOL*>(getDI(0));
+            return *static_cast<CIEC_BOOL *>(getDI(0));
           }
 
           CIEC_BOOL &QO() {
-            return *static_cast<CIEC_BOOL*>(getDO(0));
+            return *static_cast<CIEC_BOOL *>(getDO(0));
           }
 
           static const TEventID scmEventMAPID = 0;
 
           static const TEventID scmEventMAPOID = 0;
 
-          IOConfigFBSplitAdapter& IOConfigFBMultiAdapter() {
-            return (*static_cast<IOConfigFBSplitAdapter*>(mAdapters[0]));
+          IOConfigFBSplitAdapter &IOConfigFBMultiAdapter() {
+            return (*static_cast<IOConfigFBSplitAdapter *>(mAdapters[0]));
           }
 
           static const int scmSplitAdapterAdpNum = 0;
 
-          void executeEvent(TEventID paEIID, CEventChainExecutionThread * const paECET) override;
+          void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
           virtual void initHandles() = 0;
 
           void initHandle(IODeviceController::HandleDescriptor &paHandleDescriptor);
 
         private:
-          IOConfigFBSplitController* mMaster;
-
+          IOConfigFBSplitController *mMaster;
       };
 
-    } //namespace IO
-  } //namepsace core
-} //namespace forte
+    } // namespace io
+  } // namespace core
+} // namespace forte
 
 #endif /* SRC_CORE_IO_CONFIGFB_IO_CONTROLLER_PART_H_ */

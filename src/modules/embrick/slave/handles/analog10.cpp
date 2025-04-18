@@ -14,31 +14,31 @@
 #include "analog10.h"
 #include "criticalregion.h"
 
-EmbrickAnalog10SlaveHandle::EmbrickAnalog10SlaveHandle(forte::core::io::IODeviceController *paController, forte::core::io::IOMapper::Direction paDirection,
-    uint8_t paOffset, EmbrickSlaveHandler *paSlave) :
+EmbrickAnalog10SlaveHandle::EmbrickAnalog10SlaveHandle(forte::core::io::IODeviceController *paController,
+                                                       forte::core::io::IOMapper::Direction paDirection,
+                                                       uint8_t paOffset,
+                                                       EmbrickSlaveHandler *paSlave) :
     EmbrickSlaveHandle(paController, paDirection, CIEC_ANY::e_DWORD, paOffset, paSlave) {
-
 }
 
 void EmbrickAnalog10SlaveHandle::set(const CIEC_ANY &paValue) {
   CCriticalRegion criticalRegion(*mUpdateMutex);
 
-  *(mBuffer + mOffset + 1) = static_cast<const CIEC_DWORD&>(paValue) % 256;
-  *(mBuffer + mOffset) = (static_cast<const CIEC_DWORD&>(paValue) / 256) & 0x03;
+  *(mBuffer + mOffset + 1) = static_cast<const CIEC_DWORD &>(paValue) % 256;
+  *(mBuffer + mOffset) = (static_cast<const CIEC_DWORD &>(paValue) / 256) & 0x03;
 
   EmbrickSlaveHandle::set(paValue);
 }
 
 void EmbrickAnalog10SlaveHandle::get(CIEC_ANY &paValue) {
   CCriticalRegion criticalRegion(*mUpdateMutex);
-  static_cast<CIEC_DWORD&>(paValue) = getValue(mBuffer);
+  static_cast<CIEC_DWORD &>(paValue) = getValue(mBuffer);
 }
 
-bool EmbrickAnalog10SlaveHandle::equal(unsigned char* paOldBuffer) {
+bool EmbrickAnalog10SlaveHandle::equal(unsigned char *paOldBuffer) {
   return getValue(mBuffer) == getValue(paOldBuffer);
 }
 
-const CIEC_DWORD EmbrickAnalog10SlaveHandle::getValue(const unsigned char* paBuffer) {
+const CIEC_DWORD EmbrickAnalog10SlaveHandle::getValue(const unsigned char *paBuffer) {
   return CIEC_DWORD((*(paBuffer + mOffset) & 0x03) * 256 + *(paBuffer + mOffset + 1));
 }
-

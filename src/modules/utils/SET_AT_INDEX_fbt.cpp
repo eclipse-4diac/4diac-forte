@@ -29,13 +29,13 @@ USE_STRING_ID(SET_AT_INDEX);
 USE_STRING_ID(UINT);
 USE_STRING_ID(VALUE);
 
-
 #include "criticalregion.h"
 #include "resource.h"
 
 DEFINE_FIRMWARE_FB(FORTE_SET_AT_INDEX, STRID(SET_AT_INDEX))
 
-const CStringDictionary::TStringId FORTE_SET_AT_INDEX::scmDataInputNames[] = {STRID(IN_ARRAY), STRID(INDEX), STRID(VALUE)};
+const CStringDictionary::TStringId FORTE_SET_AT_INDEX::scmDataInputNames[] = {STRID(IN_ARRAY), STRID(INDEX),
+                                                                              STRID(VALUE)};
 
 const CStringDictionary::TStringId FORTE_SET_AT_INDEX::scmDataInputTypeIds[] = {STRID(ANY), STRID(UINT), STRID(ANY)};
 
@@ -53,17 +53,29 @@ const TForteInt16 FORTE_SET_AT_INDEX::scmEOWithIndexes[] = {0};
 const CStringDictionary::TStringId FORTE_SET_AT_INDEX::scmEventOutputNames[] = {STRID(CNF)};
 const CStringDictionary::TStringId FORTE_SET_AT_INDEX::scmEventOutputTypeIds[] = {STRID(Event)};
 
+const SFBInterfaceSpec FORTE_SET_AT_INDEX::scmFBInterfaceSpec = {1,
+                                                                 scmEventInputNames,
+                                                                 scmEventInputTypeIds,
+                                                                 scmEIWith,
+                                                                 scmEIWithIndexes,
+                                                                 1,
+                                                                 scmEventOutputNames,
+                                                                 scmEventOutputTypeIds,
+                                                                 scmEOWith,
+                                                                 scmEOWithIndexes,
+                                                                 3,
+                                                                 scmDataInputNames,
+                                                                 scmDataInputTypeIds,
+                                                                 2,
+                                                                 scmDataOutputNames,
+                                                                 scmDataOutputTypeIds,
+                                                                 0,
+                                                                 nullptr,
+                                                                 0,
+                                                                 nullptr};
 
-const SFBInterfaceSpec FORTE_SET_AT_INDEX::scmFBInterfaceSpec = {
-  1, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,
-  1, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes,
-  3, scmDataInputNames, scmDataInputTypeIds,
-  2, scmDataOutputNames, scmDataOutputTypeIds,
-  0, nullptr,
-  0, nullptr
-};
-
-FORTE_SET_AT_INDEX::FORTE_SET_AT_INDEX(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_SET_AT_INDEX::FORTE_SET_AT_INDEX(const CStringDictionary::TStringId paInstanceNameId,
+                                       forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId),
     var_IN_ARRAY(CIEC_ANY_VARIANT()),
     var_INDEX(CIEC_UINT(0)),
@@ -75,18 +87,17 @@ FORTE_SET_AT_INDEX::FORTE_SET_AT_INDEX(const CStringDictionary::TStringId paInst
     conn_INDEX(nullptr),
     conn_VALUE(nullptr),
     conn_QO(*this, 0, var_QO),
-    conn_OUT_ARRAY(*this, 1, var_OUT_ARRAY) {
-};
+    conn_OUT_ARRAY(*this, 1, var_OUT_ARRAY) {};
 
 void FORTE_SET_AT_INDEX::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventREQID:
       if (std::holds_alternative<CIEC_ANY_UNIQUE_PTR<CIEC_ARRAY>>(var_IN_ARRAY)) {
         auto &inArray = std::get<CIEC_ANY_UNIQUE_PTR<CIEC_ARRAY>>(var_IN_ARRAY);
         // check if data types match and index is within bounds
-        if (inArray->getElementDataTypeID() == var_VALUE.unwrap().getDataTypeID()
-            && static_cast<CIEC_UINT::TValueType>(var_INDEX) >= inArray->getLowerBound()
-            && static_cast<CIEC_UINT::TValueType>(var_INDEX) <= inArray->getUpperBound()) {
+        if (inArray->getElementDataTypeID() == var_VALUE.unwrap().getDataTypeID() &&
+            static_cast<CIEC_UINT::TValueType>(var_INDEX) >= inArray->getLowerBound() &&
+            static_cast<CIEC_UINT::TValueType>(var_INDEX) <= inArray->getUpperBound()) {
           var_OUT_ARRAY = var_IN_ARRAY;
           auto &outArray = std::get<CIEC_ANY_UNIQUE_PTR<CIEC_ARRAY>>(var_OUT_ARRAY);
           outArray->at(var_INDEX).setValue(var_VALUE.unwrap());
@@ -103,32 +114,30 @@ void FORTE_SET_AT_INDEX::executeEvent(TEventID paEIID, CEventChainExecutionThrea
 }
 
 void FORTE_SET_AT_INDEX::readInputData(TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventREQID: {
       readData(0, var_IN_ARRAY, conn_IN_ARRAY);
       readData(1, var_INDEX, conn_INDEX);
       readData(2, var_VALUE, conn_VALUE);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 void FORTE_SET_AT_INDEX::writeOutputData(TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventCNFID: {
       writeData(0, var_QO, conn_QO);
       writeData(1, var_OUT_ARRAY, conn_OUT_ARRAY);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 CIEC_ANY *FORTE_SET_AT_INDEX::getDI(size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_IN_ARRAY;
     case 1: return &var_INDEX;
     case 2: return &var_VALUE;
@@ -137,7 +146,7 @@ CIEC_ANY *FORTE_SET_AT_INDEX::getDI(size_t paIndex) {
 }
 
 CIEC_ANY *FORTE_SET_AT_INDEX::getDO(size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_QO;
     case 1: return &var_OUT_ARRAY;
   }
@@ -145,14 +154,14 @@ CIEC_ANY *FORTE_SET_AT_INDEX::getDO(size_t paIndex) {
 }
 
 CEventConnection *FORTE_SET_AT_INDEX::getEOConUnchecked(TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_CNF;
   }
   return nullptr;
 }
 
 CDataConnection **FORTE_SET_AT_INDEX::getDIConUnchecked(TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_IN_ARRAY;
     case 1: return &conn_INDEX;
     case 2: return &conn_VALUE;
@@ -161,11 +170,9 @@ CDataConnection **FORTE_SET_AT_INDEX::getDIConUnchecked(TPortId paIndex) {
 }
 
 CDataConnection *FORTE_SET_AT_INDEX::getDOConUnchecked(TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_QO;
     case 1: return &conn_OUT_ARRAY;
   }
   return nullptr;
 }
-
-

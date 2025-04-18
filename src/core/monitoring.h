@@ -32,50 +32,54 @@ namespace forte {
     /*!\brief class that handles all monitoring tasks
      *
      */
-    class CMonitoringHandler{
+    class CMonitoringHandler {
       public:
         explicit CMonitoringHandler(CResource &paResource);
 
         EMGMResponse executeMonitoringCommand(SManagementCMD &paCommand);
 
       private:
-        class  SDataWatchEntry{
+        class SDataWatchEntry {
           public:
             SDataWatchEntry(CStringDictionary::TStringId paPortId, CIEC_ANY &paDataValue) :
-                mPortId(paPortId), mDataValueRef(paDataValue), mDataBuffer(paDataValue.clone(nullptr)){
+                mPortId(paPortId),
+                mDataValueRef(paDataValue),
+                mDataBuffer(paDataValue.clone(nullptr)) {
             }
 
-            SDataWatchEntry(const SDataWatchEntry& paSrc):
-              mPortId(paSrc.mPortId), mDataValueRef(paSrc.mDataValueRef), mDataBuffer(paSrc.mDataBuffer->clone(nullptr)){
+            SDataWatchEntry(const SDataWatchEntry &paSrc) :
+                mPortId(paSrc.mPortId),
+                mDataValueRef(paSrc.mDataValueRef),
+                mDataBuffer(paSrc.mDataBuffer->clone(nullptr)) {
             }
 
-            ~SDataWatchEntry(){
+            ~SDataWatchEntry() {
               delete mDataBuffer;
             }
 
             CStringDictionary::TStringId mPortId;
-            CIEC_ANY &mDataValueRef;  //!< reference to the data point to watch
-            CIEC_ANY *mDataBuffer;    //!< buffer for copying the data from the data point reference
+            CIEC_ANY &mDataValueRef; //!< reference to the data point to watch
+            CIEC_ANY *mDataBuffer; //!< buffer for copying the data from the data point reference
 
           public:
-            SDataWatchEntry &operator=(const SDataWatchEntry&) = delete;
+            SDataWatchEntry &operator=(const SDataWatchEntry &) = delete;
         };
 
-        struct SEventWatchEntry{
-            SEventWatchEntry(CStringDictionary::TStringId paPortId,
-                TForteUInt32 &paEventData) :
-                mPortId(paPortId), mEventDataRef(paEventData){
+        struct SEventWatchEntry {
+            SEventWatchEntry(CStringDictionary::TStringId paPortId, TForteUInt32 &paEventData) :
+                mPortId(paPortId),
+                mEventDataRef(paEventData) {
             }
 
             CStringDictionary::TStringId mPortId;
-            TForteUInt32 &mEventDataRef;    //!< reference to the event counter of the watched event pin
-            TForteUInt32 mEventDataBuf;  //!< buffer for the event count
+            TForteUInt32 &mEventDataRef; //!< reference to the event counter of the watched event pin
+            TForteUInt32 mEventDataBuf; //!< buffer for the event count
         };
 
         typedef CSinglyLinkedList<SDataWatchEntry> TDataWatchList;
         typedef CSinglyLinkedList<SEventWatchEntry> TEventWatchList;
 
-        struct SFBMonitoringEntry{
+        struct SFBMonitoringEntry {
             std::string mFullFBName;
             CFunctionBlock *mFB;
             TDataWatchList mWatchedDataPoints;
@@ -84,7 +88,7 @@ namespace forte {
 
         typedef CSinglyLinkedList<SFBMonitoringEntry> TFBMonitoringList;
 
-        CFunctionBlock* getFB(forte::core::TNameIdentifier &paNameList);
+        CFunctionBlock *getFB(forte::core::TNameIdentifier &paNameList);
 
         EMGMResponse addWatch(forte::core::TNameIdentifier &paNameList);
         EMGMResponse removeWatch(forte::core::TNameIdentifier &paNameList);
@@ -93,11 +97,16 @@ namespace forte {
         EMGMResponse triggerEvent(forte::core::TNameIdentifier &paNameList);
         EMGMResponse resetEventCount(forte::core::TNameIdentifier &paNameList);
 
-        SFBMonitoringEntry &findOrCreateFBMonitoringEntry(CFunctionBlock *paFB, forte::core::TNameIdentifier &paNameList);
-        static void addDataWatch(SFBMonitoringEntry& paFBMonitoringEntry, CStringDictionary::TStringId paPortId, CIEC_ANY& paDataVal);
-        static bool removeDataWatch(SFBMonitoringEntry& paFBMonitoringEntry, CStringDictionary::TStringId paPortId);
-        static void addEventWatch(SFBMonitoringEntry& paFBMonitoringEntry, CStringDictionary::TStringId paPortId, TForteUInt32& paEventData);
-        static bool removeEventWatch(SFBMonitoringEntry& paFBMonitoringEntry, CStringDictionary::TStringId paPortId);
+        SFBMonitoringEntry &findOrCreateFBMonitoringEntry(CFunctionBlock *paFB,
+                                                          forte::core::TNameIdentifier &paNameList);
+        static void addDataWatch(SFBMonitoringEntry &paFBMonitoringEntry,
+                                 CStringDictionary::TStringId paPortId,
+                                 CIEC_ANY &paDataVal);
+        static bool removeDataWatch(SFBMonitoringEntry &paFBMonitoringEntry, CStringDictionary::TStringId paPortId);
+        static void addEventWatch(SFBMonitoringEntry &paFBMonitoringEntry,
+                                  CStringDictionary::TStringId paPortId,
+                                  TForteUInt32 &paEventData);
+        static bool removeEventWatch(SFBMonitoringEntry &paFBMonitoringEntry, CStringDictionary::TStringId paPortId);
         void readResourceWatches(std::string &paResponse);
 
         void updateMonitringData();
@@ -108,21 +117,21 @@ namespace forte {
 
         static void createFullFBName(std::string &paFullName, forte::core::TNameIdentifier &paNameList);
 
-        static size_t getExtraSizeForEscapedChars(const CIEC_ANY& paDataValue);
+        static size_t getExtraSizeForEscapedChars(const CIEC_ANY &paDataValue);
 
         static size_t getExtraSizeForEscapedCharsArray(const CIEC_ARRAY &paDataValue);
 
-        static size_t getExtraSizeForEscapedCharsStruct(const CIEC_STRUCT& paDataValue);
+        static size_t getExtraSizeForEscapedCharsStruct(const CIEC_STRUCT &paDataValue);
 
-        //!List storing all FBs which are currently monitored
+        //! List storing all FBs which are currently monitored
         TFBMonitoringList mFBMonitoringList;
         CResource &mResource; //!< The resource this monitoring handler manages
 
       public:
-        CMonitoringHandler(const CMonitoringHandler&) = delete;
-        CMonitoringHandler& operator =(const CMonitoringHandler &) = delete;
+        CMonitoringHandler(const CMonitoringHandler &) = delete;
+        CMonitoringHandler &operator=(const CMonitoringHandler &) = delete;
     };
 
-  }
-}
+  } // namespace core
+} // namespace forte
 #endif /* MONITORING_H_ */

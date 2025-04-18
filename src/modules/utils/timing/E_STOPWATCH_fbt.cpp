@@ -13,7 +13,8 @@
  *** Description: FB for stopping time between events
  *** Version:
  ***     1.0: 2018-08-29/Ben Schneider - fortiss GmbH - initial API and implementation and/or initial documentation
- ***     1.1: 2020-05-24/alois Zoitl - Johannes Kepler University Linz - Changed to a full basic FB implementation utilizing the new NOW_MONOTONIC function
+ ***     1.1: 2020-05-24/alois Zoitl - Johannes Kepler University Linz - Changed to a full basic FB implementation
+ utilizing the new NOW_MONOTONIC function
  ***     1.2: 2024-09-19/Franz Höpfinger - HR Agrartechnik GmbH - Added additional Events
  *************************************************************************/
 
@@ -32,7 +33,6 @@ USE_STRING_ID(STOP);
 USE_STRING_ID(TD);
 USE_STRING_ID(TIME);
 
-
 #include "forte_bool.h"
 #include "forte_time.h"
 #include "iec61131_functions.h"
@@ -46,26 +46,43 @@ DEFINE_FIRMWARE_FB(FORTE_E_STOPWATCH, STRID(E_STOPWATCH))
 const CStringDictionary::TStringId FORTE_E_STOPWATCH::scmDataOutputNames[] = {STRID(TD)};
 const CStringDictionary::TStringId FORTE_E_STOPWATCH::scmDataOutputTypeIds[] = {STRID(TIME)};
 const TForteInt16 FORTE_E_STOPWATCH::scmEIWithIndexes[] = {-1, -1, -1, -1};
-const CStringDictionary::TStringId FORTE_E_STOPWATCH::scmEventInputNames[] = {STRID(START), STRID(ET), STRID(STOP), STRID(RESET)};
-const CStringDictionary::TStringId FORTE_E_STOPWATCH::scmEventInputTypeIds[] = {STRID(Event), STRID(Event), STRID(Event), STRID(Event)};
-const TDataIOID FORTE_E_STOPWATCH::scmEOWith[] = {0, scmWithListDelimiter, 0, scmWithListDelimiter, 0, scmWithListDelimiter};
+const CStringDictionary::TStringId FORTE_E_STOPWATCH::scmEventInputNames[] = {STRID(START), STRID(ET), STRID(STOP),
+                                                                              STRID(RESET)};
+const CStringDictionary::TStringId FORTE_E_STOPWATCH::scmEventInputTypeIds[] = {STRID(Event), STRID(Event),
+                                                                                STRID(Event), STRID(Event)};
+const TDataIOID FORTE_E_STOPWATCH::scmEOWith[] = {0, scmWithListDelimiter, 0, scmWithListDelimiter,
+                                                  0, scmWithListDelimiter};
 const TForteInt16 FORTE_E_STOPWATCH::scmEOWithIndexes[] = {0, 2, 4};
 const CStringDictionary::TStringId FORTE_E_STOPWATCH::scmEventOutputNames[] = {STRID(EO), STRID(ETO), STRID(RESETO)};
-const CStringDictionary::TStringId FORTE_E_STOPWATCH::scmEventOutputTypeIds[] = {STRID(Event), STRID(Event), STRID(Event)};
-const SFBInterfaceSpec FORTE_E_STOPWATCH::scmFBInterfaceSpec = {
-  4, scmEventInputNames, scmEventInputTypeIds, nullptr, scmEIWithIndexes,
-  3, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes,
-  0, nullptr, nullptr,
-  1, scmDataOutputNames, scmDataOutputTypeIds,
-  0, nullptr,
-  0, nullptr
-};
+const CStringDictionary::TStringId FORTE_E_STOPWATCH::scmEventOutputTypeIds[] = {STRID(Event), STRID(Event),
+                                                                                 STRID(Event)};
+const SFBInterfaceSpec FORTE_E_STOPWATCH::scmFBInterfaceSpec = {4,
+                                                                scmEventInputNames,
+                                                                scmEventInputTypeIds,
+                                                                nullptr,
+                                                                scmEIWithIndexes,
+                                                                3,
+                                                                scmEventOutputNames,
+                                                                scmEventOutputTypeIds,
+                                                                scmEOWith,
+                                                                scmEOWithIndexes,
+                                                                0,
+                                                                nullptr,
+                                                                nullptr,
+                                                                1,
+                                                                scmDataOutputNames,
+                                                                scmDataOutputTypeIds,
+                                                                0,
+                                                                nullptr,
+                                                                0,
+                                                                nullptr};
 
 const CStringDictionary::TStringId FORTE_E_STOPWATCH::scmInternalsNames[] = {STRID(startTime)};
 const CStringDictionary::TStringId FORTE_E_STOPWATCH::scmInternalsTypeIds[] = {STRID(TIME)};
 const SInternalVarsInformation FORTE_E_STOPWATCH::scmInternalVars = {1, scmInternalsNames, scmInternalsTypeIds};
 
-FORTE_E_STOPWATCH::FORTE_E_STOPWATCH(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_E_STOPWATCH::FORTE_E_STOPWATCH(const CStringDictionary::TStringId paInstanceNameId,
+                                     forte::core::CFBContainer &paContainer) :
     CBasicFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, &scmInternalVars),
     conn_EO(*this, 0),
     conn_ETO(*this, 1),
@@ -80,44 +97,55 @@ void FORTE_E_STOPWATCH::setInitialValues() {
 
 void FORTE_E_STOPWATCH::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   do {
-    switch(mECCState) {
+    switch (mECCState) {
       case scmStateSTART:
-        if(scmEventSTARTID == paEIID) enterStateMeasure(paECET);
+        if (scmEventSTARTID == paEIID)
+          enterStateMeasure(paECET);
+        else if (scmEventRESETID == paEIID)
+          enterStateRESET(paECET);
         else
-        if(scmEventRESETID == paEIID) enterStateRESET(paECET);
-        else return; //no transition cleared
+          return; // no transition cleared
         break;
       case scmStateMeasure:
-        if(scmEventSTOPID == paEIID) enterStateSTOP(paECET);
+        if (scmEventSTOPID == paEIID)
+          enterStateSTOP(paECET);
+        else if (scmEventETID == paEIID)
+          enterStateTrig(paECET);
+        else if (scmEventRESETID == paEIID)
+          enterStateRESET(paECET);
         else
-        if(scmEventETID == paEIID) enterStateTrig(paECET);
-        else
-        if(scmEventRESETID == paEIID) enterStateRESET(paECET);
-        else return; //no transition cleared
+          return; // no transition cleared
         break;
       case scmStateSTOP:
-        if(1) enterStateSTART(paECET);
-        else return; //no transition cleared
+        if (1)
+          enterStateSTART(paECET);
+        else
+          return; // no transition cleared
         break;
       case scmStateTrig:
-        if(scmEventSTOPID == paEIID) enterStateSTOP(paECET);
+        if (scmEventSTOPID == paEIID)
+          enterStateSTOP(paECET);
+        else if (scmEventETID == paEIID)
+          enterStateTrig(paECET);
+        else if (scmEventRESETID == paEIID)
+          enterStateRESET(paECET);
         else
-        if(scmEventETID == paEIID) enterStateTrig(paECET);
-        else
-        if(scmEventRESETID == paEIID) enterStateRESET(paECET);
-        else return; //no transition cleared
+          return; // no transition cleared
         break;
       case scmStateRESET:
-        if(1) enterStateSTART(paECET);
-        else return; //no transition cleared
+        if (1)
+          enterStateSTART(paECET);
+        else
+          return; // no transition cleared
         break;
       default:
-        DEVLOG_ERROR("The state is not in the valid range! The state value is: %d. The max value can be: 5.", mECCState.operator TForteUInt16 ());
+        DEVLOG_ERROR("The state is not in the valid range! The state value is: %d. The max value can be: 5.",
+                     mECCState.operator TForteUInt16());
         mECCState = 0; // 0 is always the initial state
         return;
     }
     paEIID = cgInvalidEventID; // we have to clear the event after the first check in order to ensure correct behavior
-  } while(true);
+  } while (true);
 }
 
 void FORTE_E_STOPWATCH::enterStateSTART(CEventChainExecutionThread *const) {
@@ -152,7 +180,7 @@ void FORTE_E_STOPWATCH::readInputData(TEventID) {
 }
 
 void FORTE_E_STOPWATCH::writeOutputData(const TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventEOID: {
       writeData(0, var_TD, conn_TD);
       break;
@@ -165,8 +193,7 @@ void FORTE_E_STOPWATCH::writeOutputData(const TEventID paEIID) {
       writeData(0, var_TD, conn_TD);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
@@ -175,14 +202,14 @@ CIEC_ANY *FORTE_E_STOPWATCH::getDI(size_t) {
 }
 
 CIEC_ANY *FORTE_E_STOPWATCH::getDO(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_TD;
   }
   return nullptr;
 }
 
 CEventConnection *FORTE_E_STOPWATCH::getEOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_EO;
     case 1: return &conn_ETO;
     case 2: return &conn_RESETO;
@@ -195,14 +222,14 @@ CDataConnection **FORTE_E_STOPWATCH::getDIConUnchecked(TPortId) {
 }
 
 CDataConnection *FORTE_E_STOPWATCH::getDOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_TD;
   }
   return nullptr;
 }
 
 CIEC_ANY *FORTE_E_STOPWATCH::getVarInternal(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_startTime;
   }
   return nullptr;
@@ -210,18 +237,18 @@ CIEC_ANY *FORTE_E_STOPWATCH::getVarInternal(const size_t paIndex) {
 
 void FORTE_E_STOPWATCH::alg_captureStartTime(void) {
 
-  #line 2 "E_STOPWATCH.fbt"
+#line 2 "E_STOPWATCH.fbt"
   var_startTime = func_NOW_MONOTONIC();
 }
 
 void FORTE_E_STOPWATCH::alg_calcDiff(void) {
 
-  #line 6 "E_STOPWATCH.fbt"
+#line 6 "E_STOPWATCH.fbt"
   var_TD = func_SUB<CIEC_TIME>(func_NOW_MONOTONIC(), var_startTime);
 }
 
 void FORTE_E_STOPWATCH::alg_reset(void) {
 
-  #line 10 "E_STOPWATCH.fbt"
+#line 10 "E_STOPWATCH.fbt"
   var_TD = 0_TIME;
 }

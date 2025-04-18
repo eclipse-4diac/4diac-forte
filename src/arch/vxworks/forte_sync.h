@@ -15,24 +15,23 @@
 #include "vxWorks.h"
 #include "semLib.h"
 
-class CVXWorksSyncObject{
+class CVXWorksSyncObject {
   public:
     CVXWorksSyncObject();
     virtual ~CVXWorksSyncObject();
 
-    void lock(){
+    void lock() {
       semTake(mSemBinary, WAIT_FOREVER);
     }
 
-    void unlock(){
+    void unlock() {
       semGive(mSemBinary);
     }
 
   private:
     SEM_ID mSemBinary;
-
 };
 
-typedef CVXWorksSyncObject CSyncObject; //allows that doxygen can generate better documentation
+typedef CVXWorksSyncObject CSyncObject; // allows that doxygen can generate better documentation
 
 #endif /*FORTE_SYNC_H_*/

@@ -19,16 +19,17 @@
 #include <stddef.h>
 #include <vector>
 
-class CParameterParser{
+class CParameterParser {
   public:
-
     /**
      * Creates the parser object
-     * @param paParameters Pointer to the string to be parsed. It remains untouched during the life of the object, since the string is copied. A null pointer is treated as an empty string
+     * @param paParameters Pointer to the string to be parsed. It remains untouched during the life of the object, since
+     * the string is copied. A null pointer is treated as an empty string
      * @param paSeparator Separator of the parameters
-     * @param paExpectedNumParams Expected number of parameters if known. Not providing it, will still work, but performance is improved when provided
+     * @param paExpectedNumParams Expected number of parameters if known. Not providing it, will still work, but
+     * performance is improved when provided
      */
-    CParameterParser(const char* paParameters, const char paSeparator, size_t paExpectedNumParams = 0);
+    CParameterParser(const char *paParameters, const char paSeparator, size_t paExpectedNumParams = 0);
 
     virtual ~CParameterParser();
 
@@ -47,21 +48,21 @@ class CParameterParser{
      * @param paIndex Index of the desired parameter
      * @return If the index is less than the amount of stored parameters, a pointer to the string, 0 otherwise
      */
-    const char* operator[](const size_t paIndex);
+    const char *operator[](const size_t paIndex);
 
   private:
-    char* mParameters;
+    char *mParameters;
     std::vector<const char *> mParameterLocations;
     const char mSeparator;
 
-    void moveToPositionOfFirstNonWhiteSpaceCharacter(char** paParsePosition) const;
-    void saveStartPositionForParameterSubstring(char* paParsePosition);
-    void moveToPositionOfNextParameterSeparatorOrEndOfString(char** paParsePosition) const;
-    void trimTrailingWhiteSpacesOfParameterSubstring(char* paParsePosition, bool isSpace) const;
+    void moveToPositionOfFirstNonWhiteSpaceCharacter(char **paParsePosition) const;
+    void saveStartPositionForParameterSubstring(char *paParsePosition);
+    void moveToPositionOfNextParameterSeparatorOrEndOfString(char **paParsePosition) const;
+    void trimTrailingWhiteSpacesOfParameterSubstring(char *paParsePosition, bool isSpace) const;
 
   public:
-    CParameterParser(const CParameterParser&) = delete;
-    CParameterParser& operator =(const CParameterParser &) = delete;
+    CParameterParser(const CParameterParser &) = delete;
+    CParameterParser &operator=(const CParameterParser &) = delete;
 };
 
 #endif /* SRC_CORE_UTILS_PARAMETERPARSER_H_ */

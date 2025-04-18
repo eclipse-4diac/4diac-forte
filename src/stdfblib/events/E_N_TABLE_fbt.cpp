@@ -42,7 +42,6 @@ USE_STRING_ID(STOP);
 USE_STRING_ID(TIME);
 USE_STRING_ID(UINT);
 
-
 #include "forte_uint.h"
 #include "iec61131_functions.h"
 #include "forte_array_common.h"
@@ -53,22 +52,38 @@ USE_STRING_ID(UINT);
 DEFINE_FIRMWARE_FB(FORTE_E_N_TABLE, STRID(E_N_TABLE))
 
 const CStringDictionary::TStringId FORTE_E_N_TABLE::scmDataInputNames[] = {STRID(DT), STRID(N)};
-const CStringDictionary::TStringId FORTE_E_N_TABLE::scmDataInputTypeIds[] = {STRID(ARRAY), static_cast<CStringDictionary::TStringId>(0), static_cast<CStringDictionary::TStringId>(3), STRID(TIME), STRID(UINT)};
+const CStringDictionary::TStringId FORTE_E_N_TABLE::scmDataInputTypeIds[] = {
+    STRID(ARRAY), static_cast<CStringDictionary::TStringId>(0), static_cast<CStringDictionary::TStringId>(3),
+    STRID(TIME), STRID(UINT)};
 const TDataIOID FORTE_E_N_TABLE::scmEIWith[] = {0, 1, scmWithListDelimiter};
 const TForteInt16 FORTE_E_N_TABLE::scmEIWithIndexes[] = {0, -1};
 const CStringDictionary::TStringId FORTE_E_N_TABLE::scmEventInputNames[] = {STRID(START), STRID(STOP)};
 const TForteInt16 FORTE_E_N_TABLE::scmEOWithIndexes[] = {-1, -1, -1, -1};
-const CStringDictionary::TStringId FORTE_E_N_TABLE::scmEventOutputNames[] = {STRID(EO0), STRID(EO1), STRID(EO2), STRID(EO3)};
-const SFBInterfaceSpec FORTE_E_N_TABLE::scmFBInterfaceSpec = {
-  2, scmEventInputNames, nullptr, scmEIWith, scmEIWithIndexes,
-  4, scmEventOutputNames, nullptr, nullptr, scmEOWithIndexes,
-  2, scmDataInputNames, scmDataInputTypeIds,
-  0, nullptr, nullptr,
-  0, nullptr,
-  0, nullptr
-};
+const CStringDictionary::TStringId FORTE_E_N_TABLE::scmEventOutputNames[] = {STRID(EO0), STRID(EO1), STRID(EO2),
+                                                                             STRID(EO3)};
+const SFBInterfaceSpec FORTE_E_N_TABLE::scmFBInterfaceSpec = {2,
+                                                              scmEventInputNames,
+                                                              nullptr,
+                                                              scmEIWith,
+                                                              scmEIWithIndexes,
+                                                              4,
+                                                              scmEventOutputNames,
+                                                              nullptr,
+                                                              nullptr,
+                                                              scmEOWithIndexes,
+                                                              2,
+                                                              scmDataInputNames,
+                                                              scmDataInputTypeIds,
+                                                              0,
+                                                              nullptr,
+                                                              nullptr,
+                                                              0,
+                                                              nullptr,
+                                                              0,
+                                                              nullptr};
 
-FORTE_E_N_TABLE::FORTE_E_N_TABLE(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_E_N_TABLE::FORTE_E_N_TABLE(const CStringDictionary::TStringId paInstanceNameId,
+                                 forte::core::CFBContainer &paContainer) :
     CCompositeFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, scmFBNData),
     fb_E_TABLE(STRID(E_TABLE), *this),
     fb_E_DEMUX(STRID(E_DEMUX), *this),
@@ -80,12 +95,11 @@ FORTE_E_N_TABLE::FORTE_E_N_TABLE(const CStringDictionary::TStringId paInstanceNa
     conn_DT(nullptr),
     conn_N(nullptr),
     conn_if2in_DT(*this, 0, CIEC_ARRAY_FIXED<CIEC_TIME, 0, 3>{}),
-    conn_if2in_N(*this, 0, 0_UINT) {
-};
+    conn_if2in_N(*this, 0, 0_UINT) {};
 
 void FORTE_E_N_TABLE::setInitialValues() {
-    conn_if2in_DT.getValue() = CIEC_ARRAY_FIXED<CIEC_TIME, 0, 3>{};
-    conn_if2in_N.getValue() = 0_UINT;
+  conn_if2in_DT.getValue() = CIEC_ARRAY_FIXED<CIEC_TIME, 0, 3>{};
+  conn_if2in_N.getValue() = 0_UINT;
 }
 
 void FORTE_E_N_TABLE::setFBNetworkInitialValues() {
@@ -93,46 +107,47 @@ void FORTE_E_N_TABLE::setFBNetworkInitialValues() {
 }
 
 const SCFB_FBInstanceData FORTE_E_N_TABLE::scmInternalFBs[] = {
-  {STRID(E_TABLE), STRID(E_TABLE)},
-  {STRID(E_DEMUX), STRID(E_DEMUX)},
-  {STRID(F_SUB), STRID(F_SUB)}
-};
+    {STRID(E_TABLE), STRID(E_TABLE)}, {STRID(E_DEMUX), STRID(E_DEMUX)}, {STRID(F_SUB), STRID(F_SUB)}};
 
 const SCFB_FBConnectionData FORTE_E_N_TABLE::scmEventConnections[] = {
-  {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(START)), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_TABLE), STRID(START)), 0},
-  {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(STOP)), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_TABLE), STRID(STOP)), 0},
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_TABLE), STRID(EO)), 0, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(F_SUB), STRID(REQ)), 2},
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(F_SUB), STRID(CNF)), 2, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_DEMUX), STRID(EI)), 1},
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_DEMUX), STRID(EO0)), 1, GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(EO0)), -1},
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_DEMUX), STRID(EO1)), 1, GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(EO1)), -1},
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_DEMUX), STRID(EO2)), 1, GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(EO2)), -1},
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_DEMUX), STRID(EO3)), 1, GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(EO3)), -1},
+    {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(START)), -1,
+     GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_TABLE), STRID(START)), 0},
+    {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(STOP)), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_TABLE), STRID(STOP)),
+     0},
+    {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_TABLE), STRID(EO)), 0,
+     GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(F_SUB), STRID(REQ)), 2},
+    {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(F_SUB), STRID(CNF)), 2,
+     GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_DEMUX), STRID(EI)), 1},
+    {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_DEMUX), STRID(EO0)), 1, GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(EO0)),
+     -1},
+    {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_DEMUX), STRID(EO1)), 1, GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(EO1)),
+     -1},
+    {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_DEMUX), STRID(EO2)), 1, GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(EO2)),
+     -1},
+    {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_DEMUX), STRID(EO3)), 1, GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(EO3)),
+     -1},
 };
 
 const SCFB_FBConnectionData FORTE_E_N_TABLE::scmDataConnections[] = {
-  {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(DT)), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_TABLE), STRID(DT)), 0},
-  {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(N)), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_TABLE), STRID(N)), 0},
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_TABLE), STRID(CV)), 0, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(F_SUB), STRID(IN1)), 2},
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(F_SUB), STRID(OUT)), 2, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_DEMUX), STRID(K)), 1},
+    {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(DT)), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_TABLE), STRID(DT)), 0},
+    {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(N)), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_TABLE), STRID(N)), 0},
+    {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_TABLE), STRID(CV)), 0,
+     GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(F_SUB), STRID(IN1)), 2},
+    {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(F_SUB), STRID(OUT)), 2,
+     GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_DEMUX), STRID(K)), 1},
 };
 
 const SCFB_FBNData FORTE_E_N_TABLE::scmFBNData = {
-  3, scmInternalFBs,
-  8, scmEventConnections,
-  4, scmDataConnections,
-  0, nullptr,
-  0, nullptr
-};
+    3, scmInternalFBs, 8, scmEventConnections, 4, scmDataConnections, 0, nullptr, 0, nullptr};
 
 void FORTE_E_N_TABLE::readInputData(const TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventSTARTID: {
       readData(0, conn_if2in_DT.getValue(), conn_DT);
       readData(1, conn_if2in_N.getValue(), conn_N);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
@@ -141,7 +156,7 @@ void FORTE_E_N_TABLE::writeOutputData(TEventID) {
 }
 
 CIEC_ANY *FORTE_E_N_TABLE::getDI(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_if2in_DT.getValue();
     case 1: return &conn_if2in_N.getValue();
   }
@@ -153,7 +168,7 @@ CIEC_ANY *FORTE_E_N_TABLE::getDO(size_t) {
 }
 
 CEventConnection *FORTE_E_N_TABLE::getEOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_EO0;
     case 1: return &conn_EO1;
     case 2: return &conn_EO2;
@@ -163,7 +178,7 @@ CEventConnection *FORTE_E_N_TABLE::getEOConUnchecked(const TPortId paIndex) {
 }
 
 CDataConnection **FORTE_E_N_TABLE::getDIConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_DT;
     case 1: return &conn_N;
   }
@@ -175,7 +190,7 @@ CDataConnection *FORTE_E_N_TABLE::getDOConUnchecked(TPortId) {
 }
 
 CDataConnection *FORTE_E_N_TABLE::getIf2InConUnchecked(TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_if2in_DT;
     case 1: return &conn_if2in_N;
   }

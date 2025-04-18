@@ -21,11 +21,11 @@
 
 bool CForteGeneralArchitecture::mInitialized = false;
 
-int CForteGeneralArchitecture::initialize(int argc, char *argv[]){
-  if(mInitialized) {
+int CForteGeneralArchitecture::initialize(int argc, char *argv[]) {
+  if (mInitialized) {
     return 0;
   }
-  if(auto result = CForteSpecificArchitecture::initialize(argc, argv); result != 0){
+  if (auto result = CForteSpecificArchitecture::initialize(argc, argv); result != 0) {
     return result;
   }
   initForte();
@@ -35,17 +35,17 @@ int CForteGeneralArchitecture::initialize(int argc, char *argv[]){
 }
 
 int CForteGeneralArchitecture::deinitialize() {
-  if(!mInitialized) {
+  if (!mInitialized) {
     return 0;
   }
 
-  if(auto result = CForteSpecificArchitecture::deinitialize(); result != 0){
+  if (auto result = CForteSpecificArchitecture::deinitialize(); result != 0) {
     return result;
   }
   CForteGeneralArchitecture::mInitialized = false;
   return 0;
 }
 
-bool CForteGeneralArchitecture::isInitialized(){
+bool CForteGeneralArchitecture::isInitialized() {
   return mInitialized;
 }

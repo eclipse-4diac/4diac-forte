@@ -22,15 +22,18 @@
 #include "../device.h"
 #include "../../stdfblib/ita/EMB_RES.h"
 
-class fmuInstance : public CDevice{
+class fmuInstance : public CDevice {
 
   public:
-    fmuInstance(fmi2String instanceName, fmi2String GUID, fmi2String bootFileLocation, const fmi2CallbackFunctions *callbackFunctions);
+    fmuInstance(fmi2String instanceName,
+                fmi2String GUID,
+                fmi2String bootFileLocation,
+                const fmi2CallbackFunctions *callbackFunctions);
     ~fmuInstance() override;
 
 #ifdef FMU_DEBUG
     std::fstream debugFile;
-    void printToFile(const char* message);
+    void printToFile(const char *message);
 #endif
 
     void startInstance();
@@ -38,87 +41,88 @@ class fmuInstance : public CDevice{
     void stopInstance();
     bool loadFBs();
 
-    static fmuInstance* sFmuInstance;
+    static fmuInstance *sFmuInstance;
 
-    void registerEcet(CFMUEventChainExecutionThread* paExecutionThread){
+    void registerEcet(CFMUEventChainExecutionThread *paExecutionThread) {
       mNumberOfEcets++;
       paExecutionThread->setAllowedToRun(&mAllowEcetToRun);
       paExecutionThread->setStepSemaphore(&mEcetSemaphore);
-      static_cast<fmiTimerHandler*>(&getTimer())->addExecutionThread(paExecutionThread);
+      static_cast<fmiTimerHandler *>(&getTimer())->addExecutionThread(paExecutionThread);
     }
 
-    bool advanceInstanceTime(CIEC_LREAL& mTime){
-      return static_cast<fmiTimerHandler&>(getTimer()).advanceTicks(mTime, &mAllowEcetToRun, &mEcetSemaphore);
+    bool advanceInstanceTime(CIEC_LREAL &mTime) {
+      return static_cast<fmiTimerHandler &>(getTimer()).advanceTicks(mTime, &mAllowEcetToRun, &mEcetSemaphore);
     }
 
-    const CIEC_STRING& getBootFileLocation() const{
+    const CIEC_STRING &getBootFileLocation() const {
       return mBootFileLocation;
     }
 
-    const fmi2CallbackFunctions* getCallbackFunctions() const{
+    const fmi2CallbackFunctions *getCallbackFunctions() const {
       return mCallbackFunctions;
     }
 
-    const CIEC_STRING& getGuid() const{
+    const CIEC_STRING &getGuid() const {
       return mGUID;
     }
 
-    const CIEC_STRING& getInstanceName() const{
+    const CIEC_STRING &getInstanceName() const {
       return mInstanceName;
     }
 
-    fmi2Boolean* getLoggingCategories(){
+    fmi2Boolean *getLoggingCategories() {
       return mLoggingCategories;
     }
 
-    const EMB_RES& getResource() const{
+    const EMB_RES &getResource() const {
       return *mResource;
     }
 
-    coSimulationState getState() const{
+    coSimulationState getState() const {
       return mState;
     }
 
-    fmi2Real getStopTime() const{
+    fmi2Real getStopTime() const {
       return mStopTime;
     }
 
-    void setState(coSimulationState state){
+    void setState(coSimulationState state) {
       mState = state;
     }
 
-    std::vector<CFunctionBlock*>& getCommFBs(){
+    std::vector<CFunctionBlock *> &getCommFBs() {
       return mCommFBs;
     }
 
-    const std::vector<fmuValueContainer*>& getOutputsAndInputs() const{
+    const std::vector<fmuValueContainer *> &getOutputsAndInputs() const {
       return mOutputsAndInputs;
     }
 
-    void setStopTime(fmi2Real stopTime){
+    void setStopTime(fmi2Real stopTime) {
       mStopTime = stopTime;
     }
 
   private:
-    EMB_RES* mResource;
+    EMB_RES *mResource;
     CIEC_STRING mInstanceName;
     CIEC_STRING mGUID;
     CIEC_STRING mBootFileLocation;
     const fmi2CallbackFunctions *mCallbackFunctions;
     fmi2Boolean mLoggingCategories[NUMBER_OF_LOG_CATEGORIES];
     coSimulationState mState;
-    fmi2Real mStopTime; //if the environment tries to compute past stopTime the FMU has to return fmi2Status = fmi2Error
+    fmi2Real mStopTime; // if the environment tries to compute past stopTime the FMU has to return fmi2Status =
+                        // fmi2Error
 
-    std::vector<fmuValueContainer*> mOutputsAndInputs;
-    std::vector<CFunctionBlock*> mCommFBs;
-    std::map<CDataConnection*, CIEC_ANY*> mParameters;
+    std::vector<fmuValueContainer *> mOutputsAndInputs;
+    std::vector<CFunctionBlock *> mCommFBs;
+    std::map<CDataConnection *, CIEC_ANY *> mParameters;
 
-    void populateInputsOutputs(forte::core::CFBContainer* paResource);
-    void populateInputsAndOutputsCore(CFunctionBlock* paFB);
+    void populateInputsOutputs(forte::core::CFBContainer *paResource);
+    void populateInputsAndOutputsCore(CFunctionBlock *paFB);
 
-    CIEC_ANY::EDataTypeID getConnectedDataType(unsigned int paPortIndex, bool paIsInput, CFunctionBlock* paFB);
+    CIEC_ANY::EDataTypeID getConnectedDataType(unsigned int paPortIndex, bool paIsInput, CFunctionBlock *paFB);
 
-    void fillInterfaceElementsArray(CFunctionBlock* paFB, bool paIsInput, bool paIsEvent);
+    void fillInterfaceElementsArray(CFunctionBlock *paFB, bool paIsInput, bool paIsEvent);
 
     unsigned int mNumberOfEcets;
 
@@ -127,7 +131,5 @@ class fmuInstance : public CDevice{
     forte::arch::CSemaphore mEcetSemaphore;
 
     static CSyncObject sFmuInstanceMutex;
-
 };
 #endif /*_FMUINSTANCE_H_ */
-

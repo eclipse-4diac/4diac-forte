@@ -21,28 +21,22 @@
 //--- SW-Module memory partition, needed for new operator
 extern UINT32 FORTE_MemPart;
 
-inline
-void forte_free(void *paData){
+inline void forte_free(void *paData) {
   sys_MemXFree(paData);
 }
 
-inline
-void *forte_malloc(size_t paSize){
-  void * pTemp;
+inline void *forte_malloc(size_t paSize) {
+  void *pTemp;
 
-    pTemp = sys_MemXPAlloc(FORTE_MemPart, paSize);
+  pTemp = sys_MemXPAlloc(FORTE_MemPart, paSize);
 
-    if (pTemp == nullptr)
-    {
-      /* no memory, suspend task to avoid a nullptr exception*/
-      log_Err(
-          "forte_malloc: unable to allocate 0x%x bytes in partition %d, Suspend task!",
-          paSize, FORTE_MemPart);
-      taskSuspend(taskIdSelf());
-    }
+  if (pTemp == nullptr) {
+    /* no memory, suspend task to avoid a nullptr exception*/
+    log_Err("forte_malloc: unable to allocate 0x%x bytes in partition %d, Suspend task!", paSize, FORTE_MemPart);
+    taskSuspend(taskIdSelf());
+  }
 
-    return pTemp;
+  return pTemp;
 }
-
 
 #endif /* FORTEALLOC_H_ */

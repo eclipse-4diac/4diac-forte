@@ -19,52 +19,48 @@
 #include <forte_wstring.h>
 #include "ArrowheadPublishAdp_adp.h"
 
-class FORTE_ArrowheadPublish: public CCompositeFB{
-  DECLARE_FIRMWARE_FB(FORTE_ArrowheadPublish)
+class FORTE_ArrowheadPublish : public CCompositeFB {
+    DECLARE_FIRMWARE_FB(FORTE_ArrowheadPublish)
 
-private:
-  static const CStringDictionary::TStringId scmDataInputNames[];
-  static const CStringDictionary::TStringId scmDataInputTypeIds[];
-  CIEC_PublishEvent &publishEvent() {
-    return *static_cast<CIEC_PublishEvent*>(getDI(0));
-  };
+  private:
+    static const CStringDictionary::TStringId scmDataInputNames[];
+    static const CStringDictionary::TStringId scmDataInputTypeIds[];
+    CIEC_PublishEvent &publishEvent() {
+      return *static_cast<CIEC_PublishEvent *>(getDI(0));
+    };
 
-  CIEC_WSTRING &endpoint() {
-    return *static_cast<CIEC_WSTRING*>(getDI(1));
-  };
+    CIEC_WSTRING &endpoint() {
+      return *static_cast<CIEC_WSTRING *>(getDI(1));
+    };
 
-  static const TEventID scmEventpublishID = 0;
-  static const TForteInt16 scmEIWithIndexes[];
-  static const TDataIOID scmEIWith[];
-  static const CStringDictionary::TStringId scmEventInputNames[];
-  static const CStringDictionary::TStringId scmEventInputTypeIds[];
+    static const TEventID scmEventpublishID = 0;
+    static const TForteInt16 scmEIWithIndexes[];
+    static const TDataIOID scmEIWith[];
+    static const CStringDictionary::TStringId scmEventInputNames[];
+    static const CStringDictionary::TStringId scmEventInputTypeIds[];
 
-  static const TEventID scmEventpublishedID = 0;
-  static const TForteInt16 scmEOWithIndexes[];
-  static const CStringDictionary::TStringId scmEventOutputNames[];
-  static const CStringDictionary::TStringId scmEventOutputTypeIds[];
+    static const TEventID scmEventpublishedID = 0;
+    static const TForteInt16 scmEOWithIndexes[];
+    static const CStringDictionary::TStringId scmEventOutputNames[];
+    static const CStringDictionary::TStringId scmEventOutputTypeIds[];
 
-  static const SAdapterInstanceDef scmAdapterInstances[];
+    static const SAdapterInstanceDef scmAdapterInstances[];
 
-  FORTE_ArrowheadPublishAdp& ArrowheadPublishAdp() {
-    return (*static_cast<FORTE_ArrowheadPublishAdp*>(mAdapters[0]));
-  };
-  static const int scmArrowheadPublishAdpAdpNum = 0;
-  static const SFBInterfaceSpec scmFBInterfaceSpec;
+    FORTE_ArrowheadPublishAdp &ArrowheadPublishAdp() {
+      return (*static_cast<FORTE_ArrowheadPublishAdp *>(mAdapters[0]));
+    };
+    static const int scmArrowheadPublishAdpAdpNum = 0;
+    static const SFBInterfaceSpec scmFBInterfaceSpec;
 
+    static const SCFB_FBConnectionData scmEventConnections[];
 
-  static const SCFB_FBConnectionData scmEventConnections[];
+    static const SCFB_FBConnectionData scmDataConnections[];
+    static const SCFB_FBNData scmFBNData;
 
-  static const SCFB_FBConnectionData scmDataConnections[];
-  static const SCFB_FBNData scmFBNData;
+  public:
+    COMPOSITE_FUNCTION_BLOCK_CTOR(FORTE_ArrowheadPublish) {};
 
-public:
-  COMPOSITE_FUNCTION_BLOCK_CTOR(FORTE_ArrowheadPublish){
-  };
-
-  ~FORTE_ArrowheadPublish() override = default;
-
+    ~FORTE_ArrowheadPublish() override = default;
 };
 
-#endif //close the ifdef sequence from the beginning of the file
-
+#endif // close the ifdef sequence from the beginning of the file

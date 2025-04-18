@@ -43,34 +43,26 @@ class CTesterDevice : public CDevice {
   private:
     forte::core::CInternalFB<EMB_RES> mResource;
 
-    constexpr static SFBInterfaceSpec scTestDevSpec = {
-    0, nullptr, nullptr, nullptr, nullptr,
-    0, nullptr, nullptr, nullptr, nullptr,
-    0, nullptr, nullptr,
-    0, nullptr, nullptr,
-    0, nullptr,
-    0, nullptr
-  };
+    constexpr static SFBInterfaceSpec scTestDevSpec = {0,       nullptr, nullptr, nullptr, nullptr, 0,       nullptr,
+                                                       nullptr, nullptr, nullptr, 0,       nullptr, nullptr, 0,
+                                                       nullptr, nullptr, 0,       nullptr, 0,       nullptr};
 };
-
 
 /**Global fixture for providing the resource and device needed for fb testing
  *
  */
-class CFBTestDataGlobalFixture{
+class CFBTestDataGlobalFixture {
 
   public:
     CFBTestDataGlobalFixture();
     ~CFBTestDataGlobalFixture();
 
-    static CResource &getResource(){
+    static CResource &getResource() {
       return smTestDev->getTestResource();
     }
 
   private:
     static std::unique_ptr<CTesterDevice> smTestDev;
 };
-
-
 
 #endif

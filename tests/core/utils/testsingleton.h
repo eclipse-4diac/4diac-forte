@@ -14,11 +14,10 @@
 #ifndef TESTSINGLETON_H_
 #define TESTSINGLETON_H_
 
-class TestSingleton{
+class TestSingleton {
     DECLARE_SINGLETON(TestSingleton);
 
   public:
-
     int getSingletonID() {
       return mSingletonID;
     }

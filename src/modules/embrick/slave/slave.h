@@ -48,7 +48,8 @@ class EmbrickSlaveHandler {
     };
 
     struct Config {
-        unsigned int mUpdateInterval; //!< Sets the default frequency for the data update cycle of slaves. The emBRICK slaves require at least 20 updates per minute. The default value is 25 Hz.
+        unsigned int mUpdateInterval; //!< Sets the default frequency for the data update cycle of slaves. The emBRICK
+                                      //!< slaves require at least 20 updates per minute. The default value is 25 Hz.
     };
 
     class Delegate {
@@ -58,7 +59,7 @@ class EmbrickSlaveHandler {
     };
 
     void setConfig(Config paConfig);
-    Delegate* mDelegate;
+    Delegate *mDelegate;
 
     const unsigned int mAddress;
     unsigned int index() const {
@@ -70,26 +71,20 @@ class EmbrickSlaveHandler {
     int update();
     void forceUpdate();
 
-    EmbrickSlaveHandle* getInputHandle(int paIndex) {
+    EmbrickSlaveHandle *getInputHandle(int paIndex) {
       return getHandle(&mInputs, paIndex);
     }
-    EmbrickSlaveHandle* getOutputHandle(int paIndex) {
+    EmbrickSlaveHandle *getOutputHandle(int paIndex) {
       return getHandle(&mOutputs, paIndex);
     }
 
-    void addHandle(EmbrickSlaveHandle* paHandle) {
+    void addHandle(EmbrickSlaveHandle *paHandle) {
 
-      switch(paHandle->getDirection()){
-        case forte::core::io::IOMapper::In:
-          addHandle(&mInputs, paHandle);
-          break;
-        case forte::core::io::IOMapper::Out:
-          addHandle(&mOutputs, paHandle);
-          break;
-        default:
-          break;
+      switch (paHandle->getDirection()) {
+        case forte::core::io::IOMapper::In: addHandle(&mInputs, paHandle); break;
+        case forte::core::io::IOMapper::Out: addHandle(&mOutputs, paHandle); break;
+        default: break;
       }
-
     }
 
     void dropHandles();
@@ -99,12 +94,12 @@ class EmbrickSlaveHandler {
     CSyncObject mUpdateMutex;
 
   protected:
-    static EmbrickSlaveHandler* sendInit(EmbrickBusHandler* paBus, int paAddress);
+    static EmbrickSlaveHandler *sendInit(EmbrickBusHandler *paBus, int paAddress);
 
-    EmbrickSlaveHandler(EmbrickBusHandler* paBus, int paAddress, EmbrickSlaveInitPackage paInit);
+    EmbrickSlaveHandler(EmbrickBusHandler *paBus, int paAddress, EmbrickSlaveInitPackage paInit);
     virtual ~EmbrickSlaveHandler();
 
-    EmbrickBusHandler* mBus;
+    EmbrickBusHandler *mBus;
 
     Config mConfig;
 
@@ -121,12 +116,12 @@ class EmbrickSlaveHandler {
     typedef CSinglyLinkedList<EmbrickSlaveHandle *> TSlaveHandleList;
     TSlaveHandleList mInputs;
     TSlaveHandleList mOutputs;
-    void addHandle(TSlaveHandleList* paList, EmbrickSlaveHandle* paHandle);
-    EmbrickSlaveHandle* getHandle(TSlaveHandleList* list, int paIndex);
+    void addHandle(TSlaveHandleList *paList, EmbrickSlaveHandle *paHandle);
+    EmbrickSlaveHandle *getHandle(TSlaveHandleList *list, int paIndex);
 
   private:
-    //!declared but undefined copy constructor as we don't want Slaves to be directly copied.
-    EmbrickSlaveHandler(const EmbrickSlaveHandler&);
+    //! declared but undefined copy constructor as we don't want Slaves to be directly copied.
+    EmbrickSlaveHandler(const EmbrickSlaveHandler &);
 };
 
 #endif /* SRC_MODULES_EMBRICK_SLAVE_SLAVE_H_ */

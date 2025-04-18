@@ -17,8 +17,8 @@
 
 #include "IORevPiBusAdapter.h"
 
-class FORTE_IORevPiCore: public forte::core::io::IOConfigFBMultiMaster {
-  DECLARE_FIRMWARE_FB(FORTE_IORevPiCore)
+class FORTE_IORevPiCore : public forte::core::io::IOConfigFBMultiMaster {
+    DECLARE_FIRMWARE_FB(FORTE_IORevPiCore)
 
   private:
     static const CStringDictionary::TStringId scmDataInputNames[];
@@ -45,13 +45,13 @@ class FORTE_IORevPiCore: public forte::core::io::IOConfigFBMultiMaster {
     void writeOutputData(TEventID paEIID) override;
     void setInitialValues() override;
 
-    forte::core::io::IODeviceController* createDeviceController(CDeviceExecution& paDeviceExecution);
+    forte::core::io::IODeviceController *createDeviceController(CDeviceExecution &paDeviceExecution);
     void setConfig();
 
   public:
     FORTE_IORevPiCore(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
-    virtual ~FORTE_IORevPiCore(){};
+    virtual ~FORTE_IORevPiCore() {};
 
     CIEC_BOOL var_QI;
     CIEC_UINT var_UpdateInterval;
@@ -71,7 +71,7 @@ class FORTE_IORevPiCore: public forte::core::io::IOConfigFBMultiMaster {
     CIEC_ANY *getDI(size_t) override;
     CIEC_ANY *getDO(size_t) override;
     FORTE_IORevPiBusAdapter &var_BusAdapterOut() {
-      return *static_cast<FORTE_IORevPiBusAdapter*>(mAdapters[0]);
+      return *static_cast<FORTE_IORevPiBusAdapter *>(mAdapters[0]);
     };
 
     CEventConnection *getEOConUnchecked(TPortId) override;

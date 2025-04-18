@@ -18,21 +18,22 @@
 
 // change time elements to string
 
-int CIEC_ANY_DURATION::timeElementsToString(int64_t paTimeElement, char *paValue, int paSize, size_t paBufferSize, const char *paUnit) const {
+int CIEC_ANY_DURATION::timeElementsToString(
+    int64_t paTimeElement, char *paValue, int paSize, size_t paBufferSize, const char *paUnit) const {
 
   int size = 0;
 
-  if(paSize < 0) {
-      return -1;
+  if (paSize < 0) {
+    return -1;
   }
 
-  if(static_cast<size_t>(paSize) > paBufferSize) {
-      return -1;
+  if (static_cast<size_t>(paSize) > paBufferSize) {
+    return -1;
   }
 
-  if(0 != paTimeElement) {
+  if (0 != paTimeElement) {
     size = snprintf(paValue + paSize, paBufferSize - paSize, "%" PRId64 "%s", paTimeElement, paUnit);
-    if((-1 == size) || (size >= static_cast<int>(paBufferSize) - paSize)) {
+    if ((-1 == size) || (size >= static_cast<int>(paBufferSize) - paSize)) {
       return -1;
     }
   }

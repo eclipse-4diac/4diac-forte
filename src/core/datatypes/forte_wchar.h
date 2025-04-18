@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Copyright (c) 2022, 2023 Primetals Technologies Austria GmbH
  *                          Martin Erich Jobst
- *               
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -21,7 +21,7 @@
 /*!\ingroup COREDTS CIEC_BYTE represents the byte data type according to IEC 61131.
  */
 class CIEC_WCHAR : public CIEC_ANY_CHAR {
-  DECLARE_FIRMWARE_DATATYPE(WCHAR)
+    DECLARE_FIRMWARE_DATATYPE(WCHAR)
 
   public:
     using TValueType = TForteWChar;
@@ -34,8 +34,7 @@ class CIEC_WCHAR : public CIEC_ANY_CHAR {
 
     CIEC_WCHAR() = default;
 
-    CIEC_WCHAR(const CIEC_WCHAR& paValue) :
-        CIEC_ANY_CHAR(){
+    CIEC_WCHAR(const CIEC_WCHAR &paValue) : CIEC_ANY_CHAR() {
       setValueSimple(paValue);
     }
 
@@ -45,7 +44,7 @@ class CIEC_WCHAR : public CIEC_ANY_CHAR {
 
     ~CIEC_WCHAR() override = default;
 
-    CIEC_WCHAR& operator =(const CIEC_WCHAR &paValue){
+    CIEC_WCHAR &operator=(const CIEC_WCHAR &paValue) {
       // Simple value assignment - no self assignment check needed
       setValueSimple(paValue);
       return *this;
@@ -74,27 +73,27 @@ class CIEC_WCHAR : public CIEC_ANY_CHAR {
     }
 };
 
-inline CIEC_WCHAR operator ""_WCHAR(char16_t paValue) {
+inline CIEC_WCHAR operator""_WCHAR(char16_t paValue) {
   return CIEC_WCHAR(static_cast<CIEC_WCHAR::TValueType>(paValue));
 }
 
-inline CIEC_WCHAR operator ""_WCHAR(unsigned long long int paValue) {
+inline CIEC_WCHAR operator""_WCHAR(unsigned long long int paValue) {
   return CIEC_WCHAR(static_cast<CIEC_WCHAR::TValueType>(paValue));
 }
 
 namespace std {
-  template <>
+  template<>
   struct numeric_limits<CIEC_WCHAR> : public forte::templates::numeric_limits<CIEC_WCHAR> {
-    static constexpr size_t bitLength = 16U;
+      static constexpr size_t bitLength = 16U;
   };
-}
+} // namespace std
 
 namespace forte {
-  template <>
+  template<>
   struct CDataTypeTrait<CIEC_WCHAR> {
       static constexpr CIEC_ANY::EDataTypeID scmDataTypeId = CIEC_ANY::e_WCHAR;
       static const CStringDictionary::TStringId scmDataTypeName;
   };
-}
+} // namespace forte
 
 #endif /*_FORTE_WCHAR_H_*/

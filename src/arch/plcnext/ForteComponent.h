@@ -18,22 +18,21 @@
 
 #include "ForteComponentProgramProvider.h"
 
-
 using namespace Arp;
 using namespace Arp::System::Acf;
 using namespace Arp::Plc::Esm;
 
-namespace ForteLibrary{
+namespace ForteLibrary {
 
-  class ForteComponent : public ComponentBase, public IProgramComponent{
+  class ForteComponent : public ComponentBase, public IProgramComponent {
     public:
-      static IComponent::Ptr Create(IApplication& paApplication, const String& paComponentName);
+      static IComponent::Ptr Create(IApplication &paApplication, const String &paComponentName);
 
-      ForteComponent(IApplication& paApplication, const String& paName);
+      ForteComponent(IApplication &paApplication, const String &paName);
       virtual ~ForteComponent() = default;
 
       void Initialize() override;
-      void LoadSettings(const String& paSettingsPath) override;
+      void LoadSettings(const String &paSettingsPath) override;
       void SetupSettings() override;
       void SubscribeServices() override;
       void LoadConfig() override;
@@ -43,29 +42,30 @@ namespace ForteLibrary{
       void Dispose() override;
       void PowerDown() override;
 
-      IProgramProvider* GetProgramProvider() override;
+      IProgramProvider *GetProgramProvider() override;
 
-      ForteComponent(const ForteComponent& paArg) = delete;
-      ForteComponent& operator= (const ForteComponent& paArg) = delete;
+      ForteComponent(const ForteComponent &paArg) = delete;
+      ForteComponent &operator=(const ForteComponent &paArg) = delete;
 
     private:
-        ForteComponentProgramProvider mProgramProvider;
+      ForteComponentProgramProvider mProgramProvider;
 
-        C4diacFORTEInstance m4diacForteInstance;
+      C4diacFORTEInstance m4diacForteInstance;
   };
 
   ///////////////////////////////////////////////////////////////////////////////
   // inline methods of class ForteComponent
-  inline ForteComponent::ForteComponent(IApplication& paApplication, const String& paName)
-                        : ComponentBase(paApplication, paName, ComponentCategory::Custom, Version(0)), mDev(0){
+  inline ForteComponent::ForteComponent(IApplication &paApplication, const String &paName) :
+      ComponentBase(paApplication, paName, ComponentCategory::Custom, Version(0)),
+      mDev(0) {
   }
 
-  inline IComponent::Ptr ForteComponent::Create(IApplication& paApplication, const String& paComponentName){
-      return IComponent::Ptr(new ForteComponent(paApplication, paComponentName));
+  inline IComponent::Ptr ForteComponent::Create(IApplication &paApplication, const String &paComponentName) {
+    return IComponent::Ptr(new ForteComponent(paApplication, paComponentName));
   }
 
-  inline IProgramProvider* ForteComponent::GetProgramProvider(){
-      return &mProgramProvider;
+  inline IProgramProvider *ForteComponent::GetProgramProvider() {
+    return &mProgramProvider;
   }
 
 } // end of namespace ForteLibrary

@@ -24,8 +24,7 @@
  */
 class CFreeRTOSTimerHandler : public CTimerHandler {
   public:
-
-    explicit CFreeRTOSTimerHandler(CDeviceExecution& paDeviceExecution);
+    explicit CFreeRTOSTimerHandler(CDeviceExecution &paDeviceExecution);
 
     ~CFreeRTOSTimerHandler() override;
 
@@ -48,8 +47,6 @@ class CFreeRTOSTimerHandler : public CTimerHandler {
     int getPriority() const override;
 
   private:
-
-
     static void vCallbackFunction(TimerHandle_t paTimer);
 
     TimerHandle_t mTimer;

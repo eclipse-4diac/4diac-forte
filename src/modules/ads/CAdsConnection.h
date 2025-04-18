@@ -20,15 +20,15 @@
 namespace forte {
   namespace ads {
 
-    class CAdsConnection{
+    class CAdsConnection {
       public:
-        CAdsConnection(const std::string& paAddr, const std::string& paRemoteIpOrHostName);
-        CAdsConnection(const std::string& paAddr, uint16_t paPort, const std::string& paRemoteIpOrHostName);
+        CAdsConnection(const std::string &paAddr, const std::string &paRemoteIpOrHostName);
+        CAdsConnection(const std::string &paAddr, uint16_t paPort, const std::string &paRemoteIpOrHostName);
         ~CAdsConnection();
         bool connect();
 
         uint16_t getPort() const;
-        AmsAddr* getRemoteDevice() const;
+        AmsAddr *getRemoteDevice() const;
 
       private:
         AmsAddr mRemoteDevice;

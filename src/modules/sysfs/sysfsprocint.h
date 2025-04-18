@@ -21,12 +21,14 @@
 class CSysFsProcessInterface : public CProcessInterfaceBase {
 
   public:
-    CSysFsProcessInterface(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec& paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId);
+    CSysFsProcessInterface(forte::core::CFBContainer &paContainer,
+                           const SFBInterfaceSpec &paInterfaceSpec,
+                           const CStringDictionary::TStringId paInstanceNameId);
     ~CSysFsProcessInterface() override;
 
     class CIOHandler : public CExternalEventHandler, public CThread {
-      DECLARE_HANDLER(CIOHandler)
-        ;
+        DECLARE_HANDLER(CIOHandler);
+
       public:
         void run() override;
         void updateReadData();

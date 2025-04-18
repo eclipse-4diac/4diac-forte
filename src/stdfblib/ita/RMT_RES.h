@@ -18,8 +18,8 @@
 #include "../events/E_RESTART_fbt.h"
 #include "../events/E_SR_fbt.h"
 
-class RMT_RES final : public CResource{
-  DECLARE_FIRMWARE_FB(RMT_RES)
+class RMT_RES final : public CResource {
+    DECLARE_FIRMWARE_FB(RMT_RES)
 
   public:
     RMT_RES(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paDevice);
@@ -29,12 +29,11 @@ class RMT_RES final : public CResource{
 
     void joinResourceThread() const;
 
-
     CIEC_ANY *getDI(size_t) override;
 
   private:
     CDataConnection **getDIConUnchecked(TPortId) override;
-    CConnection *getResIf2InConnectionUnchecked(TPortId ) override;
+    CConnection *getResIf2InConnectionUnchecked(TPortId) override;
 
     CDataConnection *conn_MGR_ID;
     COutDataConnection<CIEC_WSTRING> conn_MGR_ID_int;
@@ -47,7 +46,6 @@ class RMT_RES final : public CResource{
 
     static const CStringDictionary::TStringId scmVarInputNameIds[];
     static const CStringDictionary::TStringId scmDIDataTypeIds[];
-
 };
 
-#endif //close the ifdef sequence from the beginning of the file
+#endif // close the ifdef sequence from the beginning of the file

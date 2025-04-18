@@ -21,99 +21,93 @@
 
 using namespace forte::com_infra;
 
-CTSNLayer::CTSNLayer(CComLayer* paUpperLayer, CBaseCommFB* paBaseCommFB) :
-    CIPComLayer(paUpperLayer, paBaseCommFB){
+CTSNLayer::CTSNLayer(CComLayer *paUpperLayer, CBaseCommFB *paBaseCommFB) : CIPComLayer(paUpperLayer, paBaseCommFB) {
 }
 
 CTSNLayer::~CTSNLayer() = default;
 
-EComResponse CTSNLayer::openConnection(char *paLayerParameter){
+EComResponse CTSNLayer::openConnection(char *paLayerParameter) {
   EComResponse eRetVal = e_InitInvalidId;
 
   // complete ID for publisher: fbdk[].tsn[<ip>:<port>:<vlan_id>:<prio>] e.g., fbdk[].tsn[239.1.0.1:48401:3:5]
   CParameterParser parser(paLayerParameter, ':', scmNumParameters);
 
-  if(scmNumParameters != parser.parseParameters()){
+  if (scmNumParameters != parser.parseParameters()) {
     DEVLOG_ERROR("[TSN Layer] Wrong parameters (%s)\n", paLayerParameter);
-  }
-  else{
+  } else {
 
     unsigned int vlanPriority = static_cast<unsigned int>(forte::core::util::strtoul(parser[3], nullptr, 10));
-    char * dstIPAddress = const_cast<char*>(parser[0]);
+    char *dstIPAddress = const_cast<char *>(parser[0]);
     TForteUInt16 nPort = static_cast<TForteUInt16>(forte::core::util::strtoul(parser[1], nullptr, 10));
 
     CIPComSocketHandler::TSocketDescriptor nSockDes = CIPComSocketHandler::scmInvalidSocketDescriptor;
     mConnectionState = e_Connected;
 
-    switch (mFb->getComServiceType()){
+    switch (mFb->getComServiceType()) {
       case e_Server:
         DEVLOG_ERROR("[TSN LAYER] TSN layer does not support server FBs. Use the default "
-            "ip layer without vlan parameters instead.\n");
+                     "ip layer without vlan parameters instead.\n");
         break;
       case e_Client:
         DEVLOG_ERROR("[TSN LAYER] TSN layer does not support client FBs. Use the default "
-            "ip layer without vlan parameters instead.\n");
+                     "ip layer without vlan parameters instead.\n");
         break;
       case e_Publisher:
         nSockDes = mSocketID = CIPComSocketHandler::openUDPSendPort(dstIPAddress, nPort, &mDestAddr);
         eRetVal = setVLANIDForSocket(parser[2]);
-        if(e_InitOk == eRetVal){
+        if (e_InitOk == eRetVal) {
           eRetVal = setVLANPriorityForSocket(vlanPriority);
         }
         break;
       case e_Subscriber:
         DEVLOG_ERROR("[TSN LAYER] TSN layer does not support subscriber FBs. Use the default "
-            "ip layer without vlan parameters instead.\n");
+                     "ip layer without vlan parameters instead.\n");
         break;
     }
 
-    if(CIPComSocketHandler::scmInvalidSocketDescriptor != nSockDes && e_InitOk == eRetVal){
-      if(e_Publisher != mFb->getComServiceType()){
-        //Publishers should not be registered for receiving data
+    if (CIPComSocketHandler::scmInvalidSocketDescriptor != nSockDes && e_InitOk == eRetVal) {
+      if (e_Publisher != mFb->getComServiceType()) {
+        // Publishers should not be registered for receiving data
         getExtEvHandler<CIPComSocketHandler>().addComCallback(nSockDes, this);
       }
       eRetVal = e_InitOk;
-    }
-    else{
+    } else {
       mConnectionState = e_Disconnected;
     }
   }
   return eRetVal;
 }
 
-EComResponse CTSNLayer::setVLANPriorityForSocket(unsigned int paVlanPriority){
+EComResponse CTSNLayer::setVLANPriorityForSocket(unsigned int paVlanPriority) {
   EComResponse eRetVal = e_InitInvalidId;
-  if (scmMaxVLANPrio < paVlanPriority){
+  if (scmMaxVLANPrio < paVlanPriority) {
     DEVLOG_ERROR("[TSN Layer] VLAN priority %u out of range (0 - 7)\n", paVlanPriority);
     return eRetVal;
   }
-  if(0 == setsockopt(mSocketID, SOL_SOCKET, SO_PRIORITY, &paVlanPriority, sizeof(paVlanPriority))){
+  if (0 == setsockopt(mSocketID, SOL_SOCKET, SO_PRIORITY, &paVlanPriority, sizeof(paVlanPriority))) {
     eRetVal = e_InitOk;
-  }
-  else{
+  } else {
     DEVLOG_ERROR("[TSN LAYER] Setting user space priority %u of socket not possible \n", paVlanPriority);
   }
   return eRetVal;
 }
 
-EComResponse CTSNLayer::setVLANIDForSocket(const char* paId){
+EComResponse CTSNLayer::setVLANIDForSocket(const char *paId) {
   EComResponse eRetVal = e_InitInvalidId;
 
   unsigned int id = static_cast<unsigned int>(forte::core::util::strtoul(paId, nullptr, 10));
-  if(scmMinVLANID <= id && scmMaxVLANID >= id){
+  if (scmMinVLANID <= id && scmMaxVLANID >= id) {
     struct ifreq ifr;
     memset(&ifr, 0, sizeof(ifr));
 
     snprintf(ifr.ifr_name, sizeof(ifr.ifr_name), "eth0.%u", id);
 
-    if(0 == setsockopt(mSocketID, SOL_SOCKET, SO_BINDTODEVICE, (void *) &ifr, sizeof(ifr))){
+    if (0 == setsockopt(mSocketID, SOL_SOCKET, SO_BINDTODEVICE, (void *) &ifr, sizeof(ifr))) {
       eRetVal = e_InitOk;
-    }
-    else{
+    } else {
       DEVLOG_ERROR("[TSN LAYER] binding to interface %s not possible \n", ifr.ifr_name);
     }
-  }
-  else{
+  } else {
     DEVLOG_ERROR("[TSN Layer] Invalid VLAN ID %u out of range (1 - 4095)\n", id);
   }
 

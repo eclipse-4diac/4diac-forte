@@ -43,21 +43,29 @@ const TForteInt16 FORTE_ANYToJSON::scmEOWithIndexes[] = {0, -1};
 const CStringDictionary::TStringId FORTE_ANYToJSON::scmEventOutputNames[] = {STRID(CNF)};
 const CStringDictionary::TStringId FORTE_ANYToJSON::scmEventOutputTypeIds[] = {STRID(Event)};
 
-const SFBInterfaceSpec FORTE_ANYToJSON::scmFBInterfaceSpec = {
-  1,  scmEventInputNames, scmEventInputTypeIds,  scmEIWith,  scmEIWithIndexes,
-  1,  scmEventOutputNames, scmEventOutputTypeIds,  scmEOWith, scmEOWithIndexes,  1,  scmDataInputNames, scmDataInputTypeIds,
-  1,  scmDataOutputNames, scmDataOutputTypeIds,
-  0, 0
-};
-
+const SFBInterfaceSpec FORTE_ANYToJSON::scmFBInterfaceSpec = {1,
+                                                              scmEventInputNames,
+                                                              scmEventInputTypeIds,
+                                                              scmEIWith,
+                                                              scmEIWithIndexes,
+                                                              1,
+                                                              scmEventOutputNames,
+                                                              scmEventOutputTypeIds,
+                                                              scmEOWith,
+                                                              scmEOWithIndexes,
+                                                              1,
+                                                              scmDataInputNames,
+                                                              scmDataInputTypeIds,
+                                                              1,
+                                                              scmDataOutputNames,
+                                                              scmDataOutputTypeIds,
+                                                              0,
+                                                              0};
 
 void FORTE_ANYToJSON::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
-  if(scmEventREQID == paEIID) {
+  if (scmEventREQID == paEIID) {
     output() = "";
     ArrowheadJSONHelper::transformANYToJSON(input(), output());
     sendOutputEvent(scmEventCNFID, paECET);
   }
 }
-
-
-

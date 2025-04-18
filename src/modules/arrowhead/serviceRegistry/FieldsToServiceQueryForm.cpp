@@ -26,12 +26,13 @@ USE_STRING_ID(serviceQueryForm);
 USE_STRING_ID(ServiceQueryForm);
 USE_STRING_ID(version);
 
-
 DEFINE_FIRMWARE_FB(FORTE_FieldsToServiceQueryForm, STRID(FieldsToServiceQueryForm))
 
-const CStringDictionary::TStringId FORTE_FieldsToServiceQueryForm::scmDataInputNames[] = {STRID(service), STRID(metadataSearch), STRID(pingProviders), STRID(version)};
+const CStringDictionary::TStringId FORTE_FieldsToServiceQueryForm::scmDataInputNames[] = {
+    STRID(service), STRID(metadataSearch), STRID(pingProviders), STRID(version)};
 
-const CStringDictionary::TStringId FORTE_FieldsToServiceQueryForm::scmDataInputTypeIds[] = {STRID(ArrowheadService), STRID(BOOL), STRID(BOOL), STRID(DINT)};
+const CStringDictionary::TStringId FORTE_FieldsToServiceQueryForm::scmDataInputTypeIds[] = {
+    STRID(ArrowheadService), STRID(BOOL), STRID(BOOL), STRID(DINT)};
 
 const CStringDictionary::TStringId FORTE_FieldsToServiceQueryForm::scmDataOutputNames[] = {STRID(serviceQueryForm)};
 
@@ -47,27 +48,37 @@ const TForteInt16 FORTE_FieldsToServiceQueryForm::scmEOWithIndexes[] = {0, -1};
 const CStringDictionary::TStringId FORTE_FieldsToServiceQueryForm::scmEventOutputNames[] = {STRID(CNF)};
 const CStringDictionary::TStringId FORTE_FieldsToServiceQueryForm::scmEventOutputTypeIds[] = {STRID(Event)};
 
-const SFBInterfaceSpec FORTE_FieldsToServiceQueryForm::scmFBInterfaceSpec = {
-  1,  scmEventInputNames, scmEventInputTypeIds,  scmEIWith,  scmEIWithIndexes,
-  1,  scmEventOutputNames, scmEventOutputTypeIds,  scmEOWith, scmEOWithIndexes,  4,  scmDataInputNames, scmDataInputTypeIds,
-  1,  scmDataOutputNames, scmDataOutputTypeIds,
-  0, 0
-};
+const SFBInterfaceSpec FORTE_FieldsToServiceQueryForm::scmFBInterfaceSpec = {1,
+                                                                             scmEventInputNames,
+                                                                             scmEventInputTypeIds,
+                                                                             scmEIWith,
+                                                                             scmEIWithIndexes,
+                                                                             1,
+                                                                             scmEventOutputNames,
+                                                                             scmEventOutputTypeIds,
+                                                                             scmEOWith,
+                                                                             scmEOWithIndexes,
+                                                                             4,
+                                                                             scmDataInputNames,
+                                                                             scmDataInputTypeIds,
+                                                                             1,
+                                                                             scmDataOutputNames,
+                                                                             scmDataOutputTypeIds,
+                                                                             0,
+                                                                             0};
 
-void FORTE_FieldsToServiceQueryForm::alg_REQ(){
-serviceQueryForm().service() = service();
-serviceQueryForm().metadataSearch() = metadataSearch();
-serviceQueryForm().pingProviders() = pingProviders();
-serviceQueryForm().version() = version();
-
+void FORTE_FieldsToServiceQueryForm::alg_REQ() {
+  serviceQueryForm().service() = service();
+  serviceQueryForm().metadataSearch() = metadataSearch();
+  serviceQueryForm().pingProviders() = pingProviders();
+  serviceQueryForm().version() = version();
 }
 
-
-void FORTE_FieldsToServiceQueryForm::enterStateSTART(CEventChainExecutionThread *const paECET){
+void FORTE_FieldsToServiceQueryForm::enterStateSTART(CEventChainExecutionThread *const paECET) {
   mECCState = scmStateSTART;
 }
 
-void FORTE_FieldsToServiceQueryForm::enterStateREQ(CEventChainExecutionThread * const paECET){
+void FORTE_FieldsToServiceQueryForm::enterStateREQ(CEventChainExecutionThread *const paECET) {
   mECCState = scmStateREQ;
   alg_REQ();
   sendOutputEvent(scmEventCNFID, paECET);
@@ -75,28 +86,27 @@ void FORTE_FieldsToServiceQueryForm::enterStateREQ(CEventChainExecutionThread * 
 
 void FORTE_FieldsToServiceQueryForm::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   bool bTransitionCleared;
-  do{
+  do {
     bTransitionCleared = true;
-    switch(mECCState){
+    switch (mECCState) {
       case scmStateSTART:
-        if(scmEventREQID == paEIID)
+        if (scmEventREQID == paEIID)
           enterStateREQ(paECET);
         else
-          bTransitionCleared  = false; //no transition cleared
+          bTransitionCleared = false; // no transition cleared
         break;
       case scmStateREQ:
-        if(1)
+        if (1)
           enterStateSTART(paECET);
         else
-          bTransitionCleared  = false; //no transition cleared
+          bTransitionCleared = false; // no transition cleared
         break;
       default:
-      DEVLOG_ERROR("The state is not in the valid range! The state value is: %d. The max value can be: 1.", mECCState.operator TForteUInt16 ());
-        mECCState = 0; //0 is always the initial state
+        DEVLOG_ERROR("The state is not in the valid range! The state value is: %d. The max value can be: 1.",
+                     mECCState.operator TForteUInt16());
+        mECCState = 0; // 0 is always the initial state
         break;
     }
-    paEIID = cgInvalidEventID;  // we have to clear the event after the first check in order to ensure correct behavior
-  }while(bTransitionCleared);
+    paEIID = cgInvalidEventID; // we have to clear the event after the first check in order to ensure correct behavior
+  } while (bTransitionCleared);
 }
-
-

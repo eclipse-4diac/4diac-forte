@@ -27,7 +27,7 @@ CSyncObject MQTTHandler::smMQTTMutex;
 forte::arch::CSemaphore MQTTHandler::mStateSemaphore;
 bool MQTTHandler::mIsSemaphoreEmpty = true;
 
-MQTTHandler::MQTTHandler(CDeviceExecution& paDeviceExecution) : CExternalEventHandler(paDeviceExecution) {
+MQTTHandler::MQTTHandler(CDeviceExecution &paDeviceExecution) : CExternalEventHandler(paDeviceExecution) {
   if (!isAlive()) {
     start();
   }
@@ -40,18 +40,16 @@ MQTTHandler::~MQTTHandler() {
   }
 }
 
-
-void MQTTHandler::startNewEventChain(MQTTComLayer* layer) {
+void MQTTHandler::startNewEventChain(MQTTComLayer *layer) {
   CExternalEventHandler::startNewEventChain(layer->getCommFB());
 }
 
-std::shared_ptr<CMQTTClient> MQTTHandler::getClient(const std::string& paAddress, const std::string& paClientId) {
+std::shared_ptr<CMQTTClient> MQTTHandler::getClient(const std::string &paAddress, const std::string &paClientId) {
   for (std::shared_ptr<CMQTTClient> client : mClients) {
     if (paAddress == client->getAddress()) {
       if (paClientId == client->getClientId()) {
         return client;
-      }
-      else {
+      } else {
         // Wrong ClientId
         DEVLOG_ERROR("Wrong ClientID for Address %s, ClientID: %s\n", paAddress.c_str(), paClientId.c_str());
         return nullptr;
@@ -66,8 +64,7 @@ std::shared_ptr<CMQTTClient> MQTTHandler::getClient(const std::string& paAddress
   return nullptr;
 }
 
-
-int MQTTHandler::registerLayer(const std::string& paAddress, const std::string& paClientId, MQTTComLayer* paLayer) {
+int MQTTHandler::registerLayer(const std::string &paAddress, const std::string &paClientId, MQTTComLayer *paLayer) {
   std::shared_ptr<CMQTTClient> client = getClient(paAddress, paClientId);
   if (client == nullptr) {
     return eConnectionFailed;
@@ -77,7 +74,7 @@ int MQTTHandler::registerLayer(const std::string& paAddress, const std::string& 
   return eRegisterLayerSucceeded;
 }
 
-void MQTTHandler::unregisterLayer(MQTTComLayer* paLayer) {
+void MQTTHandler::unregisterLayer(MQTTComLayer *paLayer) {
   std::shared_ptr<CMQTTClient> client = paLayer->getClient();
   if (client != nullptr) {
     client->removeLayer(paLayer);
@@ -100,7 +97,7 @@ void MQTTHandler::disableHandler() {
 }
 
 void MQTTHandler::setPriority(int) {
-  //NOTE: Priorities are currently not supported by MQTTHandler, therefore this function remains empty
+  // NOTE: Priorities are currently not supported by MQTTHandler, therefore this function remains empty
 }
 
 int MQTTHandler::getPriority() const {
@@ -120,7 +117,7 @@ void MQTTHandler::run() {
       }
     }
     if (needSleep) {
-      //sleep in case a subscribe fails while connected
+      // sleep in case a subscribe fails while connected
       needSleep = false;
       CThread::sleepThread(smSleepTime);
     }
@@ -128,7 +125,7 @@ void MQTTHandler::run() {
 }
 
 void MQTTHandler::resumeSelfSuspend() {
-  if (mIsSemaphoreEmpty) { //avoid incrementing many times
+  if (mIsSemaphoreEmpty) { // avoid incrementing many times
     {
       CCriticalRegion section(smMQTTMutex);
       mStateSemaphore.inc();

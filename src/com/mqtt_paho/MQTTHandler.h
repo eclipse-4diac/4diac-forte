@@ -31,53 +31,48 @@
 class CMQTTClient;
 
 class MQTTHandler : public CExternalEventHandler, public CThread {
-  DECLARE_HANDLER(MQTTHandler)
-public:
-  enum RegisterLayerReturnCodes {
-    eRegisterLayerSucceeded,
-    eWrongClientID,
-    eConnectionFailed
-  };
+    DECLARE_HANDLER(MQTTHandler)
+  public:
+    enum RegisterLayerReturnCodes { eRegisterLayerSucceeded, eWrongClientID, eConnectionFailed };
 
-  int registerLayer(const std::string& paAddress, const std::string& paClientId, MQTTComLayer* paLayer);
+    int registerLayer(const std::string &paAddress, const std::string &paClientId, MQTTComLayer *paLayer);
 
-  void unregisterLayer(MQTTComLayer* paLayer);
+    void unregisterLayer(MQTTComLayer *paLayer);
 
-  void enableHandler() override;
-  /*!\brief Disable this event source
-   */
-  void disableHandler() override;
-  /*!\brief Sets the priority of the event source
-   *
-   * \param paPriority new priority of the event source
-   */
-  void setPriority(int paPriority) override;
-  /*!\brief Get the current priority of the event source
-   *
-   * \return current priority
-   */
-  int getPriority() const override;
+    void enableHandler() override;
+    /*!\brief Disable this event source
+     */
+    void disableHandler() override;
+    /*!\brief Sets the priority of the event source
+     *
+     * \param paPriority new priority of the event source
+     */
+    void setPriority(int paPriority) override;
+    /*!\brief Get the current priority of the event source
+     *
+     * \return current priority
+     */
+    int getPriority() const override;
 
-  void resumeSelfSuspend();
+    void resumeSelfSuspend();
 
-  void selfSuspend();
+    void selfSuspend();
 
-  void startNewEventChain(MQTTComLayer* layer);
+    void startNewEventChain(MQTTComLayer *layer);
 
-protected:
-  void run() override;
+  protected:
+    void run() override;
 
-private:
-  std::shared_ptr<CMQTTClient> getClient(const std::string& paAddress, const std::string& paClientId);
+  private:
+    std::shared_ptr<CMQTTClient> getClient(const std::string &paAddress, const std::string &paClientId);
 
-  static CSyncObject smMQTTMutex;
-  static const int smSleepTime = 5000;
+    static CSyncObject smMQTTMutex;
+    static const int smSleepTime = 5000;
 
-  static forte::arch::CSemaphore mStateSemaphore;
-  static bool mIsSemaphoreEmpty;
+    static forte::arch::CSemaphore mStateSemaphore;
+    static bool mIsSemaphoreEmpty;
 
-
-  std::vector<std::shared_ptr<CMQTTClient>> mClients;
+    std::vector<std::shared_ptr<CMQTTClient>> mClients;
 };
 
 #endif /* MQTTHANDLER_H_ */

@@ -18,42 +18,41 @@
 #include "../../core/dataconn.h"
 #include "RMT_RES.h"
 
-class FakeTimeDev : public CDevice{
+class FakeTimeDev : public CDevice {
   public:
-
     FakeTimeDev(const std::string &paMGR_ID = "localhost:61499");
     ~FakeTimeDev() override;
 
     bool initialize() override;
 
-  /*! \brief Adds additional functionality to the originals execute func of the device.
-  *
-  * This is that it waits till the thread of the MGR resource has anded
-  */
+    /*! \brief Adds additional functionality to the originals execute func of the device.
+     *
+     * This is that it waits till the thread of the MGR resource has anded
+     */
     int startDevice() override;
 
     void awaitShutdown() override;
 
     EMGMResponse changeExecutionState(EMGMCommandType paCommand) override;
 
-    EMGMResponse writeValue(forte::core::TNameIdentifier &paNameList, const std::string & paValue, bool paForce = false) override;
+    EMGMResponse
+    writeValue(forte::core::TNameIdentifier &paNameList, const std::string &paValue, bool paForce = false) override;
 
   private:
-
     static const SFBInterfaceSpec scmFBInterfaceSpec;
 
     static const CStringDictionary::TStringId scmDINameIds[];
     static const CStringDictionary::TStringId scmDIDataTypeIds[];
 
-    COutDataConnection<CIEC_WSTRING>  conn_MGR_ID;
-    COutDataConnection<CIEC_TIME>  conn_FakeTime;
+    COutDataConnection<CIEC_WSTRING> conn_MGR_ID;
+    COutDataConnection<CIEC_TIME> conn_FakeTime;
 
-    CIEC_ANY* getDI(size_t) override;
-    CDataConnection** getDIConUnchecked(TPortId) override {
+    CIEC_ANY *getDI(size_t) override;
+    CDataConnection **getDIConUnchecked(TPortId) override {
       return nullptr;
     }
 
-    CConnection *getResIf2InConnectionUnchecked(TPortId ) override;
+    CConnection *getResIf2InConnectionUnchecked(TPortId) override;
 
     RMT_RES MGR;
 

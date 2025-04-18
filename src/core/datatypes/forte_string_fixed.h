@@ -20,38 +20,50 @@
 
 template<size_t maxLength>
 class CIEC_STRING_FIXED final : public CIEC_STRING {
-  static_assert(maxLength > 0, "Length must be larger than 0");
-  static_assert(maxLength <= CIEC_STRING::scmMaxStringLen, "Length must be smaller than CIEC_STRING::scmMaxStringLen");
+    static_assert(maxLength > 0, "Length must be larger than 0");
+    static_assert(maxLength <= CIEC_STRING::scmMaxStringLen,
+                  "Length must be smaller than CIEC_STRING::scmMaxStringLen");
+
   public:
     static constexpr size_t scmMaxStringLen = maxLength;
     using CIEC_STRING::at;
     using CIEC_STRING::operator[];
 
-    CIEC_STRING_FIXED() : CIEC_STRING() {}
+    CIEC_STRING_FIXED() : CIEC_STRING() {
+    }
 
-    //Char has size 1 so it should always fit
-    CIEC_STRING_FIXED(const CIEC_CHAR &paValue) : CIEC_STRING(paValue) {}
+    // Char has size 1 so it should always fit
+    CIEC_STRING_FIXED(const CIEC_CHAR &paValue) : CIEC_STRING(paValue) {
+    }
 
     // Copy maxLength substring from CIEC_STRING
-    CIEC_STRING_FIXED(const CIEC_STRING &paValue) : CIEC_STRING(paValue.getStorage().substr(0, maxLength)) {}
+    CIEC_STRING_FIXED(const CIEC_STRING &paValue) : CIEC_STRING(paValue.getStorage().substr(0, maxLength)) {
+    }
 
     // Same size, just copy
-    CIEC_STRING_FIXED(const CIEC_STRING_FIXED &paValue) : CIEC_STRING(paValue) {}
+    CIEC_STRING_FIXED(const CIEC_STRING_FIXED &paValue) : CIEC_STRING(paValue) {
+    }
     // Same size, just move
-    CIEC_STRING_FIXED(CIEC_STRING_FIXED &&paValue) : CIEC_STRING(std::move(paValue)) {}
+    CIEC_STRING_FIXED(CIEC_STRING_FIXED &&paValue) : CIEC_STRING(std::move(paValue)) {
+    }
 
-    template <size_t otherLength>
-    CIEC_STRING_FIXED(const CIEC_STRING_FIXED<otherLength> &paValue) : CIEC_STRING(paValue.getStorage().substr(0, std::min(maxLength, otherLength))) {}
+    template<size_t otherLength>
+    CIEC_STRING_FIXED(const CIEC_STRING_FIXED<otherLength> &paValue) :
+        CIEC_STRING(paValue.getStorage().substr(0, std::min(maxLength, otherLength))) {
+    }
 
-    template <size_t otherLength>
+    template<size_t otherLength>
     CIEC_STRING_FIXED(CIEC_STRING_FIXED<otherLength> &&paValue) : CIEC_STRING(std::move(paValue)) {
       const size_t currentLength = static_cast<size_t>(this->length());
       // currentLength should be never larger than maxLengths
       getStorageMutable().resize(std::min(currentLength, maxLength));
     }
 
-    explicit CIEC_STRING_FIXED(const std::string paValue) : CIEC_STRING(paValue.substr(0, maxLength)) {}
-    explicit CIEC_STRING_FIXED(const char *paValue, const size_t paLength) : CIEC_STRING(paValue, std::min(paLength, maxLength)) {}
+    explicit CIEC_STRING_FIXED(const std::string paValue) : CIEC_STRING(paValue.substr(0, maxLength)) {
+    }
+    explicit CIEC_STRING_FIXED(const char *paValue, const size_t paLength) :
+        CIEC_STRING(paValue, std::min(paLength, maxLength)) {
+    }
 
     ~CIEC_STRING_FIXED() = default;
 
@@ -87,7 +99,8 @@ class CIEC_STRING_FIXED final : public CIEC_STRING {
 
     void reserve(const TForteUInt16 paRequestedSize) override {
       if (paRequestedSize > maxLength) {
-        DEVLOG_WARNING("Attempt to reserve %zu chars, which is more than the CIEC_STRING_FIXED<%zu> shall support!", paRequestedSize, maxLength);
+        DEVLOG_WARNING("Attempt to reserve %zu chars, which is more than the CIEC_STRING_FIXED<%zu> shall support!",
+                       paRequestedSize, maxLength);
       }
       getStorageMutable().reserve(std::min(static_cast<size_t>(paRequestedSize), maxLength));
     }

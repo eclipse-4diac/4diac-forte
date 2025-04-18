@@ -21,19 +21,18 @@
 
 USE_STRING_ID(NOT)
 
-CDataConnection::CDataConnection(CFunctionBlock &paSrcFB, const TPortId paSrcPortId)
-        : CConnection(paSrcFB, paSrcPortId) {
+CDataConnection::CDataConnection(CFunctionBlock &paSrcFB, const TPortId paSrcPortId) :
+    CConnection(paSrcFB, paSrcPortId) {
 }
 
-EMGMResponse CDataConnection::connect(CFunctionBlock &paDstFB,
-    CStringDictionary::TStringId paDstPortNameId){
+EMGMResponse CDataConnection::connect(CFunctionBlock &paDstFB, CStringDictionary::TStringId paDstPortNameId) {
   EMGMResponse retVal = EMGMResponse::NoSuchObject;
 
   const TPortId dstPortId = paDstFB.getDIID(paDstPortNameId);
-  if(cgInvalidPortId != dstPortId){
+  if (cgInvalidPortId != dstPortId) {
     CIEC_ANY *dstDataPoint = paDstFB.getDIFromPortId(dstPortId);
     retVal = CDataConnection::establishDataConnection(paDstFB, dstPortId, *dstDataPoint);
-    if(retVal == EMGMResponse::Ready) {
+    if (retVal == EMGMResponse::Ready) {
       getSourceId().getFB().incConnRefCount();
     }
   }
@@ -41,11 +40,11 @@ EMGMResponse CDataConnection::connect(CFunctionBlock &paDstFB,
 }
 
 EMGMResponse CDataConnection::connectToCFBInterface(CFunctionBlock &paDstFB,
-    CStringDictionary::TStringId paDstPortNameId){
+                                                    CStringDictionary::TStringId paDstPortNameId) {
   EMGMResponse retVal = EMGMResponse::NoSuchObject;
   TPortId nDOID = paDstFB.getDOID(paDstPortNameId);
 
-  if(cgInvalidEventID != nDOID){
+  if (cgInvalidEventID != nDOID) {
     CIEC_ANY *dstDataPoint = paDstFB.getDataOutput(paDstPortNameId);
     nDOID |= cgInternal2InterfaceMarker;
     retVal = establishDataConnection(paDstFB, nDOID, *dstDataPoint);
@@ -54,8 +53,8 @@ EMGMResponse CDataConnection::connectToCFBInterface(CFunctionBlock &paDstFB,
   return retVal;
 }
 
-void CDataConnection::handleAnySrcPortConnection(const CIEC_ANY &paDstDataPoint){
-  if(CIEC_ANY::e_ANY != paDstDataPoint.unwrap().getDataTypeID()){
+void CDataConnection::handleAnySrcPortConnection(const CIEC_ANY &paDstDataPoint) {
+  if (CIEC_ANY::e_ANY != paDstDataPoint.unwrap().getDataTypeID()) {
     getValue().setValue(paDstDataPoint.unwrap());
     getSourceId().getFB().configureGenericDO(getSourceId().getPortId(), paDstDataPoint);
   }
@@ -75,18 +74,16 @@ EMGMResponse CDataConnection::disconnect(CFunctionBlock &paDstFB, CStringDiction
   return EMGMResponse::Ready;
 }
 
-bool CDataConnection::canBeConnected(const CIEC_ANY &paSrcDataPoint,
-    const CIEC_ANY &paDstDataPoint){
+bool CDataConnection::canBeConnected(const CIEC_ANY &paSrcDataPoint, const CIEC_ANY &paDstDataPoint) {
   CIEC_ANY::EDataTypeID eSrcId = paSrcDataPoint.getDataTypeID();
   CIEC_ANY::EDataTypeID eDstId = paDstDataPoint.getDataTypeID();
   bool bCanConnect = false;
 
-  if(eSrcId == eDstId){
+  if (eSrcId == eDstId) {
     bCanConnect = true;
-  }
-  else{
-    if(((eSrcId == CIEC_ANY::e_ANY) && (eDstId != CIEC_ANY::e_ANY))
-        || ((eSrcId != CIEC_ANY::e_ANY) && (eDstId == CIEC_ANY::e_ANY))){
+  } else {
+    if (((eSrcId == CIEC_ANY::e_ANY) && (eDstId != CIEC_ANY::e_ANY)) ||
+        ((eSrcId != CIEC_ANY::e_ANY) && (eDstId == CIEC_ANY::e_ANY))) {
       bCanConnect = true;
     } else {
       bCanConnect = CIEC_ANY::isCastable(eSrcId, eDstId);
@@ -115,8 +112,7 @@ CConnection::Wrapper CDataConnection::getDelegatingConnection(forte::core::TName
     case CIEC_ANY::e_BOOL:
       if (paSrcNameList.size() == 1 && paSrcNameList.front() == STRID(NOT)) {
         return make_delegating<forte::core::internal::CNegatingDataConnection>(
-          getSourceId().getFB(), getSourceId().getPortId(),
-          static_cast<CIEC_BOOL &>(getValue()));
+            getSourceId().getFB(), getSourceId().getPortId(), static_cast<CIEC_BOOL &>(getValue()));
       }
     default: break;
   }

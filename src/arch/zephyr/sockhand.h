@@ -5,7 +5,7 @@
  http://www.eclipse.org/legal/epl-2.0.
 
  SPDX-License-Identifier: EPL-2.0
- 
+
  Contributors:
   Dirk Kaar - initial API and implementation and/or initial documentation
  ************************************************************************************/
@@ -32,13 +32,14 @@
 
 inline in_addr_t inet_addr(const char *cp) {
   in_addr_t in_addr;
-  if (0 == net_addr_pton(AF_INET, cp, &in_addr)) return in_addr;
+  if (0 == net_addr_pton(AF_INET, cp, &in_addr))
+    return in_addr;
   return -1;
 }
 
-void setupMulticastGroup(char* paIPAddr, const char* paMCInterface);
+void setupMulticastGroup(char *paIPAddr, const char *paMCInterface);
 
-//these include needs to be last
+// these include needs to be last
 #include "../gensockhand.h"
 #include "../fdselecthand.h"
 #include "../bsdsocketinterf.h"
@@ -46,4 +47,3 @@ void setupMulticastGroup(char* paIPAddr, const char* paMCInterface);
 typedef CGenericIPComSocketHandler<CFDSelectHandler, CBSDSocketInterface> CIPComSocketHandler;
 
 #endif /* SRC_ARCH_ZEPHYR_SOCKHAND_H_ */
-

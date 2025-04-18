@@ -20,13 +20,13 @@ USE_STRING_ID(port);
 USE_STRING_ID(systemName);
 USE_STRING_ID(WSTRING);
 
-
 DEFINE_FIRMWARE_DATATYPE(ArrowheadSystem, STRID(ArrowheadSystem));
 
 CIEC_ArrowheadSystem::CIEC_ArrowheadSystem() :
     CIEC_STRUCT(STRID(ArrowheadSystem), 4, scmElementTypes, scmElementNames, e_APPLICATION + e_CONSTRUCTED + 1) {
 }
 
-const CStringDictionary::TStringId CIEC_ArrowheadSystem::scmElementTypes[] = { STRID(WSTRING), STRID(WSTRING), STRID(DINT), STRID(WSTRING) };
-const CStringDictionary::TStringId CIEC_ArrowheadSystem::scmElementNames[] = { STRID(systemName), STRID(address), STRID(port),
-  STRID(authenticationInfo) };
+const CStringDictionary::TStringId CIEC_ArrowheadSystem::scmElementTypes[] = {STRID(WSTRING), STRID(WSTRING),
+                                                                              STRID(DINT), STRID(WSTRING)};
+const CStringDictionary::TStringId CIEC_ArrowheadSystem::scmElementNames[] = {STRID(systemName), STRID(address),
+                                                                              STRID(port), STRID(authenticationInfo)};

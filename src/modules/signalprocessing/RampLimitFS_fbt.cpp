@@ -1,10 +1,10 @@
-/*************************************************************************  
- *** Copyright (c) 2024 HR Agrartechnik GmbH  
- *** This program and the accompanying materials are made available under the  
- *** terms of the Eclipse Public License 2.0 which is available at  
- *** http://www.eclipse.org/legal/epl-2.0.  
- ***  
- *** SPDX-License-Identifier: EPL-2.0  
+/*************************************************************************
+ *** Copyright (c) 2024 HR Agrartechnik GmbH
+ *** This program and the accompanying materials are made available under the
+ *** terms of the Eclipse Public License 2.0 which is available at
+ *** http://www.eclipse.org/legal/epl-2.0.
+ ***
+ *** SPDX-License-Identifier: EPL-2.0
  ***
  *** This file was generated using the 4DIAC FORTE Export Filter V1.0.x NG!
  ***
@@ -35,7 +35,6 @@ USE_STRING_ID(VAL_FULL);
 USE_STRING_ID(VAL_ZERO);
 USE_STRING_ID(ZERO);
 
-
 #include "forte_any_elementary_variant.h"
 #include "forte_any_num_variant.h"
 #include "forte_dint.h"
@@ -47,28 +46,47 @@ USE_STRING_ID(ZERO);
 
 DEFINE_FIRMWARE_FB(FORTE_signalprocessing__RampLimitFS, STRID(signalprocessing__RampLimitFS))
 
-const CStringDictionary::TStringId FORTE_signalprocessing__RampLimitFS::scmDataInputNames[] = {STRID(PV), STRID(VAL_ZERO), STRID(SLOW), STRID(FAST), STRID(VAL_FULL)};
-const CStringDictionary::TStringId FORTE_signalprocessing__RampLimitFS::scmDataInputTypeIds[] = {STRID(DINT), STRID(DINT), STRID(DINT), STRID(DINT), STRID(DINT)};
+const CStringDictionary::TStringId FORTE_signalprocessing__RampLimitFS::scmDataInputNames[] = {
+    STRID(PV), STRID(VAL_ZERO), STRID(SLOW), STRID(FAST), STRID(VAL_FULL)};
+const CStringDictionary::TStringId FORTE_signalprocessing__RampLimitFS::scmDataInputTypeIds[] = {
+    STRID(DINT), STRID(DINT), STRID(DINT), STRID(DINT), STRID(DINT)};
 const CStringDictionary::TStringId FORTE_signalprocessing__RampLimitFS::scmDataOutputNames[] = {STRID(OUT)};
 const CStringDictionary::TStringId FORTE_signalprocessing__RampLimitFS::scmDataOutputTypeIds[] = {STRID(DINT)};
-const TDataIOID FORTE_signalprocessing__RampLimitFS::scmEIWith[] = {1, scmWithListDelimiter, 2, scmWithListDelimiter, 3, scmWithListDelimiter, 2, scmWithListDelimiter, 3, scmWithListDelimiter, 4, scmWithListDelimiter, 0, scmWithListDelimiter};
+const TDataIOID FORTE_signalprocessing__RampLimitFS::scmEIWith[] = {
+    1, scmWithListDelimiter, 2, scmWithListDelimiter, 3, scmWithListDelimiter, 2, scmWithListDelimiter,
+    3, scmWithListDelimiter, 4, scmWithListDelimiter, 0, scmWithListDelimiter};
 const TForteInt16 FORTE_signalprocessing__RampLimitFS::scmEIWithIndexes[] = {0, 2, 4, 6, 8, 10, 12};
-const CStringDictionary::TStringId FORTE_signalprocessing__RampLimitFS::scmEventInputNames[] = {STRID(ZERO), STRID(UP_SLOW), STRID(UP_FAST), STRID(DOWN_SLOW), STRID(DOWN_FAST), STRID(FULL), STRID(LOAD)};
-const CStringDictionary::TStringId FORTE_signalprocessing__RampLimitFS::scmEventInputTypeIds[] = {STRID(Event), STRID(Event), STRID(Event), STRID(Event), STRID(Event), STRID(Event), STRID(Event)};
+const CStringDictionary::TStringId FORTE_signalprocessing__RampLimitFS::scmEventInputNames[] = {
+    STRID(ZERO), STRID(UP_SLOW), STRID(UP_FAST), STRID(DOWN_SLOW), STRID(DOWN_FAST), STRID(FULL), STRID(LOAD)};
+const CStringDictionary::TStringId FORTE_signalprocessing__RampLimitFS::scmEventInputTypeIds[] = {
+    STRID(Event), STRID(Event), STRID(Event), STRID(Event), STRID(Event), STRID(Event), STRID(Event)};
 const TDataIOID FORTE_signalprocessing__RampLimitFS::scmEOWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_signalprocessing__RampLimitFS::scmEOWithIndexes[] = {0};
 const CStringDictionary::TStringId FORTE_signalprocessing__RampLimitFS::scmEventOutputNames[] = {STRID(CNF)};
 const CStringDictionary::TStringId FORTE_signalprocessing__RampLimitFS::scmEventOutputTypeIds[] = {STRID(Event)};
-const SFBInterfaceSpec FORTE_signalprocessing__RampLimitFS::scmFBInterfaceSpec = {
-  7, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,
-  1, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes,
-  5, scmDataInputNames, scmDataInputTypeIds,
-  1, scmDataOutputNames, scmDataOutputTypeIds,
-  0, nullptr,
-  0, nullptr
-};
+const SFBInterfaceSpec FORTE_signalprocessing__RampLimitFS::scmFBInterfaceSpec = {7,
+                                                                                  scmEventInputNames,
+                                                                                  scmEventInputTypeIds,
+                                                                                  scmEIWith,
+                                                                                  scmEIWithIndexes,
+                                                                                  1,
+                                                                                  scmEventOutputNames,
+                                                                                  scmEventOutputTypeIds,
+                                                                                  scmEOWith,
+                                                                                  scmEOWithIndexes,
+                                                                                  5,
+                                                                                  scmDataInputNames,
+                                                                                  scmDataInputTypeIds,
+                                                                                  1,
+                                                                                  scmDataOutputNames,
+                                                                                  scmDataOutputTypeIds,
+                                                                                  0,
+                                                                                  nullptr,
+                                                                                  0,
+                                                                                  nullptr};
 
-FORTE_signalprocessing__RampLimitFS::FORTE_signalprocessing__RampLimitFS(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_signalprocessing__RampLimitFS::FORTE_signalprocessing__RampLimitFS(
+    const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CSimpleFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, nullptr),
     conn_CNF(*this, 0),
     conn_PV(nullptr),
@@ -88,37 +106,23 @@ void FORTE_signalprocessing__RampLimitFS::setInitialValues() {
   var_OUT = 0_DINT;
 }
 
-void FORTE_signalprocessing__RampLimitFS::executeEvent(const TEventID paEIID, CEventChainExecutionThread *const paECET) {
-  switch(paEIID) {
-    case scmEventZEROID:
-      alg_ZERO();
-      break;
-    case scmEventUP_SLOWID:
-      alg_UP_SLOW();
-      break;
-    case scmEventUP_FASTID:
-      alg_UP_FAST();
-      break;
-    case scmEventDOWN_SLOWID:
-      alg_DOWN_SLOW();
-      break;
-    case scmEventDOWN_FASTID:
-      alg_DOWN_FAST();
-      break;
-    case scmEventFULLID:
-      alg_FULL();
-      break;
-    case scmEventLOADID:
-      alg_LOAD();
-      break;
-    default:
-      break;
+void FORTE_signalprocessing__RampLimitFS::executeEvent(const TEventID paEIID,
+                                                       CEventChainExecutionThread *const paECET) {
+  switch (paEIID) {
+    case scmEventZEROID: alg_ZERO(); break;
+    case scmEventUP_SLOWID: alg_UP_SLOW(); break;
+    case scmEventUP_FASTID: alg_UP_FAST(); break;
+    case scmEventDOWN_SLOWID: alg_DOWN_SLOW(); break;
+    case scmEventDOWN_FASTID: alg_DOWN_FAST(); break;
+    case scmEventFULLID: alg_FULL(); break;
+    case scmEventLOADID: alg_LOAD(); break;
+    default: break;
   }
   sendOutputEvent(scmEventCNFID, paECET);
 }
 
 void FORTE_signalprocessing__RampLimitFS::readInputData(const TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventZEROID: {
       readData(1, var_VAL_ZERO, conn_VAL_ZERO);
       break;
@@ -147,24 +151,22 @@ void FORTE_signalprocessing__RampLimitFS::readInputData(const TEventID paEIID) {
       readData(0, var_PV, conn_PV);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 void FORTE_signalprocessing__RampLimitFS::writeOutputData(const TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventCNFID: {
       writeData(0, var_OUT, conn_OUT);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 CIEC_ANY *FORTE_signalprocessing__RampLimitFS::getDI(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_PV;
     case 1: return &var_VAL_ZERO;
     case 2: return &var_SLOW;
@@ -175,21 +177,21 @@ CIEC_ANY *FORTE_signalprocessing__RampLimitFS::getDI(const size_t paIndex) {
 }
 
 CIEC_ANY *FORTE_signalprocessing__RampLimitFS::getDO(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_OUT;
   }
   return nullptr;
 }
 
 CEventConnection *FORTE_signalprocessing__RampLimitFS::getEOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_CNF;
   }
   return nullptr;
 }
 
 CDataConnection **FORTE_signalprocessing__RampLimitFS::getDIConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_PV;
     case 1: return &conn_VAL_ZERO;
     case 2: return &conn_SLOW;
@@ -200,7 +202,7 @@ CDataConnection **FORTE_signalprocessing__RampLimitFS::getDIConUnchecked(const T
 }
 
 CDataConnection *FORTE_signalprocessing__RampLimitFS::getDOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_OUT;
   }
   return nullptr;
@@ -212,62 +214,62 @@ CIEC_ANY *FORTE_signalprocessing__RampLimitFS::getVarInternal(size_t) {
 
 void FORTE_signalprocessing__RampLimitFS::alg_ZERO(void) {
 
-  #line 2 "RampLimitFS.fbt"
+#line 2 "RampLimitFS.fbt"
   var_OUT = var_VAL_ZERO;
 }
 
 void FORTE_signalprocessing__RampLimitFS::alg_UP_SLOW(void) {
 
-  #line 6 "RampLimitFS.fbt"
+#line 6 "RampLimitFS.fbt"
   var_OUT = func_ADD(var_OUT, var_SLOW);
-  #line 7 "RampLimitFS.fbt"
+#line 7 "RampLimitFS.fbt"
   if (func_GT(var_OUT, var_VAL_FULL)) {
-    #line 8 "RampLimitFS.fbt"
+#line 8 "RampLimitFS.fbt"
     var_OUT = var_VAL_FULL;
   }
 }
 
 void FORTE_signalprocessing__RampLimitFS::alg_UP_FAST(void) {
 
-  #line 13 "RampLimitFS.fbt"
+#line 13 "RampLimitFS.fbt"
   var_OUT = func_ADD(var_OUT, var_FAST);
-  #line 14 "RampLimitFS.fbt"
+#line 14 "RampLimitFS.fbt"
   if (func_GT(var_OUT, var_VAL_FULL)) {
-    #line 15 "RampLimitFS.fbt"
+#line 15 "RampLimitFS.fbt"
     var_OUT = var_VAL_FULL;
   }
 }
 
 void FORTE_signalprocessing__RampLimitFS::alg_DOWN_SLOW(void) {
 
-  #line 20 "RampLimitFS.fbt"
+#line 20 "RampLimitFS.fbt"
   var_OUT = func_SUB(var_OUT, var_SLOW);
-  #line 21 "RampLimitFS.fbt"
+#line 21 "RampLimitFS.fbt"
   if (func_LT(var_OUT, var_VAL_ZERO)) {
-    #line 22 "RampLimitFS.fbt"
+#line 22 "RampLimitFS.fbt"
     var_OUT = var_VAL_ZERO;
   }
 }
 
 void FORTE_signalprocessing__RampLimitFS::alg_DOWN_FAST(void) {
 
-  #line 27 "RampLimitFS.fbt"
+#line 27 "RampLimitFS.fbt"
   var_OUT = func_SUB(var_OUT, var_FAST);
-  #line 28 "RampLimitFS.fbt"
+#line 28 "RampLimitFS.fbt"
   if (func_LT(var_OUT, var_VAL_ZERO)) {
-    #line 29 "RampLimitFS.fbt"
+#line 29 "RampLimitFS.fbt"
     var_OUT = var_VAL_ZERO;
   }
 }
 
 void FORTE_signalprocessing__RampLimitFS::alg_FULL(void) {
 
-  #line 34 "RampLimitFS.fbt"
+#line 34 "RampLimitFS.fbt"
   var_OUT = var_VAL_FULL;
 }
 
 void FORTE_signalprocessing__RampLimitFS::alg_LOAD(void) {
 
-  #line 38 "RampLimitFS.fbt"
+#line 38 "RampLimitFS.fbt"
   var_OUT = var_PV;
 }

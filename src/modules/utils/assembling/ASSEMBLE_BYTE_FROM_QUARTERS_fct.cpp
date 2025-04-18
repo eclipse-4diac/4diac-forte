@@ -30,7 +30,6 @@ USE_STRING_ID(QUARTER_BYTE_02);
 USE_STRING_ID(QUARTER_BYTE_03);
 USE_STRING_ID(REQ);
 
-
 #include "criticalregion.h"
 #include "resource.h"
 #include "forte_any_int_variant.h"
@@ -46,8 +45,10 @@ USE_STRING_ID(REQ);
 
 DEFINE_FIRMWARE_FB(FORTE_ASSEMBLE_BYTE_FROM_QUARTERS, STRID(ASSEMBLE_BYTE_FROM_QUARTERS))
 
-const CStringDictionary::TStringId FORTE_ASSEMBLE_BYTE_FROM_QUARTERS::scmDataInputNames[] = {STRID(QUARTER_BYTE_00), STRID(QUARTER_BYTE_01), STRID(QUARTER_BYTE_02), STRID(QUARTER_BYTE_03)};
-const CStringDictionary::TStringId FORTE_ASSEMBLE_BYTE_FROM_QUARTERS::scmDataInputTypeIds[] = {STRID(BYTE), STRID(BYTE), STRID(BYTE), STRID(BYTE)};
+const CStringDictionary::TStringId FORTE_ASSEMBLE_BYTE_FROM_QUARTERS::scmDataInputNames[] = {
+    STRID(QUARTER_BYTE_00), STRID(QUARTER_BYTE_01), STRID(QUARTER_BYTE_02), STRID(QUARTER_BYTE_03)};
+const CStringDictionary::TStringId FORTE_ASSEMBLE_BYTE_FROM_QUARTERS::scmDataInputTypeIds[] = {
+    STRID(BYTE), STRID(BYTE), STRID(BYTE), STRID(BYTE)};
 const CStringDictionary::TStringId FORTE_ASSEMBLE_BYTE_FROM_QUARTERS::scmDataOutputNames[] = {STRID()};
 const CStringDictionary::TStringId FORTE_ASSEMBLE_BYTE_FROM_QUARTERS::scmDataOutputTypeIds[] = {STRID(BYTE)};
 const TDataIOID FORTE_ASSEMBLE_BYTE_FROM_QUARTERS::scmEIWith[] = {0, 1, 2, 3, scmWithListDelimiter};
@@ -58,16 +59,29 @@ const TDataIOID FORTE_ASSEMBLE_BYTE_FROM_QUARTERS::scmEOWith[] = {0, scmWithList
 const TForteInt16 FORTE_ASSEMBLE_BYTE_FROM_QUARTERS::scmEOWithIndexes[] = {0};
 const CStringDictionary::TStringId FORTE_ASSEMBLE_BYTE_FROM_QUARTERS::scmEventOutputNames[] = {STRID(CNF)};
 const CStringDictionary::TStringId FORTE_ASSEMBLE_BYTE_FROM_QUARTERS::scmEventOutputTypeIds[] = {STRID(Event)};
-const SFBInterfaceSpec FORTE_ASSEMBLE_BYTE_FROM_QUARTERS::scmFBInterfaceSpec = {
-  1, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,
-  1, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes,
-  4, scmDataInputNames, scmDataInputTypeIds,
-  1, scmDataOutputNames, scmDataOutputTypeIds,
-  0, nullptr,
-  0, nullptr
-};
+const SFBInterfaceSpec FORTE_ASSEMBLE_BYTE_FROM_QUARTERS::scmFBInterfaceSpec = {1,
+                                                                                scmEventInputNames,
+                                                                                scmEventInputTypeIds,
+                                                                                scmEIWith,
+                                                                                scmEIWithIndexes,
+                                                                                1,
+                                                                                scmEventOutputNames,
+                                                                                scmEventOutputTypeIds,
+                                                                                scmEOWith,
+                                                                                scmEOWithIndexes,
+                                                                                4,
+                                                                                scmDataInputNames,
+                                                                                scmDataInputTypeIds,
+                                                                                1,
+                                                                                scmDataOutputNames,
+                                                                                scmDataOutputTypeIds,
+                                                                                0,
+                                                                                nullptr,
+                                                                                0,
+                                                                                nullptr};
 
-FORTE_ASSEMBLE_BYTE_FROM_QUARTERS::FORTE_ASSEMBLE_BYTE_FROM_QUARTERS(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_ASSEMBLE_BYTE_FROM_QUARTERS::FORTE_ASSEMBLE_BYTE_FROM_QUARTERS(
+    const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId),
     conn_CNF(*this, 0),
     conn_QUARTER_BYTE_00(nullptr),
@@ -86,7 +100,7 @@ void FORTE_ASSEMBLE_BYTE_FROM_QUARTERS::setInitialValues() {
 }
 
 void FORTE_ASSEMBLE_BYTE_FROM_QUARTERS::readInputData(const TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventREQID: {
       readData(0, var_QUARTER_BYTE_00, conn_QUARTER_BYTE_00);
       readData(1, var_QUARTER_BYTE_01, conn_QUARTER_BYTE_01);
@@ -94,24 +108,22 @@ void FORTE_ASSEMBLE_BYTE_FROM_QUARTERS::readInputData(const TEventID paEIID) {
       readData(3, var_QUARTER_BYTE_03, conn_QUARTER_BYTE_03);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 void FORTE_ASSEMBLE_BYTE_FROM_QUARTERS::writeOutputData(const TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventCNFID: {
       writeData(0, var_, conn_);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 CIEC_ANY *FORTE_ASSEMBLE_BYTE_FROM_QUARTERS::getDI(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_QUARTER_BYTE_00;
     case 1: return &var_QUARTER_BYTE_01;
     case 2: return &var_QUARTER_BYTE_02;
@@ -121,21 +133,21 @@ CIEC_ANY *FORTE_ASSEMBLE_BYTE_FROM_QUARTERS::getDI(const size_t paIndex) {
 }
 
 CIEC_ANY *FORTE_ASSEMBLE_BYTE_FROM_QUARTERS::getDO(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_;
   }
   return nullptr;
 }
 
 CEventConnection *FORTE_ASSEMBLE_BYTE_FROM_QUARTERS::getEOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_CNF;
   }
   return nullptr;
 }
 
 CDataConnection **FORTE_ASSEMBLE_BYTE_FROM_QUARTERS::getDIConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_QUARTER_BYTE_00;
     case 1: return &conn_QUARTER_BYTE_01;
     case 2: return &conn_QUARTER_BYTE_02;
@@ -145,31 +157,34 @@ CDataConnection **FORTE_ASSEMBLE_BYTE_FROM_QUARTERS::getDIConUnchecked(const TPo
 }
 
 CDataConnection *FORTE_ASSEMBLE_BYTE_FROM_QUARTERS::getDOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_;
   }
   return nullptr;
 }
 
 void FORTE_ASSEMBLE_BYTE_FROM_QUARTERS::executeEvent(const TEventID, CEventChainExecutionThread *const paECET) {
-  var_ = func_ASSEMBLE_BYTE_FROM_QUARTERS(var_QUARTER_BYTE_00, var_QUARTER_BYTE_01, var_QUARTER_BYTE_02, var_QUARTER_BYTE_03);
+  var_ = func_ASSEMBLE_BYTE_FROM_QUARTERS(var_QUARTER_BYTE_00, var_QUARTER_BYTE_01, var_QUARTER_BYTE_02,
+                                          var_QUARTER_BYTE_03);
   sendOutputEvent(scmEventCNFID, paECET);
 }
 
-CIEC_BYTE func_ASSEMBLE_BYTE_FROM_QUARTERS(CIEC_BYTE st_lv_QUARTER_BYTE_00, CIEC_BYTE st_lv_QUARTER_BYTE_01, CIEC_BYTE st_lv_QUARTER_BYTE_02, CIEC_BYTE st_lv_QUARTER_BYTE_03) {
+CIEC_BYTE func_ASSEMBLE_BYTE_FROM_QUARTERS(CIEC_BYTE st_lv_QUARTER_BYTE_00,
+                                           CIEC_BYTE st_lv_QUARTER_BYTE_01,
+                                           CIEC_BYTE st_lv_QUARTER_BYTE_02,
+                                           CIEC_BYTE st_lv_QUARTER_BYTE_03) {
   CIEC_BYTE st_ret_val = 0_BYTE;
 
-  #line 11 "ASSEMBLE_BYTE_FROM_QUARTERS.fct"
+#line 11 "ASSEMBLE_BYTE_FROM_QUARTERS.fct"
   st_ret_val = st_global_BYTE_QUARTER_ZZ;
-  #line 12 "ASSEMBLE_BYTE_FROM_QUARTERS.fct"
+#line 12 "ASSEMBLE_BYTE_FROM_QUARTERS.fct"
   st_ret_val = func_OR<CIEC_BYTE>(st_ret_val, func_SHL(st_lv_QUARTER_BYTE_03, st_global_SHIFT_QUARTER_03));
-  #line 13 "ASSEMBLE_BYTE_FROM_QUARTERS.fct"
+#line 13 "ASSEMBLE_BYTE_FROM_QUARTERS.fct"
   st_ret_val = func_OR<CIEC_BYTE>(st_ret_val, func_SHL(st_lv_QUARTER_BYTE_02, st_global_SHIFT_QUARTER_02));
-  #line 14 "ASSEMBLE_BYTE_FROM_QUARTERS.fct"
+#line 14 "ASSEMBLE_BYTE_FROM_QUARTERS.fct"
   st_ret_val = func_OR<CIEC_BYTE>(st_ret_val, func_SHL(st_lv_QUARTER_BYTE_01, st_global_SHIFT_QUARTER_01));
-  #line 15 "ASSEMBLE_BYTE_FROM_QUARTERS.fct"
+#line 15 "ASSEMBLE_BYTE_FROM_QUARTERS.fct"
   st_ret_val = func_OR<CIEC_BYTE>(st_ret_val, func_SHL(st_lv_QUARTER_BYTE_00, st_global_SHIFT_QUARTER_00));
 
   return st_ret_val;
 }
-

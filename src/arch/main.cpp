@@ -30,20 +30,20 @@ void hookSignals();
 
 C4diacFORTEInstance g4diacForteInstance;
 
-void endForte(int ){
+void endForte(int) {
   g4diacForteInstance.triggerDeviceShutdown();
 }
 
-void callOnExit(){
+void callOnExit() {
   CForteArchitecture::deinitialize();
 }
 
-int main(int argc, char *arg[]){
+int main(int argc, char *arg[]) {
 
   checkEndianess();
 
-  if(auto result = CForteArchitecture::initialize(argc, arg); result != 0){
-     return result;
+  if (auto result = CForteArchitecture::initialize(argc, arg); result != 0) {
+    return result;
   }
 
   std::atexit(callOnExit);
@@ -51,13 +51,13 @@ int main(int argc, char *arg[]){
   hookSignals();
 
   const char *ipPort = parseCommandLineArguments(argc, arg);
-  if((ipPort == nullptr) || (0 == strlen(ipPort)) || (nullptr == strchr(ipPort, ':'))) {
+  if ((ipPort == nullptr) || (0 == strlen(ipPort)) || (nullptr == strchr(ipPort, ':'))) {
     //! Lists the help for FORTE
     listHelp();
     return -1;
   }
 
-  if(!g4diacForteInstance.startupNewDevice(ipPort)) {
+  if (!g4diacForteInstance.startupNewDevice(ipPort)) {
     DEVLOG_INFO("Could not start a new device\n");
     return -1;
   }
@@ -69,18 +69,17 @@ int main(int argc, char *arg[]){
   return 0;
 }
 
-void checkEndianess(){
+void checkEndianess() {
   int i = 1;
   char *p = (char *) &i;
-  if(p[0] == 1){
-    //we are on a little endian platform
+  if (p[0] == 1) {
+    // we are on a little endian platform
 #ifdef FORTE_BIG_ENDIAN
     DEVLOG_ERROR("Wrong endianess configured! You are on a little endian platform and have configured big endian!\n");
     exit(-1);
 #endif
-  }
-  else{
-    //we are on a big endian platform
+  } else {
+    // we are on a big endian platform
 #ifdef FORTE_LITTLE_ENDIAN
     DEVLOG_ERROR("Wrong endianess configured! You are on a big endian platform and have configured little endian!\n");
     exit(-1);

@@ -33,7 +33,7 @@
 /*!\ingroup COREDTS CIEC_LINT represents the dint data type according to IEC 61131.
  */
 class CIEC_LINT final : public CIEC_ANY_SIGNED {
-  DECLARE_FIRMWARE_DATATYPE(LINT)
+    DECLARE_FIRMWARE_DATATYPE(LINT)
 
   public:
     using TValueType = TForteInt64;
@@ -47,43 +47,35 @@ class CIEC_LINT final : public CIEC_ANY_SIGNED {
 
     CIEC_LINT() = default;
 
-    CIEC_LINT(const CIEC_LINT& paValue) :
-            CIEC_ANY_SIGNED() {
+    CIEC_LINT(const CIEC_LINT &paValue) : CIEC_ANY_SIGNED() {
       setValueSimple(paValue);
     }
 
-    CIEC_LINT(const CIEC_DINT& paValue) :
-            CIEC_ANY_SIGNED() {
+    CIEC_LINT(const CIEC_DINT &paValue) : CIEC_ANY_SIGNED() {
       setValueSimple(paValue);
     }
 
-    CIEC_LINT(const CIEC_UDINT& paValue) :
-            CIEC_ANY_SIGNED() {
+    CIEC_LINT(const CIEC_UDINT &paValue) : CIEC_ANY_SIGNED() {
       setValueSimple(paValue);
     }
 
-    CIEC_LINT(const CIEC_INT& paValue) :
-            CIEC_ANY_SIGNED() {
+    CIEC_LINT(const CIEC_INT &paValue) : CIEC_ANY_SIGNED() {
       setValueSimple(paValue);
     }
 
-    CIEC_LINT(const CIEC_UINT& paValue) :
-            CIEC_ANY_SIGNED() {
+    CIEC_LINT(const CIEC_UINT &paValue) : CIEC_ANY_SIGNED() {
       setValueSimple(paValue);
     }
 
-    CIEC_LINT(const CIEC_SINT& paValue) :
-            CIEC_ANY_SIGNED() {
+    CIEC_LINT(const CIEC_SINT &paValue) : CIEC_ANY_SIGNED() {
       setValueSimple(paValue);
     }
 
-    CIEC_LINT(const CIEC_USINT& paValue) :
-            CIEC_ANY_SIGNED() {
+    CIEC_LINT(const CIEC_USINT &paValue) : CIEC_ANY_SIGNED() {
       setValueSimple(paValue);
     }
 
-    explicit CIEC_LINT(const CIEC_ANY_INT& paValue) :
-            CIEC_ANY_SIGNED() {
+    explicit CIEC_LINT(const CIEC_ANY_INT &paValue) : CIEC_ANY_SIGNED() {
       setValueSimple(paValue);
     }
 
@@ -93,13 +85,15 @@ class CIEC_LINT final : public CIEC_ANY_SIGNED {
 
     ~CIEC_LINT() override = default;
 
-    CIEC_LINT& operator =(const CIEC_LINT &paValue){
+    CIEC_LINT &operator=(const CIEC_LINT &paValue) {
       // Simple value assignment - no self assignment check needed
       setValueSimple(paValue);
       return *this;
     }
 
-    template <typename T, std::enable_if_t<std::is_same_v<typename forte::core::mpl::implicit_cast_t<T, CIEC_LINT>, CIEC_LINT>, int> = 0>
+    template<
+        typename T,
+        std::enable_if_t<std::is_same_v<typename forte::core::mpl::implicit_cast_t<T, CIEC_LINT>, CIEC_LINT>, int> = 0>
     CIEC_LINT &operator=(const T &paValue) {
       setValueSimple(paValue);
       return *this;
@@ -113,7 +107,7 @@ class CIEC_LINT final : public CIEC_ANY_SIGNED {
      *
      *   Conversion operator for converting CIEC_LINT to elementary 64 bit integer
      */
-    explicit operator TForteInt64() const{
+    explicit operator TForteInt64() const {
       return getTINT64();
     }
 
@@ -128,23 +122,23 @@ class CIEC_LINT final : public CIEC_ANY_SIGNED {
     }
 };
 
-inline CIEC_LINT operator ""_LINT(unsigned long long int paValue) {
+inline CIEC_LINT operator""_LINT(unsigned long long int paValue) {
   return CIEC_LINT(static_cast<CIEC_LINT::TValueType>(paValue));
 }
 
 namespace std {
-  template <>
+  template<>
   struct numeric_limits<CIEC_LINT> : public forte::templates::numeric_limits<CIEC_LINT> {
-    static constexpr size_t bitLength = 64U;
+      static constexpr size_t bitLength = 64U;
   };
-}
+} // namespace std
 
 namespace forte {
-  template <>
+  template<>
   struct CDataTypeTrait<CIEC_LINT> {
       static constexpr CIEC_ANY::EDataTypeID scmDataTypeId = CIEC_ANY::e_LINT;
       static const CStringDictionary::TStringId scmDataTypeName;
   };
-}
+} // namespace forte
 
 #endif /*_FORTE_LINT_H_*/

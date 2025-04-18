@@ -5,7 +5,7 @@
  http://www.eclipse.org/legal/epl-2.0.
 
  SPDX-License-Identifier: EPL-2.0
- 
+
  Contributors:
   Dirk Kaar - initial API and implementation and/or initial documentation
  ************************************************************************************/
@@ -19,21 +19,20 @@
 #define K_FP_REGS 0
 #endif // K_FP_REGS
 
-
-CZephyrTimerHandler::CZephyrTimerHandler(CDeviceExecution& paDeviceExecution) :
-  CTimerHandler(paDeviceExecution) {
+CZephyrTimerHandler::CZephyrTimerHandler(CDeviceExecution &paDeviceExecution) : CTimerHandler(paDeviceExecution) {
   k_timer_init(&timer, NULL, NULL);
   constexpr size_t stackSize = 1024;
   stack = k_thread_stack_alloc(stackSize, 0);
   if (stack == nullptr) {
     return;
   }
-  thread = static_cast<k_thread*>(k_malloc(sizeof(struct k_thread)));
+  thread = static_cast<k_thread *>(k_malloc(sizeof(struct k_thread)));
   if (thread == nullptr) {
     return;
   }
   thread_id = k_thread_create(thread, stack, stackSize, thread_fn, this, NULL, NULL, 1, K_FP_REGS, K_FOREVER);
-  if (thread_id) k_thread_name_set(thread_id, "forte_tiha");
+  if (thread_id)
+    k_thread_name_set(thread_id, "forte_tiha");
 }
 
 CZephyrTimerHandler::~CZephyrTimerHandler() {
@@ -61,15 +60,15 @@ void CZephyrTimerHandler::disableHandler() {
 }
 
 void CZephyrTimerHandler::setPriority(int paPriority) {
-  (void)paPriority;
+  (void) paPriority;
 }
 
 int CZephyrTimerHandler::getPriority() const {
   return 1;
 }
 
-void CZephyrTimerHandler::thread_fn(void* arg1, void* arg2, void* arg3) {
-  auto self = static_cast<CZephyrTimerHandler*>(arg1);
+void CZephyrTimerHandler::thread_fn(void *arg1, void *arg2, void *arg3) {
+  auto self = static_cast<CZephyrTimerHandler *>(arg1);
   while (true) {
     for (auto status = k_timer_status_sync(&self->timer); status > 0; --status) {
       self->nextTick();

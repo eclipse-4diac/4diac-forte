@@ -19,37 +19,36 @@
 namespace forte {
   namespace arch {
 
-    CVxWorksSemaphore::CVxWorksSemaphore(unsigned int paInitialValue){
+    CVxWorksSemaphore::CVxWorksSemaphore(unsigned int paInitialValue) {
       mSemaphore = semBCreate(SEM_Q_FIFO, paInitialValue > 0 ? SEM_FULL : SEM_EMPTY);
-      if(SEM_ID_NULL == mSemaphore){
-        //TODO: check return value for out_of_memory error
+      if (SEM_ID_NULL == mSemaphore) {
+        // TODO: check return value for out_of_memory error
       }
     }
 
-    CVxWorksSemaphore::~CVxWorksSemaphore(){
+    CVxWorksSemaphore::~CVxWorksSemaphore() {
       semDelete(mSemaphore);
     }
 
-    void CVxWorksSemaphore::inc(){
+    void CVxWorksSemaphore::inc() {
       semGive(mSemaphore);
-      //FIXME what to dow if retval is not RX_OK?
-      //for the current use in 4diac an overflow of the sem counter can
-      //be ignored if afterwards the value is not zero
+      // FIXME what to dow if retval is not RX_OK?
+      // for the current use in 4diac an overflow of the sem counter can
+      // be ignored if afterwards the value is not zero
     }
 
-    void CVxWorksSemaphore::waitIndefinitely(){
+    void CVxWorksSemaphore::waitIndefinitely() {
       semTake(mSemaphore, WAIT_FOREVER);
-      //FIXME what to dow if retval is not RX_OK?
+      // FIXME what to dow if retval is not RX_OK?
     }
 
-    bool CVxWorksSemaphore::timedWait(TForteUInt64 paRelativeTimeout){
-      //TODO: nanoseconds to timer ticks
-      return (OK == semTake(mSemaphore, static_cast<_Vx_ticks_t>(
-          (static_cast<double>(paRelativeTimeout) / 1E9) *
-          sysClkRateGet())));
+    bool CVxWorksSemaphore::timedWait(TForteUInt64 paRelativeTimeout) {
+      // TODO: nanoseconds to timer ticks
+      return (OK == semTake(mSemaphore, static_cast<_Vx_ticks_t>((static_cast<double>(paRelativeTimeout) / 1E9) *
+                                                                 sysClkRateGet())));
     }
 
-    bool CVxWorksSemaphore::tryNoWait(){
+    bool CVxWorksSemaphore::tryNoWait() {
       return (OK == semTake(mSemaphore, NO_WAIT));
     }
 

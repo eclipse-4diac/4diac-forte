@@ -9,8 +9,8 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *   Martin Melik Merkumians, Ingo Hegny, Alois Zoitl, Stanislav Meduna - initial API and implementation and/or initial documentation
- *   Martin Jobst - add equals tests
+ *   Martin Melik Merkumians, Ingo Hegny, Alois Zoitl, Stanislav Meduna - initial API and implementation and/or initial
+ *documentation Martin Jobst - add equals tests
  *                - add user-defined literal tests
  *******************************************************************************/
 #include <boost/test/unit_test.hpp>
@@ -19,20 +19,16 @@
 
 #include "../../../src/core/datatypes/forte_lreal.h"
 
-
 BOOST_AUTO_TEST_SUITE(CIEC_LREAL_function_test)
-BOOST_AUTO_TEST_CASE(Type_test)
-{
+BOOST_AUTO_TEST_CASE(Type_test) {
   CIEC_LREAL nTest;
-  //check type information
+  // check type information
   BOOST_REQUIRE_EQUAL(nTest.getDataTypeID(), CIEC_ANY::e_LREAL);
-  //check operator bool data type size
+  // check operator bool data type size
   BOOST_REQUIRE_EQUAL(sizeof(nTest.operator TForteDFloat()), sizeof(TForteDFloat));
-
 }
 
-BOOST_AUTO_TEST_CASE(Literal_test)
-{
+BOOST_AUTO_TEST_CASE(Literal_test) {
   CIEC_LREAL test1 = 0.0_LREAL;
   BOOST_TEST(static_cast<CIEC_LREAL::TValueType>(test1) == 0.0);
 
@@ -55,12 +51,11 @@ BOOST_AUTO_TEST_CASE(Literal_test)
   BOOST_TEST(static_cast<CIEC_LREAL::TValueType>(test7) == -3.1415e4f);
 }
 
-BOOST_AUTO_TEST_CASE(Assignment_test)
-{
+BOOST_AUTO_TEST_CASE(Assignment_test) {
   CIEC_LREAL nTest1;
   CIEC_LREAL nTest2;
 
-  //initial value must be 0
+  // initial value must be 0
   BOOST_TEST(static_cast<CIEC_LREAL::TValueType>(nTest1) == 0.0);
 
   nTest1 = CIEC_LREAL(std::numeric_limits<TForteDFloat>::min());
@@ -88,14 +83,13 @@ BOOST_AUTO_TEST_CASE(Assignment_test)
   BOOST_TEST(static_cast<CIEC_LREAL::TValueType>(nTest1) == std::numeric_limits<TForteDFloat>::max());
   BOOST_TEST(static_cast<CIEC_LREAL::TValueType>(nTest2) == std::numeric_limits<TForteDFloat>::max());
 
-  //check that assignment operator does not intertwine objects
+  // check that assignment operator does not intertwine objects
   nTest2 = CIEC_LREAL(-36.0);
   BOOST_TEST(static_cast<CIEC_LREAL::TValueType>(nTest1) == std::numeric_limits<TForteDFloat>::max());
   BOOST_TEST(static_cast<CIEC_LREAL::TValueType>(nTest2) == -36.0);
 }
 
-BOOST_AUTO_TEST_CASE(Equality_test)
-{
+BOOST_AUTO_TEST_CASE(Equality_test) {
   CIEC_LREAL nTest1;
   CIEC_LREAL nTest2;
   CIEC_REAL nTest3;
@@ -114,14 +108,13 @@ BOOST_AUTO_TEST_CASE(Equality_test)
   BOOST_CHECK(nTest1.equals(nTest2));
 }
 
-BOOST_AUTO_TEST_CASE(Conversion_test)
-{
+BOOST_AUTO_TEST_CASE(Conversion_test) {
   CIEC_LREAL nTest;
 
   char cBuffer[50];
   char cBufferFail[2];
 
-  //check cast operator
+  // check cast operator
   nTest = CIEC_LREAL(0.0);
   BOOST_CHECK_EQUAL(nTest.operator TForteDFloat(), 0.0);
 
@@ -137,7 +130,7 @@ BOOST_AUTO_TEST_CASE(Conversion_test)
   nTest = CIEC_LREAL(std::numeric_limits<TForteDFloat>::max());
   BOOST_CHECK_EQUAL(nTest.operator TForteDFloat(), std::numeric_limits<TForteDFloat>::max());
 
-  //check toString and fromString
+  // check toString and fromString
   strcpy(cBuffer, "");
 
   BOOST_CHECK_EQUAL(nTest.fromString("-1E-37"), 6);
@@ -178,7 +171,7 @@ BOOST_AUTO_TEST_CASE(Conversion_test)
   strcpy(cBuffer, "");
   nTest = CIEC_LREAL(0);
 
-  //testing values outside of allowed range
+  // testing values outside of allowed range
   BOOST_CHECK_EQUAL(nTest.fromString("4e401"), -1);
   BOOST_CHECK_EQUAL(nTest.fromString("2#100101100"), 1);
   BOOST_CHECK_EQUAL(nTest.fromString("8#116100"), 1);
@@ -186,12 +179,11 @@ BOOST_AUTO_TEST_CASE(Conversion_test)
   BOOST_CHECK_EQUAL(nTest.fromString("16#FFFF0"), 2);
   BOOST_CHECK_EQUAL(nTest.fromString("-4e401"), -1);
 
-  //check invalid fromString string
+  // check invalid fromString string
   BOOST_CHECK_EQUAL(nTest.fromString("NOT A VALID STRING"), -1);
 }
 
-BOOST_AUTO_TEST_CASE(ToString_Tests)
-{
+BOOST_AUTO_TEST_CASE(ToString_Tests) {
   CIEC_LREAL nTest(3.0);
   char cBuffer[10];
   BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 7), 3);
@@ -202,23 +194,22 @@ BOOST_AUTO_TEST_CASE(ToString_Tests)
   BOOST_CHECK_EQUAL(strcmp(cBuffer, "10.0"), 0);
 }
 
-void lRealTypedFromString(const char *paTestString, double paResult){
+void lRealTypedFromString(const char *paTestString, double paResult) {
   CIEC_LREAL nTest;
   BOOST_CHECK_EQUAL(nTest.fromString(paTestString), strlen(paTestString));
   BOOST_CHECK_EQUAL(paResult, static_cast<CIEC_LREAL::TValueType>(nTest));
 }
 
-void faultingLRealTypedFromString(const char *paTestString){
+void faultingLRealTypedFromString(const char *paTestString) {
   CIEC_LREAL nTest;
   BOOST_CHECK_EQUAL(nTest.fromString(paTestString), -1);
 }
 
-
-BOOST_AUTO_TEST_CASE(REAL_typed_fromString_tests){
+BOOST_AUTO_TEST_CASE(REAL_typed_fromString_tests) {
   lRealTypedFromString("LREAL#1E37", 1e37);
-  lRealTypedFromString("LREAL#-4.2345e4",-4.2345e4);
-  lRealTypedFromString("LREAL#0",0.0);
-  lRealTypedFromString("LREAL#3.2523E15",3.2523E15);
+  lRealTypedFromString("LREAL#-4.2345e4", -4.2345e4);
+  lRealTypedFromString("LREAL#0", 0.0);
+  lRealTypedFromString("LREAL#3.2523E15", 3.2523E15);
 
   faultingLRealTypedFromString("LREAL#4e401");
   faultingLRealTypedFromString("LREAL#-4e401");

@@ -20,22 +20,24 @@
 #include "forte_wchar.h"
 
 using TIecAnyCharVariantType = std::variant<
-// ANY_ELEMENTARY
-//  ANY_CHARS
-//   ANY_CHAR
-        CIEC_CHAR,
-        CIEC_WCHAR
-// end
->;
+    // ANY_ELEMENTARY
+    //  ANY_CHARS
+    //   ANY_CHAR
+    CIEC_CHAR,
+    CIEC_WCHAR
+    // end
+    >;
 
 class CIEC_ANY_CHAR_VARIANT : public CIEC_ANY_CHAR, public TIecAnyCharVariantType {
-DECLARE_FIRMWARE_DATATYPE(ANY_CHAR_VARIANT)
-public:
+    DECLARE_FIRMWARE_DATATYPE(ANY_CHAR_VARIANT)
+  public:
     using TIecAnyCharVariantType::variant;
     using TIecAnyCharVariantType::operator=;
-    template<class> static inline constexpr bool always_false_v = false;
+    template<class>
+    static inline constexpr bool always_false_v = false;
 
-    CIEC_ANY_CHAR_VARIANT(const CIEC_ANY_CHAR_VARIANT &paVal) : CIEC_ANY_CHAR(), variant(paVal) {}
+    CIEC_ANY_CHAR_VARIANT(const CIEC_ANY_CHAR_VARIANT &paVal) : CIEC_ANY_CHAR(), variant(paVal) {
+    }
 
     CIEC_ANY_CHAR_VARIANT(const CIEC_ANY_CHAR &paVal) {
       setValue(paVal.unwrap());
@@ -61,7 +63,7 @@ public:
 
     int fromString(const char *paValue) override;
 
-    int toString(char* paValue, size_t paBufferSize) const override;
+    int toString(char *paValue, size_t paBufferSize) const override;
 
     size_t getToStringBufferSize() const override;
 
@@ -76,4 +78,3 @@ static_assert(std::is_constructible_v<CIEC_ANY_CHAR_VARIANT, const CIEC_ANY_CHAR
 static_assert(std::is_copy_assignable_v<CIEC_ANY_CHAR_VARIANT>);
 static_assert(std::is_assignable_v<CIEC_ANY_CHAR_VARIANT, const CIEC_ANY_CHAR &>);
 static_assert(std::is_destructible_v<CIEC_ANY_CHAR_VARIANT>);
-

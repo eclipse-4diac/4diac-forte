@@ -18,10 +18,10 @@
  * \brief The sync object implementation for the rcX operating system.
  *
  * In the rcX version a mutex is used for the sync object.
- * 
+ *
  */
 
-class CrcXSyncObject{
+class CrcXSyncObject {
   public:
     CrcXSyncObject();
     ~CrcXSyncObject();
@@ -30,21 +30,21 @@ class CrcXSyncObject{
      *
      * This function blocks until it will get the lock for the coming critical section.
      */
-    void lock(){
+    void lock() {
       rX_MtxLockMutex(mMutexHandle, RX_INFINITE);
-      //TODO handle return value
+      // TODO handle return value
     }
 
-    //!Free the resource coming after the lock command
-    void unlock(){
+    //! Free the resource coming after the lock command
+    void unlock() {
       rX_MtxUnlockMutex(mMutexHandle);
-      //TODO handle return value
+      // TODO handle return value
     }
 
   private:
     RX_HANDLE mMutexHandle;
 };
 
-typedef CrcXSyncObject CSyncObject; //allows that doxygen can generate better documentation
+typedef CrcXSyncObject CSyncObject; // allows that doxygen can generate better documentation
 
 #endif /*FORTE_SYNC_H_*/

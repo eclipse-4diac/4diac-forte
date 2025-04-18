@@ -35,8 +35,8 @@
 
 /*!\ingroup COREDTS CIEC_WORD represents the word data type according to IEC 61131.
  */
-class CIEC_WORD : public CIEC_ANY_BIT{
-  DECLARE_FIRMWARE_DATATYPE(WORD)
+class CIEC_WORD : public CIEC_ANY_BIT {
+    DECLARE_FIRMWARE_DATATYPE(WORD)
 
   public:
     using TValueType = TForteWord;
@@ -49,13 +49,11 @@ class CIEC_WORD : public CIEC_ANY_BIT{
 
     CIEC_WORD() = default;
 
-    CIEC_WORD(const CIEC_WORD& paValue) :
-        CIEC_ANY_BIT(){
+    CIEC_WORD(const CIEC_WORD &paValue) : CIEC_ANY_BIT() {
       setValueSimple(paValue);
     }
 
-    CIEC_WORD(const CIEC_BYTE& paValue) :
-        CIEC_ANY_BIT(){
+    CIEC_WORD(const CIEC_BYTE &paValue) : CIEC_ANY_BIT() {
       setValueSimple(paValue);
     }
 
@@ -69,13 +67,13 @@ class CIEC_WORD : public CIEC_ANY_BIT{
 
     ~CIEC_WORD() override = default;
 
-    CIEC_WORD& operator =(const CIEC_WORD &paValue) {
+    CIEC_WORD &operator=(const CIEC_WORD &paValue) {
       // Simple value assignment - no self assignment check needed
       setValueSimple(paValue);
       return *this;
     }
 
-    CIEC_WORD& operator =(const CIEC_BYTE &paValue) {
+    CIEC_WORD &operator=(const CIEC_BYTE &paValue) {
       // Simple value assignment - no self assignment check needed
       setValueSimple(paValue);
       return *this;
@@ -139,23 +137,23 @@ class CIEC_WORD : public CIEC_ANY_BIT{
     }
 };
 
-inline CIEC_WORD operator ""_WORD(unsigned long long int paValue) {
+inline CIEC_WORD operator""_WORD(unsigned long long int paValue) {
   return CIEC_WORD(static_cast<CIEC_WORD::TValueType>(paValue));
 }
 
 namespace std {
-  template <>
+  template<>
   struct numeric_limits<CIEC_WORD> : public forte::templates::numeric_limits<CIEC_WORD> {
-    static constexpr size_t bitLength = 16U;
+      static constexpr size_t bitLength = 16U;
   };
-}
+} // namespace std
 
 namespace forte {
-  template <>
+  template<>
   struct CDataTypeTrait<CIEC_WORD> {
       static constexpr CIEC_ANY::EDataTypeID scmDataTypeId = CIEC_ANY::e_WORD;
       static const CStringDictionary::TStringId scmDataTypeName;
   };
-}
+} // namespace forte
 
 #endif /*_FORTE_WORD_H_*/

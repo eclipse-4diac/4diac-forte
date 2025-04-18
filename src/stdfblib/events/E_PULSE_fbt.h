@@ -1,10 +1,10 @@
 /*************************************************************************
- *** Copyright (c) 2023, 2024 HR Agrartechnik GmbH  
- *** This program and the accompanying materials are made available under the  
- *** terms of the Eclipse Public License 2.0 which is available at  
- *** http://www.eclipse.org/legal/epl-2.0.  
- ***  
- *** SPDX-License-Identifier: EPL-2.0  
+ *** Copyright (c) 2023, 2024 HR Agrartechnik GmbH
+ *** This program and the accompanying materials are made available under the
+ *** terms of the Eclipse Public License 2.0 which is available at
+ *** http://www.eclipse.org/legal/epl-2.0.
+ ***
+ *** SPDX-License-Identifier: EPL-2.0
  ***
  *** This file was generated using the 4DIAC FORTE Export Filter V1.0.x NG!
  ***
@@ -30,9 +30,8 @@
 #include "E_DELAY_fbt.h"
 #include "E_SR_fbt.h"
 
-
 class FORTE_E_PULSE final : public CCompositeFB {
-  DECLARE_FIRMWARE_FB(FORTE_E_PULSE)
+    DECLARE_FIRMWARE_FB(FORTE_E_PULSE)
 
   private:
     static const CStringDictionary::TStringId scmDataInputNames[];
@@ -84,5 +83,3 @@ class FORTE_E_PULSE final : public CCompositeFB {
     CDataConnection **getDIConUnchecked(TPortId) override;
     CDataConnection *getDOConUnchecked(TPortId) override;
 };
-
-

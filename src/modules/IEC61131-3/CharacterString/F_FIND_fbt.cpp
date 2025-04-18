@@ -26,7 +26,6 @@ USE_STRING_ID(IN2);
 USE_STRING_ID(OUT);
 USE_STRING_ID(REQ);
 
-
 #include "criticalregion.h"
 #include "resource.h"
 
@@ -50,17 +49,29 @@ const TForteInt16 FORTE_F_FIND::scmEOWithIndexes[] = {0};
 const CStringDictionary::TStringId FORTE_F_FIND::scmEventOutputNames[] = {STRID(CNF)};
 const CStringDictionary::TStringId FORTE_F_FIND::scmEventOutputTypeIds[] = {STRID(Event)};
 
+const SFBInterfaceSpec FORTE_F_FIND::scmFBInterfaceSpec = {1,
+                                                           scmEventInputNames,
+                                                           scmEventInputTypeIds,
+                                                           scmEIWith,
+                                                           scmEIWithIndexes,
+                                                           1,
+                                                           scmEventOutputNames,
+                                                           scmEventOutputTypeIds,
+                                                           scmEOWith,
+                                                           scmEOWithIndexes,
+                                                           2,
+                                                           scmDataInputNames,
+                                                           scmDataInputTypeIds,
+                                                           1,
+                                                           scmDataOutputNames,
+                                                           scmDataOutputTypeIds,
+                                                           0,
+                                                           nullptr,
+                                                           0,
+                                                           nullptr};
 
-const SFBInterfaceSpec FORTE_F_FIND::scmFBInterfaceSpec = {
-  1, scmEventInputNames, scmEventInputTypeIds, scmEIWith, scmEIWithIndexes,
-  1, scmEventOutputNames, scmEventOutputTypeIds, scmEOWith, scmEOWithIndexes,
-  2, scmDataInputNames, scmDataInputTypeIds,
-  1, scmDataOutputNames, scmDataOutputTypeIds,
-  0, nullptr,
-  0, nullptr
-};
-
-FORTE_F_FIND::FORTE_F_FIND(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_F_FIND::FORTE_F_FIND(const CStringDictionary::TStringId paInstanceNameId,
+                           forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId),
     var_IN1(CIEC_ANY_STRING_VARIANT()),
     var_IN2(CIEC_ANY_STRING_VARIANT()),
@@ -68,55 +79,57 @@ FORTE_F_FIND::FORTE_F_FIND(const CStringDictionary::TStringId paInstanceNameId, 
     conn_CNF(*this, 0),
     conn_IN1(nullptr),
     conn_IN2(nullptr),
-    conn_OUT(*this, 0, var_OUT) {
-};
+    conn_OUT(*this, 0, var_OUT) {};
 
 void FORTE_F_FIND::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventREQID:
-      std::visit([](auto &&paIN1, auto&&paIN2, auto&&paOUT) -> void {
-        using T = std::decay_t<decltype(paIN1)>;
-        using U = std::decay_t<decltype(paIN2)>;
-        if constexpr ((std::is_same_v<T, CIEC_STRING> && (std::is_same_v<U, CIEC_STRING> || std::is_same_v<U, CIEC_CHAR>)) || (std::is_same_v<T, CIEC_WSTRING> && (std::is_same_v<U, CIEC_WSTRING> || std::is_same_v<U, CIEC_WCHAR>))) {
-          paOUT = func_FIND<std::remove_reference_t<decltype(paOUT)>>(paIN1, paIN2);
-        } else {
-          DEVLOG_ERROR("Incompatible types IN1:%s and IN2:%s for FIND\n",
-                     CStringDictionary::get(paIN1.getTypeNameID()),
-                     CStringDictionary::get(paIN2.getTypeNameID()));
-        }
-      }, static_cast<CIEC_ANY_STRING_VARIANT::variant&>(var_IN1),
-         static_cast<CIEC_ANY_STRING_VARIANT::variant&>(var_IN2),
-         static_cast<CIEC_ANY_INT_VARIANT::variant&>(var_OUT));
+      std::visit(
+          [](auto &&paIN1, auto &&paIN2, auto &&paOUT) -> void {
+            using T = std::decay_t<decltype(paIN1)>;
+            using U = std::decay_t<decltype(paIN2)>;
+            if constexpr ((std::is_same_v<T, CIEC_STRING> &&
+                           (std::is_same_v<U, CIEC_STRING> || std::is_same_v<U, CIEC_CHAR>) ) ||
+                          (std::is_same_v<T, CIEC_WSTRING> &&
+                           (std::is_same_v<U, CIEC_WSTRING> || std::is_same_v<U, CIEC_WCHAR>) )) {
+              paOUT = func_FIND<std::remove_reference_t<decltype(paOUT)>>(paIN1, paIN2);
+            } else {
+              DEVLOG_ERROR("Incompatible types IN1:%s and IN2:%s for FIND\n",
+                           CStringDictionary::get(paIN1.getTypeNameID()),
+                           CStringDictionary::get(paIN2.getTypeNameID()));
+            }
+          },
+          static_cast<CIEC_ANY_STRING_VARIANT::variant &>(var_IN1),
+          static_cast<CIEC_ANY_STRING_VARIANT::variant &>(var_IN2),
+          static_cast<CIEC_ANY_INT_VARIANT::variant &>(var_OUT));
       sendOutputEvent(scmEventCNFID, paECET);
       break;
   }
 }
 
 void FORTE_F_FIND::readInputData(TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventREQID: {
       readData(0, var_IN1, conn_IN1);
       readData(1, var_IN2, conn_IN2);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 void FORTE_F_FIND::writeOutputData(TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventCNFID: {
       writeData(0, var_OUT, conn_OUT);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 CIEC_ANY *FORTE_F_FIND::getDI(size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_IN1;
     case 1: return &var_IN2;
   }
@@ -124,21 +137,21 @@ CIEC_ANY *FORTE_F_FIND::getDI(size_t paIndex) {
 }
 
 CIEC_ANY *FORTE_F_FIND::getDO(size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_OUT;
   }
   return nullptr;
 }
 
 CEventConnection *FORTE_F_FIND::getEOConUnchecked(TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_CNF;
   }
   return nullptr;
 }
 
 CDataConnection **FORTE_F_FIND::getDIConUnchecked(TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_IN1;
     case 1: return &conn_IN2;
   }
@@ -146,10 +159,8 @@ CDataConnection **FORTE_F_FIND::getDIConUnchecked(TPortId paIndex) {
 }
 
 CDataConnection *FORTE_F_FIND::getDOConUnchecked(TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_OUT;
   }
   return nullptr;
 }
-
-

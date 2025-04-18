@@ -19,13 +19,13 @@
 
 #include "forte_any_derived.h"
 
-class CIEC_STRUCT : public CIEC_ANY_DERIVED{
-    template <typename T, std::enable_if_t<std::is_base_of_v<CIEC_STRUCT, T>, int> = 0>
+class CIEC_STRUCT : public CIEC_ANY_DERIVED {
+    template<typename T, std::enable_if_t<std::is_base_of_v<CIEC_STRUCT, T>, int> = 0>
     friend bool operator==(const T &paLeft, const T &paRight) {
       return paLeft.equals(paRight);
     }
 
-    template <typename T, std::enable_if_t<std::is_base_of_v<CIEC_STRUCT, T>, int> = 0>
+    template<typename T, std::enable_if_t<std::is_base_of_v<CIEC_STRUCT, T>, int> = 0>
     friend bool operator!=(const T &paLeft, const T &paRight) {
       return !(paLeft == paRight);
     }
@@ -65,7 +65,7 @@ class CIEC_STRUCT : public CIEC_ANY_DERIVED{
      *   \param - No parameters necessary.
      *   \return - pointer to array of StringIds.
      */
-    virtual const CStringDictionary::TStringId* elementNames() const = 0;
+    virtual const CStringDictionary::TStringId *elementNames() const = 0;
 
     /*! \brief Get the Struct's type name
      *
@@ -76,7 +76,7 @@ class CIEC_STRUCT : public CIEC_ANY_DERIVED{
      */
     virtual CStringDictionary::TStringId getStructTypeNameID() const = 0;
 
-    void setValue(const CIEC_ANY& paValue) override;
+    void setValue(const CIEC_ANY &paValue) override;
 
     /*! \brief calculates buffer size needed for toString conversion
      */
@@ -105,7 +105,7 @@ class CIEC_STRUCT : public CIEC_ANY_DERIVED{
      *   \return number of bytes used in the buffer
      *           -1 on error
      */
-    int toString(char* paValue, size_t paBufferSize) const override;
+    int toString(char *paValue, size_t paBufferSize) const override;
 
     [[nodiscard]] bool equals(const CIEC_ANY &paOther) const override;
 
@@ -133,17 +133,13 @@ class CIEC_STRUCT : public CIEC_ANY_DERIVED{
      * \param paMemberName name of the member to be checked for
      * \return on a valid member name id a pointer to the member var otherwise 0
      */
-    CIEC_ANY* getMemberNamed(const char * paMemberName);
+    CIEC_ANY *getMemberNamed(const char *paMemberName);
 
     size_t getMemberIndex(CStringDictionary::TStringId paMemberNameId);
 
   protected:
-    enum EASN1Tags {
-      e_UNIVERSAL = 0, e_APPLICATION = 64, e_CONTEXT = 128, e_PRIVATE = 192
-    };
-    enum EASN1Encoding {
-      e_PRIMITIVE = 0, e_CONSTRUCTED = 32
-    };
+    enum EASN1Tags { e_UNIVERSAL = 0, e_APPLICATION = 64, e_CONTEXT = 128, e_PRIVATE = 192 };
+    enum EASN1Encoding { e_PRIMITIVE = 0, e_CONSTRUCTED = 32 };
 
     CIEC_STRUCT(const CIEC_STRUCT &) {};
 
@@ -157,8 +153,8 @@ class CIEC_STRUCT : public CIEC_ANY_DERIVED{
       return *this;
     };
 
-private:
-    static void findNextNonBlankSpace(const char** paRunner);
+  private:
+    static void findNextNonBlankSpace(const char **paRunner);
 
     int initializeFromString(const char *paValue);
 
@@ -166,11 +162,11 @@ private:
 };
 
 namespace forte {
-  template <>
+  template<>
   struct CDataTypeTrait<CIEC_STRUCT> {
       static constexpr CIEC_ANY::EDataTypeID scmDataTypeId = CIEC_ANY::e_STRUCT;
       static constexpr CStringDictionary::TStringId scmDataTypeName = CStringDictionary::scmInvalidStringId;
   };
-}
+} // namespace forte
 
 #endif /*_FORTE_STRUCT_H_*/

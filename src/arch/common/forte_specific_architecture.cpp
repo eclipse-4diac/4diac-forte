@@ -12,7 +12,7 @@
 
 #include "arch/forte_specific_architecture.h"
 
-int CForteSpecificArchitecture::initialize(int , char** ){
+int CForteSpecificArchitecture::initialize(int, char **) {
   return 0;
 }
 

@@ -20,68 +20,69 @@
 #include <forte_wstring.h>
 #include <forte_array.h>
 
-class FORTE_OrchestratorRequestAdp: public CAdapter{
-  DECLARE_ADAPTER_TYPE(FORTE_OrchestratorRequestAdp)
+class FORTE_OrchestratorRequestAdp : public CAdapter {
+    DECLARE_ADAPTER_TYPE(FORTE_OrchestratorRequestAdp)
 
-private:
- private:
-  static const CStringDictionary::TStringId scmDataInputNames[];
-  static const CStringDictionary::TStringId scmDataInputTypeIds[];
- public:
-  CIEC_OrchestrationForm *orchestrationResponse() {
-    return (CIEC_OrchestrationForm*)(*static_cast<CIEC_ARRAY<> *>((isSocket()) ? getDI(0) : getDO(0)))[0]; //the first element marks the start of the array
-  };
+  private:
+  private:
+    static const CStringDictionary::TStringId scmDataInputNames[];
+    static const CStringDictionary::TStringId scmDataInputTypeIds[];
 
-  CIEC_ARRAY<> &orchestrationResponse_Array() {
-    return *static_cast<CIEC_ARRAY<>*>((isSocket()) ? getDI(0) : getDO(0));
-  };
+  public:
+    CIEC_OrchestrationForm *orchestrationResponse() {
+      return (CIEC_OrchestrationForm *) (*static_cast<CIEC_ARRAY<> *>(
+          (isSocket()) ? getDI(0) : getDO(0)))[0]; // the first element marks the start of the array
+    };
 
- private:
-  static const CStringDictionary::TStringId scmDataOutputNames[];
-  static const CStringDictionary::TStringId scmDataOutputTypeIds[];
- public:
-  CIEC_ServiceRequestForm &serviceRequestForm() {
-    return *static_cast<CIEC_ServiceRequestForm*>((isSocket()) ? getDO(0) : getDI(0));
-  };
+    CIEC_ARRAY<> &orchestrationResponse_Array() {
+      return *static_cast<CIEC_ARRAY<> *>((isSocket()) ? getDI(0) : getDO(0));
+    };
 
-  CIEC_WSTRING &endpoint() {
-    return *static_cast<CIEC_WSTRING*>((isSocket()) ? getDO(1) : getDI(1));
-  };
+  private:
+    static const CStringDictionary::TStringId scmDataOutputNames[];
+    static const CStringDictionary::TStringId scmDataOutputTypeIds[];
 
- public:
-  static const TEventID scmEventresponseReceivedID = 0;
-  int responseReceived() {
-    return mParentAdapterListEventID + scmEventresponseReceivedID;
-  }
- private:
-  static const TForteInt16 scmEIWithIndexes[];
-  static const TDataIOID scmEIWith[];
-  static const CStringDictionary::TStringId scmEventInputNames[];
-  static const CStringDictionary::TStringId scmEventInputTypeIds[];
+  public:
+    CIEC_ServiceRequestForm &serviceRequestForm() {
+      return *static_cast<CIEC_ServiceRequestForm *>((isSocket()) ? getDO(0) : getDI(0));
+    };
 
- public:
-  static const TEventID scmEventrequestOrchestatorID = 0;
-  int requestOrchestator() {
-    return mParentAdapterListEventID + scmEventrequestOrchestatorID;
-  }
- private:
-  static const TForteInt16 scmEOWithIndexes[];
-  static const TDataIOID scmEOWith[];
-  static const CStringDictionary::TStringId scmEventOutputNames[];
-  static const CStringDictionary::TStringId scmEventOutputTypeIds[];
+    CIEC_WSTRING &endpoint() {
+      return *static_cast<CIEC_WSTRING *>((isSocket()) ? getDO(1) : getDI(1));
+    };
 
-  static const SFBInterfaceSpec scmFBInterfaceSpecSocket;
+  public:
+    static const TEventID scmEventresponseReceivedID = 0;
+    int responseReceived() {
+      return mParentAdapterListEventID + scmEventresponseReceivedID;
+    }
 
-  static const SFBInterfaceSpec scmFBInterfaceSpecPlug;
+  private:
+    static const TForteInt16 scmEIWithIndexes[];
+    static const TDataIOID scmEIWith[];
+    static const CStringDictionary::TStringId scmEventInputNames[];
+    static const CStringDictionary::TStringId scmEventInputTypeIds[];
 
+  public:
+    static const TEventID scmEventrequestOrchestatorID = 0;
+    int requestOrchestator() {
+      return mParentAdapterListEventID + scmEventrequestOrchestatorID;
+    }
 
-public:
-  ADAPTER_CTOR(FORTE_OrchestratorRequestAdp){
-  };
+  private:
+    static const TForteInt16 scmEOWithIndexes[];
+    static const TDataIOID scmEOWith[];
+    static const CStringDictionary::TStringId scmEventOutputNames[];
+    static const CStringDictionary::TStringId scmEventOutputTypeIds[];
 
-  ~FORTE_OrchestratorRequestAdp() override = default;
+    static const SFBInterfaceSpec scmFBInterfaceSpecSocket;
 
+    static const SFBInterfaceSpec scmFBInterfaceSpecPlug;
+
+  public:
+    ADAPTER_CTOR(FORTE_OrchestratorRequestAdp) {};
+
+    ~FORTE_OrchestratorRequestAdp() override = default;
 };
 
-#endif //close the ifdef sequence from the beginning of the file
-
+#endif // close the ifdef sequence from the beginning of the file

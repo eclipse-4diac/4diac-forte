@@ -19,7 +19,7 @@
 
 CIEC_ANY *CIEC_STRUCT::getMemberNamed(CStringDictionary::TStringId paMemberNameId) {
   size_t index = getMemberIndex(paMemberNameId);
-  if(index != csmNIndex){
+  if (index != csmNIndex) {
     return getMember(static_cast<size_t>(index));
   }
   return nullptr;
@@ -33,10 +33,10 @@ CIEC_ANY *CIEC_STRUCT::getMemberNamed(const char *paMemberName) {
   return nullptr;
 }
 
-size_t CIEC_STRUCT::getMemberIndex(CStringDictionary::TStringId paMemberNameId){
+size_t CIEC_STRUCT::getMemberIndex(CStringDictionary::TStringId paMemberNameId) {
   const CStringDictionary::TStringId *punMemberNameIds = elementNames();
-  for(size_t i = 0; i < getStructSize(); ++i){
-    if(punMemberNameIds[i] == paMemberNameId){
+  for (size_t i = 0; i < getStructSize(); ++i) {
+    if (punMemberNameIds[i] == paMemberNameId) {
       return i;
     }
   }
@@ -72,11 +72,11 @@ int CIEC_STRUCT::fromString(const char *paValue) {
       if (',' == *pcRunner) {
         pcRunner++;
       } else {
-        //we have an error or the end parentheses
+        // we have an error or the end parentheses
         break;
       }
     }
-    if (*(pcRunner++) == ')') { //arrays have to end on a closing parentheses
+    if (*(pcRunner++) == ')') { // arrays have to end on a closing parentheses
       nRetVal = static_cast<int>(pcRunner - paValue);
     }
   }
@@ -86,14 +86,14 @@ int CIEC_STRUCT::fromString(const char *paValue) {
 int CIEC_STRUCT::initializeFromString(const char *paValue) {
   int nRetVal = -1;
   const char *pcRunner = paValue;
-  //first extract the element name
+  // first extract the element name
   CStringDictionary::TStringId elementNameId = parseNextElementId(pcRunner);
   if (CStringDictionary::scmInvalidStringId != elementNameId) {
     findNextNonBlankSpace(&pcRunner);
     if (':' == *(pcRunner++) && '=' == *(pcRunner++)) { // parse ":="
       findNextNonBlankSpace(&pcRunner);
       CIEC_ANY *member = getMemberNamed(elementNameId);
-      if(nullptr != member) {
+      if (nullptr != member) {
         const int valueLength = member->fromString(pcRunner);
         if (0 <= valueLength) {
           pcRunner += valueLength;
@@ -111,8 +111,7 @@ CStringDictionary::TStringId CIEC_STRUCT::parseNextElementId(const char *&paRunn
   const char *identifierEnd = std::strpbrk(paRunner, " :)");
   if (identifierEnd) {
     paRunner = identifierEnd;
-    result = CStringDictionary::getId(identifierStart,
-                                                    static_cast<size_t>(identifierEnd - identifierStart));
+    result = CStringDictionary::getId(identifierStart, static_cast<size_t>(identifierEnd - identifierStart));
   }
   return result;
 }
@@ -167,11 +166,12 @@ int CIEC_STRUCT::toString(char *paValue, size_t paBufferSize) const {
 size_t CIEC_STRUCT::getToStringBufferSize() const {
   size_t retVal = 3; // 2 bytes for the open and closing brackets one for the '\0'
   size_t structSize = getStructSize();
-  retVal += structSize ? structSize - 1 : 0; //for the commas between the elements
-  retVal += structSize * 2; //for the := of each element
+  retVal += structSize ? structSize - 1 : 0; // for the commas between the elements
+  retVal += structSize * 2; // for the := of each element
   for (size_t i = 0; i < structSize; i++) {
-    retVal += strlen(CStringDictionary::get(elementNames()[i])); //element name
-    retVal += getMember(i)->getToStringBufferSize() - 1; //length of the element itself. -1 for the included \0 in each element
+    retVal += strlen(CStringDictionary::get(elementNames()[i])); // element name
+    retVal += getMember(i)->getToStringBufferSize() -
+              1; // length of the element itself. -1 for the included \0 in each element
   }
   return retVal;
 }

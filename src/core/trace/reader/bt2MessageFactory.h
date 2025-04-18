@@ -10,20 +10,20 @@
  *   Jose Cabral- initial API and implementation and/or initial documentation
  *******************************************************************************/
 
-#pragma once 
+#pragma once
 
 #include "trace/internal/EventMessage.h"
 
 class bt_message;
 
 namespace forte::trace::reader::Bt2MessageFactory {
-    /**
-     * @brief babeltrace2 message factory
-     * 
-     * Creates an EventMessage from the babeltrace type. If any errors occur, the program aborts
-     * 
-     * @param paMessage the message in babaeltrace format
-     * @return EventMessage the created event message
-     */
-    EventMessage createMessage(const bt_message* paMessage);
-};
+  /**
+   * @brief babeltrace2 message factory
+   *
+   * Creates an EventMessage from the babeltrace type. If any errors occur, the program aborts
+   *
+   * @param paMessage the message in babaeltrace format
+   * @return EventMessage the created event message
+   */
+  EventMessage createMessage(const bt_message *paMessage);
+}; // namespace forte::trace::reader::Bt2MessageFactory

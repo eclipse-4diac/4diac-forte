@@ -16,7 +16,7 @@
 #include "GEN_SUBSCRIBE_fbt.h"
 
 class FORTE_SUBSCRIBE_1 : public GEN_SUBSCRIBE {
-  DECLARE_GENERIC_FIRMWARE_FB(FORTE_SUBSCRIBE_1)
+    DECLARE_GENERIC_FIRMWARE_FB(FORTE_SUBSCRIBE_1)
 
   protected:
     static const TEventID scmEventRSPID = scmSendNotificationEventID;
@@ -25,7 +25,11 @@ class FORTE_SUBSCRIBE_1 : public GEN_SUBSCRIBE {
     FORTE_SUBSCRIBE_1(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
     ~FORTE_SUBSCRIBE_1() override = default;
 
-    void evt_INIT(const CIEC_BOOL &pa_QI, const CIEC_WSTRING &pa_ID, CIEC_BOOL &pa_QO, CIEC_WSTRING &pa_STATUS, CIEC_ANY &pa_RD_1) {
+    void evt_INIT(const CIEC_BOOL &pa_QI,
+                  const CIEC_WSTRING &pa_ID,
+                  CIEC_BOOL &pa_QO,
+                  CIEC_WSTRING &pa_STATUS,
+                  CIEC_ANY &pa_RD_1) {
       QI() = pa_QI;
       ID() = pa_ID;
       receiveInputEvent(scmEventINITID, nullptr);
@@ -33,7 +37,11 @@ class FORTE_SUBSCRIBE_1 : public GEN_SUBSCRIBE {
       pa_STATUS = STATUS();
       pa_RD_1.setValue(getRDs()[0]->unwrap());
     }
-    void evt_RSP(const CIEC_BOOL &pa_QI, const CIEC_WSTRING &pa_ID, CIEC_BOOL &pa_QO, CIEC_WSTRING &pa_STATUS, CIEC_ANY &pa_RD_1) {
+    void evt_RSP(const CIEC_BOOL &pa_QI,
+                 const CIEC_WSTRING &pa_ID,
+                 CIEC_BOOL &pa_QO,
+                 CIEC_WSTRING &pa_STATUS,
+                 CIEC_ANY &pa_RD_1) {
       QI() = pa_QI;
       ID() = pa_ID;
       receiveInputEvent(scmEventRSPID, nullptr);
@@ -41,7 +49,11 @@ class FORTE_SUBSCRIBE_1 : public GEN_SUBSCRIBE {
       pa_STATUS = STATUS();
       pa_RD_1.setValue(getRDs()[0]->unwrap());
     }
-    void operator()(const CIEC_BOOL &pa_QI, const CIEC_WSTRING &pa_ID, CIEC_BOOL &pa_QO, CIEC_WSTRING &pa_STATUS, CIEC_ANY &pa_RD_1) {
+    void operator()(const CIEC_BOOL &pa_QI,
+                    const CIEC_WSTRING &pa_ID,
+                    CIEC_BOOL &pa_QO,
+                    CIEC_WSTRING &pa_STATUS,
+                    CIEC_ANY &pa_RD_1) {
       evt_INIT(pa_QI, pa_ID, pa_QO, pa_STATUS, pa_RD_1);
     }
 };
