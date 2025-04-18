@@ -1,0 +1,33 @@
+name: cpp-linter
+on:
+  pull_request:
+    branches: [ "release", "develop", "freeze", "feature/**" ]
+    paths: [ "**.c", "**.cpp", "**.h", "**.hpp", "**.cxx", "**.hxx", "**.cc", "**.hh", ".clang-format", ".clang-format-ignore" ]
+  push:
+    branches: [ "release", "develop", "freeze", "feature/**" ]
+    paths: [ "**.c", "**.cpp", "**.h", "**.hpp", "**.cxx", "**.hxx", "**.cc", "**.hh", ".clang-format", ".clang-format-ignore" ]
+
+permissions:
+  pull-requests: write
+  contents: read
+
+jobs:
+  cpp-linter:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: cpp-linter/cpp-linter-action@v2.15.0
+        id: linter
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          version: 20
+          style: 'file'  # use .clang-format config file
+          tidy-checks: '-*' # disable clang-tidy
+          step-summary: true
+          files-changed-only: false
+
+      - name: Fail fast
+        if: steps.linter.outputs.checks-failed > 0
+        run: exit 1
