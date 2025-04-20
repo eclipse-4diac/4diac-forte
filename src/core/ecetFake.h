@@ -145,12 +145,12 @@ class CFakeEventExecutionThread : public CEventChainExecutionThread {
 
     struct EventEntryComparator {
         bool operator()(const TEventEntry &paFirst, const TEventEntry &paSecond) const {
-          if (paFirst.mFB < paSecond.mFB) {
+          if (&paFirst.getFB() < &paSecond.getFB()) {
             return true;
-          } else if (paFirst.mFB > paSecond.mFB) {
+          } else if (&paFirst.getFB() > &paSecond.getFB()) {
             return false;
           }
-          return paFirst.mPortId < paSecond.mPortId;
+          return paFirst.getPortId() < paSecond.getPortId();
         }
     };
 

@@ -45,7 +45,7 @@ class CEventChainExecutionThread : public CThread {
         DEVLOG_ERROR("Event queue is full, event dropped!\n");
       }
 #ifdef FORTE_TRACE_CTF
-      else if (paEventToAdd.mPortId != cgExternalEventID) {
+      else if (paEventToAdd.getPortId() != cgExternalEventID) {
         mEventCounter++;
       }
 #endif // FORTE_TRACE_CTF

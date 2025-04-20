@@ -78,7 +78,7 @@ std::optional<TEventEntry> DebugMGR::getEventEntry(CResource *paResource, std::s
     return std::nullopt;
   }
 
-  return TEventEntry{functionBlock, portID};
+  return TEventEntry{*functionBlock, portID};
 }
 
 void DebugMGR::addRemoteControlMethod() {

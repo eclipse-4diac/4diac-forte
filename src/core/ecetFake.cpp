@@ -15,7 +15,7 @@
 #include "funcbloc.h"
 
 CFakeEventExecutionThread::CFakeEventExecutionThread() : CEventChainExecutionThread() {
-  mProcessEventCallback = [this](TEventEntry paEvent) { paEvent.mFB->receiveInputEvent(paEvent.mPortId, this); };
+  mProcessEventCallback = [this](TEventEntry paEvent) { paEvent.getFB().receiveInputEvent(paEvent.getPortId(), this); };
   removeExternalControl();
 }
 
