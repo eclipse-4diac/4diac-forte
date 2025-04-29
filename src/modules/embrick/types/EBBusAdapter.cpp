@@ -25,8 +25,6 @@ USE_STRING_ID(QO);
 USE_STRING_ID(UINT);
 USE_STRING_ID(UpdateInterval);
 
-#include "criticalregion.h"
-#include "resource.h"
 
 DEFINE_ADAPTER_TYPE(FORTE_EBBusAdapter, STRID(EBBusAdapter))
 

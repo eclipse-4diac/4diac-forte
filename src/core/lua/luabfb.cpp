@@ -15,10 +15,8 @@
  *******************************************************************************/
 
 #include "luabfb.h"
-#include "resource.h"
 #include "luaengine.h"
 #include "../adapter.h"
-#include "criticalregion.h"
 
 extern "C" {
 #include <lualib.h>

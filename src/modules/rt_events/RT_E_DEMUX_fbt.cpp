@@ -38,8 +38,6 @@ USE_STRING_ID(WCET1);
 USE_STRING_ID(WCET2);
 USE_STRING_ID(WCET3);
 
-#include "criticalregion.h"
-#include "resource.h"
 
 DEFINE_FIRMWARE_FB(FORTE_RT_E_DEMUX, STRID(RT_E_DEMUX))
 

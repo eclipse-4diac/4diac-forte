@@ -43,8 +43,6 @@ USE_STRING_ID(UINT);
 USE_STRING_ID(USINT);
 USE_STRING_ID(X20DO9322);
 
-#include "resource.h"
-
 DEFINE_FIRMWARE_FB(FORTE_X20DO9322, STRID(X20DO9322))
 
 const CStringDictionary::TStringId FORTE_X20DO9322::scmDataInputNames[] = {

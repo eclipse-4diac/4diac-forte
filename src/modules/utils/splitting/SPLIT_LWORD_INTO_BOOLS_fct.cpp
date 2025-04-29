@@ -91,8 +91,6 @@ USE_STRING_ID(LWORD);
 USE_STRING_ID(REQ);
 USE_STRING_ID(SPLIT_LWORD_INTO_BOOLS);
 
-#include "criticalregion.h"
-#include "resource.h"
 #include "forte_lword.h"
 #include "forte_bool.h"
 #include "iec61131_functions.h"

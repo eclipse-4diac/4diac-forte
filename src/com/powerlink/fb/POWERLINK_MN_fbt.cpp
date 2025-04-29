@@ -27,8 +27,6 @@ USE_STRING_ID(QO);
 USE_STRING_ID(STATUS);
 USE_STRING_ID(STRING);
 
-#include "criticalregion.h"
-#include "resource.h"
 
 DEFINE_FIRMWARE_FB(FORTE_POWERLINK_MN, STRID(POWERLINK_MN))
 

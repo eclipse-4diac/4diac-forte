@@ -15,8 +15,7 @@
 
 #include "genfb.h"
 #include "mixedStorage.h"
-#include "forte_any_variant.h"
-#include "criticalregion.h"
+#include "forte_sync.h"
 
 class FORTE_GEN_RT_Bridge final : public CGenFunctionBlock<CFunctionBlock> {
     DECLARE_GENERIC_FIRMWARE_FB(FORTE_GEN_RT_Bridge)

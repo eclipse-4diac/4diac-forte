@@ -12,8 +12,6 @@
  *******************************************************************************/
 
 #include "luaadapter.h"
-#include "resource.h"
-#include "criticalregion.h"
 
 CLuaAdapter::CLuaAdapter(CStringDictionary::TStringId paInstanceNameId,
                          const CLuaAdapterTypeEntry *paTypeEntry,

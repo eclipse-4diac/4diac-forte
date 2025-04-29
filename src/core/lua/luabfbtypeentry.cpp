@@ -16,7 +16,6 @@
 #include "luaengine.h"
 #include "luabfb.h"
 #include "luatype.h"
-#include "resource.h"
 
 CLuaBFBTypeEntry::CLuaBFBTypeEntry(CStringDictionary::TStringId paTypeNameId,
                                    const std::string &paLuaScriptAsString,

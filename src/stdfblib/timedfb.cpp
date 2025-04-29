@@ -22,8 +22,6 @@ USE_STRING_ID(START);
 USE_STRING_ID(STOP);
 USE_STRING_ID(TIME);
 
-#include "resource.h"
-#include "criticalregion.h"
 
 const CStringDictionary::TStringId CTimedFB::scmEINameIds[] = {STRID(START), STRID(STOP)};
 const CStringDictionary::TStringId CTimedFB::scmEventInputTypeIds[] = {STRID(Event), STRID(Event)};

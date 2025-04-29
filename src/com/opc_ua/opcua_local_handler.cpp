@@ -26,7 +26,6 @@
 #include "core/cominfra/basecommfb.h"
 #include "core/util/parameterParser.h"
 #include "core/util/string_utils.h"
-#include "criticalregion.h"
 #include "forte_printer.h"
 #include "arch/utils/mainparam_utils.h"
 #include "opcua_local_handler.h"

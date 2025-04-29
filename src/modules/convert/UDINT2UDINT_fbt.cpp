@@ -22,8 +22,6 @@ USE_STRING_ID(REQ);
 USE_STRING_ID(UDINT);
 USE_STRING_ID(UDINT2UDINT);
 
-#include "criticalregion.h"
-#include "resource.h"
 #include "forte_udint.h"
 #include "iec61131_functions.h"
 #include "forte_array_common.h"

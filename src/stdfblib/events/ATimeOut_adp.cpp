@@ -20,8 +20,6 @@ USE_STRING_ID(STOP);
 USE_STRING_ID(TIME);
 USE_STRING_ID(TimeOut);
 
-#include "criticalregion.h"
-#include "resource.h"
 
 DEFINE_ADAPTER_TYPE(FORTE_ATimeOut, STRID(ATimeOut))
 

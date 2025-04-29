@@ -36,8 +36,6 @@ USE_STRING_ID(UpdateInterval);
 #include "forte_array.h"
 #include "forte_array_fixed.h"
 #include "forte_array_variable.h"
-#include "criticalregion.h"
-#include "resource.h"
 
 DEFINE_ADAPTER_TYPE(FORTE_PLCnextBusAdapter, STRID(PLCnextBusAdapter))
 

@@ -31,8 +31,6 @@ USE_STRING_ID(DWORD);
 USE_STRING_ID(Event);
 USE_STRING_ID(REQ);
 
-#include "criticalregion.h"
-#include "resource.h"
 #include "forte_dword.h"
 #include "forte_byte.h"
 #include "iec61131_functions.h"

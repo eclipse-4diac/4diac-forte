@@ -30,8 +30,6 @@ USE_STRING_ID(Tmin);
 USE_STRING_ID(WCET_EO1);
 USE_STRING_ID(WCET_EO2);
 
-#include "criticalregion.h"
-#include "resource.h"
 
 DEFINE_FIRMWARE_FB(FORTE_RT_E_SPLIT, STRID(RT_E_SPLIT))
 

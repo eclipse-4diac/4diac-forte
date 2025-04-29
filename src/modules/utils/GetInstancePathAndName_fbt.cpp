@@ -23,8 +23,6 @@ USE_STRING_ID(REQ);
 USE_STRING_ID(Sep);
 USE_STRING_ID(STRING);
 
-#include "criticalregion.h"
-#include "resource.h"
 #include "forte_char.h"
 #include "iec61131_functions.h"
 #include "forte_array_common.h"

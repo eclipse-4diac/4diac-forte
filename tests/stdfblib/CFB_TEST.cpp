@@ -42,8 +42,6 @@ USE_STRING_ID(S);
 USE_STRING_ID(SET);
 USE_STRING_ID(SET_CHANGED);
 
-#include "resource.h"
-#include "criticalregion.h"
 
 DEFINE_FIRMWARE_FB(FORTE_CFB_TEST, STRID(CFB_TEST))
 

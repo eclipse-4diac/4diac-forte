@@ -15,7 +15,6 @@
 #include "luaengine.h"
 #include "luatype.h"
 #include "luaadapter.h"
-#include "resource.h"
 #include "adapter.h"
 
 CLuaAdapterTypeEntry::CLuaAdapterTypeEntry(CStringDictionary::TStringId paTypeNameId,

@@ -22,8 +22,6 @@ USE_STRING_ID(REQ);
 USE_STRING_ID(WSTRING);
 USE_STRING_ID(WSTRING2WSTRING);
 
-#include "criticalregion.h"
-#include "resource.h"
 #include "forte_wstring.h"
 #include "iec61131_functions.h"
 #include "forte_array_common.h"

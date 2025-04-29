@@ -34,8 +34,6 @@ USE_STRING_ID(UDINT);
 USE_STRING_ID(UINT);
 USE_STRING_ID(WSTRING);
 
-#include "criticalregion.h"
-#include "resource.h"
 
 DEFINE_FIRMWARE_FB(FORTE_EBMaster, STRID(EBMaster))
 

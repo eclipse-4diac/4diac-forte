@@ -27,8 +27,6 @@ USE_STRING_ID(OUT);
 USE_STRING_ID(P);
 USE_STRING_ID(REQ);
 
-#include "criticalregion.h"
-#include "resource.h"
 
 DEFINE_FIRMWARE_FB(FORTE_F_DELETE, STRID(F_DELETE))
 

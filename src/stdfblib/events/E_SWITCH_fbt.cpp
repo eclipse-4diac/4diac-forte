@@ -21,8 +21,6 @@ USE_STRING_ID(E_SWITCH);
 USE_STRING_ID(Event);
 USE_STRING_ID(G);
 
-#include "criticalregion.h"
-#include "resource.h"
 #include "forte_bool.h"
 #include "iec61131_functions.h"
 #include "forte_array_common.h"

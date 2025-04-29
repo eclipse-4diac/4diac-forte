@@ -25,8 +25,6 @@ USE_STRING_ID(REQ);
 #include <stdio.h>
 #include "GEN_STRUCT_DEMUX_fbt.h"
 
-#include "resource.h"
-#include "criticalregion.h"
 
 DEFINE_GENERIC_FIRMWARE_FB(GEN_STRUCT_DEMUX, STRID(GEN_STRUCT_DEMUX));
 

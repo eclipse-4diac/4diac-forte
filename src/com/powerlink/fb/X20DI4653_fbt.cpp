@@ -35,8 +35,6 @@ USE_STRING_ID(UINT);
 USE_STRING_ID(USINT);
 USE_STRING_ID(X20DI4653);
 
-#include "criticalregion.h"
-#include "resource.h"
 
 DEFINE_FIRMWARE_FB(FORTE_X20DI4653, STRID(X20DI4653))
 

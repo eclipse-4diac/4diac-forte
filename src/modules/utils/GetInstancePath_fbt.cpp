@@ -22,8 +22,6 @@ USE_STRING_ID(REQ);
 USE_STRING_ID(Sep);
 USE_STRING_ID(STRING);
 
-#include "criticalregion.h"
-#include "resource.h"
 
 DEFINE_FIRMWARE_FB(FORTE_GetInstancePath, STRID(GetInstancePath))
 

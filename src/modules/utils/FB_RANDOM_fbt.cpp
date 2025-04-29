@@ -33,8 +33,6 @@ USE_STRING_ID(SEED);
 USE_STRING_ID(UINT);
 USE_STRING_ID(VAL);
 
-#include "criticalregion.h"
-#include "resource.h"
 #include "forte_bool.h"
 #include "forte_uint.h"
 #include "iec61131_functions.h"

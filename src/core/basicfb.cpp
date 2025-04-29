@@ -15,7 +15,6 @@
  *******************************************************************************/
 #include <string.h>
 #include "basicfb.h"
-#include "resource.h"
 
 CBasicFB::CBasicFB(forte::core::CFBContainer &paContainer,
                    const SFBInterfaceSpec &paInterfaceSpec,

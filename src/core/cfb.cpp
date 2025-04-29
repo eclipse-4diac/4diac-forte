@@ -19,7 +19,6 @@
 #include <string.h>
 #include "cfb.h"
 #include "adapter.h"
-#include "resource.h"
 #include "core/util/criticalregion.h"
 #include "adapterconn.h"
 

@@ -35,8 +35,6 @@ USE_STRING_ID(QUARTER_BYTE_07);
 USE_STRING_ID(REQ);
 USE_STRING_ID(WORD);
 
-#include "criticalregion.h"
-#include "resource.h"
 #include "forte_byte.h"
 #include "forte_any_int_variant.h"
 #include "forte_any_bit_variant.h"

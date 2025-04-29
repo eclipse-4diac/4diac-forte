@@ -23,8 +23,6 @@ USE_STRING_ID(IN);
 USE_STRING_ID(OUT);
 USE_STRING_ID(REQ);
 
-#include "criticalregion.h"
-#include "resource.h"
 #include "forte_dint.h"
 #include "forte_bool.h"
 #include "iec61131_functions.h"

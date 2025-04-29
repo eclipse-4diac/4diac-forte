@@ -19,8 +19,6 @@ USE_STRING_ID(EO2);
 USE_STRING_ID(E_SPLIT);
 USE_STRING_ID(Event);
 
-#include "criticalregion.h"
-#include "resource.h"
 #include "forte_bool.h"
 #include "iec61131_functions.h"
 #include "forte_array_common.h"

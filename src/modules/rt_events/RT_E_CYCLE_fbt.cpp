@@ -24,8 +24,6 @@ USE_STRING_ID(STOP);
 USE_STRING_ID(TIME);
 USE_STRING_ID(WCET);
 
-#include "criticalregion.h"
-#include "resource.h"
 
 DEFINE_FIRMWARE_FB(FORTE_RT_E_CYCLE, STRID(RT_E_CYCLE))
 

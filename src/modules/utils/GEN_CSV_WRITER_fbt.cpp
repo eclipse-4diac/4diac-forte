@@ -36,8 +36,6 @@ USE_STRING_ID(STRING);
 
 #include <errno.h>
 #include "devlog.h"
-#include "resource.h"
-#include "criticalregion.h"
 
 DEFINE_GENERIC_FIRMWARE_FB(GEN_CSV_WRITER, STRID(GEN_CSV_WRITER));
 

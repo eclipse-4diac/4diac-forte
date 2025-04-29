@@ -27,8 +27,6 @@ USE_STRING_ID(OUT);
 USE_STRING_ID(REQ);
 USE_STRING_ID(TIME_OF_DAY);
 
-#include "criticalregion.h"
-#include "resource.h"
 
 DEFINE_FIRMWARE_FB(FORTE_F_CONCAT_DATE_TOD, STRID(F_CONCAT_DATE_TOD))
 

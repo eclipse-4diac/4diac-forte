@@ -26,8 +26,6 @@ USE_STRING_ID(Q);
 USE_STRING_ID(REQ);
 USE_STRING_ID(TIME);
 
-#include "criticalregion.h"
-#include "resource.h"
 
 DEFINE_FIRMWARE_FB(FORTE_FB_TON, STRID(FB_TON))
 

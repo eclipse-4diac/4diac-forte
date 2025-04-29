@@ -15,8 +15,6 @@
  *******************************************************************************/
 
 #include "luacfb.h"
-#include "resource.h"
-#include "criticalregion.h"
 
 CLuaCFB::CLuaCFB(CStringDictionary::TStringId paInstanceNameId,
                  const CLuaCFBTypeEntry *paTypeEntry,

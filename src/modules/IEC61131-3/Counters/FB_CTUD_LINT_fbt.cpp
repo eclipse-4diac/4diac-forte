@@ -29,8 +29,6 @@ USE_STRING_ID(QU);
 USE_STRING_ID(R);
 USE_STRING_ID(REQ);
 
-#include "criticalregion.h"
-#include "resource.h"
 #include "forte_bool.h"
 #include "forte_lint.h"
 #include "iec61131_functions.h"

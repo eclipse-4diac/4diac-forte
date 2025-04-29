@@ -39,8 +39,6 @@ USE_STRING_ID(TIME);
 USE_STRING_ID(UINT);
 USE_STRING_ID(WCET);
 
-#include "criticalregion.h"
-#include "resource.h"
 
 DEFINE_FIRMWARE_FB(FORTE_RT_E_TRAIN, STRID(RT_E_TRAIN))
 

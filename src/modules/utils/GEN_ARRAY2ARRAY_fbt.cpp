@@ -25,8 +25,6 @@ USE_STRING_ID(IN);
 USE_STRING_ID(OUT);
 USE_STRING_ID(REQ);
 
-#include "resource.h"
-#include "criticalregion.h"
 
 DEFINE_GENERIC_FIRMWARE_FB(GEN_ARRAY2ARRAY, STRID(GEN_ARRAY2ARRAY))
 

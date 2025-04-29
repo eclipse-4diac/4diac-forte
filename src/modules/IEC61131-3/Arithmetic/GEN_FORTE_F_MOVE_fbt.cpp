@@ -20,8 +20,6 @@ USE_STRING_ID(IN);
 USE_STRING_ID(OUT);
 USE_STRING_ID(REQ);
 
-#include "criticalregion.h"
-#include "resource.h"
 
 DEFINE_GENERIC_FIRMWARE_FB(GEN_FORTE_F_MOVE, STRID(GEN_F_MOVE))
 

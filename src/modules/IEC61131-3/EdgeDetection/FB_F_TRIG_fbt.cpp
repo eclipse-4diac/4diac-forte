@@ -23,8 +23,6 @@ USE_STRING_ID(MEM);
 USE_STRING_ID(Q);
 USE_STRING_ID(REQ);
 
-#include "criticalregion.h"
-#include "resource.h"
 #include "forte_bool.h"
 #include "iec61131_functions.h"
 #include "forte_array_common.h"

@@ -24,8 +24,6 @@ USE_STRING_ID(STATUS);
 USE_STRING_ID(ST_CREATE_FB);
 USE_STRING_ID(WSTRING);
 
-#include "criticalregion.h"
-#include "resource.h"
 
 #include "device.h"
 #include "mgmcmdstruct.h"

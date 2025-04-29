@@ -21,7 +21,6 @@
 #include "forte_array_fixed.h"
 #include "forte_array_variable.h"
 
-#include "resource.h"
 
 class FORTE_EC_KILL_ELEM final : public CFunctionBlock {
     DECLARE_FIRMWARE_FB(FORTE_EC_KILL_ELEM)

@@ -25,8 +25,6 @@ USE_STRING_ID(R);
 USE_STRING_ID(RO);
 USE_STRING_ID(UINT);
 
-#include "criticalregion.h"
-#include "resource.h"
 #include "forte_uint.h"
 #include "forte_bool.h"
 #include "iec61131_functions.h"

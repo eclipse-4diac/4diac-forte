@@ -28,8 +28,6 @@ USE_STRING_ID(QO);
 USE_STRING_ID(REQ);
 USE_STRING_ID(UINT);
 
-#include "criticalregion.h"
-#include "resource.h"
 
 DEFINE_FIRMWARE_FB(FORTE_GET_AT_INDEX, STRID(GET_AT_INDEX))
 

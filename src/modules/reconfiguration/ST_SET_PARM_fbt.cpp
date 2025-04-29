@@ -25,8 +25,6 @@ USE_STRING_ID(STATUS);
 USE_STRING_ID(ST_SET_PARM);
 USE_STRING_ID(WSTRING);
 
-#include "criticalregion.h"
-#include "resource.h"
 
 #include "device.h"
 

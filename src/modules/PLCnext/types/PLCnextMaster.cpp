@@ -42,8 +42,6 @@ USE_STRING_ID(WSTRING);
 #include "forte_array.h"
 #include "forte_array_fixed.h"
 #include "forte_array_variable.h"
-#include "criticalregion.h"
-#include "resource.h"
 
 DEFINE_FIRMWARE_FB(FORTE_PLCnextMaster, STRID(PLCnextMaster))
 

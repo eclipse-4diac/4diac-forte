@@ -41,12 +41,6 @@ class CAdapter;
 class CTimerHandler;
 class CDevice;
 
-namespace forte {
-  namespace core {
-    class CFBContainer;
-  }
-} // namespace forte
-
 #ifdef FORTE_SUPPORT_MONITORING
 #include "mgmcmdstruct.h"
 namespace forte {

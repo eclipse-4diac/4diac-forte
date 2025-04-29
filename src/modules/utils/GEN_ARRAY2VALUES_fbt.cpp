@@ -27,8 +27,6 @@ USE_STRING_ID(REQ);
 
 #include <stdio.h>
 #include "forte_printer.h"
-#include "resource.h"
-#include "criticalregion.h"
 
 DEFINE_GENERIC_FIRMWARE_FB(GEN_ARRAY2VALUES, STRID(GEN_ARRAY2VALUES))
 

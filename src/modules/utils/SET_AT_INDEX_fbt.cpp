@@ -29,8 +29,6 @@ USE_STRING_ID(SET_AT_INDEX);
 USE_STRING_ID(UINT);
 USE_STRING_ID(VALUE);
 
-#include "criticalregion.h"
-#include "resource.h"
 
 DEFINE_FIRMWARE_FB(FORTE_SET_AT_INDEX, STRID(SET_AT_INDEX))
 

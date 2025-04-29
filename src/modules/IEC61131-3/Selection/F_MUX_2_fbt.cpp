@@ -27,8 +27,6 @@ USE_STRING_ID(K);
 USE_STRING_ID(OUT);
 USE_STRING_ID(REQ);
 
-#include "criticalregion.h"
-#include "resource.h"
 
 DEFINE_FIRMWARE_FB(FORTE_F_MUX_2, STRID(F_MUX_2))
 

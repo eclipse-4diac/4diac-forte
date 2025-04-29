@@ -26,8 +26,6 @@ USE_STRING_ID(MX);
 USE_STRING_ID(OUT);
 USE_STRING_ID(REQ);
 
-#include "criticalregion.h"
-#include "resource.h"
 
 DEFINE_FIRMWARE_FB(FORTE_F_LIMIT, STRID(F_LIMIT))
 

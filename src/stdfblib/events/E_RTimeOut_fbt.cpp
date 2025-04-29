@@ -23,8 +23,6 @@ USE_STRING_ID(STOP);
 USE_STRING_ID(TimeOut);
 USE_STRING_ID(TimeOutSocket);
 
-#include "criticalregion.h"
-#include "resource.h"
 
 DEFINE_FIRMWARE_FB(FORTE_E_RTimeOut, STRID(E_RTimeOut))
 

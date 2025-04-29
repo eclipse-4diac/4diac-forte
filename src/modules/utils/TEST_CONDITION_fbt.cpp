@@ -24,7 +24,6 @@ USE_STRING_ID(TEST_CONDITION);
 
 #include "devlog.h"
 #include "resource.h"
-#include "criticalregion.h"
 
 unsigned int FORTE_TEST_CONDITION::smExecutedTests = 0;
 unsigned int FORTE_TEST_CONDITION::smFailedTests = 0;

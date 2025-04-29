@@ -23,8 +23,6 @@ USE_STRING_ID(OUT);
 USE_STRING_ID(REQ);
 USE_STRING_ID(TIME_OF_DAY);
 
-#include "criticalregion.h"
-#include "resource.h"
 #include "forte_time_of_day.h"
 #include "forte_date_and_time.h"
 #include "iec61131_functions.h"

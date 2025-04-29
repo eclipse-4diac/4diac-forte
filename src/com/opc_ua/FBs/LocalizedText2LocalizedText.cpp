@@ -21,8 +21,6 @@ USE_STRING_ID(LocalizedText2LocalizedText);
 USE_STRING_ID(OUT);
 USE_STRING_ID(REQ);
 
-#include "criticalregion.h"
-#include "resource.h"
 
 DEFINE_FIRMWARE_FB(FORTE_LocalizedText2LocalizedText, STRID(LocalizedText2LocalizedText))
 

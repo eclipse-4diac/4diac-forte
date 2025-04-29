@@ -19,7 +19,6 @@
  *******************************************************************************/
 
 #include <processinterfacefb.h>
-#include "criticalregion.h"
 
 using namespace forte::core::io;
 using namespace std::string_literals;

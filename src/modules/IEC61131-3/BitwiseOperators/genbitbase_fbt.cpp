@@ -24,8 +24,6 @@ USE_STRING_ID(REQ);
 #include <ctype.h>
 #include <stdio.h>
 #include "forte_printer.h"
-#include "resource.h"
-#include "criticalregion.h"
 
 const CStringDictionary::TStringId CGenBitBase::scmDataOutputNames[] = {STRID(OUT)};
 const CStringDictionary::TStringId CGenBitBase::scmDataOutputTypeIds[] = {STRID(ANY_BIT)};

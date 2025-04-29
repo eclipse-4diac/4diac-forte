@@ -23,8 +23,6 @@ USE_STRING_ID(Event);
 USE_STRING_ID(K);
 USE_STRING_ID(UINT);
 
-#include "criticalregion.h"
-#include "resource.h"
 #include "forte_bool.h"
 #include "forte_uint.h"
 #include "iec61131_functions.h"

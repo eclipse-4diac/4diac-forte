@@ -26,8 +26,6 @@ USE_STRING_ID(REQ);
 USE_STRING_ID(TIME);
 USE_STRING_ID(TIME_OF_DAY);
 
-#include "criticalregion.h"
-#include "resource.h"
 
 DEFINE_FIRMWARE_FB(FORTE_F_ADD_TOD_TIME, STRID(F_ADD_TOD_TIME))
 

@@ -11,7 +11,9 @@
  *   Alois Zoitl - initial API and implementation and/or initial documentation
  *******************************************************************************/
 
-#include <modules/rt_events/RT_Bridge_fbt.h>
+#include "RT_Bridge_fbt.h"
+#include "ifSpecBuilder.h"
+#include "criticalregion.h"
 
 USE_STRING_ID(ANY);
 USE_STRING_ID(Event);
@@ -19,9 +21,6 @@ USE_STRING_ID(GEN_RT_Bridge);
 USE_STRING_ID(RD);
 USE_STRING_ID(RDO);
 USE_STRING_ID(WR);
-
-#include "ifSpecBuilder.h"
-#include "resource.h"
 
 DEFINE_GENERIC_FIRMWARE_FB(FORTE_GEN_RT_Bridge, STRID(GEN_RT_Bridge))
 

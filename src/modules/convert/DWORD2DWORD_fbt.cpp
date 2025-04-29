@@ -22,8 +22,6 @@ USE_STRING_ID(IN);
 USE_STRING_ID(OUT);
 USE_STRING_ID(REQ);
 
-#include "criticalregion.h"
-#include "resource.h"
 #include "forte_dword.h"
 #include "iec61131_functions.h"
 #include "forte_array_common.h"

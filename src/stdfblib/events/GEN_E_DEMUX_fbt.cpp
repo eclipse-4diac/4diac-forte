@@ -25,8 +25,6 @@ USE_STRING_ID(UINT);
 
 #include <stdio.h>
 
-#include "resource.h"
-#include "criticalregion.h"
 
 DEFINE_GENERIC_FIRMWARE_FB(GEN_E_DEMUX, STRID(GEN_E_DEMUX))
 

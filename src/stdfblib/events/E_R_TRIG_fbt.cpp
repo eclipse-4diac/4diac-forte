@@ -27,8 +27,6 @@ USE_STRING_ID(G);
 USE_STRING_ID(Q);
 USE_STRING_ID(QI);
 
-#include "criticalregion.h"
-#include "resource.h"
 
 DEFINE_FIRMWARE_FB(FORTE_E_R_TRIG, STRID(E_R_TRIG))
 

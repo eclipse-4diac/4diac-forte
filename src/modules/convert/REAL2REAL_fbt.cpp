@@ -22,8 +22,6 @@ USE_STRING_ID(REAL);
 USE_STRING_ID(REAL2REAL);
 USE_STRING_ID(REQ);
 
-#include "criticalregion.h"
-#include "resource.h"
 #include "forte_real.h"
 #include "iec61131_functions.h"
 #include "forte_array_common.h"

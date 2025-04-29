@@ -35,8 +35,6 @@ USE_STRING_ID(REAL);
 USE_STRING_ID(REQ);
 USE_STRING_ID(signalprocessing__DualHysteresis);
 
-#include "criticalregion.h"
-#include "resource.h"
 #include "forte_bool.h"
 #include "forte_real.h"
 #include "iec61131_functions.h"

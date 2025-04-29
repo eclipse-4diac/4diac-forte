@@ -18,7 +18,6 @@
 #include "opcua_action_info.h"
 #include "fortelist.h"
 #include "forte_sync.h"
-#include "criticalregion.h"
 #include <string>
 
 /**

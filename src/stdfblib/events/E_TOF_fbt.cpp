@@ -40,8 +40,6 @@ USE_STRING_ID(START);
 USE_STRING_ID(STOP);
 USE_STRING_ID(TIME);
 
-#include "criticalregion.h"
-#include "resource.h"
 
 DEFINE_FIRMWARE_FB(FORTE_E_TOF, STRID(E_TOF))
 

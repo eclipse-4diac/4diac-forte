@@ -59,8 +59,6 @@ USE_STRING_ID(IN);
 USE_STRING_ID(REQ);
 USE_STRING_ID(SPLIT_DWORD_INTO_BOOLS);
 
-#include "criticalregion.h"
-#include "resource.h"
 #include "forte_dword.h"
 #include "forte_bool.h"
 #include "iec61131_functions.h"

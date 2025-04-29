@@ -28,8 +28,6 @@ USE_STRING_ID(WSTRING);
 #include <stdio.h>
 
 #include "forte_printer.h"
-#include "resource.h"
-#include "criticalregion.h"
 
 DEFINE_GENERIC_FIRMWARE_FB(GEN_F_MUX, STRID(GEN_F_MUX));
 

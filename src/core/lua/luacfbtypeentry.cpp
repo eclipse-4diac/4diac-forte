@@ -13,7 +13,6 @@
 
 #include "luacfbtypeentry.h"
 
-#include "resource.h"
 #include "luaengine.h"
 #include "luacfb.h"
 #include "luatype.h"

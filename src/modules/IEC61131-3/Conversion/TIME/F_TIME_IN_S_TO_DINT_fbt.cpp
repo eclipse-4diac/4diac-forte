@@ -26,8 +26,6 @@ USE_STRING_ID(OUT);
 USE_STRING_ID(REQ);
 USE_STRING_ID(TIME);
 
-#include "criticalregion.h"
-#include "resource.h"
 #include "forte_dint.h"
 #include "forte_lint.h"
 #include "forte_any_duration_variant.h"

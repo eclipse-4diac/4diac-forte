@@ -21,8 +21,6 @@ USE_STRING_ID(EO);
 USE_STRING_ID(Event);
 USE_STRING_ID(Q);
 
-#include "criticalregion.h"
-#include "resource.h"
 #include "forte_bool.h"
 #include "iec61131_functions.h"
 #include "forte_array_common.h"

@@ -34,8 +34,6 @@ USE_STRING_ID(UINT);
 USE_STRING_ID(UpdateInterval);
 USE_STRING_ID(WSTRING);
 
-#include "criticalregion.h"
-#include "resource.h"
 #include "../handler/bus.h"
 
 DEFINE_FIRMWARE_FB(FORTE_EBSlave2301, STRID(EBSlave2301))

@@ -31,8 +31,6 @@ USE_STRING_ID(REQ1);
 USE_STRING_ID(REQ2);
 USE_STRING_ID(REQ3);
 
-#include "criticalregion.h"
-#include "resource.h"
 
 DEFINE_FIRMWARE_FB(FORTE_F_SEL_E_4, STRID(F_SEL_E_4))
 

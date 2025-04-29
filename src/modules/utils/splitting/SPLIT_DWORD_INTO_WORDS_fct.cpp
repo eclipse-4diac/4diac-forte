@@ -29,8 +29,6 @@ USE_STRING_ID(WORD);
 USE_STRING_ID(WORD_00);
 USE_STRING_ID(WORD_01);
 
-#include "criticalregion.h"
-#include "resource.h"
 #include "forte_dword.h"
 #include "forte_word.h"
 #include "iec61131_functions.h"
