@@ -89,6 +89,7 @@ FORTE_FB_RANDOM::FORTE_FB_RANDOM(const CStringDictionary::TStringId paInstanceNa
 }
 
 void FORTE_FB_RANDOM::setInitialValues() {
+  CBasicFB::setInitialValues();
   var_SEED = 0_UINT;
   var_VAL = 0_REAL;
 }

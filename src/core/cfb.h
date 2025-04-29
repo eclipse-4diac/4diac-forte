@@ -112,6 +112,8 @@ class CCompositeFB : public CFunctionBlock {
     EMGMResponse changeExecutionState(EMGMCommandType paCommand) override;
 
   protected:
+    void setInitialValues() override = 0;
+
     const SCFB_FBNData &getFBNData() const {
       return cmFBNData;
     }

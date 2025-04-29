@@ -33,6 +33,10 @@ class CFunctionBlockMock : public CFunctionBlock {
       return CStringDictionary::scmInvalidStringId;
     }
 
+  protected:
+    void setInitialValues() override {
+    }
+
   private:
     void executeEvent(TEventID, CEventChainExecutionThread *const) override {
     }

@@ -15,6 +15,7 @@
  *******************************************************************************/
 
 #include "F_MULTIME_fbt.h"
+#include "forte_time.h"
 
 USE_STRING_ID(ANY_NUM);
 USE_STRING_ID(CNF);
@@ -25,7 +26,6 @@ USE_STRING_ID(IN2);
 USE_STRING_ID(OUT);
 USE_STRING_ID(REQ);
 USE_STRING_ID(TIME);
-
 
 DEFINE_FIRMWARE_FB(FORTE_F_MULTIME, STRID(F_MULTIME))
 
@@ -145,4 +145,10 @@ CDataConnection *FORTE_F_MULTIME::getDOConUnchecked(TPortId paIndex) {
     case 0: return &conn_OUT;
   }
   return nullptr;
+}
+
+void FORTE_F_MULTIME::setInitialValues() {
+  var_IN1 = CIEC_TIME();
+  var_IN2 = CIEC_ANY_NUM_VARIANT();
+  var_OUT = CIEC_TIME();
 }

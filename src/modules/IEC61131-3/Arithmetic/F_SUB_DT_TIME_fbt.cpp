@@ -26,7 +26,6 @@ USE_STRING_ID(OUT);
 USE_STRING_ID(REQ);
 USE_STRING_ID(TIME);
 
-
 DEFINE_FIRMWARE_FB(FORTE_F_SUB_DT_TIME, STRID(F_SUB_DT_TIME))
 
 const CStringDictionary::TStringId FORTE_F_SUB_DT_TIME::scmDataInputNames[] = {STRID(IN1), STRID(IN2)};
@@ -144,4 +143,10 @@ CDataConnection *FORTE_F_SUB_DT_TIME::getDOConUnchecked(TPortId paIndex) {
     case 0: return &conn_OUT;
   }
   return nullptr;
+}
+
+void FORTE_F_SUB_DT_TIME::setInitialValues() {
+  var_IN1 = CIEC_DATE_AND_TIME();
+  var_IN2 = CIEC_TIME();
+  var_OUT = CIEC_DATE_AND_TIME();
 }

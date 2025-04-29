@@ -102,3 +102,7 @@ CDataConnection *FORTE_E_RTimeOut::getDOConUnchecked(TPortId) {
 CDataConnection *FORTE_E_RTimeOut::getIf2InConUnchecked(TPortId) {
   return nullptr;
 }
+
+void FORTE_E_RTimeOut::setInitialValues() {
+  // not data pins so nothing todo
+}

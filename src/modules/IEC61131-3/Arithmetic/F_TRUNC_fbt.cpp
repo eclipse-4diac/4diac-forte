@@ -15,6 +15,8 @@
  *******************************************************************************/
 
 #include "F_TRUNC_fbt.h"
+#include "forte_any_int_variant.h"
+#include "forte_any_real_variant.h"
 
 USE_STRING_ID(ANY_INT);
 USE_STRING_ID(ANY_REAL);
@@ -24,7 +26,6 @@ USE_STRING_ID(F_TRUNC);
 USE_STRING_ID(IN);
 USE_STRING_ID(OUT);
 USE_STRING_ID(REQ);
-
 
 DEFINE_FIRMWARE_FB(FORTE_F_TRUNC, STRID(F_TRUNC))
 
@@ -143,4 +144,9 @@ CDataConnection *FORTE_F_TRUNC::getDOConUnchecked(TPortId paIndex) {
     case 0: return &conn_OUT;
   }
   return nullptr;
+}
+
+void FORTE_F_TRUNC::setInitialValues() {
+  var_IN = CIEC_ANY_REAL_VARIANT();
+  var_OUT = CIEC_ANY_INT_VARIANT();
 }

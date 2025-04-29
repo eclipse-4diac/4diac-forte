@@ -27,7 +27,6 @@ USE_STRING_ID(K);
 USE_STRING_ID(OUT);
 USE_STRING_ID(REQ);
 
-
 DEFINE_FIRMWARE_FB(FORTE_F_MUX_2, STRID(F_MUX_2))
 
 const CStringDictionary::TStringId FORTE_F_MUX_2::scmDataInputNames[] = {STRID(K), STRID(IN1), STRID(IN2)};
@@ -162,4 +161,11 @@ CDataConnection *FORTE_F_MUX_2::getDOConUnchecked(TPortId paIndex) {
     case 0: return &conn_OUT;
   }
   return nullptr;
+}
+
+void FORTE_F_MUX_2::setInitialValues() {
+  var_K = CIEC_ANY_INT_VARIANT();
+  var_IN1 = CIEC_ANY_VARIANT();
+  var_IN2 = CIEC_ANY_VARIANT();
+  var_OUT = CIEC_ANY_VARIANT();
 }

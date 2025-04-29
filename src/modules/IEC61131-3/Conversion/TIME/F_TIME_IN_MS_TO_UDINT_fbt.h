@@ -1,14 +1,16 @@
-/*************************************************************************
- *** FORTE Library Element
- ***
- *** This file was generated using the 4DIAC FORTE Export Filter V1.0.x NG!
- ***
- *** Name: F_TIME_IN_MS_TO_UDINT
- *** Description: Convert TIME in MS to UDINT
- *** Version:
- ***     1.0: 2023-04-28/Martin Jobst -  -
- ***     1.1: 2023-08-21/Franz Höpfinger - HR Agrartechnik GmbH -
- *************************************************************************/
+/*******************************************************************************
+ * Copyright (c) 2023 Martin Erich Jobst, HR Agrartechnik GmbH
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ *
+ * Contributors:
+ *   Martin Jobst
+ *     - initial API and implementation and/or initial documentation
+ *******************************************************************************/
 
 #pragma once
 

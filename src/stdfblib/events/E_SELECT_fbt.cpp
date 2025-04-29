@@ -68,6 +68,7 @@ FORTE_E_SELECT::FORTE_E_SELECT(const CStringDictionary::TStringId paInstanceName
 }
 
 void FORTE_E_SELECT::setInitialValues() {
+  CBasicFB::setInitialValues();
   var_G = 0_BOOL;
 }
 

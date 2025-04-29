@@ -14,6 +14,14 @@
 
 #include "F_UDINT_TO_BCD_DWORD_fbt.h"
 
+#include "core/datatypes/forte_dword.h"
+#include "core/datatypes/forte_udint.h"
+#include "core/iec61131_functions.h"
+#include "core/datatypes/forte_array_common.h"
+#include "core/datatypes/forte_array.h"
+#include "core/datatypes/forte_array_fixed.h"
+#include "core/datatypes/forte_array_variable.h"
+
 USE_STRING_ID(CNF);
 USE_STRING_ID(DWORD);
 USE_STRING_ID(Event);
@@ -23,128 +31,108 @@ USE_STRING_ID(OUT);
 USE_STRING_ID(REQ);
 USE_STRING_ID(UDINT);
 
-#include "forte_dword.h"
-#include "forte_udint.h"
-#include "iec61131_functions.h"
-#include "forte_array_common.h"
-#include "forte_array.h"
-#include "forte_array_fixed.h"
-#include "forte_array_variable.h"
-
 DEFINE_FIRMWARE_FB(FORTE_F_UDINT_TO_BCD_DWORD, STRID(F_UDINT_TO_BCD_DWORD))
 
 const CStringDictionary::TStringId FORTE_F_UDINT_TO_BCD_DWORD::scmDataInputNames[] = {STRID(IN)};
-
 const CStringDictionary::TStringId FORTE_F_UDINT_TO_BCD_DWORD::scmDataInputTypeIds[] = {STRID(UDINT)};
-
 const CStringDictionary::TStringId FORTE_F_UDINT_TO_BCD_DWORD::scmDataOutputNames[] = {STRID(OUT)};
-
 const CStringDictionary::TStringId FORTE_F_UDINT_TO_BCD_DWORD::scmDataOutputTypeIds[] = {STRID(DWORD)};
-
 const TDataIOID FORTE_F_UDINT_TO_BCD_DWORD::scmEIWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_F_UDINT_TO_BCD_DWORD::scmEIWithIndexes[] = {0};
 const CStringDictionary::TStringId FORTE_F_UDINT_TO_BCD_DWORD::scmEventInputNames[] = {STRID(REQ)};
-const CStringDictionary::TStringId FORTE_F_UDINT_TO_BCD_DWORD::scmEventInputTypeIds[] = {STRID(Event)};
-
 const TDataIOID FORTE_F_UDINT_TO_BCD_DWORD::scmEOWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_F_UDINT_TO_BCD_DWORD::scmEOWithIndexes[] = {0};
 const CStringDictionary::TStringId FORTE_F_UDINT_TO_BCD_DWORD::scmEventOutputNames[] = {STRID(CNF)};
-const CStringDictionary::TStringId FORTE_F_UDINT_TO_BCD_DWORD::scmEventOutputTypeIds[] = {STRID(Event)};
+const SFBInterfaceSpec FORTE_F_UDINT_TO_BCD_DWORD::scmFBInterfaceSpec = {
+  1, scmEventInputNames, nullptr, scmEIWith, scmEIWithIndexes,
+  1, scmEventOutputNames, nullptr, scmEOWith, scmEOWithIndexes,
+  1, scmDataInputNames, scmDataInputTypeIds,
+  1, scmDataOutputNames, scmDataOutputTypeIds,
+  0, nullptr,
+  0, nullptr
+};
 
-const SFBInterfaceSpec FORTE_F_UDINT_TO_BCD_DWORD::scmFBInterfaceSpec = {1,
-                                                                         scmEventInputNames,
-                                                                         scmEventInputTypeIds,
-                                                                         scmEIWith,
-                                                                         scmEIWithIndexes,
-                                                                         1,
-                                                                         scmEventOutputNames,
-                                                                         scmEventOutputTypeIds,
-                                                                         scmEOWith,
-                                                                         scmEOWithIndexes,
-                                                                         1,
-                                                                         scmDataInputNames,
-                                                                         scmDataInputTypeIds,
-                                                                         1,
-                                                                         scmDataOutputNames,
-                                                                         scmDataOutputTypeIds,
-                                                                         0,
-                                                                         nullptr,
-                                                                         0,
-                                                                         nullptr};
-
-FORTE_F_UDINT_TO_BCD_DWORD::FORTE_F_UDINT_TO_BCD_DWORD(CStringDictionary::TStringId paInstanceNameId,
-                                                       forte::core::CFBContainer &paContainer) :
+FORTE_F_UDINT_TO_BCD_DWORD::FORTE_F_UDINT_TO_BCD_DWORD(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CSimpleFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, nullptr),
-    var_IN(CIEC_UDINT(0)),
-    var_OUT(CIEC_DWORD(0)),
+    var_IN(0_UDINT),
+    var_OUT(0_DWORD),
     conn_CNF(*this, 0),
     conn_IN(nullptr),
     conn_OUT(*this, 0, var_OUT) {
 }
 
-void FORTE_F_UDINT_TO_BCD_DWORD::alg_REQ(void) {
-
-  var_OUT = func_UDINT_TO_BCD_DWORD(var_IN);
+void FORTE_F_UDINT_TO_BCD_DWORD::setInitialValues() {
+  var_IN = 0_UDINT;
+  var_OUT = 0_DWORD;
 }
 
-void FORTE_F_UDINT_TO_BCD_DWORD::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
-  switch (paEIID) {
-    case scmEventREQID: alg_REQ(); break;
-    default: break;
+void FORTE_F_UDINT_TO_BCD_DWORD::executeEvent(const TEventID paEIID, CEventChainExecutionThread *const paECET) {
+  switch(paEIID) {
+    case scmEventREQID:
+      enterStateREQ(paECET);
+      break;
+    default:
+      break;
   }
+}
+
+void FORTE_F_UDINT_TO_BCD_DWORD::enterStateREQ(CEventChainExecutionThread *const paECET) {
+  alg_REQ();
   sendOutputEvent(scmEventCNFID, paECET);
 }
 
-void FORTE_F_UDINT_TO_BCD_DWORD::readInputData(TEventID paEIID) {
-  switch (paEIID) {
+void FORTE_F_UDINT_TO_BCD_DWORD::readInputData(const TEventID paEIID) {
+  switch(paEIID) {
     case scmEventREQID: {
       readData(0, var_IN, conn_IN);
       break;
     }
-    default: break;
+    default:
+      break;
   }
 }
 
-void FORTE_F_UDINT_TO_BCD_DWORD::writeOutputData(TEventID paEIID) {
-  switch (paEIID) {
+void FORTE_F_UDINT_TO_BCD_DWORD::writeOutputData(const TEventID paEIID) {
+  switch(paEIID) {
     case scmEventCNFID: {
       writeData(scmFBInterfaceSpec.mNumDIs + 0, var_OUT, conn_OUT);
       break;
     }
-    default: break;
+    default:
+      break;
   }
 }
 
-CIEC_ANY *FORTE_F_UDINT_TO_BCD_DWORD::getDI(size_t paIndex) {
-  switch (paIndex) {
+CIEC_ANY *FORTE_F_UDINT_TO_BCD_DWORD::getDI(const size_t paIndex) {
+  switch(paIndex) {
     case 0: return &var_IN;
   }
   return nullptr;
 }
 
-CIEC_ANY *FORTE_F_UDINT_TO_BCD_DWORD::getDO(size_t paIndex) {
-  switch (paIndex) {
+CIEC_ANY *FORTE_F_UDINT_TO_BCD_DWORD::getDO(const size_t paIndex) {
+  switch(paIndex) {
     case 0: return &var_OUT;
   }
   return nullptr;
 }
 
-CEventConnection *FORTE_F_UDINT_TO_BCD_DWORD::getEOConUnchecked(TPortId paIndex) {
-  switch (paIndex) {
+CEventConnection *FORTE_F_UDINT_TO_BCD_DWORD::getEOConUnchecked(const TPortId paIndex) {
+  switch(paIndex) {
     case 0: return &conn_CNF;
   }
   return nullptr;
 }
 
-CDataConnection **FORTE_F_UDINT_TO_BCD_DWORD::getDIConUnchecked(TPortId paIndex) {
-  switch (paIndex) {
+CDataConnection **FORTE_F_UDINT_TO_BCD_DWORD::getDIConUnchecked(const TPortId paIndex) {
+  switch(paIndex) {
     case 0: return &conn_IN;
   }
   return nullptr;
 }
 
-CDataConnection *FORTE_F_UDINT_TO_BCD_DWORD::getDOConUnchecked(TPortId paIndex) {
-  switch (paIndex) {
+CDataConnection *FORTE_F_UDINT_TO_BCD_DWORD::getDOConUnchecked(const TPortId paIndex) {
+  switch(paIndex) {
     case 0: return &conn_OUT;
   }
   return nullptr;
@@ -152,4 +140,10 @@ CDataConnection *FORTE_F_UDINT_TO_BCD_DWORD::getDOConUnchecked(TPortId paIndex) 
 
 CIEC_ANY *FORTE_F_UDINT_TO_BCD_DWORD::getVarInternal(size_t) {
   return nullptr;
+}
+
+void FORTE_F_UDINT_TO_BCD_DWORD::alg_REQ(void) {
+
+  #line 2 "F_UDINT_TO_BCD_DWORD.fbt"
+  var_OUT = func_UDINT_TO_BCD_DWORD(var_IN);
 }

@@ -21,6 +21,7 @@
 #include "adapter.h"
 #include "core/util/criticalregion.h"
 #include "adapterconn.h"
+#include "funcbloc.h"
 
 namespace {
   bool forwardGenericDI(CFunctionBlock &dstFB, const CStringDictionary::TStringId dstId, const CIEC_ANY &paRefValue) {
@@ -140,6 +141,11 @@ EMGMResponse CCompositeFB::changeExecutionState(EMGMCommandType paCommand) {
     setFBNetworkInitialValues();
   }
   return nRetVal;
+}
+
+void CCompositeFB::setInitialValues() {
+  CFunctionBlock::setInitialValues();
+  // currently nothing to do
 }
 
 CIEC_ANY *CCompositeFB::getVar(CStringDictionary::TStringId *paNameList, unsigned int paNameListSize) {

@@ -80,4 +80,7 @@ class FORTE_F_MOVE : public CFunctionBlock {
     void operator()(const CIEC_ANY &pa_IN, CIEC_ANY &pa_OUT) {
       evt_REQ(pa_IN, pa_OUT);
     }
+
+  protected:
+    void setInitialValues() override;
 };

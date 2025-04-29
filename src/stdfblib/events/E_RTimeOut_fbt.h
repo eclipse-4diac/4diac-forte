@@ -55,4 +55,7 @@ class FORTE_E_RTimeOut final : public CCompositeFB {
     CEventConnection *getEOConUnchecked(TPortId) override;
     CDataConnection **getDIConUnchecked(TPortId) override;
     CDataConnection *getDOConUnchecked(TPortId) override;
+
+  protected:
+    void setInitialValues() override;
 };

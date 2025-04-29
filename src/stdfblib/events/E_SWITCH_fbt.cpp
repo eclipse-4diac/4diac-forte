@@ -69,6 +69,7 @@ FORTE_E_SWITCH::FORTE_E_SWITCH(const CStringDictionary::TStringId paInstanceName
 }
 
 void FORTE_E_SWITCH::setInitialValues() {
+  CBasicFB::setInitialValues();
   var_G = 0_BOOL;
 }
 

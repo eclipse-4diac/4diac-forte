@@ -69,6 +69,9 @@ class CBasicFB : public CFunctionBlock {
 
     CIEC_STATE mECCState; //! the current state of the ecc. start value is 0 = initial state id
     const SInternalVarsInformation *const cmVarInternals; //!< struct holding the information on the internal vars.
+
+    void setInitialValues() override = 0;
+
   private:
     /*!\brief Get the pointer to a internal variable of the basic FB.
      *
@@ -76,8 +79,6 @@ class CBasicFB : public CFunctionBlock {
      * \return Pointer to the internal variable or 0.
      */
     CIEC_ANY *getInternalVar(CStringDictionary::TStringId paInternalName);
-
-    void setInitialValues() override;
 
 #ifdef FORTE_FMU
     friend class fmuInstance;

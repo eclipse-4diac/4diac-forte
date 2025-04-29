@@ -53,7 +53,7 @@ typedef CIEC_ANY *(*TDataTypeCreateFunc)(TForteByte *paDataBuf);
 #define FORTE_DUMMY_INIT_DEC static int dummyInit();
 
 //!\ingroup CORE This define is used to create the definition necessary for generic FirmwareFunction blocks in order to
-//!get them automatically added to the FirmwareType list.
+//! get them automatically added to the FirmwareType list.
 #define DECLARE_GENERIC_FIRMWARE_FB(fbclass)                                                                           \
 private:                                                                                                               \
   const static CTypeLib::CFBTypeEntry csmFirmwareFBEntry_##fbclass;                                                    \
@@ -67,7 +67,7 @@ public:                                                                         
 private:
 
 //!\ingroup CORE This define is used to create the definition necessary for FirmwareFunction blocks in order to get them
-//!automatically added to the FirmwareType list.
+//! automatically added to the FirmwareType list.
 #define DECLARE_FIRMWARE_FB(fbclass)                                                                                   \
   DECLARE_GENERIC_FIRMWARE_FB(fbclass)                                                                                 \
 public:                                                                                                                \
@@ -120,7 +120,7 @@ private:
   FORTE_DUMMY_INIT_DEF(adapterclass)
 
 //!\ingroup CORE This define is used to create the definition necessary for Firmware datatype in order to get them
-//!automatically added to the FirmwareType list.
+//! automatically added to the FirmwareType list.
 #define DECLARE_FIRMWARE_DATATYPE(datatypename)                                                                        \
 public:                                                                                                                \
   static CIEC_ANY *createDataType(TForteByte *paDataBuf) {                                                             \
@@ -307,6 +307,28 @@ class CTypeLib {
     }
 
     static CTypeEntry *findType(CStringDictionary::TStringId paTypeId, CTypeEntry *paListStart);
+
+    /*!\brief Get the size of a data point
+     *
+     * @param paDataTypeIds pointer to the data type ids. If the datatype
+     *        is an Array to more values are taken from the array. If the given
+     *        type is Any 0 is returned as necessary for maintaining the FB's interface.
+     *        The functions puts the pointer in the datatype array to the next data point's id.
+     * @return The size of the data point
+     */
+    static size_t getDataPointSize(const CStringDictionary::TStringId *&paDataTypeIds);
+
+    /*!\brief Function to create an data type instance of given type
+     *
+     * @param paDataTypeIds pointer to the data type ids. If the datatype
+     *        is an Array to more values are taken from the array. If the given
+     *        type is Any 0 is returned as necessary for maintaining the FB's interface.
+     *        The functions puts the pointer in the datatype array to the next data point's id.
+     * @param paDataBuf pointer to the data buffer which should be used by the data type to create
+     * @return on success... pointer to the datatype instance
+     *         on error... 0
+     */
+    static CIEC_ANY *createDataPoint(const CStringDictionary::TStringId *&paDataTypeIds, TForteByte *&paDataBuf);
 
   protected:
   private:

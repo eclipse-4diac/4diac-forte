@@ -84,4 +84,7 @@ class FORTE_F_SUB_TOD_TIME : public CFunctionBlock {
     void operator()(const CIEC_TIME_OF_DAY &pa_IN1, const CIEC_TIME &pa_IN2, CIEC_TIME_OF_DAY &pa_OUT) {
       evt_REQ(pa_IN1, pa_IN2, pa_OUT);
     }
+
+  protected:
+    void setInitialValues() override;
 };

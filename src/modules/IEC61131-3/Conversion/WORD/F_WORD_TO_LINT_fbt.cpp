@@ -14,6 +14,14 @@
 
 #include "F_WORD_TO_LINT_fbt.h"
 
+#include "core/datatypes/forte_lint.h"
+#include "core/datatypes/forte_word.h"
+#include "core/iec61131_functions.h"
+#include "core/datatypes/forte_array_common.h"
+#include "core/datatypes/forte_array.h"
+#include "core/datatypes/forte_array_fixed.h"
+#include "core/datatypes/forte_array_variable.h"
+
 USE_STRING_ID(CNF);
 USE_STRING_ID(Event);
 USE_STRING_ID(F_WORD_TO_LINT);
@@ -23,128 +31,108 @@ USE_STRING_ID(OUT);
 USE_STRING_ID(REQ);
 USE_STRING_ID(WORD);
 
-#include "forte_lint.h"
-#include "forte_word.h"
-#include "iec61131_functions.h"
-#include "forte_array_common.h"
-#include "forte_array.h"
-#include "forte_array_fixed.h"
-#include "forte_array_variable.h"
-
 DEFINE_FIRMWARE_FB(FORTE_F_WORD_TO_LINT, STRID(F_WORD_TO_LINT))
 
 const CStringDictionary::TStringId FORTE_F_WORD_TO_LINT::scmDataInputNames[] = {STRID(IN)};
-
 const CStringDictionary::TStringId FORTE_F_WORD_TO_LINT::scmDataInputTypeIds[] = {STRID(WORD)};
-
 const CStringDictionary::TStringId FORTE_F_WORD_TO_LINT::scmDataOutputNames[] = {STRID(OUT)};
-
 const CStringDictionary::TStringId FORTE_F_WORD_TO_LINT::scmDataOutputTypeIds[] = {STRID(LINT)};
-
 const TDataIOID FORTE_F_WORD_TO_LINT::scmEIWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_F_WORD_TO_LINT::scmEIWithIndexes[] = {0};
 const CStringDictionary::TStringId FORTE_F_WORD_TO_LINT::scmEventInputNames[] = {STRID(REQ)};
-const CStringDictionary::TStringId FORTE_F_WORD_TO_LINT::scmEventInputTypeIds[] = {STRID(Event)};
-
 const TDataIOID FORTE_F_WORD_TO_LINT::scmEOWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_F_WORD_TO_LINT::scmEOWithIndexes[] = {0};
 const CStringDictionary::TStringId FORTE_F_WORD_TO_LINT::scmEventOutputNames[] = {STRID(CNF)};
-const CStringDictionary::TStringId FORTE_F_WORD_TO_LINT::scmEventOutputTypeIds[] = {STRID(Event)};
+const SFBInterfaceSpec FORTE_F_WORD_TO_LINT::scmFBInterfaceSpec = {
+  1, scmEventInputNames, nullptr, scmEIWith, scmEIWithIndexes,
+  1, scmEventOutputNames, nullptr, scmEOWith, scmEOWithIndexes,
+  1, scmDataInputNames, scmDataInputTypeIds,
+  1, scmDataOutputNames, scmDataOutputTypeIds,
+  0, nullptr,
+  0, nullptr
+};
 
-const SFBInterfaceSpec FORTE_F_WORD_TO_LINT::scmFBInterfaceSpec = {1,
-                                                                   scmEventInputNames,
-                                                                   scmEventInputTypeIds,
-                                                                   scmEIWith,
-                                                                   scmEIWithIndexes,
-                                                                   1,
-                                                                   scmEventOutputNames,
-                                                                   scmEventOutputTypeIds,
-                                                                   scmEOWith,
-                                                                   scmEOWithIndexes,
-                                                                   1,
-                                                                   scmDataInputNames,
-                                                                   scmDataInputTypeIds,
-                                                                   1,
-                                                                   scmDataOutputNames,
-                                                                   scmDataOutputTypeIds,
-                                                                   0,
-                                                                   nullptr,
-                                                                   0,
-                                                                   nullptr};
-
-FORTE_F_WORD_TO_LINT::FORTE_F_WORD_TO_LINT(CStringDictionary::TStringId paInstanceNameId,
-                                           forte::core::CFBContainer &paContainer) :
+FORTE_F_WORD_TO_LINT::FORTE_F_WORD_TO_LINT(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CSimpleFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, nullptr),
-    var_IN(CIEC_WORD(0)),
-    var_OUT(CIEC_LINT(0)),
+    var_IN(0_WORD),
+    var_OUT(0_LINT),
     conn_CNF(*this, 0),
     conn_IN(nullptr),
     conn_OUT(*this, 0, var_OUT) {
 }
 
-void FORTE_F_WORD_TO_LINT::alg_REQ(void) {
-
-  var_OUT = func_WORD_TO_LINT(var_IN);
+void FORTE_F_WORD_TO_LINT::setInitialValues() {
+  var_IN = 0_WORD;
+  var_OUT = 0_LINT;
 }
 
-void FORTE_F_WORD_TO_LINT::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
-  switch (paEIID) {
-    case scmEventREQID: alg_REQ(); break;
-    default: break;
+void FORTE_F_WORD_TO_LINT::executeEvent(const TEventID paEIID, CEventChainExecutionThread *const paECET) {
+  switch(paEIID) {
+    case scmEventREQID:
+      enterStateREQ(paECET);
+      break;
+    default:
+      break;
   }
+}
+
+void FORTE_F_WORD_TO_LINT::enterStateREQ(CEventChainExecutionThread *const paECET) {
+  alg_REQ();
   sendOutputEvent(scmEventCNFID, paECET);
 }
 
-void FORTE_F_WORD_TO_LINT::readInputData(TEventID paEIID) {
-  switch (paEIID) {
+void FORTE_F_WORD_TO_LINT::readInputData(const TEventID paEIID) {
+  switch(paEIID) {
     case scmEventREQID: {
       readData(0, var_IN, conn_IN);
       break;
     }
-    default: break;
+    default:
+      break;
   }
 }
 
-void FORTE_F_WORD_TO_LINT::writeOutputData(TEventID paEIID) {
-  switch (paEIID) {
+void FORTE_F_WORD_TO_LINT::writeOutputData(const TEventID paEIID) {
+  switch(paEIID) {
     case scmEventCNFID: {
       writeData(scmFBInterfaceSpec.mNumDIs + 0, var_OUT, conn_OUT);
       break;
     }
-    default: break;
+    default:
+      break;
   }
 }
 
-CIEC_ANY *FORTE_F_WORD_TO_LINT::getDI(size_t paIndex) {
-  switch (paIndex) {
+CIEC_ANY *FORTE_F_WORD_TO_LINT::getDI(const size_t paIndex) {
+  switch(paIndex) {
     case 0: return &var_IN;
   }
   return nullptr;
 }
 
-CIEC_ANY *FORTE_F_WORD_TO_LINT::getDO(size_t paIndex) {
-  switch (paIndex) {
+CIEC_ANY *FORTE_F_WORD_TO_LINT::getDO(const size_t paIndex) {
+  switch(paIndex) {
     case 0: return &var_OUT;
   }
   return nullptr;
 }
 
-CEventConnection *FORTE_F_WORD_TO_LINT::getEOConUnchecked(TPortId paIndex) {
-  switch (paIndex) {
+CEventConnection *FORTE_F_WORD_TO_LINT::getEOConUnchecked(const TPortId paIndex) {
+  switch(paIndex) {
     case 0: return &conn_CNF;
   }
   return nullptr;
 }
 
-CDataConnection **FORTE_F_WORD_TO_LINT::getDIConUnchecked(TPortId paIndex) {
-  switch (paIndex) {
+CDataConnection **FORTE_F_WORD_TO_LINT::getDIConUnchecked(const TPortId paIndex) {
+  switch(paIndex) {
     case 0: return &conn_IN;
   }
   return nullptr;
 }
 
-CDataConnection *FORTE_F_WORD_TO_LINT::getDOConUnchecked(TPortId paIndex) {
-  switch (paIndex) {
+CDataConnection *FORTE_F_WORD_TO_LINT::getDOConUnchecked(const TPortId paIndex) {
+  switch(paIndex) {
     case 0: return &conn_OUT;
   }
   return nullptr;
@@ -152,4 +140,10 @@ CDataConnection *FORTE_F_WORD_TO_LINT::getDOConUnchecked(TPortId paIndex) {
 
 CIEC_ANY *FORTE_F_WORD_TO_LINT::getVarInternal(size_t) {
   return nullptr;
+}
+
+void FORTE_F_WORD_TO_LINT::alg_REQ(void) {
+
+  #line 2 "F_WORD_TO_LINT.fbt"
+  var_OUT = func_WORD_TO_LINT(var_IN);
 }

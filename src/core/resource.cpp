@@ -298,7 +298,6 @@ EMGMResponse CResource::writeValue(forte::core::TNameIdentifier &paNameList, con
 }
 
 void CResource::setInitialValues() {
-  CFunctionBlock::setInitialValues();
   for (auto it : mInitialValues) {
     it.getIECVariable().fromString(it.getInitString().c_str());
   }

@@ -99,4 +99,7 @@ class FORTE_SET_AT_INDEX : public CFunctionBlock {
                     CIEC_ANY &pa_OUT_ARRAY) {
       evt_REQ(pa_IN_ARRAY, pa_INDEX, pa_VALUE, pa_QO, pa_OUT_ARRAY);
     }
+
+  protected:
+    void setInitialValues() override;
 };

@@ -88,4 +88,7 @@ class FORTE_OUT_ANY_CONSOLE : public CFunctionBlock {
     void operator()(const CIEC_BOOL &pa_QI, const CIEC_STRING &pa_LABEL, const CIEC_ANY &pa_IN, CIEC_BOOL &pa_QO) {
       evt_REQ(pa_QI, pa_LABEL, pa_IN, pa_QO);
     }
+
+  protected:
+    void setInitialValues() override;
 };

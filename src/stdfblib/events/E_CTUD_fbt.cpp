@@ -88,6 +88,7 @@ FORTE_E_CTUD::FORTE_E_CTUD(const CStringDictionary::TStringId paInstanceNameId,
 }
 
 void FORTE_E_CTUD::setInitialValues() {
+  CBasicFB::setInitialValues();
   var_PV = 0_UINT;
   var_QU = 0_BOOL;
   var_QD = 0_BOOL;

@@ -98,4 +98,7 @@ class FORTE_F_REPLACE : public CFunctionBlock {
                     CIEC_ANY_STRING &pa_OUT) {
       evt_REQ(pa_IN1, pa_IN2, pa_L, pa_P, pa_OUT);
     }
+
+  protected:
+    void setInitialValues() override;
 };

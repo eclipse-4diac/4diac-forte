@@ -15,6 +15,7 @@
  *******************************************************************************/
 
 #include "GET_AT_INDEX_fbt.h"
+#include "forte_bool.h"
 
 USE_STRING_ID(ANY);
 USE_STRING_ID(BOOL);
@@ -27,7 +28,6 @@ USE_STRING_ID(OUT);
 USE_STRING_ID(QO);
 USE_STRING_ID(REQ);
 USE_STRING_ID(UINT);
-
 
 DEFINE_FIRMWARE_FB(FORTE_GET_AT_INDEX, STRID(GET_AT_INDEX))
 
@@ -74,8 +74,8 @@ FORTE_GET_AT_INDEX::FORTE_GET_AT_INDEX(const CStringDictionary::TStringId paInst
                                        forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId),
     var_IN_ARRAY(CIEC_ANY_VARIANT()),
-    var_INDEX(CIEC_UINT(0)),
-    var_QO(CIEC_BOOL(0)),
+    var_INDEX(0_UINT),
+    var_QO(false_BOOL),
     var_OUT(CIEC_ANY_VARIANT()),
     conn_CNF(*this, 0),
     conn_IN_ARRAY(nullptr),
@@ -163,4 +163,11 @@ CDataConnection *FORTE_GET_AT_INDEX::getDOConUnchecked(TPortId paIndex) {
     case 1: return &conn_OUT;
   }
   return nullptr;
+}
+
+void FORTE_GET_AT_INDEX::setInitialValues() {
+  var_IN_ARRAY = CIEC_ANY_VARIANT();
+  var_INDEX = 0_UINT;
+  var_QO = false_BOOL;
+  var_OUT = CIEC_ANY_VARIANT();
 }

@@ -176,3 +176,11 @@ CDataConnection *FORTE_FB_CTU_UDINT::getDOConUnchecked(TPortId paIndex) {
 CIEC_ANY *FORTE_FB_CTU_UDINT::getVarInternal(size_t) {
   return nullptr;
 }
+
+void FORTE_FB_CTU_UDINT::setInitialValues() {
+  var_CU = false_BOOL;
+  var_R = false_BOOL;
+  var_PV = 0_UDINT;
+  var_Q = false_BOOL;
+  var_CV = 0_UDINT;
+}

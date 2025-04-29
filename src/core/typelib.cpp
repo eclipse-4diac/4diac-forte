@@ -21,6 +21,8 @@
 #include "adapter.h"
 #include <stddef.h>
 
+USE_STRING_ID(ARRAY);
+
 using namespace std::string_literals;
 
 CTypeLib::CTypeEntry::CTypeEntry(CStringDictionary::TStringId paTypeNameId) :
@@ -138,6 +140,34 @@ CFunctionBlock *CTypeLib::createFB(CStringDictionary::TStringId paInstanceNameId
   }
 
   return newFB;
+}
+
+namespace {
+  void nextDataPoint(const CStringDictionary::TStringId *&paDataTypeIds) {
+    while (*(paDataTypeIds++) == STRID(ARRAY)) {
+      paDataTypeIds += 2;
+    }
+  }
+} // namespace
+
+size_t CTypeLib::getDataPointSize(const CStringDictionary::TStringId *&paDataTypeIds) {
+  CStringDictionary::TStringId dataTypeId = *paDataTypeIds;
+  auto *entry = static_cast<CDataTypeEntry *>(findType(dataTypeId, CTypeLib::getDTLibStart()));
+  nextDataPoint(paDataTypeIds);
+  return nullptr != entry ? entry->getSize() : 0;
+}
+
+CIEC_ANY *CTypeLib::createDataPoint(const CStringDictionary::TStringId *&paDataTypeIds, TForteByte *&paDataBuf) {
+  CStringDictionary::TStringId dataTypeId = *paDataTypeIds;
+  CIEC_ANY *poRetVal = createDataTypeInstance(dataTypeId, paDataBuf);
+  if (nullptr != poRetVal) {
+    if (STRID(ARRAY) == dataTypeId) {
+      static_cast<CIEC_ARRAY_DYNAMIC *>(poRetVal)->setup(paDataTypeIds + 1);
+    }
+    paDataBuf += poRetVal->getSizeof();
+  }
+  nextDataPoint(paDataTypeIds);
+  return poRetVal;
 }
 
 CFunctionBlock *CTypeLib::createGenericFB(CStringDictionary::TStringId paInstanceNameId,

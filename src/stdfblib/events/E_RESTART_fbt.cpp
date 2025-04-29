@@ -124,3 +124,7 @@ EMGMResponse FORTE_E_RESTART::changeExecutionState(EMGMCommandType paCommand) {
   }
   return eRetVal;
 }
+
+void FORTE_E_RESTART::setInitialValues() {
+  // no variables so nothing to do
+}

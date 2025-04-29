@@ -132,3 +132,8 @@ CDataConnection *FORTE_E_SPLIT::getDOConUnchecked(TPortId) {
 CIEC_ANY *FORTE_E_SPLIT::getVarInternal(size_t) {
   return nullptr;
 }
+
+void FORTE_E_SPLIT::setInitialValues() {
+  CBasicFB::setInitialValues();
+  // no variables so nothing to do
+}

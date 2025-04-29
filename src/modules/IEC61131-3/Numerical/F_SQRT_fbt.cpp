@@ -24,7 +24,6 @@ USE_STRING_ID(IN);
 USE_STRING_ID(OUT);
 USE_STRING_ID(REQ);
 
-
 DEFINE_FIRMWARE_FB(FORTE_F_SQRT, STRID(F_SQRT))
 
 const CStringDictionary::TStringId FORTE_F_SQRT::scmDataInputNames[] = {STRID(IN)};
@@ -138,4 +137,9 @@ CDataConnection *FORTE_F_SQRT::getDOConUnchecked(TPortId paIndex) {
     case 0: return &conn_OUT;
   }
   return nullptr;
+}
+
+void FORTE_F_SQRT::setInitialValues() {
+  var_IN = CIEC_ANY_REAL_VARIANT();
+  var_OUT = CIEC_ANY_REAL_VARIANT();
 }

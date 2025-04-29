@@ -15,6 +15,7 @@
  *******************************************************************************/
 
 #include "F_SUB_DATE_DATE_fbt.h"
+#include "forte_date.h"
 
 USE_STRING_ID(CNF);
 USE_STRING_ID(DATE);
@@ -25,7 +26,6 @@ USE_STRING_ID(IN2);
 USE_STRING_ID(OUT);
 USE_STRING_ID(REQ);
 USE_STRING_ID(TIME);
-
 
 DEFINE_FIRMWARE_FB(FORTE_F_SUB_DATE_DATE, STRID(F_SUB_DATE_DATE))
 
@@ -144,4 +144,10 @@ CDataConnection *FORTE_F_SUB_DATE_DATE::getDOConUnchecked(TPortId paIndex) {
     case 0: return &conn_OUT;
   }
   return nullptr;
+}
+
+void FORTE_F_SUB_DATE_DATE::setInitialValues() {
+  var_IN1 = CIEC_DATE();
+  var_IN2 = CIEC_DATE();
+  var_OUT = CIEC_TIME();
 }

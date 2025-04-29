@@ -83,4 +83,7 @@ class FORTE_FB_RS : public CSimpleFB {
     void operator()(const CIEC_BOOL &pa_S, const CIEC_BOOL &pa_R1, CIEC_BOOL &pa_Q1) {
       evt_REQ(pa_S, pa_R1, pa_Q1);
     }
+
+  protected:
+    void setInitialValues() override;
 };

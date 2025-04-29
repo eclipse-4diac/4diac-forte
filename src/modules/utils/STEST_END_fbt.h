@@ -51,4 +51,9 @@ class FORTE_STEST_END final : public CFunctionBlock {
     void operator()() {
       evt_REQ();
     }
+
+  protected:
+    void setInitialValues() override {
+      // no variables so nothing to do
+    }
 };

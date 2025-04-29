@@ -76,6 +76,7 @@ FORTE_E_DEMUX::FORTE_E_DEMUX(const CStringDictionary::TStringId paInstanceNameId
 }
 
 void FORTE_E_DEMUX::setInitialValues() {
+  CBasicFB::setInitialValues();
   var_K = 0_UINT;
 }
 

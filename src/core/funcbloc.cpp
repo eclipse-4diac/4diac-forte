@@ -23,7 +23,6 @@
 #include "datatype.h"
 #include "eventconn.h"
 
-USE_STRING_ID(ARRAY);
 USE_STRING_ID(Event);
 
 #include <stdlib.h>
@@ -378,27 +377,7 @@ bool CFunctionBlock::configureFB(const char *) {
 }
 
 void CFunctionBlock::setInitialValues() {
-  const CStringDictionary::TStringId *pnDataIds;
-
-  pnDataIds = getFBInterfaceSpec().mDIDataTypeNames;
-  for (TPortId i = 0; i < getFBInterfaceSpec().mNumDIs; ++i) {
-    TForteByte *varsData = nullptr;
-    CIEC_ANY *value = createDataPoint(pnDataIds, varsData);
-    if (value != nullptr) {
-      getDI(i)->setValue(*value);
-    }
-    delete value;
-  }
-
-  pnDataIds = getFBInterfaceSpec().mDODataTypeNames;
-  for (TPortId i = 0; i < getFBInterfaceSpec().mNumDOs; ++i) {
-    TForteByte *varsData = nullptr;
-    CIEC_ANY *value = createDataPoint(pnDataIds, varsData);
-    if (value != nullptr) {
-      getDO(i)->setValue(*value);
-    }
-    delete value;
-  }
+  // currently nothing to do here
 }
 
 EMGMResponse CFunctionBlock::changeExecutionState(EMGMCommandType paCommand) {
@@ -445,32 +424,6 @@ EMGMResponse CFunctionBlock::changeExecutionState(EMGMCommandType paCommand) {
   }
 
   return nRetVal;
-}
-
-size_t CFunctionBlock::getDataPointSize(const CStringDictionary::TStringId *&paDataTypeIds) {
-  CStringDictionary::TStringId dataTypeId = *paDataTypeIds;
-  auto *entry = static_cast<CTypeLib::CDataTypeEntry *>(CTypeLib::findType(dataTypeId, CTypeLib::getDTLibStart()));
-  nextDataPoint(paDataTypeIds);
-  return nullptr != entry ? entry->getSize() : 0;
-}
-
-CIEC_ANY *CFunctionBlock::createDataPoint(const CStringDictionary::TStringId *&paDataTypeIds, TForteByte *&paDataBuf) {
-  CStringDictionary::TStringId dataTypeId = *paDataTypeIds;
-  CIEC_ANY *poRetVal = CTypeLib::createDataTypeInstance(dataTypeId, paDataBuf);
-  if (nullptr != poRetVal) {
-    if (STRID(ARRAY) == dataTypeId) {
-      static_cast<CIEC_ARRAY_DYNAMIC *>(poRetVal)->setup(paDataTypeIds + 1);
-    }
-    paDataBuf += poRetVal->getSizeof();
-  }
-  nextDataPoint(paDataTypeIds);
-  return poRetVal;
-}
-
-void CFunctionBlock::nextDataPoint(const CStringDictionary::TStringId *&paDataTypeIds) {
-  while (*(paDataTypeIds++) == STRID(ARRAY)) {
-    paDataTypeIds += 2;
-  }
 }
 
 CAdapter *CFunctionBlock::createAdapter(const SAdapterInstanceDef &paAdapterInstanceDefinition,

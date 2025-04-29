@@ -55,4 +55,7 @@ class FORTE_E_RESTART final : public CEventSourceFB {
     CDataConnection *getDOConUnchecked(TPortId) override;
 
     EMGMResponse changeExecutionState(EMGMCommandType paCommand) override;
+
+  protected:
+    void setInitialValues() override;
 };

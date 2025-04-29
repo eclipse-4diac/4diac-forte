@@ -112,6 +112,7 @@ FORTE_signalprocessing__DualHysteresis::FORTE_signalprocessing__DualHysteresis(
 }
 
 void FORTE_signalprocessing__DualHysteresis::setInitialValues() {
+  CBasicFB::setInitialValues();
   var_QI = 0_BOOL;
   var_MI = 0.5_REAL;
   var_DEAD = 0.1_REAL;

@@ -156,3 +156,9 @@ CDataConnection *FORTE_FB_SR::getDOConUnchecked(TPortId paIndex) {
 CIEC_ANY *FORTE_FB_SR::getVarInternal(size_t) {
   return nullptr;
 }
+
+void FORTE_FB_SR::setInitialValues() {
+  var_S1 = false_BOOL;
+  var_R = false_BOOL;
+  var_Q1 = false_BOOL;
+}

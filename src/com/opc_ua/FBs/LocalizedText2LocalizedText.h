@@ -68,4 +68,7 @@ class FORTE_LocalizedText2LocalizedText : public CFunctionBlock {
     void operator()(const CIEC_LocalizedText &pa_IN, CIEC_LocalizedText &pa_OUT) {
       evt_REQ(pa_IN, pa_OUT);
     }
+
+  protected:
+    void setInitialValues() override;
 };

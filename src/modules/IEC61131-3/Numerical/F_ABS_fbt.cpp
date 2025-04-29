@@ -138,3 +138,8 @@ CDataConnection *FORTE_F_ABS::getDOConUnchecked(TPortId paIndex) {
   }
   return nullptr;
 }
+
+void FORTE_F_ABS::setInitialValues() {
+  var_IN = CIEC_ANY_NUM_VARIANT();
+  var_OUT = CIEC_ANY_NUM_VARIANT();
+}

@@ -27,7 +27,6 @@ USE_STRING_ID(OUT);
 USE_STRING_ID(P);
 USE_STRING_ID(REQ);
 
-
 DEFINE_FIRMWARE_FB(FORTE_F_DELETE, STRID(F_DELETE))
 
 const CStringDictionary::TStringId FORTE_F_DELETE::scmDataInputNames[] = {STRID(IN), STRID(L), STRID(P)};
@@ -154,4 +153,11 @@ CDataConnection *FORTE_F_DELETE::getDOConUnchecked(TPortId paIndex) {
     case 0: return &conn_OUT;
   }
   return nullptr;
+}
+
+void FORTE_F_DELETE::setInitialValues() {
+  var_IN = CIEC_ANY_STRING_VARIANT();
+  var_L = CIEC_ANY_INT_VARIANT();
+  var_P = CIEC_ANY_INT_VARIANT();
+  var_OUT = CIEC_ANY_STRING_VARIANT();
 }

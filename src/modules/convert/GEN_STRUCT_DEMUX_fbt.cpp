@@ -67,7 +67,7 @@ bool GEN_STRUCT_DEMUX::initialize() {
 }
 
 void GEN_STRUCT_DEMUX::setInitialValues() {
-  CFunctionBlock::setInitialValues();
+  CGenFunctionBlock::setInitialValues();
   copyStructValuesToOutputs();
 }
 

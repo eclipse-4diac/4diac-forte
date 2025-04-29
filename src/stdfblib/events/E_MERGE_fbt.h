@@ -48,6 +48,7 @@ class FORTE_E_MERGE final : public CBasicFB {
 
     void readInputData(TEventID paEIID) override;
     void writeOutputData(TEventID paEIID) override;
+    void setInitialValues() override;
 
   public:
     FORTE_E_MERGE(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);

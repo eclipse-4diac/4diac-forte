@@ -91,4 +91,7 @@ class FORTE_F_MID : public CFunctionBlock {
                     CIEC_ANY_STRING &pa_OUT) {
       evt_REQ(pa_IN, pa_L, pa_P, pa_OUT);
     }
+
+  protected:
+    void setInitialValues() override;
 };

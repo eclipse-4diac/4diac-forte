@@ -67,6 +67,7 @@ FORTE_E_PERMIT::FORTE_E_PERMIT(const CStringDictionary::TStringId paInstanceName
 }
 
 void FORTE_E_PERMIT::setInitialValues() {
+  CBasicFB::setInitialValues();
   var_PERMIT = 0_BOOL;
 }
 

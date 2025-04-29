@@ -89,4 +89,7 @@ class FORTE_GET_STRUCT_VALUE : public CFunctionBlock {
     void operator()(const CIEC_ANY &pa_in_struct, const CIEC_STRING &pa_member, CIEC_BOOL &pa_QO, CIEC_ANY &pa_output) {
       evt_REQ(pa_in_struct, pa_member, pa_QO, pa_output);
     }
+
+  protected:
+    void setInitialValues() override;
 };

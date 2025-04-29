@@ -53,4 +53,7 @@ class FORTE_E_TimeOut final : public CEventSourceFB {
     CDataConnection *getDOConUnchecked(TPortId) override;
 
     EMGMResponse changeExecutionState(EMGMCommandType paCommand) override;
+
+  protected:
+    void setInitialValues() override;
 };

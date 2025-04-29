@@ -89,4 +89,7 @@ class FORTE_F_SEL : public CFunctionBlock {
     void operator()(const CIEC_BOOL &pa_G, const CIEC_ANY &pa_IN0, const CIEC_ANY &pa_IN1, CIEC_ANY &pa_OUT) {
       evt_REQ(pa_G, pa_IN0, pa_IN1, pa_OUT);
     }
+
+  protected:
+    void setInitialValues() override;
 };

@@ -84,4 +84,7 @@ class FORTE_F_DIVTIME : public CFunctionBlock {
     void operator()(const CIEC_TIME &pa_IN1, const CIEC_ANY_NUM &pa_IN2, CIEC_TIME &pa_OUT) {
       evt_REQ(pa_IN1, pa_IN2, pa_OUT);
     }
+
+  protected:
+    void setInitialValues() override;
 };

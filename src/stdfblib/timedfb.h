@@ -64,6 +64,9 @@ class CTimedFB : public CEventSourceFB {
     CDataConnection *getDOConUnchecked(TPortId) override;
 
     EMGMResponse changeExecutionState(EMGMCommandType paCommand) override;
+
+  protected:
+    void setInitialValues() override;
 };
 
 #endif /*TIMEDFB_H_*/

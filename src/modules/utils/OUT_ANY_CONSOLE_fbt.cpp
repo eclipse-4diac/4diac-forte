@@ -15,6 +15,7 @@
  *******************************************************************************/
 
 #include "OUT_ANY_CONSOLE_fbt.h"
+#include "forte_bool.h"
 
 USE_STRING_ID(ANY);
 USE_STRING_ID(BOOL);
@@ -27,7 +28,6 @@ USE_STRING_ID(QI);
 USE_STRING_ID(QO);
 USE_STRING_ID(REQ);
 USE_STRING_ID(STRING);
-
 
 DEFINE_FIRMWARE_FB(FORTE_OUT_ANY_CONSOLE, STRID(OUT_ANY_CONSOLE))
 
@@ -74,10 +74,10 @@ const SFBInterfaceSpec FORTE_OUT_ANY_CONSOLE::scmFBInterfaceSpec = {1,
 FORTE_OUT_ANY_CONSOLE::FORTE_OUT_ANY_CONSOLE(const CStringDictionary::TStringId paInstanceNameId,
                                              forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId),
-    var_QI(CIEC_BOOL(0)),
-    var_LABEL(CIEC_STRING("", 0)),
+    var_QI(false_BOOL),
+    var_LABEL(""_STRING),
     var_IN(CIEC_ANY_VARIANT()),
-    var_QO(CIEC_BOOL(0)),
+    var_QO(false_BOOL),
     conn_CNF(*this, 0),
     conn_QI(nullptr),
     conn_LABEL(nullptr),
@@ -159,4 +159,11 @@ CDataConnection *FORTE_OUT_ANY_CONSOLE::getDOConUnchecked(TPortId paIndex) {
     case 0: return &conn_QO;
   }
   return nullptr;
+}
+
+void FORTE_OUT_ANY_CONSOLE::setInitialValues() {
+  var_QI = false_BOOL;
+  var_LABEL = ""_STRING;
+  var_IN = CIEC_ANY_VARIANT();
+  var_QO = false_BOOL;
 }

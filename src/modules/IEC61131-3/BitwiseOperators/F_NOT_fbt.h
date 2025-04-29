@@ -80,4 +80,7 @@ class FORTE_F_NOT : public CFunctionBlock {
     void operator()(const CIEC_ANY_BIT &pa_IN, CIEC_ANY_BIT &pa_OUT) {
       evt_REQ(pa_IN, pa_OUT);
     }
+
+  protected:
+    void setInitialValues() override;
 };

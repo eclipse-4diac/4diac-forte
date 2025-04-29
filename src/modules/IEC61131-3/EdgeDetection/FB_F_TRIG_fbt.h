@@ -86,4 +86,7 @@ class FORTE_FB_F_TRIG : public CSimpleFB {
     void operator()(const CIEC_BOOL &pa_CLK, CIEC_BOOL &pa_Q) {
       evt_REQ(pa_CLK, pa_Q);
     }
+
+  protected:
+    void setInitialValues() override;
 };

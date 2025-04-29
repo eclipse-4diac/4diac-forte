@@ -14,6 +14,14 @@
 
 #include "F_WSTRING_AS_BOOL_fbt.h"
 
+#include "core/datatypes/forte_bool.h"
+#include "core/datatypes/forte_wstring.h"
+#include "core/iec61131_functions.h"
+#include "core/datatypes/forte_array_common.h"
+#include "core/datatypes/forte_array.h"
+#include "core/datatypes/forte_array_fixed.h"
+#include "core/datatypes/forte_array_variable.h"
+
 USE_STRING_ID(BOOL);
 USE_STRING_ID(CNF);
 USE_STRING_ID(Event);
@@ -23,42 +31,26 @@ USE_STRING_ID(OUT);
 USE_STRING_ID(REQ);
 USE_STRING_ID(WSTRING);
 
-#include "forte_bool.h"
-#include "forte_wstring.h"
-#include "iec61131_functions.h"
-#include "forte_array_common.h"
-#include "forte_array.h"
-#include "forte_array_fixed.h"
-#include "forte_array_variable.h"
-
 DEFINE_FIRMWARE_FB(FORTE_F_WSTRING_AS_BOOL, STRID(F_WSTRING_AS_BOOL))
 
 const CStringDictionary::TStringId FORTE_F_WSTRING_AS_BOOL::scmDataInputNames[] = {STRID(IN)};
-
 const CStringDictionary::TStringId FORTE_F_WSTRING_AS_BOOL::scmDataInputTypeIds[] = {STRID(WSTRING)};
-
 const CStringDictionary::TStringId FORTE_F_WSTRING_AS_BOOL::scmDataOutputNames[] = {STRID(OUT)};
-
 const CStringDictionary::TStringId FORTE_F_WSTRING_AS_BOOL::scmDataOutputTypeIds[] = {STRID(BOOL)};
-
 const TDataIOID FORTE_F_WSTRING_AS_BOOL::scmEIWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_F_WSTRING_AS_BOOL::scmEIWithIndexes[] = {0};
 const CStringDictionary::TStringId FORTE_F_WSTRING_AS_BOOL::scmEventInputNames[] = {STRID(REQ)};
-const CStringDictionary::TStringId FORTE_F_WSTRING_AS_BOOL::scmEventInputTypeIds[] = {STRID(Event)};
-
 const TDataIOID FORTE_F_WSTRING_AS_BOOL::scmEOWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_F_WSTRING_AS_BOOL::scmEOWithIndexes[] = {0};
 const CStringDictionary::TStringId FORTE_F_WSTRING_AS_BOOL::scmEventOutputNames[] = {STRID(CNF)};
-const CStringDictionary::TStringId FORTE_F_WSTRING_AS_BOOL::scmEventOutputTypeIds[] = {STRID(Event)};
-
 const SFBInterfaceSpec FORTE_F_WSTRING_AS_BOOL::scmFBInterfaceSpec = {1,
                                                                       scmEventInputNames,
-                                                                      scmEventInputTypeIds,
+                                                                      nullptr,
                                                                       scmEIWith,
                                                                       scmEIWithIndexes,
                                                                       1,
                                                                       scmEventOutputNames,
-                                                                      scmEventOutputTypeIds,
+                                                                      nullptr,
                                                                       scmEOWith,
                                                                       scmEOWithIndexes,
                                                                       1,
@@ -72,30 +64,34 @@ const SFBInterfaceSpec FORTE_F_WSTRING_AS_BOOL::scmFBInterfaceSpec = {1,
                                                                       0,
                                                                       nullptr};
 
-FORTE_F_WSTRING_AS_BOOL::FORTE_F_WSTRING_AS_BOOL(CStringDictionary::TStringId paInstanceNameId,
+FORTE_F_WSTRING_AS_BOOL::FORTE_F_WSTRING_AS_BOOL(const CStringDictionary::TStringId paInstanceNameId,
                                                  forte::core::CFBContainer &paContainer) :
     CSimpleFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, nullptr),
-    var_IN(CIEC_WSTRING("")),
+    var_IN(u""_WSTRING),
     var_OUT(false_BOOL),
     conn_CNF(*this, 0),
     conn_IN(nullptr),
     conn_OUT(*this, 0, var_OUT) {
 }
 
-void FORTE_F_WSTRING_AS_BOOL::alg_REQ(void) {
-
-  var_OUT = func_WSTRING_AS_BOOL(var_IN);
+void FORTE_F_WSTRING_AS_BOOL::setInitialValues() {
+  var_IN = u""_WSTRING;
+  var_OUT = 0_BOOL;
 }
 
-void FORTE_F_WSTRING_AS_BOOL::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
+void FORTE_F_WSTRING_AS_BOOL::executeEvent(const TEventID paEIID, CEventChainExecutionThread *const paECET) {
   switch (paEIID) {
-    case scmEventREQID: alg_REQ(); break;
+    case scmEventREQID: enterStateREQ(paECET); break;
     default: break;
   }
+}
+
+void FORTE_F_WSTRING_AS_BOOL::enterStateREQ(CEventChainExecutionThread *const paECET) {
+  alg_REQ();
   sendOutputEvent(scmEventCNFID, paECET);
 }
 
-void FORTE_F_WSTRING_AS_BOOL::readInputData(TEventID paEIID) {
+void FORTE_F_WSTRING_AS_BOOL::readInputData(const TEventID paEIID) {
   switch (paEIID) {
     case scmEventREQID: {
       readData(0, var_IN, conn_IN);
@@ -105,7 +101,7 @@ void FORTE_F_WSTRING_AS_BOOL::readInputData(TEventID paEIID) {
   }
 }
 
-void FORTE_F_WSTRING_AS_BOOL::writeOutputData(TEventID paEIID) {
+void FORTE_F_WSTRING_AS_BOOL::writeOutputData(const TEventID paEIID) {
   switch (paEIID) {
     case scmEventCNFID: {
       writeData(scmFBInterfaceSpec.mNumDIs + 0, var_OUT, conn_OUT);
@@ -115,35 +111,35 @@ void FORTE_F_WSTRING_AS_BOOL::writeOutputData(TEventID paEIID) {
   }
 }
 
-CIEC_ANY *FORTE_F_WSTRING_AS_BOOL::getDI(size_t paIndex) {
+CIEC_ANY *FORTE_F_WSTRING_AS_BOOL::getDI(const size_t paIndex) {
   switch (paIndex) {
     case 0: return &var_IN;
   }
   return nullptr;
 }
 
-CIEC_ANY *FORTE_F_WSTRING_AS_BOOL::getDO(size_t paIndex) {
+CIEC_ANY *FORTE_F_WSTRING_AS_BOOL::getDO(const size_t paIndex) {
   switch (paIndex) {
     case 0: return &var_OUT;
   }
   return nullptr;
 }
 
-CEventConnection *FORTE_F_WSTRING_AS_BOOL::getEOConUnchecked(TPortId paIndex) {
+CEventConnection *FORTE_F_WSTRING_AS_BOOL::getEOConUnchecked(const TPortId paIndex) {
   switch (paIndex) {
     case 0: return &conn_CNF;
   }
   return nullptr;
 }
 
-CDataConnection **FORTE_F_WSTRING_AS_BOOL::getDIConUnchecked(TPortId paIndex) {
+CDataConnection **FORTE_F_WSTRING_AS_BOOL::getDIConUnchecked(const TPortId paIndex) {
   switch (paIndex) {
     case 0: return &conn_IN;
   }
   return nullptr;
 }
 
-CDataConnection *FORTE_F_WSTRING_AS_BOOL::getDOConUnchecked(TPortId paIndex) {
+CDataConnection *FORTE_F_WSTRING_AS_BOOL::getDOConUnchecked(const TPortId paIndex) {
   switch (paIndex) {
     case 0: return &conn_OUT;
   }
@@ -152,4 +148,10 @@ CDataConnection *FORTE_F_WSTRING_AS_BOOL::getDOConUnchecked(TPortId paIndex) {
 
 CIEC_ANY *FORTE_F_WSTRING_AS_BOOL::getVarInternal(size_t) {
   return nullptr;
+}
+
+void FORTE_F_WSTRING_AS_BOOL::alg_REQ(void) {
+
+#line 2 "F_WSTRING_AS_BOOL.fbt"
+  var_OUT = func_WSTRING_AS_BOOL(var_IN);
 }

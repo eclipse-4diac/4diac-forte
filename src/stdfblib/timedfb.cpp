@@ -119,3 +119,7 @@ EMGMResponse CTimedFB::changeExecutionState(EMGMCommandType paCommand) {
   }
   return eRetVal;
 }
+
+void CTimedFB::setInitialValues() {
+  var_DT = 0_TIME;
+}

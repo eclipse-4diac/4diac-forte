@@ -15,6 +15,8 @@
  *******************************************************************************/
 #include <string.h>
 #include "basicfb.h"
+#include "funcbloc.h"
+#include "typelib.h"
 
 CBasicFB::CBasicFB(forte::core::CFBContainer &paContainer,
                    const SFBInterfaceSpec &paInterfaceSpec,
@@ -27,17 +29,7 @@ CBasicFB::CBasicFB(forte::core::CFBContainer &paContainer,
 
 void CBasicFB::setInitialValues() {
   CFunctionBlock::setInitialValues();
-  if (cmVarInternals) {
-    const CStringDictionary::TStringId *pnDataIds = cmVarInternals->mIntVarsDataTypeNames;
-    for (TPortId i = 0; i < cmVarInternals->mNumIntVars; ++i) {
-      TForteByte *varsData = nullptr;
-      CIEC_ANY *value = createDataPoint(pnDataIds, varsData);
-      if (value) {
-        getDI(i)->setValue(*value);
-      }
-      delete value;
-    }
-  }
+  mECCState = CIEC_STATE(0);
 }
 
 CIEC_ANY *CBasicFB::getVar(CStringDictionary::TStringId *paNameList, unsigned int paNameListSize) {

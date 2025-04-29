@@ -67,6 +67,7 @@ FORTE_E_RS::FORTE_E_RS(const CStringDictionary::TStringId paInstanceNameId, fort
 }
 
 void FORTE_E_RS::setInitialValues() {
+  CBasicFB::setInitialValues();
   var_Q = 0_BOOL;
 }
 

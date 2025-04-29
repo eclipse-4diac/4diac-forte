@@ -45,7 +45,7 @@ GEN_STRUCT_MUX::GEN_STRUCT_MUX(const CStringDictionary::TStringId paInstanceName
 }
 
 void GEN_STRUCT_MUX::setInitialValues() {
-  CFunctionBlock::setInitialValues();
+  CGenFunctionBlock::setInitialValues();
   copyStructValuesToInputs();
 }
 

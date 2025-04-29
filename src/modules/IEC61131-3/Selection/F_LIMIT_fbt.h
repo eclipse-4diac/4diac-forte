@@ -92,4 +92,7 @@ class FORTE_F_LIMIT : public CFunctionBlock {
                     CIEC_ANY_ELEMENTARY &pa_OUT) {
       evt_REQ(pa_MN, pa_IN, pa_MX, pa_OUT);
     }
+
+  protected:
+    void setInitialValues() override;
 };

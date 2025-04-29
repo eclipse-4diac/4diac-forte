@@ -29,7 +29,6 @@ USE_STRING_ID(SET_AT_INDEX);
 USE_STRING_ID(UINT);
 USE_STRING_ID(VALUE);
 
-
 DEFINE_FIRMWARE_FB(FORTE_SET_AT_INDEX, STRID(SET_AT_INDEX))
 
 const CStringDictionary::TStringId FORTE_SET_AT_INDEX::scmDataInputNames[] = {STRID(IN_ARRAY), STRID(INDEX),
@@ -76,9 +75,9 @@ FORTE_SET_AT_INDEX::FORTE_SET_AT_INDEX(const CStringDictionary::TStringId paInst
                                        forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId),
     var_IN_ARRAY(CIEC_ANY_VARIANT()),
-    var_INDEX(CIEC_UINT(0)),
+    var_INDEX(0_UINT),
     var_VALUE(CIEC_ANY_VARIANT()),
-    var_QO(CIEC_BOOL(0)),
+    var_QO(false_BOOL),
     var_OUT_ARRAY(CIEC_ANY_VARIANT()),
     conn_CNF(*this, 0),
     conn_IN_ARRAY(nullptr),
@@ -173,4 +172,12 @@ CDataConnection *FORTE_SET_AT_INDEX::getDOConUnchecked(TPortId paIndex) {
     case 1: return &conn_OUT_ARRAY;
   }
   return nullptr;
+}
+
+void FORTE_SET_AT_INDEX::setInitialValues() {
+  var_IN_ARRAY = CIEC_ANY_VARIANT();
+  var_INDEX = 0_UINT;
+  var_VALUE = CIEC_ANY_VARIANT();
+  var_QO = false_BOOL;
+  var_OUT_ARRAY = CIEC_ANY_VARIANT();
 }

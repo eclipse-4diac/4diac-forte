@@ -87,4 +87,7 @@ class FORTE_F_MUX_2 : public CFunctionBlock {
     void operator()(const CIEC_ANY_INT &pa_K, const CIEC_ANY &pa_IN1, const CIEC_ANY &pa_IN2, CIEC_ANY &pa_OUT) {
       evt_REQ(pa_K, pa_IN1, pa_IN2, pa_OUT);
     }
+
+  protected:
+    void setInitialValues() override;
 };

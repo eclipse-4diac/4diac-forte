@@ -95,4 +95,7 @@ class FORTE_SET_STRUCT_VALUE : public CFunctionBlock {
                     CIEC_ANY &pa_out_struct) {
       evt_REQ(pa_in_struct, pa_member, pa_element_value, pa_out_struct);
     }
+
+  protected:
+    void setInitialValues() override;
 };

@@ -75,6 +75,10 @@ BOOST_AUTO_TEST_CASE(FB_TO_STRING_BUFFER_SIZE_TEST_WITH_INRENAL_VAR) {
       void writeOutputData(TEventID) override {
       }
 
+      void setInitialValues() override {
+        CBasicFB::setInitialValues();
+      }
+
       CIEC_ANY *getDI(size_t) override {
         return nullptr;
       }

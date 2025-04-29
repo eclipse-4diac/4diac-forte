@@ -161,3 +161,9 @@ CIEC_ANY *FORTE_FB_R_TRIG::getVarInternal(size_t paIndex) {
   }
   return nullptr;
 }
+
+void FORTE_FB_R_TRIG::setInitialValues() {
+  var_MEM = true_BOOL;
+  var_CLK = false_BOOL;
+  var_Q = false_BOOL;
+}

@@ -113,4 +113,7 @@ class FORTE_FB_CTUD : public CSimpleFB {
                     CIEC_INT &pa_CV) {
       evt_REQ(pa_CU, pa_CD, pa_R, pa_LD, pa_PV, pa_QU, pa_QD, pa_CV);
     }
+
+  protected:
+    void setInitialValues() override;
 };

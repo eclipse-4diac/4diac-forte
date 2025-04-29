@@ -84,4 +84,7 @@ class FORTE_F_LE : public CFunctionBlock {
     void operator()(const CIEC_ANY_ELEMENTARY &pa_IN1, const CIEC_ANY_ELEMENTARY &pa_IN2, CIEC_BOOL &pa_OUT) {
       evt_REQ(pa_IN1, pa_IN2, pa_OUT);
     }
+
+  protected:
+    void setInitialValues() override;
 };

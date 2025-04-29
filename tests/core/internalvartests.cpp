@@ -62,6 +62,10 @@ class CInternalVarTestFB : public CBasicFB {
     void writeOutputData(TEventID) override {
     }
 
+    void setInitialValues() override {
+      CBasicFB::setInitialValues();
+    }
+
     CIEC_ANY *getDI(size_t) override {
       return nullptr;
     }

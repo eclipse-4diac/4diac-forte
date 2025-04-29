@@ -88,4 +88,7 @@ class FORTE_GET_AT_INDEX : public CFunctionBlock {
     void operator()(const CIEC_ANY &pa_IN_ARRAY, const CIEC_UINT &pa_INDEX, CIEC_BOOL &pa_QO, CIEC_ANY &pa_OUT) {
       evt_REQ(pa_IN_ARRAY, pa_INDEX, pa_QO, pa_OUT);
     }
+
+  protected:
+    void setInitialValues() override;
 };

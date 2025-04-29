@@ -92,4 +92,7 @@ class FORTE_FB_CTU_UDINT : public CSimpleFB {
         const CIEC_BOOL &pa_CU, const CIEC_BOOL &pa_R, const CIEC_UDINT &pa_PV, CIEC_BOOL &pa_Q, CIEC_UDINT &pa_CV) {
       evt_REQ(pa_CU, pa_R, pa_PV, pa_Q, pa_CV);
     }
+
+  protected:
+    void setInitialValues() override;
 };

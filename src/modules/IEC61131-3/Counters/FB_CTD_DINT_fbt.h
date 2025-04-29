@@ -92,4 +92,7 @@ class FORTE_FB_CTD_DINT : public CSimpleFB {
         const CIEC_BOOL &pa_CD, const CIEC_BOOL &pa_LD, const CIEC_DINT &pa_PV, CIEC_BOOL &pa_Q, CIEC_DINT &pa_CV) {
       evt_REQ(pa_CD, pa_LD, pa_PV, pa_Q, pa_CV);
     }
+
+  protected:
+    void setInitialValues() override;
 };

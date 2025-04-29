@@ -134,3 +134,8 @@ CDataConnection *FORTE_LocalizedText2LocalizedText::getDOConUnchecked(TPortId pa
   }
   return nullptr;
 }
+
+void FORTE_LocalizedText2LocalizedText::setInitialValues() {
+  var_IN = CIEC_LocalizedText();
+  var_OUT = CIEC_LocalizedText();
+}

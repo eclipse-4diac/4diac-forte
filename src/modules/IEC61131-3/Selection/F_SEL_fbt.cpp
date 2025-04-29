@@ -149,3 +149,10 @@ CDataConnection *FORTE_F_SEL::getDOConUnchecked(TPortId paIndex) {
   }
   return nullptr;
 }
+
+void FORTE_F_SEL::setInitialValues() {
+  var_G = CIEC_BOOL(0);
+  var_IN0 = CIEC_ANY_VARIANT();
+  var_IN1 = CIEC_ANY_VARIANT();
+  var_OUT = CIEC_ANY_VARIANT();
+}

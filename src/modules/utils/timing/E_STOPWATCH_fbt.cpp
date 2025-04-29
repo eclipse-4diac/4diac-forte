@@ -91,6 +91,7 @@ FORTE_E_STOPWATCH::FORTE_E_STOPWATCH(const CStringDictionary::TStringId paInstan
 }
 
 void FORTE_E_STOPWATCH::setInitialValues() {
+  CBasicFB::setInitialValues();
   var_startTime = 0_TIME;
   var_TD = 0_TIME;
 }

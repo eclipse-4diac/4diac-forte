@@ -72,6 +72,7 @@ FORTE_E_D_FF::FORTE_E_D_FF(const CStringDictionary::TStringId paInstanceNameId,
 }
 
 void FORTE_E_D_FF::setInitialValues() {
+  CBasicFB::setInitialValues();
   var_D = 0_BOOL;
   var_Q = 0_BOOL;
 }

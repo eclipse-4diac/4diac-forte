@@ -131,3 +131,8 @@ CDataConnection *FORTE_E_MERGE::getDOConUnchecked(TPortId) {
 CIEC_ANY *FORTE_E_MERGE::getVarInternal(size_t) {
   return nullptr;
 }
+
+void FORTE_E_MERGE::setInitialValues() {
+  CBasicFB::setInitialValues();
+  // no variables so nothing to do
+}

@@ -14,56 +14,57 @@
 
 #pragma once
 
-#include "simplefb.h"
-#include "forte_lreal.h"
-#include "forte_real.h"
-#include "iec61131_functions.h"
-#include "forte_array_common.h"
-#include "forte_array.h"
-#include "forte_array_fixed.h"
-#include "forte_array_variable.h"
+#include "core/simplefb.h"
+#include "core/datatypes/forte_lreal.h"
+#include "core/datatypes/forte_real.h"
+#include "core/iec61131_functions.h"
+#include "core/datatypes/forte_array_common.h"
+#include "core/datatypes/forte_array.h"
+#include "core/datatypes/forte_array_fixed.h"
+#include "core/datatypes/forte_array_variable.h"
 
-class FORTE_F_LREAL_TO_REAL : public CSimpleFB {
-    DECLARE_FIRMWARE_FB(FORTE_F_LREAL_TO_REAL)
+class FORTE_F_LREAL_TO_REAL final : public CSimpleFB {
+  DECLARE_FIRMWARE_FB(FORTE_F_LREAL_TO_REAL)
 
   private:
     static const CStringDictionary::TStringId scmDataInputNames[];
     static const CStringDictionary::TStringId scmDataInputTypeIds[];
-
     static const CStringDictionary::TStringId scmDataOutputNames[];
     static const CStringDictionary::TStringId scmDataOutputTypeIds[];
-
     static const TEventID scmEventREQID = 0;
-
     static const TDataIOID scmEIWith[];
     static const TForteInt16 scmEIWithIndexes[];
     static const CStringDictionary::TStringId scmEventInputNames[];
-    static const CStringDictionary::TStringId scmEventInputTypeIds[];
-
     static const TEventID scmEventCNFID = 0;
-
     static const TDataIOID scmEOWith[];
     static const TForteInt16 scmEOWithIndexes[];
     static const CStringDictionary::TStringId scmEventOutputNames[];
-    static const CStringDictionary::TStringId scmEventOutputTypeIds[];
 
     static const SFBInterfaceSpec scmFBInterfaceSpec;
+
     CIEC_ANY *getVarInternal(size_t) override;
+
     void alg_REQ(void);
+
+    void enterStateREQ(CEventChainExecutionThread *const paECET);
 
     void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
     void readInputData(TEventID paEIID) override;
     void writeOutputData(TEventID paEIID) override;
+    void setInitialValues() override;
 
   public:
     FORTE_F_LREAL_TO_REAL(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     CIEC_LREAL var_IN;
+
     CIEC_REAL var_OUT;
 
     CEventConnection conn_CNF;
+
     CDataConnection *conn_IN;
+
     COutDataConnection<CIEC_REAL> conn_OUT;
 
     CIEC_ANY *getDI(size_t) override;
@@ -72,13 +73,14 @@ class FORTE_F_LREAL_TO_REAL : public CSimpleFB {
     CDataConnection **getDIConUnchecked(TPortId) override;
     CDataConnection *getDOConUnchecked(TPortId) override;
 
-    void evt_REQ(const CIEC_LREAL &pa_IN, CIEC_REAL &pa_OUT) {
-      var_IN = pa_IN;
-      receiveInputEvent(scmEventREQID, nullptr);
-      pa_OUT = var_OUT;
+    void evt_REQ(const CIEC_LREAL &paIN, CIEC_REAL &paOUT) {
+      var_IN = paIN;
+      executeEvent(scmEventREQID, nullptr);
+      paOUT = var_OUT;
     }
 
-    void operator()(const CIEC_LREAL &pa_IN, CIEC_REAL &pa_OUT) {
-      evt_REQ(pa_IN, pa_OUT);
+    void operator()(const CIEC_LREAL &paIN, CIEC_REAL &paOUT) {
+      evt_REQ(paIN, paOUT);
     }
 };
+

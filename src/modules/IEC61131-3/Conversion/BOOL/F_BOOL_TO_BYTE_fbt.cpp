@@ -14,6 +14,14 @@
 
 #include "F_BOOL_TO_BYTE_fbt.h"
 
+#include "core/datatypes/forte_bool.h"
+#include "core/datatypes/forte_byte.h"
+#include "core/iec61131_functions.h"
+#include "core/datatypes/forte_array_common.h"
+#include "core/datatypes/forte_array.h"
+#include "core/datatypes/forte_array_fixed.h"
+#include "core/datatypes/forte_array_variable.h"
+
 USE_STRING_ID(BOOL);
 USE_STRING_ID(BYTE);
 USE_STRING_ID(CNF);
@@ -23,42 +31,26 @@ USE_STRING_ID(IN);
 USE_STRING_ID(OUT);
 USE_STRING_ID(REQ);
 
-#include "forte_byte.h"
-#include "forte_bool.h"
-#include "iec61131_functions.h"
-#include "forte_array_common.h"
-#include "forte_array.h"
-#include "forte_array_fixed.h"
-#include "forte_array_variable.h"
-
 DEFINE_FIRMWARE_FB(FORTE_F_BOOL_TO_BYTE, STRID(F_BOOL_TO_BYTE))
 
 const CStringDictionary::TStringId FORTE_F_BOOL_TO_BYTE::scmDataInputNames[] = {STRID(IN)};
-
 const CStringDictionary::TStringId FORTE_F_BOOL_TO_BYTE::scmDataInputTypeIds[] = {STRID(BOOL)};
-
 const CStringDictionary::TStringId FORTE_F_BOOL_TO_BYTE::scmDataOutputNames[] = {STRID(OUT)};
-
 const CStringDictionary::TStringId FORTE_F_BOOL_TO_BYTE::scmDataOutputTypeIds[] = {STRID(BYTE)};
-
 const TDataIOID FORTE_F_BOOL_TO_BYTE::scmEIWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_F_BOOL_TO_BYTE::scmEIWithIndexes[] = {0};
 const CStringDictionary::TStringId FORTE_F_BOOL_TO_BYTE::scmEventInputNames[] = {STRID(REQ)};
-const CStringDictionary::TStringId FORTE_F_BOOL_TO_BYTE::scmEventInputTypeIds[] = {STRID(Event)};
-
 const TDataIOID FORTE_F_BOOL_TO_BYTE::scmEOWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_F_BOOL_TO_BYTE::scmEOWithIndexes[] = {0};
 const CStringDictionary::TStringId FORTE_F_BOOL_TO_BYTE::scmEventOutputNames[] = {STRID(CNF)};
-const CStringDictionary::TStringId FORTE_F_BOOL_TO_BYTE::scmEventOutputTypeIds[] = {STRID(Event)};
-
 const SFBInterfaceSpec FORTE_F_BOOL_TO_BYTE::scmFBInterfaceSpec = {1,
                                                                    scmEventInputNames,
-                                                                   scmEventInputTypeIds,
+                                                                   nullptr,
                                                                    scmEIWith,
                                                                    scmEIWithIndexes,
                                                                    1,
                                                                    scmEventOutputNames,
-                                                                   scmEventOutputTypeIds,
+                                                                   nullptr,
                                                                    scmEOWith,
                                                                    scmEOWithIndexes,
                                                                    1,
@@ -72,30 +64,34 @@ const SFBInterfaceSpec FORTE_F_BOOL_TO_BYTE::scmFBInterfaceSpec = {1,
                                                                    0,
                                                                    nullptr};
 
-FORTE_F_BOOL_TO_BYTE::FORTE_F_BOOL_TO_BYTE(CStringDictionary::TStringId paInstanceNameId,
+FORTE_F_BOOL_TO_BYTE::FORTE_F_BOOL_TO_BYTE(const CStringDictionary::TStringId paInstanceNameId,
                                            forte::core::CFBContainer &paContainer) :
     CSimpleFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, nullptr),
     var_IN(false_BOOL),
-    var_OUT(CIEC_BYTE(0)),
+    var_OUT(0_BYTE),
     conn_CNF(*this, 0),
     conn_IN(nullptr),
     conn_OUT(*this, 0, var_OUT) {
 }
 
-void FORTE_F_BOOL_TO_BYTE::alg_REQ(void) {
-
-  var_OUT = func_BOOL_TO_BYTE(var_IN);
+void FORTE_F_BOOL_TO_BYTE::setInitialValues() {
+  var_IN = 0_BOOL;
+  var_OUT = 0_BYTE;
 }
 
-void FORTE_F_BOOL_TO_BYTE::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
+void FORTE_F_BOOL_TO_BYTE::executeEvent(const TEventID paEIID, CEventChainExecutionThread *const paECET) {
   switch (paEIID) {
-    case scmEventREQID: alg_REQ(); break;
+    case scmEventREQID: enterStateREQ(paECET); break;
     default: break;
   }
+}
+
+void FORTE_F_BOOL_TO_BYTE::enterStateREQ(CEventChainExecutionThread *const paECET) {
+  alg_REQ();
   sendOutputEvent(scmEventCNFID, paECET);
 }
 
-void FORTE_F_BOOL_TO_BYTE::readInputData(TEventID paEIID) {
+void FORTE_F_BOOL_TO_BYTE::readInputData(const TEventID paEIID) {
   switch (paEIID) {
     case scmEventREQID: {
       readData(0, var_IN, conn_IN);
@@ -105,7 +101,7 @@ void FORTE_F_BOOL_TO_BYTE::readInputData(TEventID paEIID) {
   }
 }
 
-void FORTE_F_BOOL_TO_BYTE::writeOutputData(TEventID paEIID) {
+void FORTE_F_BOOL_TO_BYTE::writeOutputData(const TEventID paEIID) {
   switch (paEIID) {
     case scmEventCNFID: {
       writeData(scmFBInterfaceSpec.mNumDIs + 0, var_OUT, conn_OUT);
@@ -115,35 +111,35 @@ void FORTE_F_BOOL_TO_BYTE::writeOutputData(TEventID paEIID) {
   }
 }
 
-CIEC_ANY *FORTE_F_BOOL_TO_BYTE::getDI(size_t paIndex) {
+CIEC_ANY *FORTE_F_BOOL_TO_BYTE::getDI(const size_t paIndex) {
   switch (paIndex) {
     case 0: return &var_IN;
   }
   return nullptr;
 }
 
-CIEC_ANY *FORTE_F_BOOL_TO_BYTE::getDO(size_t paIndex) {
+CIEC_ANY *FORTE_F_BOOL_TO_BYTE::getDO(const size_t paIndex) {
   switch (paIndex) {
     case 0: return &var_OUT;
   }
   return nullptr;
 }
 
-CEventConnection *FORTE_F_BOOL_TO_BYTE::getEOConUnchecked(TPortId paIndex) {
+CEventConnection *FORTE_F_BOOL_TO_BYTE::getEOConUnchecked(const TPortId paIndex) {
   switch (paIndex) {
     case 0: return &conn_CNF;
   }
   return nullptr;
 }
 
-CDataConnection **FORTE_F_BOOL_TO_BYTE::getDIConUnchecked(TPortId paIndex) {
+CDataConnection **FORTE_F_BOOL_TO_BYTE::getDIConUnchecked(const TPortId paIndex) {
   switch (paIndex) {
     case 0: return &conn_IN;
   }
   return nullptr;
 }
 
-CDataConnection *FORTE_F_BOOL_TO_BYTE::getDOConUnchecked(TPortId paIndex) {
+CDataConnection *FORTE_F_BOOL_TO_BYTE::getDOConUnchecked(const TPortId paIndex) {
   switch (paIndex) {
     case 0: return &conn_OUT;
   }
@@ -152,4 +148,10 @@ CDataConnection *FORTE_F_BOOL_TO_BYTE::getDOConUnchecked(TPortId paIndex) {
 
 CIEC_ANY *FORTE_F_BOOL_TO_BYTE::getVarInternal(size_t) {
   return nullptr;
+}
+
+void FORTE_F_BOOL_TO_BYTE::alg_REQ(void) {
+
+#line 2 "F_BOOL_TO_BYTE.fbt"
+  var_OUT = func_BOOL_TO_BYTE(var_IN);
 }

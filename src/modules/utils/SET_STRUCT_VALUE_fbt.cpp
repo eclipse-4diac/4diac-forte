@@ -27,7 +27,6 @@ USE_STRING_ID(REQ);
 USE_STRING_ID(SET_STRUCT_VALUE);
 USE_STRING_ID(STRING);
 
-
 DEFINE_FIRMWARE_FB(FORTE_SET_STRUCT_VALUE, STRID(SET_STRUCT_VALUE))
 
 const CStringDictionary::TStringId FORTE_SET_STRUCT_VALUE::scmDataInputNames[] = {STRID(in_struct), STRID(member),
@@ -75,7 +74,7 @@ FORTE_SET_STRUCT_VALUE::FORTE_SET_STRUCT_VALUE(const CStringDictionary::TStringI
                                                forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId),
     var_in_struct(CIEC_ANY_VARIANT()),
-    var_member(CIEC_STRING("", 0)),
+    var_member(""_STRING),
     var_element_value(CIEC_ANY_VARIANT()),
     var_out_struct(CIEC_ANY_VARIANT()),
     conn_CNF(*this, 0),
@@ -189,4 +188,11 @@ CDataConnection *FORTE_SET_STRUCT_VALUE::getDOConUnchecked(TPortId paIndex) {
     case 0: return &conn_out_struct;
   }
   return nullptr;
+}
+
+void FORTE_SET_STRUCT_VALUE::setInitialValues() {
+  var_in_struct = CIEC_ANY_VARIANT();
+  var_member = ""_STRING;
+  var_element_value = CIEC_ANY_VARIANT();
+  var_out_struct = CIEC_ANY_VARIANT();
 }

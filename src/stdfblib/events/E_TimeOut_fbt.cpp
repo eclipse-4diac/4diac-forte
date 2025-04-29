@@ -103,3 +103,7 @@ EMGMResponse FORTE_E_TimeOut::changeExecutionState(EMGMCommandType paCommand) {
   }
   return eRetVal;
 }
+
+void FORTE_E_TimeOut::setInitialValues() {
+  // no data ports so nothing to do
+}

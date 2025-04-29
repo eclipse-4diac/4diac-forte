@@ -15,6 +15,7 @@
  *******************************************************************************/
 
 #include "F_SUB_TOD_TOD_fbt.h"
+#include "forte_time_of_day.h"
 
 USE_STRING_ID(CNF);
 USE_STRING_ID(Event);
@@ -25,7 +26,6 @@ USE_STRING_ID(OUT);
 USE_STRING_ID(REQ);
 USE_STRING_ID(TIME);
 USE_STRING_ID(TIME_OF_DAY);
-
 
 DEFINE_FIRMWARE_FB(FORTE_F_SUB_TOD_TOD, STRID(F_SUB_TOD_TOD))
 
@@ -145,4 +145,10 @@ CDataConnection *FORTE_F_SUB_TOD_TOD::getDOConUnchecked(TPortId paIndex) {
     case 0: return &conn_OUT;
   }
   return nullptr;
+}
+
+void FORTE_F_SUB_TOD_TOD::setInitialValues() {
+  var_IN1 = CIEC_TIME_OF_DAY();
+  var_IN2 = CIEC_TIME_OF_DAY();
+  var_OUT = CIEC_TIME();
 }

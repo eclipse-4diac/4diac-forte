@@ -15,6 +15,8 @@
  *******************************************************************************/
 
 #include "F_ADD_fbt.h"
+#include "forte_any_magnitude.h"
+#include "forte_any_magnitude_variant.h"
 
 USE_STRING_ID(ANY_MAGNITUDE);
 USE_STRING_ID(CNF);
@@ -24,7 +26,6 @@ USE_STRING_ID(IN1);
 USE_STRING_ID(IN2);
 USE_STRING_ID(OUT);
 USE_STRING_ID(REQ);
-
 
 DEFINE_FIRMWARE_FB(FORTE_F_ADD, STRID(F_ADD))
 
@@ -155,4 +156,10 @@ CDataConnection *FORTE_F_ADD::getDOConUnchecked(TPortId paIndex) {
     case 0: return &conn_OUT;
   }
   return nullptr;
+}
+
+void FORTE_F_ADD::setInitialValues() {
+  var_IN1 = CIEC_ANY_MAGNITUDE_VARIANT();
+  var_IN2 = CIEC_ANY_MAGNITUDE_VARIANT();
+  var_OUT = CIEC_ANY_MAGNITUDE_VARIANT();
 }

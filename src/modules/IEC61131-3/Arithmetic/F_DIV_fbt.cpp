@@ -25,7 +25,6 @@ USE_STRING_ID(IN2);
 USE_STRING_ID(OUT);
 USE_STRING_ID(REQ);
 
-
 DEFINE_FIRMWARE_FB(FORTE_F_DIV, STRID(F_DIV))
 
 const CStringDictionary::TStringId FORTE_F_DIV::scmDataInputNames[] = {STRID(IN1), STRID(IN2)};
@@ -154,4 +153,10 @@ CDataConnection *FORTE_F_DIV::getDOConUnchecked(TPortId paIndex) {
     case 0: return &conn_OUT;
   }
   return nullptr;
+}
+
+void FORTE_F_DIV::setInitialValues() {
+  var_IN1 = CIEC_ANY_NUM_VARIANT();
+  var_IN2 = CIEC_ANY_NUM_VARIANT();
+  var_OUT = CIEC_ANY_NUM_VARIANT();
 }

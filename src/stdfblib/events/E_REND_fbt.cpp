@@ -156,3 +156,8 @@ CDataConnection *FORTE_E_REND::getDOConUnchecked(TPortId) {
 CIEC_ANY *FORTE_E_REND::getVarInternal(size_t) {
   return nullptr;
 }
+
+void FORTE_E_REND::setInitialValues() {
+  CBasicFB::setInitialValues();
+  // no variables so nothing to do
+}

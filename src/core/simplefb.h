@@ -29,6 +29,9 @@ class CSimpleFB : public CBasicFB {
               const SInternalVarsInformation *paVarInternals) :
         CBasicFB(paContainer, paInterfaceSpec, paInstanceNameId, paVarInternals) {
     }
+
+  protected:
+    void setInitialValues() override = 0;
 };
 
 #endif /* SRC_CORE_SIMPLEFB_H_ */
