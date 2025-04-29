@@ -150,8 +150,4 @@ class CCompositeFB : public CFunctionBlock {
 #endif // FORTE_FMU
 };
 
-#define COMPOSITE_FUNCTION_BLOCK_CTOR(fbclass)                                                                         \
-  fbclass(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :               \
-      CCompositeFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, scmFBNData)
-
 #endif /*_CFB_H_*/

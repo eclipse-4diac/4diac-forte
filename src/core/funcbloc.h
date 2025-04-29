@@ -770,14 +770,6 @@ class CFunctionBlock : public forte::core::CFBContainer {
 #endif // FORTE_REPLAY_DEVICE
 };
 
-#define FUNCTION_BLOCK_CTOR(fbclass)                                                                                   \
-  fbclass(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :               \
-      CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId)
-
-#define FUNCTION_BLOCK_CTOR_WITH_BASE_CLASS(fbclass, fbBaseClass)                                                      \
-  fbclass(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :               \
-      fbBaseClass(paContainer, scmFBInterfaceSpec, paInstanceNameId)
-
 #ifdef OPTIONAL
 #undef OPTIONAL
 #endif

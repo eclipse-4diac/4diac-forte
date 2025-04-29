@@ -77,7 +77,9 @@ class FORTE_SET_LOCAL_ADS_ADDRESS final : public CFunctionBlock {
     void setInitialValues() override;
 
   public:
-    FUNCTION_BLOCK_CTOR(FORTE_SET_LOCAL_ADS_ADDRESS) {};
+    FORTE_SET_LOCAL_ADS_ADDRESS(const CStringDictionary::TStringId paInstanceNameId,
+                                forte::core::CFBContainer &paContainer) :
+        CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId) {};
     ~FORTE_SET_LOCAL_ADS_ADDRESS() override = default;
 
     FORTE_SET_LOCAL_ADS_ADDRESS(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);

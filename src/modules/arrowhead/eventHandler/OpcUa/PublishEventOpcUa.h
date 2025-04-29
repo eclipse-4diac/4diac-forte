@@ -44,7 +44,9 @@ class FORTE_PublishEventOpcUa : public CCompositeFB {
     static const SCFB_FBNData scmFBNData;
 
   public:
-    COMPOSITE_FUNCTION_BLOCK_CTOR(FORTE_PublishEventOpcUa) {};
+    FORTE_PublishEventOpcUa(const CStringDictionary::TStringId paInstanceNameId,
+                            forte::core::CFBContainer &paContainer) :
+        CCompositeFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, scmFBNData) {};
 
     ~FORTE_PublishEventOpcUa() override = default;
 };

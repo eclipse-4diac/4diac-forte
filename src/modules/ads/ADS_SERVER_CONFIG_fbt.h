@@ -85,7 +85,6 @@ class FORTE_ADS_SERVER_CONFIG final : public CFunctionBlock {
     void setInitialValues() override;
 
   public:
-    FUNCTION_BLOCK_CTOR(FORTE_ADS_SERVER_CONFIG) {};
     ~FORTE_ADS_SERVER_CONFIG() override = default;
 
     FORTE_ADS_SERVER_CONFIG(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);

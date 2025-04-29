@@ -123,8 +123,16 @@ class FORTE_EXECUTE_ACTION_CLIENT : public CEventSourceFB {
     void connectToActionServer();
 
   public:
-    EVENT_SOURCE_FUNCTION_BLOCK_CTOR(FORTE_EXECUTE_ACTION_CLIENT), m_Initiated(false), m_GoalActive(false),
-        m_ActionClient(0), mResultReady(false), nh(0), m_RosNamespace(""), m_RosMsgName("") {};
+    FORTE_EXECUTE_ACTION_CLIENT(const CStringDictionary::TStringId paInstanceNameId,
+                                forte::core::CFBContainer &paContainer) :
+        CEventSourceFB(paContainer, scmFBInterfaceSpec, paInstanceNameId),
+        m_Initiated(false),
+        m_GoalActive(false),
+        m_ActionClient(0),
+        mResultReady(false),
+        nh(0),
+        m_RosNamespace(""),
+        m_RosMsgName("") {};
 
     ~FORTE_EXECUTE_ACTION_CLIENT() override = default;
 };

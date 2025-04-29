@@ -89,9 +89,13 @@ class FORTE_TRIGGER_SERVICE_SERVER : public CEventSourceFB {
                          CEventChainExecutionThread *const paECET);
 
   public:
-    // cppcheck-suppress noConstructor
-    EVENT_SOURCE_FUNCTION_BLOCK_CTOR(FORTE_TRIGGER_SERVICE_SERVER), m_Initiated(false), m_RosNamespace(""),
-        m_RosMsgName(""), m_ResponseAvailable(false) {};
+    FORTE_TRIGGER_SERVICE_SERVER(const CStringDictionary::TStringId paInstanceNameId,
+                                 forte::core::CFBContainer &paContainer) :
+        CEventSourceFB(paContainer, scmFBInterfaceSpec, paInstanceNameId),
+        m_Initiated(false),
+        m_RosNamespace(""),
+        m_RosMsgName(""),
+        m_ResponseAvailable(false) {};
 
     ~FORTE_TRIGGER_SERVICE_SERVER() override = default;
 };

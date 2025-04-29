@@ -44,7 +44,9 @@ class FORTE_RequestOrchestrationOpcUa : public CCompositeFB {
     static const SCFB_FBNData scmFBNData;
 
   public:
-    COMPOSITE_FUNCTION_BLOCK_CTOR(FORTE_RequestOrchestrationOpcUa) {};
+    FORTE_RequestOrchestrationOpcUa(const CStringDictionary::TStringId paInstanceNameId,
+                                    forte::core::CFBContainer &paContainer) :
+        CCompositeFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, scmFBNData) {};
 
     ~FORTE_RequestOrchestrationOpcUa() override = default;
 };

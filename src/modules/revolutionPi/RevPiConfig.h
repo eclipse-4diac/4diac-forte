@@ -176,7 +176,8 @@ class RevPiConfig : public forte::core::io::IOConfigFBController {
     virtual void setInitialValues();
 
   public:
-    FUNCTION_BLOCK_CTOR_WITH_BASE_CLASS(RevPiConfig, forte::core::io::IOConfigFBController) {};
+    RevPiConfig(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+        forte::core::io::IOConfigFBController(paContainer, scm_stFBInterfaceSpec, paInstanceNameId) {};
 
     virtual ~RevPiConfig() {};
 

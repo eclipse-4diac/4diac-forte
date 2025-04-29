@@ -67,7 +67,8 @@ class FORTE_SET_VALUE : public CFunctionBlock {
     SINT32 write();
 
   public:
-    FUNCTION_BLOCK_CTOR(FORTE_SET_VALUE) {};
+    FORTE_SET_VALUE(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+        CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId) {};
 
     ~FORTE_SET_VALUE() override = default;
 };

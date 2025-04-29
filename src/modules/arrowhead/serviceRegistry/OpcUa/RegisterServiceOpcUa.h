@@ -44,7 +44,9 @@ class FORTE_RegisterServiceOpcUa : public CCompositeFB {
     static const SCFB_FBNData scmFBNData;
 
   public:
-    COMPOSITE_FUNCTION_BLOCK_CTOR(FORTE_RegisterServiceOpcUa) {};
+    FORTE_RegisterServiceOpcUa(const CStringDictionary::TStringId paInstanceNameId,
+                               forte::core::CFBContainer &paContainer) :
+        CCompositeFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, scmFBNData) {};
 
     ~FORTE_RegisterServiceOpcUa() override = default;
 };

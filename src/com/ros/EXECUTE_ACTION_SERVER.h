@@ -116,9 +116,15 @@ class FORTE_EXECUTE_ACTION_SERVER : public CEventSourceFB {
     void ActionExecuteCB(const ExecuteGoalConstPtr &pa_goal, CEventChainExecutionThread *const paECET);
 
   public:
-    // cppcheck-suppress noConstructor
-    EVENT_SOURCE_FUNCTION_BLOCK_CTOR(FORTE_EXECUTE_ACTION_SERVER), m_nh(0), m_RosNamespace(""), m_RosMsgName(""),
-        m_Initiated(false), m_ResultAvailable(false), m_ActionServer(0) {};
+    FORTE_EXECUTE_ACTION_SERVER(const CStringDictionary::TStringId paInstanceNameId,
+                                forte::core::CFBContainer &paContainer) :
+        CEventSourceFB(paContainer, scmFBInterfaceSpec, paInstanceNameId),
+        m_nh(0),
+        m_RosNamespace(""),
+        m_RosMsgName(""),
+        m_Initiated(false),
+        m_ResultAvailable(false),
+        m_ActionServer(0) {};
 
     ~FORTE_EXECUTE_ACTION_SERVER() override = default;
 };

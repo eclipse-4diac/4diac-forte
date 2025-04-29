@@ -23,11 +23,6 @@ namespace forte {
   namespace core {
     namespace io {
 
-#define FUNCTION_BLOCK_CTOR_FOR_IO_MULTI_SLAVE(fbclass, fbBaseClass, type)                                             \
-  fbclass(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :               \
-      fbBaseClass((const TForteUInt8 *const) &scmSlaveConfigurationIO, scmSlaveConfigurationIONum, type, paContainer,  \
-                  scmFBInterfaceSpec, paInstanceNameId)
-
       class IOConfigFBMultiSlave : public IOConfigFBBase {
         public:
           IOConfigFBMultiSlave(const TForteUInt8 *const paSlaveConfigurationIO,

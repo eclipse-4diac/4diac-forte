@@ -47,8 +47,4 @@ class CEventSourceFB : public CFunctionBlock {
     };
 };
 
-#define EVENT_SOURCE_FUNCTION_BLOCK_CTOR(fbclass)                                                                      \
-  fbclass(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :               \
-      CEventSourceFB(paContainer, scmFBInterfaceSpec, paInstanceNameId)
-
 #endif /*_ESFB_H_*/

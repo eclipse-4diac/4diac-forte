@@ -49,7 +49,9 @@ class FORTE_OrchestrationForm2OrchestrationForm : public CFunctionBlock {
     void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
   public:
-    FUNCTION_BLOCK_CTOR(FORTE_OrchestrationForm2OrchestrationForm) {};
+    FORTE_OrchestrationForm2OrchestrationForm(const CStringDictionary::TStringId paInstanceNameId,
+                                              forte::core::CFBContainer &paContainer) :
+        CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId) {};
 
     ~FORTE_OrchestrationForm2OrchestrationForm() override = default;
 };

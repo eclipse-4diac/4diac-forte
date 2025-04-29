@@ -61,7 +61,8 @@ class FORTE_GET_CHAN_INFO : public CFunctionBlock {
     SINT32 getChannelInfo();
 
   public:
-    FUNCTION_BLOCK_CTOR(FORTE_GET_CHAN_INFO) {};
+    FORTE_GET_CHAN_INFO(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+        CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId) {};
 
     ~FORTE_GET_CHAN_INFO() override = default;
 };

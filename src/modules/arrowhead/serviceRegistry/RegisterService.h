@@ -60,7 +60,8 @@ class FORTE_RegisterService : public CCompositeFB {
     static const SCFB_FBNData scmFBNData;
 
   public:
-    COMPOSITE_FUNCTION_BLOCK_CTOR(FORTE_RegisterService) {};
+    FORTE_RegisterService(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+        CCompositeFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, scmFBNData) {};
 
     ~FORTE_RegisterService() override = default;
 };
