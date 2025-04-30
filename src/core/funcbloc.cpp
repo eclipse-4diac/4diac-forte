@@ -39,10 +39,6 @@ CFunctionBlock::CFunctionBlock(forte::core::CFBContainer &paContainer,
                                CStringDictionary::TStringId paInstanceNameId) :
     CFBContainer(paInstanceNameId, paContainer),
     mInterfaceSpec(paInterfaceSpec),
-#ifdef FORTE_SUPPORT_MONITORING
-    mEOMonitorCount(nullptr),
-    mEIMonitorCount(nullptr),
-#endif
     mFBState(E_FBStates::Idle), // put the FB in the idle state to avoid a useless reset after creation
     mConnRefCount(0),
     mDeletable(true) {
@@ -548,21 +544,11 @@ CConnection::Wrapper CFunctionBlock::getOutputConnection(forte::core::TNameIdent
 #ifdef FORTE_SUPPORT_MONITORING
 void CFunctionBlock::setupEventMonitoringData() {
   freeEventMonitoringData();
-
-  if (0 != getFBInterfaceSpec().mNumEIs) {
-    mEIMonitorCount = new TForteUInt32[getFBInterfaceSpec().mNumEIs]{};
-  }
-
-  if (0 != getFBInterfaceSpec().mNumEOs) {
-    mEOMonitorCount = new TForteUInt32[getFBInterfaceSpec().mNumEOs]{};
-  }
+  mEventMonitorCount.resize(getFBInterfaceSpec().mNumEIs + getFBInterfaceSpec().mNumEOs);
 }
 
 void CFunctionBlock::freeEventMonitoringData() {
-  delete[] mEOMonitorCount;
-  mEOMonitorCount = nullptr;
-  delete[] mEIMonitorCount;
-  mEIMonitorCount = nullptr;
+  mEventMonitorCount.clear();
 }
 
 CFunctionBlock *CFunctionBlock::getFB(NameIterator &paNameListIt, NameIterator paNameListEnd) {
@@ -580,11 +566,11 @@ CFunctionBlock *CFunctionBlock::getFB(NameIterator &paNameListIt, NameIterator p
 }
 
 TForteUInt32 &CFunctionBlock::getEIMonitorData(TEventID paEIID) {
-  return mEIMonitorCount[paEIID];
+  return mEventMonitorCount[paEIID];
 }
 
 TForteUInt32 &CFunctionBlock::getEOMonitorData(TEventID paEOID) {
-  return mEOMonitorCount[paEOID];
+  return mEventMonitorCount[getFBInterfaceSpec().mNumEIs + paEOID];
 }
 
 #endif // FORTE_SUPPORT_MONITORING

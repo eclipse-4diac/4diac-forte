@@ -327,7 +327,7 @@ class CFunctionBlock : public forte::core::CFBContainer {
           readInputData(paEIID);
 #ifdef FORTE_SUPPORT_MONITORING
           // Count Event for monitoring
-          mEIMonitorCount[paEIID]++;
+          mEventMonitorCount[paEIID]++;
 #endif // FORTE_SUPPORT_MONITORING
         }
         executeEvent(paEIID, paExecEnv);
@@ -512,13 +512,15 @@ class CFunctionBlock : public forte::core::CFBContainer {
 #ifdef FORTE_TRACE_CTF
       traceOutputEvent(paEO, paECET);
 #endif // FORTE_TRACE_CTF
-      if (paEO < getFBInterfaceSpec().mNumEOs) {
+      size_t numEOs = getFBInterfaceSpec().mNumEOs;
+      if (paEO < numEOs) {
         writeOutputData(paEO);
         getEOConUnchecked(static_cast<TPortId>(paEO))->triggerEvent(paECET);
 
 #ifdef FORTE_SUPPORT_MONITORING
-        // Count Event for monitoring
-        mEOMonitorCount[paEO]++;
+        // Count Event for monitoring, use size and number of EOs for performance reason so that only one value has to
+        // be gathered from the interface spec
+        mEventMonitorCount[mEventMonitorCount.size() - numEOs + paEO]++;
 #endif // FORTE_SUPPORT_MONITORING
       }
     }
@@ -720,8 +722,8 @@ class CFunctionBlock : public forte::core::CFBContainer {
 
   private:
 #ifdef FORTE_SUPPORT_MONITORING
-    TForteUInt32 *mEOMonitorCount;
-    TForteUInt32 *mEIMonitorCount;
+    //! vector for storing the event counts for input and output events together, first inputs then outputs
+    std::vector<TForteUInt32> mEventMonitorCount;
 #endif
 
 #ifdef FORTE_TRACE_CTF
