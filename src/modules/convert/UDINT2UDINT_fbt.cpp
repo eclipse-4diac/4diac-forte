@@ -106,7 +106,7 @@ void FORTE_UDINT2UDINT::readInputData(TEventID paEIID) {
 void FORTE_UDINT2UDINT::writeOutputData(TEventID paEIID) {
   switch (paEIID) {
     case scmEventCNFID: {
-      writeData(0, var_OUT, conn_OUT);
+      writeData(scmFBInterfaceSpec.mNumDIs + 0, var_OUT, conn_OUT);
       break;
     }
     default: break;

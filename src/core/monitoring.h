@@ -1,5 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2015, 2018 fortiss GmbH, Johannes Kepler University
+ * Copyright (c) 2015, 2025 fortiss GmbH, Johannes Kepler University,
+
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -8,18 +9,17 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    Alois Zoitl
- *      - initial implementation and rework communication infrastructure
+ *   Alois Zoitl - initial implementation and rework communication infrastructure
+ *               - moved forced flag to FB
  *******************************************************************************/
 #ifndef MONITORING_H_
 #define MONITORING_H_
 
+#include "funcbloc.h"
 #include "mgmcmdstruct.h"
 #include "fortelist.h"
-#include "event.h"
 #include "conn.h"
 #include "stringdict.h"
-#include "../arch/timerha.h"
 #include "datatypes/forte_array.h"
 #include "datatypes/forte_struct.h"
 
@@ -41,14 +41,18 @@ namespace forte {
       private:
         class SDataWatchEntry {
           public:
-            SDataWatchEntry(CStringDictionary::TStringId paPortId, CIEC_ANY &paDataValue) :
+            SDataWatchEntry(CStringDictionary::TStringId paPortId,
+                            CIEC_ANY &paDataValue,
+                            TAbsDataPortNum paForceIndex) :
                 mPortId(paPortId),
+                mForceIndex(paForceIndex),
                 mDataValueRef(paDataValue),
                 mDataBuffer(paDataValue.clone(nullptr)) {
             }
 
             SDataWatchEntry(const SDataWatchEntry &paSrc) :
                 mPortId(paSrc.mPortId),
+                mForceIndex(paSrc.mForceIndex),
                 mDataValueRef(paSrc.mDataValueRef),
                 mDataBuffer(paSrc.mDataBuffer->clone(nullptr)) {
             }
@@ -57,9 +61,11 @@ namespace forte {
               delete mDataBuffer;
             }
 
-            CStringDictionary::TStringId mPortId;
-            CIEC_ANY &mDataValueRef; //!< reference to the data point to watch
+            const CStringDictionary::TStringId mPortId;
+            const TAbsDataPortNum mForceIndex;
+            const CIEC_ANY &mDataValueRef; //!< reference to the data point to watch
             CIEC_ANY *mDataBuffer; //!< buffer for copying the data from the data point reference
+            bool mForced; //!< indication if pin is forced
 
           public:
             SDataWatchEntry &operator=(const SDataWatchEntry &) = delete;

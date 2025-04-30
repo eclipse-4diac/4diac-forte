@@ -126,8 +126,8 @@ void FORTE_ADS_SERVER_CONFIG::executeEvent(const TEventID paEIID, CEventChainExe
 void FORTE_ADS_SERVER_CONFIG::writeOutputData(const TEventID paEIID) {
   switch (paEIID) {
     case scmEventINITOID: {
-      writeData(0, var_QO, conn_QO);
-      writeData(1, var_STATUS, conn_STATUS);
+      writeData(scmFBInterfaceSpec.mNumDIs + 0, var_QO, conn_QO);
+      writeData(scmFBInterfaceSpec.mNumDIs + 1, var_STATUS, conn_STATUS);
       break;
     }
     default: break;

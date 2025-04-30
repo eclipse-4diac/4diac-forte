@@ -129,16 +129,17 @@ void CCommFB::readInputData(TEventID paEI) {
 }
 
 void CCommFB::writeOutputData(TEventID paEO) {
+  size_t numDIs = getFBInterfaceSpec().mNumDIs;
   switch (paEO) {
     case scmEventINITOID: {
-      writeData(0, *mDOs[0], mDOConns[0]);
-      writeData(1, *mDOs[1], mDOConns[1]);
+      writeData(numDIs + 0, *mDOs[0], mDOConns[0]);
+      writeData(numDIs + 1, *mDOs[1], mDOConns[1]);
       break;
     }
     case scmReceiveNotificationEventID: {
       CCriticalRegion lock(getFBLock());
       for (TPortId i = 0; i < getFBInterfaceSpec().mNumDOs; ++i) {
-        writeData(i, *mDOs[i], mDOConns[i]);
+        writeData(numDIs + i, *mDOs[i], mDOConns[i]);
       }
       break;
     }

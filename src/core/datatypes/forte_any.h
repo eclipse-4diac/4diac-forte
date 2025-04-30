@@ -121,7 +121,7 @@ class CIEC_ANY {
       return oToCast;
     }
 
-    CIEC_ANY() : mForced(false) {
+    CIEC_ANY() {
       setLargestUInt(0);
     }
 
@@ -283,14 +283,6 @@ class CIEC_ANY {
     }
 
 #endif
-
-    bool isForced() const {
-      return mForced;
-    }
-
-    void setForced(bool paForced) {
-      mForced = paForced;
-    }
 
   protected:
     /*! \brief copy the union data
@@ -493,8 +485,6 @@ class CIEC_ANY {
     CIEC_ANY &operator=(const CIEC_ANY &paValue) = delete;
 
   private:
-    bool mForced;
-
     // Anonymous union holding the data value of our IEC data type
     union UAnyData {
         bool mBool;

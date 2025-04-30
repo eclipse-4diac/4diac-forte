@@ -59,7 +59,7 @@ void FORTE_GEN_RT_Bridge::readInputData(const TEventID paEIID) {
 void FORTE_GEN_RT_Bridge::writeOutputData(const TEventID paEIID) {
   if (paEIID == scmEventRDOID) {
     for (size_t i = 0; i < getFBInterfaceSpec().mNumDOs; i++) {
-      writeData(i, *getDO(i), *getDOConUnchecked(i));
+      writeData(getFBInterfaceSpec().mNumDIs + i, *getDO(i), *getDOConUnchecked(i));
     }
   }
 }

@@ -1,7 +1,7 @@
 
 /*******************************************************************************
- * Copyright (c) 2015, 2018, 2022 fortiss GmbH, Johannes Kepler University
- *  Primetals Technologies Austria GmbH
+ * Copyright (c) 2015, 2025 fortiss GmbH, Johannes Kepler University
+ *                          Primetals Technologies Austria GmbH
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -9,10 +9,8 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    Alois Zoitl
- *      - initial implementation and rework communication infrastructure
- *  Martin Melik Merkumians
- *    - adds functionality for W/CHAR
+ *   Alois Zoitl - initial implementation and rework communication infrastructure
+ *   Martin Melik Merkumians - adds functionality for W/CHAR
  *******************************************************************************/
 #include <forte_config.h>
 #include "monitoring.h"
@@ -20,6 +18,7 @@
 #include "device.h"
 #include "ecet.h"
 #include "core/util/string_utils.h"
+#include "../arch/timerha.h"
 
 using namespace std::string_literals;
 using namespace forte::core;
@@ -139,19 +138,21 @@ EMGMResponse CMonitoringHandler::readWatches(std::string &paResponse) {
 }
 
 EMGMResponse CMonitoringHandler::clearForce(forte::core::TNameIdentifier &paNameList) {
-  EMGMResponse eRetVal = EMGMResponse::NoSuchObject;
   CStringDictionary::TStringId portName = paNameList.back();
   paNameList.pop_back();
   CFunctionBlock *fB = getFB(paNameList);
 
-  if (nullptr != fB) {
-    CIEC_ANY *poDataVal = fB->getVar(&portName, 1);
-    if (nullptr != poDataVal) {
-      poDataVal->setForced(false);
-      eRetVal = EMGMResponse::Ready;
-    }
+  if (fB == nullptr) {
+    return EMGMResponse::NoSuchObject;
   }
-  return eRetVal;
+
+  auto absDataPortId = fB->getAbsDataPortNum(portName);
+  if (absDataPortId == INVALID_ABS_DATA_PORT_ID) {
+    return EMGMResponse::NoSuchObject;
+  }
+
+  fB->setForce(absDataPortId, false);
+  return EMGMResponse::Ready;
 }
 
 EMGMResponse CMonitoringHandler::triggerEvent(forte::core::TNameIdentifier &paNameList) {
@@ -229,7 +230,8 @@ void CMonitoringHandler::addDataWatch(SFBMonitoringEntry &paFBMonitoringEntry,
       return;
     }
   }
-  paFBMonitoringEntry.mWatchedDataPoints.pushBack(SDataWatchEntry(paPortId, paDataVal));
+  paFBMonitoringEntry.mWatchedDataPoints.pushBack(
+      SDataWatchEntry(paPortId, paDataVal, paFBMonitoringEntry.mFB->getAbsDataPortNum(paPortId)));
 }
 
 bool CMonitoringHandler::removeDataWatch(SFBMonitoringEntry &paFBMonitoringEntry,
@@ -335,7 +337,7 @@ void CMonitoringHandler::updateMonitringData() {
     for (TDataWatchList::Iterator itDataRunner = itRunner->mWatchedDataPoints.begin();
          itDataRunner != itRunner->mWatchedDataPoints.end(); ++itDataRunner) {
       itDataRunner->mDataBuffer->setValue(itDataRunner->mDataValueRef);
-      itDataRunner->mDataBuffer->setForced(itDataRunner->mDataValueRef.isForced());
+      itDataRunner->mForced = itRunner->mFB->getForce(itDataRunner->mForceIndex);
     }
     for (TEventWatchList::Iterator itEventRunner = itRunner->mWatchedEventPoints.begin();
          itEventRunner != itRunner->mWatchedEventPoints.end(); ++itEventRunner) {
@@ -368,7 +370,7 @@ void CMonitoringHandler::appendDataWatch(std::string &paResponse, SDataWatchEntr
     paResponse += acDataValue;
   }
   paResponse += "\" forced=\""s;
-  paResponse += (paDataWatchEntry.mDataBuffer->isForced()) ? "true"s : "false"s;
+  paResponse += (paDataWatchEntry.mForced) ? "true"s : "false"s;
   paResponse += "\"/></Port>"s;
   delete[] acDataValue;
 }

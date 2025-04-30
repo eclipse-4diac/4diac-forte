@@ -93,7 +93,7 @@ void FORTE_ATimeOut::writeOutputData(const TEventID paEIID) {
   if (isSocket()) {
     switch (paEIID) {
       case scmEventSTARTID: {
-        writeData(0, *mDOs[0], mDOConns[0]);
+        writeData(scmFBInterfaceSpecSocket.mNumDIs + 0, *mDOs[0], mDOConns[0]);
         break;
       }
       default: break;

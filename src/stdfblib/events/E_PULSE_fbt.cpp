@@ -121,7 +121,7 @@ void FORTE_E_PULSE::readInputData(const TEventID paEIID) {
 void FORTE_E_PULSE::writeOutputData(const TEventID paEIID) {
   switch (paEIID) {
     case scmEventCNFID: {
-      writeData(0, fb_E_SR->conn_Q.getValue(), conn_Q);
+      writeData(scmFBInterfaceSpec.mNumDIs + 0, fb_E_SR->conn_Q.getValue(), conn_Q);
       break;
     }
     default: break;

@@ -207,7 +207,7 @@ void FORTE_RT_E_DEMUX::readInputData(TEventID paEIID) {
 void FORTE_RT_E_DEMUX::writeOutputData(TEventID paEIID) {
   switch (paEIID) {
     case scmEventINITOID: {
-      writeData(0, var_QO, conn_QO);
+      writeData(scmFBInterfaceSpec.mNumDIs + 0, var_QO, conn_QO);
       break;
     }
     case scmEventEO0ID: {

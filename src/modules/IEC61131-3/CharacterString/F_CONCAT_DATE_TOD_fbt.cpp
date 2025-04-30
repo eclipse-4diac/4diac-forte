@@ -103,7 +103,7 @@ void FORTE_F_CONCAT_DATE_TOD::readInputData(TEventID paEIID) {
 void FORTE_F_CONCAT_DATE_TOD::writeOutputData(TEventID paEIID) {
   switch (paEIID) {
     case scmEventCNFID: {
-      writeData(0, var_OUT, conn_OUT);
+      writeData(scmFBInterfaceSpec.mNumDIs + 0, var_OUT, conn_OUT);
       break;
     }
     default: break;

@@ -133,7 +133,7 @@ void FORTE_E_TON::readInputData(const TEventID paEIID) {
 void FORTE_E_TON::writeOutputData(const TEventID paEIID) {
   switch (paEIID) {
     case scmEventCNFID: {
-      writeData(0, fb_E_RS->conn_Q.getValue(), conn_Q);
+      writeData(scmFBInterfaceSpec.mNumDIs + 0, fb_E_RS->conn_Q.getValue(), conn_Q);
       break;
     }
     default: break;

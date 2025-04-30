@@ -143,9 +143,9 @@ void FORTE_SET_LOCAL_ADS_ADDRESS::readInputData(const TEventID paEIID) {
 void FORTE_SET_LOCAL_ADS_ADDRESS::writeOutputData(const TEventID paEIID) {
   switch (paEIID) {
     case scmEventINITOID: {
-      writeData(0, var_QO, conn_QO);
-      writeData(1, var_STATUS, conn_STATUS);
-      writeData(2, var_LOCAL_ADS_ADDRESS, conn_LOCAL_ADS_ADDRESS);
+      writeData(scmFBInterfaceSpec.mNumDIs + 0, var_QO, conn_QO);
+      writeData(scmFBInterfaceSpec.mNumDIs + 1, var_STATUS, conn_STATUS);
+      writeData(scmFBInterfaceSpec.mNumDIs + 2, var_LOCAL_ADS_ADDRESS, conn_LOCAL_ADS_ADDRESS);
       break;
     }
     default: break;

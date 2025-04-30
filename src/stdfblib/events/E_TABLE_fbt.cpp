@@ -136,7 +136,7 @@ void FORTE_E_TABLE::readInputData(const TEventID paEIID) {
 void FORTE_E_TABLE::writeOutputData(const TEventID paEIID) {
   switch (paEIID) {
     case scmEventEOID: {
-      writeData(0, fb_E_TABLE_CTRL->conn_CV.getValue(), conn_CV);
+      writeData(scmFBInterfaceSpec.mNumDIs + 0, fb_E_TABLE_CTRL->conn_CV.getValue(), conn_CV);
       break;
     }
     default: break;

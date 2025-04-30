@@ -108,7 +108,7 @@ void FORTE_RT_E_MERGE::readInputData(TEventID paEIID) {
 void FORTE_RT_E_MERGE::writeOutputData(TEventID paEIID) {
   switch (paEIID) {
     case scmEventINITOID: {
-      writeData(0, var_QO, conn_QO);
+      writeData(scmFBInterfaceSpec.mNumDIs + 0, var_QO, conn_QO);
       break;
     }
     case scmEventEOID: {

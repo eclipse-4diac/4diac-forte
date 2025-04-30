@@ -108,8 +108,8 @@ void FORTE_signalprocessing__FIELDBUS_WORD_TO_PERCENT::readInputData(const TEven
 void FORTE_signalprocessing__FIELDBUS_WORD_TO_PERCENT::writeOutputData(const TEventID paEIID) {
   switch (paEIID) {
     case scmEventCNFID: {
-      writeData(0, var_, conn_);
-      writeData(1, var_WO, conn_WO);
+      writeData(scmFBInterfaceSpec.mNumDIs + 0, var_, conn_);
+      writeData(scmFBInterfaceSpec.mNumDIs + 1, var_WO, conn_WO);
       break;
     }
     default: break;

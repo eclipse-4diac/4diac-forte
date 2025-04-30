@@ -127,18 +127,18 @@ void FORTE_X20AT4222::readInputData(const TEventID paEIID) {
 void FORTE_X20AT4222::writeOutputData(const TEventID paEIID) {
   switch (paEIID) {
     case scmEventINITOID: {
-      writeData(0, var_QO, conn_QO);
-      writeData(1, var_CNIDO, conn_CNIDO);
-      writeData(2, var_STATUS, conn_STATUS);
+      writeData(scmFBInterfaceSpec.mNumDIs + 0, var_QO, conn_QO);
+      writeData(scmFBInterfaceSpec.mNumDIs + 1, var_CNIDO, conn_CNIDO);
+      writeData(scmFBInterfaceSpec.mNumDIs + 2, var_STATUS, conn_STATUS);
       break;
     }
     case scmEventCNFID: {
-      writeData(2, var_STATUS, conn_STATUS);
-      writeData(3, var_T01, conn_T01);
-      writeData(4, var_T02, conn_T02);
-      writeData(0, var_QO, conn_QO);
-      writeData(5, var_T03, conn_T03);
-      writeData(6, var_T04, conn_T04);
+      writeData(scmFBInterfaceSpec.mNumDIs + 2, var_STATUS, conn_STATUS);
+      writeData(scmFBInterfaceSpec.mNumDIs + 3, var_T01, conn_T01);
+      writeData(scmFBInterfaceSpec.mNumDIs + 4, var_T02, conn_T02);
+      writeData(scmFBInterfaceSpec.mNumDIs + 0, var_QO, conn_QO);
+      writeData(scmFBInterfaceSpec.mNumDIs + 5, var_T03, conn_T03);
+      writeData(scmFBInterfaceSpec.mNumDIs + 6, var_T04, conn_T04);
       break;
     }
     default: break;

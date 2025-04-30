@@ -155,7 +155,7 @@ void FORTE_FB_RANDOM::readInputData(const TEventID paEIID) {
 void FORTE_FB_RANDOM::writeOutputData(const TEventID paEIID) {
   switch (paEIID) {
     case scmEventCNFID: {
-      writeData(0, var_VAL, conn_VAL);
+      writeData(scmFBInterfaceSpec.mNumDIs + 0, var_VAL, conn_VAL);
       break;
     }
     default: break;

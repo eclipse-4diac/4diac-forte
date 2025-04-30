@@ -281,11 +281,9 @@ EMGMResponse CResource::writeValue(forte::core::TNameIdentifier &paNameList, con
       if ((paValue.length() > 0) && (static_cast<int>(paValue.length()) == var->fromString(paValue.c_str()))) {
         // if we cannot parse the full value the value is not valid
         if (paForce) {
-          var->setForced(true);
-          CDataConnection *con = fb->getDOConnection(portName);
-          if (nullptr != con) {
-            // if we have got a connection it was a DO mirror the forced value there
-            con->writeData(*var);
+          auto absDataPortId = fb->getAbsDataPortNum(portName);
+          if (absDataPortId != INVALID_ABS_DATA_PORT_ID) {
+            fb->setForce(absDataPortId, true);
           }
         } else {
           mInitialValues.emplace_back(*var, paValue);

@@ -100,8 +100,8 @@ void FORTE_SPLIT_WORD_INTO_BYTES::readInputData(const TEventID paEIID) {
 void FORTE_SPLIT_WORD_INTO_BYTES::writeOutputData(const TEventID paEIID) {
   switch (paEIID) {
     case scmEventCNFID: {
-      writeData(0, var_BYTE_00, conn_BYTE_00);
-      writeData(1, var_BYTE_01, conn_BYTE_01);
+      writeData(scmFBInterfaceSpec.mNumDIs + 0, var_BYTE_00, conn_BYTE_00);
+      writeData(scmFBInterfaceSpec.mNumDIs + 1, var_BYTE_01, conn_BYTE_01);
       break;
     }
     default: break;

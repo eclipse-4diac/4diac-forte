@@ -232,12 +232,12 @@ void FORTE_signalprocessing__DualHysteresis::readInputData(const TEventID paEIID
 void FORTE_signalprocessing__DualHysteresis::writeOutputData(const TEventID paEIID) {
   switch (paEIID) {
     case scmEventINITOID: {
-      writeData(0, var_QO, conn_QO);
+      writeData(scmFBInterfaceSpec.mNumDIs + 0, var_QO, conn_QO);
       break;
     }
     case scmEventCNFID: {
-      writeData(1, var_DO_UP, conn_DO_UP);
-      writeData(2, var_DO_DOWN, conn_DO_DOWN);
+      writeData(scmFBInterfaceSpec.mNumDIs + 1, var_DO_UP, conn_DO_UP);
+      writeData(scmFBInterfaceSpec.mNumDIs + 2, var_DO_DOWN, conn_DO_DOWN);
       break;
     }
     default: break;

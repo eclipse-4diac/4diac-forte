@@ -128,12 +128,12 @@ void FORTE_EBSlave2301::readInputData(const TEventID paEIID) {
 void FORTE_EBSlave2301::writeOutputData(const TEventID paEIID) {
   switch (paEIID) {
     case scmEventMAPOID: {
-      writeData(0, var_QO, conn_QO);
+      writeData(scmFBInterfaceSpec.mNumDIs + 0, var_QO, conn_QO);
       break;
     }
     case scmEventINDID: {
-      writeData(0, var_QO, conn_QO);
-      writeData(1, var_STATUS, conn_STATUS);
+      writeData(scmFBInterfaceSpec.mNumDIs + 0, var_QO, conn_QO);
+      writeData(scmFBInterfaceSpec.mNumDIs + 1, var_STATUS, conn_STATUS);
       break;
     }
     default: break;

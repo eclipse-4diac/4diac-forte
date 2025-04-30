@@ -126,8 +126,8 @@ void FORTE_SET_AT_INDEX::readInputData(TEventID paEIID) {
 void FORTE_SET_AT_INDEX::writeOutputData(TEventID paEIID) {
   switch (paEIID) {
     case scmEventCNFID: {
-      writeData(0, var_QO, conn_QO);
-      writeData(1, var_OUT_ARRAY, conn_OUT_ARRAY);
+      writeData(scmFBInterfaceSpec.mNumDIs + 0, var_QO, conn_QO);
+      writeData(scmFBInterfaceSpec.mNumDIs + 1, var_OUT_ARRAY, conn_OUT_ARRAY);
       break;
     }
     default: break;

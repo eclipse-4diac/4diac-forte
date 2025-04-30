@@ -101,8 +101,8 @@ void FORTE_SPLIT_DWORD_INTO_WORDS::readInputData(const TEventID paEIID) {
 void FORTE_SPLIT_DWORD_INTO_WORDS::writeOutputData(const TEventID paEIID) {
   switch (paEIID) {
     case scmEventCNFID: {
-      writeData(0, var_WORD_00, conn_WORD_00);
-      writeData(1, var_WORD_01, conn_WORD_01);
+      writeData(scmFBInterfaceSpec.mNumDIs + 0, var_WORD_00, conn_WORD_00);
+      writeData(scmFBInterfaceSpec.mNumDIs + 1, var_WORD_01, conn_WORD_01);
       break;
     }
     default: break;

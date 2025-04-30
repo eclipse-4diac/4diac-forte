@@ -110,7 +110,7 @@ void FORTE_F_SEL_E_2::writeOutputData(const TEventID paEIID) {
   switch (paEIID) {
     case scmEventCNFID: {
 
-      writeData(0, var_OUT, conn_OUT);
+      writeData(scmFBInterfaceSpec.mNumDIs + 0, var_OUT, conn_OUT);
       break;
     }
     default: break;

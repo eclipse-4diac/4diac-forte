@@ -99,8 +99,9 @@ void GEN_CSV_WRITER::readInputData(TEventID paEI) {
 }
 
 void GEN_CSV_WRITER::writeOutputData(TEventID) {
-  writeData(0, *mDOs[0], mDOConns[0]);
-  writeData(1, *mDOs[1], mDOConns[1]);
+  size_t numDIs = getFBInterfaceSpec().mNumDIs;
+  writeData(numDIs + 0, *mDOs[0], mDOConns[0]);
+  writeData(numDIs + 1, *mDOs[1], mDOConns[1]);
 }
 
 bool GEN_CSV_WRITER::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) {

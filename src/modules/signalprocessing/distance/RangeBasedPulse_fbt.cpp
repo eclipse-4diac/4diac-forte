@@ -132,7 +132,7 @@ void FORTE_signalprocessing__distance__RangeBasedPulse::readInputData(const TEve
 void FORTE_signalprocessing__distance__RangeBasedPulse::writeOutputData(const TEventID paEIID) {
   switch (paEIID) {
     case scmEventCNFID: {
-      writeData(0, var_Q, conn_Q);
+      writeData(scmFBInterfaceSpec.mNumDIs + 0, var_Q, conn_Q);
       break;
     }
     default: break;

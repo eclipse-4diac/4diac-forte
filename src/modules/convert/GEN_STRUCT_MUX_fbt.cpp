@@ -70,7 +70,7 @@ void GEN_STRUCT_MUX::readInputData(TEventID) {
 }
 
 void GEN_STRUCT_MUX::writeOutputData(TEventID) {
-  writeData(0, *mDOs[0], mDOConns[0]);
+  writeData(getFBInterfaceSpec().mNumDIs + 0, *mDOs[0], mDOConns[0]);
 }
 
 bool GEN_STRUCT_MUX::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) {

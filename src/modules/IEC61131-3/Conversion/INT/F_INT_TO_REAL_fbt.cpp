@@ -108,7 +108,7 @@ void FORTE_F_INT_TO_REAL::readInputData(TEventID paEIID) {
 void FORTE_F_INT_TO_REAL::writeOutputData(TEventID paEIID) {
   switch (paEIID) {
     case scmEventCNFID: {
-      writeData(0, var_OUT, conn_OUT);
+      writeData(scmFBInterfaceSpec.mNumDIs + 0, var_OUT, conn_OUT);
       break;
     }
     default: break;

@@ -89,7 +89,7 @@ void GPIOChipConfigFB::readInputData(const TEventID paEIID) {
 
 void GPIOChipConfigFB::writeOutputData(const TEventID paEIID) {
   for (auto i = 0; i < 2; i++) {
-    writeData(i, *mDOs[i], mDOConns[i]);
+    writeData(scmFBInterfaceSpec.mNumDIs + i, *mDOs[i], mDOConns[i]);
   }
 }
 

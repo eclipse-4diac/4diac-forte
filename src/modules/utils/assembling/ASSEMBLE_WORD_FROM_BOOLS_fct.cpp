@@ -164,7 +164,7 @@ void FORTE_ASSEMBLE_WORD_FROM_BOOLS::readInputData(const TEventID paEIID) {
 void FORTE_ASSEMBLE_WORD_FROM_BOOLS::writeOutputData(const TEventID paEIID) {
   switch (paEIID) {
     case scmEventCNFID: {
-      writeData(0, var_, conn_);
+      writeData(scmFBInterfaceSpec.mNumDIs + 0, var_, conn_);
       break;
     }
     default: break;

@@ -113,7 +113,7 @@ void FORTE_ASSEMBLE_BYTE_FROM_QUARTERS::readInputData(const TEventID paEIID) {
 void FORTE_ASSEMBLE_BYTE_FROM_QUARTERS::writeOutputData(const TEventID paEIID) {
   switch (paEIID) {
     case scmEventCNFID: {
-      writeData(0, var_, conn_);
+      writeData(scmFBInterfaceSpec.mNumDIs + 0, var_, conn_);
       break;
     }
     default: break;

@@ -20,6 +20,7 @@
  *******************************************************************************/
 #include "funcbloc.h"
 #include "dataconn.h"
+#include "datatype.h"
 #include "eventconn.h"
 
 USE_STRING_ID(ARRAY);
@@ -545,10 +546,12 @@ CConnection::Wrapper CFunctionBlock::getOutputConnection(forte::core::TNameIdent
 void CFunctionBlock::setupEventMonitoringData() {
   freeEventMonitoringData();
   mEventMonitorCount.resize(getFBInterfaceSpec().mNumEIs + getFBInterfaceSpec().mNumEOs);
+  mForces.resize(getFBInterfaceSpec().mNumDIs + getFBInterfaceSpec().mNumDOs + getFBInterfaceSpec().mNumDIOs);
 }
 
 void CFunctionBlock::freeEventMonitoringData() {
   mEventMonitorCount.clear();
+  mForces.clear();
 }
 
 CFunctionBlock *CFunctionBlock::getFB(NameIterator &paNameListIt, NameIterator paNameListEnd) {
@@ -571,6 +574,42 @@ TForteUInt32 &CFunctionBlock::getEIMonitorData(TEventID paEIID) {
 
 TForteUInt32 &CFunctionBlock::getEOMonitorData(TEventID paEOID) {
   return mEventMonitorCount[getFBInterfaceSpec().mNumEIs + paEOID];
+}
+
+TAbsDataPortNum CFunctionBlock::getAbsDataPortNum(CStringDictionary::TStringId paPortNameId) {
+  TPortId paPortId = getDIID(paPortNameId);
+  if (paPortId != cgInvalidPortId) {
+    return paPortId;
+  }
+
+  auto &interfaceSpec = getFBInterfaceSpec();
+  paPortId = getDOID(paPortNameId);
+  if (paPortId != cgInvalidPortId) {
+    return interfaceSpec.mNumDIs + paPortId;
+  }
+
+  paPortId = getDIOID(paPortNameId);
+  if (paPortId != cgInvalidPortId) {
+    return interfaceSpec.mNumDIs + interfaceSpec.mNumDOs + paPortId;
+  }
+
+  return INVALID_ABS_DATA_PORT_ID;
+}
+
+void CFunctionBlock::setForce(TAbsDataPortNum paAbsDataPortNum, bool paForceValue) {
+  mForces[paAbsDataPortNum] = paForceValue;
+
+  if (paForceValue) {
+    auto &interfaceSpec = getFBInterfaceSpec();
+
+    if ((interfaceSpec.mNumDIs <= paAbsDataPortNum) &&
+        (paAbsDataPortNum < interfaceSpec.mNumDIs + interfaceSpec.mNumDOs)) {
+      // it is a data output mirror the forced value there
+      TPortId doPortId = paAbsDataPortNum - interfaceSpec.mNumDIs;
+      CDataConnection *con = getDOConUnchecked(doPortId);
+      con->writeData(*getDO(doPortId));
+    }
+  }
 }
 
 #endif // FORTE_SUPPORT_MONITORING

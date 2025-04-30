@@ -143,7 +143,7 @@ void FORTE_E_BLINK::readInputData(const TEventID paEIID) {
 void FORTE_E_BLINK::writeOutputData(const TEventID paEIID) {
   switch (paEIID) {
     case scmEventCNFID: {
-      writeData(0, fb_E_TP->conn_Q.getValue(), conn_OUT);
+      writeData(scmFBInterfaceSpec.mNumDIs + 0, fb_E_TP->conn_Q.getValue(), conn_OUT);
       break;
     }
     default: break;

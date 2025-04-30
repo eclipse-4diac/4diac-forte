@@ -182,15 +182,15 @@ void FORTE_E_STOPWATCH::readInputData(TEventID) {
 void FORTE_E_STOPWATCH::writeOutputData(const TEventID paEIID) {
   switch (paEIID) {
     case scmEventEOID: {
-      writeData(0, var_TD, conn_TD);
+      writeData(scmFBInterfaceSpec.mNumDIs + 0, var_TD, conn_TD);
       break;
     }
     case scmEventETOID: {
-      writeData(0, var_TD, conn_TD);
+      writeData(scmFBInterfaceSpec.mNumDIs + 0, var_TD, conn_TD);
       break;
     }
     case scmEventRESETOID: {
-      writeData(0, var_TD, conn_TD);
+      writeData(scmFBInterfaceSpec.mNumDIs + 0, var_TD, conn_TD);
       break;
     }
     default: break;

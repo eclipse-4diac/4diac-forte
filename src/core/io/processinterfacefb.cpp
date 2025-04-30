@@ -74,15 +74,16 @@ void CProcessInterfaceFB::readInputData(const TEventID paEIID) {
 }
 
 void CProcessInterfaceFB::writeOutputData(const TEventID paEIID) {
+  size_t numDIs = getFBInterfaceSpec().mNumDIs;
   switch (paEIID) {
     case scmEventINITOID: {
-      writeData(0, var_QO, conn_QO);
-      writeData(1, var_STATUS, conn_STATUS);
+      writeData(numDIs + 0, var_QO, conn_QO);
+      writeData(numDIs + 1, var_STATUS, conn_STATUS);
       break;
     }
     case scmEventCNFID: {
-      writeData(0, var_QO, conn_QO);
-      writeData(1, var_STATUS, conn_STATUS);
+      writeData(numDIs + 0, var_QO, conn_QO);
+      writeData(numDIs + 1, var_STATUS, conn_STATUS);
       break;
     }
     default: break;

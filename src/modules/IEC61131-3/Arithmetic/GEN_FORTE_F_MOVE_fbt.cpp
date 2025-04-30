@@ -59,7 +59,7 @@ void GEN_FORTE_F_MOVE::readInputData(TEventID paEIID) {
 
 void GEN_FORTE_F_MOVE::writeOutputData(TEventID paEOID) {
   if (paEOID == scmEventCNFID) {
-    writeData(0, *mDOs[0], mDOConns[0]);
+    writeData(1 + 0, *mDOs[0], mDOConns[0]);
   }
 }
 

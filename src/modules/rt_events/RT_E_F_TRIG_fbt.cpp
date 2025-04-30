@@ -114,7 +114,7 @@ void FORTE_RT_E_F_TRIG::readInputData(TEventID paEIID) {
 void FORTE_RT_E_F_TRIG::writeOutputData(TEventID paEIID) {
   switch (paEIID) {
     case scmEventINITOID: {
-      writeData(0, var_QO, conn_QO);
+      writeData(scmFBInterfaceSpec.mNumDIs + 0, var_QO, conn_QO);
       break;
     }
     case scmEventEOID: {

@@ -103,7 +103,7 @@ void FORTE_RT_E_EC_COUPLER::readInputData(TEventID paEIID) {
 void FORTE_RT_E_EC_COUPLER::writeOutputData(TEventID paEIID) {
   switch (paEIID) {
     case scmEventINITOID: {
-      writeData(0, var_QO, conn_QO);
+      writeData(scmFBInterfaceSpec.mNumDIs + 0, var_QO, conn_QO);
       break;
     }
     case scmEventEOID: {

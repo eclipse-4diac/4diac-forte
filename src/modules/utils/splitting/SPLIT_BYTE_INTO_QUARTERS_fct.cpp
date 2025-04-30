@@ -109,10 +109,10 @@ void FORTE_SPLIT_BYTE_INTO_QUARTERS::readInputData(const TEventID paEIID) {
 void FORTE_SPLIT_BYTE_INTO_QUARTERS::writeOutputData(const TEventID paEIID) {
   switch (paEIID) {
     case scmEventCNFID: {
-      writeData(0, var_QUARTER_BYTE_00, conn_QUARTER_BYTE_00);
-      writeData(1, var_QUARTER_BYTE_01, conn_QUARTER_BYTE_01);
-      writeData(2, var_QUARTER_BYTE_02, conn_QUARTER_BYTE_02);
-      writeData(3, var_QUARTER_BYTE_03, conn_QUARTER_BYTE_03);
+      writeData(scmFBInterfaceSpec.mNumDIs + 0, var_QUARTER_BYTE_00, conn_QUARTER_BYTE_00);
+      writeData(scmFBInterfaceSpec.mNumDIs + 1, var_QUARTER_BYTE_01, conn_QUARTER_BYTE_01);
+      writeData(scmFBInterfaceSpec.mNumDIs + 2, var_QUARTER_BYTE_02, conn_QUARTER_BYTE_02);
+      writeData(scmFBInterfaceSpec.mNumDIs + 3, var_QUARTER_BYTE_03, conn_QUARTER_BYTE_03);
       break;
     }
     default: break;

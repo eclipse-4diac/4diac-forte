@@ -113,7 +113,7 @@ void FORTE_FB_F_TRIG::readInputData(TEventID paEIID) {
 void FORTE_FB_F_TRIG::writeOutputData(TEventID paEIID) {
   switch (paEIID) {
     case scmEventCNFID: {
-      writeData(0, var_Q, conn_Q);
+      writeData(scmFBInterfaceSpec.mNumDIs + 0, var_Q, conn_Q);
       break;
     }
     default: break;

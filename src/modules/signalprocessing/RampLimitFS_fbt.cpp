@@ -158,7 +158,7 @@ void FORTE_signalprocessing__RampLimitFS::readInputData(const TEventID paEIID) {
 void FORTE_signalprocessing__RampLimitFS::writeOutputData(const TEventID paEIID) {
   switch (paEIID) {
     case scmEventCNFID: {
-      writeData(0, var_OUT, conn_OUT);
+      writeData(scmFBInterfaceSpec.mNumDIs + 0, var_OUT, conn_OUT);
       break;
     }
     default: break;

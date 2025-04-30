@@ -165,14 +165,14 @@ void FORTE_X20DO9321::readInputData(const TEventID paEIID) {
 void FORTE_X20DO9321::writeOutputData(const TEventID paEIID) {
   switch (paEIID) {
     case scmEventINITOID: {
-      writeData(0, var_QO, conn_QO);
-      writeData(2, var_STATUS, conn_STATUS);
-      writeData(1, var_CNIDO, conn_CNIDO);
+      writeData(scmFBInterfaceSpec.mNumDIs + 0, var_QO, conn_QO);
+      writeData(scmFBInterfaceSpec.mNumDIs + 2, var_STATUS, conn_STATUS);
+      writeData(scmFBInterfaceSpec.mNumDIs + 1, var_CNIDO, conn_CNIDO);
       break;
     }
     case scmEventCNFID: {
-      writeData(2, var_STATUS, conn_STATUS);
-      writeData(0, var_QO, conn_QO);
+      writeData(scmFBInterfaceSpec.mNumDIs + 2, var_STATUS, conn_STATUS);
+      writeData(scmFBInterfaceSpec.mNumDIs + 0, var_QO, conn_QO);
       break;
     }
     default: break;

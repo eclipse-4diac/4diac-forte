@@ -135,20 +135,20 @@ void FORTE_IW::readInputData(const TEventID paEIID) {
 void FORTE_IW::writeOutputData(const TEventID paEIID) {
   switch (paEIID) {
     case scmEventINITOID: {
-      writeData(0, var_QO, conn_QO);
-      writeData(1, var_STATUS, conn_STATUS);
+      writeData(scmFBInterfaceSpec.mNumDIs + 0, var_QO, conn_QO);
+      writeData(scmFBInterfaceSpec.mNumDIs + 1, var_STATUS, conn_STATUS);
       break;
     }
     case scmEventCNFID: {
-      writeData(0, var_QO, conn_QO);
-      writeData(1, var_STATUS, conn_STATUS);
-      writeData(2, var_IN, conn_IN);
+      writeData(scmFBInterfaceSpec.mNumDIs + 0, var_QO, conn_QO);
+      writeData(scmFBInterfaceSpec.mNumDIs + 1, var_STATUS, conn_STATUS);
+      writeData(scmFBInterfaceSpec.mNumDIs + 2, var_IN, conn_IN);
       break;
     }
     case scmEventINDID: {
-      writeData(0, var_QO, conn_QO);
-      writeData(1, var_STATUS, conn_STATUS);
-      writeData(2, var_IN, conn_IN);
+      writeData(scmFBInterfaceSpec.mNumDIs + 0, var_QO, conn_QO);
+      writeData(scmFBInterfaceSpec.mNumDIs + 1, var_STATUS, conn_STATUS);
+      writeData(scmFBInterfaceSpec.mNumDIs + 2, var_IN, conn_IN);
       break;
     }
     default: break;

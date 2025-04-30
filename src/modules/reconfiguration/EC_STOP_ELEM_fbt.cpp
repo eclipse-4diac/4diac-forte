@@ -125,8 +125,8 @@ void FORTE_EC_STOP_ELEM::readInputData(TEventID paEIID) {
 void FORTE_EC_STOP_ELEM::writeOutputData(TEventID paEIID) {
   switch (paEIID) {
     case scmEventCNFID: {
-      writeData(1, var_STATUS, conn_STATUS);
-      writeData(0, var_QO, conn_QO);
+      writeData(scmFBInterfaceSpec.mNumDIs + 1, var_STATUS, conn_STATUS);
+      writeData(scmFBInterfaceSpec.mNumDIs + 0, var_QO, conn_QO);
       break;
     }
     default: break;

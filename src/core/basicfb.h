@@ -17,6 +17,7 @@
 #define _BASICFB_H_
 
 #include "funcbloc.h"
+#include "forte_state.h"
 
 /*!\ingroup CORE
  * \brief structure to hold the data needed for creating the internal vars

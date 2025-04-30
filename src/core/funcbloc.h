@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2024 ACIN, Profactor GmbH, nxtControl GmbH, fortiss GmbH,
+ * Copyright (c) 2005, 2025 ACIN, Profactor GmbH, nxtControl GmbH, fortiss GmbH,
  *                          Johannes Kepler University, Martin Erich Jobst,
  *                          Primetals Technologies Austria GmbH
  *
@@ -30,9 +30,7 @@
 #include "eventconn.h"
 #include "stringdict.h"
 #include "../arch/devlog.h"
-#include "iec61131_functions.h"
 #include "core/stringdict.h"
-#include "forte_state.h"
 #include "forte_st_iterator.h"
 #include "forte_st_util.h"
 
@@ -53,6 +51,11 @@ namespace forte {
 typedef CAdapter *TAdapterPtr;
 
 typedef TPortId TDataIOID; //!< \ingroup CORE Type for holding an data In- or output ID
+
+//! Datatype for indicating an absolut port num
+using TAbsDataPortNum = size_t;
+
+constexpr TAbsDataPortNum INVALID_ABS_DATA_PORT_ID = static_cast<TAbsDataPortNum>(-1);
 
 typedef CStringDictionary::TStringId TEventTypeID;
 
@@ -443,6 +446,15 @@ class CFunctionBlock : public forte::core::CFBContainer {
     TForteUInt32 &getEIMonitorData(TEventID paEIID);
 
     TForteUInt32 &getEOMonitorData(TEventID paEOID);
+
+    TAbsDataPortNum getAbsDataPortNum(CStringDictionary::TStringId paPortNameId);
+
+    void setForce(TAbsDataPortNum paAbsDataPortNum, bool paForceValue);
+
+    bool getForce(TAbsDataPortNum paAbsDataPortNum) {
+      return mForces[paAbsDataPortNum];
+    }
+
 #endif // FORTE_SUPPORT_MONITORING
 
     virtual int toString(char *paValue, size_t paBufferSize) const;
@@ -527,16 +539,16 @@ class CFunctionBlock : public forte::core::CFBContainer {
 
     /*!\brief Function to read data from an input connection into a variable of the FB.
      *
-     * \param paDINum Input index
+     * \param paAbsDataPortNum absolute data port index to be read
      * \param paValue Variable to read into.
      * \param paConn Connection to read from.
      */
-    void readData([[maybe_unused]] TPortId paDINum, CIEC_ANY &paValue, const CDataConnection *const paConn) {
+    void readData(TPortId paAbsDataPortNum, CIEC_ANY &paValue, const CDataConnection *const paConn) {
       if (!paConn) {
         return;
       }
 #ifdef FORTE_SUPPORT_MONITORING
-      if (!paValue.isForced()) {
+      if (!mForces[paAbsDataPortNum]) {
 #endif // FORTE_SUPPORT_MONITORING
         paConn->readData(paValue);
 #ifdef FORTE_SUPPORT_MONITORING
@@ -549,14 +561,14 @@ class CFunctionBlock : public forte::core::CFBContainer {
 
     /*!\brief Function to write data to an output connection from a variable of the FB.
      *
-     * \param paDONum Output index
+     * \param paAbsDataPortNum absolute data port index to be written
      * \param paValue Variable to write from.
      * \param paConn Connection to write into.
      */
     template<typename T, typename U>
-    void writeData([[maybe_unused]] TPortId paDONum, T &paValue, U &paConn) {
+    void writeData(TAbsDataPortNum paAbsDataPortNum, T &paValue, U &paConn) {
 #ifdef FORTE_SUPPORT_MONITORING
-      if (!paValue.isForced()) {
+      if (!mForces[paAbsDataPortNum]) {
 #endif // FORTE_SUPPORT_MONITORING
         paConn.writeData(paValue);
 #ifdef FORTE_SUPPORT_MONITORING
@@ -724,6 +736,8 @@ class CFunctionBlock : public forte::core::CFBContainer {
 #ifdef FORTE_SUPPORT_MONITORING
     //! vector for storing the event counts for input and output events together, first inputs then outputs
     std::vector<TForteUInt32> mEventMonitorCount;
+    //! vector of bools for determining force state of data inputs, data outputs, and var in outs in that order
+    std::vector<bool> mForces;
 #endif
 
 #ifdef FORTE_TRACE_CTF

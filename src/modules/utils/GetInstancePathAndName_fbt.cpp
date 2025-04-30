@@ -103,8 +103,8 @@ void FORTE_GetInstancePathAndName::readInputData(const TEventID paEIID) {
 void FORTE_GetInstancePathAndName::writeOutputData(const TEventID paEIID) {
   switch (paEIID) {
     case scmEventCNFID: {
-      writeData(0, var_Path, conn_Path);
-      writeData(1, var_Name, conn_Name);
+      writeData(scmFBInterfaceSpec.mNumDIs + 0, var_Path, conn_Path);
+      writeData(scmFBInterfaceSpec.mNumDIs + 1, var_Name, conn_Name);
       break;
     }
     default: break;

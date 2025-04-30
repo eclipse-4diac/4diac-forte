@@ -43,7 +43,7 @@ void CLuaAdapter::writeOutputData(TEventID paEO) {
     const TDataIOID *eiWithStart = &(getFBInterfaceSpec().mEOWith[getFBInterfaceSpec().mEOWithIndexes[paEO]]);
     for (size_t i = 0; eiWithStart[i] != scmWithListDelimiter; ++i) {
       TDataIOID doNum = eiWithStart[i];
-      writeData(doNum, *getDO(doNum), *getDOConUnchecked(doNum));
+      writeData(scmFBInterfaceSpec.mNumDIs + doNum, *getDO(doNum), *getDOConUnchecked(doNum));
     }
   }
 }

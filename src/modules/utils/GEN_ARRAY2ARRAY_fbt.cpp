@@ -59,7 +59,7 @@ void GEN_ARRAY2ARRAY::readInputData(TEventID) {
 }
 
 void GEN_ARRAY2ARRAY::writeOutputData(TEventID) {
-  writeData(0, *mDOs[0], mDOConns[0]);
+  writeData(1 + 0, *mDOs[0], mDOConns[0]);
 }
 
 bool GEN_ARRAY2ARRAY::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) {

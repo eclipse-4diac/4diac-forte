@@ -124,14 +124,14 @@ void FORTE_SPLIT_WORD_INTO_QUARTERS::readInputData(const TEventID paEIID) {
 void FORTE_SPLIT_WORD_INTO_QUARTERS::writeOutputData(const TEventID paEIID) {
   switch (paEIID) {
     case scmEventCNFID: {
-      writeData(0, var_QUARTER_BYTE_00, conn_QUARTER_BYTE_00);
-      writeData(1, var_QUARTER_BYTE_01, conn_QUARTER_BYTE_01);
-      writeData(2, var_QUARTER_BYTE_02, conn_QUARTER_BYTE_02);
-      writeData(3, var_QUARTER_BYTE_03, conn_QUARTER_BYTE_03);
-      writeData(4, var_QUARTER_BYTE_04, conn_QUARTER_BYTE_04);
-      writeData(5, var_QUARTER_BYTE_05, conn_QUARTER_BYTE_05);
-      writeData(6, var_QUARTER_BYTE_06, conn_QUARTER_BYTE_06);
-      writeData(7, var_QUARTER_BYTE_07, conn_QUARTER_BYTE_07);
+      writeData(scmFBInterfaceSpec.mNumDIs + 0, var_QUARTER_BYTE_00, conn_QUARTER_BYTE_00);
+      writeData(scmFBInterfaceSpec.mNumDIs + 1, var_QUARTER_BYTE_01, conn_QUARTER_BYTE_01);
+      writeData(scmFBInterfaceSpec.mNumDIs + 2, var_QUARTER_BYTE_02, conn_QUARTER_BYTE_02);
+      writeData(scmFBInterfaceSpec.mNumDIs + 3, var_QUARTER_BYTE_03, conn_QUARTER_BYTE_03);
+      writeData(scmFBInterfaceSpec.mNumDIs + 4, var_QUARTER_BYTE_04, conn_QUARTER_BYTE_04);
+      writeData(scmFBInterfaceSpec.mNumDIs + 5, var_QUARTER_BYTE_05, conn_QUARTER_BYTE_05);
+      writeData(scmFBInterfaceSpec.mNumDIs + 6, var_QUARTER_BYTE_06, conn_QUARTER_BYTE_06);
+      writeData(scmFBInterfaceSpec.mNumDIs + 7, var_QUARTER_BYTE_07, conn_QUARTER_BYTE_07);
       break;
     }
     default: break;

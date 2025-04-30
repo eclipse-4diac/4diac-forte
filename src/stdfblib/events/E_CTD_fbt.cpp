@@ -146,13 +146,13 @@ void FORTE_E_CTD::readInputData(const TEventID paEIID) {
 void FORTE_E_CTD::writeOutputData(const TEventID paEIID) {
   switch (paEIID) {
     case scmEventCDOID: {
-      writeData(0, var_Q, conn_Q);
-      writeData(1, var_CV, conn_CV);
+      writeData(scmFBInterfaceSpec.mNumDIs + 0, var_Q, conn_Q);
+      writeData(scmFBInterfaceSpec.mNumDIs + 1, var_CV, conn_CV);
       break;
     }
     case scmEventLDOID: {
-      writeData(0, var_Q, conn_Q);
-      writeData(1, var_CV, conn_CV);
+      writeData(scmFBInterfaceSpec.mNumDIs + 0, var_Q, conn_Q);
+      writeData(scmFBInterfaceSpec.mNumDIs + 1, var_CV, conn_CV);
       break;
     }
     default: break;

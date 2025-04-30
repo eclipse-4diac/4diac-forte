@@ -152,26 +152,26 @@ void FORTE_X20DI9371::readInputData(const TEventID paEIID) {
 void FORTE_X20DI9371::writeOutputData(const TEventID paEIID) {
   switch (paEIID) {
     case scmEventINITOID: {
-      writeData(0, var_QO, conn_QO);
-      writeData(2, var_STATUS, conn_STATUS);
-      writeData(1, var_CNIDO, conn_CNIDO);
+      writeData(scmFBInterfaceSpec.mNumDIs + 0, var_QO, conn_QO);
+      writeData(scmFBInterfaceSpec.mNumDIs + 2, var_STATUS, conn_STATUS);
+      writeData(scmFBInterfaceSpec.mNumDIs + 1, var_CNIDO, conn_CNIDO);
       break;
     }
     case scmEventCNFID: {
-      writeData(3, var_DI01, conn_DI01);
-      writeData(4, var_DI02, conn_DI02);
-      writeData(5, var_DI03, conn_DI03);
-      writeData(6, var_DI04, conn_DI04);
-      writeData(7, var_DI05, conn_DI05);
-      writeData(8, var_DI06, conn_DI06);
-      writeData(9, var_DI07, conn_DI07);
-      writeData(10, var_DI08, conn_DI08);
-      writeData(11, var_DI09, conn_DI09);
-      writeData(12, var_DI10, conn_DI10);
-      writeData(13, var_DI11, conn_DI11);
-      writeData(14, var_DI12, conn_DI12);
-      writeData(2, var_STATUS, conn_STATUS);
-      writeData(0, var_QO, conn_QO);
+      writeData(scmFBInterfaceSpec.mNumDIs + 3, var_DI01, conn_DI01);
+      writeData(scmFBInterfaceSpec.mNumDIs + 4, var_DI02, conn_DI02);
+      writeData(scmFBInterfaceSpec.mNumDIs + 5, var_DI03, conn_DI03);
+      writeData(scmFBInterfaceSpec.mNumDIs + 6, var_DI04, conn_DI04);
+      writeData(scmFBInterfaceSpec.mNumDIs + 7, var_DI05, conn_DI05);
+      writeData(scmFBInterfaceSpec.mNumDIs + 8, var_DI06, conn_DI06);
+      writeData(scmFBInterfaceSpec.mNumDIs + 9, var_DI07, conn_DI07);
+      writeData(scmFBInterfaceSpec.mNumDIs + 10, var_DI08, conn_DI08);
+      writeData(scmFBInterfaceSpec.mNumDIs + 11, var_DI09, conn_DI09);
+      writeData(scmFBInterfaceSpec.mNumDIs + 12, var_DI10, conn_DI10);
+      writeData(scmFBInterfaceSpec.mNumDIs + 13, var_DI11, conn_DI11);
+      writeData(scmFBInterfaceSpec.mNumDIs + 14, var_DI12, conn_DI12);
+      writeData(scmFBInterfaceSpec.mNumDIs + 2, var_STATUS, conn_STATUS);
+      writeData(scmFBInterfaceSpec.mNumDIs + 0, var_QO, conn_QO);
       break;
     }
     default: break;

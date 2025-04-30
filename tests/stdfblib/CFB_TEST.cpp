@@ -161,11 +161,11 @@ void FORTE_CFB_TEST::readInputData(const TEventID paEIID) {
 void FORTE_CFB_TEST::writeOutputData(const TEventID paEIID) {
   switch (paEIID) {
     case scmEventCNFID: {
-      writeData(0, fb_E_SR->conn_Q.getValue(), conn_QO);
+      writeData(scmFBInterfaceSpec.mNumDIs + 0, fb_E_SR->conn_Q.getValue(), conn_QO);
       break;
     }
     case scmEventCHANGEDID: {
-      writeData(0, fb_E_SR->conn_Q.getValue(), conn_QO);
+      writeData(scmFBInterfaceSpec.mNumDIs + 0, fb_E_SR->conn_Q.getValue(), conn_QO);
       break;
     }
     default: break;

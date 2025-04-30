@@ -43,7 +43,7 @@ void CGenBitBase::readInputData(TEventID) {
 }
 
 void CGenBitBase::writeOutputData(TEventID) {
-  writeData(0, *mDOs[0], mDOConns[0]);
+  writeData(getFBInterfaceSpec().mNumDIs + 0, *mDOs[0], mDOConns[0]);
 }
 
 bool CGenBitBase::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) {

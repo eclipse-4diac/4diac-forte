@@ -139,8 +139,8 @@ void FORTE_GET_STRUCT_VALUE::readInputData(TEventID paEIID) {
 void FORTE_GET_STRUCT_VALUE::writeOutputData(TEventID paEIID) {
   switch (paEIID) {
     case scmEventCNFID: {
-      writeData(0, var_QO, conn_QO);
-      writeData(1, var_output, conn_output);
+      writeData(scmFBInterfaceSpec.mNumDIs + 0, var_QO, conn_QO);
+      writeData(scmFBInterfaceSpec.mNumDIs + 1, var_output, conn_output);
       break;
     }
     default: break;

@@ -53,7 +53,7 @@ void GEN_STRUCT_DEMUX::readInputData(TEventID) {
 
 void GEN_STRUCT_DEMUX::writeOutputData(TEventID) {
   for (TPortId i = 0; i < getFBInterfaceSpec().mNumDOs; ++i) {
-    writeData(i, *mDOs[i], mDOConns[i]);
+    writeData(1 + i, *mDOs[i], mDOConns[i]);
   }
 }
 

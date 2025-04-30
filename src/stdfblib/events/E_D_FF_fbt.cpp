@@ -136,7 +136,7 @@ void FORTE_E_D_FF::readInputData(const TEventID paEIID) {
 void FORTE_E_D_FF::writeOutputData(const TEventID paEIID) {
   switch (paEIID) {
     case scmEventEOID: {
-      writeData(0, var_Q, conn_Q);
+      writeData(scmFBInterfaceSpec.mNumDIs + 0, var_Q, conn_Q);
       break;
     }
     default: break;

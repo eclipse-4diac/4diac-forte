@@ -108,7 +108,7 @@ void FORTE_F_LREAL_TO_SINT::readInputData(TEventID paEIID) {
 void FORTE_F_LREAL_TO_SINT::writeOutputData(TEventID paEIID) {
   switch (paEIID) {
     case scmEventCNFID: {
-      writeData(0, var_OUT, conn_OUT);
+      writeData(scmFBInterfaceSpec.mNumDIs + 0, var_OUT, conn_OUT);
       break;
     }
     default: break;

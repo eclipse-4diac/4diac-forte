@@ -156,7 +156,7 @@ void FORTE_RT_E_TRAIN::readInputData(TEventID paEIID) {
 void FORTE_RT_E_TRAIN::writeOutputData(TEventID paEIID) {
   switch (paEIID) {
     case scmEventEOID: {
-      writeData(0, fb_E_CTU->conn_CV.getValue(), conn_CV);
+      writeData(scmFBInterfaceSpec.mNumDIs + 0, fb_E_CTU->conn_CV.getValue(), conn_CV);
       break;
     }
     default: break;

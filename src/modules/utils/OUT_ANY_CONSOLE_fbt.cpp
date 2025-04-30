@@ -115,7 +115,7 @@ void FORTE_OUT_ANY_CONSOLE::readInputData(TEventID paEIID) {
 void FORTE_OUT_ANY_CONSOLE::writeOutputData(TEventID paEIID) {
   switch (paEIID) {
     case scmEventCNFID: {
-      writeData(0, var_QO, conn_QO);
+      writeData(scmFBInterfaceSpec.mNumDIs + 0, var_QO, conn_QO);
       break;
     }
     default: break;

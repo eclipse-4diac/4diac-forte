@@ -152,22 +152,22 @@ void FORTE_SPLIT_DWORD_INTO_QUARTERS::readInputData(const TEventID paEIID) {
 void FORTE_SPLIT_DWORD_INTO_QUARTERS::writeOutputData(const TEventID paEIID) {
   switch (paEIID) {
     case scmEventCNFID: {
-      writeData(0, var_QUARTER_BYTE_00, conn_QUARTER_BYTE_00);
-      writeData(1, var_QUARTER_BYTE_01, conn_QUARTER_BYTE_01);
-      writeData(2, var_QUARTER_BYTE_02, conn_QUARTER_BYTE_02);
-      writeData(3, var_QUARTER_BYTE_03, conn_QUARTER_BYTE_03);
-      writeData(4, var_QUARTER_BYTE_04, conn_QUARTER_BYTE_04);
-      writeData(5, var_QUARTER_BYTE_05, conn_QUARTER_BYTE_05);
-      writeData(6, var_QUARTER_BYTE_06, conn_QUARTER_BYTE_06);
-      writeData(7, var_QUARTER_BYTE_07, conn_QUARTER_BYTE_07);
-      writeData(8, var_QUARTER_BYTE_08, conn_QUARTER_BYTE_08);
-      writeData(9, var_QUARTER_BYTE_09, conn_QUARTER_BYTE_09);
-      writeData(10, var_QUARTER_BYTE_10, conn_QUARTER_BYTE_10);
-      writeData(11, var_QUARTER_BYTE_11, conn_QUARTER_BYTE_11);
-      writeData(12, var_QUARTER_BYTE_12, conn_QUARTER_BYTE_12);
-      writeData(13, var_QUARTER_BYTE_13, conn_QUARTER_BYTE_13);
-      writeData(14, var_QUARTER_BYTE_14, conn_QUARTER_BYTE_14);
-      writeData(15, var_QUARTER_BYTE_15, conn_QUARTER_BYTE_15);
+      writeData(scmFBInterfaceSpec.mNumDIs + 0, var_QUARTER_BYTE_00, conn_QUARTER_BYTE_00);
+      writeData(scmFBInterfaceSpec.mNumDIs + 1, var_QUARTER_BYTE_01, conn_QUARTER_BYTE_01);
+      writeData(scmFBInterfaceSpec.mNumDIs + 2, var_QUARTER_BYTE_02, conn_QUARTER_BYTE_02);
+      writeData(scmFBInterfaceSpec.mNumDIs + 3, var_QUARTER_BYTE_03, conn_QUARTER_BYTE_03);
+      writeData(scmFBInterfaceSpec.mNumDIs + 4, var_QUARTER_BYTE_04, conn_QUARTER_BYTE_04);
+      writeData(scmFBInterfaceSpec.mNumDIs + 5, var_QUARTER_BYTE_05, conn_QUARTER_BYTE_05);
+      writeData(scmFBInterfaceSpec.mNumDIs + 6, var_QUARTER_BYTE_06, conn_QUARTER_BYTE_06);
+      writeData(scmFBInterfaceSpec.mNumDIs + 7, var_QUARTER_BYTE_07, conn_QUARTER_BYTE_07);
+      writeData(scmFBInterfaceSpec.mNumDIs + 8, var_QUARTER_BYTE_08, conn_QUARTER_BYTE_08);
+      writeData(scmFBInterfaceSpec.mNumDIs + 9, var_QUARTER_BYTE_09, conn_QUARTER_BYTE_09);
+      writeData(scmFBInterfaceSpec.mNumDIs + 10, var_QUARTER_BYTE_10, conn_QUARTER_BYTE_10);
+      writeData(scmFBInterfaceSpec.mNumDIs + 11, var_QUARTER_BYTE_11, conn_QUARTER_BYTE_11);
+      writeData(scmFBInterfaceSpec.mNumDIs + 12, var_QUARTER_BYTE_12, conn_QUARTER_BYTE_12);
+      writeData(scmFBInterfaceSpec.mNumDIs + 13, var_QUARTER_BYTE_13, conn_QUARTER_BYTE_13);
+      writeData(scmFBInterfaceSpec.mNumDIs + 14, var_QUARTER_BYTE_14, conn_QUARTER_BYTE_14);
+      writeData(scmFBInterfaceSpec.mNumDIs + 15, var_QUARTER_BYTE_15, conn_QUARTER_BYTE_15);
       break;
     }
     default: break;

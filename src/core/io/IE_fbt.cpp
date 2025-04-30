@@ -88,8 +88,8 @@ void FORTE_IE::executeEvent(const TEventID paEIID, CEventChainExecutionThread *c
 
 void FORTE_IE::writeOutputData(const TEventID paEIID) {
   if (paEIID == scmEventINDID) {
-    writeData(0, var_QO, conn_QO);
-    writeData(1, var_STATUS, conn_STATUS);
+    writeData(scmFBInterfaceSpec.mNumDIs + 0, var_QO, conn_QO);
+    writeData(scmFBInterfaceSpec.mNumDIs + 1, var_STATUS, conn_STATUS);
   } else {
     CProcessInterfaceFB::writeOutputData(paEIID);
   }

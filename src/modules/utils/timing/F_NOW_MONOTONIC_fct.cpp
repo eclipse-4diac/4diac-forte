@@ -82,7 +82,7 @@ void FORTE_utils__timing__F_NOW_MONOTONIC::readInputData(TEventID) {
 void FORTE_utils__timing__F_NOW_MONOTONIC::writeOutputData(const TEventID paEIID) {
   switch (paEIID) {
     case scmEventCNFID: {
-      writeData(0, var_, conn_);
+      writeData(scmFBInterfaceSpec.mNumDIs + 0, var_, conn_);
       break;
     }
     default: break;

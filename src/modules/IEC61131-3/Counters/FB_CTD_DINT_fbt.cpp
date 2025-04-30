@@ -125,8 +125,8 @@ void FORTE_FB_CTD_DINT::readInputData(TEventID paEIID) {
 void FORTE_FB_CTD_DINT::writeOutputData(TEventID paEIID) {
   switch (paEIID) {
     case scmEventCNFID: {
-      writeData(0, var_Q, conn_Q);
-      writeData(1, var_CV, conn_CV);
+      writeData(scmFBInterfaceSpec.mNumDIs + 0, var_Q, conn_Q);
+      writeData(scmFBInterfaceSpec.mNumDIs + 1, var_CV, conn_CV);
       break;
     }
     default: break;

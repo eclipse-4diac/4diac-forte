@@ -123,10 +123,10 @@ void FORTE_PLCnextBusAdapter::writeOutputData(const TEventID paEIID) {
   if (isSocket()) {
     switch (paEIID) {
       case scmEventINITID: {
-        writeData(2, *mDOs[2], mDOConns[2]);
-        writeData(3, *mDOs[3], mDOConns[3]);
-        writeData(1, *mDOs[1], mDOConns[1]);
-        writeData(0, *mDOs[0], mDOConns[0]);
+        writeData(scmFBInterfaceSpec.mNumDIs + 2, *mDOs[2], mDOConns[2]);
+        writeData(scmFBInterfaceSpec.mNumDIs + 3, *mDOs[3], mDOConns[3]);
+        writeData(scmFBInterfaceSpec.mNumDIs + 1, *mDOs[1], mDOConns[1]);
+        writeData(scmFBInterfaceSpec.mNumDIs + 0, *mDOs[0], mDOConns[0]);
         break;
       }
       default: break;
@@ -134,7 +134,7 @@ void FORTE_PLCnextBusAdapter::writeOutputData(const TEventID paEIID) {
   } else {
     switch (paEIID) {
       case scmEventINITOID: {
-        writeData(0, *mDOs[0], mDOConns[0]);
+        writeData(scmFBInterfaceSpec.mNumDIs + 0, *mDOs[0], mDOConns[0]);
         break;
       }
       default: break;

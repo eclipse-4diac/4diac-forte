@@ -105,7 +105,7 @@ void FORTE_F_TIME_IN_US_TO_DINT::readInputData(const TEventID paEIID) {
 void FORTE_F_TIME_IN_US_TO_DINT::writeOutputData(const TEventID paEIID) {
   switch (paEIID) {
     case scmEventCNFID: {
-      writeData(0, var_OUT, conn_OUT);
+      writeData(scmFBInterfaceSpec.mNumDIs + 0, var_OUT, conn_OUT);
       break;
     }
     default: break;

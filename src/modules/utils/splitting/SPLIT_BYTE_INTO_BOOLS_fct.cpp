@@ -121,14 +121,14 @@ void FORTE_SPLIT_BYTE_INTO_BOOLS::readInputData(const TEventID paEIID) {
 void FORTE_SPLIT_BYTE_INTO_BOOLS::writeOutputData(const TEventID paEIID) {
   switch (paEIID) {
     case scmEventCNFID: {
-      writeData(0, var_BIT_00, conn_BIT_00);
-      writeData(1, var_BIT_01, conn_BIT_01);
-      writeData(2, var_BIT_02, conn_BIT_02);
-      writeData(3, var_BIT_03, conn_BIT_03);
-      writeData(4, var_BIT_04, conn_BIT_04);
-      writeData(5, var_BIT_05, conn_BIT_05);
-      writeData(6, var_BIT_06, conn_BIT_06);
-      writeData(7, var_BIT_07, conn_BIT_07);
+      writeData(scmFBInterfaceSpec.mNumDIs + 0, var_BIT_00, conn_BIT_00);
+      writeData(scmFBInterfaceSpec.mNumDIs + 1, var_BIT_01, conn_BIT_01);
+      writeData(scmFBInterfaceSpec.mNumDIs + 2, var_BIT_02, conn_BIT_02);
+      writeData(scmFBInterfaceSpec.mNumDIs + 3, var_BIT_03, conn_BIT_03);
+      writeData(scmFBInterfaceSpec.mNumDIs + 4, var_BIT_04, conn_BIT_04);
+      writeData(scmFBInterfaceSpec.mNumDIs + 5, var_BIT_05, conn_BIT_05);
+      writeData(scmFBInterfaceSpec.mNumDIs + 6, var_BIT_06, conn_BIT_06);
+      writeData(scmFBInterfaceSpec.mNumDIs + 7, var_BIT_07, conn_BIT_07);
       break;
     }
     default: break;

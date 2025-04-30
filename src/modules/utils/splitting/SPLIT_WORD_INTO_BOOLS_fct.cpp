@@ -148,22 +148,22 @@ void FORTE_SPLIT_WORD_INTO_BOOLS::readInputData(const TEventID paEIID) {
 void FORTE_SPLIT_WORD_INTO_BOOLS::writeOutputData(const TEventID paEIID) {
   switch (paEIID) {
     case scmEventCNFID: {
-      writeData(0, var_BIT_00, conn_BIT_00);
-      writeData(1, var_BIT_01, conn_BIT_01);
-      writeData(2, var_BIT_02, conn_BIT_02);
-      writeData(3, var_BIT_03, conn_BIT_03);
-      writeData(4, var_BIT_04, conn_BIT_04);
-      writeData(5, var_BIT_05, conn_BIT_05);
-      writeData(6, var_BIT_06, conn_BIT_06);
-      writeData(7, var_BIT_07, conn_BIT_07);
-      writeData(8, var_BIT_08, conn_BIT_08);
-      writeData(9, var_BIT_09, conn_BIT_09);
-      writeData(10, var_BIT_10, conn_BIT_10);
-      writeData(11, var_BIT_11, conn_BIT_11);
-      writeData(12, var_BIT_12, conn_BIT_12);
-      writeData(13, var_BIT_13, conn_BIT_13);
-      writeData(14, var_BIT_14, conn_BIT_14);
-      writeData(15, var_BIT_15, conn_BIT_15);
+      writeData(scmFBInterfaceSpec.mNumDIs + 0, var_BIT_00, conn_BIT_00);
+      writeData(scmFBInterfaceSpec.mNumDIs + 1, var_BIT_01, conn_BIT_01);
+      writeData(scmFBInterfaceSpec.mNumDIs + 2, var_BIT_02, conn_BIT_02);
+      writeData(scmFBInterfaceSpec.mNumDIs + 3, var_BIT_03, conn_BIT_03);
+      writeData(scmFBInterfaceSpec.mNumDIs + 4, var_BIT_04, conn_BIT_04);
+      writeData(scmFBInterfaceSpec.mNumDIs + 5, var_BIT_05, conn_BIT_05);
+      writeData(scmFBInterfaceSpec.mNumDIs + 6, var_BIT_06, conn_BIT_06);
+      writeData(scmFBInterfaceSpec.mNumDIs + 7, var_BIT_07, conn_BIT_07);
+      writeData(scmFBInterfaceSpec.mNumDIs + 8, var_BIT_08, conn_BIT_08);
+      writeData(scmFBInterfaceSpec.mNumDIs + 9, var_BIT_09, conn_BIT_09);
+      writeData(scmFBInterfaceSpec.mNumDIs + 10, var_BIT_10, conn_BIT_10);
+      writeData(scmFBInterfaceSpec.mNumDIs + 11, var_BIT_11, conn_BIT_11);
+      writeData(scmFBInterfaceSpec.mNumDIs + 12, var_BIT_12, conn_BIT_12);
+      writeData(scmFBInterfaceSpec.mNumDIs + 13, var_BIT_13, conn_BIT_13);
+      writeData(scmFBInterfaceSpec.mNumDIs + 14, var_BIT_14, conn_BIT_14);
+      writeData(scmFBInterfaceSpec.mNumDIs + 15, var_BIT_15, conn_BIT_15);
       break;
     }
     default: break;
