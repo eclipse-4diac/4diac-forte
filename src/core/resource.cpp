@@ -687,6 +687,6 @@ CConnection::Wrapper CResource::getOutputConnection(forte::core::TNameIdentifier
 }
 
 CConnection *CResource::getResIf2InConnection(CStringDictionary::TStringId paResInput) {
-  TPortId inPortId = getDIID(paResInput);
+  TPortId inPortId = getFBInterfaceSpec().getDIID(paResInput);
   return (inPortId != cgInvalidPortId) ? getResIf2InConnectionUnchecked(inPortId) : nullptr;
 }

@@ -25,7 +25,7 @@
 
 namespace {
   bool forwardGenericDI(CFunctionBlock &dstFB, const CStringDictionary::TStringId dstId, const CIEC_ANY &paRefValue) {
-    const TPortId dstDIPortId = dstFB.getDIID(dstId);
+    const TPortId dstDIPortId = dstFB.getFBInterfaceSpec().getDIID(dstId);
     if (dstDIPortId == cgInvalidPortId) {
       return false;
     }
@@ -34,7 +34,7 @@ namespace {
   }
 
   bool forwardGenericDIO(CFunctionBlock &dstFB, const CStringDictionary::TStringId dstId, const CIEC_ANY &paRefValue) {
-    const TPortId dstDIOPortId = dstFB.getDIOID(dstId);
+    const TPortId dstDIOPortId = dstFB.getFBInterfaceSpec().getDIOID(dstId);
     if (dstDIOPortId == cgInvalidPortId) {
       return false;
     }
@@ -43,7 +43,7 @@ namespace {
   }
 
   bool forwardGenericDO(CFunctionBlock &srcFB, const CStringDictionary::TStringId srcId, const CIEC_ANY &paRefValue) {
-    const TPortId dstDOPortId = srcFB.getDOID(srcId);
+    const TPortId dstDOPortId = srcFB.getFBInterfaceSpec().getDOID(srcId);
     if (dstDOPortId == cgInvalidPortId) {
       return false;
     }
@@ -186,8 +186,9 @@ void CCompositeFB::createEventConnections() {
     CFunctionBlock *dstFB = getFunctionBlock(currentConn->mDstFBNum);
 
     if ((nullptr != srcFB) && (nullptr != dstFB)) {
-      CEventConnection *evConn = (this == srcFB) ? mInterface2InternalEventCons[getEIID(currentConn->mSrcId)].get()
-                                                 : srcFB->getEOConnection(currentConn->mSrcId);
+      CEventConnection *evConn =
+          (this == srcFB) ? mInterface2InternalEventCons[getFBInterfaceSpec().getEIID(currentConn->mSrcId)].get()
+                          : srcFB->getEOConnection(currentConn->mSrcId);
       establishConnection(evConn, *dstFB, currentConn->mDstId);
     } else {
       // FIXME implement way to inform FB creator that creation failed
@@ -235,11 +236,11 @@ void CCompositeFB::createDataConnections() {
 
 CDataConnection *CCompositeFB::getDataConn(CFunctionBlock *paSrcFB, CStringDictionary::TStringId paSrcNameId) {
   if (this == paSrcFB) {
-    TPortId diId = getDIID(paSrcNameId);
+    TPortId diId = getFBInterfaceSpec().getDIID(paSrcNameId);
     if (diId != cgInvalidPortId) {
       return getIf2InConUnchecked(diId);
     } else {
-      TPortId dioId = getDIOID(paSrcNameId);
+      TPortId dioId = getFBInterfaceSpec().getDIOID(paSrcNameId);
       return getDIOOutConInternalUnchecked(dioId);
     }
   }

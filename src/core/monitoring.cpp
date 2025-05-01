@@ -66,12 +66,12 @@ EMGMResponse CMonitoringHandler::addWatch(forte::core::TNameIdentifier &paNameLi
       addDataWatch(fbMonitoringEntry, portName, *dataVal);
       eRetVal = EMGMResponse::Ready;
     } else {
-      TEventID eventId = fB->getEIID(portName);
+      TEventID eventId = fB->getFBInterfaceSpec().getEIID(portName);
       if (cgInvalidEventID != eventId) {
         addEventWatch(fbMonitoringEntry, portName, fB->getEIMonitorData(eventId));
         eRetVal = EMGMResponse::Ready;
       } else {
-        eventId = fB->getEOID(portName);
+        eventId = fB->getFBInterfaceSpec().getEOID(portName);
         if (cgInvalidEventID != eventId) {
           addEventWatch(fbMonitoringEntry, portName, fB->getEOMonitorData(eventId));
           eRetVal = EMGMResponse::Ready;
@@ -161,14 +161,14 @@ EMGMResponse CMonitoringHandler::triggerEvent(forte::core::TNameIdentifier &paNa
   paNameList.pop_back();
   CFunctionBlock *fB = getFB(paNameList);
   if (nullptr != fB) {
-    TEventID eventId = fB->getEIID(portName);
+    TEventID eventId = fB->getFBInterfaceSpec().getEIID(portName);
     if (cgInvalidEventID != eventId) {
       // only a single event can be triggered simultaneously (until it is executed by ecet!)
       // otherwise the triggerEvent structure needs to be moved to another place!
       mResource.getResourceEventExecution()->startEventChain(TEventEntry(*fB, eventId));
       eRetVal = EMGMResponse::Ready;
     } else {
-      eventId = fB->getEOID(portName);
+      eventId = fB->getFBInterfaceSpec().getEOID(portName);
       if (cgInvalidEventID != eventId) {
         fB->sendOutputEvent(eventId, mResource.getResourceEventExecution());
         mResource.getResourceEventExecution()->resumeSelfSuspend();
@@ -185,13 +185,13 @@ EMGMResponse CMonitoringHandler::resetEventCount(forte::core::TNameIdentifier &p
   paNameList.pop_back();
   CFunctionBlock *fB = getFB(paNameList);
   if (nullptr != fB) {
-    TEventID eventId = fB->getEIID(portName);
+    TEventID eventId = fB->getFBInterfaceSpec().getEIID(portName);
     TForteUInt32 *eventMonitorData = nullptr;
 
     if (cgInvalidEventID != eventId) {
       eventMonitorData = &fB->getEIMonitorData(eventId);
     } else {
-      eventId = fB->getEOID(portName);
+      eventId = fB->getFBInterfaceSpec().getEOID(portName);
       if (cgInvalidEventID != eventId) {
         eventMonitorData = &fB->getEOMonitorData(eventId);
       }

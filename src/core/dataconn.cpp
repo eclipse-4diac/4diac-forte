@@ -28,7 +28,7 @@ CDataConnection::CDataConnection(CFunctionBlock &paSrcFB, const TPortId paSrcPor
 EMGMResponse CDataConnection::connect(CFunctionBlock &paDstFB, CStringDictionary::TStringId paDstPortNameId) {
   EMGMResponse retVal = EMGMResponse::NoSuchObject;
 
-  const TPortId dstPortId = paDstFB.getDIID(paDstPortNameId);
+  const TPortId dstPortId = paDstFB.getFBInterfaceSpec().getDIID(paDstPortNameId);
   if (cgInvalidPortId != dstPortId) {
     CIEC_ANY *dstDataPoint = paDstFB.getDIFromPortId(dstPortId);
     retVal = CDataConnection::establishDataConnection(paDstFB, dstPortId, *dstDataPoint);
@@ -42,7 +42,7 @@ EMGMResponse CDataConnection::connect(CFunctionBlock &paDstFB, CStringDictionary
 EMGMResponse CDataConnection::connectToCFBInterface(CFunctionBlock &paDstFB,
                                                     CStringDictionary::TStringId paDstPortNameId) {
   EMGMResponse retVal = EMGMResponse::NoSuchObject;
-  TPortId nDOID = paDstFB.getDOID(paDstPortNameId);
+  TPortId nDOID = paDstFB.getFBInterfaceSpec().getDOID(paDstPortNameId);
 
   if (cgInvalidEventID != nDOID) {
     CIEC_ANY *dstDataPoint = paDstFB.getDataOutput(paDstPortNameId);
@@ -65,7 +65,7 @@ EMGMResponse CDataConnection::disconnect(CFunctionBlock &paDstFB, CStringDiction
     return EMGMResponse::NoSuchObject;
   }
 
-  const TPortId dstPortId = paDstFB.getDIID(paDstPortNameId);
+  const TPortId dstPortId = paDstFB.getFBInterfaceSpec().getDIID(paDstPortNameId);
   if (cgInvalidPortId == dstPortId) {
     return EMGMResponse::NoSuchObject;
   }

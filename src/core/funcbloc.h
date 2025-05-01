@@ -23,12 +23,11 @@
 #include <cstddef>
 #include <forte_config.h>
 #include "fbcontainer.h"
+#include "interfacespec.h"
 #include "mgmcmd.h"
-#include "event.h"
 #include "dataconn.h"
 #include "inoutdataconn.h"
 #include "eventconn.h"
-#include "stringdict.h"
 #include "../arch/devlog.h"
 #include "core/stringdict.h"
 #include "forte_st_iterator.h"
@@ -50,8 +49,6 @@ namespace forte {
 
 typedef CAdapter *TAdapterPtr;
 
-typedef TPortId TDataIOID; //!< \ingroup CORE Type for holding an data In- or output ID
-
 //! Datatype for indicating an absolut port num
 using TAbsDataPortNum = size_t;
 
@@ -59,60 +56,12 @@ constexpr TAbsDataPortNum INVALID_ABS_DATA_PORT_ID = static_cast<TAbsDataPortNum
 
 typedef CStringDictionary::TStringId TEventTypeID;
 
-/*!\ingroup CORE\brief Structure to hold all data of adapters instantiated in the function block.
- */
-struct SAdapterInstanceDef {
-    CStringDictionary::TStringId mAdapterTypeNameID; //!< Adapter type name
-    CStringDictionary::TStringId mAdapterNameID; //!< Adapter instance name
-    bool mIsPlug; //!< Flag for distinction of adapter nature (plug/socket)
-};
-
 /*!
  * \brief Instance and type name of to be created FBs. Used in CFBs FBNs and BFB/SFBs internal FBs
  */
 struct SCFB_FBInstanceData {
     CStringDictionary::TStringId mFBInstanceNameId;
     CStringDictionary::TStringId mFBTypeNameId;
-};
-
-/*!\ingroup CORE\brief Structure to hold all the data for specifying a function block interface.
- */
-struct SFBInterfaceSpec {
-    TEventID mNumEIs; //!< Number of event inputs
-    const CStringDictionary::TStringId *mEINames; //!< List of the event input names
-    const CStringDictionary::TStringId *mEITypeNames; //!< List of the event input types
-    const TDataIOID
-        *mEIWith; //!< Input WITH reference list. This list contains an array of input data ids. For each input event
-                  //!< the associated data inputs are listed. The start for each input event is specified in the
-                  //!< mEIWithIndexes field. The end is defined by the value scmWithListDelimiter.
-    const TForteInt16
-        *mEIWithIndexes; //!< Index list for each input event. This list gives for each input event an entry in the
-                         //!< mEIWith. Input events are numbered starting from 0. if the input event has no assciated
-                         //!< data inputs -1 is the entry at this event inputs postion.
-    TEventID mNumEOs; //!< Number of event outputs
-    const CStringDictionary::TStringId *mEONames; //!< List of the event output names
-    const CStringDictionary::TStringId *mEOTypeNames; //!< List of the event output types
-    const TDataIOID
-        *mEOWith; //!< Output WITH reference list. This list contains an array of output data ids. For each output event
-                  //!< the associated data outputs are listed. The start for each output event is specified in the
-                  //!< mEOWithIndexes field. The end is defined by the value scmWithListDelimiter.
-    const TForteInt16
-        *mEOWithIndexes; //!< Index list for each output event. This list gives for each output event an entry in the
-                         //!< mEOWith. Output events are numbered starting from 0. If the output event has no assciated
-                         //!< data outputs -1 is the entry at this event outputs postion. Additionally at the postion
-                         //!< mNumEOs in this list an index to an own list in the mEOWith list is stored specifying all
-                         //!< output data port that are not associated with any output event. That values will be
-                         //!< updated on every FB invocation.
-    TPortId mNumDIs; //!< Number of data inputs
-    const CStringDictionary::TStringId *mDINames; //!< List of the data input names
-    const CStringDictionary::TStringId *mDIDataTypeNames; //!< List of the data type names for the data inputs
-    TPortId mNumDOs; //!< Number of data outputs
-    const CStringDictionary::TStringId *mDONames; //!< List of the data output names
-    const CStringDictionary::TStringId *mDODataTypeNames; //!< List of the data type names for the data outputs
-    TPortId mNumDIOs; //!< Number of data inouts
-    const CStringDictionary::TStringId *mDIONames; //!< List of the data inout names
-    TPortId mNumAdapters; //!< Number of Adapters
-    const SAdapterInstanceDef *mAdapterInstanceDefinition; //!< List of adapter instances
 };
 
 /*!\ingroup CORE\brief Base class for all function blocks.
@@ -164,39 +113,11 @@ class CFunctionBlock : public forte::core::CFBContainer {
       return CStringDictionary::get(getFBTypeId());
     }
 
-    /*!\brief Get the ID of a specific event input of the FB.
-     *
-     * \param paEINameId   StringId to the event input name.
-     * \return The ID of the event input or cgInvalidEventID.
-     */
-    TEventID getEIID(CStringDictionary::TStringId paEINameId) const {
-      return static_cast<TEventID>(getPortId(paEINameId, getFBInterfaceSpec().mNumEIs, getFBInterfaceSpec().mEINames));
-    }
-
-    /*!\brief Get the ID of a specific event output of the FB.
-     *
-     * \param paEONameId string id to the event output name.
-     * \return The ID of the event output or cgInvalidEventID.
-     */
-    TEventID getEOID(CStringDictionary::TStringId paEONameId) const {
-      return static_cast<TEventID>(getPortId(paEONameId, getFBInterfaceSpec().mNumEOs, getFBInterfaceSpec().mEONames));
-    }
-
-    /*! \brief Gets the EventTypeID of a specific input event
-     * \param paEIID  StringId of the event name.
-     * \return Returns the EventTypeID of a specific input event
-     */
-    CStringDictionary::TStringId getEIType(TEventID paEIID) const;
-
-    /*! \brief Gets the EventTypeID of a specific output event
-     * \param paEOID  StringId of the event name.
-     * \return Returns the EventTypeID of a specific output event
-     */
-    CStringDictionary::TStringId getEOType(TEventID paEOID) const;
-
     CEventConnection *getEOConnection(CStringDictionary::TStringId paEONameId);
 
-    const CEventConnection *getEOConnection(CStringDictionary::TStringId paEONameId) const;
+    const CEventConnection *getEOConnection(CStringDictionary::TStringId paEONameId) const {
+      return const_cast<CFunctionBlock *>(this)->getEOConnection(paEONameId);
+    }
 
     /*!\brief Connects specific data input of a FB with a specific data connection.
      *
@@ -213,15 +134,6 @@ class CFunctionBlock : public forte::core::CFBContainer {
 
     virtual bool connectDIO(TPortId paDIPortId, CInOutDataConnection *paDataCon);
 
-    /*! \brief Gets the index of the mDINames array of a specific data output of a FB
-     *
-     * \param paDINameId  StringId of the data input name.
-     * \return Returns index of the Data Input Array of a FB
-     */
-    TPortId getDIID(CStringDictionary::TStringId paDINameId) const {
-      return getPortId(paDINameId, getFBInterfaceSpec().mNumDIs, getFBInterfaceSpec().mDINames);
-    }
-
     /*!\brief Get the pointer to a data input of the FB.
      *
      * \param paDINameId ID of the data input name.
@@ -233,22 +145,6 @@ class CFunctionBlock : public forte::core::CFBContainer {
      */
     CIEC_ANY *getDIFromPortId(TPortId paDIPortId);
 
-    /*! \brief Gets the index of the mDONames array of a specific data output of a FB
-     * \param paDONameId  StringId of the data input name.
-     * \return Returns index of the Data Output Array of a FB
-     */
-    TPortId getDOID(CStringDictionary::TStringId paDONameId) const {
-      return getPortId(paDONameId, getFBInterfaceSpec().mNumDOs, getFBInterfaceSpec().mDONames);
-    }
-
-    /*! \brief Gets the index of the mDONames array of a specific data output of a FB
-     * \param paDONameId  StringId of the data input name.
-     * \return Returns index of the Data Output Array of a FB
-     */
-    TPortId getDIOID(CStringDictionary::TStringId paDIONameId) const {
-      return getPortId(paDIONameId, getFBInterfaceSpec().mNumDIOs, getFBInterfaceSpec().mDIONames);
-    }
-
     /*!\brief get the pointer to a data output using the portId as identifier
      */
     CIEC_ANY *getDOFromPortId(TPortId paDOPortId);
@@ -257,19 +153,27 @@ class CFunctionBlock : public forte::core::CFBContainer {
 
     CDataConnection *getDIConnection(CStringDictionary::TStringId paDINameId);
 
-    const CDataConnection *getDIConnection(CStringDictionary::TStringId paDINameId) const;
+    const CDataConnection *getDIConnection(CStringDictionary::TStringId paDINameId) const {
+      return const_cast<CFunctionBlock *>(this)->getDIConnection(paDINameId);
+    }
 
     CDataConnection *getDOConnection(CStringDictionary::TStringId paDONameId);
 
-    const CDataConnection *getDOConnection(CStringDictionary::TStringId paDONameId) const;
+    const CDataConnection *getDOConnection(CStringDictionary::TStringId paDONameId) const {
+      return const_cast<CFunctionBlock *>(this)->getDOConnection(paDONameId);
+    }
 
     CInOutDataConnection *getDIOInConnection(CStringDictionary::TStringId paDIONameId);
 
-    const CInOutDataConnection *getDIOInConnection(CStringDictionary::TStringId paDIONameId) const;
+    const CInOutDataConnection *getDIOInConnection(CStringDictionary::TStringId paDIONameId) const {
+      return const_cast<CFunctionBlock *>(this)->getDIOInConnection(paDIONameId);
+    }
 
     CInOutDataConnection *getDIOOutConnection(CStringDictionary::TStringId paDIONameId);
 
-    const CInOutDataConnection *getDIOOutConnection(CStringDictionary::TStringId paDIONameId) const;
+    const CInOutDataConnection *getDIOOutConnection(CStringDictionary::TStringId paDIONameId) const {
+      return const_cast<CFunctionBlock *>(this)->getDIOOutConnection(paDIONameId);
+    }
 
     /*! \brief if the data input is of generic type (i.e, ANY) this function allows a data connection to configure
      * the DI with the specific type coming from the other end of the connection
@@ -506,10 +410,6 @@ class CFunctionBlock : public forte::core::CFBContainer {
     CFunctionBlock(forte::core::CFBContainer &paContainer,
                    const SFBInterfaceSpec &paInterfaceSpec,
                    CStringDictionary::TStringId paInstanceNameId);
-
-    static TPortId getPortId(CStringDictionary::TStringId paPortNameId,
-                             TPortId paMaxPortNames,
-                             const CStringDictionary::TStringId *paPortNames);
 
     /*!\brief Function to send an output event of the FB.
      *

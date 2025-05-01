@@ -1,6 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2005 - 2015 Profactor GmbH, ACIN, fortiss GmbH
- *               2023 Martin Erich Jobst
+ * Copyright (c) 2005, 2025 Profactor GmbH, ACIN, fortiss GmbH,
+ *                          Martin Erich Jobst, Johannes Kepler University Linz
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -17,6 +17,15 @@
 #include "basicfb.h"
 #include "funcbloc.h"
 #include "typelib.h"
+
+TPortId SInternalVarsInformation::getVarId(CStringDictionary::TStringId paInternalName) const {
+  for (TPortId i = 0; i < mNumIntVars; ++i) {
+    if (mIntVarsNames[i] == paInternalName) {
+      return i;
+    }
+  }
+  return cgInvalidPortId;
+}
 
 CBasicFB::CBasicFB(forte::core::CFBContainer &paContainer,
                    const SFBInterfaceSpec &paInterfaceSpec,
@@ -46,14 +55,13 @@ CIEC_ANY *CBasicFB::getVar(CStringDictionary::TStringId *paNameList, unsigned in
 }
 
 CIEC_ANY *CBasicFB::getInternalVar(CStringDictionary::TStringId paInternalName) {
-  CIEC_ANY *retVal = nullptr;
-  if (nullptr != cmVarInternals) {
-    TPortId unVarId = getPortId(paInternalName, cmVarInternals->mNumIntVars, cmVarInternals->mIntVarsNames);
-    if (cgInvalidPortId != unVarId) {
-      retVal = getVarInternal(unVarId);
+  if (cmVarInternals != nullptr) {
+    TPortId unVarId = cmVarInternals->getVarId(paInternalName);
+    if (unVarId != cgInvalidPortId) {
+      return getVarInternal(unVarId);
     }
   }
-  return retVal;
+  return nullptr;
 }
 
 int CBasicFB::toString(char *paValue, size_t paBufferSize) const {

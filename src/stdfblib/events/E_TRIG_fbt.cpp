@@ -139,12 +139,13 @@ void FORTE_E_TRIG::triggerEventsInResource(forte::core::CFBContainer *paContaine
 void FORTE_E_TRIG::triggerEventsOfType(TEventTypeID paEventTypeId,
                                        CFunctionBlock *paFb,
                                        CEventChainExecutionThread *const paECET) {
+  const SFBInterfaceSpec &interfaceSpec = paFb->getFBInterfaceSpec();
   // most of the FBs will only have the basic event type -> mEITypes == nullptr
-  if (paFb->getFBInterfaceSpec().mEITypeNames == nullptr) {
+  if (interfaceSpec.mEITypeNames == nullptr) {
     return;
   }
-  for (TEventID eventId = 0; eventId < paFb->getFBInterfaceSpec().mNumEIs; eventId++) {
-    if (paFb->getEIType(eventId) == paEventTypeId && !paFb->isInputEventConnected(eventId)) {
+  for (TEventID eventId = 0; eventId < interfaceSpec.mNumEIs; eventId++) {
+    if (interfaceSpec.getEIType(eventId) == paEventTypeId && !paFb->isInputEventConnected(eventId)) {
       paECET->addEventEntry(TEventEntry(*paFb, eventId));
     }
   }

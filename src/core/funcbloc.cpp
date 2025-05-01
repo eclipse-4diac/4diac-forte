@@ -23,16 +23,12 @@
 #include "datatype.h"
 #include "eventconn.h"
 
-USE_STRING_ID(Event);
-
 #include <stdlib.h>
 #include <string.h>
 #include "../arch/timerha.h"
 #include "adapter.h"
 #include "adapterconn.h"
 #include "device.h"
-
-#include "forte_array_dynamic.h"
 
 CFunctionBlock::CFunctionBlock(forte::core::CFBContainer &paContainer,
                                const SFBInterfaceSpec &paInterfaceSpec,
@@ -105,34 +101,11 @@ CTimerHandler &CFunctionBlock::getTimer() {
   return getDevice()->getTimer();
 }
 
-CStringDictionary::TStringId CFunctionBlock::getEIType(TEventID paEIID) const {
-  if (getFBInterfaceSpec().mEITypeNames != nullptr) {
-    return getFBInterfaceSpec().mEITypeNames[paEIID];
-  }
-  return STRID(Event);
-}
-
-CStringDictionary::TStringId CFunctionBlock::getEOType(TEventID paEOID) const {
-  if (getFBInterfaceSpec().mEOTypeNames != nullptr) {
-    return getFBInterfaceSpec().mEOTypeNames[paEOID];
-  }
-  return STRID(Event);
-}
-
 CEventConnection *CFunctionBlock::getEOConnection(CStringDictionary::TStringId paEONameId) {
   CEventConnection *retVal = nullptr;
-  TPortId portId = getPortId(paEONameId, getFBInterfaceSpec().mNumEOs, getFBInterfaceSpec().mEONames);
+  TPortId portId = getFBInterfaceSpec().getEOID(paEONameId);
   if (cgInvalidPortId != portId) {
     retVal = getEOConUnchecked(portId);
-  }
-  return retVal;
-}
-
-const CEventConnection *CFunctionBlock::getEOConnection(CStringDictionary::TStringId paEONameId) const {
-  const CEventConnection *retVal = nullptr;
-  TPortId portId = getPortId(paEONameId, getFBInterfaceSpec().mNumEOs, getFBInterfaceSpec().mEONames);
-  if (cgInvalidPortId != portId) {
-    retVal = const_cast<CFunctionBlock *>(this)->getEOConUnchecked(portId);
   }
   return retVal;
 }
@@ -193,75 +166,35 @@ bool CFunctionBlock::configureGenericDIO(TPortId paDIOPortId, const CIEC_ANY &pa
 }
 
 CDataConnection *CFunctionBlock::getDIConnection(CStringDictionary::TStringId paDINameId) {
-  CDataConnection *retVal = nullptr;
-  TPortId diPortID = getDIID(paDINameId);
-  if (cgInvalidPortId != diPortID) {
-    retVal = *getDIConUnchecked(diPortID);
+  TPortId diPortID = getFBInterfaceSpec().getDIID(paDINameId);
+  if (diPortID != cgInvalidPortId) {
+    return *getDIConUnchecked(diPortID);
   }
-  return retVal;
-}
-
-const CDataConnection *CFunctionBlock::getDIConnection(CStringDictionary::TStringId paDINameId) const {
-  const CDataConnection *retVal = nullptr;
-  TPortId diPortID = getDIID(paDINameId);
-  if (cgInvalidPortId != diPortID) {
-    retVal = *const_cast<CFunctionBlock *>(this)->getDIConUnchecked(diPortID);
-  }
-  return retVal;
+  return nullptr;
 }
 
 CDataConnection *CFunctionBlock::getDOConnection(CStringDictionary::TStringId paDONameId) {
-  CDataConnection *retVal = nullptr;
-  TPortId doPortID = getDOID(paDONameId);
-  if (cgInvalidPortId != doPortID) {
-    retVal = getDOConUnchecked(doPortID);
+  TPortId doPortID = getFBInterfaceSpec().getDOID(paDONameId);
+  if (doPortID != cgInvalidPortId) {
+    return getDOConUnchecked(doPortID);
   }
-  return retVal;
-}
-
-const CDataConnection *CFunctionBlock::getDOConnection(CStringDictionary::TStringId paDONameId) const {
-  const CDataConnection *retVal = nullptr;
-  TPortId doPortID = getDOID(paDONameId);
-  if (cgInvalidPortId != doPortID) {
-    retVal = const_cast<CFunctionBlock *>(this)->getDOConUnchecked(doPortID);
-  }
-  return retVal;
+  return nullptr;
 }
 
 CInOutDataConnection *CFunctionBlock::getDIOInConnection(CStringDictionary::TStringId paDIONameId) {
-  CInOutDataConnection *retVal = nullptr;
-  TPortId doPortID = getDIOID(paDIONameId);
-  if (cgInvalidPortId != doPortID) {
-    retVal = *getDIOInConUnchecked(doPortID);
+  TPortId doPortID = getFBInterfaceSpec().getDIOID(paDIONameId);
+  if (doPortID != cgInvalidPortId) {
+    return *getDIOInConUnchecked(doPortID);
   }
-  return retVal;
-}
-
-const CInOutDataConnection *CFunctionBlock::getDIOInConnection(CStringDictionary::TStringId paDIONameId) const {
-  const CInOutDataConnection *retVal = nullptr;
-  TPortId doPortID = getDIOID(paDIONameId);
-  if (cgInvalidPortId != doPortID) {
-    retVal = *const_cast<CFunctionBlock *>(this)->getDIOInConUnchecked(doPortID);
-  }
-  return retVal;
+  return nullptr;
 }
 
 CInOutDataConnection *CFunctionBlock::getDIOOutConnection(CStringDictionary::TStringId paDIONameId) {
-  CInOutDataConnection *retVal = nullptr;
-  TPortId doPortID = getDIOID(paDIONameId);
-  if (cgInvalidPortId != doPortID) {
-    retVal = getDIOOutConUnchecked(doPortID);
+  TPortId doPortID = getFBInterfaceSpec().getDIOID(paDIONameId);
+  if (doPortID != cgInvalidPortId) {
+    return getDIOOutConUnchecked(doPortID);
   }
-  return retVal;
-}
-
-const CInOutDataConnection *CFunctionBlock::getDIOOutConnection(CStringDictionary::TStringId paDIONameId) const {
-  const CInOutDataConnection *retVal = nullptr;
-  TPortId doPortID = getDIOID(paDIONameId);
-  if (cgInvalidPortId != doPortID) {
-    retVal = const_cast<CFunctionBlock *>(this)->getDIOOutConUnchecked(doPortID);
-  }
-  return retVal;
+  return nullptr;
 }
 
 bool CFunctionBlock::configureGenericDO(TPortId paDOPortId, const CIEC_ANY &paRefValue) {
@@ -276,39 +209,33 @@ bool CFunctionBlock::configureGenericDO(TPortId paDOPortId, const CIEC_ANY &paRe
 }
 
 CIEC_ANY *CFunctionBlock::getDataOutput(CStringDictionary::TStringId paDONameId) {
-  CIEC_ANY *poRetVal = nullptr;
-  TPortId unDID = getDOID(paDONameId);
-
-  if (cgInvalidPortId != unDID) {
-    poRetVal = getDO(unDID);
+  TPortId unDID = getFBInterfaceSpec().getDOID(paDONameId);
+  if (unDID != cgInvalidPortId) {
+    return getDO(unDID);
   }
-  return poRetVal;
+  return nullptr;
 }
 
 CIEC_ANY *CFunctionBlock::getDataInput(CStringDictionary::TStringId paDINameId) {
-  CIEC_ANY *poRetVal = nullptr;
-  TPortId unDID = getDIID(paDINameId);
-
-  if (cgInvalidPortId != unDID) {
-    poRetVal = getDI(unDID);
+  TPortId unDID = getFBInterfaceSpec().getDIID(paDINameId);
+  if (unDID != cgInvalidPortId) {
+    return getDI(unDID);
   }
-  return poRetVal;
+  return nullptr;
 }
 
 CIEC_ANY *CFunctionBlock::getDIFromPortId(TPortId paDIPortId) {
-  CIEC_ANY *retVal = nullptr;
   if (paDIPortId < getFBInterfaceSpec().mNumDIs) {
-    retVal = getDI(paDIPortId);
+    return getDI(paDIPortId);
   }
-  return retVal;
+  return nullptr;
 }
 
 CIEC_ANY *CFunctionBlock::getDOFromPortId(TPortId paDOPortId) {
-  CIEC_ANY *retVal = nullptr;
   if (paDOPortId < getFBInterfaceSpec().mNumDOs) {
-    retVal = getDO(paDOPortId);
+    return getDO(paDOPortId);
   }
-  return retVal;
+  return nullptr;
 }
 
 CIEC_ANY *CFunctionBlock::getDIOFromPortId(TPortId paDIPortId) {
@@ -319,17 +246,16 @@ CIEC_ANY *CFunctionBlock::getDIOFromPortId(TPortId paDIPortId) {
 }
 
 CIEC_ANY *CFunctionBlock::getVar(CStringDictionary::TStringId *paNameList, unsigned int paNameListSize) {
-
   if (1 == paNameListSize) {
-    TPortId portId = getDIID(*paNameList);
+    TPortId portId = getFBInterfaceSpec().getDIID(*paNameList);
     if (cgInvalidPortId != portId) {
       return getDI(portId);
     }
-    portId = getDOID(*paNameList);
+    portId = getFBInterfaceSpec().getDOID(*paNameList);
     if (cgInvalidPortId != portId) {
       return getDO(portId);
     }
-    portId = getDIOID(*paNameList);
+    portId = getFBInterfaceSpec().getDIOID(*paNameList);
     if (cgInvalidPortId != portId) {
       return getDIO(portId);
     }
@@ -339,7 +265,6 @@ CIEC_ANY *CFunctionBlock::getVar(CStringDictionary::TStringId *paNameList, unsig
 
 CAdapter *CFunctionBlock::getAdapter(CStringDictionary::TStringId paAdapterNameId) {
   TPortId adpPortId = getAdapterPortId(paAdapterNameId);
-
   if (cgInvalidPortId != adpPortId) {
     return getAdapterUnchecked(adpPortId);
   }
@@ -348,7 +273,6 @@ CAdapter *CFunctionBlock::getAdapter(CStringDictionary::TStringId paAdapterNameI
 
 const CAdapter *CFunctionBlock::getAdapter(CStringDictionary::TStringId paAdapterNameId) const {
   TPortId adpPortId = getAdapterPortId(paAdapterNameId);
-
   if (cgInvalidPortId != adpPortId) {
     return const_cast<CFunctionBlock *>(this)->getAdapterUnchecked(adpPortId);
   }
@@ -441,17 +365,6 @@ void CFunctionBlock::destroyAdapter(CAdapter *paAdapter) {
   delete paAdapter;
 }
 
-TPortId CFunctionBlock::getPortId(CStringDictionary::TStringId paPortNameId,
-                                  TPortId paMaxPortNames,
-                                  const CStringDictionary::TStringId *paPortNames) {
-  for (TPortId i = 0; i < paMaxPortNames; ++i) {
-    if (paPortNameId == paPortNames[i]) {
-      return i;
-    }
-  }
-  return cgInvalidPortId;
-}
-
 CConnection *CFunctionBlock::getInputConnection(forte::core::TNameIdentifier &paDstNameList) {
   if (paDstNameList.empty()) {
     return nullptr;
@@ -530,18 +443,18 @@ TForteUInt32 &CFunctionBlock::getEOMonitorData(TEventID paEOID) {
 }
 
 TAbsDataPortNum CFunctionBlock::getAbsDataPortNum(CStringDictionary::TStringId paPortNameId) {
-  TPortId paPortId = getDIID(paPortNameId);
+  TPortId paPortId = getFBInterfaceSpec().getDIID(paPortNameId);
   if (paPortId != cgInvalidPortId) {
     return paPortId;
   }
 
   auto &interfaceSpec = getFBInterfaceSpec();
-  paPortId = getDOID(paPortNameId);
+  paPortId = getFBInterfaceSpec().getDOID(paPortNameId);
   if (paPortId != cgInvalidPortId) {
     return interfaceSpec.mNumDIs + paPortId;
   }
 
-  paPortId = getDIOID(paPortNameId);
+  paPortId = getFBInterfaceSpec().getDIOID(paPortNameId);
   if (paPortId != cgInvalidPortId) {
     return interfaceSpec.mNumDIs + interfaceSpec.mNumDOs + paPortId;
   }

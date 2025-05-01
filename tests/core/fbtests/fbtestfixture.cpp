@@ -246,7 +246,7 @@ void CFBTestFixtureBase::performDataInterfaceTests() {
   BOOST_REQUIRE_EQUAL(interfaceSpec.mNumDIs, mInputDataBuffers.size());
 
   BOOST_CHECK(nullptr == mFBUnderTest->getDataInput(CStringDictionary::scmInvalidStringId));
-  BOOST_CHECK_EQUAL(cgInvalidPortId, mFBUnderTest->getDIID(CStringDictionary::scmInvalidStringId));
+  BOOST_CHECK_EQUAL(cgInvalidPortId, interfaceSpec.getDIID(CStringDictionary::scmInvalidStringId));
 
   for (TPortId i = 0; i < interfaceSpec.mNumDIs; ++i) {
     CIEC_ANY *val = mFBUnderTest->getDataInput(interfaceSpec.mDINames[i]);
@@ -259,11 +259,11 @@ void CFBTestFixtureBase::performDataInterfaceTests() {
     CStringDictionary::TStringId stringIdBuf = interfaceSpec.mDINames[i];
     BOOST_CHECK_EQUAL(val, mFBUnderTest->getVar(&stringIdBuf, 1));
 
-    BOOST_CHECK_EQUAL(i, mFBUnderTest->getDIID(interfaceSpec.mDINames[i]));
+    BOOST_CHECK_EQUAL(i, interfaceSpec.getDIID(interfaceSpec.mDINames[i]));
 
     // we should not be able to get a data output with a data input name
     BOOST_CHECK(nullptr == mFBUnderTest->getDataOutput(interfaceSpec.mDINames[i]));
-    BOOST_CHECK_EQUAL(cgInvalidPortId, mFBUnderTest->getDOID(interfaceSpec.mDINames[i]));
+    BOOST_CHECK_EQUAL(cgInvalidPortId, interfaceSpec.getDOID(interfaceSpec.mDINames[i]));
   }
 
   for (TPortId i = interfaceSpec.mNumDIs; i <= cgInvalidPortId; ++i) {
@@ -273,7 +273,7 @@ void CFBTestFixtureBase::performDataInterfaceTests() {
   BOOST_CHECK_EQUAL(interfaceSpec.mNumDOs, mOutputDataBuffers.size());
 
   BOOST_CHECK(nullptr == mFBUnderTest->getDataOutput(CStringDictionary::scmInvalidStringId));
-  BOOST_CHECK_EQUAL(cgInvalidPortId, mFBUnderTest->getDOID(CStringDictionary::scmInvalidStringId));
+  BOOST_CHECK_EQUAL(cgInvalidPortId, interfaceSpec.getDOID(CStringDictionary::scmInvalidStringId));
 
   for (TPortId i = 0; i < interfaceSpec.mNumDOs; ++i) {
     CIEC_ANY *val = mFBUnderTest->getDataOutput(interfaceSpec.mDONames[i]);
@@ -285,11 +285,11 @@ void CFBTestFixtureBase::performDataInterfaceTests() {
     CStringDictionary::TStringId stringIdBuf = interfaceSpec.mDONames[i];
     BOOST_CHECK_EQUAL(val, mFBUnderTest->getVar(&stringIdBuf, 1));
 
-    BOOST_CHECK_EQUAL(i, mFBUnderTest->getDOID(interfaceSpec.mDONames[i]));
+    BOOST_CHECK_EQUAL(i, interfaceSpec.getDOID(interfaceSpec.mDONames[i]));
 
     // we should not be able to get a data out with a data output name
     BOOST_CHECK(nullptr == mFBUnderTest->getDataInput(interfaceSpec.mDONames[i]));
-    BOOST_CHECK_EQUAL(cgInvalidPortId, mFBUnderTest->getDIID(interfaceSpec.mDONames[i]));
+    BOOST_CHECK_EQUAL(cgInvalidPortId, interfaceSpec.getDIID(interfaceSpec.mDONames[i]));
   }
 }
 

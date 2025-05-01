@@ -23,7 +23,7 @@ CEventConnection::~CEventConnection() = default;
 
 EMGMResponse CEventConnection::connect(CFunctionBlock &paDstFB, CStringDictionary::TStringId paDstPortNameId) {
   EMGMResponse retval = EMGMResponse::NoSuchObject;
-  const TPortId nEIID = paDstFB.getEIID(paDstPortNameId);
+  const TPortId nEIID = paDstFB.getFBInterfaceSpec().getEIID(paDstPortNameId);
 
   if (cgInvalidEventID != nEIID) {
     retval = addDestination(CConnectionPoint(paDstFB, nEIID));
@@ -35,7 +35,7 @@ EMGMResponse CEventConnection::connect(CFunctionBlock &paDstFB, CStringDictionar
 EMGMResponse CEventConnection::connectToCFBInterface(CFunctionBlock &paDstFB,
                                                      CStringDictionary::TStringId paDstPortNameId) {
   EMGMResponse retval = EMGMResponse::NoSuchObject;
-  TPortId nEOID = paDstFB.getEOID(paDstPortNameId);
+  TPortId nEOID = paDstFB.getFBInterfaceSpec().getEOID(paDstPortNameId);
 
   if (cgInvalidEventID != nEOID) {
     nEOID |= cgInternal2InterfaceMarker;
@@ -46,7 +46,7 @@ EMGMResponse CEventConnection::connectToCFBInterface(CFunctionBlock &paDstFB,
 
 EMGMResponse CEventConnection::disconnect(CFunctionBlock &paDstFB, CStringDictionary::TStringId paDstPortNameId) {
   EMGMResponse retval = EMGMResponse::NoSuchObject;
-  const TEventID nEIID = paDstFB.getEIID(paDstPortNameId);
+  const TEventID nEIID = paDstFB.getFBInterfaceSpec().getEIID(paDstPortNameId);
 
   if (cgInvalidEventID != nEIID) {
     retval = removeDestination(CConnectionPoint(paDstFB, nEIID));
