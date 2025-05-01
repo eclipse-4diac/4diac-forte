@@ -111,7 +111,7 @@ void FORTE_SET_LOCAL_ADS_ADDRESS::executeEvent(const TEventID paEIID, CEventChai
         AdsGetLocalAddressEx(port, &actualAddress);
         if (actualAddress.netId == desiredAddress) {
           STATUS() = CIEC_WSTRING("OK");
-          QO() = CIEC_BOOL(true);
+          QO() = true_BOOL;
           std::stringstream amsNetId;
           amsNetId << std::to_string(actualAddress.netId.b[0]) << "." + std::to_string(actualAddress.netId.b[1]) << "."
                    << std::to_string(actualAddress.netId.b[2]) << "." << std::to_string(actualAddress.netId.b[3]) << "."
@@ -119,10 +119,10 @@ void FORTE_SET_LOCAL_ADS_ADDRESS::executeEvent(const TEventID paEIID, CEventChai
           LOCAL_ADS_ADDRESS() = CIEC_STRING(amsNetId.str().c_str());
         } else {
           STATUS() = CIEC_WSTRING("NOT OK");
-          QO() = CIEC_BOOL(false);
+          QO() = false_BOOL;
         }
       } else {
-        QO() = CIEC_BOOL(false);
+        QO() = false_BOOL;
       }
 
       sendOutputEvent(scmEventINITOID, paECET);

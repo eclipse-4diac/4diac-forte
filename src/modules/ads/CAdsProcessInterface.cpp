@@ -89,7 +89,7 @@ namespace forte {
       const long status = AdsSyncReadReqEx2(connection->getPort(), connection->getRemoteDevice(), ADSIGRP_SYM_VALBYHND,
                                             mAdsHandle, sizeof(buffer), &buffer, &bytesRead);
       if (status) {
-        IN_X() = CIEC_BOOL(false);
+        IN_X() = false_BOOL;
         STATUS() = CIEC_STRING("Read Pin malfunction");
         DEVLOG_ERROR("Read Pin malfunction\n");
         return false;

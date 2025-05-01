@@ -136,11 +136,11 @@ bool GEN_CSV_WRITER::createInterfaceSpec(const char *paConfigString, SFBInterfac
 }
 
 void GEN_CSV_WRITER::openCSVFile() {
-  QO() = CIEC_BOOL(false);
+  QO() = false_BOOL;
   if (nullptr == mCSVFile) {
     mCSVFile = forte_fopen(FILE_NAME().getStorage().c_str(), "w+");
     if (nullptr != mCSVFile) {
-      QO() = CIEC_BOOL(true);
+      QO() = true_BOOL;
       STATUS() = scmOK;
       DEVLOG_INFO("[GEN_CSV_WRITER]: File %s successfully opened\n", FILE_NAME().getStorage().c_str());
     } else {
@@ -156,7 +156,7 @@ void GEN_CSV_WRITER::openCSVFile() {
 }
 
 void GEN_CSV_WRITER::closeCSVFile() {
-  QO() = CIEC_BOOL(false);
+  QO() = false_BOOL;
   if (nullptr != mCSVFile) {
     if (0 == forte_fclose(mCSVFile)) {
       STATUS() = scmOK;
@@ -223,7 +223,7 @@ void GEN_CSV_WRITER::writeCSVFileLine() {
       forte_fwrite("\n", 1, 1, mCSVFile);
     }
   } else {
-    QO() = CIEC_BOOL(false);
+    QO() = false_BOOL;
     STATUS() = scmFileNotOpened;
     DEVLOG_ERROR("[GEN_CSV_WRITER]: Can't write to file %s since it is not opened\n", FILE_NAME().getStorage().c_str());
   }

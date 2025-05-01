@@ -305,7 +305,7 @@ BOOST_AUTO_TEST_CASE(Struct_element_access_test) {
   BOOST_CHECK_EQUAL(0,
                     static_cast<CIEC_INT::TValueType>(*static_cast<CIEC_INT *>(stStruct1.getMemberNamed(STRID(Val3)))));
 
-  (*static_cast<CIEC_BOOL *>(stStruct1.getMemberNamed(STRID(Val2)))) = CIEC_BOOL(true);
+  (*static_cast<CIEC_BOOL *>(stStruct1.getMemberNamed(STRID(Val2)))) = true_BOOL;
   BOOST_TEST((*static_cast<CIEC_STRING *>(stStruct1.getMemberNamed(STRID(Val1)))).getStorage() == cTest);
   BOOST_CHECK_EQUAL(
       true, static_cast<CIEC_INT::TValueType>(*static_cast<CIEC_BOOL *>(stStruct1.getMemberNamed(STRID(Val2)))));
@@ -347,7 +347,7 @@ BOOST_AUTO_TEST_CASE(Struct_element_access_test) {
   BOOST_CHECK_EQUAL(0,
                     static_cast<CIEC_INT::TValueType>(*static_cast<CIEC_INT *>(stStruct2.getMemberNamed(STRID(Val4)))));
 
-  (*static_cast<CIEC_BOOL *>(stStruct2.getMemberNamed(STRID(Val3)))) = CIEC_BOOL(true);
+  (*static_cast<CIEC_BOOL *>(stStruct2.getMemberNamed(STRID(Val3)))) = true_BOOL;
   BOOST_CHECK_EQUAL(3.1415f, (*static_cast<CIEC_REAL *>(stStruct2.getMemberNamed(STRID(Val1)))));
   BOOST_CHECK_EQUAL(256,
                     static_cast<CIEC_INT::TValueType>(*static_cast<CIEC_INT *>(stStruct2.getMemberNamed(STRID(Val2)))));
@@ -397,7 +397,7 @@ BOOST_AUTO_TEST_CASE(Struct_element_access_test) {
   BOOST_CHECK_EQUAL(true, stStruct3.Var2);
   BOOST_CHECK_EQUAL(9, static_cast<CIEC_INT::TValueType>(stStruct3.Var3[0]));
 
-  stStruct3.Var2 = CIEC_BOOL(false);
+  stStruct3.Var2 = false_BOOL;
   BOOST_TEST(stStruct3.Var1[0].getStorage() == cTest);
   BOOST_TEST(stStruct3.Var1[1].getStorage() == cTest2);
   BOOST_CHECK_EQUAL(false, stStruct3.Var2);

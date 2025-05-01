@@ -125,7 +125,7 @@ BOOST_AUTO_TEST_CASE(TimeStruct_element_access_test) {
 
   checkTestStruct_InitialValues(stStruct);
 
-  (*static_cast<CIEC_BOOL *>(stStruct.getMemberNamed(STRID(Val1)))) = CIEC_BOOL(true);
+  (*static_cast<CIEC_BOOL *>(stStruct.getMemberNamed(STRID(Val1)))) = true_BOOL;
   (*static_cast<CIEC_INT *>(stStruct.getMemberNamed(STRID(Val2)))) = CIEC_INT(55);
   (*static_cast<CIEC_TIME *>(stStruct.getMemberNamed(STRID(Val3)))) = CIEC_TIME(static_cast<CIEC_TIME::TValueType>(12));
   BOOST_CHECK_EQUAL(true, (*static_cast<CIEC_BOOL *>(stStruct.getMemberNamed(STRID(Val1)))));

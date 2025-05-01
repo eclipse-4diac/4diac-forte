@@ -76,7 +76,7 @@ FORTE_F_STRING_AS_BOOL::FORTE_F_STRING_AS_BOOL(CStringDictionary::TStringId paIn
                                                forte::core::CFBContainer &paContainer) :
     CSimpleFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, nullptr),
     var_IN(CIEC_STRING("", 0)),
-    var_OUT(CIEC_BOOL(0)),
+    var_OUT(false_BOOL),
     conn_CNF(*this, 0),
     conn_IN(nullptr),
     conn_OUT(*this, 0, var_OUT) {

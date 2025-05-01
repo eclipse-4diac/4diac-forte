@@ -27,7 +27,6 @@ USE_STRING_ID(IN1);
 USE_STRING_ID(OUT);
 USE_STRING_ID(REQ);
 
-
 DEFINE_FIRMWARE_FB(FORTE_F_SEL, STRID(F_SEL))
 
 const CStringDictionary::TStringId FORTE_F_SEL::scmDataInputNames[] = {STRID(G), STRID(IN0), STRID(IN1)};
@@ -71,7 +70,7 @@ const SFBInterfaceSpec FORTE_F_SEL::scmFBInterfaceSpec = {1,
 
 FORTE_F_SEL::FORTE_F_SEL(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId),
-    var_G(CIEC_BOOL(0)),
+    var_G(false_BOOL),
     var_IN0(CIEC_ANY_VARIANT()),
     var_IN1(CIEC_ANY_VARIANT()),
     var_OUT(CIEC_ANY_VARIANT()),

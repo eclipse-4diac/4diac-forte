@@ -92,12 +92,12 @@ void FORTE_GET_AT_INDEX::executeEvent(TEventID paEIID, CEventChainExecutionThrea
         if (static_cast<CIEC_UINT::TValueType>(var_INDEX) >= inArray->getLowerBound() &&
             static_cast<CIEC_UINT::TValueType>(var_INDEX) <= inArray->getUpperBound()) {
           var_OUT.setValue(inArray->at(var_INDEX));
-          var_QO = CIEC_BOOL(true);
+          var_QO = true_BOOL;
         } else {
-          var_QO = CIEC_BOOL(false);
+          var_QO = false_BOOL;
         }
       } else {
-        var_QO = CIEC_BOOL(false);
+        var_QO = false_BOOL;
       }
       sendOutputEvent(scmEventCNFID, paECET);
       break;

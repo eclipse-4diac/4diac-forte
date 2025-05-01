@@ -253,7 +253,7 @@ BOOST_AUTO_TEST_CASE(InstantiateSizeOnlyVariableArray) {
 }
 
 BOOST_AUTO_TEST_CASE(InstantiateVariableArrayFromInitList) {
-  CIEC_ARRAY_VARIABLE<CIEC_BOOL> boolArray = {CIEC_BOOL(true), CIEC_BOOL(false), CIEC_BOOL(false), CIEC_BOOL(true)};
+  CIEC_ARRAY_VARIABLE<CIEC_BOOL> boolArray = {true_BOOL, false_BOOL, false_BOOL, true_BOOL};
   BOOST_CHECK_EQUAL(boolArray.size(), 4);
   BOOST_CHECK_EQUAL(boolArray.getLowerBound(), 0);
   BOOST_CHECK_EQUAL(boolArray.getUpperBound(), 3);
@@ -267,19 +267,19 @@ BOOST_AUTO_TEST_CASE(InstantiateVariableArrayFromInitList) {
 }
 
 BOOST_AUTO_TEST_CASE(VariableArrayAccess) {
-  CIEC_ARRAY_VARIABLE<CIEC_BOOL> boolArray = {CIEC_BOOL(true), CIEC_BOOL(false), CIEC_BOOL(false), CIEC_BOOL(true)};
-  BOOST_CHECK_EQUAL(boolArray[0], CIEC_BOOL(true));
-  BOOST_CHECK_EQUAL(boolArray[1], CIEC_BOOL(false));
-  BOOST_CHECK_EQUAL(boolArray[2], CIEC_BOOL(false));
-  BOOST_CHECK_EQUAL(boolArray[3], CIEC_BOOL(true));
+  CIEC_ARRAY_VARIABLE<CIEC_BOOL> boolArray = {true_BOOL, false_BOOL, false_BOOL, true_BOOL};
+  BOOST_CHECK_EQUAL(boolArray[0], true_BOOL);
+  BOOST_CHECK_EQUAL(boolArray[1], false_BOOL);
+  BOOST_CHECK_EQUAL(boolArray[2], false_BOOL);
+  BOOST_CHECK_EQUAL(boolArray[3], true_BOOL);
 }
 
 BOOST_AUTO_TEST_CASE(VariableArrayAccessIECTypes) {
-  CIEC_ARRAY_VARIABLE<CIEC_BOOL> boolArray = {CIEC_BOOL(true), CIEC_BOOL(false), CIEC_BOOL(false), CIEC_BOOL(true)};
-  BOOST_CHECK_EQUAL(boolArray[CIEC_INT(0)], CIEC_BOOL(true));
-  BOOST_CHECK_EQUAL(boolArray[CIEC_INT(1)], CIEC_BOOL(false));
-  BOOST_CHECK_EQUAL(boolArray[CIEC_INT(2)], CIEC_BOOL(false));
-  BOOST_CHECK_EQUAL(boolArray[CIEC_INT(3)], CIEC_BOOL(true));
+  CIEC_ARRAY_VARIABLE<CIEC_BOOL> boolArray = {true_BOOL, false_BOOL, false_BOOL, true_BOOL};
+  BOOST_CHECK_EQUAL(boolArray[CIEC_INT(0)], true_BOOL);
+  BOOST_CHECK_EQUAL(boolArray[CIEC_INT(1)], false_BOOL);
+  BOOST_CHECK_EQUAL(boolArray[CIEC_INT(2)], false_BOOL);
+  BOOST_CHECK_EQUAL(boolArray[CIEC_INT(3)], true_BOOL);
 }
 
 /* copy tests */
@@ -305,14 +305,14 @@ BOOST_AUTO_TEST_CASE(CopyFromStaticToVariableArray) {
 }
 
 BOOST_AUTO_TEST_CASE(CopyFromVariableToStaticArray) {
-  CIEC_ARRAY_VARIABLE<CIEC_BOOL> boolArraySource = {CIEC_BOOL(true), CIEC_BOOL(false), CIEC_BOOL(false),
-                                                    CIEC_BOOL(true)};
+  CIEC_ARRAY_VARIABLE<CIEC_BOOL> boolArraySource = {true_BOOL, false_BOOL, false_BOOL,
+                                                    true_BOOL};
   CIEC_ARRAY_FIXED<CIEC_BOOL, 0, 3> boolArray(boolArraySource);
 
-  BOOST_CHECK_EQUAL(boolArray[0], CIEC_BOOL(true));
-  BOOST_CHECK_EQUAL(boolArray[1], CIEC_BOOL(false));
-  BOOST_CHECK_EQUAL(boolArray[2], CIEC_BOOL(false));
-  BOOST_CHECK_EQUAL(boolArray[3], CIEC_BOOL(true));
+  BOOST_CHECK_EQUAL(boolArray[0], true_BOOL);
+  BOOST_CHECK_EQUAL(boolArray[1], false_BOOL);
+  BOOST_CHECK_EQUAL(boolArray[2], false_BOOL);
+  BOOST_CHECK_EQUAL(boolArray[3], true_BOOL);
 }
 
 BOOST_AUTO_TEST_CASE(CopyFromPlainOldToStaticArray) {

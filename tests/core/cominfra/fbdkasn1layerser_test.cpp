@@ -128,12 +128,12 @@ BOOST_AUTO_TEST_CASE(Single_Serialize_Test_BOOL) {
   CIEC_ANY *poArray[1];
   poArray[0] = &nBool;
 
-  nBool = CIEC_BOOL(false);
+  nBool = false_BOOL;
   BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.sendData(poArray, 1));
   BOOST_CHECK_EQUAL(nTestee.getSendDataSize(), cgBoolSerSize);
   BOOST_CHECK_EQUAL(cgBoolFalse, *((TForteByte *) nTestee.getSendDataPtr()));
 
-  nBool = CIEC_BOOL(true);
+  nBool = true_BOOL;
   BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.sendData(poArray, 1));
   BOOST_CHECK_EQUAL(nTestee.getSendDataSize(), cgBoolSerSize);
   BOOST_CHECK_EQUAL(cgBoolTrue, *((TForteByte *) nTestee.getSendDataPtr()));
@@ -952,7 +952,7 @@ BOOST_AUTO_TEST_CASE(Single_Serialize_Test_MultiDatas) {
   *poWordVal = CIEC_WORD(40396);
   *poStringVal = "HalloWorld"_STRING;
   *poIntVal = CIEC_INT(-10934);
-  *poBoolVal = CIEC_BOOL(true);
+  *poBoolVal = true_BOOL;
   poTimeVal2->fromString("T#3s22ms");
 
   const unsigned int nSerSize =
@@ -982,11 +982,11 @@ BOOST_AUTO_TEST_CASE(Single_Serialize_Test_ARRAY) {
   CIEC_ANY *poArray[1];
   poArray[0] = &nVal;
 
-  static_cast<CIEC_BOOL &>(nVal[0]) = CIEC_BOOL(true);
-  static_cast<CIEC_BOOL &>(nVal[1]) = CIEC_BOOL(false);
-  static_cast<CIEC_BOOL &>(nVal[2]) = CIEC_BOOL(false);
-  static_cast<CIEC_BOOL &>(nVal[3]) = CIEC_BOOL(true);
-  static_cast<CIEC_BOOL &>(nVal[4]) = CIEC_BOOL(true);
+  static_cast<CIEC_BOOL &>(nVal[0]) = true_BOOL;
+  static_cast<CIEC_BOOL &>(nVal[1]) = false_BOOL;
+  static_cast<CIEC_BOOL &>(nVal[2]) = false_BOOL;
+  static_cast<CIEC_BOOL &>(nVal[3]) = true_BOOL;
+  static_cast<CIEC_BOOL &>(nVal[4]) = true_BOOL;
 
   TForteByte acSmallBuf[7];
   BOOST_CHECK_EQUAL(nTestee.serializeDataPointArray(acSmallBuf, 1, const_cast<const CIEC_ANY **>(poArray), 1), -1);
@@ -1001,11 +1001,11 @@ BOOST_AUTO_TEST_CASE(Single_Serialize_Test_ARRAY) {
   BOOST_CHECK(
       std::equal(cgArrayBool10011, cgArrayBool10011 + cgBOOL5SerSize, ((TForteByte *) nTestee.getSendDataPtr())));
 
-  static_cast<CIEC_BOOL &>(nVal[0]) = CIEC_BOOL(false);
-  static_cast<CIEC_BOOL &>(nVal[1]) = CIEC_BOOL(true);
-  static_cast<CIEC_BOOL &>(nVal[2]) = CIEC_BOOL(false);
-  static_cast<CIEC_BOOL &>(nVal[3]) = CIEC_BOOL(true);
-  static_cast<CIEC_BOOL &>(nVal[4]) = CIEC_BOOL(false);
+  static_cast<CIEC_BOOL &>(nVal[0]) = false_BOOL;
+  static_cast<CIEC_BOOL &>(nVal[1]) = true_BOOL;
+  static_cast<CIEC_BOOL &>(nVal[2]) = false_BOOL;
+  static_cast<CIEC_BOOL &>(nVal[3]) = true_BOOL;
+  static_cast<CIEC_BOOL &>(nVal[4]) = false_BOOL;
 
   BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.sendData(poArray, 1));
   BOOST_CHECK_EQUAL(nTestee.getSendDataSize(), cgBOOL5SerSize);

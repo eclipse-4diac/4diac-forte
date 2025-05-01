@@ -181,16 +181,16 @@ BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_READ_WITH_IEC_TYPE_INDEX) {
 
 BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_WRITE_WITH_IEC_TYPE_INDEX) {
   CIEC_BYTE nByte;
-  nByte.partial<CIEC_BOOL>(CIEC_SINT(0)) = CIEC_BOOL(true);
+  nByte.partial<CIEC_BOOL>(CIEC_SINT(0)) = true_BOOL;
   BOOST_TEST(static_cast<CIEC_BYTE::TValueType>(nByte) == 1U);
 
-  nByte.partial<CIEC_BOOL>(CIEC_SINT(1)) = CIEC_BOOL(true);
+  nByte.partial<CIEC_BOOL>(CIEC_SINT(1)) = true_BOOL;
   BOOST_TEST(static_cast<CIEC_BYTE::TValueType>(nByte) == 3U);
 }
 
 BOOST_AUTO_TEST_CASE(PARTIAL_ACCESSOUT_OF_INDEX_ACCESS) {
   CIEC_BYTE nByte(0xFFU);
-  nByte.partial<CIEC_BOOL>(CIEC_SINT(8)) = CIEC_BOOL(false);
+  nByte.partial<CIEC_BOOL>(CIEC_SINT(8)) = false_BOOL;
   BOOST_TEST(static_cast<CIEC_BYTE::TValueType>(nByte) == 0xFFU);
 
   BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(nByte.partial<CIEC_BOOL>(CIEC_SINT(8))) == false);

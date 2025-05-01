@@ -59,7 +59,7 @@ forte::com_infra::EComResponse CXqueryClientLayer::openConnection(char *paLayerP
       if (rc == -1) {
         DEVLOG_ERROR("Access to DB denied.\n");
       } else {
-        mFb->QO() = CIEC_BOOL(true);
+        mFb->QO() = true_BOOL;
         DEVLOG_INFO("Connected to DB.\n");
         openDB();
         retVal = e_InitOk;

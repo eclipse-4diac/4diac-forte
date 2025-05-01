@@ -48,7 +48,7 @@ void IOConfigFBController::executeEvent(TEventID paEIID, CEventChainExecutionThr
   } else if (scmEventINITID == paEIID) {
     if (true == QI()) {
       if (!init(paECET)) {
-        QO() = CIEC_BOOL(false);
+        QO() = false_BOOL;
         sendOutputEvent(scmEventINITOID, paECET);
       }
     } else {
@@ -97,7 +97,7 @@ void IOConfigFBController::onError(CEventChainExecutionThread *const paECET, boo
     deInit(paECET);
   } else {
     mStarting = false;
-    QO() = CIEC_BOOL(false);
+    QO() = false_BOOL;
     sendOutputEvent(scmEventINITOID, paECET);
 
     if (paIsFatal) {
@@ -158,7 +158,7 @@ void IOConfigFBController::started(CEventChainExecutionThread *const paECET, con
   mErrorCounter = 0;
   mStarting = false;
 
-  QO() = CIEC_BOOL(true);
+  QO() = true_BOOL;
   STATUS() = CIEC_WSTRING(scmOK);
   sendOutputEvent(scmEventINITOID, paECET);
 }

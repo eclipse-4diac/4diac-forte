@@ -56,7 +56,7 @@ void CIEC_ANY_VARIANT::setValue(const CIEC_ANY &paValue) {
 
 bool CIEC_ANY_VARIANT::setDefaultValue(CIEC_ANY::EDataTypeID paDataTypeId) {
   switch (paDataTypeId) {
-    case e_BOOL: operator=(CIEC_BOOL(false)); return true;
+    case e_BOOL: operator=(false_BOOL); return true;
     case e_SINT: operator=(CIEC_SINT(0)); return true;
     case e_INT: operator=(CIEC_INT(0)); return true;
     case e_DINT: operator=(CIEC_DINT(0)); return true;

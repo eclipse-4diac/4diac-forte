@@ -30,7 +30,7 @@ void CIEC_ANY_BIT_VARIANT::setValue(const CIEC_ANY &paValue) {
 
 bool CIEC_ANY_BIT_VARIANT::setDefaultValue(CIEC_ANY::EDataTypeID paDataTypeId) {
   switch (paDataTypeId) {
-    case e_BOOL: operator=(CIEC_BOOL(false)); return true;
+    case e_BOOL: operator=(false_BOOL); return true;
     case e_BYTE: operator=(CIEC_BYTE(0)); return true;
     case e_WORD: operator=(CIEC_WORD(0)); return true;
     case e_DWORD: operator=(CIEC_DWORD(0)); return true;

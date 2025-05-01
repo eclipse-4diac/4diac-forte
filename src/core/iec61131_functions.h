@@ -1530,10 +1530,10 @@ CIEC_BOOL func_IS_VALID_BCD(const T &paValue) {
   for (size_t i = 0U; i < valueTypeSize; i++) {
     const size_t bitShift = i * 8;
     if (((value >> bitShift) & mask) > 9U || ((value >> (bitShift + nibble)) & mask) > 9U) {
-      return CIEC_BOOL(false);
+      return false_BOOL;
     }
   }
-  return CIEC_BOOL(true);
+  return true_BOOL;
 }
 
 template<typename T>

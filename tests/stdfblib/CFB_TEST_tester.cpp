@@ -44,7 +44,7 @@ struct CFB_TEST_TestFixture : public CFBTestFixtureBase {
 BOOST_FIXTURE_TEST_SUITE(PermitTests, CFB_TEST_TestFixture)
 
 BOOST_AUTO_TEST_CASE(inhibitTest) {
-  mInQI = CIEC_BOOL(false);
+  mInQI = false_BOOL;
   for (unsigned int i = 0; i < 100; ++i) {
     triggerEvent(0);
     BOOST_CHECK(eventChainEmpty());
@@ -56,7 +56,7 @@ BOOST_AUTO_TEST_CASE(inhibitTest) {
 }
 
 BOOST_AUTO_TEST_CASE(setTest) {
-  mInQI = CIEC_BOOL(true);
+  mInQI = true_BOOL;
   triggerEvent(0);
   BOOST_CHECK(checkBothOutputEvents());
   BOOST_CHECK_EQUAL(true, mOutSR);
@@ -68,7 +68,7 @@ BOOST_AUTO_TEST_CASE(setTest) {
 }
 
 BOOST_AUTO_TEST_CASE(resetTest) {
-  mInQI = CIEC_BOOL(true);
+  mInQI = true_BOOL;
   triggerEvent(0);
   clearEventChain();
   triggerEvent(1);
@@ -82,7 +82,7 @@ BOOST_AUTO_TEST_CASE(resetTest) {
 }
 
 BOOST_AUTO_TEST_CASE(toggleTest) {
-  mInQI = CIEC_BOOL(true);
+  mInQI = true_BOOL;
   for (int i = 0; i < 1000; ++i) {
     triggerEvent(0);
     BOOST_CHECK(checkBothOutputEvents());

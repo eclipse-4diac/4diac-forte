@@ -28,22 +28,22 @@ struct E_R_TRIG_TestFixture : public CFBTestFixtureBase {
 BOOST_FIXTURE_TEST_SUITE(RTrigTests, E_R_TRIG_TestFixture)
 
 BOOST_AUTO_TEST_CASE(RaisingEdge) {
-  mInQI = CIEC_BOOL(true);
+  mInQI = true_BOOL;
   triggerEvent(0);
   BOOST_CHECK(checkForSingleOutputEventOccurence(0));
 }
 
 BOOST_AUTO_TEST_CASE(FallingEdge) {
-  mInQI = CIEC_BOOL(true);
+  mInQI = true_BOOL;
   triggerEvent(0);
   clearEventChain();
-  mInQI = CIEC_BOOL(false);
+  mInQI = false_BOOL;
   triggerEvent(0);
   BOOST_CHECK(eventChainEmpty());
 }
 
 BOOST_AUTO_TEST_CASE(StableHigh) {
-  mInQI = CIEC_BOOL(true);
+  mInQI = true_BOOL;
   triggerEvent(0);
   pullFirstChainEventID();
   for (unsigned int i = 0; i < 1000; i++) {
@@ -53,7 +53,7 @@ BOOST_AUTO_TEST_CASE(StableHigh) {
 }
 
 BOOST_AUTO_TEST_CASE(StableLow) {
-  mInQI = CIEC_BOOL(false);
+  mInQI = false_BOOL;
   for (unsigned int i = 0; i < 1000; i++) {
     triggerEvent(0);
     BOOST_CHECK(eventChainEmpty());

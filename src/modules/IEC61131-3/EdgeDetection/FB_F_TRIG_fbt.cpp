@@ -78,9 +78,9 @@ const SInternalVarsInformation FORTE_FB_F_TRIG::scmInternalVars = {1, scmInterna
 FORTE_FB_F_TRIG::FORTE_FB_F_TRIG(CStringDictionary::TStringId paInstanceNameId,
                                  forte::core::CFBContainer &paContainer) :
     CSimpleFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, &scmInternalVars),
-    var_MEM(CIEC_BOOL(true)),
-    var_CLK(CIEC_BOOL(0)),
-    var_Q(CIEC_BOOL(0)),
+    var_MEM(true_BOOL),
+    var_CLK(false_BOOL),
+    var_Q(false_BOOL),
     conn_CNF(*this, 0),
     conn_CLK(nullptr),
     conn_Q(*this, 0, var_Q) {

@@ -54,8 +54,8 @@ BOOST_AUTO_TEST_CASE(CASTS_BOOL_to_BITS) {
   BOOST_CHECK_EQUAL(bTestBool_false, false);
   BOOST_CHECK_EQUAL(bTestBool_true, false);
 
-  bTestBool_false = CIEC_BOOL(false);
-  bTestBool_true = CIEC_BOOL(true);
+  bTestBool_false = false_BOOL;
+  bTestBool_true = true_BOOL;
 
   BOOST_CHECK_EQUAL(bTestBool_true, true);
 
@@ -101,8 +101,8 @@ BOOST_AUTO_TEST_CASE(CASTS_BOOL_to_INTS) {
   BOOST_CHECK_EQUAL(bTestBool_false, false);
   BOOST_CHECK_EQUAL(bTestBool_true, false);
 
-  bTestBool_false = CIEC_BOOL(false);
-  bTestBool_true = CIEC_BOOL(true);
+  bTestBool_false = false_BOOL;
+  bTestBool_true = true_BOOL;
 
   BOOST_CHECK_EQUAL(bTestBool_true, true);
 
@@ -164,8 +164,8 @@ BOOST_AUTO_TEST_CASE(CASTS_BOOL_to_REAL) {
   BOOST_CHECK_EQUAL(bTestBool_false, false);
   BOOST_CHECK_EQUAL(bTestBool_true, false);
 
-  bTestBool_false = CIEC_BOOL(false);
-  bTestBool_true = CIEC_BOOL(true);
+  bTestBool_false = false_BOOL;
+  bTestBool_true = true_BOOL;
 
   BOOST_CHECK_EQUAL(bTestBool_true, true);
 

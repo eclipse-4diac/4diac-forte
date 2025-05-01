@@ -23,8 +23,8 @@ struct F_MUX_2_TestFixture : public CFBTestFixtureBase {
     }
 
     CIEC_UINT mK_MUX_2;
-    CIEC_BOOL mIn0_MUX_2 = CIEC_BOOL(false);
-    CIEC_BOOL mIn1_MUX_2 = CIEC_BOOL(true);
+    CIEC_BOOL mIn0_MUX_2 = false_BOOL;
+    CIEC_BOOL mIn1_MUX_2 = true_BOOL;
 
     CIEC_BOOL mOut_MUX_2;
 };
@@ -36,14 +36,14 @@ BOOST_AUTO_TEST_CASE(CheckKEqualZero) {
   /* trigger the inputevent */
   triggerEvent(0);
   BOOST_CHECK(checkForSingleOutputEventOccurence(0));
-  BOOST_CHECK_EQUAL(CIEC_BOOL(false), mOut_MUX_2);
+  BOOST_CHECK_EQUAL(false_BOOL, mOut_MUX_2);
 }
 BOOST_AUTO_TEST_CASE(CheckKEqualOne) {
   mK_MUX_2 = CIEC_UINT(1U);
   /* trigger the inputevent */
   triggerEvent(0);
   BOOST_CHECK(checkForSingleOutputEventOccurence(0));
-  BOOST_CHECK_EQUAL(CIEC_BOOL(true), mOut_MUX_2);
+  BOOST_CHECK_EQUAL(true_BOOL, mOut_MUX_2);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

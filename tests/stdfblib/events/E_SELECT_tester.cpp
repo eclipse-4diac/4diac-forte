@@ -29,7 +29,7 @@ struct E_SELECT_TestFixture : public CFBTestFixtureBase {
 BOOST_FIXTURE_TEST_SUITE(SelectTests, E_SELECT_TestFixture)
 
 BOOST_AUTO_TEST_CASE(SelectEI0) {
-  mInG = CIEC_BOOL(false);
+  mInG = false_BOOL;
   triggerEvent(0);
   BOOST_CHECK(checkForSingleOutputEventOccurence(0));
   triggerEvent(1);
@@ -37,7 +37,7 @@ BOOST_AUTO_TEST_CASE(SelectEI0) {
 }
 
 BOOST_AUTO_TEST_CASE(SelectEI1) {
-  mInG = CIEC_BOOL(true);
+  mInG = true_BOOL;
   triggerEvent(1);
   BOOST_CHECK(checkForSingleOutputEventOccurence(0));
   triggerEvent(0);
@@ -45,7 +45,7 @@ BOOST_AUTO_TEST_CASE(SelectEI1) {
 }
 
 BOOST_AUTO_TEST_CASE(MultipleSelectEI0) {
-  mInG = CIEC_BOOL(false);
+  mInG = false_BOOL;
   for (unsigned int i = 0; i < 1000; i++) {
     triggerEvent(0);
     BOOST_CHECK(checkForSingleOutputEventOccurence(0));
@@ -59,7 +59,7 @@ BOOST_AUTO_TEST_CASE(MultipleSelectEI0) {
 }
 
 BOOST_AUTO_TEST_CASE(MultipleSelectEI1) {
-  mInG = CIEC_BOOL(true);
+  mInG = true_BOOL;
   for (unsigned int i = 0; i < 1000; i++) {
     triggerEvent(1);
     BOOST_CHECK(checkForSingleOutputEventOccurence(0));

@@ -108,17 +108,17 @@ void FORTE_GET_STRUCT_VALUE::executeEvent(TEventID paEIID, CEventChainExecutionT
         CIEC_ANY *member = lookForMember(*inStruct, memberName.data());
         if (nullptr != member) {
           var_output.setValue(*member);
-          var_QO = CIEC_BOOL(true);
+          var_QO = true_BOOL;
         } else {
           DEVLOG_ERROR("[GET_STRUCT_VALUE]: In instance %s, member %s was not found\n", getInstanceName(),
                        var_member.getStorage().c_str());
-          var_QO = CIEC_BOOL(false);
+          var_QO = false_BOOL;
         }
       } else {
         DEVLOG_ERROR(
             "[GET_STRUCT_VALUE]: In instance %s, the input structure is not of type structure but of type %d\n",
             getInstanceName(), var_in_struct.unwrap().getDataTypeID());
-        var_QO = CIEC_BOOL(false);
+        var_QO = false_BOOL;
       }
       sendOutputEvent(scmEventCNFID, paECET);
       break;

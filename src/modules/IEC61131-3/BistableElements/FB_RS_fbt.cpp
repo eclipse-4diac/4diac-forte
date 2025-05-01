@@ -73,9 +73,9 @@ const SFBInterfaceSpec FORTE_FB_RS::scmFBInterfaceSpec = {1,
 
 FORTE_FB_RS::FORTE_FB_RS(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CSimpleFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, nullptr),
-    var_S(CIEC_BOOL(0)),
-    var_R1(CIEC_BOOL(0)),
-    var_Q1(CIEC_BOOL(0)),
+    var_S(false_BOOL),
+    var_R1(false_BOOL),
+    var_Q1(false_BOOL),
     conn_CNF(*this, 0),
     conn_S(nullptr),
     conn_R1(nullptr),

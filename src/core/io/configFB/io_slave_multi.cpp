@@ -113,9 +113,9 @@ void IOConfigFBMultiSlave::executeEvent(TEventID paEIID, CEventChainExecutionThr
         initHandles();
       }
 
-      QO() = CIEC_BOOL(true);
+      QO() = true_BOOL;
     } else {
-      QO() = CIEC_BOOL(false);
+      QO() = false_BOOL;
     }
 
     sendOutputEvent(scmEventMAPOID, paECET);

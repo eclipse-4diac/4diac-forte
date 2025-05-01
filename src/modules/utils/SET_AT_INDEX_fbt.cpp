@@ -99,12 +99,12 @@ void FORTE_SET_AT_INDEX::executeEvent(TEventID paEIID, CEventChainExecutionThrea
           var_OUT_ARRAY = var_IN_ARRAY;
           auto &outArray = std::get<CIEC_ANY_UNIQUE_PTR<CIEC_ARRAY>>(var_OUT_ARRAY);
           outArray->at(var_INDEX).setValue(var_VALUE.unwrap());
-          var_QO = CIEC_BOOL(true);
+          var_QO = true_BOOL;
         } else {
-          var_QO = CIEC_BOOL(false);
+          var_QO = false_BOOL;
         }
       } else {
-        var_QO = CIEC_BOOL(false);
+        var_QO = false_BOOL;
       }
       sendOutputEvent(scmEventCNFID, paECET);
       break;

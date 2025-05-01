@@ -28,7 +28,7 @@ GEN_SUBL::GEN_SUBL(const CStringDictionary::TStringId paInstanceNameId, forte::c
 bool GEN_SUBL::configureFB(const char *paConfigString) {
   bool bRetVal = GEN_SUBSCRIBE::configureFB(paConfigString);
   // subls normally don't show the QI in the tool
-  QI() = CIEC_BOOL(true);
+  QI() = true_BOOL;
   return bRetVal;
 }
 

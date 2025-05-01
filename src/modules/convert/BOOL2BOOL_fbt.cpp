@@ -73,8 +73,8 @@ const SFBInterfaceSpec FORTE_BOOL2BOOL::scmFBInterfaceSpec = {1,
 FORTE_BOOL2BOOL::FORTE_BOOL2BOOL(CStringDictionary::TStringId paInstanceNameId,
                                  forte::core::CFBContainer &paContainer) :
     CSimpleFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, nullptr),
-    var_IN(CIEC_BOOL(0)),
-    var_OUT(CIEC_BOOL(0)),
+    var_IN(false_BOOL),
+    var_OUT(false_BOOL),
     conn_CNF(*this, 0),
     conn_IN(nullptr),
     conn_OUT(*this, 0, var_OUT) {

@@ -30,18 +30,18 @@ void IOConfigFBPartController::executeEvent(TEventID paEIID, CEventChainExecutio
           static_cast<CIEC_UINT::TValueType>(IOConfigFBMultiAdapter().MasterId()));
 
       if (nullptr == mMaster) {
-        QO() = CIEC_BOOL(false);
+        QO() = false_BOOL;
       } else {
         // Initialize handles
         initHandles();
 
-        QO() = CIEC_BOOL(true);
+        QO() = true_BOOL;
       }
       // Send confirmation of init
       IOConfigFBMultiAdapter().QO() = QO();
       sendAdapterEvent(scmSplitAdapterAdpNum, IOConfigFBSplitAdapter::scmEventINITOID, paECET);
     } else {
-      QO() = CIEC_BOOL(false);
+      QO() = false_BOOL;
 
       // Send confirmation of deInit
       IOConfigFBMultiAdapter().QO() = QO();

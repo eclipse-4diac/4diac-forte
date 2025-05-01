@@ -50,18 +50,18 @@ BOOST_AUTO_TEST_CASE(Assignment_test) {
   // initial value must be 0 = false
   BOOST_CHECK_EQUAL(bTest1, false);
 
-  bTest1 = CIEC_BOOL(true);
+  bTest1 = true_BOOL;
   bTest2 = bTest1;
   BOOST_CHECK_EQUAL(bTest1, true);
   BOOST_CHECK_EQUAL(bTest2, true);
 
-  bTest1 = CIEC_BOOL(false);
+  bTest1 = false_BOOL;
   bTest2 = bTest1;
   BOOST_CHECK_EQUAL(bTest1, false);
   BOOST_CHECK_EQUAL(bTest2, false);
 
   // check that assignment operator does not intertwine objects
-  bTest2 = CIEC_BOOL(true);
+  bTest2 = true_BOOL;
   BOOST_CHECK_EQUAL(bTest1, false);
   BOOST_CHECK_EQUAL(bTest2, true);
 }
@@ -79,10 +79,10 @@ BOOST_AUTO_TEST_CASE(Conversion_test) {
   strcpy(cBuffer4, "");
 
   // check cast operator
-  bTest = CIEC_BOOL(true);
+  bTest = true_BOOL;
   BOOST_CHECK_EQUAL(bTest.operator bool(), true);
 
-  bTest = CIEC_BOOL(false);
+  bTest = false_BOOL;
   BOOST_CHECK_EQUAL(bTest.operator bool(), false);
 
   // check toString and fromString

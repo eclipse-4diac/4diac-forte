@@ -63,10 +63,10 @@ void GEN_F_MUX::executeEvent(TEventID paEIID, CEventChainExecutionThread *const 
     }
 
     if (status == true) {
-      *static_cast<CIEC_BOOL *>(getDO(0)) = CIEC_BOOL(true);
+      *static_cast<CIEC_BOOL *>(getDO(0)) = true_BOOL;
       *static_cast<CIEC_WSTRING *>(getDO(1)) = CIEC_WSTRING("OK");
     } else {
-      *static_cast<CIEC_BOOL *>(getDO(0)) = CIEC_BOOL(false);
+      *static_cast<CIEC_BOOL *>(getDO(0)) = false_BOOL;
       *static_cast<CIEC_WSTRING *>(getDO(1)) = CIEC_WSTRING("Datatype ERROR");
     }
 

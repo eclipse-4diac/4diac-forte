@@ -983,7 +983,7 @@ BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_DWORD_SET_VALUE_WORD_BYTE_BIT_CHECK_BIT_A) {
   nTestByte = CIEC_BYTE(0xAD);
   nTestDWord.partial<CIEC_WORD>(0).partial<CIEC_BYTE>(0).setValue(nTestByte);
 
-  nTestBool = CIEC_BOOL(false);
+  nTestBool = false_BOOL;
   nTestDWord.partial<CIEC_WORD>(0).partial<CIEC_BYTE>(0).partial<CIEC_BOOL>(0).setValue(nTestBool);
 
   BOOST_CHECK_EQUAL((nTestDWord.partial<CIEC_BOOL>(0)), false);
@@ -1007,7 +1007,7 @@ BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_DWORD_SET_VALUE_WORD_BYTE_BIT_CHECK_BYTE_A) 
   nTestByte = CIEC_BYTE(0xAD);
   nTestDWord.partial<CIEC_WORD>(0).partial<CIEC_BYTE>(0).setValue(nTestByte);
 
-  nTestBool = CIEC_BOOL(false);
+  nTestBool = false_BOOL;
   nTestDWord.partial<CIEC_WORD>(0).partial<CIEC_BYTE>(0).partial<CIEC_BOOL>(0).setValue(nTestBool);
 
   BOOST_CHECK_EQUAL((nTestDWord.partial<CIEC_BYTE>(0)), 0xAC);
@@ -1031,7 +1031,7 @@ BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_DWORD_SET_VALUE_WORD_BYTE_BIT_CHECK_WORD_A) 
   nTestByte = CIEC_BYTE(0xAD);
   nTestDWord.partial<CIEC_WORD>(0).partial<CIEC_BYTE>(0).setValue(nTestByte);
 
-  nTestBool = CIEC_BOOL(false);
+  nTestBool = false_BOOL;
   nTestDWord.partial<CIEC_WORD>(0).partial<CIEC_BYTE>(0).partial<CIEC_BOOL>(0).setValue(nTestBool);
 
   BOOST_CHECK_EQUAL((nTestDWord.partial<CIEC_WORD>(0)), 0x0BAC);
@@ -1055,7 +1055,7 @@ BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_DWORD_SET_VALUE_WORD_BYTE_BIT_CHECK_DWORD_A)
   nTestByte = CIEC_BYTE(0xAD);
   nTestDWord.partial<CIEC_WORD>(0).partial<CIEC_BYTE>(0).setValue(nTestByte);
 
-  nTestBool = CIEC_BOOL(false);
+  nTestBool = false_BOOL;
   nTestDWord.partial<CIEC_WORD>(0).partial<CIEC_BYTE>(0).partial<CIEC_BOOL>(0).setValue(nTestBool);
 
   BOOST_CHECK_EQUAL(nTestDWord, 0xBAD00BAC);
@@ -1079,7 +1079,7 @@ BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_DWORD_SET_VALUE_WORD_BYTE_BIT_CHECK_BIT_B) {
   nTestByte = CIEC_BYTE(0xAD);
   nTestDWord.partial<CIEC_WORD>(0).partial<CIEC_BYTE>(0).setValue(nTestByte);
 
-  nTestBool = CIEC_BOOL(false);
+  nTestBool = false_BOOL;
   nTestDWord.partial<CIEC_WORD>(0).partial<CIEC_BYTE>(0).partial<CIEC_BOOL>(0).setValue(nTestBool);
 
   BOOST_CHECK_EQUAL((nTestDWord.partial<CIEC_BOOL>(0)), false);
@@ -1103,10 +1103,10 @@ BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_DWORD_SET_VALUE_WORD_BYTE_BIT_CHECK_BYTE_B) 
   nTestByte = CIEC_BYTE(0xAD);
   nTestDWord.partial<CIEC_WORD>(0).partial<CIEC_BYTE>(0).setValue(nTestByte);
 
-  nTestBool = CIEC_BOOL(false);
+  nTestBool = false_BOOL;
   nTestDWord.partial<CIEC_WORD>(0).partial<CIEC_BYTE>(0).partial<CIEC_BOOL>(0).setValue(nTestBool);
 
-  nTestBool = CIEC_BOOL(true);
+  nTestBool = true_BOOL;
   nTestDWord.partial<CIEC_WORD>(1).partial<CIEC_BYTE>(0).partial<CIEC_BOOL>(5).setValue(nTestBool);
 
   BOOST_CHECK_EQUAL((nTestDWord.partial<CIEC_BYTE>(2)), 0xF0);
@@ -1130,10 +1130,10 @@ BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_DWORD_SET_VALUE_WORD_BYTE_BIT_CHECK_WORD_B) 
   nTestByte = CIEC_BYTE(0xAD);
   nTestDWord.partial<CIEC_WORD>(0).partial<CIEC_BYTE>(0).setValue(nTestByte);
 
-  nTestBool = CIEC_BOOL(false);
+  nTestBool = false_BOOL;
   nTestDWord.partial<CIEC_WORD>(0).partial<CIEC_BYTE>(0).partial<CIEC_BOOL>(0).setValue(nTestBool);
 
-  nTestBool = CIEC_BOOL(true);
+  nTestBool = true_BOOL;
   nTestDWord.partial<CIEC_WORD>(1).partial<CIEC_BYTE>(0).partial<CIEC_BOOL>(5).setValue(nTestBool);
 
   BOOST_CHECK_EQUAL((nTestDWord.partial<CIEC_WORD>(1)), 0xBAF0);
@@ -1157,10 +1157,10 @@ BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_DWORD_SET_VALUE_WORD_BYTE_BIT_CHECK_DWORD_B)
   nTestByte = CIEC_BYTE(0xAD);
   nTestDWord.partial<CIEC_WORD>(0).partial<CIEC_BYTE>(0).setValue(nTestByte);
 
-  nTestBool = CIEC_BOOL(false);
+  nTestBool = false_BOOL;
   nTestDWord.partial<CIEC_WORD>(0).partial<CIEC_BYTE>(0).partial<CIEC_BOOL>(0).setValue(nTestBool);
 
-  nTestBool = CIEC_BOOL(true);
+  nTestBool = true_BOOL;
   nTestDWord.partial<CIEC_WORD>(1).partial<CIEC_BYTE>(0).partial<CIEC_BOOL>(5).setValue(nTestBool);
 
   BOOST_CHECK_EQUAL(nTestDWord, 0xBAF00BAC);
@@ -1178,10 +1178,10 @@ BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_READ_WITH_IEC_TYPE_INDEX) {
 
 BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_WRITE_WITH_IEC_TYPE_INDEX) {
   CIEC_DWORD nDWord;
-  nDWord.partial<CIEC_BOOL>(CIEC_SINT(0)) = CIEC_BOOL(true);
+  nDWord.partial<CIEC_BOOL>(CIEC_SINT(0)) = true_BOOL;
   BOOST_TEST(static_cast<CIEC_DWORD::TValueType>(nDWord) == 1U);
 
-  nDWord.partial<CIEC_BOOL>(CIEC_SINT(1)) = CIEC_BOOL(true);
+  nDWord.partial<CIEC_BOOL>(CIEC_SINT(1)) = true_BOOL;
   BOOST_TEST(static_cast<CIEC_DWORD::TValueType>(nDWord) == 3U);
 }
 

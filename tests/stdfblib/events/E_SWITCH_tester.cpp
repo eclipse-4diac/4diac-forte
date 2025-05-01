@@ -29,19 +29,19 @@ struct E_SWITCH_TestFixture : public CFBTestFixtureBase {
 BOOST_FIXTURE_TEST_SUITE(SwitchTests, E_SWITCH_TestFixture)
 
 BOOST_AUTO_TEST_CASE(singleE0) {
-  mInG = CIEC_BOOL(false);
+  mInG = false_BOOL;
   triggerEvent(0);
   BOOST_CHECK(checkForSingleOutputEventOccurence(0));
 }
 
 BOOST_AUTO_TEST_CASE(SingleE1) {
-  mInG = CIEC_BOOL(true);
+  mInG = true_BOOL;
   triggerEvent(0);
   BOOST_CHECK(checkForSingleOutputEventOccurence(1));
 }
 
 BOOST_AUTO_TEST_CASE(MultipleE0) {
-  mInG = CIEC_BOOL(false);
+  mInG = false_BOOL;
   for (unsigned int i = 0; i < 1000; ++i) {
     triggerEvent(0);
     BOOST_CHECK(checkForSingleOutputEventOccurence(0));
@@ -49,7 +49,7 @@ BOOST_AUTO_TEST_CASE(MultipleE0) {
 }
 
 BOOST_AUTO_TEST_CASE(MultipleE1) {
-  mInG = CIEC_BOOL(true);
+  mInG = true_BOOL;
   for (unsigned int i = 0; i < 1000; ++i) {
     triggerEvent(0);
     BOOST_CHECK(checkForSingleOutputEventOccurence(1));

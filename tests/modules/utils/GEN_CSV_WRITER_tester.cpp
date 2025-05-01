@@ -31,7 +31,7 @@ class GEN_CSV_WRITER_TestFixture : public CFBTestFixtureBase {
       setOutputData({&mQO, &mSTATUS});
       CFBTestFixtureBase::setup("CSV_WRITER_2");
 
-      mQI = CIEC_BOOL(true);
+      mQI = true_BOOL;
       mFILE_NAME = CIEC_STRING("./GEN_CSV_WRITER.temp"s);
 
       triggerEvent(InputEventINIT);
@@ -61,7 +61,7 @@ class GEN_CSV_WRITER_TestFixture : public CFBTestFixtureBase {
     enum OutputEvents { OutputEventINITO, OutputEventCNF };
 
     void closeFile() {
-      mQI = CIEC_BOOL(false);
+      mQI = false_BOOL;
 
       triggerEvent(InputEventINIT);
 
@@ -98,7 +98,7 @@ struct GEN_CSV_WRITER_TestFixtureArrayArray
 BOOST_AUTO_TEST_SUITE(GEN_CSV_WRITER_Tests)
 
 BOOST_FIXTURE_TEST_CASE(blockedWrite, GEN_CSV_WRITER_TestFixtureIntString) {
-  mQI = CIEC_BOOL(false);
+  mQI = false_BOOL;
 
   triggerEvent(InputEventREQ);
 
@@ -110,7 +110,7 @@ BOOST_FIXTURE_TEST_CASE(blockedWrite, GEN_CSV_WRITER_TestFixtureIntString) {
 }
 
 BOOST_FIXTURE_TEST_CASE(validWrite, GEN_CSV_WRITER_TestFixtureIntString) {
-  mQI = CIEC_BOOL(true);
+  mQI = true_BOOL;
   mSD_1 = CIEC_INT(1);
   mSD_2 = "Test"_STRING;
 
@@ -119,7 +119,7 @@ BOOST_FIXTURE_TEST_CASE(validWrite, GEN_CSV_WRITER_TestFixtureIntString) {
   BOOST_CHECK(checkForSingleOutputEventOccurence(OutputEventCNF));
   BOOST_CHECK(mQO);
 
-  mQI = CIEC_BOOL(true);
+  mQI = true_BOOL;
   mSD_1 = CIEC_INT(20);
   mSD_2 = "Test2"_STRING;
 
@@ -133,7 +133,7 @@ BOOST_FIXTURE_TEST_CASE(validWrite, GEN_CSV_WRITER_TestFixtureIntString) {
 }
 
 BOOST_FIXTURE_TEST_CASE(arrayWrite, GEN_CSV_WRITER_TestFixtureArrayArray) {
-  mQI = CIEC_BOOL(true);
+  mQI = true_BOOL;
   mSD_1[0].setValue(CIEC_INT(1));
   mSD_1[1].setValue(CIEC_INT(2));
   mSD_1[2].setValue(CIEC_INT(3));

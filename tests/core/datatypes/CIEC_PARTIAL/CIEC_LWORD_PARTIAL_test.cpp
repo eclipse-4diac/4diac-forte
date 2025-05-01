@@ -853,10 +853,10 @@ BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_READ_WITH_IEC_TYPE_INDEX) {
 
 BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_WRITE_WITH_IEC_TYPE_INDEX) {
   CIEC_LWORD nLWord;
-  nLWord.partial<CIEC_BOOL>(CIEC_SINT(0)) = CIEC_BOOL(true);
+  nLWord.partial<CIEC_BOOL>(CIEC_SINT(0)) = true_BOOL;
   BOOST_TEST(static_cast<CIEC_LWORD::TValueType>(nLWord) == 1U);
 
-  nLWord.partial<CIEC_BOOL>(CIEC_SINT(1)) = CIEC_BOOL(true);
+  nLWord.partial<CIEC_BOOL>(CIEC_SINT(1)) = true_BOOL;
   BOOST_TEST(static_cast<CIEC_LWORD::TValueType>(nLWord) == 3U);
 }
 

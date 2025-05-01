@@ -248,10 +248,10 @@ BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_READ_WITH_IEC_TYPE_INDEX) {
 
 BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_WRITE_WITH_IEC_TYPE_INDEX) {
   CIEC_WORD nWord;
-  nWord.partial<CIEC_BOOL>(CIEC_SINT(0)) = CIEC_BOOL(true);
+  nWord.partial<CIEC_BOOL>(CIEC_SINT(0)) = true_BOOL;
   BOOST_TEST(static_cast<CIEC_WORD::TValueType>(nWord) == 1U);
 
-  nWord.partial<CIEC_BOOL>(CIEC_SINT(1)) = CIEC_BOOL(true);
+  nWord.partial<CIEC_BOOL>(CIEC_SINT(1)) = true_BOOL;
   BOOST_TEST(static_cast<CIEC_WORD::TValueType>(nWord) == 3U);
 }
 

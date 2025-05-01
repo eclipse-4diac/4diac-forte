@@ -28,7 +28,7 @@ GEN_PUBL::GEN_PUBL(const CStringDictionary::TStringId paInstanceNameId, forte::c
 bool GEN_PUBL::configureFB(const char *paConfigString) {
   bool bRetVal = GEN_PUBLISH::configureFB(paConfigString);
   // publs normally don't show the QI in the tool
-  QI() = CIEC_BOOL(true);
+  QI() = true_BOOL;
   return bRetVal;
 }
 

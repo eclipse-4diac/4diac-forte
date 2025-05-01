@@ -48,15 +48,15 @@ BOOST_AUTO_TEST_CASE(Implicit_bool_cast_assignment) {
   CIEC_DWORD testee;
   BOOST_CHECK_EQUAL(testee, 0);
 
-  testee = CIEC_BOOL(true);
+  testee = true_BOOL;
   BOOST_CHECK_EQUAL(testee, 1);
 
-  testee = CIEC_BOOL(false);
+  testee = false_BOOL;
   BOOST_CHECK_EQUAL(testee, 0);
 }
 
 BOOST_AUTO_TEST_CASE(Implicit_bool_cast_ctor) {
-  CIEC_DWORD testee(CIEC_BOOL(true));
+  CIEC_DWORD testee(true_BOOL);
   BOOST_CHECK_EQUAL(testee, 1);
 }
 

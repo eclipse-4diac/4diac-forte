@@ -1347,7 +1347,7 @@ BOOST_AUTO_TEST_CASE(Partial_Bool_NOT_Operation) {
   CIEC_BOOL result;
 
   result = func_NOT(lword.partial<CIEC_BOOL>(4));
-  BOOST_REQUIRE_EQUAL(result, CIEC_BOOL(true));
+  BOOST_REQUIRE_EQUAL(result, true_BOOL);
 }
 
 BOOST_AUTO_TEST_CASE(Partial_Byte_NOT_Operation) {
@@ -1379,7 +1379,7 @@ BOOST_AUTO_TEST_CASE(Partial_LWord_EQ_Operation) {
   CIEC_DWORD dword(0xA5A5A5A5);
 
   CIEC_BOOL result = func_EQ(lword.partial<CIEC_DWORD>(0), dword);
-  BOOST_REQUIRE_EQUAL(CIEC_BOOL(true), result);
+  BOOST_REQUIRE_EQUAL(true_BOOL, result);
 }
 
 BOOST_AUTO_TEST_CASE(Both_Partial_EQ_Operation) {
@@ -1387,7 +1387,7 @@ BOOST_AUTO_TEST_CASE(Both_Partial_EQ_Operation) {
   CIEC_DWORD dword(0xA5A5A5A5);
 
   CIEC_BOOL result = func_EQ(lword.partial<CIEC_BYTE>(0), dword.partial<CIEC_BYTE>(0));
-  BOOST_REQUIRE_EQUAL(CIEC_BOOL(true), result);
+  BOOST_REQUIRE_EQUAL(true_BOOL, result);
 }
 
 BOOST_AUTO_TEST_CASE(Partial_LWord_NE_Operation) {
@@ -1395,7 +1395,7 @@ BOOST_AUTO_TEST_CASE(Partial_LWord_NE_Operation) {
   CIEC_DWORD dword(0xFEFEFEFE);
 
   CIEC_BOOL result = func_NE(lword.partial<CIEC_DWORD>(0), dword);
-  BOOST_REQUIRE_EQUAL(CIEC_BOOL(true), result);
+  BOOST_REQUIRE_EQUAL(true_BOOL, result);
 }
 
 BOOST_AUTO_TEST_CASE(Both_Partial_NE_Operation) {
@@ -1403,35 +1403,35 @@ BOOST_AUTO_TEST_CASE(Both_Partial_NE_Operation) {
   CIEC_DWORD dword(0xFEFEFEFE);
 
   CIEC_BOOL result = func_NE(lword.partial<CIEC_BYTE>(0), dword.partial<CIEC_BYTE>(0));
-  BOOST_REQUIRE_EQUAL(CIEC_BOOL(true), result);
+  BOOST_REQUIRE_EQUAL(true_BOOL, result);
 }
 
 BOOST_AUTO_TEST_CASE(Both_Partial_GT_Operation) {
   CIEC_LWORD lword(0xA5A5A5A5A5A5A5A5);
   CIEC_DWORD dword(0xFEFEFEFE);
 
-  BOOST_REQUIRE_EQUAL(CIEC_BOOL(false), func_GT(lword.partial<CIEC_BYTE>(0), dword.partial<CIEC_BYTE>(0)));
+  BOOST_REQUIRE_EQUAL(false_BOOL, func_GT(lword.partial<CIEC_BYTE>(0), dword.partial<CIEC_BYTE>(0)));
 }
 
 BOOST_AUTO_TEST_CASE(Both_Partial_GE_Operations) {
   CIEC_LWORD lword(0xA5A5A5A5A5A5A5A5);
   CIEC_DWORD dword(0xFEFEFEFE);
 
-  BOOST_REQUIRE_EQUAL(CIEC_BOOL(false), func_GE(lword.partial<CIEC_BYTE>(0), dword.partial<CIEC_BYTE>(0)));
+  BOOST_REQUIRE_EQUAL(false_BOOL, func_GE(lword.partial<CIEC_BYTE>(0), dword.partial<CIEC_BYTE>(0)));
 }
 
 BOOST_AUTO_TEST_CASE(Both_Partial_LT_Operations) {
   CIEC_LWORD lword(0xA5A5A5A5A5A5A5A5);
   CIEC_DWORD dword(0xFEFEFEFE);
 
-  BOOST_REQUIRE_EQUAL(CIEC_BOOL(true), func_LT(lword.partial<CIEC_BYTE>(0), dword.partial<CIEC_BYTE>(0)));
+  BOOST_REQUIRE_EQUAL(true_BOOL, func_LT(lword.partial<CIEC_BYTE>(0), dword.partial<CIEC_BYTE>(0)));
 }
 
 BOOST_AUTO_TEST_CASE(Both_Partial_LE_Operations) {
   CIEC_LWORD lword(0xA5A5A5A5A5A5A5A5);
   CIEC_DWORD dword(0xFEFEFEFE);
 
-  BOOST_REQUIRE_EQUAL(CIEC_BOOL(true), func_LE(lword.partial<CIEC_BYTE>(0), dword.partial<CIEC_BYTE>(0)));
+  BOOST_REQUIRE_EQUAL(true_BOOL, func_LE(lword.partial<CIEC_BYTE>(0), dword.partial<CIEC_BYTE>(0)));
 }
 
 BOOST_AUTO_TEST_CASE(func_minus) {
@@ -2062,7 +2062,7 @@ BOOST_AUTO_TEST_CASE(func_to_big_endian_array_typelib_copy_ctor) {
 BOOST_AUTO_TEST_CASE(func_to_big_endian_struct) {
   CIEC_EndianessTestStruct original;
 
-  (*static_cast<CIEC_BOOL *>(original.getMemberNamed(STRID(Val1)))) = CIEC_BOOL(true);
+  (*static_cast<CIEC_BOOL *>(original.getMemberNamed(STRID(Val1)))) = true_BOOL;
   (*static_cast<CIEC_DINT *>(original.getMemberNamed(STRID(Val2)))) = CIEC_DINT(55);
   (*static_cast<CIEC_LWORD *>(original.getMemberNamed(STRID(Val3)))) = CIEC_LWORD(65536UL);
 
@@ -2081,7 +2081,7 @@ BOOST_AUTO_TEST_CASE(output_negation_bool_test) {
   CIEC_BOOL outBool(false);
   testSTInIsOutBoolDummyFunction(inBool, ST_EXTEND_LIFETIME(CIEC_ANY_BIT_NOT(outBool)));
   BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(outBool) == true);
-  inBool = CIEC_BOOL(true);
+  inBool = true_BOOL;
   testSTInIsOutBoolDummyFunction(inBool, ST_EXTEND_LIFETIME(CIEC_ANY_BIT_NOT(outBool)));
   BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(outBool) == false);
 }

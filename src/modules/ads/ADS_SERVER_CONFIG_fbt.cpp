@@ -116,7 +116,7 @@ void FORTE_ADS_SERVER_CONFIG::executeEvent(const TEventID paEIID, CEventChainExe
             static_cast<CIEC_UDINT::TValueType>(ADS_PORT()), SERVER_IPV4_OR_HOSTNAME().getStorage().c_str()));
       } else {
         forte::ads::CAdsConnectionManager::getInstance().removeConnection(FRIENDLY_NAME().getStorage().c_str());
-        QO() = CIEC_BOOL(false);
+        QO() = false_BOOL;
       }
       sendOutputEvent(scmEventINITOID, paECET);
       break;

@@ -28,32 +28,32 @@ BOOST_AUTO_TEST_CASE(cast_lword_to_bool) {
   CIEC_LWORD trueResult(0xFF);
   CIEC_LWORD falseResult(0xFE);
 
-  BOOST_TEST(func_LWORD_TO_BOOL(trueResult) == CIEC_BOOL(true));
-  BOOST_TEST(func_LWORD_TO_BOOL(falseResult) == CIEC_BOOL(false));
+  BOOST_TEST(func_LWORD_TO_BOOL(trueResult) == true_BOOL);
+  BOOST_TEST(func_LWORD_TO_BOOL(falseResult) == false_BOOL);
 }
 
 BOOST_AUTO_TEST_CASE(cast_dword_to_bool) {
   CIEC_DWORD trueResult(0xFF);
   CIEC_DWORD falseResult(0xFE);
 
-  BOOST_TEST(func_DWORD_TO_BOOL(trueResult) == CIEC_BOOL(true));
-  BOOST_TEST(func_DWORD_TO_BOOL(falseResult) == CIEC_BOOL(false));
+  BOOST_TEST(func_DWORD_TO_BOOL(trueResult) == true_BOOL);
+  BOOST_TEST(func_DWORD_TO_BOOL(falseResult) == false_BOOL);
 }
 
 BOOST_AUTO_TEST_CASE(cast_word_to_bool) {
   CIEC_WORD trueResult(0xFF);
   CIEC_WORD falseResult(0xFE);
 
-  BOOST_TEST(func_WORD_TO_BOOL(trueResult) == CIEC_BOOL(true));
-  BOOST_TEST(func_WORD_TO_BOOL(falseResult) == CIEC_BOOL(false));
+  BOOST_TEST(func_WORD_TO_BOOL(trueResult) == true_BOOL);
+  BOOST_TEST(func_WORD_TO_BOOL(falseResult) == false_BOOL);
 }
 
 BOOST_AUTO_TEST_CASE(cast_byte_to_bool) {
   CIEC_BYTE trueResult(0xFF);
   CIEC_BYTE falseResult(0xFE);
 
-  BOOST_TEST(func_BYTE_TO_BOOL(trueResult) == CIEC_BOOL(true));
-  BOOST_TEST(func_BYTE_TO_BOOL(falseResult) == CIEC_BOOL(false));
+  BOOST_TEST(func_BYTE_TO_BOOL(trueResult) == true_BOOL);
+  BOOST_TEST(func_BYTE_TO_BOOL(falseResult) == false_BOOL);
 }
 
 BOOST_AUTO_TEST_CASE(cast_word_to_int_then_int_to_dint_sign_extension_test) {

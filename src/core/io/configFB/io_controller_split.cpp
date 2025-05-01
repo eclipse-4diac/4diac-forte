@@ -64,7 +64,7 @@ void IOConfigFBSplitController::onStartup(CEventChainExecutionThread *const paEC
   }
 
   cur->MasterId() = CIEC_UINT(mId);
-  cur->QI() = CIEC_BOOL(true);
+  cur->QI() = true_BOOL;
   sendAdapterEvent(scmSplitAdapter[mSplitIterator], IOConfigFBSplitAdapter::scmEventINITID, paECET);
 }
 
@@ -87,7 +87,7 @@ void IOConfigFBSplitController::onStop(CEventChainExecutionThread *const paECET)
     cur = static_cast<IOConfigFBSplitAdapter *>(mAdapters[scmSplitAdapter[mSplitIterator]]);
   }
 
-  cur->QI() = CIEC_BOOL(false);
+  cur->QI() = false_BOOL;
   sendAdapterEvent(scmSplitAdapter[mSplitIterator], IOConfigFBSplitAdapter::scmEventINITID, paECET);
 }
 

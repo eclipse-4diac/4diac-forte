@@ -101,25 +101,25 @@ BOOST_AUTO_TEST_CASE(Array_assignment_test_BOOL) {
   BOOST_CHECK_EQUAL(nTest[1].getDataTypeID(), CIEC_ANY::e_BOOL);
   BOOST_CHECK_EQUAL(nTest[2].getDataTypeID(), CIEC_ANY::e_BOOL);
 
-  static_cast<CIEC_BOOL &>(nTest[0]) = CIEC_BOOL(true);
-  static_cast<CIEC_BOOL &>(nTest[1]) = CIEC_BOOL(false);
-  static_cast<CIEC_BOOL &>(nTest[2]) = CIEC_BOOL(true);
+  static_cast<CIEC_BOOL &>(nTest[0]) = true_BOOL;
+  static_cast<CIEC_BOOL &>(nTest[1]) = false_BOOL;
+  static_cast<CIEC_BOOL &>(nTest[2]) = true_BOOL;
 
   BOOST_CHECK_EQUAL(static_cast<CIEC_BOOL &>(nTest[0]), true);
   BOOST_CHECK_EQUAL(static_cast<CIEC_BOOL &>(nTest[1]), false);
   BOOST_CHECK_EQUAL(static_cast<CIEC_BOOL &>(nTest[2]), true);
 
-  static_cast<CIEC_BOOL &>(nTest[0]) = CIEC_BOOL(false);
-  static_cast<CIEC_BOOL &>(nTest[1]) = CIEC_BOOL(false);
-  static_cast<CIEC_BOOL &>(nTest[2]) = CIEC_BOOL(true);
+  static_cast<CIEC_BOOL &>(nTest[0]) = false_BOOL;
+  static_cast<CIEC_BOOL &>(nTest[1]) = false_BOOL;
+  static_cast<CIEC_BOOL &>(nTest[2]) = true_BOOL;
 
   BOOST_CHECK_EQUAL(static_cast<CIEC_BOOL &>(nTest[0]), false);
   BOOST_CHECK_EQUAL(static_cast<CIEC_BOOL &>(nTest[1]), false);
   BOOST_CHECK_EQUAL(static_cast<CIEC_BOOL &>(nTest[2]), true);
 
-  static_cast<CIEC_BOOL &>(nTest[0]) = CIEC_BOOL(true);
-  static_cast<CIEC_BOOL &>(nTest[1]) = CIEC_BOOL(false);
-  static_cast<CIEC_BOOL &>(nTest[2]) = CIEC_BOOL(false);
+  static_cast<CIEC_BOOL &>(nTest[0]) = true_BOOL;
+  static_cast<CIEC_BOOL &>(nTest[1]) = false_BOOL;
+  static_cast<CIEC_BOOL &>(nTest[2]) = false_BOOL;
 
   BOOST_CHECK_EQUAL(static_cast<CIEC_BOOL &>(nTest[0]), true);
   BOOST_CHECK_EQUAL(static_cast<CIEC_BOOL &>(nTest[1]), false);
