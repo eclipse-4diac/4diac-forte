@@ -105,14 +105,12 @@ WagoDeviceController::createIOHandle(forte::core::io::IODeviceController::Handle
       inputOffset = mTerminalInfos[desc.mSlaveIndex].OffsetInput_bits + (2 * desc.mChannel);
       break;
     case CIEC_ANY::e_DWORD:
-      outputOffset = mTerminalInfos[desc.mSlaveIndex].OffsetOutput_bits + (4 * desc.mChannel);
-      inputOffset = mTerminalInfos[desc.mSlaveIndex].OffsetInput_bits + (4 * desc.mChannel);
+      outputOffset = (mTerminalInfos[desc.mSlaveIndex].OffsetOutput_bits + desc.mChannel) / 8;
+      inputOffset = (mTerminalInfos[desc.mSlaveIndex].OffsetInput_bits + desc.mChannel) / 8;
       break;
     default: return 0;
   }
-
-  return new WagoHandle(this, desc.mType, desc.mDirection, mAppDevInterface, mTaskId, mKBusDeviceId, outputOffset,
-                        inputOffset);
+  return new WagoHandle(this, desc.mType, desc.mDirection, mAppDevInterface, mTaskId, mKBusDeviceId, outputOffset, inputOffset);
 }
 
 void WagoDeviceController::deInit() {

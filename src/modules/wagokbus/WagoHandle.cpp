@@ -93,13 +93,13 @@ void WagoHandle::getBoolean(CIEC_BOOL &paState) {
 void WagoHandle::getWord(CIEC_WORD &paState) {
   TForteByte inDataWord[2];
   mAppDevInterface->ReadBytes(mKBusDeviceId, mTaskId, mInputOffset, 2, inDataWord);
-  paState = CIEC_WORD((inDataWord[1] << 8) & inDataWord[0]);
+  paState = CIEC_WORD((inDataWord[1] << 8) | inDataWord[0]);
 }
 
 void WagoHandle::getDWord(CIEC_DWORD &paState) {
   TForteByte inDataDWord[4];
   mAppDevInterface->ReadBytes(mKBusDeviceId, mTaskId, mInputOffset, 4, inDataDWord);
-  paState = CIEC_DWORD((inDataDWord[3] << 24) & (inDataDWord[2] << 16) & (inDataDWord[1] << 8) & inDataDWord[0]);
+  paState = CIEC_DWORD((inDataDWord[3] << 24) | (inDataDWord[2] << 16) | (inDataDWord[1] << 8) | inDataDWord[0]);
 }
 
 void WagoHandle::setBoolean(const CIEC_BOOL &paState) {
