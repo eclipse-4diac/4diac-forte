@@ -13,6 +13,7 @@
 #ifndef _EMB_RES_H_
 #define _EMB_RES_H_
 
+#include "../../core/resource.h"
 #include "E_RESTART_fbt.h"
 
 class EMB_RES : public CResource {

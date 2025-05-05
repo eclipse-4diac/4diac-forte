@@ -15,7 +15,6 @@
 #pragma once
 
 #include "../core/esfb.h"
-#include "../core/resource.h"
 #include "forte_sem.h"
 
 class FORTE_E_RESTART final : public CEventSourceFB {

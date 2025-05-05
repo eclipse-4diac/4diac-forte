@@ -15,7 +15,6 @@
 
 #include "../funcbloc.h"
 #include "../device.h"
-#include "../resource.h"
 #include "../devexec.h"
 #include "../extevhan.h"
 

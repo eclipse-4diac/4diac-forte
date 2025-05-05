@@ -12,8 +12,6 @@
  *      - initial implementation and rework communication infrastructure
  *******************************************************************************/
 #include "extevhan.h"
-#include "../resource.h"
-#include "../device.h"
 #include <devlog.h>
 
 CExternalEventHandler::CExternalEventHandler(CDeviceExecution &paDeviceExecution) :
