@@ -16,22 +16,18 @@
  *      - account for data type size in FB initialization
  *******************************************************************************/
 
-#ifndef SRC_CORE_SIMPLEFB_H_
-#define SRC_CORE_SIMPLEFB_H_
+#pragma once
 
-#include "basicfb.h"
+#include "basefb.h"
 
-class CSimpleFB : public CBasicFB {
-  public:
+class CSimpleFB : public CBaseFB {
+  protected:
     CSimpleFB(forte::core::CFBContainer &paContainer,
               const SFBInterfaceSpec &paInterfaceSpec,
               CStringDictionary::TStringId paInstanceNameId,
-              const SInternalVarsInformation *paVarInternals) :
-        CBasicFB(paContainer, paInterfaceSpec, paInstanceNameId, paVarInternals) {
+              const SInternalVarsInformation *const paVarInternals) :
+        CBaseFB(paContainer, paInterfaceSpec, paInstanceNameId, paVarInternals) {
     }
 
-  protected:
     void setInitialValues() override = 0;
 };
-
-#endif /* SRC_CORE_SIMPLEFB_H_ */

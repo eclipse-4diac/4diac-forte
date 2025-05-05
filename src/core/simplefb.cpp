@@ -12,8 +12,7 @@
  *******************************************************************************/
 
 #include "simplefb.h"
-#include "basicfb.h"
 
 void CSimpleFB::setInitialValues() {
-  CBasicFB::setInitialValues();
+  CBaseFB::setInitialValues();
 }

@@ -30,7 +30,7 @@ forte_add_sourcefile_h(conn.h)
 forte_add_sourcefile_hcpp(dataconn inoutdataconn eventconn)
 
 forte_add_sourcefile_h(esfb.h event.h fortenode.h fortelist.h genfb.h)
-forte_add_sourcefile_hcpp(interfacespec basicfb cfb simplefb device devexec forteinstance mgmcmd)
+forte_add_sourcefile_hcpp(interfacespec basefb basicfb cfb simplefb device devexec forteinstance mgmcmd)
 forte_add_sourcefile_hcpp(extevhan funcbloc fbcontainer)
 forte_add_sourcefile_hcpp(resource stringdict typelib ecet)
 forte_add_sourcefile_hcpp(adapterconn adapter anyadapter iec61131_functions)

@@ -1,6 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2005 - 2015 Profactor GmbH, ACIN, fortiss GmbH
- *               2023 Martin Erich Jobst
+ * Copyright (c) 2005, 2025 Profactor GmbH, ACIN, fortiss GmbH,
+ *                          Martin Erich Jobst, Johannes Kepler University Linz
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -9,82 +9,38 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    Thomas Strasser, Gunnar Grabmair, Alois Zoitl, Gerhard Ebenhofer, Ingo Hegny
+ *   Thomas Strasser, Gunnar Grabmair, Alois Zoitl, Gerhard Ebenhofer, Ingo Hegny
  *      - initial implementation and rework communication infrastructure
- *    Martin Jobst - account for data type size in FB initialization
+ *   Martin Jobst - account for data type size in FB initialization
+ *   Alois Zoitl  - exracted internal variable handling to new CBaseFB
  *******************************************************************************/
-#ifndef _BASICFB_H_
-#define _BASICFB_H_
 
-#include "funcbloc.h"
+#pragma once
+
+#include "basefb.h"
 #include "forte_state.h"
-
-/*!\ingroup CORE
- * \brief structure to hold the data needed for creating the internal vars
- *
- */
-struct SInternalVarsInformation {
-    TPortId mNumIntVars; //!< Number of internal vars
-    const CStringDictionary::TStringId *mIntVarsNames; //!< List of the internalvarsnames
-    const CStringDictionary::TStringId *mIntVarsDataTypeNames; //!< List of the data type names for the internal vars
-
-    TPortId getVarId(CStringDictionary::TStringId paInternalName) const;
-};
 
 /*!\ingroup CORE
  *
  * \brief Class for handling firmware basic function blocks.
  */
-class CBasicFB : public CFunctionBlock {
+class CBasicFB : public CBaseFB {
   public:
-    /*!\brief The main constructur for a basic function block.
-     */
-    CBasicFB(forte::core::CFBContainer &paContainer,
-             const SFBInterfaceSpec &paInterfaceSpec,
-             CStringDictionary::TStringId paInstanceNameId,
-             const SInternalVarsInformation *paVarInternals);
-
     ~CBasicFB() override = default;
 
     CIEC_ANY *getVar(CStringDictionary::TStringId *paNameList, unsigned int paNameListSize) override;
 
-    int toString(char *paValue, size_t paBufferSize) const override;
-
-    size_t getToStringBufferSize() const override;
-
-#ifdef FORTE_TRACE_CTF
-    void traceInstanceData() override;
-#endif
-
   protected:
-    /*! \brief Get the internal variable with given number
-     *
-     * Attention this function will not perform any range checks on the paVarIntNum parameter!
-     * @param paVarIntNum number of the internal variable starting with 0
-     * @return pointer to the internal variable
-     */
-    virtual CIEC_ANY *getVarInternal(size_t paVarIntNum) = 0;
-
-    const CIEC_ANY *getVarInternal(size_t paVarIntNum) const {
-      return const_cast<CBasicFB *>(this)->getVarInternal(paVarIntNum);
-    }
-
-    CIEC_STATE mECCState; //! the current state of the ecc. start value is 0 = initial state id
-    const SInternalVarsInformation *const cmVarInternals; //!< struct holding the information on the internal vars.
+    CBasicFB(forte::core::CFBContainer &paContainer,
+             const SFBInterfaceSpec &paInterfaceSpec,
+             CStringDictionary::TStringId paInstanceNameId,
+             const SInternalVarsInformation *const paVarInternals);
 
     void setInitialValues() override = 0;
 
-  private:
-    /*!\brief Get the pointer to a internal variable of the basic FB.
-     *
-     * \param paInternalName StringId of the internal variable name.
-     * \return Pointer to the internal variable or 0.
-     */
-    CIEC_ANY *getInternalVar(CStringDictionary::TStringId paInternalName);
+    CIEC_STATE mECCState; //! the current state of the ecc. start value is 0 = initial state id
 
 #ifdef FORTE_FMU
     friend class fmuInstance;
 #endif // FORTE_FMU
 };
-
-#endif /*_BASICFB_H_*/
