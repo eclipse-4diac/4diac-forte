@@ -61,15 +61,51 @@ void IODeviceController::addHandle(HandleDescriptor &paHandleDescriptor) {
   IOHandle *handle = createIOHandle(paHandleDescriptor);
 
   if (nullptr == handle) {
-    DEVLOG_WARNING("[IODeviceController] Failed to initialize handle '%s'. Check initHandle method.\n",
+    DEVLOG_WARNING("[IODeviceController] Failed to initialize handle '%s'. Check initHandle method.\r\n",
                    paHandleDescriptor.mId.c_str());
     return;
   }
 
-  switch (handle->getDirection()) {
-    case IOMapper::In: addHandle(&mInputHandles, paHandleDescriptor.mId, handle); break;
-    case IOMapper::Out: addHandle(&mOutputHandles, paHandleDescriptor.mId, handle); break;
-    default: break;
+  addHandle(paHandleDescriptor.mId, handle);
+}
+
+void IODeviceController::addHandle(std::string const &paId, IOHandle *paHandle) {
+  switch (paHandle->getDirection()) {
+    case IOMapper::InOut:
+      if (!paId.empty() && IOMapper::getInstance().registerHandle(paId, paHandle))
+        DEVLOG_INFO("[addHandle] %ss direction is `InOut`. Registered successfully.\r\n", paId.c_str());
+      break;
+    case IOMapper::In: addHandle(&mInputHandles, paId, paHandle); break;
+    case IOMapper::Out: addHandle(&mOutputHandles, paId, paHandle); break;
+    case IOMapper::UnknownDirection:
+      if (!paId.empty() && IOMapper::getInstance().registerHandle(paId, paHandle))
+        DEVLOG_INFO("[addHandle] %ss direction is `UnknownDirection`. Registered successfully.\r\n", paId.c_str());
+      break;
+    default:
+      DEVLOG_DEBUG("[addHandle] Not able to detect direction for %s.\r\n", paId.c_str());
+      break;
+  }
+}
+
+void IODeviceController::updateHandleList(std::string const &paId, IOHandle *paHandle) {
+  DEVLOG_DEBUG("[updateHandleList] %s gets updated.\r\n", paId.c_str());
+  mInputHandles.erase(paHandle);
+  mInputHandles.erase(paHandle);
+
+    switch (paHandle->getDirection()) {
+      case IOMapper::In: {
+        CCriticalRegion criticalRegion(mHandleMutex);
+        mInputHandles.pushBack(paHandle);
+        break;
+      }
+      case IOMapper::Out: {
+        CCriticalRegion criticalRegion(mHandleMutex);
+        mOutputHandles.pushBack(paHandle);
+        break;
+      }
+      default:
+        DEVLOG_ERROR("[updateHandleList] %ss direction is neither `In` nor `Out`.\r\n", paId.c_str());
+        break;
   }
 }
 
@@ -87,13 +123,13 @@ bool IODeviceController::hasError() const {
 
 void IODeviceController::notifyConfigFB(NotificationType paType, const void *paAttachment) {
   if (nullptr == mDelegate) {
-    DEVLOG_WARNING("[IODeviceController] No receiver for notification is available. Notification is dropped.\n");
+    DEVLOG_WARNING("[IODeviceController] No receiver for notification is available. Notification is dropped.\r\n");
     return;
   }
 
   if (!mNotificationHandled) {
     DEVLOG_WARNING("[IODeviceController] Notification has not yet been handled by the configuration fb. Notification "
-                   "is dropped.\n");
+                   "is dropped.\r\n");
     return;
   }
 

@@ -21,8 +21,9 @@
 #include <fortelist.h>
 
 #include <io/mapper/io_handle.h>
-
 #include <string>
+#include "ESpec.h"
+#include "forward_list"
 
 namespace forte {
   namespace core {
@@ -103,7 +104,18 @@ namespace forte {
             return 0;
           }
 
+          /*! @brief Updates the current handle in the input or output handle list
+           *
+           * This method deletes the current handle in the device-specific input and
+           * output list and adds it again, according to its current direction.
+           *
+           * @param paId Handle ID of the IOHandle, which should be updated
+           * @param paHandle IOHandle which should be updated
+           */
+          virtual void updateHandleList(std::string const &paId, IOHandle *paHandle);
+
         protected:
+
           explicit IODeviceController(CDeviceExecution &paDeviceExecution);
 
           /*! @brief Initializes the controller.
@@ -161,6 +173,8 @@ namespace forte {
            * @param paHandleDescriptor Descriptor of the handle
            */
           virtual void addHandle(HandleDescriptor &paHandleDescriptor);
+
+          virtual void addHandle(std::string const &paId, IOHandle *paHandle);
 
           /*! @brief Initializer for all IO handles.
            *

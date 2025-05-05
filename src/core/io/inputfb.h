@@ -37,12 +37,19 @@ namespace forte::core::io {
   class CInputFB : public forte::core::io::CProcessInterfaceFB {
       static_assert(std::is_base_of_v<CIEC_ANY_BIT, T>, "T must be a subclass of CIEC_ANY_BIT");
 
-    private:
+    protected:
       static const TEventID scmEventINDID = 2;
 
     public:
       CInputFB(forte::core::CFBContainer &paContainer, const CStringDictionary::TStringId paInstanceNameId) :
           CProcessInterfaceFB(paContainer, scmFBInterfaceSpec, paInstanceNameId),
+          var_IN(),
+          conn_IND(*this, 2),
+          conn_IN(*this, 2, var_IN) {
+      }
+
+      CInputFB(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec& paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId) :
+          CProcessInterfaceFB(paContainer, paInterfaceSpec, paInstanceNameId),
           var_IN(),
           conn_IND(*this, 2),
           conn_IN(*this, 2, var_IN) {
@@ -105,7 +112,6 @@ namespace forte::core::io {
         }
       }
 
-    private:
       static const CStringDictionary::TStringId scmDataInputNames[];
       static const CStringDictionary::TStringId scmDataInputTypeIds[];
       static const CStringDictionary::TStringId scmDataOutputNames[];
@@ -119,7 +125,7 @@ namespace forte::core::io {
       static const CStringDictionary::TStringId scmEventOutputNames[];
       static const CStringDictionary::TStringId scmEventOutputTypeIds[];
 
-      void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) final override {
+      void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override {
         switch (paEIID) {
           case cgExternalEventID: sendOutputEvent(scmEventINDID, paECET); break;
           case scmEventREQID:
