@@ -1,5 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2022 Michael Hansal
+ * Copyright (c) 2022, 2025 Michael Hansal, Primetals Technologies Austria GmbH
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -8,6 +9,7 @@
  *
  * Contributors:
  *   Michael Hansal - initial tests
+ *   Alois Zoitl    - migrated data type toString to std::string
  *******************************************************************************/
 #include "../../core/fbtests/fbtestfixture.h"
 
@@ -41,7 +43,7 @@ class GEN_CSV_WRITER_TestFixture : public CFBTestFixtureBase {
       mIsOpen = true;
     }
 
-    ~GEN_CSV_WRITER_TestFixture() {
+    ~GEN_CSV_WRITER_TestFixture() override {
       if (mIsOpen) {
         closeFile();
       }

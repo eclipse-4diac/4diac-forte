@@ -1,5 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2011 - 2013 ACIN, Profactor GmbH, fortiss GmbH, nxtControl GmbH
+ * Copyright (c) 2011, 2025 ACIN, Profactor GmbH, fortiss GmbH, nxtControl GmbH,
+ *                          Primetals Technologies Austria GmbH
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -8,9 +9,10 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    Alois Zoitl, Monika Wenger, Matthias Plasch, Martin Melik Markumians,
- *    Ingo Hegny, Stanislav Meduna
- *      - initial implementation and rework communication infrastructure
+ *   Alois Zoitl, Monika Wenger, Matthias Plasch, Martin Melik Markumians,
+ *     Ingo Hegny, Stanislav Meduna
+ *          - initial implementation and rework communication infrastructure
+ *   Markus Meingast, Alois Zoitl  - migrated data type toString to std::string
  *******************************************************************************/
 #include "forte_any_elementary.h"
 
@@ -100,101 +102,79 @@ const std::map<CStringDictionary::TStringId, CIEC_ANY::EDataTypeID> CIEC_ANY_ELE
     {STRID(STRING), CIEC_ANY::e_STRING},
     {STRID(WSTRING), CIEC_ANY::e_WSTRING}};
 
-int CIEC_ANY_ELEMENTARY::toString(char *paValue, size_t paBufferSize) const {
-  int nRetVal = 0;
+void CIEC_ANY_ELEMENTARY::toString(std::string &paTargetBuf) const {
+  TLargestUIntValueType divisor = 0;
+  TLargestUIntValueType unsignedValBuf = 0;
+  TLargestIntValueType signedValBuf = 0;
 
-  TLargestUIntValueType nDivisor = 0;
-  TLargestUIntValueType nUBuffer = 0;
-  TLargestIntValueType nSBuffer = 0;
-
-  bool bSigned = true;
+  bool isSigned = true;
 
   switch (getDataTypeID()) {
     case e_SINT:
-      nSBuffer = getTINT8();
-      nDivisor = 100;
+      signedValBuf = getTINT8();
+      divisor = 100;
       break;
     case e_USINT:
     case e_BYTE:
-      nUBuffer = getTUINT8();
-      nDivisor = 100;
-      bSigned = false;
+      unsignedValBuf = getTUINT8();
+      divisor = 100;
+      isSigned = false;
       break;
     case e_INT:
-      nSBuffer = getTINT16();
-      nDivisor = 10000;
+      signedValBuf = getTINT16();
+      divisor = 10000;
       break;
     case e_UINT:
     case e_WORD:
-      nUBuffer = getTUINT16();
-      nDivisor = 10000;
-      bSigned = false;
+      unsignedValBuf = getTUINT16();
+      divisor = 10000;
+      isSigned = false;
       break;
     case e_DINT:
-      nSBuffer = getTINT32();
-      nDivisor = 1000000000L;
+      signedValBuf = getTINT32();
+      divisor = 1000000000L;
       break;
     case e_UDINT:
     case e_DWORD:
-      nUBuffer = getTUINT32();
-      nDivisor = 1000000000L;
-      bSigned = false;
+      unsignedValBuf = getTUINT32();
+      divisor = 1000000000L;
+      isSigned = false;
       break;
     case e_LINT:
-      nSBuffer = getTINT64();
-      nDivisor = 1000000000000000000LL;
+      signedValBuf = getTINT64();
+      divisor = 1000000000000000000LL;
       break;
     case e_ULINT:
     case e_LWORD:
-      nUBuffer = getTUINT64();
-      nDivisor = 10000000000000000000ULL;
-      bSigned = false;
+      unsignedValBuf = getTUINT64();
+      divisor = 10000000000000000000ULL;
+      isSigned = false;
       break;
-    default: DEVLOG_ERROR("Attempt to call CIEC_ANY::toString in CIEC_ANY_ELEMENTARY\n"); return -1;
+    default: DEVLOG_ERROR("Attempt to call CIEC_ANY::toString in CIEC_ANY_ELEMENTARY\n"); return;
   }
 
-  if (true == bSigned) {
-    if (nSBuffer < 0) {
-      if (nRetVal >= static_cast<int>(paBufferSize)) {
-        return -1;
-      }
-      paValue[nRetVal] = '-';
-      nRetVal++;
-      nSBuffer *= -1;
+  if (true == isSigned) {
+    if (signedValBuf < 0) {
+      paTargetBuf += '-';
+      signedValBuf *= -1;
     }
-    nUBuffer = static_cast<TLargestUIntValueType>(nSBuffer);
+    unsignedValBuf = static_cast<TLargestUIntValueType>(signedValBuf);
   }
 
-  bool bLeadingZeros = true;
+  bool leadingZeros = true;
   do {
-    if ((0 == nUBuffer / nDivisor) && (true == bLeadingZeros)) {
-      nDivisor /= 10;
+    if ((0 == unsignedValBuf / divisor) && (true == leadingZeros)) {
+      divisor /= 10;
       continue;
     } else {
-      bLeadingZeros = false;
+      leadingZeros = false;
     }
-    if (nRetVal >= static_cast<int>(paBufferSize)) {
-      return -1;
-    }
+    paTargetBuf += static_cast<char>(static_cast<char>(unsignedValBuf / divisor) + '0');
+    unsignedValBuf = unsignedValBuf - (paTargetBuf.back() - '0') * divisor;
+    divisor /= 10;
+  } while (divisor > 1);
 
-    paValue[nRetVal] = static_cast<char>(static_cast<char>(nUBuffer / nDivisor) + '0');
-    nUBuffer = nUBuffer - (paValue[nRetVal] - '0') * nDivisor;
-    nDivisor /= 10;
-    nRetVal++;
-  } while (nDivisor > 1);
-
-  if (nRetVal >= static_cast<int>(paBufferSize)) {
-    return -1;
-  }
-  paValue[nRetVal] = static_cast<char>(static_cast<char>(nUBuffer / nDivisor) + '0');
-  nRetVal++;
-
-  if (nRetVal >= static_cast<int>(paBufferSize)) {
-    return -1;
-  }
-  paValue[nRetVal] = '\0';
-
-  return nRetVal;
+  paTargetBuf += static_cast<char>(static_cast<char>(unsignedValBuf / divisor) + '0');
 }
 
 int CIEC_ANY_ELEMENTARY::fromString(const char *paValue) {

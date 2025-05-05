@@ -1,6 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2023 ACIN, fortiss GmbH
- *                          Martin Erich Jobst
+ * Copyright (c) 2011, 2025 ACIN, fortiss GmbH, Martin Erich Jobst,
+ *                          Primetals Technologies Ausria GmbH
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -9,8 +9,10 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *   Martin Melik Merkumians, Ingo Hegny, Alois Zoitl - initial API and implementation and/or initial documentation
+ *   Martin Melik Merkumians, Ingo Hegny, Alois Zoitl
+ *                - initial API and implementation and/or initial documentation
  *   Martin Jobst - add user-defined literal tests
+ *   Alois Zoitl  - migrated data type toString to std::string
  *******************************************************************************/
 #include <boost/test/unit_test.hpp>
 #include "forte_boost_output_support.h"
@@ -68,15 +70,8 @@ BOOST_AUTO_TEST_CASE(Assignment_test) {
 
 BOOST_AUTO_TEST_CASE(Conversion_test) {
   CIEC_BOOL bTest;
-  char cBuffer1[10];
-  char cBuffer2[6];
-  char cBuffer3[4];
-  char cBuffer4[3];
-
-  strcpy(cBuffer1, "");
-  strcpy(cBuffer2, "");
-  strcpy(cBuffer3, "");
-  strcpy(cBuffer4, "");
+  std::string cBuffer1;
+  std::string cBuffer2;
 
   // check cast operator
   bTest = true_BOOL;
@@ -101,18 +96,14 @@ BOOST_AUTO_TEST_CASE(Conversion_test) {
   BOOST_CHECK_EQUAL(bTest.fromString("BOOL#TRUE"), strlen("BOOL#TRUE"));
   BOOST_CHECK_EQUAL(bTest, true);
 
-  BOOST_CHECK_EQUAL(bTest.toString(cBuffer1, 10), 4);
-  BOOST_CHECK_EQUAL(bTest.toString(cBuffer2, 6), 4);
-  BOOST_CHECK_EQUAL(bTest.toString(cBuffer3, 4), -1);
-  BOOST_CHECK_EQUAL(bTest.toString(cBuffer4, 3), -1);
+  bTest.toString(cBuffer1);
+  bTest.toString(cBuffer2);
 
-  BOOST_CHECK_EQUAL(strcmp(cBuffer1, "TRUE"), 0);
-  BOOST_CHECK_EQUAL(strcmp(cBuffer2, "TRUE"), 0);
+  BOOST_CHECK_EQUAL(cBuffer1, "TRUE");
+  BOOST_CHECK_EQUAL(cBuffer2, "TRUE");
 
-  strcpy(cBuffer1, "");
-  strcpy(cBuffer2, "");
-  strcpy(cBuffer3, "");
-  strcpy(cBuffer4, "");
+  cBuffer1.clear();
+  cBuffer2.clear();
 
   BOOST_CHECK_EQUAL(bTest.fromString("FALSE"), 5);
   BOOST_CHECK_EQUAL(bTest, false);
@@ -123,13 +114,11 @@ BOOST_AUTO_TEST_CASE(Conversion_test) {
   BOOST_CHECK_EQUAL(bTest.fromString("false"), 5);
   BOOST_CHECK_EQUAL(bTest, false);
 
-  BOOST_CHECK_EQUAL(bTest.toString(cBuffer1, 10), 5);
-  BOOST_CHECK_EQUAL(bTest.toString(cBuffer2, 6), 5);
-  BOOST_CHECK_EQUAL(bTest.toString(cBuffer3, 4), -1);
-  BOOST_CHECK_EQUAL(bTest.toString(cBuffer4, 3), -1);
+  bTest.toString(cBuffer1);
+  bTest.toString(cBuffer2);
 
-  BOOST_CHECK_EQUAL(strcmp(cBuffer1, "FALSE"), 0);
-  BOOST_CHECK_EQUAL(strcmp(cBuffer2, "FALSE"), 0);
+  BOOST_CHECK_EQUAL(cBuffer1, "FALSE");
+  BOOST_CHECK_EQUAL(cBuffer2, "FALSE");
 
   // check invalid fromString string
 

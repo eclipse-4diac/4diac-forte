@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2022 Primetals Technologies Austria GmbH
+ * Copyright (c) 2022, 2025 Primetals Technologies Austria GmbH
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -8,8 +8,9 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    Martin Melik-Merkumians
- *      - initial implementation and rework communication infrastructure
+ *   Martin Melik-Merkumians
+ *               - initial implementation and rework communication infrastructure
+ *   Alois Zoitl - migrated data type toString to std::string
  *******************************************************************************/
 #ifndef _FORTE_CHAR_H_
 #define _FORTE_CHAR_H_
@@ -57,15 +58,9 @@ class CIEC_CHAR : public CIEC_ANY_CHAR {
       return getChar8();
     }
 
-    int toString(char *paValue, size_t paBufferSize) const override;
+    void toString(std::string &paTargetBuf) const override;
 
     int fromString(const char *paValue) override;
-
-    /*! \brief calculates buffer size needed for toString conversion
-     */
-    size_t getToStringBufferSize() const override final {
-      return sizeof("CHAR#'$00'");
-    }
 
     EDataTypeID getDataTypeID() const override final {
       return CIEC_ANY::e_CHAR;

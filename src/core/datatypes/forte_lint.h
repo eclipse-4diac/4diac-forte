@@ -1,6 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2023 ACIN
- *                          Primetals Technologies Austria GmbH
+ * Copyright (c) 2009, 2025 ACIN, Primetals Technologies Austria GmbH,
  *                          Martin Erich Jobst
  *
  * This program and the accompanying materials are made available under the
@@ -10,13 +9,14 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    Monika Wenger, Alois Zoitl,
- *      - initial implementation and rework communication infrastructure
- *    Martin Melik Merkumians - make TForteInt64 constructor explicit,
- *      adds casts constructors, removed built-in type operator=, added
- *      castable CIEC types operator=
- *    Martin Jobst - add user-defined literal
- *                 - add ANY_SIGNED
+ *   Monika Wenger, Alois Zoitl,
+ *                - initial implementation and rework communication infrastructure
+ *   Martin Melik Merkumians - make TForteInt64 constructor explicit, adds casts
+ *                  constructors, removed built-in type operator=, added castable
+ *                  CIEC types operator=
+ *   Martin Jobst - add user-defined literal
+ *                - add ANY_SIGNED
+ *   Alois Zoitl  - migrated data type toString to std::string
  *******************************************************************************/
 #ifndef _FORTE_LINT_H_
 #define _FORTE_LINT_H_
@@ -109,12 +109,6 @@ class CIEC_LINT final : public CIEC_ANY_SIGNED {
      */
     explicit operator TForteInt64() const {
       return getTINT64();
-    }
-
-    /*! \brief calculates buffer size needed for toString conversion
-     */
-    size_t getToStringBufferSize() const override {
-      return sizeof("-9223372036854775808");
     }
 
     EDataTypeID getDataTypeID() const override {

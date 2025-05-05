@@ -1,5 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2022 Primetals Technologies Austria GmbH
+ * Copyright (c) 2022, 2025 Primetals Technologies Austria GmbH
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -7,8 +8,9 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    Martin Melik Merkumians
- *      - initial implementation and rework communication infrastructure,
+ *   Martin Melik Merkumians
+ *                - initial implementation and rework communication infrastructure
+ *   Alois Zoitl  - migrated data type toString to std::string
  *******************************************************************************/
 #ifndef _FORTE_STATE_H_
 #define _FORTE_STATE_H_
@@ -57,12 +59,6 @@ class CIEC_STATE final : public CIEC_ANY_INT {
      */
     operator TForteUInt16() const {
       return getTUINT16();
-    }
-
-    /*! \brief calculates buffer size needed for toString conversion
-     */
-    size_t getToStringBufferSize() const override {
-      return sizeof("65535");
     }
 
     EDataTypeID getDataTypeID() const override {

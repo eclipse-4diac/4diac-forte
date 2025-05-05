@@ -1,5 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2023 Martin Erich Jobst
+ * Copyright (c) 2023, 2025 Martin Erich Jobst,
+ *                          Primetals Technologies Austria GmbH
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -8,7 +9,8 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    Martin Erich Jobst - initial implementation
+ *   Martin Erich Jobst - initial implementation
+ *   Alois Zoitl  - migrated data type toString to std::string
  *******************************************************************************/
 #include "forte_any_bit_variant.h"
 
@@ -80,23 +82,9 @@ int CIEC_ANY_BIT_VARIANT::fromString(const char *paValue) {
   return nRetVal;
 }
 
-int CIEC_ANY_BIT_VARIANT::toString(char *paValue, size_t paBufferSize) const {
-  int result = -1;
+void CIEC_ANY_BIT_VARIANT::toString(std::string &paTargetBuf) const {
   const CIEC_ANY &value = unwrap();
-  const char *typeName = CStringDictionary::get(value.getTypeNameID());
-  size_t typeNameLength = strlen(typeName);
-  if (paBufferSize > typeNameLength + 2) {
-    memcpy(paValue, typeName, typeNameLength);
-    paValue[typeNameLength] = '#';
-    result = static_cast<int>(typeNameLength) + 1 +
-             value.toString(paValue + typeNameLength + 1, paBufferSize - typeNameLength - 1);
-  }
-  return result;
-}
-
-size_t CIEC_ANY_BIT_VARIANT::getToStringBufferSize() const {
-  const CIEC_ANY &value = unwrap();
-  const char *typeName = CStringDictionary::get(value.getTypeNameID());
-  size_t typeNameLength = strlen(typeName);
-  return typeNameLength + 1 + value.getToStringBufferSize();
+  paTargetBuf += CStringDictionary::get(value.getTypeNameID());
+  paTargetBuf += '#';
+  value.toString(paTargetBuf);
 }

@@ -1,7 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2023 Profactor GmbH, ACIN
- *                          Johannes Kepler University Linz
- *                          Primetals Technologies Austria GmbH
+ * Copyright (c) 2005, 2025 Profactor GmbH, ACIN,
+ *                          Johannes Kepler University Linz,
+ *                          Primetals Technologies Austria GmbH,
  *                          Martin Erich Jobst
  *
  * This program and the accompanying materials are made available under the
@@ -11,14 +11,15 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    Thomas Strasser, Ingomar Müller, Alois Zoitl, Gerhard Ebenhofer,
- *    Ingo Hegny, Martin Melik-Merkumians, Monika Wenger
- *      - initial implementation and rework communication infrastructure
- *    Ernst Blecha - add multibit partial access
- *    Martin Melik Merkumians - changes multibit access index from template
- *      parameter to call argument, make TForteByte constructor explicit,
- *      removed built-in type operator=
- *    Martin Jobst - add user-defined literal
+ *   Thomas Strasser, Ingomar Müller, Alois Zoitl, Gerhard Ebenhofer,
+ *     Ingo Hegny, Martin Melik-Merkumians, Monika Wenger
+ *                - initial implementation and rework communication infrastructure
+ *   Ernst Blecha - add multibit partial access
+ *   Martin Melik Merkumians - changes multibit access index from template parameter
+ *                  to call argument, make TForteByte constructor explicit,
+ *                  removed built-in type operator=
+ *   Martin Jobst - add user-defined literal
+ *   Alois Zoitl  - migrated data type toString to std::string
  *******************************************************************************/
 #ifndef _FORTE_BYTE_H_
 #define _FORTE_BYTE_H_
@@ -80,12 +81,6 @@ class CIEC_BYTE : public CIEC_ANY_BIT {
      */
     operator TForteByte() const {
       return getTUINT8();
-    }
-
-    /*! \brief calculates buffer size needed for toString conversion
-     */
-    size_t getToStringBufferSize() const override final {
-      return sizeof("255");
     }
 
     EDataTypeID getDataTypeID() const override final {

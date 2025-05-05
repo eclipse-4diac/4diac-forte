@@ -1,7 +1,8 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2024 Profactor GmbH, ACIN, nxtcontrol GmbH, fortiss GmbH
+ * Copyright (c) 2005, 2025 Profactor GmbH, ACIN, nxtcontrol GmbH, fortiss GmbH
  *                          TU Vienna/ACIN, Martin Erich Jobst,
- *                          Martin Melik Merkumians
+ *                          Martin Melik Merkumians,
+ *                          Primetals Technologies Austria
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -10,13 +11,14 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    Thomas Strasser, Ingomar Müller, Alois Zoitl, Gerhard Ebenhofer,
- *    Ingo Hegny, Martin Melik Merkumians, Stanislav Meduna, Monika Wenger
- *      - initial implementation and rework communication infrastructure
- *    Martin Melik Merkumians - templated cast factory function
- *    Martin Jobst - add equals function
- *                 - add support for data types with different size
- *    Martin Melik Merkumians - Add specialized numeric_limits for IEC types
+ *   Thomas Strasser, Ingomar Müller, Alois Zoitl, Gerhard Ebenhofer,
+ *     Ingo Hegny, Martin Melik Merkumians, Stanislav Meduna, Monika Wenger
+ *                - initial implementation and rework communication infrastructure
+ *   Martin Melik Merkumians - templated cast factory function
+ *   Martin Jobst - add equals function
+ *                - add support for data types with different size
+ *   Martin Melik Merkumians - Add specialized numeric_limits for IEC types
+ *   Alois Zoitl  - migrated data type toString to std::string
  *******************************************************************************/
 #ifndef _ANY_H_
 #define _ANY_H_
@@ -213,11 +215,8 @@ class CIEC_ANY {
      *   This function is necessary for communication with a proper engineering system.
      *   Pure virtual function implementation.
      *   \param paValue buffer for storing the string representation
-     *   \param paBufferSize size in bytes available in the buffer
-     *   \return number of bytes used in the buffer without trailing 0x00
-     *           -1 on error
      */
-    virtual int toString(char *paValue, size_t paBufferSize) const = 0;
+    virtual void toString(std::string &paTargetBuf) const = 0;
 
     /*! \brief Compare for equality
      *
@@ -244,10 +243,6 @@ class CIEC_ANY {
     /*! \brief perform special cast operation that can not be directly handled by the data types
      */
     static void specialCast(const CIEC_ANY &paSrcValue, CIEC_ANY &paDstValue);
-
-    /*! \brief calculates buffer size needed for toString conversion
-     */
-    virtual size_t getToStringBufferSize() const = 0;
 
     virtual size_t getIECMemorySize() const {
       const EDataTypeID typeId = getDataTypeID();

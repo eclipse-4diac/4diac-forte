@@ -1,5 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2022 Primetals Technologies Austria GmbH
+ * Copyright (c) 2022, 2025 Primetals Technologies Austria GmbH
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -8,6 +9,7 @@
  *
  * Contributors:
  *   Fabio Gandolfi - initial API and implementation and/or initial documentation
+ *   Alois Zoitl    - migrated data type toString to std::string
  *******************************************************************************/
 
 #include <boost/test/unit_test.hpp>
@@ -198,22 +200,19 @@ BOOST_AUTO_TEST_CASE(arrayOfStructs_access_test) {
   BOOST_CHECK_EQUAL(static_cast<CIEC_STRUCT &>(nTest[0]).getMemberNamed(STRID(Val3))->getDataTypeID(),
                     CIEC_ANY::e_TIME);
 
-  char acBuffer[230];
+  std::string buffer;
   for (size_t i = 0; i < 3; i++) {
     CIEC_TestStruct &toTest = static_cast<CIEC_TestStruct &>(nTest[i]);
     setupArrayOfStructTest_TestDataSet1(toTest);
-    BOOST_CHECK_EQUAL(toTest.toString(acBuffer, 230), sizeof("(Val1:=TRUE,Val2:=33,Val3:=T#22ns)") - 1);
-    BOOST_CHECK_EQUAL(strcmp(acBuffer, "(Val1:=TRUE,Val2:=33,Val3:=T#22ns)"), 0);
+    toTest.toString(buffer);
+    BOOST_CHECK_EQUAL(buffer, "(Val1:=TRUE,Val2:=33,Val3:=T#22ns)");
+    buffer.clear();
   }
 
-  BOOST_CHECK_EQUAL(nTest.toString(acBuffer, 230), sizeof("[(Val1:=TRUE,Val2:=33,Val3:=T#22ns),(Val1:=TRUE,Val2:=33,"
-                                                          "Val3:=T#22ns),(Val1:=TRUE,Val2:=33,Val3:=T#22ns)]") -
-                                                       1);
+  nTest.toString(buffer);
   BOOST_CHECK_EQUAL(
-      strcmp(
-          acBuffer,
-          "[(Val1:=TRUE,Val2:=33,Val3:=T#22ns),(Val1:=TRUE,Val2:=33,Val3:=T#22ns),(Val1:=TRUE,Val2:=33,Val3:=T#22ns)]"),
-      0);
+      buffer,
+      "[(Val1:=TRUE,Val2:=33,Val3:=T#22ns),(Val1:=TRUE,Val2:=33,Val3:=T#22ns),(Val1:=TRUE,Val2:=33,Val3:=T#22ns)]");
 }
 
 BOOST_AUTO_TEST_CASE(arrayOfStructs_TIME_parser_test) {

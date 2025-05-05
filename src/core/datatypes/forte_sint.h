@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2023 Profactor GmbH, ACIN
+ * Copyright (c) 2005, 2025 Profactor GmbH, ACIN
  *                          Primetals Technologies Austria GmbH
  *                          Martin Erich Jobst
  *
@@ -10,13 +10,14 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    Thomas Strasser, Ingomar Müller, Alois Zoitl, Gerhard Ebenhofer,
- *    Ingo Hegny, Martin Melik Merkumians
- *      - initial implementation and rework communication infrastructure
- *    Martin Melik Merkumians - make TForteInt8 constructor explicit,
- *      removed built-in type operator=
- *    Martin Jobst - add user-defined literal
- *                 - add ANY_SIGNED
+ *   Thomas Strasser, Ingomar Müller, Alois Zoitl, Gerhard Ebenhofer,
+ *     Ingo Hegny, Martin Melik Merkumians
+ *                - initial implementation and rework communication infrastructure
+ *   Martin Melik Merkumians - make TForteInt8 constructor explicit,
+ *                  removed built-in type operator=
+ *   Martin Jobst - add user-defined literal
+ *                - add ANY_SIGNED
+ *   Alois Zoitl  - migrated data type toString to std::string
  *******************************************************************************/
 #ifndef _FORTE_SINT_H_
 #define _FORTE_SINT_H_
@@ -78,12 +79,6 @@ class CIEC_SINT final : public CIEC_ANY_SIGNED {
      */
     explicit operator TForteInt8() const {
       return getTINT8();
-    }
-
-    /*! \brief calculates buffer size needed for toString conversion
-     */
-    size_t getToStringBufferSize() const override {
-      return sizeof("-128");
     }
 
     EDataTypeID getDataTypeID() const override {

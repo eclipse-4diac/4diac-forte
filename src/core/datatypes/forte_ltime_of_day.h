@@ -10,12 +10,13 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    Stanislav Meduna, Alois Zoitl, Gerhard Ebenhofer, Martin Melik Merkumians,
- *    Monika Wenger
- *      - initial implementation and rework communication infrastructure
- *    Martin Melik Merkumians - make TForteUInt64 constructor explicit,
- *      removed built-in type operator=, removed operator++
- *    Martin Jobst - add user-defined literal
+ *   Stanislav Meduna, Alois Zoitl, Gerhard Ebenhofer, Martin Melik Merkumians,
+ *     Monika Wenger
+ *                - initial implementation and rework communication infrastructure
+ *   Martin Melik Merkumians - make TForteUInt64 constructor explicit,
+ *                  removed built-in type operator=, removed operator++
+ *   Martin Jobst - add user-defined literal
+ *   Alois Zoitl  - migrated data type toString to std::string
  *******************************************************************************/
 #ifndef _FORTE_LTOD_H_
 #define _FORTE_LTOD_H_
@@ -90,18 +91,9 @@ class CIEC_LTIME_OF_DAY final : public CIEC_ANY_DATE {
      *   This command implements a conversion function from C++ data type
      *   to IEC 61131 conform data type (string format).
      *   This function is necessary for communication with a proper engineering system.
-     *   \param paValue Pointer to the buffer String
-     *   \param paBufferSize Size of the given buffer
-     *   \return number of bytes used in the buffer without trailing 0x00
-     *           -1 on error
+     *   \param paTargetBuf Reference to the buffer String
      */
-    int toString(char *paValue, size_t paBufferSize) const override;
-
-    /*! \brief calculates buffer size needed for toString conversion
-     */
-    size_t getToStringBufferSize() const override {
-      return sizeof("LTOD#00:00:00.000");
-    }
+    void toString(std::string &paTargetBuf) const override;
 };
 
 inline CIEC_LTIME_OF_DAY operator""_LTIME_OF_DAY(unsigned long long int paValue) {

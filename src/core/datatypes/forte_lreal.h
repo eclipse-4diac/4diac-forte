@@ -1,6 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2023 Profactor GmbH, ACIN
- *                          Primetals Technologies Austria GmbH
+ * Copyright (c) 2005, 2025 Profactor GmbH, ACIN,
+ *                          Primetals Technologies Austria GmbH,
  *                          Martin Erich Jobst
  *
  * This program and the accompanying materials are made available under the
@@ -10,14 +10,15 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    Thomas Strasser, Ingomar Müller, Alois Zoitl,
- *    Ingo Hegny, Monika Wenger, Martin Melik Merkumians
- *      - initial implementation and rework communication infrastructure
- *    Martin Melik Merkumians - make TForteDFloat constructor explicit,
- *      adds implicit cast constructor and operator=, removed built-in type operator=,
- *      added castable CIEC types operator=
- *    Martin Jobst - add equals function
- *                 - add user-defined literal
+ *   Thomas Strasser, Ingomar Müller, Alois Zoitl,
+ *     Ingo Hegny, Monika Wenger, Martin Melik Merkumians
+ *                - initial implementation and rework communication infrastructure
+ *   Martin Melik Merkumians - make TForteDFloat constructor explicit,
+ *                  adds implicit cast constructor and operator=, removed built-in
+ *                  type operator=, added castable CIEC types operator=
+ *   Martin Jobst - add equals function
+ *                - add user-defined literal
+ *   Alois Zoitl  - migrated data type toString to std::string
  *******************************************************************************/
 #ifndef _FORTE_LREAL_H_
 #define _FORTE_LREAL_H_
@@ -141,12 +142,6 @@ class CIEC_LREAL final : public CIEC_ANY_REAL {
       return getTDFLOAT();
     }
 
-    /*! \brief calculates buffer size needed for toString conversion
-     */
-    size_t getToStringBufferSize() const override {
-      return sizeof("-2.2250738585072014E-308"); // Minimal double number, negative for additional sign
-    }
-
     EDataTypeID getDataTypeID() const override {
       return CIEC_ANY::e_LREAL;
     }
@@ -169,12 +164,9 @@ class CIEC_LREAL final : public CIEC_ANY_REAL {
      *   This command implements a conversion function from C++ data type
      *   to IEC61131 conform data type (string format).
      *   This function is necessary for communication with a proper engineering system.
-     *   \param paValue Pointer to the buffer String
-     *   \param paBufferSize size of the buffer thats available for this function
-     *   \return number of bytes used in the buffer without trailing 0x00
-     *           -1 on error
+     *   \param paTargetBuf Reference to the buffer String
      */
-    int toString(char *paValue, size_t paBufferSize) const override;
+    void toString(std::string &paTargetBuf) const override;
 
     [[nodiscard]] bool equals(const CIEC_ANY &paOther) const override {
       if (paOther.getDataTypeID() == CIEC_ANY::e_LREAL) {

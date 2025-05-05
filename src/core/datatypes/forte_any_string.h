@@ -97,14 +97,12 @@ class CIEC_ANY_STRING : public CIEC_ANY_CHARS {
      *
      *   This command implements a conversion function from a WSTRING
      *   to a UTF-8 encoding, usable e.g. for the serialization.
-     *   \param paBuffer  Reference to the output buffer. If 0, only the needed size will be computed.
-     *   \param paBufferSize  Size of the provided buffer.
+     *   \param paBuffer  Reference to the output buffer.
      *   \param paEscape  Produce $-escapes and delimiter characters at the beginning and end
      *   \return number of bytes used in the buffer
      *           -1 on error
      */
-    virtual int toUTF8(char *, size_t, bool) const {
-      return 0;
+    virtual void toUTF8(std::string &, bool) const {
     }
 #endif
 
@@ -127,8 +125,7 @@ class CIEC_ANY_STRING : public CIEC_ANY_CHARS {
     static int determineEscapedStringLength(const char *paValue, char paDelimiter);
 
     static bool handleDollarEscapedChar(const char **paSymbol, bool paWide, TForteUInt16 &paValue);
-    // Use null as destination for just determining the need of escaping
-    static int dollarEscapeChar(char *paValue, char paSymbol, unsigned int paBufferSize, const EDataTypeID paTypeID);
+
     static bool parseEscapedHexNum(const char **paSymbol, bool paWide, TForteUInt16 &paValue);
 
     /*! \brief Unescape the input string.

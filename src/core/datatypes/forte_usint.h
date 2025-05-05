@@ -1,6 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2023 Profactor GmbH, ACIN, fortiss GmbH
- *                          Primetals Technologies Austria GmbH
+ * Copyright (c) 2005, 2025 Profactor GmbH, ACIN, fortiss GmbH,
+ *                          Primetals Technologies Austria GmbH,
  *                          Martin Erich Jobst
  *
  * This program and the accompanying materials are made available under the
@@ -10,12 +10,13 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    Thomas Strasser, Ingomar Müller, Alois Zoitl, Gerhard Ebenhofer,
- *    Ingo Hegny, Monika Wenger,
+ *   Thomas Strasser, Ingomar Müller, Alois Zoitl, Gerhard Ebenhofer,
+ *     Ingo Hegny, Monika Wenger,
  *      - initial implementation and rework communication infrastructure
- *    Martin Melik Merkumians - make TForteUInt8 constructor explicit,
+ *   Martin Melik Merkumians - make TForteUInt8 constructor explicit,
  *        removed built-in type operator=
- *    Martin Jobst - add user-defined literal
+ *   Martin Jobst - add user-defined literal
+ *   Alois Zoitl  - migrated data type toString to std::string
  *******************************************************************************/
 #ifndef _FORTE_USINT_H_
 #define _FORTE_USINT_H_
@@ -72,12 +73,6 @@ class CIEC_USINT final : public CIEC_ANY_UNSIGNED {
      */
     explicit operator TForteUInt8() const {
       return getTUINT8();
-    }
-
-    /*! \brief calculates buffer size needed for toString conversion
-     */
-    size_t getToStringBufferSize() const override {
-      return sizeof("255");
     }
 
     EDataTypeID getDataTypeID() const override {

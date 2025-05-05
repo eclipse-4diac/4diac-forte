@@ -1,5 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2005 - 2013 Profactor GmbH, ACIN, nxtControl GmbH, fortiss GmbH
+ * Copyright (c) 2005, 2013 Profactor GmbH, ACIN, nxtControl GmbH, fortiss GmbH,
+ *                          Primetals Technologies Austria GmbH
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -8,9 +9,10 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    Thomas Strasser, Ingomar Müller, Martin Melik Merkumians, Alois Zoitl,
- *    Monika Wenger, Stansilav Meduna
- *      - initial implementation and rework communication infrastructure
+ *   Thomas Strasser, Ingomar Müller, Martin Melik Merkumians, Alois Zoitl,
+ *      Monika Wenger, Stansilav Meduna
+ *                - initial implementation and rework communication infrastructure
+ *   Markus Meingast, Alois Zoitl  - migrated data type toString to std::string
  *******************************************************************************/
 #ifndef _ANY_ELE_H_
 #define _ANY_ELE_H_
@@ -35,7 +37,7 @@ class CIEC_ANY_ELEMENTARY : public CIEC_ANY {
       return CIEC_ANY::e_ANY;
     }
 
-    int toString(char *paValue, size_t paBufferSize) const override;
+    void toString(std::string &paTargetBuf) const override;
     int fromString(const char *paValue) override;
 
     static EDataTypeID getElementaryDataTypeId(CStringDictionary::TStringId paTypeNameId);

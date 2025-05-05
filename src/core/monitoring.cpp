@@ -17,12 +17,9 @@
 #include "monitoring.h"
 #include "funcbloc.h"
 #include "resource.h"
-#include "device.h"
 #include "ecet.h"
 #include "core/util/string_utils.h"
-#include "../arch/timerha.h"
-#include "datatypes/forte_array.h"
-#include "datatypes/forte_struct.h"
+#include <format>
 
 using namespace std::string_literals;
 using namespace forte::core;
@@ -95,81 +92,14 @@ namespace {
     paResponse += cgClosingXMLTag;
   }
 
-  size_t getExtraSizeForEscapedCharsStruct(const CIEC_STRUCT &paDataValue);
-
-  size_t getExtraSizeForEscapedCharsArray(const CIEC_ARRAY &paDataValue) {
-    size_t retVal = 0;
-    auto lowerBound = paDataValue.getLowerBound();
-    auto upperBound = paDataValue.getUpperBound();
-    switch (paDataValue[lowerBound].getDataTypeID()) {
-      case CIEC_ANY::e_STRING:
-        for (auto i = lowerBound; i <= upperBound; i++) {
-          retVal +=
-              forte::core::util::getExtraSizeForXMLEscapedChars(
-                  static_cast<const CIEC_STRING &>(paDataValue[static_cast<TForteUInt16>(i)]).getStorage().c_str()) +
-              10; // for opening and closing quotes or apos
-        }
-        break;
-      case CIEC_ANY::e_WSTRING:
-        for (auto i = lowerBound; i <= upperBound; i++) {
-          retVal += forte::core::util::getExtraSizeForXMLEscapedChars(
-                        static_cast<const CIEC_WSTRING &>(paDataValue[static_cast<TForteUInt16>(i)]).getValue()) +
-                    10; // for opening and closing quotes or apos
-        }
-        break;
-      case CIEC_ANY::e_STRUCT:
-        for (auto i = lowerBound; i <= upperBound; i++) {
-          retVal += getExtraSizeForEscapedCharsStruct(
-              static_cast<const CIEC_STRUCT &>(paDataValue[static_cast<TForteUInt16>(i)]));
-        }
-        break;
-      default: break;
-    }
-
-    return retVal;
-  }
-
-  size_t getExtraSizeForEscapedChars(const CIEC_ANY &paDataValue) {
-    size_t retVal = 0;
-
-    switch (paDataValue.getDataTypeID()) {
-      case CIEC_ANY::e_ANY: retVal = getExtraSizeForEscapedChars(paDataValue.unwrap()); break;
-      case CIEC_ANY::e_STRING:
-        retVal = forte::core::util::getExtraSizeForXMLEscapedChars(
-                     static_cast<const CIEC_STRING &>(paDataValue).getStorage().c_str()) +
-                 10; // for opening and closing quotes or apos
-        break;
-      case CIEC_ANY::e_WSTRING:
-        retVal = forte::core::util::getExtraSizeForXMLEscapedChars(
-                     static_cast<const CIEC_WSTRING &>(paDataValue).getValue()) +
-                 10; // for opening and closing quotes or apos
-        break;
-      case CIEC_ANY::e_CHAR:
-        retVal = 5 + 5 + 5; // Both outer quotes and symbol gets evetually replaced
-        break;
-      case CIEC_ANY::e_WCHAR:
-        retVal = 5 + 5 + 5; // Both outer quotes and symbol gets evetually replaced
-        break;
-      case CIEC_ANY::e_ARRAY:
-        retVal = getExtraSizeForEscapedCharsArray(static_cast<const CIEC_ARRAY &>(paDataValue));
-        break;
-      case CIEC_ANY::e_STRUCT:
-        retVal = getExtraSizeForEscapedCharsStruct(static_cast<const CIEC_STRUCT &>(paDataValue));
-        break;
-      default: break;
-    }
-
-    return retVal;
-  }
-
   void appendDataWatch(std::string &paResponse, internal::CDataWatchEntry &paDataWatchEntry) {
     appendPortTag(paResponse, paDataWatchEntry.getPortId());
     paResponse += "<Data value=\""s;
-    size_t bufferSize = paDataWatchEntry.mDataBuffer->getToStringBufferSize() +
-                        getExtraSizeForEscapedChars(*paDataWatchEntry.mDataBuffer);
-    char *acDataValue = new char[bufferSize];
-    int consumedBytes = paDataWatchEntry.mDataBuffer->toString(acDataValue, bufferSize);
-    if (consumedBytes > 0 && static_cast<size_t>(consumedBytes) < bufferSize) {
+
+    auto start = paResponse.size();
+    paDataWatchEntry.mDataBuffer->toString(paResponse);
+
+    if (start != paResponse.size()) {
       switch (paDataWatchEntry.mDataBuffer->getDataTypeID()) {
         case CIEC_ANY::e_ANY:
         case CIEC_ANY::e_WSTRING:
@@ -177,18 +107,13 @@ namespace {
         case CIEC_ANY::e_CHAR:
         case CIEC_ANY::e_WCHAR:
         case CIEC_ANY::e_ARRAY:
-        case CIEC_ANY::e_STRUCT:
-          consumedBytes += static_cast<int>(forte::core::util::transformNonEscapedToEscapedXMLText(acDataValue));
-          break;
+        case CIEC_ANY::e_STRUCT: forte::core::util::transformNonEscapedToEscapedXMLText(paResponse, start); break;
         default: break;
       }
-      acDataValue[consumedBytes] = '\0';
-      paResponse += acDataValue;
     }
     paResponse += "\" forced=\""s;
     paResponse += (paDataWatchEntry.mForced) ? "true"s : "false"s;
     paResponse += "\"/></Port>"s;
-    delete[] acDataValue;
   }
 
   void createFullFBName(std::string &paFullName, forte::core::TNameIdentifier &paNameList) {
@@ -199,44 +124,11 @@ namespace {
     paFullName.pop_back();
   }
 
-  size_t getExtraSizeForEscapedCharsStruct(const CIEC_STRUCT &paDataValue) {
-    size_t retVal = 0;
-
-    for (size_t i = 0; i < paDataValue.getStructSize(); i++) {
-      const CIEC_ANY *member = paDataValue.getMember(i);
-      switch (member->getDataTypeID()) {
-        case CIEC_ANY::e_STRING:
-          retVal += forte::core::util::getExtraSizeForXMLEscapedChars(
-                        static_cast<const CIEC_STRING *>(member)->getStorage().c_str()) +
-                    10; // for opening and closing quotes or apos
-          break;
-        case CIEC_ANY::e_WSTRING:
-          retVal +=
-              forte::core::util::getExtraSizeForXMLEscapedChars(static_cast<const CIEC_WSTRING *>(member)->getValue()) +
-              10; // for opening and closing quotes or apos
-          break;
-        case CIEC_ANY::e_ARRAY:
-          retVal += getExtraSizeForEscapedCharsArray(*static_cast<const CIEC_ARRAY *>(member));
-          break;
-        case CIEC_ANY::e_STRUCT:
-          retVal += getExtraSizeForEscapedCharsStruct(*static_cast<const CIEC_STRUCT *>(member));
-          break;
-        default: break;
-      }
-    }
-
-    return retVal;
-  }
-
   void appendEventWatch(std::string &paResponse, CEventWatchEntry &paEventWatchEntry) {
     appendPortTag(paResponse, paEventWatchEntry.getPortId());
 
-    CIEC_UDINT udint(paEventWatchEntry.mEventDataBuf);
-
     paResponse += "<Data value=\""s;
-    char buf[21]; // the biggest number in an ulint is 18446744073709551616, TODO directly use paResponse
-    udint.toString(buf, sizeof(buf));
-    paResponse += buf;
+    std::format_to(std::back_inserter(paResponse), "{}", paEventWatchEntry.mEventDataBuf);
     paResponse += "\"/>\n</Port>"s;
   }
 

@@ -1,5 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2008 - 2015 nxtControl GmbH, ACIN, Profactor GmbH, fortiss GmbH
+ * Copyright (c) 2008, 2015 nxtControl GmbH, ACIN, Profactor GmbH, fortiss GmbH,
+ *                          Primetals Technologies Austria GmbH
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -8,20 +9,18 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    Stanislav Meduna, Alois Zoitl, Gerhard Ebenhofer, Martin Melik Merkumians
+ *   Stanislav Meduna, Alois Zoitl, Gerhard Ebenhofer, Martin Melik Merkumians
  *      - initial implementation and rework communication infrastructure
+ *   Alois Zoitl  - migrated data type toString to std::string
  *******************************************************************************/
+#include <format>
 #include <stdlib.h>
-#include <stdio.h>
 #include <math.h>
 #include <string.h>
 #include <ctype.h>
 #include "forte_time_of_day.h"
 
 USE_STRING_ID(TIME_OF_DAY);
-
-#include "../../arch/timerha.h"
-#include <forte_printer.h>
 
 DEFINE_FIRMWARE_DATATYPE(TIME_OF_DAY, STRID(TIME_OF_DAY))
 
@@ -91,16 +90,13 @@ int CIEC_TIME_OF_DAY::fromString(const char *paValue) {
   return static_cast<int>(acBuffer - paValue);
 }
 
-int CIEC_TIME_OF_DAY::toString(char *paValue, size_t paBufferSize) const {
+void CIEC_TIME_OF_DAY::toString(std::string &paTargetBuf) const {
   TForteUInt64 ntoStingBuffer = getTUINT64();
   time_t t = static_cast<time_t>(ntoStingBuffer / 1000000000);
 
-  int nRetVal = forte_snprintf(paValue, paBufferSize, "TOD#%02d:%02d:%02d.%03d", (int) (t / 3600),
-                               (int) ((t % 3600) / 60), (int) (t % 60), (int) ((ntoStingBuffer / 1000000) % 1000));
-  if ((nRetVal < -1) || (nRetVal >= static_cast<int>(paBufferSize))) {
-    nRetVal = -1;
-  }
-  return nRetVal;
+  std::format_to(std::back_inserter(paTargetBuf), "TOD#{:02}:{:02}:{:02}.{:03}", (int) (t / 3600),
+                 static_cast<int>((t % 3600) / 60), static_cast<int>(t % 60),
+                 static_cast<int>((ntoStingBuffer / 1000000) % 1000));
 }
 
 const CStringDictionary::TStringId forte::CDataTypeTrait<CIEC_TIME_OF_DAY>::scmDataTypeName = STRID(TIME_OF_DAY);

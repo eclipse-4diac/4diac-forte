@@ -14,23 +14,21 @@
  *      - add support for infinity and nan values
  *******************************************************************************/
 #include "forte_any_real.h"
-
 #include <cctype>
 
-int CIEC_ANY_REAL::normalizeToStringRepresentation(char *paValue, size_t paBufferSize, int paUsedBytes) const {
-  // look for decimal point or alphabetic character (indicating exponent, infinity, or nan)
-  for (int i = 0; i < paUsedBytes; ++i) {
-    if (paValue[i] == '.' || std::isalpha(paValue[i])) {
-      return paUsedBytes;
-    }
+using namespace std::literals::string_literals;
+
+void CIEC_ANY_REAL::normalizeToStringRepresentation(std::string &paTargetBuf, size_t paStartPos) const {
+  if (std::isalpha(paTargetBuf[paStartPos]) ||
+      (paTargetBuf.size() > paStartPos + 1 && std::isalpha(paTargetBuf[paStartPos + 1]))) {
+    // if first or second char is a alphabetic char we have nan or infinity and we should not perform corrections
+    return;
   }
-  // found none, check if a decimal point can be added
-  if (paUsedBytes + 2 >= static_cast<int>(paBufferSize)) {
-    return -1;
+
+  auto dotPos = paTargetBuf.find('.', paStartPos);
+  auto expPos = paTargetBuf.find('e', paStartPos);
+
+  if (dotPos == std::string::npos && expPos == std::string::npos) {
+    paTargetBuf += ".0"s;
   }
-  // add it
-  paValue[paUsedBytes++] = '.';
-  paValue[paUsedBytes++] = '0';
-  paValue[paUsedBytes] = '\0';
-  return paUsedBytes;
 }

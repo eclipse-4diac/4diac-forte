@@ -20,6 +20,7 @@
  *******************************************************************************/
 #include "resource.h"
 #include "conn.h"
+#include "forte_any_string.h"
 #include "fortenew.h"
 #include "funcbloc.h"
 #include "mgmcmd.h"
@@ -304,59 +305,32 @@ void CResource::setInitialValues() {
 }
 
 EMGMResponse CResource::readValue(forte::core::TNameIdentifier &paNameList, std::string &paValue) {
-  EMGMResponse retVal = EMGMResponse::NoSuchObject;
   CIEC_ANY *const var = getVariable(paNameList);
-  if (var != nullptr) {
-    char *buffer = nullptr;
-    int nUsedChars = -1;
-    switch (var->getDataTypeID()) {
-      case CIEC_ANY::e_WSTRING: {
-        const size_t bufferSize = var->getToStringBufferSize() + forte::core::util::getExtraSizeForXMLEscapedChars(
-                                                                     static_cast<CIEC_WSTRING &>(*var).getValue());
-        buffer = new char[bufferSize]();
-        nUsedChars = static_cast<CIEC_WSTRING &>(*var).toUTF8(buffer, bufferSize, false);
-        if (bufferSize != var->getToStringBufferSize() &&
-            0 < nUsedChars) { // avoid re-running on strings which were already proven not to have any special character
-          nUsedChars += static_cast<int>(forte::core::util::transformNonEscapedToEscapedXMLText(buffer));
-        }
-        if (0 < nUsedChars) {
-          paValue += buffer;
-        }
-        break;
-      }
-      case CIEC_ANY::e_STRING: {
-        const size_t bufferSize =
-            var->getToStringBufferSize() +
-            forte::core::util::getExtraSizeForXMLEscapedChars(static_cast<CIEC_STRING &>(*var).getStorage().c_str());
-        buffer = new char[bufferSize]();
-        nUsedChars = static_cast<CIEC_STRING &>(*var).toUTF8(buffer, bufferSize, false);
-        if (bufferSize != var->getToStringBufferSize() &&
-            0 < nUsedChars) { // avoid re-running on strings which were already proven not to have any special character
-          nUsedChars += static_cast<int>(forte::core::util::transformNonEscapedToEscapedXMLText(buffer));
-        }
-        if (0 < nUsedChars) {
-          paValue += buffer;
-        }
-        break;
-      }
-      default:
-        const size_t bufferSize = var->getToStringBufferSize();
-        buffer = new char[bufferSize]();
-        nUsedChars = var->toString(buffer, sizeof(buffer));
-        if (0 < nUsedChars) {
-          paValue += buffer;
-        }
-        break;
-    }
-
-    delete[] (buffer);
-    if (-1 != nUsedChars) {
-      retVal = EMGMResponse::Ready;
-    } else {
-      retVal = EMGMResponse::InvalidObject;
-    }
+  if (var == nullptr) {
+    return EMGMResponse::NoSuchObject;
   }
-  return retVal;
+
+  auto start = paValue.size();
+  switch (var->getDataTypeID()) {
+    case CIEC_ANY::e_STRING:
+    case CIEC_ANY::e_WSTRING:
+      static_cast<CIEC_ANY_STRING &>(*var).toUTF8(paValue, false);
+      if (start != paValue.size()) {
+        forte::core::util::transformNonEscapedToEscapedXMLText(paValue, start);
+      }
+      break;
+    case CIEC_ANY::e_CHAR:
+    case CIEC_ANY::e_WCHAR:
+    case CIEC_ANY::e_ARRAY:
+    case CIEC_ANY::e_STRUCT:
+      var->toString(paValue);
+      if (start != paValue.size()) {
+        forte::core::util::transformNonEscapedToEscapedXMLText(paValue, start);
+      }
+      break;
+    default: var->toString(paValue); break;
+  }
+  return EMGMResponse::Ready;
 }
 
 #ifdef FORTE_SUPPORT_QUERY_CMD

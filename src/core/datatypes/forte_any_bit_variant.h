@@ -1,5 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2023 Martin Erich Jobst
+ * Copyright (c) 2023, 2025 Martin Erich Jobst,
+ *                          Primetals Technologies Austria GmbH
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -8,7 +9,8 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    Martin Erich Jobst - initial implementation
+ *   Martin Erich Jobst - initial implementation
+ *   Alois Zoitl  - migrated data type toString to std::string
  *******************************************************************************/
 #pragma once
 
@@ -68,9 +70,7 @@ class CIEC_ANY_BIT_VARIANT : public CIEC_ANY_BIT, public TIecAnyBitVariantType {
 
     int fromString(const char *paValue) override;
 
-    int toString(char *paValue, size_t paBufferSize) const override;
-
-    size_t getToStringBufferSize() const override;
+    void toString(std::string &paTargetBuf) const override;
 
     [[nodiscard]] bool equals(const CIEC_ANY &paOther) const override {
       return unwrap().equals(paOther.unwrap());

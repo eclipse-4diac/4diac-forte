@@ -1,7 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2012 - 2015 ACIN, fortiss GmbH
- *                      2018 Johannes Kepler University
- *               2023 Martin Erich Jobst
+ * Copyright (c) 2012, 2025 ACIN, fortiss GmbH, Johannes Kepler University,
+ *                          Martin Erich Jobst, Primetals Technologies Austria GmbH
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -9,14 +9,12 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *   Alois Zoitl
- *   - initial API and implementation and/or initial documentation
- *    Alois Zoitl - introduced new CGenFB class for better handling generic FBs
- *   Martin Jobst
- *     - refactor for ANY variant
- *     - add generic readInputData and writeOutputData
- *   Michael Hansal
- *   - add support for array parameters
+ *   Alois Zoitl  - initial API and implementation and/or initial documentation
+ *   Alois Zoitl  - introduced new CGenFB class for better handling generic FBs
+ *   Martin Jobst - refactor for ANY variant
+ *                - add generic readInputData and writeOutputData
+ *   Michael Hansal - add support for array parameters
+ *   Alois Zoitl  - migrated data type toString to std::string
  *******************************************************************************/
 #include "GEN_CSV_WRITER_fbt.h"
 
@@ -203,23 +201,18 @@ void GEN_CSV_WRITER::writeCSVFileLine() {
       numLines = 1;
     }
 
-    char acBuffer[scmWriteBufferSize];
     for (size_t line = 0; line < numLines; line++) {
       for (TPortId i = 2; i < getFBInterfaceSpec().mNumDIs; i++) {
         auto &value = getDI(i)->unwrap();
-        int nLen;
         if (multiline) {
           auto &array = static_cast<const CIEC_ARRAY &>(value);
-          nLen = array.at(line).unwrap().toString(acBuffer, scmWriteBufferSize);
+          array.at(line).unwrap().toString(mDataOutPutBuffer);
         } else {
-          nLen = value.toString(acBuffer, scmWriteBufferSize);
+          value.toString(mDataOutPutBuffer);
         }
-        if (nLen >= 0) {
-          forte_fwrite(acBuffer, 1, static_cast<size_t>(nLen), mCSVFile);
-        } else {
-          DEVLOG_ERROR("[GEN_CSV_WRITER]: Can't get string value for input %d\n", i);
-        }
+        forte_fwrite(mDataOutPutBuffer.c_str(), 1, mDataOutPutBuffer.size(), mCSVFile);
         forte_fwrite("; ", 1, 2, mCSVFile);
+        mDataOutPutBuffer.clear();
       }
       forte_fwrite("\n", 1, 1, mCSVFile);
     }

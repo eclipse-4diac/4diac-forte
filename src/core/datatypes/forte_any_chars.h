@@ -15,7 +15,6 @@
 #define _ANY_CHARS_H_
 
 #include "forte_any_elementary.h"
-#include <ctype.h>
 #include <string_utils.h>
 
 /*!\ingroup COREDTS CIEC_ANY_CHARS represents ANY_CHARS data types according to
@@ -33,11 +32,10 @@ class CIEC_ANY_CHARS : public CIEC_ANY_ELEMENTARY {
       return CIEC_ANY::e_ANY;
     }
 
-    // int toString(char* paValue, size_t paBufferSize) const override;
-    // int fromString(const char *paValue) override;
-
   protected:
     CIEC_ANY_CHARS() = default;
+
+    static void dollarEscapeChar(std::string &paTargetBuf, char paSymbol, const EDataTypeID paTypeID);
 };
 
 #endif /*_ANY_CHARS_H_*/

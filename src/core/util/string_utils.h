@@ -1,5 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2025 fortiss GmbH, Martin Erich Jobst
+ * Copyright (c) 2013, 2025 fortiss GmbH, Martin Erich Jobst,
+ *                          Primetals Technologies Austria GmbH
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -7,16 +9,17 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *   Alois Zoitl
- *    - initial API and implementation and/or initial documentation
- *   Martin Jobst
- *    - add string join function
+ *   Alois Zoitl  - initial API and implementation and/or initial documentation
+ *   Martin Jobst - add string join function
+ *   Alois Zoitl  - migrated data type toString to std::string
  *******************************************************************************/
 #ifndef _STRING_UTILS_H_
 #define _STRING_UTILS_H_
 
 #include <datatype.h>
 #include <string>
+#include "../stringdict.h"
+#include "../datatypes/forte_any.h"
 
 namespace forte {
   namespace core {
@@ -68,9 +71,8 @@ namespace forte {
        * Transforms a string with chars to be scaped (') into a string with the escaped chars (&apos;)
        * @param paString The null ended C-string to be transformed. It's changed after calling this function, and it
        * should be big enough to hold the extra chars
-       * @return Extra number of chars now present in the string comparing to the original one
        */
-      size_t transformNonEscapedToEscapedXMLText(char *const paString);
+      void transformNonEscapedToEscapedXMLText(std::string &paString, size_t paStart);
 
       char *lookForNonEscapedChar(char **paString, char paChar, char paEscapingChar);
       bool isEscaped(char *paChar, char *paBeginLimit, char paEscapingChar);
@@ -87,6 +89,11 @@ namespace forte {
         }
         paResult.pop_back(); // remove extra delimiter at end
       }
+
+      void writeToStringNameValuePair(std::string &paTargetBuf,
+                                      const CStringDictionary::TStringId variableNameId,
+                                      const CIEC_ANY *const variable);
+
     } // namespace util
   } // namespace core
 } // namespace forte

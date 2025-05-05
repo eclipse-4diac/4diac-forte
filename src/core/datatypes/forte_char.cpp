@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2022 Primetals Technologies Austria GmbH
+ * Copyright (c) 2022, 2025 Primetals Technologies Austria GmbH
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -8,37 +8,22 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    Martin Melik-Merkumians
- *      - initial implementation and rework communication infrastructure
+ *   Martin Melik-Merkumians
+ *               - initial implementation and rework communication infrastructure
+ *   Alois Zoitl - migrated data type toString to std::string
  *******************************************************************************/
 #include "forte_char.h"
 
 USE_STRING_ID(CHAR);
 
-#include "unicode_utils.h"
-
-#include <limits>
-#include <stdio.h>
+using namespace std::literals::string_literals;
 
 DEFINE_FIRMWARE_DATATYPE(CHAR, STRID(CHAR))
 
-int CIEC_CHAR::toString(char *paValue, size_t paBufferSize) const {
-  const char longestStringSerialization[] = "CHAR#'$00'";
-  const size_t longestStringSize = sizeof(longestStringSerialization);
-  if (paBufferSize >= longestStringSize) { // sizeof is char string + \0
-    const unsigned char symbol = this->operator TForteChar();
-    switch (symbol) {
-      case '\0': return snprintf(paValue, longestStringSize, "CHAR#''");
-      case '$': return snprintf(paValue, longestStringSize, "CHAR#'$$'");
-      case '\'': return snprintf(paValue, longestStringSize, "CHAR#'$''");
-      case '\n': return snprintf(paValue, longestStringSize, "CHAR#'$N'");
-      case '\f': return snprintf(paValue, longestStringSize, "CHAR#'$P'"); // page aka form feed
-      case '\r': return snprintf(paValue, longestStringSize, "CHAR#'$R'");
-      case '\t': return snprintf(paValue, longestStringSize, "CHAR#'$T'");
-      default: return snprintf(paValue, longestStringSize, "CHAR#'%c'", symbol);
-    }
-  }
-  return -1;
+void CIEC_CHAR::toString(std::string &paTargetBuf) const {
+  paTargetBuf += "CHAR#'"s;
+  dollarEscapeChar(paTargetBuf, static_cast<char>(operator TForteChar()), CIEC_ANY::e_STRING);
+  paTargetBuf += '\'';
 }
 
 int CIEC_CHAR::fromString(const char *paValue) {

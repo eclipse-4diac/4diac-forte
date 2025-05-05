@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2023 Profactor GmbH, ACIN
+ * Copyright (c) 2005, 2025 Profactor GmbH, ACIN
  *                          Johannes Kepler University Linz
  *                          Primetals Technologies Austria GmbH
  *                          Martin Erich Jobst
@@ -11,15 +11,16 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    Thomas Strasser, Ingomar Müller, Alois Zoitl, Gerhard Ebenhofer, Ingo Hegny,
- *    Monika Wenger
+ *   Thomas Strasser, Ingomar Müller, Alois Zoitl, Gerhard Ebenhofer, Ingo Hegny,
+ *      Monika Wenger
  *      - initial implementation and rework communication infrastructure
- *    Ernst Blecha - add multibit partial access
- *    Martin Melik Merkumians - changes multibit access index from template
+ *   Ernst Blecha - add multibit partial access
+ *   Martin Melik Merkumians - changes multibit access index from template
  *      parameter to call argument, make TForteWord constructor explicit, adds
  *      implicit cast constructor, removed built-in type operator=, added
  *        castable CIEC types operator=
- *    Martin Jobst - add user-defined literal
+ *   Martin Jobst - add user-defined literal
+ *   Alois Zoitl  - migrated data type toString to std::string
  *******************************************************************************/
 #ifndef _FORTE_WORD_H_
 #define _FORTE_WORD_H_
@@ -91,12 +92,6 @@ class CIEC_WORD : public CIEC_ANY_BIT {
      */
     operator TForteWord() const {
       return getTUINT16();
-    }
-
-    /*! \brief calculates buffer size needed for toString conversion
-     */
-    size_t getToStringBufferSize() const override final {
-      return sizeof("65535");
     }
 
     EDataTypeID getDataTypeID() const override final {

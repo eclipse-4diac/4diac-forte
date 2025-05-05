@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2022 Primetals Technologies Austria GmbH
+ * Copyright (c) 2022, 2025 Primetals Technologies Austria GmbH
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -8,42 +8,42 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    Martin Melik-Merkumians
+ *   Martin Melik-Merkumians
  *      - initial implementation and rework communication infrastructure
+ *   Alois Zoitl  - migrated data type toString to std::string
  *******************************************************************************/
 #include "forte_wchar.h"
+#include <cstdint>
+#include <format>
 
 USE_STRING_ID(WCHAR);
 
-#include "unicode_utils.h"
-
-#include <limits>
-#include <stdio.h>
+using namespace std::literals::string_literals;
 
 DEFINE_FIRMWARE_DATATYPE(WCHAR, STRID(WCHAR))
 
-int CIEC_WCHAR::toString(char *paValue, size_t paBufferSize) const {
-  const char longestStringSerialization[] = "WCHAR#\"$0000\"";
-  const size_t longestStringSize = sizeof(longestStringSerialization);
-  if (paBufferSize >= longestStringSize) { // sizeof is char string + \0
-    const TForteWChar symbol = this->operator TForteWChar();
-    switch (symbol) {
-      case '\0': return snprintf(paValue, longestStringSize, "WCHAR#\"\"");
-      case '$': return snprintf(paValue, longestStringSize, "WCHAR#\"$$\"");
-      case '"': return snprintf(paValue, longestStringSize, "WCHAR#\"$\"\"");
-      case '\n': return snprintf(paValue, longestStringSize, "WCHAR#\"$N\"");
-      case '\f': return snprintf(paValue, longestStringSize, "WCHAR#\"$P\""); // page aka form feed
-      case '\r': return snprintf(paValue, longestStringSize, "WCHAR#\"$R\"");
-      case '\t': return snprintf(paValue, longestStringSize, "WCHAR#\"$T\"");
-      default: {
-        if (symbol < 256) {
-          return snprintf(paValue, longestStringSize, "WCHAR#\"%c\"", symbol);
-        }
-        return snprintf(paValue, longestStringSize, "WCHAR#\"$%X\"", symbol);
+void CIEC_WCHAR::toString(std::string &paTargetBuf) const {
+  const TForteWChar symbol = this->operator TForteWChar();
+  switch (symbol) {
+    case '\0': paTargetBuf += "WCHAR#\"$0000\""s; break;
+    case '$': paTargetBuf += "WCHAR#\"$$\""s; break;
+    case '"': paTargetBuf += "WCHAR#\"$\"\""s; break;
+    case '\n': paTargetBuf += "WCHAR#\"$n\""s; break;
+    case '\f':
+      paTargetBuf += "WCHAR#\"$p\""s; // page aka form feed
+      break;
+    case '\r': paTargetBuf += "WCHAR#\"$r\""s; break;
+    case '\t': paTargetBuf += "WCHAR#\"$t\""s; break;
+    default:
+      paTargetBuf += "WCHAR#\""s;
+      if (symbol < 256 && isprint(static_cast<unsigned char>(symbol))) {
+        paTargetBuf += static_cast<char>(symbol);
+      } else {
+        std::format_to(std::back_inserter(paTargetBuf), "${:04X}", static_cast<uint16_t>(symbol));
       }
-    }
+      paTargetBuf += "\"";
+      break;
   }
-  return -1;
 }
 
 int CIEC_WCHAR::fromString(const char *paValue) {

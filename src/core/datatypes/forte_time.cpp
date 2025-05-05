@@ -1,6 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2005 - 2015 Profactor GmbH, ACIN, fortiss GmbH,
- *  2019 TU Wien/ACIN
+ * Copyright (c) 2005, 2025 Profactor GmbH, ACIN, fortiss GmbH,
+ *                          Primetals Technologies Austria
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -8,22 +9,22 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    Thomas Strasser, Ingomar Müller, Alois Zoitl, Ingo Hegny,
- *    Martin Melik Merkumians, Monika Wenger
+ *   Thomas Strasser, Ingomar Müller, Alois Zoitl, Ingo Hegny,
+ *     Martin Melik Merkumians, Monika Wenger
  *      - initial implementation and rework communication infrastructure
- *    Martin Melik Merkumians - added parsing for signed time literals
- *    Hesam Rezaee - developing new format for time variables including different time element
+ *   Martin Melik Merkumians - added parsing for signed time literals
+ *   Hesam Rezaee - developing new format for time variables including different time element
+ *   Alois Zoitl  - migrated data type toString to std::string
  *******************************************************************************/
 #include "forte_time.h"
+#include <string_view>
 
 USE_STRING_ID(TIME);
 
 #include "../../arch/timerha.h"
-#include <string.h>
-#include <stdio.h>
-#include <ctype.h>
 #include "forte_constants.h"
-#include "forte_lint.h"
+
+using namespace std::literals::string_literals;
 
 DEFINE_FIRMWARE_DATATYPE(TIME, STRID(TIME))
 
@@ -117,94 +118,49 @@ int CIEC_TIME::fromString(const char *paValue) {
   return nRetVal;
 }
 
-int CIEC_TIME::toString(char *paValue, size_t paBufferSize) const {
-  int nSize = 0;
-  int nRetVal = -1;
-  if (paBufferSize > 4) {
-    TValueType timeValNano = static_cast<TValueType>(*this);
+namespace {
+  constexpr std::string_view MIN_TIME_VALUE = "T#-106751d23h47m16s854ms775us808ns";
+  constexpr std::string_view ZERO_NANO_SECOND_TIME_VALUE = "T#0ns";
+} // namespace
 
-    //  generate the correct string for the min value
-    if (timeValNano == std::numeric_limits<CIEC_TIME::TValueType>::min()) {
-      if (paBufferSize < getToStringBufferSize()) {
-        return -1;
-      }
-      strncpy(paValue, csmMinTimeValue, paBufferSize);
-      return sizeof(csmMinTimeValue) - 1;
-    }
+void CIEC_TIME::toString(std::string &paValue) const {
+  TValueType timeValNano = static_cast<TValueType>(*this);
 
-    //  generate the correct string for 0ns
-    if (timeValNano == 0) {
-      if (paBufferSize < sizeof(csmZeroNanoSecondTimeValue)) {
-        return -1;
-      }
-      strncpy(paValue, csmZeroNanoSecondTimeValue, paBufferSize);
-      return sizeof(csmZeroNanoSecondTimeValue) - 1;
-    }
-
-    paValue[0] = 'T';
-    paValue[1] = '#';
-    nRetVal += 3; // Compensate for -1 start value
-    if (timeValNano < 0) {
-      paValue[2] = '-';
-      nRetVal++;
-    }
-    timeValNano = llabs(timeValNano);
-
-    // process days, hours, minutes, seconds, milliseconds, microseconds and nano seconds
-    const int64_t nsPart = timeValNano % 1000;
-    const int64_t usPart = timeValNano / csmForteTimeBaseUnitsPerMicroSecond % 1000;
-    const int64_t msPart = timeValNano / csmForteTimeBaseUnitsPerMilliSecond % 1000;
-    const int64_t secondsPart = timeValNano / csmForteTimeBaseUnitsPerSecond % 60;
-    const int64_t minsPart = timeValNano / csmForteTimeBaseUnitsPerMinute % 60;
-    const int64_t hoursPart = timeValNano / csmForteTimeBaseUnitsPerHour % 24;
-    const int64_t days = timeValNano / csmForteTimeBaseUnitsPerDay;
-
-    // change time elements to string
-    nSize = timeElementsToString(days, paValue, nRetVal, paBufferSize, "d");
-    if (nSize == -1) {
-      return -1;
-    } else {
-      nRetVal += nSize;
-    }
-    nSize = CIEC_ANY_DURATION::timeElementsToString(hoursPart, paValue, nRetVal, paBufferSize, "h");
-    if (nSize == -1) {
-      return -1;
-    } else {
-      nRetVal += nSize;
-    }
-    nSize = CIEC_ANY_DURATION::timeElementsToString(minsPart, paValue, nRetVal, paBufferSize, "m");
-    if (nSize == -1) {
-      return -1;
-    } else {
-      nRetVal += nSize;
-    }
-    nSize = CIEC_ANY_DURATION::timeElementsToString(secondsPart, paValue, nRetVal, paBufferSize, "s");
-    if (nSize == -1) {
-      return -1;
-    } else {
-      nRetVal += nSize;
-    }
-    nSize = CIEC_ANY_DURATION::timeElementsToString(msPart, paValue, nRetVal, paBufferSize, "ms");
-    if (nSize == -1) {
-      return -1;
-    } else {
-      nRetVal += nSize;
-    }
-    nSize = CIEC_ANY_DURATION::timeElementsToString(usPart, paValue, nRetVal, paBufferSize, "us");
-    if (nSize == -1) {
-      return -1;
-    } else {
-      nRetVal += nSize;
-    }
-    nSize = CIEC_ANY_DURATION::timeElementsToString(nsPart, paValue, nRetVal, paBufferSize, "ns");
-    if (nSize == -1) {
-      return -1;
-    } else {
-      nRetVal += nSize;
-    }
+  //  generate the correct string for the min value
+  if (timeValNano == std::numeric_limits<CIEC_TIME::TValueType>::min()) {
+    paValue += MIN_TIME_VALUE;
+    return;
   }
 
-  return nRetVal;
+  //  generate the correct string for 0ns
+  if (timeValNano == 0) {
+    paValue += ZERO_NANO_SECOND_TIME_VALUE;
+    return;
+  }
+
+  paValue += "T#"s;
+  if (timeValNano < 0) {
+    paValue += '-';
+  }
+
+  timeValNano = llabs(timeValNano);
+
+  // process days, hours, minutes, seconds, milliseconds, microseconds and nano seconds
+  const int64_t nsPart = timeValNano % 1000;
+  const int64_t usPart = timeValNano / csmForteTimeBaseUnitsPerMicroSecond % 1000;
+  const int64_t msPart = timeValNano / csmForteTimeBaseUnitsPerMilliSecond % 1000;
+  const int64_t secondsPart = timeValNano / csmForteTimeBaseUnitsPerSecond % 60;
+  const int64_t minsPart = timeValNano / csmForteTimeBaseUnitsPerMinute % 60;
+  const int64_t hoursPart = timeValNano / csmForteTimeBaseUnitsPerHour % 24;
+  const int64_t days = timeValNano / csmForteTimeBaseUnitsPerDay;
+
+  timeElementsToString(paValue, days, "d"s);
+  timeElementsToString(paValue, hoursPart, "h"s);
+  timeElementsToString(paValue, minsPart, "m"s);
+  timeElementsToString(paValue, secondsPart, "s"s);
+  timeElementsToString(paValue, msPart, "ms"s);
+  timeElementsToString(paValue, usPart, "us"s);
+  timeElementsToString(paValue, nsPart, "ns"s);
 }
 
 CIEC_TIME::TValueType CIEC_TIME::getInDays() const {

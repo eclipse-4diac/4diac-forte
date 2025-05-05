@@ -1,6 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2008, 2023 nxtControl GmbH, ACIN, fortiss GmbH
- *                          Primetals Technologies Austria GmbH
+ * Copyright (c) 2008, 2025 nxtControl GmbH, ACIN, fortiss GmbH,
+ *                          Primetals Technologies Austria GmbH,
  *                          Martin Erich Jobst
  *
  * This program and the accompanying materials are made available under the
@@ -10,11 +10,12 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    Stanislav Meduna, Alois Zoitl, Martin Melik Merkumians, Monika Wenger
- *      - initial implementation and rework communication infrastructure
- *    Martin Melik Merkumians - make TForteUInt64 constructor explicit,
- *        removed built-in type operator=, removed operator++
- *    Martin Jobst - add user-defined literal
+ *   Stanislav Meduna, Alois Zoitl, Martin Melik Merkumians, Monika Wenger
+ *                - initial implementation and rework communication infrastructure
+ *   Martin Melik Merkumians - make TForteUInt64 constructor explicit, removed
+ *                  built-in type operator=, removed operator++
+ *   Martin Jobst - add user-defined literal
+ *   Alois Zoitl  - migrated data type toString to std::string
  *******************************************************************************/
 #ifndef _FORTE_DATE_AND_TIME_H_
 #define _FORTE_DATE_AND_TIME_H_
@@ -77,26 +78,14 @@ class CIEC_DATE_AND_TIME final : public CIEC_ANY_DATE {
      *   This command implements a conversion function from C++ data type
      *   to IEC 61131 conform data type (string format).
      *   This function is necessary for communication with a proper engineering system.
-     *   \param paValue Pointer to the provided buffer
-     *   \param paBufferSize Size of the provided buffer
-     *   \return number of bytes used in the buffer without trailing 0x00
-     *           -1 on error
+     *   \param paTargetBuf Pointer to the provided buffer
      */
-    int toString(char *paValue, size_t paBufferSize) const override;
+    void toString(std::string &paTargetBuf) const override;
 
     /*! \brief Converts data type value to string - use GMT time
-     *   \param paValue Pointer to the provided buffer
-     *   \param paBufferSize Size of the provided buffer
-     *   \return number of bytes used in the buffer without trailing 0x00
-     *           -1 on error
+     *   \param paTargetBuf Pointer to the provided buffer
      */
-    int toGMTString(char *paValue, unsigned int paBufferSize) const;
-
-    /*! \brief calculates buffer size needed for toString conversion
-     */
-    size_t getToStringBufferSize() const override {
-      return sizeof("DT#1970-01-01-00:00:00.000");
-    }
+    void toGMTString(std::string &paTargetBuf) const;
 };
 
 inline bool operator==(const CIEC_DATE_AND_TIME left, const CIEC_DATE_AND_TIME &right) {

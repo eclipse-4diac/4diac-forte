@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2023 Profactor GmbH, ACIN, nxtControl GmbH, TU Wien/ACIN
+ * Copyright (c) 2005, 2025 Profactor GmbH, ACIN, nxtControl GmbH, TU Wien/ACIN
  *                          Primetals Technologies Austria GmbH
  *                          Martin Erich Jobst
  *
@@ -10,17 +10,17 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    Thomas Strasser, Ingomar Müller, Alois Zoitl, Ingo Hegny, Stanislav Meduna
- *    Martin Melik Merkumians, Matthias Plasch, Monika Wenger
+ *   Thomas Strasser, Ingomar Müller, Alois Zoitl, Ingo Hegny, Stanislav Meduna
+ *     Martin Melik Merkumians, Matthias Plasch, Monika Wenger
  *      - initial implementation and rework communication infrastructure
- *    Martin Melik Merkumians
+ *   Martin Melik Merkumians
  *      - fixed behavior for getToStringBufferSize, make const char*
  *        constructor explicit, removed built-in type operator=, added
  *        castable CIEC types operator=
- *    Martin Jobst
- *      - add compare operators
- *      - add equals function
- *      - add user-defined literal
+ *   Martin Jobst - add compare operators
+ *                - add equals function
+ *                - add user-defined literal
+ *   Alois Zoitl  - migrated data type toString to std::string
  *******************************************************************************/
 #ifndef _FORTE_WSTRING_H_
 #define _FORTE_WSTRING_H_
@@ -110,13 +110,10 @@ class CIEC_WSTRING final : public CIEC_ANY_STRING {
      *
      *   This command implements a conversion function from a WSTRING
      *   to a UTF-8 encoding, usable e.g. for the serialization.
-     *   \param paBuffer  Reference to the output buffer. If 0, only the needed size will be computed.
-     *   \param paBufferSize  Size of the provided buffer.
+     *   \param paTargetBuf  Reference to the output buffer
      *   \param paEscape  Produce $-escapes and delimiter characters at the beginning and end
-     *   \return number of bytes used in the buffer
-     *           -1 on error
      */
-    int toUTF8(char *paBuffer, size_t paBufferSize, bool paEscape) const override;
+    void toUTF8(std::string &paTargetBuf, bool paEscape) const override;
 
     /*! \brief Converts a UTF-16 encoded string to a WSTRING (UTF-8 internally)
      *
@@ -185,11 +182,8 @@ class CIEC_WSTRING final : public CIEC_ANY_STRING {
      *   to IEC61131 conform data type (string format).
      *   This function is necessary for communication with a proper engineering system.
      *   \param paValue          Pointer to char-array for the result
-     *   \param paBufferSize      Size of the buffer
-     *   \return number of bytes used in the buffer without trailing 0x00
-     *           -1 on error
      */
-    int toString(char *paValue, size_t paBufferSize) const override;
+    void toString(std::string &paTargetBuf) const override;
 
     [[nodiscard]] bool equals(const CIEC_ANY &paOther) const override {
       if (paOther.getDataTypeID() == CIEC_ANY::e_WSTRING) {
@@ -197,17 +191,6 @@ class CIEC_WSTRING final : public CIEC_ANY_STRING {
       }
       return false;
     }
-
-    /*! \brief Returns the amount of bytes needed to create the IEC 61131 literal string
-     *
-     * IEC 61131 literal strings needs to delimit all non Common_Char_Value literals and special
-     * symbols, like line-feed, into escaped symbol sequences. For single byte strings the special
-     * symbols are represented as dollar escaped strings followed by two hex digits. For double byte strings
-     * is is dollar followed by four hex digits, according to the IEC 61131 standard and its EBNF.
-     *
-     * \return Needed buffer size for literal string without type delarator e.g., WSTRING#
-     */
-    size_t getToStringBufferSize() const override;
 
   protected:
     void fromCharString(const char *const paValue);

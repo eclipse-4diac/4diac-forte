@@ -1,6 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2023 Profactor GmbH, ACIN, fortiss GmbH
- *                          Primetals Technologies Austria GmbH
+ * Copyright (c) 2005, 2025 Profactor GmbH, ACIN, fortiss GmbH,
+ *                          Primetals Technologies Austria GmbH,
  *                          Martin Erich Jobst
  *
  * This program and the accompanying materials are made available under the
@@ -10,14 +10,15 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    Thomas Strasser, Ingomar Müller, Alois Zoitl, Gerhard Ebenhofer,
- *    Ingo Hegny, Monika Wenger
- *      - initial implementation and rework communication infrastructure
- *    Martin Melik Merkumians - make TForteInt8 constructor explicit, add
- *      implicit cast constructors, removed built-in type operator=, added
- *        castable CIEC types operator=
- *    Martin Jobst - add user-defined literal
- *                 - add ANY_SIGNED
+ *   Thomas Strasser, Ingomar Müller, Alois Zoitl, Gerhard Ebenhofer,
+ *     Ingo Hegny, Monika Wenger
+ *                - initial implementation and rework communication infrastructure
+ *   Martin Melik Merkumians - make TForteInt8 constructor explicit, add implicit
+ *                  cast constructors, removed built-in type operator=, added
+ *                  castable CIEC types operator=
+ *   Martin Jobst - add user-defined literal
+ *                - add ANY_SIGNED
+ *   Alois Zoitl  - migrated data type toString to std::string
  *******************************************************************************/
 #ifndef _FORTE_DINT_H_
 #define _FORTE_DINT_H_
@@ -99,12 +100,6 @@ class CIEC_DINT final : public CIEC_ANY_SIGNED {
      */
     explicit operator TForteInt32() const {
       return getTINT32();
-    }
-
-    /*! \brief calculates buffer size needed for toString conversion
-     */
-    size_t getToStringBufferSize() const override {
-      return sizeof("-2147483648");
     }
 
     EDataTypeID getDataTypeID() const override {

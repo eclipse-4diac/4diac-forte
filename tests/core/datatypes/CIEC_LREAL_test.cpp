@@ -1,6 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2023 ACIN, nxtControl, fortiss GmbH
- *                          Martin Erich Jobst
+ * Copyright (c) 2011, 2025 ACIN, nxtControl, fortiss GmbH, Martin Erich Jobst,
+ *                          Primetals Technologies Austria GmbH
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -9,9 +9,11 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *   Martin Melik Merkumians, Ingo Hegny, Alois Zoitl, Stanislav Meduna - initial API and implementation and/or initial
- *documentation Martin Jobst - add equals tests
+ *   Martin Melik Merkumians, Ingo Hegny, Alois Zoitl, Stanislav Meduna
+ *                - initial API and implementation and/or initial documentation
+ *   Martin Jobst - add equals tests
  *                - add user-defined literal tests
+ *   Alois Zoitl  - migrated data type toString to std::string
  *******************************************************************************/
 #include <boost/test/unit_test.hpp>
 #include "forte_boost_output_support.h"
@@ -109,107 +111,106 @@ BOOST_AUTO_TEST_CASE(Equality_test) {
 }
 
 BOOST_AUTO_TEST_CASE(Conversion_test) {
-  CIEC_LREAL nTest;
+  CIEC_LREAL testVal;
 
-  char cBuffer[50];
-  char cBufferFail[2];
+  std::string buffer;
 
   // check cast operator
-  nTest = CIEC_LREAL(0.0);
-  BOOST_CHECK_EQUAL(nTest.operator TForteDFloat(), 0.0);
+  testVal = CIEC_LREAL(0.0);
+  BOOST_CHECK_EQUAL(testVal.operator TForteDFloat(), 0.0);
 
-  nTest = CIEC_LREAL(std::numeric_limits<TForteDFloat>::min());
-  BOOST_CHECK_EQUAL(nTest.operator TForteDFloat(), std::numeric_limits<TForteDFloat>::min());
+  testVal = CIEC_LREAL(std::numeric_limits<TForteDFloat>::min());
+  BOOST_CHECK_EQUAL(testVal.operator TForteDFloat(), std::numeric_limits<TForteDFloat>::min());
 
-  nTest = CIEC_LREAL(-4.2345e4);
-  BOOST_CHECK_EQUAL(nTest.operator TForteDFloat(), -4.2345e4);
+  testVal = CIEC_LREAL(-4.2345e4);
+  BOOST_CHECK_EQUAL(testVal.operator TForteDFloat(), -4.2345e4);
 
-  nTest = CIEC_LREAL(23.7813e2);
-  BOOST_CHECK_EQUAL(nTest.operator TForteDFloat(), 23.7813e2);
+  testVal = CIEC_LREAL(23.7813e2);
+  BOOST_CHECK_EQUAL(testVal.operator TForteDFloat(), 23.7813e2);
 
-  nTest = CIEC_LREAL(std::numeric_limits<TForteDFloat>::max());
-  BOOST_CHECK_EQUAL(nTest.operator TForteDFloat(), std::numeric_limits<TForteDFloat>::max());
+  testVal = CIEC_LREAL(std::numeric_limits<TForteDFloat>::max());
+  BOOST_CHECK_EQUAL(testVal.operator TForteDFloat(), std::numeric_limits<TForteDFloat>::max());
 
   // check toString and fromString
-  strcpy(cBuffer, "");
+  buffer.clear();
 
-  BOOST_CHECK_EQUAL(nTest.fromString("-1E-37"), 6);
-  BOOST_CHECK_EQUAL(static_cast<TForteDFloat>(nTest), -1.0E-37);
+  BOOST_CHECK_EQUAL(testVal.fromString("-1E-37"), 6);
+  BOOST_CHECK_EQUAL(static_cast<TForteDFloat>(testVal), -1.0E-37);
 
-  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, sizeof(cBuffer)), 23);
-  BOOST_TEST(cBuffer == "-1.0000000000000001e-37");
+  testVal.toString(buffer);
+  BOOST_TEST(buffer == "-1.0000000000000001e-37");
 
-  BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
-  strcpy(cBuffer, "");
-  nTest = CIEC_LREAL(0);
+  buffer.clear();
+  testVal = CIEC_LREAL(0);
 
-  BOOST_CHECK_EQUAL(nTest.fromString("0"), 1);
-  BOOST_CHECK_EQUAL(static_cast<TForteDFloat>(nTest), 0.0);
-  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, sizeof(cBuffer)), 3);
-  BOOST_CHECK_EQUAL(strcmp(cBuffer, "0.0"), 0);
-  BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 0), -1);
-  strcpy(cBuffer, "");
-  nTest = CIEC_LREAL(0);
+  BOOST_CHECK_EQUAL(testVal.fromString("0"), 1);
+  BOOST_CHECK_EQUAL(static_cast<TForteDFloat>(testVal), 0.0);
+  testVal.toString(buffer);
+  BOOST_CHECK_EQUAL(buffer, "0.0");
+  buffer.clear();
+  testVal = CIEC_LREAL(0);
 
-  BOOST_CHECK_EQUAL(nTest.fromString("3.2523E15"), 9);
-  BOOST_CHECK_EQUAL(static_cast<TForteDFloat>(nTest), 3.2523e15);
+  BOOST_CHECK_EQUAL(testVal.fromString("3.2523E15"), 9);
+  BOOST_CHECK_EQUAL(static_cast<TForteDFloat>(testVal), 3.2523e15);
 
-  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, sizeof(cBuffer)), 18);
-  BOOST_TEST(cBuffer == "3252300000000000.0");
+  testVal.toString(buffer);
+  BOOST_TEST(buffer == "3252300000000000.0");
 
-  BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
-  strcpy(cBuffer, "");
-  nTest = CIEC_LREAL(0);
+  buffer.clear();
+  testVal = CIEC_LREAL(0);
 
-  BOOST_CHECK_EQUAL(nTest.fromString("1E37"), 4);
-  BOOST_CHECK_EQUAL(static_cast<TForteDFloat>(nTest), 1e37);
+  BOOST_CHECK_EQUAL(testVal.fromString("1E37"), 4);
+  BOOST_CHECK_EQUAL(static_cast<TForteDFloat>(testVal), 1e37);
 
-  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, sizeof(cBuffer)), 22);
-  BOOST_TEST(cBuffer == "9.9999999999999995e+36");
+  testVal.toString(buffer);
+  BOOST_TEST(buffer == "9.9999999999999995e+36");
 
-  BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
-  strcpy(cBuffer, "");
-  nTest = CIEC_LREAL(0);
+  buffer.clear();
+  testVal = CIEC_LREAL(0);
 
   // testing values outside of allowed range
-  BOOST_CHECK_EQUAL(nTest.fromString("4e401"), -1);
-  BOOST_CHECK_EQUAL(nTest.fromString("2#100101100"), 1);
-  BOOST_CHECK_EQUAL(nTest.fromString("8#116100"), 1);
-  BOOST_CHECK_EQUAL(nTest.fromString("10#300"), 2);
-  BOOST_CHECK_EQUAL(nTest.fromString("16#FFFF0"), 2);
-  BOOST_CHECK_EQUAL(nTest.fromString("-4e401"), -1);
+  BOOST_CHECK_EQUAL(testVal.fromString("4e401"), -1);
+  BOOST_CHECK_EQUAL(testVal.fromString("2#100101100"), 1);
+  BOOST_CHECK_EQUAL(testVal.fromString("8#116100"), 1);
+  BOOST_CHECK_EQUAL(testVal.fromString("10#300"), 2);
+  BOOST_CHECK_EQUAL(testVal.fromString("16#FFFF0"), 2);
+  BOOST_CHECK_EQUAL(testVal.fromString("-4e401"), -1);
 
   // check invalid fromString string
-  BOOST_CHECK_EQUAL(nTest.fromString("NOT A VALID STRING"), -1);
+  BOOST_CHECK_EQUAL(testVal.fromString("NOT A VALID STRING"), -1);
 }
 
 BOOST_AUTO_TEST_CASE(ToString_Tests) {
-  CIEC_LREAL nTest(3.0);
-  char cBuffer[10];
-  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 7), 3);
-  BOOST_CHECK_EQUAL(strcmp(cBuffer, "3.0"), 0);
+  CIEC_LREAL testVal(3.0);
+  std::string buffer;
 
-  nTest = CIEC_LREAL(10.0);
-  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 7), 4);
-  BOOST_CHECK_EQUAL(strcmp(cBuffer, "10.0"), 0);
+  testVal.toString(buffer);
+  BOOST_CHECK_EQUAL(buffer, "3.0");
 
-  nTest = CIEC_LREAL(INFINITY);
-  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 7), 3);
-  BOOST_CHECK_EQUAL(strcmp(cBuffer, "inf"), 0);
+  buffer.clear();
+  testVal = CIEC_LREAL(10.0);
+  testVal.toString(buffer);
+  BOOST_CHECK_EQUAL(buffer, "10.0");
 
-  nTest = CIEC_LREAL(-INFINITY);
-  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 7), 4);
-  BOOST_CHECK_EQUAL(strcmp(cBuffer, "-inf"), 0);
+  buffer.clear();
+  testVal = CIEC_LREAL(INFINITY);
+  testVal.toString(buffer);
+  BOOST_CHECK_EQUAL(buffer, "inf");
 
-  nTest = CIEC_LREAL(NAN);
-  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 7), 3);
-  BOOST_CHECK_EQUAL(strcmp(cBuffer, "nan"), 0);
+  buffer.clear();
+  testVal = CIEC_LREAL(-INFINITY);
+  testVal.toString(buffer);
+  BOOST_CHECK_EQUAL(buffer, "-inf");
 
-#ifndef _MSC_VER //FIXME enable tests for MSVC after switching to std::format
-  nTest = CIEC_LREAL(-NAN);
-  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 7), 4);
-  BOOST_CHECK_EQUAL(strcmp(cBuffer, "-nan"), 0);
-#endif
+  buffer.clear();
+  testVal = CIEC_LREAL(NAN);
+  testVal.toString(buffer);
+  BOOST_CHECK_EQUAL(buffer, "nan");
+
+  buffer.clear();
+  testVal = CIEC_LREAL(-NAN);
+  testVal.toString(buffer);
+  BOOST_CHECK_EQUAL(buffer, "-nan");
 }
 
 void lRealTypedFromString(const char *paTestString, double paResult) {

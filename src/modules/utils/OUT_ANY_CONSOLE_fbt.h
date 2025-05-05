@@ -1,6 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2011 - 2014 AIT, ACIN, Profactor GmbH
- *               2023 Martin Erich Jobst
+ * Copyright (c) 2011, 2025 AIT, ACIN, Profactor GmbH, Martin Erich Jobst,
+ *                          Primetals Technologies Austria GmbH
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -9,9 +10,9 @@
  *
  * Contributors:
  *   Thomas Strasser, Monika Wenger, Matthias Plasch
- *   - initial API and implementation and/or initial documentation
- *   Martin Jobst
- *     - refactor for ANY variant
+ *                - initial API and implementation and/or initial documentation
+ *   Martin Jobst - refactor for ANY variant
+ *   Alois Zoitl  - migrated data type toString to std::string
  *******************************************************************************/
 
 #pragma once
@@ -91,4 +92,7 @@ class FORTE_OUT_ANY_CONSOLE : public CFunctionBlock {
 
   protected:
     void setInitialValues() override;
+
+  private:
+    std::string mDataOutPutBuffer;
 };

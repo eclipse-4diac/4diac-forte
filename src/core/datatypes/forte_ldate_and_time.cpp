@@ -1,5 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2008 - 2015 nxtControl GmbH, ACIN, fortiss GmbH
+ * Copyright (c) 2008, 2025 nxtControl GmbH, ACIN, fortiss GmbH,
+ *                          Primetals Technologies Austria GmbH
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -9,21 +10,17 @@
  *
  * Contributors:
  *    Stanislav Meduna, Alois Zoitl, Martin Melik Merkumians, Monika Wenger
- *      - initial implementation and rework communication infrastructure
+ *                - initial implementation and rework communication infrastructure
+ *   Alois Zoitl  - migrated data type toString to std::string
  *******************************************************************************/
+#include <format>
 #include <stdlib.h>
-#include <stdio.h>
 #include <math.h>
 #include <string.h>
 #include <ctype.h>
 #include "forte_ldate_and_time.h"
 
 USE_STRING_ID(LDATE_AND_TIME);
-
-#include "forte_ldate.h"
-#include "forte_ltime_of_day.h"
-#include "../../arch/timerha.h"
-#include <forte_printer.h>
 
 DEFINE_FIRMWARE_DATATYPE(LDATE_AND_TIME, STRID(LDATE_AND_TIME))
 
@@ -107,23 +104,16 @@ int CIEC_LDATE_AND_TIME::fromString(const char *paValue) {
   return nRetVal;
 }
 
-int CIEC_LDATE_AND_TIME::toString(char *paValue, size_t paBufferSize) const {
-  int nRetVal = -1;
-
-  struct tm ptm;
-
+void CIEC_LDATE_AND_TIME::toString(std::string &paTargetBuf) const {
+  tm ptm;
   if (nullptr != getTimeStruct(&ptm)) {
-    nRetVal = forte_snprintf(paValue, paBufferSize, "LDT#%04d-%02d-%02d-%02d:%02d:%02d.%03u", 1900 + ptm.tm_year,
-                             ptm.tm_mon + 1, ptm.tm_mday, ptm.tm_hour, ptm.tm_min, ptm.tm_sec, getMilliSeconds());
-    if ((nRetVal < -1) || (nRetVal >= static_cast<int>(paBufferSize))) {
-      nRetVal = -1;
-    }
+    std::format_to(std::back_inserter(paTargetBuf), "LDT#{:04}-{:02}-{:02}-{:02}:{:02}:{:02}.{:03}", 1900 + ptm.tm_year,
+                   ptm.tm_mon + 1, ptm.tm_mday, ptm.tm_hour, ptm.tm_min, ptm.tm_sec, getMilliSeconds());
   }
-  return nRetVal;
 }
 
-int CIEC_LDATE_AND_TIME::toGMTString(char *paValue, unsigned int paBufferSize) const {
-  return toString(paValue, paBufferSize);
+void CIEC_LDATE_AND_TIME::toGMTString(std::string &paTargetBuf) const {
+  toString(paTargetBuf);
 }
 
 const CStringDictionary::TStringId forte::CDataTypeTrait<CIEC_LDATE_AND_TIME>::scmDataTypeName = STRID(LDATE_AND_TIME);

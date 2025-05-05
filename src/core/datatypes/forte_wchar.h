@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2022, 2023 Primetals Technologies Austria GmbH
+ * Copyright (c) 2022, 2025 Primetals Technologies Austria GmbH
  *                          Martin Erich Jobst
  *
  * This program and the accompanying materials are made available under the
@@ -9,9 +9,10 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    Martin Melik-Merkumians
+ *   Martin Melik-Merkumians
  *      - initial implementation and rework communication infrastructure
- *    Martin Jobst - add user-defined literal
+ *   Martin Jobst - add user-defined literal
+ *   Alois Zoitl  - migrated data type toString to std::string
  *******************************************************************************/
 #ifndef _FORTE_WCHAR_H_
 #define _FORTE_WCHAR_H_
@@ -58,15 +59,9 @@ class CIEC_WCHAR : public CIEC_ANY_CHAR {
       return getChar16();
     }
 
-    int toString(char *paValue, size_t paBufferSize) const override;
+    void toString(std::string &paTargetBuf) const override;
 
     int fromString(const char *paValue) override;
-
-    /*! \brief calculates buffer size needed for toString conversion
-     */
-    size_t getToStringBufferSize() const override {
-      return sizeof("WCHAR#\"$0000\"");
-    }
 
     EDataTypeID getDataTypeID() const override {
       return CIEC_ANY::e_WCHAR;

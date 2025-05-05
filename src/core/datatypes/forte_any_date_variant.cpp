@@ -1,5 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2023 Martin Erich Jobst
+ * Copyright (c) 2023, 2025 Martin Erich Jobst,
+ *                          Primetals Technologies Austria GmbH
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -8,7 +9,8 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    Martin Erich Jobst - initial implementation
+ *   Martin Erich Jobst - initial implementation
+ *   Alois Zoitl  - migrated data type toString to std::string
  *******************************************************************************/
 #include "forte_any_date_variant.h"
 
@@ -82,12 +84,6 @@ int CIEC_ANY_DATE_VARIANT::fromString(const char *paValue) {
   return nRetVal;
 }
 
-int CIEC_ANY_DATE_VARIANT::toString(char *paValue, size_t paBufferSize) const {
-  const CIEC_ANY &value = unwrap();
-  return value.toString(paValue, paBufferSize);
-}
-
-size_t CIEC_ANY_DATE_VARIANT::getToStringBufferSize() const {
-  const CIEC_ANY &value = unwrap();
-  return value.getToStringBufferSize();
+void CIEC_ANY_DATE_VARIANT::toString(std::string &paTargetBuf) const {
+  unwrap().toString(paTargetBuf);
 }

@@ -1,6 +1,7 @@
 /*******************************************************************************
  * Copyright (c) 2005, 2025 Profactor GmbH, ACIN, fortiss GmbH,
- *                          Martin Erich Jobst, Johannes Kepler University Linz
+ *                          Martin Erich Jobst, Johannes Kepler University Linz,
+ *                          Primetals Technologies Austria GmbH
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -13,6 +14,7 @@
  *      - initial implementation and rework communication infrastructure
  *   Martin Jobst - account for data type size in FB initialization
  *   Alois Zoitl  - exracted internal variable handling to new CBaseFB
+ *                - migrated data type toString to std::string
  *******************************************************************************/
 
 #include "basefb.h"
@@ -56,51 +58,28 @@ CIEC_ANY *CBaseFB::getInternalVar(CStringDictionary::TStringId paInternalName) {
   return nullptr;
 }
 
-int CBaseFB::toString(char *paValue, size_t paBufferSize) const {
-  int usedBuffer = CFunctionBlock::toString(paValue, paBufferSize);
-  if (usedBuffer < 1 || cmVarInternals == nullptr || (cmVarInternals != nullptr && cmVarInternals->mNumIntVars == 0)) {
-    return usedBuffer; // nothing to do
+void CBaseFB::toString(std::string &paTargetBuf) const {
+  CFunctionBlock::toString(paTargetBuf);
+
+  if (cmVarInternals == nullptr || cmVarInternals->mNumIntVars == 0) {
+    return; // nothing to do
   }
 
-  --usedBuffer; // move the pointer to the position of the closing )
-  if (usedBuffer > 1) { // not only ()
-    strncpy(paValue + usedBuffer, csmToStringSeparator, paBufferSize - usedBuffer);
-    usedBuffer += sizeof(csmToStringSeparator) - 1;
+  paTargetBuf.resize(paTargetBuf.size() - 1); // move the pointer to the position of the closing )
+
+  if (paTargetBuf.back() != '(') { // not only ()
+    paTargetBuf += csmToStringSeparator;
   }
 
   for (size_t i = 0; i < cmVarInternals->mNumIntVars; ++i) {
-    const CIEC_ANY *const variable = getVarInternal(i);
-    const CStringDictionary::TStringId nameId = cmVarInternals->mIntVarsNames[i];
-    int result = writeToStringNameValuePair(paValue + usedBuffer, paBufferSize - usedBuffer, nameId, variable);
-    if (result >= 0) {
-      usedBuffer += result;
-    } else {
-      return -1;
-    }
-    if (paBufferSize - usedBuffer >= sizeof(csmToStringSeparator)) {
-      strncpy(paValue + usedBuffer, csmToStringSeparator, paBufferSize - usedBuffer);
-      usedBuffer += sizeof(csmToStringSeparator) - 1;
-    } else {
-      return -1;
+    forte::core::util::writeToStringNameValuePair(paTargetBuf, cmVarInternals->mIntVarsNames[i], getVarInternal(i));
+    if (i != cmVarInternals->mNumIntVars - 1) {
+      paTargetBuf += csmToStringSeparator;
     }
   }
-  strncpy(paValue + std::max(1, usedBuffer - 2), ")",
-          paBufferSize - std::max(1, usedBuffer - 2)); // overwrite the last two bytes with the closing )
-  return std::max(2, usedBuffer - 1);
-};
 
-size_t CBaseFB::getToStringBufferSize() const {
-  size_t bufferSize = CFunctionBlock::getToStringBufferSize();
-  if (cmVarInternals != nullptr) {
-    for (size_t i = 0; i < cmVarInternals->mNumIntVars; ++i) {
-      const CIEC_ANY *const variable = getVarInternal(i);
-      const CStringDictionary::TStringId nameId = cmVarInternals->mIntVarsNames[i];
-      const char *varName = CStringDictionary::get(nameId);
-      bufferSize += strlen(varName) + 4 + variable->getToStringBufferSize();
-    }
-  }
-  return bufferSize;
-}
+  paTargetBuf += ')';
+};
 
 #ifdef FORTE_TRACE_CTF
 void CBasicFB::traceInstanceData() {

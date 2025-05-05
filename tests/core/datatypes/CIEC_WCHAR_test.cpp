@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2022, 2023 Primetals Technologies Austria GmbH
+ * Copyright (c) 2022, 2025 Primetals Technologies Austria GmbH
  *                          Martin Erich Jobst
  *
  * This program and the accompanying materials are made available under the
@@ -11,6 +11,7 @@
  * Contributors:
  *   Martin Melik Merkumians - initial API and implementation and/or initial documentation
  *   Martin Jobst - add user-defined literal tests
+ *   Alois Zoitl  - migrated data type toString to std::string
  *******************************************************************************/
 #include <boost/test/unit_test.hpp>
 #include "forte_boost_output_support.h"
@@ -68,167 +69,167 @@ BOOST_AUTO_TEST_CASE(Assignment_test) {
 
 BOOST_AUTO_TEST_CASE(ToString_test) {
   CIEC_WCHAR test('a');
-  char toStringBuffer[14];
+  std::string toStringBuffer;
   const char expected[] = "WCHAR#\"a\"";
-  BOOST_CHECK_EQUAL(test.toString(toStringBuffer, sizeof(toStringBuffer)), sizeof(expected) - 1);
+  test.toString(toStringBuffer);
   BOOST_CHECK_EQUAL(toStringBuffer, expected);
 }
 
 BOOST_AUTO_TEST_CASE(ToStringEmpty_test) {
   CIEC_WCHAR test;
-  char toStringBuffer[14];
-  const char expected[] = "WCHAR#\"\"";
-  BOOST_CHECK_EQUAL(test.toString(toStringBuffer, sizeof(toStringBuffer)), sizeof(expected) - 1);
+  std::string toStringBuffer;
+  const char expected[] = "WCHAR#\"$0000\"";
+  test.toString(toStringBuffer);
   BOOST_CHECK_EQUAL(toStringBuffer, expected);
 }
 
 BOOST_AUTO_TEST_CASE(ToStringDollar_test) {
   CIEC_WCHAR test('$');
-  char toStringBuffer[14];
+  std::string toStringBuffer;
   const char expected[] = "WCHAR#\"$$\"";
-  BOOST_CHECK_EQUAL(test.toString(toStringBuffer, sizeof(toStringBuffer)), sizeof(expected) - 1);
+  test.toString(toStringBuffer);
   BOOST_CHECK_EQUAL(toStringBuffer, expected);
 }
 
 BOOST_AUTO_TEST_CASE(ToStringSingleQuote_test) {
   CIEC_WCHAR test('"');
-  char toStringBuffer[14];
+  std::string toStringBuffer;
   const char expected[] = "WCHAR#\"$\"\"";
-  BOOST_CHECK_EQUAL(test.toString(toStringBuffer, sizeof(toStringBuffer)), sizeof(expected) - 1);
+  test.toString(toStringBuffer);
   BOOST_CHECK_EQUAL(toStringBuffer, expected);
 }
 
 BOOST_AUTO_TEST_CASE(ToStringLineFeed_NewLine_test) {
   CIEC_WCHAR test('\n');
-  char toStringBuffer[14];
-  const char expected[] = "WCHAR#\"$N\"";
-  BOOST_CHECK_EQUAL(test.toString(toStringBuffer, sizeof(toStringBuffer)), sizeof(expected) - 1);
+  std::string toStringBuffer;
+  const char expected[] = "WCHAR#\"$n\"";
+  test.toString(toStringBuffer);
   BOOST_CHECK_EQUAL(toStringBuffer, expected);
 }
 
 BOOST_AUTO_TEST_CASE(ToStringPageFeed_test) {
   CIEC_WCHAR test('\f');
-  char toStringBuffer[14];
-  const char expected[] = "WCHAR#\"$P\"";
-  BOOST_CHECK_EQUAL(test.toString(toStringBuffer, sizeof(toStringBuffer)), sizeof(expected) - 1);
+  std::string toStringBuffer;
+  const char expected[] = "WCHAR#\"$p\"";
+  test.toString(toStringBuffer);
   BOOST_CHECK_EQUAL(toStringBuffer, expected);
 }
 
 BOOST_AUTO_TEST_CASE(ToStringCarriageReturn_test) {
   CIEC_WCHAR test('\r');
-  char toStringBuffer[14];
-  const char expected[] = "WCHAR#\"$R\"";
-  BOOST_CHECK_EQUAL(test.toString(toStringBuffer, sizeof(toStringBuffer)), sizeof(expected) - 1);
+  std::string toStringBuffer;
+  const char expected[] = "WCHAR#\"$r\"";
+  test.toString(toStringBuffer);
   BOOST_CHECK_EQUAL(toStringBuffer, expected);
 }
 
 BOOST_AUTO_TEST_CASE(ToStringTab_test) {
   CIEC_WCHAR test('\t');
-  char toStringBuffer[14];
-  const char expected[] = "WCHAR#\"$T\"";
-  BOOST_CHECK_EQUAL(test.toString(toStringBuffer, sizeof(toStringBuffer)), sizeof(expected) - 1);
+  std::string toStringBuffer;
+  const char expected[] = "WCHAR#\"$t\"";
+  test.toString(toStringBuffer);
   BOOST_CHECK_EQUAL(toStringBuffer, expected);
 }
 
 BOOST_AUTO_TEST_CASE(FromString_test) {
   CIEC_WCHAR test;
-  char toStringBuffer[14];
+  std::string toStringBuffer;
   const char expected[] = "WCHAR#\"A\"";
   BOOST_CHECK_EQUAL(test.fromString(expected), sizeof(expected) - 1);
-  BOOST_CHECK_EQUAL(test.toString(toStringBuffer, sizeof(toStringBuffer)), sizeof(expected) - 1);
+  test.toString(toStringBuffer);
   BOOST_CHECK_EQUAL(toStringBuffer, expected);
 }
 
 BOOST_AUTO_TEST_CASE(FromStringEmpty_test) {
   CIEC_WCHAR test;
-  char toStringBuffer[14];
-  const char expected[] = "WCHAR#\"\"";
-  BOOST_CHECK_EQUAL(test.fromString(expected), sizeof(expected) - 1);
-  BOOST_CHECK_EQUAL(test.toString(toStringBuffer, sizeof(toStringBuffer)), sizeof(expected) - 1);
-  BOOST_CHECK_EQUAL(toStringBuffer, expected);
+  std::string toStringBuffer;
+  const char input[] = "WCHAR#\"\"";
+  BOOST_CHECK_EQUAL(test.fromString(input), sizeof(input) - 1);
+  test.toString(toStringBuffer);
+  BOOST_CHECK_EQUAL(toStringBuffer, "WCHAR#\"$0000\"");
 }
 
 BOOST_AUTO_TEST_CASE(FromStringDollar_test) {
   CIEC_WCHAR test;
-  char toStringBuffer[14];
+  std::string toStringBuffer;
   const char expected[] = "WCHAR#\"$$\"";
   BOOST_CHECK_EQUAL(test.fromString(expected), sizeof(expected) - 1);
-  BOOST_CHECK_EQUAL(test.toString(toStringBuffer, sizeof(toStringBuffer)), 10);
+  test.toString(toStringBuffer);
   BOOST_CHECK_EQUAL(toStringBuffer, expected);
 }
 
 BOOST_AUTO_TEST_CASE(FromStringQuote_test) {
   CIEC_WCHAR test;
-  char toStringBuffer[14];
+  std::string toStringBuffer;
   const char expected[] = "WCHAR#\"$\"\"";
   BOOST_CHECK_EQUAL(test.fromString(expected), sizeof(expected) - 1);
-  BOOST_CHECK_EQUAL(test.toString(toStringBuffer, sizeof(toStringBuffer)), 10);
+  test.toString(toStringBuffer);
   BOOST_CHECK_EQUAL(toStringBuffer, expected);
 }
 
 BOOST_AUTO_TEST_CASE(FromStringLineFeed_test) {
   CIEC_WCHAR test;
-  char toStringBuffer[14];
+  std::string toStringBuffer;
   const char source[] = "WCHAR#\"$L\"";
-  const char expected[] = "WCHAR#\"$N\"";
+  const char expected[] = "WCHAR#\"$n\"";
   BOOST_CHECK_EQUAL(test.fromString(source), sizeof(source) - 1);
-  BOOST_CHECK_EQUAL(test.toString(toStringBuffer, sizeof(toStringBuffer)), 10);
+  test.toString(toStringBuffer);
   BOOST_CHECK_EQUAL(toStringBuffer, expected);
 }
 
 BOOST_AUTO_TEST_CASE(FromStringNewLine_test) {
   CIEC_WCHAR test;
-  char toStringBuffer[14];
-  const char expected[] = "WCHAR#\"$N\"";
+  std::string toStringBuffer;
+  const char expected[] = "WCHAR#\"$n\"";
   BOOST_CHECK_EQUAL(test.fromString(expected), sizeof(expected) - 1);
-  BOOST_CHECK_EQUAL(test.toString(toStringBuffer, sizeof(toStringBuffer)), 10);
+  test.toString(toStringBuffer);
   BOOST_CHECK_EQUAL(toStringBuffer, expected);
 }
 
 BOOST_AUTO_TEST_CASE(FromStringPageFeed_test) {
   CIEC_WCHAR test;
-  char toStringBuffer[14];
-  const char expected[] = "WCHAR#\"$P\"";
+  std::string toStringBuffer;
+  const char expected[] = "WCHAR#\"$p\"";
   BOOST_CHECK_EQUAL(test.fromString(expected), sizeof(expected) - 1);
-  BOOST_CHECK_EQUAL(test.toString(toStringBuffer, sizeof(toStringBuffer)), 10);
+  test.toString(toStringBuffer);
   BOOST_CHECK_EQUAL(toStringBuffer, expected);
 }
 
 BOOST_AUTO_TEST_CASE(FromStringCarriageReturn_test) {
   CIEC_WCHAR test;
-  char toStringBuffer[14];
-  const char expected[] = "WCHAR#\"$R\"";
+  std::string toStringBuffer;
+  const char expected[] = "WCHAR#\"$r\"";
   BOOST_CHECK_EQUAL(test.fromString(expected), sizeof(expected) - 1);
-  BOOST_CHECK_EQUAL(test.toString(toStringBuffer, sizeof(toStringBuffer)), 10);
+  test.toString(toStringBuffer);
   BOOST_CHECK_EQUAL(toStringBuffer, expected);
 }
 
 BOOST_AUTO_TEST_CASE(FromStringTab_test) {
   CIEC_WCHAR test;
-  char toStringBuffer[14];
-  const char expected[] = "WCHAR#\"$T\"";
+  std::string toStringBuffer;
+  const char expected[] = "WCHAR#\"$t\"";
   BOOST_CHECK_EQUAL(test.fromString(expected), sizeof(expected) - 1);
-  BOOST_CHECK_EQUAL(test.toString(toStringBuffer, sizeof(toStringBuffer)), 10);
+  test.toString(toStringBuffer);
   BOOST_CHECK_EQUAL(toStringBuffer, expected);
 }
 
 BOOST_AUTO_TEST_CASE(FromStringCodePoint_test) {
   CIEC_WCHAR test;
-  char toStringBuffer[14];
+  std::string toStringBuffer;
   const char source[] = "WCHAR#\"$000A\"";
-  const char expected[] = "WCHAR#\"$N\"";
+  const char expected[] = "WCHAR#\"$n\"";
   BOOST_CHECK_EQUAL(test.fromString(source), sizeof(source) - 1);
-  BOOST_CHECK_EQUAL(test.toString(toStringBuffer, sizeof(toStringBuffer)), 10);
+  test.toString(toStringBuffer);
   BOOST_CHECK_EQUAL(toStringBuffer, expected);
 }
 
 BOOST_AUTO_TEST_CASE(FromStringHighCodePoint_test) {
   CIEC_WCHAR test;
-  char toStringBuffer[14];
+  std::string toStringBuffer;
   const char source[] = "WCHAR#\"$A00A\"";
   const char expected[] = "WCHAR#\"$A00A\"";
   BOOST_CHECK_EQUAL(test.fromString(source), sizeof(source) - 1);
-  BOOST_CHECK_EQUAL(test.toString(toStringBuffer, sizeof(toStringBuffer)), sizeof(source) - 1);
+  test.toString(toStringBuffer);
   BOOST_CHECK_EQUAL(toStringBuffer, expected);
 }
 

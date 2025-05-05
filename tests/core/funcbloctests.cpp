@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2023 - Primetals Technologies Austria GmbH
+ * Copyright (c) 2023, 2025 Primetals Technologies Austria GmbH
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -9,8 +9,10 @@
  *
  * Contributors:
  *   Martin Melik Merkumians - initial API and implementation and/or initial documentation
+ *   Alois Zoitl  - migrated data type toString to std::string
  *******************************************************************************/
 
+#include <boost/test/tools/old/interface.hpp>
 #include <boost/test/unit_test.hpp>
 
 #include "E_CTUD_fbt.h"
@@ -30,9 +32,9 @@ BOOST_AUTO_TEST_CASE(FB_TO_STRING_TEST) {
   FORTE_E_CTUD testFb(
       0, CFBContainerMock::smDefaultFBContMock); // Dummy FB, do not use for anything else than testing toString
   constexpr char result[] = "(PV:=0, QU:=FALSE, QD:=FALSE, CV:=0)";
-  char buffer[50];
-  BOOST_TEST(testFb.toString(buffer, sizeof(buffer)) == strlen(result));
-  BOOST_TEST(buffer == result);
+  std::string buffer;
+  testFb.toString(buffer);
+  BOOST_CHECK_EQUAL(buffer, result);
 }
 
 BOOST_AUTO_TEST_CASE(FB_TO_STRING_BUFFER_SIZE_TEST_WITH_INRENAL_VAR) {
@@ -110,17 +112,6 @@ BOOST_AUTO_TEST_CASE(FB_TO_STRING_BUFFER_SIZE_TEST_WITH_INRENAL_VAR) {
   SInternalVarsInformation varData{3, varInternalNames, varInternalTypeIds};
   CInternalVarTestFB testFb(&varData);
   BOOST_ASSERT(testFb.initialize());
-  size_t size = testFb.getToStringBufferSize();
-  BOOST_CHECK_EQUAL(size, 39);
-}
-
-BOOST_AUTO_TEST_CASE(FB_TO_STRING_BUFFER_SIZE_TEST_WITHOUT_INRENAL_VAR) {
-
-  // Test for FB with inputs and outputs
-  FORTE_E_CTUD testFb(0, CFBContainerMock::smDefaultFBContMock); // Dummy FB, do not use for anything else than testing
-                                                                 // getToStringBufferSize
-  size_t size = testFb.getToStringBufferSize();
-  BOOST_CHECK_EQUAL(size, 51);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

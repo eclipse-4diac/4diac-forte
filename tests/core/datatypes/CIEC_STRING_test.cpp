@@ -1,8 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2011 - 2013 ACIN, nxtControl, Profactor GmbH, fortiss GmbH
- *              2018 TU Wien/ACIN
- *               2022 Primetals Technologies Austria GmbH
- *               2023 Martin Erich Jobst
+ * Copyright (c) 2011, 2025 ACIN, nxtControl, Profactor GmbH, fortiss GmbH,
+ *                          TU Wien/ACIN, Primetals Technologies Austria GmbH,
+ *                          Martin Erich Jobst
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -13,10 +12,13 @@
  *   Martin Melik Merkumians, Ingo Hegny, Alois Zoitl, Stanislav Meduna,
  *     Matthias Plasch - initial API and implementation and/or initial documentation
  *   Martin Melik Merkumians - adds getToStringBufferSize tests
- *    Martin Melik Merkumians - changes for removed implicit constructor for
+ *   Martin Melik Merkumians - changes for removed implicit constructor for
  *      primitve types
  *   Martin Jobst - add equals tests
+ *   Alois Zoitl  - migrated data type toString to std::string
  *******************************************************************************/
+#include <atomic>
+#include <boost/test/tools/old/interface.hpp>
 #include <boost/test/unit_test.hpp>
 #include "forte_boost_output_support.h"
 
@@ -328,49 +330,34 @@ BOOST_AUTO_TEST_CASE(Memory_Allocation) {
 }
 
 BOOST_AUTO_TEST_CASE(String_toUTF8) {
-  const TForteByte cASCII1[] = {0};
-  const TForteByte cASCII2[] = {'A', 0};
-  const TForteByte cASCII3[] = {0x7f, 0};
-  const TForteByte cUpper1[] = {'A', 0xc2, 0xa2, 'A', 0};
+  const char cASCII1[] = {0};
+  const char cASCII2[] = {'A', 0};
+  const char cASCII3[] = {0x7f, 0};
+  const char cUpper1[] = {'A', static_cast<char>(0xc2), static_cast<char>(0xa2), 'A', 0};
 
-  int nRes;
   CIEC_STRING sTest;
-  char sResult[32];
+  std::string sResult;
 
   sTest = ""_STRING;
-  sResult[0] = '\0';
-  nRes = sTest.toUTF8(sResult, sizeof(sResult), false);
-  BOOST_CHECK_EQUAL(nRes, 0);
-  BOOST_CHECK(!memcmp(sResult, cASCII1, sizeof(cASCII1)));
+  sResult.clear();
+  sTest.toUTF8(sResult, false);
+  BOOST_CHECK_EQUAL(sResult, cASCII1);
 
   sTest = "A"_STRING;
-  sResult[0] = '\0';
-  nRes = sTest.toUTF8(sResult, sizeof(sResult), false);
-  BOOST_CHECK_EQUAL(nRes, 1);
-  BOOST_CHECK(!memcmp(sResult, cASCII2, sizeof(cASCII2)));
-  nRes = sTest.toUTF8(sResult, 1, false);
-  BOOST_CHECK_EQUAL(nRes, -1);
+  sResult.clear();
+  sTest.toUTF8(sResult, false);
+  BOOST_CHECK_EQUAL(sResult, cASCII2);
 
   sTest = "\x7f"_STRING;
-  sResult[0] = '\0';
-  nRes = sTest.toUTF8(sResult, sizeof(sResult), false);
-  BOOST_CHECK_EQUAL(nRes, 1);
-  BOOST_CHECK(!memcmp(sResult, cASCII3, sizeof(cASCII3)));
-  nRes = sTest.toUTF8(sResult, 1, false);
-  BOOST_CHECK_EQUAL(nRes, -1);
-  nRes = sTest.toUTF8(sResult, 2, false);
-  BOOST_CHECK_EQUAL(nRes, 1);
+  sResult.clear();
+  sTest.toUTF8(sResult, false);
+  BOOST_CHECK_EQUAL(sResult, cASCII3);
 
   sTest = "A\xa2"
           "A"_STRING;
-  sResult[0] = '\0';
-  nRes = sTest.toUTF8(sResult, sizeof(sResult), false);
-  BOOST_CHECK_EQUAL(nRes, 4);
-  BOOST_CHECK(!memcmp(sResult, cUpper1, sizeof(cUpper1)));
-  nRes = sTest.toUTF8(sResult, 4, false);
-  BOOST_CHECK_EQUAL(nRes, -1);
-  nRes = sTest.toUTF8(sResult, 5, false);
-  BOOST_CHECK_EQUAL(nRes, 4);
+  sResult.clear();
+  sTest.toUTF8(sResult, false);
+  BOOST_CHECK_EQUAL(sResult, cUpper1);
 }
 
 const std::string cTestLiteral1 = "Test String"s;
@@ -468,169 +455,156 @@ BOOST_AUTO_TEST_CASE(String_fromString_typed) {
 
 BOOST_AUTO_TEST_CASE(String_toString) {
   CIEC_STRING sTestee;
-  char acBuffer[200];
+  std::string acBuffer;
 
   sTestee = CIEC_STRING(cTestResult2);
-  BOOST_CHECK_EQUAL(sTestee.toString(acBuffer, 200), cTestLiteral2.length());
-  BOOST_TEST(cTestLiteral2 == acBuffer);
+  sTestee.toString(acBuffer);
+  BOOST_CHECK_EQUAL(cTestLiteral2, acBuffer);
 
+  acBuffer.clear();
   sTestee = CIEC_STRING(cTestDollarResult);
-  BOOST_CHECK_EQUAL(sTestee.toString(acBuffer, 200), cTestDollarToStringResult.length());
-  BOOST_TEST(cTestDollarToStringResult == acBuffer);
+  sTestee.toString(acBuffer);
+  BOOST_CHECK_EQUAL(cTestDollarToStringResult, acBuffer);
 
+  acBuffer.clear();
   sTestee = CIEC_STRING(cTestLineFeedResult);
-  BOOST_CHECK_EQUAL(sTestee.toString(acBuffer, 200), cTestLineFeedToStringResult.length());
-  BOOST_TEST(cTestLineFeedToStringResult.c_str() == acBuffer);
+  sTestee.toString(acBuffer);
+  BOOST_CHECK_EQUAL(cTestLineFeedToStringResult, acBuffer);
 
+  acBuffer.clear();
   sTestee = CIEC_STRING(cTestNewLineResult);
-  BOOST_CHECK_EQUAL(sTestee.toString(acBuffer, 200), cTestNewLineToStringResult.length());
-  BOOST_TEST(cTestNewLineToStringResult.c_str() == acBuffer);
+  sTestee.toString(acBuffer);
+  BOOST_CHECK_EQUAL(cTestNewLineToStringResult, acBuffer);
 
+  acBuffer.clear();
   sTestee = CIEC_STRING(cTestFormFeedResult);
-  BOOST_CHECK_EQUAL(sTestee.toString(acBuffer, 200), cTestFormFeedToStringResult.length());
-  BOOST_TEST(cTestFormFeedToStringResult.c_str() == acBuffer);
+  sTestee.toString(acBuffer);
+  BOOST_CHECK_EQUAL(cTestFormFeedToStringResult, acBuffer);
 
+  acBuffer.clear();
   sTestee = CIEC_STRING(cTestCarriageReturnResult);
-  BOOST_CHECK_EQUAL(sTestee.toString(acBuffer, 200), cTestCarriageReturnToStringResult.length());
-  BOOST_TEST(cTestCarriageReturnToStringResult.c_str() == acBuffer);
+  sTestee.toString(acBuffer);
+  BOOST_CHECK_EQUAL(cTestCarriageReturnToStringResult, acBuffer);
 
+  acBuffer.clear();
   sTestee = CIEC_STRING(cTestTabResult);
-  BOOST_CHECK_EQUAL(sTestee.toString(acBuffer, 200), cTestTabToStringResult.length());
-  BOOST_TEST(cTestTabToStringResult.c_str() == acBuffer);
+  sTestee.toString(acBuffer);
+  BOOST_CHECK_EQUAL(cTestTabToStringResult, acBuffer);
 
+  acBuffer.clear();
   sTestee = CIEC_STRING(cTestSingleQuoteResult);
-  BOOST_CHECK_EQUAL(sTestee.toString(acBuffer, 200), cTestSingleQuoteToStringResult.length());
-  BOOST_TEST(cTestSingleQuoteToStringResult.c_str() == acBuffer);
+  sTestee.toString(acBuffer);
+  BOOST_CHECK_EQUAL(cTestSingleQuoteToStringResult, acBuffer);
 
+  acBuffer.clear();
   sTestee = CIEC_STRING(cTestDoubleQuoteResult);
-  BOOST_CHECK_EQUAL(sTestee.toString(acBuffer, 200), cTestDoubleQuoteToStringResult.length());
-  BOOST_TEST(cTestDoubleQuoteToStringResult.c_str() == acBuffer);
+  sTestee.toString(acBuffer);
+  BOOST_CHECK_EQUAL(cTestDoubleQuoteToStringResult, acBuffer);
 
+  acBuffer.clear();
   sTestee = CIEC_STRING(cTestEscapedCharacterResult);
-  BOOST_CHECK_EQUAL(sTestee.toString(acBuffer, 200), cTestEscapedCharacterToStringResult.length());
-  BOOST_TEST(cTestEscapedCharacterToStringResult.c_str() == acBuffer);
+  sTestee.toString(acBuffer);
+  BOOST_CHECK_EQUAL(cTestEscapedCharacterToStringResult, acBuffer);
 }
 
 BOOST_AUTO_TEST_CASE(String_to_string_nonprintable_sybmol_nul) {
   CIEC_STRING testString("\0"_STRING);
-  const size_t bufferSize = 6;
-  char cStringBuffer[bufferSize];
-  BOOST_TEST(5 == testString.toString(cStringBuffer, bufferSize));
+  std::string cStringBuffer;
+  testString.toString(cStringBuffer);
   BOOST_TEST("'$00'" == cStringBuffer);
 }
 
 BOOST_AUTO_TEST_CASE(String_to_string_nonprintable_sybmol_esc) {
   CIEC_STRING testString("\x1b"_STRING);
-  const size_t bufferSize = 6;
-  char cStringBuffer[bufferSize];
-  BOOST_TEST(5 == testString.toString(cStringBuffer, bufferSize));
+  std::string cStringBuffer;
+  testString.toString(cStringBuffer);
   BOOST_TEST("'$1B'" == cStringBuffer);
-}
-
-BOOST_AUTO_TEST_CASE(String_toString_faultcase_buffer_size_zero) {
-  CIEC_STRING testString("4diac 4 ever!"_STRING);
-  const size_t bufferSize = 50;
-  char cStringBuffer[bufferSize];
-
-  BOOST_TEST(-1 == testString.toString(cStringBuffer, 0));
-}
-
-BOOST_AUTO_TEST_CASE(String_toString_faultcase_buffer_pointer_nullptr) {
-  CIEC_STRING testString;
-  const size_t bufferSize = 50;
-
-  BOOST_TEST(-1 == testString.toString(nullptr, bufferSize));
-}
-
-BOOST_AUTO_TEST_CASE(String_toString_faultcase_buffer_not_enough_buffer_size) {
-  CIEC_STRING testString("4diac 4 ever!"_STRING);
-  const size_t bufferSize = "4diac 4 ever!"_STRING.length() + 1 + 2; // +1 for \0 and +2 for enclosing single quotes
-  std::vector<char> cStringBuffer(bufferSize);
-
-  for (size_t i = 0; i < cStringBuffer.size(); ++i) {
-    BOOST_CHECK_EQUAL(-1, testString.toString(cStringBuffer.data(), i));
-  }
-  BOOST_CHECK_EQUAL(cStringBuffer.size() - 1,
-                    testString.toString(cStringBuffer.data(), cStringBuffer.size())); // \0 is not counted
 }
 
 BOOST_AUTO_TEST_CASE(String_getToStringBufferSize_NoSpecialSymbols) {
   CIEC_STRING testString("4diac 4 ever!"_STRING);
 
-  size_t bufferSize = testString.getToStringBufferSize();
-  BOOST_CHECK_EQUAL(13 + 2 + 1, bufferSize);
+  std::string cStringBuffer;
+  testString.toString(cStringBuffer);
+  BOOST_CHECK_EQUAL("'4diac 4 ever!'", cStringBuffer);
 }
 
 BOOST_AUTO_TEST_CASE(String_getToStringBufferSize_Dollar) {
   CIEC_STRING testString("$"_STRING);
 
-  size_t bufferSize = testString.getToStringBufferSize();
-  BOOST_CHECK_EQUAL(2 + 2 + 1, bufferSize); // '$$'\0
+  std::string cStringBuffer;
+  testString.toString(cStringBuffer);
+  BOOST_CHECK_EQUAL("'$$'", cStringBuffer);
 }
 
 BOOST_AUTO_TEST_CASE(String_getToStringBufferSize_SingleQuote) {
   CIEC_STRING testString("\'"_STRING);
 
-  size_t bufferSize = testString.getToStringBufferSize();
-  BOOST_CHECK_EQUAL(2 + 2 + 1, bufferSize); // '$''\0
+  std::string cStringBuffer;
+  testString.toString(cStringBuffer);
+  BOOST_CHECK_EQUAL("'$''", cStringBuffer);
 }
 
 BOOST_AUTO_TEST_CASE(String_getToStringBufferSize_DoubleQuote) {
   CIEC_STRING testString("\""_STRING);
 
-  size_t bufferSize = testString.getToStringBufferSize();
-  BOOST_CHECK_EQUAL(1 + 2 + 1, bufferSize); // '"'\0
+  std::string cStringBuffer;
+  testString.toString(cStringBuffer);
+  BOOST_CHECK_EQUAL("'\"'", cStringBuffer);
 }
 
 BOOST_AUTO_TEST_CASE(String_getToStringBufferSize_LineFeed) {
   CIEC_STRING testString("\x10"_STRING);
 
-  size_t bufferSize = testString.getToStringBufferSize();
-  BOOST_CHECK_EQUAL(2 + 2 + 1, bufferSize); // '$L'\0
+  std::string cStringBuffer;
+  testString.toString(cStringBuffer);
+  BOOST_CHECK_EQUAL("'$l'", cStringBuffer);
 }
 
 BOOST_AUTO_TEST_CASE(String_getToStringBufferSize_NewLine) {
   CIEC_STRING testString("\n"_STRING);
 
-  size_t bufferSize = testString.getToStringBufferSize();
-  BOOST_CHECK_EQUAL(2 + 2 + 1, bufferSize); // '$N'\0
+  std::string cStringBuffer;
+  testString.toString(cStringBuffer);
+  BOOST_CHECK_EQUAL("'$n'", cStringBuffer);
 }
 
 BOOST_AUTO_TEST_CASE(String_getToStringBufferSize_FormFeed) {
   CIEC_STRING testString("\f"_STRING);
 
-  size_t bufferSize = testString.getToStringBufferSize();
-  BOOST_CHECK_EQUAL(2 + 2 + 1, bufferSize); // '$P'\0
+  std::string cStringBuffer;
+  testString.toString(cStringBuffer);
+  BOOST_CHECK_EQUAL("'$p'", cStringBuffer);
 }
 
 BOOST_AUTO_TEST_CASE(String_getToStringBufferSize_CarriageReturn) {
   CIEC_STRING testString("\r"_STRING);
 
-  size_t bufferSize = testString.getToStringBufferSize();
-  BOOST_CHECK_EQUAL(2 + 2 + 1, bufferSize); // '$R'\0
+  std::string cStringBuffer;
+  testString.toString(cStringBuffer);
+  BOOST_CHECK_EQUAL("'$r'", cStringBuffer);
 }
 
 BOOST_AUTO_TEST_CASE(String_getToStringBufferSize_Tab) {
   CIEC_STRING testString("\t"_STRING);
 
-  size_t bufferSize = testString.getToStringBufferSize();
-  BOOST_CHECK_EQUAL(2 + 2 + 1, bufferSize); // '$T'\0
+  std::string cStringBuffer;
+  testString.toString(cStringBuffer);
+  BOOST_CHECK_EQUAL("'$t'", cStringBuffer);
 }
 
 BOOST_AUTO_TEST_CASE(String_getToStringBufferSize_NonCommonSymbol) {
   CIEC_STRING testString("\x8A"_STRING);
 
-  size_t bufferSize = testString.getToStringBufferSize();
-  BOOST_CHECK_EQUAL(3 + 2 + 1, bufferSize); // '$8A'\0
+  std::string cStringBuffer;
+  testString.toString(cStringBuffer);
+  BOOST_CHECK_EQUAL("'$8A'", cStringBuffer);
 }
 
 BOOST_AUTO_TEST_CASE(Implicit_cast_from_CHAR) {
   CIEC_CHAR testChar('4');
   CIEC_STRING resultString(testChar);
 
-  size_t bufferSize = resultString.getToStringBufferSize();
-
-  BOOST_TEST(4 == bufferSize); //'<symbol>'\0 = 4
   BOOST_TEST("4"_STRING == resultString);
 }
 
@@ -640,9 +614,6 @@ BOOST_AUTO_TEST_CASE(Assignment_from_CHAR) {
 
   resultString = testChar;
 
-  size_t bufferSize = resultString.getToStringBufferSize();
-
-  BOOST_CHECK_EQUAL(4, bufferSize); //'<symbol>'\0 = 4
   BOOST_TEST("4"_STRING == resultString);
 }
 

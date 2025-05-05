@@ -1,5 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2005 - 2015 Profactor GmbH, ACIN, fortiss GmbH
+ * Copyright (c) 2005 - 2025 Profactor GmbH, ACIN, fortiss GmbH,
+ *                           Primetals Technologies Austria GmbH
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -8,26 +9,23 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    Thomas Strasser, Ingomar Müller, Alois Zoitl,
- *    Ingo Hegny, Martin Melik Merkumians, Monika Wenger
- *      - initial implementation and rework communication infrastructure
+ *   Thomas Strasser, Ingomar Müller, Alois Zoitl,
+ *     Ingo Hegny, Martin Melik Merkumians, Monika Wenger
+ *               - initial implementation and rework communication infrastructure
+ *   Alois Zoitl - migrated data type toString to std::string
  *******************************************************************************/
 #include <cmath>
+#include <format>
 #include <string.h>
 #include <stdlib.h>
-#include <stdio.h>
 #include <errno.h>
 #include "forte_lreal.h"
 
 USE_STRING_ID(LREAL);
 
 #include "forte_real.h"
-#include "forte_string.h"
-#include "forte_wstring.h"
 #include "forte_lint.h"
 #include "forte_ulint.h"
-
-#include <forte_printer.h>
 
 DEFINE_FIRMWARE_DATATYPE(LREAL, STRID(LREAL))
 
@@ -50,13 +48,11 @@ int CIEC_LREAL::fromString(const char *paValue) {
   return static_cast<int>(pcEnd - paValue);
 }
 
-int CIEC_LREAL::toString(char *paValue, size_t paBufferSize) const {
-  int nRetVal = forte_snprintf(paValue, paBufferSize, "%.*g", std::numeric_limits<CIEC_LREAL::TValueType>::max_digits10,
-                               getTDFLOAT());
-  if ((nRetVal < 0) || (nRetVal >= static_cast<int>(paBufferSize))) {
-    return -1;
-  }
-  return normalizeToStringRepresentation(paValue, paBufferSize, nRetVal);
+void CIEC_LREAL::toString(std::string &paTargetBuf) const {
+  auto startPos = paTargetBuf.size();
+  std::format_to(std::back_inserter(paTargetBuf), "{:.{}g}", getTDFLOAT(),
+                 std::numeric_limits<CIEC_LREAL::TValueType>::max_digits10);
+  normalizeToStringRepresentation(paTargetBuf, startPos);
 }
 
 void CIEC_LREAL::setValue(const CIEC_ANY &paValue) {

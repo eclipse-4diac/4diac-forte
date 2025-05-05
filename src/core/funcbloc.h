@@ -10,12 +10,13 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    Alois Zoitl, Thomas Strasser, Gunnar Grabmaier, Smodic Rene,
- *    Gerhard Ebenhofer, Michael Hofmann, Martin Melik Merkumians, Ingo Hegny,
- *    Stanislav Meduna, Patrick Smejkal,
- *      - initial implementation and rework communication infrastructure
- *    Alois Zoitl - introduced new CGenFB class for better handling generic FBs
- *    Martin Jobst - account for data type size in FB initialization
+ *   Alois Zoitl, Thomas Strasser, Gunnar Grabmaier, Smodic Rene,
+ *     Gerhard Ebenhofer, Michael Hofmann, Martin Melik Merkumians, Ingo Hegny,
+ *     Stanislav Meduna, Patrick Smejkal,
+ *                - initial implementation and rework communication infrastructure
+ *   Alois Zoitl  - introduced new CGenFB class for better handling generic FBs
+ *   Martin Jobst - account for data type size in FB initialization
+ *   Alois Zoitl  - migrated data type toString to std::string
  *******************************************************************************/
 #ifndef _FUNCBLOC_H_
 #define _FUNCBLOC_H_
@@ -361,9 +362,7 @@ class CFunctionBlock : public forte::core::CFBContainer {
 
 #endif // FORTE_SUPPORT_MONITORING
 
-    virtual int toString(char *paValue, size_t paBufferSize) const;
-
-    virtual size_t getToStringBufferSize() const;
+    virtual void toString(std::string &paTargetBuf) const;
 
 #ifdef FORTE_TRACE_CTF
     virtual void traceInstanceData() {
@@ -604,10 +603,6 @@ class CFunctionBlock : public forte::core::CFBContainer {
     CFunctionBlock(const CFunctionBlock &) = delete;
 
   protected:
-    int writeToStringNameValuePair(char *paValue,
-                                   size_t paBufferSize,
-                                   const CStringDictionary::TStringId variableNameId,
-                                   const CIEC_ANY *const variable) const;
     constexpr static char csmToStringSeparator[] = ", ";
 
   private:

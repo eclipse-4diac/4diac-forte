@@ -1,6 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2023 Profactor GmbH, ACIN, TU Wien/ACIN
- *                          Martin Erich Jobst
+ * Copyright (c) 2005, 2025 Profactor GmbH, ACIN, TU Wien/ACIN,
+ *                          Martin Erich Jobst,
+ *                          Primetals Technologies Austria GmbH
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -9,13 +10,14 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    Thomas Strasser, Ingomar Müller, Alois Zoitl, Gerhard Ebenhofer,
- *    Monika Wenger, Ingo Hegny, Martin Melik Merkumians,
+ *   Thomas Strasser, Ingomar Müller, Alois Zoitl, Gerhard Ebenhofer,
+ *     Monika Wenger, Ingo Hegny, Martin Melik Merkumians,
  *      - initial implementation and rework communication infrastructure
- *    Martin Melik-Merkumians - added getInNanoSeconds, setFromNanoSeconds,
+ *   Martin Melik-Merkumians - added getInNanoSeconds, setFromNanoSeconds,
  *      changed defines to constants, added literal parsing for micro and
  *      nanoseconds, removed built-in type operator=, removed operator++
- *    Martin Jobst - add user-defined literal
+ *   Martin Jobst - add user-defined literal
+ *   Alois Zoitl  - migrated data type toString to std::string
  *******************************************************************************/
 #ifndef _FORTE_TIME_H_
 #define _FORTE_TIME_H_
@@ -27,10 +29,6 @@
 
 class CIEC_TIME final : public CIEC_ANY_DURATION {
     DECLARE_FIRMWARE_DATATYPE(TIME)
-
-  private:
-    static constexpr char csmMinTimeValue[] = "T#-106751d23h47m16s854ms775us808ns";
-    static constexpr char csmZeroNanoSecondTimeValue[] = "T#0ns";
 
   public:
     [[deprecated("Please use the corresponding numeric_limits template")]]
@@ -85,18 +83,9 @@ class CIEC_TIME final : public CIEC_ANY_DURATION {
      *   This command implements a conversion function from C++ data type
      *   to IEC61131 conform data type (string format).
      *   This function is necessary for communication with a proper engineering system.
-     *   \param paValue Pointer to the buffer String
-     *   \param paBufferSize Size of the given buffer
-     *   \return number of bytes used in the buffer without trailing 0x00
-     *           -1 on error
+     *   \param paTargetBuf Reference to the buffer String
      */
-    int toString(char *paValue, size_t paBufferSize) const override;
-
-    /*! \brief calculates buffer size needed for toString conversion
-     */
-    size_t getToStringBufferSize() const override {
-      return sizeof(csmMinTimeValue);
-    }
+    void toString(std::string &paTargetBuf) const override;
 
     TValueType getInDays() const;
     TValueType getInHours() const;

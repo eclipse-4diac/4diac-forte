@@ -1,6 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2023 Profactor GmbH, ACIN, nxtControl GmbH, fortiss GmbH
- *               TU Wien/ACIN, Primetals Technologies Austria GmbH
+ * Copyright (c) 2005, 2025 Profactor GmbH, TU Wien/ACIN, nxtControl GmbH,
+ *                          fortiss GmbH, Primetals Technologies Austria GmbH
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -9,22 +9,25 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    Thomas Strasser, Ingomar Müller, Rene Smodic, Alois Zoitl,
- *    Ingo Hegny, Martin Melik Merkumians, Stanislav Meduna
+ *   Thomas Strasser, Ingomar Müller, Rene Smodic, Alois Zoitl,
+ *   Ingo Hegny, Martin Melik Merkumians, Stanislav Meduna
  *      - initial implementation and rework communication infrastructure
- *    Martin Melik Merkumians - fixes toString behavior for 0 size buffer
- *                            - fixes behavior for getToStringBufferSize
- *                            - changes storage to std::string
+ *   Martin Melik Merkumians - fixes toString behavior for 0 size buffer
+ *                           - fixes behavior for getToStringBufferSize
+ *                           - changes storage to std::string
+ *   Alois Zoitl - migrated data type toString to std::string
  *******************************************************************************/
 #include "forte_string.h"
+#include <cstddef>
+#include "datatype.h"
 
 USE_STRING_ID(STRING);
 
 #include <devlog.h>
-#include "forte_uint.h"
 #include "unicode_utils.h"
 #include <string_view>
 #include <charconv>
+#include "../../arch/forte_fileio.h"
 
 using namespace std::string_literals;
 
@@ -136,129 +139,41 @@ int CIEC_STRING::compare(const CIEC_STRING &paValue) const {
   return mValue.compare(paValue.getStorage());
 }
 
-int CIEC_STRING::determineEscapedStringLength(const char *paValue, char paDelimiter, const size_t paLength) {
-  if (*paValue != paDelimiter) {
-    return static_cast<unsigned int>(paLength);
+void CIEC_STRING::toString(std::string &paTargetBuf) const {
+  paTargetBuf += '\'';
+  for (auto c : getStorage()) {
+    dollarEscapeChar(paTargetBuf, c, getDataTypeID());
   }
-
-  const char *pacRunner = paValue + 1;
-  for (size_t i = 0; i < paLength; ++i, ++pacRunner) {
-    if ('$' == *pacRunner) {
-      TForteUInt16 nDummy;
-      ++pacRunner;
-      if (!handleDollarEscapedChar(&pacRunner, (paDelimiter == '"'), nDummy)) {
-        continue; // It is invalid but we need the real end
-      }
-    }
-  }
-
-  return (paDelimiter == *pacRunner) ? static_cast<unsigned int>(pacRunner + 1 - paValue) : -1;
-}
-
-int CIEC_STRING::toString(char *paValue, size_t paBufferSize) const {
-  int nRetVal = -1;
-  if (nullptr != paValue && getToStringBufferSize() <= paBufferSize) {
-    *paValue = '\'';
-    paValue++;
-    TForteUInt16 nLen = length();
-    size_t nUsedBytes = 0;
-    paBufferSize -= 2;
-    if (0 < nLen) {
-      const char *acValue = getStorage().c_str();
-      for (unsigned int i = 0; i < nLen; ++i) {
-        if (nUsedBytes >= paBufferSize) {
-          return -1;
-        }
-        nUsedBytes += dollarEscapeChar(paValue + nUsedBytes, acValue[i], 3, getDataTypeID());
-      }
-
-    } else {
-      *paValue = '\0';
-    }
-    nRetVal = static_cast<int>(nUsedBytes);
-    paValue[nRetVal] = '\'';
-    paValue[nRetVal + 1] = '\0';
-    nRetVal += 2;
-  }
-  return nRetVal;
-}
-
-size_t CIEC_STRING::getToStringBufferSize() const {
-  size_t neededBufferSize = 0;
-  for (auto iter = mValue.begin(); iter != mValue.end(); ++iter) {
-    if (isprint(static_cast<unsigned char>(*iter)) && '$' != *iter && '\'' != *iter) {
-      ++neededBufferSize;
-    } else {
-      switch (*iter) {
-        case '$':
-        case '\'':
-        case 0x10: // line feed
-        case '\n':
-        case '\f':
-        case '\r':
-        case '\t': neededBufferSize += 2; break;
-        default: neededBufferSize += 3; break;
-      }
-    }
-  }
-  return neededBufferSize + 2 + 1; // For Quotes and \0
+  paTargetBuf += '\'';
 }
 
 #ifdef FORTE_UNICODE_SUPPORT
-int CIEC_STRING::toUTF8(char *paBuffer, size_t paBufferSize, bool paEscape) const {
-  // Count the needed space
-  size_t nNeededLength = paEscape ? 2 : 0; // Leading and trailing delimiter
-  int nRes;
-
-  const unsigned char *pRunner = reinterpret_cast<const unsigned char *>(getStorage().c_str());
-  while (*pRunner) {
-    nRes = CUnicodeUtilities::encodeUTF8Codepoint(nullptr, 0, (TForteUInt32) *pRunner);
-    if (nRes < 0) {
-      return -1;
-    }
-    nNeededLength += nRes;
-    if (nRes == 1 && paEscape && dollarEscapeChar(nullptr, *pRunner, 0, getDataTypeID()) == 2) {
-      nNeededLength++;
-    }
-    ++pRunner;
-  }
-
-  if (nullptr == paBuffer) {
-    return static_cast<int>(nNeededLength);
-  }
-
-  if (nNeededLength + 1 > paBufferSize) {
-    return -1;
-  }
-
-  char *pEncRunner = paBuffer;
-  char *pDataEnd = paBuffer + nNeededLength;
+void CIEC_STRING::toUTF8(std::string &paBuffer, bool paEscape) const {
+  TForteByte utf8Buffer[4];
 
   if (paEscape) {
-    *pEncRunner++ = '\'';
+    paBuffer += '\'';
   }
 
-  pRunner = reinterpret_cast<const unsigned char *>(getStorage().c_str());
-  while (*pRunner) {
-    nRes = CUnicodeUtilities::encodeUTF8Codepoint(
-        (TForteByte *) pEncRunner, static_cast<unsigned int>(pDataEnd - pEncRunner), (TForteUInt32) *pRunner);
-    if (nRes == 1 && paEscape) {
-      nRes = dollarEscapeChar(pEncRunner, *pRunner, static_cast<unsigned int>(pDataEnd - pEncRunner), getDataTypeID());
-    }
+  for (char c : getStorage()) {
+    TForteByte uc = static_cast<TForteByte>(c);
+    int nRes = CUnicodeUtilities::encodeUTF8Codepoint(utf8Buffer, 4, static_cast<TForteUInt32>(uc));
     if (nRes < 0) {
-      return -1;
+      break;
     }
 
-    pEncRunner += nRes;
-    ++pRunner;
+    if (paEscape) {
+      for (size_t i = 0; i < static_cast<size_t>(nRes); i++) {
+        dollarEscapeChar(paBuffer, static_cast<char>(utf8Buffer[i]), getDataTypeID());
+      }
+    } else {
+      paBuffer.append(reinterpret_cast<char *>(utf8Buffer), static_cast<size_t>(nRes));
+    }
   }
 
   if (paEscape) {
-    *pEncRunner++ = '\'';
+    paBuffer += '\'';
   }
-  *pEncRunner = '\0';
-
-  return static_cast<int>(pEncRunner - paBuffer);
 }
 
 const CStringDictionary::TStringId forte::CDataTypeTrait<CIEC_STRING>::scmDataTypeName = STRID(STRING);

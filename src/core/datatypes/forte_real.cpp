@@ -1,5 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2005 - 2019 Profactor GmbH, ACIN, nxtControl GmbH, fortiss GmbH
+ * Copyright (c) 2005, 2025 Profactor GmbH, ACIN, nxtControl GmbH, fortiss GmbH,
+ *                          Primetals Technologies Austria GmbH
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -7,17 +9,17 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    Thomas Strasser, Ingomar Müller, Alois Zoitl,
- *    Ingo Hegny, Martin Melik Merkumians, Monika Wenger, Stanislav Meduna,
- *    Matthias Plasch
- *      - initial implementation and rework communication infrastructure
- *    Jose Cabral
- *      - Move arch dependant code (strtod) to the arch folder
+ *   Thomas Strasser, Ingomar Müller, Alois Zoitl, Ingo Hegny,
+ *     Martin Melik Merkumians, Monika Wenger, Stanislav Meduna, Matthias Plasch
+ *               - initial implementation and rework communication infrastructure
+ *   Jose Cabral - Move arch dependant code (strtod) to the arch folder
+ *   Alois Zoitl - migrated data type toString to std::string
  *******************************************************************************/
 #include <cmath>
 #include <cstring>
 #include <cstdlib>
 #include <cstdio>
+#include <format>
 #include "forte_real.h"
 
 USE_STRING_ID(REAL);
@@ -25,8 +27,6 @@ USE_STRING_ID(REAL);
 #include "forte_lreal.h"
 #include "forte_lint.h"
 #include "forte_ulint.h"
-
-#include <forte_printer.h>
 
 DEFINE_FIRMWARE_DATATYPE(REAL, STRID(REAL))
 
@@ -50,14 +50,12 @@ int CIEC_REAL::fromString(const char *paValue) {
   return static_cast<int>(pcEnd - paValue);
 }
 
-int CIEC_REAL::toString(char *paValue, size_t paBufferSize) const {
-  int nRetVal = forte_snprintf(paValue, paBufferSize, "%.*g", std::numeric_limits<CIEC_REAL::TValueType>::max_digits10,
-                               getTFLOAT());
-  if ((nRetVal < 0) || (nRetVal >= static_cast<int>(paBufferSize))) {
-    return -1;
-  }
-  // Check if there is a trailing decimal fraction or exponent
-  return normalizeToStringRepresentation(paValue, paBufferSize, nRetVal);
+void CIEC_REAL::toString(std::string &paTargetBuf) const {
+  auto startPos = paTargetBuf.size();
+  std::format_to(std::back_inserter(paTargetBuf), "{:.{}g}", getTFLOAT(),
+                 std::numeric_limits<CIEC_REAL::TValueType>::max_digits10);
+
+  normalizeToStringRepresentation(paTargetBuf, startPos);
 }
 
 void CIEC_REAL::setValue(const CIEC_ANY &paValue) {

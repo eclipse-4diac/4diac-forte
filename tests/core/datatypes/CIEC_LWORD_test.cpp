@@ -1,6 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2023 ACIN
- *                          Martin Erich Jobst
+ * Copyright (c) 2011, 2025 ACIN, Martin Erich Jobst,
+ *                          Primetals Technologies Austria GmbH
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -9,8 +9,10 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *   Martin Melik Merkumians, Ingo Hegny, Alois Zoitl - initial API and implementation and/or initial documentation
+ *   Martin Melik Merkumians, Ingo Hegny, Alois Zoitl
+ *                - initial API and implementation and/or initial documentation
  *   Martin Jobst - add user-defined literal tests
+ *   Alois Zoitl  - migrated data type toString to std::string
  *******************************************************************************/
 #include <boost/test/unit_test.hpp>
 #include "forte_boost_output_support.h"
@@ -63,149 +65,124 @@ BOOST_AUTO_TEST_CASE(Assignment_test) {
 }
 
 BOOST_AUTO_TEST_CASE(Conversion_test) {
-  CIEC_LWORD nTest;
+  CIEC_LWORD testVal;
 
-  char cBuffer[21];
-  char cBufferFail[2];
+  std::string buffer;
 
   // check cast operator
-  nTest = CIEC_LWORD(0);
-  strcpy(cBuffer, "");
+  testVal = CIEC_LWORD(0);
+  buffer.clear();
 
-  BOOST_CHECK_EQUAL(nTest.operator TForteLWord(), 0ULL);
+  BOOST_CHECK_EQUAL(testVal.operator TForteLWord(), 0ULL);
 
-  nTest = CIEC_LWORD(14524526231894545ULL);
-  BOOST_CHECK_EQUAL(nTest.operator TForteLWord(), 14524526231894545ULL);
+  testVal = CIEC_LWORD(14524526231894545ULL);
+  BOOST_CHECK_EQUAL(testVal.operator TForteLWord(), 14524526231894545ULL);
 
-  nTest = CIEC_LWORD(9223372036854775807ULL);
-  BOOST_CHECK_EQUAL(nTest.operator TForteLWord(), 9223372036854775807ULL);
+  testVal = CIEC_LWORD(9223372036854775807ULL);
+  BOOST_CHECK_EQUAL(testVal.operator TForteLWord(), 9223372036854775807ULL);
 
   // check toString and fromString
-  BOOST_CHECK_EQUAL(nTest.fromString("0"), 1);
-  BOOST_CHECK_EQUAL(nTest, 0ULL);
-  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 21), 1);
-  BOOST_CHECK_EQUAL(strcmp(cBuffer, "0"), 0);
+  BOOST_CHECK_EQUAL(testVal.fromString("0"), 1);
+  BOOST_CHECK_EQUAL(testVal, 0ULL);
+  testVal.toString(buffer);
+  BOOST_CHECK_EQUAL(buffer, "0");
 
-  BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 1), -1);
+  buffer.clear();
 
-  strcpy(cBuffer, "");
+  BOOST_CHECK_EQUAL(testVal.fromString("2#0"), 3);
+  BOOST_CHECK_EQUAL(testVal, 0ULL);
+  testVal.toString(buffer);
+  BOOST_CHECK_EQUAL(buffer, "0");
 
-  BOOST_CHECK_EQUAL(nTest.fromString("2#0"), 3);
-  BOOST_CHECK_EQUAL(nTest, 0ULL);
-  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 21), 1);
-  BOOST_CHECK_EQUAL(strcmp(cBuffer, "0"), 0);
+  buffer.clear();
 
-  BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 1), -1);
+  BOOST_CHECK_EQUAL(testVal.fromString("8#0"), 3);
+  BOOST_CHECK_EQUAL(testVal, 0ULL);
+  testVal.toString(buffer);
+  BOOST_CHECK_EQUAL(buffer, "0");
 
-  strcpy(cBuffer, "");
+  buffer.clear();
 
-  BOOST_CHECK_EQUAL(nTest.fromString("8#0"), 3);
-  BOOST_CHECK_EQUAL(nTest, 0ULL);
-  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 21), 1);
-  BOOST_CHECK_EQUAL(strcmp(cBuffer, "0"), 0);
+  BOOST_CHECK_EQUAL(testVal.fromString("16#0"), 4);
+  BOOST_CHECK_EQUAL(testVal, 0ULL);
+  testVal.toString(buffer);
+  BOOST_CHECK_EQUAL(buffer, "0");
 
-  BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 1), -1);
+  buffer.clear();
 
-  strcpy(cBuffer, "");
+  BOOST_CHECK_EQUAL(testVal.fromString("45387346543765474"), 17);
+  BOOST_CHECK_EQUAL(testVal, 45387346543765474ULL);
+  testVal.toString(buffer);
+  BOOST_CHECK_EQUAL(buffer, "45387346543765474");
 
-  BOOST_CHECK_EQUAL(nTest.fromString("16#0"), 4);
-  BOOST_CHECK_EQUAL(nTest, 0ULL);
-  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 21), 1);
-  BOOST_CHECK_EQUAL(strcmp(cBuffer, "0"), 0);
+  buffer.clear();
+  testVal = CIEC_LWORD(0);
 
-  BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 1), -1);
+  BOOST_CHECK_EQUAL(testVal.fromString("2#10100001001111111000110100011100000010011110011111100010"), 58);
+  BOOST_CHECK_EQUAL(testVal, 45387346543765474ULL);
+  testVal.toString(buffer);
+  BOOST_CHECK_EQUAL(buffer, "45387346543765474");
 
-  strcpy(cBuffer, "");
+  buffer.clear();
+  testVal = CIEC_LWORD(0);
 
-  BOOST_CHECK_EQUAL(nTest.fromString("45387346543765474"), 17);
-  BOOST_CHECK_EQUAL(nTest, 45387346543765474ULL);
-  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 21), 17);
-  BOOST_CHECK_EQUAL(strcmp(cBuffer, "45387346543765474"), 0);
+  BOOST_CHECK_EQUAL(testVal.fromString("8#2411770643402363742"), 21);
+  BOOST_CHECK_EQUAL(testVal, 45387346543765474ULL);
+  testVal.toString(buffer);
+  BOOST_CHECK_EQUAL(buffer, "45387346543765474");
 
-  BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
+  buffer.clear();
+  testVal = CIEC_LWORD(0);
 
-  strcpy(cBuffer, "");
-  nTest = CIEC_LWORD(0);
+  BOOST_CHECK_EQUAL(testVal.fromString("16#A13F8D1C09E7E2"), 17);
+  BOOST_CHECK_EQUAL(testVal, 45387346543765474ULL);
+  testVal.toString(buffer);
+  BOOST_CHECK_EQUAL(buffer, "45387346543765474");
 
-  BOOST_CHECK_EQUAL(nTest.fromString("2#10100001001111111000110100011100000010011110011111100010"), 58);
-  BOOST_CHECK_EQUAL(nTest, 45387346543765474ULL);
-  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 21), 17);
-  BOOST_CHECK_EQUAL(strcmp(cBuffer, "45387346543765474"), 0);
+  buffer.clear();
+  testVal = CIEC_LWORD(0);
 
-  BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
+  BOOST_CHECK_EQUAL(testVal.fromString("18446744073709551615"), 20);
+  BOOST_CHECK_EQUAL(testVal, 18446744073709551615ULL);
+  testVal.toString(buffer);
+  BOOST_CHECK_EQUAL(buffer, "18446744073709551615");
 
-  strcpy(cBuffer, "");
-  nTest = CIEC_LWORD(0);
+  buffer.clear();
+  testVal = CIEC_LWORD(0);
 
-  BOOST_CHECK_EQUAL(nTest.fromString("8#2411770643402363742"), 21);
-  BOOST_CHECK_EQUAL(nTest, 45387346543765474ULL);
-  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 21), 17);
-  BOOST_CHECK_EQUAL(strcmp(cBuffer, "45387346543765474"), 0);
+  BOOST_CHECK_EQUAL(testVal.fromString("2#1111111111111111111111111111111111111111111111111111111111111111"), 66);
+  BOOST_CHECK_EQUAL(testVal, 18446744073709551615ULL);
+  testVal.toString(buffer);
+  BOOST_CHECK_EQUAL(buffer, "18446744073709551615");
 
-  BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
+  buffer.clear();
+  testVal = CIEC_LWORD(0);
 
-  strcpy(cBuffer, "");
-  nTest = CIEC_LWORD(0);
+  BOOST_CHECK_EQUAL(testVal.fromString("8#1777777777777777777777"), 24);
+  BOOST_CHECK_EQUAL(testVal, 18446744073709551615ULL);
+  testVal.toString(buffer);
+  BOOST_CHECK_EQUAL(buffer, "18446744073709551615");
 
-  BOOST_CHECK_EQUAL(nTest.fromString("16#A13F8D1C09E7E2"), 17);
-  BOOST_CHECK_EQUAL(nTest, 45387346543765474ULL);
-  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 21), 17);
-  BOOST_CHECK_EQUAL(strcmp(cBuffer, "45387346543765474"), 0);
+  buffer.clear();
+  testVal = CIEC_LWORD(0);
 
-  BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
+  BOOST_CHECK_EQUAL(testVal.fromString("16#FFFFFFFFFFFFFFFF"), 19);
+  BOOST_CHECK_EQUAL(testVal, 18446744073709551615ULL);
+  testVal.toString(buffer);
+  BOOST_CHECK_EQUAL(buffer, "18446744073709551615");
 
-  strcpy(cBuffer, "");
-  nTest = CIEC_LWORD(0);
-
-  BOOST_CHECK_EQUAL(nTest.fromString("18446744073709551615"), 20);
-  BOOST_CHECK_EQUAL(nTest, 18446744073709551615ULL);
-  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 21), 20);
-  BOOST_CHECK_EQUAL(strcmp(cBuffer, "18446744073709551615"), 0);
-
-  BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
-
-  strcpy(cBuffer, "");
-  nTest = CIEC_LWORD(0);
-
-  BOOST_CHECK_EQUAL(nTest.fromString("2#1111111111111111111111111111111111111111111111111111111111111111"), 66);
-  BOOST_CHECK_EQUAL(nTest, 18446744073709551615ULL);
-  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 21), 20);
-  BOOST_CHECK_EQUAL(strcmp(cBuffer, "18446744073709551615"), 0);
-
-  BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
-
-  strcpy(cBuffer, "");
-  nTest = CIEC_LWORD(0);
-
-  BOOST_CHECK_EQUAL(nTest.fromString("8#1777777777777777777777"), 24);
-  BOOST_CHECK_EQUAL(nTest, 18446744073709551615ULL);
-  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 21), 20);
-  BOOST_CHECK_EQUAL(strcmp(cBuffer, "18446744073709551615"), 0);
-
-  BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
-
-  strcpy(cBuffer, "");
-  nTest = CIEC_LWORD(0);
-
-  BOOST_CHECK_EQUAL(nTest.fromString("16#FFFFFFFFFFFFFFFF"), 19);
-  BOOST_CHECK_EQUAL(nTest, 18446744073709551615ULL);
-  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 21), 20);
-  BOOST_CHECK_EQUAL(strcmp(cBuffer, "18446744073709551615"), 0);
-
-  BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
-
-  strcpy(cBuffer, "");
-  nTest = CIEC_LWORD(0);
+  buffer.clear();
+  testVal = CIEC_LWORD(0);
 
   // testing values outside of allowed range
-  BOOST_CHECK_EQUAL(nTest.fromString("184467440737095516150"), -1);
-  BOOST_CHECK_EQUAL(nTest.fromString("2#11111111111111111111111111111111111111111111111111111111111111110"), -1);
-  BOOST_CHECK_EQUAL(nTest.fromString("8#17777777777777777777770"), -1);
-  BOOST_CHECK_EQUAL(nTest.fromString("10#922337203685477580754"), -1);
-  BOOST_CHECK_EQUAL(nTest.fromString("16#FFFFFFFFFFFFFFFF0"), -1);
-  BOOST_CHECK_EQUAL(nTest.fromString("-130"), -1);
+  BOOST_CHECK_EQUAL(testVal.fromString("184467440737095516150"), -1);
+  BOOST_CHECK_EQUAL(testVal.fromString("2#11111111111111111111111111111111111111111111111111111111111111110"), -1);
+  BOOST_CHECK_EQUAL(testVal.fromString("8#17777777777777777777770"), -1);
+  BOOST_CHECK_EQUAL(testVal.fromString("10#922337203685477580754"), -1);
+  BOOST_CHECK_EQUAL(testVal.fromString("16#FFFFFFFFFFFFFFFF0"), -1);
+  BOOST_CHECK_EQUAL(testVal.fromString("-130"), -1);
 
   // check invalid fromString string
-  BOOST_CHECK_EQUAL(nTest.fromString("NOT A VALID STRING"), -1);
+  BOOST_CHECK_EQUAL(testVal.fromString("NOT A VALID STRING"), -1);
 }
 BOOST_AUTO_TEST_SUITE_END()

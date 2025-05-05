@@ -15,8 +15,6 @@
 #define _ANY_CHAR_H_
 
 #include "forte_any_chars.h"
-#include <ctype.h>
-#include <string_utils.h>
 
 /*!\ingroup COREDTS CIEC_ANY_CHAR represents ANY_CHAR data types according to
  *  IEC 61131.
@@ -32,9 +30,6 @@ class CIEC_ANY_CHAR : public CIEC_ANY_CHARS {
     EDataTypeID getDataTypeID() const override {
       return CIEC_ANY::e_ANY;
     }
-
-    // int toString(char* paValue, size_t paBufferSize) const override;
-    // int fromString(const char *paValue) override;
 
   protected:
     CIEC_ANY_CHAR() = default;

@@ -1,6 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2010 - 2015 ACIN, fortiss GmbH
- *               2023 Martin Erich Jobst
+ * Copyright (c) 2010, 2025 ACIN, fortiss GmbH, Martin Erich Jobst,
+ *                          Primetals Technologies Austria GmbH
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -9,13 +9,17 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    Ingo Hegny, Alois Zoitl
- *      - initial implementation and rework communication infrastructure
- *    Martin Jobst - add equals function
- *                 - refactor struct memory layout
+ *   Ingo Hegny, Alois Zoitl
+ *                - initial implementation and rework communication infrastructure
+ *   Martin Jobst - add equals function
+ *                - refactor struct memory layout
+ *   Markus Meingast, Alois Zoitl  - migrated data type toString to std::string
  *******************************************************************************/
 #include "forte_struct.h"
 #include <cstring>
+#include "../util/string_utils.h"
+
+using namespace std::string_literals;
 
 CIEC_ANY *CIEC_STRUCT::getMemberNamed(CStringDictionary::TStringId paMemberNameId) {
   size_t index = getMemberIndex(paMemberNameId);
@@ -116,64 +120,18 @@ CStringDictionary::TStringId CIEC_STRUCT::parseNextElementId(const char *&paRunn
   return result;
 }
 
-int CIEC_STRUCT::toString(char *paValue, size_t paBufferSize) const {
-  char *start = paValue;
-  if (!paBufferSize) {
-    return -1;
-  }
-
-  *paValue = '(';
-  paValue++;
-  paBufferSize--;
-
+void CIEC_STRUCT::toString(std::string &paTargetBuf) const {
+  paTargetBuf += '(';
   size_t structSize = getStructSize();
   const CStringDictionary::TStringId *memberNameIds = elementNames();
+
   for (size_t i = 0; i < structSize; ++i) {
-    const char *memberName = CStringDictionary::get(memberNameIds[i]);
-    size_t memberNameSize = std::strlen(memberName);
-    if (memberNameSize + 2 > paBufferSize) {
-      return -1;
-    }
-    std::memcpy(paValue, memberName, memberNameSize);
-    paValue += memberNameSize;
-    *(paValue++) = ':';
-    *(paValue++) = '=';
-    paBufferSize -= memberNameSize + 2;
-
-    int usedBytesByElement = getMember(i)->toString(paValue, paBufferSize);
-    if (0 > usedBytesByElement) {
-      return -1;
-    }
-    paValue += usedBytesByElement;
-    paBufferSize -= static_cast<size_t>(usedBytesByElement);
-    if (!paBufferSize) {
-      return -1;
-    }
-
+    forte::core::util::writeToStringNameValuePair(paTargetBuf, memberNameIds[i], getMember(i));
     if (i != structSize - 1) {
-      *(paValue++) = ',';
-      paBufferSize--;
+      paTargetBuf += ',';
     }
   }
-  if (paBufferSize < 2) {
-    return -1;
-  }
-  *(paValue++) = ')';
-  *paValue = '\0';
-  return static_cast<int>(paValue - start);
-}
-
-size_t CIEC_STRUCT::getToStringBufferSize() const {
-  size_t retVal = 3; // 2 bytes for the open and closing brackets one for the '\0'
-  size_t structSize = getStructSize();
-  retVal += structSize ? structSize - 1 : 0; // for the commas between the elements
-  retVal += structSize * 2; // for the := of each element
-  for (size_t i = 0; i < structSize; i++) {
-    retVal += strlen(CStringDictionary::get(elementNames()[i])); // element name
-    retVal += getMember(i)->getToStringBufferSize() -
-              1; // length of the element itself. -1 for the included \0 in each element
-  }
-  return retVal;
+  paTargetBuf += ')';
 }
 
 void CIEC_STRUCT::findNextNonBlankSpace(const char **paRunner) {

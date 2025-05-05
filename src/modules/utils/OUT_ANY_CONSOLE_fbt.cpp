@@ -1,6 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2011 - 2014 AIT, ACIN, Profactor GmbH
- *               2023 Martin Erich Jobst
+ * Copyright (c) 2011, 2025 AIT, ACIN, Profactor GmbH, Martin Erich Jobst,
+ *                          Primetals Technologies Austria GmbH
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -9,9 +10,9 @@
  *
  * Contributors:
  *   Thomas Strasser, Alois Zoitl, Matthias Plasch
- *   - initial API and implementation and/or initial documentation
- *   Martin Jobst
- *     - refactor for ANY variant
+ *                - initial API and implementation and/or initial documentation
+ *   Martin Jobst - refactor for ANY variant
+ *   Alois Zoitl  - migrated data type toString to std::string
  *******************************************************************************/
 
 #include "OUT_ANY_CONSOLE_fbt.h"
@@ -90,10 +91,9 @@ void FORTE_OUT_ANY_CONSOLE::executeEvent(TEventID paEIID, CEventChainExecutionTh
       var_QO = var_QI;
       if (var_QI) {
         DEVLOG_INFO(" %s = ", var_LABEL.getStorage().c_str());
-        size_t bufferSize = var_IN.getToStringBufferSize();
-        std::string buffer(bufferSize, 0);
-        var_IN.toString(buffer.data(), buffer.capacity());
-        DEVLOG_INFO("%s\n", buffer.c_str());
+        var_IN.toString(mDataOutPutBuffer);
+        DEVLOG_INFO("%s\n", mDataOutPutBuffer.c_str());
+        mDataOutPutBuffer.clear();
       }
       sendOutputEvent(scmEventCNFID, paECET);
       break;

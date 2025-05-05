@@ -1,5 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2008 - 2015 nxtControl GmbH, ACIN, fortiss GmbH
+ * Copyright (c) 2008, 2025 nxtControl GmbH, ACIN, fortiss GmbH,
+ *                          Primetals Technologies Austria GmbH
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -8,21 +9,18 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    Stanislav Meduna, Alois Zoitl, Martin Melik Merkumians
- *      - initial implementation and rework communication infrastructure
+ *   Stanislav Meduna, Alois Zoitl, Martin Melik Merkumians
+ *               - initial implementation and rework communication infrastructure
+ *   Alois Zoitl - migrated data type toString to std::string
  *******************************************************************************/
 #include <stdlib.h>
 #include <math.h>
 #include <string.h>
-#include <stdio.h>
 #include <ctype.h>
 #include "forte_date.h"
+#include <format>
 
 USE_STRING_ID(DATE);
-
-#include "../../arch/timerha.h"
-#include <forte_printer.h>
-#include <forte_architecture_time.h>
 
 DEFINE_FIRMWARE_DATATYPE(DATE, STRID(DATE))
 
@@ -70,18 +68,12 @@ int CIEC_DATE::fromString(const char *paValue) {
   return static_cast<unsigned int>(acBuffer - paValue);
 }
 
-int CIEC_DATE::toString(char *paValue, size_t paBufferSize) const {
-  int nRetVal = -1;
-  struct tm ptm;
-
+void CIEC_DATE::toString(std::string &paTargetBuf) const {
+  tm ptm;
   if (nullptr != getTimeStruct(&ptm)) {
-    nRetVal =
-        forte_snprintf(paValue, paBufferSize, "D#%04d-%02d-%02d", 1900 + ptm.tm_year, ptm.tm_mon + 1, ptm.tm_mday);
-    if ((nRetVal < -1) || (nRetVal >= static_cast<int>(paBufferSize))) {
-      nRetVal = -1;
-    }
+    std::format_to(std::back_inserter(paTargetBuf), "D#{:04}-{:02}-{:02}", 1900 + ptm.tm_year, ptm.tm_mon + 1,
+                   ptm.tm_mday);
   }
-  return nRetVal;
 }
 
 const CStringDictionary::TStringId forte::CDataTypeTrait<CIEC_DATE>::scmDataTypeName = STRID(DATE);

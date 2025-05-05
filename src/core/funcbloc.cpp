@@ -1,7 +1,8 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2023 Profactor GmbH, ACIN, fortiss GmbH,
- *                          Johannes Kepler University
- *                          Martin Erich Jobst
+ * Copyright (c) 2005, 2025 Profactor GmbH, ACIN, fortiss GmbH,
+ *                          Johannes Kepler University,
+ *                          Martin Erich Jobst,
+ *                          Primetals Technologies Austria GmbH
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -10,13 +11,14 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    Thomas Strasser, Gunnar Grabmaier, Alois Zoitl, Smodic Rene, Ingo Hegny,
- *    Gerhard Ebenhofer, Michael Hofmann, Martin Melik Merkumians, Monika Wenger,
- *    Matthias Plasch
- *      - initial implementation and rework communication infrastructure
- *    Alois Zoitl - introduced new CGenFB class for better handling generic FBs
- *    Martin Jobst - add CTF tracing integration
- *                 - account for data type size in FB initialization
+ *   Thomas Strasser, Gunnar Grabmaier, Alois Zoitl, Smodic Rene, Ingo Hegny,
+ *     Gerhard Ebenhofer, Michael Hofmann, Martin Melik Merkumians, Monika Wenger,
+ *     Matthias Plasch
+ *                - initial implementation and rework communication infrastructure
+ *   Alois Zoitl  - introduced new CGenFB class for better handling generic FBs
+ *   Martin Jobst - add CTF tracing integration
+ *                - account for data type size in FB initialization
+ *   Alois Zoitl  - migrated data type toString to std::string
  *******************************************************************************/
 #include "funcbloc.h"
 #include "dataconn.h"
@@ -29,6 +31,8 @@
 #include "adapter.h"
 #include "adapterconn.h"
 #include "device.h"
+
+using namespace std::string_literals;
 
 CFunctionBlock::CFunctionBlock(forte::core::CFBContainer &paContainer,
                                const SFBInterfaceSpec &paInterfaceSpec,
@@ -480,113 +484,30 @@ void CFunctionBlock::setForce(TAbsDataPortNum paAbsDataPortNum, bool paForceValu
 
 #endif // FORTE_SUPPORT_MONITORING
 
-int CFunctionBlock::writeToStringNameValuePair(char *paValue,
-                                               size_t paBufferSize,
-                                               const CStringDictionary::TStringId variableNameId,
-                                               const CIEC_ANY *const variable) const {
-  size_t usedBuffer = 0;
-  const char *const variableName = CStringDictionary::get(variableNameId);
-  size_t nameLength = strlen(variableName);
-  if ((paBufferSize - usedBuffer) < nameLength + 3) { // := and \0
-    return -1;
-  }
-  strcpy(paValue + usedBuffer, variableName);
-  strcpy(paValue + usedBuffer + nameLength, ":=");
-  usedBuffer += nameLength + 2;
-  int result = variable->toString(paValue + usedBuffer, paBufferSize - usedBuffer);
-  if (result < 0) {
-    return -1;
-  }
-  usedBuffer += static_cast<size_t>(result);
-  return static_cast<int>(usedBuffer);
-}
+void CFunctionBlock::toString(std::string &paTargetBuf) const {
+  paTargetBuf += '(';
 
-int CFunctionBlock::toString(char *paValue, size_t paBufferSize) const {
-  size_t usedBuffer = 0;
-  if (paBufferSize < 1) {
-    return -1;
-  }
-  *paValue = '(';
-  ++usedBuffer;
   for (size_t i = 0; i < getFBInterfaceSpec().mNumDIs; ++i) {
-    const CIEC_ANY *const variable = getDI(i);
-    const CStringDictionary::TStringId nameId = getFBInterfaceSpec().mDINames[i];
-    int result = writeToStringNameValuePair(paValue + usedBuffer, paBufferSize - usedBuffer, nameId, variable);
-    if (result >= 0) {
-      usedBuffer += static_cast<size_t>(result);
-    } else {
-      return -1;
-    }
-    if (paBufferSize - usedBuffer >= sizeof(csmToStringSeparator)) {
-      strncpy(paValue + usedBuffer, csmToStringSeparator, paBufferSize - usedBuffer);
-      usedBuffer += sizeof(csmToStringSeparator) - 1;
-    } else {
-      return -1;
-    }
+    forte::core::util::writeToStringNameValuePair(paTargetBuf, getFBInterfaceSpec().mDINames[i], getDI(i));
+    paTargetBuf += csmToStringSeparator;
   }
-  for (size_t i = 0; i < getFBInterfaceSpec().mNumDOs; ++i) {
-    const CIEC_ANY *const variable = getDO(i);
-    const CStringDictionary::TStringId nameId = getFBInterfaceSpec().mDONames[i];
-    int result = writeToStringNameValuePair(paValue + usedBuffer, paBufferSize - usedBuffer, nameId, variable);
-    if (result >= 0) {
-      usedBuffer += static_cast<size_t>(result);
-    } else {
-      return -1;
-    }
-    if (paBufferSize - usedBuffer >= sizeof(csmToStringSeparator)) {
-      strncpy(paValue + usedBuffer, csmToStringSeparator, paBufferSize - usedBuffer);
-      usedBuffer += sizeof(csmToStringSeparator) - 1;
-    } else {
-      return -1;
-    }
-  }
-  for (size_t i = 0; i < getFBInterfaceSpec().mNumDIOs; ++i) {
-    const CIEC_ANY *const variable = getDIO(i);
-    const CStringDictionary::TStringId nameId = getFBInterfaceSpec().mDIONames[i];
-    int result = writeToStringNameValuePair(paValue + usedBuffer, paBufferSize - usedBuffer, nameId, variable);
-    if (result >= 0) {
-      usedBuffer += static_cast<size_t>(result);
-    } else {
-      return -1;
-    }
-    if (paBufferSize - usedBuffer >= sizeof(csmToStringSeparator)) {
-      strncpy(paValue + usedBuffer, csmToStringSeparator, paBufferSize - usedBuffer);
-      usedBuffer += sizeof(csmToStringSeparator) - 1;
-    } else {
-      return -1;
-    }
-  }
-  usedBuffer = std::max(
-      usedBuffer, std::size_t{3}); // ensure usedBuffer is at least 3 in case nothing was added beyond the opening '('
-  strncpy(paValue + (usedBuffer - 2), ")",
-          paBufferSize - (usedBuffer - 2)); // overwrite the last two bytes with the closing ')'
-  return static_cast<int>(usedBuffer - 1);
-}
 
-size_t CFunctionBlock::getToStringBufferSize() const {
-  size_t bufferSize = 3;
-  for (size_t i = 0; i < getFBInterfaceSpec().mNumDIs; ++i) {
-    const CIEC_ANY *const variable = getDI(i);
-    const CStringDictionary::TStringId nameId = getFBInterfaceSpec().mDINames[i];
-    const char *varName = CStringDictionary::get(nameId);
-    bufferSize +=
-        strlen(varName) + 4 + variable->getToStringBufferSize(); // compensation for := and , for every variable
-  }
   for (size_t i = 0; i < getFBInterfaceSpec().mNumDOs; ++i) {
-    const CIEC_ANY *const variable = getDO(i);
-    const CStringDictionary::TStringId nameId = getFBInterfaceSpec().mDONames[i];
-    const char *varName = CStringDictionary::get(nameId);
-    bufferSize +=
-        strlen(varName) + 4 + variable->getToStringBufferSize(); // compensation for := and , for every variable
+    forte::core::util::writeToStringNameValuePair(paTargetBuf, getFBInterfaceSpec().mDONames[i], getDO(i));
+    paTargetBuf += csmToStringSeparator;
   }
+
   for (size_t i = 0; i < getFBInterfaceSpec().mNumDIOs; ++i) {
-    const CIEC_ANY *const variable = getDIO(i);
-    const CStringDictionary::TStringId nameId = getFBInterfaceSpec().mDIONames[i];
-    const char *varName = CStringDictionary::get(nameId);
-    bufferSize +=
-        strlen(varName) + 4 + variable->getToStringBufferSize(); // compensation for := and , for every variable
+    forte::core::util::writeToStringNameValuePair(paTargetBuf, getFBInterfaceSpec().mDIONames[i], getDIO(i));
+    paTargetBuf += csmToStringSeparator;
   }
-  return bufferSize;
+
+  if (paTargetBuf.back() != '(') {
+    // if we have more  then just the opening '(' was added remove the last to string separator
+    paTargetBuf.resize(paTargetBuf.size() - 2);
+  }
+
+  paTargetBuf += ')';
 }
 
 //********************************** below here are CTF Tracing specific functions

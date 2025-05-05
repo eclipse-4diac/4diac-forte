@@ -30,13 +30,13 @@ class CIEC_ANY_DURATION : public CIEC_ANY_MAGNITUDE {
      *  For Smaller devices which do not use 64 bit datatypes a time base of 1000 (i.e., 1ms)
      *  or 1000000 (i.e., 1micro s) may be suitable.
      */
-    static constexpr uint_fast64_t csmForteTimeBaseUnitsPerNanoSecond = 1;
-    static constexpr uint_fast64_t csmForteTimeBaseUnitsPerMicroSecond = csmForteTimeBaseUnitsPerNanoSecond * 1000;
-    static constexpr uint_fast64_t csmForteTimeBaseUnitsPerMilliSecond = csmForteTimeBaseUnitsPerMicroSecond * 1000;
-    static constexpr uint_fast64_t csmForteTimeBaseUnitsPerSecond = csmForteTimeBaseUnitsPerMilliSecond * 1000;
-    static constexpr uint_fast64_t csmForteTimeBaseUnitsPerMinute = csmForteTimeBaseUnitsPerSecond * 60;
-    static constexpr uint_fast64_t csmForteTimeBaseUnitsPerHour = csmForteTimeBaseUnitsPerMinute * 60;
-    static constexpr uint_fast64_t csmForteTimeBaseUnitsPerDay = csmForteTimeBaseUnitsPerHour * 24;
+    static constexpr int_fast64_t csmForteTimeBaseUnitsPerNanoSecond = 1;
+    static constexpr int_fast64_t csmForteTimeBaseUnitsPerMicroSecond = csmForteTimeBaseUnitsPerNanoSecond * 1000;
+    static constexpr int_fast64_t csmForteTimeBaseUnitsPerMilliSecond = csmForteTimeBaseUnitsPerMicroSecond * 1000;
+    static constexpr int_fast64_t csmForteTimeBaseUnitsPerSecond = csmForteTimeBaseUnitsPerMilliSecond * 1000;
+    static constexpr int_fast64_t csmForteTimeBaseUnitsPerMinute = csmForteTimeBaseUnitsPerSecond * 60;
+    static constexpr int_fast64_t csmForteTimeBaseUnitsPerHour = csmForteTimeBaseUnitsPerMinute * 60;
+    static constexpr int_fast64_t csmForteTimeBaseUnitsPerDay = csmForteTimeBaseUnitsPerHour * 24;
 
     template<typename T,
              typename U,
@@ -110,8 +110,7 @@ class CIEC_ANY_DURATION : public CIEC_ANY_MAGNITUDE {
 
   protected:
     CIEC_ANY_DURATION() = default;
-    int timeElementsToString(
-        int64_t paTimeElement, char *paValue, int paSize, size_t paBufferSize, const char *paUnit) const;
+    void timeElementsToString(std::string &paTargetBuf, int64_t paTimeElement, const std::string &paUnit) const;
 };
 
 #endif /*_ANY_DURATION_H_*/
