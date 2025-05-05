@@ -15,6 +15,7 @@
 #ifndef MONITORING_H_
 #define MONITORING_H_
 
+#include <functional>
 #include "funcbloc.h"
 #include "mgmcmdstruct.h"
 #include "fortelist.h"
@@ -29,6 +30,50 @@ class CResource;
 namespace forte {
   namespace core {
 
+    class SDataWatchEntry {
+      public:
+        SDataWatchEntry(CStringDictionary::TStringId paPortId, CIEC_ANY &paDataValue, TAbsDataPortNum paForceIndex) :
+            mDataBuffer(paDataValue.clone(nullptr)),
+            mPortId(paPortId),
+            mForceIndex(paForceIndex),
+            mDataValueRef(paDataValue) {
+        }
+
+        SDataWatchEntry(const SDataWatchEntry &paSrc) :
+            mDataBuffer(paSrc.mDataBuffer->clone(nullptr)),
+            mPortId(paSrc.mPortId),
+            mForceIndex(paSrc.mForceIndex),
+            mDataValueRef(paSrc.mDataValueRef) {
+        }
+
+        CStringDictionary::TStringId getPortId() const {
+          return mPortId;
+        }
+
+        void update(const CFunctionBlock &paFB);
+
+        std::unique_ptr<CIEC_ANY> mDataBuffer; //!< buffer for copying the data from the data point reference
+        bool mForced; //!< indication if pin is forced
+
+        SDataWatchEntry &operator=(const SDataWatchEntry &paOther) {
+          if (this != &paOther) {
+            mDataBuffer = mDataBuffer ? std::unique_ptr<CIEC_ANY>(paOther.mDataBuffer->clone(nullptr)) : nullptr;
+            mPortId = paOther.mPortId;
+            mForceIndex = paOther.mForceIndex;
+            mDataValueRef = paOther.mDataValueRef;
+          }
+          return *this;
+        }
+
+        SDataWatchEntry(SDataWatchEntry &&) = default;
+        SDataWatchEntry &operator=(SDataWatchEntry &&) = default;
+
+      private:
+        CStringDictionary::TStringId mPortId;
+        TAbsDataPortNum mForceIndex;
+        std::reference_wrapper<CIEC_ANY> mDataValueRef; //!< reference to the data point to watch
+    };
+
     /*!\brief class that handles all monitoring tasks
      *
      */
@@ -39,38 +84,6 @@ namespace forte {
         EMGMResponse executeMonitoringCommand(SManagementCMD &paCommand);
 
       private:
-        class SDataWatchEntry {
-          public:
-            SDataWatchEntry(CStringDictionary::TStringId paPortId,
-                            CIEC_ANY &paDataValue,
-                            TAbsDataPortNum paForceIndex) :
-                mPortId(paPortId),
-                mForceIndex(paForceIndex),
-                mDataValueRef(paDataValue),
-                mDataBuffer(paDataValue.clone(nullptr)) {
-            }
-
-            SDataWatchEntry(const SDataWatchEntry &paSrc) :
-                mPortId(paSrc.mPortId),
-                mForceIndex(paSrc.mForceIndex),
-                mDataValueRef(paSrc.mDataValueRef),
-                mDataBuffer(paSrc.mDataBuffer->clone(nullptr)) {
-            }
-
-            ~SDataWatchEntry() {
-              delete mDataBuffer;
-            }
-
-            const CStringDictionary::TStringId mPortId;
-            const TAbsDataPortNum mForceIndex;
-            const CIEC_ANY &mDataValueRef; //!< reference to the data point to watch
-            CIEC_ANY *mDataBuffer; //!< buffer for copying the data from the data point reference
-            bool mForced; //!< indication if pin is forced
-
-          public:
-            SDataWatchEntry &operator=(const SDataWatchEntry &) = delete;
-        };
-
         struct SEventWatchEntry {
             SEventWatchEntry(CStringDictionary::TStringId paPortId, TForteUInt32 &paEventData) :
                 mPortId(paPortId),
@@ -82,7 +95,7 @@ namespace forte {
             TForteUInt32 mEventDataBuf; //!< buffer for the event count
         };
 
-        typedef CSinglyLinkedList<SDataWatchEntry> TDataWatchList;
+        using TDataWatchList = std::vector<SDataWatchEntry>;
         typedef CSinglyLinkedList<SEventWatchEntry> TEventWatchList;
 
         struct SFBMonitoringEntry {
@@ -115,7 +128,7 @@ namespace forte {
         static bool removeEventWatch(SFBMonitoringEntry &paFBMonitoringEntry, CStringDictionary::TStringId paPortId);
         void readResourceWatches(std::string &paResponse);
 
-        void updateMonitringData();
+        void updateMonitoringData();
 
         static void appendDataWatch(std::string &paResponse, SDataWatchEntry &paDataWatchEntry);
         static void appendPortTag(std::string &paResponse, CStringDictionary::TStringId paPortId);

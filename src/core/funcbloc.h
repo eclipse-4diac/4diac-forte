@@ -355,7 +355,7 @@ class CFunctionBlock : public forte::core::CFBContainer {
 
     void setForce(TAbsDataPortNum paAbsDataPortNum, bool paForceValue);
 
-    bool getForce(TAbsDataPortNum paAbsDataPortNum) {
+    bool getForce(TAbsDataPortNum paAbsDataPortNum) const {
       return mForces[paAbsDataPortNum];
     }
 

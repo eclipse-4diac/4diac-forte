@@ -12,6 +12,7 @@
  *   Alois Zoitl - initial implementation and rework communication infrastructure
  *   Martin Melik Merkumians - adds functionality for W/CHAR
  *******************************************************************************/
+#include <algorithm>
 #include <forte_config.h>
 #include "monitoring.h"
 #include "resource.h"
@@ -24,6 +25,18 @@ using namespace std::string_literals;
 using namespace forte::core;
 
 const std::string cgClosingXMLTag = "\">"s;
+
+namespace {
+  constexpr auto dataWatchEntryComparator = [](const SDataWatchEntry &paItem, CStringDictionary::TStringId paPortId) {
+    return paItem.getPortId() < paPortId;
+  };
+
+} // namespace
+
+void SDataWatchEntry::update(const CFunctionBlock &paFB) {
+  mDataBuffer->setValue(mDataValueRef);
+  mForced = paFB.getForce(mForceIndex);
+}
 
 CMonitoringHandler::CMonitoringHandler(CResource &paResource) : mResource(paResource) {
 }
@@ -100,7 +113,7 @@ EMGMResponse CMonitoringHandler::removeWatch(forte::core::TNameIdentifier &paNam
         if (removeDataWatch(poFBMonitoringEntry, portName) ||
             removeEventWatch(poFBMonitoringEntry, portName)) { // if element is not watched, end search and return error
 
-          if (poFBMonitoringEntry.mWatchedDataPoints.isEmpty() && (poFBMonitoringEntry.mWatchedEventPoints.isEmpty())) {
+          if (poFBMonitoringEntry.mWatchedDataPoints.empty() && (poFBMonitoringEntry.mWatchedEventPoints.isEmpty())) {
             // no further values are monitored so remove the entry
             if (itRefNode == mFBMonitoringList.end()) {
               // we have the first entry in the list
@@ -223,41 +236,27 @@ CMonitoringHandler::findOrCreateFBMonitoringEntry(CFunctionBlock *paFB, forte::c
 void CMonitoringHandler::addDataWatch(SFBMonitoringEntry &paFBMonitoringEntry,
                                       CStringDictionary::TStringId paPortId,
                                       CIEC_ANY &paDataVal) {
-  for (TDataWatchList::Iterator itRunner = paFBMonitoringEntry.mWatchedDataPoints.begin();
-       itRunner != paFBMonitoringEntry.mWatchedDataPoints.end(); ++itRunner) {
-    if (itRunner->mPortId == paPortId) {
-      // the data point is already in the watch list
-      return;
-    }
+  auto &dataWatches = paFBMonitoringEntry.mWatchedDataPoints;
+  auto it = std::lower_bound(dataWatches.begin(), dataWatches.end(), paPortId, dataWatchEntryComparator);
+
+  if (it != dataWatches.end() && it->getPortId() == paPortId) {
+    // the data point is already in the watch list
+    return;
   }
-  paFBMonitoringEntry.mWatchedDataPoints.pushBack(
-      SDataWatchEntry(paPortId, paDataVal, paFBMonitoringEntry.mFB->getAbsDataPortNum(paPortId)));
+
+  dataWatches.emplace(it, SDataWatchEntry(paPortId, paDataVal, paFBMonitoringEntry.mFB->getAbsDataPortNum(paPortId)));
 }
 
 bool CMonitoringHandler::removeDataWatch(SFBMonitoringEntry &paFBMonitoringEntry,
                                          CStringDictionary::TStringId paPortId) {
-  bool bRetVal = false;
+  auto &dataWatches = paFBMonitoringEntry.mWatchedDataPoints;
+  auto it = std::lower_bound(dataWatches.begin(), dataWatches.end(), paPortId, dataWatchEntryComparator);
 
-  TDataWatchList::Iterator itRunner = paFBMonitoringEntry.mWatchedDataPoints.begin();
-  TDataWatchList::Iterator itRefNode = paFBMonitoringEntry.mWatchedDataPoints.end();
-
-  while (itRunner != paFBMonitoringEntry.mWatchedDataPoints.end()) {
-    if (itRunner->mPortId == paPortId) {
-      if (itRefNode == paFBMonitoringEntry.mWatchedDataPoints.end()) {
-        // we have the first entry in the list
-        paFBMonitoringEntry.mWatchedDataPoints.popFront();
-      } else {
-        paFBMonitoringEntry.mWatchedDataPoints.eraseAfter(itRefNode);
-      }
-      bRetVal = true;
-      break;
-    }
-
-    itRefNode = itRunner;
-    ++itRunner;
+  if (it != dataWatches.end() && it->getPortId() == paPortId) {
+    dataWatches.erase(it);
+    return true;
   }
-
-  return bRetVal;
+  return false;
 }
 
 void CMonitoringHandler::addEventWatch(SFBMonitoringEntry &paFBMonitoringEntry,
@@ -305,7 +304,7 @@ void CMonitoringHandler::readResourceWatches(std::string &paResponse) {
     paResponse += mResource.getInstanceName();
     paResponse += cgClosingXMLTag;
 
-    updateMonitringData();
+    updateMonitoringData();
 
     for (TFBMonitoringList::Iterator itRunner = mFBMonitoringList.begin(); itRunner != mFBMonitoringList.end();
          ++itRunner) {
@@ -314,9 +313,8 @@ void CMonitoringHandler::readResourceWatches(std::string &paResponse) {
       paResponse += cgClosingXMLTag;
 
       // add the data watches
-      for (TDataWatchList::Iterator itDataRunner = itRunner->mWatchedDataPoints.begin();
-           itDataRunner != itRunner->mWatchedDataPoints.end(); ++itDataRunner) {
-        appendDataWatch(paResponse, *itDataRunner);
+      for (auto &dataWatch : itRunner->mWatchedDataPoints) {
+        appendDataWatch(paResponse, dataWatch);
       }
 
       // add the event watches
@@ -331,14 +329,14 @@ void CMonitoringHandler::readResourceWatches(std::string &paResponse) {
   }
 }
 
-void CMonitoringHandler::updateMonitringData() {
+void CMonitoringHandler::updateMonitoringData() {
   for (TFBMonitoringList::Iterator itRunner = mFBMonitoringList.begin(); itRunner != mFBMonitoringList.end();
        ++itRunner) {
-    for (TDataWatchList::Iterator itDataRunner = itRunner->mWatchedDataPoints.begin();
-         itDataRunner != itRunner->mWatchedDataPoints.end(); ++itDataRunner) {
-      itDataRunner->mDataBuffer->setValue(itDataRunner->mDataValueRef);
-      itDataRunner->mForced = itRunner->mFB->getForce(itDataRunner->mForceIndex);
+
+    for (auto &dataWatch : itRunner->mWatchedDataPoints) {
+      dataWatch.update(*itRunner->mFB);
     }
+
     for (TEventWatchList::Iterator itEventRunner = itRunner->mWatchedEventPoints.begin();
          itEventRunner != itRunner->mWatchedEventPoints.end(); ++itEventRunner) {
       itEventRunner->mEventDataBuf = itEventRunner->mEventDataRef;
@@ -347,7 +345,7 @@ void CMonitoringHandler::updateMonitringData() {
 }
 
 void CMonitoringHandler::appendDataWatch(std::string &paResponse, SDataWatchEntry &paDataWatchEntry) {
-  appendPortTag(paResponse, paDataWatchEntry.mPortId);
+  appendPortTag(paResponse, paDataWatchEntry.getPortId());
   paResponse += "<Data value=\""s;
   size_t bufferSize = paDataWatchEntry.mDataBuffer->getToStringBufferSize() +
                       getExtraSizeForEscapedChars(*paDataWatchEntry.mDataBuffer);
