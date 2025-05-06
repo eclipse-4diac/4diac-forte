@@ -178,14 +178,14 @@ void func_SPLIT_BYTE_INTO_QUARTERS(CIEC_BYTE st_lv_IN,
 
 #line 15 "SPLIT_BYTE_INTO_QUARTERS.fct"
   st_lv_QUARTER_BYTE_00 =
-      func_SHR(func_AND<CIEC_BYTE>(st_lv_IN, st_global_BYTE_QUARTER_00), st_global_SHIFT_QUARTER_00);
+      func_SHR(func_AND<CIEC_BYTE>(st_lv_IN, FORTE_quarterconst::var_BYTE_QUARTER_00), FORTE_quarterconst::var_SHIFT_QUARTER_00);
 #line 16 "SPLIT_BYTE_INTO_QUARTERS.fct"
   st_lv_QUARTER_BYTE_01 =
-      func_SHR(func_AND<CIEC_BYTE>(st_lv_IN, st_global_BYTE_QUARTER_01), st_global_SHIFT_QUARTER_01);
+      func_SHR(func_AND<CIEC_BYTE>(st_lv_IN, FORTE_quarterconst::var_BYTE_QUARTER_01), FORTE_quarterconst::var_SHIFT_QUARTER_01);
 #line 17 "SPLIT_BYTE_INTO_QUARTERS.fct"
   st_lv_QUARTER_BYTE_02 =
-      func_SHR(func_AND<CIEC_BYTE>(st_lv_IN, st_global_BYTE_QUARTER_02), st_global_SHIFT_QUARTER_02);
+      func_SHR(func_AND<CIEC_BYTE>(st_lv_IN, FORTE_quarterconst::var_BYTE_QUARTER_02), FORTE_quarterconst::var_SHIFT_QUARTER_02);
 #line 18 "SPLIT_BYTE_INTO_QUARTERS.fct"
   st_lv_QUARTER_BYTE_03 =
-      func_SHR(func_AND<CIEC_BYTE>(st_lv_IN, st_global_BYTE_QUARTER_03), st_global_SHIFT_QUARTER_03);
+      func_SHR(func_AND<CIEC_BYTE>(st_lv_IN, FORTE_quarterconst::var_BYTE_QUARTER_03), FORTE_quarterconst::var_SHIFT_QUARTER_03);
 }

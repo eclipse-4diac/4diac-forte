@@ -157,7 +157,7 @@ CIEC_WORD func_FIELDBUS_PERCENT_TO_WORD(CIEC_REAL st_lv_RI) {
 
 #line 9 "FIELDBUS_PERCENT_TO_WORD.fct"
   st_ret_val = func_UDINT_TO_WORD(func_REAL_TO_UDINT(
-      func_MUL<CIEC_REAL>(st_lv_RI, func_UDINT_TO_REAL(func_WORD_TO_UDINT(st_global_FIELDBUS_VALID_SIGNAL_W)))));
+      func_MUL<CIEC_REAL>(st_lv_RI, func_UDINT_TO_REAL(func_WORD_TO_UDINT(FORTE_signalprocessing__FIELDBUS_SIGNAL::var_VALID_SIGNAL_W)))));
 
   return st_ret_val;
 }

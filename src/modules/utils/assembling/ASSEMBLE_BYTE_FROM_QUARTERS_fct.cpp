@@ -174,15 +174,15 @@ CIEC_BYTE func_ASSEMBLE_BYTE_FROM_QUARTERS(CIEC_BYTE st_lv_QUARTER_BYTE_00,
   CIEC_BYTE st_ret_val = 0_BYTE;
 
 #line 11 "ASSEMBLE_BYTE_FROM_QUARTERS.fct"
-  st_ret_val = st_global_BYTE_QUARTER_ZZ;
+  st_ret_val = FORTE_quarterconst::var_BYTE_QUARTER_ZZ;
 #line 12 "ASSEMBLE_BYTE_FROM_QUARTERS.fct"
-  st_ret_val = func_OR<CIEC_BYTE>(st_ret_val, func_SHL(st_lv_QUARTER_BYTE_03, st_global_SHIFT_QUARTER_03));
+  st_ret_val = func_OR<CIEC_BYTE>(st_ret_val, func_SHL(st_lv_QUARTER_BYTE_03, FORTE_quarterconst::var_SHIFT_QUARTER_03));
 #line 13 "ASSEMBLE_BYTE_FROM_QUARTERS.fct"
-  st_ret_val = func_OR<CIEC_BYTE>(st_ret_val, func_SHL(st_lv_QUARTER_BYTE_02, st_global_SHIFT_QUARTER_02));
+  st_ret_val = func_OR<CIEC_BYTE>(st_ret_val, func_SHL(st_lv_QUARTER_BYTE_02, FORTE_quarterconst::var_SHIFT_QUARTER_02));
 #line 14 "ASSEMBLE_BYTE_FROM_QUARTERS.fct"
-  st_ret_val = func_OR<CIEC_BYTE>(st_ret_val, func_SHL(st_lv_QUARTER_BYTE_01, st_global_SHIFT_QUARTER_01));
+  st_ret_val = func_OR<CIEC_BYTE>(st_ret_val, func_SHL(st_lv_QUARTER_BYTE_01, FORTE_quarterconst::var_SHIFT_QUARTER_01));
 #line 15 "ASSEMBLE_BYTE_FROM_QUARTERS.fct"
-  st_ret_val = func_OR<CIEC_BYTE>(st_ret_val, func_SHL(st_lv_QUARTER_BYTE_00, st_global_SHIFT_QUARTER_00));
+  st_ret_val = func_OR<CIEC_BYTE>(st_ret_val, func_SHL(st_lv_QUARTER_BYTE_00, FORTE_quarterconst::var_SHIFT_QUARTER_00));
 
   return st_ret_val;
 }

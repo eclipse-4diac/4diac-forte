@@ -391,103 +391,103 @@ CIEC_LWORD func_ASSEMBLE_LWORD_FROM_QUARTERS(CIEC_BYTE st_lv_QUARTER_BYTE_00,
   CIEC_LWORD st_ret_val = 0_LWORD;
 
 #line 39 "ASSEMBLE_LWORD_FROM_QUARTERS.fct"
-  st_ret_val = st_global_LWORD_QUARTER_ZZ;
+  st_ret_val = FORTE_quarterconst::var_LWORD_QUARTER_ZZ;
 #line 40 "ASSEMBLE_LWORD_FROM_QUARTERS.fct"
   st_ret_val =
-      func_OR<CIEC_LWORD>(st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_31), st_global_SHIFT_QUARTER_31));
+      func_OR<CIEC_LWORD>(st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_31), FORTE_quarterconst::var_SHIFT_QUARTER_31));
 #line 41 "ASSEMBLE_LWORD_FROM_QUARTERS.fct"
   st_ret_val =
-      func_OR<CIEC_LWORD>(st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_30), st_global_SHIFT_QUARTER_30));
+      func_OR<CIEC_LWORD>(st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_30), FORTE_quarterconst::var_SHIFT_QUARTER_30));
 #line 42 "ASSEMBLE_LWORD_FROM_QUARTERS.fct"
   st_ret_val =
-      func_OR<CIEC_LWORD>(st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_29), st_global_SHIFT_QUARTER_29));
+      func_OR<CIEC_LWORD>(st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_29), FORTE_quarterconst::var_SHIFT_QUARTER_29));
 #line 43 "ASSEMBLE_LWORD_FROM_QUARTERS.fct"
   st_ret_val =
-      func_OR<CIEC_LWORD>(st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_28), st_global_SHIFT_QUARTER_28));
+      func_OR<CIEC_LWORD>(st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_28), FORTE_quarterconst::var_SHIFT_QUARTER_28));
 #line 44 "ASSEMBLE_LWORD_FROM_QUARTERS.fct"
   st_ret_val =
-      func_OR<CIEC_LWORD>(st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_27), st_global_SHIFT_QUARTER_27));
+      func_OR<CIEC_LWORD>(st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_27), FORTE_quarterconst::var_SHIFT_QUARTER_27));
 #line 45 "ASSEMBLE_LWORD_FROM_QUARTERS.fct"
   st_ret_val =
-      func_OR<CIEC_LWORD>(st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_26), st_global_SHIFT_QUARTER_26));
+      func_OR<CIEC_LWORD>(st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_26), FORTE_quarterconst::var_SHIFT_QUARTER_26));
 #line 46 "ASSEMBLE_LWORD_FROM_QUARTERS.fct"
   st_ret_val =
-      func_OR<CIEC_LWORD>(st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_25), st_global_SHIFT_QUARTER_25));
+      func_OR<CIEC_LWORD>(st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_25), FORTE_quarterconst::var_SHIFT_QUARTER_25));
 #line 47 "ASSEMBLE_LWORD_FROM_QUARTERS.fct"
   st_ret_val =
-      func_OR<CIEC_LWORD>(st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_24), st_global_SHIFT_QUARTER_24));
+      func_OR<CIEC_LWORD>(st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_24), FORTE_quarterconst::var_SHIFT_QUARTER_24));
 #line 48 "ASSEMBLE_LWORD_FROM_QUARTERS.fct"
   st_ret_val =
-      func_OR<CIEC_LWORD>(st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_23), st_global_SHIFT_QUARTER_23));
+      func_OR<CIEC_LWORD>(st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_23), FORTE_quarterconst::var_SHIFT_QUARTER_23));
 #line 49 "ASSEMBLE_LWORD_FROM_QUARTERS.fct"
   st_ret_val =
-      func_OR<CIEC_LWORD>(st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_22), st_global_SHIFT_QUARTER_22));
+      func_OR<CIEC_LWORD>(st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_22), FORTE_quarterconst::var_SHIFT_QUARTER_22));
 #line 50 "ASSEMBLE_LWORD_FROM_QUARTERS.fct"
   st_ret_val =
-      func_OR<CIEC_LWORD>(st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_21), st_global_SHIFT_QUARTER_21));
+      func_OR<CIEC_LWORD>(st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_21), FORTE_quarterconst::var_SHIFT_QUARTER_21));
 #line 51 "ASSEMBLE_LWORD_FROM_QUARTERS.fct"
   st_ret_val =
-      func_OR<CIEC_LWORD>(st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_20), st_global_SHIFT_QUARTER_20));
+      func_OR<CIEC_LWORD>(st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_20), FORTE_quarterconst::var_SHIFT_QUARTER_20));
 #line 52 "ASSEMBLE_LWORD_FROM_QUARTERS.fct"
   st_ret_val =
-      func_OR<CIEC_LWORD>(st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_19), st_global_SHIFT_QUARTER_19));
+      func_OR<CIEC_LWORD>(st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_19), FORTE_quarterconst::var_SHIFT_QUARTER_19));
 #line 53 "ASSEMBLE_LWORD_FROM_QUARTERS.fct"
   st_ret_val =
-      func_OR<CIEC_LWORD>(st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_18), st_global_SHIFT_QUARTER_18));
+      func_OR<CIEC_LWORD>(st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_18), FORTE_quarterconst::var_SHIFT_QUARTER_18));
 #line 54 "ASSEMBLE_LWORD_FROM_QUARTERS.fct"
   st_ret_val =
-      func_OR<CIEC_LWORD>(st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_17), st_global_SHIFT_QUARTER_17));
+      func_OR<CIEC_LWORD>(st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_17), FORTE_quarterconst::var_SHIFT_QUARTER_17));
 #line 55 "ASSEMBLE_LWORD_FROM_QUARTERS.fct"
   st_ret_val =
-      func_OR<CIEC_LWORD>(st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_16), st_global_SHIFT_QUARTER_16));
+      func_OR<CIEC_LWORD>(st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_16), FORTE_quarterconst::var_SHIFT_QUARTER_16));
 #line 56 "ASSEMBLE_LWORD_FROM_QUARTERS.fct"
   st_ret_val =
-      func_OR<CIEC_LWORD>(st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_15), st_global_SHIFT_QUARTER_15));
+      func_OR<CIEC_LWORD>(st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_15), FORTE_quarterconst::var_SHIFT_QUARTER_15));
 #line 57 "ASSEMBLE_LWORD_FROM_QUARTERS.fct"
   st_ret_val =
-      func_OR<CIEC_LWORD>(st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_14), st_global_SHIFT_QUARTER_14));
+      func_OR<CIEC_LWORD>(st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_14), FORTE_quarterconst::var_SHIFT_QUARTER_14));
 #line 58 "ASSEMBLE_LWORD_FROM_QUARTERS.fct"
   st_ret_val =
-      func_OR<CIEC_LWORD>(st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_13), st_global_SHIFT_QUARTER_13));
+      func_OR<CIEC_LWORD>(st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_13), FORTE_quarterconst::var_SHIFT_QUARTER_13));
 #line 59 "ASSEMBLE_LWORD_FROM_QUARTERS.fct"
   st_ret_val =
-      func_OR<CIEC_LWORD>(st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_12), st_global_SHIFT_QUARTER_12));
+      func_OR<CIEC_LWORD>(st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_12), FORTE_quarterconst::var_SHIFT_QUARTER_12));
 #line 60 "ASSEMBLE_LWORD_FROM_QUARTERS.fct"
   st_ret_val =
-      func_OR<CIEC_LWORD>(st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_11), st_global_SHIFT_QUARTER_11));
+      func_OR<CIEC_LWORD>(st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_11), FORTE_quarterconst::var_SHIFT_QUARTER_11));
 #line 61 "ASSEMBLE_LWORD_FROM_QUARTERS.fct"
   st_ret_val =
-      func_OR<CIEC_LWORD>(st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_10), st_global_SHIFT_QUARTER_10));
+      func_OR<CIEC_LWORD>(st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_10), FORTE_quarterconst::var_SHIFT_QUARTER_10));
 #line 62 "ASSEMBLE_LWORD_FROM_QUARTERS.fct"
   st_ret_val =
-      func_OR<CIEC_LWORD>(st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_09), st_global_SHIFT_QUARTER_09));
+      func_OR<CIEC_LWORD>(st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_09), FORTE_quarterconst::var_SHIFT_QUARTER_09));
 #line 63 "ASSEMBLE_LWORD_FROM_QUARTERS.fct"
   st_ret_val =
-      func_OR<CIEC_LWORD>(st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_08), st_global_SHIFT_QUARTER_08));
+      func_OR<CIEC_LWORD>(st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_08), FORTE_quarterconst::var_SHIFT_QUARTER_08));
 #line 64 "ASSEMBLE_LWORD_FROM_QUARTERS.fct"
   st_ret_val =
-      func_OR<CIEC_LWORD>(st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_07), st_global_SHIFT_QUARTER_07));
+      func_OR<CIEC_LWORD>(st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_07), FORTE_quarterconst::var_SHIFT_QUARTER_07));
 #line 65 "ASSEMBLE_LWORD_FROM_QUARTERS.fct"
   st_ret_val =
-      func_OR<CIEC_LWORD>(st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_06), st_global_SHIFT_QUARTER_06));
+      func_OR<CIEC_LWORD>(st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_06), FORTE_quarterconst::var_SHIFT_QUARTER_06));
 #line 66 "ASSEMBLE_LWORD_FROM_QUARTERS.fct"
   st_ret_val =
-      func_OR<CIEC_LWORD>(st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_05), st_global_SHIFT_QUARTER_05));
+      func_OR<CIEC_LWORD>(st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_05), FORTE_quarterconst::var_SHIFT_QUARTER_05));
 #line 67 "ASSEMBLE_LWORD_FROM_QUARTERS.fct"
   st_ret_val =
-      func_OR<CIEC_LWORD>(st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_04), st_global_SHIFT_QUARTER_04));
+      func_OR<CIEC_LWORD>(st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_04), FORTE_quarterconst::var_SHIFT_QUARTER_04));
 #line 68 "ASSEMBLE_LWORD_FROM_QUARTERS.fct"
   st_ret_val =
-      func_OR<CIEC_LWORD>(st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_03), st_global_SHIFT_QUARTER_03));
+      func_OR<CIEC_LWORD>(st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_03), FORTE_quarterconst::var_SHIFT_QUARTER_03));
 #line 69 "ASSEMBLE_LWORD_FROM_QUARTERS.fct"
   st_ret_val =
-      func_OR<CIEC_LWORD>(st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_02), st_global_SHIFT_QUARTER_02));
+      func_OR<CIEC_LWORD>(st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_02), FORTE_quarterconst::var_SHIFT_QUARTER_02));
 #line 70 "ASSEMBLE_LWORD_FROM_QUARTERS.fct"
   st_ret_val =
-      func_OR<CIEC_LWORD>(st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_01), st_global_SHIFT_QUARTER_01));
+      func_OR<CIEC_LWORD>(st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_01), FORTE_quarterconst::var_SHIFT_QUARTER_01));
 #line 71 "ASSEMBLE_LWORD_FROM_QUARTERS.fct"
   st_ret_val =
-      func_OR<CIEC_LWORD>(st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_00), st_global_SHIFT_QUARTER_00));
+      func_OR<CIEC_LWORD>(st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_00), FORTE_quarterconst::var_SHIFT_QUARTER_00));
 
   return st_ret_val;
 }

@@ -164,12 +164,12 @@ CIEC_REAL func_FIELDBUS_WORD_TO_PERCENT(CIEC_WORD st_lv_WI, CIEC_WORD &st_lv_WO)
   st_lv_WO = 0_WORD;
 
 #line 13 "FIELDBUS_WORD_TO_PERCENT.fct"
-  if (func_LE(st_lv_WI, st_global_FIELDBUS_VALID_SIGNAL_W)) {
+  if (func_LE(st_lv_WI, FORTE_signalprocessing__FIELDBUS_SIGNAL::var_VALID_SIGNAL_W)) {
 #line 14 "FIELDBUS_WORD_TO_PERCENT.fct"
     st_lv_WO = st_lv_WI;
 #line 15 "FIELDBUS_WORD_TO_PERCENT.fct"
     st_ret_val = func_DIV<CIEC_REAL>(func_UDINT_TO_REAL(func_WORD_TO_UDINT(st_lv_WO)),
-                                     func_UDINT_TO_REAL(func_WORD_TO_UDINT(st_global_FIELDBUS_VALID_SIGNAL_W)));
+                                     func_UDINT_TO_REAL(func_WORD_TO_UDINT(FORTE_signalprocessing__FIELDBUS_SIGNAL::var_VALID_SIGNAL_W)));
   }
 
   return st_ret_val;

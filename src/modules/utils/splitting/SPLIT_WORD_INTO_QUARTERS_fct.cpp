@@ -214,26 +214,26 @@ void func_SPLIT_WORD_INTO_QUARTERS(CIEC_WORD st_lv_IN,
 
 #line 19 "SPLIT_WORD_INTO_QUARTERS.fct"
   st_lv_QUARTER_BYTE_00 =
-      func_WORD_TO_BYTE(func_SHR(func_AND<CIEC_WORD>(st_lv_IN, st_global_WORD_QUARTER_00), st_global_SHIFT_QUARTER_00));
+      func_WORD_TO_BYTE(func_SHR(func_AND<CIEC_WORD>(st_lv_IN, FORTE_quarterconst::var_WORD_QUARTER_00), FORTE_quarterconst::var_SHIFT_QUARTER_00));
 #line 20 "SPLIT_WORD_INTO_QUARTERS.fct"
   st_lv_QUARTER_BYTE_01 =
-      func_WORD_TO_BYTE(func_SHR(func_AND<CIEC_WORD>(st_lv_IN, st_global_WORD_QUARTER_01), st_global_SHIFT_QUARTER_01));
+      func_WORD_TO_BYTE(func_SHR(func_AND<CIEC_WORD>(st_lv_IN, FORTE_quarterconst::var_WORD_QUARTER_01), FORTE_quarterconst::var_SHIFT_QUARTER_01));
 #line 21 "SPLIT_WORD_INTO_QUARTERS.fct"
   st_lv_QUARTER_BYTE_02 =
-      func_WORD_TO_BYTE(func_SHR(func_AND<CIEC_WORD>(st_lv_IN, st_global_WORD_QUARTER_02), st_global_SHIFT_QUARTER_02));
+      func_WORD_TO_BYTE(func_SHR(func_AND<CIEC_WORD>(st_lv_IN, FORTE_quarterconst::var_WORD_QUARTER_02), FORTE_quarterconst::var_SHIFT_QUARTER_02));
 #line 22 "SPLIT_WORD_INTO_QUARTERS.fct"
   st_lv_QUARTER_BYTE_03 =
-      func_WORD_TO_BYTE(func_SHR(func_AND<CIEC_WORD>(st_lv_IN, st_global_WORD_QUARTER_03), st_global_SHIFT_QUARTER_03));
+      func_WORD_TO_BYTE(func_SHR(func_AND<CIEC_WORD>(st_lv_IN, FORTE_quarterconst::var_WORD_QUARTER_03), FORTE_quarterconst::var_SHIFT_QUARTER_03));
 #line 23 "SPLIT_WORD_INTO_QUARTERS.fct"
   st_lv_QUARTER_BYTE_04 =
-      func_WORD_TO_BYTE(func_SHR(func_AND<CIEC_WORD>(st_lv_IN, st_global_WORD_QUARTER_04), st_global_SHIFT_QUARTER_04));
+      func_WORD_TO_BYTE(func_SHR(func_AND<CIEC_WORD>(st_lv_IN, FORTE_quarterconst::var_WORD_QUARTER_04), FORTE_quarterconst::var_SHIFT_QUARTER_04));
 #line 24 "SPLIT_WORD_INTO_QUARTERS.fct"
   st_lv_QUARTER_BYTE_05 =
-      func_WORD_TO_BYTE(func_SHR(func_AND<CIEC_WORD>(st_lv_IN, st_global_WORD_QUARTER_05), st_global_SHIFT_QUARTER_05));
+      func_WORD_TO_BYTE(func_SHR(func_AND<CIEC_WORD>(st_lv_IN, FORTE_quarterconst::var_WORD_QUARTER_05), FORTE_quarterconst::var_SHIFT_QUARTER_05));
 #line 25 "SPLIT_WORD_INTO_QUARTERS.fct"
   st_lv_QUARTER_BYTE_06 =
-      func_WORD_TO_BYTE(func_SHR(func_AND<CIEC_WORD>(st_lv_IN, st_global_WORD_QUARTER_06), st_global_SHIFT_QUARTER_06));
+      func_WORD_TO_BYTE(func_SHR(func_AND<CIEC_WORD>(st_lv_IN, FORTE_quarterconst::var_WORD_QUARTER_06), FORTE_quarterconst::var_SHIFT_QUARTER_06));
 #line 26 "SPLIT_WORD_INTO_QUARTERS.fct"
   st_lv_QUARTER_BYTE_07 =
-      func_WORD_TO_BYTE(func_SHR(func_AND<CIEC_WORD>(st_lv_IN, st_global_WORD_QUARTER_07), st_global_SHIFT_QUARTER_07));
+      func_WORD_TO_BYTE(func_SHR(func_AND<CIEC_WORD>(st_lv_IN, FORTE_quarterconst::var_WORD_QUARTER_07), FORTE_quarterconst::var_SHIFT_QUARTER_07));
 }

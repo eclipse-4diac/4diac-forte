@@ -13,43 +13,42 @@
 
 #include "FIELDBUS_SIGNAL_gcf.h"
 
-#include "iec61131_functions.h"
-#include "forte_byte.h"
-#include "forte_dword.h"
-#include "forte_word.h"
-#include "iec61131_functions.h"
-#include "forte_array_common.h"
-#include "forte_array.h"
-#include "forte_array_fixed.h"
-#include "forte_array_variable.h"
+#include "core/datatypes/forte_byte.h"
+#include "core/datatypes/forte_dword.h"
+#include "core/datatypes/forte_word.h"
+#include "core/iec61131_functions.h"
+#include "core/datatypes/forte_array_common.h"
+#include "core/datatypes/forte_array.h"
+#include "core/datatypes/forte_array_fixed.h"
+#include "core/datatypes/forte_array_variable.h"
 
-const CIEC_BYTE st_global_FIELDBUS_REVERSE = 0_BYTE;
-const CIEC_BYTE st_global_FIELDBUS_DISABLED = 0_BYTE;
-const CIEC_BYTE st_global_FIELDBUS_DISENGAGED = 0_BYTE;
-const CIEC_BYTE st_global_FIELDBUS_FORWARD = 1_BYTE;
-const CIEC_BYTE st_global_FIELDBUS_ENABLED = 1_BYTE;
-const CIEC_BYTE st_global_FIELDBUS_ENGAGED = 1_BYTE;
-const CIEC_BYTE st_global_FIELDBUS_ERROR_INDI_2Bit = 2_BYTE;
-const CIEC_BYTE st_global_FIELDBUS_NOT_AVAILABLE_2Bit = 3_BYTE;
-const CIEC_BYTE st_global_FIELDBUS_DONT_CARE_2bit = 3_BYTE;
-const CIEC_BYTE st_global_FIELDBUS_ERROR_INDI_3Bit = 6_BYTE;
-const CIEC_BYTE st_global_FIELDBUS_NOT_AVAILABLE_3Bit = 7_BYTE;
-const CIEC_BYTE st_global_FIELDBUS_DONT_CARE_3bit = 7_BYTE;
-const CIEC_BYTE st_global_FIELDBUS_ERROR_INDI_4bit = 14_BYTE;
-const CIEC_BYTE st_global_FIELDBUS_NOT_AVAILABLE_4bit = 15_BYTE;
-const CIEC_BYTE st_global_FIELDBUS_DONT_CARE_4bit = 15_BYTE;
-const CIEC_BYTE st_global_FIELDBUS_VALID_SIGNAL_B = 250_BYTE;
-const CIEC_BYTE st_global_FIELDBUS_ERROR_INDI_B = 254_BYTE;
-const CIEC_BYTE st_global_FIELDBUS_NOT_AVAILABLE_B = 255_BYTE;
-const CIEC_BYTE st_global_FIELDBUS_DONT_CARE_B = 255_BYTE;
-const CIEC_WORD st_global_FIELDBUS_VALID_SIGNAL_W = 64255_WORD;
-const CIEC_WORD st_global_FIELDBUS_ERROR_INDI_W = 65024_WORD;
-const CIEC_WORD st_global_FIELDBUS_NOT_AVAILABLE_W = 65280_WORD;
-const CIEC_WORD st_global_FIELDBUS_ERROR_INDI_WM = 65279_WORD;
-const CIEC_WORD st_global_FIELDBUS_NOT_AVAILABLE_WM = 65535_WORD;
-const CIEC_WORD st_global_FIELDBUS_DONT_CARE_W = 65535_WORD;
-const CIEC_DWORD st_global_FIELDBUS_VALID_SIGNAL_DW = 4211081215_DWORD;
-const CIEC_DWORD st_global_FIELDBUS_ERROR_INDI_DW = 4261412864_DWORD;
-const CIEC_DWORD st_global_FIELDBUS_NOT_AVAILABLE_DW = 4278190080_DWORD;
-const CIEC_DWORD st_global_FIELDBUS_ERROR_INDI_DWM = 4278190079_DWORD;
-const CIEC_DWORD st_global_FIELDBUS_NOT_AVAILABLE_DM = 4294967295_DWORD;
+const CIEC_BYTE FORTE_signalprocessing__FIELDBUS_SIGNAL::var_REVERSE = 0_BYTE;
+const CIEC_BYTE FORTE_signalprocessing__FIELDBUS_SIGNAL::var_DISABLED = 0_BYTE;
+const CIEC_BYTE FORTE_signalprocessing__FIELDBUS_SIGNAL::var_DISENGAGED = 0_BYTE;
+const CIEC_BYTE FORTE_signalprocessing__FIELDBUS_SIGNAL::var_FORWARD = 1_BYTE;
+const CIEC_BYTE FORTE_signalprocessing__FIELDBUS_SIGNAL::var_ENABLED = 1_BYTE;
+const CIEC_BYTE FORTE_signalprocessing__FIELDBUS_SIGNAL::var_ENGAGED = 1_BYTE;
+const CIEC_BYTE FORTE_signalprocessing__FIELDBUS_SIGNAL::var_ERROR_INDI_2Bit = 2_BYTE;
+const CIEC_BYTE FORTE_signalprocessing__FIELDBUS_SIGNAL::var_NOT_AVAILABLE_2Bit = 3_BYTE;
+const CIEC_BYTE FORTE_signalprocessing__FIELDBUS_SIGNAL::var_DONT_CARE_2bit = 3_BYTE;
+const CIEC_BYTE FORTE_signalprocessing__FIELDBUS_SIGNAL::var_ERROR_INDI_3Bit = 6_BYTE;
+const CIEC_BYTE FORTE_signalprocessing__FIELDBUS_SIGNAL::var_NOT_AVAILABLE_3Bit = 7_BYTE;
+const CIEC_BYTE FORTE_signalprocessing__FIELDBUS_SIGNAL::var_DONT_CARE_3bit = 7_BYTE;
+const CIEC_BYTE FORTE_signalprocessing__FIELDBUS_SIGNAL::var_ERROR_INDI_4bit = 14_BYTE;
+const CIEC_BYTE FORTE_signalprocessing__FIELDBUS_SIGNAL::var_NOT_AVAILABLE_4bit = 15_BYTE;
+const CIEC_BYTE FORTE_signalprocessing__FIELDBUS_SIGNAL::var_DONT_CARE_4bit = 15_BYTE;
+const CIEC_BYTE FORTE_signalprocessing__FIELDBUS_SIGNAL::var_VALID_SIGNAL_B = 250_BYTE;
+const CIEC_BYTE FORTE_signalprocessing__FIELDBUS_SIGNAL::var_ERROR_INDI_B = 254_BYTE;
+const CIEC_BYTE FORTE_signalprocessing__FIELDBUS_SIGNAL::var_NOT_AVAILABLE_B = 255_BYTE;
+const CIEC_BYTE FORTE_signalprocessing__FIELDBUS_SIGNAL::var_DONT_CARE_B = 255_BYTE;
+const CIEC_WORD FORTE_signalprocessing__FIELDBUS_SIGNAL::var_VALID_SIGNAL_W = 64255_WORD;
+const CIEC_WORD FORTE_signalprocessing__FIELDBUS_SIGNAL::var_ERROR_INDI_W = 65024_WORD;
+const CIEC_WORD FORTE_signalprocessing__FIELDBUS_SIGNAL::var_NOT_AVAILABLE_W = 65280_WORD;
+const CIEC_WORD FORTE_signalprocessing__FIELDBUS_SIGNAL::var_ERROR_INDI_WM = 65279_WORD;
+const CIEC_WORD FORTE_signalprocessing__FIELDBUS_SIGNAL::var_NOT_AVAILABLE_WM = 65535_WORD;
+const CIEC_WORD FORTE_signalprocessing__FIELDBUS_SIGNAL::var_DONT_CARE_W = 65535_WORD;
+const CIEC_DWORD FORTE_signalprocessing__FIELDBUS_SIGNAL::var_VALID_SIGNAL_DW = 4211081215_DWORD;
+const CIEC_DWORD FORTE_signalprocessing__FIELDBUS_SIGNAL::var_ERROR_INDI_DW = 4261412864_DWORD;
+const CIEC_DWORD FORTE_signalprocessing__FIELDBUS_SIGNAL::var_NOT_AVAILABLE_DW = 4278190080_DWORD;
+const CIEC_DWORD FORTE_signalprocessing__FIELDBUS_SIGNAL::var_ERROR_INDI_DWM = 4278190079_DWORD;
+const CIEC_DWORD FORTE_signalprocessing__FIELDBUS_SIGNAL::var_NOT_AVAILABLE_DM = 4294967295_DWORD;
