@@ -32,7 +32,6 @@
 #include "forte_string_fixed.h"
 #include "forte_uint.h"
 #include "forte_lword.h"
-#include "forte_any_bit_not_decorator.h"
 #include "../../src/core/typelib.h"
 
 using namespace std::string_literals;
@@ -99,24 +98,53 @@ const CStringDictionary::TStringId CIEC_EndianessTestStruct::scmElementNames[] =
 
 DEFINE_FIRMWARE_DATATYPE(EndianessTestStruct, STRID(EndianessTestStruct))
 
-void testSTInIsOutBoolDummyFunction(CIEC_BOOL paIn, CIEC_BOOL &paOut) {
-  paOut = paIn;
+void testSTInIsOutIntDummyFunction(CIEC_INT paIn, COutputParameter<CIEC_INT> paOut) {
+  COutputGuard paOutGuard(paOut);
+
+  *paOut = paIn;
 }
 
-void testSTInIsOutByteDummyFunction(CIEC_BYTE paIn, CIEC_BYTE &paOut) {
-  paOut = paIn;
+void testSTInIsOutBoolDummyFunction(CIEC_BOOL paIn, CAnyBitOutputParameter<CIEC_BOOL> paOut) {
+  COutputGuard paOutGuard(paOut);
+
+  *paOut = paIn;
 }
 
-void testSTInIsOutWordDummyFunction(CIEC_WORD paIn, CIEC_WORD &paOut) {
-  paOut = paIn;
+void testSTInIsOutByteDummyFunction(CIEC_BYTE paIn, CAnyBitOutputParameter<CIEC_BYTE> paOut) {
+  COutputGuard paOutGuard(paOut);
+
+  *paOut = paIn;
 }
 
-void testSTInIsOutDWordDummyFunction(CIEC_DWORD paIn, CIEC_DWORD &paOut) {
-  paOut = paIn;
+void testSTInIsOutWordDummyFunction(CIEC_WORD paIn, CAnyBitOutputParameter<CIEC_WORD> paOut) {
+  COutputGuard paOutGuard(paOut);
+
+  *paOut = paIn;
 }
 
-void testSTInIsOutLWordDummyFunction(CIEC_LWORD paIn, CIEC_LWORD &paOut) {
-  paOut = paIn;
+void testSTInIsOutDWordDummyFunction(CIEC_DWORD paIn, CAnyBitOutputParameter<CIEC_DWORD> paOut) {
+  COutputGuard paOutGuard(paOut);
+
+  *paOut = paIn;
+}
+
+void testSTInIsOutLWordDummyFunction(CIEC_LWORD paIn, CAnyBitOutputParameter<CIEC_LWORD> paOut) {
+  COutputGuard paOutGuard(paOut);
+
+  *paOut = paIn;
+}
+
+void testSTInIsOutArrayDummyFunction(CIEC_ARRAY_FIXED<CIEC_INT, 0, 1> paIn,
+                                     COutputParameter<CIEC_ARRAY_FIXED<CIEC_INT, 0, 1>> paOut) {
+  COutputGuard paOutGuard(paOut);
+
+  *paOut = paIn;
+}
+
+void testSTInIsOutCharDummyFunction(CIEC_CHAR paIn, COutputParameter<CIEC_CHAR> paOut) {
+  COutputGuard paOutGuard(paOut);
+
+  *paOut = paIn;
 }
 
 BOOST_AUTO_TEST_SUITE(IEC61131_functions)
@@ -2076,20 +2104,43 @@ BOOST_AUTO_TEST_CASE(func_to_big_endian_struct) {
                  *reinterpret_cast<CIEC_LWORD *>(reversed.getMemberNamed(STRID(Val3)))) == 1099511627776);
 }
 
+BOOST_AUTO_TEST_CASE(output_int_test) {
+  CIEC_INT in(17);
+  CIEC_DINT out(0);
+  testSTInIsOutIntDummyFunction(in, out);
+  BOOST_TEST(static_cast<CIEC_DINT::TValueType>(out) == 17);
+}
+
+BOOST_AUTO_TEST_CASE(output_bool_test) {
+  CIEC_BOOL inBool(false);
+  CIEC_BOOL outBool(false);
+  CIEC_WORD outWord(0);
+  testSTInIsOutBoolDummyFunction(inBool, outBool);
+  BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(outBool) == false);
+  inBool = CIEC_BOOL(true);
+  testSTInIsOutBoolDummyFunction(inBool, outBool);
+  BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(outBool) == true);
+  testSTInIsOutBoolDummyFunction(inBool, outWord);
+  BOOST_TEST(static_cast<CIEC_WORD::TValueType>(outWord) == 1);
+}
+
 BOOST_AUTO_TEST_CASE(output_negation_bool_test) {
   CIEC_BOOL inBool(false);
   CIEC_BOOL outBool(false);
-  testSTInIsOutBoolDummyFunction(inBool, ST_EXTEND_LIFETIME(CIEC_ANY_BIT_NOT(outBool)));
+  CIEC_WORD outWord(0);
+  testSTInIsOutBoolDummyFunction(inBool, CAnyBitOutputParameter<CIEC_BOOL>(outBool, true));
   BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(outBool) == true);
+  testSTInIsOutBoolDummyFunction(inBool, CAnyBitOutputParameter<CIEC_BOOL>(outWord, true));
+  BOOST_TEST(static_cast<CIEC_WORD::TValueType>(outWord) == 1);
   inBool = true_BOOL;
-  testSTInIsOutBoolDummyFunction(inBool, ST_EXTEND_LIFETIME(CIEC_ANY_BIT_NOT(outBool)));
+  testSTInIsOutBoolDummyFunction(inBool, CAnyBitOutputParameter<CIEC_BOOL>(outBool, true));
   BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(outBool) == false);
 }
 
 BOOST_AUTO_TEST_CASE(output_negation_lword_test) {
   CIEC_LWORD inLword(0xFEFEFEFEFEFEFEFE);
   CIEC_LWORD outLword(0);
-  testSTInIsOutLWordDummyFunction(inLword, ST_EXTEND_LIFETIME(CIEC_ANY_BIT_NOT(outLword)));
+  testSTInIsOutLWordDummyFunction(inLword, CAnyBitOutputParameter<CIEC_LWORD>(outLword, true));
   BOOST_TEST(static_cast<CIEC_LWORD::TValueType>(outLword) == 0x0101010101010101);
 }
 
@@ -2119,6 +2170,21 @@ BOOST_AUTO_TEST_CASE(output_partial_DWORD_assignment_test) {
   CIEC_LWORD outLword(0x00);
   testSTInIsOutDWordDummyFunction(inDword, ST_EXTEND_LIFETIME(outLword.partial<CIEC_DWORD>(0)));
   BOOST_TEST(static_cast<CIEC_LWORD::TValueType>(outLword) == 0xFEFEFEFE);
+}
+
+BOOST_AUTO_TEST_CASE(output_array_test) {
+  CIEC_ARRAY_FIXED<CIEC_INT, 0, 1> in{17_INT, 4_INT};
+  CIEC_ARRAY_FIXED<CIEC_DINT, 0, 1> out;
+  testSTInIsOutArrayDummyFunction(in, out);
+  BOOST_TEST(static_cast<CIEC_DINT::TValueType>(out[0]) == 17);
+  BOOST_TEST(static_cast<CIEC_DINT::TValueType>(out[1]) == 4);
+}
+
+BOOST_AUTO_TEST_CASE(output_char_string_test) {
+  CIEC_STRING in("a"s);
+  CIEC_STRING out;
+  testSTInIsOutCharDummyFunction(in[1], out[1]);
+  BOOST_TEST(static_cast<CIEC_STRING::TValueType>(out) == "a"s);
 }
 
 BOOST_AUTO_TEST_CASE(is_valid_REAL) {
