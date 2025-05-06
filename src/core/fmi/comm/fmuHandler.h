@@ -57,7 +57,7 @@ class fmuHandler : public CExternalEventHandler {
     }
 
   private:
-    static CSinglyLinkedList<fmuComLayer *> mlayers;
+    static std::vector<fmuComLayer *> mlayers;
     std::map<CFunctionBlock *, std::vector<fmuValueContainer *> *> outputMap;
     std::map<CFunctionBlock *, std::vector<fmuValueContainer *> *> inputMap;
 };

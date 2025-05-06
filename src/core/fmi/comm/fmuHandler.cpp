@@ -18,7 +18,7 @@
 
 DEFINE_HANDLER(fmuHandler);
 
-CSinglyLinkedList<fmuComLayer *> fmuHandler::mlayers;
+std::vector<fmuComLayer *> fmuHandler::mlayers;
 
 fmuHandler::fmuHandler(CDeviceExecution &paDeviceExecution) : CExternalEventHandler(paDeviceExecution) {
 }
@@ -29,14 +29,14 @@ fmuHandler::~fmuHandler() {
 void fmuHandler::fmuMessageArrived(void *pa_value) {
 
   if (0 != pa_value) {
-    for (CSinglyLinkedList<fmuComLayer *>::Iterator it = mlayers.begin(); it != mlayers.end(); ++it) {
+    for (fmuComLayer *layer : mlayers) {
       bool found = false;
-      for (std::vector<fmuValueContainer *>::iterator itInputs = (*(*it)->getOutputs()).begin();
-           itInputs != (*(*it)->getOutputs()).end(); ++itInputs) {
+      for (std::vector<fmuValueContainer *>::iterator itInputs = (*layer->getOutputs()).begin();
+           itInputs != (*layer->getOutputs()).end(); ++itInputs) {
         if (pa_value == (*itInputs)) {
           found = true;
-          if (forte::com_infra::e_Nothing != (*it)->recvData(pa_value, 0)) {
-            ::getExtEvHandler<fmuHandler>(*(*it)->getCommFB()).startNewEventChain((*it)->getCommFB());
+          if (forte::com_infra::e_Nothing != layer->recvData(pa_value, 0)) {
+            ::getExtEvHandler<fmuHandler>(*layer->getCommFB()).startNewEventChain(layer->getCommFB());
           }
           break;
         }
@@ -50,31 +50,14 @@ void fmuHandler::fmuMessageArrived(void *pa_value) {
 
 int fmuHandler::registerLayer(fmuComLayer *paLayer) {
   if (paLayer != 0) {
-    mlayers.pushBack(paLayer);
+    mlayers.push_back(paLayer);
     return eRegisterLayerSucceeded;
   }
   return eWrongLayer;
 }
 
 void fmuHandler::unregisterLayer(fmuComLayer *paLayer) {
-
-  CSinglyLinkedList<fmuComLayer *>::Iterator itRunner(mlayers.begin());
-  CSinglyLinkedList<fmuComLayer *>::Iterator itRefNode(mlayers.end());
-  CSinglyLinkedList<fmuComLayer *>::Iterator itEnd(mlayers.end());
-
-  while (itRunner != itEnd) {
-    if (*itRunner == paLayer) {
-      if (itRefNode == itEnd) {
-        mlayers.popFront();
-      } else {
-        mlayers.eraseAfter(itRefNode);
-      }
-      break;
-    }
-
-    itRefNode = itRunner;
-    ++itRunner;
-  }
+  mlayers.erase(std::remove(mlayers.begin(), mlayers.end(), paLayer), mlayers.end());
 }
 
 void fmuHandler::enableHandler() {
