@@ -351,7 +351,7 @@ class CFunctionBlock : public forte::core::CFBContainer {
 
     TForteUInt32 &getEOMonitorData(TEventID paEOID);
 
-    TAbsDataPortNum getAbsDataPortNum(CStringDictionary::TStringId paPortNameId);
+    TAbsDataPortNum getAbsDataPortNum(CStringDictionary::TStringId paPortNameId) const;
 
     void setForce(TAbsDataPortNum paAbsDataPortNum, bool paForceValue);
 

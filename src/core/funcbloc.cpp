@@ -442,7 +442,7 @@ TForteUInt32 &CFunctionBlock::getEOMonitorData(TEventID paEOID) {
   return mEventMonitorCount[getFBInterfaceSpec().mNumEIs + paEOID];
 }
 
-TAbsDataPortNum CFunctionBlock::getAbsDataPortNum(CStringDictionary::TStringId paPortNameId) {
+TAbsDataPortNum CFunctionBlock::getAbsDataPortNum(CStringDictionary::TStringId paPortNameId) const {
   TPortId paPortId = getFBInterfaceSpec().getDIID(paPortNameId);
   if (paPortId != cgInvalidPortId) {
     return paPortId;

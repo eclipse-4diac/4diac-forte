@@ -106,6 +106,31 @@ namespace forte::core {
         std::reference_wrapper<TForteUInt32> mEventDataRef; //!< reference to the event counter of the watched event pin
     };
 
+    struct SFBMonitoringEntry {
+        SFBMonitoringEntry(std::string paFullFBName, CFunctionBlock *paFB) : mFullFBName(paFullFBName), mFB(paFB) {
+        }
+
+        const std::string &getFullFBName() const {
+          return mFullFBName;
+        }
+
+        const CFunctionBlock &getFB() const {
+          return *mFB;
+        }
+
+        std::vector<internal::CDataWatchEntry> mWatchedDataPoints;
+        std::vector<internal::CEventWatchEntry> mWatchedEventPoints;
+
+        SFBMonitoringEntry(const SFBMonitoringEntry &) = default;
+        SFBMonitoringEntry(SFBMonitoringEntry &&) = default;
+        SFBMonitoringEntry &operator=(const SFBMonitoringEntry &) = default;
+        SFBMonitoringEntry &operator=(SFBMonitoringEntry &&) = default;
+
+      private:
+        std::string mFullFBName;
+        CFunctionBlock *mFB;
+    };
+
   } // namespace internal
 
   /*!\brief class that handles all monitoring tasks
@@ -118,18 +143,6 @@ namespace forte::core {
       EMGMResponse executeMonitoringCommand(SManagementCMD &paCommand);
 
     private:
-      using TDataWatchList = std::vector<internal::CDataWatchEntry>;
-      using TEventWatchList = std::vector<internal::CEventWatchEntry>;
-
-      struct SFBMonitoringEntry {
-          std::string mFullFBName;
-          CFunctionBlock *mFB;
-          TDataWatchList mWatchedDataPoints;
-          TEventWatchList mWatchedEventPoints;
-      };
-
-      typedef CSinglyLinkedList<SFBMonitoringEntry> TFBMonitoringList;
-
       CFunctionBlock *getFB(forte::core::TNameIdentifier &paNameList);
 
       EMGMResponse addWatch(forte::core::TNameIdentifier &paNameList);
@@ -139,14 +152,18 @@ namespace forte::core {
       EMGMResponse triggerEvent(forte::core::TNameIdentifier &paNameList);
       EMGMResponse resetEventCount(forte::core::TNameIdentifier &paNameList);
 
-      SFBMonitoringEntry &findOrCreateFBMonitoringEntry(CFunctionBlock *paFB, forte::core::TNameIdentifier &paNameList);
-      static void
-      addDataWatch(SFBMonitoringEntry &paFBMonitoringEntry, CStringDictionary::TStringId paPortId, CIEC_ANY &paDataVal);
-      static bool removeDataWatch(SFBMonitoringEntry &paFBMonitoringEntry, CStringDictionary::TStringId paPortId);
-      static void addEventWatch(SFBMonitoringEntry &paFBMonitoringEntry,
+      internal::SFBMonitoringEntry &findOrCreateFBMonitoringEntry(CFunctionBlock *paFB,
+                                                                  forte::core::TNameIdentifier &paNameList);
+      static void addDataWatch(internal::SFBMonitoringEntry &paFBMonitoringEntry,
+                               CStringDictionary::TStringId paPortId,
+                               CIEC_ANY &paDataVal);
+      static bool removeDataWatch(internal::SFBMonitoringEntry &paFBMonitoringEntry,
+                                  CStringDictionary::TStringId paPortId);
+      static void addEventWatch(internal::SFBMonitoringEntry &paFBMonitoringEntry,
                                 CStringDictionary::TStringId paPortId,
                                 TForteUInt32 &paEventData);
-      static bool removeEventWatch(SFBMonitoringEntry &paFBMonitoringEntry, CStringDictionary::TStringId paPortId);
+      static bool removeEventWatch(internal::SFBMonitoringEntry &paFBMonitoringEntry,
+                                   CStringDictionary::TStringId paPortId);
       void readResourceWatches(std::string &paResponse);
 
       void updateMonitoringData();
@@ -163,7 +180,7 @@ namespace forte::core {
       static size_t getExtraSizeForEscapedCharsStruct(const CIEC_STRUCT &paDataValue);
 
       //! List storing all FBs which are currently monitored
-      TFBMonitoringList mFBMonitoringList;
+      std::vector<internal::SFBMonitoringEntry> mFBMonitoringList;
       CResource &mResource; //!< The resource this monitoring handler manages
 
     public:

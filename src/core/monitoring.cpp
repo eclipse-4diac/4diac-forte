@@ -35,6 +35,10 @@ namespace {
     return paItem.getPortId() < paPortId;
   };
 
+  constexpr auto monitoringEntryComparator = [](const SFBMonitoringEntry &paItem, const CFunctionBlock *const paFB) {
+    return &paItem.getFB() < paFB;
+  };
+
 } // namespace
 
 void CDataWatchEntry::update(const CFunctionBlock &paFB) {
@@ -105,41 +109,25 @@ EMGMResponse CMonitoringHandler::addWatch(forte::core::TNameIdentifier &paNameLi
 }
 
 EMGMResponse CMonitoringHandler::removeWatch(forte::core::TNameIdentifier &paNameList) {
-  EMGMResponse eRetVal = EMGMResponse::NoSuchObject;
-
   CStringDictionary::TStringId portName = paNameList.back();
   paNameList.pop_back();
   CFunctionBlock *fB = getFB(paNameList);
   if (nullptr != fB) {
-    TFBMonitoringList::Iterator itRefNode = mFBMonitoringList.end(); // needed for deleting the entry from the list
-    TFBMonitoringList::Iterator itRunner = mFBMonitoringList.begin();
+    auto it = std::lower_bound(mFBMonitoringList.begin(), mFBMonitoringList.end(), fB, monitoringEntryComparator);
 
-    while (itRunner != mFBMonitoringList.end()) {
-      if (itRunner->mFB == fB) {
-        SFBMonitoringEntry &poFBMonitoringEntry(*itRunner);
+    if (it != mFBMonitoringList.end() && &it->getFB() == fB) {
+      SFBMonitoringEntry &monitoringEntry = *it;
+      if (removeDataWatch(monitoringEntry, portName) ||
+          removeEventWatch(monitoringEntry, portName)) { // if element is not watched, end search and return error
 
-        if (removeDataWatch(poFBMonitoringEntry, portName) ||
-            removeEventWatch(poFBMonitoringEntry, portName)) { // if element is not watched, end search and return error
-
-          if (poFBMonitoringEntry.mWatchedDataPoints.empty() && (poFBMonitoringEntry.mWatchedEventPoints.empty())) {
-            // no further values are monitored so remove the entry
-            if (itRefNode == mFBMonitoringList.end()) {
-              // we have the first entry in the list
-              mFBMonitoringList.popFront();
-            } else {
-              mFBMonitoringList.eraseAfter(itRefNode);
-            }
-          }
-          eRetVal = EMGMResponse::Ready;
+        if (monitoringEntry.mWatchedDataPoints.empty() && (monitoringEntry.mWatchedEventPoints.empty())) {
+          mFBMonitoringList.erase(it);
         }
-        break;
+        return EMGMResponse::Ready;
       }
-
-      itRefNode = itRunner;
-      ++itRunner;
     }
   }
-  return eRetVal;
+  return EMGMResponse::NoSuchObject;
 }
 
 EMGMResponse CMonitoringHandler::readWatches(std::string &paResponse) {
@@ -225,20 +213,18 @@ EMGMResponse CMonitoringHandler::resetEventCount(forte::core::TNameIdentifier &p
   return eRetVal;
 }
 
-CMonitoringHandler::SFBMonitoringEntry &
-CMonitoringHandler::findOrCreateFBMonitoringEntry(CFunctionBlock *paFB, forte::core::TNameIdentifier &paNameList) {
-  for (TFBMonitoringList::Iterator itRunner = mFBMonitoringList.begin(); itRunner != mFBMonitoringList.end();
-       ++itRunner) {
-    if (itRunner->mFB == paFB) {
-      return *itRunner;
-    }
+SFBMonitoringEntry &CMonitoringHandler::findOrCreateFBMonitoringEntry(CFunctionBlock *paFB,
+                                                                      forte::core::TNameIdentifier &paNameList) {
+  auto it = std::lower_bound(mFBMonitoringList.begin(), mFBMonitoringList.end(), paFB, monitoringEntryComparator);
+
+  if (it != mFBMonitoringList.end() && &it->getFB() == paFB) {
+    // the data point is already in the watch list
+    return *it;
   }
 
-  mFBMonitoringList.pushBack(SFBMonitoringEntry());
-  TFBMonitoringList::Iterator itLastEntry(mFBMonitoringList.back());
-  itLastEntry->mFB = paFB;
-  createFullFBName(itLastEntry->mFullFBName, paNameList);
-  return *itLastEntry;
+  std::string fullFBName;
+  createFullFBName(fullFBName, paNameList);
+  return *mFBMonitoringList.emplace(it, std::move(fullFBName), paFB);
 }
 
 void CMonitoringHandler::addDataWatch(SFBMonitoringEntry &paFBMonitoringEntry,
@@ -252,7 +238,7 @@ void CMonitoringHandler::addDataWatch(SFBMonitoringEntry &paFBMonitoringEntry,
     return;
   }
 
-  dataWatches.emplace(it, paPortId, paDataVal, paFBMonitoringEntry.mFB->getAbsDataPortNum(paPortId));
+  dataWatches.emplace(it, paPortId, paDataVal, paFBMonitoringEntry.getFB().getAbsDataPortNum(paPortId));
 }
 
 bool CMonitoringHandler::removeDataWatch(SFBMonitoringEntry &paFBMonitoringEntry,
@@ -294,26 +280,25 @@ bool CMonitoringHandler::removeEventWatch(SFBMonitoringEntry &paFBMonitoringEntr
 }
 
 void CMonitoringHandler::readResourceWatches(std::string &paResponse) {
-  if (!mFBMonitoringList.isEmpty()) {
+  if (!mFBMonitoringList.empty()) {
     paResponse += "<Resource name=\""s;
     paResponse += mResource.getInstanceName();
     paResponse += cgClosingXMLTag;
 
     updateMonitoringData();
 
-    for (TFBMonitoringList::Iterator itRunner = mFBMonitoringList.begin(); itRunner != mFBMonitoringList.end();
-         ++itRunner) {
+    for (auto &monitoringEntry : mFBMonitoringList) {
       paResponse += "<FB name=\""s;
-      paResponse += itRunner->mFullFBName.c_str();
+      paResponse += monitoringEntry.getFullFBName();
       paResponse += cgClosingXMLTag;
 
       // add the data watches
-      for (auto &dataWatch : itRunner->mWatchedDataPoints) {
+      for (auto &dataWatch : monitoringEntry.mWatchedDataPoints) {
         appendDataWatch(paResponse, dataWatch);
       }
 
       // add the event watches
-      for (auto &eventWatch : itRunner->mWatchedEventPoints) {
+      for (auto &eventWatch : monitoringEntry.mWatchedEventPoints) {
         appendEventWatch(paResponse, eventWatch);
       }
 
@@ -324,14 +309,13 @@ void CMonitoringHandler::readResourceWatches(std::string &paResponse) {
 }
 
 void CMonitoringHandler::updateMonitoringData() {
-  for (TFBMonitoringList::Iterator itRunner = mFBMonitoringList.begin(); itRunner != mFBMonitoringList.end();
-       ++itRunner) {
+  for (auto &monitoringEntry : mFBMonitoringList) {
 
-    for (auto &dataWatch : itRunner->mWatchedDataPoints) {
-      dataWatch.update(*itRunner->mFB);
+    for (auto &dataWatch : monitoringEntry.mWatchedDataPoints) {
+      dataWatch.update(monitoringEntry.getFB());
     }
 
-    for (auto &eventWatch : itRunner->mWatchedEventPoints) {
+    for (auto &eventWatch : monitoringEntry.mWatchedEventPoints) {
       eventWatch.update();
     }
   }
