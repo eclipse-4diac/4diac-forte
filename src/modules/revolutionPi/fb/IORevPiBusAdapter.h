@@ -39,7 +39,6 @@ class FORTE_IORevPiBusAdapter : public forte::core::io::IOConfigFBMultiAdapter {
     static const CStringDictionary::TStringId scmEventOutputTypeIds[];
 
     static const SFBInterfaceSpec scmFBInterfaceSpecSocket;
-
     static const SFBInterfaceSpec scmFBInterfaceSpecPlug;
 
     void readInputData(TEventID paEIID) override;
