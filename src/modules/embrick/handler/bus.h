@@ -103,7 +103,7 @@ class EmbrickBusHandler : public forte::core::io::IODeviceMultiController {
     EmbrickSlaveHandler *getSlave(int paIndex);
     void forceUpdate(int paIndex);
 
-    void addSlaveHandle(int paIndex, forte::core::io::IOHandle *paHandle);
+    void addSlaveHandle(int paIndex, std::unique_ptr<forte::core::io::IOHandle> paHandle) override;
     void dropSlaveHandles(int paIndex);
 
   protected:

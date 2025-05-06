@@ -18,7 +18,7 @@ using namespace forte::core::io;
 const char *const IOConfigFBMultiMaster::scmFailedToInitSlaves =
     "Failed to initialize slaves. Check if the configuration matches the hardware setup.";
 
-TMasterList IOConfigFBMultiMaster::mInstances;
+std::vector<IOConfigFBMultiMaster *> IOConfigFBMultiMaster::mInstances;
 TForteUInt16 IOConfigFBMultiMaster::mInstancesIncrement = 0;
 
 IOConfigFBMultiMaster::IOConfigFBMultiMaster(forte::core::CFBContainer &paContainer,
@@ -26,18 +26,13 @@ IOConfigFBMultiMaster::IOConfigFBMultiMaster(forte::core::CFBContainer &paContai
                                              const CStringDictionary::TStringId paInstanceNameId) :
     IOConfigFBController(paContainer, paInterfaceSpec, paInstanceNameId) {
   mId = mInstancesIncrement++;
-  mInstances.pushBack(this);
+  mInstances.push_back(this);
 }
 
 IOConfigFBMultiMaster *IOConfigFBMultiMaster::getMasterById(TForteUInt16 paId) {
-  TMasterList::Iterator itEnd = mInstances.end();
-  int i = 0;
-  for (TMasterList::Iterator it = mInstances.begin(); it != itEnd; ++it, i++) {
-    if (paId == i && *it != nullptr) {
-      return *it;
-    }
-  }
-  return nullptr;
+  auto it = std::find_if(mInstances.begin(), mInstances.end(),
+                         [paId](const IOConfigFBMultiMaster *obj) { return obj->mId == paId; });
+  return (it != mInstances.end()) ? *it : nullptr;
 }
 
 void IOConfigFBMultiMaster::onStartup(CEventChainExecutionThread *const paECET) {

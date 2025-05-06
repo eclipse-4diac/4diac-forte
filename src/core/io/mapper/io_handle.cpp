@@ -26,7 +26,7 @@ IOHandle::IOHandle(IODeviceController *paController, IOMapper::Direction paDirec
 }
 
 IOHandle::~IOHandle() {
-  IOMapper::getInstance().deregisterHandle(this);
+  IOMapper::getInstance().deregisterHandle(*this);
 }
 
 void IOHandle::onObserver(IOObserver *paObserver) {

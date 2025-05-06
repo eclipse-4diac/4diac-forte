@@ -33,7 +33,7 @@ class GPIOChipController : public forte::core::io::IODeviceController {
       mConfig = *static_cast<Config *>(paConfig);
     }
 
-    bool isHandleValueEqual(forte::core::io::IOHandle *) override {
+    bool isHandleValueEqual(forte::core::io::IOHandle &) override {
       return false;
     }
 

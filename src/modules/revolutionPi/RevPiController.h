@@ -55,7 +55,7 @@ class RevPiController : public forte::core::io::IODeviceMultiController {
      * @param index Index/Position of the modular slave
      * @param handle Handle object which should be updated by the controller.
      */
-    void addSlaveHandle(int index, forte::core::io::IOHandle *handle);
+    void addSlaveHandle(int index, std::unique_ptr<forte::core::io::IOHandle> handle) override;
 
     /*! @brief Drop all handles of a specific slave
      *
@@ -98,7 +98,7 @@ class RevPiController : public forte::core::io::IODeviceMultiController {
      * @param handle Handle which should be compared to the previous IO state
      * @return True if the current state is equal to the previous IO state. In case it has changed, return false.
      */
-    virtual bool isHandleValueEqual(forte::core::io::IOHandle *handle);
+    virtual bool isHandleValueEqual(forte::core::io::IOHandle &handle);
 
   private:
     /*! @brief Checks if a slave exists at the given index

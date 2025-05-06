@@ -85,10 +85,10 @@ void IODeviceController::runLoop() {
   DEVLOG_INFO("IODeviceController::runLoop done\n");
 }
 
-bool IODeviceController::isHandleValueEqual(IOHandle *paHandle) {
-  switch (paHandle->getIOHandleDataType()) {
-    case CIEC_ANY::e_BOOL: return static_cast<IOHandleGPIO *>(paHandle)->equal(); break;
-    case CIEC_ANY::e_DWORD: return paHandle->isInput() && static_cast<IOHandleADC *>(paHandle)->equal(); break;
+bool IODeviceController::isHandleValueEqual(IOHandle &paHandle) {
+  switch (paHandle.getIOHandleDataType()) {
+    case CIEC_ANY::e_BOOL: return static_cast<IOHandleGPIO &>(paHandle).equal(); break;
+    case CIEC_ANY::e_DWORD: return paHandle.isInput() && static_cast<IOHandleADC &>(paHandle).equal(); break;
     default: return false; break;
   }
 }

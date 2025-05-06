@@ -154,8 +154,8 @@ void PLC01A1Controller::poll() {
   }
 }
 
-bool PLC01A1Controller::isHandleValueEqual(forte::core::io::IOHandle *paHandle) {
-  return ((forte::core::io::IOHandleBit *) paHandle)->equal(mInputArrayOld);
+bool PLC01A1Controller::isHandleValueEqual(forte::core::io::IOHandle &paHandle) {
+  return ((forte::core::io::IOHandleBit &) paHandle).equal(mInputArrayOld);
 }
 
 forte::core::io::IOHandle *

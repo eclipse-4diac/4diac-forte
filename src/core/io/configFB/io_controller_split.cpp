@@ -17,7 +17,7 @@ using namespace forte::core::io;
 
 const char *const IOConfigFBSplitController::scmFailedToInitParts = "Failed to initialize parts.";
 
-TControllerList IOConfigFBSplitController::mInstances;
+std::vector<IOConfigFBSplitController *> IOConfigFBSplitController::mInstances;
 TForteUInt16 IOConfigFBSplitController::mInstancesIncrement = 0;
 
 IOConfigFBSplitController::IOConfigFBSplitController(const TForteUInt8 *const paSplitAdapter,
@@ -30,18 +30,13 @@ IOConfigFBSplitController::IOConfigFBSplitController(const TForteUInt8 *const pa
     scmSplitAdapterNum(paSplitAdapterNum),
     mSplitIterator(0) {
   mId = mInstancesIncrement++;
-  mInstances.pushBack(this);
+  mInstances.push_back(this);
 }
 
 IOConfigFBSplitController *IOConfigFBSplitController::getControllerById(TForteUInt16 paId) {
-  TControllerList::Iterator itEnd = mInstances.end();
-  int i = 0;
-  for (TControllerList::Iterator it = mInstances.begin(); it != itEnd; ++it, i++) {
-    if (paId == i && *it != nullptr) {
-      return *it;
-    }
-  }
-  return nullptr;
+  auto it = std::find_if(mInstances.begin(), mInstances.end(),
+                         [paId](const IOConfigFBSplitController *obj) { return obj->mId == paId; });
+  return (it != mInstances.end()) ? *it : nullptr;
 }
 
 void IOConfigFBSplitController::onStartup(CEventChainExecutionThread *const paECET) {

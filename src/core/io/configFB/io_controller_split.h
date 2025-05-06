@@ -23,8 +23,6 @@ namespace forte {
 
       class IOConfigFBSplitController;
 
-      typedef CSinglyLinkedList<IOConfigFBSplitController *> TControllerList;
-
       class IOConfigFBSplitController : public IOConfigFBController {
         public:
           IOConfigFBSplitController(const TForteUInt8 *const paSplitAdapter,
@@ -50,7 +48,7 @@ namespace forte {
 
           TForteUInt8 mSplitIterator;
 
-          static TControllerList mInstances;
+          static std::vector<IOConfigFBSplitController *> mInstances;
 
           static TForteUInt16 mInstancesIncrement;
 

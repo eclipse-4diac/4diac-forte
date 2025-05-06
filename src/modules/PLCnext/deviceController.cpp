@@ -88,14 +88,14 @@ PLCnextSlaveHandler *PLCnextDeviceController::getSlave(int paIndex) {
   return 0;
 }
 
-void PLCnextDeviceController::addSlaveHandle(int paIndex, forte::core::io::IOHandle *paHandle) {
+void PLCnextDeviceController::addSlaveHandle(int paIndex, std::unique_ptr<forte::core::io::IOHandle> paHandle) {
   PLCnextSlaveHandler *slave = getSlave(paIndex);
   if (slave == 0) {
     DEVLOG_ERROR("no slaves are registered.");
     return;
   }
 
-  slave->addHandle((PLCnextSlaveHandle *) paHandle);
+  slave->addHandle((PLCnextSlaveHandle *) paHandle.release());
 }
 
 void PLCnextDeviceController::dropSlaveHandles(int paIndex) {

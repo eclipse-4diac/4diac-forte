@@ -52,7 +52,7 @@ namespace forte {
            * @param paIndex Index/Position of the modular slave
            * @param paHandle IOHandle object which should be updated by the controller.
            */
-          virtual void addSlaveHandle(int paIndex, IOHandle *paHandle) = 0;
+          virtual void addSlaveHandle(int paIndex, std::unique_ptr<IOHandle> paHandle) = 0;
 
           /*! @brief Drop all handles of a specific slave
            *

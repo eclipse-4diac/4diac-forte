@@ -51,7 +51,7 @@ class WagoDeviceController : public forte::core::io::IODeviceMultiController {
 
     void setConfig(struct forte::core::io::IODeviceController::Config *paConfig) override;
 
-    void addSlaveHandle(int index, forte::core::io::IOHandle *paHandle) override;
+    void addSlaveHandle(int index, std::unique_ptr<forte::core::io::IOHandle> paHandle) override;
 
     void dropSlaveHandles(int paIndex) override;
 
@@ -81,7 +81,7 @@ class WagoDeviceController : public forte::core::io::IODeviceMultiController {
      * @param handle Handle which should be compared to the previous IO state
      * @return True if the current state is equal to the previous IO state. In case it has changed, return false.
      */
-    virtual bool isHandleValueEqual(forte::core::io::IOHandle *paHandle) override;
+    virtual bool isHandleValueEqual(forte::core::io::IOHandle &paHandle) override;
 
   private:
     /*! @brief Checks if a slave exists at the given index

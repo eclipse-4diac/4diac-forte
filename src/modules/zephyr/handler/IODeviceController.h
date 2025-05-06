@@ -51,7 +51,7 @@ class IODeviceController : public forte::core::io::IODeviceController {
       mUpdateSema.inc();
     }
 
-    bool isHandleValueEqual(IOHandle *paHandle) override;
+    bool isHandleValueEqual(IOHandle &paHandle) override;
 
     struct Config mConfig;
     CSemaphore mUpdateSema;

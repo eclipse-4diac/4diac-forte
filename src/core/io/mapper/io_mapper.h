@@ -35,8 +35,8 @@ namespace forte {
         public:
           enum Direction { UnknownDirection, In, Out, InOut };
 
-          bool registerHandle(std::string const &paId, IOHandle *paHandle);
-          void deregisterHandle(IOHandle *paHandle);
+          bool registerHandle(std::string const &paId, IOHandle &paHandle);
+          void deregisterHandle(IOHandle &paHandle);
           void deregisterHandle(std::string const &paId);
 
           bool registerObserver(std::string const &paId, IOObserver *paObserver);

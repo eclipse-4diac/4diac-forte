@@ -25,8 +25,6 @@ namespace forte {
 
       class IOConfigFBMultiMaster;
 
-      typedef CSinglyLinkedList<IOConfigFBMultiMaster *> TMasterList;
-
       class IOConfigFBMultiMaster : public IOConfigFBController {
         public:
           IOConfigFBMultiMaster(forte::core::CFBContainer &paContainer,
@@ -50,7 +48,7 @@ namespace forte {
           void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
         private:
-          static TMasterList mInstances;
+          static std::vector<IOConfigFBMultiMaster *> mInstances;
 
           static TForteUInt16 mInstancesIncrement;
 

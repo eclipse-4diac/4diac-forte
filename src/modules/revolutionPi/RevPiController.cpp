@@ -88,9 +88,9 @@ void RevPiController::runLoop() {
   }
 }
 
-void RevPiController::addSlaveHandle(int, IOHandle *paHandle) {
+void RevPiController::addSlaveHandle(int, std::unique_ptr<forte::core::io::IOHandle> paHandle) {
   CCriticalRegion criticalRegion(mHandleMutex);
-  paHandle->isInput() ? mInputHandles.pushBack(paHandle) : mOutputHandles.pushBack(paHandle);
+  paHandle->isInput() ? mInputHandles.push_back(std::move(paHandle)) : mOutputHandles.push_back(std::move(paHandle);
 }
 
 void RevPiController::dropSlaveHandles(int) {
@@ -105,6 +105,6 @@ bool RevPiController::checkSlaveType(int paIndex, int paType) {
   return deviceList[paIndex + 1].i16uModuleType == paType;
 }
 
-bool RevPiController::isHandleValueEqual(IOHandle *paHandle) {
-  return !static_cast<RevPiHandle *>(paHandle)->check();
+bool RevPiController::isHandleValueEqual(IOHandle &paHandle) {
+  return !static_cast<RevPiHandle &>(paHandle).check();
 }

@@ -1,5 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2017 - 2018 fortiss GmbH
+ * Copyright (c) 2017, 2025 fortiss GmbH, Johannes Kepler University Linz
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -58,17 +59,17 @@ void IODeviceController::run() {
 }
 
 void IODeviceController::addHandle(HandleDescriptor &paHandleDescriptor) {
-  IOHandle *handle = createIOHandle(paHandleDescriptor);
+  std::unique_ptr<IOHandle> handle = std::unique_ptr<IOHandle>(createIOHandle(paHandleDescriptor));
 
-  if (nullptr == handle) {
+  if (!handle) {
     DEVLOG_WARNING("[IODeviceController] Failed to initialize handle '%s'. Check initHandle method.\n",
                    paHandleDescriptor.mId.c_str());
     return;
   }
 
   switch (handle->getDirection()) {
-    case IOMapper::In: addHandle(&mInputHandles, paHandleDescriptor.mId, handle); break;
-    case IOMapper::Out: addHandle(&mOutputHandles, paHandleDescriptor.mId, handle); break;
+    case IOMapper::In: addHandle(mInputHandles, paHandleDescriptor.mId, std::move(handle)); break;
+    case IOMapper::Out: addHandle(mOutputHandles, paHandleDescriptor.mId, std::move(handle)); break;
     default: break;
   }
 }
@@ -108,11 +109,10 @@ void IODeviceController::checkForInputChanges() {
   CCriticalRegion criticalRegion(mHandleMutex);
 
   // Iterate over input handles and check for changes
-  THandleList::Iterator itEnd = mInputHandles.end();
-  for (THandleList::Iterator it = mInputHandles.begin(); it != itEnd; ++it) {
-    if ((*it)->hasObserver() && !isHandleValueEqual(*it)) {
+  for (auto &inputHandle : mInputHandles) {
+    if (inputHandle->hasObserver() && !isHandleValueEqual(*inputHandle)) {
       // Inform Process Interface about change
-      (*it)->onChange();
+      inputHandle->onChange();
     }
   }
 }
@@ -126,30 +126,25 @@ void IODeviceController::dropHandles() {
 
   IOMapper &mapper = IOMapper::getInstance();
 
-  THandleList::Iterator itEnd = mInputHandles.end();
-  for (THandleList::Iterator it = mInputHandles.begin(); it != itEnd; ++it) {
-    mapper.deregisterHandle(*it);
-    delete *it;
-  }
-  itEnd = mOutputHandles.end();
-  for (THandleList::Iterator it = mOutputHandles.begin(); it != itEnd; ++it) {
-    mapper.deregisterHandle(*it);
-    delete *it;
+  for (auto &inputHandle : mInputHandles) {
+    mapper.deregisterHandle(*inputHandle);
   }
 
-  mInputHandles.clearAll();
-  mOutputHandles.clearAll();
+  for (auto &outputHandle : mOutputHandles) {
+    mapper.deregisterHandle(*outputHandle);
+  }
+
+  mInputHandles.clear();
+  mOutputHandles.clear();
 }
 
-bool IODeviceController::isHandleValueEqual(IOHandle *) {
+bool IODeviceController::isHandleValueEqual(IOHandle &) {
   return true;
 }
 
-void IODeviceController::addHandle(THandleList *paList, std::string const &paId, IOHandle *paHandle) {
-  if (!paId.empty() && IOMapper::getInstance().registerHandle(paId, paHandle)) {
+void IODeviceController::addHandle(THandleList &paList, std::string const &paId, std::unique_ptr<IOHandle> paHandle) {
+  if (!paId.empty() && IOMapper::getInstance().registerHandle(paId, *paHandle)) {
     CCriticalRegion criticalRegion(mHandleMutex);
-    paList->pushBack(paHandle);
-  } else {
-    delete paHandle;
+    paList.push_back(std::move(paHandle));
   }
 }

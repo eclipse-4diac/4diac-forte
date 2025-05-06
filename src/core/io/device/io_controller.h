@@ -150,7 +150,7 @@ namespace forte {
            */
           void notifyConfigFB(NotificationType paType, const void *paAttachment = nullptr);
 
-          typedef CSinglyLinkedList<IOHandle *> THandleList;
+          using THandleList = std::vector<std::unique_ptr<IOHandle>>;
 
           /*! @brief Adds an IO handle to the controller
            *
@@ -185,7 +185,7 @@ namespace forte {
            * @param paHandle IOHandle which should be compared to the previous IO state
            * @return True if the current state is equal to the previous IO state. In case it has changed, return false.
            */
-          virtual bool isHandleValueEqual(IOHandle *paHandle);
+          virtual bool isHandleValueEqual(IOHandle &paHandle);
 
           /*! @brief Synchronizes the access to the #inputHandles and #outputHandles. Use it for iterations over the
            * lists. */
@@ -221,7 +221,7 @@ namespace forte {
 
           int mInitDelay;
 
-          void addHandle(THandleList *paList, std::string const &paId, IOHandle *paHandle);
+          void addHandle(THandleList &paList, std::string const &paId, std::unique_ptr<IOHandle> paHandle);
 
           // Functions needed for the external event handler interface
           void enableHandler() override {

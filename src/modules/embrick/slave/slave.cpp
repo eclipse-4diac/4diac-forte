@@ -144,12 +144,12 @@ void EmbrickSlaveHandler::dropHandles() {
 
   TSlaveHandleList::Iterator itEnd = mInputs.end();
   for (TSlaveHandleList::Iterator it = mInputs.begin(); it != itEnd; ++it) {
-    mapper.deregisterHandle(*it);
+    mapper.deregisterHandle(**it);
     delete *it;
   }
   itEnd = mOutputs.end();
   for (TSlaveHandleList::Iterator it = mOutputs.begin(); it != itEnd; ++it) {
-    mapper.deregisterHandle(*it);
+    mapper.deregisterHandle(**it);
     delete *it;
   }
 

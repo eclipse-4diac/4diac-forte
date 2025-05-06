@@ -21,7 +21,7 @@ IODeviceMultiController::IODeviceMultiController(CDeviceExecution &paDeviceExecu
 
 void IODeviceMultiController::addHandle(IODeviceController::HandleDescriptor &paHandleDescriptor) {
   HandleDescriptor &desc = static_cast<HandleDescriptor &>(paHandleDescriptor);
-  IOHandle *handle = createIOHandle(desc);
+  std::unique_ptr<IOHandle> handle = std::unique_ptr<IOHandle>(createIOHandle(desc));
 
   if (nullptr == handle) {
     DEVLOG_WARNING("[IODeviceMultiController] Failed to initialize handle '%s'. Check initHandle method.\n",
@@ -29,9 +29,7 @@ void IODeviceMultiController::addHandle(IODeviceController::HandleDescriptor &pa
     return;
   }
 
-  if (IOMapper::getInstance().registerHandle(desc.mId, handle)) {
-    addSlaveHandle(desc.mSlaveIndex, handle);
-  } else {
-    delete handle;
+  if (IOMapper::getInstance().registerHandle(desc.mId, *handle)) {
+    addSlaveHandle(desc.mSlaveIndex, std::move(handle));
   }
 }

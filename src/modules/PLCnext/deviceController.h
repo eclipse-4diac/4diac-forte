@@ -62,7 +62,7 @@ class PLCnextDeviceController : public forte::core::io::IODeviceMultiController 
     void registerSlaveHandler(PLCnextSlaveHandler *slave);
 
     PLCnextSlaveHandler *getSlave(int paIndex);
-    void addSlaveHandle(int index, forte::core::io::IOHandle *paHandle) override;
+    void addSlaveHandle(int index, std::unique_ptr<forte::core::io::IOHandle> paHandle) override;
     void dropSlaveHandles(int paIndex) override;
 
   protected:

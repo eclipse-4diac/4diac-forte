@@ -41,7 +41,7 @@ class PLC01A1Controller : public forte::core::io::IODevicePollController {
 
     void setConfig(struct forte::core::io::IODeviceController::Config *paConfig);
 
-    virtual bool isHandleValueEqual(forte::core::io::IOHandle *paHandle);
+    virtual bool isHandleValueEqual(forte::core::io::IOHandle &paHandle);
 
     forte::core::io::IOHandle *initHandle(forte::core::io::IODeviceController::HandleDescriptor &paHandleDescriptor);
 

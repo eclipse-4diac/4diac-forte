@@ -308,13 +308,13 @@ void EmbrickBusHandler::forceUpdate(int paIndex) {
   mSyncObject.unlock();
 }
 
-void EmbrickBusHandler::addSlaveHandle(int paIndex, forte::core::io::IOHandle *paHandle) {
+void EmbrickBusHandler::addSlaveHandle(int paIndex, std::unique_ptr<forte::core::io::IOHandle> paHandle) {
   EmbrickSlaveHandler *slave = getSlave(paIndex);
   if (slave == 0) {
     return;
   }
 
-  slave->addHandle((EmbrickSlaveHandle *) paHandle);
+  slave->addHandle((EmbrickSlaveHandle *) paHandle.release());
 }
 
 void EmbrickBusHandler::dropSlaveHandles(int paIndex) {

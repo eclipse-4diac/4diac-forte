@@ -110,7 +110,8 @@ WagoDeviceController::createIOHandle(forte::core::io::IODeviceController::Handle
       break;
     default: return 0;
   }
-  return new WagoHandle(this, desc.mType, desc.mDirection, mAppDevInterface, mTaskId, mKBusDeviceId, outputOffset, inputOffset);
+  return new WagoHandle(this, desc.mType, desc.mDirection, mAppDevInterface, mTaskId, mKBusDeviceId, outputOffset,
+                        inputOffset);
 }
 
 void WagoDeviceController::deInit() {
@@ -142,9 +143,9 @@ void WagoDeviceController::runLoop() {
   }
 }
 
-void WagoDeviceController::addSlaveHandle(int, forte::core::io::IOHandle *paHandle) {
+void WagoDeviceController::addSlaveHandle(int, std::unique_ptr<forte::core::io::IOHandle> paHandle) {
   CCriticalRegion criticalRegion(mHandleMutex);
-  paHandle->isInput() ? mInputHandles.pushBack(paHandle) : mOutputHandles.pushBack(paHandle);
+  paHandle->isInput() ? mInputHandles.push_back(std::move(paHandle)) : mOutputHandles.push_back(std::move(paHandle));
 }
 
 void WagoDeviceController::dropSlaveHandles(int) {
@@ -159,8 +160,8 @@ bool WagoDeviceController::checkSlaveType(int paIndex, int paType) {
   return mTerminalIds[paIndex] == paType;
 }
 
-bool WagoDeviceController::isHandleValueEqual(forte::core::io::IOHandle *paHandle) {
-  return !static_cast<WagoHandle *>(paHandle)->check();
+bool WagoDeviceController::isHandleValueEqual(forte::core::io::IOHandle &paHandle) {
+  return !static_cast<WagoHandle &>(paHandle).check();
 }
 
 const char *WagoDeviceController::loadTerminalInformation() {
