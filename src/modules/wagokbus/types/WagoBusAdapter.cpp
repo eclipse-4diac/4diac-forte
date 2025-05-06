@@ -105,9 +105,9 @@ void FORTE_WagoBusAdapter::writeOutputData(const TEventID paEIID) {
   if (isSocket()) {
     switch (paEIID) {
       case scmEventINITID: {
-        writeData(scmFBInterfaceSpec.mNumDIs + 2, *mDOs[2], mDOConns[2]);
-        writeData(scmFBInterfaceSpec.mNumDIs + 1, *mDOs[1], mDOConns[1]);
-        writeData(scmFBInterfaceSpec.mNumDIs + 0, *mDOs[0], mDOConns[0]);
+        writeData(scmFBInterfaceSpecSocket.mNumDIs + 2, *mDOs[2], mDOConns[2]);
+        writeData(scmFBInterfaceSpecSocket.mNumDIs + 1, *mDOs[1], mDOConns[1]);
+        writeData(scmFBInterfaceSpecSocket.mNumDIs + 0, *mDOs[0], mDOConns[0]);
         break;
       }
       default: break;
@@ -115,7 +115,7 @@ void FORTE_WagoBusAdapter::writeOutputData(const TEventID paEIID) {
   } else {
     switch (paEIID) {
       case scmEventINITOID: {
-        writeData(scmFBInterfaceSpec.mNumDIs + 0, *mDOs[0], mDOConns[0]);
+        writeData(scmFBInterfaceSpecPlug.mNumDIs + 0, *mDOs[0], mDOConns[0]);
         break;
       }
       default: break;
