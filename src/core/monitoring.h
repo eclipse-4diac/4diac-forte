@@ -154,30 +154,11 @@ namespace forte::core {
 
       internal::SFBMonitoringEntry &findOrCreateFBMonitoringEntry(CFunctionBlock *paFB,
                                                                   forte::core::TNameIdentifier &paNameList);
-      static void addDataWatch(internal::SFBMonitoringEntry &paFBMonitoringEntry,
-                               CStringDictionary::TStringId paPortId,
-                               CIEC_ANY &paDataVal);
-      static bool removeDataWatch(internal::SFBMonitoringEntry &paFBMonitoringEntry,
-                                  CStringDictionary::TStringId paPortId);
-      static void addEventWatch(internal::SFBMonitoringEntry &paFBMonitoringEntry,
-                                CStringDictionary::TStringId paPortId,
-                                TForteUInt32 &paEventData);
-      static bool removeEventWatch(internal::SFBMonitoringEntry &paFBMonitoringEntry,
-                                   CStringDictionary::TStringId paPortId);
       void readResourceWatches(std::string &paResponse);
 
       void updateMonitoringData();
 
-      static void appendDataWatch(std::string &paResponse, internal::CDataWatchEntry &paDataWatchEntry);
-      static void appendPortTag(std::string &paResponse, CStringDictionary::TStringId paPortId);
       void appendEventWatch(std::string &paResponse, internal::CEventWatchEntry &paEventWatchEntry);
-      static void createFullFBName(std::string &paFullName, forte::core::TNameIdentifier &paNameList);
-
-      static size_t getExtraSizeForEscapedChars(const CIEC_ANY &paDataValue);
-
-      static size_t getExtraSizeForEscapedCharsArray(const CIEC_ARRAY &paDataValue);
-
-      static size_t getExtraSizeForEscapedCharsStruct(const CIEC_STRUCT &paDataValue);
 
       //! List storing all FBs which are currently monitored
       std::vector<internal::SFBMonitoringEntry> mFBMonitoringList;

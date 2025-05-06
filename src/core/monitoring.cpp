@@ -39,6 +39,195 @@ namespace {
     return &paItem.getFB() < paFB;
   };
 
+  void addDataWatch(internal::SFBMonitoringEntry &paFBMonitoringEntry,
+                    CStringDictionary::TStringId paPortId,
+                    CIEC_ANY &paDataVal) {
+    auto &dataWatches = paFBMonitoringEntry.mWatchedDataPoints;
+    auto it = std::lower_bound(dataWatches.begin(), dataWatches.end(), paPortId, watchEntryComparator);
+
+    if (it != dataWatches.end() && it->getPortId() == paPortId) {
+      // the data point is already in the watch list
+      return;
+    }
+
+    dataWatches.emplace(it, paPortId, paDataVal, paFBMonitoringEntry.getFB().getAbsDataPortNum(paPortId));
+  }
+
+  bool removeDataWatch(internal::SFBMonitoringEntry &paFBMonitoringEntry, CStringDictionary::TStringId paPortId) {
+    auto &dataWatches = paFBMonitoringEntry.mWatchedDataPoints;
+    auto it = std::lower_bound(dataWatches.begin(), dataWatches.end(), paPortId, watchEntryComparator);
+
+    if (it != dataWatches.end() && it->getPortId() == paPortId) {
+      dataWatches.erase(it);
+      return true;
+    }
+    return false;
+  }
+
+  void addEventWatch(internal::SFBMonitoringEntry &paFBMonitoringEntry,
+                     CStringDictionary::TStringId paPortId,
+                     TForteUInt32 &paEventData) {
+    auto &eventWatches = paFBMonitoringEntry.mWatchedEventPoints;
+    auto it = std::lower_bound(eventWatches.begin(), eventWatches.end(), paPortId, watchEntryComparator);
+
+    if (it != eventWatches.end() && it->getPortId() == paPortId) {
+      // the data point is already in the watch list
+      return;
+    }
+
+    eventWatches.emplace(it, paPortId, paEventData);
+  }
+
+  bool removeEventWatch(internal::SFBMonitoringEntry &paFBMonitoringEntry, CStringDictionary::TStringId paPortId) {
+    auto &eventWatches = paFBMonitoringEntry.mWatchedEventPoints;
+    auto it = std::lower_bound(eventWatches.begin(), eventWatches.end(), paPortId, watchEntryComparator);
+
+    if (it != eventWatches.end() && it->getPortId() == paPortId) {
+      eventWatches.erase(it);
+      return true;
+    }
+    return false;
+  }
+
+  void appendPortTag(std::string &paResponse, CStringDictionary::TStringId paPortId) {
+    paResponse += "<Port name=\""s;
+    paResponse += CStringDictionary::get(paPortId);
+    paResponse += cgClosingXMLTag;
+  }
+
+  size_t getExtraSizeForEscapedCharsStruct(const CIEC_STRUCT &paDataValue);
+
+  size_t getExtraSizeForEscapedCharsArray(const CIEC_ARRAY &paDataValue) {
+    size_t retVal = 0;
+    auto lowerBound = paDataValue.getLowerBound();
+    auto upperBound = paDataValue.getUpperBound();
+    switch (paDataValue[lowerBound].getDataTypeID()) {
+      case CIEC_ANY::e_STRING:
+        for (auto i = lowerBound; i <= upperBound; i++) {
+          retVal +=
+              forte::core::util::getExtraSizeForXMLEscapedChars(
+                  static_cast<const CIEC_STRING &>(paDataValue[static_cast<TForteUInt16>(i)]).getStorage().c_str()) +
+              10; // for opening and closing quotes or apos
+        }
+        break;
+      case CIEC_ANY::e_WSTRING:
+        for (auto i = lowerBound; i <= upperBound; i++) {
+          retVal += forte::core::util::getExtraSizeForXMLEscapedChars(
+                        static_cast<const CIEC_WSTRING &>(paDataValue[static_cast<TForteUInt16>(i)]).getValue()) +
+                    10; // for opening and closing quotes or apos
+        }
+        break;
+      case CIEC_ANY::e_STRUCT:
+        for (auto i = lowerBound; i <= upperBound; i++) {
+          retVal += getExtraSizeForEscapedCharsStruct(
+              static_cast<const CIEC_STRUCT &>(paDataValue[static_cast<TForteUInt16>(i)]));
+        }
+        break;
+      default: break;
+    }
+
+    return retVal;
+  }
+
+  size_t getExtraSizeForEscapedChars(const CIEC_ANY &paDataValue) {
+    size_t retVal = 0;
+
+    switch (paDataValue.getDataTypeID()) {
+      case CIEC_ANY::e_ANY: retVal = getExtraSizeForEscapedChars(paDataValue.unwrap()); break;
+      case CIEC_ANY::e_STRING:
+        retVal = forte::core::util::getExtraSizeForXMLEscapedChars(
+                     static_cast<const CIEC_STRING &>(paDataValue).getStorage().c_str()) +
+                 10; // for opening and closing quotes or apos
+        break;
+      case CIEC_ANY::e_WSTRING:
+        retVal = forte::core::util::getExtraSizeForXMLEscapedChars(
+                     static_cast<const CIEC_WSTRING &>(paDataValue).getValue()) +
+                 10; // for opening and closing quotes or apos
+        break;
+      case CIEC_ANY::e_CHAR:
+        retVal = 5 + 5 + 5; // Both outer quotes and symbol gets evetually replaced
+        break;
+      case CIEC_ANY::e_WCHAR:
+        retVal = 5 + 5 + 5; // Both outer quotes and symbol gets evetually replaced
+        break;
+      case CIEC_ANY::e_ARRAY:
+        retVal = getExtraSizeForEscapedCharsArray(static_cast<const CIEC_ARRAY &>(paDataValue));
+        break;
+      case CIEC_ANY::e_STRUCT:
+        retVal = getExtraSizeForEscapedCharsStruct(static_cast<const CIEC_STRUCT &>(paDataValue));
+        break;
+      default: break;
+    }
+
+    return retVal;
+  }
+
+  void appendDataWatch(std::string &paResponse, internal::CDataWatchEntry &paDataWatchEntry) {
+    appendPortTag(paResponse, paDataWatchEntry.getPortId());
+    paResponse += "<Data value=\""s;
+    size_t bufferSize = paDataWatchEntry.mDataBuffer->getToStringBufferSize() +
+                        getExtraSizeForEscapedChars(*paDataWatchEntry.mDataBuffer);
+    char *acDataValue = new char[bufferSize];
+    int consumedBytes = paDataWatchEntry.mDataBuffer->toString(acDataValue, bufferSize);
+    if (consumedBytes > 0 && static_cast<size_t>(consumedBytes) < bufferSize) {
+      switch (paDataWatchEntry.mDataBuffer->getDataTypeID()) {
+        case CIEC_ANY::e_ANY:
+        case CIEC_ANY::e_WSTRING:
+        case CIEC_ANY::e_STRING:
+        case CIEC_ANY::e_CHAR:
+        case CIEC_ANY::e_WCHAR:
+        case CIEC_ANY::e_ARRAY:
+        case CIEC_ANY::e_STRUCT:
+          consumedBytes += static_cast<int>(forte::core::util::transformNonEscapedToEscapedXMLText(acDataValue));
+          break;
+        default: break;
+      }
+      acDataValue[consumedBytes] = '\0';
+      paResponse += acDataValue;
+    }
+    paResponse += "\" forced=\""s;
+    paResponse += (paDataWatchEntry.mForced) ? "true"s : "false"s;
+    paResponse += "\"/></Port>"s;
+    delete[] acDataValue;
+  }
+
+  void createFullFBName(std::string &paFullName, forte::core::TNameIdentifier &paNameList) {
+    for (const auto &runner : paNameList) {
+      paFullName.append(CStringDictionary::get(runner));
+      paFullName.append(".");
+    }
+    paFullName.pop_back();
+  }
+
+  size_t getExtraSizeForEscapedCharsStruct(const CIEC_STRUCT &paDataValue) {
+    size_t retVal = 0;
+
+    for (size_t i = 0; i < paDataValue.getStructSize(); i++) {
+      const CIEC_ANY *member = paDataValue.getMember(i);
+      switch (member->getDataTypeID()) {
+        case CIEC_ANY::e_STRING:
+          retVal += forte::core::util::getExtraSizeForXMLEscapedChars(
+                        static_cast<const CIEC_STRING *>(member)->getStorage().c_str()) +
+                    10; // for opening and closing quotes or apos
+          break;
+        case CIEC_ANY::e_WSTRING:
+          retVal +=
+              forte::core::util::getExtraSizeForXMLEscapedChars(static_cast<const CIEC_WSTRING *>(member)->getValue()) +
+              10; // for opening and closing quotes or apos
+          break;
+        case CIEC_ANY::e_ARRAY:
+          retVal += getExtraSizeForEscapedCharsArray(*static_cast<const CIEC_ARRAY *>(member));
+          break;
+        case CIEC_ANY::e_STRUCT:
+          retVal += getExtraSizeForEscapedCharsStruct(*static_cast<const CIEC_STRUCT *>(member));
+          break;
+        default: break;
+      }
+    }
+
+    return retVal;
+  }
+
 } // namespace
 
 void CDataWatchEntry::update(const CFunctionBlock &paFB) {
@@ -227,58 +416,6 @@ SFBMonitoringEntry &CMonitoringHandler::findOrCreateFBMonitoringEntry(CFunctionB
   return *mFBMonitoringList.emplace(it, std::move(fullFBName), paFB);
 }
 
-void CMonitoringHandler::addDataWatch(SFBMonitoringEntry &paFBMonitoringEntry,
-                                      CStringDictionary::TStringId paPortId,
-                                      CIEC_ANY &paDataVal) {
-  auto &dataWatches = paFBMonitoringEntry.mWatchedDataPoints;
-  auto it = std::lower_bound(dataWatches.begin(), dataWatches.end(), paPortId, watchEntryComparator);
-
-  if (it != dataWatches.end() && it->getPortId() == paPortId) {
-    // the data point is already in the watch list
-    return;
-  }
-
-  dataWatches.emplace(it, paPortId, paDataVal, paFBMonitoringEntry.getFB().getAbsDataPortNum(paPortId));
-}
-
-bool CMonitoringHandler::removeDataWatch(SFBMonitoringEntry &paFBMonitoringEntry,
-                                         CStringDictionary::TStringId paPortId) {
-  auto &dataWatches = paFBMonitoringEntry.mWatchedDataPoints;
-  auto it = std::lower_bound(dataWatches.begin(), dataWatches.end(), paPortId, watchEntryComparator);
-
-  if (it != dataWatches.end() && it->getPortId() == paPortId) {
-    dataWatches.erase(it);
-    return true;
-  }
-  return false;
-}
-
-void CMonitoringHandler::addEventWatch(SFBMonitoringEntry &paFBMonitoringEntry,
-                                       CStringDictionary::TStringId paPortId,
-                                       TForteUInt32 &paEventData) {
-  auto &eventWatches = paFBMonitoringEntry.mWatchedEventPoints;
-  auto it = std::lower_bound(eventWatches.begin(), eventWatches.end(), paPortId, watchEntryComparator);
-
-  if (it != eventWatches.end() && it->getPortId() == paPortId) {
-    // the data point is already in the watch list
-    return;
-  }
-
-  eventWatches.emplace(it, paPortId, paEventData);
-}
-
-bool CMonitoringHandler::removeEventWatch(SFBMonitoringEntry &paFBMonitoringEntry,
-                                          CStringDictionary::TStringId paPortId) {
-  auto &eventWatches = paFBMonitoringEntry.mWatchedEventPoints;
-  auto it = std::lower_bound(eventWatches.begin(), eventWatches.end(), paPortId, watchEntryComparator);
-
-  if (it != eventWatches.end() && it->getPortId() == paPortId) {
-    eventWatches.erase(it);
-    return true;
-  }
-  return false;
-}
-
 void CMonitoringHandler::readResourceWatches(std::string &paResponse) {
   if (!mFBMonitoringList.empty()) {
     paResponse += "<Resource name=\""s;
@@ -321,135 +458,6 @@ void CMonitoringHandler::updateMonitoringData() {
   }
 }
 
-void CMonitoringHandler::appendDataWatch(std::string &paResponse, CDataWatchEntry &paDataWatchEntry) {
-  appendPortTag(paResponse, paDataWatchEntry.getPortId());
-  paResponse += "<Data value=\""s;
-  size_t bufferSize = paDataWatchEntry.mDataBuffer->getToStringBufferSize() +
-                      getExtraSizeForEscapedChars(*paDataWatchEntry.mDataBuffer);
-  char *acDataValue = new char[bufferSize];
-  int consumedBytes = paDataWatchEntry.mDataBuffer->toString(acDataValue, bufferSize);
-  if (consumedBytes > 0 && static_cast<size_t>(consumedBytes) < bufferSize) {
-    switch (paDataWatchEntry.mDataBuffer->getDataTypeID()) {
-      case CIEC_ANY::e_ANY:
-      case CIEC_ANY::e_WSTRING:
-      case CIEC_ANY::e_STRING:
-      case CIEC_ANY::e_CHAR:
-      case CIEC_ANY::e_WCHAR:
-      case CIEC_ANY::e_ARRAY:
-      case CIEC_ANY::e_STRUCT:
-        consumedBytes += static_cast<int>(forte::core::util::transformNonEscapedToEscapedXMLText(acDataValue));
-        break;
-      default: break;
-    }
-    acDataValue[consumedBytes] = '\0';
-    paResponse += acDataValue;
-  }
-  paResponse += "\" forced=\""s;
-  paResponse += (paDataWatchEntry.mForced) ? "true"s : "false"s;
-  paResponse += "\"/></Port>"s;
-  delete[] acDataValue;
-}
-
-size_t CMonitoringHandler::getExtraSizeForEscapedChars(const CIEC_ANY &paDataValue) {
-  size_t retVal = 0;
-
-  switch (paDataValue.getDataTypeID()) {
-    case CIEC_ANY::e_ANY: retVal = getExtraSizeForEscapedChars(paDataValue.unwrap()); break;
-    case CIEC_ANY::e_STRING:
-      retVal = forte::core::util::getExtraSizeForXMLEscapedChars(
-                   static_cast<const CIEC_STRING &>(paDataValue).getStorage().c_str()) +
-               10; // for opening and closing quotes or apos
-      break;
-    case CIEC_ANY::e_WSTRING:
-      retVal =
-          forte::core::util::getExtraSizeForXMLEscapedChars(static_cast<const CIEC_WSTRING &>(paDataValue).getValue()) +
-          10; // for opening and closing quotes or apos
-      break;
-    case CIEC_ANY::e_CHAR:
-      retVal = 5 + 5 + 5; // Both outer quotes and symbol gets evetually replaced
-      break;
-    case CIEC_ANY::e_WCHAR:
-      retVal = 5 + 5 + 5; // Both outer quotes and symbol gets evetually replaced
-      break;
-    case CIEC_ANY::e_ARRAY:
-      retVal = getExtraSizeForEscapedCharsArray(static_cast<const CIEC_ARRAY &>(paDataValue));
-      break;
-    case CIEC_ANY::e_STRUCT:
-      retVal = getExtraSizeForEscapedCharsStruct(static_cast<const CIEC_STRUCT &>(paDataValue));
-      break;
-    default: break;
-  }
-
-  return retVal;
-}
-
-size_t CMonitoringHandler::getExtraSizeForEscapedCharsArray(const CIEC_ARRAY &paDataValue) {
-  size_t retVal = 0;
-  auto lowerBound = paDataValue.getLowerBound();
-  auto upperBound = paDataValue.getUpperBound();
-  switch (paDataValue[lowerBound].getDataTypeID()) {
-    case CIEC_ANY::e_STRING:
-      for (auto i = lowerBound; i <= upperBound; i++) {
-        retVal +=
-            forte::core::util::getExtraSizeForXMLEscapedChars(
-                static_cast<const CIEC_STRING &>(paDataValue[static_cast<TForteUInt16>(i)]).getStorage().c_str()) +
-            10; // for opening and closing quotes or apos
-      }
-      break;
-    case CIEC_ANY::e_WSTRING:
-      for (auto i = lowerBound; i <= upperBound; i++) {
-        retVal += forte::core::util::getExtraSizeForXMLEscapedChars(
-                      static_cast<const CIEC_WSTRING &>(paDataValue[static_cast<TForteUInt16>(i)]).getValue()) +
-                  10; // for opening and closing quotes or apos
-      }
-      break;
-    case CIEC_ANY::e_STRUCT:
-      for (auto i = lowerBound; i <= upperBound; i++) {
-        retVal += getExtraSizeForEscapedCharsStruct(
-            static_cast<const CIEC_STRUCT &>(paDataValue[static_cast<TForteUInt16>(i)]));
-      }
-      break;
-    default: break;
-  }
-
-  return retVal;
-}
-
-size_t CMonitoringHandler::getExtraSizeForEscapedCharsStruct(const CIEC_STRUCT &paDataValue) {
-  size_t retVal = 0;
-
-  for (size_t i = 0; i < paDataValue.getStructSize(); i++) {
-    const CIEC_ANY *member = paDataValue.getMember(i);
-    switch (member->getDataTypeID()) {
-      case CIEC_ANY::e_STRING:
-        retVal += forte::core::util::getExtraSizeForXMLEscapedChars(
-                      static_cast<const CIEC_STRING *>(member)->getStorage().c_str()) +
-                  10; // for opening and closing quotes or apos
-        break;
-      case CIEC_ANY::e_WSTRING:
-        retVal +=
-            forte::core::util::getExtraSizeForXMLEscapedChars(static_cast<const CIEC_WSTRING *>(member)->getValue()) +
-            10; // for opening and closing quotes or apos
-        break;
-      case CIEC_ANY::e_ARRAY:
-        retVal += getExtraSizeForEscapedCharsArray(*static_cast<const CIEC_ARRAY *>(member));
-        break;
-      case CIEC_ANY::e_STRUCT:
-        retVal += getExtraSizeForEscapedCharsStruct(*static_cast<const CIEC_STRUCT *>(member));
-        break;
-      default: break;
-    }
-  }
-
-  return retVal;
-}
-
-void CMonitoringHandler::appendPortTag(std::string &paResponse, CStringDictionary::TStringId paPortId) {
-  paResponse += "<Port name=\""s;
-  paResponse += CStringDictionary::get(paPortId);
-  paResponse += cgClosingXMLTag;
-}
-
 void CMonitoringHandler::appendEventWatch(std::string &paResponse, CEventWatchEntry &paEventWatchEntry) {
   appendPortTag(paResponse, paEventWatchEntry.getPortId());
 
@@ -464,12 +472,4 @@ void CMonitoringHandler::appendEventWatch(std::string &paResponse, CEventWatchEn
   ulint.toString(buf, sizeof(buf));
   paResponse += buf;
   paResponse += "\"/>\n</Port>"s;
-}
-
-void CMonitoringHandler::createFullFBName(std::string &paFullName, forte::core::TNameIdentifier &paNameList) {
-  for (const auto &runner : paNameList) {
-    paFullName.append(CStringDictionary::get(runner));
-    paFullName.append(".");
-  }
-  paFullName.pop_back();
 }
