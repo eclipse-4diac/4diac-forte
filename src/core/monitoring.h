@@ -34,13 +34,14 @@ namespace forte::core {
           return mPortId;
         }
 
+        CWatchEntry(const CWatchEntry &) = delete;
+        CWatchEntry &operator=(const CWatchEntry &) = delete;
+
       protected:
         CWatchEntry(CStringDictionary::TStringId paPortId) : mPortId(paPortId) {
         }
 
-        CWatchEntry(const CWatchEntry &) = default;
         CWatchEntry(CWatchEntry &&) = default;
-        CWatchEntry &operator=(const CWatchEntry &) = default;
         CWatchEntry &operator=(CWatchEntry &&) = default;
 
       private:
@@ -56,29 +57,14 @@ namespace forte::core {
             mDataValueRef(paDataValue) {
         }
 
-        CDataWatchEntry(const CDataWatchEntry &paSrc) :
-            CWatchEntry(paSrc),
-            mDataBuffer(paSrc.mDataBuffer->clone(nullptr)),
-            mForceIndex(paSrc.mForceIndex),
-            mDataValueRef(paSrc.mDataValueRef) {
-        }
-
         void update(const CFunctionBlock &paFB);
 
         std::unique_ptr<CIEC_ANY> mDataBuffer; //!< buffer for copying the data from the data point reference
         bool mForced; //!< indication if pin is forced
 
-        CDataWatchEntry &operator=(const CDataWatchEntry &paOther) {
-          if (this != &paOther) {
-            CWatchEntry::operator=(paOther);
-            mDataBuffer = mDataBuffer ? std::unique_ptr<CIEC_ANY>(paOther.mDataBuffer->clone(nullptr)) : nullptr;
-            mForceIndex = paOther.mForceIndex;
-            mDataValueRef = paOther.mDataValueRef;
-          }
-          return *this;
-        }
-
+        CDataWatchEntry(const CDataWatchEntry &paSrc) = delete;
         CDataWatchEntry(CDataWatchEntry &&) = default;
+        CDataWatchEntry &operator=(const CDataWatchEntry &paOther) = delete;
         CDataWatchEntry &operator=(CDataWatchEntry &&) = default;
 
       private:
@@ -97,9 +83,9 @@ namespace forte::core {
 
         TForteUInt32 mEventDataBuf; //!< buffer for the event count
 
-        CEventWatchEntry(const CEventWatchEntry &) = default;
+        CEventWatchEntry(const CEventWatchEntry &) = delete;
         CEventWatchEntry(CEventWatchEntry &&) = default;
-        CEventWatchEntry &operator=(const CEventWatchEntry &) = default;
+        CEventWatchEntry &operator=(const CEventWatchEntry &) = delete;
         CEventWatchEntry &operator=(CEventWatchEntry &&) = default;
 
       private:
@@ -121,9 +107,9 @@ namespace forte::core {
         std::vector<internal::CDataWatchEntry> mWatchedDataPoints;
         std::vector<internal::CEventWatchEntry> mWatchedEventPoints;
 
-        SFBMonitoringEntry(const SFBMonitoringEntry &) = default;
+        SFBMonitoringEntry(const SFBMonitoringEntry &) = delete;
         SFBMonitoringEntry(SFBMonitoringEntry &&) = default;
-        SFBMonitoringEntry &operator=(const SFBMonitoringEntry &) = default;
+        SFBMonitoringEntry &operator=(const SFBMonitoringEntry &) = delete;
         SFBMonitoringEntry &operator=(SFBMonitoringEntry &&) = default;
 
       private:
