@@ -99,7 +99,7 @@ namespace forte::core::io {
               this->var_QO = false_BOOL;
             }
             break;
-          case this->scmEventREQID:
+          case CInputFB<T>::scmEventREQID:
             if(this->var_QI) {
               this->var_QO = this->read();
             } else {
