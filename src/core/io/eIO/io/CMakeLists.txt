@@ -25,6 +25,3 @@ forte_add_sourcefile_hcpp(eIXconfig_fbt)
 
 forte_add_sourcefile_hcpp(eIW_fbt)
 forte_add_sourcefile_hcpp(eIWconfig_fbt)
-
-# just for debugging and testing on systems without monitoring abilities
-forte_add_all_sourcefiles_cpp(debug_fbt)
