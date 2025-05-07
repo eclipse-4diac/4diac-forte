@@ -144,8 +144,6 @@ namespace forte::core {
 
       void updateMonitoringData();
 
-      void appendEventWatch(std::string &paResponse, internal::CEventWatchEntry &paEventWatchEntry);
-
       //! List storing all FBs which are currently monitored
       std::vector<internal::SFBMonitoringEntry> mFBMonitoringList;
       CResource &mResource; //!< The resource this monitoring handler manages

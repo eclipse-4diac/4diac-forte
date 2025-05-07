@@ -228,6 +228,18 @@ namespace {
     return retVal;
   }
 
+  void appendEventWatch(std::string &paResponse, CEventWatchEntry &paEventWatchEntry) {
+    appendPortTag(paResponse, paEventWatchEntry.getPortId());
+
+    CIEC_UDINT udint(paEventWatchEntry.mEventDataBuf);
+
+    paResponse += "<Data value=\""s;
+    char buf[21]; // the biggest number in an ulint is 18446744073709551616, TODO directly use paResponse
+    udint.toString(buf, sizeof(buf));
+    paResponse += buf;
+    paResponse += "\"/>\n</Port>"s;
+  }
+
 } // namespace
 
 void CDataWatchEntry::update(const CFunctionBlock &paFB) {
@@ -456,20 +468,4 @@ void CMonitoringHandler::updateMonitoringData() {
       eventWatch.update();
     }
   }
-}
-
-void CMonitoringHandler::appendEventWatch(std::string &paResponse, CEventWatchEntry &paEventWatchEntry) {
-  appendPortTag(paResponse, paEventWatchEntry.getPortId());
-
-  CIEC_UDINT udint(paEventWatchEntry.mEventDataBuf);
-  CIEC_ULINT ulint(mResource.getDevice()->getTimer().getForteTime());
-
-  paResponse += "<Data value=\""s;
-  char buf[21]; // the bigest number in an ulint is 18446744073709551616, TODO directly use paResponse
-  udint.toString(buf, sizeof(buf));
-  paResponse += buf;
-  paResponse += "\" time=\""s;
-  ulint.toString(buf, sizeof(buf));
-  paResponse += buf;
-  paResponse += "\"/>\n</Port>"s;
 }
