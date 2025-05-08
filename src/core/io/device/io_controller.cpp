@@ -87,28 +87,6 @@ void IODeviceController::addHandle(std::string const &paId, IOHandle *paHandle) 
   }
 }
 
-void IODeviceController::updateHandleList(std::string const &paId, IOHandle *paHandle) {
-  DEVLOG_DEBUG("[updateHandleList] %s gets updated.\r\n", paId.c_str());
-  mInputHandles.erase(paHandle);
-  mInputHandles.erase(paHandle);
-
-    switch (paHandle->getDirection()) {
-      case IOMapper::In: {
-        CCriticalRegion criticalRegion(mHandleMutex);
-        mInputHandles.pushBack(paHandle);
-        break;
-      }
-      case IOMapper::Out: {
-        CCriticalRegion criticalRegion(mHandleMutex);
-        mOutputHandles.pushBack(paHandle);
-        break;
-      }
-      default:
-        DEVLOG_ERROR("[updateHandleList] %ss direction is neither `In` nor `Out`.\r\n", paId.c_str());
-        break;
-  }
-}
-
 void IODeviceController::fireIndicationEvent(IOObserver *paObserver) {
   startNewEventChain(static_cast<CProcessInterfaceFB *>(paObserver));
 }
