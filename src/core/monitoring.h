@@ -18,7 +18,6 @@
 #include <functional>
 #include "funcbloc.h"
 #include "mgmcmdstruct.h"
-#include "fortelist.h"
 #include "conn.h"
 #include "stringdict.h"
 

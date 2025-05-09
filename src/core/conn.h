@@ -18,8 +18,6 @@
 #include <memory>
 #include <type_traits>
 
-#include <vector>
-#include "fortelist.h"
 #include "mgmcmd.h"
 #include "mgmcmdstruct.h"
 #include "stringdict.h"

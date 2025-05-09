@@ -27,7 +27,7 @@
  */
 
 template<typename T, typename Container = CSinglyLinkedListNode<T>>
-class CSinglyLinkedList {
+class [[deprecated("Use STL containers instead. Preferably std::vector")]] CSinglyLinkedList {
   private:
     friend class CIterator<T, Container>;
 

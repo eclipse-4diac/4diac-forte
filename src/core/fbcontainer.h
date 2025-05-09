@@ -17,7 +17,6 @@
 #define _FBCONTAINER_H_
 
 #include "conn.h"
-#include "fortelist.h"
 #include "stringdict.h"
 #include "mgmcmdstruct.h"
 #include <vector>

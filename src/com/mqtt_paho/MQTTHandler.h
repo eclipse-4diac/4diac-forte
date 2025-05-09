@@ -19,7 +19,6 @@
 #define MQTTHANDLER_H_
 
 #include <extevhan.h>
-#include <fortelist.h>
 #include <MQTTComLayer.h>
 #include <forte_sync.h>
 #include <forte_thread.h>
