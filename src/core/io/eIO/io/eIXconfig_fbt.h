@@ -94,7 +94,6 @@ class FORTE_eIXconfig final : public EConfigFB {
       evt_CONF(paQI, paFE, paRE, paQO, paSTATUS);
     }
 
-    /* MODIFIED */
-    std::forward_list<ESpecBase*> *eventGen() override;
+    bool eventGen() override;
 };
 

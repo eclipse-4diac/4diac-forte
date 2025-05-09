@@ -40,25 +40,25 @@ enum eIOTypes {
 
 class ESpecBase {
   private:
-    CProcessInterfaceFB *eIO;
+    CProcessInterfaceFB *mEIO;
 
   protected:
-    bool triggered;
+    bool mTriggered;
 
     bool checkConditionTriggered(bool condition) {
       if (condition) {
-        if (!triggered) {
-          triggered = true;
+        if (!mTriggered) {
+          mTriggered = true;
           return true;
         }
       } else {
-        triggered = false;
+        mTriggered = false;
       }
       return false;
     }
 
   public:
-    eIOTypes eIOType;
+    eIOTypes mEIOType;
     virtual ~ESpecBase() = default;
     virtual void trigger() = 0;
     virtual bool checkCondition() = 0;
@@ -66,22 +66,21 @@ class ESpecBase {
     virtual void readToBuffer(CIEC_ANY *) = 0;
     IOHandle *mHandle;
 
-    ESpecBase(eIOTypes type, IOHandle *handle, CProcessInterfaceFB *eIOfb) : eIOType(type), mHandle(handle), eIO(eIOfb) {}
+    ESpecBase(eIOTypes paType, IOHandle *paHandle, CProcessInterfaceFB *paEIOfb) : mEIOType(paType), mHandle(paHandle), mEIO(paEIOfb) {}
 
     CProcessInterfaceFB *getEIOfb() {
-        return eIO;
+        return mEIO;
       }
 };
 
 template <typename T, std::size_t size>
 class ESpec : public ESpecBase {
   protected:
-    EBuffer<T, size> buffer;
-    T triggerValue;
+    EBuffer<T, size> mBuffer;
 
   public:
-    ESpec(eIOTypes type, CProcessInterfaceFB *eIOfb, IOHandle *handle)
-        : ESpecBase(type, handle, eIOfb) {}
+    ESpec(eIOTypes paType, CProcessInterfaceFB *paEIOfb, IOHandle *paHandle)
+        : ESpecBase(paType, paHandle, paEIOfb) {}
 
     ~ESpec() = default;
 
@@ -96,12 +95,12 @@ class ESpec : public ESpecBase {
     void readToBuffer() override {
       T tempValue;
       mHandle->get(tempValue);
-      buffer.push(tempValue);
+      mBuffer.push(tempValue);
     }
 
     void readToBuffer(CIEC_ANY *paValue) override {
       auto tempValue = static_cast<T *>(paValue);
-      buffer.push(*tempValue);
+      mBuffer.push(*tempValue);
     }
 
     bool checkCondition() override = 0;
@@ -109,8 +108,8 @@ class ESpec : public ESpecBase {
 
 class EIO_RisingEdge : public ESpec<CIEC_BOOL, BUFFER_SIZE_RISING_EDGE> {
   public:
-    EIO_RisingEdge(CProcessInterfaceFB *eIOfb, IOHandle *handle)
-        : ESpec(eIO_RISING_EDGE, eIOfb, handle) {}
+    EIO_RisingEdge(CProcessInterfaceFB *paEIOfb, IOHandle *paHandle)
+        : ESpec(eIO_RISING_EDGE, paEIOfb, paHandle) {}
 
     bool checkCondition() final {
       if (mHandle == nullptr) {
@@ -120,8 +119,8 @@ class EIO_RisingEdge : public ESpec<CIEC_BOOL, BUFFER_SIZE_RISING_EDGE> {
 
       /* CRITERIA */
       /* ============================================ */
-      buffer.makeSnapshot();
-      auto orderedHistory = buffer.getSnapshot();
+      mBuffer.makeSnapshot();
+      auto orderedHistory = mBuffer.getSnapshot();
       auto curVal = orderedHistory[0];
       auto prevVal = orderedHistory[1];
       bool condition = curVal && !prevVal;
@@ -133,8 +132,8 @@ class EIO_RisingEdge : public ESpec<CIEC_BOOL, BUFFER_SIZE_RISING_EDGE> {
 
 class EIO_FallingEdge : public ESpec<CIEC_BOOL, BUFFER_SIZE_FALLING_EDGE> {
   public:
-    EIO_FallingEdge(CProcessInterfaceFB *eIOfb, IOHandle *handle)
-        : ESpec(eIO_FALLING_EDGE, eIOfb, handle) {}
+    EIO_FallingEdge(CProcessInterfaceFB *paEIOfb, IOHandle *paHandle)
+        : ESpec(eIO_FALLING_EDGE, paEIOfb, paHandle) {}
 
     bool checkCondition() final {
       if (mHandle == nullptr) {
@@ -144,8 +143,8 @@ class EIO_FallingEdge : public ESpec<CIEC_BOOL, BUFFER_SIZE_FALLING_EDGE> {
 
       /* CRITERIA */
       /* ============================================ */
-      buffer.makeSnapshot();
-      auto orderedHistory = buffer.getSnapshot();
+      mBuffer.makeSnapshot();
+      auto orderedHistory = mBuffer.getSnapshot();
       auto curVal = orderedHistory[0];
       auto prevVal = orderedHistory[1];
       bool condition = !curVal && prevVal;
@@ -157,9 +156,9 @@ class EIO_FallingEdge : public ESpec<CIEC_BOOL, BUFFER_SIZE_FALLING_EDGE> {
 
 class EIO_UpperThreshold : public ESpec<CIEC_WORD, BUFFER_SIZE_UPPER_THRESHOLD> {
   public:
-    EIO_UpperThreshold(CProcessInterfaceFB *eIOfb, IOHandle *handle, uint32_t threshold)
-        : ESpec(eIO_UPPER_THRESHOLD, eIOfb, handle),
-        upper_threshold(threshold){}
+    EIO_UpperThreshold(CProcessInterfaceFB *paEIOfb, IOHandle *paHandle, uint32_t paThreshold)
+        : ESpec(eIO_UPPER_THRESHOLD, paEIOfb, paHandle),
+        mUpperThreshold(paThreshold){}
 
     bool checkCondition() final {
       if (mHandle == nullptr) {
@@ -169,22 +168,22 @@ class EIO_UpperThreshold : public ESpec<CIEC_WORD, BUFFER_SIZE_UPPER_THRESHOLD> 
 
       /* CRITERIA */
       /* ============================================ */
-      uint32_t curVal = buffer.getCurrentData();
-      bool condition = curVal > upper_threshold;
+      uint32_t curVal = mBuffer.getCurrentData();
+      bool condition = curVal > mUpperThreshold;
       /* ============================================ */
 
       return checkConditionTriggered(condition);
     }
 
   private:
-    uint32_t upper_threshold;
+    uint32_t mUpperThreshold;
 };
 
 class EIO_LowerThreshold : public ESpec<CIEC_WORD, BUFFER_SIZE_LOWER_THRESHOLD> {
   public:
-    EIO_LowerThreshold(CProcessInterfaceFB *eIOfb, IOHandle *handle, uint32_t threshold)
-        : ESpec(eIO_LOWER_THRESHOLD, eIOfb, handle),
-        lower_threshold(threshold){}
+    EIO_LowerThreshold(CProcessInterfaceFB *paEIOfb, IOHandle *paHandle, uint32_t paThreshold)
+        : ESpec(eIO_LOWER_THRESHOLD, paEIOfb, paHandle),
+        mLowerThreshold(paThreshold){}
 
     bool checkCondition() final {
       if (mHandle == nullptr) {
@@ -194,22 +193,22 @@ class EIO_LowerThreshold : public ESpec<CIEC_WORD, BUFFER_SIZE_LOWER_THRESHOLD> 
 
       /* CRITERIA */
       /* ============================================ */
-      uint32_t curVal = buffer.getCurrentData();
-      bool condition = curVal < lower_threshold;
+      uint32_t curVal = mBuffer.getCurrentData();
+      bool condition = curVal < mLowerThreshold;
       /* ============================================ */
 
       return checkConditionTriggered(condition);
     }
 
   private:
-    uint32_t lower_threshold;
+    uint32_t mLowerThreshold;
 };
 
 class EIO_BoundedArea : public ESpec<CIEC_WORD, BUFFER_SIZE_BOUNDED_AREA> {
   public:
-    EIO_BoundedArea(CProcessInterfaceFB *eIOfb, IOHandle *handle, uint32_t biggerThan, uint32_t smallerThan)
-        : ESpec(eIO_BOUNDED_AREA, eIOfb, handle),
-        biggerThan(biggerThan), smallerThan(smallerThan) {}
+    EIO_BoundedArea(CProcessInterfaceFB *paEIOfb, IOHandle *paHandle, uint32_t paBiggerThan, uint32_t paSmallerThan)
+        : ESpec(eIO_BOUNDED_AREA, paEIOfb, paHandle),
+        mBiggerThan(paBiggerThan), mSmallerThan(paSmallerThan) {}
 
     bool checkCondition() final {
       if (mHandle == nullptr) {
@@ -219,35 +218,33 @@ class EIO_BoundedArea : public ESpec<CIEC_WORD, BUFFER_SIZE_BOUNDED_AREA> {
 
       /* CRITERIA */
       /* ============================================ */
-      uint32_t curVal = buffer.getCurrentData();
+      uint32_t curVal = mBuffer.getCurrentData();
       bool condition = false;
 
       // checks if value leaves bounded area
-      if (biggerThan > smallerThan)
-        condition = curVal > biggerThan || curVal < smallerThan;
+      if (mBiggerThan > mSmallerThan)
+        condition = curVal > mBiggerThan || curVal < mSmallerThan;
 
       // checks if value enters bounded area
-      if (biggerThan < smallerThan)
-        condition = curVal > biggerThan && curVal < smallerThan;
-
-      // DEVLOG_DEBUG("curVal: %d, lower_threshold: %d, upper_threshold: %d, condition: %d\r\n", curVal, biggerThan, smallerThan, condition);
-      // DEVLOG_DEBUG("curVal: %d \r\n", curVal);
+      if (mBiggerThan < mSmallerThan)
+        condition = curVal > mBiggerThan && curVal < mSmallerThan;
       /* ============================================ */
 
       return checkConditionTriggered(condition);
     }
 
   private:
-    uint32_t biggerThan;
-    uint32_t smallerThan;
+    uint32_t mBiggerThan;
+    uint32_t mSmallerThan;
 
 };
 
+
 class EIO_Gradient : public ESpec<CIEC_WORD, BUFFER_SIZE_GRADIENT> {
   public:
-    EIO_Gradient(CProcessInterfaceFB *eIOfb, IOHandle *handle, uint32_t difference)
-        : ESpec(eIO_GRADIENT, eIOfb, handle),
-        gradient(difference){}
+    EIO_Gradient(CProcessInterfaceFB *paEIOfb, IOHandle *paHandle, uint32_t paDifference)
+        : ESpec(eIO_GRADIENT, paEIOfb, paHandle),
+        mGradient(paDifference){}
 
     bool checkCondition() final {
       if (mHandle == nullptr) {
@@ -257,17 +254,16 @@ class EIO_Gradient : public ESpec<CIEC_WORD, BUFFER_SIZE_GRADIENT> {
 
       /* CRITERIA */
       /* ============================================ */
-      buffer.makeSnapshot();
-      auto orderedHistory = buffer.getSnapshot();
+      mBuffer.makeSnapshot();
+      auto orderedHistory = mBuffer.getSnapshot();
       auto curVal = uint32_t(orderedHistory[0]);
       auto prevVal = uint32_t(orderedHistory[1]);
-      bool condition = curVal > prevVal + gradient || curVal < prevVal - gradient;
-      // DEVLOG_DEBUG("curVal: %d, prevVal: %d, gradient: %d, condition: %d\r\n", curVal, prevVal, gradient, condition);
+      bool condition = curVal > prevVal + mGradient || curVal < prevVal - mGradient;
       // /* ============================================ */
 
       return condition ? true : false;
     }
 
   private:
-    uint32_t gradient;
+    uint32_t mGradient;
 };

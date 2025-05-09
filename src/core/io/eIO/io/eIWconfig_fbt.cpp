@@ -177,14 +177,14 @@ CDataConnection *FORTE_eIWconfig::getDOConUnchecked(const TPortId paIndex) {
   return nullptr;
 }
 
-std::forward_list<ESpecBase*> *FORTE_eIWconfig::eventGen() {
+bool FORTE_eIWconfig::eventGen() {
   DEVLOG_DEBUG("[eIWconfig] eventGen\r\n");
 
   // deregister every already registered evert-trigger condition of this FB
   deregisterFBsEventTrigger();
 
   if (!var_QI)
-    return &eventGenList;
+    return false;
 
   /* connecting to adapter peer */
   CAdapter* peerAdapter = nullptr;
@@ -197,12 +197,12 @@ std::forward_list<ESpecBase*> *FORTE_eIWconfig::eventGen() {
     eIW = static_cast<FORTE_eIW*>(eGenAdapter->parentFB);
   } else {
     DEVLOG_ERROR("[eIWconfig] Could not reach eIW FB via adapter!\r\n");
-    return &eventGenList;
+    return false;
   }
 
   if (eIW == nullptr) {
     DEVLOG_ERROR("[eIWconfig] eIW is nullptr\r\n");
-    return &eventGenList;
+    return false;
   }
   /* CONNECTING TO PEER ===================================================================  END  === */
 
@@ -239,5 +239,5 @@ std::forward_list<ESpecBase*> *FORTE_eIWconfig::eventGen() {
   }
   /* REGISTER eTRIGGERS ===================================================================  END  === */
 
-  return &eventGenList;
+  return true;
 }

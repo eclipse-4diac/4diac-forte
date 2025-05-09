@@ -24,13 +24,8 @@ class EConfigFB : public CFunctionBlock, public EConfig {
     bool checkEventTriggersConf(CIEC_ANY *paValue) {
       bool result = false;
 
-      if (eventGenList.empty()) {
-        DEVLOG_DEBUG("[%s] No eIO-triggers active!\r\n", this->getInstanceName());
-        return result;
-      }
-
       // iterating through all event-triggered assigned from this FB
-      for (ESpecBase* eventSpec : eventGenList) {
+      for (ESpecBase* eventSpec : mEventGenList) {
         // fill the eventSpec buffer with inputs
         eventSpec->readToBuffer(paValue);
         if (eventSpec->checkCondition()) {

@@ -57,7 +57,7 @@ namespace forte::core::io {
 
       FORTE_eGenAdapter var_eCONF;
 
-      EConfigFB *peerFB;
+      EConfigFB *mPeerFB;
 
       CAdapter *getAdapterUnchecked(const size_t paIndex) override {
         switch(paIndex) {
@@ -72,15 +72,23 @@ namespace forte::core::io {
 
         if ((peerAdapter = getAdapterUnchecked(scmeCONFAdpNum)->getPeer()) != nullptr){
           eGenAdapter = static_cast<FORTE_eGenAdapter*>(peerAdapter);
-          peerFB = static_cast<EConfigFB *>(eGenAdapter->parentFB);
-          peerFB->eventGen();
+          mPeerFB = static_cast<EConfigFB *>(eGenAdapter->parentFB);
+          mPeerFB->eventGen();
         }
         return true;
       }
 
+      bool onChange() override {
+        if (!CInputFB<T>::onChange())
+          return false;
+
+        if (mPeerFB && mPeerFB->checkEventTriggersConf(&var_IN))
+          return true;
+        return false;
+      }
+
     protected:
       static const SFBInterfaceSpec scmFBInterfaceSpec;
-      std::forward_list<ESpecBase*> *eventGenList;
 
       virtual bool checkEventTriggers() {
         return false;
@@ -91,10 +99,7 @@ namespace forte::core::io {
         switch(paEIID){
           case cgExternalEventID:
             if(this->var_QI) {
-              this->var_QO = this->read();
-              if (this->var_QO && peerFB && peerFB->checkEventTriggersConf(&var_IN)) {
-                this->sendOutputEvent(this->scmEventINDID, paECET);
-              }
+              this->sendOutputEvent(this->scmEventINDID, paECET);
             } else {
               this->var_QO = false_BOOL;
             }

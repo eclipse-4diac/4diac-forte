@@ -84,7 +84,7 @@ namespace forte::core::io {
         return IOMapper::In;
       }
 
-      bool onChange() final override {
+      bool onChange() override {
         return read();
       }
 

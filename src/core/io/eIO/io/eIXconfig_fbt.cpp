@@ -169,23 +169,20 @@ CDataConnection *FORTE_eIXconfig::getDOConUnchecked(const TPortId paIndex) {
   return nullptr;
 }
 
-
-/* MODIFIED */
-std::forward_list<ESpecBase*> *FORTE_eIXconfig::eventGen() {
+bool FORTE_eIXconfig::eventGen() {
   DEVLOG_DEBUG("[eIXconfig] eventGen\r\n");
     // deregister every already registered evert-trigger condition of this FB
   deregisterFBsEventTrigger();
 
   if (!var_QI)
-    return &eventGenList;
+    return false;
 
   auto *eIX = static_cast<FORTE_eIX * >(getIOPeer(this->getAdapterUnchecked(scmeIXAdpNum)));
 
   if (eIX == nullptr) {
     DEVLOG_ERROR("[eIXconfig::evenGen] IO instance is nullptr.\r\n");
-    return &eventGenList;
+    return false;
   }
-
 
   /* REGISTER eTRIGGERS =================================================================== BEGIN === */
   // register rising edge event-trigger
@@ -203,5 +200,5 @@ std::forward_list<ESpecBase*> *FORTE_eIXconfig::eventGen() {
   }
   /* REGISTER eTRIGGERS ===================================================================  END  === */
 
-  return &eventGenList;
+  return true;
 }

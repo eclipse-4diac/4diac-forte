@@ -98,7 +98,6 @@ class FORTE_eIWconfig final : public EConfigFB{
       evt_CONF(paQI, paST, paBT, paGRAD, paQO, paSTATUS);
     }
 
-    /* MODIFIED */
-    std::forward_list<ESpecBase*> *eventGen() override;
+    bool eventGen() override;
 };
 
