@@ -21,9 +21,8 @@
 #include <fortelist.h>
 
 #include <io/mapper/io_handle.h>
+
 #include <string>
-#include "ESpec.h"
-#include "forward_list"
 
 namespace forte {
   namespace core {
@@ -105,7 +104,6 @@ namespace forte {
           }
 
         protected:
-
           explicit IODeviceController(CDeviceExecution &paDeviceExecution);
 
           /*! @brief Initializes the controller.
@@ -163,8 +161,6 @@ namespace forte {
            * @param paHandleDescriptor Descriptor of the handle
            */
           virtual void addHandle(HandleDescriptor &paHandleDescriptor);
-
-          virtual void addHandle(std::string const &paId, IOHandle *paHandle);
 
           /*! @brief Initializer for all IO handles.
            *
