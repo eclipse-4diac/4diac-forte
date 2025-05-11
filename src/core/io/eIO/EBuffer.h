@@ -40,8 +40,9 @@ namespace forte::core::io {
       }
 
       void makeSnapshot() {
-        for (std::size_t i = 0; i < size; i++)
+        for (std::size_t i = 0; i < size; i++) {
           mSnapshot[i] = mData[(mPushIndex - 1 - i) & cmIndexMask];
+        }
       }
 
       const std::array<T, size> &getSnapshot() const {

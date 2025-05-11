@@ -183,8 +183,9 @@ bool FORTE_eIWconfig::eventGen() {
   // deregister every already registered evert-trigger condition of this FB
   deregisterFBsEventTrigger();
 
-  if (!var_QI)
+  if (!var_QI) {
     return false;
+  }
 
   /* connecting to adapter peer */
   CAdapter* peerAdapter = nullptr;
@@ -192,7 +193,7 @@ bool FORTE_eIWconfig::eventGen() {
   FORTE_eIW* eIW = nullptr;
 
   /* CONNECTING TO PEER =================================================================== BEGIN === */
-  if ((peerAdapter = getAdapterUnchecked(scmeIWAdpNum)->getPeer()) != nullptr){
+  if ((peerAdapter = getAdapterUnchecked(scmeIWAdpNum)->getPeer()) != nullptr) {
     eGenAdapter = static_cast<FORTE_eGenAdapter*>(peerAdapter);
     eIW = static_cast<FORTE_eIW*>(eGenAdapter->parentFB);
   } else {

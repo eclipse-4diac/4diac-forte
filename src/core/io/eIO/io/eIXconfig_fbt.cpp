@@ -174,8 +174,9 @@ bool FORTE_eIXconfig::eventGen() {
     // deregister every already registered evert-trigger condition of this FB
   deregisterFBsEventTrigger();
 
-  if (!var_QI)
+  if (!var_QI) {
     return false;
+  }
 
   auto *eIX = static_cast<FORTE_eIX * >(getIOPeer(this->getAdapterUnchecked(scmeIXAdpNum)));
 

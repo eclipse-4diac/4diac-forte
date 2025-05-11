@@ -52,7 +52,7 @@ class EConfig {
       CAdapter* peerAdapter = nullptr;
       FORTE_eGenAdapter* eGenAdapter = nullptr;
 
-      if ((peerAdapter = paAdapter->getPeer()) != nullptr){
+      if ((peerAdapter = paAdapter->getPeer()) != nullptr) {
         eGenAdapter = static_cast<FORTE_eGenAdapter *>(peerAdapter);
         mPeer = static_cast<CProcessInterfaceFB *>(eGenAdapter->parentFB);
       } else {
@@ -67,8 +67,9 @@ class EConfig {
     }
 
     CProcessInterfaceFB *getIOPeer(CAdapter *paAdapter) {
-     if (mPeer == nullptr)
+     if (mPeer == nullptr) {
        setIOPeer(paAdapter);
+     }
      return mPeer;
    }
 

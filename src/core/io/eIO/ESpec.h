@@ -222,12 +222,14 @@ class EIO_BoundedArea : public ESpec<CIEC_WORD, BUFFER_SIZE_BOUNDED_AREA> {
       bool condition = false;
 
       // checks if value leaves bounded area
-      if (mBiggerThan > mSmallerThan)
+      if (mBiggerThan > mSmallerThan) {
         condition = curVal > mBiggerThan || curVal < mSmallerThan;
+      }
 
       // checks if value enters bounded area
-      if (mBiggerThan < mSmallerThan)
+      if (mBiggerThan < mSmallerThan) {
         condition = curVal > mBiggerThan && curVal < mSmallerThan;
+      }
       /* ============================================ */
 
       return checkConditionTriggered(condition);
