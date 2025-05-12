@@ -79,11 +79,13 @@ namespace forte::core::io {
       }
 
       bool onChange() override {
-        if (!CInputFB<T>::onChange())
+        if (!CInputFB<T>::onChange()) {
           return false;
+        }
 
-        if (mPeerFB && mPeerFB->checkEventTriggersConf(&var_IN))
+        if (mPeerFB && mPeerFB->checkEventTriggersConf(&var_IN)) {
           return true;
+        }
         return false;
       }
 
