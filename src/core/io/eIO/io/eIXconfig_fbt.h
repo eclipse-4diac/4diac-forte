@@ -56,22 +56,18 @@ class FORTE_eIXconfig final : public CeConfigFB {
     FORTE_eIXconfig(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
     bool initialize() override;
 
-    CIEC_BOOL var_QI;
     CIEC_BOOL var_FE;
     CIEC_BOOL var_RE;
 
-    CIEC_BOOL var_QO;
     CIEC_WSTRING var_STATUS;
 
     FORTE_eGenAdapter var_eIX;
 
     CEventConnection conn_CNF;
 
-    CDataConnection *conn_QI;
     CDataConnection *conn_FE;
     CDataConnection *conn_RE;
 
-    COutDataConnection<CIEC_BOOL> conn_QO;
     COutDataConnection<CIEC_WSTRING> conn_STATUS;
 
     CIEC_ANY *getDI(size_t) override;
@@ -81,17 +77,15 @@ class FORTE_eIXconfig final : public CeConfigFB {
     CDataConnection **getDIConUnchecked(TPortId) override;
     CDataConnection *getDOConUnchecked(TPortId) override;
 
-    void evt_CONF(const CIEC_BOOL &paQI, const CIEC_BOOL &paFE, const CIEC_BOOL &paRE, CIEC_BOOL &paQO, CIEC_WSTRING &paSTATUS) {
-      var_QI = paQI;
+    void evt_CONF(const CIEC_BOOL &paFE, const CIEC_BOOL &paRE, CIEC_WSTRING &paSTATUS) {
       var_FE = paFE;
       var_RE = paRE;
       executeEvent(scmEventCONFID, nullptr);
-      paQO = var_QO;
       paSTATUS = var_STATUS;
     }
 
-    void operator()(const CIEC_BOOL &paQI, const CIEC_BOOL &paFE, const CIEC_BOOL &paRE, CIEC_BOOL &paQO, CIEC_WSTRING &paSTATUS) {
-      evt_CONF(paQI, paFE, paRE, paQO, paSTATUS);
+    void operator()(const CIEC_BOOL &paFE, const CIEC_BOOL &paRE, CIEC_WSTRING &paSTATUS) {
+      evt_CONF(paFE, paRE, paSTATUS);
     }
 
     bool eventGen() override;

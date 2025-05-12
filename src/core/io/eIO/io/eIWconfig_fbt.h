@@ -13,7 +13,6 @@
 #pragma once
 
 #include "core/funcbloc.h"
-#include "core/datatypes/forte_bool.h"
 #include "core/datatypes/forte_word.h"
 #include "core/datatypes/forte_wstring.h"
 #include "eGenAdapter_adp.h"
@@ -26,7 +25,7 @@
 #include "eIW_fbt.h"
 #include "eConfigFB.h"
 
-class FORTE_eIWconfig final : public CeConfigFB{
+class FORTE_eIWconfig final : public CeConfigFB {
   DECLARE_FIRMWARE_FB(FORTE_eIWconfig)
 
   private:
@@ -57,24 +56,20 @@ class FORTE_eIWconfig final : public CeConfigFB{
     FORTE_eIWconfig(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
     bool initialize() override;
 
-    CIEC_BOOL var_QI;
     CIEC_WORD var_ST;
     CIEC_WORD var_BT;
     CIEC_WORD var_GRAD;
 
-    CIEC_BOOL var_QO;
     CIEC_WSTRING var_STATUS;
 
     FORTE_eGenAdapter var_eIW;
 
     CEventConnection conn_CNF;
 
-    CDataConnection *conn_QI;
     CDataConnection *conn_ST;
     CDataConnection *conn_BT;
     CDataConnection *conn_GRAD;
 
-    COutDataConnection<CIEC_BOOL> conn_QO;
     COutDataConnection<CIEC_WSTRING> conn_STATUS;
 
     CIEC_ANY *getDI(size_t) override;
@@ -84,18 +79,16 @@ class FORTE_eIWconfig final : public CeConfigFB{
     CDataConnection **getDIConUnchecked(TPortId) override;
     CDataConnection *getDOConUnchecked(TPortId) override;
 
-    void evt_CONF(const CIEC_BOOL &paQI, const CIEC_WORD &paST, const CIEC_WORD &paBT, const CIEC_WORD &paGRAD, CIEC_BOOL &paQO, CIEC_WSTRING &paSTATUS) {
-      var_QI = paQI;
+    void evt_CONF(const CIEC_WORD &paST, const CIEC_WORD &paBT, const CIEC_WORD &paGRAD, CIEC_WSTRING &paSTATUS) {
       var_ST = paST;
       var_BT = paBT;
       var_GRAD = paGRAD;
       executeEvent(scmEventCONFID, nullptr);
-      paQO = var_QO;
       paSTATUS = var_STATUS;
     }
 
-    void operator()(const CIEC_BOOL &paQI, const CIEC_WORD &paST, const CIEC_WORD &paBT, const CIEC_WORD &paGRAD, CIEC_BOOL &paQO, CIEC_WSTRING &paSTATUS) {
-      evt_CONF(paQI, paST, paBT, paGRAD, paQO, paSTATUS);
+    void operator()(const CIEC_WORD &paST, const CIEC_WORD &paBT, const CIEC_WORD &paGRAD, CIEC_WSTRING &paSTATUS) {
+      evt_CONF(paST, paBT, paGRAD, paSTATUS);
     }
 
     bool eventGen() override;

@@ -24,8 +24,6 @@ USE_STRING_ID(CNF);
 USE_STRING_ID(CONF);
 USE_STRING_ID(Event);
 USE_STRING_ID(FE);
-USE_STRING_ID(QI);
-USE_STRING_ID(QO);
 USE_STRING_ID(RE);
 USE_STRING_ID(STATUS);
 USE_STRING_ID(WSTRING);
@@ -35,14 +33,14 @@ USE_STRING_ID(eIXconfig);
 
 DEFINE_FIRMWARE_FB(FORTE_eIXconfig, STRID(eIXconfig))
 
-const CStringDictionary::TStringId FORTE_eIXconfig::scmDataInputNames[] = {STRID(QI), STRID(FE), STRID(RE)};
-const CStringDictionary::TStringId FORTE_eIXconfig::scmDataInputTypeIds[] = {STRID(BOOL), STRID(BOOL), STRID(BOOL)};
-const CStringDictionary::TStringId FORTE_eIXconfig::scmDataOutputNames[] = {STRID(QO), STRID(STATUS)};
-const CStringDictionary::TStringId FORTE_eIXconfig::scmDataOutputTypeIds[] = {STRID(BOOL), STRID(WSTRING)};
-const TDataIOID FORTE_eIXconfig::scmEIWith[] = {0, 1, 2, scmWithListDelimiter};
+const CStringDictionary::TStringId FORTE_eIXconfig::scmDataInputNames[] = {STRID(FE), STRID(RE)};
+const CStringDictionary::TStringId FORTE_eIXconfig::scmDataInputTypeIds[] = {STRID(BOOL), STRID(BOOL)};
+const CStringDictionary::TStringId FORTE_eIXconfig::scmDataOutputNames[] = {STRID(STATUS)};
+const CStringDictionary::TStringId FORTE_eIXconfig::scmDataOutputTypeIds[] = {STRID(WSTRING)};
+const TDataIOID FORTE_eIXconfig::scmEIWith[] = {0, 1, scmWithListDelimiter};
 const TForteInt16 FORTE_eIXconfig::scmEIWithIndexes[] = {0};
 const CStringDictionary::TStringId FORTE_eIXconfig::scmEventInputNames[] = {STRID(CONF)};
-const TDataIOID FORTE_eIXconfig::scmEOWith[] = {0, 1, scmWithListDelimiter};
+const TDataIOID FORTE_eIXconfig::scmEOWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_eIXconfig::scmEOWithIndexes[] = {0};
 const CStringDictionary::TStringId FORTE_eIXconfig::scmEventOutputNames[] = {STRID(CNF)};
 const SAdapterInstanceDef FORTE_eIXconfig::scmAdapterInstances[] = {
@@ -51,26 +49,22 @@ const SAdapterInstanceDef FORTE_eIXconfig::scmAdapterInstances[] = {
 const SFBInterfaceSpec FORTE_eIXconfig::scmFBInterfaceSpec = {
   1, scmEventInputNames, nullptr, scmEIWith, scmEIWithIndexes,
   1, scmEventOutputNames, nullptr, scmEOWith, scmEOWithIndexes,
-  3, scmDataInputNames, scmDataInputTypeIds,
-  2, scmDataOutputNames, scmDataOutputTypeIds,
+  2, scmDataInputNames, scmDataInputTypeIds,
+  1, scmDataOutputNames, scmDataOutputTypeIds,
   0, nullptr,
   1, scmAdapterInstances
 };
 
 FORTE_eIXconfig::FORTE_eIXconfig(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CeConfigFB(paInstanceNameId, scmFBInterfaceSpec, paContainer),
-    var_QI(0_BOOL),
     var_FE(0_BOOL),
     var_RE(0_BOOL),
-    var_QO(0_BOOL),
     var_STATUS(u""_WSTRING),
     var_eIX(STRID(eIX), *this, false),
     conn_CNF(*this, 0),
-    conn_QI(nullptr),
     conn_FE(nullptr),
     conn_RE(nullptr),
-    conn_QO(*this, 0, var_QO),
-    conn_STATUS(*this, 1, var_STATUS) {
+    conn_STATUS(*this, 0, var_STATUS) {
 };
 
 bool FORTE_eIXconfig::initialize() {
@@ -80,10 +74,9 @@ bool FORTE_eIXconfig::initialize() {
 }
 
 void FORTE_eIXconfig::setInitialValues() {
-  var_QI = 0_BOOL;
+  CFunctionBlock::setInitialValues();
   var_FE = 0_BOOL;
   var_RE = 0_BOOL;
-  var_QO = 0_BOOL;
   var_STATUS = u""_WSTRING;
 }
 
@@ -93,15 +86,16 @@ void FORTE_eIXconfig::executeEvent(const TEventID paEIID, CEventChainExecutionTh
       eventGen();
       sendOutputEvent(scmEventCNFID, paECET);
       break;
+    default:
+      break;
   }
 }
 
 void FORTE_eIXconfig::readInputData(const TEventID paEIID) {
   switch(paEIID) {
     case scmEventCONFID: {
-      readData(0, var_QI, conn_QI);
-      readData(1, var_FE, conn_FE);
-      readData(2, var_RE, conn_RE);
+      readData(0, var_FE, conn_FE);
+      readData(1, var_RE, conn_RE);
       break;
     }
     default:
@@ -112,8 +106,7 @@ void FORTE_eIXconfig::readInputData(const TEventID paEIID) {
 void FORTE_eIXconfig::writeOutputData(const TEventID paEIID) {
   switch(paEIID) {
     case scmEventCNFID: {
-      writeData(0, var_QO, conn_QO);
-      writeData(1, var_STATUS, conn_STATUS);
+      writeData(2, var_STATUS, conn_STATUS);
       break;
     }
     default:
@@ -123,17 +116,15 @@ void FORTE_eIXconfig::writeOutputData(const TEventID paEIID) {
 
 CIEC_ANY *FORTE_eIXconfig::getDI(const size_t paIndex) {
   switch(paIndex) {
-    case 0: return &var_QI;
-    case 1: return &var_FE;
-    case 2: return &var_RE;
+    case 0: return &var_FE;
+    case 1: return &var_RE;
   }
   return nullptr;
 }
 
 CIEC_ANY *FORTE_eIXconfig::getDO(const size_t paIndex) {
   switch(paIndex) {
-    case 0: return &var_QO;
-    case 1: return &var_STATUS;
+    case 0: return &var_STATUS;
   }
   return nullptr;
 }
@@ -154,29 +145,23 @@ CEventConnection *FORTE_eIXconfig::getEOConUnchecked(const TPortId paIndex) {
 
 CDataConnection **FORTE_eIXconfig::getDIConUnchecked(const TPortId paIndex) {
   switch(paIndex) {
-    case 0: return &conn_QI;
-    case 1: return &conn_FE;
-    case 2: return &conn_RE;
+    case 0: return &conn_FE;
+    case 1: return &conn_RE;
   }
   return nullptr;
 }
 
 CDataConnection *FORTE_eIXconfig::getDOConUnchecked(const TPortId paIndex) {
   switch(paIndex) {
-    case 0: return &conn_QO;
-    case 1: return &conn_STATUS;
+    case 0: return &conn_STATUS;
   }
   return nullptr;
 }
 
 bool FORTE_eIXconfig::eventGen() {
   DEVLOG_DEBUG("[eIXconfig] eventGen\r\n");
-    // deregister every already registered evert-trigger condition of this FB
+  // deregister every already registered evert-trigger condition of this FB
   deregisterFBsEventTrigger();
-
-  if (!var_QI) {
-    return false;
-  }
 
   auto *eIX = static_cast<FORTE_eIX * >(getIOPeer(this->getAdapterUnchecked(scmeIXAdpNum)));
 
@@ -203,3 +188,4 @@ bool FORTE_eIXconfig::eventGen() {
 
   return true;
 }
+
