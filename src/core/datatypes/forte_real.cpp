@@ -43,7 +43,7 @@ int CIEC_REAL::fromString(const char *paValue){
   errno = 0;
   realval = forte_stringToFloat(pacRunner, &pcEnd);
 
-  if(pacRunner == pcEnd || !std::isfinite(realval) || errno != 0) {
+  if (pacRunner == pcEnd || errno != 0) {
     return -1;
   }
 
