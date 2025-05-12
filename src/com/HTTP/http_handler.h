@@ -120,13 +120,13 @@ class CHTTP_Handler : public CExternalEventHandler, public CThread, public forte
         CIEC_TIME mStartTime;
     };
 
-    std::vector<HTTPServerWaiting *> mServerLayers;
+    std::vector<HTTPServerWaiting> mServerLayers;
     CSyncObject mServerMutex;
 
-    std::vector<HTTPClientWaiting *> mClientLayers;
+    std::vector<HTTPClientWaiting> mClientLayers;
     CSyncObject mClientMutex;
 
-    std::vector<HTTPAcceptedSockets *> mAcceptedSockets;
+    std::vector<HTTPAcceptedSockets> mAcceptedSockets;
     CSyncObject mAcceptedMutex;
 
     CSemaphore mSuspendSemaphore;
