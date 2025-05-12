@@ -48,7 +48,6 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "rcX")
   forte_add_sourcefile_h(fortealloc.h ../forte_architecture_time.h)
   forte_add_sourcefile_cpp(forte_specific_architecture.cpp ../genforte_printer.cpp)
   forte_add_sourcefile_cpp(../genforte_fileio.cpp)
-  forte_add_sourcefile_cpp(../genforte_realFunctions.cpp)
 
   if(FORTE_COM_ETH)
    forte_add_sourcefile_hcpp(rcXSocketInterface)

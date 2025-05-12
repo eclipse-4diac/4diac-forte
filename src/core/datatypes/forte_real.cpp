@@ -27,7 +27,6 @@
 #include "forte_ulint.h"
 
 #include <forte_printer.h>
-#include "../../arch/forte_realFunctions.h"
 
 DEFINE_FIRMWARE_DATATYPE(REAL, g_nStringIdREAL)
 
@@ -41,7 +40,7 @@ int CIEC_REAL::fromString(const char *paValue){
   }
 
   errno = 0;
-  realval = forte_stringToFloat(pacRunner, &pcEnd);
+  realval = strtof(pacRunner, &pcEnd);
 
   if (pacRunner == pcEnd || errno != 0) {
     return -1;

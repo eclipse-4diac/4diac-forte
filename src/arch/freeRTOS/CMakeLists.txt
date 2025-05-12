@@ -71,7 +71,6 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "FreeRTOSLwIP")
   forte_add_sourcefile_cpp(../common/forte_specific_architecture.cpp)
   forte_add_sourcefile_cpp(../genforte_printer.cpp)
   forte_add_sourcefile_cpp(../genforte_fileio.cpp)
-  forte_add_sourcefile_cpp(../genforte_realFunctions.cpp)
 
   forte_add_to_executable_cpp(main)
 
