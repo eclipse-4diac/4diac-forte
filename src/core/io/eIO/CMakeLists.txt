@@ -13,8 +13,8 @@
 forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 SET(SOURCE_GROUP ${SOURCE_GROUP}\\eventTrigger)
 
-forte_add_sourcefile_h(EBuffer.h)
-forte_add_sourcefile_h(EConfig.h)
-forte_add_sourcefile_h(ESpec.h)
+forte_add_sourcefile_h(CeBuffer.h)
+forte_add_sourcefile_h(CeConfig.h)
+forte_add_sourcefile_h(CeSpec.h)
 
 add_subdirectory(io)

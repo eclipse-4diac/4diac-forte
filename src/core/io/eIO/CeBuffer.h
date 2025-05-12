@@ -19,9 +19,9 @@
 namespace forte::core::io {
 
   template<typename T, std::size_t size>
-  class EBuffer {
+  class CeBuffer {
     public:
-      EBuffer() = default;
+      CeBuffer() = default;
 
       bool push(T &elem) {
         mData[mPushIndex++ & cmIndexMask] = elem;

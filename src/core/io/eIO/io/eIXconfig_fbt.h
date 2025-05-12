@@ -25,7 +25,7 @@
 #include "eIX_fbt.h"
 #include "eConfigFB.h"
 
-class FORTE_eIXconfig final : public EConfigFB {
+class FORTE_eIXconfig final : public CeConfigFB {
   DECLARE_FIRMWARE_FB(FORTE_eIXconfig)
 
   private:

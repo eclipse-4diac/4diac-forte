@@ -26,7 +26,7 @@
 #include "eIW_fbt.h"
 #include "eConfigFB.h"
 
-class FORTE_eIWconfig final : public EConfigFB{
+class FORTE_eIWconfig final : public CeConfigFB{
   DECLARE_FIRMWARE_FB(FORTE_eIWconfig)
 
   private:

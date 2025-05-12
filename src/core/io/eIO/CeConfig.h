@@ -13,7 +13,7 @@
 #pragma once
 
 #include "extevhandlerhelper.h"
-#include "ESpec.h"
+#include "CeSpec.h"
 
 #include "devlog.h"
 
@@ -22,18 +22,18 @@ class FORTE_eGenAdapter;
  * This class handles the registration of event-triggers and
  * maintains a record of all registered event-triggers from this instance, within this instance.
  */
-class EConfig {
+class CeConfig {
   private:
     CProcessInterfaceFB *mPeer;
 
   protected:
-    std::vector<ESpecBase*> mEventGenList;
+    std::vector<CeSpecBase*> mEventGenList;
 
-   void registerEventTrigger(ESpecBase* paEvent) {
+   void registerEventTrigger(CeSpecBase* paEvent) {
      mEventGenList.push_back(paEvent);
    }
 
-   void deregisterEventTrigger(ESpecBase* paEvent) {
+   void deregisterEventTrigger(CeSpecBase* paEvent) {
      auto it = std::find(mEventGenList.begin(), mEventGenList.end(), paEvent);
      if(it != mEventGenList.end()) {
        mEventGenList.erase(it);
@@ -42,7 +42,7 @@ class EConfig {
    }
 
    void deregisterFBsEventTrigger() {
-    for (ESpecBase* eventSpec : mEventGenList) {
+    for (CeSpecBase* eventSpec : mEventGenList) {
      deregisterEventTrigger(eventSpec);
     }
    }

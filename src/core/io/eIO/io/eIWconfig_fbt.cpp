@@ -60,7 +60,7 @@ const SFBInterfaceSpec FORTE_eIWconfig::scmFBInterfaceSpec = {
 };
 
 FORTE_eIWconfig::FORTE_eIWconfig(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
-    EConfigFB(paInstanceNameId, scmFBInterfaceSpec, paContainer),
+    CeConfigFB(paInstanceNameId, scmFBInterfaceSpec, paContainer),
     var_QI(0_BOOL),
     var_ST(0_WORD),
     var_BT(0_WORD),
@@ -211,31 +211,31 @@ bool FORTE_eIWconfig::eventGen() {
   // deregister every already registered evert-trigger condition of this FB
   deregisterFBsEventTrigger();
 
-  ESpecBase* newEvent;
+  CeSpecBase* newEvent;
 
   // register bounded area event-trigger
   if (var_ST != 0 && var_BT  != 0) {
     DEVLOG_DEBUG("[eventGen] register eBA event\r\n");
-    newEvent = new EIO_BoundedArea(eIW, eIW->getHandle(), var_BT, var_ST);
+    newEvent = new CeIO_BoundedArea(eIW, eIW->getHandle(), var_BT, var_ST);
     registerEventTrigger(newEvent);
   } else {
     // register upper-threshold event-trigger
     if (var_ST != 0) {
       DEVLOG_DEBUG("[eventGen] register eUT event\r\n");
-      newEvent = new EIO_UpperThreshold(eIW, eIW->getHandle(), var_ST);
+      newEvent = new CeIO_UpperThreshold(eIW, eIW->getHandle(), var_ST);
       registerEventTrigger(newEvent);
     }
     // register bottum/lower-threshold event-trigger
     if (var_BT != 0) {
       DEVLOG_DEBUG("[eventGen] register eGR event\r\n");
-      newEvent = new EIO_LowerThreshold(eIW, eIW->getHandle(), var_BT);
+      newEvent = new CeIO_LowerThreshold(eIW, eIW->getHandle(), var_BT);
       registerEventTrigger(newEvent);
     }
   }
   // register gradient event-trigger
   if (var_GRAD != 0) {
     DEVLOG_DEBUG("[eventGen] register eGR event\r\n");
-    newEvent = new EIO_Gradient(eIW, eIW->getHandle(), var_GRAD);
+    newEvent = new CeIO_Gradient(eIW, eIW->getHandle(), var_GRAD);
     registerEventTrigger(newEvent);
   }
   /* REGISTER eTRIGGERS ===================================================================  END  === */

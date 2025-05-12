@@ -13,19 +13,19 @@
 #pragma once
 
 #include "core/funcbloc.h"
-#include "EConfig.h"
-#include "ESpec.h"
+#include "CeConfig.h"
+#include "CeSpec.h"
 
-class EConfigFB : public CFunctionBlock, public EConfig {
+class CeConfigFB : public CFunctionBlock, public CeConfig {
   public:
-    EConfigFB(const CStringDictionary::TStringId paInstanceNameId,const SFBInterfaceSpec& paInterfaceSpec, forte::core::CFBContainer &paContainer)
+    CeConfigFB(const CStringDictionary::TStringId paInstanceNameId,const SFBInterfaceSpec& paInterfaceSpec, forte::core::CFBContainer &paContainer)
     : CFunctionBlock(paContainer, paInterfaceSpec, paInstanceNameId) {}
 
     bool checkEventTriggersConf(CIEC_ANY *paValue) {
       bool result = false;
 
       // iterating through all event-triggered assigned from this FB
-      for (ESpecBase* eventSpec : mEventGenList) {
+      for (CeSpecBase* eventSpec : mEventGenList) {
         // fill the eventSpec buffer with inputs
         eventSpec->readToBuffer(paValue);
         if (eventSpec->checkCondition()) {

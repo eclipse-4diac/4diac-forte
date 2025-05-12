@@ -58,7 +58,7 @@ const SFBInterfaceSpec FORTE_eIXconfig::scmFBInterfaceSpec = {
 };
 
 FORTE_eIXconfig::FORTE_eIXconfig(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
-    EConfigFB(paInstanceNameId, scmFBInterfaceSpec, paContainer),
+    CeConfigFB(paInstanceNameId, scmFBInterfaceSpec, paContainer),
     var_QI(0_BOOL),
     var_FE(0_BOOL),
     var_RE(0_BOOL),
@@ -189,14 +189,14 @@ bool FORTE_eIXconfig::eventGen() {
   // register rising edge event-trigger
   if (var_RE) {
     DEVLOG_DEBUG("[eventGen] register eRE event\r\n");
-    auto *newEvent = new EIO_RisingEdge(eIX, eIX->getHandle());
+    auto *newEvent = new CeIO_RisingEdge(eIX, eIX->getHandle());
     registerEventTrigger(newEvent);
   }
 
   // register falling edge event-trigger
   if (var_FE) {
     DEVLOG_DEBUG("[eventGen] register eFE event\r\n");
-    auto *newEvent = new EIO_FallingEdge(eIX, eIX->getHandle());
+    auto *newEvent = new CeIO_FallingEdge(eIX, eIX->getHandle());
     registerEventTrigger(newEvent);
   }
   /* REGISTER eTRIGGERS ===================================================================  END  === */
