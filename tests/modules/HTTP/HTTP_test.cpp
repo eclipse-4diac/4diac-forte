@@ -207,77 +207,61 @@ BOOST_AUTO_TEST_CASE(parseGetRequest_test) {
   std::string invalidPath = "GET /pathHTTP/1.1\r\n"s;
 
   std::string path;
-  CSinglyLinkedList<std::string> parameterNames;
-  CSinglyLinkedList<std::string> parameterValues;
+  std::vector<std::string> parameterNames;
+  std::vector<std::string> parameterValues;
 
   BOOST_TEST(true == forte::com_infra::CHttpParser::parseGetRequest(path, parameterNames, parameterValues,
                                                                     resultValidNoParameters.data()));
   BOOST_TEST(path == "/"s);
-  BOOST_TEST(true == parameterNames.isEmpty());
-  BOOST_TEST(true == parameterValues.isEmpty());
+  BOOST_TEST(true == parameterNames.empty());
+  BOOST_TEST(true == parameterValues.empty());
 
   BOOST_TEST(true == forte::com_infra::CHttpParser::parseGetRequest(path, parameterNames, parameterValues,
                                                                     resultValidNoParameters2.data()));
   BOOST_TEST(path == "/path/to/look"s);
-  BOOST_TEST(true == parameterNames.isEmpty());
-  BOOST_TEST(true == parameterValues.isEmpty());
+  BOOST_TEST(true == parameterNames.empty());
+  BOOST_TEST(true == parameterValues.empty());
 
   BOOST_TEST(true == forte::com_infra::CHttpParser::parseGetRequest(path, parameterNames, parameterValues,
                                                                     resultValidParam.data()));
   BOOST_TEST(path == "/"s);
 
-  CSinglyLinkedList<std::string>::Iterator namesIter = parameterNames.begin();
-  CSinglyLinkedList<std::string>::Iterator valuesIter = parameterValues.begin();
+  BOOST_TEST(parameterNames[0] == "key1"s);
+  BOOST_TEST(parameterValues[0] == "val1"s);
 
-  BOOST_TEST((*namesIter) == "key1"s);
-  BOOST_TEST((*valuesIter) == "val1"s);
-
-  parameterNames.clearAll();
-  parameterValues.clearAll();
+  parameterNames.clear();
+  parameterValues.clear();
 
   BOOST_TEST(true, forte::com_infra::CHttpParser::parseGetRequest(path, parameterNames, parameterValues,
                                                                   resultValidParams.data()));
   BOOST_TEST(path == "/");
 
-  namesIter = parameterNames.begin();
-  valuesIter = parameterValues.begin();
+  BOOST_TEST(parameterNames[0] == "key1"s);
+  BOOST_TEST(parameterValues[0] == "val1"s);
+  BOOST_TEST(parameterNames[1] == "key2"s);
+  BOOST_TEST(parameterValues[1] == "val2"s);
 
-  BOOST_TEST((*namesIter) == "key1"s);
-  BOOST_TEST((*valuesIter) == "val1"s);
-  ++namesIter;
-  ++valuesIter;
-  BOOST_TEST((*namesIter) == "key2"s);
-  BOOST_TEST((*valuesIter) == "val2"s);
-
-  parameterNames.clearAll();
-  parameterValues.clearAll();
+  parameterNames.clear();
+  parameterValues.clear();
 
   BOOST_TEST(true == forte::com_infra::CHttpParser::parseGetRequest(path, parameterNames, parameterValues,
                                                                     resultValidParam2.data()));
   BOOST_TEST(path == "/path/to/look"s);
 
-  namesIter = parameterNames.begin();
-  valuesIter = parameterValues.begin();
+  BOOST_TEST(parameterNames[0] == "key1"s);
+  BOOST_TEST(parameterValues[0] == "val1"s);
 
-  BOOST_TEST((*namesIter) == "key1"s);
-  BOOST_TEST((*valuesIter) == "val1"s);
-
-  parameterNames.clearAll();
-  parameterValues.clearAll();
+  parameterNames.clear();
+  parameterValues.clear();
 
   BOOST_TEST(true == forte::com_infra::CHttpParser::parseGetRequest(path, parameterNames, parameterValues,
                                                                     resultValidParams2.data()));
   BOOST_TEST(path == "/path/to/look"s);
 
-  namesIter = parameterNames.begin();
-  valuesIter = parameterValues.begin();
-
-  BOOST_TEST((*namesIter) == "key1"s);
-  BOOST_TEST((*valuesIter) == "val1");
-  ++namesIter;
-  ++valuesIter;
-  BOOST_TEST((*namesIter) == "key2"s);
-  BOOST_TEST((*valuesIter) == "val2"s);
+  BOOST_TEST(parameterNames[0] == "key1"s);
+  BOOST_TEST(parameterValues[0] == "val1");
+  BOOST_TEST(parameterNames[1] == "key2"s);
+  BOOST_TEST(parameterValues[1] == "val2"s);
 
   BOOST_TEST(false ==
              forte::com_infra::CHttpParser::parseGetRequest(path, parameterNames, parameterValues, invalidGET.data()));

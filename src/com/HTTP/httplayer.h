@@ -24,6 +24,8 @@
 #include "ipcomlayer.h"
 #include "core/util/parameterParser.h"
 
+#include <vector>
+
 namespace forte {
 
   namespace com_infra {
@@ -36,8 +38,8 @@ namespace forte {
         EComResponse sendData(void *paData, unsigned int paSize) override; // top interface, called from top
         EComResponse recvData(const void *paData, unsigned int paSize) override;
 
-        EComResponse recvServerData(CSinglyLinkedList<std::string> &paParameterNames,
-                                    CSinglyLinkedList<std::string> &paParameterValues);
+        EComResponse recvServerData(std::vector<std::string> &paParameterNames,
+                                    std::vector<std::string> &paParameterValues);
 
         EComResponse openConnection(char *paLayerParameter) override;
 

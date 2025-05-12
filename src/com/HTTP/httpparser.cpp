@@ -76,8 +76,8 @@ bool CHttpParser::parseResponse(std::string &paBody, std::string &paResponseCode
 }
 
 bool forte::com_infra::CHttpParser::parseGetRequest(std::string &paPath,
-                                                    CSinglyLinkedList<std::string> &paParameterNames,
-                                                    CSinglyLinkedList<std::string> &paParameterValues,
+                                                    std::vector<std::string> &paParameterNames,
+                                                    std::vector<std::string> &paParameterValues,
                                                     char *paData) {
   if (0 == strncmp(paData, "GET ", 4)) {
     paData = paData + 4;
@@ -209,10 +209,10 @@ bool CHttpParser::getHttpResponseCode(std::string &paDest, char *paSrc) {
 }
 
 unsigned int forte::com_infra::CHttpParser::parseGETParameters(char *paParameters,
-                                                               CSinglyLinkedList<std::string> &paParameterNames,
-                                                               CSinglyLinkedList<std::string> &paParameterValues) {
-  paParameterNames.clearAll();
-  paParameterValues.clearAll();
+                                                               std::vector<std::string> &paParameterNames,
+                                                               std::vector<std::string> &paParameterValues) {
+  paParameterNames.clear();
+  paParameterValues.clear();
 
   unsigned int retVal = 0;
 
@@ -224,8 +224,8 @@ unsigned int forte::com_infra::CHttpParser::parseGETParameters(char *paParameter
       *startOfValue = '\0';
       startOfValue++;
     } else {
-      paParameterNames.clearAll();
-      paParameterValues.clearAll();
+      paParameterNames.clear();
+      paParameterValues.clear();
       retVal = 0;
       break;
     }
@@ -236,8 +236,8 @@ unsigned int forte::com_infra::CHttpParser::parseGETParameters(char *paParameter
     } else {
       endOfParameters = true;
     }
-    paParameterNames.pushBack(std::string(startOfName));
-    paParameterValues.pushBack(std::string(startOfValue));
+    paParameterNames.push_back(std::string(startOfName));
+    paParameterValues.push_back(std::string(startOfValue));
     retVal++;
     if (!endOfParameters) {
       startOfName = ++nextName;

@@ -27,6 +27,8 @@
 #include "comCallback.h"
 #include "forte_date_and_time.h"
 
+#include <vector>
+
 // cppcheck-suppress noConstructor
 class CHTTP_Handler : public CExternalEventHandler, public CThread, public forte::com_infra::CComCallback {
     DECLARE_HANDLER(CHTTP_Handler)
@@ -104,8 +106,7 @@ class CHTTP_Handler : public CExternalEventHandler, public CThread, public forte
     struct HTTPServerWaiting {
         forte::com_infra::CHttpComLayer *mLayer;
         std::string mPath;
-        CSinglyLinkedList<CIPComSocketHandler::TSocketDescriptor>
-            mSockets; // to handle many connections to the same path
+        std::vector<CIPComSocketHandler::TSocketDescriptor> mSockets; // to handle many connections to the same path
     };
 
     struct HTTPClientWaiting {
@@ -119,13 +120,13 @@ class CHTTP_Handler : public CExternalEventHandler, public CThread, public forte
         CIEC_TIME mStartTime;
     };
 
-    CSinglyLinkedList<HTTPServerWaiting *> mServerLayers;
+    std::vector<HTTPServerWaiting *> mServerLayers;
     CSyncObject mServerMutex;
 
-    CSinglyLinkedList<HTTPClientWaiting *> mClientLayers;
+    std::vector<HTTPClientWaiting *> mClientLayers;
     CSyncObject mClientMutex;
 
-    CSinglyLinkedList<HTTPAcceptedSockets *> mAcceptedSockets;
+    std::vector<HTTPAcceptedSockets *> mAcceptedSockets;
     CSyncObject mAcceptedMutex;
 
     CSemaphore mSuspendSemaphore;

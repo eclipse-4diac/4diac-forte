@@ -254,28 +254,22 @@ EComResponse CHttpComLayer::recvData(const void *paData, unsigned int paSize) {
   return mInterruptResp;
 }
 
-EComResponse forte::com_infra::CHttpComLayer::recvServerData(CSinglyLinkedList<std::string> &,
-                                                             CSinglyLinkedList<std::string> &paParameterValues) {
+EComResponse forte::com_infra::CHttpComLayer::recvServerData(std::vector<std::string> &,
+                                                             std::vector<std::string> &paParameterValues) {
   // for now, the parameterNames are not taken in account, and the parameters are put in the same order they arrived
 
   mInterruptResp = e_Nothing;
   bool failed = false;
   if (0 < mFb->getNumSD()) {
-    unsigned int noOfParameters = 0;
-    for (CSinglyLinkedList<std::string>::Iterator iter = paParameterValues.begin(); iter != paParameterValues.end();
-         ++iter) {
-      noOfParameters++;
-    }
 
-    if (noOfParameters == mFb->getNumRD()) {
-      noOfParameters = 0;
-      for (CSinglyLinkedList<std::string>::Iterator iter = paParameterValues.begin(); iter != paParameterValues.end();
-           ++iter) {
-        mFb->getRDs()[noOfParameters++]->setValue(CIEC_STRING(*iter));
+    if (paParameterValues.size() == mFb->getNumRD()) {
+      auto noOfParameters = 0;
+      for (const auto &parameterValue : paParameterValues) {
+        mFb->getRDs()[noOfParameters++]->setValue(CIEC_STRING(parameterValue));
       }
     } else {
       DEVLOG_ERROR("[HTTP Layer] FB with path %s received a number of parameters of %u, while it has %u SDs\n",
-                   mPath.c_str(), static_cast<TForteUInt16>(noOfParameters), mFb->getNumRD());
+                   mPath.c_str(), static_cast<TForteUInt16>(paParameterValues.size()), mFb->getNumRD());
       failed = true;
     }
   }

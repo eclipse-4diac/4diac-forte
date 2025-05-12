@@ -19,7 +19,8 @@
 
 #include <forte_string.h>
 #include "httplayer.h"
-#include "fortelist.h"
+
+#include <vector>
 
 namespace forte {
 
@@ -89,8 +90,8 @@ namespace forte {
          * @return true if no error happened, false otherwise
          */
         static bool parseGetRequest(std::string &paPath,
-                                    CSinglyLinkedList<std::string> &paParameterNames,
-                                    CSinglyLinkedList<std::string> &paParameterValues,
+                                    std::vector<std::string> &paParameterNames,
+                                    std::vector<std::string> &paParameterValues,
                                     char *paData);
 
         /**
@@ -165,8 +166,8 @@ namespace forte {
          * parameters, meaning it returns zero
          */
         static unsigned int parseGETParameters(char *paParameters,
-                                               CSinglyLinkedList<std::string> &paParameterNames,
-                                               CSinglyLinkedList<std::string> &paParameterValues);
+                                               std::vector<std::string> &paParameterNames,
+                                               std::vector<std::string> &paParameterValues);
     };
   } // namespace com_infra
 } // namespace forte
