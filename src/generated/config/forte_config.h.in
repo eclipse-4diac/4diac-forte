@@ -1,0 +1,30 @@
+/*******************************************************************************
+ * Copyright (c) 2005 - 2014 ACIN, Profactor GmbH, fortiss GmbH
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ *
+ * Contributors:
+ *   Alois Zoitl, Martin Melik Merkumians, Ingo Hegny, Michael Hofmann
+ *     - initial API and implementation and/or initial documentation
+ *******************************************************************************/
+#pragma once
+
+#include <arch/datatype.h>
+
+//! Define the number of times the CTimerHandler will be called per second.
+const TForteUInt32 cgForteTicksPerSecond = ${FORTE_TicksPerSecond};
+
+//! Define the initial size of the event chain list used in the event chain execution thread.
+const unsigned int cgEventChainEventListSize = ${FORTE_EventChainEventListSize};
+
+//! Define the initial size of the event chain's external event list.
+const unsigned int cgEventChainExternalEventListSize = ${FORTE_EventChainExternalEventListSize};
+
+//! Defines the number of pending communication messages can be handled by a communication function block
+const unsigned int cgCommunicationInterruptQueueSize = ${FORTE_CommunicationInterruptQueueSize};
+
+//! Buffer size in bytes to be used by the ip layer as receive buffer.
+const unsigned int cgIPLayerRecvBufferSize = ${FORTE_IPLayerRecvBufferSize};

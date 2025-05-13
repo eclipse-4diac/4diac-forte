@@ -10,45 +10,31 @@
  *    Jose Cabral - initial API and implementation and/or initial documentation
  *******************************************************************************/
 
-#ifndef FORTE_DEVICE_FACTORY_H
-#define FORTE_DEVICE_FACTORY_H
+#pragma once
 
 #include <memory>
 #include <string>
 
-#ifdef FORTE_MULTIPLE_DEVICES
+#if ${multiple}
+#define FORTE_MULTIPLE_DEVICES
 
 class CDevice;
 
 namespace DeviceFactory {
-
-  enum class AvailableDevices {${DEVICE_ENUM}
-  };
-
   std::unique_ptr<CDevice> createDevice(const std::string &paMGRID);
-
-  void setDeviceToCreate(AvailableDevices paDevice);
-
   bool setDeviceToCreate(std::string paDevice);
-
   std::string getAvailableDevices();
-
   std::string getCurrentDeviceToCreate();
-
 };
 
-#else // FORTE_MULTIPLE_DEVICES
+#else
 
-${SINGLE_DEVICE_INCLUDE}
+${includes}
 
 namespace DeviceFactory {
-
-  std::unique_ptr<CDevice> createDevice(const std::string &paMGRID) {
-  ${SINGLE_DEVICE_CREATE}
+  inline std::unique_ptr<CDevice> createDevice(const std::string &paMGRID) {
+    return (paMGRID.length() != 0) ? std::make_unique<${items}>(paMGRID) : std::make_unique<${items}>();
   }
-
 }
-#endif // FORTE_MULTIPLE_DEVICES
 
-
-#endif // FORTE_DEVICE_FACTORY_H
+#endif
