@@ -16,12 +16,15 @@
 #include <string.h>
 #include <stdlib.h>
 
-#ifdef FORTE_MULTIPLE_DEVICES
-#include "deviceFactory.h"
-#endif // FORTE_MULTIPLE_DEVICES
-
 #ifdef FORTE_TRACE_CTF
 #include <string>
+#endif
+
+#ifdef FORTE_SUPPORT_BOOT_FILE
+#include "stdfblib/ita/ForteBootFileLoader.h"
+#endif
+#ifdef FORTE_COM_HTTP
+#include "com/HTTP/http_handler.h"
 #endif
 
 /*!\brief Lists the help for FORTE
