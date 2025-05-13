@@ -38,7 +38,7 @@ USE_STRING_ID(SPLIT_BYTE_INTO_QUARTERS);
 #include "forte_array.h"
 #include "forte_array_fixed.h"
 #include "forte_array_variable.h"
-#include "quarterconst_gcf.h"
+#include "../const/quarterconst_gcf.h"
 
 DEFINE_FIRMWARE_FB(FORTE_SPLIT_BYTE_INTO_QUARTERS, STRID(SPLIT_BYTE_INTO_QUARTERS))
 

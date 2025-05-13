@@ -23,7 +23,7 @@
 #include "forte_sem.h"
 #include "arch/devlog.h"
 #include "arch/utils/timespec_utils.h"
-#include <criticalregion.h>
+#include "core/util/criticalregion.h"
 
 namespace forte {
   namespace arch {

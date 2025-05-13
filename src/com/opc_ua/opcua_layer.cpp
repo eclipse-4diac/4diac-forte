@@ -25,7 +25,7 @@
 #include "../../arch/devlog.h"
 #include <cstddef>
 #include <forte_string.h>
-#include <criticalregion.h>
+#include "core/util/criticalregion.h"
 #include "opcua_action_info.h"
 #include "opcua_remote_handler.h"
 #include "opcua_objectstruct_helper.h"

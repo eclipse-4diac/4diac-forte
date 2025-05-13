@@ -12,7 +12,7 @@
  *******************************************************************************/
 #include "EplXmlReader.h"
 
-#include <string_utils.h>
+#include "core/util/string_utils.h"
 #include <cstdlib>
 #include <iostream>
 #include <fstream>

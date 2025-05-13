@@ -11,7 +11,7 @@
  *******************************************************************************/
 
 #include <string.h>
-#include <criticalregion.h>
+#include "core/util/criticalregion.h"
 #include <commfb.h>
 #include "fmuHandler.h"
 #include "../fmuInstance.h"

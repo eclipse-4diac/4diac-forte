@@ -52,7 +52,7 @@ USE_STRING_ID(REQ);
 #include "forte_array.h"
 #include "forte_array_fixed.h"
 #include "forte_array_variable.h"
-#include "quarterconst_gcf.h"
+#include "../const/quarterconst_gcf.h"
 #include "ASSEMBLE_DWORD_FROM_QUARTERS_fct.h"
 
 DEFINE_FIRMWARE_FB(FORTE_ASSEMBLE_DWORD_FROM_QUARTERS, STRID(ASSEMBLE_DWORD_FROM_QUARTERS))

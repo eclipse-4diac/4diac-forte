@@ -13,7 +13,7 @@
 
 #pragma once
 
-#include <criticalregion.h>
+#include "core/util/criticalregion.h"
 #include "../devlog.h"
 #include "../core/datatypes/forte_time.h"
 #include <forte_sem.h>

@@ -44,7 +44,7 @@ USE_STRING_ID(WORD);
 #include "forte_array.h"
 #include "forte_array_fixed.h"
 #include "forte_array_variable.h"
-#include "quarterconst_gcf.h"
+#include "../const/quarterconst_gcf.h"
 
 DEFINE_FIRMWARE_FB(FORTE_SPLIT_WORD_INTO_QUARTERS, STRID(SPLIT_WORD_INTO_QUARTERS))
 

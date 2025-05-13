@@ -12,7 +12,7 @@
  *******************************************************************************/
 
 #include "basecommfb.h"
-#include "parameterParser.h"
+#include "core/util/parameterParser.h"
 #include "structmembercomlayer.h"
 #include "typelib.h"
 #include <string>

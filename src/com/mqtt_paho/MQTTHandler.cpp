@@ -17,7 +17,7 @@
 
 #include "MQTTHandler.h"
 #include "../../core/cominfra/commfb.h"
-#include <criticalregion.h>
+#include "core/util/criticalregion.h"
 
 #include "MQTTClient.h"
 

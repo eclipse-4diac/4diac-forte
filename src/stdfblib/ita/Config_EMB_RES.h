@@ -12,8 +12,8 @@
  *******************************************************************************/
 #pragma once
 
-#include "../../core/resource.h"
-#include "E_RESTART_fbt.h"
+#include "core/resource.h"
+#include "stdfblib/events/E_RESTART_fbt.h"
 
 class Config_EMB_RES final : public CResource {
     DECLARE_FIRMWARE_FB(Config_EMB_RES);

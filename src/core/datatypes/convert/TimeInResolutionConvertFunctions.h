@@ -16,7 +16,7 @@
 #define SRC_CORE_DATATYPES_CONVERT_TIMEINRESOLUTIONCONVERTFUNCTIONS_H_
 
 #include "iec61131_cast_helper.h"
-#include "forte_constants.h"
+#include "core/util/forte_constants.h"
 
 /*********************************************************************************************
  *   TIME_IN_<RESOLUTION>_TO_* functions - custom non-standard functions

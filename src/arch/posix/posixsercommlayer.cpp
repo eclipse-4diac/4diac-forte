@@ -19,7 +19,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <sockhand.h>
-#include <criticalregion.h>
+#include "core/util/criticalregion.h"
 
 CPosixSerCommLayer::CPosixSerCommLayer(forte::com_infra::CComLayer *paUpperLayer, forte::com_infra::CBaseCommFB *paFB) :
     CSerialComLayerBase(paUpperLayer, paFB) {

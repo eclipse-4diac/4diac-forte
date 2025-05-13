@@ -13,8 +13,8 @@
 #ifndef _EMB_RES_H_
 #define _EMB_RES_H_
 
-#include "../../core/resource.h"
-#include "E_RESTART_fbt.h"
+#include "core/resource.h"
+#include "stdfblib/events/E_RESTART_fbt.h"
 
 class EMB_RES : public CResource {
     DECLARE_FIRMWARE_FB(EMB_RES);

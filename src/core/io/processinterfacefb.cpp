@@ -18,7 +18,7 @@
  *                      interface elements
  *******************************************************************************/
 
-#include <processinterfacefb.h>
+#include "core/io/processinterfacefb.h"
 
 using namespace forte::core::io;
 using namespace std::string_literals;

@@ -17,7 +17,7 @@
 #include "fbtestfixture.h"
 #include "fbtesterglobalfixture.h"
 #include "device.h"
-#include <criticalregion.h>
+#include "core/util/criticalregion.h"
 #include <ecet.h>
 
 #ifdef WIN32

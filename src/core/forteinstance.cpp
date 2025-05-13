@@ -14,7 +14,7 @@
  *******************************************************************************/
 
 #include "forteinstance.h"
-#include "deviceFactory.h"
+#include "generated/deviceFactory.h"
 
 C4diacFORTEInstance::~C4diacFORTEInstance() {
   if (mActiveDevice) {

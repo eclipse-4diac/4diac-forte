@@ -15,7 +15,7 @@
  *******************************************************************************/
 
 #include "forte_architecture_time.h"
-#include "forte_constants.h"
+#include "core/util/forte_constants.h"
 #include <zephyr/kernel.h>
 
 uint_fast64_t getNanoSecondsMonotonicArch() {

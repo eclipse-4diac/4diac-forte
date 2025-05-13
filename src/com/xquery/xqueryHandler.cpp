@@ -11,7 +11,7 @@
 #include "xqueryHandler.h"
 
 #include <commfb.h>
-#include <criticalregion.h>
+#include "core/util/criticalregion.h"
 #include "forte_string.h"
 #include "../../arch/devlog.h"
 #include "xqueryClientLayer.h"

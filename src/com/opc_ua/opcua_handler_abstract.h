@@ -15,7 +15,7 @@
 
 #include <extevhan.h>
 #include <esfb.h>
-#include <opcua_action_info.h>
+#include "com/opc_ua/opcua_action_info.h"
 
 /**
  * Base class for the local and remote handler. It defines the three major function to be executed in an action

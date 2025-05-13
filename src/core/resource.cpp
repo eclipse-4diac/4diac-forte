@@ -29,7 +29,7 @@ USE_STRING_ID(START);
 
 #include "adapter.h"
 #include "adapterconn.h"
-#include "core/ecetFactory.h"
+#include "generated/ecetFactory.h"
 #include "device.h"
 #include "negdataconn.h"
 #include "string_utils.h"

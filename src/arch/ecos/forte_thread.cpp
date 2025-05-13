@@ -11,7 +11,7 @@
  *   Alois Zoitl - extracted common functions to new base class CThreadBase
  *******************************************************************************/
 #include <fortenew.h>
-#include <criticalregion.h>
+#include "core/util/criticalregion.h"
 #include "forte_thread.h"
 #include <unistd.h>
 

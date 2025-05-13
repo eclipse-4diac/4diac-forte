@@ -17,7 +17,7 @@
 #include "io_handle.h"
 #include "io_observer.h"
 #include <devlog.h>
-#include "criticalregion.h"
+#include "core/util/criticalregion.h"
 
 using namespace forte::core::io;
 

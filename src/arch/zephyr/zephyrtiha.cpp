@@ -13,7 +13,7 @@
 #include "../../core/devexec.h"
 #include "fortenew.h"
 #include "zephyrtiha.h"
-#include "forte_constants.h"
+#include "core/util/forte_constants.h"
 
 #ifndef K_FP_REGS
 #define K_FP_REGS 0

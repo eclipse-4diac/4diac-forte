@@ -19,7 +19,7 @@
 #include <cstring>
 #include <signal.h>
 #include <unistd.h>
-#include <criticalregion.h>
+#include "core/util/criticalregion.h"
 
 forte::arch::CThreadBase<pthread_t>::TThreadHandleType CPosixThread::createThread(long paStackSize) {
   TThreadHandleType retVal = 0;

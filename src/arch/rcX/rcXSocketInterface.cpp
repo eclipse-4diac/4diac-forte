@@ -16,7 +16,7 @@
 #include "devlog.h"
 #include "../../core/devexec.h"
 #include "../core/cominfra/commfb.h"
-#include <criticalregion.h>
+#include "core/util/criticalregion.h"
 #include <string.h>
 #include <forte_config.h>
 

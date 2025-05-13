@@ -16,7 +16,7 @@
 
 #include "../processinterfacefb.h"
 #include "../configFB/io_configFB_controller.h"
-#include "criticalregion.h"
+#include "core/util/criticalregion.h"
 
 using namespace forte::core::io;
 
