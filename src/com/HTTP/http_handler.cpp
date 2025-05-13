@@ -19,12 +19,13 @@
 #include "../../core/devexec.h"
 #include "../../core/iec61131_functions.h"
 #include "../../core/cominfra/basecommfb.h"
-#include <criticalregion.h>
+#include "core/util/criticalregion.h"
 #include "httpparser.h"
 #include <forte_printer.h>
 #include "comlayer.h"
 #include <forte_config.h>
 #include <string>
+#include "generated/com_HTTP_defines.h"
 
 using namespace forte::com_infra;
 using namespace std::string_literals;

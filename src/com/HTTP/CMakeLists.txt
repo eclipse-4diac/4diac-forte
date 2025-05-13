@@ -32,4 +32,7 @@ target_link_libraries(forte PRIVATE forte-com-http)
 forte_register_handler(CHTTP_Handler http_handler.h)
 
 set(FORTE_COM_HTTP_LISTENING_PORT "80" CACHE STRING "HTTP Listening Port")
-target_compile_definitions(forte-com-http PRIVATE FORTE_COM_HTTP_LISTENING_PORT=${FORTE_COM_HTTP_LISTENING_PORT})
+file(GENERATE
+  OUTPUT "${FORTE_GENERATED_FILES_DIR}/com_HTTP_defines.h"
+  CONTENT "#define FORTE_COM_HTTP_LISTENING_PORT ${FORTE_COM_HTTP_LISTENING_PORT}"
+)
