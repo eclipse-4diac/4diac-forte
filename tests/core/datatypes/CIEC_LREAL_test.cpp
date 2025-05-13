@@ -197,15 +197,37 @@ BOOST_AUTO_TEST_CASE(ToString_Tests)
   BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 7), 3);
   BOOST_CHECK_EQUAL(strcmp(cBuffer, "3.0"), 0);
 
-  nTest = CIEC_REAL(10.0);
+  nTest = CIEC_LREAL(10.0);
   BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 7), 4);
   BOOST_CHECK_EQUAL(strcmp(cBuffer, "10.0"), 0);
+
+  nTest = CIEC_LREAL(INFINITY);
+  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 7), 3);
+  BOOST_CHECK_EQUAL(strcmp(cBuffer, "inf"), 0);
+
+  nTest = CIEC_LREAL(-INFINITY);
+  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 7), 4);
+  BOOST_CHECK_EQUAL(strcmp(cBuffer, "-inf"), 0);
+
+  nTest = CIEC_LREAL(NAN);
+  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 7), 3);
+  BOOST_CHECK_EQUAL(strcmp(cBuffer, "nan"), 0);
+
+#ifndef _MSC_VER //FIXME enable tests for MSVC after switching to std::format
+  nTest = CIEC_LREAL(-NAN);
+  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 7), 4);
+  BOOST_CHECK_EQUAL(strcmp(cBuffer, "-nan"), 0);
+#endif
 }
 
-void lRealTypedFromString(const char *paTestString, double paResult){
+void lRealTypedFromString(const char *paTestString, double paResult) {
   CIEC_LREAL nTest;
-  BOOST_CHECK_EQUAL(nTest.fromString(paTestString), strlen(paTestString));
-  BOOST_CHECK_EQUAL(paResult, static_cast<CIEC_LREAL::TValueType>(nTest));
+  BOOST_TEST(nTest.fromString(paTestString) == strlen(paTestString));
+  if (std::isnormal(paResult) || std::isinf(paResult)) {
+    BOOST_TEST(paResult == static_cast<CIEC_LREAL::TValueType>(nTest));
+  } else if (std::isnan(paResult)) {
+    BOOST_TEST(std::isnan(static_cast<CIEC_LREAL::TValueType>(nTest)));
+  }
 }
 
 void faultingLRealTypedFromString(const char *paTestString){
@@ -219,6 +241,15 @@ BOOST_AUTO_TEST_CASE(REAL_typed_fromString_tests){
   lRealTypedFromString("LREAL#-4.2345e4",-4.2345e4);
   lRealTypedFromString("LREAL#0",0.0);
   lRealTypedFromString("LREAL#3.2523E15",3.2523E15);
+
+  lRealTypedFromString("LREAL#inf", INFINITY);
+  lRealTypedFromString("LREAL#-inf", -INFINITY);
+  lRealTypedFromString("LREAL#nan", NAN);
+  lRealTypedFromString("LREAL#-nan", NAN);
+  lRealTypedFromString("LREAL#Infinity", INFINITY);
+  lRealTypedFromString("LREAL#-Infinity", -INFINITY);
+  lRealTypedFromString("LREAL#NaN", NAN);
+  lRealTypedFromString("LREAL#-NaN", NAN);
 
   faultingLRealTypedFromString("LREAL#4e401");
   faultingLRealTypedFromString("LREAL#-4e401");

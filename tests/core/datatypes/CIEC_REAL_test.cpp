@@ -203,29 +203,58 @@ BOOST_AUTO_TEST_CASE(ToString_Tests) {
   nTest = CIEC_REAL(10.0f);
   BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 7), 4);
   BOOST_CHECK_EQUAL(strcmp(cBuffer, "10.0"), 0);
+
+  nTest = CIEC_REAL(INFINITY);
+  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 7), 3);
+  BOOST_CHECK_EQUAL(strcmp(cBuffer, "inf"), 0);
+
+  nTest = CIEC_REAL(-INFINITY);
+  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 7), 4);
+  BOOST_CHECK_EQUAL(strcmp(cBuffer, "-inf"), 0);
+
+  nTest = CIEC_REAL(NAN);
+  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 7), 3);
+  BOOST_CHECK_EQUAL(strcmp(cBuffer, "nan"), 0);
+
+#ifndef _MSC_VER //FIXME enable tests for MSVC after switching to std::format
+  nTest = CIEC_REAL(-NAN);
+  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 7), 4);
+  BOOST_CHECK_EQUAL(strcmp(cBuffer, "-nan"), 0);
+#endif
 }
 
-void realTypedFromString(const char *paTestString, float paResult){
+void realTypedFromString(const char *paTestString, float paResult) {
   CIEC_REAL nTest;
-  BOOST_CHECK_EQUAL(nTest.fromString(paTestString), strlen(paTestString));
-  BOOST_CHECK_EQUAL(paResult, nTest);
+  BOOST_TEST(nTest.fromString(paTestString) == strlen(paTestString));
+  if (std::isnormal(paResult) || std::isinf(paResult)) {
+    BOOST_TEST(paResult == static_cast<CIEC_REAL::TValueType>(nTest));
+  } else if (std::isnan(paResult)) {
+    BOOST_TEST(std::isnan(static_cast<CIEC_REAL::TValueType>(nTest)));
+  }
 }
 
-void faultingRealTypedFromString(const char *paTestString){
+void faultingRealTypedFromString(const char *paTestString) {
   CIEC_REAL nTest;
   BOOST_CHECK_EQUAL(nTest.fromString(paTestString), -1);
 }
 
-
-BOOST_AUTO_TEST_CASE(REAL_typed_fromString_tests){
+BOOST_AUTO_TEST_CASE(REAL_typed_fromString_tests) {
   realTypedFromString("REAL#1E37", 1e37f);
   realTypedFromString("REAL#-4.2345e4",-4.2345e4f);
   realTypedFromString("REAL#0",0.0f);
   realTypedFromString("REAL#0.0",0.0f);
 
+  realTypedFromString("REAL#inf", INFINITY);
+  realTypedFromString("REAL#-inf", -INFINITY);
+  realTypedFromString("REAL#nan", NAN);
+  realTypedFromString("REAL#-nan", -NAN);
+  realTypedFromString("REAL#Infinity", INFINITY);
+  realTypedFromString("REAL#-Infinity", -INFINITY);
+  realTypedFromString("REAL#NaN", NAN);
+  realTypedFromString("REAL#-NaN", -NAN);
+
   faultingRealTypedFromString("REAL#4e40");
   faultingRealTypedFromString("REAL#NOT A VALID STRING");
 }
-
 
 BOOST_AUTO_TEST_SUITE_END()
