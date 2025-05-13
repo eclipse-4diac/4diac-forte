@@ -87,7 +87,7 @@ class EmbrickBusHandler : public forte::core::io::IODeviceMultiController {
 
         HandleDescriptor(std::string const &paId,
                          forte::core::io::IOMapper::Direction paDirection,
-                         int paSlaveIndex,
+                         size_t paSlaveIndex,
                          HandleType paType,
                          uint8_t paOffset,
                          uint8_t paPosition) :
@@ -100,11 +100,11 @@ class EmbrickBusHandler : public forte::core::io::IODeviceMultiController {
 
     void setConfig(struct forte::core::io::IODeviceController::Config *paConfig);
 
-    EmbrickSlaveHandler *getSlave(int paIndex);
-    void forceUpdate(int paIndex);
+    EmbrickSlaveHandler *getSlave(size_t paIndex);
+    void forceUpdate(size_t paIndex);
 
-    void addSlaveHandle(int paIndex, std::unique_ptr<forte::core::io::IOHandle> paHandle) override;
-    void dropSlaveHandles(int paIndex);
+    void addSlaveHandle(size_t paIndex, std::unique_ptr<forte::core::io::IOHandle> paHandle) override;
+    void dropSlaveHandles(size_t paIndex);
 
   protected:
     const char *init();
@@ -148,7 +148,7 @@ class EmbrickBusHandler : public forte::core::io::IODeviceMultiController {
     // Slaves
     typedef CSinglyLinkedList<EmbrickSlaveHandler *> TSlaveList;
     TSlaveList *mSlaves;
-    int mSlaveCount;
+    size_t mSlaveCount;
 
     // Sync
     bool mLoopActive;
@@ -170,8 +170,8 @@ class EmbrickBusHandler : public forte::core::io::IODeviceMultiController {
     SEntry *mSNext;
 
   private:
-    bool isSlaveAvailable(int paIndex);
-    bool checkSlaveType(int paIndex, int paType);
+    bool isSlaveAvailable(size_t paIndex);
+    bool checkSlaveType(size_t paIndex, int paType);
 
     uint64_t micros();
     unsigned long millis();

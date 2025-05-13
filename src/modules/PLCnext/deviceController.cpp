@@ -71,7 +71,7 @@ void PLCnextDeviceController::runLoop() {
   }
 }
 
-PLCnextSlaveHandler *PLCnextDeviceController::getSlave(int paIndex) {
+PLCnextSlaveHandler *PLCnextDeviceController::getSlave(size_t paIndex) {
   if (mSlaves == 0) {
     DEVLOG_ERROR("no slaves are registered.");
     return 0;
@@ -88,7 +88,7 @@ PLCnextSlaveHandler *PLCnextDeviceController::getSlave(int paIndex) {
   return 0;
 }
 
-void PLCnextDeviceController::addSlaveHandle(int paIndex, std::unique_ptr<forte::core::io::IOHandle> paHandle) {
+void PLCnextDeviceController::addSlaveHandle(size_t paIndex, std::unique_ptr<forte::core::io::IOHandle> paHandle) {
   PLCnextSlaveHandler *slave = getSlave(paIndex);
   if (slave == 0) {
     DEVLOG_ERROR("no slaves are registered.");
@@ -98,7 +98,7 @@ void PLCnextDeviceController::addSlaveHandle(int paIndex, std::unique_ptr<forte:
   slave->addHandle((PLCnextSlaveHandle *) paHandle.release());
 }
 
-void PLCnextDeviceController::dropSlaveHandles(int paIndex) {
+void PLCnextDeviceController::dropSlaveHandles(size_t paIndex) {
   PLCnextSlaveHandler *slave = getSlave(paIndex);
   if (slave == 0) {
     DEVLOG_ERROR("no slaves are registered.");
@@ -108,12 +108,12 @@ void PLCnextDeviceController::dropSlaveHandles(int paIndex) {
   slave->dropHandles();
 }
 
-bool PLCnextDeviceController::isSlaveAvailable(int paIndex) {
+bool PLCnextDeviceController::isSlaveAvailable(size_t paIndex) {
   // (currently) don't check if index is really available at initialization;
   return true;
 }
 
-bool PLCnextDeviceController::checkSlaveType(int paIndex, int paType) {
+bool PLCnextDeviceController::checkSlaveType(size_t paIndex, int paType) {
   // (currently) don't check slaveType at initialization;
   return true;
 }

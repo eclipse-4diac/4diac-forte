@@ -34,7 +34,7 @@ class RevPiController : public forte::core::io::IODeviceMultiController {
 
         HandleDescriptor(std::string const &paID,
                          forte::core::io::IOMapper::Direction paDirection,
-                         int paSlaveIndex,
+                         size_t paSlaveIndex,
                          CIEC_ANY::EDataTypeID paType,
                          uint8_t paOffset,
                          uint8_t paPosition) :
@@ -55,7 +55,7 @@ class RevPiController : public forte::core::io::IODeviceMultiController {
      * @param index Index/Position of the modular slave
      * @param handle Handle object which should be updated by the controller.
      */
-    void addSlaveHandle(int index, std::unique_ptr<forte::core::io::IOHandle> handle) override;
+    void addSlaveHandle(size_t paIndex, std::unique_ptr<forte::core::io::IOHandle> handle) override;
 
     /*! @brief Drop all handles of a specific slave
      *
@@ -64,7 +64,7 @@ class RevPiController : public forte::core::io::IODeviceMultiController {
      *
      * @param index Index/Position of the modular slave
      */
-    void dropSlaveHandles(int index);
+    void dropSlaveHandles(size_t paIndex);
 
   protected:
     const char *init();
@@ -86,12 +86,12 @@ class RevPiController : public forte::core::io::IODeviceMultiController {
      */
     void runLoop();
 
-    int deviceCount;
-    SDeviceInfoStr deviceList[20];
+    size_t mDeviceCount;
+    SDeviceInfoStr mDeviceList[20];
 
     CSemaphore mTimeoutSemaphore;
 
-    Config config;
+    Config mConfig;
 
     /*! @brief Checks if the value of a handle has changed. Used by the #checkForInputChanges method.
      *
@@ -106,7 +106,7 @@ class RevPiController : public forte::core::io::IODeviceMultiController {
      * @param index Index/Position of the modular slave
      * @return True in case a slave was found at the given position
      */
-    bool isSlaveAvailable(int index);
+    bool isSlaveAvailable(size_t paIndex);
 
     /*! @brief Checks if the slave type matches the configured type
      *
@@ -114,7 +114,7 @@ class RevPiController : public forte::core::io::IODeviceMultiController {
      * @param type Type identifier which describes the modular slave
      * @return True in case the slave at the index has the given type
      */
-    bool checkSlaveType(int index, int type);
+    bool checkSlaveType(size_t paIndex, int paType);
 
     static const char *const scmFailedToOpenControlFile;
     static const char *const scmFailedToResetControllerFile;

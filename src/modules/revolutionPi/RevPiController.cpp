@@ -22,8 +22,8 @@ const char *const RevPiController::scmFailedToGetDeviceList = "Failed to get dev
 
 RevPiController::RevPiController(CDeviceExecution &paDeviceExecution) :
     IODeviceMultiController(paDeviceExecution),
-    deviceCount(0) {
-  config.updateInterval = 25;
+    mDeviceCount(0) {
+  mConfig.updateInterval = 25;
 }
 
 void RevPiController::setConfig(struct IODeviceController::Config *paConfig) {
@@ -35,7 +35,7 @@ void RevPiController::setConfig(struct IODeviceController::Config *paConfig) {
     newConfig.updateInterval = 25;
   }
 
-  this->config = newConfig;
+  this->mConfig = newConfig;
 }
 
 const char *RevPiController::init() {
@@ -46,18 +46,18 @@ const char *RevPiController::init() {
     return scmFailedToResetControllerFile;
   }
 
-  if ((status = piControlGetDeviceInfoList((SDeviceInfoStr *) &deviceList)) < 0) {
+  if ((status = piControlGetDeviceInfoList((SDeviceInfoStr *) &mDeviceList)) < 0) {
     DEVLOG_ERROR("[RevPiController] %s - %d\n", scmFailedToGetDeviceList, status);
     return scmFailedToGetDeviceList;
   }
 
-  deviceCount = status;
+  mDeviceCount = status;
 
-  for (int i = 0; i < deviceCount; i++) {
+  for (int i = 0; i < mDeviceCount; i++) {
     DEVLOG_INFO("[RevPiController] Found device %d - Type: %d -  Active: %d - Outputs: %d - Inputs: %d - Configs: %d\n",
-                deviceList[i].i8uAddress, deviceList[i].i16uModuleType, deviceList[i].i8uActive,
-                deviceList[i].i16uBaseOffset + deviceList[i].i16uOutputOffset,
-                deviceList[i].i16uBaseOffset + deviceList[i].i16uInputOffset, deviceList[i].i16uConfigLength);
+                mDeviceList[i].i8uAddress, mDeviceList[i].i16uModuleType, mDeviceList[i].i8uActive,
+                mDeviceList[i].i16uBaseOffset + mDeviceList[i].i16uOutputOffset,
+                mDeviceList[i].i16uBaseOffset + mDeviceList[i].i16uInputOffset, mDeviceList[i].i16uConfigLength);
   }
 
   return 0;
@@ -68,9 +68,9 @@ IOHandle *RevPiController::createIOHandle(IODeviceController::HandleDescriptor &
 
   return new RevPiHandle(
       this, desc.mType, desc.mDirection,
-      static_cast<uint16_t>(deviceList[desc.mSlaveIndex + 1].i16uBaseOffset + desc.mOffset +
-                            (desc.mDirection == IOMapper::In ? deviceList[desc.mSlaveIndex + 1].i16uInputOffset
-                                                             : deviceList[desc.mSlaveIndex + 1].i16uOutputOffset)),
+      static_cast<uint16_t>(mDeviceList[desc.mSlaveIndex + 1].i16uBaseOffset + desc.mOffset +
+                            (desc.mDirection == IOMapper::In ? mDeviceList[desc.mSlaveIndex + 1].i16uInputOffset
+                                                             : mDeviceList[desc.mSlaveIndex + 1].i16uOutputOffset)),
       desc.mPosition);
 }
 
@@ -81,28 +81,28 @@ void RevPiController::deInit() {
 
 void RevPiController::runLoop() {
   while (isAlive()) {
-    mTimeoutSemaphore.timedWait(1000000000 / config.updateInterval);
+    mTimeoutSemaphore.timedWait(1000000000 / mConfig.updateInterval);
 
     // Perform poll operation
     this->checkForInputChanges();
   }
 }
 
-void RevPiController::addSlaveHandle(int, std::unique_ptr<forte::core::io::IOHandle> paHandle) {
+void RevPiController::addSlaveHandle(size_t, std::unique_ptr<forte::core::io::IOHandle> paHandle) {
   CCriticalRegion criticalRegion(mHandleMutex);
   paHandle->isInput() ? mInputHandles.push_back(std::move(paHandle)) : mOutputHandles.push_back(std::move(paHandle);
 }
 
-void RevPiController::dropSlaveHandles(int) {
+void RevPiController::dropSlaveHandles(size_t) {
   // Is handled by #dropHandles method
 }
 
-bool RevPiController::isSlaveAvailable(int paIndex) {
-  return paIndex + 1 < deviceCount;
+bool RevPiController::isSlaveAvailable(size_t paIndex) {
+  return paIndex + 1 < mDeviceCount;
 }
 
-bool RevPiController::checkSlaveType(int paIndex, int paType) {
-  return deviceList[paIndex + 1].i16uModuleType == paType;
+bool RevPiController::checkSlaveType(size_t paIndex, int paType) {
+  return mDeviceList[paIndex + 1].i16uModuleType == paType;
 }
 
 bool RevPiController::isHandleValueEqual(IOHandle &paHandle) {

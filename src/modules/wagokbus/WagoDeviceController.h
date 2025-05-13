@@ -40,7 +40,7 @@ class WagoDeviceController : public forte::core::io::IODeviceMultiController {
 
         WagoHandleDescriptor(std::string const &paId,
                              forte::core::io::IOMapper::Direction paDirection,
-                             int paSlaveIndex,
+                             size_t paSlaveIndex,
                              CIEC_ANY::EDataTypeID paType,
                              TForteUInt32 paChannel) :
             forte::core::io::IODeviceMultiController::HandleDescriptor(paId, paDirection, paSlaveIndex),
@@ -51,9 +51,9 @@ class WagoDeviceController : public forte::core::io::IODeviceMultiController {
 
     void setConfig(struct forte::core::io::IODeviceController::Config *paConfig) override;
 
-    void addSlaveHandle(int index, std::unique_ptr<forte::core::io::IOHandle> paHandle) override;
+    void addSlaveHandle(size_t paIndex, std::unique_ptr<forte::core::io::IOHandle> paHandle) override;
 
-    void dropSlaveHandles(int paIndex) override;
+    void dropSlaveHandles(size_t paIndex) override;
 
   protected:
     const char *init();
@@ -89,7 +89,7 @@ class WagoDeviceController : public forte::core::io::IODeviceMultiController {
      * @param index Index/Position of the modular slave
      * @return True in case a slave was found at the given position
      */
-    bool isSlaveAvailable(int paIndex);
+    bool isSlaveAvailable(size_t paIndex);
 
     /*! @brief Checks if the slave type matches the configured type
      *
@@ -97,7 +97,7 @@ class WagoDeviceController : public forte::core::io::IODeviceMultiController {
      * @param type Type identifier which describes the modular slave
      * @return True in case the slave at the index has the given type
      */
-    bool checkSlaveType(int paIndex, int paType);
+    bool checkSlaveType(size_t paIndex, int paType);
 
     const char *loadTerminalInformation();
 

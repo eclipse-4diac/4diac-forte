@@ -308,7 +308,7 @@ void EmbrickBusHandler::forceUpdate(int paIndex) {
   mSyncObject.unlock();
 }
 
-void EmbrickBusHandler::addSlaveHandle(int paIndex, std::unique_ptr<forte::core::io::IOHandle> paHandle) {
+void EmbrickBusHandler::addSlaveHandle(size_t paIndex, std::unique_ptr<forte::core::io::IOHandle> paHandle) {
   EmbrickSlaveHandler *slave = getSlave(paIndex);
   if (slave == 0) {
     return;
@@ -317,7 +317,7 @@ void EmbrickBusHandler::addSlaveHandle(int paIndex, std::unique_ptr<forte::core:
   slave->addHandle((EmbrickSlaveHandle *) paHandle.release());
 }
 
-void EmbrickBusHandler::dropSlaveHandles(int paIndex) {
+void EmbrickBusHandler::dropSlaveHandles(size_t paIndex) {
   EmbrickSlaveHandler *slave = getSlave(paIndex);
   if (slave == 0) {
     return;
@@ -326,11 +326,11 @@ void EmbrickBusHandler::dropSlaveHandles(int paIndex) {
   slave->dropHandles();
 }
 
-bool EmbrickBusHandler::isSlaveAvailable(int paIndex) {
+bool EmbrickBusHandler::isSlaveAvailable(size_t paIndex) {
   return getSlave(paIndex) != 0;
 }
 
-bool EmbrickBusHandler::checkSlaveType(int paIndex, int paType) {
+bool EmbrickBusHandler::checkSlaveType(size_t paIndex, int paType) {
   EmbrickSlaveHandler *slave = getSlave(paIndex);
   if (slave == 0) {
     return false;

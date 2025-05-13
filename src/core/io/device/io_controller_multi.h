@@ -35,9 +35,9 @@ namespace forte {
         public:
           class HandleDescriptor : public IODeviceController::HandleDescriptor {
             public:
-              int mSlaveIndex;
+              size_t mSlaveIndex;
 
-              HandleDescriptor(std::string const &paId, IOMapper::Direction paDirection, int paSlaveIndex) :
+              HandleDescriptor(std::string const &paId, IOMapper::Direction paDirection, size_t paSlaveIndex) :
                   IODeviceController::HandleDescriptor(paId, paDirection),
                   mSlaveIndex(paSlaveIndex) {
               }
@@ -52,7 +52,7 @@ namespace forte {
            * @param paIndex Index/Position of the modular slave
            * @param paHandle IOHandle object which should be updated by the controller.
            */
-          virtual void addSlaveHandle(int paIndex, std::unique_ptr<IOHandle> paHandle) = 0;
+          virtual void addSlaveHandle(size_t paIndex, std::unique_ptr<IOHandle> paHandle) = 0;
 
           /*! @brief Drop all handles of a specific slave
            *
@@ -61,7 +61,7 @@ namespace forte {
            *
            * @param paIndex Index/Position of the modular slave
            */
-          virtual void dropSlaveHandles(int paIndex) = 0;
+          virtual void dropSlaveHandles(size_t paIndex) = 0;
 
         protected:
           explicit IODeviceMultiController(CDeviceExecution &paDeviceExecution);
@@ -76,7 +76,7 @@ namespace forte {
            * @param paIndex Index/Position of the modular slave
            * @return True in case a slave was found at the given position
            */
-          virtual bool isSlaveAvailable(int paIndex) = 0;
+          virtual bool isSlaveAvailable(size_t paIndex) = 0;
 
           /*! @brief Checks if the slave type matches the configured type
            *
@@ -84,7 +84,7 @@ namespace forte {
            * @param paType Type identifier which describes the modular slave
            * @return True in case the slave at the index has the given type
            */
-          virtual bool checkSlaveType(int paIndex, int paType) = 0;
+          virtual bool checkSlaveType(size_t paIndex, int paType) = 0;
       };
 
     } // namespace io

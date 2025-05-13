@@ -143,20 +143,20 @@ void WagoDeviceController::runLoop() {
   }
 }
 
-void WagoDeviceController::addSlaveHandle(int, std::unique_ptr<forte::core::io::IOHandle> paHandle) {
+void WagoDeviceController::addSlaveHandle(size_t, std::unique_ptr<forte::core::io::IOHandle> paHandle) {
   CCriticalRegion criticalRegion(mHandleMutex);
   paHandle->isInput() ? mInputHandles.push_back(std::move(paHandle)) : mOutputHandles.push_back(std::move(paHandle));
 }
 
-void WagoDeviceController::dropSlaveHandles(int) {
+void WagoDeviceController::dropSlaveHandles(size_t) {
   // Is handled by #dropHandles method
 }
 
-bool WagoDeviceController::isSlaveAvailable(int paIndex) {
+bool WagoDeviceController::isSlaveAvailable(size_t paIndex) {
   return paIndex < mTerminalCount;
 }
 
-bool WagoDeviceController::checkSlaveType(int paIndex, int paType) {
+bool WagoDeviceController::checkSlaveType(size_t paIndex, int paType) {
   return mTerminalIds[paIndex] == paType;
 }
 

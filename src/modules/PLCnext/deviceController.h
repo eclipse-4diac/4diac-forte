@@ -49,7 +49,7 @@ class PLCnextDeviceController : public forte::core::io::IODeviceMultiController 
 
         HandleDescriptor(CIEC_WSTRING const &paId,
                          forte::core::io::IOMapper::Direction paDirection,
-                         int paSlaveIndex,
+                         size_t paSlaveIndex,
                          uint16_t position,
                          HandleType paType) :
             forte::core::io::IODeviceMultiController::HandleDescriptor(paId, paDirection, paSlaveIndex),
@@ -61,9 +61,9 @@ class PLCnextDeviceController : public forte::core::io::IODeviceMultiController 
     void setConfig(struct forte::core::io::IODeviceController::Config *paConfig) override;
     void registerSlaveHandler(PLCnextSlaveHandler *slave);
 
-    PLCnextSlaveHandler *getSlave(int paIndex);
-    void addSlaveHandle(int index, std::unique_ptr<forte::core::io::IOHandle> paHandle) override;
-    void dropSlaveHandles(int paIndex) override;
+    PLCnextSlaveHandler *getSlave(size_t paIndex);
+    void addSlaveHandle(size_t paIndex, std::unique_ptr<forte::core::io::IOHandle> paHandle) override;
+    void dropSlaveHandles(size_t paIndex) override;
 
   protected:
     const char *init() override;
@@ -76,13 +76,12 @@ class PLCnextDeviceController : public forte::core::io::IODeviceMultiController 
 
     typedef CSinglyLinkedList<PLCnextSlaveHandler *> TSlaveList;
     TSlaveList *mSlaves = new TSlaveList();
-    ;
 
     PLCnextConfig mConfig;
 
   private:
-    bool isSlaveAvailable(int paIndex) override;
-    bool checkSlaveType(int paIndex, int paType) override;
+    bool isSlaveAvailable(size_t paIndex) override;
+    bool checkSlaveType(size_t paIndex, int paType) override;
 };
 
 #endif /* SRC_MODULES_PLCNEXT_PLCNEXTDEVICECONTROLLER_H_ */
