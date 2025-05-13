@@ -10,11 +10,11 @@
 #    Monika Wenger
 # *   - initial API and implementation and/or initial documentation
 # *******************************************************************************/
-forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
-#############################################################################
-# Selection
-#############################################################################
 
-forte_add_sourcefile_hcpp(F_SEL_E_2_fbt)
-forte_add_sourcefile_hcpp(F_SEL_E_3_fbt)
-forte_add_sourcefile_hcpp(F_SEL_E_4_fbt)
+add_library(forte-modules-utils-selection OBJECT
+    F_SEL_E_2_fbt.cpp
+    F_SEL_E_3_fbt.cpp
+    F_SEL_E_4_fbt.cpp
+)
+
+target_link_libraries(forte PRIVATE forte-modules-utils-selection)

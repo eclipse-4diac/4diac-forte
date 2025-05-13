@@ -11,13 +11,11 @@
 # *   - initial API and implementation and/or initial documentation
 # *******************************************************************************/
 
-#############################################################################
-# IO Mapper
-#############################################################################
+add_library(forte-core-io-mapper OBJECT
+	io_observer.cpp
+	io_handle.cpp
+	io_mapper.cpp
+	io_handle_bit.cpp
+)
 
-SET(SOURCE_GROUP ${SOURCE_GROUP}\\mapper)
-
-forte_add_sourcefile_hcpp(io_observer)
-forte_add_sourcefile_hcpp(io_handle)
-forte_add_sourcefile_hcpp(io_mapper)
-forte_add_sourcefile_hcpp(io_handle_bit)
+target_link_libraries(forte PRIVATE forte-core-io-mapper)

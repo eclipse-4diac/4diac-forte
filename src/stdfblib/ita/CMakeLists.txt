@@ -12,36 +12,29 @@
 #    Markus Meingast
 # *    - Add OPCUA_DEV and OPCUA_MGR to build configuration
 # *******************************************************************************/
-#############################################################################
-# Ita FB
-#############################################################################
-SET(SOURCE_GROUP ${SOURCE_GROUP}\\ita)
-forte_add_sourcefile_hcpp(DEV_MGR EMB_RES RMT_DEV RMT_RES CommandParser)
 
-forte_add_device(RMT_DEV "stdfblib/ita/RMT_DEV" "RMT_DEV")
+set(FORTE_DEVICE "RMT_DEV" CACHE STRING "Device to be used in this 4diac FORTE instance")
+mark_as_advanced(FORTE_DEVICE)
+
+add_library(forte-stdfblib-ita OBJECT
+    CommandParser.cpp
+    DEV_MGR.cpp
+    EMB_RES.cpp
+    RMT_DEV.cpp
+    RMT_RES.cpp
+    ${FORTE_DEVICE}.cpp
+    $<$<BOOL:${FORTE_SUPPORT_BOOT_FILE}>:ForteBootFileLoader.cpp>
+    $<$<BOOL:${FORTE_COM_OPC_UA}>:Config_EMB_RES.cpp>
+)
+
+target_link_libraries(forte PRIVATE forte-stdfblib-ita)
+
+forte_register_device(RMT_DEV)
 
 if (FORTE_COM_OPC_UA)
-  set(FORTE_DISABLE_OPCUA_DEV FALSE CACHE BOOL "Do not compile the OPCUA Device")
-  if(NOT ${FORTE_DISABLE_OPCUA_DEV})
-    forte_add_definition("-DFORTE_OPCUA_DEVICE")
-    forte_add_device(OPCUA_DEV "stdfblib/ita/OPCUA_DEV" "OPCUA_DEV")
-    forte_add_sourcefile_hcpp(OPCUA_DEV OPCUA_MGR)
-  endif()
-  forte_add_sourcefile_hcpp(Config_EMB_RES)
-endif ()
-
-if(FORTE_FAKE_TIME)
-  forte_add_device(FakeTimeDev "stdfblib/ita/FakeTimeDev" "FakeTimeDev")
-  forte_add_sourcefile_hcpp(FakeTimeDev)
+  forte_register_device(OPCUA_DEV)
 endif()
 
-forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
-
-if(FORTE_SUPPORT_BOOT_FILE)
-  forte_add_sourcefile_hcpp(ForteBootFileLoader)
-endif(FORTE_SUPPORT_BOOT_FILE)
-
-add_subdirectory(debug_device)
-add_subdirectory(multi)
-add_subdirectory(replay)
-
+if (FORTE_FAKE_TIME)
+  forte_register_device(FakeTimeDev)
+endif()

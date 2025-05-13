@@ -11,4 +11,4 @@
 #    Martin Jobst - initial API and implementation and/or initial documentation
 # *******************************************************************************/
 
-forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+# this is built via functions.cmake, which is included by core/io/CMakeLists.txt

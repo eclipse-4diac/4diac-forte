@@ -11,23 +11,25 @@
 #     Marc Jakobi
 # *******************************************************************************/
 # *******************************************************************************/
+
 #############################################################################
 # HTTP Com Layer (currently implements an HTTP client)
 #############################################################################
-forte_add_network_layer(HTTP OFF "http" CHttpComLayer httplayer "Enable an HTTP Com Layer")
-if(FORTE_COM_HTTP)
+forte_register_com_layer(HTTP OFF "http" CHttpComLayer httplayer.h "Enable an HTTP Com Layer")
 
-  forte_add_sourcefile_hcpp(httpparser)
-  forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
-  forte_add_handler(CHTTP_Handler http_handler)
-  forte_add_sourcefile_hcpp(http_handler)
-  
-      
-  SET(FORTE_COM_HTTP_LISTENING_PORT "80" CACHE STRING "HTTP Listening Port")
-  
-  forte_add_custom_configuration("#define FORTE_COM_HTTP_LISTENING_PORT ${FORTE_COM_HTTP_LISTENING_PORT}")
-  forte_add_custom_configuration("extern TForteUInt16 gHTTPServerPort\;")
-  
-  forte_add_custom_configuration("#cmakedefine FORTE_COM_HTTP")
-  
-endif(FORTE_COM_HTTP)
+if (NOT FORTE_COM_HTTP)
+    return()
+endif()
+
+add_library(forte-com-http OBJECT
+  httpparser.cpp
+  http_handler.cpp
+  httplayer.cpp
+)
+
+target_link_libraries(forte PRIVATE forte-com-http)
+
+forte_register_handler(CHTTP_Handler http_handler.h)
+
+set(FORTE_COM_HTTP_LISTENING_PORT "80" CACHE STRING "HTTP Listening Port")
+target_compile_definitions(forte-com-http PRIVATE FORTE_COM_HTTP_LISTENING_PORT=${FORTE_COM_HTTP_LISTENING_PORT})

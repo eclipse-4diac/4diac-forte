@@ -9,18 +9,18 @@
 # Contributors: 
 #     Franz Hoepfinger - initial API and implementation and/or initial documentation
 # *******************************************************************************/ 
-forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
-#######################################################
-# assembling
-#######################################################
 
-forte_add_sourcefile_hcpp(SPLIT_BYTE_INTO_BOOLS_fct)
-forte_add_sourcefile_hcpp(SPLIT_BYTE_INTO_QUARTERS_fct)
-forte_add_sourcefile_hcpp(SPLIT_DWORD_INTO_BOOLS_fct)
-forte_add_sourcefile_hcpp(SPLIT_DWORD_INTO_QUARTERS_fct)
-forte_add_sourcefile_hcpp(SPLIT_DWORD_INTO_WORDS_fct)
-forte_add_sourcefile_hcpp(SPLIT_LWORD_INTO_BOOLS_fct)
-forte_add_sourcefile_hcpp(SPLIT_LWORD_INTO_QUARTERS_fct)
-forte_add_sourcefile_hcpp(SPLIT_WORD_INTO_BOOLS_fct)
-forte_add_sourcefile_hcpp(SPLIT_WORD_INTO_BYTES_fct)
-forte_add_sourcefile_hcpp(SPLIT_WORD_INTO_QUARTERS_fct)
+add_library(forte-modules-utils-splitting OBJECT
+    SPLIT_BYTE_INTO_BOOLS_fct.cpp
+    SPLIT_BYTE_INTO_QUARTERS_fct.cpp
+    SPLIT_DWORD_INTO_BOOLS_fct.cpp
+    SPLIT_DWORD_INTO_QUARTERS_fct.cpp
+    SPLIT_DWORD_INTO_WORDS_fct.cpp
+    SPLIT_LWORD_INTO_BOOLS_fct.cpp
+    SPLIT_LWORD_INTO_QUARTERS_fct.cpp
+    SPLIT_WORD_INTO_BOOLS_fct.cpp
+    SPLIT_WORD_INTO_BYTES_fct.cpp
+    SPLIT_WORD_INTO_QUARTERS_fct.cpp
+)
+
+target_link_libraries(forte PRIVATE forte-modules-utils-splitting)

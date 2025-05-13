@@ -9,9 +9,8 @@
 # Contributors: 
 #     Franz Hoepfinger - initial API and implementation and/or initial documentation
 # *******************************************************************************/ 
-forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
-#######################################################
-# const
-#######################################################
 
-forte_add_sourcefile_hcpp(quarterconst_gcf)
+add_library(forte-modules-utils-const OBJECT
+    quarterconst_gcf.cpp
+)
+target_link_libraries(forte PRIVATE forte-modules-utils-const)

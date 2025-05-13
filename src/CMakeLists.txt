@@ -12,452 +12,106 @@
 # *     - initial API and implementation and/or initial documentation
 # *******************************************************************************/
 
+include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+include_directories(${CMAKE_CURRENT_BINARY_DIR})
+
+# FIXME: this is way too many
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/arch)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/core)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/core/cominfra)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/core/datatypes)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/core/datatypes/convert)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/arch/posix)
+
+target_compile_definitions(forte-global INTERFACE FORTE_${CMAKE_CXX_BYTE_ORDER})
+
+###############################################################################
+# Core infrastructure
+
+add_subdirectory(generated)
+
+if (FORTE_BUILD_EXECUTABLE)
+  add_executable(forte ${FORTE_GENERATED_FILES_DIR}/startuphook.cpp)
+  install(TARGETS forte RUNTIME DESTINATION bin)
+  message(STATUS "Building executable")
+else()
+  add_library(forte ${FORTE_GENERATED_FILES_DIR}/startuphook.cpp)
+  install(TARGETS forte RUNTIME DESTINATION lib)
+  message(STATUS "Building library")
+endif()
+
+add_subdirectory(core)
+add_subdirectory(arch)
+add_subdirectory(stdfblib)
+
+###############################################################################
+# Modules
+
+function(forte_add_modules dir)
+    file(REAL_PATH "${dir}" absdir BASE_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}")
+    if (EXISTS ${absdir}/CMakeLists.txt)
+        if (IS_ABSOLUTE ${dir})
+            message(STATUS "Adding External Module: ${absdir}")
+            string(MD5 bindir_hash "${absdir}")
+            get_property(bindir_base TARGET fortelib PROPERTY BINARY_DIR)
+            add_subdirectory(${absdir} ${bindir_base}/module-${bindir_hash})
+        else()
+            message(STATUS "Adding Internal Module: ${dir}")
+            add_subdirectory(${dir})
+        endif()
+    else()
+        message(STATUS "Searching Modules: ${dir}")
+        file(GLOB dirs CONFIGURE_DEPENDS "${dir}/*")
+        foreach(dir IN LISTS dirs)
+            forte_add_modules(${dir})
+        endforeach()
+    endif()
+endfunction()
+
+macro(forte_register_module name default description)
+  option(FORTE_MODULE_${name} "${description}" ${default})
+
+  foreach (dependency IN LISTS ARGN)
+    if (NOT ${dependency})
+      return()
+    endif()
+  endforeach()
+  if (NOT FORTE_MODULE_${name})
+    return()
+  endif()
+endmacro()
+
+forte_add_modules(com/HTTP)
+forte_add_modules(modules/utils)
+#forte_add_modules(modules)
+#forte_add_modules(com)
+
 set(FORTE_EXTERNAL_MODULES_DIRECTORY "" CACHE PATH "Path to a directory with FORTE modules located outside of the FORTE source code")
-SET(FORTE_MODULE_LIST modules;com;external)
-forte_create_modules_file("${FORTE_MODULE_LIST}")
-forte_add_subdirectory(arch)
-forte_add_subdirectory(core)
-foreach(FORTE_MODULE_DIR ${FORTE_MODULE_LIST})
-  string(COMPARE EQUAL "${FORTE_MODULE_DIR}" external _isExternal)
-  if(NOT _isExternal)
-    forte_add_subdirectory("${FORTE_MODULE_DIR}")
-  endif()
-endforeach(FORTE_MODULE_DIR)
-if(EXISTS ${FORTE_EXTERNAL_MODULES_DIRECTORY})
-  INCLUDE(${CMAKE_BINARY_DIR}/src/external/CMakeLists.txt)
-endif()
-forte_add_subdirectory(stdfblib)
+set(FORTE_EXTERNAL_MODULES_DIRECTORIES "" CACHE STRING "List of paths to directories with FORTE modules located outside of the FORTE source code")
 
-SET(SOURCE_GROUP core)  
-set_source_files_properties(${FORTE_BINARY_DIR}/stringlist.h PROPERTIES GENERATED TRUE)
-set_source_files_properties(${FORTE_BINARY_DIR}/stringlist.cpp PROPERTIES GENERATED TRUE)
-
-#######################################################################################
-# Exclude FBs
-#######################################################################################
-set(FORTE_EXCLUDE_FBS "" CACHE STRING "Exclude Function blocks")
-mark_as_advanced(FORTE_EXCLUDE_FBS)
-
-IF(FORTE_EXCLUDE_FBS)
-  STRING(REGEX MATCHALL "[^ ,;][^ ,;]*" FBLIST ${FORTE_EXCLUDE_FBS})
-
-  FOREACH(FB ${FBLIST})
-    forte_remove_sourcefile_h(${FB}.h)
-    forte_remove_sourcefile_cpp(${FB}.cpp)
-  ENDFOREACH(FB)
-ENDIF(FORTE_EXCLUDE_FBS)
-
-GET_PROPERTY(PLATFORM_REMOVES              GLOBAL PROPERTY FORTE_PLATFORM_REMOVES)
-FOREACH(FB ${PLATFORM_REMOVES})
-  forte_remove_sourcefile_h(${FB}.h)
-  forte_remove_sourcefile_cpp(${FB}.cpp)
-ENDFOREACH(FB)
-
-#############################################################################
-# Configure Network Layers
-#############################################################################
-
-GET_PROPERTY(LAYER_CLASS GLOBAL PROPERTY FORTE_LAYER_CLASS)
-GET_PROPERTY(LAYER_CONFIGNAME GLOBAL PROPERTY FORTE_LAYER_CONFIGNAME)
-GET_PROPERTY(LAYER_FILENAME GLOBAL PROPERTY FORTE_LAYER_FILENAME)
-LIST(LENGTH LAYER_CLASS       LAYER_CLASS_LEN)
-math(EXPR LAYER_CLASS_LEN           ${LAYER_CLASS_LEN}-1)
-
-SET(LAYERMANAGER_INCLUDE "")
-
-FOREACH(POS RANGE ${LAYER_CLASS_LEN}-1)
-  LIST(GET LAYER_CLASS      ${POS} CLASS) 
-  LIST(GET LAYER_CONFIGNAME ${POS} CONFIGNAME)
-  LIST(GET LAYER_FILENAME   ${POS} FILENAME)
-  SET(LAYERMANAGER_INCLUDE  "${LAYERMANAGER_INCLUDE}#include<${FILENAME}>\n")
-  if("${POS}" GREATER  "0")
-    SET(LAYERMANAGER_INSTANCE "${LAYERMANAGER_INSTANCE}  else ")
-  endif()
-  SET(LAYERMANAGER_INSTANCE "${LAYERMANAGER_INSTANCE}if(0 == strcmp(\"${CONFIGNAME}\", paLayerIdentifier)){\n    mNewLayer = new ${CLASS}(paUpperLayer, paComFB);\n  }\n")
-ENDFOREACH(POS)
-
-CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/core/cominfra/comlayersmanager.cpp.in ${CMAKE_BINARY_DIR}/core/cominfra/comlayersmanager_new.cpp)
-forte_replacefile_if_changed(${CMAKE_BINARY_DIR}/core/cominfra/comlayersmanager_new.cpp ${CMAKE_BINARY_DIR}/core/cominfra/comlayersmanager.cpp)
-file(REMOVE ${CMAKE_BINARY_DIR}/core/cominfra/comlayersmanager_new.cpp)
-
-#############################################################################
-# Configure Handlers
-#############################################################################
-
-GET_PROPERTY(HANDLER_CLASS GLOBAL PROPERTY FORTE_HANDLER_CLASS)
-GET_PROPERTY(HANDLER_FILENAME GLOBAL PROPERTY FORTE_HANDLER_FILENAME)
-LIST(LENGTH HANDLER_CLASS       HANDLER_CLASS_LEN_ORIGINAL)
-
-if(${HANDLER_CLASS_LEN_ORIGINAL} GREATER 0)
-
-math(EXPR HANDLER_CLASS_LEN           ${HANDLER_CLASS_LEN_ORIGINAL}-1)
-
-SET(HANDLERMANAGER_INCLUDE "")
-SET(HANDLERMANAGER_INSTANCE "")
-SET(HANDLERMANAGER_VARIABLES "")
-  
-SET(HANDLER_ID 1)
-FOREACH(POS RANGE ${HANDLER_CLASS_LEN}-1)
-  LIST(GET HANDLER_CLASS      ${POS} CLASS) 
-  LIST(GET HANDLER_FILENAME   ${POS} FILENAME)
-  SET(HANDLERMANAGER_INCLUDE  "${HANDLERMANAGER_INCLUDE}#include <${FILENAME}>\n")
-  
-  SET(HANDLERMANAGER_VARIABLES  "${HANDLERMANAGER_VARIABLES}const size_t ${CLASS}::mHandlerIdentifier = ${HANDLER_ID};\n")
-  SET(HANDLERMANAGER_INSTANCE "${HANDLERMANAGER_INSTANCE}    mRegisteredEventHandlers[${HANDLER_ID}].mHandler = std::make_unique<${CLASS}>(*this);\n")
-  math(EXPR HANDLER_ID           ${HANDLER_ID}+1)
-ENDFOREACH(POS)
-
-endif(${HANDLER_CLASS_LEN_ORIGINAL} GREATER 0)
-
-math(EXPR HANDLER_CLASS_LEN_ORIGINAL ${HANDLER_CLASS_LEN_ORIGINAL}+1)
-SET(FORTE_NUMBER_OF_HANDLERS ${HANDLER_CLASS_LEN_ORIGINAL} PARENT_SCOPE)
-
-
-CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/core/deviceExecutionHandlers.cpp.in ${CMAKE_BINARY_DIR}/core/deviceExecutionHandlers_new.cpp)
-forte_replacefile_if_changed(${CMAKE_BINARY_DIR}/core/deviceExecutionHandlers_new.cpp ${CMAKE_BINARY_DIR}/core/deviceExecutionHandlers.cpp)
-file(REMOVE ${CMAKE_BINARY_DIR}/core/deviceExecutionHandlers_new.cpp)
-
-#############################################################################
-# Configure Timers
-#############################################################################
-
-GET_PROPERTY(TIMERHANDLER_CLASS GLOBAL PROPERTY FORTE_TIMERHANDLER_CLASS)
-GET_PROPERTY(TIMERHANDLER_FILENAME GLOBAL PROPERTY FORTE_TIMERHANDLER_FILENAME)
-GET_PROPERTY(TIMERHANDLER_NAME GLOBAL PROPERTY FORTE_TIMERHANDLER_NAME)
-GET_PROPERTY(TIMERHANDLER_DEFAULT GLOBAL PROPERTY FORTE_TIMERHANDLER_DEFAULT)
-
-if(NOT DEFINED TIMERHANDLER_DEFAULT)
-  set(TIMERHANDLER_DEFAULT "standard")
+if (FORTE_EXTERNAL_MODULES_DIRECTORY)
+    forte_add_modules(${FORTE_EXTERNAL_MODULES_DIRECTORY})
 endif()
 
-SET(TIMERHANDLER_INCLUDE "")
-SET(TIMERHANDLER_CREATE "")
-
-LIST(LENGTH TIMERHANDLER_CLASS TIMERHANDLER_CLASS_LEN)
-math(EXPR TIMERHANDLER_CLASS_LEN ${TIMERHANDLER_CLASS_LEN}-1)
-
-FOREACH(POS RANGE ${TIMERHANDLER_CLASS_LEN})
-
-  LIST(GET TIMERHANDLER_CLASS      ${POS} CLASS) 
-  LIST(GET TIMERHANDLER_FILENAME   ${POS} FILENAME)
-  LIST(GET TIMERHANDLER_NAME       ${POS} NAME_)
-
-  SET(TIMERHANDLER_INCLUDE  "${TIMERHANDLER_INCLUDE}#include \"${FILENAME}\"\n")
-
-  SET(TIMERHANDLER_ENUM  "${TIMERHANDLER_ENUM}    ${NAME_},\n")
-  
-  SET(TIMERHANDLER_CREATE "${TIMERHANDLER_CREATE}  if(timerHandlerToCreate == AvailableTimers::${NAME_}) return new ${CLASS}(paDeviceExecution);\n")
-ENDFOREACH(POS)
-
-CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/arch/timerHandlerFactory.h.in ${CMAKE_BINARY_DIR}/arch/timerHandlerFactory_new.h)
-forte_replacefile_if_changed(${CMAKE_BINARY_DIR}/arch/timerHandlerFactory_new.h ${CMAKE_BINARY_DIR}/arch/timerHandlerFactory.h)
-file(REMOVE ${CMAKE_BINARY_DIR}/arch/timerHandlerFactory_new.h)
-
-CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/arch/timerHandlerFactory.cpp.in ${CMAKE_BINARY_DIR}/arch/timerHandlerFactory_new.cpp)
-forte_replacefile_if_changed(${CMAKE_BINARY_DIR}/arch/timerHandlerFactory_new.cpp ${CMAKE_BINARY_DIR}/arch/timerHandlerFactory.cpp)
-file(REMOVE ${CMAKE_BINARY_DIR}/arch/timerHandlerFactory_new.cpp)
-
-#############################################################################
-# Configure ECETs
-#############################################################################
-
-GET_PROPERTY(ECET_CLASS GLOBAL PROPERTY FORTE_ECET_CLASS)
-GET_PROPERTY(ECET_FILENAME GLOBAL PROPERTY FORTE_ECET_FILENAME)
-GET_PROPERTY(ECET_NAME GLOBAL PROPERTY FORTE_ECET_NAME)
-
-LIST(LENGTH ECET_CLASS ECET_CLASS_LEN)
-math(EXPR ECET_CLASS_LEN  ${ECET_CLASS_LEN}-1)
-
-SET(ECET_INCLUDE "")
-SET(ECET_CREATE "")
-SET(ECET_ENUM "")
-
-
-FOREACH(POS RANGE ${ECET_CLASS_LEN})
-  LIST(GET ECET_CLASS      ${POS} CLASS) 
-  LIST(GET ECET_FILENAME   ${POS} FILENAME)
-  LIST(GET ECET_NAME   ${POS} NAME_)
-
-  SET(ECET_INCLUDE  "${ECET_INCLUDE}#include \"${FILENAME}\"\n")
-
-  SET(ECET_ENUM  "${ECET_ENUM}\n    ${NAME_},")
-
-  SET(ECET_CREATE "${ECET_CREATE}  if(ecetToCreate == AvailableEcets::${NAME_}) return new ${CLASS}();\n")
-ENDFOREACH(POS)
-
-CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/core/ecetFactory.cpp.in ${CMAKE_BINARY_DIR}/core/ecetFactory_new.cpp)
-forte_replacefile_if_changed(${CMAKE_BINARY_DIR}/core/ecetFactory_new.cpp ${CMAKE_BINARY_DIR}/core/ecetFactory.cpp)
-file(REMOVE ${CMAKE_BINARY_DIR}/core/ecetFactory_new.cpp)
-
-CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/core/ecetFactory.h.in ${CMAKE_BINARY_DIR}/core/ecetFactory_new.h)
-forte_replacefile_if_changed(${CMAKE_BINARY_DIR}/core/ecetFactory_new.h ${CMAKE_BINARY_DIR}/core/ecetFactory.h)
-file(REMOVE ${CMAKE_BINARY_DIR}/core/ecetFactory_new.h)
-
-######################################################################################
-# Available Devices 
-######################################################################################
-
-GET_PROPERTY(DEVICE_CLASSES GLOBAL PROPERTY FORTE_DEVICE_CLASSES)
-GET_PROPERTY(DEVICE_FILENAMES GLOBAL PROPERTY FORTE_DEVICE_FILENAMES)
-GET_PROPERTY(DEVICE_NAMES GLOBAL PROPERTY FORTE_DEVICE_NAMES)
-
-LIST(LENGTH DEVICE_CLASSES DEVICE_CLASSES_LEN)
-
-IF(${DEVICE_CLASSES_LEN} EQUAL 1)
-  # only one device present
-
-  LIST(GET DEVICE_CLASSES     0 CLASS) 
-  LIST(GET DEVICE_FILENAMES   0 FILENAME)
-
-  SET(SINGLE_DEVICE_INCLUDE "#include \"${FILENAME}\"\n")
-  SET(SINGLE_DEVICE_CREATE "  return (paMGRID.length() != 0) ? std::make_unique<${CLASS}>(paMGRID) : std::make_unique<${CLASS}>(); ")
-
-ELSE()
-  forte_add_definition("-DFORTE_MULTIPLE_DEVICES")
-
-  forte_add_sourcefile_with_path_cpp(${CMAKE_BINARY_DIR}/deviceFactory.cpp) # created file
-
-  set(FORTE_DEVICE_DEFAULT "RMT_DEV" CACHE STRING "The default device to use")
-
-  if(NOT "${FORTE_DEVICE_DEFAULT}" IN_LIST DEVICE_NAMES)
-    message(FATAL_ERROR "${FORTE_DEVICE_DEFAULT} is not a valid device. Choose one of the following: ${DEVICE_NAMES}")
-  endif()
-
-  math(EXPR DEVICE_CLASSES_LEN  ${DEVICE_CLASSES_LEN}-1)
-
-  SET(DEVICE_INCLUDE "")
-  SET(DEVICE_CREATE "")
-  SET(DEVICE_ENUM "")
-
-  FOREACH(POS RANGE ${DEVICE_CLASSES_LEN})
-    LIST(GET DEVICE_CLASSES     ${POS} CLASS) 
-    LIST(GET DEVICE_FILENAMES   ${POS} FILENAME)
-    LIST(GET DEVICE_NAMES   ${POS} DEVICE_NAME)
-
-    SET(DEVICE_INCLUDE  "${DEVICE_INCLUDE}#include \"${FILENAME}\"\n")
-
-    SET(DEVICE_ENUM  "${DEVICE_ENUM}\n     ${DEVICE_NAME},")
-
-    SET(DEVICE_STRING_TO_ENUM  "${DEVICE_STRING_TO_ENUM}  if(paDevice == \"${DEVICE_NAME}\") {\n    deviceToCreate = AvailableDevices::${DEVICE_NAME};\n    return true;\n  }\n")
-
-    SET(DEVICE_CURRENT  "${DEVICE_CURRENT}\n if(deviceToCreate == AvailableDevices::${DEVICE_NAME}) return \"${DEVICE_NAME}\";")
-    
-    SET(DEVICE_CREATE "${DEVICE_CREATE}  if(deviceToCreate == AvailableDevices::${DEVICE_NAME})\n    return (paMGRID.length() != 0) ? std::make_unique<${CLASS}>(paMGRID) : std::make_unique<${CLASS}>();\n")
-  ENDFOREACH(POS)
-
-  CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/deviceFactory.cpp.in ${CMAKE_BINARY_DIR}/deviceFactory_new.cpp)
-  forte_replacefile_if_changed(${CMAKE_BINARY_DIR}/deviceFactory_new.cpp ${CMAKE_BINARY_DIR}/deviceFactory.cpp)
-  file(REMOVE ${CMAKE_BINARY_DIR}/deviceFactory_new.cpp)
-ENDIF()
-
-# configure the deviceFactory header for single and multiple devices
-CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/deviceFactory.h.in ${CMAKE_BINARY_DIR}/deviceFactory_new.h)
-forte_replacefile_if_changed(${CMAKE_BINARY_DIR}/deviceFactory_new.h ${CMAKE_BINARY_DIR}/deviceFactory.h)
-file(REMOVE ${CMAKE_BINARY_DIR}/deviceFactory_new.h)
-
-#############################################################################
-# Configure startuphook
-#############################################################################
-
-GET_PROPERTY(STARTUP_HOOK_FUNCTIONS GLOBAL PROPERTY FORTE_STARTUP_HOOK_FUNCTIONS)
-LIST(APPEND STARTUP_HOOK_FUNCTIONS_LIST ${STARTUP_HOOK_FUNCTIONS})
-
-SET(FORTE_STARTUP_HOOKS_DECLS "")
-SET(FORTE_STARTUP_HOOKS_CALLS "")
-
-FOREACH(STARTUP_HOOK_FUNCTION ${STARTUP_HOOK_FUNCTIONS_LIST})
-  SET(FORTE_STARTUP_HOOKS_DECLS  "${FORTE_STARTUP_HOOKS_DECLS}void ${STARTUP_HOOK_FUNCTION}(int argc, char *arg[]); \n")
-  
-  SET(FORTE_STARTUP_HOOKS_CALLS  "${FORTE_STARTUP_HOOKS_CALLS}  ${STARTUP_HOOK_FUNCTION}(argc, arg);\n")
-ENDFOREACH()
-
-CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/arch/startuphook.cpp.in ${CMAKE_BINARY_DIR}/src_gen/startuphook_new.cpp)
-forte_replacefile_if_changed(${CMAKE_BINARY_DIR}/src_gen/startuphook_new.cpp ${CMAKE_BINARY_DIR}/src_gen/startuphook.cpp)
-file(REMOVE ${CMAKE_BINARY_DIR}/src_gen/startuphook_new.cpp)
-
-
-#############################################################################
-# Load FORTE Extension Files
-#############################################################################
-
-GET_PROPERTY(EXTENSION_FILES GLOBAL PROPERTY FORTE_EXTENSION_FILES)
-LIST(LENGTH EXTENSION_FILES len)
-IF(len GREATER 0)
-  LIST(REMOVE_DUPLICATES EXTENSION_FILES)
-  FOREACH(FILE ${EXTENSION_FILES})
-  INCLUDE("${FILE}")
-  ENDFOREACH(FILE)
-ENDIF(len GREATER 0)
-
-#######################################################################################
-# Setup Forte with all Functionblocks
-#######################################################################################
-
-#forte init is needed for the temporary forte library, which then is linked to the main.cpp
-
-forte_add_sourcefile_with_path_hcpp(${FORTE_BINARY_DIR}/forteinit)
-set_source_files_properties(${FORTE_BINARY_DIR}/forteinit.h PROPERTIES GENERATED TRUE)
-set_source_files_properties(${FORTE_BINARY_DIR}/forteinit.cpp PROPERTIES GENERATED TRUE)
-
-GET_PROPERTY(SOURCE_TIMER_CPP         GLOBAL PROPERTY FORTE_TIMER_CPP)
-GET_PROPERTY(SOURCE_TIMER_H           GLOBAL PROPERTY FORTE_TIMER_H)
-
-forte_add_sourcefile_with_path_h(${SOURCE_TIMER_H})
-forte_add_sourcefile_with_path_cpp(${SOURCE_TIMER_CPP})
-
-GET_PROPERTY(SOURCE_H              GLOBAL PROPERTY FORTE_SOURCE_H)
-GET_PROPERTY(SOURCE_H_GROUP        GLOBAL PROPERTY FORTE_SOURCE_H_GROUP)
-LIST(APPEND SOURCE_FILES           ${SOURCE_H})
-LIST(APPEND SOURCE_FILES_GROUP     ${SOURCE_H_GROUP})
-
-GET_PROPERTY(SOURCE_CPP              GLOBAL PROPERTY FORTE_SOURCE_CPP)
-GET_PROPERTY(SOURCE_CPP_GROUP_STRUCT GLOBAL PROPERTY FORTE_SOURCE_CPP_GROUP)
-LIST(APPEND SOURCE_FILES             ${SOURCE_CPP})
-LIST(APPEND SOURCE_FILES_GROUP       ${SOURCE_CPP_GROUP_STRUCT})
-
-GET_PROPERTY(SOURCE_C                GLOBAL PROPERTY FORTE_SOURCE_C)
-GET_PROPERTY(SOURCE_C_GROUP_STRUCT   GLOBAL PROPERTY FORTE_SOURCE_C_GROUP)
-LIST(APPEND SOURCE_FILES             ${SOURCE_C})
-LIST(APPEND SOURCE_FILES_GROUP       ${SOURCE_C_GROUP_STRUCT})
-
-GET_PROPERTY(SOURCE_EXECUTABLE_CPP    GLOBAL PROPERTY FORTE_EXECUTABLE_CPP)
-GET_PROPERTY(SOURCE_EXECUTABLE_H      GLOBAL PROPERTY FORTE_EXECUTABLE_H)
-
-#############################################################################
-# Add Files to source-group
-#############################################################################
-LIST(LENGTH SOURCE_FILES       SOURCE_LEN)
-LIST(LENGTH SOURCE_FILES_GROUP SOURCE_GROUP_LEN)
-math(EXPR SOURCE_LEN           ${SOURCE_LEN}-1)
-math(EXPR SOURCE_GROUP_LEN     ${SOURCE_GROUP_LEN}-1)
-
-FOREACH(POS RANGE ${SOURCE_LEN}-1)
-  LIST(GET SOURCE_FILES        ${POS} FILE) 
-  LIST(GET SOURCE_FILES_GROUP  ${POS} GROUP) 
-  source_group(${GROUP} FILES  ${FILE})
-ENDFOREACH(POS)
-
-# remove duplicate entries
-LIST(LENGTH SOURCE_FILES len)
-IF(len GREATER 0)
-  LIST(REMOVE_DUPLICATES SOURCE_FILES)
-ENDIF(len GREATER 0)
-
-SET(WRITE_FILE "")
-FOREACH(FILE ${SOURCE_FILES})
-  SET(WRITE_FILE "${WRITE_FILE}${FILE}\n")
-ENDFOREACH(FILE)
-FILE(WRITE ${CMAKE_BINARY_DIR}/file_list.txt "${WRITE_FILE}")
-
-######################################################################################
-# Architecutre to build 4diac FORTE on
-######################################################################################
-set(FORTE_ARCHITECTURE "None" CACHE STRING "Architecture to build FORTE on")
-GET_PROPERTY(architectures GLOBAL PROPERTY FORTE_ARCHITECTURES)
-list(SORT architectures)
-set_property(CACHE FORTE_ARCHITECTURE PROPERTY STRINGS None ${architectures})
-
-#######################################################################################
-# Create Files
-#######################################################################################
-
-# setting the C++ version has to be done directly before defining the targets only then modules can override this setting 
-if (NOT DEFINED CMAKE_CXX_STANDARD)
-  set(CMAKE_CXX_STANDARD 20)
-elseif (CMAKE_CXX_STANDARD LESS 20)
-  message(NOTICE "C++ standard changed to minimum requirement of 20, was set to ${CMAKE_CXX_STANDARD} originally")
-  set(CMAKE_CXX_STANDARD 20)
-endif ()
-if (NOT DEFINED CMAKE_CXX_STANDARD_REQUIRED)
-  set(CMAKE_CXX_STANDARD_REQUIRED ON)
-endif ()
-
-#######################################################################################
-# Create an object library with all configurations needed which 
-# is then used by the others targets
-#######################################################################################
-set(FORTE_BASE_TARGET_NAME FORTE_LITE)
-add_library(${FORTE_BASE_TARGET_NAME} OBJECT ${SOURCE_FILES}) #no executables.
-target_compile_features(${FORTE_BASE_TARGET_NAME} PUBLIC cxx_std_17)
-
-#######################################################################################
-# Link Libraries to the Executable
-#######################################################################################
-# get Linker-Directories from Modules
-get_property(LINK_LIBRARY GLOBAL PROPERTY FORTE_LINK_LIBRARY)
-target_link_libraries(${FORTE_BASE_TARGET_NAME} INTERFACE ${LINK_LIBRARY})
-
-#######################################################################################
-# Define global link flags
-#######################################################################################
-
-get_property(existing_link_flags GLOBAL PROPERTY LINK_FLAGS)
-if(existing_link_flags)
-  set_property(GLOBAL APPEND PROPERTY FORTE_LINK_FLAGS ${existing_link_flags})
+if (FORTE_EXTERNAL_MODULES_DIRECTORIES)
+    foreach(dir IN LISTS FORTE_EXTERNAL_MODULES_DIRECTORIES)
+        file(REAL_PATH "${dir}" dir BASE_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}")
+        forte_add_modules(${dir})
+    endforeach()
 endif()
 
-GET_PROPERTY(link_flags GLOBAL PROPERTY FORTE_LINK_FLAGS)
 
-target_link_options(${FORTE_BASE_TARGET_NAME} INTERFACE ${link_flags})
+###############################################################################
+# Finalisation
 
-#######################################################################################
-# Define global Include-directorys
-#######################################################################################
+# TODO: FORTE_EXTENSION_FILES
 
-forte_add_include_directories(./)
-forte_add_include_directories(${FORTE_BINARY_DIR})
-forte_add_include_directories(${FORTE_BINARY_DIR}/src_gen)
+generate_typeinit(forte)
+generate_stringlist(forte)
 
-GET_PROPERTY(INCLUDE_DIRECTORIES GLOBAL PROPERTY FORTE_INCLUDE_DIRECTORIES)
+# TODO: FORTE_POST_BUILD
 
-LIST(LENGTH INCLUDE_DIRECTORIES len)
-IF(len GREATER 0)
-  LIST(REMOVE_DUPLICATES INCLUDE_DIRECTORIES)
-  LIST(REVERSE INCLUDE_DIRECTORIES) # bugfix, for replaced include files
-ENDIF(len GREATER 0)
-
-GET_PROPERTY(INCLUDE_SYSTEM_DIRECTORIES GLOBAL PROPERTY FORTE_INCLUDE_SYSTEM_DIRECTORIES)
-LIST(LENGTH INCLUDE_SYSTEM_DIRECTORIES len)
-IF(len GREATER 0)
-  LIST(REMOVE_DUPLICATES INCLUDE_SYSTEM_DIRECTORIES)
-  LIST(REVERSE INCLUDE_SYSTEM_DIRECTORIES) # bugfix, for replaced include files
-ENDIF(len GREATER 0)
-
-target_include_directories(${FORTE_BASE_TARGET_NAME} PUBLIC ${INCLUDE_DIRECTORIES})
-target_include_directories(${FORTE_BASE_TARGET_NAME} SYSTEM PUBLIC ${INCLUDE_SYSTEM_DIRECTORIES})
-
-#######################################################################################
-# Define directories for Libraries
-#######################################################################################
-GET_PROPERTY(LINK_DIRECTORIES GLOBAL PROPERTY FORTE_LINK_DIRECTORIES)
-LIST(LENGTH LINK_DIRECTORIES len)
-IF(len GREATER 0)
-  LIST(REMOVE_DUPLICATES LINK_DIRECTORIES)
-ENDIF(len GREATER 0)
-
-target_link_directories(${FORTE_BASE_TARGET_NAME} INTERFACE ${LINK_DIRECTORIES})
-
-#######################################################################################
-# Define compile definitions
-#######################################################################################
-GET_PROPERTY(DEFINITIONS GLOBAL PROPERTY FORTE_DEFINITION)
-# the following should be added to the ${FORTE_BASE_TARGET_NAME} target, but it 
-# was not working in windows for some reason
-ADD_DEFINITIONS(${DEFINITIONS}) 
-
-set(FORTE_LINK_STATIC OFF CACHE BOOL "Force static linking of forte binary")
-
-if(FORTE_BUILD_EXECUTABLE)
-  ADD_EXECUTABLE (${FORTE_EXECUTABLE_NAME} ${SOURCE_EXECUTABLE_CPP} ${FORTE_EXECUTABLE_H})
-  if (FORTE_LINK_STATIC)
-    set_target_properties(${FORTE_EXECUTABLE_NAME} PROPERTIES LINK_SEARCH_START_STATIC ON)
-    set_target_properties(${FORTE_EXECUTABLE_NAME} PROPERTIES LINK_SEARCH_END_STATIC ON)
-    target_link_options(${FORTE_EXECUTABLE_NAME} PRIVATE -static-libgcc -static-libstdc++ -static)
-  endif()
-  TARGET_LINK_LIBRARIES (${FORTE_EXECUTABLE_NAME} PUBLIC ${FORTE_BASE_TARGET_NAME})
-  install(TARGETS ${FORTE_EXECUTABLE_NAME} RUNTIME DESTINATION bin)
-  message("Building executable")
-endif(FORTE_BUILD_EXECUTABLE)
+#[[
 
 # function for configuring common things in both static and shared c libraries
 FUNCTION(configure_c_library LIBRARY_NAME)
@@ -523,38 +177,5 @@ if(FORTE_BUILD_SHARED_LIBRARY)
   endif(FORTE_C_INTERFACE)
 endif(FORTE_BUILD_SHARED_LIBRARY)
 
-#######################################################################################
-# Generate stringlist and modules
-#######################################################################################
 
-#forte init is needed for the temporary forte library, which then is linked to the main.cpp
-ADD_CUSTOM_TARGET(forte_init_generator COMMAND ${CMAKE_COMMAND} -DFORTE_BINARY_DIR:STRING="${CMAKE_BINARY_DIR}" -DFORTE_SOURCE_DIR:STRING="${CMAKE_SOURCE_DIR}" -DFORTE_LITTLE_ENDIAN:STRING=${FORTE_LITTLE_ENDIAN} -DFORTE_BIG_ENDIAN:STRING=${FORTE_BIG_ENDIAN} -DFORTE_LOGLEVEL:STRING="${FORTE_LOGLEVEL}" -P ${FORTE_BUILDSUPPORT_DIRECTORY}/generate_init.cmake)  #
-ADD_DEPENDENCIES (forte_init_generator forte_generate_modules_cmake_files)
-ADD_DEPENDENCIES (${FORTE_BASE_TARGET_NAME} forte_init_generator)
-
-ADD_CUSTOM_TARGET(forte_generate_modules_cmake_files COMMAND ${CMAKE_COMMAND}
-  -DFORTE_MODULE_LIST:LISTS="${FORTE_MODULE_LIST}"
-  -P ${FORTE_BUILDSUPPORT_DIRECTORY}/generate_modules_cmake_file.cmake)
-
-ADD_CUSTOM_TARGET(forte_stringlist_generator COMMAND ${CMAKE_COMMAND} -DFORTE_BINARY_DIR:STRING="${CMAKE_BINARY_DIR}" -DFORTE_SOURCE_DIR:STRING="${CMAKE_CURRENT_SOURCE_DIR}" -P ${FORTE_BUILDSUPPORT_DIRECTORY}/generate_stringlist.cmake)
-ADD_DEPENDENCIES (${FORTE_BASE_TARGET_NAME} forte_stringlist_generator)
-ADD_DEPENDENCIES (forte_stringlist_generator forte_generate_modules_cmake_files)
-
-#######################################################################################
-# Add post build commands
-#######################################################################################
-GET_PROPERTY(POST_BUILD_COM GLOBAL PROPERTY FORTE_POST_BUILD_COMMAND)
-STRING(LENGTH "${POST_BUILD_COM}" LEN_POST_BUILD_COM)
-if(NOT LEN_POST_BUILD_COM EQUAL 0)
-  if(FORTE_BUILD_EXECUTABLE)
-    ADD_CUSTOM_COMMAND(TARGET ${FORTE_BUILD_EXECUTABLE} POST_BUILD ${POST_BUILD_COM})
-  endif(FORTE_BUILD_EXECUTABLE)
-
-  if(FORTE_BUILD_STATIC_LIBRARY)
-    ADD_CUSTOM_COMMAND(TARGET ${FORTE_STATIC_LIBRARY_NAME} POST_BUILD ${POST_BUILD_COM})
-  endif(FORTE_BUILD_STATIC_LIBRARY)
-  
-  if(FORTE_BUILD_SHARED_LIBRARY)
-    ADD_CUSTOM_COMMAND(TARGET ${FORTE_SHARED_LIBRARY_NAME} POST_BUILD ${POST_BUILD_COM})
-  endif(FORTE_BUILD_SHARED_LIBRARY)
-endif(NOT LEN_POST_BUILD_COM EQUAL 0)
+]]

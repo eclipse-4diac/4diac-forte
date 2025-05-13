@@ -10,23 +10,8 @@
 #    Jose Cabral
 # *    - initial API and implementation and/or initial documentation
 # *******************************************************************************/
-#############################################################################
-# core/fmi/comm
-#############################################################################
 
-if(FORTE_ENABLE_FMU)
-
-  forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR}) #to be included in the normal forte for comlayersmanager.cpp
-
-  forte_add_network_layer(fmu ON "fmu" fmuComLayer fmuComLayer "Enable Forte Com Fmu") 
-    
-  forte_add_handler(fmuHandler fmuHandler)
-  
-  forte_add_sourcefile_hcpp(fmuHandler) 
-    
-endif(FORTE_ENABLE_FMU)
-
-
-
-
-
+# forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR}) #to be included in the normal forte for comlayersmanager.cpp
+# forte_add_network_layer(fmu ON "fmu" fmuComLayer fmuComLayer "Enable Forte Com Fmu") 
+# forte_add_handler(fmuHandler fmuHandler)
+# forte_add_sourcefile_hcpp(fmuHandler) 

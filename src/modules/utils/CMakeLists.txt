@@ -10,24 +10,30 @@
 #    Thomas Strasser, Alois Zoitl, Matthias Plasch, Ben Schneider
 # *   - initial API and implementation and/or initial documentation
 # *******************************************************************************/
-forte_add_module(UTILS OFF "FORTE UTILITY FBs")
+forte_register_module(UTILS OFF "FORTE UTILITY FBs")
 
-forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+add_library(forte-modules-utils OBJECT
+	GetInstancePath_fbt.cpp
+	GetInstancePathAndName_fbt.cpp
+	OUT_ANY_CONSOLE_fbt.cpp
+	GEN_F_MUX_fbt.cpp
+	GEN_CSV_WRITER_fbt.cpp
+	GEN_ARRAY2VALUES_fbt.cpp
+	GEN_VALUES2ARRAY_fbt.cpp
+	GEN_ARRAY2ARRAY_fbt.cpp
+	GET_AT_INDEX_fbt.cpp
+	SET_AT_INDEX_fbt.cpp
+	FB_RANDOM_fbt.cpp
+	GET_STRUCT_VALUE_fbt.cpp
+	SET_STRUCT_VALUE_fbt.cpp
+	STEST_END_fbt.cpp
+	TEST_CONDITION_fbt.cpp
+)
+target_link_libraries(forte PRIVATE forte-modules-utils)
 
-#############################################################################
-# FORTE UTILITY FBs
-#############################################################################
-
-forte_add_sourcefile_hcpp(GetInstancePath_fbt GetInstancePathAndName_fbt)
-forte_add_sourcefile_hcpp(OUT_ANY_CONSOLE_fbt GEN_CSV_WRITER_fbt)
-forte_add_sourcefile_hcpp(GEN_ARRAY2VALUES_fbt GEN_VALUES2ARRAY_fbt GEN_ARRAY2ARRAY_fbt GET_AT_INDEX_fbt SET_AT_INDEX_fbt)
-forte_add_sourcefile_hcpp(FB_RANDOM_fbt GET_STRUCT_VALUE_fbt SET_STRUCT_VALUE_fbt)
-
-forte_add_sourcefile_hcpp(STEST_END_fbt)
-forte_add_sourcefile_hcpp(TEST_CONDITION_fbt)
-forte_add_subdirectory(selection)
-forte_add_subdirectory(const)
-forte_add_subdirectory(assembling)
-forte_add_subdirectory(splitting)
-forte_add_subdirectory(timing)
-forte_add_subdirectory(signals)
+add_subdirectory(selection)
+add_subdirectory(const)
+add_subdirectory(assembling)
+add_subdirectory(splitting)
+add_subdirectory(timing)
+add_subdirectory(signals)

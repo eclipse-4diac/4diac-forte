@@ -9,19 +9,18 @@
 # Contributors: 
 #     Franz Hoepfinger - initial API and implementation and/or initial documentation
 # *******************************************************************************/ 
-forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
-#######################################################
-# assembling
-#######################################################
 
-forte_add_sourcefile_hcpp(ASSEMBLE_BYTE_FROM_BOOLS_fct)
-forte_add_sourcefile_hcpp(ASSEMBLE_BYTE_FROM_QUARTERS_fct)
-forte_add_sourcefile_hcpp(ASSEMBLE_DWORD_FROM_BOOLS_fct)
-forte_add_sourcefile_hcpp(ASSEMBLE_DWORD_FROM_BYTES_fct)
-forte_add_sourcefile_hcpp(ASSEMBLE_DWORD_FROM_QUARTERS_fct)
-forte_add_sourcefile_hcpp(ASSEMBLE_DWORD_FROM_WORDS_fct)
-forte_add_sourcefile_hcpp(ASSEMBLE_LWORD_FROM_BOOLS_fct)
-forte_add_sourcefile_hcpp(ASSEMBLE_LWORD_FROM_QUARTERS_fct)
-forte_add_sourcefile_hcpp(ASSEMBLE_WORD_FROM_BOOLS_fct)
-forte_add_sourcefile_hcpp(ASSEMBLE_WORD_FROM_BYTES_fct)
-forte_add_sourcefile_hcpp(ASSEMBLE_WORD_FROM_QUARTERS_fct)
+add_library(forte-modules-utils-assembling OBJECT
+    ASSEMBLE_BYTE_FROM_BOOLS_fct.cpp
+    ASSEMBLE_BYTE_FROM_QUARTERS_fct.cpp
+    ASSEMBLE_DWORD_FROM_BOOLS_fct.cpp
+    ASSEMBLE_DWORD_FROM_BYTES_fct.cpp
+    ASSEMBLE_DWORD_FROM_QUARTERS_fct.cpp
+    ASSEMBLE_DWORD_FROM_WORDS_fct.cpp
+    ASSEMBLE_LWORD_FROM_BOOLS_fct.cpp
+    ASSEMBLE_LWORD_FROM_QUARTERS_fct.cpp
+    ASSEMBLE_WORD_FROM_BOOLS_fct.cpp
+    ASSEMBLE_WORD_FROM_BYTES_fct.cpp
+    ASSEMBLE_WORD_FROM_QUARTERS_fct.cpp
+)
+target_link_libraries(forte PRIVATE forte-modules-utils-assembling)

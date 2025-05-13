@@ -11,21 +11,40 @@
 # *     - initial API and implementation and/or initial documentation
 # *******************************************************************************/
 
-#############################################################################
-# Event FB
-#############################################################################
-forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
-SET(SOURCE_GROUP ${SOURCE_GROUP}\\events)
+add_library(forte-stdfblib-events OBJECT
+	E_CTU_fbt.cpp
+	E_CTD_fbt.cpp
+	E_CTUD_fbt.cpp
+	E_CTUD_UDINT_fbt.cpp
+	E_DELAY_fbt.cpp
+	E_D_FF_fbt.cpp
+	E_MERGE_fbt.cpp
+	E_REND_fbt.cpp
+	E_RS_fbt.cpp
+	E_SELECT_fbt.cpp
+	E_SR_fbt.cpp
+	E_CYCLE_fbt.cpp
+	E_DEMUX_fbt.cpp
+	E_F_TRIG_fbt.cpp
+	E_PERMIT_fbt.cpp
+	E_RDELAY_fbt.cpp
+	E_RESTART_fbt.cpp
+	E_R_TRIG_fbt.cpp
+	E_SPLIT_fbt.cpp
+	E_SWITCH_fbt.cpp
+	GEN_E_DEMUX_fbt.cpp
+	GEN_E_MUX_fbt.cpp
+	ATimeOut_adp.cpp
+	E_TimeOut_fbt.cpp
+	ARTimeOut_adp.cpp
+	E_RTimeOut_fbt.cpp
+	E_T_FF_fbt.cpp
+	E_TRAIN_fbt.cpp
+	E_PULSE_fbt.cpp
+	E_TP_fbt.cpp
+	E_TON_fbt.cpp
+	E_TOF_fbt.cpp
+	E_TONOF_fbt.cpp
+)
 
-
-forte_add_sourcefile_hcpp(E_CTU_fbt E_CTD_fbt E_CTUD_fbt E_CTUD_UDINT_fbt E_DELAY_fbt  E_D_FF_fbt    E_MERGE_fbt)
-forte_add_sourcefile_hcpp( E_REND_fbt   E_RS_fbt     E_SELECT_fbt  E_SR_fbt)
-forte_add_sourcefile_hcpp(E_CYCLE_fbt   E_DEMUX_fbt  E_F_TRIG_fbt  E_PERMIT_fbt) 
-forte_add_sourcefile_hcpp(E_RDELAY_fbt   E_RESTART_fbt E_R_TRIG_fbt E_SPLIT_fbt   E_SWITCH_fbt)
-forte_add_sourcefile_hcpp(GEN_E_DEMUX_fbt GEN_E_MUX_fbt)
-forte_add_sourcefile_hcpp(GEN_E_SPLIT_fbt)
-forte_add_sourcefile_hcpp(ATimeOut_adp E_TimeOut_fbt ARTimeOut_adp E_RTimeOut_fbt E_T_FF_fbt E_T_FF_SR_fbt)
-forte_add_sourcefile_hcpp(E_TRAIN_fbt)
-forte_add_sourcefile_hcpp(E_PULSE_fbt E_TP_fbt E_TON_fbt E_TOF_fbt E_TONOF_fbt)
-forte_add_sourcefile_hcpp(E_TRIG_fbt)
-forte_add_sourcefile_hcpp(E_TABLE_fbt E_N_TABLE_fbt E_TABLE_CTRL_fbt)
+target_link_libraries(forte PRIVATE forte-stdfblib-events)

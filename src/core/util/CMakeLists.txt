@@ -10,13 +10,13 @@
 #    Alois Zoitl
 # *    - initial API and implementation and/or initial documentation
 # *******************************************************************************/
-#############################################################################
-# core/util
-#############################################################################
-forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
-forte_add_sourcefile_h(singlet.h criticalregion.h)
-forte_add_sourcefile_h(fortearray.h inplace_vector.h)
-forte_add_sourcefile_h(ringbuf.h)
+add_library(forte-core-util OBJECT
+	string_utils.cpp
+	parameterParser.cpp
+	configFileParser.cpp
+	mixedStorage.cpp
+	ifSpecBuilder.cpp
+)
 
-forte_add_sourcefile_hcpp(string_utils parameterParser configFileParser mixedStorage ifSpecBuilder)
+target_link_libraries(forte PRIVATE forte-core-util)

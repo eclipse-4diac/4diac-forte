@@ -10,9 +10,3 @@
 #     Martin Melik-Merkumians - adds package convert in core/datatypes
 
 # *******************************************************************************/
-#############################################################################
-# Core/datatypes/convert
-#############################################################################
-forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
-
-forte_add_sourcefile_h(convert_functions.h)

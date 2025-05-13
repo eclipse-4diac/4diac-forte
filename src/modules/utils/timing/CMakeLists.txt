@@ -9,12 +9,12 @@
 # Contributors:
 #    Franz Höpfinger - initial API and implementation and/or initial documentation
 # *******************************************************************************/
-forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
-#############################################################################
-# timing
-#############################################################################
 
-forte_add_sourcefile_hcpp(F_NOW_fct)
-forte_add_sourcefile_hcpp(F_NOW_MONOTONIC_fct)
-forte_add_sourcefile_hcpp(E_STOPWATCH_fbt)
-forte_add_sourcefile_hcpp(TIMESTAMP_NS_fct)
+add_library(forte-modules-utils-timing OBJECT
+    F_NOW_fct.cpp
+    F_NOW_MONOTONIC_fct.cpp
+    E_STOPWATCH_fbt.cpp
+    TIMESTAMP_NS_fct.cpp
+)
+
+target_link_libraries(forte PRIVATE forte-modules-utils-timing)

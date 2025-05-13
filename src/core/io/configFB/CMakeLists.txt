@@ -11,13 +11,15 @@
 # *   - initial API and implementation and/or initial documentation
 # *******************************************************************************/
 
-#############################################################################
-# IO Configuration FBs
-#############################################################################
+add_library(forte-core-io-configfb OBJECT
+    io_base.cpp
+    io_configFB_controller.cpp
+    io_adapter_multi.cpp
+    io_master_multi.cpp
+    io_slave_multi.cpp
+    io_adapter_split.cpp
+    io_controller_split.cpp
+    io_controller_part.cpp
+)
 
-SET(SOURCE_GROUP ${SOURCE_GROUP}\\configFB)
-
-forte_add_sourcefile_hcpp(io_base io_configFB_controller 
-                           io_adapter_multi io_master_multi io_slave_multi
-                           io_adapter_split io_controller_split io_controller_part
-                           )
+target_link_libraries(forte PRIVATE forte-core-io-configfb)

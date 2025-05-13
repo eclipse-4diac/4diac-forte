@@ -13,14 +13,16 @@
 #############################################################################
 # Net FB
 #############################################################################
-SET(SOURCE_GROUP ${SOURCE_GROUP}\\net)
-forte_add_sourcefile_hcpp(GEN_CLIENT_fbt GEN_PUBLISH_fbt  GEN_SERVER_fbt  GEN_SUBSCRIBE_fbt)
 
-forte_add_sourcefile_hcpp(PUBLISH_1_fbt)
-forte_add_sourcefile_hcpp(SUBSCRIBE_1_fbt)
+add_library(forte-stdfblib-net OBJECT
+    GEN_CLIENT_fbt.cpp
+    GEN_PUBLISH_fbt.cpp
+    GEN_SERVER_fbt.cpp
+    GEN_SUBSCRIBE_fbt.cpp
+    PUBLISH_1_fbt.cpp
+    SUBSCRIBE_1_fbt.cpp
+    $<$<BOOL:${FORTE_COM_LOCAL}>:GEN_PUBL_fbt.cpp>
+    $<$<BOOL:${FORTE_COM_LOCAL}>:GEN_SUBL_fbt.cpp>
+)
 
-forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
-
-if (FORTE_COM_LOCAL) 
-  forte_add_sourcefile_hcpp(GEN_PUBL_fbt GEN_SUBL_fbt)
-endif(FORTE_COM_LOCAL)
+target_link_libraries(forte PRIVATE forte-stdfblib-net)

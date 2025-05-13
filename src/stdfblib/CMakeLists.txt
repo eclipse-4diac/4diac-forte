@@ -11,15 +11,11 @@
 # *   Johannes Messmer - add IO directory
 # *******************************************************************************/
 
-forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+add_library(forte-stdfblib OBJECT timedfb.cpp)
 
-SET(SOURCE_GROUP ${SOURCE_GROUP}\\fblib)
-
-forte_add_sourcefile_hcpp(timedfb)
+target_link_libraries(forte PRIVATE forte-stdfblib)
 
 add_subdirectory(events)
-if(FORTE_IO)
-    add_subdirectory(io)
-endif()
+add_subdirectory(io)
 add_subdirectory(ita)
 add_subdirectory(net)

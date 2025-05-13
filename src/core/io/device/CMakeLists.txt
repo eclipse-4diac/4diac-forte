@@ -11,12 +11,10 @@
 # *   - initial API and implementation and/or initial documentation
 # *******************************************************************************/
 
-#############################################################################
-# IO Device
-#############################################################################
+add_library(forte-core-io-device OBJECT
+	io_controller.cpp
+	io_controller_multi.cpp
+	io_controller_poll.cpp
+)
 
-SET(SOURCE_GROUP ${SOURCE_GROUP}\\device)
-
-forte_add_sourcefile_hcpp(io_controller)
-forte_add_sourcefile_hcpp(io_controller_multi)
-forte_add_sourcefile_hcpp(io_controller_poll)
+target_link_libraries(forte PRIVATE forte-core-io-device)
