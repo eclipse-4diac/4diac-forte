@@ -53,8 +53,10 @@ void COPC_UA_Client_IterationList::addClient(CUA_ClientInformation &paClientInfo
 void COPC_UA_Client_IterationList::removeClient(CUA_ClientInformation &paClientInformation) {
   CCriticalRegion iterationListRegion(getIterationClientsMutex());
   CCriticalRegion newClientsRegion(getNewClientsMutex());
-  getNewClients().erase(&paClientInformation); // client could still be in the newList
-  getIterationClients().erase(&paClientInformation);
+
+  // client could still be in the newList
+  std::erase(getNewClients(), &paClientInformation);
+  std::erase(getIterationClients(), &paClientInformation);
 }
 
 void COPC_UA_Client_IterationList::run() {
@@ -79,29 +81,27 @@ void COPC_UA_Client_IterationList::resumeIterationLoop() {
 }
 
 void COPC_UA_Client_IterationList::addClientToList(CUA_ClientInformation &paClientInformation,
-                                                   CSinglyLinkedList<CUA_ClientInformation *> &paList) const {
+                                                   std::vector<CUA_ClientInformation *> &paList) const {
   bool elementAlreadyPresent = false;
-  for (CSinglyLinkedList<CUA_ClientInformation *>::Iterator itClientInformation = paList.begin();
-       itClientInformation != paList.end(); ++itClientInformation) {
-    if (&paClientInformation == (*itClientInformation)) {
+  for (auto clientInformation : paList) {
+    if (&paClientInformation == clientInformation) {
       elementAlreadyPresent = true;
       break;
     }
   }
 
   if (!elementAlreadyPresent) {
-    paList.pushBack(&paClientInformation);
+    paList.push_back(&paClientInformation);
   }
 }
 
 void COPC_UA_Client_IterationList::updateClientList() {
   CCriticalRegion iterationListRegion(getIterationClientsMutex());
   CCriticalRegion newClientsRegion(getNewClientsMutex());
-  for (CSinglyLinkedList<CUA_ClientInformation *>::Iterator itClientInformation = getNewClients().begin();
-       itClientInformation != getNewClients().end(); ++itClientInformation) {
-    addClientToList(**itClientInformation, getIterationClients());
+  for (auto clientInformation : getNewClients()) {
+    addClientToList(*clientInformation, getIterationClients());
   }
-  getNewClients().clearAll();
+  getNewClients().clear();
   mNewClientsPresent = false;
 }
 
@@ -193,13 +193,12 @@ UA_StatusCode COPC_UA_Remote_Handler::uninitializeAction(CActionInfo &paActionIn
 
 void COPC_UA_Remote_Handler::cleanResources() {
   CCriticalRegion criticalRegion(mAllClientListMutex);
-  for (CSinglyLinkedList<CUA_ClientInformation *>::Iterator itClientInformation = mAllClients.begin();
-       itClientInformation != mAllClients.end(); ++itClientInformation) {
-    mConnectionHandler.removeClient(**itClientInformation);
-    removeClient(**itClientInformation);
-    delete *itClientInformation;
+  for (auto clientInformation : mAllClients) {
+    mConnectionHandler.removeClient(*clientInformation);
+    removeClient(*clientInformation);
+    delete clientInformation;
   }
-  mAllClients.clearAll();
+  mAllClients.clear();
 }
 
 UA_StatusCode COPC_UA_Remote_Handler::getClientAndAddAction(CActionInfo &paActionInfo) {
@@ -216,17 +215,16 @@ CUA_ClientInformation *COPC_UA_Remote_Handler::getClient(const std::string &paEn
   CCriticalRegion allClientsRegion(mAllClientListMutex);
 
   CUA_ClientInformation *client = nullptr;
-  for (CSinglyLinkedList<CUA_ClientInformation *>::Iterator itClientInformation = mAllClients.begin();
-       itClientInformation != mAllClients.end(); ++itClientInformation) {
-    if ((*itClientInformation)->getEndpoint() == paEndpoint) {
-      client = (*itClientInformation);
+  for (auto clientInformation : mAllClients) {
+    if (clientInformation->getEndpoint() == paEndpoint) {
+      client = clientInformation;
       break;
     }
   }
   if (!client) {
     client = new CUA_ClientInformation(paEndpoint);
     if (client->configureClient()) {
-      mAllClients.pushBack(client);
+      mAllClients.push_back(client);
     } else {
       delete client;
       client = nullptr;
@@ -238,12 +236,11 @@ CUA_ClientInformation *COPC_UA_Remote_Handler::getClient(const std::string &paEn
 
 void COPC_UA_Remote_Handler::addActionToClient(CActionInfo &paActionInfo) {
   CCriticalRegion allClientsRegion(mAllClientListMutex);
-  for (CSinglyLinkedList<CUA_ClientInformation *>::Iterator itClientInformation = mAllClients.begin();
-       itClientInformation != mAllClients.end(); ++itClientInformation) {
-    CCriticalRegion clientRegion((*itClientInformation)->getMutex());
-    if ((*itClientInformation)->getEndpoint() == paActionInfo.getEndpoint()) {
-      (*itClientInformation)->addAction(paActionInfo);
-      addClientToConnectionHandler(**itClientInformation);
+  for (auto clientInformation : mAllClients) {
+    CCriticalRegion clientRegion(clientInformation->getMutex());
+    if (clientInformation->getEndpoint() == paActionInfo.getEndpoint()) {
+      clientInformation->addAction(paActionInfo);
+      addClientToConnectionHandler(*clientInformation);
       break;
     }
   }
@@ -253,12 +250,11 @@ void COPC_UA_Remote_Handler::removeActionFromClient(CActionInfo &paActionInfo) {
   CCriticalRegion allClientsRegion(mAllClientListMutex);
 
   CUA_ClientInformation *clientToDelete = nullptr;
-  for (CSinglyLinkedList<CUA_ClientInformation *>::Iterator itClientInformation = mAllClients.begin();
-       itClientInformation != mAllClients.end(); ++itClientInformation) {
-    CCriticalRegion clientRegion((*itClientInformation)->getMutex());
-    if ((*itClientInformation)->getEndpoint() == paActionInfo.getEndpoint()) {
-      (*itClientInformation)->removeAction(paActionInfo);
-      clientToDelete = *itClientInformation;
+  for (auto clientInformation : mAllClients) {
+    CCriticalRegion clientRegion(clientInformation->getMutex());
+    if (clientInformation->getEndpoint() == paActionInfo.getEndpoint()) {
+      clientInformation->removeAction(paActionInfo);
+      clientToDelete = clientInformation;
       break;
     }
   }
@@ -272,7 +268,7 @@ void COPC_UA_Remote_Handler::removeClientFromAllLists(CUA_ClientInformation &paC
   paClientInformation.setClientToInvalid();
   mConnectionHandler.removeClient(paClientInformation);
   removeClient(paClientInformation);
-  mAllClients.erase(&paClientInformation);
+  std::erase(mAllClients, &paClientInformation);
   delete &paClientInformation;
 }
 
@@ -283,16 +279,15 @@ void COPC_UA_Remote_Handler::addClientToConnectionHandler(CUA_ClientInformation 
 bool COPC_UA_Remote_Handler::handleClients() {
   CCriticalRegion iterationCriticalRegion(
       getIterationClientsMutex()); // this is needed because removing a client from the list could cause trouble
-  CSinglyLinkedList<CUA_ClientInformation *> failedClients;
+  std::vector<CUA_ClientInformation *> failedClients;
   bool asyncIsNeeded = false;
-  for (CSinglyLinkedList<CUA_ClientInformation *>::Iterator itClientInformation = getIterationClients().begin();
-       itClientInformation != getIterationClients().end(); ++itClientInformation) {
-    CCriticalRegion criticalRegionClienMutex((*itClientInformation)->getMutex());
-    if ((*itClientInformation)->isAsyncNeeded()) {
-      if (!(*itClientInformation)->executeAsyncCalls()) {
-        failedClients.pushBack(*itClientInformation);
+  for (auto clientInformation : getIterationClients()) {
+    CCriticalRegion criticalRegionClienMutex(clientInformation->getMutex());
+    if (clientInformation->isAsyncNeeded()) {
+      if (!clientInformation->executeAsyncCalls()) {
+        failedClients.push_back(clientInformation);
       } else {
-        asyncIsNeeded = (*itClientInformation)->isAsyncNeeded();
+        asyncIsNeeded = clientInformation->isAsyncNeeded();
       }
     }
     if (!isAlive()) {
@@ -300,20 +295,20 @@ bool COPC_UA_Remote_Handler::handleClients() {
     }
   }
 
-  if (isAlive() && !failedClients.isEmpty()) {
-    for (CSinglyLinkedList<CUA_ClientInformation *>::Iterator itClientInformation = failedClients.begin();
-         itClientInformation != failedClients.end(); ++itClientInformation) {
-      DEVLOG_ERROR("[OPC UA REMOTE]: There was a problem checking remote %s.\n",
-                   (*itClientInformation)->getEndpoint().c_str());
+  if (isAlive() && !failedClients.empty()) {
+    for (auto failedClient : failedClients) {
+      DEVLOG_ERROR("[OPC UA REMOTE]: There was a problem checking remote %s.\n", failedClient->getEndpoint().c_str());
 
       // we cannot use COPC_UA_Client_IterationList::remove here because it locks mIterationClientsMutex
       CCriticalRegion newClientsRegion(getNewClientsMutex());
-      CCriticalRegion criticalRegionClienMutex((*itClientInformation)->getMutex());
-      getIterationClients().erase(*itClientInformation);
-      getNewClients().erase(*itClientInformation); // client could still be in the newList
-      (*itClientInformation)->uninitializeClient(); // reset all in client and pass it back to the connection handler
-      (*itClientInformation)->configureClient();
-      addClientToConnectionHandler(**itClientInformation);
+      CCriticalRegion criticalRegionClienMutex(failedClient->getMutex());
+
+      std::erase(getIterationClients(), failedClient);
+      std::erase(getNewClients(), failedClient); // client could still be in the newList
+
+      failedClient->uninitializeClient(); // reset all in client and pass it back to the connection handler
+      failedClient->configureClient();
+      addClientToConnectionHandler(*failedClient);
     }
   }
   return asyncIsNeeded;
@@ -329,28 +324,26 @@ COPC_UA_Remote_Handler::UA_ConnectionHandler::~UA_ConnectionHandler() = default;
 
 bool COPC_UA_Remote_Handler::UA_ConnectionHandler::handleClients() {
   CCriticalRegion clientsClientsRegion(getIterationClientsMutex());
-  CSinglyLinkedList<CUA_ClientInformation *> clientsToRemove;
+  std::vector<CUA_ClientInformation *> clientsToRemove;
   bool needsRetry = false;
-  for (CSinglyLinkedList<CUA_ClientInformation *>::Iterator itClientInformation = getIterationClients().begin();
-       itClientInformation != getIterationClients().end(); ++itClientInformation) {
-    CCriticalRegion clientRegion((*itClientInformation)->getMutex());
-    if ((*itClientInformation)->handleClientState()) {
-      clientsToRemove.pushBack(*itClientInformation);
+  for (auto clientInformation : getIterationClients()) {
+    CCriticalRegion clientRegion(clientInformation->getMutex());
+    if (clientInformation->handleClientState()) {
+      clientsToRemove.push_back(clientInformation);
     } else {
       needsRetry = true;
     }
-    if ((*itClientInformation)->someActionWasInitialized()) {
-      mClientHandler.addClient(**itClientInformation);
+    if (clientInformation->someActionWasInitialized()) {
+      mClientHandler.addClient(*clientInformation);
     }
     if (!isAlive()) {
       break;
     }
   }
 
-  if (isAlive() && !clientsToRemove.isEmpty()) {
-    for (CSinglyLinkedList<CUA_ClientInformation *>::Iterator itClientInformation = clientsToRemove.begin();
-         itClientInformation != clientsToRemove.end(); ++itClientInformation) {
-      getIterationClients().erase(*itClientInformation);
+  if (isAlive() && !clientsToRemove.empty()) {
+    for (auto clientInformation : clientsToRemove) {
+      std::erase(getIterationClients(), clientInformation);
     }
   }
   return needsRetry;

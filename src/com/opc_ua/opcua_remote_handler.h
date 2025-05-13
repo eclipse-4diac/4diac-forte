@@ -20,6 +20,7 @@
 #include "forte_config.h"
 #include "opcua_handler_abstract.h"
 #include "opcua_client_information.h"
+#include "fortelist.h"
 
 /**
  * Parent class used by the remote handler and the connection thread. They both iterate a list of clients and executed
@@ -87,7 +88,7 @@ class COPC_UA_Client_IterationList : public CThread {
      * @return mIterationClients
      */
 
-    CSinglyLinkedList<CUA_ClientInformation *> &getIterationClients() {
+    std::vector<CUA_ClientInformation *> &getIterationClients() {
       return mIterationClients;
     }
 
@@ -103,7 +104,7 @@ class COPC_UA_Client_IterationList : public CThread {
      * Access to private member mNewClients
      * @return mNewClients
      */
-    CSinglyLinkedList<CUA_ClientInformation *> &getNewClients() {
+    std::vector<CUA_ClientInformation *> &getNewClients() {
       return mNewClients;
     }
 
@@ -119,7 +120,7 @@ class COPC_UA_Client_IterationList : public CThread {
     /**
      * List of clients on which the iteration is done
      */
-    CSinglyLinkedList<CUA_ClientInformation *> mIterationClients;
+    std::vector<CUA_ClientInformation *> mIterationClients;
 
     /**
      * Mutex to access the list of clients which is iterated
@@ -129,7 +130,7 @@ class COPC_UA_Client_IterationList : public CThread {
     /**
      * List of new clients. It serves as a buffer that is latter added to the main iteration list
      */
-    CSinglyLinkedList<CUA_ClientInformation *> mNewClients;
+    std::vector<CUA_ClientInformation *> mNewClients;
 
     /**
      * Mutex to access the list of new clients
@@ -142,7 +143,7 @@ class COPC_UA_Client_IterationList : public CThread {
      * @param paList List where the client is added
      */
     void addClientToList(CUA_ClientInformation &paClientInformation,
-                         CSinglyLinkedList<CUA_ClientInformation *> &paList) const;
+                         std::vector<CUA_ClientInformation *> &paList) const;
 
     /**
      * Add the new clients to the main iteration list and clears the new clients list
@@ -295,7 +296,7 @@ class COPC_UA_Remote_Handler : public COPC_UA_HandlerAbstract, public COPC_UA_Cl
     /**
      * A list with all clients
      */
-    CSinglyLinkedList<CUA_ClientInformation *> mAllClients;
+    std::vector<CUA_ClientInformation *> mAllClients;
 
     /**
      *  Mutex to access the list with all clients

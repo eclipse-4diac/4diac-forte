@@ -16,9 +16,11 @@
 #define SRC_MODULES_OPC_UA_OPCUA_CLIENT_INFORMATION_H_
 
 #include "opcua_action_info.h"
-#include "fortelist.h"
+
 #include "forte_sync.h"
+
 #include <string>
+#include <vector>
 
 /**
  * Contains all the information needed for a client to execute remote calls. It's the only class tha access
@@ -73,7 +75,7 @@ class CUA_ClientInformation {
      * @return True if an action is present in the client, false otherwise
      */
     bool hasActions() const {
-      return !mActionsReferencingIt.isEmpty();
+      return !mActionsReferencingIt.empty();
     }
 
     /**
@@ -203,17 +205,17 @@ class CUA_ClientInformation {
      */
     struct UA_SubscribeContext_Handle {
         UA_SubscribeContext_Handle(CActionInfo &paActionInfo, size_t paPortIndex) :
-            mActionInfo(paActionInfo),
+            mActionInfo(&paActionInfo),
             mPortIndex(paPortIndex) {
         }
 
         // default copy constructor should be enough
 
         bool operator==(UA_SubscribeContext_Handle const &paRightObject) const {
-          return (&mActionInfo == &paRightObject.mActionInfo && mPortIndex == paRightObject.mPortIndex);
+          return (mActionInfo == paRightObject.mActionInfo && mPortIndex == paRightObject.mPortIndex);
         }
 
-        CActionInfo &mActionInfo;
+        CActionInfo *mActionInfo;
         size_t mPortIndex;
     };
 
@@ -245,7 +247,7 @@ class CUA_ClientInformation {
         }
 
         UA_UInt32 mSubscriptionId;
-        CSinglyLinkedList<UA_MonitoringItemInfo> mMonitoredItems;
+        std::vector<std::unique_ptr<UA_MonitoringItemInfo>> mMonitoredItems;
     };
 
     /**
@@ -394,12 +396,12 @@ class CUA_ClientInformation {
     /**
      * List of actions that use this client
      */
-    CSinglyLinkedList<CActionInfo *> mActionsReferencingIt;
+    std::vector<CActionInfo *> mActionsReferencingIt;
 
     /**
      * List of actions that need to be initialized
      */
-    CSinglyLinkedList<CActionInfo *> mActionsToBeInitialized;
+    std::vector<CActionInfo *> mActionsToBeInitialized;
 
     /**
      * Indicates if the client should wait scmConnectionRetryTimeoutNano before trying to reconnect. This is true when

@@ -28,10 +28,11 @@
 #include <conn.h>
 #include <forte_sem.h>
 #include <forte_sync.h>
-#include "../../core/fortelist.h"
 #include "opcua_handler_abstract.h"
 #include "opcua_helper.h"
+
 #include <string>
+#include <vector>
 
 /**
  * Class to handle all action that are executed on a local OPC UA server
@@ -118,7 +119,7 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
      */
     UA_StatusCode splitAndCreateFolders(const std::string &paBrowsePath,
                                         std::string &paNodeName,
-                                        CSinglyLinkedList<UA_NodeId *> &paRreferencedNodes) const;
+                                        std::vector<UA_NodeId *> &paRreferencedNodes) const;
 
     /**
      * Default value for the namespace of the browsename for all created nodes
@@ -229,7 +230,7 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
      * @param paNodes Nodes being referenced by the action
      * @param paActionInfo Action referencing the nodes
      */
-    void referencedNodesIncrement(const CSinglyLinkedList<UA_NodeId *> &paNodes, CActionInfo &paActionInfo);
+    void referencedNodesIncrement(const std::vector<UA_NodeId *> &paNodes, CActionInfo &paActionInfo);
 
     /**
      * Removes the action from the references from all the nodes where it's present
@@ -378,7 +379,7 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
     /**
      * List for callback handles to be able to clean them up on destroy.
      */
-    CSinglyLinkedList<UA_VariableContext_Handle> mNodeCallbackHandles;
+    std::vector<std::unique_ptr<UA_VariableContext_Handle>> mNodeCallbackHandles;
 
     /**
      * Mutex used to avoid many threads (Resources) to access the server
@@ -436,7 +437,7 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
     /**
      * The list of parent/method information of the used methods
      */
-    CSinglyLinkedList<UA_ParentNodeHandler> mMethodsContexts;
+    std::vector<UA_ParentNodeHandler> mMethodsContexts;
 
     /**
      * Initialization of read and write of variables. It handles both existing and non-existing cases
@@ -490,7 +491,7 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
                                             CActionInfo::CNodePairInfo &paNodePairInfo,
                                             const CIEC_ANY &paVariable,
                                             size_t paIndexOfNodePair,
-                                            CSinglyLinkedList<UA_NodeId *> &paReferencedNodes,
+                                            std::vector<UA_NodeId *> &paReferencedNodes,
                                             bool paWrite);
 
     /**
@@ -640,7 +641,7 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
      * @return UA_STATUSCODE_GOOD on success, other value otherwise
      */
     UA_StatusCode
-    getNode(CActionInfo::CNodePairInfo &paNodeInfo, CSinglyLinkedList<UA_NodeId *> &paFoundNodeIds, bool *paIsPresent);
+    getNode(CActionInfo::CNodePairInfo &paNodeInfo, std::vector<UA_NodeId *> &paFoundNodeIds, bool *paIsPresent);
 
     /**
      * Execute the TranslateBrowsePathToNodeIds service in the local OPC UA server from a string containing the path
@@ -655,7 +656,7 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
                                               UA_BrowsePath **paBrowsePaths,
                                               size_t *paFoldercount,
                                               size_t *paFirstNonExistingNode,
-                                              CSinglyLinkedList<UA_NodeId *> &paFoundNodeIds) const;
+                                              std::vector<UA_NodeId *> &paFoundNodeIds) const;
 
     /**
      * Store the existing node from a TranslateBrowsePathToNodeIds service in a list of node Ids
@@ -668,7 +669,7 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
     UA_StatusCode storeAlreadyExistingNodes(const UA_BrowsePathResult *paBrowsePathsResults,
                                             size_t paFolderCnt,
                                             size_t *paFirstNonExistingNode,
-                                            CSinglyLinkedList<UA_NodeId *> &paCreatedNodeIds) const;
+                                            std::vector<UA_NodeId *> &paCreatedNodeIds) const;
 
     /**
      * Create folder objects in the OPC UA server from the string. It's assumed that the end node is not present in the
@@ -677,7 +678,7 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
      * @param paCreatedNodeIds Place to store the created nodeIds
      * @return UA_STATUSCODE_GOOD on success, other value otherwise
      */
-    UA_StatusCode createFolders(const char *paFolders, CSinglyLinkedList<UA_NodeId *> &paCreatedNodeIds) const;
+    UA_StatusCode createFolders(const char *paFolders, std::vector<UA_NodeId *> &paCreatedNodeIds) const;
 
     /**
      * Split a string into folders and node name. The provided place for store of the folder and node name are only
@@ -696,8 +697,8 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
      * @param paReferencedNodes Place to store the NodeIds if paFailed is true
      * @param paFailed True if the NodeIds should be deleted, false if they need to be copied into paReferencedNodes
      */
-    void handlePresentNodes(const CSinglyLinkedList<UA_NodeId *> &paPresentNodes,
-                            CSinglyLinkedList<UA_NodeId *> &paReferencedNodes,
+    void handlePresentNodes(const std::vector<UA_NodeId *> &paPresentNodes,
+                            std::vector<UA_NodeId *> &paReferencedNodes,
                             bool paFailed) const;
 
     /**
@@ -710,8 +711,8 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
      */
     struct CLocalMethodCall {
         CLocalMethodCall(CLocalMethodInfo &paActionInfo, COPC_UA_Helper::UA_SendVariable_handle &paSendHandle) :
-            mActionInfo(paActionInfo),
-            mSendHandle(paSendHandle) {
+            mActionInfo(&paActionInfo),
+            mSendHandle(&paSendHandle) {
         }
 
         // default copy constructor should be enough
@@ -720,8 +721,8 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
           return this == &rhs;
         }
 
-        CLocalMethodInfo &mActionInfo;
-        COPC_UA_Helper::UA_SendVariable_handle &mSendHandle;
+        CLocalMethodInfo *mActionInfo;
+        COPC_UA_Helper::UA_SendVariable_handle *mSendHandle;
     };
 
     /**
@@ -731,7 +732,7 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
      * method call can be executed. Check if this is always true, and if yes, the following related functions and
      * variables aren't necessary, and only one CLocalMethodCall is necessary
      */
-    CSinglyLinkedList<CLocalMethodCall> mMethodCalls;
+    std::vector<CLocalMethodCall> mMethodCalls;
 
     /**
      * Mutex to access mMethodCalls

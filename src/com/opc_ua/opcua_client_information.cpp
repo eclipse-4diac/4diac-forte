@@ -17,6 +17,8 @@
 #include <basecommfb.h>
 #include "opcua_handler_abstract.h" //for logger
 #include "opcua_client_config_parser.h"
+
+#include <algorithm>
 #include <stdio.h>
 
 std::string gOpcuaClientConfigFile;
@@ -68,11 +70,10 @@ bool CUA_ClientInformation::configureClientFromFile(UA_ClientConfig &paConfig) {
 
 void CUA_ClientInformation::uninitializeClient() {
   DEVLOG_INFO("[OPC UA CLIENT]: Uninitializing client %s\n", mEndpointUrl.c_str());
-  mActionsToBeInitialized.clearAll();
-  for (CSinglyLinkedList<CActionInfo *>::Iterator itReferencingActions = mActionsReferencingIt.begin();
-       itReferencingActions != mActionsReferencingIt.end(); ++itReferencingActions) {
-    uninitializeAction(**itReferencingActions);
-    mActionsToBeInitialized.pushBack(*itReferencingActions);
+  mActionsToBeInitialized.clear();
+  for (auto actionReferencingIt : mActionsReferencingIt) {
+    uninitializeAction(*actionReferencingIt);
+    mActionsToBeInitialized.push_back(actionReferencingIt);
   }
   if (mClient) {
     UA_Client_disconnect(mClient);
@@ -270,22 +271,21 @@ UA_StatusCode CUA_ClientInformation::executeCallMethod(CActionInfo &paActionInfo
 }
 
 void CUA_ClientInformation::addAction(CActionInfo &paActionInfo) {
-  mActionsReferencingIt.pushBack(&paActionInfo);
-  mActionsToBeInitialized.pushBack(&paActionInfo);
+  mActionsReferencingIt.push_back(&paActionInfo);
+  mActionsToBeInitialized.push_back(&paActionInfo);
   mWaitToInitializeActions = false;
 }
 
 void CUA_ClientInformation::removeAction(CActionInfo &paActionInfo) {
   uninitializeAction(paActionInfo);
-  mActionsReferencingIt.erase(&paActionInfo);
+  std::erase(mActionsReferencingIt, &paActionInfo);
 }
 
 bool CUA_ClientInformation::isActionInitialized(const CActionInfo &paActionInfo) {
   CCriticalRegion clientRegion(mClientMutex);
   bool retVal = true;
-  for (CSinglyLinkedList<CActionInfo *>::Iterator itClientInformation = mActionsToBeInitialized.begin();
-       itClientInformation != mActionsToBeInitialized.end(); ++itClientInformation) {
-    if ((*itClientInformation) == &paActionInfo) {
+  for (auto actionToBeInitialized : mActionsToBeInitialized) {
+    if (actionToBeInitialized == &paActionInfo) {
       retVal = false;
       break;
     }
@@ -305,23 +305,14 @@ bool CUA_ClientInformation::connectClient() {
 bool CUA_ClientInformation::initializeAllActions() {
   bool somethingFailed = false;
 
-  CSinglyLinkedList<CActionInfo *> initializedActions;
-  for (CSinglyLinkedList<CActionInfo *>::Iterator itActionInfo = mActionsToBeInitialized.begin();
-       itActionInfo != mActionsToBeInitialized.end(); ++itActionInfo) {
+  for (auto itActionInfo = mActionsToBeInitialized.begin(); itActionInfo != mActionsToBeInitialized.end();) {
 
     if (!initializeAction(**itActionInfo)) {
-      initializedActions.pushBack(*itActionInfo);
+      mSomeActionWasInitialized = true;
+      itActionInfo = mActionsToBeInitialized.erase(itActionInfo);
     } else {
       somethingFailed = true;
-    }
-  }
-
-  if (!initializedActions
-           .isEmpty()) { // if one action (FB) related to the client was initialized, copy it to the main thread
-    mSomeActionWasInitialized = true;
-    for (CSinglyLinkedList<CActionInfo *>::Iterator itActionInfo = initializedActions.begin();
-         itActionInfo != initializedActions.end(); ++itActionInfo) {
-      mActionsToBeInitialized.erase(*itActionInfo);
+      itActionInfo++;
     }
   }
 
@@ -422,49 +413,32 @@ bool CUA_ClientInformation::initializeSubscription(CActionInfo &paActionInfo) {
   bool somethingFailed = false;
   if (CActionInfo::eSubscribe == paActionInfo.getAction() && createSubscription()) {
 
-    size_t itemsAddedToList = 0;
+    std::vector<std::unique_ptr<UA_MonitoringItemInfo>> newMonitoredInfos;
+    auto &nodePairInfos = paActionInfo.getNodePairInfo();
+    for (size_t i = 0; i < nodePairInfos.size(); i++) {
+      auto monitoringItemInfo = std::make_unique<UA_MonitoringItemInfo>(UA_SubscribeContext_Handle(paActionInfo, i));
 
-    auto itFirstNewMonitoringItemInfo = mSubscriptionInfo.mMonitoredItems.end();
-
-    for (size_t i = 0; i < paActionInfo.getNoOfNodePairs(); i++) {
-      UA_MonitoringItemInfo monitoringItemInfo(UA_SubscribeContext_Handle(paActionInfo, itemsAddedToList));
-      mSubscriptionInfo.mMonitoredItems.pushBack(monitoringItemInfo);
-      if (itFirstNewMonitoringItemInfo == mSubscriptionInfo.mMonitoredItems.end()) { // store the first added item
-        itFirstNewMonitoringItemInfo = mSubscriptionInfo.mMonitoredItems.back();
-      }
-      itemsAddedToList++;
-    }
-
-    auto itNodePairInfo = paActionInfo.getNodePairInfo().begin();
-    size_t itemsAddedToLibrary = 0;
-
-    CSinglyLinkedList<UA_MonitoringItemInfo>::Iterator itAddedMonitoringItemInfo = itFirstNewMonitoringItemInfo;
-
-    for (itemsAddedToLibrary = 0; itemsAddedToLibrary < itemsAddedToList;
-         ++itAddedMonitoringItemInfo, ++itNodePairInfo) {
-      if (!addMonitoringItem(*itAddedMonitoringItemInfo, *itNodePairInfo->getNodeId())) {
+      if (!addMonitoringItem(*monitoringItemInfo, *nodePairInfos[i].getNodeId())) {
         somethingFailed = true;
         break;
       }
-      itemsAddedToLibrary++;
+      newMonitoredInfos.push_back(std::move(monitoringItemInfo));
     }
 
     if (!somethingFailed) {
+      for (auto &newMonitoredInfo : newMonitoredInfos) {
+        mSubscriptionInfo.mMonitoredItems.emplace_back(std::move(newMonitoredInfo));
+      }
       addAsyncCall();
     } else { // if something failed, remove added monitoring items and fail the whole action
 
-      for (size_t i = 0; i < itemsAddedToList; i++) {
-        if (i < itemsAddedToLibrary) { // remove items from the library
-          UA_StatusCode retVal = UA_Client_MonitoredItems_deleteSingle(
-              mClient, mSubscriptionInfo.mSubscriptionId, (*itFirstNewMonitoringItemInfo).mMonitoringItemId);
-          if (UA_STATUSCODE_GOOD != retVal) {
-            DEVLOG_ERROR("[OPC UA CLIENT]: Couldn't delete recently added monitored item %u. Error: %s\n",
-                         (*itFirstNewMonitoringItemInfo).mMonitoringItemId, UA_StatusCode_name(retVal));
-          }
+      for (auto &newMonitoredInfo : newMonitoredInfos) { // remove items from the library
+        UA_StatusCode retVal = UA_Client_MonitoredItems_deleteSingle(mClient, mSubscriptionInfo.mSubscriptionId,
+                                                                     newMonitoredInfo->mMonitoringItemId);
+        if (UA_STATUSCODE_GOOD != retVal) {
+          DEVLOG_ERROR("[OPC UA CLIENT]: Couldn't delete recently added monitored item %u. Error: %s\n",
+                       newMonitoredInfo->mMonitoringItemId, UA_StatusCode_name(retVal));
         }
-        itAddedMonitoringItemInfo = itFirstNewMonitoringItemInfo;
-        ++itFirstNewMonitoringItemInfo;
-        mSubscriptionInfo.mMonitoredItems.erase(*itAddedMonitoringItemInfo);
       }
     }
   }
@@ -498,12 +472,12 @@ bool CUA_ClientInformation::addMonitoringItem(UA_MonitoringItemInfo &paMonitorin
                                                 CUA_RemoteCallbackFunctions::subscriptionValueChangedCallback, nullptr);
   if (UA_STATUSCODE_GOOD == monResponse.statusCode) {
     DEVLOG_INFO("[OPC UA CLIENT]: Monitoring of FB %s at index %u succeeded. The monitoring item id is %u\n",
-                paMonitoringInfo.mVariableInfo.mActionInfo.getLayer().getCommFB()->getInstanceName(),
+                paMonitoringInfo.mVariableInfo.mActionInfo->getLayer().getCommFB()->getInstanceName(),
                 paMonitoringInfo.mVariableInfo.mPortIndex, monResponse.monitoredItemId);
     paMonitoringInfo.mMonitoringItemId = monResponse.monitoredItemId;
   } else {
     DEVLOG_ERROR("[OPC UA CLIENT]: Monitoring of FB %s at index %u failed. Error: %s\n",
-                 paMonitoringInfo.mVariableInfo.mActionInfo.getLayer().getCommFB()->getInstanceName(),
+                 paMonitoringInfo.mVariableInfo.mActionInfo->getLayer().getCommFB()->getInstanceName(),
                  paMonitoringInfo.mVariableInfo.mPortIndex, UA_StatusCode_name(monResponse.statusCode));
   }
 
@@ -519,32 +493,33 @@ void CUA_ClientInformation::removeAsyncCall() {
 }
 
 void CUA_ClientInformation::uninitializeAction(CActionInfo &paActionInfo) {
-  mActionsToBeInitialized.erase(&paActionInfo); // remove in case it is still not initialized
+  // remove in case it is still not initialized
+  std::erase(mActionsToBeInitialized, &paActionInfo);
+
   if (CActionInfo::eSubscribe == paActionInfo.getAction()) { // only subscription has something to release
     uninitializeSubscribeAction(paActionInfo);
   }
 }
 
 void CUA_ClientInformation::uninitializeSubscribeAction(const CActionInfo &paActionInfo) {
-  CSinglyLinkedList<UA_MonitoringItemInfo> toDelete;
   for (auto itMonitoringItemInfo = mSubscriptionInfo.mMonitoredItems.begin();
-       itMonitoringItemInfo != mSubscriptionInfo.mMonitoredItems.end(); ++itMonitoringItemInfo) {
-    if (&(*itMonitoringItemInfo).mVariableInfo.mActionInfo == &paActionInfo) {
-      toDelete.pushBack(*itMonitoringItemInfo);
+       itMonitoringItemInfo != mSubscriptionInfo.mMonitoredItems.end();) {
+    if ((*itMonitoringItemInfo)->mVariableInfo.mActionInfo == &paActionInfo) {
+      UA_StatusCode retVal = UA_Client_MonitoredItems_deleteSingle(mClient, mSubscriptionInfo.mSubscriptionId,
+                                                                   (*itMonitoringItemInfo)->mMonitoringItemId);
+      if (UA_STATUSCODE_GOOD != retVal) {
+        DEVLOG_ERROR(
+            "[OPC UA CLIENT]: Couldn't delete monitored item %u. No further actions will be taken. Error: %s\n",
+            (*itMonitoringItemInfo)->mMonitoringItemId, UA_StatusCode_name(retVal));
+      }
+
+      itMonitoringItemInfo = mSubscriptionInfo.mMonitoredItems.erase(itMonitoringItemInfo);
+    } else {
+      itMonitoringItemInfo++;
     }
   }
-  for (auto itMonitoringItemInfo = toDelete.begin(); itMonitoringItemInfo != toDelete.end(); ++itMonitoringItemInfo) {
-    UA_StatusCode retVal = UA_Client_MonitoredItems_deleteSingle(mClient, mSubscriptionInfo.mSubscriptionId,
-                                                                 (*itMonitoringItemInfo).mMonitoringItemId);
-    if (UA_STATUSCODE_GOOD != retVal) {
-      DEVLOG_ERROR("[OPC UA CLIENT]: Couldn't delete monitored item %u. No further actions will be taken. Error: %s\n",
-                   (*itMonitoringItemInfo).mMonitoringItemId, UA_StatusCode_name(retVal));
-    }
 
-    mSubscriptionInfo.mMonitoredItems.erase(*itMonitoringItemInfo);
-  }
-
-  if (mSubscriptionInfo.mMonitoredItems.isEmpty()) {
+  if (mSubscriptionInfo.mMonitoredItems.empty()) {
     resetSubscription(true);
   }
 }
@@ -757,12 +732,12 @@ void CUA_ClientInformation::CUA_RemoteCallbackFunctions::subscriptionValueChange
     handleRecv.mOffset = variableContextHandle->mPortIndex;
 
     forte::com_infra::EComResponse retVal =
-        variableContextHandle->mActionInfo.getLayer().recvData(static_cast<const void *>(&handleRecv), 0);
+        variableContextHandle->mActionInfo->getLayer().recvData(static_cast<const void *>(&handleRecv), 0);
 
     if (forte::com_infra::e_Nothing != retVal) {
-      variableContextHandle->mActionInfo.getLayer().getCommFB()->interruptCommFB(
-          &variableContextHandle->mActionInfo.getLayer());
-      variableContextHandle->mActionInfo.getLayer().triggerNewEvent();
+      variableContextHandle->mActionInfo->getLayer().getCommFB()->interruptCommFB(
+          &variableContextHandle->mActionInfo->getLayer());
+      variableContextHandle->mActionInfo->getLayer().triggerNewEvent();
     }
   }
 }
