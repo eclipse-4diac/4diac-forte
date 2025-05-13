@@ -343,7 +343,7 @@ void CHTTP_Handler::checkClientLayers() {
   CCriticalRegion criticalRegion(mClientMutex);
   if (!mClientLayers.empty()) {
     std::vector<HTTPClientWaiting *> clientsToDelete;
-    for (auto clientLayer = mClientLayers.begin(); clientLayer != mClientLayers.end(); clientLayer++) {
+    for (auto clientLayer = mClientLayers.begin(); clientLayer != mClientLayers.end();) {
       // wait until result is ready
       if (func_NOW_MONOTONIC().getInMilliSeconds() >
           clientLayer->mStartTime.getInMilliSeconds() + scmSendTimeout * 1000) {
@@ -351,7 +351,9 @@ void CHTTP_Handler::checkClientLayers() {
                      clientLayer->mLayer->getPort());
         removeAndCloseSocket(clientLayer->mSocket);
         clientLayer->mLayer->recvData(nullptr, 0); // indicates timeout
-        mClientLayers.erase(clientLayer);
+        clientLayer = mClientLayers.erase(clientLayer);
+      } else {
+        clientLayer++;
       }
     }
   }
@@ -361,14 +363,16 @@ void CHTTP_Handler::checkAcceptedSockets() {
   CCriticalRegion criticalRegion(mAcceptedMutex);
   if (!mAcceptedSockets.empty()) {
     std::vector<HTTPAcceptedSockets *> acceptedToDelete;
-    for (auto acceptedSocket = mAcceptedSockets.begin(); acceptedSocket != mAcceptedSockets.end(); acceptedSocket++) {
+    for (auto acceptedSocket = mAcceptedSockets.begin(); acceptedSocket != mAcceptedSockets.end();) {
       // wait until result is ready
       if (func_NOW_MONOTONIC().getInMilliSeconds() >
           acceptedSocket->mStartTime.getInMilliSeconds() + scmAcceptedTimeout * 1000) {
         DEVLOG_ERROR("[HTTP Handler]: Timeout at accepted socket\n");
         removeAndCloseSocket(acceptedSocket->mSocket);
-        mAcceptedSockets.erase(acceptedSocket);
-      };
+        acceptedSocket = mAcceptedSockets.erase(acceptedSocket);
+      } else {
+        acceptedSocket++;
+      }
     }
   }
 }
