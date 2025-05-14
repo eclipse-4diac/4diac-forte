@@ -98,23 +98,23 @@ class EmbrickBusHandler : public forte::core::io::IODeviceMultiController {
         }
     };
 
-    void setConfig(struct forte::core::io::IODeviceController::Config *paConfig);
+    void setConfig(struct forte::core::io::IODeviceController::Config *paConfig) override;
 
     EmbrickSlaveHandler *getSlave(size_t paIndex);
     void forceUpdate(size_t paIndex);
 
     void addSlaveHandle(size_t paIndex, std::unique_ptr<forte::core::io::IOHandle> paHandle) override;
-    void dropSlaveHandles(size_t paIndex);
+    void dropSlaveHandles(size_t paIndex) override;
 
   protected:
-    const char *init();
-    void deInit();
+    const char *init() override;
+    void deInit() override;
 
     forte::core::io::IOHandle *
-    createIOHandle(forte::core::io::IODeviceController::HandleDescriptor &paHandleDescriptor);
+    createIOHandle(forte::core::io::IODeviceController::HandleDescriptor &paHandleDescriptor) override;
 
     void prepareLoop();
-    virtual void runLoop();
+    void runLoop() override;
     void cleanLoop();
 
     bool transfer(unsigned int paTarget,
@@ -170,8 +170,8 @@ class EmbrickBusHandler : public forte::core::io::IODeviceMultiController {
     SEntry *mSNext;
 
   private:
-    bool isSlaveAvailable(size_t paIndex);
-    bool checkSlaveType(size_t paIndex, int paType);
+    bool isSlaveAvailable(size_t paIndex) override;
+    bool checkSlaveType(size_t paIndex, int paType) override;
 
     uint64_t micros();
     unsigned long millis();

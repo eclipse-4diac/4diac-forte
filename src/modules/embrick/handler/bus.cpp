@@ -14,6 +14,7 @@
 #include "bus.h"
 
 #include <algorithm>
+#include <cstddef>
 #include <slave/slave.h>
 #include <slave/packages.h>
 
@@ -262,7 +263,7 @@ bool EmbrickBusHandler::checkHandlerError() {
   return false;
 }
 
-EmbrickSlaveHandler *EmbrickBusHandler::getSlave(int paIndex) {
+EmbrickSlaveHandler *EmbrickBusHandler::getSlave(size_t paIndex) {
   if (mSlaves == 0) {
     return 0;
   }
@@ -278,7 +279,7 @@ EmbrickSlaveHandler *EmbrickBusHandler::getSlave(int paIndex) {
   return 0;
 }
 
-void EmbrickBusHandler::forceUpdate(int paIndex) {
+void EmbrickBusHandler::forceUpdate(size_t paIndex) {
   mSyncObject.lock();
 
   if (mSList == 0 || mSlaveCount <= paIndex || mSList[paIndex]->mForced) {
