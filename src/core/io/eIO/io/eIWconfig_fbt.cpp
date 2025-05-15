@@ -207,13 +207,13 @@ bool FORTE_eIWconfig::eventGen() {
     // register upper-threshold event-trigger
     if (var_ST != 0) {
       DEVLOG_DEBUG("[eventGen] register eUT event\r\n");
-      newEvent = new CeIO_UpperThreshold(eIW, eIW->getHandle(), var_ST);
+      newEvent = new CeIO_LowerThreshold(eIW, eIW->getHandle(), var_ST);
       registerEventTrigger(newEvent);
     }
     // register bottum/lower-threshold event-trigger
     if (var_BT != 0) {
       DEVLOG_DEBUG("[eventGen] register eGR event\r\n");
-      newEvent = new CeIO_LowerThreshold(eIW, eIW->getHandle(), var_BT);
+      newEvent = new CeIO_UpperThreshold(eIW, eIW->getHandle(), var_BT);
       registerEventTrigger(newEvent);
     }
   }
