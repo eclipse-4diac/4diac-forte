@@ -12,26 +12,21 @@
  *   Alois Zoitl    - migrated data type toString to std::string
  *******************************************************************************/
 #include "../../core/fbtests/fbtestfixture.h"
-
-USE_STRING_ID(GEN_CSV_WRITER);
-
 #include <cstdio>
 #include <fstream>
+#include "forte_array_fixed.h"
 
-#include "forte_array.h"
+USE_STRING_ID(CSV_WRITER_2);
 
 using namespace std::string_literals;
 
 template<typename T1, typename T2>
 class GEN_CSV_WRITER_TestFixture : public CFBTestFixtureBase {
   public:
-    GEN_CSV_WRITER_TestFixture(T1 v1 = T1(), T2 v2 = T2()) :
-        CFBTestFixtureBase(STRID(GEN_CSV_WRITER)),
-        mSD_1(v1),
-        mSD_2(v2) {
+    GEN_CSV_WRITER_TestFixture() : CFBTestFixtureBase(STRID(CSV_WRITER_2)), mSD_1(T1()), mSD_2(T2()) {
       setInputData({&mQI, &mFILE_NAME, &mSD_1, &mSD_2});
       setOutputData({&mQO, &mSTATUS});
-      CFBTestFixtureBase::setup("CSV_WRITER_2");
+      CFBTestFixtureBase::setup();
 
       mQI = true_BOOL;
       mFILE_NAME = CIEC_STRING("./GEN_CSV_WRITER.temp"s);
@@ -90,12 +85,7 @@ class GEN_CSV_WRITER_TestFixture : public CFBTestFixtureBase {
 struct GEN_CSV_WRITER_TestFixtureIntString : public GEN_CSV_WRITER_TestFixture<CIEC_INT, CIEC_STRING> {};
 
 struct GEN_CSV_WRITER_TestFixtureArrayArray
-    : public GEN_CSV_WRITER_TestFixture<CIEC_ARRAY_FIXED<CIEC_INT, 0, 2>, CIEC_ARRAY_FIXED<CIEC_STRING, 0, 2>> {
-    GEN_CSV_WRITER_TestFixtureArrayArray() :
-        GEN_CSV_WRITER_TestFixture<CIEC_ARRAY_FIXED<CIEC_INT, 0, 2>, CIEC_ARRAY_FIXED<CIEC_STRING, 0, 2>>(
-            CIEC_ARRAY_FIXED<CIEC_INT, 0, 2>(), CIEC_ARRAY_FIXED<CIEC_INT, 0, 2>()) {
-    }
-};
+    : public GEN_CSV_WRITER_TestFixture<CIEC_ARRAY_FIXED<CIEC_INT, 0, 2>, CIEC_ARRAY_FIXED<CIEC_STRING, 0, 2>> {};
 
 BOOST_AUTO_TEST_SUITE(GEN_CSV_WRITER_Tests)
 

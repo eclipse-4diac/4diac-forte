@@ -25,7 +25,7 @@ class FORTE_RequestOrchestrationOpcUa : public CCompositeFB {
     static const SAdapterInstanceDef scmAdapterInstances[];
 
     FORTE_OrchestratorRequestAdp &requestOrchestration() {
-      return (*static_cast<FORTE_OrchestratorRequestAdp *>(mAdapters[0]));
+      return (*static_cast<FORTE_OrchestratorRequestAdp *>(getAdapterUnchecked(0)));
     };
     static const int scm_nrequestOrchestrationAdpNum = 0;
     static const SFBInterfaceSpec scmFBInterfaceSpec;

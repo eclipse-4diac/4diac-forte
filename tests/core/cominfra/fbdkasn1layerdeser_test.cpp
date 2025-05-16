@@ -28,6 +28,7 @@
 #include "../../../src/stdfblib/ita/EMB_RES.h"
 
 #include <boost/test/tools/floating_point_comparison.hpp>
+#include <memory>
 
 #include "../../../src/core/datatypes/forte_real.h"
 
@@ -104,9 +105,21 @@ class CDeserTestMockCommFB : public forte::com_infra::CCommFB {
       setupFBInterface();
     }
 
-    virtual ~CDeserTestMockCommFB() {
-      freeFBInterfaceData();
-      getGenInterfaceSpec() = {};
+    ~CDeserTestMockCommFB() override = default;
+
+  protected:
+    void createGenOutputData() override {
+      size_t numGenDOs = getFBInterfaceSpec().mNumDOs - 2;
+      const CStringDictionary::TStringId *datarTypeIds = getFBInterfaceSpec().mDODataTypeNames + 2;
+      TForteByte *varsData = nullptr;
+      mGenDOs = std::make_unique<CIEC_ANY *[]>(numGenDOs);
+      for (size_t i = 0; i < numGenDOs; ++i) {
+        mGenDOs[i] = CTypeLib::createDataPoint(datarTypeIds, varsData);
+      }
+    }
+
+    size_t getGenEOOffset() override {
+      return 0;
     }
 
   private:

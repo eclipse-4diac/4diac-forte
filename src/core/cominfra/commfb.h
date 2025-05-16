@@ -32,6 +32,29 @@ namespace forte {
 
         EMGMResponse changeExecutionState(EMGMCommandType paCommand) override;
 
+        CIEC_BOOL var_QI;
+        CIEC_WSTRING var_ID;
+
+        CIEC_BOOL var_QO;
+        CIEC_WSTRING var_STATUS;
+
+        CEventConnection conn_INITO;
+        CEventConnection conn_CNF_IND;
+
+        CDataConnection *conn_QI;
+        CDataConnection *conn_ID;
+
+        COutDataConnection<CIEC_BOOL> conn_QO;
+        COutDataConnection<CIEC_WSTRING> conn_STATUS;
+
+        CIEC_ANY **getSDs() override {
+          return mGenDIs.get();
+        }
+
+        CIEC_ANY **getRDs() override {
+          return mGenDOs.get();
+        }
+
       protected:
         CCommFB(const CStringDictionary::TStringId paInstanceNameId,
                 forte::core::CFBContainer &paContainer,
@@ -57,6 +80,30 @@ namespace forte {
         EComResponse receiveData() override;
         EComResponse sendData() override;
 
+        size_t getGenEOOffset() override {
+          return 2;
+        }
+
+        size_t getGenDIOffset() override {
+          return 2;
+        }
+
+        size_t getGenDOOffset() override {
+          return 2;
+        }
+
+        CIEC_ANY *getDI(size_t) override;
+        CIEC_ANY *getDO(size_t) override;
+        CEventConnection *getEOConUnchecked(TPortId) override;
+        CDataConnection **getDIConUnchecked(TPortId) override;
+        CDataConnection *getDOConUnchecked(TPortId) override;
+
+        void createGenInputData() override;
+        void createGenOutputData() override;
+
+        std::unique_ptr<CIEC_ANY *[]> mGenDIs;
+        std::unique_ptr<CIEC_ANY *[]> mGenDOs;
+
       private:
         static const CStringDictionary::TStringId scmRequesterEventInputNameIds[];
         static const CStringDictionary::TStringId scmRequesterEventOutputNameIds[];
@@ -67,9 +114,7 @@ namespace forte {
         static const CStringDictionary::TStringId scmEventInputTypeIds[];
         static const CStringDictionary::TStringId scmEventOutputTypeIds[];
 
-        std::unique_ptr<CStringDictionary::TStringId[]> mDiDataTypeNames;
         std::unique_ptr<CStringDictionary::TStringId[]> mDiNames;
-        std::unique_ptr<CStringDictionary::TStringId[]> mDoDataTypeNames;
         std::unique_ptr<CStringDictionary::TStringId[]> mDoNames;
 
         bool createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) override;

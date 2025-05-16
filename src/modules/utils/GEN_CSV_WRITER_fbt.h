@@ -21,38 +21,31 @@
 #include <genfb.h>
 #include <stdio.h>
 #include "../../arch/forte_fileio.h"
+#include "forte_any_variant.h"
 
 #include <memory>
 
-class GEN_CSV_WRITER : public CGenFunctionBlock<CFunctionBlock> {
+class GEN_CSV_WRITER final : public CGenFunctionBlock<CFunctionBlock> {
     DECLARE_GENERIC_FIRMWARE_FB(GEN_CSV_WRITER)
 
   protected:
-    CIEC_BOOL &QI() {
-      return *static_cast<CIEC_BOOL *>(getDI(0));
-    }
+    CIEC_BOOL var_QI;
+    CIEC_STRING var_FILE_NAME;
 
-    CIEC_STRING &FILE_NAME() {
-      return *static_cast<CIEC_STRING *>(getDI(1));
-    }
+    CIEC_BOOL var_QO;
+    CIEC_STRING var_STATUS;
+
+    CEventConnection conn_INITO;
+    CEventConnection conn_CNF;
+
+    CDataConnection *conn_QI;
+    CDataConnection *conn_FILE_NAME;
+
+    COutDataConnection<CIEC_BOOL> conn_QO;
+    COutDataConnection<CIEC_STRING> conn_STATUS;
 
     static const CStringDictionary::TStringId scmDataOutputNames[];
     static const CStringDictionary::TStringId scmDataOutputTypeIds[];
-    CIEC_BOOL &QO() {
-      return *static_cast<CIEC_BOOL *>(getDO(0));
-    };
-
-    CIEC_STRING &STATUS() {
-      return *static_cast<CIEC_STRING *>(getDO(1));
-    };
-
-    TPortId getNumSD() const {
-      return getFBInterfaceSpec().mNumDIs - 2;
-    }
-
-    CIEC_ANY **getSDs() {
-      return mDIs + 2;
-    }
 
     static const TEventID scmEventINITID = 0;
     static const TEventID scmEventREQID = 1;
@@ -71,6 +64,26 @@ class GEN_CSV_WRITER : public CGenFunctionBlock<CFunctionBlock> {
 
     bool createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) override;
 
+    void createGenInputData() override;
+
+    size_t getGenEOOffset() override {
+      return 1;
+    }
+
+    size_t getGenDIOffset() override {
+      return 2;
+    }
+
+    size_t getGenDOOffset() override {
+      return 2;
+    }
+
+    CIEC_ANY *getDI(size_t) override;
+    CIEC_ANY *getDO(size_t) override;
+    CEventConnection *getEOConUnchecked(TPortId) override;
+    CDataConnection **getDIConUnchecked(TPortId paDINum) override;
+    CDataConnection *getDOConUnchecked(TPortId paDONum) override;
+
   public:
     GEN_CSV_WRITER(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
     ~GEN_CSV_WRITER() override;
@@ -84,7 +97,8 @@ class GEN_CSV_WRITER : public CGenFunctionBlock<CFunctionBlock> {
     decltype(forte_fopen(nullptr, nullptr)) mCSVFile;
 
     std::unique_ptr<CStringDictionary::TStringId[]> mDataInputNames;
-    std::unique_ptr<CStringDictionary::TStringId[]> mDataInputTypeIds;
+
+    std::unique_ptr<CIEC_ANY_VARIANT[]> mGenDIs;
 
     std::string mDataOutPutBuffer;
 

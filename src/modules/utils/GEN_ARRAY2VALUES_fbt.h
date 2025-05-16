@@ -21,21 +21,32 @@
 #include <genfb.h>
 
 #include <memory>
-#include <array>
+#include "dataconn.h"
+#include "forte_any_variant.h"
 
-class GEN_ARRAY2VALUES : public CGenFunctionBlock<CFunctionBlock> {
+class GEN_ARRAY2VALUES final : public CGenFunctionBlock<CFunctionBlock> {
     DECLARE_GENERIC_FIRMWARE_FB(GEN_ARRAY2VALUES)
+
+  protected:
+    void createGenOutputData() override;
+
+    size_t getGenEOOffset() override {
+      return 1;
+    }
+
+    size_t getGenDIOffset() override {
+      return 1;
+    }
+
+    CEventConnection *getEOConUnchecked(TPortId paEONum) override;
+    CIEC_ANY *getDI(size_t paIndex) override;
+    CIEC_ANY *getDO(size_t paIndex) override;
+    CDataConnection **getDIConUnchecked(const TPortId paIndex) override;
 
   private:
     std::unique_ptr<CStringDictionary::TStringId[]> mDataOutputNames;
-    std::unique_ptr<CStringDictionary::TStringId[]> mDataOutputTypeIds;
 
     static const CStringDictionary::TStringId scmDataInputNames[];
-    std::array<CStringDictionary::TStringId, 3> mDataInputTypeIds;
-
-    CIEC_ARRAY &IN_Array() {
-      return *static_cast<CIEC_ARRAY *>(getDI(0));
-    };
 
     static const TEventID scmEventREQID = 0;
     static const CStringDictionary::TStringId scmEventInputNames[];
@@ -46,8 +57,6 @@ class GEN_ARRAY2VALUES : public CGenFunctionBlock<CFunctionBlock> {
     static const CStringDictionary::TStringId scmEventOutputTypeIds[];
 
     // self-defined members
-    size_t mDOutputs{0};
-    CStringDictionary::TStringId mValueTypeID{CStringDictionary::scmInvalidStringId};
 
     void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
@@ -55,6 +64,13 @@ class GEN_ARRAY2VALUES : public CGenFunctionBlock<CFunctionBlock> {
     void writeOutputData(TEventID paEO) override;
 
     bool createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) override;
+
+    CEventConnection conn_CNF;
+
+    CIEC_ARRAY_DYNAMIC var_IN;
+    CDataConnection *conn_IN;
+
+    std::unique_ptr<CIEC_ANY_VARIANT[]> mGenDOs;
 
   public:
     GEN_ARRAY2VALUES(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);

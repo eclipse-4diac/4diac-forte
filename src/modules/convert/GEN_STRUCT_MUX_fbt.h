@@ -19,17 +19,27 @@
 #include <stdio.h>
 
 #include <memory>
-#include <array>
+#include "dataconn.h"
 
-class GEN_STRUCT_MUX : public CGenFunctionBlock<CFunctionBlock> {
+class GEN_STRUCT_MUX final : public CGenFunctionBlock<CFunctionBlock> {
     DECLARE_GENERIC_FIRMWARE_FB(GEN_STRUCT_MUX)
 
-  private:
-    std::unique_ptr<CStringDictionary::TStringId[]> mDiDataTypeNames;
-    std::unique_ptr<CStringDictionary::TStringId[]> mDiNames;
+  protected:
+    size_t getGenEOOffset() override {
+      return 1;
+    }
 
+    size_t getGenDOOffset() override {
+      return 1;
+    }
+
+    CEventConnection *getEOConUnchecked(TPortId paEONum) override;
+    CIEC_ANY *getDI(size_t) override;
+    CIEC_ANY *getDO(size_t paIndex) override;
+    CDataConnection *getDOConUnchecked(const TPortId paIndex) override;
+
+  private:
     static const CStringDictionary::TStringId scmDataOutputNames[];
-    std::array<CStringDictionary::TStringId, 1> mDoDataTypeNames;
 
     static const TEventID scmEventREQID = 0;
     static const CStringDictionary::TStringId scmEventInputNames[];
@@ -46,13 +56,9 @@ class GEN_STRUCT_MUX : public CGenFunctionBlock<CFunctionBlock> {
 
     bool createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) override;
 
-    CIEC_STRUCT &st_OUT() {
-      return *static_cast<CIEC_STRUCT *>(getDO(0));
-    }
-
-    bool initialize() override;
-    void setInitialValues() override;
-    void copyStructValuesToInputs();
+    CEventConnection conn_CNF;
+    std::unique_ptr<CIEC_STRUCT> var_OUT;
+    std::unique_ptr<CGenDataConnection> conn_OUT;
 
   public:
     GEN_STRUCT_MUX(const GEN_STRUCT_MUX &paOther) = delete;
@@ -60,8 +66,6 @@ class GEN_STRUCT_MUX : public CGenFunctionBlock<CFunctionBlock> {
     ~GEN_STRUCT_MUX() override = default;
 
     static CStringDictionary::TStringId getStructNameId(std::string_view paConfigString);
-
-    static size_t calcStructTypeNameSize(CIEC_STRUCT &paStruct);
 };
 
 #endif //_GEN_STRUCT_MUX_H_

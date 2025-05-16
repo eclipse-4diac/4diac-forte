@@ -72,11 +72,11 @@ class FORTE_Wago1405_6 : public WagoSlaveBase {
     CIEC_ANY *getDO(size_t) override;
 
     FORTE_WagoBusAdapter &var_BusAdapterIn() {
-      return *static_cast<FORTE_WagoBusAdapter *>(mAdapters[0]);
+      return *static_cast<FORTE_WagoBusAdapter *>(getAdapterUnchecked(0));
     };
 
     FORTE_WagoBusAdapter &var_BusAdapterOut() {
-      return *static_cast<FORTE_WagoBusAdapter *>(mAdapters[1]);
+      return *static_cast<FORTE_WagoBusAdapter *>(getAdapterUnchecked(1));
     };
 
     CEventConnection *getEOConUnchecked(TPortId) override;

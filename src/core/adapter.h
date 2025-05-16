@@ -119,6 +119,15 @@ class CAdapter : public CGenFunctionBlock<CFunctionBlock> {
     std::vector<TEventID> mOutputEventIds;
     TForteUInt16 mParentAdapterListEventID;
 
+    // TODO remove old lists when new adapter concept is implemented
+    CDataConnection **mDIConns; //!< A list of data connections pointers storing for each data input the data
+                                //!< connection. If the data input is not connected the pointer is nullptr.
+    CGenDataConnection *mDOConns; //!< A list of data connections pointers storing for each data output the data
+                                  //!< connection. If the data output is not connected the pointer is nullptr.
+
+    CIEC_ANY **mDIs; //!< A list of pointers to the data inputs. This allows to implement a general getDataInput()
+    CIEC_ANY **mDOs; //!< A list of pointers to the data outputs. This allows to implement a general
+
   private:
     void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
     void setupEventEntryList();

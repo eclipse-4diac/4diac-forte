@@ -25,7 +25,7 @@ class FORTE_PublishEventOpcUa : public CCompositeFB {
     static const SAdapterInstanceDef scmAdapterInstances[];
 
     FORTE_ArrowheadPublishAdp &publishEvent() {
-      return (*static_cast<FORTE_ArrowheadPublishAdp *>(mAdapters[0]));
+      return (*static_cast<FORTE_ArrowheadPublishAdp *>(getAdapterUnchecked(0)));
     };
     static const int scm_npublishEventAdpNum = 0;
     static const SFBInterfaceSpec scmFBInterfaceSpec;

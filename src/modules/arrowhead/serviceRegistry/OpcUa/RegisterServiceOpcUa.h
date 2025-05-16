@@ -25,7 +25,7 @@ class FORTE_RegisterServiceOpcUa : public CCompositeFB {
     static const SAdapterInstanceDef scmAdapterInstances[];
 
     FORTE_RegisterServiceAdp &registerService() {
-      return (*static_cast<FORTE_RegisterServiceAdp *>(mAdapters[0]));
+      return (*static_cast<FORTE_RegisterServiceAdp *>(getAdapterUnchecked(0)));
     };
     static const int scm_nregisterServiceAdpNum = 0;
     static const SFBInterfaceSpec scmFBInterfaceSpec;

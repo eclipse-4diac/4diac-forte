@@ -61,7 +61,7 @@ class FORTE_QueryService : public CCompositeFB {
     static const SAdapterInstanceDef scmAdapterInstances[];
 
     FORTE_QueryServicesAdp &queryServices() {
-      return (*static_cast<FORTE_QueryServicesAdp *>(mAdapters[0]));
+      return (*static_cast<FORTE_QueryServicesAdp *>(getAdapterUnchecked(0)));
     };
     static const int scm_nqueryServicesAdpNum = 0;
     static const SFBInterfaceSpec scmFBInterfaceSpec;

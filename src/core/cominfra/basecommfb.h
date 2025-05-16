@@ -48,13 +48,9 @@ namespace forte {
           return getFBInterfaceSpec().mNumDOs - 2;
         }
 
-        CIEC_ANY **getSDs() {
-          return mDIs + 2;
-        }
+        virtual CIEC_ANY **getSDs() = 0;
 
-        CIEC_ANY **getRDs() {
-          return mDOs + 2;
-        }
+        virtual CIEC_ANY **getRDs() = 0;
 
         void interruptCommFB(CComLayer *paComLayer);
 

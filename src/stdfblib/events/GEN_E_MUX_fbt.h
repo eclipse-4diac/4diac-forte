@@ -22,14 +22,18 @@
 
 #include "genfb.h"
 #include "forte_uint.h"
-#include "iec61131_functions.h"
-#include "forte_array_common.h"
-#include "forte_array.h"
-#include "forte_array_fixed.h"
-#include "forte_array_variable.h"
 
 class GEN_E_MUX final : public CGenFunctionBlock<CFunctionBlock> {
     DECLARE_GENERIC_FIRMWARE_FB(GEN_E_MUX)
+
+  protected:
+    size_t getGenEOOffset() override {
+      return 1;
+    }
+
+    size_t getGenDOOffset() override {
+      return 1;
+    }
 
   private:
     static const CStringDictionary::TStringId scmDataOutputNames[];

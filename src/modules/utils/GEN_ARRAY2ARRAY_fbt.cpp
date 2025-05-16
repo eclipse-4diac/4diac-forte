@@ -39,73 +39,81 @@ const CStringDictionary::TStringId GEN_ARRAY2ARRAY::scmEventOutputTypeIds[] = {S
 
 GEN_ARRAY2ARRAY::GEN_ARRAY2ARRAY(const CStringDictionary::TStringId paInstanceNameId,
                                  forte::core::CFBContainer &paContainer) :
-    CGenFunctionBlock<CFunctionBlock>(paContainer, paInstanceNameId) {
+    CGenFunctionBlock<CFunctionBlock>(paContainer, paInstanceNameId),
+    conn_CNF(*this, 0),
+    conn_IN(nullptr),
+    conn_OUT(*this, 0, var_IN) {
 }
 
 void GEN_ARRAY2ARRAY::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   switch (paEIID) {
-    case scmEventREQID:
-
-      OUT_Array().setValue(IN_Array());
-
-      sendOutputEvent(scmEventCNFID, paECET);
-
-      break;
+    case scmEventREQID: sendOutputEvent(scmEventCNFID, paECET); break;
   }
 }
 
 void GEN_ARRAY2ARRAY::readInputData(TEventID) {
-  readData(0, *mDIs[0], mDIConns[0]);
+  readData(0, var_IN, conn_IN);
 }
 
 void GEN_ARRAY2ARRAY::writeOutputData(TEventID) {
-  writeData(1 + 0, *mDOs[0], mDOConns[0]);
+  writeData(1 + 0, var_IN, conn_OUT);
 }
 
 bool GEN_ARRAY2ARRAY::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) {
   const char *dNumberPos = strchr(paConfigString, '_');
 
-  if (nullptr != dNumberPos) {
-    ++dNumberPos;
-    // get position of a second underscore
-    const char *dTypePos = strchr(dNumberPos, '_');
+  if (dNumberPos == nullptr) {
+    return false;
+  }
+  ++dNumberPos;
+  // get position of a second underscore
+  const char *dTypePos = strchr(dNumberPos, '_');
 
-    if (nullptr != dTypePos) {
-      // there is a number and a data type of inputs within the typename
-      mArrayLength = static_cast<unsigned int>(forte::core::util::strtoul(dNumberPos, nullptr, 10));
-      m_ValueTypeID = CStringDictionary::getId(++dTypePos);
-    } else {
-      m_ValueTypeID = CStringDictionary::scmInvalidStringId;
-      mArrayLength = 0;
-    }
-  } else {
+  if (dTypePos == nullptr) {
     return false;
   }
 
-  if (m_ValueTypeID != CStringDictionary::scmInvalidStringId && mArrayLength >= 1) {
-    // create data input type
-    mDataInputTypeIds[0] = STRID(ARRAY);
-    mDataInputTypeIds[1] = mArrayLength;
-    mDataInputTypeIds[2] = m_ValueTypeID;
+  // there is a number and a data type of inputs within the typename
+  TForteUInt16 arrayLength = static_cast<TForteUInt16>(forte::core::util::strtoul(dNumberPos, nullptr, 10));
+  auto valueTypeID = CStringDictionary::getId(++dTypePos);
 
-    // create data output type
-    mDataOutputTypeIds[0] = STRID(ARRAY);
-    mDataOutputTypeIds[1] = mArrayLength;
-    mDataOutputTypeIds[2] = m_ValueTypeID;
-
-    // create the interface Specification
-    paInterfaceSpec.mNumEIs = 1;
-    paInterfaceSpec.mEINames = scmEventInputNames;
-    paInterfaceSpec.mNumEOs = 1;
-    paInterfaceSpec.mEONames = scmEventOutputNames;
-    paInterfaceSpec.mNumDIs = 1;
-    paInterfaceSpec.mDINames = scmDataInputNames;
-    paInterfaceSpec.mDIDataTypeNames = mDataInputTypeIds.data();
-    paInterfaceSpec.mNumDOs = 1;
-    paInterfaceSpec.mDONames = scmDataOutputNames;
-    paInterfaceSpec.mDODataTypeNames = mDataOutputTypeIds.data();
-    return true;
+  if (arrayLength == 0) {
+    return false;
   }
 
-  return false;
+  // create data input type
+  var_IN.setup(arrayLength, valueTypeID);
+
+  conn_OUT.getValue().setup(arrayLength, valueTypeID);
+
+  // create the interface Specification
+  paInterfaceSpec.mNumEIs = 1;
+  paInterfaceSpec.mEINames = scmEventInputNames;
+  paInterfaceSpec.mNumEOs = 1;
+  paInterfaceSpec.mEONames = scmEventOutputNames;
+  paInterfaceSpec.mNumDIs = 1;
+  paInterfaceSpec.mDINames = scmDataInputNames;
+  paInterfaceSpec.mNumDOs = 1;
+  paInterfaceSpec.mDONames = scmDataOutputNames;
+  return true;
+}
+
+CEventConnection *GEN_ARRAY2ARRAY::getEOConUnchecked(TPortId paEONum) {
+  return (paEONum == 0) ? &conn_CNF : nullptr;
+}
+
+CIEC_ANY *GEN_ARRAY2ARRAY::getDI(size_t paIndex) {
+  return (paIndex == 0) ? &var_IN : nullptr;
+}
+
+CIEC_ANY *GEN_ARRAY2ARRAY::getDO(size_t paIndex) {
+  return (paIndex == 0) ? &var_IN : nullptr;
+}
+
+CDataConnection **GEN_ARRAY2ARRAY::getDIConUnchecked(const TPortId paIndex) {
+  return (paIndex == 0) ? &conn_IN : nullptr;
+}
+
+CDataConnection *GEN_ARRAY2ARRAY::getDOConUnchecked(TPortId paDONum) {
+  return (paDONum == 0) ? &conn_OUT : nullptr;
 }

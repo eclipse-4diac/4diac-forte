@@ -90,7 +90,7 @@ class FORTE_PLCnextMaster final : public forte::core::io::IOConfigFBMultiMaster 
     CIEC_ANY *getDO(size_t) override;
     CAdapter *getAdapterUnchecked(size_t) override;
     FORTE_PLCnextBusAdapter &var_BusAdapterOut() {
-      return *static_cast<FORTE_PLCnextBusAdapter *>(mAdapters[0]);
+      return *static_cast<FORTE_PLCnextBusAdapter *>(getAdapterUnchecked(0));
     };
 
     CEventConnection *getEOConUnchecked(TPortId) override;

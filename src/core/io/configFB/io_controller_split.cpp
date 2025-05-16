@@ -46,7 +46,8 @@ void IOConfigFBSplitController::onStartup(CEventChainExecutionThread *const paEC
     return IOConfigFBController::onStartup(paECET);
   }
 
-  IOConfigFBSplitAdapter *cur = static_cast<IOConfigFBSplitAdapter *>(mAdapters[scmSplitAdapter[mSplitIterator]]);
+  IOConfigFBSplitAdapter *cur =
+      static_cast<IOConfigFBSplitAdapter *>(getAdapterUnchecked(scmSplitAdapter[mSplitIterator]));
 
   while (!cur || nullptr == cur->getPeer()) {
     mSplitIterator++;
@@ -55,7 +56,7 @@ void IOConfigFBSplitController::onStartup(CEventChainExecutionThread *const paEC
       return IOConfigFBController::onStartup(paECET);
     }
 
-    cur = static_cast<IOConfigFBSplitAdapter *>(mAdapters[scmSplitAdapter[mSplitIterator]]);
+    cur = static_cast<IOConfigFBSplitAdapter *>(getAdapterUnchecked(scmSplitAdapter[mSplitIterator]));
   }
 
   cur->MasterId() = CIEC_UINT(mId);
@@ -70,7 +71,8 @@ void IOConfigFBSplitController::onStop(CEventChainExecutionThread *const paECET)
     return IOConfigFBController::onStop(paECET);
   }
 
-  IOConfigFBSplitAdapter *cur = static_cast<IOConfigFBSplitAdapter *>(mAdapters[scmSplitAdapter[mSplitIterator]]);
+  IOConfigFBSplitAdapter *cur =
+      static_cast<IOConfigFBSplitAdapter *>(getAdapterUnchecked(scmSplitAdapter[mSplitIterator]));
 
   while (cur->getPeer() == nullptr) {
     mSplitIterator++;
@@ -79,7 +81,7 @@ void IOConfigFBSplitController::onStop(CEventChainExecutionThread *const paECET)
       return IOConfigFBController::onStop(paECET);
     }
 
-    cur = static_cast<IOConfigFBSplitAdapter *>(mAdapters[scmSplitAdapter[mSplitIterator]]);
+    cur = static_cast<IOConfigFBSplitAdapter *>(getAdapterUnchecked(scmSplitAdapter[mSplitIterator]));
   }
 
   cur->QI() = false_BOOL;
@@ -90,7 +92,8 @@ void IOConfigFBSplitController::executeEvent(TEventID paEIID, CEventChainExecuti
   IOConfigFBController::executeEvent(paEIID, paECET);
 
   if (mSplitIterator < scmSplitAdapterNum) {
-    IOConfigFBSplitAdapter *cur = static_cast<IOConfigFBSplitAdapter *>(mAdapters[scmSplitAdapter[mSplitIterator]]);
+    IOConfigFBSplitAdapter *cur =
+        static_cast<IOConfigFBSplitAdapter *>(getAdapterUnchecked(scmSplitAdapter[mSplitIterator]));
     if (cur->INITO() == paEIID) {
 
       QO() = cur->QO();
@@ -109,7 +112,7 @@ void IOConfigFBSplitController::executeEvent(TEventID paEIID, CEventChainExecuti
         }
       } else {
         IOConfigFBSplitAdapter *next =
-            static_cast<IOConfigFBSplitAdapter *>(mAdapters[scmSplitAdapter[mSplitIterator]]);
+            static_cast<IOConfigFBSplitAdapter *>(getAdapterUnchecked(scmSplitAdapter[mSplitIterator]));
 
         while (!next || nullptr == next->getPeer()) {
           mSplitIterator++;
@@ -122,7 +125,7 @@ void IOConfigFBSplitController::executeEvent(TEventID paEIID, CEventChainExecuti
             }
           }
 
-          next = static_cast<IOConfigFBSplitAdapter *>(mAdapters[scmSplitAdapter[mSplitIterator]]);
+          next = static_cast<IOConfigFBSplitAdapter *>(getAdapterUnchecked(scmSplitAdapter[mSplitIterator]));
         }
 
         next->MasterId() = CIEC_UINT(mId);

@@ -20,21 +20,29 @@
 #include <stdio.h>
 
 #include <memory>
-#include <array>
 
-class GEN_STRUCT_DEMUX : public CGenFunctionBlock<CFunctionBlock> {
+class GEN_STRUCT_DEMUX final : public CGenFunctionBlock<CFunctionBlock> {
     DECLARE_GENERIC_FIRMWARE_FB(GEN_STRUCT_DEMUX)
+
+  protected:
+    size_t getGenEOOffset() override {
+      return 1;
+    }
+
+    size_t getGenDIOffset() override {
+      return 1;
+    }
+
+    CEventConnection *getEOConUnchecked(TPortId paEONum) override;
+    CIEC_ANY *getDI(size_t) override;
+    CIEC_ANY *getDO(size_t paIndex) override;
+    CDataConnection **getDIConUnchecked(const TPortId paIndex) override;
 
   private:
     static constexpr char NESTED_VAR_SEPARATOR = '%';
     static constexpr std::string_view STRUCT_NAME_SEPARATOR = "____";
 
-    std::unique_ptr<CStringDictionary::TStringId[]> mDoDataTypeNames;
-    std::unique_ptr<CStringDictionary::TStringId[]> mDoNames;
-    std::vector<CIEC_ANY *> mConfiguredDOPorts;
-
     static const CStringDictionary::TStringId scmDataInputNames[];
-    std::array<CStringDictionary::TStringId, 1> mDiDataTypeNames;
 
     static const TEventID scmEventREQID = 0;
     static const CStringDictionary::TStringId scmEventInputNames[];
@@ -51,21 +59,17 @@ class GEN_STRUCT_DEMUX : public CGenFunctionBlock<CFunctionBlock> {
 
     bool createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) override;
 
-    void fillConfiguredInterfaceSpec(CIEC_STRUCT *paStructType, std::vector<std::string_view> &paConfiguredMemberNames);
-    void fillInterfaceSpec(CIEC_STRUCT *paStructType);
+    void fillConfiguredInterfaceSpec(std::vector<std::string_view> &paConfiguredMemberNames);
+    void fillInterfaceSpec();
 
-    CIEC_STRUCT &st_IN() {
-      return *static_cast<CIEC_STRUCT *>(getDI(0));
-    }
-
-    bool initialize() override;
-    void setInitialValues() override;
-    void copyStructValuesToOutputs();
     std::vector<std::string_view> getConfiguredMemberNames(std::string_view paMemberNameString);
-    void setConfiguredDOPorts();
     CIEC_ANY *getNestedMember(const CStringDictionary::TStringId paNameId, CIEC_STRUCT *paStructType);
-    size_t calcConfiguredStructTypeNameSize(CIEC_STRUCT *paStructType,
-                                            std::vector<std::string_view> &paConfiguredMemberNames);
+
+    CEventConnection conn_CNF;
+    std::unique_ptr<CIEC_STRUCT> var_IN;
+    CDataConnection *conn_IN;
+    std::unique_ptr<CStringDictionary::TStringId[]> mDoNames;
+    std::vector<CIEC_ANY *> mConfiguredDOPorts;
 
   public:
     GEN_STRUCT_DEMUX(const GEN_STRUCT_DEMUX &paOther) = delete;

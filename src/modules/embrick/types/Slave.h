@@ -39,11 +39,11 @@ class EmbrickSlave : public forte::core::io::IOConfigFBMultiSlave, public Embric
     }
 
     FORTE_EBBusAdapter &BusAdapterOut() {
-      return (*static_cast<FORTE_EBBusAdapter *>(mAdapters[0]));
+      return (*static_cast<FORTE_EBBusAdapter *>(getAdapterUnchecked(0)));
     }
 
     FORTE_EBBusAdapter &BusAdapterIn() {
-      return (*static_cast<FORTE_EBBusAdapter *>(mAdapters[1]));
+      return (*static_cast<FORTE_EBBusAdapter *>(getAdapterUnchecked(1)));
     }
 
     CSyncObject mSlaveMutex;

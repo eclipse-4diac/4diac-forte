@@ -47,7 +47,7 @@ class FORTE_ArrowheadPublish : public CCompositeFB {
     static const SAdapterInstanceDef scmAdapterInstances[];
 
     FORTE_ArrowheadPublishAdp &ArrowheadPublishAdp() {
-      return (*static_cast<FORTE_ArrowheadPublishAdp *>(mAdapters[0]));
+      return (*static_cast<FORTE_ArrowheadPublishAdp *>(getAdapterUnchecked(0)));
     };
     static const int scmArrowheadPublishAdpAdpNum = 0;
     static const SFBInterfaceSpec scmFBInterfaceSpec;

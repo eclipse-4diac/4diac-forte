@@ -15,20 +15,13 @@
 #pragma once
 
 #include "genfb.h"
-#include "iec61131_functions.h"
-#include "forte_array_common.h"
-#include "forte_array.h"
-#include "forte_array_fixed.h"
-#include "forte_array_variable.h"
 
 class GEN_E_SPLIT final : public CGenFunctionBlock<CFunctionBlock> {
     DECLARE_GENERIC_FIRMWARE_FB(GEN_E_SPLIT)
 
   private:
     static const TEventID scmEventEIID = 0;
-    static const TForteInt16 scmEIWithIndexes[];
     static const CStringDictionary::TStringId scmEventInputNames[];
-    static const TForteInt16 scmEOWithIndexes[];
     std::unique_ptr<CStringDictionary::TStringId[]> scmEventOutputNames;
 
     void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;

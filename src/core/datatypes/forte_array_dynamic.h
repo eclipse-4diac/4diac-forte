@@ -558,8 +558,8 @@ class CIEC_ARRAY_DYNAMIC : public CIEC_ARRAY {
 
     [[nodiscard]] int fromString(const char *paValue) override;
 
-  protected:
-    // This constructor is only to be used by the create instance method
+    // This constructor is only to be used by the create instance method or GenFBs that correctly configure it with the
+    // setup method
     CIEC_ARRAY_DYNAMIC() :
         mSize(0),
         mElementSize(0),

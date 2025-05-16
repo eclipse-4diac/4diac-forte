@@ -18,6 +18,7 @@
 #ifndef _DATACONN_H_
 #define _DATACONN_H_
 
+#include <memory>
 #include "./datatypes/forte_any.h"
 #include "conn.h"
 
@@ -108,23 +109,23 @@ class CGenDataConnection final : public CDataConnection {
   public:
     CGenDataConnection(CFunctionBlock &paSrcFB, const TPortId paSrcPortId, CIEC_ANY &paValue) :
         CDataConnection(paSrcFB, paSrcPortId),
-        mValue(paValue) {
+        mValue(paValue.clone(nullptr)) {
     }
 
     void writeData(const CIEC_ANY &paValue) override {
-      mValue.setValue(paValue.unwrap());
+      mValue->setValue(paValue.unwrap());
     }
 
     void readData(CIEC_ANY &paValue) const override {
-      paValue.setValue(mValue.unwrap());
+      paValue.setValue(mValue->unwrap());
     }
 
     CIEC_ANY &getValue() override {
-      return mValue;
+      return *mValue;
     }
 
   private:
-    CIEC_ANY &mValue;
+    std::unique_ptr<CIEC_ANY> mValue;
 };
 
 #endif /*_DATACONN_H_*/

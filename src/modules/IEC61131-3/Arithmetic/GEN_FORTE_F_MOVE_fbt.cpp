@@ -12,6 +12,11 @@
  *******************************************************************************/
 
 #include "GEN_FORTE_F_MOVE_fbt.h"
+#include <memory>
+#include "eventconn.h"
+#include "forte_any.h"
+#include "forte_any_variant.h"
+#include "stringdict.h"
 
 USE_STRING_ID(CNF);
 USE_STRING_ID(Event);
@@ -19,7 +24,6 @@ USE_STRING_ID(GEN_F_MOVE);
 USE_STRING_ID(IN);
 USE_STRING_ID(OUT);
 USE_STRING_ID(REQ);
-
 
 DEFINE_GENERIC_FIRMWARE_FB(GEN_FORTE_F_MOVE, STRID(GEN_F_MOVE))
 
@@ -39,43 +43,42 @@ const CStringDictionary::TStringId GEN_FORTE_F_MOVE::scmEventOutputTypeIds[] = {
 
 GEN_FORTE_F_MOVE::GEN_FORTE_F_MOVE(const CStringDictionary::TStringId paInstanceNameId,
                                    forte::core::CFBContainer &paContainer) :
-    CGenFunctionBlock<CFunctionBlock>(paContainer, paInstanceNameId) {
+    CGenFunctionBlock<CFunctionBlock>(paContainer, paInstanceNameId),
+    conn_CNF(*this, 0),
+    conn_IN(nullptr) {
 }
 
 void GEN_FORTE_F_MOVE::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
-  switch (paEIID) {
-    case scmEventREQID:
-      var_OUT().setValue(var_IN());
-      sendOutputEvent(scmEventCNFID, paECET);
-      break;
+  if (paEIID == scmEventREQID) {
+    // as in and out are managed in one var we only need to send the output event
+    sendOutputEvent(scmEventCNFID, paECET);
   }
 }
 
 void GEN_FORTE_F_MOVE::readInputData(TEventID paEIID) {
   if (paEIID == scmEventREQID) {
-    readData(0, *mDIs[0], mDIConns[0]);
+    readData(0, *mIn, conn_IN);
   }
 }
 
 void GEN_FORTE_F_MOVE::writeOutputData(TEventID paEOID) {
   if (paEOID == scmEventCNFID) {
-    writeData(1 + 0, *mDOs[0], mDOConns[0]);
+    writeData(1 + 0, *mIn, *conn_OUT);
   }
 }
 
 bool GEN_FORTE_F_MOVE::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) {
-  const CTypeLib::CTypeEntry *poToCreate;
   if (strcmp(paConfigString, "F_MOVE") == 0) {
-    poToCreate = &CIEC_ANY_VARIANT::csmFirmwareDataTypeEntry_ANY_VARIANT;
+    mIn = std::make_unique<CIEC_ANY_VARIANT>();
   } else {
-    poToCreate = CTypeLib::findType(getDataTypeNameId(paConfigString), CTypeLib::getDTLibStart());
-    if (nullptr == poToCreate) {
+    CStringDictionary::TStringId dataTypeID = getDataTypeNameId(paConfigString);
+    mIn = std::unique_ptr<CIEC_ANY>(CTypeLib::createDataTypeInstance(dataTypeID, nullptr));
+    if (!mIn) {
       return false;
     }
   }
 
-  mDiDataTypeNames[0] = poToCreate->getTypeNameId();
-  mDoDataTypeNames[0] = poToCreate->getTypeNameId();
+  conn_OUT = std::make_unique<CGenDataConnection>(*this, 0, *mIn);
 
   paInterfaceSpec.mNumEIs = 1;
   paInterfaceSpec.mEINames = scmEventInputNames;
@@ -87,10 +90,8 @@ bool GEN_FORTE_F_MOVE::createInterfaceSpec(const char *paConfigString, SFBInterf
   paInterfaceSpec.mEOWithIndexes = scmEOWithIndexes;
   paInterfaceSpec.mNumDIs = 1;
   paInterfaceSpec.mDINames = scmDataInputNames;
-  paInterfaceSpec.mDIDataTypeNames = mDiDataTypeNames.data();
   paInterfaceSpec.mNumDOs = 1;
   paInterfaceSpec.mDONames = scmDataOutputNames;
-  paInterfaceSpec.mDODataTypeNames = mDoDataTypeNames.data();
 
   return true;
 }
@@ -106,4 +107,24 @@ CStringDictionary::TStringId GEN_FORTE_F_MOVE::getDataTypeNameId(const char *paC
     }
   }
   return CStringDictionary::scmInvalidStringId;
+}
+
+CEventConnection *GEN_FORTE_F_MOVE::getEOConUnchecked(TPortId paEONum) {
+  return (paEONum == 0) ? &conn_CNF : nullptr;
+}
+
+CIEC_ANY *GEN_FORTE_F_MOVE::getDI(size_t paIndex) {
+  return (paIndex == 0) ? mIn.get() : nullptr;
+}
+
+CIEC_ANY *GEN_FORTE_F_MOVE::getDO(size_t paIndex) {
+  return (paIndex == 0) ? mIn.get() : nullptr;
+}
+
+CDataConnection **GEN_FORTE_F_MOVE::getDIConUnchecked(const TPortId paIndex) {
+  return (paIndex == 0) ? &conn_IN : nullptr;
+}
+
+CDataConnection *GEN_FORTE_F_MOVE::getDOConUnchecked(TPortId paDONum) {
+  return (paDONum == 0) ? conn_OUT.get() : nullptr;
 }

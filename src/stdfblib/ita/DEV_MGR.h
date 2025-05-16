@@ -18,6 +18,7 @@
 #include <mgmcmdstruct.h>
 #include <commfb.h>
 #include "CommandParser.h"
+#include "forte_string.h"
 
 class CDevice;
 
@@ -31,6 +32,10 @@ class DEV_MGR : public forte::com_infra::CCommFB {
     ~DEV_MGR() override;
 
     bool initialize() override;
+
+  protected:
+    void createGenInputData() override;
+    void createGenOutputData() override;
 
   private:
     bool executeCommand(const char *const paDest, char *paCommand);

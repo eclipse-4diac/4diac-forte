@@ -12,7 +12,7 @@
  *******************************************************************************/
 
 #include "RT_Bridge_fbt.h"
-#include "ifSpecBuilder.h"
+#include <memory>
 #include "criticalregion.h"
 #include "string_utils.h"
 
@@ -26,13 +26,12 @@ USE_STRING_ID(WR);
 DEFINE_GENERIC_FIRMWARE_FB(FORTE_GEN_RT_Bridge, STRID(GEN_RT_Bridge))
 
 const CStringDictionary::TStringId FORTE_GEN_RT_Bridge::scmEventInputNames[] = {STRID(RD), STRID(WR)};
-const CStringDictionary::TStringId FORTE_GEN_RT_Bridge::scmEventInputTypeIds[] = {STRID(Event), STRID(Event)};
 const CStringDictionary::TStringId FORTE_GEN_RT_Bridge::scmEventOutputNames[] = {STRID(RDO)};
-const CStringDictionary::TStringId FORTE_GEN_RT_Bridge::scmEventOutputTypeIds[] = {STRID(Event)};
 
 FORTE_GEN_RT_Bridge::FORTE_GEN_RT_Bridge(const CStringDictionary::TStringId paInstanceNameId,
                                          forte::core::CFBContainer &paContainer) :
-    CGenFunctionBlock<CFunctionBlock>(paContainer, paInstanceNameId) {};
+    CGenFunctionBlock<CFunctionBlock>(paContainer, paInstanceNameId),
+    conn_RDO(*this, 0) {};
 
 void FORTE_GEN_RT_Bridge::setInitialValues() {
 }
@@ -52,7 +51,7 @@ void FORTE_GEN_RT_Bridge::executeEvent(const TEventID paEIID, CEventChainExecuti
 void FORTE_GEN_RT_Bridge::readInputData(const TEventID paEIID) {
   if (paEIID == scmEventWRID) {
     for (size_t i = 0; i < getFBInterfaceSpec().mNumDIs; i++) {
-      readData(i, *getDI(i), *getDIConUnchecked(i));
+      readData(i, mGenDIs[i], mGenDIConns[i]);
     }
   }
 }
@@ -60,7 +59,7 @@ void FORTE_GEN_RT_Bridge::readInputData(const TEventID paEIID) {
 void FORTE_GEN_RT_Bridge::writeOutputData(const TEventID paEIID) {
   if (paEIID == scmEventRDOID) {
     for (size_t i = 0; i < getFBInterfaceSpec().mNumDOs; i++) {
-      writeData(getFBInterfaceSpec().mNumDIs + i, *getDO(i), *getDOConUnchecked(i));
+      writeData(getFBInterfaceSpec().mNumDIs + i, mGenDOs[i], mGenDOConns[i]);
     }
   }
 }
@@ -80,14 +79,37 @@ bool FORTE_GEN_RT_Bridge::createInterfaceSpec(const char *paConfigString, SFBInt
     return false;
   }
 
-  static const std::array<CStringDictionary::TStringId, 2> anEventInputNames = {STRID(RD), STRID(WR)};
-  static const std::array<CStringDictionary::TStringId, 1> anEventOutputNames = {STRID(RDO)};
+  paInterfaceSpec.mEINames = scmEventInputNames;
+  paInterfaceSpec.mEONames = scmEventOutputNames;
 
-  forte::core::util::CIfSpecBuilder isb;
-  isb.mEI.setStaticEvents(anEventInputNames);
-  isb.mEO.setStaticEvents(anEventOutputNames);
-  isb.mDI.addDataRange("SD_", static_cast<int>(numPorts), STRID(ANY));
-  isb.mDO.addDataRange("RD_", static_cast<int>(numPorts), STRID(ANY));
+  mDINames = std::make_unique<CStringDictionary::TStringId[]>(numPorts);
+  generateGenericInterfacePointNameArray("SD_", mDINames.get(), numPorts);
 
-  return isb.build(mIfSpecStorage, paInterfaceSpec);
+  mDONames = std::make_unique<CStringDictionary::TStringId[]>(numPorts);
+  generateGenericInterfacePointNameArray("RD_", mDONames.get(), numPorts);
+
+  paInterfaceSpec.mDINames = mDINames.get();
+  paInterfaceSpec.mDONames = mDONames.get();
+
+  return true;
+}
+
+CIEC_ANY *FORTE_GEN_RT_Bridge::getDI(size_t paIndex) {
+  return &mGenDIs[paIndex];
+}
+
+CIEC_ANY *FORTE_GEN_RT_Bridge::getDO(size_t paIndex) {
+  return &mGenDOs[paIndex];
+}
+
+CEventConnection *FORTE_GEN_RT_Bridge::getEOConUnchecked(TPortId paIndex) {
+  return (paIndex == 0) ? &conn_RDO : nullptr;
+}
+
+void FORTE_GEN_RT_Bridge::createGenInputData() {
+  mGenDIs = std::make_unique<CIEC_ANY_VARIANT[]>(getFBInterfaceSpec().mNumDIs);
+}
+
+void FORTE_GEN_RT_Bridge::createGenOutputData() {
+  mGenDOs = std::make_unique<CIEC_ANY_VARIANT[]>(getFBInterfaceSpec().mNumDOs);
 }

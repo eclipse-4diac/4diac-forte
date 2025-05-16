@@ -29,7 +29,6 @@ USE_STRING_ID(UINT);
 DEFINE_GENERIC_FIRMWARE_FB(GEN_E_MUX, STRID(GEN_E_MUX));
 
 const CStringDictionary::TStringId GEN_E_MUX::scmDataOutputNames[] = {STRID(K)};
-const CStringDictionary::TStringId GEN_E_MUX::scmDataOutputTypeIds[] = {STRID(UINT)};
 
 const CStringDictionary::TStringId GEN_E_MUX::scmEventOutputNames[] = {STRID(EO)};
 
@@ -88,7 +87,6 @@ bool GEN_E_MUX::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec
         paInterfaceSpec.mDIDataTypeNames = nullptr;
         paInterfaceSpec.mNumDOs = 1;
         paInterfaceSpec.mDONames = scmDataOutputNames;
-        paInterfaceSpec.mDODataTypeNames = scmDataOutputTypeIds;
         return true;
       } else {
         if (paInterfaceSpec.mNumEIs >= CFunctionBlock::scmMaxInterfaceEvents) {

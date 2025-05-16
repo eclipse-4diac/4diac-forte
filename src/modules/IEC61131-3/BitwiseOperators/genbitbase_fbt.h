@@ -29,33 +29,46 @@ class CGenBitBase : public CGenFunctionBlock<CFunctionBlock> {
     ~CGenBitBase() override = default;
 
     CIEC_ANY_BIT_VARIANT &var_IN(size_t paIndex) {
-      return *static_cast<CIEC_ANY_BIT_VARIANT *>(getDI(paIndex));
+      return mGenDIs[paIndex];
     }
 
-    CIEC_ANY_BIT_VARIANT &var_OUT() {
-      return *static_cast<CIEC_ANY_BIT_VARIANT *>(getDO(0));
+    size_t getGenEOOffset() override {
+      return 1;
     }
+
+    size_t getGenDOOffset() override {
+      return 1;
+    }
+
+    CIEC_ANY *getDO(size_t) override;
+    CEventConnection *getEOConUnchecked(TPortId) override;
+    CDataConnection *getDOConUnchecked(TPortId paDONum) override;
+    void createGenInputData() override;
 
     static const TEventID scmEventREQID = 0;
     static const TEventID scmEventCNFID = 0;
 
+    CIEC_ANY_BIT_VARIANT var_OUT;
+
   private:
     std::unique_ptr<CStringDictionary::TStringId[]> mDataInputNames;
-    std::unique_ptr<CStringDictionary::TStringId[]> mDataInputTypeIds;
 
     static const CStringDictionary::TStringId scmDataOutputNames[];
-    static const CStringDictionary::TStringId scmDataOutputTypeIds[];
 
     static const CStringDictionary::TStringId scmEventInputNames[];
-    static const CStringDictionary::TStringId scmEventInputTypeIds[];
 
     static const CStringDictionary::TStringId scmEventOutputNames[];
-    static const CStringDictionary::TStringId scmEventOutputTypeIds[];
 
     void readInputData(TEventID paEI) override;
     void writeOutputData(TEventID paEO) override;
 
     bool createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) override;
+
+    std::unique_ptr<CIEC_ANY_BIT_VARIANT[]> mGenDIs;
+
+    CEventConnection conn_CNF;
+
+    COutDataConnection<CIEC_ANY_BIT_VARIANT> conn_OUT;
 };
 
 #endif /* _GENBITBASE_H_ */

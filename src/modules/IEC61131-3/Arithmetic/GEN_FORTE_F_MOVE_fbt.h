@@ -14,24 +14,33 @@
 #pragma once
 
 #include <genfb.h>
-#include "forte_any_variant.h"
-#include "iec61131_functions.h"
-#include "forte_array_common.h"
-#include "forte_array.h"
-#include "forte_array_fixed.h"
-#include "forte_array_variable.h"
 
-#include <array>
-
-class GEN_FORTE_F_MOVE : public CGenFunctionBlock<CFunctionBlock> {
+class GEN_FORTE_F_MOVE final : public CGenFunctionBlock<CFunctionBlock> {
     DECLARE_GENERIC_FIRMWARE_FB(GEN_FORTE_F_MOVE)
+
+  protected:
+    size_t getGenEOOffset() override {
+      return 1;
+    }
+
+    size_t getGenDIOffset() override {
+      return 1;
+    }
+
+    size_t getGenDOOffset() override {
+      return 1;
+    }
+
+    CEventConnection *getEOConUnchecked(TPortId paEONum) override;
+    CIEC_ANY *getDI(size_t paIndex) override;
+    CIEC_ANY *getDO(size_t paIndex) override;
+    CDataConnection **getDIConUnchecked(const TPortId paIndex) override;
+    CDataConnection *getDOConUnchecked(TPortId paDONum) override;
 
   private:
     static const CStringDictionary::TStringId scmDataInputNames[];
-    std::array<CStringDictionary::TStringId, 1> mDiDataTypeNames;
 
     static const CStringDictionary::TStringId scmDataOutputNames[];
-    std::array<CStringDictionary::TStringId, 1> mDoDataTypeNames;
 
     static const TEventID scmEventREQID = 0;
 
@@ -56,15 +65,14 @@ class GEN_FORTE_F_MOVE : public CGenFunctionBlock<CFunctionBlock> {
 
     static CStringDictionary::TStringId getDataTypeNameId(const char *paConfigString);
 
+    CEventConnection conn_CNF;
+
+    std::unique_ptr<CIEC_ANY> mIn;
+    CDataConnection *conn_IN;
+
+    std::unique_ptr<CGenDataConnection> conn_OUT;
+
   public:
     GEN_FORTE_F_MOVE(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
     ~GEN_FORTE_F_MOVE() override = default;
-
-    CIEC_ANY &var_IN() {
-      return *static_cast<CIEC_ANY *>(getDI(0));
-    }
-
-    CIEC_ANY &var_OUT() {
-      return *static_cast<CIEC_ANY *>(getDO(0));
-    }
 };

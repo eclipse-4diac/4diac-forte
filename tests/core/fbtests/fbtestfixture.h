@@ -17,6 +17,7 @@
 #ifndef TESTS_CORE_FBTESTS_FBTESTFIXTURE_H_
 #define TESTS_CORE_FBTESTS_FBTESTFIXTURE_H_
 
+#include "forte_any.h"
 #include "fortenew.h"
 #include "genfb.h"
 #include "forte_sync.h"
@@ -39,7 +40,7 @@ class CFBTestFixtureBase : public CGenFunctionBlock<CFunctionBlock> {
   protected:
     explicit CFBTestFixtureBase(CStringDictionary::TStringId paTypeId);
 
-    void setup(const char *paConfigString = nullptr);
+    void setup();
 
     bool createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) override;
 
@@ -68,6 +69,11 @@ class CFBTestFixtureBase : public CGenFunctionBlock<CFunctionBlock> {
     void setInputData(std::initializer_list<CIEC_ANY *> paInputData);
     void setOutputData(std::initializer_list<CIEC_ANY *> paOutputData);
 
+    void createGenInputData() override;
+    CIEC_ANY *getDI(size_t paIndex) override {
+      return mGenDIs[paIndex].get();
+    }
+
   private:
     void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
@@ -94,6 +100,7 @@ class CFBTestFixtureBase : public CGenFunctionBlock<CFunctionBlock> {
     std::string mConfigString;
     CFunctionBlock *mFBUnderTest;
     std::vector<std::unique_ptr<CDataConnection>> mDIConnections;
+    std::vector<std::unique_ptr<CIEC_ANY>> mGenDIs;
 
     /*! \brief list for storing the output events received from the testee
      *

@@ -17,7 +17,6 @@
  *******************************************************************************/
 
 #include "GEN_ADD_fbt.h"
-#include "ifSpecBuilder.h"
 #include "string_utils.h"
 
 USE_STRING_ID(ANY_MAGNITUDE);
@@ -27,81 +26,102 @@ USE_STRING_ID(GEN_ADD);
 USE_STRING_ID(OUT);
 USE_STRING_ID(REQ);
 
+namespace {
+  static const CStringDictionary::TStringId eventInputNames[] = {STRID(REQ)};
+  static const CStringDictionary::TStringId eventOutputNames[] = {STRID(CNF)};
+  static const CStringDictionary::TStringId dataOutputNames[] = {STRID(OUT)};
+
+} // namespace
+
 DEFINE_GENERIC_FIRMWARE_FB(GEN_ADD, STRID(GEN_ADD))
 
 GEN_ADD::GEN_ADD(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CGenFunctionBlock<CFunctionBlock>(paContainer, paInstanceNameId),
-    mDInputs(0) {
+    conn_CNF(*this, 0),
+    conn_OUT(*this, 0, var_OUT) {
 }
 
 void GEN_ADD::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
-  switch (paEIID) {
-    case scmEventREQID:
-      if (mDInputs) {
-        var_OUT() = var_IN(0);
-        for (size_t i = 1; i < mDInputs; ++i) {
-          var_OUT() = std::visit(
-              [](auto &&paOUT, auto &&paIN) -> CIEC_ANY_MAGNITUDE_VARIANT {
-                using T = std::decay_t<decltype(paOUT)>;
-                using U = std::decay_t<decltype(paIN)>;
-                using deductedType = typename forte::core::mpl::get_add_operator_result_type<T, U>::type;
-                if constexpr (!std::is_same<deductedType, forte::core::mpl::NullType>::value) {
-                  return func_ADD(paOUT, paIN);
-                }
-                DEVLOG_ERROR("Adding incompatible types %s and %s\n", CStringDictionary::get(paOUT.getTypeNameID()),
-                             CStringDictionary::get(paIN.getTypeNameID()));
-                return paOUT;
-              },
-              static_cast<CIEC_ANY_MAGNITUDE_VARIANT::variant &>(var_OUT()),
-              static_cast<CIEC_ANY_MAGNITUDE_VARIANT::variant &>(var_IN(i)));
-        }
-      }
-      sendOutputEvent(scmEventCNFID, paECET);
-      break;
+  if (paEIID == scmEventREQID) {
+    var_OUT = mGenDIs[0];
+    for (size_t i = 1; i < getFBInterfaceSpec().mNumDIs; ++i) {
+      var_OUT = std::visit(
+          [](auto &&paOUT, auto &&paIN) -> CIEC_ANY_MAGNITUDE_VARIANT {
+            using T = std::decay_t<decltype(paOUT)>;
+            using U = std::decay_t<decltype(paIN)>;
+            using deductedType = typename forte::core::mpl::get_add_operator_result_type<T, U>::type;
+            if constexpr (!std::is_same<deductedType, forte::core::mpl::NullType>::value) {
+              return func_ADD(paOUT, paIN);
+            }
+            DEVLOG_ERROR("Adding incompatible types %s and %s\n", CStringDictionary::get(paOUT.getTypeNameID()),
+                         CStringDictionary::get(paIN.getTypeNameID()));
+            return paOUT;
+          },
+          static_cast<CIEC_ANY_MAGNITUDE_VARIANT::variant &>(var_OUT),
+          static_cast<CIEC_ANY_MAGNITUDE_VARIANT::variant &>(mGenDIs[i]));
+    }
+    sendOutputEvent(scmEventCNFID, paECET);
   }
 }
 
 void GEN_ADD::readInputData(TEventID) {
   for (TPortId i = 0; i < getFBInterfaceSpec().mNumDIs; ++i) {
-    readData(i, *mDIs[i], mDIConns[i]);
+    readData(i, mGenDIs[i], mGenDIConns[i]);
   }
 }
 
 void GEN_ADD::writeOutputData(TEventID) {
-  writeData(getFBInterfaceSpec().mNumDIs + 0, *mDOs[0], mDOConns[0]);
+  writeData(getFBInterfaceSpec().mNumDIs + 0, var_OUT, conn_OUT);
 }
 
 bool GEN_ADD::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) {
   const char *pcPos = strrchr(paConfigString, '_');
-  if (nullptr != pcPos) {
-    pcPos++;
-    // we have an underscore and it is the first underscore after AND
-    mDInputs = static_cast<unsigned int>(forte::core::util::strtoul(pcPos, nullptr, 10));
-    DEVLOG_DEBUG("DIs: %d;\n", mDInputs);
-  } else {
+  if (pcPos == nullptr) {
     return false;
   }
 
-  if (mDInputs < 2) {
+  pcPos++;
+  // we have an underscore and it is the first underscore after AND
+  unsigned int numDIs = static_cast<unsigned int>(forte::core::util::strtoul(pcPos, nullptr, 10));
+  DEVLOG_DEBUG("DIs: %d;\n", mDInputs);
+
+  if (numDIs < 2) {
     return false;
   }
 
   // now the number of needed eventInputs and dataOutputs are available in the integer array
   // create the eventInputs
+  mDINames = std::make_unique<CStringDictionary::TStringId[]>(numDIs);
+  generateGenericInterfacePointNameArray("IN", mDINames.get(), numDIs);
 
-  static const std::array<CStringDictionary::TStringId, 1> anEventInputNames = {STRID(REQ)};
-  static const std::array<CStringDictionary::TStringId, 1> anEventOutputNames = {STRID(CNF)};
-  static const std::array<CStringDictionary::TStringId, 1> anDataOutputNames = {STRID(OUT)};
-  static const std::array<CStringDictionary::TStringId, 1> anDataOutputTypeIds = {STRID(ANY_MAGNITUDE)};
-  static const std::array<CStringDictionary::TStringId, 1> anEventInputTypes = {STRID(Event)};
-  static const std::array<CStringDictionary::TStringId, 1> anEventOutputTypes = {STRID(Event)};
+  paInterfaceSpec.mNumEIs = 1;
+  paInterfaceSpec.mEINames = eventInputNames;
+  paInterfaceSpec.mNumEOs = 1;
+  paInterfaceSpec.mEONames = eventOutputNames;
+  paInterfaceSpec.mNumDIs = numDIs;
+  paInterfaceSpec.mDINames = mDINames.get();
+  paInterfaceSpec.mNumDOs = 1;
+  paInterfaceSpec.mDONames = dataOutputNames;
 
-  forte::core::util::CIfSpecBuilder isb;
-  isb.mEI.setStaticEvents(anEventInputNames);
-  isb.mEO.setStaticEvents(anEventOutputNames);
-  isb.mEITypes.setStaticEvents(anEventInputTypes);
-  isb.mEOTypes.setStaticEvents(anEventOutputTypes);
-  isb.mDI.addDataRange("IN", static_cast<int>(mDInputs), STRID(ANY_MAGNITUDE));
-  isb.mDO.setStaticData(anDataOutputNames, anDataOutputTypeIds);
-  return isb.build(mIfSpecStorage, paInterfaceSpec);
+  return true;
+}
+
+CEventConnection *GEN_ADD::getEOConUnchecked(TPortId paEONum) {
+  return (paEONum == 0) ? &conn_CNF : nullptr;
+}
+
+void GEN_ADD::createGenInputData() {
+  mGenDIs = std::make_unique<CIEC_ANY_MAGNITUDE_VARIANT[]>(getFBInterfaceSpec().mNumDIs);
+}
+
+CIEC_ANY *GEN_ADD::getDI(size_t paDINum) {
+  return &mGenDIs[paDINum];
+}
+
+CIEC_ANY *GEN_ADD::getDO(size_t paDONum) {
+  return (paDONum == 0) ? &var_OUT : nullptr;
+}
+
+CDataConnection *GEN_ADD::getDOConUnchecked(const TPortId paDONum) {
+  return (paDONum == 0) ? &conn_OUT : nullptr;
 }

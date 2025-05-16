@@ -25,7 +25,7 @@ class FORTE_SubscribeEventOpcUa : public CCompositeFB {
     static const SAdapterInstanceDef scmAdapterInstances[];
 
     FORTE_SubscribeEventAdp &SubscribeEventAdp() {
-      return (*static_cast<FORTE_SubscribeEventAdp *>(mAdapters[0]));
+      return (*static_cast<FORTE_SubscribeEventAdp *>(getAdapterUnchecked(0)));
     };
     static const int scmSubscribeEventAdpAdpNum = 0;
     static const SFBInterfaceSpec scmFBInterfaceSpec;

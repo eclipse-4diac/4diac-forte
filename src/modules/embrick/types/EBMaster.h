@@ -91,7 +91,7 @@ class FORTE_EBMaster final : public forte::core::io::IOConfigFBMultiMaster {
     CIEC_ANY *getDI(size_t) override;
     CIEC_ANY *getDO(size_t) override;
     FORTE_EBBusAdapter &var_BusAdapterOut() {
-      return *static_cast<FORTE_EBBusAdapter *>(mAdapters[0]);
+      return *static_cast<FORTE_EBBusAdapter *>(getAdapterUnchecked(0));
     };
 
     CEventConnection *getEOConUnchecked(TPortId) override;

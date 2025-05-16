@@ -165,7 +165,9 @@ CIEC_ANY *CTypeLib::createDataPoint(const CStringDictionary::TStringId *&paDataT
     if (STRID(ARRAY) == dataTypeId) {
       static_cast<CIEC_ARRAY_DYNAMIC *>(poRetVal)->setup(paDataTypeIds + 1);
     }
-    paDataBuf += poRetVal->getSizeof();
+    if (paDataBuf != nullptr) {
+      paDataBuf += poRetVal->getSizeof();
+    }
   }
   nextDataPoint(paDataTypeIds);
   return poRetVal;

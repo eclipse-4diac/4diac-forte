@@ -121,11 +121,11 @@ class FORTE_PLCnextAXLSEDI16 final : public PLCnextSlaveHandler {
     CIEC_ANY *getDO(size_t) override;
     CAdapter *getAdapterUnchecked(size_t) override;
     FORTE_PLCnextBusAdapter &var_BusAdapterIn() {
-      return *static_cast<FORTE_PLCnextBusAdapter *>(mAdapters[0]);
+      return *static_cast<FORTE_PLCnextBusAdapter *>(getAdapterUnchecked(0));
     };
 
     FORTE_PLCnextBusAdapter &var_BusAdapterOut() {
-      return *static_cast<FORTE_PLCnextBusAdapter *>(mAdapters[1]);
+      return *static_cast<FORTE_PLCnextBusAdapter *>(getAdapterUnchecked(1));
     };
 
     CEventConnection *getEOConUnchecked(TPortId) override;

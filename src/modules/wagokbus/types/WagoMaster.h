@@ -37,7 +37,7 @@ class FORTE_WagoMaster : public forte::core::io::IOConfigFBMultiMaster {
     CIEC_ANY *getDI(size_t) override;
     CIEC_ANY *getDO(size_t) override;
     FORTE_WagoBusAdapter &var_BusAdapterOut() {
-      return *static_cast<FORTE_WagoBusAdapter *>(mAdapters[0]);
+      return *static_cast<FORTE_WagoBusAdapter *>(getAdapterUnchecked(0));
     };
 
     CEventConnection *getEOConUnchecked(TPortId) override;
@@ -81,6 +81,6 @@ class FORTE_WagoMaster : public forte::core::io::IOConfigFBMultiMaster {
     void writeOutputData(TEventID paEIID) override;
     void setInitialValues() override;
 
-    forte::core::io::IODeviceController *createDeviceController(CDeviceExecution &paDeviceExecution);
-    void setConfig();
+    forte::core::io::IODeviceController *createDeviceController(CDeviceExecution &paDeviceExecution) override;
+    void setConfig() override;
 };

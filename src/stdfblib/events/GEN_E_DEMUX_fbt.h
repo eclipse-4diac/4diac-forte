@@ -25,6 +25,14 @@
 class GEN_E_DEMUX : public CGenFunctionBlock<CFunctionBlock> {
     DECLARE_GENERIC_FIRMWARE_FB(GEN_E_DEMUX)
 
+  protected:
+    CIEC_ANY *getDI(size_t) override;
+    CDataConnection **getDIConUnchecked(const TPortId paIndex) override;
+
+    size_t getGenDIOffset() override {
+      return 0;
+    }
+
   private:
     static const CStringDictionary::TStringId scmDataInputNames[], scmDIDataTypeIds[];
 
@@ -41,9 +49,8 @@ class GEN_E_DEMUX : public CGenFunctionBlock<CFunctionBlock> {
 
     bool createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) override;
 
-    CIEC_UINT &K() {
-      return *static_cast<CIEC_UINT *>(getDI(0));
-    }
+    CIEC_UINT var_K;
+    CDataConnection *conn_K;
 
   public:
     GEN_E_DEMUX(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);

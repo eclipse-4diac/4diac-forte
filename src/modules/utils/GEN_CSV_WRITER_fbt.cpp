@@ -17,6 +17,7 @@
  *   Alois Zoitl  - migrated data type toString to std::string
  *******************************************************************************/
 #include "GEN_CSV_WRITER_fbt.h"
+#include <memory>
 #include "string_utils.h"
 
 USE_STRING_ID(BOOL);
@@ -54,15 +55,15 @@ const CIEC_STRING GEN_CSV_WRITER::scmFileNotOpened = "File not opened"_STRING;
 
 void GEN_CSV_WRITER::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   if (scmEventINITID == paEIID) {
-    if (QI()) {
+    if (var_QI) {
       openCSVFile();
     } else {
       closeCSVFile();
     }
     sendOutputEvent(scmEventINITOID, paECET);
   } else if (scmEventREQID == paEIID) {
-    QO() = QI();
-    if (QI()) {
+    var_QO = var_QI;
+    if (var_QI) {
       writeCSVFileLine();
     }
     sendOutputEvent(scmEventCNFID, paECET);
@@ -72,6 +73,12 @@ void GEN_CSV_WRITER::executeEvent(TEventID paEIID, CEventChainExecutionThread *c
 GEN_CSV_WRITER::GEN_CSV_WRITER(const CStringDictionary::TStringId paInstanceNameId,
                                forte::core::CFBContainer &paContainer) :
     CGenFunctionBlock<CFunctionBlock>(paContainer, paInstanceNameId),
+    conn_INITO(*this, 0),
+    conn_CNF(*this, 1),
+    conn_QI(nullptr),
+    conn_FILE_NAME(nullptr),
+    conn_QO(*this, 0, var_QO),
+    conn_STATUS(*this, 1, var_STATUS),
     mCSVFile(nullptr) {
 }
 
@@ -82,14 +89,14 @@ GEN_CSV_WRITER::~GEN_CSV_WRITER() {
 void GEN_CSV_WRITER::readInputData(TEventID paEI) {
   switch (paEI) {
     case scmEventINITID: {
-      readData(0, *mDIs[0], mDIConns[0]);
-      readData(1, *mDIs[1], mDIConns[1]);
+      readData(0, var_QI, conn_QI);
+      readData(1, var_FILE_NAME, conn_FILE_NAME);
       break;
     }
     case scmEventREQID: {
-      readData(0, *mDIs[0], mDIConns[0]);
-      for (TPortId i = 2; i < getFBInterfaceSpec().mNumDIs; i++) {
-        readData(i, *mDIs[i], mDIConns[i]);
+      readData(0, var_QI, conn_QI);
+      for (TPortId i = 0; i < getGenDINums(); i++) {
+        readData(i, mGenDIs[i], mGenDIConns[i]);
       }
       break;
     }
@@ -99,8 +106,8 @@ void GEN_CSV_WRITER::readInputData(TEventID paEI) {
 
 void GEN_CSV_WRITER::writeOutputData(TEventID) {
   size_t numDIs = getFBInterfaceSpec().mNumDIs;
-  writeData(numDIs + 0, *mDOs[0], mDOConns[0]);
-  writeData(numDIs + 1, *mDOs[1], mDOConns[1]);
+  writeData(numDIs + 0, var_QO, conn_QO);
+  writeData(numDIs + 1, var_STATUS, conn_STATUS);
 }
 
 bool GEN_CSV_WRITER::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) {
@@ -111,14 +118,10 @@ bool GEN_CSV_WRITER::createInterfaceSpec(const char *paConfigString, SFBInterfac
                                                    2); // we have in addition to the SDs a QI and FILE_NAME data inputs
 
     mDataInputNames = std::make_unique<CStringDictionary::TStringId[]>(paInterfaceSpec.mNumDIs);
-    mDataInputTypeIds = std::make_unique<CStringDictionary::TStringId[]>(paInterfaceSpec.mNumDIs);
 
     mDataInputNames[0] = STRID(QI);
-    mDataInputTypeIds[0] = STRID(BOOL);
     mDataInputNames[1] = STRID(FILE_NAME);
-    mDataInputTypeIds[1] = STRID(STRING);
-
-    generateGenericDataPointArrays("SD_", &(mDataInputTypeIds[2]), &(mDataInputNames[2]), paInterfaceSpec.mNumDIs - 2);
+    generateGenericInterfacePointNameArray("SD_", &(mDataInputNames[2]), paInterfaceSpec.mNumDIs - 2);
 
     // create the interface Specification
     paInterfaceSpec.mNumEIs = 2;
@@ -126,7 +129,6 @@ bool GEN_CSV_WRITER::createInterfaceSpec(const char *paConfigString, SFBInterfac
     paInterfaceSpec.mNumEOs = 2;
     paInterfaceSpec.mEONames = scmEventOutputNames;
     paInterfaceSpec.mDINames = mDataInputNames.get();
-    paInterfaceSpec.mDIDataTypeNames = mDataInputTypeIds.get();
     paInterfaceSpec.mNumDOs = 2;
     paInterfaceSpec.mDONames = scmDataOutputNames;
     paInterfaceSpec.mDODataTypeNames = scmDataOutputTypeIds;
@@ -136,36 +138,37 @@ bool GEN_CSV_WRITER::createInterfaceSpec(const char *paConfigString, SFBInterfac
 }
 
 void GEN_CSV_WRITER::openCSVFile() {
-  QO() = false_BOOL;
+  var_QO = false_BOOL;
   if (nullptr == mCSVFile) {
-    mCSVFile = forte_fopen(FILE_NAME().getStorage().c_str(), "w+");
+    mCSVFile = forte_fopen(var_FILE_NAME.getStorage().c_str(), "w+");
     if (nullptr != mCSVFile) {
-      QO() = true_BOOL;
-      STATUS() = scmOK;
-      DEVLOG_INFO("[GEN_CSV_WRITER]: File %s successfully opened\n", FILE_NAME().getStorage().c_str());
+      var_QO = true_BOOL;
+      var_STATUS = scmOK;
+      DEVLOG_INFO("[GEN_CSV_WRITER]: File %s successfully opened\n", var_FILE_NAME.getStorage().c_str());
     } else {
       const char *errorCode = strerror(errno);
-      STATUS() = CIEC_STRING(errorCode, strlen(errorCode));
-      DEVLOG_ERROR("[GEN_CSV_WRITER]: Couldn't open file %s. Error: %s\n", FILE_NAME().getStorage().c_str(),
-                   STATUS().getStorage().c_str());
+      var_STATUS = CIEC_STRING(errorCode, strlen(errorCode));
+      DEVLOG_ERROR("[GEN_CSV_WRITER]: Couldn't open file %s. Error: %s\n", var_FILE_NAME.getStorage().c_str(),
+                   var_STATUS.getStorage().c_str());
     }
   } else {
-    STATUS() = scmFileAlreadyOpened;
-    DEVLOG_ERROR("[GEN_CSV_WRITER]: Can't open file %s since it is already opened\n", FILE_NAME().getStorage().c_str());
+    var_STATUS = scmFileAlreadyOpened;
+    DEVLOG_ERROR("[GEN_CSV_WRITER]: Can't open file %s since it is already opened\n",
+                 var_FILE_NAME.getStorage().c_str());
   }
 }
 
 void GEN_CSV_WRITER::closeCSVFile() {
-  QO() = false_BOOL;
+  var_QO = false_BOOL;
   if (nullptr != mCSVFile) {
     if (0 == forte_fclose(mCSVFile)) {
-      STATUS() = scmOK;
-      DEVLOG_INFO("[GEN_CSV_WRITER]: File %s successfully closed\n", FILE_NAME().getStorage().c_str());
+      var_STATUS = scmOK;
+      DEVLOG_INFO("[GEN_CSV_WRITER]: File %s successfully closed\n", var_FILE_NAME.getStorage().c_str());
     } else {
       const char *errorCode = strerror(errno);
-      STATUS() = CIEC_STRING(errorCode, strlen(errorCode));
-      DEVLOG_ERROR("[GEN_CSV_WRITER]: Couldn't close file %s. Error: %s\n", FILE_NAME().getStorage().c_str(),
-                   STATUS().getStorage().c_str());
+      var_STATUS = CIEC_STRING(errorCode, strlen(errorCode));
+      DEVLOG_ERROR("[GEN_CSV_WRITER]: Couldn't close file %s. Error: %s\n", var_FILE_NAME.getStorage().c_str(),
+                   var_STATUS.getStorage().c_str());
     }
     mCSVFile = nullptr;
   }
@@ -218,8 +221,57 @@ void GEN_CSV_WRITER::writeCSVFileLine() {
       forte_fwrite("\n", 1, 1, mCSVFile);
     }
   } else {
-    QO() = false_BOOL;
-    STATUS() = scmFileNotOpened;
-    DEVLOG_ERROR("[GEN_CSV_WRITER]: Can't write to file %s since it is not opened\n", FILE_NAME().getStorage().c_str());
+    var_QO = false_BOOL;
+    var_STATUS = scmFileNotOpened;
+    DEVLOG_ERROR("[GEN_CSV_WRITER]: Can't write to file %s since it is not opened\n",
+                 var_FILE_NAME.getStorage().c_str());
   }
+}
+
+void GEN_CSV_WRITER::createGenInputData() {
+  mGenDIs = std::make_unique<CIEC_ANY_VARIANT[]>(getGenDINums());
+}
+
+CIEC_ANY *GEN_CSV_WRITER::getDI(size_t paIndex) {
+  switch (paIndex) {
+    case 0: return &var_QI;
+    case 1: return &var_FILE_NAME;
+    default: return &mGenDIs[paIndex - 2];
+  }
+  return nullptr;
+
+  return nullptr;
+}
+
+CIEC_ANY *GEN_CSV_WRITER::getDO(size_t paIndex) {
+  switch (paIndex) {
+    case 0: return &var_QO;
+    case 1: return &var_STATUS;
+  }
+  return nullptr;
+}
+
+CEventConnection *GEN_CSV_WRITER::getEOConUnchecked(TPortId paIndex) {
+  switch (paIndex) {
+    case 0: return &conn_INITO;
+    case 1: return &conn_CNF;
+  }
+  return nullptr;
+}
+
+CDataConnection **GEN_CSV_WRITER::getDIConUnchecked(TPortId paDINum) {
+  switch (paDINum) {
+    case 0: return &conn_QI;
+    case 1: return &conn_FILE_NAME;
+    default: return CGenFunctionBlock<CFunctionBlock>::getDIConUnchecked(paDINum);
+  }
+  return nullptr;
+}
+
+CDataConnection *GEN_CSV_WRITER::getDOConUnchecked(TPortId paDONum) {
+  switch (paDONum) {
+    case 0: return &conn_QO;
+    case 1: return &conn_STATUS;
+  }
+  return nullptr;
 }

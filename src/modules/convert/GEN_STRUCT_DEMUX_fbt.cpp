@@ -25,7 +25,6 @@ USE_STRING_ID(REQ);
 #include <stdio.h>
 #include "GEN_STRUCT_DEMUX_fbt.h"
 
-
 DEFINE_GENERIC_FIRMWARE_FB(GEN_STRUCT_DEMUX, STRID(GEN_STRUCT_DEMUX));
 
 const CStringDictionary::TStringId GEN_STRUCT_DEMUX::scmEventInputNames[] = {STRID(REQ)};
@@ -37,43 +36,25 @@ const CStringDictionary::TStringId GEN_STRUCT_DEMUX::scmDataInputNames[] = {STRI
 
 void GEN_STRUCT_DEMUX::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   if (scmEventREQID == paEIID) {
-    copyStructValuesToOutputs();
+    // we using struct members as outputs so no copying needed here
     sendOutputEvent(scmEventCNFID, paECET);
   }
 }
 
 GEN_STRUCT_DEMUX::GEN_STRUCT_DEMUX(const CStringDictionary::TStringId paInstanceNameId,
                                    forte::core::CFBContainer &paContainer) :
-    CGenFunctionBlock<CFunctionBlock>(paContainer, paInstanceNameId) {
+    CGenFunctionBlock<CFunctionBlock>(paContainer, paInstanceNameId),
+    conn_CNF(*this, 0),
+    conn_IN(nullptr) {
 }
 
 void GEN_STRUCT_DEMUX::readInputData(TEventID) {
-  readData(0, *mDIs[0], mDIConns[0]);
+  readData(0, *var_IN, conn_IN);
 }
 
 void GEN_STRUCT_DEMUX::writeOutputData(TEventID) {
   for (TPortId i = 0; i < getFBInterfaceSpec().mNumDOs; ++i) {
-    writeData(1 + i, *mDOs[i], mDOConns[i]);
-  }
-}
-
-bool GEN_STRUCT_DEMUX::initialize() {
-  if (CGenFunctionBlock::initialize()) {
-    setConfiguredDOPorts();
-    copyStructValuesToOutputs();
-    return true;
-  }
-  return false;
-}
-
-void GEN_STRUCT_DEMUX::setInitialValues() {
-  CGenFunctionBlock::setInitialValues();
-  copyStructValuesToOutputs();
-}
-
-void GEN_STRUCT_DEMUX::copyStructValuesToOutputs() {
-  for (TPortId i = 0; i < mConfiguredDOPorts.size(); i++) {
-    getDO(i)->setValue(mConfiguredDOPorts[i]->unwrap());
+    writeData(1 + i, *mConfiguredDOPorts[i], mGenDOConns[i]);
   }
 }
 
@@ -106,23 +87,20 @@ bool GEN_STRUCT_DEMUX::createInterfaceSpec(const char *paConfigString, SFBInterf
   }
 
   // we could find the struct
-  auto structInstance = static_cast<CIEC_STRUCT *>(data.get());
+  var_IN = std::unique_ptr<CIEC_STRUCT>(static_cast<CIEC_STRUCT *>(data.release()));
+
   size_t structSize;
   if (isConfigured) {
     std::string_view configuredMemberNamesStr{paConfigString};
     configuredMemberNamesStr = configuredMemberNamesStr.substr(endIndex + STRUCT_NAME_SEPARATOR.size());
     std::vector<std::string_view> configuredMemberNames = getConfiguredMemberNames(configuredMemberNamesStr);
     structSize = configuredMemberNames.size();
-    mDoDataTypeNames = std::make_unique<CStringDictionary::TStringId[]>(
-        calcConfiguredStructTypeNameSize(structInstance, configuredMemberNames));
     mDoNames = std::make_unique<CStringDictionary::TStringId[]>(structSize);
-    fillConfiguredInterfaceSpec(structInstance, configuredMemberNames);
+    fillConfiguredInterfaceSpec(configuredMemberNames);
   } else {
-    structSize = structInstance->getStructSize();
-    mDoDataTypeNames =
-        std::make_unique<CStringDictionary::TStringId[]>(GEN_STRUCT_MUX::calcStructTypeNameSize(*structInstance));
+    structSize = var_IN->getStructSize();
     mDoNames = std::make_unique<CStringDictionary::TStringId[]>(structSize);
-    fillInterfaceSpec(structInstance);
+    fillInterfaceSpec();
   }
   if (structSize == 0 || structSize >= cgInvalidPortId) { // the structure size must be non zero and less than
                                                           // cgInvalidPortId (maximum number of data input)
@@ -131,7 +109,6 @@ bool GEN_STRUCT_DEMUX::createInterfaceSpec(const char *paConfigString, SFBInterf
     return false;
   }
 
-  mDiDataTypeNames[0] = structTypeNameId;
   paInterfaceSpec.mNumEIs = 1;
   paInterfaceSpec.mEINames = scmEventInputNames;
   paInterfaceSpec.mEITypeNames = scmEventInputTypeIds;
@@ -140,32 +117,30 @@ bool GEN_STRUCT_DEMUX::createInterfaceSpec(const char *paConfigString, SFBInterf
   paInterfaceSpec.mEOTypeNames = scmEventOutputTypeIds;
   paInterfaceSpec.mNumDIs = 1;
   paInterfaceSpec.mDINames = scmDataInputNames;
-  paInterfaceSpec.mDIDataTypeNames = mDiDataTypeNames.data();
   paInterfaceSpec.mNumDOs = structSize;
   paInterfaceSpec.mDONames = mDoNames.get();
-  paInterfaceSpec.mDODataTypeNames = mDoDataTypeNames.get();
 
   return true;
 }
 
-void GEN_STRUCT_DEMUX::fillConfiguredInterfaceSpec(CIEC_STRUCT *paStructType,
-                                                   std::vector<std::string_view> &paConfiguredMemberNames) {
-  auto doDataTypeNames = mDoDataTypeNames.get();
+void GEN_STRUCT_DEMUX::fillConfiguredInterfaceSpec(std::vector<std::string_view> &paConfiguredMemberNames) {
+  mConfiguredDOPorts.reserve(paConfiguredMemberNames.size());
   for (size_t i = 0; i < paConfiguredMemberNames.size(); ++i) {
     CStringDictionary::TStringId memberNameId =
         CStringDictionary::insert(paConfiguredMemberNames[i].data(), paConfiguredMemberNames[i].length());
     mDoNames[i] = memberNameId;
-    CIEC_ANY *member = getNestedMember(memberNameId, paStructType);
-    fillDataPointSpec(*member, doDataTypeNames);
+    CIEC_ANY *member = getNestedMember(memberNameId, var_IN.get());
+    mConfiguredDOPorts.emplace_back(member);
   }
 }
 
-void GEN_STRUCT_DEMUX::fillInterfaceSpec(CIEC_STRUCT *paStructType) {
-  auto doDataTypeNames = mDoDataTypeNames.get();
-  for (size_t i = 0; i < paStructType->getStructSize(); ++i) {
-    const CIEC_ANY &member = *paStructType->getMember(i);
-    mDoNames[i] = paStructType->elementNames()[i];
-    fillDataPointSpec(member, doDataTypeNames);
+void GEN_STRUCT_DEMUX::fillInterfaceSpec() {
+  size_t structSize = var_IN->getStructSize();
+  mConfiguredDOPorts.reserve(structSize);
+  for (size_t i = 0; i < structSize; ++i) {
+    CIEC_ANY *member = var_IN->getMember(i);
+    mDoNames[i] = var_IN->elementNames()[i];
+    mConfiguredDOPorts.emplace_back(member);
   }
 }
 
@@ -183,16 +158,6 @@ std::vector<std::string_view> GEN_STRUCT_DEMUX::getConfiguredMemberNames(std::st
   return configuredMemberNames;
 }
 
-void GEN_STRUCT_DEMUX::setConfiguredDOPorts() {
-  const SFBInterfaceSpec interfaceSpec = getGenInterfaceSpec();
-  const CStringDictionary::TStringId *names = interfaceSpec.mDONames;
-  CIEC_STRUCT *structType = &st_IN();
-  for (TPortId i = 0; i < interfaceSpec.mNumDOs; i++) {
-    CIEC_ANY *member = getNestedMember(names[i], structType);
-    mConfiguredDOPorts.emplace_back(member);
-  }
-}
-
 CIEC_ANY *GEN_STRUCT_DEMUX::getNestedMember(const CStringDictionary::TStringId paNameId, CIEC_STRUCT *paStructType) {
   std::string_view memberName{CStringDictionary::get(paNameId)};
   size_t index = memberName.find(NESTED_VAR_SEPARATOR);
@@ -207,13 +172,18 @@ CIEC_ANY *GEN_STRUCT_DEMUX::getNestedMember(const CStringDictionary::TStringId p
   return structType->getMemberNamed(CStringDictionary::getId(memberName.data(), memberName.length()));
 }
 
-size_t GEN_STRUCT_DEMUX::calcConfiguredStructTypeNameSize(CIEC_STRUCT *paStructType,
-                                                          std::vector<std::string_view> &paConfiguredMemberNames) {
-  size_t result = 0;
-  for (std::string_view memberName : paConfiguredMemberNames) {
-    CStringDictionary::TStringId memberNameId = CStringDictionary::insert(memberName.data(), memberName.length());
-    CIEC_ANY *member = getNestedMember(memberNameId, paStructType);
-    result += getDataPointSpecSize(*member);
-  }
-  return result;
+CEventConnection *GEN_STRUCT_DEMUX::getEOConUnchecked(TPortId paEONum) {
+  return (paEONum == 0) ? &conn_CNF : nullptr;
+}
+
+CIEC_ANY *GEN_STRUCT_DEMUX::getDI(size_t paIndex) {
+  return (paIndex == 0) ? var_IN.get() : nullptr;
+}
+
+CIEC_ANY *GEN_STRUCT_DEMUX::getDO(size_t paIndex) {
+  return mConfiguredDOPorts[paIndex];
+}
+
+CDataConnection **GEN_STRUCT_DEMUX::getDIConUnchecked(const TPortId paIndex) {
+  return (paIndex == 0) ? &conn_IN : nullptr;
 }

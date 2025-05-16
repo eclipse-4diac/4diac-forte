@@ -14,7 +14,6 @@
 #ifndef SRC_CORE_IO_CONFIGFB_MASTER_MULTI_H_
 #define SRC_CORE_IO_CONFIGFB_MASTER_MULTI_H_
 
-#include "../device/io_controller_multi.h"
 #include <fortelist.h>
 #include "io_configFB_controller.h"
 #include "io_adapter_multi.h"
@@ -37,7 +36,7 @@ namespace forte {
 
         protected:
           IOConfigFBMultiAdapter &BusAdapterOut() {
-            return (*static_cast<IOConfigFBMultiAdapter *>(mAdapters[0]));
+            return (*static_cast<IOConfigFBMultiAdapter *>(getAdapterUnchecked(0)));
           }
           static const int scmBusAdapterAdpNum = 0;
 

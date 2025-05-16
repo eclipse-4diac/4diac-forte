@@ -19,21 +19,29 @@
 #include <genfb.h>
 
 #include <memory>
-#include <array>
+#include "forte_any_variant.h"
 
-class GEN_VALUES2ARRAY : public CGenFunctionBlock<CFunctionBlock> {
+class GEN_VALUES2ARRAY final : public CGenFunctionBlock<CFunctionBlock> {
     DECLARE_GENERIC_FIRMWARE_FB(GEN_VALUES2ARRAY)
 
-  private:
-    std::unique_ptr<CStringDictionary::TStringId[]> mDataInputNames;
-    std::unique_ptr<CStringDictionary::TStringId[]> mDataInputTypeIds;
-
-    static const CStringDictionary::TStringId scmDataOutputNames[];
-    std::array<CStringDictionary::TStringId, 3> mDataOutputTypeIds;
-
-    CIEC_ARRAY &OUT_Array() {
-      return *static_cast<CIEC_ARRAY *>(getDO(0));
+  protected:
+    size_t getGenEOOffset() override {
+      return 1;
     }
+
+    size_t getGenDOOffset() override {
+      return 1;
+    }
+
+    void createGenInputData() override;
+
+    CEventConnection *getEOConUnchecked(TPortId paEONum) override;
+    CIEC_ANY *getDI(size_t paIndex) override;
+    CIEC_ANY *getDO(size_t paIndex) override;
+    CDataConnection *getDOConUnchecked(TPortId paDONum) override;
+
+  private:
+    static const CStringDictionary::TStringId scmDataOutputNames[];
 
     static const TEventID scmEventREQID = 0;
     static const CStringDictionary::TStringId scmEventInputNames[];
@@ -43,16 +51,18 @@ class GEN_VALUES2ARRAY : public CGenFunctionBlock<CFunctionBlock> {
     static const CStringDictionary::TStringId scmEventOutputNames[];
     static const CStringDictionary::TStringId scmEventOutputTypeIds[];
 
-    // self-defined members
-    unsigned int mDInputs;
-    CStringDictionary::TStringId m_ValueTypeID;
-
     void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
     void readInputData(TEventID paEI) override;
     void writeOutputData(TEventID paEO) override;
 
     bool createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) override;
+
+    std::unique_ptr<CStringDictionary::TStringId[]> mDataInputNames;
+    CEventConnection conn_CNF;
+    CIEC_ARRAY_DYNAMIC var_OUT;
+    COutDataConnection<CIEC_ARRAY_DYNAMIC> conn_OUT;
+    std::unique_ptr<CIEC_ANY_VARIANT[]> mGenDIs;
 
   public:
     GEN_VALUES2ARRAY(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);

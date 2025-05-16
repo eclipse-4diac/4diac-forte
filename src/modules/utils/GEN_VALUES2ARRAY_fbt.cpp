@@ -17,6 +17,7 @@
  *     - add generic readInputData and writeOutputData
  *******************************************************************************/
 #include "GEN_VALUES2ARRAY_fbt.h"
+#include <memory>
 #include "forte_printer.h"
 #include "string_utils.h"
 
@@ -41,84 +42,88 @@ GEN_VALUES2ARRAY::GEN_VALUES2ARRAY(const CStringDictionary::TStringId paInstance
                                    forte::core::CFBContainer &paContainer) :
     CGenFunctionBlock<CFunctionBlock>(paContainer, paInstanceNameId),
     mDataInputNames(nullptr),
-    mDInputs(0),
-    m_ValueTypeID(CStringDictionary::CStringDictionary::scmInvalidStringId) {
+    conn_CNF(*this, 0),
+    conn_OUT(*this, 0, var_OUT) {
 }
 
 void GEN_VALUES2ARRAY::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   switch (paEIID) {
     case scmEventREQID:
-
-      for (unsigned int input_index = 0; input_index < mDInputs; input_index++) {
+      for (unsigned int input_index = 0; input_index < getFBInterfaceSpec().mNumDIs; input_index++) {
         // copy input values to array
-        OUT_Array()[input_index].setValue(*getDI(input_index));
+        var_OUT[input_index].setValue(*getDI(input_index));
       }
-
       sendOutputEvent(scmEventCNFID, paECET);
-
       break;
   }
 }
 
 void GEN_VALUES2ARRAY::readInputData(TEventID) {
   for (TPortId i = 0; i < getFBInterfaceSpec().mNumDIs; ++i) {
-    readData(i, *mDIs[i], mDIConns[i]);
+    readData(i, mGenDIs[i], mGenDIConns[i]);
   }
 }
 
 void GEN_VALUES2ARRAY::writeOutputData(TEventID) {
-  writeData(getFBInterfaceSpec().mNumDIs + 0, *mDOs[0], mDOConns[0]);
+  writeData(getFBInterfaceSpec().mNumDIs + 0, var_OUT, conn_OUT);
 }
 
 bool GEN_VALUES2ARRAY::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) {
   const char *dNumberPos = strchr(paConfigString, '_');
 
-  if (nullptr != dNumberPos) {
-    ++dNumberPos;
-    // get position of a second underscore
-    const char *dTypePos = strchr(dNumberPos, '_');
-
-    if (nullptr != dTypePos) {
-      // there is a number and a data type of inputs within the typename
-      mDInputs = static_cast<unsigned int>(forte::core::util::strtoul(dNumberPos, nullptr, 10));
-      m_ValueTypeID = CStringDictionary::getId(++dTypePos);
-    } else {
-      m_ValueTypeID = CStringDictionary::scmInvalidStringId;
-      mDInputs = 0;
-    }
-  } else {
+  if (dNumberPos == nullptr) {
     return false;
   }
+  ++dNumberPos;
+  // get position of a second underscore
+  const char *dTypePos = strchr(dNumberPos, '_');
 
-  if (m_ValueTypeID != CStringDictionary::scmInvalidStringId && mDInputs >= 2) {
-    // create the data inputs
-    mDataInputNames = std::make_unique<CStringDictionary::TStringId[]>(mDInputs);
-    mDataInputTypeIds = std::make_unique<CStringDictionary::TStringId[]>(mDInputs);
-
-    char diNames[cgIdentifierLength] = {"IN_"};
-    for (unsigned int di = 0; di < mDInputs; di = di + 1) {
-      forte_snprintf(&(diNames[3]), 7 - 3, "%u", di + 1);
-      mDataInputNames[di] = CStringDictionary::insert(diNames);
-      mDataInputTypeIds[di] = m_ValueTypeID;
-    }
-
-    // create data output type
-    mDataOutputTypeIds[0] = STRID(ARRAY);
-    mDataOutputTypeIds[1] = mDInputs;
-    mDataOutputTypeIds[2] = m_ValueTypeID;
-
-    // create the interface Specification
-    paInterfaceSpec.mNumEIs = 1;
-    paInterfaceSpec.mEINames = scmEventInputNames;
-    paInterfaceSpec.mNumEOs = 1;
-    paInterfaceSpec.mEONames = scmEventOutputNames;
-    paInterfaceSpec.mNumDIs = mDInputs;
-    paInterfaceSpec.mDINames = mDataInputNames.get();
-    paInterfaceSpec.mDIDataTypeNames = mDataInputTypeIds.get();
-    paInterfaceSpec.mNumDOs = 1;
-    paInterfaceSpec.mDONames = scmDataOutputNames;
-    paInterfaceSpec.mDODataTypeNames = mDataOutputTypeIds.data();
-    return true;
+  if (dTypePos == nullptr) {
+    return false;
   }
-  return false;
+  // there is a number and a data type of inputs within the typename
+  unsigned int numDIs = static_cast<unsigned int>(forte::core::util::strtoul(dNumberPos, nullptr, 10));
+  auto arrayValueTypeId = CStringDictionary::getId(++dTypePos);
+
+  if (numDIs < 2) {
+    return false;
+  }
+  // create the data inputs
+  mDataInputNames = std::make_unique<CStringDictionary::TStringId[]>(numDIs);
+
+  generateGenericInterfacePointNameArray("IN_", mDataInputNames.get(), numDIs);
+
+  // create data output type
+  var_OUT.setup(numDIs, arrayValueTypeId);
+
+  // create the interface Specification
+  paInterfaceSpec.mNumEIs = 1;
+  paInterfaceSpec.mEINames = scmEventInputNames;
+  paInterfaceSpec.mNumEOs = 1;
+  paInterfaceSpec.mEONames = scmEventOutputNames;
+  paInterfaceSpec.mNumDIs = numDIs;
+  paInterfaceSpec.mDINames = mDataInputNames.get();
+  paInterfaceSpec.mNumDOs = 1;
+  paInterfaceSpec.mDONames = scmDataOutputNames;
+  return true;
+}
+
+void GEN_VALUES2ARRAY::createGenInputData() {
+  mGenDIs = std::make_unique<CIEC_ANY_VARIANT[]>(getFBInterfaceSpec().mNumDIs);
+}
+
+CEventConnection *GEN_VALUES2ARRAY::getEOConUnchecked(TPortId paEONum) {
+  return (paEONum == 0) ? &conn_CNF : nullptr;
+}
+
+CIEC_ANY *GEN_VALUES2ARRAY::getDI(size_t paIndex) {
+  return &mGenDIs[paIndex];
+}
+
+CIEC_ANY *GEN_VALUES2ARRAY::getDO(size_t paIndex) {
+  return (paIndex == 0) ? &var_OUT : nullptr;
+}
+
+CDataConnection *GEN_VALUES2ARRAY::getDOConUnchecked(TPortId paDONum) {
+  return (paDONum == 0) ? &conn_OUT : nullptr;
 }

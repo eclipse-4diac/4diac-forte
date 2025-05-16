@@ -34,21 +34,30 @@ const CStringDictionary::TStringId GEN_E_DEMUX::scmEventInputTypeIds[] = {STRID(
 
 GEN_E_DEMUX::GEN_E_DEMUX(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CGenFunctionBlock<CFunctionBlock>(paContainer, paInstanceNameId),
-    mEventOutputNames(nullptr) {
+    mEventOutputNames(nullptr),
+    conn_K(nullptr) {
 }
 
 void GEN_E_DEMUX::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
-  if (scmEventEIID == paEIID && static_cast<CIEC_UINT::TValueType>(K()) < getFBInterfaceSpec().mNumEOs) {
-    sendOutputEvent(static_cast<CIEC_UINT::TValueType>(K()),
+  if (scmEventEIID == paEIID && static_cast<CIEC_UINT::TValueType>(var_K) < getFBInterfaceSpec().mNumEOs) {
+    sendOutputEvent(static_cast<CIEC_UINT::TValueType>(var_K),
                     paECET); // the value of K corresponds to the output event ID;
   }
 }
 
 void GEN_E_DEMUX::readInputData(TEventID) {
-  readData(0, *mDIs[0], mDIConns[0]);
+  readData(0, var_K, conn_K);
 }
 
 void GEN_E_DEMUX::writeOutputData(TEventID) {
+}
+
+CIEC_ANY *GEN_E_DEMUX::getDI(const size_t paIndex) {
+  return (paIndex == 0) ? &var_K : nullptr;
+}
+
+CDataConnection **GEN_E_DEMUX::getDIConUnchecked(const TPortId paIndex) {
+  return (paIndex == 0) ? &conn_K : nullptr;
 }
 
 bool GEN_E_DEMUX::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) {

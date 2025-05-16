@@ -16,10 +16,13 @@
  *    Alois Zoitl - introduced new CGenFB class for better handling generic FBs
  *    Martin Jobst - add generic readInputData and writeOutputData
  *******************************************************************************/
+#include <cstddef>
 #include <fortenew.h>
+#include <memory>
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include "forte_any_variant.h"
 #include "commfb.h"
 #include "comlayer.h"
 #include "comlayersmanager.h"
@@ -56,10 +59,24 @@ const CStringDictionary::TStringId CCommFB::scmEventOutputTypeIds[2] = {STRID(Ev
 CCommFB::CCommFB(const CStringDictionary::TStringId paInstanceNameId,
                  forte::core::CFBContainer &paContainer,
                  forte::com_infra::EComServiceType paCommServiceType) :
-    CBaseCommFB(paInstanceNameId, paContainer, paCommServiceType) {
+    CBaseCommFB(paInstanceNameId, paContainer, paCommServiceType),
+    conn_INITO(*this, 0),
+    conn_CNF_IND(*this, 1),
+    conn_QI(nullptr),
+    conn_ID(nullptr),
+    conn_QO(*this, 0, var_QO),
+    conn_STATUS(*this, 1, var_STATUS) {
 }
 
-CCommFB::~CCommFB() = default;
+CCommFB::~CCommFB() {
+  for (size_t i = 0; i < getGenDINums(); ++i) {
+    delete mGenDIs[i];
+  }
+
+  for (size_t i = 0; i < getGenDONums(); ++i) {
+    delete mGenDOs[i];
+  }
+}
 
 EMGMResponse CCommFB::changeExecutionState(EMGMCommandType paCommand) {
   EMGMResponse retVal = CEventSourceFB::changeExecutionState(paCommand);
@@ -113,13 +130,15 @@ void CCommFB::executeEvent(TEventID paEIID, CEventChainExecutionThread *const pa
 void CCommFB::readInputData(TEventID paEI) {
   switch (paEI) {
     case scmEventINITID: {
-      readData(0, *mDIs[0], mDIConns[0]);
-      readData(1, *mDIs[1], mDIConns[1]);
+      readData(0, var_QI, conn_QI);
+      readData(1, var_ID, conn_ID);
       break;
     }
     case scmSendNotificationEventID: {
-      for (TPortId i = 0; i < getFBInterfaceSpec().mNumDIs; ++i) {
-        readData(i, *mDIs[i], mDIConns[i]);
+      readData(0, var_QI, conn_QI);
+      readData(1, var_ID, conn_ID);
+      for (size_t i = 0; i < getGenDINums(); ++i) {
+        readData(i + 2, *mGenDIs[i], mGenDIConns[i]);
       }
       break;
     }
@@ -131,14 +150,16 @@ void CCommFB::writeOutputData(TEventID paEO) {
   size_t numDIs = getFBInterfaceSpec().mNumDIs;
   switch (paEO) {
     case scmEventINITOID: {
-      writeData(numDIs + 0, *mDOs[0], mDOConns[0]);
-      writeData(numDIs + 1, *mDOs[1], mDOConns[1]);
+      writeData(numDIs + 0, var_QO, conn_QO);
+      writeData(numDIs + 1, var_STATUS, conn_STATUS);
       break;
     }
     case scmReceiveNotificationEventID: {
+      writeData(numDIs + 0, var_QO, conn_QO);
+      writeData(numDIs + 1, var_STATUS, conn_STATUS);
       CCriticalRegion lock(getFBLock());
-      for (TPortId i = 0; i < getFBInterfaceSpec().mNumDOs; ++i) {
-        writeData(numDIs + i, *mDOs[i], mDOConns[i]);
+      for (size_t i = 0; i < getGenDONums(); ++i) {
+        writeData(numDIs + 2 + i, *mGenDOs[i], mGenDOConns[i]);
       }
       break;
     }
@@ -227,24 +248,14 @@ void CCommFB::configureDIs(const char *paDIConfigString, SFBInterfaceSpec &paInt
     // TODO: Check range of sParamA
     paInterfaceSpec.mNumDIs =
         paInterfaceSpec.mNumDIs + static_cast<TPortId>(forte::core::util::strtol(paDIConfigString, nullptr, 10));
-    mDiDataTypeNames = std::make_unique<CStringDictionary::TStringId[]>(paInterfaceSpec.mNumDIs);
     mDiNames = std::make_unique<CStringDictionary::TStringId[]>(paInterfaceSpec.mNumDIs);
-
-    generateGenericDataPointArrays("SD_", &(mDiDataTypeNames[2]), &(mDiNames[2]), paInterfaceSpec.mNumDIs - 2);
+    generateGenericInterfacePointNameArray("SD_", &(mDiNames[2]), paInterfaceSpec.mNumDIs - 2);
   } else {
-    mDiDataTypeNames = std::make_unique<CStringDictionary::TStringId[]>(paInterfaceSpec.mNumDIs);
     mDiNames = std::make_unique<CStringDictionary::TStringId[]>(paInterfaceSpec.mNumDIs);
   }
-  paInterfaceSpec.mDIDataTypeNames = mDiDataTypeNames.get();
   paInterfaceSpec.mDINames = mDiNames.get();
 
-  mDiDataTypeNames[0] = STRID(BOOL);
   mDiNames[0] = STRID(QI);
-#ifdef FORTE_USE_WSTRING_DATATYPE
-  mDiDataTypeNames[1] = STRID(WSTRING);
-#else // FORTE_USE_WSTRING_DATATYPE
-  mDiDataTypeNames[1] = STRID(STRING);
-#endif // FORTE_USE_WSTRING_DATATYPE
   mDiNames[1] = STRID(ID);
 }
 
@@ -255,25 +266,15 @@ void CCommFB::configureDOs(const char *paDOConfigString, SFBInterfaceSpec &paInt
     // TODO: Check range of sParamA
     paInterfaceSpec.mNumDOs =
         paInterfaceSpec.mNumDOs + static_cast<TPortId>(forte::core::util::strtol(paDOConfigString, nullptr, 10));
-    mDoDataTypeNames = std::make_unique<CStringDictionary::TStringId[]>(paInterfaceSpec.mNumDOs);
     mDoNames = std::make_unique<CStringDictionary::TStringId[]>(paInterfaceSpec.mNumDOs);
-
-    generateGenericDataPointArrays("RD_", &(mDoDataTypeNames[2]), &(mDoNames[2]), paInterfaceSpec.mNumDOs - 2);
+    generateGenericInterfacePointNameArray("RD_", &(mDoNames[2]), paInterfaceSpec.mNumDOs - 2);
   } else {
-    mDoDataTypeNames = std::make_unique<CStringDictionary::TStringId[]>(paInterfaceSpec.mNumDOs);
     mDoNames = std::make_unique<CStringDictionary::TStringId[]>(paInterfaceSpec.mNumDOs);
   }
 
   paInterfaceSpec.mDONames = mDoNames.get();
-  paInterfaceSpec.mDODataTypeNames = mDoDataTypeNames.get();
 
-  mDoDataTypeNames[0] = STRID(BOOL);
   mDoNames[0] = STRID(QO);
-#ifdef FORTE_USE_WSTRING_DATATYPE
-  mDoDataTypeNames[1] = STRID(WSTRING);
-#else
-  mDoDataTypeNames[1] = STRID(STRING);
-#endif
   mDoNames[1] = STRID(STATUS);
 }
 
@@ -303,4 +304,64 @@ EComResponse CCommFB::receiveData() {
 
 char *CCommFB::getDefaultIDString(const char *paID) {
   return buildIDString("fbdk[].ip[", paID, "]");
+}
+
+void CCommFB::createGenInputData() {
+  size_t numGenDIs = getGenDINums();
+  mGenDIs = std::make_unique<CIEC_ANY *[]>(numGenDIs);
+  for (size_t i = 0; i < numGenDIs; ++i) {
+    mGenDIs[i] = new CIEC_ANY_VARIANT();
+  }
+}
+
+void CCommFB::createGenOutputData() {
+  size_t numGenDOs = getGenDONums();
+  mGenDOs = std::make_unique<CIEC_ANY *[]>(numGenDOs);
+  for (size_t i = 0; i < numGenDOs; ++i) {
+    mGenDOs[i] = new CIEC_ANY_VARIANT();
+  }
+}
+
+CIEC_ANY *CCommFB::getDI(size_t paIndex) {
+  switch (paIndex) {
+    case 0: return &var_QI;
+    case 1: return &var_ID;
+    default: return mGenDIs[paIndex - getGenDIOffset()];
+  }
+  return nullptr;
+}
+
+CIEC_ANY *CCommFB::getDO(size_t paIndex) {
+  switch (paIndex) {
+    case 0: return &var_QO;
+    case 1: return &var_STATUS;
+    default: return mGenDOs[paIndex - getGenDOOffset()];
+  }
+  return nullptr;
+}
+
+CEventConnection *CCommFB::getEOConUnchecked(TPortId paIndex) {
+  switch (paIndex) {
+    case 0: return &conn_INITO;
+    case 1: return &conn_CNF_IND;
+  }
+  return nullptr;
+}
+
+CDataConnection **CCommFB::getDIConUnchecked(TPortId paIndex) {
+  switch (paIndex) {
+    case 0: return &conn_QI;
+    case 1: return &conn_ID;
+    default: return CBaseCommFB::getDIConUnchecked(paIndex);
+  }
+  return nullptr;
+}
+
+CDataConnection *CCommFB::getDOConUnchecked(TPortId paIndex) {
+  switch (paIndex) {
+    case 0: return &conn_QO;
+    case 1: return &conn_STATUS;
+    default: return CBaseCommFB::getDOConUnchecked(paIndex);
+  }
+  return nullptr;
 }

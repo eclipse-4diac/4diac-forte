@@ -128,11 +128,11 @@ class FORTE_IORevPiDIO : public forte::core::io::IOConfigFBMultiSlave {
     CIEC_ANY *getDI(size_t) override;
     CIEC_ANY *getDO(size_t) override;
     FORTE_IORevPiBusAdapter &var_BusAdapterIn() {
-      return *static_cast<FORTE_IORevPiBusAdapter *>(mAdapters[0]);
+      return *static_cast<FORTE_IORevPiBusAdapter *>(getAdapterUnchecked(0));
     };
 
     FORTE_IORevPiBusAdapter &var_BusAdapterOut() {
-      return *static_cast<FORTE_IORevPiBusAdapter *>(mAdapters[1]);
+      return *static_cast<FORTE_IORevPiBusAdapter *>(getAdapterUnchecked(1));
     };
 
     CEventConnection *getEOConUnchecked(TPortId) override;

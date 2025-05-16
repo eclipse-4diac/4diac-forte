@@ -52,12 +52,12 @@ namespace forte {
           static const TEventID scmEventINDID = 1;
 
           IOConfigFBMultiAdapter &BusAdapterOut() {
-            return (*static_cast<IOConfigFBMultiAdapter *>(mAdapters[0]));
+            return (*static_cast<IOConfigFBMultiAdapter *>(getAdapterUnchecked(0)));
           }
 
           static const int scmBusAdapterOutAdpNum = 0;
           IOConfigFBMultiAdapter &BusAdapterIn() {
-            return (*static_cast<IOConfigFBMultiAdapter *>(mAdapters[1]));
+            return (*static_cast<IOConfigFBMultiAdapter *>(getAdapterUnchecked(1)));
           }
 
           static const int scmBusAdapterInAdpNum = 1;

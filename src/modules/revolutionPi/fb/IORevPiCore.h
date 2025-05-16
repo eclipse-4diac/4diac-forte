@@ -71,7 +71,7 @@ class FORTE_IORevPiCore : public forte::core::io::IOConfigFBMultiMaster {
     CIEC_ANY *getDI(size_t) override;
     CIEC_ANY *getDO(size_t) override;
     FORTE_IORevPiBusAdapter &var_BusAdapterOut() {
-      return *static_cast<FORTE_IORevPiBusAdapter *>(mAdapters[0]);
+      return *static_cast<FORTE_IORevPiBusAdapter *>(getAdapterUnchecked(0));
     };
 
     CEventConnection *getEOConUnchecked(TPortId) override;

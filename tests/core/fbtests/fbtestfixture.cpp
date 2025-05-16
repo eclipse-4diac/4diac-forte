@@ -99,9 +99,6 @@ CFBTestFixtureBase::~CFBTestFixtureBase() {
   }
 
   performFBDeleteTests();
-
-  freeFBInterfaceData(); // clean the interface and connections first.
-  getGenInterfaceSpec() = {};
 }
 
 namespace {
@@ -153,11 +150,7 @@ void CFBTestFixtureBase::performFBDeleteTests() {
   mFBUnderTest = nullptr;
 }
 
-void CFBTestFixtureBase::setup(const char *paConfigString) {
-  if (paConfigString != nullptr) {
-    mConfigString = paConfigString;
-    mFBUnderTest->configureFB(paConfigString);
-  }
+void CFBTestFixtureBase::setup() {
   BOOST_ASSERT(initialize());
 
   setupTestInterface();
@@ -222,6 +215,14 @@ void CFBTestFixtureBase::setInputData(std::initializer_list<CIEC_ANY *> paInputD
 
 void CFBTestFixtureBase::setOutputData(std::initializer_list<CIEC_ANY *> paOutputData) {
   mOutputDataBuffers.assign(paOutputData);
+}
+
+void CFBTestFixtureBase::createGenInputData() {
+  size_t numDOsTestee = mFBUnderTest->getFBInterfaceSpec().mNumDOs;
+  mGenDIs.reserve(numDOsTestee);
+  for (size_t i = 0; i < numDOsTestee; i++) {
+    mGenDIs.emplace_back(mFBUnderTest->getDO(i)->clone(nullptr));
+  }
 }
 
 void CFBTestFixtureBase::setupTestInterface() {

@@ -15,23 +15,17 @@
 #define SRC_CORE_IO_CONFIGFB_BASE_H_
 
 #include "esfb.h"
-#include "genfb.h"
 
-namespace forte {
-  namespace core {
-    namespace io {
+namespace forte::core::io {
 
-      class IOConfigFBBase : public CGenFunctionBlock<CEventSourceFB> {
-        public:
-          IOConfigFBBase(forte::core::CFBContainer &paContainer,
-                         const SFBInterfaceSpec &paInterfaceSpec,
-                         const CStringDictionary::TStringId paInstanceNameId);
-          ~IOConfigFBBase() override;
-          bool createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) override;
-      };
+  class IOConfigFBBase : public CEventSourceFB {
+    public:
+      IOConfigFBBase(forte::core::CFBContainer &paContainer,
+                     const SFBInterfaceSpec &paInterfaceSpec,
+                     const CStringDictionary::TStringId paInstanceNameId);
+      ~IOConfigFBBase() override;
+  };
 
-    } // namespace io
-  } // namespace core
-} // namespace forte
+} // namespace forte::core::io
 
 #endif /* SRC_CORE_IO_CONFIGFB_BASE_H_ */

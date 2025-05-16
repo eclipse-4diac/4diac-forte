@@ -132,16 +132,14 @@ DEV_MGR::DEV_MGR(CStringDictionary::TStringId paInstanceNameId, forte::core::CFB
 }
 
 bool DEV_MGR::initialize() {
+  setupFBInterface();
   if (!CCommFB::initialize()) {
     return false;
   }
   return true;
 }
 
-DEV_MGR::~DEV_MGR() {
-  freeFBInterfaceData();
-  getGenInterfaceSpec() = {}; // block any wrong cleanup in the generic fb base class of CBaseCommFB
-}
+DEV_MGR::~DEV_MGR() = default;
 
 bool DEV_MGR::executeCommand(const char *const paDest, char *paCommand) {
   EMGMResponse eResp = mCommandParser.parseAndExecuteMGMCommand(paDest, paCommand);
@@ -149,4 +147,20 @@ bool DEV_MGR::executeCommand(const char *const paDest, char *paCommand) {
     DEVLOG_ERROR("Boot file error. DEV_MGR says error is %s\n", forte::mgm_cmd::getResponseText(eResp).c_str());
   }
   return (eResp == EMGMResponse::Ready);
+}
+
+void DEV_MGR::createGenInputData() {
+  size_t numGenDIs = getFBInterfaceSpec().mNumDIs - 2;
+  mGenDIs = std::unique_ptr<CIEC_ANY *[]>(new CIEC_ANY *[numGenDIs]);
+  for (size_t i = 0; i < numGenDIs; ++i) {
+    mGenDIs[i] = new CIEC_STRING();
+  }
+}
+
+void DEV_MGR::createGenOutputData() {
+  size_t numGenDOs = getFBInterfaceSpec().mNumDOs - 2;
+  mGenDOs = std::unique_ptr<CIEC_ANY *[]>(new CIEC_ANY *[numGenDOs]);
+  for (size_t i = 0; i < numGenDOs; ++i) {
+    mGenDOs[i] = new CIEC_STRING();
+  }
 }

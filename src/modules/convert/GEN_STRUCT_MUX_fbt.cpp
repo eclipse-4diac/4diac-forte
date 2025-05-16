@@ -20,7 +20,6 @@ USE_STRING_ID(GEN_STRUCT_MUX);
 USE_STRING_ID(OUT);
 USE_STRING_ID(REQ);
 
-
 DEFINE_GENERIC_FIRMWARE_FB(GEN_STRUCT_MUX, STRID(GEN_STRUCT_MUX));
 
 const CStringDictionary::TStringId GEN_STRUCT_MUX::scmEventInputNames[] = {STRID(REQ)};
@@ -32,45 +31,25 @@ const CStringDictionary::TStringId GEN_STRUCT_MUX::scmDataOutputNames[] = {STRID
 
 void GEN_STRUCT_MUX::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   if (scmEventREQID == paEIID) {
-    for (TPortId i = 0; i < st_OUT().getStructSize(); i++) {
-      st_OUT().getMember(i)->setValue(*getDI(i));
-    }
+    // the input data elements are directly the members we don't need to explicitly copy them anymore
     sendOutputEvent(scmEventCNFID, paECET);
   }
 }
 
 GEN_STRUCT_MUX::GEN_STRUCT_MUX(const CStringDictionary::TStringId paInstanceNameId,
                                forte::core::CFBContainer &paContainer) :
-    CGenFunctionBlock<CFunctionBlock>(paContainer, paInstanceNameId) {
-}
-
-void GEN_STRUCT_MUX::setInitialValues() {
-  CGenFunctionBlock::setInitialValues();
-  copyStructValuesToInputs();
-}
-
-bool GEN_STRUCT_MUX::initialize() {
-  if (CGenFunctionBlock::initialize()) {
-    copyStructValuesToInputs();
-    return true;
-  }
-  return false;
-}
-
-void GEN_STRUCT_MUX::copyStructValuesToInputs() {
-  for (TPortId i = 0; i < st_OUT().getStructSize(); i++) {
-    getDI(i)->setValue(st_OUT().getMember(i)->unwrap());
-  }
+    CGenFunctionBlock<CFunctionBlock>(paContainer, paInstanceNameId),
+    conn_CNF(*this, 0) {
 }
 
 void GEN_STRUCT_MUX::readInputData(TEventID) {
   for (TPortId i = 0; i < getFBInterfaceSpec().mNumDIs; ++i) {
-    readData(i, *mDIs[i], mDIConns[i]);
+    readData(i, *var_OUT->getMember(i), mGenDIConns[i]);
   }
 }
 
 void GEN_STRUCT_MUX::writeOutputData(TEventID) {
-  writeData(getFBInterfaceSpec().mNumDIs + 0, *mDOs[0], mDOConns[0]);
+  writeData(getFBInterfaceSpec().mNumDIs + 0, *var_OUT, *conn_OUT);
 }
 
 bool GEN_STRUCT_MUX::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) {
@@ -94,9 +73,9 @@ bool GEN_STRUCT_MUX::createInterfaceSpec(const char *paConfigString, SFBInterfac
   }
 
   // we could find the struct
-  auto structInstance = static_cast<CIEC_STRUCT *>(data.get());
+  var_OUT = std::unique_ptr<CIEC_STRUCT>(static_cast<CIEC_STRUCT *>(data.release()));
 
-  const auto structSize = structInstance->getStructSize();
+  const auto structSize = var_OUT->getStructSize();
   if (structSize == 0 || structSize >= cgInvalidPortId) { // the structure size must be non zero and less than
                                                           // cgInvalidPortId (maximum number of data input)
     DEVLOG_ERROR("[GEN_STRUCT_MUX]: The structure %s has a size that is not within range > 0 and < %u\n",
@@ -104,10 +83,7 @@ bool GEN_STRUCT_MUX::createInterfaceSpec(const char *paConfigString, SFBInterfac
     return false;
   }
 
-  mDiDataTypeNames = std::make_unique<CStringDictionary::TStringId[]>(calcStructTypeNameSize(*structInstance));
-  mDiNames = std::make_unique<CStringDictionary::TStringId[]>(structSize);
-
-  mDoDataTypeNames[0] = structTypeNameId;
+  conn_OUT = std::make_unique<CGenDataConnection>(*this, 0, *var_OUT);
 
   paInterfaceSpec.mNumEIs = 1;
   paInterfaceSpec.mEINames = scmEventInputNames;
@@ -116,18 +92,9 @@ bool GEN_STRUCT_MUX::createInterfaceSpec(const char *paConfigString, SFBInterfac
   paInterfaceSpec.mEONames = scmEventOutputNames;
   paInterfaceSpec.mEOTypeNames = scmEventOutputTypeIds;
   paInterfaceSpec.mNumDIs = structSize;
-  paInterfaceSpec.mDINames = mDiNames.get();
-  paInterfaceSpec.mDIDataTypeNames = mDiDataTypeNames.get();
+  paInterfaceSpec.mDINames = var_OUT->elementNames();
   paInterfaceSpec.mNumDOs = 1;
   paInterfaceSpec.mDONames = scmDataOutputNames;
-  paInterfaceSpec.mDODataTypeNames = mDoDataTypeNames.data();
-
-  auto diDataTypeNames = mDiDataTypeNames.get();
-  for (decltype(paInterfaceSpec.mNumDIs) i = 0; i < paInterfaceSpec.mNumDIs; i++) {
-    const auto &member = *structInstance->getMember(i);
-    mDiNames[i] = structInstance->elementNames()[i];
-    fillDataPointSpec(member, diDataTypeNames);
-  }
   return true;
 }
 
@@ -144,11 +111,18 @@ CStringDictionary::TStringId GEN_STRUCT_MUX::getStructNameId(std::string_view pa
   return CStringDictionary::scmInvalidStringId;
 }
 
-size_t GEN_STRUCT_MUX::calcStructTypeNameSize(CIEC_STRUCT &paStruct) {
-  size_t structSize = paStruct.getStructSize();
-  size_t result = 0;
-  for (size_t i = 0; i < structSize; i++) {
-    result += getDataPointSpecSize(*paStruct.getMember(i));
-  }
-  return result;
+CEventConnection *GEN_STRUCT_MUX::getEOConUnchecked(TPortId paEONum) {
+  return (paEONum == 0) ? &conn_CNF : nullptr;
+}
+
+CIEC_ANY *GEN_STRUCT_MUX::getDI(size_t paIndex) {
+  return var_OUT->getMember(paIndex);
+}
+
+CIEC_ANY *GEN_STRUCT_MUX::getDO(size_t paIndex) {
+  return (paIndex == 0) ? var_OUT.get() : nullptr;
+}
+
+CDataConnection *GEN_STRUCT_MUX::getDOConUnchecked(const TPortId paIndex) {
+  return (paIndex == 0) ? conn_OUT.get() : nullptr;
 }

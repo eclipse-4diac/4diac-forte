@@ -13,8 +13,8 @@
 
 #pragma once
 
+#include "forte_any_variant.h"
 #include "genfb.h"
-#include "mixedStorage.h"
 #include "forte_sync.h"
 
 class FORTE_GEN_RT_Bridge final : public CGenFunctionBlock<CFunctionBlock> {
@@ -24,15 +24,27 @@ class FORTE_GEN_RT_Bridge final : public CGenFunctionBlock<CFunctionBlock> {
     FORTE_GEN_RT_Bridge(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
     ~FORTE_GEN_RT_Bridge() override = default;
 
+    CEventConnection conn_RDO;
+
+  protected:
+    void createGenInputData() override;
+    void createGenOutputData() override;
+
+    size_t getGenEOOffset() override {
+      return 1;
+    }
+
+    CIEC_ANY *getDI(size_t) override;
+    CIEC_ANY *getDO(size_t) override;
+    CEventConnection *getEOConUnchecked(TPortId) override;
+
   private:
     static const TEventID scmEventRDID = 0;
     static const TEventID scmEventWRID = 1;
     static const CStringDictionary::TStringId scmEventInputNames[];
-    static const CStringDictionary::TStringId scmEventInputTypeIds[];
 
     static const TEventID scmEventRDOID = 0;
     static const CStringDictionary::TStringId scmEventOutputNames[];
-    static const CStringDictionary::TStringId scmEventOutputTypeIds[];
 
     void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
@@ -42,6 +54,11 @@ class FORTE_GEN_RT_Bridge final : public CGenFunctionBlock<CFunctionBlock> {
 
     bool createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) override;
 
-    forte::core::util::CMixedStorage mIfSpecStorage;
     CSyncObject mSyncObject;
+
+    std::unique_ptr<CIEC_ANY_VARIANT[]> mGenDIs;
+    std::unique_ptr<CIEC_ANY_VARIANT[]> mGenDOs;
+
+    std::unique_ptr<CStringDictionary::TStringId[]> mDINames;
+    std::unique_ptr<CStringDictionary::TStringId[]> mDONames;
 };

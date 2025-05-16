@@ -24,30 +24,28 @@
 #include <mixedStorage.h>
 #include <forte_any_magnitude_variant.h>
 
-class GEN_ADD : public CGenFunctionBlock<CFunctionBlock> {
+class GEN_ADD final : public CGenFunctionBlock<CFunctionBlock> {
     DECLARE_GENERIC_FIRMWARE_FB(GEN_ADD)
 
   private:
-    forte::core::util::CMixedStorage mIfSpecStorage;
-
-    CIEC_ANY_MAGNITUDE_VARIANT &var_IN(size_t paIndex) {
-      return *static_cast<CIEC_ANY_MAGNITUDE_VARIANT *>(getDI(paIndex));
+  protected:
+    size_t getGenEOOffset() override {
+      return 1;
     }
 
-    CIEC_ANY_MAGNITUDE_VARIANT &var_OUT() {
-      return *static_cast<CIEC_ANY_MAGNITUDE_VARIANT *>(getDO(0));
+    size_t getGenDOOffset() override {
+      return 1;
     }
 
+    CEventConnection *getEOConUnchecked(TPortId) override;
+    void createGenInputData() override;
+    CIEC_ANY *getDI(size_t) override;
+    CIEC_ANY *getDO(size_t) override;
+    CDataConnection *getDOConUnchecked(const TPortId paIndex) override;
+
+  private:
     static const TEventID scmEventREQID = 0;
-    static const CStringDictionary::TStringId scmEventInputNames[];
-    static const CStringDictionary::TStringId scmEventInputTypeIds[];
-
     static const TEventID scmEventCNFID = 0;
-    static const CStringDictionary::TStringId scmEventOutputNames[];
-    static const CStringDictionary::TStringId scmEventOutputTypeIds[];
-
-    // self-defined members
-    unsigned int mDInputs;
 
     void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
@@ -55,6 +53,12 @@ class GEN_ADD : public CGenFunctionBlock<CFunctionBlock> {
     void writeOutputData(TEventID paEO) override;
 
     bool createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) override;
+
+    CEventConnection conn_CNF;
+    std::unique_ptr<CIEC_ANY_MAGNITUDE_VARIANT[]> mGenDIs;
+    std::unique_ptr<CStringDictionary::TStringId[]> mDINames;
+    CIEC_ANY_MAGNITUDE_VARIANT var_OUT;
+    COutDataConnection<CIEC_ANY_MAGNITUDE_VARIANT> conn_OUT;
 
   public:
     GEN_ADD(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);

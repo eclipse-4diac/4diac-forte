@@ -15,7 +15,7 @@
  *     - add generic readInputData and writeOutputData
  *******************************************************************************/
 #include "genbitbase_fbt.h"
-#include "forte_printer.h"
+#include <memory>
 #include "string_utils.h"
 
 USE_STRING_ID(ANY_BIT);
@@ -24,24 +24,25 @@ USE_STRING_ID(OUT);
 USE_STRING_ID(REQ);
 
 const CStringDictionary::TStringId CGenBitBase::scmDataOutputNames[] = {STRID(OUT)};
-const CStringDictionary::TStringId CGenBitBase::scmDataOutputTypeIds[] = {STRID(ANY_BIT)};
 
 const CStringDictionary::TStringId CGenBitBase::scmEventInputNames[] = {STRID(REQ)};
 
 const CStringDictionary::TStringId CGenBitBase::scmEventOutputNames[] = {STRID(CNF)};
 
 CGenBitBase::CGenBitBase(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
-    CGenFunctionBlock<CFunctionBlock>(paContainer, paInstanceNameId) {
+    CGenFunctionBlock<CFunctionBlock>(paContainer, paInstanceNameId),
+    conn_CNF(*this, 0),
+    conn_OUT(*this, 0, var_OUT) {
 }
 
 void CGenBitBase::readInputData(TEventID) {
-  for (TPortId i = 0; i < getFBInterfaceSpec().mNumDIs; ++i) {
-    readData(i, *mDIs[i], mDIConns[i]);
+  for (TPortId i = 0; i < getGenDINums(); ++i) {
+    readData(i, mGenDIs[i], mGenDIConns[i]);
   }
 }
 
 void CGenBitBase::writeOutputData(TEventID) {
-  writeData(getFBInterfaceSpec().mNumDIs + 0, *mDOs[0], mDOConns[0]);
+  writeData(getFBInterfaceSpec().mNumDIs + 0, var_OUT, conn_OUT);
 }
 
 bool CGenBitBase::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) {
@@ -66,15 +67,8 @@ bool CGenBitBase::createInterfaceSpec(const char *paConfigString, SFBInterfaceSp
 
     // create the data inputs
     mDataInputNames = std::make_unique<CStringDictionary::TStringId[]>(paInterfaceSpec.mNumDIs);
-    mDataInputTypeIds = std::make_unique<CStringDictionary::TStringId[]>(paInterfaceSpec.mNumDIs);
 
-    char diNames[cgIdentifierLength] = {"IN"};
-
-    for (size_t di = 0; di < paInterfaceSpec.mNumDIs; ++di) {
-      forte_snprintf(&(diNames[2]), 5 - 2, "%i", di + 1);
-      mDataInputNames[di] = CStringDictionary::insert(diNames);
-      mDataInputTypeIds[di] = STRID(ANY_BIT);
-    }
+    generateGenericInterfacePointNameArray("IN_", mDataInputNames.get(), paInterfaceSpec.mNumDIs);
 
     // setup the interface Specification
     paInterfaceSpec.mNumEIs = 1;
@@ -82,11 +76,25 @@ bool CGenBitBase::createInterfaceSpec(const char *paConfigString, SFBInterfaceSp
     paInterfaceSpec.mNumEOs = 1;
     paInterfaceSpec.mEONames = scmEventOutputNames;
     paInterfaceSpec.mDINames = mDataInputNames.get();
-    paInterfaceSpec.mDIDataTypeNames = mDataInputTypeIds.get();
     paInterfaceSpec.mNumDOs = 1;
     paInterfaceSpec.mDONames = scmDataOutputNames;
-    paInterfaceSpec.mDODataTypeNames = scmDataOutputTypeIds;
     return true;
   }
   return false;
+}
+
+CIEC_ANY *CGenBitBase::getDO(size_t paDONum) {
+  return (paDONum == 0) ? &var_OUT : nullptr;
+}
+
+CEventConnection *CGenBitBase::getEOConUnchecked(TPortId paEONum) {
+  return (paEONum == 0) ? &conn_CNF : nullptr;
+}
+
+CDataConnection *CGenBitBase::getDOConUnchecked(TPortId paDONum) {
+  return (paDONum == 0) ? &conn_OUT : nullptr;
+}
+
+void CGenBitBase::createGenInputData() {
+  mGenDIs = std::make_unique<CIEC_ANY_BIT_VARIANT[]>(getFBInterfaceSpec().mNumDIs);
 }

@@ -15,7 +15,10 @@
 
 #pragma once
 
+#include <cstddef>
+#include <memory>
 #include "basicfb.h"
+#include "eventconn.h"
 #include "funcbloc.h"
 
 USE_STRING_ID(ANY);
@@ -35,12 +38,12 @@ class CGenFunctionBlock : public T {
 
     bool configureFB(const char *paConfigString) override;
 
-    CIEC_ANY *getDI(TPortId paDINum) override {
-      return mDIs[paDINum];
+    CIEC_ANY *getDI(TPortId) override {
+      return nullptr;
     }
 
-    CIEC_ANY *getDO(TPortId paDONum) override {
-      return mDOs[paDONum];
+    CIEC_ANY *getDO(TPortId) override {
+      return nullptr;
     }
 
   protected:
@@ -49,16 +52,9 @@ class CGenFunctionBlock : public T {
                       const CStringDictionary::TStringId paInstanceNameId,
                       Args &&...args) :
         T(paContainer, mGenInterfaceSpec, paInstanceNameId, std::forward<Args>(args)...),
-        mEOConns(nullptr),
-        mDIConns(nullptr),
-        mDOConns(nullptr),
-        mDIs(nullptr),
-        mDOs(nullptr),
         mAdapters(nullptr),
         mConfiguredFBTypeNameId(CStringDictionary::scmInvalidStringId),
-        mGenInterfaceSpec(),
-        mFBConnData(nullptr),
-        mFBVarsData(nullptr) {
+        mGenInterfaceSpec() {
     }
 
     template<typename... Args>
@@ -67,21 +63,14 @@ class CGenFunctionBlock : public T {
                       const CStringDictionary::TStringId paInstanceNameId,
                       Args &&...args) :
         T(paContainer, mGenInterfaceSpec, paInstanceNameId, std::forward<Args>(args)...),
-        mEOConns(nullptr),
-        mDIConns(nullptr),
-        mDOConns(nullptr),
-        mDIs(nullptr),
-        mDOs(nullptr),
         mAdapters(nullptr),
         mConfiguredFBTypeNameId(CStringDictionary::scmInvalidStringId),
-        mGenInterfaceSpec(paInterfaceSpec),
-        mFBConnData(nullptr),
-        mFBVarsData(nullptr) {
+        mGenInterfaceSpec(paInterfaceSpec) {
     }
 
     ~CGenFunctionBlock() override;
 
-    bool initialize();
+    bool initialize() override;
 
     void setInitialValues() override;
 
@@ -156,24 +145,74 @@ class CGenFunctionBlock : public T {
     static size_t getDataPointSpecSize(const CIEC_ANY &paValue);
     static void fillDataPointSpec(const CIEC_ANY &paValue, CStringDictionary::TStringId *&paDataTypeIds);
 
-    static size_t calculateFBConnDataSize(const SFBInterfaceSpec &paInterfaceSpec);
-
-    static size_t calculateFBVarsDataSize(const SFBInterfaceSpec &paInterfaceSpec);
-
     void setupFBInterface();
 
-    void freeFBInterfaceData();
+    virtual void createGenInputData() {
+      // per default we are not creating any pins
+    }
+
+    virtual void createGenOutputData() {
+      // per default we are not creating any pins
+    }
+
+    void createGenEOCons() {
+      if (getGenEONums()) {
+        mGenEOConns.reserve(getGenEONums());
+        for (size_t i = getGenEOOffset(); i < getGenInterfaceSpec().mNumEOs; ++i) {
+          mGenEOConns.emplace_back(*this, i);
+        }
+      }
+    }
+
+    void createGenDICons() {
+      if (getGenDINums()) {
+        mGenDIConns = std::make_unique<CDataConnection *[]>(getGenDINums());
+      }
+    }
+
+    void createGenDOCons() {
+      if (getGenDONums()) {
+        mGenDOConns.reserve(getGenDONums());
+        for (size_t i = getGenDOOffset(); i < getGenInterfaceSpec().mNumDOs; ++i) {
+          mGenDOConns.emplace_back(*this, i, *getDO(i));
+        }
+      }
+    }
+
+    size_t getGenEONums() {
+      return getGenInterfaceSpec().mNumEOs - getGenEOOffset();
+    }
+
+    virtual size_t getGenEOOffset() {
+      return 0;
+    }
+
+    size_t getGenDINums() {
+      return getGenInterfaceSpec().mNumDIs - getGenDIOffset();
+    }
+
+    virtual size_t getGenDIOffset() {
+      return 0;
+    }
+
+    size_t getGenDONums() {
+      return getGenInterfaceSpec().mNumDOs - getGenDOOffset();
+    }
+
+    virtual size_t getGenDOOffset() {
+      return 0;
+    }
 
     CEventConnection *getEOConUnchecked(TPortId paEONum) override {
-      return (mEOConns + paEONum);
+      return &mGenEOConns[paEONum - getGenEOOffset()];
     }
 
     CDataConnection *getDOConUnchecked(TPortId paDONum) override {
-      return mDOConns + paDONum;
+      return &mGenDOConns[paDONum - getGenDOOffset()];
     }
 
     CDataConnection **getDIConUnchecked(TPortId paDINum) override {
-      return mDIConns + paDINum;
+      return &mGenDIConns[paDINum - getGenDIOffset()];
     }
 
     CAdapter *getAdapterUnchecked(TPortId paAdapterNum) override {
@@ -184,16 +223,16 @@ class CGenFunctionBlock : public T {
       return mGenInterfaceSpec;
     }
 
-    CEventConnection *mEOConns; //!< A list of event connections pointers storing for each event output the event
-                                //!< connection. If the output event is not connected the pointer is nullptr.
-    CDataConnection **mDIConns; //!< A list of data connections pointers storing for each data input the data
-                                //!< connection. If the data input is not connected the pointer is nullptr.
-    CGenDataConnection *mDOConns; //!< A list of data connections pointers storing for each data output the data
-                                  //!< connection. If the data output is not connected the pointer is nullptr.
-    CIEC_ANY **mDIs; //!< A list of pointers to the data inputs. This allows to implement a general getDataInput()
-    CIEC_ANY **mDOs; //!< A list of pointers to the data outputs. This allows to implement a general getDataOutput()
-    CAdapter **mAdapters; //!< A list of pointers to the adapters. This allows to implement a general getAdapter().
+    std::vector<CEventConnection> mGenEOConns;
+    std::unique_ptr<CDataConnection *[]> mGenDIConns;
+    std::vector<CGenDataConnection> mGenDOConns;
+
+    std::unique_ptr<CAdapter *[]>
+        mAdapters; //!< A list of pointers to the adapters. This allows to implement a general getAdapter().
+
   private:
+    void freeFBInterfaceData();
+
     /*! \brief parse the config string and generate the according interface specification
      *
      * This function is to be implemented by a generic fb and should parse the given interface
@@ -211,12 +250,10 @@ class CGenFunctionBlock : public T {
       mConfiguredFBTypeNameId = paTypeNameId;
     }
 
-    void setupAdapters(TForteByte *paFBData);
+    void setupAdapters();
 
     CStringDictionary::TStringId mConfiguredFBTypeNameId;
     SFBInterfaceSpec mGenInterfaceSpec; //!< the interface spec for this specific instance of generic FB
-    void *mFBConnData; //!< Connection data buffer
-    void *mFBVarsData; //!< Variable data buffer
 };
 
 template<class T>
@@ -227,7 +264,6 @@ CGenFunctionBlock<T>::~CGenFunctionBlock() {
 
 template<class T>
 bool CGenFunctionBlock<T>::initialize() {
-  setupFBInterface();
   return T::initialize();
 }
 
@@ -241,39 +277,23 @@ bool CGenFunctionBlock<T>::configureFB(const char *paConfigString) {
   return false;
 }
 
-namespace {
-
-  void genericInitializeDataPin(const CStringDictionary::TStringId *&paDataTypeIds, CIEC_ANY &paPin) {
-    TForteByte *varsData = nullptr;
-    CIEC_ANY *value = CTypeLib::createDataPoint(paDataTypeIds, varsData);
-    if (value != nullptr) {
-      paPin.setValue(*value);
-      delete value;
-    }
-  }
-
-} // namespace
-
 template<class T>
 void CGenFunctionBlock<T>::setInitialValues() {
   T::setInitialValues();
   const SFBInterfaceSpec &interfaceSpec = T::getFBInterfaceSpec();
 
-  const CStringDictionary::TStringId *dataTypeIds = interfaceSpec.mDIDataTypeNames;
   for (TPortId i = 0; i < interfaceSpec.mNumDIs; ++i) {
-    genericInitializeDataPin(dataTypeIds, *getDI(i));
+    getDI(i)->reset();
   }
 
-  dataTypeIds = interfaceSpec.mDODataTypeNames;
   for (TPortId i = 0; i < interfaceSpec.mNumDOs; ++i) {
-    genericInitializeDataPin(dataTypeIds, *getDO(i));
+    getDO(i)->reset();
   }
 
   if constexpr (std::is_base_of_v<CBasicFB, T>) {
     if (T::cmVarInternals) {
-      dataTypeIds = T::cmVarInternals->mIntVarsDataTypeNames;
       for (TPortId i = 0; i < T::cmVarInternals->mNumIntVars; ++i) {
-        genericInitializeDataPin(dataTypeIds, *T::getVarInternal(i));
+        T::getVarInternal(i)->reset();
       }
     }
   }
@@ -369,97 +389,19 @@ void CGenFunctionBlock<T>::fillDataPointSpec(const CIEC_ANY &paValue, CStringDic
 }
 
 template<class T>
-size_t CGenFunctionBlock<T>::calculateFBConnDataSize(const SFBInterfaceSpec &paInterfaceSpec) {
-  return sizeof(CEventConnection) * paInterfaceSpec.mNumEOs + sizeof(CDataConnection *) * paInterfaceSpec.mNumDIs +
-         sizeof(CGenDataConnection) * paInterfaceSpec.mNumDOs;
-}
-
-template<class T>
-size_t CGenFunctionBlock<T>::calculateFBVarsDataSize(const SFBInterfaceSpec &paInterfaceSpec) {
-  size_t result = 0;
-
-  result += paInterfaceSpec.mNumDIs * sizeof(CIEC_ANY *);
-  const CStringDictionary::TStringId *dataTypeIds = paInterfaceSpec.mDIDataTypeNames;
-  for (TPortId i = 0; i < paInterfaceSpec.mNumDIs; ++i) {
-    result += CTypeLib::getDataPointSize(dataTypeIds);
-  }
-
-  result += paInterfaceSpec.mNumDOs * sizeof(CIEC_ANY *);
-  dataTypeIds = paInterfaceSpec.mDODataTypeNames;
-  for (TPortId i = 0; i < paInterfaceSpec.mNumDOs; ++i) {
-    result += CTypeLib::getDataPointSize(dataTypeIds) * 2; // * 2 for connection buffer value
-  }
-
-  result += paInterfaceSpec.mNumAdapters * sizeof(TAdapterPtr);
-  return result;
-}
-
-template<class T>
 void CGenFunctionBlock<T>::setupFBInterface() {
-  freeFBInterfaceData();
 
-  const SFBInterfaceSpec &interfaceSpec = T::getFBInterfaceSpec();
-  size_t connDataSize = calculateFBConnDataSize(interfaceSpec);
-  size_t varsDataSize = calculateFBVarsDataSize(interfaceSpec);
-  mFBConnData = connDataSize ? operator new(connDataSize) : nullptr;
-  mFBVarsData = varsDataSize ? operator new(varsDataSize) : nullptr;
+  createGenEOCons();
 
-  auto *connData = reinterpret_cast<TForteByte *>(mFBConnData);
-  auto *varsData = reinterpret_cast<TForteByte *>(mFBVarsData);
+  createGenInputData();
 
-  TPortId i;
-  if (interfaceSpec.mNumEOs) {
-    mEOConns = reinterpret_cast<CEventConnection *>(connData);
+  createGenDICons();
 
-    for (i = 0; i < interfaceSpec.mNumEOs; ++i) {
-      // create an event connection for each event output and initialize its source port
-      new (connData) CEventConnection(*this, i);
-      connData += sizeof(CEventConnection);
-    }
-  } else {
-    mEOConns = nullptr;
-  }
+  createGenOutputData();
 
-  const CStringDictionary::TStringId *datarTypeIds;
-  if (interfaceSpec.mNumDIs) {
-    mDIConns = reinterpret_cast<CDataConnection **>(connData);
-    connData += sizeof(CDataConnection *) * interfaceSpec.mNumDIs;
+  createGenDOCons();
 
-    mDIs = reinterpret_cast<CIEC_ANY **>(varsData);
-    varsData += interfaceSpec.mNumDIs * sizeof(CIEC_ANY *);
-
-    datarTypeIds = interfaceSpec.mDIDataTypeNames;
-    for (i = 0; i < interfaceSpec.mNumDIs; ++i) {
-      mDIs[i] = CTypeLib::createDataPoint(datarTypeIds, varsData);
-      mDIConns[i] = nullptr;
-    }
-  } else {
-    mDIConns = nullptr;
-    mDIs = nullptr;
-  }
-
-  if (interfaceSpec.mNumDOs) {
-    // let mDOConns point to the first data output connection
-    mDOConns = reinterpret_cast<CGenDataConnection *>(connData);
-
-    mDOs = reinterpret_cast<CIEC_ANY **>(varsData);
-    varsData += interfaceSpec.mNumDOs * sizeof(CIEC_ANY *);
-
-    datarTypeIds = interfaceSpec.mDODataTypeNames;
-    for (i = 0; i < interfaceSpec.mNumDOs; ++i) {
-      mDOs[i] = CTypeLib::createDataPoint(datarTypeIds, varsData);
-      CIEC_ANY *connVar = mDOs[i]->clone(varsData);
-      varsData += connVar->getSizeof();
-      new (connData) CGenDataConnection(*this, i, *connVar);
-      connData += sizeof(CGenDataConnection);
-    }
-  } else {
-    mDOConns = nullptr;
-    mDOs = nullptr;
-  }
-  if (interfaceSpec.mNumAdapters) {
-    setupAdapters(varsData);
-  }
+  setupAdapters();
 
   T::setupInputConnectionTrackingData();
 
@@ -470,46 +412,11 @@ void CGenFunctionBlock<T>::setupFBInterface() {
 
 template<class T>
 void CGenFunctionBlock<T>::freeFBInterfaceData() {
-  if (nullptr != mEOConns) {
-    std::destroy_n(mEOConns, T::getFBInterfaceSpec().mNumEOs);
-  }
-
-  if (nullptr != mDOConns) {
-    for (TPortId i = 0; i < T::getFBInterfaceSpec().mNumDOs; ++i) {
-      // FIXME move gen DO con value handling into dedicated connection class
-      if (CIEC_ANY *value = &mDOConns[i].getValue(); nullptr != value) {
-        std::destroy_at(value);
-      }
-    }
-    std::destroy_n(mDOConns, T::getFBInterfaceSpec().mNumDOs);
-  }
-
-  if (nullptr != mDIs) {
-    for (TPortId i = 0; i < T::getFBInterfaceSpec().mNumDIs; ++i) {
-      if (CIEC_ANY *value = mDIs[i]; nullptr != value) {
-        std::destroy_at(value);
-      }
-    }
-  }
-
-  if (nullptr != mDOs) {
-    for (TPortId i = 0; i < T::getFBInterfaceSpec().mNumDOs; ++i) {
-      if (CIEC_ANY *value = mDOs[i]; nullptr != value) {
-        std::destroy_at(value);
-      }
-    }
-  }
-
   if (nullptr != mAdapters) {
     for (TPortId i = 0; i < T::getFBInterfaceSpec().mNumAdapters; ++i) {
       T::destroyAdapter(mAdapters[i]);
     }
   }
-
-  operator delete(mFBConnData);
-  mFBConnData = nullptr;
-  operator delete(mFBVarsData);
-  mFBVarsData = nullptr;
 
 #ifdef FORTE_SUPPORT_MONITORING
   T::freeEventMonitoringData();
@@ -517,10 +424,11 @@ void CGenFunctionBlock<T>::freeFBInterfaceData() {
 }
 
 template<class T>
-void CGenFunctionBlock<T>::setupAdapters(TForteByte *paFBData) {
-  if ((nullptr != paFBData) && (T::getFBInterfaceSpec().mNumAdapters)) {
-    mAdapters = reinterpret_cast<TAdapterPtr *>(paFBData);
-    for (TPortId i = 0; i < T::getFBInterfaceSpec().mNumAdapters; ++i) {
+void CGenFunctionBlock<T>::setupAdapters() {
+  size_t numAdpaters = T::getFBInterfaceSpec().mNumAdapters;
+  if (numAdpaters) {
+    mAdapters = std::unique_ptr<CAdapter *[]>(new CAdapter *[numAdpaters]);
+    for (TPortId i = 0; i < numAdpaters; ++i) {
       mAdapters[i] =
           T::createAdapter(T::getFBInterfaceSpec().mAdapterInstanceDefinition[i], static_cast<TForteUInt8>(i));
     }

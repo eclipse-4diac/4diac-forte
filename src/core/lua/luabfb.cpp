@@ -121,10 +121,10 @@ CIEC_ANY *CLuaBFB::getVariable(TForteUInt32 paId) {
   }
   if ((paId & CLuaBFB::scmLuaFBAdpFlag) != 0) {
     if ((paId & CLuaBFB::scmLuaFBDoFlag) != 0) {
-      return mAdapters[(paId >> 16) & CLuaBFB::scmLuaAdpVarMax]->getDO(paId & CLuaBFB::scmLuaFBVarMax);
+      return getAdapterUnchecked((paId >> 16) & CLuaBFB::scmLuaAdpVarMax)->getDO(paId & CLuaBFB::scmLuaFBVarMax);
     }
     if ((paId & CLuaBFB::scmLuaFBDiFlag) != 0) {
-      return mAdapters[(paId >> 16) & CLuaBFB::scmLuaAdpVarMax]->getDI(paId & CLuaBFB::scmLuaFBVarMax);
+      return getAdapterUnchecked((paId >> 16) & CLuaBFB::scmLuaAdpVarMax)->getDI(paId & CLuaBFB::scmLuaFBVarMax);
     }
     return nullptr;
   }
