@@ -11,7 +11,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    container: quay.io/eclipse4diac/4diac-fortebuildcontainer:latest
 
     steps:
     - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
@@ -23,11 +22,12 @@ jobs:
         echo "source-dir=$GITHUB_WORKSPACE" >> "$GITHUB_OUTPUT"
         echo "build-dir=$GITHUB_WORKSPACE/build" >> "$GITHUB_OUTPUT"
 
-    # TODO: Enable this and the POWERLINK module back when the CI is fixed: see https://github.com/eclipse-4diac/4diac-forte/issues/287
-    #- name: Install lipcap-dev
+    - name: Install libboost (Linux)
+      run: sudo apt-get install -y libboost-all-dev
+
+    - name: Install lipcap-dev
       # libpcap-dev is required for the POWERLINK module
-      # TODO: Put this in 4diac-fortebuildcontainer
-     # run: apt-get update && apt-get install -y libpcap-dev
+      run: sudo apt-get install -y libpcap-dev
 
     - name: Configure CMake
       run: >
@@ -41,13 +41,10 @@ jobs:
         -DFORTE_COM_RAW=ON
         -DFORTE_COM_SER=ON
         -DFORTE_COM_STRUCT_MEMBER=ON
-        -DFORTE_COM_OPC_UA=OFF
-        -DFORTE_COM_OPC_UA_INCLUDE_DIR=${WORKDIR}/open62541/binStatic
-        -DFORTE_COM_OPC_UA_LIB_DIR=${WORKDIR}/open62541/binStatic/bin
-        -DFORTE_COM_OPC_UA_LIB=libopen62541.a
         -DFORTE_IO=ON
         -DFORTE_MODULE_CONVERT=ON
         -DFORTE_MODULE_IEC61131=ON
+        -DFORTE_MODULE_POWERLINK=ON
         -DFORTE_MODULE_RECONFIGURATION=ON
         -DFORTE_MODULE_RT_Events=ON
         -DFORTE_MODULE_SIGNALPROCESSING=ON
@@ -55,7 +52,6 @@ jobs:
         -DFORTE_TESTS=ON
         -DFORTE_SYSTEM_TESTS=ON
         -DFORTE_TEST_SANITIZE=ON
-#        -DFORTE_MODULE_POWERLINK=ON
 
     - name: Build
       run: cmake --build ${{ steps.strings.outputs.build-dir }}
