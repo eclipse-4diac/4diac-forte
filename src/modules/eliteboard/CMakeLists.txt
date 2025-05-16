@@ -8,28 +8,20 @@
 # 
 # Contributors:
 #   Jonathan Lainer - Initial implementation.
+#   Maximilian Scharf - Adaptations for event-triggered IOs, ADCs and DACs.
 # *******************************************************************************/
 
 if("${FORTE_ARCHITECTURE}" STREQUAL "FreeRTOSLwIP")
-forte_add_io(ELITEBOARD "Support for the eLITe-Board development board")
+  forte_add_io(ELITEBOARD "Support for the eLITe-Board development board")
 
-if(FORTE_IO_ELITEBOARD)
-forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+  if(FORTE_IO_ELITEBOARD)
+    forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
-#############################################################################
-# eLITe-Borad specific fixes
-#############################################################################
+    forte_add_definition("-ffunction-sections -fdata-sections -fno-threadsafe-statics -fno-rtti -fno-exceptions -Wl,--gc-sections")
 
-forte_add_definition("-ffunction-sections -fdata-sections -fno-threadsafe-statics -fno-rtti -fno-exceptions -Wl,--gc-sections")
+    add_subdirectory(handle)
+    add_subdirectory(handler)
+    add_subdirectory(types)
 
-#############################################################################
-# Function Blocks
-#############################################################################
-
-add_subdirectory(handler)
-forte_add_sourcefile_hcpp(handle/PinHandle)
-forte_add_sourcefile_hcpp(types/EliteBoard)
-forte_add_sourcefile_hcpp(types/Port_fbt types/PortAdapter_adp)
-
-endif(FORTE_IO_ELITEBOARD)
+  endif(FORTE_IO_ELITEBOARD)
 endif("${FORTE_ARCHITECTURE}" STREQUAL "FreeRTOSLwIP")

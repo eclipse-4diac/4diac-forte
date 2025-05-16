@@ -8,23 +8,55 @@
  *
  * Contributors:
  *   Jonathan Lainer - Initial implementation.
+ *   Maximilian Scharf - Adaptations for ADC, DAC and event-triggered IOs.
  *******************************************************************************/
 
 #include "EliteBoardDeviceController.h"
-#include "../handler/EliteBoardDeviceController.h"
-#include "../handle/PinHandle.h"
+#include "handle/PinHandle.h"
+
+#include "devlog.h"
+#include "forte_word.h"
+
+#define POLL_FREQUENCY_Hz     1000
+#define PA_POLL_INTERVAL_MS   1000/POLL_FREQUENCY_Hz
 
 DEFINE_HANDLER(EliteBoardDeviceController);
 
-EliteBoardDeviceController::EliteBoardDeviceController(CDeviceExecution &paDeviceExecution) :
-    forte::core::io::IODeviceController(paDeviceExecution) {
+EliteBoardDeviceController::EliteBoardDeviceController(CDeviceExecution& paDeviceExecution)
+    : forte::core::io::IODevicePollController(paDeviceExecution, PA_POLL_INTERVAL_MS){
 }
 
-EliteBoardDeviceController::~EliteBoardDeviceController() {
+EliteBoardDeviceController::~EliteBoardDeviceController() {}
+
+/* starts the loop thread (when it is not already running) which executes the `controllerPoll` function */
+void EliteBoardDeviceController::startThread() {
+  if (!isAlive()) {
+    EliteBoardDeviceController::start();
+    DEVLOG_DEBUG("[EliteBoardDeviceController] loop running at %3d Hz / %3d ms cycle time\r\n", POLL_FREQUENCY_Hz, PA_POLL_INTERVAL_MS);
+  }
 }
 
 EliteBoardDeviceController::IOHandle *EliteBoardDeviceController::createIOHandle(HandleDescriptor &paHandleDescriptor) {
-  auto desc = static_cast<EliteBoardHandleDescriptor &>(paHandleDescriptor);
-  IOHandle *handle = new IOHandleGPIO(this, desc.mGPIO_Port, desc.mPin);
+  auto desc_base = static_cast<EliteBoardDescriptor &>(paHandleDescriptor);
+  IOHandle *handle;
+
+  switch (desc_base.mIOType) {
+    case GPIO: {
+      auto desc = static_cast<GPIODescriptor &>(paHandleDescriptor);
+      handle = new IOHandleGPIO(this, desc);
+      break;
+    }
+    default:
+      break;
+  }
+  startThread();
   return static_cast<IOHandle *>(handle);
+}
+
+bool EliteBoardDeviceController::isHandleValueEqual(IOHandle &paHandle) {
+  return false;
+}
+
+void EliteBoardDeviceController::poll() {
+  checkForInputChanges();
 }

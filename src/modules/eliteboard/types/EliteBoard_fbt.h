@@ -22,8 +22,11 @@
 #include "forte_array_variable.h"
 
 #include "../handler/EliteBoardDeviceController.h"
+#include "core/io/configFB/io_configFB_controller.h"
 
-class FORTE_EliteBoard final : public CFunctionBlock {
+using namespace forte::core::io;
+
+class FORTE_EliteBoard final : public IOConfigFBController {
     DECLARE_FIRMWARE_FB(FORTE_EliteBoard)
 
   private:
@@ -59,6 +62,11 @@ class FORTE_EliteBoard final : public CFunctionBlock {
     FORTE_PortAdapter &getPortAdapterByIndex(int index);
     bool configurePortFB(int index, CEventChainExecutionThread *const paECET);
     int configPorts(CEventChainExecutionThread *const paECET);
+
+    // IOConfigFBController
+    EliteBoardDeviceController& mEventHandler;
+    IODeviceController *createDeviceController(CDeviceExecution &paDeviceExecution);
+    void setConfig() {}
 
   public:
     FORTE_EliteBoard(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);

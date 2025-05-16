@@ -66,13 +66,46 @@ void IODeviceController::addHandle(HandleDescriptor &paHandleDescriptor) {
                    paHandleDescriptor.mId.c_str());
     return;
   }
+  addHandle(paHandleDescriptor.mId, std::move(handle));
+}
 
-  switch (handle->getDirection()) {
-    case IOMapper::In: addHandle(mInputHandles, paHandleDescriptor.mId, std::move(handle)); break;
-    case IOMapper::Out: addHandle(mOutputHandles, paHandleDescriptor.mId, std::move(handle)); break;
+void IODeviceController::addHandle(std::string const &paId, std::unique_ptr<IOHandle> paHandle) {
+  switch (paHandle->getDirection()) {
+    case IOMapper::In: addHandle(mInputHandles, paId, std::move(paHandle)); break;
+    case IOMapper::Out: addHandle(mOutputHandles, paId, std::move(paHandle)); break;
+    case IOMapper::InOut: addHandle(mDiverseHandles, paId, std::move(paHandle)); break;
+    case IOMapper::UnknownDirection: addHandle(mDiverseHandles, paId, std::move(paHandle)); break;
     default: break;
   }
 }
+
+void IODeviceController::updateHandleList(std::string const &paId, IOHandle *paHandle) {
+  for (auto it = mDiverseHandles.begin(); it != mDiverseHandles.end(); ++it) {
+    if (it->get() == paHandle) {
+      auto handleDirection = (*it)->getDirection();
+      switch (handleDirection) {
+        case IOMapper::In: {
+          CCriticalRegion criticalRegion(mHandleMutex);
+          mInputHandles.push_back(std::move(*it));
+          mDiverseHandles.erase(it);
+          break;
+        }
+        case IOMapper::Out: {
+          CCriticalRegion criticalRegion(mHandleMutex);
+          mOutputHandles.push_back(std::move(*it));
+          mDiverseHandles.erase(it);
+          break;
+        }
+        default:
+          DEVLOG_ERROR("[updateHandleList] %s's direction is neither `In` nor `Out`.\r\n", paId.c_str());
+          break;
+      }
+      return;
+    }
+  }
+  DEVLOG_INFO("[updateHandleList] %s's is no member of mDiverseHandles.\r\n", paId.c_str());
+}
+
 
 void IODeviceController::fireIndicationEvent(IOObserver *paObserver) {
   startNewEventChain(static_cast<CProcessInterfaceFB *>(paObserver));
@@ -134,8 +167,13 @@ void IODeviceController::dropHandles() {
     mapper.deregisterHandle(*outputHandle);
   }
 
+  for (auto &diverseHandle : mDiverseHandles) {
+    mapper.deregisterHandle(*diverseHandle);
+  }
+
   mInputHandles.clear();
   mOutputHandles.clear();
+  mDiverseHandles.clear();
 }
 
 bool IODeviceController::isHandleValueEqual(IOHandle &) {

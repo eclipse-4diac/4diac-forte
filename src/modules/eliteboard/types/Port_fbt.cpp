@@ -246,10 +246,10 @@ void FORTE_Port::register_handles() {
 
     // Create a GPIO pin handle using the port struct to identify the MMIO port and
     // a bit mask to identify the pin.
-    EliteBoardDeviceController::EliteBoardHandleDescriptor descr(*id, IOMapper::UnknownDirection, port,
+    EliteBoardDeviceController::GPIODescriptor descr(*id, IOMapper::UnknownDirection, port,
                                                                  uint16_t(1 << i));
     EliteBoardDeviceController &ctrl = getExtEvHandler<EliteBoardDeviceController>(*this);
 
-    IOMapper::getInstance().registerHandle(std::string(*id), ctrl.createIOHandle(descr));
+    ctrl.addHandle(descr);
   }
 }

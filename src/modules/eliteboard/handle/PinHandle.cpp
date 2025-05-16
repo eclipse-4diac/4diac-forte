@@ -12,17 +12,22 @@
 
 #include "PinHandle.h"
 #include <forte_bool.h>
+#include "extevhandlerhelper.h"
 
-IOHandleGPIO::IOHandleGPIO(EliteBoardDeviceController *paDeviceCtrl, GPIO_TypeDef *paGPIO_Port, uint16_t paGPIO_Pin) :
-    IOHandle(
-        static_cast<forte::core::io::IODeviceController *>(paDeviceCtrl), IOMapper::UnknownDirection, CIEC_ANY::e_BOOL),
-    mGPIO_Port(paGPIO_Port),
-    mGPIO_Pin(paGPIO_Pin) {
+IOHandleGPIO::IOHandleGPIO(EliteBoardDeviceController *paDeviceCtrl,
+  EliteBoardDeviceController::GPIODescriptor desc)
+    : IOHandle( static_cast<IODeviceController *>(paDeviceCtrl), desc.mDirection, CIEC_ANY::e_BOOL),
+      mGPIO_Port(desc.mGPIO_Port),
+      mGPIO_Pin(desc.mPin),
+      mId(desc.mId){
 }
 
 void IOHandleGPIO::onObserver(IOObserver *paObserver) {
   IOHandle::onObserver(paObserver);
   mDirection = paObserver->getDirection();
+
+  // Since the direction of the GPIO is set at this time, the controller-handle-list has to be updated
+  mController->updateHandleList(mId, this);
 
   GPIO_InitTypeDef initParams{.Pin = mGPIO_Pin,
                               .Mode = (mDirection == IOMapper::In) ? GPIO_MODE_INPUT : GPIO_MODE_OUTPUT_PP,

@@ -40,7 +40,7 @@ class FORTE_Port final : public CFunctionBlock {
     void writeOutputData(TEventID paEIID) override;
     void setInitialValues() override;
 
-    // The (maximum) number  of IO pins available on a GPIO port.
+    // The (maximum) number of IO pins available on a GPIO port.
     static constexpr size_t pin_cnt = 16;
     std::array<CIEC_STRING *, pin_cnt> mRegistered;
 

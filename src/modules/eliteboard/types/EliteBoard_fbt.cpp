@@ -10,7 +10,7 @@
  *   Jonathan Lainer - Initial implementation.
  *******************************************************************************/
 
-#include "EliteBoard.h"
+#include "EliteBoard_fbt.h"
 
 USE_STRING_ID(EliteBoard);
 USE_STRING_ID(MAP);
@@ -76,7 +76,8 @@ const SFBInterfaceSpec FORTE_EliteBoard::scmFBInterfaceSpec = {1,
 
 FORTE_EliteBoard::FORTE_EliteBoard(const CStringDictionary::TStringId paInstanceNameId,
                                    forte::core::CFBContainer &paContainer) :
-    CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId),
+    IOConfigFBController(paContainer, scmFBInterfaceSpec, paInstanceNameId),
+    mEventHandler{getExtEvHandler<EliteBoardDeviceController>(*this)},
     var_PortA(STRID(PortA), *this, true),
     var_PortB(STRID(PortB), *this, true),
     var_PortC(STRID(PortC), *this, true),
@@ -245,4 +246,9 @@ bool FORTE_EliteBoard::configurePortFB(int index, CEventChainExecutionThread *co
 
   sendAdapterEvent(index, FORTE_PortAdapter::scmEventMAPID, paECET);
   return true;
+}
+
+// IOConfigFBController
+IODeviceController *FORTE_EliteBoard::createDeviceController(CDeviceExecution &paDeviceExecution) {
+  return &mEventHandler;
 }

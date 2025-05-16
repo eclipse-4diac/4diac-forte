@@ -98,7 +98,7 @@ void FORTE_PortAdapter::writeOutputData(const TEventID paEIID) {
   if (isSocket()) {
     switch (paEIID) {
       case scmEventMAPID: {
-        writeData(scmFBInterfaceSpec.mNumDIs + 0, *mDOs[0], mDOConns[0]);
+        writeData(getFBInterfaceSpec().mNumDIs + 0, *mDOs[0], mDOConns[0]);
         break;
       }
       default: break;

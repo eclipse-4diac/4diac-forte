@@ -8,61 +8,78 @@
  *
  * Contributors:
  *   Jonathan Lainer - Initial implementation.
+ *   Maximilian Scharf - Adaptations for ADC, DAC and event-triggered IOs.
  *******************************************************************************/
 
-#ifndef ELITEBOARD_DEVICE_CONTROLLER_H
-#define ELITEBOARD_DEVICE_CONTROLLER_H
+#pragma once
 
-#include "core/io/device/io_controller.h"
+#include "core/io/device/io_controller_poll.h"
 #include "core/io/mapper/io_handle.h"
 #include "extevhan.h"
 
 #include "stm32h743xx.h"
+#include <string>
+#include "CeSpec.h"
+
 #include "stm32h7xx_hal_gpio.h"
 
-#include <string>
+class EliteBoardDeviceController : public IODevicePollController {
+  DECLARE_HANDLER(EliteBoardDeviceController);
 
-class EliteBoardDeviceController : public forte::core::io::IODeviceController {
   public:
-    using HandleDescriptor = forte::core::io::IODeviceController::HandleDescriptor;
+    using HandleDescriptor = HandleDescriptor;
     using IOMapper = forte::core::io::IOMapper;
     using IOHandle = forte::core::io::IOHandle;
 
-    DECLARE_HANDLER(EliteBoardDeviceController);
+    enum EIOType {
+      GPIO = 10,
+      ADC  = 20,
+      DAC  = 30
+    };
 
-    class EliteBoardHandleDescriptor : public forte::core::io::IODeviceController::HandleDescriptor {
+    void addHandle(HandleDescriptor &paHandleDescriptor) override {
+      IODeviceController::addHandle(paHandleDescriptor);
+    }
+
+     void addHandle(std::string const &paId, std::unique_ptr<IOHandle> paHandle) override {
+       IODeviceController::addHandle(paId, std::move(paHandle));
+     }
+
+     void updateHandleList(std::string const &paId, IOHandle *paHandle) override {
+       IODeviceController::updateHandleList(paId, paHandle);
+     }
+
+    void setConfig(Config *paConfig) override {}
+
+    const char *init() override{
+      /* nullptr indicates no error */
+      return nullptr;
+    }
+
+    IOHandle *createIOHandle(HandleDescriptor &paHandleDescriptor) override;
+    bool isHandleValueEqual(IOHandle &paHandle) override;
+    void deInit() override {}
+    void poll() override;
+    void startThread();
+
+    class EliteBoardDescriptor : public HandleDescriptor {
+      public:
+        EIOType mIOType;
+        EliteBoardDescriptor(std::string paId, IOMapper::Direction paDirection, EIOType paIOType)
+          : HandleDescriptor(std::string(paId), paDirection), mIOType(paIOType) {}
+    };
+
+    class GPIODescriptor : public EliteBoardDescriptor {
       public:
         GPIO_TypeDef *mGPIO_Port;
         uint16_t mPin;
 
-        EliteBoardHandleDescriptor(CIEC_STRING const &paId,
-                                   forte::core::io::IOMapper::Direction paDirection,
-                                   GPIO_TypeDef *paGPIO_Port,
-                                   uint16_t paPin) :
-            HandleDescriptor(std::string(paId), IOMapper::UnknownDirection),
-            mGPIO_Port(paGPIO_Port),
-            mPin(paPin) {
-        }
+        GPIODescriptor(CIEC_STRING const &paId, IOMapper::Direction paDirection, GPIO_TypeDef* paGPIO_Port, uint16_t paPin)
+          : EliteBoardDescriptor(std::string(paId), paDirection, GPIO),
+            mGPIO_Port(paGPIO_Port), mPin(paPin) {}
 
-        EliteBoardHandleDescriptor(CIEC_STRING const &paId, GPIO_TypeDef *paGPIO_Port, uint16_t paPin) :
-            HandleDescriptor(std::string(paId), IOMapper::UnknownDirection),
-            mGPIO_Port(paGPIO_Port),
-            mPin(paPin) {
-        }
+        GPIODescriptor(CIEC_STRING const &paId, GPIO_TypeDef* paGPIO_Port, uint16_t paPin)
+          : EliteBoardDescriptor(std::string(paId), IOMapper::InOut, GPIO),
+            mGPIO_Port(paGPIO_Port), mPin(paPin) {}
     };
-
-    IOHandle *createIOHandle(HandleDescriptor &paHandleDescriptor);
-
-    void setConfig(Config *paConfig) {
-    }
-    const char *init() {
-      const char *x = "";
-      return x;
-    }
-    void runLoop() {
-    }
-    void deInit() {
-    }
 };
-
-#endif /* ifndef ELITEBOARD_DEVICE_CONTROLLER_H */

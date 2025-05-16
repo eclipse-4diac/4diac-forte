@@ -15,8 +15,7 @@
 
 #include <core/io/mapper/io_handle.h>
 #include <core/io/mapper/io_observer.h>
-#include "../handler/EliteBoardDeviceController.h"
-#include <stdint.h>
+#include "EliteBoardDeviceController.h"
 
 #include "stm32h743xx.h"
 #include "stm32h7xx_hal_gpio.h"
@@ -29,7 +28,7 @@ class IOHandleGPIO : public forte::core::io::IOHandle {
     using IOMapper = forte::core::io::IOMapper;
 
   public:
-    IOHandleGPIO(EliteBoardDeviceController *paDeviceCtrl, GPIO_TypeDef *paGPIO_Port, uint16_t paGPIO_Pin);
+    IOHandleGPIO(EliteBoardDeviceController *paDeviceCtrl, EliteBoardDeviceController::GPIODescriptor desc);
     void get(CIEC_ANY &) override;
     void set(const CIEC_ANY &) override;
 
@@ -40,6 +39,7 @@ class IOHandleGPIO : public forte::core::io::IOHandle {
   private:
     GPIO_TypeDef *mGPIO_Port;
     uint16_t mGPIO_Pin;
+    std::string const mId;
 };
 
 #endif

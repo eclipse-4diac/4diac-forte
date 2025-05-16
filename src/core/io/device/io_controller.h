@@ -103,6 +103,16 @@ namespace forte {
             return 0;
           }
 
+          /*! @brief Updates the current handle in the input or output handle list
+           *
+           * This method deletes the current handle in the device-specific input and
+           * output list and adds it again, according to its current direction.
+           *
+           * @param paId Handle ID of the IOHandle, which should be updated
+           * @param paHandle IOHandle which should be updated
+           */
+          virtual void updateHandleList(std::string const &paId, IOHandle *paHandle);
+
         protected:
           explicit IODeviceController(CDeviceExecution &paDeviceExecution);
 
@@ -162,10 +172,21 @@ namespace forte {
            */
           virtual void addHandle(HandleDescriptor &paHandleDescriptor);
 
+          /*! @brief Adds an IO handle to the controller
+           *
+           * This method is called by #addHandle or during the initialization, when a handler is already existing.
+           * The handle is automatically added to the correct list (#inputHandles and #outputHandles).
+           * The handle lists should be accessed by the controller to read and write IOs.
+           *
+           * @param paId Handler ID
+           * @param paHandle Already exisiting handler, which gets added to the correct list.
+           */
+          virtual void addHandle(std::string const &paId, std::unique_ptr<IOHandle> paHandle);
+
           /*! @brief Initializer for all IO handles.
            *
            * The method is called when a configuration fb adds an handle via the #addHandle method.
-           * It should return an handle instance based on the descriptor information.
+           * It should return a handle instance based on the descriptor information.
            *
            * @param paHandleDescriptor Descriptor of the handle
            */
@@ -204,6 +225,13 @@ namespace forte {
            * #dropHandles is called automatically during deinitialization.
            */
           THandleList mOutputHandles;
+
+          /*! @brief All other handles (nighter input or output) of the main controller
+           * The list contain handles of the main controller, which cannot be classified.
+           * The list is managed by the #addHandle and #dropHandles method.
+           * #dropHandles is called automatically during deinitialization.
+           */
+          THandleList mDiverseHandles;
 
         private:
           IOConfigFBController *mDelegate;
