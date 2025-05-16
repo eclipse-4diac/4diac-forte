@@ -27,7 +27,7 @@ class CIEC_ANY_REAL : public CIEC_ANY_NUM {
   protected:
     CIEC_ANY_REAL() = default;
 
-    void normalizeToStringRepresentation(std::string &paTargetBuf, size_t paStartPos) const;
+    static void normalizeToStringRepresentation(std::string &paTargetBuf, size_t paStartPos);
 };
 
 #endif /*_MANY_REA_H_*/

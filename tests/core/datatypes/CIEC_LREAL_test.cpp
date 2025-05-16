@@ -193,6 +193,11 @@ BOOST_AUTO_TEST_CASE(ToString_Tests) {
   BOOST_CHECK_EQUAL(buffer, "10.0");
 
   buffer.clear();
+  testVal = CIEC_LREAL(2.0e20);
+  testVal.toString(buffer);
+  BOOST_CHECK_EQUAL(buffer, "2.0e+20");
+
+  buffer.clear();
   testVal = CIEC_LREAL(INFINITY);
   testVal.toString(buffer);
   BOOST_CHECK_EQUAL(buffer, "inf");
