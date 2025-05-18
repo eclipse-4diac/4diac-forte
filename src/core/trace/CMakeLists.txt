@@ -12,28 +12,38 @@
 #      - initial API and implementation and/or initial documentation
 #############################################################################
 
-find_package(barectf REQUIRED)
+set(FORTE_TRACE_CONFIG_FILE ${CMAKE_CURRENT_SOURCE_DIR}/classic/config.yaml)
+set(FORTE_TRACE_FOLDER ${CMAKE_CURRENT_SOURCE_DIR}/classic/generated)
 
-add_custom_command(
-    OUTPUT barectf.h barectf.c barectf-bitfield.h metadata
-    COMMAND barectf ${CMAKE_CURRENT_SOURCE_DIR}/config.yaml
-    MAIN_DEPENDENCY config.yaml
-    DEPENDS barectf
-    COMMENT "Generating tracer for Common Trace Format (CTF) with barectf"
-)
+SET(FORTE_GENERATE_TRACE_FILES FALSE CACHE BOOL "Generate the barectf trace files again for the selected trace configuration")
+mark_as_advanced(FORTE_GENERATE_TRACE_FILES)
+
+if(FORTE_GENERATE_TRACE_FILES)
+
+  find_package(barectf REQUIRED)
+
+  add_custom_command(
+      OUTPUT ${FORTE_TRACE_FOLDER}/barectf.h ${FORTE_TRACE_FOLDER}/barectf.c ${FORTE_TRACE_FOLDER}/barectf-bitfield.h ${FORTE_TRACE_FOLDER}/metadata
+      COMMAND barectf -c ${FORTE_TRACE_FOLDER} -H ${FORTE_TRACE_FOLDER} -m ${FORTE_TRACE_FOLDER} ${FORTE_TRACE_CONFIG_FILE}
+      MAIN_DEPENDENCY ${FORTE_TRACE_CONFIG_FILE}
+      DEPENDS barectf
+      COMMENT "Generating tracer for Common Trace Format (CTF) with barectf"
+  )
+
+endif()
 
 add_library(forte_trace STATIC
-        ${CMAKE_CURRENT_BINARY_DIR}/barectf.h
-        ${CMAKE_CURRENT_BINARY_DIR}/barectf.c
-        ${CMAKE_CURRENT_BINARY_DIR}/barectf-bitfield.h
+        ${FORTE_TRACE_FOLDER}/barectf.h
+        ${FORTE_TRACE_FOLDER}/barectf.c
+        ${FORTE_TRACE_FOLDER}/barectf-bitfield.h
 )
 target_include_directories(forte_trace
     PUBLIC
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
+        $<BUILD_INTERFACE:${FORTE_TRACE_FOLDER}>
 )
 
 forte_add_link_library(forte_trace)
-forte_add_include_directories(${CMAKE_CURRENT_BINARY_DIR})
+forte_add_include_directories(${FORTE_TRACE_FOLDER})
 forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 forte_add_sourcefile_hcpp(barectf_platform_forte)

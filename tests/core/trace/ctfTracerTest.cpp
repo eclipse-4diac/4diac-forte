@@ -75,43 +75,43 @@ BOOST_AUTO_TEST_CASE(sequential_events_test) {
     command.mDestination = CStringDictionary::scmInvalidStringId;
 
     BOOST_TEST_INFO("Event connection: Start.COLD -> Counter.CU");
-    command.mFirstParam.pushBack(startInstanceName);
-    command.mFirstParam.pushBack(g_nStringIdCOLD);
-    command.mSecondParam.pushBack(counterInstanceName);
-    command.mSecondParam.pushBack(g_nStringIdCU);
+    command.mFirstParam.push_back(startInstanceName);
+    command.mFirstParam.push_back(g_nStringIdCOLD);
+    command.mSecondParam.push_back(counterInstanceName);
+    command.mSecondParam.push_back(g_nStringIdCU);
     BOOST_TEST(EMGMResponse::Ready == resource.executeMGMCommand(command));
 
     BOOST_TEST_INFO("Event connection: Counter.CUO -> Switch.EI");
     command.mFirstParam.clear();
-    command.mFirstParam.pushBack(counterInstanceName);
-    command.mFirstParam.pushBack(g_nStringIdCUO);
+    command.mFirstParam.push_back(counterInstanceName);
+    command.mFirstParam.push_back(g_nStringIdCUO);
     command.mSecondParam.clear();
-    command.mSecondParam.pushBack(switchInstanceName);
-    command.mSecondParam.pushBack(g_nStringIdEI);
+    command.mSecondParam.push_back(switchInstanceName);
+    command.mSecondParam.push_back(g_nStringIdEI);
     BOOST_TEST(EMGMResponse::Ready == resource.executeMGMCommand(command));
 
     BOOST_TEST_INFO("Data connection: Counter.Q -> Switch.G ");
     command.mFirstParam.clear();
-    command.mFirstParam.pushBack(counterInstanceName);
-    command.mFirstParam.pushBack(g_nStringIdQ);
+    command.mFirstParam.push_back(counterInstanceName);
+    command.mFirstParam.push_back(g_nStringIdQ);
     command.mSecondParam.clear();
-    command.mSecondParam.pushBack(switchInstanceName);
-    command.mSecondParam.pushBack(g_nStringIdG);
+    command.mSecondParam.push_back(switchInstanceName);
+    command.mSecondParam.push_back(g_nStringIdG);
     BOOST_TEST(EMGMResponse::Ready == resource.executeMGMCommand(command));
 
     BOOST_TEST_INFO(" Data constant value: Counter.PV = 1");
     command.mFirstParam.clear();
-    command.mFirstParam.pushBack(counterInstanceName);
-    command.mFirstParam.pushBack(g_nStringIdPV);
+    command.mFirstParam.push_back(counterInstanceName);
+    command.mFirstParam.push_back(g_nStringIdPV);
     BOOST_TEST(EMGMResponse::Ready == resource.writeValue(command.mFirstParam, "1", false));
 
     BOOST_TEST_INFO("Event connection: Switch.EO1 -> Counter.R ");
     command.mFirstParam.clear();
-    command.mFirstParam.pushBack(switchInstanceName);
-    command.mFirstParam.pushBack(g_nStringIdEO1);
+    command.mFirstParam.push_back(switchInstanceName);
+    command.mFirstParam.push_back(g_nStringIdEO1);
     command.mSecondParam.clear();
-    command.mSecondParam.pushBack(counterInstanceName);
-    command.mSecondParam.pushBack(g_nStringIdR);
+    command.mSecondParam.push_back(counterInstanceName);
+    command.mSecondParam.push_back(g_nStringIdR);
     BOOST_TEST(EMGMResponse::Ready == resource.executeMGMCommand(command));
 
     device.startDevice();

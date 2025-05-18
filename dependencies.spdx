@@ -39,3 +39,16 @@ PackageLicenseConcluded: NOASSERTION
 PackageLicenseDeclared: NOASSERTION
 PackageCopyrightText: NOASSERTION
 
+PackageName: barectf
+SPDXID: SPDXRef-barectf
+PackageComment: <text>CTF Traces generator</text>
+ExternalRef: PACKAGE-MANAGER purl pkg:github/efficios/barectf@3.1.2
+PackageVersion: 3.1.2
+PackageSupplier: Organization: efficios
+Relationship: SPDXRef-barectf OPTIONAL_DEPENDENCY_OF SPDXRef-4diac-FORTE
+PackageDownloadLocation: https://github.com/efficios/barectf/archive/refs/tags/v3.1.2.zip
+PackageChecksum: SHA256: 421d6a14d173dab359302a0050357c7a2444414bd1427534d9adcfcf02296bb4
+FilesAnalyzed: false
+PackageLicenseConcluded: NOASSERTION
+PackageLicenseDeclared: NOASSERTION
+PackageCopyrightText: NOASSERTION
