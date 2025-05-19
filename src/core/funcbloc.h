@@ -455,7 +455,7 @@ class CFunctionBlock : public forte::core::CFBContainer {
       }
 #endif // FORTE_SUPPORT_MONITORING
 #ifdef FORTE_TRACE_CTF
-      traceReadData(paDINum, paValue);
+      traceReadData(paAbsDataPortNum, paValue);
 #endif // FORTE_TRACE_CTF
     }
 
@@ -478,7 +478,7 @@ class CFunctionBlock : public forte::core::CFBContainer {
       }
 #endif // FORTE_SUPPORT_MONITORING
 #ifdef FORTE_TRACE_CTF
-      traceWriteData(paDONum, paValue);
+      traceWriteData(paAbsDataPortNum, paValue);
 #endif // FORTE_TRACE_CTF
     }
 

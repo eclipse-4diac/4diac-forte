@@ -72,7 +72,7 @@ std::optional<TEventEntry> DebugMGR::getEventEntry(CResource *paResource, std::s
     return std::nullopt;
   }
 
-  auto portID = functionBlock->getEIID(eventId);
+  auto portID = functionBlock->getFBInterfaceSpec().getEIID(eventId);
   if (portID == cgInvalidPortId) {
     // no port ID found in the function block
     return std::nullopt;

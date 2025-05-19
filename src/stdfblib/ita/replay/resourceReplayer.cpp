@@ -34,22 +34,23 @@ CResourceReplayer::CResourceReplayer(CResource &paResource, std::vector<EventMes
   auto processOneEvent = [validTypes = forte::trace::reader::utils::getServiceFunctionBlockTypes(mResource),
                           &ecet = this->mEcet](TEventEntry paEvent) {
     // pass through non interesting events
-    if (auto type = CStringDictionary::getId(paEvent.mFB->getFBTypeName()); validTypes.find(type) == validTypes.end()) {
+    if (auto type = CStringDictionary::getId(paEvent.getFB().getFBTypeName());
+        validTypes.find(type) == validTypes.end()) {
 
-      paEvent.mFB->receiveInputEvent(paEvent.mPortId, &ecet);
+      paEvent.getFB().receiveInputEvent(paEvent.getPortId(), &ecet);
       return;
     }
 
-    if (CFunctionBlock::E_FBStates::Running != paEvent.mFB->getState()) {
+    if (CFunctionBlock::E_FBStates::Running != paEvent.getFB().getState()) {
       return;
     }
 
-    if (paEvent.mPortId >= paEvent.mFB->getFBInterfaceSpec().mNumEIs) {
+    if (paEvent.getPortId() >= paEvent.getFB().getFBInterfaceSpec().mNumEIs) {
       return;
     }
 
-    paEvent.mFB->readInputData(paEvent.mPortId);
-    paEvent.mFB->traceInputEvent(paEvent.mPortId);
+    paEvent.getFB().readInputData(paEvent.getPortId());
+    paEvent.getFB().traceInputEvent(paEvent.getPortId());
   };
 
   mEcet.setRemoteCallbackForEventTriggering(processOneEvent);
@@ -90,11 +91,11 @@ std::optional<TEventEntry> CResourceReplayer::reproduceNextEvent() {
     auto simulateExternalOutputEvent = [this](TEventEntry paEvent, const std::vector<std::string> &paOutputs) {
       // copy output data to FB
       for (size_t i = 0; i < paOutputs.size(); i++) {
-        paEvent.mFB->getDO(i)->fromString(paOutputs[i].c_str());
+        paEvent.getFB().getDO(i)->fromString(paOutputs[i].c_str());
       }
 
       // the following will trace and add possible new events to the queue
-      paEvent.mFB->sendOutputEvent(paEvent.mPortId, &mEcet);
+      paEvent.getFB().sendOutputEvent(paEvent.getPortId(), &mEcet);
     };
 
     while (mEcet.getEventCounter() < payload->mEventCounter) {
@@ -110,7 +111,7 @@ std::optional<TEventEntry> CResourceReplayer::reproduceNextEvent() {
       std::abort();
     }
 
-    simulateExternalOutputEvent(TEventEntry(functionBlock, payload->mEventId), payload->mOutputs);
+    simulateExternalOutputEvent(TEventEntry(*functionBlock, payload->mEventId), payload->mOutputs);
     mStepperIndex++;
     // we don't return yet, since simulating an external input only add events to the queue
     // we exit the loop only after mEcet.triggerNextEvent() is executed

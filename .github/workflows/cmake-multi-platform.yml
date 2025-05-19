@@ -95,6 +95,7 @@ jobs:
         -DFORTE_C_INTERFACE=ON
         -DFORTE_TESTS=ON
         -DFORTE_TEST_SANITIZE=ON
+        -DFORTE_TRACE_CTF=ON
         ${{ matrix.os == 'windows-latest' && format('-DFORTE_TESTS_INC_DIRS={0}/boost.1.84.0/lib/native/include', github.workspace) || '' }}
 
     - name: Build

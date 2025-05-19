@@ -16,6 +16,7 @@
  *******************************************************************************/
 
 #include "basefb.h"
+#include "resource.h"
 
 TPortId SInternalVarsInformation::getVarId(CStringDictionary::TStringId paInternalName) const {
   for (TPortId i = 0; i < mNumIntVars; ++i) {
@@ -103,7 +104,7 @@ size_t CBaseFB::getToStringBufferSize() const {
 }
 
 #ifdef FORTE_TRACE_CTF
-void CBasicFB::traceInstanceData() {
+void CBaseFB::traceInstanceData() {
   std::vector<std::string> inputs(getFBInterfaceSpec().mNumDIs);
   std::vector<std::string> outputs(getFBInterfaceSpec().mNumDOs);
   std::vector<std::string> internals(cmVarInternals ? cmVarInternals->mNumIntVars : 0);
@@ -147,10 +148,12 @@ void CBasicFB::traceInstanceData() {
     ++i;
   }
 
-  getResource()->getTracer().traceInstanceData(
-      getFBTypeName() ?: "null", getFullQualifiedApplicationInstanceName('.').c_str() ?: "null",
-      static_cast<uint32_t>(inputs.size()), inputs_c_str.data(), static_cast<uint32_t>(outputs.size()),
-      outputs_c_str.data(), static_cast<uint32_t>(internals.size()), internals_c_str.data(),
-      static_cast<uint32_t>(internalFbs.size()), internalFbs_c_str.data());
+  auto typeName = getFBTypeName();
+  auto fullName = getFullQualifiedApplicationInstanceName('.').c_str();
+  getResource()->getTracer().traceInstanceData(typeName ? typeName : "null", fullName ? fullName : "null",
+                                               static_cast<uint32_t>(inputs.size()), inputs_c_str.data(),
+                                               static_cast<uint32_t>(outputs.size()), outputs_c_str.data(),
+                                               static_cast<uint32_t>(internals.size()), internals_c_str.data(),
+                                               static_cast<uint32_t>(internalFbs.size()), internalFbs_c_str.data());
 }
 #endif

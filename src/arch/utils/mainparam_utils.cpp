@@ -108,7 +108,7 @@ const char *parseCommandLineArguments(int argc, char *arg[]) {
 #ifdef FORTE_TRACE_CTF
           case 't':
             void barectfSetup(std::string directory);
-            barectfSetup(arg[i + 1] ?: "");
+            barectfSetup((i + 1) < static_cast<size_t>(argc) ? arg[i + 1] : "");
             break;
 #endif // FORTE_TRACE_CTF
           default: //! Unknown parameter or -h -> Lists the help for FORTE
