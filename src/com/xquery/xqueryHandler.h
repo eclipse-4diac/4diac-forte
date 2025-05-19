@@ -1,12 +1,12 @@
 /*********************************************************************
-* Copyright (c) 2017, 2025 fortiss GmbH, Monika Wenger
-*
-* This program and the accompanying materials are made
-* available under the terms of the Eclipse Public License 2.0
-* which is available at https://www.eclipse.org/legal/epl-2.0/
-*
-* SPDX-License-Identifier: EPL-2.0
-**********************************************************************/
+ * Copyright (c) 2017, 2025 fortiss GmbH, Monika Wenger
+ *
+ * This program and the accompanying materials are made
+ * available under the terms of the Eclipse Public License 2.0
+ * which is available at https://www.eclipse.org/legal/epl-2.0/
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ **********************************************************************/
 
 #ifndef XQUERY_XQUERYHANDLER_H_
 #define XQUERY_XQUERYHANDLER_H_
@@ -19,7 +19,7 @@
 #include <vector>
 
 // cppcheck-suppress noConstructor
-class CXqueryHandler : public CExternalEventHandler, private CThread{
+class CXqueryHandler : public CExternalEventHandler, private CThread {
   DECLARE_HANDLER(CXqueryHandler)
 
   private:
@@ -37,7 +37,7 @@ class CXqueryHandler : public CExternalEventHandler, private CThread{
     void disableHandler() override;
     void setPriority(int) override;
     int getPriority() const override;
-    int registerLayer(CXqueryClientLayer* paLayer);
+    int registerLayer(CXqueryClientLayer *paLayer);
 
   protected:
     void run() override;
