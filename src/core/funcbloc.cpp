@@ -595,8 +595,7 @@ size_t CFunctionBlock::getToStringBufferSize() const {
 void CFunctionBlock::traceInputEvent(TEventID paEIID) {
   if (auto &tracer = getResource()->getTracer(); tracer.isEnabled()) {
     auto typeName = getFBTypeName();
-    auto fullName = getFullQualifiedApplicationInstanceName('.').c_str();
-    tracer.traceReceiveInputEvent(typeName ? typeName : "null", fullName ? fullName : "null",
+    tracer.traceReceiveInputEvent(typeName ? typeName : "null", getFullQualifiedApplicationInstanceName('.').c_str(),
                                   static_cast<uint64_t>(paEIID));
     traceInstanceData();
   }
@@ -605,12 +604,11 @@ void CFunctionBlock::traceInputEvent(TEventID paEIID) {
 void CFunctionBlock::traceReadData(TPortId paDINum, CIEC_ANY &paValue) {
   if (auto &tracer = getResource()->getTracer(); tracer.isEnabled()) {
     auto typeName = getFBTypeName();
-    auto fullName = getFullQualifiedApplicationInstanceName('.').c_str();
 
     std::string valueString;
     valueString.reserve(paValue.getToStringBufferSize());
     paValue.toString(valueString.data(), valueString.capacity());
-    tracer.traceInputData(typeName ? typeName : "null", fullName ? fullName : "null", static_cast<uint64_t>(paDINum),
+    tracer.traceInputData(typeName ? typeName : "null", getFullQualifiedApplicationInstanceName('.').c_str(), static_cast<uint64_t>(paDINum),
                           valueString.c_str());
   }
 }
@@ -618,12 +616,11 @@ void CFunctionBlock::traceReadData(TPortId paDINum, CIEC_ANY &paValue) {
 void CFunctionBlock::traceWriteData(TPortId paDONum, CIEC_ANY &paValue) {
   if (auto &tracer = getResource()->getTracer(); tracer.isEnabled()) {
     auto typeName = getFBTypeName();
-    auto fullName = getFullQualifiedApplicationInstanceName('.').c_str();
 
     std::string valueString;
     valueString.reserve(paValue.getToStringBufferSize());
     paValue.toString(valueString.data(), valueString.capacity());
-    tracer.traceOutputData(typeName ? typeName : "null", fullName ? fullName : "null", static_cast<uint64_t>(paDONum),
+    tracer.traceOutputData(typeName ? typeName : "null", getFullQualifiedApplicationInstanceName('.').c_str(), static_cast<uint64_t>(paDONum),
                            valueString.c_str());
   }
 }

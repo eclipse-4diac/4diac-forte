@@ -20,9 +20,8 @@ void CFunctionBlock::traceOutputEvent(TEventID paEOID, CEventChainExecutionThrea
       outputs_c_str[i] = valueString.c_str();
     }
     auto typeName = getFBTypeName();
-    auto fullName = getFullQualifiedApplicationInstanceName('.').c_str();
 
-    tracer.traceSendOutputEvent(typeName ? typeName : "null", fullName ? fullName : "null",
+    tracer.traceSendOutputEvent(typeName ? typeName : "null", getFullQualifiedApplicationInstanceName('.').c_str(),
                                 static_cast<uint64_t>(paEOID), paECET->mEventCounter,
                                 static_cast<uint32_t>(outputs.size()), outputs_c_str.data());
   }

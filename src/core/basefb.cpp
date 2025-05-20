@@ -149,11 +149,10 @@ void CBaseFB::traceInstanceData() {
   }
 
   auto typeName = getFBTypeName();
-  auto fullName = getFullQualifiedApplicationInstanceName('.').c_str();
-  getResource()->getTracer().traceInstanceData(typeName ? typeName : "null", fullName ? fullName : "null",
-                                               static_cast<uint32_t>(inputs.size()), inputs_c_str.data(),
-                                               static_cast<uint32_t>(outputs.size()), outputs_c_str.data(),
-                                               static_cast<uint32_t>(internals.size()), internals_c_str.data(),
-                                               static_cast<uint32_t>(internalFbs.size()), internalFbs_c_str.data());
+  getResource()->getTracer().traceInstanceData(
+      typeName ? typeName : "null", getFullQualifiedApplicationInstanceName('.').c_str(),
+      static_cast<uint32_t>(inputs.size()), inputs_c_str.data(), static_cast<uint32_t>(outputs.size()),
+      outputs_c_str.data(), static_cast<uint32_t>(internals.size()), internals_c_str.data(),
+      static_cast<uint32_t>(internalFbs.size()), internalFbs_c_str.data());
 }
 #endif
