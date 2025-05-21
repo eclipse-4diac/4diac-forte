@@ -1,6 +1,7 @@
 /*******************************************************************************
  * Copyright (c) 2005, 2025 Profactor GmbH, TU Wien/ACIN, nxtControl GmbH,
  *                          fortiss GmbH, Primetals Technologies Austria GmbH
+ *                          Martin Erich Jobst
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -16,6 +17,7 @@
  *                           - fixes behavior for getToStringBufferSize
  *                           - changes storage to std::string
  *   Alois Zoitl - migrated data type toString to std::string
+ *   Martin Jobst - fix line feed and newline escape sequences
  *******************************************************************************/
 #include "forte_string.h"
 #include <cstddef>
@@ -76,10 +78,10 @@ int CIEC_STRING::fromString(const char *paValue) {
         char specialSymbol = 0;
         switch (inputString[i + 1]) {
           case '\'': specialSymbol = '\''; break;
+          case 'N': // Newline is an implementation-independent alias for the end of a line
+          case 'n': // FORTE uses LF on all platforms
           case 'L':
-          case 'l': specialSymbol = '\x10'; break;
-          case 'N':
-          case 'n': specialSymbol = '\n'; break;
+          case 'l': specialSymbol = '\n'; break;
           case 'P':
           case 'p': specialSymbol = '\f'; break;
           case 'R':

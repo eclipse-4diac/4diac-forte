@@ -1,5 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2022, 2025 Primetals Technologies Austria GmbH
+ *                          Martin Erich Jobst
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -11,6 +12,7 @@
  *   Martin Melik-Merkumians
  *      - initial implementation and rework communication infrastructure
  *   Alois Zoitl  - migrated data type toString to std::string
+ *   Martin Jobst - fix line feed and newline escape sequences
  *******************************************************************************/
 #include "forte_wchar.h"
 #include <cstdint>
@@ -28,7 +30,7 @@ void CIEC_WCHAR::toString(std::string &paTargetBuf) const {
     case '\0': paTargetBuf += "WCHAR#\"$0000\""s; break;
     case '$': paTargetBuf += "WCHAR#\"$$\""s; break;
     case '"': paTargetBuf += "WCHAR#\"$\"\""s; break;
-    case '\n': paTargetBuf += "WCHAR#\"$n\""s; break;
+    case '\n': paTargetBuf += "WCHAR#\"$l\""s; break;
     case '\f':
       paTargetBuf += "WCHAR#\"$p\""s; // page aka form feed
       break;
@@ -74,15 +76,19 @@ int CIEC_WCHAR::fromString(const char *paValue) {
   if ('$' ==
       paValue[bufferCount]) { // Escape sequence, so the next symbol must either be a hex number or a special symbol
     if ('"' == paValue[bufferCount + 2]) { // if there is only one symbol it will get considered as special symbol
-      const char controlSymbol = static_cast<char>(toupper(static_cast<unsigned char>(paValue[bufferCount + 1])));
-      switch (controlSymbol) {
+      switch (paValue[bufferCount + 1]) {
         case '$': *this = CIEC_WCHAR('$'); break;
         case '"': *this = CIEC_WCHAR('"'); break;
-        case 'L': *this = CIEC_WCHAR('\n'); break;
-        case 'N': *this = CIEC_WCHAR('\n'); break;
-        case 'P': *this = CIEC_WCHAR('\f'); break;
-        case 'R': *this = CIEC_WCHAR('\r'); break;
-        case 'T': *this = CIEC_WCHAR('\t'); break;
+        case 'N': // Newline is an implementation-independent alias for the end of a line
+        case 'n': // FORTE uses LF on all platforms
+        case 'L':
+        case 'l': *this = CIEC_WCHAR('\n'); break;
+        case 'P':
+        case 'p': *this = CIEC_WCHAR('\f'); break;
+        case 'R':
+        case 'r': *this = CIEC_WCHAR('\r'); break;
+        case 'T':
+        case 't': *this = CIEC_WCHAR('\t'); break;
         default: return -1;
       }
       return bufferCount + 3; // $ + control symbol + '

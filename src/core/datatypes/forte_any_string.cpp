@@ -1,6 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2011 - 2015 nxtControl GmbH, ACIN, fortiss GmbH
- *               2018 TU Wien/ACIN
+ * Copyright (c) 2011, 2025 nxtControl GmbH, ACIN, fortiss GmbH
+ *                          TU Wien/ACIN, Martin Erich Jobst
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -13,6 +13,7 @@
  *      - initial implementation and rework communication infrastructure
  *    Martin Melik Merkumians
  *      - fixes behavior for getToStringBufferSize
+ *    Martin Jobst - fix line feed and newline escape sequences
  *******************************************************************************/
 #include <fortenew.h>
 #include "forte_any_string.h"
@@ -116,16 +117,13 @@ int CIEC_ANY_STRING::determineEscapedStringLength(const char *paValue, char paDe
 }
 
 bool CIEC_ANY_STRING::handleDollarEscapedChar(const char **paSymbol, bool paWide, TForteUInt16 &paValue) {
-  bool bRetVal = true;
   switch ((*paSymbol)[0]) {
     case '\'':
-    case '\"': paValue = (*paSymbol)[0]; break;
+    case '\"': paValue = static_cast<unsigned char>((*paSymbol)[0]); break;
+    case 'N': // Newline is an implementation-independent alias for the end of a line
+    case 'n': // FORTE uses LF on all platforms
     case 'L':
-    case 'l':
-      paValue = 0x10; // ASCI 0x10 is the line feed character
-      break;
-    case 'N':
-    case 'n': paValue = '\n'; break;
+    case 'l': paValue = '\n'; break;
     case 'P':
     case 'p': paValue = '\f'; break;
     case 'R':
@@ -133,9 +131,9 @@ bool CIEC_ANY_STRING::handleDollarEscapedChar(const char **paSymbol, bool paWide
     case 'T':
     case 't': paValue = '\t'; break;
     case '$': paValue = '$'; break;
-    default: bRetVal = parseEscapedHexNum(paSymbol, paWide, paValue); break;
+    default: return parseEscapedHexNum(paSymbol, paWide, paValue);
   }
-  return bRetVal;
+  return true;
 }
 
 bool CIEC_ANY_STRING::parseEscapedHexNum(const char **paSymbol, bool paWide, TForteUInt16 &paValue) {

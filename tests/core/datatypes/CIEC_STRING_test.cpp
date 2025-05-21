@@ -370,11 +370,11 @@ const CIEC_STRING cTestDollarResult = "$"_STRING;
 const std::string cTestDollarToStringResult = "\'$$\'"s;
 
 const std::string cTestLineFeedLiteral = "\'$L$l\'"s;
-const CIEC_STRING cTestLineFeedResult = "\x10\x10"_STRING;
+const CIEC_STRING cTestLineFeedResult = "\n\n"_STRING;
 const CIEC_STRING cTestLineFeedToStringResult = "\'$l$l\'"_STRING;
 const std::string cTestNewLineLiteral = "\'$N$n\'"s;
 const CIEC_STRING cTestNewLineResult = "\n\n"_STRING;
-const CIEC_STRING cTestNewLineToStringResult = "\'$n$n\'"_STRING;
+const CIEC_STRING cTestNewLineToStringResult = "\'$l$l\'"_STRING;
 const std::string cTestFormFeedLiteral = "\'$P$p\'"s;
 const CIEC_STRING cTestFormFeedResult = "\f\f"_STRING;
 const CIEC_STRING cTestFormFeedToStringResult = "\'$p$p\'"_STRING;
@@ -554,19 +554,11 @@ BOOST_AUTO_TEST_CASE(String_getToStringBufferSize_DoubleQuote) {
 }
 
 BOOST_AUTO_TEST_CASE(String_getToStringBufferSize_LineFeed) {
-  CIEC_STRING testString("\x10"_STRING);
-
-  std::string cStringBuffer;
-  testString.toString(cStringBuffer);
-  BOOST_CHECK_EQUAL("'$l'", cStringBuffer);
-}
-
-BOOST_AUTO_TEST_CASE(String_getToStringBufferSize_NewLine) {
   CIEC_STRING testString("\n"_STRING);
 
   std::string cStringBuffer;
   testString.toString(cStringBuffer);
-  BOOST_CHECK_EQUAL("'$n'", cStringBuffer);
+  BOOST_CHECK_EQUAL("'$l'", cStringBuffer);
 }
 
 BOOST_AUTO_TEST_CASE(String_getToStringBufferSize_FormFeed) {

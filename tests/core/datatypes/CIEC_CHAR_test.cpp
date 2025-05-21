@@ -100,7 +100,7 @@ BOOST_AUTO_TEST_CASE(ToStringSingleQuote_test) {
 BOOST_AUTO_TEST_CASE(ToStringLineFeed_NewLine_test) {
   CIEC_CHAR test('\n');
   std::string toStringBuffer;
-  const char expected[] = "CHAR#'$n'";
+  const char expected[] = "CHAR#'$l'";
   test.toString(toStringBuffer);
   BOOST_CHECK_EQUAL(toStringBuffer, expected);
 }
@@ -177,7 +177,7 @@ BOOST_AUTO_TEST_CASE(FromStringLineFeed_test) {
   CIEC_CHAR test;
   std::string toStringBuffer;
   const char source[] = "CHAR#'$L'";
-  const char expected[] = "CHAR#'$n'";
+  const char expected[] = "CHAR#'$l'";
   BOOST_CHECK_EQUAL(test.fromString(source), sizeof(source) - 1);
   test.toString(toStringBuffer);
   BOOST_CHECK_EQUAL(toStringBuffer, expected);
@@ -186,8 +186,9 @@ BOOST_AUTO_TEST_CASE(FromStringLineFeed_test) {
 BOOST_AUTO_TEST_CASE(FromStringNewLine_test) {
   CIEC_CHAR test;
   std::string toStringBuffer;
-  const char expected[] = "CHAR#'$n'";
-  BOOST_CHECK_EQUAL(test.fromString(expected), sizeof(expected) - 1);
+  const char source[] = "CHAR#'$N'";
+  const char expected[] = "CHAR#'$l'";
+  BOOST_CHECK_EQUAL(test.fromString(source), sizeof(source) - 1);
   test.toString(toStringBuffer);
   BOOST_CHECK_EQUAL(toStringBuffer, expected);
 }
@@ -223,7 +224,7 @@ BOOST_AUTO_TEST_CASE(FromStringCodePoint_test) {
   CIEC_CHAR test;
   std::string toStringBuffer;
   const char source[] = "CHAR#'$0A'";
-  const char expected[] = "CHAR#'$n'";
+  const char expected[] = "CHAR#'$l'";
   BOOST_CHECK_EQUAL(test.fromString(source), sizeof(source) - 1);
   test.toString(toStringBuffer);
   BOOST_CHECK_EQUAL(toStringBuffer, expected);

@@ -102,7 +102,7 @@ BOOST_AUTO_TEST_CASE(ToStringSingleQuote_test) {
 BOOST_AUTO_TEST_CASE(ToStringLineFeed_NewLine_test) {
   CIEC_WCHAR test('\n');
   std::string toStringBuffer;
-  const char expected[] = "WCHAR#\"$n\"";
+  const char expected[] = "WCHAR#\"$l\"";
   test.toString(toStringBuffer);
   BOOST_CHECK_EQUAL(toStringBuffer, expected);
 }
@@ -171,7 +171,7 @@ BOOST_AUTO_TEST_CASE(FromStringLineFeed_test) {
   CIEC_WCHAR test;
   std::string toStringBuffer;
   const char source[] = "WCHAR#\"$L\"";
-  const char expected[] = "WCHAR#\"$n\"";
+  const char expected[] = "WCHAR#\"$l\"";
   BOOST_CHECK_EQUAL(test.fromString(source), sizeof(source) - 1);
   test.toString(toStringBuffer);
   BOOST_CHECK_EQUAL(toStringBuffer, expected);
@@ -180,8 +180,9 @@ BOOST_AUTO_TEST_CASE(FromStringLineFeed_test) {
 BOOST_AUTO_TEST_CASE(FromStringNewLine_test) {
   CIEC_WCHAR test;
   std::string toStringBuffer;
-  const char expected[] = "WCHAR#\"$n\"";
-  BOOST_CHECK_EQUAL(test.fromString(expected), sizeof(expected) - 1);
+  const char source[] = "WCHAR#\"$N\"";
+  const char expected[] = "WCHAR#\"$l\"";
+  BOOST_CHECK_EQUAL(test.fromString(source), sizeof(source) - 1);
   test.toString(toStringBuffer);
   BOOST_CHECK_EQUAL(toStringBuffer, expected);
 }
@@ -217,7 +218,7 @@ BOOST_AUTO_TEST_CASE(FromStringCodePoint_test) {
   CIEC_WCHAR test;
   std::string toStringBuffer;
   const char source[] = "WCHAR#\"$000A\"";
-  const char expected[] = "WCHAR#\"$n\"";
+  const char expected[] = "WCHAR#\"$l\"";
   BOOST_CHECK_EQUAL(test.fromString(source), sizeof(source) - 1);
   test.toString(toStringBuffer);
   BOOST_CHECK_EQUAL(toStringBuffer, expected);

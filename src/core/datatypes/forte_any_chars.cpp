@@ -1,5 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2025 Primetals Technologies Austria GmbH
+ * Copyright (c) 2025 Primetals Technologies Austria GmbH,
+ *                    Martin Erich Jobst
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -9,6 +10,7 @@
  *
  * Contributors:
  *   Alois Zoitl - extracted and reimplemnted from forte_any_string
+ *   Martin Jobst - fix line feed and newline escape sequences
  *******************************************************************************/
 #include <format>
 #include "forte_any_chars.h"
@@ -19,9 +21,8 @@ void CIEC_ANY_CHARS::dollarEscapeChar(std::string &paTargetBuf, char paSymbol, c
   switch (paSymbol) {
     case '$': paTargetBuf += "$$"s; break;
     case '\'': paTargetBuf += (paTypeID == CIEC_ANY::e_STRING) ? "$'"s : "'"s; break;
-    case '\n': paTargetBuf += "$n"s; break;
+    case '\n': paTargetBuf += "$l"s; break;
     case '\f': paTargetBuf += "$p"s; break;
-    case 0x10: paTargetBuf += "$l"s; break;
     case '\r': paTargetBuf += "$r"s; break;
     case '\t': paTargetBuf += "$t"s; break;
     case '\"': paTargetBuf += (paTypeID == CIEC_ANY::e_WSTRING) ? "$\"" : "\""s; break;
