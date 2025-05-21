@@ -478,7 +478,7 @@ class CFunctionBlock : public forte::core::CFBContainer {
       }
 #endif // FORTE_SUPPORT_MONITORING
 #ifdef FORTE_TRACE_CTF
-      traceWriteData(paAbsDataPortNum, paValue);
+      traceWriteData(paAbsDataPortNum - mInterfaceSpec.mNumDIs, paValue);
 #endif // FORTE_TRACE_CTF
     }
 
