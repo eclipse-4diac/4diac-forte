@@ -111,7 +111,10 @@ class CFunctionBlock : public forte::core::CFBContainer {
     /*!\brief Returns the type name of this FB instance
      */
     const char *getFBTypeName() const {
-      return CStringDictionary::get(getFBTypeId());
+      if (auto type = CStringDictionary::get(getFBTypeId()); type != nullptr) {
+        return type;
+      }
+      return "";
     }
 
     CEventConnection *getEOConnection(CStringDictionary::TStringId paEONameId);

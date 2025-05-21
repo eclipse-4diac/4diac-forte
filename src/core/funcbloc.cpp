@@ -516,8 +516,7 @@ void CFunctionBlock::toString(std::string &paTargetBuf) const {
 #ifdef FORTE_TRACE_CTF
 void CFunctionBlock::traceInputEvent(TEventID paEIID) {
   if (auto &tracer = getResource()->getTracer(); tracer.isEnabled()) {
-    auto typeName = getFBTypeName();
-    tracer.traceReceiveInputEvent(typeName ? typeName : "null", getFullQualifiedApplicationInstanceName('.').c_str(),
+    tracer.traceReceiveInputEvent(getFBTypeName(), getFullQualifiedApplicationInstanceName('.').c_str(),
                                   static_cast<uint64_t>(paEIID));
     traceInstanceData();
   }
@@ -525,22 +524,20 @@ void CFunctionBlock::traceInputEvent(TEventID paEIID) {
 
 void CFunctionBlock::traceReadData(TPortId paDINum, CIEC_ANY &paValue) {
   if (auto &tracer = getResource()->getTracer(); tracer.isEnabled()) {
-    auto typeName = getFBTypeName();
 
     std::string valueString;
     paValue.toString(valueString);
-    tracer.traceInputData(typeName ? typeName : "null", getFullQualifiedApplicationInstanceName('.').c_str(),
+    tracer.traceInputData(getFBTypeName(), getFullQualifiedApplicationInstanceName('.').c_str(),
                           static_cast<uint64_t>(paDINum), valueString.c_str());
   }
 }
 
 void CFunctionBlock::traceWriteData(TPortId paDONum, CIEC_ANY &paValue) {
   if (auto &tracer = getResource()->getTracer(); tracer.isEnabled()) {
-    auto typeName = getFBTypeName();
 
     std::string valueString;
     paValue.toString(valueString);
-    tracer.traceOutputData(typeName ? typeName : "null", getFullQualifiedApplicationInstanceName('.').c_str(),
+    tracer.traceOutputData(getFBTypeName(), getFullQualifiedApplicationInstanceName('.').c_str(),
                            static_cast<uint64_t>(paDONum), valueString.c_str());
   }
 }
