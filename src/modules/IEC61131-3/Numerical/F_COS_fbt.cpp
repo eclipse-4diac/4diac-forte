@@ -139,6 +139,6 @@ CDataConnection *FORTE_F_COS::getDOConUnchecked(TPortId paIndex) {
 }
 
 void FORTE_F_COS::setInitialValues() {
-  var_IN = CIEC_ANY_REAL_VARIANT();
-  var_OUT = CIEC_ANY_REAL_VARIANT();
+  var_IN.reset();
+  var_OUT.reset();
 }

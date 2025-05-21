@@ -22,6 +22,7 @@ USE_STRING_ID(OPCUA_Namespace);
 #include "opcua_local_handler.h"
 #include "core/util/parameterParser.h"
 #include <sstream>
+#include "string_utils.h"
 
 using namespace forte::com_infra;
 

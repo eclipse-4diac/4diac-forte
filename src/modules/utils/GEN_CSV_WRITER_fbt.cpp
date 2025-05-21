@@ -17,6 +17,7 @@
  *   Alois Zoitl  - migrated data type toString to std::string
  *******************************************************************************/
 #include "GEN_CSV_WRITER_fbt.h"
+#include "string_utils.h"
 
 USE_STRING_ID(BOOL);
 USE_STRING_ID(CNF);

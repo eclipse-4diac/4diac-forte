@@ -20,14 +20,14 @@
 #include "forte_string.h"
 #include <cstddef>
 #include "datatype.h"
-
-USE_STRING_ID(STRING);
-
 #include <devlog.h>
 #include "unicode_utils.h"
 #include <string_view>
 #include <charconv>
 #include "../../arch/forte_fileio.h"
+#include "string_utils.h"
+
+USE_STRING_ID(STRING);
 
 using namespace std::string_literals;
 

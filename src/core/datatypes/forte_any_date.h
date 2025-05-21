@@ -25,6 +25,10 @@ class CIEC_ANY_DATE : public CIEC_ANY_ELEMENTARY {
 
     ~CIEC_ANY_DATE() override = default;
 
+    void reset() override {
+      setTUINT64(0);
+    }
+
     /*! Retrieve the current timezone
      *
      * Can be sed to adjust mktime()-related values

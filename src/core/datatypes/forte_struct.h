@@ -33,7 +33,7 @@ class CIEC_STRUCT : public CIEC_ANY_DERIVED {
 
   public:
     //! Indicator for invalid array member index positions
-    static constexpr size_t csmNIndex = -1;
+    static constexpr size_t csmNIndex = static_cast<size_t>(-1);
 
     CIEC_STRUCT() = default;
 
@@ -79,7 +79,9 @@ class CIEC_STRUCT : public CIEC_ANY_DERIVED {
 
     void setValue(const CIEC_ANY &paValue) override;
 
-    EDataTypeID getDataTypeID() const override final {
+    void reset() override;
+
+    EDataTypeID getDataTypeID() const final {
       return CIEC_ANY::e_STRUCT;
     }
 

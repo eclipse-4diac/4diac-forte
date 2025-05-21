@@ -20,8 +20,6 @@
 #include "forte_array_common.h"
 #include <array>
 #include <algorithm>
-#include "devlog.h"
-
 #include "forte_ulint.h"
 
 template<typename T>
@@ -114,6 +112,12 @@ class CIEC_ARRAY_FIXED : public CIEC_ARRAY_COMMON<T> {
              std::enable_if_t<std::is_assignable_v<T &, const U &>, bool> = true>
     CIEC_ARRAY_FIXED(const CIEC_ARRAY_FIXED<U, sourceLowerBound, sourceUpperBound> &paSource) {
       assign(paSource, sourceLowerBound, sourceUpperBound);
+    }
+
+    void reset() override {
+      for (iterator it = begin(); it != end(); ++it) {
+        it->reset();
+      }
     }
 
     /**
@@ -270,7 +274,7 @@ class CIEC_ARRAY_FIXED : public CIEC_ARRAY_COMMON<T> {
       return nRetVal;
     }
 
-    ~CIEC_ARRAY_FIXED() = default;
+    ~CIEC_ARRAY_FIXED() override = default;
 
   private:
     template<typename U>

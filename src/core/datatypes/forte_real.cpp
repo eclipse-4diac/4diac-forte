@@ -21,12 +21,13 @@
 #include <cstdio>
 #include <format>
 #include "forte_real.h"
-
-USE_STRING_ID(REAL);
-
 #include "forte_lreal.h"
 #include "forte_lint.h"
 #include "forte_ulint.h"
+#include "forte_string.h"
+#include "forte_wstring.h"
+
+USE_STRING_ID(REAL);
 
 DEFINE_FIRMWARE_DATATYPE(REAL, STRID(REAL))
 

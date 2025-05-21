@@ -19,6 +19,7 @@
  *******************************************************************************/
 #include "forte_ltime.h"
 #include "forte_constants.h"
+#include "string_utils.h"
 
 USE_STRING_ID(LTIME);
 

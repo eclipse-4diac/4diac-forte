@@ -24,8 +24,6 @@
 
 #include "forte_any_real.h"
 
-#include "forte_string.h"
-#include "forte_wstring.h"
 #include "forte_int.h"
 #include "forte_sint.h"
 #include "forte_uint.h"
@@ -112,6 +110,10 @@ class CIEC_REAL final : public CIEC_ANY_REAL {
     }
 
     void setValue(const CIEC_ANY &paValue) override;
+
+    void reset() override {
+      setTFLOAT(0.0f);
+    }
 
     EDataTypeID getDataTypeID() const override {
       return CIEC_ANY::e_REAL;

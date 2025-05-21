@@ -31,6 +31,7 @@
 #include "adapter.h"
 #include "adapterconn.h"
 #include "device.h"
+#include "string_utils.h"
 
 using namespace std::string_literals;
 

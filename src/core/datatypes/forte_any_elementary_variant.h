@@ -14,12 +14,9 @@
  *******************************************************************************/
 #pragma once
 
-#include <memory>
 #include <variant>
 
 #include "forte_any.h"
-#include "forte_any_unique_ptr.h"
-#include "forte_array_common.h"
 #include "forte_bool.h"
 #include "forte_byte.h"
 #include "forte_char.h"
@@ -38,7 +35,6 @@
 #include "forte_real.h"
 #include "forte_sint.h"
 #include "forte_string.h"
-#include "forte_struct.h"
 #include "forte_time.h"
 #include "forte_time_of_day.h"
 #include "forte_udint.h"
@@ -119,6 +115,10 @@ class CIEC_ANY_ELEMENTARY_VARIANT : public CIEC_ANY_ELEMENTARY, public TIecAnyEl
     }
 
     void setValue(const CIEC_ANY &paValue) override;
+
+    void reset() override {
+      unwrap().reset();
+    }
 
     bool setDefaultValue(CIEC_ANY::EDataTypeID paDataTypeId);
 

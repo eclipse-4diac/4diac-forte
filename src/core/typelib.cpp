@@ -20,6 +20,7 @@
 #include "adapterconn.h"
 #include "adapter.h"
 #include <stddef.h>
+#include "string_utils.h"
 
 USE_STRING_ID(ARRAY);
 

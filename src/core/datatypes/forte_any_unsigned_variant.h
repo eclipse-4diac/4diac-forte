@@ -14,15 +14,10 @@
  *******************************************************************************/
 #pragma once
 
-#include <memory>
 #include <variant>
 
 #include "forte_any.h"
 #include "forte_any_unsigned.h"
-#include "forte_dint.h"
-#include "forte_int.h"
-#include "forte_lint.h"
-#include "forte_sint.h"
 #include "forte_udint.h"
 #include "forte_uint.h"
 #include "forte_ulint.h"
@@ -67,6 +62,10 @@ class CIEC_ANY_UNSIGNED_VARIANT : public CIEC_ANY_UNSIGNED, public TIecAnyUnsign
     }
 
     void setValue(const CIEC_ANY &paValue) override;
+
+    void reset() override {
+      unwrap().reset();
+    }
 
     bool setDefaultValue(CIEC_ANY::EDataTypeID paDataTypeId);
 

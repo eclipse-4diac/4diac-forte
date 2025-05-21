@@ -72,7 +72,7 @@ FORTE_F_ANY_AS_STRING::FORTE_F_ANY_AS_STRING(const CStringDictionary::TStringId 
 }
 
 void FORTE_F_ANY_AS_STRING::setInitialValues() {
-  var_IN = CIEC_ANY_VARIANT();
+  var_IN.reset();
   var_OUT = ""_STRING;
 }
 

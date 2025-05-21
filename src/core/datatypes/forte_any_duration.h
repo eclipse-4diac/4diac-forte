@@ -104,6 +104,10 @@ class CIEC_ANY_DURATION : public CIEC_ANY_MAGNITUDE {
 
     ~CIEC_ANY_DURATION() override = default;
 
+    void reset() override {
+      setLargestInt(0);
+    }
+
     EDataTypeID getDataTypeID() const override {
       return CIEC_ANY::e_ANY;
     }

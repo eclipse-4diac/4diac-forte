@@ -14,7 +14,6 @@
  *******************************************************************************/
 #pragma once
 
-#include <memory>
 #include <variant>
 
 #include "forte_any.h"
@@ -56,6 +55,10 @@ class CIEC_ANY_DURATION_VARIANT : public CIEC_ANY_DURATION, public TIecAnyDurati
     }
 
     void setValue(const CIEC_ANY &paValue) override;
+
+    void reset() override {
+      unwrap().reset();
+    }
 
     bool setDefaultValue(CIEC_ANY::EDataTypeID paDataTypeId);
 

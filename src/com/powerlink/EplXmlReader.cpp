@@ -17,11 +17,11 @@
 #include <iostream>
 #include <fstream>
 #include <string.h>
-
 #include "devlog.h"
-using namespace std;
-
+#include "string_utils.h"
 #include <tinyxml.h>
+
+using namespace std;
 
 CEplXmlReader::CEplXmlReader(CProcessImageMatrix *paIn, CProcessImageMatrix *paOut) {
   mProcImageIn = paIn;

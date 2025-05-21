@@ -22,7 +22,7 @@
 #define _FORTE_LTOD_H_
 
 #include "forte_any_date.h"
-#include <forte_architecture_time.h>
+#include "forte_architecture_time.h"
 
 #include "forte_time_of_day.h"
 

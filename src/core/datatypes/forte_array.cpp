@@ -25,10 +25,9 @@
  *******************************************************************************/
 
 #include "forte_array.h"
+#include "forte_ulint.h"
 
 USE_STRING_ID(ARRAY);
-
-#include "forte_ulint.h"
 
 CStringDictionary::TStringId CIEC_ARRAY::getTypeNameID() const {
   return STRID(ARRAY);
@@ -37,6 +36,12 @@ CStringDictionary::TStringId CIEC_ARRAY::getTypeNameID() const {
 void CIEC_ARRAY::setValue(const CIEC_ANY &paValue) {
   if (paValue.getDataTypeID() == CIEC_ANY::e_ARRAY) {
     operator=(static_cast<const CIEC_ARRAY &>(paValue));
+  }
+}
+
+void CIEC_ARRAY::reset() {
+  for (intmax_t i = getLowerBound(), end = getUpperBound(); i <= end; ++i) {
+    operator[](i).reset();
   }
 }
 

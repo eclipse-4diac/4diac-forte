@@ -155,7 +155,7 @@ CDataConnection *FORTE_F_SHL::getDOConUnchecked(TPortId paIndex) {
 }
 
 void FORTE_F_SHL::setInitialValues() {
-  var_IN = CIEC_ANY_BIT_VARIANT();
-  var_N = CIEC_ANY_INT_VARIANT();
-  var_OUT = CIEC_ANY_BIT_VARIANT();
+  var_IN.reset();
+  var_N.reset();
+  var_OUT.reset();
 }

@@ -39,7 +39,7 @@ CIEC_ANY *CIEC_STRUCT::getMemberNamed(const char *paMemberName) {
 
 size_t CIEC_STRUCT::getMemberIndex(CStringDictionary::TStringId paMemberNameId) {
   const CStringDictionary::TStringId *punMemberNameIds = elementNames();
-  for (size_t i = 0; i < getStructSize(); ++i) {
+  for (size_t i = 0, structSize = getStructSize(); i < structSize; ++i) {
     if (punMemberNameIds[i] == paMemberNameId) {
       return i;
     }
@@ -51,11 +51,16 @@ void CIEC_STRUCT::setValue(const CIEC_ANY &paValue) {
   if (paValue.getDataTypeID() == e_STRUCT) {
     auto &otherStruct = static_cast<const CIEC_STRUCT &>(paValue);
     if (getStructTypeNameID() == otherStruct.getStructTypeNameID()) {
-      size_t structSize = getStructSize();
-      for (size_t i = 0; i < structSize; ++i) {
+      for (size_t i = 0, structSize = getStructSize(); i < structSize; ++i) {
         getMember(i)->setValue(*otherStruct.getMember(i));
       }
     }
+  }
+}
+
+void CIEC_STRUCT::reset() {
+  for (size_t i = 0, structSize = getStructSize(); i < structSize; ++i) {
+    getMember(i)->reset();
   }
 }
 
@@ -144,7 +149,7 @@ bool CIEC_STRUCT::equals(const CIEC_ANY &paOther) const {
   if (paOther.getDataTypeID() == CIEC_ANY::e_STRUCT) {
     auto &otherStruct = static_cast<const CIEC_STRUCT &>(paOther);
     if (getStructTypeNameID() == otherStruct.getStructTypeNameID()) {
-      for (size_t i = 0; i < getStructSize(); ++i) {
+      for (size_t i = 0, structSize = getStructSize(); i < structSize; ++i) {
         if (!getMember(i)->equals(*otherStruct.getMember(i))) {
           return false;
         }

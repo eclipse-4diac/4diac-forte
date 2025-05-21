@@ -18,11 +18,11 @@
  *******************************************************************************/
 #include "forte_time.h"
 #include <string_view>
-
-USE_STRING_ID(TIME);
-
 #include "../../arch/timerha.h"
 #include "forte_constants.h"
+#include "string_utils.h"
+
+USE_STRING_ID(TIME);
 
 using namespace std::literals::string_literals;
 

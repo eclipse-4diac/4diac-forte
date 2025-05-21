@@ -104,6 +104,18 @@ CFBTestFixtureBase::~CFBTestFixtureBase() {
   getGenInterfaceSpec() = {};
 }
 
+namespace {
+  void checkVars(CIEC_ANY &paTestVar, CIEC_ANY &paFreshVar) {
+    if (paFreshVar.getDataTypeID() == CIEC_ANY::e_ANY) {
+      if (auto tempVar = std::unique_ptr<CIEC_ANY>(paTestVar.unwrap().clone(nullptr))) {
+        tempVar->reset(); // reset the CIEC_ANY not the unique_ptr
+        paFreshVar.setValue(*tempVar);
+      }
+    }
+    BOOST_TEST(paTestVar.equals(paFreshVar));
+  }
+} // namespace
+
 void CFBTestFixtureBase::performFBResetTests() {
   const SFBInterfaceSpec &interfaceSpec(mFBUnderTest->getFBInterfaceSpec());
 
@@ -118,10 +130,11 @@ void CFBTestFixtureBase::performFBResetTests() {
   }
 
   for (size_t i = 0; i < interfaceSpec.mNumDIs; ++i) {
-    BOOST_TEST(mFBUnderTest->getDI(i)->equals(*freshInstance->getDI(i)));
+    checkVars(*mFBUnderTest->getDI(i), *freshInstance->getDI(i));
   }
+
   for (size_t i = 0; i < interfaceSpec.mNumDOs; ++i) {
-    BOOST_TEST(mFBUnderTest->getDO(i)->equals(*freshInstance->getDO(i)));
+    checkVars(*mFBUnderTest->getDO(i), *freshInstance->getDO(i));
   }
 
   BOOST_CHECK(CTypeLib::deleteFB(freshInstance));

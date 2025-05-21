@@ -76,10 +76,10 @@ FORTE_F_SEL_E_3::FORTE_F_SEL_E_3(const CStringDictionary::TStringId paInstanceNa
     conn_OUT(*this, 0, var_OUT) {};
 
 void FORTE_F_SEL_E_3::setInitialValues() {
-  var_IN0 = CIEC_ANY_VARIANT();
-  var_IN1 = CIEC_ANY_VARIANT();
-  var_IN2 = CIEC_ANY_VARIANT();
-  var_OUT = CIEC_ANY_VARIANT();
+  var_IN0.reset();
+  var_IN1.reset();
+  var_IN2.reset();
+  var_OUT.reset();
 }
 
 void FORTE_F_SEL_E_3::executeEvent(const TEventID paEIID, CEventChainExecutionThread *const paECET) {

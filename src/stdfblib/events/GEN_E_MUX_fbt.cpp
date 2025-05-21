@@ -18,20 +18,13 @@
  *....Franz Höpfinger - Update it to represent latest Generation Format from 4diac IDE. no Functional Changes.
  *******************************************************************************/
 #include "GEN_E_MUX_fbt.h"
+#include "string_utils.h"
 
 USE_STRING_ID(EO);
 USE_STRING_ID(Event);
 USE_STRING_ID(GEN_E_MUX);
 USE_STRING_ID(K);
 USE_STRING_ID(UINT);
-
-#include <stdio.h>
-
-#include "iec61131_functions.h"
-#include "forte_array_common.h"
-#include "forte_array.h"
-#include "forte_array_fixed.h"
-#include "forte_array_variable.h"
 
 DEFINE_GENERIC_FIRMWARE_FB(GEN_E_MUX, STRID(GEN_E_MUX));
 

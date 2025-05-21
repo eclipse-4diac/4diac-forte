@@ -22,7 +22,7 @@
 
 USE_STRING_ID(LDATE);
 
-#include <forte_architecture_time.h>
+#include "forte_architecture_time.h"
 
 DEFINE_FIRMWARE_DATATYPE(LDATE, STRID(LDATE))
 

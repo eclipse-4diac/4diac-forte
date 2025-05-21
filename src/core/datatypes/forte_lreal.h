@@ -148,6 +148,10 @@ class CIEC_LREAL final : public CIEC_ANY_REAL {
 
     void setValue(const CIEC_ANY &paValue) override;
 
+    void reset() override {
+      setTDFLOAT(0.0);
+    }
+
     /*! \brief Converts string value to data type value
      *
      *   This command implements a conversion function from IEC 61131

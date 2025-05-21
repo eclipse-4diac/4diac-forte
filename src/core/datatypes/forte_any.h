@@ -138,6 +138,10 @@ class CIEC_ANY {
       setValueSimple(paValue);
     }
 
+    /*! \brief Reset the value for to the default initial value
+     */
+    virtual void reset() = 0;
+
     /**
      * @brief Unwrap ANY value if inside a container
      * @return The unwrapped value or this value if not in a container

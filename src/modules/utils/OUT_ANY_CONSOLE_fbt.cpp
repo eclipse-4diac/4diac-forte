@@ -164,6 +164,6 @@ CDataConnection *FORTE_OUT_ANY_CONSOLE::getDOConUnchecked(TPortId paIndex) {
 void FORTE_OUT_ANY_CONSOLE::setInitialValues() {
   var_QI = false_BOOL;
   var_LABEL = ""_STRING;
-  var_IN = CIEC_ANY_VARIANT();
+  var_IN.reset();
   var_QO = false_BOOL;
 }

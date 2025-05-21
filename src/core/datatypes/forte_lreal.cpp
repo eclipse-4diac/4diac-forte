@@ -20,12 +20,13 @@
 #include <stdlib.h>
 #include <errno.h>
 #include "forte_lreal.h"
-
-USE_STRING_ID(LREAL);
-
 #include "forte_real.h"
 #include "forte_lint.h"
 #include "forte_ulint.h"
+#include "forte_string.h"
+#include "forte_wstring.h"
+
+USE_STRING_ID(LREAL);
 
 DEFINE_FIRMWARE_DATATYPE(LREAL, STRID(LREAL))
 

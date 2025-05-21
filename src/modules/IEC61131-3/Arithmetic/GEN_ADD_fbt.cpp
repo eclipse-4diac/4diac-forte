@@ -17,6 +17,8 @@
  *******************************************************************************/
 
 #include "GEN_ADD_fbt.h"
+#include "ifSpecBuilder.h"
+#include "string_utils.h"
 
 USE_STRING_ID(ANY_MAGNITUDE);
 USE_STRING_ID(CNF);
@@ -24,11 +26,6 @@ USE_STRING_ID(Event);
 USE_STRING_ID(GEN_ADD);
 USE_STRING_ID(OUT);
 USE_STRING_ID(REQ);
-
-#include <ctype.h>
-#include <stdio.h>
-#include "ifSpecBuilder.h"
-#include "forte_printer.h"
 
 DEFINE_GENERIC_FIRMWARE_FB(GEN_ADD, STRID(GEN_ADD))
 

@@ -17,6 +17,8 @@
  *     - add generic readInputData and writeOutputData
  *******************************************************************************/
 #include "GEN_ARRAY2VALUES_fbt.h"
+#include "forte_printer.h"
+#include "string_utils.h"
 
 USE_STRING_ID(ARRAY);
 USE_STRING_ID(CNF);
@@ -24,9 +26,6 @@ USE_STRING_ID(Event);
 USE_STRING_ID(GEN_ARRAY2VALUES);
 USE_STRING_ID(IN);
 USE_STRING_ID(REQ);
-
-#include <stdio.h>
-#include "forte_printer.h"
 
 DEFINE_GENERIC_FIRMWARE_FB(GEN_ARRAY2VALUES, STRID(GEN_ARRAY2VALUES))
 

@@ -31,6 +31,10 @@ class CIEC_ANY_CHAR : public CIEC_ANY_CHARS {
       return CIEC_ANY::e_ANY;
     }
 
+    void reset() override {
+      setLargestInt(0);
+    }
+
   protected:
     CIEC_ANY_CHAR() = default;
 };

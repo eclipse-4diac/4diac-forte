@@ -62,7 +62,7 @@ class CIEC_CHAR : public CIEC_ANY_CHAR {
 
     int fromString(const char *paValue) override;
 
-    EDataTypeID getDataTypeID() const override final {
+    EDataTypeID getDataTypeID() const final {
       return CIEC_ANY::e_CHAR;
     }
 };

@@ -16,15 +16,13 @@
  *    Martin Jobst - add generic readInputData and writeOutputData
  *******************************************************************************/
 #include "GEN_E_DEMUX_fbt.h"
+#include "string_utils.h"
 
 USE_STRING_ID(EI);
 USE_STRING_ID(Event);
 USE_STRING_ID(GEN_E_DEMUX);
 USE_STRING_ID(K);
 USE_STRING_ID(UINT);
-
-#include <stdio.h>
-
 
 DEFINE_GENERIC_FIRMWARE_FB(GEN_E_DEMUX, STRID(GEN_E_DEMUX))
 

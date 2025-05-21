@@ -38,6 +38,10 @@ class CIEC_ANY_STRING : public CIEC_ANY_CHARS {
       return *this;
     }
 
+    void reset() override {
+      clear();
+    }
+
     /*! \brief Get-Method for CIEC_ANY_STRING
      *
      *   With this command the value of the actual object can be read.

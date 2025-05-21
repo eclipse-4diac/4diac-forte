@@ -14,7 +14,7 @@
 #include <stdlib.h>
 #include "forte_any_date.h"
 
-#include <forte_architecture_time.h>
+#include "forte_architecture_time.h"
 
 TForteInt32 CIEC_ANY_DATE::smTimeZoneOffset = -1;
 

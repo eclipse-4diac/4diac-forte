@@ -15,6 +15,7 @@
 #include "forte_wchar.h"
 #include <cstdint>
 #include <format>
+#include "string_utils.h"
 
 USE_STRING_ID(WCHAR);
 

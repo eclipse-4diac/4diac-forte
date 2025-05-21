@@ -18,8 +18,6 @@
 #pragma once
 
 #include <stddef.h>
-#include <inttypes.h>
-#include <initializer_list>
 
 #include "forte_any_derived.h"
 #include "forte_any_int.h"
@@ -109,6 +107,8 @@ class CIEC_ARRAY : public CIEC_ANY_DERIVED {
     CStringDictionary::TStringId getTypeNameID() const override;
 
     void setValue(const CIEC_ANY &paValue) override;
+
+    void reset() override;
 
     [[nodiscard]] bool equals(const CIEC_ANY &paOther) const override {
       if (paOther.getDataTypeID() == CIEC_ANY::e_ARRAY) {

@@ -15,6 +15,19 @@
  *   Markus Meingast, Alois Zoitl  - migrated data type toString to std::string
  *******************************************************************************/
 #include "forte_any_elementary.h"
+#include "string_utils.h"
+#include <stdlib.h>
+#include <errno.h>
+#include "forte_sint.h"
+#include "forte_int.h"
+#include "forte_dint.h"
+#include "forte_usint.h"
+#include "forte_uint.h"
+#include "forte_udint.h"
+#include "forte_lint.h"
+#include "forte_ulint.h"
+#include <devlog.h>
+#include <map>
 
 USE_STRING_ID(ANY);
 USE_STRING_ID(BOOL);
@@ -53,54 +66,45 @@ USE_STRING_ID(WCHAR);
 USE_STRING_ID(WORD);
 USE_STRING_ID(WSTRING);
 
-#include <stdlib.h>
-#include <errno.h>
-#include "forte_sint.h"
-#include "forte_int.h"
-#include "forte_dint.h"
-#include "forte_usint.h"
-#include "forte_uint.h"
-#include "forte_udint.h"
-#include "forte_lint.h"
-#include "forte_ulint.h"
-
-const std::map<CStringDictionary::TStringId, CIEC_ANY::EDataTypeID> CIEC_ANY_ELEMENTARY::scm_StringToTypeId = {
-    {STRID(ANY), CIEC_ANY::e_ANY},
-    {STRID(BOOL), CIEC_ANY::e_BOOL},
-    {STRID(SINT), CIEC_ANY::e_SINT},
-    {STRID(INT), CIEC_ANY::e_INT},
-    {STRID(DINT), CIEC_ANY::e_DINT},
-    {STRID(LINT), CIEC_ANY::e_LINT},
-    {STRID(USINT), CIEC_ANY::e_USINT},
-    {STRID(UINT), CIEC_ANY::e_UINT},
-    {STRID(UDINT), CIEC_ANY::e_UDINT},
-    {STRID(ULINT), CIEC_ANY::e_ULINT},
-    {STRID(BYTE), CIEC_ANY::e_BYTE},
-    {STRID(WORD), CIEC_ANY::e_WORD},
-    {STRID(DWORD), CIEC_ANY::e_DWORD},
-    {STRID(LWORD), CIEC_ANY::e_LWORD},
-    {STRID(T), CIEC_ANY::e_TIME},
-    {STRID(TIME), CIEC_ANY::e_TIME},
-    {STRID(D), CIEC_ANY::e_DATE},
-    {STRID(DATE), CIEC_ANY::e_DATE},
-    {STRID(TOD), CIEC_ANY::e_TIME_OF_DAY},
-    {STRID(TIME_OF_DAY), CIEC_ANY::e_TIME_OF_DAY},
-    {STRID(DT), CIEC_ANY::e_DATE_AND_TIME},
-    {STRID(DATE_AND_TIME), CIEC_ANY::e_DATE_AND_TIME},
-    {STRID(LT), CIEC_ANY::e_LTIME},
-    {STRID(LTIME), CIEC_ANY::e_LTIME},
-    {STRID(LD), CIEC_ANY::e_LDATE},
-    {STRID(LDATE), CIEC_ANY::e_LDATE},
-    {STRID(LTOD), CIEC_ANY::e_LTIME_OF_DAY},
-    {STRID(LTIME_OF_DAY), CIEC_ANY::e_LTIME_OF_DAY},
-    {STRID(LDT), CIEC_ANY::e_LDATE_AND_TIME},
-    {STRID(LDATE_AND_TIME), CIEC_ANY::e_LDATE_AND_TIME},
-    {STRID(CHAR), CIEC_ANY::e_CHAR},
-    {STRID(WCHAR), CIEC_ANY::e_WCHAR},
-    {STRID(REAL), CIEC_ANY::e_REAL},
-    {STRID(LREAL), CIEC_ANY::e_LREAL},
-    {STRID(STRING), CIEC_ANY::e_STRING},
-    {STRID(WSTRING), CIEC_ANY::e_WSTRING}};
+namespace {
+  const std::map<CStringDictionary::TStringId, CIEC_ANY::EDataTypeID> scm_StringToTypeId = {
+      {STRID(ANY), CIEC_ANY::e_ANY},
+      {STRID(BOOL), CIEC_ANY::e_BOOL},
+      {STRID(SINT), CIEC_ANY::e_SINT},
+      {STRID(INT), CIEC_ANY::e_INT},
+      {STRID(DINT), CIEC_ANY::e_DINT},
+      {STRID(LINT), CIEC_ANY::e_LINT},
+      {STRID(USINT), CIEC_ANY::e_USINT},
+      {STRID(UINT), CIEC_ANY::e_UINT},
+      {STRID(UDINT), CIEC_ANY::e_UDINT},
+      {STRID(ULINT), CIEC_ANY::e_ULINT},
+      {STRID(BYTE), CIEC_ANY::e_BYTE},
+      {STRID(WORD), CIEC_ANY::e_WORD},
+      {STRID(DWORD), CIEC_ANY::e_DWORD},
+      {STRID(LWORD), CIEC_ANY::e_LWORD},
+      {STRID(T), CIEC_ANY::e_TIME},
+      {STRID(TIME), CIEC_ANY::e_TIME},
+      {STRID(D), CIEC_ANY::e_DATE},
+      {STRID(DATE), CIEC_ANY::e_DATE},
+      {STRID(TOD), CIEC_ANY::e_TIME_OF_DAY},
+      {STRID(TIME_OF_DAY), CIEC_ANY::e_TIME_OF_DAY},
+      {STRID(DT), CIEC_ANY::e_DATE_AND_TIME},
+      {STRID(DATE_AND_TIME), CIEC_ANY::e_DATE_AND_TIME},
+      {STRID(LT), CIEC_ANY::e_LTIME},
+      {STRID(LTIME), CIEC_ANY::e_LTIME},
+      {STRID(LD), CIEC_ANY::e_LDATE},
+      {STRID(LDATE), CIEC_ANY::e_LDATE},
+      {STRID(LTOD), CIEC_ANY::e_LTIME_OF_DAY},
+      {STRID(LTIME_OF_DAY), CIEC_ANY::e_LTIME_OF_DAY},
+      {STRID(LDT), CIEC_ANY::e_LDATE_AND_TIME},
+      {STRID(LDATE_AND_TIME), CIEC_ANY::e_LDATE_AND_TIME},
+      {STRID(CHAR), CIEC_ANY::e_CHAR},
+      {STRID(WCHAR), CIEC_ANY::e_WCHAR},
+      {STRID(REAL), CIEC_ANY::e_REAL},
+      {STRID(LREAL), CIEC_ANY::e_LREAL},
+      {STRID(STRING), CIEC_ANY::e_STRING},
+      {STRID(WSTRING), CIEC_ANY::e_WSTRING}};
+}
 
 void CIEC_ANY_ELEMENTARY::toString(std::string &paTargetBuf) const {
   TLargestUIntValueType divisor = 0;

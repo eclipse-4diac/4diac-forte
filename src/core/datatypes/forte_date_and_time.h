@@ -21,7 +21,6 @@
 #define _FORTE_DATE_AND_TIME_H_
 
 #include "forte_any_date.h"
-#include <forte_architecture_time.h>
 
 /*!\ingroup COREDTS CIEC_DATE_AND_TIME represents the time data types according to IEC 61131.
  */
