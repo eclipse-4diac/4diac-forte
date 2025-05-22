@@ -97,24 +97,21 @@ void CBaseFB::traceInstanceData() {
   for (TPortId i = 0; i < inputs.size(); ++i) {
     CIEC_ANY *value = getDI(i);
     std::string &valueString = inputs[i];
-    valueString.reserve(value->getToStringBufferSize());
-    value->toString(valueString.data(), valueString.capacity());
+    value->toString(valueString);
     inputs_c_str[i] = valueString.c_str();
   }
 
   for (TPortId i = 0; i < outputs.size(); ++i) {
     CIEC_ANY *value = getDO(i);
     std::string &valueString = outputs[i];
-    valueString.reserve(value->getToStringBufferSize());
-    value->toString(valueString.data(), valueString.capacity());
+    value->toString(valueString);
     outputs_c_str[i] = valueString.c_str();
   }
 
   for (TPortId i = 0; i < internals.size(); ++i) {
     CIEC_ANY *value = getVarInternal(i);
     std::string &valueString = internals[i];
-    valueString.reserve(value->getToStringBufferSize());
-    value->toString(valueString.data(), valueString.capacity());
+    value->toString(valueString);
     internals_c_str[i] = valueString.c_str();
   }
 
@@ -122,8 +119,7 @@ void CBaseFB::traceInstanceData() {
   for (auto child : getChildren()) {
     CFunctionBlock &value = static_cast<CFunctionBlock &>(*child);
     std::string &valueString = internalFbs[i];
-    valueString.reserve(value.getToStringBufferSize());
-    value.toString(valueString.data(), valueString.capacity());
+    value.toString(valueString);
     internalFbs_c_str[i] = valueString.c_str();
     ++i;
   }

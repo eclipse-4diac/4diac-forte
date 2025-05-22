@@ -528,10 +528,9 @@ void CFunctionBlock::traceReadData(TPortId paDINum, CIEC_ANY &paValue) {
     auto typeName = getFBTypeName();
 
     std::string valueString;
-    valueString.reserve(paValue.getToStringBufferSize());
-    paValue.toString(valueString.data(), valueString.capacity());
-    tracer.traceInputData(typeName ? typeName : "null", getFullQualifiedApplicationInstanceName('.').c_str(), static_cast<uint64_t>(paDINum),
-                          valueString.c_str());
+    paValue.toString(valueString);
+    tracer.traceInputData(typeName ? typeName : "null", getFullQualifiedApplicationInstanceName('.').c_str(),
+                          static_cast<uint64_t>(paDINum), valueString.c_str());
   }
 }
 
@@ -540,10 +539,9 @@ void CFunctionBlock::traceWriteData(TPortId paDONum, CIEC_ANY &paValue) {
     auto typeName = getFBTypeName();
 
     std::string valueString;
-    valueString.reserve(paValue.getToStringBufferSize());
-    paValue.toString(valueString.data(), valueString.capacity());
-    tracer.traceOutputData(typeName ? typeName : "null", getFullQualifiedApplicationInstanceName('.').c_str(), static_cast<uint64_t>(paDONum),
-                           valueString.c_str());
+    paValue.toString(valueString);
+    tracer.traceOutputData(typeName ? typeName : "null", getFullQualifiedApplicationInstanceName('.').c_str(),
+                           static_cast<uint64_t>(paDONum), valueString.c_str());
   }
 }
 
