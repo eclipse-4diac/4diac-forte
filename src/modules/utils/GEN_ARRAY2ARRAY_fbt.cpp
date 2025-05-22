@@ -16,6 +16,7 @@
  *    Martin Jobst - add generic readInputData and writeOutputData
  *******************************************************************************/
 #include "GEN_ARRAY2ARRAY_fbt.h"
+#include "string_utils.h"
 
 USE_STRING_ID(ARRAY);
 USE_STRING_ID(CNF);
@@ -24,7 +25,6 @@ USE_STRING_ID(GEN_ARRAY2ARRAY);
 USE_STRING_ID(IN);
 USE_STRING_ID(OUT);
 USE_STRING_ID(REQ);
-
 
 DEFINE_GENERIC_FIRMWARE_FB(GEN_ARRAY2ARRAY, STRID(GEN_ARRAY2ARRAY))
 

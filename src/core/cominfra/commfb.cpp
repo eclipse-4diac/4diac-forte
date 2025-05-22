@@ -21,6 +21,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "commfb.h"
+#include "comlayer.h"
+#include "comlayersmanager.h"
+#include "criticalregion.h"
+#include "string_utils.h"
 
 USE_STRING_ID(BOOL);
 USE_STRING_ID(CNF);
@@ -37,11 +41,6 @@ USE_STRING_ID(RSP);
 USE_STRING_ID(STATUS);
 USE_STRING_ID(STRING);
 USE_STRING_ID(WSTRING);
-
-#include "../resource.h"
-#include "comlayer.h"
-#include "comlayersmanager.h"
-#include "criticalregion.h"
 
 using namespace forte::com_infra;
 

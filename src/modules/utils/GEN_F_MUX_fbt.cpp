@@ -16,6 +16,8 @@
  *    Martin Jobst - add generic readInputData and writeOutputData
  *******************************************************************************/
 #include "GEN_F_MUX_fbt.h"
+#include "forte_printer.h"
+#include "string_utils.h"
 
 USE_STRING_ID(ANY);
 USE_STRING_ID(BOOL);
@@ -23,11 +25,6 @@ USE_STRING_ID(EO);
 USE_STRING_ID(Event);
 USE_STRING_ID(GEN_F_MUX);
 USE_STRING_ID(WSTRING);
-
-#include <ctype.h>
-#include <stdio.h>
-
-#include "forte_printer.h"
 
 DEFINE_GENERIC_FIRMWARE_FB(GEN_F_MUX, STRID(GEN_F_MUX));
 

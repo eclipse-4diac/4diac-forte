@@ -1,5 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2005 - 2013 Profactor GmbH, ACIN, fortiss GmbH
+ * Copyright (c) 2005, 2023 Profactor GmbH, ACIN, fortiss GmbH,
+ *                          Primetals Technologies Ausria GmbH
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -8,15 +9,18 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    Thomas Strasser, Ingomar Müller, Alois Zoitl, Rene Smodic,
- *    Gerhard Ebenhofer, Ingo Hegny, Monika Wenger
- *      - initial implementation and rework communication infrastructure
+ *   Thomas Strasser, Ingomar Müller, Alois Zoitl, Rene Smodic,
+ *     Gerhard Ebenhofer, Ingo Hegny, Monika Wenger
+ *               - initial implementation and rework communication infrastructure
+ *   Alois Zoitl - migrated data type toString to std::string
  *******************************************************************************/
 #include "forte_bool.h"
 
 USE_STRING_ID(BOOL);
 
 #include <stdlib.h>
+
+using namespace std::literals::string_literals;
 
 DEFINE_FIRMWARE_DATATYPE(BOOL, STRID(BOOL))
 
@@ -55,19 +59,8 @@ int CIEC_BOOL::fromString(const char *paValue) {
   return nRetVal;
 }
 
-int CIEC_BOOL::toString(char *paValue, size_t paBufferSize) const {
-  int nRetval = -1;
-  if (paBufferSize >= getToStringBufferSize()) {
-    if (getTBOOL8()) {
-      strncpy(paValue, "TRUE", paBufferSize);
-      nRetval = 4;
-    } else {
-      strncpy(paValue, "FALSE", paBufferSize);
-      nRetval = 5;
-    }
-    paValue[paBufferSize - 1] = '\0';
-  }
-  return nRetval;
+void CIEC_BOOL::toString(std::string &paTargetBuf) const {
+  paTargetBuf += getTBOOL8() ? "TRUE"s : "FALSE"s;
 }
 
 const CStringDictionary::TStringId forte::CDataTypeTrait<CIEC_BOOL>::scmDataTypeName = STRID(BOOL);

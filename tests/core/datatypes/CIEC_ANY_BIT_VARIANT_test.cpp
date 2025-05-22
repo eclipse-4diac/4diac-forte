@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2023 Martin Erich Jobst
+ * Copyright (c) 2023, 2025 Martin Erich Jobst, Primetals Technologies Austria GmbH
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -8,7 +8,8 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    Martin Erich Jobst - initial implementation
+ *   Martin Erich Jobst - initial implementation
+ *   Alois Zoitl  - migrated data type toString to std::string
  *******************************************************************************/
 #include <boost/test/unit_test.hpp>
 #include "forte_boost_output_support.h"
@@ -66,12 +67,12 @@ BOOST_AUTO_TEST_CASE(Assignment_test) {
 }
 
 void checkStringConversion(CIEC_ANY_BIT_VARIANT &paValue, const char *paString, CIEC_ANY::EDataTypeID paDataTypeId) {
-  char buf[50];
+  std::string buf;
   BOOST_CHECK_EQUAL(paValue.fromString(paString), strlen(paString));
   BOOST_CHECK_EQUAL(paValue.getDataTypeID(), CIEC_ANY::e_ANY);
   BOOST_CHECK_EQUAL(paValue.unwrap().getDataTypeID(), paDataTypeId);
-  BOOST_CHECK_EQUAL(paValue.toString(buf, sizeof(buf)), strlen(paString));
-  BOOST_CHECK_EQUAL(std::strcmp(paString, buf), 0);
+  paValue.toString(buf);
+  BOOST_CHECK_EQUAL(paString, buf);
 }
 
 BOOST_AUTO_TEST_CASE(String_Conversion_test) {

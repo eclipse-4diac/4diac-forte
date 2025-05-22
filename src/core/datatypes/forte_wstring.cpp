@@ -1,6 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2005 - 2015 Profactor GmbH, ACIN, nxtControl GmbH, fortiss GmbH
- *   2018 TU Wien/ACIN
+ * Copyright (c) 2005, 2025 Profactor GmbH, ACIN, nxtControl GmbH, fortiss GmbH,
+ *                          TU Wien/ACIN, Primetals Technologies Austria GmbH
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -8,10 +9,10 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    Thomas Strasser, Ingomar Müller, Alois Zoitl, Ingo Hegny, Stanislav Meduna
+ *   Thomas Strasser, Ingomar Müller, Alois Zoitl, Ingo Hegny, Stanislav Meduna
  *      - initial implementation and rework communication infrastructure
- *    Martin Melik Merkumians
- *      - fixes behavior for getToStringBufferSize
+ *   Martin Melik Merkumians - fixes behavior for getToStringBufferSize
+ *   Alois Zoitl  - migrated data type toString to std::string
  *******************************************************************************/
 #include "forte_wstring.h"
 
@@ -175,8 +176,8 @@ int CIEC_WSTRING::fromString(const char *paValue) {
   return (-1 == nUTF8Result) ? -1 : (nRetVal + nUTF8Result);
 }
 
-int CIEC_WSTRING::toString(char *paValue, size_t paBufferSize) const {
-  return toUTF8(paValue, paBufferSize, true);
+void CIEC_WSTRING::toString(std::string &paTargetBuf) const {
+  toUTF8(paTargetBuf, true);
 }
 
 int CIEC_WSTRING::fromUTF8(const char *paValue, int paLen, bool paUnescape) {
@@ -259,71 +260,19 @@ int CIEC_WSTRING::fromUTF8(const char *paValue, int paLen, bool paUnescape) {
   return nSrcLen;
 }
 
-int CIEC_WSTRING::toUTF8(char *paBuffer, size_t paBufferSize, bool paEscape) const {
-  if ((TForteUInt32) length() + (paEscape ? 2 : 0) + 1 > paBufferSize) {
-    return -1;
-  }
-
+void CIEC_WSTRING::toUTF8(std::string &paTargetBuf, bool paEscape) const {
   if (!paEscape) {
-    memcpy(paBuffer, getValue(), length() + 1);
-    return length();
+    paTargetBuf.append(getValue(), length());
+    return;
   }
 
-  const char *pRunner;
-  char *pEncRunner = paBuffer;
-  char *pDataEnd = paBuffer + paBufferSize;
+  paTargetBuf += '\"';
 
-  *pEncRunner++ = '\"';
-
-  pRunner = getValue();
-  while (*pRunner) {
-    int nRes =
-        dollarEscapeChar(pEncRunner, *pRunner, static_cast<unsigned int>(pDataEnd - pEncRunner), getDataTypeID());
-
-    if (nRes < 0) {
-      return -1;
-    }
-
-    pEncRunner += nRes;
-    ++pRunner;
+  for (size_t i = 0; i < length(); i++) {
+    dollarEscapeChar(paTargetBuf, getValue()[i], getDataTypeID());
   }
 
-  if (pDataEnd - pEncRunner < 2) {
-    return -1;
-  }
-
-  *pEncRunner++ = '\"';
-  *pEncRunner = '\0';
-
-  return static_cast<int>(pEncRunner - paBuffer);
-}
-
-size_t CIEC_WSTRING::getToStringBufferSize() const {
-  const char *const stringValue = getValue();
-  size_t neededBufferSize = 0;
-  for (size_t i = 0; i < length(); ++i) {
-    if (isprint(static_cast<unsigned char>(stringValue[i])) && '$' != stringValue[i] && '\"' != stringValue[i]) {
-      ++neededBufferSize;
-    } else {
-      switch (stringValue[i]) {
-        case '$':
-        case 0x10: // line feed
-        case '\n':
-        case '\f':
-        case '\r':
-        case '\t':
-        case '\"': neededBufferSize += 2; break;
-        default:
-          // WSTRING are two-byte strings, so we only have to check for two byte UTF-8 symbols
-          if ((stringValue[i] & 0xe0) == 0xc0 && (stringValue[i + 1] & 0xc0) == 0x80) {
-            ++i;
-          }
-          neededBufferSize += 5;
-          break;
-      }
-    }
-  }
-  return neededBufferSize + 2 + 1; // For Quotes and \0
+  paTargetBuf += '\"';
 }
 
 void CIEC_WSTRING::fromCharString(const char *const paValue) {

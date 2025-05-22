@@ -164,8 +164,8 @@ CDataConnection *FORTE_F_MUX_2::getDOConUnchecked(TPortId paIndex) {
 }
 
 void FORTE_F_MUX_2::setInitialValues() {
-  var_K = CIEC_ANY_INT_VARIANT();
-  var_IN1 = CIEC_ANY_VARIANT();
-  var_IN2 = CIEC_ANY_VARIANT();
-  var_OUT = CIEC_ANY_VARIANT();
+  var_K.reset();
+  var_IN1.reset();
+  var_IN2.reset();
+  var_OUT.reset();
 }

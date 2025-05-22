@@ -1,6 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2023 ACIN, nxtControl
- *                          Martin Erich Jobst
+ * Copyright (c) 2011, 2025 ACIN, nxtControl, Martin Erich Jobst,
+ *                          Primetals Technologies Austria GmbH
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -9,8 +9,10 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *   Martin Melik Merkumians, Ingo Hegny, Alois Zoitl, Stanislav Meduna - initial API and implementation and/or initial
- *documentation Martin Jobst - add user-defined literal tests
+ *   Martin Melik Merkumians, Ingo Hegny, Alois Zoitl, Stanislav Meduna
+ *                - initial API and implementation and/or initial documentation
+ *   Martin Jobst - add user-defined literal tests
+ *   Alois Zoitl  - migrated data type toString to std::string
  *******************************************************************************/
 #include <boost/test/unit_test.hpp>
 #include "forte_boost_output_support.h"
@@ -71,9 +73,7 @@ BOOST_AUTO_TEST_CASE(Operator_test) {
 
 BOOST_AUTO_TEST_CASE(Conversion_test) {
   CIEC_DATE_AND_TIME nTest;
-
-  char cBuffer[40];
-  char cBufferFail[2];
+  std::string buffer;
 
   // check cast operator
   nTest = CIEC_DATE_AND_TIME(0);
@@ -90,126 +90,108 @@ BOOST_AUTO_TEST_CASE(Conversion_test) {
   BOOST_CHECK_EQUAL(nTest.operator TForteUInt64(), std::numeric_limits<TForteUInt64>::max());
 
   // check toString and fromString
-  strcpy(cBuffer, "");
 
   nTest = CIEC_DATE_AND_TIME(0);
   BOOST_CHECK_EQUAL(nTest.fromString("1994-06-22-14:23:54.8"), 21);
-  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 40), 26);
-  BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
-  BOOST_TEST(cBuffer == "DT#1994-06-22-14:23:54.800");
-  strcpy(cBuffer, "");
+  nTest.toString(buffer);
+  BOOST_TEST(buffer == "DT#1994-06-22-14:23:54.800");
+  buffer.clear();
 
   nTest = CIEC_DATE_AND_TIME(0);
   BOOST_CHECK_EQUAL(nTest.fromString("1994-06-22-14:23:54"), 19);
-  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 40), 26);
-  BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
-  BOOST_CHECK_EQUAL(strcmp(cBuffer, "DT#1994-06-22-14:23:54.000"), 0);
-  strcpy(cBuffer, "");
+  nTest.toString(buffer);
+  BOOST_CHECK_EQUAL(buffer, "DT#1994-06-22-14:23:54.000");
+  buffer.clear();
 
   nTest = CIEC_DATE_AND_TIME(0);
   BOOST_CHECK_EQUAL(nTest.fromString("1994-06-22-14:23:54.1"), 21);
-  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 40), 26);
-  BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
-  BOOST_CHECK_EQUAL(strcmp(cBuffer, "DT#1994-06-22-14:23:54.100"), 0);
-  strcpy(cBuffer, "");
+  nTest.toString(buffer);
+  BOOST_CHECK_EQUAL(buffer, "DT#1994-06-22-14:23:54.100");
+  buffer.clear();
 
   nTest = CIEC_DATE_AND_TIME(0);
   BOOST_CHECK_EQUAL(nTest.fromString("1994-06-22-14:23:54.10"), 22);
-  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 40), 26);
-  BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
-  BOOST_CHECK_EQUAL(strcmp(cBuffer, "DT#1994-06-22-14:23:54.100"), 0);
-  strcpy(cBuffer, "");
+  nTest.toString(buffer);
+  BOOST_CHECK_EQUAL(buffer, "DT#1994-06-22-14:23:54.100");
+  buffer.clear();
 
   nTest = CIEC_DATE_AND_TIME(0);
   BOOST_CHECK_EQUAL(nTest.fromString("1994-06-22-14:23:54.100"), 23);
-  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 40), 26);
-  BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
-  BOOST_CHECK_EQUAL(strcmp(cBuffer, "DT#1994-06-22-14:23:54.100"), 0);
-  strcpy(cBuffer, "");
+  nTest.toString(buffer);
+  BOOST_CHECK_EQUAL(buffer, "DT#1994-06-22-14:23:54.100");
+  buffer.clear();
 
   nTest = CIEC_DATE_AND_TIME(0);
   BOOST_CHECK_EQUAL(nTest.fromString("1994-06-22-14:23:54.12"), 22);
-  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 40), 26);
-  BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
-  BOOST_CHECK_EQUAL(strcmp(cBuffer, "DT#1994-06-22-14:23:54.120"), 0);
-  strcpy(cBuffer, "");
+  nTest.toString(buffer);
+  BOOST_CHECK_EQUAL(buffer, "DT#1994-06-22-14:23:54.120");
+  buffer.clear();
 
   nTest = CIEC_DATE_AND_TIME(0);
   BOOST_CHECK_EQUAL(nTest.fromString("1994-06-22-14:23:54.120"), 23);
-  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 40), 26);
-  BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
-  BOOST_CHECK_EQUAL(strcmp(cBuffer, "DT#1994-06-22-14:23:54.120"), 0);
-  strcpy(cBuffer, "");
+  nTest.toString(buffer);
+  BOOST_CHECK_EQUAL(buffer, "DT#1994-06-22-14:23:54.120");
+  buffer.clear();
 
   nTest = CIEC_DATE_AND_TIME(0);
   BOOST_CHECK_EQUAL(nTest.fromString("1994-06-22-14:23:54.123"), 23);
-  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 40), 26);
-  BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
-  BOOST_CHECK_EQUAL(strcmp(cBuffer, "DT#1994-06-22-14:23:54.123"), 0);
-  strcpy(cBuffer, "");
+  nTest.toString(buffer);
+  BOOST_CHECK_EQUAL(buffer, "DT#1994-06-22-14:23:54.123");
+  buffer.clear();
 
   nTest = CIEC_DATE_AND_TIME(0);
   BOOST_CHECK_EQUAL(nTest.fromString("DATE_AND_TIME#1994-06-22-14:23:54.8"), 35);
-  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 40), 26);
-  BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
-  BOOST_CHECK_EQUAL(strcmp(cBuffer, "DT#1994-06-22-14:23:54.800"), 0);
-  strcpy(cBuffer, "");
+  nTest.toString(buffer);
+  BOOST_CHECK_EQUAL(buffer, "DT#1994-06-22-14:23:54.800");
+  buffer.clear();
 
   nTest = CIEC_DATE_AND_TIME(0);
   BOOST_CHECK_EQUAL(nTest.fromString("date_and_time#1994-06-22-14:23:54.8"), 35);
-  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 40), 26);
-  BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
-  BOOST_CHECK_EQUAL(strcmp(cBuffer, "DT#1994-06-22-14:23:54.800"), 0);
-  strcpy(cBuffer, "");
+  nTest.toString(buffer);
+  BOOST_CHECK_EQUAL(buffer, "DT#1994-06-22-14:23:54.800");
+  buffer.clear();
 
   nTest = CIEC_DATE_AND_TIME(0);
   BOOST_CHECK_EQUAL(nTest.fromString("DT#1994-06-22-14:23:54.8"), 24);
-  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 40), 26);
-  BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
-  BOOST_CHECK_EQUAL(strcmp(cBuffer, "DT#1994-06-22-14:23:54.800"), 0);
-  strcpy(cBuffer, "");
+  nTest.toString(buffer);
+  BOOST_CHECK_EQUAL(buffer, "DT#1994-06-22-14:23:54.800");
+  buffer.clear();
 
   nTest = CIEC_DATE_AND_TIME(0);
   BOOST_CHECK_EQUAL(nTest.fromString("dt#1994-06-22-14:23:54.8"), 24);
-  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 40), 26);
-  BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
-  BOOST_CHECK_EQUAL(strcmp(cBuffer, "DT#1994-06-22-14:23:54.800"), 0);
-  strcpy(cBuffer, "");
+  nTest.toString(buffer);
+  BOOST_CHECK_EQUAL(buffer, "DT#1994-06-22-14:23:54.800");
+  buffer.clear();
 
   nTest = CIEC_DATE_AND_TIME(0);
   BOOST_CHECK_EQUAL(nTest.fromString("2008-04-03-09:05:23.4"), 21);
-  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 40), 26);
-  BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
-  BOOST_CHECK_EQUAL(strcmp(cBuffer, "DT#2008-04-03-09:05:23.400"), 0);
-  strcpy(cBuffer, "");
+  nTest.toString(buffer);
+  BOOST_CHECK_EQUAL(buffer, "DT#2008-04-03-09:05:23.400");
+  buffer.clear();
 
   nTest = CIEC_DATE_AND_TIME(0);
   BOOST_CHECK_EQUAL(nTest.fromString("DATE_AND_TIME#2008-04-03-09:05:23.4"), 35);
-  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 40), 26);
-  BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
-  BOOST_CHECK_EQUAL(strcmp(cBuffer, "DT#2008-04-03-09:05:23.400"), 0);
-  strcpy(cBuffer, "");
+  nTest.toString(buffer);
+  BOOST_CHECK_EQUAL(buffer, "DT#2008-04-03-09:05:23.400");
+  buffer.clear();
 
   nTest = CIEC_DATE_AND_TIME(0);
   BOOST_CHECK_EQUAL(nTest.fromString("date_and_time#2008-04-03-09:05:23.4"), 35);
-  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 40), 26);
-  BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
-  BOOST_CHECK_EQUAL(strcmp(cBuffer, "DT#2008-04-03-09:05:23.400"), 0);
-  strcpy(cBuffer, "");
+  nTest.toString(buffer);
+  BOOST_CHECK_EQUAL(buffer, "DT#2008-04-03-09:05:23.400");
+  buffer.clear();
   nTest = CIEC_DATE_AND_TIME(0);
 
   BOOST_CHECK_EQUAL(nTest.fromString("DT#2008-04-03-09:05:23.4"), 24);
-  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 40), 26);
-  BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
-  BOOST_CHECK_EQUAL(strcmp(cBuffer, "DT#2008-04-03-09:05:23.400"), 0);
-  strcpy(cBuffer, "");
+  nTest.toString(buffer);
+  BOOST_CHECK_EQUAL(buffer, "DT#2008-04-03-09:05:23.400");
+  buffer.clear();
   nTest = CIEC_DATE_AND_TIME(0);
 
   BOOST_CHECK_EQUAL(nTest.fromString("dt#2008-04-03-09:05:23.4"), 24);
-  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 40), 26);
-  BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
-  BOOST_CHECK_EQUAL(strcmp(cBuffer, "DT#2008-04-03-09:05:23.400"), 0);
-  strcpy(cBuffer, "");
+  nTest.toString(buffer);
+  BOOST_CHECK_EQUAL(buffer, "DT#2008-04-03-09:05:23.400");
+  buffer.clear();
   nTest = CIEC_DATE_AND_TIME(0);
 }
 

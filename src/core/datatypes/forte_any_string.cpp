@@ -1,6 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2011 - 2015 nxtControl GmbH, ACIN, fortiss GmbH
- *               2018 TU Wien/ACIN
+ * Copyright (c) 2011, 2025 nxtControl GmbH, ACIN, fortiss GmbH
+ *                          TU Wien/ACIN, Martin Erich Jobst
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -13,10 +13,12 @@
  *      - initial implementation and rework communication infrastructure
  *    Martin Melik Merkumians
  *      - fixes behavior for getToStringBufferSize
+ *    Martin Jobst - fix line feed and newline escape sequences
  *******************************************************************************/
 #include <fortenew.h>
 #include "forte_any_string.h"
 #include "unicode_utils.h"
+#include "string_utils.h"
 #include <string.h>
 #include <stdlib.h>
 #include <devlog.h>
@@ -116,16 +118,13 @@ int CIEC_ANY_STRING::determineEscapedStringLength(const char *paValue, char paDe
 }
 
 bool CIEC_ANY_STRING::handleDollarEscapedChar(const char **paSymbol, bool paWide, TForteUInt16 &paValue) {
-  bool bRetVal = true;
   switch ((*paSymbol)[0]) {
     case '\'':
-    case '\"': paValue = (*paSymbol)[0]; break;
+    case '\"': paValue = static_cast<unsigned char>((*paSymbol)[0]); break;
+    case 'N': // Newline is an implementation-independent alias for the end of a line
+    case 'n': // FORTE uses LF on all platforms
     case 'L':
-    case 'l':
-      paValue = 0x10; // ASCI 0x10 is the line feed character
-      break;
-    case 'N':
-    case 'n': paValue = '\n'; break;
+    case 'l': paValue = '\n'; break;
     case 'P':
     case 'p': paValue = '\f'; break;
     case 'R':
@@ -133,83 +132,9 @@ bool CIEC_ANY_STRING::handleDollarEscapedChar(const char **paSymbol, bool paWide
     case 'T':
     case 't': paValue = '\t'; break;
     case '$': paValue = '$'; break;
-    default: bRetVal = parseEscapedHexNum(paSymbol, paWide, paValue); break;
+    default: return parseEscapedHexNum(paSymbol, paWide, paValue);
   }
-  return bRetVal;
-}
-
-int CIEC_ANY_STRING::dollarEscapeChar(char *paValue,
-                                      char paSymbol,
-                                      unsigned int paBufferSize,
-                                      const EDataTypeID paTypeID) {
-  unsigned int nUsedBytes = 1;
-  char cVal = paSymbol;
-  switch (paSymbol) {
-    case '$':
-      ++nUsedBytes;
-      cVal = '$';
-      break;
-    case '\'':
-      if (paTypeID == CIEC_ANY::e_STRING) {
-        ++nUsedBytes;
-        cVal = '\'';
-      }
-      break;
-    case 0x10: // line feed
-      ++nUsedBytes;
-      cVal = 'l';
-      break;
-    case '\n':
-      ++nUsedBytes;
-      cVal = 'n';
-      break;
-    case '\f':
-      ++nUsedBytes;
-      cVal = 'p';
-      break;
-    case '\r':
-      ++nUsedBytes;
-      cVal = 'r';
-      break;
-    case '\t':
-      ++nUsedBytes;
-      cVal = 't';
-      break;
-    case '\"':
-      if (paTypeID == CIEC_ANY::e_WSTRING) {
-        ++nUsedBytes;
-        cVal = '\"';
-      }
-      break;
-    default:
-      if (!isprint(static_cast<unsigned char>(paSymbol)) && paTypeID == CIEC_ANY::e_STRING) {
-        nUsedBytes += 2; // '$xx'
-      }
-      break;
-  }
-
-  if (paValue == nullptr) {
-    return nUsedBytes;
-  }
-
-  if (nUsedBytes > paBufferSize) {
-    return -1;
-  }
-
-  if (nUsedBytes == 3) {
-    *paValue = '$';
-    char hex[3];
-    std::snprintf(hex, sizeof(hex), "%02X", paSymbol);
-    *(++paValue) = hex[0];
-    *(++paValue) = hex[1];
-  } else if (nUsedBytes == 2) {
-    *paValue = '$';
-    *(++paValue) = cVal;
-  } else {
-    *paValue = cVal;
-  }
-
-  return nUsedBytes;
+  return true;
 }
 
 bool CIEC_ANY_STRING::parseEscapedHexNum(const char **paSymbol, bool paWide, TForteUInt16 &paValue) {

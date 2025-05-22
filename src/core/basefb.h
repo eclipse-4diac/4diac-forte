@@ -1,6 +1,7 @@
 /*******************************************************************************
  * Copyright (c) 2005, 2025 Profactor GmbH, ACIN, fortiss GmbH,
- *                          Martin Erich Jobst, Johannes Kepler University Linz
+ *                          Martin Erich Jobst, Johannes Kepler University Linz,
+ *                          Primetals Technologies Austria GmbH
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -13,6 +14,7 @@
  *                - initial implementation and rework communication infrastructure
  *   Martin Jobst - account for data type size in FB initialization
  *   Alois Zoitl  - exracted internal variable handling to new CBaseFB
+ *                - migrated data type toString to std::string
  *******************************************************************************/
 
 #pragma once
@@ -37,9 +39,7 @@ class CBaseFB : public CFunctionBlock {
 
     CIEC_ANY *getVar(CStringDictionary::TStringId *paNameList, unsigned int paNameListSize) override;
 
-    int toString(char *paValue, size_t paBufferSize) const override;
-
-    size_t getToStringBufferSize() const override;
+    void toString(std::string &paTargetBuf) const override;
 
 #ifdef FORTE_TRACE_CTF
     void traceInstanceData() override;

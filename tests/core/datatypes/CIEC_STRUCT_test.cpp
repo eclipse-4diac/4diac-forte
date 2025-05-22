@@ -1,6 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2013 fortiss GmbH
- *               2023 Martin Erich Jobst
+ * Copyright (c) 2013, 2025 fortiss GmbH, Martin Erich Jobst,
+ *                          Primetals Technologies Austria GmbH
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -10,6 +11,7 @@
  * Contributors:
  *   Alois Zoitl - initial API and implementation and/or initial documentation
  *   Martin Jobst - add equals tests
+ *   Alois Zoitl  - migrated data type toString to std::string
  *******************************************************************************/
 #include <boost/test/unit_test.hpp>
 #include "forte_boost_output_support.h"
@@ -920,21 +922,13 @@ BOOST_AUTO_TEST_CASE(Struct_fromString_TestStruct3) {
   BOOST_CHECK_EQUAL(stStruct1.fromString(cTestStringNIO5), -1);
 }
 
-void toStringTest_testStruct1(const char *paVal1, bool paVal2, int paVal3, const char *paResult) {
+void toStringTest_testStruct1(const char *paVal1, bool paVal2, int paVal3, const std::string &paResult) {
   CIEC_TestStruct1 stStruct;
-  BOOST_CHECK_EQUAL(stStruct.getToStringBufferSize(), sizeof("(Val1:='',Val2:=FALSE,Val3:=+32767)"));
-  size_t nResultLength = strlen(paResult);
-  char acBuffer[50];
+  std::string acBuffer;
 
-  for (size_t i = (nResultLength + 1); i < 50; i++) {
-    setDataTestStruct1(stStruct, paVal1, paVal2, paVal3);
-    BOOST_CHECK_EQUAL(stStruct.toString(acBuffer, i), nResultLength);
-    BOOST_CHECK_EQUAL(strcmp(acBuffer, paResult), 0);
-    BOOST_CHECK_EQUAL(stStruct.getToStringBufferSize(), sizeof("(Val1:='',Val2:=FALSE,Val3:=+32767)") + strlen(paVal1));
-  }
-  for (size_t i = 0; i <= nResultLength; i++) {
-    BOOST_CHECK_EQUAL(stStruct.toString(acBuffer, i), -1);
-  }
+  setDataTestStruct1(stStruct, paVal1, paVal2, paVal3);
+  stStruct.toString(acBuffer);
+  BOOST_CHECK_EQUAL(acBuffer, paResult);
 }
 
 BOOST_AUTO_TEST_CASE(Struct_toString_TestStruct1) {
@@ -944,23 +938,13 @@ BOOST_AUTO_TEST_CASE(Struct_toString_TestStruct1) {
   toStringTest_testStruct1("", true, 2345, "(Val1:='',Val2:=TRUE,Val3:=2345)");
 }
 
-void toStringTest_testStruct2(float paVal1, int paVal2, bool paVal3, int paVal4, const char *paResult) {
+void toStringTest_testStruct2(float paVal1, int paVal2, bool paVal3, int paVal4, const std::string &paResult) {
   CIEC_TestStruct2 stStruct;
-  BOOST_CHECK_EQUAL(stStruct.getToStringBufferSize(),
-                    sizeof("(Val1:=-1.175494351E-38,Val2:=+32767,Val3:=FALSE,Val4:=+32767)"));
-  size_t nResultLength = strlen(paResult);
-  char acBuffer[60];
+  std::string acBuffer;
 
-  for (size_t i = (nResultLength + 1); i < 60; i++) {
-    setDataTestStruct2(stStruct, paVal1, paVal2, paVal3, paVal4);
-    BOOST_CHECK_EQUAL(stStruct.toString(acBuffer, i), nResultLength);
-    BOOST_CHECK_EQUAL(strcmp(acBuffer, paResult), 0);
-    BOOST_CHECK_EQUAL(stStruct.getToStringBufferSize(),
-                      sizeof("(Val1:=-1.175494351E-38,Val2:=+32767,Val3:=FALSE,Val4:=+32767)"));
-  }
-  for (size_t i = 0; i <= nResultLength; i++) {
-    BOOST_CHECK_EQUAL(stStruct.toString(acBuffer, i), -1);
-  }
+  setDataTestStruct2(stStruct, paVal1, paVal2, paVal3, paVal4);
+  stStruct.toString(acBuffer);
+  BOOST_CHECK_EQUAL(acBuffer, paResult);
 }
 
 BOOST_AUTO_TEST_CASE(Struct_toString_TestStruct2) {
@@ -971,31 +955,22 @@ BOOST_AUTO_TEST_CASE(Struct_toString_TestStruct2) {
   toStringTest_testStruct2(1345.13f, -32767, false, -32768, "(Val1:=1345.13,Val2:=-32767,Val3:=FALSE,Val4:=-32768)");
 }
 
-void toStringTest_testStruct3(const char *paVal11, const char *paVal12, bool paVal2, int paVal3, const char *paResult) {
+void toStringTest_testStruct3(
+    const char *paVal11, const char *paVal12, bool paVal2, int paVal3, const std::string &paResult) {
   CIEC_TestStruct3 stStruct;
-  BOOST_CHECK_EQUAL(stStruct.getToStringBufferSize(), sizeof("(Val1:=['',''],Val2:=FALSE,Val3:=[+32767])"));
-  size_t nResultLength = strlen(paResult);
-  char acBuffer[70];
+  std::string acBuffer;
 
-  for (size_t i = (nResultLength + 1); i < 70; i++) {
-    setDataTestStruct3(stStruct, paVal11, paVal12, paVal2, paVal3);
-    BOOST_CHECK_EQUAL(stStruct.toString(acBuffer, i), nResultLength);
-    BOOST_CHECK_EQUAL(strcmp(acBuffer, paResult), 0);
-    BOOST_CHECK_EQUAL(stStruct.getToStringBufferSize(),
-                      sizeof("(Val1:=['',''],Val2:=FALSE,Val3:=[+32767])") + strlen(paVal11) + strlen(paVal12));
-  }
-  for (size_t i = 0; i <= nResultLength; i++) {
-    BOOST_CHECK_EQUAL(stStruct.toString(acBuffer, i), -1);
-  }
+  setDataTestStruct3(stStruct, paVal11, paVal12, paVal2, paVal3);
+  stStruct.toString(acBuffer);
+  BOOST_CHECK_EQUAL(acBuffer, paResult);
 }
 
 BOOST_AUTO_TEST_CASE(Struct_toString_TestStruct3) {
   CIEC_TestStruct3 stStruct;
   const char *initialString = "(Val1:=['',''],Val2:=TRUE,Val3:=[9])";
-  char acBuffer[70];
-  BOOST_CHECK_EQUAL(stStruct.toString(acBuffer, 70), strlen(initialString));
-  BOOST_CHECK_EQUAL(strcmp(acBuffer, initialString), 0);
-  BOOST_CHECK_EQUAL(stStruct.getToStringBufferSize(), sizeof("(Val1:=['',''],Val2:=FALSE,Val3:=[+32767])"));
+  std::string acBuffer;
+  stStruct.toString(acBuffer);
+  BOOST_CHECK_EQUAL(acBuffer, initialString);
 
   toStringTest_testStruct3("", "", false, 0, "(Val1:=['',''],Val2:=FALSE,Val3:=[0])");
   toStringTest_testStruct3("", "", true, 0, "(Val1:=['',''],Val2:=TRUE,Val3:=[0])");

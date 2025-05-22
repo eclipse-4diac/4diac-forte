@@ -12,31 +12,15 @@
  *      - initial implementation and rework communication infrastructure
  *******************************************************************************/
 #include "forte_any_duration.h"
-#include "../../arch/timerha.h"
-#include <stdio.h>
-#include <cinttypes>
+#include <format>
 
 // change time elements to string
 
-int CIEC_ANY_DURATION::timeElementsToString(
-    int64_t paTimeElement, char *paValue, int paSize, size_t paBufferSize, const char *paUnit) const {
-
-  int size = 0;
-
-  if (paSize < 0) {
-    return -1;
+void CIEC_ANY_DURATION::timeElementsToString(std::string &paTargetBuf,
+                                             int64_t paTimeElement,
+                                             const std::string &paUnit) const {
+  if (paTimeElement != 0) {
+    std::format_to(std::back_inserter(paTargetBuf), "{}", paTimeElement);
+    paTargetBuf += paUnit;
   }
-
-  if (static_cast<size_t>(paSize) > paBufferSize) {
-    return -1;
-  }
-
-  if (0 != paTimeElement) {
-    size = snprintf(paValue + paSize, paBufferSize - paSize, "%" PRId64 "%s", paTimeElement, paUnit);
-    if ((-1 == size) || (size >= static_cast<int>(paBufferSize) - paSize)) {
-      return -1;
-    }
-  }
-
-  return size;
 }

@@ -1,7 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2023 ACIN, fortiss GmbH
- *                          Johannes Kepler University
- *                          Martin Erich Jobst
+ * Copyright (c) 2012, 2025 ACIN, fortiss GmbH, Johannes Kepler University
+ *                          Martin Erich Jobst, Primetals Technologies Austria GmbH
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -11,9 +10,10 @@
  *
  * Contributors:
  *   Alois Zoitl, Monika Wenger
- *   - initial API and implementation and/or initial documentation
- *    Alois Zoitl - introduced new CGenFB class for better handling generic FBs
- *    Martin Jobst - add generic readInputData and writeOutputData
+ *                - initial API and implementation and/or initial documentation
+ *   Alois Zoitl  - introduced new CGenFB class for better handling generic FBs
+ *   Martin Jobst - add generic readInputData and writeOutputData
+ *   Alois Zoitl  - migrated data type toString to std::string
  *******************************************************************************/
 #ifndef _GEN_CSV_WRITER_H_
 #define _GEN_CSV_WRITER_H_
@@ -86,11 +86,11 @@ class GEN_CSV_WRITER : public CGenFunctionBlock<CFunctionBlock> {
     std::unique_ptr<CStringDictionary::TStringId[]> mDataInputNames;
     std::unique_ptr<CStringDictionary::TStringId[]> mDataInputTypeIds;
 
+    std::string mDataOutPutBuffer;
+
     static const CIEC_STRING scmOK;
     static const CIEC_STRING scmFileAlreadyOpened;
     static const CIEC_STRING scmFileNotOpened;
-
-    static const size_t scmWriteBufferSize = 100;
 };
 
 #endif //_GEN_CSV_WRITER_H_

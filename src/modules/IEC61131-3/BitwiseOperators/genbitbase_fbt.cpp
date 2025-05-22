@@ -15,15 +15,13 @@
  *     - add generic readInputData and writeOutputData
  *******************************************************************************/
 #include "genbitbase_fbt.h"
+#include "forte_printer.h"
+#include "string_utils.h"
 
 USE_STRING_ID(ANY_BIT);
 USE_STRING_ID(CNF);
 USE_STRING_ID(OUT);
 USE_STRING_ID(REQ);
-
-#include <ctype.h>
-#include <stdio.h>
-#include "forte_printer.h"
 
 const CStringDictionary::TStringId CGenBitBase::scmDataOutputNames[] = {STRID(OUT)};
 const CStringDictionary::TStringId CGenBitBase::scmDataOutputTypeIds[] = {STRID(ANY_BIT)};

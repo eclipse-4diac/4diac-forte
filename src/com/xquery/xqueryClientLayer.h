@@ -1,5 +1,5 @@
 /*********************************************************************
- * Copyright (c) 2017 fortiss GmbH
+ * Copyright (c) 2017, 2025 fortiss GmbH, Monika Wenger
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -11,8 +11,9 @@
 #ifndef SRC_MODULES_XQUERY_XQUERYCLIENT_H_
 #define SRC_MODULES_XQUERY_XQUERYCLIENT_H_
 
-#include <comlayer.h>
-#include <extevhan.h>
+#include "comlayer.h"
+#include "extevhan.h"
+#include <string.h>
 
 using namespace forte::com_infra;
 
@@ -25,11 +26,11 @@ class CXqueryClientLayer : public forte::com_infra::CComLayer {
     EComResponse recvData(const void *paData, unsigned int paSize) override;
     EComResponse processInterrupt() override;
 
-    const char *getCommand() {
-      return command;
+    const char* getCommand() {
+      return mCommand.c_str();
     }
     int getSfd() {
-      return sfd;
+      return mSfd;
     }
 
   private:
@@ -37,15 +38,16 @@ class CXqueryClientLayer : public forte::com_infra::CComLayer {
     EComResponse openConnection(char *paLayerParameter) override;
     bool parseParameters(char *paLayerParameter);
     void openDB();
+    const CIEC_ANY& getSDx(void *paData, int paSdNum);
 
-    int sfd;
-    char *host;
-    char *port;
-    char *dbName;
-    char *usr;
-    char *psw;
+    int mSfd;
+    char *mHost;
+    char *mPort;
+    char *mDbName;
+    char *mUsr;
+    char *mPsw;
+    std::string mCommand;
     static const char *scmParameterSeperator;
-    char *command;
 };
 
 #endif /* SRC_MODULES_XQUERY_XQUERYCLIENT_H_ */

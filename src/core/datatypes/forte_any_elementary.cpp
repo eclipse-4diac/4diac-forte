@@ -1,5 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2011 - 2013 ACIN, Profactor GmbH, fortiss GmbH, nxtControl GmbH
+ * Copyright (c) 2011, 2025 ACIN, Profactor GmbH, fortiss GmbH, nxtControl GmbH,
+ *                          Primetals Technologies Austria GmbH
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -8,11 +9,25 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    Alois Zoitl, Monika Wenger, Matthias Plasch, Martin Melik Markumians,
- *    Ingo Hegny, Stanislav Meduna
- *      - initial implementation and rework communication infrastructure
+ *   Alois Zoitl, Monika Wenger, Matthias Plasch, Martin Melik Markumians,
+ *     Ingo Hegny, Stanislav Meduna
+ *          - initial implementation and rework communication infrastructure
+ *   Markus Meingast, Alois Zoitl  - migrated data type toString to std::string
  *******************************************************************************/
 #include "forte_any_elementary.h"
+#include "string_utils.h"
+#include <stdlib.h>
+#include <errno.h>
+#include "forte_sint.h"
+#include "forte_int.h"
+#include "forte_dint.h"
+#include "forte_usint.h"
+#include "forte_uint.h"
+#include "forte_udint.h"
+#include "forte_lint.h"
+#include "forte_ulint.h"
+#include <devlog.h>
+#include <map>
 
 USE_STRING_ID(ANY);
 USE_STRING_ID(BOOL);
@@ -51,150 +66,119 @@ USE_STRING_ID(WCHAR);
 USE_STRING_ID(WORD);
 USE_STRING_ID(WSTRING);
 
-#include <stdlib.h>
-#include <errno.h>
-#include "forte_sint.h"
-#include "forte_int.h"
-#include "forte_dint.h"
-#include "forte_usint.h"
-#include "forte_uint.h"
-#include "forte_udint.h"
-#include "forte_lint.h"
-#include "forte_ulint.h"
+namespace {
+  const std::map<CStringDictionary::TStringId, CIEC_ANY::EDataTypeID> scm_StringToTypeId = {
+      {STRID(ANY), CIEC_ANY::e_ANY},
+      {STRID(BOOL), CIEC_ANY::e_BOOL},
+      {STRID(SINT), CIEC_ANY::e_SINT},
+      {STRID(INT), CIEC_ANY::e_INT},
+      {STRID(DINT), CIEC_ANY::e_DINT},
+      {STRID(LINT), CIEC_ANY::e_LINT},
+      {STRID(USINT), CIEC_ANY::e_USINT},
+      {STRID(UINT), CIEC_ANY::e_UINT},
+      {STRID(UDINT), CIEC_ANY::e_UDINT},
+      {STRID(ULINT), CIEC_ANY::e_ULINT},
+      {STRID(BYTE), CIEC_ANY::e_BYTE},
+      {STRID(WORD), CIEC_ANY::e_WORD},
+      {STRID(DWORD), CIEC_ANY::e_DWORD},
+      {STRID(LWORD), CIEC_ANY::e_LWORD},
+      {STRID(T), CIEC_ANY::e_TIME},
+      {STRID(TIME), CIEC_ANY::e_TIME},
+      {STRID(D), CIEC_ANY::e_DATE},
+      {STRID(DATE), CIEC_ANY::e_DATE},
+      {STRID(TOD), CIEC_ANY::e_TIME_OF_DAY},
+      {STRID(TIME_OF_DAY), CIEC_ANY::e_TIME_OF_DAY},
+      {STRID(DT), CIEC_ANY::e_DATE_AND_TIME},
+      {STRID(DATE_AND_TIME), CIEC_ANY::e_DATE_AND_TIME},
+      {STRID(LT), CIEC_ANY::e_LTIME},
+      {STRID(LTIME), CIEC_ANY::e_LTIME},
+      {STRID(LD), CIEC_ANY::e_LDATE},
+      {STRID(LDATE), CIEC_ANY::e_LDATE},
+      {STRID(LTOD), CIEC_ANY::e_LTIME_OF_DAY},
+      {STRID(LTIME_OF_DAY), CIEC_ANY::e_LTIME_OF_DAY},
+      {STRID(LDT), CIEC_ANY::e_LDATE_AND_TIME},
+      {STRID(LDATE_AND_TIME), CIEC_ANY::e_LDATE_AND_TIME},
+      {STRID(CHAR), CIEC_ANY::e_CHAR},
+      {STRID(WCHAR), CIEC_ANY::e_WCHAR},
+      {STRID(REAL), CIEC_ANY::e_REAL},
+      {STRID(LREAL), CIEC_ANY::e_LREAL},
+      {STRID(STRING), CIEC_ANY::e_STRING},
+      {STRID(WSTRING), CIEC_ANY::e_WSTRING}};
+}
 
-const std::map<CStringDictionary::TStringId, CIEC_ANY::EDataTypeID> CIEC_ANY_ELEMENTARY::scm_StringToTypeId = {
-    {STRID(ANY), CIEC_ANY::e_ANY},
-    {STRID(BOOL), CIEC_ANY::e_BOOL},
-    {STRID(SINT), CIEC_ANY::e_SINT},
-    {STRID(INT), CIEC_ANY::e_INT},
-    {STRID(DINT), CIEC_ANY::e_DINT},
-    {STRID(LINT), CIEC_ANY::e_LINT},
-    {STRID(USINT), CIEC_ANY::e_USINT},
-    {STRID(UINT), CIEC_ANY::e_UINT},
-    {STRID(UDINT), CIEC_ANY::e_UDINT},
-    {STRID(ULINT), CIEC_ANY::e_ULINT},
-    {STRID(BYTE), CIEC_ANY::e_BYTE},
-    {STRID(WORD), CIEC_ANY::e_WORD},
-    {STRID(DWORD), CIEC_ANY::e_DWORD},
-    {STRID(LWORD), CIEC_ANY::e_LWORD},
-    {STRID(T), CIEC_ANY::e_TIME},
-    {STRID(TIME), CIEC_ANY::e_TIME},
-    {STRID(D), CIEC_ANY::e_DATE},
-    {STRID(DATE), CIEC_ANY::e_DATE},
-    {STRID(TOD), CIEC_ANY::e_TIME_OF_DAY},
-    {STRID(TIME_OF_DAY), CIEC_ANY::e_TIME_OF_DAY},
-    {STRID(DT), CIEC_ANY::e_DATE_AND_TIME},
-    {STRID(DATE_AND_TIME), CIEC_ANY::e_DATE_AND_TIME},
-    {STRID(LT), CIEC_ANY::e_LTIME},
-    {STRID(LTIME), CIEC_ANY::e_LTIME},
-    {STRID(LD), CIEC_ANY::e_LDATE},
-    {STRID(LDATE), CIEC_ANY::e_LDATE},
-    {STRID(LTOD), CIEC_ANY::e_LTIME_OF_DAY},
-    {STRID(LTIME_OF_DAY), CIEC_ANY::e_LTIME_OF_DAY},
-    {STRID(LDT), CIEC_ANY::e_LDATE_AND_TIME},
-    {STRID(LDATE_AND_TIME), CIEC_ANY::e_LDATE_AND_TIME},
-    {STRID(CHAR), CIEC_ANY::e_CHAR},
-    {STRID(WCHAR), CIEC_ANY::e_WCHAR},
-    {STRID(REAL), CIEC_ANY::e_REAL},
-    {STRID(LREAL), CIEC_ANY::e_LREAL},
-    {STRID(STRING), CIEC_ANY::e_STRING},
-    {STRID(WSTRING), CIEC_ANY::e_WSTRING}};
+void CIEC_ANY_ELEMENTARY::toString(std::string &paTargetBuf) const {
+  TLargestUIntValueType divisor = 0;
+  TLargestUIntValueType unsignedValBuf = 0;
+  TLargestIntValueType signedValBuf = 0;
 
-int CIEC_ANY_ELEMENTARY::toString(char *paValue, size_t paBufferSize) const {
-  int nRetVal = 0;
-
-  TLargestUIntValueType nDivisor = 0;
-  TLargestUIntValueType nUBuffer = 0;
-  TLargestIntValueType nSBuffer = 0;
-
-  bool bSigned = true;
+  bool isSigned = true;
 
   switch (getDataTypeID()) {
     case e_SINT:
-      nSBuffer = getTINT8();
-      nDivisor = 100;
+      signedValBuf = getTINT8();
+      divisor = 100;
       break;
     case e_USINT:
     case e_BYTE:
-      nUBuffer = getTUINT8();
-      nDivisor = 100;
-      bSigned = false;
+      unsignedValBuf = getTUINT8();
+      divisor = 100;
+      isSigned = false;
       break;
     case e_INT:
-      nSBuffer = getTINT16();
-      nDivisor = 10000;
+      signedValBuf = getTINT16();
+      divisor = 10000;
       break;
     case e_UINT:
     case e_WORD:
-      nUBuffer = getTUINT16();
-      nDivisor = 10000;
-      bSigned = false;
+      unsignedValBuf = getTUINT16();
+      divisor = 10000;
+      isSigned = false;
       break;
     case e_DINT:
-      nSBuffer = getTINT32();
-      nDivisor = 1000000000L;
+      signedValBuf = getTINT32();
+      divisor = 1000000000L;
       break;
     case e_UDINT:
     case e_DWORD:
-      nUBuffer = getTUINT32();
-      nDivisor = 1000000000L;
-      bSigned = false;
+      unsignedValBuf = getTUINT32();
+      divisor = 1000000000L;
+      isSigned = false;
       break;
     case e_LINT:
-      nSBuffer = getTINT64();
-      nDivisor = 1000000000000000000LL;
+      signedValBuf = getTINT64();
+      divisor = 1000000000000000000LL;
       break;
     case e_ULINT:
     case e_LWORD:
-      nUBuffer = getTUINT64();
-      nDivisor = 10000000000000000000ULL;
-      bSigned = false;
+      unsignedValBuf = getTUINT64();
+      divisor = 10000000000000000000ULL;
+      isSigned = false;
       break;
-    default: DEVLOG_ERROR("Attempt to call CIEC_ANY::toString in CIEC_ANY_ELEMENTARY\n"); return -1;
+    default: DEVLOG_ERROR("Attempt to call CIEC_ANY::toString in CIEC_ANY_ELEMENTARY\n"); return;
   }
 
-  if (true == bSigned) {
-    if (nSBuffer < 0) {
-      if (nRetVal >= static_cast<int>(paBufferSize)) {
-        return -1;
-      }
-      paValue[nRetVal] = '-';
-      nRetVal++;
-      nSBuffer *= -1;
+  if (true == isSigned) {
+    if (signedValBuf < 0) {
+      paTargetBuf += '-';
+      signedValBuf *= -1;
     }
-    nUBuffer = static_cast<TLargestUIntValueType>(nSBuffer);
+    unsignedValBuf = static_cast<TLargestUIntValueType>(signedValBuf);
   }
 
-  bool bLeadingZeros = true;
+  bool leadingZeros = true;
   do {
-    if ((0 == nUBuffer / nDivisor) && (true == bLeadingZeros)) {
-      nDivisor /= 10;
+    if ((0 == unsignedValBuf / divisor) && (true == leadingZeros)) {
+      divisor /= 10;
       continue;
     } else {
-      bLeadingZeros = false;
+      leadingZeros = false;
     }
-    if (nRetVal >= static_cast<int>(paBufferSize)) {
-      return -1;
-    }
+    paTargetBuf += static_cast<char>(static_cast<char>(unsignedValBuf / divisor) + '0');
+    unsignedValBuf = unsignedValBuf - (paTargetBuf.back() - '0') * divisor;
+    divisor /= 10;
+  } while (divisor > 1);
 
-    paValue[nRetVal] = static_cast<char>(static_cast<char>(nUBuffer / nDivisor) + '0');
-    nUBuffer = nUBuffer - (paValue[nRetVal] - '0') * nDivisor;
-    nDivisor /= 10;
-    nRetVal++;
-  } while (nDivisor > 1);
-
-  if (nRetVal >= static_cast<int>(paBufferSize)) {
-    return -1;
-  }
-  paValue[nRetVal] = static_cast<char>(static_cast<char>(nUBuffer / nDivisor) + '0');
-  nRetVal++;
-
-  if (nRetVal >= static_cast<int>(paBufferSize)) {
-    return -1;
-  }
-  paValue[nRetVal] = '\0';
-
-  return nRetVal;
+  paTargetBuf += static_cast<char>(static_cast<char>(unsignedValBuf / divisor) + '0');
 }
 
 int CIEC_ANY_ELEMENTARY::fromString(const char *paValue) {

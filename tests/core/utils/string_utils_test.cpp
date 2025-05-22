@@ -1,5 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2013 - 2014 fortiss GmbH
+ * Copyright (c) 2013, 2025 fortiss GmbH, Primetals Technologies Austria GmbH
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -7,7 +8,8 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *   Alois Zoitl  - initial API and implementation and/or initial documentation
+ *   Alois Zoitl - initial API and implementation and/or initial documentation
+ *   Alois Zoitl - migrated data type toString to std::string
  *******************************************************************************/
 #include <boost/test/unit_test.hpp>
 #include "../../../src/core/util/string_utils.h"
@@ -558,12 +560,11 @@ BOOST_AUTO_TEST_CASE(getExtraSizeForEscapedChars) {
 }
 
 BOOST_AUTO_TEST_CASE(transformNonEscapedToEscapedXMLText) {
-  char toTest[50];
+  std::string toTest;
   for (size_t i = 0; i < sNonEscapedData.size(); i++) {
-    memset(toTest, 0, 50);
-    memcpy(toTest, sNonEscapedData[i], strlen(sNonEscapedData[i]));
-    BOOST_CHECK_EQUAL(forte::core::util::transformNonEscapedToEscapedXMLText(toTest), sExtraSize[i]);
-    BOOST_CHECK_EQUAL(std::string(toTest), sEscapedData[i]);
+    toTest = sNonEscapedData[i];
+    forte::core::util::transformNonEscapedToEscapedXMLText(toTest, 0);
+    BOOST_CHECK_EQUAL(toTest, sEscapedData[i]);
   }
 }
 

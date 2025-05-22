@@ -13,15 +13,10 @@
  *******************************************************************************/
 
 #include "GEN_E_SPLIT_fbt.h"
+#include "string_utils.h"
 
 USE_STRING_ID(EI);
 USE_STRING_ID(GEN_E_SPLIT);
-
-#include "iec61131_functions.h"
-#include "forte_array_common.h"
-#include "forte_array.h"
-#include "forte_array_fixed.h"
-#include "forte_array_variable.h"
 
 DEFINE_GENERIC_FIRMWARE_FB(GEN_E_SPLIT, STRID(GEN_E_SPLIT))
 

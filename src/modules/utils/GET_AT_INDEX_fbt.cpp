@@ -166,8 +166,8 @@ CDataConnection *FORTE_GET_AT_INDEX::getDOConUnchecked(TPortId paIndex) {
 }
 
 void FORTE_GET_AT_INDEX::setInitialValues() {
-  var_IN_ARRAY = CIEC_ANY_VARIANT();
+  var_IN_ARRAY.reset();
   var_INDEX = 0_UINT;
   var_QO = false_BOOL;
-  var_OUT = CIEC_ANY_VARIANT();
+  var_OUT.reset();
 }

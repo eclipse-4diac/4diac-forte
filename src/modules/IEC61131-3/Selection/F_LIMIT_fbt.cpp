@@ -152,8 +152,8 @@ CDataConnection *FORTE_F_LIMIT::getDOConUnchecked(TPortId paIndex) {
 }
 
 void FORTE_F_LIMIT::setInitialValues() {
-  var_MN = CIEC_ANY_ELEMENTARY_VARIANT();
-  var_IN = CIEC_ANY_ELEMENTARY_VARIANT();
-  var_MX = CIEC_ANY_ELEMENTARY_VARIANT();
-  var_OUT = CIEC_ANY_ELEMENTARY_VARIANT();
+  var_MN.reset();
+  var_IN.reset();
+  var_MX.reset();
+  var_OUT.reset();
 }

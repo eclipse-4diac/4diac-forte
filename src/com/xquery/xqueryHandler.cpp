@@ -1,5 +1,5 @@
 /*********************************************************************
- * Copyright (c) 2017 fortiss GmbH
+ * Copyright (c) 2017, 2025 fortiss GmbH, Monika Wenger
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -24,7 +24,8 @@ DEFINE_HANDLER(CXqueryHandler);
 CSyncObject CXqueryHandler::smXqueryMutex = CSyncObject();
 forte::arch::CSemaphore CXqueryHandler::mStateSemaphore = forte::arch::CSemaphore();
 
-CXqueryHandler::CXqueryHandler(CDeviceExecution &paDeviceExecution) : CExternalEventHandler(paDeviceExecution) {
+CXqueryHandler::CXqueryHandler(CDeviceExecution &paDeviceExecution) :
+    CExternalEventHandler(paDeviceExecution) {
   result = nullptr;
   info = nullptr;
 }
@@ -56,8 +57,8 @@ void CXqueryHandler::disableHandler() {
   }
 }
 
-void CXqueryHandler::setPriority(int pa_prio) {
-  //  FIXME adjust thread priority correctly
+void CXqueryHandler::setPriority(int) {
+  // not used
 }
 
 int CXqueryHandler::getPriority() const {
@@ -65,20 +66,20 @@ int CXqueryHandler::getPriority() const {
 }
 
 int CXqueryHandler::registerLayer(CXqueryClientLayer *paLayer) {
-  mXqueryFBList.pushBack(paLayer);
+  mXqueryFBList.emplace_back(paLayer);
   enableHandler();
   resumeSuspend();
   return 0;
 }
 
 void CXqueryHandler::run() {
-  while (isAlive()) {
-    if (mXqueryFBList.isEmpty()) {
+  while(isAlive()) {
+    if (mXqueryFBList.empty()) {
       selfSuspend();
     } else {
-      TXqueryFBContainer::Iterator it = mXqueryFBList.begin();
+      auto it = mXqueryFBList.begin();
       CXqueryClientLayer *xc = *it;
-      if (xc->getSfd() > -1) {
+      if (xc && xc->getSfd() > -1) {
         int rc = basex_execute(xc->getSfd(), xc->getCommand(), &result, &info);
         if (rc == -1) { // general (i/o or the like) error
           DEVLOG_ERROR("An error occured during execution of '%s'.\n", xc->getCommand());
@@ -95,7 +96,7 @@ void CXqueryHandler::run() {
       } else {
         DEVLOG_ERROR("Connection seems to be lost, query not sent.\n");
       }
-      mXqueryFBList.popFront();
+      mXqueryFBList.erase(mXqueryFBList.begin());
     }
   }
 }

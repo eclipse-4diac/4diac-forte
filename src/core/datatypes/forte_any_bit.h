@@ -20,13 +20,16 @@
 #define _ANY_BIT_H_
 
 #include "forte_any_elementary.h"
-#include <limits>
 
 /*!\ingroup COREDTS IIEC_ANY_BIT represents any bit data types according to IEC 61131.
  */
 class CIEC_ANY_BIT : public CIEC_ANY_ELEMENTARY {
   public:
     ~CIEC_ANY_BIT() override = default;
+
+    void reset() override {
+      setTUINT64(0);
+    }
 
   protected:
     CIEC_ANY_BIT() = default;

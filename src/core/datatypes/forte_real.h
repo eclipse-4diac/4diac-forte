@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2023 Pr3factor GmbH, ACIN, fortiss GmbH
+ * Copyright (c) 2005, 2025 Pr3factor GmbH, ACIN, fortiss GmbH
  *                          Primetals Technologies Austria GmbH
  *                          Martin Erich Jobst
  *
@@ -10,21 +10,20 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    Thomas Strasser, Ingomar Müller, Alois Zoitl, Gerhard Ebenhofer,
- *    Ingo Hegny, Martin Melik Merkumians, Monika Wenger
- *      - initial implementation and rework communication infrastructure
- *    Martin Melik Merkumians - make TForteFloat constructor explicit,
- *        removed built-in type operator=, added castable CIEC types operator=
- *    Martin Jobst - add equals function
- *                 - add user-defined literal
+ *   Thomas Strasser, Ingomar Müller, Alois Zoitl, Gerhard Ebenhofer,
+ *     Ingo Hegny, Martin Melik Merkumians, Monika Wenger
+ *                - initial implementation and rework communication infrastructure
+ *   Martin Melik Merkumians - make TForteFloat constructor explicit, removed
+ *                  built-in type operator=, added castable CIEC types operator=
+ *   Martin Jobst - add equals function
+ *                - add user-defined literal
+ *   Alois Zoitl  - migrated data type toString to std::string
  *******************************************************************************/
 #ifndef _FORTE_REAL_H_
 #define _FORTE_REAL_H_
 
 #include "forte_any_real.h"
 
-#include "forte_string.h"
-#include "forte_wstring.h"
 #include "forte_int.h"
 #include "forte_sint.h"
 #include "forte_uint.h"
@@ -112,6 +111,10 @@ class CIEC_REAL final : public CIEC_ANY_REAL {
 
     void setValue(const CIEC_ANY &paValue) override;
 
+    void reset() override {
+      setTFLOAT(0.0f);
+    }
+
     EDataTypeID getDataTypeID() const override {
       return CIEC_ANY::e_REAL;
     }
@@ -131,18 +134,9 @@ class CIEC_REAL final : public CIEC_ANY_REAL {
      *   This command implements a conversion function from C++ data type
      *   to IEC 61131 conform data type (string format).
      *   This function is necessary for communication with a proper engineering system.
-     *   \param paValue Pointer to the buffer String
-     *   \param paBufferSize size of the buffer thats available for this function
-     *   \return number of bytes used in the buffer without trailing 0x00
-     *           -1 on error
+     *   \param paTargetBuf Reference to the buffer String
      */
-    int toString(char *paValue, size_t paBufferSize) const override;
-
-    /*! \brief calculates buffer size needed for toString conversion
-     */
-    size_t getToStringBufferSize() const override {
-      return sizeof("-1.175494351E-38"); // minimal float value (negative for additional sign)
-    }
+    void toString(std::string &paTargetBuf) const override;
 
     [[nodiscard]] bool equals(const CIEC_ANY &paOther) const override {
       if (paOther.getDataTypeID() == CIEC_ANY::e_REAL) {

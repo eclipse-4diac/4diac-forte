@@ -16,8 +16,9 @@
  *******************************************************************************/
 #include "ipcomlayer.h"
 #include "../../arch/devlog.h"
-#include "commfb.h"
+#include "basecommfb.h"
 #include <forte_thread.h>
+#include "string_utils.h"
 
 using namespace forte::com_infra;
 

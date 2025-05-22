@@ -1,6 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2010 - 2013 ACIN
- *               2023 Martin Erich Jobst
+ * Copyright (c) 2010, 2025 ACIN, Martin Erich Jobst,
+ *                          Primetals Technologies Austria GmbH
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -9,10 +9,11 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    Ingo Hegny, Alois Zoitl, Monika Wenger
+ *   Ingo Hegny, Alois Zoitl, Monika Wenger
  *      - initial implementation and rework communication infrastructure
- *    Martin Jobst - add equals function
- *                 - refactor struct memory layout
+ *   Martin Jobst - add equals function
+ *                - refactor struct memory layout
+ *   Markus Meingast, Alois Zoitl  - migrated data type toString to std::string
  *******************************************************************************/
 #ifndef _FORTE_STRUCT_H_
 #define _FORTE_STRUCT_H_
@@ -32,7 +33,7 @@ class CIEC_STRUCT : public CIEC_ANY_DERIVED {
 
   public:
     //! Indicator for invalid array member index positions
-    static constexpr size_t csmNIndex = -1;
+    static constexpr size_t csmNIndex = static_cast<size_t>(-1);
 
     CIEC_STRUCT() = default;
 
@@ -78,11 +79,9 @@ class CIEC_STRUCT : public CIEC_ANY_DERIVED {
 
     void setValue(const CIEC_ANY &paValue) override;
 
-    /*! \brief calculates buffer size needed for toString conversion
-     */
-    size_t getToStringBufferSize() const override;
+    void reset() override;
 
-    EDataTypeID getDataTypeID() const override final {
+    EDataTypeID getDataTypeID() const final {
       return CIEC_ANY::e_STRUCT;
     }
 
@@ -101,11 +100,8 @@ class CIEC_STRUCT : public CIEC_ANY_DERIVED {
      *
      *   This command implements a conversion function to C++ data type.
      *   \param paValue       Pointer to char-array
-     *   \param paBufferSize   Size of the provided buffer
-     *   \return number of bytes used in the buffer
-     *           -1 on error
      */
-    int toString(char *paValue, size_t paBufferSize) const override;
+    void toString(std::string &paTargetBuf) const override;
 
     [[nodiscard]] bool equals(const CIEC_ANY &paOther) const override;
 

@@ -1,6 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2023 ACIN
- *                          Martin Erich Jobst
+ * Copyright (c) 2011, 2025 ACIN, Martin Erich Jobst,
+ *                          Primetals Technolgies Austria GmbH
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -9,8 +9,10 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *   Martin Melik Merkumians, Ingo Hegny, Alois Zoitl - initial API and implementation and/or initial documentation
+ *   Martin Melik Merkumians, Ingo Hegny, Alois Zoitl
+ *                - initial API and implementation and/or initial documentation
  *   Martin Jobst - add user-defined literal tests
+ *   Alois Zoitl  - migrated data type toString to std::string
  *******************************************************************************/
 #include <boost/test/unit_test.hpp>
 #include "forte_boost_output_support.h"
@@ -64,149 +66,123 @@ BOOST_AUTO_TEST_CASE(Assignment_test) {
 }
 
 BOOST_AUTO_TEST_CASE(Conversion_test) {
-  CIEC_WORD nTest;
+  CIEC_WORD testVal;
 
-  char cBuffer[6];
-  char cBufferFail[2];
+  std::string buffer;
 
   // check cast operator
-  nTest = CIEC_WORD(0);
-  strcpy(cBuffer, "");
+  testVal = CIEC_WORD(0);
 
-  BOOST_CHECK_EQUAL(nTest.operator TForteWord(), 0);
+  BOOST_CHECK_EQUAL(testVal.operator TForteWord(), 0);
 
-  nTest = CIEC_WORD(8756);
-  BOOST_CHECK_EQUAL(nTest.operator TForteWord(), 8756);
+  testVal = CIEC_WORD(8756);
+  BOOST_CHECK_EQUAL(testVal.operator TForteWord(), 8756);
 
-  nTest = CIEC_WORD(65535);
-  BOOST_CHECK_EQUAL(nTest.operator TForteWord(), 65535);
+  testVal = CIEC_WORD(65535);
+  BOOST_CHECK_EQUAL(testVal.operator TForteWord(), 65535);
 
   // check toString and fromString
-  BOOST_CHECK_EQUAL(nTest.fromString("0"), 1);
-  BOOST_CHECK_EQUAL(nTest, 0);
-  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 6), 1);
-  BOOST_CHECK_EQUAL(strcmp(cBuffer, "0"), 0);
+  BOOST_CHECK_EQUAL(testVal.fromString("0"), 1);
+  BOOST_CHECK_EQUAL(testVal, 0);
+  testVal.toString(buffer);
+  BOOST_CHECK_EQUAL(buffer, "0");
 
-  BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 1), -1);
+  buffer.clear();
 
-  strcpy(cBuffer, "");
+  BOOST_CHECK_EQUAL(testVal.fromString("2#0"), 3);
+  BOOST_CHECK_EQUAL(testVal, 0);
+  testVal.toString(buffer);
+  BOOST_CHECK_EQUAL(buffer, "0");
 
-  BOOST_CHECK_EQUAL(nTest.fromString("2#0"), 3);
-  BOOST_CHECK_EQUAL(nTest, 0);
-  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 6), 1);
-  BOOST_CHECK_EQUAL(strcmp(cBuffer, "0"), 0);
+  buffer.clear();
 
-  BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 1), -1);
+  BOOST_CHECK_EQUAL(testVal.fromString("8#0"), 3);
+  BOOST_CHECK_EQUAL(testVal, 0);
+  testVal.toString(buffer);
+  BOOST_CHECK_EQUAL(buffer, "0");
 
-  strcpy(cBuffer, "");
+  buffer.clear();
 
-  BOOST_CHECK_EQUAL(nTest.fromString("8#0"), 3);
-  BOOST_CHECK_EQUAL(nTest, 0);
-  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 6), 1);
-  BOOST_CHECK_EQUAL(strcmp(cBuffer, "0"), 0);
+  BOOST_CHECK_EQUAL(testVal.fromString("16#0"), 4);
+  BOOST_CHECK_EQUAL(testVal, 0);
+  testVal.toString(buffer);
+  BOOST_CHECK_EQUAL(buffer, "0");
 
-  BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 1), -1);
+  buffer.clear();
 
-  strcpy(cBuffer, "");
+  BOOST_CHECK_EQUAL(testVal.fromString("79"), 2);
+  BOOST_CHECK_EQUAL(testVal, 79);
+  testVal.toString(buffer);
+  BOOST_CHECK_EQUAL(buffer, "79");
 
-  BOOST_CHECK_EQUAL(nTest.fromString("16#0"), 4);
-  BOOST_CHECK_EQUAL(nTest, 0);
-  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 6), 1);
-  BOOST_CHECK_EQUAL(strcmp(cBuffer, "0"), 0);
+  buffer.clear();
+  testVal = CIEC_WORD(0);
 
-  BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 1), -1);
+  BOOST_CHECK_EQUAL(testVal.fromString("2#1001111"), 9);
+  BOOST_CHECK_EQUAL(testVal, 79);
+  testVal.toString(buffer);
+  BOOST_CHECK_EQUAL(buffer, "79");
 
-  strcpy(cBuffer, "");
+  buffer.clear();
+  testVal = CIEC_WORD(0);
 
-  BOOST_CHECK_EQUAL(nTest.fromString("79"), 2);
-  BOOST_CHECK_EQUAL(nTest, 79);
-  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 6), 2);
-  BOOST_CHECK_EQUAL(strcmp(cBuffer, "79"), 0);
+  BOOST_CHECK_EQUAL(testVal.fromString("8#117"), 5);
+  BOOST_CHECK_EQUAL(testVal, 79);
+  testVal.toString(buffer);
+  BOOST_CHECK_EQUAL(buffer, "79");
 
-  BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
+  buffer.clear();
+  testVal = CIEC_WORD(0);
 
-  strcpy(cBuffer, "");
-  nTest = CIEC_WORD(0);
+  BOOST_CHECK_EQUAL(testVal.fromString("16#4F"), 5);
+  BOOST_CHECK_EQUAL(testVal, 79);
+  testVal.toString(buffer);
+  BOOST_CHECK_EQUAL(buffer, "79");
 
-  BOOST_CHECK_EQUAL(nTest.fromString("2#1001111"), 9);
-  BOOST_CHECK_EQUAL(nTest, 79);
-  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 6), 2);
-  BOOST_CHECK_EQUAL(strcmp(cBuffer, "79"), 0);
+  buffer.clear();
+  testVal = CIEC_WORD(0);
 
-  BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
+  BOOST_CHECK_EQUAL(testVal.fromString("65535"), 5);
+  BOOST_CHECK_EQUAL(testVal, 65535);
+  testVal.toString(buffer);
+  BOOST_CHECK_EQUAL(buffer, "65535");
 
-  strcpy(cBuffer, "");
-  nTest = CIEC_WORD(0);
+  buffer.clear();
+  testVal = CIEC_WORD(0);
 
-  BOOST_CHECK_EQUAL(nTest.fromString("8#117"), 5);
-  BOOST_CHECK_EQUAL(nTest, 79);
-  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 6), 2);
-  BOOST_CHECK_EQUAL(strcmp(cBuffer, "79"), 0);
+  BOOST_CHECK_EQUAL(testVal.fromString("2#1111111111111111"), 18);
+  BOOST_CHECK_EQUAL(testVal, 65535);
+  testVal.toString(buffer);
+  BOOST_CHECK_EQUAL(buffer, "65535");
 
-  BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
+  buffer.clear();
+  testVal = CIEC_WORD(0);
 
-  strcpy(cBuffer, "");
-  nTest = CIEC_WORD(0);
+  BOOST_CHECK_EQUAL(testVal.fromString("8#177777"), 8);
+  BOOST_CHECK_EQUAL(testVal, 65535);
+  testVal.toString(buffer);
+  BOOST_CHECK_EQUAL(buffer, "65535");
 
-  BOOST_CHECK_EQUAL(nTest.fromString("16#4F"), 5);
-  BOOST_CHECK_EQUAL(nTest, 79);
-  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 6), 2);
-  BOOST_CHECK_EQUAL(strcmp(cBuffer, "79"), 0);
+  buffer.clear();
+  testVal = CIEC_WORD(0);
 
-  BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
+  BOOST_CHECK_EQUAL(testVal.fromString("16#FFFF"), 7);
+  BOOST_CHECK_EQUAL(testVal, 65535);
+  testVal.toString(buffer);
+  BOOST_CHECK_EQUAL(buffer, "65535");
 
-  strcpy(cBuffer, "");
-  nTest = CIEC_WORD(0);
-
-  BOOST_CHECK_EQUAL(nTest.fromString("65535"), 5);
-  BOOST_CHECK_EQUAL(nTest, 65535);
-  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 6), 5);
-  BOOST_CHECK_EQUAL(strcmp(cBuffer, "65535"), 0);
-
-  BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
-
-  strcpy(cBuffer, "");
-  nTest = CIEC_WORD(0);
-
-  BOOST_CHECK_EQUAL(nTest.fromString("2#1111111111111111"), 18);
-  BOOST_CHECK_EQUAL(nTest, 65535);
-  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 6), 5);
-  BOOST_CHECK_EQUAL(strcmp(cBuffer, "65535"), 0);
-
-  BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
-
-  strcpy(cBuffer, "");
-  nTest = CIEC_WORD(0);
-
-  BOOST_CHECK_EQUAL(nTest.fromString("8#177777"), 8);
-  BOOST_CHECK_EQUAL(nTest, 65535);
-  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 6), 5);
-  BOOST_CHECK_EQUAL(strcmp(cBuffer, "65535"), 0);
-
-  BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
-
-  strcpy(cBuffer, "");
-  nTest = CIEC_WORD(0);
-
-  BOOST_CHECK_EQUAL(nTest.fromString("16#FFFF"), 7);
-  BOOST_CHECK_EQUAL(nTest, 65535);
-  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 6), 5);
-  BOOST_CHECK_EQUAL(strcmp(cBuffer, "65535"), 0);
-
-  BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
-
-  strcpy(cBuffer, "");
-  nTest = CIEC_WORD(0);
+  buffer.clear();
+  testVal = CIEC_WORD(0);
 
   // testing values outside of allowed range
-  BOOST_CHECK_EQUAL(nTest.fromString("70000"), -1);
-  BOOST_CHECK_EQUAL(nTest.fromString("2#10001000101110000"), -1);
-  BOOST_CHECK_EQUAL(nTest.fromString("8#210560"), -1);
-  BOOST_CHECK_EQUAL(nTest.fromString("10#70000"), -1);
-  BOOST_CHECK_EQUAL(nTest.fromString("16#11170"), -1);
-  BOOST_CHECK_EQUAL(nTest.fromString("-130"), -1);
+  BOOST_CHECK_EQUAL(testVal.fromString("70000"), -1);
+  BOOST_CHECK_EQUAL(testVal.fromString("2#10001000101110000"), -1);
+  BOOST_CHECK_EQUAL(testVal.fromString("8#210560"), -1);
+  BOOST_CHECK_EQUAL(testVal.fromString("10#70000"), -1);
+  BOOST_CHECK_EQUAL(testVal.fromString("16#11170"), -1);
+  BOOST_CHECK_EQUAL(testVal.fromString("-130"), -1);
 
   // check invalid fromString string
-  BOOST_CHECK_EQUAL(nTest.fromString("NOT A VALID STRING"), -1);
+  BOOST_CHECK_EQUAL(testVal.fromString("NOT A VALID STRING"), -1);
 }
 BOOST_AUTO_TEST_SUITE_END()

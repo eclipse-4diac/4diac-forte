@@ -1,5 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2018 Johannes Kepler University
+ * Copyright (c) 2018, 2025 Johannes Kepler University,
+ *                          Primetals Technologies Austria GmbH
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -9,6 +10,7 @@
  *
  * Contributors:
  *   Alois Zoitl - initial API and implementation and/or initial documentation
+ *   Alois Zoitl - migrated data type toString to std::string
  *******************************************************************************/
 
 #include <boost/test/unit_test.hpp>
@@ -148,9 +150,9 @@ BOOST_AUTO_TEST_CASE(testToStringWithInternalVariables) {
   CInternalVarTestFB testFB(&varData);
   BOOST_ASSERT(testFB.initialize());
   constexpr char result[] = "(QU:=FALSE, QD:=FALSE, CV:=0)";
-  char buffer[50];
-  BOOST_TEST(testFB.toString(buffer, sizeof(buffer)) == strlen(result));
-  BOOST_TEST(buffer == result);
+  std::string buffer;
+  testFB.toString(buffer);
+  BOOST_CHECK_EQUAL(buffer, result);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

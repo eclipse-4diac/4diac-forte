@@ -1,6 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2022 Primetals Technologies Austria GmbH
- *               2023 Martin Erich Jobst
+ * Copyright (c) 2022, 2025 Primetals Technologies Austria GmbH,
+ *                          Martin Erich Jobst
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -9,17 +9,15 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    Martin Melik Merkumians
+ *   Martin Melik Merkumians
  *      - initial implementation and rework communication infrastructure
- *    Martin Jobst
- *      - refactored for common assignment operators
- *      - refactored array type structure
+ *   Martin Jobst - refactored for common assignment operators
+ *                - refactored array type structure
+ *   Markus Meingast, Alois Zoitl  - migrated data type toString to std::string
  *******************************************************************************/
 #pragma once
 
 #include <stddef.h>
-#include <inttypes.h>
-#include <initializer_list>
 
 #include "forte_any_derived.h"
 #include "forte_any_int.h"
@@ -110,6 +108,8 @@ class CIEC_ARRAY : public CIEC_ANY_DERIVED {
 
     void setValue(const CIEC_ANY &paValue) override;
 
+    void reset() override;
+
     [[nodiscard]] bool equals(const CIEC_ANY &paOther) const override {
       if (paOther.getDataTypeID() == CIEC_ANY::e_ARRAY) {
         return *this == static_cast<const CIEC_ARRAY &>(paOther);
@@ -117,9 +117,7 @@ class CIEC_ARRAY : public CIEC_ANY_DERIVED {
       return false;
     }
 
-    [[nodiscard]] int toString(char *paValue, size_t paBufferSize) const override;
-
-    [[nodiscard]] size_t getToStringBufferSize() const override;
+    void toString(std::string &paTargetBuf) const override;
 
     ~CIEC_ARRAY() override = default;
 
@@ -135,10 +133,9 @@ class CIEC_ARRAY : public CIEC_ANY_DERIVED {
     static const intmax_t cmCollapseMaxSize = 100;
 
   private:
-    [[nodiscard]] int toCollapsedString(char *paValue, size_t paBufferSize) const;
+    void toCollapsedString(std::string &paTargetBuf) const;
 
-    [[nodiscard]] int toCollapsedElementString(
-        const CIEC_ANY &paElement, size_t paCount, bool paComma, char *paValue, size_t paBufferSize) const;
+    void toCollapsedElementString(const CIEC_ANY &paElement, size_t paCount, std::string &paTargetBuf) const;
 
     template<typename U>
     inline void assignDynamic(const U &paArray, intmax_t sourceLowerBound, intmax_t sourceUpperBound) {

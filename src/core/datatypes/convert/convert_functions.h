@@ -1,8 +1,8 @@
 /*******************************************************************************
- * Copyright (c) 2010 - 2015 TU Vienna/ACIN, Profactor GmbH, fortiss GmbH,
- *               2018-2019 TU Vienna/ACIN
- *               2021 HIT robot group
- *               2024 Monika Wenger
+ * Copyright (c) 2010, 2025 TU Vienna/ACIN, Profactor GmbH, fortiss GmbH,
+ *                          HIT robot group, Monika Wenger,
+ *                          Primetals Technologies Austria GmbH
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -10,14 +10,15 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    Alois Zoitl, Ingo Hegny, Monika Wenger, Carolyn Oates, Patrick Smejkal,
- *    Matthias Plasch,
+ *   Alois Zoitl, Ingo Hegny, Monika Wenger, Carolyn Oates, Patrick Smejkal,
+ *     Matthias Plasch
  *      - initial implementation and rework communication infrastructure
- *    Martin Melik-Merkumians - fixes DT_TO_TOD
- *    Martin Melik-Merkumians - removes invalid casts, update implementation
+ *   Martin Melik-Merkumians - fixes DT_TO_TOD
+ *   Martin Melik-Merkumians - removes invalid casts, update implementation
  *     to use new cast function
- *    Zhao Xin -fixes string conversion
- *    Monika Wenger - func_ANY_AS_STRING
+ *   Zhao Xin -fixes string conversion
+ *   Monika Wenger - func_ANY_AS_STRING
+ *   Alois Zoitl  - migrated data type toString to std::string
  *******************************************************************************/
 #ifndef SRC_CORE_DATATYPES_CONVERT_CONVERT_FUNCTIONS_H_
 #define SRC_CORE_DATATYPES_CONVERT_CONVERT_FUNCTIONS_H_
@@ -64,21 +65,15 @@
  */
 
 inline void stringConverter(CIEC_WSTRING &paString, const CIEC_ANY &paVal) {
-  size_t bufferSize = paVal.getToStringBufferSize();
-
-  paString.reserve(static_cast<TForteUInt16>(bufferSize));
-  char *pacBuffer = paString.getValue();
-  int nWrittenBytes = paVal.toString(pacBuffer, bufferSize);
-  nWrittenBytes = nWrittenBytes > -1 ? nWrittenBytes : 0;
-  paString.assign(pacBuffer, static_cast<TForteUInt16>(nWrittenBytes));
+  std::string buffer;
+  paVal.toString(buffer);
+  paString = CIEC_WSTRING(buffer.c_str());
 }
 
 inline void stringConverter(CIEC_STRING &paString, const CIEC_ANY &paVal) {
-  size_t bufferSize = paVal.getToStringBufferSize();
-  char *const buffer = new char[bufferSize]();
-  paVal.toString(buffer, bufferSize);
-  paString.assign(buffer, static_cast<TForteUInt16>(strlen(buffer))); // max length 65534, cast to silence to compiler
-  delete[] (buffer);
+  std::string buffer;
+  paVal.toString(buffer);
+  paString = CIEC_STRING(std::move(buffer));
 }
 
 inline const CIEC_STRING func_ANY_AS_STRING(const CIEC_ANY &paVal) {

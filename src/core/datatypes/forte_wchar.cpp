@@ -1,5 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2022 Primetals Technologies Austria GmbH
+ * Copyright (c) 2022, 2025 Primetals Technologies Austria GmbH
+ *                          Martin Erich Jobst
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -8,42 +9,44 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    Martin Melik-Merkumians
+ *   Martin Melik-Merkumians
  *      - initial implementation and rework communication infrastructure
+ *   Alois Zoitl  - migrated data type toString to std::string
+ *   Martin Jobst - fix line feed and newline escape sequences
  *******************************************************************************/
 #include "forte_wchar.h"
+#include <cstdint>
+#include <format>
+#include "string_utils.h"
 
 USE_STRING_ID(WCHAR);
 
-#include "unicode_utils.h"
-
-#include <limits>
-#include <stdio.h>
+using namespace std::literals::string_literals;
 
 DEFINE_FIRMWARE_DATATYPE(WCHAR, STRID(WCHAR))
 
-int CIEC_WCHAR::toString(char *paValue, size_t paBufferSize) const {
-  const char longestStringSerialization[] = "WCHAR#\"$0000\"";
-  const size_t longestStringSize = sizeof(longestStringSerialization);
-  if (paBufferSize >= longestStringSize) { // sizeof is char string + \0
-    const TForteWChar symbol = this->operator TForteWChar();
-    switch (symbol) {
-      case '\0': return snprintf(paValue, longestStringSize, "WCHAR#\"\"");
-      case '$': return snprintf(paValue, longestStringSize, "WCHAR#\"$$\"");
-      case '"': return snprintf(paValue, longestStringSize, "WCHAR#\"$\"\"");
-      case '\n': return snprintf(paValue, longestStringSize, "WCHAR#\"$N\"");
-      case '\f': return snprintf(paValue, longestStringSize, "WCHAR#\"$P\""); // page aka form feed
-      case '\r': return snprintf(paValue, longestStringSize, "WCHAR#\"$R\"");
-      case '\t': return snprintf(paValue, longestStringSize, "WCHAR#\"$T\"");
-      default: {
-        if (symbol < 256) {
-          return snprintf(paValue, longestStringSize, "WCHAR#\"%c\"", symbol);
-        }
-        return snprintf(paValue, longestStringSize, "WCHAR#\"$%X\"", symbol);
+void CIEC_WCHAR::toString(std::string &paTargetBuf) const {
+  const TForteWChar symbol = this->operator TForteWChar();
+  switch (symbol) {
+    case '\0': paTargetBuf += "WCHAR#\"$0000\""s; break;
+    case '$': paTargetBuf += "WCHAR#\"$$\""s; break;
+    case '"': paTargetBuf += "WCHAR#\"$\"\""s; break;
+    case '\n': paTargetBuf += "WCHAR#\"$l\""s; break;
+    case '\f':
+      paTargetBuf += "WCHAR#\"$p\""s; // page aka form feed
+      break;
+    case '\r': paTargetBuf += "WCHAR#\"$r\""s; break;
+    case '\t': paTargetBuf += "WCHAR#\"$t\""s; break;
+    default:
+      paTargetBuf += "WCHAR#\""s;
+      if (symbol < 256 && isprint(static_cast<unsigned char>(symbol))) {
+        paTargetBuf += static_cast<char>(symbol);
+      } else {
+        std::format_to(std::back_inserter(paTargetBuf), "${:04X}", static_cast<uint16_t>(symbol));
       }
-    }
+      paTargetBuf += "\"";
+      break;
   }
-  return -1;
 }
 
 int CIEC_WCHAR::fromString(const char *paValue) {
@@ -74,15 +77,19 @@ int CIEC_WCHAR::fromString(const char *paValue) {
   if ('$' ==
       paValue[bufferCount]) { // Escape sequence, so the next symbol must either be a hex number or a special symbol
     if ('"' == paValue[bufferCount + 2]) { // if there is only one symbol it will get considered as special symbol
-      const char controlSymbol = static_cast<char>(toupper(static_cast<unsigned char>(paValue[bufferCount + 1])));
-      switch (controlSymbol) {
+      switch (paValue[bufferCount + 1]) {
         case '$': *this = CIEC_WCHAR('$'); break;
         case '"': *this = CIEC_WCHAR('"'); break;
-        case 'L': *this = CIEC_WCHAR('\n'); break;
-        case 'N': *this = CIEC_WCHAR('\n'); break;
-        case 'P': *this = CIEC_WCHAR('\f'); break;
-        case 'R': *this = CIEC_WCHAR('\r'); break;
-        case 'T': *this = CIEC_WCHAR('\t'); break;
+        case 'N': // Newline is an implementation-independent alias for the end of a line
+        case 'n': // FORTE uses LF on all platforms
+        case 'L':
+        case 'l': *this = CIEC_WCHAR('\n'); break;
+        case 'P':
+        case 'p': *this = CIEC_WCHAR('\f'); break;
+        case 'R':
+        case 'r': *this = CIEC_WCHAR('\r'); break;
+        case 'T':
+        case 't': *this = CIEC_WCHAR('\t'); break;
         default: return -1;
       }
       return bufferCount + 3; // $ + control symbol + '

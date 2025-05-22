@@ -1,5 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2025 fortiss GmbH, Johannes Kepler University Linz
+ * Copyright (c) 2013, 2025 fortiss GmbH, Johannes Kepler University Linz,
+ *                          Primetals Technologies Austria GmbH
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -8,6 +10,7 @@
  *
  * Contributors:
  *   Alois Zoitl - initial API and implementation and/or initial documentation
+ *   Alois Zoitl  - migrated data type toString to std::string
  *******************************************************************************/
 #include "string_utils.h"
 #include "../datatypes/forte_dint.h"
@@ -20,6 +23,8 @@
 #include <string.h>
 #include <array>
 #include <map>
+
+using namespace std::string_literals;
 
 constexpr auto scCharacters2Escape = std::array{"&quot;", "&apos;", "&amp;", "&lt;", "&gt;"};
 
@@ -225,23 +230,18 @@ size_t forte::core::util::getExtraSizeForXMLEscapedChars(const char *paString) {
   return retVal;
 }
 
-size_t forte::core::util::transformNonEscapedToEscapedXMLText(char *const paString) {
-  size_t retVal = 0;
-  char *runner = strchr(paString, '\0');
-  char *originalEnd = runner;
-  runner--;
-  while (paString <= runner) {
-    auto escapeChar = scEscapeMap.find(*runner);
+void forte::core::util::transformNonEscapedToEscapedXMLText(std::string &paString, size_t paStart) {
+  if (paString.size() == 0) {
+    return;
+  }
+
+  for (size_t runner = paString.size() - 1; runner >= paStart && runner != static_cast<size_t>(-1); runner--) {
+    auto escapeChar = scEscapeMap.find(paString[runner]);
     if (escapeChar != scEscapeMap.end()) {
       const char *const escapSeq = std::get<0>(escapeChar->second);
-      size_t toMove = std::get<1>(escapeChar->second);
-      memmove(&runner[toMove], runner + 1, originalEnd - runner + retVal);
-      memcpy(runner, escapSeq, toMove);
-      retVal += toMove - 1;
+      paString.replace(runner, 1, escapSeq);
     }
-    runner--;
   }
-  return retVal;
 }
 
 size_t forte::core::util::transformEscapedXMLToNonEscapedText(char *const paString) {
@@ -330,4 +330,12 @@ void forte::core::util::removeEscapedSigns(char **paString, char paEscapingChar)
     }
     runner++;
   }
+}
+
+void forte::core::util::writeToStringNameValuePair(std::string &paTargetBuf,
+                                                   const CStringDictionary::TStringId variableNameId,
+                                                   const CIEC_ANY *const variable) {
+  paTargetBuf += CStringDictionary::get(variableNameId);
+  paTargetBuf += ":="s;
+  variable->toString(paTargetBuf);
 }

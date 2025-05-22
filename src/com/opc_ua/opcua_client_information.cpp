@@ -12,7 +12,7 @@
  *    Martin Melik Merkumians - Change CIEC_STRING to std::string
  *******************************************************************************/
 
-#include <forte_architecture_time.h>
+#include "forte_architecture_time.h"
 #include "opcua_client_information.h"
 #include <basecommfb.h>
 #include "opcua_handler_abstract.h" //for logger
