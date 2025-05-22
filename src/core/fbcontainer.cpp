@@ -115,16 +115,19 @@ EMGMResponse CFBContainer::createFB(CStringDictionary::TStringId paInstanceNameI
   }
   TFBContainerList::iterator childIt = getChildrenIterator(paInstanceNameId);
   // test if the container does not contain any FB or a container with the same name
-  if (!isChild(childIt, paInstanceNameId)) {
-    CFunctionBlock *newFB = CTypeLib::createFB(paInstanceNameId, paTypeName, *this);
-    if (newFB != nullptr) {
-      // we could create a FB now add it to the list of contained FBs
-      mChildren.insert(childIt, newFB);
-      return EMGMResponse::Ready;
-    }
-    return CTypeLib::getLastError();
+  if (isChild(childIt, paInstanceNameId)) {
+    return EMGMResponse::InvalidState;
   }
-  return EMGMResponse::InvalidState;
+
+  EMGMResponse errorMSG;
+  CFunctionBlock *newFB = CTypeLib::createFB(paInstanceNameId, paTypeName, *this, errorMSG);
+  if (newFB == nullptr) {
+    return errorMSG;
+  }
+
+  // we could create a FB now add it to the list of contained FBs
+  mChildren.insert(childIt, newFB);
+  return EMGMResponse::Ready;
 }
 
 EMGMResponse CFBContainer::deleteFB(NameIterator &paNameListIt, NameIterator paNameListEnd) {

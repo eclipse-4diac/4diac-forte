@@ -21,6 +21,7 @@
 #include "fortenew.h"
 #include "mgmcmd.h"
 #include "core/stringdict.h"
+#include <vector>
 
 // forward declaration of a few classes to reduce include file dependencies
 class CFunctionBlock;
@@ -158,9 +159,6 @@ class CTypeLib {
         CStringDictionary::TStringId mTypeNameId;
 
       public:
-        CTypeEntry *mNext; //!< a pointer to the next element in the list. Will be used to build single linked list of
-                           //!< type entries.
-
         explicit CTypeEntry(CStringDictionary::TStringId paTypeNameId);
         virtual ~CTypeEntry();
 
@@ -249,6 +247,11 @@ class CTypeLib {
      */
     static CFunctionBlock *createFB(CStringDictionary::TStringId paInstanceNameId,
                                     CStringDictionary::TStringId paFBTypeId,
+                                    forte::core::CFBContainer &paContainer,
+                                    EMGMResponse &paErrorMSG);
+
+    static CFunctionBlock *createFB(CStringDictionary::TStringId paInstanceNameId,
+                                    CStringDictionary::TStringId paFBTypeId,
                                     forte::core::CFBContainer &paContainer);
 
     /*\brief Delete the given FB
@@ -258,65 +261,29 @@ class CTypeLib {
     static CAdapter *createAdapter(CStringDictionary::TStringId paInstanceNameId,
                                    CStringDictionary::TStringId paFBTypeId,
                                    forte::core::CFBContainer &paContainer,
-                                   bool paIsPlug);
+                                   bool paIsPlug,
+                                   EMGMResponse &paErrorMSG);
 
     /*!\brief Create an instance of an data type.
      *
      * @param paDTNameId string id of the datatype to create
      * @param paDataBuf buffer that the datatype should use. Has to be at least the size of CIEC_ANY
+     * @param paErrorMSG reference to an EMGMResponse for storing errors if the data type instance could not created.
+     * This is indicated with a return value of nullptr.
      * @return pointer to the create data type.
      */
+    static CIEC_ANY *
+    createDataTypeInstance(CStringDictionary::TStringId paDTNameId, TForteByte *paDataBuf, EMGMResponse &paErrorMSG);
+
     static CIEC_ANY *createDataTypeInstance(CStringDictionary::TStringId paDTNameId, TForteByte *paDataBuf);
 
-    /*!\brief Return a description of the last error that occured within the CTypeLib.
-     *
-     * e.g. Out of memory
-     * \return Reference to the error string.
-     */
-    static EMGMResponse getLastError() {
-      return mLastErrorMSG;
-    };
+    static CFBTypeEntry *getFBTypeEntry(CStringDictionary::TStringId paTypeNameId);
+    static CAdapterTypeEntry *getAdapterTypeEntry(CStringDictionary::TStringId paTypeNameId);
+    static CDataTypeEntry *getDataTypeEntry(CStringDictionary::TStringId paTypeNameId);
 
-    /*!\brief add a Firmware FB type to the type lib (is mainly used by the corresponding entry class).
-     */
-    static void addFBType(CFBTypeEntry *paFBTypeEntry);
-
-    /*!\brief add a Firmware Adapter type to the type lib (is mainly used by the corresponding entry class).
-     */
-    static void addAdapterType(CAdapterTypeEntry *paAdapterTypeEntry);
-
-    /*!\brief add a Firmware data type to the type lib (is mainly used by the corresponding entry class).
-     */
-    static void addDataType(CDataTypeEntry *paDTEntry);
-    /*!\brief Get a pointer to the begin of the FB library list
-     */
-    static CTypeEntry *getFBLibStart() {
-      return mFBLibStart;
-    }
-
-    /*!\brief Get a pointer to the begin of the FB library list
-     */
-    static CTypeEntry *getAdapterLibStart() {
-      return mAdapterLibStart;
-    }
-
-    /*!\brief Get a pointer to the begin of the datatype library list
-     */
-    static CTypeEntry *getDTLibStart() {
-      return mDTLibStart;
-    }
-
-    static CTypeEntry *findType(CStringDictionary::TStringId paTypeId, CTypeEntry *paListStart);
-
-    /*!\brief Get the size of a data point
-     *
-     * @param paDataTypeIds pointer to the data type ids. If the datatype
-     *        is an Array to more values are taken from the array. If the given
-     *        type is Any 0 is returned as necessary for maintaining the FB's interface.
-     *        The functions puts the pointer in the datatype array to the next data point's id.
-     * @return The size of the data point
-     */
-    static size_t getDataPointSize(const CStringDictionary::TStringId *&paDataTypeIds);
+    static const std::vector<CFBTypeEntry *> &getFBTypeEntries();
+    static const std::vector<CAdapterTypeEntry *> &getAdapterTypeEntries();
+    static const std::vector<CDataTypeEntry *> &getDataTypeEntries();
 
     /*!\brief Function to create an data type instance of given type
      *
@@ -329,29 +296,6 @@ class CTypeLib {
      *         on error... 0
      */
     static CIEC_ANY *createDataPoint(const CStringDictionary::TStringId *&paDataTypeIds, TForteByte *&paDataBuf);
-
-  protected:
-  private:
-    /*!\brief Buffer for the last error that occurred.
-     */
-    static EMGMResponse mLastErrorMSG;
-
-    static CFBTypeEntry *mFBLibStart, //!< pointer to the begin of the firmware fb library list
-        *mFBLibEnd; //!< pointer to the end of the firmware fb library list
-
-    static CAdapterTypeEntry *mAdapterLibStart, //!< pointer to the begin of the firmware adapter library list
-        *mAdapterLibEnd; //!< pointer to the end of the firmware adapter library list
-
-    static CDataTypeEntry *mDTLibStart, //!< pointer to the begin of the data type library
-        *mDTLibEnd; //!< pointer to the end of the data type library
-
-    static CFunctionBlock *createGenericFB(CStringDictionary::TStringId paInstanceNameId,
-                                           CStringDictionary::TStringId paFBTypeId,
-                                           forte::core::CFBContainer &paContainer);
-
-    //! find the position of the first underscore that marks the end of the type name and the beginning of the generic
-    //! part
-    static const char *getFirstNonTypeNameUnderscorePos(const char *paTypeName);
 };
 
 #endif /*TYPELIB_H_*/

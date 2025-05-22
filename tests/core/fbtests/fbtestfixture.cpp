@@ -16,7 +16,6 @@
  *******************************************************************************/
 #include "fbtestfixture.h"
 #include "fbtesterglobalfixture.h"
-#include "device.h"
 #include <criticalregion.h>
 #include <ecet.h>
 
@@ -31,10 +30,11 @@ class CFBTestConn final : public CDataConnection {
       return CDataConnection::canBeConnected(paSrcDataPoint, paDstDataPoint);
     }
 
+    // you are not allowed to create this class
+    CFBTestConn() = delete;
+
   private:
-    // you are not allowed to create this class therefor constructor and destructor are private
-    CFBTestConn();
-    virtual ~CFBTestConn();
+    ~CFBTestConn() override;
 };
 
 class CFBTestInputDataConn final : public CDataConnection {
@@ -62,8 +62,8 @@ class CFBTestInputDataConn final : public CDataConnection {
 
 CFBTestFixtureBase::CFBTestFixtureBase(CStringDictionary::TStringId paTypeId) :
     CGenFunctionBlock<CFunctionBlock>(CFBTestDataGlobalFixture::getResource(), 0),
-    mTypeId(paTypeId),
-    mFBUnderTest(CTypeLib::createFB(paTypeId, paTypeId, CFBTestDataGlobalFixture::getResource())) {
+    mTypeId(paTypeId) {
+  mFBUnderTest = CTypeLib::createFB(paTypeId, paTypeId, CFBTestDataGlobalFixture::getResource());
 }
 
 bool CFBTestFixtureBase::initialize() {

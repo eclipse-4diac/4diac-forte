@@ -29,8 +29,7 @@ void CIEC_ARRAY_DYNAMIC::setup(TForteUInt16 paLength, CStringDictionary::TString
     mLowerBound = 0;
     mUpperBound = paLength - 1;
 
-    mElementDataTypeEntry =
-        static_cast<CTypeLib::CDataTypeEntry *>(CTypeLib::findType(paArrayType, CTypeLib::getDTLibStart()));
+    mElementDataTypeEntry = CTypeLib::getDataTypeEntry(paArrayType);
     if (mElementDataTypeEntry) {
       mElementSize = mElementDataTypeEntry->getSize();
       mData = operator new(paLength * mElementSize);
@@ -49,8 +48,7 @@ void CIEC_ARRAY_DYNAMIC::setup(intmax_t paLowerBound, intmax_t paUpperBound, CSt
   mLowerBound = paLowerBound;
   mUpperBound = paUpperBound;
 
-  mElementDataTypeEntry =
-      static_cast<CTypeLib::CDataTypeEntry *>(CTypeLib::findType(paArrayType, CTypeLib::getDTLibStart()));
+  mElementDataTypeEntry = CTypeLib::getDataTypeEntry(paArrayType);
   if (mElementDataTypeEntry) {
     auto size = static_cast<size_t>(paUpperBound - paLowerBound + 1);
     mElementSize = mElementDataTypeEntry->getSize();
@@ -69,8 +67,7 @@ void CIEC_ARRAY_DYNAMIC::setup(const CStringDictionary::TStringId *paParameters)
   mUpperBound = static_cast<intmax_t>(paParameters[1]);
   CStringDictionary::TStringId elementType = paParameters[2];
 
-  mElementDataTypeEntry =
-      static_cast<CTypeLib::CDataTypeEntry *>(CTypeLib::findType(elementType, CTypeLib::getDTLibStart()));
+  mElementDataTypeEntry = CTypeLib::getDataTypeEntry(elementType);
   if (mElementDataTypeEntry) {
     auto size = static_cast<size_t>(mUpperBound - mLowerBound + 1);
     mElementSize = mElementDataTypeEntry->getSize();

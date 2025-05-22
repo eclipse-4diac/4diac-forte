@@ -24,15 +24,12 @@
 #include "fortenew.h"
 #include "funcbloc.h"
 #include "mgmcmd.h"
-
-USE_STRING_ID(START);
-
 #include "adapter.h"
 #include "adapterconn.h"
 #include "core/ecetFactory.h"
-#include "device.h"
-#include "negdataconn.h"
 #include "string_utils.h"
+
+USE_STRING_ID(START);
 
 #ifdef FORTE_DYNAMIC_TYPE_LOAD
 #include "lua/luaadaptertypeentry.h"
@@ -336,25 +333,29 @@ EMGMResponse CResource::readValue(forte::core::TNameIdentifier &paNameList, std:
 
 #ifdef FORTE_SUPPORT_QUERY_CMD
 
+namespace {
+
+  template<typename T>
+  void appendTypeNameList(std::string &paValue, const std::vector<T *> &paTypeEntries) {
+    if (!paTypeEntries.empty()) {
+      for (T *entry : paTypeEntries) {
+        paValue += entry->getTypeName();
+        paValue += ", ";
+      }
+      paValue.erase(paValue.size() - 2);
+    }
+  }
+
+} // namespace
+
 EMGMResponse CResource::queryAllFBTypes(std::string &paValue) {
-  appendTypeNameList(paValue, CTypeLib::getFBLibStart());
+  appendTypeNameList(paValue, CTypeLib::getFBTypeEntries());
   return EMGMResponse::Ready;
 }
 
 EMGMResponse CResource::queryAllAdapterTypes(std::string &paValue) {
-  appendTypeNameList(paValue, CTypeLib::getAdapterLibStart());
+  appendTypeNameList(paValue, CTypeLib::getAdapterTypeEntries());
   return EMGMResponse::Ready;
-}
-
-void CResource::appendTypeNameList(std::string &paValue, CTypeLib::CTypeEntry *paTypeListStart) {
-  if (paTypeListStart != nullptr) {
-    for (; paTypeListStart != nullptr; paTypeListStart = paTypeListStart->mNext) {
-      paValue += paTypeListStart->getTypeName();
-      if (paTypeListStart->mNext != nullptr) {
-        paValue += ", ";
-      }
-    }
-  }
 }
 
 EMGMResponse CResource::queryFBs(std::string &paValue, const CFBContainer &container, const std::string prefix) {
@@ -448,8 +449,7 @@ void CResource::createConnectionResponseMessage(const CConnection &paConn,
 EMGMResponse CResource::createFBTypeResponseMessage(const CStringDictionary::TStringId paValue,
                                                     std::string &paReqResult) {
   EMGMResponse retVal = EMGMResponse::UnsupportedType;
-  CTypeLib::CFBTypeEntry *fbType =
-      static_cast<CTypeLib::CFBTypeEntry *>(CTypeLib::findType(paValue, CTypeLib::getFBLibStart()));
+  CTypeLib::CFBTypeEntry *fbType = CTypeLib::getFBTypeEntry(paValue);
   if (nullptr != fbType) {
     retVal = createXTypeResponseMessage(fbType, paValue, retVal, paReqResult);
   }
@@ -459,8 +459,7 @@ EMGMResponse CResource::createFBTypeResponseMessage(const CStringDictionary::TSt
 EMGMResponse CResource::createAdapterTypeResponseMessage(const CStringDictionary::TStringId paValue,
                                                          std::string &paReqResult) {
   EMGMResponse retVal = EMGMResponse::UnsupportedType;
-  CTypeLib::CAdapterTypeEntry *adapterType =
-      static_cast<CTypeLib::CAdapterTypeEntry *>(CTypeLib::findType(paValue, CTypeLib::getAdapterLibStart()));
+  CTypeLib::CAdapterTypeEntry *adapterType = CTypeLib::getAdapterTypeEntry(paValue);
   if (nullptr != adapterType) {
     retVal = createXTypeResponseMessage(adapterType, paValue, retVal, paReqResult);
   }

@@ -353,8 +353,7 @@ class CIEC_ARRAY_DYNAMIC : public CIEC_ARRAY {
         mLowerBound(paSource.getLowerBound()),
         mUpperBound(paSource.getUpperBound()),
         mData(nullptr) {
-      mElementDataTypeEntry = static_cast<CTypeLib::CDataTypeEntry *>(
-          CTypeLib::findType(paSource.getElementTypeNameID(), CTypeLib::getDTLibStart()));
+      mElementDataTypeEntry = CTypeLib::getDataTypeEntry(paSource.getElementTypeNameID());
       setup(paSource);
     }
 
@@ -370,8 +369,7 @@ class CIEC_ARRAY_DYNAMIC : public CIEC_ARRAY {
         mLowerBound(paSource.getLowerBound()),
         mUpperBound(paSource.getUpperBound()),
         mData(nullptr) {
-      mElementDataTypeEntry = static_cast<CTypeLib::CDataTypeEntry *>(
-          CTypeLib::findType(paSource.getElementTypeNameID(), CTypeLib::getDTLibStart()));
+      mElementDataTypeEntry = CTypeLib::getDataTypeEntry(paSource.getElementTypeNameID());
       setup(paSource);
     }
 
@@ -387,8 +385,7 @@ class CIEC_ARRAY_DYNAMIC : public CIEC_ARRAY {
         mLowerBound(paSource.getLowerBound()),
         mUpperBound(paSource.getUpperBound()),
         mData(nullptr) {
-      mElementDataTypeEntry = static_cast<CTypeLib::CDataTypeEntry *>(
-          CTypeLib::findType(paSource.getElementTypeNameID(), CTypeLib::getDTLibStart()));
+      mElementDataTypeEntry = CTypeLib::getDataTypeEntry(paSource.getElementTypeNameID());
       setup(paSource);
     }
 
@@ -406,8 +403,7 @@ class CIEC_ARRAY_DYNAMIC : public CIEC_ARRAY {
         mLowerBound(lowerBound),
         mUpperBound(upperBound),
         mData(nullptr) {
-      mElementDataTypeEntry = static_cast<CTypeLib::CDataTypeEntry *>(
-          CTypeLib::findType(paSource.getElementTypeNameID(), CTypeLib::getDTLibStart()));
+      mElementDataTypeEntry = CTypeLib::getDataTypeEntry(paSource.getElementTypeNameID());
       setup(paSource);
     }
 

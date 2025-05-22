@@ -357,9 +357,10 @@ EMGMResponse CFunctionBlock::changeExecutionState(EMGMCommandType paCommand) {
 
 CAdapter *CFunctionBlock::createAdapter(const SAdapterInstanceDef &paAdapterInstanceDefinition,
                                         TForteUInt8 paParentAdapterlistID) {
+  EMGMResponse errorMSG;
   CAdapter *adapter = CTypeLib::createAdapter(paAdapterInstanceDefinition.mAdapterNameID,
                                               paAdapterInstanceDefinition.mAdapterTypeNameID, *this,
-                                              paAdapterInstanceDefinition.mIsPlug);
+                                              paAdapterInstanceDefinition.mIsPlug, errorMSG);
   if (adapter) {
     adapter->setParentFB(this, paParentAdapterlistID);
   }
