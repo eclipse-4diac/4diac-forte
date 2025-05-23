@@ -80,32 +80,34 @@ void IODeviceController::addHandle(std::string const &paId, std::unique_ptr<IOHa
 }
 
 void IODeviceController::updateHandleList(std::string const &paId, IOHandle *paHandle) {
-  for (auto it = mDiverseHandles.begin(); it != mDiverseHandles.end(); ++it) {
+  for (auto it = mDiverseHandles.begin(); it != mDiverseHandles.end();) {
     if (it->get() == paHandle) {
       auto handleDirection = (*it)->getDirection();
       switch (handleDirection) {
         case IOMapper::In: {
           CCriticalRegion criticalRegion(mHandleMutex);
           mInputHandles.push_back(std::move(*it));
-          mDiverseHandles.erase(it);
+          it = mDiverseHandles.erase(it);
           break;
         }
         case IOMapper::Out: {
           CCriticalRegion criticalRegion(mHandleMutex);
           mOutputHandles.push_back(std::move(*it));
-          mDiverseHandles.erase(it);
+          it = mDiverseHandles.erase(it);
           break;
         }
         default:
           DEVLOG_ERROR("[updateHandleList] %s's direction is neither `In` nor `Out`.\r\n", paId.c_str());
+          ++it;
           break;
       }
       return;
+    } else {
+      ++it;
     }
   }
   DEVLOG_INFO("[updateHandleList] %s's is no member of mDiverseHandles.\r\n", paId.c_str());
 }
-
 
 void IODeviceController::fireIndicationEvent(IOObserver *paObserver) {
   startNewEventChain(static_cast<CProcessInterfaceFB *>(paObserver));
