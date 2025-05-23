@@ -19,7 +19,7 @@
 #include <string.h>
 #include <ctype.h>
 #include "forte_ltime_of_day.h"
-#include "string_utils.h"
+#include "core/util/string_utils.h"
 
 USE_STRING_ID(LTIME_OF_DAY);
 

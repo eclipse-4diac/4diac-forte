@@ -12,7 +12,7 @@
  *   Alois Zoitl - initial API and implementation and/or initial documentation
  *   Alois Zoitl  - migrated data type toString to std::string
  *******************************************************************************/
-#include "string_utils.h"
+#include "core/util/string_utils.h"
 #include "../datatypes/forte_dint.h"
 #include "../datatypes/forte_udint.h"
 #include "../datatypes/forte_lint.h"

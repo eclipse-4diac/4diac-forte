@@ -18,8 +18,8 @@
  *   Alois Zoitl  - migrated data type toString to std::string
  *******************************************************************************/
 #include "forte_ltime.h"
-#include "forte_constants.h"
-#include "string_utils.h"
+#include "core/util/forte_constants.h"
+#include "core/util/string_utils.h"
 
 USE_STRING_ID(LTIME);
 

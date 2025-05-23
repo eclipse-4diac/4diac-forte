@@ -15,7 +15,7 @@
  *   Markus Meingast, Alois Zoitl  - migrated data type toString to std::string
  *******************************************************************************/
 #include "forte_any_elementary.h"
-#include "string_utils.h"
+#include "core/util/string_utils.h"
 #include <stdlib.h>
 #include <errno.h>
 #include "forte_sint.h"

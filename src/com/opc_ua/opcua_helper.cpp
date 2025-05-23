@@ -20,7 +20,7 @@
 #include "forte_date.h"
 #include "forte_struct.h"
 #include "forte_array.h"
-#include "string_utils.h"
+#include "core/util/string_utils.h"
 
 static const CIEC_DATE::TValueType internalToOPCUAEpochDifferenceInNanoseconds = 11644473600000000LL;
 

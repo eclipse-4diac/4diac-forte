@@ -18,7 +18,7 @@
 #include "../../arch/devlog.h"
 #include "basecommfb.h"
 #include <forte_thread.h>
-#include "string_utils.h"
+#include "core/util/string_utils.h"
 
 using namespace forte::com_infra;
 

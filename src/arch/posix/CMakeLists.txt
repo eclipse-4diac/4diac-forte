@@ -27,7 +27,6 @@ add_library(forte-arch-posix OBJECT
     ../genforte_printer.cpp
     ../genforte_fileio.cpp
     ../utils/timespec_utils.cpp
-    ../genforte_realFunctions.cpp
     ../common/forte_specific_architecture.cpp
     $<$<BOOL:${FORTE_COM_ETH}>:../fdselecthand.cpp>
     $<$<BOOL:${FORTE_COM_ETH}>:../bsdsocketinterf.cpp>

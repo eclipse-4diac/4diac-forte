@@ -17,7 +17,7 @@
 #include "commfb.h"
 #include <stdio.h>
 #include "parameterParser.h"
-#include "string_utils.h"
+#include "core/util/string_utils.h"
 
 using namespace forte::com_infra;
 
