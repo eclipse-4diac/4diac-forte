@@ -58,7 +58,6 @@ namespace forte {
           return *static_cast<CIEC_BOOL *>(getDI(0));
         }
 
-#ifdef FORTE_USE_WSTRING_DATATYPE
         CIEC_WSTRING &ID() {
           return *static_cast<CIEC_WSTRING *>(getDI(1));
         }
@@ -66,16 +65,6 @@ namespace forte {
         CIEC_WSTRING &STATUS() {
           return *static_cast<CIEC_WSTRING *>(getDO(1));
         }
-#else
-        // TODO after fixing discussion on the new compliance profile fix these values to STRING
-        CIEC_STRING &ID() {
-          return *static_cast<CIEC_STRING *>(getDI(1));
-        }
-
-        CIEC_STRING &STATUS() {
-          return *static_cast<CIEC_STRING *>(getDO(1));
-        }
-#endif
 
         CIEC_BOOL &QO() {
           return *static_cast<CIEC_BOOL *>(getDO(0));

@@ -64,13 +64,11 @@ inline const CIEC_STRING func_REAL_AS_STRING(const CIEC_REAL &paVal) {
   return string;
 }
 
-#ifdef FORTE_USE_WSTRING_DATATYPE
 inline const CIEC_WSTRING func_REAL_AS_WSTRING(const CIEC_REAL &paVal) {
   CIEC_WSTRING string;
   stringConverter(string, paVal);
   return string;
 }
-#endif
 
 inline const CIEC_DWORD func_REAL_TO_DWORD(const CIEC_REAL &paVal) {
   return CIEC_ANY::cast<CIEC_DWORD>(paVal);

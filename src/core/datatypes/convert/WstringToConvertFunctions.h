@@ -22,7 +22,6 @@
 //********************************************************************************************
 //   WSTRING_TO_*  functions
 //********************************************************************************************
-#ifdef FORTE_USE_WSTRING_DATATYPE
 inline const CIEC_BOOL func_WSTRING_AS_BOOL(const CIEC_WSTRING &paVal) {
   CIEC_BOOL tempVal;
   const char *pacBuffer = paVal.getValue();
@@ -140,6 +139,5 @@ inline const CIEC_ULINT func_WSTRING_AS_ULINT(const CIEC_WSTRING &paVal) {
   tempVal.fromString(pacBuffer);
   return tempVal;
 }
-#endif
 
 #endif /* SRC_CORE_DATATYPES_CONVERT_WSTRINGTOCONVERTFUNCTIONS_H_ */

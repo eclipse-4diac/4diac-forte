@@ -30,8 +30,6 @@
 
 #include <codecvt>
 
-#ifdef FORTE_USE_WSTRING_DATATYPE
-
 /*!\ingroup COREDTS \brief CIEC_WSTRING represents the wide string data type according to IEC 61131.
  *
  *  "wstring" is implemented like the "string" - the following first implementation
@@ -232,7 +230,5 @@ namespace forte {
       static const CStringDictionary::TStringId scmDataTypeName;
   };
 } // namespace forte
-
-#endif
 
 #endif /*_FORTE_WSTRING_H_*/

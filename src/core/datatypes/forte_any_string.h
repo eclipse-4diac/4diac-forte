@@ -96,7 +96,6 @@ class CIEC_ANY_STRING : public CIEC_ANY_CHARS {
       return (nullptr != getGenData()) ? (*((TForteUInt16 *) (getGenData() + 2))) : static_cast<TForteUInt16>(0);
     }
 
-#ifdef FORTE_UNICODE_SUPPORT
     /*! \brief Converts the variable to a UTF-8 representation
      *
      *   This command implements a conversion function from a WSTRING
@@ -108,7 +107,6 @@ class CIEC_ANY_STRING : public CIEC_ANY_CHARS {
      */
     virtual void toUTF8(std::string &, bool) const {
     }
-#endif
 
   protected:
     static char smNullString[];

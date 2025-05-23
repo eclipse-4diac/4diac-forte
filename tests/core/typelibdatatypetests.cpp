@@ -313,7 +313,6 @@ BOOST_AUTO_TEST_CASE(createSTRING) {
   delete poVal;
 }
 
-#ifdef FORTE_USE_WSTRING_DATATYPE
 BOOST_AUTO_TEST_CASE(createWSTRING) {
   TForteByte acDataBuf[sizeof(CIEC_WSTRING)];
   CIEC_ANY *poVal = CTypeLib::createDataTypeInstance(STRID(WSTRING), acDataBuf);
@@ -325,7 +324,6 @@ BOOST_AUTO_TEST_CASE(createWSTRING) {
   BOOST_CHECK_EQUAL("", static_cast<CIEC_WSTRING *>(poVal)->getValue());
   delete poVal;
 }
-#endif
 
 // TODO check array
 

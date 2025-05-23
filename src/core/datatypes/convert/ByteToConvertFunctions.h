@@ -81,12 +81,10 @@ inline const CIEC_STRING func_BYTE_AS_STRING(const CIEC_BYTE &paVal) {
   return string;
 }
 
-#ifdef FORTE_USE_WSTRING_DATATYPE
 inline const CIEC_WSTRING func_BYTE_AS_WSTRING(const CIEC_BYTE &paVal) {
   CIEC_WSTRING string;
   stringConverter(string, paVal);
   return string;
 }
-#endif
 
 #endif /* SRC_CORE_DATATYPES_CONVERT_BYTETOCONVERTFUNCTIONS_H_ */

@@ -81,12 +81,10 @@ inline const CIEC_STRING func_LINT_AS_STRING(const CIEC_LINT &paVal) {
   return string;
 }
 
-#ifdef FORTE_USE_WSTRING_DATATYPE
 inline const CIEC_WSTRING func_LINT_AS_WSTRING(const CIEC_LINT &paVal) {
   CIEC_WSTRING string;
   stringConverter(string, paVal);
   return string;
 }
-#endif
 
 #endif /* SRC_CORE_DATATYPES_CONVERT_LINTTOCONVERTFUNCTIONS_H_ */

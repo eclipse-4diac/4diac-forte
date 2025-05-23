@@ -80,12 +80,10 @@ inline const CIEC_STRING func_UINT_AS_STRING(const CIEC_UINT &paVal) {
   return string;
 }
 
-#ifdef FORTE_USE_WSTRING_DATATYPE
 inline const CIEC_WSTRING func_UINT_AS_WSTRING(const CIEC_UINT &paVal) {
   CIEC_WSTRING string;
   stringConverter(string, paVal);
   return string;
 }
-#endif
 
 #endif /* SRC_CORE_DATATYPES_CONVERT_UINTTOCONVERTFUNCTIONS_H_ */

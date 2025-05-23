@@ -99,10 +99,8 @@ inline const CIEC_CHAR func_STRING_TO_CHAR(const CIEC_STRING &paVal) {
   return paVal.length() > 0 ? paVal[1] : 0_CHAR;
 }
 
-#ifdef FORTE_USE_WSTRING_DATATYPE
 inline const CIEC_WSTRING func_STRING_TO_WSTRING(const CIEC_STRING &paVal) {
   return func_STRING_AS_X_helper<CIEC_WSTRING>(paVal);
 }
-#endif
 
 #endif /* SRC_CORE_DATATYPES_CONVERT_STRINGTOCONVERTFUNCTIONS_H_ */

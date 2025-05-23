@@ -38,13 +38,11 @@ inline const CIEC_STRING func_TIME_AS_STRING(const CIEC_TIME &paVal) {
   return string;
 }
 
-#ifdef FORTE_USE_WSTRING_DATATYPE
 inline const CIEC_WSTRING func_TIME_AS_WSTRING(const CIEC_TIME &paVal) {
   CIEC_WSTRING string;
   stringConverter(string, paVal);
   return string;
 }
-#endif
 
 inline const CIEC_STRING func_LTIME_AS_STRING(const CIEC_LTIME &paVal) {
   CIEC_STRING string;
@@ -52,12 +50,10 @@ inline const CIEC_STRING func_LTIME_AS_STRING(const CIEC_LTIME &paVal) {
   return string;
 }
 
-#ifdef FORTE_USE_WSTRING_DATATYPE
 inline const CIEC_WSTRING func_LTIME_AS_WSTRING(const CIEC_LTIME &paVal) {
   CIEC_WSTRING string;
   stringConverter(string, paVal);
   return string;
 }
-#endif
 
 #endif /* SRC_CORE_DATATYPES_CONVERT_TIMETOCONVERTFUNCTIONS_H_ */

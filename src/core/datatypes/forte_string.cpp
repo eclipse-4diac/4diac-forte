@@ -149,7 +149,6 @@ void CIEC_STRING::toString(std::string &paTargetBuf) const {
   paTargetBuf += '\'';
 }
 
-#ifdef FORTE_UNICODE_SUPPORT
 void CIEC_STRING::toUTF8(std::string &paBuffer, bool paEscape) const {
   TForteByte utf8Buffer[4];
 
@@ -179,5 +178,3 @@ void CIEC_STRING::toUTF8(std::string &paBuffer, bool paEscape) const {
 }
 
 const CStringDictionary::TStringId forte::CDataTypeTrait<CIEC_STRING>::scmDataTypeName = STRID(STRING);
-
-#endif

@@ -80,12 +80,10 @@ inline const CIEC_STRING func_DINT_AS_STRING(const CIEC_DINT &paVal) {
   return string;
 }
 
-#ifdef FORTE_USE_WSTRING_DATATYPE
 inline const CIEC_WSTRING func_DINT_AS_WSTRING(const CIEC_DINT &paVal) {
   CIEC_WSTRING string;
   stringConverter(string, paVal);
   return string;
 }
-#endif
 
 #endif /* SRC_CORE_DATATYPES_CONVERT_DINTTOCONVERTFUNCTIONS_H_ */

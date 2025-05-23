@@ -344,7 +344,6 @@ class CIEC_STRING : public CIEC_ANY_STRING {
       return false;
     }
 
-#ifdef FORTE_UNICODE_SUPPORT
     /*! \brief Converts the STRING to a UTF-8 representation
      *
      *   This command implements a conversion function from a STRING
@@ -355,7 +354,6 @@ class CIEC_STRING : public CIEC_ANY_STRING {
      *           -1 on error
      */
     void toUTF8(std::string &paBuffer, bool paEscape) const override;
-#endif
 
     void setValue(const CIEC_ANY &paValue) override {
       if (paValue.getDataTypeID() == CIEC_ANY::e_STRING) {

@@ -339,11 +339,9 @@ int CFBDKASN1ComLayer::serializeValue(TForteByte *paBytes, int paStreamSize, con
       case CIEC_ANY::e_TIME:
         nRetVal = serializeValueTime(paBytes, paStreamSize, static_cast<const CIEC_TIME &>(paCIECData));
         break;
-#ifdef FORTE_USE_WSTRING_DATATYPE
       case CIEC_ANY::e_WSTRING:
         nRetVal = serializeValueWString(paBytes, paStreamSize, static_cast<const CIEC_WSTRING &>(paCIECData));
         break;
-#endif
       case CIEC_ANY::e_STRING:
         nRetVal = serializeValueString(paBytes, paStreamSize, static_cast<const CIEC_STRING &>(paCIECData));
         break;
@@ -435,7 +433,6 @@ int CFBDKASN1ComLayer::serializeValueString(TForteByte *paBytes, int paStreamSiz
   return nRetVal;
 }
 
-#ifdef FORTE_USE_WSTRING_DATATYPE
 int CFBDKASN1ComLayer::serializeValueWString(TForteByte *paBytes, int paStreamSize, const CIEC_WSTRING &paWString) {
   int nRetVal = -1;
 
@@ -452,7 +449,6 @@ int CFBDKASN1ComLayer::serializeValueWString(TForteByte *paBytes, int paStreamSi
 
   return nRetVal;
 }
-#endif
 
 int CFBDKASN1ComLayer::serializeArray(TForteByte *paBytes, int paStreamSize, const CIEC_ARRAY &paArray) {
   int nRetVal = -1;
@@ -608,11 +604,9 @@ int CFBDKASN1ComLayer::deserializeValue(const TForteByte *paBytes, int paStreamS
       case CIEC_ANY::e_LTIME:
         nRetVal = deserializeValueTime(paBytes, paStreamSize, static_cast<CIEC_TIME &>(paCIECData));
         break;
-#ifdef FORTE_USE_WSTRING_DATATYPE
       case CIEC_ANY::e_WSTRING:
         nRetVal = deserializeValueWString(paBytes, paStreamSize, static_cast<CIEC_WSTRING &>(paCIECData));
         break;
-#endif
       case CIEC_ANY::e_STRING:
         nRetVal = deserializeValueString(paBytes, paStreamSize, static_cast<CIEC_STRING &>(paCIECData));
         break;
@@ -695,7 +689,6 @@ int CFBDKASN1ComLayer::deserializeValueTime(const TForteByte *paBytes, int paStr
   return nRetVal;
 }
 
-#ifdef FORTE_USE_WSTRING_DATATYPE
 int CFBDKASN1ComLayer::deserializeValueWString(const TForteByte *paBytes, int paStreamSize, CIEC_WSTRING &paIECData) {
   int nRetVal = -1;
   if (paStreamSize >= 2) {
@@ -707,7 +700,6 @@ int CFBDKASN1ComLayer::deserializeValueWString(const TForteByte *paBytes, int pa
   }
   return nRetVal;
 }
-#endif
 
 int CFBDKASN1ComLayer::deserializeValueString(const TForteByte *paBytes, int paStreamSize, CIEC_STRING &paIECData) {
   int nRetVal = -1;
@@ -841,9 +833,7 @@ size_t CFBDKASN1ComLayer::getRequiredSerializationSize(const CIEC_ANY &paCIECDat
   switch (paCIECData.getDataTypeID()) {
     case CIEC_ANY::e_ANY: unRetVal = getRequiredSerializationSize(paCIECData.unwrap()); break;
     case CIEC_ANY::e_STRING: unRetVal += ((CIEC_STRING &) paCIECData).length() + 3; break;
-#ifdef FORTE_USE_WSTRING_DATATYPE
     case CIEC_ANY::e_WSTRING: unRetVal += ((CIEC_WSTRING &) paCIECData).toUTF16(nullptr, 0) + 3; break;
-#endif
     case CIEC_ANY::e_ARRAY:
       unRetVal += 3;
       if (((CIEC_ARRAY &) paCIECData).getElementDataTypeID() == CIEC_ANY::e_BOOL) {

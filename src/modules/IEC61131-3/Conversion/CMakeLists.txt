@@ -27,11 +27,7 @@ forte_add_subdirectory(UINT)
 forte_add_subdirectory(USINT)
 forte_add_subdirectory(WORD)
 forte_add_subdirectory(BCD)
-
-if(FORTE_USE_WSTRING_DATATYPE)
-  forte_add_subdirectory(WSTRING)
-endif(FORTE_USE_WSTRING_DATATYPE)
-
+forte_add_subdirectory(WSTRING)
 forte_add_subdirectory(REAL)
 forte_add_subdirectory(LREAL)
 forte_add_subdirectory(ULINT)

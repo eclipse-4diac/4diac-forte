@@ -37,7 +37,4 @@ forte_add_sourcefile_hcpp(F_TIME_IN_S_TO_LREAL_fbt)
 forte_add_sourcefile_hcpp(F_TIME_IN_MS_TO_LREAL_fbt)
 forte_add_sourcefile_hcpp(F_TIME_IN_US_TO_LREAL_fbt)
 forte_add_sourcefile_hcpp(F_TIME_IN_NS_TO_LREAL_fbt)
-
-if(FORTE_USE_WSTRING_DATATYPE)
-  forte_add_sourcefile_hcpp(F_TIME_AS_WSTRING_fbt)
-endif(FORTE_USE_WSTRING_DATATYPE)
+forte_add_sourcefile_hcpp(F_TIME_AS_WSTRING_fbt)

@@ -26,8 +26,4 @@ forte_add_sourcefile_hcpp(F_REAL_AS_STRING_fbt)
 forte_add_sourcefile_hcpp(F_REAL_TO_LINT_fbt)
 forte_add_sourcefile_hcpp(F_REAL_TO_ULINT_fbt)
 forte_add_sourcefile_hcpp(F_REAL_TO_LREAL_fbt)
-
-
-if(FORTE_USE_WSTRING_DATATYPE)
-  forte_add_sourcefile_hcpp(F_REAL_AS_WSTRING_fbt)
-endif(FORTE_USE_WSTRING_DATATYPE)
+forte_add_sourcefile_hcpp(F_REAL_AS_WSTRING_fbt)
