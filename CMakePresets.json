@@ -1,0 +1,86 @@
+{
+  "version": 6,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 25,
+    "patch": 0
+  },
+  "configurePresets": [
+    {
+      "name": "base",
+      "hidden": true,
+      "binaryDir": "${sourceDir}/build/${presetName}",
+      "installDir": "${sourceDir}/install/${presetName}",
+      "cacheVariables": {
+        "FORTE_COM_ETH": "ON",
+        "FORTE_COM_FBDK": "ON",
+        "FORTE_COM_LOCAL": "ON",
+        "FORTE_MODULE_CONVERT": "ON",
+        "FORTE_MODULE_IEC61131": "ON",
+        "FORTE_MODULE_UTILS": "ON"
+      }
+    },
+    {
+      "name": "posix",
+      "hidden": true,
+      "inherits": "base",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Linux"
+      },
+      "cacheVariables": {
+        "FORTE_ARCHITECTURE": "Posix"
+      }
+    },
+    {
+      "name": "posix-debug",
+      "displayName": "Debug (Posix)",
+      "inherits": "posix",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
+    },
+    {
+      "name": "posix-release",
+      "displayName": "Release (Posix)",
+      "inherits": "posix",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release"
+      }
+    },
+    {
+      "name": "windows",
+      "hidden": true,
+      "inherits": "base",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Windows"
+      },
+      "cacheVariables": {
+        "FORTE_ARCHITECTURE": "Win32"
+      },
+      "architecture": {
+        "value": "x64",
+        "strategy": "external"
+      }
+    },
+    {
+      "name": "windows-debug",
+      "displayName": "Debug (Windows)",
+      "inherits": "windows",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
+    },
+    {
+      "name": "windows-release",
+      "displayName": "Release (Windows)",
+      "inherits": "windows",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release"
+      }
+    }
+  ]
+}
