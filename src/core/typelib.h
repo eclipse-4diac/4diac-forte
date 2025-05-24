@@ -21,6 +21,7 @@
 #include "fortenew.h"
 #include "mgmcmd.h"
 #include "core/stringdict.h"
+#include <string_view>
 #include <vector>
 
 // forward declaration of a few classes to reduce include file dependencies
@@ -79,15 +80,19 @@ private:
 // const SFBInterfaceSpec& getFBInterfaceSpec() const override { return scmFBInterfaceSpec;}
 
 #define DEFINE_GENERIC_FIRMWARE_FB(fbclass, fbTypeNameId)                                                              \
-  const CTypeLib::CFBTypeEntry fbclass::csmFirmwareFBEntry_##fbclass((fbTypeNameId), fbclass::createFB, 0);            \
+  const CTypeLib::CFBTypeEntry fbclass::csmFirmwareFBEntry_##fbclass((fbTypeNameId), std::string_view{},               \
+                                                                     fbclass::createFB, 0);                            \
   FORTE_DUMMY_INIT_DEF(fbclass)
+
+#define GET_TYPE_HASH(_1, ...) _1
 
 /*!\ingroup CORE This define is used to create the implementation for the above definition. The second parameter is
  * needed for the prebuild script that generates the constant string list.
  */
-#define DEFINE_FIRMWARE_FB(fbclass, fbTypeNameId)                                                                      \
-  const CTypeLib::CFBTypeEntry fbclass::csmFirmwareFBEntry_##fbclass((fbTypeNameId), fbclass::createFB,                \
-                                                                     &(fbclass::scmFBInterfaceSpec));                  \
+#define DEFINE_FIRMWARE_FB(fbclass, fbTypeNameId, ...)                                                                 \
+  const CTypeLib::CFBTypeEntry fbclass::csmFirmwareFBEntry_##fbclass(                                                  \
+      (fbTypeNameId), GET_TYPE_HASH(__VA_ARGS__ __VA_OPT__(, ) std::string_view{}), fbclass::createFB,                 \
+      &(fbclass::scmFBInterfaceSpec));                                                                                 \
   FORTE_DUMMY_INIT_DEF(fbclass)                                                                                        \
   CStringDictionary::TStringId fbclass::getFBTypeId() const {                                                          \
     return (fbTypeNameId);                                                                                             \
@@ -110,14 +115,15 @@ public:                                                                         
 private:
 
 //!\ingroup CORE This define is used to create the implementation for the above definition.
-#define DEFINE_ADAPTER_TYPE(adapterclass, adapterTypeNameId)                                                           \
+#define DEFINE_ADAPTER_TYPE(adapterclass, adapterTypeNameId, ...)                                                      \
   const CTypeLib::CAdapterTypeEntry adapterclass::csmAdapterTypeEntry_##adapterclass(                                  \
-      (adapterTypeNameId), adapterclass::createAdapter, &(adapterclass::scmFBInterfaceSpecSocket));                    \
+      (adapterTypeNameId), GET_TYPE_HASH(__VA_ARGS__ __VA_OPT__(, ) std::string_view{}), adapterclass::createAdapter,  \
+      &(adapterclass::scmFBInterfaceSpecSocket));                                                                      \
   FORTE_DUMMY_INIT_DEF(adapterclass)
 
 #define DEFINE_GENERIC_ADAPTER_TYPE(adapterclass, adapterTypeNameId)                                                   \
-  const CTypeLib::CAdapterTypeEntry adapterclass::csmAdapterTypeEntry_##adapterclass((adapterTypeNameId),              \
-                                                                                     adapterclass::createAdapter, 0);  \
+  const CTypeLib::CAdapterTypeEntry adapterclass::csmAdapterTypeEntry_##adapterclass(                                  \
+      (adapterTypeNameId), std::string_view{}, adapterclass::createAdapter, 0);                                        \
   FORTE_DUMMY_INIT_DEF(adapterclass)
 
 //!\ingroup CORE This define is used to create the definition necessary for Firmware datatype in order to get them
@@ -141,9 +147,10 @@ private:                                                                        
   const static CTypeLib::CDataTypeEntry csmFirmwareDataTypeEntry_##datatypename;
 
 //!\ingroup CORE This define is used to create the implementation for the above definition.
-#define DEFINE_FIRMWARE_DATATYPE(datatypename, datatypenameid)                                                         \
+#define DEFINE_FIRMWARE_DATATYPE(datatypename, datatypenameid, ...)                                                    \
   const CTypeLib::CDataTypeEntry CIEC_##datatypename::csmFirmwareDataTypeEntry_##datatypename(                         \
-      (datatypenameid), CIEC_##datatypename::createDataType, sizeof(CIEC_##datatypename));                             \
+      (datatypenameid), GET_TYPE_HASH(__VA_ARGS__ __VA_OPT__(, ) std::string_view{}),                                  \
+      CIEC_##datatypename::createDataType, sizeof(CIEC_##datatypename));                                               \
   FORTE_DUMMY_INIT_DEF(CIEC_##datatypename)
 
 struct SFBInterfaceSpec;
@@ -159,17 +166,22 @@ class CTypeLib {
       public:
         constexpr CStringDictionary::TStringId getTypeNameId() const {
           return mTypeNameId;
-        };
+        }
 
         const char *getTypeName() const {
           return CStringDictionary::get(getTypeNameId());
-        };
+        }
+
+        constexpr std::string_view getTypeHash() const {
+          return mTypeHash;
+        }
 
       protected:
-        constexpr explicit CTypeEntry(CStringDictionary::TStringId paTypeNameId);
+        constexpr explicit CTypeEntry(CStringDictionary::TStringId paTypeNameId, std::string_view paTypeHash);
 
       private:
         CStringDictionary::TStringId mTypeNameId;
+        std::string_view mTypeHash;
     };
 
     class CSpecTypeEntry : public CTypeEntry {
@@ -180,6 +192,7 @@ class CTypeLib {
 
       protected:
         constexpr CSpecTypeEntry(CStringDictionary::TStringId paTypeNameId,
+                                 std::string_view paTypeHash,
                                  const SFBInterfaceSpec *paSocketInterfaceSpec);
 
       private:
@@ -190,6 +203,7 @@ class CTypeLib {
     class CFBTypeEntry : public CSpecTypeEntry {
       public:
         CFBTypeEntry(CStringDictionary::TStringId paTypeNameId,
+                     std::string_view paTypeHash,
                      TFunctionBlockCreateFunc pa_pfuncCreateFB,
                      const SFBInterfaceSpec *paSocketInterfaceSpec);
 
@@ -207,6 +221,7 @@ class CTypeLib {
     class CAdapterTypeEntry : public CSpecTypeEntry {
       public:
         CAdapterTypeEntry(CStringDictionary::TStringId paTypeNameId,
+                          std::string_view paTypeHash,
                           TAdapterCreateFunc pa_pfuncCreateAdapter,
                           const SFBInterfaceSpec *paSocketInterfaceSpec);
 
@@ -223,7 +238,10 @@ class CTypeLib {
     //! The base class for all data type entries in the type lib.
     class CDataTypeEntry : public CTypeEntry {
       public:
-        CDataTypeEntry(CStringDictionary::TStringId paTypeNameId, TDataTypeCreateFunc paDTCreateFunc, size_t paSize);
+        CDataTypeEntry(CStringDictionary::TStringId paTypeNameId,
+                       std::string_view paTypeHash,
+                       TDataTypeCreateFunc paDTCreateFunc,
+                       size_t paSize);
 
         CIEC_ANY *createDataTypeInstance(TForteByte *paDataBuf) {
           return mDTCreateFunc(paDataBuf);

@@ -77,6 +77,7 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "Win32")
     forte_add_definition("-wd4290")  #warning 4290: C++ exception specification ignored except to indicate a function is not __declspec(nothrow). A function is declared using exception specification, which Visual C++ accepts but does not implement. (from new/delete warning)
     forte_add_definition("-D_SILENCE_CXX20_CODECVT_FACETS_DEPRECATION_WARNING") # silence C++20 codecvt facets deprecation warnings until a viable replacement is found to prevent repeated warnings during builds
     forte_add_definition("-DNOMINMAX")  #needed that windows.h is not adding macros for MIN and MAX
+    forte_add_definition("/Zc:preprocessor")  # needed for __VA_OPT__
   endif()
   
   forte_add_definition("-DWIN32_LEAN_AND_MEAN")  # needed for windows.h
