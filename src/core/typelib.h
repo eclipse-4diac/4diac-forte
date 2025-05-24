@@ -127,7 +127,6 @@ public:                                                                         
   static CIEC_ANY *createDataType(TForteByte *paDataBuf) {                                                             \
     return (0 != paDataBuf) ? new (paDataBuf) CIEC_##datatypename() : new CIEC_##datatypename;                         \
   };                                                                                                                   \
-  const static CTypeLib::CDataTypeEntry csmFirmwareDataTypeEntry_##datatypename;                                       \
   size_t getSizeof() const override {                                                                                  \
     return sizeof(CIEC_##datatypename);                                                                                \
   }                                                                                                                    \
@@ -138,7 +137,8 @@ public:                                                                         
     return CIEC_##datatypename::csmFirmwareDataTypeEntry_##datatypename.getTypeNameId();                               \
   }                                                                                                                    \
   FORTE_DUMMY_INIT_DEC                                                                                                 \
-private:
+private:                                                                                                               \
+  const static CTypeLib::CDataTypeEntry csmFirmwareDataTypeEntry_##datatypename;
 
 //!\ingroup CORE This define is used to create the implementation for the above definition.
 #define DEFINE_FIRMWARE_DATATYPE(datatypename, datatypenameid)                                                         \
@@ -155,32 +155,35 @@ class CTypeLib {
   public:
     //! The base class for all type entries in the type lib.
     class CTypeEntry {
-      private:
-        CStringDictionary::TStringId mTypeNameId;
 
       public:
-        explicit CTypeEntry(CStringDictionary::TStringId paTypeNameId);
-        virtual ~CTypeEntry();
-
-        CStringDictionary::TStringId getTypeNameId() const {
+        constexpr CStringDictionary::TStringId getTypeNameId() const {
           return mTypeNameId;
         };
 
         const char *getTypeName() const {
           return CStringDictionary::get(getTypeNameId());
         };
+
+      protected:
+        constexpr explicit CTypeEntry(CStringDictionary::TStringId paTypeNameId);
+
+      private:
+        CStringDictionary::TStringId mTypeNameId;
     };
 
     class CSpecTypeEntry : public CTypeEntry {
-      private:
-        const SFBInterfaceSpec *mSocketInterfaceSpec;
-
       public:
-        CSpecTypeEntry(CStringDictionary::TStringId paTypeNameId, const SFBInterfaceSpec *paSocketInterfaceSpec);
-        ~CSpecTypeEntry() override;
         const SFBInterfaceSpec *getInterfaceSpec() const {
           return mSocketInterfaceSpec;
         }
+
+      protected:
+        constexpr CSpecTypeEntry(CStringDictionary::TStringId paTypeNameId,
+                                 const SFBInterfaceSpec *paSocketInterfaceSpec);
+
+      private:
+        const SFBInterfaceSpec *mSocketInterfaceSpec;
     };
 
     //! The base class for all function block types entries in the type lib.
@@ -189,9 +192,9 @@ class CTypeLib {
         CFBTypeEntry(CStringDictionary::TStringId paTypeNameId,
                      TFunctionBlockCreateFunc pa_pfuncCreateFB,
                      const SFBInterfaceSpec *paSocketInterfaceSpec);
-        ~CFBTypeEntry() override;
-        virtual CFunctionBlock *createFBInstance(CStringDictionary::TStringId paInstanceNameId,
-                                                 forte::core::CFBContainer &paContainer) {
+
+        CFunctionBlock *createFBInstance(CStringDictionary::TStringId paInstanceNameId,
+                                         forte::core::CFBContainer &paContainer) {
           return m_pfuncFBCreationFunc(paInstanceNameId, paContainer);
         }
 
@@ -206,10 +209,10 @@ class CTypeLib {
         CAdapterTypeEntry(CStringDictionary::TStringId paTypeNameId,
                           TAdapterCreateFunc pa_pfuncCreateAdapter,
                           const SFBInterfaceSpec *paSocketInterfaceSpec);
-        ~CAdapterTypeEntry() override;
-        virtual CAdapter *createAdapterInstance(CStringDictionary::TStringId paInstanceNameId,
-                                                forte::core::CFBContainer &paContainer,
-                                                bool paIsPlug) {
+
+        CAdapter *createAdapterInstance(CStringDictionary::TStringId paInstanceNameId,
+                                        forte::core::CFBContainer &paContainer,
+                                        bool paIsPlug) {
           return m_pfuncAdapterCreationFunc(paInstanceNameId, paContainer, paIsPlug);
         }
 
@@ -221,11 +224,12 @@ class CTypeLib {
     class CDataTypeEntry : public CTypeEntry {
       public:
         CDataTypeEntry(CStringDictionary::TStringId paTypeNameId, TDataTypeCreateFunc paDTCreateFunc, size_t paSize);
-        ~CDataTypeEntry() override;
-        virtual CIEC_ANY *createDataTypeInstance(TForteByte *paDataBuf) {
+
+        CIEC_ANY *createDataTypeInstance(TForteByte *paDataBuf) {
           return mDTCreateFunc(paDataBuf);
-        };
-        [[nodiscard]] size_t getSize() const {
+        }
+
+        [[nodiscard]] constexpr size_t getSize() const {
           return mSize;
         }
 

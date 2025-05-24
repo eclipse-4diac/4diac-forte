@@ -67,18 +67,14 @@ namespace {
 
 }; // namespace
 
-CTypeLib::CTypeEntry::CTypeEntry(CStringDictionary::TStringId paTypeNameId) : mTypeNameId(paTypeNameId) {
+constexpr CTypeLib::CTypeEntry::CTypeEntry(CStringDictionary::TStringId paTypeNameId) : mTypeNameId(paTypeNameId) {
 }
 
-CTypeLib::CTypeEntry::~CTypeEntry() = default;
-
-CTypeLib::CSpecTypeEntry::CSpecTypeEntry(CStringDictionary::TStringId paTypeNameId,
-                                         const SFBInterfaceSpec *paSocketInterfaceSpec) :
+constexpr CTypeLib::CSpecTypeEntry::CSpecTypeEntry(CStringDictionary::TStringId paTypeNameId,
+                                                   const SFBInterfaceSpec *paSocketInterfaceSpec) :
     CTypeEntry(paTypeNameId),
     mSocketInterfaceSpec(paSocketInterfaceSpec) {
 }
-
-CTypeLib::CSpecTypeEntry::~CSpecTypeEntry() = default;
 
 CTypeLib::CFBTypeEntry::CFBTypeEntry(CStringDictionary::TStringId paTypeNameId,
                                      TFunctionBlockCreateFunc pa_pfuncCreateFB,
@@ -88,8 +84,6 @@ CTypeLib::CFBTypeEntry::CFBTypeEntry(CStringDictionary::TStringId paTypeNameId,
   addFBType(this);
 }
 
-CTypeLib::CFBTypeEntry::~CFBTypeEntry() = default;
-
 CTypeLib::CAdapterTypeEntry::CAdapterTypeEntry(CStringDictionary::TStringId paTypeNameId,
                                                TAdapterCreateFunc pa_pfuncCreateAdapter,
                                                const SFBInterfaceSpec *paSocketInterfaceSpec) :
@@ -97,8 +91,6 @@ CTypeLib::CAdapterTypeEntry::CAdapterTypeEntry(CStringDictionary::TStringId paTy
     m_pfuncAdapterCreationFunc(pa_pfuncCreateAdapter) {
   addAdapterType(this);
 }
-
-CTypeLib::CAdapterTypeEntry::~CAdapterTypeEntry() = default;
 
 CTypeLib::CDataTypeEntry::CDataTypeEntry(CStringDictionary::TStringId paTypeNameId,
                                          TDataTypeCreateFunc pafuncDTCreateFunc,
@@ -108,8 +100,6 @@ CTypeLib::CDataTypeEntry::CDataTypeEntry(CStringDictionary::TStringId paTypeName
     mSize(paSize) {
   addDataType(this);
 }
-
-CTypeLib::CDataTypeEntry::~CDataTypeEntry() = default;
 
 CAdapter *CTypeLib::createAdapter(CStringDictionary::TStringId paInstanceNameId,
                                   CStringDictionary::TStringId paAdapterTypeId,
