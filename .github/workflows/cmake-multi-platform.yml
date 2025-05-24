@@ -30,15 +30,15 @@ jobs:
           - os: windows-latest
             c_compiler: cl
             cpp_compiler: cl
-            architecture: "Win32"
+            architecture: "windows"
           - os: ubuntu-latest
             c_compiler: gcc
             cpp_compiler: g++
-            architecture: "Posix"
+            architecture: "posix"
           - os: ubuntu-latest
             c_compiler: clang
             cpp_compiler: clang++
-            architecture: "Posix"
+            architecture: "posix"
         exclude:
           - os: windows-latest
             c_compiler: gcc
@@ -74,28 +74,7 @@ jobs:
         -DCMAKE_C_COMPILER=${{ matrix.c_compiler }}
         -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
         -S ${{ github.workspace }}
-        -DFORTE_ARCHITECTURE=${{ matrix.architecture }}
-        -DFORTE_DEVICE=RMT_DEV
-        -DFORTE_COM_ETH=ON
-        -DFORTE_COM_FBDK=ON
-        -DFORTE_COM_HTTP=ON
-        -DFORTE_COM_LOCAL=ON
-        -DFORTE_COM_RAW=ON
-        -DFORTE_COM_SER=ON
-        -DFORTE_COM_STRUCT_MEMBER=ON
-        -DFORTE_IO=ON
-        -DFORTE_MODULE_CONVERT=ON
-        -DFORTE_MODULE_IEC61131=ON
-        -DFORTE_MODULE_RECONFIGURATION=ON
-        -DFORTE_MODULE_RT_Events=ON
-        -DFORTE_MODULE_SIGNALPROCESSING=ON
-        -DFORTE_MODULE_UTILS=ON
-        -DFORTE_BUILD_STATIC_LIBRARY=ON
-        -DFORTE_BUILD_SHARED_LIBRARY=ON
-        -DFORTE_C_INTERFACE=ON
-        -DFORTE_TESTS=ON
-        -DFORTE_TEST_SANITIZE=ON
-        -DFORTE_TRACE_CTF=ON
+        --preset ${{ matrix.architecture }}-tests
         ${{ matrix.os == 'windows-latest' && format('-DFORTE_TESTS_INC_DIRS={0}/boost.1.84.0/lib/native/include', github.workspace) || '' }}
 
     - name: Build
