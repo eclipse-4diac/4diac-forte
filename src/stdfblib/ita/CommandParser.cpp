@@ -168,9 +168,7 @@ namespace forte::ita {
         paResponse.append(mCommand.mAdditionalParams);
         paResponse.append("\n  </DTList>");
       } else if (mCommand.mCMD == EMGMCommandType::QueryFBType) {
-        paResponse.append("<FBType Comment=\"generated\" ");
         paResponse.append(mCommand.mAdditionalParams);
-        paResponse.append("  </FBType>");
       } else if (mCommand.mCMD == EMGMCommandType::QueryAdapterType) {
         paResponse.append("<AdapterType Comment=\"generated\" ");
         paResponse.append(mCommand.mAdditionalParams);
@@ -490,18 +488,8 @@ namespace forte::ita {
     if (nullptr != paRequestPartLeft) {
       switch (paRequestPartLeft[0]) {
         case 'F': // query fb or fb type list
-          if (!strncmp(paRequestPartLeft, "FBT", sizeof("FBT") - 1)) {
-            if (parseTypeListData(paRequestPartLeft)) {
-              mCommand.mCMD = EMGMCommandType::QueryFBTypes;
-            }
-#ifdef FORTE_DYNAMIC_TYPE_LOAD
-            else if (parseXType(paRequestPartLeft, "FBType Name=\"")) {
-              mCommand.mCMD = EMGMCommandType::QueryFBType;
-            }
-#endif
-            else {
-              mCommand.mCMD = EMGMCommandType::QueryGroup;
-            }
+          if (!strncmp(paRequestPartLeft, "FBType", sizeof("FBType") - 1)) {
+            parseQueryFBType(paRequestPartLeft + 6);
           } else if (parseFBData(paRequestPartLeft)) {
             mCommand.mCMD = EMGMCommandType::QueryFB;
           }
@@ -538,6 +526,22 @@ namespace forte::ita {
           break;
         default: break;
       }
+    }
+  }
+
+  void CommandParser::parseQueryFBType(std::string_view paRequestPartLeft) {
+    if (!paRequestPartLeft.starts_with(" Name=\"")) {
+      return;
+    }
+
+    if (paRequestPartLeft[7] == '*') {
+      mCommand.mCMD = EMGMCommandType::QueryFBTypes;
+      return;
+    }
+
+    if (parseTypeName(paRequestPartLeft.substr(7), mCommand.mSecondParam, mCommand.mAdditionalParams) != -1) {
+      mCommand.mCMD = EMGMCommandType::QueryFBType;
+      return;
     }
   }
 

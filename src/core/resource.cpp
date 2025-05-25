@@ -134,7 +134,8 @@ EMGMResponse CResource::executeMGMCommand(forte::core::SManagementCMD &paCommand
       case EMGMCommandType::QueryAdapterTypes: retVal = queryAllAdapterTypes(paCommand.mAdditionalParams); break;
       case EMGMCommandType::QueryFB: retVal = queryFBs(paCommand.mAdditionalParams, *this, ""); break;
       case EMGMCommandType::QueryFBType:
-        retVal = createFBTypeResponseMessage(paCommand.mFirstParam.front(), paCommand.mAdditionalParams);
+        retVal = createFBTypeResponseMessage(paCommand.mFirstParam.front(), paCommand.mAdditionalParams,
+                                             paCommand.mAdditionalParams);
         break;
       case EMGMCommandType::QueryAdapterType:
         retVal = createAdapterTypeResponseMessage(paCommand.mFirstParam.front(), paCommand.mAdditionalParams);
@@ -448,13 +449,30 @@ void CResource::createConnectionResponseMessage(const CConnection &paConn,
 }
 
 EMGMResponse CResource::createFBTypeResponseMessage(const CStringDictionary::TStringId paValue,
+                                                    std::string &paTypeHash,
                                                     std::string &paReqResult) {
-  EMGMResponse retVal = EMGMResponse::UnsupportedType;
   CTypeLib::CFBTypeEntry *fbType = CTypeLib::getFBTypeEntry(paValue);
-  if (nullptr != fbType) {
-    retVal = createXTypeResponseMessage(fbType, paValue, retVal, paReqResult);
+  if (fbType == nullptr) {
+    return EMGMResponse::UnsupportedType;
   }
-  return retVal;
+
+  if (paTypeHash.empty()) {
+    // return type hash
+    paReqResult = "<FBType Name=\""s;
+    paReqResult += fbType->getTypeName();
+    paReqResult += '#';
+    paReqResult += fbType->getTypeHash();
+    paReqResult += "\"/>"s;
+  } else {
+    // we can only clear paReqResult after this type hash check
+    if (paTypeHash != fbType->getTypeHash()) {
+      paReqResult.clear();
+      return EMGMResponse::UnsupportedType;
+    }
+    paReqResult.clear();
+  }
+
+  return EMGMResponse::Ready;
 }
 
 EMGMResponse CResource::createAdapterTypeResponseMessage(const CStringDictionary::TStringId paValue,

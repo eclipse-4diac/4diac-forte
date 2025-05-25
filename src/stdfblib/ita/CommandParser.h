@@ -98,6 +98,7 @@ namespace forte::ita {
 
 #ifdef FORTE_SUPPORT_QUERY_CMD
       void parseQueryData(char *paRequestPartLeft);
+      void parseQueryFBType(std::string_view paRequestPartLeft);
       bool parseTypeListData(char *paRequestPartLeft);
 #endif
 
