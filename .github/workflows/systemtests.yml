@@ -41,4 +41,4 @@ jobs:
 
     - name: Test
       working-directory: ${{ steps.strings.outputs.build-dir }}
-      run: ctest
+      run: ctest --verbose
