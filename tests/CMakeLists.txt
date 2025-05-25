@@ -145,6 +145,8 @@ SET_TARGET_PROPERTIES(forte_test PROPERTIES LINKER_LANGUAGE CXX)
 #add forte_test to the list of test to be executed by ctest
 add_test(forte_test ${EXECUTABLE_OUTPUT_PATH}/forte_test)
 
+set_tests_properties(forte_test PROPERTIES TIMEOUT 300)
+
 if("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
   if(FORTE_TEST_CODE_COVERAGE_ANALYSIS)
       INCLUDE(${FORTE_BUILDSUPPORT_DIRECTORY}/GCov.cmake)    
