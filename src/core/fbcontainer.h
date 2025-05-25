@@ -58,7 +58,9 @@ namespace forte {
          * @param paTypeName      the type name of the FB to be created
          * @return response of the command execution as defined in IEC 61499
          */
-        EMGMResponse createFB(CStringDictionary::TStringId paInstanceNameId, CStringDictionary::TStringId paTypeName);
+        EMGMResponse createFB(CStringDictionary::TStringId paInstanceNameId,
+                              CStringDictionary::TStringId paTypeName,
+                              std::string_view paTypeHash);
 
         /*!\brief Gets a function block from the container or recursively from its subcontainers
          *
@@ -144,8 +146,10 @@ namespace forte {
          * @param paTypeName      the type name of the FB to be created
          * @return response of the command execution as defined in IEC 61499
          */
-        EMGMResponse
-        createFB(NameIterator &paNameListIt, NameIterator paNameListEnd, CStringDictionary::TStringId paTypeName);
+        EMGMResponse createFB(NameIterator &paNameListIt,
+                              NameIterator paNameListEnd,
+                              CStringDictionary::TStringId paTypeName,
+                              std::string_view paTypeHash);
 
         /*!\brief Delete a FB instance with given name
          *

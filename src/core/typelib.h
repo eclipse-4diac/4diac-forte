@@ -269,6 +269,7 @@ class CTypeLib {
      */
     static CFunctionBlock *createFB(CStringDictionary::TStringId paInstanceNameId,
                                     CStringDictionary::TStringId paFBTypeId,
+                                    std::string_view paTypeHash,
                                     forte::core::CFBContainer &paContainer,
                                     EMGMResponse &paErrorMSG);
 

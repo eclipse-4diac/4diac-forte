@@ -21,6 +21,7 @@
 #include "adapter.h"
 #include "stringdict.h"
 #include <stddef.h>
+#include <string_view>
 #include "string_utils.h"
 
 USE_STRING_ID(ARRAY);
@@ -137,12 +138,18 @@ CAdapter *CTypeLib::createAdapter(CStringDictionary::TStringId paInstanceNameId,
 
 CFunctionBlock *CTypeLib::createFB(CStringDictionary::TStringId paInstanceNameId,
                                    CStringDictionary::TStringId paFBTypeId,
+                                   std::string_view paTypeHash,
                                    forte::core::CFBContainer &paContainer,
                                    EMGMResponse &paErrorMSG) {
   CFunctionBlock *newFB = nullptr;
   CFBTypeEntry *typeEntry = getFBTypeEntry(paFBTypeId);
   // TODO: Avoid that the user can create generic blocks.
   if (typeEntry != nullptr) {
+    if (!paTypeHash.empty() && paTypeHash != typeEntry->getTypeHash()) {
+      paErrorMSG = EMGMResponse::UnsupportedType;
+      return nullptr;
+    }
+
     newFB = typeEntry->createFBInstance(paInstanceNameId, paContainer);
     if (newFB == nullptr) { // we could not create the requested object
       paErrorMSG = EMGMResponse::Overflow;
@@ -164,7 +171,7 @@ CFunctionBlock *CTypeLib::createFB(CStringDictionary::TStringId paInstanceNameId
                                    CStringDictionary::TStringId paFBTypeId,
                                    forte::core::CFBContainer &paContainer) {
   EMGMResponse errorMSG;
-  return CTypeLib::createFB(paInstanceNameId, paFBTypeId, paContainer, errorMSG);
+  return CTypeLib::createFB(paInstanceNameId, paFBTypeId, std::string_view{}, paContainer, errorMSG);
 }
 
 namespace {

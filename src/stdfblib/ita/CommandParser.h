@@ -113,11 +113,14 @@ namespace forte::ita {
 
       /*! \brief Parse the name of the type
        *
-       * @param paTypeName string containing the type name that will be parsed
+       * @param paCmdString string containing the type name that will be parsed
        * @param paIdentifier identifier vector where to write the parsed identifiers to
+       * @param paTypeHash  buffer for storing the type hash if present
        * @return number of bytes used from the character array or -1 if the identifier could not be parsed
        */
-      int parseTypeName(const std::string_view paTypeName, forte::core::TNameIdentifier &paIdentifier);
+      int parseTypeName(const std::string_view paCmdString,
+                        forte::core::TNameIdentifier &paIdentifier,
+                        std::string &paTypeHash);
 
 #ifdef FORTE_SUPPORT_MONITORING
       bool parseMonitoringData(char *paRequestPartLeft);

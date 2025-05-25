@@ -271,7 +271,7 @@ namespace forte::ita {
       if (acBuf != nullptr) {
         if (acBuf[1] != '*') {
           ++acBuf;
-          i = parseTypeName(acBuf, mCommand.mSecondParam);
+          i = parseTypeName(acBuf, mCommand.mSecondParam, mCommand.mAdditionalParams);
           if (-1 != i) {
             acBuf = strchr(&(acBuf[i + 1]), '\"');
             if (acBuf != nullptr) {
@@ -311,16 +311,25 @@ namespace forte::ita {
     return -1;
   }
 
-  int CommandParser::parseTypeName(const std::string_view paTypeName, forte::core::TNameIdentifier &paIdentifier) {
-    size_t endIndex = paTypeName.find('"');
+  int CommandParser::parseTypeName(const std::string_view paCmdString,
+                                   forte::core::TNameIdentifier &paIdentifier,
+                                   std::string &paTypeHash) {
+    size_t endIndex = paCmdString.find('"');
     if (endIndex == std::string::npos) {
       return -1;
     }
-    const std::string_view result = paTypeName.substr(0, endIndex);
-    if (!paIdentifier.push_back(CStringDictionary::insert(result.data(), result.length()))) {
+    std::string_view fbTypeName = paCmdString.substr(0, endIndex);
+
+    size_t typeHashSeparator = fbTypeName.find('#');
+    if (typeHashSeparator != std::string::npos) {
+      paTypeHash = fbTypeName.substr(typeHashSeparator + 1);
+      fbTypeName = fbTypeName.substr(0, typeHashSeparator);
+    }
+
+    if (!paIdentifier.push_back(CStringDictionary::insert(fbTypeName.data(), fbTypeName.length()))) {
       return -1;
     }
-    return static_cast<int>(result.length());
+    return static_cast<int>(endIndex + 1);
   }
 
   bool CommandParser::parseConnectionData(char *paRequestPartLeft) {

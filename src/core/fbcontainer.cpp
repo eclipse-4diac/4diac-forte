@@ -92,9 +92,10 @@ void CFBContainer::getFullQualifiedApplicationInstanceName(TNameIdentifier &paRe
 
 EMGMResponse CFBContainer::createFB(NameIterator &paNameListIt,
                                     NameIterator paNameListEnd,
-                                    CStringDictionary::TStringId paTypeName) {
+                                    CStringDictionary::TStringId paTypeName,
+                                    std::string_view paTypeHash) {
   if (paNameListIt + 1 == paNameListEnd) {
-    return createFB(*paNameListIt, paTypeName);
+    return createFB(*paNameListIt, paTypeName, paTypeHash);
   } else if (isDynamicContainer()) {
     // we have more than one name in the fb name list. Find or create the container and hand the create command to this
     // container.
@@ -102,14 +103,15 @@ EMGMResponse CFBContainer::createFB(NameIterator &paNameListIt,
     if (childCont != nullptr && childCont->isDynamicContainer()) {
       // remove the container from the name list
       ++paNameListIt;
-      return childCont->createFB(paNameListIt, paNameListEnd, paTypeName);
+      return childCont->createFB(paNameListIt, paNameListEnd, paTypeName, paTypeHash);
     }
   }
   return EMGMResponse::InvalidDst;
 }
 
 EMGMResponse CFBContainer::createFB(CStringDictionary::TStringId paInstanceNameId,
-                                    CStringDictionary::TStringId paTypeName) {
+                                    CStringDictionary::TStringId paTypeName,
+                                    std::string_view paTypeHash) {
   if (!isDynamicContainer()) {
     return EMGMResponse::InvalidDst;
   }
@@ -120,7 +122,7 @@ EMGMResponse CFBContainer::createFB(CStringDictionary::TStringId paInstanceNameI
   }
 
   EMGMResponse errorMSG;
-  CFunctionBlock *newFB = CTypeLib::createFB(paInstanceNameId, paTypeName, *this, errorMSG);
+  CFunctionBlock *newFB = CTypeLib::createFB(paInstanceNameId, paTypeName, paTypeHash, *this, errorMSG);
   if (newFB == nullptr) {
     return errorMSG;
   }

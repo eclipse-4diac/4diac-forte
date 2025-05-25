@@ -152,16 +152,14 @@ BOOST_AUTO_TEST_CASE(wrongDataType) {
 }
 
 BOOST_AUTO_TEST_CASE(emptyStruct) {
-  EMGMResponse errorMSG;
   CFunctionBlock *fb = CTypeLib::createFB(STRID(InstanceName), STRID(STRUCT_MUX_1Struct_Muxer_Test_Struct_3),
-                                          CFBContainerMock::smDefaultFBContMock, errorMSG);
+                                          CFBContainerMock::smDefaultFBContMock);
   BOOST_CHECK(nullptr == fb);
 }
 
 BOOST_AUTO_TEST_CASE(bigStruct) {
-  EMGMResponse errorMSG;
   CFunctionBlock *fb = CTypeLib::createFB(STRID(InstanceName), STRID(STRUCT_MUX_1Struct_Muxer_Test_Struct_4),
-                                          CFBContainerMock::smDefaultFBContMock, errorMSG);
+                                          CFBContainerMock::smDefaultFBContMock);
   BOOST_CHECK(nullptr != fb);
   delete fb;
 }
