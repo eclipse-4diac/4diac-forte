@@ -19,6 +19,7 @@
  *    Fabio Gandolfi - send also subapps on requested resources
  *******************************************************************************/
 #include "resource.h"
+#include <string_view>
 #include "conn.h"
 #include "forte_any_string.h"
 #include "fortenew.h"
@@ -139,6 +140,10 @@ EMGMResponse CResource::executeMGMCommand(forte::core::SManagementCMD &paCommand
         break;
       case EMGMCommandType::QueryAdapterType:
         retVal = createAdapterTypeResponseMessage(paCommand.mFirstParam.front(), paCommand.mAdditionalParams);
+        break;
+      case EMGMCommandType::QueryDataType:
+        retVal = createDataTypeResponseMessage(paCommand.mFirstParam.front(), paCommand.mAdditionalParams,
+                                               paCommand.mAdditionalParams);
         break;
       case EMGMCommandType::QueryConnection: retVal = queryConnections(paCommand.mAdditionalParams, *this); break;
 #endif // FORTE_SUPPORT_QUERY_CMD
@@ -448,31 +453,50 @@ void CResource::createConnectionResponseMessage(const CConnection &paConn,
   paReqResult.append("\"/>\n"s);
 }
 
-EMGMResponse CResource::createFBTypeResponseMessage(const CStringDictionary::TStringId paValue,
-                                                    std::string &paTypeHash,
-                                                    std::string &paReqResult) {
-  CTypeLib::CFBTypeEntry *fbType = CTypeLib::getFBTypeEntry(paValue);
-  if (fbType == nullptr) {
-    return EMGMResponse::UnsupportedType;
-  }
+namespace {
 
-  if (paTypeHash.empty()) {
-    // return type hash
-    paReqResult = "<FBType Name=\""s;
-    paReqResult += fbType->getTypeName();
-    paReqResult += '#';
-    paReqResult += fbType->getTypeHash();
-    paReqResult += "\"/>"s;
-  } else {
-    // we can only clear paReqResult after this type hash check
-    if (paTypeHash != fbType->getTypeHash()) {
-      paReqResult.clear();
+  template<class T>
+  EMGMResponse createQueryTypeResponseMessage(T *paTypeEntry,
+                                              std::string_view paTypeHash,
+                                              std::string &paReqResult,
+                                              std::string paResponsePrefix) {
+    if (paTypeEntry == nullptr) {
       return EMGMResponse::UnsupportedType;
     }
-    paReqResult.clear();
+
+    if (paTypeHash.empty()) {
+      // return type hash
+      paReqResult = '<';
+      paReqResult += paResponsePrefix;
+      paReqResult += " Name=\""s;
+      paReqResult += paTypeEntry->getTypeName();
+      paReqResult += '#';
+      paReqResult += paTypeEntry->getTypeHash();
+      paReqResult += "\"/>"s;
+    } else {
+      // we can only clear paReqResult after this type hash check
+      if (paTypeHash != paTypeEntry->getTypeHash()) {
+        paReqResult.clear();
+        return EMGMResponse::UnsupportedType;
+      }
+      paReqResult.clear();
+    }
+
+    return EMGMResponse::Ready;
   }
 
-  return EMGMResponse::Ready;
+} // namespace
+
+EMGMResponse CResource::createFBTypeResponseMessage(const CStringDictionary::TStringId paTypeNameId,
+                                                    std::string_view paTypeHash,
+                                                    std::string &paReqResult) {
+  return createQueryTypeResponseMessage(CTypeLib::getFBTypeEntry(paTypeNameId), paTypeHash, paReqResult, "FBType"s);
+}
+
+EMGMResponse CResource::createDataTypeResponseMessage(const CStringDictionary::TStringId paTypeNameId,
+                                                      std::string_view paTypeHash,
+                                                      std::string &paReqResult) {
+  return createQueryTypeResponseMessage(CTypeLib::getDataTypeEntry(paTypeNameId), paTypeHash, paReqResult, "DataType"s);
 }
 
 EMGMResponse CResource::createAdapterTypeResponseMessage(const CStringDictionary::TStringId paValue,

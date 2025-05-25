@@ -260,9 +260,13 @@ class CResource : public CFunctionBlock {
                                                 CStringDictionary::TStringId paDstId,
                                                 std::string &paReqResult);
 
-    EMGMResponse createFBTypeResponseMessage(const CStringDictionary::TStringId paValue,
-                                             std::string &paTypeHash,
+    EMGMResponse createFBTypeResponseMessage(const CStringDictionary::TStringId paTypeNameId,
+                                             std::string_view paTypeHash,
                                              std::string &paReqResult);
+    EMGMResponse createDataTypeResponseMessage(const CStringDictionary::TStringId paTypeNameId,
+                                               std::string_view paTypeHash,
+                                               std::string &paReqResult);
+
     EMGMResponse createAdapterTypeResponseMessage(const CStringDictionary::TStringId paValue, std::string &paReqResult);
     EMGMResponse createXTypeResponseMessage(const CTypeLib::CSpecTypeEntry *paInterfaceSpec,
                                             const CStringDictionary::TStringId paValue,

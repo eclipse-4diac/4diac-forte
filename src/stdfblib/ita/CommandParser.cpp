@@ -132,48 +132,8 @@ namespace forte::ita {
         paResponse.append("\" />");
       }
 #ifdef FORTE_SUPPORT_QUERY_CMD
-      else if (mCommand.mCMD == EMGMCommandType::QueryConnection) {
-        if ((mCommand.mFirstParam.empty()) && (mCommand.mSecondParam.empty())) { // src & dst = *
-          paResponse.append(mCommand.mAdditionalParams);
-        } else { // either src or dst = * (both != * should be treated by generateResponse
-          paResponse.append("<EndpointList>\n    ");
-          paResponse.append(mCommand.mAdditionalParams);
-          paResponse.append("\n  </EndpointList>");
-        }
-      } else if (mCommand.mCMD == EMGMCommandType::QueryFB) {
-        if (!mCommand.mFirstParam.empty()) { // Name != "*"
-          if (!mCommand.mSecondParam.empty()) { // Type != "*"
-            paResponse.append("<FBStatus Status=\"");
-            paResponse.append(mCommand.mAdditionalParams);
-            paResponse.append("\" />");
-          } else { // Type == "*"
-            paResponse.append("<FB Name=\"");
-            appendIdentifierName(paResponse, mCommand.mFirstParam);
-            paResponse.append("\" Type=\"");
-            paResponse.append(mCommand.mAdditionalParams);
-            paResponse.append("\" />");
-          }
-        } else {
-          paResponse.append("<FBList>\n    ");
-          paResponse.append(mCommand.mAdditionalParams);
-          paResponse.append("\n  </FBList>");
-        }
-      } else if (mCommand.mCMD == EMGMCommandType::QueryFBTypes ||
-                 mCommand.mCMD == EMGMCommandType::QueryAdapterTypes) {
-        paResponse.append("<NameList>\n    ");
-        paResponse.append(mCommand.mAdditionalParams);
-        paResponse.append("\n  </NameList>");
-      } else if (mCommand.mCMD == EMGMCommandType::QueryDTTypes) {
-        paResponse.append("<DTList>\n    ");
-        paResponse.append(mCommand.mAdditionalParams);
-        paResponse.append("\n  </DTList>");
-      } else if (mCommand.mCMD == EMGMCommandType::QueryFBType) {
-        paResponse.append(mCommand.mAdditionalParams);
-      } else if (mCommand.mCMD == EMGMCommandType::QueryAdapterType) {
-        paResponse.append("<AdapterType Comment=\"generated\" ");
-        paResponse.append(mCommand.mAdditionalParams);
-        paResponse.append(
-            "   <Service Comment=\"generated\" LeftInterface=\"SOCKET\" RightInterface=\"PLUG\"/>\n</AdapterType>");
+      else {
+        generateQueryResponse(paResponse);
       }
 #endif
     }
@@ -489,7 +449,8 @@ namespace forte::ita {
       switch (paRequestPartLeft[0]) {
         case 'F': // query fb or fb type list
           if (!strncmp(paRequestPartLeft, "FBType", sizeof("FBType") - 1)) {
-            parseQueryFBType(paRequestPartLeft + 6);
+            parseQueryTypes(paRequestPartLeft + sizeof("FBType") - 1, EMGMCommandType::QueryFBType,
+                            EMGMCommandType::QueryFBTypes);
           } else if (parseFBData(paRequestPartLeft)) {
             mCommand.mCMD = EMGMCommandType::QueryFB;
           }
@@ -499,13 +460,10 @@ namespace forte::ita {
             mCommand.mCMD = EMGMCommandType::QueryConnection;
           }
           break;
-        case 'D': // query datatype list
+        case 'D': // query datatype or datatype list
           if (!strncmp(paRequestPartLeft, "DataType", sizeof("DataType") - 1)) {
-            if (parseTypeListData(paRequestPartLeft)) {
-              mCommand.mCMD = EMGMCommandType::QueryDTTypes;
-            } else {
-              mCommand.mCMD = EMGMCommandType::QueryGroup;
-            }
+            parseQueryTypes(paRequestPartLeft + sizeof("DataType") - 1, EMGMCommandType::QueryDataType,
+                            EMGMCommandType::QueryDTTypes);
           }
           break;
         case 'A': // query adaptertype list
@@ -529,18 +487,20 @@ namespace forte::ita {
     }
   }
 
-  void CommandParser::parseQueryFBType(std::string_view paRequestPartLeft) {
+  void CommandParser::parseQueryTypes(std::string_view paRequestPartLeft,
+                                      EMGMCommandType paSingleQueryCMD,
+                                      EMGMCommandType paListQueryCMD) {
     if (!paRequestPartLeft.starts_with(" Name=\"")) {
       return;
     }
 
     if (paRequestPartLeft[7] == '*') {
-      mCommand.mCMD = EMGMCommandType::QueryFBTypes;
+      mCommand.mCMD = paListQueryCMD;
       return;
     }
 
     if (parseTypeName(paRequestPartLeft.substr(7), mCommand.mSecondParam, mCommand.mAdditionalParams) != -1) {
-      mCommand.mCMD = EMGMCommandType::QueryFBType;
+      mCommand.mCMD = paSingleQueryCMD;
       return;
     }
   }
@@ -564,6 +524,60 @@ namespace forte::ita {
     }
     return retVal;
   }
+
+  void CommandParser::generateQueryResponse(CIEC_STRING &paResponse) {
+    switch (mCommand.mCMD) {
+      case EMGMCommandType::QueryConnection:
+        if ((mCommand.mFirstParam.empty()) && (mCommand.mSecondParam.empty())) { // src & dst = *
+          paResponse.append(mCommand.mAdditionalParams);
+        } else { // either src or dst = * (both != * should be treated by generateResponse
+          paResponse.append("<EndpointList>\n    ");
+          paResponse.append(mCommand.mAdditionalParams);
+          paResponse.append("\n  </EndpointList>");
+        }
+        break;
+      case EMGMCommandType::QueryFB:
+        if (!mCommand.mFirstParam.empty()) { // Name != "*"
+          if (!mCommand.mSecondParam.empty()) { // Type != "*"
+            paResponse.append("<FBStatus Status=\"");
+            paResponse.append(mCommand.mAdditionalParams);
+            paResponse.append("\" />");
+          } else { // Type == "*"
+            paResponse.append("<FB Name=\"");
+            appendIdentifierName(paResponse, mCommand.mFirstParam);
+            paResponse.append("\" Type=\"");
+            paResponse.append(mCommand.mAdditionalParams);
+            paResponse.append("\" />");
+          }
+        } else {
+          paResponse.append("<FBList>\n    ");
+          paResponse.append(mCommand.mAdditionalParams);
+          paResponse.append("\n  </FBList>");
+        }
+        break;
+      case EMGMCommandType::QueryFBTypes:
+      case EMGMCommandType::QueryAdapterTypes:
+        paResponse.append("<NameList>\n    ");
+        paResponse.append(mCommand.mAdditionalParams);
+        paResponse.append("\n  </NameList>");
+        break;
+      case EMGMCommandType::QueryDTTypes:
+        paResponse.append("<DTList>\n    ");
+        paResponse.append(mCommand.mAdditionalParams);
+        paResponse.append("\n  </DTList>");
+        break;
+      case EMGMCommandType::QueryFBType:
+      case EMGMCommandType::QueryDataType: paResponse.append(mCommand.mAdditionalParams); break;
+      case EMGMCommandType::QueryAdapterType:
+        paResponse.append("<AdapterType Comment=\"generated\" ");
+        paResponse.append(mCommand.mAdditionalParams);
+        paResponse.append(
+            "   <Service Comment=\"generated\" LeftInterface=\"SOCKET\" RightInterface=\"PLUG\"/>\n</AdapterType>");
+        break;
+      default: break;
+    }
+  }
+
 #endif
 
   void CommandParser::appendIdentifierName(CIEC_STRING &paDest, forte::core::TNameIdentifier &paIdentifier) {

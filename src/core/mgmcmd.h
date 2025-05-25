@@ -205,23 +205,32 @@ enum class EMGMCommandType : uint8_t {
    */
   QueryTypeVers = 0x67,
 
-  /*! \brief Read the interface of a specific FB type.
+  /*! \brief Check for a specific FB type.
    *
-   * When reading the FB interface the parameters of the SManagementCMD are defined as:
+   * The parameters of the SManagementCMD are defined as:
    *    - mFirstParam = FB type name
    *    - mSecondParam = not used
-   *    - mAdditionalParams the read value is stored here
+   *    - mAdditionalParams the type hash if present
    */
   QueryFBType = 0x77,
 
-  /*! \brief Read the interface of a specific adapter type.
+  /*! \brief Check for a specific adapter type.
    *
-   * When reading the adapter interface the parameters of the SManagementCMD are defined as:
+   * The parameters of the SManagementCMD are defined as:
    *    - mFirstParam = adapter type name
    *    - mSecondParam = not used
-   *    - mAdditionalParams the read value is stored here
+   *    - mAdditionalParams the type hash if present
    */
   QueryAdapterType = 0x87,
+
+  /*! \brief Check for a specific data type.
+   *
+   * The parameters of the SManagementCMD are defined as:
+   *    - mFirstParam = data type name
+   *    - mSecondParam = not used
+   *    - mAdditionalParams the type hash if present
+   */
+  QueryDataType = 0x97,
 #endif
 
   /*! \brief reset a FB, resource or the device.
