@@ -139,7 +139,8 @@ EMGMResponse CResource::executeMGMCommand(forte::core::SManagementCMD &paCommand
                                              paCommand.mAdditionalParams);
         break;
       case EMGMCommandType::QueryAdapterType:
-        retVal = createAdapterTypeResponseMessage(paCommand.mFirstParam.front(), paCommand.mAdditionalParams);
+        retVal = createAdapterTypeResponseMessage(paCommand.mFirstParam.front(), paCommand.mAdditionalParams,
+                                                  paCommand.mAdditionalParams);
         break;
       case EMGMCommandType::QueryDataType:
         retVal = createDataTypeResponseMessage(paCommand.mFirstParam.front(), paCommand.mAdditionalParams,
@@ -459,7 +460,7 @@ namespace {
   EMGMResponse createQueryTypeResponseMessage(T *paTypeEntry,
                                               std::string_view paTypeHash,
                                               std::string &paReqResult,
-                                              std::string paResponsePrefix) {
+                                              std::string_view paResponsePrefix) {
     if (paTypeEntry == nullptr) {
       return EMGMResponse::UnsupportedType;
     }
@@ -490,153 +491,22 @@ namespace {
 EMGMResponse CResource::createFBTypeResponseMessage(const CStringDictionary::TStringId paTypeNameId,
                                                     std::string_view paTypeHash,
                                                     std::string &paReqResult) {
-  return createQueryTypeResponseMessage(CTypeLib::getFBTypeEntry(paTypeNameId), paTypeHash, paReqResult, "FBType"s);
+  return createQueryTypeResponseMessage(CTypeLib::getFBTypeEntry(paTypeNameId), paTypeHash, paReqResult, "FBType");
 }
 
 EMGMResponse CResource::createDataTypeResponseMessage(const CStringDictionary::TStringId paTypeNameId,
                                                       std::string_view paTypeHash,
                                                       std::string &paReqResult) {
-  return createQueryTypeResponseMessage(CTypeLib::getDataTypeEntry(paTypeNameId), paTypeHash, paReqResult, "DataType"s);
+  return createQueryTypeResponseMessage(CTypeLib::getDataTypeEntry(paTypeNameId), paTypeHash, paReqResult, "DataType");
 }
 
-EMGMResponse CResource::createAdapterTypeResponseMessage(const CStringDictionary::TStringId paValue,
+EMGMResponse CResource::createAdapterTypeResponseMessage(const CStringDictionary::TStringId paTypeNameId,
+                                                         std::string_view paTypeHash,
                                                          std::string &paReqResult) {
-  EMGMResponse retVal = EMGMResponse::UnsupportedType;
-  CTypeLib::CAdapterTypeEntry *adapterType = CTypeLib::getAdapterTypeEntry(paValue);
-  if (nullptr != adapterType) {
-    retVal = createXTypeResponseMessage(adapterType, paValue, retVal, paReqResult);
-  }
-  return retVal;
+  return createQueryTypeResponseMessage(CTypeLib::getAdapterTypeEntry(paTypeNameId), paTypeHash, paReqResult,
+                                        "AdapterType");
 }
 
-EMGMResponse CResource::createXTypeResponseMessage(const CTypeLib::CSpecTypeEntry *paTypeEntry,
-                                                   const CStringDictionary::TStringId paValue,
-                                                   EMGMResponse retVal,
-                                                   std::string &paReqResult) {
-  const SFBInterfaceSpec *paInterfaceSpec = paTypeEntry->getInterfaceSpec();
-  if (nullptr != paInterfaceSpec) {
-    paReqResult.append("Name=\"");
-    paReqResult.append(CStringDictionary::get(paValue));
-    paReqResult.append("\">\n    <InterfaceList>\n      ");
-    createEventInterfaceResponseMessage(paInterfaceSpec, paReqResult);
-    createDataInterfaceResponseMessage(paInterfaceSpec, paReqResult);
-    createAdapterInterfaceResponseMessage(paInterfaceSpec, paReqResult);
-    paReqResult.append("</InterfaceList>\n");
-    retVal = EMGMResponse::Ready;
-  }
-  return retVal;
-}
-
-void CResource::createEventInterfaceResponseMessage(const SFBInterfaceSpec *paInterfaceSpec, std::string &paReqResult) {
-  if (paInterfaceSpec->mNumEIs > 0) {
-    paReqResult.append("<EventInputs>\n         ");
-    createInterfaceResponseMessages(paReqResult, "Event", paInterfaceSpec->mEINames, nullptr, paInterfaceSpec->mNumEIs,
-                                    paInterfaceSpec->mEIWith, paInterfaceSpec->mEIWithIndexes,
-                                    paInterfaceSpec->mDINames);
-    paReqResult.append("</EventInputs>\n   ");
-  }
-  if (paInterfaceSpec->mNumEOs > 0) {
-    paReqResult.append("<EventOutputs>\n         ");
-    createInterfaceResponseMessages(paReqResult, "Event", paInterfaceSpec->mEONames, nullptr, paInterfaceSpec->mNumEOs,
-                                    paInterfaceSpec->mEOWith, paInterfaceSpec->mEOWithIndexes,
-                                    paInterfaceSpec->mDONames);
-    paReqResult.append("</EventOutputs>\n   ");
-  }
-}
-
-void CResource::createDataInterfaceResponseMessage(const SFBInterfaceSpec *paInterfaceSpec, std::string &paReqResult) {
-  if (paInterfaceSpec->mNumDIs > 0) {
-    paReqResult.append("<InputVars>\n         ");
-    createInterfaceResponseMessages(paReqResult, "VarDeclaration", paInterfaceSpec->mDINames,
-                                    paInterfaceSpec->mDIDataTypeNames, paInterfaceSpec->mNumDIs);
-    paReqResult.append("</InputVars>\n   ");
-  }
-  if (paInterfaceSpec->mNumDOs > 0) {
-    paReqResult.append("<OutputVars>\n         ");
-    createInterfaceResponseMessages(paReqResult, "VarDeclaration", paInterfaceSpec->mDONames,
-                                    paInterfaceSpec->mDODataTypeNames, paInterfaceSpec->mNumDOs);
-    paReqResult.append("</OutputVars>\n   ");
-  }
-}
-
-void CResource::createAdapterInterfaceResponseMessage(const SFBInterfaceSpec *paInterfaceSpec,
-                                                      std::string &paReqResult) {
-  if (paInterfaceSpec->mNumAdapters > 0) {
-    std::string sockets;
-    std::string plugs;
-    for (TPortId i = 0; i < paInterfaceSpec->mNumAdapters; i++) {
-      if (paInterfaceSpec->mAdapterInstanceDefinition[i].mIsPlug) {
-        const char *adapterName = CStringDictionary::get(paInterfaceSpec->mAdapterInstanceDefinition[i].mAdapterNameID);
-        const char *adapterTypeName =
-            CStringDictionary::get(paInterfaceSpec->mAdapterInstanceDefinition[i].mAdapterTypeNameID);
-        createInterfaceResponseMessage(plugs, "AdapterDeclaration", adapterName, adapterTypeName);
-      } else {
-        const char *adapterName = CStringDictionary::get(paInterfaceSpec->mAdapterInstanceDefinition[i].mAdapterNameID);
-        const char *adapterTypeName =
-            CStringDictionary::get(paInterfaceSpec->mAdapterInstanceDefinition[i].mAdapterTypeNameID);
-        createInterfaceResponseMessage(sockets, "AdapterDeclaration", adapterName, adapterTypeName);
-      }
-    }
-    if (!plugs.empty()) {
-      paReqResult.append("<Plugs>\n         ");
-      paReqResult.append(plugs);
-      paReqResult.append("</Plugs>\n   ");
-    }
-    if (!sockets.empty()) {
-      paReqResult.append("<Sockets>\n         ");
-      paReqResult.append(sockets);
-      paReqResult.append("</Sockets>\n   ");
-    }
-  }
-}
-
-void CResource::createInterfaceResponseMessages(std::string &paReqResult,
-                                                const char *paCommand,
-                                                const CStringDictionary::TStringId *paNameList,
-                                                const CStringDictionary::TStringId *paTypeList,
-                                                const TEventID paNumberOfElements,
-                                                const TDataIOID *paEWith,
-                                                const TForteInt16 *paEWithIndexes,
-                                                const CStringDictionary::TStringId *paDNameList) {
-  for (TEventID nIndex = 0; nIndex < paNumberOfElements; nIndex++) {
-    if (nullptr != paTypeList) {
-      const char *name = CStringDictionary::get(paNameList[nIndex]);
-      const char *type = CStringDictionary::get(paTypeList[nIndex]);
-      createInterfaceResponseMessage(paReqResult, paCommand, name, type);
-    } else {
-      const char *name = CStringDictionary::get(paNameList[nIndex]);
-      constexpr char event[] = "Event";
-      createInterfaceResponseMessage(paReqResult, paCommand, name, event, paEWith, paEWithIndexes, nIndex, paDNameList);
-    }
-  }
-}
-
-void CResource::createInterfaceResponseMessage(std::string &paReqResult,
-                                               const char *paCommand,
-                                               const std::string &paName,
-                                               const std::string &paType,
-                                               const TDataIOID *paEWith,
-                                               const TForteInt16 *paEWithIndexes,
-                                               const TEventID paIndex,
-                                               const CStringDictionary::TStringId *paENameList) const {
-  paReqResult.append("<");
-  paReqResult.append(paCommand);
-  paReqResult.append(" Name=\"");
-  paReqResult.append(paName);
-  paReqResult.append("\" Type=\"");
-  paReqResult.append(paType);
-  if (nullptr != paEWithIndexes && -1 != paEWithIndexes[paIndex]) {
-    paReqResult.append("\">\n         ");
-    for (int nRunIndex = paEWithIndexes[paIndex]; scmWithListDelimiter != paEWith[nRunIndex]; nRunIndex++) {
-      paReqResult.append("<With Var=\"");
-      paReqResult.append(CStringDictionary::get(paENameList[paEWith[nRunIndex]]));
-      paReqResult.append("\"/>\n      ");
-    }
-    paReqResult.append("</Event>\n      ");
-  } else {
-    paReqResult.append("\"/>\n");
-  }
-}
 #endif // FORTE_SUPPORT_QUERY_CMD
 
 #ifdef FORTE_DYNAMIC_TYPE_LOAD

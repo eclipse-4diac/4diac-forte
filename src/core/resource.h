@@ -267,30 +267,9 @@ class CResource : public CFunctionBlock {
                                                std::string_view paTypeHash,
                                                std::string &paReqResult);
 
-    EMGMResponse createAdapterTypeResponseMessage(const CStringDictionary::TStringId paValue, std::string &paReqResult);
-    EMGMResponse createXTypeResponseMessage(const CTypeLib::CSpecTypeEntry *paInterfaceSpec,
-                                            const CStringDictionary::TStringId paValue,
-                                            EMGMResponse retVal,
-                                            std::string &paReqResult);
-    void createEventInterfaceResponseMessage(const SFBInterfaceSpec *paInterfaceSpec, std::string &paReqResult);
-    void createDataInterfaceResponseMessage(const SFBInterfaceSpec *paInterfaceSpec, std::string &paReqResult);
-    void createAdapterInterfaceResponseMessage(const SFBInterfaceSpec *paInterfaceSpec, std::string &paReqResult);
-    void createInterfaceResponseMessages(std::string &paReqResult,
-                                         const char *paCommand,
-                                         const CStringDictionary::TStringId *paNameList,
-                                         const CStringDictionary::TStringId *paTypeList,
-                                         const TEventID paNumberOfElements = 0,
-                                         const TDataIOID *paEWith = nullptr,
-                                         const TForteInt16 *paEWithIndexes = nullptr,
-                                         const CStringDictionary::TStringId *paDNameList = nullptr);
-    void createInterfaceResponseMessage(std::string &paReqResult,
-                                        const char *paCommand,
-                                        const std::string &paName,
-                                        const std::string &paType,
-                                        const TDataIOID *paEWith = nullptr,
-                                        const TForteInt16 *paEWithIndexes = nullptr,
-                                        const TEventID paIndex = 0,
-                                        const CStringDictionary::TStringId *paENameList = nullptr) const;
+    EMGMResponse createAdapterTypeResponseMessage(const CStringDictionary::TStringId paTypeNameId,
+                                                  std::string_view paTypeHash,
+                                                  std::string &paReqResult);
 
 #endif // FORTE_SUPPORT_QUERY_CMD
 

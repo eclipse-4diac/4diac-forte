@@ -14,6 +14,7 @@
 #include "CommandParser.h"
 
 #include <cstring>
+#include <string_view>
 
 #include "core/util/string_utils.h"
 #include "core/device.h"
@@ -443,13 +444,19 @@ namespace forte::ita {
   }
 
 #ifdef FORTE_SUPPORT_QUERY_CMD
+  namespace {
+    constexpr std::string_view FB_TYPE = "FBType";
+    constexpr std::string_view ADAPTER_TYPE = "AdapterType";
+    constexpr std::string_view DATA_TYPE = "DataType";
+  } // namespace
+
   void CommandParser::parseQueryData(char *paRequestPartLeft) {
     mCommand.mCMD = EMGMCommandType::INVALID;
     if (nullptr != paRequestPartLeft) {
       switch (paRequestPartLeft[0]) {
         case 'F': // query fb or fb type list
-          if (!strncmp(paRequestPartLeft, "FBType", sizeof("FBType") - 1)) {
-            parseQueryTypes(paRequestPartLeft + sizeof("FBType") - 1, EMGMCommandType::QueryFBType,
+          if (!strncmp(paRequestPartLeft, FB_TYPE.data(), FB_TYPE.size())) {
+            parseQueryTypes(paRequestPartLeft + FB_TYPE.size(), EMGMCommandType::QueryFBType,
                             EMGMCommandType::QueryFBTypes);
           } else if (parseFBData(paRequestPartLeft)) {
             mCommand.mCMD = EMGMCommandType::QueryFB;
@@ -461,24 +468,15 @@ namespace forte::ita {
           }
           break;
         case 'D': // query datatype or datatype list
-          if (!strncmp(paRequestPartLeft, "DataType", sizeof("DataType") - 1)) {
-            parseQueryTypes(paRequestPartLeft + sizeof("DataType") - 1, EMGMCommandType::QueryDataType,
+          if (!strncmp(paRequestPartLeft, DATA_TYPE.data(), DATA_TYPE.size())) {
+            parseQueryTypes(paRequestPartLeft + DATA_TYPE.size(), EMGMCommandType::QueryDataType,
                             EMGMCommandType::QueryDTTypes);
           }
           break;
         case 'A': // query adaptertype list
-          if (!strncmp(paRequestPartLeft, "AdapterT", sizeof("AdapterT") - 1)) {
-            if (parseTypeListData(paRequestPartLeft)) {
-              mCommand.mCMD = EMGMCommandType::QueryAdapterTypes;
-            }
-#ifdef FORTE_DYNAMIC_TYPE_LOAD
-            else if (parseXType(paRequestPartLeft, "AdapterType Name=\"")) {
-              mCommand.mCMD = EMGMCommandType::QueryAdapterType;
-            }
-#endif
-            else {
-              mCommand.mCMD = EMGMCommandType::QueryGroup;
-            }
+          if (!strncmp(paRequestPartLeft, ADAPTER_TYPE.data(), ADAPTER_TYPE.size())) {
+            parseQueryTypes(paRequestPartLeft + ADAPTER_TYPE.size(), EMGMCommandType::QueryAdapterType,
+                            EMGMCommandType::QueryAdapterTypes);
           }
 
           break;
@@ -503,26 +501,6 @@ namespace forte::ita {
       mCommand.mCMD = paSingleQueryCMD;
       return;
     }
-  }
-
-  bool CommandParser::parseTypeListData(char *paRequestPartLeft) {
-    bool retVal = true;
-
-    if (!strncmp("DataType Name=\"", paRequestPartLeft, sizeof("DataType Name=\"") - 1)) {
-      if (paRequestPartLeft[15] != '*') { // does not support query for DataType-Declaration
-        retVal = false;
-      }
-    } else if (!strncmp("FBType Name=\"", paRequestPartLeft, sizeof("FBType Name=\"") - 1)) {
-      if (paRequestPartLeft[13] !=
-          '*') { // supports query for FBType-Declaration only for DynamicTypeLoad profile (LUA enabled)
-        retVal = false;
-      }
-    } else if (!strncmp("AdapterType Name=\"", paRequestPartLeft, sizeof("AdapterType Name=\"") - 1)) {
-      if (paRequestPartLeft[18] != '*') { // does not support query for AdapterType-Declaration
-        retVal = false;
-      }
-    }
-    return retVal;
   }
 
   void CommandParser::generateQueryResponse(CIEC_STRING &paResponse) {
@@ -567,13 +545,8 @@ namespace forte::ita {
         paResponse.append("\n  </DTList>");
         break;
       case EMGMCommandType::QueryFBType:
-      case EMGMCommandType::QueryDataType: paResponse.append(mCommand.mAdditionalParams); break;
-      case EMGMCommandType::QueryAdapterType:
-        paResponse.append("<AdapterType Comment=\"generated\" ");
-        paResponse.append(mCommand.mAdditionalParams);
-        paResponse.append(
-            "   <Service Comment=\"generated\" LeftInterface=\"SOCKET\" RightInterface=\"PLUG\"/>\n</AdapterType>");
-        break;
+      case EMGMCommandType::QueryDataType:
+      case EMGMCommandType::QueryAdapterType: paResponse.append(mCommand.mAdditionalParams); break;
       default: break;
     }
   }

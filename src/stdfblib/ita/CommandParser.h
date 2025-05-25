@@ -101,7 +101,6 @@ namespace forte::ita {
       void parseQueryTypes(std::string_view paRequestPartLeft,
                            EMGMCommandType paSingleQueryCMD,
                            EMGMCommandType paListQueryCMD);
-      bool parseTypeListData(char *paRequestPartLeft);
       void generateQueryResponse(CIEC_STRING &paResponse);
 #endif
 
