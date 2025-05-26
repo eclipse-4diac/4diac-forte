@@ -26,8 +26,8 @@
 #include "core/datatypes/forte_array_fixed.h"
 #include "core/datatypes/forte_array_variable.h"
 
-
 class FORTE_quarterconst final {
+    DECLARE_FIRMWARE_GLOBAL_CONST()
   public:
     static const CIEC_BYTE var_BYTE_QUARTER_ZZ;
     static const CIEC_SINT var_SHIFT_QUARTER_00;
@@ -128,4 +128,3 @@ class FORTE_quarterconst final {
 
     FORTE_quarterconst() = delete;
 };
-

@@ -26,6 +26,17 @@
 #include "core/datatypes/forte_array_fixed.h"
 #include "core/datatypes/forte_array_variable.h"
 
+using namespace std::literals;
+
+USE_STRING_ID(quarterconst);
+
+namespace {
+    constexpr std::string_view TypeHash ="v1:SHA3-512:3e091fc4945b20ac19b06f45f556ad4f6f1e91c3792812367fe9790870b5552a3bc52e4c83b6da18325a2bc35570425bab9a2a16285549756a15d599797f970d"sv;
+}
+
+DEFINE_FIRMWARE_GLOBAL_CONST(FORTE_quarterconst, STRID(quarterconst), TypeHash)
+
+
 const CIEC_BYTE FORTE_quarterconst::var_BYTE_QUARTER_ZZ = 0_BYTE;
 const CIEC_SINT FORTE_quarterconst::var_SHIFT_QUARTER_00 = 0_SINT;
 const CIEC_BYTE FORTE_quarterconst::var_BYTE_QUARTER_00 = 3_BYTE;

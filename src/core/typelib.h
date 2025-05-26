@@ -153,6 +153,19 @@ private:                                                                        
       CIEC_##datatypename::createDataType, sizeof(CIEC_##datatypename));                                               \
   FORTE_DUMMY_INIT_DEF(CIEC_##datatypename)
 
+#define DECLARE_FIRMWARE_GLOBAL_CONST()                                                                                \
+private:                                                                                                               \
+  const static CTypeLib::CGlobalConstEntry csmGlobalConstEntry;                                                        \
+                                                                                                                       \
+public:                                                                                                                \
+  FORTE_DUMMY_INIT_DEC                                                                                                 \
+private:
+
+#define DEFINE_FIRMWARE_GLOBAL_CONST(gcClass, gcTypeNameId, ...)                                                       \
+  const CTypeLib::CGlobalConstEntry gcClass::csmGlobalConstEntry(                                                      \
+      (gcTypeNameId), GET_TYPE_HASH(__VA_ARGS__ __VA_OPT__(, ) std::string_view{}));                                   \
+  FORTE_DUMMY_INIT_DEF(gcClass)
+
 struct SFBInterfaceSpec;
 
 /*!\ingroup CORE \brief Class for storing the functionblock libraries.
@@ -256,6 +269,11 @@ class CTypeLib {
         size_t mSize;
     };
 
+    class CGlobalConstEntry : public CTypeEntry {
+      public:
+        CGlobalConstEntry(CStringDictionary::TStringId paTypeNameId, std::string_view paTypeHash);
+    };
+
   public:
     /*!\brief Create a new FB instance of given type and given instance name.
      *
@@ -303,10 +321,12 @@ class CTypeLib {
     static CFBTypeEntry *getFBTypeEntry(CStringDictionary::TStringId paTypeNameId);
     static CAdapterTypeEntry *getAdapterTypeEntry(CStringDictionary::TStringId paTypeNameId);
     static CDataTypeEntry *getDataTypeEntry(CStringDictionary::TStringId paTypeNameId);
+    static CGlobalConstEntry *getGlobalConstTypeEntry(CStringDictionary::TStringId paTypeNameId);
 
     static const std::vector<CFBTypeEntry *> &getFBTypeEntries();
     static const std::vector<CAdapterTypeEntry *> &getAdapterTypeEntries();
     static const std::vector<CDataTypeEntry *> &getDataTypeEntries();
+    static const std::vector<CGlobalConstEntry *> &getGlobalConstEntries();
 
     /*!\brief Function to create an data type instance of given type
      *

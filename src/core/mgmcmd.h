@@ -231,6 +231,9 @@ enum class EMGMCommandType : uint8_t {
    *    - mAdditionalParams the type hash if present
    */
   QueryDataType = 0x97,
+
+  QueryGlobalConstType = 0xA7,
+  QueryGlobalConstTypes = 0xB7,
 #endif
 
   /*! \brief reset a FB, resource or the device.

@@ -22,8 +22,8 @@
 #include "core/datatypes/forte_array_fixed.h"
 #include "core/datatypes/forte_array_variable.h"
 
-
 class FORTE_signalprocessing__FIELDBUS_SIGNAL final {
+    DECLARE_FIRMWARE_GLOBAL_CONST()
   public:
     static const CIEC_BYTE var_REVERSE;
     static const CIEC_BYTE var_DISABLED;
@@ -58,4 +58,3 @@ class FORTE_signalprocessing__FIELDBUS_SIGNAL final {
 
     FORTE_signalprocessing__FIELDBUS_SIGNAL() = delete;
 };
-

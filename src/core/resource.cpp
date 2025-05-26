@@ -133,6 +133,9 @@ EMGMResponse CResource::executeMGMCommand(forte::core::SManagementCMD &paCommand
 #ifdef FORTE_SUPPORT_QUERY_CMD
       case EMGMCommandType::QueryFBTypes: retVal = queryAllFBTypes(paCommand.mAdditionalParams); break;
       case EMGMCommandType::QueryAdapterTypes: retVal = queryAllAdapterTypes(paCommand.mAdditionalParams); break;
+      case EMGMCommandType::QueryGlobalConstTypes:
+        retVal = queryAllGlobalConstTypes(paCommand.mAdditionalParams);
+        break;
       case EMGMCommandType::QueryFB: retVal = queryFBs(paCommand.mAdditionalParams, *this, ""); break;
       case EMGMCommandType::QueryFBType:
         retVal = createFBTypeResponseMessage(paCommand.mFirstParam.front(), paCommand.mAdditionalParams,
@@ -145,6 +148,9 @@ EMGMResponse CResource::executeMGMCommand(forte::core::SManagementCMD &paCommand
       case EMGMCommandType::QueryDataType:
         retVal = createDataTypeResponseMessage(paCommand.mFirstParam.front(), paCommand.mAdditionalParams,
                                                paCommand.mAdditionalParams);
+      case EMGMCommandType::QueryGlobalConstType:
+        retVal = createGlobalConstTypeResponseMessage(paCommand.mFirstParam.front(), paCommand.mAdditionalParams,
+                                                      paCommand.mAdditionalParams);
         break;
       case EMGMCommandType::QueryConnection: retVal = queryConnections(paCommand.mAdditionalParams, *this); break;
 #endif // FORTE_SUPPORT_QUERY_CMD
@@ -366,6 +372,11 @@ EMGMResponse CResource::queryAllAdapterTypes(std::string &paValue) {
   return EMGMResponse::Ready;
 }
 
+EMGMResponse CResource::queryAllGlobalConstTypes(std::string &paValue) {
+  appendTypeNameList(paValue, CTypeLib::getGlobalConstEntries());
+  return EMGMResponse::Ready;
+}
+
 EMGMResponse CResource::queryFBs(std::string &paValue, const CFBContainer &container, const std::string prefix) {
   for (auto itRunner : container.getChildren()) {
     if (itRunner->isFB()) {
@@ -505,6 +516,13 @@ EMGMResponse CResource::createAdapterTypeResponseMessage(const CStringDictionary
                                                          std::string &paReqResult) {
   return createQueryTypeResponseMessage(CTypeLib::getAdapterTypeEntry(paTypeNameId), paTypeHash, paReqResult,
                                         "AdapterType");
+}
+
+EMGMResponse CResource::createGlobalConstTypeResponseMessage(const CStringDictionary::TStringId paTypeNameId,
+                                                             std::string_view paTypeHash,
+                                                             std::string &paReqResult) {
+  return createQueryTypeResponseMessage(CTypeLib::getGlobalConstTypeEntry(paTypeNameId), paTypeHash, paReqResult,
+                                        "GlobalConstType");
 }
 
 #endif // FORTE_SUPPORT_QUERY_CMD

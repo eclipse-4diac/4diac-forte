@@ -45,6 +45,12 @@ namespace {
     return *dataTypeLib;
   }
 
+  std::vector<CTypeLib::CGlobalConstEntry *> &getGlobalConstTypeLib() {
+    static std::vector<CTypeLib::CGlobalConstEntry *> *globalConstTypeLib =
+        new std::vector<CTypeLib::CGlobalConstEntry *>();
+    return *globalConstTypeLib;
+  }
+
   CFunctionBlock *createGenericFB(CStringDictionary::TStringId paInstanceNameId,
                                   CStringDictionary::TStringId paFBTypeId,
                                   forte::core::CFBContainer &paContainer,
@@ -65,6 +71,8 @@ namespace {
   /*!\brief add a Firmware data type to the type lib (is mainly used by the corresponding entry class).
    */
   void addDataType(CTypeLib::CDataTypeEntry *paDTEntry);
+
+  void addGlobalConstType(CTypeLib::CGlobalConstEntry *paGlobalConstTypeEntry);
 
 }; // namespace
 
@@ -106,6 +114,11 @@ CTypeLib::CDataTypeEntry::CDataTypeEntry(CStringDictionary::TStringId paTypeName
     mDTCreateFunc(pafuncDTCreateFunc),
     mSize(paSize) {
   addDataType(this);
+}
+
+CTypeLib::CGlobalConstEntry::CGlobalConstEntry(CStringDictionary::TStringId paTypeNameId, std::string_view paTypeHash) :
+    CTypeEntry(paTypeNameId, paTypeHash) {
+  addGlobalConstType(this);
 }
 
 CAdapter *CTypeLib::createAdapter(CStringDictionary::TStringId paInstanceNameId,
@@ -254,6 +267,10 @@ CTypeLib::CDataTypeEntry *CTypeLib::getDataTypeEntry(CStringDictionary::TStringI
   return findTypeEntry(getDataTypeLib(), paTypeNameId);
 }
 
+CTypeLib::CGlobalConstEntry *CTypeLib::getGlobalConstTypeEntry(CStringDictionary::TStringId paTypeNameId) {
+  return findTypeEntry(getGlobalConstTypeLib(), paTypeNameId);
+}
+
 const std::vector<CTypeLib::CFBTypeEntry *> &CTypeLib::getFBTypeEntries() {
   return getFBTypeLib();
 }
@@ -264,6 +281,10 @@ const std::vector<CTypeLib::CAdapterTypeEntry *> &CTypeLib::getAdapterTypeEntrie
 
 const std::vector<CTypeLib::CDataTypeEntry *> &CTypeLib::getDataTypeEntries() {
   return getDataTypeLib();
+}
+
+const std::vector<CTypeLib::CGlobalConstEntry *> &CTypeLib::getGlobalConstEntries() {
+  return getGlobalConstTypeLib();
 }
 
 namespace {
@@ -349,6 +370,10 @@ namespace {
 
   void addDataType(CTypeLib::CDataTypeEntry *paDTEntry) {
     sortedTypeEntryInsert(getDataTypeLib(), paDTEntry);
+  }
+
+  void addGlobalConstType(CTypeLib::CGlobalConstEntry *paGlobalConstTypeEntry) {
+    sortedTypeEntryInsert(getGlobalConstTypeLib(), paGlobalConstTypeEntry);
   }
 
 }; // namespace

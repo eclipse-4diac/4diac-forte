@@ -243,6 +243,8 @@ class CResource : public CFunctionBlock {
      */
     static EMGMResponse queryAllAdapterTypes(std::string &paValue);
 
+    static EMGMResponse queryAllGlobalConstTypes(std::string &paValue);
+
     /*!\brief Retrieve the list of FB instances
      *
      * @param paValue the result of the query
@@ -270,6 +272,10 @@ class CResource : public CFunctionBlock {
     EMGMResponse createAdapterTypeResponseMessage(const CStringDictionary::TStringId paTypeNameId,
                                                   std::string_view paTypeHash,
                                                   std::string &paReqResult);
+
+    EMGMResponse createGlobalConstTypeResponseMessage(const CStringDictionary::TStringId paTypeNameId,
+                                                      std::string_view paTypeHash,
+                                                      std::string &paReqResult);
 
 #endif // FORTE_SUPPORT_QUERY_CMD
 

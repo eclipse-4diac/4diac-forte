@@ -448,6 +448,7 @@ namespace forte::ita {
     constexpr std::string_view FB_TYPE = "FBType";
     constexpr std::string_view ADAPTER_TYPE = "AdapterType";
     constexpr std::string_view DATA_TYPE = "DataType";
+    constexpr std::string_view GLOBAL_CONST_TYPE = "GlobalConstType";
   } // namespace
 
   void CommandParser::parseQueryData(char *paRequestPartLeft) {
@@ -478,7 +479,12 @@ namespace forte::ita {
             parseQueryTypes(paRequestPartLeft + ADAPTER_TYPE.size(), EMGMCommandType::QueryAdapterType,
                             EMGMCommandType::QueryAdapterTypes);
           }
-
+          break;
+        case 'G': // query adaptertype list
+          if (!strncmp(paRequestPartLeft, GLOBAL_CONST_TYPE.data(), GLOBAL_CONST_TYPE.size())) {
+            parseQueryTypes(paRequestPartLeft + GLOBAL_CONST_TYPE.size(), EMGMCommandType::QueryGlobalConstType,
+                            EMGMCommandType::QueryGlobalConstTypes);
+          }
           break;
         default: break;
       }
@@ -535,6 +541,7 @@ namespace forte::ita {
         break;
       case EMGMCommandType::QueryFBTypes:
       case EMGMCommandType::QueryAdapterTypes:
+      case EMGMCommandType::QueryGlobalConstTypes:
         paResponse.append("<NameList>\n    ");
         paResponse.append(mCommand.mAdditionalParams);
         paResponse.append("\n  </NameList>");
@@ -546,7 +553,8 @@ namespace forte::ita {
         break;
       case EMGMCommandType::QueryFBType:
       case EMGMCommandType::QueryDataType:
-      case EMGMCommandType::QueryAdapterType: paResponse.append(mCommand.mAdditionalParams); break;
+      case EMGMCommandType::QueryAdapterType:
+      case EMGMCommandType::QueryGlobalConstType: paResponse.append(mCommand.mAdditionalParams); break;
       default: break;
     }
   }
