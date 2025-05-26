@@ -1,6 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2022 Primetals Technologies Austria GmbH
- *               2022 - 2023 Martin Erich Jobst
+ * Copyright (c) 2022, 2025 Primetals Technologies Austria GmbH
+ *                          Martin Erich Jobst
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -14,6 +14,7 @@
  *    Martin Jobst
  *      - add support for data types with different size
  *      - refactored array type structure
+ *      - add support for setting bounds
  *******************************************************************************/
 #pragma once
 
@@ -230,6 +231,14 @@ class CIEC_ARRAY_FIXED : public CIEC_ARRAY_COMMON<T> {
 
     [[nodiscard]] constexpr const_iterator cend() const {
       return data.cend();
+    }
+
+    [[nodiscard]] bool hasVariableBounds() const override {
+      return false;
+    };
+
+    void setBounds(intmax_t paLowerBound, intmax_t paUpperBound) override {
+      DEVLOG_ERROR("Cannot set bounds of fixed array\n");
     }
 
     [[nodiscard]] CIEC_ANY::EDataTypeID getElementDataTypeID() const override {

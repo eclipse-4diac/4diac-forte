@@ -18,6 +18,7 @@
  *   Alois Zoitl  - introduced new CGenFB class for better handling generic FBs
  *   Martin Jobst - add CTF tracing integration
  *                - account for data type size in FB initialization
+ *                - handle in-out connections with variable arrays
  *   Alois Zoitl  - migrated data type toString to std::string
  *******************************************************************************/
 #include "funcbloc.h"
@@ -164,8 +165,17 @@ bool CFunctionBlock::connectDIO(TPortId paDIOPortId, CInOutDataConnection *paDat
 
 bool CFunctionBlock::configureGenericDIO(TPortId paDIOPortId, const CIEC_ANY &paRefValue) {
   CIEC_ANY *dio = getDIO(paDIOPortId);
-  if (dio->getDataTypeID() == CIEC_ANY::e_ANY) {
-    dio->setValue(paRefValue.unwrap());
+  switch (dio->getDataTypeID()) {
+    case CIEC_ANY::e_ANY: dio->setValue(paRefValue.unwrap()); break;
+    case CIEC_ANY::e_ARRAY: {
+      auto &dioArrayValue = static_cast<CIEC_ARRAY &>(*dio);
+      auto &refArrayValue = static_cast<const CIEC_ARRAY &>(paRefValue.unwrap());
+      if (dioArrayValue.hasVariableBounds() && !refArrayValue.hasVariableBounds()) {
+        dioArrayValue.setBounds(refArrayValue.getLowerBound(), refArrayValue.getUpperBound());
+      }
+      break;
+    }
+    default: break;
   }
   return true;
 }

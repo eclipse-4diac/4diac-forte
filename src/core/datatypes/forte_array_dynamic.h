@@ -1,7 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2007 - 2013 ACIN, nxtControl GmbH, fortiss GmbH
- *               2022 Primetals Technologies Austria GmbH
- *               2022 - 2023 Martin Erich Jobst
+ * Copyright (c) 2007, 2025 ACIN, nxtControl GmbH, fortiss GmbH
+ *                          Primetals Technologies Austria GmbH
+ *                          Martin Erich Jobst
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -21,6 +21,7 @@
  *                 - refactored for elements with dynamic size
  *                 - refactored for lower and upper bounds
  *                 - refactored array type structure
+ *                 - add support for setting bounds
  *******************************************************************************/
 
 #pragma once
@@ -541,6 +542,16 @@ class CIEC_ARRAY_DYNAMIC : public CIEC_ARRAY {
 
     [[nodiscard]] const_reference operator[](intmax_t paIndex) const override {
       return at(paIndex);
+    }
+
+    [[nodiscard]] bool hasVariableBounds() const override {
+      return true;
+    };
+
+    void setBounds(intmax_t paLowerBound, intmax_t paUpperBound) override {
+      if (paLowerBound != mLowerBound || paUpperBound != mUpperBound) {
+        setup(paLowerBound, paUpperBound, mElementDataTypeEntry->getTypeNameId());
+      }
     }
 
     [[nodiscard]] CIEC_ANY::EDataTypeID getElementDataTypeID() const override {

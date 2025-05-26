@@ -13,6 +13,7 @@
  *      - initial implementation and rework communication infrastructure
  *   Martin Jobst - refactored for common assignment operators
  *                - refactored array type structure
+ *                - add support for setting bounds
  *   Markus Meingast, Alois Zoitl  - migrated data type toString to std::string
  *******************************************************************************/
 #pragma once
@@ -107,6 +108,10 @@ class CIEC_ARRAY : public CIEC_ANY_DERIVED {
     CStringDictionary::TStringId getTypeNameID() const override;
 
     void setValue(const CIEC_ANY &paValue) override;
+
+    [[nodiscard]] virtual bool hasVariableBounds() const = 0;
+
+    virtual void setBounds(intmax_t paLowerBound, intmax_t paUpperBound) = 0;
 
     void reset() override;
 

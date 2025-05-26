@@ -1,6 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2022 Primetals Technologies Austria GmbH
- *               2022 - 2023 Martin Erich Jobst
+ * Copyright (c) 2022, 2025 Primetals Technologies Austria GmbH
+ *                          Martin Erich Jobst
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -14,6 +14,7 @@
  *    Martin Jobst
  *      - add support for data types with different size
  *      - refactored array type structure
+ *      - add support for setting bounds
  *******************************************************************************/
 #pragma once
 
@@ -42,10 +43,10 @@ class CIEC_ARRAY_VARIABLE : public CIEC_ARRAY_COMMON<T> {
      * @param paUpperBound The upper bound
      */
     CIEC_ARRAY_VARIABLE(intmax_t paLowerBound, intmax_t paUpperBound) :
-        cmLowerBound(paLowerBound),
-        cmUpperBound(paUpperBound),
-        cmSize(static_cast<size_t>(paUpperBound - paLowerBound + 1)),
-        data(cmSize) {
+        mLowerBound(paLowerBound),
+        mUpperBound(paUpperBound),
+        mSize(static_cast<size_t>(paUpperBound - paLowerBound + 1)),
+        data(mSize) {
     }
 
     /**
@@ -53,9 +54,9 @@ class CIEC_ARRAY_VARIABLE : public CIEC_ARRAY_COMMON<T> {
      * @param init The initializer list
      */
     CIEC_ARRAY_VARIABLE(std::initializer_list<T> init) :
-        cmLowerBound(0),
-        cmUpperBound(init.size() - 1),
-        cmSize(init.size()),
+        mLowerBound(0),
+        mUpperBound(init.size() - 1),
+        mSize(init.size()),
         data(init) {
     }
 
@@ -64,9 +65,9 @@ class CIEC_ARRAY_VARIABLE : public CIEC_ARRAY_COMMON<T> {
      * @param paSource The original array
      */
     CIEC_ARRAY_VARIABLE(const CIEC_ARRAY_VARIABLE &paSource) :
-        cmLowerBound(paSource.cmLowerBound),
-        cmUpperBound(paSource.cmUpperBound),
-        cmSize(paSource.cmSize),
+        mLowerBound(paSource.mLowerBound),
+        mUpperBound(paSource.mUpperBound),
+        mSize(paSource.mSize),
         data(paSource.data) {
     }
 
@@ -75,9 +76,9 @@ class CIEC_ARRAY_VARIABLE : public CIEC_ARRAY_COMMON<T> {
      * @param paSource The original array
      */
     CIEC_ARRAY_VARIABLE(CIEC_ARRAY_VARIABLE &&paSource) :
-        cmLowerBound(paSource.cmLowerBound),
-        cmUpperBound(paSource.cmUpperBound),
-        cmSize(paSource.cmSize),
+        mLowerBound(paSource.mLowerBound),
+        mUpperBound(paSource.mUpperBound),
+        mSize(paSource.mSize),
         data(std::move(paSource.data)) {
     }
 
@@ -87,9 +88,9 @@ class CIEC_ARRAY_VARIABLE : public CIEC_ARRAY_COMMON<T> {
      * @param paSource The original array
      */
     CIEC_ARRAY_VARIABLE(const CIEC_ARRAY &paSource) :
-        cmLowerBound(paSource.getLowerBound()),
-        cmUpperBound(paSource.getUpperBound()),
-        cmSize(paSource.size()),
+        mLowerBound(paSource.getLowerBound()),
+        mUpperBound(paSource.getUpperBound()),
+        mSize(paSource.size()),
         data(paSource.size()) {
       assignDynamic(paSource, paSource.getLowerBound(), paSource.getUpperBound());
     }
@@ -101,9 +102,9 @@ class CIEC_ARRAY_VARIABLE : public CIEC_ARRAY_COMMON<T> {
      */
     template<typename U>
     CIEC_ARRAY_VARIABLE(const CIEC_ARRAY_COMMON<U> &paSource) :
-        cmLowerBound(paSource.getLowerBound()),
-        cmUpperBound(paSource.getUpperBound()),
-        cmSize(paSource.size()),
+        mLowerBound(paSource.getLowerBound()),
+        mUpperBound(paSource.getUpperBound()),
+        mSize(paSource.size()),
         data(paSource.size()) {
       assignDynamic(paSource, paSource.getLowerBound(), paSource.getUpperBound());
     }
@@ -115,9 +116,9 @@ class CIEC_ARRAY_VARIABLE : public CIEC_ARRAY_COMMON<T> {
      */
     template<typename U, std::enable_if_t<std::is_assignable_v<T &, const U &>, bool> = true>
     CIEC_ARRAY_VARIABLE(const CIEC_ARRAY_VARIABLE<U> &paSource) :
-        cmLowerBound(paSource.cmLowerBound),
-        cmUpperBound(paSource.cmUpperBound),
-        cmSize(paSource.cmSize),
+        mLowerBound(paSource.mLowerBound),
+        mUpperBound(paSource.mUpperBound),
+        mSize(paSource.mSize),
         data(paSource.begin(), paSource.end()) {
     }
 
@@ -133,9 +134,9 @@ class CIEC_ARRAY_VARIABLE : public CIEC_ARRAY_COMMON<T> {
              intmax_t sourceUpperBound,
              std::enable_if_t<std::is_assignable_v<T &, const U &>, bool> = true>
     CIEC_ARRAY_VARIABLE(const CIEC_ARRAY_FIXED<U, sourceLowerBound, sourceUpperBound> &paSource) :
-        cmLowerBound(sourceLowerBound),
-        cmUpperBound(sourceUpperBound),
-        cmSize(paSource.size()),
+        mLowerBound(sourceLowerBound),
+        mUpperBound(sourceUpperBound),
+        mSize(paSource.size()),
         data(paSource.begin(), paSource.end()) {
     }
 
@@ -145,7 +146,7 @@ class CIEC_ARRAY_VARIABLE : public CIEC_ARRAY_COMMON<T> {
      * @return The assigned array
      */
     CIEC_ARRAY_VARIABLE &operator=(const CIEC_ARRAY_VARIABLE &paSource) {
-      assign(paSource, paSource.cmLowerBound, paSource.cmUpperBound);
+      assign(paSource, paSource.mLowerBound, paSource.mUpperBound);
       return *this;
     }
 
@@ -155,7 +156,7 @@ class CIEC_ARRAY_VARIABLE : public CIEC_ARRAY_COMMON<T> {
      * @return The assigned array
      */
     CIEC_ARRAY_VARIABLE &operator=(CIEC_ARRAY_VARIABLE &&paSource) {
-      assignMove(std::forward<CIEC_ARRAY_VARIABLE>(paSource), paSource.cmLowerBound, paSource.cmUpperBound);
+      assignMove(std::forward<CIEC_ARRAY_VARIABLE>(paSource), paSource.mLowerBound, paSource.mUpperBound);
       return *this;
     }
 
@@ -167,7 +168,7 @@ class CIEC_ARRAY_VARIABLE : public CIEC_ARRAY_COMMON<T> {
      */
     template<typename U, std::enable_if_t<std::is_assignable_v<T &, const U &>, bool> = true>
     CIEC_ARRAY_VARIABLE &operator=(const CIEC_ARRAY_VARIABLE<U> &paSource) {
-      assign(paSource, paSource.cmLowerBound, paSource.cmUpperBound);
+      assign(paSource, paSource.mLowerBound, paSource.mUpperBound);
       return *this;
     }
 
@@ -215,15 +216,15 @@ class CIEC_ARRAY_VARIABLE : public CIEC_ARRAY_COMMON<T> {
     }
 
     [[nodiscard]] constexpr intmax_t getLowerBound() const override {
-      return cmLowerBound;
+      return mLowerBound;
     }
 
     [[nodiscard]] constexpr intmax_t getUpperBound() const override {
-      return cmUpperBound;
+      return mUpperBound;
     }
 
     [[nodiscard]] constexpr size_t size() const override {
-      return static_cast<size_t>(cmUpperBound - cmLowerBound + 1); // e.g., from 0 to 0 is still 1 element
+      return static_cast<size_t>(mUpperBound - mLowerBound + 1); // e.g., from 0 to 0 is still 1 element
     }
 
     [[nodiscard]] iterator begin() noexcept {
@@ -250,6 +251,19 @@ class CIEC_ARRAY_VARIABLE : public CIEC_ARRAY_COMMON<T> {
       return data.cend();
     }
 
+    [[nodiscard]] bool hasVariableBounds() const override {
+      return true;
+    };
+
+    void setBounds(intmax_t paLowerBound, intmax_t paUpperBound) override {
+      if (paLowerBound != mLowerBound || paUpperBound != mUpperBound) {
+        mLowerBound = paLowerBound;
+        mUpperBound = paUpperBound;
+        mSize = static_cast<size_t>(paUpperBound - paLowerBound + 1);
+        data.resize(mSize);
+      }
+    }
+
     [[nodiscard]] CIEC_ANY::EDataTypeID getElementDataTypeID() const override {
       return data[0].getDataTypeID();
     }
@@ -263,13 +277,13 @@ class CIEC_ARRAY_VARIABLE : public CIEC_ARRAY_COMMON<T> {
       return -1; // not supported
     }
 
-    ~CIEC_ARRAY_VARIABLE() = default;
+    ~CIEC_ARRAY_VARIABLE() override = default;
 
   private:
     template<typename U>
     inline void assign(const U &paArray, intmax_t sourceLowerBound, intmax_t sourceUpperBound) {
-      intmax_t begin = std::max(cmLowerBound, sourceLowerBound);
-      intmax_t end = std::min(cmUpperBound, sourceUpperBound);
+      intmax_t begin = std::max(mLowerBound, sourceLowerBound);
+      intmax_t end = std::min(mUpperBound, sourceUpperBound);
       for (intmax_t i = begin; i <= end; ++i) {
         (*this)[i] = paArray[i];
       }
@@ -277,8 +291,8 @@ class CIEC_ARRAY_VARIABLE : public CIEC_ARRAY_COMMON<T> {
 
     template<typename U>
     inline void assignMove(U &&paArray, intmax_t sourceLowerBound, intmax_t sourceUpperBound) {
-      intmax_t begin = std::max(cmLowerBound, sourceLowerBound);
-      intmax_t end = std::min(cmUpperBound, sourceUpperBound);
+      intmax_t begin = std::max(mLowerBound, sourceLowerBound);
+      intmax_t end = std::min(mUpperBound, sourceUpperBound);
       for (intmax_t i = begin; i <= end; ++i) {
         (*this)[i] = std::move(paArray[i]);
       }
@@ -287,8 +301,8 @@ class CIEC_ARRAY_VARIABLE : public CIEC_ARRAY_COMMON<T> {
     template<typename U>
     inline void assignDynamic(const U &paArray, intmax_t sourceLowerBound, intmax_t sourceUpperBound) {
       if (paArray.size()) { // check if initialized
-        intmax_t begin = std::max(cmLowerBound, sourceLowerBound);
-        intmax_t end = std::min(cmUpperBound, sourceUpperBound);
+        intmax_t begin = std::max(mLowerBound, sourceLowerBound);
+        intmax_t end = std::min(mUpperBound, sourceUpperBound);
         for (intmax_t i = begin; i <= end; ++i) {
           (*this)[i].setValue(paArray[i]);
         }
@@ -296,12 +310,12 @@ class CIEC_ARRAY_VARIABLE : public CIEC_ARRAY_COMMON<T> {
     }
 
     [[nodiscard]] constexpr size_t getDataArrayIndex(intmax_t paSTIndex) const {
-      return static_cast<size_t>(paSTIndex - cmLowerBound);
+      return static_cast<size_t>(paSTIndex - mLowerBound);
     }
 
-    const intmax_t cmLowerBound;
-    const intmax_t cmUpperBound;
-    const size_t cmSize;
+    intmax_t mLowerBound;
+    intmax_t mUpperBound;
+    size_t mSize;
     std::vector<T> data;
 };
 
