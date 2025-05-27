@@ -32,7 +32,7 @@ USE_STRING_ID(START);
 #include "generated/ecetFactory.h"
 #include "device.h"
 #include "negdataconn.h"
-#include "string_utils.h"
+#include "core/util/string_utils.h"
 
 #ifdef FORTE_DYNAMIC_TYPE_LOAD
 #include "lua/luaadaptertypeentry.h"

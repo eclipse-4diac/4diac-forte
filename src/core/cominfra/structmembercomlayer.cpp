@@ -17,7 +17,7 @@
 #include "typelib.h"
 #include <string>
 #include <errno.h>
-#include "string_utils.h"
+#include "core/util/string_utils.h"
 
 using namespace forte::com_infra;
 

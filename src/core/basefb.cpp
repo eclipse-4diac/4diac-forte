@@ -19,7 +19,7 @@
 
 #include "basefb.h"
 #include "resource.h"
-#include "string_utils.h"
+#include "core/util/string_utils.h"
 
 TPortId SInternalVarsInformation::getVarId(CStringDictionary::TStringId paInternalName) const {
   for (TPortId i = 0; i < mNumIntVars; ++i) {

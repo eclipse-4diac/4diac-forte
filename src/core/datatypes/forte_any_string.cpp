@@ -18,7 +18,7 @@
 #include <fortenew.h>
 #include "forte_any_string.h"
 #include "unicode_utils.h"
-#include "string_utils.h"
+#include "core/util/string_utils.h"
 #include <string.h>
 #include <stdlib.h>
 #include <devlog.h>

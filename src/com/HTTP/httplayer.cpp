@@ -23,7 +23,7 @@
 #include "basecommfb.h"
 #include "http_handler.h"
 #include "comtypes.h"
-#include "string_utils.h"
+#include "core/util/string_utils.h"
 
 using namespace forte::com_infra;
 using namespace std::string_literals;

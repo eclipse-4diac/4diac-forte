@@ -19,8 +19,8 @@
 #include "forte_time.h"
 #include <string_view>
 #include "../../arch/timerha.h"
-#include "forte_constants.h"
-#include "string_utils.h"
+#include "core/util/forte_constants.h"
+#include "core/util/string_utils.h"
 
 USE_STRING_ID(TIME);
 

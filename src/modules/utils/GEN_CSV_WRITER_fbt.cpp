@@ -18,7 +18,7 @@
  *******************************************************************************/
 #include "GEN_CSV_WRITER_fbt.h"
 #include <memory>
-#include "string_utils.h"
+#include "core/util/string_utils.h"
 
 USE_STRING_ID(BOOL);
 USE_STRING_ID(CNF);

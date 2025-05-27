@@ -27,7 +27,7 @@
 #include <string_view>
 #include <charconv>
 #include "../../arch/forte_fileio.h"
-#include "string_utils.h"
+#include "core/util/string_utils.h"
 
 USE_STRING_ID(STRING);
 

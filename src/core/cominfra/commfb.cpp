@@ -26,8 +26,8 @@
 #include "commfb.h"
 #include "comlayer.h"
 #include "comlayersmanager.h"
-#include "criticalregion.h"
-#include "string_utils.h"
+#include "core/util/criticalregion.h"
+#include "core/util/string_utils.h"
 
 USE_STRING_ID(BOOL);
 USE_STRING_ID(CNF);
