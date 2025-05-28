@@ -727,8 +727,7 @@ void CUA_ClientInformation::CUA_RemoteCallbackFunctions::subscriptionValueChange
 
     COPC_UA_Helper::UA_RecvVariable_handle handleRecv;
 
-    const UA_Variant *value = &paData->value;
-    handleRecv.mData.push_back(value);
+    handleRecv.mData.emplace_back(&paData->value);
     handleRecv.mOffset = variableContextHandle->mPortIndex;
 
     forte::com_infra::EComResponse retVal =

@@ -223,12 +223,9 @@ void COPC_UA_Local_Handler::referencedNodesIncrement(const std::vector<UA_NodeId
       }
     }
     if (!found) {
-      nodesReferencedByActions newRef;
       UA_NodeId *newNode = UA_NodeId_new();
       UA_NodeId_copy(node, newNode);
-      newRef.mNodeId = newNode;
-      newRef.mActionsReferencingIt.push_back(&paActionInfo);
-      mNodesReferences.push_back(newRef);
+      mNodesReferences.emplace_back(newNode, std::vector<CActionInfo *>{&paActionInfo});
     }
   }
 }
@@ -772,9 +769,7 @@ UA_StatusCode COPC_UA_Local_Handler::handleExistingMethod(CActionInfo &paActionI
     if (UA_STATUSCODE_GOOD == retVal) {
       retVal = UA_Server_setNodeContext(mUaServer, *it->getNodeId(), this);
       if (UA_STATUSCODE_GOOD == retVal) {
-        UA_ParentNodeHandler parentNodeContext(paParentNode, it->getNodeId(),
-                                               static_cast<CLocalMethodInfo &>(paActionInfo));
-        mMethodsContexts.push_back(parentNodeContext);
+        mMethodsContexts.emplace_back(paParentNode, it->getNodeId(), static_cast<CLocalMethodInfo &>(paActionInfo));
       } else {
         DEVLOG_ERROR("[OPC UA LOCAL]: Could not set context function for method at %s. Error: %s\n",
                      paActionInfo.getLayer().getCommFB()->getInstanceName(), UA_StatusCode_name(retVal));
@@ -866,8 +861,7 @@ UA_StatusCode COPC_UA_Local_Handler::createMethodNode(CCreateMethodInfo &paCreat
       UA_NodeId_copy(paCreateMethodInfo.mReturnedNodeId, *paNodeId);
     }
 
-    UA_ParentNodeHandler parentNodeContext(parentNodeId, *paNodeId, paCreateMethodInfo.mLocalMethodInfo);
-    mMethodsContexts.push_back(parentNodeContext);
+    mMethodsContexts.emplace_back(parentNodeId, *paNodeId, paCreateMethodInfo.mLocalMethodInfo);
   } else {
     DEVLOG_ERROR("[OPC UA LOCAL]: OPC UA could not create method at %s. Error: %s\n",
                  paCreateMethodInfo.mLocalMethodInfo.getLayer().getCommFB()->getInstanceName(),
@@ -1455,7 +1449,7 @@ COPC_UA_Local_Handler::CLocalMethodCall &
 COPC_UA_Local_Handler::addMethodCall(CLocalMethodInfo &paActionInfo,
                                      COPC_UA_Helper::UA_SendVariable_handle &paHandleRecv) {
   CCriticalRegion criticalRegion(mMethodCallsMutex);
-  mMethodCalls.push_back(CLocalMethodCall(paActionInfo, paHandleRecv));
+  mMethodCalls.emplace_back(paActionInfo, paHandleRecv);
   return mMethodCalls.back();
 }
 
