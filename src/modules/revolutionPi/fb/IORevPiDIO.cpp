@@ -111,6 +111,12 @@ const CStringDictionary::TStringId FORTE_IORevPiDIO::scmEventOutputNames[] = {ST
 const CStringDictionary::TStringId FORTE_IORevPiDIO::scmEventOutputTypeIds[] = {STRID(Event), STRID(Event)};
 const SAdapterInstanceDef FORTE_IORevPiDIO::scmAdapterInstances[] = {
     {STRID(IORevPiBusAdapter), STRID(BusAdapterOut), true}, {STRID(IORevPiBusAdapter), STRID(BusAdapterIn), false}};
+
+namespace {
+  const auto cSocketNameIds = std::array{STRID(BusAdapterIn)};
+  const auto cPlugNameIds = std::array{STRID(BusAdapterOut)};
+} // namespace
+
 const SFBInterfaceSpec FORTE_IORevPiDIO::scmFBInterfaceSpec = {1,
                                                                scmEventInputNames,
                                                                scmEventInputTypeIds,
@@ -130,7 +136,9 @@ const SFBInterfaceSpec FORTE_IORevPiDIO::scmFBInterfaceSpec = {1,
                                                                0,
                                                                nullptr,
                                                                2,
-                                                               scmAdapterInstances};
+                                                               scmAdapterInstances,
+                                                               cSocketNameIds,
+                                                               cPlugNameIds};
 
 const TForteUInt8 FORTE_IORevPiDIO::scmSlaveConfigurationIO[] = {};
 const TForteUInt8 FORTE_IORevPiDIO::scmSlaveConfigurationIONum = 0;
@@ -171,7 +179,9 @@ FORTE_IORevPiDIO::FORTE_IORevPiDIO(const CStringDictionary::TStringId paInstance
     conn_DigitalOutput_13(nullptr),
     conn_DigitalOutput_14(nullptr),
     conn_QO(*this, 0, var_QO),
-    conn_STATUS(*this, 1, var_STATUS) {};
+    conn_STATUS(*this, 1, var_STATUS),
+    var_BusAdapterOut(STRID(BusAdapterOut), *this, 0),
+    var_BusAdapterIn(STRID(BusAdapterIn), *this, 0) {};
 
 void FORTE_IORevPiDIO::setInitialValues() {
   var_QI = 0_BOOL;
@@ -301,6 +311,14 @@ CIEC_ANY *FORTE_IORevPiDIO::getDO(const size_t paIndex) {
     case 1: return &var_STATUS;
   }
   return nullptr;
+}
+
+forte::IPlugPin *FORTE_IORevPiDIO::getPlugPinUnchecked(size_t paIndex) {
+  return (paIndex == 0) ? &var_BusAdapterOut : nullptr;
+}
+
+forte::ISocketPin *FORTE_IORevPiDIO::getSocketPinUnchecked(size_t paIndex) {
+  return (paIndex == 0) ? &var_BusAdapterIn : nullptr;
 }
 
 CEventConnection *FORTE_IORevPiDIO::getEOConUnchecked(const TPortId paIndex) {

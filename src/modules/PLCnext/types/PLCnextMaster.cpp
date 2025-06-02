@@ -18,6 +18,7 @@
  *************************************************************************/
 
 #include "PLCnextMaster.h"
+#include "../deviceController.h"
 
 USE_STRING_ID(BOOL);
 USE_STRING_ID(BusAdapterOut);
@@ -35,14 +36,6 @@ USE_STRING_ID(STATUS);
 USE_STRING_ID(UINT);
 USE_STRING_ID(WSTRING);
 
-#include "PLCnextBusAdapter.h"
-#include "forte_uint.h"
-#include "iec61131_functions.h"
-#include "forte_array_common.h"
-#include "forte_array.h"
-#include "forte_array_fixed.h"
-#include "forte_array_variable.h"
-
 DEFINE_FIRMWARE_FB(FORTE_PLCnextMaster, STRID(PLCnextMaster))
 
 const CStringDictionary::TStringId FORTE_PLCnextMaster::scmDataInputNames[] = {STRID(QI), STRID(SlaveUpdateInterval)};
@@ -59,6 +52,11 @@ const CStringDictionary::TStringId FORTE_PLCnextMaster::scmEventOutputNames[] = 
 const CStringDictionary::TStringId FORTE_PLCnextMaster::scmEventOutputTypeIds[] = {STRID(EInit), STRID(Event)};
 const SAdapterInstanceDef FORTE_PLCnextMaster::scmAdapterInstances[] = {
     {STRID(PLCnextBusAdapter), STRID(BusAdapterOut), true}};
+
+namespace {
+  const auto cPlugNameIds = std::array{STRID(BusAdapterOut)};
+} // namespace
+
 const SFBInterfaceSpec FORTE_PLCnextMaster::scmFBInterfaceSpec = {1,
                                                                   scmEventInputNames,
                                                                   scmEventInputTypeIds,
@@ -78,7 +76,9 @@ const SFBInterfaceSpec FORTE_PLCnextMaster::scmFBInterfaceSpec = {1,
                                                                   0,
                                                                   nullptr,
                                                                   1,
-                                                                  scmAdapterInstances};
+                                                                  scmAdapterInstances,
+                                                                  {},
+                                                                  cPlugNameIds};
 
 FORTE_PLCnextMaster::FORTE_PLCnextMaster(const CStringDictionary::TStringId paInstanceNameId,
                                          forte::core::CFBContainer &paContainer) :
@@ -94,14 +94,6 @@ FORTE_PLCnextMaster::FORTE_PLCnextMaster(const CStringDictionary::TStringId paIn
     conn_SlaveUpdateInterval(nullptr),
     conn_QO(*this, 0, var_QO),
     conn_STATUS(*this, 1, var_STATUS) {};
-
-bool FORTE_PLCnextMaster::initialize() {
-  if (!var_BusAdapterOut.initialize()) {
-    return false;
-  }
-  var_BusAdapterOut.setParentFB(this, 0);
-  return CFunctionBlock::initialize();
-}
 
 void FORTE_PLCnextMaster::setInitialValues() {
   var_QI = 0_BOOL;
@@ -153,11 +145,8 @@ CIEC_ANY *FORTE_PLCnextMaster::getDO(const size_t paIndex) {
   return nullptr;
 }
 
-CAdapter *FORTE_PLCnextMaster::getAdapterUnchecked(const size_t paIndex) {
-  switch (paIndex) {
-    case 0: return &var_BusAdapterOut;
-  }
-  return nullptr;
+forte::IPlugPin *FORTE_PLCnextMaster::getPlugPinUnchecked(size_t paIndex) {
+  return (paIndex == 0) ? &var_BusAdapterOut : nullptr;
 }
 
 CEventConnection *FORTE_PLCnextMaster::getEOConUnchecked(const TPortId paIndex) {
@@ -190,6 +179,6 @@ forte::core::io::IODeviceController *FORTE_PLCnextMaster::createDeviceController
 
 void FORTE_PLCnextMaster::setConfig() {
   PLCnextDeviceController::PLCnextConfig config;
-  config.updateInterval = st_SlaveUpdateInterval();
+  config.updateInterval = var_SlaveUpdateInterval.operator TForteUInt16();
   getDeviceController()->setConfig(&config);
 }

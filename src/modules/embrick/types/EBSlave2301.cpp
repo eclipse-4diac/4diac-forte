@@ -54,6 +54,12 @@ const TForteInt16 FORTE_EBSlave2301::scmEOWithIndexes[] = {0, 2};
 const CStringDictionary::TStringId FORTE_EBSlave2301::scmEventOutputNames[] = {STRID(MAPO), STRID(IND)};
 const SAdapterInstanceDef FORTE_EBSlave2301::scmAdapterInstances[] = {
     {STRID(EBBusAdapter), STRID(BusAdapterIn), false}, {STRID(EBBusAdapter), STRID(BusAdapterOut), true}};
+
+namespace {
+  const auto cSocketNameIds = std::array{STRID(BusAdapterIn)};
+  const auto cPlugNameIds = std::array{STRID(BusAdapterOut)};
+} // namespace
+
 const SFBInterfaceSpec FORTE_EBSlave2301::scmFBInterfaceSpec = {1,
                                                                 scmEventInputNames,
                                                                 nullptr,
@@ -73,7 +79,9 @@ const SFBInterfaceSpec FORTE_EBSlave2301::scmFBInterfaceSpec = {1,
                                                                 0,
                                                                 nullptr,
                                                                 2,
-                                                                scmAdapterInstances};
+                                                                scmAdapterInstances,
+                                                                cSocketNameIds,
+                                                                cPlugNameIds};
 
 FORTE_EBSlave2301::FORTE_EBSlave2301(const CStringDictionary::TStringId paInstanceNameId,
                                      forte::core::CFBContainer &paContainer) :

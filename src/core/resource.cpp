@@ -25,7 +25,6 @@
 #include "fortenew.h"
 #include "funcbloc.h"
 #include "mgmcmd.h"
-#include "adapter.h"
 #include "adapterconn.h"
 #include "core/ecetFactory.h"
 #include "string_utils.h"
@@ -117,11 +116,10 @@ namespace {
 
   void createAOConnectionResponse(const CFunctionBlock &paFb, std::string &paReqResult) {
     const SFBInterfaceSpec &spec(paFb.getFBInterfaceSpec());
-    for (size_t i = 0; i < spec.mNumAdapters; i++) {
-      const CAdapter *const adapter = paFb.getAdapter(spec.mAdapterInstanceDefinition[i].mAdapterNameID);
-      const CAdapterConnection *aConn = adapter->getAdapterConnection();
-      if (!spec.mAdapterInstanceDefinition[i].mIsPlug && aConn != nullptr && aConn->isConnected()) {
-        createConnectionResponseMessage(*aConn, paFb, adapter->getInstanceNameId(), paReqResult);
+    for (auto it : spec.mSocketNames) {
+      const forte::ISocketPin *const skt = paFb.getSocketPin(it);
+      if (skt != nullptr && skt->getAdapterCon() != nullptr) {
+        createConnectionResponseMessage(*skt->getAdapterCon(), paFb, it, paReqResult);
       }
     }
   }

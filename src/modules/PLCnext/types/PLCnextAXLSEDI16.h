@@ -19,6 +19,7 @@
 
 #pragma once
 
+#include "../slaveHandler.h"
 #include "funcbloc.h"
 #include "forte_bool.h"
 #include "forte_string.h"
@@ -89,10 +90,6 @@ class FORTE_PLCnextAXLSEDI16 final : public PLCnextSlaveHandler {
     CIEC_BOOL var_QO;
     CIEC_WSTRING var_STATUS;
 
-    FORTE_PLCnextBusAdapter var_BusAdapterIn;
-
-    FORTE_PLCnextBusAdapter var_BusAdapterOut;
-
     CEventConnection conn_INITO;
     CEventConnection conn_IND;
 
@@ -119,14 +116,6 @@ class FORTE_PLCnextAXLSEDI16 final : public PLCnextSlaveHandler {
 
     CIEC_ANY *getDI(size_t) override;
     CIEC_ANY *getDO(size_t) override;
-    CAdapter *getAdapterUnchecked(size_t) override;
-    FORTE_PLCnextBusAdapter &var_BusAdapterIn() {
-      return *static_cast<FORTE_PLCnextBusAdapter *>(getAdapterUnchecked(0));
-    };
-
-    FORTE_PLCnextBusAdapter &var_BusAdapterOut() {
-      return *static_cast<FORTE_PLCnextBusAdapter *>(getAdapterUnchecked(1));
-    };
 
     CEventConnection *getEOConUnchecked(TPortId) override;
     CDataConnection **getDIConUnchecked(TPortId) override;

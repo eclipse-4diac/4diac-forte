@@ -12,6 +12,7 @@
 
 #pragma once
 
+#include "adapterconn.h"
 #include "esfb.h"
 #include "typelib.h"
 #include "iec61131_functions.h"
@@ -43,11 +44,11 @@ class FORTE_E_TimeOut final : public CEventSourceFB {
     FORTE_E_TimeOut(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
     bool initialize() override;
 
-    FORTE_ATimeOut var_TimeOutSocket;
+    forte::CSocketPin<FORTE_ATimeOut_Socket> var_TimeOutSocket;
 
     CIEC_ANY *getDI(size_t) override;
     CIEC_ANY *getDO(size_t) override;
-    CAdapter *getAdapterUnchecked(size_t) override;
+    forte::ISocketPin *getSocketPinUnchecked(size_t) override;
     CEventConnection *getEOConUnchecked(TPortId) override;
     CDataConnection **getDIConUnchecked(TPortId) override;
     CDataConnection *getDOConUnchecked(TPortId) override;

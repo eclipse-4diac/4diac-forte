@@ -12,19 +12,24 @@
  *******************************************************************************/
 
 #include "io_adapter_multi.h"
+#include "forte_bool.h"
 
 using namespace forte::core::io;
 
-IOConfigFBMultiAdapter::IOConfigFBMultiAdapter(const TForteUInt8 *const paSlaveConfigurationIO,
-                                               const TForteUInt8 paSlaveConfigurationIONum,
+IOConfigFBMultiAdapter::IOConfigFBMultiAdapter(const std::span<const TForteUInt8> paSlaveConfigurationIO,
                                                forte::core::CFBContainer &paContainer,
-                                               const SFBInterfaceSpec &paInterfaceSpecSocket,
+                                               const SFBInterfaceSpec &paInterfaceSpec,
                                                const CStringDictionary::TStringId paInstanceNameId,
-                                               const SFBInterfaceSpec &paInterfaceSpecPlug,
-                                               bool paIsPlug) :
-    CAdapter(paContainer, paInterfaceSpecSocket, paInstanceNameId, paInterfaceSpecPlug, paIsPlug),
-    cmSlaveConfigurationIO(paSlaveConfigurationIO),
-    mSlaveConfigurationIONum(paSlaveConfigurationIONum) {
+                                               TForteUInt8 paParentAdapterlistID) :
+    CAdapter(paContainer, paInterfaceSpec, paInstanceNameId, paParentAdapterlistID),
+    cmSlaveConfigurationIO(paSlaveConfigurationIO) {
 }
 
 IOConfigFBMultiAdapter::~IOConfigFBMultiAdapter() = default;
+
+void IOConfigFBMultiAdapter::setInitialValues() {
+  var_QO = false_BOOL;
+  var_QI = false_BOOL;
+  var_MasterId = 0_UINT;
+  var_Index = 0_UINT;
+}

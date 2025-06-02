@@ -27,9 +27,9 @@
 class CFunctionBlock;
 class CResource;
 class CIEC_ANY;
-class CAdapter;
 
 namespace forte {
+  class CAdapter;
   namespace core {
     class CFBContainer;
   }
@@ -40,9 +40,10 @@ typedef CFunctionBlock *(*TFunctionBlockCreateFunc)(CStringDictionary::TStringId
                                                     forte::core::CFBContainer &paContainer);
 
 //!\ingroup CORE Type for a function pointer which allows to create an adapter instance
-typedef CAdapter *(*TAdapterCreateFunc)(CStringDictionary::TStringId paInstanceNameId,
-                                        forte::core::CFBContainer &paContainer,
-                                        bool paIsPlug);
+typedef forte::CAdapter *(*TAdapterCreateFunc)(CStringDictionary::TStringId paInstanceNameId,
+                                               forte::core::CFBContainer &paContainer,
+                                               bool paIsPlug,
+                                               TForteUInt8 paParentAdapterlistID);
 
 //!\ingroup CORE Type for a function pointer which allows to create a data type instance
 typedef CIEC_ANY *(*TDataTypeCreateFunc)(TForteByte *paDataBuf);
@@ -103,10 +104,9 @@ private:                                                                        
   const static forte::core::CAdapterTypeEntry csmAdapterTypeEntry_##adapterclass;                                      \
                                                                                                                        \
 public:                                                                                                                \
-  static CAdapter *createAdapter(CStringDictionary::TStringId paInstanceNameId,                                        \
-                                 forte::core::CFBContainer &paContainer, bool paIsPlug) {                              \
-    return new adapterclass(paInstanceNameId, paContainer, paIsPlug);                                                  \
-  };                                                                                                                   \
+  static forte::CAdapter *createAdapter(CStringDictionary::TStringId paInstanceNameId,                                 \
+                                        forte::core::CFBContainer &paContainer, bool paIsPlug,                         \
+                                        TForteUInt8 paParentAdapterlistID);                                            \
   CStringDictionary::TStringId getFBTypeId() const override {                                                          \
     return (csmAdapterTypeEntry_##adapterclass.getTypeNameId());                                                       \
   };                                                                                                                   \
@@ -117,7 +117,15 @@ private:
 #define DEFINE_ADAPTER_TYPE(adapterclass, adapterTypeNameId, ...)                                                      \
   const forte::core::CAdapterTypeEntry adapterclass::csmAdapterTypeEntry_##adapterclass(                               \
       (adapterTypeNameId), GET_TYPE_HASH(__VA_ARGS__ __VA_OPT__(, ) std::string_view{}), adapterclass::createAdapter,  \
-      &(adapterclass::scmFBInterfaceSpecSocket));                                                                      \
+      &scmFBInterfaceSpecSocket);                                                                                      \
+  forte::CAdapter *adapterclass::createAdapter(CStringDictionary::TStringId paInstanceNameId,                          \
+                                               forte::core::CFBContainer &paContainer, bool paIsPlug,                  \
+                                               TForteUInt8 paParentAdapterlistID) {                                    \
+    if (paIsPlug) {                                                                                                    \
+      return new adapterclass##_Plug(paInstanceNameId, paContainer, paParentAdapterlistID);                            \
+    }                                                                                                                  \
+    return new adapterclass##_Socket(paInstanceNameId, paContainer, paParentAdapterlistID);                            \
+  };                                                                                                                   \
   FORTE_DUMMY_INIT_DEF(adapterclass)
 
 #define DEFINE_GENERIC_ADAPTER_TYPE(adapterclass, adapterTypeNameId)                                                   \
@@ -234,10 +242,11 @@ namespace forte::core {
                         TAdapterCreateFunc pa_pfuncCreateAdapter,
                         const SFBInterfaceSpec *paSocketInterfaceSpec);
 
-      CAdapter *createAdapterInstance(CStringDictionary::TStringId paInstanceNameId,
-                                      forte::core::CFBContainer &paContainer,
-                                      bool paIsPlug) {
-        return m_pfuncAdapterCreationFunc(paInstanceNameId, paContainer, paIsPlug);
+      forte::CAdapter *createAdapterInstance(CStringDictionary::TStringId paInstanceNameId,
+                                             forte::core::CFBContainer &paContainer,
+                                             bool paIsPlug,
+                                             TForteUInt8 paParentAdapterlistID) {
+        return m_pfuncAdapterCreationFunc(paInstanceNameId, paContainer, paIsPlug, paParentAdapterlistID);
       }
 
     private:

@@ -52,15 +52,12 @@ namespace forte {
           static const TEventID scmEventINDID = 1;
 
           IOConfigFBMultiAdapter &BusAdapterOut() {
-            return (*static_cast<IOConfigFBMultiAdapter *>(getAdapterUnchecked(0)));
+            return (*static_cast<IOConfigFBMultiAdapter *>(getPlugPinUnchecked(0)->getAdapterBlock()));
           }
 
-          static const int scmBusAdapterOutAdpNum = 0;
           IOConfigFBMultiAdapter &BusAdapterIn() {
-            return (*static_cast<IOConfigFBMultiAdapter *>(getAdapterUnchecked(1)));
+            return (*static_cast<IOConfigFBMultiAdapter *>(getSocketPinUnchecked(0)->getAdapterBlock()));
           }
-
-          static const int scmBusAdapterInAdpNum = 1;
 
           void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
@@ -83,7 +80,7 @@ namespace forte {
           static const CIEC_WSTRING scmOK;
           static const char *const scmMasterNotFound;
 
-          int mIndex;
+          size_t mIndex;
 
           const TForteUInt8 *mSlaveConfigurationIO;
 

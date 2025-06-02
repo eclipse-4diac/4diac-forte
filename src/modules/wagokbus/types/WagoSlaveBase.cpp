@@ -8,8 +8,10 @@
  *************************************************************************/
 
 #include "WagoSlaveBase.h"
-
 #include "../WagoDeviceController.h"
+
+USE_STRING_ID(BusAdapterIn);
+USE_STRING_ID(BusAdapterOut);
 
 using namespace forte::core::io;
 
@@ -21,7 +23,9 @@ WagoSlaveBase::WagoSlaveBase(int paType,
                              const SFBInterfaceSpec &paInterfaceSpec,
                              const CStringDictionary::TStringId paInstanceNameId) :
     IOConfigFBMultiSlave(
-        scmSlaveConfigurationIO, scmSlaveConfigurationIONum, paType, paContainer, paInterfaceSpec, paInstanceNameId) {
+        scmSlaveConfigurationIO, scmSlaveConfigurationIONum, paType, paContainer, paInterfaceSpec, paInstanceNameId),
+    var_BusAdapterOut(STRID(BusAdapterOut), *this, 0),
+    var_BusAdapterIn(STRID(BusAdapterIn), *this, 0) {
 }
 
 void WagoSlaveBase::initWagoHandle(int paDIIndex,
@@ -60,4 +64,12 @@ void WagoSlaveBase::initHandlesBase(size_t paNumberOfBoolInputs,
   for (size_t i = 0; i < paNumberOfAnalogOutputs; i++) {
     initWagoHandle(offset + i, i, CIEC_ANY::e_WORD, IOMapper::Out);
   }
+}
+
+forte::IPlugPin *WagoSlaveBase::getPlugPinUnchecked(size_t paIndex) {
+  return (paIndex == 0) ? &var_BusAdapterOut : nullptr;
+}
+
+forte::ISocketPin *WagoSlaveBase::getSocketPinUnchecked(size_t paIndex) {
+  return (paIndex == 0) ? &var_BusAdapterIn : nullptr;
 }

@@ -13,6 +13,7 @@
 
 #pragma once
 
+#include "adapter.h"
 #include "funcbloc.h"
 #include "forte_bool.h"
 #include "forte_uint.h"
@@ -56,11 +57,11 @@ class FORTE_EBMaster final : public forte::core::io::IOConfigFBMultiMaster {
     void setInitialValues() override;
 
   protected:
-    forte::core::io::IODeviceController *createDeviceController(CDeviceExecution &paDeviceExecution);
+    forte::core::io::IODeviceController *createDeviceController(CDeviceExecution &paDeviceExecution) override;
 
-    void setConfig();
+    void setConfig() override;
 
-    virtual void onStartup(CEventChainExecutionThread *const paECET);
+    virtual void onStartup(CEventChainExecutionThread *const paECET) override;
 
   public:
     FORTE_EBMaster(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
@@ -90,13 +91,13 @@ class FORTE_EBMaster final : public forte::core::io::IOConfigFBMultiMaster {
 
     CIEC_ANY *getDI(size_t) override;
     CIEC_ANY *getDO(size_t) override;
-    FORTE_EBBusAdapter &var_BusAdapterOut() {
-      return *static_cast<FORTE_EBBusAdapter *>(getAdapterUnchecked(0));
-    };
+
+    forte::CPlugPin<FORTE_EBBusAdapter_Plug> var_BusAdapterOut;
 
     CEventConnection *getEOConUnchecked(TPortId) override;
     CDataConnection **getDIConUnchecked(TPortId) override;
     CDataConnection *getDOConUnchecked(TPortId) override;
+    forte::IPlugPin *getPlugPinUnchecked(size_t) override;
 
     void evt_INIT(const CIEC_BOOL &paQI,
                   const CIEC_UINT &paBusInterface,

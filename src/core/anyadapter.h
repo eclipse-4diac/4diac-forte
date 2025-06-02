@@ -1,5 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2025 fortiss GmbH, TU Vienna/ACIN
+ * Copyright (c) 2013, 2025 fortiss GmbH, TU Vienna/ACIN,
+ *                          Johannes Kepler Universty Linz
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -7,87 +8,81 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    Alois Zoitl
- *      - initial implementation and rework communication infrastructure
- *    Martin Melik Merkumians
- *      - fixes event chain initialisation, adds typifyAnyAdapter
+ *   Alois Zoitl - initial implementation and rework communication infrastructure
+ *   Martin Melik Merkumians
+ *               - fixes event chain initialisation, adds typifyAnyAdapter
+ *   Alois Zoitl - re-implementation for new communication infrastructure
  *******************************************************************************/
-#ifndef ANYADAPTER_H_
-#define ANYADAPTER_H_
+#pragma once
 
-#include "adapter.h"
+#include "adapterconn.h"
 
-/*! \brief A generic adapter that behaves similar to the ANY data type and allows all other adapters to be connected.
- *
- *  The main use of such an adapter is in service interfaces that provide generic services based on the adapter
- * connected.
- */
+namespace forte {
 
-class CAnyAdapter : public CAdapter {
-    DECLARE_ADAPTER_TYPE(CAnyAdapter)
+  class CAnyAdapterPin : public IAdapterPin {
+    public:
+      CAnyAdapterPin(CStringDictionary::TStringId paInstanceNameId);
+      ~CAnyAdapterPin();
 
-  public:
-    CAnyAdapter(CStringDictionary::TStringId paAdapterInstanceName,
-                forte::core::CFBContainer &paContainer,
-                bool paIsPlug);
-    ~CAnyAdapter() override;
+    protected:
+      void createConfiguredAdapter(CAdapter *paPeer,
+                                   CFunctionBlock &paParent,
+                                   bool paIsPlug,
+                                   TForteUInt8 paParentAdapterlistID);
+      void removeConfiguredAdapter();
 
-    void typifyAnyAdapter(const CAdapter &paPeer);
+      CStringDictionary::TStringId mInstanceNameId;
+      std::unique_ptr<CAdapter> mConfiguredAdapter;
+  };
 
-    bool disconnect(CAdapterConnection *paAdConn) override;
+  class CAnyPlugPin final : public CAnyAdapterPin, public IPlugPin {
 
-    //! Helper functions allowing to retrieve interface information from any_adpaters TODO look for Doxygen grouping
-    //! syntax
-    TEventID getNumEIs() const {
-      return getFBInterfaceSpec().mNumEIs;
-    }
+    public:
+      CAnyPlugPin(CStringDictionary::TStringId paInstanceNameId,
+                  CFunctionBlock &paParentFB,
+                  TForteUInt8 paParentAdapterlistID);
 
-    TEventID getNumEOs() const {
-      return getFBInterfaceSpec().mNumEOs;
-    }
+      CAdapter *getAdapterBlock() override;
 
-    const TForteInt16 *getEIWithIndexes() const {
-      return getFBInterfaceSpec().mEIWithIndexes;
-    }
+      CStringDictionary::TStringId getAdapterTypeId() const override;
 
-    const TDataIOID *getEIWiths() const {
-      return getFBInterfaceSpec().mEIWith;
-    }
+      bool isCompatible(IAdapterPin &paPeer) override;
 
-    TPortId getNumDIs() const {
-      return getFBInterfaceSpec().mNumDIs;
-    }
+      CAdapterConnection &getAdapterCon() override;
 
-    const CStringDictionary::TStringId *getDataInputNames() const {
-      return getFBInterfaceSpec().mDINames;
-    }
+      void setPeer(CAdapter *paPeer) override;
 
-    CIEC_ANY *getDataInputs() {
-      return getDI(0);
-    }
+    private:
+      void removeConfiguredAdapter();
 
-    TPortId getNumDOs() const {
-      return getFBInterfaceSpec().mNumDOs;
-    }
+      CAdapterConnection mAdapterCon;
+  };
 
-    const CStringDictionary::TStringId *getDataOutputNames() const {
-      return getFBInterfaceSpec().mDONames;
-    }
+  class CAnySocketPin final : public CAnyAdapterPin, public ISocketPin {
 
-    CIEC_ANY *getDataOutputs() {
-      return getDO(0);
-    }
+    public:
+      CAnySocketPin(CStringDictionary::TStringId paInstanceNameId,
+                    CFunctionBlock &paParentFB,
+                    TForteUInt8 paParentAdapterlistID);
 
-  protected:
-    void readInputData(TEventID) override {
-    }
+      CAdapter *getAdapterBlock() override;
 
-    void writeOutputData(TEventID) override {
-    }
+      CStringDictionary::TStringId getAdapterTypeId() const override;
 
-  private:
-    static const SFBInterfaceSpec scmFBInterfaceSpec; //! interface spec for the empty interface of an any adapter will
-                                                      //! be used for plug and socket
-};
+      bool isCompatible(IAdapterPin &paPeer) override;
 
-#endif /* ANYADAPTER_H_ */
+      bool connect(CAdapterConnection &paConn) override;
+
+      void disconnect() override;
+
+      CAdapterConnection *getAdapterCon() override {
+        return mAdapterCon;
+      }
+
+    private:
+      CAdapterConnection *mAdapterCon;
+      CFunctionBlock &mParentFB;
+      const TForteUInt8 mParentAdapterlistID;
+  };
+
+} // namespace forte

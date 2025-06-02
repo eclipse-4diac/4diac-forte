@@ -11,48 +11,95 @@
  *******************************************************************************/
 
 #include "eGenAdapter_adp.h"
-
-#include "core/iec61131_functions.h"
-#include "core/datatypes/forte_array_common.h"
-#include "core/datatypes/forte_array.h"
-#include "core/datatypes/forte_array_fixed.h"
-#include "core/datatypes/forte_array_variable.h"
+#include "adapter.h"
 
 USE_STRING_ID(eGenAdapter);
 
+namespace {
+  const SFBInterfaceSpec scmFBInterfaceSpecSocket = {0,       nullptr, nullptr, nullptr, nullptr, 0,       nullptr,
+                                                     nullptr, nullptr, nullptr, 0,       nullptr, nullptr, 0,
+                                                     nullptr, nullptr, 0,       nullptr, 0,       nullptr};
+
+  const SFBInterfaceSpec scmFBInterfaceSpecPlug = {0,       nullptr, nullptr, nullptr, nullptr, 0,       nullptr,
+                                                   nullptr, nullptr, nullptr, 0,       nullptr, nullptr, 0,
+                                                   nullptr, nullptr, 0,       nullptr, 0,       nullptr};
+
+} // namespace
+
 DEFINE_ADAPTER_TYPE(FORTE_eGenAdapter, STRID(eGenAdapter))
 
-
-const SFBInterfaceSpec FORTE_eGenAdapter::scmFBInterfaceSpecSocket = {
-  0, nullptr, nullptr, nullptr, nullptr,
-  0, nullptr, nullptr, nullptr, nullptr,
-  0, nullptr, nullptr,
-  0, nullptr, nullptr,
-  0, nullptr,
-  0, nullptr
-};
-
-const SFBInterfaceSpec FORTE_eGenAdapter::scmFBInterfaceSpecPlug = {
-  0, nullptr, nullptr, nullptr, nullptr,
-  0, nullptr, nullptr, nullptr, nullptr,
-  0, nullptr, nullptr,
-  0, nullptr, nullptr,
-  0, nullptr,
-  0, nullptr
-};
-
-void FORTE_eGenAdapter::readInputData(TEventID) {
-  if(isSocket()) {
-    // nothing to do
-  } else {
-    // nothing to do
-  }
+void FORTE_eGenAdapter::setInitialValues() {
+  forte::CAdapter::setInitialValues();
 }
 
-void FORTE_eGenAdapter::writeOutputData(TEventID) {
-  if(isSocket()) {
-    // nothing to do
-  } else {
-    // nothing to do
-  }
+FORTE_eGenAdapter_Plug::FORTE_eGenAdapter_Plug(CStringDictionary::TStringId paInstanceNameId,
+                                               forte::core::CFBContainer &paContainer,
+                                               TForteUInt8 paParentAdapterlistID) :
+    FORTE_eGenAdapter(paContainer, scmFBInterfaceSpecPlug, paInstanceNameId, paParentAdapterlistID) {
+}
+
+void FORTE_eGenAdapter_Plug::readInputData(TEventID) {
+  // no pins nothing to do
+}
+
+void FORTE_eGenAdapter_Plug::writeOutputData(TEventID) {
+  // no pins nothing to do
+}
+
+CEventConnection *FORTE_eGenAdapter_Plug::getEOConUnchecked(TPortId) {
+  return nullptr;
+}
+
+CIEC_ANY *FORTE_eGenAdapter_Plug::getDI(TPortId) {
+  return nullptr;
+}
+
+CDataConnection **FORTE_eGenAdapter_Plug::getDIConUnchecked(TPortId) {
+  return nullptr;
+}
+
+CDataConnection *FORTE_eGenAdapter_Plug::getDOConUnchecked(TPortId) {
+  return nullptr;
+}
+
+CIEC_ANY *FORTE_eGenAdapter_Plug::getDO(TPortId) {
+  return nullptr;
+}
+
+FORTE_eGenAdapter_Socket *FORTE_eGenAdapter_Plug::getSocket() {
+  return static_cast<FORTE_eGenAdapter_Socket *>(getPeer());
+}
+
+FORTE_eGenAdapter_Socket::FORTE_eGenAdapter_Socket(CStringDictionary::TStringId paInstanceNameId,
+                                                   forte::core::CFBContainer &paContainer,
+                                                   TForteUInt8 paParentAdapterlistID) :
+    FORTE_eGenAdapter(paContainer, scmFBInterfaceSpecSocket, paInstanceNameId, paParentAdapterlistID) {
+}
+
+void FORTE_eGenAdapter_Socket::readInputData(TEventID) {
+  // no pins nothing to do
+}
+
+void FORTE_eGenAdapter_Socket::writeOutputData(TEventID) {
+  // no pins nothing to do
+}
+
+CEventConnection *FORTE_eGenAdapter_Socket::getEOConUnchecked(TPortId) {
+  return nullptr;
+}
+
+CIEC_ANY *FORTE_eGenAdapter_Socket::getDI(TPortId) {
+  return nullptr;
+}
+
+CDataConnection **FORTE_eGenAdapter_Socket::getDIConUnchecked(TPortId) {
+  return nullptr;
+}
+
+CDataConnection *FORTE_eGenAdapter_Socket::getDOConUnchecked(TPortId) {
+  return nullptr;
+}
+
+CIEC_ANY *FORTE_eGenAdapter_Socket::getDO(TPortId) {
+  return nullptr;
 }

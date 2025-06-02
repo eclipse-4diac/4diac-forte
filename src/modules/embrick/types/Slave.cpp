@@ -14,6 +14,9 @@
 #include "Slave.h"
 #include <io/mapper/io_mapper.h>
 
+USE_STRING_ID(BusAdapterIn);
+USE_STRING_ID(BusAdapterOut);
+
 const CIEC_WSTRING EmbrickSlave::scmSlow("Slow");
 const CIEC_WSTRING EmbrickSlave::scmInterrupted("Interrupted");
 const CIEC_WSTRING EmbrickSlave::scmError("Error");
@@ -27,11 +30,21 @@ EmbrickSlave::EmbrickSlave(const TForteUInt8 *const paSlaveConfigurationIO,
                            const CStringDictionary::TStringId paInstanceNameId) :
     forte::core::io::IOConfigFBMultiSlave(
         paSlaveConfigurationIO, paSlaveConfigurationIO_num, paType, paContainer, paInterfaceSpec, paInstanceNameId),
-    mSlave(0) {
+    var_BusAdapterIn(STRID(BusAdapterIn), *this, 0),
+    var_BusAdapterOut(STRID(BusAdapterOut), *this, 0),
+    mSlave(nullptr) {
 }
 
 EmbrickSlave::~EmbrickSlave() {
   deInit();
+}
+
+forte::IPlugPin *EmbrickSlave::getPlugPinUnchecked(size_t paIndex) {
+  return (paIndex == 0) ? &var_BusAdapterOut : nullptr;
+}
+
+forte::ISocketPin *EmbrickSlave::getSocketPinUnchecked(size_t paIndex) {
+  return (paIndex == 0) ? &var_BusAdapterIn : nullptr;
 }
 
 const char *EmbrickSlave::init() {
@@ -46,15 +59,15 @@ const char *EmbrickSlave::init() {
   config.mUpdateInterval = UpdateInterval().operator TForteUInt16();
   mSlave->setConfig(config);
 
-  return 0;
+  return nullptr;
 }
 
 void EmbrickSlave::deInit() {
   CCriticalRegion criticalRegion(mSlaveMutex);
 
-  if (mSlave != 0) {
-    mSlave->mDelegate = 0;
-    mSlave = 0;
+  if (mSlave != nullptr) {
+    mSlave->mDelegate = nullptr;
+    mSlave = nullptr;
   }
 }
 

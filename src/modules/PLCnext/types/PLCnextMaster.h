@@ -19,17 +19,10 @@
 
 #pragma once
 
-#include "funcbloc.h"
 #include "forte_bool.h"
 #include "forte_uint.h"
 #include "forte_wstring.h"
-#include "iec61131_functions.h"
-#include "forte_array_common.h"
-#include "forte_array.h"
-#include "forte_array_fixed.h"
-#include "forte_array_variable.h"
 #include "../../../core/io/configFB/io_master_multi.h"
-#include "../deviceController.h"
 #include "PLCnextBusAdapter.h"
 
 class FORTE_PLCnextMaster final : public forte::core::io::IOConfigFBMultiMaster {
@@ -62,12 +55,11 @@ class FORTE_PLCnextMaster final : public forte::core::io::IOConfigFBMultiMaster 
     void writeOutputData(TEventID paEIID) override;
     void setInitialValues() override;
 
-    forte::core::io::IODeviceController *createDeviceController(CDeviceExecution &paDeviceExecution);
-    void setConfig();
+    forte::core::io::IODeviceController *createDeviceController(CDeviceExecution &paDeviceExecution) override;
+    void setConfig() override;
 
   public:
     FORTE_PLCnextMaster(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
-    bool initialize() override;
 
     CIEC_BOOL var_QI;
     CIEC_UINT var_SlaveUpdateInterval;
@@ -75,7 +67,7 @@ class FORTE_PLCnextMaster final : public forte::core::io::IOConfigFBMultiMaster 
     CIEC_BOOL var_QO;
     CIEC_WSTRING var_STATUS;
 
-    FORTE_PLCnextBusAdapter var_BusAdapterOut;
+    forte::CPlugPin<FORTE_PLCnextBusAdapter_Plug> var_BusAdapterOut;
 
     CEventConnection conn_INITO;
     CEventConnection conn_IND;
@@ -88,10 +80,8 @@ class FORTE_PLCnextMaster final : public forte::core::io::IOConfigFBMultiMaster 
 
     CIEC_ANY *getDI(size_t) override;
     CIEC_ANY *getDO(size_t) override;
-    CAdapter *getAdapterUnchecked(size_t) override;
-    FORTE_PLCnextBusAdapter &var_BusAdapterOut() {
-      return *static_cast<FORTE_PLCnextBusAdapter *>(getAdapterUnchecked(0));
-    };
+
+    forte::IPlugPin *getPlugPinUnchecked(size_t) override;
 
     CEventConnection *getEOConUnchecked(TPortId) override;
     CDataConnection **getDIConUnchecked(TPortId) override;

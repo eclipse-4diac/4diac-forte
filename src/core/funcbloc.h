@@ -35,20 +35,20 @@
 #include "forte_st_util.h"
 
 class CEventChainExecutionThread;
-class CAdapter;
 class CTimerHandler;
 class CDevice;
 
 #ifdef FORTE_SUPPORT_MONITORING
 #include "mgmcmdstruct.h"
 namespace forte {
+  class IPlugPin;
+  class ISocketPin;
+
   namespace core {
     class CMonitoringHandler;
   }
 } // namespace forte
 #endif // FORTE_SUPPORT_MONITORING
-
-typedef CAdapter *TAdapterPtr;
 
 //! Datatype for indicating an absolut port num
 using TAbsDataPortNum = size_t;
@@ -210,16 +210,23 @@ class CFunctionBlock : public forte::core::CFBContainer {
      */
     virtual CIEC_ANY *getVar(CStringDictionary::TStringId *paNameList, unsigned int paNameListSize);
 
-    /*!\brief Get the pointer to the adapter instance of the FB.
+    /*!\brief Get the pointer to the plub pin of the FB.
      *
-     * \param paAdapterNameId  StringId of the adapter name.
-     * \return Pointer to the adapter or nullptr.
+     * \param pasocketNameId  StringId of the socket name.
+     * \return Pointer to the socket or nullptr.
      */
-    CAdapter *getAdapter(CStringDictionary::TStringId paAdapterNameId);
+    forte::IPlugPin *getPlugPin(CStringDictionary::TStringId paPlugNameId);
 
-    const CAdapter *getAdapter(CStringDictionary::TStringId paAdapterNameId) const;
+    /*!\brief Get the pointer to the socket pin of the FB.
+     *
+     * \param paSocketNameId  StringId of the socket name.
+     * \return Pointer to the socket or nullptr.
+     */
+    forte::ISocketPin *getSocketPin(CStringDictionary::TStringId paSocketNameId);
 
-    TPortId getAdapterPortId(CStringDictionary::TStringId paAdapterNameId) const;
+    const forte::ISocketPin *getSocketPin(CStringDictionary::TStringId paSocketNameId) const {
+      return const_cast<CFunctionBlock *>(this)->getSocketPin(paSocketNameId);
+    }
 
     /*!\brief Function that handles incoming events.
      *
@@ -329,12 +336,6 @@ class CFunctionBlock : public forte::core::CFBContainer {
     const CIEC_ANY *getDIO(TPortId paDIONum) const {
       return const_cast<CFunctionBlock *>(this)->getDIO(paDIONum);
     }
-
-    /*!\brief get any internal FB referenced by the iterator to the name list
-     *
-     * This allows that also adapters and the internals of a CFB can be monitored.
-     */
-    CFunctionBlock *getFB(NameIterator &paNameListIt, NameIterator paNameListEnd) override;
 
     /*!\brief get the connection object for the given destination identifier
      *
@@ -496,11 +497,11 @@ class CFunctionBlock : public forte::core::CFBContainer {
 
     /*!\brief Function to send an output event via the adapter.
      *
-     * \param paAdapterID ID of Adapter in current FBs adapter list.
+     * \param paAdapter adpater for which the event should be sent
      * \param paEID Event ID where event should be fired.
      * \param paExecEnv Event chain execution environment where the event will be sent to.
      */
-    void sendAdapterEvent(TPortId paAdapterID, TEventID paEID, CEventChainExecutionThread *const paECET);
+    void sendAdapterEvent(forte::CAdapter &paAdapter, TEventID paEID, CEventChainExecutionThread *const paECET);
 
     virtual CEventConnection *getEOConUnchecked(TPortId paEONum) = 0;
 
@@ -535,20 +536,13 @@ class CFunctionBlock : public forte::core::CFBContainer {
       return nullptr;
     }
 
-    virtual CAdapter *getAdapterUnchecked(TPortId) {
+    virtual forte::IPlugPin *getPlugPinUnchecked(TPortId) {
       return nullptr;
     }
 
-    /*!\brief Function to create an adapter instance
-     *
-     * @param paAdapterInstanceDefinition the adapter instance definition
-     * @param paParentAdapterlistID the adapter index
-     * @return on success... pointer to the adapter instance
-     *         on error... nullptr
-     */
-    CAdapter *createAdapter(const SAdapterInstanceDef &paAdapterInstanceDefinition, TForteUInt8 paParentAdapterlistID);
-
-    static void destroyAdapter(CAdapter *adapter);
+    virtual forte::ISocketPin *getSocketPinUnchecked(TPortId) {
+      return nullptr;
+    }
 
     const SFBInterfaceSpec &mInterfaceSpec; //!< Pointer to the interface specification
 

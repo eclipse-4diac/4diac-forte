@@ -20,7 +20,6 @@
 #define _CFB_H_
 
 #include "funcbloc.h"
-#include "fbcontainer.h"
 
 struct SCFB_FBConnectionData {
     CStringDictionary::TStringId mSrcId;

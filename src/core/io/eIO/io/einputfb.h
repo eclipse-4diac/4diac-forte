@@ -12,11 +12,9 @@
 
 #pragma once
 
+#include "adapterconn.h"
 #include "core/io/inputfb.h"
-#include "core/io/device/io_controller.h"
 #include "eGenAdapter_adp.h"
-#include "CeSpec.h"
-#include "CeConfig.h"
 #include "eConfigFB.h"
 
 USE_STRING_ID(eCONF);
@@ -26,9 +24,6 @@ namespace forte::core::io {
 
   template<class T>
   class CeInputFB : public CInputFB<T> {
-    protected:
-      static const int scmeCONFAdpNum = 0;
-
     private:
       static const SAdapterInstanceDef scmAdapterInstances[];
 
@@ -51,28 +46,24 @@ namespace forte::core::io {
       using CInputFB<T>::var_IN;
 
     public:
-      CeInputFB(forte::core::CFBContainer &paContainer, const CStringDictionary::TStringId paInstanceNameId)
-        : CInputFB<T>(paContainer, scmFBInterfaceSpec, paInstanceNameId),
-          var_eCONF(STRID(eCONF), *this, true) {};
+      CeInputFB(forte::core::CFBContainer &paContainer, const CStringDictionary::TStringId paInstanceNameId) :
+          CInputFB<T>(paContainer, scmFBInterfaceSpec, paInstanceNameId),
+          var_eCONF(STRID(eCONF), *this, 0) {};
 
-      FORTE_eGenAdapter var_eCONF;
+      forte::CPlugPin<FORTE_eGenAdapter_Plug> var_eCONF;
 
       CeConfigFB *mPeerFB;
 
-      CAdapter *getAdapterUnchecked(const size_t paIndex) override {
-        switch(paIndex) {
+      IPlugPin *getPlugPinUnchecked(const size_t paIndex) override {
+        switch (paIndex) {
           case 0: return &var_eCONF;
         }
         return nullptr;
       }
 
       bool eventConfig() {
-        CAdapter* peerAdapter = nullptr;
-        FORTE_eGenAdapter* eGenAdapter = nullptr;
-
-        if ((peerAdapter = getAdapterUnchecked(scmeCONFAdpNum)->getPeer()) != nullptr){
-          eGenAdapter = static_cast<FORTE_eGenAdapter*>(peerAdapter);
-          mPeerFB = static_cast<CeConfigFB *>(eGenAdapter->parentFB);
+        if (auto skt = var_eCONF.getAdapterCon().getSocket(); skt != nullptr && skt->getAdapterBlock() != nullptr) {
+          mPeerFB = &static_cast<CeConfigFB &>(skt->getAdapterBlock()->getParent());
           mPeerFB->eventGen();
         }
         return true;
@@ -97,17 +88,17 @@ namespace forte::core::io {
       };
 
     private:
-      void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) final override {
-        switch(paEIID){
+      void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) final {
+        switch (paEIID) {
           case cgExternalEventID:
-            if(this->var_QI) {
+            if (this->var_QI) {
               this->sendOutputEvent(this->scmEventINDID, paECET);
             } else {
               this->var_QO = false_BOOL;
             }
             break;
           case CInputFB<T>::scmEventREQID:
-            if(this->var_QI) {
+            if (this->var_QI) {
               this->var_QO = this->read();
             } else {
               this->var_QO = false_BOOL;
@@ -120,18 +111,10 @@ namespace forte::core::io {
             break;
         }
       }
-
-      bool initialize() override {
-        if(!var_eCONF.initialize()) { return false; }
-        var_eCONF.setParentFB(this, 0);
-        return CFunctionBlock::initialize();
-      }
   };
 
   template<class T>
-  const SAdapterInstanceDef CeInputFB<T>::scmAdapterInstances[] = {
-    {STRID(eGenAdapter), STRID(eCONF), true}
-  };
+  const SAdapterInstanceDef CeInputFB<T>::scmAdapterInstances[] = {{STRID(eGenAdapter), STRID(eCONF), true}};
 
   template<class T>
   const SFBInterfaceSpec CeInputFB<T>::scmFBInterfaceSpec = {2,
@@ -153,6 +136,5 @@ namespace forte::core::io {
                                                              0,
                                                              nullptr,
                                                              1,
-                                                             scmAdapterInstances
-  };
-}
+                                                             scmAdapterInstances};
+} // namespace forte::core::io

@@ -34,7 +34,6 @@ USE_STRING_ID(UDINT);
 USE_STRING_ID(UINT);
 USE_STRING_ID(WSTRING);
 
-
 DEFINE_FIRMWARE_FB(FORTE_EBMaster, STRID(EBMaster))
 
 const CStringDictionary::TStringId FORTE_EBMaster::scmDataInputNames[] = {
@@ -91,7 +90,8 @@ FORTE_EBMaster::FORTE_EBMaster(const CStringDictionary::TStringId paInstanceName
     conn_BusLoopSpeed(nullptr),
     conn_SlaveUpdateInterval(nullptr),
     conn_QO(*this, 0, var_QO),
-    conn_STATUS(*this, 1, var_STATUS) {};
+    conn_STATUS(*this, 1, var_STATUS),
+    var_BusAdapterOut(STRID(BusAdapterOut), *this, 0) {};
 
 void FORTE_EBMaster::setInitialValues() {
   var_QI = 0_BOOL;
@@ -183,6 +183,10 @@ CDataConnection *FORTE_EBMaster::getDOConUnchecked(const TPortId paIndex) {
   return nullptr;
 }
 
+forte::IPlugPin *FORTE_EBMaster::getPlugPinUnchecked(size_t paIndex) {
+  return (paIndex == 0) ? &var_BusAdapterOut : nullptr;
+}
+
 forte::core::io::IODeviceController *FORTE_EBMaster::createDeviceController(CDeviceExecution &paDeviceExecution) {
   return new EmbrickBusHandler(paDeviceExecution);
 }
@@ -197,7 +201,7 @@ void FORTE_EBMaster::setConfig() {
 }
 
 void FORTE_EBMaster::onStartup(CEventChainExecutionThread *const paECET) {
-  var_BusAdapterOut().var_UpdateInterval() = var_SlaveUpdateInterval;
+  var_BusAdapterOut->var_UpdateInterval = var_SlaveUpdateInterval;
 
   forte::core::io::IOConfigFBMultiMaster::onStartup(paECET);
 }

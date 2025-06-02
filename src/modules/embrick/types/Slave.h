@@ -32,30 +32,29 @@ class EmbrickSlave : public forte::core::io::IOConfigFBMultiSlave, public Embric
                  const CStringDictionary::TStringId paInstanceNameId);
     ~EmbrickSlave() override;
 
+    forte::CSocketPin<FORTE_EBBusAdapter_Socket> var_BusAdapterIn;
+    forte::CPlugPin<FORTE_EBBusAdapter_Plug> var_BusAdapterOut;
+
+    forte::IPlugPin *getPlugPinUnchecked(size_t) override;
+    forte::ISocketPin *getSocketPinUnchecked(size_t) override;
+
   protected:
     virtual CIEC_UINT &UpdateInterval() {
       // TODO Remove
       return *static_cast<CIEC_UINT *>(getDI(0));
     }
 
-    FORTE_EBBusAdapter &BusAdapterOut() {
-      return (*static_cast<FORTE_EBBusAdapter *>(getAdapterUnchecked(0)));
-    }
-
-    FORTE_EBBusAdapter &BusAdapterIn() {
-      return (*static_cast<FORTE_EBBusAdapter *>(getAdapterUnchecked(1)));
-    }
-
     CSyncObject mSlaveMutex;
     EmbrickSlaveHandler *mSlave;
 
   public:
-    void onSlaveStatus(EmbrickSlaveHandler::SlaveStatus paStatus, EmbrickSlaveHandler::SlaveStatus paOldStatus);
-    void onSlaveDestroy();
+    void onSlaveStatus(EmbrickSlaveHandler::SlaveStatus paStatus,
+                       EmbrickSlaveHandler::SlaveStatus paOldStatus) override;
+    void onSlaveDestroy() override;
 
   private:
-    const char *init();
-    void deInit();
+    const char *init() override;
+    void deInit() override;
 
     static const CIEC_WSTRING scmSlow;
     static const CIEC_WSTRING scmInterrupted;

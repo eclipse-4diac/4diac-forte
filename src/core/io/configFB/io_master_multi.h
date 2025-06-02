@@ -35,9 +35,8 @@ namespace forte {
 
         protected:
           IOConfigFBMultiAdapter &BusAdapterOut() {
-            return (*static_cast<IOConfigFBMultiAdapter *>(getAdapterUnchecked(0)));
+            return (*static_cast<IOConfigFBMultiAdapter *>(getPlugPinUnchecked(0)->getAdapterBlock()));
           }
-          static const int scmBusAdapterAdpNum = 0;
 
           void onStartup(CEventChainExecutionThread *const paECET) override;
 

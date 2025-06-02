@@ -27,11 +27,17 @@ class CDevice;
 class CResource;
 
 namespace forte {
+
+  class CAdapter;
+  class CAnyAdapterPin;
+
   namespace core {
 
     class CFBContainer {
         template<typename U>
         friend class CInternalFB;
+
+        friend class forte::CAnyAdapterPin;
 
       protected:
         using NameIterator = forte::core::TNameIdentifier::const_iterator;
@@ -217,6 +223,14 @@ namespace forte {
                     CFBContainer &paContainer) :
             mFB(std::make_unique<T>(paInstanceNameId, paContainer)) {
           mFB->configureFB(paConfigString);
+          paContainer.addFB(*mFB);
+        }
+
+        template<typename U = T, typename = typename std::enable_if<std::is_base_of<forte::CAdapter, U>::value>::type>
+        CInternalFB(CStringDictionary::TStringId paInstanceNameId,
+                    forte::core::CFBContainer &paContainer,
+                    TForteUInt8 paParentAdapterlistID) :
+            mFB(std::make_unique<T>(paInstanceNameId, paContainer, paParentAdapterlistID)) {
           paContainer.addFB(*mFB);
         }
 

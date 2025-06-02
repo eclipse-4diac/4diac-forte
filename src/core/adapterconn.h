@@ -11,55 +11,77 @@
  *      - initial implementation and rework communication infrastructure
  *    Martin Melik-Merkumians - adds typifyAnyAdapter
  *******************************************************************************/
-#ifndef _ADAPTERCONN_H_
-#define _ADAPTERCONN_H_
+#pragma once
 
 #include "conn.h"
 
-class CAdapter;
+namespace forte {
 
-/*! \ingroup CORE\brief Class for handling a adapter connection.
- */
-class CAdapterConnection : public CConnection {
-  public:
-    CAdapterConnection(CFunctionBlock &paSrcFB, const TPortId paSrcPortId, CAdapter &paPlug);
-    ~CAdapterConnection() override;
+  class CAdapter;
+  class IPlugPin;
+  class ISocketPin;
 
-    EMGMResponse connect(CFunctionBlock &paDstFB, CStringDictionary::TStringId paDstPortNameId) override;
-    EMGMResponse connectToCFBInterface(CFunctionBlock &paDstFB, CStringDictionary::TStringId paDstPortNameId) override;
+  /*! \ingroup CORE\brief Class for handling a adapter connection.
+   */
+  class CAdapterConnection : public CConnection {
+    public:
+      CAdapterConnection(CFunctionBlock &paSrcFB, const TPortId paSrcPortId, IPlugPin &paPlug);
+      ~CAdapterConnection() override;
 
-    EMGMResponse disconnect(CFunctionBlock &paDstFB, CStringDictionary::TStringId paDstPortNameId) override;
+      EMGMResponse connect(CFunctionBlock &paDstFB, CStringDictionary::TStringId paDstPortNameId) override;
+      EMGMResponse connectToCFBInterface(CFunctionBlock &paDstFB,
+                                         CStringDictionary::TStringId paDstPortNameId) override;
 
-    void getSourcePortName(forte::core::TNameIdentifier &paResult) const override;
+      EMGMResponse disconnect(CFunctionBlock &paDstFB, CStringDictionary::TStringId paDstPortNameId) override;
 
-    bool isConnected() const {
-      return mSocket != nullptr;
-    }
+      void getSourcePortName(forte::core::TNameIdentifier &paResult) const override;
 
-    CAdapter &getPlug() {
-      return mPlug;
-    }
+      IPlugPin &getPlug() {
+        return mPlug;
+      }
 
-    const CAdapter &getPlug() const {
-      return mPlug;
-    }
+      const IPlugPin &getPlug() const {
+        return mPlug;
+      }
 
-    void setSocket(CAdapter *paSocket) {
-      mSocket = paSocket;
-    }
+      ISocketPin *getSocket() {
+        return mSocket;
+      }
 
-    CAdapter *getSocket() {
-      return mSocket;
-    }
+      const ISocketPin *getSocket() const {
+        return mSocket;
+      }
 
-  private:
-    void typifyAnyAdapter(CAdapter *paSocket);
-    void performDisconnect();
+    private:
+      void performDisconnect();
 
-    CAdapter &mPlug;
-    CAdapter *mSocket;
-};
+      IPlugPin &mPlug;
 
-typedef CAdapterConnection *TAdapterConnectionPtr;
+      ISocketPin *mSocket;
+  };
 
-#endif /*_ADAPTERCONN_H_*/
+  class IAdapterPin {
+    public:
+      virtual CAdapter *getAdapterBlock() = 0;
+      virtual bool isCompatible(IAdapterPin &paPeer) = 0;
+      virtual CStringDictionary::TStringId getAdapterTypeId() const = 0;
+  };
+
+  class IPlugPin : public IAdapterPin {
+    public:
+      virtual CAdapterConnection &getAdapterCon() = 0;
+      virtual void setPeer(CAdapter *paPeer) = 0;
+  };
+
+  class ISocketPin : public IAdapterPin {
+    public:
+      virtual bool connect(CAdapterConnection &paConn) = 0;
+      virtual void disconnect() = 0;
+      virtual CAdapterConnection *getAdapterCon() = 0;
+
+      const CAdapterConnection *getAdapterCon() const {
+        return const_cast<ISocketPin *>(this)->getAdapterCon();
+      }
+  };
+
+} // namespace forte

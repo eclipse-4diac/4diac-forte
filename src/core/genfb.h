@@ -52,7 +52,6 @@ class CGenFunctionBlock : public T {
                       const CStringDictionary::TStringId paInstanceNameId,
                       Args &&...args) :
         T(paContainer, mGenInterfaceSpec, paInstanceNameId, std::forward<Args>(args)...),
-        mAdapters(nullptr),
         mConfiguredFBTypeNameId(CStringDictionary::scmInvalidStringId),
         mGenInterfaceSpec() {
     }
@@ -63,7 +62,6 @@ class CGenFunctionBlock : public T {
                       const CStringDictionary::TStringId paInstanceNameId,
                       Args &&...args) :
         T(paContainer, mGenInterfaceSpec, paInstanceNameId, std::forward<Args>(args)...),
-        mAdapters(nullptr),
         mConfiguredFBTypeNameId(CStringDictionary::scmInvalidStringId),
         mGenInterfaceSpec(paInterfaceSpec) {
     }
@@ -172,6 +170,10 @@ class CGenFunctionBlock : public T {
       }
     }
 
+    virtual void createAdapters() {
+      // per default we are not creating any adapters
+    }
+
     size_t getGenEONums() {
       return getGenInterfaceSpec().mNumEOs - getGenEOOffset();
     }
@@ -208,10 +210,6 @@ class CGenFunctionBlock : public T {
       return &mGenDIConns[paDINum - getGenDIOffset()];
     }
 
-    CAdapter *getAdapterUnchecked(TPortId paAdapterNum) override {
-      return mAdapters[paAdapterNum];
-    }
-
     SFBInterfaceSpec &getGenInterfaceSpec() {
       return mGenInterfaceSpec;
     }
@@ -219,9 +217,6 @@ class CGenFunctionBlock : public T {
     std::vector<CEventConnection> mGenEOConns;
     std::unique_ptr<CDataConnection *[]> mGenDIConns;
     std::vector<CGenDataConnection> mGenDOConns;
-
-    std::unique_ptr<CAdapter *[]>
-        mAdapters; //!< A list of pointers to the adapters. This allows to implement a general getAdapter().
 
   private:
     void freeFBInterfaceData();
@@ -242,8 +237,6 @@ class CGenFunctionBlock : public T {
     void setConfiguredTypeNameId(CStringDictionary::TStringId paTypeNameId) {
       mConfiguredFBTypeNameId = paTypeNameId;
     }
-
-    void setupAdapters();
 
     CStringDictionary::TStringId mConfiguredFBTypeNameId;
     SFBInterfaceSpec mGenInterfaceSpec; //!< the interface spec for this specific instance of generic FB
@@ -353,7 +346,7 @@ void CGenFunctionBlock<T>::setupFBInterface() {
 
   createGenDOCons();
 
-  setupAdapters();
+  createAdapters();
 
   T::setupInputConnectionTrackingData();
 
@@ -364,25 +357,8 @@ void CGenFunctionBlock<T>::setupFBInterface() {
 
 template<class T>
 void CGenFunctionBlock<T>::freeFBInterfaceData() {
-  if (nullptr != mAdapters) {
-    for (TPortId i = 0; i < T::getFBInterfaceSpec().mNumAdapters; ++i) {
-      T::destroyAdapter(mAdapters[i]);
-    }
-  }
 
 #ifdef FORTE_SUPPORT_MONITORING
   T::freeEventMonitoringData();
 #endif // FORTE_SUPPORT_MONITORING
-}
-
-template<class T>
-void CGenFunctionBlock<T>::setupAdapters() {
-  size_t numAdpaters = T::getFBInterfaceSpec().mNumAdapters;
-  if (numAdpaters) {
-    mAdapters = std::unique_ptr<CAdapter *[]>(new CAdapter *[numAdpaters]);
-    for (TPortId i = 0; i < numAdpaters; ++i) {
-      mAdapters[i] =
-          T::createAdapter(T::getFBInterfaceSpec().mAdapterInstanceDefinition[i], static_cast<TForteUInt8>(i));
-    }
-  }
 }

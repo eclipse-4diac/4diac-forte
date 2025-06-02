@@ -13,17 +13,10 @@
 
 #pragma once
 
-#include "funcbloc.h"
+#include "Slave.h"
 #include "forte_bool.h"
 #include "forte_wstring.h"
 #include "forte_uint.h"
-#include "iec61131_functions.h"
-#include "forte_array_common.h"
-#include "forte_array.h"
-#include "forte_array_fixed.h"
-#include "forte_array_variable.h"
-#include "EBBusAdapter.h"
-#include "Slave.h"
 
 class FORTE_EBSlave2301 final : public EmbrickSlave {
     DECLARE_FIRMWARE_FB(FORTE_EBSlave2301)
@@ -89,13 +82,6 @@ class FORTE_EBSlave2301 final : public EmbrickSlave {
 
     CIEC_ANY *getDI(size_t) override;
     CIEC_ANY *getDO(size_t) override;
-    FORTE_EBBusAdapter &var_BusAdapterIn() {
-      return *static_cast<FORTE_EBBusAdapter *>(getAdapterUnchecked(0));
-    };
-
-    FORTE_EBBusAdapter &var_BusAdapterOut() {
-      return *static_cast<FORTE_EBBusAdapter *>(getAdapterUnchecked(1));
-    };
 
     CEventConnection *getEOConUnchecked(TPortId) override;
     CDataConnection **getDIConUnchecked(TPortId) override;

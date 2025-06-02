@@ -25,15 +25,13 @@
 #include "dataconn.h"
 #include "datatype.h"
 #include "eventconn.h"
+#include "adapter.h"
 
 #include <stdlib.h>
 #include <string.h>
 #include "../arch/timerha.h"
-#include "adapter.h"
-#include "adapterconn.h"
 #include "device.h"
 #include "string_utils.h"
-#include "typelib_internal.h"
 
 using namespace std::string_literals;
 
@@ -87,11 +85,10 @@ void CFunctionBlock::deinitialize() {
   }
 
   // disconnect all adapter input connections
-  for (TPortId aiId = 0; aiId < getFBInterfaceSpec().mNumAdapters; aiId++) {
-    CAdapter *adp = getAdapterUnchecked(aiId);
-    if (adp->isSocket() && adp->getAdapterConnection() != nullptr) {
-      adp->getAdapterConnection()->disconnect(*this,
-                                              getFBInterfaceSpec().mAdapterInstanceDefinition[aiId].mAdapterNameID);
+  for (TPortId aiId = 0; aiId < getFBInterfaceSpec().mSocketNames.size(); aiId++) {
+    forte::ISocketPin *skt = getSocketPinUnchecked(aiId);
+    if (skt->getAdapterCon() != nullptr) {
+      skt->getAdapterCon()->disconnect(*this, getFBInterfaceSpec().mSocketNames[aiId]);
     }
   }
 
@@ -279,37 +276,26 @@ CIEC_ANY *CFunctionBlock::getVar(CStringDictionary::TStringId *paNameList, unsig
   return nullptr;
 }
 
-CAdapter *CFunctionBlock::getAdapter(CStringDictionary::TStringId paAdapterNameId) {
-  TPortId adpPortId = getAdapterPortId(paAdapterNameId);
-  if (cgInvalidPortId != adpPortId) {
-    return getAdapterUnchecked(adpPortId);
+forte::IPlugPin *CFunctionBlock::getPlugPin(CStringDictionary::TStringId paPlugNameId) {
+  TPortId plugPortId = getFBInterfaceSpec().getPlugID(paPlugNameId);
+  if (plugPortId != cgInvalidPortId) {
+    return getPlugPinUnchecked(plugPortId);
   }
   return nullptr;
 }
 
-const CAdapter *CFunctionBlock::getAdapter(CStringDictionary::TStringId paAdapterNameId) const {
-  TPortId adpPortId = getAdapterPortId(paAdapterNameId);
-  if (cgInvalidPortId != adpPortId) {
-    return const_cast<CFunctionBlock *>(this)->getAdapterUnchecked(adpPortId);
+forte::ISocketPin *CFunctionBlock::getSocketPin(CStringDictionary::TStringId paSocketNameId) {
+  TPortId sktPortId = getFBInterfaceSpec().getSocketID(paSocketNameId);
+  if (sktPortId != cgInvalidPortId) {
+    return getSocketPinUnchecked(sktPortId);
   }
   return nullptr;
 }
 
-TPortId CFunctionBlock::getAdapterPortId(CStringDictionary::TStringId paAdapterNameId) const {
-  for (TPortId i = 0; i < getFBInterfaceSpec().mNumAdapters; ++i) {
-    if (getFBInterfaceSpec().mAdapterInstanceDefinition[i].mAdapterNameID == paAdapterNameId) {
-      return i;
-    }
-  }
-  return cgInvalidPortId;
-}
-
-void CFunctionBlock::sendAdapterEvent(TPortId paAdapterID, TEventID paEID, CEventChainExecutionThread *const paECET) {
-  if (paAdapterID < getFBInterfaceSpec().mNumAdapters) {
-    if (CAdapter *adapter = getAdapterUnchecked(paAdapterID); adapter != nullptr) {
-      adapter->receiveInputEvent(paEID, paECET);
-    }
-  }
+void CFunctionBlock::sendAdapterEvent(forte::CAdapter &paAdapter,
+                                      TEventID paEID,
+                                      CEventChainExecutionThread *const paECET) {
+  paAdapter.receiveInputEvent(paEID, paECET);
 }
 
 bool CFunctionBlock::configureFB(const char *) {
@@ -352,34 +338,10 @@ EMGMResponse CFunctionBlock::changeExecutionState(EMGMCommandType paCommand) {
   }
 
   if (EMGMResponse::Ready == nRetVal) {
-    for (TPortId i = 0; i < getFBInterfaceSpec().mNumAdapters; ++i) {
-      if (CAdapter *adapter = getAdapterUnchecked(i); adapter != nullptr) {
-        adapter->changeExecutionState(paCommand);
-      }
-    }
-  }
-
-  if (EMGMResponse::Ready == nRetVal) {
     nRetVal = CFBContainer::changeExecutionState(paCommand);
   }
 
   return nRetVal;
-}
-
-CAdapter *CFunctionBlock::createAdapter(const SAdapterInstanceDef &paAdapterInstanceDefinition,
-                                        TForteUInt8 paParentAdapterlistID) {
-  EMGMResponse errorMSG;
-  CAdapter *adapter = forte::core::createAdapter(paAdapterInstanceDefinition.mAdapterNameID,
-                                                 paAdapterInstanceDefinition.mAdapterTypeNameID, *this,
-                                                 paAdapterInstanceDefinition.mIsPlug, errorMSG);
-  if (adapter) {
-    adapter->setParentFB(this, paParentAdapterlistID);
-  }
-  return adapter;
-}
-
-void CFunctionBlock::destroyAdapter(CAdapter *paAdapter) {
-  delete paAdapter;
 }
 
 CConnection *CFunctionBlock::getInputConnection(forte::core::TNameIdentifier &paDstNameList) {
@@ -393,8 +355,8 @@ CConnection *CFunctionBlock::getInputConnection(forte::core::TNameIdentifier &pa
   if (const auto conn = getDIOInConnection(name); conn) {
     return conn;
   };
-  if (const auto adapter = getAdapter(name); adapter) {
-    return adapter->getAdapterConnection();
+  if (const auto skt = getSocketPin(name); skt) {
+    return skt->getAdapterCon();
   };
   return CFBContainer::getInputConnection(paDstNameList);
 }
@@ -416,9 +378,9 @@ CConnection::Wrapper CFunctionBlock::getOutputConnection(forte::core::TNameIdent
     paSrcNameList.erase(paSrcNameList.cbegin());
     return conn->getDelegatingConnection(paSrcNameList);
   };
-  if (const auto adapter = getAdapter(name); adapter) {
+  if (const auto plug = getPlugPin(name); plug) {
     paSrcNameList.erase(paSrcNameList.cbegin());
-    return adapter->getAdapterConnection()->getDelegatingConnection(paSrcNameList);
+    return plug->getAdapterCon().getDelegatingConnection(paSrcNameList);
   };
   return CFBContainer::getOutputConnection(paSrcNameList);
 }
@@ -435,20 +397,6 @@ void CFunctionBlock::setupEventMonitoringData() {
 void CFunctionBlock::freeEventMonitoringData() {
   mEventMonitorCount.clear();
   mForces.clear();
-}
-
-CFunctionBlock *CFunctionBlock::getFB(NameIterator &paNameListIt, NameIterator paNameListEnd) {
-  CFunctionBlock *retVal = nullptr;
-
-  if (paNameListIt + 1 == paNameListEnd) {
-    // only check for adpaters if it we have the last entry in the line
-    retVal = getAdapter(*paNameListIt);
-  }
-  if (retVal == nullptr) {
-    retVal = CFBContainer::getFB(paNameListIt, paNameListEnd);
-  }
-
-  return retVal;
 }
 
 TForteUInt32 &CFunctionBlock::getEIMonitorData(TEventID paEIID) {

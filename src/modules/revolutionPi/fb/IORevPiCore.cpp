@@ -47,6 +47,11 @@ const CStringDictionary::TStringId FORTE_IORevPiCore::scmEventOutputNames[] = {S
 const CStringDictionary::TStringId FORTE_IORevPiCore::scmEventOutputTypeIds[] = {STRID(Event), STRID(Event)};
 const SAdapterInstanceDef FORTE_IORevPiCore::scmAdapterInstances[] = {
     {STRID(IORevPiBusAdapter), STRID(BusAdapterOut), true}};
+
+namespace {
+  const auto cPlugNameIds = std::array{STRID(BusAdapterOut)};
+} // namespace
+
 const SFBInterfaceSpec FORTE_IORevPiCore::scmFBInterfaceSpec = {1,
                                                                 scmEventInputNames,
                                                                 scmEventInputTypeIds,
@@ -66,7 +71,9 @@ const SFBInterfaceSpec FORTE_IORevPiCore::scmFBInterfaceSpec = {1,
                                                                 0,
                                                                 nullptr,
                                                                 1,
-                                                                scmAdapterInstances};
+                                                                scmAdapterInstances,
+                                                                {},
+                                                                cPlugNameIds};
 
 FORTE_IORevPiCore::FORTE_IORevPiCore(const CStringDictionary::TStringId paInstanceNameId,
                                      forte::core::CFBContainer &paContainer) :
@@ -77,7 +84,8 @@ FORTE_IORevPiCore::FORTE_IORevPiCore(const CStringDictionary::TStringId paInstan
     conn_QI(nullptr),
     conn_UpdateInterval(nullptr),
     conn_QO(*this, 0, var_QO),
-    conn_STATUS(*this, 1, var_STATUS) {
+    conn_STATUS(*this, 1, var_STATUS),
+    var_BusAdapterOut(STRID(BusAdapterOut), *this, 0) {
 }
 
 void FORTE_IORevPiCore::setInitialValues() {
@@ -138,6 +146,10 @@ CIEC_ANY *FORTE_IORevPiCore::getDO(const size_t paIndex) {
     case 1: return &var_STATUS;
   }
   return nullptr;
+}
+
+forte::IPlugPin *FORTE_IORevPiCore::getPlugPinUnchecked(size_t paIndex) {
+  return (paIndex == 0) ? &var_BusAdapterOut : nullptr;
 }
 
 CEventConnection *FORTE_IORevPiCore::getEOConUnchecked(const TPortId paIndex) {

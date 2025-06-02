@@ -13,11 +13,10 @@
 
 #pragma once
 
-#include "funcbloc.h"
+#include <io/configFB/io_slave_multi.h>
 #include "forte_bool.h"
 #include "forte_wstring.h"
 #include "IORevPiBusAdapter.h"
-#include <io/configFB/io_slave_multi.h>
 
 class FORTE_IORevPiAIO : public forte::core::io::IOConfigFBMultiSlave {
     DECLARE_FIRMWARE_FB(FORTE_IORevPiAIO)
@@ -85,15 +84,14 @@ class FORTE_IORevPiAIO : public forte::core::io::IOConfigFBMultiSlave {
     COutDataConnection<CIEC_BOOL> conn_QO;
     COutDataConnection<CIEC_WSTRING> conn_STATUS;
 
+    forte::CPlugPin<FORTE_IORevPiBusAdapter_Plug> var_BusAdapterOut;
+    forte::CSocketPin<FORTE_IORevPiBusAdapter_Socket> var_BusAdapterIn;
+
     CIEC_ANY *getDI(size_t) override;
     CIEC_ANY *getDO(size_t) override;
-    FORTE_IORevPiBusAdapter &var_BusAdapterIn() {
-      return *static_cast<FORTE_IORevPiBusAdapter *>(getAdapterUnchecked(0));
-    };
 
-    FORTE_IORevPiBusAdapter &var_BusAdapterOut() {
-      return *static_cast<FORTE_IORevPiBusAdapter *>(getAdapterUnchecked(1));
-    };
+    forte::IPlugPin *getPlugPinUnchecked(size_t) override;
+    forte::ISocketPin *getSocketPinUnchecked(size_t) override;
 
     CEventConnection *getEOConUnchecked(TPortId) override;
     CDataConnection **getDIConUnchecked(TPortId) override;
@@ -140,5 +138,5 @@ class FORTE_IORevPiAIO : public forte::core::io::IOConfigFBMultiSlave {
     }
 
   protected:
-    void initHandles();
+    void initHandles() override;
 };

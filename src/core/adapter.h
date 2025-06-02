@@ -16,125 +16,135 @@
  *******************************************************************************/
 #pragma once
 
-#include "genfb.h"
+#include "adapterconn.h"
+#include "datatype.h"
+#include "funcbloc.h"
 
-class CAdapterConnection;
+namespace forte {
 
-#define ADAPTER_CTOR(fbclass)                                                                                          \
-  fbclass(CStringDictionary::TStringId paAdapterInstanceName, forte::core::CFBContainer &paContainer, bool paIsPlug) : \
-      CAdapter(paContainer, &scmFBInterfaceSpecSocket, paAdapterInstanceName, &scmFBInterfaceSpecPlug, paIsPlug)
+  class CAdapterConnection;
 
-#define ADAPTER_CTOR_WITH_BASE_CLASS(fbclass, fbBaseClass)                                                             \
-  fbclass(CStringDictionary::TStringId paAdapterInstanceName, forte::core::CFBContainer &paContainer, bool paIsPlug) : \
-      fbBaseClass(paContainer, &scmFBInterfaceSpecSocket, paAdapterInstanceName, &scmFBInterfaceSpecPlug, paIsPlug)
+  constexpr TForteUInt8 cgCFBParentAdapterlistIDMarker = static_cast<TForteUInt8>(-1);
 
-/*!\ingroup CORE\brief Class for handling adapters.
- *
- */
-class CAdapter : public CGenFunctionBlock<CFunctionBlock> {
-  public:
-    /*!\brief The main constructor for an adapter instance.
-     */
-    // TODO: think on interface
-    CAdapter(forte::core::CFBContainer &paContainer,
-             const SFBInterfaceSpec &paInterfaceSpecSocket,
-             const CStringDictionary::TStringId paInstanceNameId,
-             const SFBInterfaceSpec &paInterfaceSpecPlug,
-             bool paIsPlug);
-    ~CAdapter() override;
+  /*!\ingroup CORE\brief Class for handling adapters.
+   *
+   */
+  class CAdapter : public CFunctionBlock {
+    public:
+      ~CAdapter() override = default;
 
-    bool initialize() override;
+      void setPeer(CAdapter *paPeer) {
+        mPeer = paPeer;
+      }
 
-    bool createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) override;
+      CAdapter *getPeer() {
+        return mPeer;
+      }
 
-    /*!\brief Returns if Adapter instance is a Plug
-     */
-    bool isPlug() const {
-      return mIsPlug;
-    }
+    protected:
+      CAdapter(forte::core::CFBContainer &paContainer,
+               const SFBInterfaceSpec &paInterfaceSpec,
+               const CStringDictionary::TStringId paInstanceNameId,
+               TForteUInt8 paParentAdapterlistID);
 
-    /*!\brief Returns if Adapter instance is a Socket
-     */
-    bool isSocket() const {
-      return !mIsPlug;
-    }
+      TForteUInt16 getParentAdapterListEventID() const {
+        return mParentAdapterListEventID;
+      }
 
-    virtual void setParentFB(CFunctionBlock *paParentFB, TForteUInt8 paParentAdapterlistID);
+    private:
+      void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
-    /*! \brief Connects adapter to peer adapter
-     *
-     *   With this command the adapter is connected to a complementary adapter instance (peer).
-     *   The data output pointers are "redirected" to the data inputs of the peer.
-     *   \param paPeer  Pointer to the peer to connect to.
-     *   \param paAdConn Pointer to the connecting adapter connection.
-     *   \return success of establishment of connection
-     */
-    bool connect(CAdapter *paPeer, CAdapterConnection *paAdConn);
+      TForteUInt16 mParentAdapterListEventID;
 
-    /*! \brief Disconnects adapter from peer adapter
-     *
-     *   With this command the adapter is disconnected from a complementary adapter instance (peer).
-     *   The redirection of data output pointers is removed.
-     *   \param paAdConn Pointer to the connecting adapter connection.
-     *   \return success of disconnection
-     */
-    virtual bool disconnect(CAdapterConnection *paAdConn = nullptr);
+      CAdapter *mPeer;
+  };
 
-    /*! \brief Returns the compatibility of the adapter to another adapter
-     *
-     *   This method will evaluate the compatibility of this adapter to another one.
-     *   Only instances of compatible adapter types may be interconnected.
-     *   \param paPeer Pointer to a potential peer, whose compatibility has to be checked.
-     *   \return compatibility status
-     */
-    bool isCompatible(const CAdapter &paPeer) const;
+  template<typename T>
+  class CPlugPin final : public core::CInternalFB<T>, public IPlugPin {
+      static_assert(std::is_base_of_v<CAdapter, T>, "T must be a CAdapter");
 
-    const TForteInt16 *getEventInputWithIndices() const {
-      return getFBInterfaceSpec().mEIWithIndexes;
-    }
+    public:
+      CPlugPin(CStringDictionary::TStringId paInstanceNameId,
+               CFunctionBlock &paParentFB,
+               TForteUInt8 paParentAdapterlistID) :
+          core::CInternalFB<T>(paInstanceNameId, paParentFB, paParentAdapterlistID),
+          mAdapterCon(paParentFB, paParentAdapterlistID, *this) {
+      }
 
-    const TForteInt16 *getEventOutputWithIndices() const {
-      return getFBInterfaceSpec().mEOWithIndexes;
-    }
+      T *getAdapterBlock() override {
+        return core::CInternalFB<T>::get();
+      }
 
-    const TDataIOID *getEventInputWith() const {
-      return getFBInterfaceSpec().mEIWith;
-    }
+      const T *getAdapterBlock() const {
+        return const_cast<CPlugPin<T> *>(this)->getAdapterBlock();
+      }
 
-    const TDataIOID *getEventOutputWith() const {
-      return getFBInterfaceSpec().mEOWith;
-    }
+      CStringDictionary::TStringId getAdapterTypeId() const override {
+        return getAdapterBlock()->getFBTypeId();
+      }
 
-    CAdapter *getPeer() {
-      return mPeer;
-    }
+      bool isCompatible(IAdapterPin &paPeer) override {
+        return getAdapterTypeId() == paPeer.getAdapterTypeId();
+      }
 
-    CAdapterConnection *getAdapterConnection() const {
-      return mAdapterConn;
-    }
+      CAdapterConnection &getAdapterCon() override {
+        return mAdapterCon;
+      }
 
-  protected:
-    void fillEventEntryList();
+      void setPeer(CAdapter *paPeer) override {
+        getAdapterBlock()->setPeer(paPeer);
+      }
 
-    std::vector<TEventID> mOutputEventIds;
-    TForteUInt16 mParentAdapterListEventID;
+    private:
+      CAdapterConnection mAdapterCon;
+  };
 
-    // TODO remove old lists when new adapter concept is implemented
-    CDataConnection **mDIConns; //!< A list of data connections pointers storing for each data input the data
-                                //!< connection. If the data input is not connected the pointer is nullptr.
-    CGenDataConnection *mDOConns; //!< A list of data connections pointers storing for each data output the data
-                                  //!< connection. If the data output is not connected the pointer is nullptr.
+  template<typename T>
+  class CSocketPin final : public core::CInternalFB<T>, public ISocketPin {
+      static_assert(std::is_base_of_v<CAdapter, T>, "T must be a CAdapter");
 
-    CIEC_ANY **mDIs; //!< A list of pointers to the data inputs. This allows to implement a general getDataInput()
-    CIEC_ANY **mDOs; //!< A list of pointers to the data outputs. This allows to implement a general
+    public:
+      CSocketPin(CStringDictionary::TStringId paInstanceNameId,
+                 CFunctionBlock &paParentFB,
+                 TForteUInt8 paParentAdapterlistID) :
+          core::CInternalFB<T>(paInstanceNameId, paParentFB, paParentAdapterlistID),
+          mAdapterCon(nullptr) {
+      }
 
-  private:
-    void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
-    void setupEventEntryList();
+      T *getAdapterBlock() override {
+        return core::CInternalFB<T>::get();
+      }
 
-    const bool mIsPlug;
-    CAdapter *mPeer;
-    CIEC_ANY **mLocalDIs;
-    CAdapterConnection *mAdapterConn;
-    CFunctionBlock *mParentFB;
-};
+      const T *getAdapterBlock() const {
+        return const_cast<CSocketPin<T> *>(this)->getAdapterBlock();
+      }
+
+      CStringDictionary::TStringId getAdapterTypeId() const override {
+        return getAdapterBlock()->getFBTypeId();
+      }
+
+      bool isCompatible(IAdapterPin &paPeer) override {
+        return getAdapterTypeId() == paPeer.getAdapterTypeId();
+      }
+
+      bool connect(CAdapterConnection &paConn) override {
+        paConn.getPlug().setPeer(getAdapterBlock());
+        mAdapterCon = &paConn;
+        getAdapterBlock()->setPeer(paConn.getPlug().getAdapterBlock());
+        return true;
+      }
+
+      void disconnect() override {
+        mAdapterCon = nullptr;
+        getAdapterBlock()->setPeer(nullptr);
+      }
+
+      CAdapterConnection *getAdapterCon() override {
+        return mAdapterCon;
+      }
+
+    private:
+      CAdapterConnection *mAdapterCon;
+  };
+
+} // namespace forte

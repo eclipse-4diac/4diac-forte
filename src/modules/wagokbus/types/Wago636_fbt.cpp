@@ -47,19 +47,31 @@ using namespace forte::core::io;
 
 DEFINE_FIRMWARE_FB(FORTE_Wago636, STRID(Wago636))
 
-const CStringDictionary::TStringId FORTE_Wago636::scmDataInputNames[] = {
-    STRID(QI),                STRID(Busy),     STRID(LimitSwitchN), STRID(LimitSwitchP),    STRID(PresetInput),
-    STRID(OptimizeOnZInput),  STRID(OnTarget), STRID(ReferenceOk),  STRID(CurrentPosition), STRID(TargetPosition),
-    STRID(MotorN),            STRID(MotorP),   STRID(Positioning),  STRID(OptimizeOn),          STRID(Preset),
-    STRID(PresetInputEnable), STRID(QuitErrors)};
+const CStringDictionary::TStringId FORTE_Wago636::scmDataInputNames[] = {STRID(QI),
+                                                                         STRID(Busy),
+                                                                         STRID(LimitSwitchN),
+                                                                         STRID(LimitSwitchP),
+                                                                         STRID(PresetInput),
+                                                                         STRID(OptimizeOnZInput),
+                                                                         STRID(OnTarget),
+                                                                         STRID(ReferenceOk),
+                                                                         STRID(CurrentPosition),
+                                                                         STRID(TargetPosition),
+                                                                         STRID(MotorN),
+                                                                         STRID(MotorP),
+                                                                         STRID(Positioning),
+                                                                         STRID(OptimizeOn),
+                                                                         STRID(Preset),
+                                                                         STRID(PresetInputEnable),
+                                                                         STRID(QuitErrors)};
 const CStringDictionary::TStringId FORTE_Wago636::scmDataInputTypeIds[] = {
-    STRID(BOOL),   STRID(STRING), STRID(STRING), STRID(STRING), STRID(STRING),
-    STRID(STRING), STRID(STRING), STRID(STRING), STRID(STRING), STRID(STRING),
-    STRID(STRING), STRID(STRING), STRID(STRING), STRID(STRING), STRID(STRING),
-    STRID(STRING), STRID(STRING)};
+    STRID(BOOL),   STRID(STRING), STRID(STRING), STRID(STRING), STRID(STRING), STRID(STRING),
+    STRID(STRING), STRID(STRING), STRID(STRING), STRID(STRING), STRID(STRING), STRID(STRING),
+    STRID(STRING), STRID(STRING), STRID(STRING), STRID(STRING), STRID(STRING)};
 const CStringDictionary::TStringId FORTE_Wago636::scmDataOutputNames[] = {STRID(QO), STRID(STATUS)};
 const CStringDictionary::TStringId FORTE_Wago636::scmDataOutputTypeIds[] = {STRID(BOOL), STRID(WSTRING)};
-const TDataIOID FORTE_Wago636::scmEIWith[] = {3, 2, 0, 11, 10, 8, 9, 14, 12, 13, 1, 4, 5, 6, 7, 15, 16, scmWithListDelimiter};
+const TDataIOID FORTE_Wago636::scmEIWith[] = {3,  2, 0, 11, 10, 8, 9,  14, 12,
+                                              13, 1, 4, 5,  6,  7, 15, 16, scmWithListDelimiter};
 const TForteInt16 FORTE_Wago636::scmEIWithIndexes[] = {0};
 const CStringDictionary::TStringId FORTE_Wago636::scmEventInputNames[] = {STRID(MAP)};
 const CStringDictionary::TStringId FORTE_Wago636::scmEventInputTypeIds[] = {STRID(Event)};
@@ -69,6 +81,12 @@ const CStringDictionary::TStringId FORTE_Wago636::scmEventOutputNames[] = {STRID
 const CStringDictionary::TStringId FORTE_Wago636::scmEventOutputTypeIds[] = {STRID(Event), STRID(Event)};
 const SAdapterInstanceDef FORTE_Wago636::scmAdapterInstances[] = {{STRID(WagoBusAdapter), STRID(BusAdapterOut), true},
                                                                   {STRID(WagoBusAdapter), STRID(BusAdapterIn), false}};
+
+namespace {
+  const auto cSocketNameIds = std::array{STRID(BusAdapterIn)};
+  const auto cPlugNameIds = std::array{STRID(BusAdapterOut)};
+} // namespace
+
 const SFBInterfaceSpec FORTE_Wago636::scmFBInterfaceSpec = {1,
                                                             scmEventInputNames,
                                                             scmEventInputTypeIds,
@@ -88,7 +106,9 @@ const SFBInterfaceSpec FORTE_Wago636::scmFBInterfaceSpec = {1,
                                                             0,
                                                             nullptr,
                                                             2,
-                                                            scmAdapterInstances};
+                                                            scmAdapterInstances,
+                                                            cSocketNameIds,
+                                                            cPlugNameIds};
 
 FORTE_Wago636::FORTE_Wago636(const CStringDictionary::TStringId paInstanceNameId,
                              forte::core::CFBContainer &paContainer) :
@@ -274,10 +294,13 @@ void FORTE_Wago636::initHandlesBase(size_t paNumberOfBoolInputs,
 
   if (paNumberOfBoolInputs == 7) {
     initWagoHandle(offset, 3, CIEC_ANY::e_BOOL, IOMapper::In); // busy - Status-Byte 0 Bit 3
-    initWagoHandle(1 + offset, 14, CIEC_ANY::e_BOOL, IOMapper::In); // limit switch negative (Hardware pin) - Status-Byte 1 Bit 6
-    initWagoHandle(2 + offset, 15, CIEC_ANY::e_BOOL, IOMapper::In); // limit switch positive (Hardware pin) - Status-Byte 1 Bit 7
+    initWagoHandle(1 + offset, 14, CIEC_ANY::e_BOOL,
+                   IOMapper::In); // limit switch negative (Hardware pin) - Status-Byte 1 Bit 6
+    initWagoHandle(2 + offset, 15, CIEC_ANY::e_BOOL,
+                   IOMapper::In); // limit switch positive (Hardware pin) - Status-Byte 1 Bit 7
     initWagoHandle(3 + offset, 13, CIEC_ANY::e_BOOL, IOMapper::In); // preset input (Hardware pin) - Status-Byte 1 Bit 0
-    initWagoHandle(4 + offset, 9, CIEC_ANY::e_BOOL, IOMapper::In); // optimize on / z input (Hardware pin) - Status-Byte 1 Bit 1
+    initWagoHandle(4 + offset, 9, CIEC_ANY::e_BOOL,
+                   IOMapper::In); // optimize on / z input (Hardware pin) - Status-Byte 1 Bit 1
     initWagoHandle(5 + offset, 2, CIEC_ANY::e_BOOL, IOMapper::In); // on target - Status-Byte 0 Bit 2
     initWagoHandle(6 + offset, 5, CIEC_ANY::e_BOOL, IOMapper::In); // reference ok - Status-Byte 0 Bit 5
   } else {

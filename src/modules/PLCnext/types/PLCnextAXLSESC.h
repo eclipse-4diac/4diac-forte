@@ -19,15 +19,9 @@
 
 #pragma once
 
-#include "funcbloc.h"
+#include "../slaveHandler.h"
 #include "forte_bool.h"
-#include "forte_uint.h"
 #include "forte_wstring.h"
-#include "iec61131_functions.h"
-#include "forte_array_common.h"
-#include "forte_array.h"
-#include "forte_array_fixed.h"
-#include "forte_array_variable.h"
 #include "PLCnextBusAdapter.h"
 
 class FORTE_PLCnextAXLSESC final : public PLCnextSlaveHandler {
@@ -66,16 +60,11 @@ class FORTE_PLCnextAXLSESC final : public PLCnextSlaveHandler {
 
   public:
     FORTE_PLCnextAXLSESC(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
-    bool initialize() override;
 
     CIEC_BOOL var_QI;
 
     CIEC_BOOL var_QO;
     CIEC_WSTRING var_STATUS;
-
-    FORTE_PLCnextBusAdapter var_BusAdapterIn;
-
-    FORTE_PLCnextBusAdapter var_BusAdapterOut;
 
     CEventConnection conn_INITO;
     CEventConnection conn_IND;
@@ -87,14 +76,6 @@ class FORTE_PLCnextAXLSESC final : public PLCnextSlaveHandler {
 
     CIEC_ANY *getDI(size_t) override;
     CIEC_ANY *getDO(size_t) override;
-    CAdapter *getAdapterUnchecked(size_t) override;
-    FORTE_PLCnextBusAdapter &var_BusAdapterIn() {
-      return *static_cast<FORTE_PLCnextBusAdapter *>(getAdapterUnchecked(0));
-    };
-
-    FORTE_PLCnextBusAdapter &var_BusAdapterOut() {
-      return *static_cast<FORTE_PLCnextBusAdapter *>(getAdapterUnchecked(1);
-    };
 
     CEventConnection *getEOConUnchecked(TPortId) override;
     CDataConnection **getDIConUnchecked(TPortId) override;

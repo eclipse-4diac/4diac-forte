@@ -15,66 +15,93 @@
 #include "adapter.h"
 #include "typelib.h"
 #include "forte_time.h"
-#include "iec61131_functions.h"
-#include "forte_array_common.h"
-#include "forte_array.h"
-#include "forte_array_fixed.h"
-#include "forte_array_variable.h"
+#include "adapterconn.h"
 
-class FORTE_ATimeOut final : public CAdapter {
+class FORTE_ATimeOut : public forte::CAdapter {
     DECLARE_ADAPTER_TYPE(FORTE_ATimeOut)
-
-  private:
-    static const CStringDictionary::TStringId scmDataOutputNames[];
-    static const CStringDictionary::TStringId scmDataOutputTypeIds[];
 
   public:
     static const TEventID scmEventTimeOutID = 0;
 
-  private:
-    static const TForteInt16 scmEIWithIndexes[];
-    static const CStringDictionary::TStringId scmEventInputNames[];
-    static const CStringDictionary::TStringId scmEventInputTypeIds[];
-
-  public:
     static const TEventID scmEventSTARTID = 0;
     static const TEventID scmEventSTOPID = 1;
 
-  private:
-    static const TDataIOID scmEOWith[];
-    static const TForteInt16 scmEOWithIndexes[];
-    static const CStringDictionary::TStringId scmEventOutputNames[];
-    static const CStringDictionary::TStringId scmEventOutputTypeIds[];
+    void setInitialValues() override;
 
-    static const SFBInterfaceSpec scmFBInterfaceSpecSocket;
+    CIEC_TIME var_DT;
 
-    static const SFBInterfaceSpec scmFBInterfaceSpecPlug;
+    TEventID evt_TimeOut() {
+      return getParentAdapterListEventID() + scmEventTimeOutID;
+    }
+
+    TEventID evt_START() {
+      return getParentAdapterListEventID() + scmEventSTARTID;
+    }
+
+    TEventID evt_STOP() {
+      return getParentAdapterListEventID() + scmEventSTOPID;
+    }
+
+  protected:
+    FORTE_ATimeOut(forte::core::CFBContainer &paContainer,
+                   const SFBInterfaceSpec &paInterfaceSpec,
+                   const CStringDictionary::TStringId paInstanceNameId,
+                   TForteUInt8 paParentAdapterlistID);
+
+    ~FORTE_ATimeOut() override = default;
+};
+
+class FORTE_ATimeOut_Socket;
+
+class FORTE_ATimeOut_Plug final : public FORTE_ATimeOut {
+  public:
+    FORTE_ATimeOut_Plug(CStringDictionary::TStringId paInstanceNameId,
+                        forte::core::CFBContainer &paContainer,
+                        TForteUInt8 paParentAdapterlistID);
+    ~FORTE_ATimeOut_Plug() override = default;
 
     void readInputData(TEventID paEIID) override;
     void writeOutputData(TEventID paEIID) override;
 
+    CEventConnection conn_TimeOUT;
+
+    CDataConnection *conn_DT;
+
+  protected:
+    CEventConnection *getEOConUnchecked(TPortId paEONum) override;
+    CIEC_ANY *getDI(TPortId paDINum) override;
+    CDataConnection **getDIConUnchecked(TPortId paDINum) override;
+    CDataConnection *getDOConUnchecked(TPortId paDONum) override;
+    CIEC_ANY *getDO(TPortId paDONum) override;
+
+  private:
+    FORTE_ATimeOut_Socket *getSocket();
+};
+
+class FORTE_ATimeOut_Socket final : public FORTE_ATimeOut {
   public:
-    CIEC_TIME &var_DT() {
-      return *static_cast<CIEC_TIME *>((isSocket()) ? getDO(0) : getDI(0));
+    FORTE_ATimeOut_Socket(CStringDictionary::TStringId paInstanceNameId,
+                          forte::core::CFBContainer &paContainer,
+                          TForteUInt8 paParentAdapterlistID);
+    ~FORTE_ATimeOut_Socket() override = default;
+
+    void readInputData(TEventID paEIID) override;
+    void writeOutputData(TEventID paEIID) override;
+
+    CEventConnection conn_START;
+    CEventConnection conn_STOP;
+
+    COutDataConnection<CIEC_TIME> conn_DT;
+
+  protected:
+    CEventConnection *getEOConUnchecked(TPortId paEONum) override;
+    CIEC_ANY *getDI(TPortId paDINum) override;
+    CDataConnection **getDIConUnchecked(TPortId paDINum) override;
+    CDataConnection *getDOConUnchecked(TPortId paDONum) override;
+    CIEC_ANY *getDO(TPortId paDONum) override;
+
+  private:
+    FORTE_ATimeOut_Plug *getPlug() {
+      return static_cast<FORTE_ATimeOut_Plug *>(getPeer());
     }
-
-    TEventID evt_TimeOut() {
-      return mParentAdapterListEventID + scmEventTimeOutID;
-    }
-
-    TEventID evt_START() {
-      return mParentAdapterListEventID + scmEventSTARTID;
-    }
-
-    TEventID evt_STOP() {
-      return mParentAdapterListEventID + scmEventSTOPID;
-    }
-
-  public:
-    FORTE_ATimeOut(CStringDictionary::TStringId paAdapterInstanceName,
-                   forte::core::CFBContainer &paContainer,
-                   bool paIsPlug) :
-        CAdapter(paContainer, scmFBInterfaceSpecSocket, paAdapterInstanceName, scmFBInterfaceSpecPlug, paIsPlug) {};
-
-    virtual ~FORTE_ATimeOut() = default;
 };

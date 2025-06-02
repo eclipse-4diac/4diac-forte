@@ -14,7 +14,6 @@
 #pragma once
 
 #include <io/configFB/io_adapter_multi.h>
-#include "adapter.h"
 #include "typelib.h"
 #include "forte_bool.h"
 #include "forte_uint.h"
@@ -38,43 +37,85 @@ class FORTE_IORevPiBusAdapter : public forte::core::io::IOConfigFBMultiAdapter {
     static const CStringDictionary::TStringId scmEventOutputNames[];
     static const CStringDictionary::TStringId scmEventOutputTypeIds[];
 
+  protected:
     static const SFBInterfaceSpec scmFBInterfaceSpecSocket;
     static const SFBInterfaceSpec scmFBInterfaceSpecPlug;
 
-    void readInputData(TEventID paEIID) override;
-    void writeOutputData(TEventID paEIID) override;
+    void setInitialValues() override;
 
   public:
-    ADAPTER_CTOR_FOR_IO_MULTI(FORTE_IORevPiBusAdapter) {};
-    virtual ~FORTE_IORevPiBusAdapter() {};
+    CIEC_BOOL var_QO;
 
-    static const TEventID scmEventINITOID = 0;
-    static const TEventID scmEventINITID = 0;
-
-    static const TForteUInt8 scmSlaveConfigurationIO[];
-    static const TForteUInt8 scmSlaveConfigurationIONum;
-
-    CIEC_BOOL &var_QO() {
-      return *static_cast<CIEC_BOOL *>((isSocket()) ? getDI(0) : getDO(0));
-    }
-
-    CIEC_BOOL &var_QI() {
-      return *static_cast<CIEC_BOOL *>((isSocket()) ? getDO(0) : getDI(0));
-    }
-
-    CIEC_UINT &var_MasterId() {
-      return *static_cast<CIEC_UINT *>((isSocket()) ? getDO(1) : getDI(1));
-    }
-
-    CIEC_UINT &var_Index() {
-      return *static_cast<CIEC_UINT *>((isSocket()) ? getDO(2) : getDI(2));
-    }
+    CIEC_BOOL var_QI;
+    CIEC_UINT var_MasterId;
+    CIEC_UINT var_Index;
 
     TEventID evt_INITO() {
-      return mParentAdapterListEventID + scmEventINITOID;
+      return getParentAdapterListEventID() + scmEventINITOID;
     }
 
     TEventID evt_INIT() {
-      return mParentAdapterListEventID + scmEventINITID;
+      return getParentAdapterListEventID() + scmEventINITID;
     }
+
+    CIEC_ANY *getDeviceConfigPin(int) override {
+      return nullptr;
+    }
+    ~FORTE_IORevPiBusAdapter() override = default;
+
+  protected:
+    FORTE_IORevPiBusAdapter(forte::core::CFBContainer &paContainer,
+                            const SFBInterfaceSpec &paInterfaceSpec,
+                            const CStringDictionary::TStringId paInstanceNameId,
+                            TForteUInt8 paParentAdapterlistID);
+};
+
+class FORTE_IORevPiBusAdapter_Plug final : public FORTE_IORevPiBusAdapter {
+  public:
+    FORTE_IORevPiBusAdapter_Plug(CStringDictionary::TStringId paInstanceNameId,
+                                 forte::core::CFBContainer &paContainer,
+                                 TForteUInt8 paParentAdapterlistID);
+    ~FORTE_IORevPiBusAdapter_Plug() override = default;
+
+    CEventConnection conn_INITO;
+
+    CDataConnection *conn_QI;
+    CDataConnection *conn_MasterId;
+    CDataConnection *conn_Index;
+
+    COutDataConnection<CIEC_BOOL> conn_QO;
+
+  private:
+    void readInputData(TEventID paEIID) override;
+    void writeOutputData(TEventID paEIID) override;
+    CIEC_ANY *getDI(size_t) override;
+    CIEC_ANY *getDO(size_t) override;
+    CEventConnection *getEOConUnchecked(TPortId) override;
+    CDataConnection **getDIConUnchecked(TPortId) override;
+    CDataConnection *getDOConUnchecked(TPortId) override;
+};
+
+class FORTE_IORevPiBusAdapter_Socket final : public FORTE_IORevPiBusAdapter {
+  public:
+    FORTE_IORevPiBusAdapter_Socket(CStringDictionary::TStringId paInstanceNameId,
+                                   forte::core::CFBContainer &paContainer,
+                                   TForteUInt8 paParentAdapterlistID);
+    ~FORTE_IORevPiBusAdapter_Socket() override = default;
+
+    CEventConnection conn_INIT;
+
+    CDataConnection *conn_QO;
+
+    COutDataConnection<CIEC_BOOL> conn_QI;
+    COutDataConnection<CIEC_UINT> conn_MasterId;
+    COutDataConnection<CIEC_UINT> conn_Index;
+
+  private:
+    void readInputData(TEventID paEIID) override;
+    void writeOutputData(TEventID paEIID) override;
+    CIEC_ANY *getDI(size_t) override;
+    CIEC_ANY *getDO(size_t) override;
+    CEventConnection *getEOConUnchecked(TPortId) override;
+    CDataConnection **getDIConUnchecked(TPortId) override;
+    CDataConnection *getDOConUnchecked(TPortId) override;
 };

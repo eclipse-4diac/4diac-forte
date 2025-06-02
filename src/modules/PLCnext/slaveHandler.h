@@ -21,8 +21,9 @@
 #include "../../core/io/configFB/io_slave_multi.h"
 #include "slaveHandle/slaveHandle.h"
 #include "deviceController.h"
-#include "plcNextDeviceInterface.h"
 #include <io/mapper/io_mapper.h>
+#include "types/PLCnextBusAdapter.h"
+#include "plcNextDeviceInterface.h"
 
 class PLCnextSlaveHandler : public forte::core::io::IOConfigFBMultiSlave {
 
@@ -35,6 +36,9 @@ class PLCnextSlaveHandler : public forte::core::io::IOConfigFBMultiSlave {
     void addHandle(PLCnextSlaveHandle *paHandle);
     void dropHandles();
     void initBufferImage(size_t imageSize);
+
+    forte::CPlugPin<FORTE_PLCnextBusAdapter_Plug> var_BusAdapterOut;
+    forte::CSocketPin<FORTE_PLCnextBusAdapter_Socket> var_BusAdapterIn;
 
     const SlaveType slaveType = SlaveType::UnknownSlave;
 
@@ -49,13 +53,16 @@ class PLCnextSlaveHandler : public forte::core::io::IOConfigFBMultiSlave {
                         const SFBInterfaceSpec *paInterfaceSpec,
                         const CStringDictionary::TStringId paInstanceNameId);
 
-    ~PLCnextSlaveHandler();
+    ~PLCnextSlaveHandler() override;
 
   protected:
     PLCnextDeviceInterface plcNextDevice;
 
-    virtual void initHandles() = 0;
-    virtual const char *init() = 0;
+    void initHandles() override = 0;
+    const char *init() override = 0;
+
+    forte::IPlugPin *getPlugPinUnchecked(size_t) override;
+    forte::ISocketPin *getSocketPinUnchecked(size_t) override;
 
     std::vector<PLCnextSlaveHandle *> mDeviceHandles;
 

@@ -13,12 +13,12 @@
 #pragma once
 
 /* BUFFER_SIZE has to be a power of 2 */
-#define BUFFER_SIZE_RISING_EDGE        8
-#define BUFFER_SIZE_FALLING_EDGE       8
-#define BUFFER_SIZE_UPPER_THRESHOLD    8
-#define BUFFER_SIZE_LOWER_THRESHOLD    8
-#define BUFFER_SIZE_BOUNDED_AREA       8
-#define BUFFER_SIZE_GRADIENT           8
+#define BUFFER_SIZE_RISING_EDGE 8
+#define BUFFER_SIZE_FALLING_EDGE 8
+#define BUFFER_SIZE_UPPER_THRESHOLD 8
+#define BUFFER_SIZE_LOWER_THRESHOLD 8
+#define BUFFER_SIZE_BOUNDED_AREA 8
+#define BUFFER_SIZE_GRADIENT 8
 
 #include "CeBuffer.h"
 #include "forte_word.h"
@@ -26,16 +26,15 @@
 #include <core/io/mapper/io_handle.h>
 #include <core/io/processinterfacefb.h>
 
-
 using namespace forte::core::io;
 
 enum EeIOTypes {
-  eIO_RISING_EDGE                   = 10,
-  eIO_FALLING_EDGE                  = 20,
-  eIO_UPPER_THRESHOLD               = 30,
-  eIO_LOWER_THRESHOLD               = 40,
-  eIO_BOUNDED_AREA                  = 50,
-  eIO_GRADIENT                      = 60
+  eIO_RISING_EDGE = 10,
+  eIO_FALLING_EDGE = 20,
+  eIO_UPPER_THRESHOLD = 30,
+  eIO_LOWER_THRESHOLD = 40,
+  eIO_BOUNDED_AREA = 50,
+  eIO_GRADIENT = 60
 };
 
 class CeSpecBase {
@@ -66,23 +65,27 @@ class CeSpecBase {
     virtual void readToBuffer(CIEC_ANY *) = 0;
     IOHandle *mHandle;
 
-    CeSpecBase(EeIOTypes paType, IOHandle *paHandle, CProcessInterfaceFB *paEIOfb) : mEIOType(paType), mHandle(paHandle), mEIO(paEIOfb) {}
+    CeSpecBase(EeIOTypes paType, IOHandle *paHandle, CProcessInterfaceFB *paEIOfb) :
+        mEIO(paEIOfb),
+        mEIOType(paType),
+        mHandle(paHandle) {
+    }
 
     CProcessInterfaceFB *getEIOfb() {
-        return mEIO;
-      }
+      return mEIO;
+    }
 };
 
-template <typename T, std::size_t size>
+template<typename T, std::size_t size>
 class CeSpec : public CeSpecBase {
   protected:
     CeBuffer<T, size> mBuffer;
 
   public:
-    CeSpec(EeIOTypes paType, CProcessInterfaceFB *paEIOfb, IOHandle *paHandle)
-        : CeSpecBase(paType, paHandle, paEIOfb) {}
+    CeSpec(EeIOTypes paType, CProcessInterfaceFB *paEIOfb, IOHandle *paHandle) : CeSpecBase(paType, paHandle, paEIOfb) {
+    }
 
-    ~CeSpec() = default;
+    ~CeSpec() override = default;
 
     void trigger() override {
       if (getEIOfb()) {
@@ -108,8 +111,8 @@ class CeSpec : public CeSpecBase {
 
 class CeIO_RisingEdge : public CeSpec<CIEC_BOOL, BUFFER_SIZE_RISING_EDGE> {
   public:
-    CeIO_RisingEdge(CProcessInterfaceFB *paEIOfb, IOHandle *paHandle)
-        : CeSpec(eIO_RISING_EDGE, paEIOfb, paHandle) {}
+    CeIO_RisingEdge(CProcessInterfaceFB *paEIOfb, IOHandle *paHandle) : CeSpec(eIO_RISING_EDGE, paEIOfb, paHandle) {
+    }
 
     bool checkCondition() final {
       if (mHandle == nullptr) {
@@ -132,8 +135,8 @@ class CeIO_RisingEdge : public CeSpec<CIEC_BOOL, BUFFER_SIZE_RISING_EDGE> {
 
 class CeIO_FallingEdge : public CeSpec<CIEC_BOOL, BUFFER_SIZE_FALLING_EDGE> {
   public:
-    CeIO_FallingEdge(CProcessInterfaceFB *paEIOfb, IOHandle *paHandle)
-        : CeSpec(eIO_FALLING_EDGE, paEIOfb, paHandle) {}
+    CeIO_FallingEdge(CProcessInterfaceFB *paEIOfb, IOHandle *paHandle) : CeSpec(eIO_FALLING_EDGE, paEIOfb, paHandle) {
+    }
 
     bool checkCondition() final {
       if (mHandle == nullptr) {
@@ -156,9 +159,10 @@ class CeIO_FallingEdge : public CeSpec<CIEC_BOOL, BUFFER_SIZE_FALLING_EDGE> {
 
 class CeIO_UpperThreshold : public CeSpec<CIEC_WORD, BUFFER_SIZE_UPPER_THRESHOLD> {
   public:
-    CeIO_UpperThreshold(CProcessInterfaceFB *paEIOfb, IOHandle *paHandle, uint32_t paThreshold)
-        : CeSpec(eIO_UPPER_THRESHOLD, paEIOfb, paHandle),
-        mUpperThreshold(paThreshold){}
+    CeIO_UpperThreshold(CProcessInterfaceFB *paEIOfb, IOHandle *paHandle, uint32_t paThreshold) :
+        CeSpec(eIO_UPPER_THRESHOLD, paEIOfb, paHandle),
+        mUpperThreshold(paThreshold) {
+    }
 
     bool checkCondition() final {
       if (mHandle == nullptr) {
@@ -181,9 +185,10 @@ class CeIO_UpperThreshold : public CeSpec<CIEC_WORD, BUFFER_SIZE_UPPER_THRESHOLD
 
 class CeIO_LowerThreshold : public CeSpec<CIEC_WORD, BUFFER_SIZE_LOWER_THRESHOLD> {
   public:
-    CeIO_LowerThreshold(CProcessInterfaceFB *paEIOfb, IOHandle *paHandle, uint32_t paThreshold)
-        : CeSpec(eIO_LOWER_THRESHOLD, paEIOfb, paHandle),
-        mLowerThreshold(paThreshold){}
+    CeIO_LowerThreshold(CProcessInterfaceFB *paEIOfb, IOHandle *paHandle, uint32_t paThreshold) :
+        CeSpec(eIO_LOWER_THRESHOLD, paEIOfb, paHandle),
+        mLowerThreshold(paThreshold) {
+    }
 
     bool checkCondition() final {
       if (mHandle == nullptr) {
@@ -206,9 +211,11 @@ class CeIO_LowerThreshold : public CeSpec<CIEC_WORD, BUFFER_SIZE_LOWER_THRESHOLD
 
 class CeIO_BoundedArea : public CeSpec<CIEC_WORD, BUFFER_SIZE_BOUNDED_AREA> {
   public:
-    CeIO_BoundedArea(CProcessInterfaceFB *paEIOfb, IOHandle *paHandle, uint32_t paBiggerThan, uint32_t paSmallerThan)
-        : CeSpec(eIO_BOUNDED_AREA, paEIOfb, paHandle),
-        mBiggerThan(paBiggerThan), mSmallerThan(paSmallerThan) {}
+    CeIO_BoundedArea(CProcessInterfaceFB *paEIOfb, IOHandle *paHandle, uint32_t paBiggerThan, uint32_t paSmallerThan) :
+        CeSpec(eIO_BOUNDED_AREA, paEIOfb, paHandle),
+        mBiggerThan(paBiggerThan),
+        mSmallerThan(paSmallerThan) {
+    }
 
     bool checkCondition() final {
       if (mHandle == nullptr) {
@@ -238,15 +245,14 @@ class CeIO_BoundedArea : public CeSpec<CIEC_WORD, BUFFER_SIZE_BOUNDED_AREA> {
   private:
     uint32_t mBiggerThan;
     uint32_t mSmallerThan;
-
 };
-
 
 class CeIO_Gradient : public CeSpec<CIEC_WORD, BUFFER_SIZE_GRADIENT> {
   public:
-    CeIO_Gradient(CProcessInterfaceFB *paEIOfb, IOHandle *paHandle, uint32_t paDifference)
-        : CeSpec(eIO_GRADIENT, paEIOfb, paHandle),
-        mGradient(paDifference){}
+    CeIO_Gradient(CProcessInterfaceFB *paEIOfb, IOHandle *paHandle, uint32_t paDifference) :
+        CeSpec(eIO_GRADIENT, paEIOfb, paHandle),
+        mGradient(paDifference) {
+    }
 
     bool checkCondition() final {
       if (mHandle == nullptr) {

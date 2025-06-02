@@ -12,6 +12,8 @@
 
 #pragma once
 
+#include "adapterconn.h"
+#include "anyadapter.h"
 #include "core/funcbloc.h"
 #include "core/datatypes/forte_word.h"
 #include "core/datatypes/forte_wstring.h"
@@ -26,7 +28,7 @@
 #include "eConfigFB.h"
 
 class FORTE_eIWconfig final : public CeConfigFB {
-  DECLARE_FIRMWARE_FB(FORTE_eIWconfig)
+    DECLARE_FIRMWARE_FB(FORTE_eIWconfig)
 
   private:
     static const CStringDictionary::TStringId scmDataInputNames[];
@@ -54,7 +56,6 @@ class FORTE_eIWconfig final : public CeConfigFB {
 
   public:
     FORTE_eIWconfig(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
-    bool initialize() override;
 
     CIEC_WORD var_ST;
     CIEC_WORD var_BT;
@@ -62,7 +63,7 @@ class FORTE_eIWconfig final : public CeConfigFB {
 
     CIEC_WSTRING var_STATUS;
 
-    FORTE_eGenAdapter var_eIW;
+    forte::CSocketPin<FORTE_eGenAdapter_Socket> var_eIW;
 
     CEventConnection conn_CNF;
 
@@ -74,7 +75,7 @@ class FORTE_eIWconfig final : public CeConfigFB {
 
     CIEC_ANY *getDI(size_t) override;
     CIEC_ANY *getDO(size_t) override;
-    CAdapter *getAdapterUnchecked(size_t) override;
+    forte::ISocketPin *getSocketPinUnchecked(size_t) override;
     CEventConnection *getEOConUnchecked(TPortId) override;
     CDataConnection **getDIConUnchecked(TPortId) override;
     CDataConnection *getDOConUnchecked(TPortId) override;
@@ -93,4 +94,3 @@ class FORTE_eIWconfig final : public CeConfigFB {
 
     bool eventGen() override;
 };
-

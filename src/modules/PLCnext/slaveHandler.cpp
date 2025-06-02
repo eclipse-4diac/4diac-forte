@@ -14,6 +14,9 @@
 #include "deviceController.h"
 #include <io/mapper/io_mapper.h>
 
+USE_STRING_ID(BusAdapterIn);
+USE_STRING_ID(BusAdapterOut);
+
 const TForteUInt8 PLCnextSlaveHandler::scmSlaveConfigurationIO[] = {};
 const TForteUInt8 PLCnextSlaveHandler::scmSlaveConfigurationIONum = 0;
 
@@ -21,8 +24,11 @@ PLCnextSlaveHandler::PLCnextSlaveHandler(int paType,
                                          forte::core::CFBContainer &paContainer,
                                          const SFBInterfaceSpec *paInterfaceSpec,
                                          const CStringDictionary::TStringId paInstanceNameId) :
-    IOConfigFBMultiSlave(scmSlaveConfigurationIO, scmSlaveConfigurationIONum, paType, paContainer, paInterfaceSpec),
-    slaveType(SlaveType(paType)) {
+    IOConfigFBMultiSlave(
+        scmSlaveConfigurationIO, scmSlaveConfigurationIONum, paType, paContainer, paInterfaceSpec, paInstanceNameId),
+    slaveType(SlaveType(paType)),
+    var_BusAdapterOut(STRID(BusAdapterOut), *this, 0),
+    var_BusAdapterIn(STRID(BusAdapterIn), *this, 0) {
 }
 
 PLCnextSlaveHandler::~PLCnextSlaveHandler() {
@@ -68,4 +74,12 @@ PLCnextSlaveHandle *PLCnextSlaveHandler::getHandle(size_t paIndex) {
   }
 
   return mDeviceHandles[paIndex];
+}
+
+forte::IPlugPin *PLCnextSlaveHandler::getPlugPinUnchecked(size_t paIndex) {
+  return (paIndex == 0) ? &var_BusAdapterOut : nullptr;
+}
+
+forte::ISocketPin *PLCnextSlaveHandler::getSocketPinUnchecked(size_t paIndex) {
+  return (paIndex == 0) ? &var_BusAdapterIn : nullptr;
 }

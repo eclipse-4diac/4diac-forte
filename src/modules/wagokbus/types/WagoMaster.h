@@ -9,8 +9,8 @@
 
 #pragma once
 
-#include "../../../core/io/configFB/io_master_multi.h"
 #include "WagoBusAdapter.h"
+#include "../../../core/io/configFB/io_master_multi.h"
 
 class FORTE_WagoMaster : public forte::core::io::IOConfigFBMultiMaster {
     DECLARE_FIRMWARE_FB(FORTE_WagoMaster)
@@ -34,11 +34,12 @@ class FORTE_WagoMaster : public forte::core::io::IOConfigFBMultiMaster {
     COutDataConnection<CIEC_BOOL> conn_QO;
     COutDataConnection<CIEC_WSTRING> conn_STATUS;
 
+    forte::CPlugPin<FORTE_WagoBusAdapter_Plug> var_BusAdapterOut;
+
     CIEC_ANY *getDI(size_t) override;
     CIEC_ANY *getDO(size_t) override;
-    FORTE_WagoBusAdapter &var_BusAdapterOut() {
-      return *static_cast<FORTE_WagoBusAdapter *>(getAdapterUnchecked(0));
-    };
+
+    forte::IPlugPin *getPlugPinUnchecked(size_t) override;
 
     CEventConnection *getEOConUnchecked(TPortId) override;
     CDataConnection **getDIConUnchecked(TPortId) override;

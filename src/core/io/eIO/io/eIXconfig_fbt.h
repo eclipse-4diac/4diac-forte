@@ -26,7 +26,7 @@
 #include "eConfigFB.h"
 
 class FORTE_eIXconfig final : public CeConfigFB {
-  DECLARE_FIRMWARE_FB(FORTE_eIXconfig)
+    DECLARE_FIRMWARE_FB(FORTE_eIXconfig)
 
   private:
     static const CStringDictionary::TStringId scmDataInputNames[];
@@ -54,14 +54,13 @@ class FORTE_eIXconfig final : public CeConfigFB {
 
   public:
     FORTE_eIXconfig(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
-    bool initialize() override;
 
     CIEC_BOOL var_FE;
     CIEC_BOOL var_RE;
 
     CIEC_WSTRING var_STATUS;
 
-    FORTE_eGenAdapter var_eIX;
+    forte::CSocketPin<FORTE_eGenAdapter_Socket> var_eIX;
 
     CEventConnection conn_CNF;
 
@@ -72,7 +71,7 @@ class FORTE_eIXconfig final : public CeConfigFB {
 
     CIEC_ANY *getDI(size_t) override;
     CIEC_ANY *getDO(size_t) override;
-    CAdapter *getAdapterUnchecked(size_t) override;
+    forte::ISocketPin *getSocketPinUnchecked(size_t) override;
     CEventConnection *getEOConUnchecked(TPortId) override;
     CDataConnection **getDIConUnchecked(TPortId) override;
     CDataConnection *getDOConUnchecked(TPortId) override;
@@ -90,4 +89,3 @@ class FORTE_eIXconfig final : public CeConfigFB {
 
     bool eventGen() override;
 };
-

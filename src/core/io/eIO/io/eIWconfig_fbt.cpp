@@ -12,6 +12,7 @@
 
 #include "eIWconfig_fbt.h"
 
+#include "adapterconn.h"
 #include "eGenAdapter_adp.h"
 #include "core/iec61131_functions.h"
 #include "core/datatypes/forte_array_common.h"
@@ -44,37 +45,41 @@ const CStringDictionary::TStringId FORTE_eIWconfig::scmEventInputNames[] = {STRI
 const TDataIOID FORTE_eIWconfig::scmEOWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_eIWconfig::scmEOWithIndexes[] = {0};
 const CStringDictionary::TStringId FORTE_eIWconfig::scmEventOutputNames[] = {STRID(CNF)};
-const SAdapterInstanceDef FORTE_eIWconfig::scmAdapterInstances[] = {
-  {STRID(eGenAdapter), STRID(eIW), false}
-};
-const SFBInterfaceSpec FORTE_eIWconfig::scmFBInterfaceSpec = {
-  1, scmEventInputNames, nullptr, scmEIWith, scmEIWithIndexes,
-  1, scmEventOutputNames, nullptr, scmEOWith, scmEOWithIndexes,
-  3, scmDataInputNames, scmDataInputTypeIds,
-  1, scmDataOutputNames, scmDataOutputTypeIds,
-  0, nullptr,
-  1, scmAdapterInstances
-};
+const SAdapterInstanceDef FORTE_eIWconfig::scmAdapterInstances[] = {{STRID(eGenAdapter), STRID(eIW), false}};
+const SFBInterfaceSpec FORTE_eIWconfig::scmFBInterfaceSpec = {1,
+                                                              scmEventInputNames,
+                                                              nullptr,
+                                                              scmEIWith,
+                                                              scmEIWithIndexes,
+                                                              1,
+                                                              scmEventOutputNames,
+                                                              nullptr,
+                                                              scmEOWith,
+                                                              scmEOWithIndexes,
+                                                              3,
+                                                              scmDataInputNames,
+                                                              scmDataInputTypeIds,
+                                                              1,
+                                                              scmDataOutputNames,
+                                                              scmDataOutputTypeIds,
+                                                              0,
+                                                              nullptr,
+                                                              1,
+                                                              scmAdapterInstances};
 
-FORTE_eIWconfig::FORTE_eIWconfig(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_eIWconfig::FORTE_eIWconfig(const CStringDictionary::TStringId paInstanceNameId,
+                                 forte::core::CFBContainer &paContainer) :
     CeConfigFB(paInstanceNameId, scmFBInterfaceSpec, paContainer),
     var_ST(0_WORD),
     var_BT(0_WORD),
     var_GRAD(0_WORD),
     var_STATUS(u""_WSTRING),
-    var_eIW(STRID(eIW), *this, false),
+    var_eIW(STRID(eIW), *this, 0),
     conn_CNF(*this, 0),
     conn_ST(nullptr),
     conn_BT(nullptr),
     conn_GRAD(nullptr),
-    conn_STATUS(*this, 0, var_STATUS) {
-};
-
-bool FORTE_eIWconfig::initialize() {
-  if(!var_eIW.initialize()) { return false; }
-  var_eIW.setParentFB(this, 0);
-  return CFunctionBlock::initialize();
-}
+    conn_STATUS(*this, 0, var_STATUS) {};
 
 void FORTE_eIWconfig::setInitialValues() {
   CFunctionBlock::setInitialValues();
@@ -85,42 +90,39 @@ void FORTE_eIWconfig::setInitialValues() {
 }
 
 void FORTE_eIWconfig::executeEvent(const TEventID paEIID, CEventChainExecutionThread *const paECET) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventCONFID:
       eventGen();
       sendOutputEvent(scmEventCNFID, paECET);
       break;
-    default:
-      break;
+    default: break;
   }
 }
 
 void FORTE_eIWconfig::readInputData(const TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventCONFID: {
       readData(0, var_ST, conn_ST);
       readData(1, var_BT, conn_BT);
       readData(2, var_GRAD, conn_GRAD);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 void FORTE_eIWconfig::writeOutputData(const TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventCNFID: {
       writeData(3, var_STATUS, conn_STATUS);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 CIEC_ANY *FORTE_eIWconfig::getDI(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_ST;
     case 1: return &var_BT;
     case 2: return &var_GRAD;
@@ -129,28 +131,28 @@ CIEC_ANY *FORTE_eIWconfig::getDI(const size_t paIndex) {
 }
 
 CIEC_ANY *FORTE_eIWconfig::getDO(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_STATUS;
   }
   return nullptr;
 }
 
-CAdapter *FORTE_eIWconfig::getAdapterUnchecked(const size_t paIndex) {
-  switch(paIndex) {
+forte::ISocketPin *FORTE_eIWconfig::getSocketPinUnchecked(const size_t paIndex) {
+  switch (paIndex) {
     case 0: return &var_eIW;
   }
   return nullptr;
 }
 
 CEventConnection *FORTE_eIWconfig::getEOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_CNF;
   }
   return nullptr;
 }
 
 CDataConnection **FORTE_eIWconfig::getDIConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_ST;
     case 1: return &conn_BT;
     case 2: return &conn_GRAD;
@@ -159,12 +161,11 @@ CDataConnection **FORTE_eIWconfig::getDIConUnchecked(const TPortId paIndex) {
 }
 
 CDataConnection *FORTE_eIWconfig::getDOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_STATUS;
   }
   return nullptr;
 }
-
 
 bool FORTE_eIWconfig::eventGen() {
   DEVLOG_DEBUG("[eIWconfig] eventGen\r\n");
@@ -173,14 +174,11 @@ bool FORTE_eIWconfig::eventGen() {
   deregisterFBsEventTrigger();
 
   /* connecting to adapter peer */
-  CAdapter* peerAdapter = nullptr;
-  FORTE_eGenAdapter* eGenAdapter = nullptr;
-  FORTE_eIW* eIW = nullptr;
+  FORTE_eIW *eIW = nullptr;
 
   /* CONNECTING TO PEER =================================================================== BEGIN === */
-  if ((peerAdapter = getAdapterUnchecked(scmeIWAdpNum)->getPeer()) != nullptr) {
-    eGenAdapter = static_cast<FORTE_eGenAdapter*>(peerAdapter);
-    eIW = static_cast<FORTE_eIW*>(eGenAdapter->parentFB);
+  if (auto &plg = var_eIW.getAdapterCon()->getPlug(); plg.getAdapterBlock() != nullptr) {
+    eIW = &static_cast<FORTE_eIW &>(plg.getAdapterBlock()->getParent());
   } else {
     DEVLOG_ERROR("[eIWconfig] Could not reach eIW FB via adapter!\r\n");
     return false;
@@ -196,10 +194,10 @@ bool FORTE_eIWconfig::eventGen() {
   // deregister every already registered evert-trigger condition of this FB
   deregisterFBsEventTrigger();
 
-  CeSpecBase* newEvent;
+  CeSpecBase *newEvent;
 
   // register bounded area event-trigger
-  if (var_ST != 0 && var_BT  != 0) {
+  if (var_ST != 0 && var_BT != 0) {
     DEVLOG_DEBUG("[eventGen] register eBA event\r\n");
     newEvent = new CeIO_BoundedArea(eIW, eIW->getHandle(), var_BT, var_ST);
     registerEventTrigger(newEvent);

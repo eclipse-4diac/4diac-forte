@@ -45,6 +45,11 @@ const CStringDictionary::TStringId FORTE_WagoMaster::scmEventOutputNames[] = {ST
 const CStringDictionary::TStringId FORTE_WagoMaster::scmEventOutputTypeIds[] = {STRID(EInit), STRID(Event)};
 const SAdapterInstanceDef FORTE_WagoMaster::scmAdapterInstances[] = {
     {STRID(WagoBusAdapter), STRID(BusAdapterOut), true}};
+
+namespace {
+  const auto cPlugNameIds = std::array{STRID(BusAdapterOut)};
+} // namespace
+
 const SFBInterfaceSpec FORTE_WagoMaster::scmFBInterfaceSpec = {1,
                                                                scmEventInputNames,
                                                                scmEventInputTypeIds,
@@ -64,7 +69,9 @@ const SFBInterfaceSpec FORTE_WagoMaster::scmFBInterfaceSpec = {1,
                                                                0,
                                                                nullptr,
                                                                1,
-                                                               scmAdapterInstances};
+                                                               scmAdapterInstances,
+                                                               {},
+                                                               cPlugNameIds};
 
 FORTE_WagoMaster::FORTE_WagoMaster(const CStringDictionary::TStringId paInstanceNameId,
                                    forte::core::CFBContainer &paContainer) :
@@ -78,7 +85,8 @@ FORTE_WagoMaster::FORTE_WagoMaster(const CStringDictionary::TStringId paInstance
     conn_QI(nullptr),
     conn_UpdateInterval(nullptr),
     conn_QO(*this, 0, var_QO),
-    conn_STATUS(*this, 1, var_STATUS) {};
+    conn_STATUS(*this, 1, var_STATUS),
+    var_BusAdapterOut(STRID(BusAdapterOut), *this, 0) {};
 
 void FORTE_WagoMaster::setInitialValues() {
   var_QI = 0_BOOL;
@@ -138,6 +146,10 @@ CIEC_ANY *FORTE_WagoMaster::getDO(const size_t paIndex) {
     case 1: return &var_STATUS;
   }
   return nullptr;
+}
+
+forte::IPlugPin *FORTE_WagoMaster::getPlugPinUnchecked(size_t paIndex) {
+  return (paIndex == 0) ? &var_BusAdapterOut : nullptr;
 }
 
 CEventConnection *FORTE_WagoMaster::getEOConUnchecked(const TPortId paIndex) {

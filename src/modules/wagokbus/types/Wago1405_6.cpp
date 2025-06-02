@@ -76,6 +76,12 @@ const CStringDictionary::TStringId FORTE_Wago1405_6::scmEventOutputNames[] = {ST
 const CStringDictionary::TStringId FORTE_Wago1405_6::scmEventOutputTypeIds[] = {STRID(Event), STRID(Event)};
 const SAdapterInstanceDef FORTE_Wago1405_6::scmAdapterInstances[] = {
     {STRID(WagoBusAdapter), STRID(BusAdapterOut), true}, {STRID(WagoBusAdapter), STRID(BusAdapterIn), false}};
+
+namespace {
+  const auto cSocketNameIds = std::array{STRID(BusAdapterIn)};
+  const auto cPlugNameIds = std::array{STRID(BusAdapterOut)};
+} // namespace
+
 const SFBInterfaceSpec FORTE_Wago1405_6::scmFBInterfaceSpec = {1,
                                                                scmEventInputNames,
                                                                scmEventInputTypeIds,
@@ -95,7 +101,9 @@ const SFBInterfaceSpec FORTE_Wago1405_6::scmFBInterfaceSpec = {1,
                                                                0,
                                                                nullptr,
                                                                2,
-                                                               scmAdapterInstances};
+                                                               scmAdapterInstances,
+                                                               cSocketNameIds,
+                                                               cPlugNameIds};
 
 FORTE_Wago1405_6::FORTE_Wago1405_6(const CStringDictionary::TStringId paInstanceNameId,
                                    forte::core::CFBContainer &paContainer) :

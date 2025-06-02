@@ -13,6 +13,8 @@
 
 #pragma once
 
+#include "adapter.h"
+#include "anyadapter.h"
 #include "funcbloc.h"
 #include "forte_bool.h"
 #include "forte_wstring.h"
@@ -109,13 +111,6 @@ class FORTE_EBSlave2181 final : public EmbrickSlave {
 
     CIEC_ANY *getDI(size_t) override;
     CIEC_ANY *getDO(size_t) override;
-    FORTE_EBBusAdapter &var_BusAdapterIn() {
-      return *static_cast<FORTE_EBBusAdapter *>(getAdapterUnchecked(0));
-    };
-
-    FORTE_EBBusAdapter &var_BusAdapterOut() {
-      return *static_cast<FORTE_EBBusAdapter *>(getAdapterUnchecked(1));
-    };
 
     CEventConnection *getEOConUnchecked(TPortId) override;
     CDataConnection **getDIConUnchecked(TPortId) override;

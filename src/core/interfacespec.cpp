@@ -35,6 +35,16 @@ namespace {
     return cgInvalidPortId;
   }
 
+  TPortId getPortId(CStringDictionary::TStringId paPortNameId,
+                    std::span<const CStringDictionary::TStringId> paPortNames) {
+    for (TPortId i = 0; i < paPortNames.size(); ++i) {
+      if (paPortNameId == paPortNames[i]) {
+        return i;
+      }
+    }
+    return cgInvalidPortId;
+  }
+
 } // namespace
 
 TEventID SFBInterfaceSpec::getEIID(CStringDictionary::TStringId paEINameId) const {
@@ -69,4 +79,12 @@ TPortId SFBInterfaceSpec::getDOID(CStringDictionary::TStringId paDONameId) const
 
 TPortId SFBInterfaceSpec::getDIOID(CStringDictionary::TStringId paDIONameId) const {
   return getPortId(paDIONameId, mNumDIOs, mDIONames);
+}
+
+TPortId SFBInterfaceSpec::getPlugID(CStringDictionary::TStringId paPlugNameId) const {
+  return getPortId(paPlugNameId, mPlugNames);
+}
+
+TPortId SFBInterfaceSpec::getSocketID(CStringDictionary::TStringId paSocketNameId) const {
+  return getPortId(paSocketNameId, mSocketNames);
 }

@@ -19,9 +19,6 @@
 #include <string.h>
 #include "cfb.h"
 #include "adapter.h"
-#include "core/util/criticalregion.h"
-#include "adapterconn.h"
-#include "funcbloc.h"
 
 namespace {
   bool forwardGenericDI(CFunctionBlock &dstFB, const CStringDictionary::TStringId dstId, const CIEC_ANY &paRefValue) {
@@ -75,12 +72,6 @@ bool CCompositeFB::initialize() {
   createAdapterConnections();
   setFBNetworkInitialValues();
 
-  // remove adapter-references for CFB
-  for (TPortId i = 0; i < getFBInterfaceSpec().mNumAdapters; i++) {
-    if (CAdapter *adapter = getAdapterUnchecked(i); adapter != nullptr) {
-      adapter->setParentFB(nullptr, 0);
-    }
-  }
   return true;
 }
 
@@ -256,14 +247,12 @@ void CCompositeFB::createAdapterConnections() {
   for (size_t i = 0; i < cmFBNData.mNumAdapterConnections; ++i) {
     const SCFB_FBConnectionData &currentConn(cmFBNData.mAdapterConnections[i]);
     // FIXME implement way to inform FB creator that creation failed
-    const CFunctionBlock *const srcFB = getFunctionBlock(currentConn.mSrcFBNum);
+    CFunctionBlock *const srcFB = getFunctionBlock(currentConn.mSrcFBNum);
     CFunctionBlock *const dstFB = getFunctionBlock(currentConn.mDstFBNum);
 
     if ((nullptr != srcFB) && (nullptr != dstFB)) {
-      const CAdapter *const adp = srcFB->getAdapter(currentConn.mSrcId);
-      if ((nullptr != adp) && (adp->isPlug())) {
-        // only plugs hold the connection object
-        adp->getAdapterConnection()->connect(*dstFB, currentConn.mDstId);
+      if (auto plug = srcFB->getPlugPin(currentConn.mSrcId); plug != nullptr) {
+        plug->getAdapterCon().connect(*dstFB, currentConn.mDstId);
       } else {
         DEVLOG_ERROR("[CFB Creation] Adapter source is not a plug!");
       }
@@ -298,8 +287,10 @@ CFunctionBlock *CCompositeFB::getFunctionBlock(int paFBNum) {
     TForteUInt32 fbNum = static_cast<TForteUInt32>(paFBNum);
     if (scmAdapterMarker == (scmAdapterMarker & fbNum)) {
       fbNum &= scmAdapterFBRange;
-      if (fbNum < getFBInterfaceSpec().mNumAdapters) {
-        return getAdapterUnchecked(fbNum);
+      if (fbNum < getFBInterfaceSpec().mPlugNames.size()) {
+        return getPlugPinUnchecked(fbNum)->getAdapterBlock();
+      } else if (fbNum < getFBInterfaceSpec().mPlugNames.size() + getFBInterfaceSpec().mSocketNames.size()) {
+        return getSocketPinUnchecked(fbNum - getFBInterfaceSpec().mPlugNames.size())->getAdapterBlock();
       }
     } else {
       if (fbNum < cmFBNData.mNumFBs) {

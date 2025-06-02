@@ -12,14 +12,12 @@
  *    Martin Melik-Merkumians - adds typifyAnyAdapter
  *******************************************************************************/
 #include "adapterconn.h"
-
-USE_STRING_ID(ANY_ADAPTER);
-
 #include "funcbloc.h"
 #include "adapter.h"
-#include "anyadapter.h"
 
-CAdapterConnection::CAdapterConnection(CFunctionBlock &paSrcFB, const TPortId paSrcPortId, CAdapter &paPlug) :
+using namespace forte;
+
+CAdapterConnection::CAdapterConnection(CFunctionBlock &paSrcFB, const TPortId paSrcPortId, IPlugPin &paPlug) :
     CConnection(paSrcFB, paSrcPortId),
     mPlug(paPlug),
     mSocket(nullptr) {
@@ -29,42 +27,34 @@ CAdapterConnection::~CAdapterConnection() {
   performDisconnect();
 }
 
-void CAdapterConnection::typifyAnyAdapter(CAdapter *paSocket) {
-  if (STRID(ANY_ADAPTER) == paSocket->getFBTypeId()) {
-    static_cast<CAnyAdapter *>(paSocket)->typifyAnyAdapter(mPlug);
-  }
-
-  if (STRID(ANY_ADAPTER) == mPlug.getFBTypeId()) {
-    static_cast<CAnyAdapter &>(mPlug).typifyAnyAdapter(*paSocket);
-  }
-}
-
 EMGMResponse CAdapterConnection::connect(CFunctionBlock &paDstFB, CStringDictionary::TStringId paDstPortNameId) {
-  const TPortId portId = paDstFB.getAdapterPortId(paDstPortNameId);
-  if (portId == cgInvalidPortId) {
-    return EMGMResponse::NoSuchObject;
-  }
-
-  if (isConnected()) {
+  if (mSocket != nullptr) {
+    // we are already connected
     return EMGMResponse::InvalidState;
   }
 
-  CAdapter *socket = paDstFB.getAdapter(paDstPortNameId);
-  typifyAnyAdapter(socket);
+  ISocketPin *socket = paDstFB.getSocketPin(paDstPortNameId);
+  if (socket == nullptr) {
+    return EMGMResponse::NoSuchObject;
+  }
 
-  if (!socket->isSocket() || !socket->isCompatible(mPlug)) {
+  if (socket->getAdapterCon() != nullptr) {
+    // the socket is already connected
+    return EMGMResponse::InvalidState;
+  }
+
+  if (!mPlug.isCompatible(*socket) && !socket->isCompatible(mPlug)) {
     return EMGMResponse::InvalidObject;
   }
 
-  if (mPlug.connect(socket, this) && socket->connect(&mPlug, this)) {
-    mSocket = socket;
-    paDstFB.incConnRefCount();
-    getSourceId().getFB().incConnRefCount();
-    return EMGMResponse::Ready;
+  if (!socket->connect(*this)) {
+    return EMGMResponse::Overflow;
   }
-  mPlug.disconnect();
-  socket->disconnect();
-  return EMGMResponse::InvalidObject;
+
+  mSocket = socket;
+  paDstFB.incConnRefCount();
+  getSourceId().getFB().incConnRefCount();
+  return EMGMResponse::Ready;
 }
 
 EMGMResponse CAdapterConnection::connectToCFBInterface(CFunctionBlock &, CStringDictionary::TStringId) {
@@ -73,28 +63,32 @@ EMGMResponse CAdapterConnection::connectToCFBInterface(CFunctionBlock &, CString
 }
 
 EMGMResponse CAdapterConnection::disconnect(CFunctionBlock &paDstFB, CStringDictionary::TStringId paDstPortNameId) {
-  if (isConnected()) {
-    CAdapter *socket = paDstFB.getAdapter(paDstPortNameId);
-    if (socket == mSocket) {
-      performDisconnect();
-      paDstFB.decConnRefCount();
-      getSourceId().getFB().decConnRefCount();
-      return EMGMResponse::Ready;
-    }
+  if (mSocket == nullptr) {
+    // we are not connected
+    return EMGMResponse::InvalidState;
   }
-  return EMGMResponse::NoSuchObject;
+
+  ISocketPin *socket = paDstFB.getSocketPin(paDstPortNameId);
+  if (socket == nullptr || socket != mSocket) {
+    return EMGMResponse::NoSuchObject;
+  }
+
+  performDisconnect();
+
+  paDstFB.decConnRefCount();
+  getSourceId().getFB().decConnRefCount();
+  return EMGMResponse::Ready;
 }
 
 void CAdapterConnection::performDisconnect() {
-  mPlug.disconnect(this);
+  mPlug.setPeer(nullptr);
 
   if (mSocket != nullptr) {
-    mSocket->disconnect(this);
+    mSocket->disconnect();
     mSocket = nullptr;
   }
 }
 
 void CAdapterConnection::getSourcePortName(forte::core::TNameIdentifier &paResult) const {
-  paResult.push_back(
-      getSourceId().getFB().getFBInterfaceSpec().mAdapterInstanceDefinition[getSourceId().getPortId()].mAdapterNameID);
+  paResult.push_back(mPlug.getAdapterBlock()->getInstanceNameId());
 }

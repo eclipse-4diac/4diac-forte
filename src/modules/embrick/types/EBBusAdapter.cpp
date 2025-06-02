@@ -1,5 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2016 - 2018 Johannes Messmer (admin@jomess.com), fortiss GmbH
+ * Copyright (c) 2016, 2025 Johannes Messmer (admin@jomess.com), fortiss GmbH,
+ *                          Johannes Kepler University Linz
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -9,6 +11,7 @@
  * Contributors:
  *   Johannes Messmer - initial API and implementation and/or initial documentation
  *   Jose Cabral - Cleaning of namespaces
+ *   Alois Zoitl - Upgraded to new adapter architecture
  *******************************************************************************/
 
 #include "EBBusAdapter.h"
@@ -25,111 +28,208 @@ USE_STRING_ID(QO);
 USE_STRING_ID(UINT);
 USE_STRING_ID(UpdateInterval);
 
+namespace {
+  const CStringDictionary::TStringId scmDataInputNames[] = {STRID(QO)};
+  const CStringDictionary::TStringId scmDataInputTypeIds[] = {STRID(BOOL)};
+  const CStringDictionary::TStringId scmDataOutputNames[] = {STRID(QI), STRID(MasterId), STRID(Index),
+                                                             STRID(UpdateInterval)};
+  const CStringDictionary::TStringId scmDataOutputTypeIds[] = {STRID(BOOL), STRID(UINT), STRID(UINT), STRID(UINT)};
+  const TDataIOID scmEIWith[] = {0, CFunctionBlock::scmWithListDelimiter};
+  const TForteInt16 scmEIWithIndexes[] = {0};
+  const CStringDictionary::TStringId scmEventInputNames[] = {STRID(INITO)};
+  const CStringDictionary::TStringId scmEventInputTypeIds[] = {STRID(EInit)};
+  const TDataIOID scmEOWith[] = {2, 3, 1, 0, CFunctionBlock::scmWithListDelimiter};
+  const TForteInt16 scmEOWithIndexes[] = {0};
+  const CStringDictionary::TStringId scmEventOutputNames[] = {STRID(INIT)};
+  const CStringDictionary::TStringId scmEventOutputTypeIds[] = {STRID(EInit)};
+
+  const SFBInterfaceSpec scmFBInterfaceSpecSocket = {1,
+                                                     scmEventInputNames,
+                                                     scmEventInputTypeIds,
+                                                     scmEIWith,
+                                                     scmEIWithIndexes,
+                                                     1,
+                                                     scmEventOutputNames,
+                                                     scmEventOutputTypeIds,
+                                                     scmEOWith,
+                                                     scmEOWithIndexes,
+                                                     1,
+                                                     scmDataInputNames,
+                                                     scmDataInputTypeIds,
+                                                     4,
+                                                     scmDataOutputNames,
+                                                     scmDataOutputTypeIds,
+                                                     0,
+                                                     nullptr,
+                                                     0,
+                                                     nullptr};
+
+  const SFBInterfaceSpec scmFBInterfaceSpecPlug = {1,
+                                                   scmEventOutputNames,
+                                                   scmEventOutputTypeIds,
+                                                   scmEOWith,
+                                                   scmEOWithIndexes,
+                                                   1,
+                                                   scmEventInputNames,
+                                                   scmEventInputTypeIds,
+                                                   scmEIWith,
+                                                   scmEIWithIndexes,
+                                                   4,
+                                                   scmDataOutputNames,
+                                                   scmDataOutputTypeIds,
+                                                   1,
+                                                   scmDataInputNames,
+                                                   scmDataInputTypeIds,
+                                                   0,
+                                                   nullptr,
+                                                   0,
+                                                   nullptr};
+
+  const auto scmSlaveConfigurationIO = std::array<const TForteUInt8, 1>{3};
+
+} // namespace
 
 DEFINE_ADAPTER_TYPE(FORTE_EBBusAdapter, STRID(EBBusAdapter))
 
-const CStringDictionary::TStringId FORTE_EBBusAdapter::scmDataInputNames[] = {STRID(QO)};
-const CStringDictionary::TStringId FORTE_EBBusAdapter::scmDataInputTypeIds[] = {STRID(BOOL)};
-const CStringDictionary::TStringId FORTE_EBBusAdapter::scmDataOutputNames[] = {STRID(QI), STRID(MasterId), STRID(Index),
-                                                                               STRID(UpdateInterval)};
-const CStringDictionary::TStringId FORTE_EBBusAdapter::scmDataOutputTypeIds[] = {STRID(BOOL), STRID(UINT), STRID(UINT),
-                                                                                 STRID(UINT)};
-const TDataIOID FORTE_EBBusAdapter::scmEIWith[] = {0, scmWithListDelimiter};
-const TForteInt16 FORTE_EBBusAdapter::scmEIWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_EBBusAdapter::scmEventInputNames[] = {STRID(INITO)};
-const CStringDictionary::TStringId FORTE_EBBusAdapter::scmEventInputTypeIds[] = {STRID(EInit)};
-const TDataIOID FORTE_EBBusAdapter::scmEOWith[] = {2, 3, 1, 0, scmWithListDelimiter};
-const TForteInt16 FORTE_EBBusAdapter::scmEOWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_EBBusAdapter::scmEventOutputNames[] = {STRID(INIT)};
-const CStringDictionary::TStringId FORTE_EBBusAdapter::scmEventOutputTypeIds[] = {STRID(EInit)};
+FORTE_EBBusAdapter::FORTE_EBBusAdapter(forte::core::CFBContainer &paContainer,
+                                       const SFBInterfaceSpec &paInterfaceSpec,
+                                       const CStringDictionary::TStringId paInstanceNameId,
+                                       TForteUInt8 paParentAdapterlistID) :
+    IOConfigFBMultiAdapter(
+        scmSlaveConfigurationIO, paContainer, paInterfaceSpec, paInstanceNameId, paParentAdapterlistID) {
+}
 
-const SFBInterfaceSpec FORTE_EBBusAdapter::scmFBInterfaceSpecSocket = {1,
-                                                                       scmEventInputNames,
-                                                                       scmEventInputTypeIds,
-                                                                       scmEIWith,
-                                                                       scmEIWithIndexes,
-                                                                       1,
-                                                                       scmEventOutputNames,
-                                                                       scmEventOutputTypeIds,
-                                                                       scmEOWith,
-                                                                       scmEOWithIndexes,
-                                                                       1,
-                                                                       scmDataInputNames,
-                                                                       scmDataInputTypeIds,
-                                                                       4,
-                                                                       scmDataOutputNames,
-                                                                       scmDataOutputTypeIds,
-                                                                       0,
-                                                                       nullptr,
-                                                                       0,
-                                                                       nullptr};
+void FORTE_EBBusAdapter::setInitialValues() {
+  var_UpdateInterval = 0_UINT;
+}
 
-const SFBInterfaceSpec FORTE_EBBusAdapter::scmFBInterfaceSpecPlug = {1,
-                                                                     scmEventOutputNames,
-                                                                     scmEventOutputTypeIds,
-                                                                     scmEOWith,
-                                                                     scmEOWithIndexes,
-                                                                     1,
-                                                                     scmEventInputNames,
-                                                                     scmEventInputTypeIds,
-                                                                     scmEIWith,
-                                                                     scmEIWithIndexes,
-                                                                     4,
-                                                                     scmDataOutputNames,
-                                                                     scmDataOutputTypeIds,
-                                                                     1,
-                                                                     scmDataInputNames,
-                                                                     scmDataInputTypeIds,
-                                                                     0,
-                                                                     nullptr,
-                                                                     0,
-                                                                     nullptr};
+FORTE_EBBusAdapter_Plug::FORTE_EBBusAdapter_Plug(CStringDictionary::TStringId paInstanceNameId,
+                                                 forte::core::CFBContainer &paContainer,
+                                                 TForteUInt8 paParentAdapterlistID) :
+    FORTE_EBBusAdapter(paContainer, scmFBInterfaceSpecPlug, paInstanceNameId, paParentAdapterlistID),
+    conn_INITO(*this, 0),
+    conn_QI(nullptr),
+    conn_MasterId(nullptr),
+    conn_MasterIndex(nullptr),
+    conn_UpdateInterval(nullptr),
+    conn_QO(*this, 0, var_QO) {
+}
 
-void FORTE_EBBusAdapter::readInputData(const TEventID paEIID) {
-  if (isSocket()) {
-    switch (paEIID) {
-      case scmEventINITOID: {
-        readData(0, *mDIs[0], mDIConns[0]);
-        break;
-      }
-      default: break;
-    }
-  } else {
-    switch (paEIID) {
-      case scmEventINITID: {
-        readData(2, *mDIs[2], mDIConns[2]);
-        readData(3, *mDIs[3], mDIConns[3]);
-        readData(1, *mDIs[1], mDIConns[1]);
-        readData(0, *mDIs[0], mDIConns[0]);
-        break;
-      }
-      default: break;
+void FORTE_EBBusAdapter_Plug::readInputData(TEventID paEIID) {
+  if (paEIID == scmEventINITID) {
+    readData(0, var_QI, conn_QI);
+    readData(1, var_MasterId, conn_MasterId);
+    readData(2, var_Index, conn_MasterIndex);
+    readData(3, var_UpdateInterval, conn_UpdateInterval);
+    if (getPeer() != nullptr) {
+      getSocket()->var_QI = var_QI;
+      getSocket()->var_MasterId = var_MasterId;
+      getSocket()->var_Index = var_Index;
+      getSocket()->var_UpdateInterval = var_UpdateInterval;
     }
   }
 }
 
-void FORTE_EBBusAdapter::writeOutputData(const TEventID paEIID) {
-  if (isSocket()) {
-    switch (paEIID) {
-      case scmEventINITID: {
-        writeData(scmFBInterfaceSpecSocket.mNumDIs + 2, *mDOs[2], mDOConns[2]);
-        writeData(scmFBInterfaceSpecSocket.mNumDIs + 3, *mDOs[3], mDOConns[3]);
-        writeData(scmFBInterfaceSpecSocket.mNumDIs + 1, *mDOs[1], mDOConns[1]);
-        writeData(scmFBInterfaceSpecSocket.mNumDIs + 0, *mDOs[0], mDOConns[0]);
-        break;
-      }
-      default: break;
-    }
-  } else {
-    switch (paEIID) {
-      case scmEventINITOID: {
-        writeData(scmFBInterfaceSpecPlug.mNumDIs + 0, *mDOs[0], mDOConns[0]);
-        break;
-      }
-      default: break;
+void FORTE_EBBusAdapter_Plug::writeOutputData(TEventID paEIID) {
+  if (paEIID == scmEventINITOID) {
+    writeData(scmFBInterfaceSpecPlug.mNumDIs + 0, var_QO, conn_QO);
+  }
+}
+
+CEventConnection *FORTE_EBBusAdapter_Plug::getEOConUnchecked(TPortId paEONum) {
+  return (paEONum == 0) ? &conn_INITO : nullptr;
+}
+
+CIEC_ANY *FORTE_EBBusAdapter_Plug::getDI(TPortId paDINum) {
+  switch (paDINum) {
+    case 0: return &var_QI; break;
+    case 1: return &var_MasterId; break;
+    case 2: return &var_Index; break;
+    case 3: return &var_UpdateInterval; break;
+  }
+  return nullptr;
+}
+
+CDataConnection **FORTE_EBBusAdapter_Plug::getDIConUnchecked(TPortId paDINum) {
+  switch (paDINum) {
+    case 0: return &conn_QI; break;
+    case 1: return &conn_MasterId; break;
+    case 2: return &conn_MasterIndex; break;
+    case 3: return &conn_UpdateInterval; break;
+  }
+  return nullptr;
+}
+
+CDataConnection *FORTE_EBBusAdapter_Plug::getDOConUnchecked(TPortId paDONum) {
+  return (paDONum == 0) ? &conn_QO : nullptr;
+}
+
+CIEC_ANY *FORTE_EBBusAdapter_Plug::getDO(TPortId paDONum) {
+  return (paDONum == 0) ? &var_QO : nullptr;
+}
+
+FORTE_EBBusAdapter_Socket *FORTE_EBBusAdapter_Plug::getSocket() {
+  return static_cast<FORTE_EBBusAdapter_Socket *>(getPeer());
+}
+
+FORTE_EBBusAdapter_Socket::FORTE_EBBusAdapter_Socket(CStringDictionary::TStringId paInstanceNameId,
+                                                     forte::core::CFBContainer &paContainer,
+                                                     TForteUInt8 paParentAdapterlistID) :
+    FORTE_EBBusAdapter(paContainer, scmFBInterfaceSpecSocket, paInstanceNameId, paParentAdapterlistID),
+    conn_QO(nullptr),
+    conn_INIT(*this, 0),
+    conn_QI(*this, 0, var_QI),
+    conn_MasterId(*this, 1, var_MasterId),
+    conn_MasterIndex(*this, 2, var_Index),
+    conn_UpdateInterval(*this, 3, var_UpdateInterval) {
+}
+
+void FORTE_EBBusAdapter_Socket::readInputData(TEventID paEIID) {
+  if (paEIID == scmEventINITOID) {
+    readData(0, var_QO, conn_QO);
+    if (getPeer() != nullptr) {
+      getPlug()->var_QO = var_QO;
     }
   }
 }
 
-const TForteUInt8 FORTE_EBBusAdapter::scmSlaveConfigurationIO[] = {3};
-const TForteUInt8 FORTE_EBBusAdapter::scmSlaveConfigurationIONum = 1;
+void FORTE_EBBusAdapter_Socket::writeOutputData(TEventID paEIID) {
+  if (paEIID == scmEventINITID) {
+    writeData(scmFBInterfaceSpecSocket.mNumDIs + 0, var_QI, conn_QI);
+    writeData(scmFBInterfaceSpecSocket.mNumDIs + 1, var_MasterId, conn_MasterId);
+    writeData(scmFBInterfaceSpecSocket.mNumDIs + 2, var_Index, conn_MasterIndex);
+    writeData(scmFBInterfaceSpecSocket.mNumDIs + 3, var_UpdateInterval, conn_UpdateInterval);
+  }
+}
+
+CEventConnection *FORTE_EBBusAdapter_Socket::getEOConUnchecked(TPortId paEONum) {
+  return (paEONum == 0) ? &conn_INIT : nullptr;
+}
+
+CIEC_ANY *FORTE_EBBusAdapter_Socket::getDI(TPortId paDINum) {
+  return (paDINum == 0) ? &var_QO : nullptr;
+}
+
+CDataConnection **FORTE_EBBusAdapter_Socket::getDIConUnchecked(TPortId paDINum) {
+  return (paDINum == 0) ? &conn_QO : nullptr;
+}
+
+CDataConnection *FORTE_EBBusAdapter_Socket::getDOConUnchecked(TPortId paDONum) {
+  switch (paDONum) {
+    case 0: return &conn_QI; break;
+    case 1: return &conn_MasterId; break;
+    case 2: return &conn_MasterIndex; break;
+    case 3: return &conn_UpdateInterval; break;
+  }
+  return nullptr;
+}
+
+CIEC_ANY *FORTE_EBBusAdapter_Socket::getDO(TPortId paDONum) {
+  switch (paDONum) {
+    case 0: return &var_QI; break;
+    case 1: return &var_MasterId; break;
+    case 2: return &var_Index; break;
+    case 3: return &var_UpdateInterval; break;
+  }
+  return nullptr;
+}

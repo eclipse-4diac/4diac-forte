@@ -121,12 +121,12 @@ forte::core::CGlobalConstEntry::CGlobalConstEntry(CStringDictionary::TStringId p
   addGlobalConstType(this);
 }
 
-CAdapter *forte::core::createAdapter(CStringDictionary::TStringId paInstanceNameId,
-                                     CStringDictionary::TStringId paAdapterTypeId,
-                                     forte::core::CFBContainer &paContainer,
-                                     bool paIsPlug,
-                                     EMGMResponse &paErrorMSG) {
-  // CAdapter *poNewAdapter = nullptr;
+forte::CAdapter *forte::core::createAdapter(CStringDictionary::TStringId paInstanceNameId,
+                                            CStringDictionary::TStringId paAdapterTypeId,
+                                            forte::core::CFBContainer &paContainer,
+                                            bool paIsPlug,
+                                            TForteUInt8 paParentAdapterlistID,
+                                            EMGMResponse &paErrorMSG) {
   CAdapterTypeEntry *poToCreate = getAdapterTypeEntry(paAdapterTypeId);
   if (poToCreate == nullptr) {
     paErrorMSG = EMGMResponse::UnsupportedType;
@@ -134,7 +134,7 @@ CAdapter *forte::core::createAdapter(CStringDictionary::TStringId paInstanceName
   }
 
   CAdapter *newAdapter =
-      (static_cast<CAdapterTypeEntry *>(poToCreate))->createAdapterInstance(paInstanceNameId, paContainer, paIsPlug);
+      poToCreate->createAdapterInstance(paInstanceNameId, paContainer, paIsPlug, paParentAdapterlistID);
   if (newAdapter == nullptr) {
     paErrorMSG = EMGMResponse::Overflow;
     return nullptr;

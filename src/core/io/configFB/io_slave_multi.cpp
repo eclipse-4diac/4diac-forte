@@ -28,7 +28,7 @@ IOConfigFBMultiSlave::IOConfigFBMultiSlave(const TForteUInt8 *const paSlaveConfi
                                            const SFBInterfaceSpec &paInterfaceSpec,
                                            const CStringDictionary::TStringId paInstanceNameId) :
     IOConfigFBBase(paContainer, paInterfaceSpec, paInstanceNameId),
-    mIndex(-1),
+    mIndex(static_cast<size_t>(-1)),
     mSlaveConfigurationIO(paSlaveConfigurationIO),
     mMaster(nullptr),
     mType(paType),
@@ -46,7 +46,7 @@ IOConfigFBMultiSlave::~IOConfigFBMultiSlave() {
 
 void IOConfigFBMultiSlave::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   if (BusAdapterIn().INIT() == paEIID) {
-    if (BusAdapterIn().QI() == true) {
+    if (BusAdapterIn().var_QI == true) {
       // Handle initialization event
       const char *const error = handleInitEvent();
       QO() = CIEC_BOOL(mInitialized = error == nullptr);
@@ -59,26 +59,26 @@ void IOConfigFBMultiSlave::executeEvent(TEventID paEIID, CEventChainExecutionThr
 
       if (BusAdapterOut().getPeer() != nullptr) {
         // Initialize next slave
-        BusAdapterOut().QI() = BusAdapterIn().QI();
-        BusAdapterOut().Index() = func_ADD(BusAdapterIn().Index(), CIEC_UINT(1));
-        BusAdapterOut().MasterId() = BusAdapterIn().MasterId();
+        BusAdapterOut().var_QI = BusAdapterIn().var_QI;
+        BusAdapterOut().var_Index = func_ADD(BusAdapterIn().var_Index, CIEC_UINT(1));
+        BusAdapterOut().var_MasterId = BusAdapterIn().var_MasterId;
 
-        for (int i = 0; i < BusAdapterIn().mSlaveConfigurationIONum; i++) {
-          CIEC_ANY *ptr = BusAdapterIn().getSlaveConfig(i);
-          if (CIEC_ANY::e_UINT == ptr->getDataTypeID()) {
-            *static_cast<CIEC_UINT *>(BusAdapterOut().getSlaveConfig(i)) = *static_cast<CIEC_UINT *>(ptr);
+        for (auto it : BusAdapterIn().cmSlaveConfigurationIO) {
+          CIEC_ANY *inConfigPin = BusAdapterIn().getDeviceConfigPin(it);
+          if (inConfigPin != nullptr) {
+            BusAdapterOut().getDeviceConfigPin(it)->setValue(*inConfigPin);
           } else {
-            DEVLOG_WARNING("[IOConfigFBMultiSlave] Unable to handle data type %d. Skip adapter configuration\n",
-                           ptr->getDataTypeID());
+            DEVLOG_WARNING("[IOConfigFBMultiSlave] Unable to get device config pin #%d. Skip adapter configuration\n",
+                           it);
           }
         }
 
-        sendAdapterEvent(scmBusAdapterOutAdpNum, IOConfigFBMultiAdapter::scmEventINITID, paECET);
+        sendAdapterEvent(BusAdapterOut(), IOConfigFBMultiAdapter::scmEventINITID, paECET);
         sendOutputEvent(scmEventINDID, paECET);
       } else {
         // Send confirmation of init
-        BusAdapterIn().QO() = QO();
-        sendAdapterEvent(scmBusAdapterInAdpNum, IOConfigFBMultiAdapter::scmEventINITOID, paECET);
+        BusAdapterIn().var_QO = QO();
+        sendAdapterEvent(BusAdapterIn(), IOConfigFBMultiAdapter::scmEventINITOID, paECET);
       }
     } else {
       deInit();
@@ -88,20 +88,20 @@ void IOConfigFBMultiSlave::executeEvent(TEventID paEIID, CEventChainExecutionThr
 
       if (BusAdapterOut().getPeer() != nullptr) {
         // DeInit next slave
-        BusAdapterOut().QI() = BusAdapterIn().QI();
+        BusAdapterOut().var_QI = BusAdapterIn().var_QI;
 
-        sendAdapterEvent(scmBusAdapterOutAdpNum, IOConfigFBMultiAdapter::scmEventINITID, paECET);
+        sendAdapterEvent(BusAdapterOut(), IOConfigFBMultiAdapter::scmEventINITID, paECET);
         sendOutputEvent(scmEventINDID, paECET);
       } else {
         // Send confirmation of deInit
-        BusAdapterIn().QO() = QO();
-        sendAdapterEvent(scmBusAdapterInAdpNum, IOConfigFBMultiAdapter::scmEventINITOID, paECET);
+        BusAdapterIn().var_QO = QO();
+        sendAdapterEvent(BusAdapterIn(), IOConfigFBMultiAdapter::scmEventINITOID, paECET);
       }
     }
   } else if (BusAdapterOut().INITO() == paEIID) {
     // Forward confirmation of initialization
-    BusAdapterIn().QO() = func_AND(BusAdapterOut().QO(), QO());
-    sendAdapterEvent(scmBusAdapterInAdpNum, IOConfigFBMultiAdapter::scmEventINITOID, paECET);
+    BusAdapterIn().var_QO = func_AND(BusAdapterOut().var_QO, QO());
+    sendAdapterEvent(BusAdapterIn(), IOConfigFBMultiAdapter::scmEventINITOID, paECET);
   }
 
   if (scmEventMAPID == paEIID) {
@@ -128,14 +128,14 @@ void IOConfigFBMultiSlave::initHandle(IODeviceController::HandleDescriptor &paHa
 
 const char *IOConfigFBMultiSlave::handleInitEvent() {
   // Get master by id
-  mMaster = IOConfigFBMultiMaster::getMasterById(static_cast<CIEC_UINT::TValueType>(BusAdapterIn().MasterId()));
+  mMaster = IOConfigFBMultiMaster::getMasterById(static_cast<CIEC_UINT::TValueType>(BusAdapterIn().var_MasterId));
   if (nullptr == mMaster) {
     return scmMasterNotFound;
   }
-  mIndex = static_cast<CIEC_UINT::TValueType>(BusAdapterIn().Index());
+  mIndex = static_cast<CIEC_UINT::TValueType>(BusAdapterIn().var_Index);
 
   // Default parameters
-  for (int i = 0; i < mSlaveConfigurationIONum; i++) {
+  for (size_t i = 0; i < mSlaveConfigurationIONum; i++) {
     bool isSet = true;
 
     CIEC_ANY *ptr = getDI(mSlaveConfigurationIO[i]);
@@ -151,8 +151,8 @@ const char *IOConfigFBMultiSlave::handleInitEvent() {
       mSlaveConfigurationIOIsDefault[i] = true;
     }
 
-    if (mSlaveConfigurationIOIsDefault[i] && CIEC_ANY::e_UINT == ptr->getDataTypeID()) {
-      *static_cast<CIEC_UINT *>(ptr) = *static_cast<CIEC_UINT *>(BusAdapterIn().getSlaveConfig(i));
+    if (mSlaveConfigurationIOIsDefault[i]) {
+      ptr->setValue(*BusAdapterIn().getDeviceConfigPin(BusAdapterIn().cmSlaveConfigurationIO[i]));
     }
   }
 

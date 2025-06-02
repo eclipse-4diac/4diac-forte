@@ -22,6 +22,7 @@
 
 #include "event.h"
 #include "stringdict.h"
+#include <span>
 
 using TDataIOID = TPortId; //!< \ingroup CORE Type for holding an data In- or output ID
 
@@ -72,6 +73,9 @@ struct SFBInterfaceSpec {
     TPortId mNumAdapters; //!< Number of Adapters
     const SAdapterInstanceDef *mAdapterInstanceDefinition; //!< List of adapter instances
 
+    std::span<const CStringDictionary::TStringId> mSocketNames;
+    std::span<const CStringDictionary::TStringId> mPlugNames;
+
     /*!\brief Get the ID of a specific event input of the FB.
      *
      * \param paEINameId   StringId to the event input name.
@@ -116,4 +120,8 @@ struct SFBInterfaceSpec {
      * \return Returns index of the Data Output Array of a FB
      */
     TPortId getDIOID(CStringDictionary::TStringId paDIONameId) const;
+
+    TPortId getPlugID(CStringDictionary::TStringId paPlugNameId) const;
+
+    TPortId getSocketID(CStringDictionary::TStringId paSocketNameId) const;
 };

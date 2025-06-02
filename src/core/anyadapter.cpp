@@ -8,58 +8,109 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    Alois Zoitl
- *      - initial implementation and rework communication infrastructure
- *    Martin Melik Merkumians - fixes event chain initialisation, adds typifyAnyAdapter
- *    Alois Zoitl - introduced new CGenFB class for better handling generic FBs
+ *   Alois Zoitl - initial implementation and rework communication infrastructure
+ *   Martin Melik Merkumians - fixes event chain initialisation, adds typifyAnyAdapter
+ *   Alois Zoitl - introduced new CGenFB class for better handling generic FBs
+                 - re-implementation for new communication infrastructure
  *******************************************************************************/
 #include "anyadapter.h"
+#include "adapter.h"
+#include "funcbloc.h"
+#include "typelib_internal.h"
 
 USE_STRING_ID(ANY_ADAPTER);
 
-DEFINE_GENERIC_ADAPTER_TYPE(CAnyAdapter, STRID(ANY_ADAPTER))
+using namespace forte;
 
-const SFBInterfaceSpec CAnyAdapter::scmFBInterfaceSpec = {0,       nullptr, nullptr, nullptr, nullptr, 0,       nullptr,
-                                                          nullptr, nullptr, nullptr, 0,       nullptr, nullptr, 0,
-                                                          nullptr, nullptr, 0,       nullptr, 0,       nullptr};
-
-CAnyAdapter::CAnyAdapter(CStringDictionary::TStringId paAdapterInstanceName,
-                         forte::core::CFBContainer &paContainer,
-                         bool paIsPlug) :
-    CAdapter(paContainer, scmFBInterfaceSpec, paAdapterInstanceName, scmFBInterfaceSpec, paIsPlug) {
+CAnyAdapterPin::CAnyAdapterPin(CStringDictionary::TStringId paInstanceNameId) : mInstanceNameId(paInstanceNameId) {
 }
 
-CAnyAdapter::~CAnyAdapter() = default;
-
-void CAnyAdapter::typifyAnyAdapter(const CAdapter &paPeer) {
-  getGenInterfaceSpec().mNumEIs = paPeer.getFBInterfaceSpec().mNumEOs;
-  getGenInterfaceSpec().mEINames = paPeer.getFBInterfaceSpec().mEONames;
-  getGenInterfaceSpec().mEIWith = paPeer.getFBInterfaceSpec().mEOWith;
-  getGenInterfaceSpec().mEIWithIndexes = paPeer.getFBInterfaceSpec().mEOWithIndexes;
-  getGenInterfaceSpec().mNumEOs = paPeer.getFBInterfaceSpec().mNumEIs;
-  getGenInterfaceSpec().mEONames = paPeer.getFBInterfaceSpec().mEINames;
-  getGenInterfaceSpec().mEOWith = paPeer.getFBInterfaceSpec().mEIWith;
-  getGenInterfaceSpec().mEOWithIndexes = paPeer.getFBInterfaceSpec().mEIWithIndexes;
-  getGenInterfaceSpec().mNumDIs = paPeer.getFBInterfaceSpec().mNumDOs;
-  getGenInterfaceSpec().mDINames = paPeer.getFBInterfaceSpec().mDONames;
-  getGenInterfaceSpec().mDIDataTypeNames = paPeer.getFBInterfaceSpec().mDODataTypeNames;
-  getGenInterfaceSpec().mNumDOs = paPeer.getFBInterfaceSpec().mNumDIs;
-  getGenInterfaceSpec().mDONames = paPeer.getFBInterfaceSpec().mDINames;
-  getGenInterfaceSpec().mDODataTypeNames = paPeer.getFBInterfaceSpec().mDIDataTypeNames;
-  getGenInterfaceSpec().mNumDIOs = paPeer.getFBInterfaceSpec().mNumDIOs;
-  getGenInterfaceSpec().mDIONames = paPeer.getFBInterfaceSpec().mDIONames;
-  setupFBInterface();
-
-  mOutputEventIds.resize(getFBInterfaceSpec().mNumEOs);
-  fillEventEntryList();
+CAnyAdapterPin::~CAnyAdapterPin() {
+  removeConfiguredAdapter();
 }
 
-bool CAnyAdapter::disconnect(CAdapterConnection *paAdConn) {
-  bool bRetVal = CAdapter::disconnect(paAdConn);
+void CAnyAdapterPin::createConfiguredAdapter(CAdapter *paPeer,
+                                             CFunctionBlock &paParent,
+                                             bool paIsPlug,
+                                             TForteUInt8 paParentAdapterlistID) {
+  removeConfiguredAdapter();
+  EMGMResponse errorMSG;
+  mConfiguredAdapter = std::unique_ptr<CAdapter>(forte::core::createAdapter(
+      mInstanceNameId, paPeer->getFBTypeId(), paParent, paIsPlug, paParentAdapterlistID, errorMSG));
 
-  // clean interface data and reset to empty interface
-  getGenInterfaceSpec() = scmFBInterfaceSpec;
-  setupFBInterface();
+  if (mConfiguredAdapter) {
+    paParent.addFB(*mConfiguredAdapter);
+    mConfiguredAdapter->setPeer(paPeer);
+  }
+}
 
-  return bRetVal;
+void CAnyAdapterPin::removeConfiguredAdapter() {
+  if (mConfiguredAdapter) {
+    mConfiguredAdapter->getParent().removeFB(*mConfiguredAdapter);
+  }
+}
+
+CAnyPlugPin::CAnyPlugPin(CStringDictionary::TStringId paInstanceNameId,
+                         CFunctionBlock &paParentFB,
+                         TForteUInt8 paParentAdapterlistID) :
+    CAnyAdapterPin(paInstanceNameId),
+    mAdapterCon(paParentFB, paParentAdapterlistID, *this) {
+}
+
+forte::CAdapter *CAnyPlugPin::getAdapterBlock() {
+  return mConfiguredAdapter.get();
+}
+
+CStringDictionary::TStringId CAnyPlugPin::getAdapterTypeId() const {
+  return (mConfiguredAdapter) ? mConfiguredAdapter->getFBTypeId() : STRID(ANY_ADAPTER);
+}
+
+bool CAnyPlugPin::isCompatible(IAdapterPin &paPeer) {
+  return paPeer.getAdapterTypeId() != STRID(ANY_ADAPTER);
+}
+
+CAdapterConnection &CAnyPlugPin::getAdapterCon() {
+  return mAdapterCon;
+}
+
+void CAnyPlugPin::setPeer(CAdapter *paPeer) {
+  if (paPeer != nullptr) {
+    auto srcInfo = mAdapterCon.getSourceId();
+    createConfiguredAdapter(paPeer, srcInfo.getFB(), true, static_cast<TForteUInt8>(srcInfo.getPortId()));
+  }
+}
+
+CAnySocketPin::CAnySocketPin(CStringDictionary::TStringId paInstanceNameId,
+                             CFunctionBlock &paParentFB,
+                             TForteUInt8 paParentAdapterlistID) :
+    CAnyAdapterPin(paInstanceNameId),
+    mParentFB(paParentFB),
+    mParentAdapterlistID(paParentAdapterlistID) {
+}
+
+forte::CAdapter *CAnySocketPin::getAdapterBlock() {
+  return mConfiguredAdapter.get();
+}
+
+CStringDictionary::TStringId CAnySocketPin::getAdapterTypeId() const {
+  return (mConfiguredAdapter) ? mConfiguredAdapter->getFBTypeId() : STRID(ANY_ADAPTER);
+}
+
+bool CAnySocketPin::isCompatible(IAdapterPin &paPeer) {
+  return paPeer.getAdapterTypeId() != STRID(ANY_ADAPTER);
+}
+
+bool CAnySocketPin::connect(CAdapterConnection &paConn) {
+  mAdapterCon = &paConn;
+  createConfiguredAdapter(paConn.getPlug().getAdapterBlock(), mParentFB, true, mParentAdapterlistID);
+  if (!mConfiguredAdapter) {
+    return false;
+  }
+  paConn.getPlug().setPeer(getAdapterBlock());
+  return true;
+}
+
+void CAnySocketPin::disconnect() {
+  removeConfiguredAdapter();
+  mAdapterCon = nullptr;
 }

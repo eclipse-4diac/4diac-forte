@@ -40,10 +40,10 @@ void IOConfigFBMultiMaster::onStartup(CEventChainExecutionThread *const paECET) 
     return IOConfigFBController::onStartup(paECET);
   }
 
-  BusAdapterOut().MasterId() = CIEC_UINT(mId);
-  BusAdapterOut().Index() = 0_UINT;
-  BusAdapterOut().QI() = true_BOOL;
-  sendAdapterEvent(scmBusAdapterAdpNum, IOConfigFBMultiAdapter::scmEventINITID, paECET);
+  BusAdapterOut().var_MasterId = CIEC_UINT(mId);
+  BusAdapterOut().var_Index = 0_UINT;
+  BusAdapterOut().var_QI = true_BOOL;
+  sendAdapterEvent(BusAdapterOut(), IOConfigFBMultiAdapter::scmEventINITID, paECET);
 }
 
 void IOConfigFBMultiMaster::onStop(CEventChainExecutionThread *const paECET) {
@@ -51,18 +51,18 @@ void IOConfigFBMultiMaster::onStop(CEventChainExecutionThread *const paECET) {
     return IOConfigFBController::onStop(paECET);
   }
 
-  BusAdapterOut().QI() = false_BOOL;
-  sendAdapterEvent(scmBusAdapterAdpNum, IOConfigFBMultiAdapter::scmEventINITID, paECET);
+  BusAdapterOut().var_QI = false_BOOL;
+  sendAdapterEvent(BusAdapterOut(), IOConfigFBMultiAdapter::scmEventINITID, paECET);
 }
 
 void IOConfigFBMultiMaster::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   IOConfigFBController::executeEvent(paEIID, paECET);
 
   if (BusAdapterOut().INITO() == paEIID) {
-    QO() = BusAdapterOut().QO();
+    QO() = BusAdapterOut().var_QO;
 
-    if (BusAdapterOut().QI() == true) {
-      if (BusAdapterOut().QO() == true) {
+    if (BusAdapterOut().var_QI == true) {
+      if (BusAdapterOut().var_QO == true) {
         IOConfigFBController::onStartup(paECET);
       } else {
         started(paECET, scmFailedToInitSlaves);

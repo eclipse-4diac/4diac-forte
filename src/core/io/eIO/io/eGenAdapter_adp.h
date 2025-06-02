@@ -14,36 +14,64 @@
 
 #include "core/adapter.h"
 #include "core/typelib.h"
-#include "core/iec61131_functions.h"
-#include "core/datatypes/forte_array_common.h"
-#include "core/datatypes/forte_array.h"
-#include "core/datatypes/forte_array_fixed.h"
-#include "core/datatypes/forte_array_variable.h"
 
-class FORTE_eGenAdapter final : public CAdapter {
-  DECLARE_ADAPTER_TYPE(FORTE_eGenAdapter)
+class FORTE_eGenAdapter : public forte::CAdapter {
+    DECLARE_ADAPTER_TYPE(FORTE_eGenAdapter)
 
-  private:
+  public:
+    FORTE_eGenAdapter(forte::core::CFBContainer &paContainer,
+                      const SFBInterfaceSpec &paInterfaceSpec,
+                      const CStringDictionary::TStringId paInstanceNameId,
+                      TForteUInt8 paParentAdapterlistID) :
+        forte::CAdapter(paContainer, paInterfaceSpec, paInstanceNameId, paParentAdapterlistID) {};
 
-    static const SFBInterfaceSpec scmFBInterfaceSpecSocket;
+    ~FORTE_eGenAdapter() override = default;
 
-    static const SFBInterfaceSpec scmFBInterfaceSpecPlug;
+    void setInitialValues() override;
+};
+
+class FORTE_eGenAdapter_Socket;
+
+class FORTE_eGenAdapter_Plug final : public FORTE_eGenAdapter {
+  public:
+    FORTE_eGenAdapter_Plug(CStringDictionary::TStringId paInstanceNameId,
+                           forte::core::CFBContainer &paContainer,
+                           TForteUInt8 paParentAdapterlistID);
+    ~FORTE_eGenAdapter_Plug() override = default;
 
     void readInputData(TEventID paEIID) override;
     void writeOutputData(TEventID paEIID) override;
-  public:
-    FORTE_eGenAdapter(CStringDictionary::TStringId paAdapterInstanceName, forte::core::CFBContainer &paContainer, bool paIsPlug) :
-        CAdapter(paContainer, scmFBInterfaceSpecSocket, paAdapterInstanceName, scmFBInterfaceSpecPlug, paIsPlug) {
-    };
 
-    virtual ~FORTE_eGenAdapter() = default;
+  protected:
+    CEventConnection *getEOConUnchecked(TPortId paEONum) override;
+    CIEC_ANY *getDI(TPortId paDINum) override;
+    CDataConnection **getDIConUnchecked(TPortId paDINum) override;
+    CDataConnection *getDOConUnchecked(TPortId paDONum) override;
+    CIEC_ANY *getDO(TPortId paDONum) override;
 
-    /* MODIFIED */
-    CFunctionBlock *parentFB;
-
-    void setParentFB(CFunctionBlock *paParentFB, TForteUInt8 paParentAdapterlistID) override {
-      CAdapter::setParentFB(paParentFB, paParentAdapterlistID);
-      parentFB = paParentFB;
-    }
+  private:
+    FORTE_eGenAdapter_Socket *getSocket();
 };
 
+class FORTE_eGenAdapter_Socket final : public FORTE_eGenAdapter {
+  public:
+    FORTE_eGenAdapter_Socket(CStringDictionary::TStringId paInstanceNameId,
+                             forte::core::CFBContainer &paContainer,
+                             TForteUInt8 paParentAdapterlistID);
+    ~FORTE_eGenAdapter_Socket() override = default;
+
+    void readInputData(TEventID paEIID) override;
+    void writeOutputData(TEventID paEIID) override;
+
+  protected:
+    CEventConnection *getEOConUnchecked(TPortId paEONum) override;
+    CIEC_ANY *getDI(TPortId paDINum) override;
+    CDataConnection **getDIConUnchecked(TPortId paDINum) override;
+    CDataConnection *getDOConUnchecked(TPortId paDONum) override;
+    CIEC_ANY *getDO(TPortId paDONum) override;
+
+  private:
+    FORTE_eGenAdapter_Plug *getPlug() {
+      return static_cast<FORTE_eGenAdapter_Plug *>(getPeer());
+    }
+};
