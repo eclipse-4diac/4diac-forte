@@ -21,6 +21,7 @@ class CDevice;
 
 #include <memory>
 #include <vector>
+#include <cstdint>
 
 /**\ingroup CORE
  Handles all the IEC 61499 execution requests and aspects within one device
