@@ -18,6 +18,4 @@
 SET(SOURCE_GROUP ${SOURCE_GROUP}\\configFB)
 
 forte_add_sourcefile_hcpp(io_base io_configFB_controller 
-                           io_adapter_multi io_master_multi io_slave_multi
-                           io_adapter_split io_controller_split io_controller_part
-                           )
+                           io_adapter_multi io_master_multi io_slave_multi)
