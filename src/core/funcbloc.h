@@ -539,13 +539,6 @@ class CFunctionBlock : public forte::core::CFBContainer {
       return nullptr;
     }
 
-    /*!\brief Function to skip to the next data point
-     *
-     * @param paDataTypeIds pointer to the data type ids. If the datatype
-     *        is an Array to more values are taken from the array.
-     */
-    static void nextDataPoint(const CStringDictionary::TStringId *&paDataTypeIds);
-
     /*!\brief Function to create an adapter instance
      *
      * @param paAdapterInstanceDefinition the adapter instance definition

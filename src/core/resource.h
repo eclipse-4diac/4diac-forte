@@ -230,65 +230,6 @@ class CResource : public CFunctionBlock {
      */
     EMGMResponse readValue(forte::core::TNameIdentifier &paNameList, std::string &paValue);
 
-#ifdef FORTE_SUPPORT_QUERY_CMD
-    /*!\brief Read the existing fb types.
-     *
-     * @return response of the command execution as defined in IEC 61499
-     */
-    static EMGMResponse queryAllFBTypes(std::string &paValue);
-
-    /*!\brief Read the existing adapter types.
-     *
-     * @return response of the command execution as defined in IEC 61499
-     */
-    static EMGMResponse queryAllAdapterTypes(std::string &paValue);
-
-    static EMGMResponse queryAllGlobalConstTypes(std::string &paValue);
-
-    /*!\brief Retrieve the list of FB instances
-     *
-     * @param paValue the result of the query
-     * @return response of the command execution as defined in IEC 61499
-     */
-    static EMGMResponse queryFBs(std::string &paValue, const CFBContainer &container, std::string prefix);
-    static void createFBResponseMessage(const CFunctionBlock &paFb, const std::string &fullName, std::string &paValue);
-
-    EMGMResponse queryConnections(std::string &paValue, const CFBContainer &container);
-    static void createEOConnectionResponse(const CFunctionBlock &paFb, std::string &paReqResult);
-    static void createDOConnectionResponse(const CFunctionBlock &paFb, std::string &paReqResult);
-    static void createAOConnectionResponse(const CFunctionBlock &paFb, std::string &paReqResult);
-    static void createConnectionResponseMessage(const CConnection &paConn,
-                                                const CFunctionBlock &paDstFb,
-                                                CStringDictionary::TStringId paDstId,
-                                                std::string &paReqResult);
-
-    EMGMResponse createFBTypeResponseMessage(const CStringDictionary::TStringId paTypeNameId,
-                                             std::string_view paTypeHash,
-                                             std::string &paReqResult);
-    EMGMResponse createDataTypeResponseMessage(const CStringDictionary::TStringId paTypeNameId,
-                                               std::string_view paTypeHash,
-                                               std::string &paReqResult);
-
-    EMGMResponse createAdapterTypeResponseMessage(const CStringDictionary::TStringId paTypeNameId,
-                                                  std::string_view paTypeHash,
-                                                  std::string &paReqResult);
-
-    EMGMResponse createGlobalConstTypeResponseMessage(const CStringDictionary::TStringId paTypeNameId,
-                                                      std::string_view paTypeHash,
-                                                      std::string &paReqResult);
-
-#endif // FORTE_SUPPORT_QUERY_CMD
-
-#ifdef FORTE_DYNAMIC_TYPE_LOAD
-    /*!\brief create
-     *
-     * @return response of the command execution as defined in IEC 61499
-     */
-    EMGMResponse createFBTypeFromLua(CStringDictionary::TStringId typeNameId, const std::string &paLuaScriptAsString);
-
-    EMGMResponse createAdapterTypeFromLua(CStringDictionary::TStringId typeNameId,
-                                          const std::string &paLuaScriptAsString);
-#endif
     /*!\brief get the variable with the given name identifier
      *
      * @param paNameList the identifier name list of the variable to be retrieved

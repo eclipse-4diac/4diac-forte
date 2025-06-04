@@ -43,6 +43,223 @@ USE_STRING_ID(START);
 
 using namespace std::string_literals;
 
+#ifdef FORTE_SUPPORT_QUERY_CMD
+
+namespace {
+
+  template<typename T>
+  void appendTypeNameList(std::string &paValue, const std::vector<T *> &paTypeEntries) {
+    if (!paTypeEntries.empty()) {
+      for (T *entry : paTypeEntries) {
+        paValue += entry->getTypeName();
+        paValue += ", ";
+      }
+      paValue.erase(paValue.size() - 2);
+    }
+  }
+
+  EMGMResponse queryAllFBTypes(std::string &paValue) {
+    appendTypeNameList(paValue, CTypeLib::getFBTypeEntries());
+    return EMGMResponse::Ready;
+  }
+
+  EMGMResponse queryAllAdapterTypes(std::string &paValue) {
+    appendTypeNameList(paValue, CTypeLib::getAdapterTypeEntries());
+    return EMGMResponse::Ready;
+  }
+
+  EMGMResponse queryAllGlobalConstTypes(std::string &paValue) {
+    appendTypeNameList(paValue, CTypeLib::getGlobalConstEntries());
+    return EMGMResponse::Ready;
+  }
+
+  void createConnectionResponseMessage(const CConnection &paConn,
+                                       const CFunctionBlock &paDstFb,
+                                       const CStringDictionary::TStringId paDstId,
+                                       std::string &paReqResult) {
+    paReqResult += "<Connection Source=\""s;
+
+    forte::core::TNameIdentifier srcNameList;
+    paConn.getSourceId().getFB().getFullQualifiedApplicationInstanceName(srcNameList);
+    paConn.getSourcePortName(srcNameList);
+    forte::core::util::join(srcNameList.cbegin(), srcNameList.cend(), CStringDictionary::get, '.', paReqResult);
+
+    paReqResult.append("\" Destination=\""s);
+
+    paReqResult += paDstFb.getFullQualifiedApplicationInstanceName('.');
+    paReqResult += "."s;
+    paReqResult += CStringDictionary::get(paDstId);
+
+    paReqResult.append("\"/>\n"s);
+  }
+
+  void createEOConnectionResponse(const CFunctionBlock &paFb, std::string &paReqResult) {
+    const SFBInterfaceSpec &spec(paFb.getFBInterfaceSpec());
+    for (size_t i = 0; i < spec.mNumEOs; i++) {
+      const CEventConnection *eConn = paFb.getEOConnection(spec.mEONames[i]);
+      if (eConn) {
+        for (const auto &it : eConn->getDestinationList()) {
+          createConnectionResponseMessage(*eConn, it.getFB(), it.getFB().getFBInterfaceSpec().mEINames[it.getPortId()],
+                                          paReqResult);
+        }
+      }
+    }
+  }
+
+  void createDOConnectionResponse(const CFunctionBlock &paFb, std::string &paReqResult) {
+    const SFBInterfaceSpec &spec(paFb.getFBInterfaceSpec());
+    for (size_t i = 0; i < spec.mNumDIs; i++) {
+      const CDataConnection *const dConn = paFb.getDIConnection(spec.mDINames[i]);
+      if (dConn != nullptr) {
+        createConnectionResponseMessage(*dConn, paFb, spec.mDINames[i], paReqResult);
+      }
+    }
+  }
+
+  void createAOConnectionResponse(const CFunctionBlock &paFb, std::string &paReqResult) {
+    const SFBInterfaceSpec &spec(paFb.getFBInterfaceSpec());
+    for (size_t i = 0; i < spec.mNumAdapters; i++) {
+      const CAdapter *const adapter = paFb.getAdapter(spec.mAdapterInstanceDefinition[i].mAdapterNameID);
+      const CAdapterConnection *aConn = adapter->getAdapterConnection();
+      if (!spec.mAdapterInstanceDefinition[i].mIsPlug && aConn != nullptr && aConn->isConnected()) {
+        createConnectionResponseMessage(*aConn, paFb, adapter->getInstanceNameId(), paReqResult);
+      }
+    }
+  }
+
+  void createFBResponseMessage(const CFunctionBlock &paFb, const std::string &fullName, std::string &paValue) {
+    paValue += "<FB name=\""s;
+    paValue += fullName;
+    paValue += "\" type=\""s;
+    paValue += paFb.getFBTypeName();
+    paValue += "\"/>\n"s;
+  }
+
+  EMGMResponse queryFBs(std::string &paValue, const forte::core::CFBContainer &container, const std::string prefix) {
+    for (auto itRunner : container.getChildren()) {
+      if (itRunner->isFB()) {
+        const CFunctionBlock &fb = static_cast<const CFunctionBlock &>(*itRunner);
+        createFBResponseMessage(fb, prefix + fb.getInstanceName(), paValue);
+      } else {
+        queryFBs(paValue, *itRunner, prefix + itRunner->getInstanceName() + "."s);
+      }
+    }
+    return EMGMResponse::Ready;
+  }
+
+  EMGMResponse queryConnections(std::string &paReqResult, const forte::core::CFBContainer &container) {
+    for (auto itRunner : container.getChildren()) {
+      if (itRunner->isFB()) {
+        const CFunctionBlock &fb = static_cast<const CFunctionBlock &>(*itRunner);
+        createEOConnectionResponse(fb, paReqResult);
+        createDOConnectionResponse(fb, paReqResult);
+        createAOConnectionResponse(fb, paReqResult);
+      } else {
+        queryConnections(paReqResult, *itRunner);
+      }
+    }
+    return EMGMResponse::Ready;
+  }
+
+  template<class T>
+  EMGMResponse createQueryTypeResponseMessage(T *paTypeEntry,
+                                              std::string_view paTypeHash,
+                                              std::string &paReqResult,
+                                              std::string_view paResponsePrefix) {
+    if (paTypeEntry == nullptr) {
+      return EMGMResponse::UnsupportedType;
+    }
+
+    if (paTypeHash.empty()) {
+      // return type hash
+      paReqResult = '<';
+      paReqResult += paResponsePrefix;
+      paReqResult += " Name=\""s;
+      paReqResult += paTypeEntry->getTypeName();
+      paReqResult += '#';
+      paReqResult += paTypeEntry->getTypeHash();
+      paReqResult += "\"/>"s;
+    } else {
+      // we can only clear paReqResult after this type hash check
+      if (paTypeHash != paTypeEntry->getTypeHash()) {
+        paReqResult.clear();
+        return EMGMResponse::UnsupportedType;
+      }
+      paReqResult.clear();
+    }
+
+    return EMGMResponse::Ready;
+  }
+
+  EMGMResponse createFBTypeResponseMessage(const CStringDictionary::TStringId paTypeNameId,
+                                           std::string_view paTypeHash,
+                                           std::string &paReqResult) {
+    return createQueryTypeResponseMessage(CTypeLib::getFBTypeEntry(paTypeNameId), paTypeHash, paReqResult, "FBType");
+  }
+
+  EMGMResponse createDataTypeResponseMessage(const CStringDictionary::TStringId paTypeNameId,
+                                             std::string_view paTypeHash,
+                                             std::string &paReqResult) {
+    return createQueryTypeResponseMessage(CTypeLib::getDataTypeEntry(paTypeNameId), paTypeHash, paReqResult,
+                                          "DataType");
+  }
+
+  EMGMResponse createAdapterTypeResponseMessage(const CStringDictionary::TStringId paTypeNameId,
+                                                std::string_view paTypeHash,
+                                                std::string &paReqResult) {
+    return createQueryTypeResponseMessage(CTypeLib::getAdapterTypeEntry(paTypeNameId), paTypeHash, paReqResult,
+                                          "AdapterType");
+  }
+
+  EMGMResponse createGlobalConstTypeResponseMessage(const CStringDictionary::TStringId paTypeNameId,
+                                                    std::string_view paTypeHash,
+                                                    std::string &paReqResult) {
+    return createQueryTypeResponseMessage(CTypeLib::getGlobalConstTypeEntry(paTypeNameId), paTypeHash, paReqResult,
+                                          "GlobalConstType");
+  }
+
+} // namespace
+
+#endif // FORTE_SUPPORT_QUERY_CMD
+
+#ifdef FORTE_DYNAMIC_TYPE_LOAD
+
+namespace {
+
+  EMGMResponse createFBTypeFromLua(CStringDictionary::TStringId typeNameId, const std::string &paLuaScriptAsString) {
+    EMGMResponse retVal = EMGMResponse::UnsupportedType;
+
+    if (paLuaScriptAsString.find("internalFBs") != std::string::npos) { // CFBType
+      if (CLuaCFBTypeEntry::createLuaFBTypeEntry(typeNameId, paLuaScriptAsString) != nullptr) {
+        retVal = EMGMResponse::Ready;
+      } else {
+        retVal = EMGMResponse::InvalidOperation;
+      }
+    } else { // BFBType
+      if (CLuaBFBTypeEntry::createLuaFBTypeEntry(typeNameId, paLuaScriptAsString) != nullptr) {
+        retVal = EMGMResponse::Ready;
+      } else {
+        retVal = EMGMResponse::InvalidOperation;
+      }
+    }
+    return retVal;
+  }
+
+  EMGMResponse createAdapterTypeFromLua(CStringDictionary::TStringId typeNameId,
+                                        const std::string &paLuaScriptAsString) {
+    EMGMResponse retVal = EMGMResponse::UnsupportedType;
+    if (CLuaAdapterTypeEntry::createLuaAdapterTypeEntry(typeNameId, paLuaScriptAsString) != nullptr) {
+      retVal = EMGMResponse::Ready;
+    } else {
+      retVal = EMGMResponse::InvalidOperation;
+    }
+    return retVal;
+  }
+
+} // namespace
+
+#endif // FORTE_DYNAMIC_TYPE_LOAD
+
 CResource::CResource(forte::core::CFBContainer &paDevice,
                      const SFBInterfaceSpec &paInterfaceSpec,
                      const CStringDictionary::TStringId paInstanceNameId) :
@@ -344,222 +561,6 @@ EMGMResponse CResource::readValue(forte::core::TNameIdentifier &paNameList, std:
   }
   return EMGMResponse::Ready;
 }
-
-#ifdef FORTE_SUPPORT_QUERY_CMD
-
-namespace {
-
-  template<typename T>
-  void appendTypeNameList(std::string &paValue, const std::vector<T *> &paTypeEntries) {
-    if (!paTypeEntries.empty()) {
-      for (T *entry : paTypeEntries) {
-        paValue += entry->getTypeName();
-        paValue += ", ";
-      }
-      paValue.erase(paValue.size() - 2);
-    }
-  }
-
-} // namespace
-
-EMGMResponse CResource::queryAllFBTypes(std::string &paValue) {
-  appendTypeNameList(paValue, CTypeLib::getFBTypeEntries());
-  return EMGMResponse::Ready;
-}
-
-EMGMResponse CResource::queryAllAdapterTypes(std::string &paValue) {
-  appendTypeNameList(paValue, CTypeLib::getAdapterTypeEntries());
-  return EMGMResponse::Ready;
-}
-
-EMGMResponse CResource::queryAllGlobalConstTypes(std::string &paValue) {
-  appendTypeNameList(paValue, CTypeLib::getGlobalConstEntries());
-  return EMGMResponse::Ready;
-}
-
-EMGMResponse CResource::queryFBs(std::string &paValue, const CFBContainer &container, const std::string prefix) {
-  for (auto itRunner : container.getChildren()) {
-    if (itRunner->isFB()) {
-      const CFunctionBlock &fb = static_cast<const CFunctionBlock &>(*itRunner);
-      createFBResponseMessage(fb, prefix + fb.getInstanceName(), paValue);
-    } else {
-      queryFBs(paValue, *itRunner, prefix + itRunner->getInstanceName() + "."s);
-    }
-  }
-  return EMGMResponse::Ready;
-}
-
-EMGMResponse CResource::queryConnections(std::string &paReqResult, const CFBContainer &container) {
-  for (auto itRunner : container.getChildren()) {
-    if (itRunner->isFB()) {
-      const CFunctionBlock &fb = static_cast<const CFunctionBlock &>(*itRunner);
-      createEOConnectionResponse(fb, paReqResult);
-      createDOConnectionResponse(fb, paReqResult);
-      createAOConnectionResponse(fb, paReqResult);
-    } else {
-      queryConnections(paReqResult, *itRunner);
-    }
-  }
-  return EMGMResponse::Ready;
-}
-
-void CResource::createEOConnectionResponse(const CFunctionBlock &paFb, std::string &paReqResult) {
-  const SFBInterfaceSpec &spec(paFb.getFBInterfaceSpec());
-  for (size_t i = 0; i < spec.mNumEOs; i++) {
-    const CEventConnection *eConn = paFb.getEOConnection(spec.mEONames[i]);
-    if (eConn) {
-      for (const auto &it : eConn->getDestinationList()) {
-        createConnectionResponseMessage(*eConn, it.getFB(), it.getFB().getFBInterfaceSpec().mEINames[it.getPortId()],
-                                        paReqResult);
-      }
-    }
-  }
-}
-
-void CResource::createDOConnectionResponse(const CFunctionBlock &paFb, std::string &paReqResult) {
-  const SFBInterfaceSpec &spec(paFb.getFBInterfaceSpec());
-  for (size_t i = 0; i < spec.mNumDIs; i++) {
-    const CDataConnection *const dConn = paFb.getDIConnection(spec.mDINames[i]);
-    if (dConn != nullptr) {
-      createConnectionResponseMessage(*dConn, paFb, spec.mDINames[i], paReqResult);
-    }
-  }
-}
-
-void CResource::createAOConnectionResponse(const CFunctionBlock &paFb, std::string &paReqResult) {
-  const SFBInterfaceSpec &spec(paFb.getFBInterfaceSpec());
-  for (size_t i = 0; i < spec.mNumAdapters; i++) {
-    const CAdapter *const adapter = paFb.getAdapter(spec.mAdapterInstanceDefinition[i].mAdapterNameID);
-    const CAdapterConnection *aConn = adapter->getAdapterConnection();
-    if (!spec.mAdapterInstanceDefinition[i].mIsPlug && aConn != nullptr && aConn->isConnected()) {
-      createConnectionResponseMessage(*aConn, paFb, adapter->getInstanceNameId(), paReqResult);
-    }
-  }
-}
-
-void CResource::createFBResponseMessage(const CFunctionBlock &paFb, const std::string &fullName, std::string &paValue) {
-  paValue += "<FB name=\""s;
-  paValue += fullName;
-  paValue += "\" type=\""s;
-  paValue += paFb.getFBTypeName();
-  paValue += "\"/>\n"s;
-}
-
-void CResource::createConnectionResponseMessage(const CConnection &paConn,
-                                                const CFunctionBlock &paDstFb,
-                                                const CStringDictionary::TStringId paDstId,
-                                                std::string &paReqResult) {
-  paReqResult += "<Connection Source=\""s;
-
-  forte::core::TNameIdentifier srcNameList;
-  paConn.getSourceId().getFB().getFullQualifiedApplicationInstanceName(srcNameList);
-  paConn.getSourcePortName(srcNameList);
-  forte::core::util::join(srcNameList.cbegin(), srcNameList.cend(), CStringDictionary::get, '.', paReqResult);
-
-  paReqResult.append("\" Destination=\""s);
-
-  paReqResult += paDstFb.getFullQualifiedApplicationInstanceName('.');
-  paReqResult += "."s;
-  paReqResult += CStringDictionary::get(paDstId);
-
-  paReqResult.append("\"/>\n"s);
-}
-
-namespace {
-
-  template<class T>
-  EMGMResponse createQueryTypeResponseMessage(T *paTypeEntry,
-                                              std::string_view paTypeHash,
-                                              std::string &paReqResult,
-                                              std::string_view paResponsePrefix) {
-    if (paTypeEntry == nullptr) {
-      return EMGMResponse::UnsupportedType;
-    }
-
-    if (paTypeHash.empty()) {
-      // return type hash
-      paReqResult = '<';
-      paReqResult += paResponsePrefix;
-      paReqResult += " Name=\""s;
-      paReqResult += paTypeEntry->getTypeName();
-      paReqResult += '#';
-      paReqResult += paTypeEntry->getTypeHash();
-      paReqResult += "\"/>"s;
-    } else {
-      // we can only clear paReqResult after this type hash check
-      if (paTypeHash != paTypeEntry->getTypeHash()) {
-        paReqResult.clear();
-        return EMGMResponse::UnsupportedType;
-      }
-      paReqResult.clear();
-    }
-
-    return EMGMResponse::Ready;
-  }
-
-} // namespace
-
-EMGMResponse CResource::createFBTypeResponseMessage(const CStringDictionary::TStringId paTypeNameId,
-                                                    std::string_view paTypeHash,
-                                                    std::string &paReqResult) {
-  return createQueryTypeResponseMessage(CTypeLib::getFBTypeEntry(paTypeNameId), paTypeHash, paReqResult, "FBType");
-}
-
-EMGMResponse CResource::createDataTypeResponseMessage(const CStringDictionary::TStringId paTypeNameId,
-                                                      std::string_view paTypeHash,
-                                                      std::string &paReqResult) {
-  return createQueryTypeResponseMessage(CTypeLib::getDataTypeEntry(paTypeNameId), paTypeHash, paReqResult, "DataType");
-}
-
-EMGMResponse CResource::createAdapterTypeResponseMessage(const CStringDictionary::TStringId paTypeNameId,
-                                                         std::string_view paTypeHash,
-                                                         std::string &paReqResult) {
-  return createQueryTypeResponseMessage(CTypeLib::getAdapterTypeEntry(paTypeNameId), paTypeHash, paReqResult,
-                                        "AdapterType");
-}
-
-EMGMResponse CResource::createGlobalConstTypeResponseMessage(const CStringDictionary::TStringId paTypeNameId,
-                                                             std::string_view paTypeHash,
-                                                             std::string &paReqResult) {
-  return createQueryTypeResponseMessage(CTypeLib::getGlobalConstTypeEntry(paTypeNameId), paTypeHash, paReqResult,
-                                        "GlobalConstType");
-}
-
-#endif // FORTE_SUPPORT_QUERY_CMD
-
-#ifdef FORTE_DYNAMIC_TYPE_LOAD
-EMGMResponse CResource::createFBTypeFromLua(CStringDictionary::TStringId typeNameId,
-                                            const std::string &paLuaScriptAsString) {
-  EMGMResponse retVal = EMGMResponse::UnsupportedType;
-
-  if (paLuaScriptAsString.find("internalFBs") != std::string::npos) { // CFBType
-    if (CLuaCFBTypeEntry::createLuaFBTypeEntry(typeNameId, paLuaScriptAsString) != nullptr) {
-      retVal = EMGMResponse::Ready;
-    } else {
-      retVal = EMGMResponse::InvalidOperation;
-    }
-  } else { // BFBType
-    if (CLuaBFBTypeEntry::createLuaFBTypeEntry(typeNameId, paLuaScriptAsString) != nullptr) {
-      retVal = EMGMResponse::Ready;
-    } else {
-      retVal = EMGMResponse::InvalidOperation;
-    }
-  }
-  return retVal;
-}
-
-EMGMResponse CResource::createAdapterTypeFromLua(CStringDictionary::TStringId typeNameId,
-                                                 const std::string &paLuaScriptAsString) {
-  EMGMResponse retVal = EMGMResponse::UnsupportedType;
-  if (CLuaAdapterTypeEntry::createLuaAdapterTypeEntry(typeNameId, paLuaScriptAsString) != nullptr) {
-    retVal = EMGMResponse::Ready;
-  } else {
-    retVal = EMGMResponse::InvalidOperation;
-  }
-  return retVal;
-}
-
-#endif // FORTE_DYNAMIC_TYPE_LOAD
 
 CIEC_ANY *CResource::getVariable(forte::core::TNameIdentifier &paNameList) {
   CStringDictionary::TStringId portName = paNameList.back();
