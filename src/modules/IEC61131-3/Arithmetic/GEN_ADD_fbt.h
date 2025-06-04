@@ -21,7 +21,6 @@
 #define _GEN_ADD_H_
 
 #include <genfb.h>
-#include <mixedStorage.h>
 #include <forte_any_magnitude_variant.h>
 
 class GEN_ADD final : public CGenFunctionBlock<CFunctionBlock> {

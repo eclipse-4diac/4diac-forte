@@ -137,13 +137,6 @@ class CGenFunctionBlock : public T {
     static void generateGenericInterfacePointNameArray(const char *const paPrefix,
                                                        CStringDictionary::TStringId *paNamesArayStart,
                                                        size_t paNumGenericDataPoints);
-    static void generateGenericDataPointArrays(const char *const paPrefix,
-                                               CStringDictionary::TStringId *paDataTypeNamesArrayStart,
-                                               CStringDictionary::TStringId *paNamesArrayStart,
-                                               size_t paNumGenericDataPoints);
-
-    static size_t getDataPointSpecSize(const CIEC_ANY &paValue);
-    static void fillDataPointSpec(const CIEC_ANY &paValue, CStringDictionary::TStringId *&paDataTypeIds);
 
     void setupFBInterface();
 
@@ -344,47 +337,6 @@ void CGenFunctionBlock<T>::generateGenericInterfacePointNameArray(const char *co
     DEVLOG_ERROR("CFunctionBlock::generateGenericInterfacePointNameArray won't be able to create all the generics "
                  "since %s is too long to hold until %d",
                  paPrefix, paNumGenericDataPoints);
-  }
-}
-
-template<class T>
-void CGenFunctionBlock<T>::generateGenericDataPointArrays(const char *const paPrefix,
-                                                          CStringDictionary::TStringId *paDataTypeNamesArrayStart,
-                                                          CStringDictionary::TStringId *paNamesArrayStart,
-                                                          size_t paNumGenericDataPoints) {
-  generateGenericInterfacePointNameArray(paPrefix, paNamesArrayStart, paNumGenericDataPoints);
-
-  for (size_t i = 0; i < paNumGenericDataPoints; i++) {
-    paDataTypeNamesArrayStart[i] = STRID(ANY);
-  }
-}
-
-template<class T>
-size_t CGenFunctionBlock<T>::getDataPointSpecSize(const CIEC_ANY &paValue) {
-  CIEC_ANY::EDataTypeID dataTypeId = paValue.getDataTypeID();
-  if (dataTypeId == CIEC_ANY::e_ARRAY) {
-    const CIEC_ARRAY &arrayValue = static_cast<const CIEC_ARRAY &>(paValue);
-    if (arrayValue.size() > 0) {
-      return 3 + getDataPointSpecSize(arrayValue[arrayValue.getLowerBound()]);
-    }
-    return 4;
-  }
-  return 1;
-}
-
-template<class T>
-void CGenFunctionBlock<T>::fillDataPointSpec(const CIEC_ANY &paValue, CStringDictionary::TStringId *&paDataTypeIds) {
-  *(paDataTypeIds++) = paValue.getTypeNameID();
-  CIEC_ANY::EDataTypeID dataTypeId = paValue.getDataTypeID();
-  if (dataTypeId == CIEC_ANY::e_ARRAY) {
-    const CIEC_ARRAY &arrayValue = static_cast<const CIEC_ARRAY &>(paValue);
-    *(paDataTypeIds++) = static_cast<CStringDictionary::TStringId>(arrayValue.getLowerBound());
-    *(paDataTypeIds++) = static_cast<CStringDictionary::TStringId>(arrayValue.getUpperBound());
-    if (arrayValue.size() > 0) {
-      fillDataPointSpec(arrayValue[arrayValue.getLowerBound()], paDataTypeIds);
-    } else {
-      *(paDataTypeIds++) = arrayValue.getElementTypeNameID();
-    }
   }
 }
 

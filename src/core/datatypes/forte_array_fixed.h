@@ -237,7 +237,7 @@ class CIEC_ARRAY_FIXED : public CIEC_ARRAY_COMMON<T> {
       return false;
     };
 
-    void setBounds(intmax_t paLowerBound, intmax_t paUpperBound) override {
+    void setBounds(intmax_t, intmax_t) override {
       DEVLOG_ERROR("Cannot set bounds of fixed array\n");
     }
 

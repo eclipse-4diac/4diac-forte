@@ -19,4 +19,4 @@ forte_add_sourcefile_h(singlet.h criticalregion.h)
 forte_add_sourcefile_h(fortearray.h inplace_vector.h)
 forte_add_sourcefile_h(ringbuf.h)
 
-forte_add_sourcefile_hcpp(string_utils parameterParser configFileParser mixedStorage ifSpecBuilder)
+forte_add_sourcefile_hcpp(string_utils parameterParser configFileParser)
