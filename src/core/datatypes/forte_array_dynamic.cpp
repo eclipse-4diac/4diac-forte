@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2023 ACIN, nxtControl GmbH, fortiss GmbH,
+ * Copyright (c) 2007, 2025 ACIN, nxtControl GmbH, fortiss GmbH,
  *                          Martin Erich Jobst
  *
  * This program and the accompanying materials are made available under the
@@ -13,7 +13,8 @@
  *      - initial implementation and rework communication infrastructure
  *    Martin Jobst
  *      - refactored array type structure
-  *******************************************************************************/
+ *      - added lower and upper bound with dimension
+ *******************************************************************************/
 #include "forte_array_dynamic.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
 #include "forte_array_dynamic_gen.cpp"
@@ -186,3 +187,42 @@ int CIEC_ARRAY_DYNAMIC::initializeSimpleFromString(iterator &paPosition, const c
   }
 }
 
+intmax_t CIEC_ARRAY_DYNAMIC::getLowerBound(intmax_t paDimension) const {
+  if (paDimension == 1) {
+    return mLowerBound;
+  }
+  if (paDimension < 1) {
+    DEVLOG_ERROR("The dimension must not be less than 1\n");
+    return 0;
+  }
+  if (!mData) {
+    DEVLOG_ERROR("The array is not initialized\n");
+    return 0;
+  }
+  const CIEC_ANY &element = *reinterpret_cast<CIEC_ANY *>(mData);
+  if (element.getDataTypeID() != e_ARRAY) {
+    DEVLOG_ERROR("The dimension is larger than the dimensions of the array\n");
+    return 0;
+  }
+  return static_cast<const CIEC_ARRAY &>(element).getLowerBound(paDimension - 1);
+}
+
+intmax_t CIEC_ARRAY_DYNAMIC::getUpperBound(intmax_t paDimension) const {
+  if (paDimension == 1) {
+    return mUpperBound;
+  }
+  if (paDimension < 1) {
+    DEVLOG_ERROR("The dimension must not be less than 1\n");
+    return 0;
+  }
+  if (!mData) {
+    DEVLOG_ERROR("The array is not initialized\n");
+    return 0;
+  }
+  const CIEC_ANY &element = *reinterpret_cast<CIEC_ANY *>(mData);
+  if (element.getDataTypeID() != e_ARRAY) {
+    DEVLOG_ERROR("The dimension is larger than the dimensions of the array\n");
+    return 0;
+  }
+  return static_cast<const CIEC_ARRAY &>(element).getUpperBound(paDimension - 1);
+}

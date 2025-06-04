@@ -1,6 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2022 Primetals Technologies Austria GmbH
- *               2022 - 2023 Martin Erich Jobst
+ * Copyright (c) 2022, 2025 Primetals Technologies Austria GmbH
+ *                          Martin Erich Jobst
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -14,6 +14,7 @@
  *    Martin Jobst
  *      - add support for data types with different size
  *      - refactored array type structure
+ *      - added lower and upper bound with dimension
  *******************************************************************************/
 #pragma once
 
@@ -174,6 +175,38 @@ public:
 
     [[nodiscard]] constexpr intmax_t getUpperBound() const override {
       return upperBound;
+    }
+
+    [[nodiscard]] constexpr intmax_t getLowerBound(intmax_t paDimension) const override {
+      if (paDimension == 1) {
+        return lowerBound;
+      }
+      if (paDimension < 1) {
+        DEVLOG_ERROR("The dimension must not be less than 1\n");
+        return 0;
+      }
+      if constexpr (std::is_base_of_v<CIEC_ARRAY, T>) {
+        return data[0].getLowerBound(paDimension - 1);
+      } else {
+        DEVLOG_ERROR("The dimension is larger than the dimensions of the array\n");
+        return 0;
+      }
+    }
+
+    [[nodiscard]] constexpr intmax_t getUpperBound(intmax_t paDimension) const override {
+      if (paDimension == 1) {
+        return upperBound;
+      }
+      if (paDimension < 1) {
+        DEVLOG_ERROR("The dimension must not be less than 1\n");
+        return 0;
+      }
+      if constexpr (std::is_base_of_v<CIEC_ARRAY, T>) {
+        return data[0].getUpperBound(paDimension - 1);
+      } else {
+        DEVLOG_ERROR("The dimension is larger than the dimensions of the array\n");
+        return 0;
+      }
     }
 
     [[nodiscard]] constexpr size_t size() const override {

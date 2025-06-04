@@ -1,7 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2007 - 2013 ACIN, nxtControl GmbH, fortiss GmbH
- *               2022 Primetals Technologies Austria GmbH
- *               2022 - 2023 Martin Erich Jobst
+ * Copyright (c) 2007, 2025 ACIN, nxtControl GmbH, fortiss GmbH
+ *                          Primetals Technologies Austria GmbH
+ *                          Martin Erich Jobst
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -21,6 +21,7 @@
  *                 - refactored for elements with dynamic size
  *                 - refactored for lower and upper bounds
  *                 - refactored array type structure
+ *                 - added lower and upper bound with dimension
  *******************************************************************************/
 
 #pragma once
@@ -467,6 +468,10 @@ public:
     [[nodiscard]] intmax_t getUpperBound() const override {
       return mUpperBound;
     }
+
+    [[nodiscard]] intmax_t getLowerBound(intmax_t paDimension) const override;
+
+    [[nodiscard]] intmax_t getUpperBound(intmax_t paDimension) const override;
 
     [[nodiscard]] constexpr iterator begin() {
       return iterator(mElementSize, mData);

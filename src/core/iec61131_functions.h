@@ -1,6 +1,8 @@
 /*******************************************************************************
- * Copyright (c) 2010,2023 TU Vienna/ACIN, Profactor GmbH, fortiss GmbH
+ * Copyright (c) 2010,2025 TU Vienna/ACIN, Profactor GmbH, fortiss GmbH
  *                         Primetals Technologies Austria GmbH
+ *                         Martin Erich Jobst
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -17,9 +19,11 @@
  *      - reworked and fixes ADD and SUB for time types
  *      - Added variadic comparison, MIN, MAX, ADD, MUL functions
  *      - Added unary plus function
+ *    Martin Erich Jobst
+ *      - added lower and upper bound functions
  *******************************************************************************/
-#ifndef IEC61131_FUNCTIONS_H_
-#define IEC61131_FUNCTIONS_H_
+
+#pragma once
 
 #include "../arch/devlog.h"
 #include "convert_functions.h"
@@ -1719,4 +1723,18 @@ T func_FROM_BIG_ENDIAN(const T &paValue) {
 }
 #endif
 
-#endif /* IEC61131_FUNCTIONS_H_ */
+template<typename T, typename U>
+T func_LOWER_BOUND(const CIEC_ARRAY &paArray, const U &paDimension) {
+  static_assert(std::is_base_of_v<CIEC_ANY_INT, T>, "T not of ANY_INT");
+  static_assert(std::is_base_of_v<CIEC_ANY_INT, U>, "U not of ANY_INT");
+  return T(static_cast<typename T::TValueType>(paArray.getLowerBound(
+    static_cast<typename U::TValueType>(paDimension))));
+}
+
+template<typename T, typename U>
+T func_UPPER_BOUND(const CIEC_ARRAY &paArray, const U &paDimension) {
+  static_assert(std::is_base_of_v<CIEC_ANY_INT, T>, "T not of ANY_INT");
+  static_assert(std::is_base_of_v<CIEC_ANY_INT, U>, "U not of ANY_INT");
+  return T(static_cast<typename T::TValueType>(paArray.getUpperBound(
+    static_cast<typename U::TValueType>(paDimension))));
+}

@@ -1,6 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2023 TU Vienna/ACIN, nxtControl, Profactor GmbH, fortiss GmbH
+ * Copyright (c) 2011, 2025 TU Vienna/ACIN, nxtControl, Profactor GmbH, fortiss GmbH
  *                          Primetals Technologies Austria GmbH
+ *                          Martin Erich Jobst
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -17,6 +18,7 @@
  *   Martin Melik-Merkumians - adds test for variadic CONCAT, ADD, MUL, MIN, MAX,
  *    LT, LE, GT, GE, EQ
  *   Martin Melik-Merkumians - adds test for func_PLUS
+ *   Martin Erich Jobst      - addd test for LOWER_BOUND and UPPER_BOUND
  *******************************************************************************/
 
 #include <math.h>
@@ -2592,6 +2594,80 @@ BOOST_AUTO_TEST_CASE(func_max_variadic_3) {
 BOOST_AUTO_TEST_CASE(func_max_variadic_4) {
   // cast to int for better readability in test result output
   BOOST_TEST(static_cast<int>(static_cast<CIEC_SINT::TValueType>(func_MAX(0_SINT, -10_SINT, 50_SINT, 35_SINT))) == 50);
+}
+
+BOOST_AUTO_TEST_CASE(func_lower_bound1) {
+  CIEC_ARRAY_FIXED<CIEC_INT, -10, 10> fixed;
+  BOOST_TEST(static_cast<CIEC_INT::TValueType>(func_LOWER_BOUND<CIEC_INT>(fixed, 0_INT)) == 0); // < 1
+  BOOST_TEST(static_cast<CIEC_INT::TValueType>(func_LOWER_BOUND<CIEC_INT>(fixed, 1_INT)) == -10);
+  BOOST_TEST(static_cast<CIEC_INT::TValueType>(func_LOWER_BOUND<CIEC_INT>(fixed, 2_INT)) == 0); // > dimensions
+
+  CIEC_ARRAY_VARIABLE<CIEC_INT> variable(fixed);
+  BOOST_TEST(static_cast<CIEC_INT::TValueType>(func_LOWER_BOUND<CIEC_INT>(variable, 0_INT)) == 0); // < 1
+  BOOST_TEST(static_cast<CIEC_INT::TValueType>(func_LOWER_BOUND<CIEC_INT>(variable, 1_INT)) == -10);
+  BOOST_TEST(static_cast<CIEC_INT::TValueType>(func_LOWER_BOUND<CIEC_INT>(variable, 2_INT)) == 0); // > dimensions
+
+  CIEC_ARRAY_DYNAMIC dynamic(fixed);
+  BOOST_TEST(static_cast<CIEC_INT::TValueType>(func_LOWER_BOUND<CIEC_INT>(dynamic, 0_INT)) == 0); // < 1
+  BOOST_TEST(static_cast<CIEC_INT::TValueType>(func_LOWER_BOUND<CIEC_INT>(dynamic, 1_INT)) == -10);
+  BOOST_TEST(static_cast<CIEC_INT::TValueType>(func_LOWER_BOUND<CIEC_INT>(dynamic, 2_INT)) == 0); // > dimensions
+}
+
+BOOST_AUTO_TEST_CASE(func_lower_bound_fixed2) {
+  CIEC_ARRAY_FIXED<CIEC_ARRAY_FIXED<CIEC_INT, -10, 10>, 1, 2> fixed;
+  BOOST_TEST(static_cast<CIEC_INT::TValueType>(func_LOWER_BOUND<CIEC_INT>(fixed, 0_INT)) == 0); // < 1
+  BOOST_TEST(static_cast<CIEC_INT::TValueType>(func_LOWER_BOUND<CIEC_INT>(fixed, 1_INT)) == 1);
+  BOOST_TEST(static_cast<CIEC_INT::TValueType>(func_LOWER_BOUND<CIEC_INT>(fixed, 2_INT)) == -10);
+  BOOST_TEST(static_cast<CIEC_INT::TValueType>(func_LOWER_BOUND<CIEC_INT>(fixed, 3_INT)) == 0); // > dimensions
+
+  CIEC_ARRAY_VARIABLE<CIEC_ARRAY_VARIABLE<CIEC_INT>> variable(fixed);
+  BOOST_TEST(static_cast<CIEC_INT::TValueType>(func_LOWER_BOUND<CIEC_INT>(variable, 0_INT)) == 0); // < 1
+  BOOST_TEST(static_cast<CIEC_INT::TValueType>(func_LOWER_BOUND<CIEC_INT>(variable, 1_INT)) == 1);
+  BOOST_TEST(static_cast<CIEC_INT::TValueType>(func_LOWER_BOUND<CIEC_INT>(variable, 2_INT)) == -10);
+  BOOST_TEST(static_cast<CIEC_INT::TValueType>(func_LOWER_BOUND<CIEC_INT>(variable, 3_INT)) == 0); // > dimensions
+
+  CIEC_ARRAY_DYNAMIC dynamic(fixed);
+  BOOST_TEST(static_cast<CIEC_INT::TValueType>(func_LOWER_BOUND<CIEC_INT>(dynamic, 0_INT)) == 0); // < 1
+  BOOST_TEST(static_cast<CIEC_INT::TValueType>(func_LOWER_BOUND<CIEC_INT>(dynamic, 1_INT)) == 1);
+  BOOST_TEST(static_cast<CIEC_INT::TValueType>(func_LOWER_BOUND<CIEC_INT>(dynamic, 2_INT)) == -10);
+  BOOST_TEST(static_cast<CIEC_INT::TValueType>(func_LOWER_BOUND<CIEC_INT>(dynamic, 3_INT)) == 0); // > dimensions
+}
+
+BOOST_AUTO_TEST_CASE(func_upper_bound1) {
+  CIEC_ARRAY_FIXED<CIEC_INT, -10, 10> fixed;
+  BOOST_TEST(static_cast<CIEC_INT::TValueType>(func_UPPER_BOUND<CIEC_INT>(fixed, 0_INT)) == 0); // < 1
+  BOOST_TEST(static_cast<CIEC_INT::TValueType>(func_UPPER_BOUND<CIEC_INT>(fixed, 1_INT)) == 10);
+  BOOST_TEST(static_cast<CIEC_INT::TValueType>(func_UPPER_BOUND<CIEC_INT>(fixed, 2_INT)) == 0); // > dimensions
+
+  CIEC_ARRAY_VARIABLE<CIEC_INT> variable(fixed);
+  BOOST_TEST(static_cast<CIEC_INT::TValueType>(func_UPPER_BOUND<CIEC_INT>(variable, 0_INT)) == 0); // < 1
+  BOOST_TEST(static_cast<CIEC_INT::TValueType>(func_UPPER_BOUND<CIEC_INT>(variable, 1_INT)) == 10);
+  BOOST_TEST(static_cast<CIEC_INT::TValueType>(func_UPPER_BOUND<CIEC_INT>(variable, 2_INT)) == 0); // > dimensions
+
+  CIEC_ARRAY_DYNAMIC dynamic(fixed);
+  BOOST_TEST(static_cast<CIEC_INT::TValueType>(func_UPPER_BOUND<CIEC_INT>(dynamic, 0_INT)) == 0); // < 1
+  BOOST_TEST(static_cast<CIEC_INT::TValueType>(func_UPPER_BOUND<CIEC_INT>(dynamic, 1_INT)) == 10);
+  BOOST_TEST(static_cast<CIEC_INT::TValueType>(func_UPPER_BOUND<CIEC_INT>(dynamic, 2_INT)) == 0); // > dimensions
+}
+
+BOOST_AUTO_TEST_CASE(func_upper_bound_fixed2) {
+  CIEC_ARRAY_FIXED<CIEC_ARRAY_FIXED<CIEC_INT, -10, 10>, 1, 2> fixed;
+  BOOST_TEST(static_cast<CIEC_INT::TValueType>(func_UPPER_BOUND<CIEC_INT>(fixed, 0_INT)) == 0); // < 1
+  BOOST_TEST(static_cast<CIEC_INT::TValueType>(func_UPPER_BOUND<CIEC_INT>(fixed, 1_INT)) == 2);
+  BOOST_TEST(static_cast<CIEC_INT::TValueType>(func_UPPER_BOUND<CIEC_INT>(fixed, 2_INT)) == 10);
+  BOOST_TEST(static_cast<CIEC_INT::TValueType>(func_UPPER_BOUND<CIEC_INT>(fixed, 3_INT)) == 0); // > dimensions
+
+  CIEC_ARRAY_VARIABLE<CIEC_ARRAY_VARIABLE<CIEC_INT>> variable(fixed);
+  BOOST_TEST(static_cast<CIEC_INT::TValueType>(func_UPPER_BOUND<CIEC_INT>(variable, 0_INT)) == 0); // < 1
+  BOOST_TEST(static_cast<CIEC_INT::TValueType>(func_UPPER_BOUND<CIEC_INT>(variable, 1_INT)) == 2);
+  BOOST_TEST(static_cast<CIEC_INT::TValueType>(func_UPPER_BOUND<CIEC_INT>(variable, 2_INT)) == 10);
+  BOOST_TEST(static_cast<CIEC_INT::TValueType>(func_UPPER_BOUND<CIEC_INT>(variable, 3_INT)) == 0); // > dimensions
+
+  CIEC_ARRAY_DYNAMIC dynamic(fixed);
+  BOOST_TEST(static_cast<CIEC_INT::TValueType>(func_UPPER_BOUND<CIEC_INT>(dynamic, 0_INT)) == 0); // < 1
+  BOOST_TEST(static_cast<CIEC_INT::TValueType>(func_UPPER_BOUND<CIEC_INT>(dynamic, 1_INT)) == 2);
+  BOOST_TEST(static_cast<CIEC_INT::TValueType>(func_UPPER_BOUND<CIEC_INT>(dynamic, 2_INT)) == 10);
+  BOOST_TEST(static_cast<CIEC_INT::TValueType>(func_UPPER_BOUND<CIEC_INT>(dynamic, 3_INT)) == 0); // > dimensions
 }
 
 BOOST_AUTO_TEST_SUITE_END()
