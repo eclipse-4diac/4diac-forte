@@ -72,7 +72,7 @@ bool GEN_FORTE_F_MOVE::createInterfaceSpec(const char *paConfigString, SFBInterf
     mIn = std::make_unique<CIEC_ANY_VARIANT>();
   } else {
     CStringDictionary::TStringId dataTypeID = getDataTypeNameId(paConfigString);
-    mIn = std::unique_ptr<CIEC_ANY>(CTypeLib::createDataTypeInstance(dataTypeID, nullptr));
+    mIn = std::unique_ptr<CIEC_ANY>(forte::core::createDataTypeInstance(dataTypeID, nullptr));
     if (!mIn) {
       return false;
     }

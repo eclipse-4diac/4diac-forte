@@ -59,6 +59,8 @@
 
 #include "../../../src/core/datatypes/forte_lreal.h"
 
+#include "../../../src/core/typelib_internal.h"
+
 USE_STRING_ID(ARRAY);
 USE_STRING_ID(BOOL);
 USE_STRING_ID(BYTE);
@@ -114,7 +116,7 @@ class CDeserTestMockCommFB : public forte::com_infra::CCommFB {
       TForteByte *varsData = nullptr;
       mGenDOs = std::make_unique<CIEC_ANY *[]>(numGenDOs);
       for (size_t i = 0; i < numGenDOs; ++i) {
-        mGenDOs[i] = CTypeLib::createDataPoint(datarTypeIds, varsData);
+        mGenDOs[i] = forte::core::createDataPoint(datarTypeIds, varsData);
       }
     }
 

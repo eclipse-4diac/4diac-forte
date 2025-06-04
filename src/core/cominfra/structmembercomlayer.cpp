@@ -138,7 +138,7 @@ EComResponse CStructMemberLocalComLayer::openConnection(char *paLayerParameter) 
       CStringDictionary::insert(parser[EComStringIndex::e_LOCALGROUPNAME]);
   CStringDictionary::TStringId dataTypeNameID = CStringDictionary::insert(parser[EComStringIndex::e_STRUCTTYPE]);
 
-  CIEC_STRUCT *const dummy = static_cast<CIEC_STRUCT *>(CTypeLib::createDataTypeInstance(dataTypeNameID, nullptr));
+  CIEC_STRUCT *const dummy = static_cast<CIEC_STRUCT *>(forte::core::createDataTypeInstance(dataTypeNameID, nullptr));
 
   if (nullptr == dummy) {
     DEVLOG_ERROR("[StructMemberLayer] The struct is not available in the data type lib: %s!\r\n",

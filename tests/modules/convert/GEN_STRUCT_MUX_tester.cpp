@@ -23,6 +23,7 @@ USE_STRING_ID(STRUCT_MUX_1UnknownType);
 
 #include "struct_mux_demux_data.h"
 #include "fbcontainermock.h"
+#include "typelib_internal.h"
 
 struct STRUCT_MUX_TestFixture_1 : public CFBTestFixtureBase {
 
@@ -138,28 +139,28 @@ BOOST_AUTO_TEST_SUITE(STRUCT_MUX_FailedCreationTest)
 
 BOOST_AUTO_TEST_CASE(missingDataType) {
   CFunctionBlock *fb =
-      CTypeLib::createFB(STRID(InstanceName), STRID(STRUCT_MUX_1UnknownType), CFBContainerMock::smDefaultFBContMock);
+      forte::core::createFB(STRID(InstanceName), STRID(STRUCT_MUX_1UnknownType), CFBContainerMock::smDefaultFBContMock);
   BOOST_CHECK(nullptr == fb);
 }
 
 BOOST_AUTO_TEST_CASE(wrongDataType) {
   CFunctionBlock *fb =
-      CTypeLib::createFB(STRID(InstanceName), STRID(STRUCT_MUX_1STRING), CFBContainerMock::smDefaultFBContMock);
+      forte::core::createFB(STRID(InstanceName), STRID(STRUCT_MUX_1STRING), CFBContainerMock::smDefaultFBContMock);
   BOOST_CHECK(nullptr == fb);
 
-  fb = CTypeLib::createFB(STRID(InstanceName), STRID(STRUCT_MUX_1REAL), CFBContainerMock::smDefaultFBContMock);
+  fb = forte::core::createFB(STRID(InstanceName), STRID(STRUCT_MUX_1REAL), CFBContainerMock::smDefaultFBContMock);
   BOOST_CHECK(nullptr == fb);
 }
 
 BOOST_AUTO_TEST_CASE(emptyStruct) {
-  CFunctionBlock *fb = CTypeLib::createFB(STRID(InstanceName), STRID(STRUCT_MUX_1Struct_Muxer_Test_Struct_3),
-                                          CFBContainerMock::smDefaultFBContMock);
+  CFunctionBlock *fb = forte::core::createFB(STRID(InstanceName), STRID(STRUCT_MUX_1Struct_Muxer_Test_Struct_3),
+                                             CFBContainerMock::smDefaultFBContMock);
   BOOST_CHECK(nullptr == fb);
 }
 
 BOOST_AUTO_TEST_CASE(bigStruct) {
-  CFunctionBlock *fb = CTypeLib::createFB(STRID(InstanceName), STRID(STRUCT_MUX_1Struct_Muxer_Test_Struct_4),
-                                          CFBContainerMock::smDefaultFBContMock);
+  CFunctionBlock *fb = forte::core::createFB(STRID(InstanceName), STRID(STRUCT_MUX_1Struct_Muxer_Test_Struct_4),
+                                             CFBContainerMock::smDefaultFBContMock);
   BOOST_CHECK(nullptr != fb);
   delete fb;
 }

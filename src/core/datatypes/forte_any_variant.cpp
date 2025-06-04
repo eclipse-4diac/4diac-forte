@@ -134,7 +134,7 @@ int CIEC_ANY_VARIANT::fromString(const char *paValue) {
       CIEC_ANY &value = unwrap();
       retVal = value.fromString(paValue);
     } else {
-      CIEC_ANY *value = CTypeLib::createDataTypeInstance(typeNameId, nullptr);
+      CIEC_ANY *value = forte::core::createDataTypeInstance(typeNameId, nullptr);
       if (value) {
         retVal = value->fromString(hashPos + 1); // start after '#'
         if (retVal < 0) {

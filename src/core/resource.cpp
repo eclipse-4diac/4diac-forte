@@ -29,6 +29,7 @@
 #include "adapterconn.h"
 #include "core/ecetFactory.h"
 #include "string_utils.h"
+#include "typelib_internal.h"
 
 USE_STRING_ID(START);
 
@@ -59,17 +60,17 @@ namespace {
   }
 
   EMGMResponse queryAllFBTypes(std::string &paValue) {
-    appendTypeNameList(paValue, CTypeLib::getFBTypeEntries());
+    appendTypeNameList(paValue, forte::core::getFBTypeEntries());
     return EMGMResponse::Ready;
   }
 
   EMGMResponse queryAllAdapterTypes(std::string &paValue) {
-    appendTypeNameList(paValue, CTypeLib::getAdapterTypeEntries());
+    appendTypeNameList(paValue, forte::core::getAdapterTypeEntries());
     return EMGMResponse::Ready;
   }
 
   EMGMResponse queryAllGlobalConstTypes(std::string &paValue) {
-    appendTypeNameList(paValue, CTypeLib::getGlobalConstEntries());
+    appendTypeNameList(paValue, forte::core::getGlobalConstEntries());
     return EMGMResponse::Ready;
   }
 
@@ -194,27 +195,27 @@ namespace {
   EMGMResponse createFBTypeResponseMessage(const CStringDictionary::TStringId paTypeNameId,
                                            std::string_view paTypeHash,
                                            std::string &paReqResult) {
-    return createQueryTypeResponseMessage(CTypeLib::getFBTypeEntry(paTypeNameId), paTypeHash, paReqResult, "FBType");
+    return createQueryTypeResponseMessage(forte::core::getFBTypeEntry(paTypeNameId), paTypeHash, paReqResult, "FBType");
   }
 
   EMGMResponse createDataTypeResponseMessage(const CStringDictionary::TStringId paTypeNameId,
                                              std::string_view paTypeHash,
                                              std::string &paReqResult) {
-    return createQueryTypeResponseMessage(CTypeLib::getDataTypeEntry(paTypeNameId), paTypeHash, paReqResult,
+    return createQueryTypeResponseMessage(forte::core::getDataTypeEntry(paTypeNameId), paTypeHash, paReqResult,
                                           "DataType");
   }
 
   EMGMResponse createAdapterTypeResponseMessage(const CStringDictionary::TStringId paTypeNameId,
                                                 std::string_view paTypeHash,
                                                 std::string &paReqResult) {
-    return createQueryTypeResponseMessage(CTypeLib::getAdapterTypeEntry(paTypeNameId), paTypeHash, paReqResult,
+    return createQueryTypeResponseMessage(forte::core::getAdapterTypeEntry(paTypeNameId), paTypeHash, paReqResult,
                                           "AdapterType");
   }
 
   EMGMResponse createGlobalConstTypeResponseMessage(const CStringDictionary::TStringId paTypeNameId,
                                                     std::string_view paTypeHash,
                                                     std::string &paReqResult) {
-    return createQueryTypeResponseMessage(CTypeLib::getGlobalConstTypeEntry(paTypeNameId), paTypeHash, paReqResult,
+    return createQueryTypeResponseMessage(forte::core::getGlobalConstTypeEntry(paTypeNameId), paTypeHash, paReqResult,
                                           "GlobalConstType");
   }
 

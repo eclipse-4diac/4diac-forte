@@ -17,8 +17,9 @@
  *   Alois Zoitl  - merged fbs and containers in one list
  *   Martin Jobst - add smart pointer for internal FBs
  *******************************************************************************/
-#include "funcbloc.h"
 #include "fbcontainer.h"
+#include "funcbloc.h"
+#include "typelib_internal.h"
 
 using namespace forte::core;
 
@@ -122,7 +123,7 @@ EMGMResponse CFBContainer::createFB(CStringDictionary::TStringId paInstanceNameI
   }
 
   EMGMResponse errorMSG;
-  CFunctionBlock *newFB = CTypeLib::createFB(paInstanceNameId, paTypeName, paTypeHash, *this, errorMSG);
+  CFunctionBlock *newFB = forte::core::createFB(paInstanceNameId, paTypeName, paTypeHash, *this, errorMSG);
   if (newFB == nullptr) {
     return errorMSG;
   }
@@ -149,7 +150,7 @@ EMGMResponse CFBContainer::deleteFB(NameIterator &paNameListIt, NameIterator paN
     } else if (child->isFB()) {
       CFunctionBlock *fb = static_cast<CFunctionBlock *>(child);
       if (fb->isCurrentlyDeleteable()) {
-        CTypeLib::deleteFB(fb);
+        forte::core::deleteFB(fb);
         mChildren.erase(childIt);
         retval = EMGMResponse::Ready;
       } else {

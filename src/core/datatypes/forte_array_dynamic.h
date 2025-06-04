@@ -354,7 +354,7 @@ class CIEC_ARRAY_DYNAMIC : public CIEC_ARRAY {
         mLowerBound(paSource.getLowerBound()),
         mUpperBound(paSource.getUpperBound()),
         mData(nullptr) {
-      mElementDataTypeEntry = CTypeLib::getDataTypeEntry(paSource.getElementTypeNameID());
+      mElementDataTypeEntry = forte::core::getDataTypeEntry(paSource.getElementTypeNameID());
       setup(paSource);
     }
 
@@ -370,7 +370,7 @@ class CIEC_ARRAY_DYNAMIC : public CIEC_ARRAY {
         mLowerBound(paSource.getLowerBound()),
         mUpperBound(paSource.getUpperBound()),
         mData(nullptr) {
-      mElementDataTypeEntry = CTypeLib::getDataTypeEntry(paSource.getElementTypeNameID());
+      mElementDataTypeEntry = forte::core::getDataTypeEntry(paSource.getElementTypeNameID());
       setup(paSource);
     }
 
@@ -386,7 +386,7 @@ class CIEC_ARRAY_DYNAMIC : public CIEC_ARRAY {
         mLowerBound(paSource.getLowerBound()),
         mUpperBound(paSource.getUpperBound()),
         mData(nullptr) {
-      mElementDataTypeEntry = CTypeLib::getDataTypeEntry(paSource.getElementTypeNameID());
+      mElementDataTypeEntry = forte::core::getDataTypeEntry(paSource.getElementTypeNameID());
       setup(paSource);
     }
 
@@ -404,7 +404,7 @@ class CIEC_ARRAY_DYNAMIC : public CIEC_ARRAY {
         mLowerBound(lowerBound),
         mUpperBound(upperBound),
         mData(nullptr) {
-      mElementDataTypeEntry = CTypeLib::getDataTypeEntry(paSource.getElementTypeNameID());
+      mElementDataTypeEntry = forte::core::getDataTypeEntry(paSource.getElementTypeNameID());
       setup(paSource);
     }
 
@@ -622,7 +622,7 @@ class CIEC_ARRAY_DYNAMIC : public CIEC_ARRAY {
     intmax_t mLowerBound; ///< The lower bound of the array
     intmax_t mUpperBound; ///< The upper bound of the array
     void *mData; ///< The data pointer (with mSize * mElementSize bytes capacity)
-    CTypeLib::CDataTypeEntry *mElementDataTypeEntry; ///< The element data type entry
+    forte::core::CDataTypeEntry *mElementDataTypeEntry; ///< The element data type entry
 };
 
 static_assert(std::is_copy_constructible_v<CIEC_ARRAY_DYNAMIC>);

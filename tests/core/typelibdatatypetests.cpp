@@ -65,21 +65,21 @@ BOOST_AUTO_TEST_SUITE(TypeLibDataTypeTests)
 
 BOOST_AUTO_TEST_CASE(createANY) {
   TForteByte acDataBuf[sizeof(CIEC_ANY_VARIANT)];
-  CIEC_ANY *poVal = CTypeLib::createDataTypeInstance(STRID(ANY), acDataBuf);
+  CIEC_ANY *poVal = forte::core::createDataTypeInstance(STRID(ANY), acDataBuf);
   BOOST_CHECK_EQUAL(CIEC_ANY::e_ANY, poVal->getDataTypeID());
 
-  poVal = CTypeLib::createDataTypeInstance(STRID(ANY), nullptr);
+  poVal = forte::core::createDataTypeInstance(STRID(ANY), nullptr);
   BOOST_CHECK_EQUAL(CIEC_ANY::e_ANY, poVal->getDataTypeID());
   delete poVal;
 }
 
 BOOST_AUTO_TEST_CASE(createBOOL) {
   TForteByte acDataBuf[sizeof(CIEC_BOOL)];
-  CIEC_ANY *poVal = CTypeLib::createDataTypeInstance(STRID(BOOL), acDataBuf);
+  CIEC_ANY *poVal = forte::core::createDataTypeInstance(STRID(BOOL), acDataBuf);
   BOOST_CHECK_EQUAL(CIEC_ANY::e_BOOL, poVal->getDataTypeID());
   BOOST_CHECK_EQUAL(false, *static_cast<CIEC_BOOL *>(poVal));
 
-  poVal = CTypeLib::createDataTypeInstance(STRID(BOOL), nullptr);
+  poVal = forte::core::createDataTypeInstance(STRID(BOOL), nullptr);
   BOOST_CHECK_EQUAL(CIEC_ANY::e_BOOL, poVal->getDataTypeID());
   BOOST_CHECK_EQUAL(false, *static_cast<CIEC_BOOL *>(poVal));
   delete poVal;
@@ -87,11 +87,11 @@ BOOST_AUTO_TEST_CASE(createBOOL) {
 
 BOOST_AUTO_TEST_CASE(createSINT) {
   TForteByte acDataBuf[sizeof(CIEC_SINT)];
-  CIEC_ANY *poVal = CTypeLib::createDataTypeInstance(STRID(SINT), acDataBuf);
+  CIEC_ANY *poVal = forte::core::createDataTypeInstance(STRID(SINT), acDataBuf);
   BOOST_CHECK_EQUAL(CIEC_ANY::e_SINT, poVal->getDataTypeID());
   BOOST_CHECK_EQUAL(0, static_cast<CIEC_SINT::TValueType>(*static_cast<CIEC_SINT *>(poVal)));
 
-  poVal = CTypeLib::createDataTypeInstance(STRID(SINT), nullptr);
+  poVal = forte::core::createDataTypeInstance(STRID(SINT), nullptr);
   BOOST_CHECK_EQUAL(CIEC_ANY::e_SINT, poVal->getDataTypeID());
   BOOST_CHECK_EQUAL(0, static_cast<CIEC_SINT::TValueType>(*static_cast<CIEC_SINT *>(poVal)));
   delete poVal;
@@ -99,11 +99,11 @@ BOOST_AUTO_TEST_CASE(createSINT) {
 
 BOOST_AUTO_TEST_CASE(createINT) {
   TForteByte acDataBuf[sizeof(CIEC_INT)];
-  CIEC_ANY *poVal = CTypeLib::createDataTypeInstance(STRID(INT), acDataBuf);
+  CIEC_ANY *poVal = forte::core::createDataTypeInstance(STRID(INT), acDataBuf);
   BOOST_CHECK_EQUAL(CIEC_ANY::e_INT, poVal->getDataTypeID());
   BOOST_CHECK_EQUAL(0, static_cast<CIEC_INT::TValueType>(*static_cast<CIEC_INT *>(poVal)));
 
-  poVal = CTypeLib::createDataTypeInstance(STRID(INT), nullptr);
+  poVal = forte::core::createDataTypeInstance(STRID(INT), nullptr);
   BOOST_CHECK_EQUAL(CIEC_ANY::e_INT, poVal->getDataTypeID());
   BOOST_CHECK_EQUAL(0, static_cast<CIEC_INT::TValueType>(*static_cast<CIEC_INT *>(poVal)));
   delete poVal;
@@ -111,11 +111,11 @@ BOOST_AUTO_TEST_CASE(createINT) {
 
 BOOST_AUTO_TEST_CASE(createDINT) {
   TForteByte acDataBuf[sizeof(CIEC_DINT)];
-  CIEC_ANY *poVal = CTypeLib::createDataTypeInstance(STRID(DINT), acDataBuf);
+  CIEC_ANY *poVal = forte::core::createDataTypeInstance(STRID(DINT), acDataBuf);
   BOOST_CHECK_EQUAL(CIEC_ANY::e_DINT, poVal->getDataTypeID());
   BOOST_CHECK_EQUAL(0, static_cast<CIEC_DINT::TValueType>(*static_cast<CIEC_DINT *>(poVal)));
 
-  poVal = CTypeLib::createDataTypeInstance(STRID(DINT), nullptr);
+  poVal = forte::core::createDataTypeInstance(STRID(DINT), nullptr);
   BOOST_CHECK_EQUAL(CIEC_ANY::e_DINT, poVal->getDataTypeID());
   BOOST_CHECK_EQUAL(0, static_cast<CIEC_DINT::TValueType>(*static_cast<CIEC_DINT *>(poVal)));
   delete poVal;
@@ -123,11 +123,11 @@ BOOST_AUTO_TEST_CASE(createDINT) {
 
 BOOST_AUTO_TEST_CASE(createLINT) {
   TForteByte acDataBuf[sizeof(CIEC_LINT)];
-  CIEC_ANY *poVal = CTypeLib::createDataTypeInstance(STRID(LINT), acDataBuf);
+  CIEC_ANY *poVal = forte::core::createDataTypeInstance(STRID(LINT), acDataBuf);
   BOOST_CHECK_EQUAL(CIEC_ANY::e_LINT, poVal->getDataTypeID());
   BOOST_CHECK_EQUAL(0, static_cast<CIEC_LINT::TValueType>(*static_cast<CIEC_LINT *>(poVal)));
 
-  poVal = CTypeLib::createDataTypeInstance(STRID(LINT), nullptr);
+  poVal = forte::core::createDataTypeInstance(STRID(LINT), nullptr);
   BOOST_CHECK_EQUAL(CIEC_ANY::e_LINT, poVal->getDataTypeID());
   BOOST_CHECK_EQUAL(0, static_cast<CIEC_LINT::TValueType>(*static_cast<CIEC_LINT *>(poVal)));
   delete poVal;
@@ -135,11 +135,11 @@ BOOST_AUTO_TEST_CASE(createLINT) {
 
 BOOST_AUTO_TEST_CASE(createUSINT) {
   TForteByte acDataBuf[sizeof(CIEC_USINT)];
-  CIEC_ANY *poVal = CTypeLib::createDataTypeInstance(STRID(USINT), acDataBuf);
+  CIEC_ANY *poVal = forte::core::createDataTypeInstance(STRID(USINT), acDataBuf);
   BOOST_CHECK_EQUAL(CIEC_ANY::e_USINT, poVal->getDataTypeID());
   BOOST_CHECK_EQUAL(0, static_cast<CIEC_USINT::TValueType>(*static_cast<CIEC_USINT *>(poVal)));
 
-  poVal = CTypeLib::createDataTypeInstance(STRID(USINT), nullptr);
+  poVal = forte::core::createDataTypeInstance(STRID(USINT), nullptr);
   BOOST_CHECK_EQUAL(CIEC_ANY::e_USINT, poVal->getDataTypeID());
   BOOST_CHECK_EQUAL(0, static_cast<CIEC_USINT::TValueType>(*static_cast<CIEC_USINT *>(poVal)));
   delete poVal;
@@ -147,11 +147,11 @@ BOOST_AUTO_TEST_CASE(createUSINT) {
 
 BOOST_AUTO_TEST_CASE(createUINT) {
   TForteByte acDataBuf[sizeof(CIEC_UINT)];
-  CIEC_ANY *poVal = CTypeLib::createDataTypeInstance(STRID(UINT), acDataBuf);
+  CIEC_ANY *poVal = forte::core::createDataTypeInstance(STRID(UINT), acDataBuf);
   BOOST_CHECK_EQUAL(CIEC_ANY::e_UINT, poVal->getDataTypeID());
   BOOST_TEST(0 == static_cast<CIEC_UINT::TValueType>(*static_cast<CIEC_UINT *>(poVal)));
 
-  poVal = CTypeLib::createDataTypeInstance(STRID(UINT), nullptr);
+  poVal = forte::core::createDataTypeInstance(STRID(UINT), nullptr);
   BOOST_CHECK_EQUAL(CIEC_ANY::e_UINT, poVal->getDataTypeID());
   BOOST_TEST(0 == static_cast<CIEC_UINT::TValueType>(*static_cast<CIEC_UINT *>(poVal)));
   delete poVal;
@@ -159,11 +159,11 @@ BOOST_AUTO_TEST_CASE(createUINT) {
 
 BOOST_AUTO_TEST_CASE(createUDINT) {
   TForteByte acDataBuf[sizeof(CIEC_UDINT)];
-  CIEC_ANY *poVal = CTypeLib::createDataTypeInstance(STRID(UDINT), acDataBuf);
+  CIEC_ANY *poVal = forte::core::createDataTypeInstance(STRID(UDINT), acDataBuf);
   BOOST_CHECK_EQUAL(CIEC_ANY::e_UDINT, poVal->getDataTypeID());
   BOOST_CHECK_EQUAL(0, static_cast<CIEC_UDINT::TValueType>(*static_cast<CIEC_UDINT *>(poVal)));
 
-  poVal = CTypeLib::createDataTypeInstance(STRID(UDINT), nullptr);
+  poVal = forte::core::createDataTypeInstance(STRID(UDINT), nullptr);
   BOOST_CHECK_EQUAL(CIEC_ANY::e_UDINT, poVal->getDataTypeID());
   BOOST_CHECK_EQUAL(0, static_cast<CIEC_UDINT::TValueType>(*static_cast<CIEC_UDINT *>(poVal)));
   delete poVal;
@@ -171,11 +171,11 @@ BOOST_AUTO_TEST_CASE(createUDINT) {
 
 BOOST_AUTO_TEST_CASE(createULINT) {
   TForteByte acDataBuf[sizeof(CIEC_ULINT)];
-  CIEC_ANY *poVal = CTypeLib::createDataTypeInstance(STRID(ULINT), acDataBuf);
+  CIEC_ANY *poVal = forte::core::createDataTypeInstance(STRID(ULINT), acDataBuf);
   BOOST_CHECK_EQUAL(CIEC_ANY::e_ULINT, poVal->getDataTypeID());
   BOOST_CHECK_EQUAL(0, static_cast<CIEC_ULINT::TValueType>(*static_cast<CIEC_ULINT *>(poVal)));
 
-  poVal = CTypeLib::createDataTypeInstance(STRID(ULINT), nullptr);
+  poVal = forte::core::createDataTypeInstance(STRID(ULINT), nullptr);
   BOOST_CHECK_EQUAL(CIEC_ANY::e_ULINT, poVal->getDataTypeID());
   BOOST_CHECK_EQUAL(0, static_cast<CIEC_ULINT::TValueType>(*static_cast<CIEC_ULINT *>(poVal)));
   delete poVal;
@@ -183,11 +183,11 @@ BOOST_AUTO_TEST_CASE(createULINT) {
 
 BOOST_AUTO_TEST_CASE(createBYTE) {
   TForteByte acDataBuf[sizeof(CIEC_BYTE)];
-  CIEC_ANY *poVal = CTypeLib::createDataTypeInstance(STRID(BYTE), acDataBuf);
+  CIEC_ANY *poVal = forte::core::createDataTypeInstance(STRID(BYTE), acDataBuf);
   BOOST_CHECK_EQUAL(CIEC_ANY::e_BYTE, poVal->getDataTypeID());
   BOOST_CHECK_EQUAL(0, *static_cast<CIEC_BYTE *>(poVal));
 
-  poVal = CTypeLib::createDataTypeInstance(STRID(BYTE), nullptr);
+  poVal = forte::core::createDataTypeInstance(STRID(BYTE), nullptr);
   BOOST_CHECK_EQUAL(CIEC_ANY::e_BYTE, poVal->getDataTypeID());
   BOOST_CHECK_EQUAL(0, *static_cast<CIEC_BYTE *>(poVal));
   delete poVal;
@@ -195,11 +195,11 @@ BOOST_AUTO_TEST_CASE(createBYTE) {
 
 BOOST_AUTO_TEST_CASE(createWORD) {
   TForteByte acDataBuf[sizeof(CIEC_WORD)];
-  CIEC_ANY *poVal = CTypeLib::createDataTypeInstance(STRID(WORD), acDataBuf);
+  CIEC_ANY *poVal = forte::core::createDataTypeInstance(STRID(WORD), acDataBuf);
   BOOST_CHECK_EQUAL(CIEC_ANY::e_WORD, poVal->getDataTypeID());
   BOOST_CHECK_EQUAL(0, *static_cast<CIEC_WORD *>(poVal));
 
-  poVal = CTypeLib::createDataTypeInstance(STRID(WORD), nullptr);
+  poVal = forte::core::createDataTypeInstance(STRID(WORD), nullptr);
   BOOST_CHECK_EQUAL(CIEC_ANY::e_WORD, poVal->getDataTypeID());
   BOOST_CHECK_EQUAL(0, *static_cast<CIEC_WORD *>(poVal));
   delete poVal;
@@ -207,11 +207,11 @@ BOOST_AUTO_TEST_CASE(createWORD) {
 
 BOOST_AUTO_TEST_CASE(createDWORD) {
   TForteByte acDataBuf[sizeof(CIEC_DWORD)];
-  CIEC_ANY *poVal = CTypeLib::createDataTypeInstance(STRID(DWORD), acDataBuf);
+  CIEC_ANY *poVal = forte::core::createDataTypeInstance(STRID(DWORD), acDataBuf);
   BOOST_CHECK_EQUAL(CIEC_ANY::e_DWORD, poVal->getDataTypeID());
   BOOST_CHECK_EQUAL(0, *static_cast<CIEC_DWORD *>(poVal));
 
-  poVal = CTypeLib::createDataTypeInstance(STRID(DWORD), nullptr);
+  poVal = forte::core::createDataTypeInstance(STRID(DWORD), nullptr);
   BOOST_CHECK_EQUAL(CIEC_ANY::e_DWORD, poVal->getDataTypeID());
   BOOST_CHECK_EQUAL(0, *static_cast<CIEC_DWORD *>(poVal));
   delete poVal;
@@ -219,11 +219,11 @@ BOOST_AUTO_TEST_CASE(createDWORD) {
 
 BOOST_AUTO_TEST_CASE(createLWORD) {
   TForteByte acDataBuf[sizeof(CIEC_LWORD)];
-  CIEC_ANY *poVal = CTypeLib::createDataTypeInstance(STRID(LWORD), acDataBuf);
+  CIEC_ANY *poVal = forte::core::createDataTypeInstance(STRID(LWORD), acDataBuf);
   BOOST_CHECK_EQUAL(CIEC_ANY::e_LWORD, poVal->getDataTypeID());
   BOOST_CHECK_EQUAL(0, *static_cast<CIEC_LWORD *>(poVal));
 
-  poVal = CTypeLib::createDataTypeInstance(STRID(LWORD), nullptr);
+  poVal = forte::core::createDataTypeInstance(STRID(LWORD), nullptr);
   BOOST_CHECK_EQUAL(CIEC_ANY::e_LWORD, poVal->getDataTypeID());
   BOOST_CHECK_EQUAL(0, *static_cast<CIEC_LWORD *>(poVal));
   delete poVal;
@@ -231,11 +231,11 @@ BOOST_AUTO_TEST_CASE(createLWORD) {
 
 BOOST_AUTO_TEST_CASE(createDATE) {
   TForteByte acDataBuf[sizeof(CIEC_DATE)];
-  CIEC_ANY *poVal = CTypeLib::createDataTypeInstance(STRID(DATE), acDataBuf);
+  CIEC_ANY *poVal = forte::core::createDataTypeInstance(STRID(DATE), acDataBuf);
   BOOST_CHECK_EQUAL(CIEC_ANY::e_DATE, poVal->getDataTypeID());
   BOOST_CHECK_EQUAL(0, *static_cast<CIEC_DATE *>(poVal));
 
-  poVal = CTypeLib::createDataTypeInstance(STRID(DATE), nullptr);
+  poVal = forte::core::createDataTypeInstance(STRID(DATE), nullptr);
   BOOST_CHECK_EQUAL(CIEC_ANY::e_DATE, poVal->getDataTypeID());
   BOOST_CHECK_EQUAL(0, *static_cast<CIEC_DATE *>(poVal));
   delete poVal;
@@ -243,11 +243,11 @@ BOOST_AUTO_TEST_CASE(createDATE) {
 
 BOOST_AUTO_TEST_CASE(createTIME_OF_DAY) {
   TForteByte acDataBuf[sizeof(CIEC_TIME_OF_DAY)];
-  CIEC_ANY *poVal = CTypeLib::createDataTypeInstance(STRID(TIME_OF_DAY), acDataBuf);
+  CIEC_ANY *poVal = forte::core::createDataTypeInstance(STRID(TIME_OF_DAY), acDataBuf);
   BOOST_CHECK_EQUAL(CIEC_ANY::e_TIME_OF_DAY, poVal->getDataTypeID());
   BOOST_CHECK_EQUAL(0, static_cast<CIEC_TIME_OF_DAY::TValueType>(*static_cast<CIEC_TIME_OF_DAY *>(poVal)));
 
-  poVal = CTypeLib::createDataTypeInstance(STRID(TIME_OF_DAY), nullptr);
+  poVal = forte::core::createDataTypeInstance(STRID(TIME_OF_DAY), nullptr);
   BOOST_CHECK_EQUAL(CIEC_ANY::e_TIME_OF_DAY, poVal->getDataTypeID());
   BOOST_CHECK_EQUAL(0, static_cast<CIEC_TIME_OF_DAY::TValueType>(*static_cast<CIEC_TIME_OF_DAY *>(poVal)));
   delete poVal;
@@ -255,11 +255,11 @@ BOOST_AUTO_TEST_CASE(createTIME_OF_DAY) {
 
 BOOST_AUTO_TEST_CASE(createDATE_AND_TIME) {
   TForteByte acDataBuf[sizeof(CIEC_DATE_AND_TIME)];
-  CIEC_ANY *poVal = CTypeLib::createDataTypeInstance(STRID(DATE_AND_TIME), acDataBuf);
+  CIEC_ANY *poVal = forte::core::createDataTypeInstance(STRID(DATE_AND_TIME), acDataBuf);
   BOOST_CHECK_EQUAL(CIEC_ANY::e_DATE_AND_TIME, poVal->getDataTypeID());
   BOOST_CHECK_EQUAL(0, *static_cast<CIEC_DATE_AND_TIME *>(poVal));
 
-  poVal = CTypeLib::createDataTypeInstance(STRID(DATE_AND_TIME), nullptr);
+  poVal = forte::core::createDataTypeInstance(STRID(DATE_AND_TIME), nullptr);
   BOOST_CHECK_EQUAL(CIEC_ANY::e_DATE_AND_TIME, poVal->getDataTypeID());
   BOOST_CHECK_EQUAL(0, *static_cast<CIEC_DATE_AND_TIME *>(poVal));
   delete poVal;
@@ -267,11 +267,11 @@ BOOST_AUTO_TEST_CASE(createDATE_AND_TIME) {
 
 BOOST_AUTO_TEST_CASE(createTIME) {
   TForteByte acDataBuf[sizeof(CIEC_TIME)];
-  CIEC_ANY *poVal = CTypeLib::createDataTypeInstance(STRID(TIME), acDataBuf);
+  CIEC_ANY *poVal = forte::core::createDataTypeInstance(STRID(TIME), acDataBuf);
   BOOST_CHECK_EQUAL(CIEC_ANY::e_TIME, poVal->getDataTypeID());
   BOOST_CHECK_EQUAL(0, static_cast<CIEC_TIME::TValueType>(*static_cast<CIEC_TIME *>(poVal)));
 
-  poVal = CTypeLib::createDataTypeInstance(STRID(TIME), nullptr);
+  poVal = forte::core::createDataTypeInstance(STRID(TIME), nullptr);
   BOOST_CHECK_EQUAL(CIEC_ANY::e_TIME, poVal->getDataTypeID());
   BOOST_CHECK_EQUAL(0, static_cast<CIEC_TIME::TValueType>(*static_cast<CIEC_TIME *>(poVal)));
   delete poVal;
@@ -279,11 +279,11 @@ BOOST_AUTO_TEST_CASE(createTIME) {
 
 BOOST_AUTO_TEST_CASE(createREAL) {
   TForteByte acDataBuf[sizeof(CIEC_REAL)];
-  CIEC_ANY *poVal = CTypeLib::createDataTypeInstance(STRID(REAL), acDataBuf);
+  CIEC_ANY *poVal = forte::core::createDataTypeInstance(STRID(REAL), acDataBuf);
   BOOST_CHECK_EQUAL(CIEC_ANY::e_REAL, poVal->getDataTypeID());
   BOOST_CHECK_EQUAL(0.0f, *static_cast<CIEC_REAL *>(poVal));
 
-  poVal = CTypeLib::createDataTypeInstance(STRID(REAL), nullptr);
+  poVal = forte::core::createDataTypeInstance(STRID(REAL), nullptr);
   BOOST_CHECK_EQUAL(CIEC_ANY::e_REAL, poVal->getDataTypeID());
   BOOST_CHECK_EQUAL(0.0f, *static_cast<CIEC_REAL *>(poVal));
   delete poVal;
@@ -291,11 +291,11 @@ BOOST_AUTO_TEST_CASE(createREAL) {
 
 BOOST_AUTO_TEST_CASE(createLREAL) {
   TForteByte acDataBuf[sizeof(CIEC_LREAL)];
-  CIEC_ANY *poVal = CTypeLib::createDataTypeInstance(STRID(LREAL), acDataBuf);
+  CIEC_ANY *poVal = forte::core::createDataTypeInstance(STRID(LREAL), acDataBuf);
   BOOST_TEST(CIEC_ANY::e_LREAL == poVal->getDataTypeID());
   BOOST_TEST(0.0 == static_cast<CIEC_LREAL::TValueType>(*static_cast<CIEC_LREAL *>(poVal)));
 
-  poVal = CTypeLib::createDataTypeInstance(STRID(LREAL), nullptr);
+  poVal = forte::core::createDataTypeInstance(STRID(LREAL), nullptr);
   BOOST_TEST(CIEC_ANY::e_LREAL == poVal->getDataTypeID());
   BOOST_TEST(0.0 == static_cast<CIEC_LREAL::TValueType>(*static_cast<CIEC_LREAL *>(poVal)));
   delete poVal;
@@ -303,11 +303,11 @@ BOOST_AUTO_TEST_CASE(createLREAL) {
 
 BOOST_AUTO_TEST_CASE(createSTRING) {
   TForteByte acDataBuf[sizeof(CIEC_STRING)];
-  CIEC_ANY *poVal = CTypeLib::createDataTypeInstance(STRID(STRING), acDataBuf);
+  CIEC_ANY *poVal = forte::core::createDataTypeInstance(STRID(STRING), acDataBuf);
   BOOST_CHECK_EQUAL(CIEC_ANY::e_STRING, poVal->getDataTypeID());
   BOOST_TEST(""s == static_cast<CIEC_STRING *>(poVal)->getStorage());
 
-  poVal = CTypeLib::createDataTypeInstance(STRID(STRING), nullptr);
+  poVal = forte::core::createDataTypeInstance(STRID(STRING), nullptr);
   BOOST_CHECK_EQUAL(CIEC_ANY::e_STRING, poVal->getDataTypeID());
   BOOST_TEST(""s == static_cast<CIEC_STRING *>(poVal)->getStorage());
   delete poVal;
@@ -315,11 +315,11 @@ BOOST_AUTO_TEST_CASE(createSTRING) {
 
 BOOST_AUTO_TEST_CASE(createWSTRING) {
   TForteByte acDataBuf[sizeof(CIEC_WSTRING)];
-  CIEC_ANY *poVal = CTypeLib::createDataTypeInstance(STRID(WSTRING), acDataBuf);
+  CIEC_ANY *poVal = forte::core::createDataTypeInstance(STRID(WSTRING), acDataBuf);
   BOOST_CHECK_EQUAL(CIEC_ANY::e_WSTRING, poVal->getDataTypeID());
   BOOST_CHECK_EQUAL("", static_cast<CIEC_WSTRING *>(poVal)->getValue());
 
-  poVal = CTypeLib::createDataTypeInstance(STRID(WSTRING), nullptr);
+  poVal = forte::core::createDataTypeInstance(STRID(WSTRING), nullptr);
   BOOST_CHECK_EQUAL(CIEC_ANY::e_WSTRING, poVal->getDataTypeID());
   BOOST_CHECK_EQUAL("", static_cast<CIEC_WSTRING *>(poVal)->getValue());
   delete poVal;

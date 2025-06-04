@@ -18,6 +18,7 @@
 #include "fbtesterglobalfixture.h"
 #include <criticalregion.h>
 #include <ecet.h>
+#include "typelib_internal.h"
 
 #ifdef WIN32
 #define usleep(x) Sleep((x) / 1000)
@@ -63,7 +64,7 @@ class CFBTestInputDataConn final : public CDataConnection {
 CFBTestFixtureBase::CFBTestFixtureBase(CStringDictionary::TStringId paTypeId) :
     CGenFunctionBlock<CFunctionBlock>(CFBTestDataGlobalFixture::getResource(), 0),
     mTypeId(paTypeId) {
-  mFBUnderTest = CTypeLib::createFB(paTypeId, paTypeId, CFBTestDataGlobalFixture::getResource());
+  mFBUnderTest = forte::core::createFB(paTypeId, paTypeId, CFBTestDataGlobalFixture::getResource());
 }
 
 bool CFBTestFixtureBase::initialize() {
@@ -119,7 +120,7 @@ void CFBTestFixtureBase::performFBResetTests() {
   BOOST_CHECK_EQUAL(EMGMResponse::Ready, mFBUnderTest->changeExecutionState(EMGMCommandType::Stop));
   BOOST_CHECK_EQUAL(EMGMResponse::Ready, mFBUnderTest->changeExecutionState(EMGMCommandType::Reset));
 
-  CFunctionBlock *freshInstance = CTypeLib::createFB(mTypeId, mTypeId, *getResource());
+  CFunctionBlock *freshInstance = forte::core::createFB(mTypeId, mTypeId, *getResource());
   BOOST_REQUIRE(freshInstance != nullptr);
 
   if (!mConfigString.empty()) {
@@ -134,7 +135,7 @@ void CFBTestFixtureBase::performFBResetTests() {
     checkVars(*mFBUnderTest->getDO(i), *freshInstance->getDO(i));
   }
 
-  BOOST_CHECK(CTypeLib::deleteFB(freshInstance));
+  BOOST_CHECK(forte::core::deleteFB(freshInstance));
 
   BOOST_CHECK_EQUAL(EMGMResponse::Ready, mFBUnderTest->changeExecutionState(EMGMCommandType::Start));
 }
@@ -146,7 +147,7 @@ void CFBTestFixtureBase::performFBDeleteTests() {
 
   BOOST_CHECK(mFBUnderTest->isCurrentlyDeleteable());
 
-  BOOST_CHECK(CTypeLib::deleteFB(mFBUnderTest));
+  BOOST_CHECK(forte::core::deleteFB(mFBUnderTest));
   mFBUnderTest = nullptr;
 }
 

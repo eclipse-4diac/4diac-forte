@@ -33,6 +33,7 @@
 #include "adapterconn.h"
 #include "device.h"
 #include "string_utils.h"
+#include "typelib_internal.h"
 
 using namespace std::string_literals;
 
@@ -368,9 +369,9 @@ EMGMResponse CFunctionBlock::changeExecutionState(EMGMCommandType paCommand) {
 CAdapter *CFunctionBlock::createAdapter(const SAdapterInstanceDef &paAdapterInstanceDefinition,
                                         TForteUInt8 paParentAdapterlistID) {
   EMGMResponse errorMSG;
-  CAdapter *adapter = CTypeLib::createAdapter(paAdapterInstanceDefinition.mAdapterNameID,
-                                              paAdapterInstanceDefinition.mAdapterTypeNameID, *this,
-                                              paAdapterInstanceDefinition.mIsPlug, errorMSG);
+  CAdapter *adapter = forte::core::createAdapter(paAdapterInstanceDefinition.mAdapterNameID,
+                                                 paAdapterInstanceDefinition.mAdapterTypeNameID, *this,
+                                                 paAdapterInstanceDefinition.mIsPlug, errorMSG);
   if (adapter) {
     adapter->setParentFB(this, paParentAdapterlistID);
   }

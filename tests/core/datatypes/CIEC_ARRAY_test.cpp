@@ -341,7 +341,7 @@ BOOST_AUTO_TEST_CASE(Array_equality_test) {
 
 BOOST_AUTO_TEST_CASE(Configure_test) {
   CIEC_ARRAY_DYNAMIC *pTest =
-      static_cast<CIEC_ARRAY_DYNAMIC *>(CTypeLib::createDataTypeInstance(STRID(ARRAY), nullptr));
+      static_cast<CIEC_ARRAY_DYNAMIC *>(forte::core::createDataTypeInstance(STRID(ARRAY), nullptr));
 
   pTest->setup(8, STRID(INT));
 
