@@ -165,29 +165,13 @@ CMLPIFaceProcessInterface::CIOHandler::~CIOHandler() {
 }
 
 void CMLPIFaceProcessInterface::CIOHandler::registerIXFB(CMLPIFaceProcessInterface *paFB) {
-  mReadFBListSync.lock();
-  mReadFBList.pushBack(paFB);
-  mReadFBListSync.unlock();
+  CCriticalRegion readList(mReadFBListSync);
+  mReadFBList.push_back(paFB);
 }
 
 void CMLPIFaceProcessInterface::CIOHandler::unregisterIXFB(CMLPIFaceProcessInterface *paFB) {
-  mReadFBListSync.lock();
-  TReadFBContainer::Iterator itRunner(mReadFBList.begin());
-  TReadFBContainer::Iterator itRefNode(mReadFBList.end());
-  TReadFBContainer::Iterator itEnd(mReadFBList.end());
-  while (itRunner != itEnd) {
-    if (*itRunner == paFB) {
-      if (itRefNode == itEnd) {
-        mReadFBList.popFront();
-      } else {
-        mReadFBList.eraseAfter(itRefNode);
-      }
-      break;
-    }
-    itRefNode = itRunner;
-    ++itRunner;
-  }
-  mReadFBListSync.unlock();
+  CCriticalRegion readList(mReadFBListSync);
+  mReadFBList.erase(std::remove(mReadFBList.begin(), mReadFBList.end(), paFB), mReadFBList.end());
 }
 
 void CMLPIFaceProcessInterface::CIOHandler::run() {
@@ -198,10 +182,10 @@ void CMLPIFaceProcessInterface::CIOHandler::run() {
 }
 
 void CMLPIFaceProcessInterface::CIOHandler::updateReadData() {
-  TReadFBContainer::Iterator itEnd(mReadFBList.end());
-  for (TReadFBContainer::Iterator itRunner = mReadFBList.begin(); itRunner != itEnd; ++itRunner) {
-    if ((*itRunner)->checkInputData()) {
-      startNewEventChain(*itRunner);
+  CCriticalRegion readList(mReadFBListSync);
+  for (CMLPIFaceProcessInterface *it : mReadFBList) {
+    if (it->checkInputData()) {
+      startNewEventChain(it);
     }
   }
 }

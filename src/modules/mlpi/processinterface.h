@@ -36,8 +36,7 @@ class CMLPIFaceProcessInterface : public CProcessInterfaceBase {
     class CIOHandler : public CExternalEventHandler, public CThread {
         DECLARE_HANDLER(CIOHandler)
       private:
-        typedef CSinglyLinkedList<CMLPIFaceProcessInterface *> TReadFBContainer;
-        TReadFBContainer mReadFBList;
+        std::vector<CMLPIFaceProcessInterface *> mReadFBList;
         CSyncObject mReadFBListSync;
 
       public:

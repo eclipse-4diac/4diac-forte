@@ -13,10 +13,7 @@
 #ifndef SRC_MODULES_PLCNEXT_SLAVEHANDLER_H_
 #define SRC_MODULES_PLCNEXT_SLAVEHANDLER_H_
 
-#include <stdint.h>
 #include <cstring>
-#include <fortelist.h>
-#include <stdint.h>
 #include <forte_sync.h>
 #include <forte_wstring.h>
 #include <devlog.h>
@@ -34,7 +31,7 @@ class PLCnextSlaveHandler : public forte::core::io::IOConfigFBMultiSlave {
 
     int update();
 
-    PLCnextSlaveHandle *getHandle(int paIndex);
+    PLCnextSlaveHandle *getHandle(size_t paIndex);
     void addHandle(PLCnextSlaveHandle *paHandle);
     void dropHandles();
     void initBufferImage(size_t imageSize);
@@ -60,8 +57,7 @@ class PLCnextSlaveHandler : public forte::core::io::IOConfigFBMultiSlave {
     virtual void initHandles() = 0;
     virtual const char *init() = 0;
 
-    typedef CSinglyLinkedList<PLCnextSlaveHandle *> TSlaveHandleList;
-    TSlaveHandleList *slaveHandles = new TSlaveHandleList();
+    std::vector<PLCnextSlaveHandle *> mDeviceHandles;
 
     static const TForteUInt8 scmSlaveConfigurationIO[];
     static const TForteUInt8 scmSlaveConfigurationIONum;

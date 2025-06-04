@@ -22,7 +22,6 @@
 #include <timerha.h>
 #include <string>
 #include <pthread.h>
-#include <fortelist.h>
 #include "spi.h"
 #include "pin.h"
 #include <slave/slave.h>
@@ -120,16 +119,16 @@ class EmbrickBusHandler : public forte::core::io::IODeviceMultiController {
     bool transfer(unsigned int paTarget,
                   Command paCmd,
                   unsigned char *paDataSend = nullptr,
-                  int paDataSendLength = 0,
+                  size_t paDataSendLength = 0,
                   unsigned char *paDataReceive = nullptr,
-                  int paDataReceiveLength = 0,
+                  size_t paDataReceiveLength = 0,
                   EmbrickSlaveHandler::SlaveStatus *paStatus = nullptr,
                   CSyncObject *paSyncMutex = nullptr);
     bool broadcast(Command paCmd,
                    unsigned char *paDataSend = nullptr,
-                   int paDataSendLength = 0,
+                   size_t paDataSendLength = 0,
                    unsigned char *paDataReceive = nullptr,
-                   int paDataReceiveLength = 0) {
+                   size_t paDataReceiveLength = 0) {
       return transfer(0, paCmd, paDataSend, paDataSendLength, paDataReceive, paDataReceiveLength);
     }
 
@@ -145,10 +144,8 @@ class EmbrickBusHandler : public forte::core::io::IODeviceMultiController {
     EmbrickSPIHandler *mSpi;
     EmbrickPinHandler *mSlaveSelect;
 
-    // Slaves
-    typedef CSinglyLinkedList<EmbrickSlaveHandler *> TSlaveList;
-    TSlaveList *mSlaves;
-    size_t mSlaveCount;
+    // Devices
+    std::vector<EmbrickSlaveHandler *> mDevices;
 
     // Sync
     bool mLoopActive;

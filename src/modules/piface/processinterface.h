@@ -17,6 +17,7 @@
 #include <../../stdfblib/io/processinterfacebase.h>
 #include <extevhan.h>
 #include <forte_thread.h>
+#include <vector>
 #include "../conmeleon_c1/spi/spidevice.h"
 
 class CPiFaceProcessInterface : public CProcessInterfaceBase {
@@ -58,8 +59,6 @@ class CPiFaceProcessInterface : public CProcessInterfaceBase {
         int getPriority() const override;
 
       private:
-        typedef CSinglyLinkedList<CPiFaceProcessInterface *> TReadFBContainer;
-
         static const int scmPiFaceWrite = 0x40;
         static const int scmPiFaceRead = 0x41;
 
@@ -73,7 +72,7 @@ class CPiFaceProcessInterface : public CProcessInterfaceBase {
           eGPIOPullupResistorsPortB = 0x0D
         };
 
-        TReadFBContainer mReadFBList;
+        std::vector<CPiFaceProcessInterface *> mReadFBList;
         CSyncObject mReadFBListSync;
         TForteUInt8 mOutBuffer;
 

@@ -25,7 +25,7 @@ CPiFaceProcessInterface::~CPiFaceProcessInterface() {
 
 bool CPiFaceProcessInterface::initialise(bool paIsInput, CEventChainExecutionThread *const paECET) {
   bool retVal = false;
-  if (paInput) {
+  if (paIsInput) {
     getExtEvHandler<CPiFaceIOHandler>(*this).registerIXFB(this);
   }
   QO() = QI();
@@ -105,36 +105,20 @@ void CPiFaceProcessInterface::CPiFaceIOHandler::run() {
 }
 
 void CPiFaceProcessInterface::CPiFaceIOHandler::registerIXFB(CPiFaceProcessInterface *paFB) {
-  mReadFBListSync.lock();
-  mReadFBList.pushBack(paFB);
-  mReadFBListSync.unlock();
+  CCriticalRegion readList(mReadFBListSync);
+  mReadFBList.push_back(paFB);
 }
 
 void CPiFaceProcessInterface::CPiFaceIOHandler::unregisterIXFB(CPiFaceProcessInterface *paFB) {
-  mReadFBListSync.lock();
-  TReadFBContainer::Iterator itRunner(mReadFBList.begin());
-  TReadFBContainer::Iterator itRefNode(mReadFBList.end());
-  TReadFBContainer::Iterator itEnd(mReadFBList.end());
-  while (itRunner != itEnd) {
-    if (*itRunner == paFB) {
-      if (itRefNode == itEnd) {
-        mReadFBList.popFront();
-      } else {
-        mReadFBList.eraseAfter(itRefNode);
-      }
-      break;
-    }
-    itRefNode = itRunner;
-    ++itRunner;
-  }
-  mReadFBListSync.unlock();
+  CCriticalRegion readList(mReadFBListSync);
+  mReadFBList.erase(std::remove(mReadFBList.begin(), mReadFBList.end(), paFB), mReadFBList.end());
 }
 
 void CPiFaceProcessInterface::CPiFaceIOHandler::updateReadData(TForteUInt8 paInBuffer) {
-  TReadFBContainer::Iterator itEnd(mReadFBList.end());
-  for (TReadFBContainer::Iterator itRunner = mReadFBList.begin(); itRunner != itEnd; ++itRunner) {
-    if ((*itRunner)->checkInputData(paInBuffer)) {
-      startNewEventChain(*itRunner);
+  CCriticalRegion readList(mReadFBListSync);
+  for (CPiFaceProcessInterface *it : mReadFBList) {
+    if (it->checkInputData(paInBuffer)) {
+      startNewEventChain(it);
     }
   }
 }

@@ -14,7 +14,6 @@
 #ifndef SRC_CORE_IO_CONFIGFB_MASTER_MULTI_H_
 #define SRC_CORE_IO_CONFIGFB_MASTER_MULTI_H_
 
-#include <fortelist.h>
 #include "io_configFB_controller.h"
 #include "io_adapter_multi.h"
 

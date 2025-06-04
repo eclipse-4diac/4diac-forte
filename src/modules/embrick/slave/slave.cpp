@@ -12,6 +12,7 @@
  *******************************************************************************/
 
 #include "slave.h"
+#include <cstddef>
 #include <handler/bus.h>
 #include <io/mapper/io_mapper.h>
 #include <processinterfacefb.h>
@@ -20,7 +21,7 @@
 const int EmbrickSlaveHandler::scmMaxUpdateErrors = 50;
 
 EmbrickSlaveHandler::EmbrickSlaveHandler(EmbrickBusHandler *paBus, int paAddress, EmbrickSlaveInitPackage paInit) :
-    mDelegate(0),
+    mDelegate(nullptr),
     mAddress(paAddress),
     mType((SlaveType) paInit.mDeviceId),
     mBus(paBus),
@@ -49,7 +50,7 @@ EmbrickSlaveHandler::~EmbrickSlaveHandler() {
   delete mUpdateReceiveImage;
   delete mUpdateReceiveImageOld;
 
-  if (mDelegate != 0) {
+  if (mDelegate != nullptr) {
     mDelegate->onSlaveDestroy();
   }
 }
@@ -76,7 +77,7 @@ EmbrickSlaveHandler *EmbrickSlaveHandler::sendInit(EmbrickBusHandler *paBus, int
   // Send init via broadcast. Due to the sequential slave select activation, only one slave will respond.
   if (!paBus->broadcast(EmbrickBusHandler::Init, sendBuffer, sizeof(EmbrickMasterInitPackage), receiveBuffer,
                         sizeof(EmbrickSlaveInitPackage))) {
-    return 0;
+    return nullptr;
   }
 
   EmbrickSlaveInitPackage initPackage = EmbrickSlaveInitPackage::fromBuffer(receiveBuffer);
@@ -107,11 +108,10 @@ int EmbrickSlaveHandler::update() {
   // forte::core::IO::IOHandle the received image
   {
     CCriticalRegion criticalRegion(mHandleMutex);
-    TSlaveHandleList::Iterator itEnd = mInputs.end();
-    for (TSlaveHandleList::Iterator it = mInputs.begin(); it != itEnd; ++it) {
-      if ((*it)->hasObserver() && !(*it)->equal(mUpdateReceiveImageOld)) {
+    for (EmbrickSlaveHandle *it : mInputs) {
+      if (it->hasObserver() && !it->equal(mUpdateReceiveImageOld)) {
         // Inform Process Interface about change
-        (*it)->onChange();
+        it->onChange();
       }
     }
   }
@@ -125,7 +125,7 @@ int EmbrickSlaveHandler::update() {
   }
 
   // Check status
-  if (mDelegate != 0 && mOldStatus != mStatus) {
+  if (mDelegate != nullptr && mOldStatus != mStatus) {
     mDelegate->onSlaveStatus(mStatus, mOldStatus);
     mOldStatus = mStatus;
   }
@@ -142,35 +142,30 @@ void EmbrickSlaveHandler::dropHandles() {
 
   forte::core::io::IOMapper &mapper = forte::core::io::IOMapper::getInstance();
 
-  TSlaveHandleList::Iterator itEnd = mInputs.end();
-  for (TSlaveHandleList::Iterator it = mInputs.begin(); it != itEnd; ++it) {
-    mapper.deregisterHandle(**it);
-    delete *it;
-  }
-  itEnd = mOutputs.end();
-  for (TSlaveHandleList::Iterator it = mOutputs.begin(); it != itEnd; ++it) {
-    mapper.deregisterHandle(**it);
-    delete *it;
+  for (EmbrickSlaveHandle *it : mInputs) {
+    mapper.deregisterHandle(*it);
+    delete it;
   }
 
-  mInputs.clearAll();
-  mOutputs.clearAll();
+  for (EmbrickSlaveHandle *it : mOutputs) {
+    mapper.deregisterHandle(*it);
+    delete it;
+  }
+
+  mInputs.clear();
+  mOutputs.clear();
 }
 
-void EmbrickSlaveHandler::addHandle(TSlaveHandleList *paList, EmbrickSlaveHandle *paHandle) {
+void EmbrickSlaveHandler::addHandle(std::vector<EmbrickSlaveHandle *> &paList, EmbrickSlaveHandle *paHandle) {
   CCriticalRegion criticalRegion(mHandleMutex);
-  paList->pushBack(paHandle);
+  paList.push_back(paHandle);
 
   // TODO Maybe send indication event after connecting
 }
 
-EmbrickSlaveHandle *EmbrickSlaveHandler::getHandle(TSlaveHandleList *paList, int paIndex) {
-  TSlaveHandleList::Iterator itEnd = paList->end();
-  int i = 0;
-  for (TSlaveHandleList::Iterator it = paList->begin(); it != itEnd; ++it, i++) {
-    if (paIndex == i) {
-      return *it;
-    }
+EmbrickSlaveHandle *EmbrickSlaveHandler::getHandle(std::vector<EmbrickSlaveHandle *> &paList, size_t paIndex) {
+  if (paList.size() <= paIndex) {
+    return nullptr;
   }
-  return nullptr;
+  return paList[paIndex];
 }

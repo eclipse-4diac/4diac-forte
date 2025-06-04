@@ -17,9 +17,6 @@
 #include <syslog.h>
 #include <unistd.h>
 #include <libgen.h>
-#include <thread>
-#include <pthread.h>
-#include <fortelist.h>
 #include "forte_wstring.h"
 
 class PLCnextSlaveHandler;
@@ -36,7 +33,7 @@ class PLCnextDeviceController : public forte::core::io::IODeviceMultiController 
       mConfig.updateInterval = 25; // set default
     };
 
-    ~PLCnextDeviceController();
+    ~PLCnextDeviceController() override = default;
 
     struct PLCnextConfig : forte::core::io::IODeviceController::Config {
         unsigned int updateInterval;
@@ -53,8 +50,8 @@ class PLCnextDeviceController : public forte::core::io::IODeviceMultiController 
                          uint16_t position,
                          HandleType paType) :
             forte::core::io::IODeviceMultiController::HandleDescriptor(paId, paDirection, paSlaveIndex),
-            mPosition(position),
-            mType(paType) {
+            mType(paType),
+            mPosition(position) {
         }
     };
 
@@ -74,8 +71,7 @@ class PLCnextDeviceController : public forte::core::io::IODeviceMultiController 
     void deInit() override;
     void runLoop() override;
 
-    typedef CSinglyLinkedList<PLCnextSlaveHandler *> TSlaveList;
-    TSlaveList *mSlaves = new TSlaveList();
+    std::vector<PLCnextSlaveHandler *> mDevices;
 
     PLCnextConfig mConfig;
 

@@ -41,8 +41,7 @@ class CSysFsProcessInterface : public CProcessInterfaceBase {
         int getPriority() const override;
 
       private:
-        typedef CSinglyLinkedList<CSysFsProcessInterface *> TReadFBContainer;
-        TReadFBContainer mReadFBList;
+        std::vector<CSysFsProcessInterface *> mReadFBList;
         CSyncObject mReadFBListSync;
     };
 

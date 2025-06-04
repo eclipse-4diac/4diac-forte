@@ -18,7 +18,6 @@
 #include <forte_sync.h>
 #include <forte_thread.h>
 #include <devlog.h>
-#include <fortelist.h>
 
 #include <io/mapper/io_handle.h>
 

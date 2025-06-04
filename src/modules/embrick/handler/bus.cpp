@@ -21,8 +21,8 @@
 #include <slave/handles/bit.h>
 #include <slave/handles/analog.h>
 #include <slave/handles/analog10.h>
-#include "core/util/criticalregion.h"
 #include "arch/utils/timespec_utils.h"
+#include <fortealloc.h>
 
 const char *const EmbrickBusHandler::scmSlaveUpdateFailed = "Update of slave failed.";
 const char *const EmbrickBusHandler::scmNoSlavesFound = "No slave modules found.";
@@ -31,8 +31,6 @@ EmbrickBusHandler::EmbrickBusHandler(CDeviceExecution &paDeviceExecution) :
     forte::core::io::IODeviceMultiController(paDeviceExecution),
     mSpi(0),
     mSlaveSelect(0),
-    mSlaves(0),
-    mSlaveCount(0),
     mLoopActive(false),
     mSList(0) {
   // Set init time
@@ -64,7 +62,6 @@ const char *EmbrickBusHandler::init() {
   // Start handlers
   mSpi = new EmbrickSPIHandler(mConfig.mBusInterface);
   mSlaveSelect = new EmbrickPinHandler(mConfig.mBusSelectPin);
-  mSlaves = new TSlaveList();
 
   // Check handlers
   if (checkHandlerError()) {
@@ -94,7 +91,7 @@ const char *EmbrickBusHandler::init() {
     EmbrickSlaveHandler *slave = EmbrickSlaveHandler::sendInit(this, slaveCounter);
 
     if (slave != 0) {
-      mSlaves->pushBack(slave);
+      mDevices.push_back(slave);
 
       // Activate next slave by sending the 'SelectNextSlave' command to the current slave
       // It enables the slave select pin for the next slave on the bus
@@ -107,26 +104,23 @@ const char *EmbrickBusHandler::init() {
     microsleep(SyncGapDuration * 2);
   } while (++attempts < 3);
 
-  mSlaveCount = slaveCounter - 1;
-
-  if (mSlaveCount == 0) {
+  if (mDevices.empty()) {
     return scmNoSlavesFound;
   }
 
   // Increase the speed of the bus for data transfers
   mSpi->setSpeed(mConfig.mBusLoopSpeed);
 
-  return 0;
+  return nullptr;
 }
 
 void EmbrickBusHandler::deInit() {
-  // Free memory -> delete all slave instances and hardware handlers
-  TSlaveList::Iterator itEnd(mSlaves->end());
-  for (TSlaveList::Iterator it = mSlaves->begin(); it != itEnd; ++it) {
-    delete *it;
+  // Free memory -> delete all devices instances and hardware handlers
+
+  for (EmbrickSlaveHandler *it : mDevices) {
+    delete it;
   }
-  delete mSlaves;
-  mSlaves = 0;
+  mDevices.clear();
 
   delete mSpi;
   delete mSlaveSelect;
@@ -137,8 +131,8 @@ EmbrickBusHandler::createIOHandle(forte::core::io::IODeviceController::HandleDes
   HandleDescriptor &desc = static_cast<HandleDescriptor &>(paHandleDescriptor);
 
   EmbrickSlaveHandler *slave = getSlave(desc.mSlaveIndex);
-  if (slave == 0) {
-    return 0;
+  if (slave == nullptr) {
+    return nullptr;
   }
 
   switch (desc.mType) {
@@ -147,7 +141,7 @@ EmbrickBusHandler::createIOHandle(forte::core::io::IODeviceController::HandleDes
     case Analog10: return new EmbrickAnalog10SlaveHandle(this, desc.mDirection, desc.mOffset, slave);
   }
 
-  return 0;
+  return nullptr;
 }
 
 void EmbrickBusHandler::prepareLoop() {
@@ -157,17 +151,15 @@ void EmbrickBusHandler::prepareLoop() {
   // Scheduling
   // TODO Combine slaves list and scheduling information
   // DISCUSS Speed of array and forte_list?
-  TSlaveList::Iterator it = mSlaves->begin();
-  mSList = (struct SEntry **) forte_malloc(sizeof(struct SEntry *) * mSlaveCount);
-  for (int i = 0; i < mSlaveCount; i++) {
+
+  mSList = (struct SEntry **) forte_malloc(sizeof(struct SEntry *) * mDevices.size());
+  for (size_t i = 0; i < mDevices.size(); i++) {
     mSList[i] = (struct SEntry *) forte_malloc(sizeof(struct SEntry));
-    mSList[i]->mSlave = *it;
+    mSList[i]->mSlave = mDevices[i];
     mSList[i]->mNextDeadline = mNextLoop;
     mSList[i]->mLastDuration = 0;
     mSList[i]->mForced = false;
     mSList[i]->mDelayed = false;
-
-    ++it;
   }
   mSNext = mSList[0];
   mLoopActive = false;
@@ -177,7 +169,7 @@ void EmbrickBusHandler::runLoop() {
   prepareLoop();
 
   // Init loop variables
-  SEntry *sCur = 0;
+  SEntry *sCur = nullptr;
 
   while (isAlive()) {
     // Sleep till next deadline is reached or loop is waked up
@@ -229,7 +221,7 @@ void EmbrickBusHandler::runLoop() {
       addTime(sCur->mNextDeadline, sCur->mLastDuration);
     }
 
-    for (int i = 0; i < mSlaveCount; i++) {
+    for (size_t i = 0; i < mDevices.size(); i++) {
       if (timespecLessThan(&mSList[i]->mNextDeadline, &mSNext->mNextDeadline)) {
         mSNext = mSList[i];
       }
@@ -242,11 +234,11 @@ void EmbrickBusHandler::runLoop() {
 
 void EmbrickBusHandler::cleanLoop() {
   // Free memory of list
-  for (int i = 0; i < mSlaveCount; i++) {
+  for (size_t i = 0; i < mDevices.size(); i++) {
     forte_free(mSList[i]);
   }
   forte_free(mSList);
-  mSList = 0;
+  mSList = nullptr;
 }
 
 bool EmbrickBusHandler::checkHandlerError() {
@@ -264,25 +256,16 @@ bool EmbrickBusHandler::checkHandlerError() {
 }
 
 EmbrickSlaveHandler *EmbrickBusHandler::getSlave(size_t paIndex) {
-  if (mSlaves == 0) {
-    return 0;
+  if (mDevices.size() <= paIndex) {
+    return nullptr;
   }
-
-  TSlaveList::Iterator itEnd = mSlaves->end();
-  int i = 0;
-  for (TSlaveList::Iterator it = mSlaves->begin(); it != itEnd; ++it, i++) {
-    if (paIndex == i) {
-      return *it;
-    }
-  }
-
-  return 0;
+  return mDevices[paIndex];
 }
 
 void EmbrickBusHandler::forceUpdate(size_t paIndex) {
   mSyncObject.lock();
 
-  if (mSList == 0 || mSlaveCount <= paIndex || mSList[paIndex]->mForced) {
+  if (mSList == nullptr || mDevices.size() <= paIndex || mSList[paIndex]->mForced) {
     mSyncObject.unlock();
     return;
   }
@@ -311,7 +294,7 @@ void EmbrickBusHandler::forceUpdate(size_t paIndex) {
 
 void EmbrickBusHandler::addSlaveHandle(size_t paIndex, std::unique_ptr<forte::core::io::IOHandle> paHandle) {
   EmbrickSlaveHandler *slave = getSlave(paIndex);
-  if (slave == 0) {
+  if (slave == nullptr) {
     return;
   }
 
@@ -320,7 +303,7 @@ void EmbrickBusHandler::addSlaveHandle(size_t paIndex, std::unique_ptr<forte::co
 
 void EmbrickBusHandler::dropSlaveHandles(size_t paIndex) {
   EmbrickSlaveHandler *slave = getSlave(paIndex);
-  if (slave == 0) {
+  if (slave == nullptr) {
     return;
   }
 
@@ -328,12 +311,12 @@ void EmbrickBusHandler::dropSlaveHandles(size_t paIndex) {
 }
 
 bool EmbrickBusHandler::isSlaveAvailable(size_t paIndex) {
-  return getSlave(paIndex) != 0;
+  return getSlave(paIndex) != nullptr;
 }
 
 bool EmbrickBusHandler::checkSlaveType(size_t paIndex, int paType) {
   EmbrickSlaveHandler *slave = getSlave(paIndex);
-  if (slave == 0) {
+  if (slave == nullptr) {
     return false;
   }
 
@@ -343,9 +326,9 @@ bool EmbrickBusHandler::checkSlaveType(size_t paIndex, int paType) {
 bool EmbrickBusHandler::transfer(unsigned int paTarget,
                                  Command paCmd,
                                  unsigned char *paDataSend,
-                                 int paDataSendLength,
+                                 size_t paDataSendLength,
                                  unsigned char *paDataReceive,
-                                 int paDataReceiveLength,
+                                 size_t paDataReceiveLength,
                                  EmbrickSlaveHandler::SlaveStatus *paStatus,
                                  CSyncObject *paSyncMutex) {
   unsigned int dataLength = std::max(paDataSendLength, paDataReceiveLength + 1); // + 1 status byte
@@ -467,7 +450,7 @@ void EmbrickBusHandler::microsleep(uint64_t paMicroseconds) {
   struct timespec ts;
   ts.tv_sec = (time_t) (paMicroseconds / 1'000'000UL);
   ts.tv_nsec = (long) (paMicroseconds - (unsigned long) ts.tv_sec * 1'000'000UL) * 1'000;
-  nanosleep(&ts, 0);
+  nanosleep(&ts, nullptr);
 }
 
 void EmbrickBusHandler::addTime(struct timespec &paTs, unsigned long paMicroseconds) {

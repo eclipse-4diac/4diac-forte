@@ -44,14 +44,10 @@ int PLCnextSlaveHandler::update() {
 
 void PLCnextSlaveHandler::dropHandles() {
   CCriticalRegion criticalRegion(handleMutex);
-
-  forte::core::io::IOMapper &mapper = forte::core::io::IOMapper::getInstance();
-
-  TSlaveHandleList::Iterator itEnd = slaveHandles->end();
-  for (TSlaveHandleList::Iterator it = slaveHandles->begin(); it != itEnd; ++it) {
-    mapper.deregisterHandle(*it);
-    delete *it;
+  for (PLCnextSlaveHandle *it : mDeviceHandles) {
+    delete it;
   }
+  mDeviceHandles.clear();
 }
 
 void PLCnextSlaveHandler::initBufferImage(size_t size) {
@@ -63,17 +59,13 @@ void PLCnextSlaveHandler::initBufferImage(size_t size) {
 
 void PLCnextSlaveHandler::addHandle(PLCnextSlaveHandle *paHandle) {
   CCriticalRegion criticalRegion(handleMutex);
-  slaveHandles->pushBack(paHandle);
+  mDeviceHandles.push_back(paHandle);
 }
 
-PLCnextSlaveHandle *PLCnextSlaveHandler::getHandle(int paIndex) {
-  TSlaveHandleList::Iterator itEnd = slaveHandles->end();
-
-  int i = 0;
-  for (TSlaveHandleList::Iterator it = slaveHandles->begin(); it != itEnd; ++it, i++) {
-    if (paIndex == i) {
-      return *it;
-    }
+PLCnextSlaveHandle *PLCnextSlaveHandler::getHandle(size_t paIndex) {
+  if (mDeviceHandles.size() <= paIndex) {
+    return nullptr;
   }
-  return NULL;
+
+  return mDeviceHandles[paIndex];
 }

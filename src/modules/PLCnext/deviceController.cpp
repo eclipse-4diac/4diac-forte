@@ -10,13 +10,9 @@
  *   Peirlberger Juergen - initial API and implementation and/or initial documentation
  *******************************************************************************/
 
-#include "core/util/criticalregion.h"
 #include "deviceController.h"
 #include "slaveHandle/bitSlaveHandle.h"
 #include "slaveHandle/slaveHandle.h"
-
-PLCnextDeviceController::~PLCnextDeviceController() {
-}
 
 void PLCnextDeviceController::setConfig(struct forte::core::io::IODeviceController::Config *paConfig) {
   if (isAlive()) {
@@ -28,43 +24,42 @@ void PLCnextDeviceController::setConfig(struct forte::core::io::IODeviceControll
 }
 
 const char *PLCnextDeviceController::init() {
-  return 0;
+  return nullptr;
 }
 
 void PLCnextDeviceController::deInit() {
-  TSlaveList::Iterator itEnd(mSlaves->end());
-  for (TSlaveList::Iterator it = mSlaves->begin(); it != itEnd; ++it) {
-    delete *it;
+  for (PLCnextSlaveHandler *it : mDevices) {
+    delete it;
   }
+  mDevices.clear();
 }
 
 void PLCnextDeviceController::registerSlaveHandler(PLCnextSlaveHandler *slave) {
-  mSlaves->pushBack(slave);
+  mDevices.push_back(slave);
 }
 
 forte::core::io::IOHandle *
 PLCnextDeviceController::createIOHandle(forte::core::io::IODeviceController::HandleDescriptor &paHandleDescriptor) {
   HandleDescriptor &desc = static_cast<HandleDescriptor &>(paHandleDescriptor);
-  PLCnextSlaveHandler *slave = getSlave(desc.mSlaveIndex);
+  PLCnextSlaveHandler *device = getSlave(desc.mSlaveIndex);
 
-  if (slave == 0) {
+  if (device == nullptr) {
     DEVLOG_ERROR("slave with index %d not found.\n", desc.mSlaveIndex);
-    return 0;
+    return nullptr;
   }
 
   switch (desc.mType) {
-    case Bit: return new PLCnextBitSlaveHandle(this, desc.mDirection, desc.mPosition, slave);
-    case BitString16: return 0; // TODO: implement AnalogSlaveHandle!
+    case Bit: return new PLCnextBitSlaveHandle(this, desc.mDirection, desc.mPosition, device);
+    case BitString16: return nullptr; // TODO: implement AnalogSlaveHandle!
   }
 
-  return 0;
+  return nullptr;
 }
 
 void PLCnextDeviceController::runLoop() {
   while (isAlive()) {
-    TSlaveList::Iterator itEnd = mSlaves->end();
-    for (TSlaveList::Iterator it = mSlaves->begin(); it != itEnd; ++it) {
-      (*it)->update();
+    for (PLCnextSlaveHandler *it : mDevices) {
+      it->update();
     }
 
     CThread::sleepThread(mConfig.updateInterval);
@@ -72,48 +67,39 @@ void PLCnextDeviceController::runLoop() {
 }
 
 PLCnextSlaveHandler *PLCnextDeviceController::getSlave(size_t paIndex) {
-  if (mSlaves == 0) {
-    DEVLOG_ERROR("no slaves are registered.");
-    return 0;
+  if (mDevices.size() <= paIndex) {
+    return nullptr;
   }
 
-  TSlaveList::Iterator itEnd = mSlaves->end();
-  int i = 0;
-  for (TSlaveList::Iterator it = mSlaves->begin(); it != itEnd; ++it, i++) {
-    if (paIndex == i) {
-      return *it;
-    }
-  }
-
-  return 0;
+  return mDevices[paIndex];
 }
 
 void PLCnextDeviceController::addSlaveHandle(size_t paIndex, std::unique_ptr<forte::core::io::IOHandle> paHandle) {
-  PLCnextSlaveHandler *slave = getSlave(paIndex);
-  if (slave == 0) {
-    DEVLOG_ERROR("no slaves are registered.");
+  PLCnextSlaveHandler *device = getSlave(paIndex);
+  if (device == nullptr) {
+    DEVLOG_ERROR("no devices registered.");
     return;
   }
 
-  slave->addHandle((PLCnextSlaveHandle *) paHandle.release());
+  device->addHandle((PLCnextSlaveHandle *) paHandle.release());
 }
 
 void PLCnextDeviceController::dropSlaveHandles(size_t paIndex) {
-  PLCnextSlaveHandler *slave = getSlave(paIndex);
-  if (slave == 0) {
-    DEVLOG_ERROR("no slaves are registered.");
+  PLCnextSlaveHandler *device = getSlave(paIndex);
+  if (device == nullptr) {
+    DEVLOG_ERROR("no devices registered.");
     return;
   }
 
-  slave->dropHandles();
+  device->dropHandles();
 }
 
-bool PLCnextDeviceController::isSlaveAvailable(size_t paIndex) {
+bool PLCnextDeviceController::isSlaveAvailable(size_t) {
   // (currently) don't check if index is really available at initialization;
   return true;
 }
 
-bool PLCnextDeviceController::checkSlaveType(size_t paIndex, int paType) {
+bool PLCnextDeviceController::checkSlaveType(size_t, int) {
   // (currently) don't check slaveType at initialization;
   return true;
 }

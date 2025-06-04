@@ -14,11 +14,11 @@
 #ifndef SRC_MODULES_EMBRICK_SLAVE_SLAVE_H_
 #define SRC_MODULES_EMBRICK_SLAVE_SLAVE_H_
 
+#include <cstddef>
 #include <stdint.h>
 #include <cstring>
 #include "packages.h"
 #include "handle.h"
-#include <fortelist.h>
 #include <stdint.h>
 #include <forte_sync.h>
 #include <forte_wstring.h>
@@ -71,18 +71,18 @@ class EmbrickSlaveHandler {
     int update();
     void forceUpdate();
 
-    EmbrickSlaveHandle *getInputHandle(int paIndex) {
-      return getHandle(&mInputs, paIndex);
+    EmbrickSlaveHandle *getInputHandle(size_t paIndex) {
+      return getHandle(mInputs, paIndex);
     }
-    EmbrickSlaveHandle *getOutputHandle(int paIndex) {
-      return getHandle(&mOutputs, paIndex);
+    EmbrickSlaveHandle *getOutputHandle(size_t paIndex) {
+      return getHandle(mOutputs, paIndex);
     }
 
     void addHandle(EmbrickSlaveHandle *paHandle) {
 
       switch (paHandle->getDirection()) {
-        case forte::core::io::IOMapper::In: addHandle(&mInputs, paHandle); break;
-        case forte::core::io::IOMapper::Out: addHandle(&mOutputs, paHandle); break;
+        case forte::core::io::IOMapper::In: addHandle(mInputs, paHandle); break;
+        case forte::core::io::IOMapper::Out: addHandle(mOutputs, paHandle); break;
         default: break;
       }
     }
@@ -113,11 +113,10 @@ class EmbrickSlaveHandler {
     static const int scmMaxUpdateErrors;
 
     CSyncObject mHandleMutex;
-    typedef CSinglyLinkedList<EmbrickSlaveHandle *> TSlaveHandleList;
-    TSlaveHandleList mInputs;
-    TSlaveHandleList mOutputs;
-    void addHandle(TSlaveHandleList *paList, EmbrickSlaveHandle *paHandle);
-    EmbrickSlaveHandle *getHandle(TSlaveHandleList *list, int paIndex);
+    std::vector<EmbrickSlaveHandle *> mInputs;
+    std::vector<EmbrickSlaveHandle *> mOutputs;
+    void addHandle(std::vector<EmbrickSlaveHandle *> &paList, EmbrickSlaveHandle *paHandle);
+    EmbrickSlaveHandle *getHandle(std::vector<EmbrickSlaveHandle *> &paList, size_t paIndex);
 
   private:
     //! declared but undefined copy constructor as we don't want Slaves to be directly copied.
