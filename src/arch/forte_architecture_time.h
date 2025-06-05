@@ -42,27 +42,6 @@ constexpr auto getNanoSecondsMonotonic = getNanoSecondsMonotonicArch;
 constexpr auto getNanoSecondsRealtime = getNanoSecondsRealtimeArch;
 #endif // FORTE_FAKE_TIME
 
-#if defined(WINCE)
-#include <wce_time.h>
-
-inline struct tm *forte_localtime(const time_t *pa_time) {
-  return wceex_localtime(pa_time);
-}
-
-inline time_t forte_mktime(struct tm *pa_tm) {
-  return wceex_mktime(pa_tm);
-}
-
-inline struct tm *forte_gmtime(const time_t *pa_time) {
-  return wceex_gmtime(pa_time);
-}
-
-inline time_t forte_time_arch() {
-  return wceex_time(0);
-}
-
-#else // defined(WINCE)
-
 struct tm *forte_localtime(const time_t *paTime, struct tm *const paResult);
 
 inline time_t forte_mktime(struct tm *pa_tm) {
@@ -76,7 +55,5 @@ struct tm *forte_gmtime(const time_t *const paTime, struct tm *const paResult);
 inline time_t forte_time_arch() {
   return time(nullptr);
 }
-
-#endif // defined(WINCE)
 
 #endif /* SRC_ARCH_FORTE_ARCHITECTURE_TIME_H_ */
