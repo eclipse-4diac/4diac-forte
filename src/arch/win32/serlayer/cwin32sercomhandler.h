@@ -12,7 +12,6 @@
 #include "../forte_thread.h"
 #include "../forte_sync.h"
 #include "../../../core/extevhan.h"
-#include "../../../core/fortelist.h"
 #include "../forte_sem.h"
 
 #ifndef CWIN32SERCOMHANDLER_H_
@@ -50,9 +49,7 @@ class CWin32SerComHandler : public CExternalEventHandler, public CThread {
   private:
     void run();
 
-    typedef CSinglyLinkedList<CWin32SerComLayer *> TCWin32SerComLayerContainer;
-
-    TCWin32SerComLayerContainer mComLayerList;
+    std::vector<CWin32SerComLayer *> mComLayerList;
     CSyncObject mSync;
 
     //! Sempahore for implementing a suspend feature similar to what we are doing in CEventChainExecutionThread

@@ -27,7 +27,7 @@ CWin32SerComHandler::~CWin32SerComHandler() {
 void CWin32SerComHandler::registerSerComLayer(CWin32SerComLayer *paComLayer) {
   {
     CCriticalRegion region(mSync);
-    mComLayerList.pushBack(paComLayer);
+    mComLayerList.push_back(paComLayer);
   }
   if (!isAlive()) {
     this->start();
@@ -37,48 +37,25 @@ void CWin32SerComHandler::registerSerComLayer(CWin32SerComLayer *paComLayer) {
 
 void CWin32SerComHandler::unregisterSerComLayer(CWin32SerComLayer *paComLayer) {
   CCriticalRegion region(mSync);
-
-  TCWin32SerComLayerContainer::Iterator itRunner(mComLayerList.begin());
-  TCWin32SerComLayerContainer::Iterator itRefNode(mComLayerList.end());
-  TCWin32SerComLayerContainer::Iterator itEnd(mComLayerList.end());
-
-  while (itRunner != itEnd) {
-    if (*itRunner == paComLayer) {
-      if (itRefNode == itEnd) {
-        mComLayerList.popFront();
-      } else {
-        mComLayerList.eraseAfter(itRefNode);
-      }
-      break;
-    }
-
-    itRefNode = itRunner;
-    ++itRunner;
-  }
+  mComLayerList.erase(std::remove(mComLayerList.begin(), mComLayerList.end(), paComLayer), mComLayerList.end());
 }
 
 void CWin32SerComHandler::run() {
   while (isAlive()) {
 
-    if (true == mComLayerList.isEmpty()) {
+    if (mComLayerList.empty()) {
       mSem.waitIndefinitely();
     }
     if (!isAlive()) {
       break;
     }
 
-    mSync.lock();
-    TCWin32SerComLayerContainer::Iterator itEnd(mComLayerList.end());
-    for (TCWin32SerComLayerContainer::Iterator itRunner = mComLayerList.begin(), itCurrent = mComLayerList.begin();
-         itRunner != itEnd;) {
-      itCurrent = itRunner;
-      ++itRunner;
-
-      if (forte::com_infra::e_Nothing != (*itCurrent)->recvData(0, 0)) {
-        startNewEventChain((*itCurrent)->getCommFB());
+    CCriticalRegion region(mSync);
+    for (CWin32SerComLayer *it : mComLayerList) {
+      if (forte::com_infra::e_Nothing != it->recvData(0, 0)) {
+        startNewEventChain(it->getCommFB());
       }
     }
-    mSync.unlock();
     Sleep(1000);
   }
 }
