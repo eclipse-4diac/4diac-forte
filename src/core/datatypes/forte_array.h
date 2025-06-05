@@ -120,6 +120,8 @@ class CIEC_ARRAY : public CIEC_ANY_DERIVED {
 
     virtual void setBounds(intmax_t paLowerBound, intmax_t paUpperBound) = 0;
 
+    virtual void setBounds(const CIEC_ARRAY &paArray) = 0;
+
     void reset() override;
 
     [[nodiscard]] bool equals(const CIEC_ANY &paOther) const override {

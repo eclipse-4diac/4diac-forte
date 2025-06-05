@@ -221,3 +221,12 @@ intmax_t CIEC_ARRAY_DYNAMIC::getUpperBound(intmax_t paDimension) const {
   }
   return static_cast<const CIEC_ARRAY &>(element).getUpperBound(paDimension - 1);
 }
+
+void CIEC_ARRAY_DYNAMIC::setBounds(const CIEC_ARRAY &paArray) {
+  setBounds(paArray.getLowerBound(), paArray.getUpperBound());
+  if (getElementDataTypeID() == e_ARRAY && paArray.getElementDataTypeID() == e_ARRAY) {
+    for (intmax_t i = mLowerBound; i <= mUpperBound; ++i) {
+      static_cast<CIEC_ARRAY &>((*this)[i]).setBounds(static_cast<const CIEC_ARRAY &>(paArray[i]));
+    }
+  }
+}

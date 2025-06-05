@@ -274,6 +274,10 @@ class CIEC_ARRAY_FIXED : public CIEC_ARRAY_COMMON<T> {
       DEVLOG_ERROR("Cannot set bounds of fixed array\n");
     }
 
+    void setBounds(const CIEC_ARRAY &) override {
+      DEVLOG_ERROR("Cannot set bounds of fixed array\n");
+    }
+
     [[nodiscard]] CIEC_ANY::EDataTypeID getElementDataTypeID() const override {
       return data[0].getDataTypeID();
     }

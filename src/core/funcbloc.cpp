@@ -172,7 +172,7 @@ bool CFunctionBlock::configureGenericDIO(TPortId paDIOPortId, const CIEC_ANY &pa
       auto &dioArrayValue = static_cast<CIEC_ARRAY &>(*dio);
       auto &refArrayValue = static_cast<const CIEC_ARRAY &>(paRefValue.unwrap());
       if (dioArrayValue.hasVariableBounds() && !refArrayValue.hasVariableBounds()) {
-        dioArrayValue.setBounds(refArrayValue.getLowerBound(), refArrayValue.getUpperBound());
+        dioArrayValue.setBounds(refArrayValue);
       }
       break;
     }

@@ -559,6 +559,8 @@ class CIEC_ARRAY_DYNAMIC : public CIEC_ARRAY {
       }
     }
 
+    void setBounds(const CIEC_ARRAY &paArray) override;
+
     [[nodiscard]] CIEC_ANY::EDataTypeID getElementDataTypeID() const override {
       return mData != nullptr ? reinterpret_cast<CIEC_ANY *>(mData)->getDataTypeID() : CIEC_ANY::e_ANY;
     }

@@ -307,6 +307,17 @@ class CIEC_ARRAY_VARIABLE : public CIEC_ARRAY_COMMON<T> {
       }
     }
 
+    void setBounds(const CIEC_ARRAY &paArray) override {
+      setBounds(paArray.getLowerBound(), paArray.getUpperBound());
+      if constexpr (std::is_base_of_v<CIEC_ARRAY, T>) {
+        if (paArray.getElementDataTypeID() == CIEC_ANY::e_ARRAY) {
+          for (intmax_t i = mLowerBound; i <= mUpperBound; ++i) {
+            (*this)[i].setBounds(static_cast<const CIEC_ARRAY &>(paArray[i]));
+          }
+        }
+      }
+    }
+
     [[nodiscard]] CIEC_ANY::EDataTypeID getElementDataTypeID() const override {
       return data[0].getDataTypeID();
     }
