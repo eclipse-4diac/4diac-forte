@@ -32,27 +32,6 @@ SET(SOURCE_GROUP core)
 set_source_files_properties(${FORTE_BINARY_DIR}/stringlist.h PROPERTIES GENERATED TRUE)
 set_source_files_properties(${FORTE_BINARY_DIR}/stringlist.cpp PROPERTIES GENERATED TRUE)
 
-#######################################################################################
-# Exclude FBs
-#######################################################################################
-set(FORTE_EXCLUDE_FBS "" CACHE STRING "Exclude Function blocks")
-mark_as_advanced(FORTE_EXCLUDE_FBS)
-
-IF(FORTE_EXCLUDE_FBS)
-  STRING(REGEX MATCHALL "[^ ,;][^ ,;]*" FBLIST ${FORTE_EXCLUDE_FBS})
-
-  FOREACH(FB ${FBLIST})
-    forte_remove_sourcefile_h(${FB}.h)
-    forte_remove_sourcefile_cpp(${FB}.cpp)
-  ENDFOREACH(FB)
-ENDIF(FORTE_EXCLUDE_FBS)
-
-GET_PROPERTY(PLATFORM_REMOVES              GLOBAL PROPERTY FORTE_PLATFORM_REMOVES)
-FOREACH(FB ${PLATFORM_REMOVES})
-  forte_remove_sourcefile_h(${FB}.h)
-  forte_remove_sourcefile_cpp(${FB}.cpp)
-ENDFOREACH(FB)
-
 #############################################################################
 # Configure Network Layers
 #############################################################################
