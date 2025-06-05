@@ -503,9 +503,8 @@ namespace forte::ita {
       return;
     }
 
-    if (parseTypeName(paRequestPartLeft.substr(7), mCommand.mSecondParam, mCommand.mAdditionalParams) != -1) {
+    if (parseTypeName(paRequestPartLeft.substr(7), mCommand.mFirstParam, mCommand.mAdditionalParams) != -1) {
       mCommand.mCMD = paSingleQueryCMD;
-      return;
     }
   }
 

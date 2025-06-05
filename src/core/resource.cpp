@@ -366,6 +366,7 @@ EMGMResponse CResource::executeMGMCommand(forte::core::SManagementCMD &paCommand
       case EMGMCommandType::QueryDataType:
         retVal = createDataTypeResponseMessage(paCommand.mFirstParam.front(), paCommand.mAdditionalParams,
                                                paCommand.mAdditionalParams);
+        break;
       case EMGMCommandType::QueryGlobalConstType:
         retVal = createGlobalConstTypeResponseMessage(paCommand.mFirstParam.front(), paCommand.mAdditionalParams,
                                                       paCommand.mAdditionalParams);
