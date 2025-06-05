@@ -96,13 +96,11 @@ namespace forte::ita {
       void parseReadData(char *paRequestPartLeft);
       void parseWriteData(char *paRequestPartLeft);
 
-#ifdef FORTE_SUPPORT_QUERY_CMD
       void parseQueryData(char *paRequestPartLeft);
       void parseQueryTypes(std::string_view paRequestPartLeft,
                            EMGMCommandType paSingleQueryCMD,
                            EMGMCommandType paListQueryCMD);
       void generateQueryResponse(CIEC_STRING &paResponse);
-#endif
 
       /*! \brief parse a hierarchical identifier list
        *

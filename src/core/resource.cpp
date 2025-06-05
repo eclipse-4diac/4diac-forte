@@ -44,8 +44,6 @@ USE_STRING_ID(START);
 
 using namespace std::string_literals;
 
-#ifdef FORTE_SUPPORT_QUERY_CMD
-
 namespace {
 
   template<typename T>
@@ -221,8 +219,6 @@ namespace {
 
 } // namespace
 
-#endif // FORTE_SUPPORT_QUERY_CMD
-
 #ifdef FORTE_DYNAMIC_TYPE_LOAD
 
 namespace {
@@ -348,7 +344,6 @@ EMGMResponse CResource::executeMGMCommand(forte::core::SManagementCMD &paCommand
       case EMGMCommandType::Stop:
       case EMGMCommandType::Kill:
       case EMGMCommandType::Reset: retVal = handleExecutionStateCmd(paCommand.mCMD, paCommand.mFirstParam); break;
-#ifdef FORTE_SUPPORT_QUERY_CMD
       case EMGMCommandType::QueryFBTypes: retVal = queryAllFBTypes(paCommand.mAdditionalParams); break;
       case EMGMCommandType::QueryAdapterTypes: retVal = queryAllAdapterTypes(paCommand.mAdditionalParams); break;
       case EMGMCommandType::QueryGlobalConstTypes:
@@ -371,7 +366,6 @@ EMGMResponse CResource::executeMGMCommand(forte::core::SManagementCMD &paCommand
                                                       paCommand.mAdditionalParams);
         break;
       case EMGMCommandType::QueryConnection: retVal = queryConnections(paCommand.mAdditionalParams, *this); break;
-#endif // FORTE_SUPPORT_QUERY_CMD
       default:
 #ifdef FORTE_SUPPORT_MONITORING
         retVal = mMonitoringHandler.executeMonitoringCommand(paCommand);

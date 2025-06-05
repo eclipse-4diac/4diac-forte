@@ -64,10 +64,8 @@ namespace forte::ita {
           case EMGMCommandType::Reset: parseAdditionalStateCommandData(acRequestPartLeft); break;
           case EMGMCommandType::Read: parseReadData(acRequestPartLeft); break;
           case EMGMCommandType::Write: parseWriteData(acRequestPartLeft); break;
-#ifdef FORTE_SUPPORT_QUERY_CMD
           case EMGMCommandType::QueryGroup: // query something
             parseQueryData(acRequestPartLeft);
-#endif
             break;
           default: break;
         }
@@ -131,12 +129,9 @@ namespace forte::ita {
         paResponse.append("\" Destination=\"");
         paResponse.append(mCommand.mAdditionalParams);
         paResponse.append("\" />");
-      }
-#ifdef FORTE_SUPPORT_QUERY_CMD
-      else {
+      } else {
         generateQueryResponse(paResponse);
       }
-#endif
     }
     paResponse.append("\n</Response>");
   }
@@ -176,13 +171,9 @@ namespace forte::ita {
           mCommand.mCMD = EMGMCommandType::Read;
         } else if (!strncmp("WRITE", acCommandStart, 5)) {
           mCommand.mCMD = EMGMCommandType::Write;
-        }
-#ifdef FORTE_SUPPORT_QUERY_CMD
-        else if (!strncmp("QUERY", acCommandStart, 5)) {
+        } else if (!strncmp("QUERY", acCommandStart, 5)) {
           mCommand.mCMD = EMGMCommandType::QueryGroup;
-        }
-#endif // FORTE_SUPPORT_QUERY_CMD
-        else {
+        } else {
           return nullptr;
         }
         acCommandStart += scnCommandLength[static_cast<int>(mCommand.mCMD)];
@@ -443,7 +434,6 @@ namespace forte::ita {
     }
   }
 
-#ifdef FORTE_SUPPORT_QUERY_CMD
   namespace {
     constexpr std::string_view FB_TYPE = "FBType";
     constexpr std::string_view ADAPTER_TYPE = "AdapterType";
@@ -558,8 +548,6 @@ namespace forte::ita {
       default: break;
     }
   }
-
-#endif
 
   void CommandParser::appendIdentifierName(CIEC_STRING &paDest, forte::core::TNameIdentifier &paIdentifier) {
     if (!paIdentifier.empty()) {

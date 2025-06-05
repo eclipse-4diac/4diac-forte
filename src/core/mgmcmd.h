@@ -146,7 +146,6 @@ enum class EMGMCommandType : uint8_t {
    */
   Kill = 0x06,
 
-#ifdef FORTE_SUPPORT_QUERY_CMD
   QueryGroup = 0x07, //!< Identifier for all query commands
 
   /*! \brief query FBs
@@ -234,7 +233,6 @@ enum class EMGMCommandType : uint8_t {
 
   QueryGlobalConstType = 0xA7,
   QueryGlobalConstTypes = 0xB7,
-#endif
 
   /*! \brief reset a FB, resource or the device.
    *
