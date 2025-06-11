@@ -13,6 +13,8 @@
 target_sources(forte_systemtest PRIVATE
         GatheringTestStruct_dtp.h
         GatheringTestStruct_dtp.cpp
+        MemberAccessTestStruct_dtp.h
+        MemberAccessTestStruct_dtp.cpp
 )
 
 add_subdirectory(modules)
