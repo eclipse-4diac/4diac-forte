@@ -16,6 +16,7 @@
  *******************************************************************************/
 #include "dataconn.h"
 #include "funcbloc.h"
+#include "membdataconn.h"
 #include "mgmcmd.h"
 #include "negdataconn.h"
 
@@ -114,6 +115,13 @@ CConnection::Wrapper CDataConnection::getDelegatingConnection(forte::core::TName
         return make_delegating<forte::core::internal::CNegatingDataConnection>(
             getSourceId().getFB(), getSourceId().getPortId(), static_cast<CIEC_BOOL &>(getValue()));
       }
+      break;
+    case CIEC_ANY::e_STRUCT:
+      if (CIEC_ANY *member = static_cast<CIEC_STRUCT &>(getValue()).getMemberNamed(paSrcNameList); member) {
+        return make_delegating<forte::core::internal::CMemberDataConnection>(
+          getSourceId().getFB(), getSourceId().getPortId(), *member, paSrcNameList);
+      }
+      break;
     default: break;
   }
   return CConnection::getDelegatingConnection(paSrcNameList);

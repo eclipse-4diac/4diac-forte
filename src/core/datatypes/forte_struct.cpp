@@ -13,6 +13,7 @@
  *                - initial implementation and rework communication infrastructure
  *   Martin Jobst - add equals function
  *                - refactor struct memory layout
+ *                - add path member access
  *   Markus Meingast, Alois Zoitl  - migrated data type toString to std::string
  *******************************************************************************/
 #include "forte_struct.h"
@@ -35,6 +36,23 @@ CIEC_ANY *CIEC_STRUCT::getMemberNamed(const char *paMemberName) {
     return getMemberNamed(elementNameId);
   }
   return nullptr;
+}
+
+CIEC_ANY *CIEC_STRUCT::getMemberNamed(std::span<CStringDictionary::TStringId> paMemberName) {
+  if (paMemberName.empty()) {
+    return nullptr;
+  }
+  CIEC_ANY *member = getMemberNamed(paMemberName.front());
+  if (!member) {
+    return nullptr;
+  }
+  if (paMemberName.size() == 1) {
+    return member;
+  }
+  if (member->getDataTypeID() != e_STRUCT) {
+    return nullptr;
+  }
+  return static_cast<CIEC_STRUCT *>(member)->getMemberNamed(paMemberName.subspan(1));
 }
 
 size_t CIEC_STRUCT::getMemberIndex(CStringDictionary::TStringId paMemberNameId) {

@@ -88,6 +88,16 @@ namespace forte::core::util {
         return pos;
       }
 
+      iterator insert(iterator pos, const_iterator first, const_iterator last) {
+        size_t count = std::distance(first, last);
+        assert(size() + count <= capacity());
+
+        std::move_backward(pos, end(), end() + count);
+        std::copy(first, last, pos);
+        mNumElements += count;
+        return pos;
+      }
+
       void pop_back() {
         if (!empty()) {
           mNumElements--;

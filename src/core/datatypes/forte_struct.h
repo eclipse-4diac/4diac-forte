@@ -13,10 +13,13 @@
  *      - initial implementation and rework communication infrastructure
  *   Martin Jobst - add equals function
  *                - refactor struct memory layout
+ *                - add path member access
  *   Markus Meingast, Alois Zoitl  - migrated data type toString to std::string
  *******************************************************************************/
 #ifndef _FORTE_STRUCT_H_
 #define _FORTE_STRUCT_H_
+
+#include <span>
 
 #include "forte_any_derived.h"
 
@@ -130,6 +133,13 @@ class CIEC_STRUCT : public CIEC_ANY_DERIVED {
      * \return on a valid member name id a pointer to the member var otherwise 0
      */
     CIEC_ANY *getMemberNamed(const char *paMemberName);
+
+    /*! \brief Get the struct's member var with the given name id
+     *
+     * \param paMemberNameId the string id of the member name
+     * \return on a valid member name id a pointer to the member var otherwise 0
+     */
+    CIEC_ANY *getMemberNamed(std::span<CStringDictionary::TStringId> paMemberNameId);
 
     size_t getMemberIndex(CStringDictionary::TStringId paMemberNameId);
 
